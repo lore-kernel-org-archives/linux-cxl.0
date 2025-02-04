@@ -1,304 +1,244 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0E5E1F76CA
-	for <linux-cxl@vger.kernel.org>; Tue,  4 Feb 2025 04:24:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B38B3D81
+	for <linux-cxl@vger.kernel.org>; Tue,  4 Feb 2025 05:16:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738643077; cv=none; b=TGRmqQefIPpRurY2Rf38uLPSyukiBCkBliOWKdL1hFtqheA95ucKwsu5pn6UNy1OqbySDaLHz8M2fjYJOpYAB1TTVlmXnFkA5W/yogdV6ms5mdm79WcpKjgYpejkNtlyMoE3FpHPMag5PzOfN62JPEju0+kZRKb9R6QGxPUKqxw=
+	t=1738646217; cv=none; b=EPrxXbLmGqCPME+/yhoW+sjUvs1m+ZUOBA5GvR/NShPArtRPRbmr4Usf+y68HVyL1HplyeL2jDh1f6aMyihyo/6wa49JPDgsOjGFkp83EEcPLVXJMbQA2nYpepuGT0rJ03GhcK+Kfb0XgizynmGu710VDrmpv3+hSUdjlJfnovc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738643077; c=relaxed/simple;
-	bh=pKOPD3ZS5/e+uewG99TJwHUaDxSJi+LjHe5SnUX4qIk=;
-	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mqAaBB+z6/ds5X/sXVNI+9mge8GSlLzwfCtiWDAGNWjBliKkoWUAxW1LjgrDkSfGMa1bgwdWGFR91reJblVNvkjTMi1lflYE4gEWCS7B9C6q2oZe4vg7V9KrKSUFe9ANDKHD6AQhMDdzcedBKoc0EFRbKFp1B/KE7nuzEcCf3Ek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y9vsPa0Z; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738646217; c=relaxed/simple;
+	bh=7mY5fIq6ZYnU3zbZDKPURdg9tnLMq/t+25mI31lBPJ4=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=Sl5eLY9YjwicQ0jFepyFC9oXnibGZJbhRPAV+ZBr/2F8/MgZ+j4JYHwzY+loLPQ3o2BgR7X8V3No3KyqbdjSmfP1OurlY5Nfda3dYGdPNFfxqWTe7nxtTf8o4oLhmBnvJqYT466hyhZ5kON9KcfQX1INF5FdlTpaSPb2FZy3rsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JU0dmxie; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y9vsPa0Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738643076; x=1770179076;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=pKOPD3ZS5/e+uewG99TJwHUaDxSJi+LjHe5SnUX4qIk=;
-  b=Y9vsPa0ZpHOLvJlyzBNnCWawWMzKtj1Yopc5nvRqGbaAy6Gy+AETuoP7
-   ue4SlJ+Y72Z427npBGQG+47i4aXXVqtNDGzKLYZSDT1+YhKrdD5dn6FaM
-   NDLHJ1GhHD5SLegm+bDWwl9LJu9Fxd0ILEqwAu9zBgn5+OqvZgO9jpU8r
-   /GmM6b71GqHA9uPwyZ7mpBZ48yKFD8KaS+NekkNm4OFnEZJ6b0cWJZcEN
-   IMt601D/nAyubLsUbM9lN14Swnk/oiBdhuGq6cpJfkYdr9cYODsjIW8n6
-   EpmXcVtgqjILwJmpQhOD19A8n9AyvgCcmBBBFaZNjtKTWXNPLTs9B/JLB
-   w==;
-X-CSE-ConnectionGUID: qRXQVcGmRQOwdi7PCx1oMQ==
-X-CSE-MsgGUID: ieHJCsLxRZOH9uc/iw8Kwg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="56586424"
-X-IronPort-AV: E=Sophos;i="6.13,257,1732608000"; 
-   d="scan'208";a="56586424"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 20:24:36 -0800
-X-CSE-ConnectionGUID: /GKH4HfDR0irmk6RcFUcMg==
-X-CSE-MsgGUID: dljihc/mQPWPNHVmIjJtfg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="115645956"
-Received: from dnelso2-mobl.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.125.109.230])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 20:24:36 -0800
-Subject: [PATCH v3 6/6] cxl: Cleanup partition size and perf helpers
-From: Dan Williams <dan.j.williams@intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: Dave Jiang <dave.jiang@intel.com>, Alejandro Lucero <alucerop@amd.com>,
- Ira Weiny <ira.weiny@intel.com>, dave.jiang@intel.com,
- Jonathan.Cameron@huawei.com
-Date: Mon, 03 Feb 2025 20:24:35 -0800
-Message-ID: <173864307519.668823.10800104022426067621.stgit@dwillia2-xfh.jf.intel.com>
-In-Reply-To: <173864304059.668823.3914867296781664103.stgit@dwillia2-xfh.jf.intel.com>
-References: <173864304059.668823.3914867296781664103.stgit@dwillia2-xfh.jf.intel.com>
-User-Agent: StGit/0.18-3-g996c
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JU0dmxie"
+Content-Type: text/plain;
+	charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738646206;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PVqA3UhwBSLXFAm+nMBBwe/jLdLmHRgKTIJvFdPLXKM=;
+	b=JU0dmxieACGhnV5ML+bjn/C+JT95sPl2KEzn8w2beFCJudpIbUmggzJNg6h69F8WzirNe2
+	1SP9BxoA4Pbgr1fEoRIm0wDI8PfcRaJRKpfY3Kmbpp6fPkDjnmiyk1vnnJDdP25pB75vLs
+	xh+msnG29PdNJEQqYIsyWBwAYaPRhfk=
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
+Subject: Re: [RFC PATCH v12 qemu 2/2] qtest/cxl: Add aarch64 virt test for CXL
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Itaru Kitayama <itaru.kitayama@linux.dev>
+In-Reply-To: <20250203173040.145763-3-Jonathan.Cameron@huawei.com>
+Date: Tue, 4 Feb 2025 14:16:19 +0900
+Cc: qemu-devel@nongnu.org,
+ Fan Ni <fan.ni@samsung.com>,
+ Peter Maydell <peter.maydell@linaro.org>,
+ mst@redhat.com,
+ linux-cxl@vger.kernel.org,
+ linuxarm@huawei.com,
+ qemu-arm@nongnu.org,
+ Yuquan Wang <wangyuquan1236@phytium.com.cn>,
+ =?utf-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@linaro.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <4AEA1355-C6E8-4A9D-8652-607FEBD7EE03@linux.dev>
+References: <20250203173040.145763-1-Jonathan.Cameron@huawei.com>
+ <20250203173040.145763-3-Jonathan.Cameron@huawei.com>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+X-Migadu-Flow: FLOW_OUT
 
-Now that the 'struct cxl_dpa_partition' array contains both size and
-performance information, all paths that iterate over that information
-can use a loop rather than hard-code 'ram' and 'pmem' lookups.
+Jonathan,
 
-Remove, or reduce the scope of the temporary helpers that bridged the
-pre-'struct cxl_dpa_partition' state of the code to the post-'struct
-cxl_dpa_partition' state.
+> On Feb 4, 2025, at 2:30, Jonathan Cameron =
+<Jonathan.Cameron@huawei.com> wrote:
+>=20
+> Add a single complex case for aarch64 virt machine.
+> Given existing much more comprehensive tests for x86 cover the
+> common functionality, a single test should be enough to verify
+> that the aarch64 part continue to work.
+>=20
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+> tests/qtest/cxl-test.c  | 59 ++++++++++++++++++++++++++++++++---------
+> tests/qtest/meson.build |  1 +
+> 2 files changed, 47 insertions(+), 13 deletions(-)
+>=20
+> diff --git a/tests/qtest/cxl-test.c b/tests/qtest/cxl-test.c
+> index a600331843..c7189d6222 100644
+> --- a/tests/qtest/cxl-test.c
+> +++ b/tests/qtest/cxl-test.c
+> @@ -19,6 +19,12 @@
+>     "-device pxb-cxl,id=3Dcxl.1,bus=3Dpcie.0,bus_nr=3D53 " \
+>     "-M =
+cxl-fmw.0.targets.0=3Dcxl.0,cxl-fmw.0.targets.1=3Dcxl.1,cxl-fmw.0.size=3D4=
+G "
+>=20
+> +#define QEMU_VIRT_2PXB_CMD \
+> +    "-machine virt,cxl=3Don -cpu max " \
+> +    "-device pxb-cxl,id=3Dcxl.0,bus=3Dpcie.0,bus_nr=3D52 " \
+> +    "-device pxb-cxl,id=3Dcxl.1,bus=3Dpcie.0,bus_nr=3D53 " \
+> +    "-M =
+cxl-fmw.0.targets.0=3Dcxl.0,cxl-fmw.0.targets.1=3Dcxl.1,cxl-fmw.0.size=3D4=
+G "
+> +
+> #define QEMU_RP \
+>     "-device cxl-rp,id=3Drp0,bus=3Dcxl.0,chassis=3D0,slot=3D0 "
+>=20
+> @@ -197,25 +203,52 @@ static void cxl_2pxb_4rp_4t3d(void)
+>     qtest_end();
+>     rmdir(tmpfs);
+> }
+> +
+> +static void cxl_virt_2pxb_4rp_4t3d(void)
+> +{
+> +    g_autoptr(GString) cmdline =3D g_string_new(NULL);
+> +    char template[] =3D "/tmp/cxl-test-XXXXXX";
+> +    const char *tmpfs;
+> +
+> +    tmpfs =3D mkdtemp(template);
+> +
+> +    g_string_printf(cmdline, QEMU_VIRT_2PXB_CMD QEMU_4RP QEMU_4T3D,
+> +                    tmpfs, tmpfs, tmpfs, tmpfs, tmpfs, tmpfs,
+> +                    tmpfs, tmpfs);
+> +
+> +    qtest_start(cmdline->str);
+> +    qtest_end();
+> +    rmdir(tmpfs);
+> +}
+> #endif /* CONFIG_POSIX */
+>=20
+> int main(int argc, char **argv)
+> {
+> -    g_test_init(&argc, &argv, NULL);
+> +    const char *arch =3D qtest_get_arch();
+>=20
+> -    qtest_add_func("/pci/cxl/basic_hostbridge", cxl_basic_hb);
+> -    qtest_add_func("/pci/cxl/basic_pxb", cxl_basic_pxb);
+> -    qtest_add_func("/pci/cxl/pxb_with_window", cxl_pxb_with_window);
+> -    qtest_add_func("/pci/cxl/pxb_x2_with_window", =
+cxl_2pxb_with_window);
+> -    qtest_add_func("/pci/cxl/rp", cxl_root_port);
+> -    qtest_add_func("/pci/cxl/rp_x2", cxl_2root_port);
+> +    g_test_init(&argc, &argv, NULL);
+> +    if (strcmp(arch, "i386") =3D=3D 0 || strcmp(arch, "x86_64") =3D=3D =
+0) {
+> +        qtest_add_func("/pci/cxl/basic_hostbridge", cxl_basic_hb);
+> +        qtest_add_func("/pci/cxl/basic_pxb", cxl_basic_pxb);
+> +        qtest_add_func("/pci/cxl/pxb_with_window", =
+cxl_pxb_with_window);
+> +        qtest_add_func("/pci/cxl/pxb_x2_with_window", =
+cxl_2pxb_with_window);
+> +        qtest_add_func("/pci/cxl/rp", cxl_root_port);
+> +        qtest_add_func("/pci/cxl/rp_x2", cxl_2root_port);
+> #ifdef CONFIG_POSIX
+> -    qtest_add_func("/pci/cxl/type3_device", cxl_t3d_deprecated);
+> -    qtest_add_func("/pci/cxl/type3_device_pmem", cxl_t3d_persistent);
+> -    qtest_add_func("/pci/cxl/type3_device_vmem", cxl_t3d_volatile);
+> -    qtest_add_func("/pci/cxl/type3_device_vmem_lsa", =
+cxl_t3d_volatile_lsa);
+> -    qtest_add_func("/pci/cxl/rp_x2_type3_x2", cxl_1pxb_2rp_2t3d);
+> -    qtest_add_func("/pci/cxl/pxb_x2_root_port_x4_type3_x4", =
+cxl_2pxb_4rp_4t3d);
+> +        qtest_add_func("/pci/cxl/type3_device", cxl_t3d_deprecated);
+> +        qtest_add_func("/pci/cxl/type3_device_pmem", =
+cxl_t3d_persistent);
+> +        qtest_add_func("/pci/cxl/type3_device_vmem", =
+cxl_t3d_volatile);
+> +        qtest_add_func("/pci/cxl/type3_device_vmem_lsa", =
+cxl_t3d_volatile_lsa);
+> +        qtest_add_func("/pci/cxl/rp_x2_type3_x2", cxl_1pxb_2rp_2t3d);
+> +        qtest_add_func("/pci/cxl/pxb_x2_root_port_x4_type3_x4",
+> +                       cxl_2pxb_4rp_4t3d);
+> #endif
+> +    } else if (strcmp(arch, "aarch64") =3D=3D 0) {
+> +#ifdef CONFIG_POSIX
+> +        qtest_add_func("/pci/cxl/virt/pxb_x2_root_port_x4_type3_x4",
+> +                       cxl_virt_2pxb_4rp_4t3d);
+> +#endif
+> +    }
+> +
+>     return g_test_run();
+> }
+> diff --git a/tests/qtest/meson.build b/tests/qtest/meson.build
+> index e60e92fe9d..f5e7fb060e 100644
+> --- a/tests/qtest/meson.build
+> +++ b/tests/qtest/meson.build
+> @@ -257,6 +257,7 @@ qtests_aarch64 =3D \
+>   (config_all_accel.has_key('CONFIG_TCG') and                          =
+                  \
+>    config_all_devices.has_key('CONFIG_TPM_TIS_I2C') ? =
+['tpm-tis-i2c-test'] : []) + \
+>   (config_all_devices.has_key('CONFIG_ASPEED_SOC') ? qtests_aspeed64 : =
+[]) + \
+> +  qtests_cxl +                                                        =
+                          \
+>   ['arm-cpu-features',
+>    'numa-test',
+>    'boot-serial-test',
+> --=20
+> 2.43.0
+>=20
 
-- to_{ram,pmem}_perf(): scope reduced to just sysfs_emit + is_visible()
-  helpers
+In Ubuntu 22.04 LTS, cxl-test applied on top of today=E2=80=99s QEMU =
+upstream master branch cxl-test fails:
 
-- to_{ram,pmem}_res(): fold into their only users cxl_{ram,pmem}_size()
+$ ./tests/qtest/cxl-test
+# random seed: R02S2a8b02df7b32b79d086ce22f7f8ebeab
+1..1
+# Start of aarch64 tests
+# Start of pci tests
+# Start of cxl tests
+# Start of virt tests
+# starting QEMU: exec qemu-system-aarch64 -qtest =
+unix:/tmp/qtest-568421.sock -qtest-log /dev/null -chardev =
+socket,path=3D/tmp/qtest-568421.qmp,id=3Dchar0 -mon =
+chardev=3Dchar0,mode=3Dcontrol -display none -audio none -machine =
+virt,cxl=3Don -cpu max -device pxb-cxl,id=3Dcxl.0,bus=3Dpcie.0,bus_nr=3D52=
+ -device pxb-cxl,id=3Dcxl.1,bus=3Dpcie.0,bus_nr=3D53 -M =
+cxl-fmw.0.targets.0=3Dcxl.0,cxl-fmw.0.targets.1=3Dcxl.1,cxl-fmw.0.size=3D4=
+G -device cxl-rp,id=3Drp0,bus=3Dcxl.0,chassis=3D0,slot=3D0 -device =
+cxl-rp,id=3Drp1,bus=3Dcxl.0,chassis=3D0,slot=3D1 -device =
+cxl-rp,id=3Drp2,bus=3Dcxl.1,chassis=3D0,slot=3D2 -device =
+cxl-rp,id=3Drp3,bus=3Dcxl.1,chassis=3D0,slot=3D3 -object =
+memory-backend-file,id=3Dcxl-mem0,mem-path=3D/tmp/cxl-test-WdBn4X,size=3D2=
+56M -object =
+memory-backend-file,id=3Dlsa0,mem-path=3D/tmp/cxl-test-WdBn4X,size=3D256M =
+-device cxl-type3,bus=3Drp0,persistent-memdev=3Dcxl-mem0,lsa=3Dlsa0,id=3Dp=
+mem0 -object =
+memory-backend-file,id=3Dcxl-mem1,mem-path=3D/tmp/cxl-test-WdBn4X,size=3D2=
+56M -object =
+memory-backend-file,id=3Dlsa1,mem-path=3D/tmp/cxl-test-WdBn4X,size=3D256M =
+-device cxl-type3,bus=3Drp1,persistent-memdev=3Dcxl-mem1,lsa=3Dlsa1,id=3Dp=
+mem1 -object =
+memory-backend-file,id=3Dcxl-mem2,mem-path=3D/tmp/cxl-test-WdBn4X,size=3D2=
+56M -object =
+memory-backend-file,id=3Dlsa2,mem-path=3D/tmp/cxl-test-WdBn4X,size=3D256M =
+-device cxl-type3,bus=3Drp2,persistent-memdev=3Dcxl-mem2,lsa=3Dlsa2,id=3Dp=
+mem2 -object =
+memory-backend-file,id=3Dcxl-mem3,mem-path=3D/tmp/cxl-test-WdBn4X,size=3D2=
+56M -object =
+memory-backend-file,id=3Dlsa3,mem-path=3D/tmp/cxl-test-WdBn4X,size=3D256M =
+-device cxl-type3,bus=3Drp3,persistent-memdev=3Dcxl-mem3,lsa=3Dlsa3,id=3Dp=
+mem3  -accel qtest
+qemu-system-aarch64: -audio: invalid option
+socket_accept failed: Resource temporarily unavailable
+**
+ERROR:../tests/qtest/libqtest.c:550:qtest_connect: assertion failed: =
+(s->fd >=3D 0 && s->qmp_fd >=3D 0)
+Bail out! ERROR:../tests/qtest/libqtest.c:550:qtest_connect: assertion =
+failed: (s->fd >=3D 0 && s->qmp_fd >=3D 0)
+../tests/qtest/libqtest.c:199: kill_qemu() tried to terminate QEMU =
+process but encountered exit status 1 (expected 0)
+Aborted (core dumped)
 
-- cxl_ram_size(): scope reduced to ram_size_show() (Note,
-  cxl_pmem_size() also used to gate nvdimm registration)
+Do I need set env vars when execute this test?
 
-In short, memdev sysfs ABI already made the promise that 0-sized
-partitions will show for memdevs, but that can be avoided for future
-partitions by using dynamic sysfs group visibility (new relative to when
-the partition ABI first shipped upstream).
-
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Alejandro Lucero <alucerop@amd.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/cxl/core/cdat.c   |   51 ++++++++++++++++++++++-------------------
- drivers/cxl/core/memdev.c |   23 ++++++++++++++++++
- drivers/cxl/cxlmem.h      |   56 ++++++---------------------------------------
- 3 files changed, 57 insertions(+), 73 deletions(-)
-
-diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-index f96ae28022b0..bfba7f5019cf 100644
---- a/drivers/cxl/core/cdat.c
-+++ b/drivers/cxl/core/cdat.c
-@@ -306,9 +306,6 @@ static int match_cxlrd_qos_class(struct device *dev, void *data)
- 
- static void reset_dpa_perf(struct cxl_dpa_perf *dpa_perf)
- {
--	if (!dpa_perf)
--		return;
--
- 	*dpa_perf = (struct cxl_dpa_perf) {
- 		.qos_class = CXL_QOS_CLASS_INVALID,
- 	};
-@@ -317,9 +314,6 @@ static void reset_dpa_perf(struct cxl_dpa_perf *dpa_perf)
- static bool cxl_qos_match(struct cxl_port *root_port,
- 			  struct cxl_dpa_perf *dpa_perf)
- {
--	if (!dpa_perf)
--		return false;
--
- 	if (dpa_perf->qos_class == CXL_QOS_CLASS_INVALID)
- 		return false;
- 
-@@ -351,37 +345,46 @@ static int match_cxlrd_hb(struct device *dev, void *data)
- 	return 0;
- }
- 
--static int cxl_qos_class_verify(struct cxl_memdev *cxlmd)
-+static void cxl_qos_class_verify(struct cxl_memdev *cxlmd)
- {
- 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
--	struct cxl_dpa_perf *ram_perf = to_ram_perf(cxlds),
--			    *pmem_perf = to_pmem_perf(cxlds);
- 	struct cxl_port *root_port;
--	int rc;
- 
- 	struct cxl_root *cxl_root __free(put_cxl_root) =
- 		find_cxl_root(cxlmd->endpoint);
- 
-+	/*
-+	 * No need to reset_dpa_perf() here as find_cxl_root() is guaranteed to
-+	 * succeed when called in the cxl_endpoint_port_probe() path.
-+	 */
- 	if (!cxl_root)
--		return -ENODEV;
-+		return;
- 
- 	root_port = &cxl_root->port;
- 
--	/* Check that the QTG IDs are all sane between end device and root decoders */
--	if (!cxl_qos_match(root_port, ram_perf))
--		reset_dpa_perf(ram_perf);
--	if (!cxl_qos_match(root_port, pmem_perf))
--		reset_dpa_perf(pmem_perf);
--
--	/* Check to make sure that the device's host bridge is under a root decoder */
--	rc = device_for_each_child(&root_port->dev,
--				   cxlmd->endpoint->host_bridge, match_cxlrd_hb);
--	if (!rc) {
--		reset_dpa_perf(ram_perf);
--		reset_dpa_perf(pmem_perf);
-+	/*
-+	 * Save userspace from needing to check if a qos class has any matches
-+	 * by hiding qos class info if the memdev is not mapped by a root
-+	 * decoder, or the partition class does not match any root decoder
-+	 * class.
-+	 */
-+	if (!device_for_each_child(&root_port->dev,
-+				   cxlmd->endpoint->host_bridge,
-+				   match_cxlrd_hb)) {
-+		for (int i = 0; i < cxlds->nr_partitions; i++) {
-+			struct cxl_dpa_perf *perf = &cxlds->part[i].perf;
-+
-+			reset_dpa_perf(perf);
-+		}
-+		return;
- 	}
- 
--	return rc;
-+	for (int i = 0; i < cxlds->nr_partitions; i++) {
-+		struct cxl_dpa_perf *perf = &cxlds->part[i].perf;
-+
-+		if (!cxl_qos_match(root_port, perf))
-+			reset_dpa_perf(perf);
-+	}
- }
- 
- static void discard_dsmas(struct xarray *xa)
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index 615cbd861f66..63c6c681125d 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -75,6 +75,14 @@ static ssize_t label_storage_size_show(struct device *dev,
- }
- static DEVICE_ATTR_RO(label_storage_size);
- 
-+static resource_size_t cxl_ram_size(struct cxl_dev_state *cxlds)
-+{
-+	/* Static RAM is only expected at partition 0. */
-+	if (cxlds->part[0].mode != CXL_PARTMODE_RAM)
-+		return 0;
-+	return resource_size(&cxlds->part[0].res);
-+}
-+
- static ssize_t ram_size_show(struct device *dev, struct device_attribute *attr,
- 			     char *buf)
- {
-@@ -399,6 +407,14 @@ static struct attribute *cxl_memdev_attributes[] = {
- 	NULL,
- };
- 
-+static struct cxl_dpa_perf *to_pmem_perf(struct cxl_dev_state *cxlds)
-+{
-+	for (int i = 0; i < cxlds->nr_partitions; i++)
-+		if (cxlds->part[i].mode == CXL_PARTMODE_PMEM)
-+			return &cxlds->part[i].perf;
-+	return NULL;
-+}
-+
- static ssize_t pmem_qos_class_show(struct device *dev,
- 				   struct device_attribute *attr, char *buf)
- {
-@@ -417,6 +433,13 @@ static struct attribute *cxl_memdev_pmem_attributes[] = {
- 	NULL,
- };
- 
-+static struct cxl_dpa_perf *to_ram_perf(struct cxl_dev_state *cxlds)
-+{
-+	if (cxlds->part[0].mode != CXL_PARTMODE_RAM)
-+		return NULL;
-+	return &cxlds->part[0].perf;
-+}
-+
- static ssize_t ram_qos_class_show(struct device *dev,
- 				  struct device_attribute *attr, char *buf)
- {
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index f218d43dec9f..36a091597066 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -470,58 +470,16 @@ struct cxl_dev_state {
- 	struct cxl_mailbox cxl_mbox;
- };
- 
--
--/* Static RAM is only expected at partition 0. */
--static inline const struct resource *to_ram_res(struct cxl_dev_state *cxlds)
--{
--	if (cxlds->part[0].mode != CXL_PARTMODE_RAM)
--		return NULL;
--	return &cxlds->part[0].res;
--}
--
--/*
-- * Static PMEM may be at partition index 0 when there is no static RAM
-- * capacity.
-- */
--static inline const struct resource *to_pmem_res(struct cxl_dev_state *cxlds)
--{
--	for (int i = 0; i < cxlds->nr_partitions; i++)
--		if (cxlds->part[i].mode == CXL_PARTMODE_PMEM)
--			return &cxlds->part[i].res;
--	return NULL;
--}
--
--static inline struct cxl_dpa_perf *to_ram_perf(struct cxl_dev_state *cxlds)
--{
--	if (cxlds->part[0].mode != CXL_PARTMODE_RAM)
--		return NULL;
--	return &cxlds->part[0].perf;
--}
--
--static inline struct cxl_dpa_perf *to_pmem_perf(struct cxl_dev_state *cxlds)
-+static inline resource_size_t cxl_pmem_size(struct cxl_dev_state *cxlds)
- {
-+	/*
-+	 * Static PMEM may be at partition index 0 when there is no static RAM
-+	 * capacity.
-+	 */
- 	for (int i = 0; i < cxlds->nr_partitions; i++)
- 		if (cxlds->part[i].mode == CXL_PARTMODE_PMEM)
--			return &cxlds->part[i].perf;
--	return NULL;
--}
--
--static inline resource_size_t cxl_ram_size(struct cxl_dev_state *cxlds)
--{
--	const struct resource *res = to_ram_res(cxlds);
--
--	if (!res)
--		return 0;
--	return resource_size(res);
--}
--
--static inline resource_size_t cxl_pmem_size(struct cxl_dev_state *cxlds)
--{
--	const struct resource *res = to_pmem_res(cxlds);
--
--	if (!res)
--		return 0;
--	return resource_size(res);
-+			return resource_size(&cxlds->part[i].res);
-+	return 0;
- }
- 
- static inline struct cxl_dev_state *mbox_to_cxlds(struct cxl_mailbox *cxl_mbox)
-
+Itaru.=
