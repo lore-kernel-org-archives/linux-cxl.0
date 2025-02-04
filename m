@@ -1,56 +1,57 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B6E61946C7
-	for <linux-cxl@vger.kernel.org>; Tue,  4 Feb 2025 04:24:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD6F2063D0
+	for <linux-cxl@vger.kernel.org>; Tue,  4 Feb 2025 04:24:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738643055; cv=none; b=jQPOXKGkcg5GkHOYkrqYAGNsTqwCrwkFu7XepjQXEJsbTKG1neCtuQFHP5S15tRBBLuXMHFHI582VB8FCCODbKpkFZ7Nnaq5dQbXZlTE865K10HxJuSz+YufV9595sV0HlHQvdPYel2qn+cOQmwSGwfcZh4bcSA+qurUM6D/AQE=
+	t=1738643061; cv=none; b=YcO4Ekc4/JZSwNifPlyQv3FbVY8DZUSPOrRJjzSsNjcJR+Ye/RaNuTRRF60A1afXeX4JbanQa2CmfKQCwQCmkhfz3s9J0lsNaWmztwjJnW8KrAF6z7Nc1aTCvbN/Cgs3fuIWfKhk+w/ix5TyiL5YowvALeVnPSYtLsdWnkfhS4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738643055; c=relaxed/simple;
-	bh=fCp2srLKH9W1hpvzwDFRLxehudy2B/Ic6+1opL8Jki8=;
+	s=arc-20240116; t=1738643061; c=relaxed/simple;
+	bh=WFrSCLUZQCkeyYsaw9pnkH7yPqOrrC7GqhnJfqrNHOw=;
 	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KJQ0dqO049YQZekng/jXDdy8oz9A92RX5PMD20zZ25PcTXOdp30H5SoR7bHgjSEvh9+V2Yal6flmSTflsyC5UBS4VHzFG8naWmOIIa1x10F859X9XZ8XNUp/ATgXKefSHOKIyn4cP0cqdgHb+xPlXwex7/Dwti1pvH6UCZoPsK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d1To8Q33; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version:Content-Type; b=BXCP55/+Jdv3dvvtwo10dtgF3DcFFh/n6rQhzM0KbIxwxhQHExFpyTCdAUQq+uaqpnRGhLAGD45dNSWMHRyZQepKgPJfywm4TycjGQTfXYe1t511aPeZrUkoqJSbw34MtyEh40zfXjdrGhbAdlkSvI/LQz1hVRxXFlbgMdGMjgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rv1joRYn; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d1To8Q33"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rv1joRYn"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738643054; x=1770179054;
+  t=1738643060; x=1770179060;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=fCp2srLKH9W1hpvzwDFRLxehudy2B/Ic6+1opL8Jki8=;
-  b=d1To8Q33GxRohYNM/SsdeoP8oYKWfVE5Hwg2r4wtcLvdkbbDE1Z8zPXi
-   VdwjVzgbjSoQ3+RKkuTboCcJzdpirbf2CR5wVin66R/PylEpeMgq3hteT
-   +b9CyeeZCUXTl1W+jek/WZApzJDY9qJqHIw8OYgVUBuSZK4TiRHe5JNIV
-   PSTImLCem1HdSTCpju3I2s6mOxm2WMve8jKyeWmiAUMZ1u77vDUKteauS
-   YyeZcmi6uR7cJhwHc7aVNx+d4euKIHdWTUS1KOKHrohgdfQwL3OySS5qM
-   ez6RLylj42HPk1HPcJeJ9bauXRLnvE9bfiCj06M7vilcGYiwfwCHiaCtR
+  bh=WFrSCLUZQCkeyYsaw9pnkH7yPqOrrC7GqhnJfqrNHOw=;
+  b=Rv1joRYnUPVRykcwSJbSYTRdSr/MEyRiV2VZLvx5cqXCqrQ3NEK9mxMi
+   2WwU0Z7ZLLw8UyUErvFdunPaQNmW0Yjppk1kRjqHfUMtz1jxs2itzlNkY
+   PVnr/uMhatALJr/3AdFwqH32U86qYdPONd/lFI8Si+9QManrI7SGfg4uD
+   f2IZ0OsE1US4JVA50Gxo5R32lQTiQNdzJWpYOtAXRV8UyZSMdjZgiTavs
+   XqIO/Q44BStBmyrpj2LJ0UaCJi+QNcpOIEGSr0lRKlcEaP1KvVZPs3Ou4
+   /W51zfzxE+wu+KOjFabnP3b0p1g2JgEV8Qr0RY9frCs0FQRVwLV3W/GI2
    w==;
-X-CSE-ConnectionGUID: XdZqEquCRYOvGdoJyF+scg==
-X-CSE-MsgGUID: k7G8ONDlSpGFT75hlAT2Mw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="39058645"
+X-CSE-ConnectionGUID: RWG2eit1TTahSnhyc2fsKA==
+X-CSE-MsgGUID: 8cn473z4R0mV3U+MO92PyA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11335"; a="39058661"
 X-IronPort-AV: E=Sophos;i="6.13,257,1732608000"; 
-   d="scan'208";a="39058645"
+   d="scan'208";a="39058661"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 20:24:13 -0800
-X-CSE-ConnectionGUID: nUwPlDaFRi+sPg9B+DCbnA==
-X-CSE-MsgGUID: nouz4iONTai3xjrF2IKv8g==
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 20:24:19 -0800
+X-CSE-ConnectionGUID: iBgjk9y4TVWMGncj9teLsA==
+X-CSE-MsgGUID: IjN6mDOiQv2H+9r78ThfFw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="114520393"
+   d="scan'208";a="114520400"
 Received: from dnelso2-mobl.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.125.109.230])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 20:24:13 -0800
-Subject: [PATCH v3 2/6] cxl: Introduce to_{ram,pmem}_{res,perf}() helpers
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 20:24:19 -0800
+Subject: [PATCH v3 3/6] cxl: Introduce 'struct cxl_dpa_partition' and
+ 'struct cxl_range_info'
 From: Dan Williams <dan.j.williams@intel.com>
 To: linux-cxl@vger.kernel.org
-Cc: Alejandro Lucero <alucerop@amd.com>, Ira Weiny <ira.weiny@intel.com>,
- Dave Jiang <dave.jiang@intel.com>, dave.jiang@intel.com,
+Cc: Ira Weiny <ira.weiny@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+ Alejandro Lucero <alucerop@amd.com>, dave.jiang@intel.com,
  Jonathan.Cameron@huawei.com
-Date: Mon, 03 Feb 2025 20:24:12 -0800
-Message-ID: <173864305238.668823.16553986866633608541.stgit@dwillia2-xfh.jf.intel.com>
+Date: Mon, 03 Feb 2025 20:24:18 -0800
+Message-ID: <173864305827.668823.13978794102080021276.stgit@dwillia2-xfh.jf.intel.com>
 In-Reply-To: <173864304059.668823.3914867296781664103.stgit@dwillia2-xfh.jf.intel.com>
 References: <173864304059.668823.3914867296781664103.stgit@dwillia2-xfh.jf.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -63,606 +64,576 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-In preparation for consolidating all DPA partition information into an
-array of DPA metadata, introduce helpers that hide the layout of the
-current data. I.e. make the eventual replacement of ->ram_res,
-->pmem_res, ->ram_perf, and ->pmem_perf with a new DPA metadata array a
-no-op for code paths that consume that information, and reduce the noise
-of follow-on patches.
+The pending efforts to add CXL Accelerator (type-2) device [1], and
+Dynamic Capacity (DCD) support [2], tripped on the
+no-longer-fit-for-purpose design in the CXL subsystem for tracking
+device-physical-address (DPA) metadata. Trip hazards include:
 
-The end goal is to consolidate all DPA information in 'struct
-cxl_dev_state', but for now the helpers just make it appear that all DPA
-metadata is relative to @cxlds.
+- CXL Memory Devices need to consider a PMEM partition, but Accelerator
+  devices with CXL.mem likely do not in the common case.
 
-As the conversion to generic partition metadata walking is completed,
-these helpers will naturally be eliminated, or reduced in scope.
+- CXL Memory Devices enumerate DPA through Memory Device mailbox
+  commands like Partition Info, Accelerators devices do not.
 
-Cc: Alejandro Lucero <alucerop@amd.com>
+- CXL Memory Devices that support DCD support more than 2 partitions.
+  Some of the driver algorithms are awkward to expand to > 2 partition
+  cases.
+
+- DPA performance data is a general capability that can be shared with
+  accelerators, so tracking it in 'struct cxl_memdev_state' is no longer
+  suitable.
+
+- Hardcoded assumptions around the PMEM partition always being index-1
+  if RAM is zero-sized or PMEM is zero sized.
+
+- 'enum cxl_decoder_mode' is sometimes a partition id and sometimes a
+  memory property, it should be phased in favor of a partition id and
+  the memory property comes from the partition info.
+
+Towards cleaning up those issues and allowing a smoother landing for the
+aforementioned pending efforts, introduce a 'struct cxl_dpa_partition'
+array to 'struct cxl_dev_state', and 'struct cxl_range_info' as a shared
+way for Memory Devices and Accelerators to initialize the DPA information
+in 'struct cxl_dev_state'.
+
+For now, split a new cxl_dpa_setup() from cxl_mem_create_range_info() to
+get the new data structure initialized, and cleanup some qos_class init.
+Follow on patches will go further to use the new data structure to
+cleanup algorithms that are better suited to loop over all possible
+partitions.
+
+cxl_dpa_setup() follows the locking expectations of mutating the device
+DPA map, and is suitable for Accelerator drivers to use. Accelerators
+likely only have one hardcoded 'ram' partition to convey to the
+cxl_core.
+
+Link: http://lore.kernel.org/20241230214445.27602-1-alejandro.lucero-palau@amd.com [1]
+Link: http://lore.kernel.org/20241210-dcd-type2-upstream-v8-0-812852504400@intel.com [2]
 Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Alejandro Lucero <alucerop@amd.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/core/cdat.c      |   71 +++++++++++++++++++++++++++---------------
- drivers/cxl/core/hdm.c       |   26 ++++++++-------
- drivers/cxl/core/mbox.c      |   18 ++++++-----
- drivers/cxl/core/memdev.c    |   42 +++++++++++++------------
- drivers/cxl/core/region.c    |   10 ++++--
- drivers/cxl/cxlmem.h         |   58 ++++++++++++++++++++++++++++++----
- drivers/cxl/mem.c            |    2 +
- tools/testing/cxl/test/cxl.c |   25 ++++++++-------
- 8 files changed, 162 insertions(+), 90 deletions(-)
+ drivers/cxl/core/cdat.c      |   15 ++-----
+ drivers/cxl/core/hdm.c       |   88 +++++++++++++++++++++++++++++++++++++++-
+ drivers/cxl/core/mbox.c      |   68 ++++++++++---------------------
+ drivers/cxl/core/memdev.c    |    2 -
+ drivers/cxl/cxlmem.h         |   93 +++++++++++++++++++++++++++++-------------
+ drivers/cxl/pci.c            |    7 +++
+ tools/testing/cxl/test/cxl.c |   15 ++-----
+ tools/testing/cxl/test/mem.c |    7 +++
+ 8 files changed, 195 insertions(+), 100 deletions(-)
 
 diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-index 8153f8d83a16..797baad483cb 100644
+index 797baad483cb..33cabe4aa026 100644
 --- a/drivers/cxl/core/cdat.c
 +++ b/drivers/cxl/core/cdat.c
-@@ -258,27 +258,36 @@ static void update_perf_entry(struct device *dev, struct dsmas_entry *dent,
- static void cxl_memdev_set_qos_class(struct cxl_dev_state *cxlds,
- 				     struct xarray *dsmas_xa)
- {
--	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
+@@ -261,27 +261,20 @@ static void cxl_memdev_set_qos_class(struct cxl_dev_state *cxlds,
  	struct device *dev = cxlds->dev;
--	struct range pmem_range = {
--		.start = cxlds->pmem_res.start,
--		.end = cxlds->pmem_res.end,
--	};
--	struct range ram_range = {
--		.start = cxlds->ram_res.start,
--		.end = cxlds->ram_res.end,
--	};
  	struct dsmas_entry *dent;
  	unsigned long index;
-+	const struct resource *partition[] = {
-+		to_ram_res(cxlds),
-+		to_pmem_res(cxlds),
-+	};
-+	struct cxl_dpa_perf *perf[] = {
-+		to_ram_perf(cxlds),
-+		to_pmem_perf(cxlds),
-+	};
+-	const struct resource *partition[] = {
+-		to_ram_res(cxlds),
+-		to_pmem_res(cxlds),
+-	};
+-	struct cxl_dpa_perf *perf[] = {
+-		to_ram_perf(cxlds),
+-		to_pmem_perf(cxlds),
+-	};
  
  	xa_for_each(dsmas_xa, index, dent) {
--		if (resource_size(&cxlds->ram_res) &&
--		    range_contains(&ram_range, &dent->dpa_range))
--			update_perf_entry(dev, dent, &mds->ram_perf);
--		else if (resource_size(&cxlds->pmem_res) &&
--			 range_contains(&pmem_range, &dent->dpa_range))
--			update_perf_entry(dev, dent, &mds->pmem_perf);
--		else
-+		bool found = false;
-+
-+		for (int i = 0; i < ARRAY_SIZE(partition); i++) {
-+			const struct resource *res = partition[i];
-+			struct range range = {
-+				.start = res->start,
-+				.end = res->end,
-+			};
-+
-+			if (range_contains(&range, &dent->dpa_range)) {
-+				update_perf_entry(dev, dent, perf[i]);
-+				found = true;
-+				break;
-+			}
-+		}
-+
-+		if (!found)
- 			dev_dbg(dev, "no partition for dsmas dpa: %pra\n",
- 				&dent->dpa_range);
- 	}
-@@ -304,6 +313,9 @@ static int match_cxlrd_qos_class(struct device *dev, void *data)
+ 		bool found = false;
  
- static void reset_dpa_perf(struct cxl_dpa_perf *dpa_perf)
- {
-+	if (!dpa_perf)
-+		return;
-+
- 	*dpa_perf = (struct cxl_dpa_perf) {
- 		.qos_class = CXL_QOS_CLASS_INVALID,
- 	};
-@@ -312,6 +324,9 @@ static void reset_dpa_perf(struct cxl_dpa_perf *dpa_perf)
- static bool cxl_qos_match(struct cxl_port *root_port,
- 			  struct cxl_dpa_perf *dpa_perf)
- {
-+	if (!dpa_perf)
-+		return false;
-+
- 	if (dpa_perf->qos_class == CXL_QOS_CLASS_INVALID)
- 		return false;
+-		for (int i = 0; i < ARRAY_SIZE(partition); i++) {
+-			const struct resource *res = partition[i];
++		for (int i = 0; i < cxlds->nr_partitions; i++) {
++			struct resource *res = &cxlds->part[i].res;
+ 			struct range range = {
+ 				.start = res->start,
+ 				.end = res->end,
+ 			};
  
-@@ -346,7 +361,8 @@ static int match_cxlrd_hb(struct device *dev, void *data)
- static int cxl_qos_class_verify(struct cxl_memdev *cxlmd)
- {
- 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
--	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-+	struct cxl_dpa_perf *ram_perf = to_ram_perf(cxlds),
-+			    *pmem_perf = to_pmem_perf(cxlds);
- 	struct cxl_port *root_port;
- 	int rc;
- 
-@@ -359,17 +375,17 @@ static int cxl_qos_class_verify(struct cxl_memdev *cxlmd)
- 	root_port = &cxl_root->port;
- 
- 	/* Check that the QTG IDs are all sane between end device and root decoders */
--	if (!cxl_qos_match(root_port, &mds->ram_perf))
--		reset_dpa_perf(&mds->ram_perf);
--	if (!cxl_qos_match(root_port, &mds->pmem_perf))
--		reset_dpa_perf(&mds->pmem_perf);
-+	if (!cxl_qos_match(root_port, ram_perf))
-+		reset_dpa_perf(ram_perf);
-+	if (!cxl_qos_match(root_port, pmem_perf))
-+		reset_dpa_perf(pmem_perf);
- 
- 	/* Check to make sure that the device's host bridge is under a root decoder */
- 	rc = device_for_each_child(&root_port->dev,
- 				   cxlmd->endpoint->host_bridge, match_cxlrd_hb);
- 	if (!rc) {
--		reset_dpa_perf(&mds->ram_perf);
--		reset_dpa_perf(&mds->pmem_perf);
-+		reset_dpa_perf(ram_perf);
-+		reset_dpa_perf(pmem_perf);
- 	}
- 
- 	return rc;
-@@ -574,20 +590,23 @@ static struct cxl_dpa_perf *cxled_get_dpa_perf(struct cxl_endpoint_decoder *cxle
- 					       enum cxl_decoder_mode mode)
- {
- 	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
--	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
- 	struct cxl_dpa_perf *perf;
- 
- 	switch (mode) {
- 	case CXL_DECODER_RAM:
--		perf = &mds->ram_perf;
-+		perf = to_ram_perf(cxlds);
- 		break;
- 	case CXL_DECODER_PMEM:
--		perf = &mds->pmem_perf;
-+		perf = to_pmem_perf(cxlds);
- 		break;
- 	default:
- 		return ERR_PTR(-EINVAL);
- 	}
- 
-+	if (!perf)
-+		return ERR_PTR(-EINVAL);
-+
- 	if (!dpa_perf_contains(perf, cxled->dpa_res))
- 		return ERR_PTR(-EINVAL);
- 
+ 			if (range_contains(&range, &dent->dpa_range)) {
+-				update_perf_entry(dev, dent, perf[i]);
++				update_perf_entry(dev, dent,
++						  &cxlds->part[i].perf);
+ 				found = true;
+ 				break;
+ 			}
 diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index b7f6a2d69f78..48b26d3dad26 100644
+index 48b26d3dad26..ea4e792f789f 100644
 --- a/drivers/cxl/core/hdm.c
 +++ b/drivers/cxl/core/hdm.c
 @@ -327,9 +327,9 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
  	cxled->dpa_res = res;
  	cxled->skip = skipped;
  
--	if (resource_contains(&cxlds->pmem_res, res))
-+	if (resource_contains(to_pmem_res(cxlds), res))
+-	if (resource_contains(to_pmem_res(cxlds), res))
++	if (to_pmem_res(cxlds) && resource_contains(to_pmem_res(cxlds), res))
  		cxled->mode = CXL_DECODER_PMEM;
--	else if (resource_contains(&cxlds->ram_res, res))
-+	else if (resource_contains(to_ram_res(cxlds), res))
+-	else if (resource_contains(to_ram_res(cxlds), res))
++	else if (to_ram_res(cxlds) && resource_contains(to_ram_res(cxlds), res))
  		cxled->mode = CXL_DECODER_RAM;
  	else {
  		dev_warn(dev, "decoder%d.%d: %pr does not map any partition\n",
-@@ -442,11 +442,11 @@ int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
- 	 * Only allow modes that are supported by the current partition
- 	 * configuration
- 	 */
--	if (mode == CXL_DECODER_PMEM && !resource_size(&cxlds->pmem_res)) {
-+	if (mode == CXL_DECODER_PMEM && !cxl_pmem_size(cxlds)) {
- 		dev_dbg(dev, "no available pmem capacity\n");
- 		return -ENXIO;
- 	}
--	if (mode == CXL_DECODER_RAM && !resource_size(&cxlds->ram_res)) {
-+	if (mode == CXL_DECODER_RAM && !cxl_ram_size(cxlds)) {
- 		dev_dbg(dev, "no available ram capacity\n");
- 		return -ENXIO;
- 	}
-@@ -464,6 +464,8 @@ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
- 	struct device *dev = &cxled->cxld.dev;
- 	resource_size_t start, avail, skip;
- 	struct resource *p, *last;
-+	const struct resource *ram_res = to_ram_res(cxlds);
-+	const struct resource *pmem_res = to_pmem_res(cxlds);
- 	int rc;
+@@ -342,6 +342,90 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
+ 	return 0;
+ }
  
- 	down_write(&cxl_dpa_rwsem);
-@@ -480,37 +482,37 @@ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
- 		goto out;
- 	}
- 
--	for (p = cxlds->ram_res.child, last = NULL; p; p = p->sibling)
-+	for (p = ram_res->child, last = NULL; p; p = p->sibling)
- 		last = p;
- 	if (last)
- 		free_ram_start = last->end + 1;
- 	else
--		free_ram_start = cxlds->ram_res.start;
-+		free_ram_start = ram_res->start;
- 
--	for (p = cxlds->pmem_res.child, last = NULL; p; p = p->sibling)
-+	for (p = pmem_res->child, last = NULL; p; p = p->sibling)
- 		last = p;
- 	if (last)
- 		free_pmem_start = last->end + 1;
- 	else
--		free_pmem_start = cxlds->pmem_res.start;
-+		free_pmem_start = pmem_res->start;
- 
- 	if (cxled->mode == CXL_DECODER_RAM) {
- 		start = free_ram_start;
--		avail = cxlds->ram_res.end - start + 1;
-+		avail = ram_res->end - start + 1;
- 		skip = 0;
- 	} else if (cxled->mode == CXL_DECODER_PMEM) {
- 		resource_size_t skip_start, skip_end;
- 
- 		start = free_pmem_start;
--		avail = cxlds->pmem_res.end - start + 1;
-+		avail = pmem_res->end - start + 1;
- 		skip_start = free_ram_start;
- 
- 		/*
- 		 * If some pmem is already allocated, then that allocation
- 		 * already handled the skip.
- 		 */
--		if (cxlds->pmem_res.child &&
--		    skip_start == cxlds->pmem_res.child->start)
-+		if (pmem_res->child &&
-+		    skip_start == pmem_res->child->start)
- 			skip_end = skip_start - 1;
- 		else
- 			skip_end = start - 1;
++static int add_dpa_res(struct device *dev, struct resource *parent,
++		       struct resource *res, resource_size_t start,
++		       resource_size_t size, const char *type)
++{
++	int rc;
++
++	*res = (struct resource) {
++		.name = type,
++		.start = start,
++		.end =  start + size - 1,
++		.flags = IORESOURCE_MEM,
++	};
++	if (resource_size(res) == 0) {
++		dev_dbg(dev, "DPA(%s): no capacity\n", res->name);
++		return 0;
++	}
++	rc = request_resource(parent, res);
++	if (rc) {
++		dev_err(dev, "DPA(%s): failed to track %pr (%d)\n", res->name,
++			res, rc);
++		return rc;
++	}
++
++	dev_dbg(dev, "DPA(%s): %pr\n", res->name, res);
++
++	return 0;
++}
++
++static const char *cxl_mode_name(enum cxl_partition_mode mode)
++{
++	switch (mode) {
++	case CXL_PARTMODE_RAM:
++		return "ram";
++	case CXL_PARTMODE_PMEM:
++		return "pmem";
++	default:
++		return "";
++	};
++}
++
++/* if this fails the caller must destroy @cxlds, there is no recovery */
++int cxl_dpa_setup(struct cxl_dev_state *cxlds, const struct cxl_dpa_info *info)
++{
++	struct device *dev = cxlds->dev;
++
++	guard(rwsem_write)(&cxl_dpa_rwsem);
++
++	if (cxlds->nr_partitions)
++		return -EBUSY;
++
++	if (!info->size || !info->nr_partitions) {
++		cxlds->dpa_res = DEFINE_RES_MEM(0, 0);
++		cxlds->nr_partitions = 0;
++		return 0;
++	}
++
++	cxlds->dpa_res = DEFINE_RES_MEM(0, info->size);
++
++	for (int i = 0; i < info->nr_partitions; i++) {
++		const struct cxl_dpa_part_info *part = &info->part[i];
++		int rc;
++
++		cxlds->part[i].perf.qos_class = CXL_QOS_CLASS_INVALID;
++		cxlds->part[i].mode = part->mode;
++
++		/* Require ordered + contiguous partitions */
++		if (i) {
++			const struct cxl_dpa_part_info *prev = &info->part[i - 1];
++
++			if (prev->range.end + 1 != part->range.start)
++				return -EINVAL;
++		}
++		rc = add_dpa_res(dev, &cxlds->dpa_res, &cxlds->part[i].res,
++				 part->range.start, range_len(&part->range),
++				 cxl_mode_name(part->mode));
++		if (rc)
++			return rc;
++		cxlds->nr_partitions++;
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(cxl_dpa_setup);
++
+ int devm_cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
+ 				resource_size_t base, resource_size_t len,
+ 				resource_size_t skipped)
 diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 548564c770c0..3502f1633ad2 100644
+index 3502f1633ad2..62bb3653362f 100644
 --- a/drivers/cxl/core/mbox.c
 +++ b/drivers/cxl/core/mbox.c
-@@ -1270,24 +1270,26 @@ static int add_dpa_res(struct device *dev, struct resource *parent,
- int cxl_mem_create_range_info(struct cxl_memdev_state *mds)
+@@ -1241,57 +1241,39 @@ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd)
+ 	return rc;
+ }
+ 
+-static int add_dpa_res(struct device *dev, struct resource *parent,
+-		       struct resource *res, resource_size_t start,
+-		       resource_size_t size, const char *type)
++static void add_part(struct cxl_dpa_info *info, u64 start, u64 size, enum cxl_partition_mode mode)
+ {
+-	int rc;
++	int i = info->nr_partitions;
+ 
+-	res->name = type;
+-	res->start = start;
+-	res->end = start + size - 1;
+-	res->flags = IORESOURCE_MEM;
+-	if (resource_size(res) == 0) {
+-		dev_dbg(dev, "DPA(%s): no capacity\n", res->name);
+-		return 0;
+-	}
+-	rc = request_resource(parent, res);
+-	if (rc) {
+-		dev_err(dev, "DPA(%s): failed to track %pr (%d)\n", res->name,
+-			res, rc);
+-		return rc;
+-	}
+-
+-	dev_dbg(dev, "DPA(%s): %pr\n", res->name, res);
++	if (size == 0)
++		return;
+ 
+-	return 0;
++	info->part[i].range = (struct range) {
++		.start = start,
++		.end = start + size - 1,
++	};
++	info->part[i].mode = mode;
++	info->nr_partitions++;
+ }
+ 
+-int cxl_mem_create_range_info(struct cxl_memdev_state *mds)
++int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
  {
  	struct cxl_dev_state *cxlds = &mds->cxlds;
-+	struct resource *ram_res = to_ram_res(cxlds);
-+	struct resource *pmem_res = to_pmem_res(cxlds);
+-	struct resource *ram_res = to_ram_res(cxlds);
+-	struct resource *pmem_res = to_pmem_res(cxlds);
  	struct device *dev = cxlds->dev;
  	int rc;
  
  	if (!cxlds->media_ready) {
- 		cxlds->dpa_res = DEFINE_RES_MEM(0, 0);
--		cxlds->ram_res = DEFINE_RES_MEM(0, 0);
--		cxlds->pmem_res = DEFINE_RES_MEM(0, 0);
-+		*ram_res = DEFINE_RES_MEM(0, 0);
-+		*pmem_res = DEFINE_RES_MEM(0, 0);
+-		cxlds->dpa_res = DEFINE_RES_MEM(0, 0);
+-		*ram_res = DEFINE_RES_MEM(0, 0);
+-		*pmem_res = DEFINE_RES_MEM(0, 0);
++		info->size = 0;
  		return 0;
  	}
  
- 	cxlds->dpa_res = DEFINE_RES_MEM(0, mds->total_bytes);
+-	cxlds->dpa_res = DEFINE_RES_MEM(0, mds->total_bytes);
++	info->size = mds->total_bytes;
  
  	if (mds->partition_align_bytes == 0) {
--		rc = add_dpa_res(dev, &cxlds->dpa_res, &cxlds->ram_res, 0,
-+		rc = add_dpa_res(dev, &cxlds->dpa_res, ram_res, 0,
- 				 mds->volatile_only_bytes, "ram");
- 		if (rc)
- 			return rc;
--		return add_dpa_res(dev, &cxlds->dpa_res, &cxlds->pmem_res,
-+		return add_dpa_res(dev, &cxlds->dpa_res, pmem_res,
- 				   mds->volatile_only_bytes,
- 				   mds->persistent_only_bytes, "pmem");
+-		rc = add_dpa_res(dev, &cxlds->dpa_res, ram_res, 0,
+-				 mds->volatile_only_bytes, "ram");
+-		if (rc)
+-			return rc;
+-		return add_dpa_res(dev, &cxlds->dpa_res, pmem_res,
+-				   mds->volatile_only_bytes,
+-				   mds->persistent_only_bytes, "pmem");
++		add_part(info, 0, mds->volatile_only_bytes, CXL_PARTMODE_RAM);
++		add_part(info, mds->volatile_only_bytes,
++			 mds->persistent_only_bytes, CXL_PARTMODE_PMEM);
++		return 0;
  	}
-@@ -1298,11 +1300,11 @@ int cxl_mem_create_range_info(struct cxl_memdev_state *mds)
+ 
+ 	rc = cxl_mem_get_partition_info(mds);
+@@ -1300,15 +1282,13 @@ int cxl_mem_create_range_info(struct cxl_memdev_state *mds)
  		return rc;
  	}
  
--	rc = add_dpa_res(dev, &cxlds->dpa_res, &cxlds->ram_res, 0,
-+	rc = add_dpa_res(dev, &cxlds->dpa_res, ram_res, 0,
- 			 mds->active_volatile_bytes, "ram");
- 	if (rc)
- 		return rc;
--	return add_dpa_res(dev, &cxlds->dpa_res, &cxlds->pmem_res,
-+	return add_dpa_res(dev, &cxlds->dpa_res, pmem_res,
- 			   mds->active_volatile_bytes,
- 			   mds->active_persistent_bytes, "pmem");
+-	rc = add_dpa_res(dev, &cxlds->dpa_res, ram_res, 0,
+-			 mds->active_volatile_bytes, "ram");
+-	if (rc)
+-		return rc;
+-	return add_dpa_res(dev, &cxlds->dpa_res, pmem_res,
+-			   mds->active_volatile_bytes,
+-			   mds->active_persistent_bytes, "pmem");
++	add_part(info, 0, mds->active_volatile_bytes, CXL_PARTMODE_RAM);
++	add_part(info, mds->active_volatile_bytes, mds->active_persistent_bytes,
++		 CXL_PARTMODE_PMEM);
++
++	return 0;
  }
-@@ -1450,8 +1452,8 @@ struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev)
+-EXPORT_SYMBOL_NS_GPL(cxl_mem_create_range_info, "CXL");
++EXPORT_SYMBOL_NS_GPL(cxl_mem_dpa_fetch, "CXL");
+ 
+ int cxl_set_timestamp(struct cxl_memdev_state *mds)
+ {
+@@ -1452,8 +1432,6 @@ struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev)
  	mds->cxlds.reg_map.host = dev;
  	mds->cxlds.reg_map.resource = CXL_RESOURCE_NONE;
  	mds->cxlds.type = CXL_DEVTYPE_CLASSMEM;
--	mds->ram_perf.qos_class = CXL_QOS_CLASS_INVALID;
--	mds->pmem_perf.qos_class = CXL_QOS_CLASS_INVALID;
-+	to_ram_perf(&mds->cxlds)->qos_class = CXL_QOS_CLASS_INVALID;
-+	to_pmem_perf(&mds->cxlds)->qos_class = CXL_QOS_CLASS_INVALID;
+-	to_ram_perf(&mds->cxlds)->qos_class = CXL_QOS_CLASS_INVALID;
+-	to_pmem_perf(&mds->cxlds)->qos_class = CXL_QOS_CLASS_INVALID;
  
  	return mds;
  }
 diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index ae3dfcbe8938..c5f8320ed330 100644
+index c5f8320ed330..be0eb57086e1 100644
 --- a/drivers/cxl/core/memdev.c
 +++ b/drivers/cxl/core/memdev.c
 @@ -80,7 +80,7 @@ static ssize_t ram_size_show(struct device *dev, struct device_attribute *attr,
  {
  	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
--	unsigned long long len = resource_size(&cxlds->ram_res);
-+	unsigned long long len = resource_size(to_ram_res(cxlds));
+-	unsigned long long len = resource_size(to_ram_res(cxlds));
++	unsigned long long len = cxl_ram_size(cxlds);
  
  	return sysfs_emit(buf, "%#llx\n", len);
  }
-@@ -93,7 +93,7 @@ static ssize_t pmem_size_show(struct device *dev, struct device_attribute *attr,
- {
- 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
- 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
--	unsigned long long len = resource_size(&cxlds->pmem_res);
-+	unsigned long long len = cxl_pmem_size(cxlds);
- 
- 	return sysfs_emit(buf, "%#llx\n", len);
- }
-@@ -198,16 +198,20 @@ static int cxl_get_poison_by_memdev(struct cxl_memdev *cxlmd)
- 	int rc = 0;
- 
- 	/* CXL 3.0 Spec 8.2.9.8.4.1 Separate pmem and ram poison requests */
--	if (resource_size(&cxlds->pmem_res)) {
--		offset = cxlds->pmem_res.start;
--		length = resource_size(&cxlds->pmem_res);
-+	if (cxl_pmem_size(cxlds)) {
-+		const struct resource *res = to_pmem_res(cxlds);
-+
-+		offset = res->start;
-+		length = resource_size(res);
- 		rc = cxl_mem_get_poison(cxlmd, offset, length, NULL);
- 		if (rc)
- 			return rc;
- 	}
--	if (resource_size(&cxlds->ram_res)) {
--		offset = cxlds->ram_res.start;
--		length = resource_size(&cxlds->ram_res);
-+	if (cxl_ram_size(cxlds)) {
-+		const struct resource *res = to_ram_res(cxlds);
-+
-+		offset = res->start;
-+		length = resource_size(res);
- 		rc = cxl_mem_get_poison(cxlmd, offset, length, NULL);
- 		/*
- 		 * Invalid Physical Address is not an error for
-@@ -409,9 +413,8 @@ static ssize_t pmem_qos_class_show(struct device *dev,
- {
- 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
- 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
--	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
- 
--	return sysfs_emit(buf, "%d\n", mds->pmem_perf.qos_class);
-+	return sysfs_emit(buf, "%d\n", to_pmem_perf(cxlds)->qos_class);
- }
- 
- static struct device_attribute dev_attr_pmem_qos_class =
-@@ -428,9 +431,8 @@ static ssize_t ram_qos_class_show(struct device *dev,
- {
- 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
- 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
--	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
- 
--	return sysfs_emit(buf, "%d\n", mds->ram_perf.qos_class);
-+	return sysfs_emit(buf, "%d\n", to_ram_perf(cxlds)->qos_class);
- }
- 
- static struct device_attribute dev_attr_ram_qos_class =
-@@ -466,11 +468,11 @@ static umode_t cxl_ram_visible(struct kobject *kobj, struct attribute *a, int n)
- {
- 	struct device *dev = kobj_to_dev(kobj);
- 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
--	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-+	struct cxl_dpa_perf *perf = to_ram_perf(cxlmd->cxlds);
- 
--	if (a == &dev_attr_ram_qos_class.attr)
--		if (mds->ram_perf.qos_class == CXL_QOS_CLASS_INVALID)
--			return 0;
-+	if (a == &dev_attr_ram_qos_class.attr &&
-+	    (!perf || perf->qos_class == CXL_QOS_CLASS_INVALID))
-+		return 0;
- 
- 	return a->mode;
- }
-@@ -485,11 +487,11 @@ static umode_t cxl_pmem_visible(struct kobject *kobj, struct attribute *a, int n
- {
- 	struct device *dev = kobj_to_dev(kobj);
- 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
--	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-+	struct cxl_dpa_perf *perf = to_pmem_perf(cxlmd->cxlds);
- 
--	if (a == &dev_attr_pmem_qos_class.attr)
--		if (mds->pmem_perf.qos_class == CXL_QOS_CLASS_INVALID)
--			return 0;
-+	if (a == &dev_attr_pmem_qos_class.attr &&
-+	    (!perf || perf->qos_class == CXL_QOS_CLASS_INVALID))
-+		return 0;
- 
- 	return a->mode;
- }
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 34aa3d45fafa..6706a1b79549 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -2701,7 +2701,7 @@ static int cxl_get_poison_unmapped(struct cxl_memdev *cxlmd,
- 
- 	if (ctx->mode == CXL_DECODER_RAM) {
- 		offset = ctx->offset;
--		length = resource_size(&cxlds->ram_res) - offset;
-+		length = cxl_ram_size(cxlds) - offset;
- 		rc = cxl_mem_get_poison(cxlmd, offset, length, NULL);
- 		if (rc == -EFAULT)
- 			rc = 0;
-@@ -2713,9 +2713,11 @@ static int cxl_get_poison_unmapped(struct cxl_memdev *cxlmd,
- 		length = resource_size(&cxlds->dpa_res) - offset;
- 		if (!length)
- 			return 0;
--	} else if (resource_size(&cxlds->pmem_res)) {
--		offset = cxlds->pmem_res.start;
--		length = resource_size(&cxlds->pmem_res);
-+	} else if (cxl_pmem_size(cxlds)) {
-+		const struct resource *res = to_pmem_res(cxlds);
-+
-+		offset = res->start;
-+		length = resource_size(res);
- 	} else {
- 		return 0;
- 	}
 diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 2a25d1957ddb..78e92e24d7b5 100644
+index 78e92e24d7b5..e33b2d5efed9 100644
 --- a/drivers/cxl/cxlmem.h
 +++ b/drivers/cxl/cxlmem.h
-@@ -423,8 +423,8 @@ struct cxl_dpa_perf {
+@@ -97,6 +97,24 @@ int devm_cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
+ 			 resource_size_t base, resource_size_t len,
+ 			 resource_size_t skipped);
+ 
++enum cxl_partition_mode {
++	CXL_PARTMODE_RAM,
++	CXL_PARTMODE_PMEM,
++};
++
++#define CXL_NR_PARTITIONS_MAX 2
++
++struct cxl_dpa_info {
++	u64 size;
++	struct cxl_dpa_part_info {
++		struct range range;
++		enum cxl_partition_mode mode;
++	} part[CXL_NR_PARTITIONS_MAX];
++	int nr_partitions;
++};
++
++int cxl_dpa_setup(struct cxl_dev_state *cxlds, const struct cxl_dpa_info *info);
++
+ static inline struct cxl_ep *cxl_ep_load(struct cxl_port *port,
+ 					 struct cxl_memdev *cxlmd)
+ {
+@@ -408,6 +426,18 @@ struct cxl_dpa_perf {
+ 	int qos_class;
+ };
+ 
++/**
++ * struct cxl_dpa_partition - DPA partition descriptor
++ * @res: shortcut to the partition in the DPA resource tree (cxlds->dpa_res)
++ * @perf: performance attributes of the partition from CDAT
++ * @mode: operation mode for the DPA capacity, e.g. ram, pmem, dynamic...
++ */
++struct cxl_dpa_partition {
++	struct resource res;
++	struct cxl_dpa_perf perf;
++	enum cxl_partition_mode mode;
++};
++
+ /**
+  * struct cxl_dev_state - The driver device state
+  *
+@@ -423,8 +453,8 @@ struct cxl_dpa_perf {
   * @rcd: operating in RCD mode (CXL 3.0 9.11.8 CXL Devices Attached to an RCH)
   * @media_ready: Indicate whether the device media is usable
   * @dpa_res: Overall DPA resource tree for the device
-- * @pmem_res: Active Persistent memory capacity configuration
-- * @ram_res: Active Volatile memory capacity configuration
-+ * @_pmem_res: Active Persistent memory capacity configuration
-+ * @_ram_res: Active Volatile memory capacity configuration
+- * @_pmem_res: Active Persistent memory capacity configuration
+- * @_ram_res: Active Volatile memory capacity configuration
++ * @part: DPA partition array
++ * @nr_partitions: Number of DPA partitions
   * @serial: PCIe Device Serial Number
   * @type: Generic Memory Class device or Vendor Specific Memory device
   * @cxl_mbox: CXL mailbox context
-@@ -438,13 +438,41 @@ struct cxl_dev_state {
+@@ -438,21 +468,47 @@ struct cxl_dev_state {
  	bool rcd;
  	bool media_ready;
  	struct resource dpa_res;
--	struct resource pmem_res;
--	struct resource ram_res;
-+	struct resource _pmem_res;
-+	struct resource _ram_res;
+-	struct resource _pmem_res;
+-	struct resource _ram_res;
++	struct cxl_dpa_partition part[CXL_NR_PARTITIONS_MAX];
++	unsigned int nr_partitions;
  	u64 serial;
  	enum cxl_devtype type;
  	struct cxl_mailbox cxl_mbox;
  };
  
-+static inline struct resource *to_ram_res(struct cxl_dev_state *cxlds)
+-static inline struct resource *to_ram_res(struct cxl_dev_state *cxlds)
++
++/* Static RAM is only expected at partition 0. */
++static inline const struct resource *to_ram_res(struct cxl_dev_state *cxlds)
 +{
-+	return &cxlds->_ram_res;
++	if (cxlds->part[0].mode != CXL_PARTMODE_RAM)
++		return NULL;
++	return &cxlds->part[0].res;
 +}
 +
-+static inline struct resource *to_pmem_res(struct cxl_dev_state *cxlds)
++/*
++ * Static PMEM may be at partition index 0 when there is no static RAM
++ * capacity.
++ */
++static inline const struct resource *to_pmem_res(struct cxl_dev_state *cxlds)
 +{
-+	return &cxlds->_pmem_res;
++	for (int i = 0; i < cxlds->nr_partitions; i++)
++		if (cxlds->part[i].mode == CXL_PARTMODE_PMEM)
++			return &cxlds->part[i].res;
++	return NULL;
 +}
 +
-+static inline resource_size_t cxl_ram_size(struct cxl_dev_state *cxlds)
-+{
-+	const struct resource *res = to_ram_res(cxlds);
-+
-+	if (!res)
-+		return 0;
-+	return resource_size(res);
-+}
-+
-+static inline resource_size_t cxl_pmem_size(struct cxl_dev_state *cxlds)
-+{
-+	const struct resource *res = to_pmem_res(cxlds);
-+
-+	if (!res)
-+		return 0;
-+	return resource_size(res);
-+}
-+
- static inline struct cxl_dev_state *mbox_to_cxlds(struct cxl_mailbox *cxl_mbox)
++static inline struct cxl_dpa_perf *to_ram_perf(struct cxl_dev_state *cxlds)
  {
- 	return dev_get_drvdata(cxl_mbox->host);
-@@ -471,8 +499,8 @@ static inline struct cxl_dev_state *mbox_to_cxlds(struct cxl_mailbox *cxl_mbox)
+-	return &cxlds->_ram_res;
++	if (cxlds->part[0].mode != CXL_PARTMODE_RAM)
++		return NULL;
++	return &cxlds->part[0].perf;
+ }
+ 
+-static inline struct resource *to_pmem_res(struct cxl_dev_state *cxlds)
++static inline struct cxl_dpa_perf *to_pmem_perf(struct cxl_dev_state *cxlds)
+ {
+-	return &cxlds->_pmem_res;
++	for (int i = 0; i < cxlds->nr_partitions; i++)
++		if (cxlds->part[i].mode == CXL_PARTMODE_PMEM)
++			return &cxlds->part[i].perf;
++	return NULL;
+ }
+ 
+ static inline resource_size_t cxl_ram_size(struct cxl_dev_state *cxlds)
+@@ -499,8 +555,6 @@ static inline struct cxl_dev_state *mbox_to_cxlds(struct cxl_mailbox *cxl_mbox)
   * @active_persistent_bytes: sum of hard + soft persistent
   * @next_volatile_bytes: volatile capacity change pending device reset
   * @next_persistent_bytes: persistent capacity change pending device reset
-- * @ram_perf: performance data entry matched to RAM partition
-- * @pmem_perf: performance data entry matched to PMEM partition
-+ * @_ram_perf: performance data entry matched to RAM partition
-+ * @_pmem_perf: performance data entry matched to PMEM partition
+- * @_ram_perf: performance data entry matched to RAM partition
+- * @_pmem_perf: performance data entry matched to PMEM partition
   * @event: event log driver state
   * @poison: poison driver state info
   * @security: security driver state info
-@@ -496,8 +524,8 @@ struct cxl_memdev_state {
+@@ -524,29 +578,12 @@ struct cxl_memdev_state {
  	u64 next_volatile_bytes;
  	u64 next_persistent_bytes;
  
--	struct cxl_dpa_perf ram_perf;
--	struct cxl_dpa_perf pmem_perf;
-+	struct cxl_dpa_perf _ram_perf;
-+	struct cxl_dpa_perf _pmem_perf;
- 
+-	struct cxl_dpa_perf _ram_perf;
+-	struct cxl_dpa_perf _pmem_perf;
+-
  	struct cxl_event_state event;
  	struct cxl_poison_state poison;
-@@ -505,6 +533,20 @@ struct cxl_memdev_state {
+ 	struct cxl_security_state security;
  	struct cxl_fw_state fw;
  };
  
-+static inline struct cxl_dpa_perf *to_ram_perf(struct cxl_dev_state *cxlds)
-+{
-+	struct cxl_memdev_state *mds = container_of(cxlds, typeof(*mds), cxlds);
-+
-+	return &mds->_ram_perf;
-+}
-+
-+static inline struct cxl_dpa_perf *to_pmem_perf(struct cxl_dev_state *cxlds)
-+{
-+	struct cxl_memdev_state *mds = container_of(cxlds, typeof(*mds), cxlds);
-+
-+	return &mds->_pmem_perf;
-+}
-+
+-static inline struct cxl_dpa_perf *to_ram_perf(struct cxl_dev_state *cxlds)
+-{
+-	struct cxl_memdev_state *mds = container_of(cxlds, typeof(*mds), cxlds);
+-
+-	return &mds->_ram_perf;
+-}
+-
+-static inline struct cxl_dpa_perf *to_pmem_perf(struct cxl_dev_state *cxlds)
+-{
+-	struct cxl_memdev_state *mds = container_of(cxlds, typeof(*mds), cxlds);
+-
+-	return &mds->_pmem_perf;
+-}
+-
  static inline struct cxl_memdev_state *
  to_cxl_memdev_state(struct cxl_dev_state *cxlds)
  {
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index 2f03a4d5606e..9675243bd05b 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -152,7 +152,7 @@ static int cxl_mem_probe(struct device *dev)
- 		return -ENXIO;
- 	}
+@@ -860,7 +897,7 @@ int cxl_internal_send_cmd(struct cxl_mailbox *cxl_mbox,
+ int cxl_dev_state_identify(struct cxl_memdev_state *mds);
+ int cxl_await_media_ready(struct cxl_dev_state *cxlds);
+ int cxl_enumerate_cmds(struct cxl_memdev_state *mds);
+-int cxl_mem_create_range_info(struct cxl_memdev_state *mds);
++int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info);
+ struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev);
+ void set_exclusive_cxl_commands(struct cxl_memdev_state *mds,
+ 				unsigned long *cmds);
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index a96e54c6259e..b2c943a4de0a 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -903,6 +903,7 @@ __ATTRIBUTE_GROUPS(cxl_rcd);
+ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ {
+ 	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
++	struct cxl_dpa_info range_info = { 0 };
+ 	struct cxl_memdev_state *mds;
+ 	struct cxl_dev_state *cxlds;
+ 	struct cxl_register_map map;
+@@ -993,7 +994,11 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	if (rc)
+ 		return rc;
  
--	if (resource_size(&cxlds->pmem_res) && IS_ENABLED(CONFIG_CXL_PMEM)) {
-+	if (cxl_pmem_size(cxlds) && IS_ENABLED(CONFIG_CXL_PMEM)) {
- 		rc = devm_cxl_add_nvdimm(parent_port, cxlmd);
- 		if (rc) {
- 			if (rc == -ENODEV)
+-	rc = cxl_mem_create_range_info(mds);
++	rc = cxl_mem_dpa_fetch(mds, &range_info);
++	if (rc)
++		return rc;
++
++	rc = cxl_dpa_setup(cxlds, &range_info);
+ 	if (rc)
+ 		return rc;
+ 
 diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index cc8948f49117..9654513bbccf 100644
+index 9654513bbccf..083a66a52731 100644
 --- a/tools/testing/cxl/test/cxl.c
 +++ b/tools/testing/cxl/test/cxl.c
-@@ -1000,25 +1000,28 @@ static void mock_cxl_endpoint_parse_cdat(struct cxl_port *port)
- 		find_cxl_root(port);
+@@ -1001,26 +1001,19 @@ static void mock_cxl_endpoint_parse_cdat(struct cxl_port *port)
  	struct cxl_memdev *cxlmd = to_cxl_memdev(port->uport_dev);
  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
--	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
  	struct access_coordinate ep_c[ACCESS_COORDINATE_MAX];
--	struct range pmem_range = {
--		.start = cxlds->pmem_res.start,
--		.end = cxlds->pmem_res.end,
-+	const struct resource *partition[] = {
-+		to_ram_res(cxlds),
-+		to_pmem_res(cxlds),
- 	};
--	struct range ram_range = {
--		.start = cxlds->ram_res.start,
--		.end = cxlds->ram_res.end,
-+	struct cxl_dpa_perf *perf[] = {
-+		to_ram_perf(cxlds),
-+		to_pmem_perf(cxlds),
- 	};
+-	const struct resource *partition[] = {
+-		to_ram_res(cxlds),
+-		to_pmem_res(cxlds),
+-	};
+-	struct cxl_dpa_perf *perf[] = {
+-		to_ram_perf(cxlds),
+-		to_pmem_perf(cxlds),
+-	};
  
  	if (!cxl_root)
  		return;
  
--	if (range_len(&ram_range))
--		dpa_perf_setup(port, &ram_range, &mds->ram_perf);
-+	for (int i = 0; i < ARRAY_SIZE(partition); i++) {
-+		const struct resource *res = partition[i];
-+		struct range range = {
-+			.start = res->start,
-+			.end = res->end,
-+		};
+-	for (int i = 0; i < ARRAY_SIZE(partition); i++) {
+-		const struct resource *res = partition[i];
++	for (int i = 0; i < cxlds->nr_partitions; i++) {
++		struct resource *res = &cxlds->part[i].res;
++		struct cxl_dpa_perf *perf = &cxlds->part[i].perf;
+ 		struct range range = {
+ 			.start = res->start,
+ 			.end = res->end,
+ 		};
  
--	if (range_len(&pmem_range))
--		dpa_perf_setup(port, &pmem_range, &mds->pmem_perf);
-+		dpa_perf_setup(port, &range, perf[i]);
-+	}
+-		dpa_perf_setup(port, &range, perf[i]);
++		dpa_perf_setup(port, &range, perf);
+ 	}
  
  	cxl_memdev_update_perf(cxlmd);
+diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+index 8d731bd63988..495199238335 100644
+--- a/tools/testing/cxl/test/mem.c
++++ b/tools/testing/cxl/test/mem.c
+@@ -1494,6 +1494,7 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
+ 	struct cxl_dev_state *cxlds;
+ 	struct cxl_mockmem_data *mdata;
+ 	struct cxl_mailbox *cxl_mbox;
++	struct cxl_dpa_info range_info = { 0 };
+ 	int rc;
+ 
+ 	mdata = devm_kzalloc(dev, sizeof(*mdata), GFP_KERNEL);
+@@ -1554,7 +1555,11 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
+ 	if (rc)
+ 		return rc;
+ 
+-	rc = cxl_mem_create_range_info(mds);
++	rc = cxl_mem_dpa_fetch(mds, &range_info);
++	if (rc)
++		return rc;
++
++	rc = cxl_dpa_setup(cxlds, &range_info);
+ 	if (rc)
+ 		return rc;
  
 
