@@ -1,282 +1,334 @@
-Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CF9A20B80D
-	for <linux-cxl@vger.kernel.org>; Tue,  4 Feb 2025 11:08:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1944A2063F3
+	for <linux-cxl@vger.kernel.org>; Tue,  4 Feb 2025 11:15:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738667303; cv=none; b=cYcvYFem9K0jJk08bS4/quZWqDrDkqCjRxxrJZxSuUl0ZOPeHNj2EHLluHeDmYNrsH4HPOEtNok3ScRyGY4qXnbg8/aJcGl5krsJ+suceKM/W9mhcxgGEqvW0faVddIR1U/QW6ro5yVWAD0tB9NAdGNEUj/a3levnRwRK7L4FiI=
+	t=1738667750; cv=none; b=N4XPjmpe7A1u7nEf3gVzjFDai+ykesTukD8dwQUItKaJDnrdD0RN6Xv/SjuMQOgPZEaoUvhs2lgs3r5QgB8MIN3PZ8HmPa4U16VzJnfX6jDFVQx2Tq4ZijEUTT4MKsC9gHPV/KjA1bqIsV+J1+E/j09VqJLZOABd4ujiBuo0XdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738667303; c=relaxed/simple;
-	bh=HbGSzhd3f6t9yLh1zspPmRUS6E/WwAp4SJuAEXjgRM8=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=LiS2Y2jNvlJyIGPPJ3E8hs7nbx7sr+L246SNsI9OkThlKOGYmroDkAAlEqdtiEJyuWshW3xTuAwl1QniTvxpafBTerGdSt5bwmHsrgiQTOwgCPJT2PtZECLfIfKLs1xZxFqmYnCjhFMM8xQr33NqKNnAMPXkUfXlW1DWAvPulGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=CLDth2BZ; arc=none smtp.client-ip=95.215.58.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="CLDth2BZ"
-Content-Type: text/plain;
-	charset=utf-8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738667296;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fu/GVtqvZ9rYS8IsVZvLcxgstzPj1tjXtyzGOWk1exg=;
-	b=CLDth2BZS0h6g/qpEiX4CtKzqw95LE4bBoPH0lZK9W6EmjX9qB8efnd0nv29EFlkAkaiMI
-	qPY9n8oLjYthVvRGJ0hUN1rFSTB1Y1UtWS1GCMsA1Yk0IWIad6d3YJpZxQUNfEUu9Nrbmq
-	jZVPNxJH+6vFhQ+nBTXxyj5j8jZP4Z4=
+	s=arc-20240116; t=1738667750; c=relaxed/simple;
+	bh=YhFXqUhtcuJP2TxwJrxYY1ZUI1nI99wxEUasmBdBhAs=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lHh0goOjmBbr8fLCtlsR0tqDZF7HUkUVyMw4WupvMBamsdJostMOgObob8v+Pou8Q8/qu5P9h6FBUbE6oyFj1aFrMbL2cXYNj0wTCEhidsk9cHwbE7XeFVv0YGFlwfDJK80rt6aah+c0nRkH5L4OQ2PCKqUAFNkVvw3ZGd51sjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YnLP70WTfz6HJdB;
+	Tue,  4 Feb 2025 19:14:51 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 735F41400CA;
+	Tue,  4 Feb 2025 19:15:43 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 4 Feb
+ 2025 12:15:42 +0100
+Date: Tue, 4 Feb 2025 11:15:41 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Sweta Kumari <s5.kumari@samsung.com>
+CC: <qemu-devel@nongnu.org>, <gost.dev@samsung.com>,
+	<linux-cxl@vger.kernel.org>, <nifan.cxl@gmail.com>, <dave@stgolabs.net>,
+	<vishak.g@samsung.com>, <krish.reddy@samsung.com>,
+	<a.manzanares@samsung.com>, <alok.rathore@samsung.com>
+Subject: Re: [PATCH 1/1] Added support for get/set alert configuration
+ commands
+Message-ID: <20250204111541.00002ef0@huawei.com>
+In-Reply-To: <20250203114445.64088-2-s5.kumari@samsung.com>
+References: <20250203114445.64088-1-s5.kumari@samsung.com>
+	<CGME20250203114459epcas5p33839b8e8150427947f9b5419ce9cd611@epcas5p3.samsung.com>
+	<20250203114445.64088-2-s5.kumari@samsung.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
-Subject: Re: [RFC PATCH v12 qemu 2/2] qtest/cxl: Add aarch64 virt test for CXL
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Itaru Kitayama <itaru.kitayama@linux.dev>
-In-Reply-To: <20250204092944.00004d3c@huawei.com>
-Date: Tue, 4 Feb 2025 20:07:53 +0900
-Cc: qemu-devel@nongnu.org,
- Fan Ni <fan.ni@samsung.com>,
- Peter Maydell <peter.maydell@linaro.org>,
- mst@redhat.com,
- linux-cxl@vger.kernel.org,
- linuxarm@huawei.com,
- qemu-arm@nongnu.org,
- Yuquan Wang <wangyuquan1236@phytium.com.cn>,
- =?utf-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@linaro.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <769E9340-B09C-4432-BAC8-D178CE2C7EE3@linux.dev>
-References: <20250203173040.145763-1-Jonathan.Cameron@huawei.com>
- <20250203173040.145763-3-Jonathan.Cameron@huawei.com>
- <4AEA1355-C6E8-4A9D-8652-607FEBD7EE03@linux.dev>
- <20250204092944.00004d3c@huawei.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+ frapeml500008.china.huawei.com (7.182.85.71)
+
+On Mon,  3 Feb 2025 17:14:45 +0530
+Sweta Kumari <s5.kumari@samsung.com> wrote:
+
+> Signed-off-by: Sweta Kumari <s5.kumari@samsung.com>
+> Reviewed-by: Alok Rathore <alok.rathore@samsung.com>
+> Reviewed-by: Krishna Kanth Reddy <krish.reddy@samsung.com>
+Hi Sweta,
+
+Thanks for the patch. Great to see someone working on these
+features.   As in previous thread, in general RB tags that are
+given before public posting aren't really very useful.  Reviews
+can mean very different things in different companies / groups within
+them.  Much prefer to see a final round of review done on the public
+mailing list if possible.
+
+Various comments inline.
+
+Jonathan
+
+> ---
+>  hw/cxl/cxl-mailbox-utils.c  | 91 +++++++++++++++++++++++++++++++++++++
+>  hw/mem/cxl_type3.c          | 20 ++++++++
+>  include/hw/cxl/cxl_device.h | 24 ++++++++++
+>  3 files changed, 135 insertions(+)
+> 
+> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> index 9c7ea5bc35..7a054c059d 100644
+> --- a/hw/cxl/cxl-mailbox-utils.c
+> +++ b/hw/cxl/cxl-mailbox-utils.c
+> @@ -86,6 +86,9 @@ enum {
+>          #define GET_PARTITION_INFO     0x0
+>          #define GET_LSA       0x2
+>          #define SET_LSA       0x3
+> +    HEALTH_INFO_ALERTS = 0x42,
+> +        #define GET_ALERT_CONFIGURATION 0x1
+> +        #define SET_ALERT_CONFIGURATION 0x2
+>      SANITIZE    = 0x44,
+>          #define OVERWRITE     0x0
+>          #define SECURE_ERASE  0x1
+> @@ -1625,6 +1628,90 @@ static CXLRetCode cmd_ccls_set_lsa(const struct cxl_cmd *cmd,
+>      return CXL_MBOX_SUCCESS;
+>  }
+>  
+> +/* CXL r3.1 Section 8.2.9.9.3.2 Get Alert Configuration (Opcode 4201h) */
+
+For new commands, preference is for spec references being to
+the latest spec as that's the one that is downloadable via a click through
+on the website.
+
+> +static CXLRetCode cmd_get_alert_config(const struct cxl_cmd *cmd,
+> +                                   uint8_t *payload_in,
+
+Align immediate after ( unless we have very long lines.
+
+> +                                   size_t len_in,
+> +                                   uint8_t *payload_out,
+> +                                   size_t *len_out,
+> +                                   CXLCCI *cci)
+> +{
+> +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
+> +    CXLAlertConfig *out = (void *)payload_out;
+
+blank line here.
+
+> +    memcpy(out, &ct3d->alert_config, sizeof(ct3d->alert_config));
+> +    *len_out = sizeof(ct3d->alert_config);
+
+blank line here.
+
+> +    return CXL_MBOX_SUCCESS;
+> +
+> +}
+> +
+> +/* CXL r3.1 Section 8.2.9.9.3.3 Set Alert Configuration (Opcode 4202h) */
+> +static CXLRetCode cmd_set_alert_config(const struct cxl_cmd *cmd,
+> +                                   uint8_t *payload_in,
+> +                                   size_t len_in,
+> +                                   uint8_t *payload_out,
+> +                                   size_t *len_out,
+> +                                   CXLCCI *cci)
+> +{
+> +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
+> +    CXLAlertConfig *alert_config = &ct3d->alert_config;
+> +    struct {
+> +        CXLValidEnableAlerts valid_alert_actions;
+> +        CXLValidEnableAlerts enable_alert_actions;
+
+uint8_t for both of these + defines.
+
+> +        uint8_t lupwt;
+
+Longer names here as below.
+
+> +        uint8_t reserve;
+> +        uint16_t dotpwt;
+> +        uint16_t dutpwt;
+> +        uint16_t cvmepwt;
+> +        uint16_t cpmepwt;
+> +    } QEMU_PACKED *in = (void *)payload_in;
+> +
+> +    if (in->valid_alert_actions.lupwt) {
+> +        if ((in->lupwt > 100) || (in->lupwt >= alert_config->lucat)) {
+
+Add a spec reference for these constraints. Looks like they
+are in the get alert configuration output table.
+
+> +            return CXL_MBOX_INVALID_INPUT;
+> +        }
+> +
+> +        if (in->enable_alert_actions.lupwt) {
+> +            alert_config->lupwt = in->lupwt;
+
+That's interesting.  Do we only write it when enabled. I would have
+thought valid was enough.  Spec reference in a comment would help
+for this first case at least. No need to replicate in the
+others if it is a common thing.
 
 
+> +        }
+> +        alert_config->enable_alerts.lupwt = in->enable_alert_actions.lupwt;
+> +    }
+> +
+> +    if (in->valid_alert_actions.dotpwt) {
+> +        if (in->dotpwt >= alert_config->dotcat) {
+> +            return CXL_MBOX_INVALID_INPUT;
+> +        }
+> +        if (in->enable_alert_actions.dotpwt) {
+> +            alert_config->dotpwt = in->dotpwt;
+> +        }
+> +        alert_config->enable_alerts.dotpwt = in->enable_alert_actions.dotpwt;
+> +    }
+> +
+> +    if (in->valid_alert_actions.dutpwt) {
+> +        if (in->dutpwt < alert_config->dutcat) {
+> +            return CXL_MBOX_INVALID_INPUT;
+> +        }
+> +        if (in->enable_alert_actions.dutpwt) {
+> +            alert_config->dutpwt = in->dutpwt;
+> +        }
+> +        alert_config->enable_alerts.dutpwt = in->enable_alert_actions.dutpwt;
+> +    }
+> +
+> +    if (in->valid_alert_actions.cvmepwt) {
+> +        if (in->enable_alert_actions.cvmepwt) {
+> +            alert_config->cvmepwt = in->cvmepwt;
+> +        }
+> +        alert_config->enable_alerts.cvmepwt = in->valid_alert_actions.cvmepwt;
+> +    }
+> +
+> +    if (in->valid_alert_actions.cpmepwt) {
+> +        if (in->enable_alert_actions.cpmepwt) {
+> +            alert_config->cpmepwt = in->cpmepwt;
+> +        }
+> +        alert_config->enable_alerts.cpmepwt = in->valid_alert_actions.cpmepwt;
+> +    }
+> +    return CXL_MBOX_SUCCESS;
+> +}
+> +
+>  /* Perform the actual device zeroing */
+>  static void __do_sanitization(CXLType3Dev *ct3d)
+>  {
+> @@ -2859,6 +2946,10 @@ static const struct cxl_cmd cxl_cmd_set[256][256] = {
+>      [CCLS][GET_LSA] = { "CCLS_GET_LSA", cmd_ccls_get_lsa, 8, 0 },
+>      [CCLS][SET_LSA] = { "CCLS_SET_LSA", cmd_ccls_set_lsa,
+>          ~0, CXL_MBOX_IMMEDIATE_CONFIG_CHANGE | CXL_MBOX_IMMEDIATE_DATA_CHANGE },
+> +    [HEALTH_INFO_ALERTS][GET_ALERT_CONFIGURATION] = {"GET_ALERT_CONFIGURATION",
+> +        cmd_get_alert_config, 0, 0 },
+> +    [HEALTH_INFO_ALERTS][SET_ALERT_CONFIGURATION] = {"SET_ALERT_CONFIGURATION",
+> +        cmd_set_alert_config, 12, CXL_MBOX_IMMEDIATE_POLICY_CHANGE },
+>      [SANITIZE][OVERWRITE] = { "SANITIZE_OVERWRITE", cmd_sanitize_overwrite, 0,
+>          (CXL_MBOX_IMMEDIATE_DATA_CHANGE |
+>           CXL_MBOX_SECURITY_STATE_CHANGE |
+> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> index 5f365afb4d..ce5a4962da 100644
+> --- a/hw/mem/cxl_type3.c
+> +++ b/hw/mem/cxl_type3.c
+> @@ -956,6 +956,25 @@ static DOEProtocol doe_comp_prot[] = {
+>      { }
+>  };
+>  
+> +/*
+> + * Initialize CXL device alerts with default threshold values.
+> + */
+> +static void init_alert_config(CXLType3Dev *ct3d)
+> +{
+> +    CXLAlertConfig *alert_config = &ct3d->alert_config;
+> +
+> +    memset(&alert_config->valid_alerts, 0, sizeof(CXLValidEnableAlerts));
+> +    memset(&alert_config->enable_alerts, 0, sizeof(CXLValidEnableAlerts));
+> +    alert_config->lucat = 75;
+> +    alert_config->lupwt = 0;
+> +    alert_config->dotcat = 35;
+> +    alert_config->dutcat = 10;
+> +    alert_config->dotpwt = 25;
+> +    alert_config->dutpwt = 20;
+> +    alert_config->cvmepwt = 0;
+> +    alert_config->cpmepwt = 0;
+Easier to read as
+      ct3d_alert_config = (CXLAlertConfig) {
+          .life_used_critical_thresh = 75,
+...
 
-> On Feb 4, 2025, at 18:29, Jonathan Cameron =
-<Jonathan.Cameron@huawei.com> wrote:
->=20
-> On Tue, 4 Feb 2025 14:16:19 +0900
-> Itaru Kitayama <itaru.kitayama@linux.dev> wrote:
->=20
->> Jonathan,
->>=20
->>> On Feb 4, 2025, at 2:30, Jonathan Cameron =
-<Jonathan.Cameron@huawei.com> wrote:
->>>=20
->>> Add a single complex case for aarch64 virt machine.
->>> Given existing much more comprehensive tests for x86 cover the
->>> common functionality, a single test should be enough to verify
->>> that the aarch64 part continue to work.
->>>=20
->>> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->>> ---
->>> tests/qtest/cxl-test.c  | 59 =
-++++++++++++++++++++++++++++++++---------
->>> tests/qtest/meson.build |  1 +
->>> 2 files changed, 47 insertions(+), 13 deletions(-)
->>>=20
->>> diff --git a/tests/qtest/cxl-test.c b/tests/qtest/cxl-test.c
->>> index a600331843..c7189d6222 100644
->>> --- a/tests/qtest/cxl-test.c
->>> +++ b/tests/qtest/cxl-test.c
->>> @@ -19,6 +19,12 @@
->>>    "-device pxb-cxl,id=3Dcxl.1,bus=3Dpcie.0,bus_nr=3D53 " \
->>>    "-M =
-cxl-fmw.0.targets.0=3Dcxl.0,cxl-fmw.0.targets.1=3Dcxl.1,cxl-fmw.0.size=3D4=
-G "
->>>=20
->>> +#define QEMU_VIRT_2PXB_CMD \
->>> +    "-machine virt,cxl=3Don -cpu max " \
->>> +    "-device pxb-cxl,id=3Dcxl.0,bus=3Dpcie.0,bus_nr=3D52 " \
->>> +    "-device pxb-cxl,id=3Dcxl.1,bus=3Dpcie.0,bus_nr=3D53 " \
->>> +    "-M =
-cxl-fmw.0.targets.0=3Dcxl.0,cxl-fmw.0.targets.1=3Dcxl.1,cxl-fmw.0.size=3D4=
-G "
->>> +
->>> #define QEMU_RP \
->>>    "-device cxl-rp,id=3Drp0,bus=3Dcxl.0,chassis=3D0,slot=3D0 "
->>>=20
->>> @@ -197,25 +203,52 @@ static void cxl_2pxb_4rp_4t3d(void)
->>>    qtest_end();
->>>    rmdir(tmpfs);
->>> }
->>> +
->>> +static void cxl_virt_2pxb_4rp_4t3d(void)
->>> +{
->>> +    g_autoptr(GString) cmdline =3D g_string_new(NULL);
->>> +    char template[] =3D "/tmp/cxl-test-XXXXXX";
->>> +    const char *tmpfs;
->>> +
->>> +    tmpfs =3D mkdtemp(template);
->>> +
->>> +    g_string_printf(cmdline, QEMU_VIRT_2PXB_CMD QEMU_4RP QEMU_4T3D,
->>> +                    tmpfs, tmpfs, tmpfs, tmpfs, tmpfs, tmpfs,
->>> +                    tmpfs, tmpfs);
->>> +
->>> +    qtest_start(cmdline->str);
->>> +    qtest_end();
->>> +    rmdir(tmpfs);
->>> +}
->>> #endif /* CONFIG_POSIX */
->>>=20
->>> int main(int argc, char **argv)
->>> {
->>> -    g_test_init(&argc, &argv, NULL);
->>> +    const char *arch =3D qtest_get_arch();
->>>=20
->>> -    qtest_add_func("/pci/cxl/basic_hostbridge", cxl_basic_hb);
->>> -    qtest_add_func("/pci/cxl/basic_pxb", cxl_basic_pxb);
->>> -    qtest_add_func("/pci/cxl/pxb_with_window", =
-cxl_pxb_with_window);
->>> -    qtest_add_func("/pci/cxl/pxb_x2_with_window", =
-cxl_2pxb_with_window);
->>> -    qtest_add_func("/pci/cxl/rp", cxl_root_port);
->>> -    qtest_add_func("/pci/cxl/rp_x2", cxl_2root_port);
->>> +    g_test_init(&argc, &argv, NULL);
->>> +    if (strcmp(arch, "i386") =3D=3D 0 || strcmp(arch, "x86_64") =3D=3D=
- 0) {
->>> +        qtest_add_func("/pci/cxl/basic_hostbridge", cxl_basic_hb);
->>> +        qtest_add_func("/pci/cxl/basic_pxb", cxl_basic_pxb);
->>> +        qtest_add_func("/pci/cxl/pxb_with_window", =
-cxl_pxb_with_window);
->>> +        qtest_add_func("/pci/cxl/pxb_x2_with_window", =
-cxl_2pxb_with_window);
->>> +        qtest_add_func("/pci/cxl/rp", cxl_root_port);
->>> +        qtest_add_func("/pci/cxl/rp_x2", cxl_2root_port);
->>> #ifdef CONFIG_POSIX
->>> -    qtest_add_func("/pci/cxl/type3_device", cxl_t3d_deprecated);
->>> -    qtest_add_func("/pci/cxl/type3_device_pmem", =
-cxl_t3d_persistent);
->>> -    qtest_add_func("/pci/cxl/type3_device_vmem", cxl_t3d_volatile);
->>> -    qtest_add_func("/pci/cxl/type3_device_vmem_lsa", =
-cxl_t3d_volatile_lsa);
->>> -    qtest_add_func("/pci/cxl/rp_x2_type3_x2", cxl_1pxb_2rp_2t3d);
->>> -    qtest_add_func("/pci/cxl/pxb_x2_root_port_x4_type3_x4", =
-cxl_2pxb_4rp_4t3d);
->>> +        qtest_add_func("/pci/cxl/type3_device", =
-cxl_t3d_deprecated);
->>> +        qtest_add_func("/pci/cxl/type3_device_pmem", =
-cxl_t3d_persistent);
->>> +        qtest_add_func("/pci/cxl/type3_device_vmem", =
-cxl_t3d_volatile);
->>> +        qtest_add_func("/pci/cxl/type3_device_vmem_lsa", =
-cxl_t3d_volatile_lsa);
->>> +        qtest_add_func("/pci/cxl/rp_x2_type3_x2", =
-cxl_1pxb_2rp_2t3d);
->>> +        qtest_add_func("/pci/cxl/pxb_x2_root_port_x4_type3_x4",
->>> +                       cxl_2pxb_4rp_4t3d);
->>> #endif
->>> +    } else if (strcmp(arch, "aarch64") =3D=3D 0) {
->>> +#ifdef CONFIG_POSIX
->>> +        =
-qtest_add_func("/pci/cxl/virt/pxb_x2_root_port_x4_type3_x4",
->>> +                       cxl_virt_2pxb_4rp_4t3d);
->>> +#endif
->>> +    }
->>> +
->>>    return g_test_run();
->>> }
->>> diff --git a/tests/qtest/meson.build b/tests/qtest/meson.build
->>> index e60e92fe9d..f5e7fb060e 100644
->>> --- a/tests/qtest/meson.build
->>> +++ b/tests/qtest/meson.build
->>> @@ -257,6 +257,7 @@ qtests_aarch64 =3D \
->>>  (config_all_accel.has_key('CONFIG_TCG') and                         =
-                   \
->>>   config_all_devices.has_key('CONFIG_TPM_TIS_I2C') ? =
-['tpm-tis-i2c-test'] : []) + \
->>>  (config_all_devices.has_key('CONFIG_ASPEED_SOC') ? qtests_aspeed64 =
-: []) + \
->>> +  qtests_cxl +                                                      =
-                            \
->>>  ['arm-cpu-features',
->>>   'numa-test',
->>>   'boot-serial-test',
->>> --=20
->>> 2.43.0
->>>=20
->>=20
->> In Ubuntu 22.04 LTS, cxl-test applied on top of today=E2=80=99s QEMU =
-upstream master branch cxl-test fails:
->>=20
->> $ ./tests/qtest/cxl-test
->> # random seed: R02S2a8b02df7b32b79d086ce22f7f8ebeab
->> 1..1
->> # Start of aarch64 tests
->> # Start of pci tests
->> # Start of cxl tests
->> # Start of virt tests
->> # starting QEMU: exec qemu-system-aarch64 -qtest =
-unix:/tmp/qtest-568421.sock -qtest-log /dev/null -chardev =
-socket,path=3D/tmp/qtest-568421.qmp,id=3Dchar0 -mon =
-chardev=3Dchar0,mode=3Dcontrol -display none -audio none -machine =
-virt,cxl=3Don -cpu max -device pxb-cxl,id=3Dcxl.0,bus=3Dpcie.0,bus_nr=3D52=
- -device pxb-cxl,id=3Dcxl.1,bus=3Dpcie.0,bus_nr=3D53 -M =
-cxl-fmw.0.targets.0=3Dcxl.0,cxl-fmw.0.targets.1=3Dcxl.1,cxl-fmw.0.size=3D4=
-G -device cxl-rp,id=3Drp0,bus=3Dcxl.0,chassis=3D0,slot=3D0 -device =
-cxl-rp,id=3Drp1,bus=3Dcxl.0,chassis=3D0,slot=3D1 -device =
-cxl-rp,id=3Drp2,bus=3Dcxl.1,chassis=3D0,slot=3D2 -device =
-cxl-rp,id=3Drp3,bus=3Dcxl.1,chassis=3D0,slot=3D3 -object =
-memory-backend-file,id=3Dcxl-mem0,mem-path=3D/tmp/cxl-test-WdBn4X,size=3D2=
-56M -object =
-memory-backend-file,id=3Dlsa0,mem-path=3D/tmp/cxl-test-WdBn4X,size=3D256M =
--device cxl-type3,bus=3Drp0,persistent-memdev=3Dcxl-mem0,lsa=3Dlsa0,id=3Dp=
-mem0 -object =
-memory-backend-file,id=3Dcxl-mem1,mem-path=3D/tmp/cxl-test-WdBn4X,size=3D2=
-56M -object =
-memory-backend-file,id=3Dlsa1,mem-path=3D/tmp/cxl-test-WdBn4X,size=3D256M =
--device cxl-type3,bus=3Drp1,persistent-memdev=3Dcxl-mem1,lsa=3Dlsa1,id=3Dp=
-mem1 -object =
-memory-backend-file,id=3Dcxl-mem2,mem-path=3D/tmp/cxl-test-WdBn4X,size=3D2=
-56M -object =
-memory-backend-file,id=3Dlsa2,mem-path=3D/tmp/cxl-test-WdBn4X,size=3D256M =
--device cxl-type3,bus=3Drp2,persistent-memdev=3Dcxl-mem2,lsa=3Dlsa2,id=3Dp=
-mem2 -object =
-memory-backend-file,id=3Dcxl-mem3,mem-path=3D/tmp/cxl-test-WdBn4X,size=3D2=
-56M -object =
-memory-backend-file,id=3Dlsa3,mem-path=3D/tmp/cxl-test-WdBn4X,size=3D256M =
--device cxl-type3,bus=3Drp3,persistent-memdev=3Dcxl-mem3,lsa=3Dlsa3,id=3Dp=
-mem3  -accel qtest
->> qemu-system-aarch64: -audio: invalid option
->> socket_accept failed: Resource temporarily unavailable
->> **
->> ERROR:../tests/qtest/libqtest.c:550:qtest_connect: assertion failed: =
-(s->fd >=3D 0 && s->qmp_fd >=3D 0)
->> Bail out! ERROR:../tests/qtest/libqtest.c:550:qtest_connect: =
-assertion failed: (s->fd >=3D 0 && s->qmp_fd >=3D 0)
->> ../tests/qtest/libqtest.c:199: kill_qemu() tried to terminate QEMU =
-process but encountered exit status 1 (expected 0)
->> Aborted (core dumped)
->>=20
->> Do I need set env vars when execute this test?
->=20
-> I've just been running it with make check-qtest and not seeing =
-anything similar.
->=20
+You can skip anything where a default of 0 is an obvious default.
+Perhaps the valid_alerts and enable alerts for instance.
 
-Ah. `make check-qtest` rather than directly executing the binary made =
-the updated cxl-test finished with other 26 =E2=80=9COk=E2=80=9D test 1 =
-Skipped for aarch64
+      };
+> +}
+> +
+>  void ct3_realize(PCIDevice *pci_dev, Error **errp)
+>  {
+>      ERRP_GUARD();
+> @@ -1030,6 +1049,7 @@ void ct3_realize(PCIDevice *pci_dev, Error **errp)
+>          goto err_free_special_ops;
+>      }
+>  
+> +    init_alert_config(ct3d);
+>      pcie_cap_deverr_init(pci_dev);
+>      /* Leave a bit of room for expansion */
+>      rc = pcie_aer_init(pci_dev, PCI_ERR_VER, 0x200, PCI_ERR_SIZEOF, NULL);
+> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> index a64739be25..6acae7d74d 100644
+> --- a/include/hw/cxl/cxl_device.h
+> +++ b/include/hw/cxl/cxl_device.h
+> @@ -581,6 +581,28 @@ typedef struct CXLSetFeatureInfo {
+>      size_t data_size;
+>  } CXLSetFeatureInfo;
+>  
+> +typedef struct CXLValidEnableAlerts {
+> +    uint8_t lupwt:1;
 
-Tested-by: Itaru Kitayama <itaru.kitayama@fujitsu.com =
-<mailto:itaru.kitayama@fujitsu.com>>
+Give these longer names.
+life_used_warning_threshold etc
+etc as we don't want to go find the spec to figure
+out what they are.
 
-> I'm not sure what infrastructure qtest puts round these but I guess it =
-sets
-> up that socket.
->=20
-> Jonathan
->=20
->=20
->=20
->>=20
->> Itaru.
 
+> +    uint8_t dotpwt:1;
+> +    uint8_t dutpwt:1;
+> +    uint8_t cvmepwt:1;
+> +    uint8_t cpmepwt:1;
+> +    uint8_t reserved:3;
+
+Generally bit fields do not play well with potential endian
+variations or low level code in general.  There is too much
+flexibility in how they are stored.  So better to use a
+uint8_t and some defines for the bits that are set.
+
+
+> +} CXLValidEnableAlerts;
+> +
+> +typedef struct CXLAlertConfig {
+> +    CXLValidEnableAlerts valid_alerts;
+> +    CXLValidEnableAlerts enable_alerts;
+> +    uint8_t lucat;
+Longer names.  These want to be at least vaguely comprehensible
+without the spec in front of us.
+lif_used_critical_thresh
+life_used_warning_thresh (I'm not sure why programmable matters!)
+etc
+
+> +    uint8_t lupwt;
+> +    uint16_t dotcat;
+> +    uint16_t dutcat;
+> +    uint16_t dotpwt;
+> +    uint16_t dutpwt;
+> +    uint16_t cvmepwt;
+> +    uint16_t cpmepwt;
+> +} QEMU_PACKED CXLAlertConfig;
+> +
+>  struct CXLType3Dev {
+>      /* Private */
+>      PCIDevice parent_obj;
+> @@ -605,6 +627,8 @@ struct CXLType3Dev {
+>      CXLCCI vdm_fm_owned_ld_mctp_cci;
+>      CXLCCI ld0_cci;
+>  
+> +    CXLAlertConfig alert_config;
+> +
+>      /* PCIe link characteristics */
+>      PCIExpLinkSpeed speed;
+>      PCIExpLinkWidth width;
 
