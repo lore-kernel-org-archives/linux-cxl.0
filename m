@@ -1,196 +1,240 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CEEA208974
-	for <linux-cxl@vger.kernel.org>; Tue,  4 Feb 2025 10:00:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345DA2080FD
+	for <linux-cxl@vger.kernel.org>; Tue,  4 Feb 2025 10:04:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738663206; cv=none; b=vAFyEUn/Q/wOOBuuXNKORKJ/9qVeEA2JD4xkmBfbFPcQwp5bFCzBFmcOmDRoO9vxiPbZ9wXaWhwjAT6cQORQmLr/+0slra5IJO60pA8sW8ctREcwFZJWtoGfLa/v2nvHoizYJnnuQCnC+AEebnPlGJbL8OWFccEgrHpk4ZBf/cY=
+	t=1738663456; cv=none; b=DfrnQzNKEu15psna89qnlsK3JAim69L8woyuZtq6d0LjjFV4iLFu/arE8lrV7+oHJTg8qClwhqFLAnhdIgr/eIFUvy/jtafVmdr2+Agp/rFVjGkCuLKTa7pilyAqXlwQGgVZPhzH/Esz3hKwoej+BuAG2ibST+1uQGRBAgVoLz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738663206; c=relaxed/simple;
-	bh=6czwO0fm8HFp1X0fKNO36in1vD1gSXIUzjzZYwzLOZU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EdcJ80XSIokEGa68WmWaBN1dyMrLsaKHu+3/FFAg++zW7gFUriej7uYyvNJ8wVYKfqBXYk+uQxB7lZT3VKwMdB4yKVF+tFiMAhz8q6+CYIpdu2RohenW4+zv6w8ZY7zYwkgojSxbOlFG4T2w+H8eWG9bQ3lQhgOA5/H4oqOV0eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J/58d+8M; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J/58d+8M"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738663203;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=m9EKHP4nynfCdNmUrSWbenO+oqa2jlQ1dNbX1aaC4cc=;
-	b=J/58d+8M0NCusur5xxjEraY14/QOw0rGmZlKHLh5jXi0iHu/c+qmAlDKpmW/TBGjTakMzq
-	zE9HJvS1wJAkOpFTKmuGzxfd47xLDK/RhrqBsUuEXHkpyWGxoGDYxumAxjbjhqJi9WXGex
-	v3pHLm4ugenVEsHW02dL84rOgnLwg38=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-223-QvEGDVUpPNWGTt5mxUBxpQ-1; Tue, 04 Feb 2025 04:59:59 -0500
-X-MC-Unique: QvEGDVUpPNWGTt5mxUBxpQ-1
-X-Mimecast-MFC-AGG-ID: QvEGDVUpPNWGTt5mxUBxpQ
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4361fc2b2d6so27910625e9.3
-        for <linux-cxl@vger.kernel.org>; Tue, 04 Feb 2025 01:59:59 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738663198; x=1739267998;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=m9EKHP4nynfCdNmUrSWbenO+oqa2jlQ1dNbX1aaC4cc=;
-        b=vpHY0NYtsPbJcMzh7CVHXq0cLXt5o3TDd9tERSk/lPrUMTN6YIsA4atWDQl8Q/HLbQ
-         VE8+JNstRVMgoLhLAgOfSw0xBYANhHFhHx88enaWj/HTQNUv6J9KCG6Gh/v+uxsvQ1ox
-         OHUzqnnsAlg9JuyYSjjGxblkNSvenC2gZyXxYdBQrF0CYXXRQUjyNBub1drqGl5dDhOa
-         +UCYeYrrStNsvoCH8QiVL0VgtE9ZYlTT983ogovRSKUDl3KqH39e7rJWDeIDuXYAguxi
-         GKhojODICm/PDSoPCvfLfVz09BnTek98KUkY0Wfp8U5u3+QSMIr2wVEn6E+XlGIFspaq
-         Iv4w==
-X-Gm-Message-State: AOJu0YxAmqJVoUJSN4hMS2YFBEVAvIJcHqi5+DtYtqa7tq1E4LXUUxqD
-	LYccncp1hHUClQ/gEUv4suzrOlya7uI5PvVfYk14veeH0fcF2aM08wdtOohhIZuNYy8EKfTmZfx
-	KMqLZnd+T0wBxDWAua1heb2oF4VOv5+9PXuTxrHGmghEdVZaopnfZFoB0cg==
-X-Gm-Gg: ASbGnctykQm31OmdGN9y9FoG35Jdycy3wyNYL5X33bsFKYAonK6ngAVVIZtCj19wo13
-	8l91b5i1K7xd6nqjqlBR/CVRBvg/u0X1tTR2s+qV7BFUXhQU4Eqj/HRSluLWNXA5vWtqHUIsX5A
-	sGoLDVSOdLKkcz4MTPYrkEMkQfPWZbYraAq3R6ESkC2W0raytYSItBDI/0//TLN0OPUm0RKgQpk
-	1AkmIt5fvWIKcfkEPzS1P8mm6etHXeqiW+CEtbvIGbfUrRiYn5yu2ojVRmBqBrGWW9QWbVD4/XD
-	eg36AwyTZno2Dz7MAxBUIK8nW8osW+j9Ls05OpEcEeXNtsN3W8sgL1aR+Eraj+cvggqPqhjeH5n
-	W1eid5qeYeHRd6hgBzNAM95fPM5M=
-X-Received: by 2002:a05:600c:1d07:b0:434:f219:6b28 with SMTP id 5b1f17b1804b1-438dc40ff6fmr196190345e9.24.1738663198618;
-        Tue, 04 Feb 2025 01:59:58 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEtopFGL7jNdvaOuoIy/KfAsAxC9FULS53CWXbdFKmMqrHJokZHeTPUiO/3DKnbEDH+GDtscw==
-X-Received: by 2002:a05:600c:1d07:b0:434:f219:6b28 with SMTP id 5b1f17b1804b1-438dc40ff6fmr196190205e9.24.1738663198246;
-        Tue, 04 Feb 2025 01:59:58 -0800 (PST)
-Received: from ?IPV6:2003:cb:c70a:300:3ae1:c3c0:cef:8413? (p200300cbc70a03003ae1c3c00cef8413.dip0.t-ipconnect.de. [2003:cb:c70a:300:3ae1:c3c0:cef:8413])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc2ef08sm221424315e9.22.2025.02.04.01.59.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2025 01:59:57 -0800 (PST)
-Message-ID: <3e5cfe8b-9ca8-4625-b6ff-7f170f1579ff@redhat.com>
-Date: Tue, 4 Feb 2025 10:59:55 +0100
+	s=arc-20240116; t=1738663456; c=relaxed/simple;
+	bh=g3emyf3vQ0MSkaICpzT0GIpY0E/pMzVG5hEviIiSEnQ=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=c5m+RYHB5QOsQ512th8iU25K4q5OJdk15yFQROfGH3qBymWzuzyAUWxRg57xiKfUn1daWpYxNwjo0TgIHd/T5CIBAKJ/1AhetmW95AqzDB5cta4tbcdV29P8hHeAcuXbvWxC2c6sek4SJJgFDc1u5qdIx8+fk9oTCryi21Hgg24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YnJn05RJDz6D9PS;
+	Tue,  4 Feb 2025 18:01:56 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id C7892140A71;
+	Tue,  4 Feb 2025 18:04:10 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 4 Feb
+ 2025 11:04:10 +0100
+Date: Tue, 4 Feb 2025 10:04:08 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
+	<ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
+	<alison.schofield@intel.com>, <dave@stgolabs.net>, <jgg@nvidia.com>,
+	<shiju.jose@huawei.com>
+Subject: Re: [PATCH v1 14/19] cxl: Add support for fwctl RPC command to
+ enable CXL feature commands
+Message-ID: <20250204100408.000048fd@huawei.com>
+In-Reply-To: <67a170ca464e3_2d2c294d@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20250122235159.2716036-1-dave.jiang@intel.com>
+	<20250122235159.2716036-15-dave.jiang@intel.com>
+	<6794478dd8026_20f329455@dwillia2-xfh.jf.intel.com.notmuch>
+	<20250127105132.000072dd@huawei.com>
+	<67982790e13d1_2d1e294b0@dwillia2-xfh.jf.intel.com.notmuch>
+	<20250128120138.0000599f@huawei.com>
+	<67a170ca464e3_2d2c294d@dwillia2-xfh.jf.intel.com.notmuch>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [LSF/MM/BPF TOPIC] Restricting or migrating unmovable kernel
- allocations from slow tier
-To: Hyeonggon Yoo <42.hyeyoo@gmail.com>, lsf-pc@lists.linux-foundation.org,
- linux-mm@kvack.org
-Cc: linux-cxl@vger.kernel.org, Byungchul Park <byungchul@sk.com>,
- Honggyu Kim <honggyu.kim@sk.com>
-References: <Z54hUTXRsw0LYQ8b@localhost.localdomain>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <Z54hUTXRsw0LYQ8b@localhost.localdomain>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 2LqZYUCB30wn4Fzhj3zAwBkJbAFI2kGjrJycqpVlHcM_1738663199
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On 01.02.25 14:29, Hyeonggon Yoo wrote:
-> Hi,
+On Mon, 3 Feb 2025 17:43:38 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
+
+> Jonathan Cameron wrote:
+> [..]
+> > > > > I think it's fine to let userspace see that exclusive features are
+> > > > > present, just need to return EBUSY if userspace actually tries to use
+> > > > > them.    
+> > > > 
+> > > > To me, a poke it and see interface is really ugly.    
+> > > 
+> > > That smells more like a matter of documentation. "Doctor it hurts when I
+> > > try to use the documented kernel-exclusive commands?"  
+> > 
+> > To me this is a nasty interface design.
+> > If I'm writing a tool to enumerate what is exposed etc then it will
+> > have to poke every get command just to list if an interface is available.
+> > Hopefully none of them have side effects!  
 > 
-> Byungchul and I would like to suggest a topic about the performance impact of
-> kernel allocations on CXL memory.
+> The kernel exclusive list is documented. How did this tool get written
+> in such a way to understand how to get data out of the interface but
+> without reading the documentation on how to consume that data?
+
+Today's kernel exclusive list is documented.  Kind of tricky to know what
+is on that list in a few years time.
+
 > 
-> As CXL-enabled servers and memory devices are being developed, CXL-supported
-> hardware is expected to continue emerging in the coming years.
+> > > > 2. Query type interface.  So a way to actually ask if a given feature is
+> > > >    usable.    
+> > > 
+> > > Not sure we really need a programmatic way to read the documentation.
+> > > 
+> > > The CXL_MEM_COMMAND_FLAG_EXCLUSIVE flag is for cases where the
+> > > exclusivity is transient. For these features the exclusivity is
+> > > permanent, and I hope we never need to cross that
+> > > transient-exclusivity-bridge for Features.  
+> > 
+> > It's permanent today, but I can definitely see that not always being
+> > the case - we may well have future kernel does things in X fashion but
+> > for legacy support disable that CONFIG option. Not nice but definitely
+> > plausible.  
 > 
-> The Linux kernel supports hot-plugging CXL memory via dax/kmem functionality.
-> The hot-plugged memory allows either unmovable kernel allocations
-> (ZONE_NORMAL), or restricts them to movable allocations (ZONE_MOVABLE)
-> depending on the hot-plug policy.
+> Then we cross that bridge and build some new ABI to communicate
+> transient exclusivity, and that new state of the world will be
+> documented as to how to discover that new capability.
 > 
-> Recently, Byungchul and I observed a measurable performance degradation with
-> memhp_default_state=online compared to memhp_default_state=online_movable
-> on a server where the ratio of memory capacity between DRAM and CXL is 1:2
-> when running the llama.cpp workload with the default mempolicy.
-> The workload performs LLM inference and pressures the memory subsystem
-> due to its large working set size.
+> Something like a Linux specific feature that returns a list of transient
+> and permanently exclusive Features.
 > 
-> Obviously, allowing kernel allocations from CXL memory degrades performance
-> because kernel memory like page tables, kernel stacks, and slab allocations,
-> is accessed frequently and may reside in physical memory with significantly
-> higher access latency.
+> In the meantime no need to hide useful information from userspace.
+
+Ok.  Seems like a more complex long term solution, but meh I don't care
+that much.
+
 > 
-> However, as far as I can tell there are at least two reasons why we need to
-> support ZONE_NORMAL for CXL memory (please add if there are more):
->    1. When hot-plugging a huge amount of CXL memory, the size of
->       the struct page array might not fit into DRAM
->       -> This could be relaxed with memmap_on_memory
+> > > > 3. What we have here.  To me the simplest solution is hide what we can't
+> > > >    be used.    
+> > > 
+> > > It is inconsistent that we do not do this for the other kernel exclusive
+> > > commands in userspace retreived Command Effects Log. The ABI here is raw
+> > > Get Supported Features payload.  
+> > 
+> > If they were exposed via similar paths I'd agree consistency matters
+> > but I 'hope' no one is going to have a tool that mixes fwctl and the
+> > legacy path.  In my head we add all the useful commands to fwctl
+> > and that legacy path ends up effectively deprecated.
+> > 
+> > Anyhow, I don't feel that strongly about this, it's just a case
+> > of doesn't smell of roses to me.
+> >   
+> > >   
+> > > > > > +	/* These effects supported for all scope */
+> > > > > > +	if ((effects & CXL_CMD_CONFIG_CHANGE_COLD_RESET ||
+> > > > > > +	     (effects & CXL_CMD_EFFECTS_EXTEND &&
+> > > > > > +	      (effects & CXL_CMD_CONFIG_CHANGE_CONV_RESET ||
+> > > > > > +	       effects & CXL_CMD_CONFIG_CHANGE_CXL_RESET))) &&
+> > > > > > +	    scope >= FWCTL_RPC_DEBUG_WRITE)
+> > > > > > +		return true;      
+> > > > > 
+> > > > > Looks good for the known bits, but this needs to return false for the
+> > > > > currently reserved bits because the driver can not assume a security
+> > > > > model for future effects. If a future spec adds
+> > > > > FWCTL_RPC_DEBUG_WRITE-safe effects, a new kernel is needed to allow
+> > > > > those Feature commands through.
+> > > > > 
+> > > > > Sidenote: I wonder why the spec wasted one of its bits on an extend bit,
+> > > > > but here we are. The 'extend' concept is typically something like
+> > > > > "bit15: go look at this other field in this payload as this 16-bit field
+> > > > > was exhausted", not "bit9: the bits above this originally defined 16 bit
+> > > > > field now has more bits", oh well.    
+> > > > 
+> > > > It's odd but corner case of going from 'unknown' state for the remaining
+> > > > pair of bits to 0 means this and 1 means this.    
+> > > 
+> > > I don't understand. 0 means no effect to worry about whether it is
+> > > defined or not.
+> > >   
+> > > > Naming though doesn't match the spec that calls it CEL[11:10] valid.
+> > > > Would be good to name it closer to that as we may well have something
+> > > > in bits 12 and 15 in future and it doesn't refer to them.    
+> > > 
+> > > Hopefully we can head off another "valid2" mistake, and I don't think
+> > > Linux needs to define anything for this bit. That bit's definition is:
+> > > 
+> > >    "Bit[9]: 1 is recommended, 0 is permitted (CEL[11:10] Valid)"
+> > > 
+> > > ...which translates to "useless". If 11 or 10 are set, I don't care what
+> > > value 9 has.
+> > >
+> > > If 12:15 are set, I don't care if there is a future valid2
+> > > bit gating whether or not to use them. Valid bits are for cases that go
+> > > outside of what Reserved 0 compatibility rules can convey, and I think
+> > > Reserved 0 compatiblity fully covers us in this case.  
+> > 
+> > Seems the spec authors disagreed. (obviously I can't comment on that
+> > discussion).
+> > 
+> > Using just what anyone can see (if they have the spec)
+> > It was a clear spec hole and there wasn't an obvious default for 0 to
+> > mean so it was a 'read your device docs and act appropriately' case
+> > before this stuff was added.  
+> 
+> I see v2 is still trying to pretend this bit matters.
+> 
+> Are you saying that because the unused bits were marked 0 instead of
+> "Reserved" that software needs to play this game of checking an extend
+> bit?
+> 
+> What breaks if software treats those bits as Reserved0? What breaks if
+> software ignores bit9?
 
-There are some others, although most are less significant, and I tried 
-documenting them here:
+More generally we can't assume it doesn't happen if those bits are 0.
+In this particular case perhaps it doesn't matter.
 
-https://www.kernel.org/doc/html/latest/admin-guide/mm/memory-hotplug.html#zone-movable-sizing-considerations
+Hmm. The aim is to decide if the permissions DEBUG_WRITE is enough.
+
+We have already verified it doesn't happen immediately. So now
+the question is does it result in a change conventional reset.
+
+Without bit 9 we have no idea either way.  So question is do
+we assume it does, or assume it doesn't?
+
++	/* These effects supported for all scope */
++	if ((effects & CXL_CMD_CONFIG_CHANGE_COLD_RESET ||
++	     (effects & CXL_CMD_EFFECTS_EXTEND &&
++	      (effects & CXL_CMD_CONFIG_CHANGE_CONV_RESET ||
++	       effects & CXL_CMD_CONFIG_CHANGE_CXL_RESET))) &&
++	    scope >= FWCTL_RPC_DEBUG_WRITE)
++		return true;
++
++	return false;
+
+Right now we return false if it was conventional reset but
+we don't know that because the hardware doesn't say either way.
+
+I'm stuck on what the right thing to do is.  My assumption
+is that cold reset will always apply if conv or cxl reset
+do. So maybe who cares and we shouldn't check these two
+at all?
+
+Fun corner: there must be something that causes an effect
+to happen (or in what sense is this a 'set') and if we have
+excluded everything else maybe we should assume that
+it must be one of these two resets?
 
 
-E.g., a 4 KiB page requires a single PTE (8 bytes) to be mapped into 
-user space, corresponding to 0.2 %. At least for anonymous memory, 
-PMD-sized THPs don't help, because we still have to allocate the page 
-table to be prepared for a PMD->PTE remapping. In the worst case, the 
-directmap requires another 0.2 % (but usually, we rely on PMD mappings). 
-So that usage depends on how you are intending to use the CXL memory 
-(e.g., pagecache vs. anonymous memory).
+> 
+> > There may be corner cases where the right answer if we know the
+> > feature is not persisted over a reset but instead panic or take
+> > some heavy weight action. Same can be true the other way around
+> > in that we may have to do something heavy to manually reset something
+> > we don't want to persist over reset. Hopefully not but we'll see.  
+> 
+> ...but how is that relevant to the FWCTL use case which just wants to
+> know if the operation is going to have an immediate effect that changes
+> a parameter behind the kernel's back?
 
+In that case, should we just let everything through and not check for
+cold reset either?
 
- >    2. To hot-unplug CXL memory, pages in CXL memory should be 
-migrated to DRAM,
- >       which means sometimes some portion of CXL memory should be 
-ZONE_NORMAL.
+Jonathan
 
-I don't quite understand that argument for ZONE_NORMAL.
-
--- 
-Cheers,
-
-David / dhildenb
+> 
 
