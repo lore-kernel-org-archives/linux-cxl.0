@@ -1,47 +1,43 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345DA2080FD
-	for <linux-cxl@vger.kernel.org>; Tue,  4 Feb 2025 10:04:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B2B208990
+	for <linux-cxl@vger.kernel.org>; Tue,  4 Feb 2025 10:28:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738663456; cv=none; b=DfrnQzNKEu15psna89qnlsK3JAim69L8woyuZtq6d0LjjFV4iLFu/arE8lrV7+oHJTg8qClwhqFLAnhdIgr/eIFUvy/jtafVmdr2+Agp/rFVjGkCuLKTa7pilyAqXlwQGgVZPhzH/Esz3hKwoej+BuAG2ibST+1uQGRBAgVoLz4=
+	t=1738664908; cv=none; b=HTEGjEelkD9pA/FFJgGtY4q26Z+T3LiRbGd0/iKByaMXr0YDmRqCGqzluWCDDq3pbaywm/lfe/CMyxw7HJBOrFaBcHYXtoX/TlHb+u2tOpLWudNBLQDErmeJJ6uNrs3aTU39t43T99lr9ijQq/Hcq4RdldgjdHmWdchGfZmBgXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738663456; c=relaxed/simple;
-	bh=g3emyf3vQ0MSkaICpzT0GIpY0E/pMzVG5hEviIiSEnQ=;
+	s=arc-20240116; t=1738664908; c=relaxed/simple;
+	bh=km8bdCj3rAbqxedw1X7goi0qwfEtapylHqBHD9aX8WM=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c5m+RYHB5QOsQ512th8iU25K4q5OJdk15yFQROfGH3qBymWzuzyAUWxRg57xiKfUn1daWpYxNwjo0TgIHd/T5CIBAKJ/1AhetmW95AqzDB5cta4tbcdV29P8hHeAcuXbvWxC2c6sek4SJJgFDc1u5qdIx8+fk9oTCryi21Hgg24=
+	 MIME-Version:Content-Type; b=fTm3mh3hc9CK5uoLGXS++btgEfoqKUfbFzEVxRqmCyAs3MX6Ul1Wo45kCT2PyrGdILrbRouEmK94rNOK8hGksTOL2HyfrAdwG0iMzwCIQLeZ18arum9C1VeyQZN10U2HQ/mpiSIGBCnREYXreTY+xb5skn4exz1BvrELHFXUFFk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YnJn05RJDz6D9PS;
-	Tue,  4 Feb 2025 18:01:56 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YnKJW4srLz6L50m;
+	Tue,  4 Feb 2025 18:25:47 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id C7892140A71;
-	Tue,  4 Feb 2025 18:04:10 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 84BAC140442;
+	Tue,  4 Feb 2025 18:28:22 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 4 Feb
- 2025 11:04:10 +0100
-Date: Tue, 4 Feb 2025 10:04:08 +0000
+ 2025 11:28:21 +0100
+Date: Tue, 4 Feb 2025 10:28:20 +0000
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Dan Williams <dan.j.williams@intel.com>
-CC: Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
-	<ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
-	<alison.schofield@intel.com>, <dave@stgolabs.net>, <jgg@nvidia.com>,
-	<shiju.jose@huawei.com>
-Subject: Re: [PATCH v1 14/19] cxl: Add support for fwctl RPC command to
- enable CXL feature commands
-Message-ID: <20250204100408.000048fd@huawei.com>
-In-Reply-To: <67a170ca464e3_2d2c294d@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20250122235159.2716036-1-dave.jiang@intel.com>
-	<20250122235159.2716036-15-dave.jiang@intel.com>
-	<6794478dd8026_20f329455@dwillia2-xfh.jf.intel.com.notmuch>
-	<20250127105132.000072dd@huawei.com>
-	<67982790e13d1_2d1e294b0@dwillia2-xfh.jf.intel.com.notmuch>
-	<20250128120138.0000599f@huawei.com>
-	<67a170ca464e3_2d2c294d@dwillia2-xfh.jf.intel.com.notmuch>
+To: Arpit Kumar <arpit1.kumar@samsung.com>
+CC: <qemu-devel@nongnu.org>, <gost.dev@samsung.com>,
+	<linux-cxl@vger.kernel.org>, <nifan.cxl@gmail.com>, <dave@stgolabs.net>,
+	<vishak.g@samsung.com>, <krish.reddy@samsung.com>,
+	<a.manzanares@samsung.com>, <alok.rathore@samsung.com>
+Subject: Re: [PATCH 1/3] hw/cxl/cxl-mailbox-utils.c: Added support for Get
+ Log Capabilities (Opcode 0402h)
+Message-ID: <20250204102820.000047fb@huawei.com>
+In-Reply-To: <20250203055950.2126627-2-arpit1.kumar@samsung.com>
+References: <20250203055950.2126627-1-arpit1.kumar@samsung.com>
+	<CGME20250203060051epcas5p350b7b24d3b5fcff25bc30e1acccd8121@epcas5p3.samsung.com>
+	<20250203055950.2126627-2-arpit1.kumar@samsung.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -51,190 +47,270 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Mon, 3 Feb 2025 17:43:38 -0800
-Dan Williams <dan.j.williams@intel.com> wrote:
+On Mon,  3 Feb 2025 11:29:48 +0530
+Arpit Kumar <arpit1.kumar@samsung.com> wrote:
 
-> Jonathan Cameron wrote:
-> [..]
-> > > > > I think it's fine to let userspace see that exclusive features are
-> > > > > present, just need to return EBUSY if userspace actually tries to use
-> > > > > them.    
-> > > > 
-> > > > To me, a poke it and see interface is really ugly.    
-> > > 
-> > > That smells more like a matter of documentation. "Doctor it hurts when I
-> > > try to use the documented kernel-exclusive commands?"  
-> > 
-> > To me this is a nasty interface design.
-> > If I'm writing a tool to enumerate what is exposed etc then it will
-> > have to poke every get command just to list if an interface is available.
-> > Hopefully none of them have side effects!  
-> 
-> The kernel exclusive list is documented. How did this tool get written
-> in such a way to understand how to get data out of the interface but
-> without reading the documentation on how to consume that data?
+Please add some descriptive teext here.
 
-Today's kernel exclusive list is documented.  Kind of tricky to know what
-is on that list in a few years time.
+> Signed-off-by: Arpit Kumar <arpit1.kumar@samsung.com>
+> Reviewed-by: Alok Rathore <alok.rathore@samsung.com>
+> Reviewed-by: Krishna Kanth Reddy <krish.reddy@samsung.com>
 
-> 
-> > > > 2. Query type interface.  So a way to actually ask if a given feature is
-> > > >    usable.    
-> > > 
-> > > Not sure we really need a programmatic way to read the documentation.
-> > > 
-> > > The CXL_MEM_COMMAND_FLAG_EXCLUSIVE flag is for cases where the
-> > > exclusivity is transient. For these features the exclusivity is
-> > > permanent, and I hope we never need to cross that
-> > > transient-exclusivity-bridge for Features.  
-> > 
-> > It's permanent today, but I can definitely see that not always being
-> > the case - we may well have future kernel does things in X fashion but
-> > for legacy support disable that CONFIG option. Not nice but definitely
-> > plausible.  
-> 
-> Then we cross that bridge and build some new ABI to communicate
-> transient exclusivity, and that new state of the world will be
-> documented as to how to discover that new capability.
-> 
-> Something like a Linux specific feature that returns a list of transient
-> and permanently exclusive Features.
-> 
-> In the meantime no need to hide useful information from userspace.
+Hi Arpit,
 
-Ok.  Seems like a more complex long term solution, but meh I don't care
-that much.
+Whilst it is good to do internal reviews, I'd prefer to see feedback
+on the mailing list if possible.  Hard for a maintainer to tell
+what a RB tag given before posting means unfortunately so in most
+cases preference is to not add RB tags based on internal review.
+If your colleagues have greatly affected the code, a
+Co-developed-by: and additional sign off may be a good way to
+reflect that.
 
-> 
-> > > > 3. What we have here.  To me the simplest solution is hide what we can't
-> > > >    be used.    
-> > > 
-> > > It is inconsistent that we do not do this for the other kernel exclusive
-> > > commands in userspace retreived Command Effects Log. The ABI here is raw
-> > > Get Supported Features payload.  
-> > 
-> > If they were exposed via similar paths I'd agree consistency matters
-> > but I 'hope' no one is going to have a tool that mixes fwctl and the
-> > legacy path.  In my head we add all the useful commands to fwctl
-> > and that legacy path ends up effectively deprecated.
-> > 
-> > Anyhow, I don't feel that strongly about this, it's just a case
-> > of doesn't smell of roses to me.
-> >   
-> > >   
-> > > > > > +	/* These effects supported for all scope */
-> > > > > > +	if ((effects & CXL_CMD_CONFIG_CHANGE_COLD_RESET ||
-> > > > > > +	     (effects & CXL_CMD_EFFECTS_EXTEND &&
-> > > > > > +	      (effects & CXL_CMD_CONFIG_CHANGE_CONV_RESET ||
-> > > > > > +	       effects & CXL_CMD_CONFIG_CHANGE_CXL_RESET))) &&
-> > > > > > +	    scope >= FWCTL_RPC_DEBUG_WRITE)
-> > > > > > +		return true;      
-> > > > > 
-> > > > > Looks good for the known bits, but this needs to return false for the
-> > > > > currently reserved bits because the driver can not assume a security
-> > > > > model for future effects. If a future spec adds
-> > > > > FWCTL_RPC_DEBUG_WRITE-safe effects, a new kernel is needed to allow
-> > > > > those Feature commands through.
-> > > > > 
-> > > > > Sidenote: I wonder why the spec wasted one of its bits on an extend bit,
-> > > > > but here we are. The 'extend' concept is typically something like
-> > > > > "bit15: go look at this other field in this payload as this 16-bit field
-> > > > > was exhausted", not "bit9: the bits above this originally defined 16 bit
-> > > > > field now has more bits", oh well.    
-> > > > 
-> > > > It's odd but corner case of going from 'unknown' state for the remaining
-> > > > pair of bits to 0 means this and 1 means this.    
-> > > 
-> > > I don't understand. 0 means no effect to worry about whether it is
-> > > defined or not.
-> > >   
-> > > > Naming though doesn't match the spec that calls it CEL[11:10] valid.
-> > > > Would be good to name it closer to that as we may well have something
-> > > > in bits 12 and 15 in future and it doesn't refer to them.    
-> > > 
-> > > Hopefully we can head off another "valid2" mistake, and I don't think
-> > > Linux needs to define anything for this bit. That bit's definition is:
-> > > 
-> > >    "Bit[9]: 1 is recommended, 0 is permitted (CEL[11:10] Valid)"
-> > > 
-> > > ...which translates to "useless". If 11 or 10 are set, I don't care what
-> > > value 9 has.
-> > >
-> > > If 12:15 are set, I don't care if there is a future valid2
-> > > bit gating whether or not to use them. Valid bits are for cases that go
-> > > outside of what Reserved 0 compatibility rules can convey, and I think
-> > > Reserved 0 compatiblity fully covers us in this case.  
-> > 
-> > Seems the spec authors disagreed. (obviously I can't comment on that
-> > discussion).
-> > 
-> > Using just what anyone can see (if they have the spec)
-> > It was a clear spec hole and there wasn't an obvious default for 0 to
-> > mean so it was a 'read your device docs and act appropriately' case
-> > before this stuff was added.  
-> 
-> I see v2 is still trying to pretend this bit matters.
-> 
-> Are you saying that because the unused bits were marked 0 instead of
-> "Reserved" that software needs to play this game of checking an extend
-> bit?
-> 
-> What breaks if software treats those bits as Reserved0? What breaks if
-> software ignores bit9?
+Great to have you working on these features. Some comments inline.
+Main ones are around naming (always tricky!) and suggestion to
+handle the arrays of log capabilities as static const pointers.
 
-More generally we can't assume it doesn't happen if those bits are 0.
-In this particular case perhaps it doesn't matter.
-
-Hmm. The aim is to decide if the permissions DEBUG_WRITE is enough.
-
-We have already verified it doesn't happen immediately. So now
-the question is does it result in a change conventional reset.
-
-Without bit 9 we have no idea either way.  So question is do
-we assume it does, or assume it doesn't?
-
-+	/* These effects supported for all scope */
-+	if ((effects & CXL_CMD_CONFIG_CHANGE_COLD_RESET ||
-+	     (effects & CXL_CMD_EFFECTS_EXTEND &&
-+	      (effects & CXL_CMD_CONFIG_CHANGE_CONV_RESET ||
-+	       effects & CXL_CMD_CONFIG_CHANGE_CXL_RESET))) &&
-+	    scope >= FWCTL_RPC_DEBUG_WRITE)
-+		return true;
-+
-+	return false;
-
-Right now we return false if it was conventional reset but
-we don't know that because the hardware doesn't say either way.
-
-I'm stuck on what the right thing to do is.  My assumption
-is that cold reset will always apply if conv or cxl reset
-do. So maybe who cares and we shouldn't check these two
-at all?
-
-Fun corner: there must be something that causes an effect
-to happen (or in what sense is this a 'set') and if we have
-excluded everything else maybe we should assume that
-it must be one of these two resets?
-
-
-> 
-> > There may be corner cases where the right answer if we know the
-> > feature is not persisted over a reset but instead panic or take
-> > some heavy weight action. Same can be true the other way around
-> > in that we may have to do something heavy to manually reset something
-> > we don't want to persist over reset. Hopefully not but we'll see.  
-> 
-> ...but how is that relevant to the FWCTL use case which just wants to
-> know if the operation is going to have an immediate effect that changes
-> a parameter behind the kernel's back?
-
-In that case, should we just let everything through and not check for
-cold reset either?
+Thanks,
 
 Jonathan
 
+
+> ---
+>  hw/cxl/cxl-mailbox-utils.c   | 55 ++++++++++++++++++++++++++++++++++++
+>  include/hw/cxl/cxl_device.h  | 31 ++++++++++++++++++++
+>  include/hw/cxl/cxl_mailbox.h |  5 ++++
+>  3 files changed, 91 insertions(+)
 > 
+> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> index 9c7ea5bc35..3d66a425a9 100644
+> --- a/hw/cxl/cxl-mailbox-utils.c
+> +++ b/hw/cxl/cxl-mailbox-utils.c
+> @@ -76,6 +76,7 @@ enum {
+>      LOGS        = 0x04,
+>          #define GET_SUPPORTED 0x0
+>          #define GET_LOG       0x1
+> +        #define GET_LOG_CAPABILITIES   0x2
+>      FEATURES    = 0x05,
+>          #define GET_SUPPORTED 0x0
+>          #define GET_FEATURE   0x1
+> @@ -1075,6 +1076,45 @@ static CXLRetCode cmd_logs_get_log(const struct cxl_cmd *cmd,
+>      return CXL_MBOX_SUCCESS;
+>  }
+>  
+> +static int32_t valid_log_check(QemuUUID *uuid, CXLCCI *cci)
+
+Perhaps find_log_index() or something like that?
+I would return &ccx->supported_log_cap[i] / NULL if not found
+as then can avoid long reference into array below.
+
+> +{
+> +    int32_t id = -1;
+> +    for (int i = CEL; i < MAX_LOG_TYPE; i++) {
+> +        if (qemu_uuid_is_equal(uuid,
+> +            &cci->supported_log_cap[i].uuid)) {
+> +            id = i;
+> +            break;
+> +        }
+> +    }
+> +    return id;
+> +}
+> +
+> +/* CXL r3.1 Section 8.2.9.5.3: Get Log Capabilities (Opcode 0402h) */
+
+For new documentation please use latest spec.
+This is a bit different to many other spec where the request is the
+earliest one. That is due to the consortium only making the latest
+version available (currently r3.2)
+
+> +static CXLRetCode cmd_logs_get_log_capabilities(const struct cxl_cmd *cmd,
+> +                                                uint8_t *payload_in,
+> +                                                size_t len_in,
+> +                                                uint8_t *payload_out,
+> +                                                size_t *len_out,
+> +                                                CXLCCI *cci)
+> +{
+> +    int32_t cap_id;
+> +    struct {
+> +        QemuUUID uuid;
+> +    } QEMU_PACKED QEMU_ALIGNED(8) * get_log_capabilities_in = (void *)payload_in;
+> +
+> +    CXLParamFlags *get_log_capabilities_out = (void *)payload_out;
+> +
+> +    cap_id = valid_log_check(&get_log_capabilities_in->uuid, cci);
+    CXLLogCapabilities *cap;
+
+    cap = find_log_cap(&get_log_capabilities_in->uuid, cci);
+    if (!cap) {
+        return CXL_MBOX_INVALID_LOG);
+    }
+
+    mempcy(get_log_capabilities_out, cap->param_flags.pflags,
+           sizeof(cap->param_flags.pflags));
+...
+
+> +    if (cap_id == -1) {
+> +        return CXL_MBOX_INVALID_LOG;
+> +    }
+> +
+> +    memcpy(get_log_capabilities_out, &cci->supported_log_cap[cap_id].param_flags.pflags,
+> +           sizeof(CXLParamFlags));
+> +    *len_out = sizeof(*get_log_capabilities_out);
+> +    return CXL_MBOX_SUCCESS;
+> +}
+> +
+>  /* CXL r3.1 section 8.2.9.6: Features */
+>  /*
+>   * Get Supported Features output payload
+> @@ -2840,6 +2880,8 @@ static const struct cxl_cmd cxl_cmd_set[256][256] = {
+>      [LOGS][GET_SUPPORTED] = { "LOGS_GET_SUPPORTED", cmd_logs_get_supported,
+>                                0, 0 },
+>      [LOGS][GET_LOG] = { "LOGS_GET_LOG", cmd_logs_get_log, 0x18, 0 },
+> +    [LOGS][GET_LOG_CAPABILITIES] = { "LOGS_GET_LOG_CAPABILITIES",
+> +                                     cmd_logs_get_log_capabilities, 0x10, 0 },
+>      [FEATURES][GET_SUPPORTED] = { "FEATURES_GET_SUPPORTED",
+>                                    cmd_features_get_supported, 0x8, 0 },
+>      [FEATURES][GET_FEATURE] = { "FEATURES_GET_FEATURE",
+> @@ -3084,10 +3126,23 @@ static void cxl_rebuild_cel(CXLCCI *cci)
+>      }
+>  }
+>  
+> +static const struct CXLLogCapabilities cxl_get_log_cap[MAX_LOG_TYPE] = {
+> +    [CEL] = {.param_flags.pflags = CXL_LOG_CAP_CLEAR | CXL_LOG_CAP_POPULATE,
+> +             .uuid = cel_uuid},
+> +};
+> +
+> +static void cxl_init_get_log(CXLCCI *cci)
+> +{
+> +    for (int set = CEL; set < MAX_LOG_TYPE; set++) {
+> +        cci->supported_log_cap[set] = cxl_get_log_cap[set];
+
+As below. Can we just use a static const pointer in cci?
+Seems relatively unlikely we'll have lots of different log combinations
+depending on runtime configuration.  So may be better to just pick
+between a few const arrays like cxl_get_log_cap.
+
+Good to also store the length of that log or use a terminating entry
+of some type so that we don't need to iterate over empty entries.
+
+> +    }
+> +}
+> +
+>  void cxl_init_cci(CXLCCI *cci, size_t payload_max)
+>  {
+>      cci->payload_max = payload_max;
+>      cxl_rebuild_cel(cci);
+> +    cxl_init_get_log(cci);
+>  
+>      cci->bg.complete_pct = 0;
+>      cci->bg.starttime = 0;
+> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> index a64739be25..e7cb99a1d2 100644
+> --- a/include/hw/cxl/cxl_device.h
+> +++ b/include/hw/cxl/cxl_device.h
+> @@ -164,6 +164,18 @@ typedef enum {
+>      CXL_MBOX_MAX = 0x20
+>  } CXLRetCode;
+>  
+> +/* types of logs */
+> +enum Logs {
+
+For things in the header please prefix with CXL.  The chances
+of a naming clash in future drivers that include this is too high
+without that! 
+
+Also QEMU tends to use typedefs for enums
+
+typedef enum {
+	CXL_LOG_CEL,
+	CXL_LOG_VENDOR,
+} CXLLogType;
+or something like that.
+
+Some of these abbreviations are a bit too compact and
+don't line up with spec like CEL does.,
+
+
+
+
+> +    CEL,
+> +    VDL,
+> +    CSDL,
+CXL_LOG_COMPONENT_STATE_DUMP,
+> +    ECSL,
+CXL_LOG_ECS, //this one is standard acronym
+> +    MTCL,
+CXL_LOG_MEDIA_TEST_CAP
+> +    MTRSL,
+CXL_LOG_MEDIA_TEST_SHORT
+> +    MTRLL,
+CXL_LOG_MEDIA_TEST_LONG
+
+perhaps?
+> +    MAX_LOG_TYPE
+> +};
+> +
+>  typedef struct CXLCCI CXLCCI;
+>  typedef struct cxl_device_state CXLDeviceState;
+>  struct cxl_cmd;
+> @@ -194,6 +206,22 @@ typedef struct CXLEventLog {
+>      QSIMPLEQ_HEAD(, CXLEvent) events;
+>  } CXLEventLog;
+>  
+> +typedef struct CXLParamFlags {
+> +    union {
+
+Unless I'm reading this wrong this is a union of lots of flags
+on top of each other.
+
+Also, don't use bitfields. They don't play well with
+different endian architectures. 
+Defines for the various bits are a more reliable solution.
+Similar to the ones you have below in cxl_mailbox.h
+
+
+> +        uint32_t clear_log_supported:1;
+> +        uint32_t populate_log_supported:1;
+> +        uint32_t auto_populate_supported:1;
+> +        uint32_t persistent_across_cold_reset:1;
+> +        uint32_t reserved:28;
+> +        uint32_t pflags;
+> +    };
+> +} CXLParamFlags;
+> +
+> +typedef struct CXLLogCapabilities {
+> +    CXLParamFlags param_flags;
+> +    QemuUUID uuid;
+> +} CXLLogCapabilities;
+> +
+>  typedef struct CXLCCI {
+>      struct cxl_cmd cxl_cmd_set[256][256];
+>      struct cel_log {
+> @@ -202,6 +230,9 @@ typedef struct CXLCCI {
+>      } cel_log[1 << 16];
+>      size_t cel_size;
+>  
+> +    /* get log capabilities */
+> +    CXLLogCapabilities supported_log_cap[MAX_LOG_TYPE];
+Perhaps a const pointer is appropriate?
+> +
+>      /* background command handling (times in ms) */
+>      struct {
+>          uint16_t opcode;
+> diff --git a/include/hw/cxl/cxl_mailbox.h b/include/hw/cxl/cxl_mailbox.h
+> index 9008402d1c..f3502c3f68 100644
+> --- a/include/hw/cxl/cxl_mailbox.h
+> +++ b/include/hw/cxl/cxl_mailbox.h
+> @@ -16,4 +16,9 @@
+>  #define CXL_MBOX_BACKGROUND_OPERATION (1 << 6)
+>  #define CXL_MBOX_BACKGROUND_OPERATION_ABORT (1 << 7)
+>  
+> +#define CXL_LOG_CAP_CLEAR 1
+> +#define CXL_LOG_CAP_POPULATE (1 << 1)
+> +#define CXL_LOG_CAP_AUTO_POPULATE (1 << 2)
+> +#define CXL_LOG_CAP_PERSISTENT_COLD_RESET (1 << 3)
+> +
+>  #endif
 
