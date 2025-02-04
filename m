@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF6725A623
-	for <linux-cxl@vger.kernel.org>; Tue,  4 Feb 2025 22:04:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE5C25A623
+	for <linux-cxl@vger.kernel.org>; Tue,  4 Feb 2025 22:04:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738706684; cv=none; b=P+637DiFvq32FE4dLmvkQ9q3KNxKcIg55oeszBfh0WuJV+gpqmtYVlshJ67LEnSesB15w7I37J/guKB5e/mkMVrCddMSUQLwBSCHu47xjfCpmJgF4DSytFXwmVaV0SAkOiMnH9Z+ZeFnzkGQZam7yNPQdZBfK+i1+JCFv4OCmnM=
+	t=1738706686; cv=none; b=HJf0TVwpZCI0ZRezbHMv4Vu4457E4jVNgNu83PVCVi88iRB/1BG8gXxaLYvnLEj+KLdtaLjBMyUH4237l1KybfWkIwMy3eKaFPF9dzefKDdNAU6MpbCk3kNUiwVzOtWMiz20CpEi+6B7ZudKRWwUJuof08syfRbPxpSawWFwa/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738706684; c=relaxed/simple;
-	bh=6Sf22O6lqWPomVPvocvoGHUmfpQAWYmM1o7Z0M0zMcY=;
+	s=arc-20240116; t=1738706686; c=relaxed/simple;
+	bh=55rsfKNKYilTYAYYYzHVBd//CB78bULp5ZEJcdvkwnw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lau1w3n9Q9wOpTi76lS/ZaQLJSCXoBJjtUp84LFpeMbqSSoClJmmkS3+qcWDTskXty+8v2J2g0zhF8Sn7pR0/JQR0LjrNUdolYHQysZ++DjZyAJvy+PYi9CBZyxeeGD2mc1i2q11/possDET/7vEamjFzZwn9+55Fnj51obJIt4=
+	 MIME-Version; b=DCZVQ+OWdxatLA0e2qjokV9eQJEx52KxMAy9VfM6J0MpcYmiGSPsKLOyb3UTpgolqQ0OoQ6UD+snmAzXGUWZHQjjdNkFeuKbJ9YKl/BPs5almwz8L8cuy1oJpKqVeD8tj1KkaLIywQ8p5i+7QNKc05BhWi1yQkEI3WRtyEFz0gs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C966EC4CEDF;
-	Tue,  4 Feb 2025 22:04:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0D7EC4CEDF;
+	Tue,  4 Feb 2025 22:04:45 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: dan.j.williams@intel.com,
@@ -24,9 +24,9 @@ Cc: dan.j.williams@intel.com,
 	dave@stgolabs.net,
 	jgg@nvidia.com,
 	shiju.jose@huawei.com
-Subject: [PATCH v3 05/16] cxl/mbox: Add GET_FEATURE mailbox command
-Date: Tue,  4 Feb 2025 15:03:06 -0700
-Message-ID: <20250204220430.4146187-6-dave.jiang@intel.com>
+Subject: [PATCH v3 06/16] cxl/mbox: Add SET_FEATURE mailbox command
+Date: Tue,  4 Feb 2025 15:03:07 -0700
+Message-ID: <20250204220430.4146187-7-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250204220430.4146187-1-dave.jiang@intel.com>
 References: <20250204220430.4146187-1-dave.jiang@intel.com>
@@ -40,149 +40,162 @@ Content-Transfer-Encoding: 8bit
 
 From: Shiju Jose <shiju.jose@huawei.com>
 
-Add support for GET_FEATURE mailbox command.
+Add support for SET_FEATURE mailbox command.
 
 CXL spec r3.2 section 8.2.9.6 describes optional device specific features.
-The settings of a feature can be retrieved using Get Feature command.
-CXL spec r3.2 section 8.2.9.6.2 describes Get Feature command.
+CXL devices supports features with changeable attributes.
+The settings of a feature can be optionally modified using Set Feature
+command.
+CXL spec r3.2 section 8.2.9.6.3 describes Set Feature command.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/cxl/core/Makefile   |  1 +
- drivers/cxl/core/features.c | 59 +++++++++++++++++++++++++++++++++++++
- include/cxl/features.h      | 29 ++++++++++++++++++
- tools/testing/cxl/Kbuild    |  1 +
- 4 files changed, 90 insertions(+)
- create mode 100644 drivers/cxl/core/features.c
+v3:
+- Remove extraneous (). (Jonathan)
+---
+ drivers/cxl/core/features.c | 81 +++++++++++++++++++++++++++++++++++++
+ include/cxl/features.h      | 33 +++++++++++++++
+ 2 files changed, 114 insertions(+)
 
-diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-index 9259bcc6773c..73b6348afd67 100644
---- a/drivers/cxl/core/Makefile
-+++ b/drivers/cxl/core/Makefile
-@@ -14,5 +14,6 @@ cxl_core-y += pci.o
- cxl_core-y += hdm.o
- cxl_core-y += pmu.o
- cxl_core-y += cdat.o
-+cxl_core-y += features.o
- cxl_core-$(CONFIG_TRACING) += trace.o
- cxl_core-$(CONFIG_CXL_REGION) += region.o
 diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-new file mode 100644
-index 000000000000..b01dc5ebb24d
---- /dev/null
+index b01dc5ebb24d..ec0df5ad741c 100644
+--- a/drivers/cxl/core/features.c
 +++ b/drivers/cxl/core/features.c
-@@ -0,0 +1,59 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright(c) 2024-2025 Intel Corporation. All rights reserved. */
-+#include <linux/device.h>
-+#include <cxl/mailbox.h>
-+#include <cxl/features.h>
-+#include "cxl.h"
-+#include "core.h"
-+#include "cxlmem.h"
-+#include "features.h"
+@@ -57,3 +57,84 @@ size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
+ 	return data_rcvd_size;
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_get_feature, "CXL");
 +
-+size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
-+		       enum cxl_get_feat_selection selection,
-+		       void *feat_out, size_t feat_out_size, u16 offset,
-+		       u16 *return_code)
++/*
++ * FEAT_DATA_MIN_PAYLOAD_SIZE - min extra number of bytes should be
++ * available in the mailbox for storing the actual feature data so that
++ * the feature data transfer would work as expected.
++ */
++#define FEAT_DATA_MIN_PAYLOAD_SIZE 10
++int cxl_set_feature(struct cxl_mailbox *cxl_mbox,
++		    const uuid_t *feat_uuid, u8 feat_version,
++		    void *feat_data, size_t feat_data_size,
++		    u32 feat_flag, u16 offset, u16 *return_code)
 +{
-+	size_t data_to_rd_size, size_out;
-+	struct cxl_mbox_get_feat_in pi;
++	struct cxl_memdev_set_feat_pi {
++		struct cxl_mbox_set_feat_hdr hdr;
++		u8 feat_data[];
++	}  __packed;
++	size_t data_in_size, data_sent_size = 0;
 +	struct cxl_mbox_cmd mbox_cmd;
-+	size_t data_rcvd_size = 0;
-+	int rc;
++	size_t hdr_size;
++	int rc = 0;
 +
 +	if (return_code)
 +		*return_code = CXL_MBOX_CMD_RC_INPUT;
 +
-+	if (!feat_out || !feat_out_size)
-+		return 0;
++	struct cxl_memdev_set_feat_pi *pi __free(kfree) =
++			kzalloc(cxl_mbox->payload_size, GFP_KERNEL);
++	uuid_copy(&pi->hdr.uuid, feat_uuid);
++	pi->hdr.version = feat_version;
++	feat_flag &= ~CXL_SET_FEAT_FLAG_DATA_TRANSFER_MASK;
++	feat_flag |= CXL_SET_FEAT_FLAG_DATA_SAVED_ACROSS_RESET;
++	hdr_size = sizeof(pi->hdr);
++	/*
++	 * Check minimum mbox payload size is available for
++	 * the feature data transfer.
++	 */
++	if (hdr_size + FEAT_DATA_MIN_PAYLOAD_SIZE > cxl_mbox->payload_size)
++		return -ENOMEM;
 +
-+	size_out = min(feat_out_size, cxl_mbox->payload_size);
-+	uuid_copy(&pi.uuid, feat_uuid);
-+	pi.selection = selection;
++	if (hdr_size + feat_data_size <= cxl_mbox->payload_size) {
++		pi->hdr.flags = cpu_to_le32(feat_flag |
++				       CXL_SET_FEAT_FLAG_FULL_DATA_TRANSFER);
++		data_in_size = feat_data_size;
++	} else {
++		pi->hdr.flags = cpu_to_le32(feat_flag |
++				       CXL_SET_FEAT_FLAG_INITIATE_DATA_TRANSFER);
++		data_in_size = cxl_mbox->payload_size - hdr_size;
++	}
++
 +	do {
-+		data_to_rd_size = min(feat_out_size - data_rcvd_size,
-+				      cxl_mbox->payload_size);
-+		pi.offset = cpu_to_le16(offset + data_rcvd_size);
-+		pi.count = cpu_to_le16(data_to_rd_size);
-+
++		pi->hdr.offset = cpu_to_le16(offset + data_sent_size);
++		memcpy(pi->feat_data, feat_data + data_sent_size, data_in_size);
 +		mbox_cmd = (struct cxl_mbox_cmd) {
-+			.opcode = CXL_MBOX_OP_GET_FEATURE,
-+			.size_in = sizeof(pi),
-+			.payload_in = &pi,
-+			.size_out = size_out,
-+			.payload_out = feat_out + data_rcvd_size,
-+			.min_out = data_to_rd_size,
++			.opcode = CXL_MBOX_OP_SET_FEATURE,
++			.size_in = hdr_size + data_in_size,
++			.payload_in = pi,
 +		};
 +		rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
-+		if (rc < 0 || !mbox_cmd.size_out) {
++		if (rc < 0) {
 +			if (return_code)
 +				*return_code = mbox_cmd.return_code;
++			return rc;
++		}
++
++		data_sent_size += data_in_size;
++		if (data_sent_size >= feat_data_size) {
++			if (return_code)
++				*return_code = CXL_MBOX_CMD_RC_SUCCESS;
 +			return 0;
 +		}
-+		data_rcvd_size += mbox_cmd.size_out;
-+	} while (data_rcvd_size < feat_out_size);
 +
-+	if (return_code)
-+		*return_code = CXL_MBOX_CMD_RC_SUCCESS;
-+
-+	return data_rcvd_size;
++		if ((feat_data_size - data_sent_size) <= (cxl_mbox->payload_size - hdr_size)) {
++			data_in_size = feat_data_size - data_sent_size;
++			pi->hdr.flags = cpu_to_le32(feat_flag |
++					       CXL_SET_FEAT_FLAG_FINISH_DATA_TRANSFER);
++		} else {
++			pi->hdr.flags = cpu_to_le32(feat_flag |
++					       CXL_SET_FEAT_FLAG_CONTINUE_DATA_TRANSFER);
++		}
++	} while (true);
 +}
-+EXPORT_SYMBOL_NS_GPL(cxl_get_feature, "CXL");
++EXPORT_SYMBOL_NS_GPL(cxl_set_feature, "CXL");
 diff --git a/include/cxl/features.h b/include/cxl/features.h
-index c65760342f97..5e70c6c3ae9d 100644
+index 5e70c6c3ae9d..a7811969cfdb 100644
 --- a/include/cxl/features.h
 +++ b/include/cxl/features.h
-@@ -89,4 +89,33 @@ struct cxl_mbox_get_sup_feats_out {
- 	struct cxl_feat_entry ents[] __counted_by_le(num_entries);
- } __packed;
+@@ -112,10 +112,43 @@ enum cxl_get_feat_selection {
+ 	CXL_GET_FEAT_SEL_MAX
+ };
  
 +/*
-+ * Get Feature CXL spec r3.2 Spec 8.2.9.6.2
++ * Set Feature CXL spec r3.2  8.2.9.6.3
 + */
 +
 +/*
-+ * Get Feature input payload
-+ * CXL spec r3.2 section 8.2.9.6.2 Table 8-99
++ * Set Feature input payload
++ * CXL spec r3.2 section 8.2.9.6.3 Table 8-101
 + */
-+struct cxl_mbox_get_feat_in {
++struct cxl_mbox_set_feat_hdr {
 +	uuid_t uuid;
++	__le32 flags;
 +	__le16 offset;
-+	__le16 count;
-+	u8 selection;
++	u8 version;
++	u8 rsvd[9];
 +}  __packed;
 +
-+/* Selection field for 'struct cxl_mbox_get_feat_in' */
-+enum cxl_get_feat_selection {
-+	CXL_GET_FEAT_SEL_CURRENT_VALUE,
-+	CXL_GET_FEAT_SEL_DEFAULT_VALUE,
-+	CXL_GET_FEAT_SEL_SAVED_VALUE,
-+	CXL_GET_FEAT_SEL_MAX
++/* Set Feature flags field */
++enum cxl_set_feat_flag_data_transfer {
++	CXL_SET_FEAT_FLAG_FULL_DATA_TRANSFER = 0,
++	CXL_SET_FEAT_FLAG_INITIATE_DATA_TRANSFER,
++	CXL_SET_FEAT_FLAG_CONTINUE_DATA_TRANSFER,
++	CXL_SET_FEAT_FLAG_FINISH_DATA_TRANSFER,
++	CXL_SET_FEAT_FLAG_ABORT_DATA_TRANSFER,
++	CXL_SET_FEAT_FLAG_DATA_TRANSFER_MAX
 +};
 +
-+struct cxl_mailbox;
-+size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
-+		       enum cxl_get_feat_selection selection,
-+		       void *feat_out, size_t feat_out_size, u16 offset,
-+		       u16 *return_code);
++#define CXL_SET_FEAT_FLAG_DATA_TRANSFER_MASK	GENMASK(2, 0)
 +
++#define CXL_SET_FEAT_FLAG_DATA_SAVED_ACROSS_RESET	BIT(3)
++
+ struct cxl_mailbox;
+ size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
+ 		       enum cxl_get_feat_selection selection,
+ 		       void *feat_out, size_t feat_out_size, u16 offset,
+ 		       u16 *return_code);
++int cxl_set_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
++		    u8 feat_version, void *feat_data, size_t feat_data_size,
++		    u32 feat_flag, u16 offset, u16 *return_code);
+ 
  #endif
-diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-index 47be82a2dd5b..6b0a992af4a7 100644
---- a/tools/testing/cxl/Kbuild
-+++ b/tools/testing/cxl/Kbuild
-@@ -61,6 +61,7 @@ cxl_core-y += $(CXL_CORE_SRC)/pci.o
- cxl_core-y += $(CXL_CORE_SRC)/hdm.o
- cxl_core-y += $(CXL_CORE_SRC)/pmu.o
- cxl_core-y += $(CXL_CORE_SRC)/cdat.o
-+cxl_core-y += $(CXL_CORE_SRC)/features.o
- cxl_core-$(CONFIG_TRACING) += $(CXL_CORE_SRC)/trace.o
- cxl_core-$(CONFIG_CXL_REGION) += $(CXL_CORE_SRC)/region.o
- cxl_core-y += config_check.o
 -- 
 2.48.1
 
