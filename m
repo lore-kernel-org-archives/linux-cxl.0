@@ -1,243 +1,196 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FB292080C4
-	for <linux-cxl@vger.kernel.org>; Tue,  4 Feb 2025 09:29:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CEEA208974
+	for <linux-cxl@vger.kernel.org>; Tue,  4 Feb 2025 10:00:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738661391; cv=none; b=PCpb0yrmlq89BZdkyM3+wMgTguB7OPnVHvROQORyfzmut4HTQ7YfSuIuHf9DZpRMSo8v4uSG5uHLRj2ggcaB4eCWOac+YChkRCAZT1nkJ+AIRadPadV/I6rDaDvdur/hjzndPVq2jjjbxEEuF4+5uPB1e4EOYRKHjqX1M0FAd0o=
+	t=1738663206; cv=none; b=vAFyEUn/Q/wOOBuuXNKORKJ/9qVeEA2JD4xkmBfbFPcQwp5bFCzBFmcOmDRoO9vxiPbZ9wXaWhwjAT6cQORQmLr/+0slra5IJO60pA8sW8ctREcwFZJWtoGfLa/v2nvHoizYJnnuQCnC+AEebnPlGJbL8OWFccEgrHpk4ZBf/cY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738661391; c=relaxed/simple;
-	bh=FTi+LFckYwrMXylID39e5cPJUdhkxbFha+DK0QCRcbE=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JsYlpHnpVZGSMQ3JgQQJ/RTFZPvF1McC+zPkzje09LzmxkH44hQzdqLqzSgeNKXVR1n+j5o7OdPO9G9E5SXRY5+ffOg5KnQ+EmCKge/FO8ZSUFQyANHUrYGng6siDqb/Die3c3dM9zVSwLel/uox2qkKAmlnp2SEct3EZvLutbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YnJ0v3Pbpz6L4tw;
-	Tue,  4 Feb 2025 17:27:11 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3309414011B;
-	Tue,  4 Feb 2025 17:29:46 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 4 Feb
- 2025 10:29:45 +0100
-Date: Tue, 4 Feb 2025 09:29:44 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Itaru Kitayama <itaru.kitayama@linux.dev>
-CC: <qemu-devel@nongnu.org>, Fan Ni <fan.ni@samsung.com>, Peter Maydell
-	<peter.maydell@linaro.org>, <mst@redhat.com>, <linux-cxl@vger.kernel.org>,
-	<linuxarm@huawei.com>, <qemu-arm@nongnu.org>, Yuquan Wang
-	<wangyuquan1236@phytium.com.cn>, Philippe =?ISO-8859-1?Q?Mathieu-Daud=E9?=
-	<philmd@linaro.org>
-Subject: Re: [RFC PATCH v12 qemu 2/2] qtest/cxl: Add aarch64 virt test for
- CXL
-Message-ID: <20250204092944.00004d3c@huawei.com>
-In-Reply-To: <4AEA1355-C6E8-4A9D-8652-607FEBD7EE03@linux.dev>
-References: <20250203173040.145763-1-Jonathan.Cameron@huawei.com>
-	<20250203173040.145763-3-Jonathan.Cameron@huawei.com>
-	<4AEA1355-C6E8-4A9D-8652-607FEBD7EE03@linux.dev>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1738663206; c=relaxed/simple;
+	bh=6czwO0fm8HFp1X0fKNO36in1vD1gSXIUzjzZYwzLOZU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EdcJ80XSIokEGa68WmWaBN1dyMrLsaKHu+3/FFAg++zW7gFUriej7uYyvNJ8wVYKfqBXYk+uQxB7lZT3VKwMdB4yKVF+tFiMAhz8q6+CYIpdu2RohenW4+zv6w8ZY7zYwkgojSxbOlFG4T2w+H8eWG9bQ3lQhgOA5/H4oqOV0eo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J/58d+8M; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J/58d+8M"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738663203;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=m9EKHP4nynfCdNmUrSWbenO+oqa2jlQ1dNbX1aaC4cc=;
+	b=J/58d+8M0NCusur5xxjEraY14/QOw0rGmZlKHLh5jXi0iHu/c+qmAlDKpmW/TBGjTakMzq
+	zE9HJvS1wJAkOpFTKmuGzxfd47xLDK/RhrqBsUuEXHkpyWGxoGDYxumAxjbjhqJi9WXGex
+	v3pHLm4ugenVEsHW02dL84rOgnLwg38=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-223-QvEGDVUpPNWGTt5mxUBxpQ-1; Tue, 04 Feb 2025 04:59:59 -0500
+X-MC-Unique: QvEGDVUpPNWGTt5mxUBxpQ-1
+X-Mimecast-MFC-AGG-ID: QvEGDVUpPNWGTt5mxUBxpQ
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4361fc2b2d6so27910625e9.3
+        for <linux-cxl@vger.kernel.org>; Tue, 04 Feb 2025 01:59:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738663198; x=1739267998;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=m9EKHP4nynfCdNmUrSWbenO+oqa2jlQ1dNbX1aaC4cc=;
+        b=vpHY0NYtsPbJcMzh7CVHXq0cLXt5o3TDd9tERSk/lPrUMTN6YIsA4atWDQl8Q/HLbQ
+         VE8+JNstRVMgoLhLAgOfSw0xBYANhHFhHx88enaWj/HTQNUv6J9KCG6Gh/v+uxsvQ1ox
+         OHUzqnnsAlg9JuyYSjjGxblkNSvenC2gZyXxYdBQrF0CYXXRQUjyNBub1drqGl5dDhOa
+         +UCYeYrrStNsvoCH8QiVL0VgtE9ZYlTT983ogovRSKUDl3KqH39e7rJWDeIDuXYAguxi
+         GKhojODICm/PDSoPCvfLfVz09BnTek98KUkY0Wfp8U5u3+QSMIr2wVEn6E+XlGIFspaq
+         Iv4w==
+X-Gm-Message-State: AOJu0YxAmqJVoUJSN4hMS2YFBEVAvIJcHqi5+DtYtqa7tq1E4LXUUxqD
+	LYccncp1hHUClQ/gEUv4suzrOlya7uI5PvVfYk14veeH0fcF2aM08wdtOohhIZuNYy8EKfTmZfx
+	KMqLZnd+T0wBxDWAua1heb2oF4VOv5+9PXuTxrHGmghEdVZaopnfZFoB0cg==
+X-Gm-Gg: ASbGnctykQm31OmdGN9y9FoG35Jdycy3wyNYL5X33bsFKYAonK6ngAVVIZtCj19wo13
+	8l91b5i1K7xd6nqjqlBR/CVRBvg/u0X1tTR2s+qV7BFUXhQU4Eqj/HRSluLWNXA5vWtqHUIsX5A
+	sGoLDVSOdLKkcz4MTPYrkEMkQfPWZbYraAq3R6ESkC2W0raytYSItBDI/0//TLN0OPUm0RKgQpk
+	1AkmIt5fvWIKcfkEPzS1P8mm6etHXeqiW+CEtbvIGbfUrRiYn5yu2ojVRmBqBrGWW9QWbVD4/XD
+	eg36AwyTZno2Dz7MAxBUIK8nW8osW+j9Ls05OpEcEeXNtsN3W8sgL1aR+Eraj+cvggqPqhjeH5n
+	W1eid5qeYeHRd6hgBzNAM95fPM5M=
+X-Received: by 2002:a05:600c:1d07:b0:434:f219:6b28 with SMTP id 5b1f17b1804b1-438dc40ff6fmr196190345e9.24.1738663198618;
+        Tue, 04 Feb 2025 01:59:58 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEtopFGL7jNdvaOuoIy/KfAsAxC9FULS53CWXbdFKmMqrHJokZHeTPUiO/3DKnbEDH+GDtscw==
+X-Received: by 2002:a05:600c:1d07:b0:434:f219:6b28 with SMTP id 5b1f17b1804b1-438dc40ff6fmr196190205e9.24.1738663198246;
+        Tue, 04 Feb 2025 01:59:58 -0800 (PST)
+Received: from ?IPV6:2003:cb:c70a:300:3ae1:c3c0:cef:8413? (p200300cbc70a03003ae1c3c00cef8413.dip0.t-ipconnect.de. [2003:cb:c70a:300:3ae1:c3c0:cef:8413])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438dcc2ef08sm221424315e9.22.2025.02.04.01.59.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2025 01:59:57 -0800 (PST)
+Message-ID: <3e5cfe8b-9ca8-4625-b6ff-7f170f1579ff@redhat.com>
+Date: Tue, 4 Feb 2025 10:59:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
- frapeml500008.china.huawei.com (7.182.85.71)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [LSF/MM/BPF TOPIC] Restricting or migrating unmovable kernel
+ allocations from slow tier
+To: Hyeonggon Yoo <42.hyeyoo@gmail.com>, lsf-pc@lists.linux-foundation.org,
+ linux-mm@kvack.org
+Cc: linux-cxl@vger.kernel.org, Byungchul Park <byungchul@sk.com>,
+ Honggyu Kim <honggyu.kim@sk.com>
+References: <Z54hUTXRsw0LYQ8b@localhost.localdomain>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <Z54hUTXRsw0LYQ8b@localhost.localdomain>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 2LqZYUCB30wn4Fzhj3zAwBkJbAFI2kGjrJycqpVlHcM_1738663199
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, 4 Feb 2025 14:16:19 +0900
-Itaru Kitayama <itaru.kitayama@linux.dev> wrote:
+On 01.02.25 14:29, Hyeonggon Yoo wrote:
+> Hi,
+> 
+> Byungchul and I would like to suggest a topic about the performance impact of
+> kernel allocations on CXL memory.
+> 
+> As CXL-enabled servers and memory devices are being developed, CXL-supported
+> hardware is expected to continue emerging in the coming years.
+> 
+> The Linux kernel supports hot-plugging CXL memory via dax/kmem functionality.
+> The hot-plugged memory allows either unmovable kernel allocations
+> (ZONE_NORMAL), or restricts them to movable allocations (ZONE_MOVABLE)
+> depending on the hot-plug policy.
+> 
+> Recently, Byungchul and I observed a measurable performance degradation with
+> memhp_default_state=online compared to memhp_default_state=online_movable
+> on a server where the ratio of memory capacity between DRAM and CXL is 1:2
+> when running the llama.cpp workload with the default mempolicy.
+> The workload performs LLM inference and pressures the memory subsystem
+> due to its large working set size.
+> 
+> Obviously, allowing kernel allocations from CXL memory degrades performance
+> because kernel memory like page tables, kernel stacks, and slab allocations,
+> is accessed frequently and may reside in physical memory with significantly
+> higher access latency.
+> 
+> However, as far as I can tell there are at least two reasons why we need to
+> support ZONE_NORMAL for CXL memory (please add if there are more):
+>    1. When hot-plugging a huge amount of CXL memory, the size of
+>       the struct page array might not fit into DRAM
+>       -> This could be relaxed with memmap_on_memory
 
-> Jonathan,
->=20
-> > On Feb 4, 2025, at 2:30, Jonathan Cameron <Jonathan.Cameron@huawei.com>=
- wrote:
-> >=20
-> > Add a single complex case for aarch64 virt machine.
-> > Given existing much more comprehensive tests for x86 cover the
-> > common functionality, a single test should be enough to verify
-> > that the aarch64 part continue to work.
-> >=20
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > ---
-> > tests/qtest/cxl-test.c  | 59 ++++++++++++++++++++++++++++++++---------
-> > tests/qtest/meson.build |  1 +
-> > 2 files changed, 47 insertions(+), 13 deletions(-)
-> >=20
-> > diff --git a/tests/qtest/cxl-test.c b/tests/qtest/cxl-test.c
-> > index a600331843..c7189d6222 100644
-> > --- a/tests/qtest/cxl-test.c
-> > +++ b/tests/qtest/cxl-test.c
-> > @@ -19,6 +19,12 @@
-> >     "-device pxb-cxl,id=3Dcxl.1,bus=3Dpcie.0,bus_nr=3D53 " \
-> >     "-M cxl-fmw.0.targets.0=3Dcxl.0,cxl-fmw.0.targets.1=3Dcxl.1,cxl-fmw=
-.0.size=3D4G "
-> >=20
-> > +#define QEMU_VIRT_2PXB_CMD \
-> > +    "-machine virt,cxl=3Don -cpu max " \
-> > +    "-device pxb-cxl,id=3Dcxl.0,bus=3Dpcie.0,bus_nr=3D52 " \
-> > +    "-device pxb-cxl,id=3Dcxl.1,bus=3Dpcie.0,bus_nr=3D53 " \
-> > +    "-M cxl-fmw.0.targets.0=3Dcxl.0,cxl-fmw.0.targets.1=3Dcxl.1,cxl-fm=
-w.0.size=3D4G "
-> > +
-> > #define QEMU_RP \
-> >     "-device cxl-rp,id=3Drp0,bus=3Dcxl.0,chassis=3D0,slot=3D0 "
-> >=20
-> > @@ -197,25 +203,52 @@ static void cxl_2pxb_4rp_4t3d(void)
-> >     qtest_end();
-> >     rmdir(tmpfs);
-> > }
-> > +
-> > +static void cxl_virt_2pxb_4rp_4t3d(void)
-> > +{
-> > +    g_autoptr(GString) cmdline =3D g_string_new(NULL);
-> > +    char template[] =3D "/tmp/cxl-test-XXXXXX";
-> > +    const char *tmpfs;
-> > +
-> > +    tmpfs =3D mkdtemp(template);
-> > +
-> > +    g_string_printf(cmdline, QEMU_VIRT_2PXB_CMD QEMU_4RP QEMU_4T3D,
-> > +                    tmpfs, tmpfs, tmpfs, tmpfs, tmpfs, tmpfs,
-> > +                    tmpfs, tmpfs);
-> > +
-> > +    qtest_start(cmdline->str);
-> > +    qtest_end();
-> > +    rmdir(tmpfs);
-> > +}
-> > #endif /* CONFIG_POSIX */
-> >=20
-> > int main(int argc, char **argv)
-> > {
-> > -    g_test_init(&argc, &argv, NULL);
-> > +    const char *arch =3D qtest_get_arch();
-> >=20
-> > -    qtest_add_func("/pci/cxl/basic_hostbridge", cxl_basic_hb);
-> > -    qtest_add_func("/pci/cxl/basic_pxb", cxl_basic_pxb);
-> > -    qtest_add_func("/pci/cxl/pxb_with_window", cxl_pxb_with_window);
-> > -    qtest_add_func("/pci/cxl/pxb_x2_with_window", cxl_2pxb_with_window=
-);
-> > -    qtest_add_func("/pci/cxl/rp", cxl_root_port);
-> > -    qtest_add_func("/pci/cxl/rp_x2", cxl_2root_port);
-> > +    g_test_init(&argc, &argv, NULL);
-> > +    if (strcmp(arch, "i386") =3D=3D 0 || strcmp(arch, "x86_64") =3D=3D=
- 0) {
-> > +        qtest_add_func("/pci/cxl/basic_hostbridge", cxl_basic_hb);
-> > +        qtest_add_func("/pci/cxl/basic_pxb", cxl_basic_pxb);
-> > +        qtest_add_func("/pci/cxl/pxb_with_window", cxl_pxb_with_window=
-);
-> > +        qtest_add_func("/pci/cxl/pxb_x2_with_window", cxl_2pxb_with_wi=
-ndow);
-> > +        qtest_add_func("/pci/cxl/rp", cxl_root_port);
-> > +        qtest_add_func("/pci/cxl/rp_x2", cxl_2root_port);
-> > #ifdef CONFIG_POSIX
-> > -    qtest_add_func("/pci/cxl/type3_device", cxl_t3d_deprecated);
-> > -    qtest_add_func("/pci/cxl/type3_device_pmem", cxl_t3d_persistent);
-> > -    qtest_add_func("/pci/cxl/type3_device_vmem", cxl_t3d_volatile);
-> > -    qtest_add_func("/pci/cxl/type3_device_vmem_lsa", cxl_t3d_volatile_=
-lsa);
-> > -    qtest_add_func("/pci/cxl/rp_x2_type3_x2", cxl_1pxb_2rp_2t3d);
-> > -    qtest_add_func("/pci/cxl/pxb_x2_root_port_x4_type3_x4", cxl_2pxb_4=
-rp_4t3d);
-> > +        qtest_add_func("/pci/cxl/type3_device", cxl_t3d_deprecated);
-> > +        qtest_add_func("/pci/cxl/type3_device_pmem", cxl_t3d_persisten=
-t);
-> > +        qtest_add_func("/pci/cxl/type3_device_vmem", cxl_t3d_volatile);
-> > +        qtest_add_func("/pci/cxl/type3_device_vmem_lsa", cxl_t3d_volat=
-ile_lsa);
-> > +        qtest_add_func("/pci/cxl/rp_x2_type3_x2", cxl_1pxb_2rp_2t3d);
-> > +        qtest_add_func("/pci/cxl/pxb_x2_root_port_x4_type3_x4",
-> > +                       cxl_2pxb_4rp_4t3d);
-> > #endif
-> > +    } else if (strcmp(arch, "aarch64") =3D=3D 0) {
-> > +#ifdef CONFIG_POSIX
-> > +        qtest_add_func("/pci/cxl/virt/pxb_x2_root_port_x4_type3_x4",
-> > +                       cxl_virt_2pxb_4rp_4t3d);
-> > +#endif
-> > +    }
-> > +
-> >     return g_test_run();
-> > }
-> > diff --git a/tests/qtest/meson.build b/tests/qtest/meson.build
-> > index e60e92fe9d..f5e7fb060e 100644
-> > --- a/tests/qtest/meson.build
-> > +++ b/tests/qtest/meson.build
-> > @@ -257,6 +257,7 @@ qtests_aarch64 =3D \
-> >   (config_all_accel.has_key('CONFIG_TCG') and                          =
-                  \
-> >    config_all_devices.has_key('CONFIG_TPM_TIS_I2C') ? ['tpm-tis-i2c-tes=
-t'] : []) + \
-> >   (config_all_devices.has_key('CONFIG_ASPEED_SOC') ? qtests_aspeed64 : =
-[]) + \
-> > +  qtests_cxl +                                                        =
-                          \
-> >   ['arm-cpu-features',
-> >    'numa-test',
-> >    'boot-serial-test',
-> > --=20
-> > 2.43.0
-> >  =20
->=20
-> In Ubuntu 22.04 LTS, cxl-test applied on top of today=E2=80=99s QEMU upst=
-ream master branch cxl-test fails:
->=20
-> $ ./tests/qtest/cxl-test
-> # random seed: R02S2a8b02df7b32b79d086ce22f7f8ebeab
-> 1..1
-> # Start of aarch64 tests
-> # Start of pci tests
-> # Start of cxl tests
-> # Start of virt tests
-> # starting QEMU: exec qemu-system-aarch64 -qtest unix:/tmp/qtest-568421.s=
-ock -qtest-log /dev/null -chardev socket,path=3D/tmp/qtest-568421.qmp,id=3D=
-char0 -mon chardev=3Dchar0,mode=3Dcontrol -display none -audio none -machin=
-e virt,cxl=3Don -cpu max -device pxb-cxl,id=3Dcxl.0,bus=3Dpcie.0,bus_nr=3D5=
-2 -device pxb-cxl,id=3Dcxl.1,bus=3Dpcie.0,bus_nr=3D53 -M cxl-fmw.0.targets.=
-0=3Dcxl.0,cxl-fmw.0.targets.1=3Dcxl.1,cxl-fmw.0.size=3D4G -device cxl-rp,id=
-=3Drp0,bus=3Dcxl.0,chassis=3D0,slot=3D0 -device cxl-rp,id=3Drp1,bus=3Dcxl.0=
-,chassis=3D0,slot=3D1 -device cxl-rp,id=3Drp2,bus=3Dcxl.1,chassis=3D0,slot=
-=3D2 -device cxl-rp,id=3Drp3,bus=3Dcxl.1,chassis=3D0,slot=3D3 -object memor=
-y-backend-file,id=3Dcxl-mem0,mem-path=3D/tmp/cxl-test-WdBn4X,size=3D256M -o=
-bject memory-backend-file,id=3Dlsa0,mem-path=3D/tmp/cxl-test-WdBn4X,size=3D=
-256M -device cxl-type3,bus=3Drp0,persistent-memdev=3Dcxl-mem0,lsa=3Dlsa0,id=
-=3Dpmem0 -object memory-backend-file,id=3Dcxl-mem1,mem-path=3D/tmp/cxl-test=
--WdBn4X,size=3D256M -object memory-backend-file,id=3Dlsa1,mem-path=3D/tmp/c=
-xl-test-WdBn4X,size=3D256M -device cxl-type3,bus=3Drp1,persistent-memdev=3D=
-cxl-mem1,lsa=3Dlsa1,id=3Dpmem1 -object memory-backend-file,id=3Dcxl-mem2,me=
-m-path=3D/tmp/cxl-test-WdBn4X,size=3D256M -object memory-backend-file,id=3D=
-lsa2,mem-path=3D/tmp/cxl-test-WdBn4X,size=3D256M -device cxl-type3,bus=3Drp=
-2,persistent-memdev=3Dcxl-mem2,lsa=3Dlsa2,id=3Dpmem2 -object memory-backend=
--file,id=3Dcxl-mem3,mem-path=3D/tmp/cxl-test-WdBn4X,size=3D256M -object mem=
-ory-backend-file,id=3Dlsa3,mem-path=3D/tmp/cxl-test-WdBn4X,size=3D256M -dev=
-ice cxl-type3,bus=3Drp3,persistent-memdev=3Dcxl-mem3,lsa=3Dlsa3,id=3Dpmem3 =
- -accel qtest
-> qemu-system-aarch64: -audio: invalid option
-> socket_accept failed: Resource temporarily unavailable
-> **
-> ERROR:../tests/qtest/libqtest.c:550:qtest_connect: assertion failed: (s->=
-fd >=3D 0 && s->qmp_fd >=3D 0)
-> Bail out! ERROR:../tests/qtest/libqtest.c:550:qtest_connect: assertion fa=
-iled: (s->fd >=3D 0 && s->qmp_fd >=3D 0)
-> ../tests/qtest/libqtest.c:199: kill_qemu() tried to terminate QEMU proces=
-s but encountered exit status 1 (expected 0)
-> Aborted (core dumped)
->=20
-> Do I need set env vars when execute this test?
+There are some others, although most are less significant, and I tried 
+documenting them here:
 
-I've just been running it with make check-qtest and not seeing anything sim=
-ilar.
-
-I'm not sure what infrastructure qtest puts round these but I guess it sets
-up that socket.
-
-Jonathan
+https://www.kernel.org/doc/html/latest/admin-guide/mm/memory-hotplug.html#zone-movable-sizing-considerations
 
 
+E.g., a 4 KiB page requires a single PTE (8 bytes) to be mapped into 
+user space, corresponding to 0.2 %. At least for anonymous memory, 
+PMD-sized THPs don't help, because we still have to allocate the page 
+table to be prepared for a PMD->PTE remapping. In the worst case, the 
+directmap requires another 0.2 % (but usually, we rely on PMD mappings). 
+So that usage depends on how you are intending to use the CXL memory 
+(e.g., pagecache vs. anonymous memory).
 
->=20
-> Itaru.
+
+ >    2. To hot-unplug CXL memory, pages in CXL memory should be 
+migrated to DRAM,
+ >       which means sometimes some portion of CXL memory should be 
+ZONE_NORMAL.
+
+I don't quite understand that argument for ZONE_NORMAL.
+
+-- 
+Cheers,
+
+David / dhildenb
+
