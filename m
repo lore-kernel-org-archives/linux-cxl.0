@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE3F925A623
-	for <linux-cxl@vger.kernel.org>; Tue,  4 Feb 2025 22:04:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33FFA25A623
+	for <linux-cxl@vger.kernel.org>; Tue,  4 Feb 2025 22:04:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738706688; cv=none; b=m5TdnjROG9HcvtASNvx9SpuJgnLSWxQWmWY4GRo87lMD1g8Zs137sVAJSxVqavSC4YO4qJGMkCBhZojIFnO59xX29ods10gciCoDgKRkTIXERxp1PEsV8iUuWq+PoW1xaTlfd56KdIs+fzxNbQ3qt350ruzcz1567pByhqFzGXw=
+	t=1738706690; cv=none; b=qjKBzgn2yOPzrH50j6NIMAzWd3ZsP4U0/oL2Yd0MfoULSCyNQv6IPfdhMMZzNzPAirj4HDFwiKxP2zRqBJNR9QK5dcxYrB4j2P9WlJCqsriOX9RrT0wx28lIqSJ67tT6MSW40FytDs8dlcKC8MV5fJvriNh7TPwlD8Ynv1NPNmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738706688; c=relaxed/simple;
-	bh=DUmCNlRQYdYNaTVWQryluYHT2VuW1cs3qgmEVyhVn0M=;
+	s=arc-20240116; t=1738706690; c=relaxed/simple;
+	bh=i9zckXiawJdK7UCsszm7YOLbjagjZfXgkO1egOW9J2Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FEfpPYtfCZaXq9XwZo2MZ8ip+tsOpVs37shw7gQKnX6nJWqqKqLA5ICI+4LhdI8S9VJYO23v5V1OPz3wgjnb1FGYq0+IxDS/LYHzWjATuX/SvWN638Eg0phAyFd5s1T9bx7RCo+1B3fvvXfm60hAiiMjfg9PwBWYt7lWzgLcQzE=
+	 MIME-Version; b=JCyVjFi4D0iudKpXcHEJorG+qoDFdhnC6MjLmlA5CdZSR29TamoM44mb3JmAwjq1Ne9N4s76lCZ2mENTExPNS4s3aTr2bbB0xDBI3yt+KlRD9Ba9ZYznAy321KEjLn5PkD8vPmIABjdL2bgjPrHkOezjcuidERBl5ksmlkkxWN0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A013FC4CEDF;
-	Tue,  4 Feb 2025 22:04:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 845AAC4CEE3;
+	Tue,  4 Feb 2025 22:04:49 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: dan.j.williams@intel.com,
@@ -24,9 +24,9 @@ Cc: dan.j.williams@intel.com,
 	dave@stgolabs.net,
 	jgg@nvidia.com,
 	shiju.jose@huawei.com
-Subject: [PATCH v3 07/16] cxl: Setup exclusive CXL features that are reserved for the kernel
-Date: Tue,  4 Feb 2025 15:03:08 -0700
-Message-ID: <20250204220430.4146187-8-dave.jiang@intel.com>
+Subject: [PATCH v3 08/16] cxl: Add FWCTL support to the CXL memdev driver
+Date: Tue,  4 Feb 2025 15:03:09 -0700
+Message-ID: <20250204220430.4146187-9-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250204220430.4146187-1-dave.jiang@intel.com>
 References: <20250204220430.4146187-1-dave.jiang@intel.com>
@@ -38,161 +38,289 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Certain features will be exclusively used by components such as in
-kernel RAS driver. Setup an exclusion list that can be later filtered
-out before exposing to user space.
+Add fwctl support code to allow sending of CXL feature commands from
+userspace through as ioctls via FWCTL. Provide initial setup bits.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/cxl/core/features.c | 29 +++++++++++++++++++++++++++++
- drivers/cxl/features.c      |  4 ++++
- drivers/cxl/features.h      |  3 +++
- include/cxl/features.h      | 35 +++++++++++++++++++++++++++++++++++
- 4 files changed, 71 insertions(+)
+v3:
+- Fix spelling error in Kconfig text
+- Remove errant blank line
+- Drop using of __weak. (Jason)
+- Return NULL for allocate function. (Jonathan)
+---
+ drivers/cxl/Kconfig        | 15 +++++++
+ drivers/cxl/Makefile       |  1 +
+ drivers/cxl/features.c     |  8 +++-
+ drivers/cxl/features.h     | 29 +++++++++++++
+ drivers/cxl/fwctl.c        | 89 ++++++++++++++++++++++++++++++++++++++
+ include/cxl/features.h     |  3 ++
+ include/uapi/fwctl/fwctl.h |  1 +
+ tools/testing/cxl/Kbuild   |  1 +
+ 8 files changed, 145 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/cxl/fwctl.c
 
-diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-index ec0df5ad741c..0ab02c2a94f9 100644
---- a/drivers/cxl/core/features.c
-+++ b/drivers/cxl/core/features.c
-@@ -8,6 +8,35 @@
- #include "cxlmem.h"
- #include "features.h"
+diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+index 876469e23f7a..6bb1ffc74956 100644
+--- a/drivers/cxl/Kconfig
++++ b/drivers/cxl/Kconfig
+@@ -102,6 +102,21 @@ config CXL_MEM
  
-+/* All the features below are exclusive to the kernel */
-+static const uuid_t cxl_exclusive_feats[] = {
-+	CXL_FEAT_PATROL_SCRUB_UUID,
-+	CXL_FEAT_ECS_UUID,
-+	CXL_FEAT_SPPR_UUID,
-+	CXL_FEAT_HPPR_UUID,
-+	CXL_FEAT_CACHELINE_SPARING_UUID,
-+	CXL_FEAT_ROW_SPARING_UUID,
-+	CXL_FEAT_BANK_SPARING_UUID,
-+	CXL_FEAT_RANK_SPARING_UUID,
-+};
+ 	  If unsure say 'm'.
+ 
++config CXL_FWCTL
++	bool "CXL: Firmware Control support"
++	depends on CXL_MEM
++	select FWCTL
++	help
++	  Enable support for firmware control of CXL devices. This allows
++	  a FWCTL char device to be created in order to issue ioctls from
++	  user space to exercise the CXL Features commands supported by
++	  a CXL mailbox. There are some Features defined in the CXL spec
++	  such as memory sparing. However a lot of those features are
++	  exclusive to the kernel. Most likely the Features manipulated
++	  by CXL_FWCTL will be vendor defined Features.
 +
-+/**
-+ * is_cxl_feature_exclusive() - Check if a CXL feature is exclusive to kernel
-+ * @entry: cxl feature entry
-+ *
-+ * Return true if feature is exclusive to kernel, otherwise false
-+ */
-+bool is_cxl_feature_exclusive(struct cxl_feat_entry *entry)
-+{
-+	for (int i = 0; i < ARRAY_SIZE(cxl_exclusive_feats); i++) {
-+		if (uuid_equal(&entry->uuid, &cxl_exclusive_feats[i]))
-+			return true;
-+	}
++	  If unsure say 'n'.
 +
-+	return false;
-+}
-+EXPORT_SYMBOL_NS_GPL(is_cxl_feature_exclusive, "CXL");
-+
- size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
- 		       enum cxl_get_feat_selection selection,
- 		       void *feat_out, size_t feat_out_size, u16 offset,
+ config CXL_PORT
+ 	default CXL_BUS
+ 	tristate
+diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
+index 12fbc35081bb..cd28fb3bf855 100644
+--- a/drivers/cxl/Makefile
++++ b/drivers/cxl/Makefile
+@@ -18,4 +18,5 @@ cxl_port-y := port.o
+ cxl_acpi-y := acpi.o
+ cxl_pmem-y := pmem.o security.o
+ cxl_mem-y := mem.o features.o
++cxl_mem-$(CONFIG_CXL_FWCTL) += fwctl.o
+ cxl_pci-y := pci.o
 diff --git a/drivers/cxl/features.c b/drivers/cxl/features.c
-index 4d8c603121f0..0086fdb20bfd 100644
+index 0086fdb20bfd..c14dc6d45985 100644
 --- a/drivers/cxl/features.c
 +++ b/drivers/cxl/features.c
-@@ -46,6 +46,7 @@ static int get_supported_features(struct cxl_memdev *cxlmd,
- 	struct cxl_mbox_get_sup_feats_in mbox_in;
- 	struct cxl_feat_entry *entry;
- 	struct cxl_mbox_cmd mbox_cmd;
-+	int user_feats = 0;
- 	int count;
+@@ -1,6 +1,8 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /* Copyright(c) 2024-2025 Intel Corporation. All rights reserved. */
++#include <linux/pci.h>
+ #include <linux/device.h>
++#include <linux/module.h>
+ #include <cxl/mailbox.h>
+ #include <cxl/features.h>
+ #include "cxl.h"
+@@ -173,7 +175,7 @@ static void cxlfs_free(void *_cxlfs)
+ }
+ DEFINE_FREE(free_cxlfs, struct cxl_features_state *, if (_T) cxlfs_free(_T))
  
- 	if (cxlfs->cap < CXL_FEATURES_RO)
-@@ -125,6 +126,8 @@ static int get_supported_features(struct cxl_memdev *cxlmd,
- 			return -ENXIO;
+-static struct cxl_features_state *devm_cxlfs_allocate(struct cxl_memdev *cxlmd)
++struct cxl_features_state *_devm_cxlfs_allocate(struct cxl_memdev *cxlmd)
+ {
+ 	int rc;
  
- 		memcpy(entry, mbox_out->ents, retrieved);
-+		if (!is_cxl_feature_exclusive(entry))
-+			user_feats++;
- 		entry++;
- 		/*
- 		 * If the number of output entries is less than expected, add the
-@@ -135,6 +138,7 @@ static int get_supported_features(struct cxl_memdev *cxlmd,
- 	} while (remain_feats);
+@@ -191,7 +193,7 @@ static struct cxl_features_state *devm_cxlfs_allocate(struct cxl_memdev *cxlmd)
+ 	return no_free_ptr(cxlfs);
+ }
  
- 	cxlfs->num_features = count;
-+	cxlfs->num_user_features = user_feats;
- 	cxlfs->entries = no_free_ptr(entries);
- 	return devm_add_action_or_reset(&cxlmd->dev, cxl_free_feature_entries,
- 					cxlfs->entries);
+-static void devm_cxlfs_free(struct cxl_memdev *cxlmd)
++void _devm_cxlfs_free(struct cxl_memdev *cxlmd)
+ {
+ 	kfree(cxlmd->cxlfs);
+ 	/* Set in devm_cxl_add_features(), make sure it's cleared */
+@@ -231,3 +233,5 @@ int devm_cxl_add_features(struct cxl_memdev *cxlmd)
+ 	return 0;
+ }
+ EXPORT_SYMBOL_NS_GPL(devm_cxl_add_features, "CXL");
++
++MODULE_IMPORT_NS("CXL");
 diff --git a/drivers/cxl/features.h b/drivers/cxl/features.h
-index 0cc6d9e6c441..8706f944b476 100644
+index 8706f944b476..a51625774b58 100644
 --- a/drivers/cxl/features.h
 +++ b/drivers/cxl/features.h
-@@ -3,6 +3,9 @@
+@@ -3,8 +3,37 @@
  #ifndef __CXL_FEATURES_LOCAL__
  #define __CXL_FEATURES_LOCAL__
  
-+struct cxl_feat_entry;
++struct cxl_features_state *_devm_cxlfs_allocate(struct cxl_memdev *cxlmd);
++void _devm_cxlfs_free(struct cxl_memdev *cxlmd);
 +
- int devm_cxl_add_features(struct cxl_memdev *cxlmd);
-+bool is_cxl_feature_exclusive(struct cxl_feat_entry *entry);
++#ifdef CONFIG_CXL_FWCTL
++struct cxl_features_state *_devm_cxlfs_fwctl_allocate(struct cxl_memdev *cxlmd);
++void _devm_cxlfs_fwctl_free(struct cxl_memdev *cxlmd);
++#endif
++
++static inline struct cxl_features_state *
++devm_cxlfs_allocate(struct cxl_memdev *cxlmd)
++{
++#ifdef CONFIG_CXL_FWCTL
++	return _devm_cxlfs_fwctl_allocate(cxlmd);
++#else
++	return _devm_cxlfs_allocate(cxlmd);
++#endif
++}
++
++static inline void devm_cxlfs_free(struct cxl_memdev *cxlmd)
++{
++#ifdef CONFIG_CXL_FWCTL
++	_devm_cxlfs_fwctl_free(cxlmd);
++#else
++	_devm_cxlfs_free(cxlmd);
++#endif
++}
++
+ struct cxl_feat_entry;
  
- #endif
++struct cxl_features_state *devm_cxlfs_allocate(struct cxl_memdev *cxlmd);
++void devm_cxlfs_free(struct cxl_memdev *cxlmd);
+ int devm_cxl_add_features(struct cxl_memdev *cxlmd);
+ bool is_cxl_feature_exclusive(struct cxl_feat_entry *entry);
+ 
+diff --git a/drivers/cxl/fwctl.c b/drivers/cxl/fwctl.c
+new file mode 100644
+index 000000000000..985315d5d503
+--- /dev/null
++++ b/drivers/cxl/fwctl.c
+@@ -0,0 +1,89 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/* Copyright(c) 2025 Intel Corporation. All rights reserved. */
++#include <linux/fwctl.h>
++#include <linux/device.h>
++#include <cxl/features.h>
++#include "cxlmem.h"
++#include "features.h"
++
++static int cxlctl_open_uctx(struct fwctl_uctx *uctx)
++{
++	return 0;
++}
++
++static void cxlctl_close_uctx(struct fwctl_uctx *uctx)
++{
++}
++
++static void *cxlctl_info(struct fwctl_uctx *uctx, size_t *length)
++{
++	/* Place holder */
++	return ERR_PTR(-EOPNOTSUPP);
++}
++
++static void *cxlctl_fw_rpc(struct fwctl_uctx *uctx, enum fwctl_rpc_scope scope,
++			   void *in, size_t in_len, size_t *out_len)
++{
++	/* Place holder */
++	return ERR_PTR(-EOPNOTSUPP);
++}
++
++static const struct fwctl_ops cxlctl_ops = {
++	.device_type = FWCTL_DEVICE_TYPE_CXL,
++	.uctx_size = sizeof(struct fwctl_uctx),
++	.open_uctx = cxlctl_open_uctx,
++	.close_uctx = cxlctl_close_uctx,
++	.info = cxlctl_info,
++	.fw_rpc = cxlctl_fw_rpc,
++};
++
++static void remove_cxlfs(void *_cxlfs)
++{
++	struct cxl_features_state *cxlfs = _cxlfs;
++	struct cxl_memdev *cxlmd = cxlfs->cxlmd;
++	struct fwctl_device *fwctl = &cxlfs->fwctl;
++
++	/* Set in devm_cxl_add_features(), make sure it's cleared */
++	cxlmd->cxlfs = NULL;
++	fwctl_unregister(fwctl);
++	fwctl_put(fwctl);
++}
++
++DEFINE_FREE(free_cxlfs, struct cxl_features_state *, if (_T) fwctl_put(&_T->fwctl))
++
++static struct cxl_features_state *
++__devm_cxlfs_fwctl_allocate(struct cxl_memdev *cxlmd, const struct fwctl_ops *ops)
++{
++	struct device *dev = &cxlmd->dev;
++	int rc;
++
++	struct cxl_features_state *cxlfs __free(free_cxlfs) =
++		fwctl_alloc_device(dev, ops, struct cxl_features_state, fwctl);
++	if (!cxlfs)
++		return NULL;
++
++	cxlfs->cxlmd = cxlmd;
++	rc = fwctl_register(&cxlfs->fwctl);
++	if (rc)
++		return NULL;
++
++	rc = devm_add_action_or_reset(dev, remove_cxlfs, cxlfs);
++	if (rc)
++		return NULL;
++
++	return no_free_ptr(cxlfs);
++}
++
++struct cxl_features_state *_devm_cxlfs_fwctl_allocate(struct cxl_memdev *cxlmd)
++{
++	return __devm_cxlfs_fwctl_allocate(cxlmd, &cxlctl_ops);
++}
++EXPORT_SYMBOL_NS_GPL(_devm_cxlfs_fwctl_allocate, "CXL");
++
++void _devm_cxlfs_fwctl_free(struct cxl_memdev *cxlmd)
++{
++	devm_release_action(&cxlmd->dev, remove_cxlfs, cxlmd);
++}
++EXPORT_SYMBOL_NS_GPL(_devm_cxlfs_fwctl_free, "CXL");
++
++MODULE_IMPORT_NS("FWCTL");
 diff --git a/include/cxl/features.h b/include/cxl/features.h
-index a7811969cfdb..869a18559f2b 100644
+index 869a18559f2b..b11b964e6384 100644
 --- a/include/cxl/features.h
 +++ b/include/cxl/features.h
-@@ -5,6 +5,39 @@
+@@ -4,6 +4,7 @@
+ #define __CXL_FEATURES_H__
  
  #include <linux/uuid.h>
++#include <linux/fwctl.h>
  
-+/* Feature UUIDs used by the kernel */
-+#define CXL_FEAT_PATROL_SCRUB_UUID						\
-+	UUID_INIT(0x96dad7d6, 0xfde8, 0x482b, 0xa7, 0x33, 0x75, 0x77, 0x4e,	\
-+		  0x06, 0xdb, 0x8a)
-+
-+#define CXL_FEAT_ECS_UUID							\
-+	UUID_INIT(0xe5b13f22, 0x2328, 0x4a14, 0xb8, 0xba, 0xb9, 0x69, 0x1e,	\
-+		  0x89, 0x33, 0x86)
-+
-+#define CXL_FEAT_SPPR_UUID							\
-+	UUID_INIT(0x892ba475, 0xfad8, 0x474e, 0x9d, 0x3e, 0x69, 0x2c, 0x91,	\
-+		  0x75, 0x68, 0xbb)
-+
-+#define CXL_FEAT_HPPR_UUID							\
-+	UUID_INIT(0x80ea4521, 0x786f, 0x4127, 0xaf, 0xb1, 0xec, 0x74, 0x59,	\
-+		  0xfb, 0x0e, 0x24)
-+
-+#define CXL_FEAT_CACHELINE_SPARING_UUID						\
-+	UUID_INIT(0x96C33386, 0x91dd, 0x44c7, 0x9e, 0xcb, 0xfd, 0xaf, 0x65,	\
-+		  0x03, 0xba, 0xc4)
-+
-+#define CXL_FEAT_ROW_SPARING_UUID						\
-+	UUID_INIT(0x450ebf67, 0xb135, 0x4f97, 0xa4, 0x98, 0xc2, 0xd5, 0x7f,	\
-+		  0x27, 0x9b, 0xed)
-+
-+#define CXL_FEAT_BANK_SPARING_UUID						\
-+	UUID_INIT(0x78b79636, 0x90ac, 0x4b64, 0xa4, 0xef, 0xfa, 0xac, 0x5d,	\
-+		  0x18, 0xa8, 0x63)
-+
-+#define CXL_FEAT_RANK_SPARING_UUID						\
-+	UUID_INIT(0x34dbaff5, 0x0552, 0x4281, 0x8f, 0x76, 0xda, 0x0b, 0x5e,	\
-+		  0x7a, 0x76, 0xa7)
-+
- struct cxl_mailbox;
+ /* Feature UUIDs used by the kernel */
+ #define CXL_FEAT_PATROL_SCRUB_UUID						\
+@@ -57,6 +58,7 @@ enum cxl_features_capability {
  
- /* Index IDs for CXL mailbox Feature commands */
-@@ -27,12 +60,14 @@ enum cxl_features_capability {
+ /**
+  * struct cxl_features_state - The Features state for the device
++ * @fwctl: FWCTL device
   * @cxlmd: Pointer to cxl mem device
   * @cap: Feature commands capability
   * @num_features: total Features supported by the device
-+ * @num_user_features: total Features not kernel exclusive
+@@ -64,6 +66,7 @@ enum cxl_features_capability {
   * @entries: Feature detail entries fetched from the device
   */
  struct cxl_features_state {
++	struct fwctl_device fwctl;
  	struct cxl_memdev *cxlmd;
  	enum cxl_features_capability cap;
  	int num_features;
-+	int num_user_features;
- 	struct cxl_feat_entry *entries;
+diff --git a/include/uapi/fwctl/fwctl.h b/include/uapi/fwctl/fwctl.h
+index f9b27fb5c161..4e4d30104667 100644
+--- a/include/uapi/fwctl/fwctl.h
++++ b/include/uapi/fwctl/fwctl.h
+@@ -43,6 +43,7 @@ enum {
+ enum fwctl_device_type {
+ 	FWCTL_DEVICE_TYPE_ERROR = 0,
+ 	FWCTL_DEVICE_TYPE_MLX5 = 1,
++	FWCTL_DEVICE_TYPE_CXL = 2,
  };
+ 
+ /**
+diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
+index 6b0a992af4a7..6396d1296cef 100644
+--- a/tools/testing/cxl/Kbuild
++++ b/tools/testing/cxl/Kbuild
+@@ -47,6 +47,7 @@ cxl_port-y += cxl_port_test.o
+ obj-m += cxl_mem.o
+ 
+ cxl_mem-y := $(CXL_SRC)/mem.o $(CXL_SRC)/features.o
++cxl_mem-$(CONFIG_CXL_FWCTL) += $(CXL_SRC)/fwctl.o
+ cxl_mem-y += config_check.o
+ cxl_mem-y += cxl_mem_test.o
  
 -- 
 2.48.1
