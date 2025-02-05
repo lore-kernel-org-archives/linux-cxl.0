@@ -1,278 +1,218 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1332A20DD49
-	for <linux-cxl@vger.kernel.org>; Wed,  5 Feb 2025 01:51:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738720266; cv=fail; b=GQNnJXuELB6R+9X/W8xyroacYdE8MxYAVsGk1G1Zg7w8gubSGz3H+HKe0Z1Kcuwkpt9b5kebsWG3kZXpMvx58ffNqWgiEyR+zCaIrVCmInP9r8AR2TA8wPoqQ/BXwhu6zYJSibSGIo2P8hyS8xRvRACcKCDAFzhHzNUGnXEh0OE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738720266; c=relaxed/simple;
-	bh=JP91ZsPmloHFcufIIQvB1YHUVKYvMauHvn7gPFtkswY=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=O1N/DuqkQxsBA9fWq30InEbgi+n3szGn4cwolaj4TvLkMHIFOsMwKHtnxG2pyArlgLyEXinqwMZjOaM1N3JL+xxIGV1APulasTRjRDBk7yLLCAT7EaLm9kd8adDLTDTxyzNNnQUXg6MQxU69989Tdc0DYu6iqia6SYUKNtfKrZo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HV4oWu/S; arc=fail smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D03D25A65D
+	for <linux-cxl@vger.kernel.org>; Wed,  5 Feb 2025 02:17:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738721836; cv=none; b=GNe2N1MF8Lh0015rRFBNfTIcH613nJgsB70W3Nf7/QpwCfKVyRDvsU3u9O7lSKnoJm264bCaOPEbhFRJqfVq2pqwP85seSiP6EYkQR99fDxvNLfksWmAv62KvP7/LU/6QfQh39rTltjN/vZbiVuLPsdwX6paQn7lVK1aL0LpJOE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738721836; c=relaxed/simple;
+	bh=CPlLUYXLI0IgQ1H+q1v8VNFC/v8ZG5uQkGMq9h6f9tk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oaVVKMcZwDLq0vm1AULkis7Hog6xilg8s1wi/wGlk/rcNkrZBcUdY1pxFwjWnvT79P6YVp/KPK82GnrAQmqCy689xflJYRIUeMiRGIcJp9asa0AnhXj3v9Ae73TDdt8AXAez/eUCxLNQF4sbBA1IZEH2r4Ccd3IDWY8M1N6fhO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Wog+RfI2; arc=none smtp.client-ip=209.85.222.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HV4oWu/S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738720263; x=1770256263;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=JP91ZsPmloHFcufIIQvB1YHUVKYvMauHvn7gPFtkswY=;
-  b=HV4oWu/SBP7tUrb5ScXaupBY/+ESmym/MGvGj2OQoW3prS2+dDUxOMd4
-   mj7qvy+M30z4gTzEbnXzg6evEjffA9ZTGEFMCX3CHbxVTDckZ/DxQrZ+X
-   xBYb5rfhKGwDT8Jz3fSX3+URDs6IiLezHrcWguu7aluEAQBGT9TJXoCcp
-   scStjJoMsAljGpr3LqTeLXW7KZgErTDFFO7Cbm49Soo6PoNQoEwip76cz
-   +R2wdAKMTwNhLuMdbWdgk8UyMezfUW0kasoPyX+Nh7un/RF79mFyALaGd
-   wQZfNIembi7BMp3ARKKKbHuO37xvWYJ1tRvZI2YTylOS1AQzAZVW50wek
-   Q==;
-X-CSE-ConnectionGUID: TIJehsExTNmbU/YPLrILZA==
-X-CSE-MsgGUID: xdHdNHo7TCeNijY7E9dp6Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="56698650"
-X-IronPort-AV: E=Sophos;i="6.13,260,1732608000"; 
-   d="scan'208";a="56698650"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2025 17:51:02 -0800
-X-CSE-ConnectionGUID: rcJW/KdLTB+BalHKJ7+FAw==
-X-CSE-MsgGUID: FTVJX2HTRyKsswTY8gJH8A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,260,1732608000"; 
-   d="scan'208";a="110653847"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 04 Feb 2025 17:51:01 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Tue, 4 Feb 2025 17:51:01 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Tue, 4 Feb 2025 17:51:01 -0800
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.48) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Tue, 4 Feb 2025 17:50:59 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fyU1xfuYCMe2Qs0i9tlZYszNiERCuzdfsGh8M9RyY/0L/vJFWpsKG47oVazZ/5lfwlH0vwRtaxH456DiYXZ4A6bO+Mc7K6q51vSZoccHAtc7d3tDDz1nhGFOWT3A2uE715Klx3RKgTb03DuyulGe/DQ6AcCaqNvL+6oYsBrSW2VQ3PHgPf1x1DTFqVgeeJZeRCpNtFPPr6w6jC5AMlPqlFkt0E1+1Oeup8IRCiGUdOAdDzXXFriFCEen04Sr0gYv6XCxZ+0uS0Ha1nByqHlIUm5qfpDuLuD52oKQp5p/ZoIkmqbUTdXslBDsDl3jqwIJiP7s0pFG7bCLwGHdyr4fBw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XpOoFDn5GSAQVb8w0qvN1Z1LEvBoreFxSbgAK7wt4LA=;
- b=Jge0WXyUOv+XYStbkTO2DRkV/YZ66YNYcM26pEDGpZItehsJPTeOhKYQfNyXHXhtvSUQ5qQL3eqNX/9+GBZ3Q4oEJiKssfPtR8OG9jvbvHwS7Hpy9P+xA0Hz6nsgMTiPuCVT1PKVuc9XB8dSkRx18j5q30Ca7J9d1+z8l86L2MtVQKc3aznX0cxnvYM4b7LLgevte0H0ZD/HokkZjHcsfdMkoLJPyNEJQdnuJGghUgx1RNszlTzna4owmSCOvFUyTAq/vrSWi1T2QxTxqABm/TTxy+qysHre78YFneOD4Bo6tn+bxb1fJ3zWRT1df839iiuSPFa5MfFuzGX79MbJrA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by MW3PR11MB4729.namprd11.prod.outlook.com (2603:10b6:303:5d::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.10; Wed, 5 Feb
- 2025 01:50:16 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8398.025; Wed, 5 Feb 2025
- 01:50:16 +0000
-Date: Tue, 4 Feb 2025 17:50:14 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>
-CC: <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
-	<vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
-	<Jonathan.Cameron@huawei.com>, <dave@stgolabs.net>, <jgg@nvidia.com>,
-	<shiju.jose@huawei.com>
-Subject: Re: [PATCH v3 16/16] fwctl/cxl: Add documentation to FWCTL CXL
-Message-ID: <67a2c3d64966b_2d2c2942e@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20250204220430.4146187-1-dave.jiang@intel.com>
- <20250204220430.4146187-17-dave.jiang@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250204220430.4146187-17-dave.jiang@intel.com>
-X-ClientProxiedBy: MW4PR03CA0116.namprd03.prod.outlook.com
- (2603:10b6:303:b7::31) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Wog+RfI2"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7b6f19a6c04so586051785a.0
+        for <linux-cxl@vger.kernel.org>; Tue, 04 Feb 2025 18:17:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1738721833; x=1739326633; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gQ4wMumQZupZLc/dhljQZvdj84cqZT9CeaohEOD51F8=;
+        b=Wog+RfI2ROXqxVW4hl/py6mW+e/CIBrOu23kIytFdw9QbX7xFmxLEDGuWkuCMdOMLX
+         wHvc2P8kHqGCMfVnHfEHOqna0RKceYQLMN9el3qDaY6Pq2soPzZf0O3aUlUfbO0mhxND
+         40tnLWpDxl9bU500e8d+T2uC275RpP2qsAbNrA3SyKKXp7Uwk/8RKge6GYDopWKRQ1xd
+         dBefFlYbUGEuhw3E73/jRu/dPfsAXzzUyedmCm2j6XMVtKTOexfTOynjzoLV1C4Hh9v0
+         JD8eL36XtOQR3ruUXU4ATgddjeEy3l/+ATMVxlLQqCuOYuHsrscd/zcm4lgaZLs/ZvnH
+         ZDIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738721833; x=1739326633;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gQ4wMumQZupZLc/dhljQZvdj84cqZT9CeaohEOD51F8=;
+        b=OjlyxF2GpNQBnnFdH2Du6jRf3MWYV+2zPuKlmfsuTM2fg0Ss01ddwYQf8i4ZrIFsWQ
+         eq6M4TNcZmpNWVxFyOu69Ijt8748+aiASorAcwvJRc9XQuK2VkADNcSVMmtoP/xI4Ngx
+         JqLhpt2D1kjJYWVfrP2WSB7Vs/u6iasFydc4KX7435Ehd/7CI2Cwq1LeGqcMq8lVksP+
+         fMUddJgson7cGWE/nkVxg6gSfebT+Mz75vq0/auZKFMeqih+QT9eRV35oqtYyl2i2od5
+         mZz9dyJk93DqVZ7AmPCILwA/8EIavMvlnlL+JoiTsGD8TtJ59gDNqi+OCuX6iuBAWjZB
+         1JoA==
+X-Forwarded-Encrypted: i=1; AJvYcCVShDpKgv0NpbxPsFOOiZkF3/wCqY/tILD0G1WLYn445hDD4nnFyCPKz0XgjqE+XCWa1xjEPM4wb+g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzx0NXVprdYilaeN/lJrkKnrT22OFoj8CvCWgFEKDHVRyytAqor
+	akOlLhCASmTTXXu9Y/BLdh/v2F1GBp1MelcMPxddxibUnWOXIR5RZUNnqBKjX3zrO+awbHYN/br
+	1
+X-Gm-Gg: ASbGncuamxooVAHKDjWn9XBjmTZ5E+MNPcRECIhmAF7IwdSwByKPladprKNy6z0P56n
+	bQUBpQ3sq8zc2NvH+z0HnNUxs/Smb1Hfz6zaQ/AnZKYMP4pfVkbGVeUFnbCqwtht2AukwKGav24
+	/vY0Lr8FLxGogm5v1L+phxaDaDPdoFTN0zbsl7ldCCZrZvw4/XMPK6DOn3Vnl2JQA3fQuNfRzg8
+	On1sn+Pu8Fma+sIFhoVstafG/HEGoAZSXlAlI7j5Bsjxb6XTxl8pTFcVvoA6V93IqRBcT0qmzfs
+	bft5Kk8rOKyZP+uYyna9uO8HLR7aDMK0NyhJL1U3/Elw4EJqzVSIFo0ErKAT7FqxtNhB89hFaQ=
+	=
+X-Google-Smtp-Source: AGHT+IGcCYeEGXr7ma2IdlwziuxtLLKn8PauDO/TRhblgjJ2/h/K5GKeyVVeyaZAXnakq4YCgficbw==
+X-Received: by 2002:ad4:5f45:0:b0:6e4:227b:c2b0 with SMTP id 6a1803df08f44-6e42fbef82cmr19007526d6.22.1738721832796;
+        Tue, 04 Feb 2025 18:17:12 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e254814007sm68655186d6.34.2025.02.04.18.17.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 18:17:11 -0800 (PST)
+Date: Tue, 4 Feb 2025 21:17:09 -0500
+From: Gregory Price <gourry@gourry.net>
+To: lsf-pc@lists.linux-foundation.org
+Cc: linux-mm@kvack.org, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [LSF/MM] CXL Boot to Bash - Section 1: BIOS, EFI, and Early Boot
+Message-ID: <Z6LKJZkcdjuit2Ck@gourry-fedora-PF4VCD3F>
+References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|MW3PR11MB4729:EE_
-X-MS-Office365-Filtering-Correlation-Id: c37e045e-c4d9-48d5-742d-08dd45877061
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?rEHl64srfhq+9ihygYBMZ7nYJnjIONU1NWgPIVT2yRp3r3zGpNbDOjRQOrTx?=
- =?us-ascii?Q?pP1UlLIJW0uQga+Tgqbe3OBYn3GahlaDkbL/kOh8zjVM2G/AOh++5G7k62w0?=
- =?us-ascii?Q?ef98V5gvmCRnJjYrB+3WxFMkhhF4taGMWiJlJOEEPrj0jpQ6SLSAlDJvzXZJ?=
- =?us-ascii?Q?dglkk+SftgFsGasE+gS2thAS0n19XOFpH1LNTYSk48EBEPsFEwGWQTKEq2G+?=
- =?us-ascii?Q?5rUP1OKnZaSizUL3qX6kq7nLcoFMXzMX5uDEFaenEKNQSLngQMz+z5yyXR0O?=
- =?us-ascii?Q?ClaUFpv0qUljeh7Jfyl7M4JYTKCV47XMNYvdne0dASRc6xwXd8OLQn5BSSOM?=
- =?us-ascii?Q?QtYkiTWIcfMAiRi4BB4zOn+qDX7ijnf1FkBDXV7vRR8BpRj754f7b7YhAyvd?=
- =?us-ascii?Q?/UspY0fbWYyn9tSZlsUks2zEl/BmeIxAfkGVLudkxvpcEN5QfFg12KiW5+h+?=
- =?us-ascii?Q?3dU81u9OARuTUUxMFDZeSwTiR6LP4/1TTRJDxopGAxaJQ68zncrfQVU0Je2T?=
- =?us-ascii?Q?4MWx8FBAXA+6dlsRplB0Hydk7/ivlH+g/9EumBGcWwG92lO543aeS/6So4mj?=
- =?us-ascii?Q?C8C9E0s2KfvX3DchAFgLCoCNpnwN4yICZ9Ihfql6yZ9LwgH8nVmMskc+svxg?=
- =?us-ascii?Q?R+oBUMrIVK3Rpoa93PHDJpmF9PAPI7w90Cn7WxVp8D3FiowHcdAnOhTzJ58i?=
- =?us-ascii?Q?fVZcQaPk3ISWirsnj2I0Hy+52/kWRVbmwtvJc59MI2CM2Mi3lRXkoJWMStjF?=
- =?us-ascii?Q?P2RdqdeTYOSw5IXod0hIEBaDOMasVCuZ73fwk9KSaqDwENnqv7lLg9ijSf69?=
- =?us-ascii?Q?KKytU+x3G3jaFUjRINJmo/BKKfx8y+8YW4nbKCWEmY8+qpeCHjnvqBjK+Um4?=
- =?us-ascii?Q?fW8lYwlo9PQ/tU4Vr3+e0TSu1g9b0CRrbg66vo9ilTw2jCdyxar+9vJ7LHgA?=
- =?us-ascii?Q?n487cIbWvtK0IbZxd0iPmdal46YU1RNNaF8yzISxHMlh8c2sA4cNjXsmKxnl?=
- =?us-ascii?Q?PMrNkJY8yoxPKZd6zgqD/dcVKQYuBsm+Kt0z9haY49auCPfz/cTTPBL7BglY?=
- =?us-ascii?Q?UK1j/yI5ht/ssIcAz2x6wz4lZ64neMhd9CuGxHaiXOb6W2c6/dAApcb1AAFC?=
- =?us-ascii?Q?bilzkx40vKZM1JPzn+UqU5RYZcxzJi4/cF+TBgqSd0YhKWYLSd/EHdBdyPc1?=
- =?us-ascii?Q?UWjK8bm+xQzZCagE+xsKpk7rBhCeafgi5Eq/RQFeylp25DV2uHb1zykBYFpf?=
- =?us-ascii?Q?6C7FmhhzJe7vn0iy2ePtO9xan05mbXpMAaV5DLL6+JBcjieSm8EhwCnbte5E?=
- =?us-ascii?Q?QcBtisFc5xL/KYknLcMzRE8bQh5I6mwsu5lZyXuVtmVYocejR+xqJSDdJOiB?=
- =?us-ascii?Q?muBAEoqWzN4m5ngx2lcRUwjKIf6a?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?cApqYyX2QrUarnfw1n4d2dgXZGRkaKE4I/541RSUbo62O78rVBxisF40vrVy?=
- =?us-ascii?Q?SL0QD+twB8uVFm5WrKxIgBLpTjo8978eIPAKAVek0EIPi4fZs/HZJCCKlNnj?=
- =?us-ascii?Q?fPgwE+H+gQsVLT0W14HBYZetjh13A5xeZjnuAnuM33B8JYjzM0ULOYBNWgg4?=
- =?us-ascii?Q?sfJndW+a61dVPJaSpqa4Vfc8DQRRGBSCnivQpiAKmg9SIOFX01RJVv23O25T?=
- =?us-ascii?Q?0OA07otO8BVNIatTBhfrYO6cGV63328sGSA5gQvNgGFzFR34HRku7oO3cWcH?=
- =?us-ascii?Q?i7/dPyn79bfgsnzcCdhITGT6J7NxBjpV4dyWACRC/wWygD3BN/YmVHk01G2g?=
- =?us-ascii?Q?okyxUr6ScIOoEHp0k7fcYIzJz3v1a1YilkHdSGzsGuQRwzSuuLNEvWK/OwDO?=
- =?us-ascii?Q?hrQXkvbEs5pgSiikOehx1mF7MI1kML15GVsxF27ByRiaASS3WS7nfreoV/rO?=
- =?us-ascii?Q?n+1DVavmEkbWthxBnl6/FFqKEluEyznAvDpliD92KUojf8nm9zY3pHnbyA+F?=
- =?us-ascii?Q?Uo12IB6NgQefRf83hSrFZbQUP+5X3o8+HipZ0PAWAbWrxgChlf3pkJBywzw8?=
- =?us-ascii?Q?d13O+RasUXILCL4G69lxAt2QLmX7vlUJt6S4v1GbVhNhg/7YOQpTqOH/SXaI?=
- =?us-ascii?Q?0CJNZZfb1w5ti2ZSOrpSwyYbl6zpg8HI6xg03qeLy8Vhv+AmRpc3a3GL/38r?=
- =?us-ascii?Q?XetqCbIGDLVdB1nbfDrnqi3BjPhQtKij2SV9zVGSourVGv3b6fD85n5jxDQg?=
- =?us-ascii?Q?WUjnm8IPIOFmWYfaVwUiRcksRW80CRloa6dPRFYtaYfJMhu2rH06kEzAOfJ/?=
- =?us-ascii?Q?ADWjH3zBt9E6u0mQNZgfj/Juc++ANlL6IWFOjf8ZMp1LwC+EVIl6hgcjQmae?=
- =?us-ascii?Q?uu1MvqnTe7a/yMls7S3r+4r6auiZHKLoZkZ+kn4dfpGllvnB07NoFV679Fip?=
- =?us-ascii?Q?Q4UraW+tqrcGz+c5y1GY8C6eQFPfRYbXv08F7QCIA7CZ0x1mzmvGLsZkQ1Yd?=
- =?us-ascii?Q?YCTgvkRj5YEr/EY6jJXAGtOLVBUvxhYmfbYx1r2CrXp8peffMSSG67YUWPrx?=
- =?us-ascii?Q?TNfaQvY7axZoMStLB7jx7igeBW+f0TzzbNRg0kgl+d/luARWEUrR4PX8m46S?=
- =?us-ascii?Q?or9gj3ZdEk17HZ8POYtERaKsRKn2pPldwLDXaMONt0YARmVc9tW+mgLg3z+4?=
- =?us-ascii?Q?IgVPOD5++WFGR9Dh2ZxpaNaDT0zA3A//GlhUl2ZLI6CSURdjFn/QEcweVKkv?=
- =?us-ascii?Q?NGrKQneZTauWvcquffL+oikn9d/3qNtg8un4OyhAGRieZhuKFpWkvXuQA+SK?=
- =?us-ascii?Q?LAGkxb4fNv9kmcm0X5U6rj2vibjvOjXAE6je6IURVWJBRFvWGt87sornXtsQ?=
- =?us-ascii?Q?c2SNArwvz3UsV+T6sGRpEX+gCMwSSThycL44taNDxvvCYCZRo/9NALjBiobe?=
- =?us-ascii?Q?UM2kbAs8VV/BDVxStrpXxsTTgaAZcF+0C8xaJPtm7kSYjq8tovv8iPWL/pHX?=
- =?us-ascii?Q?GqdWs+HdJWQ4TAu0RpyplF8RaQzPCXIsG29YFay6tY06qA3emJgtuYlHY2yU?=
- =?us-ascii?Q?GCE2LdTb+g5elbaeFmj0JPLJB2Z8Z3bNe4yOSqU/wxwLAr/lpFTEOQCOLdvh?=
- =?us-ascii?Q?PA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: c37e045e-c4d9-48d5-742d-08dd45877061
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2025 01:50:16.6270
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ObjE4o27rfm4H+/P24i0vXrWO8KH8z2eB5808omoOahAj61DtlroJB2XcpuSOJp+n3QgMcRsLSeOpGuBgcOMwbo3Hmh+iD37Fak1N4BxVG4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4729
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
 
-Dave Jiang wrote:
-> Add policy and operational documentation for FWCTL CXL.
-> 
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> ---
-> v3:
-> - Add a sentence on how entries are filtered. (Jonathan)
-> ---
->  .../userspace-api/fwctl/fwctl-cxl.rst         | 137 ++++++++++++++++++
->  Documentation/userspace-api/fwctl/index.rst   |   1 +
->  MAINTAINERS                                   |   1 +
->  3 files changed, 139 insertions(+)
->  create mode 100644 Documentation/userspace-api/fwctl/fwctl-cxl.rst
-> 
-> diff --git a/Documentation/userspace-api/fwctl/fwctl-cxl.rst b/Documentation/userspace-api/fwctl/fwctl-cxl.rst
-> new file mode 100644
-> index 000000000000..81c694f6a44d
-> --- /dev/null
-> +++ b/Documentation/userspace-api/fwctl/fwctl-cxl.rst
-> @@ -0,0 +1,137 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +================
-> +fwctl cxl driver
-> +================
-> +
-> +:Author: Dave Jiang
-[..]
 
-Thanks for the verb tense changes!
+Tossing this out as larger documentation of these steps for comment,
+not as a representation of what will show up in the talk.
 
-> +
-> +Code example of a Get Feature
-> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> +
-> +.. code-block:: c
+This is trying to cover the minimum needed information to start
+reasoning about the growing complexity of configurations.
 
-Nice, thanks for the example, it finally allows me to put a finger on a
-naming nit below...
 
-> +
-> +        static int cxl_fwctl_rpc_get_test_feature(int fd, struct test_feature *feat_ctx,
-> +                                                  const uint32_t expected_data)
-> +        {
-> +                struct cxl_mbox_get_feat_in feat_in __attribute__((aligned(16))) = {0};
-> +                struct fwctl_rpc_cxl in __attribute__((aligned(16))) = {0};
-> +                struct fwctl_rpc_cxl_out *out;
-> +                struct fwctl_rpc rpc = {0};
-> +                size_t out_size;
-> +                uint32_t val;
-> +                void *data;
-> +                int rc;
-> +
-> +                uuid_copy(feat_in.uuid, feat_ctx->uuid);
-> +                feat_in.count = feat_ctx->get_size;
-> +
-> +                out_size = sizeof(*out) + feat_in.count;
-> +                out = aligned_alloc(16, out_size);
-> +                if (!out)
-> +                        return -ENOMEM;
-> +
-> +                memset(out, 0, out_size);
-> +                data = out->payload;
-> +
-> +                in.command_id = CXL_FEATURE_ID_GET_FEATURE;
+Platform / BIOS / EFI Configuraiton
+===================================
+---------------------------------------
+Step 1: BIOS-time hardware programming.
+---------------------------------------
 
-So this should probably be CXL_FWCTL_GET_FEATURE, right? There's no such
-thing as a feature command id to userspace only FWCTL command ids that
-translate to one of Get Suppported, Get, and Set Feature(s), and the
-"id" is implied.
+I don't want to focus on platform specifics, so really all you need
+to know about this phase for the purpose of MM is that platforms may
+program the CXL device heirarchy and lock the configuration.
 
-> +                in.op_size = sizeof(feat_in);
-> +                in.in_payload = (uint64_t)(uint64_t *)&feat_in;
-> +
-> +                rpc.size = sizeof(rpc);
-> +                rpc.scope = FWCTL_RPC_CONFIGURATION;
-> +                rpc.in_len = sizeof(in);
-> +                rpc.out_len = out_size;
-> +                rpc.in = (uint64_t)(uint64_t *)&in;
-> +                rpc.out = (uint64_t)(uint64_t *)out;
-> +
-> +                rc = send_command(fd, &rpc, out);
-> +                if (rc)
-> +                        goto out;
-> +
-> +                val = le32toh(*(__le32 *)data);
-> +                if (memcmp(&val, &expected_data, sizeof(val)) != 0) {
-> +                        rc = -ENXIO;
-> +                        goto out;
-> +                }
-> +
-> +        out:
-> +                free(out);
-> +                return rc;
-> +        }
-> +
-> +It is recommended to take a look at CXL CLI test directory
+In practice it means you probably can't reconfigure things after boot
+without doing major teardowns of the devices and resetting them -
+assuming the platform doesn't have major quirks that prevent this.
 
-Passive -> imperative:
+This has implications for Hotplug, Interleave, and RAS, but we'll
+cover those explicitly elsewhere. Otherwise, if something gets mucked
+up at this stage - complain to your platform / hardware vendor.
 
-s/It is recommended to take/Take/
 
-Other than that, this looks good!
+------------------------------------------------------------------
+Step 2: BIOS / EFI generates the CEDT (CXL Early Detection Table).
+------------------------------------------------------------------
+
+This table is responsible for reporting each "CXL Host Bridge" and
+"CXL Fixed Memory Window" present at boot - which enables early boot
+software to manage those devices and the memory capacity presented
+by those devices.
+
+Example CEDT Entries (truncated) 
+         Subtable Type : 00 [CXL Host Bridge Structure]
+              Reserved : 00
+                Length : 0020
+Associated host bridge : 00000005
+
+         Subtable Type : 01 [CXL Fixed Memory Window Structure]
+              Reserved : 00
+                Length : 002C
+              Reserved : 00000000
+   Window base address : 000000C050000000
+           Window size : 0000003CA0000000
+
+If this memory is NOT marked "Special Purpose" by BIOS (next section),
+you should find a matching entry EFI Memory Map and /proc/iomem
+
+BIOS-e820:   [mem 0x000000c050000000-0x000000fcefffffff] usable
+/proc/iomem: c050000000-fcefffffff : System RAM
+
+
+Observation: This memory is treated as 100% normal System RAM
+
+   1) This memory may be placed in any zone (ZONE_NORMAL, typically)
+   2) The kernel may use this memory for arbitrary allocations
+   4) The driver still enumerates CXL devices and memory regions, but
+   3) The CXL driver CANNOT manage this memory (as of today)
+      (Caveat: *some* RAS features may still work, possibly)
+
+This creates an nuanced management state.
+
+The memory is online by default and completely usable, AND the driver
+appears to be managing the devices - BUT the memory resources and the
+management structure are fundamentally separate.
+   1) CXL Driver manages CXL features
+   2) Non-CXL SystemRAM mechanisms surface the memory to allocators.
+
+
+---------------------------------------------------------------
+Step 3: EFI_MEMORY_SP - Deferring Management to the CXL Driver.
+---------------------------------------------------------------
+
+Assuming you DON'T want CXL memory to default to SystemRAM and prefer
+NOT to have your kernel allocate arbitrary resources on CXL, you
+probably want to defer managing these memory regions to the CXL driver.
+
+The mechanism for is setting EFI_MEMORY_SP bit on CXL memory in BIOS.
+This will mark the memory "Special Purpose".
+
+Doing this will result in your memory being marked "Soft Reserved" on
+x86 and ARM (presently unknown on other architectures).
+
+You will see Memory Map and iomem entries like so:
+
+BIOS-e820:   [mem 0x000000c050000000-0x000000fcefffffff] soft reserved
+/proc/iomem: c050000000-fcefffffff : Soft Reserved
+
+Unless of course:
+  1) CONFIG_EFI_SOFT_RESERVE=n in your build config, or
+  2) You set the nosoftreserve boot parameter
+  3) You kexec'd from a kernel where conditions #1 or #2 are met
+
+In which case you'll get SystemRAM as if EFI_MEMORY_SP was never set.
+(#3 was fun to debug, for some definition of fun. Ask me over coffee)
+
+------------------------------------------------------------
+First bit of nuanced complexity: Early-Boot Resource Re-use.
+------------------------------------------------------------
+How are MemoryMap resources managed by a driver after being reserved
+during early boot? Example: Hot-(un)plugging a device.
+
+What if we replace said Hot-unplugged device with a device with a new
+capacity?  What if the arch/platform code combines two adjacent
+regions with similar attributes before creating resources?
+
+Recent work by Nathan Fontenot [1] has been looking to try to address
+some of the issues with these Soft Reserved resources and either re-using them
+or handing them off entirely to the relative driver for management.
+
+[1] https://lore.kernel.org/linux-cxl/cover.1737046620.git.nathan.fontenot@amd.com/
+
+
+--------------------------------------------------------------------
+The Complexity story up til now (what's likely to show up in slides)
+--------------------------------------------------------------------
+
+Platform and BIOS:
+   May configure all the devices prior to kernel hand-off.
+   May or may not support reconfiguring / hotplug.
+BIOS and EFI:
+   EFI_MEMORY_SP              - used to defer management to drivers
+Kernel Build and Boot:
+   CONFIG_EFI_SOFT_RESERVE=n  - Will always result in CXL as SystemRAM
+   nosoftreserve              - Will always result in CXL as SystemRAM
+   kexec                      - SystemRAM configs carry over to target
+
+
+--------------------------------------------------------------------
+Next Up:
+   Driver Management - Decoders, HPA/SPA, DAX, and RAS.
+   Memory (Block) Hotplug - Zones, Auto-Online, and User Policy.
+   RAS - Poison, MCE, and why you probably want CXL=ZONE_MOVABLE.
+   Interleave - RAS and Region Management (Hotplug-ability) 
+
+~Gregory
