@@ -1,67 +1,66 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14781FF5F4
-	for <linux-cxl@vger.kernel.org>; Wed,  5 Feb 2025 19:35:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7240ADF5C
+	for <linux-cxl@vger.kernel.org>; Wed,  5 Feb 2025 19:50:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738784150; cv=none; b=Ncr94JAfa5bjhLDd+3HNoUVHJxlQmgYKz9XGCco5pi1cy+5hfkZxekw8siHOyKhiJAB6HTuBZd5IhOzT2awV96VzpqfPUSbBAqyRMFeEpykaOQMcfoWNfiqxgQDUPDkTkfNTbhGV0wfq+CpVNGdyCHyp5dCGiKoWdYTm++UOn90=
+	t=1738785028; cv=none; b=MrO7dzPVyDy70SEnYTZfafj32Y1rReifJ41B0Y8Dwkc1CeZvqsAvCK18m3pULZab5TyIORW2MamKPBlbIAH7EfZEBNRpEzbXHI8K7jMEgpe6tRZLr59Tk8cusNG6ZbtppzwjjKkJ6s4j90oOyj+k6TVRcpQsxWm/OOgMYIZfCcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738784150; c=relaxed/simple;
-	bh=7rmeXiOFyHpHUc2gcEBdx9CMM3a6bCCbvMpYqWexx08=;
+	s=arc-20240116; t=1738785028; c=relaxed/simple;
+	bh=n8j3DGOLUHU7uRmc+FhLpi4ngVKHsDZJ/NqvWTWKGcY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PzATNSNDBt4W2O7Q0oMBCYaMAxkpWCgnWB+wa21l0P1HTd3O8SSM4wumiGKl8TqX9M3BDmEa5+x+46wackQnWk51wZdFAMcyPBHP5m82zOVtvo6e7r4oD6h0njfObqeHG5tKrp5hZ9bMk/nwFMKV5ayORnIwfkc/ghu+hQfXJwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=B57nyCL9; arc=none smtp.client-ip=209.85.222.170
+	 Content-Type:Content-Disposition:In-Reply-To; b=bJkPT2RSEZVm3TyjZK9cyMsbSDcPRUnSUjpi96x/xBd5f7P0VftRfb3A9HfcRATjl6U2K+6p1OM7NKYR5ChjrsOgDsvSU0f5L/Eu1Pd88B9iavjWRtLnzlzTDnyhDSXCUZNmFdNLcepL4Z7tvlbYQ6OFqb4XovFful2mLs0cdkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=q9k7rDL9; arc=none smtp.client-ip=209.85.222.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="B57nyCL9"
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7c0155af484so12906885a.0
-        for <linux-cxl@vger.kernel.org>; Wed, 05 Feb 2025 11:35:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="q9k7rDL9"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7b7041273ddso7858385a.3
+        for <linux-cxl@vger.kernel.org>; Wed, 05 Feb 2025 11:50:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1738784148; x=1739388948; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1738785025; x=1739389825; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hEv6FH3+8Q9Xxcq199dXGOrCJLqcmfKdGm0I8JED3Qw=;
-        b=B57nyCL9AhXYhtMwVGvTNU96zns54sLmY88t0Y2E1nwT9B7IljwGmbHRK6n9RA4A2j
-         NFiDmUQoS7jeM493Xg/pgf7fMqjiXqaHzZfFN3scwms944w6zmmvWUaQYMY32maIdIKG
-         pdig2tjOjTXAmyAJ4c/RM3FmI7lkSd6dCFnPunqQULBOwNtj+4OqkboDOSMou3SJ2jUi
-         JyYAQ54Ljwv6ubKXCbjKwB0xtB+OHPY8UMAfGrBxohnwr8XfBIgJsf/unt2EwblVF6lL
-         19iOWjqK1omu1AJBJpdiV2qLm4rq1wqWk6PP5tg3N1Snk+S31CYZDIqN3uKV2si1mdTf
-         8VOQ==
+        bh=JB1QhklLlkYCU54lqW0Pm1NXVvCDDXyC2idxgwvRo9A=;
+        b=q9k7rDL9USHXqJYagynqTeWaqNWXooVFaKv4xC8LkdZmIJ/DQHRzFAwuNo6xNgepDb
+         Uj3oef18e/jHX/CQfS9WStux1RPBpIxiXz6FeDDIp/5zDrLIqk+BCRUuH89lXkfsyja7
+         4fk1twEZBpwHepIzwizC89qadIImAsx1ddtPY9AolaDtPy4EPp2w5W/ZpeTc5RkarUH4
+         mwGf5XGH4QAswMR4uLHfo4ffc70w4UXSN1JFgUfmjbwlLeRxXPnI14DaryOXKwpdZ19B
+         04oo++rpYP11iN/6HnJ4exH0FThIKopmy6SomPBMtPuFmel1x94fho3NOrYXShmXnVRJ
+         6HFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738784148; x=1739388948;
+        d=1e100.net; s=20230601; t=1738785025; x=1739389825;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hEv6FH3+8Q9Xxcq199dXGOrCJLqcmfKdGm0I8JED3Qw=;
-        b=u+txL5OMFFTIB3wcOK01KC24M+xJRrcKeuQHzKgN2CnpiGLHxXi4pr360NAnPfS/bI
-         4tBSWXGSwCQLJReh6Avj9eYLT32uOa2zkL5giISBarBHczMxlZqtASSI9tcOfK8xKokf
-         68NypDjad0onHtyc661lHEwJXfrvqit1eVi2rzZ0pr5iRoQrnl3bX1ByvfZnDSmTdJjR
-         /TcxXcwpjJWfO0QJ83umHRns1/U0Y4ZoEiXV0h4lzvvxhT1/OEnNdjJin27P32KTAVKl
-         fmySZkfLQ3+JQuGBvkcu5vSwWa0cvuGIq2GlGMiTQ9josgvZw5tQqdXX0ODftDlUlh/v
-         e9kQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUhP5+pZRDcWGnKOozdc2eydVVmFhNCusfMS5iuXqu+kBrl51vu7GGqv3qcFpLCo1nd9M00rZmGLLI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeWMg0YZKVU2x+VKHroE2X/5dkTDa/2MEN6mok4jjX2VsG7Apa
-	+QkGUh+xgQ9ehvQT6+QB7ruHG/8oeoLXY3VB78GzAUe0uFRpvgDAx336DM96274=
-X-Gm-Gg: ASbGncsSleOn36jvVVJ/JYDQc2PcMXMpJcZek0Hb2qBnoCqb0pTdNKNZNnitVusU9VZ
-	7YAmHVhGNGgI38UcuFb//4WQXowf/0b47v4V21utjg8VYOGDAdhJEnNxmJUZHcsvf0dsOnZxkab
-	qo+R5psWiOnqIgCQCxMLbMVhO2+tfGYeFB4/Ub2H0IxM353aL2eYuCpJLTgmUj9BRcIwPiKe/MA
-	eSie1v7Mhk5K3Gzac/qvCN+IiPjdDfyCoPhO6+JC7caKBglwNnm9fkKj+uDjobFJJmda4TJu/0o
-	qyS4jm9SehUdh2h1tJrrtlTz0iQgiIP60x+Pzq0477ixzkNZ3WHnEClhBgnAjswDfFV0+3b5tg=
+        bh=JB1QhklLlkYCU54lqW0Pm1NXVvCDDXyC2idxgwvRo9A=;
+        b=wgXlR3AWXgSqR4smJ+WcjgqyYsTITieaG0L5jZKJm593luEaQNfTRaFh5qO1qidb2P
+         eV3fg3+grhatiGKUR+Ylqf2/JkwH1y/Y8ox8w12S6SmqDezidKrYekNsfQtj8lvdSa/B
+         acBHtPMQU10NR+7w6xQAs1gBwZd+NTFJgIUoXvtc2ZuKM6jDGrfazLI/gJrUMy8CCmHV
+         fhYjE4N7zLUOEQEAOnPAj0z+HN70jb5/LHSr9NfhdD23FIzH2U01/29Os0PFsi7PmsJH
+         amBAWE6UUVnjDWjlCbdE9lPScdBADL8S+mYd0lS5kJoctNfqsUHFqZAb2Vt/OX+tFC3r
+         NglA==
+X-Forwarded-Encrypted: i=1; AJvYcCWyCxDt1hRVLbDi7OHNzAWmqnn3T3oZio7VZ0kYj1nIxQhOUVYvgJ7zGQYuMnLp3fiQxhyuT0Zc82E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzC8GsP0ydr9sMeCk0YEncsfUg8P5oN0XHKBfOAc0a+J23RDRDa
+	lX23OobNG4bv6tiNRVrYdWUGuT6eNJH9tZ+8s+nuGxfJiX998yJA3NDf79LPvJw=
+X-Gm-Gg: ASbGncsQObvGlWF7pEzkeHiBGV+logdlEFl8mftflTQC6HGQPH0U42KENPqQEYoYriO
+	/UTXaKIq40jInUzpBqVs8KDLCjLROqN84CdVNmDxPiwgLQmYQOJyejoZo7Q3vrLVfybtU1X9CF6
+	9FfZK2OHO1aYytjdIW+ouBbxYQUu/jBPVcY6tHcLYKaLxrh1LJL0FYIROaIr2iHEz52ABW0R2TP
+	B/ubxtM0yoMxJZ3QfIGqSXd3iGKjCpdChc9ZYgiXJrJ5upIw6cjdGTQcPjd3SH/TyUDGB1tWlzc
+	7rzqXW6sr3KBFZrlX1nCiatYgybp41taQLStmuKRBk/Kg0sJxmmwH7UBsyes/b53ibRxaTeYig=
 	=
-X-Google-Smtp-Source: AGHT+IEsah4I9S4q0Ze9aL8MG/O/dUCKPZO+7vyWCLiabhjOKyO3me8+KzmnUjKFwsULcJvzrFX+tw==
-X-Received: by 2002:a05:6214:4613:b0:6d4:142d:8119 with SMTP id 6a1803df08f44-6e42fcdc639mr53221046d6.42.1738784147737;
-        Wed, 05 Feb 2025 11:35:47 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGcFSjOMu8RpqfHkHlk/VsaPfJwj2d6oLcZx7tPWUMVQrzAwbXbG3wdktaK5qXTF1GIr6IVqA==
+X-Received: by 2002:a05:6214:21ed:b0:6d8:af37:ae5b with SMTP id 6a1803df08f44-6e42fc83442mr59146136d6.43.1738785025216;
+        Wed, 05 Feb 2025 11:50:25 -0800 (PST)
 Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e42778c9dbsm20875296d6.113.2025.02.05.11.35.46
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e42169524csm23923566d6.125.2025.02.05.11.50.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2025 11:35:47 -0800 (PST)
-Date: Wed, 5 Feb 2025 14:35:45 -0500
+        Wed, 05 Feb 2025 11:50:24 -0800 (PST)
+Date: Wed, 5 Feb 2025 14:50:22 -0500
 From: Gregory Price <gourry@gourry.net>
-To: "Luck, Tony" <tony.luck@intel.com>
-Cc: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
-	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-cxl@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
 	Alison Schofield <alison.schofield@intel.com>,
 	Vishal Verma <vishal.l.verma@intel.com>,
@@ -70,12 +69,11 @@ Cc: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
 	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
 	Yazen Ghannam <yazen.ghannam@amd.com>,
 	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v6 4/6] acpi/ghes, cper: Recognize and cache CXL Protocol
- errors
-Message-ID: <Z6O9kVCDqiKwQcYi@gourry-fedora-PF4VCD3F>
+Subject: Re: [PATCH v6 5/6] acpi/ghes, cxl/pci: Process CXL CPER Protocol
+ Errors
+Message-ID: <Z6PA_hN-3ZtWbhUh@gourry-fedora-PF4VCD3F>
 References: <20250123084421.127697-1-Smita.KoralahalliChannabasappa@amd.com>
- <20250123084421.127697-5-Smita.KoralahalliChannabasappa@amd.com>
- <Z6ESAm79OIAQaXM-@agluck-desk3>
+ <20250123084421.127697-6-Smita.KoralahalliChannabasappa@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -84,47 +82,29 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z6ESAm79OIAQaXM-@agluck-desk3>
+In-Reply-To: <20250123084421.127697-6-Smita.KoralahalliChannabasappa@amd.com>
 
-On Mon, Feb 03, 2025 at 10:59:14AM -0800, Luck, Tony wrote:
-> On Thu, Jan 23, 2025 at 08:44:19AM +0000, Smita Koralahalli wrote:
-> > diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-> > index b72772494655..4d725d988c43 100644
-> > --- a/drivers/acpi/apei/ghes.c
-> > +++ b/drivers/acpi/apei/ghes.c
-> > @@ -674,6 +674,56 @@ static void ghes_defer_non_standard_event(struct acpi_hest_generic_data *gdata,
-> >  	schedule_work(&entry->work);
-> >  }
-> >  
-> > +static void cxl_cper_post_prot_err(struct cxl_cper_sec_prot_err *prot_err,
-> > +				   int severity)
-> > +{
-> > +#ifdef CONFIG_ACPI_APEI_PCIEAER
+On Thu, Jan 23, 2025 at 08:44:20AM +0000, Smita Koralahalli wrote:
+> When PCIe AER is in FW-First, OS should process CXL Protocol errors from
+> CPER records. Introduce support for handling and logging CXL Protocol
+> errors.
 > 
-> #ifdef in ".c" code is ugly. But I don't see a less ugly way to deal
-> with this. Moving this elsewhere and adding an empty stub function
-> for when CONFIG_ACPI_APEI_PCIEAER isn't configured doesn't make things
-> any better.
->
-
-The generally accepted ways I've seen for static funcs in .c is:
-
-#ifdef CONFIG_ACPI_APEI_PCIEAER
-static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
-{
-	...
-}
-#else
-static void ghes_handle_aer(struct acpi_hest_generic_data *gdata) { }
-#endif
-
-This at least makes the function that does stuff easier to read and
-gives you a spot to throw out a "Config not enabled" error if its
-beneficial.
-
-More of a style nit than anything else.
-
-
-But either way,
+> The defined trace events cxl_aer_uncorrectable_error and
+> cxl_aer_correctable_error trace native CXL AER endpoint errors. Reuse them
+> to trace FW-First Protocol errors.
+> 
+> Since the CXL code is required to be called from process context and
+> GHES is in interrupt context, use workqueues for processing.
+> 
+> Similar to CXL CPER event handling, use kfifo to handle errors as it
+> simplifies queue processing by providing lock free fifo operations.
+> 
+> Add the ability for the CXL sub-system to register a workqueue to
+> process CXL CPER protocol errors.
+> 
+> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 
 Reviewed-by: Gregory Price <gourry@gourry.net>
