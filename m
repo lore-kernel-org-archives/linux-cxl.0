@@ -1,101 +1,188 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4A71B412A
-	for <linux-cxl@vger.kernel.org>; Thu,  6 Feb 2025 18:18:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82CE21A239A
+	for <linux-cxl@vger.kernel.org>; Thu,  6 Feb 2025 18:22:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738865923; cv=none; b=cGKuev9Pt5MTyxDsdc+gbIZV7m0X5Efl9oxZ6iixSxbw/YvIzKdqLpQd+/SIIXOLQC7/XPXaEOb9Q2tfRx9ugWNTl35lH7dmfLWL208CvNVW4dDTixbt202hl+FMfQPz+iKHqfVkQkSkH0gVAUK30MeCtySb+BlwX3M5XodNnPU=
+	t=1738866139; cv=none; b=Q5sHYaQ4lMk/4wkFgcn9XTLANIorZstt6Nlf93ZUIaQZyHYVRBGq/bowRiCwEj2Xjfwq0N/nRkhwKY4RRwi8EJyKiz5H0js8ObOE/O6ES9UwTYIeEVo0Ao/yOabT/EEfLns2CmmK8FR7VfpO7dn00QJZ+XjbjAza3JBPU6xI/tk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738865923; c=relaxed/simple;
-	bh=svxamlkxBUKcTv2w6ZafIS1La0uoCbSywKilubANIRo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=snElyxeBGzgVJUWblJuZbiUrYSGDAroXFmBAn426fegqREL8eSKJmYV0w0VXmQCVnig59qH5lf4MSwRZPYsSUj02ecVViwgg+cycJQVBsYXzMt+vCaG0xKohAPdcCBI8CuXW5uzcxEPes6vgiPjKwZY8zpuidoQCnTK8YDj/1bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=mbSs+E6K; arc=none smtp.client-ip=209.85.222.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1738866139; c=relaxed/simple;
+	bh=RNuDfLvxANr4HYgm+x3V6wd6PmSAu1PEmfPdO3mcWdA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W9KZdEyG2LI1scw6smh1SWfz7I4xfoBPA/AJle1mQYwHLVs4XDF327SeJdx06GkmJk1u1O6wGvAruOPDJF3k6kjUII2Yxv9e8AeDxHrn2vO6/XA7NEapqqOmzeL0qAAib5TJ2OMvzPp4n8jamP9mSchpIMMfIXdLvNTcmjL6Jtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NjEZqwpZ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="mbSs+E6K"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7b6e5ee6ac7so93969185a.0
-        for <linux-cxl@vger.kernel.org>; Thu, 06 Feb 2025 10:18:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1738865918; x=1739470718; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sUG6NzheiadFCQgj6TrWOr68/8bmtDa4jtIU00ptXAY=;
-        b=mbSs+E6K1mng+bdaDcGEHpilu6UD9hQ+MzTDmdB0rMQViksbRMFL5Y6WlrW2SA2tA+
-         K1mjJ2eoEShi78wee1z1RUpdF2a/WvieNFxjY6ZM74woVzYTmvesov0oCDwoUJAaRAOT
-         Zbsx5jvu465jpl4LQUWVy5K96G32hhd6WjZJJMLYRVrjbHQ4/1Jr9mofTXMfyyACkWOS
-         TUvPkB0eaTxJnAwmUS0kLy/rnHZi+32AcOoyF5RRQeOtfhPjV+vtRP1ge6PrWk9fdpQt
-         Yf9l2/+bFZ+bTJN/wHbGRyioUtpupBCAX3L5YWRvWA81YZlIRaExlWC1R4ti/TytXugZ
-         8tUg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NjEZqwpZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738866136;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=LRwETV/iLFtR/2LHzH+aFMI38YMZRd4xypTzTICAxBU=;
+	b=NjEZqwpZir1Or8mfsnGIZNqaSn6qYCDnKGB/V6DaBbc5bcIDcA+jvfMD7s/aT7lFqw2jH8
+	aTRLiahsBkOcEeoRLQpnUHDPorImY4yKeW5R1vZWvOrQYGzjgs+4VNtB4QRrE9wNUfqm3T
+	8iRWwq/vdNBjQrtI3qaZu14piUyVdis=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-183--ew2-85lNQWkiIAtXcZrbw-1; Thu, 06 Feb 2025 13:22:15 -0500
+X-MC-Unique: -ew2-85lNQWkiIAtXcZrbw-1
+X-Mimecast-MFC-AGG-ID: -ew2-85lNQWkiIAtXcZrbw
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43626224274so7397395e9.0
+        for <linux-cxl@vger.kernel.org>; Thu, 06 Feb 2025 10:22:15 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738865918; x=1739470718;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sUG6NzheiadFCQgj6TrWOr68/8bmtDa4jtIU00ptXAY=;
-        b=k2Ry64y3eswckKbgvjy8EmNA4qqbOJ+dcLgGRTquF8wY6LXp0rdV4efWZ6loS98/T7
-         seqnkapu0RnurkDMN8kFWp0Ualm+ptEj+aPe+FU2qMBreSJCsMwXavu7v1k+uZLhdX/O
-         h80w93TD4GXn1nvsPDO+6CTAS1jZw3mAVRzw8ZAqgioAcgEnks8Ofz0aZsjCjydilSo0
-         StEUzZ3AvczpjnFiOaCBQHOZv2ivHhpGmQEY1LgUO8fAm1e0L9mITITZ3DmHXWdQoZpM
-         ZOFo3RfUS3hLguPIptaiwFnoxSBpjCfF10G3s3DkImejbiOPUqnB/9xalf9a9L7w5jy9
-         dy+A==
-X-Gm-Message-State: AOJu0YzhXDF2WZorn0XzMlT5SzRAdsOr7a5vqcWL5rNhI0VZyTxT/yLU
-	hw0iSpz5wf5lCtmRPTPBaOZKiGkKGFSRR0/E0cAFTWoFZYmsTNjjsupbQpSHpBQ=
-X-Gm-Gg: ASbGncsWnlp2cNpv3s99eUbmutfCDmkHL0tzFybj5wlk6Xzxmv2Nk//HE+2EX6L3r6p
-	fgm4Vw97rlHJNFBjIS94G8y0Opy2BBRp2Z8wv1aW31RvIaT1/QOo0OAdMbWvsnMVzbySsqxElzQ
-	RLfri8qOcKQJBoTnUo1F16ERAV+lBFVSPyT1SdwZVlDgeNikAuCyFaEhhIxtNAJl55Cw1ylE8sb
-	9+yBKeShE4amdr53xFsIqOQ+eCZxlu5HMYqwWsD48JLX50YwW3ttP3j3mY5TJDLxIp6QVGjAzTM
-	xarszEngJ0BgDYGV+2q21jqzXxabqT9Oc+6icsi2PEPZBmb1z1/vnnnPzjOQriTwDdCXZ04oKQ=
-	=
-X-Google-Smtp-Source: AGHT+IE0GG1TtDuISiUGDhpqfV/qZ02GwpSV6gJbe4kGblMEMNURq4Dlgd839ByGnXLwhq51VKDVqg==
-X-Received: by 2002:a05:620a:43a1:b0:7b6:d6dd:8826 with SMTP id af79cd13be357-7c047c9512bmr16375185a.55.1738865918192;
-        Thu, 06 Feb 2025 10:18:38 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c041e9f94csm86724485a.78.2025.02.06.10.18.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 10:18:37 -0800 (PST)
-Date: Thu, 6 Feb 2025 13:18:35 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Terry Bowman <terry.bowman@amd.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
-	ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
-	rrichter@amd.com, nathan.fontenot@amd.com,
-	Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
-	ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com,
-	alucerop@amd.com
-Subject: Re: [PATCH v5 04/16] PCI/AER: Modify AER driver logging to report
- CXL or PCIe bus error type
-Message-ID: <Z6T8-zXvcdQrCWdu@gourry-fedora-PF4VCD3F>
-References: <20250107143852.3692571-1-terry.bowman@amd.com>
- <20250107143852.3692571-5-terry.bowman@amd.com>
+        d=1e100.net; s=20230601; t=1738866134; x=1739470934;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=LRwETV/iLFtR/2LHzH+aFMI38YMZRd4xypTzTICAxBU=;
+        b=e2SUV+azLbPjGKHpuBGcgEbyPX5HGf/R4n2qFiHEQCOjAC70TJlBEzhHtLtAtbRJDV
+         eDhGuNX0WDQ/457pXiVwSNVtZmMfkfZPEfx/LLkw4OBHuDUSfXNQ6K0gkv4UJIdWVqT9
+         S4uenHqZzRho3LpXvKzHcad7BZmW1rMl56goJA7zYRobxsopIm9j7tjkWWD1G9z2i2x2
+         Uy33ogsYZYDOFT+N0sNQmA+LJqwLg3BTe5yNihXWFcdJfe90MzDQ27hwdezi2jdCGBJ8
+         A/hr4Q1jZ6pv+N4YXgevG0TmPqnBCSZKjPtLcVftoukhnoiXn8sXtkJolA9LjMaCeSaS
+         EtkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXx8HZaoET0nIx0p0NpnxCldXT2MOQ+68PHazeQJXbwdCkl/FNmitCLFzmfN+N9jwvcZL7YCMTdQO0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YycMjXJ/26xUKMiOFTzONL8fB7CCCIrjHNiIZAGJFWwZQ3Az1J2
+	buI64rI87JXPHzbyVj4feJCTPNQN/2SaH6Trtb0o583TXuCR70lXs5VoymbeGF27D0nzGhqnrcf
+	uFujVN454KjqgYk2Ka12EEQEp/h3W//tA4da0gjCmyzoeZpdVGoQVGbxwBw==
+X-Gm-Gg: ASbGncuIuc/pd5CVszyIUY5dj5xRBH45hp5xmmd14v7VeLhEtzlzgSmO6C9VOjf4Ewe
+	yJRv2Y4txKQ0ZaFoiNo3inpVL9rwwTxAoZHOVH7uWwdqLqkc0I/CSjUq9vqVCCvMRQoUpxDaYZD
+	NpYQYS9ledk9v9fFBfqSwXXoLGGJO9WGfImIlLAOYutCccy0yuuC9+lvnKLj90HcyjsAE7O+hkq
+	07QAhzTQ9Y341bTO68zNxeHlb96hbLAJVvxBsrU7qG0PCQ2t/8y0C3LmgAJ3wEm2SSD2yEVPcXt
+	Q5LMrM0Dn2yvnSbhincU0IjOcPmno2oSeUq0xvAl63rJ+IBHIpCB6hCPady0qAYu124a1Gr6smH
+	2Y078IWnCJTalEe2ms5bXDtlAM6TK75N+
+X-Received: by 2002:a05:600c:5492:b0:438:a214:52f4 with SMTP id 5b1f17b1804b1-439249c3836mr3041735e9.25.1738866134136;
+        Thu, 06 Feb 2025 10:22:14 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEJsOu7BlThZM7jjX1u3bd1XUgT/ofkklDz8h7wnTYaw9b+KwJ+b24h6IY929fci0j6pQ/Akw==
+X-Received: by 2002:a05:600c:5492:b0:438:a214:52f4 with SMTP id 5b1f17b1804b1-439249c3836mr3041485e9.25.1738866133723;
+        Thu, 06 Feb 2025 10:22:13 -0800 (PST)
+Received: from ?IPV6:2003:cb:c707:3000:a06b:56f1:d152:db83? (p200300cbc7073000a06b56f1d152db83.dip0.t-ipconnect.de. [2003:cb:c707:3000:a06b:56f1:d152:db83])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390d93369fsm63771175e9.3.2025.02.06.10.22.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2025 10:22:12 -0800 (PST)
+Message-ID: <e1630046-8889-4452-9f8f-07695ba07772@redhat.com>
+Date: Thu, 6 Feb 2025 19:22:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250107143852.3692571-5-terry.bowman@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 01/26] fuse: Fix dax truncate/punch_hole fault path
+To: Albert Esteve <aesteve@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>, Dan Williams <dan.j.williams@intel.com>,
+ Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org,
+ linux-mm@kvack.org, alison.schofield@intel.com, lina@asahilina.net,
+ zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com,
+ vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com,
+ bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com,
+ will@kernel.org, mpe@ellerman.id.au, npiggin@gmail.com,
+ dave.hansen@linux.intel.com, ira.weiny@intel.com, willy@infradead.org,
+ djwong@kernel.org, tytso@mit.edu, linmiaohe@huawei.com, peterx@redhat.com,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+ nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+ linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
+ david@fromorbit.com, chenhuacai@kernel.org, kernel@xen0n.name,
+ loongarch@lists.linux.dev, Hanna Czenczek <hreitz@redhat.com>,
+ German Maglione <gmaglione@redhat.com>
+References: <cover.11189864684e31260d1408779fac9db80122047b.1736488799.git-series.apopple@nvidia.com>
+ <bfae590045c7fc37b7ccef10b9cec318012979fd.1736488799.git-series.apopple@nvidia.com>
+ <Z6NhkR8ZEso4F-Wx@redhat.com>
+ <67a3fde7da328_2d2c2942b@dwillia2-xfh.jf.intel.com.notmuch>
+ <Z6S7A-51SdPco_3Z@redhat.com> <20250206143032.GA400591@fedora>
+ <CADSE00+2o5Ma0W6FBLHwpUaKut9Tf74GKLCU-377qgxr08EeoQ@mail.gmail.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <CADSE00+2o5Ma0W6FBLHwpUaKut9Tf74GKLCU-377qgxr08EeoQ@mail.gmail.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: ZBfH8VfNpjsIMwSq9Z5pW1cKVxnpfnbwi03dXuAeN14_1738866134
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 07, 2025 at 08:38:40AM -0600, Terry Bowman wrote:
-> The AER driver and aer_event tracing currently log 'PCIe Bus Type'
-> for all errors.
+On 06.02.25 15:59, Albert Esteve wrote:
+> Hi!
 > 
-> Update the driver and aer_event tracing to log 'CXL Bus Type' for CXL
-> device errors.
+> On Thu, Feb 6, 2025 at 3:30 PM Stefan Hajnoczi <stefanha@redhat.com> wrote:
+>>
+>> On Thu, Feb 06, 2025 at 08:37:07AM -0500, Vivek Goyal wrote:
+>>> And then there are challenges at QEMU level. virtiofsd needs additional
+>>> vhost-user commands to implement DAX and these never went upstream in
+>>> QEMU. I hope these challenges are sorted at some point of time.
+>>
+>> Albert Esteve has been working on QEMU support:
+>> https://lore.kernel.org/qemu-devel/20240912145335.129447-1-aesteve@redhat.com/
+>>
+>> He has a viable solution. I think the remaining issue is how to best
+>> structure the memory regions. The reason for slow progress is not
+>> because it can't be done, it's probably just because this is a
+>> background task.
 > 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Reviewed-by: Fan Ni <fan.ni@samsung.com>
+> It is partially that, indeed. But what has me blocked for now on posting the
+> next version is that I was reworking a bit the MMAP strategy.
+> Following David comments, I am relying more on RAMBlocks and
+> subregions for mmaps. But this turned out more difficult than anticipated.
 
-Worth a macro/static function?  Wonder what else could use this.
+Yeah, if that turns out to be too painful, we could start with the 
+previous approach and work on that later. I also did not expect that to 
+become that complicated.
 
-Reviewed-by: Gregory Price <gourry@gourry.net>
+-- 
+Cheers,
+
+David / dhildenb
+
