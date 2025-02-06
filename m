@@ -1,123 +1,140 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88D41A5B84
-	for <linux-cxl@vger.kernel.org>; Thu,  6 Feb 2025 14:30:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E993F236426
+	for <linux-cxl@vger.kernel.org>; Thu,  6 Feb 2025 14:59:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738852249; cv=none; b=MLXDn8Ivk5IQUuk0UvPkxGJI3QIgsUtRTNf6tEAt+Bzglhxr5xTsjORta07l695zVFbaGnvuOpRSZ24vT72eLo4fN3oCUc3hTci2f5fj/y5DIYkhsquEI2bYDMtZ8Yze0RzCPt4LP42XXw14lY0e8Owb8tfJ9/8QQAucSW6Rff8=
+	t=1738853960; cv=none; b=FGsyykFWn7lv5DWLyqsOXG0m2+bf0I/FT33IwJ83CZ84esooKdBIZB+xzCfnc2wJjK7LabVYRPYbTCcZmV/NAo41Yj+TQCCcSFsJgcZJc1OIVXNVYhHlvf+YqqU1rVC0Z7TJ3BBXZGIW2Wgjr43tSBjC/BfkOsNJrggQCytkW5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738852249; c=relaxed/simple;
-	bh=WdipNZI3y5wwEW1WPJkKmfPilkJ7iVaBxEPNzdzmX4E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AB5r6Tkk7GkrOWq045F3wEcASVXDvsqnVz+uKjGcv2s2OoO80T20Cfh49FTBSC2uJVRLuZ123qmSqBdfmyC2M8axGTj96eUE6boX00I07s4F0GAdFrKWpdC4sQAvHTwqYtlSGrG4KZQ1qcBcDXUtlCslG49OLgE2iXhRkeFkFVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CDkjfouy; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1738853960; c=relaxed/simple;
+	bh=U74SGZiAIGmMlazRLhrpYiZ/iTjbN0drFn9h+a0WXAw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ILHH5iOHEaE1u1Po3S4vDp+tdCkOe0bUK+UfhE3ZaPnNySRzKcWmPaHYIvByuRdd/7mWItJR1G44hRhwdiIRNnlgJUYhjyBwfZTOxwjPluJAzgMfvRIo7g08aHGK+8p0w61uJcNobLOvz0c5wRzMVGeD3og8xfFZ/L2fM/B1Y6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BdCqkirI; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CDkjfouy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BdCqkirI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738852246;
+	s=mimecast20190719; t=1738853957;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WdipNZI3y5wwEW1WPJkKmfPilkJ7iVaBxEPNzdzmX4E=;
-	b=CDkjfouyt5dauUvfIC7ViNGjW3fTIMDVyTCX3dsHs8Z5w4RfUfCxD+D5wQsK8l1cmH2SXN
-	0PHJPqTyne8Bmrr7LAmkIQccLhQ6aZwBgP3jzT8lmE3eTqGUXUJSD7kSh575dlDvoxt275
-	Bt6yi//cS5ogLeqN+q+v78ujJUn5+so=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-669-jpp1Wx5AN3GqEECzTVdKQg-1; Thu,
- 06 Feb 2025 09:30:43 -0500
-X-MC-Unique: jpp1Wx5AN3GqEECzTVdKQg-1
-X-Mimecast-MFC-AGG-ID: jpp1Wx5AN3GqEECzTVdKQg
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AAACC1956086;
-	Thu,  6 Feb 2025 14:30:36 +0000 (UTC)
-Received: from localhost (unknown [10.2.16.145])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6D97B1800878;
-	Thu,  6 Feb 2025 14:30:33 +0000 (UTC)
-Date: Thu, 6 Feb 2025 09:30:32 -0500
-From: Stefan Hajnoczi <stefanha@redhat.com>
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Dan Williams <dan.j.williams@intel.com>,
-	Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org,
-	linux-mm@kvack.org, alison.schofield@intel.com, lina@asahilina.net,
-	zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com,
-	vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com,
-	bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca,
-	catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au,
-	npiggin@gmail.com, dave.hansen@linux.intel.com, ira.weiny@intel.com,
-	willy@infradead.org, djwong@kernel.org, tytso@mit.edu,
-	linmiaohe@huawei.com, david@redhat.com, peterx@redhat.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-	linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
-	david@fromorbit.com, chenhuacai@kernel.org, kernel@xen0n.name,
-	loongarch@lists.linux.dev, Hanna Czenczek <hreitz@redhat.com>,
-	German Maglione <gmaglione@redhat.com>,
-	Albert Esteve <aesteve@redhat.com>
-Subject: Re: [PATCH v6 01/26] fuse: Fix dax truncate/punch_hole fault path
-Message-ID: <20250206143032.GA400591@fedora>
-References: <cover.11189864684e31260d1408779fac9db80122047b.1736488799.git-series.apopple@nvidia.com>
- <bfae590045c7fc37b7ccef10b9cec318012979fd.1736488799.git-series.apopple@nvidia.com>
- <Z6NhkR8ZEso4F-Wx@redhat.com>
- <67a3fde7da328_2d2c2942b@dwillia2-xfh.jf.intel.com.notmuch>
- <Z6S7A-51SdPco_3Z@redhat.com>
+	bh=U74SGZiAIGmMlazRLhrpYiZ/iTjbN0drFn9h+a0WXAw=;
+	b=BdCqkirIJKZnIsCjuzBtLunX5J96UtsuVh0dB1pI1y90rh3MXWKSEtVMENEJrTFYsO3Qod
+	TidMRNNfFwVHPB5nrYB2LZCJCcVkqRhcyrD3Atpxk3EF5ymhBx0D/2Tk5O2QoABedpjkyL
+	cMAVADLrEfUPzEHjXQyyZmAd4hjn5tA=
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
+ [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-261-AmB0ZPwAO4uaAqEzSruCDA-1; Thu, 06 Feb 2025 09:59:16 -0500
+X-MC-Unique: AmB0ZPwAO4uaAqEzSruCDA-1
+X-Mimecast-MFC-AGG-ID: AmB0ZPwAO4uaAqEzSruCDA
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2fa166cf656so652758a91.2
+        for <linux-cxl@vger.kernel.org>; Thu, 06 Feb 2025 06:59:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738853955; x=1739458755;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=U74SGZiAIGmMlazRLhrpYiZ/iTjbN0drFn9h+a0WXAw=;
+        b=UwvIOIUUc/CJXcv+Ix4qFk9Ch1GMLVMbuckb7PQRBoL/Gh8FXlR2+HOi93NsoCP7Hg
+         lEhhMXc0zYMl0xMLJMZNfO+5fZ+yXYQSl4vw6lzMP7UyMrIvi4Eoll5kXwzyAB4b3ark
+         d50/VP4n9/z6yH2xmGSuqp9nVX0SoK8J1EG76kGkRKVu/eOHVEu+IXr9USRUf0aDX6hy
+         Phy81XEQHfErQrYLzsOgNMa8YMpFB/Lt8fvxs5baV6a5d7bsB5RX0odbzwn+K6sD5jqD
+         +WpvDlKwFM/+ZJnzPo9j5fE3n+bNxqWfz1qaKdizL8YJxF1Lyv0W0oTCOwzHwwGvo6BX
+         YgEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXohtDhNqDhxiS1fhudhEmK7FCOvMM4TUcZARCe69enc+Q8KevbPVSygKbA2munw4Y7sTxKN+XLuU8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQs0v8bJs+74z+zhmXe5ps26nEbXISSfzrom1JvbXJH5JDSyAM
+	kWteMHOU4Tsp75kb/T3r3L7ldXpGHYmMCO7I8V/QMcZ9EknCs9yQD9gTH/tPp90QksnsMUu2WXX
+	zh2+tTOdM0Nt8yo36c4defBmtNUhZ+tpckaKZkvz9AntZxSPN+knBgnHeVpKaH2BNQqfjKxWuQ6
+	W5VSkQJN0Q5bS0jW1zeIAE9KbBYXZ3QZuK
+X-Gm-Gg: ASbGncvmiqt0q+zFLcM4r2xZvNvpanAilFlAEKsCg+9TJAyyYF3CtMS0hwEWAnTHxlU
+	HQpapCmtPkGrvQQnjHHupUsprFkQVwlwbCYOSAjFbZkzO7l6m9ylFgTueDHRc6+XT
+X-Received: by 2002:a17:90b:2786:b0:2ee:e518:c1d8 with SMTP id 98e67ed59e1d1-2f9e082f33emr11110470a91.30.1738853955568;
+        Thu, 06 Feb 2025 06:59:15 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFWpQlGfjL4+bcsd9CXoOi/pDbHuiuuwkJUWCLm8Y4KSWCpEnRWVj/utErs2ioiglleYEOHWPatBsG9+Rhw180=
+X-Received: by 2002:a17:90b:2786:b0:2ee:e518:c1d8 with SMTP id
+ 98e67ed59e1d1-2f9e082f33emr11110445a91.30.1738853955312; Thu, 06 Feb 2025
+ 06:59:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="dVdFjdbROmPA0Gp+"
-Content-Disposition: inline
-In-Reply-To: <Z6S7A-51SdPco_3Z@redhat.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+References: <cover.11189864684e31260d1408779fac9db80122047b.1736488799.git-series.apopple@nvidia.com>
+ <bfae590045c7fc37b7ccef10b9cec318012979fd.1736488799.git-series.apopple@nvidia.com>
+ <Z6NhkR8ZEso4F-Wx@redhat.com> <67a3fde7da328_2d2c2942b@dwillia2-xfh.jf.intel.com.notmuch>
+ <Z6S7A-51SdPco_3Z@redhat.com> <20250206143032.GA400591@fedora>
+In-Reply-To: <20250206143032.GA400591@fedora>
+From: Albert Esteve <aesteve@redhat.com>
+Date: Thu, 6 Feb 2025 15:59:03 +0100
+X-Gm-Features: AWEUYZm-M5VdAvcj3hSDqRtWWsY2KSl-UpKtCd6mALNvZQI6X9XPfCW9uUgmKYc
+Message-ID: <CADSE00+2o5Ma0W6FBLHwpUaKut9Tf74GKLCU-377qgxr08EeoQ@mail.gmail.com>
+Subject: Re: [PATCH v6 01/26] fuse: Fix dax truncate/punch_hole fault path
+To: Stefan Hajnoczi <stefanha@redhat.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org, linux-mm@kvack.org, 
+	alison.schofield@intel.com, lina@asahilina.net, zhang.lyra@gmail.com, 
+	gerald.schaefer@linux.ibm.com, vishal.l.verma@intel.com, dave.jiang@intel.com, 
+	logang@deltatee.com, bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca, 
+	catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au, 
+	npiggin@gmail.com, dave.hansen@linux.intel.com, ira.weiny@intel.com, 
+	willy@infradead.org, djwong@kernel.org, tytso@mit.edu, linmiaohe@huawei.com, 
+	david@redhat.com, peterx@redhat.com, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linuxppc-dev@lists.ozlabs.org, nvdimm@lists.linux.dev, 
+	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org, jhubbard@nvidia.com, 
+	hch@lst.de, david@fromorbit.com, chenhuacai@kernel.org, kernel@xen0n.name, 
+	loongarch@lists.linux.dev, Hanna Czenczek <hreitz@redhat.com>, 
+	German Maglione <gmaglione@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: OZaXVRb9luc8MWqO7NmGoGT7SeixbQSygMHc3JvTXKw_1738853955
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi!
 
---dVdFjdbROmPA0Gp+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Thu, Feb 6, 2025 at 3:30=E2=80=AFPM Stefan Hajnoczi <stefanha@redhat.com=
+> wrote:
+>
+> On Thu, Feb 06, 2025 at 08:37:07AM -0500, Vivek Goyal wrote:
+> > And then there are challenges at QEMU level. virtiofsd needs additional
+> > vhost-user commands to implement DAX and these never went upstream in
+> > QEMU. I hope these challenges are sorted at some point of time.
+>
+> Albert Esteve has been working on QEMU support:
+> https://lore.kernel.org/qemu-devel/20240912145335.129447-1-aesteve@redhat=
+.com/
+>
+> He has a viable solution. I think the remaining issue is how to best
+> structure the memory regions. The reason for slow progress is not
+> because it can't be done, it's probably just because this is a
+> background task.
 
-On Thu, Feb 06, 2025 at 08:37:07AM -0500, Vivek Goyal wrote:
-> And then there are challenges at QEMU level. virtiofsd needs additional
-> vhost-user commands to implement DAX and these never went upstream in
-> QEMU. I hope these challenges are sorted at some point of time.
+It is partially that, indeed. But what has me blocked for now on posting th=
+e
+next version is that I was reworking a bit the MMAP strategy.
+Following David comments, I am relying more on RAMBlocks and
+subregions for mmaps. But this turned out more difficult than anticipated.
 
-Albert Esteve has been working on QEMU support:
-https://lore.kernel.org/qemu-devel/20240912145335.129447-1-aesteve@redhat.com/
+I hope I can make it work this month and then post the next version.
+If there are no major blockers/reworks, further iterations on the
+patch shall go smoother.
 
-He has a viable solution. I think the remaining issue is how to best
-structure the memory regions. The reason for slow progress is not
-because it can't be done, it's probably just because this is a
-background task.
+I have a separate patch for the vhost-user spec which could
+iterate faster, if that'd help.
 
-Please discuss with Albert if QEMU support is urgent.
+BR,
+Albert.
 
-Stefan
-
---dVdFjdbROmPA0Gp+
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAmekx4gACgkQnKSrs4Gr
-c8jOKwf/ZukZTp1v1Bj1iqbpAm6HBWN90Y4JWmyzZGuKRqLAwN8AyiIJ6Ms1fx+v
-WJLR47NztCQ3sDtsTQT1814wwXSpJlPguLu6isoWbCGpUwAZZk3JTpHNBofs7IKj
-04NWFZ9B2tOVgirm8OMtsVVJwzQhvQc7YtMhdB9naCzqcdC7ynKp6mLH9bd7Q+Ze
-K9CwEFtKcTm9Ge+t3U0E3Q7MI2D55far3KPi84MpfI9oEu6l0MOzzmKjaOBq9+wy
-XXZCisxWbGLZtfbY2BAQxTUhKq9TTXgeQm/Ti/SzsVLf/Qd7nrEkG1v51xs5HCnR
-FMQhDw7oBmFsGs5S/Qywvta1pcaYwg==
-=JZcT
------END PGP SIGNATURE-----
-
---dVdFjdbROmPA0Gp+--
+>
+> Please discuss with Albert if QEMU support is urgent.
+>
+> Stefan
 
