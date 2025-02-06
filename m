@@ -1,148 +1,101 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4010119CC05
-	for <linux-cxl@vger.kernel.org>; Thu,  6 Feb 2025 18:11:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4A71B412A
+	for <linux-cxl@vger.kernel.org>; Thu,  6 Feb 2025 18:18:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738865471; cv=none; b=V/J+hWxZV91gyWiPgyc4w5NmAAs7HrcMKcRONep8irYDGrpLpPlr1CensEG3/Q3kLopKDdephTCvnWB+jeTPOxQLLsBEp2vcCEtRJJtHqI9UNbYch6a3d+n8asW4zD9pmQ3Suw04IIqua9X2+uVe4qOsu+A07JYubDawdxdfmMA=
+	t=1738865923; cv=none; b=cGKuev9Pt5MTyxDsdc+gbIZV7m0X5Efl9oxZ6iixSxbw/YvIzKdqLpQd+/SIIXOLQC7/XPXaEOb9Q2tfRx9ugWNTl35lH7dmfLWL208CvNVW4dDTixbt202hl+FMfQPz+iKHqfVkQkSkH0gVAUK30MeCtySb+BlwX3M5XodNnPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738865471; c=relaxed/simple;
-	bh=L1Ng9lldW/83WhLxtsVxj1Z34scX9+JOOnEphNXYxHw=;
+	s=arc-20240116; t=1738865923; c=relaxed/simple;
+	bh=svxamlkxBUKcTv2w6ZafIS1La0uoCbSywKilubANIRo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mjSRqaaftbxaUGZawvz2O2UB7CgJiY2SqNg59GHgwz3fgFJ6UToWnGPSTNPGp+kcS54FOflDJwmULxW62akyIYW12nV/J3myF5Av0dvN/BhhJca7Pger1jMUrg6/Oa5bDa0+yGXdG2ZgRD6hx/ph1XXl4evAjnmJOWif8X3kgP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q0rKUKKY; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=snElyxeBGzgVJUWblJuZbiUrYSGDAroXFmBAn426fegqREL8eSKJmYV0w0VXmQCVnig59qH5lf4MSwRZPYsSUj02ecVViwgg+cycJQVBsYXzMt+vCaG0xKohAPdcCBI8CuXW5uzcxEPes6vgiPjKwZY8zpuidoQCnTK8YDj/1bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=mbSs+E6K; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q0rKUKKY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738865468;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L1Ng9lldW/83WhLxtsVxj1Z34scX9+JOOnEphNXYxHw=;
-	b=Q0rKUKKYOwfszoaS+oITbJYMPn42PBXWq5YwKRYgIXMSK559Q27/ZYVawluDjvA0CACdkR
-	xP+SDHAYGTMvqtI4nAbTmzzBVI8RwiBrgdEDK4UKfz9qqyIu917R480prlVMvZ7Z0Aww0d
-	T7QJz3zE3mvVoCHyU5+nZr8PtaTMOvc=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-257-8E3rdXJoPkCOp7n7f2PNnw-1; Thu,
- 06 Feb 2025 13:11:05 -0500
-X-MC-Unique: 8E3rdXJoPkCOp7n7f2PNnw-1
-X-Mimecast-MFC-AGG-ID: 8E3rdXJoPkCOp7n7f2PNnw
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8B6E61955BC0;
-	Thu,  6 Feb 2025 18:10:26 +0000 (UTC)
-Received: from localhost (unknown [10.2.16.145])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id EA005180087A;
-	Thu,  6 Feb 2025 18:10:21 +0000 (UTC)
-Date: Thu, 6 Feb 2025 13:10:19 -0500
-From: Stefan Hajnoczi <stefanha@redhat.com>
-To: Albert Esteve <aesteve@redhat.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org,
-	linux-mm@kvack.org, alison.schofield@intel.com, lina@asahilina.net,
-	zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com,
-	vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com,
-	bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca,
-	catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au,
-	npiggin@gmail.com, dave.hansen@linux.intel.com, ira.weiny@intel.com,
-	willy@infradead.org, djwong@kernel.org, tytso@mit.edu,
-	linmiaohe@huawei.com, david@redhat.com, peterx@redhat.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-	linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
-	david@fromorbit.com, chenhuacai@kernel.org, kernel@xen0n.name,
-	loongarch@lists.linux.dev, Hanna Czenczek <hreitz@redhat.com>,
-	German Maglione <gmaglione@redhat.com>
-Subject: Re: [PATCH v6 01/26] fuse: Fix dax truncate/punch_hole fault path
-Message-ID: <20250206181019.GA413673@fedora>
-References: <cover.11189864684e31260d1408779fac9db80122047b.1736488799.git-series.apopple@nvidia.com>
- <bfae590045c7fc37b7ccef10b9cec318012979fd.1736488799.git-series.apopple@nvidia.com>
- <Z6NhkR8ZEso4F-Wx@redhat.com>
- <67a3fde7da328_2d2c2942b@dwillia2-xfh.jf.intel.com.notmuch>
- <Z6S7A-51SdPco_3Z@redhat.com>
- <20250206143032.GA400591@fedora>
- <CADSE00+2o5Ma0W6FBLHwpUaKut9Tf74GKLCU-377qgxr08EeoQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="mbSs+E6K"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7b6e5ee6ac7so93969185a.0
+        for <linux-cxl@vger.kernel.org>; Thu, 06 Feb 2025 10:18:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1738865918; x=1739470718; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=sUG6NzheiadFCQgj6TrWOr68/8bmtDa4jtIU00ptXAY=;
+        b=mbSs+E6K1mng+bdaDcGEHpilu6UD9hQ+MzTDmdB0rMQViksbRMFL5Y6WlrW2SA2tA+
+         K1mjJ2eoEShi78wee1z1RUpdF2a/WvieNFxjY6ZM74woVzYTmvesov0oCDwoUJAaRAOT
+         Zbsx5jvu465jpl4LQUWVy5K96G32hhd6WjZJJMLYRVrjbHQ4/1Jr9mofTXMfyyACkWOS
+         TUvPkB0eaTxJnAwmUS0kLy/rnHZi+32AcOoyF5RRQeOtfhPjV+vtRP1ge6PrWk9fdpQt
+         Yf9l2/+bFZ+bTJN/wHbGRyioUtpupBCAX3L5YWRvWA81YZlIRaExlWC1R4ti/TytXugZ
+         8tUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738865918; x=1739470718;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sUG6NzheiadFCQgj6TrWOr68/8bmtDa4jtIU00ptXAY=;
+        b=k2Ry64y3eswckKbgvjy8EmNA4qqbOJ+dcLgGRTquF8wY6LXp0rdV4efWZ6loS98/T7
+         seqnkapu0RnurkDMN8kFWp0Ualm+ptEj+aPe+FU2qMBreSJCsMwXavu7v1k+uZLhdX/O
+         h80w93TD4GXn1nvsPDO+6CTAS1jZw3mAVRzw8ZAqgioAcgEnks8Ofz0aZsjCjydilSo0
+         StEUzZ3AvczpjnFiOaCBQHOZv2ivHhpGmQEY1LgUO8fAm1e0L9mITITZ3DmHXWdQoZpM
+         ZOFo3RfUS3hLguPIptaiwFnoxSBpjCfF10G3s3DkImejbiOPUqnB/9xalf9a9L7w5jy9
+         dy+A==
+X-Gm-Message-State: AOJu0YzhXDF2WZorn0XzMlT5SzRAdsOr7a5vqcWL5rNhI0VZyTxT/yLU
+	hw0iSpz5wf5lCtmRPTPBaOZKiGkKGFSRR0/E0cAFTWoFZYmsTNjjsupbQpSHpBQ=
+X-Gm-Gg: ASbGncsWnlp2cNpv3s99eUbmutfCDmkHL0tzFybj5wlk6Xzxmv2Nk//HE+2EX6L3r6p
+	fgm4Vw97rlHJNFBjIS94G8y0Opy2BBRp2Z8wv1aW31RvIaT1/QOo0OAdMbWvsnMVzbySsqxElzQ
+	RLfri8qOcKQJBoTnUo1F16ERAV+lBFVSPyT1SdwZVlDgeNikAuCyFaEhhIxtNAJl55Cw1ylE8sb
+	9+yBKeShE4amdr53xFsIqOQ+eCZxlu5HMYqwWsD48JLX50YwW3ttP3j3mY5TJDLxIp6QVGjAzTM
+	xarszEngJ0BgDYGV+2q21jqzXxabqT9Oc+6icsi2PEPZBmb1z1/vnnnPzjOQriTwDdCXZ04oKQ=
+	=
+X-Google-Smtp-Source: AGHT+IE0GG1TtDuISiUGDhpqfV/qZ02GwpSV6gJbe4kGblMEMNURq4Dlgd839ByGnXLwhq51VKDVqg==
+X-Received: by 2002:a05:620a:43a1:b0:7b6:d6dd:8826 with SMTP id af79cd13be357-7c047c9512bmr16375185a.55.1738865918192;
+        Thu, 06 Feb 2025 10:18:38 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c041e9f94csm86724485a.78.2025.02.06.10.18.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2025 10:18:37 -0800 (PST)
+Date: Thu, 6 Feb 2025 13:18:35 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Terry Bowman <terry.bowman@amd.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
+	ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
+	rrichter@amd.com, nathan.fontenot@amd.com,
+	Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
+	ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com,
+	alucerop@amd.com
+Subject: Re: [PATCH v5 04/16] PCI/AER: Modify AER driver logging to report
+ CXL or PCIe bus error type
+Message-ID: <Z6T8-zXvcdQrCWdu@gourry-fedora-PF4VCD3F>
+References: <20250107143852.3692571-1-terry.bowman@amd.com>
+ <20250107143852.3692571-5-terry.bowman@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="9gaKO0MQEl4+jp8i"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CADSE00+2o5Ma0W6FBLHwpUaKut9Tf74GKLCU-377qgxr08EeoQ@mail.gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+In-Reply-To: <20250107143852.3692571-5-terry.bowman@amd.com>
 
+On Tue, Jan 07, 2025 at 08:38:40AM -0600, Terry Bowman wrote:
+> The AER driver and aer_event tracing currently log 'PCIe Bus Type'
+> for all errors.
+> 
+> Update the driver and aer_event tracing to log 'CXL Bus Type' for CXL
+> device errors.
+> 
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Fan Ni <fan.ni@samsung.com>
 
---9gaKO0MQEl4+jp8i
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Worth a macro/static function?  Wonder what else could use this.
 
-On Thu, Feb 06, 2025 at 03:59:03PM +0100, Albert Esteve wrote:
-> Hi!
->=20
-> On Thu, Feb 6, 2025 at 3:30=E2=80=AFPM Stefan Hajnoczi <stefanha@redhat.c=
-om> wrote:
-> >
-> > On Thu, Feb 06, 2025 at 08:37:07AM -0500, Vivek Goyal wrote:
-> > > And then there are challenges at QEMU level. virtiofsd needs addition=
-al
-> > > vhost-user commands to implement DAX and these never went upstream in
-> > > QEMU. I hope these challenges are sorted at some point of time.
-> >
-> > Albert Esteve has been working on QEMU support:
-> > https://lore.kernel.org/qemu-devel/20240912145335.129447-1-aesteve@redh=
-at.com/
-> >
-> > He has a viable solution. I think the remaining issue is how to best
-> > structure the memory regions. The reason for slow progress is not
-> > because it can't be done, it's probably just because this is a
-> > background task.
->=20
-> It is partially that, indeed. But what has me blocked for now on posting =
-the
-> next version is that I was reworking a bit the MMAP strategy.
-> Following David comments, I am relying more on RAMBlocks and
-> subregions for mmaps. But this turned out more difficult than anticipated.
->=20
-> I hope I can make it work this month and then post the next version.
-> If there are no major blockers/reworks, further iterations on the
-> patch shall go smoother.
->=20
-> I have a separate patch for the vhost-user spec which could
-> iterate faster, if that'd help.
-
-Let's see if anyone needs the vhost-user spec extension now. Otherwise
-it seems fine to merge it together with the implementation of that spec.
-
-Stefan
-
---9gaKO0MQEl4+jp8i
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAmek+wsACgkQnKSrs4Gr
-c8iv1AgAtw36d3ZukmPTk9VmX0NGRgWskCoroH9Kztfi3UeYUTi5bn/AL9yD+73x
-aQ8w4QvmQQBq/U85J8DNgOJ6hXW4uE2XpHCEtdgVWRFatuEwWtlLNZ46gUMD+AJb
-QtUvCLNwOtMYbADhEDUiIDIZS3DxHUvTI8JZWN6tNCFme7tuoUiJ4hWEhHhQ07yS
-yebWMNRoW2UmDtVWBMsp/v7zhoroqrrIcRvAaLUBTIE/k2myl3zxEPRW7j69jl9S
-7XwGGLC9Odz8ssha4UIg5fbwuUqpbJQA/PwPQVeJWR0a4OXhbFWebWEGdrXiTKP4
-04dxu53buvDo8JePVLkCaQZfazl9Cg==
-=cm2Y
------END PGP SIGNATURE-----
-
---9gaKO0MQEl4+jp8i--
-
+Reviewed-by: Gregory Price <gourry@gourry.net>
