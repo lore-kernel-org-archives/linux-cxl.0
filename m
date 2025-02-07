@@ -1,131 +1,112 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 878FB1A23A9
-	for <linux-cxl@vger.kernel.org>; Fri,  7 Feb 2025 10:46:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C99E2B9B9
+	for <linux-cxl@vger.kernel.org>; Fri,  7 Feb 2025 10:49:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738925220; cv=none; b=LqkkW/IrQpLG94gSEq8IQsQsz6m3NKmyTUICM3PDFn/5bulZKul+IR9xx/UiLxSTnL6umLAf/fG2RN4gm7OpMRknGshonJdMXxEEfxGmPGjzkmucX+NGA2FWmoKkj06mAsXhPcZUp6EQRzHYZodrLgKnGBlF+gp9z2pTVta23n4=
+	t=1738925401; cv=none; b=cDKXEVnb7ZzSyrJRQACstqCsrd8DDv0rBXgomeI/hCqohtb8n+YWlT50eZzUhVtb+1XJzoUOL8pmfur48zkSzHAqE768x8zcfaekYYEh1ldZ3prE+4ef3u//bc0w1+iOVd0PbwzueXKhhqiBZwdM9P5va8xfGxJNvhaqcEZ8C/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738925220; c=relaxed/simple;
-	bh=Al82twb3ZORnkFpPKGWaa+dGonLUQqELTg90LuZe754=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VBwPSig+NYRckUDeOocw7bHg+5+G/jd/61dQDJDdZaoV2NbWpcui9ZQEn8yDi54RO04JHdmsXSOZb/CwTuP9go0LLxGGOLlGA1GrlP1wJ7MoX/suUGV8TdkdKbhxmnkyB49vYM1cRV9MDkh4TLyUfhZyfc2LSCQAdE7fkRpdOYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OU//l8MD; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OU//l8MD"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e5b1c4b952dso1625345276.0
-        for <linux-cxl@vger.kernel.org>; Fri, 07 Feb 2025 02:46:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738925217; x=1739530017; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ELHCCsWgc5ETP5HPI0Vfzd1JQz/muXIEmMEw0zlWiV4=;
-        b=OU//l8MDT+sEMW0uUdsIRvwP5nJmTdKnPNX/IGy25g6w42OZrboAiuh7ClW3wsbzzV
-         Bs9uy+bm10G8Y1TzG5TXvAp1ixFcp3SKGEeAltgh6GHkr03sAo7CNQHLt/6b9RBtTgkp
-         uDTVFIf+3UWl2xg6tP6Ee4IgEceddd3pr8lSogbOZAZshVXC15+kU53mo5rfzZOFFLJD
-         /MFpbHEGL4haKALxcLDxxgMftFawuoX8VGDhp16en5akquKcqwbtlceQRFYRT/0VD8kU
-         u5pjBvvTPPRHG9VzSQnGi18MuFLR1q1LuvDgv22FJKkE3cCsGD+Mh0F7xjaJdh2nj5Ek
-         6C3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738925217; x=1739530017;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ELHCCsWgc5ETP5HPI0Vfzd1JQz/muXIEmMEw0zlWiV4=;
-        b=Ccjg0B6DN5pZW3+ceJVszGv60n2AT6AuOUwBxvWI/2yYab1LND4JLlQ7u2eBg4q63h
-         o1R/ZMT8iezc6TXlSJN0e2aSKgBWP2FQKo0PVg8nKpWgk9RQ8i28OPznUU6e3ov0gzfd
-         VL7a3GX50lXi2o513buwQ7j3bpgkBIk5gvr7W6NVj2SzNNb5uOneLupOuIvf4kYNts/s
-         0EmpxvoIVjYxsRr7bn2/ez4oBf59ukA/ZSSnmeVqA5ZeKd+NQ5h9g9nzj5hnV3Q5Kuzs
-         XJ2fObIzOyQ9DbK8w/xoIBZvoAdHoIAOnr5Qo9JO4MOfNvPzUNq1eDA+97zeCtTngD1r
-         +0VQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVzBtuzCx+i7N9Vk11RF2mOO6eVWaB69G6cvnzwehn6JAWICgLKWyyBfemFctyID0eKmIYQIH7tbdk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwW6I1UjxulWKuIFKF4iu5VFNfFOvQVqUhyBQ4MP+ijeRFmeQ9K
-	6anDKfID5l3oRUBDDa5ypN2DCInlVQ/wcDTkzI2Z9yWzG1ay2KSIc4P5ef35cT1Zqmw/Bc9kuHs
-	7JjfB71njJFTOQaZeKhSNaave0ovl9SvihD4njYHI
-X-Gm-Gg: ASbGncvlVsZ0zzlLshcf6mvrI4tv9GhKjXyJoIGlmvUadV5BYASjWgwlu8YrAHqCcHG
-	+NrdSIuTzOImUXZ1nLU+YK44pcwaCUkvIdzer7s3Z5qwDPhg5RdqVX2Cjse8t7DERbpFXmwfMew
-	==
-X-Google-Smtp-Source: AGHT+IEgcCQQICaOTy5gqNVXRGpv9GRs+ijB2WHBN2P3UBkZlfZ+yDK6vEcPWA2hR8HOw82quOstRHxPnC/ECXmCrrY=
-X-Received: by 2002:a05:6902:2581:b0:e5b:19a0:afe2 with SMTP id
- 3f1490d57ef6-e5b461e105emr2270733276.24.1738925217458; Fri, 07 Feb 2025
- 02:46:57 -0800 (PST)
+	s=arc-20240116; t=1738925401; c=relaxed/simple;
+	bh=iCR1dmrjrNFllGLWPQBgfFUzKWX/36TLqyq/iuTiqCs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EF9o/kgpvN6Dcdhh7WmhfxLqftQTMJupVCQ6K6fXpFG7dTg2zFBoxswPDSkIsxPQjb89yjzXW7RuMXevf+qe5gRBckVnl37gv+jtQNMZamjR2ABn5cyCcgORSOjBVcxnSXPbr13ZeDc8+4PrS/4491XsHQo8nrDIJ7zlY/6w5eQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-3e1ff7000001d7ae-3e-67a5e5507558
+Date: Fri, 7 Feb 2025 19:49:47 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Gregory Price <gourry@gourry.net>
+Cc: Honggyu Kim <honggyu.kim@sk.com>, kernel_team@skhynix.com,
+	Matthew Wilcox <willy@infradead.org>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
+	linux-cxl@vger.kernel.org
+Subject: Re: [LSF/MM/BPF TOPIC] Restricting or migrating unmovable kernel
+ allocations from slow tier
+Message-ID: <20250207104947.GB35103@system.software.com>
+References: <Z54hUTXRsw0LYQ8b@localhost.localdomain>
+ <Z54p4QOnAlTYm6DG@casper.infradead.org>
+ <20250207072024.GA48419@system.software.com>
+ <Z6XLCeU0vjIOYGKe@gourry-fedora-PF4VCD3F>
+ <ada54160-461c-4942-a4dc-43f7eab0f1bf@sk.com>
+ <Z6XYQjCLK6umaoIS@gourry-fedora-PF4VCD3F>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250205040842.1253616-1-dave@stgolabs.net> <20250205040842.1253616-2-dave@stgolabs.net>
-In-Reply-To: <20250205040842.1253616-2-dave@stgolabs.net>
-From: Yee Li <seven.yi.lee@gmail.com>
-Date: Fri, 7 Feb 2025 18:46:21 +0800
-X-Gm-Features: AWEUYZmWY_l0vX8ILy8cFXiRWsmElLKYT2kB7nZc-bpoHjA53Bin39yUUGKZsnw
-Message-ID: <CALX8JfQzofLZwUj4sNN_3A4aL-LMe3mUX1-PE35=rvR0pzEfHw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] cxl/pmem: Export dirty shutdown count via sysfs
-To: Davidlohr Bueso <dave@stgolabs.net>
-Cc: dave.jiang@intel.com, dan.j.williams@intel.com, 
-	jonathan.cameron@huawei.com, alison.schofield@intel.com, ira.weiny@intel.com, 
-	vishal.l.verma@intel.com, a.manzanares@samsung.com, fan.ni@samsung.com, 
-	anisa.su@samsung.com, linux-cxl@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6XYQjCLK6umaoIS@gourry-fedora-PF4VCD3F>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrELMWRmVeSWpSXmKPExsXC9ZZnkW7A06XpBqufiVtM7DGw+Hn3OLvF
+	+VmnWCzurfnParHv9V5mi98/5rA5sHnsnHWX3aO77TK7x+YVWh6bPk1i95h8Yzmjx+dNcgFs
+	UVw2Kak5mWWpRfp2CVwZ7cvfsxSs5q24sHErawPjDq4uRk4OCQETiZNLn7B3MXKA2VN+JoOE
+	WQRUJPbt+84IYrMJqEvcuPGTGaREREBVou2KexcjFwezwCNGiYsHljCBxIUF0iTe/vADMXkF
+	LCS6ztmBlAgJTGWSuD1hIhvIGF4BQYmTM5+wgNjMAloSN/69BGtlFpCWWP6PAyTMKWAmsWLt
+	T7ASUQFliQPbjjOBzJEQ2MMm0dvxjRHiYkmJgytusExgFJiFZOwsJGNnIYxdwMi8ilEoM68s
+	NzEzx0QvozIvs0IvOT93EyMwpJfV/onewfjpQvAhRgEORiUe3oQDS9KFWBPLiitzDzFKcDAr
+	ifBOWQMU4k1JrKxKLcqPLyrNSS0+xCjNwaIkzmv0rTxFSCA9sSQ1OzW1ILUIJsvEwSnVwDh1
+	85tLv99uMuhf0ztjtvuma1UNicI3p4mLJ+3v1PN8JhSrcWL1D6vmKW+vXzCIPW9zk62YlXmV
+	Sobuv7Awea6+rM0Ol8pLag7HlS438jhzVDroTOqM827JDr2T9/7vnZP/xKHS4sDtZy/y0sLY
+	ogy2X/U2VH87K9Hbcd8bWR5etTcpInt6zyuxFGckGmoxFxUnAgBGX633ZQIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrELMWRmVeSWpSXmKPExsXC5WfdrBvwdGm6QXsDn8XEHgOLn3ePs1t8
+	fvaa2eLw3JOsFudnnWKxuLfmP6vFvtd7mS1+/5jD5sDhsXPWXXaP7rbL7B6bV2h5bPo0id1j
+	8o3ljB7fbnt4LH7xgcnj8ya5AI4oLpuU1JzMstQifbsEroz25e9ZClbzVlzYuJW1gXEHVxcj
+	B4eEgInElJ/JXYycHCwCKhL79n1nBLHZBNQlbtz4yQxSIiKgKtF2xb2LkYuDWeARo8TFA0uY
+	QOLCAmkSb3/4gZi8AhYSXefsQEqEBKYySdyeMJENZAyvgKDEyZlPWEBsZgEtiRv/XoK1MgtI
+	Syz/xwES5hQwk1ix9idYiaiAssSBbceZJjDyzkLSPQtJ9yyE7gWMzKsYRTLzynITM3NM9Yqz
+	MyrzMiv0kvNzNzECQ3ZZ7Z+JOxi/XHY/xCjAwajEw5twYEm6EGtiWXFl7iFGCQ5mJRHeKWuA
+	QrwpiZVVqUX58UWlOanFhxilOViUxHm9wlMThATSE0tSs1NTC1KLYLJMHJxSDYwLzS66163n
+	YDtwQST31/vjy9bdUzk2c2GnH8+pTVMtJIT2y87a3zFx3bT691uqaqrbAvJ4t7+ZGZpwbnFy
+	7QXX3iu2nHIJD2o89160uLB/e7+E+AOeiDsnWmdf+3U6epJfM/Omlpu5eUx6ciclbhTGvl69
+	48jkd5aPUnRTvR38mVVFbYM9/rYosRRnJBpqMRcVJwIAduQ4dVUCAAA=
+X-CFilter-Loop: Reflected
 
-Hi Davidlohr,
+On Fri, Feb 07, 2025 at 04:54:10AM -0500, Gregory Price wrote:
+> On Fri, Feb 07, 2025 at 06:34:43PM +0900, Honggyu Kim wrote:
+> > On 2/7/2025 5:57 PM, Gregory Price wrote:
+> > 
+> > > The default kernel stack size is like 16kb.  You'd need like 100,000
+> > > threads to eat up 1.5GB, and 2048 threads only eats like 32MB.
+> > > 
+> > > It's not an interesting amount of memory if you have a 20TB system.
+> > 
+> > The amount might be small, but having those data in slow tier can
+> > make performance degradation if it is heavily accessed.
+> > 
+> > The number of accesses isn't linearly corelated to the size of the
+> > memory region.
+> > 
+> 
+> Right, I started by saying:
+> 
+> [CXL is] "generally not fit for kernel use"
+> 
+> I have the opinion that CXL memory should be defaulted to ZONE_MOVABLE,
+> but I understand the pressure on ZONE_NORMAL means this may not be
+> possible for large capacities.
 
-I tried the patch in linux-cxl next branch,
-ERROR: modpost: "cxl_gpf_device" [drivers/cxl/cxl_pmem.ko] undefined
+Just to clarify, for moderate capacities where ZONE_NORMAL in DRAM
+covers the whole memory, it's not a big issue since the easiest solution
+would be to place kernel objects in DRAM's ZONE_NORMAL and not allow
+ZONE_NORMAL in non-DRAM.  No objection on it.
 
-A few comments inline.
+For large capacities, kernel object migratability might be a must.
 
-Thanks,
-Yee
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index a5c65f79db18..bcf05d010a77 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -1141,3 +1141,26 @@ int cxl_gpf_port_setup(struct device *dport_dev, struct cxl_port *port)
->
->         return 0;
->  }
-> +
-> +int cxl_gpf_device(struct cxl_dev_state *cxlds)
-> +{
-> +       int dvsec;
-> +       struct device *dev = cxlds->dev;
-> +       struct pci_dev *pdev;
-> +
-> +       if (!dev_is_pci(dev))
-> +               return 0;
-> +
-> +       pdev = to_pci_dev(dev);
-> +       if (!pdev)
-> +               return -EINVAL;
-> +
-> +       dvsec = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
-> +                                         CXL_DVSEC_DEVICE_GPF);
-> +       if (!dvsec) {
-> +               pci_warn(pdev, "Device GPF DVSEC not present\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       return 0;
-> +}
-Maybe cxl_gpf_device needs EXPORT_SYMBOL.
+For capacities between moderate and large, kernel object migratibility
+or allowing ZONE_NORMAL in non-DRAM, or something better idea, would
+help to reduce ZONE_NORMAL cost.
 
-cxl_gpf_device
-defined in drivers/cxl/cxlmem.h as a prototype
-defined in drivers/cxl/core/pci.c as a function -- #include <cxlmem.h>
-referenced in drivers/cxl/pmem.c -- #include "cxlmem.h"
+I'm adding my opinion with the last two cases in mind.
 
-Refers to other functions (external call) in the drivers/cxl/core/pci.c,
-EXPORT_SYMBOL_NS_GPL(cxl_gpf_device, "CXL");
+	Byungchul
 
->  struct cxl_pmem_region_mapping {
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 536cbe521d16..ee0c93fde50c 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> +int cxl_gpf_device(struct cxl_dev_state *cxlds);
->  #endif /* __CXL_MEM_H__ */
+> I don't think the solution is to make kernel memory migratable and allow
+> kernel allocations on CXL.
+> 
+> There's a reason most kernel allocations are not swappable.
+> 
+> > Thanks,
+> > Honggyu
