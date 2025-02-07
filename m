@@ -1,83 +1,65 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5925A1A3161
-	for <linux-cxl@vger.kernel.org>; Fri,  7 Feb 2025 22:19:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 831308479;
+	Fri,  7 Feb 2025 22:22:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738966795; cv=none; b=dv9lPrpEytqv0j767i+UKC6CVBOMG9ZvQ8xY86M7QHpVpg5nWKA1kVmC4sCg3fta8uyeYn5BZjtLIUHUq9cwOQGIL8FM1Hpg+moOIj4YYbCvhoEJkKPLK6JACHqBxSdw6ElBPQcKqy9D9DgsEI2wfI3X3gERlJ71/71cTB0NjrI=
+	t=1738966931; cv=none; b=uL03/ByX9eKI2pgerhBHKRlu73aKaoFv7qKPmiqXtke8Dj0nQxF60hcU1vmCxbq9DlE6z69WMIPLP5mtPz698vhyBMFD1rSpFGeS9CX5DkcYiKtaPhxoo1tvanXjvtpg5A1DZ1dBPX7aUIYqJQd3GE7ngWifsfNQChTpVwJ/4KY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738966795; c=relaxed/simple;
-	bh=ps5EjYggeB2pmCfRj5Y1qHEl1n/SHTtVyuqzfKf0ht8=;
+	s=arc-20240116; t=1738966931; c=relaxed/simple;
+	bh=4IoCEk/tAjd8JEMqSopgO2Y7+eRV8cqL0jxI6XMXQvs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=me0WFFHTxe0O2Kv3yCz0sXAox9+hqwYsc6XKo4ub4HpGUhgwQG5M0l3Dvw/MnFZc0p4PRTxSR+yFh7Ohv/XJVmMqOXILkneVASTD8tDfm6aackv4BPu/JxNO9MvPPG0aISizNkREzR65r0Lv5JgHJcsSXevGSqmMM0vfRDkcmLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=ScZcY2N1; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=PDnRUgRxRYTcbUAPMRKFvqvS8saFNMdxxC8a8Klk0ynCxxuEagU9X2yXontkZxq2TlCpXjN6qym/0PvoL5bnT/mwfV//wnRwOLrmZu44hcG0jjXaI55jrK1xCnM4q/+lH4ogQOgezSy8D+AZsaVBgxTl08sPXsM3ikBiFqG8Hyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LR0KJWkG; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="ScZcY2N1"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6dd420f82e2so32251106d6.1
-        for <linux-cxl@vger.kernel.org>; Fri, 07 Feb 2025 14:19:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1738966793; x=1739571593; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LNYJ3hvEn3WHrM7IryEw3ayHWigT+bDMHa3yuIYsG60=;
-        b=ScZcY2N15IHWTxx1YUi5LctkewctjNwvLcXxq9GP8s+82s7Mk5Ne0lkrlBJf+9AdCj
-         b6g0YS8ZHUL3MNxGaMkeJvE+7hUVvopjH+pLIZI0itSWr2bDPAb7ABrtb8vbvvptGfEr
-         GTuuuggOnXEUpEO5qCaSbGYay6wZQtvoyu2bKhgI1OkBOstmEfsmaTIuIHLQaIKB/aKT
-         Pu2lfW2LlbjU1TNwoxgGjfXc9M4M1vMBj3DE7ejJ/WZ9omXbKXrdpcIpsEWlILF50wyV
-         F0bkS+XXOHxvDmjkU3OEfYBqnkMMlBhCjpHZL9x9w3Hn6bHpiXxNQLOrxJH2hQbPdmvM
-         /1SQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738966793; x=1739571593;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LNYJ3hvEn3WHrM7IryEw3ayHWigT+bDMHa3yuIYsG60=;
-        b=i80CQ2LwkX1+TvjaYvFDLGuVtdFSOztmn8ruHcp0AJ7unJ8qywZs0veE/f8gOw1oCg
-         qJIBaqDD6tF6Aqgh/Na2XIwys9QtczWV76CiNx6+TkYs0RA65JtFZlXYfSLkhTzigEWU
-         2M+xbg4LArS1YpKORmlhRxXU1CQkJWMrtF8zKW6YIS5BaducmvwqlbC+4ixfPcvmvh0b
-         k+v4eGCRTrygIE5V5tmuxB1C2DFcbJBz/6PFnyOehXZ7ap6a2Dzie9OiMwfZra5bOF0l
-         EvIaEoiG76rD9YfZNsTsExkbcjfdV92git+tahZNy9Q8YrkTsrkkTa1hB8GZ1YeV4CmG
-         DI0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXEWxTLp3UzUgK0n6Tk1eiNNgtMcqPvcnzNQPzOeHnWTw7959JxjE8JgC/JkY8ndN4J3KWCOc3zgUM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzoTq/YWNPSbaxaQa1dKeysubK0ez9CfnJIplIrcKWAjIITj8Wq
-	o+xCPwhHMfPh1omgDXORhFD5/+aEFCd77fvHB9N4f0ITPq2F++VrugOVKj6QcPM=
-X-Gm-Gg: ASbGnct1T/4H6mNmc8rGzWwyxUxC6q62OHG0zG32Ok5kIa8WbVHy6K26zEHlQF8lSHl
-	e14YkAfYxURjxdliEPHYtKQ834VLqqIAtTYx7OlVbPRXb7YlXXRWKS1EP7lsndxfVVivJ57uDXE
-	CdimL9YZBUb8yFjZt9qxDSzCyPyBfqLyt7vH7WA4tfn+pbImZFW2W6WuIV/kGHN2UXRWSFm3CkA
-	dPjakePtx1VGOFoSoekaNjJF2DHopm19tDbKwkMNS6Ij5oo3rN7nXBMaODD/UwfWOz9NXhdGqB3
-	9Qll6Uk6BLXmzMZhTVaj3xVCxQaS/6nNoipR9XCOjGwrBdv12F0hfdWGQbiJlNkT/3z52HvvXw=
-	=
-X-Google-Smtp-Source: AGHT+IHuh8FZ1mgmCnMmsLjrt+LL4tFHjVCmaSizXKjRSMf8Fg3xlArwjI3h301vYadEZcBHltyvdA==
-X-Received: by 2002:ad4:576b:0:b0:6d8:9062:6616 with SMTP id 6a1803df08f44-6e4455d2f32mr79737356d6.7.1738966793258;
-        Fri, 07 Feb 2025 14:19:53 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e43bad5a7bsm21233486d6.119.2025.02.07.14.19.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 14:19:52 -0800 (PST)
-Date: Fri, 7 Feb 2025 17:19:50 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Jim Kao <jim.kao@xconn-tech.com>
-Cc: Robert Richter <rrichter@amd.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LR0KJWkG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738966929; x=1770502929;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4IoCEk/tAjd8JEMqSopgO2Y7+eRV8cqL0jxI6XMXQvs=;
+  b=LR0KJWkG/taAK1HyQs0k74oQ1NhK+lbSmx2DTsMQ98acW2Z3hLp5jKSa
+   EZt2wulFW8ta7ihT2Z5IE4wlDzHU9fFo14vzSZ4e7FS1Czhtagjd7XbyR
+   VJqlQzyBfDrmRXEaKQtN4XKScFpcb10YZ8L0LWs8DKsLjyx0sjpBANiBf
+   zw7KkRUy8POOKevPWMA8aDrDo56mnQdZfghUqTSbgF6FqkGwXE2npvd9+
+   1+27pPgb42wm5IUX8SxOvqE2FLDGflsAE3ImLhDOMx1FkZUMS570cuKGW
+   hktthWWUrTNT173BBVb02ysRDZar4Cy/cpxFYhk42WTdsuqCM8rJfYYao
+   A==;
+X-CSE-ConnectionGUID: Gbu9IdBvRVmtVYWmoT+Scg==
+X-CSE-MsgGUID: 4/OX13T6RS2sQ3mS4g9h3A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="42462550"
+X-IronPort-AV: E=Sophos;i="6.13,268,1732608000"; 
+   d="scan'208";a="42462550"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 14:22:08 -0800
+X-CSE-ConnectionGUID: 5dvWo4bCQTW+52ds4wUF3A==
+X-CSE-MsgGUID: W3F1OP9GQJyiWjnCKPCYTQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,268,1732608000"; 
+   d="scan'208";a="111414811"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.111.82])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 14:22:08 -0800
+Date: Fri, 7 Feb 2025 14:22:06 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: Robert Richter <rrichter@amd.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>,
 	Ira Weiny <ira.weiny@intel.com>,
 	Dan Williams <dan.j.williams@intel.com>,
 	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
 	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Gregory Price <gourry@gourry.net>,
 	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
 	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v2 03/18] cxl/pci: cxl_hdm_decode_init: Move comment
-Message-ID: <Z6aHBuGwuEMy6Kc1@gourry-fedora-PF4VCD3F>
+Subject: Re: [PATCH v2 13/18] cxl/region: Add function to find a port's
+ switch decoder by range
+Message-ID: <Z6aHjiROdVotsZt5@aschofie-mobl2.lan>
 References: <20250207153753.418849-1-rrichter@amd.com>
- <20250207153753.418849-4-rrichter@amd.com>
- <Z6YurVy_K96jet3U@gourry-fedora-PF4VCD3F>
- <BYAPR06MB413558D98731EBD422CF24E4A1F12@BYAPR06MB4135.namprd06.prod.outlook.com>
+ <20250207153753.418849-14-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -86,15 +68,41 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <BYAPR06MB413558D98731EBD422CF24E4A1F12@BYAPR06MB4135.namprd06.prod.outlook.com>
+In-Reply-To: <20250207153753.418849-14-rrichter@amd.com>
 
-On Fri, Feb 07, 2025 at 09:36:08PM +0000, Jim Kao wrote:
-> Do we have any limitation for HDM Decoder Range in Linux Kernel ?
-> We has observed that Linux might be hung if range is larger than 8TB.
+On Fri, Feb 07, 2025 at 04:37:48PM +0100, Robert Richter wrote:
+> Factor out code to find the switch decoder of a port for a specific
+> address range. Reuse the code to search a root decoder, create the
+> function cxl_port_find_switch_decoder() and rework
+> match_root_decoder_by_range() to be usable for switch decoders too.
 > 
-> Jim
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> ---
+>  drivers/cxl/core/region.c | 46 +++++++++++++++++++++++----------------
+>  1 file changed, 27 insertions(+), 19 deletions(-)
 > 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index cfcd235f311e..15286acdf6d1 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
 
-Do you have any additional details? dmesg/core dumps, etc?
+snip
 
-Seems pretty suspicious that it happens right on the 44-bit boundary.
+
+> @@ -3218,9 +3234,8 @@ cxl_find_root_decoder(struct cxl_endpoint_decoder *cxled)
+>  	if (!iter)
+>  		return NULL;
+>  
+> -	cxlrd_dev = device_find_child(&iter->dev, hpa,
+> -				      match_root_decoder_by_range);
+> -	if (!cxlrd_dev) {
+> +	cxld = cxl_port_find_switch_decoder(iter, hpa);
+> +	if (!cxld) {
+>  		dev_err(cxlmd->dev.parent,
+>  			"%s:%s no CXL window for range %#llx:%#llx\n",
+>  			dev_name(&cxlmd->dev), dev_name(&cxld->dev),
+
+The dev_err() needs cleanup to align with !cxld.
+As it is now, fails w NULL ptr dereference.
+
+--snip
