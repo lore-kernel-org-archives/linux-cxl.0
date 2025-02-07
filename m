@@ -1,144 +1,131 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3488219994F
-	for <linux-cxl@vger.kernel.org>; Fri,  7 Feb 2025 10:14:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 878FB1A23A9
+	for <linux-cxl@vger.kernel.org>; Fri,  7 Feb 2025 10:46:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738923303; cv=none; b=SlgFB51pF960iCTwRYhU2QA2rzmLcWGPUcZcjF76c9i7jvW+m+a4dOK41CV2boDtjrdsJ9CKTEqNV7G8mwUFTl/WwhwH7gdyM3NtytkzB9s70AUvrln3cw341EgxXw2z1VAHksT0YW9o/pDkUOjJG33VVs2UrhWtwevQJY2usBs=
+	t=1738925220; cv=none; b=LqkkW/IrQpLG94gSEq8IQsQsz6m3NKmyTUICM3PDFn/5bulZKul+IR9xx/UiLxSTnL6umLAf/fG2RN4gm7OpMRknGshonJdMXxEEfxGmPGjzkmucX+NGA2FWmoKkj06mAsXhPcZUp6EQRzHYZodrLgKnGBlF+gp9z2pTVta23n4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738923303; c=relaxed/simple;
-	bh=v/1UIMwsP3y9X8YWxu/JTNIkPLYd6PGOUSRh72mP1d0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oHvktKwCz0Ki653qoSmK7DRfu9Ds3teYSkC5iPMQPNBpYhXG/9KaAmUS2XJmwyXFCHpQTzPGbn5j9jnCASFjug2acNbNzTRf36U2pN83VuwfFd4QbhCiIQm9rDTr9+FDuX0LyLhTXCAFozBlRXr4ohDpPpUN1rxTZme93WqTBZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-3e1ff7000001d7ae-d2-67a5dd1f99cb
-Date: Fri, 7 Feb 2025 19:14:49 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: Gregory Price <gourry@gourry.net>
-Cc: Matthew Wilcox <willy@infradead.org>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
-	linux-cxl@vger.kernel.org, Honggyu Kim <honggyu.kim@sk.com>,
-	kernel_team@skhynix.com
-Subject: Re: [LSF/MM/BPF TOPIC] Restricting or migrating unmovable kernel
- allocations from slow tier
-Message-ID: <20250207101449.GA35103@system.software.com>
-References: <Z54hUTXRsw0LYQ8b@localhost.localdomain>
- <Z54p4QOnAlTYm6DG@casper.infradead.org>
- <20250207072024.GA48419@system.software.com>
- <Z6XLCeU0vjIOYGKe@gourry-fedora-PF4VCD3F>
+	s=arc-20240116; t=1738925220; c=relaxed/simple;
+	bh=Al82twb3ZORnkFpPKGWaa+dGonLUQqELTg90LuZe754=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VBwPSig+NYRckUDeOocw7bHg+5+G/jd/61dQDJDdZaoV2NbWpcui9ZQEn8yDi54RO04JHdmsXSOZb/CwTuP9go0LLxGGOLlGA1GrlP1wJ7MoX/suUGV8TdkdKbhxmnkyB49vYM1cRV9MDkh4TLyUfhZyfc2LSCQAdE7fkRpdOYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OU//l8MD; arc=none smtp.client-ip=209.85.219.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OU//l8MD"
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e5b1c4b952dso1625345276.0
+        for <linux-cxl@vger.kernel.org>; Fri, 07 Feb 2025 02:46:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738925217; x=1739530017; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ELHCCsWgc5ETP5HPI0Vfzd1JQz/muXIEmMEw0zlWiV4=;
+        b=OU//l8MDT+sEMW0uUdsIRvwP5nJmTdKnPNX/IGy25g6w42OZrboAiuh7ClW3wsbzzV
+         Bs9uy+bm10G8Y1TzG5TXvAp1ixFcp3SKGEeAltgh6GHkr03sAo7CNQHLt/6b9RBtTgkp
+         uDTVFIf+3UWl2xg6tP6Ee4IgEceddd3pr8lSogbOZAZshVXC15+kU53mo5rfzZOFFLJD
+         /MFpbHEGL4haKALxcLDxxgMftFawuoX8VGDhp16en5akquKcqwbtlceQRFYRT/0VD8kU
+         u5pjBvvTPPRHG9VzSQnGi18MuFLR1q1LuvDgv22FJKkE3cCsGD+Mh0F7xjaJdh2nj5Ek
+         6C3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738925217; x=1739530017;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ELHCCsWgc5ETP5HPI0Vfzd1JQz/muXIEmMEw0zlWiV4=;
+        b=Ccjg0B6DN5pZW3+ceJVszGv60n2AT6AuOUwBxvWI/2yYab1LND4JLlQ7u2eBg4q63h
+         o1R/ZMT8iezc6TXlSJN0e2aSKgBWP2FQKo0PVg8nKpWgk9RQ8i28OPznUU6e3ov0gzfd
+         VL7a3GX50lXi2o513buwQ7j3bpgkBIk5gvr7W6NVj2SzNNb5uOneLupOuIvf4kYNts/s
+         0EmpxvoIVjYxsRr7bn2/ez4oBf59ukA/ZSSnmeVqA5ZeKd+NQ5h9g9nzj5hnV3Q5Kuzs
+         XJ2fObIzOyQ9DbK8w/xoIBZvoAdHoIAOnr5Qo9JO4MOfNvPzUNq1eDA+97zeCtTngD1r
+         +0VQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVzBtuzCx+i7N9Vk11RF2mOO6eVWaB69G6cvnzwehn6JAWICgLKWyyBfemFctyID0eKmIYQIH7tbdk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwW6I1UjxulWKuIFKF4iu5VFNfFOvQVqUhyBQ4MP+ijeRFmeQ9K
+	6anDKfID5l3oRUBDDa5ypN2DCInlVQ/wcDTkzI2Z9yWzG1ay2KSIc4P5ef35cT1Zqmw/Bc9kuHs
+	7JjfB71njJFTOQaZeKhSNaave0ovl9SvihD4njYHI
+X-Gm-Gg: ASbGncvlVsZ0zzlLshcf6mvrI4tv9GhKjXyJoIGlmvUadV5BYASjWgwlu8YrAHqCcHG
+	+NrdSIuTzOImUXZ1nLU+YK44pcwaCUkvIdzer7s3Z5qwDPhg5RdqVX2Cjse8t7DERbpFXmwfMew
+	==
+X-Google-Smtp-Source: AGHT+IEgcCQQICaOTy5gqNVXRGpv9GRs+ijB2WHBN2P3UBkZlfZ+yDK6vEcPWA2hR8HOw82quOstRHxPnC/ECXmCrrY=
+X-Received: by 2002:a05:6902:2581:b0:e5b:19a0:afe2 with SMTP id
+ 3f1490d57ef6-e5b461e105emr2270733276.24.1738925217458; Fri, 07 Feb 2025
+ 02:46:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6XLCeU0vjIOYGKe@gourry-fedora-PF4VCD3F>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMLMWRmVeSWpSXmKPExsXC9ZZnoa783aXpBt96eC0m9hhY/Lx7nN3i
-	/KxTLBb31vxntdj3ei+zxe8fc9gc2Dx2zrrL7tHddpndY/MKLY9Nnyaxe0y+sZzR4/MmuQC2
-	KC6blNSczLLUIn27BK6M/t2HmAv2i1esvRjcwLhZqIuRk0NCwETi1fTvzDD2692nwGwWARWJ
-	TbefgtlsAuoSN278BLI5OEQEVCXarrh3MXJxMAs8YpTY/n4fG0hcWCBN4u0PP5ByXgELiSs7
-	mxlBaoQEdjJKzNreygqREJQ4OfMJC4jNLKAlcePfSyaQXmYBaYnl/zhAwpwCZhKXGu+ygdii
-	AsoSB7YdZwKZIyGwg01iWms7O8SdkhIHV9xgmcAoMAvJ2FlIxs5CGLuAkXkVo1BmXlluYmaO
-	iV5GZV5mhV5yfu4mRmBQL6v9E72D8dOF4EOMAhyMSjy8CQeWpAuxJpYVV+YeYpTgYFYS4Z2y
-	BijEm5JYWZValB9fVJqTWnyIUZqDRUmc1+hbeYqQQHpiSWp2ampBahFMlomDU6qBMTzpVU2a
-	y+3vm0slg16oRpbzLL93+mZoz7ueJezHWt/u7LqSwuNiM9kgO/CeTeshFVW74N6OqU+d54n6
-	cn23v6LmdlTnb/LOpqqUBboSRlylXu4/l5x9+OrzBv9LO46zua18tDxVMuD/rC9rjr90+vau
-	dUmnn3+ab8X/v1d1dTXe1n7/Hr9xhxJLcUaioRZzUXEiADk2aVtmAgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrMLMWRmVeSWpSXmKPExsXC5WfdrCt/d2m6wasNjBYTewwsft49zm7x
-	+dlrZovDc0+yWpyfdYrF4t6a/6wW+17vZbb4/WMOmwOHx85Zd9k9utsus3tsXqHlsenTJHaP
-	yTeWM3p8u+3hsfjFByaPz5vkAjiiuGxSUnMyy1KL9O0SuDL6dx9iLtgvXrH2YnAD42ahLkZO
-	DgkBE4nXu08xg9gsAioSm24/BbPZBNQlbtz4CWRzcIgIqEq0XXHvYuTiYBZ4xCix/f0+NpC4
-	sECaxNsffiDlvAIWEld2NjOC1AgJ7GSUmLW9lRUiIShxcuYTFhCbWUBL4sa/l0wgvcwC0hLL
-	/3GAhDkFzCQuNd5lA7FFBZQlDmw7zjSBkXcWku5ZSLpnIXQvYGRexSiSmVeWm5iZY6pXnJ1R
-	mZdZoZecn7uJERi0y2r/TNzB+OWy+yFGAQ5GJR7ehANL0oVYE8uKK3MPMUpwMCuJ8E5ZAxTi
-	TUmsrEotyo8vKs1JLT7EKM3BoiTO6xWemiAkkJ5YkpqdmlqQWgSTZeLglGpgFPjZnrMg5eqz
-	h7Pr3+WvlWy++mymvLyDjpzKlN/nG/ZNu7z0ROBxgVf2P1tEmQx0pkReKJ5978dk7clSzBJJ
-	a79X31FZu+pYSJLQp2fuKm77Jwc+Onxe+fK2tNlua845bfJlmfRPoqA1+Mc3+YZXj+WZDQz8
-	HX593Bo7oZLlZH6o9U65Sc7Nv5VYijMSDbWYi4oTAd9z6+pWAgAA
-X-CFilter-Loop: Reflected
+References: <20250205040842.1253616-1-dave@stgolabs.net> <20250205040842.1253616-2-dave@stgolabs.net>
+In-Reply-To: <20250205040842.1253616-2-dave@stgolabs.net>
+From: Yee Li <seven.yi.lee@gmail.com>
+Date: Fri, 7 Feb 2025 18:46:21 +0800
+X-Gm-Features: AWEUYZmWY_l0vX8ILy8cFXiRWsmElLKYT2kB7nZc-bpoHjA53Bin39yUUGKZsnw
+Message-ID: <CALX8JfQzofLZwUj4sNN_3A4aL-LMe3mUX1-PE35=rvR0pzEfHw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] cxl/pmem: Export dirty shutdown count via sysfs
+To: Davidlohr Bueso <dave@stgolabs.net>
+Cc: dave.jiang@intel.com, dan.j.williams@intel.com, 
+	jonathan.cameron@huawei.com, alison.schofield@intel.com, ira.weiny@intel.com, 
+	vishal.l.verma@intel.com, a.manzanares@samsung.com, fan.ni@samsung.com, 
+	anisa.su@samsung.com, linux-cxl@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Feb 07, 2025 at 03:57:45AM -0500, Gregory Price wrote:
-> On Fri, Feb 07, 2025 at 04:20:24PM +0900, Byungchul Park wrote:
-> > On Sat, Feb 01, 2025 at 02:04:17PM +0000, Matthew Wilcox wrote:
-> > 
-> > We can work with from the easiest object
-> 
-> >e.g. page table
-> 
-> It's more efficient and easier to change page sizes than it is to make
-> page tables migratable.
+Hi Davidlohr,
 
-You are misunderstanding.  I didn't say 'do not change page sizes'.  I
-didn't say it's easier than changing page size.  I said *both* changing
-page sizes and making them migratable could reduce ZONE_NORMAL cost.
+I tried the patch in linux-cxl next branch,
+ERROR: modpost: "cxl_gpf_device" [drivers/cxl/cxl_pmem.ko] undefined
 
-> It's also easier to reclaim cold pages eating up significantly more
-> memory than the page table (which describes pages at ~8 bytes per page).
+A few comments inline.
 
-Same.  We should keep reclaiming cold pages eating up memory.  Why do we
-give up reclaiming cold pages if page table becomes migratable?  I
-really don't understand why you are trying to exclusively pick up only
-one effort for that purpose.
+Thanks,
+Yee
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index a5c65f79db18..bcf05d010a77 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -1141,3 +1141,26 @@ int cxl_gpf_port_setup(struct device *dport_dev, struct cxl_port *port)
+>
+>         return 0;
+>  }
+> +
+> +int cxl_gpf_device(struct cxl_dev_state *cxlds)
+> +{
+> +       int dvsec;
+> +       struct device *dev = cxlds->dev;
+> +       struct pci_dev *pdev;
+> +
+> +       if (!dev_is_pci(dev))
+> +               return 0;
+> +
+> +       pdev = to_pci_dev(dev);
+> +       if (!pdev)
+> +               return -EINVAL;
+> +
+> +       dvsec = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
+> +                                         CXL_DVSEC_DEVICE_GPF);
+> +       if (!dvsec) {
+> +               pci_warn(pdev, "Device GPF DVSEC not present\n");
+> +               return -EINVAL;
+> +       }
+> +
+> +       return 0;
+> +}
+Maybe cxl_gpf_device needs EXPORT_SYMBOL.
 
-> Also, there's quite a bit of literature that shows page tables landing
-> on remote nodes (cross-socket) has negative performance impacts.
+cxl_gpf_device
+defined in drivers/cxl/cxlmem.h as a prototype
+defined in drivers/cxl/core/pci.c as a function -- #include <cxlmem.h>
+referenced in drivers/cxl/pmem.c -- #include "cxlmem.h"
 
-Exactly.  That's the motivation to suggest this topic.  That's why we
-are asking about kernel object migratibility.  Of course, we try our
-best to place kernel object in DRAM in the first place.  However, the
-thing would arise when it becomes impossible.  It's about comparison
-between 'premature reclaim and die(= oom)' and 'slight degradation of
-performance'.
+Refers to other functions (external call) in the drivers/cxl/core/pci.c,
+EXPORT_SYMBOL_NS_GPL(cxl_gpf_device, "CXL");
 
-> Putting them on CXL makes the problem worse.
-
-No.  Higher chance to die is worse.
-
-> > struct page,
-> 
-> `struct page` is a structure that describes a physically addressed page.
-> 
-> It is common to access it by simply doing `pfn_to_page()`, which is a
-> fairly simply conversion (bit more complex in sparsemem w/ sections)
-> 
-> This is used in a lockless manner to acquire page references all over
-> the kernel.
-> 
-> Making that migratable is... ambitious, to say the least.
-
-Yes.  I don't think it's easy.
-
-> > and kernel stack,
-> 
-> The default kernel stack size is like 16kb.  You'd need like 100,000
-> threads to eat up 1.5GB, and 2048 threads only eats like 32MB.
-> 
-> It's not an interesting amount of memory if you have a 20TB system.
-
-Kernel stack is an example.  We can skip it and look for better
-candidate.
-
-> > When it comes to this topic, the most important thing is the collected
-> > *direction* from the community so that we can start the work under the
-> > *direction*.
-> > 
-> 
-> My thoughts here are that memory tiering is the wrong tool for the
-> problem you are trying to solve.
-
-I think any valid efforts can be considered at the same time.  Is there
-any reason that effort in tiering environment should be excluded?
-
-	Byungchul
-
-> Maybe there's a world in which we propose a ZONE_MEMDESC which is
-> exclusively used for `struct page` for a node. 
-> 
-> At least then you could design CXL capacities *around* that.
-> 
-> ~Gregory
+>  struct cxl_pmem_region_mapping {
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index 536cbe521d16..ee0c93fde50c 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> +int cxl_gpf_device(struct cxl_dev_state *cxlds);
+>  #endif /* __CXL_MEM_H__ */
