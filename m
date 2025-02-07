@@ -1,69 +1,78 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2068.outbound.protection.outlook.com [40.107.94.68])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2045.outbound.protection.outlook.com [40.107.244.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B2719994F;
-	Thu,  6 Feb 2025 21:23:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 601BE7E1;
+	Fri,  7 Feb 2025 00:13:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.45
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738877030; cv=fail; b=UETWdC2HnhYF6IKsMcJw3av4fmHsDLcmU4x0IblBkRnpFD9Zg68RIDbqGPsqI5h2VVWZTGwloyslSqlwhNwFK92gr/XefPnDkjxXldrBfjV1jSbHXm03RShm/oASYgBWFp3bnPzjY427ZhyAtTIq7uWL1RpAV+ybBObTliyXQiM=
+	t=1738887222; cv=fail; b=eYby06Y7US0/jv6yWd4WTuxQA2t0wR4e4O9FP+AG4D98TsgfPR3ShPsBIngFbxLx9sF/q7VUZaNWv+fuZ+aHju1RvzXMMvTHtcA1CTod80y9yKeE/ox7QymTjWPlYTAxNj3IcwZI49WNEdLcu3/C7zPLOHnZuuFnlB+BbvYs4d0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738877030; c=relaxed/simple;
-	bh=gCuiZ5/Y/3JNZ0aLimpoueGwcWw4URorYt/XR4aUTh0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Q2j2Bfx63I4JMaRov34gOa5vRfXN8X9hCdrpxX8hW85ZgTjPHaQ8zFvsgNVlzAIfQk9+U5s3mKvuOQV1fBEJ6n0Qd6betjJMN30+mI7F8i76qfdok5jHUsBU5mnq3dAo9rz+7Ciy1osw9iY3mD4dkGI+eoJb/TgZGNZwt8X9uXY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=JXowtN0S; arc=fail smtp.client-ip=40.107.94.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1738887222; c=relaxed/simple;
+	bh=kFWwKN2a31IpSOZzhB3Xx/RHgKuQXnwlHqSWoEMcokg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=F9JAG9wJGOeX5IJBXwiuIR8oMBhx6JmPNtu8T95hZgzlXqI4LrUXakdoRZoGun2RU2Csi9I49/vzM8+YxA/pRhuITDsdNyyTIjTFFHMQvSSfTr9CaW+tZVVFqxZ7gJFlbAAOW0FKvzmN+J1is5LI02zbGeKusf4d9yXDTar9tF8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ZdFc7OyO; arc=fail smtp.client-ip=40.107.244.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="JXowtN0S"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ZdFc7OyO"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QPxEo8bBXWnE+k/vYOwTRySjhVvL/H1En5szLl22mzOYIck90rtnZ2U2TZGLlQ1yOIurlk0whBIsmGkv1Wc4roNQ5VIjozLvX6CiAbc0ILEJqymwSNgGRnLhm+64G/iofbgBzi5OJvjInFd6D9jfumh9SUJ0IqxH3gfOXQIsqZ0Ouo9mvMIcW0WdiwI8+yXz5qlSIBb9mQ35PAzZDHP22lWM0FfblBjqRacpnslPoNgboalIkLH7jheRpTHUEP89VgsCL24w6Toedb38r8ahS3j/X2g7ejcixF00biRbEOZXJ7ZZkfoyzvHO9qCp2gqoqpTBdCeqRIyn9PPyzWKfTg==
+ b=iz9nYY29yIBpCmLbVL/sReBj8PNJB66wdJpr1nF3K8jJn8FNKt3RqZ09daOREvCpSsAp/5B9Efqh9Me2K5dyBwF3WukaHcviLY4k7e7rWUcnw704pFAqs0UKfUHcWOhmJualxtIgF/xrjovbhrFR6ULdJnZap6xYhguNrF/BJEpRnVMZqJ/IsO2W8U1gRjvYFYDFtw+a0s0+ww9CHoKcfkeGL6pegYlOiQ8ZqEK+wNRSHdq7iWu59Db/E42+cScVUVbaMaKQmtyT51+QlxV1ZB2OI9JgjU3GL5xMSbCYtTMAs+1c6w2ZbSYhy+S1b6RFgfdM9KwgQzM9MKxNiy6+0Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+XEkjM+bXh72cpwcf/TgovzvYH9Gsfm+RC8ivlTGDNo=;
- b=K1ZHTlhjD79VfZCXdsqKagwvLcXupE5zRcojy4UOf2R3lIkpoN872Ip6ekah+TwBn+aw13Ojh47T9sSoWP1lWBWFYE32iQV/K2TQkUtlNBbjB8Bdn6h0ZuzplQLSY9WaVwmUEGZg06XASbg74HtGTdEXpGrsL1vv6Xa+hokix+jvze4MaLS3rXW1dxjMmWznZQaKFq4MQ3eDyDLQStYU+W6agdQGUgVqBP7xp32kvVdUO5LKhJ9uUkfocg5strd6+8X4UzLES51vP0R/RnnthLwerjr6UP5qHMdtVn0NccOY8QaMwjrMmNlOorRL+lGoJxxkAVUWE8cFkOM3z+XbTw==
+ bh=uJP4O92zwVekjKWNGJ+pCivhdJA5kJyiRfrHLsYfbTg=;
+ b=PzRSpMpJyR1mt3C18XHGeT9sDDKVWZ/WLkxVHw3g1RkqFgDzRhrZATxS5SPjnb9CtJ5AOZeb41U/i+lZMCNUOA1Vkjib92kSYmrjouMDpaw++nkqDYz/TlBpSLe2Deau6zBcmkqqamkwMRvxq2djhh7aCKnX8RH3EjpJZ0hZudEKLUwDiUD7weWnx5ll46JXEWBvgFz8TwKf7pswhHamYr3x7esnjPEtRdLrBYynoIFm8cZjdpiJZ24uHzK/6rvpyENJZGypDfew44GXeJQ8mQTEQbjGc/kgkZT2UIJVAkYRMoV84qv9GZZkLg7xTIAJrlPH5/BgYusRqlTnyM79bA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+XEkjM+bXh72cpwcf/TgovzvYH9Gsfm+RC8ivlTGDNo=;
- b=JXowtN0SonWQ7i155v/aGpD85lozLhKonPXLqtEfFMa6L9VFWwMcinYg0W6eiEp82cj89rZVLo/SI8OXe5v+2ZREARovRWqK8oMgu1PFL84VNn6g1CeKHGYQj8CyJNdEdHTNuMDHWaBfqmV51eV/agzDi4Sr6IUznGCbypWPl7w=
+ bh=uJP4O92zwVekjKWNGJ+pCivhdJA5kJyiRfrHLsYfbTg=;
+ b=ZdFc7OyONoBK7Js2Q01fKEdZIpqq2iRljPxILeKuVXnuBo64vQYSsYF3/IlYazCybb83AHTNsmrjN+RGy04+IV179nnDV+EwmiiEJP3h/G3xJ41ulF2PSxuDOlwe/8/Yg+sqhWapchxglEGM+bNdgIB1LdMVsKJzdzF1phW/gD6mH6GnzfrW4K8tjqH+zNPnqSpXBkzV+WXSpcZNwfsQmIhUX9lffePnf5bkboQpP/zA0Xj1emu24F5aWK4rwnmelo+0nxYeuQ33MN6k1nzY16Udje47L57iBARNWb80g/6n6/Pgz+p4V/u03O4IbeHts0FvdGkD+B0hrAB/VJ+nhg==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com (2603:10b6:930:be::18)
- by CH3PR12MB7498.namprd12.prod.outlook.com (2603:10b6:610:143::15) with
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by SN7PR12MB6885.namprd12.prod.outlook.com (2603:10b6:806:263::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.25; Thu, 6 Feb
- 2025 21:23:46 +0000
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::b965:1501:b970:e60a]) by CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::b965:1501:b970:e60a%5]) with mapi id 15.20.8398.021; Thu, 6 Feb 2025
- 21:23:46 +0000
-Date: Thu, 6 Feb 2025 22:23:40 +0100
-From: Robert Richter <rrichter@amd.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.24; Fri, 7 Feb
+ 2025 00:13:34 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%6]) with mapi id 15.20.8398.025; Fri, 7 Feb 2025
+ 00:13:34 +0000
+From: Jason Gunthorpe <jgg@nvidia.com>
+To:
+Cc: Andy Gospodarek <andrew.gospodarek@broadcom.com>,
+	Aron Silverton <aron.silverton@oracle.com>,
 	Dan Williams <dan.j.williams@intel.com>,
+	Daniel Vetter <daniel.vetter@ffwll.ch>,
 	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Gregory Price <gourry@gourry.net>,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v1 28/29] cxl/region: Show message on broken target list
-Message-ID: <Z6UoXDqmh3ARH_10@rric.localdomain>
-References: <20250107141015.3367194-1-rrichter@amd.com>
- <20250107141015.3367194-29-rrichter@amd.com>
- <20250114111641.00001cf5@huawei.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250114111641.00001cf5@huawei.com>
-X-ClientProxiedBy: FR3P281CA0194.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:a4::10) To CYYPR12MB8750.namprd12.prod.outlook.com
- (2603:10b6:930:be::18)
+	David Ahern <dsahern@kernel.org>,
+	Andy Gospodarek <gospo@broadcom.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Itay Avraham <itayavr@nvidia.com>,
+	Jiri Pirko <jiri@nvidia.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Leonid Bloch <lbloch@nvidia.com>,
+	Leon Romanovsky <leonro@nvidia.com>,
+	linux-cxl@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	netdev@vger.kernel.org,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	"Nelson, Shannon" <shannon.nelson@amd.com>
+Subject: [PATCH v4 10/10] bnxt: Create an auxiliary device for fwctl_bnxt
+Date: Thu,  6 Feb 2025 20:13:32 -0400
+Message-ID: <10-v4-0cf4ec3b8143+4995-fwctl_jgg@nvidia.com>
+In-Reply-To: <0-v4-0cf4ec3b8143+4995-fwctl_jgg@nvidia.com>
+References:
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BL1PR13CA0307.namprd13.prod.outlook.com
+ (2603:10b6:208:2c1::12) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -71,123 +80,310 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CYYPR12MB8750:EE_|CH3PR12MB7498:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2b844c70-bfd7-4bb5-b365-08dd46f48a75
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|SN7PR12MB6885:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9f4250b2-7b83-4974-9c5b-08dd470c4287
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|1800799024|376014;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7416014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?MfHGaAUFbapjESRYGIcdZeLpu+68t12ELT8ZPtsDwIVpXFGpi7WLWVXn9cy8?=
- =?us-ascii?Q?UeiZ6X5P0os0W1ShCMbxobdAuuUjHD+7NOjbf0sBI4KvQkGnBM2Gdpl6WWl0?=
- =?us-ascii?Q?8sUSsfnnAd+LYJnNZbKHImqfKnpvkNUrhELE8PTfNTOOEdW7DZ+OVgcZB60i?=
- =?us-ascii?Q?4+MIxqKoxex//199IeHEQg88LujsnvSK5Qjp0nBulxWXsGxKDYyBDkT3/R+f?=
- =?us-ascii?Q?znezdIozR//51x9giGA2Z3tnvjQS+L+N9/ZtCTI94w/LFgfw+/WXRSi7L9aX?=
- =?us-ascii?Q?Tfhj6Lf+XU8JC/loO4x90h/jY+UCYm6GVdCYqAghw5jYBAqOjOUEchZ3Cz6P?=
- =?us-ascii?Q?WriiSUG+ERnFEOzWEo9eWntH6xyyzHfKNaj9WXHXAnM0LpqsD6T6SixEIyDr?=
- =?us-ascii?Q?J/RHzM7xa3NagQ2h5z8mp9MFoG5SrryoXNQPyU/nv5Qkcgo1vSep4uxJgORC?=
- =?us-ascii?Q?T65r33nStCPDt8ECETL/u5wjm6pP4ClrcqP8xGkpUX323+1NOVHy3d/tdh+5?=
- =?us-ascii?Q?MN+fKM7pLr6w99UCJo16rwZCtNcY+PGDQNc9AsygPAxiXiH12ZD/YVyWhSTb?=
- =?us-ascii?Q?wlf+5IWzcphQoV0IW9a9LLWFELHXgo2Sc9fy9/Von631pXwj3yryGRjlhCks?=
- =?us-ascii?Q?ZP7KvlItKZyQfBWk38PmikOcnmcDfwZePYjo9x4gxP9ToG36JJGHj0B5eWKA?=
- =?us-ascii?Q?Yqgu0bQrXx5QmCnFedxj2KYD9BmzvLbm6jsFayXxxKeVtCDdhuq5MCboaJI4?=
- =?us-ascii?Q?VeS8i5X0h3D/8w40RHk7vvfa0VQhWBE4rtImdT3USMiLeVb63sASWzt/kbyx?=
- =?us-ascii?Q?IWYlnFew9GaLRhE5ePLx5SZBMB14SHOaY0dfeJde42QHWw7lY7lrOZ9szsRZ?=
- =?us-ascii?Q?MOt1eDCsTGF2nDn8zrembYLMOq300HVV3GW62c7Usoq6dzHfD4r1DttEmuMC?=
- =?us-ascii?Q?btGnrT5eLW99cwAi/8FENsyCOd/Ur55b+PRgVuGI/B8towFo+uikkXJCMiUz?=
- =?us-ascii?Q?5/en8svs9LtcgnwVtrNT1NJklWUMK1P5KsFsI+Tj4x3X5m4SriKfq+DGPl9k?=
- =?us-ascii?Q?xWPCGuyHQitxlDaPc7QS6m2LYfE5gSYhTWg5dYKsDweSJ/mhI1XQK1IfHQO3?=
- =?us-ascii?Q?LxlSjsMdXi4Jj0pIbRVT5AlAVU6XxpgerwS5bw2a2R+hm11SgFQl281FCIeD?=
- =?us-ascii?Q?ktRXoO5g20HLOv08MSMKKbBefWsv/Jk+lf9kT4tVm4JrhkMiYOkrSf6tz2ph?=
- =?us-ascii?Q?tyoWmmwMbIjMlJ0YgfbikyQrWAf738yLKmvK3CrsiBBAzMDB9NScAx+DAeHE?=
- =?us-ascii?Q?TaqXLDqjOXYyp8dvkbTUUYQkz6+I/MmuLjl+RTnc0zrXuyROv9v5KmLoTf+I?=
- =?us-ascii?Q?scdOR615COiczUamGr66EbhyTk0e?=
+	=?us-ascii?Q?DVLWNH2uJVbBWb6mrA1CtARKpICO1YtQHLrj+BeR8xhSe3ww98ldRZhKPlxG?=
+ =?us-ascii?Q?u2WP7MtePW2IOK6nNojNNyfDATQioNz40M/HJFQ8JH6Wj+Lsp2Nb/2dxhobR?=
+ =?us-ascii?Q?X8Ltr2c7mNO7nbhV+SGmj30WOk0Cfe/xf84Sg3QuAsZDFcnbp8tNV4KiXpA6?=
+ =?us-ascii?Q?7r1gn2rNS/sNifzuS3FW/oLKvatFgjlXoE4AWuRVeGOjMOb+agkWRHRJ0Hp3?=
+ =?us-ascii?Q?hEc+N0TQEnPAJGKvdQMiAcTL+VkyzE30xOUjL8Istt32NXwc0/1QC7nYI69v?=
+ =?us-ascii?Q?iftQQJ77foCRJAD6b0YEpmHU/DUQQeZOJZapBXfNVXWnqU+jlhqrThak6WAz?=
+ =?us-ascii?Q?ZGPFSdO1kNr1ABUnTVqAdOAwF/gzAtUq4I1B3VpvEa86zswGgdBhtmN0oZEo?=
+ =?us-ascii?Q?UiTHkiPPsqbO8cF5zPDQvdAJB1vOcH5IBnN9RCvj8a1onUC3qwO+6p7wgoZj?=
+ =?us-ascii?Q?Ipuqugh80FTMwjjbwB/Zne+noS05rLgy4gqmfUnpoIeVDih4DY+IcoPsN3yG?=
+ =?us-ascii?Q?K0ytRajhq2np6S3WnCE1VJI3s0If9Mslnwb5bTbswxIkdd1NebLwXXbILG9z?=
+ =?us-ascii?Q?sSinBRhpZvCpM3ssgPN+FLxt7kcd970eGEK6MSB0WJtJ8GqR66hzEJxSXG+E?=
+ =?us-ascii?Q?9nacJX6Ea8hHITN3HLFj0aOyemmmWEi//EsF46hRYGvAgS173P+TfBP0kl/r?=
+ =?us-ascii?Q?5HDjWBXZqAOvZgK+SHPuTMRtjTHddXwTOEm6+YZlFHCMlxI2iObBQk3SOKZF?=
+ =?us-ascii?Q?UBcj9PGAbodBo9ONpUbG77NeK13oxWrw5TLn79hBvHdTes+9WJmZQczkIf+/?=
+ =?us-ascii?Q?BXrgxChrAgNMQBP4QD+M8rUQjcAMc6KJnMZ2E7GUj0ZtbpDh+WgJtc0CDMR+?=
+ =?us-ascii?Q?XhZOJhMEPjzPwRfffZTGXKEO1+h+n8rE8LO+y4x8qulHMcwCijrRX1J9llzm?=
+ =?us-ascii?Q?SIdQc9OjhE2z4kvHlj2DaD2stVZdYhSF4rTejrCJVxtI5lbyzpJUnj2SQqnG?=
+ =?us-ascii?Q?58j/OqA6RF9IW6iRQm0qPsQEw1vWbifDJyeunYjb8RYpqZfOnl/ksVJ2/3/d?=
+ =?us-ascii?Q?Oy922TEgiDRy6Ewt/URwo67QJWAtmBy0oDrFk5Lkxv+HJa6vGXWF1oUUDx8d?=
+ =?us-ascii?Q?rkrf7cJBukwuN7yoEpHuxZkt6UOjc1WVRcLWl4aqa0ycZzM2/O4L+kWosM0g?=
+ =?us-ascii?Q?61xBlyTNf4Ru17Wp+5Dexb6PNf4FdN8Xw2mBzR0JK4JybWPtvKMWsOj1vpMn?=
+ =?us-ascii?Q?Y6o1FpBu14GSVcViuBtK0fiSDc/MLuQ9gFVDs88KwszIidr0E+1ZLWpG0u/e?=
+ =?us-ascii?Q?LMJF2nGUpMrLY+zg1nm/JlLjsSKSWNKiJzvy25sYdT7sNz8yTAH29YwBd68l?=
+ =?us-ascii?Q?XpSoNCmSMQnmVnvR3guCMufxdrte?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(376014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7416014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?zlt6AAfqxZYRhrCXxQraGCIYsAR8+qqQZeoNjutVihr2LjE/UpN61/qdGvjh?=
- =?us-ascii?Q?qCSq4PHg8Pg9QfZcDulLlEo/TS2I4ItNPiddu5C2svauyqhZkDXPUYpFwy7d?=
- =?us-ascii?Q?4IuZqfKusnhv7nrz9O0UP6UgPgX/mpUCn1qfJBWZDyCv6+1ub2WNvfZY4eYJ?=
- =?us-ascii?Q?oxKRH4edNEDDTziuFyk+CJQe9xQ5/XRsIQgwk/sGy0UIoKYgi2c8J5kWPqt4?=
- =?us-ascii?Q?Y+N+1bcl5+xwi9ea2hv5c7TgA1a5H4aR4czrSxP5VERh4F/p3tEqYCxKJqVL?=
- =?us-ascii?Q?duWa2sVjUmLSPY2NS0BeKVzJpfXBOszG3S6nzScIlwxWMQv1RJzcXVz1ZK3V?=
- =?us-ascii?Q?NxzlOtNNRX2P8R0mdbVD4hLGfXm26Gye8npuMI9AAIbgrY6Z5E6MqbPHwrXC?=
- =?us-ascii?Q?osCDs3MXLI3uraLvj3A+0C4dUkxOO2Gt8H74wGYxl+v7MTuBgUxoy+JPAN1z?=
- =?us-ascii?Q?PxKOHPHwo/PverYyV3Osl8dNjoZTHdWj4VApuhTwyALFhy2MSv5zaiSr3ITd?=
- =?us-ascii?Q?fLRZra1VgqCdULQGSkUC1RTlLOEyKA438snSqSuODnEa7qIQemKpKLRehigy?=
- =?us-ascii?Q?ad7FofqNCBqQ4jLEZxF4qvDerBzshZUGW8qY/3mqreHjIbL0EKezAf5MoVkz?=
- =?us-ascii?Q?LrZT82jQZ3NfRXO4gStoXvLK0YqSOfjp//lKayKCmqjZCoKnHwCtwZFuY3lx?=
- =?us-ascii?Q?PRExtHWvyOFwaqUU0jluGuR1KSos57f1yupDboERf0d04bTax8uu76U7N4Ec?=
- =?us-ascii?Q?Xb3McV5li8J2s7lwSWpR+7lr/4F9Thp1ANiHlEVKs9XhEbOteXFJxDWOvEyk?=
- =?us-ascii?Q?w+LkAwtxFmRwJ45f1T5DeprRUai2XI7jF0cyCRzr/77C5sK3rhAZoJ/yzhEV?=
- =?us-ascii?Q?b09fyrbBaAb6NTu2L3djUJlYm0wBm7DX7mOF7i6ZYdOBxRpq40k7XZ7Am5Cr?=
- =?us-ascii?Q?sg1mCBgu2t3/fFGdL/32OZOf7PUKNrBkaVITv75/pPOjtTbHBpAgYSnG2olq?=
- =?us-ascii?Q?UhSpERM35dhMEXK8b03DBLnxkMRuGeS3f+RG7k2u3Q4bXOE0qPtFHDTyqxfX?=
- =?us-ascii?Q?/lYrjGDviCvbqeXjFilDUXohT0/wQGdX7GxwhXPW/XAsf4Iue9ac9XdqkViJ?=
- =?us-ascii?Q?LkhUISNNhs1ZtoWAwzdQacj6cyxEPVZIgcOG08fLPAkIdXfA26r/Ww2xPxdW?=
- =?us-ascii?Q?GolcDD0uyIfQBldfPh9kr0ACX0Kk9CjBonJJCuy81aatYIHeEEDvq7V8a0nA?=
- =?us-ascii?Q?zvM2v4+9+6eGyA+pxENLZXIhFiDieU3yilEPduNBjX7YaKFewUSvJ6Vo4otj?=
- =?us-ascii?Q?xb/KA6A+9cjcM0H+KAAsOVThw94L3twJvN7KV2jxjwuHC4A9TYEISe/Ms0Ny?=
- =?us-ascii?Q?w0R1h6vy+naGhSq6DGOl8QVjb8oY41QcVHTHZTER0dyeQo+5lYPCaFYewAlA?=
- =?us-ascii?Q?t8eeqVal7C8DmFQ/jfCqKawPApBcWpCF7YiwgViyUqXZagOxfyoNqDeUkPd+?=
- =?us-ascii?Q?SGAvwBDLwytmbpRoIzJDe3nbjS0Nd2dZUYJ3Af1jE7RreKF/eLz2W9Mo2OmA?=
- =?us-ascii?Q?UcuOlWZo6L4KIepJQ7BLi8XugoxLu33Ef3GNO0k0?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2b844c70-bfd7-4bb5-b365-08dd46f48a75
-X-MS-Exchange-CrossTenant-AuthSource: CYYPR12MB8750.namprd12.prod.outlook.com
+	=?us-ascii?Q?nWhB3eHrh6W25VACc4AncL/7azgb+DOC6jc75oV12s2CJ6pXblSnRr/3S59m?=
+ =?us-ascii?Q?havIF3dsU6NCGFD0FqVSmtI5KDwuD82osG/7UkE7yRm5E4MAoiAU9eouNsMz?=
+ =?us-ascii?Q?hvH+4OJyz5qu0LrGs1UHswd0Z5rvLT+2WWiDaUQ5KaoQonjG/X5729EDz1Se?=
+ =?us-ascii?Q?qcec0jNrV/wMGXbwRmueegBQ47gGlW0SGFj95CAhGDwaGlamqxXc2rMXeUt4?=
+ =?us-ascii?Q?Qxlx4UBJf/dClDERV4M2in2Bsyfa0PLDW4sJSQd7YHugGR4oN7H8IMaz8aj0?=
+ =?us-ascii?Q?ukhmA5uVYvm7Won6VNr1HARxMcuu8ZdJhpBzy/agQN6dyMlAkZTdJNcVN+Uu?=
+ =?us-ascii?Q?l0bGGP+jvwWcmmdr+smJLyVexpfJrEAxxR9VpURY31SqUjdT3sYKWbRnz9FR?=
+ =?us-ascii?Q?z9on1e1xDjIuU1VyRb1R4F4URUzlUICLva6aWZ6xTbsPs/hO3HsFQCrkLX6G?=
+ =?us-ascii?Q?KCNQmqLixcy20Oo44Y/O5oilXxcW6W+BUnxK46sY8Leb+AeWg7WO91eqx7Z9?=
+ =?us-ascii?Q?0uhlp6MxCTW0kaB6gOBhTJBIjjz5qDUwec15BM//VFbbycVvvkhsi+QlrFKF?=
+ =?us-ascii?Q?kSBJ/CMJqPx60mYjnA0C8bUrEtydMhuTHdVEm2R4XcoPD8pvY3rSh8gEVyAn?=
+ =?us-ascii?Q?g9vSHLNTAwrlPd60egpGHCytwWt3ffD2ru5aLExXHoUt0DOWmbCAf5ch9bvJ?=
+ =?us-ascii?Q?scRmSYdUs7Sl0/pXfHuc5SaDJK8xpU1B+ONL5BK8IVCBTWWp/ZFBfmlL+SCd?=
+ =?us-ascii?Q?uQEFckC+Povc49s7VUjFoGaKf8V/fH4X4nDLwfiok6NVDB76xc82QvKeYDTZ?=
+ =?us-ascii?Q?wjd3MkWfBhH0KZoYyAa180FOWFbVvE5/xNIG7LobVVKrX/pSd8c69zQoInwj?=
+ =?us-ascii?Q?l4yoppeugZDcCDw5vLyjJWVJ7rZ83se9CssPUClqizqC8bGabZV8nBWORFMT?=
+ =?us-ascii?Q?E2OleZA9t+akvO8vlH/869+lL8pTrMkaLHm/5+KtQI3axme3vV7p2uN1j/i2?=
+ =?us-ascii?Q?Apswi49g8i1FmLYFpz8d8Usy+UIIoyp53Ad/s2+SYq4nDK1xTO9d6Zc1L6eL?=
+ =?us-ascii?Q?1UwFUbXFShvfEmf7rTuiBomDLsdfPN2vp9RLx/cJITQrVyJQuhf5841V5SXN?=
+ =?us-ascii?Q?WZbzMs3hkgWxvS8ijngckuTgpVFpEUI9w2TB401jP+kf3jc9GnDW+8fsFY9Z?=
+ =?us-ascii?Q?H4jM2icejWtoh9bOzBJ+1/wASY+/60qtuLvxTsJfvNwQem/AuOSCICaBAh8a?=
+ =?us-ascii?Q?kXdnbjI1hGSTH46XQKbiETfZr+PrVDIS6OV5bCAurrNOwP6GCQ2VVoHWr8cV?=
+ =?us-ascii?Q?UdwluS7lLMGQ5/OW4TT1Olm0jlh+4U7iO2j57aoaVcfPjaBnjomAZw52XmSt?=
+ =?us-ascii?Q?giTxpHEMx1HB5xzAyUb03c0AXm54hI9o+k40qdwZ8NLTk4ksPTh59M43ZXbh?=
+ =?us-ascii?Q?TeZjvVIcsGlwmXxloBAiXmHgVxaRyEsUCzSOVj5XxLIFNKq+bqvDM7gWq6vu?=
+ =?us-ascii?Q?UbhU71PFzW2dFJE45R3COJbNkYvXnbd/aUgoNDL/CDG64xu9J0jg3Q3f7Ss9?=
+ =?us-ascii?Q?0bMWQ0tIDAsQN6eNz/MuXytTcEz4Rs2fWNI+yo8N?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9f4250b2-7b83-4974-9c5b-08dd470c4287
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2025 21:23:46.6813
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 00:13:34.0341
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NNh8/I0aRsOX+xS9w8itlPHUFCupyZ1/yfwJQB5Orf+eqzKlE5J1KWKSYK8PGz03wj4k3LkIHBE5xSNOCVb7LA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7498
+X-MS-Exchange-CrossTenant-UserPrincipalName: aXyOBfyQSL9UT7N8Wfsfwwzab9EkJOt8KKsVT8/bf04yxwsKqHUVvCfUI4qLoHt5
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6885
 
-On 14.01.25 11:16:41, Jonathan Cameron wrote:
-> On Tue, 7 Jan 2025 15:10:14 +0100
-> Robert Richter <rrichter@amd.com> wrote:
-> 
-> > Broken target lists are hard to discover as the driver fails at a
-> > later initialization stage. Add an error message for this.
-> > 
-> > Signed-off-by: Robert Richter <rrichter@amd.com>
-> > ---
-> >  drivers/cxl/core/region.c | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> > 
-> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > index 775450a1a887..2af3b6c14f46 100644
-> > --- a/drivers/cxl/core/region.c
-> > +++ b/drivers/cxl/core/region.c
-> > @@ -1870,6 +1870,13 @@ static int find_pos_and_ways(struct cxl_port *port, struct range *range,
-> >  	}
-> >  	put_device(dev);
-> >  
-> > +	if (rc)
-> > +		dev_err(port->uport_dev,
-> > +			"failed to find %s:%s in target list of %s\n",
-> > +			dev_name(&port->dev),
-> > +			dev_name(port->parent_dport->dport_dev),
-> > +			dev_name(&cxlsd->cxld.dev));
-> > +
-> >  	return rc;
-> >  }
-> This function would benefit from some __free() magic dust.
-> Then we could return in the good path in the loop and not need the if (rc)
-> check here.
+From: Andy Gospodarek <gospo@broadcom.com>
 
-That does not really simplify the code. It would just this one
-indentation. On the other side there is a central exit for the code
-and we just need only that one put_device(). Plus, I like to have the
-'success' code path returning at the end of block.
+Signed-off-by: Andy Gospodarek <gospo@broadcom.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+---
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c     |   3 +
+ drivers/net/ethernet/broadcom/bnxt/bnxt.h     |   3 +
+ drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c | 126 +++++++++++++++++-
+ drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.h |   4 +
+ 4 files changed, 132 insertions(+), 4 deletions(-)
 
--Robert
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index 7b8b5b39c7bbe8..bf33e7f26b1fd2 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -16291,6 +16291,8 @@ static int bnxt_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	bnxt_init_ring_params(bp);
+ 	bnxt_set_ring_params(bp);
+ 	bnxt_rdma_aux_device_init(bp);
++	bnxt_fwctl_aux_device_init(bp);
++
+ 	rc = bnxt_set_dflt_rings(bp, true);
+ 	if (rc) {
+ 		if (BNXT_VF(bp) && rc == -ENODEV) {
+@@ -16353,6 +16355,7 @@ static int bnxt_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	bnxt_dl_fw_reporters_create(bp);
+ 
+ 	bnxt_rdma_aux_device_add(bp);
++	bnxt_fwctl_aux_device_add(bp);
+ 
+ 	bnxt_print_device_info(bp);
+ 
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.h b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
+index 2373f423a523ec..1951fdda8820d0 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.h
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
+@@ -30,6 +30,7 @@
+ #include <net/xdp.h>
+ #include <linux/dim.h>
+ #include <linux/io-64-nonatomic-lo-hi.h>
++#include "bnxt_hsi.h"
+ #ifdef CONFIG_TEE_BNXT_FW
+ #include <linux/firmware/broadcom/tee_bnxt_fw.h>
+ #endif
+@@ -2326,7 +2327,9 @@ struct bnxt {
+ 	(BNXT_CHIP_P3(bp) || BNXT_CHIP_P4(bp) || BNXT_CHIP_P5(bp))
+ 
+ 	struct bnxt_aux_priv	*aux_priv;
++	struct bnxt_aux_priv	*aux_priv_fwctl;
+ 	struct bnxt_en_dev	*edev;
++	struct bnxt_en_dev	*edev_fwctl;
+ 
+ 	struct bnxt_napi	**bnapi;
+ 
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c
+index e4a7f37036edba..7e39d9695af339 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c
+@@ -26,7 +26,8 @@
+ #include "bnxt_hwrm.h"
+ #include "bnxt_ulp.h"
+ 
+-static DEFINE_IDA(bnxt_aux_dev_ids);
++static DEFINE_IDA(bnxt_rdma_aux_dev_ids);
++static DEFINE_IDA(bnxt_fwctl_aux_dev_ids);
+ 
+ static void bnxt_fill_msix_vecs(struct bnxt *bp, struct bnxt_msix_entry *ent)
+ {
+@@ -413,7 +414,7 @@ static void bnxt_aux_dev_release(struct device *dev)
+ 		container_of(dev, struct bnxt_aux_priv, aux_dev.dev);
+ 	struct bnxt *bp = netdev_priv(aux_priv->edev->net);
+ 
+-	ida_free(&bnxt_aux_dev_ids, aux_priv->id);
++	ida_free(&bnxt_rdma_aux_dev_ids, aux_priv->id);
+ 	kfree(aux_priv->edev->ulp_tbl);
+ 	bp->edev = NULL;
+ 	kfree(aux_priv->edev);
+@@ -488,7 +489,7 @@ void bnxt_rdma_aux_device_init(struct bnxt *bp)
+ 	if (!aux_priv)
+ 		goto exit;
+ 
+-	aux_priv->id = ida_alloc(&bnxt_aux_dev_ids, GFP_KERNEL);
++	aux_priv->id = ida_alloc(&bnxt_rdma_aux_dev_ids, GFP_KERNEL);
+ 	if (aux_priv->id < 0) {
+ 		netdev_warn(bp->dev,
+ 			    "ida alloc failed for ROCE auxiliary device\n");
+@@ -504,7 +505,7 @@ void bnxt_rdma_aux_device_init(struct bnxt *bp)
+ 
+ 	rc = auxiliary_device_init(aux_dev);
+ 	if (rc) {
+-		ida_free(&bnxt_aux_dev_ids, aux_priv->id);
++		ida_free(&bnxt_rdma_aux_dev_ids, aux_priv->id);
+ 		kfree(aux_priv);
+ 		goto exit;
+ 	}
+@@ -536,3 +537,120 @@ void bnxt_rdma_aux_device_init(struct bnxt *bp)
+ exit:
+ 	bp->flags &= ~BNXT_FLAG_ROCE_CAP;
+ }
++
++void bnxt_fwctl_aux_device_uninit(struct bnxt *bp)
++{
++	struct bnxt_aux_priv *aux_priv;
++	struct auxiliary_device *adev;
++
++	/* Skip if no auxiliary device init was done. */
++	if (!bp->aux_priv_fwctl)
++		return;
++
++	aux_priv = bp->aux_priv_fwctl;
++	adev = &aux_priv->aux_dev;
++	auxiliary_device_uninit(adev);
++}
++
++
++void bnxt_fwctl_aux_device_del(struct bnxt *bp)
++{
++	if (!bp->edev_fwctl)
++		return;
++
++	auxiliary_device_delete(&bp->aux_priv_fwctl->aux_dev);
++}
++
++void bnxt_fwctl_aux_device_add(struct bnxt *bp)
++{
++	struct auxiliary_device *aux_dev;
++	int rc;
++
++	if (!bp->edev_fwctl) {
++		printk(KERN_CRIT "edev_fwctl is NULL %s\n", __func__);
++		return;
++	}
++
++	aux_dev = &bp->aux_priv_fwctl->aux_dev;
++	rc = auxiliary_device_add(aux_dev);
++	if (rc) {
++		netdev_warn(bp->dev, "Failed to add auxiliary device for FWCTL\n");
++		auxiliary_device_uninit(aux_dev);
++		bp->flags &= ~BNXT_FLAG_ROCE_CAP;
++	} else {
++		netdev_warn(bp->dev, "Added auxiliary device for FWCTL!!!\n");
++	}
++}
++
++static void bnxt_fwctl_aux_dev_release(struct device *dev)
++{
++	struct bnxt_aux_priv *aux_priv =
++		container_of(dev, struct bnxt_aux_priv, aux_dev.dev);
++	struct bnxt *bp = netdev_priv(aux_priv->edev->net);
++
++	ida_free(&bnxt_fwctl_aux_dev_ids, aux_priv->id);
++	kfree(aux_priv->edev);
++	bp->edev_fwctl = NULL;
++	kfree(bp->aux_priv_fwctl);
++	bp->aux_priv_fwctl = NULL;
++}
++
++
++void bnxt_fwctl_aux_device_init(struct bnxt *bp)
++{
++	struct auxiliary_device *aux_dev;
++	struct bnxt_aux_priv *aux_priv;
++	struct bnxt_en_dev *edev;
++	struct bnxt_ulp *ulp;
++	int rc;
++
++	aux_priv = kzalloc(sizeof(*bp->aux_priv), GFP_KERNEL);
++	if (!aux_priv)
++		return;
++
++	aux_priv->id = ida_alloc(&bnxt_fwctl_aux_dev_ids, GFP_KERNEL);
++	if (aux_priv->id < 0) {
++		netdev_warn(bp->dev,
++			    "ida alloc failed for FWCTL auxiliary device\n");
++		kfree(aux_priv);
++		return;
++	}
++
++	aux_dev = &aux_priv->aux_dev;
++	aux_dev->id = aux_priv->id;
++	aux_dev->name = "fwctl";
++	aux_dev->dev.parent = &bp->pdev->dev;
++	aux_dev->dev.release = bnxt_fwctl_aux_dev_release;
++
++	rc = auxiliary_device_init(aux_dev);
++	if (rc) {
++		ida_free(&bnxt_fwctl_aux_dev_ids, aux_priv->id);
++		kfree(aux_priv);
++		return;
++	}
++	bp->aux_priv_fwctl = aux_priv;
++
++	/* From this point, all cleanup will happen via the .release callback &
++	 * any error unwinding will need to include a call to
++	 * auxiliary_device_uninit.
++	 */
++	edev = kzalloc(sizeof(*edev), GFP_KERNEL);
++	if (!edev)
++		goto aux_dev_uninit;
++
++	aux_priv->edev = edev;
++
++	ulp = kzalloc(sizeof(*ulp), GFP_KERNEL);
++	if (!ulp)
++		goto aux_dev_uninit;
++
++	edev->ulp_tbl = ulp;
++	bp->edev_fwctl = edev;
++	bnxt_set_edev_info(edev, bp);
++	/* bp->ulp_num_msix_want = bnxt_set_dflt_ulp_msix(bp); */
++	printk(KERN_CRIT "Made it %s\n", __func__);
++	return;
++
++aux_dev_uninit:
++	auxiliary_device_uninit(aux_dev);
++}
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.h b/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.h
+index 7fa3b8d1ebd288..148e3eb32be001 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.h
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.h
+@@ -124,6 +124,10 @@ void bnxt_rdma_aux_device_uninit(struct bnxt *bp);
+ void bnxt_rdma_aux_device_del(struct bnxt *bp);
+ void bnxt_rdma_aux_device_add(struct bnxt *bp);
+ void bnxt_rdma_aux_device_init(struct bnxt *bp);
++void bnxt_fwctl_aux_device_uninit(struct bnxt *bp);
++void bnxt_fwctl_aux_device_del(struct bnxt *bp);
++void bnxt_fwctl_aux_device_add(struct bnxt *bp);
++void bnxt_fwctl_aux_device_init(struct bnxt *bp);
+ int bnxt_register_dev(struct bnxt_en_dev *edev, struct bnxt_ulp_ops *ulp_ops,
+ 		      void *handle);
+ void bnxt_unregister_dev(struct bnxt_en_dev *edev);
+-- 
+2.43.0
 
-> 
-> Otherwise looks fine.
-> 
-> Jonathan
-> 
-> >  
-> 
