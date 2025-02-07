@@ -1,275 +1,133 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C5F23F29F;
-	Fri,  7 Feb 2025 14:31:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC392206A0;
+	Fri,  7 Feb 2025 14:42:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738938662; cv=none; b=VuMMbzvVeX6x+qRmzl9SXw+gqVI7V5Jw4cksNIpfoHmNkwtVDPHhVb++iugglTVlfMpJEgFSVm3BveduBpmKbyQZsq0Z7Dd5gD3iMiTNDKIQNnnsXblGmC8fdO9F/YLQoNBA8xheYNVB44Sc6jaIJZYMAT+z+q8Bs//o1DGgbZs=
+	t=1738939377; cv=none; b=dsrlclBRtNO6x8OVIZi7dLtR+jhx+LGEjHLwniLX2MrLafR/YNwpvsM2kNfuE/3D6usO1I/Ab/T7R5/59lH/z/KpcK8N2EpieeqeXZxN4t2vztVeoqby7C8dZ7tpLxw8SMkNqtUunP3vhKrg2BQvtg2f3RzCQZ2HziJaZv4G2w8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738938662; c=relaxed/simple;
-	bh=ZF9f7jGUfMLnxque3loxIfAs4Ce34nahszkMvVP6Nlo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hBFcBH7LWYIt6HPvmnRIId288c/7UhLYj+ojgOpfaSynqBdgIiLAQgXUtkZWTIaze6S2LLR4D+j7KOgEd7pAFDOZr/xfiadKwJvScKHF7ZyXePkFfw/HHQ5SyISNo88+YwT8wfJwUltYGL0wjMO1JwTrrzhxO1Ul9V3CVeHOOwg=
+	s=arc-20240116; t=1738939377; c=relaxed/simple;
+	bh=hTAH9CDVAVmikUCkkTbmfxcvKGpyCVE3UYAyXb3D7BY=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iEj5tzbXalrKautnkCaIsRhzZ7PPrY3Ligz/nnhnTIlEeoPoXghBRfM8JIX1GYsKEEEwd3/wtr6ZehoAP7IsdCil/pAVp/CWVrTG8w5i2vy60NFsE8nDRopyMcWPwfuH54hj9musKNEwttljYB/g5XBDvz8yLdvOCWWu/YYofUY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YqGXs5yHfz6L5Bh;
-	Fri,  7 Feb 2025 22:28:13 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
-	by mail.maildlp.com (Postfix) with ESMTPS id C317F1402A5;
-	Fri,  7 Feb 2025 22:30:58 +0800 (CST)
-Received: from P_UKIT01-A7bmah.china.huawei.com (10.126.173.5) by
- frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 7 Feb 2025 15:30:57 +0100
-From: <shiju.jose@huawei.com>
-To: <linux-edac@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-	<mchehab@kernel.org>, <dave.jiang@intel.com>, <dan.j.williams@intel.com>,
-	<bp@alien8.de>, <jonathan.cameron@huawei.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>, <dave@stgolabs.net>
-CC: <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>, <shiju.jose@huawei.com>
-Subject: [PATCH 4/4] rasdaemon: cxl: Add CXL memory repair boot-up script for unrepaired memory errors
-Date: Fri, 7 Feb 2025 14:30:25 +0000
-Message-ID: <20250207143028.1865-5-shiju.jose@huawei.com>
-X-Mailer: git-send-email 2.43.0.windows.1
-In-Reply-To: <20250207143028.1865-1-shiju.jose@huawei.com>
-References: <20250207143028.1865-1-shiju.jose@huawei.com>
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YqGpZ1nVXz6L5CZ;
+	Fri,  7 Feb 2025 22:40:06 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 35F64140A30;
+	Fri,  7 Feb 2025 22:42:51 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 7 Feb
+ 2025 15:42:50 +0100
+Date: Fri, 7 Feb 2025 14:42:49 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: Andy Gospodarek <andrew.gospodarek@broadcom.com>, Aron Silverton
+	<aron.silverton@oracle.com>, Dan Williams <dan.j.williams@intel.com>, Daniel
+ Vetter <daniel.vetter@ffwll.ch>, Dave Jiang <dave.jiang@intel.com>, David
+ Ahern <dsahern@kernel.org>, Andy Gospodarek <gospo@broadcom.com>, Christoph
+ Hellwig <hch@infradead.org>, Itay Avraham <itayavr@nvidia.com>, Jiri Pirko
+	<jiri@nvidia.com>, Jakub Kicinski <kuba@kernel.org>, Leonid Bloch
+	<lbloch@nvidia.com>, Leon Romanovsky <leonro@nvidia.com>,
+	<linux-cxl@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+	<netdev@vger.kernel.org>, Saeed Mahameed <saeedm@nvidia.com>, "Nelson,
+ Shannon" <shannon.nelson@amd.com>
+Subject: Re: [PATCH v4 06/10] fwctl: Add documentation
+Message-ID: <20250207144249.00000521@huawei.com>
+In-Reply-To: <6-v4-0cf4ec3b8143+4995-fwctl_jgg@nvidia.com>
+References: <0-v4-0cf4ec3b8143+4995-fwctl_jgg@nvidia.com>
+	<6-v4-0cf4ec3b8143+4995-fwctl_jgg@nvidia.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- frapeml500007.china.huawei.com (7.182.85.172)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-From: Shiju Jose <shiju.jose@huawei.com>
+On Thu,  6 Feb 2025 20:13:28 -0400
+Jason Gunthorpe <jgg@nvidia.com> wrote:
 
-Rasdaemon supports live memory repair for the CXL DRAM errors reported,
-with 'maintenance needed' flag set. However the kernel CXL driver rejects
-the request for the live memory repair in the following situations.
-1. Memory is online and the repair is disruptive.
-2. Memory is online and event record does not match.
-In addition, live memory repair is not requested if the auto repair option
-is switched off for the rasdaemon.
+> Document the purpose and rules for the fwctl subsystem.
+> 
+> Link in kdocs to the doc tree.
+> 
+> Nacked-by: Jakub Kicinski <kuba@kernel.org>
+> Link: https://lore.kernel.org/r/20240603114250.5325279c@kernel.org
+> Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+> https://lore.kernel.org/r/ZrHY2Bds7oF7KRGz@phenom.ffwll.local
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
 
-In the above unrepaired cases, rasdaemon stores the repair-needed
-information in the DRAM event record of the SQLite database. This allows
-a boot-up script to read repair needed flag and repair attributes from
-the database. If the memory has not been repaired, the script will
-issue the memory repair operation needed by the CXL memory device
-in the previous boot. kernel CXL driver sends a repair command to the
-device if the memory to be repaired is offline.
+A few tiny things inline.
 
-Add boot-up script for handling the unrepaired CXL DRAM memory errors
-from the previous boot.
+> ---
+>  Documentation/userspace-api/fwctl/fwctl.rst | 285 ++++++++++++++++++++
+>  Documentation/userspace-api/fwctl/index.rst |  12 +
+>  Documentation/userspace-api/index.rst       |   1 +
+>  MAINTAINERS                                 |   2 +-
+>  4 files changed, 299 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/userspace-api/fwctl/fwctl.rst
+>  create mode 100644 Documentation/userspace-api/fwctl/index.rst
+> 
+> diff --git a/Documentation/userspace-api/fwctl/fwctl.rst b/Documentation/userspace-api/fwctl/fwctl.rst
+> new file mode 100644
+> index 00000000000000..428f6f5bb9b4f9
+> --- /dev/null
+> +++ b/Documentation/userspace-api/fwctl/fwctl.rst
+> @@ -0,0 +1,285 @@
 
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
----
- util/cxl-mem-repair.sh | 189 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 189 insertions(+)
- create mode 100755 util/cxl-mem-repair.sh
+> +Operations exposed through fwctl's non-taining interfaces should be fully
+> +sharable with other users of the device. For instance exposing a RPC through
+> +fwctl should never prevent a kernel subsystem from also concurrently using that
+> +same RPC or hardware unit down the road. In such cases fwctl will be less
+> +important than proper kernel subsystems that eventually emerge. Mistakes in this
+> +area resulting in clashes will be resolved in favour of a kernel implementation.
+> +
+> +fwctl User API
+> +==============
+> +
+> +.. kernel-doc:: include/uapi/fwctl/fwctl.h
+> +.. kernel-doc:: include/uapi/fwctl/mlx5.h
 
-diff --git a/util/cxl-mem-repair.sh b/util/cxl-mem-repair.sh
-new file mode 100755
-index 0000000..2e3d261
---- /dev/null
-+++ b/util/cxl-mem-repair.sh
-@@ -0,0 +1,189 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Copyright (c) Huawei Technologies Co., Ltd. 2025. All rights reserved.
-+#
-+# Boot-up script for CXL memory repair features.
-+#
-+
-+CXL_MAINT_CLASS_SPARING=2
-+
-+CXL_MAINT_SUBCLASS_CACHELINE_SPARING=0
-+CXL_MAINT_SUBCLASS_ROW_SPARING=1
-+CXL_MAINT_SUBCLASS_BANK_SPARING=2
-+CXL_MAINT_SUBCLASS_RANK_SPARING=3
-+
-+RASDAEMON_SQL_DB=/usr/local/var/lib/rasdaemon/ras-mc_event.db
-+EDAC_CXL_BUS_PATH=/sys/bus/edac/devices/cxl_
-+
-+id=1
-+idx=-1
-+found_repair=-1
-+repair_type=''
-+
-+while [ "$id" ]
-+do
-+	id=$(sqlite3  $RASDAEMON_SQL_DB "select id from cxl_dram_event where id=$id")
-+	if [ -z "$id" ]
-+	then
-+		break;
-+	fi
-+
-+	repair_needed=$(sqlite3 $RASDAEMON_SQL_DB "select repair_needed from cxl_dram_event where id=$id")
-+	if [[ -z "$repair_needed" || $repair_needed -eq 0 ]]
-+	then
-+		id=$((id+1))
-+		continue;
-+	fi
-+
-+	maint_op_class=$(sqlite3  $RASDAEMON_SQL_DB "select hdr_maint_op_class from cxl_dram_event where id=$id")
-+	if [ $maint_op_class -ne $CXL_MAINT_CLASS_SPARING ]
-+	then
-+		id=$((id+1))
-+		continue;
-+	fi
-+
-+	maint_op_sub_class=$(sqlite3 $RASDAEMON_SQL_DB "select hdr_maint_op_sub_class from cxl_dram_event where id=$id")
-+	if [ -z "$maint_op_sub_class" ]
-+	then
-+		id=$((id+1))
-+		continue;
-+	fi
-+
-+	repair_type=''
-+	if [ $maint_op_sub_class -eq $CXL_MAINT_SUBCLASS_CACHELINE_SPARING ]
-+	then
-+		repair_type='cacheline-sparing'
-+	fi
-+	if [ $maint_op_sub_class -eq $CXL_MAINT_SUBCLASS_ROW_SPARING ]
-+	then
-+		repair_type='row-sparing'
-+	fi
-+	if [ $maint_op_sub_class -eq $CXL_MAINT_SUBCLASS_BANK_SPARING ]
-+	then
-+		repair_type='bank-sparing'
-+	fi
-+	if [ $maint_op_sub_class -eq $CXL_MAINT_SUBCLASS_RANK_SPARING ]
-+	then
-+		repair_type='rank-sparing'
-+	fi
-+
-+	memdev=$(sqlite3 $RASDAEMON_SQL_DB "select memdev from cxl_dram_event where id=$id")
-+	if [ -z "$memdev" ]
-+	then
-+		id=$((id+1))
-+		continue;
-+	fi
-+
-+	# find the matching sparing type in sysfs
-+	idx=0
-+	found_repair=0
-+	while [ 1 ]
-+	do
-+		out=$(cat "$EDAC_CXL_BUS_PATH""$memdev""/mem_repair"$idx"/repair_type")
-+		if [ -z "$out" ]
-+		then
-+			break;
-+		fi
-+
-+		if [ "$repair_type" = "$out" ]
-+		then
-+			found_repair=1
-+			break;
-+		fi
-+		idx=$((idx+1))
-+	done
-+	if [ $found_repair -eq 0 ]
-+	then
-+		id=$((id+1))
-+		continue;
-+	fi
-+
-+	if [[ $maint_op_sub_class == $CXL_MAINT_SUBCLASS_CACHELINE_SPARING  || $maint_op_sub_class == $CXL_MAINT_SUBCLASS_ROW_SPARING || $maint_op_sub_class == $CXL_MAINT_SUBCLASS_BANK_SPARING ]]
-+		then
-+		bank_group=$(sqlite3 $RASDAEMON_SQL_DB "select bank_group from cxl_dram_event where id=$id")
-+		if [ "$bank_group" ]
-+		then
-+			echo $bank_group > "$EDAC_CXL_BUS_PATH""$memdev""/mem_repair"$idx"/bank_group"
-+		else
-+			id=$((id+1))
-+			continue;
-+		fi
-+
-+		bank=$(sqlite3 $RASDAEMON_SQL_DB "select bank from cxl_dram_event where id=$id")
-+		if [ "$bank" ]
-+		then
-+			echo $bank > "$EDAC_CXL_BUS_PATH""$memdev""/mem_repair"$idx"/bank"
-+		else
-+			id=$((id+1))
-+			continue;
-+		fi
-+
-+		if [[ $maint_op_sub_class == $CXL_MAINT_SUBCLASS_CACHELINE_SPARING || $maint_op_sub_class == $CXL_MAINT_SUBCLASS_ROW_SPARING ]]
-+		then
-+			row=$(sqlite3 $RASDAEMON_SQL_DB "select row from cxl_dram_event where id=$id")
-+			if [ "$row" ]
-+			then
-+				echo $row > "$EDAC_CXL_BUS_PATH""$memdev""/mem_repair"$idx"/row"
-+			else
-+				id=$((id+1))
-+				continue;
-+			fi
-+		fi
-+
-+		if [ $maint_op_sub_class -eq $CXL_MAINT_SUBCLASS_CACHELINE_SPARING ]
-+		then
-+			column=$(sqlite3 $RASDAEMON_SQL_DB "select column from cxl_dram_event where id=$id")
-+			if [ "$column" ]
-+			then
-+				echo $column > "$EDAC_CXL_BUS_PATH""$memdev""/mem_repair"$idx"/column"
-+			else
-+				id=$((id+1))
-+				continue;
-+			fi
-+
-+			sub_channel=$(sqlite3 $RASDAEMON_SQL_DB "select sub_channel from cxl_dram_event where id=$id")
-+			if [ "$sub_channel" ]
-+			then
-+				echo $sub_channel > "$EDAC_CXL_BUS_PATH""$memdev""/mem_repair"$idx"/sub_channel"
-+			else
-+				id=$((id+1))
-+				continue;
-+			fi
-+		fi
-+	fi
-+
-+	channel=$(sqlite3 $RASDAEMON_SQL_DB "select channel from cxl_dram_event where id=$id")
-+	if [ "$channel" ]
-+	then
-+		echo $channel > "$EDAC_CXL_BUS_PATH""$memdev""/mem_repair"$idx"/channel"
-+	else
-+		id=$((id+1))
-+		continue;
-+	fi
-+
-+	rank=$(sqlite3 $RASDAEMON_SQL_DB "select rank from cxl_dram_event where id=$id")
-+	if [ "$rank" ]
-+	then
-+		echo $rank > "$EDAC_CXL_BUS_PATH""$memdev""/mem_repair"$idx"/rank"
-+	else
-+		id=$((id+1))
-+		continue;
-+	fi
-+
-+	nibble_mask=$(sqlite3 $RASDAEMON_SQL_DB "select nibble_mask from cxl_dram_event where id=$id")
-+	if [ "$nibble_mask" ]
-+	then
-+		echo $nibble_mask > "$EDAC_CXL_BUS_PATH""$memdev""/mem_repair"$idx"/nibble_mask"
-+	else
-+		id=$((id+1))
-+		continue;
-+	fi
-+
-+	echo 1 > "$EDAC_CXL_BUS_PATH""$memdev""/mem_repair"$idx"/repair"
-+
-+	#Clear repair_needed field of cxl_dram_event table
-+	$(sqlite3 $RASDAEMON_SQL_DB "update cxl_dram_event set repair_needed = 0 where id=$id")
-+
-+	id=$((id+1))
-+done
--- 
-2.43.0
+Doesn't exist yet...  I'm not sure if that actually causes a build issue
+or not but probably better to just slip this in later in the series.
+
+> +Development and debugging focused RPCs under more permissive scopes can have
+> +less stablitiy if the tools using them are only run under exceptional
+
+stability 
+
+> +circumstances and not for every day use of the device. Debugging tools may even
+> +require exact version matching as they may require something similar to DWARF
+> +debug information from the FW binary.
+> +
+
+...
+
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 5f30adbe6c8521..319169f7cb7e1c 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9561,7 +9561,7 @@ FWCTL SUBSYSTEM
+>  M:	Jason Gunthorpe <jgg@nvidia.com>
+>  M:	Saeed Mahameed <saeedm@nvidia.com>
+>  S:	Maintained
+> -F:	Documentation/userspace-api/fwctl.rst
+> +F:	Documentation/userspace-api/fwctl/
+
+Push back to patch 1 or introduce this here for the first time.
+
+>  F:	drivers/fwctl/
+>  F:	include/linux/fwctl.h
+>  F:	include/uapi/fwctl/
 
