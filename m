@@ -1,214 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from poodle.tulip.relay.mailchannels.net (poodle.tulip.relay.mailchannels.net [23.83.218.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A071D372
-	for <linux-cxl@vger.kernel.org>; Sat,  8 Feb 2025 00:03:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738973032; cv=none; b=EXGApvKdXqxQX+ruJ2aqgB7Q7v2NNFvJ+eaomZZUGfcI0n65LYuL8JxpJAvDj6629ZN7wBR0lS7DK0MEpqKS59x1CuWCIkQrLbqoXh0gXqZ34vo6EF9WalY0h6DFyHqPeEjR80r/3VH6kIdD7Ojf/vo4t3JwbJ0j00QbW/Tvzdw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738973032; c=relaxed/simple;
-	bh=8y0mh5C0clRXY6IsnBI51ubkEG/b/iJdzrDLUMyvdn4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jF1fi+D9E2QfqrnSiOz2gzHWdByO2+G8RXmizmEgQGxet66nHV9NxmhKgf9nxmnp4O9WSTsuU0+NHXCc/OBZb5lo23Cvh32liRshx+n9JHgK3CxJRkAr54EIYd8egmwnlmtF2J2wsYws10XXj1dwqpjTkpC23p/IlOjC4eqaGPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FFepMyBX; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E1F4A1C;
+	Sat,  8 Feb 2025 00:05:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.249
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738973115; cv=pass; b=RwiWdOE3NIeXygxXwediL1JlF19DCq4eJSpA4tkfQQsK3i/LabyNVtKVw5USWrnKg1AJMkZxIZ9fIjC+3ntTUsLY8iy/5XfBsl5QBQcC5fk2YzZnqLeyEz/uCMjGCuDKyC5k8qkzaYZdoVte7dLGuEXUfF70PA3Xb4HkAzBGuJk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738973115; c=relaxed/simple;
+	bh=6nIn93xgtbMPZ1IbkvH9U+yB6qf0/CglZ/7Xa5WX9Es=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OHOwkCsPVfLGc+9sAP309jCLfv2XgCIo5Q4ycFGFGwUJSOLLqHh6vVq7hzeKl5PTxqLTKCRmht59/rUE/lHcq2jVLLqKqFa4vtnvuUh0TfDmSooOUZkkqFtLeRef3MWsrgm2WAMBHB2mQ9daaUEtmUEQ8a842S42YCpbneoeO2c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=IyQ18xOu; arc=pass smtp.client-ip=23.83.218.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FFepMyBX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738973031; x=1770509031;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=8y0mh5C0clRXY6IsnBI51ubkEG/b/iJdzrDLUMyvdn4=;
-  b=FFepMyBXNEgQQmKPv45GXi0LvPO7/GCfmN6CvPJZ99WhwkCZdy64IMw6
-   IICgS7Qu6sO0V6KSGi4rDNfUiKw6vVGcSXdxwr3aEpahn7ZcOp5L3j+/w
-   ft6kcHlMtlG/Ql930P5xxy0CLqvRxMQwfDge3IbECca5lVGswDuSE/V4H
-   okQ6CrvmWDdFfxVlxFwU8ytFCPvRjpuWsA0HPh4NNosC4QWxmxsOVLUT9
-   GVHTOY+ZTMCsSCMuKvm16OHCFbXhxsg6jBSl34BcAtxYPgAGWA/+qmpqf
-   aJK1DJRFTgo8iobdhuDSwNiAzVfvl13wxI8pA1lEFiuWOlBk0TcJR/esI
-   g==;
-X-CSE-ConnectionGUID: xvCAKyjbQh2g1JeCY+ZmLw==
-X-CSE-MsgGUID: hqRblRa0Q5uxBdDjVYaeuA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="42468301"
-X-IronPort-AV: E=Sophos;i="6.13,268,1732608000"; 
-   d="scan'208";a="42468301"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 16:03:50 -0800
-X-CSE-ConnectionGUID: SNJXb3ipTkeJaLJh7MydYw==
-X-CSE-MsgGUID: h9gPYymoTy6RcaSmMkAuBw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="134899719"
-Received: from agladkov-desk.ger.corp.intel.com (HELO [10.125.111.68]) ([10.125.111.68])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 16:03:49 -0800
-Message-ID: <aba6711d-5b11-49a2-b22b-99ef51b4c60a@intel.com>
-Date: Fri, 7 Feb 2025 17:03:47 -0700
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="IyQ18xOu"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 5F1D72C4572;
+	Fri,  7 Feb 2025 23:58:03 +0000 (UTC)
+Received: from pdx1-sub0-mail-a256.dreamhost.com (trex-6.trex.outbound.svc.cluster.local [100.127.158.245])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id EA3982C410D;
+	Fri,  7 Feb 2025 23:58:02 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1738972683; a=rsa-sha256;
+	cv=none;
+	b=bdQhSzO5qRul2hJ4Ak5M6Gq3XCwOjbr6tlSIh78jjdKCfWo2acYpE5CRj17TR/2l0+nfnN
+	f4RWWpNvOCCTySj57BdboMvwMwJzR+/K68uzjPAo9q7wHWlMuYF3UgAMUnnnJtCiU1PGtu
+	9J3OaS6PS20k0DauSOqKYZOg0JrVs6LEvBQKK7pXwSPWoit7MJjTponCEk84GQpK77olh8
+	5wckuy8VCmqPTc/7Wpx3U2a6Y8YmB8rJsfwgEnVR2Xoujxu3cNQ5KYsKec+BvwQRK9ZdGW
+	QySxtnU29P0WjC4dOkWv+knOayuQHlnjPhST3Q/cLTn1EoVS73EgXTaQdqEHCg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1738972683;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=6nIn93xgtbMPZ1IbkvH9U+yB6qf0/CglZ/7Xa5WX9Es=;
+	b=KqCDtiP/K0vWVrXq3esTY6/OOz1mxyMi02izssylGH1USYNAsqIohVLMATxtrWysHdg4ar
+	6yue144mpV/ZKvwd8ADWA5kDijtt4rJwH5JOwxEW7u2xTj+7fxo1kPRdVu3iei91jxnsBi
+	MYZO/55BStz1vnIyZjtNYW/1mMxmYx7wasPHTVl72h+talB7oH3LmsFupa5qYkFqvLgk9H
+	HvTQyRFvy3CmJefui0G4DO5CWnBi5k/ihTHXK5e9CSIC5U54GSP65zTXv5P8bISdNVSQs5
+	DnoEH26cOM5FIppAR/7p96s3gszmv4FenvCM8/+Zi0ymRx6O5MWxduNbtE653Q==
+ARC-Authentication-Results: i=1;
+	rspamd-587f8d7697-hhqps;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Invention-Inform: 3f0ccca42e6f0850_1738972683274_3335836820
+X-MC-Loop-Signature: 1738972683274:2535421094
+X-MC-Ingress-Time: 1738972683274
+Received: from pdx1-sub0-mail-a256.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.127.158.245 (trex/7.0.2);
+	Fri, 07 Feb 2025 23:58:03 +0000
+Received: from offworld (unknown [172.58.112.146])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a256.dreamhost.com (Postfix) with ESMTPSA id 4YqWBK5fSzz2W;
+	Fri,  7 Feb 2025 15:58:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1738972682;
+	bh=6nIn93xgtbMPZ1IbkvH9U+yB6qf0/CglZ/7Xa5WX9Es=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=IyQ18xOuGA+OGl4fVd9I/sUtfpK9kSBxdZR9RcXr5F4x4Vcpj3tuKZeTMkukZBs8Q
+	 vkykugiPCn2JsTPGuCndyKVrSDe8cZkDfl2q8X4bWv3OeP/VPAGAQP/8Aitk7f+c9J
+	 X8zX1ZplnFlZt/xCFKxPbUu1jLYOxNRoqYqwam167wWXYuHjROXjdB+Ab0UVPM6wje
+	 P+YyRQdFKTd3RaU667/ZCIRS6v1dfo3DrieOyeaMdNM3nYJM9BMdiIIRnqO4OitEr0
+	 akuRN1+LvV59Y3EtuHwKv4Ic0gxCXDN+DwHdONI4XUNzF2H392cXMnK97b/LAyegVB
+	 lpEM4O/SrNScA==
+Date: Fri, 7 Feb 2025 15:57:58 -0800
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Gregory Price <gourry@gourry.net>,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v2 02/18] cxl/pci: Moving code in cxl_hdm_decode_init()
+Message-ID: <20250207235758.kczvcogrkkrwmcrn@offworld>
+References: <20250207153753.418849-1-rrichter@amd.com>
+ <20250207153753.418849-3-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 03/16] cxl: Add Get Supported Features command for
- kernel usage
-To: Li Ming <ming.li@zohomail.com>, linux-cxl@vger.kernel.org
-Cc: dan.j.williams@intel.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
- alison.schofield@intel.com, Jonathan.Cameron@huawei.com, dave@stgolabs.net,
- jgg@nvidia.com, shiju.jose@huawei.com
-References: <20250204220430.4146187-1-dave.jiang@intel.com>
- <20250204220430.4146187-4-dave.jiang@intel.com>
- <94a52a5d-5b71-43b2-ae1f-49745bfa3416@zohomail.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <94a52a5d-5b71-43b2-ae1f-49745bfa3416@zohomail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250207153753.418849-3-rrichter@amd.com>
+User-Agent: NeoMutt/20220429
 
+On Fri, 07 Feb 2025, Robert Richter wrote:
 
+>Commit 3f9e07531778 ("cxl/pci: simplify the check of mem_enabled in
+>cxl_hdm_decode_init()") changed the code flow in this function. The
+>root port is determined before a check to leave the function. Since
+>the root port is not used by the check it can be moved to run the
+>check first. This improves code readability and avoids unnesessary
+>code execution.
+>
+>Signed-off-by: Robert Richter <rrichter@amd.com>
 
-On 2/6/25 10:42 PM, Li Ming wrote:
-> On 2/5/2025 6:03 AM, Dave Jiang wrote:
->> CXL spec r3.2 8.2.9.6.1 Get Supported Features (Opcode 0500h)
->> The command retrieve the list of supported device-specific features
->> (identified by UUID) and general information about each Feature.
->>
->> The driver will retrieve the feature entries in order to make checks and
->> provide information for the Get Feature and Set Feature command. One of
->> the main piece of information retrieved are the effects a Set Feature
->> command would have for a particular feature.
->>
->> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->> v3:
->> - Use struct_size() instead of open coding the calculation. (Jonathan)
->> ---
->>  drivers/cxl/features.c | 138 +++++++++++++++++++++++++++++++++++++++++
->>  include/cxl/features.h |  57 +++++++++++++++++
->>  2 files changed, 195 insertions(+)
->>
->> diff --git a/drivers/cxl/features.c b/drivers/cxl/features.c
->> index 958e4828a58d..4d8c603121f0 100644
->> --- a/drivers/cxl/features.c
->> +++ b/drivers/cxl/features.c
->> @@ -7,6 +7,139 @@
-> [...]
->> +static int get_supported_features(struct cxl_memdev *cxlmd,
->> +				  struct cxl_features_state *cxlfs)
->> +{
->> +	int remain_feats, max_size, max_feats, start, rc, hdr_size;
->> +	struct cxl_mailbox *cxl_mbox = &cxlmd->cxlds->cxl_mbox;
->> +	int feat_size = sizeof(struct cxl_feat_entry);
->> +	struct cxl_mbox_get_sup_feats_in mbox_in;
->> +	struct cxl_feat_entry *entry;
->> +	struct cxl_mbox_cmd mbox_cmd;
->> +	int count;
->> +
->> +	if (cxlfs->cap < CXL_FEATURES_RO)
->> +		return -EOPNOTSUPP;
->> +
->> +	count = cxl_get_supported_features_count(cxl_mbox);
->> +	if (count == 0)
->> +		return -ENOENT;
->> +	if (count < 0)
->> +		return -ENXIO;
->> +
->> +	struct cxl_feat_entry *entries __free(kvfree) =
->> +		kvmalloc(count * sizeof(*entries), GFP_KERNEL);
->> +	if (!entries)
->> +		return -ENOMEM;
->> +
->> +	struct cxl_mbox_get_sup_feats_out *mbox_out __free(kvfree) =
->> +		kvmalloc(cxl_mbox->payload_size, GFP_KERNEL);
->> +	if (!mbox_out)
->> +		return -ENOMEM;
->> +
->> +	hdr_size = struct_size(mbox_out, ents, 0);
->> +	max_size = cxl_mbox->payload_size - hdr_size;
->> +	/* max feat entries that can fit in mailbox max payload size */
->> +	max_feats = max_size / feat_size;
->> +	entry = entries;
->> +
->> +	start = 0;
->> +	remain_feats = count;
->> +	do {
->> +		int retrieved, alloc_size, copy_feats;
->> +		int num_entries;
->> +
->> +		if (remain_feats > max_feats) {
->> +			alloc_size = struct_size(mbox_out, ents, max_feats);
->> +			remain_feats = remain_feats - max_feats;
->> +			copy_feats = max_feats;
->> +		} else {
->> +			alloc_size = struct_size(mbox_out, ents, remain_feats);
->> +			copy_feats = remain_feats;
->> +			remain_feats = 0;
->> +		}
->> +
->> +		memset(&mbox_in, 0, sizeof(mbox_in));
->> +		mbox_in.count = cpu_to_le32(alloc_size);
->> +		mbox_in.start_idx = cpu_to_le16(start);
->> +		memset(mbox_out, 0, alloc_size);
->> +		mbox_cmd = (struct cxl_mbox_cmd) {
->> +			.opcode = CXL_MBOX_OP_GET_SUPPORTED_FEATURES,
->> +			.size_in = sizeof(mbox_in),
->> +			.payload_in = &mbox_in,
->> +			.size_out = alloc_size,
->> +			.payload_out = mbox_out,
->> +			.min_out = hdr_size,
->> +		};
->> +		rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
->> +		if (rc < 0)
->> +			return rc;
->> +
->> +		if (mbox_cmd.size_out <= hdr_size)
->> +			return -ENXIO;
->> +
->> +		/*
->> +		 * Make sure retrieved out buffer is multiple of feature
->> +		 * entries.
->> +		 */
->> +		retrieved = mbox_cmd.size_out - hdr_size;
->> +		if (retrieved % feat_size)
->> +			return -ENXIO;
->> +
->> +		num_entries = le16_to_cpu(mbox_out->num_entries);
->> +		/*
->> +		 * If the reported output entries * defined entry size !=
->> +		 * retrieved output bytes, then the output package is incorrect.
->> +		 */
->> +		if (num_entries * feat_size != retrieved)
->> +			return -ENXIO;
->> +
->> +		memcpy(entry, mbox_out->ents, retrieved);
->> +		entry++;
-> 
-> This memcpy() copies multiple entries from mbox_out->ents to entry, this ''entry++" should be "entry += num_entries"?
-
-Thanks for finding this Ming. Appreciate the review. Fixed in v4.
-
-DJ
-
-> 
-> 
-> Ming
-> 
->> +		/*
->> +		 * If the number of output entries is less than expected, add the
->> +		 * remaining entries to the next batch.
->> +		 */
->> +		remain_feats += copy_feats - num_entries;
->> +		start += num_entries;
->> +	} while (remain_feats);
->> +
->> +	cxlfs->num_features = count;
->> +	cxlfs->entries = no_free_ptr(entries);
->> +	return devm_add_action_or_reset(&cxlmd->dev, cxl_free_feature_entries,
->> +					cxlfs->entries);
->> +}
->> +
-> 
-
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
