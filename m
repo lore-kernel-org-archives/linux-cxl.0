@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F393E1448E0;
-	Fri,  7 Feb 2025 13:24:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D52713BAE4;
+	Fri,  7 Feb 2025 13:46:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738934644; cv=none; b=dVxFSNMdvTGlbgI9g6QsZ642oruDIfj3bobl6xgh+wzLw1sfvuYA+v3SjjrmXVxyrV6PFAkQpdUF4jhH0ApohBTaQbH//FdYvrbiU6mvAOPR3IhZbyMZsvBH/Pa9d+uJU7UukkM1fXWftJLYm2I1cHMQQJxDqhC+KBi3y5hoHTo=
+	t=1738935969; cv=none; b=HJoZKKcQJcKS7gTXM07xg5blb1an6/xmS7gkN6tYGp3I2A8IFD+8rgfon9wKQLsRfcAyR83y3cewWz+mK1FicZ6fJAXxqu3K9LK4X2JbtLC22UmpEtcjWe9mWxFCnHiUDVrJ5TzwPcptsYtmC/ZYAO7FdwfBQPMgQ4bjtY6mX3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738934644; c=relaxed/simple;
-	bh=pvBHIzpMFGVggBJELNXPy0i5kwkvMht4y9SKOGdc3BI=;
+	s=arc-20240116; t=1738935969; c=relaxed/simple;
+	bh=vki1oqGmK5esFUBsTHOMw5oPUVHzvomX1JXIFhNDcbk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nccBpfV4HSuu8HQgNgMhrvoMTUBi5fuLKfkfo9P3uZG10+RmayD4WQGnv5AP82hb/N71p6Ms8tr0/WLmnK9b8izBER2eAw7H3FJgrv7nW4ayxonqO+pyPCiIrBRB92VlVy4ouy9MHcGotHQuTQAjzZDsKGTGhg58Rg8xjSjTwpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rw4kTpt1; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=hyMm3DyubFVapZ3+x+Y1NkSF1znwI2VTRBXn1l6w7jf96gp9mhR4a7Ccdq2f1iKYWhLZCcC56ku2gZWuERFBtjJFT7+s5l98Srm4u3Qe/XLrLzvAksO8P2TBQI9Gp3O5BH9oKXdp27HvPa+511pYFJ1bZnRCIamwYIR7T0gdkkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=snWNcL0D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rw4kTpt1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73B99C4CED1;
-	Fri,  7 Feb 2025 13:24:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="snWNcL0D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A9A8C4CED1;
+	Fri,  7 Feb 2025 13:46:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738934643;
-	bh=pvBHIzpMFGVggBJELNXPy0i5kwkvMht4y9SKOGdc3BI=;
+	s=k20201202; t=1738935969;
+	bh=vki1oqGmK5esFUBsTHOMw5oPUVHzvomX1JXIFhNDcbk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rw4kTpt1tekZ8TNkYbm5HzowTm5bOJYiJ0g6UXjHkZCR94UL3do1qXYNe1Rz23Fz/
-	 r6gxbcPsZuPa4yLfeNokkTviYfMH/prqGUtPwg0LHA8BZnyk4MbH/fB7zWw5oywapp
-	 GkD5ulGtBi9IwQ+LJ3phxKT0aZfFWasBol1JKoCRLY2Fr5QAiYtSvkeNLrwkRYQRXr
-	 Fl6YD22UMRgi8USCS/EOs7n5uJXLK+uuBuTlkQ0U8/pZkS0YaNkTusqouLa2l6DEDu
-	 E5L0eM8IK+81T5dF++QnnJhITaIg0fztLDVREHsojOgcIcnyzknEeVo/Ezafz+Gm6h
-	 PItmKql7Ec1yA==
-Date: Fri, 7 Feb 2025 13:23:59 +0000
+	b=snWNcL0D+tAmQV/54UGHrSp8PE9Tw+wgdxa3XaofbaPPY8rkN/Af6Y+JJY6H0kGrB
+	 sk6DLSLCs6I+hiU9czTS8zImRaoYSkHFarALZplo90j1BXSKXnB5OPdieV4iSRlrpQ
+	 /1XL58Kyz+c8Czj3QGXAJCGRWV1OacnmxLoFhw73pJN/pbokDtAtY2CmTAkkO/ubGq
+	 mTRcZj6lLdDknwQaQOkuKrpvNFpSIDDWK8vJ0hkdvmrMmCIfujJBlZEtGgqq5L4MrJ
+	 8LlxIqPZLwuFQrwtEk3PVXoVg2lonHZjO8Xdlx46FgGBUMbdjkrewflSEuOfZvks/x
+	 AM/w7loLFWglA==
+Date: Fri, 7 Feb 2025 13:46:05 +0000
 From: Simon Horman <horms@kernel.org>
 To: alucerop@amd.com
 Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
 	dan.j.williams@intel.com, edward.cree@amd.com, davem@davemloft.net,
 	kuba@kernel.org, pabeni@redhat.com, edumazet@google.com,
 	dave.jiang@intel.com
-Subject: Re: [PATCH v10 21/26] cxl: allow region creation by type2 drivers
-Message-ID: <20250207132359.GT554665@kernel.org>
+Subject: Re: [PATCH v10 16/26] cxl: define a driver interface for DPA
+ allocation
+Message-ID: <20250207134605.GV554665@kernel.org>
 References: <20250205151950.25268-1-alucerop@amd.com>
- <20250205151950.25268-22-alucerop@amd.com>
+ <20250205151950.25268-17-alucerop@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -45,47 +46,47 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250205151950.25268-22-alucerop@amd.com>
+In-Reply-To: <20250205151950.25268-17-alucerop@amd.com>
 
-On Wed, Feb 05, 2025 at 03:19:45PM +0000, alucerop@amd.com wrote:
+On Wed, Feb 05, 2025 at 03:19:40PM +0000, alucerop@amd.com wrote:
 > From: Alejandro Lucero <alucerop@amd.com>
 > 
-> Creating a CXL region requires userspace intervention through the cxl
-> sysfs files. Type2 support should allow accelerator drivers to create
-> such cxl region from kernel code.
+> Region creation involves finding available DPA (device-physical-address)
+> capacity to map into HPA (host-physical-address) space. Define an API,
+> cxl_request_dpa(), that tries to allocate the DPA memory the driver
+> requires to operate. The memory requested should not be bigger than the
+> max available HPA obtained previously with cxl_get_hpa_freespace.
 > 
-> Adding that functionality and integrating it with current support for
-> memory expanders.
-> 
-> Based on https://lore.kernel.org/linux-cxl/168592159835.1948938.1647215579839222774.stgit@dwillia2-xfh.jf.intel.com/
+> Based on https://lore.kernel.org/linux-cxl/168592158743.1948938.7622563891193802610.stgit@dwillia2-xfh.jf.intel.com/
 > 
 > Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> Co-developed-by: Dan Williams <dan.j.williams@intel.com>
-> Reviewed-by: Zhi Wang <zhiw@nvidia.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > ---
->  drivers/cxl/core/region.c | 145 ++++++++++++++++++++++++++++++++++----
->  drivers/cxl/cxlmem.h      |   2 +
->  drivers/cxl/port.c        |   5 +-
->  include/cxl/cxl.h         |   4 ++
->  4 files changed, 141 insertions(+), 15 deletions(-)
+>  drivers/cxl/core/hdm.c | 83 ++++++++++++++++++++++++++++++++++++++++++
+>  include/cxl/cxl.h      |  4 ++
+>  2 files changed, 87 insertions(+)
 > 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index af025da81fa2..cec2c7dcaf3a 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -3,6 +3,7 @@
+>  #include <linux/seq_file.h>
+>  #include <linux/device.h>
+>  #include <linux/delay.h>
+> +#include <cxl/cxl.h>
 
-...
+Hi Alejandro,
 
-> +/**
-> + * cxl_create_region - Establish a region given an endpoint decoder
-> + * @cxlrd: root decoder to allocate HPA
-> + * @cxled: endpoint decoder with reserved DPA capacity
+I think that linux/range.h should be included in cxl.h, or if not here.
+This is because on allmodconfigs for both arm and arm64 I see:
 
-nit: @ways: should be documented here too.
-
-> + *
-> + * Returns a fully formed region in the commit state and attached to the
-> + * cxl_region driver.
-> + */
-> +struct cxl_region *cxl_create_region(struct cxl_root_decoder *cxlrd,
-> +				     struct cxl_endpoint_decoder *cxled, int ways)
+In file included from drivers/cxl/core/hdm.c:6:
+./include/cxl/cxl.h:67:16: error: field has incomplete type 'struct range'
+   67 |                 struct range range;
+      |                              ^
+./include/linux/memory_hotplug.h:247:8: note: forward declaration of 'struct range'
+  247 | struct range arch_get_mappable_range(void);
+      |        ^
+1 error generated.
 
 ...
