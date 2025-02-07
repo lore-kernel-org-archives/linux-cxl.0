@@ -1,25 +1,25 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E730F176AB5
-	for <linux-cxl@vger.kernel.org>; Fri,  7 Feb 2025 23:47:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA993176AB5
+	for <linux-cxl@vger.kernel.org>; Fri,  7 Feb 2025 23:47:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738972043; cv=none; b=q63/yMVOMq9tNGoqtfnvfFw/DH/Pj16as0iUdUJXYScALkPo96e62hINhu4k51BCbio3Dl6zHLDmAw+NWWA8voAqk5QGdsl+VysgqgQbCHDIHWjDygqUF5VN5/09TyQXktVAkjQiyR2pgLHcmC/hnPvIHF7eHmZHHGem7X2tNsU=
+	t=1738972045; cv=none; b=YDW6Mp3JYNBASbQj9NYpIq5+wtrbvEpVwc37smGOzgxu0SA2UlNwt8bPCXkud6KAf/pxf8d7KPtfk2oNeLLyL4yUbZyT5xll98jxz5rFIGG0cz5iuu+tB+EzDKp8l8UOLpDwHn2G3RnoZBP5NiMc457wm05TW7iEVQ9szaY0B1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738972043; c=relaxed/simple;
-	bh=tFViK+KgAmQI3b662C7w78A0G4xr1wEsh2C/04CsDNQ=;
+	s=arc-20240116; t=1738972045; c=relaxed/simple;
+	bh=F8w/saOxPnwkCzMf8U+T8XMpRR16zTLwPXNlcH1RqVc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WTUZC58dF7Gs3G8kQOx8EckceunYSuayiZ09npSjJbtXAua2bEZbMzY4NDnBYLszxp7O1RKNk2EUGE7kxRVq9+W+H+QHqg7Dx7t/X+GR1Nu5Zpd/AYU0Uj2MaFmVVBJM8q6Ghq17jnMVDjNgxfWsgheHrqbkYZEemhazvvf92ms=
+	 MIME-Version; b=Wf5eSRrSrtgC/u6hNJ+XHMI6GB7bQDfSUqj9VnwdO7Wcn1oMOvca+IeEN7CcEeT6QWzTIXuR5vnIBo8ZpGot3ZgQd2o8d2cKPjO28qYhTuJmnBlQ4WZqFvD+Q0KwUWJt2V73yKk7dz+jH29mXNEJct1ElmJ533HB4lt6pmChVXc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EFE8C4CED1;
-	Fri,  7 Feb 2025 23:47:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28D65C4CED1;
+	Fri,  7 Feb 2025 23:47:25 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: alison.schofield@intel.com
-Subject: [NDCTL PATCH v3 2/3] cxl: Enumerate major/minor of FWCTL char device
-Date: Fri,  7 Feb 2025 16:46:34 -0700
-Message-ID: <20250207234718.2387622-3-dave.jiang@intel.com>
+Subject: [NDCTL PATCH v3 3/3] cxl/test: Add test for cxl features device
+Date: Fri,  7 Feb 2025 16:46:35 -0700
+Message-ID: <20250207234718.2387622-4-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250207234718.2387622-1-dave.jiang@intel.com>
 References: <20250207234718.2387622-1-dave.jiang@intel.com>
@@ -31,153 +31,471 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add major/minor discovery for the FWCTL character device that is associated
-with supprting CXL Features under the cxl_memdev. Add libcxl API functions
-to retrieve the major and minor of the FWCTL character device.
+Add a unit test to verify the features ioctl commands. Test support added
+for locating a features device, retrieve and verify the supported features
+commands, retrieve specific feature command data, retrieve test feature
+data, and write and verify test feature data.
 
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- cxl/lib/libcxl.c   | 74 ++++++++++++++++++++++++++++++++++++++++++++++
- cxl/lib/libcxl.sym |  2 ++
- cxl/lib/private.h  |  1 +
- cxl/libcxl.h       |  2 ++
- 4 files changed, 79 insertions(+)
+ test/cxl-features.sh |  19 +++
+ test/fwctl.c         | 364 +++++++++++++++++++++++++++++++++++++++++++
+ test/meson.build     |  17 ++
+ 3 files changed, 400 insertions(+)
+ create mode 100755 test/cxl-features.sh
+ create mode 100644 test/fwctl.c
 
-diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-index bab7343e8a4a..566870acb30a 100644
---- a/cxl/lib/libcxl.c
-+++ b/cxl/lib/libcxl.c
-@@ -1253,6 +1253,66 @@ static int add_cxl_memdev_fwl(struct cxl_memdev *memdev,
- 	return -ENOMEM;
- }
- 
-+static const char fwctl_prefix[] = "fwctl";
-+static int get_feature_chardev(const char *base, char *chardev_path)
+diff --git a/test/cxl-features.sh b/test/cxl-features.sh
+new file mode 100755
+index 000000000000..fec392e84e20
+--- /dev/null
++++ b/test/cxl-features.sh
+@@ -0,0 +1,19 @@
++#!/bin/bash -Ex
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (C) 2025 Intel Corporation. All rights reserved.
++
++rc=77
++
++. $(dirname $0)/common
++FWCTL="$TEST_PATH"/fwctl
++
++trap 'err $LINENO' ERR
++
++check_min_kver "6.15" || do_skip "may lack CXL features support"
++
++modprobe cxl_test
++
++test -x "$FWCTL" || do_skip "no fwctl"
++"$FWCTL"
++
++_cxl_cleanup
+diff --git a/test/fwctl.c b/test/fwctl.c
+new file mode 100644
+index 000000000000..a2b85c69b61e
+--- /dev/null
++++ b/test/fwctl.c
+@@ -0,0 +1,364 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (C) 2024-2025 Intel Corporation. All rights reserved.
++#include <errno.h>
++#include <fcntl.h>
++#include <stdio.h>
++#include <endian.h>
++#include <stdint.h>
++#include <stdlib.h>
++#include <syslog.h>
++#include <string.h>
++#include <unistd.h>
++#include <sys/ioctl.h>
++#include <cxl/libcxl.h>
++#include <cxl/features.h>
++#include <fwctl/fwctl.h>
++#include <fwctl/cxl.h>
++#include <linux/uuid.h>
++#include <uuid/uuid.h>
++#include <util/bitmap.h>
++
++static const char provider[] = "cxl_test";
++
++UUID_DEFINE(test_uuid,
++	    0xff, 0xff, 0xff, 0xff,
++	    0xff, 0xff,
++	    0xff, 0xff,
++	    0xff, 0xff,
++	    0xff, 0xff, 0xff, 0xff, 0xff, 0xff
++);
++
++#define CXL_MBOX_OPCODE_GET_SUPPORTED_FEATURES	0x0500
++#define CXL_MBOX_OPCODE_GET_FEATURE		0x0501
++#define CXL_MBOX_OPCODE_SET_FEATURE		0x0502
++
++#define GET_FEAT_SIZE	4
++#define SET_FEAT_SIZE	4
++#define EFFECTS_MASK	(BIT(0) | BIT(9))
++
++#define MAX_TEST_FEATURES	1
++#define DEFAULT_TEST_DATA	0xdeadbeef
++#define DEFAULT_TEST_DATA2	0xabcdabcd
++
++struct test_feature {
++	uuid_t uuid;
++	size_t get_size;
++	size_t set_size;
++};
++
++static int send_command(int fd, struct fwctl_rpc *rpc, struct fwctl_rpc_cxl_out *out)
 +{
-+	char *path = calloc(1, strlen(base) + 100);
-+	struct dirent *entry;
-+	int rc = 0;
-+	DIR *dir;
-+
-+	if (!path)
-+		return -ENOMEM;
-+
-+	sprintf(path, "%s/fwctl/", base);
-+	dir = opendir(path);
-+	if (!dir) {
-+		rc = -errno;
-+		goto err;
++	if (ioctl(fd, FWCTL_RPC, rpc) == -1) {
++		fprintf(stderr, "RPC ioctl error: %s\n", strerror(errno));
++		return -errno;
 +	}
 +
-+	while ((entry = readdir(dir)) != NULL)
-+		if (strncmp(entry->d_name, fwctl_prefix, strlen(fwctl_prefix)) == 0)
-+			break;
-+
-+	if (!entry) {
-+		rc = -ENOENT;
-+		goto read_err;
++	if (out->retval) {
++		fprintf(stderr, "operation returned failure: %d\n", out->retval);
++		return -ENXIO;
 +	}
 +
-+	sprintf(chardev_path, "/dev/fwctl/%s", entry->d_name);
-+
-+read_err:
-+	closedir(dir);
-+err:
-+	free(path);
-+	return rc;
++	return 0;
 +}
 +
-+static int memdev_get_fwctl_chardev(struct cxl_memdev *memdev,
-+				    const char *cxlmem_base)
++static int cxl_fwctl_rpc_get_test_feature(int fd, struct test_feature *feat_ctx,
++					  const uint32_t expected_data)
 +{
-+	char *path = calloc(1, strlen(cxlmem_base) + 100);
-+	struct stat st;
++	struct cxl_mbox_get_feat_in feat_in __attribute__((aligned(16))) = {0};
++	struct fwctl_rpc_cxl in __attribute__((aligned(16))) = {0};
++	struct fwctl_rpc_cxl_out *out;
++	struct fwctl_rpc rpc = {0};
++	size_t out_size;
++	uint32_t val;
++	void *data;
 +	int rc;
 +
-+	rc = get_feature_chardev(cxlmem_base, path);
++	uuid_copy(feat_in.uuid, feat_ctx->uuid);
++	feat_in.count = feat_ctx->get_size;
++
++	out_size = sizeof(*out) + feat_in.count;
++	out = aligned_alloc(16, out_size);
++	if (!out)
++		return -ENOMEM;
++
++	memset(out, 0, out_size);
++	data = out->payload;
++
++	in.opcode = CXL_MBOX_OPCODE_GET_FEATURE;
++	in.op_size = sizeof(feat_in);
++	in.in_payload = (uint64_t)(uint64_t *)&feat_in;
++
++	rpc.size = sizeof(rpc);
++	rpc.scope = FWCTL_RPC_CONFIGURATION;
++	rpc.in_len = sizeof(in);
++	rpc.out_len = out_size;
++	rpc.in = (uint64_t)(uint64_t *)&in;
++	rpc.out = (uint64_t)(uint64_t *)out;
++
++	rc = send_command(fd, &rpc, out);
 +	if (rc)
 +		goto out;
 +
-+	if (stat(path, &st) < 0) {
-+		rc = -errno;
++	val = le32toh(*(__le32 *)data);
++	if (memcmp(&val, &expected_data, sizeof(val)) != 0) {
++		rc = -ENXIO;
 +		goto out;
 +	}
 +
-+	memdev->fwctl_major = major(st.st_rdev);
-+	memdev->fwctl_minor = minor(st.st_rdev);
-+
 +out:
-+	free(path);
++	free(out);
 +	return rc;
 +}
 +
- static void *add_cxl_memdev(void *parent, int id, const char *cxlmem_base)
- {
- 	const char *devname = devpath_to_devname(cxlmem_base);
-@@ -1279,6 +1339,10 @@ static void *add_cxl_memdev(void *parent, int id, const char *cxlmem_base)
- 	memdev->major = major(st.st_rdev);
- 	memdev->minor = minor(st.st_rdev);
- 
-+	/* If this fails, no Features support. */
-+	if (memdev_get_fwctl_chardev(memdev, cxlmem_base))
-+		dbg(ctx, "%s: no Features support.\n", devname);
-+
- 	sprintf(path, "%s/pmem/size", cxlmem_base);
- 	if (sysfs_read_attr(ctx, path, buf) == 0)
- 		memdev->pmem_size = strtoull(buf, NULL, 0);
-@@ -1515,6 +1579,16 @@ CXL_EXPORT int cxl_memdev_get_minor(struct cxl_memdev *memdev)
- 	return memdev->minor;
- }
- 
-+CXL_EXPORT int cxl_memdev_get_fwctl_major(struct cxl_memdev *memdev)
++static int cxl_fwctl_rpc_set_test_feature(int fd, struct test_feature *feat_ctx)
 +{
-+	return memdev->fwctl_major;
++	struct cxl_mbox_set_feat_in *feat_in;
++	struct fwctl_rpc_cxl in __attribute__((aligned(16))) = {0};
++	struct fwctl_rpc_cxl_out out __attribute__((aligned(16))) = {0};
++	struct fwctl_rpc rpc = {0};
++	size_t in_size;
++	uint32_t val;
++	void *data;
++	int rc;
++
++	in_size = sizeof(*feat_in) + sizeof(val);
++	feat_in = aligned_alloc(16, in_size);
++	if (!feat_in)
++		return -ENOMEM;
++
++	memset(feat_in, 0, in_size);
++	uuid_copy(feat_in->hdr.uuid, feat_ctx->uuid);
++	data = feat_in->data;
++	val = DEFAULT_TEST_DATA2;
++	*(uint32_t *)data = htole32(val);
++	feat_in->hdr.flags = CXL_SET_FEAT_FLAG_FULL_DATA_TRANSFER;
++
++	in.opcode = CXL_MBOX_OPCODE_SET_FEATURE;
++	in.op_size = in_size;
++	in.in_payload = (uint64_t)(uint64_t *)feat_in;
++
++	rpc.size = sizeof(rpc);
++	rpc.scope = FWCTL_RPC_DEBUG_WRITE_FULL;
++	rpc.in_len = in_size;
++	rpc.out_len = sizeof(out);
++	rpc.in = (uint64_t)(uint64_t *)&in;
++	rpc.out = (uint64_t)(uint64_t *)&out;
++
++	rc = send_command(fd, &rpc, &out);
++	if (rc)
++		goto out;
++
++	rc = cxl_fwctl_rpc_get_test_feature(fd, feat_ctx, DEFAULT_TEST_DATA2);
++	if (rc) {
++		fprintf(stderr, "Failed ioctl to get feature verify: %d\n", rc);
++		goto out;
++	}
++
++out:
++	free(feat_in);
++	return rc;
 +}
 +
-+CXL_EXPORT int cxl_memdev_get_fwctl_minor(struct cxl_memdev *memdev)
++static int cxl_fwctl_rpc_get_supported_features(int fd, struct test_feature *feat_ctx)
 +{
-+	return memdev->fwctl_minor;
++	struct cxl_mbox_get_sup_feats_in feat_in __attribute__((aligned(16))) = {0};
++	struct fwctl_rpc_cxl_out out __attribute__((aligned(16))) = {0};
++	struct fwctl_rpc_cxl in __attribute__((aligned(16))) = {0};
++	struct cxl_mbox_get_sup_feats_out *feat_out;
++	struct fwctl_rpc_cxl_out *out2;
++	struct cxl_feat_entry *entry;
++	struct fwctl_rpc rpc = {0};
++	size_t out_size;
++	int feats, rc;
++
++	/* First query, to get number of features w/o per feature data */
++	in.opcode = CXL_MBOX_OPCODE_GET_SUPPORTED_FEATURES;
++	in.op_size = sizeof(feat_in);
++	in.in_payload = (uint64_t)(uint64_t *)&feat_in;
++
++	rpc.size = sizeof(rpc);
++	rpc.scope = FWCTL_RPC_CONFIGURATION;
++	rpc.in_len = sizeof(in);
++	rpc.out_len = sizeof(out) + sizeof(*feat_out);
++	rpc.in = (uint64_t)(uint64_t *)&in;
++	rpc.out = (uint64_t)(uint64_t *)&out;
++
++	rc = send_command(fd, &rpc, &out);
++	if (rc)
++		return rc;
++
++	feat_out = (struct cxl_mbox_get_sup_feats_out *)&out.payload[0];
++	feats = le16toh(feat_out->supported_feats);
++	if (feats != MAX_TEST_FEATURES) {
++		fprintf(stderr, "Test device has greater than %d test features.\n",
++			MAX_TEST_FEATURES);
++		return -ENXIO;
++	}
++
++	/* Going second round to retrieve each feature details */
++	out_size = sizeof(*out2) + sizeof(*feat_out) + feats * sizeof(*entry);
++	rpc.out_len = out_size;
++	out2 = aligned_alloc(16, out_size);
++	if (!out2)
++		return -ENOMEM;
++
++	memset(out2, 0, out_size);
++	rpc.out = (uint64_t)(uint64_t *)out2;
++	feat_in.count = htole32(feats * sizeof(*entry));
++
++	rc = send_command(fd, &rpc, out2);
++	if (rc)
++		goto out;
++
++	feat_out = (struct cxl_mbox_get_sup_feats_out *)&out2->payload[0];
++	feats = le16toh(feat_out->supported_feats);
++	if (feats != MAX_TEST_FEATURES) {
++		fprintf(stderr, "Test device has greater than %u test features.\n",
++			MAX_TEST_FEATURES);
++		rc = -ENXIO;
++		goto out;
++	}
++
++	if (le16toh(feat_out->num_entries) != MAX_TEST_FEATURES) {
++		fprintf(stderr, "Test device did not return expected entries. %u\n",
++			le16toh(feat_out->num_entries));
++		rc = -ENXIO;
++		goto out;
++	}
++
++	entry = &feat_out->ents[0];
++	if (uuid_compare(test_uuid, entry->uuid) != 0) {
++		fprintf(stderr, "Test device did not export expected test feature.\n");
++		rc = -ENXIO;
++		goto out;
++	}
++
++	if (le16toh(entry->get_feat_size) != GET_FEAT_SIZE ||
++	    le16toh(entry->set_feat_size) != SET_FEAT_SIZE) {
++		fprintf(stderr, "Test device feature in/out size incorrect.\n");
++		rc = -ENXIO;
++		goto out;
++	}
++
++	if (le16toh(entry->effects) != EFFECTS_MASK) {
++		fprintf(stderr, "Test device set effects incorrect\n");
++		rc = -ENXIO;
++		goto out;
++	}
++
++	uuid_copy(feat_ctx->uuid, entry->uuid);
++	feat_ctx->get_size = le16toh(entry->get_feat_size);
++	feat_ctx->set_size = le16toh(entry->set_feat_size);
++
++out:
++	free(out2);
++	return rc;
 +}
 +
- CXL_EXPORT unsigned long long cxl_memdev_get_pmem_size(struct cxl_memdev *memdev)
- {
- 	return memdev->pmem_size;
-diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
-index 1fc33cc6e1a4..b2b51a72673c 100644
---- a/cxl/lib/libcxl.sym
-+++ b/cxl/lib/libcxl.sym
-@@ -292,4 +292,6 @@ global:
- LIBCXL_9 {
- global:
- 	cxl_bus_get_by_provider;
-+	cxl_memdev_get_fwctl_major;
-+	cxl_memdev_get_fwctl_minor;
- } LIBECXL_8;
-diff --git a/cxl/lib/private.h b/cxl/lib/private.h
-index b6cd910e9335..676bf1573487 100644
---- a/cxl/lib/private.h
-+++ b/cxl/lib/private.h
-@@ -37,6 +37,7 @@ enum cxl_fwl_loading {
- struct cxl_endpoint;
- struct cxl_memdev {
- 	int id, major, minor;
-+	int fwctl_major, fwctl_minor;
- 	int numa_node;
- 	void *dev_buf;
- 	size_t buf_len;
-diff --git a/cxl/libcxl.h b/cxl/libcxl.h
-index 3b309968a808..26aa906740af 100644
---- a/cxl/libcxl.h
-+++ b/cxl/libcxl.h
-@@ -69,6 +69,8 @@ const char *cxl_memdev_get_host(struct cxl_memdev *memdev);
- struct cxl_bus *cxl_memdev_get_bus(struct cxl_memdev *memdev);
- int cxl_memdev_get_major(struct cxl_memdev *memdev);
- int cxl_memdev_get_minor(struct cxl_memdev *memdev);
-+int cxl_memdev_get_fwctl_major(struct cxl_memdev *memdev);
-+int cxl_memdev_get_fwctl_minor(struct cxl_memdev *memdev);
- struct cxl_ctx *cxl_memdev_get_ctx(struct cxl_memdev *memdev);
- unsigned long long cxl_memdev_get_pmem_size(struct cxl_memdev *memdev);
- unsigned long long cxl_memdev_get_ram_size(struct cxl_memdev *memdev);
++static int cxl_fwctl_retrieve_info(int fd)
++{
++	struct fwctl_info info = {0};
++	struct fwctl_info_cxl cxl_info __attribute__((aligned(16))) = {0};
++
++	info.size = sizeof(info);
++	info.out_device_type = FWCTL_DEVICE_TYPE_CXL;
++	info.device_data_len = sizeof(cxl_info);
++	info.out_device_data = (uint64_t)(uint64_t *)&cxl_info;
++
++	if (ioctl(fd, FWCTL_INFO, &info) == -1) {
++		fprintf(stderr, "INFO ioctl error: %s\n", strerror(errno));
++		return -errno;
++	}
++
++	return 0;
++}
++
++static int test_fwctl_features(struct cxl_memdev *memdev)
++{
++	struct test_feature feat_ctx;
++	unsigned int major, minor;
++	int fd, rc;
++	char path[256];
++
++	major = cxl_memdev_get_fwctl_major(memdev);
++	minor = cxl_memdev_get_fwctl_minor(memdev);
++
++	if (!major && !minor)
++		return -EINVAL;
++
++	sprintf(path, "/dev/char/%d:%d", major, minor);
++
++	fd = open(path, O_RDONLY, 0644);
++	if (!fd) {
++		fprintf(stderr, "Failed to open: %d\n", -errno);
++		return -errno;
++	}
++
++	rc = cxl_fwctl_retrieve_info(fd);
++	if (rc) {
++		fprintf(stderr, "Failed ioctl to retrieve drv info: %d\n", rc);
++		goto out;
++	}
++
++	rc = cxl_fwctl_rpc_get_supported_features(fd, &feat_ctx);
++	if (rc) {
++		fprintf(stderr, "Failed ioctl to get supported features: %d\n", rc);
++		goto out;
++	}
++
++	rc = cxl_fwctl_rpc_get_test_feature(fd, &feat_ctx, DEFAULT_TEST_DATA);
++	if (rc) {
++		fprintf(stderr, "Failed ioctl to get feature: %d\n", rc);
++		goto out;
++	}
++
++	rc = cxl_fwctl_rpc_set_test_feature(fd, &feat_ctx);
++	if (rc) {
++		fprintf(stderr, "Failed ioctl to set feature: %d\n", rc);
++		goto out;
++	}
++
++out:
++	close(fd);
++	return rc;
++}
++
++static int test_fwctl(struct cxl_ctx *ctx, struct cxl_bus *bus)
++{
++	struct cxl_memdev *memdev;
++
++	cxl_memdev_foreach(ctx, memdev) {
++		if (cxl_memdev_get_bus(memdev) != bus)
++			continue;
++		return test_fwctl_features(memdev);
++	}
++
++	return 0;
++}
++
++int main(int argc, char *argv[])
++{
++	struct cxl_ctx *ctx;
++	struct cxl_bus *bus;
++	int rc;
++
++	rc = cxl_new(&ctx);
++	if (rc < 0)
++		return rc;
++
++	cxl_set_log_priority(ctx, LOG_DEBUG);
++
++	bus = cxl_bus_get_by_provider(ctx, provider);
++	if (!bus) {
++		fprintf(stderr, "%s: unable to find bus (%s)\n",
++			argv[0], provider);
++		rc = -ENODEV;
++		goto out;
++	}
++
++	rc = test_fwctl(ctx, bus);
++
++out:
++	cxl_unref(ctx);
++	return rc;
++}
+diff --git a/test/meson.build b/test/meson.build
+index d871e28e17ce..5704bc4659b5 100644
+--- a/test/meson.build
++++ b/test/meson.build
+@@ -17,6 +17,13 @@ ndctl_deps = libndctl_deps + [
+   versiondep,
+ ]
+ 
++libcxl_deps = [
++  cxl_dep,
++  ndctl_dep,
++  uuid,
++  kmod,
++]
++
+ libndctl = executable('libndctl', testcore + [ 'libndctl.c'],
+   dependencies : libndctl_deps,
+   include_directories : root_inc,
+@@ -130,6 +137,13 @@ revoke_devmem = executable('revoke_devmem', testcore + [
+   include_directories : root_inc,
+ )
+ 
++fwctl = executable('fwctl', testcore + [
++    'fwctl.c',
++  ],
++  dependencies : libcxl_deps,
++  include_directories : root_inc,
++)
++
+ mmap = executable('mmap', 'mmap.c',)
+ 
+ create = find_program('create.sh')
+@@ -161,6 +175,7 @@ cxl_sanitize = find_program('cxl-sanitize.sh')
+ cxl_destroy_region = find_program('cxl-destroy-region.sh')
+ cxl_qos_class = find_program('cxl-qos-class.sh')
+ cxl_poison = find_program('cxl-poison.sh')
++cxl_features = find_program('cxl-features.sh')
+ 
+ tests = [
+   [ 'libndctl',               libndctl,		  'ndctl' ],
+@@ -194,6 +209,7 @@ tests = [
+   [ 'cxl-destroy-region.sh',  cxl_destroy_region, 'cxl'   ],
+   [ 'cxl-qos-class.sh',       cxl_qos_class,      'cxl'   ],
+   [ 'cxl-poison.sh',          cxl_poison,         'cxl'   ],
++  [ 'cxl-features.sh',        cxl_features,       'cxl'   ],
+ ]
+ 
+ if get_option('destructive').enabled()
+@@ -249,6 +265,7 @@ foreach t : tests
+       daxdev_errors,
+       dax_dev,
+       mmap,
++      fwctl,
+     ],
+     suite: t[2],
+     timeout : 600,
 -- 
 2.48.1
 
