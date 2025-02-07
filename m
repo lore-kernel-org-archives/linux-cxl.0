@@ -1,162 +1,139 @@
-Received: from outbound.mail.protection.outlook.com (mail-dm6nam11on2045.outbound.protection.outlook.com [40.107.223.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCA322500C1;
-	Fri,  7 Feb 2025 15:39:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738942769; cv=fail; b=SQTNefkPWpMJyPi9Gk4UtUXCXCxVBN+cApjqiZVc3+EmtLHcfO8YLMKoJfhSvwJTCvmZjI8eGzY+Yh0OvzrEYw7Z7lH21CPwKzEl+OstJWrETRwiViNY3duzpFJaZc3z5P4H6iZ165QkyuOWKsr62BNBm5TtX2Aa2HLo7HYmTzI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738942769; c=relaxed/simple;
-	bh=vaRXiTTTYdl9QdrDViWZv8abaSXPXnW9cVQ5TPD/mE8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=U3XmXj+qoQ2O1ftFUNxbMmZA3NXbxysnvH6sKbtGpW5LT1IDKBLxz6Y0ImdA1GREo1/7W0QRYh0k5LNxPZvyCXzsHGZ5KfjFUnroOjoOSDkkmbEdk0No6EgQmV0W1h8qIc/c1wWPsvxxArqaTQG02x170fAwnZSnQir6ZFxlGaQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=M5JGdgu3; arc=fail smtp.client-ip=40.107.223.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4375823C8B5
+	for <linux-cxl@vger.kernel.org>; Fri,  7 Feb 2025 16:02:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738944142; cv=none; b=FPOT2WniIyrUqx134c3PLlcuTLy/FBKMz3ovs2XwRiAmXemwa8i5hex358mogB9F4Xa1gKfQ6CiakcCmstnhpR9dWwRPglWQGbosdnyPtzuCI1l0SuPvOPvRPP75YWgiI1OZTOZIlj8uZBH6glAT7AQM4oGgD9MVE8AIRu932nI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738944142; c=relaxed/simple;
+	bh=zpMXVfQjnAUBW6qykmx3EJiuUjgkhNeI+8nEmVNmDko=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oSjAoyU+/foTHh+Eug669F4/p/8mMsz+RftUQk6J9qwnz92aF+kTweTwLw2kUsL5lAON/IiGc2N2mYk8/xOBD5pLRpdBaI18hzCFDrE/Gg9O68zp+RNVRK68+oy/Q3q8Pf3IgAE0IKNnK6UHjulZ0137MqdN1UA98Q9XFpCvWlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=VHlZg2ER; arc=none smtp.client-ip=209.85.222.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="M5JGdgu3"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VeQrTHYv+Orv3emDPujmaSTfscL7F7Nc+l/q193RuPuc/qax/31zC/expVAE4y35K4JYNm4HUwZdBDZcAqV60wF8FVETzZH0aJJ/iKnYPhwg3U1PV7tTy98Zl9hmWBjPAgDPSdmpbuvA6edtu+OIkV7h1pcCMQysptK2toeEOa64hI+v0Z80uv9uE4ItQ9dlekEW7tD3Lr+c2RuNIwlspj5L3p/wYbZdIvYAh84PBCf5NO1M+EuOK957laFSgZzMZI7W46PtI9qxCleGyZNhwTUZs0HNZ5PVkOemWdwZd7JLt6aYm4VoXBWYdscat9mGL67ZvSZY6qJt4QEk1p1uMQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=G0w2fMhd4DD1eD2nixGLYLH6kh82RTcJv05MJF5WZbM=;
- b=xt0DDfbwY/+WrwlYOUTAwhcWKeFC1DSgoyTqxpelJI0n7FLzhk0aJXa3O0Hp/02OoYaeFKPC55riT8ZutQLwyeRW03gIfpKnp/9NqabOD0giF6PA7D6ZkXpYDoKiAp6S5/IBFj5fhf7iHDZ55PFaxCyjwOLTegM2IuGr9YRvD/zCz3JXRIF1iVIRU6U4z2URVK93dxyB5hmT7PDKEHREKgTmAFt84O/bnrCVKm2007thZfyoXirhVjnk+YFacy6Z6r5O5ZlMVZWx+E+UZqU3lMZ3N31j6/tlhm0AahViH2wml+Iyvu5HLEt3HJ7LbsSTawkQqmADTVl6Vp4mfnH5AQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G0w2fMhd4DD1eD2nixGLYLH6kh82RTcJv05MJF5WZbM=;
- b=M5JGdgu3PL5TmT4yo86t1v6YLfsOYkgsAL110nrQYYEW3eR11QY6HG302KZBn9Zy4MKO8JRNy27iC6WOOHl2lAMUe9fZb47FGCbDJXhkYTHy+y+ox5nkNnOwxZcRLbXxdMNYs+TVCXaUTsTvEMmbZiLiI0SPaTggWqCxrtnpjng=
-Received: from SJ0PR13CA0106.namprd13.prod.outlook.com (2603:10b6:a03:2c5::21)
- by DM3PR12MB9416.namprd12.prod.outlook.com (2603:10b6:0:4b::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8422.15; Fri, 7 Feb 2025 15:39:22 +0000
-Received: from MWH0EPF000971E2.namprd02.prod.outlook.com
- (2603:10b6:a03:2c5:cafe::f6) by SJ0PR13CA0106.outlook.office365.com
- (2603:10b6:a03:2c5::21) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8445.7 via Frontend Transport; Fri, 7
- Feb 2025 15:39:22 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- MWH0EPF000971E2.mail.protection.outlook.com (10.167.243.69) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8398.14 via Frontend Transport; Fri, 7 Feb 2025 15:39:22 +0000
-Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 7 Feb
- 2025 09:39:18 -0600
-From: Robert Richter <rrichter@amd.com>
-To: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Gregory Price
-	<gourry@gourry.net>, "Fabio M. De Francesco"
-	<fabio.m.de.francesco@linux.intel.com>, Terry Bowman <terry.bowman@amd.com>,
-	Robert Richter <rrichter@amd.com>
-Subject: [PATCH v2 18/18] cxl/acpi: Unify CFMWS memory log messages with SRAT messages
-Date: Fri, 7 Feb 2025 16:37:53 +0100
-Message-ID: <20250207153753.418849-19-rrichter@amd.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250207153753.418849-1-rrichter@amd.com>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="VHlZg2ER"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7b6f8524f23so278442085a.2
+        for <linux-cxl@vger.kernel.org>; Fri, 07 Feb 2025 08:02:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1738944139; x=1739548939; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XBpucnCVHzGQH+O7bMwiQtnZts9S0udJs+IqXXWisiQ=;
+        b=VHlZg2ERA0DascTFe5PwYOVyGHK2KqVWQv7FDvQHq6jbNOVtIUmlzEbf7gOx8kamoF
+         D6eyukfOalEygtvLLf2jgKaCDld7bRjLu3TPPpuocLSNnJvEjb7XXAV1d8ZkLT4Bj6kY
+         Fg+SYtb+0KGIbaPM1Xt9qmnZgbcuaJqeh3D+It3Qqst1MEIQ+ACo5GS3pVSDNyy4BgyL
+         D6Am8UsBNGaJ0pnz7/s0N7Lhim7pNZ05dvIPx1NhSw56U0HQshsxh2rUcq8grIwzricg
+         QLbKjsqG/dexWCoYxntSzGJ4v30LqHksWJXcX19otZweMjd0DA8vfqIOsKzHR6cq41H+
+         v3SA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738944139; x=1739548939;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XBpucnCVHzGQH+O7bMwiQtnZts9S0udJs+IqXXWisiQ=;
+        b=ZNp9Gojs3ekSg9zcWfqV5O0FDPmj5L8937M9Z1dSkobmRqiw8Jla6MCzeuz818HWvk
+         MzE3Xr12xmu4RUrq+yjjveCtzeXlVGRAd075Lx48Bd99IIYMgNzK9jI5wJdZKya4NuVI
+         qkDpMY6OmXhbQaUd9+Slx9g0UsdoXaPK81rmDbEoPMCgftZcuWIr5ECMeVoMGtC4QoQT
+         cjkKLbMBJrr+uDmY222Ht23qmhbdU5/pJs0xT1jezWxACqao+Dsh1ch9QiNcbf1V/N6R
+         9qu7nO4ovBZL6uHSmKV/6WKh9MaD0xTbByFvwuAu0lcgEvHNX38xO+E0l4v+oWsDG0hw
+         dxsw==
+X-Forwarded-Encrypted: i=1; AJvYcCWiOQgay2eTh0pYJa/4oFqJb1nNTlDlUqgPGn+5UiMm8T9WsQn2U8Eg0zqU1aU4/zcYaoUEQkVcoCU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzL7TSVPvw/JT16dsD8BLSTWGBrwvNVoQ4GYZkowjVgpwCRlxkM
+	3Yyoiwr0Iv8/9L4cPFG4SjAnlu++CppuuyzSN8jVbiNk+FcLLoXKZ2xgzjQKhE4=
+X-Gm-Gg: ASbGncsydMmzCQ2zb4M6EzbV061AsXAMhOKL8ON1hCOIzHnkmbA2I9YH6DMM6KjQ90F
+	8QVfNJLtbUZBWPnmesDCaYIX7IcvrWmrjHMx+Lv98FF4Tt5MyoXKk57fhfGTKvy61nZkAIm1bzm
+	PVYkUjU5gXWHMoZSs8r5X2MDAw1TIIb59pN8rIdnjCx4Fqd1fojsBPFqEv5xBBXkOxyMAimBbTD
+	/oHgDSVCdGNDLD70tmxHesrVxevx+gfiPybfcw8v2cx8aHwRrj2KWz94RE5LUvqWeEQyk4dyQr6
+	rFMFDax2EGswjaS6cF/x7Bz8VYqGFMf2l7tswCtrO2vh3VTJQa8uyoFDn2IwHL6tnMjIfbNw4A=
+	=
+X-Google-Smtp-Source: AGHT+IHaACtCyvYcSAtPimBnfNUn6WiPGaHDl2LoofMFjXuD4jKdMZq31UofSzyQhbo/FJ8IF4spoQ==
+X-Received: by 2002:a05:620a:26a1:b0:7b6:d252:b4e4 with SMTP id af79cd13be357-7c047c9507cmr677196085a.53.1738944138934;
+        Fri, 07 Feb 2025 08:02:18 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47149275ff8sm18152201cf.11.2025.02.07.08.02.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 08:02:16 -0800 (PST)
+Date: Fri, 7 Feb 2025 11:02:13 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v2 02/18] cxl/pci: Moving code in cxl_hdm_decode_init()
+Message-ID: <Z6YuhYHz7K-arZuo@gourry-fedora-PF4VCD3F>
 References: <20250207153753.418849-1-rrichter@amd.com>
+ <20250207153753.418849-3-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000971E2:EE_|DM3PR12MB9416:EE_
-X-MS-Office365-Filtering-Correlation-Id: 557298e1-2f22-4100-13a1-08dd478d97fc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|36860700013|7416014|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?kYqXyOkEHc6DNKGqd9H3pbLW4hq+Qwy/XY0fxyja55G8kG/u7cUlEvZDoVg4?=
- =?us-ascii?Q?fJCbBg4/jhZZQJLVRoQk8Db+hvK5kdrvqBHuwL0XyLdUb9o6b6rxr/bryWf0?=
- =?us-ascii?Q?JJsj1wgfmLrwfiTi4VgmzNXlfTOwWcVpDjMOj6bXTgzI6lymJiiqHCsQiAVo?=
- =?us-ascii?Q?V9+/gPvSmKXKNDyMzAqJp+Mzof2sAyRGsPh3Mwp3Um/UsiiqkI247riqjUm8?=
- =?us-ascii?Q?Ia/yJ4I+loLoTUlHeckutwYH2FJ4APaw5t3SDK3PX5WtgQoasS5P/nW3Nyc7?=
- =?us-ascii?Q?//Zzun4k5BmtslB1xEe2/lVH/MtitJcUCgmqdcnKuxEIKox6MPgt7Nw4dkHC?=
- =?us-ascii?Q?oPgffavdwdwhuaYo8NK6F3uCgmhWg9ISv1UYyIu2bu2rXpuq/vC4WzrFb4DM?=
- =?us-ascii?Q?1+6q5aK9qfSo6L7TFqIUznsCQ0oKAPHWrQmYS8c5Pr4bYteCctctnwK058Ev?=
- =?us-ascii?Q?JpeLL9/kPR2QS/uXHvlgJYXmP1ZRiU3sQ43PCzcJ6t/wuEnehbqe7ifptyJp?=
- =?us-ascii?Q?2Ao/FjakwdbrULhNNvv/dlzuXU0GwrdJ2sHheAYSAnotGEcmzn+zN717ZlXM?=
- =?us-ascii?Q?dK2qzZadfAupc6dds9/Dylgf/LfcAJfoqHfse7qLyQTBFvJeZpDUI3YFUfZm?=
- =?us-ascii?Q?1NK0/UTCliQ/uLxPVE2GSecMLjW8dl80AHEmAnoPsinG9oWVD4lk8qAErd7E?=
- =?us-ascii?Q?8ZYbV5QbWFpUsjvFK6uSACXegW3YbGxTaJlaMfpYfTGkQ/mP+DTA+wjmVwbh?=
- =?us-ascii?Q?fJmJbKI0vUMwM24+PHxG2wgeFKcq6eXVqUK2EIbPVd45ZtK/e1xg89ISzWeS?=
- =?us-ascii?Q?fb2MJR1Ch2M9EPiSt6HxvMA/EOEF5F6B1iOHr5AINVnRsEiaFiXFttyrqFd6?=
- =?us-ascii?Q?Nar+gdfMEcyl/d2nbzavOxh3cQnWLNVnxCaM0uRgN/91RyBDsub2apW4Dfei?=
- =?us-ascii?Q?AeI56jFRRSCtF87kdYuvrf/vt1e7578H03glYDHYF+sBB3Q/G3nD6gqKeBE3?=
- =?us-ascii?Q?7BM3/uUlKxpw+AKQP9/kJigokW5KIt9pTf8JFGlmbIrOivWl27dyp7ZDQ0r9?=
- =?us-ascii?Q?3jPOVdGtNV98BaRpCU+w8cgiXzFZeueuPLzBJ0d8FKSh6r+FHlRODRhJgXWF?=
- =?us-ascii?Q?3ZktCxXX/7/ZPfC1DZfwPhEhQAaAVPuGJZI02Yty1hsGggeYEyMMq+8iZ0IR?=
- =?us-ascii?Q?J+WzoKcVf8MSwFMfvVTHY6u7GOn79K0WfCzu8feS7wCBBZfnwf5MOfHc2jJh?=
- =?us-ascii?Q?LicZPGJok3RqWA9OsJLkS2HYTmq1HLbaprzRojp7wFNtKIjMbwSUHr67Ttny?=
- =?us-ascii?Q?iUzkJ3W2EFBGRmDpcPqdPj1u8pGZmLDUqJYaO0WhYQeFCtcrD16FnRv9o3rR?=
- =?us-ascii?Q?/1rgbcFxnxPWkXSROEX7zBDOeDOjkDMPa2h5tKS9dJfrMzdzsxBufVhb8Li0?=
- =?us-ascii?Q?RqlTFC2XtrZa+sl+99mwvHzRgLAQOj8fYFq/U0WGQbinXvD3hbwmKW6YZawn?=
- =?us-ascii?Q?Ps7Yh6GrZFdBN7w=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(36860700013)(7416014)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 15:39:22.0444
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 557298e1-2f22-4100-13a1-08dd478d97fc
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000971E2.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR12MB9416
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207153753.418849-3-rrichter@amd.com>
 
-CFMWS entries have a similar importance as SRAT table entries to
-describe memory regions. For CXL error analysis and memory debugging
-information of both is needed. Unify output of both messages to
-improve logging. Change the style of CFMWS message according to SRAT
-output. Also, turn messages into a dev_info() same as for SRAT.
+On Fri, Feb 07, 2025 at 04:37:37PM +0100, Robert Richter wrote:
+> Commit 3f9e07531778 ("cxl/pci: simplify the check of mem_enabled in
+> cxl_hdm_decode_init()") changed the code flow in this function. The
+> root port is determined before a check to leave the function. Since
+> the root port is not used by the check it can be moved to run the
+> check first. This improves code readability and avoids unnesessary
+> code execution.
+> 
+> Signed-off-by: Robert Richter <rrichter@amd.com>
 
-SRAT pr_info() for reference:
+Reviewed-by: Gregory Price <gourry@gourry.net>
 
-drivers/acpi/numa/srat.c:
-  pr_info("SRAT: Node %u PXM %u [mem %#010Lx-%#010Lx]%s%s\n",
-
-Signed-off-by: Robert Richter <rrichter@amd.com>
----
- drivers/cxl/acpi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 3e75e612cbc4..93c73b163c28 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -447,7 +447,7 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
- 			cfmws->base_hpa,
- 			cfmws->base_hpa + cfmws->window_size - 1, rc);
- 	else
--		dev_dbg(dev, "decode range: node: %d range [%#llx - %#llx]\n",
-+		dev_info(dev, "ACPI: CFMWS: Node %u [mem %#010Lx-%#010Lx]\n",
- 			phys_to_target_node(cfmws->base_hpa), cfmws->base_hpa,
- 			cfmws->base_hpa + cfmws->window_size - 1);
- 
--- 
-2.39.5
-
+> ---
+>  drivers/cxl/core/pci.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 2ec8c97ab160..f8e22bc278c3 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -419,14 +419,6 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
+>  	if (!hdm)
+>  		return -ENODEV;
+>  
+> -	root = to_cxl_port(port->dev.parent);
+> -	while (!is_cxl_root(root) && is_cxl_port(root->dev.parent))
+> -		root = to_cxl_port(root->dev.parent);
+> -	if (!is_cxl_root(root)) {
+> -		dev_err(dev, "Failed to acquire root port for HDM enable\n");
+> -		return -ENODEV;
+> -	}
+> -
+>  	if (!info->mem_enabled) {
+>  		rc = devm_cxl_enable_hdm(&port->dev, cxlhdm);
+>  		if (rc)
+> @@ -435,6 +427,14 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
+>  		return devm_cxl_enable_mem(&port->dev, cxlds);
+>  	}
+>  
+> +	root = to_cxl_port(port->dev.parent);
+> +	while (!is_cxl_root(root) && is_cxl_port(root->dev.parent))
+> +		root = to_cxl_port(root->dev.parent);
+> +	if (!is_cxl_root(root)) {
+> +		dev_err(dev, "Failed to acquire root port for HDM enable\n");
+> +		return -ENODEV;
+> +	}
+> +
+>  	for (i = 0, allowed = 0; i < info->ranges; i++) {
+>  		struct device *cxld_dev;
+>  
+> -- 
+> 2.39.5
+> 
