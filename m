@@ -1,92 +1,153 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA9EC23C8B5
-	for <linux-cxl@vger.kernel.org>; Fri,  7 Feb 2025 16:02:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4720D23C8C5
+	for <linux-cxl@vger.kernel.org>; Fri,  7 Feb 2025 16:16:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738944179; cv=none; b=MOYi7rXG+k0pujGvMSeJA4Wdr6TUKua+4YajlHigcTZqgzw++AS6wOJ8cbcBQHazF/JvbemVONbJiKppNxY79C8oQkH82+qFhCDu8LtlfeQBvxP8cco2tf50eCORs/BDhE06DurD4vU9kT0jxlY88phfAaQX+4G9MOvKF6wkyRU=
+	t=1738944987; cv=none; b=JhdhZ0w3dC0F0QSRIa/g9EASaAobrYld2T9hXCjf+KUedc89CacfW5AJNVsGGUUbKEOgmayd95bjF2YybDU2O4ottaByIJJqa342F/yNNjfthT9UxjgZZnA/X4DtlJqSZt7tSF1R3oLo6w2iXBbl8yTE1Gw+4u98lw6J8SYqFM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738944179; c=relaxed/simple;
-	bh=qTTrwmonuoBn114EjCukQAQjX6dYX2f9YggJdvYqtuA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DG/dEBdqB+nUBfZ1c7YhbBo+MGqB5zPK52UmSR7p5OtCpvRW63eQIGPGhkUHmOAmuczweEnkL8ltTR4kVUL4ouShbZDOhqcxk3NfA3mtUlAU746jKar06leL7SiDd8HvEby7/J8YIRBu3TGjYg6YtfpuVggFftLLpzR3acCUa8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=NVZLtnYT; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1738944987; c=relaxed/simple;
+	bh=hD+eCZVAmu9HYlJ66O10gtRu+u/xshw0dNIF0ppHeG4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=T55wesq/i6ZTO4zy27e0O5niu5K3uuH+X0SSHlI/0d1gpph7k0EsXBE4ZuLdlnU57AbHIKM8nNa6qjzpOh0JVtIhFpkB2Z0a37uFsi4o2VI0mXsCh2SzDtdV8dY/d5rf9xtfihVPvztfB+RtG3VxmxMEn9JLGHDyEe4ibnhw01c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YuORY2oB; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="NVZLtnYT"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-467918c360aso26731201cf.0
-        for <linux-cxl@vger.kernel.org>; Fri, 07 Feb 2025 08:02:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1738944177; x=1739548977; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OxwRHe5U4ZPv9/a1cUnE/D3XB6IfxkHhfzV2eY3RtYQ=;
-        b=NVZLtnYTNCy/HsHNR4jyUtDWcTlccc1el7eJr6kCz+d/1RkoP5pvQkpYvEvKX0FdYE
-         V7B7QWc2rfI8Dnl2R8/O931FJmLWwhD6D/2APi/vQLap1tzbJq5p9Wfr2TMQoOyxBhh8
-         9gBVBuj/UdD5NUDVOCTbsUiPBZ8s5FsmlUbp7rtaI6bjvAhSkHA2aJe05jA8mg2WTk4y
-         NcqCC7/9MoyorHvCmiNfjBBnrOk/y4uNkA56+tnxs8DSw6BcYBU1yZLl0UHKrXqdGTCS
-         bcriPINk4VZuqsW7PYLRdZwj37vnALSnWAtGZVORNDJnlJZScW39C8mXLWag5hkCdeyq
-         NPFA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YuORY2oB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738944984;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hD+eCZVAmu9HYlJ66O10gtRu+u/xshw0dNIF0ppHeG4=;
+	b=YuORY2oBfCPOdTPGwf5EzqLLdAf/zylsM7/yufw/rTqoXFkFhWVRIbKCod4DmlFTuC2B72
+	OOpRygSdG5jX9cfqsIAJB7CtLrMcJwXH1t38ti9M4U0zYrW4nORRrTAa1MOcmZ0tTJOO3L
+	RJMpv9w1IKtXewdXpAksumqvh4/rUTk=
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
+ [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-373-KFEEHageM-OKL28-SGn9dw-1; Fri, 07 Feb 2025 11:16:23 -0500
+X-MC-Unique: KFEEHageM-OKL28-SGn9dw-1
+X-Mimecast-MFC-AGG-ID: KFEEHageM-OKL28-SGn9dw
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2fa166cf656so3379112a91.2
+        for <linux-cxl@vger.kernel.org>; Fri, 07 Feb 2025 08:16:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738944177; x=1739548977;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OxwRHe5U4ZPv9/a1cUnE/D3XB6IfxkHhfzV2eY3RtYQ=;
-        b=QJ9lzVpXNcutV7+0XWtN6R+DgZdWLYaLjQbPy07Zp7VHqeuaR7oNtyYuzCqVTBYmbt
-         2ScYoCoodcMHIwn2liujow6L5q+zp3Gf9dHsPESXCIAl1DcjJ5aUjPufTERMRpfVEDUV
-         bHEP0y7CozTs5FQ643uR6/aFYLJwLeFYTY7cLtRW6LzqcfXkMtZ4zvjccFrlRakfMPPm
-         YbbvvsMAgCwfShP/Crh1zy4kC6HwGrUJRoLFmuRA7Ikm1BzXXRGCokt1wJbc/3sE2n0k
-         YAvyX1erKKSYHkIwd66HgZjQIZPMWvYZKm1JOTJt0mU58N9HHeqEFfGaS9t1xjeELpE7
-         ELCA==
-X-Forwarded-Encrypted: i=1; AJvYcCVPehw4geL4UxegxOJ1Gsc6OgQ/PxkvI8fiqVrTprO3Wz8Rg0OSKU7RqebvUtIMBvvyd2Am2EJ9zug=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0UNTzDk9tFjci3ZjCn1J+dl4lkBWSbdsN07s4Li0wC78K2q8s
-	R9/YgV1hD0HHHCWcL6um+yq0BWZPrQgmZo94Jg2g00Dw+JzdoA1DCLaBZX9kF8M=
-X-Gm-Gg: ASbGnctjS1gYLiZRFBQk0GMXPbHBRCX3yuC3aXl2Ab6ywz38WZaMoWVd9O1N1cVnoZg
-	zn8M02GPdc+bwMAg7zvEpGfuAD0U87wIFsG9qOtH2LR47R0jeZEW2UxCB2hGi2NS2ZBMIK/6M36
-	BT3s15vRXTMRkXE+TPyvgRbnK87Pm3cbAQ36KBecrM416AEOrM9ctksbiiFe/qx+8ok6WMvIjd5
-	zoiXPUPJ6HlBVzxYKzLZaskaPjH6OJjGdqc/lGqD8vwid0/PVZW82dycYnkgjI3Xer6gOaRmqW5
-	l35JJmJiBdeoGPhaoA32IP184YsvEPz9GPf7l+xkjmcsqUQysgfUXycVx+M0HfRU78zRN842IQ=
-	=
-X-Google-Smtp-Source: AGHT+IFgXCB04Lpt0gpJYG7B8kSjZz+kozBjKHRr1ex1n/QVmUZcaq9+qUd7LdBIW8zmfPollMQw5A==
-X-Received: by 2002:a05:622a:1181:b0:46d:fd08:7c9f with SMTP id d75a77b69052e-47167aa11eamr47466111cf.22.1738944175429;
-        Fri, 07 Feb 2025 08:02:55 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47153bc7375sm18071411cf.56.2025.02.07.08.02.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 08:02:54 -0800 (PST)
-Date: Fri, 7 Feb 2025 11:02:53 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Robert Richter <rrichter@amd.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v2 03/18] cxl/pci: cxl_hdm_decode_init: Move comment
-Message-ID: <Z6YurVy_K96jet3U@gourry-fedora-PF4VCD3F>
-References: <20250207153753.418849-1-rrichter@amd.com>
- <20250207153753.418849-4-rrichter@amd.com>
+        d=1e100.net; s=20230601; t=1738944982; x=1739549782;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hD+eCZVAmu9HYlJ66O10gtRu+u/xshw0dNIF0ppHeG4=;
+        b=oiEcCdRs7FpLw4z8NuRPaaCRTq5tynzGx79qqBPjQKMbbg4+Vy4n+R6iCgXQegAAE8
+         xFPgeRqsTlM8NCowhbtp9bRvkw6hcs6r38IcwZRFTnP4xj8HX0lZ9qwVxganeVBxxgiq
+         hrdRpurrUa//xVJJBkdF5lHDOuhq0YMpRVeNRTF+RaosXKuNOO5hLC9s3iWVyQHfPHEl
+         jNFRpbmZZaKBU/LeO1Ibvo/a7thO0gshkCRPiMnAl9e43StuQnBb8LoyEMk/Fy+9yGUF
+         TZWSd3D+CMvXJdSLlNAVePn3KFXMMHcYLnZn1JAMDM/mEt/U9OX2w2SS3UxNiVQW8am3
+         p3pQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWEL1l32xw831EqjwaS5WxiBh3XI/SoE3d4Hm6YMvzL2WIwUjGXHMMxU+WYqrK6JK04JIk02kgIta0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzcZy43iuEyieuCl0knsf9e1vnv0lsTlEiIrmL0x+KvoHeYj4f
+	JhHEp/ZdouVAtD0Yt1xNKA6qvAz5WqBvRlC8PXTqAfvfYDKY8E34dYR36teY4aYeXFNvyALi83P
+	+7enJbFgUdJFQ5nrNMGXsbYB6EmQi3cEemFRXp40VWBBTIUdcQZE9HPgk+8l1Kw7/BsqfYgWwhg
+	bgMvBwrc9Ju4vXDgynW9l4Bzb7rgGV2fgg
+X-Gm-Gg: ASbGncsd5ncj0tPRPkhv+dgYp2MSGkI5PnhP1ghuizKCit8+14fXT1+e+8+LfMVj6aI
+	51/kyeKjFdEcEi5PuFx8rASObz3fY3dLOUQrg6s3R2xQg5QqZiLD8Fb6UqPwFavnG
+X-Received: by 2002:a17:90b:1b44:b0:2f4:f7f8:fc8b with SMTP id 98e67ed59e1d1-2fa242e7602mr5367352a91.27.1738944981867;
+        Fri, 07 Feb 2025 08:16:21 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IG9qQ6Ac9CdjS0hM2Fp5CTCftFgkMjfVYiNIpp2aFlk5UPLOL/FOPn2I3gKNt5IDhZaRA3QY4m6BBB8aMlIkFs=
+X-Received: by 2002:a17:90b:1b44:b0:2f4:f7f8:fc8b with SMTP id
+ 98e67ed59e1d1-2fa242e7602mr5367287a91.27.1738944981087; Fri, 07 Feb 2025
+ 08:16:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250207153753.418849-4-rrichter@amd.com>
+References: <cover.11189864684e31260d1408779fac9db80122047b.1736488799.git-series.apopple@nvidia.com>
+ <bfae590045c7fc37b7ccef10b9cec318012979fd.1736488799.git-series.apopple@nvidia.com>
+ <Z6NhkR8ZEso4F-Wx@redhat.com> <67a3fde7da328_2d2c2942b@dwillia2-xfh.jf.intel.com.notmuch>
+ <Z6S7A-51SdPco_3Z@redhat.com> <20250206143032.GA400591@fedora>
+ <CADSE00+2o5Ma0W6FBLHwpUaKut9Tf74GKLCU-377qgxr08EeoQ@mail.gmail.com> <e1630046-8889-4452-9f8f-07695ba07772@redhat.com>
+In-Reply-To: <e1630046-8889-4452-9f8f-07695ba07772@redhat.com>
+From: Albert Esteve <aesteve@redhat.com>
+Date: Fri, 7 Feb 2025 17:16:09 +0100
+X-Gm-Features: AWEUYZnF6uEewR9F7JdT3B1cLzxz-kUGRVOwAxRfyR8MegKqDpoCLJWu8Fphkbs
+Message-ID: <CADSE00KUeTp_C_kZPS1U2JcLiWuN1s6Se72gtFiN71kXCZx4UA@mail.gmail.com>
+Subject: Re: [PATCH v6 01/26] fuse: Fix dax truncate/punch_hole fault path
+To: David Hildenbrand <david@redhat.com>
+Cc: Stefan Hajnoczi <stefanha@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, 
+	Dan Williams <dan.j.williams@intel.com>, Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org, 
+	linux-mm@kvack.org, alison.schofield@intel.com, lina@asahilina.net, 
+	zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com, vishal.l.verma@intel.com, 
+	dave.jiang@intel.com, logang@deltatee.com, bhelgaas@google.com, jack@suse.cz, 
+	jgg@ziepe.ca, catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au, 
+	npiggin@gmail.com, dave.hansen@linux.intel.com, ira.weiny@intel.com, 
+	willy@infradead.org, djwong@kernel.org, tytso@mit.edu, linmiaohe@huawei.com, 
+	peterx@redhat.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org, 
+	linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de, 
+	david@fromorbit.com, chenhuacai@kernel.org, kernel@xen0n.name, 
+	loongarch@lists.linux.dev, Hanna Czenczek <hreitz@redhat.com>, 
+	German Maglione <gmaglione@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: KFCYgoeb3mPUjk1C7eOoTLiCxIDMYAhuNyBEzRCwUys_1738944982
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 07, 2025 at 04:37:38PM +0100, Robert Richter wrote:
-> The comment applies to the check, move it there.
-> 
-> Signed-off-by: Robert Richter <rrichter@amd.com>
+On Thu, Feb 6, 2025 at 7:22=E2=80=AFPM David Hildenbrand <david@redhat.com>=
+ wrote:
+>
+> On 06.02.25 15:59, Albert Esteve wrote:
+> > Hi!
+> >
+> > On Thu, Feb 6, 2025 at 3:30=E2=80=AFPM Stefan Hajnoczi <stefanha@redhat=
+.com> wrote:
+> >>
+> >> On Thu, Feb 06, 2025 at 08:37:07AM -0500, Vivek Goyal wrote:
+> >>> And then there are challenges at QEMU level. virtiofsd needs addition=
+al
+> >>> vhost-user commands to implement DAX and these never went upstream in
+> >>> QEMU. I hope these challenges are sorted at some point of time.
+> >>
+> >> Albert Esteve has been working on QEMU support:
+> >> https://lore.kernel.org/qemu-devel/20240912145335.129447-1-aesteve@red=
+hat.com/
+> >>
+> >> He has a viable solution. I think the remaining issue is how to best
+> >> structure the memory regions. The reason for slow progress is not
+> >> because it can't be done, it's probably just because this is a
+> >> background task.
+> >
+> > It is partially that, indeed. But what has me blocked for now on postin=
+g the
+> > next version is that I was reworking a bit the MMAP strategy.
+> > Following David comments, I am relying more on RAMBlocks and
+> > subregions for mmaps. But this turned out more difficult than anticipat=
+ed.
+>
+> Yeah, if that turns out to be too painful, we could start with the
+> previous approach and work on that later. I also did not expect that to
+> become that complicated.
 
-Reviewed-by: Gregory Price <gourry@gourry.net>
+Thanks. I'd like to do it properly, so I think will try a bit more to get i=
+t
+to work. Maybe another week. If I do not manage, I may do
+what you suggested (I'll align with you first) to move the patch forward.
+
+That said, if I end up doing that, I will definitively revisit it later.
+
+BR,
+Albert.
+
+>
+> --
+> Cheers,
+>
+> David / dhildenb
+>
+
