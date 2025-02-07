@@ -1,263 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86A4B1A9B52;
-	Fri,  7 Feb 2025 21:58:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5925A1A3161
+	for <linux-cxl@vger.kernel.org>; Fri,  7 Feb 2025 22:19:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738965536; cv=none; b=Hcz/s4HoOjiCCA/2SB+mdtoq5Sz9XCTwP5yKRCUIEB4MMcUCXkAs9G9Ba3mAmMEJIVhn/BqHOhHouZOdCCrjxc/apaR2pHNEjhT9EsNsz7zYz6uzfAtPrC+ZZimd/Fz1pWLEdO4xNTYvSZgdc88AzmH3m/PykERgIEVNZweEbhY=
+	t=1738966795; cv=none; b=dv9lPrpEytqv0j767i+UKC6CVBOMG9ZvQ8xY86M7QHpVpg5nWKA1kVmC4sCg3fta8uyeYn5BZjtLIUHUq9cwOQGIL8FM1Hpg+moOIj4YYbCvhoEJkKPLK6JACHqBxSdw6ElBPQcKqy9D9DgsEI2wfI3X3gERlJ71/71cTB0NjrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738965536; c=relaxed/simple;
-	bh=XQs531thxZCJLRwyajyMcoSYZLq5HidXYiLmRJW0jbs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h+T1S8ckdINo+oU0J0ITtgISwoM8hlPmmkeIgN76E+SjSchqSNmFMngIbv145lWaNLhsqdkbPmz3eXRbG87mnA3sLsc2wa394QsnPh8ETEiKhin07JwvgbJTP9iaSscORe/LiDeqTfAHvXKghtIDaPC9qhrXghJTjQowbaKO/MA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GU+kVKud; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738966795; c=relaxed/simple;
+	bh=ps5EjYggeB2pmCfRj5Y1qHEl1n/SHTtVyuqzfKf0ht8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=me0WFFHTxe0O2Kv3yCz0sXAox9+hqwYsc6XKo4ub4HpGUhgwQG5M0l3Dvw/MnFZc0p4PRTxSR+yFh7Ohv/XJVmMqOXILkneVASTD8tDfm6aackv4BPu/JxNO9MvPPG0aISizNkREzR65r0Lv5JgHJcsSXevGSqmMM0vfRDkcmLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=ScZcY2N1; arc=none smtp.client-ip=209.85.219.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GU+kVKud"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738965535; x=1770501535;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=XQs531thxZCJLRwyajyMcoSYZLq5HidXYiLmRJW0jbs=;
-  b=GU+kVKudswGF6SR41Fst71IvpQbthTuEszPiKRyYZfj7Nc+rkmeORZ1Z
-   yn/pIzlPL7lQgV24HC6+hnpB27rWrBoyv5BkNIsv33ji87VkwvdtT84kI
-   eka9DR6ErEqDs1h1L2BNqOWcV/1YIX0GNAEqpdHuAXlZF4V2QyT5jiWuw
-   ccEBokTN1wT2fcaobYChzvxkHE/pxHnRIUdLcrAdVJbL8C/PiUtp3YK9r
-   esr3lcMttGU8AEw0nV0SpVOkK2bIeWEh5Y829B6GlIt9N7wuyEhf8JNTS
-   I8CCVQQ6RkUjIR3qngh48wW/T88TT+uq+NnnbpbkDD71wqYFK2KcJJ6vq
-   g==;
-X-CSE-ConnectionGUID: GP2tb54BQ3WaFXn5HMFLcA==
-X-CSE-MsgGUID: 7E3/xtd0S6G1d5wczw2zCw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="39746199"
-X-IronPort-AV: E=Sophos;i="6.13,268,1732608000"; 
-   d="scan'208";a="39746199"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 13:58:54 -0800
-X-CSE-ConnectionGUID: /X1+MCPXRJKHjtnKvQoRLw==
-X-CSE-MsgGUID: T4xSSaO4T0iYC3Xc5CMZbQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="148843173"
-Received: from agladkov-desk.ger.corp.intel.com (HELO [10.125.111.68]) ([10.125.111.68])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 13:58:53 -0800
-Message-ID: <a0f1648f-eefb-455c-b264-169cb67a7486@intel.com>
-Date: Fri, 7 Feb 2025 14:58:51 -0700
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="ScZcY2N1"
+Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6dd420f82e2so32251106d6.1
+        for <linux-cxl@vger.kernel.org>; Fri, 07 Feb 2025 14:19:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1738966793; x=1739571593; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=LNYJ3hvEn3WHrM7IryEw3ayHWigT+bDMHa3yuIYsG60=;
+        b=ScZcY2N15IHWTxx1YUi5LctkewctjNwvLcXxq9GP8s+82s7Mk5Ne0lkrlBJf+9AdCj
+         b6g0YS8ZHUL3MNxGaMkeJvE+7hUVvopjH+pLIZI0itSWr2bDPAb7ABrtb8vbvvptGfEr
+         GTuuuggOnXEUpEO5qCaSbGYay6wZQtvoyu2bKhgI1OkBOstmEfsmaTIuIHLQaIKB/aKT
+         Pu2lfW2LlbjU1TNwoxgGjfXc9M4M1vMBj3DE7ejJ/WZ9omXbKXrdpcIpsEWlILF50wyV
+         F0bkS+XXOHxvDmjkU3OEfYBqnkMMlBhCjpHZL9x9w3Hn6bHpiXxNQLOrxJH2hQbPdmvM
+         /1SQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738966793; x=1739571593;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LNYJ3hvEn3WHrM7IryEw3ayHWigT+bDMHa3yuIYsG60=;
+        b=i80CQ2LwkX1+TvjaYvFDLGuVtdFSOztmn8ruHcp0AJ7unJ8qywZs0veE/f8gOw1oCg
+         qJIBaqDD6tF6Aqgh/Na2XIwys9QtczWV76CiNx6+TkYs0RA65JtFZlXYfSLkhTzigEWU
+         2M+xbg4LArS1YpKORmlhRxXU1CQkJWMrtF8zKW6YIS5BaducmvwqlbC+4ixfPcvmvh0b
+         k+v4eGCRTrygIE5V5tmuxB1C2DFcbJBz/6PFnyOehXZ7ap6a2Dzie9OiMwfZra5bOF0l
+         EvIaEoiG76rD9YfZNsTsExkbcjfdV92git+tahZNy9Q8YrkTsrkkTa1hB8GZ1YeV4CmG
+         DI0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXEWxTLp3UzUgK0n6Tk1eiNNgtMcqPvcnzNQPzOeHnWTw7959JxjE8JgC/JkY8ndN4J3KWCOc3zgUM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzoTq/YWNPSbaxaQa1dKeysubK0ez9CfnJIplIrcKWAjIITj8Wq
+	o+xCPwhHMfPh1omgDXORhFD5/+aEFCd77fvHB9N4f0ITPq2F++VrugOVKj6QcPM=
+X-Gm-Gg: ASbGnct1T/4H6mNmc8rGzWwyxUxC6q62OHG0zG32Ok5kIa8WbVHy6K26zEHlQF8lSHl
+	e14YkAfYxURjxdliEPHYtKQ834VLqqIAtTYx7OlVbPRXb7YlXXRWKS1EP7lsndxfVVivJ57uDXE
+	CdimL9YZBUb8yFjZt9qxDSzCyPyBfqLyt7vH7WA4tfn+pbImZFW2W6WuIV/kGHN2UXRWSFm3CkA
+	dPjakePtx1VGOFoSoekaNjJF2DHopm19tDbKwkMNS6Ij5oo3rN7nXBMaODD/UwfWOz9NXhdGqB3
+	9Qll6Uk6BLXmzMZhTVaj3xVCxQaS/6nNoipR9XCOjGwrBdv12F0hfdWGQbiJlNkT/3z52HvvXw=
+	=
+X-Google-Smtp-Source: AGHT+IHuh8FZ1mgmCnMmsLjrt+LL4tFHjVCmaSizXKjRSMf8Fg3xlArwjI3h301vYadEZcBHltyvdA==
+X-Received: by 2002:ad4:576b:0:b0:6d8:9062:6616 with SMTP id 6a1803df08f44-6e4455d2f32mr79737356d6.7.1738966793258;
+        Fri, 07 Feb 2025 14:19:53 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e43bad5a7bsm21233486d6.119.2025.02.07.14.19.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 14:19:52 -0800 (PST)
+Date: Fri, 7 Feb 2025 17:19:50 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Jim Kao <jim.kao@xconn-tech.com>
+Cc: Robert Richter <rrichter@amd.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v2 03/18] cxl/pci: cxl_hdm_decode_init: Move comment
+Message-ID: <Z6aHBuGwuEMy6Kc1@gourry-fedora-PF4VCD3F>
+References: <20250207153753.418849-1-rrichter@amd.com>
+ <20250207153753.418849-4-rrichter@amd.com>
+ <Z6YurVy_K96jet3U@gourry-fedora-PF4VCD3F>
+ <BYAPR06MB413558D98731EBD422CF24E4A1F12@BYAPR06MB4135.namprd06.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 00/10] Introduce fwctl subystem
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Andy Gospodarek <andrew.gospodarek@broadcom.com>,
- Aron Silverton <aron.silverton@oracle.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Daniel Vetter <daniel.vetter@ffwll.ch>, David Ahern <dsahern@kernel.org>,
- Andy Gospodarek <gospo@broadcom.com>, Christoph Hellwig <hch@infradead.org>,
- Itay Avraham <itayavr@nvidia.com>, Jiri Pirko <jiri@nvidia.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Jakub Kicinski <kuba@kernel.org>, Leonid Bloch <lbloch@nvidia.com>,
- Leon Romanovsky <leonro@nvidia.com>, linux-cxl@vger.kernel.org,
- linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
- Saeed Mahameed <saeedm@nvidia.com>, "Nelson, Shannon"
- <shannon.nelson@amd.com>
-References: <0-v4-0cf4ec3b8143+4995-fwctl_jgg@nvidia.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <0-v4-0cf4ec3b8143+4995-fwctl_jgg@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BYAPR06MB413558D98731EBD422CF24E4A1F12@BYAPR06MB4135.namprd06.prod.outlook.com>
 
+On Fri, Feb 07, 2025 at 09:36:08PM +0000, Jim Kao wrote:
+> Do we have any limitation for HDM Decoder Range in Linux Kernel ?
+> We has observed that Linux might be hung if range is larger than 8TB.
+> 
+> Jim
+> 
 
+Do you have any additional details? dmesg/core dumps, etc?
 
-On 2/6/25 5:13 PM, Jason Gunthorpe wrote:
-> [
-> Many people were away around the holiday period, but work is back in full
-> swing now with Dave already at v3 on his CXL work over the past couple
-> weeks. We are looking at a good chance of reaching this merge window. I
-> will work out some shared branches with CXL and get it into linux-next
-> once all three drivers can be assembled and reviews seem to be concluding.
-> 
-> There are couple open notes
->  - Greg was interested in a new name, but nobody offered any bikesheds
->  - I would like a co-maintainer
-
-I volunteer as tribute. :) 
-
-I got the CXL series rebased and tested on top of this series. So you can add
-Tested-by: Dave Jiang <dave.jiang@intel.com>
-for the core FWCTL bits in the series.
-
-I'll post the CXL FWCTL series v4 shortly.
-
-DJ
-
-> ]
-> 
-> fwctl is a new subsystem intended to bring some common rules and order to
-> the growing pattern of exposing a secure FW interface directly to
-> userspace. Unlike existing places like RDMA/DRM/VFIO/uacce that are
-> exposing a device for datapath operations fwctl is focused on debugging,
-> configuration and provisioning of the device. It will not have the
-> necessary features like interrupt delivery to support a datapath.
-> 
-> This concept is similar to the long standing practice in the "HW" RAID
-> space of having a device specific misc device to manage the RAID
-> controller FW. fwctl generalizes this notion of a companion debug and
-> management interface that goes along with a dataplane implemented in an
-> appropriate subsystem.
-> 
-> The need for this has reached a critical point as many users are moving to
-> run lockdown enabled kernels. Several existing devices have had long
-> standing tooling for management that relied on /sys/../resource0 or PCI
-> config space access which is not permitted in lockdown. A major point of
-> fwctl is to define and document the rules that a device must follow to
-> expose a lockdown compatible RPC.
-> 
-> Based on some discussion fwctl splits the RPCs into four categories
-> 
-> 	FWCTL_RPC_CONFIGURATION
-> 	FWCTL_RPC_DEBUG_READ_ONLY
-> 	FWCTL_RPC_DEBUG_WRITE
-> 	FWCTL_RPC_DEBUG_WRITE_FULL
-> 
-> Where the latter two trigger a new TAINT_FWCTL, and the final one requires
-> CAP_SYS_RAWIO - excluding it from lockdown. The device driver and its FW
-> would be responsible to restrict RPCs to the requested security scope,
-> while the core code handles the tainting and CAP checks.
-> 
-> For details see the final patch which introduces the documentation.
-> 
-> The CXL FWCTL driver is now in it own series on v3:
->  https://lore.kernel.org/r/20250204220430.4146187-1-dave.jiang@intel.com
-> 
-> I'm expecting a 3rd driver (from Shannon @ Pensando) to be posted right
-> away, the github version I saw looked good. I've got soft commitments for
-> about 6 drivers in total now.
-> 
-> There have been three LWN articles written discussing various aspects of
-> this proposal:
-> 
->  https://lwn.net/Articles/955001/
->  https://lwn.net/Articles/969383/
->  https://lwn.net/Articles/990802/
-> 
-> A really giant ksummit thread preceding a discussion at the Maintainer
-> Summit:
-> 
->  https://lore.kernel.org/ksummit/668c67a324609_ed99294c0@dwillia2-xfh.jf.intel.com.notmuch/
-> 
-> Several have expressed general support for this concept:
-> 
->  AMD/Pensando - https://lore.kernel.org/linux-rdma/20241205222818.44439-1-shannon.nelson@amd.com
->  Broadcom Networking - https://lore.kernel.org/r/Zf2n02q0GevGdS-Z@C02YVCJELVCG
->  Christoph Hellwig - https://lore.kernel.org/r/Zcx53N8lQjkpEu94@infradead.org
->  Daniel Vetter - https://lore.kernel.org/r/ZrHY2Bds7oF7KRGz@phenom.ffwll.local
->  Enfabrica - https://lore.kernel.org/r/9cc7127f-8674-43bc-b4d7-b1c4c2d96fed@kernel.org
->  NVIDIA Networking
->  Oded Gabbay/Habana - https://lore.kernel.org/r/ZrMl1bkPP-3G9B4N@T14sgabbay.
->  Oracle Linux - https://lore.kernel.org/r/6lakj6lxlxhdgrewodvj3xh6sxn3d36t5dab6najzyti2navx3@wrge7cyfk6nq
->  SuSE/Hannes - https://lore.kernel.org/r/2fd48f87-2521-4c34-8589-dbb7e91bb1c8@suse.com
-> 
-> Work is ongoing for userspace, currently the mellanox tool suite has been
-> ported over:
->   https://github.com/Mellanox/mstflint
-> 
-> And a more simplified example how to use it:
->   https://github.com/jgunthorpe/mlx5ctl.git
-> 
-> This is on github: https://github.com/jgunthorpe/linux/commits/fwctl
-> 
-> v4:
->  - Rebase to v6.14-rc1
->  - Fine tune comments and rst documentatin
->  - Adjust cleanup.h usage - remove places that add more ofuscation than
->    value
->  - CXL is back to its own independent series
->  - Increase FWCTL_MAX_DEVICES to 4096, someone hit the limit
->  - Fix mlx5ctl_validate_rpc() logic around scope checking
->  - Disable mlx5ctl on SFs
-> v3: https://patch.msgid.link/r/0-v3-960f17f90f17+516-fwctl_jgg@nvidia.com
->  - Rebase to v6.11-rc4
->  - Add a squashed version of David's CXL series as the 2nd driver
->  - Add missing includes
->  - Improve comments based on feedback
->  - Use the kdoc format that puts the member docs inside the struct
->  - Rewrite fwctl_alloc_device() to be clearer
->  - Incorporate all remarks for the documentation
-> v2: https://lore.kernel.org/r/0-v2-940e479ceba9+3821-fwctl_jgg@nvidia.com
->  - Rebase to v6.10-rc5
->  - Minor style changes
->  - Follow the style consensus for the guard stuff
->  - Documentation grammer/spelling
->  - Add missed length output for mlx5 get_info
->  - Add two more missed MLX5 CMD's
->  - Collect tags
-> v1: https://lore.kernel.org/r/0-v1-9912f1a11620+2a-fwctl_jgg@nvidia.com
-> 
-> Andy Gospodarek (2):
->   fwctl/bnxt: Support communicating with bnxt fw
->   bnxt: Create an auxiliary device for fwctl_bnxt
-> 
-> Jason Gunthorpe (6):
->   fwctl: Add basic structure for a class subsystem with a cdev
->   fwctl: Basic ioctl dispatch for the character device
->   fwctl: FWCTL_INFO to return basic information about the device
->   taint: Add TAINT_FWCTL
->   fwctl: FWCTL_RPC to execute a Remote Procedure Call to device firmware
->   fwctl: Add documentation
-> 
-> Saeed Mahameed (2):
->   fwctl/mlx5: Support for communicating with mlx5 fw
->   mlx5: Create an auxiliary device for fwctl_mlx5
-> 
->  Documentation/admin-guide/tainted-kernels.rst |   5 +
->  Documentation/userspace-api/fwctl/fwctl.rst   | 285 ++++++++++++
->  Documentation/userspace-api/fwctl/index.rst   |  12 +
->  Documentation/userspace-api/index.rst         |   1 +
->  .../userspace-api/ioctl/ioctl-number.rst      |   1 +
->  MAINTAINERS                                   |  16 +
->  drivers/Kconfig                               |   2 +
->  drivers/Makefile                              |   1 +
->  drivers/fwctl/Kconfig                         |  32 ++
->  drivers/fwctl/Makefile                        |   6 +
->  drivers/fwctl/bnxt/Makefile                   |   4 +
->  drivers/fwctl/bnxt/bnxt.c                     | 167 +++++++
->  drivers/fwctl/main.c                          | 416 ++++++++++++++++++
->  drivers/fwctl/mlx5/Makefile                   |   4 +
->  drivers/fwctl/mlx5/main.c                     | 340 ++++++++++++++
->  drivers/net/ethernet/broadcom/bnxt/bnxt.c     |   3 +
->  drivers/net/ethernet/broadcom/bnxt/bnxt.h     |   3 +
->  drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c | 126 +++++-
->  drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.h |   4 +
->  drivers/net/ethernet/mellanox/mlx5/core/dev.c |   9 +
->  include/linux/fwctl.h                         | 135 ++++++
->  include/linux/panic.h                         |   3 +-
->  include/uapi/fwctl/bnxt.h                     |  27 ++
->  include/uapi/fwctl/fwctl.h                    | 140 ++++++
->  include/uapi/fwctl/mlx5.h                     |  36 ++
->  kernel/panic.c                                |   1 +
->  tools/debugging/kernel-chktaint               |   8 +
->  27 files changed, 1782 insertions(+), 5 deletions(-)
->  create mode 100644 Documentation/userspace-api/fwctl/fwctl.rst
->  create mode 100644 Documentation/userspace-api/fwctl/index.rst
->  create mode 100644 drivers/fwctl/Kconfig
->  create mode 100644 drivers/fwctl/Makefile
->  create mode 100644 drivers/fwctl/bnxt/Makefile
->  create mode 100644 drivers/fwctl/bnxt/bnxt.c
->  create mode 100644 drivers/fwctl/main.c
->  create mode 100644 drivers/fwctl/mlx5/Makefile
->  create mode 100644 drivers/fwctl/mlx5/main.c
->  create mode 100644 include/linux/fwctl.h
->  create mode 100644 include/uapi/fwctl/bnxt.h
->  create mode 100644 include/uapi/fwctl/fwctl.h
->  create mode 100644 include/uapi/fwctl/mlx5.h
-> 
-> 
-> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-
+Seems pretty suspicious that it happens right on the 44-bit boundary.
