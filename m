@@ -1,123 +1,120 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638EB194C6A
-	for <linux-cxl@vger.kernel.org>; Fri,  7 Feb 2025 21:24:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F217C1A254C
+	for <linux-cxl@vger.kernel.org>; Fri,  7 Feb 2025 21:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738963455; cv=none; b=nvSiHISbtOHPjDD5ZBPW+uCOXM18LM04ODhF95NpBmy0RnKoJr9LzGEg+tuGOrpS8rqRMXR94YDoqvEESrCDI/f6vqSZPrJ+F1Tqd6w22Bq/EsQ9KEP7L+6Keg5BIPALo383nOvDDTSpz7PWpWh1liBgKOxvlI04Hd5n42qbSuk=
+	t=1738964173; cv=none; b=oI8gH5Cs+t3GPXVJjv/9NbhpX+SRXnNI9RgI5S8sdGSKbuHNjAtUOTrNA5Cs5su1GVY4df2XjWSOB4hywvCQ4XGOcHLFFrlQAUnO1WQYhpxNAxT8xaUjUy3EIjFsTZ6DoJAEDD94myUBzj3E54wdY44NPRK8E6IptBqAo3Q72wI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738963455; c=relaxed/simple;
-	bh=Jh8bJM2/fI9Ng6LWK2hdPmWaTdsJAUhglOnt064rwcQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UW6n4TgP+hJGhoXQV1IwnFg3AsNs7U4N+aMSnFBARpcewE3o4+5C7CX6cvm+1vgmrEwlcdrzKywGXcjsJEv0r8L0WvMBiNYUmHzQFNAeZRlnzMbJzsx/J+t8vKCGH2dOjzLawYWA4Vmxn+GZZEobm0aBDyfOFpFpuOKMbtFm/do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=odQmWd+W; arc=none smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1738964173; c=relaxed/simple;
+	bh=em4d7q4/4/lk2sf/I7ehijLHymxDwUlgAoCxq6MRmxQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=iUYZfoFPHeWN6J5vnCiKhEp2BlcgwFb42acbWbom5RRCsy6DMJkynitOXvUzDv16JPorT4M7lRYER1r5LI/5I78/rfnW75xZTRzfNmNlhW3fZ4Sw0mqUVolM66J1REBfNKFCS0qU0Est5F0O2O2suwWWX8xlLMIgFa4SdR8CrHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xconn-tech.com; spf=pass smtp.mailfrom=xconn-tech.com; dkim=pass (2048-bit key) header.d=xconn-tech.com header.i=@xconn-tech.com header.b=Vnv+s0Si; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xconn-tech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xconn-tech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="odQmWd+W"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6e440e64249so22716576d6.3
-        for <linux-cxl@vger.kernel.org>; Fri, 07 Feb 2025 13:24:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=xconn-tech.com header.i=@xconn-tech.com header.b="Vnv+s0Si"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2166651f752so57824485ad.3
+        for <linux-cxl@vger.kernel.org>; Fri, 07 Feb 2025 13:36:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1738963452; x=1739568252; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gYyXNF2oTW8ZaEdbEsNiifpIRvkBhrKm317n8H4kIGo=;
-        b=odQmWd+W3Dxj5N8vfZrbfR3yoHcsLCQQVyMysetv8CBtNjrxqb6yahA7njybQEUmW/
-         V5OLzcbtDzFyZHaAGTk5ZK+eJnhskKVum8kqsW0d9ZbVb62fKSkAC80cliIFfxHdQGwH
-         pBaHTMHmOX6bxkZpd+GQxlbLz/ZUsuR3t7SoUu/bbifRhJ8bAQe+myf7VQy2MszwtEgF
-         +Wy/yYfg4DCjkKsuq7FhBc4KIolDF+FXnqBT4b2iOQoJ44ADjXp4D6N8SuIFuWT264qn
-         BizcX4ML/XDzQ1BnlLbFp8988RIZX+5HyD2QurnYQFKgxN7tXtSDXALSoVtdAvaS6Aav
-         1NEw==
+        d=xconn-tech.com; s=google; t=1738964170; x=1739568970; darn=vger.kernel.org;
+        h=mime-version:content-transfer-encoding:msip_labels:content-language
+         :accept-language:in-reply-to:references:message-id:date:thread-index
+         :thread-topic:subject:cc:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=em4d7q4/4/lk2sf/I7ehijLHymxDwUlgAoCxq6MRmxQ=;
+        b=Vnv+s0Sir1HuRYK+GUvDExmB5B8OO8xpAQZfvRkt9SP9fD/av/GrcfN0QIktcqTF0z
+         eZ8E8C+7ada1BQ9N/9O7yW96jULH90unKa5BnFUEiJxP0eQYrHeculmYVW3lP5f3IyZD
+         21P8VJM4WgPwD0bEWmnbY8ZDgWVxvjpfEd9HZO9Yc7G8gbRrjJjSGsyox92JAe9c4mux
+         Zq0g2pF8fonvE4MrboNFFH86JkHIP3HOfW1ocAxbI1u5n6FK4UTlc/BBZOw5xAJPyt2t
+         hZ4sBmC6TuH0UcWF1fyc5nQ7Y/DbCFgdyMjuR+NMALKwhvWZbXjJq1QgzNsH/ZmMTBf2
+         2gAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738963452; x=1739568252;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gYyXNF2oTW8ZaEdbEsNiifpIRvkBhrKm317n8H4kIGo=;
-        b=JVR8ztMbzlzpHNNZ2OCnH4vkGT2TBFfdEBBGvcF+/NSb5M0waZ1SS9Q3jY21E9mJ8G
-         Ys8IeJMoFu+ds55H2UrfwFjHxhC7saV7AuK4mAQyXqHdFQaM14r33FvNwb6H1QqLVo24
-         eC7joq/J34PfAjA6oKqJBcvX3/1PRUeHJ8Lu8gyHiwTlE1/VWH3gRVUyc3CEhOQZCwCG
-         kjM65TksOuNnENP6zR+F0mAJ9F8e9AqlGAQ0VM2bDXa+2aZHaLOT8R6YuRo49Li4mCeZ
-         1vRSmcmqfVkTfVSOEmEwgbdtgbkjr9XxRZ7XwZEaEwYt9lOBbdrIKp/guLrH6Bzvs/rV
-         14PA==
-X-Forwarded-Encrypted: i=1; AJvYcCXftpmLU/y1DNTDeuWap83juHW/QsKfWhmU7EJ5YidiV30ZH81gV1Zg0ld7KjpbsOvWX0mw/e2Ck84=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJa872f1OBKdDA8HARB2d7nCuqrex0t+tDG7MRbwjrt+me3qgw
-	BbhCkViuXo1/hNU9bmJlsRp/hKJOctesVHqYdmXcRpXICVo2PHgppcWhYywyDVPjprMFuPdd392
-	e
-X-Gm-Gg: ASbGncsVkLCVjp57T9BuV/v/HV85o3KLbFAc9a82JWTrBWOwMq4VJt4NPcxDeJ0GbsY
-	wwsRZKaJqWvybSu5IBpOFTN6EZZ6vNYRg5jgWPJGhNF9r4Dps8aEQ/1jhsIhlQt04pZWff0lCB+
-	v2dbLnZKH5P8079vBDeZbqjyP52D/kY51IRYVipp+TDYMyzltH8R3W0XlEtcCZqKw4w2BRCCLXx
-	vyE5mEQahd8lP7rdGPZwzujqat3Wl3iTD5M0a3y/zOwJuu+BksNyqOXVXjQzTiTc1KsbpQ6HYtM
-	Nc/CcOZE2u9QvnVDZsAwfHYWpZ2159Hni3NIEL8p7gUUfAt519v6vL3pM8TpZ7pU54R8I/bdFg=
-	=
-X-Google-Smtp-Source: AGHT+IFobMYtRD+ts0IjDmZUcfPs9gYsgQs0G1siAa2ZlSeZodwmtBL8KT228UzP8KiW1YKKcAkJYA==
-X-Received: by 2002:ad4:5bc4:0:b0:6e4:41b3:4983 with SMTP id 6a1803df08f44-6e4456dd202mr74890986d6.35.1738963452178;
-        Fri, 07 Feb 2025 13:24:12 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e44f4835e6sm4336616d6.111.2025.02.07.13.24.10
+        d=1e100.net; s=20230601; t=1738964170; x=1739568970;
+        h=mime-version:content-transfer-encoding:msip_labels:content-language
+         :accept-language:in-reply-to:references:message-id:date:thread-index
+         :thread-topic:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=em4d7q4/4/lk2sf/I7ehijLHymxDwUlgAoCxq6MRmxQ=;
+        b=CY+bM2hoqQE2sttLrQzhk1LO+Au0yVs3Io24d44jIuibTEG4nG8rXT3a1oV/gooxDa
+         BDW+UqkjvaRI+7rg7du9R8iYU8nOQJkaLLhjb7KF0q4LMAFXAS7AezBqXkClQ5vOMCfL
+         qMgvozY9l59XBStB8PSO2Bv/jhJ1mtjRKPWnZ/ezvTmQ06iYP5UeY7xK5obkuhrJnr5k
+         yPbJ1i1cvrgmsDXPpcWJIQziWiLjKeDy++3OxRvZb1auLE2IhvsFx1RFzeaQ0s5JcIgm
+         SsezwyO6fcLxG9RjfZMOyZ3OEMBf41CE3jRndmgzO/RI6GRrUy2kFJHwOafvnDz5HJ2M
+         1t4A==
+X-Forwarded-Encrypted: i=1; AJvYcCVgsMHe4b7fadi/bOqF0PXuKiIzRXfViTuIilkOwvOd5/ZCbNkm+FQJ01H6IzLZyA9wa0jIQys2aTk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHjFcWc8fAGo7lscS2428BqIoZfWV8VDlao4bHIjoQd6HcILlT
+	sdAZffqRP0emhT0CavwQUtfIOwukJo6+m1Fye90f0Cv7LtpaRqGbbuYeesEaxxo=
+X-Gm-Gg: ASbGncu0u2a3nudxri8qJndi6NpYSGx8F/OHt0Ii2jaEnqcCOtB5d+riMF52m74s40U
+	SzTNwQdmf3dOJ6dcBTWDHtHj1r+D+ay2mCJlWd73rTTe3L3s60ALlYxHSbnG1ARJOM6iXiiYnKN
+	+foIbjPQ22a/RtiDzcdQDksa8+JYSlqMxTDDk8IV33snVMhGgjn2dvO056fmvy6R5pXTG2PQ87v
+	Sykf8foQLwys8hBL3amY/QWKuvyKCylEBG15LIemrO7oPtXZh4UHISwn/5pfUl66rgA7NKrirML
+	AFy6cBhy2mGA1TWdyHfmXs8Ep/RtaOQqwN73NqvfQYE+UWtVkNAAai4vzweDmLz8V8zm2vKR0we
+	f1g==
+X-Google-Smtp-Source: AGHT+IEWcjeawcc67xQoNXRrnfhYE5btFNPyPq9AzMglKKfStP7mN8XiNHG32+hzgHqIV2e29MeMCw==
+X-Received: by 2002:a05:6a21:158c:b0:1e1:aef4:9cd0 with SMTP id adf61e73a8af0-1ee03a24237mr8893146637.3.1738964170273;
+        Fri, 07 Feb 2025 13:36:10 -0800 (PST)
+Received: from BYAPR06MB4135.namprd06.prod.outlook.com ([2603:1036:a03:12::5])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048c1623dsm3546663b3a.132.2025.02.07.13.36.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 13:24:11 -0800 (PST)
-Date: Fri, 7 Feb 2025 16:24:09 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Robert Richter <rrichter@amd.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v2 00/18] cxl: Address translation support, part 1:
- Cleanups and refactoring
-Message-ID: <Z6Z5-UQYSfi7Btlz@gourry-fedora-PF4VCD3F>
+        Fri, 07 Feb 2025 13:36:09 -0800 (PST)
+From: Jim Kao <jim.kao@xconn-tech.com>
+To: Gregory Price <gourry@gourry.net>, Robert Richter <rrichter@amd.com>
+CC: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Fabio M. De
+ Francesco" <fabio.m.de.francesco@linux.intel.com>, Terry Bowman
+	<terry.bowman@amd.com>
+Subject: Re: [PATCH v2 03/18] cxl/pci: cxl_hdm_decode_init: Move comment
+Thread-Topic: [PATCH v2 03/18] cxl/pci: cxl_hdm_decode_init: Move comment
+Thread-Index: AQHbeXZwobcdjmN85EOzIwKkaoKPi7M8AI+AgABc9E0=
+X-MS-Exchange-MessageSentRepresentingType: 1
+Date: Fri, 7 Feb 2025 21:36:08 +0000
+Message-ID:
+	<BYAPR06MB413558D98731EBD422CF24E4A1F12@BYAPR06MB4135.namprd06.prod.outlook.com>
 References: <20250207153753.418849-1-rrichter@amd.com>
+ <20250207153753.418849-4-rrichter@amd.com>
+ <Z6YurVy_K96jet3U@gourry-fedora-PF4VCD3F>
+In-Reply-To: <Z6YurVy_K96jet3U@gourry-fedora-PF4VCD3F>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-Exchange-Organization-SCL: -1
+X-MS-TNEF-Correlator:
+X-MS-Exchange-Organization-RecordReviewCfmType: 0
+msip_labels:
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250207153753.418849-1-rrichter@amd.com>
 
-On Fri, Feb 07, 2025 at 04:37:35PM +0100, Robert Richter wrote:
-> This series is the first part of adding support for CXL address
-> translation. It contains cleanup and code refactoring in preparation
-> of the actual implementation that will be sent in part 2. Cleanup and
-> code refactoring have been split in a separate series to reduce the
-> number of patches of the series. Even without address translation on
-> top this rework improves esp. the region code, cleans it up,
-> simplifies it and adds debugging messages to better analyze region
-> creation failures:
-> 
-> Content of patches:
-> 
->  * Patches 1: Remove else after return.
-> 
->  * Patches 2-4: Cleanups and comments around cxl_hdm_decode_init().
-> 
->  * Patches 5, 6, 13: Adding and modifying helper functions.
-> 
->  * Patches 7-12, 14: Refactoring of endpoint decoder setup.
-> 
->  * Patches 15-18: Adding and modifying debug messages.
-> 
-> Most of the patches were part of my first submission of v1 [1], some
-> of them were already reviewed.
-> 
-> [1] https://lore.kernel.org/linux-cxl/20250107141015.3367194-1-rrichter@amd.com/
+Do we have any limitation for HDM Decoder Range in Linux Kernel ?=0A=
+We has observed that Linux might be hung if range is larger than 8TB.=0A=
+=0A=
+Jim
+
+________________________________________
+From: Gregory Price <gourry@gourry.net>
+Sent: Friday, February 7, 2025 8:02 AM
+To: Robert Richter
+Cc: Alison Schofield; Vishal Verma; Ira Weiny; Dan Williams; Jonathan Camer=
+on; Dave Jiang; Davidlohr Bueso; linux-cxl@vger.kernel.org; linux-kernel@vg=
+er.kernel.org; Fabio M. De Francesco; Terry Bowman
+Subject: Re: [PATCH v2 03/18] cxl/pci: cxl_hdm_decode_init: Move comment
+
+On Fri, Feb 07, 2025 at 04:37:38PM +0100, Robert Richter wrote:
+> The comment applies to the check, move it there.
 >
+> Signed-off-by: Robert Richter <rrichter@amd.com>
 
-For entire series:
+Reviewed-by: Gregory Price <gourry@gourry.net>
 
-Tested-by: Gregory Price <gourry@gourry.net>
-
-Tested individually and w/ a rebase of the full translation patch set from
-[1] on a Zen5 platform with PRM and translation.
-
-Will test again with part-2 as I expect some changes.
