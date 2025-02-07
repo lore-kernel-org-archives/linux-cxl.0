@@ -1,75 +1,125 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D28142AB4
-	for <linux-cxl@vger.kernel.org>; Fri,  7 Feb 2025 06:19:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738909152; cv=pass; b=OAcvWyx/PFezTw9eVs/CmzVgVJIpOZwyzCW+D4rxKMtIJkeyFxzyZUyMI6UlWyQvXIpekW081+xUXYcZ54luv40alKKZTijmn3veQMNUtFrREXWtohbyJDncY+3StgwFz9BiPSf8KYjs31sSCDM7eNyf0AS099cpR6jT6pCuov4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738909152; c=relaxed/simple;
-	bh=ZJKyvl2bFZx8/cCz1kCsUkjxv7CLdtEdmqj6U837q58=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pOQstu0h7vWxAUTmV9/HxqwVj8MO/CtegrA5VQ1c6lA4gr7DuCyLm8DANFYApmw4/1XinzCKcy4P6juNSYkMuVunE8fMk5ahvLhCn1dQw85yhA8NYzTWZ35xvz0KZ6qW4Y/bpGR2TYbqeu4zOEYEV/0vYujN750PFs8YeuQGf+M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=LI0rviY7; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="LI0rviY7"
-ARC-Seal: i=1; a=rsa-sha256; t=1738909135; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=WgsHexypFAJTgDP/89ZYexUH/bIAboPvBvZTlJNm3sfvf07Efo2CzmSyrTRi3KGBPUE4b35MqDGp1jrNwDzw34jiK1C8eO/ZBQYfspVfEFvgqeFX29HzAPiOwngc2PBL76y3mUvd7KYrP+VZ0W08DUkz91vrFNKLGJZZqUbHbaM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1738909135; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=ZJKyvl2bFZx8/cCz1kCsUkjxv7CLdtEdmqj6U837q58=; 
-	b=byoU5M1tPKsX0wvxeyowtXW1OII55HtntIts37ychSLnmbZDYGFIZcUqK25GxYJpY/RjcC5Qtagv+JWD1aeOjQO0ZK1CT2q9QTZkurDdAp7KrPV4qCwnog1Tb3TMoGy8qdv9epEIjd2xe2heuIBq6YxmWUVXMJ3RWfbv31Zgqk4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1738909135;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=ZJKyvl2bFZx8/cCz1kCsUkjxv7CLdtEdmqj6U837q58=;
-	b=LI0rviY7KzhY0KMdFkQPNdaWY9APBpZRRCWKdRrHnK9hMDESyyaKGL/pV5IW/w1E
-	WtkjroYReRulAd1dhlfptOo17ocebsf6eZjiZervK9imdteeRvOYcNpIbQCZ1/ZvWHm
-	GN/nDmDx8BkSSRgntN34Ct5OGDOClsFm/dvCIFMk=
-Received: by mx.zohomail.com with SMTPS id 1738909132825605.2947795681735;
-	Thu, 6 Feb 2025 22:18:52 -0800 (PST)
-Message-ID: <0f01fe45-c975-42e3-94a5-e4130d133233@zohomail.com>
-Date: Fri, 7 Feb 2025 14:18:44 +0800
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49E351A0BDB
+	for <linux-cxl@vger.kernel.org>; Fri,  7 Feb 2025 07:20:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738912844; cv=none; b=awsVtQfZCgi5DBLiHnSyvptEXsTkrqfQinLDXnQDHNBStXbrEYMFFuIqUMg9UCanRTF0bgXYozZvr5J3z02TQg+jGyVBbX1TIwb7RC6Y82RqUp0oC1RrGFwcFXfhnlax0Z04GQwsGd2iLZ5NG+RsIH/MlBsv/EPduArlH2CHso0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738912844; c=relaxed/simple;
+	bh=7WD0sLVMZpG91Qn1m572aAqQtGFtNqchoLBGQzxCQfU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=STz8mWiUKNJb9xPJFAMeMWCyMKkuw40L1vcBLo8jqSBZet15PlygkBe7OfkOBr92MVLUDUUmJw9rOlWe0oWgtDTE0xN87c46hgSm2lAlkXQP1JKhB3cOmm1IOE70LRIvsvoo6vK0oWM0D9Nn9nQCA96qJ3OdUZGpAWeKyOEZSPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-3c9ff7000001d7ae-5c-67a5b43e5722
+Date: Fri, 7 Feb 2025 16:20:24 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>, lsf-pc@lists.linux-foundation.org,
+	linux-mm@kvack.org, linux-cxl@vger.kernel.org,
+	Honggyu Kim <honggyu.kim@sk.com>, kernel_team@skhynix.com
+Subject: Re: [LSF/MM/BPF TOPIC] Restricting or migrating unmovable kernel
+ allocations from slow tier
+Message-ID: <20250207072024.GA48419@system.software.com>
+References: <Z54hUTXRsw0LYQ8b@localhost.localdomain>
+ <Z54p4QOnAlTYm6DG@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 05/16] cxl/mbox: Add GET_FEATURE mailbox command
-To: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org
-Cc: dan.j.williams@intel.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
- alison.schofield@intel.com, Jonathan.Cameron@huawei.com, dave@stgolabs.net,
- jgg@nvidia.com, shiju.jose@huawei.com
-References: <20250204220430.4146187-1-dave.jiang@intel.com>
- <20250204220430.4146187-6-dave.jiang@intel.com>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <20250204220430.4146187-6-dave.jiang@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Feedback-ID: rr08011227c69e3458fe26957544145b800000192d9b6968b90fc4c4bed6bdf98bfbe42f2ee4cd9a3180c157:zu0801122751189be8c762964403cf5a1700002ecab9b81a6349d2eb01a391f963bb1730dcdf8b7938e9f19b:rf0801122d92972635cb1e6be03799e4cb00008bc61d1636018eeae1fc2b2274451925b4a88889c4159b45da827318343e57:ZohoMail
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z54p4QOnAlTYm6DG@casper.infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrBLMWRmVeSWpSXmKPExsXC9ZZnoa7dlqXpBg/38VpM7DGwOD/rFIvF
+	vTX/WS32vd7LbPH7xxw2B1aPnbPusntsXqHlsenTJHaPyTeWM3p83iQXwBrFZZOSmpNZllqk
+	b5fAlXGmcxFjwUfxipvzVzM3MB4W6mLk5JAQMJHYsWc5excjB5jdvEUYJMwioCKxad0pNhCb
+	TUBd4saNn8wgJSICGhJvthh1MXJxMAvsYJR4tfAHK0hcWCBN4u0PP5ByXgELie+nPzCB2EIC
+	cRJ3etYwQsQFJU7OfMICYjMLaEnc+PeSCaSVWUBaYvk/DpAwJ9ABR1o+gpWICihLHNh2nAlk
+	lYTAGjaJby2TWSAulpQ4uOIGywRGgVlIxs5CMnYWwtgFjMyrGIUy88pyEzNzTPQyKvMyK/SS
+	83M3MQLDd1ntn+gdjJ8uBB9iFOBgVOLhTTiwJF2INbGsuDL3EKMEB7OSCO+UNUAh3pTEyqrU
+	ovz4otKc1OJDjNIcLErivEbfylOEBNITS1KzU1MLUotgskwcnFINjB2rfafvDK3WsSovllN2
+	azZWFet/c2ch31SWiMe6TJycPsmTeOYy7eY/3WMm+6HsXqzGq3cB6+7Wn973it1BuXCjYru6
+	/S55tl2P9NJ+sYe5re3YV6BSWfzY4fyUEzyOcvVXZDfu1Wz0Ndm0Y8+svfflnEz3is29JPtQ
+	5YH3ohdnlwrKHi1apMRSnJFoqMVcVJwIAJCf2G1bAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrBLMWRmVeSWpSXmKPExsXC5WfdrGu7ZWm6we+n1hYTewwsPj97zWxx
+	eO5JVovzs06xWNxb85/VYt/rvcwWv3/MYXNg99g56y67x+YVWh6bPk1i95h8Yzmjx7fbHh6L
+	X3xg8vi8SS6APYrLJiU1J7MstUjfLoEr40znIsaCj+IVN+evZm5gPCzUxcjBISFgItG8RbiL
+	kZODRUBFYtO6U2wgNpuAusSNGz+ZQUpEBDQk3mwx6mLk4mAW2MEo8WrhD1aQuLBAmsTbH34g
+	5bwCFhLfT39gArGFBOIk7vSsYYSIC0qcnPmEBcRmFtCSuPHvJRNIK7OAtMTyfxwgYU6gA460
+	fAQrERVQljiw7TjTBEbeWUi6ZyHpnoXQvYCReRWjSGZeWW5iZo6pXnF2RmVeZoVecn7uJkZg
+	eC6r/TNxB+OXy+6HGAU4GJV4eBMOLEkXYk0sK67MPcQowcGsJMI7ZQ1QiDclsbIqtSg/vqg0
+	J7X4EKM0B4uSOK9XeGqCkEB6YklqdmpqQWoRTJaJg1OqgbFOK/7H7npfnZksN/ceS2B56Ghd
+	PrHRRFHK8pKGV4eSSKNgge6118kP9JY/FTjL94+jfLFQ4qNJ68MWfatYI3VWesaZP1/qlrwz
+	+eW0eFfNK6Hsnz/b25SOXpkWvY5Ne3a+SJCUlOS5aIe9Kzu/mTqlPTP8dqBphZr1yUcFhdy1
+	PW8Z124XLFdiKc5INNRiLipOBAAmQDCFSwIAAA==
+X-CFilter-Loop: Reflected
 
-On 2/5/2025 6:03 AM, Dave Jiang wrote:
-> From: Shiju Jose <shiju.jose@huawei.com>
->
-> Add support for GET_FEATURE mailbox command.
->
-> CXL spec r3.2 section 8.2.9.6 describes optional device specific features.
-> The settings of a feature can be retrieved using Get Feature command.
-> CXL spec r3.2 section 8.2.9.6.2 describes Get Feature command.
->
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Li Ming <ming.li@zohomail.com>
+On Sat, Feb 01, 2025 at 02:04:17PM +0000, Matthew Wilcox wrote:
+> On Sat, Feb 01, 2025 at 10:29:23PM +0900, Hyeonggon Yoo wrote:
+> > The Linux kernel supports hot-plugging CXL memory via dax/kmem functionality.
+> > The hot-plugged memory allows either unmovable kernel allocations
+> > (ZONE_NORMAL), or restricts them to movable allocations (ZONE_MOVABLE)
+> > depending on the hot-plug policy.
+> 
+> This all seems like a grand waste of time.  Don't do that.  Don't allow
+> kernel allocations from CXL at all.  Don't build systems that have
+> vast quantities of CXL memory (or if you do, expose it as really fast
+> swap, not as memory).
+> 
+> All of the CXL topics I see this year are "It really hurts performance
+> when ..." and my reaction is "Yes, I told you it would hurt and you did
+> it anyway".  Just stop doing it.  CXL is this decade's Infiniband / ATM
+> / (name your favourite misguided dead technology here).  You can't stop
+> other people from doing foolish things, but you don't have to join in.
+> And we don't have to take stupid patches.
 
+Hyeonggon and I described the topic based on what we observed in CXL
+memory environment, but fundamentally it doesn't have to be only CXL
+memory issue but also heterogeneous memory or ZONE_NORMAL cost issue as
+you and others mentioned.  Lemme clarify it.
+
+<general mm issue>
+
+   1. Allow kernel object to be movable:
+      a. ZONE_NORMAL cost will be reduced. (less reclaim and oom)
+      b. ZONE_NORMAL covers bigger whole memory.
+      c. A smaller ZONE_NORMAL is sufficient.
+      d. Need additional consideration about when(or what) to move.
+
+   2. Never allow kernel object to be movable:
+      a. ZONE_NORMAL cost keeps high. (premature reclaim and oom)
+      b. ZONE_NORMAL covers smaller whole memory.
+      c. A bigger ZONE_NORMAL is required.
+
+<heterogeneous memory specific issue>
+
+   3. Allow ZONE_NORMAL in non-DRAM:
+      a. Mitigate ZONE_NORMAL cost. (less reclaim and oom)
+      b. Followed by e.g. hot-unplug issue.
+      c. Option 1: No restricting the ZONE_NORMAL size.
+      d. Option 2: Restricting the size as budget to cover its capacity.
+      e. Option 3: ?
+
+   4. Never allow ZONE_NORMAL in non-DRAM:
+      a. ZONE_NORMAL cost should be low enough to cover non-DRAM too.
+      b. Any efforts to reduce ZONE_NORMAL cost should be welcome.
+      c. Matthew's work would mitigate the cost.
+      d. Allowing kernel object to be movable would work for it too.
+
+Plus, I think Metthew's effort to reduce ZONE_NORMAL cost is amazing and
+hope successfully make it.  However, ZONE_NORMAL cost can be reduced in
+many ways and all the efforts can be considered meaningful.
+
+We can work with from the easiest object e.g. page table, struct page,
+and kernel stack, to harder ones, while struct page cost is getting
+reduced by Matthew's work at the same time.
+
+When it comes to this topic, the most important thing is the collected
+*direction* from the community so that we can start the work under the
+*direction*.
+
+	Byungchul
