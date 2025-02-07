@@ -1,218 +1,137 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 595851B042C
-	for <linux-cxl@vger.kernel.org>; Fri,  7 Feb 2025 08:39:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B5F1B4239
+	for <linux-cxl@vger.kernel.org>; Fri,  7 Feb 2025 08:57:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738917574; cv=none; b=WafYVnvrBZI0We+w28dI+rYUUG7HmpZ6xsh5/xqDZV8VwmyaLm5F5vf21ggTKn8bOPFgQvt7H6fnMjdTosNn5gTR2nLybtjHQgCPY4vfSncVRwHjeo8Q6MSm+nx8XYCU8a/i1U+ymbVTcMhCz4snNHwmSL2AvVNCplZSbbus12M=
+	t=1738918672; cv=none; b=fF+Nf5eVuPp9JtL4NjdOOKU5JZ4GsWRCPxrlXrbP7b3hxvLw3rx2m+FylNB9YYqOdFEy2ReTC2cW7mjsJnwqiNx5h/YpaWI6xBDqA4RdkqQUBBCTVtnJPmNI0zvVTkxt6KjP3VBPDAKzTlwthoDeD7hDSZ8zfkIyE1PIPcLriqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738917574; c=relaxed/simple;
-	bh=WiLqHXEQuJL48+r9PUGYrw6xtM0fSfAP1INxIaCB7ms=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=rf+JpczmlQP1DPoND3v+ESwjZRyczOaD5/hvfxmdURPo3cvkrybzwc/ft1Q/fKDf1QOWPimSeuNRaUQQxNNOp62Ijxa3MFWtPlbG/SwhfMHufJO3M9oTxWSfwvnthHDDJvjeaMaF8NK/rebKo/7Q8gUpQjei5L+umFKKAVHF3zE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cdWuO7eU; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738918672; c=relaxed/simple;
+	bh=GcOzZLBP1nqWpmU4ehierO046jTkvvo6hp9hYlhVjFY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fvhr9TvY+bl5RRXjEiE++2eVNWmHr9bh7g2KIX5tL2PiW+B+tHQXmktc+3NBScp+WJgF/9FDrb+1z/yl2I0WwfYZS7KJmlzPCPLzxsDW/st7KasQgKVDw/8+Ei2nSvp48iPFeF0SzYPxF88AlhitEhcxb6gOerxBJJ7SS7gtGx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=OR7LqJcu; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cdWuO7eU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738917572; x=1770453572;
-  h=date:from:to:cc:subject:message-id;
-  bh=WiLqHXEQuJL48+r9PUGYrw6xtM0fSfAP1INxIaCB7ms=;
-  b=cdWuO7eUfwUWHerrHjB6Wni3m4ogprBMQm90qfcpCadOLRl0lipZEVK/
-   5g+FrLtId+WP0uTk0FAY6X/iZf97xMF0N5kTD0qroWqAaUew8pBZyeSQZ
-   vsVArKuyLjtMP+AfoEbLyfa1l+V8YzehLupsYeZ9XXipEaC3a8FtCwMKt
-   8E4bSlHwDyx5nWjo5dydj0GlDq7/SqrpufNeoaiyTwQn0t2pkx2g3/EBR
-   MyAqljzy6Q9SxypmMTqUprPL9TE2SMdwoiw0EU9JCZPiChkcgZu+kG2Yr
-   tNk5D7V/IyuVusTYWQyJyw/PmxrvPKXytBMuUHkmdS+P42BwwjuF/qOcQ
-   g==;
-X-CSE-ConnectionGUID: BkYP4zjBQeCJTe0tkM6jOA==
-X-CSE-MsgGUID: 8EqG+giDTpSw8ZmHZWkOLw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="50190821"
-X-IronPort-AV: E=Sophos;i="6.13,266,1732608000"; 
-   d="scan'208";a="50190821"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 00:39:31 -0800
-X-CSE-ConnectionGUID: 6Z9dOKZXRNm753/M+1pDnw==
-X-CSE-MsgGUID: vXJ2EpL1QROLA5DCKl0DDA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,266,1732608000"; 
-   d="scan'208";a="112086221"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 07 Feb 2025 00:39:29 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tgJtW-000xyx-30;
-	Fri, 07 Feb 2025 08:39:26 +0000
-Date: Fri, 07 Feb 2025 16:39:17 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Subject: [cxl:next] BUILD SUCCESS
- 5585e342e8d38cc598279bdb87f235f8b954dd5a
-Message-ID: <202502071610.uwxgWsTk-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="OR7LqJcu"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7bcf33f698dso170608185a.2
+        for <linux-cxl@vger.kernel.org>; Fri, 07 Feb 2025 00:57:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1738918669; x=1739523469; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NgvrfAQwLFovDWtM64VfstFqvcyM7cPGtOE5g74BpOE=;
+        b=OR7LqJcu+8dXiJjr6VTkJsKP4MQc34nCvEsXfE82Pe8Lt9DwXCctCzoPnRaph+JP/A
+         k99f2oi189MYnVbBHaGRhShr4UDyM6EwV1XnoMocPQtdokWojoqzNX/leXnQSk5gfstG
+         USB1hIcHNubXfC+ylELhCuxgFMCD8KoTk1PPfCNaQjutrdk+JxjOXE17LVhkIFyZDmAj
+         gZwXfemTJZT61f7raOBeUGcdOoadk7dtzbUNjWPOcviYjFGJP6MiW/ZWTNYikExTD143
+         UOBUCjXzxlAoVWQqdqlYAC2ac1cpT0IfRU/qvHCaQu37lDwAYCU3XHW9YYmw+8k0cmT9
+         Z64Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738918669; x=1739523469;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NgvrfAQwLFovDWtM64VfstFqvcyM7cPGtOE5g74BpOE=;
+        b=oGWa9SGIug2QJo4FD0vw7SrpE2yU0MPYchOv+icZmp9FxgaguJB3JYldXUQ+741T1I
+         Bgse71CQ7H1vUl2aG7SXtOMhGGufjXKAj05ji3sYx/0MzHZa0l4z8xggBu4FA56JCdiL
+         jR5lBbufb1ADb3Ls5HBBR122Z6VcdXE21bC2vEfiIx5KBJLbbEQ2XJpJZAWd9aPscmfF
+         vtWTEIT1JpAHe1LgDUGg8ZmyUSihCpXzutCh+s98t1L+YTuogxx3eM10/o78maOhuUJs
+         FkQUG+iBQF+mTF3I6g/DIdvEJ35MzVBMlhWX2YSjM+SKiJw6ZlL9iE+OMDd8vXtB0wQX
+         cfzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWmJtRk3LpwSmDfH9o6dCK44OXcYPisCH27hSyK2slehFCY3nG+kFOAszuDXmdgchY3WVfGW2ZLc4g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxoCP+5WnOBDPoJvszTk84vJoG1pGX400+pl9E0HDOIAk0+/jYm
+	QKw3fDVMrcBbbcpL/TXI2BPQXIhsNP/fmpycB320yv/BeKDBgst63NmrzYwLbII=
+X-Gm-Gg: ASbGncsqGvt2jVF5uAHXjevMuQeLBdKeYpXttcj7ufxfsetQ6VtRfSkusi52wncXmvr
+	iyfzb+XGqLYgMOnouAYj2trvVVspxSv05qVGdr1xDXDkCjXa09KWufw0C8HaBd6ceLvxeLpp1kA
+	PvFtENlPNYlcavRwYz75nhXWVQ+MX3do8aAkvZX3dK52Yj9qH0DMpUvbpPGhs9FYr7XGtS30lW9
+	sdqY5152X19p301OCPRLM2/pQ9AXOv2VXvdei11m+/sIwd5v3nxmlNN7CJkHmj2cMAODhm7dRdx
+	tt0Hoz4JaNNFhHeZd/Gpt+YIeu6iDo6gE+NYaeAFMt1Ti42svLAtpX5DUXGcoo9KajqcrlRPnw=
+	=
+X-Google-Smtp-Source: AGHT+IHmp+FH1AuZTlJKN929evp5N+MuXixQzE8522ihJ4whOBdQptmbBxXYSkVLlqkBflCAEdVa/w==
+X-Received: by 2002:a05:620a:270c:b0:7b7:2de:6fd3 with SMTP id af79cd13be357-7c047b5214fmr359033585a.0.1738918669134;
+        Fri, 07 Feb 2025 00:57:49 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c041dec312sm163884585a.11.2025.02.07.00.57.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 00:57:48 -0800 (PST)
+Date: Fri, 7 Feb 2025 03:57:45 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Byungchul Park <byungchul@sk.com>
+Cc: Matthew Wilcox <willy@infradead.org>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
+	linux-cxl@vger.kernel.org, Honggyu Kim <honggyu.kim@sk.com>,
+	kernel_team@skhynix.com
+Subject: Re: [LSF/MM/BPF TOPIC] Restricting or migrating unmovable kernel
+ allocations from slow tier
+Message-ID: <Z6XLCeU0vjIOYGKe@gourry-fedora-PF4VCD3F>
+References: <Z54hUTXRsw0LYQ8b@localhost.localdomain>
+ <Z54p4QOnAlTYm6DG@casper.infradead.org>
+ <20250207072024.GA48419@system.software.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207072024.GA48419@system.software.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-branch HEAD: 5585e342e8d38cc598279bdb87f235f8b954dd5a  cxl/memdev: Remove unused partition values
+On Fri, Feb 07, 2025 at 04:20:24PM +0900, Byungchul Park wrote:
+> On Sat, Feb 01, 2025 at 02:04:17PM +0000, Matthew Wilcox wrote:
+> 
+> We can work with from the easiest object
 
-elapsed time: 725m
+>e.g. page table
 
-configs tested: 138
-configs skipped: 5
+It's more efficient and easier to change page sizes than it is to make
+page tables migratable.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+It's also easier to reclaim cold pages eating up significantly more
+memory than the page table (which describes pages at ~8 bytes per page).
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-alpha                               defconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-13.2.0
-arc                              allyesconfig    gcc-13.2.0
-arc                                 defconfig    gcc-13.2.0
-arc                   randconfig-001-20250207    gcc-13.2.0
-arc                   randconfig-002-20250207    gcc-13.2.0
-arm                              alldefconfig    gcc-14.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-17
-arm                              allyesconfig    gcc-14.2.0
-arm                                 defconfig    clang-21
-arm                      jornada720_defconfig    clang-21
-arm                   randconfig-001-20250207    gcc-14.2.0
-arm                   randconfig-002-20250207    gcc-14.2.0
-arm                   randconfig-003-20250207    gcc-14.2.0
-arm                   randconfig-004-20250207    clang-21
-arm64                            alldefconfig    gcc-14.2.0
-arm64                            allmodconfig    clang-18
-arm64                             allnoconfig    gcc-14.2.0
-arm64                               defconfig    gcc-14.2.0
-arm64                 randconfig-001-20250207    gcc-14.2.0
-arm64                 randconfig-002-20250207    gcc-14.2.0
-arm64                 randconfig-003-20250207    clang-16
-arm64                 randconfig-004-20250207    clang-21
-csky                              allnoconfig    gcc-14.2.0
-csky                                defconfig    gcc-14.2.0
-csky                  randconfig-001-20250207    gcc-14.2.0
-csky                  randconfig-002-20250207    gcc-14.2.0
-hexagon                          allmodconfig    clang-21
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-18
-hexagon                             defconfig    clang-21
-hexagon               randconfig-001-20250207    clang-21
-hexagon               randconfig-002-20250207    clang-17
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250207    gcc-12
-i386        buildonly-randconfig-002-20250207    gcc-12
-i386        buildonly-randconfig-003-20250207    gcc-12
-i386        buildonly-randconfig-004-20250207    gcc-12
-i386        buildonly-randconfig-005-20250207    clang-19
-i386        buildonly-randconfig-006-20250207    clang-19
-i386                                defconfig    clang-19
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch                           defconfig    gcc-14.2.0
-loongarch             randconfig-001-20250207    gcc-14.2.0
-loongarch             randconfig-002-20250207    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                                defconfig    gcc-14.2.0
-m68k                          hp300_defconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-microblaze                          defconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                          ath79_defconfig    gcc-14.2.0
-mips                         bigsur_defconfig    gcc-14.2.0
-mips                           ip32_defconfig    clang-21
-nios2                             allnoconfig    gcc-14.2.0
-nios2                               defconfig    gcc-14.2.0
-nios2                 randconfig-001-20250207    gcc-14.2.0
-nios2                 randconfig-002-20250207    gcc-14.2.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-14.2.0
-parisc                randconfig-001-20250207    gcc-14.2.0
-parisc                randconfig-002-20250207    gcc-14.2.0
-parisc64                            defconfig    gcc-14.1.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-16
-powerpc                     kmeter1_defconfig    gcc-14.2.0
-powerpc               randconfig-001-20250207    clang-21
-powerpc               randconfig-002-20250207    clang-21
-powerpc               randconfig-003-20250207    gcc-14.2.0
-powerpc64             randconfig-001-20250207    gcc-14.2.0
-powerpc64             randconfig-002-20250207    clang-21
-powerpc64             randconfig-003-20250207    gcc-14.2.0
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-21
-riscv                               defconfig    clang-19
-riscv                 randconfig-001-20250207    gcc-14.2.0
-riscv                 randconfig-002-20250207    gcc-14.2.0
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                                defconfig    clang-15
-s390                  randconfig-001-20250207    gcc-14.2.0
-s390                  randconfig-002-20250207    clang-21
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                        apsh4ad0a_defconfig    gcc-14.2.0
-sh                                  defconfig    gcc-14.2.0
-sh                    randconfig-001-20250207    gcc-14.2.0
-sh                    randconfig-002-20250207    gcc-14.2.0
-sh                          rsk7264_defconfig    gcc-14.2.0
-sh                     sh7710voipgw_defconfig    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250207    gcc-14.2.0
-sparc                 randconfig-002-20250207    gcc-14.2.0
-sparc                       sparc32_defconfig    gcc-14.2.0
-sparc64                             defconfig    gcc-14.2.0
-sparc64               randconfig-001-20250207    gcc-14.2.0
-sparc64               randconfig-002-20250207    gcc-14.2.0
-um                               allmodconfig    clang-21
-um                                allnoconfig    clang-18
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-21
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250207    clang-21
-um                    randconfig-002-20250207    gcc-12
-um                           x86_64_defconfig    clang-15
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20250207    gcc-12
-x86_64      buildonly-randconfig-002-20250207    clang-19
-x86_64      buildonly-randconfig-003-20250207    clang-19
-x86_64      buildonly-randconfig-004-20250207    clang-19
-x86_64      buildonly-randconfig-005-20250207    clang-19
-x86_64      buildonly-randconfig-006-20250207    clang-19
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250207    gcc-14.2.0
-xtensa                randconfig-002-20250207    gcc-14.2.0
+Also, there's quite a bit of literature that shows page tables landing
+on remote nodes (cross-socket) has negative performance impacts.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Putting them on CXL makes the problem worse.
+
+
+> struct page,
+
+`struct page` is a structure that describes a physically addressed page.
+
+It is common to access it by simply doing `pfn_to_page()`, which is a
+fairly simply conversion (bit more complex in sparsemem w/ sections)
+
+This is used in a lockless manner to acquire page references all over
+the kernel.
+
+Making that migratable is... ambitious, to say the least.
+
+
+> and kernel stack,
+
+The default kernel stack size is like 16kb.  You'd need like 100,000
+threads to eat up 1.5GB, and 2048 threads only eats like 32MB.
+
+It's not an interesting amount of memory if you have a 20TB system.
+
+
+> When it comes to this topic, the most important thing is the collected
+> *direction* from the community so that we can start the work under the
+> *direction*.
+> 
+
+My thoughts here are that memory tiering is the wrong tool for the
+problem you are trying to solve.
+
+Maybe there's a world in which we propose a ZONE_MEMDESC which is
+exclusively used for `struct page` for a node. 
+
+At least then you could design CXL capacities *around* that.
+
+~Gregory
