@@ -1,112 +1,85 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7ED225414
-	for <linux-cxl@vger.kernel.org>; Fri,  7 Feb 2025 09:27:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1C3F610D
+	for <linux-cxl@vger.kernel.org>; Fri,  7 Feb 2025 09:34:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738920460; cv=none; b=VoSRZovdjhWpnYF1xD8suhV9LKwtQZMT+6/ugeETLCy62M+8/MmCNANo2BUR7xwpEQoAtMbtneoYU86KMbwL3rSka9wyN6dY7gdB2dFYQewcqYJUtRyM7W67A+/rYLP/8rbxrqC10OIQo3+XfZcGSA1Q/kcvd/4KPwEX2giwNeY=
+	t=1738920892; cv=none; b=gPMdFc/SZ6/oI1nvtVHH+GRYzZe1ux65kBP/kONo7ryi/PO/KH19eXm55efLOTcCL5gTS+2Zcbm/VaeO2WgD5TPLL768KEC0TTWgFh8zMpkQIEl4jPVr6+PESDeU2YXNKEoe0hCfiQtLhYa3+sJ/a/oCXyLaofknFbut/KzFPrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738920460; c=relaxed/simple;
-	bh=3AqXyu8QhBXw/UQQykwq5g1AnytLO6aRVPl0NqOHqRs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jMxIo27kq8/UcLNx8ziTdayBpUZTMsjYYeOEWo2xDvBC2J4WYA6ZiXTKC90iAhpPjW7XRRiuzV3DyeFVO95lXWVvgATgRlrCEi812M/UCjnSCqW2IM9FxaiWaXYPoExvXeRjhL60vjKTM18djSv4Vb9o69ek7Xt5EcxSKYRdKSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=YDddOy1C; arc=none smtp.client-ip=209.85.222.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="YDddOy1C"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7b8618be68bso164533085a.3
-        for <linux-cxl@vger.kernel.org>; Fri, 07 Feb 2025 01:27:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1738920458; x=1739525258; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=m/uMI1tK22C0XcXmMy8inP8Xd5AMUl+UVIdWHN2SnCA=;
-        b=YDddOy1Crtv4WIa2Yc39bYwcYVpWeLobyJcNUyot1lwBQaD+nxjS+JAUAfv+L7Zrkc
-         W9MecMmyCUYlDbDEM1+JXybz8gKB4yQdOWmsfCco8X4/0D1RS9vuXgqsAho4qSnkciF2
-         DIsZejxqxbD8MwPgXCT7K4NIIFKuKmTU0ieOIXwSCKScfTU3ZhLozEKD8vQ1dE/HlV5b
-         8CSgtNVXFDm0JUff8ubS8FRYjuOBTFNzK+TPlpOYPTIJPbbGDskZdDAlmc86Twe3EQwJ
-         3OykjMsB04C2j8YER3cy/2rIUewrvweQCDxYtYjp1F44JDyIPp+s/lj9ACJYIooNAK1D
-         cbXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738920458; x=1739525258;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=m/uMI1tK22C0XcXmMy8inP8Xd5AMUl+UVIdWHN2SnCA=;
-        b=qThplSQo6EdZ991fdsYuNgHx+tJZSu5Otx7da8c5EVGBuM7PMAqyknOCJGvg689qt3
-         Yn2tVe1JRv5qNI64Wrhqb7U18LZhP0PHR8FD1K9++olMa6OLwf5OY/ysr8h6C/x0UCdJ
-         ypVYgDOc0f2YApcAHipo4WFMEKjb2H4X3oDZwhEfubqv4FWKtheqGPCG3Ko5sazeR3ua
-         lqi2mXBnPth+Y0EQQXZ4QNFMrVnpBhfUZrWgv0Dg15rFe4rMA1HBb3pQhR8yJWupEv5L
-         tNl4W3JApuFJajEm8XIoyErJ8YnxPzHvmK6/qJFCAiXICRoier7LNVh7f/QWHTrtwu08
-         UvSA==
-X-Forwarded-Encrypted: i=1; AJvYcCU51BHOlnNaM2siG11r76/kxOlGIPP/nQrIuYq1tWKOOvWR8G0fZBYaN+7sIhIA+M+0oiNRFCTl3LY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7nFit1MExZC0/LxHfbdyJ1JrdrRrGPoxRCa+IJ6GC7bbJIip1
-	t0DWfHRkRt/1pAUta8SmmoXXis8ab9fOJNExk9Hw2dQ1GYrU9TQUqHz1io6JD+SaluEfTLBX3H0
-	C
-X-Gm-Gg: ASbGncvPbbRWBgN0ZqTU+UJs8psUsAWZnt0LjPXRsJ/lYlm2w+KZg6yibLvKAmGj9Zz
-	lg+uBHTtJcpYQJGJlkNVCFrnKF3Z0PVFZbLSvUjEyWZWP+cueqeCdiRerGff1QUQohG16pSJtKm
-	iLaUDUHtSoToDn29yrbsO+4w1XpWDwTq0oCHtgxoIttYEgAlpLPP/Y2AZPddgoiLm5841burDzN
-	RjPp4+KxghE9/l0Gq7Igsxq/CA+NNDk/eylZMhpvYPtiMnB7r0E64gz0KVjjonwBu/Rh7EfeA4J
-	hGJMpuhRuTD3TqcldmiBrdMA/Cg4JABSieHZEIB+TzcBu3DxX9IDtoUPiQep8ugp7UD9oI7oVQ=
-	=
-X-Google-Smtp-Source: AGHT+IFJRp2jaR2qZ3cXfvTiU/3UzYoJIEOUnTN1p8TBNt5vL+bmEK6odcZXSkWnX6trVbJ5K/6Q4A==
-X-Received: by 2002:a05:620a:1990:b0:7b6:d65a:d6ea with SMTP id af79cd13be357-7c047c7891dmr406314785a.46.1738920457766;
-        Fri, 07 Feb 2025 01:27:37 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c041dedba2sm166192085a.16.2025.02.07.01.27.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 01:27:37 -0800 (PST)
-Date: Fri, 7 Feb 2025 04:27:35 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Byungchul Park <byungchul@sk.com>
-Cc: Matthew Wilcox <willy@infradead.org>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
-	linux-cxl@vger.kernel.org, Honggyu Kim <honggyu.kim@sk.com>,
-	kernel_team@skhynix.com
-Subject: Re: [LSF/MM/BPF TOPIC] Restricting or migrating unmovable kernel
- allocations from slow tier
-Message-ID: <Z6XSB3RcRpUWTcOg@gourry-fedora-PF4VCD3F>
-References: <Z54hUTXRsw0LYQ8b@localhost.localdomain>
- <Z54p4QOnAlTYm6DG@casper.infradead.org>
- <20250207072024.GA48419@system.software.com>
- <Z6XLCeU0vjIOYGKe@gourry-fedora-PF4VCD3F>
+	s=arc-20240116; t=1738920892; c=relaxed/simple;
+	bh=HZnVlV5X3G9PT+9ysZIA8U8pQFrpkStQKStPlIgtIyE=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=lt/xQNuBwzebrhx2Audvq6/Y/jnir3/UmALcD7+RbossxdBnu+JEevkEhwxZXHfw6vC79QWbNMIgFvU8NmQruPhgeVvHiJpmMB2Fg5ulJtEiK1pH+gIoMo1UqW63dJHlFp5GoO6/lRF2hA2niNKJY5za7Xn9CXdmQSEHcWZY09c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-3e1ff7000001d7ae-c5-67a5d3b38476
+Message-ID: <ada54160-461c-4942-a4dc-43f7eab0f1bf@sk.com>
+Date: Fri, 7 Feb 2025 18:34:43 +0900
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Cc: kernel_team@skhynix.com, Matthew Wilcox <willy@infradead.org>,
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>, lsf-pc@lists.linux-foundation.org,
+ linux-mm@kvack.org, linux-cxl@vger.kernel.org
+Subject: Re: [LSF/MM/BPF TOPIC] Restricting or migrating unmovable kernel
+ allocations from slow tier
+To: Gregory Price <gourry@gourry.net>, Byungchul Park <byungchul@sk.com>
+References: <Z54hUTXRsw0LYQ8b@localhost.localdomain>
+ <Z54p4QOnAlTYm6DG@casper.infradead.org>
+ <20250207072024.GA48419@system.software.com>
+ <Z6XLCeU0vjIOYGKe@gourry-fedora-PF4VCD3F>
+Content-Language: ko
+From: Honggyu Kim <honggyu.kim@sk.com>
 In-Reply-To: <Z6XLCeU0vjIOYGKe@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrLLMWRmVeSWpSXmKPExsXC9ZZnoe7my0vTDY5v0rOY2GNg8fPucXaL
+	87NOsVjcW/Of1WLf673MFr9/zGFzYPPYOesuu0d322V2j80rtDw2fZrE7jH5xnJGj8+b5ALY
+	orhsUlJzMstSi/TtErgy3jStZS1YzFKx+XZ1A+MK5i5GTg4JAROJj++7WWDsTVvfAsU5OHgF
+	LCUurZcACbMIqEis3POBCcTmFRCUODnzCVi5qIC8xP1bM9i7GLk4mAX2MEr8nXCTFaRXWCBN
+	4u0PP5AaEQEPiY6JM5hAaoQEdjJKzNreygqSYBYQkZjd2QZ2A5uAmsSVl5PAFnAKmElcarzL
+	BlFjJtG1tYsRwpaX2P52DjPIIAmBM2wSH3adYYQ4WlLi4IobLBMYBWchOXAWkh2zkMyahWTW
+	AkaWVYxCmXlluYmZOSZ6GZV5mRV6yfm5mxiBkbCs9k/0DsZPF4IPMQpwMCrx8CYcWJIuxJpY
+	VlyZe4hRgoNZSYR3yhqgEG9KYmVValF+fFFpTmrxIUZpDhYlcV6jb+UpQgLpiSWp2ampBalF
+	MFkmDk6pBka+u3H+Gx4LG29e9/tt4q70/GtuJjZFUwyYjqg0Fr5o4VBu0u1a1nPj29GrD09p
+	ed+W+lUgZTmt4NfbXWa3PMRiZ2vtYbG4MaHols8yyfupk++sNymau0U9ZWdxRoPYpx1MUQ9u
+	P99vViZb+v5si43kyZBX8VMUqtZyTaq+oS3QPt33dJRq4F0lluKMREMt5qLiRABvN8MDgAIA
+	AA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrLLMWRmVeSWpSXmKPExsXCNUNLT3fz5aXpBqe2qltM7DGwODdlNpvF
+	z7vH2S0Ozz3JanF+1ikWi3tr/rNa7Hu9l9ni9485bA4cHjtn3WX36G67zO6xeYWWx6ZPk9g9
+	Jt9Yzujx7baHx+IXH5g8Pm+SC+CI4rJJSc3JLEst0rdL4Mp407SWtWAxS8Xm29UNjCuYuxg5
+	OSQETCQ2bX0LZHNw8ApYSlxaLwESZhFQkVi55wMTiM0rIChxcuYTFhBbVEBe4v6tGexdjFwc
+	zAJ7GCX+TrjJCtIrLJAm8faHH0iNiICHRMfEGUwgNUICOxklZm1vZQVJMAuISMzubAPbyyag
+	JnHl5SSwBZwCZhKXGu+yQdSYSXRt7WKEsOUltr+dwzyBkW8WkjtmIRk1C0nLLCQtCxhZVjGK
+	ZOaV5SZm5pjqFWdnVOZlVugl5+duYgQG+rLaPxN3MH657H6IUYCDUYmHN+HAknQh1sSy4src
+	Q4wSHMxKIrxT1gCFeFMSK6tSi/Lji0pzUosPMUpzsCiJ83qFpyYICaQnlqRmp6YWpBbBZJk4
+	OKUaGK/PL0xsvxf53fa54nWl9IvnCjs+6tXF6lXFfphziYc7qCciivXKJKl5tYmXHm26tlhg
+	4j6rc50PbQvfzLf+xBPkxXXudirvcmsfhyjuriNl947Hvnsty/pL5aX2rXWXTYJvry0yn+HP
+	1VrxI2F2+Sedue6NDacsF8lcTdx0bMpnHqGuR4VnVymxFGckGmoxFxUnAgByqEKicAIAAA==
+X-CFilter-Loop: Reflected
 
-On Fri, Feb 07, 2025 at 03:57:45AM -0500, Gregory Price wrote:
-> On Fri, Feb 07, 2025 at 04:20:24PM +0900, Byungchul Park wrote:
+Hi Gregory,
+
+On 2/7/2025 5:57 PM, Gregory Price wrote:
+
+[...snip...]
+
+>> and kernel stack,
 > 
-> My thoughts here are that memory tiering is the wrong tool for the
-> problem you are trying to solve.
+> The default kernel stack size is like 16kb.  You'd need like 100,000
+> threads to eat up 1.5GB, and 2048 threads only eats like 32MB.
 > 
-> Maybe there's a world in which we propose a ZONE_MEMDESC which is
-> exclusively used for `struct page` for a node. 
-> 
-> At least then you could design CXL capacities *around* that.
->
+> It's not an interesting amount of memory if you have a 20TB system.
 
-Dumb question time
+The amount might be small, but having those data in slow tier can
+make performance degradation if it is heavily accessed.
 
-Is this maybe not an entirely horrible idea?  Even at 16-byte page
-structs we use 4GB-per-1TB of capacity.
+The number of accesses isn't linearly corelated to the size of the
+memory region.
 
-Maybe a memory device providing additional capacity SHOULD be made
-(given the option?) to service its own struct pages - but maintain
-some control over hot-plug-ability?
-
-At least it could tear down all the ZONE_MOVABLE regions and finally
-release the MEMDESC region when finished.
-
-Seems too obvious to have not been proposed already. :shrug:
-
-~Gregory
+Thanks,
+Honggyu
