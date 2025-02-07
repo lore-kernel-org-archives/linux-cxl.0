@@ -1,112 +1,193 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C99E2B9B9
-	for <linux-cxl@vger.kernel.org>; Fri,  7 Feb 2025 10:49:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738925401; cv=none; b=cDKXEVnb7ZzSyrJRQACstqCsrd8DDv0rBXgomeI/hCqohtb8n+YWlT50eZzUhVtb+1XJzoUOL8pmfur48zkSzHAqE768x8zcfaekYYEh1ldZ3prE+4ef3u//bc0w1+iOVd0PbwzueXKhhqiBZwdM9P5va8xfGxJNvhaqcEZ8C/c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738925401; c=relaxed/simple;
-	bh=iCR1dmrjrNFllGLWPQBgfFUzKWX/36TLqyq/iuTiqCs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EF9o/kgpvN6Dcdhh7WmhfxLqftQTMJupVCQ6K6fXpFG7dTg2zFBoxswPDSkIsxPQjb89yjzXW7RuMXevf+qe5gRBckVnl37gv+jtQNMZamjR2ABn5cyCcgORSOjBVcxnSXPbr13ZeDc8+4PrS/4491XsHQo8nrDIJ7zlY/6w5eQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-3e1ff7000001d7ae-3e-67a5e5507558
-Date: Fri, 7 Feb 2025 19:49:47 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: Gregory Price <gourry@gourry.net>
-Cc: Honggyu Kim <honggyu.kim@sk.com>, kernel_team@skhynix.com,
-	Matthew Wilcox <willy@infradead.org>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
-	linux-cxl@vger.kernel.org
-Subject: Re: [LSF/MM/BPF TOPIC] Restricting or migrating unmovable kernel
- allocations from slow tier
-Message-ID: <20250207104947.GB35103@system.software.com>
-References: <Z54hUTXRsw0LYQ8b@localhost.localdomain>
- <Z54p4QOnAlTYm6DG@casper.infradead.org>
- <20250207072024.GA48419@system.software.com>
- <Z6XLCeU0vjIOYGKe@gourry-fedora-PF4VCD3F>
- <ada54160-461c-4942-a4dc-43f7eab0f1bf@sk.com>
- <Z6XYQjCLK6umaoIS@gourry-fedora-PF4VCD3F>
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2080.outbound.protection.outlook.com [40.107.94.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03E49944E;
+	Fri,  7 Feb 2025 12:46:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.80
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738932390; cv=fail; b=O1ZTDruaz6cUlDLm3itwQntI1Xg/RLNsYecJtlU0pvEOSzliq4k+md+uAerhGZSVvNmkWX/BRdEhEzRQJ9LEfOP/WH35Kp3jVI0Dvvj+zhEWTbqHa2LlF2EnKI0GMA6SAqOUTRDMpy9RsJ8lnswBGLpzxMJkacyVQlqCLyAmX3s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738932390; c=relaxed/simple;
+	bh=9OKl7WsOAz6gNx27cUjylrkfwQQTarImZRLLchV2EtU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=bj1gNV5Gbx6LEsNxHFN89I4oHn9a3CXcWdl92USzMpbllEQu33aUQM5pm6zf+opy9bzHGOIwqFO9vsQuyVqyTrprdk9batRSqkn9wchouVdrTUBmasIwG+ifXOtCa+HIbzob4UvuF01F5s6UGu4k9X+sWiev/f2fgJy5Fjf3Cko=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=OpUBZATo; arc=fail smtp.client-ip=40.107.94.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="OpUBZATo"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qtSltzqGlzrux0HpyZdb4Knd90rjdumIhI1prXTVG/2tcePdn8lavhWSAjE98kQnrd4D6jU6zN1VmZFf/ruF7TQ9S+NfN0yHOFLSaL943klX01bT4KR4/12pPMznYuaoKx6MJBhRc9SInjCotziKxn/jz3jqEgBdeEayGsMWFoTDz38AYeGQAPM2LA3+RciaWhgwJllXXVPzu77ZXgFsHQM4nkOUrhvTuBOU6kQqxT8FCse2n68hI721JoyHUOgPexiN5jFyLoCQc+iKXyWHnXAuGdrDatplCR6+n6y18QbUY5NP/AgZtAP3yQG2ofGzcHofQxdPSnOOB3mZWdlpew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kC4Gnt9sj+tMLZtr5hpHtWytzWBgXbBPignuMv9hlDs=;
+ b=ew2+UMd9ASduNxvzFnxGZeLgqSbsdZjvlaAdMOwGfgQ992fEAZktdZsGoMXYJqnON5+gt8Jja8GgyB/UwUHj1cwqyU3If4W5xRDRL0q/A/eWanCN2i5kOsvtMb5PVyj4J9S5XqdqbP4srRU+H9hsnKwVcjvU8dyU6TlDQa7w8D1JIAUbSk9k1ZPAwBBC77KnC9SSapOzz2yKlKHm5UZzhNaFdiu+cVdM58pirU3h7WlCPnz+QDF1z8lB+QJY420QPcdrlMC9YGwRuMpGcOWck/3TPywioswpDFukeRYPyQ9xcVyy4Q7P2g15Q9zfqto4sMdFc3/ysg35R0bcQZGOqw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kC4Gnt9sj+tMLZtr5hpHtWytzWBgXbBPignuMv9hlDs=;
+ b=OpUBZAToXEV40RolmkDo5pbi7BI3S7orDiOYyc8RTu/G/0SZfHGaqgRsl3CHgd7WT1MNwTzq9AzGTX9IM8SanFz207UT5B1IV3zaq+P66wih4DTdlIKahb/C6pLrEyKfwqrBYWqijOT0AjlLraOkaYy6t/8fLeSZ9TYzc0+vuzvgL8OTFh4dYRykT7PSsP4QbW85nglke0lILFzmKcb3n7m9Jcui5KSEoPaKUjexf2vqmx52/8nHhyjXPT8lURfz9dJH+EOMV/ySO3ZbMbEnFyds59tse+36Pi4T9gAINNQvXtc6PEWFiWTJSiZ9DDo1btSltyqwpkcjvmwwgrSZTg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by CH3PR12MB8512.namprd12.prod.outlook.com (2603:10b6:610:158::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Fri, 7 Feb
+ 2025 12:46:26 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%6]) with mapi id 15.20.8422.011; Fri, 7 Feb 2025
+ 12:46:26 +0000
+Date: Fri, 7 Feb 2025 08:46:24 -0400
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Andy Gospodarek <andrew.gospodarek@broadcom.com>
+Cc: Jakub Kicinski <kuba@kernel.org>,
+	Aron Silverton <aron.silverton@oracle.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Daniel Vetter <daniel.vetter@ffwll.ch>,
+	Dave Jiang <dave.jiang@intel.com>, David Ahern <dsahern@kernel.org>,
+	Andy Gospodarek <gospo@broadcom.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Itay Avraham <itayavr@nvidia.com>, Jiri Pirko <jiri@nvidia.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Leonid Bloch <lbloch@nvidia.com>,
+	Leon Romanovsky <leonro@nvidia.com>, linux-cxl@vger.kernel.org,
+	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	"Nelson, Shannon" <shannon.nelson@amd.com>,
+	Michael Chan <michael.chan@broadcom.com>
+Subject: Re: [PATCH v4 10/10] bnxt: Create an auxiliary device for fwctl_bnxt
+Message-ID: <20250207124624.GP2960738@nvidia.com>
+References: <0-v4-0cf4ec3b8143+4995-fwctl_jgg@nvidia.com>
+ <10-v4-0cf4ec3b8143+4995-fwctl_jgg@nvidia.com>
+ <20250206164449.52b2dfef@kernel.org>
+ <CACDg6nU_Dkte_GASNRpkvSSCihpg52FBqNr0KR3ud1YRvrRs3w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACDg6nU_Dkte_GASNRpkvSSCihpg52FBqNr0KR3ud1YRvrRs3w@mail.gmail.com>
+X-ClientProxiedBy: BN0PR10CA0019.namprd10.prod.outlook.com
+ (2603:10b6:408:143::8) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6XYQjCLK6umaoIS@gourry-fedora-PF4VCD3F>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrELMWRmVeSWpSXmKPExsXC9ZZnkW7A06XpBqufiVtM7DGw+Hn3OLvF
-	+VmnWCzurfnParHv9V5mi98/5rA5sHnsnHWX3aO77TK7x+YVWh6bPk1i95h8Yzmjx+dNcgFs
-	UVw2Kak5mWWpRfp2CVwZ7cvfsxSs5q24sHErawPjDq4uRk4OCQETiZNLn7B3MXKA2VN+JoOE
-	WQRUJPbt+84IYrMJqEvcuPGTGaREREBVou2KexcjFwezwCNGiYsHljCBxIUF0iTe/vADMXkF
-	LCS6ztmBlAgJTGWSuD1hIhvIGF4BQYmTM5+wgNjMAloSN/69BGtlFpCWWP6PAyTMKWAmsWLt
-	T7ASUQFliQPbjjOBzJEQ2MMm0dvxjRHiYkmJgytusExgFJiFZOwsJGNnIYxdwMi8ilEoM68s
-	NzEzx0QvozIvs0IvOT93EyMwpJfV/onewfjpQvAhRgEORiUe3oQDS9KFWBPLiitzDzFKcDAr
-	ifBOWQMU4k1JrKxKLcqPLyrNSS0+xCjNwaIkzmv0rTxFSCA9sSQ1OzW1ILUIJsvEwSnVwDh1
-	85tLv99uMuhf0ztjtvuma1UNicI3p4mLJ+3v1PN8JhSrcWL1D6vmKW+vXzCIPW9zk62YlXmV
-	Sobuv7Awea6+rM0Ol8pLag7HlS438jhzVDroTOqM827JDr2T9/7vnZP/xKHS4sDtZy/y0sLY
-	ogy2X/U2VH87K9Hbcd8bWR5etTcpInt6zyuxFGckGmoxFxUnAgBGX633ZQIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrELMWRmVeSWpSXmKPExsXC5WfdrBvwdGm6QXsDn8XEHgOLn3ePs1t8
-	fvaa2eLw3JOsFudnnWKxuLfmP6vFvtd7mS1+/5jD5sDhsXPWXXaP7rbL7B6bV2h5bPo0id1j
-	8o3ljB7fbnt4LH7xgcnj8ya5AI4oLpuU1JzMstQifbsEroz25e9ZClbzVlzYuJW1gXEHVxcj
-	B4eEgInElJ/JXYycHCwCKhL79n1nBLHZBNQlbtz4yQxSIiKgKtF2xb2LkYuDWeARo8TFA0uY
-	QOLCAmkSb3/4gZi8AhYSXefsQEqEBKYySdyeMJENZAyvgKDEyZlPWEBsZgEtiRv/XoK1MgtI
-	Syz/xwES5hQwk1ix9idYiaiAssSBbceZJjDyzkLSPQtJ9yyE7gWMzKsYRTLzynITM3NM9Yqz
-	MyrzMiv0kvNzNzECQ3ZZ7Z+JOxi/XHY/xCjAwajEw5twYEm6EGtiWXFl7iFGCQ5mJRHeKWuA
-	QrwpiZVVqUX58UWlOanFhxilOViUxHm9wlMThATSE0tSs1NTC1KLYLJMHJxSDYwLzS66163n
-	YDtwQST31/vjy9bdUzk2c2GnH8+pTVMtJIT2y87a3zFx3bT691uqaqrbAvJ4t7+ZGZpwbnFy
-	7QXX3iu2nHIJD2o89160uLB/e7+E+AOeiDsnWmdf+3U6epJfM/Omlpu5eUx6ciclbhTGvl69
-	48jkd5aPUnRTvR38mVVFbYM9/rYosRRnJBpqMRcVJwIAduQ4dVUCAAA=
-X-CFilter-Loop: Reflected
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|CH3PR12MB8512:EE_
+X-MS-Office365-Filtering-Correlation-Id: af5a0f4a-0941-493d-abc3-08dd47756f1b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ZEZMNFVvOHRWT3pML2dOTndyK29zdWh0N0hSY3ZHc3hCMTgxSWZMaWhwMk9G?=
+ =?utf-8?B?OFJ2KzhudlBpd0dqVUdPT2YvVktqd3BUeUkxeEdBSGNYMTY5VjMvaFk2R0to?=
+ =?utf-8?B?eDllbXVaWEJDWFA2UlJabHF1UDMzdGZZZDNoekd4ZmpOb3JNUzdwdDA0cTB3?=
+ =?utf-8?B?U2RpbXI5aVpIVFJFOWg5N2thdVZ4UERHRTZvZm1UMHdHYTJ1YndRYmxiQllI?=
+ =?utf-8?B?dHZvQTlVTFNnSEYxeGtYdmwyazdwMnFVTVZldDNNRCtSMFA0cFlIMjNvcjBa?=
+ =?utf-8?B?bGhTUkdQL0pqbUN5OEhrd1Q3Q0VKSXBIV29aYjNRSEpya2wrZ2xwUTFOS0Zq?=
+ =?utf-8?B?N3J5dUR5MnE5QTF6S28zclJYOHk4WXVyY2V0QmoyS0o2R09xQmRqZkdwRkJt?=
+ =?utf-8?B?YnduZ1JWc0tNUGJMVVR0RVlEVnAxTWVyYjFJYkRrdnZlMFFiSlgwdG45Y09u?=
+ =?utf-8?B?TklvcGMvWkFiTnd0MnpCQ3ZyQXo3cnpoM2ZYTjdtRjc4eUNLVy9QbHFPUTl1?=
+ =?utf-8?B?WjFnUkNNWmt2Qm15dzZlVE11V3VYNVRpbFN4SFQ2UmFzQXNCS0s1UjVFN2Uz?=
+ =?utf-8?B?NHNQc1JIREszekVLTTNWQy9RYUNXdjhZd0toaXZ3N3BlYVV2MjIrMHhsaUNF?=
+ =?utf-8?B?ZU5YN0hVTVp4akhhdUtMMkpBNXZ2QVZRSXdrUlFMcXE5WUxZa2diaDBwcjdV?=
+ =?utf-8?B?QysvV28rVXUvOFFCdVlmSEFWOFFuM25UT1dWQjhlS2oyUUo0YTNzb3BqemY4?=
+ =?utf-8?B?UmRLTWZlcmhuVTFLVFJmY1JKVjA4QXFmZUVjV2dva1pZTitGS0xqRzZBNHFq?=
+ =?utf-8?B?R1NiOHJnZnoxKzhUVCt4YWkxVVIzK2paNHJ4aEJSOHM2YXdLaC8wQTFCcndF?=
+ =?utf-8?B?UE9qZVJqZFA1dzc1S3FCQ2pxaFM5a1BNYk9ZbkRsSzFydW10TjdJbTd0YkJx?=
+ =?utf-8?B?YkgzUWxWdFQ0dTJ6Q1l3Rkhjand5VEpiNm5ZOTdDU3Z3YUZDTmM5NDdzWFZj?=
+ =?utf-8?B?YTVOV2lkcTlsUG4wNmxFU2lLQXBseHJUWnpnQ2NuUGN6S2ZGNEN1dkNlVnJF?=
+ =?utf-8?B?cnFjZjFLdmptUzk4M0Z5U3FEQlRKU2pYNzFlYUI5Y2JkWS9yVE5paXhMemZx?=
+ =?utf-8?B?T3VxSjlFa3RuaUh0S1p5cUh3Y0dHSGQyam1qb2NMdWUxVXFUWnJsLytCUGVt?=
+ =?utf-8?B?b3BsVlBVT3MwNzk2OWhkSVFZMlRlVVRRb1d3aXdLdnFNbC9HZEhYc1E5NkdC?=
+ =?utf-8?B?SWlidHltbkYrcWVJMEJtZldRMHRHWHRQWndvWC9yaHh4RDYzTlhNQk1meVNG?=
+ =?utf-8?B?amdadWZJdDNQM2UxY0dQclRSYTBXNk42aWlTQkZkcXFzVWw2RnF1eXZ2dXBH?=
+ =?utf-8?B?dTBQNFhJYjR0SW0zeFhTaWw5MVdNSkRMZ04weVZyMXpsSitOaHZoUGw5bkhj?=
+ =?utf-8?B?eUptSHpYNjZla0xMcDMzTEJUM2h6S1hPMXpwd3VzOFltQ0NlZ0ZZcDZiT29C?=
+ =?utf-8?B?UnBLTTBseWlRY25JdVNGVGRuYU4xNlczU1RUZTlLVVNyeFhHZ2xsQTFOOHow?=
+ =?utf-8?B?RTJlNHBkQnJpZjAySDdZS25nQXg4QXNmSHJaOU1yVExBWnc1Q0ErU3Z3bHBq?=
+ =?utf-8?B?ejhIcm45Ly9rakhETDVUN3RjeHk2c3VEN3ZrS1Y5WXlaRWY1d2FNdVc4YnNu?=
+ =?utf-8?B?M3htdWxrOFBLNVRvNU11czV3aW1OdzdwYnVLOHNCaml1VXV0WXEvYUxVMjVv?=
+ =?utf-8?B?cWkxWEdmSVNQcVU3V3IxV1lCOUwyNm9OejNZNjU4dnNyeTI2Y2J6QmprU2hp?=
+ =?utf-8?B?eXVHZGhhSzNHY1A4U2ZpeFlwMHNJTmxVMDNETjFsRTdHK2R6RFN5YXQvcm9r?=
+ =?utf-8?Q?w0zwpTFh0SuCh?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VjBoMEh0b2lSQVJDWjJXdFRBbkREOUpXRnFuVnNvQnV4MXJBVU82U3prRW81?=
+ =?utf-8?B?UzVxWWZOZjNOb0VyRzMyZVpJdUEvRzhpM0JGcndidlo5ZTFjRW9tTzJpK2Nl?=
+ =?utf-8?B?dHlQd2ZaYVlNUXZPaUtKLzAxSTdLenhkOEU5QjBXMnpONTVERUlzc3prZzJQ?=
+ =?utf-8?B?ZktQcFQrVnROcldhQ0YwdHd1WkE4aGhuZ0lhaWJrR21zZ2JhLzFxVGdLT21x?=
+ =?utf-8?B?V1ZPdGMxalVrZi91MWM5bDRETkFneDM1YmpyVHAwWE44aW5WQ3JKQjJQTGlF?=
+ =?utf-8?B?MzF6ZEQzN3cydHJjT0pacElmT1dGaUxzTng3L1BYVTdmN05yVFNTYmg3cDdE?=
+ =?utf-8?B?a21PMjRFUHlsUWhrRGFVTEJnK3BjMVdRM0g2cVBJVklROThkcmRjdEZJQ29C?=
+ =?utf-8?B?bDExU284WkRGV0I1eHFFbllWc21lbnBNVmZpR2dRb0twaFhJa0dmamVyQ0tS?=
+ =?utf-8?B?VGhQYUJ0YVp2OSs4R2xjZEk2YW5kOE9Vam0zWEJQaHFKY216blM5Q2Z5T1d4?=
+ =?utf-8?B?NjQ0Q09MU0hUdjVNMkpaSWhkaDc1aEozN2RrdHgwaENKelpyT0w0UXVkL3NM?=
+ =?utf-8?B?ZWJPSW8vWklQRnJKdnBMS0V6REdGdFBIZFF2M3l6bEFWd2Y1ajdwbGZxdUpG?=
+ =?utf-8?B?c01XTHlaV1VaUVlqL2JqTG5aVDhjNmlaa2ZESmlKMXJIUzJaazBrYXVza1Yw?=
+ =?utf-8?B?YXd6TE9nYSt6aGZmUHVKc2RsRjR3Q1ZZenA1QTk0T1lxL2hXYkZQRlJ3Sjhi?=
+ =?utf-8?B?M2xhbmhtUUZrWjJMeXpuMWJWZkxrNW1jaDJlaG94dHdjVnB2eTgyUm8rQXlw?=
+ =?utf-8?B?WEloMHRUNWpnd2lQeTM5SEZOQkdhMFZMVnM3YnNwMHpaMjdTbjNqYlFlS0dV?=
+ =?utf-8?B?dUt3azNWM0EwM2M3SVJMaXZoZk51UlFDeXVBeUtYNVM5aGVyQ2dsVzREZ3R2?=
+ =?utf-8?B?bnlQOTBucjlYVjgyZ2dVWERTbFA0UThDRTBNc3BrQ1ZvWFhMTm0wWFFwT2Jw?=
+ =?utf-8?B?bHpMNVl1WStETjl3SkJDUGVkclRmTElDZXRBUjhseDIxSmxVbzVrVVQvelBy?=
+ =?utf-8?B?dUU2UEFVZ1E2UDBkNTY4R2pjZHpsWUJaY21sZTA0S012cjV4MXlKbFVaTHA0?=
+ =?utf-8?B?bzVvemZTdFA5NHlxbEx2QWpjd2x4TE9seXBOc0ViSmFVeERCdHVya3EwN1dl?=
+ =?utf-8?B?KzVuak95Ri9zRlNPT1VmZVdLVnpPMW4reUJaOFBXS2tQR3M3ZEZSaWxFcnM5?=
+ =?utf-8?B?a0p4dzZLbk1naGdxNzVEbklVNTFPVERMNEhqc0FsNVdzRDE1MDZXOFFSUUQ3?=
+ =?utf-8?B?Z296T0Z6eFJQM2U4MjlJYU00S0RaY0dJOUMrajZHcDZDcjNHY3dUSWdiMkcz?=
+ =?utf-8?B?QWZHcVE4dERranlMNHRVZFVucFZjZDBYV01zL1EzVERVcmNzUWE5Zjd3Q241?=
+ =?utf-8?B?OGxqUTdFMERYVkhodzBYb1M5WFJrdFMvcEVzODVqYTRvL0hQOVlNTW9jVHVM?=
+ =?utf-8?B?aWF0eGVMVE1BMTlIc2lVWkMza25kSVBaZWJzOXhoSlFLM0NvUGRlT3BmV04w?=
+ =?utf-8?B?RURXcVlFRlVaaThQWDgvemRsNjhzVEQxZ21lbUxGaUcwZXBIZjRJTDlIT2xX?=
+ =?utf-8?B?dTN4TjRmaCtwZUlMcWpDdjlmeGtZZ3Y5cFBpMHIvMTBsZU1kQmVCS1o2SUFs?=
+ =?utf-8?B?QWxRS3R4VURacVd2cWxyMEhrZEc1aEhuMUM4QkwvODFCbDlweXBHZ1R5TExx?=
+ =?utf-8?B?OWNRdlI4RXFsOUdVMXZMMklYYlQ4MGpzRndYRDN1T0daM3U4blUwemhwaEFG?=
+ =?utf-8?B?RkRwcUdITmovWm94Q0UzRFA4dHkvd0ZYbVFCcnd1cUdKMDJJb0N4TG5uUTRT?=
+ =?utf-8?B?bW02TjZid095NDhadDBWQzJoamZ6OU02RmlmVHdRQWxVcHdwaHhMTlFGR3F5?=
+ =?utf-8?B?L2JPZ0YrS203NkEzTlJna21kd0V0OW5QTWk2d1o5TTJia2c2ZlFLOWNkbWlH?=
+ =?utf-8?B?V1RKOGVLYmFhUEs3a0MrMUNkMzcrcU5BK2JaOVR1Zms1K2VHRXgzQTE3Rkht?=
+ =?utf-8?B?bGVTa3hQWlhnMm1ZMWtsSjlaSGwvTVE0Q2U3UzNjOGg2R1g1N2xSZFI0K0Vp?=
+ =?utf-8?Q?wGnc=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: af5a0f4a-0941-493d-abc3-08dd47756f1b
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 12:46:25.9643
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0E5+aMkuoX0k84mGVJfijimn+CtXli7rhsMRcTdO8ViMQf1vc9Wy8EvFxhqBFzDV
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8512
 
-On Fri, Feb 07, 2025 at 04:54:10AM -0500, Gregory Price wrote:
-> On Fri, Feb 07, 2025 at 06:34:43PM +0900, Honggyu Kim wrote:
-> > On 2/7/2025 5:57 PM, Gregory Price wrote:
-> > 
-> > > The default kernel stack size is like 16kb.  You'd need like 100,000
-> > > threads to eat up 1.5GB, and 2048 threads only eats like 32MB.
-> > > 
-> > > It's not an interesting amount of memory if you have a 20TB system.
-> > 
-> > The amount might be small, but having those data in slow tier can
-> > make performance degradation if it is heavily accessed.
-> > 
-> > The number of accesses isn't linearly corelated to the size of the
-> > memory region.
-> > 
+On Thu, Feb 06, 2025 at 10:17:58PM -0500, Andy Gospodarek wrote:
+> On Thu, Feb 6, 2025 at 7:44 PM Jakub Kicinski <kuba@kernel.org> wrote:
+> >
+> > On Thu,  6 Feb 2025 20:13:32 -0400 Jason Gunthorpe wrote:
+> > > From: Andy Gospodarek <gospo@broadcom.com>
+> > >
+> > > Signed-off-by: Andy Gospodarek <gospo@broadcom.com>
+> > > Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> >
+> > This is only needed for RDMA, why can't you make this part of bnxt_re ?
 > 
-> Right, I started by saying:
-> 
-> [CXL is] "generally not fit for kernel use"
-> 
-> I have the opinion that CXL memory should be defaulted to ZONE_MOVABLE,
-> but I understand the pressure on ZONE_NORMAL means this may not be
-> possible for large capacities.
+> This is not just needed for RDMA, so having the aux device for fwctl
+> as part of the base driver is preferred.
 
-Just to clarify, for moderate capacities where ZONE_NORMAL in DRAM
-covers the whole memory, it's not a big issue since the easiest solution
-would be to place kernel objects in DRAM's ZONE_NORMAL and not allow
-ZONE_NORMAL in non-DRAM.  No objection on it.
+Same for mlx5
 
-For large capacities, kernel object migratability might be a must.
+I have to apologize, somehow the bnxt WIP patches got included here,
+I did not intend that, it was late and I'm juggling too many things
+this week.
 
-For capacities between moderate and large, kernel object migratibility
-or allowing ZONE_NORMAL in non-DRAM, or something better idea, would
-help to reduce ZONE_NORMAL cost.
-
-I'm adding my opinion with the last two cases in mind.
-
-	Byungchul
-
-> I don't think the solution is to make kernel memory migratable and allow
-> kernel allocations on CXL.
-> 
-> There's a reason most kernel allocations are not swappable.
-> 
-> > Thanks,
-> > Honggyu
+Jason
