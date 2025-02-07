@@ -1,93 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 329BB1D63D6;
-	Fri,  7 Feb 2025 13:03:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19AA31E1A23;
+	Fri,  7 Feb 2025 13:06:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738933427; cv=none; b=ni2bp1mqf4VqM7uksLGCSsoNNYhP0pB2yTTmKfJMX9gJEmIIxi8iuGfVfsP9MUvsha4BwqauzyWMW3g3GfR188pxjXJvsNTC+Gg8MT+dVSL+BFpftFW3VXH+QjFfqmYooNwCLD083V5YqbOMPi2snrfE9f3eXqQblveue4EcFvA=
+	t=1738933608; cv=none; b=bg2ZM0lJunlTFENAAWgrGH/NLqfQ3o6AbGjGv8Y7DoCG/UNA4IKagGcbJi2TUna3vpvBwzZRoLh4Sj7nOSqCISDIbxLFjWOcGv+Whv1HBfUqcTzkyGyuhX+/LLyNOzpswnxGY8XqkZBozvyLvsLHTtl8VcjQCYWU9CinMh0ull4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738933427; c=relaxed/simple;
-	bh=Ge71FYL2GxX0fWNuNn/Fft2bQdnWJ71P5qdP6gV5SYM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hJ5CePNa+/vyjC0+40e/gCQPgAzHK9c7EGG8AiZDafHWQ0K5BBIWn9hVtZjoTHnq+fGdXg6K6Hk7eDKsh6pD4obyhZBjGzUIKpSheOvhCjW65PB6d0aK8qacZ6guOjYKxILG8dm79uNl5jhC0ZAEhY8uIaJ9pG7ttMk3KcFKKQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CcFEnB42; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CcFEnB42"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F49BC4CED1;
-	Fri,  7 Feb 2025 13:03:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738933426;
-	bh=Ge71FYL2GxX0fWNuNn/Fft2bQdnWJ71P5qdP6gV5SYM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CcFEnB42ximi0lRosDYVFzLu1WwYULG5V0ke7KdfA2vjf1QBIlf1s1AaelQCjVrwg
-	 Vcb4LXUPEa8bR+lZNv/HCjtvxH9fSkBepF/UmRGWiWC2Acnn7S4rJPqCazUD5PkSnF
-	 ybqeRT8ruM7Ej5QWEv2P3Bzb9m/2bzvwcfoQe7BRgsia4WWGM2NWMlMHw8nK4nQavu
-	 ki1W3UDbFs+waHdWGJAGbhbCtWo6xCuSIMCsBdm1DctbKQzdL1fXE5U82w5t9oEXw/
-	 rLzEhPgPPjCVvHb44AXydjwcQHa2zsh9zqH4CSxbwEPZfkZKsANGbXPiiM40+uX4ne
-	 2U0HKR46BJvQg==
-Date: Fri, 7 Feb 2025 13:03:42 +0000
-From: Simon Horman <horms@kernel.org>
-To: alucerop@amd.com
-Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
-	dan.j.williams@intel.com, edward.cree@amd.com, davem@davemloft.net,
-	kuba@kernel.org, pabeni@redhat.com, edumazet@google.com,
-	dave.jiang@intel.com
-Subject: Re: [PATCH v10 02/26] sfc: add basic cxl initialization
-Message-ID: <20250207130342.GS554665@kernel.org>
-References: <20250205151950.25268-1-alucerop@amd.com>
- <20250205151950.25268-3-alucerop@amd.com>
+	s=arc-20240116; t=1738933608; c=relaxed/simple;
+	bh=D7RNcAAO05N1HIIZezFPcpHocutqTqQ2WqDfdpexqi8=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=h7wqMlOjYpPnFn38EnK3i8Nr2U+rmxsXhGgK3zf3tycIuKHQ2bfP6/eovIE2NRqh57K0mrY/P6KYEDTBn0KqiZ0ngjgYeywSIcm47NmuYmktqGnW8yZCrQyHafqzdDzUYycIsNpPRsvYsfvQ5cGede18S8/Bzbun8xY206PsiVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YqDjf5vc6z6HJbd;
+	Fri,  7 Feb 2025 21:05:42 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id EC9E0140A30;
+	Fri,  7 Feb 2025 21:06:43 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 7 Feb
+ 2025 14:06:43 +0100
+Date: Fri, 7 Feb 2025 13:06:41 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: Andy Gospodarek <andrew.gospodarek@broadcom.com>, Aron Silverton
+	<aron.silverton@oracle.com>, Dan Williams <dan.j.williams@intel.com>, Daniel
+ Vetter <daniel.vetter@ffwll.ch>, Dave Jiang <dave.jiang@intel.com>, David
+ Ahern <dsahern@kernel.org>, Andy Gospodarek <gospo@broadcom.com>, Christoph
+ Hellwig <hch@infradead.org>, Itay Avraham <itayavr@nvidia.com>, Jiri Pirko
+	<jiri@nvidia.com>, Jakub Kicinski <kuba@kernel.org>, Leonid Bloch
+	<lbloch@nvidia.com>, Leon Romanovsky <leonro@nvidia.com>,
+	<linux-cxl@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+	<netdev@vger.kernel.org>, Saeed Mahameed <saeedm@nvidia.com>, "Nelson,
+ Shannon" <shannon.nelson@amd.com>
+Subject: Re: [PATCH v4 03/10] fwctl: FWCTL_INFO to return basic information
+ about the device
+Message-ID: <20250207130641.00005cb9@huawei.com>
+In-Reply-To: <3-v4-0cf4ec3b8143+4995-fwctl_jgg@nvidia.com>
+References: <0-v4-0cf4ec3b8143+4995-fwctl_jgg@nvidia.com>
+	<3-v4-0cf4ec3b8143+4995-fwctl_jgg@nvidia.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250205151950.25268-3-alucerop@amd.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Wed, Feb 05, 2025 at 03:19:26PM +0000, alucerop@amd.com wrote:
-> From: Alejandro Lucero <alucerop@amd.com>
+On Thu,  6 Feb 2025 20:13:25 -0400
+Jason Gunthorpe <jgg@nvidia.com> wrote:
+
+> Userspace will need to know some details about the fwctl interface being
+> used to locate the correct userspace code to communicate with the
+> kernel. Provide a simple device_type enum indicating what the kernel
+> driver is.
 > 
-> Create a cxl_memdev_state with CXL_DEVTYPE_DEVMEM, aka CXL Type2 memory
-> device.
+> Allow the device to provide a device specific info struct that contains
+> any additional information that the driver may need to provide to
+> userspace.
 > 
-> Make sfc CXL initialization dependent on kernel CXL configuration.
-> 
-> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Trivial comment inline.
+
+
 > ---
->  drivers/net/ethernet/sfc/Kconfig      |  5 +++
->  drivers/net/ethernet/sfc/Makefile     |  1 +
->  drivers/net/ethernet/sfc/efx.c        | 16 ++++++-
->  drivers/net/ethernet/sfc/efx_cxl.c    | 60 +++++++++++++++++++++++++++
->  drivers/net/ethernet/sfc/efx_cxl.h    | 40 ++++++++++++++++++
->  drivers/net/ethernet/sfc/net_driver.h | 10 +++++
->  6 files changed, 131 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/net/ethernet/sfc/efx_cxl.c
->  create mode 100644 drivers/net/ethernet/sfc/efx_cxl.h
+>  drivers/fwctl/main.c       | 51 ++++++++++++++++++++++++++++++++++++++
+>  include/linux/fwctl.h      | 12 +++++++++
+>  include/uapi/fwctl/fwctl.h | 32 ++++++++++++++++++++++++
+>  3 files changed, 95 insertions(+)
 > 
-> diff --git a/drivers/net/ethernet/sfc/Kconfig b/drivers/net/ethernet/sfc/Kconfig
-> index 3eb55dcfa8a6..0ce4a9cd5590 100644
-> --- a/drivers/net/ethernet/sfc/Kconfig
-> +++ b/drivers/net/ethernet/sfc/Kconfig
-> @@ -65,6 +65,11 @@ config SFC_MCDI_LOGGING
->  	  Driver-Interface) commands and responses, allowing debugging of
->  	  driver/firmware interaction.  The tracing is actually enabled by
->  	  a sysfs file 'mcdi_logging' under the PCI device.
-> +config SFC_CXL
-> +	bool "Solarflare SFC9100-family CXL support"
-> +	depends on SFC && CXL_BUS && !(SFC=y && CXL_BUS=m)
-> +	depends on CXL_BUS >= CXL_BUS
+> diff --git a/drivers/fwctl/main.c b/drivers/fwctl/main.c
+> index d561deaf2b86d8..4b6792f2031e86 100644
+> --- a/drivers/fwctl/main.c
+> +++ b/drivers/fwctl/main.c
+> @@ -27,8 +27,58 @@ struct fwctl_ucmd {
 
-Hi Alejandro,
 
-I'm confused by the intent of the line above.
-Could you clarify?
-
-> +	default SFC
+> diff --git a/include/uapi/fwctl/fwctl.h b/include/uapi/fwctl/fwctl.h
+> index f4718a6240f281..ac66853200a5a8 100644
+> --- a/include/uapi/fwctl/fwctl.h
+> +++ b/include/uapi/fwctl/fwctl.h
+> @@ -4,6 +4,9 @@
+>  #ifndef _UAPI_FWCTL_H
+>  #define _UAPI_FWCTL_H
 >  
->  source "drivers/net/ethernet/sfc/falcon/Kconfig"
->  source "drivers/net/ethernet/sfc/siena/Kconfig"
+> +#include <linux/types.h>
+> +#include <linux/ioctl.h>
+> +
+>  #define FWCTL_TYPE 0x9A
+>  
+>  /**
+> @@ -33,6 +36,35 @@
+>   */
+>  enum {
+>  	FWCTL_CMD_BASE = 0,
+> +	FWCTL_CMD_INFO = 0,
+> +	FWCTL_CMD_RPC = 1,
 
-...
+Trivial but in theory should perhaps leave RPC for patch 5?
+
+>  };
+
+
