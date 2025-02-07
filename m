@@ -1,137 +1,180 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2057.outbound.protection.outlook.com [40.107.237.57])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B5F1B4239
-	for <linux-cxl@vger.kernel.org>; Fri,  7 Feb 2025 08:57:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738918672; cv=none; b=fF+Nf5eVuPp9JtL4NjdOOKU5JZ4GsWRCPxrlXrbP7b3hxvLw3rx2m+FylNB9YYqOdFEy2ReTC2cW7mjsJnwqiNx5h/YpaWI6xBDqA4RdkqQUBBCTVtnJPmNI0zvVTkxt6KjP3VBPDAKzTlwthoDeD7hDSZ8zfkIyE1PIPcLriqk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738918672; c=relaxed/simple;
-	bh=GcOzZLBP1nqWpmU4ehierO046jTkvvo6hp9hYlhVjFY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fvhr9TvY+bl5RRXjEiE++2eVNWmHr9bh7g2KIX5tL2PiW+B+tHQXmktc+3NBScp+WJgF/9FDrb+1z/yl2I0WwfYZS7KJmlzPCPLzxsDW/st7KasQgKVDw/8+Ei2nSvp48iPFeF0SzYPxF88AlhitEhcxb6gOerxBJJ7SS7gtGx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=OR7LqJcu; arc=none smtp.client-ip=209.85.222.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C9931CDA2D
+	for <linux-cxl@vger.kernel.org>; Fri,  7 Feb 2025 09:03:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738919040; cv=fail; b=QzOMyBoQpyI274YE31gHdUX9IzocLeJ1piIGBlkzrnGjRhGmUKqgFKEf/K+aLCqnO0egluhp/bwd7pkrbHzgYJMD2sHY3CgX/xTTL75k2L43Ha7I5ZfMif8FzQ/2JUfuNAQwqcGoSAAcbapQUmABB+gCcDYDmsgakajR24oQEPU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738919040; c=relaxed/simple;
+	bh=gyds3R53LCAqnLzTEJdYZ9MDqXvtDJ1TZQIvN94uvQg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=aZCoCiDcNmBRu8GfE7zNHl0hM+P6zSmB7LSGylfQIKFtKlQQDou6Tui/cDYYfbeSGJeF+/TcM0t7SdkhLWHQexMKJ33WWnzOci0xwXPpL+SVZ0RqqkI7Mr6zQzqQlOPt+EzZNwImVLR/uxamzMdqEE2QSaYz3L8QmbA24ial7UU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=aXZi2Cxe; arc=fail smtp.client-ip=40.107.237.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="OR7LqJcu"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7bcf33f698dso170608185a.2
-        for <linux-cxl@vger.kernel.org>; Fri, 07 Feb 2025 00:57:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1738918669; x=1739523469; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NgvrfAQwLFovDWtM64VfstFqvcyM7cPGtOE5g74BpOE=;
-        b=OR7LqJcu+8dXiJjr6VTkJsKP4MQc34nCvEsXfE82Pe8Lt9DwXCctCzoPnRaph+JP/A
-         k99f2oi189MYnVbBHaGRhShr4UDyM6EwV1XnoMocPQtdokWojoqzNX/leXnQSk5gfstG
-         USB1hIcHNubXfC+ylELhCuxgFMCD8KoTk1PPfCNaQjutrdk+JxjOXE17LVhkIFyZDmAj
-         gZwXfemTJZT61f7raOBeUGcdOoadk7dtzbUNjWPOcviYjFGJP6MiW/ZWTNYikExTD143
-         UOBUCjXzxlAoVWQqdqlYAC2ac1cpT0IfRU/qvHCaQu37lDwAYCU3XHW9YYmw+8k0cmT9
-         Z64Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738918669; x=1739523469;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NgvrfAQwLFovDWtM64VfstFqvcyM7cPGtOE5g74BpOE=;
-        b=oGWa9SGIug2QJo4FD0vw7SrpE2yU0MPYchOv+icZmp9FxgaguJB3JYldXUQ+741T1I
-         Bgse71CQ7H1vUl2aG7SXtOMhGGufjXKAj05ji3sYx/0MzHZa0l4z8xggBu4FA56JCdiL
-         jR5lBbufb1ADb3Ls5HBBR122Z6VcdXE21bC2vEfiIx5KBJLbbEQ2XJpJZAWd9aPscmfF
-         vtWTEIT1JpAHe1LgDUGg8ZmyUSihCpXzutCh+s98t1L+YTuogxx3eM10/o78maOhuUJs
-         FkQUG+iBQF+mTF3I6g/DIdvEJ35MzVBMlhWX2YSjM+SKiJw6ZlL9iE+OMDd8vXtB0wQX
-         cfzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWmJtRk3LpwSmDfH9o6dCK44OXcYPisCH27hSyK2slehFCY3nG+kFOAszuDXmdgchY3WVfGW2ZLc4g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoCP+5WnOBDPoJvszTk84vJoG1pGX400+pl9E0HDOIAk0+/jYm
-	QKw3fDVMrcBbbcpL/TXI2BPQXIhsNP/fmpycB320yv/BeKDBgst63NmrzYwLbII=
-X-Gm-Gg: ASbGncsqGvt2jVF5uAHXjevMuQeLBdKeYpXttcj7ufxfsetQ6VtRfSkusi52wncXmvr
-	iyfzb+XGqLYgMOnouAYj2trvVVspxSv05qVGdr1xDXDkCjXa09KWufw0C8HaBd6ceLvxeLpp1kA
-	PvFtENlPNYlcavRwYz75nhXWVQ+MX3do8aAkvZX3dK52Yj9qH0DMpUvbpPGhs9FYr7XGtS30lW9
-	sdqY5152X19p301OCPRLM2/pQ9AXOv2VXvdei11m+/sIwd5v3nxmlNN7CJkHmj2cMAODhm7dRdx
-	tt0Hoz4JaNNFhHeZd/Gpt+YIeu6iDo6gE+NYaeAFMt1Ti42svLAtpX5DUXGcoo9KajqcrlRPnw=
-	=
-X-Google-Smtp-Source: AGHT+IHmp+FH1AuZTlJKN929evp5N+MuXixQzE8522ihJ4whOBdQptmbBxXYSkVLlqkBflCAEdVa/w==
-X-Received: by 2002:a05:620a:270c:b0:7b7:2de:6fd3 with SMTP id af79cd13be357-7c047b5214fmr359033585a.0.1738918669134;
-        Fri, 07 Feb 2025 00:57:49 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c041dec312sm163884585a.11.2025.02.07.00.57.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 00:57:48 -0800 (PST)
-Date: Fri, 7 Feb 2025 03:57:45 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Byungchul Park <byungchul@sk.com>
-Cc: Matthew Wilcox <willy@infradead.org>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
-	linux-cxl@vger.kernel.org, Honggyu Kim <honggyu.kim@sk.com>,
-	kernel_team@skhynix.com
-Subject: Re: [LSF/MM/BPF TOPIC] Restricting or migrating unmovable kernel
- allocations from slow tier
-Message-ID: <Z6XLCeU0vjIOYGKe@gourry-fedora-PF4VCD3F>
-References: <Z54hUTXRsw0LYQ8b@localhost.localdomain>
- <Z54p4QOnAlTYm6DG@casper.infradead.org>
- <20250207072024.GA48419@system.software.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="aXZi2Cxe"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=orQ1ClgbtKoMNj+v2OdQSLiU1vQtAOyNTbklPeLbSaxBYLeiAq9G2PxCChEkaw7FZBRg2roFKISkLvHAno4lhtr5vcYIWAPnijHqU+iWPhG3uZhD6H5YUclyCBYIkvYkeK6tqpiIn4n0we6VnF4deWTQ0asxn33ums1ow/Ew7/7YERW+AaFodqSschfV7EzYiVOkYDslwxSZ3LKNsLQuv7bRP8RAZpi7trvUSkt47wqrEQ3HKZSYxD3embiMCAumLKMA+KrRrO7aAT4Freugvtr0cQEjrOWSANl1vr00HmPjqIZrJaEpp2zNFFR2kupyrYxinBbJNRxHC0FzKIBOyA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wMAGQ98/2W/PT0aCmtxPuoLJFiOf4YxCzNkcW/2FAmY=;
+ b=NsH67Y6GUNBvRQtcmyxyWfe55gPyEKi0sv6M2XYDB/NTF4yS/i3IuXghYVrZJ96nXUDMqxO7r0taAnvSniYH46zHBsaxc+Odx6IltbUXc3X9xskbb9t5guCJoYnGQMmhTgCexo3tqd2S3lcleDVaRO0/yLzTqZxHW6cknFU6R9jObW2XrsLcBLqL+qrkQ5wVQBVpNfplIQHU0uFdOiABEY0hfkKbX462Pmj5aE0/c3IOkUWtVXL0MOKTarQrmUHa66V9WwKIok7iGK9CDr1mChyfb48gX0h60C/rRMkyalpgqXDH+RcxR5Y7oJM7QcNRXBDQysBFKlAyxGBqQ4MtMw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=stgolabs.net smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wMAGQ98/2W/PT0aCmtxPuoLJFiOf4YxCzNkcW/2FAmY=;
+ b=aXZi2CxeJCg7Y3XSg7rZdX0/rCPSUzWGgK+G9x0LVym4mDGgBayCJjXLhMv5DCj9w0+rwngLUZgsIIlViPD2hgzrQ6PzoqEzvZOXrHRVlQVgM6ZsoCbcB5fbuMYRvRDqSxdbRcon35mKgr1uqi9iCSVPfdPdJFgU3GW3RezHJ94ttPTp1aFbjT6yiJMDRQv5GSsoKaqZ70qIFK8yiUQDo5SJEGv8E+TChtz6m/QYekbWNUfSSlwC/lXBAEHHpbRKx6ZK4YGN3kk6QZkhweou3oQBlFntvl2lM9ugIqhM8b+dbGdOkUQlglUVG8FSNeAL/rP3TlVTBlEKoyIi2TRTdQ==
+Received: from SN7PR04CA0103.namprd04.prod.outlook.com (2603:10b6:806:122::18)
+ by PH8PR12MB8608.namprd12.prod.outlook.com (2603:10b6:510:1bc::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.28; Fri, 7 Feb
+ 2025 09:03:55 +0000
+Received: from SA2PEPF000015CA.namprd03.prod.outlook.com
+ (2603:10b6:806:122:cafe::80) by SN7PR04CA0103.outlook.office365.com
+ (2603:10b6:806:122::18) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.30 via Frontend Transport; Fri,
+ 7 Feb 2025 09:03:55 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ SA2PEPF000015CA.mail.protection.outlook.com (10.167.241.200) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8398.14 via Frontend Transport; Fri, 7 Feb 2025 09:03:54 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 7 Feb 2025
+ 01:03:37 -0800
+Received: from 181d492-lcedt.nvidia.com (10.126.231.35) by
+ rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Fri, 7 Feb 2025 01:03:37 -0800
+From: Srirangan Madhavan <smadhavan@nvidia.com>
+To: Srirangan Madhavan <smadhavan@nvidia.com>, Davidlohr Bueso
+	<dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, "Dave
+ Jiang" <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+	"Dan Williams" <dan.j.williams@intel.com>
+CC: Zhi Wang <zhiw@nvidia.com>, Vishal Aslot <vaslot@nvidia.com>, "Shanker
+ Donthineni" <sdonthineni@nvidia.com>, <linux-cxl@vger.kernel.org>
+Subject: [PATCH v1 0/1] Add CXL Reset Support for CXL Devices
+Date: Fri, 7 Feb 2025 01:03:26 -0800
+Message-ID: <20250207090327.172478-1-smadhavan@nvidia.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250207072024.GA48419@system.software.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: rnnvmail203.nvidia.com (10.129.68.9) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF000015CA:EE_|PH8PR12MB8608:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2b7cc1dd-a364-4b1f-0ac8-08dd4756596f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|1800799024|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?J2oW7TeZXijBO14N1P1Ew995iM0EXHt9Bj+3BTUbWZ34Ynm6fTVcCeCDit2J?=
+ =?us-ascii?Q?pbCWRzk9oGvI+HQNEhg35+AymzgQJvtgRmXIq4/5vMV/nYJDp0gwjxoHflP+?=
+ =?us-ascii?Q?PBuFJVcjTUprQ373C5Qqo6mq/3gWCsUP8QsqD7sc0VSvoJ7RL0xqnenyCx1r?=
+ =?us-ascii?Q?e9JrvnYUVUQFmqry5tRk7ZscQTqGMPFuof5P/OXqQ2DmGxDkZVcwjs0WJ7qb?=
+ =?us-ascii?Q?gug5UCvZpdRbf77Du4KfZg3sIpuBoEJj5WdoiOWNRlDPYMrhHmxLLN7OCkNt?=
+ =?us-ascii?Q?Mxf1Bx2q0X+6SWfCEi5LiRiC8k6LNejhkWA9Iw+HbfYjlzdajW9NNfNx5qk7?=
+ =?us-ascii?Q?Vm6xvsj/FzNsPqiTUZ+fq/cHRc41Hrctp3h8yU7hiAs3JaldxG9cJGPXqWpO?=
+ =?us-ascii?Q?SdhX30h8dRoFQ6Stm6Rn0DVc5FoxHvEjCUEl2YwlRVO+5xAdrqt8HS7YIJ+d?=
+ =?us-ascii?Q?J9owM+kiQV20VMCVaC9/eYASWy2t9YAcIEIRFtGTOMU7M4DvwlqnFZxu50QU?=
+ =?us-ascii?Q?78i1/T7Puw+K6CNpFSUAUQCIWhONePlCpV31S86EgvyMDm2rCYIMaVm3ep6/?=
+ =?us-ascii?Q?Mj27Bdg6TBgghtHqWJr2GqHqQl0afa5RtIxa66WwwrFNIel1QjEDVmrIM6IR?=
+ =?us-ascii?Q?0Ub3W4LBm85o/97C7x6KGFqEqooIGTmyHZqHT774Q2IpDMsyfmXvtDJJHWpm?=
+ =?us-ascii?Q?ZdovVax06LC8ye287Chvz3/+y68Cgob6zS1282FOrtgrR00qvLF+K+zAfdRP?=
+ =?us-ascii?Q?O6Q0rLyZG6oh58SEu5e4BxWQWiUdMDNMOHT5V8X4EXNHy/RJYwOypK+NB1Pb?=
+ =?us-ascii?Q?Ggd7nEnmTGvhy35DfU6tIv9AXsDcuvjW7ZBCJMogs4mSiGS0SHo88ptIS/OA?=
+ =?us-ascii?Q?bOT4/q7KzA7ZrwSbdNF+ba1msoXciNrKjRA0XWkcidddQqvWv27L1pxRyac2?=
+ =?us-ascii?Q?MXcppxDzI0zbmXGsU3QgT/llI/xyMjvpE9zCMvQkhMdhIakvffxA0Wq8t3v+?=
+ =?us-ascii?Q?5agMhBKGD1T1jH2fHsNjCnsYd1GRa48Z68oSPZFEE+cL+TVM2qI94QraTvzs?=
+ =?us-ascii?Q?86OB0rXzMWgaclMJ+9r6WCAbrTAZxiP1S+ffMaewxVoD6jfbNB4GrbbKC7Yj?=
+ =?us-ascii?Q?ZiKtACtpKnpz6n6zQ3YaYwqDOfHRHH/16qV96f4MuAs8dpHarLp3pHNl7PTn?=
+ =?us-ascii?Q?o0pNfShusJZmCq7a4SqcWSQh7utXSilKV6C+Z9pxZY12b3riHy2+aewhXvlK?=
+ =?us-ascii?Q?lEuXAlG31MbUHZQNW6/88frP8VZB6zQebPQPB4pGSrVJCkdwCjNU37Dj6WKq?=
+ =?us-ascii?Q?Z1YX5aeEzH0a87qUXhUDyCidRoT/B/FbDLJaveKgivTKaEmYHGSansgFj7dz?=
+ =?us-ascii?Q?P9995pwPjJgHW4/Rw4iq8jKhXcSb4AH0RjUe0TMCCUDE+1bmU4p/8fFKiZCs?=
+ =?us-ascii?Q?2m2pjfZJg2QPM3vgQeLOzVmpPfrn+lFP2nRW8Vex/jKIUbhvWw6LyiCw9IZb?=
+ =?us-ascii?Q?CMW4Pct4cKAKKpg=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(376014)(1800799024)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 09:03:54.8281
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2b7cc1dd-a364-4b1f-0ac8-08dd4756596f
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF000015CA.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB8608
 
-On Fri, Feb 07, 2025 at 04:20:24PM +0900, Byungchul Park wrote:
-> On Sat, Feb 01, 2025 at 02:04:17PM +0000, Matthew Wilcox wrote:
-> 
-> We can work with from the easiest object
+This patch introduces support for the CXL Reset method
+for CXL devices, implementing the reset procedure outlined in
+CXL Spec [1] v3.1, Sections 9.6 and 9.7.
 
->e.g. page table
+RFC -> v1:
+- Added cover letter and dropped the RFC.
 
-It's more efficient and easier to change page sizes than it is to make
-page tables migratable.
+The RFC patche can be found here [2]
 
-It's also easier to reclaim cold pages eating up significantly more
-memory than the page table (which describes pages at ~8 bytes per page).
+Motivation:
+-----------
+This change is broadly useful for reasons including but not limited to the
+following:
+- As support for Type 2 devices [3] is being introduced, more devices will
+  require finer-grained reset mechanisms beyond bus-wide reset methods.
+- FLR does not affect CXL.cache or CXL.mem protocols, making CXL Reset
+  the preferred method in some cases.
+- The CXL spec (Sections 7.2.3 Binding and Unbinding, 9.5 FLR) highlights use
+  cases like function rebinding and error recovery, where CXL Reset is
+  explicitly mentioned.
 
-Also, there's quite a bit of literature that shows page tables landing
-on remote nodes (cross-socket) has negative performance impacts.
+Change Description:
+-------------------
+The patch implements the required steps for CXL reset and introduces a new reset
+method in the pci_reset_fn_methods. It also defines the necessary CXL DVSEC
+register macros. The actual steps for rest are broadly: disable cache lines and
+asserts WB+I, wait for cache and memory clear signals, initial reset, wait for
+complete and return status.
 
-Putting them on CXL makes the problem worse.
+Command line to test the CXL reset on a capable device:
+    echo cxl_reset > /sys/bus/pci/devices/<pci_device>/reset_method
+    echo 1 > /sys/bus/pci/devices/<pci_device>/reset
 
+[1] https://computeexpresslink.org/wp-content/uploads/2024/02/CXL-3.1-Specification.pdf
+[2] https://lore.kernel.org/all/20241213074143.374-1-smadhavan@nvidia.com/
+[3] https://lore.kernel.org/linux-cxl/20241216161042.42108-1-alejandro.lucero-palau@amd.com/
 
-> struct page,
+Srirangan Madhavan (1):
+  cxl: add support for cxl reset
 
-`struct page` is a structure that describes a physically addressed page.
+ drivers/pci/pci.c             | 183 ++++++++++++++++++++++++++++++++++
+ include/linux/pci.h           |   2 +-
+ include/uapi/linux/pci_regs.h |  25 +++++
+ 3 files changed, 209 insertions(+), 1 deletion(-)
 
-It is common to access it by simply doing `pfn_to_page()`, which is a
-fairly simply conversion (bit more complex in sparsemem w/ sections)
+-- 
+2.25.1
 
-This is used in a lockless manner to acquire page references all over
-the kernel.
-
-Making that migratable is... ambitious, to say the least.
-
-
-> and kernel stack,
-
-The default kernel stack size is like 16kb.  You'd need like 100,000
-threads to eat up 1.5GB, and 2048 threads only eats like 32MB.
-
-It's not an interesting amount of memory if you have a 20TB system.
-
-
-> When it comes to this topic, the most important thing is the collected
-> *direction* from the community so that we can start the work under the
-> *direction*.
-> 
-
-My thoughts here are that memory tiering is the wrong tool for the
-problem you are trying to solve.
-
-Maybe there's a world in which we propose a ZONE_MEMDESC which is
-exclusively used for `struct page` for a node. 
-
-At least then you could design CXL capacities *around* that.
-
-~Gregory
