@@ -1,49 +1,49 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B53F4C7C
-	for <linux-cxl@vger.kernel.org>; Sun,  9 Feb 2025 01:25:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 862A23D6A
+	for <linux-cxl@vger.kernel.org>; Sun,  9 Feb 2025 01:26:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739064319; cv=none; b=r+LXClMGovkwNuPU+T57eJVuWPk4E5G2P6fjgHRW+luIVGzbIdOeypIML1vsS/lEDIK8v30MLNwAPdef9E546tAo8hqgrALlj0JfU1NySDCPEwUSZidSKzZsuKYHob+18kmxJ7u6I3q5bqK5GW48UeyH+qWsYCPdiMA8N0hFjoY=
+	t=1739064412; cv=none; b=pqNyHfssLpt+82OA9xkF6+kSmBoVmY5iJHpWE99vL8/q0f6qlhBe7LNq5ghauii4+EJ83JGi1kmoV834By7xU+K6SBChELLISDNyGCwViQEAstUAhz09RhSV1nZ5ShP/KD1g/mK9Bt1LvKuaeUdV4FEh48XKaVKkV168OVOtpC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739064319; c=relaxed/simple;
-	bh=8HvZjh/OZne0Rd9Pem7SJyNnKzy/3sBkmbrItwM4omU=;
+	s=arc-20240116; t=1739064412; c=relaxed/simple;
+	bh=SQQ2qz1S6d2d6R7VZjNR11TbkRi0vFJho3iRaoRMFDg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e68mO962jnAKBFdEJMr1k0+XeFIBzUD7qsxMVnYjx1bRB4gf/m1kKQjLaKqIQ0sqgVcT41s6jaNVXplxvLsSqjwADJsFwJwaeXuUBJRKSenP0Wk2NR9DXHhOYdyEaPlDXd/n6v0Nftt3THGGQPZVNyQb2vOYKu6Gz8s9h397DP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W/rTu2uz; arc=none smtp.client-ip=192.198.163.13
+	 Content-Type:Content-Disposition:In-Reply-To; b=KnUKMSfRl4NodY+OmJ//chMjtvyjXl3C3RIiHpowCXi46QHMmkz/K+iK16vZrA6WpwWJ+7GW+YXFhd32qhRSkIEM3gb4z8B/Q7eZQ4LNJUSKzPhXAi/9Stp1nUwV+KLs0JX6UGjM0X8B+cOm9Q+KcMtXXiPx2G8IIedzufZUK1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QtwHsJAs; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W/rTu2uz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QtwHsJAs"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739064318; x=1770600318;
+  t=1739064410; x=1770600410;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=8HvZjh/OZne0Rd9Pem7SJyNnKzy/3sBkmbrItwM4omU=;
-  b=W/rTu2uz1RP/fogwaYdmH9QTeY0QvNbwu/epc3qjdT9s/VIeTlpjBPg7
-   kxLdHvboq8gQaNv0GGSpVErpL4xmOUCADYRZfBt9Yw5q9teipCPXPkmY2
-   lBV84w/OMzM66TsTF4iLIYzpY5amjC8Ye3NtW3LvZfwafjkmlGqxmJ64o
-   pbhM9EQsutllffMMl24qSE0HImBGZ1aUIjfu8xVqrkL5OGpGM+yj1vBv6
-   B7RhasM6FsaKt4ekB+b/fF4qvxj5gV63H82d1MlBLc2xJzDLLevahXKUT
-   WrPklmLdFfy25o1tpc2QMtfphERSnQEot/xQ9k7jC0w6v181FLw2nR15v
-   A==;
-X-CSE-ConnectionGUID: sSwPShhKSYmC609QV3eq/A==
-X-CSE-MsgGUID: fYaMX/ZZQ7+w/H0ytc6hVA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11339"; a="42516355"
+  bh=SQQ2qz1S6d2d6R7VZjNR11TbkRi0vFJho3iRaoRMFDg=;
+  b=QtwHsJAs+WQ7eNuvJthXhkuyhiNHXkqS+CoHmqM0eApelC4T80/8PwJ7
+   c9DpOxbo52ytDywGsGIEEJWpP6OYPqbdk5SNW00NfBFG9oRiiDkZTKI5h
+   qu+q/WRNYIQRlVBJWLUp3hLuLi78lSIfEc0Q5U/PNKQ3gSS5ENTH6rPTv
+   XKnLc9EDj6RLQbI7MRQpES+b/6l2i9B810jpZoHhQ24KlLcXkGive7eO0
+   6nQ8Q05BsER6zJcIDhwcs1GsD4UufKXKSQEYzzua41KWP6Oe6QLM4jz0T
+   FMzy87jcqaHFxZnoNQxRV1tW49jKH44sDv+5yT8DyCbeMrkV3V9sKi7Ve
+   g==;
+X-CSE-ConnectionGUID: tV/c9L7ITRuB9NMT51AoaA==
+X-CSE-MsgGUID: Phuw46FGRieo/iDu413SqQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11339"; a="39695899"
 X-IronPort-AV: E=Sophos;i="6.13,271,1732608000"; 
-   d="scan'208";a="42516355"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 17:25:14 -0800
-X-CSE-ConnectionGUID: Hc2TVKBsRfCK5nGK73LWHg==
-X-CSE-MsgGUID: 09Fcdi1TQiu6BWMba+yHFQ==
+   d="scan'208";a="39695899"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 17:26:50 -0800
+X-CSE-ConnectionGUID: WkoG0k3qS+qpYeJkGx1A9w==
+X-CSE-MsgGUID: GKuqJvR6SBa4QMQki25OYQ==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,271,1732608000"; 
-   d="scan'208";a="116907798"
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="111692498"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.111.139])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 17:25:14 -0800
-Date: Sat, 8 Feb 2025 17:25:12 -0800
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 17:26:49 -0800
+Date: Sat, 8 Feb 2025 17:26:46 -0800
 From: Alison Schofield <alison.schofield@intel.com>
 To: Ira Weiny <ira.weiny@intel.com>
 Cc: Vishal Verma <vishal.l.verma@intel.com>,
@@ -53,11 +53,11 @@ Cc: Vishal Verma <vishal.l.verma@intel.com>,
 	Dan Williams <dan.j.williams@intel.com>,
 	Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
 	nvdimm@lists.linux.dev
-Subject: Re: [ndctl PATCH v2 1/6] ndctl/cxl-events: Don't fail test until
- event counts are reported
-Message-ID: <Z6gD-Lq1rWLveZWN@aschofie-mobl2.lan>
+Subject: Re: [ndctl PATCH v2 2/6] ndctl/cxl/region: Report max size for
+ region creation
+Message-ID: <Z6gEVs3CxhlVvM4x@aschofie-mobl2.lan>
 References: <20241104-dcd-region2-v2-0-be057b479eeb@intel.com>
- <20241104-dcd-region2-v2-1-be057b479eeb@intel.com>
+ <20241104-dcd-region2-v2-2-be057b479eeb@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -66,21 +66,18 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241104-dcd-region2-v2-1-be057b479eeb@intel.com>
+In-Reply-To: <20241104-dcd-region2-v2-2-be057b479eeb@intel.com>
 
-On Mon, Nov 04, 2024 at 08:10:45PM -0600, Ira Weiny wrote:
-> In testing DCD event modifications a failed cxl-event test lacked
-> details on the event counts.  This was because the greps were failing
-> the test rather than the check against the counts.
+On Mon, Nov 04, 2024 at 08:10:46PM -0600, Ira Weiny wrote:
+> When creating a region if the size exceeds the max an error is printed.
+> However, the max available space is not reported which makes it harder
+> to determine what is wrong.
 > 
-> Suppress the grep failure and rely on event count checks for pass/fail
-> of the test.
+> Add the max size available to the output error.
 > 
 > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> ---
 
-Thanks!  Applied to https://github.com/pmem/ndctl/commits/pending/
-with [ alison: rm unnecessary reference to DCD in commit log ]
+Thanks! Applied to https://github.com/pmem/ndctl/commits/pending/
 
 snip
 
