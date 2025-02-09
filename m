@@ -1,57 +1,55 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 656A3C2FB
-	for <linux-cxl@vger.kernel.org>; Sun,  9 Feb 2025 01:21:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53A82243379
+	for <linux-cxl@vger.kernel.org>; Sun,  9 Feb 2025 01:23:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739064075; cv=none; b=hyKWRuLeTW63S9MC8kzxDivUJJiESWvl6VIcsOyHeznTPVN4KVjtKpEMbxMFxJ+vB9VcOHuzoqivaNJVOgcCc556gP6JPOISCEwEzcWJsCycGFcLYnBG6ryARa5ri8YymyOS0pd2gNIR2BsQ8EC7KBDcFiBJBTL7KfEgvMOLRsI=
+	t=1739064213; cv=none; b=ZSA2127xkQkfkPhpb4AawH4M54jL13iHZ9rJcPaSBEd3e6HLssu4R2zpRujMMbckfCDGQi6iGN2nXHqC+zJjpcPjZ6zJCgyBk5fjhxFK8iJqZ49OlVXQ3VgCmXJunHy0SzCNycKQY6OjMIauWpHog1b5zz62q6wZsGFM9Uvsfbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739064075; c=relaxed/simple;
-	bh=EU0vvjvElMG7VijPF380pawRKAzzbl1R8WB+1dcSFnw=;
+	s=arc-20240116; t=1739064213; c=relaxed/simple;
+	bh=rEmXBEjiYmLoDizogR5e21aMkNXyTbXLysJN1B96MWg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dg/ytX5MGmTHy8KD6izoCq1eEDSibtzqQYa3543iG/P95OjaOdhgo6k6/HqBxoHB5LOT/Y5wiPSFipdMdUPtV1h4V2KC6TMQGpLxD2CHog1SKdRE6GPRmAZcxHD0nHqUjykNefc3G4dlCfT7CVOAKzgYDFzsoyDAlGh0BPYOxkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S2fcNdDl; arc=none smtp.client-ip=198.175.65.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=BEKn+k1yfj7E2hWZsINgKl4Ha8Igcgs14QdarLG1A0v5JH0kzpe8L0XuvDovBdMhYV5NMUHHbuondTZQLCxe0D4FQDeHJACxONAWk3e/KJVMmjmxh39AkXmZPPI4xgoq/P94EY+/160fg/p/g6hnLJc5svdH5pKdLUnD38tjFGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XzZgG9dV; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S2fcNdDl"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XzZgG9dV"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739064074; x=1770600074;
+  t=1739064211; x=1770600211;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=EU0vvjvElMG7VijPF380pawRKAzzbl1R8WB+1dcSFnw=;
-  b=S2fcNdDlrNxI2t5Q5QYCVXTo1JwjGAwfMtLVw4B3f3dtQkXhmBdXbwBr
-   AQvm5UXEYSfFyXyLolYWC5ILBxK86/5RjPnx1CchZC/0Fb93BX4FeUSAr
-   GVVj6Eb9Ps9RVqG+hgQk15PVO5nWXfmoF/we19QWntG/JWGBSNmDF4few
-   c3Z/muBZuo2KeidIIJKzEGdjd3986enmFn5UHAgQYpz3XSvJZyDkUwTx6
-   met+7hlj7NwGBm6Yg5QWRzUvWthyHPSb5Ef2+CvDsGUYYZNpAGHvXHP4d
-   Ags38LZw1hAstP3j77LfLZpPEhoQSaYDVLCEOEUKo0j5kx4rkJxLugBjx
-   Q==;
-X-CSE-ConnectionGUID: JIawlMGdTkOXM32tmyVJuQ==
-X-CSE-MsgGUID: 2wAffmM8QjOAJ6Xzp1Vy5g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="39789843"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="39789843"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 17:21:14 -0800
-X-CSE-ConnectionGUID: 8armEJQ6QfqTWtg9JvKX2A==
-X-CSE-MsgGUID: aV0ZbmbxRwmJLNeL3S5Sbg==
+  bh=rEmXBEjiYmLoDizogR5e21aMkNXyTbXLysJN1B96MWg=;
+  b=XzZgG9dVfgOZOLEBFvq2QsnHEHo8W7kG3pLBXen9QDv1i5tYLIIjoOd8
+   wAx1aR04lm1rBoQsZMF0nAZ+Yv+GUwgnDYAL6KN7tfp5Pn4rAUA2fdnFc
+   Nh4XEChlioWMc7Sen6OgvRn72l99mJN8PKuS02j2dCwWnS+/F2VTVkhtX
+   vhfyqC8Kija1tFAjvmGddFXckcJxaqbeiTuXYhG7dJeukyv7A9g60IyrO
+   LVSefAGDxA3lnAxoQJ+96emG2e19mKooofloW+9VZRQWzaOrEGo7f7gPx
+   TOXtO4x8yJkvMzWLSqg41CEpUNoI5DzKs4AUovLaHxU/b2pc+f2EUqW4M
+   A==;
+X-CSE-ConnectionGUID: whJJ6l1CRq6kPgZHEbzTdw==
+X-CSE-MsgGUID: wJPj+QUIQs+P0g4yK9jB1g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11339"; a="50312566"
+X-IronPort-AV: E=Sophos;i="6.13,271,1732608000"; 
+   d="scan'208";a="50312566"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 17:23:31 -0800
+X-CSE-ConnectionGUID: v2Ot9oAfROCqwxs+EmNasg==
+X-CSE-MsgGUID: Wsy0e8DPQCWbVxfTwinMrA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,271,1732608000"; 
-   d="scan'208";a="112488085"
+   d="scan'208";a="142725478"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.111.139])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 17:21:13 -0800
-Date: Sat, 8 Feb 2025 17:21:11 -0800
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 17:23:30 -0800
+Date: Sat, 8 Feb 2025 17:23:28 -0800
 From: Alison Schofield <alison.schofield@intel.com>
 To: Li Zhijian <lizhijian@fujitsu.com>
 Cc: nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
-Subject: Re: [ndctl PATCH v3 2/2] test/monitor.sh: Fix shellcheck SC2086
- issues as more as possible
-Message-ID: <Z6gDB4XhDk8_Zuu0@aschofie-mobl2.lan>
-References: <20241018013020.2523845-1-lizhijian@fujitsu.com>
- <20241018013020.2523845-2-lizhijian@fujitsu.com>
+Subject: Re: [ndctl PATCH] test/security.sh: add missing jq requirement check
+Message-ID: <Z6gDkJoNMv0kEguv@aschofie-mobl2.lan>
+References: <20241014064951.1221095-1-lizhijian@fujitsu.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -60,44 +58,16 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241018013020.2523845-2-lizhijian@fujitsu.com>
+In-Reply-To: <20241014064951.1221095-1-lizhijian@fujitsu.com>
 
-On Fri, Oct 18, 2024 at 09:30:20AM +0800, Li Zhijian wrote:
-> SC2086 [1], aka. Double quote to prevent globbing and word splitting.
+On Mon, Oct 14, 2024 at 02:49:51PM +0800, Li Zhijian wrote:
+> Add jd requirement check explicitly like others so that the test can
+> be skipped when no jd is installed.
 > 
-> Previously, SC2086 will cause error in [[]] or [], for example
-> $ grep -w line build/meson-logs/testlog.txt
-> test/monitor.sh: line 99: [: too many arguments
-> test/monitor.sh: line 99: [: nmem0: binary operator expected
-> 
-> Firstly,  generated diff by shellcheck tool:
-> $ shellcheck -i SC2086 -f diff test/monitor.sh
-> 
-> In addition, we have remove the double quote around $1 like below
-> changes. That's because when an empty "$1" passed to a command will open to ''
-> it would cause an error, for example
-> $ ndctl/build/test/list-smart-dimm -b nfit_test.0 ''
->   Error: unknown parameter ""
-> 
-> -       $NDCTL monitor -c "$monitor_conf" -l "$logfile" "$1" &
-> +       $NDCTL monitor -c "$monitor_conf" -l "$logfile" $1 &
-> 
-> -       jlist=$("$TEST_PATH"/list-smart-dimm -b "$smart_supported_bus" "$1")
-> +       jlist=$("$TEST_PATH"/list-smart-dimm -b "$smart_supported_bus" $1)
-> 
-> -       $NDCTL inject-smart "$monitor_dimms" "$1"
-> +       $NDCTL inject-smart "$monitor_dimms" $1
-> 
-> -       [[ $1 == $notify_dimms ]]
-> +       [[ "$1" == "$notify_dimms" ]]
-> 
-> -               [ ! -z "$monitor_dimms" ] && break
-> +               [[ "$monitor_dimms" ]] && break
-> 
-> [1] https://www.shellcheck.net/wiki/SC2086
 > Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
+> ---
 
-Thanks! Applied to https://github.com/pmem/ndctl/tree/pending
-with [ alison: edited commit msg/log ]
+Thanks! Applied to https://github.com/pmem/ndctl/commits/pending/
 
 snip
+
