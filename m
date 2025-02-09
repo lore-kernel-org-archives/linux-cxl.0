@@ -1,55 +1,63 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53A82243379
-	for <linux-cxl@vger.kernel.org>; Sun,  9 Feb 2025 01:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B53F4C7C
+	for <linux-cxl@vger.kernel.org>; Sun,  9 Feb 2025 01:25:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739064213; cv=none; b=ZSA2127xkQkfkPhpb4AawH4M54jL13iHZ9rJcPaSBEd3e6HLssu4R2zpRujMMbckfCDGQi6iGN2nXHqC+zJjpcPjZ6zJCgyBk5fjhxFK8iJqZ49OlVXQ3VgCmXJunHy0SzCNycKQY6OjMIauWpHog1b5zz62q6wZsGFM9Uvsfbc=
+	t=1739064319; cv=none; b=r+LXClMGovkwNuPU+T57eJVuWPk4E5G2P6fjgHRW+luIVGzbIdOeypIML1vsS/lEDIK8v30MLNwAPdef9E546tAo8hqgrALlj0JfU1NySDCPEwUSZidSKzZsuKYHob+18kmxJ7u6I3q5bqK5GW48UeyH+qWsYCPdiMA8N0hFjoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739064213; c=relaxed/simple;
-	bh=rEmXBEjiYmLoDizogR5e21aMkNXyTbXLysJN1B96MWg=;
+	s=arc-20240116; t=1739064319; c=relaxed/simple;
+	bh=8HvZjh/OZne0Rd9Pem7SJyNnKzy/3sBkmbrItwM4omU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BEKn+k1yfj7E2hWZsINgKl4Ha8Igcgs14QdarLG1A0v5JH0kzpe8L0XuvDovBdMhYV5NMUHHbuondTZQLCxe0D4FQDeHJACxONAWk3e/KJVMmjmxh39AkXmZPPI4xgoq/P94EY+/160fg/p/g6hnLJc5svdH5pKdLUnD38tjFGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XzZgG9dV; arc=none smtp.client-ip=192.198.163.9
+	 Content-Type:Content-Disposition:In-Reply-To; b=e68mO962jnAKBFdEJMr1k0+XeFIBzUD7qsxMVnYjx1bRB4gf/m1kKQjLaKqIQ0sqgVcT41s6jaNVXplxvLsSqjwADJsFwJwaeXuUBJRKSenP0Wk2NR9DXHhOYdyEaPlDXd/n6v0Nftt3THGGQPZVNyQb2vOYKu6Gz8s9h397DP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W/rTu2uz; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XzZgG9dV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W/rTu2uz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739064211; x=1770600211;
+  t=1739064318; x=1770600318;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=rEmXBEjiYmLoDizogR5e21aMkNXyTbXLysJN1B96MWg=;
-  b=XzZgG9dVfgOZOLEBFvq2QsnHEHo8W7kG3pLBXen9QDv1i5tYLIIjoOd8
-   wAx1aR04lm1rBoQsZMF0nAZ+Yv+GUwgnDYAL6KN7tfp5Pn4rAUA2fdnFc
-   Nh4XEChlioWMc7Sen6OgvRn72l99mJN8PKuS02j2dCwWnS+/F2VTVkhtX
-   vhfyqC8Kija1tFAjvmGddFXckcJxaqbeiTuXYhG7dJeukyv7A9g60IyrO
-   LVSefAGDxA3lnAxoQJ+96emG2e19mKooofloW+9VZRQWzaOrEGo7f7gPx
-   TOXtO4x8yJkvMzWLSqg41CEpUNoI5DzKs4AUovLaHxU/b2pc+f2EUqW4M
+  bh=8HvZjh/OZne0Rd9Pem7SJyNnKzy/3sBkmbrItwM4omU=;
+  b=W/rTu2uz1RP/fogwaYdmH9QTeY0QvNbwu/epc3qjdT9s/VIeTlpjBPg7
+   kxLdHvboq8gQaNv0GGSpVErpL4xmOUCADYRZfBt9Yw5q9teipCPXPkmY2
+   lBV84w/OMzM66TsTF4iLIYzpY5amjC8Ye3NtW3LvZfwafjkmlGqxmJ64o
+   pbhM9EQsutllffMMl24qSE0HImBGZ1aUIjfu8xVqrkL5OGpGM+yj1vBv6
+   B7RhasM6FsaKt4ekB+b/fF4qvxj5gV63H82d1MlBLc2xJzDLLevahXKUT
+   WrPklmLdFfy25o1tpc2QMtfphERSnQEot/xQ9k7jC0w6v181FLw2nR15v
    A==;
-X-CSE-ConnectionGUID: whJJ6l1CRq6kPgZHEbzTdw==
-X-CSE-MsgGUID: wJPj+QUIQs+P0g4yK9jB1g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11339"; a="50312566"
+X-CSE-ConnectionGUID: sSwPShhKSYmC609QV3eq/A==
+X-CSE-MsgGUID: fYaMX/ZZQ7+w/H0ytc6hVA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11339"; a="42516355"
 X-IronPort-AV: E=Sophos;i="6.13,271,1732608000"; 
-   d="scan'208";a="50312566"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 17:23:31 -0800
-X-CSE-ConnectionGUID: v2Ot9oAfROCqwxs+EmNasg==
-X-CSE-MsgGUID: Wsy0e8DPQCWbVxfTwinMrA==
+   d="scan'208";a="42516355"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 17:25:14 -0800
+X-CSE-ConnectionGUID: Hc2TVKBsRfCK5nGK73LWHg==
+X-CSE-MsgGUID: 09Fcdi1TQiu6BWMba+yHFQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,271,1732608000"; 
-   d="scan'208";a="142725478"
+   d="scan'208";a="116907798"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.111.139])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 17:23:30 -0800
-Date: Sat, 8 Feb 2025 17:23:28 -0800
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 17:25:14 -0800
+Date: Sat, 8 Feb 2025 17:25:12 -0800
 From: Alison Schofield <alison.schofield@intel.com>
-To: Li Zhijian <lizhijian@fujitsu.com>
-Cc: nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
-Subject: Re: [ndctl PATCH] test/security.sh: add missing jq requirement check
-Message-ID: <Z6gDkJoNMv0kEguv@aschofie-mobl2.lan>
-References: <20241014064951.1221095-1-lizhijian@fujitsu.com>
+To: Ira Weiny <ira.weiny@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Fan Ni <fan.ni@samsung.com>,
+	Navneet Singh <navneet.singh@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev
+Subject: Re: [ndctl PATCH v2 1/6] ndctl/cxl-events: Don't fail test until
+ event counts are reported
+Message-ID: <Z6gD-Lq1rWLveZWN@aschofie-mobl2.lan>
+References: <20241104-dcd-region2-v2-0-be057b479eeb@intel.com>
+ <20241104-dcd-region2-v2-1-be057b479eeb@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -58,16 +66,21 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241014064951.1221095-1-lizhijian@fujitsu.com>
+In-Reply-To: <20241104-dcd-region2-v2-1-be057b479eeb@intel.com>
 
-On Mon, Oct 14, 2024 at 02:49:51PM +0800, Li Zhijian wrote:
-> Add jd requirement check explicitly like others so that the test can
-> be skipped when no jd is installed.
+On Mon, Nov 04, 2024 at 08:10:45PM -0600, Ira Weiny wrote:
+> In testing DCD event modifications a failed cxl-event test lacked
+> details on the event counts.  This was because the greps were failing
+> the test rather than the check against the counts.
 > 
-> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
+> Suppress the grep failure and rely on event count checks for pass/fail
+> of the test.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 > ---
 
-Thanks! Applied to https://github.com/pmem/ndctl/commits/pending/
+Thanks!  Applied to https://github.com/pmem/ndctl/commits/pending/
+with [ alison: rm unnecessary reference to DCD in commit log ]
 
 snip
 
