@@ -1,129 +1,70 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C8371A239F
-	for <linux-cxl@vger.kernel.org>; Mon, 10 Feb 2025 06:00:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739167209; cv=none; b=rFwDjK0++suv/+BjDpxAjW1zVI+BSIatNwNQpltm3ub4fbXTbaogtXmnaw3x617rI3LLUH/VS9EVwni0LbLkSA7+/B0fJ5dh6V8FT0LblzMhpjjwCE10ZCVpUoYrxncIML4XMdbFEZwtnjPH1TGS4YY60dM+U8j6nuQqVnLvU7Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739167209; c=relaxed/simple;
-	bh=mK8iz7bLRPDbKyiHp0IffWZZjD7Aii5NSpwyRZOiFj4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O+wcrpfTg8shUqgzg1dgHZ1ChW1iJ0Xy8Fcun0t9CCQyn+vNjyfYQcsPW6OznjLNemdsMrc1Kw41alE6iJwnYgB9c93vChbeGjE4O6PTN4WGNAq8cEvQeAdU5qD6jxZQjUuTY0eUk2AycJE5EjVJrRHZ7370y14i/SS5BygIq0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=H3hAfm8/; arc=none smtp.client-ip=209.85.222.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00BE81990CD
+	for <linux-cxl@vger.kernel.org>; Mon, 10 Feb 2025 06:21:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739168515; cv=pass; b=DxVUOQ0d24pirj0rd9kAtXlRTYPvtsN5lTetxTl+iuA+CkkHmErHInbrbfkmjv72OYL9JpprtIvPlFVQAfb88fy20VCyIHYG06siZmtM8G0gQUc2PGNx54v+slzx4nJ7col7Di7pcxCuriJmgzt5ZR2ydssOJl/en/gjI/5zzVU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739168515; c=relaxed/simple;
+	bh=GXWZvNRb5dbpClsX007Vhy1Qq/kRGRhizkCl+Vrw7eE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jMdIq2FxWQwhT6mXS4IZXpc2JSab1dchg4RGo2hn+D4RVeKh8+qWVIBpZL7tVrRNpRiP0hP0uNrO11Ou7y9lurKjywEciNrQo6QJGbKX+BdH5dbNO2mqT2QQCzA6dK4NStxhNmv99hpTvjx8pS27j9pnwFEzzu9G7yDnWE13mc0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=ZLPtB8Rn; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="H3hAfm8/"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7c053a107b8so150614485a.3
-        for <linux-cxl@vger.kernel.org>; Sun, 09 Feb 2025 22:00:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1739167205; x=1739772005; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=amAQ/fip1zjjPAFrEnkAcUMSCHVM3BmAahoIJR9K7hU=;
-        b=H3hAfm8/gJk2YvfyJ7WvTnIKu8CTwaFhEZfuFgyd+otgKf+xje9FBVh07QMfoIsSDR
-         hkkUvofXtffiyKfsx9Haz6o/yhiqQIEjyPDPI7S/akxErXwD/V3qz7NazAkadDJI8lY7
-         7DZRCK0GuS6nrAmYGpifh245EhC5cCseDhJ5qUX2+Hky2cQcHQHuZycVE+bhngh0Rw2f
-         yqRHzHC+YrL3JUiTKUWi8rfsFscr1TXSZ21c1+PGfngRSJsl2no5vmJOx3xJutT5DyNA
-         3q77Xy9F+6e9NZFDDOS/wqOHgrQ3ViklUNWpTBK2BIHMCOmOYVdr5mt9wxu2ImUlrl4h
-         uzXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739167205; x=1739772005;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=amAQ/fip1zjjPAFrEnkAcUMSCHVM3BmAahoIJR9K7hU=;
-        b=qOTMkD7zJqFReE7PIWhsggggSBKdyWUL/HKMLBaentBMQvWMxeB6spOfN7Gl6iunYA
-         vK9tY3qhqVVpu4wr9WWb+dEgAKxWYFGnV2n2Jb6qDDpL5htkMBZajUsOiRbB98RRmf8Q
-         nxzpQqx2xpeU2STGa/V1zioHp96NBlNILsIe16L8d8Zc9OcscZKPi8UQs9+2Ou8s93oh
-         bKxkS5sBfS74qo7FkbekzlAhekwysvCjDKQUQHMX6ExpvvD9ygOm/u5UlaDYo8yHRtk6
-         xsKBxXZ14lw9fs5IjyZA1Cs0fueKyAybRo8dwkrLuP+hnkqUqaDHWMjRot/rZreXBBgF
-         mSLw==
-X-Forwarded-Encrypted: i=1; AJvYcCVs/suNannnwDUiqzHn3/FFyXF3bn6R1kBAkM5wwRYvl1wnAqTMWlDqsdsmHAn6KFulTGHUgpogUWs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMVXmrgNcywgaStSrR0fQKJF36F38kMiYhgNHkuMxazkRCBoaF
-	cQqo6Zo1e9n/kWptXIdvWuCTo4YVMtCnWo0pl8UkVySLh4v/O/P8ppybHKVQfgE=
-X-Gm-Gg: ASbGnctYrpQ8VphzMU7l/re7DMKgAtZ6lt92HCX5ETrN9veE4K6Y8QxRo3N1gt/hw0K
-	z885sQD4RB2cCThFhVfJ+PvKiRcv0hfpcWT7vzvw5DeI2lh3MyA44Pfyi9eRZAQ/znf4eit5Iat
-	rVhZ1QKn1zh7MeqMlUEwu/GAd5cRqIequMJNPyWvwGM5QUZgqn8ExZhAq99D0yz1pRw6Xj0CZ5r
-	lYRU56rMRbvhD8BS34l2rZC2qXmaOXqfQOVAjGVlth8Z7uH22dCs9EBki1JuIHi5zz78fkwSwt0
-	bvQpvcHqg0C7QDiF01cPBUJDDWSf2Aht6dy/KvU8v7JoiP79I3a5U3fcfNuMLa9f3BsQb9qmWg=
-	=
-X-Google-Smtp-Source: AGHT+IHhwRLl2TltpPoSTD0m1jyHAGjWZCwGLbFlLxrmsv3fIf/VYYOQNaeDAvY04Qt2kVJcxb3hLQ==
-X-Received: by 2002:a05:620a:f14:b0:7b1:5763:4ba2 with SMTP id af79cd13be357-7c047c7504dmr2264001985a.40.1739167205217;
-        Sun, 09 Feb 2025 22:00:05 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c04e111a58sm257668385a.92.2025.02.09.22.00.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2025 22:00:04 -0800 (PST)
-Date: Mon, 10 Feb 2025 01:00:02 -0500
-From: Gregory Price <gourry@gourry.net>
-To: "Harry (Hyeonggon) Yoo" <42.hyeyoo@gmail.com>
-Cc: Honggyu Kim <honggyu.kim@sk.com>, Byungchul Park <byungchul@sk.com>,
-	kernel_team@skhynix.com, Matthew Wilcox <willy@infradead.org>,
-	lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
-	linux-cxl@vger.kernel.org
-Subject: Re: [LSF/MM/BPF TOPIC] Restricting or migrating unmovable kernel
- allocations from slow tier
-Message-ID: <Z6mV4vwkP0weiLie@gourry-fedora-PF4VCD3F>
-References: <Z54hUTXRsw0LYQ8b@localhost.localdomain>
- <Z54p4QOnAlTYm6DG@casper.infradead.org>
- <20250207072024.GA48419@system.software.com>
- <Z6XLCeU0vjIOYGKe@gourry-fedora-PF4VCD3F>
- <ada54160-461c-4942-a4dc-43f7eab0f1bf@sk.com>
- <Z6XYQjCLK6umaoIS@gourry-fedora-PF4VCD3F>
- <Z6lli5cRHh1Ffvql@MacBook-Air-5.local>
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="ZLPtB8Rn"
+ARC-Seal: i=1; a=rsa-sha256; t=1739168494; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=iO5d8JcQO1wxqDXEF4/QjkhVyNPbK4oaEQqkboJM1bhWzR5UBW1LTvp+qmTTbSbqaFf7gQImLAISloxy/8ywq4V7aSumFaKILuFyoDk381TpyxcATdZYEdGdvEanmIJ/C3jQw0i61lIqMyqcKMFayptkm0ddHV0omWy66/x2jcE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1739168494; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=GXWZvNRb5dbpClsX007Vhy1Qq/kRGRhizkCl+Vrw7eE=; 
+	b=Ovf0xJFs+oGb792nKn22tpUHlTE5ADZ9VLXGj67i2YM3K5xRFeJ3sfMgdwrACd9BMnkGGXqiJG2Cm4jmMSJn6hlWKzjXF205nk2VCjdfXW1oTxi1QjK561dfEvoukU+zD9gqOgbu+0p3iFqVU2NKeTKEYQt/NaI3NjM78A2W3hs=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739168494;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=GXWZvNRb5dbpClsX007Vhy1Qq/kRGRhizkCl+Vrw7eE=;
+	b=ZLPtB8Rnj7lb5ONqWymDpVuDCdgkPLugc97WS/7oja8r0HCfAwSmCBhleTx0lICj
+	iagfK9e80AEg9ORtGkRsIsbIf8+R6ruuPo8m34UUbHkOMnP59/R7I4mzyvxve3sd/Kx
+	1zFFt9wWA2gfocOrpdk65ncK+jqsxEt9sTaSrODc=
+Received: by mx.zohomail.com with SMTPS id 1739168492249308.71380450002005;
+	Sun, 9 Feb 2025 22:21:32 -0800 (PST)
+Message-ID: <812c7adf-dcec-48c7-aeda-6b6379fcf833@zohomail.com>
+Date: Mon, 10 Feb 2025 14:21:28 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6lli5cRHh1Ffvql@MacBook-Air-5.local>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 08/15] cxl: Add support for FWCTL get driver
+ information callback
+To: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org
+Cc: dan.j.williams@intel.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
+ alison.schofield@intel.com, Jonathan.Cameron@huawei.com, dave@stgolabs.net,
+ jgg@nvidia.com, shiju.jose@huawei.com
+References: <20250207233914.2375110-1-dave.jiang@intel.com>
+ <20250207233914.2375110-9-dave.jiang@intel.com>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <20250207233914.2375110-9-dave.jiang@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Feedback-ID: rr0801122757691dc250ead385df3b07db00009f9d9bb75c3cd00cb850e98620b70cbf69fb7bb108adb9737e:zu0801122730d41e25d0cb9568e75c420200006f4031c1a7eb7248bc13016c29639f4def511d5fc7ddd5b1da:rf0801122d193d38a9c1e6a67d898ed5be00006e738e53f27b9f2758796ccde320a18044334c8bbd8d3092b94ad9695333f1:ZohoMail
+X-ZohoMailClient: External
 
-On Mon, Feb 10, 2025 at 11:33:47AM +0900, Harry (Hyeonggon) Yoo wrote:
-> 
-> Premise: Some ZONE_NORMAL capacity exists on CXL memory
->          due to its large capacity.
+On 2/8/2025 7:37 AM, Dave Jiang wrote:
+> Add definition for fwctl_ops->info() to return driver information. The
+> function will return a data structure with a reserved u32. This is setup
+> for future usages.
 >
-What you actually need to show to justify increasing the complexity is
-(at least - but not limited to)
-
-1) structures you want to migrate are harmful when placed on slow memory
-
-   ex) Is `struct page` on slow mem actually harmful? - no data?
-   ex) Are page tables on slow mem actually harmful? - known, yes.
-
-2) The structures cannot be made to take up less space on local tier
-
-   ex) struct page can be shrunk - do that first
-   ex) huge-pages can be deployed - do that first
-
-3) the structures take up sufficient space that it matters
-
-   ex) struct page after shrunk might not - do that first
-   ex) page tables with multi-sized huge pages may not - do that first
-
-4) Making the structures migratable actually does something useful
-
-   are `struct page` or page tables after #2 and #3 both:
-
-   a) going through hot/cold phases enough to warrant being tiered
-
-   b) hot enough for long enough that migration matters?
-
-   You can probably actually (maybe?) collect data on this today - but
-   you still have to contend with #2 and #3.
-
->
-> I don't understand why we shouldn't introduce more kernel movable memory
-> if that turns out to be beneficial?
-> 
-
-No one is going to stop research you want to do. I'm simply expressing
-that I think it's an ill-advised path to take.
-
-~Gregory
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Li Ming <ming.li@zohomail.com>
