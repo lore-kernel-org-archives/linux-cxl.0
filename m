@@ -1,73 +1,111 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 320C426296
-	for <linux-cxl@vger.kernel.org>; Mon, 10 Feb 2025 06:45:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739169916; cv=pass; b=pzdHfVOaRKtGTghLtT7hspbOMUcOHdRvGZRQkSY5MH8Uh06gAnQxBD56WnGHCgfok5i1YgXeIVsNBtec3YcbCt1+a4BuU6KANtrq3Hj5e7AImgFZtzwmtm4xDNW3iEV447iU6OmX3SszAUBHglNUI6bgC9s1mkRHE35f228qgwg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739169916; c=relaxed/simple;
-	bh=dSna6r4zr2NPFUZrxu9ix+03dwF7p99CC6EQWkpppz0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b/KdSBbfFrAaPH1eKchEUecYdaXC0crv8aMD5LF/dlJ8rXe5bxWDd37Q0otfju+gydY0RYMEeAOzmU/ppdbmts/8jQE8HzA3KxInQs+Cdq0jrR/mMiC/2uj9pR+QgHooI6moQLoiBaYTeZR4l8da1QupXAzRg9RI8Sn6fVk8yc8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=PsSC7XfU; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="PsSC7XfU"
-ARC-Seal: i=1; a=rsa-sha256; t=1739169900; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=TudKTuMzmERt0xSDv+QrB2ySPVSfI0AK7vhT1SctTpohbwfuq+Q7GSld7bwiQ7OJlvMzsr2eEHhdYOgklCIuTiMwxM0QvAt8TWv/urSRfJdnw5JlLfJI78xdui1DB8UBFDaLjf7KyWvYEej5Hfqj6xp2uUPIQIPxX9PhwVfrd9M=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1739169900; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=dSna6r4zr2NPFUZrxu9ix+03dwF7p99CC6EQWkpppz0=; 
-	b=aVftNOoNtkdOv8PqjRhRa2DDIA0ROxbjZB51JBvwClszVtvqx4rogV1zuFGfulCNDAH9mwd0SVqPlVi4jxI1EtJqqLRARwiUGi9XEJgRV2vfokyr1sHUDpRofQsQgQDdpQMbCBxdlAIR/8Xyej6L4scWmEjFDB3wjzXZKKd2dxo=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739169900;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=dSna6r4zr2NPFUZrxu9ix+03dwF7p99CC6EQWkpppz0=;
-	b=PsSC7XfUdcKXE/DFpmv9odWy0g9eOKYeiYn1JGMY99iR76zhfuoi4cJiZr9k5jzD
-	ElSF9OKTRmkfKrWBDfuMnhuckq7+p3euxiAleqF0FicwMEVB5Vij960+p3gDyCpSEOZ
-	MdOzTcbsU5SSR0p3asgZv2OoV/iU5vw3qFdouVhk=
-Received: by mx.zohomail.com with SMTPS id 17391698981001020.5938351078634;
-	Sun, 9 Feb 2025 22:44:58 -0800 (PST)
-Message-ID: <2d08b259-e160-4170-b863-78337942cf83@zohomail.com>
-Date: Mon, 10 Feb 2025 14:44:54 +0800
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F3C01B0F33
+	for <linux-cxl@vger.kernel.org>; Mon, 10 Feb 2025 07:02:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739170987; cv=none; b=q1PGCt3E0cA5ur80Npdk255Zo1k9PHL+vrq6r+wgwT7RRbPbwPZzzFLfSSV1u5e7HnJwoCxLFfIXb+nOLWkzCt//1dQW5Rb10/joJOpx54ErfNG2dsDQJTXthMV2fsEhBO1HsySb6lcx3BXDfdovjnlrLiQ6J9WOIMP9uLYls7c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739170987; c=relaxed/simple;
+	bh=dR4z+iQ5PzxDl+dE+omMr3LTPe78lZe1IJe1S9AQa7E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=URWDF/6R5tJl8ORVf/Eysll7I9rGhL5UE5X8yA1t/2YtgzdWW3y5/pt8BEX7f+dFeadZPbLfEkO1u3zj9AirhIz6PppzYuQuU1pANyTLBHrR6CLeAcAe3O7CGTKlzbge5sm154JdIqEP5lXzk13Xptg5ILpzqyqO0BC/JLuBQP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-3c9ff7000001d7ae-7f-67a9a49c09aa
+Date: Mon, 10 Feb 2025 16:02:47 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Gregory Price <gourry@gourry.net>
+Cc: Matthew Wilcox <willy@infradead.org>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
+	linux-cxl@vger.kernel.org, Honggyu Kim <honggyu.kim@sk.com>,
+	kernel_team@skhynix.com
+Subject: Re: [LSF/MM/BPF TOPIC] Restricting or migrating unmovable kernel
+ allocations from slow tier
+Message-ID: <20250210070247.GA39454@system.software.com>
+References: <Z54hUTXRsw0LYQ8b@localhost.localdomain>
+ <Z54p4QOnAlTYm6DG@casper.infradead.org>
+ <20250207072024.GA48419@system.software.com>
+ <Z6XLCeU0vjIOYGKe@gourry-fedora-PF4VCD3F>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 14/15] cxl/test: Add Set Feature support to cxl_test
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: dan.j.williams@intel.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
- alison.schofield@intel.com, Jonathan.Cameron@huawei.com, dave@stgolabs.net,
- jgg@nvidia.com, shiju.jose@huawei.com, linux-cxl@vger.kernel.org
-References: <20250207233914.2375110-1-dave.jiang@intel.com>
- <20250207233914.2375110-15-dave.jiang@intel.com>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <20250207233914.2375110-15-dave.jiang@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Feedback-ID: rr08011227571744e056d8175a2c8b28d40000244c34195061bbd343425480a3d2bee5aec32f22653b105b2a:zu080112278cc6234723e9f5a2c8c4b7250000bdf8c864946f3e72ce8dfb7e1143b1827818a616b62bc797c2:rf0801122d540cb5336a2de4b68db8843a00009f3a06796b05eb6032ae1c60190684c15cab99e36b241fc0959b7e300acaac:ZohoMail
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6XLCeU0vjIOYGKe@gourry-fedora-PF4VCD3F>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMLMWRmVeSWpSXmKPExsXC9ZZnke6cJSvTDZZu07GY2GNg8fPucXaL
+	87NOsVjcW/Of1WLf673MFr9/zGFzYPPYOesuu0d322V2j80rtDw2fZrE7jH5xnJGj8+b5ALY
+	orhsUlJzMstSi/TtErgydlzYz17wmb9i4YwfrA2Mc3i6GDk5JARMJD4eOsgMY587u48VxGYR
+	UJX4fuwCmM0moC5x48ZPoBoODhGgeNsV9y5GLg5mgUeMEtvf72MDiQsLpEm8/eEHUs4rYCFx
+	v+cUK0iNkMBORolZ21tZIRKCEidnPmEBsZkFtCRu/HvJBNLLLCAtsfwfB0iYU8BM4lLjXTYQ
+	W1RAWeLAtuNMEKftYZO4sIwFwpaUOLjiBssERoFZSKbOQjJ1FsLUBYzMqxiFMvPKchMzc0z0
+	MirzMiv0kvNzNzECg3pZ7Z/oHYyfLgQfYhTgYFTi4T0wY0W6EGtiWXFl7iFGCQ5mJRFek4VA
+	Id6UxMqq1KL8+KLSnNTiQ4zSHCxK4rxG38pThATSE0tSs1NTC1KLYLJMHJxSDYx1kw8qW8pG
+	nSuYVWrFGNU2MyvVNbGSQTmJ6elTibux0ed4y/OvOAX5LttVI+sm0jn7BWuPhPvh6GCZZSoh
+	DOttFNfc1Jt3Pur4vsM1Fx9p2RzeMyvWOSBEXjes7BZP5kdDpVmrru4oPBobq2K5eJdBzhLJ
+	/82pV3WPLjF2X7NPsKY6pPHKOyWW4oxEQy3mouJEAHHsIzNmAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCLMWRmVeSWpSXmKPExsXC5WfdrDtnycp0g5WnFS0m9hhY/Lx7nN3i
+	87PXzBaH555ktTg/6xSLxb01/1kt9r3ey2zx+8ccNgcOj52z7rJ7dLddZvfYvELLY9OnSewe
+	k28sZ/T4dtvDY/GLD0wenzfJBXBEcdmkpOZklqUW6dslcGXsuLCfveAzf8XCGT9YGxjn8HQx
+	cnJICJhInDu7jxXEZhFQlfh+7AKYzSagLnHjxk/mLkYODhGgeNsV9y5GLg5mgUeMEtvf72MD
+	iQsLpEm8/eEHUs4rYCFxv+cUK0iNkMBORolZ21tZIRKCEidnPmEBsZkFtCRu/HvJBNLLLCAt
+	sfwfB0iYU8BM4lLjXTYQW1RAWeLAtuNMExh5ZyHpnoWkexZC9wJG5lWMIpl5ZbmJmTmmesXZ
+	GZV5mRV6yfm5mxiBYbus9s/EHYxfLrsfYhTgYFTi4T0wY0W6EGtiWXFl7iFGCQ5mJRFek4VA
+	Id6UxMqq1KL8+KLSnNTiQ4zSHCxK4rxe4akJQgLpiSWp2ampBalFMFkmDk6pBkYuv+mrbnjO
+	qdnu576dkXXJT+XL11K+TGPKtK4LaJe9kJH9IWpvRMnDKSt1dl1yZH/CtnLy0RP11Ue1Va78
+	Oe+V9PlO1In36SsTWx5slzipeVKOM2f3Znfe4z9/CMz9XvovsnfXKneT6p9ZU960TblqUae+
+	cYbtt2T5r3u65m7eOe+QbpdGZ8N2JZbijERDLeai4kQAjYfA+lcCAAA=
+X-CFilter-Loop: Reflected
 
-On 2/8/2025 7:37 AM, Dave Jiang wrote:
-> Add emulation to support Set Feature mailbox command to cxl_test.
-> The only feature supported is the device patrol scrub feature. The
-> set feature allows activation of patrol scrub for the cxl_test
-> emulated device. The command does not support partial data transfer
-> even though the spec allows it. This restriction is to reduce complexity
-> of the emulation given the patrol scrub feature is very minimal.
->
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Li Ming <ming.li@zohomail.com>
+On Fri, Feb 07, 2025 at 03:57:45AM -0500, Gregory Price wrote:
+> On Fri, Feb 07, 2025 at 04:20:24PM +0900, Byungchul Park wrote:
+> > On Sat, Feb 01, 2025 at 02:04:17PM +0000, Matthew Wilcox wrote:
+> > 
+> > We can work with from the easiest object
+> 
+> >e.g. page table
+> 
+> It's more efficient and easier to change page sizes than it is to make
+> page tables migratable.
+> 
+> It's also easier to reclaim cold pages eating up significantly more
+> memory than the page table (which describes pages at ~8 bytes per page).
+
+Sorry for leaving comments in an excited manner last time.  Lemme focus
+on what to consider and how to resolve them:
+
+Case 1. A system with no or little non-DRAM capacity
+
+   You are right.  It'd be easier to reclaim cold pages eating up
+   ZONE_NORMAL.  ZONE_NORMAL in DRAM probably can cover whole memory.
+
+Case 2. A system with very huge non-DRAM capacity
+
+   ZONE_NORMAL in DRAM might not be able to cover whole memory.  So
+   either allowing ZONE_NORMAL in non-DRAM or allowing some kernel
+   objects to be placed in ZONE_MOVABLE would be required.
+
+   If all the guys agree with Matthew - a system should never be able to
+   equipped with very huge non-DRAM memory, then yes, we might not need
+   the discussion.
+
+Case 3. A system with a capacity between huge and little non-DRAM
+
+   ZONE_NORMAL in DRAM might or might not be able to cover whole memory.
+   Quite big amount of kernel object would be still required.  Of course,
+   properly reclaiming cold pages eating up ZONE_NORMAL in DRAM might
+   work for the purpose.  At the same time, any efforts to reduce the
+   ZONE_NORMAL cost would help and mitigate the pressure on ZONE_NORMAL
+   in DRAM.  Here, the efforts include e.g. reducing size of kernel
+   object, making some kernel objects migratable, and so on.
+   
+   Same.  If this case is also the one that Matthew and others think
+   is not realistic, then yes, we might not need the discussion.  If not,
+   we need to consider the issue.
+
+	Byungchul
