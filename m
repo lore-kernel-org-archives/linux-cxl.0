@@ -1,126 +1,167 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06813176ADE
-	for <linux-cxl@vger.kernel.org>; Mon, 10 Feb 2025 07:17:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739171874; cv=none; b=IOO1XBgOjab7+zknyvj3EuUYbFSfpDhj7EPUT6LHsYK+e8d10L7kcSz/aMXkxS1+NQvR3ZD254ahkg7LjPJ3qQEOD6OnjJ//homE2Vqg/NOC04gPAdbYCLuF13Ftq5A5LmDAcYrxSvJvy+cntzustMaCKPxJr0/B6XD22XdxEdU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739171874; c=relaxed/simple;
-	bh=nid2nrusmZTr3RkMjEyyChPzPy8CI3efI4843DJgr38=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tGTg66UUFvS2Jtd7rPSIkyT/PEGSb918ag3OyisIHLPVHcqXijGn3Qt7TJD1XMY3JgKoEPJDAjgBLz3JZEjQXF5EhjRA1n7j/MeZjHVqjkpz9zvGAerf01oCUrw7ZEhOXkyXvhsDxhpZYQwsupkmkOzAw83BiR+THmDC+I1sPgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-3c9ff7000001d7ae-26-67a9a81af303
-Date: Mon, 10 Feb 2025 16:17:41 +0900
-From: Byungchul Park <byungchul@sk.com>
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2081.outbound.protection.outlook.com [40.107.93.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1847B16F271;
+	Mon, 10 Feb 2025 11:07:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.81
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739185651; cv=fail; b=HKoIRwEvpG+NI7pFmtdWCrBiayVztgjlq1pF7TeEkioKzdTW8zyoutsHm6g4hUVLkWIGsckqsfAo8GWVI3OQxNC0OWjYqXN9I51iFH7RpE3cUqSGlkODmzPP8Azr1yYlFPD/L6ixDFFFava+JrUm/FoT3I3WobEsYeiyLXe0qNk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739185651; c=relaxed/simple;
+	bh=ZX46mN9tECn7BRaKNV+q7WVaO/gNyO5DduHCO/5znYc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=PhYpUtcktKCKEw8Y+fa2fkdlCRgznNxGy8SrMRnPuMWEs9qqmzNYnaYvu6ollNOoLNKam0WV6/X90wEdvaLAJSoyKAMcr02Un6fLFYIWM72zeNyoIyKzzEt7ST2uP5KCO22TJjNDdxwpPOpe8aWz/pN2t1/CRLWXxcXxTpeR6SU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=vw35ZXzO; arc=fail smtp.client-ip=40.107.93.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="vw35ZXzO"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Gl0w8gjSOaX6ORZh3pCHzsOm+3/mEneJ7xn7iUKpXoLceb3svEcl4F1wBrrCvFCqN17DIZFJbDsCxVyEPsj0u+peHiXiIIHQWjw8oCDDwFfvHKbjd8krExY4myNN8ewhhl+xCeSNn5/fy8wSj5xO99UGz2/shbaG/+HZBW7urFcqEnFjVRlJYoZTDFv06HbAQLG8k2awlrK1LEWsyqFeYY11GDGTITtPRUZINqoThkamzveEpvkypPu6IWao83HyO6R1Ip7902lAqYFgtNWhZjFKIycXSTpPfYwIt+xfZrFXPxJ/iWeRPyaHMm8OXnE3XpOshvbi2TzV20wGHdhgJQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eygjou8LQRbxVavVMhtlU4zs6XKBe6KtLHhQsYvd3+c=;
+ b=rXMi76s1tG2f4SyHvzswUtMmnLMZzCSYbWz4CeNg8YPdSRAQPehBy3W2943oMAC0Se/Wn5XTTsB1KX9gkE1arq32thl58cDgnf14AKNQ0UF+NCqIMlcjws8r8yNNI4dtFRxY6Nfmac3REWre4RodVOFfjbif/W0lxA8miYmWBzAz7XQZNIrOW8UN5p0s9oKt1ZA2Fao7QQg8eUUY652tcOlu9jk462V6p+rnk+AXiBH26DsnRaC5kFoVRRZUrd89WIT1UsAYzi9mxbGm8nTnuR/eeZtU2mvKTcMc/DFUEXhz3+8I/XuOveNgPomQGUtWcezwzLmh7yhFRk8O6ITNNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eygjou8LQRbxVavVMhtlU4zs6XKBe6KtLHhQsYvd3+c=;
+ b=vw35ZXzOxrtNsZsCW4xttacUFfbj2bAWT6qOdMPpkZieUxoDFxTKHv3wYejHazHMgfeOpOL1ZvIseYajCUsnHCFtBjz2Wn2N7KeO2T+UKtseRthpjsDTEzONIcyhF9mhatRmU32dId8xnTK0ow4oz5oIFrjSnpmPPtNavG4j904=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CYYPR12MB8750.namprd12.prod.outlook.com (2603:10b6:930:be::18)
+ by CYYPR12MB8924.namprd12.prod.outlook.com (2603:10b6:930:bd::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Mon, 10 Feb
+ 2025 11:07:27 +0000
+Received: from CYYPR12MB8750.namprd12.prod.outlook.com
+ ([fe80::b965:1501:b970:e60a]) by CYYPR12MB8750.namprd12.prod.outlook.com
+ ([fe80::b965:1501:b970:e60a%6]) with mapi id 15.20.8422.015; Mon, 10 Feb 2025
+ 11:07:27 +0000
+Date: Mon, 10 Feb 2025 12:07:20 +0100
+From: Robert Richter <rrichter@amd.com>
 To: Gregory Price <gourry@gourry.net>
-Cc: "Harry (Hyeonggon) Yoo" <42.hyeyoo@gmail.com>,
-	Honggyu Kim <honggyu.kim@sk.com>, kernel_team@skhynix.com,
-	Matthew Wilcox <willy@infradead.org>,
-	lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
-	linux-cxl@vger.kernel.org
-Subject: Re: [LSF/MM/BPF TOPIC] Restricting or migrating unmovable kernel
- allocations from slow tier
-Message-ID: <20250210071741.GB39454@system.software.com>
-References: <Z54hUTXRsw0LYQ8b@localhost.localdomain>
- <Z54p4QOnAlTYm6DG@casper.infradead.org>
- <20250207072024.GA48419@system.software.com>
- <Z6XLCeU0vjIOYGKe@gourry-fedora-PF4VCD3F>
- <ada54160-461c-4942-a4dc-43f7eab0f1bf@sk.com>
- <Z6XYQjCLK6umaoIS@gourry-fedora-PF4VCD3F>
- <Z6lli5cRHh1Ffvql@MacBook-Air-5.local>
- <Z6mV4vwkP0weiLie@gourry-fedora-PF4VCD3F>
+Cc: Jim Kao <jim.kao@xconn-tech.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v2 03/18] cxl/pci: cxl_hdm_decode_init: Move comment
+Message-ID: <Z6nd6Hwi7wP4QxVH@rric.localdomain>
+References: <20250207153753.418849-1-rrichter@amd.com>
+ <20250207153753.418849-4-rrichter@amd.com>
+ <Z6YurVy_K96jet3U@gourry-fedora-PF4VCD3F>
+ <BYAPR06MB413558D98731EBD422CF24E4A1F12@BYAPR06MB4135.namprd06.prod.outlook.com>
+ <Z6aHBuGwuEMy6Kc1@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6aHBuGwuEMy6Kc1@gourry-fedora-PF4VCD3F>
+X-ClientProxiedBy: FR0P281CA0061.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:49::16) To CYYPR12MB8750.namprd12.prod.outlook.com
+ (2603:10b6:930:be::18)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6mV4vwkP0weiLie@gourry-fedora-PF4VCD3F>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMLMWRmVeSWpSXmKPExsXC9ZZnka7UipXpBi1nRSwm9hhY/Lx7nN3i
-	/KxTLBb31vxntdj3ei+zxe8fc9gc2Dx2zrrL7tHddpndY/MKLY9Nnyaxe0y+sZzR4/MmuQC2
-	KC6blNSczLLUIn27BK6MdR3n2At+8ldcn9zP2sDYwNPFyMkhIWAi0fLnPyOM3djxlQnEZhFQ
-	lXj5dwJYnE1AXeLGjZ/MXYwcHCJA8bYr7l2MXBzMAm8YJf5t3MgEEhcWSJN4+8MPpJxXwELi
-	wbQlbCC2kMArJonlu8wg4oISJ2c+YQGxmQW0JG78ewnWyiwgLbH8HwdImFPATGLSpGPMILao
-	gLLEgW3HmUBWSQjsYJOY0XqFDeJMSYmDK26wTGAUmIVk7CwkY2chjF3AyLyKUSgzryw3MTPH
-	RC+jMi+zQi85P3cTIzCol9X+id7B+OlC8CFGAQ5GJR7eAzNWpAuxJpYVV+YeYpTgYFYS4TVZ
-	CBTiTUmsrEotyo8vKs1JLT7EKM3BoiTOa/StPEVIID2xJDU7NbUgtQgmy8TBKdXAqJ18ePaD
-	cGcB9X3un2sNn7Wy7z+gn+W/6/nvC87iLw55sAVJH8wwjeB5eOI/z5m30XfP+QaGnJVUK8t6
-	bmWZ3923MHGCE49v+OJ+h5bDm748vTLrrUMwb0i2C8/x+8zbOk+5FgXttG2y+JXUmFSXvLlL
-	IMI28YQ51022JQzK3V+yeDlEfokqsRRnJBpqMRcVJwIAn4ZuOWYCAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrMLMWRmVeSWpSXmKPExsXC5WfdrCu1YmW6wZ8f3BYTewwsft49zm7x
-	+dlrZovDc0+yWpyfdYrF4t6a/6wW+17vZbb4/WMOmwOHx85Zd9k9utsus3tsXqHlsenTJHaP
-	yTeWM3p8u+3hsfjFByaPz5vkAjiiuGxSUnMyy1KL9O0SuDLWdZxjL/jJX3F9cj9rA2MDTxcj
-	J4eEgIlEY8dXJhCbRUBV4uXfCYwgNpuAusSNGz+Zuxg5OESA4m1X3LsYuTiYBd4wSvzbuJEJ
-	JC4skCbx9ocfSDmvgIXEg2lL2EBsIYFXTBLLd5lBxAUlTs58wgJiMwtoSdz49xKslVlAWmL5
-	Pw6QMKeAmcSkSceYQWxRAWWJA9uOM01g5J2FpHsWku5ZCN0LGJlXMYpk5pXlJmbmmOoVZ2dU
-	5mVW6CXn525iBAbtsto/E3cwfrnsfohRgINRiYf3wIwV6UKsiWXFlbmHGCU4mJVEeE0WAoV4
-	UxIrq1KL8uOLSnNSiw8xSnOwKInzeoWnJggJpCeWpGanphakFsFkmTg4pRoYnU885Kx/vYR/
-	rrbMMudPzxf++frr7meek7u2pFwX6/v+7JRv/jTBtjWfhKvKZ31mcFqget+gkyt9RteKiNLf
-	0fF/tvmvO3Rtqm9hsGib6dX7Wu0X7Kbf7X6wLfz0mWemdz8sbRWwPVEw21RVflqja+u6p74T
-	eradOntmo6Df3GTlJrsWj6jcVUosxRmJhlrMRcWJAHZl8DtWAgAA
-X-CFilter-Loop: Reflected
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CYYPR12MB8750:EE_|CYYPR12MB8924:EE_
+X-MS-Office365-Filtering-Correlation-Id: 98d2d96a-0dc3-4ee2-c3ed-08dd49c31a95
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?6cMLrPLj+MbvVI2Vl54PnU7edwvJKB+wH7rIwD/GhiPNOY4M++BkFY+tMIHC?=
+ =?us-ascii?Q?mplYkp+RXAf7GKb6JxxOmfiGCZH07L8MVlcE3piuDOSzJbXDSMYW9ucr6ap0?=
+ =?us-ascii?Q?tFiW6x0TAUaubW2t3Aitzc0t2ERbN3G7SyybJJd1clNQGuvpgwExb7PZxLp6?=
+ =?us-ascii?Q?MHnnKL+Db5vL/0VSBkAy1nfglpQlak6WbDlocDAw3akUeuLuyo1ReEaq4t8g?=
+ =?us-ascii?Q?LnyJfcRA9EXzh5+rhQQWMZ/ZPp4J6mUU/Ok2OhtBRJNwIRPXcKubWiJAKzUn?=
+ =?us-ascii?Q?z3N5tZShd7JgcHG8WssudvJVKh4hzeV+peWUY+xc/JD36wXkLUl0pbV70Gpd?=
+ =?us-ascii?Q?Ax5FIOs7uzbMlCwH1PHmOk3sTAekmK0I+7vx2406Ls6bhMzKu/4kw9Ele28x?=
+ =?us-ascii?Q?DDuW6JjWoP6yyIg8TtgolaVIDmDG2G4DO4RYu4rMeynbFrN+G0R4vS2TIINW?=
+ =?us-ascii?Q?SZEhjmo0cWf+3PO7ZjA5AJhsoS9XQGnDBcmZk9Lgw23g1+47haEXX2A2e16l?=
+ =?us-ascii?Q?FRTix5gefGOYocWKa7odKA4/J+xKYYvTPnP4I8I0pvjKh9diRbpbcanb58/M?=
+ =?us-ascii?Q?NijVHbaW1z+RA5B1OA5FVI+Oo+id84tQ5SrN1+Gt93wlxg17Q5UxPj/f/xoM?=
+ =?us-ascii?Q?/c30SBHVAcaZmBFutr5lKMbpmR38/SzXtamP4NTt/I4ZcjHvL+vYdK0sBy7a?=
+ =?us-ascii?Q?SobjPZezNtRExfDZSrr0LqREaTjrfRHo+yaZ4JLS+p77DgLaAQWr5JQT6mjm?=
+ =?us-ascii?Q?BzCqYM+PouwWmn0TKM4p3KcwwKBfwHY7SsjC+AMnd2Ap0rRW+lLeC/Ww/i8K?=
+ =?us-ascii?Q?cZpvphbaPY+jhMCNY4kM8PJJG02ZnF7tAlRiSZQU5YeH6ERR1f4yBywqkKPE?=
+ =?us-ascii?Q?L1mul1yCi1SuG5P1L3563Uw2P6GYP65GFe/9ILdMAvOyGHTEZ6uPPsJqAGvG?=
+ =?us-ascii?Q?a7s9rdHCGcoLSEKjOMb1qnmkZZIrQDDFY/gp0Yk52IAnIyux/Z97uwQxf/3B?=
+ =?us-ascii?Q?3ggeWhCGMTfvZ3rnUCksgLz4sgV5+Xo1icuzC0MCCxNJRqRDXv7tT4F1vAfE?=
+ =?us-ascii?Q?GRAQfKCyJsRahlFWs3RoFMYZ5gzlnaxqKL/JA0Ekn70u57o/1xcSxPihN/2J?=
+ =?us-ascii?Q?gZMZkagbIOsqypVCbB7YaIaQP07CT9oOMW+TvKsw9wNQD3UNZZxEHgrm+GY/?=
+ =?us-ascii?Q?rOShixlCsrxWRpLo2TQ0metc2J1domI3eKXMUd4stfHsgAOoip8Yi6gH1NXp?=
+ =?us-ascii?Q?1ckshalJPbUDknNsZZq6mQmh+GWE8rPq4ybZl5Skaw5QRS2kIOGTsiNb98x/?=
+ =?us-ascii?Q?ae7c5RZtbID/hNlkWs/Z1B3E/tRwqkKH4hbUVqwQp4BRqskCYjQivBINIG9K?=
+ =?us-ascii?Q?rGd5fwC3UczdEzrw3VzLm6M/NGzu?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?3fbxhdyPxcXbTldfzwb2cvn0otbaV16qX/6WrRgpe+td32KFV2EWwILxYHet?=
+ =?us-ascii?Q?aw7NCqk2PR9DSTV2ecqYymC4dPGohtbLG2EHmd3wTdxIZg6ELeNZfhLIQPsm?=
+ =?us-ascii?Q?//h/ub9EcHuG2VZyVkjRX+Y4AR1yQaUEg0FNz00DaE3QNQcOexgPZMzg/GDl?=
+ =?us-ascii?Q?5+zunjdO2pqy4ogQsLkg3l/VkYVz5phnNYkOZyAEyeuJ3w2MwrfWvhHQ4Foe?=
+ =?us-ascii?Q?tPOMz0+tB7Mip4zfrVNBtewjtSkqElR39Uovd9vd0wsTA9lzfeQIRNj2bewg?=
+ =?us-ascii?Q?2+rD18CYlCJsGY1nJcGM24o7kcp1rN5GDoRTahfE4O2/zXu0dhaefUPnxUBp?=
+ =?us-ascii?Q?avXKEJ115TOXiBnyjqhDEJgqdfZ4gdUjPY9Rfv+aniM3x4OBb6iiZlw8JFki?=
+ =?us-ascii?Q?3dyhz/ugf0zjbHhrUcA0KN4GsU8I2/1gNt+3KC+8un74dvyk5rKkGf68dXG+?=
+ =?us-ascii?Q?fL8fcxHXyd1LeeKuCbDx++WVXUj8Neb10JDhgPR0ICtBKQPMNsf/UXMENkKs?=
+ =?us-ascii?Q?+p5CFtVll6slf/mnM9MWEWbQ2964OLjt4GbSIK1kk0MoLxs2iJYVdumAGyEs?=
+ =?us-ascii?Q?LvR3otbEYHixGFeovhIcydSqbZxpSVf5MesKvahnc4Za/M3kyO1isViRfLFy?=
+ =?us-ascii?Q?H2Qoo1EIGXjK6BqDSFzMnE2Soa5UCMH/JGQcFxJDrGfSQcjFk3ivTJwnEcbZ?=
+ =?us-ascii?Q?/4vo1lkVUPhXq8XajJ6b92iXwnPW3wQ96rf6vY5MqCEKmDKWAXEItWgW724Z?=
+ =?us-ascii?Q?5yX7nl7v2VVeR/y3UCqt/PwD7Rb/F6RPDY4B5r8kQj638z+CWS44LAa1zGZQ?=
+ =?us-ascii?Q?hTzopO0ZWniu4Ia0o4sWBJjxCRlE8PLPQPf152+c6WC5PwpklMCMBo0WBTtb?=
+ =?us-ascii?Q?C9VCoKJZVCEQRrLVtcT9YM+zIgbduVOc5eQMUAzU8qc9VFRUkr43hXSSaHi+?=
+ =?us-ascii?Q?sZBSekEbwoMxTD9wGq2o9yN0hE7fMb79K29OaA4tcCShNhohhWo1c2xeMUc/?=
+ =?us-ascii?Q?3ckbdm7+WI92I+FpiDhdU4YtJSftGPFphEnHUVWV6Lf8SSvjYChRxRX/kZ+N?=
+ =?us-ascii?Q?ciYaFbGXZXGAmKcz/jbBMTib7lgfE1ZGbnK2x4ylhZFplsq0Ryp/c2HClF66?=
+ =?us-ascii?Q?puDKL72xwK7bJaXzyZrYQgzmTGZC3ZrAaJ7EQwB4vMuRjeiFytn28SiwL4at?=
+ =?us-ascii?Q?FntbPi/n5sDFLeofie3hcUJrkHSJ4kut9KEmV7iFSZzAy/0CeBda1xIxJdSS?=
+ =?us-ascii?Q?J3j7uICURzsketsepDMHV7cGlch8gAmtelu5ch2m4sHNr5WoXrwq37JOuhbC?=
+ =?us-ascii?Q?/AjhOo7QeVI29dymsSg51kWhO9i5PzpLRzZm2/E8vDpMAE8/VgQsQlwVGJB+?=
+ =?us-ascii?Q?wxbmF7b4LXPbnynDIllnCRZjz2mBdUhojzofoZKkvNJkxFfPO5vw/DGz3r46?=
+ =?us-ascii?Q?C42n5Htdenl181aHq5sGv40sVtlenza+Jzgu3sTPrVn06eyOW0I5QjhNFKmS?=
+ =?us-ascii?Q?amqFVSEcyM4Auk8wQdCUDKcOcNuCHoZewgNHDUEld0EXlrscHFASIGpyuvwN?=
+ =?us-ascii?Q?AMEI/0suImavJ1jysnWdcs2r2Y82Ro2+UnK/4Odm?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 98d2d96a-0dc3-4ee2-c3ed-08dd49c31a95
+X-MS-Exchange-CrossTenant-AuthSource: CYYPR12MB8750.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2025 11:07:27.2585
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: eb82G7/73dfWSujfqapX0BgL4IO49N/mBErchfkG9i7DXMHyR1NOHYo6nN8bln1c0GUDNcI4U4LBluDmLOYUTg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8924
 
-On Mon, Feb 10, 2025 at 01:00:02AM -0500, Gregory Price wrote:
-> On Mon, Feb 10, 2025 at 11:33:47AM +0900, Harry (Hyeonggon) Yoo wrote:
+On 07.02.25 17:19:50, Gregory Price wrote:
+> On Fri, Feb 07, 2025 at 09:36:08PM +0000, Jim Kao wrote:
+> > Do we have any limitation for HDM Decoder Range in Linux Kernel ?
+> > We has observed that Linux might be hung if range is larger than 8TB.
 > > 
-> > Premise: Some ZONE_NORMAL capacity exists on CXL memory
-> >          due to its large capacity.
-> >
-> What you actually need to show to justify increasing the complexity is
-> (at least - but not limited to)
-> 
-> 1) structures you want to migrate are harmful when placed on slow memory
-> 
->    ex) Is `struct page` on slow mem actually harmful? - no data?
-
-Then we can hold this one until it turns out it's harmful or give up.
-
->    ex) Are page tables on slow mem actually harmful? - known, yes.
-
-Defenitly yes.  What can be the next?
-
-> 2) The structures cannot be made to take up less space on local tier
-> 
->    ex) struct page can be shrunk - do that first
->    ex) huge-pages can be deployed - do that first
-
-I'm really courious about this.  Is there any reason that we should work
-these in a serialized manner?
-
-> 3) the structures take up sufficient space that it matters
-> 
->    ex) struct page after shrunk might not - do that first
->    ex) page tables with multi-sized huge pages may not - do that first
-
-Same.  Should it be serialized?
-
-> 4) Making the structures migratable actually does something useful
-> 
->    are `struct page` or page tables after #2 and #3 both:
-> 
->    a) going through hot/cold phases enough to warrant being tiered
-> 
->    b) hot enough for long enough that migration matters?
-> 
->    You can probably actually (maybe?) collect data on this today - but
->    you still have to contend with #2 and #3.
-
-Ah.  You seem to mean those works should be serialized.  Right?  If it
-should be for some reason, then it could be sensible.
-
-	Byungchul
-
-> > I don't understand why we shouldn't introduce more kernel movable memory
-> > if that turns out to be beneficial?
+> > Jim
 > > 
 > 
-> No one is going to stop research you want to do. I'm simply expressing
-> that I think it's an ill-advised path to take.
+> Do you have any additional details? dmesg/core dumps, etc?
 > 
-> ~Gregory
+> Seems pretty suspicious that it happens right on the 44-bit boundary.
+
+I am not aware of limitations from CXL spec or driver. AMD platforms
+support a much larger physical address range.
+
+-Robert
