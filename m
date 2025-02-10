@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11C142500BA
-	for <linux-cxl@vger.kernel.org>; Mon, 10 Feb 2025 17:41:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E8F25B676
+	for <linux-cxl@vger.kernel.org>; Mon, 10 Feb 2025 17:51:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739209263; cv=none; b=RITyMUYAzZGsGwVhw0ChXum90pYblip9qnT6HDlAb032ccK6BxITR3FwJFIhNqpfxAPKGm2u03I9aeMHbLOhno89wqsD9CyWU1hJcIDQ3LxghZGq5t2RtD8FYWwWMMI9Hd16F6o1RU0u+GYaZ1ryi44KF+f/BTQ99J8JC0c7bb4=
+	t=1739209862; cv=none; b=PWQhrtYYzNOUBA3ciXYsuGIC6Rm+kQU5fBXBMLyEEofw4eNX/CAaLYUqAUvTKYdatRVCK/OOgrWd27a2V9ciykV9R3Ym4NGDmlCOD1c6XmiMasM3/Pd2K4OkOsdu0cxgKa/Xvy1xNPAHC5CfpCnZ3VlABs+KfugcTkJzP1QhQs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739209263; c=relaxed/simple;
-	bh=X9GPSv4uWfq9tjTMX40JYp455H7jI5YDbzkZbPGlJlw=;
+	s=arc-20240116; t=1739209862; c=relaxed/simple;
+	bh=WdwetryGiwWUL5gYFvFIkRjj3GJ7ymbwu4v7hxmUILI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bNQGkkr6hTdyGwbIDVOrS6DDS6iBqVqEPq6LNWYObv61jJEOdLySyulA59iuJ1Rs6FjAEoQ+u2L392bbIvsE4oZv9IWKkJo9XJP7+IKo//AWlqcRLSlMbnQ3dx7TiPJVpm9beugRAKZR0JC3p8MdDHAClITPomxNi15bXHJrkwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RhX4VDjd; arc=none smtp.client-ip=198.175.65.9
+	 In-Reply-To:Content-Type; b=UByPZqXWurIL+2zSkwE8X6FuGklvWJp1JtoOnkQVStWUNjXtQ/DDbMCvPxAUcb7gbBytTT3s/F6tmqvPU+TGXf5HdyCI65Z53MrHdRJUChVGaPvXAF3XUFB0MJzwo1xG/PTg5QtjD4YARR0ry+YNMZAlNFSLpY1RD214348CutQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YjWeGyHQ; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RhX4VDjd"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YjWeGyHQ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739209262; x=1770745262;
+  t=1739209860; x=1770745860;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=X9GPSv4uWfq9tjTMX40JYp455H7jI5YDbzkZbPGlJlw=;
-  b=RhX4VDjdkzexSLOKCmw/w8HVxcXNqdPPq88DA1TLRZPpcUGxq/Q6G6FV
-   yHW2lnJDOUVU6UytFupnV75hacwfurplJg/ON+AI/heeYfLvOBrkkDaW2
-   zjjtdsEpDh1YbPx8BAP0o5/hjVSg3Mw1/Nx7om3UzKxAyYLUi4ZP3DHtL
-   Raprg0Kvl1AZaQLGAb+LZqXS7xzJYqnAMNIVO+DsxDT/F3KnOfNcL2wiz
-   /d73H0hBxsRW1aPMeLZeCooZud1SF1iUNpy8hp0vMijG7AJLpJtJebQgT
-   gbdQPs7eTj6Ioj+X1iASpa4uc8yQo+m7F2fsnirNqLkM92X14YXvQ6ftY
-   Q==;
-X-CSE-ConnectionGUID: W0ULl5PDQfG5GBpC/rns8Q==
-X-CSE-MsgGUID: 2F/G1DBsTPa0i7v7QMOqwg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="62276987"
+  bh=WdwetryGiwWUL5gYFvFIkRjj3GJ7ymbwu4v7hxmUILI=;
+  b=YjWeGyHQYv5thyfOgqPKO5xKyBBMv7MTuesU9kzx0p6kWOmRGEp3jlTH
+   JNpE5/PKZeGH+SoZ8iEi0nUOL6QdW+YdRmksNJEXr5f4XXgpttTMSPFLg
+   H5IWLI/nqvVJNtTiIb1OgKtXrp/c3Ma2SpUP8v/mXRXJsjkaIXkebgkMk
+   QL3+08AnCzXpbGgUXi4sgRhQvoq+9x8T0wbHDZ7Lo6CXgBenhDAQk4NxV
+   m+pcMEW0vpbh6KIYwAy9mxS8uHriQ0Api7m98o7baPi2HVoVgPksTNndw
+   L3U4myQgCegCfevMvWS8Bysd6FJfPxK487YG+YJxnhnS5EdTLi5f2QdhS
+   g==;
+X-CSE-ConnectionGUID: tf47ynJeRw+ToJEcX7f5MQ==
+X-CSE-MsgGUID: Ayydgr5RSHSqrgmQh1mWBA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="39951973"
 X-IronPort-AV: E=Sophos;i="6.13,275,1732608000"; 
-   d="scan'208";a="62276987"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 09:41:01 -0800
-X-CSE-ConnectionGUID: Cwcx7ue7T4CTIQwT2/tS+Q==
-X-CSE-MsgGUID: leGL293kTQGB/nWrEYHv2Q==
+   d="scan'208";a="39951973"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 09:51:00 -0800
+X-CSE-ConnectionGUID: 9/n0qTjgR62V/kBv9TEvIA==
+X-CSE-MsgGUID: drQLc4a3R7KpKZXeYmZpCQ==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,275,1732608000"; 
-   d="scan'208";a="117332343"
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="113135496"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO [10.125.111.192]) ([10.125.111.192])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 09:41:00 -0800
-Message-ID: <9e38ddd1-b4ff-4c20-a1e9-76bc94f35e48@intel.com>
-Date: Mon, 10 Feb 2025 10:40:58 -0700
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 09:50:58 -0800
+Message-ID: <d991ca86-2e0b-46e5-80af-e922d38d20ab@intel.com>
+Date: Mon, 10 Feb 2025 10:50:57 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -128,6 +128,12 @@ On 2/7/25 11:22 PM, Li Ming wrote:
 >>  			return NULL;
 >>  
 >>  		memcpy(entry, mbox_out->ents, retrieved);
+
+While you are pointing out the issue with copying multiple entries, I noticed that this needs to be fixed in patch2 as well. It should be:
+memcpy(entry, mbox_out->ents + start, retrieved);
+
+DJ
+
 >> +		if (!is_cxl_feature_exclusive(entry))
 >> +			user_feats++;
 > 
@@ -140,11 +146,6 @@ On 2/7/25 11:22 PM, Li Ming wrote:
 > 
 >         user_feats++;
 > 
-
-Yes I'll fix. The copying multiple entries really threw everything off. Thanks for the catch.
-
-DJ
-
 > 
 > Other looks good to me.
 > 
