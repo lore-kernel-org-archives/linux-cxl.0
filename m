@@ -1,193 +1,155 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F12D261562;
-	Tue, 11 Feb 2025 17:36:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59121E231F
+	for <linux-cxl@vger.kernel.org>; Tue, 11 Feb 2025 18:29:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739295372; cv=none; b=MDiLrckPkvyovm+8RvyqAardXuk/2rWUnRt34bm/0By4y7adc4zUPjLqjukG41G51O31wXZg76XicDOr/pUH0w661bDAkFFliKrmva1c4qUm+CTdiinmfVXROY1t/2AWGerzQIO2dTltyBOz9VyBcKjK8zYoQKvS+9aZDKVf1I0=
+	t=1739298552; cv=none; b=vDLCJoknL1mkXqW3gte0k0c2hJuuwQsvMRZIE1EfPYnaf7CdSC8q11atQwMTHgl9oiF6CereSwIRMR3/Z7AKNPr6G2ccaF8qMlnDUVs7vFdoICS+hVE50VObD4D0nhDWcMJhW4ppmGwmavknuhnhEtWuoYniMyhF2KU2zeCMQtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739295372; c=relaxed/simple;
-	bh=pA2c/4v4jIsjXDTHK2U3nVkLaip9cFt3LkM0qkCtz5U=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SAJMW+8JgclemYdLs52XuQTaA1k6pepke9NOPef9EPxqrqJ/PRXgrjDUrWrxKkBkMzIkh0JE3L6nPQatiP4VArHkthaWsWy5bK3vOMRUwJAGGRDvEs975w9F/l/Ld7RBFCf2zB5CUl6p+a6MMIUw7iYagynGWQG5h3Sb88HJubg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YspVQ5Xkdz6K5p3;
-	Wed, 12 Feb 2025 01:34:54 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2A5A61402A4;
-	Wed, 12 Feb 2025 01:36:08 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 11 Feb
- 2025 18:36:07 +0100
-Date: Tue, 11 Feb 2025 17:36:06 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Li Ming <ming.li@zohomail.com>
-CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 7/7] cxl/region: Drop goto pattern of
- construct_region()
-Message-ID: <20250211173606.00004d33@huawei.com>
-In-Reply-To: <20250211075727.351895-8-ming.li@zohomail.com>
-References: <20250211075727.351895-1-ming.li@zohomail.com>
-	<20250211075727.351895-8-ming.li@zohomail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1739298552; c=relaxed/simple;
+	bh=EqjD4rTmIxUkZ4sG2ozcudaDPEqVq2WSNU5pWjtk2hw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lww2AsLjtonoywjhelpnrNqW4Bncyyoqw1qV1Z5UHPnkaA91tZw4UpV7Fz5t7FAvJXK89ztwbzgy2g+s8Gso8uskphkHRCdwDXMAyM9Hoj7UWWg2eRMrEli6tlktPYlo0RJba1UYI02iPEK9ZeYDgb1t21zlKJwZYnudqNf75B8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40FEDC4CEDD;
+	Tue, 11 Feb 2025 18:29:12 +0000 (UTC)
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org
+Cc: dan.j.williams@intel.com,
+	ira.weiny@intel.com,
+	vishal.l.verma@intel.com,
+	alison.schofield@intel.com,
+	Jonathan.Cameron@huawei.com,
+	dave@stgolabs.net,
+	jgg@nvidia.com,
+	shiju.jose@huawei.com
+Subject: [PATCH v5 00/15] cxl: Add CXL feature commands support via fwctl
+Date: Tue, 11 Feb 2025 11:27:54 -0700
+Message-ID: <20250211182909.1650096-1-dave.jiang@intel.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Transfer-Encoding: 8bit
 
-On Tue, 11 Feb 2025 15:57:27 +0800
-Li Ming <ming.li@zohomail.com> wrote:
+v5:
+- Add devm action to fwctl. (Dan)
+- Fix return of NULL instead of ERR_PTR() for get features. (Ming)
+- Make cxl_get/set_feature() internal to cxl/core (Dan)
+- Add missing NULL check for cxl_set_feature() (Dan)
+- Remove cxlmd back pointer from fwctl. (Dan)
+- Add missing CONFIG_FWCTL dependency to Kconfig.
+- Fix index of for loop for fwctl get features. (Ming)
+- See individual patches for detailed changes from v4.
 
-> Some operations need to be procted by the cxl_region_rwsem in construct
-> region(). Currently, construct_region() uses down_write() and up_write()
-> for the cxl_region_rwsem, so there is a goto pattern after down_write()
-> invoked to release cxl_region_rwsem.
-> 
-> construct region() can be optimized to remove the goto pattern. The
-> changes are creating a new function called __construct_region() which
-> will include all checking and operations protected by the
-> cxl_region_rwsem, and using guard(rwsem_write) to replace down_write()
-> and up_write() in __construct_region().
-> 
-> Signed-off-by: Li Ming <ming.li@zohomail.com>
-> ---
->  drivers/cxl/core/region.c | 71 +++++++++++++++++++++------------------
->  1 file changed, 39 insertions(+), 32 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 36f3771818d3..170278bdcedc 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -3217,49 +3217,31 @@ static int match_region_by_range(struct device *dev, const void *data)
->  	return rc;
->  }
->  
-> -/* Establish an empty region covering the given HPA range */
-> -static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
-> -					   struct cxl_endpoint_decoder *cxled)
-> +static int __construct_region(struct cxl_region *cxlr,
+v4:
+- Rebase to FWCTL series v4 based on v6.14-rc1
+- Merge patch 1/16 from v3 into cxl/next ahead. (Jonathan)
+- Move everything to core/features.c and behind CONFIG_CXL_FEATURES. (Dan)
+- Split the registration of features into 2 parts. Do the registration in
+  PCI probe. One before memdev enumeration to enable kernel feature support,
+  and one after memdev enumeration to support FWCTL. (Dan)
+- Fix incrememt of pointer after copying feature data. (Ming)
+- Add check for no immediate change effect and no reset change effects. (Dan, Jonathan)
+- Remove IDs and use opcodes directly. (Dan)
+- See individual patches for detailed changes from v3.
 
-This is only factoring out part, so I'm not sure the naming makes sense.
-I don't have a better name however as this is doing various different things...
-setup_region() doesn't feel right either...
+v3:
+- Rearrange code and shift code forward to reduce diffs. (Jonathan)
+- Use struct_size() in appropriate locations. (Jonathan)
+- Remove usage of __weak and refactor accordingly. (Jason)
+- Return NULL for allocation functions. (Jonathan)
+- See individual patches for detailed changes from v2.
 
+v2:
+- Drop features device and driver. Move features enabling to cxl_memdev. (Dan)
+- Drop sysfs attribute of number of features. (Dan)
+- Drop moving of include/uapi/linux/cxl_mem.h. (Dan)
+- Set get driver info ioctl to return reserved 32bit. Set behavior of issue
+  ioctl successful as indicating Feature commands supported.
+- Set 'Set Feature Size' to 0 for kernel exclusive Features.
+- See individual patches for detailed changes from v1.
+- Hide FWCTL bits behind CONFIG_CXL_FWCTL. (Dan)
 
-> +			      struct cxl_root_decoder *cxlrd,
-> +			      struct cxl_endpoint_decoder *cxled)
->  {
->  	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> -	struct cxl_port *port = cxlrd_to_port(cxlrd);
->  	struct range *hpa = &cxled->cxld.hpa_range;
->  	struct cxl_region_params *p;
-> -	struct cxl_region *cxlr;
->  	struct resource *res;
->  	int rc;
->  
-> -	do {
-> -		cxlr = __create_region(cxlrd, cxled->mode,
-> -				       atomic_read(&cxlrd->region_id));
-> -	} while (IS_ERR(cxlr) && PTR_ERR(cxlr) == -EBUSY);
-> -
-> -	if (IS_ERR(cxlr)) {
-> -		dev_err(cxlmd->dev.parent,
-> -			"%s:%s: %s failed assign region: %ld\n",
-> -			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
-> -			__func__, PTR_ERR(cxlr));
-> -		return cxlr;
-> -	}
-> -
-> -	down_write(&cxl_region_rwsem);
-> +	guard(rwsem_write)(&cxl_region_rwsem);
->  	p = &cxlr->params;
->  	if (p->state >= CXL_CONFIG_INTERLEAVE_ACTIVE) {
->  		dev_err(cxlmd->dev.parent,
->  			"%s:%s: %s autodiscovery interrupted\n",
->  			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
->  			__func__);
-> -		rc = -EBUSY;
-> -		goto err;
-> +		return -EBUSY;
->  	}
->  
->  	set_bit(CXL_REGION_F_AUTO, &cxlr->flags);
->  
->  	res = kmalloc(sizeof(*res), GFP_KERNEL);
-> -	if (!res) {
-> -		rc = -ENOMEM;
-> -		goto err;
-> -	}
-> +	if (!res)
-> +		return -ENOMEM;
->  
->  	*res = DEFINE_RES_MEM_NAMED(hpa->start, range_len(hpa),
->  				    dev_name(&cxlr->dev));
-> @@ -3282,7 +3264,7 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
->  
->  	rc = sysfs_update_group(&cxlr->dev.kobj, get_cxl_region_target_group());
->  	if (rc)
-> -		goto err;
-> +		return rc;
->  
->  	dev_dbg(cxlmd->dev.parent, "%s:%s: %s %s res: %pr iw: %d ig: %d\n",
->  		dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev), __func__,
-> @@ -3291,14 +3273,39 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
->  
->  	/* ...to match put_device() in cxl_add_to_region() */
->  	get_device(&cxlr->dev);
-> -	up_write(&cxl_region_rwsem);
->  
-> -	return cxlr;
-> +	return 0;
-> +}
->  
-> -err:
-> -	up_write(&cxl_region_rwsem);
-> -	devm_release_action(port->uport_dev, unregister_region, cxlr);
-> -	return ERR_PTR(rc);
-> +/* Establish an empty region covering the given HPA range */
-> +static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
-> +					   struct cxl_endpoint_decoder *cxled)
-> +{
-> +	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> +	struct cxl_port *port = cxlrd_to_port(cxlrd);
-> +	struct cxl_region *cxlr;
-> +	int rc;
-> +
-> +	do {
-> +		cxlr = __create_region(cxlrd, cxled->mode,
-> +				       atomic_read(&cxlrd->region_id));
-> +	} while (IS_ERR(cxlr) && PTR_ERR(cxlr) == -EBUSY);
-> +
-> +	if (IS_ERR(cxlr)) {
-> +		dev_err(cxlmd->dev.parent,
-> +			"%s:%s: %s failed assign region: %ld\n",
-> +			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
-> +			__func__, PTR_ERR(cxlr));
-> +		return cxlr;
-> +	}
-> +
-> +	rc = __construct_region(cxlr, cxlrd, cxled);
-> +	if (rc) {
-> +		devm_release_action(port->uport_dev, unregister_region, cxlr);
-> +		return ERR_PTR(rc);
-> +	}
-> +
-> +	return cxlr;
->  }
->  
->  int cxl_add_to_region(struct cxl_port *root, struct cxl_endpoint_decoder *cxled)
+v1:
+- Create a CXL features driver to handle all feature command related bits
+  including FWCTL support. (Dan)
+- Tested against CXL CLI unit tests for FWCTL.
+- See individual patches for detailed changes from RFC v2.
 
+RFC v2:
+- Dropped 1/13 and 2/13 from previous version. Merged upstream already.
+- Combined changes from Shiju for "get supported features"
+- Addressed comments from Jonathan and Jason
+- See specific changes in individual patch revision history
+- Added hardware command info to FWCTL
+- Added filtering to set feature command
+- Added documentation
+
+This series add support for CXL feature commands using the FWCTL framework [1].
+The code has been tested with CXL CLI unit tests for FWCTL.
+
+Patches 1-6 are shared with EDAC series [1] and there will be an immutable branch
+once accepted post review.
+
+CXL Features support is added behind the CXL mem driver. The 3 mailbox commands
+"Get Supported Features", "Get Feature", and "Set Feature" are implemented. The
+"Get" commands are under the FWCTL_RPC_CONFIGURATION policy, the "Set" command
+checks the policy depending on the set effects of the feature defined by the
+device via the Feature set effects field. All mailbox commands for CXL provides
+an effects table that describes the effects of a command when performed on the
+device.  For CXL features, there is also an effects field that describes the
+effects a feature set operation has on the device per feature. The security
+policy is checked against this feature specific effects field. 
+
+The code is based off of v4 of FWCTL series [2] posted by Jason and rebased on top of
+v6.14-rc1 plus 1 patch in
+cxl/next 43ca2463df9d ("cxl: Refactor user ioctl command path from mds to mailbox").
+A kernel branch [3] is provided for convience of testing and review.
+
+[1]: https://lore.kernel.org/linux-cxl/20250106121017.1620-1-shiju.jose@huawei.com/T/#t
+[2]: https://lore.kernel.org/linux-cxl/0-v3-960f17f90f17+516-fwctl_jgg@nvidia.com/#r
+[3]: https://git.kernel.org/pub/scm/linux/kernel/git/djiang/linux.git/log/?h=cxl/fwctl
+
+---
+
+Dave Jiang (13):
+      cxl: Enumerate feature commands
+      cxl: Add Get Supported Features command for kernel usage
+      cxl/test: Add Get Supported Features mailbox command support
+      cxl: Setup exclusive CXL features that are reserved for the kernel
+      cxl: Add FWCTL support to CXL
+      cxl: Add support for FWCTL get driver information callback
+      cxl: Move cxl feature command structs to user header
+      cxl: Add support for fwctl RPC command to enable CXL feature commands
+      cxl: Add support to handle user feature commands for get feature
+      cxl: Add support to handle user feature commands for set feature
+      cxl/test: Add Get Feature support to cxl_test
+      cxl/test: Add Set Feature support to cxl_test
+      fwctl/cxl: Add documentation to FWCTL CXL
+
+Shiju Jose (2):
+      cxl/mbox: Add GET_FEATURE mailbox command
+      cxl/mbox: Add SET_FEATURE mailbox command
+
+ Documentation/userspace-api/fwctl/fwctl-cxl.rst | 137 ++++++++
+ Documentation/userspace-api/fwctl/index.rst     |   1 +
+ MAINTAINERS                                     |   1 +
+ drivers/cxl/Kconfig                             |  12 +
+ drivers/cxl/core/Makefile                       |   1 +
+ drivers/cxl/core/core.h                         |  10 +
+ drivers/cxl/core/features.c                     | 740 ++++++++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/core/mbox.c                         |  36 ++-
+ drivers/cxl/cxlmem.h                            |   7 +
+ drivers/cxl/pci.c                               |   8 +
+ include/cxl/features.h                          |  92 ++++++
+ include/cxl/mailbox.h                           |   4 +
+ include/uapi/cxl/features.h                     | 128 ++++++++
+ include/uapi/fwctl/cxl.h                        |  48 +++
+ include/uapi/fwctl/fwctl.h                      |   1 +
+ tools/testing/cxl/Kbuild                        |   1 +
+ tools/testing/cxl/test/mem.c                    | 184 +++++++++++
+ 17 files changed, 1410 insertions(+), 1 deletion(-)
