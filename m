@@ -1,97 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F36C1D54C2;
-	Tue, 11 Feb 2025 07:55:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739260560; cv=none; b=Tq2pYpr4ayWsNAKL5++sEXSwi+yicc01RRMuOUh6oFgkNYFNjdKec/D7afV5v2ZkQFnoH+2jeEqYvAPhwcMBC5+kJYswdZtW/UuXyeYsL/ku915X1ifrhqwyX5Z4dnluC2neIw3DngjJWbwcxiCgG1R1EuND5HNo1K3G8+pPWMY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739260560; c=relaxed/simple;
-	bh=FELs+YTJY5wG1fT/XXOisUg9dVRRC8S4Idi6jI4jsP8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=abFGcaewlxAdTu3vsOrxXdRQVNCGTR6ZN4HL9j5+sXuxRHeZN0J5V4JHHJvOJHrsoPLpk7XtWzgvnt+ftAiuhvIHwOQsPegIv+qFhbbtYjrfY9fLqepxecWR0PYA8MU7wVzFKerfZHsO9ylT/IHKSgevq5ohl8Op3Y5tdjSpCus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t3Ohyi+g; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D2AA1CB51B;
+	Tue, 11 Feb 2025 07:57:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739260676; cv=pass; b=dVuxSw/T5rnR5HuCqpqK2f8iEXlfAEY32gefTo10eEGrNAFqxd2xjZEj+WG3xMEPCt9or78i2yvXROH+Ex2roM5sji+dpWYKRF9eSz3f5h2H5RilF9i6AzC3tDtduelHhOaCWbVn+cd3jih5UuF/XTZWZT7rzG8hi7SQUmbuXPI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739260676; c=relaxed/simple;
+	bh=EkXyonoyXlxTxbDDka2sbe2pzNYd9avLkgJX04haqYE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=t96YNtRX1recCrkbsU+i0mrfrMAWFEHYGGnVfLdnIOu0ZmNhWZ+FoyfwyvMsd9RI7f3ZZQDfrEznQ8dtou20EnPNg+ZvuYG0cL4cyJSmiFqdU8a4hnFcXaATbb8Q27wHuXRDuEL1IV8lp57WGhsEK52NbgkKaTCZ/9tfT88nUCc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=J9OfNxcc; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t3Ohyi+g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A839C4CEDD;
-	Tue, 11 Feb 2025 07:55:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739260559;
-	bh=FELs+YTJY5wG1fT/XXOisUg9dVRRC8S4Idi6jI4jsP8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=t3Ohyi+gbS9BSClkhjavMy30VcCoo4YwwtZXQ9CPju2TActO/eM8iFP9kooICHeTA
-	 LAo/p/bohI/WTXYKIX/ry85w4tOnhw6Zgi+Yg02uzpr1Vt4X+92FjjDduMquF1sPSO
-	 fyh9R0f8DC3tQx74N3ITFaaeHZeXow8IHRKkJ7Au/5UgKlDvR2IFsbiib0C7zJhvP6
-	 BkQVexRj23EzHICjCcA4SsDpAMvS9fhzECBuNbypW7VpYE3oC18/J7pSNxnS9/JC2m
-	 a0OezbLMWAJfIb7gIPk/ng2WKOCntFyqD/r+XKnBeRE8DG6YqKJLersMh7d1lgQlIk
-	 CUE6+f2ULccjQ==
-Date: Tue, 11 Feb 2025 09:55:53 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: Jakub Kicinski <kuba@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>
-Cc: Saeed Mahameed <saeedm@nvidia.com>,
-	Andy Gospodarek <andrew.gospodarek@broadcom.com>,
-	Aron Silverton <aron.silverton@oracle.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Daniel Vetter <daniel.vetter@ffwll.ch>,
-	Dave Jiang <dave.jiang@intel.com>, David Ahern <dsahern@kernel.org>,
-	Andy Gospodarek <gospo@broadcom.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Itay Avraham <itayavr@nvidia.com>, Jiri Pirko <jiri@nvidia.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Leonid Bloch <lbloch@nvidia.com>, linux-cxl@vger.kernel.org,
-	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-	"Nelson, Shannon" <shannon.nelson@amd.com>,
-	Michael Chan <michael.chan@broadcom.com>
-Subject: Re: [PATCH v4 10/10] bnxt: Create an auxiliary device for fwctl_bnxt
-Message-ID: <20250211075553.GF17863@unreal>
-References: <0-v4-0cf4ec3b8143+4995-fwctl_jgg@nvidia.com>
- <10-v4-0cf4ec3b8143+4995-fwctl_jgg@nvidia.com>
- <20250206164449.52b2dfef@kernel.org>
- <CACDg6nU_Dkte_GASNRpkvSSCihpg52FBqNr0KR3ud1YRvrRs3w@mail.gmail.com>
- <20250207073648.1f0bad47@kernel.org>
- <Z6ZsOMLq7tt3ijX_@x130>
- <20250207135111.6e4e10b9@kernel.org>
- <20250208011647.GH3660748@nvidia.com>
- <20250210170423.62a2f746@kernel.org>
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="J9OfNxcc"
+ARC-Seal: i=1; a=rsa-sha256; t=1739260661; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Iu5o4OhpjZhY8Ow79gN0JHjyJw5rea/2ALE9NeXX2v6jOCcJMev/n2CmFQJmrd5M2mfhs15xytuKurWqQqaqZuhZqpvScs/Bff6+3CSU5Xs3Vd7Bizv+qyuYij3hTWvUHEcsPB7lk1hW8Q2eAioxtcnOFWCtqaMRr3Ntj+01jQQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1739260661; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=aJYugM60n93ioiD/yFHZ0ukaareKO/ZhIAhoTxBvDPQ=; 
+	b=g9Pg3br2WHiDGRYlXerK7i8uIAOBqhqs6QzJ8ONDGOotsLPWvtQGrGnXDIuH38QLNKwIQ5R/yF9235uJ4+6dM1ZvQHCi5cTH/X4UV79ytYoRvCeInKhoNSODPNEUuvh0Ta/ozu0nmTr29jVu/nJPkR1SxQ4yGhBlEKBV2nlighc=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739260661;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
+	bh=aJYugM60n93ioiD/yFHZ0ukaareKO/ZhIAhoTxBvDPQ=;
+	b=J9OfNxccFFUvtXN+dAh5nrLbrX1MWDh/KeO+l35EY3fZvkoJSNOPL1P4/KZk7rwN
+	LsByghmzgV+uDCv7RinQEb5t6g6EgAx1zzbOusmpM9us3JTgSmWuQTrPFujld17Uy+q
+	LPQA9NvFNKezyJnfAnICUljYgbK5HoMZ2q4qdWvY=
+Received: by mx.zohomail.com with SMTPS id 1739260658164746.6572688940518;
+	Mon, 10 Feb 2025 23:57:38 -0800 (PST)
+From: Li Ming <ming.li@zohomail.com>
+To: dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Li Ming <ming.li@zohomail.com>
+Subject: [PATCH v1 0/7] Use guard() instead of rwsem locking
+Date: Tue, 11 Feb 2025 15:57:20 +0800
+Message-Id: <20250211075727.351895-1-ming.li@zohomail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250210170423.62a2f746@kernel.org>
+Content-Transfer-Encoding: 8bit
+Feedback-ID: rr08011227697a47ad496bfedf41ffec840000e16ec349b7a5ef7307093606e9313b20b659af9c738441d42f:zu08011227424f64415c2e61a70b4a02be00007c5d89c04393e58da93543626a27d42225e5b47246624933af:rf0801122d30a9f785deb526d2e4ee69db00002ea7e2a7eae156bba825b5829b419127b1c3197a7cb16dfcc9829094af26cd:ZohoMail
+X-ZohoMailClient: External
 
-On Mon, Feb 10, 2025 at 05:04:23PM -0800, Jakub Kicinski wrote:
-> On Fri, 7 Feb 2025 21:16:47 -0400 Jason Gunthorpe wrote:
-> > On Fri, Feb 07, 2025 at 01:51:11PM -0800, Jakub Kicinski wrote:
-> > 
-> > > But if you agree the netdev doesn't need it seems like a fairly
-> > > straightforward way to unblock your progress.  
-> > 
-> > I'm trying to understand what you are suggesting here.
-> > 
-> > We have many scenarios where mlx5_core spawns all kinds of different
-> > devices, including recovery cases where there is no networking at all
-> > and only fwctl. So we can't just discard the aux dev or mlx5_core
-> > triggered setup without breaking scenarios.
-> > 
-> > However, you seem to be suggesting that netdev-only configurations (ie
-> > netdev loaded but no rdma loaded) should disable fwctl. Is that the
-> > case? All else would remain the same. It is very ugly but I could see
-> > a technical path to do it, and would consider it if that brings peace.
-> 
-> Yes, when RDMA driver is not loaded there should be no access to fwctl.
+Use scoped resource management to replace open-coded locking operation
+is recommended. CXL subsystem still remains some down_read()/up_read()
+and down_write()/up_write() which can be replaced by guard() simply.
 
-There are users mentioned in cover letter, which need FWCTL without RDMA.
-https://lore.kernel.org/all/0-v4-0cf4ec3b8143+4995-fwctl_jgg@nvidia.com/
+This patchset includes simply using guard() instead of some
+down_read()/up_read() and down_write()/up_write() cases. Besides, it
+also includes some function code cleanup after using guard().
 
-I want to suggest something different. What about to move all XXX_core
-logic (mlx5_core, bnxt_core, e.t.c.) from netdev to some other dedicated
-place?
+base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3 (tag: v6.14-rc2)
 
-There is no technical need to have PCI/FW logic inside networking stack.
+Li Ming (7):
+  cxl/core: Use guard() to replace open-coded down_read/write()
+  cxl/core: cxl_mem_sanitize() cleanup
+  cxl/memdev: cxl_memdev_ioctl() cleanup
+  cxl/core: Use guard() to drop the goto pattern of cxl_dpa_free()
+  cxl/core: Use guard() to drop goto pattern of cxl_dpa_alloc()
+  cxl/region: Drop goto pattern in cxl_dax_region_alloc()
+  cxl/region: Drop goto pattern of construct_region()
 
-Thanks
+ drivers/cxl/core/hdm.c    | 62 +++++++++++----------------
+ drivers/cxl/core/mbox.c   | 10 ++---
+ drivers/cxl/core/memdev.c | 17 +++-----
+ drivers/cxl/core/port.c   |  8 +---
+ drivers/cxl/core/region.c | 90 +++++++++++++++++++--------------------
+ 5 files changed, 81 insertions(+), 106 deletions(-)
+
+-- 
+2.34.1
+
