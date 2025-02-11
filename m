@@ -1,165 +1,428 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2067.outbound.protection.outlook.com [40.107.243.67])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1921E1F4E5F;
-	Tue, 11 Feb 2025 09:55:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.67
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739267730; cv=fail; b=LBZIWSEqSdY83Dnku6n08ayyUmwbv8z8sRNZrvLWXNui0Dw8Cq6W53Iybrcpe5nunbiA0NCadvT+Ao3A1+eNDrHWzLMDC3nxBygOnhj0MdD2Kusn6t7w7guqFZEDBt79YfENHjVqvsTsb2nipz+xtrPqNAY34wnV7MosFINYeV0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739267730; c=relaxed/simple;
-	bh=1kVylbdxdkNkBTiX6QnuectspACoYt9+1zMeWNQwH4o=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S8UgBxIfHDBEHpe23CuxQfLdugnSjQdN+xP+SKJRsXZBNu71Xbpy0f4rVSWAfSr+va37qVBboB7iZmj/aCK8U/TWnrjxM4o+iIRkGHHPe61M+VSZ02ljNTv/Xmf2RRJHKjsYjelJQHb6g8j2T1179o4qsEktNg1C0KUSErgaxck=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=qZ1O7f0/; arc=fail smtp.client-ip=40.107.243.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82D6D1F3FCB
+	for <linux-cxl@vger.kernel.org>; Tue, 11 Feb 2025 12:22:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739276569; cv=none; b=IDQESsZgx+tzE5xxPBCxlYnoMZ50qMGYXJ5+8TJRXAQWF71Izu/rhlan7tKOnsT+xMl5Q31DGlR8Qtdxlw3husogNU2Aj7yqO/GDuA+HDDDKchzqUDY2wAEw72I+AemEgO/BEiwsLMpC8Pt9+az8v+3EL5ZsxZFj4JZEFc+rAkU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739276569; c=relaxed/simple;
+	bh=yrWbyiDMGU3vLDUTK9iijoww5yuOk14RiyK4i+2w6xA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=qQJJRMJxi4aTOvZqEaI1DbVhhnq/YR3GVje5dmWLPApWj13R/UCJEj8ACQa8Trv25XWsDC61IZ7J+32JARI92KRT6zi5F+Z0anN8+2iY6qliKE6Sw1sbLEdl2/v1nOnZzp2ZxhvuVfXzzTYiyUImaR5UGQyN1D+gW/7yTCR/R/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=kzdvbZGu; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="qZ1O7f0/"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JMr66qjw5wssJZ/GwhL7GMzlaRa7vERb45s2jORNQj9CnET6OaKBnE3XMg1la1NbH+YAgKq+Jc821wnZuK9D10VovaoGqKwVxuPwKU3j+DRy9Si4102hFcyqjUSdf3L249EAF3wnGqm+3VJ3lCnDgTpXlOPI1wnol6mtsOHPwzaICNZRK8zT1iTkV5JEEj6hF+G4VBKBjtZboPq2eTxbPjSp6RqFf3a0NdKKnJjbgeAWYCBvWbGnceRsvpIJdDEDULIugXT0DQVZmT8ZMWEyeEZL0Qcy/bPVMLCo09UGg4LzucvPA+k4n+JFMf0Jh1gRGk1+bAJ1AS3+S6T2ABxezQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dzXV2rnwBqKKQY2rRJbtDQaYsk3OKUNOB3yeZ02G70E=;
- b=UkL9eHoH92Of6pxA8Qxe89LK9rSljCjP0ZhLDr5WJXnkqb2g1/tSkPGcP5IVQbW+nxrNsZclsHBTYkpSmcU3ZqACEbfAQ9KZZKBTjgaUMoCecrmbqw0kijE4M1+vzjcHpn9tIa4Cvi4BXpRkwnwO0eLwo1B8fAXW5ymahy8TkN/0MFpxf8mdZii9VdyY6fU9q+4G9jDg/mxYBVg/W8cpOXqWTOLpm1Rdi0TBN1GIFKHmQAANgfx5DC7WiQ416jsV+SmeiJVOHogBd2bEPrWA0kg8DGeyBvKhqUHivsoOhEY5eYV8IA7z2zZCSftrQXK6Ec6d4AbFwYc9uNhVLqsH+A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dzXV2rnwBqKKQY2rRJbtDQaYsk3OKUNOB3yeZ02G70E=;
- b=qZ1O7f0/jOTlvycjjcvJBxmeqEsfabl3tKKz70QhoriuUsmnd2WG4VB7l/2xM7GeqY6UJbUppVprHh3nkdZlWAg6miz2zpmedjvPDNYcXf6/lapZhUJ24g6t7lHfOON9ry4cmh7Nq9Cd/bq8Vw4d4ThC8+42aY/mZphgTfAblKw=
-Received: from MW4PR04CA0245.namprd04.prod.outlook.com (2603:10b6:303:88::10)
- by CH3PR12MB8753.namprd12.prod.outlook.com (2603:10b6:610:178::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Tue, 11 Feb
- 2025 09:55:24 +0000
-Received: from SN1PEPF000397B4.namprd05.prod.outlook.com
- (2603:10b6:303:88:cafe::18) by MW4PR04CA0245.outlook.office365.com
- (2603:10b6:303:88::10) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.31 via Frontend Transport; Tue,
- 11 Feb 2025 09:55:24 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SN1PEPF000397B4.mail.protection.outlook.com (10.167.248.58) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8445.10 via Frontend Transport; Tue, 11 Feb 2025 09:55:24 +0000
-Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 11 Feb
- 2025 03:55:20 -0600
-From: Robert Richter <rrichter@amd.com>
-To: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Gregory Price
-	<gourry@gourry.net>, "Fabio M. De Francesco"
-	<fabio.m.de.francesco@linux.intel.com>, Terry Bowman <terry.bowman@amd.com>,
-	Robert Richter <rrichter@amd.com>
-Subject: [PATCH v3 18/18] cxl/acpi: Unify CFMWS memory log messages with SRAT messages
-Date: Tue, 11 Feb 2025 10:53:48 +0100
-Message-ID: <20250211095349.981096-19-rrichter@amd.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250211095349.981096-1-rrichter@amd.com>
-References: <20250211095349.981096-1-rrichter@amd.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="kzdvbZGu"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250211122243epoutp01638f38ecf92bd486e7ec13b6df94a843~jJtGxmYWf0547305473epoutp01S
+	for <linux-cxl@vger.kernel.org>; Tue, 11 Feb 2025 12:22:43 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250211122243epoutp01638f38ecf92bd486e7ec13b6df94a843~jJtGxmYWf0547305473epoutp01S
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1739276563;
+	bh=TGWNpM2ZKsTvZgF9SHocDjG+BrgBd4wjsTUpwQtRVq4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kzdvbZGuaMXUHor1RI/EhWysdaERfzMl89Qi7ZUlfq3Ia3zEt1OFq8LWAfN8ZhnOa
+	 uxox0UpXzJ7d7V77fgiHBVSkPdxpd451gnxbnrrfcw+kZ7Jx6nM1Oo3uSrIL6KWXA6
+	 Sl698HYRTUuhz21BKfc2OuZa+wWzTf6zWyu6mDxg=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+	20250211122242epcas5p3fcd92d68123feaafaea3c6521a35c11d~jJtGQ53t-0629106291epcas5p3y;
+	Tue, 11 Feb 2025 12:22:42 +0000 (GMT)
+Received: from epsmges5p2new.samsung.com (unknown [182.195.38.175]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4YsgZ92Rjqz4x9Pv; Tue, 11 Feb
+	2025 12:22:41 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	D1.C5.19933.1114BA76; Tue, 11 Feb 2025 21:22:41 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20250211110814epcas5p380959628ce355b2b9eb5a388c10c0378~jIsE7KrWA1150711507epcas5p3J;
+	Tue, 11 Feb 2025 11:08:14 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250211110814epsmtrp21dcd1cc211740fa17b9a0156ef0dea6f~jIsE6cN0l0682706827epsmtrp2a;
+	Tue, 11 Feb 2025 11:08:14 +0000 (GMT)
+X-AuditID: b6c32a4a-b87c770000004ddd-35-67ab4111d7ca
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	8F.C1.33707.E9F2BA76; Tue, 11 Feb 2025 20:08:14 +0900 (KST)
+Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250211110812epsmtip23a47e8b5a86eed95f4c3e6be433a1b90~jIsDbSTKk3049430494epsmtip2G;
+	Tue, 11 Feb 2025 11:08:12 +0000 (GMT)
+Date: Tue, 11 Feb 2025 16:37:50 +0530
+From: Sweta Kumari <s5.kumari@samsung.com>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: qemu-devel@nongnu.org, gost.dev@samsung.com, linux-cxl@vger.kernel.org,
+	nifan.cxl@gmail.com, dave@stgolabs.net, vishak.g@samsung.com,
+	krish.reddy@samsung.com, a.manzanares@samsung.com, alok.rathore@samsung.com
+Subject: Re: [PATCH 1/1] Added support for get/set alert configuration
+ commands
+Message-ID: <20250211110750.4ldvuzxc2cezgwsm@test-PowerEdge-R740xd>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF000397B4:EE_|CH3PR12MB8753:EE_
-X-MS-Office365-Filtering-Correlation-Id: fdae945b-78f6-4b15-e9a4-08dd4a82346d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|36860700013|82310400026|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?8kxdX897lqOYbETey6DAV5o7XXJecvDbUS1XCYywmIQHP4fwWzykoTc/5+Kz?=
- =?us-ascii?Q?7jqowdmRwFg/73NDJ3mPGbSRKESf7XoigLJYnpQQCZwBJ/SukEPNFBzzV2l9?=
- =?us-ascii?Q?M2RwydSF1IXtoFNv7/Jeeod7mYNVT8nKNcE2H+stcX8Ou6elDw+B+wDUWqi3?=
- =?us-ascii?Q?cg1YoZun9oK7oF7rMyyBFl2FlpfGrWFnfBAI4TK8Z0okE7MNFp1qatYoxxU2?=
- =?us-ascii?Q?WSlvPuKUYZwVeyWP4erLrc6Ksy6xUoTEKTbSl3XpdL228+Mc4WMer/gsRz5H?=
- =?us-ascii?Q?mVqjhQFnWgsnqyBhG+vmsp5TY5tmh7kqrSuUn06sPIoWHbqfoi7w7SA8YkeS?=
- =?us-ascii?Q?ssHVFiQwAw+2zAj/MX7iy1lYsQlPoLNHszlXusDpbfAbgqAner1wx4oz4jwa?=
- =?us-ascii?Q?D71rvMaBrSJn+3XLf9vKXFE8gWmd8NQr60hYTCblzXjmDfAXCKC0N1wWVSZM?=
- =?us-ascii?Q?zcprvgAV/YwJpxzckioqVvuZt0F9VcGFRVWpQ885dWL+wA87XvuIB3ihxnNF?=
- =?us-ascii?Q?GDKDIdfmd2Elqwee2L4BzcHD6smtCLPJR3K/dZ2suTuzvJw/6DTkQTMXe0Ij?=
- =?us-ascii?Q?KDIbUQGslEqsmHhRDcQCmngIPfHCypBj0eKnAln3/mg+Q5eszOXzKa4LY+D1?=
- =?us-ascii?Q?Ma8RHzFYef4SL4AwAHyleJaGDOnLV9WhVf/SMOveYSsIWjLvKun2OEQAA+mK?=
- =?us-ascii?Q?ySqFHX2vXAOBsBp/nl5t8fCumLtugDt5nIkBb+1GJDbUBSq5cgou71VrvpGc?=
- =?us-ascii?Q?Nm1uKL0uKE8L4A4xAEpJGtPim5fQvrdPyHu+juGhSbDYEERPgxPqHi+x5k0N?=
- =?us-ascii?Q?pITFQ6Ks4XURhyRKDfgLL6DysOhUebwhox5Q1ZCcBlV1pg2oyMmp98jKz5Gk?=
- =?us-ascii?Q?GKEb03eXduZPpjhUpTddxW4xDEpYR+E9qbNqS6F8Dc4hS1yoRR1NvrPnnX4k?=
- =?us-ascii?Q?atvwyR6jTIHtSNqRFyzvbZKXzORX1Av8eAgcaIXfb1K6j/3IeJWXDnBTAXAy?=
- =?us-ascii?Q?tu6vO4LcGJUAesPlkdcty52M2Qctl/rqQzhEnxHvX8XdwX1FJn3dwxrMpCkh?=
- =?us-ascii?Q?7hoqS5ou1MsYua46KHkZlij3uzbKLWaVELBFGUb2pYWIScBzddG2CMCUN1td?=
- =?us-ascii?Q?T7DEwb9Q8L0BxknjT6R6GWyZktXXwGH1zgfkulljjZ9vlgH8mkLzXuycsSOU?=
- =?us-ascii?Q?S9hzokjrDII0gvh7UMeX0JzOVyXi9F0jeBrfpw9tMb1BnXCUQk2xC1Na3SjR?=
- =?us-ascii?Q?RPKrx1VyUipBLcEUiOQWa19PvPSPD7IpoD2jwV4pSnYo2KkA5X5j7341mLUh?=
- =?us-ascii?Q?L89VzOwQpnyiTm1UlYLTUf5P0Xk3ubU7sgDdtvncSxJHX3IXbvWSiEbtvng6?=
- =?us-ascii?Q?mxnGBAw824rs3tG3gs33hEjNP4qVmOd4fIGUoDfdtys5M48jB9fQloGRll0P?=
- =?us-ascii?Q?gX3vFjBEpW1mrdAj0GjiCCJEUVGMBwNzmGjFyTj7wr1lMgDMId9Iu+ICqgbn?=
- =?us-ascii?Q?xj7S3FAOMSEsgTE=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(36860700013)(82310400026)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2025 09:55:24.1363
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: fdae945b-78f6-4b15-e9a4-08dd4a82346d
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF000397B4.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8753
+In-Reply-To: <20250204111541.00002ef0@huawei.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrCJsWRmVeSWpSXmKPExsWy7bCmlq6g4+p0g4cr+S2mH1a0+HJ6D5vF
+	6ptrGC1uHtjJZLFq4TU2i4UblzFZnJ91isXi77a9jBbHe3ewALlz2B24PHbOusvu0XLkLavH
+	k2ubmTz6tqxi9Jg6u97j8ya5ALaobJuM1MSU1CKF1Lzk/JTMvHRbJe/geOd4UzMDQ11DSwtz
+	JYW8xNxUWyUXnwBdt8wcoMOUFMoSc0qBQgGJxcVK+nY2RfmlJakKGfnFJbZKqQUpOQUmBXrF
+	ibnFpXnpenmpJVaGBgZGpkCFCdkZWxesYStYE16x69wK1gbGK45djJwcEgImEk3HZrJ1MXJx
+	CAnsZpQ4d+wSO4TziVHi3bqPLHDO3bmPWGFaDq98zwqR2MkocWnCOoSWvWtmMINUsQioSnxa
+	doQdxGYT0JL48fkBWFxEwEji3Y1JjCANzAI3GSUaJz1jA0kICwRKvOx7ywhi8wo4Syze9ZkN
+	whaUODnzCQuIzSlgKHH6+U4mkGYJgVYOiY/nzkDd5CIxq/kuC4QtLPHq+BZ2CFtK4vO7vWwQ
+	drbE3a2dUHaJxIfbu5kgbHuJ1lP9YNcxC2RIbPvdAjVHVmLqqXVMEHE+id7fT6DqeSV2zIOx
+	lSW2/FsOdYOkxIrPS6BsD4mZT5uZIMHyjFFi9azzzBMY5WYheWgWkn0QtpVE54cm1lmMHEC2
+	tMTyfxwQpqbE+l36CxhZVzFKphYU56anFpsWGOWllsPjOTk/dxMjOLlqee1gfPjgg94hRiYO
+	xkOMEhzMSiK8JgtXpAvxpiRWVqUW5ccXleakFh9iNAXG0ERmKdHkfGB6zyuJNzSxNDAxMzMz
+	sTQ2M1QS523e2ZIuJJCeWJKanZpakFoE08fEwSnVwKQqoTchM2OxnNYp9+u7ZpycfeFn+9EZ
+	aWkftj/QPWfJP0PC9st29sn+JR2qf66/f7q1uNlMVrBrwfnNBzsbLkad1t61WL9F7NuWc/oN
+	G5KFrsks4mA6fOXbq+Yft/ODz7y5kLFubapQ0vZpXcf5rm43rJi+6XVpCM8E+4yqn1O+hU+R
+	PyY4X+OEe3mYvKmBp9xNJ26Zdhbuh6Z++htzHk522CX64nCJ1uO+UPnfIdMt4m8ffekZKPxn
+	/bb995ZNt3K5sO/6/oWvCteuO9c6VyZ+heninXFNHLWpM10rt+55y7ho1xrVzf+1NjxYv+3Q
+	fifrqZzeRp6p12e1l3kxvqwSWpdjEM+42J/DtreHJVhFiaU4I9FQi7moOBEAebMIVjcEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrALMWRmVeSWpSXmKPExsWy7bCSvO48/dXpBk++C1hMP6xo8eX0HjaL
+	1TfXMFrcPLCTyWLVwmtsFgs3LmOyOD/rFIvF3217GS2O9+5gAXLnsDtweeycdZfdo+XIW1aP
+	J9c2M3n0bVnF6DF1dr3H501yAWxRXDYpqTmZZalF+nYJXBnTdx5jK7gXUrH21yvGBsYF9l2M
+	nBwSAiYSh1e+Z+1i5OIQEtjOKPHrcRsbREJS4u2ZS4wQtrDEyn/P2SGKPjBKHLxzjwUkwSKg
+	KvFp2RF2EJtNQEvix+cHzCC2iICRxLsbkxhBGpgFbjNK/N4N0SAsECjxsu8t2FReAWeJxbs+
+	g20TEnjGKLHirwZEXFDi5MwnYPXMAmYS8zY/BBrKAWRLSyz/xwES5hQwlDj9fCfTBEaBWUg6
+	ZiHpmIXQsYCReRWjaGpBcW56bnKBoV5xYm5xaV66XnJ+7iZGcCRoBe1gXLb+r94hRiYOxkOM
+	EhzMSiK8JgtXpAvxpiRWVqUW5ccXleakFh9ilOZgURLnVc7pTBESSE8sSc1OTS1ILYLJMnFw
+	SjUwST2dtu53S3CwG7uxjElyzcaNUpIzbzh39K5env5hYaz/pbdFRysdGh/Y5EZ/6/Cd87ek
+	PuFpZIBZ0oqp/nr5JwzP+317FJkidfXJ5elnuwqkO5ZNDlIVOx/5+81/izarNlWOK1Pi42Wq
+	3hZKRR6zNrrLW7985dyOP7ufnr21+PmRgl6Fi+oOjxqytwv1JPtMZHFk2zxvr33KXuXwl1VH
+	9xYfz/nq0iGivWp7R5uFUeDCzMssCrPPOE/I/GTw746d8WUDj77w58kql5PE5KtUFZZfmxDw
+	xOzv4R9rl+faLy0S2R0qem7VezWed4fnG6W65oZ++3rlilo2x+MLkr9NnsU42M447u13UDlJ
+	z2q1EktxRqKhFnNRcSIAlDGANfMCAAA=
+X-CMS-MailID: 20250211110814epcas5p380959628ce355b2b9eb5a388c10c0378
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----knAlFONTECbX-FcfvlefBkarukSN3r7qQKLuxxl86w44aglH=_469ef_"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250203114459epcas5p33839b8e8150427947f9b5419ce9cd611
+References: <20250203114445.64088-1-s5.kumari@samsung.com>
+	<CGME20250203114459epcas5p33839b8e8150427947f9b5419ce9cd611@epcas5p3.samsung.com>
+	<20250203114445.64088-2-s5.kumari@samsung.com>
+	<20250204111541.00002ef0@huawei.com>
 
-CFMWS entries have a similar importance as SRAT table entries to
-describe memory regions. For CXL error analysis and memory debugging
-information of both is needed. Unify output of both messages to
-improve logging. Change the style of CFMWS message according to SRAT
-output. Also, turn messages into a dev_info() same as for SRAT.
+------knAlFONTECbX-FcfvlefBkarukSN3r7qQKLuxxl86w44aglH=_469ef_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
 
-SRAT pr_info() for reference:
+On 04/02/25 11:15AM, Jonathan Cameron wrote:
+>On Mon,  3 Feb 2025 17:14:45 +0530
+>Sweta Kumari <s5.kumari@samsung.com> wrote:
+>
+>> Signed-off-by: Sweta Kumari <s5.kumari@samsung.com>
+>> Reviewed-by: Alok Rathore <alok.rathore@samsung.com>
+>> Reviewed-by: Krishna Kanth Reddy <krish.reddy@samsung.com>
+>Hi Sweta,
+>
+>Thanks for the patch. Great to see someone working on these
+>features.   As in previous thread, in general RB tags that are
+>given before public posting aren't really very useful.  Reviews
+>can mean very different things in different companies / groups within
+>them.  Much prefer to see a final round of review done on the public
+>mailing list if possible.
+>
+>Various comments inline.
+>
+>Jonathan
+>
+Hi Jonathan,
 
-drivers/acpi/numa/srat.c:
-  pr_info("SRAT: Node %u PXM %u [mem %#010Lx-%#010Lx]%s%s\n",
+Thank you for the feedback. I'll fix this in V2 patch.
+>> ---
+>>  hw/cxl/cxl-mailbox-utils.c  | 91 +++++++++++++++++++++++++++++++++++++
+>>  hw/mem/cxl_type3.c          | 20 ++++++++
+>>  include/hw/cxl/cxl_device.h | 24 ++++++++++
+>>  3 files changed, 135 insertions(+)
+>>
+>> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+>> index 9c7ea5bc35..7a054c059d 100644
+>> --- a/hw/cxl/cxl-mailbox-utils.c
+>> +++ b/hw/cxl/cxl-mailbox-utils.c
+>> @@ -86,6 +86,9 @@ enum {
+>>          #define GET_PARTITION_INFO     0x0
+>>          #define GET_LSA       0x2
+>>          #define SET_LSA       0x3
+>> +    HEALTH_INFO_ALERTS = 0x42,
+>> +        #define GET_ALERT_CONFIGURATION 0x1
+>> +        #define SET_ALERT_CONFIGURATION 0x2
+>>      SANITIZE    = 0x44,
+>>          #define OVERWRITE     0x0
+>>          #define SECURE_ERASE  0x1
+>> @@ -1625,6 +1628,90 @@ static CXLRetCode cmd_ccls_set_lsa(const struct cxl_cmd *cmd,
+>>      return CXL_MBOX_SUCCESS;
+>>  }
+>>
+>> +/* CXL r3.1 Section 8.2.9.9.3.2 Get Alert Configuration (Opcode 4201h) */
+>
+>For new commands, preference is for spec references being to
+>the latest spec as that's the one that is downloadable via a click through
+>on the website.
+>
+Ok, Will fix it in V2 patch.
+>> +static CXLRetCode cmd_get_alert_config(const struct cxl_cmd *cmd,
+>> +                                   uint8_t *payload_in,
+>
+>Align immediate after ( unless we have very long lines.
+>
+>> +                                   size_t len_in,
+>> +                                   uint8_t *payload_out,
+>> +                                   size_t *len_out,
+>> +                                   CXLCCI *cci)
+>> +{
+>> +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
+>> +    CXLAlertConfig *out = (void *)payload_out;
+>
+>blank line here.
+>
+Ok.
+>> +    memcpy(out, &ct3d->alert_config, sizeof(ct3d->alert_config));
+>> +    *len_out = sizeof(ct3d->alert_config);
+>
+>blank line here.
+>
+Ok.
+>> +    return CXL_MBOX_SUCCESS;
+>> +
+>> +}
+>> +
+>> +/* CXL r3.1 Section 8.2.9.9.3.3 Set Alert Configuration (Opcode 4202h) */
+>> +static CXLRetCode cmd_set_alert_config(const struct cxl_cmd *cmd,
+>> +                                   uint8_t *payload_in,
+>> +                                   size_t len_in,
+>> +                                   uint8_t *payload_out,
+>> +                                   size_t *len_out,
+>> +                                   CXLCCI *cci)
+>> +{
+>> +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
+>> +    CXLAlertConfig *alert_config = &ct3d->alert_config;
+>> +    struct {
+>> +        CXLValidEnableAlerts valid_alert_actions;
+>> +        CXLValidEnableAlerts enable_alert_actions;
+>
+>uint8_t for both of these + defines.
+>
+>> +        uint8_t lupwt;
+>
+>Longer names here as below.
+>
+Ok, I'll update both with defines and longer names as suggested.
+>> +        uint8_t reserve;
+>> +        uint16_t dotpwt;
+>> +        uint16_t dutpwt;
+>> +        uint16_t cvmepwt;
+>> +        uint16_t cpmepwt;
+>> +    } QEMU_PACKED *in = (void *)payload_in;
+>> +
+>> +    if (in->valid_alert_actions.lupwt) {
+>> +        if ((in->lupwt > 100) || (in->lupwt >= alert_config->lucat)) {
+>
+>Add a spec reference for these constraints. Looks like they
+>are in the get alert configuration output table.
+>
+Ok, as you mentioned, I'll remove the if (in->lupwt > 100) check and
+retain only the if (in->lupwt >= alert_config->lucat) check.
+As per CXL spec 3.2. The life used warning threshold shall be less than
+the life used critical alert value.
+>> +            return CXL_MBOX_INVALID_INPUT;
+>> +        }
+>> +
+>> +        if (in->enable_alert_actions.lupwt) {
+>> +            alert_config->lupwt = in->lupwt;
+>
+>That's interesting.  Do we only write it when enabled. I would have
+>thought valid was enough.  Spec reference in a comment would help
+>for this first case at least. No need to replicate in the
+>others if it is a common thing.
+>
+>
+Based on your feedback, I'll remove the checks for enable alert actions and
+rely only on valid alert actions to determine if the field should be processed,
+as it is sufficient for this operation
+>> +        }
+>> +        alert_config->enable_alerts.lupwt = in->enable_alert_actions.lupwt;
+>> +    }
+>> +
+>> +    if (in->valid_alert_actions.dotpwt) {
+>> +        if (in->dotpwt >= alert_config->dotcat) {
+>> +            return CXL_MBOX_INVALID_INPUT;
+>> +        }
+>> +        if (in->enable_alert_actions.dotpwt) {
+>> +            alert_config->dotpwt = in->dotpwt;
+>> +        }
+>> +        alert_config->enable_alerts.dotpwt = in->enable_alert_actions.dotpwt;
+>> +    }
+>> +
+>> +    if (in->valid_alert_actions.dutpwt) {
+>> +        if (in->dutpwt < alert_config->dutcat) {
+>> +            return CXL_MBOX_INVALID_INPUT;
+>> +        }
+>> +        if (in->enable_alert_actions.dutpwt) {
+>> +            alert_config->dutpwt = in->dutpwt;
+>> +        }
+>> +        alert_config->enable_alerts.dutpwt = in->enable_alert_actions.dutpwt;
+>> +    }
+>> +
+>> +    if (in->valid_alert_actions.cvmepwt) {
+>> +        if (in->enable_alert_actions.cvmepwt) {
+>> +            alert_config->cvmepwt = in->cvmepwt;
+>> +        }
+>> +        alert_config->enable_alerts.cvmepwt = in->valid_alert_actions.cvmepwt;
+>> +    }
+>> +
+>> +    if (in->valid_alert_actions.cpmepwt) {
+>> +        if (in->enable_alert_actions.cpmepwt) {
+>> +            alert_config->cpmepwt = in->cpmepwt;
+>> +        }
+>> +        alert_config->enable_alerts.cpmepwt = in->valid_alert_actions.cpmepwt;
+>> +    }
+>> +    return CXL_MBOX_SUCCESS;
+>> +}
+>> +
+>>  /* Perform the actual device zeroing */
+>>  static void __do_sanitization(CXLType3Dev *ct3d)
+>>  {
+>> @@ -2859,6 +2946,10 @@ static const struct cxl_cmd cxl_cmd_set[256][256] = {
+>>      [CCLS][GET_LSA] = { "CCLS_GET_LSA", cmd_ccls_get_lsa, 8, 0 },
+>>      [CCLS][SET_LSA] = { "CCLS_SET_LSA", cmd_ccls_set_lsa,
+>>          ~0, CXL_MBOX_IMMEDIATE_CONFIG_CHANGE | CXL_MBOX_IMMEDIATE_DATA_CHANGE },
+>> +    [HEALTH_INFO_ALERTS][GET_ALERT_CONFIGURATION] = {"GET_ALERT_CONFIGURATION",
+>> +        cmd_get_alert_config, 0, 0 },
+>> +    [HEALTH_INFO_ALERTS][SET_ALERT_CONFIGURATION] = {"SET_ALERT_CONFIGURATION",
+>> +        cmd_set_alert_config, 12, CXL_MBOX_IMMEDIATE_POLICY_CHANGE },
+>>      [SANITIZE][OVERWRITE] = { "SANITIZE_OVERWRITE", cmd_sanitize_overwrite, 0,
+>>          (CXL_MBOX_IMMEDIATE_DATA_CHANGE |
+>>           CXL_MBOX_SECURITY_STATE_CHANGE |
+>> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+>> index 5f365afb4d..ce5a4962da 100644
+>> --- a/hw/mem/cxl_type3.c
+>> +++ b/hw/mem/cxl_type3.c
+>> @@ -956,6 +956,25 @@ static DOEProtocol doe_comp_prot[] = {
+>>      { }
+>>  };
+>>
+>> +/*
+>> + * Initialize CXL device alerts with default threshold values.
+>> + */
+>> +static void init_alert_config(CXLType3Dev *ct3d)
+>> +{
+>> +    CXLAlertConfig *alert_config = &ct3d->alert_config;
+>> +
+>> +    memset(&alert_config->valid_alerts, 0, sizeof(CXLValidEnableAlerts));
+>> +    memset(&alert_config->enable_alerts, 0, sizeof(CXLValidEnableAlerts));
+>> +    alert_config->lucat = 75;
+>> +    alert_config->lupwt = 0;
+>> +    alert_config->dotcat = 35;
+>> +    alert_config->dutcat = 10;
+>> +    alert_config->dotpwt = 25;
+>> +    alert_config->dutpwt = 20;
+>> +    alert_config->cvmepwt = 0;
+>> +    alert_config->cpmepwt = 0;
+>Easier to read as
+>      ct3d_alert_config = (CXLAlertConfig) {
+>          .life_used_critical_thresh = 75,
+>...
+>
+>You can skip anything where a default of 0 is an obvious default.
+>Perhaps the valid_alerts and enable alerts for instance.
+>
+Ok, I'll address this in V2 patch.
+>      };
+>> +}
+>> +
+>>  void ct3_realize(PCIDevice *pci_dev, Error **errp)
+>>  {
+>>      ERRP_GUARD();
+>> @@ -1030,6 +1049,7 @@ void ct3_realize(PCIDevice *pci_dev, Error **errp)
+>>          goto err_free_special_ops;
+>>      }
+>>
+>> +    init_alert_config(ct3d);
+>>      pcie_cap_deverr_init(pci_dev);
+>>      /* Leave a bit of room for expansion */
+>>      rc = pcie_aer_init(pci_dev, PCI_ERR_VER, 0x200, PCI_ERR_SIZEOF, NULL);
+>> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+>> index a64739be25..6acae7d74d 100644
+>> --- a/include/hw/cxl/cxl_device.h
+>> +++ b/include/hw/cxl/cxl_device.h
+>> @@ -581,6 +581,28 @@ typedef struct CXLSetFeatureInfo {
+>>      size_t data_size;
+>>  } CXLSetFeatureInfo;
+>>
+>> +typedef struct CXLValidEnableAlerts {
+>> +    uint8_t lupwt:1;
+>
+>Give these longer names.
+>life_used_warning_threshold etc
+>etc as we don't want to go find the spec to figure
+>out what they are.
+>
+>
+Ok, I'll update this in V2 patch.
+>> +    uint8_t dotpwt:1;
+>> +    uint8_t dutpwt:1;
+>> +    uint8_t cvmepwt:1;
+>> +    uint8_t cpmepwt:1;
+>> +    uint8_t reserved:3;
+>
+>Generally bit fields do not play well with potential endian
+>variations or low level code in general.  There is too much
+>flexibility in how they are stored.  So better to use a
+>uint8_t and some defines for the bits that are set.
+>
+>
+Ok.
+>> +} CXLValidEnableAlerts;
+>> +
+>> +typedef struct CXLAlertConfig {
+>> +    CXLValidEnableAlerts valid_alerts;
+>> +    CXLValidEnableAlerts enable_alerts;
+>> +    uint8_t lucat;
+>Longer names.  These want to be at least vaguely comprehensible
+>without the spec in front of us.
+>lif_used_critical_thresh
+>life_used_warning_thresh (I'm not sure why programmable matters!)
+>etc
+>
+Ok, will fix this in V2 patch.
+>> +    uint8_t lupwt;
+>> +    uint16_t dotcat;
+>> +    uint16_t dutcat;
+>> +    uint16_t dotpwt;
+>> +    uint16_t dutpwt;
+>> +    uint16_t cvmepwt;
+>> +    uint16_t cpmepwt;
+>> +} QEMU_PACKED CXLAlertConfig;
+>> +
+>>  struct CXLType3Dev {
+>>      /* Private */
+>>      PCIDevice parent_obj;
+>> @@ -605,6 +627,8 @@ struct CXLType3Dev {
+>>      CXLCCI vdm_fm_owned_ld_mctp_cci;
+>>      CXLCCI ld0_cci;
+>>
+>> +    CXLAlertConfig alert_config;
+>> +
+>>      /* PCIe link characteristics */
+>>      PCIExpLinkSpeed speed;
+>>      PCIExpLinkWidth width;
+>
 
-Signed-off-by: Robert Richter <rrichter@amd.com>
-Reviewed-by: Gregory Price <gourry@gourry.net>
-Tested-by: Gregory Price <gourry@gourry.net>
----
- drivers/cxl/acpi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+------knAlFONTECbX-FcfvlefBkarukSN3r7qQKLuxxl86w44aglH=_469ef_
+Content-Type: text/plain; charset="utf-8"
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 3e75e612cbc4..93c73b163c28 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -447,7 +447,7 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
- 			cfmws->base_hpa,
- 			cfmws->base_hpa + cfmws->window_size - 1, rc);
- 	else
--		dev_dbg(dev, "decode range: node: %d range [%#llx - %#llx]\n",
-+		dev_info(dev, "ACPI: CFMWS: Node %u [mem %#010Lx-%#010Lx]\n",
- 			phys_to_target_node(cfmws->base_hpa), cfmws->base_hpa,
- 			cfmws->base_hpa + cfmws->window_size - 1);
- 
--- 
-2.39.5
 
+------knAlFONTECbX-FcfvlefBkarukSN3r7qQKLuxxl86w44aglH=_469ef_--
