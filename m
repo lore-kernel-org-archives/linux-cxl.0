@@ -1,146 +1,118 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD1201B6CE9;
-	Tue, 11 Feb 2025 02:40:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 827E179CD
+	for <linux-cxl@vger.kernel.org>; Tue, 11 Feb 2025 02:47:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739241614; cv=none; b=XLwpPpVpDoWauTa95Gv8CVtC3AQtd48/NX1VrN9DE+DBaRujznKr9oLqboeLN+rVWcenHevkQtl6OBJTQItlwR5gQL5SaTmOAB7xMtzXrYB26/jY+VoYtubZ6diy0xTDr8L2ZdUMW5xvP8EpboPwpUVRROy/zLpcObsLUcFG43I=
+	t=1739242045; cv=none; b=SDwTTp/q6UwyioQQT8jkRYvW2qDy/PlD/e0ArlfLQ01LikqO6OxTIHpUK6v87J6qkli5ukGoXPL2j4SjSnLnhMRghrCl8NMeS2t2OSOWIL1qpolNte/GZZiavH9EaQtgVd97jCqqca1bNalV9plgM6beG56WQ1R1Ig7LQZmePms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739241614; c=relaxed/simple;
-	bh=n2oinbXtGGE6y9EV6Pn/imw8Ob/8ITCtlHNl/OvbJDc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SFULUEGCvyWbXaW6S9xwJDJN7hjAAG1xhWXjxuN48RkrFPeZOrL9Jk8JS/wkgaN9ir+qREq9uoPwOrDzwxc3saVAstfmbX2+5L2grLj3l1IyHyXXuuFFgq0ITLlJ1OdLPTEtDpYYpczJeKclHPWoxtICQTLXcmwUeiMk3I9DdbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eVDa9OLN; arc=none smtp.client-ip=192.198.163.12
+	s=arc-20240116; t=1739242045; c=relaxed/simple;
+	bh=njA+vY+Vv2TA503qIqdQAyNBcM6OrgNCoBcwV27IbFo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uUsF0shVAoRQIRtrYOqMu4lR1v6FKV7hHScWDlZh/jrZeLNx7TazywjYD6xYCxoBqH8tclLs/vMGvuYzgRpXzKL/yEOuoGX9Pw1JyHd97A5pRBcqV6DI7pFTDa+S7opBbxbQIBgy2lR19N5rvFK99thZkWslN32f7zY6pNv2eZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cLkGwjGV; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eVDa9OLN"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cLkGwjGV"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739241612; x=1770777612;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=n2oinbXtGGE6y9EV6Pn/imw8Ob/8ITCtlHNl/OvbJDc=;
-  b=eVDa9OLNX8svr/8CEDFqaDruQ7HGVqQHlZPVIt2jY96fVcPgHPmK1m+2
-   Q3o2WbDSdxZ2uS0t9O38hCYH6Rrkq8IqbRD9NIcMHd/EnqrU6T1iWOGXl
-   e5l5SKULteLU0wuwE2mlCkvON7ddpHhUOTLkenx+JQwwrUYx0542i1nwZ
-   /r+EF9bIaA8/ca/l5kCrHpM7SHF8xWvcSRSuACveXN7TqfRS/ThCZXcp8
-   P8x2p2Y5u3u6j4mmn3sqL+fCtCKkqurXKYEQ6TTB9L82qGhkFo7TxzT2g
-   5TA/UeN9HihS//QXY4ahEGNHxKen2DHMIZkuPs+MubhGXXIiekbHofJe2
-   Q==;
-X-CSE-ConnectionGUID: aA/TviufSaCV/CfUnhaR6g==
-X-CSE-MsgGUID: e7PIi1/1QBGV7aGDdFiz6w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="43775072"
+  t=1739242041; x=1770778041;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=njA+vY+Vv2TA503qIqdQAyNBcM6OrgNCoBcwV27IbFo=;
+  b=cLkGwjGVYck+vl3mc+Uv/f2+WDQ/1zqKVOJaa3IWfKe06MH+ce3rLWl4
+   +0MDWsvfHfj3CqDmNnmSgoDmVmxhREpG7ZDQyV6dO+z6PTuM3gjOz+5K3
+   2Qi4ePc1XAmNhbrGFjBVW2aEEwjYM6gJkHhB9BiQAqMqRFqFJqZ96znl5
+   qY2rmOA0gD7K86lh6ow9wi72utaaf7JPP16i1bXiXMHdUwi2kLTJOtkO6
+   E6aqGESGXVKGsY2OYfFnZmfgQxXGecPz84ufwfJ2AS3p3G9+NhCyfDQrg
+   PZzoldCXgfCUGkfbjzAHJwbDkisrmdsno7niRdEYFC5cwt3akZHsGdyze
+   g==;
+X-CSE-ConnectionGUID: ktoPlfMdQzmPC+q/UL+IEA==
+X-CSE-MsgGUID: Z8+tz99MRkCX0TLMOw4XkQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="50077673"
 X-IronPort-AV: E=Sophos;i="6.13,276,1732608000"; 
-   d="scan'208";a="43775072"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 18:40:11 -0800
-X-CSE-ConnectionGUID: QNak6SWmRKSj3idvZIkL7w==
-X-CSE-MsgGUID: zv89mSVRRJq8wFJvqtbxwg==
+   d="scan'208";a="50077673"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 18:47:20 -0800
+X-CSE-ConnectionGUID: s1xVeTdbQs60AGm8Y7CjsQ==
+X-CSE-MsgGUID: dB96ADT1QdOtVaYBob2U/w==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,276,1732608000"; 
-   d="scan'208";a="143229130"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO [10.125.111.192]) ([10.125.111.192])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 18:39:52 -0800
-Message-ID: <99a80c40-4c1d-4dc6-8b44-397f49460501@intel.com>
-Date: Mon, 10 Feb 2025 19:39:51 -0700
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="117576145"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.111.205])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 18:47:19 -0800
+Date: Mon, 10 Feb 2025 18:47:18 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: Ira Weiny <ira.weiny@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Fan Ni <fan.ni@samsung.com>,
+	Sushant1 Kumar <sushant1.kumar@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev
+Subject: Re: [ndctl PATCH v4 0/9] ndctl: Dynamic Capacity additions for
+ cxl-cli
+Message-ID: <Z6q6Nht8FKJYlnSR@aschofie-mobl2.lan>
+References: <20241214-dcd-region2-v4-0-36550a97f8e2@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v19 07/15] cxl: Add helper function to retrieve a feature
- entry
-To: shiju.jose@huawei.com, linux-edac@vger.kernel.org,
- linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-Cc: linux-doc@vger.kernel.org, bp@alien8.de, tony.luck@intel.com,
- rafael@kernel.org, lenb@kernel.org, mchehab@kernel.org,
- dan.j.williams@intel.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
- david@redhat.com, Vilas.Sridharan@amd.com, leo.duran@amd.com,
- Yazen.Ghannam@amd.com, rientjes@google.com, jiaqiyan@google.com,
- Jon.Grimm@amd.com, dave.hansen@linux.intel.com, naoya.horiguchi@nec.com,
- james.morse@arm.com, jthoughton@google.com, somasundaram.a@hpe.com,
- erdemaktas@google.com, pgonda@google.com, duenwen@google.com,
- gthelen@google.com, wschwartz@amperecomputing.com,
- dferguson@amperecomputing.com, wbs@os.amperecomputing.com,
- nifan.cxl@gmail.com, tanxiaofei@huawei.com, prime.zeng@hisilicon.com,
- roberto.sassu@huawei.com, kangkang.shen@futurewei.com,
- wanghuiqiang@huawei.com, linuxarm@huawei.com
-References: <20250207144445.1879-1-shiju.jose@huawei.com>
- <20250207144445.1879-8-shiju.jose@huawei.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250207144445.1879-8-shiju.jose@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241214-dcd-region2-v4-0-36550a97f8e2@intel.com>
 
-
-
-On 2/7/25 7:44 AM, shiju.jose@huawei.com wrote:
-> From: Shiju Jose <shiju.jose@huawei.com>
+On Sat, Dec 14, 2024 at 08:58:27PM -0600, Ira Weiny wrote:
+> Further testing showed some bugs in the 'jq' command use in cxl-test.
+> Fix those bugs and adjust test to work around false positive lockdep
+> splats.
 > 
-> Add helper function to retrieve a feature entry from the supported
-> features list, if supported.
+> This series can be found here:
 > 
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+> 	https://github.com/weiny2/ndctl/tree/dcd-region2-2024-12-10
+> 
+> CXL Dynamic Capacity Device (DCD) support is close to landing in the
+> upstream kernel.  cxl-cli requires modifications to interact with those
+> devices.  This includes creating and operating on DCD regions.
+> cxl-testing allows for quick regression testing as well as helping to
+> design the cxl-cli interfaces.
+> 
+> Add preliminary patches with some fixes.  Update libcxl, cxl-cli and
+> cxl-test with DCD support.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 > ---
->  drivers/cxl/core/features.c | 21 +++++++++++++++++++++
->  include/cxl/features.h      |  2 ++
->  2 files changed, 23 insertions(+)
+> Changes in v4:
+> - iweiny: Fix dax device checks in cxl-test
+> - iweiny: Update some documentation
+> - Link to v3: https://patch.msgid.link/20241115-dcd-region2-v3-0-585d480ccdab@intel.com
 > 
-> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-> index 5f64185a5c7a..bf175e69cda1 100644
-> --- a/drivers/cxl/core/features.c
-> +++ b/drivers/cxl/core/features.c
-> @@ -43,6 +43,27 @@ bool is_cxl_feature_exclusive(struct cxl_feat_entry *entry)
->  }
->  EXPORT_SYMBOL_NS_GPL(is_cxl_feature_exclusive, "CXL");
->  
-> +struct cxl_feat_entry *cxl_get_feature_entry(struct cxl_memdev *cxlmd,
-> +					     const uuid_t *feat_uuid)
-> +{
-> +	struct cxl_features_state *cxlfs = cxlmd->cxlfs;
-> +	struct cxl_feat_entry *feat_entry;
-> +	int count;
-> +
-> +	/*
-> +	 * Retrieve the feature entry from the supported features list,
-> +	 * if the feature is supported.
-> +	 */
-> +	feat_entry = cxlfs->entries;
-> +	for (count = 0; count < cxlfs->num_features; count++, feat_entry++) {
-> +		if (uuid_equal(&feat_entry->uuid, feat_uuid))
-> +			return feat_entry;
-> +	}
-> +
-> +	return ERR_PTR(-ENOENT);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_get_feature_entry, "CXL");
+> ---
 
-You probably don't need this if the memfeature code are in CXL core. 
+Hi Ira,
 
-DJ
+Thanks for the separating out the libcxl and other updates.
+I got a bit hung up on MODEs and then you made me aware that
+MODEs were simplifying so I backed off trying to put together
+a kernel build and run this. I eyeballed it, compiled, and
+poked at a few things. See the individual patches.
 
-> +
->  size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
->  		       enum cxl_get_feat_selection selection,
->  		       void *feat_out, size_t feat_out_size, u16 offset,
-> diff --git a/include/cxl/features.h b/include/cxl/features.h
-> index e52d0573f504..563d966beee5 100644
-> --- a/include/cxl/features.h
-> +++ b/include/cxl/features.h
-> @@ -68,6 +68,8 @@ struct cxl_features_state {
->  };
->  
->  struct cxl_mailbox;
-> +struct cxl_feat_entry *cxl_get_feature_entry(struct cxl_memdev *cxlmd,
-> +					     const uuid_t *feat_uuid);
->  size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
->  		       enum cxl_get_feat_selection selection,
->  		       void *feat_out, size_t feat_out_size, u16 offset,
 
+> Ira Weiny (9):
+>       ndctl/cxl-events: Don't fail test until event counts are reported
+>       ndctl/cxl/region: Report max size for region creation
+Above 2 applied to ndctl/pending. Sorry about bad email. I do think
+I got the v4 of these.
+
+>       libcxl: Separate region mode from decoder mode
+>       cxl/region: Use new region mode in cxl-cli
+>       libcxl: Add Dynamic Capacity region support
+>       cxl/region: Add cxl-cli support for DCD regions
+>       libcxl: Add extent functionality to DC regions
+>       cxl/region: Add extent output to region query
+>       cxl/test: Add Dynamic Capacity tests
