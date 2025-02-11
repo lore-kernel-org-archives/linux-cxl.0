@@ -1,368 +1,206 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB7361D89E5;
-	Tue, 11 Feb 2025 20:42:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739306547; cv=none; b=M3R6Y1gY3f1+ILWOGP0od2yMc7Et44IAPQfDaBn4RyykDKBr84pwQYYQmBv422vIsGPxFUvelKnYZad14s0SxiViwOXUKZLgHeCdhvi3GxOGtV1nDhqClFVwvXwDw3/dIYQXgcBqmePop2X5Lx1L5hn6L2KEP0bhnIvhww2vd9g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739306547; c=relaxed/simple;
-	bh=I7akJBwRiTP9CbfLL05hx9JniHdTpAdfGXEoDL07HKQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=V6n4i7FedueHxKu6few2GXQ3LeDQYZKJLA0RP8vij7594sth0+Dvi70BU6ThTLy2pphaChkbAmV9tIgTMaHCdglWXoP/4DQlYVzRBTpN7xZib0I3WNYpAcP3kI4C+9Ek7p9zd5GwHckJp1+tyl3GXNM7zRiAQbhZF9dmTicCShI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YstbG71Tyz6L56q;
-	Wed, 12 Feb 2025 04:39:22 +0800 (CST)
-Received: from frapeml100006.china.huawei.com (unknown [7.182.85.201])
-	by mail.maildlp.com (Postfix) with ESMTPS id E44BC1400DD;
-	Wed, 12 Feb 2025 04:42:20 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (7.182.85.172) by
- frapeml100006.china.huawei.com (7.182.85.201) with Microsoft SMTP Server
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A07B91D89E5;
+	Tue, 11 Feb 2025 20:42:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739306556; cv=fail; b=HESHWU5iIbh44Mmk63MYNxBy2RZ4VDb3LG6HLMhdo1ulgIdvOenl5FuKCiIpN3AryCFPMmv1HDP0OUfkMk2qNfe7ddB/RZP38k6QwWUuEX2VDGmue4De+JsbE5zv3AQvrV5d851hns+EozLoSOXGrXKbWvdLGPwXlA2fOJozlPA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739306556; c=relaxed/simple;
+	bh=euUrD7f3L9pRXao7vCGd+yFmm/+EiP2rzAsETCTk/IY=;
+	h=Date:From:To:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=WkV2rR/c/9R89DMy4q5qPwi5VhGJYJN2jezJon582s1d1QJ/fSpyvJOJF4j/XNMFFfLh60WccAcfGaixExRcuWZw9btydmtnI2EpGvfYlIxS1rveg0l02vMWE/v7TcmdtNQPZbpYDplYvxixDSAIuOHvyIolXiHO3ZxFcMVT7Lg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Tsn87yiR; arc=fail smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tsn87yiR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739306555; x=1770842555;
+  h=date:from:to:subject:message-id:references:in-reply-to:
+   mime-version;
+  bh=euUrD7f3L9pRXao7vCGd+yFmm/+EiP2rzAsETCTk/IY=;
+  b=Tsn87yiRqoIxKSCcDgVzMYQKN64cAuzwlk/PbhaCv2TaEqLLiTfkkKRF
+   Kt4K0lwcreajrwQ34TjClIsbKnxJP7rDxyUitJztJwIiG6p0m+8FGefC2
+   Fv6tKz8/rAgWOcA+8CsnrvH+suetnC8kuxwD0svlnxu+xP5j89Vnrp11G
+   8zkeRzdNdyHrzfPpSMnvspzrxmWxxQp96DtI8KGEKZPkm5J07oHWxg6zO
+   AB6JSGygbgnNEaojpczPbL/SQM0/H+1tNxzzG5JARo4RFNIHZGODExdTb
+   J4YSDFr4oCBf7gvGCvUKx2Dmfwv7OuMoU8HoWr+SpV2YHw4O8E5qxO+kC
+   A==;
+X-CSE-ConnectionGUID: xSBnuzp3Sg+1/pwkkveXYw==
+X-CSE-MsgGUID: 1SIl1gRIQAmoOIhYVNEc7Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="50168491"
+X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
+   d="scan'208";a="50168491"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 12:42:34 -0800
+X-CSE-ConnectionGUID: nn1zdZklSHKWdJ5OZWbFaw==
+X-CSE-MsgGUID: 3DVMln0cTo6+HVL6QfZpwg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="135883234"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 11 Feb 2025 12:42:33 -0800
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Tue, 11 Feb 2025 12:42:32 -0800
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Tue, 11 Feb 2025 12:42:32 -0800
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.174)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 11 Feb 2025 21:42:20 +0100
-Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
- frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
- Tue, 11 Feb 2025 21:42:20 +0100
-From: Shiju Jose <shiju.jose@huawei.com>
-To: Fan Ni <nifan.cxl@gmail.com>
-CC: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-	"tony.luck@intel.com" <tony.luck@intel.com>, "rafael@kernel.org"
-	<rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
-	"mchehab@kernel.org" <mchehab@kernel.org>, "dan.j.williams@intel.com"
-	<dan.j.williams@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
-	"Jonathan Cameron" <jonathan.cameron@huawei.com>, "dave.jiang@intel.com"
-	<dave.jiang@intel.com>, "alison.schofield@intel.com"
-	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
-	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
-	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
-	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
-	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
-	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "naoya.horiguchi@nec.com"
-	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
-	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
-	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
-	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
-	<duenwen@google.com>, "gthelen@google.com" <gthelen@google.com>,
-	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
-	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
-	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>, tanxiaofei
-	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, "Roberto
- Sassu" <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
-	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
-	Linuxarm <linuxarm@huawei.com>, "a.manzanares@samsung.com"
-	<a.manzanares@samsung.com>, "nmtadam.samsung@gmail.com"
-	<nmtadam.samsung@gmail.com>, "anisa.su887@gmail.com" <anisa.su887@gmail.com>
-Subject: RE: [PATCH v19 00/15] EDAC: Scrub: introduce generic EDAC RAS control
- feature driver + CXL/ACPI-RAS2 drivers
-Thread-Topic: [PATCH v19 00/15] EDAC: Scrub: introduce generic EDAC RAS
- control feature driver + CXL/ACPI-RAS2 drivers
-Thread-Index: AQHbeW7q+yAlb0l8b0m3xpFA4TlX9rNAxY6AgAF8IfCAACR1AIAAMBhg
-Date: Tue, 11 Feb 2025 20:42:20 +0000
-Message-ID: <04b3b2608db74f78ba88cf434108fcac@huawei.com>
-References: <20250207144445.1879-1-shiju.jose@huawei.com>
- <Z6o87wa-tabDy34V@fan> <c2fe65c81ab4484f977f5938a3278036@huawei.com>
- <Z6uaZOWlDd3OWcZl@fan>
-In-Reply-To: <Z6uaZOWlDd3OWcZl@fan>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
+ 15.1.2507.44; Tue, 11 Feb 2025 12:42:32 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nfybSc2YrrQrYTpkxLR0sjjplN/if9qYWaqNo+6sjSGD7SnSZEuB/gulLMW2PsM3QbSXp2y2ZafUb4eELSuwEOjHjLxhwqEDpE0f86lbsSQJSd5iEWYz0ZV+QyUAyDuvjwgSPptpC1LIwUIlYd/+KspwD6v7uN83maJKQ84V4l0bHMrk3ZB+9Ak0se9XXTc5DMvnb2oYDJa5zGQXlvP8D32XVReHJCjGhSh2BuYiv9wioKzmw5n+ZapAgX6GY+ymw/D9/G6M2vlep2bg2bkMHDsGt8g3f6nCtxnK8bA2AnJm1LrhY7gD9P4QdtJBg0u1wQTpvw6pY7moVf7/ghxLXA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xh2gs3ZYiqfsZ2Syg5XaAIRrOTDIcfyajZLFPFfVn/I=;
+ b=Xb3QKNjMIvN8Iuz9PHfyCtnmSxFTNJHpeJ/qZ13yqfgzPwWtNd7GQJpkptk8JDho490FzkjxuHF5P9NRUTHnkLnXU00sC3I/WGuf/J1EYvthq/Jv1pV5nnJEiNsd9ro/nLiDmqMu/KPYER29MeBU0aP6fdIJpYWfPZ28jxo7AEvpq1Igkej8FT2FSHdfFRHdUnS6ijtVL+2mdaJjtUqGnGBm6kv1LPSy7BlpItdc9svOOIHFrqy3tNXJ12MRu7U60tLIRiwq9KO5p/DvGP3lR0LJaR5ZG+nhf3RY3TM1OKepQgTRcFxCTLJzxfTBrAFP0gwS0B2FAC/I+x0xAEq+/A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by SA3PR11MB7488.namprd11.prod.outlook.com (2603:10b6:806:313::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Tue, 11 Feb
+ 2025 20:42:29 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8445.008; Tue, 11 Feb 2025
+ 20:42:28 +0000
+Date: Tue, 11 Feb 2025 12:42:25 -0800
+From: Dan Williams <dan.j.williams@intel.com>
+To: Terry Bowman <terry.bowman@amd.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<nifan.cxl@gmail.com>, <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
+	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <ira.weiny@intel.com>,
+	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
+	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
+	<lukas@wunner.de>, <ming.li@zohomail.com>,
+	<PradeepVineshReddy.Kodamati@amd.com>
+Subject: Re: [PATCH v7 01/17] PCI/AER: Introduce 'struct cxl_err_handlers'
+ and add to 'struct pci_driver'
+Message-ID: <67abb6316492_2d1e2947b@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20250211192444.2292833-1-terry.bowman@amd.com>
+ <20250211192444.2292833-2-terry.bowman@amd.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+In-Reply-To: <20250211192444.2292833-2-terry.bowman@amd.com>
+X-ClientProxiedBy: MW4PR03CA0175.namprd03.prod.outlook.com
+ (2603:10b6:303:8d::30) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SA3PR11MB7488:EE_
+X-MS-Office365-Filtering-Correlation-Id: f852a4d0-8e57-42a3-0091-08dd4adc995c
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024|7053199007|921020;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?vN9C4bxZ8cXL8+bdx6ECnFRoBjWkH2fwtQ17uYHCIbNjVMGMoTegIZlNCuxW?=
+ =?us-ascii?Q?aqabPuOjEOTgipji3Gt5azNffDcysDfny8hbgi1bfK434oJReGtKBKrB0CRa?=
+ =?us-ascii?Q?MDHj2/KIBzBRbExxEL3H6fyD+hprFCtxuR0AcRC3xd48udEHnVB5pngeHPJJ?=
+ =?us-ascii?Q?0s4Y6of038kMOpzG4zi1GPLMxj3M9ptj09UjSz59yUcXylBZWMJBNt1Dl9t7?=
+ =?us-ascii?Q?V8GvsNUUD0av78Mtte6l/p4wDPezlon29cFr1YjiKcbcxWDJuB8D/dXOcHxG?=
+ =?us-ascii?Q?DE1mje/7Inwarippa/EgWqp4hVc+aN1asmTEHc/DM07ijMp2cuvyCrZkmuaD?=
+ =?us-ascii?Q?1eBEpTdpj/G3A4NwkuwjdmkNas00yx02zyps7NYohIHo0qRJJ8J3lPGJlTos?=
+ =?us-ascii?Q?UQTt6WutYsbaGUO/o+RDtKm+otmZV/vaUr1t6dbSX8nt9YXQc/p4rLdUhiRs?=
+ =?us-ascii?Q?ESoFXBd8CRYFt+MVmi4fd+7eAPOgFt70erp+BVwubF/mojTznN3acpDTqTFC?=
+ =?us-ascii?Q?S+V4Y2Fd5naAG2+GsCoXhMwvtkuCw79D27+qQl6RVLeu9sYdp5mDjixCJB7O?=
+ =?us-ascii?Q?zplRpsoJX7+kDxG/AmRkuAqoSPfgdMBp6lXT7IW15sZq9X2Yv3mzeWl0UT+H?=
+ =?us-ascii?Q?Dgb97vHm1VLumD7abWJ1vsQfe9WZKALAL2xEabo0BVuE9aMM2stpS7Tjzi8X?=
+ =?us-ascii?Q?m1vhKwAOltm61u1xHehEfVguJJ1SkGya5K25kBMbn7anDa/WmnfG6pafMtcg?=
+ =?us-ascii?Q?oF2lO2WcUk49ur2efHJJuylkdh35MKGDacoNWmaBhbTFYQkbfWnjSLBKfXl6?=
+ =?us-ascii?Q?ePvCmLiBHx9jX/aaeoEBkZw4vfHYV9O49OQ7ZV/2pumyGJZUuZceMQfB+Ay3?=
+ =?us-ascii?Q?j+fQ7XesE+TDUQbVjGwEK6iCb7qpFo/gdropir2SxGPXBMBlFodYTXAYnhfl?=
+ =?us-ascii?Q?B6Zxp2AAV6/8VuHgOLU80cc8KxwuWAP0cW+dewKLTYtVtdIdt3N2t+ZFWYla?=
+ =?us-ascii?Q?QikSdQ4bq1z579FiDfKcNevYgywl4FdVRIM09jr8qTAPIABgM2MZItv8AkFx?=
+ =?us-ascii?Q?NG1jzSDI747WcxLWY20J9DgVP15d7zcfGscl6m08Qn/isfFHIh2fxsreBjuH?=
+ =?us-ascii?Q?fMxUJzpX3iKFTRFYsWegqfVR7eKLNiO+tLJBbHkZFaZg0b9B740GL5wRBohB?=
+ =?us-ascii?Q?CVs2O/i5BR/v4R6aYZyJZHkoyC07KrgkV6doqeBCkAdB2mxmvbdxT8FU7NUg?=
+ =?us-ascii?Q?yqOe8CcdR6/YxZ2Uz6wjhdRjFlchNTws3RWuQxWTXI9MWWtUq1xAsGhwMQTv?=
+ =?us-ascii?Q?brSpq8g4Qa10b4emO4Yxzs5T5ZW1qsWIbLZJ9skDd6Rq93bN5JohPS6tzCFY?=
+ =?us-ascii?Q?BeFEfrjGkLRpOGSNlfTyOcO8bNXQ7r715nyQExxvD5RcN3f464kq2u++yxif?=
+ =?us-ascii?Q?XzQMyCu7SIw=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(7053199007)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?/AoK6UnLdylcJR3sqZvTY3H0KPcs6yJT6Mdv2cs0YWlLSAQe7DKWKGWViAYY?=
+ =?us-ascii?Q?RUj+3CSeo2fdRxMd3hZy107srpRrio05d2L6QuvpAs8cCAloOtzKY1ksAxNk?=
+ =?us-ascii?Q?XyH1xz5eijRucfJH+NzxaMTKTOGW7d0yUFApWrWygCq8oDOSWOuVcAHyPz/2?=
+ =?us-ascii?Q?KLsMCHK2gq6mc1LXtAQM1li1Lobzh1w/KQCB0A2pJVzP5C0axPSb+DL1b7Jz?=
+ =?us-ascii?Q?+ujKjar09E7j5x9oQHAJvladoBDxkg667ce6ynhiF4eb6R1UKZU+5UhcYdB0?=
+ =?us-ascii?Q?8KpJWwpv1J7o+wPbTR4g1NVhSylGx/1dfLI9egn/lr5pbL4DExJ+fn2+cpin?=
+ =?us-ascii?Q?iAZ+1w6pDA68AqhEOixz/KH3h5urdOD7SlJ10SORRoe0bsnD3rOV6bJr84O/?=
+ =?us-ascii?Q?u/eri0nmejWf72jtIVtKiHF6/30z91ZRacA5s7Mf3zhV15heGmOucC+JYskf?=
+ =?us-ascii?Q?ka/iKO6EBYknhGyxcpUb0KR4WGrXmWrQXIgPkwPw9gSvamVuz5s+t2nA5517?=
+ =?us-ascii?Q?W/A2pcmsAnFM5zeX+MHOQsDZGCXvz3qpWRtCwRt6GgaJqawPnVg1CNAksXJk?=
+ =?us-ascii?Q?LXwOaTLwdBxXpghkXtkcBNTjHCTyoxPYVpXkTmtWeHsxD0bbeiqUE05lgri3?=
+ =?us-ascii?Q?XatcwiXc8qG9Of553lA5xScZppkQbv+a2HWRjEeI3ccfyTOLh0T5wO79kKJU?=
+ =?us-ascii?Q?xB8DayEo26OCiR+cjlnvyvdA+rohT65ICZkKxjYha3pnViawwGUXp6XT42BD?=
+ =?us-ascii?Q?lHfn/caoRz63lKaF9FUpHUCZz/B8wYsbJsE4ZiSioYUf2oT5UU2sMWx/BYO9?=
+ =?us-ascii?Q?3okM3LCfxGy1QvxIONb7OQmt4fFsu4mvffnV/aFjUPReG6EGv3vHuzapyQJD?=
+ =?us-ascii?Q?rHSVKuB1cVfB5kEaLglIIywGFgVf6ledFwzoZSwhmCaQBty/2VuGZ2i1YjvS?=
+ =?us-ascii?Q?wbG4FsuJabLXdVglvtujr1ysq4u80orfmCOVMbe+Ow5fk107KBttC1kutbRM?=
+ =?us-ascii?Q?olJXwEyu3SQSA9680yH2LqKaU15FsbOAepVJIFUpEsZb8Iq3lKmZD1c/OaXE?=
+ =?us-ascii?Q?fkoxOUF+exay8nfRqMTFOBMdH+blOPxdMEUeHujGpB82G7/S/Tk5KVtYDyLL?=
+ =?us-ascii?Q?SIzfG8BBZEdwo2QkSwS0Y3zQOWuOP8+HO/7a+9mxMNoQwQoiKm3LCpsJmRBi?=
+ =?us-ascii?Q?r9xN0Qc7SrUquzSrUeo3StBQkXGZGq1c70oPs+sTTzdu4j6Xre263ZNYuxqA?=
+ =?us-ascii?Q?He9t61X89+cPbojs6do6icl/Gxa/PdmBhnBVlqSliZNB/rf8db3r51crl6Qf?=
+ =?us-ascii?Q?sCrAxbDbsM4shCGDbb8G5KXYbCCn+uX4YFsgdkdTtCdChRwubrwxUd9aQ5jD?=
+ =?us-ascii?Q?9/Ipmr3nOpBhKd5ltkaAWPK5WrSi5j2MDCf/2QtVNF6vPbl0xVpK/qxBF3Ts?=
+ =?us-ascii?Q?Q7+Z/Xg5ielI9AKoUu5m2GjkCKGhQM5Pxp5zRhtC9j1tPXRwnUjDqWvR2ad8?=
+ =?us-ascii?Q?bAplLhxvcaRSNzZmJR7Jrq1+JMEGl4TjF8e0+H09zzskXWSCC4gNvhXc18uq?=
+ =?us-ascii?Q?0mpmMZtTp7VXaMD4knFcGau7WK6+juiIKJAespvWNwihZ/WXasJ5Mjepl/T/?=
+ =?us-ascii?Q?EA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: f852a4d0-8e57-42a3-0091-08dd4adc995c
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2025 20:42:28.4558
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: rto0bV2f2YGzZZG7/WqsD3HfHXlM7gpjW3fTn7BKkY6OciR4hPori2tjF89zOjXu6ObklKOYCfwT5ASmCj8WJPp2+SaYIwT+xPv1pKdQSzE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR11MB7488
+X-OriginatorOrg: intel.com
 
+Terry Bowman wrote:
+> CXL.io is implemented on top of PCIe Protocol Errors. But, CXL.io and PCIe
+> have different handling requirements for uncorrectable errors (UCE).
+> 
+> The PCIe AER service driver may attempt recovering PCIe devices with
+> UCE while recovery is not used for CXL.io. Recovery is not used in the
+> CXL.io case because of potential corruption on what can be system memory.
+> 
+> Create pci_driver::cxl_err_handlers structure similar to
+> pci_driver::error_handler. Create handlers for correctable and
+> uncorrectable CXL.io error handling.
+> 
+> The CXL error handlers will be used in future patches adding CXL PCIe
+> Port Protocol Error handling.
+> 
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Fan Ni <fan.ni@samsung.com>
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> Reviewed-by: Gregory Price <gourry@gourry.net>
 
+Looks good to me.
 
->-----Original Message-----
->From: Fan Ni <nifan.cxl@gmail.com>
->Sent: 11 February 2025 18:44
->To: Shiju Jose <shiju.jose@huawei.com>
->Cc: Fan Ni <nifan.cxl@gmail.com>; linux-edac@vger.kernel.org; linux-
->cxl@vger.kernel.org; linux-acpi@vger.kernel.org; linux-mm@kvack.org; linux=
--
->kernel@vger.kernel.org; linux-doc@vger.kernel.org; bp@alien8.de;
->tony.luck@intel.com; rafael@kernel.org; lenb@kernel.org;
->mchehab@kernel.org; dan.j.williams@intel.com; dave@stgolabs.net; Jonathan
->Cameron <jonathan.cameron@huawei.com>; dave.jiang@intel.com;
->alison.schofield@intel.com; vishal.l.verma@intel.com; ira.weiny@intel.com;
->david@redhat.com; Vilas.Sridharan@amd.com; leo.duran@amd.com;
->Yazen.Ghannam@amd.com; rientjes@google.com; jiaqiyan@google.com;
->Jon.Grimm@amd.com; dave.hansen@linux.intel.com;
->naoya.horiguchi@nec.com; james.morse@arm.com; jthoughton@google.com;
->somasundaram.a@hpe.com; erdemaktas@google.com; pgonda@google.com;
->duenwen@google.com; gthelen@google.com;
->wschwartz@amperecomputing.com; dferguson@amperecomputing.com;
->wbs@os.amperecomputing.com; tanxiaofei <tanxiaofei@huawei.com>; Zengtao
->(B) <prime.zeng@hisilicon.com>; Roberto Sassu <roberto.sassu@huawei.com>;
->kangkang.shen@futurewei.com; wanghuiqiang <wanghuiqiang@huawei.com>;
->Linuxarm <linuxarm@huawei.com>; a.manzanares@samsung.com;
->nmtadam.samsung@gmail.com; anisa.su887@gmail.com
->Subject: Re: [PATCH v19 00/15] EDAC: Scrub: introduce generic EDAC RAS
->control feature driver + CXL/ACPI-RAS2 drivers
->
->On Tue, Feb 11, 2025 at 04:55:49PM +0000, Shiju Jose wrote:
->> >-----Original Message-----
->> >From: Fan Ni <nifan.cxl@gmail.com>
->> >Sent: 10 February 2025 17:53
->> >To: Shiju Jose <shiju.jose@huawei.com>
->> >Cc: linux-edac@vger.kernel.org; linux-cxl@vger.kernel.org; linux-
->> >acpi@vger.kernel.org; linux-mm@kvack.org;
->> >linux-kernel@vger.kernel.org; linux-doc@vger.kernel.org;
->> >bp@alien8.de; tony.luck@intel.com; rafael@kernel.org;
->> >lenb@kernel.org; mchehab@kernel.org; dan.j.williams@intel.com;
->> >dave@stgolabs.net; Jonathan Cameron <jonathan.cameron@huawei.com>;
->> >dave.jiang@intel.com; alison.schofield@intel.com;
->> >vishal.l.verma@intel.com; ira.weiny@intel.com; david@redhat.com;
->> >Vilas.Sridharan@amd.com; leo.duran@amd.com;
->Yazen.Ghannam@amd.com;
->> >rientjes@google.com; jiaqiyan@google.com; Jon.Grimm@amd.com;
->> >dave.hansen@linux.intel.com; naoya.horiguchi@nec.com;
->> >james.morse@arm.com; jthoughton@google.com;
->somasundaram.a@hpe.com;
->> >erdemaktas@google.com; pgonda@google.com; duenwen@google.com;
->> >gthelen@google.com; wschwartz@amperecomputing.com;
->> >dferguson@amperecomputing.com; wbs@os.amperecomputing.com;
->> >nifan.cxl@gmail.com; tanxiaofei <tanxiaofei@huawei.com>; Zengtao (B)
->> ><prime.zeng@hisilicon.com>; Roberto Sassu <roberto.sassu@huawei.com>;
->> >kangkang.shen@futurewei.com; wanghuiqiang
-><wanghuiqiang@huawei.com>;
->> >Linuxarm <linuxarm@huawei.com>; a.manzanares@samsung.com;
->> >nmtadam.samsung@gmail.com; anisa.su887@gmail.com
->> >Subject: Re: [PATCH v19 00/15] EDAC: Scrub: introduce generic EDAC
->> >RAS control feature driver + CXL/ACPI-RAS2 drivers
->> >
->> >On Fri, Feb 07, 2025 at 02:44:29PM +0000, shiju.jose@huawei.com wrote:
->> >> From: Shiju Jose <shiju.jose@huawei.com>
->> >>
->> >> The CXL patches of this series has dependency on Dave's CXL fwctl
->> >> series [1].
->> >>
->> >> The code is based on v3 of CXL fwctl series [1] posted by Dave and
->> >> v3 of FWCTL series [2] posted by Jason and rebased on top of
->> >> v6.14-rc1.
->> >>
->> >> [1]:
->> >> https://lore.kernel.org/linux-cxl/20250204220430.4146187-1-dave.jia
->> >> ng@
->> >> intel.com/
->> >> [2]:
->> >> https://lore.kernel.org/linux-cxl/0-v3-960f17f90f17+516-fwctl_jgg@n
->> >> vid
->> >> ia.com/#r
->> >>
->> >>
->> >> Userspace code for CXL memory repair features [3] and sample
->> >> boot-script for CXL memory repair [4].
->> >>
->> >> [3]:
->> >> https://lore.kernel.org/lkml/20250207143028.1865-1-shiju.jose@huawe
->> >> i.c
->> >> om/
->> >> [4]:
->> >> https://lore.kernel.org/lkml/20250207143028.1865-5-shiju.jose@huawe
->> >> i.c
->> >> om/
->> >>
->> >
->> >Hi Shiju,
->> >Is this series the same as in branch
->> >https://github.com/shijujose4/linux/tree/edac-enhancement-ras-
->features_v19?
->> >
->> >I hit some compile errors wen trying to test with the above branch dire=
-ctly.
->> >
->> >Here are two cases where I found the code cannot compile. Please
->> >check if it is a false alarm.
->> >
->> >Case 1: CONFIG_CXL_RAS_FEATURES=3Dm
->...
->> >
->> >fan:~/cxl/linux-edac$ make -j16
->> >mkdir -p /home/fan/cxl/linux-edac/tools/objtool && make
->> >O=3D/home/fan/cxl/linux-edac subdir=3Dtools/objtool --no-print-director=
-y -C
->objtool
->> >  CALL    scripts/checksyscalls.sh
->> >  INSTALL libsubcmd_headers
->> >  UPD     include/generated/utsversion.h
->> >  CC      init/version-timestamp.o
->> >  KSYMS   .tmp_vmlinux0.kallsyms.S
->> >  AS      .tmp_vmlinux0.kallsyms.o
->> >  LD      .tmp_vmlinux1
->> >ld: vmlinux.o: in function `cxl_region_probe':
->> >/home/fan/cxl/linux-edac/drivers/cxl/core/region.c:3456:(.text+0x7b296f=
-):
->> >undefined reference to `devm_cxl_region_edac_register'
->> >ld: vmlinux.o: in function `cxl_mem_probe':
->> >/home/fan/cxl/linux-edac/drivers/cxl/mem.c:188:(.text+0x7b8ad1):
->> >undefined reference to `devm_cxl_memdev_edac_register'
->> >make[2]: *** [scripts/Makefile.vmlinux:77: vmlinux] Error 1
->> >make[1]: *** [/home/fan/cxl/linux-edac/Makefile:1226: vmlinux] Error
->> >2
->> >make: *** [Makefile:251: __sub-make] Error 2
->> >
->> >When compile with CONFIG_CXL_RAS_FEATURES=3Dy,  it can compile.
->> >
->> Hi Fan,
->>
->> Thanks for checking this and reporting.
->>
->> This error is with CONFIG_CXL_RAS_FEATURES=3Dm and CONFIG_CXL_BUS=3Dy
->and CONFIG_CXL_MEM=3Dy.
->> Now changed  CONFIG_CXL_RAS_FEATURES  for tristate -> boolean as this
->> implemented only interface functions for the CXL RAS features.
->> >
->> >CASE 2: CONFIG_EDAC=3Dm
->> >
->...
->> >fan:~/cxl/linux-edac$ make -j16
->> >mkdir -p /home/fan/cxl/linux-edac/tools/objtool && make
->> >O=3D/home/fan/cxl/linux-edac subdir=3Dtools/objtool --no-print-director=
-y -C
->objtool
->> >  CALL    scripts/checksyscalls.sh
->> >  INSTALL libsubcmd_headers
->> >  UPD     include/generated/utsversion.h
->> >  CC      init/version-timestamp.o
->> >  KSYMS   .tmp_vmlinux0.kallsyms.S
->> >  AS      .tmp_vmlinux0.kallsyms.o
->> >  LD      .tmp_vmlinux1
->> >ld: vmlinux.o: in function `devm_cxl_region_edac_register':
->> >/home/fan/cxl/linux-
->> >edac/drivers/cxl/core/memfeature.c:1720:(.text+0x7b665d): undefined
->> >reference to `edac_dev_register'
->> >ld: vmlinux.o: in function `devm_cxl_memdev_edac_register':
->> >/home/fan/cxl/linux-
->> >edac/drivers/cxl/core/memfeature.c:1697:(.text+0x7b7241): undefined
->> >reference to `edac_dev_register'
->> >ld: vmlinux.o: in function `ras2_probe':
->> >/home/fan/cxl/linux-edac/drivers/ras/acpi_ras2.c:363:(.text+0xb0ecc8):
->> >undefined reference to `edac_dev_register'
->> >make[2]: *** [scripts/Makefile.vmlinux:77: vmlinux] Error 1
->> >make[1]: *** [/home/fan/cxl/linux-edac/Makefile:1226: vmlinux] Error
->> >2
->> >make: *** [Makefile:251: __sub-make] Error 2
->> >
->>
->> Here the symbol 'edac_dev_register' can't find with CONFIG_CXL_BUS=3Dy
->> CONFIG_CXL_RAS_FEATURES=3Dy and CONFIG_EDAC=3Dm.
->> Modified CXL_RAS_FEATURES depends on EDAC=3Dy || (CXL_BUS=3Dm &&
->EDAC=3Dm)
->> to fix this.
->Hi Shiju,
->Did you mean the following fix?
->
->diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig index
->77baef31cf3c..8615f329baa2 100644
->--- a/drivers/cxl/Kconfig
->+++ b/drivers/cxl/Kconfig
->@@ -162,11 +162,12 @@ config CXL_REGION_INVALIDATION_TEST
->          say N.
->
-> config CXL_RAS_FEATURES
->-       tristate "CXL: Memory RAS features"
->+       bool "CXL: Memory RAS features"
->        depends on CXL_MEM
->        depends on EDAC_SCRUB
->        depends on EDAC_ECS
->        depends on EDAC_MEM_REPAIR
->+       depends on EDAC=3Dy || (CXL_BUS=3Dm && EDAC=3Dm)
->        help
->          The CXL memory RAS feature control is optional and allows host t=
-o
->          control the RAS features configurations of CXL Type 3 devices.
-
-Hi Fan,
-
-Yes.=20
->
->
->
->With the fix, I still see the errors with following config.
-
-Sorry. I did not shared the RAS2 Kconfig change, assuming you are checking =
-the CXL part only.
-Please see RAS2 change, which require some improvements for the case CONFIG=
-_MEM_ACPI_RAS2=3Dm.=20
-
-diff --git a/drivers/ras/Kconfig b/drivers/ras/Kconfig index c907e44360c8..=
-881d6a642457 100644
---- a/drivers/ras/Kconfig
-+++ b/drivers/ras/Kconfig
-@@ -49,7 +49,7 @@ config RAS_FMPM
- config MEM_ACPI_RAS2
-        tristate "Memory ACPI RAS2 driver"
-        depends on ACPI_RAS2
--       depends on EDAC_SCRUB
-+       depends on EDAC=3Dy && EDAC_SCRUB
-        help
-          The driver binds to the platform device added by the ACPI RAS2
-          table parser. Use a PCC channel subspace for communicating with =
-=20
-
-
-Thanks,
-Shiju
->
->fan:~/cxl/linux-edac$ cat .config | egrep "EDAC|CXL|RAS" | grep -v "^#"
->CONFIG_ACPI_RAS2=3Dy
->CONFIG_ACPI_APEI_EINJ_CXL=3Dy
->CONFIG_PCIEAER_CXL=3Dy
->CONFIG_CXL_BUS=3Dm
->CONFIG_CXL_PCI=3Dm
->CONFIG_CXL_MEM_RAW_COMMANDS=3Dy
->CONFIG_CXL_ACPI=3Dm
->CONFIG_CXL_PMEM=3Dm
->CONFIG_CXL_MEM=3Dm
->CONFIG_CXL_FWCTL=3Dy
->CONFIG_CXL_PORT=3Dm
->CONFIG_CXL_SUSPEND=3Dy
->CONFIG_CXL_REGION=3Dy
->CONFIG_CXL_REGION_INVALIDATION_TEST=3Dy
->CONFIG_CXL_RAS_FEATURES=3Dy
->CONFIG_MMC_SDHCI_OF_ARASAN=3Dy
->CONFIG_EDAC_ATOMIC_SCRUB=3Dy
->CONFIG_EDAC_SUPPORT=3Dy
->CONFIG_EDAC=3Dm
->CONFIG_EDAC_LEGACY_SYSFS=3Dy
->CONFIG_EDAC_DEBUG=3Dy
->CONFIG_EDAC_DECODE_MCE=3Dm
->CONFIG_EDAC_GHES=3Dm
->CONFIG_EDAC_SCRUB=3Dy
->CONFIG_EDAC_ECS=3Dy
->CONFIG_EDAC_MEM_REPAIR=3Dy
->CONFIG_EDAC_IGEN6=3Dm
->CONFIG_RAS=3Dy
->CONFIG_MEM_ACPI_RAS2=3Dy
->CONFIG_DEV_DAX_CXL=3Dm
->
->ld: vmlinux.o: in function `ras2_probe':
->/home/fan/cxl/linux-edac/drivers/ras/acpi_ras2.c:363:(.text+0xaeb5c8):
->undefined reference to `edac_dev_register'
->make[2]: *** [scripts/Makefile.vmlinux:77: vmlinux] Error 1
->make[1]: *** [/home/fan/cxl/linux-edac/Makefile:1226: vmlinux] Error 2
->make: *** [Makefile:251: __sub-make] Error 2
->
->It seems ACPI_RAS2 depends on EDAC.
->When changing CONFIG_EDAC=3Dy, it compiles fine.
->
->Fan
-[...]
-
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
