@@ -1,257 +1,217 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2082.outbound.protection.outlook.com [40.107.94.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C901F1515;
-	Tue, 11 Feb 2025 09:33:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739266417; cv=none; b=lbGScaFk6vlb+fD4sywiqfm96Fnw4ynYJ3Hdvn8XRd3NRIx0wl7K/aWH42AWD64qONj0JXWEEqwnygGz8MqIzIlKsonRaOkbHl6uh7TffdDgR5R5FEIe+xplEuofL9K4IvC+hA/1TBxIWBah73ZFsE3ik6zn93kBzrkfq6/DjVM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739266417; c=relaxed/simple;
-	bh=4vSZl2WPnLw3OPkUSssErIRZUxNMaeRRqYU17OwHZg4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LnyTDrZext2gD2Rn5AesVe411MYaCluIHWyeNxdci5mcXW5ksFzFXZDNalgy0PMw+j4dLY1EyWBAzsI1NFZIytuEQtjlAsfV/dIoNrdWyomUjqvGgzQCN1Ltuk76Msc0E98SX8nKaGFL4KoTSSzzh2wsbw5AxlOEAL00dGQyaHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Ysblb4lCXz67sgR;
-	Tue, 11 Feb 2025 17:30:35 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 20C941404F5;
-	Tue, 11 Feb 2025 17:33:32 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 11 Feb
- 2025 10:33:31 +0100
-Date: Tue, 11 Feb 2025 09:33:29 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Dave Jiang <dave.jiang@intel.com>
-CC: Jason Gunthorpe <jgg@nvidia.com>, Andy Gospodarek
-	<andrew.gospodarek@broadcom.com>, Aron Silverton <aron.silverton@oracle.com>,
-	Dan Williams <dan.j.williams@intel.com>, Daniel Vetter
-	<daniel.vetter@ffwll.ch>, David Ahern <dsahern@kernel.org>, Andy Gospodarek
-	<gospo@broadcom.com>, Christoph Hellwig <hch@infradead.org>, Itay Avraham
-	<itayavr@nvidia.com>, Jiri Pirko <jiri@nvidia.com>, Jakub Kicinski
-	<kuba@kernel.org>, Leonid Bloch <lbloch@nvidia.com>, Leon Romanovsky
-	<leonro@nvidia.com>, <linux-cxl@vger.kernel.org>,
-	<linux-rdma@vger.kernel.org>, <netdev@vger.kernel.org>, Saeed Mahameed
-	<saeedm@nvidia.com>, "Nelson, Shannon" <shannon.nelson@amd.com>
-Subject: Re: [PATCH v4 00/10] Introduce fwctl subystem
-Message-ID: <20250211093329.00000b95@huawei.com>
-In-Reply-To: <a0f1648f-eefb-455c-b264-169cb67a7486@intel.com>
-References: <0-v4-0cf4ec3b8143+4995-fwctl_jgg@nvidia.com>
-	<a0f1648f-eefb-455c-b264-169cb67a7486@intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD53C1EF092;
+	Tue, 11 Feb 2025 09:54:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.82
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739267663; cv=fail; b=FB5HTP3OMjQSw6yslS46+jnUjTwZe/LrGPhKYeS43JLLCjVfK3JHWKwW++F4/Dzxu4ZYk0DN2nWa9Dj7b8nmciCbddoCnu1vMXoByuwLWYYcG4wnQvdPuLVGVeuhqt5u3aBMe0TcqeIJHRS72/x73rEwKdNl/laYfoLGkYMfkbE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739267663; c=relaxed/simple;
+	bh=cI0+wZSRY4pb8s2dzZ5VZPrThgHg/mZM2wV+izLLGDY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EqRbhq+49zBVvu0CcZ9xNt0fo62w9pnu40SA4qGGJwZqUtdE458LqV4rRPKWfqFMjWN42tqZP/yr5k0pDjTWwiL0R368ZsXa7QHvAXWoamUGSXSl6Y20hMhu05nS+M23NT2NgwOv+fCdRY0P4oKOYKV9AIzlmV5M2syXPDpG63k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=BncGMRG0; arc=fail smtp.client-ip=40.107.94.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="BncGMRG0"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=l7bTC64tJDEza4sce3AePRn38sdGINfYjcZik4swgg/vFFZaHKe76R5/KEUVYYTS5gDzZDQwi01os8nbIO4jJWYT9wEuG0sK+r0Ulnz+WJ99wirF6hinscr6rg3JOKLLYMPiLhNb/ApUHtlU0f9Q/RJpH+zQDOPTKNum1LuWjyrtCREADKp8JHM2DHT5kYK2L1TTZ52JFnJYvsD04F8ozNXz++u2F7y6/8kI6xTtRJCio9KxnWoMq1R+cmo1MbSNJuou16mWOVLF2aOuQ+O9ZGzQU2Adq6m4n8HLkY00v25taFT6qRqkNR+sNLuGgVbGOgxy8I9oSRLlyvN8BWFuuQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IpnvKrfFIhUaduZ/GV8tLVUSv2+r0EXytAMw8y0W8bY=;
+ b=S2vqt+6Iozjd3ZdCON7lHn/HxklPC87J3Riz40vAlY5iOg3SgSzf5vIYsDhGgL5lcK9srUpiYefzULcfezhnc4YmK2QOsqs0Xw6rGH22d27YyEdQGVEA99fyEonkZV3IpZvIWiSnlTBnIK6j42O3ZWXV7nGtP4ZgK0s8meh30MhD/8CmxEIh2PFPHL+xPdAH4CVoqT+Ck7CWOsq3X0X7HvWiG3jFj7C0Eywp7EAOuYfSVKaPBKyuGAdj9lBfd4BOC8phGPdMKhWcXOICX646sDfzUmCQR6W19lM3An1VdISNBdc1D9Q/4+CmwN8e2Nw1pThTiBtztxRES5Ss3eLxiw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IpnvKrfFIhUaduZ/GV8tLVUSv2+r0EXytAMw8y0W8bY=;
+ b=BncGMRG0En1+8zaGxkv548cF6TmMmEB/rqSgXmWszWNJ1ZwuAZm2ghjP08Yq5zNaWYCYZLCp93VlUlmUl9Cd3m1TdLFNMrU0EU6nOjr3R3HveTrurplCC3VFpZvaWOSmrXrpCggFP5K2+CXMMzu6ekTeUImdS4eUYuR90IbPBuM=
+Received: from MN0P220CA0017.NAMP220.PROD.OUTLOOK.COM (2603:10b6:208:52e::10)
+ by BL1PR12MB5972.namprd12.prod.outlook.com (2603:10b6:208:39b::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Tue, 11 Feb
+ 2025 09:54:16 +0000
+Received: from BN2PEPF000044AB.namprd04.prod.outlook.com
+ (2603:10b6:208:52e:cafe::e3) by MN0P220CA0017.outlook.office365.com
+ (2603:10b6:208:52e::10) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8445.11 via Frontend Transport; Tue,
+ 11 Feb 2025 09:54:16 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN2PEPF000044AB.mail.protection.outlook.com (10.167.243.106) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8445.10 via Frontend Transport; Tue, 11 Feb 2025 09:54:16 +0000
+Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 11 Feb
+ 2025 03:54:12 -0600
+From: Robert Richter <rrichter@amd.com>
+To: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Gregory Price
+	<gourry@gourry.net>, "Fabio M. De Francesco"
+	<fabio.m.de.francesco@linux.intel.com>, Terry Bowman <terry.bowman@amd.com>,
+	Robert Richter <rrichter@amd.com>
+Subject: [PATCH v3 00/18] cxl: Address translation support, part 1: Cleanups and refactoring
+Date: Tue, 11 Feb 2025 10:53:30 +0100
+Message-ID: <20250211095349.981096-1-rrichter@amd.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN2PEPF000044AB:EE_|BL1PR12MB5972:EE_
+X-MS-Office365-Filtering-Correlation-Id: f774f90c-eb63-4e21-705a-08dd4a820c01
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|36860700013|82310400026|1800799024|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?n0BKAEHVTFNgnY9jVnr2UuS4ItCZVURHJH841GHohATaU63f2zNUPXnLXqKO?=
+ =?us-ascii?Q?mi1bF/xryzmYCZCa2/PvVF34Igc645W4hqJVMS+2R3weJcjVkrYYGwjA9bgN?=
+ =?us-ascii?Q?pIKAMfZsFZo37B9bXLd7rn8jDg8YP5wpNc4UWe13TXeqxEuaKfhcag9e+a/x?=
+ =?us-ascii?Q?HKJp56ryVJxZmdsSerDkrozB3EL+y2E9H/iahdkchpTMhfuOVIiXbi5JPrI6?=
+ =?us-ascii?Q?IrJVaclQ5y00brq++fJX5Ez3/JIc+RVjvVjVQmQXk54YfolrVaKxaJxGlK9q?=
+ =?us-ascii?Q?ECWwFnLVXGS44nlqrxcCwdvZ41jrsH6ACB70hSrrfSrDfUZV28wmQG9sjZka?=
+ =?us-ascii?Q?1wNrNP+mxGIn5h0O/ky39pc2BfqorBv3EKYSZ/rXEFJxFKjwOc4IGns3R3ew?=
+ =?us-ascii?Q?yYjkdSwGrdyvSrcbEFQngqnqXWuHzu0TeWTMIBePEMEhrZbbVD0/r/NBKlJx?=
+ =?us-ascii?Q?BZK7oR7aokvdk4cor32bm5EI2Kvkt0VDbnLB4nJCK9kII7DB8LkgMW2+cAK4?=
+ =?us-ascii?Q?RL+FxqXQu52CuwzNqX/m5niUUNNlrzIXh5UeInarbm7oBK2wRpgUgJ2LS99y?=
+ =?us-ascii?Q?cw8W3kI/xVAz/hKTRNbGrEbVfdd4zY2p/YVM6GSxbHtuYLSDWhKJ9ne17hgx?=
+ =?us-ascii?Q?e894UIBPmg00YXD/qi/CS7Jz7paKWnCQOvxJFCgbBVuLTRc4pzLNzEIRLm5H?=
+ =?us-ascii?Q?SAppgagUZM3v2VpjJ+L+j016wwfUr1a78yYb+hPeomgFTrrsYBP2YY7p76fX?=
+ =?us-ascii?Q?hb69Kol1Mc8ZntDVdb/aHlhSXmQk/fKXwWLFJSSlr/AozEyu9W/1Ky9Mmn+H?=
+ =?us-ascii?Q?oojQkile8cGaPmXAMcevBh3be0+7+61HZEa42fEavCdW1mgOEyZGieLax6Oi?=
+ =?us-ascii?Q?E2awOO7rqLnnt0CHdyw4NiiowiwwO4dZsdYo849/5WzuFeprVpstsohtK++n?=
+ =?us-ascii?Q?WHuyRWQm5OkUns5jxp3mzIKFXEPHKjtjfSrHaymH9ivYtZRT3YSKKRdjtEKE?=
+ =?us-ascii?Q?XjYSVSIba0kk1nqKVC/K+yvjH9oT6gbyk0SPpKaGmT10699LXqkojlDywfGu?=
+ =?us-ascii?Q?1p7CCMCnkkoN5yksLslUWz8yXpI26j6GpOb6o63yy+37yEGj+Usczqucs/MO?=
+ =?us-ascii?Q?gP8lvQKKu1nTaM9DMYo8AkiQ6ecLxISuGMMD2Od7AHh0Vber+1mzYyMf5IOx?=
+ =?us-ascii?Q?/FIfS4BnU5RNezHLlX7bgACyhDVb+Ss/vAYOyLbv/Vh8xYXSstzNn1DyIMLi?=
+ =?us-ascii?Q?nGGlcGILyv974vDddlzvVmZ2OWyB8batamHWYi6oNRlUCdOZPF8jaJTWoY2j?=
+ =?us-ascii?Q?hJGUkY+Fpls3lZi13xD9KHUNvhfXDKTJ2XiDJCqkKafY1kxtFSwknHcxtqyc?=
+ =?us-ascii?Q?zen91PBw2muIgF/TbdtBVvgIbN2nTxQylpUcI8eW7++XHZpMBB7Bgc5F1NTj?=
+ =?us-ascii?Q?PlAi6x5uYQmKyiHKkLavQjhu7k/HnE4iBF+TKqqN44lmg6u1RBwWl6wa35Mo?=
+ =?us-ascii?Q?9t/Vm3IH4MAcDlk=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(36860700013)(82310400026)(1800799024)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2025 09:54:16.2697
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f774f90c-eb63-4e21-705a-08dd4a820c01
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN2PEPF000044AB.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5972
 
-On Fri, 7 Feb 2025 14:58:51 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
+This series is the first part of adding support for CXL address
+translation. It contains cleanup and code refactoring in preparation
+of the actual implementation that will be sent in part 2. Cleanup and
+code refactoring have been split in a separate series to reduce the
+number of patches of the series. Even without address translation on
+top this rework improves esp. the region code, cleans it up,
+simplifies it and adds debugging messages to better analyze region
+creation failures:
 
-> On 2/6/25 5:13 PM, Jason Gunthorpe wrote:
-> > [
-> > Many people were away around the holiday period, but work is back in full
-> > swing now with Dave already at v3 on his CXL work over the past couple
-> > weeks. We are looking at a good chance of reaching this merge window. I
-> > will work out some shared branches with CXL and get it into linux-next
-> > once all three drivers can be assembled and reviews seem to be concluding.
-> > 
-> > There are couple open notes
-> >  - Greg was interested in a new name, but nobody offered any bikesheds
-> >  - I would like a co-maintainer  
-> 
-> I volunteer as tribute. :) 
-> 
-> I got the CXL series rebased and tested on top of this series. So you can add
-> Tested-by: Dave Jiang <dave.jiang@intel.com>
-> for the core FWCTL bits in the series.
+Content of patches:
 
-This is an area I plan to keep reviewing (and adding more use cases), so feel
-free to add me as a Reviewer or Maintainer (depending on how guilty you want
-me to feel if there is a backlog to review :)  Will save me making sure to
-track these down as they get posted in different subsystems.
+ * Patches 1: Remove else after return.
 
-Thanks,
+ * Patches 2-4: Cleanups and comments around cxl_hdm_decode_init().
 
-Jonathan
+ * Patches 5, 6, 13: Adding and modifying helper functions.
 
-> 
-> I'll post the CXL FWCTL series v4 shortly.
-> 
-> DJ
-> 
-> > ]
-> > 
-> > fwctl is a new subsystem intended to bring some common rules and order to
-> > the growing pattern of exposing a secure FW interface directly to
-> > userspace. Unlike existing places like RDMA/DRM/VFIO/uacce that are
-> > exposing a device for datapath operations fwctl is focused on debugging,
-> > configuration and provisioning of the device. It will not have the
-> > necessary features like interrupt delivery to support a datapath.
-> > 
-> > This concept is similar to the long standing practice in the "HW" RAID
-> > space of having a device specific misc device to manage the RAID
-> > controller FW. fwctl generalizes this notion of a companion debug and
-> > management interface that goes along with a dataplane implemented in an
-> > appropriate subsystem.
-> > 
-> > The need for this has reached a critical point as many users are moving to
-> > run lockdown enabled kernels. Several existing devices have had long
-> > standing tooling for management that relied on /sys/../resource0 or PCI
-> > config space access which is not permitted in lockdown. A major point of
-> > fwctl is to define and document the rules that a device must follow to
-> > expose a lockdown compatible RPC.
-> > 
-> > Based on some discussion fwctl splits the RPCs into four categories
-> > 
-> > 	FWCTL_RPC_CONFIGURATION
-> > 	FWCTL_RPC_DEBUG_READ_ONLY
-> > 	FWCTL_RPC_DEBUG_WRITE
-> > 	FWCTL_RPC_DEBUG_WRITE_FULL
-> > 
-> > Where the latter two trigger a new TAINT_FWCTL, and the final one requires
-> > CAP_SYS_RAWIO - excluding it from lockdown. The device driver and its FW
-> > would be responsible to restrict RPCs to the requested security scope,
-> > while the core code handles the tainting and CAP checks.
-> > 
-> > For details see the final patch which introduces the documentation.
-> > 
-> > The CXL FWCTL driver is now in it own series on v3:
-> >  https://lore.kernel.org/r/20250204220430.4146187-1-dave.jiang@intel.com
-> > 
-> > I'm expecting a 3rd driver (from Shannon @ Pensando) to be posted right
-> > away, the github version I saw looked good. I've got soft commitments for
-> > about 6 drivers in total now.
-> > 
-> > There have been three LWN articles written discussing various aspects of
-> > this proposal:
-> > 
-> >  https://lwn.net/Articles/955001/
-> >  https://lwn.net/Articles/969383/
-> >  https://lwn.net/Articles/990802/
-> > 
-> > A really giant ksummit thread preceding a discussion at the Maintainer
-> > Summit:
-> > 
-> >  https://lore.kernel.org/ksummit/668c67a324609_ed99294c0@dwillia2-xfh.jf.intel.com.notmuch/
-> > 
-> > Several have expressed general support for this concept:
-> > 
-> >  AMD/Pensando - https://lore.kernel.org/linux-rdma/20241205222818.44439-1-shannon.nelson@amd.com
-> >  Broadcom Networking - https://lore.kernel.org/r/Zf2n02q0GevGdS-Z@C02YVCJELVCG
-> >  Christoph Hellwig - https://lore.kernel.org/r/Zcx53N8lQjkpEu94@infradead.org
-> >  Daniel Vetter - https://lore.kernel.org/r/ZrHY2Bds7oF7KRGz@phenom.ffwll.local
-> >  Enfabrica - https://lore.kernel.org/r/9cc7127f-8674-43bc-b4d7-b1c4c2d96fed@kernel.org
-> >  NVIDIA Networking
-> >  Oded Gabbay/Habana - https://lore.kernel.org/r/ZrMl1bkPP-3G9B4N@T14sgabbay.
-> >  Oracle Linux - https://lore.kernel.org/r/6lakj6lxlxhdgrewodvj3xh6sxn3d36t5dab6najzyti2navx3@wrge7cyfk6nq
-> >  SuSE/Hannes - https://lore.kernel.org/r/2fd48f87-2521-4c34-8589-dbb7e91bb1c8@suse.com
-> > 
-> > Work is ongoing for userspace, currently the mellanox tool suite has been
-> > ported over:
-> >   https://github.com/Mellanox/mstflint
-> > 
-> > And a more simplified example how to use it:
-> >   https://github.com/jgunthorpe/mlx5ctl.git
-> > 
-> > This is on github: https://github.com/jgunthorpe/linux/commits/fwctl
-> > 
-> > v4:
-> >  - Rebase to v6.14-rc1
-> >  - Fine tune comments and rst documentatin
-> >  - Adjust cleanup.h usage - remove places that add more ofuscation than
-> >    value
-> >  - CXL is back to its own independent series
-> >  - Increase FWCTL_MAX_DEVICES to 4096, someone hit the limit
-> >  - Fix mlx5ctl_validate_rpc() logic around scope checking
-> >  - Disable mlx5ctl on SFs
-> > v3: https://patch.msgid.link/r/0-v3-960f17f90f17+516-fwctl_jgg@nvidia.com
-> >  - Rebase to v6.11-rc4
-> >  - Add a squashed version of David's CXL series as the 2nd driver
-> >  - Add missing includes
-> >  - Improve comments based on feedback
-> >  - Use the kdoc format that puts the member docs inside the struct
-> >  - Rewrite fwctl_alloc_device() to be clearer
-> >  - Incorporate all remarks for the documentation
-> > v2: https://lore.kernel.org/r/0-v2-940e479ceba9+3821-fwctl_jgg@nvidia.com
-> >  - Rebase to v6.10-rc5
-> >  - Minor style changes
-> >  - Follow the style consensus for the guard stuff
-> >  - Documentation grammer/spelling
-> >  - Add missed length output for mlx5 get_info
-> >  - Add two more missed MLX5 CMD's
-> >  - Collect tags
-> > v1: https://lore.kernel.org/r/0-v1-9912f1a11620+2a-fwctl_jgg@nvidia.com
-> > 
-> > Andy Gospodarek (2):
-> >   fwctl/bnxt: Support communicating with bnxt fw
-> >   bnxt: Create an auxiliary device for fwctl_bnxt
-> > 
-> > Jason Gunthorpe (6):
-> >   fwctl: Add basic structure for a class subsystem with a cdev
-> >   fwctl: Basic ioctl dispatch for the character device
-> >   fwctl: FWCTL_INFO to return basic information about the device
-> >   taint: Add TAINT_FWCTL
-> >   fwctl: FWCTL_RPC to execute a Remote Procedure Call to device firmware
-> >   fwctl: Add documentation
-> > 
-> > Saeed Mahameed (2):
-> >   fwctl/mlx5: Support for communicating with mlx5 fw
-> >   mlx5: Create an auxiliary device for fwctl_mlx5
-> > 
-> >  Documentation/admin-guide/tainted-kernels.rst |   5 +
-> >  Documentation/userspace-api/fwctl/fwctl.rst   | 285 ++++++++++++
-> >  Documentation/userspace-api/fwctl/index.rst   |  12 +
-> >  Documentation/userspace-api/index.rst         |   1 +
-> >  .../userspace-api/ioctl/ioctl-number.rst      |   1 +
-> >  MAINTAINERS                                   |  16 +
-> >  drivers/Kconfig                               |   2 +
-> >  drivers/Makefile                              |   1 +
-> >  drivers/fwctl/Kconfig                         |  32 ++
-> >  drivers/fwctl/Makefile                        |   6 +
-> >  drivers/fwctl/bnxt/Makefile                   |   4 +
-> >  drivers/fwctl/bnxt/bnxt.c                     | 167 +++++++
-> >  drivers/fwctl/main.c                          | 416 ++++++++++++++++++
-> >  drivers/fwctl/mlx5/Makefile                   |   4 +
-> >  drivers/fwctl/mlx5/main.c                     | 340 ++++++++++++++
-> >  drivers/net/ethernet/broadcom/bnxt/bnxt.c     |   3 +
-> >  drivers/net/ethernet/broadcom/bnxt/bnxt.h     |   3 +
-> >  drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c | 126 +++++-
-> >  drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.h |   4 +
-> >  drivers/net/ethernet/mellanox/mlx5/core/dev.c |   9 +
-> >  include/linux/fwctl.h                         | 135 ++++++
-> >  include/linux/panic.h                         |   3 +-
-> >  include/uapi/fwctl/bnxt.h                     |  27 ++
-> >  include/uapi/fwctl/fwctl.h                    | 140 ++++++
-> >  include/uapi/fwctl/mlx5.h                     |  36 ++
-> >  kernel/panic.c                                |   1 +
-> >  tools/debugging/kernel-chktaint               |   8 +
-> >  27 files changed, 1782 insertions(+), 5 deletions(-)
-> >  create mode 100644 Documentation/userspace-api/fwctl/fwctl.rst
-> >  create mode 100644 Documentation/userspace-api/fwctl/index.rst
-> >  create mode 100644 drivers/fwctl/Kconfig
-> >  create mode 100644 drivers/fwctl/Makefile
-> >  create mode 100644 drivers/fwctl/bnxt/Makefile
-> >  create mode 100644 drivers/fwctl/bnxt/bnxt.c
-> >  create mode 100644 drivers/fwctl/main.c
-> >  create mode 100644 drivers/fwctl/mlx5/Makefile
-> >  create mode 100644 drivers/fwctl/mlx5/main.c
-> >  create mode 100644 include/linux/fwctl.h
-> >  create mode 100644 include/uapi/fwctl/bnxt.h
-> >  create mode 100644 include/uapi/fwctl/fwctl.h
-> >  create mode 100644 include/uapi/fwctl/mlx5.h
-> > 
-> > 
-> > base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b  
-> 
-> 
+ * Patches 7-12, 14: Refactoring of endpoint decoder setup.
+
+ * Patches 15-18: Adding and modifying debug messages.
+
+Most of the patches were part of my first submission of v1 [1], some
+of them were already reviewed.
+
+[1] https://lore.kernel.org/linux-cxl/20250107141015.3367194-1-rrichter@amd.com/
+
+v3:
+ * added tags to SOB chain,
+ * fixed NULL pointer dereference in cxl_find_root_decoder() (Alison),
+ * updated subject line of patches that add kernel messages and
+   included example log messages (Alison),
+
+V2:
+ * rebased onto cxl/next,
+ * added tags to SOB chain,
+ * move patches with cleanups and refactoring into this separate
+   series (Dave),
+ * added patch "cxl/acpi: Unify CFMWS memory log messages with SRAT
+   messages" to improve CFMWS log messages,
+ * renamed endpoint decoder functions to cxl_endpoint_decoder_*() (Li),
+ * reworded patch description that moves find_cxl_root() and reworks
+   cxl_find_root_decoder() (Terry),
+ * small changes to cxl_find_root_decoder()/
+   cxl_endpoint_decoder_initialize() (Jonanthan),
+ * updated comment in cxl_port_find_switch_decoder() (Ben),
+ * cxl_endpoint_decoder_initialize(): Simplify variable declaration
+   (Jonathan, Ben),
+ * cxl_find_decoder_early(): Added comment on function usage (Gregory),
+ * reordered patches and reworded some of the subject for a better
+   structure.
+
+Robert Richter (18):
+  cxl: Remove else after return
+  cxl/pci: Moving code in cxl_hdm_decode_init()
+  cxl/pci: cxl_hdm_decode_init: Move comment
+  cxl/pci: Add comments to cxl_hdm_decode_init()
+  cxl: Introduce parent_port_of() helper
+  cxl/region: Rename function to cxl_find_decoder_early()
+  cxl/region: Avoid duplicate call of cxl_find_decoder_early()
+  cxl/region: Move find_cxl_root() to cxl_add_to_region()
+  cxl/region: Factor out code to find the root decoder
+  cxl/region: Factor out code to find a root decoder's region
+  cxl/region: Split region registration into an initialization and
+    adding part
+  cxl/region: Use iterator to find the root port in
+    cxl_find_root_decoder()
+  cxl/region: Add function to find a port's switch decoder by range
+  cxl/region: Unfold cxl_find_root_decoder() into
+    cxl_endpoint_decoder_initialize()
+  cxl/region: Add a dev_warn() on registration failure
+  cxl/region: Add a dev_err() on missing target list entries
+  cxl: Add a dev_dbg() when a decoder was added to a port
+  cxl/acpi: Unify CFMWS memory log messages with SRAT messages
+
+ drivers/cxl/acpi.c        |  12 ++-
+ drivers/cxl/core/cdat.c   |   2 +-
+ drivers/cxl/core/hdm.c    |   3 +-
+ drivers/cxl/core/pci.c    |  44 +++++----
+ drivers/cxl/core/port.c   |  15 +--
+ drivers/cxl/core/region.c | 190 +++++++++++++++++++++++++-------------
+ drivers/cxl/cxl.h         |   9 +-
+ drivers/cxl/port.c        |  22 ++---
+ 8 files changed, 187 insertions(+), 110 deletions(-)
+
+
+base-commit: 5585e342e8d38cc598279bdb87f235f8b954dd5a
+-- 
+2.39.5
 
