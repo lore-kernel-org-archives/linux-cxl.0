@@ -1,137 +1,86 @@
 Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11D811DEFD2
-	for <linux-cxl@vger.kernel.org>; Tue, 11 Feb 2025 05:46:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE6AB1E633C;
+	Tue, 11 Feb 2025 06:21:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739252818; cv=pass; b=o58+1J4O8+CCIy83fbt7vVahbi+sL6TOz7xHvuDfMxdS0VVP6dzP1ENhGC4dbnQUtof09gRB+7HIEgSVfHUE2Z2HNMs1bnAsNQP0Q8eOnVPiicxXXtz6DLlIaA7KvaZxqlW4kotigNPMQzGzvD+XDmWCWmzcuPDrZwvbP6zSYr8=
+	t=1739254898; cv=pass; b=pzqoLrtyAlN1gB2MFP1ufx0V2MMAKHkORzzCtuFSmR/Gpppj8ncaGQh//GrjXulo1K849CfEM8x2c7Q7n/W0jSCTDwg4LCcInR8dwmul375M3eJABJMh0e3osNxTesL6GH3Q/sgrQsbo4fKfyNtkA4FqSThW0UjkETBwnOnwpzk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739252818; c=relaxed/simple;
-	bh=1sfBlDsE6NybRlhU7MD2jG2yaQUNH1D9Ep9C49w2Opw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ByAHdDpxC7omAvttGnVzePEwpkvqReLb2+R7YU7IA+BGOj7eoF3juJIL/OSoo0vR6la4tsrs2lAO/ovPJQUspIxlCviLwMJBoz/qXWuKDu8RNXS6O/6VvtY/DZFx3MFUrD3RXr+rxZJo0TfdUndB6EW8+YDL7bjKvCU7f9adqwQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=EE3LYwZq; arc=pass smtp.client-ip=136.143.188.94
+	s=arc-20240116; t=1739254898; c=relaxed/simple;
+	bh=oBuFtIps8sGZ8zC0dZ6JqBBIIse9hUQ3UjLxYk55sXA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FVH+cj/nBDd/XvrfuNViHUnunOBLfYL5pkpTgoKzc82KscjJ231GDJwoMHFeg2r69AghsyPpTofEl98lGDIbzQs+pQ27r2AjPQEqPRP1TmOCrSxkOUfRrPNTS4BEzJ5MYy2dwxcS08icoHdh1jPzqG4xlyTvzrQLgCGsbWFuRK4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=QilXGhL/; arc=pass smtp.client-ip=136.143.188.94
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="EE3LYwZq"
-ARC-Seal: i=1; a=rsa-sha256; t=1739252797; cv=none; 
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="QilXGhL/"
+ARC-Seal: i=1; a=rsa-sha256; t=1739254882; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=hfCiLjund3zMtrUJ9NSqavvuekOpBRqunvJfu6a3UrqywNBMmRig+PVa2/q9d8SR/4tUeFQ3kw/QkwWNUC61//CozkdCMTPLMtEclRB+zYlpTE+m7hgZlUh/j7RV2rN5PJwlPtKPLdv3GYSV44XDW5PVQHb0fdItFRCSa/XT+qE=
+	b=JI8TO3n+OTuqgEcvPvChhX+bmAatgs+5BI5ckjAu+nr0NwR865zdGk3TPcAEON6gLiZOPi9IW3qhzO/zeBz7UNhJ0rGMd1c0xwL/RYxk1r9JjnuH1AwoqxjlzXMxe3Rfjq0xgNuCoFRer3JEROPrBXj0V+wgfyRoJpYW8b4j5uc=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1739252797; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=ra3ik4L74mI/EleeqyuvDQq7laB2uFJyTkglvF5QLyY=; 
-	b=VlaArXefkpmUpmX3s1Q+OZyjEWG+N17Lff5Ia2nqIKFiJDXxHGUmNVBuF0uGjjQ38X95TKIFrs3LGQ0Vcd7Ni2ovd0b//OX+cDktVcgoPV1we0NnB4U/Iw6jCx+qsWjPqfL20Amcz9suWi6pmX7Wy0AFEmU+Lfn/04q+smQKaJI=
+	t=1739254882; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=668bId0JdCiv6vE9UnGCvkp/FNEM+8SepfiZj0GGLPE=; 
+	b=O0VRD3yRpTuhqhtdo324WsjMumBf+ox7EavMbc308uFmf71AZGwxW3o2rXUJpSvSdoH4PkEA9v1WE3X1WrvAksF9M/J4u9KI//Vgwg0V0lSkgynIJJc5fFfOOavTdUBnvK8hEpxqANBe0zrQIVq8NiYR9FA8N172/CGr/tqnooE=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=zohomail.com;
 	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
 	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739252797;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739254882;
 	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=ra3ik4L74mI/EleeqyuvDQq7laB2uFJyTkglvF5QLyY=;
-	b=EE3LYwZqwPvn8JIN4j/BD/NeE8bqF920RsgnK5VagM7Q0yD9ySNHpBduCQW2uhm8
-	71RtOdDWk4lanfBbPfxSk+mZGkjDAzsZj4/I2B46BIcT8pSyI3Pc9V0qj9hT0rzshEL
-	ZmBsmCaA7GpAfKFTA00LI17ZzSrcnQCj21wnzD/w=
-Received: by mx.zohomail.com with SMTPS id 1739252793596952.7087934726432;
-	Mon, 10 Feb 2025 21:46:33 -0800 (PST)
-Message-ID: <7e199f67-f068-42fd-ae2e-fa2d402f9e20@zohomail.com>
-Date: Tue, 11 Feb 2025 13:46:30 +0800
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
+	bh=668bId0JdCiv6vE9UnGCvkp/FNEM+8SepfiZj0GGLPE=;
+	b=QilXGhL/+vjFNtsEgp95ZJW195iGFMD/mEhdAguU1zir00iL8UdtEOyvj8YSx5Ef
+	2g64S0D2/+uX48xvHnNmZGX5oFt5W9Rh0WBh3y3SM3lQMI1Y91RO/TfUWXBTwa5bMa3
+	w5kuew4vErlJ1PeoWh1BjgQHf2Et7E+jzmF2FfSI=
+Received: by mx.zohomail.com with SMTPS id 1739254879233457.3033271412928;
+	Mon, 10 Feb 2025 22:21:19 -0800 (PST)
+From: Li Ming <ming.li@zohomail.com>
+To: dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Li Ming <ming.li@zohomail.com>
+Subject: [PATCH v1 1/1] cxl/cdat: Remove redundant gp_port initialization
+Date: Tue, 11 Feb 2025 14:20:54 +0800
+Message-Id: <20250211062054.300108-1-ming.li@zohomail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 06/15] cxl: Setup exclusive CXL features that are
- reserved for the kernel
-To: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org
-Cc: dan.j.williams@intel.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
- alison.schofield@intel.com, Jonathan.Cameron@huawei.com, dave@stgolabs.net,
- jgg@nvidia.com, shiju.jose@huawei.com
-References: <20250207233914.2375110-1-dave.jiang@intel.com>
- <20250207233914.2375110-7-dave.jiang@intel.com>
- <7c6c904c-4045-4b5b-8c31-99e3fd971515@zohomail.com>
- <d991ca86-2e0b-46e5-80af-e922d38d20ab@intel.com>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <d991ca86-2e0b-46e5-80af-e922d38d20ab@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Feedback-ID: rr08011227c141984913e53e720fcc44c000002782c75340fc565430b3858b6402fe5edffa4887e7c5b6bbeb:zu08011227d8bc393d8658f0a7f6f662cd0000e5e35621c2bc526e9b0765a7521d96ecade379535c38e6b34c:rf0801122d41650cf823f4c005428df1150000a904407dec3f43f33c025b1c438b4cb97ecd3b20608def88e768cb1503bca4:ZohoMail
+Content-Transfer-Encoding: 8bit
+Feedback-ID: rr080112272a0c232586dd370b9453f8600000cf59533ff5396389351935a23a99df020016d826b54e2ba33e:zu08011227c46a6d4aaeb4d1cc51fbb92400008bdc00d4386bbc417c287fc20cc1b0fa229c2087fc7ea49f60:rf0801122dab5026cbd4ca03a6d9df3a1d0000e02e263f3af988ca56396fbe18bc6b539da4948a0ac6b3c484b7cd0c64e146:ZohoMail
 X-ZohoMailClient: External
 
-On 2/11/2025 1:50 AM, Dave Jiang wrote:
->
-> On 2/7/25 11:22 PM, Li Ming wrote:
->> On 2/8/2025 7:37 AM, Dave Jiang wrote:
->>> Certain features will be exclusively used by components such as in
->>> kernel RAS driver. Setup an exclusion list that can be later filtered
->>> out before exposing to user space.
->>>
->>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->>> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
->>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>> ---
->>>  drivers/cxl/core/features.c | 26 ++++++++++++++++++++++++++
->>>  include/cxl/features.h      | 34 ++++++++++++++++++++++++++++++++++
->>>  2 files changed, 60 insertions(+)
->>>
->>> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
->>> index d337224158fa..82f21f64452a 100644
->>> --- a/drivers/cxl/core/features.c
->>> +++ b/drivers/cxl/core/features.c
->>> @@ -6,6 +6,28 @@
->>>  #include "cxl.h"
->>>  #include "cxlmem.h"
->>>  
->>> +/* All the features below are exclusive to the kernel */
->>> +static const uuid_t cxl_exclusive_feats[] = {
->>> +	CXL_FEAT_PATROL_SCRUB_UUID,
->>> +	CXL_FEAT_ECS_UUID,
->>> +	CXL_FEAT_SPPR_UUID,
->>> +	CXL_FEAT_HPPR_UUID,
->>> +	CXL_FEAT_CACHELINE_SPARING_UUID,
->>> +	CXL_FEAT_ROW_SPARING_UUID,
->>> +	CXL_FEAT_BANK_SPARING_UUID,
->>> +	CXL_FEAT_RANK_SPARING_UUID,
->>> +};
->>> +
->>> +static bool is_cxl_feature_exclusive(struct cxl_feat_entry *entry)
->>> +{
->>> +	for (int i = 0; i < ARRAY_SIZE(cxl_exclusive_feats); i++) {
->>> +		if (uuid_equal(&entry->uuid, &cxl_exclusive_feats[i]))
->>> +			return true;
->>> +	}
->>> +
->>> +	return false;
->>> +}
->>> +
->>>  inline struct cxl_features_state *to_cxlfs(struct cxl_dev_state *cxlds)
->>>  {
->>>  	return cxlds->cxlfs;
->>> @@ -46,6 +68,7 @@ get_supported_features(struct cxl_features_state *cxlfs)
->>>  	struct cxl_mbox_get_sup_feats_in mbox_in;
->>>  	struct cxl_feat_entry *entry;
->>>  	struct cxl_mbox_cmd mbox_cmd;
->>> +	int user_feats = 0;
->>>  	int count;
->>>  
->>>  	count = cxl_get_supported_features_count(cxl_mbox);
->>> @@ -120,6 +143,8 @@ get_supported_features(struct cxl_features_state *cxlfs)
->>>  			return NULL;
->>>  
->>>  		memcpy(entry, mbox_out->ents, retrieved);
-> While you are pointing out the issue with copying multiple entries, I noticed that this needs to be fixed in patch2 as well. It should be:
-> memcpy(entry, mbox_out->ents + start, retrieved);
->
-> DJ
+gp_port is already pointed to the grandparent port during its definition,
+remove a redundant code to let gp_port point to the grandparent port
+again.
 
-I noticed there is a 'mbox_in.start_idx = cpu_to_le16(start)' before sending GET_SUPPORTED_FEATURES command every time.
+Signed-off-by: Li Ming <ming.li@zohomail.com>
+---
+ drivers/cxl/core/cdat.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-I think the 'mbox_out->ents[0]' is the first feature info starting from 'start', so the change you mentioned is not needed?
-
-
-Ming
+diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
+index 8153f8d83a16..c656c1346aa0 100644
+--- a/drivers/cxl/core/cdat.c
++++ b/drivers/cxl/core/cdat.c
+@@ -651,7 +651,6 @@ static int cxl_endpoint_gather_bandwidth(struct cxl_region *cxlr,
+ 	if (IS_ERR(perf))
+ 		return PTR_ERR(perf);
+ 
+-	gp_port = to_cxl_port(parent_port->dev.parent);
+ 	*gp_is_root = is_cxl_root(gp_port);
+ 
+ 	/*
+-- 
+2.34.1
 
