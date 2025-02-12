@@ -1,423 +1,235 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861FC209F4B
-	for <linux-cxl@vger.kernel.org>; Wed, 12 Feb 2025 13:08:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73A020ADE6
+	for <linux-cxl@vger.kernel.org>; Wed, 12 Feb 2025 13:08:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739365706; cv=none; b=lBMrju8sKAdNelo4d+mInAcBAUQNDTTSYYQM86tTyoSoy/Cvn3a2tdhIJS5N3C3eU9A6Q0uopkboGxixKaxRIqr+iOcLqjW6dw6FrCXWYrF3YCuSCAaIedFUOU/rJgp6T/J9ZbIujyEeJgr5yJZTUstcztHdvppSM2M6VmIVWs0=
+	t=1739365717; cv=none; b=e1qSvETj3ADhCdJVUnm7MVjbybmlrid7F0qv+sYfIoSvcUpHrdjdSun6lvq4KmmTZXp4ND/QoG0NQxHL7KONlCzqly0jJPPyiV9LDD+CmJ+bYHPCgem2lcA32YKGW5EJMKO1GkGv9tBm6Z1qwMYijd4uLo+vTkghqRkWCD4dINE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739365706; c=relaxed/simple;
-	bh=CHbgW0kTNgCWTDDdpCwKXfjmxb70xvGlT1hLmAq9QAQ=;
+	s=arc-20240116; t=1739365717; c=relaxed/simple;
+	bh=K+UFasprA+DttSZNhGtYH4okWW0g6k8u4h77tuoHqFw=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=JK4+TjsW1sZy8r54l9iJzX5ZMn4xBtRFB1EYw6MWyejEs28qMlRvC5FNiod36d7ecvXSDWUoq8NXpNDn5+kUCTQ7qK6OTDXMIUofDen7tmYVEbHHjeSzwmM1/o8bhcK1TEUuUDh+r6mU16mazWUqK3HH6lrGFmE3r6todtA9y3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=CCEDaWY7; arc=none smtp.client-ip=203.254.224.24
+	 Content-Type:References; b=O0zZlkikimvdZ5wAQqFyzmDVFtzSdLOqYXgnwJEX0JXbsNdQaqgTXHLyDdFzwcw8sp6gYw6Ud/Q8N4rOndgFBTh2jXeLqNwe3htZbRur+o9NTM/bN2lwQT2FCnjoRF4fORZhlcMhmrMIeoCZsHlc62nq/sfEHJQz5hm/aTR2+z0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=oDhOOGjr; arc=none smtp.client-ip=203.254.224.25
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="CCEDaWY7"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250212130822epoutp01d0b3d370004cf90dacc20041caa93bb4~jd_QPJg2_0743507435epoutp01I
-	for <linux-cxl@vger.kernel.org>; Wed, 12 Feb 2025 13:08:22 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250212130822epoutp01d0b3d370004cf90dacc20041caa93bb4~jd_QPJg2_0743507435epoutp01I
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="oDhOOGjr"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250212130828epoutp0285498d1763111a4e43e9fb56a9a09ea4~jd_Vf0zre0528405284epoutp02V
+	for <linux-cxl@vger.kernel.org>; Wed, 12 Feb 2025 13:08:28 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250212130828epoutp0285498d1763111a4e43e9fb56a9a09ea4~jd_Vf0zre0528405284epoutp02V
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1739365702;
-	bh=JIUR12aJIEknI+U+0TzpDBbOGwe2AgNlCVW2ch5zdKM=;
+	s=mail20170921; t=1739365708;
+	bh=aH6hNuq4o8VH6EBItpXBg3NZCF57oQNgUhJfWyllJPA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=CCEDaWY7qWm8YazmM0g7MW7J+KK3QYIIRFzx4fDT+UIt90tQ9YVaCo+f4fb7TRe1s
-	 n2CD2M6a6V1nfOoq0sjdqe8in1vQaMPXJgs23TGdlBxEj9uP1DXa6o15gJ/Ks+1iPQ
-	 f6YQ0OiWdxTL3jeAIEm+kDDPz14rS2ElfCU5a0S8=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	b=oDhOOGjrh4aTENQzE8MnauW2Ou79mBSufMriuRD0LtZhxZJh8vjl661tAXpHUrBhW
+	 GfsfU0zygxTCWPW8YrAjNlldU0OToYOCuRG8LIXQ+f/5/MoMwYxrSkQTa8P0VwTGFs
+	 jksMMRzXTMXDgKHj6Rpmz371WW9ZK47vDFzMnOjk=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
 	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-	20250212130822epcas5p37d1dde1a418af459a90c4726a719f0d8~jd_P7O8fN2137521375epcas5p3j;
-	Wed, 12 Feb 2025 13:08:22 +0000 (GMT)
-Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.174]) by
-	epsnrtp2.localdomain (Postfix) with ESMTP id 4YtJXN6Pnwz4x9Px; Wed, 12 Feb
-	2025 13:08:20 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	28.14.19710.44D9CA76; Wed, 12 Feb 2025 22:08:20 +0900 (KST)
+	20250212130827epcas5p36a40693e0cbf6fd390fbd5198424d7cf~jd_Umigr62814328143epcas5p3G;
+	Wed, 12 Feb 2025 13:08:27 +0000 (GMT)
+Received: from epsmgec5p1-new.samsung.com (unknown [182.195.38.177]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4YtJXT6DhHz4x9Pp; Wed, 12 Feb
+	2025 13:08:25 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+	epsmgec5p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	F1.9F.29212.94D9CA76; Wed, 12 Feb 2025 22:08:25 +0900 (KST)
 Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20250212113110epcas5p341b05ca64d755d4ff4042233de731d6b~jcpY4hXWH0678206782epcas5p3w;
-	Wed, 12 Feb 2025 11:31:10 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250212113729epcas5p2707be4e4b7787ea8ba5f47f3b31a1ac3~jcu6IVoZ-0329103291epcas5p20;
+	Wed, 12 Feb 2025 11:37:29 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
 	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250212113110epsmtrp100ecdcd5d1ea5a1e59424eee45eb2ee8~jcpY3zPLx0202502025epsmtrp1K;
-	Wed, 12 Feb 2025 11:31:10 +0000 (GMT)
-X-AuditID: b6c32a44-36bdd70000004cfe-8c-67ac9d44702f
+	20250212113729epsmtrp140ebe53f39b59bf5155180ee7b507848~jcu6HhVtu0509205092epsmtrp16;
+	Wed, 12 Feb 2025 11:37:29 +0000 (GMT)
+X-AuditID: b6c32a50-7ebff7000000721c-a3-67ac9d49f09f
 Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	D2.E2.23488.E768CA76; Wed, 12 Feb 2025 20:31:10 +0900 (KST)
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	8B.6A.18949.9F78CA76; Wed, 12 Feb 2025 20:37:29 +0900 (KST)
 Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
 	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250212113109epsmtip1b47a0036d61e1682723fa2233d26d837~jcpXZu9Yy0638906389epsmtip1A;
-	Wed, 12 Feb 2025 11:31:08 +0000 (GMT)
-Date: Wed, 12 Feb 2025 17:00:57 +0530
+	20250212113728epsmtip17255d461eb0e7244d40bf0a694e17c22~jcu4dwqg10939709397epsmtip1a;
+	Wed, 12 Feb 2025 11:37:27 +0000 (GMT)
+Date: Wed, 12 Feb 2025 17:07:01 +0530
 From: Arpit Kumar <arpit1.kumar@samsung.com>
 To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Cc: qemu-devel@nongnu.org, gost.dev@samsung.com, linux-cxl@vger.kernel.org,
 	nifan.cxl@gmail.com, dave@stgolabs.net, vishak.g@samsung.com,
 	krish.reddy@samsung.com, a.manzanares@samsung.com, alok.rathore@samsung.com
-Subject: Re: [PATCH 1/3] hw/cxl/cxl-mailbox-utils.c: Added support for Get
- Log Capabilities (Opcode 0402h)
-Message-ID: <20250212113012.datt6a7sddkbli25@test-PowerEdge-R740xd>
+Subject: Re: [PATCH 2/3] hw/cxl/cxl-mailbox-utils.c: Added support for Clear
+ Log (Opcode 0403h)
+Message-ID: <20250212113631.ngye4varkii5bb5j@test-PowerEdge-R740xd>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250204102820.000047fb@huawei.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEJsWRmVeSWpSXmKPExsWy7bCmhq7L3DXpBhtnG1tMP6xo8eX0HjaL
+In-Reply-To: <20250204105342.00000c31@huawei.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrKJsWRmVeSWpSXmKPExsWy7bCmuq7n3DXpBh9O6VlMP6xo8eX0HjaL
 	1TfXMFrcPLCTyWLVwmtsFgs3LmOyOD/rFIvF3217GS2O9+5gAXLnsDtweeycdZfdo+XIW1aP
 	J9c2M3n0bVnF6DF1dr3H501yAWxR2TYZqYkpqUUKqXnJ+SmZeem2St7B8c7xpmYGhrqGlhbm
 	Sgp5ibmptkouPgG6bpk5QIcpKZQl5pQChQISi4uV9O1sivJLS1IVMvKLS2yVUgtScgpMCvSK
-	E3OLS/PS9fJSS6wMDQyMTIEKE7IzLm9sZy+Y4ldxcu8X9gbGhdZdjJwcEgImEi0nLzB1MXJx
-	CAnsZpS48raFESQhJPCJUeLsdk0I+xujxKreHJiG5xveskA07GWUuP7uIyOEA9RwYtoZdpAq
-	FgFViSWfLjOB2GwCOhLnb89lA7FFBIwk3t2YBNbALHCTUaJx0jOwhLBAjsTzb3+ZQWxeAWeJ
-	B7vfM0LYghInZz5hAbE5BQwlTvTcBFstIdDKITFj2RkmiJtcJPrvLmGDsIUlXh3fwg5hS0m8
-	7G+DsrMl/sxvh6opkFj0cyZU3F6i9VQ/2GJmgQyJ1hMdzBBxWYmpp9YxQcT5JHp/P4HaxSux
-	Yx6MrSbRvmM+1BwZiTe/FkPN95C4N2cuMyRYPjBKtFzYxjaBUW4WkodmIdkHYVtJdH5oYp3F
-	yAFkS0ss/8cBYWpKrN+lv4CRdRWjZGpBcW56arJpgWFeajk8lpPzczcxghOrlssOxhvz/+kd
-	YmTiYDzEKMHBrCTCKzFtTboQb0piZVVqUX58UWlOavEhRlNgDE1klhJNzgem9rySeEMTSwMT
-	MzMzE0tjM0Mlcd7mnS3pQgLpiSWp2ampBalFMH1MHJxSDUzP2G/+dbgeElNn18h7qv5EnU6W
-	698/fHvajy7W0DVWDKuaG/KWz8Tk9L6SHbW1039UymzIuLie9+nSqt9mV1z/66yafu6AVn5P
-	dbmQQYdI0LvK50f8LyxUfFQeGdCR/HDtfqMSk9T+PilZAeN4y8L5fHZBDisY/S9OuFZfoW+a
-	m/dE4So7r5q/qYf3oqnVxlNWuAaqrv1auiWqVGZ6pV0hs1mox9c7GzZb6fSu41qdNr+D5d2B
-	BwnZKQHBf4VzzhQL+a4//m7D8iu8mQZ3P+4OFtfIym3itNjmfTCo8HeR/pStDp6OO6/usTrI
-	c+69yY7JgutKL2VtWdr/UkBhorrqpZv+5xZcXrl9dVlKohJLcUaioRZzUXEiAJkTdLc1BAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrCLMWRmVeSWpSXmKPExsWy7bCSnG5d25p0g/UTFSymH1a0+HJ6D5vF
-	6ptrGC1uHtjJZLFq4TU2i4UblzFZnJ91isXi77a9jBbHe3ewALlz2B24PHbOusvu0XLkLavH
-	k2ubmTz6tqxi9Jg6u97j8ya5ALYoLpuU1JzMstQifbsEroy2+RvYCo55V9zaI9jA+Naii5GT
-	Q0LAROL5hrcsXYxcHEICuxklPsxeygSRkJG4OPMxC4QtLLHy33N2iKIPjBLLWj6CJVgEVCWW
-	fLoM1sAmoCNx/vZcNhBbRMBI4t2NSYwgDcwCtxklfu++B9YgLJAj8fzbX2YQm1fAWeLB7veM
-	cFOPtd1kgkgISpyc+QSsgVnATGLe5odADRxAtrTE8n8cIGFOAUOJEz03WSYwCsxC0jELSccs
-	hI4FjMyrGCVTC4pz03OTDQsM81LL9YoTc4tL89L1kvNzNzGCI0JLYwfju29N+ocYmTgYDzFK
-	cDArifCaLFyRLsSbklhZlVqUH19UmpNafIhRmoNFSZx3pWFEupBAemJJanZqakFqEUyWiYNT
-	qoEpzO56QuSiirQnzqe3fD7Z+HnOZ3t+gRW9imxdXBbvzktp6E7znfdhs5/fi0flHy5y1TH+
-	7T7LpN96QTzbQ/3s9aTXS90+/bgh67cg+Yf8xweK6x6liUl95j1aqRDTG7vwd1y17uOyWVNd
-	PTxsvt27eUCxbsbEJ+aVrIy82oUf9n/t3THtPlPPT1OP6zdZXWZ9zrGpOZ1TM2fWM33bWwxX
-	t++Qz5plXeEwp2S3qVHh+8NBPmWzdKuET3EJVgacniX4mP2S4D/JFZOmXX3VYbW2un7GiYxt
-	5zoTNjamnba0EhIyDo75usri9vMN5Rcs+NhfJF4sfLtm7YvmDcyd61hMsh4ltc5+dshhVfZb
-	/8kmSizFGYmGWsxFxYkA1TNxkfcCAAA=
-X-CMS-MailID: 20250212113110epcas5p341b05ca64d755d4ff4042233de731d6b
+	E3OLS/PS9fJSS6wMDQyMTIEKE7IzXqzoYypoVar4vPkxUwPjO4kuRk4OCQETiTdXVzJ3MXJx
+	CAnsYZS49uALlPOJUeLfks9QzjdGib0Ln7PDtPTe7meFSOxllHizczkLXMvP9s1MIFUsAqoS
+	1z8dZwGx2QR0JM7fnssGYosIGEm8uzGJEaSBWeAmo0TjpGdgCWGBRInO4x1gDbwCzhK/zl9h
+	g7AFJU7OfAIW5xQwlNh/bR/YNgmBTg6J2bdXskHc5CKx6+VWZghbWOLV8S1Qt0pJvOxvg7Kz
+	Jf7Mb4eqL5BY9HMmVNxeovVUP1gvs0CGROvKPUwQcVmJqafWMUHE+SR6fz+BivNK7JgHY6tJ
+	tO+YDzVHRuLNr8VQ8z0kjq3/zwgJlg+MEnt2T2acwCg3C8lDs5Dsg7CtJDo/NLHOYuQAsqUl
+	lv/jgDA1Jdbv0l/AyLqKUSq1oDg3PTXZtMBQNy+1HB7Ryfm5mxjB6VUrYAfj6g1/9Q4xMnEw
+	HmKU4GBWEuGVmLYmXYg3JbGyKrUoP76oNCe1+BCjKTCKJjJLiSbnAxN8Xkm8oYmlgYmZmZmJ
+	pbGZoZI4b/POlnQhgfTEktTs1NSC1CKYPiYOTqkGJk9hw/sX/7E6P1dojXWZUPbec1VRS726
+	y1H+e+/L7pXl8G1ONj2+SD0kVf6lsNnk41490tPrG/qEuPYlTl33m5s3SydgN287t9jHTxve
+	fel0UPY/wsencPPbmti7mu9Sj8/U2jUlZMZRyfP1Iol1Zteimo2zNpV9LJvRytcq6Ha20C9O
+	/4jT0teWrsySQpP3CviuC9C9c+MxWzfHAi37LbaP5wpL3tW+sHPnue3qfkFHMyfO2xj9MPy8
+	3v8tj339dN7fUhFmbN/zrPnLivOCT9PP5OfrfvJoE46XWxRx2LBq16qtF+ce8+w5LxK97G5R
+	gDYH990whpSSgjqrO49YRVQPK67nXT3L/KiqQtcDJZbijERDLeai4kQAW//AbjgEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrKLMWRmVeSWpSXmKPExsWy7bCSnO7P9jXpBns3GFlMP6xo8eX0HjaL
+	1TfXMFrcPLCTyWLVwmtsFgs3LmOyOD/rFIvF3217GS2O9+5gAXLnsDtweeycdZfdo+XIW1aP
+	J9c2M3n0bVnF6DF1dr3H501yAWxRXDYpqTmZZalF+nYJXBlfZ1xnLNguX3Hm/AmWBsZdYl2M
+	nBwSAiYSvbf7WbsYuTiEBHYzSqzd8pMVIiEjcXHmYxYIW1hi5b/n7BBFHxglHhydzw6SYBFQ
+	lbj+6ThYEZuAjsT523PZQGwRASOJdzcmMYI0MAvcZpT4vfseWJGwQKJE5/EOMJtXwFni1/kr
+	bHBTW192MEEkBCVOznwCVsQsYCYxb/ND5i5GDiBbWmL5Pw6QMKeAocT+a/tYJjAKzELSMQtJ
+	xyyEjgWMzKsYJVMLinPTc4sNC4zyUsv1ihNzi0vz0vWS83M3MYJjQktrB+OeVR/0DjEycTAe
+	YpTgYFYS4TVZuCJdiDclsbIqtSg/vqg0J7X4EKM0B4uSOO+3170pQgLpiSWp2ampBalFMFkm
+	Dk6pBqbEA/OWtB9bum51T6+3gVDV2RM1r541f/xj0OvP8VfcLTti4suzGz9IVXBOsND9+Kg4
+	7JrWrPdR+x7zVs3qaC3pL+p+OSfaeLPx5nVhxTrrnuZ8uRH4su743bt9Ia97Itr4VXT6FtuE
+	npqrPD33wD+V2w5tHkqpMyLz+JqsVjrqHDgh6vRaL22TQOYVmVrDy6dPs/gEOjheXFM8wTf+
+	5D6RdT9fHr/ywfhEk3tZWKtb4qY+0ZmiHTzLctjK+72crBZs8jZ7eV2dUSnteUbNuhs1R148
+	WbBxp9fefdG6OybVu/Eq9nx9rflq49PZCQvrXLhOJB1tmz3dqTb2vOODPsGbgd0ba7du6tb/
+	cVXT/I8SS3FGoqEWc1FxIgBksDfC+AIAAA==
+X-CMS-MailID: 20250212113729epcas5p2707be4e4b7787ea8ba5f47f3b31a1ac3
 X-Msg-Generator: CA
 Content-Type: multipart/mixed;
-	boundary="----souVHaJ2v40ysJO-goJgDtKdm5PFoGmT3TNK2tOxyR5.xT_N=_4c199_"
+	boundary="----8pCVYZkCOGUjObx0wm0yJlGbi0Dl-Xo5m.-jYkYL.P4N.DQv=_4c48b_"
 X-Sendblock-Type: REQ_APPROVE
 CMS-TYPE: 105P
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250203060051epcas5p350b7b24d3b5fcff25bc30e1acccd8121
+X-CMS-RootMailID: 20250203060053epcas5p137fe4cbd5661afdfd2602dbc7facdcb9
 References: <20250203055950.2126627-1-arpit1.kumar@samsung.com>
-	<CGME20250203060051epcas5p350b7b24d3b5fcff25bc30e1acccd8121@epcas5p3.samsung.com>
-	<20250203055950.2126627-2-arpit1.kumar@samsung.com>
-	<20250204102820.000047fb@huawei.com>
+	<CGME20250203060053epcas5p137fe4cbd5661afdfd2602dbc7facdcb9@epcas5p1.samsung.com>
+	<20250203055950.2126627-3-arpit1.kumar@samsung.com>
+	<20250204105342.00000c31@huawei.com>
 
-------souVHaJ2v40ysJO-goJgDtKdm5PFoGmT3TNK2tOxyR5.xT_N=_4c199_
+------8pCVYZkCOGUjObx0wm0yJlGbi0Dl-Xo5m.-jYkYL.P4N.DQv=_4c48b_
 Content-Type: text/plain; charset="utf-8"; format="flowed"
 Content-Disposition: inline
 
-On 04/02/25 10:28AM, Jonathan Cameron wrote:
->On Mon,  3 Feb 2025 11:29:48 +0530
+On 04/02/25 10:53AM, Jonathan Cameron wrote:
+>On Mon,  3 Feb 2025 11:29:49 +0530
 >Arpit Kumar <arpit1.kumar@samsung.com> wrote:
 >
->Please add some descriptive teext here.
+>Add some description of what is being added here.
 >
-Sure, will append here in V2 patch.
-
->> Signed-off-by: Arpit Kumar <arpit1.kumar@samsung.com>
->> Reviewed-by: Alok Rathore <alok.rathore@samsung.com>
->> Reviewed-by: Krishna Kanth Reddy <krish.reddy@samsung.com>
->
->Hi Arpit,
->
->Whilst it is good to do internal reviews, I'd prefer to see feedback
->on the mailing list if possible.  Hard for a maintainer to tell
->what a RB tag given before posting means unfortunately so in most
->cases preference is to not add RB tags based on internal review.
->If your colleagues have greatly affected the code, a
->Co-developed-by: and additional sign off may be a good way to
->reflect that.
->
->Great to have you working on these features. Some comments inline.
->Main ones are around naming (always tricky!) and suggestion to
->handle the arrays of log capabilities as static const pointers.
->
->Thanks,
+>Key issue in here is that clearing the CEL doesn't make
+>sense. It is a description of what the device supports, there
+>is no state to clear in it.  To add this command you need
+>to pick a different log.
 >
 >Jonathan
 >
-Thanks for the review Jonathan, will make changes accordingly in the
-next iteration-V2 of the patch.
+Thanks for the review Jonathan, will modify the code accordingly 
+in V2 patch.
+
 >
+>> Signed-off-by: Arpit Kumar <arpit1.kumar@samsung.com>
+>> Reviewed-by: Alok Rathore <alok.rathore@samsung.com>
+>> Reviewed-by: Krishna Kanth Reddy <krish.reddy@samsung.com>
 >> ---
->>  hw/cxl/cxl-mailbox-utils.c   | 55 ++++++++++++++++++++++++++++++++++++
->>  include/hw/cxl/cxl_device.h  | 31 ++++++++++++++++++++
->>  include/hw/cxl/cxl_mailbox.h |  5 ++++
->>  3 files changed, 91 insertions(+)
+>>  hw/cxl/cxl-mailbox-utils.c | 36 ++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 36 insertions(+)
 >>
 >> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
->> index 9c7ea5bc35..3d66a425a9 100644
+>> index 3d66a425a9..5fd7f850c4 100644
 >> --- a/hw/cxl/cxl-mailbox-utils.c
 >> +++ b/hw/cxl/cxl-mailbox-utils.c
->> @@ -76,6 +76,7 @@ enum {
->>      LOGS        = 0x04,
+>> @@ -77,6 +77,7 @@ enum {
 >>          #define GET_SUPPORTED 0x0
 >>          #define GET_LOG       0x1
->> +        #define GET_LOG_CAPABILITIES   0x2
+>>          #define GET_LOG_CAPABILITIES   0x2
+>> +        #define CLEAR_LOG     0x3
 >>      FEATURES    = 0x05,
 >>          #define GET_SUPPORTED 0x0
 >>          #define GET_FEATURE   0x1
->> @@ -1075,6 +1076,45 @@ static CXLRetCode cmd_logs_get_log(const struct cxl_cmd *cmd,
+>> @@ -1115,6 +1116,39 @@ static CXLRetCode cmd_logs_get_log_capabilities(const struct cxl_cmd *cmd,
 >>      return CXL_MBOX_SUCCESS;
 >>  }
 >>
->> +static int32_t valid_log_check(QemuUUID *uuid, CXLCCI *cci)
->
->Perhaps find_log_index() or something like that?
->I would return &ccx->supported_log_cap[i] / NULL if not found
->as then can avoid long reference into array below.
->
-okay, got it.
-
->> +{
->> +    int32_t id = -1;
->> +    for (int i = CEL; i < MAX_LOG_TYPE; i++) {
->> +        if (qemu_uuid_is_equal(uuid,
->> +            &cci->supported_log_cap[i].uuid)) {
->> +            id = i;
->> +            break;
->> +        }
->> +    }
->> +    return id;
->> +}
->> +
->> +/* CXL r3.1 Section 8.2.9.5.3: Get Log Capabilities (Opcode 0402h) */
->
->For new documentation please use latest spec.
->This is a bit different to many other spec where the request is the
->earliest one. That is due to the consortium only making the latest
->version available (currently r3.2)
->
-okay
-
->> +static CXLRetCode cmd_logs_get_log_capabilities(const struct cxl_cmd *cmd,
->> +                                                uint8_t *payload_in,
->> +                                                size_t len_in,
->> +                                                uint8_t *payload_out,
->> +                                                size_t *len_out,
->> +                                                CXLCCI *cci)
+>> +/* CXL r3.1 Section 8.2.9.5.4: Clear Log (Opcode 0403h) */
+>> +static CXLRetCode cmd_logs_clear_log(const struct cxl_cmd *cmd,
+>> +                                     uint8_t *payload_in,
+>> +                                     size_t len_in,
+>> +                                     uint8_t *payload_out,
+>> +                                     size_t *len_out,
+>> +                                     CXLCCI *cci)
 >> +{
 >> +    int32_t cap_id;
 >> +    struct {
 >> +        QemuUUID uuid;
->> +    } QEMU_PACKED QEMU_ALIGNED(8) * get_log_capabilities_in = (void *)payload_in;
+>> +    } QEMU_PACKED QEMU_ALIGNED(8) * clear_log = (void *)payload_in;
 >> +
->> +    CXLParamFlags *get_log_capabilities_out = (void *)payload_out;
->> +
->> +    cap_id = valid_log_check(&get_log_capabilities_in->uuid, cci);
->    CXLLogCapabilities *cap;
->
->    cap = find_log_cap(&get_log_capabilities_in->uuid, cci);
->    if (!cap) {
->        return CXL_MBOX_INVALID_LOG);
->    }
->
->    mempcy(get_log_capabilities_out, cap->param_flags.pflags,
->           sizeof(cap->param_flags.pflags));
->...
-
-got it.
-
->
+>> +    cap_id = valid_log_check(&clear_log->uuid, cci);
 >> +    if (cap_id == -1) {
 >> +        return CXL_MBOX_INVALID_LOG;
 >> +    }
+>
+>Follow on from previous patch, if this returns the cap pointer,
+>the following code wont have to index the array and should end up simpler.
+>
+okay
+
 >> +
->> +    memcpy(get_log_capabilities_out, &cci->supported_log_cap[cap_id].param_flags.pflags,
->> +           sizeof(CXLParamFlags));
->> +    *len_out = sizeof(*get_log_capabilities_out);
+>> +    if (cci->supported_log_cap[cap_id].param_flags.clear_log_supported) {
+>I would flip this.
+>    if (!(cap->param_flags & PARAM_FLAG_CLEAR_LOG_SUPPORTED)) {
+>        return CXL_MBOX_UNSUPPORTED;
+>    }
+>
+>
+>> +        switch (cap_id) {
+>> +        case CEL:
+>
+>So if we return the cap as suggested, it will have to reference what it is
+>or provide a callback (which might be cleaner as this grows).
+>
+>However, what does clearly the command effects log mean?
+>This makes no sense.  So if you want to implement clear_log you
+>need to implement a different log to clear.
+>
+okay
+
+>> +            memset(cci->cel_log, 0, (1 << 16) * sizeof(struct cel_log));
+>> +            cci->cel_size = 0;
+>> +            break;
+>> +        default:
+>> +            return CXL_MBOX_UNSUPPORTED;
+>> +        }
+>> +    } else {
+>> +        return CXL_MBOX_UNSUPPORTED;
+>> +    }
 >> +    return CXL_MBOX_SUCCESS;
 >> +}
 >> +
 >>  /* CXL r3.1 section 8.2.9.6: Features */
 >>  /*
 >>   * Get Supported Features output payload
->> @@ -2840,6 +2880,8 @@ static const struct cxl_cmd cxl_cmd_set[256][256] = {
->>      [LOGS][GET_SUPPORTED] = { "LOGS_GET_SUPPORTED", cmd_logs_get_supported,
->>                                0, 0 },
+>> @@ -2882,6 +2916,8 @@ static const struct cxl_cmd cxl_cmd_set[256][256] = {
 >>      [LOGS][GET_LOG] = { "LOGS_GET_LOG", cmd_logs_get_log, 0x18, 0 },
->> +    [LOGS][GET_LOG_CAPABILITIES] = { "LOGS_GET_LOG_CAPABILITIES",
->> +                                     cmd_logs_get_log_capabilities, 0x10, 0 },
+>>      [LOGS][GET_LOG_CAPABILITIES] = { "LOGS_GET_LOG_CAPABILITIES",
+>>                                       cmd_logs_get_log_capabilities, 0x10, 0 },
+>> +    [LOGS][CLEAR_LOG] = { "LOGS_CLEAR_LOG", cmd_logs_clear_log, 0x10,
+>> +                          CXL_MBOX_IMMEDIATE_LOG_CHANGE},
 >>      [FEATURES][GET_SUPPORTED] = { "FEATURES_GET_SUPPORTED",
 >>                                    cmd_features_get_supported, 0x8, 0 },
 >>      [FEATURES][GET_FEATURE] = { "FEATURES_GET_FEATURE",
->> @@ -3084,10 +3126,23 @@ static void cxl_rebuild_cel(CXLCCI *cci)
->>      }
->>  }
->>
->> +static const struct CXLLogCapabilities cxl_get_log_cap[MAX_LOG_TYPE] = {
->> +    [CEL] = {.param_flags.pflags = CXL_LOG_CAP_CLEAR | CXL_LOG_CAP_POPULATE,
->> +             .uuid = cel_uuid},
->> +};
->> +
->> +static void cxl_init_get_log(CXLCCI *cci)
->> +{
->> +    for (int set = CEL; set < MAX_LOG_TYPE; set++) {
->> +        cci->supported_log_cap[set] = cxl_get_log_cap[set];
->
->As below. Can we just use a static const pointer in cci?
-
-static const pointer in cci gives compilation error as it used below
-to assign value:
-     cci->supported_log_cap[set] = cxl_get_log_cap[set];
-
->Seems relatively unlikely we'll have lots of different log combinations
->depending on runtime configuration.  So may be better to just pick
->between a few const arrays like cxl_get_log_cap.
->
-okay, will fix it in V2 patch.
-
->Good to also store the length of that log or use a terminating entry
->of some type so that we don't need to iterate over empty entries.
->
-okay, will use terminating entry for the same.
-
->> +    }
->> +}
->> +
->>  void cxl_init_cci(CXLCCI *cci, size_t payload_max)
->>  {
->>      cci->payload_max = payload_max;
->>      cxl_rebuild_cel(cci);
->> +    cxl_init_get_log(cci);
->>
->>      cci->bg.complete_pct = 0;
->>      cci->bg.starttime = 0;
->> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
->> index a64739be25..e7cb99a1d2 100644
->> --- a/include/hw/cxl/cxl_device.h
->> +++ b/include/hw/cxl/cxl_device.h
->> @@ -164,6 +164,18 @@ typedef enum {
->>      CXL_MBOX_MAX = 0x20
->>  } CXLRetCode;
->>
->> +/* types of logs */
->> +enum Logs {
->
->For things in the header please prefix with CXL.  The chances
->of a naming clash in future drivers that include this is too high
->without that!
->
->Also QEMU tends to use typedefs for enums
->
-okay
-
->typedef enum {
->	CXL_LOG_CEL,
->	CXL_LOG_VENDOR,
->} CXLLogType;
->or something like that.
->
->Some of these abbreviations are a bit too compact and
->don't line up with spec like CEL does.,
->
-okay, will update the abbreviations as per your suggestion in
-V2 patch.
-
->
->
->
->> +    CEL,
->> +    VDL,
->> +    CSDL,
->CXL_LOG_COMPONENT_STATE_DUMP,
->> +    ECSL,
->CXL_LOG_ECS, //this one is standard acronym
->> +    MTCL,
->CXL_LOG_MEDIA_TEST_CAP
->> +    MTRSL,
->CXL_LOG_MEDIA_TEST_SHORT
->> +    MTRLL,
->CXL_LOG_MEDIA_TEST_LONG
->
->perhaps?
->> +    MAX_LOG_TYPE
->> +};
->> +
->>  typedef struct CXLCCI CXLCCI;
->>  typedef struct cxl_device_state CXLDeviceState;
->>  struct cxl_cmd;
->> @@ -194,6 +206,22 @@ typedef struct CXLEventLog {
->>      QSIMPLEQ_HEAD(, CXLEvent) events;
->>  } CXLEventLog;
->>
->> +typedef struct CXLParamFlags {
->> +    union {
->
->Unless I'm reading this wrong this is a union of lots of flags
->on top of each other.
->
->Also, don't use bitfields. They don't play well with
->different endian architectures.
->Defines for the various bits are a more reliable solution.
->Similar to the ones you have below in cxl_mailbox.h
->
-okay, will fix this in V2 patch.
-
->
->> +        uint32_t clear_log_supported:1;
->> +        uint32_t populate_log_supported:1;
->> +        uint32_t auto_populate_supported:1;
->> +        uint32_t persistent_across_cold_reset:1;
->> +        uint32_t reserved:28;
->> +        uint32_t pflags;
->> +    };
->> +} CXLParamFlags;
->> +
->> +typedef struct CXLLogCapabilities {
->> +    CXLParamFlags param_flags;
->> +    QemuUUID uuid;
->> +} CXLLogCapabilities;
->> +
->>  typedef struct CXLCCI {
->>      struct cxl_cmd cxl_cmd_set[256][256];
->>      struct cel_log {
->> @@ -202,6 +230,9 @@ typedef struct CXLCCI {
->>      } cel_log[1 << 16];
->>      size_t cel_size;
->>
->> +    /* get log capabilities */
->> +    CXLLogCapabilities supported_log_cap[MAX_LOG_TYPE];
->Perhaps a const pointer is appropriate?
-
-const pointer here gives compilation error as it is used below 
-to assign value:
-     cci->supported_log_cap[set] = cxl_get_log_cap[set];
->> +
->>      /* background command handling (times in ms) */
->>      struct {
->>          uint16_t opcode;
->> diff --git a/include/hw/cxl/cxl_mailbox.h b/include/hw/cxl/cxl_mailbox.h
->> index 9008402d1c..f3502c3f68 100644
->> --- a/include/hw/cxl/cxl_mailbox.h
->> +++ b/include/hw/cxl/cxl_mailbox.h
->> @@ -16,4 +16,9 @@
->>  #define CXL_MBOX_BACKGROUND_OPERATION (1 << 6)
->>  #define CXL_MBOX_BACKGROUND_OPERATION_ABORT (1 << 7)
->>
->> +#define CXL_LOG_CAP_CLEAR 1
->> +#define CXL_LOG_CAP_POPULATE (1 << 1)
->> +#define CXL_LOG_CAP_AUTO_POPULATE (1 << 2)
->> +#define CXL_LOG_CAP_PERSISTENT_COLD_RESET (1 << 3)
->> +
->>  #endif
 >
 
-------souVHaJ2v40ysJO-goJgDtKdm5PFoGmT3TNK2tOxyR5.xT_N=_4c199_
+------8pCVYZkCOGUjObx0wm0yJlGbi0Dl-Xo5m.-jYkYL.P4N.DQv=_4c48b_
 Content-Type: text/plain; charset="utf-8"
 
 
-------souVHaJ2v40ysJO-goJgDtKdm5PFoGmT3TNK2tOxyR5.xT_N=_4c199_--
+------8pCVYZkCOGUjObx0wm0yJlGbi0Dl-Xo5m.-jYkYL.P4N.DQv=_4c48b_--
