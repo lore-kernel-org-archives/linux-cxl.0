@@ -1,218 +1,256 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B41B61EE7B9
-	for <linux-cxl@vger.kernel.org>; Wed, 12 Feb 2025 10:41:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DF8E205AAF;
+	Wed, 12 Feb 2025 11:57:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739356903; cv=none; b=E0HBnygiEoyCPmWCkwqh8nqHbRWkX7q77bhjDmdNJFDxGuPoLzfjOwI+GRsJrtJex3jA4hUSBxt2TIBQgEwAuM+NDEdj+JDpgG6L8hgP8mZoYn/CN9IzkTkZu64LT2h56TDrxH1KDuRGEochkN/1s2LnOd/ofzZX+KkXRwGBF/w=
+	t=1739361467; cv=none; b=d4H4ggYScW/UbCo+PAzqrdieZrT95aiKJvpNMjP33hUw3c4lnfgScHZLHRmDAgT0zM2sFldmDsAKpYVAj4x0fH7zjy+GiOak7NSvhhqVZqmvrbYd3LoQq7GJvo+FXn40TXUz/KTHQlU+w6tymeuJcOxS0OSh6AM2KICFp304+ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739356903; c=relaxed/simple;
-	bh=V5Cwz6DD0OH3vN+FTxZ5vVn3lsJQ+qa4m91wqBRkZvo=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=QBHorwEY3Ck2XsQ3dvff+c5tJ6qe3s7C9b+1E6opXN9tIffo60W8dLekznoFlXggXAwn08o1HrII/3jjujsyp+9lSftkv5wzqny3SOlwqAs25vJn5mLIr9I7egbkgDF8cWP0Hn8+S9PBLetKkIVDcyM4oiHXsnr413mN0LBPCro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WrO+nXCo; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WrO+nXCo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739356902; x=1770892902;
-  h=date:from:to:cc:subject:message-id;
-  bh=V5Cwz6DD0OH3vN+FTxZ5vVn3lsJQ+qa4m91wqBRkZvo=;
-  b=WrO+nXCom+d3k8mDIm/i0/GeGFZXd+t7kMjGu4OxUe/gFHOb/jaXNi4C
-   aqPLvWkTeh37kDAh8FoUY3o2R95a/tqtZwTgrQl04FQD74VjdxjUWqUdi
-   6suw0+qb3YaODq3zR8eFEnyPJLq1uYyT8m2Iotc7Am3EIs/+/Xb58UIv0
-   pfEFbLGzg4DKZzLVwxnpYw0KjQ1qzwIMTVV5ioEvXMWAsacv6bQrY+Pi9
-   MsIyNhkwkYZlsyvLmG+0aexwXrp+kG5shw/Jg6c5FKjwHoC9sHiRXNZcY
-   tq03ACT50+GeHMbDJD/ytMUsVcjuJlo6gZ/PlrsVTb3X3Hecgo85rrqVZ
-   g==;
-X-CSE-ConnectionGUID: LI9kPTUJRQS5UIlr4f9e1g==
-X-CSE-MsgGUID: jV/X6tbtTMWyaJyic70hHQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="39709568"
-X-IronPort-AV: E=Sophos;i="6.13,279,1732608000"; 
-   d="scan'208";a="39709568"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 02:41:41 -0800
-X-CSE-ConnectionGUID: kCOCbEdMS6q0hkIo3hlj8A==
-X-CSE-MsgGUID: bhjt4jd0RGS1VEOzFGCH6w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="113282055"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 12 Feb 2025 02:41:40 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tiABV-0015Vz-0f;
-	Wed, 12 Feb 2025 10:41:37 +0000
-Date: Wed, 12 Feb 2025 18:41:29 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Subject: [cxl:next] BUILD SUCCESS
- 8760c1c0bf7eee63a56b5f9edb42d93737a6a378
-Message-ID: <202502121813.46u9aHhK-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1739361467; c=relaxed/simple;
+	bh=JLcYrsxs5VQrFQ8zp3bYRSeJrYhvPjX8ki2I4JOySLc=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sjYTeogypNwv7G1Uyqs0cGy20JjhGPlNTme65e78XGJpgAobp10FjAuuaeVSzNvWxq8qj/Yugkfj4WV+eiyfekCPRPB+j3EWj4MPRnk26HnHaQq2QmzDFmwbkc6y1P0l8eGZ6+XODk3ilUjpcuVDMBWZojFGBtSSeEPnv7AdiJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YtGxP4qGnz6HJc1;
+	Wed, 12 Feb 2025 19:56:25 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 291681401DC;
+	Wed, 12 Feb 2025 19:57:41 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 12 Feb
+ 2025 12:57:40 +0100
+Date: Wed, 12 Feb 2025 11:57:38 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Shannon Nelson <shannon.nelson@amd.com>
+CC: <jgg@nvidia.com>, <andrew.gospodarek@broadcom.com>,
+	<aron.silverton@oracle.com>, <dan.j.williams@intel.com>,
+	<daniel.vetter@ffwll.ch>, <dave.jiang@intel.com>, <dsahern@kernel.org>,
+	<gospo@broadcom.com>, <hch@infradead.org>, <itayavr@nvidia.com>,
+	<jiri@nvidia.com>, <kuba@kernel.org>, <lbloch@nvidia.com>,
+	<leonro@nvidia.com>, <saeedm@nvidia.com>, <linux-cxl@vger.kernel.org>,
+	<linux-rdma@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<brett.creeley@amd.com>
+Subject: Re: [RFC PATCH fwctl 1/5] pds_core: specify auxiliary_device to be
+ created
+Message-ID: <20250212115738.0000161b@huawei.com>
+In-Reply-To: <20250211234854.52277-2-shannon.nelson@amd.com>
+References: <20250211234854.52277-1-shannon.nelson@amd.com>
+	<20250211234854.52277-2-shannon.nelson@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-branch HEAD: 8760c1c0bf7eee63a56b5f9edb42d93737a6a378  cxl/cdat: Remove redundant gp_port initialization
+On Tue, 11 Feb 2025 15:48:50 -0800
+Shannon Nelson <shannon.nelson@amd.com> wrote:
 
-elapsed time: 1015m
+> In preparation for adding a new auxiliary_device for the
+> PF, make the vif type an argument to pdsc_auxbus_dev_add().
+> We also now pass in the address to where we'll keep the new
+> padev pointer so that the caller can specify where to save it
+> but we can still change it under the mutex and keep the mutex
+> usage within the function.
+> 
+> Signed-off-by: Shannon Nelson <shannon.nelson@amd.com>
 
-configs tested: 138
-configs skipped: 7
+One trivial comment inline.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> ---
+>  drivers/net/ethernet/amd/pds_core/auxbus.c  | 41 ++++++++++-----------
+>  drivers/net/ethernet/amd/pds_core/core.h    |  7 +++-
+>  drivers/net/ethernet/amd/pds_core/devlink.c |  6 ++-
+>  drivers/net/ethernet/amd/pds_core/main.c    | 11 ++++--
+>  4 files changed, 36 insertions(+), 29 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/amd/pds_core/auxbus.c b/drivers/net/ethernet/amd/pds_core/auxbus.c
+> index 2babea110991..0a3035adda52 100644
+> --- a/drivers/net/ethernet/amd/pds_core/auxbus.c
+> +++ b/drivers/net/ethernet/amd/pds_core/auxbus.c
+> @@ -175,34 +175,37 @@ static struct pds_auxiliary_dev *pdsc_auxbus_dev_register(struct pdsc *cf,
+>  	return padev;
+>  }
+>  
+> -int pdsc_auxbus_dev_del(struct pdsc *cf, struct pdsc *pf)
+> +int pdsc_auxbus_dev_del(struct pdsc *cf, struct pdsc *pf,
+> +			struct pds_auxiliary_dev **pd_ptr)
+>  {
+>  	struct pds_auxiliary_dev *padev;
+> -	int err = 0;
+>  
+>  	if (!cf)
+>  		return -ENODEV;
+>  
+> +	if (!*pd_ptr)
+> +		return 0;
+> +
+>  	mutex_lock(&pf->config_lock);
+>  
+> -	padev = pf->vfs[cf->vf_id].padev;
+> -	if (padev) {
+> -		pds_client_unregister(pf, padev->client_id);
+> -		auxiliary_device_delete(&padev->aux_dev);
+> -		auxiliary_device_uninit(&padev->aux_dev);
+> -		padev->client_id = 0;
+> -	}
+> -	pf->vfs[cf->vf_id].padev = NULL;
+> +	padev = *pd_ptr;
+> +	pds_client_unregister(pf, padev->client_id);
+> +	auxiliary_device_delete(&padev->aux_dev);
+> +	auxiliary_device_uninit(&padev->aux_dev);
+> +	padev->client_id = 0;
+> +	*pd_ptr = NULL;
+>  
+>  	mutex_unlock(&pf->config_lock);
+> -	return err;
+> +
+> +	return 0;
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-alpha                               defconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-13.2.0
-arc                              allyesconfig    gcc-13.2.0
-arc                                 defconfig    gcc-13.2.0
-arc                   randconfig-001-20250212    gcc-13.2.0
-arc                   randconfig-002-20250212    gcc-13.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-17
-arm                              allyesconfig    gcc-14.2.0
-arm                                 defconfig    clang-21
-arm                         lpc32xx_defconfig    clang-21
-arm                          pxa3xx_defconfig    clang-21
-arm                          pxa910_defconfig    gcc-14.2.0
-arm                             pxa_defconfig    gcc-14.2.0
-arm                   randconfig-001-20250212    clang-18
-arm                   randconfig-002-20250212    clang-16
-arm                   randconfig-003-20250212    clang-21
-arm                   randconfig-004-20250212    clang-16
-arm                           u8500_defconfig    gcc-14.2.0
-arm64                            allmodconfig    clang-18
-arm64                             allnoconfig    gcc-14.2.0
-arm64                               defconfig    gcc-14.2.0
-arm64                 randconfig-001-20250212    gcc-14.2.0
-arm64                 randconfig-002-20250212    gcc-14.2.0
-arm64                 randconfig-003-20250212    clang-16
-arm64                 randconfig-004-20250212    gcc-14.2.0
-csky                              allnoconfig    gcc-14.2.0
-csky                                defconfig    gcc-14.2.0
-csky                  randconfig-001-20250212    gcc-14.2.0
-csky                  randconfig-002-20250212    gcc-14.2.0
-hexagon                          allmodconfig    clang-21
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-18
-hexagon                             defconfig    clang-21
-hexagon               randconfig-001-20250212    clang-21
-hexagon               randconfig-002-20250212    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250212    clang-19
-i386        buildonly-randconfig-002-20250212    gcc-12
-i386        buildonly-randconfig-003-20250212    gcc-12
-i386        buildonly-randconfig-004-20250212    gcc-12
-i386        buildonly-randconfig-005-20250212    gcc-12
-i386        buildonly-randconfig-006-20250212    gcc-12
-i386                                defconfig    clang-19
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch                           defconfig    gcc-14.2.0
-loongarch             randconfig-001-20250212    gcc-14.2.0
-loongarch             randconfig-002-20250212    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                                defconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-microblaze                          defconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                         db1xxx_defconfig    clang-21
-nios2                             allnoconfig    gcc-14.2.0
-nios2                               defconfig    gcc-14.2.0
-nios2                 randconfig-001-20250212    gcc-14.2.0
-nios2                 randconfig-002-20250212    gcc-14.2.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-14.2.0
-openrisc                  or1klitex_defconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-14.2.0
-parisc                randconfig-001-20250212    gcc-14.2.0
-parisc                randconfig-002-20250212    gcc-14.2.0
-parisc64                            defconfig    gcc-14.1.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-16
-powerpc                      cm5200_defconfig    clang-21
-powerpc                  iss476-smp_defconfig    gcc-14.2.0
-powerpc               mpc834x_itxgp_defconfig    clang-18
-powerpc                      pcm030_defconfig    clang-17
-powerpc               randconfig-001-20250212    gcc-14.2.0
-powerpc               randconfig-002-20250212    clang-16
-powerpc               randconfig-003-20250212    gcc-14.2.0
-powerpc                     tqm8540_defconfig    gcc-14.2.0
-powerpc                        warp_defconfig    gcc-14.2.0
-powerpc64             randconfig-001-20250212    clang-16
-powerpc64             randconfig-002-20250212    gcc-14.2.0
-powerpc64             randconfig-003-20250212    gcc-14.2.0
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-21
-riscv                               defconfig    clang-19
-riscv                 randconfig-001-20250212    clang-21
-riscv                 randconfig-002-20250212    clang-18
-s390                             alldefconfig    gcc-14.2.0
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                                defconfig    clang-15
-s390                  randconfig-001-20250212    clang-15
-s390                  randconfig-002-20250212    clang-17
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                                  defconfig    gcc-14.2.0
-sh                    randconfig-001-20250212    gcc-14.2.0
-sh                    randconfig-002-20250212    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250212    gcc-14.2.0
-sparc                 randconfig-002-20250212    gcc-14.2.0
-sparc64                             defconfig    gcc-14.2.0
-sparc64               randconfig-001-20250212    gcc-14.2.0
-sparc64               randconfig-002-20250212    gcc-14.2.0
-um                               allmodconfig    clang-21
-um                                allnoconfig    clang-18
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-21
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250212    clang-16
-um                    randconfig-002-20250212    gcc-12
-um                           x86_64_defconfig    clang-15
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20250212    gcc-11
-x86_64      buildonly-randconfig-002-20250212    clang-19
-x86_64      buildonly-randconfig-003-20250212    clang-19
-x86_64      buildonly-randconfig-004-20250212    clang-19
-x86_64      buildonly-randconfig-005-20250212    gcc-12
-x86_64      buildonly-randconfig-006-20250212    clang-19
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250212    gcc-14.2.0
-xtensa                randconfig-002-20250212    gcc-14.2.0
+If you are always going to return 0, maybe change the signature
+to not return anything?
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Would require changing the ternary usage below, but perhaps
+it is worth it to remove the implication of failures being
+a possibility.
+
+
+>  }
+>  
+> -int pdsc_auxbus_dev_add(struct pdsc *cf, struct pdsc *pf)
+> +int pdsc_auxbus_dev_add(struct pdsc *cf, struct pdsc *pf,
+> +			enum pds_core_vif_types vt,
+> +			struct pds_auxiliary_dev **pd_ptr)
+>  {
+>  	struct pds_auxiliary_dev *padev;
+>  	char devname[PDS_DEVNAME_LEN];
+> -	enum pds_core_vif_types vt;
+>  	unsigned long mask;
+>  	u16 vt_support;
+>  	int client_id;
+> @@ -211,6 +214,9 @@ int pdsc_auxbus_dev_add(struct pdsc *cf, struct pdsc *pf)
+>  	if (!cf)
+>  		return -ENODEV;
+>  
+> +	if (vt >= PDS_DEV_TYPE_MAX)
+> +		return -EINVAL;
+> +
+>  	mutex_lock(&pf->config_lock);
+>  
+>  	mask = BIT_ULL(PDSC_S_FW_DEAD) |
+> @@ -222,17 +228,10 @@ int pdsc_auxbus_dev_add(struct pdsc *cf, struct pdsc *pf)
+>  		goto out_unlock;
+>  	}
+>  
+> -	/* We only support vDPA so far, so it is the only one to
+> -	 * be verified that it is available in the Core device and
+> -	 * enabled in the devlink param.  In the future this might
+> -	 * become a loop for several VIF types.
+> -	 */
+> -
+>  	/* Verify that the type is supported and enabled.  It is not
+>  	 * an error if there is no auxbus device support for this
+>  	 * VF, it just means something else needs to happen with it.
+>  	 */
+> -	vt = PDS_DEV_TYPE_VDPA;
+>  	vt_support = !!le16_to_cpu(pf->dev_ident.vif_types[vt]);
+>  	if (!(vt_support &&
+>  	      pf->viftype_status[vt].supported &&
+> @@ -258,7 +257,7 @@ int pdsc_auxbus_dev_add(struct pdsc *cf, struct pdsc *pf)
+>  		err = PTR_ERR(padev);
+>  		goto out_unlock;
+>  	}
+> -	pf->vfs[cf->vf_id].padev = padev;
+> +	*pd_ptr = padev;
+>  
+>  out_unlock:
+>  	mutex_unlock(&pf->config_lock);
+> diff --git a/drivers/net/ethernet/amd/pds_core/core.h b/drivers/net/ethernet/amd/pds_core/core.h
+> index 14522d6d5f86..065031dd5af6 100644
+> --- a/drivers/net/ethernet/amd/pds_core/core.h
+> +++ b/drivers/net/ethernet/amd/pds_core/core.h
+> @@ -303,8 +303,11 @@ void pdsc_health_thread(struct work_struct *work);
+>  int pdsc_register_notify(struct notifier_block *nb);
+>  void pdsc_unregister_notify(struct notifier_block *nb);
+>  void pdsc_notify(unsigned long event, void *data);
+> -int pdsc_auxbus_dev_add(struct pdsc *cf, struct pdsc *pf);
+> -int pdsc_auxbus_dev_del(struct pdsc *cf, struct pdsc *pf);
+> +int pdsc_auxbus_dev_add(struct pdsc *cf, struct pdsc *pf,
+> +			enum pds_core_vif_types vt,
+> +			struct pds_auxiliary_dev **pd_ptr);
+> +int pdsc_auxbus_dev_del(struct pdsc *cf, struct pdsc *pf,
+> +			struct pds_auxiliary_dev **pd_ptr);
+>  
+>  void pdsc_process_adminq(struct pdsc_qcq *qcq);
+>  void pdsc_work_thread(struct work_struct *work);
+> diff --git a/drivers/net/ethernet/amd/pds_core/devlink.c b/drivers/net/ethernet/amd/pds_core/devlink.c
+> index 44971e71991f..c2f380f18f21 100644
+> --- a/drivers/net/ethernet/amd/pds_core/devlink.c
+> +++ b/drivers/net/ethernet/amd/pds_core/devlink.c
+> @@ -56,8 +56,10 @@ int pdsc_dl_enable_set(struct devlink *dl, u32 id,
+>  	for (vf_id = 0; vf_id < pdsc->num_vfs; vf_id++) {
+>  		struct pdsc *vf = pdsc->vfs[vf_id].vf;
+>  
+> -		err = ctx->val.vbool ? pdsc_auxbus_dev_add(vf, pdsc) :
+> -				       pdsc_auxbus_dev_del(vf, pdsc);
+> +		err = ctx->val.vbool ? pdsc_auxbus_dev_add(vf, pdsc, vt_entry->vif_id,
+> +							   &pdsc->vfs[vf_id].padev) :
+> +				       pdsc_auxbus_dev_del(vf, pdsc,
+> +						           &pdsc->vfs[vf_id].padev);
+>  	}
+>  
+>  	return err;
+> diff --git a/drivers/net/ethernet/amd/pds_core/main.c b/drivers/net/ethernet/amd/pds_core/main.c
+> index 660268ff9562..a3a68889137b 100644
+> --- a/drivers/net/ethernet/amd/pds_core/main.c
+> +++ b/drivers/net/ethernet/amd/pds_core/main.c
+> @@ -190,7 +190,8 @@ static int pdsc_init_vf(struct pdsc *vf)
+>  	devl_unlock(dl);
+>  
+>  	pf->vfs[vf->vf_id].vf = vf;
+> -	err = pdsc_auxbus_dev_add(vf, pf);
+> +	err = pdsc_auxbus_dev_add(vf, pf, PDS_DEV_TYPE_VDPA,
+> +				  &pf->vfs[vf->vf_id].padev);
+>  	if (err) {
+>  		devl_lock(dl);
+>  		devl_unregister(dl);
+> @@ -417,7 +418,7 @@ static void pdsc_remove(struct pci_dev *pdev)
+>  
+>  		pf = pdsc_get_pf_struct(pdsc->pdev);
+>  		if (!IS_ERR(pf)) {
+> -			pdsc_auxbus_dev_del(pdsc, pf);
+> +			pdsc_auxbus_dev_del(pdsc, pf, &pf->vfs[pdsc->vf_id].padev);
+>  			pf->vfs[pdsc->vf_id].vf = NULL;
+>  		}
+>  	} else {
+> @@ -482,7 +483,8 @@ static void pdsc_reset_prepare(struct pci_dev *pdev)
+>  
+>  		pf = pdsc_get_pf_struct(pdsc->pdev);
+>  		if (!IS_ERR(pf))
+> -			pdsc_auxbus_dev_del(pdsc, pf);
+> +			pdsc_auxbus_dev_del(pdsc, pf,
+> +					    &pf->vfs[pdsc->vf_id].padev);
+>  	}
+>  
+>  	pdsc_unmap_bars(pdsc);
+> @@ -527,7 +529,8 @@ static void pdsc_reset_done(struct pci_dev *pdev)
+>  
+>  		pf = pdsc_get_pf_struct(pdsc->pdev);
+>  		if (!IS_ERR(pf))
+> -			pdsc_auxbus_dev_add(pdsc, pf);
+> +			pdsc_auxbus_dev_add(pdsc, pf, PDS_DEV_TYPE_VDPA,
+> +					    &pf->vfs[pdsc->vf_id].padev);
+>  	}
+>  }
+>  
+
