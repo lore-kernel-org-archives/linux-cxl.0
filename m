@@ -1,151 +1,386 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2064.outbound.protection.outlook.com [40.107.243.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60ED728A2CE
-	for <linux-cxl@vger.kernel.org>; Thu, 13 Feb 2025 19:36:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739475419; cv=fail; b=K9bOh1p5l0v73aKw+6nEeKi3vQtPQgwLsPaTeBu6jhnkbIqkgV4VbHinDZBZGUkghUxNngJSYTAKC3xq3f692+Ky557fRqeMyGWbjLZhHNCpspWYwFQl04dzRcdIvHD86BKARpUiznQbcMJGa2XBDizI4EIJHIwTNGL3uyPjZd8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739475419; c=relaxed/simple;
-	bh=gInhHSm4Z4viYDQ0tB3MgcO9HX2nus2HqqWU3gJzx2U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=qs7JReBAneCouR08efWXiCLwMbyNQMimWb7FxCb6B0F2hT0Hjb+xGJYwN8Q2LAnkSXJT0tlXJmbWOa3XsgQ4gPXbRg0mSij+wScrA1fQi4rdCOg/7wVTqkAH2NPJpV0POz7U9JsN59ztRu2NoTFfuagy9sYU9a8bcKeE3XUlY5U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=JJlpktvj; arc=fail smtp.client-ip=40.107.243.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A07F8250EC;
+	Thu, 13 Feb 2025 21:06:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739480780; cv=none; b=PQiVlFbW3exGkLSQVFt+iAlBvt5ZtSBohLWPu1yZH7r6J8UPWEVFpKZFa2aJvwGLjSwAAFz+zcD9ms9zT6ojyorjnHnWjIHEariGx066YH6CA9XVIGTXJB8vuTMQClrxqtbSWxp3pBDUS6wTlT0LDtGSl4K89uDEeOXSKTxBCIk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739480780; c=relaxed/simple;
+	bh=MpmjcTrQDvEPm4rW4W/L5mzP4uBnKkBPc1FXep3gkLE=;
+	h=Message-ID:From:Date:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h0NxdI08JwAyV3vJQx0pOyfgyudQBon+6AwaVtXv/ko798hN7WU6wmbjvBlftfKlGy6elVI8s3d2vFGPIQDeP9abLzcDn/S1nmpE2B7XqnSZd740pd5+ukGVI19vR2spEh39l2IWCDQAfTZ8mG+0znGL67JmyZ6AbbtPX34Ibuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RVC41UkU; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="JJlpktvj"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hjKx2F/sdDQTS71bQYEza48xQWW74Tn8jvCOMD5b1i0hXuVM8LLSl7jvcRMBv5HRAj/h33YQzkhfuJ5UjfaS0NUYmgZIpdbNatVYsJDHPtpqvltZEjozIyyHYIZeK8tlkF9KZDnzW3KHVBjqM7u6dneUZPe9Is1obqn+kIYp4S0iRcLLHDNciRqeqEMYH6PW5lSv1lypmy4qYi6lNBF8fPZ6pNKLmbggC2LFRzhYCV8UfYBw1JszoGVAAQDpKd6hT/4fIt5eriezw/B2r8YgCPX3/ZAfIzgnACqHI44joCBnYjMqHs4W1F8JKxQkOy5O/IV1j+FxOO6yzLBKAzLY7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gInhHSm4Z4viYDQ0tB3MgcO9HX2nus2HqqWU3gJzx2U=;
- b=xN9nfEUFnQlAxeTPB3naAIMI8AVvHpm0LlOJvZrtqKhij7XEff4i14OMpw+xORvVn0a1XzpiNnJcSeDZfyl9F5D9gim4048X6wY2xr4ePjtkH2kyGPwtNucIsxCnbe3mx5YPqDdmEk+UyRBpvCBGsvxjt614iXoEVGQk4BasWJauIzmiRPgzrnLmr2A1JIzM4rPNThbi1fDN2Rvzjmsx0knMEZmJx5uh9lLuqTkuDMtkwJcGdzjsHPh+dojK6sDtfq+47v/fix9kQWrAc7Cg50fcR87LnraYhWOyFpSPULleWcbF1O5SrkHbyuZgfUZSiVOHLa8cLq9g6Fcdn4qV/w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gInhHSm4Z4viYDQ0tB3MgcO9HX2nus2HqqWU3gJzx2U=;
- b=JJlpktvjjpNxjHGZYcO5IKLFxvvZ4VogpA+VlXSQSVqvt7fZPhzLQK8vYG5W9akoTxAx8Nbeqht+2EiaZUfNmCMSyOeBtmQrDWYlPvEQUMhIh60KTifxb/EiZfKy+wHyHG1L0p10udnLTOxI2iChcebT2FNxARdWUCbiGxMw5H5xeQZwC2CBFEz92ZMl+hJgMhYmrFBMnzsR4JymJrWqQDMIFKT5kwYRoFVmAb68N51EvohWMUUc3FCERA67J3b0pb3f/PsYwnAfWBuyy2kC8J7ct1P9KkCCiPLqCk9CDBPFV/cKskhlteSps3mGoWH/upcp+21j+vYVaCL71Piptg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by SJ1PR12MB6146.namprd12.prod.outlook.com (2603:10b6:a03:45b::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.13; Thu, 13 Feb
- 2025 19:36:53 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%6]) with mapi id 15.20.8445.013; Thu, 13 Feb 2025
- 19:36:52 +0000
-Date: Thu, 13 Feb 2025 15:36:51 -0400
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
-	ira.weiny@intel.com, vishal.l.verma@intel.com,
-	alison.schofield@intel.com, Jonathan.Cameron@huawei.com,
-	dave@stgolabs.net, shiju.jose@huawei.com,
-	Li Ming <ming.li@zohomail.com>
-Subject: Re: [PATCH v5 08/15] cxl: Add support for FWCTL get driver
- information callback
-Message-ID: <20250213193651.GD3886819@nvidia.com>
-References: <20250211182909.1650096-1-dave.jiang@intel.com>
- <20250211182909.1650096-9-dave.jiang@intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250211182909.1650096-9-dave.jiang@intel.com>
-X-ClientProxiedBy: BL1PR13CA0257.namprd13.prod.outlook.com
- (2603:10b6:208:2ba::22) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RVC41UkU"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-21f48ebaadfso27442505ad.2;
+        Thu, 13 Feb 2025 13:06:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739480778; x=1740085578; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:date:from:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=Zj6IyoMI7/+XesEjkVAnf4BmLCrNLF66imYiCl83NlM=;
+        b=RVC41UkUranJJx7F1Rir0fUxvqtylY2g+/7aC3M7PYe544kuAHUEkOS69ujc2/XYY4
+         E82KI3GXgymcJzOsGBvbneWa82tT7vAkkklXy4bElwgRgkXw4VOZJz466iQZX1CcrCIH
+         bNKUkBOStzenzgwQzXEU7jqjRrhpaidPOyOyypMw3c7k/vGrYw/n+zt15jJAWv8Lb38L
+         1gALAm63lzmN2RtMjDbzCgtHZz3ExD/125FZm7mo25EqqmyfyKl9gl1sxEbg0hkwk+S/
+         QRMGY5mjla5cj3zGZrBFRk4Dx/2XKuS92MvDLrCKc1ErQIfQdFC69IGGiLp9a6gfKHCy
+         oMQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739480778; x=1740085578;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:date:from:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Zj6IyoMI7/+XesEjkVAnf4BmLCrNLF66imYiCl83NlM=;
+        b=B+Gh3AxqVkrwgZJd/PnFcQP+z8Wl7CB4IGEgnoac959iWQ5By1wxj0lulN/jN2p1oP
+         TuxaclGIus3Fw3OP9d37E0G8nZf4fCZ6moGlo0onlgaiYoogZyKLvG/RBZqAzpB83MEF
+         52aiaZJn18EF4Rw2kAoWgI3f+EVcLE7MBmMd1CEFEPJCnoZnpFyhkZKUEKAyrdi54Ifq
+         8sm8UFJhUpOkfQ6tZKwDQbL8hTwNebKJcqXHgsE00AsGFm2WFEsju+NaFVPT0PF82gcf
+         D3tV75TZN3A5Mb7CO/8yySHVt8XasNc1JD/Cl4LSJJ2+aagrDGXc77k5PLkDRq5tG+rw
+         lX7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW2t0ah6eU6jr0Wk53CU2y8siLNk6KJIajr4lztA60s2D4+hmC2duWNjTDA5eX0NIUOVk8+YWMS/DhR@vger.kernel.org, AJvYcCWgAWSIRitrEpVis1MMOBQ2KiDNfJ5l5GGMJ50LKk6S/OJn6lImgfYIeTy/yqy6NVs4b7W6BR0JkSyiNkbl@vger.kernel.org, AJvYcCXMIPOofav8TeROSW0g0S6ZaVpTxKcF9QzJe6Z78MCpj+rKHVZOTNWevJsuZjb5bPLzNdvaWA9+lQed@vger.kernel.org, AJvYcCXQymXRoqkXhkGVW10kq2Pc2Tv6Ko+5mH+cV5Bqy2KIpIlxBjOgLJ+Ff8z2Wo+caApk78RYVR5PKtSK@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFxwXqh7izWUdYrCmECu9b55P9kUwV3+BmEVMxsXxzzMeTVolJ
+	OH1ha6plvqevg5I3ktd08VofWZb4wjaLG8QymEQtAcTVWreC4DLp
+X-Gm-Gg: ASbGncvYjqReOJesuc0BHe/Sh741xZkLdCMp+8pI4Zu3QpZfvm4Mvuklc9zYc1bAhao
+	6kXmj/d71a27fmP+c36F2teCafH0+66Du1z9zDRTvus0RlWA/dLADfvvkkzt2EYEfHK6BJ9vVf2
+	3llH6tTrPVxhjLBR8mAZLnZNBg1OOJ4ZychApLWt5/4AU5jGSoUR55d4l0OOI3EsrPYGAmLC042
+	/XkczOcsgKlHuo+CQO6hEyBkPQLp1BLtJFhPhpB+Jkk2bWRFVg9VBsTOKWAxqgZ/MPMKIf/EK8I
+	vpiyKcvI3anHTIpgOppq7qCtPHpWeR/Z0nIbY0HAl5s=
+X-Google-Smtp-Source: AGHT+IEZh5CGS1QOxvKwoON2sPBaz7fHaxqQbJ1CRIi7eBl37m2+GOBij6F/G7vXVQz7wwd2GS5O/w==
+X-Received: by 2002:a05:6a00:178d:b0:725:cfa3:bc6b with SMTP id d2e1a72fcca58-7322c3754admr15708096b3a.3.1739480777593;
+        Thu, 13 Feb 2025 13:06:17 -0800 (PST)
+Received: from asus. (c-73-189-148-61.hsd1.ca.comcast.net. [73.189.148.61])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73242546177sm1730934b3a.5.2025.02.13.13.06.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2025 13:06:17 -0800 (PST)
+Message-ID: <67ae5ec9.a70a0220.15bb91.94a5@mx.google.com>
+X-Google-Original-Message-ID: <Z65evEPv8nVQWPLl@asus.>
+From: Fan Ni <nifan.cxl@gmail.com>
+X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
+Date: Thu, 13 Feb 2025 13:06:04 -0800
+To: shiju.jose@huawei.com
+Cc: linux-edac@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	bp@alien8.de, tony.luck@intel.com, rafael@kernel.org,
+	lenb@kernel.org, mchehab@kernel.org, dan.j.williams@intel.com,
+	dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com, david@redhat.com,
+	Vilas.Sridharan@amd.com, leo.duran@amd.com, Yazen.Ghannam@amd.com,
+	rientjes@google.com, jiaqiyan@google.com, Jon.Grimm@amd.com,
+	dave.hansen@linux.intel.com, naoya.horiguchi@nec.com,
+	james.morse@arm.com, jthoughton@google.com, somasundaram.a@hpe.com,
+	erdemaktas@google.com, pgonda@google.com, duenwen@google.com,
+	gthelen@google.com, wschwartz@amperecomputing.com,
+	dferguson@amperecomputing.com, wbs@os.amperecomputing.com,
+	nifan.cxl@gmail.com, tanxiaofei@huawei.com,
+	prime.zeng@hisilicon.com, roberto.sassu@huawei.com,
+	kangkang.shen@futurewei.com, wanghuiqiang@huawei.com,
+	linuxarm@huawei.com
+Subject: Re: [PATCH v20 01/15] EDAC: Add support for EDAC device features
+ control
+References: <20250212143654.1893-1-shiju.jose@huawei.com>
+ <20250212143654.1893-2-shiju.jose@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|SJ1PR12MB6146:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9b7171d5-b9a9-4b91-2322-08dd4c65c40e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?cRIc9P6FgQn2UGXizeFNw64P6JAXb0L8my0ZrnVdI1/Oe5E0ldzkXt0cHE//?=
- =?us-ascii?Q?SRaLqqHjoG/ivRCvd38Wt053GtnMxgYlGLjUibcD+hO9b7DBesotcnal+Ii0?=
- =?us-ascii?Q?vJtAnm7KofwasoMs47yLX1mJnZuaP9C07CudWZ9N4fKspgA+D0abUnue75gt?=
- =?us-ascii?Q?kcXuKRZvIZuJjmFAUzdZeoYrakTCFs2UWBG21UyBjXBpgtB0yaIkTU8jiaUw?=
- =?us-ascii?Q?z+TdQxysBXHyuRtLOr+Rqo5DzwRJnmPau/1SE9pVS+a4ZBOItxn9EbiuA2ev?=
- =?us-ascii?Q?RbfRPh42PW0mFpDmWcI6f8fUeljd/AuFb/w8LMLXL6I0mOSCNzpvEPx2Q9Xs?=
- =?us-ascii?Q?i7WjfUbPqm7XToSmtPH9zeYcJ1CEUpNfvyWqPKhUEy72Th5+3vB6t4kQyyPZ?=
- =?us-ascii?Q?BL+ZfR3k+skOuYHT8z06c+qrP/mK15cIYp1HooYlA2HmVqkbwqns4aiF5maL?=
- =?us-ascii?Q?P7jOkFUwJBFd1tqumm+mu0xjg8hH3ReBHw0ya7k/ha2nWFcQtaYnso9k/tas?=
- =?us-ascii?Q?Dvrra060RvWWyxbSauJ7x3ob8BO3tJMYo8+ad0MRbpL30ZGgzw6sIziLTUQM?=
- =?us-ascii?Q?ApYhpc63W2TDTuIyuGxDGVSkH8aC2LLtP9gjjEUJt2c3nJH11KOEWR3mW0bS?=
- =?us-ascii?Q?uyA82kbTRZMnc9ObhAePa2/7k6J2EJ1h1ZmFCJ2bCtnz3USvqJYMobX/C02Q?=
- =?us-ascii?Q?g3q0+fxd5vUCces3ocuklm0NQWefLiQtU1o0h/YPrRDgtIQPlifxAp5GvcuY?=
- =?us-ascii?Q?3qnCiJAzTzJ1MEZL4Udtzl3N2lsEAeD1LsFo1/CNVR0uIWMhR6fAXegAN0pl?=
- =?us-ascii?Q?AqbVWiOKbUaFTRYeoiKLRfaQXmHG7XFyj04NeP2S90Efuxaz948981L2f/8B?=
- =?us-ascii?Q?VHcjeBtSX6ksKO+irmtUavMLaZGExJhGUH2Iec9FmU8XKz3kank3z8n/a24d?=
- =?us-ascii?Q?0VP4iZ8yXme5N7utyI5sbm4epW2QuMc8yx9eLX7DNEceALWHVD18F/RKSvAU?=
- =?us-ascii?Q?yBQqfHDtjzUO6Vqqb8TGv6sFYMLMl7ur8mAqxPHleUheDRr46fOXx0rs7c9a?=
- =?us-ascii?Q?vq31JMTaQkul/X647C8xV08jRsVitaE+T9Lzfi+V/aRNURhbTxIF1KeDcmaf?=
- =?us-ascii?Q?Q+f6o6b7u/9aTzfbFfDG9vX/trcWJbyZ6Aw3XgvSGoGxF680kGFHvKSdPsiv?=
- =?us-ascii?Q?WKv4EGEwKbvf4W0Gi6johv72MMxRnVEUO84ChzUsBayEN/ZgjNHjDRDVcHym?=
- =?us-ascii?Q?TfFz32BJGtWdPfm3DDZlo794yVe3IVkCEMAEpWgRJDOwkNID1/GZMDS0fdDf?=
- =?us-ascii?Q?CShg+xlSRgLjRJqHwH3b5q8C/K0qGdfcGoIySK4sGnm8yZ5eHD7n/DiM21K9?=
- =?us-ascii?Q?0LgMAt+19RGS2X0qAR+/AIco+STt?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?YvsAtFWg5rVzrYoh+tV9ABT8Leen0by/+qa62acfDc9gcJuvikqUj/HQ4lBX?=
- =?us-ascii?Q?fYoP20ezyd1tMXPnwDaD3uAmRX3VQ+HAZ4isL3c5wxtGOAu4y3GsF/gYJ1oQ?=
- =?us-ascii?Q?QCoDJOBlSH/FHt5b14c58EWBUMmlo7lNhpt0iFqw3fn4CQTuewVKkq0kHuD6?=
- =?us-ascii?Q?OIfnjEw9VNLd99wv7eCZSnzzu+6Gg5ol+7UGb/xapvcQYZfUQ7D7sRCK3iOv?=
- =?us-ascii?Q?6wmFXP0jGZO91r7yG5TRlLdD5aBaLG0KHdtFIz4/sulcVqVYprdjNRcmN4EO?=
- =?us-ascii?Q?+3Kv9ydclaSUYBVAFacDHbDpohmVLRl+8iS2MfgQcSCqmVjg6bqZr1Bs9hwD?=
- =?us-ascii?Q?3zvhsrepoDgj3jmgHAdY+D60LTLR/4C2BCi5iHU1MR20J9iyQmyAn9JbeYsS?=
- =?us-ascii?Q?7QSrCL6ZCPPob/ZHlkRtZe5J4OABiEFaQYjR2HzYhNvT/4wtHY7o52dohaNv?=
- =?us-ascii?Q?8h5Zf4IqaD4pR+kwu9iJzeo9vxXvYd+JdCc1AEK5/I3SI/lzxkQ0wuwlqklG?=
- =?us-ascii?Q?tB0XRAcOiTnWVlO5qoKNwKe6upbXAsO76wxuA6LvBgRC5FM1DV03t0IhWKnx?=
- =?us-ascii?Q?aOS29L6t2MO3GPH3XbS2gdtyo+WqiiCBW/eSrC/9PlLdY/WM+AYRhRohstFK?=
- =?us-ascii?Q?wwxNlG6btxoZShzeF2+eIeC2YxfbOy0HtQwF5KywBdAfm9k1BHi7OccYSXVm?=
- =?us-ascii?Q?CsIP8ze67REiU+SFxuKMv26TBoGP5JvMmRxBUroFUdHKeWxl2Bcor7XePy+U?=
- =?us-ascii?Q?1tDQShhCMURrDlvO8bWM9jYQYXLDplhM+OKlB/g7huJmU/angPgwNJZHEAyI?=
- =?us-ascii?Q?MY+H4ukbxqTuQMFpu0g6AN8fL43+YX8OdDi0cDgO7ud39D6alTdQzE7o7FR1?=
- =?us-ascii?Q?4SeMTx6YYPHCVsICcNvuRSOyvaVRwD55Fq8elJkjzB7siQ8cN7cN0igSu0Do?=
- =?us-ascii?Q?hprxzdARQ6JthXvuB8UujsxN9PPuaKxvURlHdw/i35aHDhYTXBroYDsMJwSZ?=
- =?us-ascii?Q?revepQqrVk7NeULN1zXGOsZpZ44iWJl+F4w+mhY2HKaVL3DHWMtQsKqRKt29?=
- =?us-ascii?Q?Yi0NzsMvg0sYw30Lip6Wn5ZMbuGWFiIjllprqg0Z0tMWuStn7Z6sCPSqdol8?=
- =?us-ascii?Q?rQqp+tDAoFEofiP8dBonnfd8TlhuNNCwYc6Wv75eI8ICO3YfLbZiC/rLFJXy?=
- =?us-ascii?Q?oCTMBaDTDAxvFnFmqTnosi3VrIiJoRoJ/xDat4miyum3FyDKB/TE4wdZwYAe?=
- =?us-ascii?Q?4CbTTsHaX5Dz4Z0ZVXHxySBAE/jpBAd/mRdhXg3GJNIaN1aA4BqVMqbZ/ZEH?=
- =?us-ascii?Q?nVsKGsd3+HDuKiQiTdnJG52wrl2SDFmi3S0/vHsYQm/2pPbz5uMKFRaaG95R?=
- =?us-ascii?Q?lZKylJxtUd6hQvMwqRxsNvTiPT0X6n3j0ofTYH8583V2RJE8RILtkyWH/WBz?=
- =?us-ascii?Q?0rSarcE/rZXn9nEzz40RPTv2yRry0qV3kItp1gJQbexqE0rZFoFPFv3TMDFg?=
- =?us-ascii?Q?V044GdXR16kJzl+G3HVbcpnPbwrbqk2gvQRerlE0lQZTK0uv+NnpqUEL0g7d?=
- =?us-ascii?Q?tkwZFNbNB+Vrxz70Ouzed5t5UASwGUQdg8eVLgnr?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9b7171d5-b9a9-4b91-2322-08dd4c65c40e
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Feb 2025 19:36:52.3153
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: pbQxmOCA3VYAYj0RnriE6ua+2tXB7ea6B9zpbVEbMElzkozv5ENdMw2iDgfbFp+K
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6146
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250212143654.1893-2-shiju.jose@huawei.com>
 
-On Tue, Feb 11, 2025 at 11:28:02AM -0700, Dave Jiang wrote:
-> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> +/*
-> + * Copyright (c) 2024, Intel Corporation
+On Wed, Feb 12, 2025 at 02:36:39PM +0000, shiju.jose@huawei.com wrote:
+> From: Shiju Jose <shiju.jose@huawei.com>
+> 
+> Add generic EDAC device feature controls supporting the registration
+> of RAS features available in the system. The driver exposes control
+> attributes for these features to userspace in
+> /sys/bus/edac/devices/<dev-name>/<ras-feature>/
+> 
+> Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Tested-by: Daniel Ferguson <danielf@os.amperecomputing.com>
+> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 
-Please also go through and update the dates, 2024-2025
+Reviewed-by: Fan Ni <fan.ni@samsung.com>
+Tested-by: Fan Ni <fan.ni@samsung.com>
 
-Jason
+> ---
+>  Documentation/edac/features.rst |  94 +++++++++++++++++++++++++++++
+>  Documentation/edac/index.rst    |  10 ++++
+>  drivers/edac/edac_device.c      | 102 ++++++++++++++++++++++++++++++++
+>  include/linux/edac.h            |  26 ++++++++
+>  4 files changed, 232 insertions(+)
+>  create mode 100644 Documentation/edac/features.rst
+>  create mode 100644 Documentation/edac/index.rst
+> 
+> diff --git a/Documentation/edac/features.rst b/Documentation/edac/features.rst
+> new file mode 100644
+> index 000000000000..6b0fdc6f5d6e
+> --- /dev/null
+> +++ b/Documentation/edac/features.rst
+> @@ -0,0 +1,94 @@
+> +.. SPDX-License-Identifier: GPL-2.0 OR GFDL-1.2-no-invariants-or-later
+> +
+> +============================================
+> +Augmenting EDAC for controlling RAS features
+> +============================================
+> +
+> +Copyright (c) 2024-2025 HiSilicon Limited.
+> +
+> +:Author:   Shiju Jose <shiju.jose@huawei.com>
+> +:License:  The GNU Free Documentation License, Version 1.2 without
+> +           Invariant Sections, Front-Cover Texts nor Back-Cover Texts.
+> +           (dual licensed under the GPL v2)
+> +
+> +- Written for: 6.15
+> +
+> +Introduction
+> +------------
+> +The expansion of EDAC for controlling RAS features and exposing features
+> +control attributes to userspace via sysfs. Some Examples:
+> +
+> +1. Scrub control
+> +
+> +2. Error Check Scrub (ECS) control
+> +
+> +3. ACPI RAS2 features
+> +
+> +4. Post Package Repair (PPR) control
+> +
+> +5. Memory Sparing Repair control etc.
+> +
+> +High level design is illustrated in the following diagram::
+> +
+> +        +-----------------------------------------------+
+> +        |   Userspace - Rasdaemon                       |
+> +        | +-------------+                               |
+> +        | | RAS CXL mem |     +---------------+         |
+> +        | |error handler|---->|               |         |
+> +        | +-------------+     | RAS dynamic   |         |
+> +        | +-------------+     | scrub, memory |         |
+> +        | | RAS memory  |---->| repair control|         |
+> +        | |error handler|     +----|----------+         |
+> +        | +-------------+          |                    |
+> +        +--------------------------|--------------------+
+> +                                   |
+> +                                   |
+> +   +-------------------------------|------------------------------+
+> +   |     Kernel EDAC extension for | controlling RAS Features     |
+> +   |+------------------------------|----------------------------+ |
+> +   || EDAC Core          Sysfs EDAC| Bus                        | |
+> +   ||   +--------------------------|---------------------------+| |
+> +   ||   |/sys/bus/edac/devices/<dev>/scrubX/ |   | EDAC device || |
+> +   ||   |/sys/bus/edac/devices/<dev>/ecsX/   |<->| EDAC MC     || |
+> +   ||   |/sys/bus/edac/devices/<dev>/repairX |   | EDAC sysfs  || |
+> +   ||   +---------------------------|--------------------------+| |
+> +   ||                           EDAC|Bus                        | |
+> +   ||                               |                           | |
+> +   ||   +----------+ Get feature    |      Get feature          | |
+> +   ||   |          | desc +---------|------+ desc +----------+  | |
+> +   ||   |EDAC scrub|<-----| EDAC device    |      |          |  | |
+> +   ||   +----------+      | driver- RAS    |----->| EDAC mem |  | |
+> +   ||   +----------+      | feature control|      | repair   |  | |
+> +   ||   |          |<-----|                |      +----------+  | |
+> +   ||   |EDAC ECS  |      +---------|------+                    | |
+> +   ||   +----------+    Register RAS|features                   | |
+> +   ||         ______________________|_____________              | |
+> +   |+---------|---------------|------------------|--------------+ |
+> +   |  +-------|----+  +-------|-------+     +----|----------+     |
+> +   |  |            |  | CXL mem driver|     | Client driver |     |
+> +   |  | ACPI RAS2  |  | scrub, ECS,   |     | memory repair |     |
+> +   |  | driver     |  | sparing, PPR  |     | features      |     |
+> +   |  +-----|------+  +-------|-------+     +------|--------+     |
+> +   |        |                 |                    |              |
+> +   +--------|-----------------|--------------------|--------------+
+> +            |                 |                    |
+> +   +--------|-----------------|--------------------|--------------+
+> +   |    +---|-----------------|--------------------|-------+      |
+> +   |    |                                                  |      |
+> +   |    |            Platform HW and Firmware              |      |
+> +   |    +--------------------------------------------------+      |
+> +   +--------------------------------------------------------------+
+> +
+> +
+> +1. EDAC Features components - Create feature specific descriptors.
+> +   For example, EDAC scrub, EDAC ECS, EDAC memory repair in the above
+> +   diagram.
+> +
+> +2. EDAC device driver for controlling RAS Features - Get feature's attribute
+> +   descriptors from EDAC RAS feature component and registers device's RAS
+> +   features with EDAC bus and exposes the features control attributes via
+> +   the sysfs EDAC bus. For example, /sys/bus/edac/devices/<dev-name>/<feature>X/
+> +
+> +3. RAS dynamic feature controller - Userspace sample modules in rasdaemon for
+> +   dynamic scrub/repair control to issue scrubbing/repair when excess number
+> +   of corrected memory errors are reported in a short span of time.
+> diff --git a/Documentation/edac/index.rst b/Documentation/edac/index.rst
+> new file mode 100644
+> index 000000000000..de4a3aa452cb
+> --- /dev/null
+> +++ b/Documentation/edac/index.rst
+> @@ -0,0 +1,10 @@
+> +.. SPDX-License-Identifier: GPL-2.0 OR GFDL-1.2-no-invariants-or-later
+> +
+> +==============
+> +EDAC Subsystem
+> +==============
+> +
+> +.. toctree::
+> +   :maxdepth: 1
+> +
+> +   features
+> diff --git a/drivers/edac/edac_device.c b/drivers/edac/edac_device.c
+> index 621dc2a5d034..142a661ff543 100644
+> --- a/drivers/edac/edac_device.c
+> +++ b/drivers/edac/edac_device.c
+> @@ -570,3 +570,105 @@ void edac_device_handle_ue_count(struct edac_device_ctl_info *edac_dev,
+>  		      block ? block->name : "N/A", count, msg);
+>  }
+>  EXPORT_SYMBOL_GPL(edac_device_handle_ue_count);
+> +
+> +static void edac_dev_release(struct device *dev)
+> +{
+> +	struct edac_dev_feat_ctx *ctx = container_of(dev, struct edac_dev_feat_ctx, dev);
+> +
+> +	kfree(ctx->dev.groups);
+> +	kfree(ctx);
+> +}
+> +
+> +const struct device_type edac_dev_type = {
+> +	.name = "edac_dev",
+> +	.release = edac_dev_release,
+> +};
+> +
+> +static void edac_dev_unreg(void *data)
+> +{
+> +	device_unregister(data);
+> +}
+> +
+> +/**
+> + * edac_dev_register - register device for RAS features with EDAC
+> + * @parent: parent device.
+> + * @name: name for the folder in the /sys/bus/edac/devices/,
+> + *	  which is derived from the parent device.
+> + *	  For eg. /sys/bus/edac/devices/cxl_mem0/
+> + * @private: parent driver's data to store in the context if any.
+> + * @num_features: number of RAS features to register.
+> + * @ras_features: list of RAS features to register.
+> + *
+> + * Return:
+> + *  * %0       - Success.
+> + *  * %-EINVAL - Invalid parameters passed.
+> + *  * %-ENOMEM - Dynamic memory allocation failed.
+> + *
+> + */
+> +int edac_dev_register(struct device *parent, char *name,
+> +		      void *private, int num_features,
+> +		      const struct edac_dev_feature *ras_features)
+> +{
+> +	const struct attribute_group **ras_attr_groups;
+> +	struct edac_dev_feat_ctx *ctx;
+> +	int attr_gcnt = 0;
+> +	int ret, feat;
+> +
+> +	if (!parent || !name || !num_features || !ras_features)
+> +		return -EINVAL;
+> +
+> +	/* Double parse to make space for attributes */
+> +	for (feat = 0; feat < num_features; feat++) {
+> +		switch (ras_features[feat].ft_type) {
+> +		/* Add feature specific code */
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +	}
+> +
+> +	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
+> +	if (!ctx)
+> +		return -ENOMEM;
+> +
+> +	ras_attr_groups = kcalloc(attr_gcnt + 1, sizeof(*ras_attr_groups), GFP_KERNEL);
+> +	if (!ras_attr_groups) {
+> +		ret = -ENOMEM;
+> +		goto ctx_free;
+> +	}
+> +
+> +	attr_gcnt = 0;
+> +	for (feat = 0; feat < num_features; feat++, ras_features++) {
+> +		switch (ras_features->ft_type) {
+> +		/* Add feature specific code */
+> +		default:
+> +			ret = -EINVAL;
+> +			goto groups_free;
+> +		}
+> +	}
+> +
+> +	ctx->dev.parent = parent;
+> +	ctx->dev.bus = edac_get_sysfs_subsys();
+> +	ctx->dev.type = &edac_dev_type;
+> +	ctx->dev.groups = ras_attr_groups;
+> +	ctx->private = private;
+> +	dev_set_drvdata(&ctx->dev, ctx);
+> +
+> +	ret = dev_set_name(&ctx->dev, name);
+> +	if (ret)
+> +		goto groups_free;
+> +
+> +	ret = device_register(&ctx->dev);
+> +	if (ret) {
+> +		put_device(&ctx->dev);
+> +		return ret;
+> +	}
+> +
+> +	return devm_add_action_or_reset(parent, edac_dev_unreg, &ctx->dev);
+> +
+> +groups_free:
+> +	kfree(ras_attr_groups);
+> +ctx_free:
+> +	kfree(ctx);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(edac_dev_register);
+> diff --git a/include/linux/edac.h b/include/linux/edac.h
+> index b4ee8961e623..8c4b6ca2a994 100644
+> --- a/include/linux/edac.h
+> +++ b/include/linux/edac.h
+> @@ -661,4 +661,30 @@ static inline struct dimm_info *edac_get_dimm(struct mem_ctl_info *mci,
+>  
+>  	return mci->dimms[index];
+>  }
+> +
+> +/* RAS feature type */
+> +enum edac_dev_feat {
+> +	RAS_FEAT_MAX
+> +};
+> +
+> +/* EDAC device feature information structure */
+> +struct edac_dev_data {
+> +	u8 instance;
+> +	void *private;
+> +};
+> +
+> +struct edac_dev_feat_ctx {
+> +	struct device dev;
+> +	void *private;
+> +};
+> +
+> +struct edac_dev_feature {
+> +	enum edac_dev_feat ft_type;
+> +	u8 instance;
+> +	void *ctx;
+> +};
+> +
+> +int edac_dev_register(struct device *parent, char *dev_name,
+> +		      void *parent_pvt_data, int num_features,
+> +		      const struct edac_dev_feature *ras_features);
+>  #endif /* _LINUX_EDAC_H_ */
+> -- 
+> 2.43.0
+> 
