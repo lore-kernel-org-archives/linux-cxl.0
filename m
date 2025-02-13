@@ -1,221 +1,191 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749B614AD20
-	for <linux-cxl@vger.kernel.org>; Thu, 13 Feb 2025 18:22:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739470966; cv=fail; b=aZy42yCJdwcqRIqZbRCxhcUENNxMjdpwhWP0nXVBcWK3CcbpM1YP4zzxTMILPjf6nu5Y2L0NUqFKIRMg8DXQF3A7+QMyBDcuzuxRubN9lHaqxAg80/vDo+pVtOsrz03AnovaAqufJB/xHnP3OFj2OZUVN1F423XX/1GfbOe5NOg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739470966; c=relaxed/simple;
-	bh=gWJwtk0aixVy5sowofvDieI1cuOo+dgzJEPzyMlIoec=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=WcHJJFIZnz5n8YkK4j0CYMxOJoMvUGqoSvLolN1jjVATT2HzWeTFgjcF/C2SGsYImPuIdD51Wd34TFSN4Fvqe/M/ptWQtcjhdGdmrPnPws6P7PLKxNDh3bRJdkx/XlqVT4lOVkeuDYq8WTlZ4sKoN2GmkQb7VIpnMXgwDwMdSiw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fAOgwtJT; arc=fail smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C8D28A2BF
+	for <linux-cxl@vger.kernel.org>; Thu, 13 Feb 2025 18:27:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739471238; cv=none; b=Vv7jawQqvDd9xxp9/FjJvFGxYe5V1X8OTFSV663rnEINih7Pshp5Rmp8l73LX4OQwLCI6RDf/grOVzocXCZlQhD0rwAY9mxgyTf83hRnDMxb/Su/MxDj+tDI6gdWurYrlG1COKJgicGptqlzKWu9nf8m8pnCpcERc2J5kB5kLwo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739471238; c=relaxed/simple;
+	bh=LIpjt27x/BARksXQpxNfhGtaEe/+cQMCrFwMOh3tgTM=;
+	h=Message-ID:From:Date:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QPt+1/SgdP1VU8UrKScoo0ZLZm844lNFeK7cTvhEmOOcuCmMrCXd0u3oufvXToX1g1QKoXD81+L+oNnjqV3iJT+vD22JFksK2eh2SJxmXBhodZaqyAMFtKgYVuyyJFWkitga+vFPgVOuOFw///6yuWrckPU/T1st/a9at3Lo2Nw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rv6tZ0Jr; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fAOgwtJT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739470965; x=1771006965;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=gWJwtk0aixVy5sowofvDieI1cuOo+dgzJEPzyMlIoec=;
-  b=fAOgwtJTNOPIHRmRLrhPV6A54OGZ1QFCoQn66rrQjZ4EVKBodjXtNNwX
-   hY9t9ZL0zLNWv5EbnumHMWa7O/5Day2e1hUcbBJcKYSSBYyk7t+6EcB4+
-   Pvfn1Y0NZS7mW8m/qJwvOGwoG0f4r3YPZWDM0YzOgda8xfvb07y2m5EmB
-   W8ErEn/3Bc4uBzK9rA2QmQ8QC1pLHXNiEUxFUdb2KJOj1Vx51+t3YzGsA
-   gSv7hVnRbhI1R9oemw3sfQE8usZJoG3J1KY7vWTktQeDQ8t9/UrDbzGTU
-   9P1UL0CsZCHDQNOXy/bl2YJviry6UBkF/gCuTvpjFVG4/x+0mNN8dBAkE
-   A==;
-X-CSE-ConnectionGUID: zv0fGcIfT2a1F7sMn7lC8g==
-X-CSE-MsgGUID: cWdlg41iSaSmDaXWx/ISEQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="43960845"
-X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
-   d="scan'208";a="43960845"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 10:22:41 -0800
-X-CSE-ConnectionGUID: m2UBR3yIQD2RgQigEoUDNQ==
-X-CSE-MsgGUID: onaov0e1RxSVVwze+xk/9g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
-   d="scan'208";a="118232143"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orviesa004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 13 Feb 2025 10:22:37 -0800
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Thu, 13 Feb 2025 10:22:36 -0800
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Thu, 13 Feb 2025 10:22:36 -0800
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.45) by
- edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Thu, 13 Feb 2025 10:22:36 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dTAgWsQoFywXMB96OXTwBQHzYuElr1bUJvK0YzPx57KhnVuCX1y0BTXhNLGDrmxK0pk8fIhwmqwU9H6WO3REhgO6dPZlGgyKLAPzeXik9Sj0AETo6D7twurxl2x6T03h+613Qxa5T/+Bhfph51Lhqe2ZfH5aGktfGY0QlGlAYd0hOvqqsTwVoq+TwslO3RO9x1mCtf1I2J4v/kqpOWrfsOeOna5s53USj5KA4UP8toxmYkiAe4TAB0f2FmAsygb5lmIelXRZp673tarwfivB5ch5vMsQO8itwhbBTRAqeRrsFb3y+vBASSakMBzug/sNee6n8o8eTd+eoTomLDCh3Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5KDJ7eqEocY/4QwcpLtGXLX0tF4R2sS/wKaF/nGUgq4=;
- b=D38/tGWT3QX9uZfWYYHxbNi82sIUYF+C2UrdUIy/VSbteg7cHlju1IoPzvnJDucj56mH173W3ffIica1QK3Nooi/hKjlfNdFJunOu7Fb+dgTgECl9FC3E+e/kHQnw+xN9edKCJXVbVjtsV6NNhYrn5ZGOw4ZotA1rpQ+bSFEikL3ECEd75UalOGMisoqr+sFq6EFmM+9vTghNIPKyLPK+R7QikLuZ6tgauSWinZb2OrJsEr8kwZMV0qj9m+FFMdxfwaOaYZaQT2vU3sWZHQ/PEedBWLMrFuFwYb6HrGRmN01/TMYuoicymCD+HSbzcFnEJ+Qj+J4XbsZo6uwl0pvCA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by SA1PR11MB6783.namprd11.prod.outlook.com (2603:10b6:806:25f::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.13; Thu, 13 Feb
- 2025 18:22:32 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8445.008; Thu, 13 Feb 2025
- 18:22:32 +0000
-Date: Thu, 13 Feb 2025 10:22:29 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: Saeed Mahameed <saeed@kernel.org>, Dave Jiang <dave.jiang@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
-	<ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
-	<alison.schofield@intel.com>, <Jonathan.Cameron@huawei.com>,
-	<dave@stgolabs.net>, <jgg@nvidia.com>, <shiju.jose@huawei.com>
-Subject: Re: [PATCH v5 10/15] cxl: Add support for fwctl RPC command to
- enable CXL feature commands
-Message-ID: <67ae3865d033a_2d1e29498@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20250211182909.1650096-1-dave.jiang@intel.com>
- <20250211182909.1650096-11-dave.jiang@intel.com>
- <Z61dsxVDH1yZAfEY@x130>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <Z61dsxVDH1yZAfEY@x130>
-X-ClientProxiedBy: MW4PR03CA0108.namprd03.prod.outlook.com
- (2603:10b6:303:b7::23) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rv6tZ0Jr"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-21f48ebaadfso24651285ad.2
+        for <linux-cxl@vger.kernel.org>; Thu, 13 Feb 2025 10:27:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739471236; x=1740076036; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:date:from:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=cmghmuCnhycAkjWOUuCwMZFMKLZ5v7aidKalfucPC10=;
+        b=Rv6tZ0Jr6TJ41HF4mz/ZdlrH6U8or5z1PfiCOhf9Mqzn9Td7T9vqL8iN8GyTzgnIqR
+         AP5i7ZLtyyprwaYyQdaY/Tb6Vjfsm4X3g8JAx9KhHa3X8KIIV096ep+I1/hgLMejfhmn
+         XQgDrf+oKe2aQWhj6e07s6iXLC4zI+cELxGnRp4Q9vkYV/RNJCPYX8XjoE0+LEqAGh+M
+         i6jEnCwcAbb75OsGgb5rsPxBsZ7XgGl52+36HrsSuSXleFoCV5PM5yiz4SJnx0chpE92
+         6KDcN1U94QhsJibl0wFp+ejXMYtW9bKmKJjgtVrDA/SAhX4O9FPrn4sAn1gKV8clWPBk
+         VyjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739471236; x=1740076036;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:date:from:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cmghmuCnhycAkjWOUuCwMZFMKLZ5v7aidKalfucPC10=;
+        b=GgTmd8Pvsa1Vt/6Rlt7whULoWWIvFaU47zJ4Czlnuwdu3wFMOZQEeZhlfgHN1g/Smt
+         8TKQikdx2+dKwlYQFIZnnWFn3ogCU6rU9Hyn8vW9pQ8DIABRDF8nmkq2KMWbCa4UBdfB
+         R5GxSfULtNLeZzB4n80w21sqfymej1jQOTi4Sbu0QvX4LNRUfa9VPHmCw1JlOnoUOl1A
+         BBg8rEipXDusd66MkqJd91Rvr6R57hcU6Og5wmvoP2KP5KbqObLomb7zfsbQ8aZXIEzk
+         0iFYu5AR0bgUVbcSZ6hbpBmGM0KIM7pJRkuNWl+vCVDReQykwVFtIUdjPWTEovfcQ15H
+         NP0A==
+X-Forwarded-Encrypted: i=1; AJvYcCXWlQigczSuzWSw6ayPoB2HTyX05feHictT/3k82E+t4rLOAzNAn09kc2ArCJLxPQ5LNFdkx9nBY8s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVkMyk3YEhzx2UQ5gbrk/MCJi6xDQQaK7wpuyja4OsSjrhvc5A
+	a5fS/92g5JoSdOzhvGdURBD1CToafAHw7bhZ0N8DouJBxmWwJXWnyuFMMw==
+X-Gm-Gg: ASbGncuUNBeIgsrpOcUj/HNOAdYaAXi63zt2YH0SENrQzhgXD6oJf3lPmSl2xj7C6pT
+	LDBGA9N9q3Q7o539rd03p/jsBziGYcI76q14jATy9BN7J1At7g6suLs52JllK1RchuOF14Vhr/y
+	ZR0BMcR8OKZfWKVQo896XgaIeS3t2lzUOuwl0AJnrmv7YXC/cvdOpLX11UQuz7ja/pB3fiUwd1Q
+	j2BxcDGJc3tE324e61Tf9U20mGsb2DrgBe1F3q7Ekw1dC8NJqDcdgP9vW/NwGLizFbHFi4n97cV
+	B/keqOVC4FsT9MRLvA2gzd/rDxxc91owgKQPwCfrGeA=
+X-Google-Smtp-Source: AGHT+IHHVKOSijGgzkJb8J/7oWAd13hrPMDbDrXhsTaZtvB9ikRLLiNjtVxpFMg94MGeoTtCDznDcQ==
+X-Received: by 2002:a17:902:d502:b0:206:9a3f:15e5 with SMTP id d9443c01a7336-220bbc67fbemr141122475ad.32.1739471236605;
+        Thu, 13 Feb 2025 10:27:16 -0800 (PST)
+Received: from asus. (c-73-189-148-61.hsd1.ca.comcast.net. [73.189.148.61])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d5364669sm15385295ad.86.2025.02.13.10.27.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Feb 2025 10:27:16 -0800 (PST)
+Message-ID: <67ae3984.170a0220.36b6de.8cb0@mx.google.com>
+X-Google-Original-Message-ID: <Z645erpowZDDVt1E@asus.>
+From: Fan Ni <nifan.cxl@gmail.com>
+X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
+Date: Thu, 13 Feb 2025 10:27:06 -0800
+To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, qemu-devel@nongnu.org,
+	chenbaozi@phytium.com.cn, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH 1/1] mem/cxl-type3: Add a default value of sn
+References: <20250211022413.80842-1-wangyuquan1236@phytium.com.cn>
+ <20250211022413.80842-2-wangyuquan1236@phytium.com.cn>
+ <20250211092655.00004310@huawei.com>
+ <Z62akRdahoGqHN5x@phytium.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SA1PR11MB6783:EE_
-X-MS-Office365-Filtering-Correlation-Id: cab51423-0d23-4270-b166-08dd4c5b61a3
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?/YyS7VenGo6iKFNTy1oEFEU6MFsEbcvXXXHSwf+61l38n0flP6u7IUsZcrBR?=
- =?us-ascii?Q?BXxswM5gE2rcNGtS9hElwX36WETpAiFO/Gh2TFg3WXEpaXfLo1E/jLsU2gmc?=
- =?us-ascii?Q?Qz98OlQht/ebkpKBq+q5HjeFmRz0nWZ33OcIoWIMOebJ5waJ46mSRpaA6TNV?=
- =?us-ascii?Q?lgltJv4vcXRR5VA1u+Ff1fcTYilFP+bGc7u5usjhE89rlw3K1epJVgTPMo70?=
- =?us-ascii?Q?/EwY5HRG1qw9CPqJw9L9OgGsKDDxHtfi6J/VBfdMVcF+dtmBZ8wSdihW2wXt?=
- =?us-ascii?Q?wDZZhwu8t8qGrk1kczJFDkdYlwp7q6cE65RBTd9571qabb2k5Bxy6vB/QA0Y?=
- =?us-ascii?Q?5x9hkNOr3UsOnuh0xYIQIRurE6c/cYCcnjoss8OPhmfD1mIUnv5Un4hI1bcG?=
- =?us-ascii?Q?xMih7t2JEQWLTR+9lBmYbqAybV32ASkhHWxvRj2f6X+XsAkQfyhNbs/bQ7YU?=
- =?us-ascii?Q?pOZJMspypHpskFeRoi+Bv1jjJT9N/mYSd0oSBEftYkR1kqbAoPCgShGaDgm6?=
- =?us-ascii?Q?4ObVRe+g4pXzG4+YD9JtKBeatJsNacTIqQl0lZ+xFpYHH+7AxO4j8kcKQuAL?=
- =?us-ascii?Q?39IV4MVK2bD2AgcNULTmBVQk4H9E49WxZfVpmhYcfJU6hInsaOutBrL30LHx?=
- =?us-ascii?Q?jXQXg7p1vFLJNSHalGBiPpKyI5zzMjEBNEM8N0EBM9EVkwxKad6DP0DlMLNr?=
- =?us-ascii?Q?rdhqDfflyvDhFksQPjxzzx1p+FXN311MVjzThPA8ZqVFn8Bvf5PrN8KFMJDj?=
- =?us-ascii?Q?+BdTs1giSOGdCGV0TsXYH+pDosc4Ztws/zfZ6g6mmnsL5SA8tsKd8Z2Vkag0?=
- =?us-ascii?Q?p53rz2uoencffeqoVscWaAfj87MW7UW95DnNxSQMPAzdGeXLTXiaue3lXyl9?=
- =?us-ascii?Q?PY9zXCnIhrv5gfD3ef5dA1VveTgjQ9YjWm+dJz7fWp3WzfA+/iuvDToH9BTq?=
- =?us-ascii?Q?DWw4aAQmj2TBJ+kPR+Q9haZ0SYANcYGP33L+4aJbE+WWCuIIg69VWwxmv6kp?=
- =?us-ascii?Q?vb/nZ0bWtfn2eJWiJCd0Q2WUvoTjjnvZzddOWG1XWKEK5ClEB64cMDi4I6d8?=
- =?us-ascii?Q?V6hqN4UO5QpptTpTn6Iqjc1Mq/LmPX1/rgG3CE50tUfT1qY2EAeQIHD+Hg2z?=
- =?us-ascii?Q?BDzo8HxzPLg0NDv4CohEhkxFKOqZIEC7X041GasNmvpN6s7B4amVGMqrpGBK?=
- =?us-ascii?Q?+AGSbYd7F5Kon5Xp43z/ZBc6A933CNgA+18EUBDzebIyON8B5rsG6rFC67E3?=
- =?us-ascii?Q?kNNQ3PJv1fE53ez5lhFaakCEnenunpxolxeM1Zqf69ePs6BOkqVpwRllQogI?=
- =?us-ascii?Q?gwXf58FeWqFxqGh44gy9YaFZ2nB5qU/uJTCkwKwGXS57S+unHQbXu98AR1lo?=
- =?us-ascii?Q?meADPjbU/SWcAWRg3TGyJ0rT56lM?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?D7XB1I3BgOdZdjDOylw3053fwxf/3K3SAQjY7vla91NGi1H4TpZMCdWtU1FH?=
- =?us-ascii?Q?3AdytET5W2Gny/TJgdIdHXdXahSRFWzVITmziMib0VBqdJ6sbrh4/J41BuaL?=
- =?us-ascii?Q?9M1TwQBCW/qA8hYrDe7o/SnhJc4lRXvQYIiZWdscHNzmf37oY7mUvJ78wli5?=
- =?us-ascii?Q?GIHoMofo8vTUtOGLY5K044mOSVyGOYw3AIJ6AHqUQCZiDmh0Q0PF33Qh/+6W?=
- =?us-ascii?Q?6pwgpfr8qJ0bH07nVfVuxUzLE8izFDcRtFU2CJHbqTttqWc5cIvBu/8BU1nM?=
- =?us-ascii?Q?p/1Z/UAQSiOjjYHM++0f9ytM0rr3ZxugzvOqiJHLA+kfv9N9FHTov9vyRr+n?=
- =?us-ascii?Q?FKJRTra18jneIpp/HzyqMx/AWvwDiaE5gbCrlyBcraeNLbQbErEYwl/vSWKx?=
- =?us-ascii?Q?3P2ggaHL2ohV9ZKzS2KT776F91mllhcXAFlHEBi10fLQueSVYjO+1Jt6rc/f?=
- =?us-ascii?Q?TSd9OBnDjAD1BvnGn5gUPpdMD2t+h2FEZpxroeZS+wMgnN3oAvIoVksDGyzT?=
- =?us-ascii?Q?pOjAN3yircYgLD60sE2t8DManjhkJmMDE9YVy6n0b1s//vLfFgjJn8G4Q/ok?=
- =?us-ascii?Q?R8IGuOapVKdh18TiuOnpZos5eCvJwDWBB+LXWTALFu4IKqmnhGWl/QutCEgj?=
- =?us-ascii?Q?IB0wlVwffKDx9mrDf8aRqXAln4x+JwFDBGvyb4afbmV1lYNgXWe1JyOFUHLW?=
- =?us-ascii?Q?Klyq3yl54Vu/FGAPn3sz4juqVseq5NO2A5AVhwtkA6bKvEZsTh0sWg3kIO0o?=
- =?us-ascii?Q?8lLDnlLls+j99KMKkpTJsqADt5n0fQN99Os+HcCywQ1IOG87484oxu+QJaDA?=
- =?us-ascii?Q?dSIJ291B1bTKMXVpK+UwdUx+mTPhNIC6uUY3uHdu6/1Lx8jMeTdv/38equbB?=
- =?us-ascii?Q?ff6xNyj3s/Z3TCZ5JH0b6Sh/daq7dnuEeIRhBrr0UYr2eFwD1uCYpIHn1Wa0?=
- =?us-ascii?Q?lOfSyQJ0PPoZ862ri2ug9VWHtW3iLkR6q+9Yw9NoA7j71eZEwHmDsXGRBedD?=
- =?us-ascii?Q?1tnTkBV0o1niRPBfKfNvO9IRTknfIdbvTnyqZXFRA2TRvw4X6KTX2U/NIDiO?=
- =?us-ascii?Q?12jBtw5Y0zRTNieYwTf8dsg2EECPzVRzguvC3iV9CSW3m48+jEYqNHJqGwfj?=
- =?us-ascii?Q?FSyQmocooIZr9GVMkMK6PlIYkRaCezgg6OT4PcCcLSyWbfPBbf+gt2oXq2zU?=
- =?us-ascii?Q?OqPSgttl42SK9wykpJMs/ONL2vyZ4a6Kjc9+PDQLB2Hkr5xNn3W0j+z3RlDN?=
- =?us-ascii?Q?owEWppuMgLGVdylm2Toon5/srCx5s3UDEgfGEEpFrR/mQ2GJWG3M+mJm7I7U?=
- =?us-ascii?Q?lNk3ar4OZG3QQ3ZQFQaDbG3UhR1QzOAwEz9lCMhICa/HK+NTvTVKwbyZeghb?=
- =?us-ascii?Q?LfSSKLM87nMLxde5w4IgBDbmkipSj48pWL8a+7ngsPUEVjqrg8REpRjOwFDe?=
- =?us-ascii?Q?NsgwxQKcYTgxzgp/ovtIJ4z1RZHJY4K9XmfKtsjf1Ke81CDwF/maA04ro5VW?=
- =?us-ascii?Q?7hR0E/sZoAqgm+2I9DiKQDtTuktXhaXjt7B0qC+gAofxXrbGZjP0tWRtdTet?=
- =?us-ascii?Q?Tv9bhuw2GDVJhvuKhmbxzkJZEU61NF/MuKmPtkEWbRx5p2Kmg3bcCiM7LbsC?=
- =?us-ascii?Q?MA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: cab51423-0d23-4270-b166-08dd4c5b61a3
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Feb 2025 18:22:32.1669
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ghw41A3oAL0c8uhB0ZPljBywkbotF0tWmaZbSJ3vXtYVeh/IowiBPJHV73U9uI0qlIYAhymtxz0OBqRkNQhNa8/M/Q9Ef3ThJq1tbw83jKc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB6783
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z62akRdahoGqHN5x@phytium.com.cn>
 
-Saeed Mahameed wrote:
-> On 11 Feb 11:28, Dave Jiang wrote:
-> >fwctl provides a fwctl_ops->fw_rpc() callback in order to issue ioctls
-> >to a device. The cxl fwctl driver will start by supporting the CXL
-> >Feature commands: Get Supported Features, Get Feature, and Set Feature.
-> >
-> >The fw_rpc() callback provides 'enum fwctl_rpc_scope' parameter where
-> >it indicates the security scope of the call. The Get Supported Features
-> >and Get Feature calls can be executed with the scope of
-> >FWCTL_RPC_CONFIGRATION. The Set Feature call is gated by the effects
-> >of the Feature reported by Get Supported Features call for the specific
-> >Feature.
-> >
-> >Only "Get Supported Features" is supported in this patch. Additional
-> >commands will be added in follow on patches. "Get Supported Features"
-> >will filter the Features that are exclusive to the kernel. The flag
-> >field of the Feature details will be cleared of the "Changeable"
-> >field and the "set feat size" will be set to 0 to indicate that
-> >the feature is not changeable.
-> >
-> >Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> >Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-[..]
-> >+	/*
-> >+	 * If the Feature setting causes immediate configuration change
-> >+	 * then we need the full write permission policy.
-> >+	 */
-> >+	if (effects & imm_mask && scope >= FWCTL_RPC_DEBUG_WRITE_FULL)
-> >+		return true;
+On Thu, Feb 13, 2025 at 03:09:05PM +0800, Yuquan Wang wrote:
+> On Tue, Feb 11, 2025 at 09:26:55AM +0000, Jonathan Cameron wrote:
+> > On Tue, 11 Feb 2025 10:24:13 +0800
+> > Yuquan Wang <wangyuquan1236@phytium.com.cn> wrote:
+> > 
+> > > The previous default value of sn is UI64_NULL which would cause the
+> > > cookie of nd_interleave_set be '0' and the "invalid interleave-set
+> > > -cookie" failure in label validation.
+> > Hi Yuquan,
+> > 
+> > Maybe we should harden the nd_interleave_set code to fail
+> > to set the cookie in the event of no serial number. That is a
+> > device not compliant with the spec, but none the less it is not
+> > implausible with test devices etc.
+> > 
+> Thanks for your suggestions :)
 > 
-> I am not sure the security policy here is coherent with the documentation
->   * @FWCTL_RPC_DEBUG_WRITE_FULL: Write access to all debug information
+> I have send patch 'cxl/pmem: debug invalid serial number data' trying to
+> fix this problem. Welcome more comments to guide me!
 > 
->  From the documentation these features settings in CXL should only be for
-> debug purposes, a bit confusing, same for below.
+> link: https://lore.kernel.org/linux-cxl/20250213064008.4032730-1-wangyuquan1236@phytium.com.cn/T/#t
+> 
+> Here I have another question about labels. It seems like current kernel
+> only deals with nvdimm namespaces labels and leaves cxl region labels to
+> do. Therefore, for some dynamically-created cxl pmem regions, users have
+> to re-create these regions manually. Does it means CXL drivers could not recover
+> a cxl region by cxl region lables now?.
 
-Have another read through the FWCTL documentation. The reason the term
-"debug write" is used is due to the expectation that FWCTL manipulates
-ancillary functionality of the device. It is "debug" because FWCTL
-Feature support can be disabled without losing access to the primary
-capabilties of the device.
+As you mentioned, region label is not implemented in current kernel, so
+I do not see a way to recover a region with region label as it is not
+persisted to the LSA of the device.
 
-For the same way debugfs enables some non-debug flows, but is
-disabled in kernel lockdown scenarios, FWCTL enables some non-debug
-flows and is disabled in kernel lockdown scenarios.
+Fan
+> > > 
+> > > As many users maybe not know how to set a unique sn for cxl-type3
+> > > device and perhaps be confuesd by the failure of label validation,
+> > > so this defines '1' as the default value of serial number to fix the
+> > > problem.
+> > 
+> > That magic value is specifically chosen to be 'undefined' to trigger
+> > clean handling of the failure and not provide the serial number
+> > capability. 
+> > 
+> > If you have multiple devices and provide a 'valid' default then
+> > there are circumstances in which the device will be seen as a multiheaded
+> > single device attached to two places in the PCI topology.
+> > 
+> > So I'm not keen to change this.  Ideally we'd have made this a required
+> > parameter from the start, but we didn't and doing so now would result
+> > in a backwards compatibility problem.
+> > 
+> > So I think this is kind of a 'won't fix' situation on the qemu side.
+> Ok, I see.
+> 
+> Maybe we could modify the Example command lines in docs/../cxl.rst to remind
+> users to add this parameter. Is this feasible?
+> 
+> > 
+> > Jonathan
+> > 
+> > > 
+> > > Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+> > > ---
+> > >  hw/mem/cxl_type3.c | 17 ++++-------------
+> > >  1 file changed, 4 insertions(+), 13 deletions(-)
+> > > 
+> > > diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> > > index 0ae1704a34..a6b5a9f74e 100644
+> > > --- a/hw/mem/cxl_type3.c
+> > > +++ b/hw/mem/cxl_type3.c
+> > > @@ -310,12 +310,6 @@ static void ct3d_config_write(PCIDevice *pci_dev, uint32_t addr, uint32_t val,
+> > >      pcie_aer_write_config(pci_dev, addr, val, size);
+> > >  }
+> > >  
+> > > -/*
+> > > - * Null value of all Fs suggested by IEEE RA guidelines for use of
+> > > - * EU, OUI and CID
+> > > - */
+> > > -#define UI64_NULL ~(0ULL)
+> > > -
+> > >  static void build_dvsecs(CXLType3Dev *ct3d)
+> > >  {
+> > >      CXLComponentState *cxl_cstate = &ct3d->cxl_cstate;
+> > > @@ -856,12 +850,9 @@ static void ct3_realize(PCIDevice *pci_dev, Error **errp)
+> > >      pci_config_set_prog_interface(pci_conf, 0x10);
+> > >  
+> > >      pcie_endpoint_cap_init(pci_dev, 0x80);
+> > > -    if (ct3d->sn != UI64_NULL) {
+> > > -        pcie_dev_ser_num_init(pci_dev, 0x100, ct3d->sn);
+> > > -        cxl_cstate->dvsec_offset = 0x100 + 0x0c;
+> > > -    } else {
+> > > -        cxl_cstate->dvsec_offset = 0x100;
+> > > -    }
+> > > +
+> > > +    pcie_dev_ser_num_init(pci_dev, 0x100, ct3d->sn);
+> > > +    cxl_cstate->dvsec_offset = 0x100 + 0x0c;
+> > >  
+> > >      ct3d->cxl_cstate.pdev = pci_dev;
+> > >      build_dvsecs(ct3d);
+> > > @@ -1225,7 +1216,7 @@ static const Property ct3_props[] = {
+> > >                       TYPE_MEMORY_BACKEND, HostMemoryBackend *),
+> > >      DEFINE_PROP_LINK("lsa", CXLType3Dev, lsa, TYPE_MEMORY_BACKEND,
+> > >                       HostMemoryBackend *),
+> > > -    DEFINE_PROP_UINT64("sn", CXLType3Dev, sn, UI64_NULL),
+> > > +    DEFINE_PROP_UINT64("sn", CXLType3Dev, sn, 0x1),
+> > >      DEFINE_PROP_STRING("cdat", CXLType3Dev, cxl_cstate.cdat.filename),
+> > >      DEFINE_PROP_UINT8("num-dc-regions", CXLType3Dev, dc.num_regions, 0),
+> > >      DEFINE_PROP_LINK("volatile-dc-memdev", CXLType3Dev, dc.host_dc,
+> > 
+> 
