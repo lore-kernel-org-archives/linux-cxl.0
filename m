@@ -1,111 +1,85 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7982870810;
-	Thu, 13 Feb 2025 04:15:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739420146; cv=pass; b=NbEFsCR5EoGC916sU0DcOvFIQV3ln+RMnCDLvhXEIuETY5oyPtB7fT/iBZJw9B3gFEbtSNHZigOUvb8xYvhLPmq3kOOEhPeA0C+NWrVNRLqctLIpqf+DFvFIwCkOv9wdYOX/kf5ETOK04n7sNMdSYdCM7dTIJvjeLAqNed7IMIE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739420146; c=relaxed/simple;
-	bh=qRLrJsVRTZ+WWw41jpvi8qCG0lbc4O9YO80RcNk63B4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IMW5eKkkXYp47n2fdjvr3lSg93zVaS/9M59bHh6OphHpH61iOO1aDYccTvBt4UnZqbwzFID5YkDyNNRRkUEa1z9fU0GER2Vw5b7RYuBKnSsPdXl8TJVtdt3WucNYCSbYPzfspjjFmLtOx3PHE+lcVp2gGawgahkHR8NfmhBWlyI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=FuftZmEp; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="FuftZmEp"
-ARC-Seal: i=1; a=rsa-sha256; t=1739420131; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=d4jhk0HkQAXO2XIk3inKmktR6ewF51lw7GQmceAe3sExk1wLkQV2sBJm9XKkJHVriIpO/bRvdFzIgj4x1r6O6yZHK8rz2vIfIZBSh37cfyOFaKqyLqDX9+Jl2bQ1gpRtQEMoTfread7DvwUj7j+vKPQ3ReVEAbFPtGw6N8oxNKc=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1739420131; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=4ToEDu8hKvNWByGuJPfWdRectEFq8etbekmoQIvQ/no=; 
-	b=BcHTkYkzkbodpHQZmPBGbrE4EowoaaZYrQKEQSiB3Sw7/TShji5L9Rgho18cEiXeP7wYnTuz+6+qdXFQE4QLVOPWd44XUTLepV3rZ2LI8i0J/FYdS++AtXXH8XveIENsVO6WhXt6Y21WO/xogFY8dg6R8wlC94nW3ZESkzkScYE=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739420131;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=4ToEDu8hKvNWByGuJPfWdRectEFq8etbekmoQIvQ/no=;
-	b=FuftZmEpeeUoK6b6YLs4+nqG8RXHjyVjKQeLf2n0dIMs3dp6efoVs4tJlF/r5usH
-	y9t/EWGFND8nWjMIjey/G/7fZDNkWEOTwa5GfJV03tuykvyFEstxBBWAn2+0yK6YVro
-	evj5eR9fOv1OE7gANKRwHDcT3HGX9ALIteB24MMc=
-Received: by mx.zohomail.com with SMTPS id 1739420128330834.3986541056635;
-	Wed, 12 Feb 2025 20:15:28 -0800 (PST)
-Message-ID: <cf0421d6-f002-4dc1-b3cd-5b535d79cc1d@zohomail.com>
-Date: Thu, 13 Feb 2025 12:15:24 +0800
+Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2954B13B29B;
+	Thu, 13 Feb 2025 06:40:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739428851; cv=none; b=Ad3qoUqrpnI4gn+2CXtN5OWmYt0QbznOir8GavLnYP2M4Y2LJ7gmgWnzlH9wrybT7YJocoHWrOxvIZc1lkIzN42Sm38BjzxAxeY8O3bHo2H6OpAoeqTrTaUKYPFZs/fFIT/gWrYorPkZNps2t5ZenHtPcImmFwmwJZIToQViWKM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739428851; c=relaxed/simple;
+	bh=uiYq/m+D8YJ34U/ACDq/KTXk1GBAmHmULfGwBs63PK4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=huOuNgO9VkHVTwyf0vxfD2cYwEJdypA4cizbDZXULEHIE5SXhpr+ku63tYkZp4bXaJO6ERuyRPzhDmmAWTqiesav5TaN3ccQDpQbzquzMU9Zbk/ZN38bHnSnMD56H5tgLslTVg4FQIFCX6XT6P0o7tSxMnGIC6VNNnLZis4sQto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=209.97.181.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
+Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
+	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwAnrCzdk61nEyPDAg--.29670S2;
+	Thu, 13 Feb 2025 14:40:29 +0800 (CST)
+Received: from phytium.com.cn (unknown [123.150.8.50])
+	by mail (Coremail) with SMTP id AQAAfwDHyYXbk61ngoElAA--.9652S3;
+	Thu, 13 Feb 2025 14:40:28 +0800 (CST)
+From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+To: dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yuquan Wang <wangyuquan1236@phytium.com.cn>
+Subject: [PATCH 0/1] cxl/pmem: debug invalid serial number data
+Date: Thu, 13 Feb 2025 14:40:07 +0800
+Message-Id: <20250213064008.4032730-1-wangyuquan1236@phytium.com.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 7/7] cxl/region: Drop goto pattern of
- construct_region()
-To: Dave Jiang <dave.jiang@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: dave@stgolabs.net, alison.schofield@intel.com, vishal.l.verma@intel.com,
- ira.weiny@intel.com, dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250211075727.351895-1-ming.li@zohomail.com>
- <20250211075727.351895-8-ming.li@zohomail.com>
- <20250211173606.00004d33@huawei.com>
- <d848f0ab-5055-4cda-8531-258c6fa7280e@intel.com>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <d848f0ab-5055-4cda-8531-258c6fa7280e@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Feedback-ID: rr080112271d77f85e48e997955392a03b00007472e1e0cd7a6a76749b207e70f14a6877e49e11328c65ae00:zu08011227318bf9d040207c88550d2aa200000ac7a2c6c48efcceab0d99b60c9ea3af0c6a8e322a0f936ac5:rf0801122debabfad60d5f832903152e720000189c8cbc9a0a94ded23112e2848deb9ad4a3e67db15163b25a5441e5ff000f:ZohoMail
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAfwDHyYXbk61ngoElAA--.9652S3
+X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAAAWes-icCNQAAsl
+Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=wangyuquan
+	1236@phytium.com.cn;
+X-Coremail-Antispam: 1Uk129KBjvdXoWrZr1rJw4UWw45KFyUZF1fZwb_yoWkXwb_ua
+	yDuFWxZa4UWF1ftF43JrWrJr98Ar4xGr1xXrWjqw4kJw47JFZxua9F93ZI9F18ur4xGrn5
+	Xr1aka4fZ3WSgjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrnU
+	Uv73VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRUUUUU
+	UUUU=
 
-On 2/12/2025 5:24 AM, Dave Jiang wrote:
->
-> On 2/11/25 10:36 AM, Jonathan Cameron wrote:
->> On Tue, 11 Feb 2025 15:57:27 +0800
->> Li Ming <ming.li@zohomail.com> wrote:
->>
->>> Some operations need to be procted by the cxl_region_rwsem in construct
->>> region(). Currently, construct_region() uses down_write() and up_write()
->>> for the cxl_region_rwsem, so there is a goto pattern after down_write()
->>> invoked to release cxl_region_rwsem.
->>>
->>> construct region() can be optimized to remove the goto pattern. The
->>> changes are creating a new function called __construct_region() which
->>> will include all checking and operations protected by the
->>> cxl_region_rwsem, and using guard(rwsem_write) to replace down_write()
->>> and up_write() in __construct_region().
->>>
->>> Signed-off-by: Li Ming <ming.li@zohomail.com>
->>> ---
->>>  drivers/cxl/core/region.c | 71 +++++++++++++++++++++------------------
->>>  1 file changed, 39 insertions(+), 32 deletions(-)
->>>
->>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->>> index 36f3771818d3..170278bdcedc 100644
->>> --- a/drivers/cxl/core/region.c
->>> +++ b/drivers/cxl/core/region.c
->>> @@ -3217,49 +3217,31 @@ static int match_region_by_range(struct device *dev, const void *data)
->>>  	return rc;
->>>  }
->>>  
->>> -/* Establish an empty region covering the given HPA range */
->>> -static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
->>> -					   struct cxl_endpoint_decoder *cxled)
->>> +static int __construct_region(struct cxl_region *cxlr,
->> This is only factoring out part, so I'm not sure the naming makes sense.
->> I don't have a better name however as this is doing various different things...
->> setup_region() doesn't feel right either...
-> setup_auto_region()? construct_auto_region()?
->
-> DJ
+Background
+==========
+In Qemu environment, the default serial number of cxl-type3 device
+is UI64_NULL. But we could still use it to create a nvdimm pmem region
+and set a non-zero cookie of nd_interleave_set, for example:
+  1. create a cxl pmem region interleaved with 2 devices (one with
+     serial number 0 and the other with serial number 1), and the cookie
+     would be non-zero/valid.
+  2. create the second cxl pmem region by 1 device with no serial number
+     and this region would have a non-zero cookie because the offset of
+     dpa is non-zero.
 
-Will use construct_auto_region() in V2 if no a better name, thanks for that.
+Problem
+=======
+In a nvdimm interleave-set each device with an invalid or zero
+serial number may cause pmem region initialization to fail, but in
+cxl case such device could still set cookies of nd_interleave_set
+and create a nvdimm pmem region.
 
+CXL Pmem Validation
+===================
+This patch adds the validation of serial number in cxl pmem region creation.
+The event of no serial number would cause to fail to set the cookie
+and pmem region.
 
-Ming
+Yuquan Wang (1):
+  cxl/pmem: debug invalid serial number data
+
+ drivers/cxl/pmem.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+-- 
+2.34.1
 
