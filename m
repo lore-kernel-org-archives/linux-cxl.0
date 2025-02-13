@@ -1,326 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0119A2054FD;
-	Thu, 13 Feb 2025 04:09:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739419752; cv=none; b=Y7Hma1Bn1h0bUf/CxekeLeWwquYhhFyH7ISJ2AH8dEC1ZtXbKJJ1C9K2pABx09wrN+eTEsbs0Y98yX0DVUSaxIffWaLvkOlzYRU4IWpP3kEUXgSiuiP84XbOsvhseCuVO4rOlBwk/ARB2JuVk9Nx5qmLIuw3AGNNZIAw1jp3BOQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739419752; c=relaxed/simple;
-	bh=I83c3TZ8PInC74LiUfr9cW6b0WIPQOEr+Izbf2Pmmps=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L6VjopC/0bi2t46wRN3gSMfRfc4o+N0a530g8b2Eg6+kNEGJ8NO+34RVmK1Rx/th4aCefszYNtHqdLGuVibDn9EVOTJZYEeunH7eYfd8I3jF8dMwCs3OdEqq0W8FB5TfQfDzgDhfjcuheU9hPO2vtIt88wD/A7tjSQUy5Hm6D+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ia24f1WC; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7982870810;
+	Thu, 13 Feb 2025 04:15:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739420146; cv=pass; b=NbEFsCR5EoGC916sU0DcOvFIQV3ln+RMnCDLvhXEIuETY5oyPtB7fT/iBZJw9B3gFEbtSNHZigOUvb8xYvhLPmq3kOOEhPeA0C+NWrVNRLqctLIpqf+DFvFIwCkOv9wdYOX/kf5ETOK04n7sNMdSYdCM7dTIJvjeLAqNed7IMIE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739420146; c=relaxed/simple;
+	bh=qRLrJsVRTZ+WWw41jpvi8qCG0lbc4O9YO80RcNk63B4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IMW5eKkkXYp47n2fdjvr3lSg93zVaS/9M59bHh6OphHpH61iOO1aDYccTvBt4UnZqbwzFID5YkDyNNRRkUEa1z9fU0GER2Vw5b7RYuBKnSsPdXl8TJVtdt3WucNYCSbYPzfspjjFmLtOx3PHE+lcVp2gGawgahkHR8NfmhBWlyI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=FuftZmEp; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ia24f1WC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739419751; x=1770955751;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=I83c3TZ8PInC74LiUfr9cW6b0WIPQOEr+Izbf2Pmmps=;
-  b=Ia24f1WCccK/+0MM2S/x0a9nDuN2IhmYTDLj0VpZjJzMXAdtXWuJ+9Fr
-   yOznVtM3DtUIvImqnTZugTpG5i5Hf/n+p+EunnopoLEj4DP/dfGjRG/rX
-   ixpXUerKPDxvWUrbUHbXp5NVD/j+lacOu1FcrsmJ1RMBWaZdYWKKL3ibp
-   /WhZNVAYmEGQCJ38JxzeXduSEaDgd+6jPPtp/wnypbK8K0uXtdhyMHwBC
-   E+HWUPBZ3jaYGLRLA92r2icXhzhhAhZLyvv5KLIOlTev0dhyGW1N8gx1J
-   T9xX4waXdrXZ0p7vpNEpUP4wuW17b5lFxViT8T4l6CNg5HPJVjKUjaOPD
-   w==;
-X-CSE-ConnectionGUID: BsLtvw1MT/KRZn/Bg1UXZQ==
-X-CSE-MsgGUID: IF57e7U0RjOXeQEYj8ZC/Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11343"; a="51092167"
-X-IronPort-AV: E=Sophos;i="6.13,281,1732608000"; 
-   d="scan'208";a="51092167"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 20:09:03 -0800
-X-CSE-ConnectionGUID: VAFTU3a8SzyPtmxHQnHoog==
-X-CSE-MsgGUID: WAuKoi1hQGSXmzBtgXi7Eg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,281,1732608000"; 
-   d="scan'208";a="113689720"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.108.167])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 20:09:01 -0800
-Date: Wed, 12 Feb 2025 20:08:58 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: alucerop@amd.com
-Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
-	dan.j.williams@intel.com, edward.cree@amd.com, davem@davemloft.net,
-	kuba@kernel.org, pabeni@redhat.com, edumazet@google.com,
-	dave.jiang@intel.com
-Subject: Re: [PATCH v10 14/26] cxl: define a driver interface for HPA free
- space enumeration
-Message-ID: <Z61wWucUQnzjcEh3@aschofie-mobl2.lan>
-References: <20250205151950.25268-1-alucerop@amd.com>
- <20250205151950.25268-15-alucerop@amd.com>
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="FuftZmEp"
+ARC-Seal: i=1; a=rsa-sha256; t=1739420131; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=d4jhk0HkQAXO2XIk3inKmktR6ewF51lw7GQmceAe3sExk1wLkQV2sBJm9XKkJHVriIpO/bRvdFzIgj4x1r6O6yZHK8rz2vIfIZBSh37cfyOFaKqyLqDX9+Jl2bQ1gpRtQEMoTfread7DvwUj7j+vKPQ3ReVEAbFPtGw6N8oxNKc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1739420131; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=4ToEDu8hKvNWByGuJPfWdRectEFq8etbekmoQIvQ/no=; 
+	b=BcHTkYkzkbodpHQZmPBGbrE4EowoaaZYrQKEQSiB3Sw7/TShji5L9Rgho18cEiXeP7wYnTuz+6+qdXFQE4QLVOPWd44XUTLepV3rZ2LI8i0J/FYdS++AtXXH8XveIENsVO6WhXt6Y21WO/xogFY8dg6R8wlC94nW3ZESkzkScYE=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739420131;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=4ToEDu8hKvNWByGuJPfWdRectEFq8etbekmoQIvQ/no=;
+	b=FuftZmEpeeUoK6b6YLs4+nqG8RXHjyVjKQeLf2n0dIMs3dp6efoVs4tJlF/r5usH
+	y9t/EWGFND8nWjMIjey/G/7fZDNkWEOTwa5GfJV03tuykvyFEstxBBWAn2+0yK6YVro
+	evj5eR9fOv1OE7gANKRwHDcT3HGX9ALIteB24MMc=
+Received: by mx.zohomail.com with SMTPS id 1739420128330834.3986541056635;
+	Wed, 12 Feb 2025 20:15:28 -0800 (PST)
+Message-ID: <cf0421d6-f002-4dc1-b3cd-5b535d79cc1d@zohomail.com>
+Date: Thu, 13 Feb 2025 12:15:24 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250205151950.25268-15-alucerop@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 7/7] cxl/region: Drop goto pattern of
+ construct_region()
+To: Dave Jiang <dave.jiang@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: dave@stgolabs.net, alison.schofield@intel.com, vishal.l.verma@intel.com,
+ ira.weiny@intel.com, dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250211075727.351895-1-ming.li@zohomail.com>
+ <20250211075727.351895-8-ming.li@zohomail.com>
+ <20250211173606.00004d33@huawei.com>
+ <d848f0ab-5055-4cda-8531-258c6fa7280e@intel.com>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <d848f0ab-5055-4cda-8531-258c6fa7280e@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Feedback-ID: rr080112271d77f85e48e997955392a03b00007472e1e0cd7a6a76749b207e70f14a6877e49e11328c65ae00:zu08011227318bf9d040207c88550d2aa200000ac7a2c6c48efcceab0d99b60c9ea3af0c6a8e322a0f936ac5:rf0801122debabfad60d5f832903152e720000189c8cbc9a0a94ded23112e2848deb9ad4a3e67db15163b25a5441e5ff000f:ZohoMail
+X-ZohoMailClient: External
 
-On Wed, Feb 05, 2025 at 03:19:38PM +0000, alucerop@amd.com wrote:
-> From: Alejandro Lucero <alucerop@amd.com>
-> 
-> CXL region creation involves allocating capacity from device DPA
-> (device-physical-address space) and assigning it to decode a given HPA
-> (host-physical-address space). Before determining how much DPA to
-> allocate the amount of available HPA must be determined. Also, not all
-> HPA is created equal, some specifically targets RAM, some target PMEM,
-> some is prepared for device-memory flows like HDM-D and HDM-DB, and some
-> is host-only (HDM-H).
-> 
-> Wrap all of those concerns into an API that retrieves a root decoder
-> (platform CXL window) that fits the specified constraints and the
-> capacity available for a new region.
-> 
-> Add a complementary function for releasing the reference to such root
-> decoder.
-> 
-> Based on https://lore.kernel.org/linux-cxl/168592159290.1948938.13522227102445462976.stgit@dwillia2-xfh.jf.intel.com/
-> 
-> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> Co-developed-by: Dan Williams <dan.j.williams@intel.com>
+On 2/12/2025 5:24 AM, Dave Jiang wrote:
+>
+> On 2/11/25 10:36 AM, Jonathan Cameron wrote:
+>> On Tue, 11 Feb 2025 15:57:27 +0800
+>> Li Ming <ming.li@zohomail.com> wrote:
+>>
+>>> Some operations need to be procted by the cxl_region_rwsem in construct
+>>> region(). Currently, construct_region() uses down_write() and up_write()
+>>> for the cxl_region_rwsem, so there is a goto pattern after down_write()
+>>> invoked to release cxl_region_rwsem.
+>>>
+>>> construct region() can be optimized to remove the goto pattern. The
+>>> changes are creating a new function called __construct_region() which
+>>> will include all checking and operations protected by the
+>>> cxl_region_rwsem, and using guard(rwsem_write) to replace down_write()
+>>> and up_write() in __construct_region().
+>>>
+>>> Signed-off-by: Li Ming <ming.li@zohomail.com>
+>>> ---
+>>>  drivers/cxl/core/region.c | 71 +++++++++++++++++++++------------------
+>>>  1 file changed, 39 insertions(+), 32 deletions(-)
+>>>
+>>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>>> index 36f3771818d3..170278bdcedc 100644
+>>> --- a/drivers/cxl/core/region.c
+>>> +++ b/drivers/cxl/core/region.c
+>>> @@ -3217,49 +3217,31 @@ static int match_region_by_range(struct device *dev, const void *data)
+>>>  	return rc;
+>>>  }
+>>>  
+>>> -/* Establish an empty region covering the given HPA range */
+>>> -static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+>>> -					   struct cxl_endpoint_decoder *cxled)
+>>> +static int __construct_region(struct cxl_region *cxlr,
+>> This is only factoring out part, so I'm not sure the naming makes sense.
+>> I don't have a better name however as this is doing various different things...
+>> setup_region() doesn't feel right either...
+> setup_auto_region()? construct_auto_region()?
+>
+> DJ
 
-Checkpatch WARNS on more than one of these in the set.
-Dan's SOB goes after his Co-dev tag.
-
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
->  drivers/cxl/core/region.c | 160 ++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/cxl.h         |   3 +
->  include/cxl/cxl.h         |  10 +++
->  3 files changed, 173 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 84ce625b8591..69ff00154298 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -695,6 +695,166 @@ static int free_hpa(struct cxl_region *cxlr)
->  	return 0;
->  }
->  
-> +struct cxlrd_max_context {
-> +	struct device * const *host_bridges;
-> +	int interleave_ways;
-> +	unsigned long flags;
-> +	resource_size_t max_hpa;
-> +	struct cxl_root_decoder *cxlrd;
-> +};
-> +
-> +static int find_max_hpa(struct device *dev, void *data)
-> +{
-> +	struct cxlrd_max_context *ctx = data;
-> +	struct cxl_switch_decoder *cxlsd;
-> +	struct cxl_root_decoder *cxlrd;
-> +	struct resource *res, *prev;
-> +	struct cxl_decoder *cxld;
-> +	resource_size_t max;
-> +	int found;
-> +
-> +	if (!is_root_decoder(dev))
-> +		return 0;
-> +
-> +	cxlrd = to_cxl_root_decoder(dev);
-> +	cxlsd = &cxlrd->cxlsd;
-> +	cxld = &cxlsd->cxld;
-> +	if ((cxld->flags & ctx->flags) != ctx->flags) {
-> +		dev_dbg(dev, "flags not matching: %08lx vs %08lx\n",
-> +			cxld->flags, ctx->flags);
-> +		return 0;
-> +	}
-> +
-> +	for (int i = 0; i < ctx->interleave_ways; i++)
-> +		for (int j = 0; j < ctx->interleave_ways; j++)
-> +			if (ctx->host_bridges[i] == cxlsd->target[j]->dport_dev) {
-> +				found++;
-> +				break;
-> +			}
-> +
-Above deserves another bracket at least on the outer for loop:
-https://www.kernel.org/doc/html/latest/process/coding-style.html
-"Also, use braces when a loop contains more than a single simple
-statement"
+Will use construct_auto_region() in V2 if no a better name, thanks for that.
 
 
-> +	if (found != ctx->interleave_ways) {
+Ming
 
-Adding on to Simons feedback: Even if found is OK as 0, prefer it be
-initialized so we don't have to think about it on every static report.
-
-
-> +		dev_dbg(dev, "Not enough host bridges found(%d) for interleave ways requested (%d)\n",
-> +			found, ctx->interleave_ways);
-> +		return 0;
-> +	}
-> +
-> +	/*
-> +	 * Walk the root decoder resource range relying on cxl_region_rwsem to
-> +	 * preclude sibling arrival/departure and find the largest free space
-> +	 * gap.
-> +	 */
-> +	lockdep_assert_held_read(&cxl_region_rwsem);
-> +	max = 0;
-> +	res = cxlrd->res->child;
-> +
-> +	/* With no resource child the whole parent resource is available */
-> +	if (!res)
-> +		max = resource_size(cxlrd->res);
-> +	else
-> +		max = 0;
-> +
-> +	for (prev = NULL; res; prev = res, res = res->sibling) {
-> +		struct resource *next = res->sibling;
-> +		resource_size_t free = 0;
-> +
-> +		/*
-> +		 * Sanity check for preventing arithmetic problems below as a
-> +		 * resource with size 0 could imply using the end field below
-> +		 * when set to unsigned zero - 1 or all f in hex.
-> +		 */
-> +		if (prev && !resource_size(prev))
-> +			continue;
-> +
-> +		if (!prev && res->start > cxlrd->res->start) {
-> +			free = res->start - cxlrd->res->start;
-> +			max = max(free, max);
-> +		}
-> +		if (prev && res->start > prev->end + 1) {
-> +			free = res->start - prev->end + 1;
-> +			max = max(free, max);
-> +		}
-> +		if (next && res->end + 1 < next->start) {
-> +			free = next->start - res->end + 1;
-> +			max = max(free, max);
-> +		}
-> +		if (!next && res->end + 1 < cxlrd->res->end + 1) {
-> +			free = cxlrd->res->end + 1 - res->end + 1;
-> +			max = max(free, max);
-> +		}
-> +	}
-> +
-> +	dev_dbg(CXLRD_DEV(cxlrd), "found %pa bytes of free space\n", &max);
-> +	if (max > ctx->max_hpa) {
-> +		if (ctx->cxlrd)
-> +			put_device(CXLRD_DEV(ctx->cxlrd));
-> +		get_device(CXLRD_DEV(cxlrd));
-> +		ctx->cxlrd = cxlrd;
-> +		ctx->max_hpa = max;
-> +		dev_dbg(CXLRD_DEV(cxlrd), "found %pa bytes of free space\n",
-> +			&max);
-> +	}
-> +	return 0;
-> +}
-> +
-> +/**
-> + * cxl_get_hpa_freespace - find a root decoder with free capacity per constraints
-> + * @cxlmd: the CXL memory device with an endpoint that is mapped by the returned
-> + *	    decoder
-> + * @interleave_ways: number of entries in @host_bridges
-> + * @flags: CXL_DECODER_F flags for selecting RAM vs PMEM, and HDM-H vs HDM-D[B]
-> + * @max_avail_contig: output parameter of max contiguous bytes available in the
-> + *		      returned decoder
-> + *
-> + * The return tuple of a 'struct cxl_root_decoder' and 'bytes available given
-> + * in (@max_avail_contig))' is a point in time snapshot. If by the time the
-> + * caller goes to use this root decoder's capacity the capacity is reduced then
-> + * caller needs to loop and retry.
-> + *
-> + * The returned root decoder has an elevated reference count that needs to be
-> + * put with put_device(CXLRD_DEV(cxlrd)).
-> + */
-> +struct cxl_root_decoder *cxl_get_hpa_freespace(struct cxl_memdev *cxlmd,
-> +					       int interleave_ways,
-> +					       unsigned long flags,
-> +					       resource_size_t *max_avail_contig)
-> +{
-> +	struct cxl_port *endpoint = cxlmd->endpoint;
-> +	struct cxlrd_max_context ctx = {
-> +		.host_bridges = &endpoint->host_bridge,
-> +		.flags = flags,
-> +	};
-> +	struct cxl_port *root_port;
-> +	struct cxl_root *root __free(put_cxl_root) = find_cxl_root(endpoint);
-> +
-> +	if (!is_cxl_endpoint(endpoint)) {
-> +		dev_dbg(&endpoint->dev, "hpa requestor is not an endpoint\n");
-> +		return ERR_PTR(-EINVAL);
-> +	}
-> +
-> +	if (!root) {
-> +		dev_dbg(&endpoint->dev, "endpoint can not be related to a root port\n");
-> +		return ERR_PTR(-ENXIO);
-> +	}
-> +
-> +	root_port = &root->port;
-> +	down_read(&cxl_region_rwsem);
-> +	device_for_each_child(&root_port->dev, &ctx, find_max_hpa);
-> +	up_read(&cxl_region_rwsem);
-> +
-> +	if (!ctx.cxlrd)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	*max_avail_contig = ctx.max_hpa;
-> +	return ctx.cxlrd;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_get_hpa_freespace, "CXL");
-> +
-> +void cxl_put_root_decoder(struct cxl_root_decoder *cxlrd)
-> +{
-> +	put_device(CXLRD_DEV(cxlrd));
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_put_root_decoder, "CXL");
-> +
->  static ssize_t size_store(struct device *dev, struct device_attribute *attr,
->  			  const char *buf, size_t len)
->  {
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 3faba6c9dbfb..e1a8e3d786af 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -759,6 +759,9 @@ struct cxl_decoder *to_cxl_decoder(struct device *dev);
->  struct cxl_root_decoder *to_cxl_root_decoder(struct device *dev);
->  struct cxl_switch_decoder *to_cxl_switch_decoder(struct device *dev);
->  struct cxl_endpoint_decoder *to_cxl_endpoint_decoder(struct device *dev);
-> +
-> +#define CXLRD_DEV(cxlrd) (&(cxlrd)->cxlsd.cxld.dev)
-> +
->  bool is_root_decoder(struct device *dev);
->  bool is_switch_decoder(struct device *dev);
->  bool is_endpoint_decoder(struct device *dev);
-> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-> index 592aa5e75bc2..3b72dc7ce8cf 100644
-> --- a/include/cxl/cxl.h
-> +++ b/include/cxl/cxl.h
-> @@ -39,6 +39,10 @@ enum cxl_devtype {
->  	CXL_DEVTYPE_CLASSMEM,
->  };
->  
-> +#define CXL_DECODER_F_RAM   BIT(0)
-> +#define CXL_DECODER_F_PMEM  BIT(1)
-> +#define CXL_DECODER_F_TYPE2 BIT(2)
-> +
->  /*
->   * struct for an accel driver giving partition data when Type2 device without a
->   * mailbox.
-> @@ -80,4 +84,10 @@ int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info);
->  int cxl_dpa_setup(struct cxl_memdev_state *cxlmds, const struct cxl_dpa_info *info);
->  struct cxl_memdev *devm_cxl_add_memdev(struct device *host,
->  				       struct cxl_memdev_state *cxlmds);
-> +struct cxl_port;
-> +struct cxl_root_decoder *cxl_get_hpa_freespace(struct cxl_memdev *cxlmd,
-> +					       int interleave_ways,
-> +					       unsigned long flags,
-> +					       resource_size_t *max);
-> +void cxl_put_root_decoder(struct cxl_root_decoder *cxlrd);
->  #endif
-> -- 
-> 2.17.1
-> 
-> 
