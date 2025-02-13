@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31868269824
-	for <linux-cxl@vger.kernel.org>; Thu, 13 Feb 2025 22:11:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A021826E149
+	for <linux-cxl@vger.kernel.org>; Thu, 13 Feb 2025 22:11:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739484676; cv=none; b=Mq8UYlKcXAhQSCUmxUmBWkMl+/ltG7rAG9hP93mRJAliCWIMGGYPSbQL2hYBWdru+7Redi5XtHe09xyVMu1fUwSI3psW3ziUVPWdkyx97jXwGoGugQMKbP4plNsWuu9LXfTQDjSDVIVtMUzu7ZbeWcgkpytUNeT5Kzt5+w7kQbw=
+	t=1739484700; cv=none; b=Zuo84b/ALyhBXyVWRpZyCxhdtCPxxSyi9qXcaQyJS7MGYxZI+Vr27ck6DZ0WNLV/H/JEH1kRFkUDj6p0Nwf1qSTbhEMzJFYIQD/xjSa9kV8KveSieX0HZXhkquPeDwQ4xpBTU/u+6Me0kX+BCqAhlz4mhevlHsmqk8ZgR2/BL5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739484676; c=relaxed/simple;
-	bh=wHbxgZBbqeQN4tIw5NwwcrMmnbZqgFIDj+0hbZBUqIc=;
+	s=arc-20240116; t=1739484700; c=relaxed/simple;
+	bh=QLn0HCDo3El7ELZhOainUECMpPWBdtPyjGJW8Kvg65U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LLfd6useld5aieF/tRTGiNsiOmHpxv8ZcQQ682ICyOSf8+fh3v/hYreAft6EKjCHCc05NsPZaOU0JpWh00DsKciLofpzjhAwi863UuYChHTeuyYzrRTfjgb0zfmikVOr2cvlKeE+2MAYf2JdznTXpjku8BhfxOwg/zEzTocse+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RbBVptrd; arc=none smtp.client-ip=198.175.65.10
+	 In-Reply-To:Content-Type; b=anbI4TJ9OhnsCALmF+S9pAz5YNuaQ7BAr6QSajCazNXmUiBeENwHAD3c4x8XtKRPZCvpWoPLQqIzmHpbF4bFhxA9g+QNngAtOx/h+/MLPcB123S5h/44vsKe4Mu1+a3T/Er/uYT4ToBz6pEP3neiViaL6zA4fuCrzDhwn4vq4Nk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ynaw1pft; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RbBVptrd"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ynaw1pft"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739484675; x=1771020675;
+  t=1739484699; x=1771020699;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=wHbxgZBbqeQN4tIw5NwwcrMmnbZqgFIDj+0hbZBUqIc=;
-  b=RbBVptrdkx+CeimI+1Hnnsv71RhtTAu3y0th59Yawt1TejbVNOcrsFwO
-   u3oVpiyG1uzWVs84EEa8mpYNr1zLEcYXZ8pOpHMJV9AtL89LqZ62RHgAa
-   lHrOjcVoP+hEwHQd3JyVgvUAlTO82ThXTgMTImpQ5Q+nCWvf1GBClEh43
-   KrTVevC8//eKsluYantQU/7BnoTown5oERS/L69Qib9OamXwId2gutR7Z
-   n4+LUn5Qp6GXFIVXAfAJoMSm2S79eGGm+mhboOxn8RV1NFbcTeopF/Ga1
-   Z2Kn9e4H6asiw4lmWTr0dHCTi/MQbUDQsVunS9hSf5XklJzjv0tKz1fSR
-   w==;
-X-CSE-ConnectionGUID: 1pjk61JTTeSWmRLyhKed3w==
-X-CSE-MsgGUID: Aks5dYeqTOeSin6EbE39VQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="57617798"
+  bh=QLn0HCDo3El7ELZhOainUECMpPWBdtPyjGJW8Kvg65U=;
+  b=Ynaw1pftFckoijXF+InvNMvlxTon+7cY7+l7Dy91zP/sPNwVtpjtehiJ
+   +jQB2ji4blP5Kknr5FwVQ3WTH7R8XT27szxAGNsWNPu8Ab+4i5xxmc7LS
+   uBPwh1yp8rMKQZXkuiI4TeM4wA0q937m/pfc/J7sy75L2ts+t5rJzzxdQ
+   FHQvkucZlHSUAlq7AEC+vUuQXqOFDRpBW6fSJ/Rte+2U3dALrhraNXpbe
+   ecPx8FDapbqPUnHTWn5rDrB7wrsV40wTDuVCHygAh7s3OUT6AkA9b/bFh
+   Grbiwpg4CUJeI6F8VV6g3uI0nmu7qtRk4DNUtSA/sAH6zJrtFAkYfiYIK
+   A==;
+X-CSE-ConnectionGUID: byZrbd2YQoWPMkLDZnt/aA==
+X-CSE-MsgGUID: 1QTaAy4aT0GkqsUYLklV1g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="57617827"
 X-IronPort-AV: E=Sophos;i="6.13,284,1732608000"; 
-   d="scan'208";a="57617798"
+   d="scan'208";a="57617827"
 Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 14:11:15 -0800
-X-CSE-ConnectionGUID: bLlIRqwsRYahqrWTiUqYfA==
-X-CSE-MsgGUID: giGoWkAVTWuR92PUs6oGig==
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 14:11:38 -0800
+X-CSE-ConnectionGUID: v/fXhECiRB2OV2kok3YiyQ==
+X-CSE-MsgGUID: Ee7V8wBZTSa0wcJ15pkN8A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,284,1732608000"; 
-   d="scan'208";a="118288856"
+   d="scan'208";a="118288981"
 Received: from ldmartin-desk2.corp.intel.com (HELO [10.125.108.200]) ([10.125.108.200])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 14:11:13 -0800
-Message-ID: <c57ed7ef-9339-4d02-9b01-a4bf30eed46c@intel.com>
-Date: Thu, 13 Feb 2025 15:11:12 -0700
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 14:11:38 -0800
+Message-ID: <4001ae63-c1b8-4f9e-8cbd-7017d34779a4@intel.com>
+Date: Thu, 13 Feb 2025 15:11:35 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -54,110 +54,33 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v5 08/15] cxl: Add support for FWCTL get driver
  information callback
-To: Dan Williams <dan.j.williams@intel.com>, Saeed Mahameed <saeed@kernel.org>
-Cc: linux-cxl@vger.kernel.org, ira.weiny@intel.com, vishal.l.verma@intel.com,
- alison.schofield@intel.com, Jonathan.Cameron@huawei.com, dave@stgolabs.net,
- jgg@nvidia.com, shiju.jose@huawei.com, Li Ming <ming.li@zohomail.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com, ira.weiny@intel.com,
+ vishal.l.verma@intel.com, alison.schofield@intel.com,
+ Jonathan.Cameron@huawei.com, dave@stgolabs.net, shiju.jose@huawei.com,
+ Li Ming <ming.li@zohomail.com>
 References: <20250211182909.1650096-1-dave.jiang@intel.com>
- <20250211182909.1650096-9-dave.jiang@intel.com> <Z60QCS6o-3VInenG@x130>
- <67ae35fcecf69_2d1e294f7@dwillia2-xfh.jf.intel.com.notmuch>
+ <20250211182909.1650096-9-dave.jiang@intel.com>
+ <20250213193651.GD3886819@nvidia.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <67ae35fcecf69_2d1e294f7@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <20250213193651.GD3886819@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 2/13/25 11:12 AM, Dan Williams wrote:
-> Saeed Mahameed wrote:
->> On 11 Feb 11:28, Dave Jiang wrote:
->>> Add definition for fwctl_ops->info() to return driver information. The
->>> function will return a data structure with a reserved u32. This is setup
->>> for future usages.
->>>
->>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->>> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
->>> Reviewed-by: Li Ming <ming.li@zohomail.com>
->>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>> ---
->>> drivers/cxl/core/features.c | 11 +++++++++--
->>> include/cxl/mailbox.h       |  1 +
->>> include/uapi/fwctl/cxl.h    | 19 +++++++++++++++++++
->>> 3 files changed, 29 insertions(+), 2 deletions(-)
->>> create mode 100644 include/uapi/fwctl/cxl.h
->>>
->>> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
->>> index db48a8fbde81..923c054599ad 100644
->>> --- a/drivers/cxl/core/features.c
->>> +++ b/drivers/cxl/core/features.c
->>> @@ -354,8 +354,15 @@ static void cxlctl_close_uctx(struct fwctl_uctx *uctx)
->>>
->>> static void *cxlctl_info(struct fwctl_uctx *uctx, size_t *length)
->>> {
->>> -	/* Place holder */
->>> -	return ERR_PTR(-EOPNOTSUPP);
->>> +	struct fwctl_info_cxl *info;
->>> +
->>> +	info = kzalloc(sizeof(*info), GFP_KERNEL);
->>> +	if (!info)
->>> +		return ERR_PTR(-ENOMEM);
->>> +
->>> +	*length = sizeof(*info);
->>> +
->>> +	return info;
->>> }
->>>
->>> static void *cxlctl_fw_rpc(struct fwctl_uctx *uctx, enum fwctl_rpc_scope scope,
->>> diff --git a/include/cxl/mailbox.h b/include/cxl/mailbox.h
->>> index c4e99e2e3a9d..60a26a0d8f1f 100644
->>> --- a/include/cxl/mailbox.h
->>> +++ b/include/cxl/mailbox.h
->>> @@ -4,6 +4,7 @@
->>> #define __CXL_MBOX_H__
->>> #include <linux/rcuwait.h>
->>> #include <cxl/features.h>
->>> +#include <uapi/fwctl/cxl.h>
->>> #include <uapi/linux/cxl_mem.h>
->>>
->>> /**
->>> diff --git a/include/uapi/fwctl/cxl.h b/include/uapi/fwctl/cxl.h
->>> new file mode 100644
->>> index 000000000000..d21fd6b80c20
->>> --- /dev/null
->>> +++ b/include/uapi/fwctl/cxl.h
->>> @@ -0,0 +1,19 @@
->>> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
->>> +/*
->>> + * Copyright (c) 2024, Intel Corporation
->>> + *
->>> + * These are definitions for the mailbox command interface of CXL subsystem.
->>> + */
->>> +#ifndef _UAPI_FWCTL_CXL_H_
->>> +#define _UAPI_FWCTL_CXL_H_
->>> +
->>> +#include <linux/types.h>
->>> +
->>> +/**
->>> + * struct fwctl_info_cxl - ioctl(FWCTL_INFO) out_device_data
->>> + * @reserved: zero
->>> + */
->>> +struct fwctl_info_cxl {
->>> +	__u32 reserved;
->>> +};
->>
->> I would add some useful info such as: num_user_features, mbox->feature_cap,
->> etc ...
+On 2/13/25 12:36 PM, Jason Gunthorpe wrote:
+> On Tue, Feb 11, 2025 at 11:28:02AM -0700, Dave Jiang wrote:
+>> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+>> +/*
+>> + * Copyright (c) 2024, Intel Corporation
 > 
-> I much prefer Jason's suggestion of just allowing the subsystem to
-> opt-out of the 'info' command.
-> 
-> The Features that are private / exclusive to the kernel are a small
-> fixed list that is unlikely to grow.
-> 
-> There is no need for an info command when documentation can communicate
-> what CXL Features are available through the fwctl interface.
+> Please also go through and update the dates, 2024-2025
 
-Ok this patch is dropped for next rev.
+Ok will do
 
+> 
+> Jason
+> 
 
