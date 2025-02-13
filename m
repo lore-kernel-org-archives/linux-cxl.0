@@ -1,41 +1,68 @@
-Received: from zg8tmtyylji0my4xnjqumte4.icoremail.net (zg8tmtyylji0my4xnjqumte4.icoremail.net [162.243.164.118])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F14D77F11;
-	Fri, 14 Feb 2025 03:10:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.164.118
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA31220B1EA
+	for <linux-cxl@vger.kernel.org>; Fri, 14 Feb 2025 09:35:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739502648; cv=none; b=T4n1C4DgHe4j2bs8SRtNOF+mUSC5RiPctXdvRfgVszQH7SYhSm4um6V5e42JjJiQNtDCyCErvq1ANNPSQyPqu69WKzMMdiUFI3n64SIpA6dgC7cy9v0jYY5vZxYu/jHKfgtFSCHGSmu+rQeZmbAngqJYP28VlzBQBBlJOxk0cdM=
+	t=1739525753; cv=none; b=AjocB60tIwEm/1D+q9degTBF1KwPLcLu1KBQo2le2XKAAqyA3soXMCWAu+sJsY4XGtjUUEOGt4dVkkLl7KBHjjSgnd6S6vZhUAtWtE7Y994Evhv8m8ZnpuuK2Ha2yBxA008XaEccy+fG7xp7cl7TiWETCfh1rGpK1Yy6wb5khEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739502648; c=relaxed/simple;
-	bh=UPsU2fwceXEeyqYpbVC8GWYctW1Q2dnHUuLzGyuLWzQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ADYvkoOgWUp18J9h4SNFl17gcD36RiBkYWn+2VE0YPQ+z56zvE5TtdfEdF+VD9JW4wgp/kkOGWo3P1eA0GqEg0GTGXs/LfbjEVBKMx7iMMkg0r2ukD2gOCUgwL8J/tWEtmTjTSkexdkEcmiljIItL1dD1FYBwKeh2DtJgkG7CQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=162.243.164.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwDHzWkZtK5nxWbnAg--.29056S2;
-	Fri, 14 Feb 2025 11:10:17 +0800 (CST)
-Received: from phytium.com.cn (unknown [123.150.8.50])
-	by mail (Coremail) with SMTP id AQAAfwA3PYkTtK5n+U4mAA--.10696S4;
-	Fri, 14 Feb 2025 11:10:15 +0800 (CST)
-From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	chenbaozi@phytium.com.cn,
-	Yuquan Wang <wangyuquan1236@phytium.com.cn>
-Subject: [PATCH v2 1/1] cxl/pmem: debug invalid serial number data
-Date: Fri, 14 Feb 2025 11:09:52 +0800
-Message-Id: <20250214030952.4047438-2-wangyuquan1236@phytium.com.cn>
+	s=arc-20240116; t=1739525753; c=relaxed/simple;
+	bh=49Cq05jvKpvgPjLZeLuYwaYJr31Nl2ZdeptcrFeCuBo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=qKS7nBrbo1nxaxVLOu+sySvsLOQhxwIpEhIjQkjBFUsEtQJfM92va9qJFuLZQNB1k1M/G82igdGFYXGvoWIkHTuDJzIYGMQpiVzMHM8nJWw07jm07pLKUYewBvvYsLf1lXc5311qrZ9zSHZA4jIS1cINaiSZYRBy/rD0pED5IJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=MZ2kjvFD; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="MZ2kjvFD"
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250214093547epoutp039f890c51473cd35eb2bc76e68c0fe5ef~kCXNiMPdO0699506995epoutp032
+	for <linux-cxl@vger.kernel.org>; Fri, 14 Feb 2025 09:35:47 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250214093547epoutp039f890c51473cd35eb2bc76e68c0fe5ef~kCXNiMPdO0699506995epoutp032
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1739525747;
+	bh=6u2ec4HZlFgEdfaEdHv9kpNbb1MXfilSNcxiYqMArPE=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=MZ2kjvFDL0+QeeApPnyDBjoC6bLTULLn/iGQlf9yX/E7v5genTskOQoHOSR2nGY7j
+	 coCZu3Tue46znXlBLmsQsoHPYfMJe6HMVp2R3yBOzOTvxREG/dowIJvHwrA1CPHkW1
+	 ydhkCGhiRntLVpEf4u2INL57PT9H3DU45gOu6i1U=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+	20250214093546epcas5p26f3bfda81550485851792a747b1bc52b~kCXMso-5p2589725897epcas5p29;
+	Fri, 14 Feb 2025 09:35:46 +0000 (GMT)
+Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.178]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4YvRk82Yncz4x9Px; Fri, 14 Feb
+	2025 09:35:44 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	B5.DC.19710.07E0FA76; Fri, 14 Feb 2025 18:35:44 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20250213091628epcas5p31ec87df7fc4ce2d47db40b693239d7ad~judDp1wSH1363713637epcas5p3G;
+	Thu, 13 Feb 2025 09:16:28 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250213091628epsmtrp1a59b67dfe448d52937837bd6f64e0b73~judDpJg4k2265622656epsmtrp1Y;
+	Thu, 13 Feb 2025 09:16:28 +0000 (GMT)
+X-AuditID: b6c32a44-363dc70000004cfe-ae-67af0e704e7b
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	DC.CC.23488.B68BDA76; Thu, 13 Feb 2025 18:16:27 +0900 (KST)
+Received: from test-PowerEdge-R740xd.samsungds.net (unknown [107.99.41.79])
+	by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250213091626epsmtip183dcd405a89a1af930b9313be2e2944b~judCM2YZ82148921489epsmtip1W;
+	Thu, 13 Feb 2025 09:16:26 +0000 (GMT)
+From: Vinayak Holikatti <vinayak.kh@samsung.com>
+To: qemu-devel@nongnu.org
+Cc: gost.dev@samsung.com, linux-cxl@vger.kernel.org, nifan.cxl@gmail.com,
+	dave@stgolabs.net, vishak.g@samsung.com, krish.reddy@samsung.com,
+	a.manzanares@samsung.com, alok.rathore@samsung.com, Vinayak Holikatti
+	<vinayak.kh@samsung.com>
+Subject: [PATCH v2 0/3] CXL CCI Media Operations
+Date: Thu, 13 Feb 2025 14:45:55 +0530
+Message-Id: <20250213091558.2294806-1-vinayak.kh@samsung.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250214030952.4047438-1-wangyuquan1236@phytium.com.cn>
-References: <20250214030952.4047438-1-wangyuquan1236@phytium.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -43,65 +70,76 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAfwA3PYkTtK5n+U4mAA--.10696S4
-X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQABAWeuT6cBawAAsK
-Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=wangyuquan
-	1236@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjvJXoW7tryfXF4rJr47GrWxWrykXwb_yoW8AF1rpr
-	48tayYkrW3CF13Zw4xZFy8ZFyYg3Z7W3yxGryjvwn8urn5tF1IqFWxta1jya43Ca95tw4a
-	934j9ryUuFWUW3DanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
-	UUUUU
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAJsWRmVeSWpSXmKPExsWy7bCmlm4B3/p0g28TBC2mH1a0+HJ6D5vF
+	6ptrGC1uHtjJZLFw4zImi/OzTrFY/N22l9HieO8OFosTJ7ezA8XmsDtweeycdZfd48m1zUwe
+	fVtWMXpMnV3v8XmTXABrVLZNRmpiSmqRQmpecn5KZl66rZJ3cLxzvKmZgaGuoaWFuZJCXmJu
+	qq2Si0+ArltmDtBNSgpliTmlQKGAxOJiJX07m6L80pJUhYz84hJbpdSClJwCkwK94sTc4tK8
+	dL281BIrQwMDI1OgwoTsjKMT37MUzOGo2HHzJksD4w22LkZODgkBE4kzM6azdjFycQgJ7GaU
+	eHngHzOE84lR4szmnSwQzjdGib7GM6wwLcumToNq2csoMfd7C1RLA5PE/1ntYFVsAgYSD5qP
+	s4PYIgKSEr+7TjOD2MwCHxglFj3VBbGFgWqmP9sHFmcRUJV4v2MmWC+vgK3E9FkdUAfKS+w/
+	eJYZIi4ocXLmExaIOfISzVtngy2WELjFLtG65TELRIOLxMc1L6FsYYlXx7ewQ9hSEi/726Ds
+	YolzFz8xQtg1Eq+7VjBD2PYSraf6gWwOoAWaEut36UOEZSWmnlrHBLGXT6L39xMmiDivxI55
+	IDYHkK0isfRtJsymL8+aoaZ7SLzvmQt2jZBArETL5w2sExjlZyH5ZhaSb2YhLF7AyLyKUTK1
+	oDg3PTXZtMAwL7UcHrHJ+bmbGMFJU8tlB+ON+f/0DjEycTAeYpTgYFYS4ZWYtiZdiDclsbIq
+	tSg/vqg0J7X4EKMpMIgnMkuJJucD03ZeSbyhiaWBiZmZmYmlsZmhkjhv886WdCGB9MSS1OzU
+	1ILUIpg+Jg5OqQYm/eKp+vYM2tMN9hj82im8bckO2x75/jUiYtmL+d+etbKV2fVvxa/NXuxX
+	Lq0V/fzwALfEGh/9lbUCnMoVG89HrFuimfuOd3kGm6p1s8i1xbv6RVKE5pYbvHLcG9L565Pm
+	72yZn7xXpD9c3nRXT+fwUZ+7SqlHjZv9y4WWb0i7p/yIxbTa2TApeqnzlxPTN/jsUTtXYZP9
+	6MnuVbVv7SMb2Oastz9dE7LNXvHBrkyHectbLjw5vdK56nB18KXpf14F8dpt2sel5NYW4WTl
+	p+b9c8vxVJHU9/vC/xk7MpjzJ3jfM771yy7wg1JL0PR9q9N6rB/NPv5DfN0z7rYk+fQ1nzSc
+	/NV3nUvcbCXBNve1EktxRqKhFnNRcSIAJT9XviMEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrLLMWRmVeSWpSXmKPExsWy7bCSnG72jrXpBpMWmltMP6xo8eX0HjaL
+	1TfXMFrcPLCTyWLhxmVMFudnnWKx+LttL6PF8d4dLBYnTm5nB4rNYXfg8tg56y67x5Nrm5k8
+	+rasYvSYOrve4/MmuQDWKC6blNSczLLUIn27BK6MoxPfsxTM4ajYcfMmSwPjDbYuRk4OCQET
+	iWVTp7F2MXJxCAnsZpTYtm4OI0RCSuLYzp9QRcISK/89Z4co+scoMePMA3aQBJuAgcSD5uNg
+	toiApMTvrtPMIEXMAr8YJZ7uvg+WEAYqmv5sHzOIzSKgKvF+x0xWEJtXwFZi+qwOqA3yEvsP
+	nmWGiAtKnJz5hAXEZgaKN2+dzTyBkW8WktQsJKkFjEyrGCVTC4pz03OTDQsM81LL9YoTc4tL
+	89L1kvNzNzGCQ1hLYwfju29N+ocYmTgYDzFKcDArifBKTFuTLsSbklhZlVqUH19UmpNafIhR
+	moNFSZx3pWFEupBAemJJanZqakFqEUyWiYNTqoEpgJ+zvlv31WkRlT4u474wSdU6vf9J9vUV
+	gUpTWqacnpOwx8Xfm4mhQUFi455yq+RixbqU/j6mhKw7bw4+3r7MwWxJ14yioqlP088rejCo
+	TL077dAELRnheZnHU/IK9lYp75cLfZwoacDw0/iumNAt3k7GXO+f66+WfLlyQE6mxuPRSv4c
+	lVOGO3bxsMyPWXlop/Xh4EKPy6IxrNkLgpZmXQuZuujMfNXIKqmpbWstHrw9WzXx7Rn7bcXO
+	daVHF0+8YldzhnXbz4M3eALvO1ocE/Gok6u8cEikaE7+68XBBdF5tzrNpjLMFLtV//FWQcnM
+	Gb/KmIuDyu3lNaRlEmvZSm8KT0l7fsrPO+7sRSWW4oxEQy3mouJEAGpgwvLQAgAA
+X-CMS-MailID: 20250213091628epcas5p31ec87df7fc4ce2d47db40b693239d7ad
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250213091628epcas5p31ec87df7fc4ce2d47db40b693239d7ad
+References: <CGME20250213091628epcas5p31ec87df7fc4ce2d47db40b693239d7ad@epcas5p3.samsung.com>
 
-In a nvdimm interleave-set each device with an invalid or zero
-serial number may cause pmem region initialization to fail, but in
-cxl case such device could still set cookies of nd_interleave_set
-and create a nvdimm pmem region.
+CXL CCI media operations commands implmented as per CXL Specification
+3.1 8.2.9.9.5.3
+1) General(00h) - Discovery (00h)
+2) Sanitize(01h - Sanitize (00h)
+                  Write zeros (01h)
 
-This adds the validation of serial number in cxl pmem region creation.
-The event of no serial number would cause to fail to set the cookie
-and pmem region.
+The patches are generated against the Johnathan's tree
+https://gitlab.com/jic23/qemu.git and branch cxl-2024-11-27.
 
-For cxl-test to work properly, always +1 on mock device's serial
-number.
+Changes V1->V2
+1) Addressed the review comments from Jonathan Cameron.
 
-Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
----
- drivers/cxl/pmem.c           | 7 +++++++
- tools/testing/cxl/test/mem.c | 2 +-
- 2 files changed, 8 insertions(+), 1 deletion(-)
+2) Modularied the media operations class & subclass handling
+into separate functions.
 
-diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
-index f9c95996e937..cc854169e50b 100644
---- a/drivers/cxl/pmem.c
-+++ b/drivers/cxl/pmem.c
-@@ -384,6 +384,13 @@ static int cxl_pmem_region_probe(struct device *dev)
- 		};
- 		info[i].offset = m->start;
- 		info[i].serial = cxlds->serial;
-+
-+		if (info[i].serial == 0) {
-+			dev_err(dev, "%s: invalid serial number\n",
-+				dev_name(&cxlmd->dev));
-+			rc = -ENXIO;
-+			goto out_nvd;
-+		}
- 	}
- 	ndr_desc.num_mappings = cxlr_pmem->nr_mappings;
- 	ndr_desc.mapping = mappings;
-diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-index 8d731bd63988..9e098cf06603 100644
---- a/tools/testing/cxl/test/mem.c
-+++ b/tools/testing/cxl/test/mem.c
-@@ -1533,7 +1533,7 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
- 	mds->event.buf = (struct cxl_get_event_payload *) mdata->event_buf;
- 	INIT_DELAYED_WORK(&mds->security.poll_dwork, cxl_mockmem_sanitize_work);
- 
--	cxlds->serial = pdev->id;
-+	cxlds->serial = pdev->id + 1;
- 	if (is_rcd(pdev))
- 		cxlds->rcd = true;
- 
+Signed-off-by: Vinayak Holikatti <vinayak.kh@samsung.com>
+
+Vinayak Holikatti (3):
+  hw/cxl/cxl-mailbox-utils: Add support for Media operations discovery
+    commands (8.2.9.9.5.3)
+  hw/cxl: factor out calculation of sanitize duration from
+    cmd_santize_overwrite
+  hw/cxl/cxl-mailbox-utils: Add support for Media operations Sanitize
+    and Write Zeros commands (8.2.9.9.5.3)
+
+ hw/cxl/cxl-mailbox-utils.c  | 404 +++++++++++++++++++++++++++++++++---
+ include/hw/cxl/cxl_device.h |   4 +
+ 2 files changed, 382 insertions(+), 26 deletions(-)
+
 -- 
 2.34.1
 
