@@ -1,213 +1,186 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DEE6221DAD
-	for <linux-cxl@vger.kernel.org>; Fri, 14 Feb 2025 10:23:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B5815198D;
+	Fri, 14 Feb 2025 10:49:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739528604; cv=none; b=e90i+x3VEzg16mY0MUP2/bklnizdURKi018RWnOq2AmDUZYin0NwQJ5ge32258PyfOhc0QnVAHQ0dzbx8k4T7a0EReJ1BkCwtnFqsoAI0+Nrh7NeGldu3SiLDjlMCuDj73sGLzeUDlYaNi7WRuZcKkm/HlUJwrpyKH7OwyXH6d4=
+	t=1739530197; cv=none; b=ElruiMxhMnvBOVZUUPAnP7CD61JqCV7wqYsf9ob4fCyZZKsSMUynPBfeXzZAaIi1TGDsMafnaJt4Dkd7MpZy2RdCHppUfwk9CqiPUm5vBYRiaIeDj0WLcsz5W1EqOAXRPgpVlNwcmOKvTPGknZds+N5m3E2100nngnI3PIj8TlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739528604; c=relaxed/simple;
-	bh=rvKM9PWc4R8j2H0bUbv18YspzAOl/dm683Y7SuuN7jI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=ifUWEWs5SQPFB+M9vwSrYyd6XtRXu5g9WrxupH9RyJZLPSA/Qphrb4umpF2NfzRUtYqaNX3CLBzVHMC3pbxPCYwL0ThxL+9puQ81qraURCSPU9AcTOz2DDuOQBJQSNhzoWX4Ne3KJGNUDDXT17pjlr9df0psSZi0hCvL3CgKPDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=o0fY1m5N; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="o0fY1m5N"
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250214102319epoutp0327b35c7ec622efb3a5c2930b1b6f2e6c~kDAtoTuGJ1559215592epoutp03Y
-	for <linux-cxl@vger.kernel.org>; Fri, 14 Feb 2025 10:23:19 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250214102319epoutp0327b35c7ec622efb3a5c2930b1b6f2e6c~kDAtoTuGJ1559215592epoutp03Y
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1739528599;
-	bh=Y+YmI6Fv+4dx1jCNiVWWElBmtPS0hoZA2vg6Skzhh8I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=o0fY1m5N2lpQ6hO/7ao1jN3kIbbD1i2Vrs/3N4wj1wkeUpp0Yy9ePaR56toLzIs3T
-	 D1+t5+1uFzTvNWbcSfShRaek0XKeNlw03Ix7SNX/sjeg9q2qHqO+nWN8zUULGIcS9g
-	 5mtFuNDpeIGr/GmcBC100XQiGimWD0F94MdoYIcM=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-	20250214102318epcas5p1ae926a25ac7b6b81a517169295d58415~kDAtBYSiH0495704957epcas5p1j;
-	Fri, 14 Feb 2025 10:23:18 +0000 (GMT)
-Received: from epsmges5p2new.samsung.com (unknown [182.195.38.178]) by
-	epsnrtp2.localdomain (Postfix) with ESMTP id 4YvSn03PSxz4x9Pt; Fri, 14 Feb
-	2025 10:23:16 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	9B.B5.19933.4991FA76; Fri, 14 Feb 2025 19:23:16 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250213091631epcas5p12bc4ff8f6f3498f400cf5f2cb1a42e96~judGrUT3r1560415604epcas5p11;
-	Thu, 13 Feb 2025 09:16:31 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250213091631epsmtrp1cf59accc57012985e3c9bcadf7285db1~judGqhZpE2265622656epsmtrp1f;
-	Thu, 13 Feb 2025 09:16:31 +0000 (GMT)
-X-AuditID: b6c32a4a-b87c770000004ddd-f4-67af199452a3
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	44.94.33707.F68BDA76; Thu, 13 Feb 2025 18:16:31 +0900 (KST)
-Received: from test-PowerEdge-R740xd.samsungds.net (unknown [107.99.41.79])
-	by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250213091629epsmtip1e54855622dae06f776471d16077ffced~judFQq1Cr2264222642epsmtip1r;
-	Thu, 13 Feb 2025 09:16:29 +0000 (GMT)
-From: Vinayak Holikatti <vinayak.kh@samsung.com>
-To: qemu-devel@nongnu.org
-Cc: gost.dev@samsung.com, linux-cxl@vger.kernel.org, nifan.cxl@gmail.com,
-	dave@stgolabs.net, vishak.g@samsung.com, krish.reddy@samsung.com,
-	a.manzanares@samsung.com, alok.rathore@samsung.com, Vinayak Holikatti
-	<vinayak.kh@samsung.com>
-Subject: [PATCH v2 2/3] hw/cxl: factor out calculation of sanitize duration
- from cmd_santize_overwrite
-Date: Thu, 13 Feb 2025 14:45:57 +0530
-Message-Id: <20250213091558.2294806-3-vinayak.kh@samsung.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250213091558.2294806-1-vinayak.kh@samsung.com>
+	s=arc-20240116; t=1739530197; c=relaxed/simple;
+	bh=nTLGQRv9+Dmv04TXYESDtBUvopxmV+9Gvf73k4K56rs=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=hJ44cjtWjEu+fgIV1Sko1tKXnldxz96ftCkt1m3twmVBG4/L+2hYeZUpCdWZ6HxV8k5SK5ZE7shGNP0vSZo3+1A1nmd0joyncpe0WOilxCb7bHGTMohX6LbnVVmJYFXCNv8t3VfDD6NMq0Ol8H7DLJlIJJkHD3f24xCyJl05v1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YvTHz4wLdz6L4t9;
+	Fri, 14 Feb 2025 18:46:39 +0800 (CST)
+Received: from frapeml100007.china.huawei.com (unknown [7.182.85.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id E1DB31400DA;
+	Fri, 14 Feb 2025 18:49:45 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (7.182.85.172) by
+ frapeml100007.china.huawei.com (7.182.85.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Fri, 14 Feb 2025 11:49:45 +0100
+Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
+ frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
+ Fri, 14 Feb 2025 11:49:45 +0100
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Fan Ni <nifan.cxl@gmail.com>
+CC: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, "bp@alien8.de" <bp@alien8.de>,
+	"tony.luck@intel.com" <tony.luck@intel.com>, "rafael@kernel.org"
+	<rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
+	"mchehab@kernel.org" <mchehab@kernel.org>, "dan.j.williams@intel.com"
+	<dan.j.williams@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
+	"Jonathan Cameron" <jonathan.cameron@huawei.com>, "dave.jiang@intel.com"
+	<dave.jiang@intel.com>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
+	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
+	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
+	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
+	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "naoya.horiguchi@nec.com"
+	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
+	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
+	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
+	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
+	<duenwen@google.com>, "gthelen@google.com" <gthelen@google.com>,
+	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
+	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
+	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>, tanxiaofei
+	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, "Roberto
+ Sassu" <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
+	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
+	Linuxarm <linuxarm@huawei.com>
+Subject: RE: [PATCH v20 02/15] EDAC: Add scrub control feature
+Thread-Topic: [PATCH v20 02/15] EDAC: Add scrub control feature
+Thread-Index: AQHbfVudPqq/NHwN4UqlQ2GJSWClwrNFsryAgADmw2A=
+Date: Fri, 14 Feb 2025 10:49:45 +0000
+Message-ID: <4bf20362774e4a7cb9387f97f43fff9c@huawei.com>
+References: <20250212143654.1893-1-shiju.jose@huawei.com>
+ <20250212143654.1893-3-shiju.jose@huawei.com>
+ <67ae6587.170a0220.2d3544.9687@mx.google.com>
+In-Reply-To: <67ae6587.170a0220.2d3544.9687@mx.google.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNJsWRmVeSWpSXmKPExsWy7bCmpu4UyfXpBi/fSVhMP6xo8eX0HjaL
-	1TfXMFrcPLCTyWLhxmVMFudnnWKx+LttL6PF8d4dLBYnTm5nB4rNYXfg8tg56y67x5Nrm5k8
-	+rasYvSYOrve4/MmuQDWqGybjNTElNQihdS85PyUzLx0WyXv4HjneFMzA0NdQ0sLcyWFvMTc
-	VFslF58AXbfMHKCblBTKEnNKgUIBicXFSvp2NkX5pSWpChn5xSW2SqkFKTkFJgV6xYm5xaV5
-	6Xp5qSVWhgYGRqZAhQnZGSf+2xR0ylc0HVjD2sC4QKyLkZNDQsBEYmLDVNYuRi4OIYHdjBIv
-	nuxlgnA+MUrcPviGEc5Z9uoWK0zL0uanbBCJnYwSC189YYdwGpgkWpZtBKtiEzCQeNB8nB3E
-	FhGQlPjddZoZxGYW+MAoseipLogtLJAhsWzHViYQm0VAVeLD0+9gNbwCthLtJ99AbZOX2H/w
-	LFCcg4NTwE5i2stsiBJBiZMzn7BAjJSXaN46mxnkBgmBVg6J31enskP0ukj82LeDEcIWlnh1
-	fAtUXEriZX8blF0sce7iJ6iaGonXXSuYIWx7idZT/WB7mQU0Jdbv0ocIy0pMPbWOCWIvn0Tv
-	7ydMEHFeiR3zQGwOIFtFYunbTJhNX541Q033kPh46y8zJKgmMkpce/OQbQKjwiwk78xC8s4s
-	hM0LGJlXMUqmFhTnpqcWmxYY5aWWw+M4OT93EyM4lWp57WB8+OCD3iFGJg7GQ4wSHMxKIrwS
-	09akC/GmJFZWpRblxxeV5qQWH2I0BQb3RGYp0eR8YDLPK4k3NLE0MDEzMzOxNDYzVBLnbd7Z
-	ki4kkJ5YkpqdmlqQWgTTx8TBKdXAlJRw/X72jO0BrnI7FyV0b+22vSJnsXJpaY9O2b3CWwxi
-	6xKqmvnnekgzSn79vz/H8LnWJ3Xmvl+LDCbXn3FhOaY1x5QptvuDn8H6cGG3kiMFGac2Pzog
-	WP2//cqx4BK/S2+fnvkhIXyq+JC3yBmHtX+7nDdUn1117yjnvd4bHiJWXOeOT544+fFTg098
-	Tvyps4Lm907PKw9eenjKuY/3fz5c1WxmKGXyPGEPn2L5q7Qr4lZycusy3qYleXWGHONvvjKv
-	al946+5/P9+u7UnmvXlhcv1n3VXWefLPWryc2K4UnL4s8f/etmnchT/bAi2WOio8M93Qq2H/
-	/ZfMmdoy+bjg8orvKk7bPr9jzu2wUmIpzkg01GIuKk4EAN1nzb8uBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrCLMWRmVeSWpSXmKPExsWy7bCSnG7+jrXpBnfbeCymH1a0+HJ6D5vF
-	6ptrGC1uHtjJZLFw4zImi/OzTrFY/N22l9HieO8OFosTJ7ezA8XmsDtweeycdZfd48m1zUwe
-	fVtWMXpMnV3v8XmTXABrFJdNSmpOZllqkb5dAlfGif82BZ3yFU0H1rA2MC4Q62Lk5JAQMJFY
-	2vyUrYuRi0NIYDujROuRl4wQCSmJYzt/skHYwhIr/z1nhyj6xyjRtnEtO0iCTcBA4kHzcTBb
-	REBS4nfXaWaQImaBX4wST3ffB0pwcAgLpEnc+MkKUsMioCrx4el3ZhCbV8BWov3kG1aIBfIS
-	+w+eZQYp5xSwk5j2MhskLARUsrvzGhNEuaDEyZlPWEBKmAXUJdbPEwIJMwN1Nm+dzTyBUXAW
-	kqpZCFWzkFQtYGRexSiaWlCcm56bXGCoV5yYW1yal66XnJ+7iREcEVpBOxiXrf+rd4iRiYPx
-	EKMEB7OSCK/EtDXpQrwpiZVVqUX58UWlOanFhxilOViUxHmVczpThATSE0tSs1NTC1KLYLJM
-	HJxSDUxsBQ2X2ObMM/dzLtl76bG1y9tZis7ZGv8vXVzzdnu9pO8E90tLfjEmV9ZePBe/9doJ
-	5S1PdwnKHTmi5L7/X9axtjLBKM33rtzTosyXxugLdtfueFgry19f2mX2v6u/taw3/NIHd7uN
-	TGu/8WZbWx41Smzb7fA+Ja/xWrzfr8Ta0MS6pZbJq7h3PPseWPNy11Mdm6zlNu4XfXVShT9N
-	//BLaK5Pb89MBsG4mXpHP4R/n5G56EbSDRdnQ9Up+3kS7jb7zv3ToT/bxln73PddDZlrmWyv
-	F4YEWYQusp2yPlfQ98jHGKaAyO/trY9qmJYr2izO6+SPPta9ZHFwIs/aOexsu8KT5HdqTeqP
-	cbz6T4mlOCPRUIu5qDgRAKNOHPn3AgAA
-X-CMS-MailID: 20250213091631epcas5p12bc4ff8f6f3498f400cf5f2cb1a42e96
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250213091631epcas5p12bc4ff8f6f3498f400cf5f2cb1a42e96
-References: <20250213091558.2294806-1-vinayak.kh@samsung.com>
-	<CGME20250213091631epcas5p12bc4ff8f6f3498f400cf5f2cb1a42e96@epcas5p1.samsung.com>
 
-Move the code of calculation of sanitize duration into function
-for usability by other sanitize routines
 
-Estimate times based on:
-             https://pmem.io/documents/NVDIMM_DSM_Interface-V1.8.pdf
+>-----Original Message-----
+>From: Fan Ni <nifan.cxl@gmail.com>
+>Sent: 13 February 2025 21:35
+>To: Shiju Jose <shiju.jose@huawei.com>
+>Cc: linux-edac@vger.kernel.org; linux-cxl@vger.kernel.org; linux-
+>acpi@vger.kernel.org; linux-mm@kvack.org; linux-kernel@vger.kernel.org;
+>linux-doc@vger.kernel.org; bp@alien8.de; tony.luck@intel.com;
+>rafael@kernel.org; lenb@kernel.org; mchehab@kernel.org;
+>dan.j.williams@intel.com; dave@stgolabs.net; Jonathan Cameron
+><jonathan.cameron@huawei.com>; dave.jiang@intel.com;
+>alison.schofield@intel.com; vishal.l.verma@intel.com; ira.weiny@intel.com;
+>david@redhat.com; Vilas.Sridharan@amd.com; leo.duran@amd.com;
+>Yazen.Ghannam@amd.com; rientjes@google.com; jiaqiyan@google.com;
+>Jon.Grimm@amd.com; dave.hansen@linux.intel.com;
+>naoya.horiguchi@nec.com; james.morse@arm.com; jthoughton@google.com;
+>somasundaram.a@hpe.com; erdemaktas@google.com; pgonda@google.com;
+>duenwen@google.com; gthelen@google.com;
+>wschwartz@amperecomputing.com; dferguson@amperecomputing.com;
+>wbs@os.amperecomputing.com; nifan.cxl@gmail.com; tanxiaofei
+><tanxiaofei@huawei.com>; Zengtao (B) <prime.zeng@hisilicon.com>; Roberto
+>Sassu <roberto.sassu@huawei.com>; kangkang.shen@futurewei.com;
+>wanghuiqiang <wanghuiqiang@huawei.com>; Linuxarm
+><linuxarm@huawei.com>
+>Subject: Re: [PATCH v20 02/15] EDAC: Add scrub control feature
+>
+>On Wed, Feb 12, 2025 at 02:36:40PM +0000, shiju.jose@huawei.com wrote:
+>> From: Shiju Jose <shiju.jose@huawei.com>
+>>
+>> Add a generic EDAC scrub control to manage memory scrubbers in the syste=
+m.
+>> Devices with a scrub feature register with the EDAC device driver,
+>> which retrieves the scrub descriptor from the EDAC scrub driver and
+>> exposes the sysfs scrub control attributes for a scrub instance to
+>> userspace at /sys/bus/edac/devices/<dev-name>/scrubX/.
+>>
+>> The common sysfs scrub control interface abstracts the control of
+>> arbitrary scrubbing functionality into a common set of functions. The
+>> sysfs scrub attribute nodes are only present if the client driver has
+>> implemented the corresponding attribute callback function and passed
+>> the
+>> operations(ops) to the EDAC device driver during registration.
+>>
+>> Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> Tested-by: Daniel Ferguson <danielf@os.amperecomputing.com>
+>> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+>> ---
+>>  Documentation/ABI/testing/sysfs-edac-scrub |  69 ++++++
+>>  Documentation/edac/features.rst            |   6 +
+>>  Documentation/edac/index.rst               |   1 +
+>>  Documentation/edac/scrub.rst               | 259 +++++++++++++++++++++
+>>  drivers/edac/Kconfig                       |   9 +
+>>  drivers/edac/Makefile                      |   2 +
+>>  drivers/edac/edac_device.c                 |  41 +++-
+>>  drivers/edac/scrub.c                       | 209 +++++++++++++++++
+>>  include/linux/edac.h                       |  43 ++++
+>>  9 files changed, 635 insertions(+), 4 deletions(-)  create mode
+>> 100644 Documentation/ABI/testing/sysfs-edac-scrub
+>>  create mode 100644 Documentation/edac/scrub.rst  create mode 100755
+>> drivers/edac/scrub.c
+>
+>LGTM.
+>
+>Just one question, for min/max/current_cycle_duration attributes, is there=
+ a
+>reason why seconds are used instead of hours directly as mentioned in the =
+spec.
+>That confused me a little bit when I tested to modify the current_cycle_du=
+ration
+>with some value not multiple of 3600 and found the value read back is not =
+the
+>same as that just written.
+>
+Hi Fan,
 
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-Signed-off-by: Vinayak Holikatti <vinayak.kh@samsung.com>
----
- hw/cxl/cxl-mailbox-utils.c | 61 ++++++++++++++++++++++----------------
- 1 file changed, 35 insertions(+), 26 deletions(-)
+Thanks for reviewing and testing.
+The unit for the scrub cycle attributes has been chosen as a small unit, se=
+conds,=20
+since the EDAC scrub interface is a common interface and the unit may vary =
+across=20
+various hardware scrub interfaces.
+In the CXL scrub control feature, the scrub cycle is represented in hours. =
+Therefore,=20
+the scrub cycle is internally converted to hours, and the rounded value in =
+hours,=20
+which is set in the device, is returned when read back.
 
-diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-index fa38ecf507..d58c20842f 100644
---- a/hw/cxl/cxl-mailbox-utils.c
-+++ b/hw/cxl/cxl-mailbox-utils.c
-@@ -1656,34 +1656,10 @@ static void __do_sanitization(CXLType3Dev *ct3d)
-     cxl_discard_all_event_records(&ct3d->cxl_dstate);
- }
- 
--/*
-- * CXL r3.1 Section 8.2.9.9.5.1: Sanitize (Opcode 4400h)
-- *
-- * Once the Sanitize command has started successfully, the device shall be
-- * placed in the media disabled state. If the command fails or is interrupted
-- * by a reset or power failure, it shall remain in the media disabled state
-- * until a successful Sanitize command has been completed. During this state:
-- *
-- * 1. Memory writes to the device will have no effect, and all memory reads
-- * will return random values (no user data returned, even for locations that
-- * the failed Sanitize operation didn’t sanitize yet).
-- *
-- * 2. Mailbox commands shall still be processed in the disabled state, except
-- * that commands that access Sanitized areas shall fail with the Media Disabled
-- * error code.
-- */
--static CXLRetCode cmd_sanitize_overwrite(const struct cxl_cmd *cmd,
--                                         uint8_t *payload_in,
--                                         size_t len_in,
--                                         uint8_t *payload_out,
--                                         size_t *len_out,
--                                         CXLCCI *cci)
-+static int get_sanitize_duration(uint64_t total_mem)
- {
--    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
--    uint64_t total_mem; /* in Mb */
--    int secs;
-+    int secs = 0;
- 
--    total_mem = (ct3d->cxl_dstate.vmem_size + ct3d->cxl_dstate.pmem_size) >> 20;
-     if (total_mem <= 512) {
-         secs = 4;
-     } else if (total_mem <= 1024) {
-@@ -1712,6 +1688,39 @@ static CXLRetCode cmd_sanitize_overwrite(const struct cxl_cmd *cmd,
-         secs = 240 * 60; /* max 4 hrs */
-     }
- 
-+    return secs;
-+}
-+
-+/*
-+ * CXL r3.1 Section 8.2.9.9.5.1: Sanitize (Opcode 4400h)
-+ *
-+ * Once the Sanitize command has started successfully, the device shall be
-+ * placed in the media disabled state. If the command fails or is interrupted
-+ * by a reset or power failure, it shall remain in the media disabled state
-+ * until a successful Sanitize command has been completed. During this state:
-+ *
-+ * 1. Memory writes to the device will have no effect, and all memory reads
-+ * will return random values (no user data returned, even for locations that
-+ * the failed Sanitize operation didn’t sanitize yet).
-+ *
-+ * 2. Mailbox commands shall still be processed in the disabled state, except
-+ * that commands that access Sanitized areas shall fail with the Media Disabled
-+ * error code.
-+ */
-+static CXLRetCode cmd_sanitize_overwrite(const struct cxl_cmd *cmd,
-+                                         uint8_t *payload_in,
-+                                         size_t len_in,
-+                                         uint8_t *payload_out,
-+                                         size_t *len_out,
-+                                         CXLCCI *cci)
-+{
-+    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
-+    uint64_t total_mem; /* in Mb */
-+    int secs;
-+
-+    total_mem = (ct3d->cxl_dstate.vmem_size + ct3d->cxl_dstate.pmem_size) >> 20;
-+    secs = get_sanitize_duration(total_mem);
-+
-     /* EBUSY other bg cmds as of now */
-     cci->bg.runtime = secs * 1000UL;
-     *len_out = 0;
--- 
-2.34.1
+>With that in mind,=09
+>
+>Tested-by: Fan Ni <fan.ni@samsung.com>
+>
+>
+>>
+[...]
+>> --
+>> 2.43.0
+>>
 
+Thanks,
+Shiju
