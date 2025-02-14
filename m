@@ -1,30 +1,30 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38A4D7E0ED;
-	Fri, 14 Feb 2025 16:33:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D6B266EE1;
+	Fri, 14 Feb 2025 16:35:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739550833; cv=none; b=DeXnacj6yP6I8zcNxToay+jPbW356uUghilJME8R8bkLp3jWKZo+gE3eG5eYqhx9VtVda6utX/baIzgIig02IGncqyWOIG5tPaxB+jKn2V4Wm5A3Q9hzbwfiSKt6tX9GGJ1eET4rEkJhxCWVQ0Nk4m2lUdVZcde0nkKPWY9PdVY=
+	t=1739550909; cv=none; b=PJF60wZpoGgHUryD0lacEvo2cxyi7isNt1eMtQNmSknxTZbfBtHQpjUOnn+LlCAa7hfh/TZ2kGvmstu19+n4zy0V9zqO9XLKUI3mWrwt3opOleMIyGkmCwupKUR/melADq1S0Z+ygiwxvuOaTtSwvVFgDTjl1kg6yEZNsqV2+Rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739550833; c=relaxed/simple;
-	bh=gFDaOmwQbOF+QYMqI3l9zMjrHfJ7vsGvcdEoLzNNtHE=;
+	s=arc-20240116; t=1739550909; c=relaxed/simple;
+	bh=W8zq/v5vPvhVYcs9auKXlmzYWh04rjm5apQKr28YEzk=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=baxzOQLTRBeWuRJWgGCrbD6RvbXAO/aASenUyuMKBSQIKuP31pF9tjq4XHcDBMFoyxuPNax4KptpNeyC/gZ2WSQcqv769vdizRHj+R9iGksQVIuqsViBBrPbWvBS+cG4h56VXQMm0r6RNKVjRkO9olC9TG1u7X9oewFifby7RyI=
+	 MIME-Version:Content-Type; b=hmfC/a0gkqW2GlzFxmhwdx7R2INAkwKi982B6oJHx++DyZhCCw6uUgjxVE0r9UK0m0tyAgnhFl6ASNmiU6t1tNA15ucdTtn+JvXtA9jc8VKzf5lAqjODb6FWQ6IvaWTggcJUh+Qgycbw1zDj536TejWPOuWpxw6p5ZS6rLrxl9A=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Yvcwx6P7Vz6L531;
-	Sat, 15 Feb 2025 00:30:41 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Yvcz82wrgz6M4f8;
+	Sat, 15 Feb 2025 00:32:36 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id CC39C140B39;
-	Sat, 15 Feb 2025 00:33:48 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id D970814038F;
+	Sat, 15 Feb 2025 00:35:04 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 14 Feb
- 2025 17:33:48 +0100
-Date: Fri, 14 Feb 2025 16:33:46 +0000
+ 2025 17:35:04 +0100
+Date: Fri, 14 Feb 2025 16:35:02 +0000
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To: Robert Richter <rrichter@amd.com>
 CC: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
@@ -34,12 +34,12 @@ CC: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
 	<linux-kernel@vger.kernel.org>, Gregory Price <gourry@gourry.net>, "Fabio M.
  De Francesco" <fabio.m.de.francesco@linux.intel.com>, Terry Bowman
 	<terry.bowman@amd.com>
-Subject: Re: [PATCH v3 14/18] cxl/region: Unfold cxl_find_root_decoder()
- into cxl_endpoint_decoder_initialize()
-Message-ID: <20250214163346.00007ade@huawei.com>
-In-Reply-To: <20250211095349.981096-15-rrichter@amd.com>
+Subject: Re: [PATCH v3 15/18] cxl/region: Add a dev_warn() on registration
+ failure
+Message-ID: <20250214163502.0000575f@huawei.com>
+In-Reply-To: <20250211095349.981096-16-rrichter@amd.com>
 References: <20250211095349.981096-1-rrichter@amd.com>
-	<20250211095349.981096-15-rrichter@amd.com>
+	<20250211095349.981096-16-rrichter@amd.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -48,90 +48,61 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, 11 Feb 2025 10:53:44 +0100
+On Tue, 11 Feb 2025 10:53:45 +0100
 Robert Richter <rrichter@amd.com> wrote:
 
-> To determine other endpoint parameters such as interleaving parameters
-> during endpoint initialization, the iterator function in
-> cxl_find_root_decoder() can be used. Unfold this function into
-> cxl_endpoint_decoder_initialize() and make the iterator available
-> there.
-I'm not following this description at all. Perhaps this needs
-to wait until you have code that is reusing this to find those
-interleave parameters and similar.
-
-For now it just looks like a sensible bit of cleanup where there
-was just a single caller of cxl_find_root_decoder()
-
-> 
+> Esp. in complex system configurations with multiple endpoints and
+> interleaving setups it is hard to detect region setup failures as its
+> registration may silently fail. Add messages to show registration
+> failures.
+>=20
+> Example log message:
+>=20
+>   cxl region5: region sort successful
+>   cxl region5: mem0:endpoint5 decoder5.0 add: mem0:decoder5.0 @ 0 next: n=
+one nr_eps: 1 nr_targets: 1
+>   cxl_port endpoint5: decoder5.0: range: 0x22350000000-0x2634fffffff iw: =
+1 ig: 256
+>   cxl region5: pci0000:e0:port1 decoder1.2 add: mem0:decoder5.0 @ 0 next:=
+ mem0 nr_eps: 1 nr_targets: 1
+>   cxl region5: pci0000:e0:port1 iw: 1 ig: 256
+>   cxl region5: pci0000:e0:port1: decoder1.2 expected 0000:e0:01.2 at 0
+>   cxl endpoint5: failed to attach decoder5.0 to region5: -6
+>   cxl_port endpoint5: probe: 0
+>=20
 > Signed-off-by: Robert Richter <rrichter@amd.com>
 > Reviewed-by: Gregory Price <gourry@gourry.net>
 > Tested-by: Gregory Price <gourry@gourry.net>
+I'm in general fine with this, but we have previously been reluctant in
+some cases to go above dev_dbg.  Hence would like input from more
+people on this one.
+
+=46rom me though
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
 > ---
->  drivers/cxl/core/region.c | 24 +++++-------------------
->  1 file changed, 5 insertions(+), 19 deletions(-)
-> 
+>  drivers/cxl/core/region.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>=20
 > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 72e991e7d9ab..ebcfbfe9eafc 100644
+> index ebcfbfe9eafc..3031d4773274 100644
 > --- a/drivers/cxl/core/region.c
 > +++ b/drivers/cxl/core/region.c
-> @@ -3220,8 +3220,7 @@ cxl_port_find_switch_decoder(struct cxl_port *port, struct range *hpa)
->  	return cxld_dev ? to_cxl_decoder(cxld_dev) : NULL;
+> @@ -2147,6 +2147,12 @@ static int attach_target(struct cxl_region *cxlr,
+>  	rc =3D cxl_region_attach(cxlr, cxled, pos);
+>  	up_read(&cxl_dpa_rwsem);
+>  	up_write(&cxl_region_rwsem);
+> +
+> +	if (rc)
+> +		dev_warn(cxled->cxld.dev.parent,
+> +			"failed to attach %s to %s: %d\n",
+> +			dev_name(&cxled->cxld.dev), dev_name(&cxlr->dev), rc);
+> +
+>  	return rc;
 >  }
->  
-> -static struct cxl_root_decoder *
-> -cxl_find_root_decoder(struct cxl_endpoint_decoder *cxled)
-> +static int cxl_endpoint_decoder_initialize(struct cxl_endpoint_decoder *cxled)
->  {
->  	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
->  	struct cxl_port *iter = cxled_to_port(cxled);
-> @@ -3232,7 +3231,7 @@ cxl_find_root_decoder(struct cxl_endpoint_decoder *cxled)
->  		iter = to_cxl_port(iter->dev.parent);
->  
->  	if (!iter)
-> -		return NULL;
-> +		return -ENXIO;
->  
->  	root = cxl_port_find_switch_decoder(iter, hpa);
->  	if (!root) {
-> @@ -3240,12 +3239,12 @@ cxl_find_root_decoder(struct cxl_endpoint_decoder *cxled)
->  			"%s:%s no CXL window for range %#llx:%#llx\n",
->  			dev_name(&cxlmd->dev), dev_name(&cxld->dev),
->  			cxld->hpa_range.start, cxld->hpa_range.end);
-> -		return NULL;
-> +		return -ENXIO;
->  	}
->  
-> +	cxled->cxlrd = to_cxl_root_decoder(&root->dev);
->  
-> -
-> -	return to_cxl_root_decoder(&root->dev);
-> +	return 0;
->  }
->  
->  static int match_region_by_range(struct device *dev, const void *data)
-> @@ -3370,19 +3369,6 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
->  	return ERR_PTR(rc);
->  }
->  
-> -static int cxl_endpoint_decoder_initialize(struct cxl_endpoint_decoder *cxled)
-> -{
-> -	struct cxl_root_decoder *cxlrd;
-> -
-> -	cxlrd = cxl_find_root_decoder(cxled);
-> -	if (!cxlrd)
-> -		return -ENXIO;
-> -
-> -	cxled->cxlrd = cxlrd;
-> -
-> -	return 0;
-> -}
-> -
->  static int cxl_endpoint_decoder_add(struct cxl_endpoint_decoder *cxled)
->  {
->  	struct range *hpa = &cxled->cxld.hpa_range;
+> =20
 
