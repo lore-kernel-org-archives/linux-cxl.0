@@ -1,254 +1,291 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D72486328;
-	Fri, 14 Feb 2025 17:36:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0930264A80
+	for <linux-cxl@vger.kernel.org>; Fri, 14 Feb 2025 17:44:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739554598; cv=none; b=KIaDe9O0sZd1Jcbr74Yj8bE7LBBU1WbEqDpWidzhSMk1J95sVa+Ca6CKRrE25XH7cnbuFgQGnempIMPjXKwHZTLDOphkVfovToNT26n54HBYk8l7pvMqLxhKX/fXaNFvmFbqgiaWyqTBsMqx4Le3AdkE2jQRDzk1p32Lq5dWBBY=
+	t=1739555046; cv=none; b=qT5tAuvX7hPQvXIQOokpCP4L6vOR9gxCXuRy9Pqkqj+VaIWxXhPhYiJGoTaL3SSqXM51WIxW8bpMfEH8hvymov7tSVfCIWNVKMHXb/t8WuGRxOzZQQQ+BxU6dayV88SLX1KU8lwxnPXlrejgjMdDF9CSSMRhqKYeqMvwBkyec+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739554598; c=relaxed/simple;
-	bh=qfybTiOUSWNbq8BCvxruFHatLxAy5MykIIKdWBZur8I=;
-	h=Message-ID:From:Date:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=glKak8y0rqeK4QNWT2Cqbotxm9h2WqUwrQjCUNz68AVAsArb57juRIraeFzqGqGk18lw5MnOpQ0nc4CAKVVL6iW24ZsWbp92Y+Nwe1oiYYqF+zyWZvVOsYFD0oTLEBiT14viUmUgKUVZEqOHqusop2dPopvgZugN46EFFGlTfVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W9spkMiQ; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W9spkMiQ"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-220c8eb195aso47117625ad.0;
-        Fri, 14 Feb 2025 09:36:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739554596; x=1740159396; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:date:from:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=IkhQ+i3KL52bBAily72UySWih9Zn3fPD2ZA69cri6n0=;
-        b=W9spkMiQ04l5ganixxsFQuHW31Wiute7BtHM1PvEsHfsZxDkoLcXOiUT7wQrTfKgZo
-         l7PSCbDgsnMhgJAJu4CrO5aD3da0z4vwzPICePDFs7vOxKTrBtC+2TgOGYspX0sSdTZJ
-         xnuVIJtc0ZV/pe0z39PY0kapagsUq8ogpAzwhyZxPNAKBj1Lksmw+YZ7o0Pk85QHOKzY
-         F4bQH13ROy9qEL3VsMQUnKctM4u9Bl3DCP7dopnCQIL52q+Bd2ZbGLvbZGz7GDCtpJ7U
-         qJiGik/MtqgxVHGvciKVr4ZhKS+4CfhpQrTq6QF5tKmraR3Cii95PE/lXTmWfWE+YfV2
-         9GKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739554596; x=1740159396;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:date:from:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IkhQ+i3KL52bBAily72UySWih9Zn3fPD2ZA69cri6n0=;
-        b=rzRViZqkc/0E9levbxW4Oln4Qbhlcuon7S5HE6nvCEZna+xMKxOVc8ZX3WTKFyyGgz
-         Bqe4y+6+ShRZVD7QURgv6KSzjL4B6m4AaE1deYSeEsP3aQL0EMatq+Gylf9j+1tFunFG
-         fYHDzCcUPw5mA7kz6rnL2morIpr4O8qM4h42RFtMBtTlW6PoHPTY/lFTvWHA7Vr/WdVy
-         6Fcbt9+PxOuL8N0l+fpWcDynXKNITwXkffbV0TZzuOp862Qi+RbF8jA4wDwk51m6k9l+
-         EAoYkBqN3Kh91HcAdl2O1vtQXO1PMBz0ou0zSV360SvBSwLfrtMKWuwkVE7Cj/DI/f4T
-         fwtA==
-X-Forwarded-Encrypted: i=1; AJvYcCVS0phz5HZN2r3yZdK87aewai2AcEG1U66c6qKDJzScRPqVBPIbVxeF3LlcKBG+RdgxX4zWXouUVA9qxwM=@vger.kernel.org, AJvYcCVwOn6vsPPUsv61W1Ej87JujDlfN/Iy9+TgLbySE04PyhIMFf3yJBbPKvCQNaXjAGMORRMGxG3uCKmg@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFqLeZkCaw2vXg4CiPrisaAdEobOXlwTGdPDTtHOx4ZmNICDXD
-	ZEi9w7MrP39BepkWpjE+r+joTwU0i0v1yw17c5cjl0Zen3/61XmY
-X-Gm-Gg: ASbGnctik+lrvQOeu2cVEy7u4WB2CgsPMgqji5Eiteu1f7LxOkDUvCbvAtEyBbw2dAH
-	h+w4uJs+a91DUrr+EhXX1iNOKw9pu3vYUAtXetZhR6o+mAXEBYUDKk4ZqrvYJveCVn20SJJR+1g
-	98bs5oNSbd2XiBoYrhL/L5mkGaiT0y5MEj37fTbEUeTB9H6LAhJTmab0hYUSEoas9d2tfaZ3lWy
-	eK3Lv+iJ6FJX5v/V83L5pDAnpwg01D0mMBHD3bATwn1SFG3zsjE3Lv6MMNNVbAXxWXtvCvtsJF4
-	3OX3PV2IZM/TP18HRSYe5vZ73/u7imsZTB8GHcjjCrc=
-X-Google-Smtp-Source: AGHT+IHq23vD0wNWN8GqPqA34fojUP1PkUyAZoM6q5IRmKF60hjImvHXcppQN5XSaAnO3RMG54Irjg==
-X-Received: by 2002:a17:902:ecc7:b0:220:d6c3:17b8 with SMTP id d9443c01a7336-22103c602abmr1919815ad.0.1739554596449;
-        Fri, 14 Feb 2025 09:36:36 -0800 (PST)
-Received: from asus. (c-73-189-148-61.hsd1.ca.comcast.net. [73.189.148.61])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d545c985sm31673885ad.154.2025.02.14.09.36.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2025 09:36:35 -0800 (PST)
-Message-ID: <67af7f23.170a0220.25b6a5.75a3@mx.google.com>
-X-Google-Original-Message-ID: <Z69_HV89FoQKWFSv@asus.>
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Fri, 14 Feb 2025 09:36:29 -0800
-To: Terry Bowman <terry.bowman@amd.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
-	ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
-	rrichter@amd.com, nathan.fontenot@amd.com,
-	Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
-	ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com
-Subject: Re: [PATCH v7 06/17] PCI/AER: Add CXL PCIe Port uncorrectable error
- recovery in AER service driver
-References: <20250211192444.2292833-1-terry.bowman@amd.com>
- <20250211192444.2292833-7-terry.bowman@amd.com>
+	s=arc-20240116; t=1739555046; c=relaxed/simple;
+	bh=iUnT+IaL0Xfq8ca7RrG2Ae1E2p5WZnp/kMkM/wB4HrY=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ud/a6Qyh2fDvJYX2OdGOPhbPguea2qrSRgdIJDnNFmaBIpGMEWZt9iHS/52TBKKqqjeO776Ut8pFPA+Y86M7yc4eV7qIAfAQeCVIFTazrSsgaBy+a7hsjHabdJXQ6X3KhDDalTFK6EA6PbKivmQh6hNHbXrzGl08AzJZzfa0rDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YvfTy4lxNz6L531;
+	Sat, 15 Feb 2025 01:40:54 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id C4DC31402CB;
+	Sat, 15 Feb 2025 01:44:01 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 14 Feb
+ 2025 18:44:01 +0100
+Date: Fri, 14 Feb 2025 17:43:59 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Sweta Kumari <s5.kumari@samsung.com>
+CC: <qemu-devel@nongnu.org>, <gost.dev@samsung.com>,
+	<linux-cxl@vger.kernel.org>, <nifan.cxl@gmail.com>, <dave@stgolabs.net>,
+	<vishak.g@samsung.com>, <krish.reddy@samsung.com>,
+	<a.manzanares@samsung.com>, <alok.rathore@samsung.com>
+Subject: Re: [PATCH v2] CXL CCI Get/Set Alert Configuration commands
+ implmented as per CXL Specification 3.2 section 8.2.10.9.3
+Message-ID: <20250214174359.0000368a@huawei.com>
+In-Reply-To: <20250214132211.528019-1-s5.kumari@samsung.com>
+References: <CGME20250214132317epcas5p3732f86a4aa3cee5c396e18c2bf98a82b@epcas5p3.samsung.com>
+	<20250214132211.528019-1-s5.kumari@samsung.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250211192444.2292833-7-terry.bowman@amd.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, Feb 11, 2025 at 01:24:33PM -0600, Terry Bowman wrote:
-> Existing recovery procedure for PCIe uncorrectable errors (UCE) does not
-> apply to CXL devices. Recovery can not be used for CXL devices because of
-> potential corruption on what can be system memory. Also, current PCIe UCE
-> recovery, in the case of a Root Port (RP) or Downstream Switch Port (DSP),
-> does not begin at the RP/DSP but begins at the first downstream device.
-> This will miss handling CXL Protocol Errors in a CXL RP or DSP. A separate
-> CXL recovery is needed because of the different handling requirements
-> 
-> Add a new function, cxl_do_recovery() using the following.
-> 
-> Add cxl_walk_bridge() to iterate the detected error's sub-topology.
-> cxl_walk_bridge() is similar to pci_walk_bridge() but the CXL flavor
-> will begin iteration at the RP or DSP rather than beginning at the
-> first downstream device.
-> 
-> pci_walk_bridge() is candidate to possibly reuse cxl_walk_bridge() but
-> needs further investigation. This will be left for future improvement
-> to make the CXL and PCI handling paths more common.
-> 
-> Add cxl_report_error_detected() as an analog to report_error_detected().
-> It will call pci_driver::cxl_err_handlers for each iterated downstream
-> device. The pci_driver::cxl_err_handler's UCE handler returns a boolean
-> indicating if there was a UCE error detected during handling.
-> 
-> cxl_do_recovery() uses the status from cxl_report_error_detected() to
-> determine how to proceed. Non-fatal CXL UCE errors will be treated as
-> fatal. If a UCE was present during handling then cxl_do_recovery()
-> will kernel panic.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+On Fri, 14 Feb 2025 18:52:11 +0530
+Sweta Kumari <s5.kumari@samsung.com> wrote:
 
-Reviewed-by: Fan Ni <fan.ni@samsung.com>
+> 1)get alert configuration(Opcode 4201h)
+> 2)set alert configuration(Opcode 4202h)
 
+Move the change log to below the ---
+The key thing being git then doesn't pick it up whilst applying the patch.
+Whilst changed logs are very useful during the review process we don't
+typically want to keep them in the git history for ever!
+
+Otherwise, main comment here is shorten more names.
+
+Jonathan
+
+> 
+> This v2 patch addresses the feedback from the v1 patch and include some minor new changes.
+> 
+> Changes in V2:
+> - Removed cover letter as it's a single patch
+> - Added latest spec reference
+> - Fixed alignment issues
+> - Updated shorter variable names to be more descriptive
+> - Replaced field-by-field initialization in 'init_alert_config' with structured initialization for improved readability.
+> - Replaced bit fields with 'uint8_t' and added defines for individual bits.
+> 
+> The patch is generated against the Johnathan's tree
+> https://gitlab.com/jic23/qemu.git and branch cxl-2024-11-27.
+> 
+> Signed-off-by: Sweta Kumari <s5.kumari@samsung.com>
 > ---
->  drivers/pci/pci.h      |  3 +++
->  drivers/pci/pcie/aer.c |  4 +++
->  drivers/pci/pcie/err.c | 58 ++++++++++++++++++++++++++++++++++++++++++
->  include/linux/pci.h    |  3 +++
->  4 files changed, 68 insertions(+)
+>  hw/cxl/cxl-mailbox-utils.c  | 116 ++++++++++++++++++++++++++++++++++++
+>  hw/mem/cxl_type3.c          |  16 +++++
+>  include/hw/cxl/cxl_device.h |  15 +++++
+>  3 files changed, 147 insertions(+)
 > 
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 01e51db8d285..deb193b387af 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -722,6 +722,9 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->  		pci_channel_state_t state,
->  		pci_ers_result_t (*reset_subordinates)(struct pci_dev *pdev));
+> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> index 9c7ea5bc35..105c63fdec 100644
+> --- a/hw/cxl/cxl-mailbox-utils.c
+> +++ b/hw/cxl/cxl-mailbox-utils.c
+> @@ -28,6 +28,11 @@
+>  #define CXL_DC_EVENT_LOG_SIZE 8
+>  #define CXL_NUM_EXTENTS_SUPPORTED 512
+>  #define CXL_NUM_TAGS_SUPPORTED 0
+> +#define CXL_ALERTS_LIFE_USED_WARNING_THRESHOLD (1 << 0)
+> +#define CXL_ALERTS_DEVICE_OVER_TEMP_WARNING_THRESHOLD (1 << 1)
+> +#define CXL_ALERTS_DEVICE_UNDER_TEMP_WARNING_THRESHOLD (1 << 2)
+> +#define CXL_ALERTS_CORRECTED_VOLATILE_MEMORY_ERROR_WARNING_THRESHOLD (1 << 3)
+> +#define CXL_ALERTS_CORRECTED_PERSISTENT_MEMORY_ERROR_WARNING_THRESHOLD (1 << 4)
+Let's shorten these as they are very ugly to use when a line long!
+
+#define CXL_ALERTS_OVER_TEMP_WARN_THRESH
+etc. Similar to comments below.
+
 >  
-> +/* CXL error reporting and handling */
-> +void cxl_do_recovery(struct pci_dev *dev);
-> +
->  bool pcie_wait_for_link(struct pci_dev *pdev, bool active);
->  int pcie_retrain_link(struct pci_dev *pdev, bool use_lt);
->  
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 34ec0958afff..ee38db08d005 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -1012,6 +1012,8 @@ static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
->  			err_handler->error_detected(dev, pci_channel_io_normal);
->  		else if (info->severity == AER_FATAL)
->  			err_handler->error_detected(dev, pci_channel_io_frozen);
-> +
-> +		cxl_do_recovery(dev);
->  	}
->  out:
->  	device_unlock(&dev->dev);
-> @@ -1041,6 +1043,8 @@ static void cxl_handle_error(struct pci_dev *dev, struct aer_err_info *info)
->  			pdrv->cxl_err_handler->cor_error_detected(dev);
->  
->  		pcie_clear_device_status(dev);
-> +	} else {
-> +		cxl_do_recovery(dev);
->  	}
+>  /*
+>   * How to add a new command, example. The command set FOO, with cmd BAR.
+> @@ -86,6 +91,9 @@ enum {
+>          #define GET_PARTITION_INFO     0x0
+>          #define GET_LSA       0x2
+>          #define SET_LSA       0x3
+> +    HEALTH_INFO_ALERTS = 0x42,
+> +        #define GET_ALERT_CONFIGURATION 0x1
+> +        #define SET_ALERT_CONFIGURATION 0x2
+CONFIG maybe enough?
+
+>      SANITIZE    = 0x44,
+>          #define OVERWRITE     0x0
+>          #define SECURE_ERASE  0x1
+> @@ -1625,6 +1633,110 @@ static CXLRetCode cmd_ccls_set_lsa(const struct cxl_cmd *cmd,
+>      return CXL_MBOX_SUCCESS;
 >  }
 >  
-> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index 31090770fffc..05f2d1ef4c36 100644
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -24,6 +24,9 @@
->  static pci_ers_result_t merge_result(enum pci_ers_result orig,
->  				  enum pci_ers_result new)
+> +/* CXL r3.2 Section 8.2.10.9.3.2 Get Alert Configuration (Opcode 4201h) */
+> +static CXLRetCode cmd_get_alert_config(const struct cxl_cmd *cmd,
+> +                                       uint8_t *payload_in,
+> +                                       size_t len_in,
+> +                                       uint8_t *payload_out,
+> +                                       size_t *len_out,
+> +                                       CXLCCI *cci)
+> +{
+> +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
+> +    CXLAlertConfig *out = (void *)payload_out;
+
+In this case we can cast to the right type (can't do that if we don't
+name that type which happens in a lot these structures). So prefer
+    CXLAlertConfig *out = (CXLAlertConfig *)payload_out;
+ 
+
+> +
+> +    memcpy(out, &ct3d->alert_config, sizeof(ct3d->alert_config));
+> +    *len_out = sizeof(ct3d->alert_config);
+> +
+> +    return CXL_MBOX_SUCCESS;
+> +}
+> +
+> +/* CXL r3.2 Section 8.2.10.9.3.3 Set Alert Configuration (Opcode 4202h) */
+> +static CXLRetCode cmd_set_alert_config(const struct cxl_cmd *cmd,
+> +                                       uint8_t *payload_in,
+> +                                       size_t len_in,
+> +                                       uint8_t *payload_out,
+> +                                       size_t *len_out,
+> +                                       CXLCCI *cci)
+> +{
+> +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
+> +    CXLAlertConfig *alert_config = &ct3d->alert_config;
+> +    struct {
+> +        uint8_t valid_alert_actions;
+> +        uint8_t enable_alert_actions;
+> +        uint8_t life_used_warning_threshold;
+> +        uint8_t rsvd;
+> +        uint16_t device_over_temperature_warning_threshold;
+> +        uint16_t device_under_temperature_warning_threshold;
+> +        uint16_t Corrected_volatile_memory_error_warning_threshold;
+> +        uint16_t Corrected_persistent_memory_error_warning_threshold;
+
+Shorten these as well. Similar to suggestions below.  They are
+just too long to make for nice code!
+
+> +    } QEMU_PACKED *in = (void *)payload_in;
+> +
+> +    if (in->valid_alert_actions & CXL_ALERTS_LIFE_USED_WARNING_THRESHOLD) {
+> +        /*
+> +         * CXL 3.2 Table 8-149 The life used warning threshold shall be
+> +         * less than the life used critical alert value.
+> +         */
+> +        if (in->life_used_warning_threshold >=
+> +            alert_config->life_used_critical_alert_threshold) {
+> +            return CXL_MBOX_INVALID_INPUT;
+> +        }
+> +        alert_config->life_used_warning_threshold =
+> +            in->life_used_warning_threshold;
+> +        alert_config->enable_alerts |= CXL_ALERTS_LIFE_USED_WARNING_THRESHOLD;
+> +    }
+> +
+> +    if (in->valid_alert_actions &
+> +        CXL_ALERTS_DEVICE_OVER_TEMP_WARNING_THRESHOLD) {
+> +        /*
+> +         * CXL 3.2 Table 8-149 The Device Over-Temperature Warning Threshold
+> +         * shall be less than the the Device Over-Temperature Critical
+> +         * Alert Threshold.
+> +         */
+> +        if (in->device_over_temperature_warning_threshold >=
+> +            alert_config->device_over_temperature_critical_alert_threshold) {
+> +            return CXL_MBOX_INVALID_INPUT;
+> +        }
+> +        alert_config->device_over_temperature_warning_threshold =
+> +            in->device_over_temperature_warning_threshold;
+> +        alert_config->enable_alerts |=
+> +            CXL_ALERTS_DEVICE_OVER_TEMP_WARNING_THRESHOLD;
+> +    }
+> +
+> +    if (in->valid_alert_actions &
+> +        CXL_ALERTS_DEVICE_UNDER_TEMP_WARNING_THRESHOLD) {
+> +        /*
+> +         * CXL 3.2 Table 8-149 The Device Under-Temperature Warning Threshold
+> +         * shall be higher than the the Device Under-Temperature Critical
+> +         * Alert Threshold.
+> +         */
+> +        if (in->device_under_temperature_warning_threshold <=
+> +            alert_config->device_under_temperature_critical_alert_threshold) {
+> +            return CXL_MBOX_INVALID_INPUT;
+> +        }
+> +        alert_config->device_under_temperature_warning_threshold =
+> +            in->device_under_temperature_warning_threshold;
+> +        alert_config->enable_alerts |=
+> +            CXL_ALERTS_DEVICE_UNDER_TEMP_WARNING_THRESHOLD;
+> +    }
+> +
+> +    if (in->valid_alert_actions &
+> +        CXL_ALERTS_CORRECTED_VOLATILE_MEMORY_ERROR_WARNING_THRESHOLD) {
+> +        alert_config->Corrected_volatile_memory_error_warning_threshold =
+> +            in->Corrected_volatile_memory_error_warning_threshold;
+> +        alert_config->enable_alerts |=
+> +            CXL_ALERTS_CORRECTED_VOLATILE_MEMORY_ERROR_WARNING_THRESHOLD;
+> +    }
+> +
+> +    if (in->valid_alert_actions &
+> +        CXL_ALERTS_CORRECTED_PERSISTENT_MEMORY_ERROR_WARNING_THRESHOLD) {
+> +        alert_config->Corrected_persistent_memory_error_warning_threshold =
+> +            in->Corrected_persistent_memory_error_warning_threshold;
+> +        alert_config->enable_alerts |=
+> +            CXL_ALERTS_CORRECTED_PERSISTENT_MEMORY_ERROR_WARNING_THRESHOLD;
+> +    }
+> +    return CXL_MBOX_SUCCESS;
+> +}
+> +
+>  /* Perform the actual device zeroing */
+>  static void __do_sanitization(CXLType3Dev *ct3d)
 >  {
-> +	if (new == PCI_ERS_RESULT_PANIC)
-> +		return PCI_ERS_RESULT_PANIC;
-> +
->  	if (new == PCI_ERS_RESULT_NO_AER_DRIVER)
->  		return PCI_ERS_RESULT_NO_AER_DRIVER;
+> @@ -2859,6 +2971,10 @@ static const struct cxl_cmd cxl_cmd_set[256][256] = {
+>      [CCLS][GET_LSA] = { "CCLS_GET_LSA", cmd_ccls_get_lsa, 8, 0 },
+>      [CCLS][SET_LSA] = { "CCLS_SET_LSA", cmd_ccls_set_lsa,
+>          ~0, CXL_MBOX_IMMEDIATE_CONFIG_CHANGE | CXL_MBOX_IMMEDIATE_DATA_CHANGE },
+> +    [HEALTH_INFO_ALERTS][GET_ALERT_CONFIGURATION] = {"GET_ALERT_CONFIGURATION",
+
+Space after { to match local style.
+
+> +        cmd_get_alert_config, 0, 0 },
+> +    [HEALTH_INFO_ALERTS][SET_ALERT_CONFIGURATION] = {"SET_ALERT_CONFIGURATION",
+> +        cmd_set_alert_config, 12, CXL_MBOX_IMMEDIATE_POLICY_CHANGE },
+>      [SANITIZE][OVERWRITE] = { "SANITIZE_OVERWRITE", cmd_sanitize_overwrite, 0,
+>          (CXL_MBOX_IMMEDIATE_DATA_CHANGE |
+>           CXL_MBOX_SECURITY_STATE_CHANGE |
+
+> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> index a64739be25..1da23bf553 100644
+> --- a/include/hw/cxl/cxl_device.h
+> +++ b/include/hw/cxl/cxl_device.h
+> @@ -581,6 +581,19 @@ typedef struct CXLSetFeatureInfo {
+>      size_t data_size;
+>  } CXLSetFeatureInfo;
 >  
-> @@ -276,3 +279,58 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->  
->  	return status;
->  }
-> +
-> +static void cxl_walk_bridge(struct pci_dev *bridge,
-> +			    int (*cb)(struct pci_dev *, void *),
-> +			    void *userdata)
-> +{
-> +	if (cb(bridge, userdata))
-> +		return;
-> +
-> +	if (bridge->subordinate)
-> +		pci_walk_bus(bridge->subordinate, cb, userdata);
-> +}
-> +
-> +static int cxl_report_error_detected(struct pci_dev *dev, void *data)
-> +{
-> +	const struct cxl_error_handlers *cxl_err_handler;
-> +	pci_ers_result_t vote, *result = data;
-> +	struct pci_driver *pdrv;
-> +
-> +	device_lock(&dev->dev);
-> +	pdrv = dev->driver;
-> +	if (!pdrv || !pdrv->cxl_err_handler ||
-> +	    !pdrv->cxl_err_handler->error_detected)
-> +		goto out;
-> +
-> +	cxl_err_handler = pdrv->cxl_err_handler;
-> +	vote = cxl_err_handler->error_detected(dev);
-> +	*result = merge_result(*result, vote);
-> +out:
-> +	device_unlock(&dev->dev);
-> +	return 0;
-> +}
-> +
-> +void cxl_do_recovery(struct pci_dev *dev)
-> +{
-> +	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
-> +	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
-> +
-> +	cxl_walk_bridge(dev, cxl_report_error_detected, &status);
-> +	if (status == PCI_ERS_RESULT_PANIC)
-> +		panic("CXL cachemem error.");
-> +
-> +	/*
-> +	 * If we have native control of AER, clear error status in the device
-> +	 * that detected the error.  If the platform retained control of AER,
-> +	 * it is responsible for clearing this status.  In that case, the
-> +	 * signaling device may not even be visible to the OS.
-> +	 */
-> +	if (host->native_aer || pcie_ports_native) {
-> +		pcie_clear_device_status(dev);
-> +		pci_aer_clear_nonfatal_status(dev);
-> +		pci_aer_clear_fatal_status(dev);
-> +	}
-> +
-> +	pci_info(dev, "CXL uncorrectable error.\n");
-> +}
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 82a0401c58d3..5b539b5bf0d1 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -864,6 +864,9 @@ enum pci_ers_result {
->  
->  	/* No AER capabilities registered for the driver */
->  	PCI_ERS_RESULT_NO_AER_DRIVER = (__force pci_ers_result_t) 6,
-> +
-> +	/* System is unstable, panic  */
-> +	PCI_ERS_RESULT_PANIC = (__force pci_ers_result_t) 7,
->  };
->  
->  /* PCI bus error event callbacks */
-> -- 
-> 2.34.1
-> 
+> +typedef struct CXLAlertConfig {
+> +    uint8_t valid_alerts;
+> +    uint8_t enable_alerts;
+> +    uint8_t life_used_critical_alert_threshold;
+> +    uint8_t life_used_warning_threshold;
+> +    uint16_t device_over_temperature_critical_alert_threshold;
+I think we can shorten these at least a bit without lost of meaning!
+It's on a device so can drop that entirely. Perhaps
+
+    uint8_t life_used_crit_alert_thresh;
+    uint8_t life_used_warn_thresh;
+    uint16_t over_temp_crit_alert_thresh;
+    uint16_t under_temp_crit_alert_thresh;
+    uint16_t over_temp_warn_thresh;
+    uint16_t under_temp_warn_thresh;
+    uint16_t cor_volatile_mem_err_warn_thresh;
+    uint16_t cor_persistent_mem_err_warn_thresh;
+
+> +    uint16_t device_under_temperature_critical_alert_threshold;
+> +    uint16_t device_over_temperature_warning_threshold;
+> +    uint16_t device_under_temperature_warning_threshold;
+> +    uint16_t Corrected_volatile_memory_error_warning_threshold;
+Capital in just this one doesn't make much sense.
+> +    uint16_t Corrected_persistent_memory_error_warning_threshold;
+> +} QEMU_PACKED CXLAlertConfig;
+
+
