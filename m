@@ -1,116 +1,254 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2072268690;
-	Fri, 14 Feb 2025 17:21:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D72486328;
+	Fri, 14 Feb 2025 17:36:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739553718; cv=none; b=VP3y8fqaT2Q1j0oK0pbfal976UnTOO66W3jW3O/c7t2n9foN3Uv9UWSGBijRfVwYvW8ufyY2Wdt/pi4Ba6p69y5E6ActVhQL9bMiKjRbbooaGfP2I3+iXle2zfB+wPeF8jpcBwKwzIj2eF9f3tlA4czU9ck0NoTi8lVfGXvGwNU=
+	t=1739554598; cv=none; b=KIaDe9O0sZd1Jcbr74Yj8bE7LBBU1WbEqDpWidzhSMk1J95sVa+Ca6CKRrE25XH7cnbuFgQGnempIMPjXKwHZTLDOphkVfovToNT26n54HBYk8l7pvMqLxhKX/fXaNFvmFbqgiaWyqTBsMqx4Le3AdkE2jQRDzk1p32Lq5dWBBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739553718; c=relaxed/simple;
-	bh=lRbQbfyjiqWxqdNeCAxC/YxkDrLjeUGSt5L+LuO2OKc=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CXyVNRBSgJxre6Dq0D43JOw0knk1CKXxzhUf5LOlGyC3kaWpFAkv/Lh9YA2/kSQfeND5zubmDoF/JD7Phm4QBZw41nSLQZI8DflCLtdFvtLBz09hqXYqfEcbpfU3nI5WWJzo8EkZZk31I/YAPn/3Tb+/DrrGxs1NZCf2MVWVfX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Yvf175gKgz6M4gH;
-	Sat, 15 Feb 2025 01:19:23 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4C206140A77;
-	Sat, 15 Feb 2025 01:21:52 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 14 Feb
- 2025 18:21:51 +0100
-Date: Fri, 14 Feb 2025 17:21:50 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <alucerop@amd.com>
-CC: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<dan.j.williams@intel.com>, <edward.cree@amd.com>, <davem@davemloft.net>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>,
-	<dave.jiang@intel.com>
-Subject: Re: [PATCH v10 04/26] cxl: move register/capability check to driver
-Message-ID: <20250214172150.0000136c@huawei.com>
-In-Reply-To: <20250205151950.25268-5-alucerop@amd.com>
-References: <20250205151950.25268-1-alucerop@amd.com>
-	<20250205151950.25268-5-alucerop@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1739554598; c=relaxed/simple;
+	bh=qfybTiOUSWNbq8BCvxruFHatLxAy5MykIIKdWBZur8I=;
+	h=Message-ID:From:Date:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=glKak8y0rqeK4QNWT2Cqbotxm9h2WqUwrQjCUNz68AVAsArb57juRIraeFzqGqGk18lw5MnOpQ0nc4CAKVVL6iW24ZsWbp92Y+Nwe1oiYYqF+zyWZvVOsYFD0oTLEBiT14viUmUgKUVZEqOHqusop2dPopvgZugN46EFFGlTfVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W9spkMiQ; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W9spkMiQ"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-220c8eb195aso47117625ad.0;
+        Fri, 14 Feb 2025 09:36:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739554596; x=1740159396; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:date:from:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=IkhQ+i3KL52bBAily72UySWih9Zn3fPD2ZA69cri6n0=;
+        b=W9spkMiQ04l5ganixxsFQuHW31Wiute7BtHM1PvEsHfsZxDkoLcXOiUT7wQrTfKgZo
+         l7PSCbDgsnMhgJAJu4CrO5aD3da0z4vwzPICePDFs7vOxKTrBtC+2TgOGYspX0sSdTZJ
+         xnuVIJtc0ZV/pe0z39PY0kapagsUq8ogpAzwhyZxPNAKBj1Lksmw+YZ7o0Pk85QHOKzY
+         F4bQH13ROy9qEL3VsMQUnKctM4u9Bl3DCP7dopnCQIL52q+Bd2ZbGLvbZGz7GDCtpJ7U
+         qJiGik/MtqgxVHGvciKVr4ZhKS+4CfhpQrTq6QF5tKmraR3Cii95PE/lXTmWfWE+YfV2
+         9GKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739554596; x=1740159396;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:date:from:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IkhQ+i3KL52bBAily72UySWih9Zn3fPD2ZA69cri6n0=;
+        b=rzRViZqkc/0E9levbxW4Oln4Qbhlcuon7S5HE6nvCEZna+xMKxOVc8ZX3WTKFyyGgz
+         Bqe4y+6+ShRZVD7QURgv6KSzjL4B6m4AaE1deYSeEsP3aQL0EMatq+Gylf9j+1tFunFG
+         fYHDzCcUPw5mA7kz6rnL2morIpr4O8qM4h42RFtMBtTlW6PoHPTY/lFTvWHA7Vr/WdVy
+         6Fcbt9+PxOuL8N0l+fpWcDynXKNITwXkffbV0TZzuOp862Qi+RbF8jA4wDwk51m6k9l+
+         EAoYkBqN3Kh91HcAdl2O1vtQXO1PMBz0ou0zSV360SvBSwLfrtMKWuwkVE7Cj/DI/f4T
+         fwtA==
+X-Forwarded-Encrypted: i=1; AJvYcCVS0phz5HZN2r3yZdK87aewai2AcEG1U66c6qKDJzScRPqVBPIbVxeF3LlcKBG+RdgxX4zWXouUVA9qxwM=@vger.kernel.org, AJvYcCVwOn6vsPPUsv61W1Ej87JujDlfN/Iy9+TgLbySE04PyhIMFf3yJBbPKvCQNaXjAGMORRMGxG3uCKmg@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFqLeZkCaw2vXg4CiPrisaAdEobOXlwTGdPDTtHOx4ZmNICDXD
+	ZEi9w7MrP39BepkWpjE+r+joTwU0i0v1yw17c5cjl0Zen3/61XmY
+X-Gm-Gg: ASbGnctik+lrvQOeu2cVEy7u4WB2CgsPMgqji5Eiteu1f7LxOkDUvCbvAtEyBbw2dAH
+	h+w4uJs+a91DUrr+EhXX1iNOKw9pu3vYUAtXetZhR6o+mAXEBYUDKk4ZqrvYJveCVn20SJJR+1g
+	98bs5oNSbd2XiBoYrhL/L5mkGaiT0y5MEj37fTbEUeTB9H6LAhJTmab0hYUSEoas9d2tfaZ3lWy
+	eK3Lv+iJ6FJX5v/V83L5pDAnpwg01D0mMBHD3bATwn1SFG3zsjE3Lv6MMNNVbAXxWXtvCvtsJF4
+	3OX3PV2IZM/TP18HRSYe5vZ73/u7imsZTB8GHcjjCrc=
+X-Google-Smtp-Source: AGHT+IHq23vD0wNWN8GqPqA34fojUP1PkUyAZoM6q5IRmKF60hjImvHXcppQN5XSaAnO3RMG54Irjg==
+X-Received: by 2002:a17:902:ecc7:b0:220:d6c3:17b8 with SMTP id d9443c01a7336-22103c602abmr1919815ad.0.1739554596449;
+        Fri, 14 Feb 2025 09:36:36 -0800 (PST)
+Received: from asus. (c-73-189-148-61.hsd1.ca.comcast.net. [73.189.148.61])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d545c985sm31673885ad.154.2025.02.14.09.36.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2025 09:36:35 -0800 (PST)
+Message-ID: <67af7f23.170a0220.25b6a5.75a3@mx.google.com>
+X-Google-Original-Message-ID: <Z69_HV89FoQKWFSv@asus.>
+From: Fan Ni <nifan.cxl@gmail.com>
+X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
+Date: Fri, 14 Feb 2025 09:36:29 -0800
+To: Terry Bowman <terry.bowman@amd.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
+	ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
+	rrichter@amd.com, nathan.fontenot@amd.com,
+	Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
+	ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com
+Subject: Re: [PATCH v7 06/17] PCI/AER: Add CXL PCIe Port uncorrectable error
+ recovery in AER service driver
+References: <20250211192444.2292833-1-terry.bowman@amd.com>
+ <20250211192444.2292833-7-terry.bowman@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250211192444.2292833-7-terry.bowman@amd.com>
 
-On Wed, 5 Feb 2025 15:19:28 +0000
-alucerop@amd.com wrote:
-
-> From: Alejandro Lucero <alucerop@amd.com>
+On Tue, Feb 11, 2025 at 01:24:33PM -0600, Terry Bowman wrote:
+> Existing recovery procedure for PCIe uncorrectable errors (UCE) does not
+> apply to CXL devices. Recovery can not be used for CXL devices because of
+> potential corruption on what can be system memory. Also, current PCIe UCE
+> recovery, in the case of a Root Port (RP) or Downstream Switch Port (DSP),
+> does not begin at the RP/DSP but begins at the first downstream device.
+> This will miss handling CXL Protocol Errors in a CXL RP or DSP. A separate
+> CXL recovery is needed because of the different handling requirements
 > 
-> Type3 has some mandatory capabilities which are optional for Type2.
+> Add a new function, cxl_do_recovery() using the following.
 > 
-> In order to support same register/capability discovery code for both
-> types, avoid any assumption about what capabilities should be there, and
-> export the capabilities found for the caller doing the capabilities
-> check based on the expected ones.
+> Add cxl_walk_bridge() to iterate the detected error's sub-topology.
+> cxl_walk_bridge() is similar to pci_walk_bridge() but the CXL flavor
+> will begin iteration at the RP or DSP rather than beginning at the
+> first downstream device.
 > 
-> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> pci_walk_bridge() is candidate to possibly reuse cxl_walk_bridge() but
+> needs further investigation. This will be left for future improvement
+> to make the CXL and PCI handling paths more common.
+> 
+> Add cxl_report_error_detected() as an analog to report_error_detected().
+> It will call pci_driver::cxl_err_handlers for each iterated downstream
+> device. The pci_driver::cxl_err_handler's UCE handler returns a boolean
+> indicating if there was a UCE error detected during handling.
+> 
+> cxl_do_recovery() uses the status from cxl_report_error_detected() to
+> determine how to proceed. Non-fatal CXL UCE errors will be treated as
+> fatal. If a UCE was present during handling then cxl_do_recovery()
+> will kernel panic.
+> 
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
 
-A few additional trivial comments.
-With that and missing docs tidied up seems fine to me.
+Reviewed-by: Fan Ni <fan.ni@samsung.com>
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
+> ---
+>  drivers/pci/pci.h      |  3 +++
+>  drivers/pci/pcie/aer.c |  4 +++
+>  drivers/pci/pcie/err.c | 58 ++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/pci.h    |  3 +++
+>  4 files changed, 68 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 01e51db8d285..deb193b387af 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -722,6 +722,9 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>  		pci_channel_state_t state,
+>  		pci_ers_result_t (*reset_subordinates)(struct pci_dev *pdev));
 >  
-
-> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-> index 722782b868ac..790d0520eaf4 100644
-> --- a/include/cxl/cxl.h
-> +++ b/include/cxl/cxl.h
-> @@ -5,6 +5,26 @@
->  #define __CXL_H
+> +/* CXL error reporting and handling */
+> +void cxl_do_recovery(struct pci_dev *dev);
+> +
+>  bool pcie_wait_for_link(struct pci_dev *pdev, bool active);
+>  int pcie_retrain_link(struct pci_dev *pdev, bool use_lt);
 >  
->  #include <linux/types.h>
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 34ec0958afff..ee38db08d005 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -1012,6 +1012,8 @@ static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
+>  			err_handler->error_detected(dev, pci_channel_io_normal);
+>  		else if (info->severity == AER_FATAL)
+>  			err_handler->error_detected(dev, pci_channel_io_frozen);
 > +
-> +/* Capabilities as defined for:
-Nit. It's not networking code, so lets use the standard
-the rest of the kernel (more or less :) follows.
-/*
- * Capabilities as defined for:
-
-> + *
-> + *	Component Registers (Table 8-22 CXL 3.1 specification)
-> + *	Device Registers (8.2.8.2.1 CXL 3.1 specification)
-> + *
-> + * and currently being used for kernel CXL support.
-> + */
+> +		cxl_do_recovery(dev);
+>  	}
+>  out:
+>  	device_unlock(&dev->dev);
+> @@ -1041,6 +1043,8 @@ static void cxl_handle_error(struct pci_dev *dev, struct aer_err_info *info)
+>  			pdrv->cxl_err_handler->cor_error_detected(dev);
+>  
+>  		pcie_clear_device_status(dev);
+> +	} else {
+> +		cxl_do_recovery(dev);
+>  	}
+>  }
+>  
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index 31090770fffc..05f2d1ef4c36 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -24,6 +24,9 @@
+>  static pci_ers_result_t merge_result(enum pci_ers_result orig,
+>  				  enum pci_ers_result new)
+>  {
+> +	if (new == PCI_ERS_RESULT_PANIC)
+> +		return PCI_ERS_RESULT_PANIC;
 > +
-> +enum cxl_dev_cap {
-> +	/* capabilities from Component Registers */
-> +	CXL_DEV_CAP_RAS,
-> +	CXL_DEV_CAP_HDM,
-> +	/* capabilities from Device Registers */
-> +	CXL_DEV_CAP_DEV_STATUS,
-> +	CXL_DEV_CAP_MAILBOX_PRIMARY,
-> +	CXL_DEV_CAP_MEMDEV,
-> +	CXL_MAX_CAPS,
-> +};
+>  	if (new == PCI_ERS_RESULT_NO_AER_DRIVER)
+>  		return PCI_ERS_RESULT_NO_AER_DRIVER;
+>  
+> @@ -276,3 +279,58 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>  
+>  	return status;
+>  }
 > +
->  /*
->   * enum cxl_devtype - delineate type-2 from a generic type-3 device
->   * @CXL_DEVTYPE_DEVMEM - Vendor specific CXL Type-2 device implementing HDM-D or
-> @@ -22,5 +42,4 @@ enum cxl_devtype {
->  struct device;
->  struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev, u64 serial,
->  					   u16 dvsec, enum cxl_devtype type);
-> -
-Stray change.  Drop it or push to earlier patch so the line never existed.
-
->  #endif
-
+> +static void cxl_walk_bridge(struct pci_dev *bridge,
+> +			    int (*cb)(struct pci_dev *, void *),
+> +			    void *userdata)
+> +{
+> +	if (cb(bridge, userdata))
+> +		return;
+> +
+> +	if (bridge->subordinate)
+> +		pci_walk_bus(bridge->subordinate, cb, userdata);
+> +}
+> +
+> +static int cxl_report_error_detected(struct pci_dev *dev, void *data)
+> +{
+> +	const struct cxl_error_handlers *cxl_err_handler;
+> +	pci_ers_result_t vote, *result = data;
+> +	struct pci_driver *pdrv;
+> +
+> +	device_lock(&dev->dev);
+> +	pdrv = dev->driver;
+> +	if (!pdrv || !pdrv->cxl_err_handler ||
+> +	    !pdrv->cxl_err_handler->error_detected)
+> +		goto out;
+> +
+> +	cxl_err_handler = pdrv->cxl_err_handler;
+> +	vote = cxl_err_handler->error_detected(dev);
+> +	*result = merge_result(*result, vote);
+> +out:
+> +	device_unlock(&dev->dev);
+> +	return 0;
+> +}
+> +
+> +void cxl_do_recovery(struct pci_dev *dev)
+> +{
+> +	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
+> +	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+> +
+> +	cxl_walk_bridge(dev, cxl_report_error_detected, &status);
+> +	if (status == PCI_ERS_RESULT_PANIC)
+> +		panic("CXL cachemem error.");
+> +
+> +	/*
+> +	 * If we have native control of AER, clear error status in the device
+> +	 * that detected the error.  If the platform retained control of AER,
+> +	 * it is responsible for clearing this status.  In that case, the
+> +	 * signaling device may not even be visible to the OS.
+> +	 */
+> +	if (host->native_aer || pcie_ports_native) {
+> +		pcie_clear_device_status(dev);
+> +		pci_aer_clear_nonfatal_status(dev);
+> +		pci_aer_clear_fatal_status(dev);
+> +	}
+> +
+> +	pci_info(dev, "CXL uncorrectable error.\n");
+> +}
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 82a0401c58d3..5b539b5bf0d1 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -864,6 +864,9 @@ enum pci_ers_result {
+>  
+>  	/* No AER capabilities registered for the driver */
+>  	PCI_ERS_RESULT_NO_AER_DRIVER = (__force pci_ers_result_t) 6,
+> +
+> +	/* System is unstable, panic  */
+> +	PCI_ERS_RESULT_PANIC = (__force pci_ers_result_t) 7,
+>  };
+>  
+>  /* PCI bus error event callbacks */
+> -- 
+> 2.34.1
+> 
