@@ -1,291 +1,205 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2069.outbound.protection.outlook.com [40.107.100.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0930264A80
-	for <linux-cxl@vger.kernel.org>; Fri, 14 Feb 2025 17:44:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739555046; cv=none; b=qT5tAuvX7hPQvXIQOokpCP4L6vOR9gxCXuRy9Pqkqj+VaIWxXhPhYiJGoTaL3SSqXM51WIxW8bpMfEH8hvymov7tSVfCIWNVKMHXb/t8WuGRxOzZQQQ+BxU6dayV88SLX1KU8lwxnPXlrejgjMdDF9CSSMRhqKYeqMvwBkyec+w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739555046; c=relaxed/simple;
-	bh=iUnT+IaL0Xfq8ca7RrG2Ae1E2p5WZnp/kMkM/wB4HrY=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ud/a6Qyh2fDvJYX2OdGOPhbPguea2qrSRgdIJDnNFmaBIpGMEWZt9iHS/52TBKKqqjeO776Ut8pFPA+Y86M7yc4eV7qIAfAQeCVIFTazrSsgaBy+a7hsjHabdJXQ6X3KhDDalTFK6EA6PbKivmQh6hNHbXrzGl08AzJZzfa0rDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YvfTy4lxNz6L531;
-	Sat, 15 Feb 2025 01:40:54 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id C4DC31402CB;
-	Sat, 15 Feb 2025 01:44:01 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 14 Feb
- 2025 18:44:01 +0100
-Date: Fri, 14 Feb 2025 17:43:59 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Sweta Kumari <s5.kumari@samsung.com>
-CC: <qemu-devel@nongnu.org>, <gost.dev@samsung.com>,
-	<linux-cxl@vger.kernel.org>, <nifan.cxl@gmail.com>, <dave@stgolabs.net>,
-	<vishak.g@samsung.com>, <krish.reddy@samsung.com>,
-	<a.manzanares@samsung.com>, <alok.rathore@samsung.com>
-Subject: Re: [PATCH v2] CXL CCI Get/Set Alert Configuration commands
- implmented as per CXL Specification 3.2 section 8.2.10.9.3
-Message-ID: <20250214174359.0000368a@huawei.com>
-In-Reply-To: <20250214132211.528019-1-s5.kumari@samsung.com>
-References: <CGME20250214132317epcas5p3732f86a4aa3cee5c396e18c2bf98a82b@epcas5p3.samsung.com>
-	<20250214132211.528019-1-s5.kumari@samsung.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3733A8D2;
+	Fri, 14 Feb 2025 19:36:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.69
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739561805; cv=fail; b=OkAM7QSsg8wLH3H/SMyk5vavUzY5qmFvEyiZWGi0/ESzNdJNtc+1Jb417P4xkM3h8kVFb4mN9j+Trr5zmwix5keX59ZRqcR1tKTNyv+2SvvwAhK64Dh4x0VzLnTSaiSWshR+vEgnDSmK6ohxXDutDqf8QYQq+RFbwZbFxpYdL64=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739561805; c=relaxed/simple;
+	bh=5z/K8QodkPshvseCS+ieOpsDmeVm/cbgKBIln6/KhAc=;
+	h=Message-ID:Date:From:Subject:To:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=JTgTFHU/KmpXnstC/WOJGXdSX0G29P32f4VPiTkEU/rt6sVRCzRMaMBgKsTsdrRNMToo2ZeXLLBKFy7t82e7/eOPBFEjy91ENmSCR+x1sKtYmhYq7Y4npP1dXmWk2cz2JUMO6zi+KCkvmCFdxO/zMut+GxUuQufHAVC0934k4lI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=F6oqidox; arc=fail smtp.client-ip=40.107.100.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="F6oqidox"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=EsqK/18j/DxfvZIHZViNdWtrtkwgFnCyS+hWzpBaA7H33fqYi8wLGeCNP/N9cHJkrIZWbxu+nKrS3CI4ADx80+U2eVi8XNaFVMqCk6D6cFYjZUzogoNN5rVUHK0ujacF2pcQ24SdLBJul+2xQfDPtbWLvqftT4x/YmCqwOXOyKsI5Eg/UAsS/L4b5niWeepxY1lCjNhkTNQVUUTLBCGwDQFrsNLTMpZIypDt0KQzBM0OLTSyUlGFI1wHSH1Nz4sUbYf71mut1s+aGJPepBs/prq1d6MYKZoau58N5zGOUavozSam00b+tlkXj7SD3giSeXMZM0pFGlPgBkPmwcL/dA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5z/K8QodkPshvseCS+ieOpsDmeVm/cbgKBIln6/KhAc=;
+ b=cD048gvLmZhVWjEwzgAdz1bRa9BzkXRD7IPGuRaZplMZ1j8UYpH9b1KwZkKpoHJveYyN29UtDJDe41B2DWnKzCQpBSO8vCx/cSRbKGTmDsvXij9sz4J1AAW03E+GUmCucFTotaZhDSh2Stcg19taB3gpHzAZa+Ay4BDXNW2cA6yHU5/z5DI+5JuZUvb1ed4U9brZkFxjIpdpuWG2DsrvS/h9yGuZLmMZqNpYn+4aCOqkPldecvqAI+XSBVct+t3VzdhvkeZQhDPdzv2G3n0SU7rcNalNwsWrU7Fi8xcrZ9wj9XS1rrRHjLdenY2n2jWEUKBqHLk0t2DfOCAVeLTQ+g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5z/K8QodkPshvseCS+ieOpsDmeVm/cbgKBIln6/KhAc=;
+ b=F6oqidoxlnda5AFx7QXrZ237OtKnNyShs2dfsg62CGc6GsdLWS1yrvJE2kuU6Gl30JDDyG6TSMWyfBNZd0w6YjBiwiAcsT6UbH7NkNynCQ+4Kgt1nixz7JKEFwtKfqeElo3Xh2gqzrKKWJeFrg1PCssUWSs+RSFOgMsq8yhNTmE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
+ MN0PR12MB6079.namprd12.prod.outlook.com (2603:10b6:208:3c9::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.14; Fri, 14 Feb
+ 2025 19:36:39 +0000
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f%3]) with mapi id 15.20.8422.010; Fri, 14 Feb 2025
+ 19:36:38 +0000
+Message-ID: <ef4e438a-ae10-4757-90ad-642fcb2dc8d6@amd.com>
+Date: Fri, 14 Feb 2025 13:36:35 -0600
+User-Agent: Mozilla Thunderbird
+From: "Bowman, Terry" <terry.bowman@amd.com>
+Subject: Re: [PATCH v7 06/17] PCI/AER: Add CXL PCIe Port uncorrectable error
+ recovery in AER service driver
+To: Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ nifan.cxl@gmail.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
+ dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
+ bhelgaas@google.com, mahesh@linux.ibm.com, ira.weiny@intel.com,
+ oohall@gmail.com, Benjamin.Cheatham@amd.com, rrichter@amd.com,
+ nathan.fontenot@amd.com, Smita.KoralahalliChannabasappa@amd.com,
+ lukas@wunner.de, ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com
+References: <20250211192444.2292833-1-terry.bowman@amd.com>
+ <20250211192444.2292833-7-terry.bowman@amd.com>
+ <67abea44d80f3_2d1e294ca@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Language: en-US
+In-Reply-To: <67abea44d80f3_2d1e294ca@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN6PR01CA0018.prod.exchangelabs.com (2603:10b6:805:b6::31)
+ To DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- frapeml500008.china.huawei.com (7.182.85.71)
-
-On Fri, 14 Feb 2025 18:52:11 +0530
-Sweta Kumari <s5.kumari@samsung.com> wrote:
-
-> 1)get alert configuration(Opcode 4201h)
-> 2)set alert configuration(Opcode 4202h)
-
-Move the change log to below the ---
-The key thing being git then doesn't pick it up whilst applying the patch.
-Whilst changed logs are very useful during the review process we don't
-typically want to keep them in the git history for ever!
-
-Otherwise, main comment here is shorten more names.
-
-Jonathan
-
-> 
-> This v2 patch addresses the feedback from the v1 patch and include some minor new changes.
-> 
-> Changes in V2:
-> - Removed cover letter as it's a single patch
-> - Added latest spec reference
-> - Fixed alignment issues
-> - Updated shorter variable names to be more descriptive
-> - Replaced field-by-field initialization in 'init_alert_config' with structured initialization for improved readability.
-> - Replaced bit fields with 'uint8_t' and added defines for individual bits.
-> 
-> The patch is generated against the Johnathan's tree
-> https://gitlab.com/jic23/qemu.git and branch cxl-2024-11-27.
-> 
-> Signed-off-by: Sweta Kumari <s5.kumari@samsung.com>
-> ---
->  hw/cxl/cxl-mailbox-utils.c  | 116 ++++++++++++++++++++++++++++++++++++
->  hw/mem/cxl_type3.c          |  16 +++++
->  include/hw/cxl/cxl_device.h |  15 +++++
->  3 files changed, 147 insertions(+)
-> 
-> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> index 9c7ea5bc35..105c63fdec 100644
-> --- a/hw/cxl/cxl-mailbox-utils.c
-> +++ b/hw/cxl/cxl-mailbox-utils.c
-> @@ -28,6 +28,11 @@
->  #define CXL_DC_EVENT_LOG_SIZE 8
->  #define CXL_NUM_EXTENTS_SUPPORTED 512
->  #define CXL_NUM_TAGS_SUPPORTED 0
-> +#define CXL_ALERTS_LIFE_USED_WARNING_THRESHOLD (1 << 0)
-> +#define CXL_ALERTS_DEVICE_OVER_TEMP_WARNING_THRESHOLD (1 << 1)
-> +#define CXL_ALERTS_DEVICE_UNDER_TEMP_WARNING_THRESHOLD (1 << 2)
-> +#define CXL_ALERTS_CORRECTED_VOLATILE_MEMORY_ERROR_WARNING_THRESHOLD (1 << 3)
-> +#define CXL_ALERTS_CORRECTED_PERSISTENT_MEMORY_ERROR_WARNING_THRESHOLD (1 << 4)
-Let's shorten these as they are very ugly to use when a line long!
-
-#define CXL_ALERTS_OVER_TEMP_WARN_THRESH
-etc. Similar to comments below.
-
->  
->  /*
->   * How to add a new command, example. The command set FOO, with cmd BAR.
-> @@ -86,6 +91,9 @@ enum {
->          #define GET_PARTITION_INFO     0x0
->          #define GET_LSA       0x2
->          #define SET_LSA       0x3
-> +    HEALTH_INFO_ALERTS = 0x42,
-> +        #define GET_ALERT_CONFIGURATION 0x1
-> +        #define SET_ALERT_CONFIGURATION 0x2
-CONFIG maybe enough?
-
->      SANITIZE    = 0x44,
->          #define OVERWRITE     0x0
->          #define SECURE_ERASE  0x1
-> @@ -1625,6 +1633,110 @@ static CXLRetCode cmd_ccls_set_lsa(const struct cxl_cmd *cmd,
->      return CXL_MBOX_SUCCESS;
->  }
->  
-> +/* CXL r3.2 Section 8.2.10.9.3.2 Get Alert Configuration (Opcode 4201h) */
-> +static CXLRetCode cmd_get_alert_config(const struct cxl_cmd *cmd,
-> +                                       uint8_t *payload_in,
-> +                                       size_t len_in,
-> +                                       uint8_t *payload_out,
-> +                                       size_t *len_out,
-> +                                       CXLCCI *cci)
-> +{
-> +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
-> +    CXLAlertConfig *out = (void *)payload_out;
-
-In this case we can cast to the right type (can't do that if we don't
-name that type which happens in a lot these structures). So prefer
-    CXLAlertConfig *out = (CXLAlertConfig *)payload_out;
- 
-
-> +
-> +    memcpy(out, &ct3d->alert_config, sizeof(ct3d->alert_config));
-> +    *len_out = sizeof(ct3d->alert_config);
-> +
-> +    return CXL_MBOX_SUCCESS;
-> +}
-> +
-> +/* CXL r3.2 Section 8.2.10.9.3.3 Set Alert Configuration (Opcode 4202h) */
-> +static CXLRetCode cmd_set_alert_config(const struct cxl_cmd *cmd,
-> +                                       uint8_t *payload_in,
-> +                                       size_t len_in,
-> +                                       uint8_t *payload_out,
-> +                                       size_t *len_out,
-> +                                       CXLCCI *cci)
-> +{
-> +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
-> +    CXLAlertConfig *alert_config = &ct3d->alert_config;
-> +    struct {
-> +        uint8_t valid_alert_actions;
-> +        uint8_t enable_alert_actions;
-> +        uint8_t life_used_warning_threshold;
-> +        uint8_t rsvd;
-> +        uint16_t device_over_temperature_warning_threshold;
-> +        uint16_t device_under_temperature_warning_threshold;
-> +        uint16_t Corrected_volatile_memory_error_warning_threshold;
-> +        uint16_t Corrected_persistent_memory_error_warning_threshold;
-
-Shorten these as well. Similar to suggestions below.  They are
-just too long to make for nice code!
-
-> +    } QEMU_PACKED *in = (void *)payload_in;
-> +
-> +    if (in->valid_alert_actions & CXL_ALERTS_LIFE_USED_WARNING_THRESHOLD) {
-> +        /*
-> +         * CXL 3.2 Table 8-149 The life used warning threshold shall be
-> +         * less than the life used critical alert value.
-> +         */
-> +        if (in->life_used_warning_threshold >=
-> +            alert_config->life_used_critical_alert_threshold) {
-> +            return CXL_MBOX_INVALID_INPUT;
-> +        }
-> +        alert_config->life_used_warning_threshold =
-> +            in->life_used_warning_threshold;
-> +        alert_config->enable_alerts |= CXL_ALERTS_LIFE_USED_WARNING_THRESHOLD;
-> +    }
-> +
-> +    if (in->valid_alert_actions &
-> +        CXL_ALERTS_DEVICE_OVER_TEMP_WARNING_THRESHOLD) {
-> +        /*
-> +         * CXL 3.2 Table 8-149 The Device Over-Temperature Warning Threshold
-> +         * shall be less than the the Device Over-Temperature Critical
-> +         * Alert Threshold.
-> +         */
-> +        if (in->device_over_temperature_warning_threshold >=
-> +            alert_config->device_over_temperature_critical_alert_threshold) {
-> +            return CXL_MBOX_INVALID_INPUT;
-> +        }
-> +        alert_config->device_over_temperature_warning_threshold =
-> +            in->device_over_temperature_warning_threshold;
-> +        alert_config->enable_alerts |=
-> +            CXL_ALERTS_DEVICE_OVER_TEMP_WARNING_THRESHOLD;
-> +    }
-> +
-> +    if (in->valid_alert_actions &
-> +        CXL_ALERTS_DEVICE_UNDER_TEMP_WARNING_THRESHOLD) {
-> +        /*
-> +         * CXL 3.2 Table 8-149 The Device Under-Temperature Warning Threshold
-> +         * shall be higher than the the Device Under-Temperature Critical
-> +         * Alert Threshold.
-> +         */
-> +        if (in->device_under_temperature_warning_threshold <=
-> +            alert_config->device_under_temperature_critical_alert_threshold) {
-> +            return CXL_MBOX_INVALID_INPUT;
-> +        }
-> +        alert_config->device_under_temperature_warning_threshold =
-> +            in->device_under_temperature_warning_threshold;
-> +        alert_config->enable_alerts |=
-> +            CXL_ALERTS_DEVICE_UNDER_TEMP_WARNING_THRESHOLD;
-> +    }
-> +
-> +    if (in->valid_alert_actions &
-> +        CXL_ALERTS_CORRECTED_VOLATILE_MEMORY_ERROR_WARNING_THRESHOLD) {
-> +        alert_config->Corrected_volatile_memory_error_warning_threshold =
-> +            in->Corrected_volatile_memory_error_warning_threshold;
-> +        alert_config->enable_alerts |=
-> +            CXL_ALERTS_CORRECTED_VOLATILE_MEMORY_ERROR_WARNING_THRESHOLD;
-> +    }
-> +
-> +    if (in->valid_alert_actions &
-> +        CXL_ALERTS_CORRECTED_PERSISTENT_MEMORY_ERROR_WARNING_THRESHOLD) {
-> +        alert_config->Corrected_persistent_memory_error_warning_threshold =
-> +            in->Corrected_persistent_memory_error_warning_threshold;
-> +        alert_config->enable_alerts |=
-> +            CXL_ALERTS_CORRECTED_PERSISTENT_MEMORY_ERROR_WARNING_THRESHOLD;
-> +    }
-> +    return CXL_MBOX_SUCCESS;
-> +}
-> +
->  /* Perform the actual device zeroing */
->  static void __do_sanitization(CXLType3Dev *ct3d)
->  {
-> @@ -2859,6 +2971,10 @@ static const struct cxl_cmd cxl_cmd_set[256][256] = {
->      [CCLS][GET_LSA] = { "CCLS_GET_LSA", cmd_ccls_get_lsa, 8, 0 },
->      [CCLS][SET_LSA] = { "CCLS_SET_LSA", cmd_ccls_set_lsa,
->          ~0, CXL_MBOX_IMMEDIATE_CONFIG_CHANGE | CXL_MBOX_IMMEDIATE_DATA_CHANGE },
-> +    [HEALTH_INFO_ALERTS][GET_ALERT_CONFIGURATION] = {"GET_ALERT_CONFIGURATION",
-
-Space after { to match local style.
-
-> +        cmd_get_alert_config, 0, 0 },
-> +    [HEALTH_INFO_ALERTS][SET_ALERT_CONFIGURATION] = {"SET_ALERT_CONFIGURATION",
-> +        cmd_set_alert_config, 12, CXL_MBOX_IMMEDIATE_POLICY_CHANGE },
->      [SANITIZE][OVERWRITE] = { "SANITIZE_OVERWRITE", cmd_sanitize_overwrite, 0,
->          (CXL_MBOX_IMMEDIATE_DATA_CHANGE |
->           CXL_MBOX_SECURITY_STATE_CHANGE |
-
-> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> index a64739be25..1da23bf553 100644
-> --- a/include/hw/cxl/cxl_device.h
-> +++ b/include/hw/cxl/cxl_device.h
-> @@ -581,6 +581,19 @@ typedef struct CXLSetFeatureInfo {
->      size_t data_size;
->  } CXLSetFeatureInfo;
->  
-> +typedef struct CXLAlertConfig {
-> +    uint8_t valid_alerts;
-> +    uint8_t enable_alerts;
-> +    uint8_t life_used_critical_alert_threshold;
-> +    uint8_t life_used_warning_threshold;
-> +    uint16_t device_over_temperature_critical_alert_threshold;
-I think we can shorten these at least a bit without lost of meaning!
-It's on a device so can drop that entirely. Perhaps
-
-    uint8_t life_used_crit_alert_thresh;
-    uint8_t life_used_warn_thresh;
-    uint16_t over_temp_crit_alert_thresh;
-    uint16_t under_temp_crit_alert_thresh;
-    uint16_t over_temp_warn_thresh;
-    uint16_t under_temp_warn_thresh;
-    uint16_t cor_volatile_mem_err_warn_thresh;
-    uint16_t cor_persistent_mem_err_warn_thresh;
-
-> +    uint16_t device_under_temperature_critical_alert_threshold;
-> +    uint16_t device_over_temperature_warning_threshold;
-> +    uint16_t device_under_temperature_warning_threshold;
-> +    uint16_t Corrected_volatile_memory_error_warning_threshold;
-Capital in just this one doesn't make much sense.
-> +    uint16_t Corrected_persistent_memory_error_warning_threshold;
-> +} QEMU_PACKED CXLAlertConfig;
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|MN0PR12MB6079:EE_
+X-MS-Office365-Filtering-Correlation-Id: 874563ee-3d48-4a72-467e-08dd4d2ee670
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|366016|376014|921020|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?d0pZSkVRQ1FDZGZIL20vMkFPSmxjcE1PZUNnenVDdm82NGVoTHhwQTJxTUNL?=
+ =?utf-8?B?Znk1QjdJMlZ3OW1IanBwWm1lOTduYmFpZ0VVa2lDK3ZlUVFTSlpsV1IwYmNG?=
+ =?utf-8?B?YzBucVo0ZGg3aExPcnZNT1Z3M0xxZ2tkUUhDTzI0Q0s4Vm1oY00wYTJOT0V5?=
+ =?utf-8?B?N2dpN3hVSmcxOUtQVHVnaGU2QmhuZlY1L2RiY2oxQk1CU2dSSDBzVmo1cG01?=
+ =?utf-8?B?dXcvdWZSWW45ejFYdTlyZzFzc0tCSmlIUmVPR2xVbGxxU05GQ2IzZ0IwTWxy?=
+ =?utf-8?B?UVlGWVZ2ZDJVcllBaVc1UENJTERoR1cveVpENUU1YldIOE95ZnlsbW4rLzEx?=
+ =?utf-8?B?anZXWVJpNVB3ZnpkM0RQU0tCOWZFZXFrVG1RWmJ4ZWY4UlIxOXpmRXVqSGNO?=
+ =?utf-8?B?czZtWG1XZUFWZHMydGI1c3kvbURNT1N5bWVhcUs1cGRscXVQYlVpSzQ2TXZY?=
+ =?utf-8?B?M1hmYit5L2E3ZEJqeXYxTWRtTm5sRUg5MjdiRjMyWTk3bkVwcEZnSnRxMmx3?=
+ =?utf-8?B?OTNvdm8xeVhQbnhlSmJTOWVuYkpjZU0zbE9PdHhaZ0hRS0VKNkNCNjFPakNF?=
+ =?utf-8?B?QmZHWnFsM3ZMQ2ZGckNSOFNMMDRmK0xVS1RCZ0FwNFU1QnBrSDZPRHZTYkxZ?=
+ =?utf-8?B?ZHZaZ1AvQzdEeURBcndsNjZUaGFDcy9VL1RWQ1pUanRSQWNBVlJCWmlUSG1T?=
+ =?utf-8?B?eS9HcEp1MS90MGZRMVRIWS9OcDRFemJvN2tPNGd6K0xnU2tkc05VTHpYaXdl?=
+ =?utf-8?B?SXVabFBvbzQyVC96NWVYWUZOT2duVEt2VEgxL0w1czF2Nk5tRytNVVViUTNF?=
+ =?utf-8?B?cDF6TVVldjg4dUZjeXFSd2krOTVlU2lHMGpBMHkzZGZiMFAwNzJrMHQ5L0Vu?=
+ =?utf-8?B?RU5qMUgvRUNJUnptSXdjUWcyT1VkMHZtU21UazdVNjBxaFZWelk3cmpHVFJC?=
+ =?utf-8?B?VXAyTmlMNlF3Sk9pZWhTb1pZYWhwSldKSlEwVjErbkZISTRqQXk1NHVVTjFt?=
+ =?utf-8?B?WG02L09jSUV1eW5vTEtPblZqdlJTWUhneGQwYzVFTzJoTk1hSWo5RGd2eFp5?=
+ =?utf-8?B?WUk5ajkwWEk5SjBJOXJ2ZmRiZjF4NWRncktxeGxYTUtFSWhLeCtXR0pGVzBZ?=
+ =?utf-8?B?c216SlJ1NnVaTHYzNmJtNElLeHQ5RFN4QkJqOHU2U2JZSytMRE1tSmtuOWtJ?=
+ =?utf-8?B?dVhrVCtBNTR0KzdXTkNFLy9sMk1zQ25lMi9MTTFoQzVPWEZoM01JTG1aZmhz?=
+ =?utf-8?B?bHh5OG5IZkdKdFBxYXRTdFlaV0xSaDFSNDd3c21EclFDNWErVi90TTFWOHQw?=
+ =?utf-8?B?UWZZelJyRGw1dWNWeW5teEJVK24rc20rcjBvWHZKRFMrdUJNYzlWOHkwOEVK?=
+ =?utf-8?B?a0xaSXFTUFdRZDdIMXpnMzhXc0NSeGVNWkFZVC9XU0plbXBMWlJ3R1greGNK?=
+ =?utf-8?B?aDhHaERoaWlwTm9HNmpDaUhwcGErNS9DMi92RUx4cU1uaFdGQUhkUkVHaWFu?=
+ =?utf-8?B?REt1LzBiZFcvTVNJZjBOa2pNSUZjZzhLbkRpRi9mdGdrenU0Zm93L0ExQ1M0?=
+ =?utf-8?B?YUhNdnE3Z0FDVW8raXZLNC90TzhkZ3AyeFZWNWdQU2lFbmgzakJLZ0hQMS84?=
+ =?utf-8?B?dnkxUUR2alRwYVN3QWxYdnFuSzYwYTg4NUtnQWFqMW4veTNYRytrMW9uTEk2?=
+ =?utf-8?B?ZTBWNlVncktPbGRHdGxNVzMyN05nQnp1SzlxQTgxZndtQjQzd3hzNU9VL05n?=
+ =?utf-8?B?NlpaMVFPZkh0NGs1RTZUMVhodWc0WGtCb0R5UERmVGZwRnN1dG8yRWZtR2Fr?=
+ =?utf-8?B?ZlhOL1BlZEtUenkySDg2dFovV3hneTRXVE0xMTFKV08zNzlHVW14WXVKcUtp?=
+ =?utf-8?B?RmRKa29zSkc5T0d1SHVNYVZ3eWhYcVFWTEQxaDREWFp0N2lBZkJwaHJHUHEw?=
+ =?utf-8?Q?ELa0BOPPz3A=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(366016)(376014)(921020)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VzFMTFI3UEZjbDEwUVJUTHRWTm02NWcxT2hYbmE1NUZJZFhncWszd3JweUt6?=
+ =?utf-8?B?OHdhV0lvbWN2bkpOcFh1U2JEVkRmMThwVVowM0xIL21MZ0RjaFhwVXhCdUZ5?=
+ =?utf-8?B?ZTdiWWQxSk1qZjRuNXZ1S0N4QTNUWkl4S3FkSHcyaXVyK3dwbWRGMWpzcmpp?=
+ =?utf-8?B?d2dYS1N0MFRNMzV4SG1VYWFQRDl0b0tYTm02UTFGU3pZSWhYODRaZVBZTE1s?=
+ =?utf-8?B?cHoralFNMXQwUlpCNDlyNitPbmV2WkdtVXg2V2tRZndYTlNNeUtzK2RUa2d5?=
+ =?utf-8?B?YVlsV0lJdzF4VEdlajJNeFpzSVVIUHBhWVVGNm9vVnFnWjFEdWlaY2VqQzd3?=
+ =?utf-8?B?bnhIUEgxaUoxVlowWkloYUhSditib3QrVDlzRCtkYytUaEwxTVJERlFpaWxR?=
+ =?utf-8?B?eWhvanZkSTFjNkVOYUpORzFsSWlneCtmb1VyRFdKYTk2YW1TemN4bUJ2K0tz?=
+ =?utf-8?B?Um9TOGZTN2hibkZ5ZTEwQTc1S1N6RnhyM28xYUh2dld2L2dBTjd4bjY1elMr?=
+ =?utf-8?B?ZExXcFg2SS8yVDhXNTlCZVN2MEhaYklzZFZwZVUveUpFU1pSOWVOTUVCU0hi?=
+ =?utf-8?B?bW5oR3BwWVNuSVhiRmpyMXBGcVJGVlJFQW9GWTFBa0JqZ2QvL3l0K0h3VVV4?=
+ =?utf-8?B?R201NklYVGkxMnN6Qi8wRjlidXFZQ2VtUE9iZmhmSFRnUE9EWWNnOHJyY3Fv?=
+ =?utf-8?B?akdtTnNpZDNCMjRDdUs0bElvYVUvSDFaZnNhbnNmS3M3a3FaRFowREw0dXdx?=
+ =?utf-8?B?TURuNzUxcXB4SmxpT0c4SWNJN29PVGl6eEVraVd2SzFURG1kTUJNUk0vQWJZ?=
+ =?utf-8?B?S01zckFEYThOclppMTIrbWhvemlVaUU2ak5KZm9mZUgzSVJQeVNtV2RIQWRy?=
+ =?utf-8?B?QkM4N1lDV0wwUmw3VFRKTnJRZklFbERZUjZNOTNIckNJU1JTL29uMk8yeTQ1?=
+ =?utf-8?B?U3JsR3ppUENvanU2TS93QUNwUEtIZGRueDRqUEE3ekFUNFhIb3ZlaHIwWXl6?=
+ =?utf-8?B?S0Q3bHBrWktYMlEyVDZuU2Z2S0p2Q3VMZlRsdkFvS2dGcm41aWdMUno1MXFH?=
+ =?utf-8?B?Rmw1NVFxZkJRVHRpTmlmRVNXKzlOOUJNWWczR3RFc241c3VqR0xpYVh2U2Js?=
+ =?utf-8?B?empQUmg4VkY5bERJc2xxZHJYY3lJYXgvZm04a21rQy9xd1B3UUh2ZUcxZndk?=
+ =?utf-8?B?UU9maFloT1pBMUt6aTRyVGVSTFlPMWdNWEZ0eVNXTEZUVEVpNHZOUzA5VVZo?=
+ =?utf-8?B?cFNMRU5FQjA3azN5Vk9vVDVUbHNtcjlVQ3RNZjBndXdTUlVlMUtENkdzeFZv?=
+ =?utf-8?B?TFBXTVNUeFZ0cFVFT0VDYkZDVzdRRG1SRDhnaUwvc2N0OWZtbGRlSEg5eDhF?=
+ =?utf-8?B?NDFQLzI4bDRCaXRFSnVTWklmbk1JK1N2RWNmd2FXMTRnNmFZOWd2dXdRSUZN?=
+ =?utf-8?B?V25QYnZJcmVqMUtxN2h5R0ovOHc2bVN6dlFoZlJ4SkEwTmdtMlRnU0R0amtN?=
+ =?utf-8?B?Ung1YWhVNFd4OWF0TElXd0dHYVVpbUN5czNuUXJLVVFOOFhVa21nQmtvWW5Y?=
+ =?utf-8?B?akRaeEZRbTRkN09rNmk4cmVOVjNpUUg4dTZpZmlzdUFBemxHNlFiS0tURVFV?=
+ =?utf-8?B?d2tsdWl6MlV5T0xMY2pINlhNREh3bkV4bkJRODM5a0lRWVZERWEyV09iSkJ6?=
+ =?utf-8?B?OGtOalIrcklFd1Yyd3lBUkMwSGhQR0UrVTduczkyMVBzWllvQVhkaS9wZ254?=
+ =?utf-8?B?VGN4blQ1a2pmR2I0a21rV0lSNzdIYXd0ZWVMYWlqR0R2UXpGYmR1bHJUUlc0?=
+ =?utf-8?B?M2pBQlZ2RXJOR3hVMFRVeVgvSHVkK1MzVyt5QkQ2L1RJYWtxb3FQbThTbjNG?=
+ =?utf-8?B?ZkhDU01Td2hzWW13TVZMOFZQTmtsZ0JtK0U0RGJENG1oVnQwM2pmQTdhUktP?=
+ =?utf-8?B?bXN5WnZMOXBCMnpWT2FrZTVZODZPcUd1WVRXTVJiSlVKTnkyOEVVMGxIN3BT?=
+ =?utf-8?B?OVNXZ3YxQ3VPY0o3YmNQV1ppcXY2UVl6T0VBdlB3cUhtZjJka01Pa2pBZDRI?=
+ =?utf-8?B?b2hqSEV2VmMxdm15Y0VFSHdiOFNrR1RhQ0FoZWJQQ2swdUo0cGl5OEJxcmZU?=
+ =?utf-8?Q?r3j507uDP/yq/OQS7I/Mk2w4X?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 874563ee-3d48-4a72-467e-08dd4d2ee670
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2025 19:36:38.8251
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: kXdNxp8hMvgSw5xJaJwDyW095QzzSUYhL5m64YfI/zo0qU0e4xLJMqAiLkb2/yAbuER3hq24nMlnkhAWjimI8w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6079
 
 
+
+On 2/11/2025 6:24 PM, Dan Williams wrote:
+> Terry Bowman wrote:
+>> Existing recovery procedure for PCIe uncorrectable errors (UCE) does not
+>> apply to CXL devices. Recovery can not be used for CXL devices because of
+>> potential corruption on what can be system memory. Also, current PCIe UCE
+>> recovery, in the case of a Root Port (RP) or Downstream Switch Port (DSP),
+>> does not begin at the RP/DSP but begins at the first downstream device.
+>> This will miss handling CXL Protocol Errors in a CXL RP or DSP. A separate
+>> CXL recovery is needed because of the different handling requirements
+>>
+>> Add a new function, cxl_do_recovery() using the following.
+>>
+>> Add cxl_walk_bridge() to iterate the detected error's sub-topology.
+>> cxl_walk_bridge() is similar to pci_walk_bridge() but the CXL flavor
+>> will begin iteration at the RP or DSP rather than beginning at the
+>> first downstream device.
+>>
+>> pci_walk_bridge() is candidate to possibly reuse cxl_walk_bridge() but
+>> needs further investigation. This will be left for future improvement
+>> to make the CXL and PCI handling paths more common.
+>>
+>> Add cxl_report_error_detected() as an analog to report_error_detected().
+>> It will call pci_driver::cxl_err_handlers for each iterated downstream
+>> device. The pci_driver::cxl_err_handler's UCE handler returns a boolean
+>> indicating if there was a UCE error detected during handling.
+>>
+>> cxl_do_recovery() uses the status from cxl_report_error_detected() to
+>> determine how to proceed. Non-fatal CXL UCE errors will be treated as
+>> fatal. If a UCE was present during handling then cxl_do_recovery()
+>> will kernel panic.
+> For what this is:
+>
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+>
+> ...and perhaps it addresses my concern on the prior patch that
+> ->error_detected() is responsible for the safety of checking that in
+> fact a CXL internal error / UCE was detected.
+Thanks Dan
