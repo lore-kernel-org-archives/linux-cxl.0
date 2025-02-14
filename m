@@ -1,330 +1,186 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2076.outbound.protection.outlook.com [40.107.220.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F995B64A
-	for <linux-cxl@vger.kernel.org>; Fri, 14 Feb 2025 00:10:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739491827; cv=none; b=GC3nWzbsVaHt+D50g0OjR49noKX2OXcKE35qdTsAYMzkcUgkEefcHS3tz7O43bZCt060SXMKD1ec9tQSx0ptRBH8Y7THy/Fkl5eSQOeyz7LbEbckN/uqteWnIihowIAhbOA0ZzaSgD5ZM9Y7Hn7FcX+8nOuA4c4k7PeTs0HU4YA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739491827; c=relaxed/simple;
-	bh=K5SA8GU6wsqJ9hUJTM31mUXcKajb3uBP7JxgJa8JMpE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GdtVbgdYW8nyKgi+xe6etxjwyLxIK291GIaz8qfpxNctoIG92w5c3u4mPrfHRLPXXt7haGHO3C/My1yPMHx91Xj3P3idgyBDIu9ad6JnI34KV56Iyrh69wfSSSRvlZIGNXABKSksjCOHmX6MXOLMGIFcn95TQaR6nh5ORlmBg0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EQSIOVj6; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF9A62753FD;
+	Fri, 14 Feb 2025 00:55:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739494541; cv=fail; b=cL4jK+3C5o5SnFzKtVviKudscEgSD83wTv0Txp08UkbFpiPQXX65SuXlWP0/yzBPXqOd0zzVPWd8buaeGLiU3MBcNuxaCC5asjpiQV916Aplalnbsg791CYd0BJjg7X1gBF9hweHAP82B4oWDsWlIAAa1gtbjA/wt/GaMLw971o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739494541; c=relaxed/simple;
+	bh=y6L9hpx6YbsziAIkveM8ZuSJRAvGzJ79LySpcLRc2EQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=bPkwvcNy32nQ8mVy6+vev05vRgsfgLMy6VaMI3ZIj8XB1Vg3rnWBi3f3DZXCX3DfPhf5xfMoi1V91PUynNiGYJSLkcYuEYbe2HzpiujpoQ/2WHQFujZ6ieRAPT4QYLajVH78+vJ6Sqcorwf/x+lWFykjtpsnChNpyhfcQscnJ00=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=qNNmOA06; arc=fail smtp.client-ip=40.107.220.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EQSIOVj6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739491825; x=1771027825;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=K5SA8GU6wsqJ9hUJTM31mUXcKajb3uBP7JxgJa8JMpE=;
-  b=EQSIOVj6WXB5EbWEtXKD1xNUqB6YCMRNqge65JhuJHNNEQhl7bQrHXEh
-   7EGDQD68E6anan0A4FZuejZXayfTB2k82GgUdH8O7SasGjKOiagIYY5j/
-   5yamMidvCxhhYVrJcomasb4e0VyrWgZTHk9VLQZmpXf9BmQGswF/m5WQA
-   ahCXBadcX754zCHvhAUDn09r/bjsB1efAexKhlbwEdh1P3d5K5YPBlEPq
-   nWvexuaUbSvMwxG8ById9YoqPCxRfehhA+1fT2SDO8fLwEn0Mgo/mm41X
-   eDlQFGL19CfKii84GW6I3zSGt72d00b2XqsiJsyCqNyj54ZTDUlrvVi/V
-   w==;
-X-CSE-ConnectionGUID: 2TsLRVNnQim+syb4teEWJw==
-X-CSE-MsgGUID: nnvhR0hfSUiXlH4WHppAvw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="27824489"
-X-IronPort-AV: E=Sophos;i="6.13,284,1732608000"; 
-   d="scan'208";a="27824489"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 16:10:24 -0800
-X-CSE-ConnectionGUID: ahDRM9+STzG31aYy5j/2LQ==
-X-CSE-MsgGUID: XN/CWaqBR/+ZIjockXrBxw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="114191203"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.108.202])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 16:10:24 -0800
-Date: Thu, 13 Feb 2025 16:10:21 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: Ben Cheatham <Benjamin.Cheatham@amd.com>
-Cc: nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
-Subject: Re: [RFC ndctl PATCH] cxl: Add inject-error command
-Message-ID: <Z66J7fW4SXuqFgN_@aschofie-mobl2.lan>
-References: <20250108215749.181852-1-Benjamin.Cheatham@amd.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="qNNmOA06"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uFxblCMobnoeoQHC1n5wzuIYKRWvn81Ovk9pZAo/ku2bSXBxufcAQS+Rv2ltq9e0wRB9mWOBV9czmkPWKa4Cb5q6AqPhHivayTJwI0D8ygUs9cdiv6O5Z+N3sW93nrP968mjfz9Ym7AeQtoX0ngwZasKjhxJdK4r20ec16E0m2PPztBi6sUebAAQZX0wzv3JweBnYCqNksSZkho12MbBOAyJkKAB0knt+fP+w6B/AXsvocfoQqjOWNCpjyMP052NxBd7/eXnOO1yY5pUZOKxVhJXhZaEgk8bkarfbQd5PPldqKv132XoClksZpUrBJhNeW/OX/XoNoXD5IKuC+ovFA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XmlTw9AFPGTGVFD7oDaQNoYVDDgATd9e31R7fnzXAX0=;
+ b=rFr7z+9SUj26xiWc6bdXJ5SUhzVIOmg+lbMfj5wL0Zp9lhjDECCps1dOlKEHZlW4IutjjQKB4rerJunuMXs3dO2X6SygnaDiS1B5Z+sDALOvVC5JUkK0GLiEgssdz3i7O1SHcH88bk1kFkS1OcOzRTlevC61/NC6eDG2zufzRK1tRwQCYJgaKZ1AgRJBytFaWRnV7tlLQTyseqxeC2xgn3gaPC0GsAJPhGf2W0ErtQaRmQCTzw7mzTfswBwK3jDiYn9gFpx06LsimAjB1JHjA9d3yAo2RVWQc1ZHz8/JXDL/GKBml0rgibF84VHODcR5z2xCVFWM0D6dPDZvLhm7Dw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XmlTw9AFPGTGVFD7oDaQNoYVDDgATd9e31R7fnzXAX0=;
+ b=qNNmOA06o2eXuL+ktwdJw6zjryBqlaSi9hh0BfwNhpR0fjYyp8WsMJIl+wJHvCA7EZOKSHRjueJOpO9DIbekr+oaPiAwHiEVFFNcMNspRMSdKPRFD2SM+Zkhe3aKgZxHdZVrM8bw7N8iykI5yM0wHj9eknMQFKyxr/z2/VEbgSIejK/MMFEAAlSpA+ZMgonYD9E8yjl61ULdPr+N8WImNQFSRD5GHWeqq6G6/YAxVu485l0o7qI6MusvXYREdRFgonRIMxX5kFgBZgtFxj3uXnSXTTlkMZcLI3kMFh3ld2CylbDNnqCvwfmMZ+gJHC7GXJdB7Z/yQedzyM83qjuKyQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by DS0PR12MB8786.namprd12.prod.outlook.com (2603:10b6:8:149::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.11; Fri, 14 Feb
+ 2025 00:55:21 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%6]) with mapi id 15.20.8445.013; Fri, 14 Feb 2025
+ 00:55:21 +0000
+Date: Thu, 13 Feb 2025 20:55:20 -0400
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: "Nelson, Shannon" <shannon.nelson@amd.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	andrew.gospodarek@broadcom.com, aron.silverton@oracle.com,
+	dan.j.williams@intel.com, daniel.vetter@ffwll.ch,
+	dave.jiang@intel.com, dsahern@kernel.org, gospo@broadcom.com,
+	hch@infradead.org, itayavr@nvidia.com, jiri@nvidia.com,
+	kuba@kernel.org, lbloch@nvidia.com, leonro@nvidia.com,
+	saeedm@nvidia.com, linux-cxl@vger.kernel.org,
+	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+	brett.creeley@amd.com
+Subject: Re: [RFC PATCH fwctl 3/5] pds_fwctl: initial driver framework
+Message-ID: <20250214005520.GE3886819@nvidia.com>
+References: <20250211234854.52277-1-shannon.nelson@amd.com>
+ <20250211234854.52277-4-shannon.nelson@amd.com>
+ <20250212122215.000001a0@huawei.com>
+ <3d9b8966-8ad6-43ee-a745-073a5c82554b@amd.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3d9b8966-8ad6-43ee-a745-073a5c82554b@amd.com>
+X-ClientProxiedBy: MN2PR05CA0058.namprd05.prod.outlook.com
+ (2603:10b6:208:236::27) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250108215749.181852-1-Benjamin.Cheatham@amd.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|DS0PR12MB8786:EE_
+X-MS-Office365-Filtering-Correlation-Id: 19b4e2fd-a66b-4b30-0a75-08dd4c924203
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?66p4w5s3/drz8pmRvhanYVkCDTRtOnkeWneDVRJrBtHbvbk9ZzYSeYtKaGyk?=
+ =?us-ascii?Q?8eNLH06V5GJHXktokF6xS6fT2/NLsQIYZLjkxakmzz4PZUavGW9EY3OQS/4c?=
+ =?us-ascii?Q?L7NlDExprpuXOLXJWzx6/78QPPKGZWAEyvbsvHmMSq1I3D4ENBaQCQRp2Duy?=
+ =?us-ascii?Q?1qBaXHm5J7GUUl5IYuMqNl2VeeK34uCeXJ7rFS2NS62MGzO9BavODhwRZvCP?=
+ =?us-ascii?Q?siS9jfrb3ZfTOAyfmk1zcwlJz5gDYJHSX0dwxcbHZyXBrKaEoMzlBhQM7zFS?=
+ =?us-ascii?Q?DGxsAr0oF60rzOIG6lLCj6t+fkucpKsxf5x/c22aO/knhSQZvuJUQVxCNLuQ?=
+ =?us-ascii?Q?gf1zQT8S5nuCSIxPNDdw5OTAniDbmfeeXDWK0Det0611YzQbWauCcniCh371?=
+ =?us-ascii?Q?QP5XONcQP1T+MnNt8xQKS3K0xL4I+mu4xFNNQuGNuLsyrudPzuCW6qvpC3aF?=
+ =?us-ascii?Q?whdEaxS3VbehH3CV5PMwnLe60etBH+p6F5ViwjCO8BimlEdLfTvLrDKj9EB6?=
+ =?us-ascii?Q?Geu043RmwpVCh5wjd6qqkL1SQc8CqR16uQx2qO7BtPbySuTa0wKRdUttbl3x?=
+ =?us-ascii?Q?i92+GwlaCC6B+9uSShdaRW9t2A74OsaSh/mL4JIFsWSWEClgSiW20ebpbU1L?=
+ =?us-ascii?Q?6QD9VVwlsDw9M+cTGFmDsTAUp4mO95kEqB2WFxV9H038/oFjmO/2A9cM5Pik?=
+ =?us-ascii?Q?m68vpNRnHKUHTIZ0kGzRpUoeoEbnEhUA6mlsjtFzP7W6WqP2Wa+qx3JY3vgt?=
+ =?us-ascii?Q?kI8gSgzeeY3uiRCJyQ1S0lA/54WzCKkkL8CPTTI9dqWZMDbl43DKBsPAGZF9?=
+ =?us-ascii?Q?dC11Hxqw8w82BzwbYWxYNSnkn6D8sLhtTvhR8DHiXtX2aS94+khd76lXbhVQ?=
+ =?us-ascii?Q?/gOvYndVmc6YITaSJnxURyq+qPb+vfafx/QS9XSFDfADa2fj4Wl+8PLbz0hT?=
+ =?us-ascii?Q?1rburf1cpo5VIMccEe4WhpHgwY+VyCjOG/ODoUUYALrRNg7ah3bB/tE2sGNn?=
+ =?us-ascii?Q?4h7Ax/G9xxiS6CYih4BL+CKJB1zilbHl8VPuQ2SJ1CvRYmCAfuMWt7ZYzqUX?=
+ =?us-ascii?Q?fOvXfoop9RnwVttxa64bTHs27PxrPvbtDfK4vd/q8uZRo5evpGvyjh+OkpOc?=
+ =?us-ascii?Q?hq6+J8ndLm48y4KqH0gTwXPpXbcTm/xieD0pt4RjavO6K6+ZLE4eX4HuWTHO?=
+ =?us-ascii?Q?jxiN0btUIr/REKR9q/vXHsIfL1PB3CpNNiZEP0EaQhXfPMpLRNwzXZZ2dgyX?=
+ =?us-ascii?Q?NmYO7p6uwAekAQ3nYYcD8jXx7MKk+biKfVXz1kLN+hiFD/mV9fD9H/jXe449?=
+ =?us-ascii?Q?0TRvkLFWLZmH6mcf95lEqRSO3b3ROQa/o/MFQ9zbS6hLGYOOaZopZTNnmLeJ?=
+ =?us-ascii?Q?SsPy+57t4RUPrQIFA4vLYPfcd3B5?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?LEMO9C2ERyZFfkHEGyANL7hRJ9P+ezccULf+fJAo73RfQfkZs2RLY//DzgoO?=
+ =?us-ascii?Q?SZWeKweD3v1E8bYBklN8b4jZhwBRoGFBAHhtdlhwa5GJty0DUlGEB0YgZybS?=
+ =?us-ascii?Q?apmjl26qzndqWAjbSh9NQMnxBHDMF1pw6PK1DQCxoCO6iIc8VtyvT20srjmq?=
+ =?us-ascii?Q?6mS+OuHALly1Fgt+gtQmIK2zNf4TMSY/ZoifKEMAIKXcoMl0SJ3shodFC+7A?=
+ =?us-ascii?Q?iUz4PVn8e9a7oYtIavKovgSulotYFgK/ns2J9ZkdYHTAhG5DDOdA+VOCNdaD?=
+ =?us-ascii?Q?lHFdshlh9duR4mupGx+ncmX2dD+GI8ltjAFxAwEq8sHatX34nbusQYwyme9n?=
+ =?us-ascii?Q?2Elgme8tyCQnlx4CsAx1Pl9St6csI+OtuJ/xhSWDUyhlSwy7uqbw8y/QIxlI?=
+ =?us-ascii?Q?ssCLhLCdOvRKS4B9CNt3WRaGb33udHyHTxUiXmTrVO4Q0M880KJNfARP9MW6?=
+ =?us-ascii?Q?py+6SPEYa8qv2NyuN4fOaOuGWuCEgVxWYFfmuByy0e/QJxls5Wn5a/zDTIsv?=
+ =?us-ascii?Q?YfqIyEKRlrU/VU5XffzmbLbFcR9lpkd/j8fFWA0fnzugwvOHJZYhxTgJcLfs?=
+ =?us-ascii?Q?Bsdtla6CWjCcM/ncnnoN6pO0zwQzQPr6XWwKCT0pFlUD8L9XMj4U30readk5?=
+ =?us-ascii?Q?I2KZqCxXoPRVzqjeAW5NU7RVSokxZNzkRP9tPzJGZgoXp9GoNZ36xV+xuf6i?=
+ =?us-ascii?Q?N3JszdxjUxFKNo0AMUB7T+XBDL4JKVQ6ndmU8erzKu4ZEnTtShyzhf2TC9kW?=
+ =?us-ascii?Q?xW6dClX2V4duscCkae1W/9HqwCwZTQMk8HhCLthGJBoBv2eo0mOnQY6Du2f/?=
+ =?us-ascii?Q?46CJ7Av7l6j4vcVg58Ltsp93hf2M+uPCs0fwWsRmgmCxI/ZIaE7lSGa0/1IT?=
+ =?us-ascii?Q?xo4IuX00dCdbPgip1eQWmsNf+4r41QKu9iljVQbYfI1y+uFNJiGgkjuZuZOM?=
+ =?us-ascii?Q?jCjdWTf/nNBTTGRViofgUncPyEz7RKfhnMAVb8C0uJ/658If4NAqTLuDdPu1?=
+ =?us-ascii?Q?8VubyNHQRTwwJbyF9mGTADAWP9WLHN1yz/jsJgEAMUUL3zb9u11tSV8gKl/g?=
+ =?us-ascii?Q?f5EYNuBENvWOqSFjsVq+OKRUTrZT6UnH12RlMBl6GH9u8pvHbgSlVKBoYFpL?=
+ =?us-ascii?Q?6P59Cgq25G1zpXgbiIFf0ekMgqMomesBgaKdfB7XzZDa6s6ZBXgHmyooHLj3?=
+ =?us-ascii?Q?VxAQSbgs7NMjG9eYw2V4QbyOj6RI2m7VwY+9XBKTJ5kgfpKAzDvFPfzCzvcX?=
+ =?us-ascii?Q?dTmgLJCwLuK3Hk2BcN+CIzUke/a9mKJRCDalVCT3UsXooNobqS88AOc++uVi?=
+ =?us-ascii?Q?LvqRH84sHphrWHpKigO6YLCCGsPbOuYSDWMFDVrgpC6MEqHAXrDOihE3we0/?=
+ =?us-ascii?Q?5+oqr0/IZo9ISw/049UkGHIvbQKSAe6oyr4m6sbNH0jPwOtpgy66GLA8OYyY?=
+ =?us-ascii?Q?9NYlt/8aiNEYoOl+ym9PAdfIgINLI4Iyjf/Sopiqgpxcob24zfAGy5P4IBWM?=
+ =?us-ascii?Q?yNHk+yhPfFKdNFCGvQevTLgIC/qliBthDVPPp5WZUzP6WGeLmhJe24qya1RI?=
+ =?us-ascii?Q?AvqMKJQm1NsC2RhHA9cvZARsmUJvJAMkVueoN9y7?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 19b4e2fd-a66b-4b30-0a75-08dd4c924203
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2025 00:55:21.4683
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vuuBkLvFATD2g25thRfjwVHhK2+m7iaBF8vgxuqWZ2s8WyTa7W40vzPtpt1LiO5i
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8786
 
-On Wed, Jan 08, 2025 at 03:57:49PM -0600, Ben Cheatham wrote:
-> Add inject-error command for injecting CXL errors into CXL devices.
-> The command currently only has support for injecting CXL protocol
-> errors into CXL downstream ports via EINJ.
+On Thu, Feb 13, 2025 at 03:06:14PM -0800, Nelson, Shannon wrote:
 
-Hi Ben,
-I went through enough to give you some feedback for your v1.
-Just ran out of time and didn't want to keep you waiting any longer.
-
-wrt 'currently only has' - what is the grander scope of this that we
-might see in the future. Will there only every be one system wide
-response to --list-errors or will there be error types per type of
-port.
-
-Spec reference?
-
+> > > +/**
+> > > + * struct pds_fwctl_cmd - Firmware control command structure
+> > > + * @opcode: Opcode
+> > > + * @rsvd:   Word boundary padding
+> > > + * @ep:     Endpoint identifier.
+> > > + * @op:     Operation identifier.
+> > > + */
+> > > +struct pds_fwctl_cmd {
+> > > +     u8     opcode;
+> > > +     u8     rsvd[3];
+> > > +     __le32 ep;
+> > > +     __le32 op;
+> > > +} __packed;
+> > None of these actually need to be packed given explicit padding to
+> > natural alignment of all fields.  Arguably it does no harm though
+> > so up to you.
 > 
-> The command takes an error type and injects an error of that type into the
-> specified downstream port. Downstream ports can be specified using the
-> port's device name with the -d option. Available error types can be obtained
-> by running "cxl inject-error --list-errors".
-> 
-> This command requires the kernel to be built with CONFIG_DEBUGFS and
-> CONFIG_ACPI_APEI_EINJ_CXL enabled. It also requires root privileges to
-> run due to reading from <debugfs>/cxl/einj_types and writing to
-> <debugfs>/cxl/<dport>/einj_inject.
-> 
-> Example usage:
->     # cxl inject-error --list-errors
->     cxl.mem_correctable
->     cxl.mem_fatal
->     ...
->     # cxl inject-error -d 0000:00:01.1 cxl.mem_correctable
->     injected cxl.mem_correctable protocol error
->
+> Old belt-and-suspenders habits...
 
-I'll probably ask this again later on, but how does user see
-list of downstream ports. Does user really think -d dport,
-or do they think -d device-name, or ?
-Man page will help here.
+In that case it is worth knowing that __packed also changes the
+assumed alignment of the struct. You can access a __packed struct at
+any byte.
 
-We don't have cxl-cli support for poison inject, but to future
-proof this, let's think about the naming.
+On x86 this is mostly meaningless, but on other arches it can effect
+code generation as the compiler will have to assume that, say, a 64
+bit load is not naturally aligned and emit a more expensive sequence
+to load it.
 
-Please split the patch up at least into 2 -
-libcxl: Add APIs supporting CXL protocol error injection
-        include updates to Documentation/cxl/lib/libcxl.txt
+Which is why you occasionally see things like:
+  __attribute__ ((packed,aligned(8)));
 
-cxl: add {list,inject}-protocol-error' commands
-     include man page updates, additiona
+Which says that there is no padding inside the struct, but also that
+the compiler can assume a guaranteed starting alignment for the
+memory.
 
-The 'list-errors' is the the system level error support, right?
-Could that fit in the existing 'cxl list' hierachy?
-Would they be a property of the bus?
-
-I don't know that 'protocol' is best name, but seems it needs
-another descriptor.
-
-
-> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
-> ---
->  cxl/builtin.h      |   1 +
->  cxl/cxl.c          |   1 +
->  cxl/inject-error.c | 188 +++++++++++++++++++++++++++++++++++++++++++++
->  cxl/lib/libcxl.c   |  53 +++++++++++++
->  cxl/lib/libcxl.sym |   2 +
->  cxl/libcxl.h       |  13 ++++
->  cxl/meson.build    |   1 +
->  7 files changed, 259 insertions(+)
->  create mode 100644 cxl/inject-error.c
-> 
-> diff --git a/cxl/builtin.h b/cxl/builtin.h
-> index c483f30..e82fcb5 100644
-> --- a/cxl/builtin.h
-> +++ b/cxl/builtin.h
-> @@ -25,6 +25,7 @@ int cmd_create_region(int argc, const char **argv, struct cxl_ctx *ctx);
->  int cmd_enable_region(int argc, const char **argv, struct cxl_ctx *ctx);
->  int cmd_disable_region(int argc, const char **argv, struct cxl_ctx *ctx);
->  int cmd_destroy_region(int argc, const char **argv, struct cxl_ctx *ctx);
-> +int cmd_inject_error(int argc, const char **argv, struct cxl_ctx *ctx);
->  #ifdef ENABLE_LIBTRACEFS
->  int cmd_monitor(int argc, const char **argv, struct cxl_ctx *ctx);
->  #else
-> diff --git a/cxl/cxl.c b/cxl/cxl.c
-> index 1643667..f808926 100644
-> --- a/cxl/cxl.c
-> +++ b/cxl/cxl.c
-> @@ -79,6 +79,7 @@ static struct cmd_struct commands[] = {
->  	{ "enable-region", .c_fn = cmd_enable_region },
->  	{ "disable-region", .c_fn = cmd_disable_region },
->  	{ "destroy-region", .c_fn = cmd_destroy_region },
-> +	{ "inject-error", .c_fn = cmd_inject_error },
->  	{ "monitor", .c_fn = cmd_monitor },
->  };
->  
-> diff --git a/cxl/inject-error.c b/cxl/inject-error.c
-> new file mode 100644
-
-Can this fit in an existing file?  port.c ?
-
-I didn't review this file yet, so snipping.
-
-
-> index 0000000..3645934
-> --- /dev/null
-> +++ b/cxl/inject-error.c
-
-snip
-
-> diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-> index 91eedd1..8174c11 100644
-> --- a/cxl/lib/libcxl.c
-> +++ b/cxl/lib/libcxl.c
-> @@ -3179,6 +3179,59 @@ CXL_EXPORT int cxl_dport_get_id(struct cxl_dport *dport)
->  	return dport->id;
->  }
->  
-> +CXL_EXPORT int cxl_dport_inject_proto_err(struct cxl_dport *dport,
-> +					  enum cxl_proto_error_types perr,
-> +					  const char *debugfs)
-> +{
-> +	struct cxl_port *port = cxl_dport_get_port(dport);
-> +	size_t path_len = strlen(debugfs) + 24;
-
-What's the path_len math, +24 here and +16 in next fcn.
-I notice other path calloc's in this file padding more, ie +100 or +50.
-
-
-> +	struct cxl_ctx *ctx = port->ctx;
-> +	char buf[32];
-> +	char *path;
-> +	int rc;
-> +
-> +	if (!dport->dev_path) {
-> +		err(ctx, "no dev_path for dport\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	path_len += strlen(dport->dev_path);
-> +	path = calloc(1, path_len);
-> +	if (!path)
-> +		return -ENOMEM;
-> +
-> +	snprintf(path, path_len, "%s/cxl/%s/einj_inject", debugfs,
-> +		 cxl_dport_get_devname(dport));
-> +
-> +	snprintf(buf, sizeof(buf), "0x%lx\n", (u64) perr);
-
-Here, and in cxl_get_proto_errors(), can we check for the path and
-fail with 'unsupported' if it doesn't exist. That'll tell folks
-if feature is not configured, or not enabled ?
-Are kernel configured and port enabled 2 different levels?
-
-There's an example in this file w "if (access(path, F_OK) != 0)"
-
-
-> +	rc = sysfs_write_attr(ctx, path, buf);
-> +	if (rc)
-> +		err(ctx, "could not write to %s: %d\n", path, rc);
-
-for 'sameness' with most err's in this library, do:
-        err(ctx, "failed write to %s: %s\n", path, strerr(-rc));
-
-> +
-> +	free(path);
-> +	return rc;
-> +}
-> +
-> +CXL_EXPORT int cxl_get_proto_errors(struct cxl_ctx *ctx, char *buf,
-> +				    const char *debugfs)
-> +{
-> +	size_t path_len = strlen(debugfs) + 16;
-> +	char *path;
-> +	int rc = 0;
-> +
-> +	path = calloc(1, path_len);
-> +	if (!path)
-> +		return -ENOMEM;
-> +
-> +	snprintf(path, path_len, "%s/cxl/einj_types", debugfs);
-> +	rc = sysfs_read_attr(ctx, path, buf);
-> +	if (rc)
-> +		err(ctx, "could not read from %s: %d\n", path, rc);
-> +
-
-same comments as previous, check path and make err msg similar
-
-
-> +	free(path);
-> +	return rc;
-> +}
-> +
->  CXL_EXPORT struct cxl_port *cxl_dport_get_port(struct cxl_dport *dport)
->  {
->  	return dport->port;
-> diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
-> index 304d7fa..d39a12d 100644
-> --- a/cxl/lib/libcxl.sym
-> +++ b/cxl/lib/libcxl.sym
-> @@ -281,4 +281,6 @@ global:
->  	cxl_memdev_get_ram_qos_class;
->  	cxl_region_qos_class_mismatch;
->  	cxl_port_decoders_committed;
-> +	cxl_dport_inject_proto_err;
-> +	cxl_get_proto_errors;
->  } LIBCXL_6;
-
-Start a new section above for these new symbols.
-Each ndctl release gets a new section - if symbols added.
-
-
-
-> diff --git a/cxl/libcxl.h b/cxl/libcxl.h
-> index fc6dd00..867daa4 100644
-> --- a/cxl/libcxl.h
-> +++ b/cxl/libcxl.h
-> @@ -160,6 +160,15 @@ struct cxl_port *cxl_port_get_next_all(struct cxl_port *port,
->  	for (port = cxl_port_get_first(top); port != NULL;                     \
->  	     port = cxl_port_get_next_all(port, top))
->  
-> +enum cxl_proto_error_types {
-> +	CXL_CACHE_CORRECTABLE = 1 << 12,
-> +	CXL_CACHE_UNCORRECTABLE = 1 << 13,
-> +	CXL_CACHE_FATAL = 1 << 14,
-> +	CXL_MEM_CORRECTABLE = 1 << 15,
-> +	CXL_MEM_UNCORRECTABLE = 1 << 16,
-> +	CXL_MEM_FATAL = 1 << 17,
-> +};
-
-Please align like enum util_json_flags
-Is there a spec reference to add?
-
-That's all.
--- Alison
-
-
-
-> +
->  struct cxl_dport;
->  struct cxl_dport *cxl_dport_get_first(struct cxl_port *port);
->  struct cxl_dport *cxl_dport_get_next(struct cxl_dport *dport);
-> @@ -168,6 +177,10 @@ const char *cxl_dport_get_physical_node(struct cxl_dport *dport);
->  const char *cxl_dport_get_firmware_node(struct cxl_dport *dport);
->  struct cxl_port *cxl_dport_get_port(struct cxl_dport *dport);
->  int cxl_dport_get_id(struct cxl_dport *dport);
-> +int cxl_dport_inject_proto_err(struct cxl_dport *dport,
-> +			       enum cxl_proto_error_types err,
-> +			       const char *debugfs);
-> +int cxl_get_proto_errors(struct cxl_ctx *ctx, char *buf, const char *debugfs);
->  bool cxl_dport_maps_memdev(struct cxl_dport *dport, struct cxl_memdev *memdev);
->  struct cxl_dport *cxl_port_get_dport_by_memdev(struct cxl_port *port,
->  					       struct cxl_memdev *memdev);
-> diff --git a/cxl/meson.build b/cxl/meson.build
-> index 61b4d87..79da4e6 100644
-> --- a/cxl/meson.build
-> +++ b/cxl/meson.build
-> @@ -7,6 +7,7 @@ cxl_src = [
->    'memdev.c',
->    'json.c',
->    'filter.c',
-> +  'inject-error.c',
->    '../daxctl/json.c',
->    '../daxctl/filter.c',
->  ]
-> -- 
-> 2.34.1
-> 
-> 
+Jason
