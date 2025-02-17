@@ -1,67 +1,65 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2049.outbound.protection.outlook.com [40.107.236.49])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2081.outbound.protection.outlook.com [40.107.93.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CE9D1E51D;
-	Mon, 17 Feb 2025 13:41:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67C2F215F5E;
+	Mon, 17 Feb 2025 13:44:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.81
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739799680; cv=fail; b=U12gM4ZyIekfJu7Uy3EKfY+969mpF7Crq/ZrKEdMOrYvAcC+3Ol5SRLypwWxZ0tt4/e5kVxaWlBaU2zxARVKVWIlCCUX5jbhXUoewygR+aLkYLIYvumgECkUvNPY7MHwRFRStSEGfoS+LcJDr/vs0RgOK2F4oPrKT6Qz1qpA9E0=
+	t=1739799886; cv=fail; b=C2Kax++pTDo490sFEeIh3cqTlp1lZRnFbPd0F3KXZCZpDcWEDLFWt1OWQWGqZn5/qiCihk6fUR7xD0hQw9XFsksiFyivqZZq2A67Vu3c2NtkW3a5JwFCIe5JtNWPtj8FJPz8R0B4iqbJpg0/fHnZgzGZF9bboQ1vgLNAEdx3Pts=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739799680; c=relaxed/simple;
-	bh=tYY+9s54+UWibuC1blWlvBQXjEew36u603pV0kVX4vs=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=FP9hIYixd89+S1f4zOC5I4JVH4NuYips6N9GCPyXZHDVAnand0rny2Kvai3ytB9RZwTKfmxLhpu4x9BojR7646KVUzwCIrwhk9Xw8wnKXQ9wMMpG2ZSeCa1bQOwo1uhYZGc98vRxB+hhdAW8c8/Q2DHpF+6eZVktcpUqCL/yiyc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=l74mHm25; arc=fail smtp.client-ip=40.107.236.49
+	s=arc-20240116; t=1739799886; c=relaxed/simple;
+	bh=vu9jBDdIS7SBrv1m9SKsUhyP1gsT0mNKBMCxISUNyW0=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=rEzqV3MJMty9k63Nd097guJG7dtcKkxav3mc5kY85HqKXLKesMnw58vkFnAWAv1bXw4D7tFMm9R+/EUXQRMUt5a3KaFMGaBBrXw2Ns+ygE5H5IF1Tj69ddDa9XivQoVEsdcF4qKgPLDohQyH6KUr/ZjdUnSE2WqJXV7dEPBKomY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ZFle7TW7; arc=fail smtp.client-ip=40.107.93.81
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="l74mHm25"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ZFle7TW7"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kCekHedfG3C82CNyED6uXfvyHFv7GJFPkVDJLK9UNSj747Ue8trmDT+/4VhFLH7T4XFvRm4bR71YSBdreZba0XZ5d2suvL9Yz1fJcSSJEnq+77mS5mFehjq2P/o/I2dAQ4A2jLW84wiwWWSVJKh+tXSeGtruhwgbUobQGJcTz0DzT3IqdvGLD+4rqe2OzjIyvlVttOCrFv5AkDrXrHM+XTtUcOaSMabp9TERjGAf3ENapDOQVbl3A9kBjaz6JLWT9GgKY7RJ4vN41lIXGnoJictl4ktLjUWDWLuq1vOcRq8gySRaXdNcrMuziP1xdH++vX2HkokKMVMYBrYzUVaaEA==
+ b=WuSMwKP3mhCZaY2mZbnAqINY94ofEqmk90NmAJ7lwYvUPfdFfjXlCcTPjS58xLVvL+HaAeIBR57ri5NOznfZXIxWFWK+K+/v9/lu0HGsw6oyhZ/zHjoN/OXTo3RUJOaeKddKW3yjO9JSDVS1KxzqefxH4YWN5jFE/tz8dmpjzHCozN6EkPsvNd9BzJC54eQ+MZzO15N2W9vQMNvfpEzCuXzuLramofCL/7YHn0cOCWwWwrukWJV27o0NqVBL1fNHwRBcAfA308ADEZmlAXHSFyQtXN2WSiSl+kUCKQveKv9iMAkZ0oj0bho/Sch5YKS6Dp96yPYYiQODmqUvZRKcSw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QcW19wnBImIvu4emPvLKmq7EI6MKlQsfLJ1M3EaoEQw=;
- b=B7NVrXiROnI+Fe+o8VJiX5xtAwvmyZvTKuWdg5i+qo39HomFy3Ao+QhFq22go77oKG8cpd7kbHqrn2fT9QQ6st73PGL9V2ONnNKi1tV/Z2/aPwFZQPxM+J+nZLvLIMUG1KC4xDhUfm1HdjQxs3hIilMZxsuVGJNaoUtobwGP5giWSbDgSdnGKTv9swl31BsTnS++Dsj2yg4P+srjx+OfCWTTJH6hIkJnTWo5GjYT/581PISa1dv0QYwuNPclFxHCFbCs7o5ecgwSdjM64Jav/6pvTR530KHNCxuEvC1BHgw3VQietQufDzuyh4Arg6t7Bs5ZMRhZ5BQM0Pk33pVLZA==
+ bh=FfndiYfJco0enLynjc36VQrDCBj4709nyav83XO3+58=;
+ b=LgSLhi4S7+MmlJxukKVhrH5+stbF+ufm4AiIu9QHz5zBgfPZNiPQY5WmtvMSMP7Pd3UHxfhAENUTY1kgF3ZOcvnZjgRM3+2+ofmlnvN7d7yFl3PSHxFJGsLEAb/FsRZ7ZdHmWc8f6zOPSvRCMbm7oGADy67gLtCjoFj495v45cBfU5cjr1ureok5RM7q8ax4rGFQvs41f+1KVvoqvqDo0XdAzEg3CU6wCdbsbDy+ICJsJNMt0xpVDTDN+sS7PggNEIArAaoJr6XX0U3dKB46F5muidkivQ0tt+W25DQwyAjXfZxNtCnh4Dh56+iR3tu5NBBCHwVSAF0zeQxx/FGpJw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QcW19wnBImIvu4emPvLKmq7EI6MKlQsfLJ1M3EaoEQw=;
- b=l74mHm25byiqqvQQWlnHIvYzWDgfcrcr+kc9Az9hA8YRjT8RW7Kk46dD6iHTaa+Xu0RElt+bd4u32e+KZHKwcxDR6QHc6Uyi5HoW8u7IMmq2Cdv6jiOM8ioUKwEyG8Fi8aI22Bscyo8jHiN07C+gypKPXyhCxQ8yutg3sqqyse4=
+ bh=FfndiYfJco0enLynjc36VQrDCBj4709nyav83XO3+58=;
+ b=ZFle7TW78K0YcefdgJcUpkZQj5y3jbuC2dc9p6kWz7GB/H0yB1h/iNJYRgCkoBqQWJ992E2EyXjofKaUUR4hLzLhogFLOQvK+GicDlb5I48XhXF94uKbv0cih2j941EBJqGAtEf0iRkpVYhRa9fRDriUPvfzibbM5Ci1//yIbv4=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
- by LV3PR12MB9120.namprd12.prod.outlook.com (2603:10b6:408:1a3::5) with
+ by IA0PR12MB8421.namprd12.prod.outlook.com (2603:10b6:208:40f::5) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.19; Mon, 17 Feb
- 2025 13:41:15 +0000
+ 2025 13:44:40 +0000
 Received: from DM6PR12MB4202.namprd12.prod.outlook.com
  ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
  ([fe80::f943:600c:2558:af79%7]) with mapi id 15.20.8445.017; Mon, 17 Feb 2025
- 13:41:15 +0000
-Message-ID: <eccb157e-10c3-4009-9036-dabccf4ba918@amd.com>
-Date: Mon, 17 Feb 2025 13:41:02 +0000
+ 13:44:40 +0000
+Message-ID: <3ffdaada-5d60-4af1-90e7-5f43ceb0d3cb@amd.com>
+Date: Mon, 17 Feb 2025 13:44:35 +0000
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 09/26] cxl: support device identification without
- mailbox
+Subject: Re: [PATCH v10 14/26] cxl: define a driver interface for HPA free
+ space enumeration
 Content-Language: en-US
-To: Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org,
- netdev@vger.kernel.org, dan.j.williams@intel.com, edward.cree@amd.com,
- davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
- edumazet@google.com, dave.jiang@intel.com
+To: Simon Horman <horms@kernel.org>
+Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
+ dan.j.williams@intel.com, edward.cree@amd.com, davem@davemloft.net,
+ kuba@kernel.org, pabeni@redhat.com, edumazet@google.com, dave.jiang@intel.com
 References: <20250205151950.25268-1-alucerop@amd.com>
- <20250205151950.25268-10-alucerop@amd.com>
- <67a3dc0071693_2ee275294fc@iweiny-mobl.notmuch>
- <9ce2dc57-ad51-4587-8099-60f568984b84@amd.com>
- <67a50c15de8e1_305d76294d2@iweiny-mobl.notmuch>
+ <20250205151950.25268-15-alucerop@amd.com>
+ <20250207125543.GR554665@kernel.org>
 From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <67a50c15de8e1_305d76294d2@iweiny-mobl.notmuch>
+In-Reply-To: <20250207125543.GR554665@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CT2P275CA0061.ZAFP275.PROD.OUTLOOK.COM
- (2603:1086:100:24::17) To DM6PR12MB4202.namprd12.prod.outlook.com
+X-ClientProxiedBy: DU2PR04CA0315.eurprd04.prod.outlook.com
+ (2603:10a6:10:2b5::20) To DM6PR12MB4202.namprd12.prod.outlook.com
  (2603:10b6:5:219::22)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -70,256 +68,182 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|LV3PR12MB9120:EE_
-X-MS-Office365-Filtering-Correlation-Id: abf64d9b-adea-4d1e-df7c-08dd4f58bf9f
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|IA0PR12MB8421:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5b41b23c-ec67-498f-d23e-08dd4f593a46
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|921020;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?cjF6RFRwSS9zWGszdmt6aVJXbTZBZ2FlbmdLUGliOFM2dHRqMmIxZkRGZXFN?=
- =?utf-8?B?b3JOMlI0R1ZHd21MdEszR2VyK0lCalU0dTNOS1ptSnQyZFRiM0srZ2dNalFC?=
- =?utf-8?B?K1VrdUZpUXMvbXhVcXBLcGJFT3UwWGtxNi8vbVFIajZ3OFVwRVBhOFNVSWh1?=
- =?utf-8?B?N2o1SDhMMUU5TCtqbVVRUlBCQk9JQnhsdW1GVFA4cklFeHpRbkR4V1hoRmdt?=
- =?utf-8?B?Wk5iRGpKV3JicTByenROTDdnN1QzNjJZWXpnTjVlT2cyT2dCQmlLNGROQVpl?=
- =?utf-8?B?U1pFVDJTZ1VPWVdtUmo1YmliT0x4RWJDVVNrVlBGZTFCeVowam5CRjVPZUdI?=
- =?utf-8?B?Tjl0Rm40aGtJTm05VmxkOTk1Rm4rWGJBZ1N6N05EY0htZFNTdU1OZ3VFNEhR?=
- =?utf-8?B?WnZOL2FhbVMyMXNrYXhFcVk4dzhhbkxIQkJFSVdhZ2JBZWtvOWpCUlRiVGYv?=
- =?utf-8?B?MzVmeFNqTWRwY3JuN2xXVk9abVdCOTM0SFVVQm9jZHJpSmltZ1loeXpaTXh0?=
- =?utf-8?B?ZnR6ZzRFc1hnTFRPQ3BLTmV2SlZOalpFTWR6TlpmZ0FkTHY1MDcyTnR2dS96?=
- =?utf-8?B?TWVXallaclcrbXVTSmgxbkdiallCYTBVQWFDVDBlalVqdTAzZVVQNitTbmQx?=
- =?utf-8?B?NnlFN0x4d2ZORDFRR0c5blAyYytqMDlPc0htMG5yWmFqczMvK3R1UnNoa3Vm?=
- =?utf-8?B?L0JUbmUwSldsY0F0MHpBRndjWkxhMnlzd1orMWJnVVJvbVBjRlFEcFFUb3pG?=
- =?utf-8?B?YWI4L2VEcUxtZ015V1VJNm1lZFdTSm5aaTlBcTdqUGpnUlhLQ3pNUTg0bGpO?=
- =?utf-8?B?bU1iTWhDdUdSVWl4MWhObkFRdWVtMlZuVzJxN0tTWGJtWXZES1ZrMEIrZ283?=
- =?utf-8?B?NytvZ2NGWGx4bkhCaGNJQTRlSngvcE5DckZiT3pURTF3SmowejZpUThGZUxL?=
- =?utf-8?B?VTNOSEZVR0IvV0FZRFZPUmdNanJSNmhra2EySDdKQnBMa0xvVk9ydDFjTVFV?=
- =?utf-8?B?S1dOWVlyYm5wUlFCaW1UdUdaNmZlRUdmR0lUOVU0SjhPS2lyekE0dXhabnpw?=
- =?utf-8?B?SkFaVTZnd0ZIbmFZdkF3Z3laTWxpVWphR0xwTnQ3K0FpSnJpKzVtQjdxNFlx?=
- =?utf-8?B?NEo5Q3UzeTd5WUQ2U0xHYjBNdC9QUmU1dVdybEZTN3RTbCs5ZDVtVXkya1JT?=
- =?utf-8?B?OTZKUmJTWmQvMEFBamt3RGh5UEtEMFZHTkZiVjl2RU9weGF0OWlFZlhJR0RI?=
- =?utf-8?B?a2JCU25aVEVyUnJUNVdVWWlFNHRZNFFCWmMxdHAyMlpEL3JEVmVkSFV3NEtM?=
- =?utf-8?B?dTNSOUtaUkFUbE9BcExUdnlHVC80STFwanF0a0gyZVFrZ2E4UXg2RFlueHlG?=
- =?utf-8?B?Y0d6MGZzdjByazdGV2VDVEJTOEJGOWF5S3RHKzNtVzBMTGxkZ3JrY0hZUlVy?=
- =?utf-8?B?TVZNMitIUms5ckM1dlF4WVh2a2JseTdFSWIvTXZ6WXFkWkc3SjBVVkVwaEpY?=
- =?utf-8?B?NzM5eGJlaHc0WkJITVRyWUJSTXJQdUgrTkZZa3dhMC8rYk1ZYU9vcm1GYkJK?=
- =?utf-8?B?bk9CcS8yU2gzVmMwelNuVHVWQTR3bUtGQXNTSnorU3B4aTZkZGlMSXRwL0pP?=
- =?utf-8?B?YmxpN3ZQUFJSZ1o5VEFaZXhDWmVKS1JUOTFTT3gwZERyZXlhYVE2Z21UWjk2?=
- =?utf-8?B?UEhjaXRIVHUxVTZmUTFTcEFrYTNmQVdWVWNON250N1dIN3QwNXovSEdsczZk?=
- =?utf-8?B?SHZFalJsenNQbVhCS3lpY3dYNjhpSGUwOU80L055Tm1VYk84WmV1ME54RVg4?=
- =?utf-8?B?NWI5U3NTektuY0lONjRCdGErMWFiSWxoTE91RjNqdFV2Qk5vU1NLYVJFNUhs?=
- =?utf-8?B?THlxRTVrbk1mYzRNbUdMT0pPQnFodVJNQTF3aHlITytCNEFIdlAwNGdIZ3Bo?=
- =?utf-8?Q?oEomCikulJE+o5P3F7FNYNWoCBEvH3m0?=
+	=?utf-8?B?VWRUeGVlbjlTM202YzZLUXE2WWFSYTBSYzl2M2J3MnBFMS9FM0owT0wySnRo?=
+ =?utf-8?B?eU16Z2xHN0RYVFZhZGJzTExjRSsvOU44eWJ6NWVycml1anJnQTY3UlpISlRY?=
+ =?utf-8?B?OHBERXRYQUhseVMwcll4WTFKNW5BQ0MxZm5tWWdUQkpycGx1dWhMOVNZZ3lF?=
+ =?utf-8?B?eGRZRDN4MEw3N0NpVjZhNWpGUEhIdXZKUE5mbUMxUmk2OG44RGNwelhaMHN5?=
+ =?utf-8?B?cG5HSGVBYUJXOGRiaVQyTStCWjROSWJXWExEU21Rd29uaFNOUEJmTk9lWXJC?=
+ =?utf-8?B?U013UFc5U2h0MVJMMUhHL1VGR2Y3alBoN0ZVbHdhaXAybmZyV2lQWGpHNDEw?=
+ =?utf-8?B?ejMxSG1Pd1UveEF1UTRWdm9OazZEVncyTEVnVENhcy93YTh3ZUZCMllhNjV5?=
+ =?utf-8?B?aVFMWXJ0aFhoOEIrZjByRFhkN2NXbmVveDd6L2JBSTJNUmh4TWlDcnh0allF?=
+ =?utf-8?B?cWt5WGNYZVdSQjRGaFRGZEdnQ3FEWlJKQXBGUittYk9mbTFVdkxsaVhYSVdP?=
+ =?utf-8?B?RzRXL2hwQ3hPOENSUHlIR3hRYWF1V0FscmJlN1FERkgzQTJOTFpQNWVlcDU3?=
+ =?utf-8?B?WnFieTY2OFhxOHYzOWV2QVduSC9ZaWpuQ09nLy9wcUJLNno5amppbldzTERr?=
+ =?utf-8?B?QStnSFJmcEc4NjZBWnBIdzhoUytsZy9hZjA2RVJCSk9zd0FyY2U4ZDlGNkNT?=
+ =?utf-8?B?MmF0bU1DOGtnRXNHa09leVNtY2hTc2tTMEhmamlETkIySit0OEN4L2ZEVjBm?=
+ =?utf-8?B?RUJPSndUb05aVThpNmRkaVRTYVBDRXJ3UWFWZEFTbDZoZEZWamJvNFVYKzlj?=
+ =?utf-8?B?UVFtRFRqVTJVRitRT0MrejdMMmJkdndNSkRySHU3VDc5dklVN0MyWkF4Ky90?=
+ =?utf-8?B?a1VtUFE3SzBtbk40ZEFXSm5FS0VUMU1QY1dHbnFwVGs5VGtuZEtBWWZSNU40?=
+ =?utf-8?B?ZDBiRHl0NmtsOE00UTZrdys4VnEwSEpERnFma2hUUUJ2QUVUSG1ralI0bEpQ?=
+ =?utf-8?B?QUxOOXowVHllZ3g1UWVyOUV1UHBHN2phdW5lTDZzTDBFRFFnbGc1OE56a0tW?=
+ =?utf-8?B?S01MUU9pWW9hcmlrcjV1WnNZTlFGV0VCTEpRQm02ZGZ4RjlqRGVjbzJPQ1Ry?=
+ =?utf-8?B?SG45RnplU3V2MFFaVlFpK1hvQlFtM01qQk5JUTFQL0dCSDE5T3ZHbk5HdUo4?=
+ =?utf-8?B?dElUQmJBejM4TGtMaWdiSFBCNVBBZy9qRGdxOUFaUEpNL1BxNE1LaW8vN3Fj?=
+ =?utf-8?B?dndpQUVIUVNNaG03K09mOVRva3NPTmd2SGI2MWI5UGpMMm5KUDdBNmRYNExZ?=
+ =?utf-8?B?eWREbHpPc3J0WlRBQVhCeVVia09ISXZ3c1IvaG9DZndCWXpvcFhZMmQvczg0?=
+ =?utf-8?B?QlEyWjJraGgrTHJ1ZCtDUUtDUER5RGkrWDZkQUk1b3o0dTZNOXkxS28yZzl3?=
+ =?utf-8?B?TTRNRjY2Ti9yTU1paGlDNlZzNUQ5cU11SGVpZEZOaG5ucUZkdU1GUTUrRHVR?=
+ =?utf-8?B?V24vd1JmVEdPNHhOSmhGY3pESFV5N1luMHEzQzhCaFEvMFdxdzllVGVIc3Na?=
+ =?utf-8?B?QlVtN3JwdDY0VHRPbEhteXZBWE54NmFwK1BCM1U1TDJ2bm9hOXQzSkVzbity?=
+ =?utf-8?B?SnJiTDcxSXZZVXRkYnRhM0tSY1hxNCt0NVZlQU40dDlZejZTR0FsZXlFbVNK?=
+ =?utf-8?B?NHEwL3YzL2VBakRtdUUyUkJlamp2RUdDSXlqV0ZRZzZEdkxMd1JVemZ0UzVH?=
+ =?utf-8?B?VXFsU0FSZnlMTXp2SXBQRkI3UHBNdkcweUZVOWlKOVdKQjljRUFyb29QeFlH?=
+ =?utf-8?B?QVhSRHVmbXZJOG5CZTVLa3BCSUEyR2c4MUZaS1JMWitrVEV4bEV1cjA2UXVk?=
+ =?utf-8?Q?4DQZediiQsknD?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(921020);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?V3p6ZXhndWNmZkNnTHB3NFEyeDg5THAybjVHem00bXJtNFNMRnRPMWZ5b2FX?=
- =?utf-8?B?dUtHZGhmNVpNOTRSdkdqai9adWVzalFUc2FFcmZwWHd4UjV4dGR4L3YzRXhy?=
- =?utf-8?B?MXNaem5pOU12THF2eE9HSm1DRVg1RVVXclRRWm5ra2gxbXlvU1A4cDlSclBy?=
- =?utf-8?B?VXIwM3dLME03QURBTXNBYWZpcTJTekdyeldZTU9RRXN2R1J1Q2JRczFWd01J?=
- =?utf-8?B?czNPWm5sLzBTbE5KUFNyOXlMSjNVY0JZSmVqOTZlZmQ1TWFRWTR6cWhxR2JG?=
- =?utf-8?B?d2MveGkwUGRiMFBUaXAyS1RQMFp3TnV3ZlZPL2NrQjNSWDkrOENsdmFsMnI4?=
- =?utf-8?B?b24yUlNoQ09wWTBXWjB6ajFWT0FrRC90SHhuUFJPNURjVzBvL1dvUEdFelBk?=
- =?utf-8?B?aW9JRnVQU24rUVV6YnlzMXdUVk1zWlVXQmtrLys0dGU0YTEwU2QyWUswb0dl?=
- =?utf-8?B?U01TWlZrYWJNYnIxT1ZZNnQwbld6VnNab3k5dEtUaDZVOHUxSUdZV243S3Iw?=
- =?utf-8?B?ai95MDQzN3dUNU9Eb2JKek54V0FJa2J0MEd6bFNuVVJxK2hiR0xJUEIzaFNs?=
- =?utf-8?B?UEdoaE9YM2VIcU1IdGowZWVrOUhoMnQ4RFVtVzNLRFJLR2dqUFc3YXJzc3E4?=
- =?utf-8?B?R3ovMVc3M25yOUN3bTd6MEJOeUJ0RTMwcTFXYW9ra0RIcllXNVhaWHV0SUt3?=
- =?utf-8?B?V3ZzZGJUcmtiMklobnRQc0NXeUhTQndSczl4TnVmQUQvVnoxRGZuVWVxa2VB?=
- =?utf-8?B?aSt4Mjhxc2dOTWlqSzgzVU0xNnFZcWp5RldwMlNzd3orNkZ2N2xndWM5cUhQ?=
- =?utf-8?B?K1N5ald0dU5Ud3Rka2kwT0d0R1FYclB5QlJLbDNIczh0LzJSdFVkMDN4eU1t?=
- =?utf-8?B?bSsxTFM5TFhwT1VqVnFyVFN4ZWNndWVEdTFLSFBmMHFjYnRPczJXL3dTNzdK?=
- =?utf-8?B?VnA4OWJzTm5tSTFEMmNIY0Y2KzcwSHF4SDJQbnI4cjZBUjNYWXFNeEd5Qnk0?=
- =?utf-8?B?a25SS3dyYURjODlnZTNOUWhMVmphNE9OMW5lbHJSV0NKRzVFL0xWYTA2ck8y?=
- =?utf-8?B?bCtuZ0hNRFRpRjJHYVhWaGdWeFVJRkptOWc3TmV4dlgyaktZQ210OEI5ZnVp?=
- =?utf-8?B?a2xrNUJoQnY2QnVZSmhONHB6R2x3aGlEVE9DeHJtWkFmZHViWStiYWorUmdl?=
- =?utf-8?B?R1l5UldpU1lkMnBaK2JGcW00cUdJeGwvWXFqd3luZm1PMnFoeEJ2WmVJbTUw?=
- =?utf-8?B?V2Ixd2YxdVhpMjlSR3Z1N0NHQm9RQ3NFTTFkRFBpRTJzOTZ2eHNpdkkvYytv?=
- =?utf-8?B?UHRnN09Odm0wRzBsV1VFZ29hQzhOb0VVdUlUUE1ONmJHVjh3ZVJWWDdMQXdm?=
- =?utf-8?B?T01wSjNWNnl1bWZWdmRUUkdjU0lHZFY4L1NRaXBSU1VndUFKa2pqNjBCMnlE?=
- =?utf-8?B?NHhnYkJxeW5mSzhmL2t5R3g3Nm0yc0h1REgwK3doREo2VVhGZXg5RkxEYW94?=
- =?utf-8?B?akVudkdjWWx0UUFBbnZObTBhTEJqcHc5VXhDNGdxbisvd05mdWNFall5bmZa?=
- =?utf-8?B?UzdNbWZQM2IzWnU5emN2RjIxY0lFOTlsdTloYTdOWXZFWWp5Z3FrTmhXWkEz?=
- =?utf-8?B?eW9YSEp4MVAyTnZtcFJZNCs0bFMySHpJdGJ5TXN1bmtRcnFiWFNid0VSZng3?=
- =?utf-8?B?RFlCRTFONWd5R3d5akprcWN0eXNXRWpORWNqZ0xod3JabVMxSkgvcWhJQVFm?=
- =?utf-8?B?YTVTSWNZNzdhTzZaaWluTzEycXVoaExkQkp6WjZSSCt3TEhBYjdRbXYzaFpH?=
- =?utf-8?B?SlFYVUEyeWtPNkQxMWorMnB4NktQbnhJQTBiUy9makhKU2M0enJGaGJUN1Vx?=
- =?utf-8?B?Y2hHQmdxN2tCN2doWXZPa2NxWDBOSzluWThBQjQrbFdpTE5VaHB6VDhPUks5?=
- =?utf-8?B?b29CRlNpU041eDRVQWZDYTJGT09QMTE3N1lVSXpoaS9ReThWSFR3U3BkaXpC?=
- =?utf-8?B?dlB5RFNPVkRvTlB1dEU0QUZjcnc5ZTRIa0Y0eHJvcnVqeWJic3Nsd01seDRB?=
- =?utf-8?B?WDdWOXdpaDdCTWVDdWlRQ2RjUUtpZFpKVCtyOW53RkFnSGN3ZVdRNGlFM2RK?=
- =?utf-8?Q?YzPEWwKlVWMr2LYNVtjhA7IKN?=
+	=?utf-8?B?MDVBc2J6K2pXcEdsQlFyYlBMYlJOZ0UrZ2RzQThNL1V0dVl4eFc3VlhRTjU2?=
+ =?utf-8?B?OXdYcUJoeXgxbkVneWo1dDI5TDZCWEptZE9nUlExYUFFeWVGU3ZuN3lJQ0ox?=
+ =?utf-8?B?MlF3NWFHWXZBeGVKY2ZTaTZwWGx5V0QxMk1qblZLbDZ3MEtsYWg0TGp3akc2?=
+ =?utf-8?B?MmpXWnJJdVJ6ZmdYbjN3S2RCS3czWVF1SGIxNVlYdEs2YnFTZk00eURkTHE0?=
+ =?utf-8?B?d2EyTHFMaFBWTks4MEZ1RjZPY1JzZGpxZWZzS1hyZTF4eDh0VUVlb1hNZFJk?=
+ =?utf-8?B?RGlsek4zUlRvSG0zNTRzU01WL1ZUQ0hiZDE2bzhFZ3pCOFVYeUl4TktRK2l5?=
+ =?utf-8?B?Qlo4RWtXcVNqM2k4S001ZVdqN1p3dWE5aWlOQnBudDVBcUduZmp0M0Z6aFBS?=
+ =?utf-8?B?YkpnV2JnNktLOFpsZ1JyVThvMytwZkFpb011SGVvaUM3M0lKSmRSeGZXSVFI?=
+ =?utf-8?B?WmZTV1BSNmdocGFqK3FCQmtUNWYvZnp2RDEveDJGNjBVT3F2ZDdZVThncHBk?=
+ =?utf-8?B?djJBbzdsenAvRW1wMmJ3L3FYdEFZcWlkTE81czBGM2VCM0NwRGdyTUhUUGYr?=
+ =?utf-8?B?Q0V4aFEweVVBR2w5WUp4Z21IQ0VxL2krbWR1WVh3Y0Voa0FDMkkxOG1ZYUZK?=
+ =?utf-8?B?WlFuVlFPVVQwYURtNzdtZnlPbCtGa0YySS96TjkzQ0d5NnY1NlVpM3JsYWtr?=
+ =?utf-8?B?YWxZWVZrRFIvUWlxZ2Z0N2xDa0R0d2NZS2ZlMnB5ZVdNRWsyVGpqUHJOc3Vp?=
+ =?utf-8?B?ZXpZYkFrUUJHM094YWtoN1lnRGZ4Yzh6ci9WNE1rNkNuaDQ0dnY4a0VtazF2?=
+ =?utf-8?B?dThxU3NHR3BYZzQzSUMyS2l2dHlqdno0NDZRazZ1TDRpeEdkWTVjM3AyNjZt?=
+ =?utf-8?B?MTh0Y25wQXE5WE1hNU9scm84bXlKbm0zV2dEUFRaVC91TzIxV1grZlpaQ1hB?=
+ =?utf-8?B?Q0FtendxWVZvQ0FHckpOa1d4ZVhtbVN1eFhwWENJTm80UnpNOVJ6eDFmTmNj?=
+ =?utf-8?B?WjNlbWMvOVF3TFdYOTJUdGtoVTZHTDFsTGtiTEpaSUZ4aXF6Q0xlYW4rWnZV?=
+ =?utf-8?B?cExnaS95djJJbzZqUXgxUWJ5dlpFREZWTjNlVGVzVC95QjJCcm9nZURub2hR?=
+ =?utf-8?B?eVlOMDcwY3ZlVDg2bEJRTlZmTG1sV25KQ1QvdWdHY1BKeHRTUWFtaEttMzVZ?=
+ =?utf-8?B?b3JOZ3FNenNpbXFuUloxNnBVcEIwR2VBRkdFNzFxRktKV3dKRUU4RnpqNG9y?=
+ =?utf-8?B?TlAwQ05PQUY2WnJ5T2V2eDBqd3FNVXdIZnNTY0YzTE4xcCtTNTdOckFBWFZ0?=
+ =?utf-8?B?bFRmblFQb0xnemtHUzVQY3BzZ2JNK0Q3VW1mdmNIci94aXU2ZHRVc1hTblR5?=
+ =?utf-8?B?K2pETUU0a0RKWkQvQmVTc0FCQmsyQ0kxbEcrM2d6Ukg2SFNjM2hTVUZXK1RE?=
+ =?utf-8?B?aXA3YW1OemMzbHNZSHBpLzBCTG1UTFJDUm5laHg5NldNWVBlK08zTU9GSnJX?=
+ =?utf-8?B?bStVUlVPWjUyYVUyQ0Q2MTJkMmFPTjMrMUYzaCsxazRiUTJWa3hXTWFKS2hH?=
+ =?utf-8?B?ZHBnK2dIazZ3cU1yam8ra2Y5TGZNVjdvL1BiSElkak9UZWd6K09DRDJ3c0h4?=
+ =?utf-8?B?R2RIL3VCeUxoTnNEMXQ5ZlpIdWV4cDJZSHFHWWNHa0pHQThEUmpjbGxzczdO?=
+ =?utf-8?B?OGhhL1lVZWdWVW1uYmxNWjlxRjhFU0R1aFQ0QW13NWNraUJSdzdwVHJLd1Zn?=
+ =?utf-8?B?dUFXQTdWNGZPYkVUejBldVQ1ejkraXMxZjJaRThuZHFjN2JhdGZHZDdZOFV2?=
+ =?utf-8?B?TTIxYTB4RnRSMXV5U21XY1Z5b3ZtNERWVlFTa1lXdzF0TkFQZEtkajVlNnda?=
+ =?utf-8?B?cGkzL0trT2N4UHJyM1NvMlBvVDM2V1pmWUU3L25QVklFa2NlVnRFTTFhdi9F?=
+ =?utf-8?B?akY3TzVpWTdnU2xXaGRESG5ib0w3azQrT0RKUUR5ZG94V1JSUkk5azB1QVNm?=
+ =?utf-8?B?Q2c4dERUUTlneHlVMEpObVQ0RlU2WHAxWnUybXBIVDEwOWdxa3doSi9yQndk?=
+ =?utf-8?B?ZUcwekRhMlM0ZjFDUGdtVlhiT3BRQzVhUXhYWVE3d1FoczRQR1JlcnFpYnJF?=
+ =?utf-8?Q?SNnwTjsw1ImN8zGpvc4adWlml?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: abf64d9b-adea-4d1e-df7c-08dd4f58bf9f
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5b41b23c-ec67-498f-d23e-08dd4f593a46
 X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2025 13:41:15.0492
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2025 13:44:40.7208
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Qp70IFxpmZaXQMFW6MeCQJJaOn4oeMjARyLBAU+djFRXL+cuonuaQfaZVIrDdVjW6NZMKBgQQib9JBEYIFYo0w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9120
+X-MS-Exchange-CrossTenant-UserPrincipalName: xdBUSLNKy1fJMgluuwRBrj76FL3Qyisy8BW3IEYiTPHGvhK6CLG4YjsfDt7pO8Rx5sOZMXtMQtSarym74CsAbQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8421
 
 
-On 2/6/25 19:23, Ira Weiny wrote:
-> Alejandro Lucero Palau wrote:
->> On 2/5/25 21:45, Ira Weiny wrote:
->>> alucerop@ wrote:
->>>> From: Alejandro Lucero <alucerop@amd.com>
->>>>
->>>> Type3 relies on mailbox CXL_MBOX_OP_IDENTIFY command for initializing
->>>> memdev state params.
->>>>
->>>> Allow a Type2 driver to initialize same params using an info struct and
->>>> assume partition alignment not required by now.
->>>>
->>>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
->>> This is exactly the type of thing I was hoping to avoid by removing these
->>> members from the mds.  There is no reason you should have to fake these
->>> values within an mds just to create partitions in the device state.
+On 2/7/25 12:55, Simon Horman wrote:
+> On Wed, Feb 05, 2025 at 03:19:38PM +0000, alucerop@amd.com wrote:
+>> From: Alejandro Lucero <alucerop@amd.com>
 >>
->> Let's be practical here.
+>> CXL region creation involves allocating capacity from device DPA
+>> (device-physical-address space) and assigning it to decode a given HPA
+>> (host-physical-address space). Before determining how much DPA to
+>> allocate the amount of available HPA must be determined. Also, not all
+>> HPA is created equal, some specifically targets RAM, some target PMEM,
+>> some is prepared for device-memory flows like HDM-D and HDM-DB, and some
+>> is host-only (HDM-H).
 >>
+>> Wrap all of those concerns into an API that retrieves a root decoder
+>> (platform CXL window) that fits the specified constraints and the
+>> capacity available for a new region.
 >>
->> A type2 without a mailbox needs to give that information for building up
->> the DPA partitions. Before it was about dealing with DPA resources from
->> the accel driver, but I do not think an accel driver should handle any
->> partition setup at all.
-> I 100% totally agree!  However, the dev state is where those partitions are
-> managed.  Not the memdev state.
-
-
-But as I said in other previous patches, this patchset version does use 
-cxl_memdev_state as the opaque struct to be used by the accel driver.
-
-
->> Mainly because there is code now doing that in
->> the cxl core which can be used for accel drivers without requiring too
->> much effort. You can see what the sfc driver does now, and it is
->> equivalent to the current pci driver. An accel driver with a device
->> supporting a mailbox will do exactly the same than the pci driver.
+>> Add a complementary function for releasing the reference to such root
+>> decoder.
 >>
-> I agree that the effort you made in these patches was not huge.  Changing the
-> types around and defining mds_info is not hard.  But the final result is odd
-> and does not fix a couple of the issues Dan had with the core architecture.
-> First of which is the carrying of initialization values in the memdev
-> state:[1]
+>> Based on https://lore.kernel.org/linux-cxl/168592159290.1948938.13522227102445462976.stgit@dwillia2-xfh.jf.intel.com/
+>>
+>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+>> Co-developed-by: Dan Williams <dan.j.williams@intel.com>
+>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> ---
+>>   drivers/cxl/core/region.c | 160 ++++++++++++++++++++++++++++++++++++++
+>>   drivers/cxl/cxl.h         |   3 +
+>>   include/cxl/cxl.h         |  10 +++
+>>   3 files changed, 173 insertions(+)
+>>
+>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>> index 84ce625b8591..69ff00154298 100644
+>> --- a/drivers/cxl/core/region.c
+>> +++ b/drivers/cxl/core/region.c
+>> @@ -695,6 +695,166 @@ static int free_hpa(struct cxl_region *cxlr)
+>>   	return 0;
+>>   }
+>>   
+>> +struct cxlrd_max_context {
+>> +	struct device * const *host_bridges;
+>> +	int interleave_ways;
+>> +	unsigned long flags;
+>> +	resource_size_t max_hpa;
+>> +	struct cxl_root_decoder *cxlrd;
+>> +};
+>> +
+>> +static int find_max_hpa(struct device *dev, void *data)
+>> +{
+>> +	struct cxlrd_max_context *ctx = data;
+>> +	struct cxl_switch_decoder *cxlsd;
+>> +	struct cxl_root_decoder *cxlrd;
+>> +	struct resource *res, *prev;
+>> +	struct cxl_decoder *cxld;
+>> +	resource_size_t max;
+>> +	int found;
+>> +
+>> +	if (!is_root_decoder(dev))
+>> +		return 0;
+>> +
+>> +	cxlrd = to_cxl_root_decoder(dev);
+>> +	cxlsd = &cxlrd->cxlsd;
+>> +	cxld = &cxlsd->cxld;
+>> +	if ((cxld->flags & ctx->flags) != ctx->flags) {
+>> +		dev_dbg(dev, "flags not matching: %08lx vs %08lx\n",
+>> +			cxld->flags, ctx->flags);
+>> +		return 0;
+>> +	}
+>> +
+>> +	for (int i = 0; i < ctx->interleave_ways; i++)
+>> +		for (int j = 0; j < ctx->interleave_ways; j++)
+>> +			if (ctx->host_bridges[i] == cxlsd->target[j]->dport_dev) {
+>> +				found++;
+> Hi Alejandro,
 >
-> [1]
->
-> 	> @@ -473,7 +488,9 @@ static inline struct cxl_dev_state *mbox_to_cxlds(struct cxl_mailbox *cxl_mbox)
-> 	>   * @dcd_cmds: List of DCD commands implemented by memory device
-> 	>   * @enabled_cmds: Hardware commands found enabled in CEL.
-> 	>   * @exclusive_cmds: Commands that are kernel-internal only
-> 	> - * @total_bytes: sum of all possible capacities
-> 	> + * @total_bytes: length of all possible capacities
-> 	> + * @static_bytes: length of possible static RAM and PMEM partitions
-> 	> + * @dynamic_bytes: length of possible DC partitions (DC Regions)
-> 	>   * @volatile_only_bytes: hard volatile capacity
-> 	>   * @persistent_only_bytes: hard persistent capacity
-> 	
-> 	I have regrets that cxl_memdev_state permanently carries runtime
-> 	storage for init time variables, lets not continue down that path
-> 	with DCD enabling.
->
-> 	-- https://lore.kernel.org/all/67871f05cd767_20f32947f@dwillia2-xfh.jf.intel.com.notmuch/
->
->> For avoiding the mds fields the weight should not be on the accel
->> driver.
-> I agree.  So why would you want to use the mds fields at all?
+> found is incremented here, but does not appear to have been initialised.
 
 
-I just wanted to have Type2 support patchset working with the new DPA 
-work. I was hoping those concerns not addressed with another patch or 
-patches Type2 work should be adapted to.
+Yes. I'll fix it.
+
+Thanks
 
 
 >
-> I proposed a helper function to create cxl_dpa_info [cxl_add_partition] and Dan
-> proposed a function to create the partitions from cxl_dpa_info
-> [cxl_dpa_setup].[2]
+> Flagged by W=1 build with clang-19, and by Smatch.
 >
-> [2]
->
->     void cxl_add_partition(struct cxl_dpa_info *info, u64 start, u64 size, enum cxl_partition_mode mode)
->     int cxl_dpa_setup(struct cxl_dev_state *cxlds, const struct cxl_dpa_info *info)
->
-> 	-- https://lore.kernel.org/all/20250128-rfc-rearch-mem-res-v1-2-26d1ca151376@intel.com/
->
-> What more do you need?
-
-
-I need a stable API to work with which is not going to change so quick 
-after a work like the DPA changes.
-
-
->> This patch adds a way for giving the required (and little) info
->> to the core for building the partitions.
-> The second issue with your patch set is in the addition of struct mds_info.
-> This has the same issue which Dan objected to about creating a temporary
-> variable[3] but this is worse than my proposal in that your set continues to
-> carry the initialization state around in the memdev forever.
->
-> [3]
->
-> 	The crux of the concern for me is less about the role of
-> 	cxl_mem_get_partition_info() and more about the introduction of a new
-> 	'struct cxl_mem_dev_info' in/out parameter which is similar in function
-> 	to 'struct cxl_dpa_info'. If you can find a way to avoid another level
-> 	of indirection or otherwise consolidate all these steps into a straight
-> 	line routine that does "all the DPA enumeration" things.
->
-> 	-- https://lore.kernel.org/all/67a28921ca0b5_2d2c29434@dwillia2-xfh.jf.intel.com.notmuch/
->
->
-> Note to Dan.  I think doing 'all the DPA enumeration' things is the issue
-> here.  DCD further complicates this because it adds an additional DPA
-> discovery mechanism.  In summary we have:
->
-> 	1) Identify Memory Device (existing)
-> 	2) Hard coded values (Alejandro's type 2 set)
-> 	3) Get dynamic capacity configuration (DCD set)
->
-> It is conceivable that a device might want to do some random combination of
-> those.  But the combinations we have in front of us are:
->
-> 	A) 1 only
-> 	B) 2 only
-> 	C) 1 & 3
->
-> I'm not sure it is worth having a single call which attempts to enumerate the
-> dpa info.  I'll explore having a call which does A & C for mailbox supported
-> devices.  But B was specifically in my mind when I came up with the
-> cxl_add_partition() call.  And I felt using it in A and C would work just
-> fine.
->
->> So if you or Dan suggest this
->> is wrong and the accel driver should deal with the intrinsics of DPA
->> partitions, I will fight against it :-)
-> I don't want an accel driver to deal with the intrinsics of the DPA
-> partitions at all!  But it should be able to specify the size parameters
-> separate from creating dummy memdev state objects with values it does not
-> care about.
-
-
-Yes, but those objects have been there for a long time ...
-
-I bet we can optimize other aspects of those structs as well, but this 
-is being done in the middle of patches like Type2 and DCD relying on them.
-
-
->> I'm quite happy with the DPA partition work,
-> As am I.  I'm just trying to go a step further so it fits a bit cleaner
-> when DCD comes along.  I do apologize for the delay and churn in your set.
-> That was not my intention.  But I thought the alterations of the memdev
-> state were a good clean up.
->
->> with the result of current
->> v10 being simpler and cleaner. But it is time to get the patchsets
->> depending on that cleaning work going forward.
-> Agreed.
->
-> If Dan likes what you have here I will adjust the DCD work.
->
-> Ira
+>> +				break;
+>> +			}
+> ...
