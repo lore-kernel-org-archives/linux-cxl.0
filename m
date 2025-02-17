@@ -1,203 +1,149 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E1C42248AC;
-	Mon, 17 Feb 2025 14:52:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739803949; cv=pass; b=jjpMF52PiuwBPtvR0qr4kyo3NcwrVioWx/F1TV0NuF6CAvEnq9a46BOjofix7pvtiwrluVj9Zeew5oZMOQA2kcDbYHrrdeZW/teBN0xl0beYHdERbzd7BmB2JaBSrf5gDO1W0znbYiPHotOMWuJ/bZfFygGWrn17yCkIoboRT0s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739803949; c=relaxed/simple;
-	bh=JRmCF9LjmJYKWivhjQ6n8IMZFxSXDeNdiP8wgPC7wg0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EkkZGQ5h2PeTNLYz7333gduhTT6310n1Xw+Yf2bS4icVps5TRLkmzLVBaNgsTMop9vkrL06p/f5NO5Hds9AsKS5rSYz3Ja6PbUDC/MM6Tn5TFSiD6nzecyGU5ZHxB5UZDSZG8YHaZjEYQrve5MZrYeVi5LVkBr6NE0DEAYL/QJ8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=TW/TVcc6; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E24188587;
+	Mon, 17 Feb 2025 19:02:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739818948; cv=none; b=QdalkCyxSwZjLH16r0NWQ/vS22bCEQce2koGXGj12RTY9q+ZCVAXuHtkgPHD9KEcUR9uwHL6JcbkUVuqtV8Byouq2Yp1j1M8rQwtIty92KDsW25WSJ9gxk8ft7stcQNEWX+oDx7jELgd2tgG4ea3JuqpR3mrK7bBk8sJ55Ha7rw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739818948; c=relaxed/simple;
+	bh=8feeCX8F0dISVge9lCOCz2KhWK3uuoj5HsZP7Hxh9tk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MU/q4ChJ04w4zs43vv7U1/NMRbVlVNCWMBCYTf2Bx7fcRw9DrNHrja25DJtyXQJCrxm5gMaatvWJ54M7cJbjR2LxFnEouAe2xtMwl4kNwUurI+hyiLU9lJVvgWaTurZe7DDBGzUmwCbNcvM29KhE4NMKGntW9E6BwBjM3LDL7G0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X78Ycrin; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="TW/TVcc6"
-ARC-Seal: i=1; a=rsa-sha256; t=1739803806; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=UqiwUddfNdEJ/ycmxXdmA38GekVPzC7NL83fV3PdbunGGkpW6BZWqBg/mz4jExLuehulmOar8psrWw0AZbsH72dDH27ioAcXgTbXsgeHcZ6/rrK+tTd2mNjcbO2xbVWmAqf5A0pFyBRk7+poykB50JNs3/2ifC24z6Dl7xirPkI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1739803806; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=u5TjcDD2fVC5Z7fmg3HTZT6iZIZPELI9FVatCCA70pE=; 
-	b=JCObFY58kyM/3qfU+hAY6rnwKW7vc+YW4EJSIFVrDEIYBrnt1IWnU5SsVQk2qb+aJ+nwSCz7UDsB0QUl6NQYQ3W8xl64UBR2HE9MMg2j71WMMuIfSZHFBwdsqAgaegonNS2m3xWjK/aDb2xJDxFxPEXZEePKmSuZGSPUv3x6idU=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739803806;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
-	bh=u5TjcDD2fVC5Z7fmg3HTZT6iZIZPELI9FVatCCA70pE=;
-	b=TW/TVcc6KoDGSDzqzNLWxrpINcDFMI7E9zZAO83NE9Ib/LB7/BNAkA69CRhKCD6d
-	93doKC2o251DrvXKPZqiYwJTWJLFEbjIBzH3lgtaC8xKsCR51yPPrjuhxxDK4KycWja
-	mphbbfrvlBGGnOzb889zmvUy7BLnwTRS+jLz5sac=
-Received: by mx.zohomail.com with SMTPS id 173980380247995.30722494540043;
-	Mon, 17 Feb 2025 06:50:02 -0800 (PST)
-From: Li Ming <ming.li@zohomail.com>
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Li Ming <ming.li@zohomail.com>
-Subject: [PATCH v2 7/7] cxl/region: Drop goto pattern of construct_region()
-Date: Mon, 17 Feb 2025 22:48:28 +0800
-Message-Id: <20250217144828.30651-8-ming.li@zohomail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250217144828.30651-1-ming.li@zohomail.com>
-References: <20250217144828.30651-1-ming.li@zohomail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X78Ycrin"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84ED4C4CED1;
+	Mon, 17 Feb 2025 19:02:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739818948;
+	bh=8feeCX8F0dISVge9lCOCz2KhWK3uuoj5HsZP7Hxh9tk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=X78Ycrin00wpwK6zeqygmhbVj4Y0FHS8OvkZWG895TG2oGHQRDIFXODCm0Ar5L8TW
+	 eJWQYeZc4ynwf8R2frTjPckYuX7tk6Bm6kmVY+7onFJ/FsQaqlasbk58BBSjuz/sab
+	 0wa4vcYFQ4VvgxqtnRr/mvBkdrXAuIei26BOUPWxBnkpVWmhT4aNMBWO4slfzraijv
+	 0Eo/F7b0wGooW8uEJ7li5L0c0zq3GIhTy1cR28Q5oi9vUGz80h6goo8FyWx02XhQBA
+	 ywcwo3D7bXD1yXgmSMi0DKp2slKCifxBORsE9Bt912eA5Qm7JsRoCocd5HAvlglCqL
+	 33Olkm9ckSBdg==
+Date: Mon, 17 Feb 2025 21:02:22 +0200
+From: Leon Romanovsky <leon@kernel.org>
+To: Jiri Pirko <jiri@resnulli.us>
+Cc: Saeed Mahameed <saeed@kernel.org>,
+	"Nelson, Shannon" <shannon.nelson@amd.com>,
+	Jakub Kicinski <kuba@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Andy Gospodarek <andrew.gospodarek@broadcom.com>,
+	Aron Silverton <aron.silverton@oracle.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Daniel Vetter <daniel.vetter@ffwll.ch>,
+	Dave Jiang <dave.jiang@intel.com>, David Ahern <dsahern@kernel.org>,
+	Andy Gospodarek <gospo@broadcom.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Itay Avraham <itayavr@nvidia.com>, Jiri Pirko <jiri@nvidia.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Leonid Bloch <lbloch@nvidia.com>, linux-cxl@vger.kernel.org,
+	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+	Michael Chan <michael.chan@broadcom.com>
+Subject: Re: [PATCH v4 10/10] bnxt: Create an auxiliary device for fwctl_bnxt
+Message-ID: <20250217190222.GB69863@unreal>
+References: <20250207073648.1f0bad47@kernel.org>
+ <Z6ZsOMLq7tt3ijX_@x130>
+ <20250207135111.6e4e10b9@kernel.org>
+ <20250208011647.GH3660748@nvidia.com>
+ <20250210170423.62a2f746@kernel.org>
+ <20250211075553.GF17863@unreal>
+ <b0395452-dc56-414d-950c-9d0c68cf0f4a@amd.com>
+ <20250212132229.GG17863@unreal>
+ <Z66WfMwNpVBeWLLq@x130>
+ <ccdz4sq2dzclxhevnj4ecfbehgtbiiw4pxtwctvknjzlvp72fl@lvfpjzfekm6z>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Feedback-ID: rr080112270a1b3a40a4862390f0c7011f0000a6533c9e532b319b72bcea67a4ff7b47a766f9ac6b7a87cf67:zu08011227637483a4a31eb2f0b8ceb2e6000059b8d4e13f7089160e231c8be7dbb43f030a73e70a3b9635e1:rf0801122d5c87afa6af03d5275597f33e000026a3925e33887a0b88a34465cb4731f8771e61e7a209610abb740fad050b8a:ZohoMail
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ccdz4sq2dzclxhevnj4ecfbehgtbiiw4pxtwctvknjzlvp72fl@lvfpjzfekm6z>
 
-Some operations need to be protected by the cxl_region_rwsem in
-construct_region(). Currently, construct_region() uses down_write() and
-up_write() for the cxl_region_rwsem locking, so there is a goto pattern
-after down_write() invoked to release cxl_region_rwsem.
+On Mon, Feb 17, 2025 at 01:49:12PM +0100, Jiri Pirko wrote:
+> Fri, Feb 14, 2025 at 02:03:56AM +0100, saeed@kernel.org wrote:
+> >On 12 Feb 15:22, Leon Romanovsky wrote:
+> >> On Tue, Feb 11, 2025 at 10:36:37AM -0800, Nelson, Shannon wrote:
+> >> > On 2/10/2025 11:55 PM, Leon Romanovsky wrote:
+> >> > >
+> >> > > On Mon, Feb 10, 2025 at 05:04:23PM -0800, Jakub Kicinski wrote:
+> >> > > > On Fri, 7 Feb 2025 21:16:47 -0400 Jason Gunthorpe wrote:
+> >> > > > > On Fri, Feb 07, 2025 at 01:51:11PM -0800, Jakub Kicinski wrote:
+> >> > > > >
+> >> > > > > > But if you agree the netdev doesn't need it seems like a fairly
+> >> > > > > > straightforward way to unblock your progress.
+> >> > > > >
+> >> > > > > I'm trying to understand what you are suggesting here.
+> >> > > > >
+> >> > > > > We have many scenarios where mlx5_core spawns all kinds of different
+> >> > > > > devices, including recovery cases where there is no networking at all
+> >> > > > > and only fwctl. So we can't just discard the aux dev or mlx5_core
+> >> > > > > triggered setup without breaking scenarios.
+> >> > > > >
+> >> > > > > However, you seem to be suggesting that netdev-only configurations (ie
+> >> > > > > netdev loaded but no rdma loaded) should disable fwctl. Is that the
+> >> > > > > case? All else would remain the same. It is very ugly but I could see
+> >> > > > > a technical path to do it, and would consider it if that brings peace.
+> >> > > >
+> >> > > > Yes, when RDMA driver is not loaded there should be no access to fwctl.
+> >> > >
+> >> > > There are users mentioned in cover letter, which need FWCTL without RDMA.
+> >> > > https://lore.kernel.org/all/0-v4-0cf4ec3b8143+4995-fwctl_jgg@nvidia.com/
+> >> > >
+> >> > > I want to suggest something different. What about to move all XXX_core
+> >> > > logic (mlx5_core, bnxt_core, e.t.c.) from netdev to some other dedicated
+> >> > > place?
+> >> > >
+> >> > > There is no technical need to have PCI/FW logic inside networking stack.
+> >> > >
+> >> > > Thanks
+> >> > 
+> >> > Our pds_core device fits this description as well: it is not an ethernet PCI
+> >> > device, but helps manage the FW/HW for Eth and other things that are
+> >> > separate PCI functions.  We ended up in the netdev arena because we first
+> >> > went in as a support for vDPA VFs.
+> >> > 
+> >> > Should these 'core' devices live in linux-pci land?  Is it possible that
+> >> > some 'core' things might be platform devices rather than PCI?
+> >> 
+> >> IMHO, linux-pci was right place before FWCTL and auxbus arrived, but now
+> >> these core drivers can be placed in drivers/fwctl instead. It will be natural
+> >+1
+> >
+> >Fwctl subsystem is perfect for shared modules that need to initialize the
+> >pci device to a minimal state where fwctl uAPIs are enabled for debug and
+> >bare metal device configs while aux sunsystem can carry out the
+> >spawning of other subsystems.
+> 
+> Wouldn't it be better to call it drivers/core/ and have corectl or
+> corefwctl ?
 
-construct region() can be optimized to remove the goto pattern. The
-changes are creating a new function called construct_auto_region() which
-will include all checking and operations protected by the
-cxl_region_rwsem, and using guard(rwsem_write) to replace down_write()
-and up_write() in construct_auto_region().
+Before names, let's first agree that this is the right thing to do.
+I'm fine with any proposed name.
 
-Signed-off-by: Li Ming <ming.li@zohomail.com>
----
-v2:
-- Rename __construct_region() to construct_auto_region(). (Jonathan and Dave)
----
- drivers/cxl/core/region.c | 71 +++++++++++++++++++++------------------
- 1 file changed, 39 insertions(+), 32 deletions(-)
+Thanks
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 320a3f218131..7a9e51aba9f4 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -3216,49 +3216,31 @@ static int match_region_by_range(struct device *dev, const void *data)
- 	return 0;
- }
- 
--/* Establish an empty region covering the given HPA range */
--static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
--					   struct cxl_endpoint_decoder *cxled)
-+static int construct_auto_region(struct cxl_region *cxlr,
-+				 struct cxl_root_decoder *cxlrd,
-+				 struct cxl_endpoint_decoder *cxled)
- {
- 	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
--	struct cxl_port *port = cxlrd_to_port(cxlrd);
- 	struct range *hpa = &cxled->cxld.hpa_range;
- 	struct cxl_region_params *p;
--	struct cxl_region *cxlr;
- 	struct resource *res;
- 	int rc;
- 
--	do {
--		cxlr = __create_region(cxlrd, cxled->mode,
--				       atomic_read(&cxlrd->region_id));
--	} while (IS_ERR(cxlr) && PTR_ERR(cxlr) == -EBUSY);
--
--	if (IS_ERR(cxlr)) {
--		dev_err(cxlmd->dev.parent,
--			"%s:%s: %s failed assign region: %ld\n",
--			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
--			__func__, PTR_ERR(cxlr));
--		return cxlr;
--	}
--
--	down_write(&cxl_region_rwsem);
-+	guard(rwsem_write)(&cxl_region_rwsem);
- 	p = &cxlr->params;
- 	if (p->state >= CXL_CONFIG_INTERLEAVE_ACTIVE) {
- 		dev_err(cxlmd->dev.parent,
- 			"%s:%s: %s autodiscovery interrupted\n",
- 			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
- 			__func__);
--		rc = -EBUSY;
--		goto err;
-+		return -EBUSY;
- 	}
- 
- 	set_bit(CXL_REGION_F_AUTO, &cxlr->flags);
- 
- 	res = kmalloc(sizeof(*res), GFP_KERNEL);
--	if (!res) {
--		rc = -ENOMEM;
--		goto err;
--	}
-+	if (!res)
-+		return -ENOMEM;
- 
- 	*res = DEFINE_RES_MEM_NAMED(hpa->start, range_len(hpa),
- 				    dev_name(&cxlr->dev));
-@@ -3281,7 +3263,7 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
- 
- 	rc = sysfs_update_group(&cxlr->dev.kobj, get_cxl_region_target_group());
- 	if (rc)
--		goto err;
-+		return rc;
- 
- 	dev_dbg(cxlmd->dev.parent, "%s:%s: %s %s res: %pr iw: %d ig: %d\n",
- 		dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev), __func__,
-@@ -3290,14 +3272,39 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
- 
- 	/* ...to match put_device() in cxl_add_to_region() */
- 	get_device(&cxlr->dev);
--	up_write(&cxl_region_rwsem);
- 
--	return cxlr;
-+	return 0;
-+}
- 
--err:
--	up_write(&cxl_region_rwsem);
--	devm_release_action(port->uport_dev, unregister_region, cxlr);
--	return ERR_PTR(rc);
-+/* Establish an empty region covering the given HPA range */
-+static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
-+					   struct cxl_endpoint_decoder *cxled)
-+{
-+	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-+	struct cxl_port *port = cxlrd_to_port(cxlrd);
-+	struct cxl_region *cxlr;
-+	int rc;
-+
-+	do {
-+		cxlr = __create_region(cxlrd, cxled->mode,
-+				       atomic_read(&cxlrd->region_id));
-+	} while (IS_ERR(cxlr) && PTR_ERR(cxlr) == -EBUSY);
-+
-+	if (IS_ERR(cxlr)) {
-+		dev_err(cxlmd->dev.parent,
-+			"%s:%s: %s failed assign region: %ld\n",
-+			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
-+			__func__, PTR_ERR(cxlr));
-+		return cxlr;
-+	}
-+
-+	rc = construct_auto_region(cxlr, cxlrd, cxled);
-+	if (rc) {
-+		devm_release_action(port->uport_dev, unregister_region, cxlr);
-+		return ERR_PTR(rc);
-+	}
-+
-+	return cxlr;
- }
- 
- int cxl_add_to_region(struct cxl_port *root, struct cxl_endpoint_decoder *cxled)
--- 
-2.34.1
-
+> 
+> >
+> >> place for them as they will be located near the UAPI which provides an access
+> >> to them.
+> >> 
+> >> All other components will be auxbus devices in their respective
+> >> subsystems (eth, RDMA ...).
+> >> 
+> >> Thanks
+> >> 
+> >> > 
+> >> > sln
+> >> > 
+> >> > 
+> >> 
+> >
+> 
