@@ -1,236 +1,350 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA91423908B
-	for <linux-cxl@vger.kernel.org>; Mon, 17 Feb 2025 19:58:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C004227BAA
+	for <linux-cxl@vger.kernel.org>; Mon, 17 Feb 2025 20:05:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739822332; cv=none; b=k/pjLiAx7D+l2zhqYLMTjp3E1QIgriYmpIIbNygm7dKTTtJoDeuAcKVp6dJj2h62UWxamERTHNGKeTr9TrzdcsDjPFy5H03RfaE7hjZDEJAL+skrtm58+uOcnMwyF91PVbCekkXc4+ffpNyR2bizL9OFLkP+rqqQ/m7p054TUC8=
+	t=1739822752; cv=none; b=IotC9wk/nyBOHmbaN3S5WFpnOOOy+JLsxcHAyuX8jnoL3hA/mqcgVHhDXvNA1UorXQQT0SFsfdzEjE0w56aV0BCEOvpZhuVUaaRBW8vm4rv+pckATlhyDGex3aXj07ca/vXZxEra/TWHSNi1P0x/VygTdW9m+S/BvXdHa6Cz44I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739822332; c=relaxed/simple;
-	bh=H7EXqVyyi+kLT8T3AFWH4gU/uM442cOf8FS+Ncb8NkM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ufzYRvc79h7ZCCXhFkarDyRocFtswthgimPqcQJUyyPp3D4yHFcwkO+5LlKFTFJXmmcW6B5zqzzOHRINTu60Ka2JlRzBD7sRvhcvxxZrTbaZGZRSoSgTqzFY55arnhov7ajTC1OVY6VCnCnAMnXX+vBKb0Q5fFIbVqLWkVlA+co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f7M67JDx; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739822752; c=relaxed/simple;
+	bh=k6DNKFKMaCUQ0DgrC2eIhHYG/gMH73GjjhFevt5GJKU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UOWqlrkDo744GlvItNDLkMcNIRBwi7OSmBkFoZGJmFcbWgaBIFS3xZ3S4+r2M5aYQ45J1yPAU8+xGJ53XzM91qa4wT0g+7ocily94SIIAgEb6kvUS+5vH8EjF0Z4xNPGib2ZbP+nSU4QCxVPnyID7q5EL5+lFoEn0WxdrSk7KHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=m3nCne8t; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f7M67JDx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739822329;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=NlktFKbt7fWOri2OGRbyYiQR64jGh1ap4Xy3JViDRMo=;
-	b=f7M67JDxOUqKR0YkWSTWyPpLBSGXqUvbVwSGyzjBideY/36IxwsvUBmV0xgcOVb9pp+MXd
-	00hRCxg7Kn8J/rKkV0B6KJH392+cZ+wJu3/ImP+Mnt8Qpqcjquwo8SD91Oia5iOUZOBDLh
-	k+lkT81AO/SfVeF0HGIXOOwRSRe1dNA=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-341-0N9v8YE1N8m5r2o5zX7PXQ-1; Mon, 17 Feb 2025 14:58:46 -0500
-X-MC-Unique: 0N9v8YE1N8m5r2o5zX7PXQ-1
-X-Mimecast-MFC-AGG-ID: 0N9v8YE1N8m5r2o5zX7PXQ_1739822325
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-38f4bf0d5faso534574f8f.0
-        for <linux-cxl@vger.kernel.org>; Mon, 17 Feb 2025 11:58:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="m3nCne8t"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6e67ce516efso11350186d6.3
+        for <linux-cxl@vger.kernel.org>; Mon, 17 Feb 2025 12:05:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1739822749; x=1740427549; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vCgeOMU2MhngBhzCworEtjOZ+T+D6653XM8U1/nQhGA=;
+        b=m3nCne8tCiewC8EhkbNFjLXFzgtYp1CWjAljSQmkPhhzXNZS63hJdGdijnmtlRqgxI
+         3aVlPH5wnrNDRYWv3feZQ4LB/qCdF6z8M/L0JlCw2eENLKHU9j8Zz5P+gLznyW1+Bka1
+         IhD+rQeiYarlB8qBvMcsqcLKzo5lDj+j81Sw3aiGDFMYsLc6/GqvwOhnKs4AuK+ZnfAA
+         mJCkMGhNQuZqaVrBfB6EWiZTmtnQjMfRGoAWlbPwzL7vsynjuCiwIVJohlYoQh5pYIi0
+         dlu+tRhkfem7Tltge2WtpJ2Np66+Av4Ce2Ljsj2dQPapXXAca00BExgUtLcd/zr/bkU2
+         +1hA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739822325; x=1740427125;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=NlktFKbt7fWOri2OGRbyYiQR64jGh1ap4Xy3JViDRMo=;
-        b=HBE6W5G3P8biChCuzI+z5QqSmEASQW/UaXvDmImb9DWZc769zM7/gYU8CyjVOqLKVM
-         2BaSCvh2fST+mpSPA7OJQ3G0ylq2PhIE3HDNO2i533Ogsv4McHVzkDy0QCSr8P8amdZ2
-         vPSOtbKC/m+ASEes4SPU/Dnvz4kS53Zmi86WiIXFXVSEQRMiZyf6eBN6Gz59DhRS08UT
-         Jf+1TSwXh9A5YxtfxMtfyszFxwkO9Yqg5qRypJZqBkJxpFBbU4PKN6Rrm44k+wLSmHbz
-         mPzSlcDEUaWwyI9Q6X3TBTEBLlO5BLk/2qXXDk3OC7mu/rSaHp4SSxK050e11esHyzhy
-         /MnA==
-X-Forwarded-Encrypted: i=1; AJvYcCW8JGRx//boR31Y5/4AsEU+JAlEFXg7nFJKWExfVkOU9bI5C9EpHBnZ4x5fqPKJdtxlMYs7IjTcs7k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyG/aOrRwfjhPUgci1KNTlBoI7GNy740thJW41XQ8oK2dv9EloO
-	XBKaErsH8ARgK+8rTqSBccN0wvTYtwOYGpue/ZPPIBpxPD0wEl2cv8peDKe/fPvfFlTQmrI2tfv
-	KsXloSINvj3h0miczIFzS+ORdzeltQLHqSugMEllJ4fOZZLDBROX1C7wyWw==
-X-Gm-Gg: ASbGncv/fEd2Kzpv+7G7uG4SNLB174lmERtFd/iDGJmoalxlcfloIqVLMFppfwmUyje
-	w4BBJbdLmfL8510Af1yAtns7tWEwUtG/mb1suigQl+Cs0+5d1WCt7qCT5tjyDzGYK7MjtZp6hr/
-	oC2yW3PWeLsZFtlz0vMEgdKKPuwuiwWxvdlxxxFn1oyu22whHTRl7hAinXAhbQ3iHlKEXFaysGh
-	HqjF0ayCK4PeiPar5Hlh56Gx//lqkJrDNqNmMG5p3Eb64kCEyPksxZgEtKhWbmWU6g0HR//AOnv
-	nGh20TcVWITGoTKVu65JwrQ5ahMqv0EJHDR2N+ZG2zpMzTHaJqFdg89sbrIC3ikiBVHBSdb5ofk
-	3cBzie3BFZj6sNs56/I1Nwu97pTa6Ww==
-X-Received: by 2002:a5d:4a43:0:b0:38f:3392:9fd8 with SMTP id ffacd0b85a97d-38f33f2cb57mr8062636f8f.18.1739822325463;
-        Mon, 17 Feb 2025 11:58:45 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGmnf+EH+x2w9Z3amJyvk4I4a5QL1krZ5SQiXGUsJvRabwqfhUp4vd7zVPxaXWLqtKKNwXS0Q==
-X-Received: by 2002:a5d:4a43:0:b0:38f:3392:9fd8 with SMTP id ffacd0b85a97d-38f33f2cb57mr8062617f8f.18.1739822325081;
-        Mon, 17 Feb 2025 11:58:45 -0800 (PST)
-Received: from ?IPV6:2003:cb:c739:900:900f:3c9e:2f7b:5d0a? (p200300cbc7390900900f3c9e2f7b5d0a.dip0.t-ipconnect.de. [2003:cb:c739:900:900f:3c9e:2f7b:5d0a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f258b4118sm13425148f8f.18.2025.02.17.11.58.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Feb 2025 11:58:43 -0800 (PST)
-Message-ID: <519c6ef7-ca56-4aac-8e43-f75b17353d66@redhat.com>
-Date: Mon, 17 Feb 2025 20:58:38 +0100
+        d=1e100.net; s=20230601; t=1739822749; x=1740427549;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vCgeOMU2MhngBhzCworEtjOZ+T+D6653XM8U1/nQhGA=;
+        b=pqATBBjpvEu2CPU6AAUM582IUtZxY68WsfaPJ9AF09yguzaAGdlb+7ok4fTbfLdmtq
+         hjCDfE/0BaIi0PvFWIMx/uyo7dIYCBHP2Jf8AGRBUKd8THu/WIrlQiR8ix6hKwdoW6Mg
+         lldPh1fcfsbZuGHcsQwr0+kQRmimX/lC9lOimmIPtK/8PxFgXKE70Q17mieGq31gaurB
+         bImQBr0f9CoxS2/V69GFJOnSYOh9mI7IZYBIoCxMuNZ57HrPg8XQRuNotdJzqxWLN2oo
+         cRCecdQVqkt3RE+AI6aOnKRImp2qNihq5sixzTTxJoM8dfYpk0IvdGdQDW6RwrPk1G9d
+         HvIw==
+X-Forwarded-Encrypted: i=1; AJvYcCWwH6W9R00mZEVwDr5GSZvoAOAYOq86GPMIqFw4NTag6etOZVkOTR4OMNEnyNuadqhCOaZ6FIndc3w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlAx97yS316ryK21SfSjbTa4bk5gIGHwkZ1w2mteIN6yUmLFyK
+	ZYh6jLmNfAyzQk2ec6Lfo1ELfYdVStq/JP39iXDeKfdMZDRSzRBcj5CPlHFvmjo=
+X-Gm-Gg: ASbGncsWV3YRbanKp5cizy+DpBK6Cn3AIFLPV7paJPTDIz0bopfiWxQ0grCg5QpaePg
+	jCPfQTWLkSTKijFZeMgACw7OsJr0OT/Gx/naVgkVsYFeG7wi1CzrOWxDLCmp4pd0rnDMfE0sfjx
+	Dk/wEJBoAfGlJoNbMC3lOqdkYhrj0CV232zD9mbNBTjAmm0uD5wHIeqhH6IMJP4gD7JUCwjNVGh
+	ODjJBXfs9EXI+B2wsahiF03dWEebLHreEX64t5nW6XZSMCdcrZPTgbm/38hLjvbxJy/4VYzShTk
+	mPfQJ8gqWryvSKSVuPE8M3l/DYnLu20a9dDP9sd8ArqPX7CeI5pkMq5mXq6gnxycelJi4Q+wSg=
+	=
+X-Google-Smtp-Source: AGHT+IFPULOdVELO2VyJgNV5ljLKvzQJzC37IUdklvHnQ5b1U1CtrvxTzhQkTu86wiLswV9Q8uTiRQ==
+X-Received: by 2002:a05:6214:3bc9:b0:6e4:4331:aad9 with SMTP id 6a1803df08f44-6e676294de1mr124170946d6.2.1739822748947;
+        Mon, 17 Feb 2025 12:05:48 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e65daffdbbsm55675956d6.99.2025.02.17.12.05.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2025 12:05:48 -0800 (PST)
+Date: Mon, 17 Feb 2025 15:05:44 -0500
+From: Gregory Price <gourry@gourry.net>
+To: lsf-pc@lists.linux-foundation.org
+Cc: linux-mm@kvack.org, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: CXL Boot to Bash - Section 3: Memory (block) Hotplug
+Message-ID: <Z7OWmDXEYhT0BB0X@gourry-fedora-PF4VCD3F>
+References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 16/20] huge_memory: Add vmf_insert_folio_pmd()
-To: Alistair Popple <apopple@nvidia.com>
-Cc: akpm@linux-foundation.org, dan.j.williams@intel.com, linux-mm@kvack.org,
- Alison Schofield <alison.schofield@intel.com>, lina@asahilina.net,
- zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com,
- vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com,
- bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com,
- will@kernel.org, mpe@ellerman.id.au, npiggin@gmail.com,
- dave.hansen@linux.intel.com, ira.weiny@intel.com, willy@infradead.org,
- djwong@kernel.org, tytso@mit.edu, linmiaohe@huawei.com, peterx@redhat.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
- nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
- david@fromorbit.com, chenhuacai@kernel.org, kernel@xen0n.name,
- loongarch@lists.linux.dev
-References: <cover.472dfc700f28c65ecad7591096a1dc7878ff6172.1738709036.git-series.apopple@nvidia.com>
- <9f10e88441f3cb26eff6be0c9ef5997844c8c24e.1738709036.git-series.apopple@nvidia.com>
- <afff4368-9401-4943-b802-1b15bdcf5aaa@redhat.com>
- <6mmjoe27y63cfe5cycqje63gehgumod3bp7zzgvpz7qehgfuv4@uomvqgizba2m>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <6mmjoe27y63cfe5cycqje63gehgumod3bp7zzgvpz7qehgfuv4@uomvqgizba2m>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: wQexV0y5RKZygPuasm7bgAir2vOz34KtB-Eud7_u3R8_1739822325
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
 
-On 17.02.25 05:29, Alistair Popple wrote:
-> On Mon, Feb 10, 2025 at 07:45:09PM +0100, David Hildenbrand wrote:
->> On 04.02.25 23:48, Alistair Popple wrote:
->>> Currently DAX folio/page reference counts are managed differently to normal
->>> pages. To allow these to be managed the same as normal pages introduce
->>> vmf_insert_folio_pmd. This will map the entire PMD-sized folio and take
->>> references as it would for a normally mapped page.
->>>
->>> This is distinct from the current mechanism, vmf_insert_pfn_pmd, which
->>> simply inserts a special devmap PMD entry into the page table without
->>> holding a reference to the page for the mapping.
->>>
->>> It is not currently useful to implement a more generic vmf_insert_folio()
->>> which selects the correct behaviour based on folio_order(). This is because
->>> PTE faults require only a subpage of the folio to be PTE mapped rather than
->>> the entire folio. It would be possible to add this context somewhere but
->>> callers already need to handle PTE faults and PMD faults separately so a
->>> more generic function is not useful.
->>>
->>> Signed-off-by: Alistair Popple <apopple@nvidia.com>
->>
->> Nit: patch subject ;)
->>
->>>
->>> ---
->>>
->>> Changes for v7:
->>>
->>>    - Fix bad pgtable handling for PPC64 (Thanks Dan and Dave)
->>
->> Is it? ;) insert_pfn_pmd() still doesn't consume a "pgtable_t *"
->>
->> But maybe I am missing something ...
-> 
-> At a high-level all I'm trying to do (perhaps badly) is pull the ptl locking one
-> level up the callstack.
-> 
-> As far as I can tell the pgtable is consumed here:
-> 
-> static int insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
-> 		pmd_t *pmd, pfn_t pfn, pgprot_t prot, bool write,
-> 		pgtable_t pgtable)
-> 
-> [...]
-> 
-> 	if (pgtable) {
-> 		pgtable_trans_huge_deposit(mm, pmd, pgtable);
-> 		mm_inc_nr_ptes(mm);
-> 		pgtable = NULL;
-> 	}
-> 
-> [...]
-> 
-> 	return 0;
-> 
-> Now I can see I failed to clean up the useless pgtable = NULL asignment, which
-> is confusing because I'm not trying to look at pgtable in the caller (ie.
-> vmf_insert_pfn_pmd()/vmf_insert_folio_pmd()) to determine if it needs freeing.
-> So I will remove this assignment.
 
-Ahhh, yes, the "pgtable = NULL" confused me, so I was looking for a 
-"pgtable_t *pgtable" being passed instead, that we could manipulate.
+The story up to now
+-------------------
+When we left the driver arena, we had created a dax device - which
+connects a Soft Reserved iomem resource to one or more `memory blocks`
+via the kmem driver.  We also discussed a bit about ZONE selection
+and default online behavior.
 
-> 
-> Instead callers just look at the return code from insert_pfn_pmd() - if there
-> was an error pgtable_trans_huge_deposit(pgtable) wasn't called and if the caller
-> passed a pgtable it should be freed. Otherwise if insert_pfn_pmd() succeeded
-> then callers can assume the pgtable was consumed by pgtable_trans_huge_deposit()
-> and therefore should not be freed.
-> 
-> Hopefully that all makes sense, but maybe I've missed something obvious too...
+In this section we'll discuss what actually goes into memory block
+creation, how those memory blocks are exposed to kernel allocators
+(tl;dr: sparsemem / memmap / struct page), and the implications of
+the selected memory zones.
 
-Yes, you assume that if insert_pfn_pmd() succeeds, the table was 
-consumed, otherwise it must be freed.
 
-Thanks!
+-------------------------------------
+Step 7: Hot-(un)plug Memory (Blocks).
+-------------------------------------
+Memory hotplug refers to surfacing physical memory to kernel
+allocators (page, slab, cache, etc) - as opposed to the action of
+"physically hotplugging" a device into a system (e.g. USB). 
 
-Acked-by: David Hildenbrand <david@redhat.com>
+Physical memory is exposed to allocators in the form of memory blocks.
 
--- 
-Cheers,
+A `memory block` is an abstraction to describe a physically
+contiguous region memory, or more explicitly a collection of physically
+contiguous page frames which is described by a physically contiguous
+set of `struct page` structures in the system memory-map.
 
-David / dhildenb
+The system memmap is what is used for pfn-to-page (struct) and
+page(struct)-to-pfn conversions. The system memmap has `flat` and
+`sparse` modes (configured at build-time). Memory hotplug requires the
+use of `sparsemem`, which aptly makes the memory map sparse.
 
+Hot *remove* (un-plug) is distinct from Hot add (plug).  To hot-remove
+an active memory block, the pages in-use must have their data (and
+therefore mappings) migrated to another memory block. Hot-remove must
+be specifically enabled separate from hotplug.
+
+
+Build configurations affecting memory block hot(un)plug
+  CONFIG_ARCH_ENABLE_MEMORY_HOTPLUG
+  CONFIG_SPARSEMEM
+  CONFIG_64BIT
+  CONFIG_MEMORY_HOTPLUG
+  CONFIG_ARCH_ENABLE_MEMORY_HOTREMOVE
+  CONFIG_MHP_DEFAULT_ONLINE_TYPE_OFFLINE
+  CONFIG_MHP_DEFAULT_ONLINE_TYPE_AUTO
+  CONFIG_MHP_DEFAULT_ONLINE_TYPE_ONLINE_KERNEL
+  CONFIG_MHP_DEFAULT_ONLINE_TYPE_ONLINE_MOVABLE
+  CONFIG_MHP_MEMMAP_ON_MEMORY
+  CONFIG_ARCH_MHP_MEMMAP_ON_MEMORY_ENABLE
+  CONFIG_MIGRATION
+  CONFIG_MEMORY_HOTREMOVE
+
+During early-boot, the kernel finds all SystemRAM memory regions NOT
+marked "Special Purpose" and will create memory blocks for these
+regions by default.  These blocks are defaulted into ZONE_NORMAL
+(more on zones shortly).
+
+Memory regions present at boot marked `EFI_MEMORY_SP` have memory blocks
+created and hot-plugged by drivers.  The same mechanism is used to
+hot-add memory physically hotplugged after system boot (i.e. not present
+in the EFI Memory Map at boot time).
+
+The DAX/KMEM driver hotplugs memory blocks via the
+  `add_memory_driver_managed()`
+function.
+
+
+-------------------------------
+Step 8: Page Struct allocation.
+-------------------------------
+A `memory block` is made up of a collection of physical memory pages,
+which must have entries in the system Memory Map - which is managed by
+sparsemem on systems with memory (block) hotplug.  Sparsemem fills the
+memory map with `struct page` for hot-plugged memory.
+
+Here is a rough trace through the (current) stack on how page structs
+are populated into the system Memory Map on hotplug.
+
+```
+add_memory_driver_managed
+  add_memory_resource
+    memblock_add_node
+      arch_add_memory
+        init_memory_mapping
+          add_pages
+            __add_pages
+              sparse_add_section
+                section_activate
+                  populate_section_memmap
+                    __populate_section_memmap
+                      memmap_alloc
+                        memblock_alloc_try_nid_raw
+                          memblock_alloc_internal
+                            memblock_alloc_range_nid
+                              kzalloc_node(..., GFP_KERNEL, ...)
+```
+
+All allocatable-memory requires `struct page` resources to describe the
+physical page state.  On a system with regular 4kb size pages and 256GB
+of memory - 4GB is required just to describe/manage the memory.
+
+This is ~1.5% of the new capacity to just surface it (4/256).
+
+This becomes an issue if the memory is not intended for kernel-use,
+as `struct page` memory must be allocated in non-movable, kernel memory
+`zones`.  If hot-plugged capacity is designated for a non-kernel zone
+(ZONE_MOVABLE, ZONE_DEVICE, etc), then there must be sufficient
+ZONE_NORMAL (or similar kernel-compatible zone) to allocate from.
+
+Matthew Wilcox has a plan to reduce this cost, some details of his plan:
+https://fosdem.org/2025/schedule/event/fosdem-2025-4860-shrinking-memmap/
+https://lore.kernel.org/all/Z37pxbkHPbLYnDKn@casper.infradead.org/
+
+
+---------------------
+Step 9: Memory Zones.
+---------------------
+We've alluded to "Memory Zones" in prior sections, with really the only
+detail about these concepts being that there are "Kernel-allocation
+compatible" and "Movable" zones, as well as some relationship between
+memory blocks and memory zones.
+
+The two zones we really care about are `ZONE_NORMAL` and `ZONE_MOVABLE`.
+
+For the purpose of this reading we'll consider two basic use-cases:
+- memory block hot-unplug
+- kernel resource allocation
+
+You can (for the most part) consider these cases incompatible.  If the
+kernel allocates `struct page` memory from a block, then that block cannot
+be hot-unplugged.  This memory is typically unmovable (cannot be migrated),
+and its pages unlikely to be removed from the memory map.
+
+There are other scenarios, such as page pinning, that can block hot-unplug.
+The individual mechanisms preventing hot-unplug are less important than
+their relationship to memory zones.
+
+ZONE_NORMAL basically allows any allocations, including things like page
+tables, struct pages, and pinned memory.
+
+ZONE_MOVABLE, under normal conditions, disallows most kernel allocations.
+
+ZONE_MOVABLE does NOT make a *strong* guarantee of hut-unplug-ability.
+The kernel and privileged users can cause long-term pinning to occur - 
+even in ZONE_MOVABLE.  It should be seen as a best-attempt at providing
+hot-unplug-ability under normal conditions.
+
+
+Here's the take-away:
+
+Any capacity marked SystemRAM but not Special Purpose during early boot
+will be onlined into ZONE_NORMAL by default - making it available for
+kernel-use during boot.  There is no guarantee of being hot-unpluggable.
+
+Any capacity marked Special Purpose at boot, or hot-added (physically),
+will be onlined into a user-selected zone (Normal or Movable).
+
+There are (at least) 4 ways to select what zone to online memory blocks.
+
+Build Time:
+  CONFIG_MHP_DEFAULT_ONLINE_TYPE_*
+Boot Time:
+  memhp_default_state (boot parameter)
+udev / daxctl:
+  user policy explicitly requesting the zone
+memory sysfs
+  online_movable > /sys/bus/memory/devices/memoryN/online
+
+
+------------------------------------------
+Nuance: memmap_on_memory and ZONE_MOVABLE.
+------------------------------------------
+As alluded to in the prior sections - hot-added ZONE_MOVABLE capacity
+will consume ZONE_NORMAL capacity for its kernel resources.  This can
+be problematic if vast amounts of ZONE_MOVABLE is added on a system
+with limited ZONE_NORMAL capacity.
+
+For example, consider a system with 4GB of ZONE_NORMAL and 256GB of
+ZONE_MOVABLE.  This wouldn't work, as the entirety of ZONE_NORMAL would
+be consumed to allocate `struct page` resources for the ZONE_MOVABLE
+capacity - leaving no working memory for the rest of the kernel.
+
+The `memmap_on_memory` configuration option allows for hotplugged memory
+blocks to host their own `struct page` allocations... 
+
+                   if they're placed in ZONE_NORMAL.
+
+To enable, use the boot param: `memory_hotplug.memmap_on_memory=1`.
+
+Sparsemem allocation of memory map resources ultimately uses a
+`kzalloc_node` call, which simply allocates memory from ZONE_NORMAL with
+a *suggested* node.
+
+```
+memmap_alloc
+  memblock_alloc_try_nid_raw
+    memblock_alloc_internal
+      memblock_alloc_range_nid
+        kzalloc_node(..., GFP_KERNEL, ...)
+```
+
+The node ID passed in as an argument is a "preferred node", which means
+is insufficient space on that node exists to service the GFP_KERNEL
+allocation, it will fall back to another node.
+
+If all hot-plugged memory is added to ZONE_MOVABLE, two things occur:
+
+  1) A portion of the memory block is carved out for to allocate memmap
+     data (reducing usable size by 64b*nr_pages)
+
+  2) The memory is allocated on ZONE_NORMAL on another node..
+
+Result: Lost capacity due to the unused carve-out area for no value.
+
+--------------------------------
+The Complexity Story up til now.
+--------------------------------
+Platform and BIOS:
+  May configure all the devices prior to kernel hand-off.
+  May or may not support reconfiguring / hotplug.
+
+BIOS and EFI:
+  EFI_MEMORY_SP              - used to defer management to drivers
+
+Kernel Build and Boot:
+  CONFIG_ARCH_ENABLE_MEMORY_HOTPLUG
+  CONFIG_SPARSEMEM
+  CONFIG_64BIT
+  CONFIG_MEMORY_HOTPLUG
+  CONFIG_ARCH_ENABLE_MEMORY_HOTREMOVE
+  CONFIG_MHP_DEFAULT_ONLINE_TYPE_OFFLINE
+  CONFIG_MHP_DEFAULT_ONLINE_TYPE_AUTO
+  CONFIG_MHP_DEFAULT_ONLINE_TYPE_ONLINE_KERNEL
+  CONFIG_MHP_DEFAULT_ONLINE_TYPE_ONLINE_MOVABLE
+  CONFIG_MHP_MEMMAP_ON_MEMORY
+  CONFIG_ARCH_MHP_MEMMAP_ON_MEMORY_ENABLE
+  CONFIG_MIGRATION
+  CONFIG_MEMORY_HOTREMOVE
+  CONFIG_EFI_SOFT_RESERVE=n  - Will always result in CXL as SystemRAM
+  nosoftreserve              - Will always result in CXL as SystemRAM
+  kexec                      - SystemRAM configs carry over to target
+  memory_hotplug.memmap_on_memory
+
+Driver Build Options Required
+  CONFIG_CXL_ACPI
+  CONFIG_CXL_BUS
+  CONFIG_CXL_MEM
+  CONFIG_CXL_PCI
+  CONFIG_CXL_PORT
+  CONFIG_CXL_REGION
+  CONFIG_DEV_DAX
+  CONFIG_DEV_DAX_CXL
+  CONFIG_DEV_DAX_KMEM
+
+User Policy
+  CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE (<=v6.13)
+  CONFIG_MHP_DEFAULT_ONLINE_TYPE       (>=v6.14)
+  memhp_default_state                  (boot param)
+  daxctl online-memory daxN.Y          (userland)
+
+Nuances
+  Early-boot resource re-use
+  Memory Block Alignment
+  memmap_on_meomry + ZONE_MOVABLE
+
+----------------------------------------------------
+Next up:
+  RAS - Poison, MCE, and why you probably want CXL=ZONE_MOVABLE
+  Interleave - RAS and Region Management
+
+~Gregory
