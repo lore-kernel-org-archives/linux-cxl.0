@@ -1,41 +1,41 @@
 Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78E22222D1;
-	Mon, 17 Feb 2025 14:52:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD277223328;
+	Mon, 17 Feb 2025 14:52:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739803927; cv=pass; b=Pm5k5tXLIk0teZldC/6qsaBnKnVoj1tgK7yjcgo+RXEOalYkMve8BIbQVRkIzdV/mOKQjSmT2A3AKAM95bJWxrp7Kd7jpsVc6ULTvI89FoWN9E7/GVZF8bbEZCMc9MFNq+IjyTBNPKFGYgjWJI9bxxyBiQx/JG5wc6akTakSnKw=
+	t=1739803936; cv=pass; b=aIEv1DqKBFg/8h747xEu/mOq+ezC3WzXREHsTbuUAzWXuYVOZBBw/n9UKewWSe4fShDeN917tNojKFYJDnib+9w/zcc/20I2KBfI2KsGReSvY3HLxDSak0zMAWW1n25LvbyQ4qK0EaUk60ABS/QEpT0s2Eq0aGeVMQCuQyv9ycU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739803927; c=relaxed/simple;
-	bh=CMU0oC5OqZfOfX3TUGRzV6xGk9VpKd3fVn4+DmGjr/M=;
+	s=arc-20240116; t=1739803936; c=relaxed/simple;
+	bh=RiB1oXhMD5rMP5CbSPhagMBU8X4ZPgknYiSKpVbHubI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BegvAv4/BeaVtrArWs/IWy70W2FkTDQHPquprF3uGiIUbYw3bfkzQNUmb/QMaq5x8Jr6qajkRgTV07lLvVEYZh4p2lpOPeTLwignn/9Rnh+EMjubSqkRFKLltulcNMP6VKgOnVYW3oQ7WCc67F+IrVZF0VSWoz7bxMdifEtBX2Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=IfRtTPGq; arc=pass smtp.client-ip=136.143.188.94
+	 MIME-Version; b=KsuO1ZCjYWcRIFya3rxRG0aKomd6CCZaDQMUWJw5PEyO14VHylRxVfeJ7+l676IJXxgqVhiIaviVlr+9RjXWZtKQ9YI1kLWZHS1py53b5m/EikAre070Ini/ueZQHD8l0ULJqQDvzBrlpYmarBD9010awnXibJSyW9UNSz7hfI0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=drISJy0h; arc=pass smtp.client-ip=136.143.188.94
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="IfRtTPGq"
-ARC-Seal: i=1; a=rsa-sha256; t=1739803778; cv=none; 
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="drISJy0h"
+ARC-Seal: i=1; a=rsa-sha256; t=1739803789; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=Sh77v+CqXjwXA2ckIXYeC8GWKl+CoU17/Ij9jOtVfrYAJeMefPPRt6NTIsTaQ4F/TpGrv9uKsJjPSwX6Ctlx6W0unjbcnxzU0Skh6rtcUp55zDsFEgnVcFEuzLs+NhpPHFOw7l/ZyfrDTGxx76yF536LrwqpKmBQMciLhbE6DtQ=
+	b=OEyDTQFE3PL/rMaep9wLKOvMx09kC1ebYIqwkfEFs5q/PyoohyLk3+W866ie3l2vNyceWc0N5A+86vO0bkUgZX+KP4VO51G6KfDxqr88BSXiTKNKuwyN/FPZAK/38QAMEACBX3xwHhZI96VR7qIxK4KuQJHYgYmKBkyqNBSFYoE=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1739803778; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=UBTwBPzFp5F5/5KTauGoDs85/B0rlCeCpCRsH73OvuE=; 
-	b=kYwAFXa2zZ8w0ekdAF5Niy15pXsp3vf/BW71249Al8I1wCcUf5atjgWVklen1HC7CMNTTYaSpLGW2eI8DgTHfGk4H4Qiltw/1r5IFUNMiP+4eqWjH4GnjGQJZEGmQ0CjpL4ecoPNVutakhZyqarnLSfChauV2IZIyptNhFjOmRk=
+	t=1739803789; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=fwSLwPfrZMT8HZvx/0S2Jc6bVi6NXmFLmVbTwY6Loqo=; 
+	b=YvJgL18afOj35blO2UZyfTByg+7cyNRntg8ni8b0dSFZFNT/y7lIk/IKbRT3tBQXSMO7iKoiQVRQM3TwTZclW6vTxCi5C7yQ/UhZkRanDARI9yTFVRcCqfASMqiN1Ucpax/etrss0CsA22l6tkYdCMKERqHKPA5l6CqHHDY5Bwk=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=zohomail.com;
 	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
 	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739803777;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739803789;
 	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
 	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
-	bh=UBTwBPzFp5F5/5KTauGoDs85/B0rlCeCpCRsH73OvuE=;
-	b=IfRtTPGqfVpzOjZkgyXab2Sc32ZzpGfB29+yuyug7uz0FdxxCD+dYYdgh0/G7Fh6
-	NaJ15Giu+6zJWPdhyYWa51g93yzAYX81nN+FAkZ9bLeoDyoEVmxtPK7FiDpnNkW4/5v
-	Ob8PQi5t3QyONzpmPzy2ilMEaI82muJ8HazKZRCw=
-Received: by mx.zohomail.com with SMTPS id 1739803775573102.290568107931;
-	Mon, 17 Feb 2025 06:49:35 -0800 (PST)
+	bh=fwSLwPfrZMT8HZvx/0S2Jc6bVi6NXmFLmVbTwY6Loqo=;
+	b=drISJy0hhCXcxT/bnL634+Gju9y3gQzTDTaT5UiJXwPULhlRJh3FeN/QRxuURNG+
+	zJ/37drqtVrBCnH6n6LQLyujKkCjhNMGbc0FYcLDts68+LV5EAbFf9pLcCazfvE5zEY
+	oQV3FMm9r29gcoChEXkq2I08i0FrtdVujNCRsHJU=
+Received: by mx.zohomail.com with SMTPS id 173980378657025.23360537786118;
+	Mon, 17 Feb 2025 06:49:46 -0800 (PST)
 From: Li Ming <ming.li@zohomail.com>
 To: dave@stgolabs.net,
 	jonathan.cameron@huawei.com,
@@ -48,9 +48,9 @@ Cc: linux-cxl@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Li Ming <ming.li@zohomail.com>,
 	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v2 5/7] cxl/core: Use guard() to drop goto pattern of cxl_dpa_alloc()
-Date: Mon, 17 Feb 2025 22:48:26 +0800
-Message-Id: <20250217144828.30651-6-ming.li@zohomail.com>
+Subject: [PATCH v2 6/7] cxl/region: Drop goto pattern in cxl_dax_region_alloc()
+Date: Mon, 17 Feb 2025 22:48:27 +0800
+Message-Id: <20250217144828.30651-7-ming.li@zohomail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250217144828.30651-1-ming.li@zohomail.com>
 References: <20250217144828.30651-1-ming.li@zohomail.com>
@@ -61,95 +61,56 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Feedback-ID: rr080112275d074be819fc2935b176da3600009a1dd890bc7708c32f22f433548c65c354c38b6f46e7576260:zu080112275322b8c484c65ee0f1fd9bce0000c575d7b372fecf17294a5b12d881d8bbd98d9ff179e6fb94a5:rf0801122d280512da356b3612724f41be000055e6ca8760a22fc51ff0373fa823d38b8c2049a0d54ac02e8258514d71a86e:ZohoMail
+Feedback-ID: rr080112272c5dc6440b0446e6588a766f00001b0dec5e1aa36b1ef08c2fff4b5f878ab81e8eaf7d6b074e9a:zu080112274dfe11115d82755fbbbc9214000048773d70501f33f8ddf947b8ee4fad21aac94e977a758c942a:rf0801122d0813314a8608b029609f6c1f000018e4b981a75ca902e9d6f3e6e096f74db99aaab4175851196d58a21a24b9b5:ZohoMail
 X-ZohoMailClient: External
 
-In cxl_dpa_alloc(), some checking and operations need to be protected by
-a rwsem called cxl_dpa_rwsem, so there is a goto pattern in
-cxl_dpa_alloc() to release the rwsem. The goto pattern can be optimized
-by using guard() to hold the rwsem.
-
-Creating a new function called __cxl_dpa_alloc() to include all checking
-and operations needed to be procted by cxl_dpa_rwsem. Using
-guard(rwsem_write()) to hold cxl_dpa_rwsem at the beginning of the new
-function.
+In cxl_dax_region_alloc(), there is a goto pattern to release the rwsem
+cxl_region_rwsem when the function returns, the down_read() and up_read
+can be replaced by a guard(rwsem_read) then the goto pattern can be
+removed.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Li Ming <ming.li@zohomail.com>
 ---
- drivers/cxl/core/hdm.c | 29 ++++++++++++++---------------
- 1 file changed, 14 insertions(+), 15 deletions(-)
+ drivers/cxl/core/region.c | 16 +++++-----------
+ 1 file changed, 5 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index 874a791f8292..1edbf7873471 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -442,29 +442,25 @@ int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
- 	return 0;
- }
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index d8a71f9f9fa5..320a3f218131 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -3038,17 +3038,13 @@ static struct cxl_dax_region *cxl_dax_region_alloc(struct cxl_region *cxlr)
+ 	struct cxl_dax_region *cxlr_dax;
+ 	struct device *dev;
  
--int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
-+static int __cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
- {
- 	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
- 	resource_size_t free_ram_start, free_pmem_start;
--	struct cxl_port *port = cxled_to_port(cxled);
- 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
- 	struct device *dev = &cxled->cxld.dev;
- 	resource_size_t start, avail, skip;
- 	struct resource *p, *last;
--	int rc;
- 
--	down_write(&cxl_dpa_rwsem);
-+	guard(rwsem_write)(&cxl_dpa_rwsem);
- 	if (cxled->cxld.region) {
- 		dev_dbg(dev, "decoder attached to %s\n",
- 			dev_name(&cxled->cxld.region->dev));
--		rc = -EBUSY;
+-	down_read(&cxl_region_rwsem);
+-	if (p->state != CXL_CONFIG_COMMIT) {
+-		cxlr_dax = ERR_PTR(-ENXIO);
 -		goto out;
-+		return -EBUSY;
- 	}
+-	}
++	guard(rwsem_read)(&cxl_region_rwsem);
++	if (p->state != CXL_CONFIG_COMMIT)
++		return ERR_PTR(-ENXIO);
  
- 	if (cxled->cxld.flags & CXL_DECODER_F_ENABLE) {
- 		dev_dbg(dev, "decoder enabled\n");
--		rc = -EBUSY;
+ 	cxlr_dax = kzalloc(sizeof(*cxlr_dax), GFP_KERNEL);
+-	if (!cxlr_dax) {
+-		cxlr_dax = ERR_PTR(-ENOMEM);
 -		goto out;
-+		return -EBUSY;
- 	}
+-	}
++	if (!cxlr_dax)
++		return ERR_PTR(-ENOMEM);
  
- 	for (p = cxlds->ram_res.child, last = NULL; p; p = p->sibling)
-@@ -504,21 +500,24 @@ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
- 		skip = skip_end - skip_start + 1;
- 	} else {
- 		dev_dbg(dev, "mode not set\n");
--		rc = -EINVAL;
--		goto out;
-+		return -EINVAL;
- 	}
- 
- 	if (size > avail) {
- 		dev_dbg(dev, "%pa exceeds available %s capacity: %pa\n", &size,
- 			cxl_decoder_mode_name(cxled->mode), &avail);
--		rc = -ENOSPC;
--		goto out;
-+		return -ENOSPC;
- 	}
- 
--	rc = __cxl_dpa_reserve(cxled, start, size, skip);
+ 	cxlr_dax->hpa_range.start = p->res->start;
+ 	cxlr_dax->hpa_range.end = p->res->end;
+@@ -3061,8 +3057,6 @@ static struct cxl_dax_region *cxl_dax_region_alloc(struct cxl_region *cxlr)
+ 	dev->parent = &cxlr->dev;
+ 	dev->bus = &cxl_bus_type;
+ 	dev->type = &cxl_dax_region_type;
 -out:
--	up_write(&cxl_dpa_rwsem);
-+	return __cxl_dpa_reserve(cxled, start, size, skip);
-+}
-+
-+int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
-+{
-+	struct cxl_port *port = cxled_to_port(cxled);
-+	int rc;
+-	up_read(&cxl_region_rwsem);
  
-+	rc = __cxl_dpa_alloc(cxled, size);
- 	if (rc)
- 		return rc;
- 
+ 	return cxlr_dax;
+ }
 -- 
 2.34.1
 
