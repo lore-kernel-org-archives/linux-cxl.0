@@ -1,375 +1,323 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2079.outbound.protection.outlook.com [40.107.92.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D69601B0421
-	for <linux-cxl@vger.kernel.org>; Mon, 17 Feb 2025 09:39:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739785144; cv=none; b=M0rRGlBsemxjBiwTVyBC9XXE2Jwlriek4HZuVK8zvAuaYG1C/3cT+CDOKqld1QLO7bkSzZX24u2/Beta4FP5bRkHg74vWmZb4NgfIAE2JJI7F2ID2RplmKrxMIutVTNPAJ3q0sRtj+Dubt6Q/6+7NRMUVBA+W9aF51K80lA6ENc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739785144; c=relaxed/simple;
-	bh=xPXOpJak1MZ8OHj+P8uX6/EB5RD4fI8BkklGBAnKea4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=gQpe7p4gbLIMQ/U/Lx7+0sCOBFYGv9zQfAnFPbP6iKlzwKupf8mQmdGmnVbuTKJNSnZhcLrW9jS4QeQ8fZuV7GGxSVYCalIgQhFIcxgnlcph49hgXBW0OfGkWdAMS2c5z1lITGckDyRc4OIOvAYJORwJ2pAPkaIdbrt0K3vMfHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=e09cMCFO; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84AFD1E49F;
+	Mon, 17 Feb 2025 12:32:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.79
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739795564; cv=fail; b=L0sZhhTtc2AhbfbYg2wu6SCblGHkUptbg0tUzv6kI1quj1zbZCm+cwwlKcLiU3wL5L08YSoFGcCNa2H92CwLWpuT9t1VdSxcWna/48b50SnOLOGMbvoy0qs8cB8gVbsHA3CcXvvLLJCh3XC/S5S6/AZMOEF9HMnyEBS7CbfKzFI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739795564; c=relaxed/simple;
+	bh=oHiP3FvPMPDMbpveVMCEnfvs4LafL8in4X16FXKLsgI=;
+	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=SlYvFFiuPqlahBu9RbYCmd06+frorf35ie0ghoCV3SijgC+ZgmMv2sw5DWx3dQ1Azb/2Ck3bN5DHzkKOi1zzG36XizkHuRTfV0BfmNXsbPYuDQKa4uFQMOvTzUGxgLv1vWE8podiWVVYppe4fNyI/YE9IVpWxbapULxGiSPaHs4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=M99z4kDs; arc=fail smtp.client-ip=40.107.92.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="e09cMCFO"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250217093859epoutp02d88952ee27f4aee6d852f0e1eeb095fd~k9V3ckoTB0532205322epoutp020
-	for <linux-cxl@vger.kernel.org>; Mon, 17 Feb 2025 09:38:59 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250217093859epoutp02d88952ee27f4aee6d852f0e1eeb095fd~k9V3ckoTB0532205322epoutp020
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1739785139;
-	bh=sy6dlm46RivPu+uzqtCThlfV9c35JXwDl1zw0oX06cw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=e09cMCFO6ni8nebAAf79mOjrR3QZw8hGmP/44ZGvnwDC6MY+u1/+JTptccy/h9f80
-	 /mj8S/ijxfZFyK7L1kLy4Wp7ghxz6BiElkt3+tZ/CfS7hBfawR4zgCvL3nppslx777
-	 ylO8vJ+GgYq7jW2jXIhiNZXm88Tum8wT5pYuBBE0=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-	20250217093859epcas5p18de803dc50e596673f94a72fe71e844a~k9V28VKxr2060920609epcas5p1G;
-	Mon, 17 Feb 2025 09:38:59 +0000 (GMT)
-Received: from epsmgec5p1-new.samsung.com (unknown [182.195.38.178]) by
-	epsnrtp2.localdomain (Postfix) with ESMTP id 4YxHfT0DLGz4x9Py; Mon, 17 Feb
-	2025 09:38:57 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-	epsmgec5p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	BF.D4.29212.0B303B76; Mon, 17 Feb 2025 18:38:56 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20250217093732epcas5p34a9841ca77c60e02522232f00090074b~k9Ul_Kzke0862108621epcas5p3O;
-	Mon, 17 Feb 2025 09:37:32 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250217093732epsmtrp16ed253934e606437dd030b0528ecf98e~k9Ul9HHEa2392023920epsmtrp1Q;
-	Mon, 17 Feb 2025 09:37:32 +0000 (GMT)
-X-AuditID: b6c32a50-801fa7000000721c-5c-67b303b0afda
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	F2.56.18729.B5303B76; Mon, 17 Feb 2025 18:37:31 +0900 (KST)
-Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250217093729epsmtip2f9f3c6d990ce9ebf70633cc86f0e27da~k9Uj7XLXr0985409854epsmtip2N;
-	Mon, 17 Feb 2025 09:37:29 +0000 (GMT)
-Date: Mon, 17 Feb 2025 15:07:24 +0530
-From: Sweta Kumari <s5.kumari@samsung.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: qemu-devel@nongnu.org, gost.dev@samsung.com, linux-cxl@vger.kernel.org,
-	nifan.cxl@gmail.com, dave@stgolabs.net, vishak.g@samsung.com,
-	krish.reddy@samsung.com, a.manzanares@samsung.com, alok.rathore@samsung.com
-Subject: Re: CXL CCI Get/Set Alert Configuration commands implmented as per
- CXL Specification 3.2 section 8.2.10.9.3
-Message-ID: <20250217093724.f64zqdhk727bhk5b@test-PowerEdge-R740xd>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="M99z4kDs"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=QTpv1DO0Q3I9dOLdoGBVmmPvzVYpjMFBs3+vS+dSJwqdQW/JwhP8a2YlAY20QXkTD3FNXDa9STMXnD6HCZdBTXQEW5NF2YcotXNHECSJrUFkrdsEFef99f9/iAo+M5lbWNXn1LF+jtwssEg5YeuByer0tYNR62KgGPHdSqujW2HUGFZzPXkqrPtTRC7jI5KjAulNhIDCvqqRgQqmo97tkAgbAmJz2mhHk7sFuKorl/kQo3/iUymS7E5mGB2Omo0tCQtV6dZ83RRsu3jx3Hly+wxRpuS48C42+YCSoluYOVEMEPcr/in6rvVyhLSsG8JeEmHGcgZBW8XJZSNZl+BZqw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HzTkJABKyBMVMd8CxFwgtMD1+c5VVry4Y3AuE2EJIIg=;
+ b=uO3Ntek7kSGEfUZ6dOcUa4MfUNQGRdodtHK3Zcd3x/haLbmD0xzdvU+LLvOwj+1t99wdJw4wcOx39dKHpmrZVtQ7P/7urY7yAjC8Zel9yxXAGWFr4D+9eC5qVJuSeD2zK8nmaiZhLedKswTjj6OFZ5JDXUYHqlyLwGVo3XQLuHHd3AodEKDRewn6W1pb9Ny6/G7mzyPPmf17VVtBap4abaV2V8t5b4++7+PdaL7W6gK9M3C7fTQTOcEmpaihUUwTAoGyGHyOjsq3++MExmdOW2MhzTFCrwgwE+5Z8UK/Yz60iMWzFY7aylnJjQldJJTAL4VHSfD+tqTLNQx+zVG+6w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HzTkJABKyBMVMd8CxFwgtMD1+c5VVry4Y3AuE2EJIIg=;
+ b=M99z4kDsOWvRhjqJhSicef+oyvGaY3/r13IHFZQNTz5J/wFBbpyvOvfbmEsWNQ74lYLpOAnzbTuokISdUmiMpBUHhAULtrY3MjicKB2mPdF1Ld0pOIcgxZqBc8+86rOmgMAzJSwDEPIi9+HLoWSHc12L3333wYkUSLvCx5OA9oY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
+ by PH8PR12MB6889.namprd12.prod.outlook.com (2603:10b6:510:1c9::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.18; Mon, 17 Feb
+ 2025 12:32:39 +0000
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79%7]) with mapi id 15.20.8445.017; Mon, 17 Feb 2025
+ 12:32:39 +0000
+Message-ID: <33aceef3-9e01-4b28-bc3e-7dc11b59a1f6@amd.com>
+Date: Mon, 17 Feb 2025 12:32:26 +0000
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 01/26] cxl: make memdev creation type agnostic
+Content-Language: en-US
+To: Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
+ netdev@vger.kernel.org, edward.cree@amd.com, davem@davemloft.net,
+ kuba@kernel.org, pabeni@redhat.com, edumazet@google.com, dave.jiang@intel.com
+References: <20250205151950.25268-1-alucerop@amd.com>
+ <20250205151950.25268-2-alucerop@amd.com>
+ <67a50f7fbdfb_2d2c29447@dwillia2-xfh.jf.intel.com.notmuch>
+From: Alejandro Lucero Palau <alucerop@amd.com>
+In-Reply-To: <67a50f7fbdfb_2d2c29447@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: JN3P275CA0007.ZAFP275.PROD.OUTLOOK.COM (2603:1086:0:70::19)
+ To DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250214174359.0000368a@huawei.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrCJsWRmVeSWpSXmKPExsWy7bCmuu4G5s3pBhMum1lMP6xo8eX0HjaL
-	1TfXMFrcPLCTyWLVwmtsFgs3LmOyOD/rFIvF3217GS2O9+5gAXLnsDtweeycdZfdo+XIW1aP
-	J9c2M3n0bVnF6DF1dr3H501yAWxR2TYZqYkpqUUKqXnJ+SmZeem2St7B8c7xpmYGhrqGlhbm
-	Sgp5ibmptkouPgG6bpk5QIcpKZQl5pQChQISi4uV9O1sivJLS1IVMvKLS2yVUgtScgpMCvSK
-	E3OLS/PS9fJSS6wMDQyMTIEKE7IzZj+ZwlxwKrziwguVBsZu5y5GTg4JAROJTxsOsHYxcnEI
-	CexhlLg57SI7hPOJUaKpoZEZwvnGKHHk9F4WmJZbS9vZIBJ7GSV2Lu9kgWv58+A2M0gVi4Cq
-	xNfH3WAdbAJaEj8+PwCLiwgYSby7MYkRpIFZ4CajROOkZ2wgCWGBMomuGQvAGngFnCXWXVjC
-	BmELSpyc+QQszilgKPFnM8SBEgK9HBLNPz+zQdzkIjH15mwmCFtY4tXxLewQtpTEy/42KDtb
-	4u7WTqj6EokPt3dD1dtLtJ7qB7uOWSBD4v+iZ6wQcVmJqafWMUHE+SR6fz+BqueV2DEPxlaW
-	2PJvOVS9pMSKz0ugbA+J6x+XQYNlG6PEpgl32Ccwys1C8tAsJPsgbCuJzg9NQDYHkC0tsfwf
-	B4SpKbF+l/4CRtZVjFKpBcW56anJpgWGunmp5fB4Ts7P3cQITq5aATsYV2/4q3eIkYmD8RCj
-	BAezkgjvoa4N6UK8KYmVValF+fFFpTmpxYcYTYFRNJFZSjQ5H5je80riDU0sDUzMzMxMLI3N
-	DJXEeZt3tqQLCaQnlqRmp6YWpBbB9DFxcEo1MEV++f+f36C8/MEzDY7blvNW35K+aV2umOLw
-	qlk0kqWjSqhiNXfysqhJR868lOM68Oh5xusyJT2tyQvSJjQUaB0/rNDedytt80m5XRcW8hpa
-	f37BJDato/hQXc0ytsnnpqXvfy+YbLfctvlCa+qc3IAikWWrs0Inu3YFtk6QWbdr0V4+Lj6+
-	0A+aN9s+tig1eEi8/2Bf/8FuldC0vghPTsE9Oj8ZwhX47PZvsEhYsuPvjw++HwLSNnQvfvC+
-	0cTg06ocvj+5FRvSXi3Vi500tfvXqtgbuxim/NbRv5H701n0z03Dte1+MskvUwvby1TMmO9Y
-	sbyTPWYUoefWWbYlYcbMea/frBZ2/mQ/UZupX4mlOCPRUIu5qDgRAOrfB9Q3BAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrCLMWRmVeSWpSXmKPExsWy7bCSvG408+Z0gzvXLC2mH1a0+HJ6D5vF
-	6ptrGC1uHtjJZLFq4TU2i4UblzFZnJ91isXi77a9jBbHe3ewALlz2B24PHbOusvu0XLkLavH
-	k2ubmTz6tqxi9Jg6u97j8ya5ALYoLpuU1JzMstQifbsErow5j68zF/wJqXh6/zBbA+N1hy5G
-	Tg4JAROJW0vb2boYuTiEBHYzSjx+8ZsdIiEp8fbMJUYIW1hi5b/n7BBFHxgldi5YAVbEIqAq
-	8fVxNwuIzSagJfHj8wNmEFtEwEji3Y1JjCANzAK3GSV+774HViQsUCbRNWMBmM0r4Cyx7sIS
-	NhBbSGAbo8S6e4UQcUGJkzOfgNUwC5hJzNv8EGgoB5AtLbH8HwdImFPAUOLP5ovsExgFZiHp
-	mIWkYxZCxwJG5lWMkqkFxbnpucWGBYZ5qeV6xYm5xaV56XrJ+bmbGMERoaW5g3H7qg96hxiZ
-	OBgPMUpwMCuJ8B7q2pAuxJuSWFmVWpQfX1Sak1p8iFGag0VJnFf8RW+KkEB6YklqdmpqQWoR
-	TJaJg1OqgSm62Lno74SUTobvq5a+LGV2SlnhO9dMVfnDVJuA+KX3vRdszD35xUBbucJ433ep
-	7R2VS2/oyhex/S/6o+9sfPpDrEKQQr/HJin9NWvja+ZezFvSNSd/eYlG4o7jsS+/T48+dGXZ
-	SZcHrmui7h9T3ND3b2psbJDE0Q93L20+JOqgqpsrGM27MJKjbllR+E/33hNWV/qqLi+uCZV/
-	ccHz/umvF3SinaUdzfYuf7Foxu3UjB/ez5JqvnuJiuQw1f2zqOtZNHl/qugc+xmuSk/T7j9k
-	uDuzOOH2vGePNu0XuPv91amDrh+ythxbuCds2veKCjueScEfZ+4z0V9dUrxn2aK2TuNZF5Y3
-	Sy56zB9ktjtFiaU4I9FQi7moOBEAUaeNffcCAAA=
-X-CMS-MailID: 20250217093732epcas5p34a9841ca77c60e02522232f00090074b
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----MTAFpDJBIS7x0DorxmyomC-IKR7RHdtq514vGN5lDcSFRf5o=_5ebd2_"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250214132317epcas5p3732f86a4aa3cee5c396e18c2bf98a82b
-References: <CGME20250214132317epcas5p3732f86a4aa3cee5c396e18c2bf98a82b@epcas5p3.samsung.com>
-	<20250214132211.528019-1-s5.kumari@samsung.com>
-	<20250214174359.0000368a@huawei.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|PH8PR12MB6889:EE_
+X-MS-Office365-Filtering-Correlation-Id: 826e7947-ac55-411d-bcf1-08dd4f4f2a41
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?REl0bVhFWXduWnF5aHZTSStOUTh3M1FQa0Rma3JGNldRU2Y1dVByZC9lZkY0?=
+ =?utf-8?B?MURML0ViUTAxTUNPNG1PY3FVZUpzcGFyblp6aTFjRkUyYUZHU2lPa3h0bS9U?=
+ =?utf-8?B?MGlFbUh2K2hFZ0thRktxeGk2ZDZ2aTliMmZBSytLMFNtMUFOaXNucW9SUXgz?=
+ =?utf-8?B?RGQ0Sk96Vk05REVCTjZVaytWcWVXdHN0THBxNndIeE1HOWpyczk1YnIyVnM5?=
+ =?utf-8?B?N0dtZ291WitvenNUQTQyWDRRdlljMS8vYnhYbnYyaFc3cmZTclRoMDZiRFRN?=
+ =?utf-8?B?RE42YjhicjVSRTVoRjRBNEN4R2RqSG9FNGxFWmNqR3NrNk96U0hNWWhwT0JB?=
+ =?utf-8?B?QTVUMG02Qjczc01TbysyUFgrMEdNUnVPS0FabmkzMjFhYVQ2WkxnbUY1RDlu?=
+ =?utf-8?B?b0FlYW9sWW41Q1RvdFVscjlDZFlQUkxWNWQ1NG9iVEhvd1o1SHdTU2dHM0Jz?=
+ =?utf-8?B?SmpDNTd5Y1JPZjdsQmZyOU1xSmpzYUlVajFKU0VwbGtLbkVSOXZ6aFo0NGZ3?=
+ =?utf-8?B?Vi9vRjl5L1d2cmpmckQ3MnVKS0lsUTJJNG1tMnlydlJZN25DNGlVVW5DTU5U?=
+ =?utf-8?B?WkY0RTBMYmQzNHlUYjlXVTlvYk9VUFhucTdiK2h5anA0SjcrVVJ0MFVxQ0FB?=
+ =?utf-8?B?cFd4ZXhrbU1NMlNSeU9jSHFEUEZlZmYxaUlqbXRXOXNIc0EvemtJeE5IWXEw?=
+ =?utf-8?B?OVQzOEY3bGJnMWZyOGowTER3Y1FhTDVVY21PejlGRlVSYnBKSmtjTUxsZndJ?=
+ =?utf-8?B?OHRGQS9DVjVOUEU3WVNMUGIwaVNaeE5RQW5FT09Ld003aEY5QUZOdVJUV2t0?=
+ =?utf-8?B?TklteVFKK09uRnRoNjZpczIzZjlvQU5VYzRNb1FIY1A4UGxqMy9qUUVXZ2lo?=
+ =?utf-8?B?Tmg5V0xJRUYzbEV2THc1K25uT3ZTWFFjMmFwdWRxdVRxYVBqeDR2WG51SURG?=
+ =?utf-8?B?QkJ4Vjdvb2o0eUxLd2JMVE5DT0cxOW5GaHpzQ0V3NG9jdnRwUU1XN01UZnV5?=
+ =?utf-8?B?R0hSaXd3eC9wTW9VSGFFcUN5a1RTdGdZSlJqa1F6ZHdEMFQ4Yy9Nb29DT2hO?=
+ =?utf-8?B?amxvb0lVVmZCdUVXRzQ4RjB2c2lCVUJsaGJKUDlWSnBlRlJGYXNWTTFVbFhu?=
+ =?utf-8?B?V2xYLzBXbEdZdkdMUU42eHNPUWlwR3ZjeDRZVXFXOHRtWWp0ME1FYWU5d0JI?=
+ =?utf-8?B?NzI4QjJhNEFSK20xQTJ3TW12K3VSdS9rcHVPWVNKdmJmWnJ5SlpvTmZVTitB?=
+ =?utf-8?B?Q0R0NzFsbGdUTnBES3Rld2x1TUJhaHZpWkdpTG10N2tKTTZaNHhITDJMZExy?=
+ =?utf-8?B?eW1jRXdvNjhLaXVoSGFGcjVMeGtuUXhJREovV0lhQ0E2OVNDbmMvQ1RKZ045?=
+ =?utf-8?B?M01ET2xNZnFWb1hVR1g5elNjalNjcWlLT1l3YmozbVJHWUMydW1wcnUydHMx?=
+ =?utf-8?B?elNsQjBKWS9YcXlQa0xxZW9oUnNZbHdtcC85TGdqTUo0bThrbUR5TFRLa290?=
+ =?utf-8?B?WWc0WnVSaWpBWG9oNmlHclB1TE1sNUFoNVNjN1d2TlNvUXIrTjl4VDZuUlBE?=
+ =?utf-8?B?R3daaWswZWdVYmVWQXQwM2FFUzhpbGVydjFzQmlydEhWQXFrbHdEejJZOVZF?=
+ =?utf-8?B?LzJENTQ1TUMwOThhY2h1YzMySUdDY2NXbHhRSkt6RWZLSHpLck1Zb3NLaVJ2?=
+ =?utf-8?B?OURzYWVDYlB6VUkxU3plQkozNlc5UmtXOHhUK2FtVEp2MFM5WllKVUNXQ1JI?=
+ =?utf-8?B?QVhPVU5uMEFmQ0hUcXFVSC8yTGtvbU5wb3FZYlJrd0tnL2M4R2VKZ2duanRu?=
+ =?utf-8?B?WWIzL29SQnhsQWR1eHhYRkNmSDZzWHpyN1ZFeEUvNU9wdGNxYjR4S3BsQXc5?=
+ =?utf-8?Q?xhpytWip0yn6V?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Zm9EOG5lRVhmVVRid1NoS3NMaVVzMGVmanpSeU1id0wwM3JBM0R0S3BsZ3Ay?=
+ =?utf-8?B?VEhHQ09uT1JMNlVCWXNhR21WU2NaNzFqZEpXcWNKRksrbDA2NUg2L1FSV1da?=
+ =?utf-8?B?VGUzalFobEFlRFY0Wi83NE5Gcy9hY01LcE90aXlOWExEV2IrcDN0NSszc0ZI?=
+ =?utf-8?B?RTh4b3VFMzBDOEtHa1E1MTV1disyRS9PeWRsRG4vVEtDbUVpeFJnQUwrek9F?=
+ =?utf-8?B?RytKS2w3NmlCT2psS1BJdXpkRkc0dEZzRzNiTUV4ZEJWUkpJY0RaalJFRzZm?=
+ =?utf-8?B?WkVXdnBVMnlSMm1ibm9xNTlnMzAyRyt3b2E3V1A5SitsMkFiMm93YnN2V1Ja?=
+ =?utf-8?B?ZVA0L216dldQT0d1WTJrM1hEMTJBOHJzSmYyWkhFMitqL29tYkRWcEo4K2RE?=
+ =?utf-8?B?WWhUZnNZeDlMVmpMallNRnJGdXZuOHRRMDdiS1QzZzFwM1pTNnptRGxOaXJn?=
+ =?utf-8?B?YTFscFF6NUZEVVAxeWpwZUl4NTM5emFDMm13ZXQreEIvT3VmWHp4RHRObXNY?=
+ =?utf-8?B?OHhRaHFCTGtvYmJHSUdlamNQb3FVeU1KMkFEeEp3MHJrczdwRFlXNDQyUURL?=
+ =?utf-8?B?ZGVHQmF3c2NKc3czR0gwSEc0OGVhaS9jL2p6ckI5ZS9FL1BwY25NMUtRNTVm?=
+ =?utf-8?B?ME9DbWhqeTQ1UXlkMjZIZmlEek4rMUpEY0pCTzVTdHNoek5XbHBaQTVlbTVQ?=
+ =?utf-8?B?eHFWbW9Na1NmMi9Fa2wyTUVRMUpCZmh3YTNCeFRYb1hjajg4V1FOU0p3ZXBu?=
+ =?utf-8?B?QW04cnExdmZTb1QxMGVIbmFBRUgrK2l3YXA1cWF2Yi9nVGJXaUV2TkowOFBW?=
+ =?utf-8?B?L1Nncy9WS0RTTzg0cHh3Y0VJM3pZTGF1Q2FKVmNHSkFQc2lYSkRjSWdFMmdI?=
+ =?utf-8?B?VEFiaEdxQjRlbFdDejRvMHpDMlFELzBUZ0pRdUtueXNrOXhYSENKUWJLcmM0?=
+ =?utf-8?B?QjJXL01LRWhHR3JBTXhGV01OOEtRNmlvTm13K0pNZUd3MUFwaGxLcEJidysx?=
+ =?utf-8?B?cjhXNGpvWVVvQTFING9rRFM3WFNnS3hxZDZhREh3M2E1MzgwMldQWElLKy9W?=
+ =?utf-8?B?RDZxejh0NmN4R1NJQThyek5sVG5HWUFlaERZc2FxQ1duL0gzNDFsR3o1c3d4?=
+ =?utf-8?B?enJKODU0MXczUEJobWpxL2s0OE0yQnQyelQwSVdCSHlJdE43QTBwamJORnRm?=
+ =?utf-8?B?Q2lZbzN6Qko4YVUyY3VvQTRBcmFJN0pPZW1CZ2FsN2ZvRTNDamZkNFZwbDlF?=
+ =?utf-8?B?MGhXNUtCRi8xdVVrRmRwa0dvdndjWjJ1THJ2Y1BiTkhvN1FvLzlWV1Q2ekdi?=
+ =?utf-8?B?WDRrSkZmL214UERIclZpeEk5WTJCODBkb0RSa1ZlNXU2b01uTTNDZE81b2dh?=
+ =?utf-8?B?NjVuVGF2SjgxZ01ZeGVyT285SStTanhwQ1NrdHErajV4ZXljZ3EySGZVMmdw?=
+ =?utf-8?B?aXhCWWkzY1ZJSHZEVStYanByM25MZDZxOVJ0MUpCajdjN2RldW9DV3BHQW9E?=
+ =?utf-8?B?OTFDRzFVbDZkTFRoLzdUZDdGV0xTVm5GQU5oSUh5WmJwdDZuMHFlUGVxaHJT?=
+ =?utf-8?B?Y0NhQ0dHWkg1dVdvc0ZDTDhRSS9KY2trdGcydmRYMXdkY292QUEzQ2gyOHNL?=
+ =?utf-8?B?NUx0ZzJ2V21sOGdsbGFyQWxrekthMjRSY0RkdnlEVDJnVUdnVmxhd2dwdFpy?=
+ =?utf-8?B?OFNFMHhtOHY1eHVVZHpRdWNndVZBTm1UVm5QeXRsSVp2Q0h3RVVsNWwxOFYx?=
+ =?utf-8?B?aUExUHFtdmVIVWgvbGc5Ym5BMCtlUm1WRUQ2YVRycGd1RlBSWjAxZExXa0tu?=
+ =?utf-8?B?TXZIZ1FJOWJLbWkrWGtpZGt4NmpjeHVrWTNDZFNvN0Rpc25uSVM5cWVIRDJn?=
+ =?utf-8?B?OUpUMHJLOFcvakIwWHkxTGNYeG9tYXk0RWNpTENqZEpodlh0YlVvNWRoNVhT?=
+ =?utf-8?B?enl5NkExZndSaFBYQUlmWFN4UTZZa29zK25EMjJqc3pBUzZocnVuYkUvbWdV?=
+ =?utf-8?B?RXdXTVluTmF5czlYZ3MxK0FuTHdNL0NaZUFtY1E3ZTYrM21WM1ZIMjVaRS9a?=
+ =?utf-8?B?ZDlKeENRR2FlNUtKbEFLdXQxOUQwOFhxM0hXdWQ2aHJwZjY5TTBnWGNVVEp3?=
+ =?utf-8?Q?Lrr13LgZ5nH6gO9ZYICK4OkGl?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 826e7947-ac55-411d-bcf1-08dd4f4f2a41
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2025 12:32:39.3896
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: awWzDctrIXen+pGTiJeMSwamE2KVFBWTs/HTOZhRfk0b2Eehv+WEP1uzdzyU3FTyQGoWnKvnV6nj7nbI0+wXVA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6889
 
-------MTAFpDJBIS7x0DorxmyomC-IKR7RHdtq514vGN5lDcSFRf5o=_5ebd2_
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Disposition: inline
 
-On 14/02/25 05:43PM, Jonathan Cameron wrote:
->On Fri, 14 Feb 2025 18:52:11 +0530
->Sweta Kumari <s5.kumari@samsung.com> wrote:
->
->> 1)get alert configuration(Opcode 4201h)
->> 2)set alert configuration(Opcode 4202h)
->
->Move the change log to below the ---
->The key thing being git then doesn't pick it up whilst applying the patch.
->Whilst changed logs are very useful during the review process we don't
->typically want to keep them in the git history for ever!
->
->Otherwise, main comment here is shorten more names.
->
->Jonathan
->
-Thank you for the feedback, will make the changes accordingly in the v3
-patch.
+On 2/6/25 19:37, Dan Williams wrote:
+> alucerop@ wrote:
+>> From: Alejandro Lucero <alucerop@amd.com>
 >>
->> This v2 patch addresses the feedback from the v1 patch and include some minor new changes.
+>> In preparation for Type2 support, change memdev creation making
+>> type based on argument.
 >>
->> Changes in V2:
->> - Removed cover letter as it's a single patch
->> - Added latest spec reference
->> - Fixed alignment issues
->> - Updated shorter variable names to be more descriptive
->> - Replaced field-by-field initialization in 'init_alert_config' with structured initialization for improved readability.
->> - Replaced bit fields with 'uint8_t' and added defines for individual bits.
+>> Integrate initialization of dvsec and serial fields in the related
+>> cxl_dev_state within same function creating the memdev.
 >>
->> The patch is generated against the Johnathan's tree
->> https://gitlab.com/jic23/qemu.git and branch cxl-2024-11-27.
+>> Move the code from mbox file to memdev file.
 >>
->> Signed-off-by: Sweta Kumari <s5.kumari@samsung.com>
+>> Add new header files with type2 required definitions for memdev
+>> state creation.
+>>
+>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
 >> ---
->>  hw/cxl/cxl-mailbox-utils.c  | 116 ++++++++++++++++++++++++++++++++++++
->>  hw/mem/cxl_type3.c          |  16 +++++
->>  include/hw/cxl/cxl_device.h |  15 +++++
->>  3 files changed, 147 insertions(+)
+>>   drivers/cxl/core/mbox.c   | 20 --------------------
+>>   drivers/cxl/core/memdev.c | 23 +++++++++++++++++++++++
+>>   drivers/cxl/cxlmem.h      | 18 +++---------------
+>>   drivers/cxl/cxlpci.h      | 17 +----------------
+>>   drivers/cxl/pci.c         | 16 +++++++++-------
+>>   include/cxl/cxl.h         | 26 ++++++++++++++++++++++++++
+>>   include/cxl/pci.h         | 23 +++++++++++++++++++++++
+>>   7 files changed, 85 insertions(+), 58 deletions(-)
+>>   create mode 100644 include/cxl/cxl.h
+>>   create mode 100644 include/cxl/pci.h
 >>
->> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
->> index 9c7ea5bc35..105c63fdec 100644
->> --- a/hw/cxl/cxl-mailbox-utils.c
->> +++ b/hw/cxl/cxl-mailbox-utils.c
->> @@ -28,6 +28,11 @@
->>  #define CXL_DC_EVENT_LOG_SIZE 8
->>  #define CXL_NUM_EXTENTS_SUPPORTED 512
->>  #define CXL_NUM_TAGS_SUPPORTED 0
->> +#define CXL_ALERTS_LIFE_USED_WARNING_THRESHOLD (1 << 0)
->> +#define CXL_ALERTS_DEVICE_OVER_TEMP_WARNING_THRESHOLD (1 << 1)
->> +#define CXL_ALERTS_DEVICE_UNDER_TEMP_WARNING_THRESHOLD (1 << 2)
->> +#define CXL_ALERTS_CORRECTED_VOLATILE_MEMORY_ERROR_WARNING_THRESHOLD (1 << 3)
->> +#define CXL_ALERTS_CORRECTED_PERSISTENT_MEMORY_ERROR_WARNING_THRESHOLD (1 << 4)
->Let's shorten these as they are very ugly to use when a line long!
->
->#define CXL_ALERTS_OVER_TEMP_WARN_THRESH
->etc. Similar to comments below.
->
-Ok, will shorten the macro names as suggested in v3 patch.
->>
->>  /*
->>   * How to add a new command, example. The command set FOO, with cmd BAR.
->> @@ -86,6 +91,9 @@ enum {
->>          #define GET_PARTITION_INFO     0x0
->>          #define GET_LSA       0x2
->>          #define SET_LSA       0x3
->> +    HEALTH_INFO_ALERTS = 0x42,
->> +        #define GET_ALERT_CONFIGURATION 0x1
->> +        #define SET_ALERT_CONFIGURATION 0x2
->CONFIG maybe enough?
->
-Okay.
->>      SANITIZE    = 0x44,
->>          #define OVERWRITE     0x0
->>          #define SECURE_ERASE  0x1
->> @@ -1625,6 +1633,110 @@ static CXLRetCode cmd_ccls_set_lsa(const struct cxl_cmd *cmd,
->>      return CXL_MBOX_SUCCESS;
->>  }
->>
->> +/* CXL r3.2 Section 8.2.10.9.3.2 Get Alert Configuration (Opcode 4201h) */
->> +static CXLRetCode cmd_get_alert_config(const struct cxl_cmd *cmd,
->> +                                       uint8_t *payload_in,
->> +                                       size_t len_in,
->> +                                       uint8_t *payload_out,
->> +                                       size_t *len_out,
->> +                                       CXLCCI *cci)
+>> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+>> index 4d22bb731177..96155b8af535 100644
+>> --- a/drivers/cxl/core/mbox.c
+>> +++ b/drivers/cxl/core/mbox.c
+>> @@ -1435,26 +1435,6 @@ int cxl_mailbox_init(struct cxl_mailbox *cxl_mbox, struct device *host)
+>>   }
+>>   EXPORT_SYMBOL_NS_GPL(cxl_mailbox_init, "CXL");
+>>   
+>> -struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev)
+>> -{
+>> -	struct cxl_memdev_state *mds;
+>> -
+>> -	mds = devm_kzalloc(dev, sizeof(*mds), GFP_KERNEL);
+>> -	if (!mds) {
+>> -		dev_err(dev, "No memory available\n");
+>> -		return ERR_PTR(-ENOMEM);
+>> -	}
+>> -
+>> -	mutex_init(&mds->event.log_lock);
+>> -	mds->cxlds.dev = dev;
+>> -	mds->cxlds.reg_map.host = dev;
+>> -	mds->cxlds.reg_map.resource = CXL_RESOURCE_NONE;
+>> -	mds->cxlds.type = CXL_DEVTYPE_CLASSMEM;
+>> -
+>> -	return mds;
+>> -}
+>> -EXPORT_SYMBOL_NS_GPL(cxl_memdev_state_create, "CXL");
+>> -
+>>   void __init cxl_mbox_init(void)
+>>   {
+>>   	struct dentry *mbox_debugfs;
+>> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+>> index 63c6c681125d..456d505f1bc8 100644
+>> --- a/drivers/cxl/core/memdev.c
+>> +++ b/drivers/cxl/core/memdev.c
+>> @@ -632,6 +632,29 @@ static void detach_memdev(struct work_struct *work)
+>>   
+>>   static struct lock_class_key cxl_memdev_key;
+>>   
+>> +struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev, u64 serial,
+>> +						 u16 dvsec, enum cxl_devtype type)
 >> +{
->> +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
->> +    CXLAlertConfig *out = (void *)payload_out;
->
->In this case we can cast to the right type (can't do that if we don't
->name that type which happens in a lot these structures). So prefer
->    CXLAlertConfig *out = (CXLAlertConfig *)payload_out;
->
->
-Okay, will fix this in v3 patch
+>> +	struct cxl_memdev_state *mds;
 >> +
->> +    memcpy(out, &ct3d->alert_config, sizeof(ct3d->alert_config));
->> +    *len_out = sizeof(ct3d->alert_config);
+>> +	mds = devm_kzalloc(dev, sizeof(*mds), GFP_KERNEL);
+>> +	if (!mds) {
+>> +		dev_err(dev, "No memory available\n");
+>> +		return ERR_PTR(-ENOMEM);
+>> +	}
 >> +
->> +    return CXL_MBOX_SUCCESS;
+>> +	mutex_init(&mds->event.log_lock);
+>> +	mds->cxlds.dev = dev;
+>> +	mds->cxlds.reg_map.host = dev;
+>> +	mds->cxlds.reg_map.resource = CXL_RESOURCE_NONE;
+>> +	mds->cxlds.cxl_dvsec = dvsec;
+>> +	mds->cxlds.serial = serial;
+>> +	mds->cxlds.type = type;
+>> +
+>> +	return mds;
 >> +}
->> +
->> +/* CXL r3.2 Section 8.2.10.9.3.3 Set Alert Configuration (Opcode 4202h) */
->> +static CXLRetCode cmd_set_alert_config(const struct cxl_cmd *cmd,
->> +                                       uint8_t *payload_in,
->> +                                       size_t len_in,
->> +                                       uint8_t *payload_out,
->> +                                       size_t *len_out,
->> +                                       CXLCCI *cci)
->> +{
->> +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
->> +    CXLAlertConfig *alert_config = &ct3d->alert_config;
->> +    struct {
->> +        uint8_t valid_alert_actions;
->> +        uint8_t enable_alert_actions;
->> +        uint8_t life_used_warning_threshold;
->> +        uint8_t rsvd;
->> +        uint16_t device_over_temperature_warning_threshold;
->> +        uint16_t device_under_temperature_warning_threshold;
->> +        uint16_t Corrected_volatile_memory_error_warning_threshold;
->> +        uint16_t Corrected_persistent_memory_error_warning_threshold;
->
->Shorten these as well. Similar to suggestions below.  They are
->just too long to make for nice code!
->
-Got it.
->> +    } QEMU_PACKED *in = (void *)payload_in;
->> +
->> +    if (in->valid_alert_actions & CXL_ALERTS_LIFE_USED_WARNING_THRESHOLD) {
->> +        /*
->> +         * CXL 3.2 Table 8-149 The life used warning threshold shall be
->> +         * less than the life used critical alert value.
->> +         */
->> +        if (in->life_used_warning_threshold >=
->> +            alert_config->life_used_critical_alert_threshold) {
->> +            return CXL_MBOX_INVALID_INPUT;
->> +        }
->> +        alert_config->life_used_warning_threshold =
->> +            in->life_used_warning_threshold;
->> +        alert_config->enable_alerts |= CXL_ALERTS_LIFE_USED_WARNING_THRESHOLD;
->> +    }
->> +
->> +    if (in->valid_alert_actions &
->> +        CXL_ALERTS_DEVICE_OVER_TEMP_WARNING_THRESHOLD) {
->> +        /*
->> +         * CXL 3.2 Table 8-149 The Device Over-Temperature Warning Threshold
->> +         * shall be less than the the Device Over-Temperature Critical
->> +         * Alert Threshold.
->> +         */
->> +        if (in->device_over_temperature_warning_threshold >=
->> +            alert_config->device_over_temperature_critical_alert_threshold) {
->> +            return CXL_MBOX_INVALID_INPUT;
->> +        }
->> +        alert_config->device_over_temperature_warning_threshold =
->> +            in->device_over_temperature_warning_threshold;
->> +        alert_config->enable_alerts |=
->> +            CXL_ALERTS_DEVICE_OVER_TEMP_WARNING_THRESHOLD;
->> +    }
->> +
->> +    if (in->valid_alert_actions &
->> +        CXL_ALERTS_DEVICE_UNDER_TEMP_WARNING_THRESHOLD) {
->> +        /*
->> +         * CXL 3.2 Table 8-149 The Device Under-Temperature Warning Threshold
->> +         * shall be higher than the the Device Under-Temperature Critical
->> +         * Alert Threshold.
->> +         */
->> +        if (in->device_under_temperature_warning_threshold <=
->> +            alert_config->device_under_temperature_critical_alert_threshold) {
->> +            return CXL_MBOX_INVALID_INPUT;
->> +        }
->> +        alert_config->device_under_temperature_warning_threshold =
->> +            in->device_under_temperature_warning_threshold;
->> +        alert_config->enable_alerts |=
->> +            CXL_ALERTS_DEVICE_UNDER_TEMP_WARNING_THRESHOLD;
->> +    }
->> +
->> +    if (in->valid_alert_actions &
->> +        CXL_ALERTS_CORRECTED_VOLATILE_MEMORY_ERROR_WARNING_THRESHOLD) {
->> +        alert_config->Corrected_volatile_memory_error_warning_threshold =
->> +            in->Corrected_volatile_memory_error_warning_threshold;
->> +        alert_config->enable_alerts |=
->> +            CXL_ALERTS_CORRECTED_VOLATILE_MEMORY_ERROR_WARNING_THRESHOLD;
->> +    }
->> +
->> +    if (in->valid_alert_actions &
->> +        CXL_ALERTS_CORRECTED_PERSISTENT_MEMORY_ERROR_WARNING_THRESHOLD) {
->> +        alert_config->Corrected_persistent_memory_error_warning_threshold =
->> +            in->Corrected_persistent_memory_error_warning_threshold;
->> +        alert_config->enable_alerts |=
->> +            CXL_ALERTS_CORRECTED_PERSISTENT_MEMORY_ERROR_WARNING_THRESHOLD;
->> +    }
->> +    return CXL_MBOX_SUCCESS;
->> +}
->> +
->>  /* Perform the actual device zeroing */
->>  static void __do_sanitization(CXLType3Dev *ct3d)
->>  {
->> @@ -2859,6 +2971,10 @@ static const struct cxl_cmd cxl_cmd_set[256][256] = {
->>      [CCLS][GET_LSA] = { "CCLS_GET_LSA", cmd_ccls_get_lsa, 8, 0 },
->>      [CCLS][SET_LSA] = { "CCLS_SET_LSA", cmd_ccls_set_lsa,
->>          ~0, CXL_MBOX_IMMEDIATE_CONFIG_CHANGE | CXL_MBOX_IMMEDIATE_DATA_CHANGE },
->> +    [HEALTH_INFO_ALERTS][GET_ALERT_CONFIGURATION] = {"GET_ALERT_CONFIGURATION",
->
->Space after { to match local style.
->
-Ok, will address this in v3 patch.
->> +        cmd_get_alert_config, 0, 0 },
->> +    [HEALTH_INFO_ALERTS][SET_ALERT_CONFIGURATION] = {"SET_ALERT_CONFIGURATION",
->> +        cmd_set_alert_config, 12, CXL_MBOX_IMMEDIATE_POLICY_CHANGE },
->>      [SANITIZE][OVERWRITE] = { "SANITIZE_OVERWRITE", cmd_sanitize_overwrite, 0,
->>          (CXL_MBOX_IMMEDIATE_DATA_CHANGE |
->>           CXL_MBOX_SECURITY_STATE_CHANGE |
->
->> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
->> index a64739be25..1da23bf553 100644
->> --- a/include/hw/cxl/cxl_device.h
->> +++ b/include/hw/cxl/cxl_device.h
->> @@ -581,6 +581,19 @@ typedef struct CXLSetFeatureInfo {
->>      size_t data_size;
->>  } CXLSetFeatureInfo;
->>
->> +typedef struct CXLAlertConfig {
->> +    uint8_t valid_alerts;
->> +    uint8_t enable_alerts;
->> +    uint8_t life_used_critical_alert_threshold;
->> +    uint8_t life_used_warning_threshold;
->> +    uint16_t device_over_temperature_critical_alert_threshold;
->I think we can shorten these at least a bit without lost of meaning!
->It's on a device so can drop that entirely. Perhaps
->
->    uint8_t life_used_crit_alert_thresh;
->    uint8_t life_used_warn_thresh;
->    uint16_t over_temp_crit_alert_thresh;
->    uint16_t under_temp_crit_alert_thresh;
->    uint16_t over_temp_warn_thresh;
->    uint16_t under_temp_warn_thresh;
->    uint16_t cor_volatile_mem_err_warn_thresh;
->    uint16_t cor_persistent_mem_err_warn_thresh;
->
-Ok, will shorten the field names as suggested.
->> +    uint16_t device_under_temperature_critical_alert_threshold;
->> +    uint16_t device_over_temperature_warning_threshold;
->> +    uint16_t device_under_temperature_warning_threshold;
->> +    uint16_t Corrected_volatile_memory_error_warning_threshold;
->Capital in just this one doesn't make much sense.
->> +    uint16_t Corrected_persistent_memory_error_warning_threshold;
->> +} QEMU_PACKED CXLAlertConfig;
->
->
-
-------MTAFpDJBIS7x0DorxmyomC-IKR7RHdtq514vGN5lDcSFRf5o=_5ebd2_
-Content-Type: text/plain; charset="utf-8"
+>> +EXPORT_SYMBOL_NS_GPL(cxl_memdev_state_create, "CXL");
+> I was envisioning that accelerators only consider 'struct cxl_dev_state'
+> and that 'struct cxl_memdev_state' is exclusively for
+> CXL_DEVTYPE_CLASSMEM memory expander use case.
 
 
-------MTAFpDJBIS7x0DorxmyomC-IKR7RHdtq514vGN5lDcSFRf5o=_5ebd2_--
+That was the original idea and what I have followed since the RFC, but 
+since the patchset has gone through some assumptions which turned wrong, 
+I seized the "revolution" for changing this as well.
+
+
+A type2 is a memdev, and what makes it different is the exposure, so I 
+can not see why an accel driver, at least a Type2, should not use a 
+cxl_memdev_state struct. This simplifies the type2 support and after 
+all, a Type2 could require the exact same things like a type3, like 
+mbox, perf, poison, ... .
+
+
+>   Something roughly like
+> the below. Note, this borrows from the fwctl_alloc_device() example
+> which captures the spirit of registering a core object wrapped by an end
+> driver provided structure).
+>
+> #define cxl_dev_state_create(parent, serial, dvsec, type, drv_struct, member)  \
+>          ({                                                                     \
+>                  static_assert(__same_type(struct cxl_dev_state,                \
+>                                            ((drv_struct *)NULL)->member));      \
+>                  static_assert(offsetof(drv_struct, member) == 0);              \
+>                  (drv_struct *)_cxl_dev_state_create(parent, serial, dvsec,     \
+>                                                      type, sizeof(drv_struct)); \
+>          })
+
+
+If you prefer the accel driver keeping a struct embedding the core cxl 
+object, that is fine. I can not see a reason for not doing it, although 
+I can not see a reason either for imposing this.
+
+
+> struct cxl_memdev_state *cxl_memdev_state_create(parent, serial, dvsec)
+> {
+>          struct cxl_memdev_state *mds = cxl_dev_state_create(
+>                  parent, serial, dvsec, CXL_DEVTYPE_CLASSMEM,
+>                  struct cxl_memdev_state, cxlds);
+>
+>          if (IS_ERR(mds))
+>                  return mds;
+>          
+>          mutex_init(&mds->event.log_lock);
+>          mds->cxlds.dev = dev;
+>          mds->cxlds.reg_map.host = dev;
+>          mds->cxlds.reg_map.resource = CXL_RESOURCE_NONE;
+>          mds->cxlds.cxl_dvsec = dvsec;
+>          mds->cxlds.serial = serial;
+>          mds->cxlds.type = type;
+>
+>          return mds;
+> }
+>
+> If an accelerator wants to share infrastructure that is currently housed
+> in 'struct cxl_memdev_state', then that functionality should first move
+> to 'struct cxl_dev_state'.
+
+
+If you see the full patchset, you will realize the accel driver does not 
+use the cxl objects except for doing further initialization with them. 
+In other words, we keep the idea of avoiding the accel driver 
+manipulating those structs freely, and having an API for accel drivers. 
+Using cxl_memdev_struct now implies to change some core functions for 
+using that struct as the argument what should not be a problem.
+
+
+We will need to think about this when type2 cache support comes, which 
+will mean type1 support as well. But it is hard to think about what will 
+be required then, because it is not clear yet how we should implement 
+that support. So for the impending need of having Type2 support for 
+CXL.mem, I really think this is all what we need by now.
+
