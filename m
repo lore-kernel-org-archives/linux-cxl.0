@@ -1,111 +1,112 @@
-Received: from dog.elm.relay.mailchannels.net (dog.elm.relay.mailchannels.net [23.83.212.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2CCC270EBF;
-	Tue, 18 Feb 2025 17:54:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.212.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739901274; cv=pass; b=X5vnzcfcjaIi2JWFLQKptXmo2gkZUnR2SUQCu9pUCIPBvbvBrvDeo8OJXsWjt/3XPgS9U9UmFLllwnSCdIuv2dOjBmqtOQO0wwgutHJZpU9J5D+boT3gjNTTGontb0D0ix0/5RCMNbPoY7905G8jZwhbkR6re069WAxEn78F0eM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739901274; c=relaxed/simple;
-	bh=EXlnmm98gVz4H22ygJFIiFPd9A+akx/jzNMXZ6VZSFc=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A362270ECB
+	for <linux-cxl@vger.kernel.org>; Tue, 18 Feb 2025 18:04:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739901896; cv=none; b=OCUIiSvrGlPYEoU0ITrl9VJjFI9O06NI4xF5paNSpJWF065yxzqTu63oLyTfrl0uW79AzJ8uXNY8qp2fcVTFUIVWdNScGEMj8w3KMB5skI8+PnzenmxHJmKqG8MB0A1pnpFCnUMTu0RNgUK0mW0rCDMB2iDDcA6m1a/kzSJfdBM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739901896; c=relaxed/simple;
+	bh=89YH2L66JdBDvc/z1zr776bVYkPkPpM/OI3XRKn7/0U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PUpWPGCwvAamvJXZxwMTb+ZS7D2F+sN0OzYlKpHkdOT+w2o2ZCCoIBhs+9eLHbvL40PcZPDW4YZfEPCarCqs9XtJJqYbNxoTU285M94ACWqPC2trjVKLyzXh99ThId1Rr9ykXKCNemnHkIbhYFk7YvIaoHde5Cz5Zz13nSlFXSI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=c1djtRmN; arc=pass smtp.client-ip=23.83.212.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=RXbRxkHMeKUCDEQ+ZTffR5/ss4gCFN8FTzMjc7UXqdfFYaNmaOACYoL07x4SBGuI0C5tIa7Il25lTldhfXWorQNISAKrtRnRzPvvQ/6jZJbmaAKMY6edTSRQUAtLsaqQjaQHxlno26rkvVX6xB1n1EmSrPTffgrTYScu2npbpM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=K0a6GdIy; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="c1djtRmN"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id B12FE21815;
-	Tue, 18 Feb 2025 17:54:31 +0000 (UTC)
-Received: from pdx1-sub0-mail-a238.dreamhost.com (trex-4.trex.outbound.svc.cluster.local [100.101.208.230])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 480D2232DE;
-	Tue, 18 Feb 2025 17:54:31 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1739901271; a=rsa-sha256;
-	cv=none;
-	b=i2g2u3kCQdFjZ4K7HtYNrVOzxUFDLbNP01R3JdM+zBKXu9GjTS311zQyYuAn4DHJvFLY4Q
-	4VFdscz7daBh9CvgwuBFQ2wm0yY0RpzUZQIq/fBCj5oI9UXqkzNq2eENNVlISrzgPWVXT9
-	rFa3gFPXp+eF+mHwclJ0nrjjuHCYpRCavII8jLa2xXJ77Icl+ChhdCD/Kpc9vlenfXP/E1
-	qpNX9Qjp9xreOjg0bETILZl62VRGOZe0XlCEngU6EVLfKHPO6lTIdRvyzW4gnOIX8JPLIu
-	4JlXAEzkl4pseNdQmgpWk75EQHMEQBOxVWiFwq71KCDe0LgTd+O3zIOjMB3Nfg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1739901271;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=EXlnmm98gVz4H22ygJFIiFPd9A+akx/jzNMXZ6VZSFc=;
-	b=iL+v+xHUSMJkaXpBKKx/iFK+Ip9GEFs7Trsf2/rWelYo63Q8nd5ZJgMZdsxRIXstkHWKch
-	RiBoRdS6zNxaXa0Onjh9ctnkE6mJIPhgAlkVI8k/e5aMU59bRSTtyPw5lx2UVoD+MOPsOQ
-	bCfJH21qDl+6OqGg9W79UetFvScNh5WfaVF7tydRuCX0zHYP6aoWXBgln+6k6TtIZFnLUG
-	Ez0r99h/W9AvtpBd4ZNqZMrgfzGg8OCvs8ffS50sepX3AsRDthmV4i7SHwltCLiXTYo+HI
-	4nwOU7wHtcXf0mXryI5Sfaab4AvZNpCum4uWWeV0FA2B23dCgplEMWP0/dILcA==
-ARC-Authentication-Results: i=1;
-	rspamd-6d7cc6b78d-2km2b;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Illustrious-Occur: 3958d16b4ec81d63_1739901271571_2723353521
-X-MC-Loop-Signature: 1739901271571:1401287282
-X-MC-Ingress-Time: 1739901271571
-Received: from pdx1-sub0-mail-a238.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.101.208.230 (trex/7.0.2);
-	Tue, 18 Feb 2025 17:54:31 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a238.dreamhost.com (Postfix) with ESMTPSA id 4Yy6bp3sjhzK5;
-	Tue, 18 Feb 2025 09:54:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1739901271;
-	bh=EXlnmm98gVz4H22ygJFIiFPd9A+akx/jzNMXZ6VZSFc=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=c1djtRmNEQWXB5gkXrAf7d+ir/R7ZAFaHwrNrOAqZb29xF2u+AVTYYp6Zs1GU9JVU
-	 u07aviKr+2BVBo158K9xg8bFMNfL+OhDroB1z8qeBO1i+a1flUrSj/v2kCFhqPkkbU
-	 t006bXCjLzEtNLc+oEx8zE+BuJy+6xMzPjFGRQl5Fp11nw86unbRdSF1PTUwL5F29k
-	 h32aYNr0gue6efvKwrmr0wmuLvg5BQpZfY2KqIRfps0/PiTPUY/Z+9oIZNeA9Dvp4h
-	 zJxQ5jLZDsLmwAC7RgiooPWqrttmyoRsZrkHqSDsv0gfKFvzJp7iyEKgXnVcF52TSX
-	 wx8TIBXEYbGdA==
-Date: Tue, 18 Feb 2025 09:54:27 -0800
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Li Ming <ming.li@zohomail.com>
-Cc: jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, dan.j.williams@intel.com,
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="K0a6GdIy"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7c0a26b1c67so220889185a.3
+        for <linux-cxl@vger.kernel.org>; Tue, 18 Feb 2025 10:04:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1739901893; x=1740506693; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=/2QkXBrR+RLY2Ff/8MHFN38wGfIHYvjpwObZxuk5dJA=;
+        b=K0a6GdIyb3ewk6pQ6b1xuyURq3XEdUo5m64DbGAV0y45eDuLj/MDS2BZr/oRNzUGYI
+         aNTlQkGSqRtSIlnkQFJE2sgfpbqzP2GwBh8A6pqGXjAc4QRpDJvDEQGE91YVI+5NYS3H
+         AJLRbV2a0dJ8goyv+69bJjzEUwC50EJZW7IxZcghhIOOpyQExcKymOWqTukXu7HoYNkh
+         9h0hMGg0YMrW1u4OsLEbKDlC3vj1eokY3Hu2IeS1cD1sUphPpsd5ASwniV7mh7h1EyQh
+         nCO/ihxAZDkhvkA72NNbr9nWP9u+hp5mAO6SFW1JAtCjamDrF0p6CQx/KoiWjvSfyBpG
+         kyqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739901893; x=1740506693;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/2QkXBrR+RLY2Ff/8MHFN38wGfIHYvjpwObZxuk5dJA=;
+        b=C7DY1BCQz4XYLiIVJhx6kdSnmnre9nN6DXPruWZHGJp1x1Xl7A76aav60uHK7FpD9y
+         h8vuYDJ7k09WSQBgmSgyTcqK0g2m7ew++/CmLgFeT5rd6pCnY6YQF3fikcZnNOUdY4v2
+         Lj35h6h1X8yMiYhZf24tVh8bEazdDzmkkfwyWvqgtsyCtQV0K4qvXjo5Z1J5wY9ZUnNC
+         ZgPiqkVBblrqmpC91ybrwEEseMxsTfDKIwRBw7ldM0WnQywXwY0edhzWxj7+h+IaPbXE
+         vTlX8J/P9ObMO0reboWz4iKoO21Ick10Sdllpu12lF/KXp/Ueog092YsFgAEfMrhH2hm
+         Vu3g==
+X-Forwarded-Encrypted: i=1; AJvYcCXRaATrZFGwDJHeeUG0JhuAHD3Ay96RyTQUW/dP37M6DvFoglXr2+PJni0toYgihKlw4c7QhVn6Jx4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+gObPMG2Kw1ujTX8X5LsBC8/wkRuPZrfIOI+azJnkubjIRJh5
+	0u3Clxu9m53PHZ7WUMXVgkHN7XJuyPlqSAiPUXg7lxa0Gs0Pmmy94zfpg2lKrXg=
+X-Gm-Gg: ASbGncvESw6ozcE6xZ9z8KwG6oa7Llyn58qGmwSxMEj0CvsGFq3e7XYLgm9LKuB1J1b
+	DBcF2ZhBF1rXKpEMd/0lWVfmeJtlPmU+O5spXdbfKYkNR5/9Ktnb7Q45k00IzQ8hi0d/WCoq3jr
+	BdcK+LdVbJJIoGZ7WwC7p4VX32mmEIjOM473zHpSUTQLNbgnBtYLs1O0wkRWihkq6nh64Ll/Zey
+	ji6cGdWe/VEBAijPB6d3sWPVzsgT1CHkV/molKo7xp6ofRpYh9Bt6SpBiugTC1T27XmeEmEGJk3
+	csiFZoXLhmSlLbDcGx1Oj9fK4y4wh5BuHMXL4jUiWy9YbrWRni8K6CSUEwIIyAAfSuJJ5Joysg=
+	=
+X-Google-Smtp-Source: AGHT+IEprOBQSn3Ytg4X7qFQ2WbvhHazV+Lw3tNlJvmsytmgmsjBdXJWK9TXucgmcuhpw5lyap3g8A==
+X-Received: by 2002:a05:620a:2b4a:b0:7c0:ae2e:62ff with SMTP id af79cd13be357-7c0ae2e6516mr464537585a.22.1739901893011;
+        Tue, 18 Feb 2025 10:04:53 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c0a852b95fsm162892085a.116.2025.02.18.10.04.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2025 10:04:52 -0800 (PST)
+Date: Tue, 18 Feb 2025 13:04:50 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Yang Shi <shy828301@gmail.com>
+Cc: lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
 	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/7] Use guard() instead of rwsem locking
-Message-ID: <20250218175427.qlmunbgkjhrroc2r@offworld>
-References: <20250217144828.30651-1-ming.li@zohomail.com>
+Subject: Re: CXL Boot to Bash - Section 3: Memory (block) Hotplug
+Message-ID: <Z7TLwtQY3vGUw2bO@gourry-fedora-PF4VCD3F>
+References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
+ <Z7OWmDXEYhT0BB0X@gourry-fedora-PF4VCD3F>
+ <CAHbLzkq6Me6nRaL6b09YxJ_nFkxb+n+M3-q_aJwOs2ZO4q8VCg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250217144828.30651-1-ming.li@zohomail.com>
-User-Agent: NeoMutt/20220429
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHbLzkq6Me6nRaL6b09YxJ_nFkxb+n+M3-q_aJwOs2ZO4q8VCg@mail.gmail.com>
 
-On Mon, 17 Feb 2025, Li Ming wrote:
+On Tue, Feb 18, 2025 at 09:49:28AM -0800, Yang Shi wrote:
+> On Mon, Feb 17, 2025 at 12:05 PM Gregory Price <gourry@gourry.net> wrote:
+> > The node ID passed in as an argument is a "preferred node", which means
+> > is insufficient space on that node exists to service the GFP_KERNEL
+> > allocation, it will fall back to another node.
+> >
+> > If all hot-plugged memory is added to ZONE_MOVABLE, two things occur:
+> >
+> >   1) A portion of the memory block is carved out for to allocate memmap
+> >      data (reducing usable size by 64b*nr_pages)
+> >
+> >   2) The memory is allocated on ZONE_NORMAL on another node..
+> 
+> Nice write-up, thanks for putting everything together. A follow up
+> question on this. Do you mean the memmap memory will show up as a new
+> node with ZONE_NORMAL only besides other hot-plugged memory blocks? So
+> we will actually see two nodes are hot-plugged?
+> 
 
->Use scoped resource management to replace open-coded locking operation
->is recommended. CXL subsystem still remains some down_read()/up_read()
->and down_write()/up_write() which can be replaced by guard() simply.
->
->This patchset includes simply using guard() instead of some
->down_read()/up_read() and down_write()/up_write() cases. Besides, it
->also includes some function code cleanup after using guard().
+No, it creates 1 ZONE_MOVABLE memory block of size
 
-For the series, feel free to add my:
+                   (BLOCK_SIZE - memmap_size)
 
-Acked-by: Davidlohr Bueso <dave@stgolabs.net>
+and as far as i can tell the actual memory map allocations still
+occur on ZONE_NORMAL (i.e. not CXL).
+
+So you just lose the capacity, it's just stranded and unused.
+
+> Thanks,
+> Yang
+> 
