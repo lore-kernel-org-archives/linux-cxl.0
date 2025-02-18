@@ -1,364 +1,265 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2081.outbound.protection.outlook.com [40.107.236.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F0B22D4C9
-	for <linux-cxl@vger.kernel.org>; Tue, 18 Feb 2025 11:37:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739878658; cv=none; b=D8WxCSC8JR5OxCHVv3IWhbT8CQOkQZ0wp7icld5YzwzViRg6nMpniEMWwNKMfboQCzR24z/YAU0KXKjXhwCBOnVnUoqDJb3NBJ3xyifi6k8rxpciyOqxCINrI9GNgEL6XUmnI2QdicA4QNSJCxlBL5jFTEYp+6gEO/NPC+G1g4s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739878658; c=relaxed/simple;
-	bh=rB+SbcpFCdmiOPV/BM90V5rcqs3Ru/L2xe8wSM+/qS0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JHZTdP2/8Wj7UyUHwTY58yuK2PHQzQ/yH/DLQCLFYe3WUpeQtH8OvC8JP1EpENif1djKyyoeeUrLGFlKOqEfwHxRZa9U5u9r0HJkYF4h0aAlvSzZepWuPOHWht7xHQDnqOREgac+sFNKiECLFhJ+rPSR5iD4ajRATmhCSs9ytlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VsxYUHgc; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58C43269804;
+	Tue, 18 Feb 2025 13:24:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.81
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739885077; cv=fail; b=oVhUY204UYV+68dFtMtJfpOZhKuQyoOP76zwMj+RZC4ZrXPPWeDHImcWmZmTobFCwjVGIaQ4HXbE69vWo3pZull/hUfO+PtWAYeYm4h6cZlmUsHsSctfQCSq2jZUbfs6zu+YSPa4nnq9UveBSCbaXazMrmwJlM8IdmH86Xdc/Cg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739885077; c=relaxed/simple;
+	bh=FTKjq4C0T6fwBWfeifnoQQI6UgFUWgKqS3O+ZHbDF1o=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=aRd13a30ksyV9FI+OexPTuoj/wmCic8t7T5BS4g5X6Et33zfhZIchiyC1DfsuOd2Nm1WsY9yxqqroarsPOaAmwu1ZkYs3XMLewcmbAVptjhWEylcDgpzHRMfDpkud1cZ44l8vJFtjKnkophIAHCx0Ly4VrSH4/LOIiuJU6L/8wI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=31UiLWRK; arc=fail smtp.client-ip=40.107.236.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VsxYUHgc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739878655;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=3KYEQ9uPTnjY2p/sMmDxtE88/IrnTJfnjpzPNyXQ728=;
-	b=VsxYUHgcnH/907t01d1ZI8uNJZ2a29m7D6EMeYNIbE5r3L1tO7bPmzMRBlItZhkp82/4Au
-	6JSSd6JOXJ5skpsJ7ZVP3k2iPJFfqCch4NjuHlbbVAnr4WAcv/vInalIv83Bmc5GW6BZzo
-	zWYNsDKAKnOyB5f/dFCuaLOpF9Qe3zo=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-402-oNLyy_T6MIOtQO9mxdYSOw-1; Tue, 18 Feb 2025 06:37:34 -0500
-X-MC-Unique: oNLyy_T6MIOtQO9mxdYSOw-1
-X-Mimecast-MFC-AGG-ID: oNLyy_T6MIOtQO9mxdYSOw_1739878653
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4393e89e910so28699435e9.0
-        for <linux-cxl@vger.kernel.org>; Tue, 18 Feb 2025 03:37:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739878653; x=1740483453;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=3KYEQ9uPTnjY2p/sMmDxtE88/IrnTJfnjpzPNyXQ728=;
-        b=arxGj2GjuC1AkHZdIEgKA7SEjIuNBaB2jIAqIcJggppcK3zwqHAgW62Ti1Ngg80Llm
-         walWXlouCn3UuqennYCYvloiA6YUIaluMWU3JxAGfU6ghqtDNAqi3DZhwpvvNKiR4vSJ
-         Y0vwJTLsTB2/9rYmz24eBotXf6cYZo1d17d9ChiXUVX+zhVy93/s74JJXvGf3pH/gGz0
-         oq8V7bQKmBqtRlggrZiVK2Q+kGE62YF2Z3AvVXbtuo3ybG6VwIQATODK4GSQ62/qNHw/
-         7i0ZCvKLbfdWEHRHwBZ8FN4As+VstivNxR7tqK1ODf+sYDVbks0nBItjBPo2FBJprLQ6
-         lC/A==
-X-Forwarded-Encrypted: i=1; AJvYcCVAc8Cmapznq/9jqIzmOMPMB73Jjv/fWrIf1B6Fzeq2DK7Q0nD5QiYMqcRW7aC6El8zmA722SNR88Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpPwvnD+z0XI2BzljEqQp2WUtNOUdmpUJgnSgvkU9E++7OC57g
-	XWoKiVOLZA3//6nqvChPWW3Acm/MvQ+dXa60WdyJPsReYO2bU7yMmH0vND5uprHct7oYNLBE0Ep
-	QtYJWzHoIyrKUs93r0eJ498nlO5ZfiSfzncjw+BrAAj39UtIK/S/QmXgwag==
-X-Gm-Gg: ASbGnctAgHwFROF/nhwPzdT3yI/8zqOXWf0wa4lAyAZIWA8fTFc+lHd88rPUiUYFH7A
-	Q4cFMtWLDcUZAMfq8DA4VXrP7wjMjaVomPFw452VajmqouseGEOu6DUGx74meWCO8+0G9Kz+gg8
-	8wk8TQjOltQ0CeeITb028R0SoLoDXvAt7kIfS8UtWIHt2xOMvoKt36IPKibE/FrTwU7o0FqAGW9
-	4enD6/7WLFvtuVgTElqr0k2ou94u8zMq+ZFuG2IIwVGbW21J3L4ooYi3uW4XCmiy2p/BnTePRx/
-	pqVJU1lBdamspdSXV6SrJ0Z1ubTEo/aK9LoIAnN5GWNNEvnHYlqvYG8K5P63AZDtcd3Z/ipGhyz
-	pKn01I540oOI5TF/r/AGNQQWMVKHica7w
-X-Received: by 2002:a05:600c:3107:b0:439:98ca:e390 with SMTP id 5b1f17b1804b1-43998cae421mr406365e9.27.1739878653214;
-        Tue, 18 Feb 2025 03:37:33 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEbabLu7vXUCSD0KjrAUx0yqgTTkLbXo6HpuVQb6Cs/Gdy4/wAwG8GKVTrqyk1JHoNpZDyU9w==
-X-Received: by 2002:a05:600c:3107:b0:439:98ca:e390 with SMTP id 5b1f17b1804b1-43998cae421mr405775e9.27.1739878652740;
-        Tue, 18 Feb 2025 03:37:32 -0800 (PST)
-Received: from ?IPV6:2003:cb:c70d:fb00:d3ed:5f44:1b2d:12af? (p200300cbc70dfb00d3ed5f441b2d12af.dip0.t-ipconnect.de. [2003:cb:c70d:fb00:d3ed:5f44:1b2d:12af])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439872b5a46sm47439565e9.32.2025.02.18.03.37.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2025 03:37:31 -0800 (PST)
-Message-ID: <cb29f96f-f222-4c94-9c67-c2d4bffeb654@redhat.com>
-Date: Tue, 18 Feb 2025 12:37:28 +0100
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="31UiLWRK"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XLrEMsaNyELBK4h1aOSal7U4G7uuhKkqndrKrjMfqXKft3k8eVH9d/jjaOr+6YhEL2zcLA4icxzP4Otj5B0doykhGAr8+2rcegi/gAAzpKmV5K5aCX9cXCjLY1eFBSMjc7Q8yZcwBdJNUkC4i9aXUBcxNfIeKs8JnGhQeP177QFE9lNoZlKcjPfotOfSDB+kTUIHy6o4mzfln3zsjm8SebiRjtfWFaOb5uWxwXi60z/MudChayCXyJSGm9W2zUHBHbCC9egFLdCwxNBCkhcVgczcOAiikjAJ1F6IHjm/xzLqAt9bLMQbVXJCyy0Uts1L8IvF0uCdEDjbd9VA4k1RvQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tIjohDLJbLCE1V2pbGpBzzDOyClI+oG1mc/qRATYU0Y=;
+ b=hI3scKq58pikxekNM0fwkitngPX5uJLCukeP2i1UKKXVW1bf9Ad3JZEnDejIGTlnZ4l6/pFkROI9oi5S5a1AVnWgo6ZE2oSs8XNh93KazkL4GAAO76OV2vuIMMBCglOdKN3NA9qg0NR1tbwljy7BFFA6pqrrN0PljX/icFmJF7F0B5TQZFwIWmPD+klyTWHJdn2wIEV85oSNUulYGb0/FzqSvI10TTJQh7YEG94Ze9iWVfKwimrC94ArJ33hudJvVgil89kENm8djmtgTLuLrIf5haT9UB+iRFJ1FlzQ28iVtmMnVC0wkHx9/FIFF1Tw7/iV8rjG9MnGjhiyZCoACQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tIjohDLJbLCE1V2pbGpBzzDOyClI+oG1mc/qRATYU0Y=;
+ b=31UiLWRKF1ItpFKGdbhFQbmJU3n6WRcg+fbVjZF0advcPnXs7iwWO3unBcAvbQUaNQnVDBd8kBZ5dgZiJWU6raLaea/CLy86V82YkiOZ57LRnYkqcds/Yd6Hr20vh2C6Gfdff54JCBHPD0PyXp4bAz8ZYdLL0HY6iHABjnXVCH8=
+Received: from BL0PR05CA0010.namprd05.prod.outlook.com (2603:10b6:208:91::20)
+ by SJ0PR12MB6734.namprd12.prod.outlook.com (2603:10b6:a03:478::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.13; Tue, 18 Feb
+ 2025 13:24:31 +0000
+Received: from BL02EPF00021F6F.namprd02.prod.outlook.com
+ (2603:10b6:208:91:cafe::f4) by BL0PR05CA0010.outlook.office365.com
+ (2603:10b6:208:91::20) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.14 via Frontend Transport; Tue,
+ 18 Feb 2025 13:24:30 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL02EPF00021F6F.mail.protection.outlook.com (10.167.249.11) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8466.11 via Frontend Transport; Tue, 18 Feb 2025 13:24:30 +0000
+Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 18 Feb
+ 2025 07:24:27 -0600
+From: Robert Richter <rrichter@amd.com>
+To: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Gregory Price
+	<gourry@gourry.net>, "Fabio M. De Francesco"
+	<fabio.m.de.francesco@linux.intel.com>, Terry Bowman <terry.bowman@amd.com>,
+	Robert Richter <rrichter@amd.com>
+Subject: [PATCH v2 00/15] cxl: Address translation support, part 2: Generic support and AMD Zen5 platform enablement
+Date: Tue, 18 Feb 2025 14:23:41 +0100
+Message-ID: <20250218132356.1809075-1-rrichter@amd.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 19/20] fs/dax: Properly refcount fs dax pages
-To: Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org,
- dan.j.williams@intel.com, linux-mm@kvack.org
-Cc: Alison Schofield <alison.schofield@intel.com>, lina@asahilina.net,
- zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com,
- vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com,
- bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com,
- will@kernel.org, mpe@ellerman.id.au, npiggin@gmail.com,
- dave.hansen@linux.intel.com, ira.weiny@intel.com, willy@infradead.org,
- djwong@kernel.org, tytso@mit.edu, linmiaohe@huawei.com, peterx@redhat.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
- nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
- david@fromorbit.com, chenhuacai@kernel.org, kernel@xen0n.name,
- loongarch@lists.linux.dev
-References: <cover.a782e309b1328f961da88abddbbc48e5b4579021.1739850794.git-series.apopple@nvidia.com>
- <b33a5b2e03ffb6dbcfade84788acdd91d10fbc51.1739850794.git-series.apopple@nvidia.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <b33a5b2e03ffb6dbcfade84788acdd91d10fbc51.1739850794.git-series.apopple@nvidia.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: th_WqknP5tB-jWoIDc9R9OQ1ruZ8wC7Qlkiz29721dc_1739878653
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL02EPF00021F6F:EE_|SJ0PR12MB6734:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2f397e47-5ca1-4788-c082-08dd501f93ba
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|376014|7416014|82310400026|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?c0Q4dWcyblJDNG1FOG9NcGRMeHg0emE3cFdjVlphQkxrSXpzRHBscUZCMXFY?=
+ =?utf-8?B?d1pMT2RlcXJsYmNIZXRHbkhuTTA2NCtJMk1VS3FuRDZRRWhJQVByVU0wTS9a?=
+ =?utf-8?B?cG1mQStOQlBTUXN0dEpDVzJ0N3Vkc3JJUW5HbGNmQjNmVW9lYnRYa0EzVzdh?=
+ =?utf-8?B?c24vY1JKVHpkNWRkTGw1YTNyUFgvOEhVRDJ0aE1iZmFhaTlCZmwzUU5KaTdT?=
+ =?utf-8?B?NWQ2L0JQcUs5NktabVBDeXZrNk5kMnA4QnZ6TTViQ2U0S3lSZXV3dGR4Zjl3?=
+ =?utf-8?B?UEpXemNOLzJnN0JlSVdJd3crNzhtRFVGa0U4SnVkSlByc1orWG5scEdnUlEw?=
+ =?utf-8?B?ZCtPMUROeWdrc1RtSFRLWUVnZG5UaVIrZ1NQRkZ6WUtFYWpyelRabUgzK3NT?=
+ =?utf-8?B?dnpzZ3BkZU01UTVUUTlXMGJKOXQvRUE4dDJnb3ZsUkM1ejRlYURVb3RUZGh4?=
+ =?utf-8?B?MzAwSCswSHJURHJ1R092amE0YTNrZDFzKzg3U250NGIrcW5BRWl2Q3ZXT0FW?=
+ =?utf-8?B?RDR5UUE2bnpua3E5TG5RKzlVWEltSDFaMTNDUHo5TkFmNis3SThsWmlGeDRU?=
+ =?utf-8?B?YmpFbG5zcnR4Y2RVNzhFTUEwTnI0RTZBTE9YUUZ0akdTZ2NOOHNZR0tqTWNj?=
+ =?utf-8?B?NHRsTFRXcmgvMmtWMGoxZkY1aGFxcFV1ai9pbmIzRzdybEl5MGNGOU1MTDlW?=
+ =?utf-8?B?VDllTTQxRi9aZFN6VEw4NjhQdFRjaWpiLzJTWWl3Q0Q3cnQyVmJrWndEMU80?=
+ =?utf-8?B?NnJPZ01heE13bm1GUE5QMHdlWDBzMnVKL2wrMy8rNzFSTDMzNjNIM1ZxS2tJ?=
+ =?utf-8?B?cUs2Q0dKRlJVNU8xMENBQjlLcWREeGtwY3diTXJJWStFZG15aThrN2NsV3Z3?=
+ =?utf-8?B?bHBxelpJbEhXV0lRbjdUbjlzeVJ3L2ExeEJZaXBKVTF4b0U0OHh3U25lZjJu?=
+ =?utf-8?B?OXMvZ2tQSk9hd0d3VzFhd3J3ZjdaZFM3aXlyb1pPa0o2QUN3S2MzaDJIa0Za?=
+ =?utf-8?B?UFRWMUpteDAzWFdSRnVzSGdpTnpmZko2VStCOFFZd2VabU5HQmpVMXNkZWhC?=
+ =?utf-8?B?MjVBNndjZ2F2RVZEeUJ5blh6YXMyTWQ5M0JvSTV6ZGxXQ0lYSGJmdnl6UVN6?=
+ =?utf-8?B?RTlKS3U0KzdTTDJpT3NWd25BbTRoQngzTEpwN1VjTmV2RGNKbFBIVnF0c2Mr?=
+ =?utf-8?B?a1dUcEN4ZDZ0WCtiTEVMWHdhOEtMcmd0YU12alpyMTF6SnJlUG1NUm1MRGJ0?=
+ =?utf-8?B?d0pNWmNRTnducDJwd3ljcXNKVm1MdkdGbFg3b2pYc2QybWRBYWRJaHV2cVVG?=
+ =?utf-8?B?T3FIVFphV0RmNXdQY3BtOUJoOEtqUXBPdXIxTHZWL214RDNoRGMvbE82NUF4?=
+ =?utf-8?B?bTZiZmk1dkRjSHNkd2NFNWpjckIzbXRqVWpGUDh4ZUZad21SUTY2RU9TaTBu?=
+ =?utf-8?B?MzRkNm9paFJxZkpuNmN6amVWU2xldFBVYkdZdndBTHlhL3g4dzN5WWZicXVh?=
+ =?utf-8?B?dXFlSWQ4ZHFhVE1Tb2prNSsxV2g1L3NXRVM0ekhiWHhodmtURzBZS3RTL3JT?=
+ =?utf-8?B?NUxqN0dTRnpwUUJRdEc0Yktud1FqNVpyc3lMbmtjYlB3dHZxUGYzdzJRWDhF?=
+ =?utf-8?B?cWlKaXFKNWxwbTkyNEZHREQ2UUhLbEQvNlh2THVsUmpVL05sYTZOL3pXbjF2?=
+ =?utf-8?B?QXVDeG1TZ1lYSVZRenlIa1AzTGdTVXdteTd0QjlDU1ZTUmVhQnNQQ09OYVpR?=
+ =?utf-8?B?ZGJycU5nTGk3UmN4QkEvdWRUTUlWK1gzOWl5YTIwbHBxbFVmOThZWlRpUGRl?=
+ =?utf-8?B?MzdjcmM3Vk5BYjEwZFFkdVhRSkJ5WmoyT1U0aWZiUGZ2T29WVU5zSEhxaWFi?=
+ =?utf-8?B?VkhFUFMrZ3BiWGNrcE9FbU1iaFl3VUg0aWFHUktibG5DekNqZGtMZ0JCbW44?=
+ =?utf-8?B?MXRXSk1mOFlvdWdiTWtQOHBFQzhCVmR6S2ZMclMzcEZueUl2VXRXZ1NOL1o1?=
+ =?utf-8?Q?Vrt9EP0O7B+fCWyOTlAUYQMIGmiS9Q=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(7416014)(82310400026)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Feb 2025 13:24:30.8863
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2f397e47-5ca1-4788-c082-08dd501f93ba
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL02EPF00021F6F.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6734
 
-On 18.02.25 04:55, Alistair Popple wrote:
-> Currently fs dax pages are considered free when the refcount drops to
-> one and their refcounts are not increased when mapped via PTEs or
-> decreased when unmapped. This requires special logic in mm paths to
-> detect that these pages should not be properly refcounted, and to
-> detect when the refcount drops to one instead of zero.
-> 
-> On the other hand get_user_pages(), etc. will properly refcount fs dax
-> pages by taking a reference and dropping it when the page is
-> unpinned.
-> 
-> Tracking this special behaviour requires extra PTE bits
-> (eg. pte_devmap) and introduces rules that are potentially confusing
-> and specific to FS DAX pages. To fix this, and to possibly allow
-> removal of the special PTE bits in future, convert the fs dax page
-> refcounts to be zero based and instead take a reference on the page
-> each time it is mapped as is currently the case for normal pages.
-> 
-> This may also allow a future clean-up to remove the pgmap refcounting
-> that is currently done in mm/gup.c.
-> 
-> Signed-off-by: Alistair Popple <apopple@nvidia.com>
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+This patch set adds support of address translation and enables this
+for AMD Zen5 platforms. This is a new appoach in response to an
+earlier attempt to implement CXL address translation [1] and the
+comments on it, esp. Dan's [2]. Dan suggested to solve this by walking
+the port hierarchy from the host port to the host bridge. When
+crossing memory domains from one port to the other, HPA translations
+are applied using a callback function to handle platform specifics.
 
-A couple of nits (sorry that I didn't manage to review the whole thing 
-the last time, I am a slow reviewer ...). Likely that can all be 
-adjsuted on top, no need for a full resend IMHO.
+The CXL driver currently does not implement address translation which
+assumes the host physical addresses (HPA) and system physical
+addresses (SPA) are equal.
 
-> index 6674540..cf96f3d 100644
-> --- a/fs/dax.c
-> +++ b/fs/dax.c
-> @@ -71,6 +71,11 @@ static unsigned long dax_to_pfn(void *entry)
->   	return xa_to_value(entry) >> DAX_SHIFT;
->   }
->   
-> +static struct folio *dax_to_folio(void *entry)
-> +{
-> +	return page_folio(pfn_to_page(dax_to_pfn(entry)));
+Systems with different HPA and SPA addresses need address translation.
+If this is the case, the hardware addresses esp. used in the HDM
+decoder configurations are different to the system's or parent port
+address ranges. E.g. AMD Zen5 systems may be configured to use
+'Normalized addresses'. Then, CXL endpoints have their own physical
+address base which is not the same as the SPA used by the CXL host
+bridge. Thus, addresses need to be translated from the endpoint's to
+its CXL host bridge's address range.
 
-Nit: return pfn_folio(dax_to_pfn(entry));
+To enable address translation, the endpoint's HPA range must be
+translated to each of the parent port's address ranges up to the root
+decoder. This is implemented by traversing the decoder and port
+hierarchy from the endpoint up to the root port and applying platform
+specific translation functions to determine the next HPA range of the
+parent port where needed:
 
-> +}
-> +
+  if (cxl_port->to_hpa)
+    hpa = cxl_port->to_hpa(cxl_decoder, hpa)
 
-[...]
+A callback is introduced to translate an HPA range from a port to its
+parent. Not all ports in the hierarchy must implement this function,
+e.g. on Zen5 only the first root or switch port that connects the
+endpoints require address translation.
 
->   
-> -static inline unsigned long dax_folio_share_put(struct folio *folio)
-> +static inline unsigned long dax_folio_put(struct folio *folio)
->   {
-> -	return --folio->page.share;
-> +	unsigned long ref;
-> +	int order, i;
-> +
-> +	if (!dax_folio_is_shared(folio))
-> +		ref = 0;
-> +	else
-> +		ref = --folio->share;
-> +
+The root port's HPA range is equivalent to the system's SPA range and
+can then be used to find an endpoint's root port and region.  
 
-out of interest, what synchronizes access to folio->share?
+Also, translated HPA ranges must be used to calculate the endpoint
+position in the region.
 
-> +	if (ref)
-> +		return ref;
-> +
-> +	folio->mapping = NULL;
-> +	order = folio_order(folio);
-> +	if (!order)
-> +		return 0;
-> +
-> +	for (i = 0; i < (1UL << order); i++) {
-> +		struct dev_pagemap *pgmap = page_pgmap(&folio->page);
-> +		struct page *page = folio_page(folio, i);
-> +		struct folio *new_folio = (struct folio *)page;
-> +
-> +		ClearPageHead(page);
-> +		clear_compound_head(page);
-> +
-> +		new_folio->mapping = NULL;
-> +		/*
-> +		 * Reset pgmap which was over-written by
-> +		 * prep_compound_page().
-> +		 */
-> +		new_folio->pgmap = pgmap;
-> +		new_folio->share = 0;
-> +		WARN_ON_ONCE(folio_ref_count(new_folio));
-> +	}
-> +
-> +	return ref;
-> +}
-> +
-> +static void dax_folio_init(void *entry)
-> +{
-> +	struct folio *folio = dax_to_folio(entry);
-> +	int order = dax_entry_order(entry);
-> +
-> +	/*
-> +	 * Folio should have been split back to order-0 pages in
-> +	 * dax_folio_put() when they were removed from their
-> +	 * final mapping.
-> +	 */
-> +	WARN_ON_ONCE(folio_order(folio));
-> +
-> +	if (order > 0) {
-> +		prep_compound_page(&folio->page, order);
-> +		if (order > 1)
-> +			INIT_LIST_HEAD(&folio->_deferred_list);
+Once the region was found, the decoders of all ports between the
+endpoint and the root port need to be found based on the translated
+HPA. Configuration checks and interleaving setup must be modified as
+necessary to support address translation.
 
-Nit: prep_compound_page() -> prep_compound_head() should be taking care 
-of initializing all folio fields already, so this very likely can be 
-dropped.
+Note that only auto-discovery of decoders is supported. Thus, decoders
+are locked and cannot be configured manually.
 
-> +		WARN_ON_ONCE(folio_ref_count(folio));
-> +	}
->   }
+Finally, Zen5 address translation is enabled using ACPI PRMT.
+
+This series bases on:
+
+ [PATCH v3 00/18] cxl: Address translation support, part 1: Cleanups and refactoring
+
+Purpose of patches:
+ * Patches #1-#2: Introduction of address translation callback,
+ * Patches #3-#12: Functional changes for address
+   translation (common code).
+ * #13: Architectural platform setup
+ * Patch #15, #15: AMD Zen5 address translation.
+
+V2:
+ * rebased onto cxl/next,
+ * split of v1 in two parts:
+   * removed cleanups and updates from this series to post them as a
+     separate series (Dave),
+   * this part 2 applies on top of part 1, v3,
+ * added tags to SOB chain,
+ * reworked architecture, vendor and platform setup (Jonathan):
+   * added patch "cxl/x86: Prepare for architectural platform setup",
+   * added function arch_cxl_port_platform_setup() plus a __weak
+     versions for archs other than x86,
+   * moved code to core/x86,
+ * added comment to cxl_to_hpa_fn (Ben),
+ * updated year in copyright statement (Ben),
+ * cxl_port_calc_hpa(): Removed HPA check for zero (Jonathan), return
+   1 if modified,
+ * cxl_port_calc_pos(): Updated description and wording (Ben),
+ * added sereral patches around interleaving and SPA calculation in
+   cxl_endpoint_decoder_initialize(),
+ * reworked iterator in cxl_endpoint_decoder_initialize() (Gregory),
+ * fixed region interleaving parameters() (Alison),
+ * fixed check in cxl_region_attach() (Alison),
+ * Clarified in coverletter that not all ports in a system must
+   implement the to_hpa() callback (Terry).
+
+[1] https://lore.kernel.org/linux-cxl/20240701174754.967954-1-rrichter@amd.com/
+[2] https://lore.kernel.org/linux-cxl/669086821f136_5fffa29473@dwillia2-xfh.jf.intel.com.notmuch/
+
+Robert Richter (15):
+  cxl: Modify address translation callback for generic use
+  cxl: Introduce callback to translate an HPA range from a port to its
+    parent
+  cxl/region: Factor out code for interleaving calculations
+  cxl/region: Calculate endpoint's region position during init
+  cxl/region: Calculate and store the SPA range of an endpoint
+  cxl/region: Use endpoint's HPA range to find the port's decoder
+  cxl/region: Use translated HPA ranges to find the port's decoder
+  cxl/region: Use the endpoint's SPA range to find a region
+  cxl/region: Use the endpoint's SPA range to create a region
+  cxl/region: Use root decoders interleaving parameters to create a
+    region
+  cxl/region: Use the endpoint's SPA range to check a region
+  cxl/region: Lock decoders that need address translation
+  cxl/x86: Prepare for architectural platform setup
+  cxl/amd: Enable Zen5 address translation using ACPI PRMT
+  MAINTAINERS: CXL: Add entry for AMD platform support (CXL_AMD)
+
+ MAINTAINERS                   |   7 +
+ drivers/cxl/Kconfig           |   4 +
+ drivers/cxl/acpi.c            |   4 +-
+ drivers/cxl/core/Makefile     |   3 +
+ drivers/cxl/core/core.h       |   4 +
+ drivers/cxl/core/port.c       |   4 +
+ drivers/cxl/core/region.c     | 323 ++++++++++++++++++++++++++++------
+ drivers/cxl/core/x86/amd.c    | 259 +++++++++++++++++++++++++++
+ drivers/cxl/core/x86/common.c |  14 ++
+ drivers/cxl/cxl.h             |  19 +-
+ 10 files changed, 583 insertions(+), 58 deletions(-)
+ create mode 100644 drivers/cxl/core/x86/amd.c
+ create mode 100644 drivers/cxl/core/x86/common.c
 
 
-[...]
-
-
->   }
-> @@ -1808,7 +1843,8 @@ static vm_fault_t dax_fault_iter(struct vm_fault *vmf,
->   	loff_t pos = (loff_t)xas->xa_index << PAGE_SHIFT;
->   	bool write = iter->flags & IOMAP_WRITE;
->   	unsigned long entry_flags = pmd ? DAX_PMD : 0;
-> -	int err = 0;
-> +	struct folio *folio;
-> +	int ret, err = 0;
->   	pfn_t pfn;
->   	void *kaddr;
->   
-> @@ -1840,17 +1876,19 @@ static vm_fault_t dax_fault_iter(struct vm_fault *vmf,
->   			return dax_fault_return(err);
->   	}
->   
-> +	folio = dax_to_folio(*entry);
->   	if (dax_fault_is_synchronous(iter, vmf->vma))
->   		return dax_fault_synchronous_pfnp(pfnp, pfn);
->   
-> -	/* insert PMD pfn */
-> +	folio_ref_inc(folio);
-
-Why is that not a folio_get() ? Could the refcount be 0? Might deserve a 
-comment then.
-
->   	if (pmd)
-> -		return vmf_insert_pfn_pmd(vmf, pfn, write);
-> +		ret = vmf_insert_folio_pmd(vmf, pfn_folio(pfn_t_to_pfn(pfn)),
-> +					write);
-> +	else
-> +		ret = vmf_insert_page_mkwrite(vmf, pfn_t_to_page(pfn), write);
-> +	folio_put(folio);
->   
-> -	/* insert PTE pfn */
-> -	if (write)
-> -		return vmf_insert_mixed_mkwrite(vmf->vma, vmf->address, pfn);
-> -	return vmf_insert_mixed(vmf->vma, vmf->address, pfn);
-> +	return ret;
->   }
->   
->   static vm_fault_t dax_iomap_pte_fault(struct vm_fault *vmf, pfn_t *pfnp,
-> @@ -2089,6 +2127,7 @@ dax_insert_pfn_mkwrite(struct vm_fault *vmf, pfn_t pfn, unsigned int order)
->   {
->   	struct address_space *mapping = vmf->vma->vm_file->f_mapping;
->   	XA_STATE_ORDER(xas, &mapping->i_pages, vmf->pgoff, order);
-> +	struct folio *folio;
->   	void *entry;
->   	vm_fault_t ret;
->   
-> @@ -2106,14 +2145,17 @@ dax_insert_pfn_mkwrite(struct vm_fault *vmf, pfn_t pfn, unsigned int order)
->   	xas_set_mark(&xas, PAGECACHE_TAG_DIRTY);
->   	dax_lock_entry(&xas, entry);
->   	xas_unlock_irq(&xas);
-> +	folio = pfn_folio(pfn_t_to_pfn(pfn));
-> +	folio_ref_inc(folio);
-
-Same thought.
-
-> diff --git a/include/linux/dax.h b/include/linux/dax.h
-> index 2333c30..dcc9fcd 100644
-> --- a/include/linux/dax.h
-> +++ b/include/linux/dax.h
-> @@ -209,7 +209,7 @@ int dax_truncate_page(struct inode *inode, loff_t pos, bool *did_zero,
->   
-
-[...]
-
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index d189826..1a0d6a8 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -2225,7 +2225,7 @@ int zap_huge_pmd(struct mmu_gather *tlb, struct vm_area_struct *vma,
->   						tlb->fullmm);
->   	arch_check_zapped_pmd(vma, orig_pmd);
->   	tlb_remove_pmd_tlb_entry(tlb, pmd, addr);
-> -	if (vma_is_special_huge(vma)) {
-> +	if (!vma_is_dax(vma) && vma_is_special_huge(vma)) {
-
-I wonder if we actually want to remove the vma_is_dax() check from 
-vma_is_special_huge(), and instead add it to the remaining callers of 
-vma_is_special_huge() that still need it -- if any need it.
-
-Did we sanity-check which callers of vma_is_special_huge() still need 
-it? Is there still reason to have that DAX check in vma_is_special_huge()?
-
-But vma_is_special_huge() is rather confusing from me ... the whole 
-vma_is_special_huge() thing should probably be removed. That's a cleanup 
-for another day, though.
-
+base-commit: ed50d9abb9177ba106f47e2c48e1bf1804a6956c
 -- 
-Cheers,
-
-David / dhildenb
+2.39.5
 
