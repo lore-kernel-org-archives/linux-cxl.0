@@ -1,95 +1,33 @@
-Received: from dog.elm.relay.mailchannels.net (dog.elm.relay.mailchannels.net [23.83.212.48])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F51F2862B7
-	for <linux-cxl@vger.kernel.org>; Tue, 18 Feb 2025 22:54:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.212.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739919293; cv=pass; b=YbXidjRT1RxIi0BMDpZIH1jNVT1jSuFND+4tvubrULsgBFuvJLvdLqs2HOHnTdfbSoucvGXRLTNb8cLgGgbKqkjybCBW5YN/Kclii3looO2iO51amoYiV55+2KxhnEaiGiNY9gfE2sA0BCRmgvkaVsJN282j7yGJCu1RpXejQgc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739919293; c=relaxed/simple;
-	bh=vsqB8zBcueJSyxYsu5MYuSX5H9iAnkTb0aGKGrnSUlk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dGZXne3rpIVL+9K9mNXpFlmtfSVCZ9Z/3GzLDUHTXy2bBDrJ+XYMPzzP6Ns0VVZCTQ7/CVkfGKCl7ntaRtSjsHgAhDPbh21efspq/mOcK6kWJtCw2FkkXoSt/NXqWsAQR2FE+lXpeFZOmHKULZWBemHS1GQPXfDnKqDASDZkC5Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=fuHc348I; arc=pass smtp.client-ip=23.83.212.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="fuHc348I"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 4943A8415E;
-	Tue, 18 Feb 2025 22:49:35 +0000 (UTC)
-Received: from pdx1-sub0-mail-a303.dreamhost.com (trex-8.trex.outbound.svc.cluster.local [100.101.191.136])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id E932C840C8;
-	Tue, 18 Feb 2025 22:49:34 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1739918975; a=rsa-sha256;
-	cv=none;
-	b=l2V397FuigjlLv4zqYypTt+hYZs4QPiDC9jCDIwtAjhfzIN094zPIwCgfdai6npQJUBMhD
-	3YmxTuK9C0LYdNphSYh/z3p4grJBuA6KNYnLNLPnhFY0yP+Ccji/dEvrqsz9ZGTIw+XaC7
-	J5cEa7HMN96W9UhvDpMLaOxObqztnmllD3gyC4dQC/AqGqr5dV3j7Lc9RUypZ1ReEsIV+c
-	xaGYeQtjMdCda8pGG/A8FxP1DoCovYH470X0l8PykM9w9DeW+3iNoaAZl/2EdNb5U7tsO3
-	jE3TEFf8mFW5YVqSMHC7ACPQCYuInwsOstW3VPjgPafZz+d8qVoGjOEqugb/BA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1739918975;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=pR9LFH2Ed7oqWr1ZTHIJA0T/v52hho/lyHEaJ3y1pjk=;
-	b=vF98ywEDKQYPz76cbkB8xmnIyYFhe7rNyEtPzMmZzs4tupaBqBNXzAzWDHo5g7oG6UvPMZ
-	4p3LOo8/nkkQFIr4NRzjKf33zN4vIeF6CXufORh1rvZeZXgrhy1nKZhjoUpWV3fejDhUph
-	76NHZVjbN3mMWNVD+AzU18pEyStLvUcpvZTQUFFNNMZysEUcnA8kszhRAi3HyEISf0aS4j
-	4/eZ6c3LchmmYrZ00NImSaWzngCWyqzoVdWU9Mp2/be803tCDqUlAbxahoQTBk3h2NrSgm
-	wehey9qcLHdxa8qNX8I0sorKZeh3Xuec5wCjYhtFnzCxR1ouhCsB7M0lRzE81g==
-ARC-Authentication-Results: i=1;
-	rspamd-6d7cc6b78d-bt28w;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Minister-Society: 51f238df70712818_1739918975192_3006900656
-X-MC-Loop-Signature: 1739918975192:3009615032
-X-MC-Ingress-Time: 1739918975192
-Received: from pdx1-sub0-mail-a303.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.101.191.136 (trex/7.0.2);
-	Tue, 18 Feb 2025 22:49:35 +0000
-Received: from localhost.localdomain (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a303.dreamhost.com (Postfix) with ESMTPSA id 4YyF8G2J9yzWY;
-	Tue, 18 Feb 2025 14:49:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1739918974;
-	bh=pR9LFH2Ed7oqWr1ZTHIJA0T/v52hho/lyHEaJ3y1pjk=;
-	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-	b=fuHc348IPN1skCodl/0g9HqA6f1/AoQElE49+gGirV1jwek2sPeAX6kamP2NIRH5i
-	 Y8r338pmPvaJspGfJ/T13f0YfolpUfWhsGH0Cxx/Wf5EiYNXspqp9FYslLCYVnfBc1
-	 9g89b1W9eBHLdJF440cRdn4+kVa/z/MskoLL/+KD5Gb8s6e/M+nScAvg2HJLj4Gjvg
-	 cbtAcQlt+K2trYdOAvQFfrPJFroVJy+qptdffteJz/pv8hOvMPervq775zGqVLF7BA
-	 qAUK7DWTAq9mBI1CPf4xO/uan6MoXrn6v167M5kzOdvSkw85auSpZxAMj5X69JhyNi
-	 ysRzKyjOBiYAQ==
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: dave.jiang@intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B6631D618E
+	for <linux-cxl@vger.kernel.org>; Tue, 18 Feb 2025 22:57:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739919455; cv=none; b=iybVz6Eq7GNky3VP8A7X3XDVPPDFrjGloUSMXl0RKMGXhZwf1KHmbsgOXcNr5puotmCd766SZ78b44b4jq7QzKpFR+1UUYcQ/rCgYEF78a3Zl37P1y5sxboxy6qRvi6xzOp4sHvAyFB4AvLAeA7VkFD2sRvg4O/xh+BYHpNDUNg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739919455; c=relaxed/simple;
+	bh=SDPogokzivx5Axuh/ymRZJOkLuAvvgYemi4UtElsrJI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nMn+fRPQP6eIV0Q/bMe0V86xLmViJ365iPCzxdlwR3qdWG6Ktv++Y3oMZPdX2EDJO7g+d21FZfiFcRsXpnnc6p6Ahhb60s2lOE27J8rOxdXUTqMiYclZZcLPdv/mh+gVVL5Ho6cwLC9Xf/iXonI9sEG+WlFZXhBYAGNCyI8IEb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82F3FC4CEE2;
+	Tue, 18 Feb 2025 22:57:34 +0000 (UTC)
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org
 Cc: dan.j.williams@intel.com,
-	Jonathan.Cameron@huawei.com,
 	ira.weiny@intel.com,
+	vishal.l.verma@intel.com,
 	alison.schofield@intel.com,
+	Jonathan.Cameron@huawei.com,
 	dave@stgolabs.net,
-	linux-cxl@vger.kernel.org
-Subject: [PATCH 1/2] cxl: Plug typos in ABI doc
-Date: Tue, 18 Feb 2025 14:48:52 -0800
-Message-Id: <20250218224853.67457-2-dave@stgolabs.net>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250218224853.67457-1-dave@stgolabs.net>
-References: <20250218224853.67457-1-dave@stgolabs.net>
+	jgg@nvidia.com,
+	shiju.jose@huawei.com,
+	saeed@kernel.org
+Subject: [PATCH v6 00/14] cxl: Add CXL feature commands support via fwctl 
+Date: Tue, 18 Feb 2025 15:54:29 -0700
+Message-ID: <20250218225721.2682235-1-dave.jiang@intel.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -98,52 +36,119 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Trivially update where necessary.
+v5:
+- Add devm action to fwctl. (Dan)
+- Fix return of NULL instead of ERR_PTR() for get features. (Ming)
+- Make cxl_get/set_feature() internal to cxl/core (Dan)
+- Add missing NULL check for cxl_set_feature() (Dan)
+- Remove cxlmd back pointer from fwctl. (Dan)
+- Add missing CONFIG_FWCTL dependency to Kconfig.
+- Fix index of for loop for fwctl get features. (Ming)
+- See individual patches for detailed changes from v4.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+v4:
+- Rebase to FWCTL series v4 based on v6.14-rc1
+- Merge patch 1/16 from v3 into cxl/next ahead. (Jonathan)
+- Move everything to core/features.c and behind CONFIG_CXL_FEATURES. (Dan)
+- Split the registration of features into 2 parts. Do the registration in
+  PCI probe. One before memdev enumeration to enable kernel feature support,
+  and one after memdev enumeration to support FWCTL. (Dan)
+- Fix incrememt of pointer after copying feature data. (Ming)
+- Add check for no immediate change effect and no reset change effects. (Dan, Jonathan)
+- Remove IDs and use opcodes directly. (Dan)
+- See individual patches for detailed changes from v3.
+
+v3:
+- Rearrange code and shift code forward to reduce diffs. (Jonathan)
+- Use struct_size() in appropriate locations. (Jonathan)
+- Remove usage of __weak and refactor accordingly. (Jason)
+- Return NULL for allocation functions. (Jonathan)
+- See individual patches for detailed changes from v2.
+
+v2:
+- Drop features device and driver. Move features enabling to cxl_memdev. (Dan)
+- Drop sysfs attribute of number of features. (Dan)
+- Drop moving of include/uapi/linux/cxl_mem.h. (Dan)
+- Set get driver info ioctl to return reserved 32bit. Set behavior of issue
+  ioctl successful as indicating Feature commands supported.
+- Set 'Set Feature Size' to 0 for kernel exclusive Features.
+- See individual patches for detailed changes from v1.
+- Hide FWCTL bits behind CONFIG_CXL_FWCTL. (Dan)
+
+v1:
+- Create a CXL features driver to handle all feature command related bits
+  including FWCTL support. (Dan)
+- Tested against CXL CLI unit tests for FWCTL.
+- See individual patches for detailed changes from RFC v2.
+
+RFC v2:
+- Dropped 1/13 and 2/13 from previous version. Merged upstream already.
+- Combined changes from Shiju for "get supported features"
+- Addressed comments from Jonathan and Jason
+- See specific changes in individual patch revision history
+- Added hardware command info to FWCTL
+- Added filtering to set feature command
+- Added documentation
+
+This series add support for CXL feature commands using the FWCTL framework [1].
+The code has been tested with CXL CLI unit tests for FWCTL.
+
+Patches 1-6 are shared with EDAC series [1] and there will be an immutable branch
+once accepted post review.
+
+CXL Features support is added behind the CXL mem driver. The 3 mailbox commands
+"Get Supported Features", "Get Feature", and "Set Feature" are implemented. The
+"Get" commands are under the FWCTL_RPC_CONFIGURATION policy, the "Set" command
+checks the policy depending on the set effects of the feature defined by the
+device via the Feature set effects field. All mailbox commands for CXL provides
+an effects table that describes the effects of a command when performed on the
+device.  For CXL features, there is also an effects field that describes the
+effects a feature set operation has on the device per feature. The security
+policy is checked against this feature specific effects field. 
+
+The code is based off of v4 of FWCTL series [2] posted by Jason and rebased on top of
+v6.14-rc1 plus 1 patch in
+cxl/next 43ca2463df9d ("cxl: Refactor user ioctl command path from mds to mailbox").
+A kernel branch [3] is provided for convience of testing and review.
+
+[1]: https://lore.kernel.org/linux-cxl/20250106121017.1620-1-shiju.jose@huawei.com/T/#t
+[2]: https://lore.kernel.org/linux-cxl/0-v3-960f17f90f17+516-fwctl_jgg@nvidia.com/#r
+[3]: https://git.kernel.org/pub/scm/linux/kernel/git/djiang/linux.git/log/?h=cxl/fwctl
+
 ---
- Documentation/ABI/testing/sysfs-bus-cxl | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Dave Jiang (12):
+      cxl: Enumerate feature commands
+      cxl: Add Get Supported Features command for kernel usage
+      cxl/test: Add Get Supported Features mailbox command support
+      cxl: Setup exclusive CXL features that are reserved for the kernel
+      cxl: Add FWCTL support to CXL
+      cxl: Move cxl feature command structs to user header
+      cxl: Add support for fwctl RPC command to enable CXL feature commands
+      cxl: Add support to handle user feature commands for get feature
+      cxl: Add support to handle user feature commands for set feature
+      cxl/test: Add Get Feature support to cxl_test
+      cxl/test: Add Set Feature support to cxl_test
+      fwctl/cxl: Add documentation to FWCTL CXL
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-index 3f5627a1210a..7bdf0eb79d7c 100644
---- a/Documentation/ABI/testing/sysfs-bus-cxl
-+++ b/Documentation/ABI/testing/sysfs-bus-cxl
-@@ -1,5 +1,5 @@
- What:		/sys/bus/cxl/flush
--Date:		Januarry, 2022
-+Date:		January, 2022
- KernelVersion:	v5.18
- Contact:	linux-cxl@vger.kernel.org
- Description:
-@@ -33,7 +33,7 @@ Date:		May, 2023
- KernelVersion:	v6.8
- Contact:	linux-cxl@vger.kernel.org
- Description:
--		(RO) For CXL host platforms that support "QoS Telemmetry"
-+		(RO) For CXL host platforms that support "QoS Telemetry"
- 		this attribute conveys a comma delimited list of platform
- 		specific cookies that identifies a QoS performance class
- 		for the volatile partition of the CXL mem device. These
-@@ -60,7 +60,7 @@ Date:		May, 2023
- KernelVersion:	v6.8
- Contact:	linux-cxl@vger.kernel.org
- Description:
--		(RO) For CXL host platforms that support "QoS Telemmetry"
-+		(RO) For CXL host platforms that support "QoS Telemetry"
- 		this attribute conveys a comma delimited list of platform
- 		specific cookies that identifies a QoS performance class
- 		for the persistent partition of the CXL mem device. These
-@@ -423,7 +423,7 @@ Date:		May, 2023
- KernelVersion:	v6.5
- Contact:	linux-cxl@vger.kernel.org
- Description:
--		(RO) For CXL host platforms that support "QoS Telemmetry" this
-+		(RO) For CXL host platforms that support "QoS Telemetry" this
- 		root-decoder-only attribute conveys a platform specific cookie
- 		that identifies a QoS performance class for the CXL Window.
- 		This class-id can be compared against a similar "qos_class"
--- 
-2.39.5
+Shiju Jose (2):
+      cxl/mbox: Add GET_FEATURE mailbox command
+      cxl/mbox: Add SET_FEATURE mailbox command
 
+ Documentation/userspace-api/fwctl/fwctl-cxl.rst | 144 +++++++++
+ Documentation/userspace-api/fwctl/index.rst     |   1 +
+ MAINTAINERS                                     |   1 +
+ drivers/cxl/Kconfig                             |  12 +
+ drivers/cxl/core/Makefile                       |   1 +
+ drivers/cxl/core/core.h                         |  11 +
+ drivers/cxl/core/features.c                     | 710 ++++++++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/core/mbox.c                         |  36 ++-
+ drivers/cxl/cxlmem.h                            |   7 +
+ drivers/cxl/pci.c                               |   8 +
+ include/cxl/features.h                          |  91 ++++++
+ include/cxl/mailbox.h                           |   3 +
+ include/uapi/cxl/features.h                     | 128 ++++++++
+ include/uapi/fwctl/cxl.h                        |  63 ++++
+ include/uapi/fwctl/fwctl.h                      |   1 +
+ tools/testing/cxl/Kbuild                        |   1 +
+ tools/testing/cxl/test/mem.c                    | 185 ++++++++++++
+ 17 files changed, 1402 insertions(+), 1 deletion(-)
