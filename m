@@ -1,565 +1,381 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2087.outbound.protection.outlook.com [40.107.100.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169B416F8E5
-	for <linux-cxl@vger.kernel.org>; Tue, 18 Feb 2025 23:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739919683; cv=none; b=JjTyIxo/FLkAyizBTSPjuUI+ka4CrPUIifF+q5ivsxKorPLNa/bZJa+F34e+66xJMKEqjkjI251M9DvqJysTkP7YjFp9DuNZZpURSlm7VXSWDWGABXq0WDOP9HSpR9reEYOWZjRN6blK+6WbOwXH3MSgjCmI4euhjHhHqFBnY/w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739919683; c=relaxed/simple;
-	bh=DntL0xmzynbTxzNZkKU+Z5tz08BUCIrHtVXDy2S1Rho=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ej+5LA/+snLnw8SQKqJqy2XT/rMZrCNIbzbDy6fn4E9wgebifnY2W6OhIc81h+hDB9Gc990su9o2B0AE2SjXmMdTno5ba4Pkn6mQlDCn6IFjPQVcMpuunnlr4lzlADSvTMRISopO8RUKCyCxJlxRNEEW6YKaa6+241BUR2WMRO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 784D4C4CEE2;
-	Tue, 18 Feb 2025 23:01:22 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: alison.schofield@intel.com
-Subject: [NDCTL PATCH v4 3/3] cxl/test: Add test for cxl features device
-Date: Tue, 18 Feb 2025 15:59:56 -0700
-Message-ID: <20250218230116.2689627-4-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250218230116.2689627-1-dave.jiang@intel.com>
-References: <20250218230116.2689627-1-dave.jiang@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3FEB19CC17;
+	Tue, 18 Feb 2025 23:30:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.87
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739921442; cv=fail; b=eOxe7DF0OwJLWRJbcTY/WVLS4Gf/NYGmrGFC7pdet2Z2TQhB9mnEB+Dsr2TGJ2VknMg2qGEOl54MfYHg/FHQjBBG+ohvrJxYeEI483JL5w1E5iwDpkwc6pODB32FQjXOsNPlNTmLlMi0kcK6yOSOus9vWkr2rHb0Msaw8eHHB8M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739921442; c=relaxed/simple;
+	bh=EvAqQJBTFphhjM2px4l1VpbcjMSuEROtfIMPIlyEm1s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=TSrn7M4mx3MJLQ/neJrkXWo6am/Hjv0b+Zoopfj0oFpFj9Kysaeo2mNo4lHQlFOOPj0Aq2qUEa88+adogsuuYrYA1yuZ+t7RcfFQGWFu0zbm9rKbbfj0Kw8GBOwb9C6f1fK+HPxcojPAQwdTIBrH/05Gm6HY+6Wcr9gJw6o1bG8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=YxJNsa54; arc=fail smtp.client-ip=40.107.100.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="YxJNsa54"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Sdalyx0fOmu3Y7bqHq1me5Y9l4Gn8ZvxkPybia+7Gn80peSCktX8XyeGO90cGG7dkJ7IH5N/9onehhWqv/w0RexbERtj8VJZNRtMFsbOw0YEHfJ7faI9uiChVJwj2p0euG1qb/Hi1ei/fCO0Qt7UOfzb6VbTdY8eL2kuEosB7QNLYkI6bRr7eD9o2CHGS2WZLLFxDWTLmWqSKPmVzUFOW1+vvQFWqZ1LKrEWV6a4IkwW+Ms/ZJTHQW4TLclMwb7oFfSj2Qn4X8sz/b8C8DGgob0qnaKyhRONsUCzngNHmNpTeevDFSpVVfLG0HLjc2e7xk4ntt4dUUmqINHzSW5L7Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2/XyJ/5W8cVygXYbZ0B/91iqdi7aL/7aKRbIbKxcsbM=;
+ b=P6XdkBAHFmMf2InrZ5MMovAnPniTpvmJWPvJihFXmcgPnGPAsKNzDiIHiHPmnzxQV3wjr+MtHE47J8n87BAnzYPRTzWCfc7T0ljhCcb8P0Ch6LOBKOV3eASApCjDdGphUeibYnKHDq/9fILOXF2cS6G6/+24rEX+RmTk+2J9aRhhCw8QofhplewuCzZdKJzdDnychNhLht9v5Iptfy5Mnb3F4PuXgazjI2Ret+Qw8vLuS0iit78jLSS89R0+pKcV2u96dnF5Xjj2wMFkkoD4xWH+Fs48jGqUt0C2RemUtUuBOtmrt5mrQt/AfaU8qXOzUbvRDLRtC/SefS4GeM47Mw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2/XyJ/5W8cVygXYbZ0B/91iqdi7aL/7aKRbIbKxcsbM=;
+ b=YxJNsa54cUwCQuJiCsZxElCE59BV99j6elyXtO2ATFQwTBwWZ+r68+Epm/Aeca3a1yz4B9KGlxjIkzTzLeMaSVwrqEmO9LpkNUUDsYnV+yJ32PzETNJEi55l7hNBp1RDKTcEAOHB/ovN9Hls0NwX43zHbwScTQ8Zak7CvJmakZnoDL4YA2+ec4LGKZZ2+H5ok6bxEvd5jOeGm6GGLn0I9MD3986TsXbs4VZ6OHo11ahRWD1qRaHX4BfnKFJwzbtYVWaVjuPjEdKLuySnXy3vi7E7KrunpUEwzMglIFA4nOXRlVO6BuUqWtyHC9PR4HTS+XMb/JFMxC7Fog1GPnXJMg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
+ PH8PR12MB7232.namprd12.prod.outlook.com (2603:10b6:510:224::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.14; Tue, 18 Feb
+ 2025 23:30:36 +0000
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::953f:2f80:90c5:67fe%7]) with mapi id 15.20.8445.017; Tue, 18 Feb 2025
+ 23:30:36 +0000
+Date: Wed, 19 Feb 2025 10:30:29 +1100
+From: Alistair Popple <apopple@nvidia.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: akpm@linux-foundation.org, dan.j.williams@intel.com, 
+	linux-mm@kvack.org, Alison Schofield <alison.schofield@intel.com>, 
+	lina@asahilina.net, zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com, 
+	vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com, bhelgaas@google.com, 
+	jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com, will@kernel.org, 
+	mpe@ellerman.id.au, npiggin@gmail.com, dave.hansen@linux.intel.com, 
+	ira.weiny@intel.com, willy@infradead.org, djwong@kernel.org, tytso@mit.edu, 
+	linmiaohe@huawei.com, peterx@redhat.com, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linuxppc-dev@lists.ozlabs.org, nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org, 
+	jhubbard@nvidia.com, hch@lst.de, david@fromorbit.com, chenhuacai@kernel.org, 
+	kernel@xen0n.name, loongarch@lists.linux.dev
+Subject: Re: [PATCH v8 19/20] fs/dax: Properly refcount fs dax pages
+Message-ID: <jf6hr2uzyz76axd62v6czy3wzcuu4eb7ydow5mznehfuiwhqq3@2q7easkxhdp4>
+References: <cover.a782e309b1328f961da88abddbbc48e5b4579021.1739850794.git-series.apopple@nvidia.com>
+ <b33a5b2e03ffb6dbcfade84788acdd91d10fbc51.1739850794.git-series.apopple@nvidia.com>
+ <cb29f96f-f222-4c94-9c67-c2d4bffeb654@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cb29f96f-f222-4c94-9c67-c2d4bffeb654@redhat.com>
+X-ClientProxiedBy: SY5PR01CA0067.ausprd01.prod.outlook.com
+ (2603:10c6:10:1f4::14) To DS0PR12MB7726.namprd12.prod.outlook.com
+ (2603:10b6:8:130::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|PH8PR12MB7232:EE_
+X-MS-Office365-Filtering-Correlation-Id: f144e0c2-c18e-42a0-a963-08dd50743ee5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?B8Bg1YJLTPRDgKHtsLsN1NEeXyhR0EsIArOhprAvM+b9ZKTkLgW10lmcysoj?=
+ =?us-ascii?Q?MPZCaFMAY6TXGzhQn0vWFYx4QNa/wMKYP9c4FzqnymiZOzKJKO0mpWDBe3X/?=
+ =?us-ascii?Q?LGFjDwCVKgiwpgTy3CsZIRmQGWdiSzwtORcwTyOmSrxgyBQdgTkEPBBWUhpt?=
+ =?us-ascii?Q?YHw1o3qBPiMKn89CMNz9EPUfgv31EG8CKQBw/7QyexnYzEz5rGGumFg+eaNo?=
+ =?us-ascii?Q?AnltLP8JfzMtC4BPyqQivZ+qGHj/NRsML+2env1B1+Vpz3CaePaeeRuE837a?=
+ =?us-ascii?Q?CarHI7xKHHFHq3hXd509yj9QebQkL5E3JfOXYQM2HoZgS/Vqm7FgF0sFyp5A?=
+ =?us-ascii?Q?yjdn0jm2GBFTPi0MMBtvL9FsCQnA91TCbP9yjXQ5Sf7DBYuZsMAyJpCV9+Ab?=
+ =?us-ascii?Q?uSKyr/wK6BVFK/fNYTm1LEDLD6Pus6gnff/418vq+VY1RSPRdos6CDs8d8KB?=
+ =?us-ascii?Q?Gg+6PlzmkS499Xo5bwCMRpzFFInKU/CFuFmTVWX+tE5U7/r9hYxXgpPpuHy4?=
+ =?us-ascii?Q?Ua/U6FQgzREoTqgdPmwJ0GLFTzBaxHERXg8DCgX3WRK/W/ZpaWLPpMSrLqLn?=
+ =?us-ascii?Q?b8kl6vu2A8ntejzHEHUe094cwJalEskcL5QYvaPpE91EyOUuGc3pWWXwEuxD?=
+ =?us-ascii?Q?6BxgZBpdB/tAoTkmjzgDh/+xoHyLpKIcx1Fz+5VdkJEPi7g9qrmtxmkHa8TV?=
+ =?us-ascii?Q?1i11/27p8T6J1pbzgsVd9jZJiJ7n7ZQYfmuE5blTbPn6eaR5Y5lcB+ZJB9R3?=
+ =?us-ascii?Q?//+Sad2L9+dgYEm2wjHXaGnQygwDlLu28tN8fMiXalUy06dWvKTveS/Thxwa?=
+ =?us-ascii?Q?2VdK/sTcs89aBiZuRv2VvLzl269ng/ZIr+HCxkIrmRpbjCxn8jKQF/PZkhpp?=
+ =?us-ascii?Q?VOtes5AC4dARSRoWtW6Aye/QUigsnnWzd4w7AztkrUmoFCkMO5eWQiZmLtzU?=
+ =?us-ascii?Q?bGTUgOKStWzjXsnYgolohzpCIw3Ed2pDlEovoQAnWWm864REZ0q5vyeBuEZX?=
+ =?us-ascii?Q?iNcEVW62stsZyL7s/k+KIW1QeBE75ddefnYERigL6biloUHYJ/w19W+YkjiL?=
+ =?us-ascii?Q?YgJjU7Jp5W5+FRBaVwpr/cvdk5RnQrbL1w8YvAKuE3idSVY/x6/8gnQ8dNdL?=
+ =?us-ascii?Q?Pa8o/UGaI2CMFbTg97f4BRiSa6vzlwxDWHuB75XyHOhkDA1bnA0ESCQuF5ie?=
+ =?us-ascii?Q?TBK+6m4wMc43y5iKHK2o1HUNuwZguTIuMRSgXtDJhy5iFkuzbsaWOgjqoGtL?=
+ =?us-ascii?Q?hDtwVs8zpYN64923KIHQGEgQuHewDZ5JE9VpDUDRKr3y9GNTnLLTv7oqDwJ7?=
+ =?us-ascii?Q?V0ucPe34vpNvKj/GINMm/w19Qxz71tbj6/Y+M/BgyQEuMdho1asttv291g4V?=
+ =?us-ascii?Q?2Dc9lgfc0D7/+3ICp5nppC+3xkRo?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?AFZ1WnU71rH2mPJwtoKq7rs7IsJILwQ5zuEDAA9BESk6eJzy08JyrAFY2l3J?=
+ =?us-ascii?Q?dTUZ60x5biq1VUU53HbajjnanCevOB1HrGfzyNkJ4NCO4q59WF4c8X0ltrZt?=
+ =?us-ascii?Q?Lel78JG8eRK+4q9myh/GjvdVy31ws7euchMkLIqptqG2FGjT3OmGGfwhJGpu?=
+ =?us-ascii?Q?SRYK2BkBq2paK8Xe+/7eJpdWmKdnRP9dWdCTrDf1gGqbvtaXf6tWvAYS3BJ3?=
+ =?us-ascii?Q?mPNRV4yE46Lr2b1E8J3fRQ1Jhvqsr1gfRDMR4TMXqNPSuUgzA7mea0xy3lFK?=
+ =?us-ascii?Q?GRyPxYs24y5fnW7X/YRJkk0LiCNC3usd1dhnKzPSyTxx3PzZ6odU7YulOuMz?=
+ =?us-ascii?Q?kAkNplXOB7rhBKYat/vm9/T2UmZzmpTfucMe4zh8oaMxexRRQi/2VxZJjFwt?=
+ =?us-ascii?Q?4MENi8s3qhO8j31qeb3leSmFK2jQkbau18iuD//6Xq8368WQf40IUD8N+xPE?=
+ =?us-ascii?Q?SIETt7KfIM8IwABYVpVq+1JjHGt8WBGWyX+yhHJN4rhLtFjHJmHbPyWkE+ll?=
+ =?us-ascii?Q?h2YAv8vbs/IEjPagCItp0PCo9QRXeTnGsW1Dz6aY9dFr473+mKENJCyLmMms?=
+ =?us-ascii?Q?DsYWm1pYFjFbCz5ElH+Y6rgqwF/e4EppkfaxFjVYcDMqnf++sZMwlVnJRo7z?=
+ =?us-ascii?Q?K9361uGgZPdh7lVlbPB6d+61ELBm/yH2RPjF8X2T7DotKWcxmVAIFOmc7KME?=
+ =?us-ascii?Q?PxN2gWB5qqRj5Qxv6YX7ZdMsh3Oz7NZEeoDC6nXTCQiUly++AvSrtDKktJbf?=
+ =?us-ascii?Q?KItmja2RrIL7LrROy7v2PC2andQns6P4iDORQcgdxgACS63oMuyccmzQYa4E?=
+ =?us-ascii?Q?xfkgq+Ee8VjUjmaQt3MDbSeCUKjglMzANR4hybvtVCJJl5x+uBGQdBprrmO8?=
+ =?us-ascii?Q?OLeBPmMe7A9KAsTqTy7nFxYOLimcgWCcgSKzR9pF34PbaYSbK0LzeAHV8pXd?=
+ =?us-ascii?Q?UgZVitiFy0rpdAnnp/qX/jxehsh4PJ4k1XJyrfq0emmD2e4HTJ7tRYCfXFWD?=
+ =?us-ascii?Q?0xZF2fYqScVuWJcW3+gWYTt+np1d1jOHEN6FFiqwYol1HgVdZep9rV22wPxk?=
+ =?us-ascii?Q?OVl3+ebrHPcbPoeXGMETiUsMuV94QlQX86MF78VnB7ltNXV00EAVmGvvuF91?=
+ =?us-ascii?Q?W5tH111L9pWimpPrssS9yxOXsvaC8NEZjz65YAjqx38zwKGyU6AbnnHTHPTO?=
+ =?us-ascii?Q?aszRF94U4NHABfKtNGHJ6CrU/A3FxirSy8ox9qXHfnAaA1Y/IWwzFy7pyLu/?=
+ =?us-ascii?Q?aUOECZmjefYgrDtmjEVIIvaahbOShCG5ZkazHOMGwW35XeDGZ3hmRUssoetp?=
+ =?us-ascii?Q?LmQPx5ebK570yr0fhETc68omSjvJw6mUEwW4KAH/Q8B8zFx//d+0fmhX6e72?=
+ =?us-ascii?Q?NCTWmhkul+9t6IuQZ6nTS6eMEIEpQGaj59fPXK3+2Q5KW9dtd0lTVb8RX6Pn?=
+ =?us-ascii?Q?LJntTm7g4egElGaZgV2KMTkKVLkLh29QBDq49/jziYS5nGvbqSQijP7nTJoa?=
+ =?us-ascii?Q?CHfzU9lBhpnVb49dbH42LMVAUkKG+60cTXbNuNEWJ5aBGvZPWV2pGSRQAs0k?=
+ =?us-ascii?Q?ptPdoRhDpJDKGaFojvO9mNTIGb3byAdMX9KUZKyU?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f144e0c2-c18e-42a0-a963-08dd50743ee5
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Feb 2025 23:30:36.1511
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SAopfzQAHOOceK1PA9oRQjU3aGEjspGPSTQSEvuns34urOdrhYOOxmOaHKnMl+UicCxF7QVcKSbvjxdYCyp8gQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7232
 
-Add a unit test to verify the features ioctl commands. Test support added
-for locating a features device, retrieve and verify the supported features
-commands, retrieve specific feature command data, retrieve test feature
-data, and write and verify test feature data.
+On Tue, Feb 18, 2025 at 12:37:28PM +0100, David Hildenbrand wrote:
+> On 18.02.25 04:55, Alistair Popple wrote:
+> > Currently fs dax pages are considered free when the refcount drops to
+> > one and their refcounts are not increased when mapped via PTEs or
+> > decreased when unmapped. This requires special logic in mm paths to
+> > detect that these pages should not be properly refcounted, and to
+> > detect when the refcount drops to one instead of zero.
+> > 
+> > On the other hand get_user_pages(), etc. will properly refcount fs dax
+> > pages by taking a reference and dropping it when the page is
+> > unpinned.
+> > 
+> > Tracking this special behaviour requires extra PTE bits
+> > (eg. pte_devmap) and introduces rules that are potentially confusing
+> > and specific to FS DAX pages. To fix this, and to possibly allow
+> > removal of the special PTE bits in future, convert the fs dax page
+> > refcounts to be zero based and instead take a reference on the page
+> > each time it is mapped as is currently the case for normal pages.
+> > 
+> > This may also allow a future clean-up to remove the pgmap refcounting
+> > that is currently done in mm/gup.c.
+> > 
+> > Signed-off-by: Alistair Popple <apopple@nvidia.com>
+> > Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> 
+> A couple of nits (sorry that I didn't manage to review the whole thing the
+> last time, I am a slow reviewer ...).
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
-v4:
-- Adjust for kernel changes of input/out data structures
-- Setup test script to error out if not -ENODEV
-- Remove kernel 6.15 check
----
- test/cxl-features.sh |  31 ++++
- test/fwctl.c         | 383 +++++++++++++++++++++++++++++++++++++++++++
- test/meson.build     |  45 +++++
- 3 files changed, 459 insertions(+)
- create mode 100755 test/cxl-features.sh
- create mode 100644 test/fwctl.c
+No problem. I appreciate your indepth review comments.
 
-diff --git a/test/cxl-features.sh b/test/cxl-features.sh
-new file mode 100755
-index 000000000000..8e44a5bcc3e5
---- /dev/null
-+++ b/test/cxl-features.sh
-@@ -0,0 +1,31 @@
-+#!/bin/bash -Ex
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2025 Intel Corporation. All rights reserved.
-+
-+rc=77
-+# 237 is -ENODEV
-+ERR_NODEV=237
-+
-+. $(dirname $0)/common
-+FWCTL="$TEST_PATH"/fwctl
-+
-+trap 'err $LINENO' ERR
-+
-+modprobe cxl_test
-+
-+test -x "$FWCTL" || do_skip "no fwctl"
-+# disable trap
-+trap - $(compgen -A signal)
-+"$FWCTL"
-+rc=$?
-+
-+echo "error: $rc"
-+if [ "$rc" -eq "$ERR_NODEV" ]; then
-+	do_skip "no fwctl char dev"
-+elif [ "$rc" -ne 0 ]; then
-+	echo "fail: $LINENO" && exit 1
-+fi
-+
-+trap 'err $LINENO' ERR
-+
-+_cxl_cleanup
-diff --git a/test/fwctl.c b/test/fwctl.c
-new file mode 100644
-index 000000000000..ca39e30f6dca
---- /dev/null
-+++ b/test/fwctl.c
-@@ -0,0 +1,383 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2024-2025 Intel Corporation. All rights reserved.
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <stdio.h>
-+#include <endian.h>
-+#include <stdint.h>
-+#include <stdlib.h>
-+#include <syslog.h>
-+#include <string.h>
-+#include <unistd.h>
-+#include <sys/ioctl.h>
-+#include <cxl/libcxl.h>
-+#include <cxl/features.h>
-+#include <fwctl/fwctl.h>
-+#include <fwctl/cxl.h>
-+#include <linux/uuid.h>
-+#include <uuid/uuid.h>
-+#include <util/bitmap.h>
-+
-+static const char provider[] = "cxl_test";
-+
-+UUID_DEFINE(test_uuid,
-+	    0xff, 0xff, 0xff, 0xff,
-+	    0xff, 0xff,
-+	    0xff, 0xff,
-+	    0xff, 0xff,
-+	    0xff, 0xff, 0xff, 0xff, 0xff, 0xff
-+);
-+
-+#define CXL_MBOX_OPCODE_GET_SUPPORTED_FEATURES	0x0500
-+#define CXL_MBOX_OPCODE_GET_FEATURE		0x0501
-+#define CXL_MBOX_OPCODE_SET_FEATURE		0x0502
-+
-+#define GET_FEAT_SIZE	4
-+#define SET_FEAT_SIZE	4
-+#define EFFECTS_MASK	(BIT(0) | BIT(9))
-+
-+#define MAX_TEST_FEATURES	1
-+#define DEFAULT_TEST_DATA	0xdeadbeef
-+#define DEFAULT_TEST_DATA2	0xabcdabcd
-+
-+struct test_feature {
-+	uuid_t uuid;
-+	size_t get_size;
-+	size_t set_size;
-+};
-+
-+static int send_command(int fd, struct fwctl_rpc *rpc, struct fwctl_rpc_cxl_out *out)
-+{
-+	if (ioctl(fd, FWCTL_RPC, rpc) == -1) {
-+		fprintf(stderr, "RPC ioctl error: %s\n", strerror(errno));
-+		return -errno;
-+	}
-+
-+	if (out->retval) {
-+		fprintf(stderr, "operation returned failure: %d\n", out->retval);
-+		return -ENXIO;
-+	}
-+
-+	return 0;
-+}
-+
-+static int cxl_fwctl_rpc_get_test_feature(int fd, struct test_feature *feat_ctx,
-+					  const uint32_t expected_data)
-+{
-+	struct cxl_mbox_get_feat_in *feat_in;
-+	struct fwctl_rpc_cxl_out *out;
-+	struct fwctl_rpc rpc = {0};
-+	struct fwctl_rpc_cxl *in;
-+	size_t out_size, in_size;
-+	uint32_t val;
-+	void *data;
-+	int rc;
-+
-+	in_size = sizeof(*in) + sizeof(*feat_in);
-+	rc = posix_memalign((void **)&in, 16, in_size);
-+	if (rc)
-+		return -ENOMEM;
-+	memset(in, 0, in_size);
-+	feat_in = &in->get_feat_in;
-+
-+	uuid_copy(feat_in->uuid, feat_ctx->uuid);
-+	feat_in->count = feat_ctx->get_size;
-+
-+	out_size = sizeof(*out) + feat_ctx->get_size;
-+	rc = posix_memalign((void **)&out, 16, out_size);
-+	if (rc)
-+		goto free_in;
-+	memset(out, 0, out_size);
-+
-+	in->opcode = CXL_MBOX_OPCODE_GET_FEATURE;
-+	in->op_size = sizeof(*feat_in);
-+
-+	rpc.size = sizeof(rpc);
-+	rpc.scope = FWCTL_RPC_CONFIGURATION;
-+	rpc.in_len = in_size;
-+	rpc.out_len = out_size;
-+	rpc.in = (uint64_t)(uint64_t *)in;
-+	rpc.out = (uint64_t)(uint64_t *)out;
-+
-+	rc = send_command(fd, &rpc, out);
-+	if (rc)
-+		goto free_all;
-+
-+	data = out->payload;
-+	val = le32toh(*(__le32 *)data);
-+	if (memcmp(&val, &expected_data, sizeof(val)) != 0) {
-+		rc = -ENXIO;
-+		goto free_all;
-+	}
-+
-+free_all:
-+	free(out);
-+free_in:
-+	free(in);
-+	return rc;
-+}
-+
-+static int cxl_fwctl_rpc_set_test_feature(int fd, struct test_feature *feat_ctx)
-+{
-+	struct cxl_mbox_set_feat_in *feat_in;
-+	struct fwctl_rpc_cxl_out *out;
-+	struct fwctl_rpc_cxl *in;
-+	struct fwctl_rpc rpc = {0};
-+	size_t in_size, out_size;
-+	uint32_t val;
-+	void *data;
-+	int rc;
-+
-+	in_size = sizeof(*in) + sizeof(*feat_in) + sizeof(val);
-+	rc = posix_memalign((void **)&in, 16, in_size);
-+	if (rc)
-+		return -ENOMEM;
-+	memset(in, 0, in_size);
-+	feat_in = &in->set_feat_in;
-+
-+	out_size = sizeof(*out) + sizeof(val);
-+	rc = posix_memalign((void **)&out, 16, out_size);
-+	if (rc)
-+		goto free_in;
-+
-+	uuid_copy(feat_in->uuid, feat_ctx->uuid);
-+	data = feat_in->feat_data;
-+	val = DEFAULT_TEST_DATA2;
-+	*(uint32_t *)data = htole32(val);
-+	feat_in->flags = CXL_SET_FEAT_FLAG_FULL_DATA_TRANSFER;
-+
-+	in->opcode = CXL_MBOX_OPCODE_SET_FEATURE;
-+	in->op_size = sizeof(*feat_in) + sizeof(val);
-+
-+	rpc.size = sizeof(rpc);
-+	rpc.scope = FWCTL_RPC_DEBUG_WRITE_FULL;
-+	rpc.in_len = in_size;
-+	rpc.out_len = out_size;
-+	rpc.in = (uint64_t)(uint64_t *)in;
-+	rpc.out = (uint64_t)(uint64_t *)out;
-+
-+	rc = send_command(fd, &rpc, out);
-+	if (rc)
-+		goto free_all;
-+
-+	rc = cxl_fwctl_rpc_get_test_feature(fd, feat_ctx, DEFAULT_TEST_DATA2);
-+	if (rc) {
-+		fprintf(stderr, "Failed ioctl to get feature verify: %d\n", rc);
-+		goto free_all;
-+	}
-+
-+free_all:
-+	free(out);
-+free_in:
-+	free(in);
-+	return rc;
-+}
-+
-+static int cxl_fwctl_rpc_get_supported_features(int fd, struct test_feature *feat_ctx)
-+{
-+	struct cxl_mbox_get_sup_feats_out *feat_out;
-+	struct cxl_mbox_get_sup_feats_in *feat_in;
-+	struct fwctl_rpc_cxl_out *out;
-+	struct fwctl_rpc_cxl *in;
-+	struct cxl_feat_entry *entry;
-+	struct fwctl_rpc rpc = {0};
-+	size_t out_size, in_size;
-+	int feats, rc;
-+
-+	in_size = sizeof(*in) + sizeof(*feat_in);
-+	rc = posix_memalign((void **)&in, 16, in_size);
-+	if (rc)
-+		return rc;
-+	memset(in, 0, in_size);
-+	/* First query, to get number of features w/o per feature data */
-+	in->opcode = CXL_MBOX_OPCODE_GET_SUPPORTED_FEATURES;
-+	in->op_size = sizeof(*feat_in);
-+
-+	out_size = sizeof(*out) + sizeof(*feat_out);
-+	rc = posix_memalign((void **)&out, 16, out_size);
-+	if (rc)
-+		goto free_in;
-+
-+	/* No need to fill in feat_in first go as we are passing in all 0's */
-+
-+	rpc.size = sizeof(rpc);
-+	rpc.scope = FWCTL_RPC_CONFIGURATION;
-+	rpc.in_len = in_size;
-+	rpc.out_len = out_size;
-+	rpc.in = (uint64_t)(uint64_t *)in;
-+	rpc.out = (uint64_t)(uint64_t *)out;
-+
-+	rc = send_command(fd, &rpc, out);
-+	if (rc)
-+		goto free_all;
-+
-+	feat_out = &out->get_sup_feats_out;
-+	feats = le16toh(feat_out->supported_feats);
-+	if (feats != MAX_TEST_FEATURES) {
-+		fprintf(stderr, "Test device has greater than %d test features.\n",
-+			MAX_TEST_FEATURES);
-+		rc = -ENXIO;
-+		goto free_all;
-+	}
-+
-+	free(in);
-+	free(out);
-+
-+	/* Going second round to retrieve each feature details */
-+	in_size += feats * sizeof(*entry);
-+	rc = posix_memalign((void **)&in, 16, in_size);
-+	if (rc)
-+		return rc;
-+	memset(in, 0, in_size);
-+	in->opcode = CXL_MBOX_OPCODE_GET_SUPPORTED_FEATURES;
-+	in->op_size = sizeof(*feat_in);
-+
-+	out_size += feats * sizeof(*entry);
-+	rpc.out_len = out_size;
-+	rc = posix_memalign((void **)&out, 16, out_size);
-+	if (rc)
-+		goto free_in;
-+	memset(out, 0, out_size);
-+
-+	feat_in = &in->get_sup_feats_in;
-+
-+	rpc.out = (uint64_t)(uint64_t *)out;
-+	rpc.out_len = out_size;
-+	rpc.in = (uint64_t)(uint64_t *)in;
-+	rpc.in_len = in_size;
-+	feat_in->count = htole32(feats * sizeof(*entry));
-+
-+	rc = send_command(fd, &rpc, out);
-+	if (rc)
-+		goto free_all;
-+
-+	feat_out = &out->get_sup_feats_out;
-+	feats = le16toh(feat_out->supported_feats);
-+	if (feats != MAX_TEST_FEATURES) {
-+		fprintf(stderr, "Test device has greater than %u test features.\n",
-+			MAX_TEST_FEATURES);
-+		rc = -ENXIO;
-+		goto free_all;
-+	}
-+
-+	if (le16toh(feat_out->num_entries) != MAX_TEST_FEATURES) {
-+		fprintf(stderr, "Test device did not return expected entries. %u\n",
-+			le16toh(feat_out->num_entries));
-+		rc = -ENXIO;
-+		goto free_all;
-+	}
-+
-+	entry = &feat_out->ents[0];
-+	if (uuid_compare(test_uuid, entry->uuid) != 0) {
-+		fprintf(stderr, "Test device did not export expected test feature.\n");
-+		rc = -ENXIO;
-+		goto free_all;
-+	}
-+
-+	if (le16toh(entry->get_feat_size) != GET_FEAT_SIZE ||
-+	    le16toh(entry->set_feat_size) != SET_FEAT_SIZE) {
-+		fprintf(stderr, "Test device feature in/out size incorrect.\n");
-+		rc = -ENXIO;
-+		goto free_all;
-+	}
-+
-+	if (le16toh(entry->effects) != EFFECTS_MASK) {
-+		fprintf(stderr, "Test device set effects incorrect\n");
-+		rc = -ENXIO;
-+		goto free_all;
-+	}
-+
-+	uuid_copy(feat_ctx->uuid, entry->uuid);
-+	feat_ctx->get_size = le16toh(entry->get_feat_size);
-+	feat_ctx->set_size = le16toh(entry->set_feat_size);
-+
-+free_all:
-+	free(out);
-+free_in:
-+	free(in);
-+	return rc;
-+}
-+
-+static int test_fwctl_features(struct cxl_memdev *memdev)
-+{
-+	struct test_feature feat_ctx;
-+	unsigned int major, minor;
-+	int fd, rc;
-+	char path[256];
-+
-+	major = cxl_memdev_get_fwctl_major(memdev);
-+	minor = cxl_memdev_get_fwctl_minor(memdev);
-+
-+	if (!major && !minor)
-+		return -ENODEV;
-+
-+	sprintf(path, "/dev/char/%d:%d", major, minor);
-+
-+	fd = open(path, O_RDONLY, 0644);
-+	if (!fd) {
-+		fprintf(stderr, "Failed to open: %d\n", -errno);
-+		return -errno;
-+	}
-+
-+	rc = cxl_fwctl_rpc_get_supported_features(fd, &feat_ctx);
-+	if (rc) {
-+		fprintf(stderr, "Failed ioctl to get supported features: %d\n", rc);
-+		goto out;
-+	}
-+
-+	rc = cxl_fwctl_rpc_get_test_feature(fd, &feat_ctx, DEFAULT_TEST_DATA);
-+	if (rc) {
-+		fprintf(stderr, "Failed ioctl to get feature: %d\n", rc);
-+		goto out;
-+	}
-+
-+	rc = cxl_fwctl_rpc_set_test_feature(fd, &feat_ctx);
-+	if (rc) {
-+		fprintf(stderr, "Failed ioctl to set feature: %d\n", rc);
-+		goto out;
-+	}
-+
-+out:
-+	close(fd);
-+	return rc;
-+}
-+
-+static int test_fwctl(struct cxl_ctx *ctx, struct cxl_bus *bus)
-+{
-+	struct cxl_memdev *memdev;
-+
-+	cxl_memdev_foreach(ctx, memdev) {
-+		if (cxl_memdev_get_bus(memdev) != bus)
-+			continue;
-+		return test_fwctl_features(memdev);
-+	}
-+
-+	return 0;
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	struct cxl_ctx *ctx;
-+	struct cxl_bus *bus;
-+	int rc;
-+
-+	rc = cxl_new(&ctx);
-+	if (rc < 0)
-+		return rc;
-+
-+	cxl_set_log_priority(ctx, LOG_DEBUG);
-+
-+	bus = cxl_bus_get_by_provider(ctx, provider);
-+	if (!bus) {
-+		fprintf(stderr, "%s: unable to find bus (%s)\n",
-+			argv[0], provider);
-+		rc = -EINVAL;
-+		goto out;
-+	}
-+
-+	rc = test_fwctl(ctx, bus);
-+
-+out:
-+	cxl_unref(ctx);
-+	return rc;
-+}
-diff --git a/test/meson.build b/test/meson.build
-index d871e28e17ce..476f4ba6c97c 100644
---- a/test/meson.build
-+++ b/test/meson.build
-@@ -17,6 +17,13 @@ ndctl_deps = libndctl_deps + [
-   versiondep,
- ]
- 
-+libcxl_deps = [
-+  cxl_dep,
-+  ndctl_dep,
-+  uuid,
-+  kmod,
-+]
-+
- libndctl = executable('libndctl', testcore + [ 'libndctl.c'],
-   dependencies : libndctl_deps,
-   include_directories : root_inc,
-@@ -130,6 +137,33 @@ revoke_devmem = executable('revoke_devmem', testcore + [
-   include_directories : root_inc,
- )
- 
-+fs = import('fs')
-+
-+feature_hdrs = [
-+  '/usr/include/cxl/features.h',
-+  '/usr/include/fwctl/cxl.h',
-+  '/usr/include/fwctl/fwctl.h',
-+]
-+
-+feat_hdrs_exist = true
-+foreach file : feature_hdrs
-+  if not fs.exists(file)
-+    feat_hdrs_exist = false
-+    break
-+  endif
-+endforeach
-+
-+if feat_hdrs_exist
-+    fwctl = executable('fwctl', [
-+        'fwctl.c',
-+    ],
-+    include_directories : root_inc,
-+    dependencies : libcxl_deps,
-+    )
-+else
-+    fwctl = []
-+endif
-+
- mmap = executable('mmap', 'mmap.c',)
- 
- create = find_program('create.sh')
-@@ -162,6 +196,10 @@ cxl_destroy_region = find_program('cxl-destroy-region.sh')
- cxl_qos_class = find_program('cxl-qos-class.sh')
- cxl_poison = find_program('cxl-poison.sh')
- 
-+if feat_hdrs_exist
-+  cxl_features = find_program('cxl-features.sh')
-+endif
-+
- tests = [
-   [ 'libndctl',               libndctl,		  'ndctl' ],
-   [ 'dsm-fail',               dsm_fail,	      	  'ndctl' ],
-@@ -196,6 +234,12 @@ tests = [
-   [ 'cxl-poison.sh',          cxl_poison,         'cxl'   ],
- ]
- 
-+if feat_hdrs_exist
-+  tests += [
-+    [ 'cxl-features.sh',        cxl_features,       'cxl'   ],
-+  ]
-+endif
-+
- if get_option('destructive').enabled()
-   sub_section = find_program('sub-section.sh')
-   dax_ext4 = find_program('dax-ext4.sh')
-@@ -249,6 +293,7 @@ foreach t : tests
-       daxdev_errors,
-       dax_dev,
-       mmap,
-+      fwctl,
-     ],
-     suite: t[2],
-     timeout : 600,
--- 
-2.48.1
+> Likely that can all be adjsuted on
+> top, no need for a full resend IMHO.
+> 
+> > index 6674540..cf96f3d 100644
+> > --- a/fs/dax.c
+> > +++ b/fs/dax.c
+> > @@ -71,6 +71,11 @@ static unsigned long dax_to_pfn(void *entry)
+> >   	return xa_to_value(entry) >> DAX_SHIFT;
+> >   }
+> > +static struct folio *dax_to_folio(void *entry)
+> > +{
+> > +	return page_folio(pfn_to_page(dax_to_pfn(entry)));
+> 
+> Nit: return pfn_folio(dax_to_pfn(entry));
+> 
+> > +}
+> > +
+> 
+> [...]
+> 
+> > -static inline unsigned long dax_folio_share_put(struct folio *folio)
+> > +static inline unsigned long dax_folio_put(struct folio *folio)
+> >   {
+> > -	return --folio->page.share;
+> > +	unsigned long ref;
+> > +	int order, i;
+> > +
+> > +	if (!dax_folio_is_shared(folio))
+> > +		ref = 0;
+> > +	else
+> > +		ref = --folio->share;
+> > +
+> 
+> out of interest, what synchronizes access to folio->share?
 
+Actually that's an excellent question as I hadn't looked too closely at this
+given I wasn't changing the overall flow with regards to synchronization, merely
+representation of the "shared" state. So I don't have a good answer for you off
+the top of my head - Dan maybe you can shed some light here?
+
+> > +	if (ref)
+> > +		return ref;
+> > +
+> > +	folio->mapping = NULL;
+> > +	order = folio_order(folio);
+> > +	if (!order)
+> > +		return 0;
+> > +
+> > +	for (i = 0; i < (1UL << order); i++) {
+> > +		struct dev_pagemap *pgmap = page_pgmap(&folio->page);
+> > +		struct page *page = folio_page(folio, i);
+> > +		struct folio *new_folio = (struct folio *)page;
+> > +
+> > +		ClearPageHead(page);
+> > +		clear_compound_head(page);
+> > +
+> > +		new_folio->mapping = NULL;
+> > +		/*
+> > +		 * Reset pgmap which was over-written by
+> > +		 * prep_compound_page().
+> > +		 */
+> > +		new_folio->pgmap = pgmap;
+> > +		new_folio->share = 0;
+> > +		WARN_ON_ONCE(folio_ref_count(new_folio));
+> > +	}
+> > +
+> > +	return ref;
+> > +}
+> > +
+> > +static void dax_folio_init(void *entry)
+> > +{
+> > +	struct folio *folio = dax_to_folio(entry);
+> > +	int order = dax_entry_order(entry);
+> > +
+> > +	/*
+> > +	 * Folio should have been split back to order-0 pages in
+> > +	 * dax_folio_put() when they were removed from their
+> > +	 * final mapping.
+> > +	 */
+> > +	WARN_ON_ONCE(folio_order(folio));
+> > +
+> > +	if (order > 0) {
+> > +		prep_compound_page(&folio->page, order);
+> > +		if (order > 1)
+> > +			INIT_LIST_HEAD(&folio->_deferred_list);
+> 
+> Nit: prep_compound_page() -> prep_compound_head() should be taking care of
+> initializing all folio fields already, so this very likely can be dropped.
+
+Thanks. That's only the case for >= v6.10, so I guess I started this patch
+series before then.
+
+> > +		WARN_ON_ONCE(folio_ref_count(folio));
+> > +	}
+> >   }
+> 
+> 
+> [...]
+> 
+> 
+> >   }
+> > @@ -1808,7 +1843,8 @@ static vm_fault_t dax_fault_iter(struct vm_fault *vmf,
+> >   	loff_t pos = (loff_t)xas->xa_index << PAGE_SHIFT;
+> >   	bool write = iter->flags & IOMAP_WRITE;
+> >   	unsigned long entry_flags = pmd ? DAX_PMD : 0;
+> > -	int err = 0;
+> > +	struct folio *folio;
+> > +	int ret, err = 0;
+> >   	pfn_t pfn;
+> >   	void *kaddr;
+> > @@ -1840,17 +1876,19 @@ static vm_fault_t dax_fault_iter(struct vm_fault *vmf,
+> >   			return dax_fault_return(err);
+> >   	}
+> > +	folio = dax_to_folio(*entry);
+> >   	if (dax_fault_is_synchronous(iter, vmf->vma))
+> >   		return dax_fault_synchronous_pfnp(pfnp, pfn);
+> > -	/* insert PMD pfn */
+> > +	folio_ref_inc(folio);
+> 
+> Why is that not a folio_get() ? Could the refcount be 0? Might deserve a
+> comment then.
+
+Right, refcount is most likely 0 as this is when the folio is allocated for uses
+other than by the owning driver of the page.
+
+> >   	if (pmd)
+> > -		return vmf_insert_pfn_pmd(vmf, pfn, write);
+> > +		ret = vmf_insert_folio_pmd(vmf, pfn_folio(pfn_t_to_pfn(pfn)),
+> > +					write);
+> > +	else
+> > +		ret = vmf_insert_page_mkwrite(vmf, pfn_t_to_page(pfn), write);
+> > +	folio_put(folio);
+> > -	/* insert PTE pfn */
+> > -	if (write)
+> > -		return vmf_insert_mixed_mkwrite(vmf->vma, vmf->address, pfn);
+> > -	return vmf_insert_mixed(vmf->vma, vmf->address, pfn);
+> > +	return ret;
+> >   }
+> >   static vm_fault_t dax_iomap_pte_fault(struct vm_fault *vmf, pfn_t *pfnp,
+> > @@ -2089,6 +2127,7 @@ dax_insert_pfn_mkwrite(struct vm_fault *vmf, pfn_t pfn, unsigned int order)
+> >   {
+> >   	struct address_space *mapping = vmf->vma->vm_file->f_mapping;
+> >   	XA_STATE_ORDER(xas, &mapping->i_pages, vmf->pgoff, order);
+> > +	struct folio *folio;
+> >   	void *entry;
+> >   	vm_fault_t ret;
+> > @@ -2106,14 +2145,17 @@ dax_insert_pfn_mkwrite(struct vm_fault *vmf, pfn_t pfn, unsigned int order)
+> >   	xas_set_mark(&xas, PAGECACHE_TAG_DIRTY);
+> >   	dax_lock_entry(&xas, entry);
+> >   	xas_unlock_irq(&xas);
+> > +	folio = pfn_folio(pfn_t_to_pfn(pfn));
+> > +	folio_ref_inc(folio);
+> 
+> Same thought.
+
+Yes, will add a comment, either as a respin or a fixup depending what Andrew prefers.
+
+> > diff --git a/include/linux/dax.h b/include/linux/dax.h
+> > index 2333c30..dcc9fcd 100644
+> > --- a/include/linux/dax.h
+> > +++ b/include/linux/dax.h
+> > @@ -209,7 +209,7 @@ int dax_truncate_page(struct inode *inode, loff_t pos, bool *did_zero,
+> 
+> [...]
+> 
+> > diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> > index d189826..1a0d6a8 100644
+> > --- a/mm/huge_memory.c
+> > +++ b/mm/huge_memory.c
+> > @@ -2225,7 +2225,7 @@ int zap_huge_pmd(struct mmu_gather *tlb, struct vm_area_struct *vma,
+> >   						tlb->fullmm);
+> >   	arch_check_zapped_pmd(vma, orig_pmd);
+> >   	tlb_remove_pmd_tlb_entry(tlb, pmd, addr);
+> > -	if (vma_is_special_huge(vma)) {
+> > +	if (!vma_is_dax(vma) && vma_is_special_huge(vma)) {
+> 
+> I wonder if we actually want to remove the vma_is_dax() check from
+> vma_is_special_huge(), and instead add it to the remaining callers of
+> vma_is_special_huge() that still need it -- if any need it.
+> 
+> Did we sanity-check which callers of vma_is_special_huge() still need it? Is
+> there still reason to have that DAX check in vma_is_special_huge()?
+
+If by "we" you mean "me" then yes :) There are still a few callers of it, mainly
+for page splitting.
+
+> But vma_is_special_huge() is rather confusing from me ... the whole
+> vma_is_special_huge() thing should probably be removed. That's a cleanup for
+> another day, though.
+
+But after double checking I have come to the same conclusion as you - it should
+be removed. I will add that to my ever growing clean-up series that can go on
+top of this one.
+
+> 
+> -- 
+> Cheers,
+> 
+> David / dhildenb
+> 
