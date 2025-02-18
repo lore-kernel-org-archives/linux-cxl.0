@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B759B1DA0E0
-	for <linux-cxl@vger.kernel.org>; Tue, 18 Feb 2025 22:57:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B581D9A49
+	for <linux-cxl@vger.kernel.org>; Tue, 18 Feb 2025 22:57:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739919456; cv=none; b=pJ2O6NSxxBqUouygKIpvtBzjBo6Mvr2K4zAeXGrAE4VSram1py9fHmwk1dsk79azul4j7L5Ej0TIBem+sClMt+b+Jz/ZfBeNIS7w0/ICDq/ZdpqIlcWF34WFb//XD01gLlgPvNljQjr56QfVJUOoIZ91U/ioGhCdVnJ6kp2idQY=
+	t=1739919457; cv=none; b=h62uIAaQj0bfo1+cNgiMwid36JT52wH94hEa7LuZFDwkxSjkg8NYm0TbbWhpt2UVrz8+6KGjLIqIKhjSa0kYi/kd2GfMAmhsDtKYwpYjLjhizdcZ2kQaINTocoCqL8yk6wA8ZBiJ+OeAzjk9UQ6jcfQwEAElZWTV1AaKmkV2hzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739919456; c=relaxed/simple;
-	bh=PAw8ia+l/mYFRkZJ5e1rDgYuefQPaZwsVFipxUZjeTc=;
+	s=arc-20240116; t=1739919457; c=relaxed/simple;
+	bh=YKlw+Ruh3KOoP6QhDoeprbFyNw/o33xS8HsmJzXH/TQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eiFBhoCJOTkjs5f1SuwMu/QNCOw1O1J5BRYX0OwPpug+oO0YECk/LjcUm3wGNZdTdJCSNwg5VmKqLVJph/nKBNp+i3QfzIP3Gq1ziKZ6MVRCYTkhjvm0SVDanEMoWGLmKERiV74GyvGYG4PX1xEnN8T+X9JGzKlTVBywI3+RrQU=
+	 MIME-Version; b=Lytj5Zkw98wHdXXtUDD2Q0duKiWG9VajWg1BbqlkzCCqxpPiupemlvvHa1a2rIprNcMkcdyCoUZDQ4vrl6xtFl8plevXfyiaqRlzh/O8Y+31mxgR6AhOB/HLbk85A1npeYtnUoJiLXXhskuoTATCrSJzPpJTF8+F6ntUnEJLvYc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C19AC4CEE2;
-	Tue, 18 Feb 2025 22:57:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C06FC4CEE2;
+	Tue, 18 Feb 2025 22:57:37 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: dan.j.williams@intel.com,
@@ -26,9 +26,9 @@ Cc: dan.j.williams@intel.com,
 	shiju.jose@huawei.com,
 	saeed@kernel.org,
 	Li Ming <ming.li@zohomail.com>
-Subject: [PATCH v6 01/14] cxl: Enumerate feature commands
-Date: Tue, 18 Feb 2025 15:54:30 -0700
-Message-ID: <20250218225721.2682235-2-dave.jiang@intel.com>
+Subject: [PATCH v6 02/14] cxl: Add Get Supported Features command for kernel usage
+Date: Tue, 18 Feb 2025 15:54:31 -0700
+Message-ID: <20250218225721.2682235-3-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250218225721.2682235-1-dave.jiang@intel.com>
 References: <20250218225721.2682235-1-dave.jiang@intel.com>
@@ -40,152 +40,417 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add feature commands enumeration code in order to detect and enumerate
-the 3 feature related commands "get supported features", "get feature",
-and "set feature". The enumeration will help determine whether the driver
-can issue any of the 3 commands to the device.
+CXL spec r3.2 8.2.9.6.1 Get Supported Features (Opcode 0500h)
+The command retrieve the list of supported device-specific features
+(identified by UUID) and general information about each Feature.
 
+The driver will retrieve the Feature entries in order to make checks and
+provide information for the Get Feature and Set Feature command. One of
+the main piece of information retrieved are the effects a Set Feature
+command would have for a particular feature. The retrieved Feature
+entries are stored in the cxl_mailbox context.
+
+The setup of Features is initiated via devm_cxl_setup_features() during the
+pci probe function before the cxl_memdev is enumerated.
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 Reviewed-by: Li Ming <ming.li@zohomail.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/cxl/core/mbox.c | 36 +++++++++++++++++++++++++++++++++++-
- drivers/cxl/cxlmem.h    |  3 +++
- include/cxl/features.h  | 13 +++++++++++++
- include/cxl/mailbox.h   |  3 +++
- 4 files changed, 54 insertions(+), 1 deletion(-)
- create mode 100644 include/cxl/features.h
+v6:
+- Remove @cap comment from 'cxl_features_state' (Shiju)
+---
+ drivers/cxl/Kconfig          |  11 +++
+ drivers/cxl/core/Makefile    |   1 +
+ drivers/cxl/core/features.c  | 175 +++++++++++++++++++++++++++++++++++
+ drivers/cxl/cxlmem.h         |   4 +
+ drivers/cxl/pci.c            |   4 +
+ include/cxl/features.h       |  87 +++++++++++++++++
+ tools/testing/cxl/Kbuild     |   1 +
+ tools/testing/cxl/test/mem.c |   4 +
+ 8 files changed, 287 insertions(+)
+ create mode 100644 drivers/cxl/core/features.c
 
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 9c1b9e353e3e..78c5346e3e89 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -706,6 +706,35 @@ static int cxl_xfer_log(struct cxl_memdev_state *mds, uuid_t *uuid,
- 	return 0;
- }
+diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+index 876469e23f7a..ad2e796e4ac6 100644
+--- a/drivers/cxl/Kconfig
++++ b/drivers/cxl/Kconfig
+@@ -102,6 +102,17 @@ config CXL_MEM
  
-+static int check_features_opcodes(u16 opcode, int *ro_cmds, int *wr_cmds)
+ 	  If unsure say 'm'.
+ 
++config CXL_FEATURES
++	bool "CXL: Features"
++	depends on CXL_PCI
++	help
++	  Enable support for CXL Features. A CXL device that includes a mailbox
++	  supports commands that allows listing, getting, and setting of
++	  optionally defined features such as memory sparing or post package
++	  sparing. Vendors may define custom features for the device.
++
++	  If unsure say 'n'
++
+ config CXL_PORT
+ 	default CXL_BUS
+ 	tristate
+diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+index 9259bcc6773c..b0bfbd9eac9b 100644
+--- a/drivers/cxl/core/Makefile
++++ b/drivers/cxl/core/Makefile
+@@ -16,3 +16,4 @@ cxl_core-y += pmu.o
+ cxl_core-y += cdat.o
+ cxl_core-$(CONFIG_TRACING) += trace.o
+ cxl_core-$(CONFIG_CXL_REGION) += region.o
++cxl_core-$(CONFIG_CXL_FEATURES) += features.o
+diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
+new file mode 100644
+index 000000000000..f2898a56bd63
+--- /dev/null
++++ b/drivers/cxl/core/features.c
+@@ -0,0 +1,175 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/* Copyright(c) 2024-2025 Intel Corporation. All rights reserved. */
++#include <linux/device.h>
++#include <cxl/mailbox.h>
++#include <cxl/features.h>
++#include "cxl.h"
++#include "cxlmem.h"
++
++inline struct cxl_features_state *to_cxlfs(struct cxl_dev_state *cxlds)
 +{
-+	switch (opcode) {
-+	case CXL_MBOX_OP_GET_SUPPORTED_FEATURES:
-+	case CXL_MBOX_OP_GET_FEATURE:
-+		(*ro_cmds)++;
-+		return 1;
-+	case CXL_MBOX_OP_SET_FEATURE:
-+		(*wr_cmds)++;
-+		return 1;
-+	default:
-+		return 0;
-+	}
++	return cxlds->cxlfs;
++}
++EXPORT_SYMBOL_NS_GPL(to_cxlfs, "CXL");
++
++static int cxl_get_supported_features_count(struct cxl_mailbox *cxl_mbox)
++{
++	struct cxl_mbox_get_sup_feats_out mbox_out;
++	struct cxl_mbox_get_sup_feats_in mbox_in;
++	struct cxl_mbox_cmd mbox_cmd;
++	int rc;
++
++	memset(&mbox_in, 0, sizeof(mbox_in));
++	mbox_in.count = cpu_to_le32(sizeof(mbox_out));
++	memset(&mbox_out, 0, sizeof(mbox_out));
++	mbox_cmd = (struct cxl_mbox_cmd) {
++		.opcode = CXL_MBOX_OP_GET_SUPPORTED_FEATURES,
++		.size_in = sizeof(mbox_in),
++		.payload_in = &mbox_in,
++		.size_out = sizeof(mbox_out),
++		.payload_out = &mbox_out,
++		.min_out = sizeof(mbox_out),
++	};
++	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
++	if (rc < 0)
++		return rc;
++
++	return le16_to_cpu(mbox_out.supported_feats);
 +}
 +
-+/* 'Get Supported Features' and 'Get Feature' */
-+#define MAX_FEATURES_READ_CMDS	2
-+static void set_features_cap(struct cxl_mailbox *cxl_mbox,
-+			     int ro_cmds, int wr_cmds)
++static struct cxl_feat_entries *
++get_supported_features(struct cxl_features_state *cxlfs)
 +{
-+	/* Setting up Features capability while walking the CEL */
-+	if (ro_cmds == MAX_FEATURES_READ_CMDS) {
-+		if (wr_cmds)
-+			cxl_mbox->feat_cap = CXL_FEATURES_RW;
-+		else
-+			cxl_mbox->feat_cap = CXL_FEATURES_RO;
-+	}
++	int remain_feats, max_size, max_feats, start, rc, hdr_size;
++	struct cxl_mailbox *cxl_mbox = &cxlfs->cxlds->cxl_mbox;
++	int feat_size = sizeof(struct cxl_feat_entry);
++	struct cxl_mbox_get_sup_feats_in mbox_in;
++	struct cxl_feat_entry *entry;
++	struct cxl_mbox_cmd mbox_cmd;
++	int count;
++
++	count = cxl_get_supported_features_count(cxl_mbox);
++	if (count <= 0)
++		return NULL;
++
++	struct cxl_feat_entries *entries __free(kvfree) =
++		kvmalloc(struct_size(entries, ent, count), GFP_KERNEL);
++	if (!entries)
++		return NULL;
++
++	struct cxl_mbox_get_sup_feats_out *mbox_out __free(kvfree) =
++		kvmalloc(cxl_mbox->payload_size, GFP_KERNEL);
++	if (!mbox_out)
++		return NULL;
++
++	hdr_size = struct_size(mbox_out, ents, 0);
++	max_size = cxl_mbox->payload_size - hdr_size;
++	/* max feat entries that can fit in mailbox max payload size */
++	max_feats = max_size / feat_size;
++	entry = entries->ent;
++
++	start = 0;
++	remain_feats = count;
++	do {
++		int retrieved, alloc_size, copy_feats;
++		int num_entries;
++
++		if (remain_feats > max_feats) {
++			alloc_size = struct_size(mbox_out, ents, max_feats);
++			remain_feats = remain_feats - max_feats;
++			copy_feats = max_feats;
++		} else {
++			alloc_size = struct_size(mbox_out, ents, remain_feats);
++			copy_feats = remain_feats;
++			remain_feats = 0;
++		}
++
++		memset(&mbox_in, 0, sizeof(mbox_in));
++		mbox_in.count = cpu_to_le32(alloc_size);
++		mbox_in.start_idx = cpu_to_le16(start);
++		memset(mbox_out, 0, alloc_size);
++		mbox_cmd = (struct cxl_mbox_cmd) {
++			.opcode = CXL_MBOX_OP_GET_SUPPORTED_FEATURES,
++			.size_in = sizeof(mbox_in),
++			.payload_in = &mbox_in,
++			.size_out = alloc_size,
++			.payload_out = mbox_out,
++			.min_out = hdr_size,
++		};
++		rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
++		if (rc < 0)
++			return NULL;
++
++		if (mbox_cmd.size_out <= hdr_size)
++			return NULL;
++
++		/*
++		 * Make sure retrieved out buffer is multiple of feature
++		 * entries.
++		 */
++		retrieved = mbox_cmd.size_out - hdr_size;
++		if (retrieved % feat_size)
++			return NULL;
++
++		num_entries = le16_to_cpu(mbox_out->num_entries);
++		/*
++		 * If the reported output entries * defined entry size !=
++		 * retrieved output bytes, then the output package is incorrect.
++		 */
++		if (num_entries * feat_size != retrieved)
++			return NULL;
++
++		memcpy(entry, mbox_out->ents, retrieved);
++		entry += num_entries;
++		/*
++		 * If the number of output entries is less than expected, add the
++		 * remaining entries to the next batch.
++		 */
++		remain_feats += copy_feats - num_entries;
++		start += num_entries;
++	} while (remain_feats);
++
++	entries->num_features = count;
++
++	return no_free_ptr(entries);
 +}
 +
- /**
-  * cxl_walk_cel() - Walk through the Command Effects Log.
-  * @mds: The driver data for the operation
-@@ -721,7 +750,7 @@ static void cxl_walk_cel(struct cxl_memdev_state *mds, size_t size, u8 *cel)
- 	struct cxl_cel_entry *cel_entry;
- 	const int cel_entries = size / sizeof(*cel_entry);
- 	struct device *dev = mds->cxlds.dev;
--	int i;
-+	int i, ro_cmds = 0, wr_cmds = 0;
- 
- 	cel_entry = (struct cxl_cel_entry *) cel;
- 
-@@ -735,6 +764,9 @@ static void cxl_walk_cel(struct cxl_memdev_state *mds, size_t size, u8 *cel)
- 			enabled++;
- 		}
- 
-+		enabled += check_features_opcodes(opcode, &ro_cmds,
-+						  &wr_cmds);
++static void free_cxlfs(void *_cxlfs)
++{
++	struct cxl_features_state *cxlfs = _cxlfs;
++	struct cxl_dev_state *cxlds = cxlfs->cxlds;
 +
- 		if (cxl_is_poison_command(opcode)) {
- 			cxl_set_poison_cmd_enabled(&mds->poison, opcode);
- 			enabled++;
-@@ -748,6 +780,8 @@ static void cxl_walk_cel(struct cxl_memdev_state *mds, size_t size, u8 *cel)
- 		dev_dbg(dev, "Opcode 0x%04x %s\n", opcode,
- 			enabled ? "enabled" : "unsupported by driver");
- 	}
++	cxlds->cxlfs = NULL;
++	kvfree(cxlfs->entries);
++	kfree(cxlfs);
++}
 +
-+	set_features_cap(cxl_mbox, ro_cmds, wr_cmds);
- }
- 
- static struct cxl_mbox_get_supported_logs *cxl_get_gsl(struct cxl_memdev_state *mds)
++/**
++ * devm_cxl_setup_features() - Allocate and initialize features context
++ * @cxlds: CXL device context
++ *
++ * Return 0 on success or -errno on failure.
++ */
++int devm_cxl_setup_features(struct cxl_dev_state *cxlds)
++{
++	struct cxl_mailbox *cxl_mbox = &cxlds->cxl_mbox;
++
++	if (cxl_mbox->feat_cap < CXL_FEATURES_RO)
++		return -ENODEV;
++
++	struct cxl_features_state *cxlfs __free(kfree) =
++		kzalloc(sizeof(*cxlfs), GFP_KERNEL);
++	if (!cxlfs)
++		return -ENOMEM;
++
++	cxlfs->cxlds = cxlds;
++
++	cxlfs->entries = get_supported_features(cxlfs);
++	if (!cxlfs->entries)
++		return -ENOMEM;
++
++	cxlds->cxlfs = cxlfs;
++
++	return devm_add_action_or_reset(cxlds->dev, free_cxlfs, no_free_ptr(cxlfs));
++}
++EXPORT_SYMBOL_NS_GPL(devm_cxl_setup_features, "CXL");
 diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index a0a49809cd76..55c55685cb39 100644
+index 55c55685cb39..0dc2682eb379 100644
 --- a/drivers/cxl/cxlmem.h
 +++ b/drivers/cxl/cxlmem.h
-@@ -490,6 +490,9 @@ enum cxl_opcode {
- 	CXL_MBOX_OP_GET_LOG_CAPS	= 0x0402,
- 	CXL_MBOX_OP_CLEAR_LOG           = 0x0403,
- 	CXL_MBOX_OP_GET_SUP_LOG_SUBLIST = 0x0405,
-+	CXL_MBOX_OP_GET_SUPPORTED_FEATURES	= 0x0500,
-+	CXL_MBOX_OP_GET_FEATURE		= 0x0501,
-+	CXL_MBOX_OP_SET_FEATURE		= 0x0502,
- 	CXL_MBOX_OP_IDENTIFY		= 0x4000,
- 	CXL_MBOX_OP_GET_PARTITION_INFO	= 0x4100,
- 	CXL_MBOX_OP_SET_PARTITION_INFO	= 0x4101,
-diff --git a/include/cxl/features.h b/include/cxl/features.h
-new file mode 100644
-index 000000000000..357d3acf8429
---- /dev/null
-+++ b/include/cxl/features.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/* Copyright(c) 2024-2025 Intel Corporation. */
-+#ifndef __CXL_FEATURES_H__
-+#define __CXL_FEATURES_H__
-+
-+/* Feature commands capability supported by a device */
-+enum cxl_features_capability {
-+	CXL_FEATURES_NONE = 0,
-+	CXL_FEATURES_RO,
-+	CXL_FEATURES_RW,
-+};
-+
-+#endif
-diff --git a/include/cxl/mailbox.h b/include/cxl/mailbox.h
-index cc894f07a435..c4e99e2e3a9d 100644
---- a/include/cxl/mailbox.h
-+++ b/include/cxl/mailbox.h
-@@ -3,6 +3,7 @@
- #ifndef __CXL_MBOX_H__
- #define __CXL_MBOX_H__
- #include <linux/rcuwait.h>
-+#include <cxl/features.h>
- #include <uapi/linux/cxl_mem.h>
- 
- /**
-@@ -51,6 +52,7 @@ struct cxl_mbox_cmd {
-  * @mbox_mutex: mutex protects device mailbox and firmware
-  * @mbox_wait: rcuwait for mailbox
-  * @mbox_send: @dev specific transport for transmitting mailbox commands
-+ * @feat_cap: Features capability
+@@ -392,6 +392,7 @@ struct cxl_dpa_perf {
+  * @serial: PCIe Device Serial Number
+  * @type: Generic Memory Class device or Vendor Specific Memory device
+  * @cxl_mbox: CXL mailbox context
++ * @cxl_features: CXL features context
   */
- struct cxl_mailbox {
- 	struct device *host;
-@@ -60,6 +62,7 @@ struct cxl_mailbox {
- 	struct mutex mbox_mutex; /* lock to protect mailbox context */
- 	struct rcuwait mbox_wait;
- 	int (*mbox_send)(struct cxl_mailbox *cxl_mbox, struct cxl_mbox_cmd *cmd);
-+	enum cxl_features_capability feat_cap;
+ struct cxl_dev_state {
+ 	struct device *dev;
+@@ -407,6 +408,9 @@ struct cxl_dev_state {
+ 	u64 serial;
+ 	enum cxl_devtype type;
+ 	struct cxl_mailbox cxl_mbox;
++#ifdef CONFIG_CXL_FEATURES
++	struct cxl_features_state *cxlfs;
++#endif
  };
  
- int cxl_mailbox_init(struct cxl_mailbox *cxl_mbox, struct device *host);
+ static inline struct cxl_dev_state *mbox_to_cxlds(struct cxl_mailbox *cxl_mbox)
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index a96e54c6259e..3e666ec51580 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -997,6 +997,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	if (rc)
+ 		return rc;
+ 
++	rc = devm_cxl_setup_features(cxlds);
++	if (rc)
++		dev_dbg(&pdev->dev, "No CXL Features discovered\n");
++
+ 	cxlmd = devm_cxl_add_memdev(&pdev->dev, cxlds);
+ 	if (IS_ERR(cxlmd))
+ 		return PTR_ERR(cxlmd);
+diff --git a/include/cxl/features.h b/include/cxl/features.h
+index 357d3acf8429..5b3485eb0f77 100644
+--- a/include/cxl/features.h
++++ b/include/cxl/features.h
+@@ -3,6 +3,8 @@
+ #ifndef __CXL_FEATURES_H__
+ #define __CXL_FEATURES_H__
+ 
++#include <linux/uuid.h>
++
+ /* Feature commands capability supported by a device */
+ enum cxl_features_capability {
+ 	CXL_FEATURES_NONE = 0,
+@@ -10,4 +12,89 @@ enum cxl_features_capability {
+ 	CXL_FEATURES_RW,
+ };
+ 
++/* Get Supported Features (0x500h) CXL r3.2 8.2.9.6.1 */
++struct cxl_mbox_get_sup_feats_in {
++	__le32 count;
++	__le16 start_idx;
++	u8 reserved[2];
++} __packed;
++
++/* CXL spec r3.2 Table 8-87 command effects */
++#define CXL_CMD_CONFIG_CHANGE_COLD_RESET	BIT(0)
++#define CXL_CMD_CONFIG_CHANGE_IMMEDIATE		BIT(1)
++#define CXL_CMD_DATA_CHANGE_IMMEDIATE		BIT(2)
++#define CXL_CMD_POLICY_CHANGE_IMMEDIATE		BIT(3)
++#define CXL_CMD_LOG_CHANGE_IMMEDIATE		BIT(4)
++#define CXL_CMD_SECURITY_STATE_CHANGE		BIT(5)
++#define CXL_CMD_BACKGROUND			BIT(6)
++#define CXL_CMD_BGCMD_ABORT_SUPPORTED		BIT(7)
++#define CXL_CMD_EFFECTS_VALID			BIT(9)
++#define CXL_CMD_CONFIG_CHANGE_CONV_RESET	BIT(10)
++#define CXL_CMD_CONFIG_CHANGE_CXL_RESET		BIT(11)
++
++/*
++ * CXL spec r3.2 Table 8-109
++ * Get Supported Features Supported Feature Entry
++ */
++struct cxl_feat_entry {
++	uuid_t uuid;
++	__le16 id;
++	__le16 get_feat_size;
++	__le16 set_feat_size;
++	__le32 flags;
++	u8 get_feat_ver;
++	u8 set_feat_ver;
++	__le16 effects;
++	u8 reserved[18];
++} __packed;
++
++/* @flags field for 'struct cxl_feat_entry' */
++#define CXL_FEATURE_F_CHANGEABLE		BIT(0)
++#define CXL_FEATURE_F_PERSIST_FW_UPDATE		BIT(4)
++#define CXL_FEATURE_F_DEFAULT_SEL		BIT(5)
++#define CXL_FEATURE_F_SAVED_SEL			BIT(6)
++
++/*
++ * CXL spec r3.2 Table 8-108
++ * Get supported Features Output Payload
++ */
++struct cxl_mbox_get_sup_feats_out {
++	__struct_group(cxl_mbox_get_sup_feats_out_hdr, hdr, /* no attrs */,
++		__le16 num_entries;
++		__le16 supported_feats;
++		__u8 reserved[4];
++	);
++	struct cxl_feat_entry ents[] __counted_by_le(num_entries);
++} __packed;
++
++/**
++ * struct cxl_features_state - The Features state for the device
++ * @cxlds: Pointer to CXL device state
++ * @entries: CXl feature entry context
++ *	@num_features: total Features supported by the device
++ *	@ent: Flex array of Feature detail entries from the device
++ */
++struct cxl_features_state {
++	struct cxl_dev_state *cxlds;
++	struct cxl_feat_entries {
++		int num_features;
++		struct cxl_feat_entry ent[] __counted_by(num_features);
++	} *entries;
++};
++
++#ifdef CONFIG_CXL_FEATURES
++inline struct cxl_features_state *to_cxlfs(struct cxl_dev_state *cxlds);
++int devm_cxl_setup_features(struct cxl_dev_state *cxlds);
++#else
++static inline struct cxl_features_state *to_cxlfs(struct cxl_dev_state *cxlds)
++{
++	return NULL;
++}
++
++static inline int devm_cxl_setup_features(struct cxl_dev_state *cxlds)
++{
++	return -EOPNOTSUPP;
++}
++#endif
++
+ #endif
+diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
+index b1256fee3567..0a6572ab6f37 100644
+--- a/tools/testing/cxl/Kbuild
++++ b/tools/testing/cxl/Kbuild
+@@ -63,6 +63,7 @@ cxl_core-y += $(CXL_CORE_SRC)/pmu.o
+ cxl_core-y += $(CXL_CORE_SRC)/cdat.o
+ cxl_core-$(CONFIG_TRACING) += $(CXL_CORE_SRC)/trace.o
+ cxl_core-$(CONFIG_CXL_REGION) += $(CXL_CORE_SRC)/region.o
++cxl_core-$(CONFIG_CXL_FEATURES) += $(CXL_CORE_SRC)/features.o
+ cxl_core-y += config_check.o
+ cxl_core-y += cxl_core_test.o
+ cxl_core-y += cxl_core_exports.o
+diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+index 8d731bd63988..e9494cd446ef 100644
+--- a/tools/testing/cxl/test/mem.c
++++ b/tools/testing/cxl/test/mem.c
+@@ -1558,6 +1558,10 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
+ 	if (rc)
+ 		return rc;
+ 
++	rc = devm_cxl_setup_features(cxlds);
++	if (rc)
++		dev_dbg(dev, "No CXL Features discovered\n");
++
+ 	cxl_mock_add_event_logs(&mdata->mes);
+ 
+ 	cxlmd = devm_cxl_add_memdev(&pdev->dev, cxlds);
 -- 
 2.48.1
 
