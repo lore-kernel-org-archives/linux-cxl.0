@@ -1,134 +1,117 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from sienna.cherry.relay.mailchannels.net (sienna.cherry.relay.mailchannels.net [23.83.223.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7F3126FD8B;
-	Tue, 18 Feb 2025 17:08:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739898532; cv=none; b=JzgnKExoSXg2doLTwi6+8apQzRHRt4yfNwzjyR3SErsoIRiVd6APByIvO4wCf3R4NHyITSHetEOa/Yb8MvX7NuGBqwAdMxfy3LPWEEtbMnRSfjGEmFxzvzhIJHkFNkjsGm4+lqOm6FUhHGZjLb5Fk94sb8hqZayWT/TmGI4Vv4Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739898532; c=relaxed/simple;
-	bh=a6gzkT/1WOil1FjkegQ5U9ewcuxrQ23z0OALJmt+Dr8=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=paslAxXiMdNIkxQu9c/6o3VIIvYedXFogCw6roH3apaDzhx/GzLgI2xOeb+0ETIS+JUbK2vEYevocFTKDjQN1JQSBiuSizGIUYNiyA4j9Jrtqfd4W/weT31ongwH+Q8khIRYuc0Za5BwuFUhzLq8f8WgnuL0ZdsmIZme6Q4OXAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Yy5WB313lz67g19;
-	Wed, 19 Feb 2025 01:05:26 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 492CD1400DD;
-	Wed, 19 Feb 2025 01:08:46 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 18 Feb
- 2025 18:08:45 +0100
-Date: Tue, 18 Feb 2025 17:08:44 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-CC: Fan Ni <nifan.cxl@gmail.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>, <dan.j.williams@intel.com>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<chenbaozi@phytium.com.cn>
-Subject: Re: [PATCH v3 1/1] cxl/pmem: debug invalid serial number data
-Message-ID: <20250218170844.00000e2a@huawei.com>
-In-Reply-To: <Z7P4A+3hfRdNnMM3@phytium.com.cn>
-References: <20250218014746.166565-1-wangyuquan1236@phytium.com.cn>
-	<20250218014746.166565-2-wangyuquan1236@phytium.com.cn>
-	<67b3ee67.a70a0220.21e7fd.0285@mx.google.com>
-	<Z7P4A+3hfRdNnMM3@phytium.com.cn>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E3E26FA6E
+	for <linux-cxl@vger.kernel.org>; Tue, 18 Feb 2025 17:11:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.165
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739898686; cv=pass; b=Y5IThv3jzqJpY3/l8zEhqruecz2kJSGAYMXentRarvHO7HXyUGqpRD853XYFwzqGVP8+6ZVBGgZuolxuHmMKUTuEjeGnjYCjMUIkifWB4wW1S++j7T0wL7XXbheU2xlUQQl2jgwYJpJdAUHNdxPWTN3mLWa5sQgR18PBsahGHOk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739898686; c=relaxed/simple;
+	bh=fnsW9e8reO4O19QVzQGDSJGEQGnR4Etfhe4kXr2PV54=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qykLNa/BwF2WeCxiTe/D02kkoIVb+PBUwtJMSUsWlUGxkzv5GdbsEGLwYZat4tEvx/PV4Blev7cJe3yFoRYP1MXU/+zqu57AJW/koVl6lER7iDC0jDDcQUwqWQ33H3UtXtlzKUHnX2Lu0EIKvbBq7+uj2hqjG6Y1Wioo5/epfrs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=L1LZBfGM; arc=pass smtp.client-ip=23.83.223.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="L1LZBfGM"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 26B1E2C3D63;
+	Tue, 18 Feb 2025 16:55:43 +0000 (UTC)
+Received: from pdx1-sub0-mail-a238.dreamhost.com (trex-7.trex.outbound.svc.cluster.local [100.127.240.155])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id ABAD82C56E7;
+	Tue, 18 Feb 2025 16:55:42 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1739897742; a=rsa-sha256;
+	cv=none;
+	b=n7y2g4wQqzDrXHV1e9xIMbS9ScG3fwgJl1/8eCGNjZtU1sQm1n0ik37HDgLR8n56BUKoNA
+	Un2tf2NErL/ccfm7DxS0LyhEPOUCQC3hU/LQgVM3M4frAmFZUaHuVFZXxGhXYTr/Il9oxc
+	BluZN7h1cqV+RyHIVncldEFwj2VBSrQsbwXzlVoM32C+Bbl65qsllxHcMBdJfxmKFCvll9
+	ImH25ZSCk/RCvVUWNm5N3Hrozwij2x8vC+7JUIuRZ7U1yb/wjn678nlZZFiwvzKUKJYA6l
+	Fpuof8YdgZ+BEGe1KwYYATkwDI9xOGSAggIzRP3RJkr6g2FAPJ76nHoWGu9HlQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1739897742;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=fnsW9e8reO4O19QVzQGDSJGEQGnR4Etfhe4kXr2PV54=;
+	b=13pZf3Ot2nryslNA+bczUUF07DG12pp3Z8lNUrwVLtQQNyRqOBch3n7ns1yDdhS0d+Hwy+
+	Wy0ocFdyPfvbW9HSkuzrajNCqKmjVzF8sSwYM0x5HMWobjCuyYrcM4jB2M//j9Go74Bssv
+	ulRZVlwQHpo167AbZAr4SMFDSdFEH9mst9q7wMYKLkzDpEleQWY4Ea32FWTFasCV3BgE4E
+	gm/6sZ/N/1oODGYB983gl2CCdTxMyO+NXUOGs/afgRSaK8JarEMjcAR7WfkNsEO9Trxyqy
+	Ky2KwsMHhz2oUDE/M2KQe/pDg5w06gmLwrLMooWKyYFoaASMQJI6+AtcdJwySA==
+ARC-Authentication-Results: i=1;
+	rspamd-78ddd997cc-whmpx;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Exultant-Company: 15a802750605959f_1739897742944_2776121294
+X-MC-Loop-Signature: 1739897742944:2764716646
+X-MC-Ingress-Time: 1739897742944
+Received: from pdx1-sub0-mail-a238.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.127.240.155 (trex/7.0.2);
+	Tue, 18 Feb 2025 16:55:42 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a238.dreamhost.com (Postfix) with ESMTPSA id 4Yy5Hy12nYz5x;
+	Tue, 18 Feb 2025 08:55:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1739897742;
+	bh=fnsW9e8reO4O19QVzQGDSJGEQGnR4Etfhe4kXr2PV54=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=L1LZBfGMTMGCRcMzsuFKtUMbmIyB0xHj7Gi74ySFe0ypjB+SqzXOP8/p7jxVHXJ6h
+	 9OVJMLtNTsZmaR/mBzW8F2RiBl46XXo/4kyGvOoA/KKZBZOAW64eXGNKHYVudIdGO4
+	 YsieuIeVHI2cDx1J2ciRuyXGL06YXEOYcw/AlLHahv6mGrsYnuxHi9JqlCWU+kE+B2
+	 cHbqbYWgqYrwPbWTJ3yGA2UKtIdrupO3OaZn3pbSCsKr6gAr553r6VA52Yt6QN2zR+
+	 PZO/B1SgLhMa2EWSTSzHRp9+pTd7LZZK2+1aPWvZstRuoVdrFsO5nZZy0yo8SSQ/KO
+	 9pAucCm/KRaqw==
+Date: Tue, 18 Feb 2025 08:55:38 -0800
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: vishal.l.verma@intel.com, y-goto@fujitsu.com, dave.jiang@intel.com,
+	dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev
+Subject: Re: [PATCH -ndctl] cxl/memdev: Introduce sanitize-memdev
+ functionality
+Message-ID: <20250218165538.ifbh35zcq4bxwhzs@offworld>
+References: <20240928211643.140264-1-dave@stgolabs.net>
+ <ZvrhusA7So_u51W_@aschofie-mobl2.lan>
+ <f6ybfabcft5wcpx2wuoxf3qgwset3h4nhngn5c4jk6ssudl5gj@o2ssocnihy6t>
+ <ngnoxz6w6q3y6korof6mepzvw2jyx4trlii7zon5jcoafobbfp@4z5ld55qgvqy>
+ <Z7S2e0Bi7OMUviWo@aschofie-mobl2.lan>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <Z7S2e0Bi7OMUviWo@aschofie-mobl2.lan>
+User-Agent: NeoMutt/20220429
 
-On Tue, 18 Feb 2025 11:01:23 +0800
-Yuquan Wang <wangyuquan1236@phytium.com.cn> wrote:
+On Tue, 18 Feb 2025, Alison Schofield wrote:
 
-> On Mon, Feb 17, 2025 at 06:20:18PM -0800, Fan Ni wrote:
-> > On Tue, Feb 18, 2025 at 09:47:46AM +0800, Yuquan Wang wrote:  
-> > > In a nvdimm interleave-set each device with an invalid or zero
-> > > serial number may cause pmem region initialization to fail, but in
-> > > cxl case such device could still set cookies of nd_interleave_set
-> > > and create a nvdimm pmem region.
-> > > 
-> > > This adds the validation of serial number in cxl pmem region creation.
-> > > The event of no serial number would cause to fail to set the cookie
-> > > and pmem region.
-> > > 
-> > > For cxl-test to work properly, always +1 on mock device's serial
-> > > number.
-> > > 
-> > > Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-> > > ---
-> > >  drivers/cxl/pmem.c           | 8 ++++++++
-> > >  tools/testing/cxl/test/mem.c | 2 +-
-> > >  2 files changed, 9 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
-> > > index f9c95996e937..73787afe1b9d 100644
-> > > --- a/drivers/cxl/pmem.c
-> > > +++ b/drivers/cxl/pmem.c
-> > > @@ -383,6 +383,14 @@ static int cxl_pmem_region_probe(struct device *dev)
-> > >  			.position = i,
-> > >  		};
-> > >  		info[i].offset = m->start;
-> > > +
-> > > +		if (cxlds->serial == 0) {
-> > > +			/* include missing alongside invalid in this error message. */
-> > > +			dev_err(dev, "%s: invalid or missing serial number\n",
-> > > +				dev_name(&cxlmd->dev));
-> > > +			rc = -ENXIO;
-> > > +			goto out_nvd;
-> > > +		}  
-> > 
-> > Should we do the check earlier in the code? 
-> > For example, right below if (!nvdimm) {}
-> > 
-> > Fan  
-> 
-> I agree. This would removes unnecessary struct value assignments
-> and make the code easier to read. Jonathan, what's your opinion?
-> 
+>On Mon, Sep 30, 2024 at 02:39:33PM -0700, Davidlohr Bueso wrote:
+>> On Mon, 30 Sep 2024, Davidlohr Bueso wrote:\n
+>
+>Hi David,
+>
+>Checking on patches we noted as needing review in last months collab,
+>and now I'm thinking this one is pending a v2 from you. Is that right?
 
-Seems a bit odd to move it well clear of where it is used.  You could
-pull these two info[i] lines up as well then it would seem more reasonable.
+Yes, that is right. I will try to get it out soon, its just been low on
+my list.
 
-I don't mind that much though.
-
-Jonathan
-
-> Yuquan
-> 
-> >   
-> > >  		info[i].serial = cxlds->serial;
-> > >  	}
-> > >  	ndr_desc.num_mappings = cxlr_pmem->nr_mappings;
-> > > diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-> > > index 8d731bd63988..9e098cf06603 100644
-> > > --- a/tools/testing/cxl/test/mem.c
-> > > +++ b/tools/testing/cxl/test/mem.c
-> > > @@ -1533,7 +1533,7 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
-> > >  	mds->event.buf = (struct cxl_get_event_payload *) mdata->event_buf;
-> > >  	INIT_DELAYED_WORK(&mds->security.poll_dwork, cxl_mockmem_sanitize_work);
-> > >  
-> > > -	cxlds->serial = pdev->id;
-> > > +	cxlds->serial = pdev->id + 1;
-> > >  	if (is_rcd(pdev))
-> > >  		cxlds->rcd = true;
-> > >  
-> > > -- 
-> > > 2.34.1
-> > >   
-> 
-> 
-
+Thanks,
+Davidlohr
