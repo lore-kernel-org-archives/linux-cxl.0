@@ -1,185 +1,166 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from buffalo.tulip.relay.mailchannels.net (buffalo.tulip.relay.mailchannels.net [23.83.218.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D79F1B66E
-	for <linux-cxl@vger.kernel.org>; Wed, 19 Feb 2025 01:10:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739927416; cv=none; b=AzmKr2c7Dp5MZrOOg7J2K5PynEAVJ7f9u4AgjelHDRdoA+VqhF/Vv30RmJhZxglN0vqRXyg6i5Zy4JbT+xFJxQx5ueEZkJCP7Go/nCJvL/AmI/5Hm6sSN53rL0BEOtXIHmVzKgkbcjHLCSJL/qGicIZczWpTW+hGPA6b7HicIzo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739927416; c=relaxed/simple;
-	bh=UGNs0ZW6hb7R/Hw/kagHqKOGU8gopsipQ9iM7x6k7x8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BZV/ClnHX1b0ykzk89Me8EC/8EnWjuj9waXpXt+nrdWIL9Jhfx2uPySOLI90EzfKo/NjgiGjrUexoc624QMfXxh5BtqhAdm3SS2Q1yOvbJn0AsFF4xA1mmswgkEzfpDbuWOvVCUSo/xrA3w5P5RvjhLipMxNo94MtDEjjc38T5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=bVWws8qO; arc=none smtp.client-ip=209.85.222.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C736187859
+	for <linux-cxl@vger.kernel.org>; Wed, 19 Feb 2025 02:15:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=23.83.218.24
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739931334; cv=fail; b=tog7VnA40xAAYHzCHVdPcblXcJ7qgcBqi3CUx6l5M5MMMPf1D3RA9gIttG9PJjZSQpG5RiyUlnUmZbQDX5wepFK6dfS8DifnmNi7/BGYkBRZJI7Zohjn/a3+b0aDbpt1O1j159rZQfaFuSteXh/qcdLVwscpoLWhvx8xNARUUOc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739931334; c=relaxed/simple;
+	bh=dnNZCp4ptLEEa2T+51OuudSNTBJBq5FlcL3eNXhrGVg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=NXPt9fPn9B8dWa/W5Dun3OwwusZFFKfd4lhun+TzKu6+yglkO+W+ylAHJcCxBjHsC8CjytNiMOZHRNYIjeFBddUWI7ttiMZbeSyR524AIn4iC4oIpvV2mhWQvsZAjaHxi7GtX7MX0myHiYAwgLGtnBXi3pyjVwme85dFoSKtMTs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=o7kMFYpn; arc=fail smtp.client-ip=23.83.218.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="bVWws8qO"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7c08fc20194so570915585a.2
-        for <linux-cxl@vger.kernel.org>; Tue, 18 Feb 2025 17:10:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1739927413; x=1740532213; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mUpwLBw+Z1T0MkCckOh5bFyJys42TZYUDiEdEk41zSc=;
-        b=bVWws8qOVDmI9nXMB6pK5actNUiveL/W2/iHsy+Z/fc8eCAAWrqiiXsLkc/ZmS6Kx6
-         oFvwHK6caNJaGRYbOmRb6ALSbMC2bo/KGU72R0FYoCkHdWZF5YfwV3hEEM0ts0YNg8+4
-         bvGJjovT8DfUFq5Meexte6gWyx1AHIQs/GhHUTAj9ni16VDf9y+LF6R6JYk78LyKTr5/
-         MCwO2+MEmHnEeUm4nrPYSI1Ha0z4GF+/9D9hqM2LqVxc9cHCRhrS9tVWVSAVwdX0u4zp
-         DOlMYKASr682j172f6uDWqQOkC4F/AbfhkYiEx0lAVCepdw/2q3FvLf/1r2QHmq6cbhl
-         8KKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739927413; x=1740532213;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mUpwLBw+Z1T0MkCckOh5bFyJys42TZYUDiEdEk41zSc=;
-        b=VeowLJUHBYqp6jmVixsi+GS7rYrbdtynG1lNfvs5nOLdbbIBeG+FNAL4oL16mcCVi5
-         gm1MCYkxJN0200TEqid8CMr3zXo+MWtdZ/t0joS6cZNykQozFkG+3nLqXld+Luw/6DJZ
-         edTBxEtNsfKsLpIARHQcaYbLdfvvDmjAOg4b5tctp7JSmWagvDdlDyHMGsCWnk8f2nab
-         hp+YCTmpyUpZDG4kLr5UvvLNiZo2gg5DIUA2uDNM22qdS5R1iMPzMp7D4/1DGT8FbY1K
-         eflja8ONH5p+ZftAZczTZyun0zBVnyKSJuan7UlLeg6rxmmKMiQHQGpZY+ia4dC+VyUj
-         ys2A==
-X-Forwarded-Encrypted: i=1; AJvYcCUuf0BY7IjnpXFxi9ASqaHLxgAV4KqZNm1dqo8vMN1a2MtA+4P1ZP0kPrMyzps70Wfog0PUSHlXl80=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUuPl37oPfR2W/Qlee4IOv1AqnzkMXqD+vpcTmZnSTsk7j1AB2
-	zwyS6E4Rp7k4lVFp8YiZIf5JNHhZ5HlfGXqXjdU0+ol46dGMQBZWiJbRDkIQHeg=
-X-Gm-Gg: ASbGncuUR1w9pg/ffN7ofNX5EbkP0ymnmkjxFoqlvKA78MRh7QAPp1Udvqvn6VkSi5b
-	hrOok1wZJ1UVQH8UwzYYioSMECnIRJgy4wcm+k63Y4pJk2Y9BfCPwdECs/Dht9SDinIpm2bGeew
-	PxUPtjqefrXmdLmwbc06CzDXY6c7tDOnp4jARxtVJ9KcdjZzAzyGaxu2uiytegzsvnu8VcXKAui
-	PMTFv5a60nGWlfD4girCIU/wm1BB7IEioZUhyLduDiQ6R3hgVJp4NI0eqCCBCRWOshttk0X84Ya
-	WM6OkIfn6yauVSlCrLALCaVcFOqCi2f0sPAVfqfuTvVBclpkNykdf4dC/97OFSS+KMadMLPTRg=
-	=
-X-Google-Smtp-Source: AGHT+IH/AUdFwBNx24uUtaBVfN+n1JoWvhbYt0qh38JBEugYo+ybiMsaT1gcAkaQqXvSHqzz/jLiKA==
-X-Received: by 2002:a05:620a:4626:b0:7c0:a28e:4970 with SMTP id af79cd13be357-7c0a28e4ae2mr1109600285a.29.1739927413662;
-        Tue, 18 Feb 2025 17:10:13 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e65dce9f9csm69069206d6.104.2025.02.18.17.10.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2025 17:10:12 -0800 (PST)
-Date: Tue, 18 Feb 2025 20:10:10 -0500
-From: Gregory Price <gourry@gourry.net>
-To: David Hildenbrand <david@redhat.com>
-Cc: Yang Shi <shy828301@gmail.com>, lsf-pc@lists.linux-foundation.org,
-	linux-mm@kvack.org, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: CXL Boot to Bash - Section 3: Memory (block) Hotplug
-Message-ID: <Z7UvchoiRUg_cnhh@gourry-fedora-PF4VCD3F>
-References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
- <Z7OWmDXEYhT0BB0X@gourry-fedora-PF4VCD3F>
- <CAHbLzkq6Me6nRaL6b09YxJ_nFkxb+n+M3-q_aJwOs2ZO4q8VCg@mail.gmail.com>
- <Z7TLwtQY3vGUw2bO@gourry-fedora-PF4VCD3F>
- <1b4c6442-a2b0-4290-8b89-c7b82a66d358@redhat.com>
- <Z7TswQbpPV590ADr@gourry-fedora-PF4VCD3F>
- <bda4cf52-d81a-4935-b45a-09e9439e33b6@redhat.com>
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="o7kMFYpn"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 40D1A18345C;
+	Wed, 19 Feb 2025 02:15:26 +0000 (UTC)
+Received: from pdx1-sub0-mail-a289.dreamhost.com (100-101-191-136.trex-nlb.outbound.svc.cluster.local [100.101.191.136])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id D06E2182C56;
+	Wed, 19 Feb 2025 02:15:25 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1739931325; a=rsa-sha256;
+	cv=none;
+	b=k+K6alxqqyKV90zkz1jB0MqBynVhcGMmSMGKmhiFoFDMu9hMk7sKaiwlptSc+uEgS3Jqez
+	9Xudnh7gbKvFyt7MeK8ZFhOshVDHYpYMYhPg0dizrejY9dCIQJ0ES3xllrfEA9+OvK1aRF
+	5vQG7aLH0WnO/7n144pCk0d5hxil8vbMLMU+CNrez7mfhOBF+DeFfdJnFOb2Bg1wIcASNs
+	zp0LkM75TezolZvJpcTScvkzlKk3vXt3THIQCq49167jmAZekxw8FEj3e3UWc+eaTpWg9k
+	TbcDv0w7VwHJR/LYTo/+RQGpBaFEb/K40rMcFvHbL5ng6zTDG2t38JrGv9TwUQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1739931325;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=cXu71Rxk8iuvHkU8AhGSGzNvUadQT4fD3KJ5THE0ipM=;
+	b=k7rsydEuIi182n8ki58GbxFmA0q12Jjn1sc4lgeqRZZFJFPUGv7YTSj2gHHq7GymtBRjut
+	CTVh4sR5utQDBDTlyvxlOwePgaVD+Cy0Ov6kzDLhgTUL39Vx/NCpnWmqsz+edWuerUYCsy
+	g+7E3E14fpTB6e2UXbjqtM49WUeFzg0gRA3LhBNtGRzRHbaXFa/vkfNgRN+9hajjy7Q1Jb
+	IwV5pftgIUqhEyL22p7KJfRh9xusy9aNMDRbTLdYYnf2PPbWkz8TZIX2dlYLliDX07f0Lp
+	snVRcebuXETSTThJAF8a1GE5cdFsVMv2BaEPKN6sqGHLGMRui/kgRAPT45SbZg==
+ARC-Authentication-Results: i=1;
+	rspamd-6d7cc6b78d-bq9x4;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Fumbling-Army: 077630a86db23a8a_1739931326153_1727152453
+X-MC-Loop-Signature: 1739931326153:2124248045
+X-MC-Ingress-Time: 1739931326153
+Received: from pdx1-sub0-mail-a289.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.101.191.136 (trex/7.0.2);
+	Wed, 19 Feb 2025 02:15:26 +0000
+Received: from localhost.localdomain (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a289.dreamhost.com (Postfix) with ESMTPSA id 4YyKjm708Zz8j;
+	Tue, 18 Feb 2025 18:15:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1739931325;
+	bh=IYpZ53/8tvO+3xfNWpcYVQNrS/JIc9fl49EIwLa5Onc=;
+	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
+	b=o7kMFYpnob7eTdmUE5UwOlYoYafm5xhROUM1f3XuYgBKTGPMzzRVL3oJ/orjvqaAE
+	 DNPHoDlo1RF6t3juz2kT1N0vGKB6HFn6f33gPkZ/eX1Ojs8mj2oDKAdk+pQipL/EXB
+	 2AbWns5+4XwYPj4Lu5YTKP1zpOJGHak/1216i5eHUV+8eIS5Hb/jdD0xnL0UVTyrHK
+	 RbkuhEtxEDjB6WnMGFGS1A8qPHxIV9BMepXrmUDIjbppU/ffgzSKvxYqvkUbCnoXUI
+	 CZRVSFRkotQhQ9Vk836yV/hFVH+zdXnm4osqr0QU3e9QOIeYOQFzrc+NdsPXwxjgg1
+	 K3/kgEI0610vA==
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: dave.jiang@intel.com,
+	dan.j.williams@intel.com
+Cc: jonathan.cameron@huawei.com,
+	alison.schofield@intel.com,
+	ira.weiny@intel.com,
+	vishal.l.verma@intel.com,
+	seven.yi.lee@gmail.com,
+	a.manzanares@samsung.com,
+	fan.ni@samsung.com,
+	anisa.su@samsung.com,
+	dave@stgolabs.net,
+	linux-cxl@vger.kernel.org
+Subject: [PATCH 2/4] cxl/pmem: Rename cxl_dirty_shutdown_state()
+Date: Tue, 18 Feb 2025 18:14:18 -0800
+Message-Id: <20250219021420.214991-3-dave@stgolabs.net>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250219021420.214991-1-dave@stgolabs.net>
+References: <20250219021420.214991-1-dave@stgolabs.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bda4cf52-d81a-4935-b45a-09e9439e33b6@redhat.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 18, 2025 at 09:57:06PM +0100, David Hildenbrand wrote:
-> > 
-> > 2) if memmap_on_memory is on, and hotplug capacity (node1) is
-> >     zone_movable - then each memory block (256MB) should appear
-> >     as 252MB (-4MB of 64-byte page structs).  For 256GB (my system)
-> >     I should see a total of 252GB of onlined memory (-4GB of page struct)
-> 
-> In memory_block_online(), we have:
-> 
-> 	/*
-> 	 * Account once onlining succeeded. If the zone was unpopulated, it is
-> 	 * now already properly populated.
-> 	 */
-> 	if (nr_vmemmap_pages)
-> 		adjust_present_page_count(pfn_to_page(start_pfn), mem->group,
-> 					  nr_vmemmap_pages);
-> 
+... to a better suited 'cxl_arm_dirty_shutdown()'.
 
-I've validated the behavior on my system, I just mis-read my results.
-memmap_on_memory works as suggested.
+Suggested-by: Dave Jiang <dave.jiang@intel.com>
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+---
+ drivers/cxl/core/mbox.c | 4 ++--
+ drivers/cxl/cxlmem.h    | 2 +-
+ drivers/cxl/pmem.c      | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-What's mildly confusing is for pages used for altmap to be accounted for
-as if it's an allocation in vmstat - but for that capacity to be chopped
-out of the memory-block (it "makes sense" it's just subtly misleading).
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index c5eedcae3b02..86d13f4a1c18 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -1281,7 +1281,7 @@ int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_mem_dpa_fetch, "CXL");
+ 
+-int cxl_dirty_shutdown_state(struct cxl_memdev_state *mds)
++int cxl_arm_dirty_shutdown(struct cxl_memdev_state *mds)
+ {
+ 	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
+ 	struct cxl_mbox_cmd mbox_cmd;
+@@ -1297,7 +1297,7 @@ int cxl_dirty_shutdown_state(struct cxl_memdev_state *mds)
+ 
+ 	return cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
+ }
+-EXPORT_SYMBOL_NS_GPL(cxl_dirty_shutdown_state, "CXL");
++EXPORT_SYMBOL_NS_GPL(cxl_arm_dirty_shutdown, "CXL");
+ 
+ int cxl_set_timestamp(struct cxl_memdev_state *mds)
+ {
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index 8e1e46c348f5..6d60030139df 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -822,7 +822,7 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+ 			    enum cxl_event_log_type type,
+ 			    enum cxl_event_type event_type,
+ 			    const uuid_t *uuid, union cxl_event *evt);
+-int cxl_dirty_shutdown_state(struct cxl_memdev_state *mds);
++int cxl_arm_dirty_shutdown(struct cxl_memdev_state *mds);
+ int cxl_set_timestamp(struct cxl_memdev_state *mds);
+ int cxl_poison_state_init(struct cxl_memdev_state *mds);
+ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
+index a39e2c52d7ab..6b284962592f 100644
+--- a/drivers/cxl/pmem.c
++++ b/drivers/cxl/pmem.c
+@@ -90,7 +90,7 @@ static int cxl_nvdimm_probe(struct device *dev)
+ 	 * clear it upon a successful GPF flow. The exception to this
+ 	 * is upon Viral detection, per CXL 3.2 section 12.4.2.
+ 	 */
+-	if (cxl_dirty_shutdown_state(mds))
++	if (cxl_arm_dirty_shutdown(mds))
+ 		dev_warn(dev, "GPF: could not dirty shutdown state\n");
+ 
+ 	dev_set_drvdata(dev, nvdimm);
+-- 
+2.39.5
 
-I thought the system was saying i'd allocated memory (from the 'free'
-capacity) instead of just reducing capacity.
-
-Thank you for clearing this up.
-
-> > 
-> > stupid question - it sorta seems like you'd want this as the default
-> > setting for driver-managed hotplug memory blocks, but I suppose for
-> > very small blocks there's problems (as described in the docs).
-> 
-> The issue is that it is per-memblock. So you'll never have 1 GiB ranges
-> of consecutive usable memory (e.g., 1 GiB hugetlb page).
->
-
-That makes sense, i had not considered this.  Although it only applies
-for small blocks - which is basically an indictment of this suggestion:
-
-https://lore.kernel.org/linux-mm/20250127153405.3379117-1-gourry@gourry.net/
-
-So I'll have to consider this and whether this should be a default.
-It's probably this is enough to nak this entirely.
-
-
-... that said ....
-
-Interestingly, when I tried allocating 1GiB hugetlb pages on a dax device
-in ZONE_MOVABLE (without memmap_on_memory) - the allocation fails silently
-regardless of block size (tried both 2GB and 256MB).  I can't find a reason
-why this would be the case in the existing documentation.
-
-(note: hugepage migration is enabled in build config, so it's not that)
-
-If I enable one block (256MB) into ZONE_NORMAL, and the remainder in
-movable (with memmap_on_memory=n) the allocation still fails, and:
-
-   nr_slab_unreclaimable 43
-
-in node1/vmstat - where previously there was nothing.
-
-Onlining the dax devices into ZONE_NORMAL successfully allowed 1GiB huge
-pages to allocate.
-
-This used the /sys/bus/node/devices/node1/hugepages/* interfaces to test
-
-Using the /sys/kernel/mm/hugepages/hugepages-1048576kB/nr_hugepages with
-interleave mempolicy - all hugepages end up on ZONE_NORMAL.
-
-(v6.13 base kernel)
-
-This behavior is *curious* to say the least.  Not sure if bug, or some
-nuance missing from the documentation - but certainly glad I caught it.
-
-
-> I thought we had that? See MHP_MEMMAP_ON_MEMORY set by dax/kmem.
-> 
-> IIRC, the global toggle must be enabled for the driver option to be considered.
-
-Oh, well, that's an extra layer I missed.  So there's:
-
-build:
-  CONFIG_MHP_MEMMAP_ON_MEMORY=y
-  CONFIG_ARCH_MHP_MEMMAP_ON_MEMORY_ENABLE=y
-global:
-  /sys/module/memory_hotplug/parameters/memmap_on_memory
-device:
-  /sys/bus/dax/devices/dax0.0/memmap_on_memory
-
-And looking at it - this does seem to be the default for dax.
-
-So I can drop the existing `nuance movable/memmap` section and just
-replace it with the hugetlb subtleties x_x.
-
-I appreciate the clarifications here, sorry for the incorrect info and
-the increasing confusing.
-
-~Gregory
