@@ -1,86 +1,107 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A3DEEEAA
-	for <linux-cxl@vger.kernel.org>; Wed, 19 Feb 2025 07:27:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739950066; cv=pass; b=mHt+WKBxO1ahRLT9s1RNLggmUv719WSrVkVL+ZoGWr8xz5bOLj7SSQFTl+Q2PxGEDE8ecFpeXHtDzbbjbrnVgK0s9Z9Mmfki96/sgo8w/JxE4kJrjHcLw86F11yuF6KCez+qI1BygmGwZa5L4w06phf0FZYM6rqXAS0Oemv4yP4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739950066; c=relaxed/simple;
-	bh=UmuRzwv2/BnjmYiklcgYamWjQGSPp2WkhRA5v3fctBY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z7FggLc4r0y7CqtoFQoKXPDPX19vcgSCHx2jZbl2VFebJczzq7sAVkLBM+5l/Nx+4CtqzXyV21ohbU6+O6gWUKeNss2MQT9ud7KdQb/TcQ5BJENC7felCc3MX6SCrS/tNhvKdVxNKmijA/5w0OcBqiHr2WHPVsxY5BIxlU+nBBk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=RcayL6CM; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE15E42A93;
+	Wed, 19 Feb 2025 08:24:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739953450; cv=none; b=qbKmClz2zwH0zUCr1OJHabzYjr18yJ4SYvPXWbfUcTEVzUTZvR0a4h8UAncBZg8OljvIf3QoGpLyeasMk0AuKrpzsRujIcMud1B2doDCpGESPbr9/nh7UfgGsKh9zftgTmFWv7uLJInHk3BKZHCj5WG2EJE3UYckh0AXundCvL8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739953450; c=relaxed/simple;
+	bh=95w7EDKsRDoPuqJHls8uz2vABQ/9pubYzApPmVZyK9Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WbkghH3FwUfVjBo297+eXtYnKJ10Ob+djzM7YL8cKDmmRKU9V0k5Q7otm+64b/VEtZRG+ox/ZvvSX1jxs5SfiVTLnQQvxMDSSXA+lP7r4aRBtAwjN7zD6bAP8wpfDPCHrf5iuofV2rHCqMw+LoKjChlLHP36t9csUEqniiwOU/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S+lW5BTM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="RcayL6CM"
-ARC-Seal: i=1; a=rsa-sha256; t=1739950052; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=hXDJpg6jEqF51N7hUHSMU85KBNjtZ7bFGgKZm2U9qU8QsXVUkmqppd6pzgyq/ffPftAkk5JQpBuqQQhoFYmjKe51xz71NUwqypeU1c80rIRpddtGMVRu92T4IyJHKeEp9Dldk21i5FcpZG8Gwgb9d3Slp9ZU/K84SG3b2yx+mmI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1739950052; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=UmuRzwv2/BnjmYiklcgYamWjQGSPp2WkhRA5v3fctBY=; 
-	b=VM5S5vWI3b3qolc4bMsVnzmmTCDbA7pyhvIH+3e0/o2GsT1fFQM4fQrGyEnvd9tdAVTGTX4e5nCX32RF4w6zCwvf6OQngJUv7kuT8YHHJZNiteUDyz2XVi/Ko5DBa1eQmR+93NaCTYLvEzk2+HFf5wVkeU+9TuTtaXR7ipVkCrU=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739950052;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=UmuRzwv2/BnjmYiklcgYamWjQGSPp2WkhRA5v3fctBY=;
-	b=RcayL6CMKs1E33LtSd15nXB19jcaZXXwTtKEz1/EAJd+A6TiFdWdNdElpTMl2+VJ
-	+GwV6Nso9L7dxDUHxf8AF1Jqb5B5OPaFOkCFeCTYLfN8X4rGGKS5m7sHLz9eY+Cpj8u
-	yDTZkR9d5QGqzDVHc4SSNCU0rzv8k2i3NiTXw7EQ=
-Received: by mx.zohomail.com with SMTPS id 1739950049503885.8796489984959;
-	Tue, 18 Feb 2025 23:27:29 -0800 (PST)
-Message-ID: <bba2fe8d-0bb6-47fd-a81b-8e7edb734eb3@zohomail.com>
-Date: Wed, 19 Feb 2025 15:27:27 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S+lW5BTM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85824C4CED1;
+	Wed, 19 Feb 2025 08:24:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739953450;
+	bh=95w7EDKsRDoPuqJHls8uz2vABQ/9pubYzApPmVZyK9Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=S+lW5BTMOsXNLjh6MhoTEk1UwpgvNBdB+52zr5MEKW5pVwVOVlJsCU9zEHuYGfnas
+	 KewSBy+Dmk/b0UcSa6ixr/u/MoB7tbbNk4lY+HdKIALro9wuHcbLVnqvYOAIfj1syz
+	 SIWdNJCeVxw+7iRNFz16F4Cjoy927VyfOoOFfBtwqTy1iwyS/UbrAZPowhBkbuWxTC
+	 IXWcxWL/t4EzeJSTaykBK4mLOHm3+QaeFG0qhxoSg2YNnjlM1+/QqOgDkovGiyKcnt
+	 5ESXiU1hAPlfMQGvbDNQGnk27Dmy54KHuhljlAU34ATb51wbcUTktustIFMMoOb2je
+	 RR1VJ3KRM/0NA==
+Date: Wed, 19 Feb 2025 10:24:05 +0200
+From: Leon Romanovsky <leon@kernel.org>
+To: "Nelson, Shannon" <shannon.nelson@amd.com>
+Cc: jgg@nvidia.com, andrew.gospodarek@broadcom.com,
+	aron.silverton@oracle.com, dan.j.williams@intel.com,
+	daniel.vetter@ffwll.ch, dave.jiang@intel.com, dsahern@kernel.org,
+	gospo@broadcom.com, hch@infradead.org, itayavr@nvidia.com,
+	jiri@nvidia.com, Jonathan.Cameron@huawei.com, kuba@kernel.org,
+	lbloch@nvidia.com, saeedm@nvidia.com, linux-cxl@vger.kernel.org,
+	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+	brett.creeley@amd.com
+Subject: Re: [RFC PATCH fwctl 2/5] pds_core: add new fwctl auxilary_device
+Message-ID: <20250219082405.GC53094@unreal>
+References: <20250211234854.52277-1-shannon.nelson@amd.com>
+ <20250211234854.52277-3-shannon.nelson@amd.com>
+ <20250218192822.GA53094@unreal>
+ <604b058d-88e8-436d-abf7-229a624d9386@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 09/14] cxl: Add support for fwctl RPC command to enable
- CXL feature commands
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: dan.j.williams@intel.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
- alison.schofield@intel.com, Jonathan.Cameron@huawei.com, dave@stgolabs.net,
- jgg@nvidia.com, shiju.jose@huawei.com, saeed@kernel.org,
- linux-cxl@vger.kernel.org
-References: <20250218225721.2682235-1-dave.jiang@intel.com>
- <20250218225721.2682235-10-dave.jiang@intel.com>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <20250218225721.2682235-10-dave.jiang@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Feedback-ID: rr080112272a932d09b5126f8e3d99d6bb0000c59cf4905c04afab527bd7b4b65119eb887486f959d98a55b3:zu08011227b0041f13ebfceafeec4e027d00007938ff9e0594add0108a9909c197845f7485c1595c4a7aab90:rf0801122d38cf846d524a2e0b0b0866ca0000b5660a80cc12f80c2244d8ebfeb2f2797664f85f78b095741e99d3be739f6a:ZohoMail
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <604b058d-88e8-436d-abf7-229a624d9386@amd.com>
 
-On 2/19/2025 6:54 AM, Dave Jiang wrote:
-> fwctl provides a fwctl_ops->fw_rpc() callback in order to issue ioctls
-> to a device. The cxl fwctl driver will start by supporting the CXL
-> Feature commands: Get Supported Features, Get Feature, and Set Feature.
->
-> The fw_rpc() callback provides 'enum fwctl_rpc_scope' parameter where
-> it indicates the security scope of the call. The Get Supported Features
-> and Get Feature calls can be executed with the scope of
-> FWCTL_RPC_CONFIGRATION. The Set Feature call is gated by the effects
-> of the Feature reported by Get Supported Features call for the specific
-> Feature.
->
-> Only "Get Supported Features" is supported in this patch. Additional
-> commands will be added in follow on patches. "Get Supported Features"
-> will filter the Features that are exclusive to the kernel. The flag
-> field of the Feature details will be cleared of the "Changeable"
-> field and the "set feat size" will be set to 0 to indicate that
-> the feature is not changeable.
->
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Li Ming <ming.li@zohomail.com>
+On Tue, Feb 18, 2025 at 12:00:52PM -0800, Nelson, Shannon wrote:
+> On 2/18/2025 11:28 AM, Leon Romanovsky wrote:
+> > 
+> > On Tue, Feb 11, 2025 at 03:48:51PM -0800, Shannon Nelson wrote:
+> > > Add support for a new fwctl-based auxiliary_device for creating a
+> > > channel for fwctl support into the AMD/Pensando DSC.
+> > > 
+> > > Signed-off-by: Shannon Nelson <shannon.nelson@amd.com>
+> > > ---
+> > >   drivers/net/ethernet/amd/pds_core/auxbus.c |  3 +--
+> > >   drivers/net/ethernet/amd/pds_core/core.c   |  7 +++++++
+> > >   drivers/net/ethernet/amd/pds_core/core.h   |  1 +
+> > >   drivers/net/ethernet/amd/pds_core/main.c   | 10 ++++++++++
+> > >   include/linux/pds/pds_common.h             |  2 ++
+> > >   5 files changed, 21 insertions(+), 2 deletions(-)
+> > 
+> > <...>
+> > 
+> > My comment is only slightly related to the patch itself, but worth to
+> > write it anyway.
+> > 
+> > > diff --git a/include/linux/pds/pds_common.h b/include/linux/pds/pds_common.h
+> > > index 5802e1deef24..b193adbe7cc3 100644
+> > > --- a/include/linux/pds/pds_common.h
+> > > +++ b/include/linux/pds/pds_common.h
+> > > @@ -29,6 +29,7 @@ enum pds_core_vif_types {
+> > >        PDS_DEV_TYPE_ETH        = 3,
+> > >        PDS_DEV_TYPE_RDMA       = 4,
+> > >        PDS_DEV_TYPE_LM         = 5,
+> > > +     PDS_DEV_TYPE_FWCTL      = 6,
+> > 
+> > This enum and defines below should be cleaned from unsupported types.
+> > I don't see any code for RDMA, LM and ETH.
+> > 
+> > Thanks
+> 
+> I've looked at those a few times over the life of this code, but I continue
+> to leave them there because they are part of the firmware interface
+> definition, whether we use them or not.
+
+How? You are passing some number which FW is not aware of it. You can
+pass any number you want there. Even it is not true, you can
+PDS_DEV_TYPE_FWCTL = 6 here, but remove rest of enums and *_STR defines.
+
+> 
+> You're right, there is no ETH or RDMA type code, they exist as historical
+> artifacts of the early interface design.
+
+This make me wonder why netdev merged this code which has nothing to do
+with netdev subsystem at all.
+
+Thanks
