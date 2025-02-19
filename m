@@ -1,132 +1,171 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A101D198E81
-	for <linux-cxl@vger.kernel.org>; Wed, 19 Feb 2025 16:36:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40ECA1FECA1
+	for <linux-cxl@vger.kernel.org>; Wed, 19 Feb 2025 16:40:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739982980; cv=none; b=awZe+JKOBL1vGJ5jSmsDyv+yWSMsq19T1JVO79PWIX02rw4bDH0kK0s4yYvEfqp8kmqAKts28A8Iv9Czva7dltVfYMx07aLqxcHcjPw7sokgfxLK0/QaryTLpGteDbJp27wgxjMdGxd6segJ1YcL4tON6tQkY9Q9zPUEHBZFt3Y=
+	t=1739983255; cv=none; b=fej4p7QyveJj47MCPjOA1wjbdXvsyE2WzXULUjG6scitbX5mKzBkJ2u/HTSuj0P4NzFVYjiQG9eGRWFmMheDtXDm5FPN/wg9QAySOuwCCKGfD69iuFSImyhDbOq5D8SOgtX98W8PM6nkWzNEogsO1+dezuhSRQfny2AehItBS5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739982980; c=relaxed/simple;
-	bh=vpat3ICs6/FR2l3kGqefBzsBsJh/G/BikZTczr304Uk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZxSzWzLOsjY0o013nAHxNcAvY5/4q3puhYGcaKkn/X5LTk0OPH89YHPaFDpcSpVaVwgYDhazrWjCwuvcPCJqujdWdRZej9+dUS+B2ISe7WJzfw/Gu4BYK1MIRmXWWtyDyQzC4IcSzLZzLsly9UiQ5+7yfzBBZ/0/rng3Xgq92ZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EDv6nfYa; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739983255; c=relaxed/simple;
+	bh=JEiXYyZewYdZ/29ICidTlcyS7ChrkiDlmDmScjZNzKU=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=o90h34ybXvlQPoJbgHQnSkiiIKbWECNTAqVBH9a+58Jx6YA4Ola4BVADBy0MR062Kn645v+tyHR8jPrRCH5XXf7q2+cdg/jfBAAYmhI63bxjYYic2fcQP2ySRRZHXA+e8KBxDlf9udT8ZJj/Srmi/MjDClcwR3E0JmDiaya8CAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EDjK69CE; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EDv6nfYa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739982979; x=1771518979;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=vpat3ICs6/FR2l3kGqefBzsBsJh/G/BikZTczr304Uk=;
-  b=EDv6nfYaCwy2lP1HffYHWidq5j0h2DSYnFH7A1eVeIa/+5PCLG3Kao55
-   UAQMyUa6ZQptlP+Z236lT7toyyWpJ+XNf7wq7q40mJ604Ay7uk4oCCPb8
-   DsUHJnO74wtvLrTwXkefu8FjLolL9ptFrCRCsMeBcijr2mhGSlua3qkh7
-   oMtfDTuXvPvlH9IHRiUMcJF+AOnZ0YI9M0cYYFw0fZRio3phciXM2co86
-   k7XbcK8Q3MqC55J2FLa++fsJfYF16QlvlVRAdjf/EUWLmJ/QJRFFA+aTZ
-   Va1CY3FihG+SYEyeMjGGNnenLY9jDAr0FmT8yWKaBxA9A/FAyk/Pf+pvu
-   A==;
-X-CSE-ConnectionGUID: 7CXjNjXuQKKSNIAQrVMzBg==
-X-CSE-MsgGUID: aEUsEFYoTc++lJiGxWaFdQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="51710616"
-X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="51710616"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 08:36:16 -0800
-X-CSE-ConnectionGUID: s9QFpunMRh6dfT6S6VCn4Q==
-X-CSE-MsgGUID: 3kDPi+CBSuChQs/ej3tG5g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="115664679"
-Received: from inaky-mobl1.amr.corp.intel.com (HELO [10.125.110.11]) ([10.125.110.11])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 08:34:30 -0800
-Message-ID: <21a5e8e1-d807-4bf2-978e-cc72f81d5e44@intel.com>
-Date: Wed, 19 Feb 2025 09:34:17 -0700
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EDjK69CE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739983253;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DQDREIFxnc5HDXCuGfoZp5kxakhT8GCTFWXZKOmaSXw=;
+	b=EDjK69CEY8MqOPRdCuEw7Q8awGB4Q6yss3ezHwxc96yhY+k9SaHlgiC+sAYruTbMThj7AE
+	g5qiI4m6oQerHlROwvaEo4BRL4l6XWNcZ7Ax92Vu6JprqeHTve9dZ0jH+y45Vi0x/x7z0W
+	MFZdS6o84x+QKJEcnHAki7PWPltKiRg=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-274-ThzB33ccPcCmZcgY1IOmQg-1; Wed,
+ 19 Feb 2025 11:40:50 -0500
+X-MC-Unique: ThzB33ccPcCmZcgY1IOmQg-1
+X-Mimecast-MFC-AGG-ID: ThzB33ccPcCmZcgY1IOmQg_1739983249
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BCFC2190FF83;
+	Wed, 19 Feb 2025 16:40:48 +0000 (UTC)
+Received: from segfault.usersys.redhat.com (unknown [10.22.82.8])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E0910190C54C;
+	Wed, 19 Feb 2025 16:40:46 +0000 (UTC)
+From: Jeff Moyer <jmoyer@redhat.com>
+To: Donet Tom <donettom@linux.ibm.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,  nvdimm@lists.linux.dev,
+  linux-cxl@vger.kernel.org,  Ritesh Harjani <ritesh.list@gmail.com>,  Li
+ Zhijian <lizhijian@fujitsu.com>
+Subject: Re: [PATCH] ndctl: json: Region capabilities are not displayed if
+ any of the BTT, PFN, or DAX are not present
+References: <20250219094049.5156-1-donettom@linux.ibm.com>
+X-PGP-KeyID: 1F78E1B4
+X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
+Date: Wed, 19 Feb 2025 11:40:44 -0500
+In-Reply-To: <20250219094049.5156-1-donettom@linux.ibm.com> (Donet Tom's
+	message of "Wed, 19 Feb 2025 03:40:49 -0600")
+Message-ID: <x494j0pj3ar.fsf@segfault.usersys.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] cxl/pmem: Rename cxl_dirty_shutdown_state()
-To: Davidlohr Bueso <dave@stgolabs.net>, dan.j.williams@intel.com
-Cc: jonathan.cameron@huawei.com, alison.schofield@intel.com,
- ira.weiny@intel.com, vishal.l.verma@intel.com, seven.yi.lee@gmail.com,
- a.manzanares@samsung.com, fan.ni@samsung.com, anisa.su@samsung.com,
- linux-cxl@vger.kernel.org
-References: <20250219062832.237881-1-dave@stgolabs.net>
- <20250219062832.237881-3-dave@stgolabs.net>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250219062832.237881-3-dave@stgolabs.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: Q2lqOLWtDNpsTNm1K11M5ygDx6CrcFlsMLkWc1fehwY_1739983249
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 
+Donet Tom <donettom@linux.ibm.com> writes:
 
-
-On 2/18/25 11:28 PM, Davidlohr Bueso wrote:
-> ... to a better suited 'cxl_arm_dirty_shutdown()'.
-> 
-> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
+> If any one of BTT, PFN, or DAX is not present, but the other two
+> are, then the region capabilities are not displayed in the
+> ndctl list -R -C command.
+>
+> This is because util_region_capabilities_to_json() returns NULL
+> if any one of BTT, PFN, or DAX is not present.
+>
+> In this patch, we have changed the logic to display all the region
+> capabilities that are present.
+>
+> Test Results with CONFIG_BTT disabled
+> =====================================
+> Without this patch
+> ------------------
+>  # ./build/ndctl/ndctl  list -R -C
+>  [
+>   {
+>     "dev":"region1",
+>     "size":549755813888,
+>     "align":16777216,
+>     "available_size":549755813888,
+>     "max_available_extent":549755813888,
+>     "type":"pmem",
+>     "iset_id":11510624209454722969,
+>     "persistence_domain":"memory_controller"
+>   },
+>
+> With this patch
+> ---------------
+>  # ./build/ndctl/ndctl  list -R -C
+>  [
+>   {
+>     "dev":"region1",
+>     "size":549755813888,
+>     "align":16777216,
+>     "available_size":549755813888,
+>     "max_available_extent":549755813888,
+>     "type":"pmem",
+>     "iset_id":11510624209454722969,
+>     "capabilities":[
+>       {
+>         "mode":"fsdax",
+>         "alignments":[
+>           65536,
+>           16777216
+>         ]
+>       },
+>       {
+>         "mode":"devdax",
+>         "alignments":[
+>           65536,
+>           16777216
+>         ]
+>       }
+>     ],
+>     "persistence_domain":"memory_controller"
+>   },
+>
+> Signed-off-by: Donet Tom <donettom@linux.ibm.com>
 > ---
->  drivers/cxl/core/mbox.c | 4 ++--
->  drivers/cxl/cxlmem.h    | 2 +-
->  drivers/cxl/pmem.c      | 2 +-
->  3 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index c5eedcae3b02..86d13f4a1c18 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -1281,7 +1281,7 @@ int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_mem_dpa_fetch, "CXL");
+>  ndctl/json.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+>
+> diff --git a/ndctl/json.c b/ndctl/json.c
+> index 23bad7f..3df3bc4 100644
+> --- a/ndctl/json.c
+> +++ b/ndctl/json.c
+> @@ -381,9 +381,6 @@ struct json_object *util_region_capabilities_to_json(struct ndctl_region *region
+>  	struct ndctl_pfn *pfn = ndctl_region_get_pfn_seed(region);
+>  	struct ndctl_dax *dax = ndctl_region_get_dax_seed(region);
 >  
-> -int cxl_dirty_shutdown_state(struct cxl_memdev_state *mds)
-> +int cxl_arm_dirty_shutdown(struct cxl_memdev_state *mds)
->  {
->  	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
->  	struct cxl_mbox_cmd mbox_cmd;
-> @@ -1297,7 +1297,7 @@ int cxl_dirty_shutdown_state(struct cxl_memdev_state *mds)
+> -	if (!btt || !pfn || !dax)
+> -		return NULL;
+> -
+
+I think this was meant to be:
+
+	if (!btt && !pfn && !dax)
+		return NULL;
+
+I think that would be the more appropriate fix.
+
+Cheers,
+Jeff
+
+>  	jcaps = json_object_new_array();
+>  	if (!jcaps)
+>  		return NULL;
+> @@ -436,7 +433,8 @@ struct json_object *util_region_capabilities_to_json(struct ndctl_region *region
+>  		json_object_object_add(jcap, "alignments", jobj);
+>  	}
 >  
->  	return cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
->  }
-> -EXPORT_SYMBOL_NS_GPL(cxl_dirty_shutdown_state, "CXL");
-> +EXPORT_SYMBOL_NS_GPL(cxl_arm_dirty_shutdown, "CXL");
->  
->  int cxl_set_timestamp(struct cxl_memdev_state *mds)
->  {
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 8e1e46c348f5..6d60030139df 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -822,7 +822,7 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
->  			    enum cxl_event_log_type type,
->  			    enum cxl_event_type event_type,
->  			    const uuid_t *uuid, union cxl_event *evt);
-> -int cxl_dirty_shutdown_state(struct cxl_memdev_state *mds);
-> +int cxl_arm_dirty_shutdown(struct cxl_memdev_state *mds);
->  int cxl_set_timestamp(struct cxl_memdev_state *mds);
->  int cxl_poison_state_init(struct cxl_memdev_state *mds);
->  int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
-> diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
-> index a39e2c52d7ab..6b284962592f 100644
-> --- a/drivers/cxl/pmem.c
-> +++ b/drivers/cxl/pmem.c
-> @@ -90,7 +90,7 @@ static int cxl_nvdimm_probe(struct device *dev)
->  	 * clear it upon a successful GPF flow. The exception to this
->  	 * is upon Viral detection, per CXL 3.2 section 12.4.2.
->  	 */
-> -	if (cxl_dirty_shutdown_state(mds))
-> +	if (cxl_arm_dirty_shutdown(mds))
->  		dev_warn(dev, "GPF: could not dirty shutdown state\n");
->  
->  	dev_set_drvdata(dev, nvdimm);
+> -	return jcaps;
+> +	if (btt || pfn || dax)
+> +		return jcaps;
+>  err:
+>  	json_object_put(jcaps);
+>  	return NULL;
 
