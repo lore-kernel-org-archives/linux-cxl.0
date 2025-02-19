@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8DD61EB195
-	for <linux-cxl@vger.kernel.org>; Wed, 19 Feb 2025 16:49:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CD4A21421F
+	for <linux-cxl@vger.kernel.org>; Wed, 19 Feb 2025 17:05:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739983746; cv=none; b=IDokkxvyAN37DnlBAYhgnDFZNebx8qs58KQ8CEczLrOXrl/XYAOkWM9zwaCu8orejrywNKaMXxXafWdpm5hdhr0u+WD5Ju7yrHHiQlyaR+Y+no/8gAtMbptEoK4siRDv0yRdkUynrAtZo/3X+dA1L8GZ6xRcLJpEvx+HXNwvC1U=
+	t=1739984757; cv=none; b=FzFwXZgERLUeh6RcjXVX4TaBVxwga62uI/62JTVdf5WaUFlRCzZ+ST/HnQpYpFYe2VjBg0uQ2EeRulqFu5zXQg/ULJ5h+eEotFm/Gtl3O0aeX1XWvF6QIOpUZYb2d9sZ6gXld5HI0Q/eYkJH6RwQtCSCp0MPQvVCxzs8sQmVHBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739983746; c=relaxed/simple;
-	bh=nYTJMxf3z1aMXQYdGragY+UjfJi4eqVmTFsluFfk9vY=;
+	s=arc-20240116; t=1739984757; c=relaxed/simple;
+	bh=b+1cFOJXiHlUOawwa0ftb9POWcoBrAfpm8Lpkicei+I=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mfhy0itkJO1CxvKcADpMR6mugIbgXbTu9YnPOp+GnVKUWADQxyrlYZeRADhbyHfjd6FXCclAMPbVn7hfR6z1bzWIDDoDWCRUvghVV1IL6OSe6m9GpbvnYCDtltVkqiOsmd2lvRiZjWODvUfg7Yg5ahRZGcfQxvxJ+UJyKmWzwFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fs6R7ptL; arc=none smtp.client-ip=192.198.163.12
+	 In-Reply-To:Content-Type; b=KsnQwiOL+jl2gUlftRsVvzN3McUd9/hkYFxqNtk6kZ3zoNAhdNGkVmEVE4BtuJFYU5ura9uhOvCfJx5057HEBJ26pZCZOvZShb2EB4iJTkXDOaPua6gguOfoCu2UP3F7yUgwqxF0lFb2Uy3I+dOA4W1R9Pj3MVbmM3zrDwHHOTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OYuTWmhM; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fs6R7ptL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OYuTWmhM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739983745; x=1771519745;
+  t=1739984753; x=1771520753;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=nYTJMxf3z1aMXQYdGragY+UjfJi4eqVmTFsluFfk9vY=;
-  b=Fs6R7ptLAUGLcZm/pvNchGrQgI6dnwtwbsOwOAbk8QT/9cKJ2JHmBxcG
-   qIExIq59uXXZE3H78p6fuJSI+KzaLbRkYWJdg+W8fKWkR/zUQ3cm9zjOO
-   d03BdJgzyPINg7EAuIc2BBF9G6Wq/n7B9U9KjzkPaH0MlaJveH4M7DMqc
-   AaN7gpZB68E+3IEh/KzLhY77uo7I2e1RzxFF5McVDaOIEY36aTE+fKQkw
-   04xESyFfXLaf50MWcgjkqTvdxWB9P8G219S/xMe8ZGEr/Q5Gp0+w7IhdW
-   oOnOQT+RTxhK1jjY4rsST9Xbi1cueqzUAm6pJbvVJNMiXKDYF9beP+s3u
-   Q==;
-X-CSE-ConnectionGUID: keKywx5RTge2DTsKQYg8Ug==
-X-CSE-MsgGUID: jY0HwRb4S9CLbcTfzzyRig==
-X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="44649001"
+  bh=b+1cFOJXiHlUOawwa0ftb9POWcoBrAfpm8Lpkicei+I=;
+  b=OYuTWmhMuqWWUVSWbkzPaUfFJ1Q2sicSdbhTw946kWX7nesaB0CU7ULa
+   pHaYul4Td4oWpShLsXDULowIF6cwyT7otQM5O959t3AvnawO7xbWK0gco
+   7VhawH2KTv6WuTRHRp1UT47RApoOnhKYwphfC6wQ/t+1AbpnYxFWecOWY
+   Iy8DSLwD6Gfe3p1BTFfVu/2kumIbxBGtCK83VT/FWh+vQZsM2l3hrCk03
+   yziKhnJOyHYXRm1Nn4b5+EiR44FqAHRqNuAvyvKraDNXsKGf/hmakOIac
+   CRkeaA+EpqLIoFIQkkjs+7L2Fpu+BTMDjuMhnJizmcZoR9j3QkvYOYdbR
+   w==;
+X-CSE-ConnectionGUID: qGJSD2Y3SQWmdAKzQYXjXw==
+X-CSE-MsgGUID: DJc4QP52Q/eDa+dPI6INrw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="44380677"
 X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="44649001"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 08:49:04 -0800
-X-CSE-ConnectionGUID: zHS3AmLXRC6ajOH5Ngxh8g==
-X-CSE-MsgGUID: qlM5QYGPRJiRtMSGpK3Kqw==
+   d="scan'208";a="44380677"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 09:05:45 -0800
+X-CSE-ConnectionGUID: MfVroJnmQ/CfIw4S/zEOAQ==
+X-CSE-MsgGUID: yd3ogXfKTZK4cfaQjU204Q==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="115293810"
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="115252521"
 Received: from inaky-mobl1.amr.corp.intel.com (HELO [10.125.110.11]) ([10.125.110.11])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 08:49:03 -0800
-Message-ID: <f79dfd9f-07c5-4193-a4a3-9fbef8ca3445@intel.com>
-Date: Wed, 19 Feb 2025 09:48:59 -0700
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 09:05:12 -0800
+Message-ID: <588f9606-495c-4a4d-a62d-a4ceec517f06@intel.com>
+Date: Wed, 19 Feb 2025 10:05:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,89 +52,67 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4] tools/testing/cxl: Set Shutdown State support
-To: Davidlohr Bueso <dave@stgolabs.net>, dan.j.williams@intel.com
-Cc: jonathan.cameron@huawei.com, alison.schofield@intel.com,
- ira.weiny@intel.com, vishal.l.verma@intel.com, seven.yi.lee@gmail.com,
- a.manzanares@samsung.com, fan.ni@samsung.com, anisa.su@samsung.com,
- linux-cxl@vger.kernel.org
-References: <20250219062832.237881-1-dave@stgolabs.net>
- <20250219062832.237881-5-dave@stgolabs.net>
+Subject: Re: [PATCH 1/2] cxl: Plug typos in ABI doc
+To: Davidlohr Bueso <dave@stgolabs.net>
+Cc: dan.j.williams@intel.com, Jonathan.Cameron@huawei.com,
+ ira.weiny@intel.com, alison.schofield@intel.com, linux-cxl@vger.kernel.org
+References: <20250218224853.67457-1-dave@stgolabs.net>
+ <20250218224853.67457-2-dave@stgolabs.net>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250219062832.237881-5-dave@stgolabs.net>
+In-Reply-To: <20250218224853.67457-2-dave@stgolabs.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 2/18/25 11:28 PM, Davidlohr Bueso wrote:
-> Add support to emulate the CXL Set Shutdown State operation.
+On 2/18/25 3:48 PM, Davidlohr Bueso wrote:
+> Trivially update where necessary.
 > 
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 > ---
->  tools/testing/cxl/test/mem.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
+>  Documentation/ABI/testing/sysfs-bus-cxl | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-> index 495199238335..832680a87c73 100644
-> --- a/tools/testing/cxl/test/mem.c
-> +++ b/tools/testing/cxl/test/mem.c
-> @@ -65,6 +65,10 @@ static struct cxl_cel_entry mock_cel[] = {
->  		.opcode = cpu_to_le16(CXL_MBOX_OP_GET_HEALTH_INFO),
->  		.effect = CXL_CMD_EFFECT_NONE,
->  	},
-> +	{
-> +		.opcode = cpu_to_le16(CXL_MBOX_OP_SET_SHUTDOWN_STATE),
-> +		.effect = POLICY_CHANGE_IMMEDIATE,
-> +	},
->  	{
->  		.opcode = cpu_to_le16(CXL_MBOX_OP_GET_POISON),
->  		.effect = CXL_CMD_EFFECT_NONE,
-> @@ -161,6 +165,7 @@ struct cxl_mockmem_data {
->  	u8 event_buf[SZ_4K];
->  	u64 timestamp;
->  	unsigned long sanitize_timeout;
-> +	int shutdown_state;
-
-Should be u8?
-
-DJ
-
->  };
->  
->  static struct mock_event_log *event_find_log(struct device *dev, int log_type)
-> @@ -1088,6 +1093,21 @@ static int mock_health_info(struct cxl_mbox_cmd *cmd)
->  	return 0;
->  }
->  
-> +static int mock_set_shutdown_state(struct cxl_mockmem_data *mdata,
-> +				   struct cxl_mbox_cmd *cmd)
-> +{
-> +	struct cxl_mbox_set_shutdown_state_in *ss = cmd->payload_in;
-> +
-> +	if (cmd->size_in != sizeof(*ss))
-> +		return -EINVAL;
-> +
-> +	if (cmd->size_out != 0)
-> +		return -EINVAL;
-> +
-> +	mdata->shutdown_state = ss->state;
-> +	return 0;
-> +}
-> +
->  static struct mock_poison {
->  	struct cxl_dev_state *cxlds;
->  	u64 dpa;
-> @@ -1421,6 +1441,9 @@ static int cxl_mock_mbox_send(struct cxl_mailbox *cxl_mbox,
->  	case CXL_MBOX_OP_PASSPHRASE_SECURE_ERASE:
->  		rc = mock_passphrase_secure_erase(mdata, cmd);
->  		break;
-> +	case CXL_MBOX_OP_SET_SHUTDOWN_STATE:
-> +		rc = mock_set_shutdown_state(mdata, cmd);
-> +		break;
->  	case CXL_MBOX_OP_GET_POISON:
->  		rc = mock_get_poison(cxlds, cmd);
->  		break;
+> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> index 3f5627a1210a..7bdf0eb79d7c 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> @@ -1,5 +1,5 @@
+>  What:		/sys/bus/cxl/flush
+> -Date:		Januarry, 2022
+> +Date:		January, 2022
+>  KernelVersion:	v5.18
+>  Contact:	linux-cxl@vger.kernel.org
+>  Description:
+> @@ -33,7 +33,7 @@ Date:		May, 2023
+>  KernelVersion:	v6.8
+>  Contact:	linux-cxl@vger.kernel.org
+>  Description:
+> -		(RO) For CXL host platforms that support "QoS Telemmetry"
+> +		(RO) For CXL host platforms that support "QoS Telemetry"
+>  		this attribute conveys a comma delimited list of platform
+>  		specific cookies that identifies a QoS performance class
+>  		for the volatile partition of the CXL mem device. These
+> @@ -60,7 +60,7 @@ Date:		May, 2023
+>  KernelVersion:	v6.8
+>  Contact:	linux-cxl@vger.kernel.org
+>  Description:
+> -		(RO) For CXL host platforms that support "QoS Telemmetry"
+> +		(RO) For CXL host platforms that support "QoS Telemetry"
+>  		this attribute conveys a comma delimited list of platform
+>  		specific cookies that identifies a QoS performance class
+>  		for the persistent partition of the CXL mem device. These
+> @@ -423,7 +423,7 @@ Date:		May, 2023
+>  KernelVersion:	v6.5
+>  Contact:	linux-cxl@vger.kernel.org
+>  Description:
+> -		(RO) For CXL host platforms that support "QoS Telemmetry" this
+> +		(RO) For CXL host platforms that support "QoS Telemetry" this
+>  		root-decoder-only attribute conveys a platform specific cookie
+>  		that identifies a QoS performance class for the CXL Window.
+>  		This class-id can be compared against a similar "qos_class"
 
