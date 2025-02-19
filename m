@@ -1,271 +1,152 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2060.outbound.protection.outlook.com [40.107.94.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11D6F192580
-	for <linux-cxl@vger.kernel.org>; Wed, 19 Feb 2025 17:53:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739987600; cv=none; b=jR2sOrwZV4IVAYe7xKIY0vMubQB1DYRGIs0TFNpLWGfEyFZs9uPPI1UUlx+OFHMKbjPvVMecBpBwWvnkDnFEqkESecSL8drUCxaXzgs+D7oHoRp/urxQ5RHnYmYC0y/6j/hLfmL+B+Va6wO+d2DjVUG8VQixeEBLIKeqgoYUo7w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739987600; c=relaxed/simple;
-	bh=VrdfhHpTCwhBXT3aqYTMo2m2eaLzk8pl2dFqLj46RvE=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=n+6ptfG3Mk0FC5njxkRa4DdMXLdMOcDLHk+1Oginft3/QpnIGDDn8VQuEW8nP5Y7/DU8ztDMNXEAqdyisAUxZcHbaRkEXiTXZBXCTrRE1/byqAGWuUS+9h+SFJ0IgOhUHYrAStEZnY0BIjBYPMLbBS0mWIpOV+WLGfqczqbz1D8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YykV22pTyz6HJbS;
-	Thu, 20 Feb 2025 01:51:38 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 95884140AE5;
-	Thu, 20 Feb 2025 01:53:14 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 19 Feb
- 2025 18:53:13 +0100
-Date: Wed, 19 Feb 2025 17:53:12 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Dave Jiang <dave.jiang@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
-	<ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
-	<alison.schofield@intel.com>, <dave@stgolabs.net>, <jgg@nvidia.com>,
-	<shiju.jose@huawei.com>, <saeed@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 212DA192580
+	for <linux-cxl@vger.kernel.org>; Wed, 19 Feb 2025 17:56:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.60
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739987800; cv=fail; b=IbRw+SriLGKbRi7j7Z0joS5uy70EA5uIWzzV7VpzsNZEtUbtfqfb1SMREbWA7m/sJcELhJ8f/1IZxOVcOfmJQSHyEVrJ2j7iLaIt20OL++Rvie+uFkvD/OpNmIuouxb/XhWxgNlb9YTNkDVebCOLSm0Ov9eVCyV3nT3q31/yLnI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739987800; c=relaxed/simple;
+	bh=FdJhg0sTcKj09aUuT2Hp4nXdd43ccnWmR5gCDepINBo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=S/TCDIEvto+VFwJPNPuBS/Nzgnhfa5ZVtLsmT4hHJdiND8BUI9emDw15u3cHHw2dBvMX48+yrmjh+YD2IKpaCYaBx67SGo3DXmt489Gp040lBOaEPt8q7PwPhl3t4ljHXKgfJ2nwwXi8kObPAXnvRkBYy+fIT9xiInfLTlKjYAk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=NDVpU63a; arc=fail smtp.client-ip=40.107.94.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="NDVpU63a"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=fMLfb2jVbrxX5ZIJxkAIuWHiSYlMtnfzp83Gf/jcx5fHV2iYXUACabl97Z99tbGR3qPj8/daltQyYEmwj1I8H7s9S95g1hLVYfFyJDW8AcnL/MaEnzQwz0gJux+CcVNpz0yU0uGxYqlzSJOKzE1HCWTISjKBf8sYYLuwtMR5j593LhbndrOCuCA6lGF2SL+Ffaqbp3W4+QQTfKrySsojN8U7l5ZHEnFbrRXrk/+zKea/VFldxV7bb+hfTfHMDxFUZp6r99zIINZDTCBW4KySyyapugUNVvUAqi+/kTKliPkjJSNmIZ7BjckSALhkaUubAeM5U9dzlNXteAMOC0Fq9w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PBVAZ07URB86t/qEpv766LWbzzkXkIcbgp3mHU3IWe0=;
+ b=NiXOpdjECiQlKOJvyWMuEJT6ECSZCGvW8wwdFEHkJe8tb1+y6/9UKR7fXIwK7yEDF8xe+vtiw9Fi5nh1TACtuDOyvxTJ/HwI+Gzj08H8wpmiDJgl1UZ5C37XSn+MSCcEYUWT8jvEPj0IguXOXK9NcfsEOYKvUVM7be5bqRDgQ0l/ko9aLYNY4P8tXui0q+du2h0TPJRTtKC0xkVMDpQAaBmKHN5vmcXpzxArvpr+xBpaVhShz+I+VJyDMoSVwAGs3xY+T1xFrZRghYVNCVCCjebk7afnMl23AVmKw1w4S+cEWPfFQJMIMR8iTQTDkrY5FvJdTdDCEVYgMfSEVIuOOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PBVAZ07URB86t/qEpv766LWbzzkXkIcbgp3mHU3IWe0=;
+ b=NDVpU63a5nJLDp8zUYE3xsGtavi+1bpFUmC/hJJDoSRcBg+1prc860sKZpt5sWCueWZy3K0WXQocurKrsr9zWilakXHyEu5BDGkOXDzIHk6UeRTv+SwG5sAHvsoTJ6I36cR3VU5i+cgWRZEGIy6d5U+Qop7npnqbH2zkHEGNYiMr+YfzOy2KqVACeskZGsi0Ilt10vTMrTIR5kXU5YoqL6IY1oYUkqHfRilXDkyNUALGpFQ5HroIBJA7GZzU0mOD6sBW/YDfABFGpBMUCeP1Mw+v7RQ7SPvFjd3sT+dM0iIC/1z3vjKElAVyfMhUfB3ej8MEDSlklxrtOL6ytPBX7g==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by DM4PR12MB8571.namprd12.prod.outlook.com (2603:10b6:8:187::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.18; Wed, 19 Feb
+ 2025 17:56:37 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.8445.019; Wed, 19 Feb 2025
+ 17:56:37 +0000
+Date: Wed, 19 Feb 2025 13:56:35 -0400
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
+	dan.j.williams@intel.com, ira.weiny@intel.com,
+	vishal.l.verma@intel.com, alison.schofield@intel.com,
+	dave@stgolabs.net, shiju.jose@huawei.com, saeed@kernel.org
 Subject: Re: [PATCH v6 09/14] cxl: Add support for fwctl RPC command to
  enable CXL feature commands
-Message-ID: <20250219175312.000070ec@huawei.com>
-In-Reply-To: <20250218225721.2682235-10-dave.jiang@intel.com>
+Message-ID: <20250219175635.GB28076@nvidia.com>
 References: <20250218225721.2682235-1-dave.jiang@intel.com>
-	<20250218225721.2682235-10-dave.jiang@intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+ <20250218225721.2682235-10-dave.jiang@intel.com>
+ <20250219175312.000070ec@huawei.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250219175312.000070ec@huawei.com>
+X-ClientProxiedBy: BN9PR03CA0570.namprd03.prod.outlook.com
+ (2603:10b6:408:138::35) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- frapeml500008.china.huawei.com (7.182.85.71)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|DM4PR12MB8571:EE_
+X-MS-Office365-Filtering-Correlation-Id: aac97b82-0017-44cf-1c2d-08dd510ec119
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?D5zuwgDJJMJTPKqoHNaOrFW6xdNi/pM2akhtuQTq+sUoEyibb+tqq+U2P2Jn?=
+ =?us-ascii?Q?AsSUqAtTbx6XRWW/BMuNH0OYSTRlbpdew5gvOIhakcji68MyCqD22hJfnXiq?=
+ =?us-ascii?Q?7RIghY8RzGhqgKguVFK/8l4g4ycZ8CuWmO/HJksSctGOs+VFdjNjcHDe0tCi?=
+ =?us-ascii?Q?i8eJpntoX+IBpe6AfC0WZlMBMNn6cCNw6Yw7JeAVb3qvJy+DyTUaHxy9j0sF?=
+ =?us-ascii?Q?4y6mO8HcCO5Oezv7aZM9X94ib5QJwqcsUyLnJdaW7XTwNGy4xnKAuuw6sXbH?=
+ =?us-ascii?Q?oiEhyBk4qgzwrKcvXO+WS3Jt46DWG4TJW+dwZviQpQdwt0Xhqqp5Iz4AWN5X?=
+ =?us-ascii?Q?rl9HknIiGiG57wiL+deWowi0fr6hqS1ss+LbLGeXIoc7FoJKtQMHKazhdTbm?=
+ =?us-ascii?Q?QPZBRk9YH5u/+M1rxcW+9cDHNnHtJbEc8iy1TYYl7P3gQulhLXRnpAeer05Y?=
+ =?us-ascii?Q?YrScU1UUH+9sVjlFO1Kf2CzwxqyFAEIbtU3+rf4lFOzpXVHtcbrGVD2IEG5u?=
+ =?us-ascii?Q?joGuDh0o+aOD0GnyWceeazHIHwlDA3lQkGVClOfKd81QtKt3Jbk5riISp3Xv?=
+ =?us-ascii?Q?ePDTi87Zw+GB8LYpAT1Eg5Ctsr8f0WYpeor0fHYoMFm+CpgnQ4vgi5J0BQRA?=
+ =?us-ascii?Q?aH9udimwJCmVGMDCU/FqOwMl562AhZkb/I+9rLd3AZCUU8rrp94yGs2dGpof?=
+ =?us-ascii?Q?sP5CjV8BPV8sAiyX9UsXDJxdhtwxz+n7PO1n6295QkhsFlbhlI41Ch7mAlwV?=
+ =?us-ascii?Q?V2WkCRzlLScsh4DzpCLOjxdRiCDIyg5GX5nvh3FJPSOiP1L5Z4Ev6hu4Wfza?=
+ =?us-ascii?Q?GqnO4Et372B5GfkHGb79F4tE9W1UcP/BNW8lICzCZyAzX5vhZO5q3hfL3JTZ?=
+ =?us-ascii?Q?TYmucslOX2tH0hNqV2jr9VLvLxK3CymPZN14/QTugvpuZdNrUPfD0BBCSFHT?=
+ =?us-ascii?Q?G3WpdpmzV1dd9CiBsadeJSZ9jZ8jRT9HcJpP24dfIxpYvmhxIywWuXoM7Caa?=
+ =?us-ascii?Q?0UjalxyP8mJz90XFzcENelOQCHFoKFVa3VW0LwwDGfXstEOb2ARfd6BhxMNI?=
+ =?us-ascii?Q?aEHK3oCr6hskCC0uT0quv/X+zbiswSwpOM0G7ONIT+UjtmX2l8CrF59Rih/3?=
+ =?us-ascii?Q?lSDHZHE9qv8Cu2KiLvixmlVvxeTml1PFu57bTYhFf50bZdR/ro/QR0AO+rgi?=
+ =?us-ascii?Q?me+ABCKMFOuW7CS9tIhlXLR5NIF/lfQDCPbglQO0WkxPcrlbZB4zy5yOJO/9?=
+ =?us-ascii?Q?SbpdSFiTEc9RIBQxmMatQ5HHU0PRfho8G2QlqFvHIrFgV6yeOAhHkQxhLy3l?=
+ =?us-ascii?Q?P4Ey3YE/nStNmYNvXT523I9fYuisYosgOczNCJmQJGZ44OF9bFVtcvhXDqpW?=
+ =?us-ascii?Q?9kgvlu0qkReNL0ZgdfS5BzXExAmI?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?8iRgWWyvnJGDeqO88FPVFhLTQahsm5h0b/P0MG/Z3tfJ6C0dRAG+zQZXyWT8?=
+ =?us-ascii?Q?816ViSPwT2cBx8XLnpLVMz1e43+XCpnFCO7oSqC5aEhChWYcEyRn+6xDSqau?=
+ =?us-ascii?Q?a07ZZp746Ohdwm8Wrb4dawt/kW/cpbY265TC7g2Tm+Nn9TbGIoGHA+r4eYqN?=
+ =?us-ascii?Q?w+She3WxvufiiuePc5dkF9mBIGzr0zAmNnzU6gGFVWZ51lDHjxFlof3dj6H6?=
+ =?us-ascii?Q?sm19y+optOhoLMffshNgLm9DVe7PrbStcRx+ShnZyh4B/tNeDOgX6wH8jCFi?=
+ =?us-ascii?Q?hnAM3oVwUGS4Q4m+EJOvPlC6eVYpxNVL71CL/kn0LM9aOERrafT7G1SW+kiO?=
+ =?us-ascii?Q?ffy2gfVap939u0eQcvCCt1Je8bSZh9C3WCIzVED8bgPAXsPa6oHVQCn+zXCG?=
+ =?us-ascii?Q?7GY/x0edh1j+r57gYvd3cTbmA+fTV61YXFyeDvKXgvaDTKEs0/OIVOgrEPBQ?=
+ =?us-ascii?Q?wY63z3zUHe/bX6vjF5KEU50DGumqN3HRFFTSAhzaWZ6I5g8EhCHK/Djd0aB+?=
+ =?us-ascii?Q?bM6Z0aCjKmDdk7L5vHgalvOl71MQFk5k9Datt8SiJRT6LAUHAG4kJvgXrie8?=
+ =?us-ascii?Q?rQbw4rwyGTvut9Zkv9RrxzKLC8NCi1urdwTE9GCFiTmrnXYEz+2XgYULcQID?=
+ =?us-ascii?Q?v0I6C57lh/LWY2ztOQaF0IIHucHSFCgxrD7wHhiCqxL7+FrtITyQbPE37tyL?=
+ =?us-ascii?Q?mL/qv46G2BvANadKCh0x4TnefCMrNxzg/mV+b1czOnenUM75SinaDiLESiLj?=
+ =?us-ascii?Q?NZsBCdp8qjIp2I+R5MqFaPrRY7NoJL2VvH0UTT+vfTpbTPrxVBTS9Gg7+Oon?=
+ =?us-ascii?Q?sPMUF5eIIKHY2yfbdBKB4L4RImaDu0fS5K+Hca9eI4AvPZHZ6egKyAtJcTUy?=
+ =?us-ascii?Q?JasZ4VAUqSftrdIKdRaXwHjz2qbNvCkS2k8KTpZbryCZZBikFWIon+u2XxaS?=
+ =?us-ascii?Q?RjBWekimsdr5Vq5IdMu1ruysJiiL6M9QHWTlnziOB7VPXGNTYyP9BO8QaOlA?=
+ =?us-ascii?Q?VjLckV5t7GDbdtzia6vTvdgAXiscCpuhwmptJsc+rZ1Yamfxgeq/xG9eJgJ+?=
+ =?us-ascii?Q?4MZHQ3oWclBhhbWMMVh3Z67CwmGjmyhrg2CPfSmfxXdUF15k4UPRpwy7dbqE?=
+ =?us-ascii?Q?rPv7I0NXL0jeIxG/fyUdyF4AqUlUgsRjShjet7/pUY6DV3IRmFnYWlRL17p+?=
+ =?us-ascii?Q?P6L9cCETnOfm2RDcdbAGVXMNIc0OfE4Q+Au1+1joCR9Dxkpt+XwbVHdD0Cql?=
+ =?us-ascii?Q?rF823bnReeaomE3SmnhzEreyrapS751fdeZ8rs2K/H280cSo+85e8Rwl+QSX?=
+ =?us-ascii?Q?5XhRTQBTtn+bgk9H5g2iJLT6Ym2QVGdvMpACkEN3viGFEpoqj6FLii1qpKc2?=
+ =?us-ascii?Q?6sEbEtMeH03+W6RRD3oN94C9pA3v8zHJWobpL16Fx9lSyqP/swV1qbXOX9O2?=
+ =?us-ascii?Q?YlIZ4lDs9Pnnb3841bMqoiRdBnU4CLJM5OLa++0Gnh3kKSh9tQD303pjJ5rR?=
+ =?us-ascii?Q?Yj+IQdoxE6kfmN2mPQfoMC99jTQt07/G3p8yD8DlfId5Dfu2iNgd+o1bPLI8?=
+ =?us-ascii?Q?lEZV2XQFfp/zxCo7+YRs/lh8xiGA8chWEQu/IGac?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aac97b82-0017-44cf-1c2d-08dd510ec119
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2025 17:56:36.9255
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2oaj30kHkq47kQ3rTV/yVewfLzZntIrBYgOvmh6M4XTpCUJpcXgL68J2oyPUpPYM
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB8571
 
-On Tue, 18 Feb 2025 15:54:38 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
+On Wed, Feb 19, 2025 at 05:53:12PM +0000, Jonathan Cameron wrote:
 
-> fwctl provides a fwctl_ops->fw_rpc() callback in order to issue ioctls
-> to a device. The cxl fwctl driver will start by supporting the CXL
-> Feature commands: Get Supported Features, Get Feature, and Set Feature.
-> 
-> The fw_rpc() callback provides 'enum fwctl_rpc_scope' parameter where
-> it indicates the security scope of the call. The Get Supported Features
-> and Get Feature calls can be executed with the scope of
-> FWCTL_RPC_CONFIGRATION. The Set Feature call is gated by the effects
-> of the Feature reported by Get Supported Features call for the specific
-> Feature.
-> 
-> Only "Get Supported Features" is supported in this patch. Additional
-> commands will be added in follow on patches. "Get Supported Features"
-> will filter the Features that are exclusive to the kernel. The flag
-> field of the Feature details will be cleared of the "Changeable"
-> field and the "set feat size" will be set to 0 to indicate that
-> the feature is not changeable.
-> 
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Hi Dave,
+> I'm probably missing something but I don't understand the need for
+> __DECLARE_FLEXIBLE_ARRAY() in the unions.  We always seem to use one of
+> the structs (some of which have trailing flexible arrays).
 
-I'm probably missing something but I don't understand the need for
-__DECLARE_FLEXIBLE_ARRAY() in the unions.  We always seem to use one of
-the structs (some of which have trailing flexible arrays).
+Can you even use those defines in a uapi header???
 
-
-> ---
-> v6:
-> - Embed hw op in 'fwctl_rpc_cxl'. (Saeed, Jason)
-> - Move set_features bits to set_features enabling patch. (Saeed)
-> - Fix copyright years. (Jason)
-> ---
->  drivers/cxl/core/features.c | 121 +++++++++++++++++++++++++++++++++++-
->  include/uapi/cxl/features.h |   1 +
->  include/uapi/fwctl/cxl.h    |  57 +++++++++++++++++
->  3 files changed, 177 insertions(+), 2 deletions(-)
->  create mode 100644 include/uapi/fwctl/cxl.h
-> 
-> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-> index 846de3294a5e..106ea9e25c82 100644
-> --- a/drivers/cxl/core/features.c
-> +++ b/drivers/cxl/core/features.c
-> @@ -4,6 +4,7 @@
->  #include <linux/device.h>
->  #include <cxl/mailbox.h>
->  #include <cxl/features.h>
-> +#include <uapi/fwctl/cxl.h>
->  #include "cxl.h"
->  #include "core.h"
->  #include "cxlmem.h"
-> @@ -349,11 +350,127 @@ static void cxlctl_close_uctx(struct fwctl_uctx *uctx)
->  {
->  }
->  
-> +static void *cxlctl_get_supported_features(struct cxl_features_state *cxlfs,
-> +					   const struct fwctl_rpc_cxl *rpc_in,
-> +					   size_t *out_len)
-> +{
-> +	const struct cxl_mbox_get_sup_feats_in *feat_in;
-> +	struct cxl_mbox_get_sup_feats_out *feat_out;
-> +	struct cxl_feat_entry *pos;
-> +	size_t out_size;
-> +	int requested;
-> +	u32 count;
-> +	u16 start;
-> +	int i;
-> +
-> +	if (rpc_in->op_size != sizeof(*feat_in))
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	feat_in = &rpc_in->get_sup_feats_in;
-> +	count = le32_to_cpu(feat_in->count);
-> +	start = le16_to_cpu(feat_in->start_idx);
-> +	requested = count / sizeof(*pos);
-> +
-> +	/*
-> +	 * Make sure that the total requested number of entries is not greater
-> +	 * than the total number of supported features allowed for userspace.
-> +	 */
-> +	if (start >= cxlfs->entries->num_features)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	requested = min_t(int, requested, cxlfs->entries->num_features - start);
-> +
-> +	out_size = sizeof(struct fwctl_rpc_cxl_out) +
-> +		struct_size(feat_out, ents, requested);
-> +
-> +	struct fwctl_rpc_cxl_out *rpc_out __free(kvfree) =
-> +		kvzalloc(out_size, GFP_KERNEL);
-> +	if (!rpc_out)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	rpc_out->size = struct_size(feat_out, ents, requested);
-> +	feat_out = (struct cxl_mbox_get_sup_feats_out *)rpc_out->payload;
-
-Why not, 
-
-	feat_out = rpc_out->get_sup_feats_out;
-?
-
-
-> +	if (requested == 0) {
-> +		feat_out->num_entries = cpu_to_le16(requested);
-> +		feat_out->supported_feats =
-> +			cpu_to_le16(cxlfs->entries->num_features);
-> +		rpc_out->retval = CXL_MBOX_CMD_RC_SUCCESS;
-> +		*out_len = out_size;
-> +		return no_free_ptr(rpc_out);
-> +	}
-> +
-> +	for (i = start, pos = &feat_out->ents[0];
-> +	     i < cxlfs->entries->num_features; i++, pos++) {
-> +		if (i - start == requested)
-> +			break;
-> +
-> +		memcpy(pos, &cxlfs->entries->ent[i], sizeof(*pos));
-> +		/*
-> +		 * If the feature is exclusive, set the set_feat_size to 0 to
-> +		 * indicate that the feature is not changeable.
-> +		 */
-> +		if (is_cxl_feature_exclusive(pos)) {
-> +			u32 flags;
-> +
-> +			pos->set_feat_size = 0;
-> +			flags = le32_to_cpu(pos->flags);
-> +			flags &= ~CXL_FEATURE_F_CHANGEABLE;
-> +			pos->flags = cpu_to_le32(flags);
-> +		}
-> +	}
-> +
-> +	feat_out->num_entries = cpu_to_le16(requested);
-> +	feat_out->supported_feats = cpu_to_le16(cxlfs->entries->num_features);
-> +	rpc_out->retval = CXL_MBOX_CMD_RC_SUCCESS;
-> +	*out_len = out_size;
-> +
-> +	return no_free_ptr(rpc_out);
-> +}
-
-> diff --git a/include/uapi/fwctl/cxl.h b/include/uapi/fwctl/cxl.h
-> new file mode 100644
-> index 000000000000..39996ec56816
-> --- /dev/null
-> +++ b/include/uapi/fwctl/cxl.h
-> @@ -0,0 +1,57 @@
-> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> +/*
-> + * Copyright (c) 2024-2025 Intel Corporation
-> + *
-> + * These are definitions for the mailbox command interface of CXL subsystem.
-> + */
-> +#ifndef _UAPI_FWCTL_CXL_H_
-> +#define _UAPI_FWCTL_CXL_H_
-> +
-> +#include <linux/types.h>
-> +#include <linux/stddef.h>
-> +#include <cxl/features.h>
-> +
-> +struct cxl_mbox_get_sup_feats_in;
-> +struct cxl_mbox_get_sup_feats_out;
-
-These are defined now in uapi/cxl/features.h anyway so why is forwards
-def needed?
-
-> +
-> +/**
-> + * struct fwctl_rpc_cxl - ioctl(FWCTL_RPC) input for CXL
-> + * @opcode: CXL mailbox command opcode
-> + * @flags: Flags for the command (input).
-> + * @op_size: Size of input payload.
-> + * @reserved1: Reserved. Must be 0s.
-> + * @get_sup_feats_in: Get Supported Features input
-> + * @op: hardware operation input byte array
-> + */
-> +struct fwctl_rpc_cxl {
-> +	__struct_group(fwctl_rpc_cxl_hdr, hdr, /* no attrs */,
-> +		__u32 opcode;
-> +		__u32 flags;
-> +		__u32 op_size;
-> +		__u32 reserved1;
-> +	);
-> +	union {
-> +		struct cxl_mbox_get_sup_feats_in get_sup_feats_in;
-> +		__DECLARE_FLEX_ARRAY(__u8, op);
-
-Similar to below. op isn't used in this patch that I can see.
-Is it just here so it's obvious what op_size refers to?
-
-> +	};
-> +};
-> +
-> +/**
-> + * struct fwctl_rpc_cxl_out - ioctl(FWCTL_RPC) output for CXL
-> + * @size: Size of the output payload
-> + * @retval: Return value from device
-> + * @get_sup_feats_out: Get Supported Features output
-> + * @payload: Return data from device
-> + */
-> +struct fwctl_rpc_cxl_out {
-> +	__struct_group(fwctl_rpc_cxl_out_hdr, hdr, /* no attrs */,
-> +		__u32 size;
-> +		__u32 retval;
-> +	);
-> +	union {
-> +		struct cxl_mbox_get_sup_feats_out get_sup_feats_out;
-> +		__DECLARE_FLEX_ARRAY(__u8, payload);
-
-I this patch I don't see a particular use for payload other
-than where I've noted I think you can use get_sup_feats_out
-directly.
-
-> +	};
-> +};
-> +
-> +#endif
-
+Jason
