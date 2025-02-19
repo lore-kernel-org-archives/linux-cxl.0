@@ -1,127 +1,137 @@
-Received: from skyblue.cherry.relay.mailchannels.net (skyblue.cherry.relay.mailchannels.net [23.83.223.167])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C1A25A341
-	for <linux-cxl@vger.kernel.org>; Wed, 19 Feb 2025 22:54:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.167
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740005686; cv=pass; b=UGN8Gz+wTzvsGr6Cn2GGXrq30ZCfpew14wyx7Ol288iXXWYNNe4VtuCEVUyYgNkZk69gmu5NIW6ELaMF6p6VJo8dH/vbnHQg2oGVK0JFay3ixaMRKRJAcd4szvpwAZGcb99JY5pif5T/AnXwdsUhoOSmfFrewn2fE35CTQSnl1k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740005686; c=relaxed/simple;
-	bh=yqjsIRiHkwyCVm8b+TmA+rrF1NYQc5HFI0Os5vTb/ag=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 123CA1D79BE
+	for <linux-cxl@vger.kernel.org>; Wed, 19 Feb 2025 23:32:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740007971; cv=none; b=rA2CBS1XFRCJrwGhikntPG2+kT0U8OYbjz4J2ZcmdAHFGrsdh6Tntx5fXqRu7V9UoynD9oWY9+l8WOGXryeS/EVJ7kj+i8SJAmzblX/zhcMK4hCxOP6J/t5UNBmRW/PYT5aXV+fwvlWN4Wwew4RxhyYJd2x3WpsD9L574kXIAJA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740007971; c=relaxed/simple;
+	bh=3Qpi59IwyoeIc+HODTOPdRs+OhUPUgKytanIj4rGMlM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TLK1KFd4yDQeF7HNN0Wf09qfQPYmqJMbFygckhGO1To1ewND18DmdgFCXLRQPaPSPvTOxf2FX+y0cbmre174991yOQdkz/QjX2zjCb2pRfb3UYYckLwMI4LY7a16Z9wvTvzP2wpYtY3MHgDXj1pdx69Cd0fesG45Y1HcmFXXZTw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=IEbiZRLd; arc=pass smtp.client-ip=23.83.223.167
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=kSZslucnjHgtzQVq+gbXhfeu0DWGM4F7xLCx87N4YwiQi2rkCokL+lIvXCSxNRgQ04YgRs9EplAgoDG4rYt2QM/RpedoNwmPIZN/gIqs+Dxd6GiO/y+6ZgIqIC2yDLNvB9Pj/CaO1teuomdcYpxws0SAAR+VK3TYuctC9N4mX5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=S44wyVWX; arc=none smtp.client-ip=209.85.219.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="IEbiZRLd"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 9851D231B9;
-	Wed, 19 Feb 2025 22:54:43 +0000 (UTC)
-Received: from pdx1-sub0-mail-a277.dreamhost.com (trex-1.trex.outbound.svc.cluster.local [100.105.230.78])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 24AA12288E;
-	Wed, 19 Feb 2025 22:54:43 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1740005683; a=rsa-sha256;
-	cv=none;
-	b=yyIiqlfxo9ayi4GLyixi2/NKi4oZ2dQmo6oZ6PXcCKTitw0aZA2maEMIdGpzA2sNR9PAky
-	sSyVVJ6HHZJaLWxy2/BT+/SZfFZ8Tv7UB2FdnkmrdZV7xJjB62x9x6fWTrJqB8BlD4WITf
-	M8So8raMMcL/bA20ySSPSv5un/hyOsV5pqEaFBox/YGQdJ8ffYbzrMG9OvFVXsPt17NWF6
-	vmIA9X7y2e8SOIQkNk30wceQWnLyyavXlYtfGEVCc7NiKhM469zMdsLabTKuEce0B/41cq
-	7UBz1//nhalgTmYdYCAMDNL2gxkgvPmq9Ci8qvWRPybtoiWWZoMma2fCtI1W7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1740005683;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=4J5q641sBAPXQyyQQ8ggPPgYSwh1QELGlNVLAn/LYM0=;
-	b=TJcsyIpsAr7B/J9dX/xzWMQN+QbXVp3q4GPYo4kBWM0VvVO1D3Fxy1JSlDE5HNQqFWg0KN
-	+1XHSAboRQy8h05N2bgTF/SbcT0D3QVlo+MCxM3gTD955C/nqwnJpwGyKrP0v4NZscnGCt
-	bPNTDjp2ySI5RICeNTXaSLxrWEOeNkIesahXtNUMPZeczV/MOieT9I09ikz3YnCfwoiPgz
-	R20vN5FRIfx4xO9FycXk/DtUfXDvCoyH9NV/NHMG1D13LuuzpwWIyTstrxxFn7EXHbhOgv
-	qKwnOg4/+42JAu6Kct/R8m8bjoN7DPYhJJxUC15/hYpT0oMbTEag8Is171xHbg==
-ARC-Authentication-Results: i=1;
-	rspamd-78ddd997cc-hp8s9;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Whistle-Versed: 5c818d816b2cf3bd_1740005683434_1657288459
-X-MC-Loop-Signature: 1740005683434:1096892101
-X-MC-Ingress-Time: 1740005683434
-Received: from pdx1-sub0-mail-a277.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.105.230.78 (trex/7.0.2);
-	Wed, 19 Feb 2025 22:54:43 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a277.dreamhost.com (Postfix) with ESMTPSA id 4YysCk2h6Kz27;
-	Wed, 19 Feb 2025 14:54:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1740005683;
-	bh=4J5q641sBAPXQyyQQ8ggPPgYSwh1QELGlNVLAn/LYM0=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=IEbiZRLdmHHmbaSLAYIHpMU15Sm6Yw9QfL/mdXooiHC9TNwbcXgGg+BWoNQa4seIg
-	 gAUhZ5Oexu4CDtOOhoeBTiWHsjMgglqeFHkwOLPFxTi7IxNAr7iDW3ZG/SSIAH58TR
-	 sg7gSgMvVRr5xdoUjM96B6jjOkcJPkXvJslKf7TT7byZ1EO7UidouNv29HxLS9xTbA
-	 9goHh20iUWsCtuJb1yfs0wW3TTPxOltqjOW6TTIjS+tA42aQxscn68+KiYp6iQjqrQ
-	 bR7LzpoHFUpfjQlHLlPVNmJ7N57pcwV6hBWYB5Fbs6/G2ofnplqsrV/yxIqf0hPfYH
-	 tSAz2Is0pWchQ==
-Date: Wed, 19 Feb 2025 14:54:39 -0800
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: dan.j.williams@intel.com, jonathan.cameron@huawei.com,
-	alison.schofield@intel.com, ira.weiny@intel.com,
-	vishal.l.verma@intel.com, seven.yi.lee@gmail.com,
-	a.manzanares@samsung.com, fan.ni@samsung.com, anisa.su@samsung.com,
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 1/4] cxl/pci: Introduce cxl_gpf_get_dvsec()
-Message-ID: <20250219225439.4zyxfl6clvgzabnx@offworld>
-References: <20250219062832.237881-1-dave@stgolabs.net>
- <20250219062832.237881-2-dave@stgolabs.net>
- <0c2f9ba2-19f7-4014-9290-cdf9dc271934@intel.com>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="S44wyVWX"
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6e677921db0so2464796d6.0
+        for <linux-cxl@vger.kernel.org>; Wed, 19 Feb 2025 15:32:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1740007968; x=1740612768; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=BuJ8MnTrLLKgSkkWBdG51HCA8Qkyi0aXGWMt1dCxiM4=;
+        b=S44wyVWXSFRWrX9p0tc8MphkaYAy+ql4+wXN6T2wP0qjNqpEXvhFXjfeeZv5zEo9l1
+         JxNYsaHNcJIl6fMtDooaC4SKGJfctspyxJJ74OB97ezOYzwvigl3MhZ6opJ1u+IQkT/U
+         eOfV2H5TWTuLf9yIJsraJy0fNeww7sY3a8EZmwuqSQeVvbJYhn/bKFIgDpu9McqliC2/
+         mFe/zV9zTHPiRTTD0h3T5Q/yKXppI1FYJCijYd5mtnzXAcWCljCNbiOqBWqLL9DfI19X
+         1Qm9/hG3M1dESMP9NcQBSOIamYZ1AG7daVlYAGj6vHPjOot5UqHCBKxqwooqVBYRFy1W
+         st1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740007968; x=1740612768;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BuJ8MnTrLLKgSkkWBdG51HCA8Qkyi0aXGWMt1dCxiM4=;
+        b=FGSs2G376e/8eH6CG5XqFHRFaDVPYRHbS2Hcdu3P/Z2ke7hi4LQ9IHQRAdWfMtWbrI
+         qV4qB98efPSXKg+x4ZJvO5uhLndcNUA7uKfLiTyDy+RAKKNCdqrPfIJUmHaoUel4F2y8
+         Ki/36ljYj6swp916E0jd0YWjxo6bLbw13s9DeezUtj1eXAEKQMjERVPI5xDOQBDf+CzX
+         elH/clbAq8hnTrLroHBQNTT1pSr0nmSocYq18qx547Y6s3bfJANPj/o0IYA8A0bGzwyR
+         ncAGWbd46DLe7zyNvsC9JsEIwsEppXtpFJ3tC6CiMTBgCKbU0v2PEvLEbTlAKqCT6y2M
+         MBEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUc92wMBh7BQ2gPwFEOWU/alEjvqDdk00nrkLKpbGu+MreVIZ3OEpww+sOIPVd/A3XvwCF0Agp/nno=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyaDVsYtUUC4TsjXPyLWZYAchE6tiWA/C/5PW2Ql+yo7gEcYB8J
+	BlOBbTySv/4Eo4fjf1uDLoEbZ5FyzaqreVJdHCKkNfuyxf7VbAHFQn82enTYDPQ=
+X-Gm-Gg: ASbGncueJDPQFiXVrApD5RUU05RyA4L+smZTiUOhR5bE/vAWhGvyZ+VyaAnkyAbyQhM
+	C8mEN9I0T/gJvbqJdgXEWWB8ISGAY0xC/SyZpgQVvasI4jaT6kIjuM/zEB2W3wREjI8U3bfG8w5
+	msReziG2ttwHQcmxNtXJjdiDATypVFzOUWB6I61JbA52ccLAv1ucHbBdQx5Gbz186ugpHeG5QYr
+	zd8ZciyxncAmL0J7+9kgj/xZNHPEShbsZ8zCVmGTH78PDbe4bgmi2TSoSlPpxMA5MJDSQ6v0MNI
+	qxFz7KlfMO54fv0vwOR32lfNUgL6/EN39WN5+6mwKWo8enmaZA0otjEq3asXZKAmJkw54Dp+dQ=
+	=
+X-Google-Smtp-Source: AGHT+IEb1NSA6KP9GRyN2gqcBNFucCfbTKdR4b3/RwdPjgrLvsacTXJUjiUUYluNqmcUzxHzBNnpzQ==
+X-Received: by 2002:a05:6214:d46:b0:6e4:4484:f357 with SMTP id 6a1803df08f44-6e66cd19ecamr248188026d6.30.1740007967718;
+        Wed, 19 Feb 2025 15:32:47 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e65d784e99sm80839416d6.28.2025.02.19.15.32.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2025 15:32:47 -0800 (PST)
+Date: Wed, 19 Feb 2025 18:32:45 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v2 04/15] cxl/region: Calculate endpoint's region
+ position during init
+Message-ID: <Z7ZqHc44qLU73hpS@gourry-fedora-PF4VCD3F>
+References: <20250218132356.1809075-1-rrichter@amd.com>
+ <20250218132356.1809075-5-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <0c2f9ba2-19f7-4014-9290-cdf9dc271934@intel.com>
-User-Agent: NeoMutt/20220429
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250218132356.1809075-5-rrichter@amd.com>
 
-On Wed, 19 Feb 2025, Dave Jiang wrote:
+On Tue, Feb 18, 2025 at 02:23:45PM +0100, Robert Richter wrote:
+> The calculation of an endpoint's position in a region traverses all
+> ports up to the root port and determines the corresponding decoders
+> for that particular address range. For address translation the HPA
+> range must be recalculated between ports. In order to prepare the
+> implementation of address translation, move code to
+> cxl_endpoint_decoder_initialize() and reuse the existing iterator
+> there.
+> 
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> ---
+>  drivers/cxl/core/region.c | 25 +++++++++++++++++++++----
+>  1 file changed, 21 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index ad4a6ce37216..6f106bfa115f 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -1903,7 +1903,6 @@ static int cxl_region_sort_targets(struct cxl_region *cxlr)
+>  	for (i = 0; i < p->nr_targets; i++) {
+>  		struct cxl_endpoint_decoder *cxled = p->targets[i];
+>  
+> -		cxled->pos = cxl_calc_interleave_pos(cxled);
+>  		/*
+>  		 * Record that sorting failed, but still continue to calc
+>  		 * cxled->pos so that follow-on code paths can reliably
+> @@ -3264,10 +3263,22 @@ static int cxl_endpoint_decoder_initialize(struct cxl_endpoint_decoder *cxled)
+>  	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+>  	struct cxl_port *iter = cxled_to_port(cxled);
+>  	struct cxl_decoder *root, *cxld = &cxled->cxld;
+> -	struct range *hpa = &cxld->hpa_range;
+> +	struct range hpa = cxld->hpa_range;
 
->> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
->> index a5c65f79db18..2226cca3382d 100644
->> --- a/drivers/cxl/core/pci.c
->> +++ b/drivers/cxl/core/pci.c
->> @@ -1072,6 +1072,27 @@ int cxl_pci_get_bandwidth(struct pci_dev *pdev, struct access_coordinate *c)
->>  #define GPF_TIMEOUT_BASE_MAX 2
->>  #define GPF_TIMEOUT_SCALE_MAX 7 /* 10 seconds */
->>
->> +int cxl_gpf_get_dvsec(struct device *dev, bool port)
->
->Maybe consider enum instead of bool. That would make it more readable. if not, maybe rename the bool to is_port
->
->> +{
->> +	struct pci_dev *pdev;
->> +	int dvsec;
->> +
->> +	if (!dev_is_pci(dev))
->> +		return -EINVAL;
->
->Since this function is mostly a wrapper for pci_find_dvsec_capability(), why not have it return type to be u16 and just return 0 here? That way when you check you only need to verify if it's 0 (failed).
+I believe you have a build error here:
 
-I kind of wanted to not have a u16 return just because it was ugly for cxl general
-calls, but yeah it is better to follow the pci call itself, given the name of this
-cxl helper is *dvsec*.
+drivers/cxl/core/region.c: In function ‘cxl_endpoint_decoder_initialize’:
+drivers/cxl/core/region.c:3286:51: error: incompatible type for argument 2 of ‘cxl_port_find_switch_decoder’
+ 3286 |         root = cxl_port_find_switch_decoder(iter, hpa);
+      |                                                   ^~~
+      |                                                   |
+      |                                                   struct range
+drivers/cxl/core/region.c:3244:67: note: expected ‘struct range *’ but argument is of type ‘struct range’
+ 3244 | cxl_port_find_switch_decoder(struct cxl_port *port, struct range *hpa)
+      |                                                     ~~~~~~~~~~~~~~^~~
+
+Just a missed & later in the function
+
+~Gregory
