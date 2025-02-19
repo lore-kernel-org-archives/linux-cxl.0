@@ -1,108 +1,63 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BFF51FECAE
-	for <linux-cxl@vger.kernel.org>; Wed, 19 Feb 2025 17:05:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4383D2862B2
+	for <linux-cxl@vger.kernel.org>; Wed, 19 Feb 2025 17:09:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739984758; cv=none; b=DDAQTlQdhQIaVqBPRvC9K1oKUZ2/iKHChddHwVqpgJy+aZ6MgUY6yQKUQbjn03X+QtGOtyryhklkXAguLlYG3Xv+aMxt1Uo5zSfSrB+QjO4UOOuAjY9z9Nl8yHsLS/0Yh35Ef5p4XYdqeTqLKuByCbeIn9rLbj19YhlDPqDr1O4=
+	t=1739985002; cv=none; b=bDxtg5BC0W0JZx7Nspmlwu0nSGK8/gaogc19KGRfD6Sn3p8kw5iZ/vwHPNqUwj+zOMQ8Y259HpLl5O0Zn6w7lVXvYuUNI8r9MGSxIQX+aNdyEWT7v6ZuNH3cYdPgS4/k4JzTEktoIshiRFSg2xuIPU8HKFZ87XhKGuCmkJKLAY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739984758; c=relaxed/simple;
-	bh=d1f77bYgroldxR5h5yYq3k7rEKDl36tby1NxwnvSOwU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aGwcl+qFmHHudm3jqmFbakIGUfGWySgqdNnltJBz934OkDTblfGLKv61X+JbP7ihnvixTgFPhtmZOF5dKT0rHr8NEZYp5QrODhewkqOuzgQ4IXz6aSJwgSKv0E9oXvyDUrFx8MU1Aq/ST8KMXG7DETDtb7g4mDxLkGr3TDFMfbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AjWpLH6G; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AjWpLH6G"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739984755; x=1771520755;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=d1f77bYgroldxR5h5yYq3k7rEKDl36tby1NxwnvSOwU=;
-  b=AjWpLH6GFzG09xIdV8TsVc0qTYNV4AoSAUP4geV+HedxDQlYfGMpTHl1
-   Ja28GVRWlz5ePBXufPIBHnO9Uvu5kmD08kVf2/mb0nnWtUtIqhf5ZrdQG
-   qqGLiuQBeYXbjIx2DVso9jKY4N5MpZ4tjwylpmI4x9dDlvs5vIdz7wPUO
-   x/dMRNRzrBvYr9vlr/mt78ZZSiNMsQJrI64zDKT6Kp6uUgtVM+7+nr+3U
-   Ix/Pfl01Nf8MkaEomlb3SEOmUVAnzDcpZt+ATNCq+bB6zAXbs5J4gBO4M
-   FzJaXMYEzb3p4CIUi8LikeV3umRrBpRpHludqA6WMzVDwkzFo2IEH0SNU
-   w==;
-X-CSE-ConnectionGUID: iBak2jIGRJmfbUoIFP9pUQ==
-X-CSE-MsgGUID: GkDQOvFrQr+x83LOHG7oOQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="44380712"
-X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="44380712"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 09:05:50 -0800
-X-CSE-ConnectionGUID: GhNtkM2TSQ+1WlJ7d1rJGg==
-X-CSE-MsgGUID: La9tmLw4QmS0EVBZSvxcsQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="115252563"
-Received: from inaky-mobl1.amr.corp.intel.com (HELO [10.125.110.11]) ([10.125.110.11])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 09:05:26 -0800
-Message-ID: <9df43c5c-bca9-4e34-b6df-758272b211a6@intel.com>
-Date: Wed, 19 Feb 2025 10:05:22 -0700
+	s=arc-20240116; t=1739985002; c=relaxed/simple;
+	bh=nMqnOt0m28f9DajUxVKkeaSnJkbo+FPvEYTudBUwI6Q=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=U0i6pvFWqipXOtcIhH5XhhNgClMPhhzO7RvBos708YyE6WPxULFxpxjBd+Wc2bl2ji/haioN4urUdnWNFefbg5jiYUTPs58P1Dbrwb2tZWN3H1R1wnoiV+rgpMj4mziUu3JmqIBzGSXVyRxs9SIY/VvMzQjuz6knPDvflIi/jeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YyjV04TLkz686xP;
+	Thu, 20 Feb 2025 01:06:32 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id A11331400D4;
+	Thu, 20 Feb 2025 01:09:55 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 19 Feb
+ 2025 18:09:54 +0100
+Date: Wed, 19 Feb 2025 17:09:53 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Dave Jiang <dave.jiang@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
+	<ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
+	<alison.schofield@intel.com>, <dave@stgolabs.net>, <jgg@nvidia.com>,
+	<shiju.jose@huawei.com>, <saeed@kernel.org>
+Subject: Re: [PATCH v6 07/14] cxl: Add FWCTL support to CXL
+Message-ID: <20250219170953.00004f0b@huawei.com>
+In-Reply-To: <20250218225721.2682235-8-dave.jiang@intel.com>
+References: <20250218225721.2682235-1-dave.jiang@intel.com>
+	<20250218225721.2682235-8-dave.jiang@intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] cxl: Document missing sysfs files
-To: Davidlohr Bueso <dave@stgolabs.net>
-Cc: dan.j.williams@intel.com, Jonathan.Cameron@huawei.com,
- ira.weiny@intel.com, alison.schofield@intel.com, linux-cxl@vger.kernel.org
-References: <20250218224853.67457-1-dave@stgolabs.net>
- <20250218224853.67457-3-dave@stgolabs.net>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250218224853.67457-3-dave@stgolabs.net>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
+On Tue, 18 Feb 2025 15:54:36 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-
-On 2/18/25 3:48 PM, Davidlohr Bueso wrote:
-> Add to the ABI documentation the payload_max and label_storage_size
-> read-only files, which have been there since the early days.
+> Add fwctl support code to allow sending of CXL feature commands from
+> userspace through as ioctls via FWCTL. Provide initial setup bits. The
+> CXL PCI probe function will call cxl_setup_fwctl() after the cxl_memdev
+> has been enumerated in order to setup FWCTL char device under the
+> cxl_memdev like the existing memdev char device for issuing CXL raw
+> mailbox commands from userspace via ioctls.
 > 
-> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  Documentation/ABI/testing/sysfs-bus-cxl | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-> index 7bdf0eb79d7c..04a880bd1dde 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-cxl
-> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
-> @@ -18,6 +18,24 @@ Description:
->  		specification.
->  
->  
-> +What:		/sys/bus/cxl/devices/memX/payload_max
-> +Date:		December, 2020
-> +KernelVersion:	v5.12
-> +Contact:	linux-cxl@vger.kernel.org
-> +Description:
-> +		(RO) Maximum size (in bytes) of the mailbox command payload
-> +		registers. Linux caps this at 1MB if the device reports a
-> +		larger size.
-> +
-> +
-> +What:		/sys/bus/cxl/devices/memX/label_storage_size
-> +Date:		May, 2021
-> +KernelVersion:	v5.13
-> +Contact:	linux-cxl@vger.kernel.org
-> +Description:
-> +		(RO) Size (in bytes) of the Label Storage Area (LSA).
-> +
-> +
->  What:		/sys/bus/cxl/devices/memX/ram/size
->  Date:		December, 2020
->  KernelVersion:	v5.12
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
