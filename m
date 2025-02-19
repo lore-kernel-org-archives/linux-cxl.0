@@ -1,84 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF1BE126BFA;
-	Wed, 19 Feb 2025 18:26:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDCAA21481B;
+	Wed, 19 Feb 2025 18:26:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739989595; cv=none; b=p+QZ3hCu7YeH/TwdJw+EoJVXzINHB83MHFfbh1Eg05IeoaX608QctCADb3PjkFELjkjFr9OCjvHZ7BfcKg8PaJ+B7qudrtcJQqo6mcPrckU8h+XJ+XUfw2Y0U7tn68h7IzLoo0fed1Hrv1eGi7dhoFsKP+0z9iwtE4UnzcBfCKA=
+	t=1739989616; cv=none; b=tqCvWcixQzeQwJkShdb8WcD1cBiP2WSuIpvil4G/3SldR1HsyeRWWurOjEIYmV4Uc1j6CUmdWFypVjObMvV5Lbyx1QyPyPKbVkWPG1kGpjBqClLEwoFS5ihUwRwcNyMtdIlriw+ETlr1pZIuaE1TQG9hSZCC8y5703kknNDN19U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739989595; c=relaxed/simple;
-	bh=J9nejIYo+VlPUsyivsCMZuxiVZl3v9sewy19d7xGe48=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ONUrTPk4vFRk5ug4ovRGJiEqWIKUp8TkfSFk9tGYTfgf9cf9OqS1tTpdKoxEgwsD7GAy2iHOmEaqj0DLcBmbZP4iatU+uqzy0DZ+73lmYn24NUF4f2O/0QynGS1uKETtjOl1U/MNylH//JLnmu57fApx8QrzZAQOGp8EM9ucq/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H4QxGeeh; arc=none smtp.client-ip=198.175.65.13
+	s=arc-20240116; t=1739989616; c=relaxed/simple;
+	bh=BynjFU2Ir4LMIytzR/2ljyenub6oAViTBqIdgJJdD3I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jG688b5/oxSQGuyAJ0PN68B/v83UzSOSkYHu+sokkKMaAfEtfysjF8FSrYm+8uLxHbkrmpw5O8iu+Si8XqJ6lRHmcAQaOjQThKFLm/L31E+NPelnaLGIpscHWTnGqm0J9eyWMyU3y+q6DGBQzy4wxKjiYmkZ9CplIlV9XqJEi08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VvxF8XA3; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H4QxGeeh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VvxF8XA3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739989594; x=1771525594;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=J9nejIYo+VlPUsyivsCMZuxiVZl3v9sewy19d7xGe48=;
-  b=H4QxGeehUZ7edq4AWjIP+cA/lucqo3jatXeK+m4uCdnVFbW5HJUrWnXJ
-   Birrt7Zdt9HPV4t48EJA7DMYEC5gvorFgkEJ3Z5knjVJMH1eWFVMmBOeJ
-   UlvKeMvTXHq5g5jIEk2mlT+yy4irxI3psm6IGhtdRJ45nqo2L5cmG3ibS
-   zP2DD0PXBZFsT4sUM3eIEwTFSL7RZ9mKJLl1rS2gZv0GUhjBzESl81zN4
-   KLlx9kk0St3KFTwb/nRvfEmKVNDOkONX+1jZjsbtpAh4CzKy+hZhYhVfH
-   cMW0AhJGF/KOH2V5GPa/kwOJnf7Gp8tLdSUCs8J5ceasFzx0eXwVIMdd6
-   Q==;
-X-CSE-ConnectionGUID: ix4thxFmQQKKBKBzk7r+Sw==
-X-CSE-MsgGUID: TKN9qzLFQxCsMF7noZeCnQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="51725362"
+  t=1739989615; x=1771525615;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=BynjFU2Ir4LMIytzR/2ljyenub6oAViTBqIdgJJdD3I=;
+  b=VvxF8XA3EUSeAir9u90jXQ5S6leTbu0F4UQnk8xqTmLnpHSi48p8F3Zc
+   jOxsP2XLKosedU/L5/ExXu6aa3Xe+UAQs/TC9R635EpEex2O/QyESMgUu
+   eEE4TJ9xMSDhKrwPqZfKu9YKtFhDtcFsvQ3KPgPT8r1xOxw3hiEwiweYe
+   MrVDZOB+BucC1RZUv2QEwAyULfWYmgg16p27hbf3MRqLuGvXODBFv2laq
+   lLuxxW/BYK9swrdLGtib/L9uFypIh5i/ByPcGjf11maJ1OY35JZ/MATxk
+   XmzpSbh6pD9HcE57OSqRv8drjCyUs5s7Gp8VQyDA62WSWl/8476xpMu1G
+   A==;
+X-CSE-ConnectionGUID: cXJoqJz4T1KjeetE7YATgw==
+X-CSE-MsgGUID: A3nHNWyeRlydTXJpqqn4sQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="40756606"
 X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="51725362"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 10:26:33 -0800
-X-CSE-ConnectionGUID: 75iN1BC6SciVEJA1N4GuFA==
-X-CSE-MsgGUID: 3nOx3ntqRpaO2ywTgdjifg==
+   d="scan'208";a="40756606"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 10:26:53 -0800
+X-CSE-ConnectionGUID: 0ikWnpgcRh++9TjK5rV0bA==
+X-CSE-MsgGUID: uor3T1kPTruOnoQnsDIn0g==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="119907906"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.110.15])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 09:38:48 -0800
-Date: Wed, 19 Feb 2025 09:38:39 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: Li Ming <ming.li@zohomail.com>
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 7/7] cxl/region: Drop goto pattern of
- construct_region()
-Message-ID: <Z7YXHwN2LSSC5rVe@aschofie-mobl2.lan>
-References: <20250217144828.30651-1-ming.li@zohomail.com>
- <20250217144828.30651-8-ming.li@zohomail.com>
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="118923359"
+Received: from inaky-mobl1.amr.corp.intel.com (HELO [10.125.110.11]) ([10.125.110.11])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 09:16:35 -0800
+Message-ID: <ec04b92f-e916-4769-be82-93f369c9c593@intel.com>
+Date: Wed, 19 Feb 2025 10:16:22 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250217144828.30651-8-ming.li@zohomail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/7] cxl/memdev: cxl_memdev_ioctl() cleanup
+To: Li Ming <ming.li@zohomail.com>, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250217144828.30651-1-ming.li@zohomail.com>
+ <20250217144828.30651-4-ming.li@zohomail.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250217144828.30651-4-ming.li@zohomail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 17, 2025 at 10:48:28PM +0800, Li Ming wrote:
-> Some operations need to be protected by the cxl_region_rwsem in
-> construct_region(). Currently, construct_region() uses down_write() and
-> up_write() for the cxl_region_rwsem locking, so there is a goto pattern
-> after down_write() invoked to release cxl_region_rwsem.
+
+
+On 2/17/25 7:48 AM, Li Ming wrote:
+> In cxl_memdev_ioctl(), the down_read(&cxl_memdev_rwsem) and
+> up_read(&cxl_memdev_rwsem) can be replaced by a
+> guard(rwsem_read)(&cxl_memdev_rwsem), it helps to remove the open-coded
+> up_read(&cxl_memdev_rwsem). Besides, the local var 'rc' can be also
+> removed to make the code more cleaner.
 > 
-> construct region() can be optimized to remove the goto pattern. The
-> changes are creating a new function called construct_auto_region() which
-> will include all checking and operations protected by the
-> cxl_region_rwsem, and using guard(rwsem_write) to replace down_write()
-> and up_write() in construct_auto_region().
-> 
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > Signed-off-by: Li Ming <ming.li@zohomail.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+> ---
+>  drivers/cxl/core/memdev.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index 98c05426aa4a..6f90dcd626f9 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -668,15 +668,13 @@ static long cxl_memdev_ioctl(struct file *file, unsigned int cmd,
+>  {
+>  	struct cxl_memdev *cxlmd = file->private_data;
+>  	struct cxl_dev_state *cxlds;
+> -	int rc = -ENXIO;
+>  
+> -	down_read(&cxl_memdev_rwsem);
+> +	guard(rwsem_read)(&cxl_memdev_rwsem);
+>  	cxlds = cxlmd->cxlds;
+>  	if (cxlds && cxlds->type == CXL_DEVTYPE_CLASSMEM)
+> -		rc = __cxl_memdev_ioctl(cxlmd, cmd, arg);
+> -	up_read(&cxl_memdev_rwsem);
+> +		return __cxl_memdev_ioctl(cxlmd, cmd, arg);
+>  
+> -	return rc;
+> +	return -ENXIO;
+>  }
+>  
+>  static int cxl_memdev_open(struct inode *inode, struct file *file)
 
-snip
