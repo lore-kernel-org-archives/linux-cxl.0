@@ -1,106 +1,129 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB51D214A99
-	for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 17:13:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F7402F852;
+	Thu, 20 Feb 2025 17:17:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740071584; cv=none; b=dg6mUF+ka8wZAjywOjfUkil1av/Vj+pPLiHIU1GAbVJkw9FU0l1Ilzxs/2qStbjIq0Ba0m62E5Tqf6dxOpwN4RU3JZ/UnSDxkLzEE39JVuJNb23QixLHD43lHDLZnrbdCIwZzAKvxzpaCiRhsXaTuZXlMJF9R49GKnXBR/FKo3c=
+	t=1740071871; cv=none; b=RjsneJL6aDvtT4rHYssiwr3B/O2tStOPtSPtfjQZ/1KcClrs2cyKe4d9Z/WOSlX5saRCTggEh4BcbNfdEGHGr/7HbHqXBjlYRtAZalUco+dyg4aUXYwDH4AvIqjii+JB1MJyi1I0IUgs8Plo64jOtmspZWcNjb23FXVgWQm1mCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740071584; c=relaxed/simple;
-	bh=lV7TcScsIRAKPDlTrdQMI5rMpotWjokiuo1bDm/dhMU=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KWcb3/WqdpGQIL1J/efwBYlnolmBDj1SjqHOdI0dQ6NicpS730nPpwwLRqX5m7kM4R0CXc+A+H6RUl71t7c/G+HQiKa8Z5/FWpCDfUkh3/GmEAmZoAaxQb+qdGlrg4L2SHFUxB33SqTV6hIFTiJWv9CJwsRtLywu4cW0P/+9Oyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YzKWx2yDRz67HSr;
-	Fri, 21 Feb 2025 01:10:21 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 45AFD140B55;
-	Fri, 21 Feb 2025 01:12:59 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 20 Feb
- 2025 18:12:58 +0100
-Date: Thu, 20 Feb 2025 17:12:57 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Davidlohr Bueso <dave@stgolabs.net>
-CC: <dave.jiang@intel.com>, <dan.j.williams@intel.com>,
-	<alison.schofield@intel.com>, <ira.weiny@intel.com>,
-	<vishal.l.verma@intel.com>, <seven.yi.lee@gmail.com>, <ming.li@zohomail.com>,
-	<a.manzanares@samsung.com>, <fan.ni@samsung.com>, <anisa.su@samsung.com>,
-	<linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 2/4] cxl/pmem: Rename cxl_dirty_shutdown_state()
-Message-ID: <20250220171257.0000605f@huawei.com>
-In-Reply-To: <20250220013604.263489-3-dave@stgolabs.net>
-References: <20250220013604.263489-1-dave@stgolabs.net>
-	<20250220013604.263489-3-dave@stgolabs.net>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1740071871; c=relaxed/simple;
+	bh=YT5Fa455xzJIgAAesy8Hd+w/8vUYTo87Psi7+utV9xc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i7obDbURKBlEdcrpBt/AOyRYYLucQUazZyDhXtFiVeqJJPcz0zHQaPZrmdwYwgyaGcjN2hJFRhoI7Gd1yvXsGjG//xdOzNfROgV9fyMymEsABvxkebhFKhk0YjNxfJo2aQjADqmofePy2ZmkSoh9uKhyFFCv8RGXYK76Km8+erU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WGINU7vc; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WGINU7vc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740071869; x=1771607869;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=YT5Fa455xzJIgAAesy8Hd+w/8vUYTo87Psi7+utV9xc=;
+  b=WGINU7vcfuB3tijhk2Kt8ufjV7Krt1j5sciwr3TjZgEROfyk9adVqxJu
+   4nDMsuU2fjw8hUL2h/Alvk2evvLX7pJRIr0cFpFM6JrXcalXpPHOALD+c
+   1rsJhDWMw+J0T9bONNKHJaOW+V+mtYksqHRxjV5SebwrzCOR2U+OUW2e0
+   lmW3KiBi98cfHA2hjogfaFOftiYLTKR1WVPY0hl3BPTgNs9Cuzxng6DEE
+   TZ3gPmp8KUw8nGPHyzGk/2IGOzH1zmJPelviGI3plY3jgUGMv2qsyLd8k
+   mQGHogqppj2Lxk2myuVKtgDXoAGanO3TZkRi9C1UcctJXDFSggcsfSJPT
+   A==;
+X-CSE-ConnectionGUID: uWSZ/GRZRge7+E4AGXIucA==
+X-CSE-MsgGUID: 2h3FLJwzQh6t1eTkzDW+cA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="41075198"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="41075198"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 09:17:49 -0800
+X-CSE-ConnectionGUID: o/DP0KRZROySbXhGQ31eSQ==
+X-CSE-MsgGUID: pZ2aYE6aR/ehYEYSyak37A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="114966004"
+Received: from puneetse-mobl.amr.corp.intel.com (HELO [10.125.110.112]) ([10.125.110.112])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 09:17:48 -0800
+Message-ID: <7b65a200-cddf-4503-9fe8-4004d67f856b@intel.com>
+Date: Thu, 20 Feb 2025 10:17:47 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 12/18] cxl/region: Use iterator to find the root port
+ in cxl_find_root_decoder()
+To: Robert Richter <rrichter@amd.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Davidlohr Bueso <dave@stgolabs.net>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Gregory Price <gourry@gourry.net>,
+ "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+ Terry Bowman <terry.bowman@amd.com>
+References: <20250211095349.981096-1-rrichter@amd.com>
+ <20250211095349.981096-13-rrichter@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250211095349.981096-13-rrichter@amd.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- frapeml500008.china.huawei.com (7.182.85.71)
-
-On Wed, 19 Feb 2025 17:36:02 -0800
-Davidlohr Bueso <dave@stgolabs.net> wrote:
-
-> ... to a better suited 'cxl_arm_dirty_shutdown()'.
-
-But it works on x86 as well! I'll cope I suppose.
-
-Mind you why not let it take the state as a parameter
-and always pass 1?  From a mailbox command point of
-view 0 is valid. The text in table 8-152 has me a little confused
-but I think it says you can set it to 1 and back to 0 and
-then reset at which point the dirty shutdown count will
-not increment.
-
-No idea why you'd do that, but just passing a 1 into
-this function would make a call of
-cxl_set_dirty_shutdown_state(mds, 1)
-seem reasonable, or pass a boolean.
- 
 
 
 
+On 2/11/25 2:53 AM, Robert Richter wrote:
+> cxl_find_root_decoder() uses find_cxl_root() to find the root port.
+> In order to support address translation, an iterator must traverse all
+> ports from endpoint to root port and filter based on system physical
+> address. Replace the call to find_cxl_root() with the required logic.
 > 
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Reviewed-by: Li Ming <ming.li@zohomail.com>
-> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> Reviewed-by: Gregory Price <gourry@gourry.net>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Tested-by: Gregory Price <gourry@gourry.net>
+
+Hi Robert,
+
+While some cleanup patches are good to send ahead, some like these would be good to go right before they get used to allow the reviewer to see how the new code is utilized. Otherwise the changes doesn't make a lot of sense stand alone.
+
+If it's not too much of a pain, I'd like to this series only have cleanups/refactorings that would make sense without the address translation needs. And move the other changes near the address translation changes for a smoother review.
+
+Thanks!   
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
+
 > ---
->  drivers/cxl/core/mbox.c | 4 ++--
->  drivers/cxl/cxlmem.h    | 2 +-
->  drivers/cxl/pmem.c      | 2 +-
->  3 files changed, 4 insertions(+), 4 deletions(-)
+>  drivers/cxl/core/region.c | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index c5eedcae3b02..86d13f4a1c18 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -1281,7 +1281,7 @@ int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_mem_dpa_fetch, "CXL");
->  
-> -int cxl_dirty_shutdown_state(struct cxl_memdev_state *mds)
-> +int cxl_arm_dirty_shutdown(struct cxl_memdev_state *mds)
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index fb43e154c7b9..cfcd235f311e 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -3207,13 +3207,18 @@ static struct cxl_root_decoder *
+>  cxl_find_root_decoder(struct cxl_endpoint_decoder *cxled)
 >  {
->  	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
->  	struct cxl_mbox_cmd mbox_cmd;
-> @@ -1297,7 +1297,7 @@ int cxl_dirty_shutdown_state(struct cxl_memdev_state *mds)
+>  	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+> -	struct cxl_port *port = cxled_to_port(cxled);
+> -	struct cxl_root *cxl_root __free(put_cxl_root) = find_cxl_root(port);
+> +	struct cxl_port *iter = cxled_to_port(cxled);
+>  	struct cxl_decoder *cxld = &cxled->cxld;
+>  	struct range *hpa = &cxld->hpa_range;
+>  	struct device *cxlrd_dev;
 >  
->  	return cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
->  }
-> -EXPORT_SYMBOL_NS_GPL(cxl_dirty_shutdown_state, "CXL");
-> +EXPORT_SYMBOL_NS_GPL(cxl_arm_dirty_shutdown, "CXL");
->  
->  int cxl_set_timestamp(struct cxl_memdev_state *mds)
->  {
+> -	cxlrd_dev = device_find_child(&cxl_root->port.dev, hpa,
+> +	while (iter && !is_cxl_root(iter))
+> +		iter = to_cxl_port(iter->dev.parent);
+> +
+> +	if (!iter)
+> +		return NULL;
+> +
+> +	cxlrd_dev = device_find_child(&iter->dev, hpa,
+>  				      match_root_decoder_by_range);
+>  	if (!cxlrd_dev) {
+>  		dev_err(cxlmd->dev.parent,
 
