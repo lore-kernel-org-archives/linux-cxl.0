@@ -1,226 +1,105 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48C7A34CF5
-	for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 15:37:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A471FF7A5
+	for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 16:00:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740065871; cv=none; b=by9dHjKFHGqbr0HiY9rqC2ht/iZW6y0Vxd7nzuxSmefNGxezJ5Q8l5w2qWvm/3QLth0mgeThG+fBhyEbP05RzD0KBea/U7EIiVXvT87+dqjgnFQDAXwyKH1y0D6pZV9UsPZqTR+Nooj6vshb81kotRiGsu4Jlwb2qo3SZVOeA48=
+	t=1740067254; cv=none; b=ANQo/mRKQIDCBbme4tpsLtSHutwW5hIf2Hm/f7L1h0TL11beeO+k7SG1G8L+4c+5WrDu7yd6EF4OIWgb9fMTNLtL4wkyNGppoEYhYFfCX3nOKogXJndiHpnansyxs9m8VbYXuWC3hNXVshKFwGJWzAxZgqDjikdjrD4rToUQm8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740065871; c=relaxed/simple;
-	bh=U6wkZKJuUgil9LBfncrQvYKYTtwtTVUkDWtmIp+5OBE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=qBWDkiRN0FQGEW8NmwdgUZM4oj6FDNUZf929+qaTsJVUUqhGaYG9VY1+NICpa6HBJswPsd9doqNxJuJ/vdVsQwLlDxaI0Uu+akOi0SLRzNvRUWqR8u/+w6tJKWOdxVEcOW13zCFfUBFbdMw+8mExWo0BttwYou5ywYoEXoXx5tE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YzHP865ndz6GBZC;
-	Thu, 20 Feb 2025 23:34:20 +0800 (CST)
-Received: from frapeml100007.china.huawei.com (unknown [7.182.85.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id CF908140119;
-	Thu, 20 Feb 2025 23:37:46 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (7.182.85.172) by
- frapeml100007.china.huawei.com (7.182.85.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 20 Feb 2025 16:37:46 +0100
-Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
- frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
- Thu, 20 Feb 2025 16:37:46 +0100
-From: Shiju Jose <shiju.jose@huawei.com>
-To: Dave Jiang <dave.jiang@intel.com>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>
-CC: "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-	"ira.weiny@intel.com" <ira.weiny@intel.com>, "vishal.l.verma@intel.com"
-	<vishal.l.verma@intel.com>, "alison.schofield@intel.com"
-	<alison.schofield@intel.com>, Jonathan Cameron <jonathan.cameron@huawei.com>,
-	"dave@stgolabs.net" <dave@stgolabs.net>, "jgg@nvidia.com" <jgg@nvidia.com>,
-	"saeed@kernel.org" <saeed@kernel.org>, Li Ming <ming.li@zohomail.com>
-Subject: RE: [PATCH v6 06/14] cxl: Setup exclusive CXL features that are
- reserved for the kernel
-Thread-Topic: [PATCH v6 06/14] cxl: Setup exclusive CXL features that are
- reserved for the kernel
-Thread-Index: AQHbgliILzagj5mciUKUq+IajY4Z+7NQVPPQ
-Date: Thu, 20 Feb 2025 15:37:46 +0000
-Message-ID: <3fc274862c2548efb259dfb96e083612@huawei.com>
-References: <20250218225721.2682235-1-dave.jiang@intel.com>
- <20250218225721.2682235-7-dave.jiang@intel.com>
-In-Reply-To: <20250218225721.2682235-7-dave.jiang@intel.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1740067254; c=relaxed/simple;
+	bh=PFLJoqT/cNJyDxWt7BAfFDChIabrl8XCG2RAweqsZ0Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HY9iWphRbeIAaa2m6hqkKHM91LdT+21iOEp9su7AWqKzYdoVp2pxJxLYSlX3RHQyEruzMNNw4F07SEowngoId3nT9rJFWUzNXWf7SMX4jcO+NfRQmo0c9qIyM9UOCthFAG+HAFzHlde1WHhQV67GclxyE8/9bU4+mLQ9VJuABvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=PTIAMy8L; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="PTIAMy8L"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7be49f6b331so110900885a.1
+        for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 08:00:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1740067251; x=1740672051; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Hb4nDnsDItCK7e2FGSDzpODPaEsgaUkyUWraQucTKeA=;
+        b=PTIAMy8LxYVf8aveDl5GB5cMwya9FqrCY9wMiL8n/iI08PT6HwUCig8mDDm9P/c25B
+         BD8lWth2ZDFG0s/Gy6f2qtV/kuDMsSGbDccTs6S6PSPVwC+MidghrKZ5G7dRTguOdBKt
+         r2PfUJSpAjS5MZ0t3Ikb/FZGbU8ev/QZIbcdzn8MUKdXuIeeMtWf1vcPwA58dMLb03+Q
+         8+eNXMkc7clNsazlploVuNrxMAgRSXjsWNls3EzGIYttBIL8EK8B01xl5Ko7ZNiu50BM
+         UgznjqrbapOF2ZgkLJXfmwGIyS5XP2lG1LgSrI08bvG1auda/fDAfDyS8KhBfvizgchf
+         537Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740067251; x=1740672051;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Hb4nDnsDItCK7e2FGSDzpODPaEsgaUkyUWraQucTKeA=;
+        b=CtBwjEJ4A/ptzgfiDZhuTbJrizgSdaz9kQxLP143PwUecWaB1Bd8jdyb7T+FAM5sv5
+         DWgZSMeY+VhqoTbrSFsvAjYf8wx2SU9tS7N0f1kd07O/4Oj8Oc+5yx/kwEsZfFxhr0ky
+         +r0LmuknjUa724UNAKNg90K7bw8Y8be2atbLVi05g+ynp/ZlaeCOrQj1SAE85nCJ2bER
+         SPfm4UrxdiEnDSJA/ckOM8lUrdblS+xlo78r96yTNMBsTTA34mxxoF9cG7bUg1v7GCo7
+         aSG1C0pUte09GU6DbkCiYIXCutMbBme5hUDNUp+/l/3uEeY1VtcngxirTsf+V20O8c5v
+         HwtA==
+X-Forwarded-Encrypted: i=1; AJvYcCUnOfg8VF9D+YE1MNl7yH7suJQ7tH/ewzBwW+vwmtKB/SqWxQAYR4p4nES6ghTpRapVgn9EPF/Lbs4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZ3JFiOZbOC6IZ5VGob6CDvT7EOsurxc848tjCSzx+GtDyYOAc
+	3NSb3hRMeSFZL4tfJoknKCu0XMnAEFA+gxMn1NMsHd2z78HeZwxiK4iuy2ItDUA=
+X-Gm-Gg: ASbGncudvMjFBeq1cRxbVlv1n78NvotaW30zK8Z4zYDCkhPYJn11mZVLdIRYCHXdoao
+	Z+s6OGDoTH+5ih+VQzq0wAtTrozTNbGU88y9AD6dMspqtcwLGXjVJcBzBfnPclHKO8xNyrE6oR2
+	+vtQx72GuGfZ1XWuh9twj19nyH457PW6mTwaiWMqz76Jx1469F3emTWk8NArn/2DpAZWAdJ9plE
+	rG8rgKfBpIZUktEAUbz3pGofpephz5UfjsXAppUTqbafFZusenCNDM0+sQ3q7qy4cdBdDxyFmHw
+	TEvkJ4K1wjAGBNmYMsnHZHlqO5C2ydCd1TiaUptrGWEMjkZ9CrDLucy5CI85Ci2wEDVxSfigYQ=
+	=
+X-Google-Smtp-Source: AGHT+IGphiYX9yy9vqSy5vgpD7h+lkSFIztYChgp7ux/RvE6ggnd/svuGRnDHeGWZqk5dNE4JJcfTg==
+X-Received: by 2002:a05:620a:4091:b0:7c0:bca7:1a34 with SMTP id af79cd13be357-7c0bca71e02mr770969985a.23.1740067249836;
+        Thu, 20 Feb 2025 08:00:49 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4720670039bsm25311111cf.18.2025.02.20.08.00.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2025 08:00:49 -0800 (PST)
+Date: Thu, 20 Feb 2025 11:00:47 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v2 01/15] cxl: Modify address translation callback for
+ generic use
+Message-ID: <Z7dRrz9D22p3urfI@gourry-fedora-PF4VCD3F>
+References: <20250218132356.1809075-1-rrichter@amd.com>
+ <20250218132356.1809075-2-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250218132356.1809075-2-rrichter@amd.com>
 
->-----Original Message-----
->From: Dave Jiang <dave.jiang@intel.com>
->Sent: 18 February 2025 22:55
->To: linux-cxl@vger.kernel.org
->Cc: dan.j.williams@intel.com; ira.weiny@intel.com; vishal.l.verma@intel.co=
-m;
->alison.schofield@intel.com; Jonathan Cameron
-><jonathan.cameron@huawei.com>; dave@stgolabs.net; jgg@nvidia.com; Shiju
->Jose <shiju.jose@huawei.com>; saeed@kernel.org; Li Ming
-><ming.li@zohomail.com>
->Subject: [PATCH v6 06/14] cxl: Setup exclusive CXL features that are reser=
-ved for
->the kernel
->
->Certain features will be exclusively used by components such as in kernel =
-RAS
->driver. Setup an exclusion list that can be used to detect if a feature is=
- exclusive
->to the kernel.
->
->Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->Reviewed-by: Dan Williams <dan.j.williams@intel.com>
->Reviewed-by: Li Ming <ming.li@zohomail.com>
->Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+On Tue, Feb 18, 2025 at 02:23:42PM +0100, Robert Richter wrote:
+> The root decoder address translation callback could be reused for
+> other decoders too. For generic use of the callback, change the
+> function interface to use a decoder argument instead of the root
+> decoder.
+> 
+> Note that a root decoder's HPA is equal to its SPA, but else it may be
 
-Tested-by: Shiju Jose <shiju.jose@huawei.com>
+slighlty better wording:
+"but it may different for non-root decoders"
 
->---
-> drivers/cxl/core/features.c | 28 ++++++++++++++++++++++++++++
-> include/cxl/features.h      | 34 ++++++++++++++++++++++++++++++++++
-> 2 files changed, 62 insertions(+)
->
->diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c ind=
-ex
->17a82734a340..048ba4fc3538 100644
->--- a/drivers/cxl/core/features.c
->+++ b/drivers/cxl/core/features.c
->@@ -7,6 +7,28 @@
-> #include "core.h"
-> #include "cxlmem.h"
->
->+/* All the features below are exclusive to the kernel */ static const
->+uuid_t cxl_exclusive_feats[] =3D {
->+	CXL_FEAT_PATROL_SCRUB_UUID,
->+	CXL_FEAT_ECS_UUID,
->+	CXL_FEAT_SPPR_UUID,
->+	CXL_FEAT_HPPR_UUID,
->+	CXL_FEAT_CACHELINE_SPARING_UUID,
->+	CXL_FEAT_ROW_SPARING_UUID,
->+	CXL_FEAT_BANK_SPARING_UUID,
->+	CXL_FEAT_RANK_SPARING_UUID,
->+};
->+
->+static bool is_cxl_feature_exclusive(struct cxl_feat_entry *entry) {
->+	for (int i =3D 0; i < ARRAY_SIZE(cxl_exclusive_feats); i++) {
->+		if (uuid_equal(&entry->uuid, &cxl_exclusive_feats[i]))
->+			return true;
->+	}
->+
->+	return false;
->+}
->+
-> inline struct cxl_features_state *to_cxlfs(struct cxl_dev_state *cxlds)  =
-{
-> 	return cxlds->cxlfs;
->@@ -47,6 +69,7 @@ get_supported_features(struct cxl_features_state *cxlfs)
-> 	struct cxl_mbox_get_sup_feats_in mbox_in;
-> 	struct cxl_feat_entry *entry;
-> 	struct cxl_mbox_cmd mbox_cmd;
->+	int user_feats =3D 0;
-> 	int count;
->
-> 	count =3D cxl_get_supported_features_count(cxl_mbox);
->@@ -121,6 +144,10 @@ get_supported_features(struct cxl_features_state
->*cxlfs)
-> 			return NULL;
->
-> 		memcpy(entry, mbox_out->ents, retrieved);
->+		for (int i =3D 0; i < num_entries; i++) {
->+			if (!is_cxl_feature_exclusive(entry + i))
->+				user_feats++;
->+		}
-> 		entry +=3D num_entries;
-> 		/*
-> 		 * If the number of output entries is less than expected, add the
->@@ -131,6 +158,7 @@ get_supported_features(struct cxl_features_state *cxlf=
-s)
-> 	} while (remain_feats);
->
-> 	entries->num_features =3D count;
->+	entries->num_user_features =3D user_feats;
->
-> 	return no_free_ptr(entries);
-> }
->diff --git a/include/cxl/features.h b/include/cxl/features.h index
->ae56ef7ec9ab..d2cde46b0fec 100644
->--- a/include/cxl/features.h
->+++ b/include/cxl/features.h
->@@ -5,6 +5,39 @@
->
-> #include <linux/uuid.h>
->
->+/* Feature UUIDs used by the kernel */
->+#define CXL_FEAT_PATROL_SCRUB_UUID
->		\
->+	UUID_INIT(0x96dad7d6, 0xfde8, 0x482b, 0xa7, 0x33, 0x75, 0x77, 0x4e,
->	\
->+		  0x06, 0xdb, 0x8a)
->+
->+#define CXL_FEAT_ECS_UUID
->	\
->+	UUID_INIT(0xe5b13f22, 0x2328, 0x4a14, 0xb8, 0xba, 0xb9, 0x69, 0x1e,
->	\
->+		  0x89, 0x33, 0x86)
->+
->+#define CXL_FEAT_SPPR_UUID
->	\
->+	UUID_INIT(0x892ba475, 0xfad8, 0x474e, 0x9d, 0x3e, 0x69, 0x2c, 0x91,
->	\
->+		  0x75, 0x68, 0xbb)
->+
->+#define CXL_FEAT_HPPR_UUID
->	\
->+	UUID_INIT(0x80ea4521, 0x786f, 0x4127, 0xaf, 0xb1, 0xec, 0x74, 0x59,
->	\
->+		  0xfb, 0x0e, 0x24)
->+
->+#define CXL_FEAT_CACHELINE_SPARING_UUID
->		\
->+	UUID_INIT(0x96C33386, 0x91dd, 0x44c7, 0x9e, 0xcb, 0xfd, 0xaf, 0x65,
->	\
->+		  0x03, 0xba, 0xc4)
->+
->+#define CXL_FEAT_ROW_SPARING_UUID
->		\
->+	UUID_INIT(0x450ebf67, 0xb135, 0x4f97, 0xa4, 0x98, 0xc2, 0xd5, 0x7f,
->	\
->+		  0x27, 0x9b, 0xed)
->+
->+#define CXL_FEAT_BANK_SPARING_UUID
->		\
->+	UUID_INIT(0x78b79636, 0x90ac, 0x4b64, 0xa4, 0xef, 0xfa, 0xac, 0x5d,
->	\
->+		  0x18, 0xa8, 0x63)
->+
->+#define CXL_FEAT_RANK_SPARING_UUID
->		\
->+	UUID_INIT(0x34dbaff5, 0x0552, 0x4281, 0x8f, 0x76, 0xda, 0x0b, 0x5e,
->	\
->+		  0x7a, 0x76, 0xa7)
->+
-> /* Feature commands capability supported by a device */  enum
->cxl_features_capability {
-> 	CXL_FEATURES_NONE =3D 0,
->@@ -134,6 +167,7 @@ struct cxl_features_state {
-> 	struct cxl_dev_state *cxlds;
-> 	struct cxl_feat_entries {
-> 		int num_features;
->+		int num_user_features;
-> 		struct cxl_feat_entry ent[] __counted_by(num_features);
-> 	} *entries;
-> };
->--
->2.48.1
+> different. Thus, change the name of the function type to
+> cxl_to_hpa_fn.
+> 
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+
+Reviewed-by: Gregory Price <gourry@gourry.net>
 
