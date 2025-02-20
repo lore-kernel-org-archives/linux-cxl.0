@@ -1,156 +1,122 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from brown.aspen.relay.mailchannels.net (brown.aspen.relay.mailchannels.net [23.83.221.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDD471DED7C
-	for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 19:50:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740081025; cv=none; b=BRRtGw9vhTKlNF9C3XWgdnDBaOPVa/BU3F/Rrsr6vmkhWTABp0AKKYbmZ1OIV0v/niULAx8yNQLqYPEeOEODvGDU+Y7WE0drrd+XL8zBnKnm+s+4Y6dqlwkd2RTOXok3I7vK9764us9dNwjCjxgbBjeVE5Aie3pPwL3yDTsU6MU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740081025; c=relaxed/simple;
-	bh=hrA9p38IDspEkGP1O2nHIhWSgfQXQd2krV1yHoiJhZc=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01D4E1DED7C
+	for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 19:56:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.221.23
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740081371; cv=pass; b=UJbqYnVxgqelpaqgLAv+7AZ3rDeFi9DhF72Ek0d27X2rMj6brmjTtvKKRiltJ60FGW4VDJCVfa/yaYTRDB80XUcl2rusEhKXpmNyrGnuwt8lfQiveuNtgs8+S7n/X8tVZidBX6ax5UA8IrnzoEhBGE3YMThTxukdDRhDetfpHIk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740081371; c=relaxed/simple;
+	bh=13U5IuuThoS2jAUBTL0Bmt8a1R+NKkIQSX/buXv6I3M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VvM4+byjHPKWLVBT7I7Iz0SK/wxKFD9siidhWvBCdCMVn1AB5PK49hIwqWIkC+dYOSX7Cqdw4T/Z9Lj7kY4zVLmZ5GG740dUJP1w/4YbFI/six/Yir63P6vngy4GEk7w2Dk5gYKJXzxIuwz/UCZsbeBFe76SccAIXJ4CIskmEIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=XreyP/6V; arc=none smtp.client-ip=209.85.222.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=aPSKEqjPHT8c87prMXUjRBoe65cUXFxsc1ah7f87O62jHfK/GYu1r13yHTK88mXSOLpEHG355F+vDGE9GHAayXwYPLMCmawtzW3oRpQsI6+ClYOgALtLRFWckMC4evlDoGHSyx19afD0nWyZh1GwZw/4CZtOFbH7dIAB7uylpAA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=B/Fks41e; arc=pass smtp.client-ip=23.83.221.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="XreyP/6V"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7c04df48a5bso137461585a.2
-        for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 11:50:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1740081021; x=1740685821; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vsR/rhOtN1rjKKzwMCE+sYzTv4I88D0Di854W37LUUs=;
-        b=XreyP/6VZR+/YlqqsKyd/jk6z18yFsNjCesyjq1uzTTXdRqQI6zR6xijGstcs8KBYM
-         wER5BnvKL5jg3oMtzvYCc/UoJpI50wZvZIqz/UF0yY2fRAv+xQ+Oellzny35NYn9wk2D
-         qytqRcU0jHxCSZ4s1YRR2cG4aWOz3wwDTu+Lt+GU9TXyd6g9wL+ejrYESAuf2yjxpyIx
-         LYe8E8CHrHCXU6F+p6epRmVC7MDXTUnvevQrLSXb4rcUXwkk16tEr/vrWBpcpYXTQlKq
-         kyA/rR3Ob2wl8tAqrds6C21gn2tRau7sN2Ovgi4YYhURT/f7SAejJ7RQf8IeXQI1qKlf
-         8ZaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740081021; x=1740685821;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vsR/rhOtN1rjKKzwMCE+sYzTv4I88D0Di854W37LUUs=;
-        b=W7TGeJyB407u2hOQ2UYtZKlJ8CuOWQKJyul69vnt206+nVIKCaSAZucHvLVv4PzkQO
-         jrhKFhcAx0mJjCyF3rkDIeRZUIAutckxpNc+OG8w2ACMomNmre1g28VKsKWR/AvoJ+F4
-         Ng6BA8/tjl2BjT7Ir2G/weisHKqF6hViCsIMBsDWzocHN6zW/CNhjf/+/ZGPLe30Mbel
-         R95MVDwuTE58pg/ZKEJQHzoUJdqMqCn3q9xSTU3+oQ5n8quX6EOzVxT2ondqdrOreZuU
-         nmb95scdR7YxTXRPNL74MVigs0YKOTtRYCXYdgyVXjDKOZmnaJt/KrwkFF+cn596AxEY
-         qZ6w==
-X-Forwarded-Encrypted: i=1; AJvYcCUfXOZZnq+VQWUc5faN5NmMySQ7il6wxXnITv+3GFQVv7ow/I9p8taegsrs2G3xQ/ce3/75tdRXGl8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yznevi638TEZ3QRpaZj5QiScnvZ39ZufIrEKCTeEPHj1XI4N2o4
-	Uo5vevgzTuXLcI7FWtVoV90PwZjfTQocVQWufs7hC58fHltbVBJC/DVbWw4uRGY=
-X-Gm-Gg: ASbGncvLLbFNfhRLoCQwyhUwxwQi8XL435Thfeo0n/qAV1Teoca/UwwAT3cpJA5ozZ8
-	vm3mu6PxX8FJwM03pziAvqRpzJbOSOBdebyjg6chE+4W/ZmxprYHYuFA10F8m/KsL4YcOEWNvG+
-	ddcSaWhUDg5a8FzddmqMzsML/vfan/SMpBURJKAZUe/hD/nu82aAAup463vjkiuoMSlrKtyjqKU
-	0CYfYqH2JZkdvfnItRytsFyYPbHFC0gKT/5cW9oemwPGmum9zHuMJlJ+Z1dqcREJhKUIv8uF+9r
-	YQVtJSOxCI8+yZV9sPNtk4XIP8xjal9VuxmloMcAuUW9QXYH3s/xh+XG7eklBO1OYaw0HRSW8w=
-	=
-X-Google-Smtp-Source: AGHT+IEpdlOT13ijaiv8n6s5j9ITcvCGGzuTUZDlk5Q68kLQIU9M+/yqHtmw3jOZcJB0IM4LCuCABQ==
-X-Received: by 2002:a05:620a:444c:b0:7c0:ae2e:630d with SMTP id af79cd13be357-7c0ceefe6c0mr64848485a.16.1740081021543;
-        Thu, 20 Feb 2025 11:50:21 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c0c46f59cbsm98364485a.41.2025.02.20.11.50.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2025 11:50:20 -0800 (PST)
-Date: Thu, 20 Feb 2025 14:50:18 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Robert Richter <rrichter@amd.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v2 11/15] cxl/region: Use the endpoint's SPA range to
- check a region
-Message-ID: <Z7eHeuikvako1Xhh@gourry-fedora-PF4VCD3F>
-References: <20250218132356.1809075-1-rrichter@amd.com>
- <20250218132356.1809075-12-rrichter@amd.com>
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="B/Fks41e"
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id E94228A6943;
+	Thu, 20 Feb 2025 19:54:06 +0000 (UTC)
+Received: from pdx1-sub0-mail-a208.dreamhost.com (trex-1.trex.outbound.svc.cluster.local [100.105.230.78])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id DA6F38A6025;
+	Thu, 20 Feb 2025 19:51:50 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1740081226; a=rsa-sha256;
+	cv=none;
+	b=gX00CsG0lRzmf6TUG87S4l5WLAjPf6ZnusleyYKZmuTTIql3ftqdm7hM814yf1PgIs14lk
+	MEVYG9aobTKn7nJhSvIUYb+Ikd8ZHuNhW4RDOx8ZapVseyJjLTzqxaZG1vAyvFPvtCEYEH
+	B0h05Dna5Ty0gavyW3EuriDWE78F/8Np2eCR9to7yuTysscxnH5Sh8WBOrl/Zpcr3lzH4F
+	avtVIDpay8blc8GXqmwAyqLV2x8XP6qFe5jq/U/AZUVUsGHNpjFT4Ii4ni8PkLIcaVaAHa
+	/BERRILcrXFwa1pVf8HuKMUYTgN8JndC1NV6wNVJ4HFmZ0Ag9OG2+fq4ARYWLw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1740081226;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=JgG90nUMsnXJZSf6wgYOwJatNMEE9jQ/YFPCu29GpAM=;
+	b=VIMlkBh9IJm7FnABR54K7qpmC3nN2AlagrZRkt2KfDbIKLWJa88/biBDnhQLQPm6RvoshS
+	NbWMQf4aYXlUbPBXlcGD2QAiRX0r61HFDyrmwoFTUpwXaba3NezHeS/wLFo86TF1jw3uHS
+	nsQFcBX26rBjW8e6zAXSY7EOmsr9s/vwTdNfwnmZoGAk/FYNqu9F5xoFteLfJcNKKgQ9Cj
+	+eguUV9ootpMrldR+x9C3Zi5Jsr+HqfyCPwReHY+RFMPHF0E0htZ7f5EJxj4MAvaXL+9ur
+	Fh/G1+Z/2LCznOo1CqSyvMiJm/KjrrEwgc19BsxH2SYmoJpR8rLvuwSK1z5Z+Q==
+ARC-Authentication-Results: i=1;
+	rspamd-78ddd997cc-hhww8;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+Received: from pdx1-sub0-mail-a208.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.105.230.78 (trex/7.0.2);
+	Thu, 20 Feb 2025 19:53:46 +0000
+Received: from offworld (unknown [104.36.25.240])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a208.dreamhost.com (Postfix) with ESMTPSA id 4YzP5T2qtFzdm;
+	Thu, 20 Feb 2025 11:51:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1740081070;
+	bh=JgG90nUMsnXJZSf6wgYOwJatNMEE9jQ/YFPCu29GpAM=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=B/Fks41ej89loR5LN+6qzXnGrJGDvTCOj2brjKDJbjP2b/5S8FpniLn6UZQ0eY0io
+	 XQqbpLkrrFW78nWemkSx+eEtGJDGvB/9/NOBvg1FT1PbV/erM+xOXxFLE9NcQ3pyWR
+	 lr4JNq3HCLFk+e1FlHAmepZNuWh7+QcFLqQqQhgShGz6beBTkCw3gOUD6XEkx4vFOn
+	 9hyzreAUNZOIjkBqW8vS1aqCOXQGPOqrIfJpSHnNl6F5yUKwVahJFilgyfI122zOOE
+	 2DY3o4qK0l6PZzNGBbeX5G+S2A7JP7KGMYsJLbqq/zinhg5o0IXak0TOIEjxpXywfi
+	 +ocWJGboH/zhg==
+Date: Thu, 20 Feb 2025 11:51:06 -0800
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: dave.jiang@intel.com, dan.j.williams@intel.com,
+	alison.schofield@intel.com, ira.weiny@intel.com,
+	vishal.l.verma@intel.com, seven.yi.lee@gmail.com,
+	ming.li@zohomail.com, a.manzanares@samsung.com, fan.ni@samsung.com,
+	anisa.su@samsung.com, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH 2/4] cxl/pmem: Rename cxl_dirty_shutdown_state()
+Message-ID: <20250220195106.mkvs3xmhnovjxoym@offworld>
+References: <20250220013604.263489-1-dave@stgolabs.net>
+ <20250220013604.263489-3-dave@stgolabs.net>
+ <20250220171257.0000605f@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20250218132356.1809075-12-rrichter@amd.com>
+In-Reply-To: <20250220171257.0000605f@huawei.com>
+User-Agent: NeoMutt/20220429
 
-On Tue, Feb 18, 2025 at 02:23:52PM +0100, Robert Richter wrote:
-> Endpoints or switches requiring address translation might not be aware
-> of the system's interleaving configuration. Then, the configured
-> endpoint's address range might not match the expected range. In
-> contrast, the SPA range of an endpoint is calculated applying platform
-> specific address translation. That range is correct and can be used to
-> check a region range.
-> 
-> Adjust the region range check and use the endpoint's SPA range to
-> check it.
-> 
-> Signed-off-by: Robert Richter <rrichter@amd.com>
+On Thu, 20 Feb 2025, Jonathan Cameron wrote:
 
-Explanation could be a little clearer, something like:
+>On Wed, 19 Feb 2025 17:36:02 -0800
+>Davidlohr Bueso <dave@stgolabs.net> wrote:
+>
+>> ... to a better suited 'cxl_arm_dirty_shutdown()'.
+>
+>But it works on x86 as well! I'll cope I suppose.
+>
+>Mind you why not let it take the state as a parameter
+>and always pass 1?  From a mailbox command point of
+>view 0 is valid. The text in table 8-152 has me a little confused
+>but I think it says you can set it to 1 and back to 0 and
+>then reset at which point the dirty shutdown count will
+>not increment.
+>
+>No idea why you'd do that, but just passing a 1 into
+>this function would make a call of
+>cxl_set_dirty_shutdown_state(mds, 1)
+>seem reasonable, or pass a boolean.
 
-Endpoint and switch decoders may have an HPA range that differs from
-the memory region's SPA range.  Utilize the device's calculated
-spa_range instead of its hpa_range to validate the region mapping.
+I prefer how it is now, really.
 
+No point passing the arg which will always be 1, and that
+"arm/setup" is in the name, so passing 0 would be counter
+intuitive as well.
 
-The interleave comments don't seem particularly relevant here unless i'm
-missing something.
-
-The content of the patch looks good.
-
-Reviewed-by: Gregory Price <gourry@gourry.net>
-
-> ---
->  drivers/cxl/core/region.c | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 3afcc9ca06ae..2ca24565757a 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -1531,22 +1531,26 @@ static int cxl_port_setup_targets(struct cxl_port *port,
->  	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
->  		if (cxld->interleave_ways != iw ||
->  		    cxld->interleave_granularity != ig ||
-> -		    cxld->hpa_range.start != p->res->start ||
-> -		    cxld->hpa_range.end != p->res->end ||
-> +		    cxled->spa_range.start != p->res->start ||
-> +		    cxled->spa_range.end != p->res->end ||
->  		    ((cxld->flags & CXL_DECODER_F_ENABLE) == 0)) {
->  			dev_err(&cxlr->dev,
->  				"%s:%s %s expected iw: %d ig: %d %pr\n",
->  				dev_name(port->uport_dev), dev_name(&port->dev),
->  				__func__, iw, ig, p->res);
->  			dev_err(&cxlr->dev,
-> -				"%s:%s %s got iw: %d ig: %d state: %s %#llx:%#llx\n",
-> +				"%s:%s %s got iw: %d ig: %d state: %s %#llx-%#llx:%#llx-%#llx(%s):%#llx-%#llx(%s)\n",
->  				dev_name(port->uport_dev), dev_name(&port->dev),
->  				__func__, cxld->interleave_ways,
->  				cxld->interleave_granularity,
->  				(cxld->flags & CXL_DECODER_F_ENABLE) ?
->  					"enabled" :
->  					"disabled",
-> -				cxld->hpa_range.start, cxld->hpa_range.end);
-> +				p->res->start, p->res->end,
-> +				cxled->spa_range.start, cxled->spa_range.end,
-> +				dev_name(&cxled->cxld.dev),
-> +				cxld->hpa_range.start, cxld->hpa_range.end,
-> +				dev_name(&cxld->dev));
->  			return -ENXIO;
->  		}
->  	} else {
-> -- 
-> 2.39.5
-> 
+Thanks,
+Davidlohr
