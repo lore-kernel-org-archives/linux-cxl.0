@@ -1,225 +1,216 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015AB1F3BB1
-	for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 11:51:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F11C1F582A;
+	Thu, 20 Feb 2025 12:19:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740052310; cv=none; b=YR4QyZQ+S3l5H+V4LtYWH3ZpyzTm836L5uI/yQ6jwRswAYaSdpzayE/N01rya4EEGgTN825QCt2NAD6IQbvCupWgb/6/uL8Iv435TTqH7BMO7og8jdN3rv9fyUizN7IC+POSTLO7HVnYRt8UPA0pXefJ6xqeDveXmVPyed0h4fE=
+	t=1740053965; cv=none; b=GRlnWO+rr/rPjJ6RrYuQhvDbeDwPqb42Neb24FdrhvkfXcoL5+/g4Xrell3kuTqUpLH+SzLAKyoTUO8D+YzgiFJOtZtT20z8Bi/8kI9LFPIuYHtXiwADbSNZ+t6QwkooBSLA2EutkSiGCWNT5bosiW5sIm+hMKzjVUDO3xadKJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740052310; c=relaxed/simple;
-	bh=JFzc4nUr4yZiTe8SSpZhQOKJYx1uM8lgiC5+pr9WSZQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R8Kd5zh/CG/OwurWbvYOw0GJijCc+ky/9SCZ9CiEPAXd4IWGTy/nU+dcdNQVSPzHOGVXf3bNBmST1LOQ9LWJq0Nq4TdLH+kdtC3sRV4YY4lbFkLLlgxOGTgbXcy7v/8pvLCzwF0Q7hicoPZJN09H59LF9VlFYkdMsAY8iadaCqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aQDYxNap; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aQDYxNap"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740052307;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=mBr0SgtnHCYiFsBcWQ6weYZTbRdO1rbmjW4f7Sy3Ft8=;
-	b=aQDYxNapnU5EnLqwJPUbPRl5cIHKfirCiw1bXE6EGhEX1LDNr/wGWEj7dpPuMPiZUNguvd
-	u6w4rEu3jdc0UyRfkaSo+0gDZRWXVLkvBV9AtLYx51iN3X3fwNBWxCwm2GhMQ4vIm3Dq3C
-	EyFhZgQ8lBrCQc15h3Jxi5BM7ZVUcPM=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-552-NN7Zz2enN2e_Uajiet4sjQ-1; Thu, 20 Feb 2025 06:51:47 -0500
-X-MC-Unique: NN7Zz2enN2e_Uajiet4sjQ-1
-X-Mimecast-MFC-AGG-ID: NN7Zz2enN2e_Uajiet4sjQ_1740052306
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4393e873962so4096825e9.3
-        for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 03:51:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740052306; x=1740657106;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=mBr0SgtnHCYiFsBcWQ6weYZTbRdO1rbmjW4f7Sy3Ft8=;
-        b=SRcZbpEQzu3n39ghp8tL2VT/p+GmdEsz4m61P3bfBQ9+P8xC1a7qu4kjJTEGfMyj7t
-         Z6ysIs7r8gJsjrlAowap2W2mlPNdM52AwxyTkfVsVwupxcKMaC4z0CQnLPT8l0ap+GDM
-         /54VUyZCC3BUv+gdmN7qVGWGWyr4lGk+nwCMJ3zSjhOOwnK0p2rSwlXeVvfYFn748G2Y
-         7TpQIqF4CpG3imsj4YTI19hBQ/Scpdt66bzvttLgobleDPh891Eq1bbARLIK0+tL/pND
-         bvQjsNad4E0oua/b7LtsHqc1L1KulVfnqQ5aCPCFmv0CsMr88/6MrnYX5boL+jHoSNbK
-         85EA==
-X-Forwarded-Encrypted: i=1; AJvYcCVwmoDrISNgspIRCO70CVztoCy9oxpUQaMMdNZqi9r9NUko6zOrwCg4KZugPG+WMN2E8qxwWWW01kw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoJsh0qlNwDx/xitxeUwa4rExAAQSa4GCMOHMZwGr5QUp9+5zi
-	Fgp+7vTSloXUBVCghHOA9KDINgwBT1HXTZWaa9ooHqqMaSteM38puT6j3tJwPu1Po6/DJTvx8cY
-	7aRckc8viPhA+ahASsGzb/2tiPN7dziTfLbl/3WZ7ZSR30UB+3j/Kj6OwyA==
-X-Gm-Gg: ASbGncuzKjei6ZiGQLw+U8PvmhrkZe6kyKD9VxNiTIJzRDb4F4IPj43W3bPVknS27X4
-	8iETYPCTe7iDeyHPhisoLszOirTlMk/dhMelFYwxuko5mhi5eMvXjSanQ29E+V9aHqkNV3BSQ3D
-	ASSMc7wY6IY1iD+BuhrEXSUAKmlDzHlVx0OvsW+iOLAMg7SKttGGcHZEFWMQRoanR3TFde8XpKp
-	6VkA0qBMtYSWmpNAg4Psi5FIFrkBXyx64cswMKeMRn09cO8AeInfuwnNpyeClkAR1xOY0nv4/rP
-	Z+O2Ht6P7OdmduDi5JEYRTIqFzwUnbwV2+P9ImkeWq8sjWt5q7RCWHPid0xa35hIubi04saOOzj
-	6+df0sBWpQuoJDUDBG38YejNjKMf8HQ==
-X-Received: by 2002:a05:600c:548b:b0:439:9a40:a9ff with SMTP id 5b1f17b1804b1-4399a40ac3cmr57546795e9.1.1740052305608;
-        Thu, 20 Feb 2025 03:51:45 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IE3Q1vBWLy8jITcTBIhMHZsv8pvY8WalvXMgoplaUinz3S7uxyqUT+2Vn++NdI0bj3eRlaAoQ==
-X-Received: by 2002:a05:600c:548b:b0:439:9a40:a9ff with SMTP id 5b1f17b1804b1-4399a40ac3cmr57546305e9.1.1740052305138;
-        Thu, 20 Feb 2025 03:51:45 -0800 (PST)
-Received: from ?IPV6:2003:cb:c706:2000:e44c:bc46:d8d3:be5? (p200300cbc7062000e44cbc46d8d30be5.dip0.t-ipconnect.de. [2003:cb:c706:2000:e44c:bc46:d8d3:be5])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43985c50397sm113532355e9.0.2025.02.20.03.51.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Feb 2025 03:51:43 -0800 (PST)
-Message-ID: <f720d914-3d66-42a9-a65c-dbdd58d5bccd@redhat.com>
-Date: Thu, 20 Feb 2025 12:51:41 +0100
+	s=arc-20240116; t=1740053965; c=relaxed/simple;
+	bh=DY0KP4iwrTYG2pXg4GoCemRkht2uRnkGK9mkmW+EEfg=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ErL8AbFIw/vktN+D+nqKB8Q07T6wNYbVOB4J1Ku9S7q1Es2E1AXMdgWW0HEsk5DeEKiWOhbk2u2d9jD9GyOvWeMd4ezJP38zaN59rKZkAj67vkcFRafOU9LRjPCd6wwMAV/9o/lAgiTgrGD4rZT846v1Aulxy3WTAuT+2tRK2ZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YzC091d91z6H6w3;
+	Thu, 20 Feb 2025 20:15:53 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id BBB5C140B33;
+	Thu, 20 Feb 2025 20:19:18 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 20 Feb
+ 2025 13:19:17 +0100
+Date: Thu, 20 Feb 2025 12:19:15 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Borislav Petkov <bp@alien8.de>
+CC: Shiju Jose <shiju.jose@huawei.com>, "linux-edac@vger.kernel.org"
+	<linux-edac@vger.kernel.org>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "linux-acpi@vger.kernel.org"
+	<linux-acpi@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"tony.luck@intel.com" <tony.luck@intel.com>, "rafael@kernel.org"
+	<rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
+	"mchehab@kernel.org" <mchehab@kernel.org>, "dan.j.williams@intel.com"
+	<dan.j.williams@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
+	"dave.jiang@intel.com" <dave.jiang@intel.com>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
+	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
+	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
+	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
+	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "naoya.horiguchi@nec.com"
+	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
+	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
+	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
+	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
+	<duenwen@google.com>, "gthelen@google.com" <gthelen@google.com>,
+	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
+	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
+	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
+	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, tanxiaofei
+	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, "Roberto
+ Sassu" <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
+	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
+	Linuxarm <linuxarm@huawei.com>, Vandana Salve <vsalve@micron.com>, "Steven
+ Rostedt" <rostedt@goodmis.org>
+Subject: Re: [PATCH v18 04/19] EDAC: Add memory repair control feature
+Message-ID: <20250220121915.00001391@huawei.com>
+In-Reply-To: <20250219184533.GCZ7YmzTDk5B4p-C7e@fat_crate.local>
+References: <20250109161902.GDZ3_29rH-sQMV4n0N@fat_crate.local>
+	<20250109183448.000059ec@huawei.com>
+	<20250111171243.GCZ4Kmi5xMtY2ktCHm@fat_crate.local>
+	<20250113110740.00003a7c@huawei.com>
+	<20250121161653.GAZ4_IdYDQ9_-QoEvn@fat_crate.local>
+	<20250121181632.0000637c@huawei.com>
+	<20250122190917.GDZ5FCXetp9--djyQ6@fat_crate.local>
+	<20250206133949.00006dd6@huawei.com>
+	<20250217132322.GCZ7M4Somf2VYvbwHb@fat_crate.local>
+	<20250218165125.00007065@huawei.com>
+	<20250219184533.GCZ7YmzTDk5B4p-C7e@fat_crate.local>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 19/20] fs/dax: Properly refcount fs dax pages
-To: Alistair Popple <apopple@nvidia.com>
-Cc: akpm@linux-foundation.org, dan.j.williams@intel.com, linux-mm@kvack.org,
- Alison Schofield <alison.schofield@intel.com>, lina@asahilina.net,
- zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com,
- vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com,
- bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com,
- will@kernel.org, mpe@ellerman.id.au, npiggin@gmail.com,
- dave.hansen@linux.intel.com, ira.weiny@intel.com, willy@infradead.org,
- djwong@kernel.org, tytso@mit.edu, linmiaohe@huawei.com, peterx@redhat.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
- nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
- david@fromorbit.com, chenhuacai@kernel.org, kernel@xen0n.name,
- loongarch@lists.linux.dev
-References: <cover.a782e309b1328f961da88abddbbc48e5b4579021.1739850794.git-series.apopple@nvidia.com>
- <b33a5b2e03ffb6dbcfade84788acdd91d10fbc51.1739850794.git-series.apopple@nvidia.com>
- <cb29f96f-f222-4c94-9c67-c2d4bffeb654@redhat.com>
- <jf6hr2uzyz76axd62v6czy3wzcuu4eb7ydow5mznehfuiwhqq3@2q7easkxhdp4>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <jf6hr2uzyz76axd62v6czy3wzcuu4eb7ydow5mznehfuiwhqq3@2q7easkxhdp4>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: HbJ35PJmu1olOZW2wZ-lqeBNEoxvrxmxHbKZKXBTWRo_1740052306
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
->>> -static inline unsigned long dax_folio_share_put(struct folio *folio)
->>> +static inline unsigned long dax_folio_put(struct folio *folio)
->>>    {
->>> -	return --folio->page.share;
->>> +	unsigned long ref;
->>> +	int order, i;
->>> +
->>> +	if (!dax_folio_is_shared(folio))
->>> +		ref = 0;
->>> +	else
->>> +		ref = --folio->share;
->>> +
->>
->> out of interest, what synchronizes access to folio->share?
+On Wed, 19 Feb 2025 19:45:33 +0100
+Borislav Petkov <bp@alien8.de> wrote:
+
+> On Tue, Feb 18, 2025 at 04:51:25PM +0000, Jonathan Cameron wrote:
+> > As a side note, if you are in the situation where the device can do
+> > memory repair without any disruption of memory access then my
+> > assumption is in the case where the device would set the maintenance
+> > needed + where it is considering soft repair (so no long term cost
+> > to a wrong decision) then the device would probably just do it
+> > autonomously and at most we might get a notification.  
 > 
-> Actually that's an excellent question as I hadn't looked too closely at this
-> given I wasn't changing the overall flow with regards to synchronization, merely
-> representation of the "shared" state. So I don't have a good answer for you off
-> the top of my head - Dan maybe you can shed some light here?
-
-Not that I understand what that dax-shared thing is or does, but the 
-non-atomic update on a folio_put path looked "surprising".
-
->>> diff --git a/include/linux/dax.h b/include/linux/dax.h
->>> index 2333c30..dcc9fcd 100644
->>> --- a/include/linux/dax.h
->>> +++ b/include/linux/dax.h
->>> @@ -209,7 +209,7 @@ int dax_truncate_page(struct inode *inode, loff_t pos, bool *did_zero,
->>
->> [...]
->>
->>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
->>> index d189826..1a0d6a8 100644
->>> --- a/mm/huge_memory.c
->>> +++ b/mm/huge_memory.c
->>> @@ -2225,7 +2225,7 @@ int zap_huge_pmd(struct mmu_gather *tlb, struct vm_area_struct *vma,
->>>    						tlb->fullmm);
->>>    	arch_check_zapped_pmd(vma, orig_pmd);
->>>    	tlb_remove_pmd_tlb_entry(tlb, pmd, addr);
->>> -	if (vma_is_special_huge(vma)) {
->>> +	if (!vma_is_dax(vma) && vma_is_special_huge(vma)) {
->>
->> I wonder if we actually want to remove the vma_is_dax() check from
->> vma_is_special_huge(), and instead add it to the remaining callers of
->> vma_is_special_huge() that still need it -- if any need it.
->>
->> Did we sanity-check which callers of vma_is_special_huge() still need it? Is
->> there still reason to have that DAX check in vma_is_special_huge()?
+> And this is basically what I'm trying to hint at: if you can do recovery
+> action without userspace involvement, then please, by all means. There's no
+> need to noodle information back'n'forth through user if the kernel or the
+> device itself even, can handle it on its own.
 > 
-> If by "we" you mean "me" then yes :) There are still a few callers of it, mainly
-> for page splitting.
+> More involved stuff should obviously rely on userspace to do more involved
+> "pondering."
 
-Heh, "you or any of the reviewers" :)
-
-So IIUC, the existing users still need the DAX check I assume (until 
-that part is cleaned up, below).
+Lets explore this further as a follow up. A policy switch to let the kernel
+do the 'easy' stuff (assuming device didn't do it) makes sense if this
+particular combination is common.
 
 > 
->> But vma_is_special_huge() is rather confusing from me ... the whole
->> vma_is_special_huge() thing should probably be removed. That's a cleanup for
->> another day, though.
+> > So I think that if we see this there will be some disruption.
+> > Latency spikes for soft repair or we are looking at hard repair.
+> > In that case we'd need policy on whether to repair at all.
+> > In general the rasdaemon handling in that series is intentionally
+> > simplistic. Real solutions will take time to refine but they
+> > don't need changes to the kernel interface, just when to poke it.  
 > 
-> But after double checking I have come to the same conclusion as you - it should
-> be removed. I will add that to my ever growing clean-up series that can go on
-> top of this one.
+> I hope so.
+> 
+> > The error record comes out as a trace point. Is there any precedence for
+> > injecting those back into the kernel?   
+> 
+> I'm just questioning the whole interface and its usability. Not saying it
+> doesn't make sense - we're simply weighing all options here.
+> 
+> > That policy question is a long term one but I can suggest 'possible' policies
+> > that might help motivate the discussion
+> >
+> > 1. Repair may be very disruptive to memory latency. Delay until a maintenance
+> >    window when latency spike is accepted by the customer until then rely on
+> >    maintenance needed still representing a relatively low chance of failure.  
+> 
+> So during the maintenance window, the operator is supposed to do
+> 
+> rasdaemon --start-expensive-repair-operations
 
-Nice!
+Yes, would be something along those lines.  Or a script very similar to the
+the boot one Shiju wrote.  Scan the DB and find what needs repairing + do so.
 
--- 
-Cheers,
+> 
+> ?
+> 
+> > 2. Hard repair uses known limited resources - e.g. those are known to match up
+> >    to a particular number of rows in each module. That is not discoverable under
+> >    the CXL spec so would have to come from another source of metadata.
+> >    Apply some sort of fall off function so that we repair only the very worst
+> >    cases as we run out. Alternative is always soft offline the memory in the OS,
+> >    aim is to reduce chance of having to do that a somewhat optimal fashion.
+> >    I'm not sure on the appropriate stats, maybe assume a given granual failure
+> >    rate follows a Poison distribution and attempt to estimate lambda?  Would
+> >    need an expert in appropriate failure modes or a lot of data to define
+> >    this!  
+> 
+> I have no clue what you're saying here. :-)
 
-David / dhildenb
+I'll write something up at some point as it's definitely a complex
+topic and I need to find a statistician + hardware folk with error models to
+help flesh it out. 
+
+There is another topic to look at which is what to do with synchronous poison
+if we can repair the memory and bring it back into use.
+I can't find the thread, but last time I asked about recovering from that, the
+mm folk said they'd need to see the code + usecases (fair enough!).
+
+> 
+> > It is the simplest interface that we have come up with so far. I'm fully open
+> > to alternatives that provide a clean way to get this data back into the
+> > kernel and play well with existing logging tooling (e.g. rasdaemon)
+> > 
+> > Some things we could do,
+> > * Store binary of trace event and reinject. As above + we would have to be
+> >   very careful that any changes to the event are made with knowledge that
+> >   we need to handle this path.  Little or now marshaling / formatting code
+> >   in userspace, but new logging infrastructure needed + a chardev /ioctl
+> >   to inject the data and a bit of userspace glue to talk to it.
+> > * Reinject a binary representation we define, via an ioctl on some
+> >   chardev we create for the purpose.  Userspace code has to take
+> >   key value pairs and process them into this form.  So similar amount
+> >   of marshaling code to what we have for sysfs.
+> > * Or what we currently propose, write set of key value pairs to a simple
+> >   (though multifile) sysfs interface. As you've noted marshaling is needed.  
+> 
+> ... and the advantage of having such a sysfs interface: it is human readable
+> and usable vs having to use a tool to create a binary blob in a certain
+> format...
+> 
+> Ok, then. Let's give that API a try... I guess I need to pick up the EDAC
+> patches from here:
+> 
+> https://lore.kernel.org/r/20250212143654.1893-1-shiju.jose@huawei.com
+> 
+> If so, there's an EDAC patch 14 which is not together with the first 4. And
+> I was thinking of taking the first 4 or 5 and then giving other folks an
+> immutable branch in the EDAC tree which they can use to base the CXL stuff on
+> top.
+> 
+> What's up?
+
+My fault. I asked Shiju to split the more complex ABI for sparing out
+to build the complexity up rather than having it all in one patch.
+
+Should be fine for you to take 1-4 and 14 which is all the EDAC parts.
+
+For 5 and 6 Rafael acked the ACPI part (5), and the ACPI ras2 scrub driver
+has no other dependencies so I think that should go through your
+tree as well, though no need to be in the immutable branch.
+
+Dave Jiang can work his magic on the CXL stuff on top of a merge of your
+immutable branch.
+
+Thanks!
+
+Jonathan
+> 
 
