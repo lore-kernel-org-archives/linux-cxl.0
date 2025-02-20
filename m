@@ -1,113 +1,196 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1301920487F
-	for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 16:41:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E452153C3;
+	Thu, 20 Feb 2025 16:48:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740069674; cv=none; b=rV32V9sXylBeEoosS6ZmA0mrA+hEvgSh3WTh9UE5ZJbaTTAqI64wjcVhSoZDW77hbdumhK0VTr/sZ+JOGmN/7duSlsNFg9xiZoZ8+mqMZ34yExnBYrSWA9zJkAn4oxOLBf8GHKRGGCIpBNYHSSuD+pGrImHqx4lVlch3VenDc4E=
+	t=1740070109; cv=none; b=LNWdild+LO0nGlsejjJ/5ICOVNb7/mhDvFS/tEpzn3sxWTKvomI5rUOCw8SaSJBYpoLEvUxhYzZJ3OgApQ+DIdRJWL+asCInCGuoGsa+DvLsmp8iLytJNDZSIR6RY4I5KOn4WnFZhZQ5Sf1xGhJz+vPhSIyP+EwqKHrLEq7CBik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740069674; c=relaxed/simple;
-	bh=wtVm1OReLkO+WQiX2RY76tqiMRy5uIw9+ikeo3KDP0o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RaBppbepg945o5YQ7wdl9J50pupmYBn7gY9DA6u998FvY+GUpEjvJnI0czxluynCDdcasNuKCNdoiAVAsyyN6SJDxxTtlW6Scrrb6D2kYUBzNBAxC3fLQ1Jo8a1gIknPuvti0n2PfCxV+rHX7msCPkvIwHdrNjpuLX5P0kKKKZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Y2tqgT8P; arc=none smtp.client-ip=209.85.222.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1740070109; c=relaxed/simple;
+	bh=mV1gERHgHiEeuJzc5j6UMyr/UVr3dy4CIKZMVkmnQX4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G6jCe2Z9Cj24InBUGdNaXlxaFBtuofzAlYuuMCIbyJ5heYoifVIFe1dQ/mrl+nTdh06TzDOofKX0lBVAxwlxoh0Y+S5ND/cpoZEtz5SWNBjXmgQ5W3LtZsKwRmJJxhcQp5fy+wtpVdmzTHNvYKT8M/Xd3+lnbcuH6kkw1An4X3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UWBvfszC; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Y2tqgT8P"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7c0ba89dda9so124075985a.0
-        for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 08:41:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1740069672; x=1740674472; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wvT9hr4wyRdgqH4GD8vWiYOLKGLcsbZRX76Llb1LL6s=;
-        b=Y2tqgT8Pjo3g7ZZPfYB6vqKamFXy9a/mwd/St0nRqbx85XVIRfZYl5bcdr90Fyqo/E
-         jtX1mKjR4wsR+ZL0J7yvyvdHGjwAfaTknUc98dedqPDCynkrMMgNjj9M4n4kGbNmoKhw
-         yd0h8fHXDV4Hd1NxvXVhsN8fRUroy2ya9Qm5KbMgm1Hyh6mkhBhOMVxtSOOjcyWcucqi
-         AH5+o/8Tq4MICedCyzIXoA1JU6XLJTha/cawWTxeCVap4SniIR9rghA8JGy09To/LpQy
-         sg9n6E7gtlB1hA7El7K4u3o9ekh2L5YqSJlI49XPQKjdkB3isCMTzGERFyhgsfCSSTup
-         lENg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740069672; x=1740674472;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wvT9hr4wyRdgqH4GD8vWiYOLKGLcsbZRX76Llb1LL6s=;
-        b=V4m/v9qlkLuro1Ebcsj7UbiOAdszbavN5KETksoyisCW5/5nMLHLAPRHh3+foBl0hF
-         PAhhM8sfQKgX4GLLeVzTUBV/gUJdGtJBn9e2cxf4RwF4XkrXcn8vayTdndkKpLQuvYhV
-         Jg89WGRqBzz4dJBvhy6+h2MKSd/zze7qWhlKtbjJ49WjAN0MEeYR5LZ6EnbcBRe4b2S/
-         hiBJfyX2qtWw6s9kPiVuvNYGwyG63WAnunKKYHtdk/eXuPwXCPHQso7KkOlPY9J+D5uh
-         67jW+cRAjeqwWMe/qG00DrS6+B3gsikbZNcqsTxkZTM47txdvfdSCsv+SYkKTKovJJpk
-         E58Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXBPgSSchDwapl2kk7Peq3qaGvPzwFMuIy0gSsRr1VcAOOBxJW44BAynpy2xesiiAHat9RR1Lu7zKQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRElEkNBWFyHIqzyz6QYNtee4CR8U+EuYuu2eP623AjJFDeof4
-	LieGQv4e/SlBMA3BAUw69xx/vpZ0j9P028FBg/RHkUTWz37P+czylECcXPPa8zo=
-X-Gm-Gg: ASbGncuOibS/FNRMYsKUpcYRfSQOCfy/IPWomLaIi+pNPmMFXfoZqg2mXGdKMKh3f3F
-	+pkvCTcJ05d7OwRcVtk4A6kLF9HQZ4SmvKDWLwarp21U+JSl2QdqMyPbcbsDP/1RXy3tjyTuDre
-	f10hH6PruBtL742yCGMaFMnJcugyYBaPxrs9J9YprxYuXcMb8fTp3w7hScNbHUbEUUbv8Z+cKXk
-	APxR2i0ZJ5UEPnY4iHDJrUX5dkWcwvSHvmDQ+aFsP64T5npJj59nZ65ik8eSEal1yMpOgXagIxN
-	HajlDUBy0NLz8nQ3Hto/roIRn4SuCuEmE65L8itlqBkDshBN3Kwrv63e5bEwwq3T5YbHpcNsfA=
-	=
-X-Google-Smtp-Source: AGHT+IGlH80zk+2PBNQ/ZB5qRD43YHH9jlASFS3zwf6R7lUXwObcQaUrgnHIjK3rfriVXd+k7XVBog==
-X-Received: by 2002:a05:620a:1927:b0:7c0:9df3:a0d7 with SMTP id af79cd13be357-7c09df3aa60mr2071684885a.41.1740069671990;
-        Thu, 20 Feb 2025 08:41:11 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c0c6d41b5asm70688485a.73.2025.02.20.08.41.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2025 08:41:11 -0800 (PST)
-Date: Thu, 20 Feb 2025 11:41:09 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Robert Richter <rrichter@amd.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v2 03/15] cxl/region: Factor out code for interleaving
- calculations
-Message-ID: <Z7dbJfr-qVrXj6ek@gourry-fedora-PF4VCD3F>
-References: <20250218132356.1809075-1-rrichter@amd.com>
- <20250218132356.1809075-4-rrichter@amd.com>
- <Z7dYODuRrRv1bXpV@gourry-fedora-PF4VCD3F>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UWBvfszC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740070106; x=1771606106;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=mV1gERHgHiEeuJzc5j6UMyr/UVr3dy4CIKZMVkmnQX4=;
+  b=UWBvfszCeBlb8NIX6mHbakdvGH3e2f3UD/Pn7K07D/j3ZjuOU/+bFjta
+   S+D7VzhWXaQducVVFUvKnQ+plAAsNRZcZrUL/rwaoepEISTx/q1+phSxR
+   WPGqunzwvhxY6kHJFAfI+lIhdFsJlsa0UAIu4wPCvnJI05HogHwuplNQl
+   R08wOX7dkFk9hfIrEt2joIKk9NKfedmh54V4QbXe3n/0TcprR5iO8YQOJ
+   sAv3iEbibRGaXaK3WmFvqLGeANlLNUeImMK+Ri8VCAP1N0pe8WRvs4uWS
+   xeukj0RawCSLdGrgpgqfwpDfZxjn7GhZReE84bJQY4gyJMaM10qJNhId5
+   Q==;
+X-CSE-ConnectionGUID: CM9luoYxSWq5ZApwJi7Ocg==
+X-CSE-MsgGUID: BvZSy3nPRxmFFTvtGhtmhg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11351"; a="58268534"
+X-IronPort-AV: E=Sophos;i="6.13,302,1732608000"; 
+   d="scan'208";a="58268534"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 08:48:25 -0800
+X-CSE-ConnectionGUID: YytAqhmdTkiXsXhJ71sr0g==
+X-CSE-MsgGUID: JodJtwBTSwe3ylisuwb02Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,302,1732608000"; 
+   d="scan'208";a="119707884"
+Received: from puneetse-mobl.amr.corp.intel.com (HELO [10.125.110.112]) ([10.125.110.112])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 08:48:24 -0800
+Message-ID: <7ea607c2-b769-4077-9df0-79f79bb0415e@intel.com>
+Date: Thu, 20 Feb 2025 09:48:23 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z7dYODuRrRv1bXpV@gourry-fedora-PF4VCD3F>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 09/18] cxl/region: Factor out code to find the root
+ decoder
+To: Robert Richter <rrichter@amd.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Davidlohr Bueso <dave@stgolabs.net>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Gregory Price <gourry@gourry.net>,
+ "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+ Terry Bowman <terry.bowman@amd.com>
+References: <20250211095349.981096-1-rrichter@amd.com>
+ <20250211095349.981096-10-rrichter@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250211095349.981096-10-rrichter@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 20, 2025 at 11:28:40AM -0500, Gregory Price wrote:
-> On Tue, Feb 18, 2025 at 02:23:44PM +0100, Robert Richter wrote:
-> I get that this will be used later to pass information back, but this
-> patch by itself is a little confusing because ctx seems pointless since
-> the function still returns the position and accesses the hpa_range directly
+
+
+On 2/11/25 2:53 AM, Robert Richter wrote:
+> In function cxl_add_to_region() there is code to determine the root
+> decoder associated to an endpoint decoder. Factor out that code for
+> later reuse. This has the benefit of reducing cxl_add_to_region()'s
+> function complexity.
 > 
-> Looked at in isolation, having the context structure change in this
-> patch than just adding the hpa_range as an argument and adding the
-> context later when it's actually relevant.
+> The reference of cxlrd_dev can be freed earlier. Since the root
+> decoder exists as long as the root port exists and the endpoint
+> already holds a reference to the root port, this additional reference
+> is not needed. Though it looks obvious to use __free() for the
+> reference of cxlrd_dev here too, this is done in a later rework. So
+> just move the code.
 > 
-> static int cxl_port_calc_interleave(struct cxl_port *port,
-> 				    struct range *hpa_range);
->
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> Reviewed-by: Gregory Price <gourry@gourry.net>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Tested-by: Gregory Price <gourry@gourry.net>
 
-Disregard my note here, I missed that pos has to be carried through.
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-Didn't notice until I looked at patch 3 and 4 together.
-
-> +	ctx->pos = ctx->pos * parent_ways + parent_pos;
+> ---
+>  drivers/cxl/core/region.c | 55 ++++++++++++++++++++++++++-------------
+>  1 file changed, 37 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 0e38bcb43be6..c641c8922455 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -3203,6 +3203,38 @@ static int match_root_decoder_by_range(struct device *dev,
+>  	return range_contains(r1, r2);
+>  }
+>  
+> +static struct cxl_root_decoder *
+> +cxl_find_root_decoder(struct cxl_endpoint_decoder *cxled)
+> +{
+> +	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+> +	struct cxl_port *port = cxled_to_port(cxled);
+> +	struct cxl_root *cxl_root __free(put_cxl_root) = find_cxl_root(port);
+> +	struct cxl_decoder *cxld = &cxled->cxld;
+> +	struct range *hpa = &cxld->hpa_range;
+> +	struct device *cxlrd_dev;
 > +
-> +	return ctx->pos;
+> +	cxlrd_dev = device_find_child(&cxl_root->port.dev, hpa,
+> +				      match_root_decoder_by_range);
+> +	if (!cxlrd_dev) {
+> +		dev_err(cxlmd->dev.parent,
+> +			"%s:%s no CXL window for range %#llx:%#llx\n",
+> +			dev_name(&cxlmd->dev), dev_name(&cxld->dev),
+> +			cxld->hpa_range.start, cxld->hpa_range.end);
+> +		return NULL;
+> +	}
+> +
+> +	/*
+> +	 * device_find_child() created a reference to the root
+> +	 * decoder. Since the root decoder exists as long as the root
+> +	 * port exists and the endpoint already holds a reference to
+> +	 * the root port, this additional reference is not needed.
+> +	 * Free it here.
+> +	 */
+> +	put_device(cxlrd_dev);
+> +
+> +	return to_cxl_root_decoder(cxlrd_dev);
+> +}
+> +
+>  static int match_region_by_range(struct device *dev, const void *data)
+>  {
+>  	struct cxl_region_params *p;
+> @@ -3314,29 +3346,17 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+>  
+>  int cxl_add_to_region(struct cxl_endpoint_decoder *cxled)
+>  {
+> -	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+> -	struct cxl_port *port = cxled_to_port(cxled);
+> -	struct cxl_root *cxl_root __free(put_cxl_root) = find_cxl_root(port);
+>  	struct range *hpa = &cxled->cxld.hpa_range;
+> -	struct cxl_decoder *cxld = &cxled->cxld;
+> -	struct device *cxlrd_dev, *region_dev;
+> +	struct device *region_dev;
+>  	struct cxl_root_decoder *cxlrd;
+>  	struct cxl_region_params *p;
+>  	struct cxl_region *cxlr;
+>  	bool attach = false;
+>  	int rc;
+>  
+> -	cxlrd_dev = device_find_child(&cxl_root->port.dev, &cxld->hpa_range,
+> -				      match_root_decoder_by_range);
+> -	if (!cxlrd_dev) {
+> -		dev_err(cxlmd->dev.parent,
+> -			"%s:%s no CXL window for range %#llx:%#llx\n",
+> -			dev_name(&cxlmd->dev), dev_name(&cxld->dev),
+> -			cxld->hpa_range.start, cxld->hpa_range.end);
+> +	cxlrd = cxl_find_root_decoder(cxled);
+> +	if (!cxlrd)
+>  		return -ENXIO;
+> -	}
+> -
+> -	cxlrd = to_cxl_root_decoder(cxlrd_dev);
+>  
+>  	/*
+>  	 * Ensure that if multiple threads race to construct_region() for @hpa
+> @@ -3354,7 +3374,7 @@ int cxl_add_to_region(struct cxl_endpoint_decoder *cxled)
+>  
+>  	rc = PTR_ERR_OR_ZERO(cxlr);
+>  	if (rc)
+> -		goto out;
+> +		return rc;
+>  
+>  	attach_target(cxlr, cxled, -1, TASK_UNINTERRUPTIBLE);
+>  
+> @@ -3375,8 +3395,7 @@ int cxl_add_to_region(struct cxl_endpoint_decoder *cxled)
+>  	}
+>  
+>  	put_device(region_dev);
+> -out:
+> -	put_device(cxlrd_dev);
+> +
+>  	return rc;
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_add_to_region, "CXL");
 
-This looks fine
-
-Reviewed-by: Gregory Price <gourry@gourry.net>
