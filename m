@@ -1,59 +1,97 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from crimson.yew.relay.mailchannels.net (crimson.yew.relay.mailchannels.net [23.83.220.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 758E913DB9F;
-	Fri, 21 Feb 2025 01:26:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC80CA94A
+	for <linux-cxl@vger.kernel.org>; Fri, 21 Feb 2025 01:28:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.220.44
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740101199; cv=pass; b=IpK9IeS2ahKv1xcsbQ3HLmBG3sCv84jemIQkZLdthrGCIqo6d3fa5x+nJtOVjNZgV0YkmaoN2SAoevX7c4dz1UnvJPPjAEjAwSj1+qceyaOalVkJk1wNn+zhEhIETUiZxoF5jkSXmhcsO/o862p7K2KUl9rv5fFp8UlAk13Jz/4=
+	t=1740101319; cv=pass; b=HLymByelZUYsJ3/bA5rbXmLpu+6MLEWbMe0LXMN/FKFYiPnlt5oPpe8HSVPVqeinkulB68iA2fG+SRUz7cP3uWAF8/69ShA+TEaWaWQPo+JXDSm3ItpWgJd+t5epRlmU/JTu38y6NvAluH//uk72LjLzkXNDm++R3isD0Vk0wjQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740101199; c=relaxed/simple;
-	bh=jJSVX2RrQtDAHNdHcfm0/wAcvFaJmQX1s57o1vOJo94=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=V/H1byrvO9CZ7k8r+hBMMsyaPr7aQhckLyqIP3RhfeOrddo5elTk8jQ884yubA/3FH4GlIthDM79N1Mfx98kOpV+H4I90MBv5ZIivUIOaX/gg6LTaxh6r1gcKNC0R0ek0eVDNbPxwNf6XC4YP0GEZoJcCN+nITI9yXeT5lJpB1Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=DSZm1U73; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	s=arc-20240116; t=1740101319; c=relaxed/simple;
+	bh=0oU9nGLRctraxB/S/SeupYsQh4DMcej1ca5Zw+kel1U=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lBD9hSNzcDU0/WSmkTW+RSKGWptnQ+cmI85maAJS6yqoHTcQVa4HeikKswyQOTNFIdOKS18dIfix7Hm0vYb+NnnXBjbNcz5ml6aX7V9SBtPlKZcyraFDsUT5rPLg+7C0qREp+NvtnKC9oH4KArF8lxvUUNe+EeEVNM4YHoBFZMc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=Ml4Sdwx1; arc=pass smtp.client-ip=23.83.220.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="DSZm1U73"
-ARC-Seal: i=1; a=rsa-sha256; t=1740101168; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=BROVFzOWPGvONJKu41VUsV3duKcEtwdRFXMUuKl6qlSQwiivHAv7STqs8S/OnDRVVadjlBY3SNASQlKGhNqnUEl4i9jAvvyTtVROeuYPBSiNsbiSxBA+UR/E5jQBwQDscuRp3VWiInB5lep+lfiYvEnhtooWRSSXuubMA4WVMzA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740101168; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=EC6hdBRAaNe+LM1jGuZXk5/BWpGrWVrmaRoztohpJHQ=; 
-	b=VjatBjoFAa7ZZ4sKYVsDCxrhjqgkPyVbEbsH9FRpJHSN/HhJfDWQIp5B1dyBaq2RhJD8ZpLU1TK9dmXvb5cRBtYgu2WEbXps9kGVV6AYulvdptMJajLX9wX5+F2ola7vktCHDPCln2IYPi1uf1v2fooAu12gZlvuBEpZQgxUuWY=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740101168;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
-	bh=EC6hdBRAaNe+LM1jGuZXk5/BWpGrWVrmaRoztohpJHQ=;
-	b=DSZm1U73dUgZqMWnZPtzeOQfXL5hz0n0KYcde40xq3FEPhk4R8nlw8GTIKpzc7HT
-	8pnBMGNRSh7UZo4JQq4MOxpMPDBPxynN36hRDkrD1Q48lP80jimQyC3SibI0Cm5073x
-	WDlwARvYWplv/ZU2x5Ee3jypcVB0DOOLdji3U8yU=
-Received: by mx.zohomail.com with SMTPS id 1740101166835944.9869850009496;
-	Thu, 20 Feb 2025 17:26:06 -0800 (PST)
-From: Li Ming <ming.li@zohomail.com>
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="Ml4Sdwx1"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 0FFFF322E00;
+	Thu, 20 Feb 2025 22:02:42 +0000 (UTC)
+Received: from pdx1-sub0-mail-a229.dreamhost.com (100-97-28-76.trex-nlb.outbound.svc.cluster.local [100.97.28.76])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 5508D322F18;
+	Thu, 20 Feb 2025 22:02:41 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1740088961; a=rsa-sha256;
+	cv=none;
+	b=5BmYYP3A7Tko5IoUzJtYvDFY5rQvbjAOJZXWy9yDDVQFM425ORm5DTjzb7163LzWeyzGEw
+	ZUT6dAexziWoQfXpRDhnIjh77rFO8c1Eoe+xt/24BO9qFWawczEDXvlx1swn55sc175oyz
+	QmBDPmLpAZWXwDDdfRejSgLOaD1Cw6nZA0D0c0vC8anBjrceLtThwmSkpA47cejCeIpBcu
+	MHTWUF35swWCVx1nuHo98KrqlaW0ojbDB9LGfklhAA1N2sz46pDmXcIBhRwlpccc+tqxBq
+	6Spl4pC0ti8apXgXuesUxWXws0MJbNe2JzdmFwx00TuHEsWrZnpimngfcJp/6g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1740088961;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:dkim-signature;
+	bh=an6uVolBgKwPu5v0qfdukWY/y+90pz+FF04pCiJ6z74=;
+	b=fIUvSvhRUps4czHkQCGGh8zLKGtCGllk5XeMOIiIhnBQxP7phvZcAt7QCWYtHUB07WW59+
+	pbgqia/1xPOGqsoC4aWlI00CDOKGrS1jro8lPlvK+UqR6VbElhx85gIAKR0JJHo1qyJs0u
+	wEOQZ9PUpj4DqoAOcJHa2ALsk8xGpHU1T3GiAeZAnX5LOqbr5vMubi93MFoTCoW5vofFjt
+	Jr3uoS6BCNGa6QPMvg05yfchdkZaxlTJErrOQCMmzlub77fCJ69U4a1xlQOF76kKeQrKm6
+	g7LUIeOLUfGd3/fWyz0dwHM4NSjUQoLteOOI4fLxPjy24f1cPxakrukuCweiDg==
+ARC-Authentication-Results: i=1;
+	rspamd-6d7cc6b78d-fvkg7;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Good
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Relation-Society: 0028685e37ec1c5f_1740088961810_399080677
+X-MC-Loop-Signature: 1740088961810:802406110
+X-MC-Ingress-Time: 1740088961810
+Received: from pdx1-sub0-mail-a229.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.97.28.76 (trex/7.0.2);
+	Thu, 20 Feb 2025 22:02:41 +0000
+Received: from localhost.localdomain (unknown [104.36.25.240])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a229.dreamhost.com (Postfix) with ESMTPSA id 4YzS1D2t1vz7L;
+	Thu, 20 Feb 2025 14:02:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1740088961;
+	bh=an6uVolBgKwPu5v0qfdukWY/y+90pz+FF04pCiJ6z74=;
+	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
+	b=Ml4Sdwx1p9OHU8QLkCuyc59WfHliMjf/1eCGv5lNzCyy6yNnEvSdEhSEGEByzS+eN
+	 UyM0PjxN+KmASTVFIwzISPU/NwEL2vBf3HwXn+x6uWsFKUt9Zd8t9woM6OO/9ZzE1F
+	 VvrTLsoKaos8KmOlBFZM+TUX78ZQehfa/k3QrcWUZJaCIKuC1pT+fpNXeLjkV8oEZ3
+	 OlmWqLpOJ2IF8ala5Tqz1c5ma1TBK4mL9xOu69x63EGrfMPLroR4PNbv4yP/ihh3Bj
+	 9ZS5WDFkjldVE2n0OO/faBB0AwrBn6zFtslaykPCgfIDIZXnDyZbQTmmjtdm/OCrJY
+	 6NObUjUWwSaWQ==
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: dave.jiang@intel.com,
 	dan.j.williams@intel.com
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Li Ming <ming.li@zohomail.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v3 6/7] cxl/region: Drop goto pattern in cxl_dax_region_alloc()
-Date: Fri, 21 Feb 2025 09:24:52 +0800
-Message-Id: <20250221012453.126366-7-ming.li@zohomail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250221012453.126366-1-ming.li@zohomail.com>
-References: <20250221012453.126366-1-ming.li@zohomail.com>
+Cc: jonathan.cameron@huawei.com,
+	alison.schofield@intel.com,
+	ira.weiny@intel.com,
+	vishal.l.verma@intel.com,
+	seven.yi.lee@gmail.com,
+	ming.li@zohomail.com,
+	a.manzanares@samsung.com,
+	fan.ni@samsung.com,
+	anisa.su@samsung.com,
+	dave@stgolabs.net,
+	linux-cxl@vger.kernel.org
+Subject: [PATCH v5 0/4] cxl: Dirty shutdown followups
+Date: Thu, 20 Feb 2025 14:02:31 -0800
+Message-Id: <20250220220235.276831-1-dave@stgolabs.net>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -61,60 +99,39 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Feedback-ID: rr0801122763afccc3e0bf13c4fcf237c500000a2e18be141714b8afd49bfb979b618f1b45778593ff423b69:zu080112274e6e69bb57c99848a7e6e5a7000073d3cb19de40d2a2c7cdfabd16edc081006965258de78e4823:rf0801122d5b45866a6bde9f6136f84f6b00001e311490b10bf04dfa8de33b7ea8801703c06894ccfa501d8da61161339fb6:ZohoMail
-X-ZohoMailClient: External
 
-In cxl_dax_region_alloc(), there is a goto pattern to release the rwsem
-cxl_region_rwsem when the function returns, the down_read() and up_read
-can be replaced by a guard(rwsem_read) then the goto pattern can be
-removed.
+Changes from v4:
+  - use %llu on the correct sysfs file in patch 3 (Jonathan)
+  - s/cxl_nvdimm_setup_dirty_tracking()/cxl_nvdimm_arm_dirty_shutdown_tracking()
+    in patch 3 which was feedback from v1.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-Acked-by: Davidlohr Bueso <dave@stgolabs.net>
-Signed-off-by: Li Ming <ming.li@zohomail.com>
----
- drivers/cxl/core/region.c | 16 +++++-----------
- 1 file changed, 5 insertions(+), 11 deletions(-)
+Hi,
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 8e68091e3f20..9f082bc0f4e3 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -3037,17 +3037,13 @@ static struct cxl_dax_region *cxl_dax_region_alloc(struct cxl_region *cxlr)
- 	struct cxl_dax_region *cxlr_dax;
- 	struct device *dev;
- 
--	down_read(&cxl_region_rwsem);
--	if (p->state != CXL_CONFIG_COMMIT) {
--		cxlr_dax = ERR_PTR(-ENXIO);
--		goto out;
--	}
-+	guard(rwsem_read)(&cxl_region_rwsem);
-+	if (p->state != CXL_CONFIG_COMMIT)
-+		return ERR_PTR(-ENXIO);
- 
- 	cxlr_dax = kzalloc(sizeof(*cxlr_dax), GFP_KERNEL);
--	if (!cxlr_dax) {
--		cxlr_dax = ERR_PTR(-ENOMEM);
--		goto out;
--	}
-+	if (!cxlr_dax)
-+		return ERR_PTR(-ENOMEM);
- 
- 	cxlr_dax->hpa_range.start = p->res->start;
- 	cxlr_dax->hpa_range.end = p->res->end;
-@@ -3060,8 +3056,6 @@ static struct cxl_dax_region *cxl_dax_region_alloc(struct cxl_region *cxlr)
- 	dev->parent = &cxlr->dev;
- 	dev->bus = &cxl_bus_type;
- 	dev->type = &cxl_dax_region_type;
--out:
--	up_read(&cxl_region_rwsem);
- 
- 	return cxlr_dax;
- }
+Some followup patches to the GPF work. First two patches are from feedback
+provided by DaveJ. The third patch adds a $platform/dirty_shutdown sysfs
+attribute to expose the count to userspace. Fourth patch adds support
+emulating the set shutdown state command for the mock device.
+
+Applies against the -next branch of cxl.git.
+
+Thanks!
+
+Davidlohr Bueso (4):
+  cxl/pci: Introduce cxl_gpf_get_dvsec()
+  cxl/pmem: Rename cxl_dirty_shutdown_state()
+  cxl/pmem: Export dirty shutdown count via sysfs
+  tools/testing/cxl: Set Shutdown State support
+
+ Documentation/ABI/testing/sysfs-bus-cxl       | 12 +++
+ Documentation/driver-api/cxl/maturity-map.rst |  2 +-
+ drivers/cxl/core/mbox.c                       | 25 +++++-
+ drivers/cxl/core/pci.c                        | 30 +++++---
+ drivers/cxl/cxl.h                             |  3 +
+ drivers/cxl/cxlmem.h                          | 15 +++-
+ drivers/cxl/pmem.c                            | 77 +++++++++++++++++--
+ tools/testing/cxl/test/mem.c                  | 23 ++++++
+ 8 files changed, 165 insertions(+), 22 deletions(-)
+
 -- 
-2.34.1
+2.39.5
 
