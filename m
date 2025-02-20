@@ -1,180 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6E7A204877;
-	Thu, 20 Feb 2025 17:23:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E188C214806
+	for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 17:29:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740072235; cv=none; b=NlbORB5tfwI3+PwLqOOexey6KUr0N3Wm0wRSA/lqHitrAIfyIMhORxZSbCUlSlQC3+GvLap69q/zNVQlmw7HHV50A2j3JE+icVN7W9QpZH/QC4H3K+U+giEvULx+2blFAVI+V6aLFkT4+G9WBntMNMJf531nayOPcarpVczAQ38=
+	t=1740072573; cv=none; b=mzXPwymyUETDN2e+FUIA3q205kX/Hz4EwKNtga7vcVFDCMO5+ecBFTSN81CcFa9r3bICaxaeh3qFKbin3YfuwwiQLs2mPOfb794t+axItdQIoMV4Av2lUUeyDzp4z5fptNFALFkI78AcjSwk7fOP5os8ftsOV1vxeBXWf7tnCnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740072235; c=relaxed/simple;
-	bh=CoU9Upr5IfW1UbCU/qk6AaXo8dcsi5zMO7uYXliXrGY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J0/Nrs4LDzxk9R0mH4OJblF1oq4al3ibepO1wSknhcgMxUlWUOFkDY/u474uVA+aoAWm4eMY18PFCJRhh4haJ65gwAbBm0XgPBJVX3edg9hoHT6aRIRMPPJBa5ooEl9QNxAGFhGmUvcYv+poUBRxAbL8fz4ihTHudPM8FVNMP2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hppNGksD; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hppNGksD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740072234; x=1771608234;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=CoU9Upr5IfW1UbCU/qk6AaXo8dcsi5zMO7uYXliXrGY=;
-  b=hppNGksDvtLVAT/bygcQKKQ/2ic4Wx8PfBCpBfqG7YBh9cYMUdjL9BDd
-   FrdsVXobnxIwmv37WNOg9ocUQeShWU1dRFLMfweenOmrCGJPtfYYQwzWo
-   Z7fm2fdU9+F6AsEGpzYx+me+Icg9jyMVRQzXPsDEoNYT5i5eCX8toXATC
-   RsfUWC+aqakWDru9ajnhQCA9Ta5GSpHF6XvzFNKgIfE+YAbIRfUvn3KvB
-   LBDYowRa7mpkoKHWlz1XDvEk8dujnB4S84AgX8z/0lrq3Z5yjGgqtAEeO
-   ysoB0qncdKFXQ5U06A9/OQDH8rXyn/enKJlvA8Ps+13HS350KcYdRpop8
-   A==;
-X-CSE-ConnectionGUID: vtIcjIuIR7+T3Pe1coJPwA==
-X-CSE-MsgGUID: Z39tp2oGRCqlOZXIAJcQTQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="41076275"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="41076275"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 09:23:53 -0800
-X-CSE-ConnectionGUID: xTOc1FKNS0OFg8TAmcXuHQ==
-X-CSE-MsgGUID: jASiOlg7Rz2nvCfhNsk+0Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="114966710"
-Received: from puneetse-mobl.amr.corp.intel.com (HELO [10.125.110.112]) ([10.125.110.112])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 09:23:53 -0800
-Message-ID: <e5cdb4b2-9be4-4af5-9579-01451d221c74@intel.com>
-Date: Thu, 20 Feb 2025 10:23:51 -0700
+	s=arc-20240116; t=1740072573; c=relaxed/simple;
+	bh=wAgrsNrANLY4hTapFAYgvQ8AlrdUx9xGaX7VENshF1c=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hGOC5ZjQrVAm9Qh+sOClFC5F32upjgAygCrhPG4llAmQxZARIU/QG0VySR5rl2I1GkeZ8+B0dzjPVZHSjb8Oo0EbYpnSxZPODHmFmT74pWeE+6OkHrsbb0EL/afl3yTjJVfvGu/xyMqElQ0NvOrz5ok9cXMdYKIvj6/ToseSogs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YzKw432W9z6HJfl;
+	Fri, 21 Feb 2025 01:27:48 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6ECC41404F5;
+	Fri, 21 Feb 2025 01:29:27 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 20 Feb
+ 2025 18:29:26 +0100
+Date: Thu, 20 Feb 2025 17:29:25 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Davidlohr Bueso <dave@stgolabs.net>
+CC: <dave.jiang@intel.com>, <dan.j.williams@intel.com>,
+	<alison.schofield@intel.com>, <ira.weiny@intel.com>,
+	<vishal.l.verma@intel.com>, <seven.yi.lee@gmail.com>, <ming.li@zohomail.com>,
+	<a.manzanares@samsung.com>, <fan.ni@samsung.com>, <anisa.su@samsung.com>,
+	<linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH 3/4] cxl/pmem: Export dirty shutdown count via sysfs
+Message-ID: <20250220172925.000044f2@huawei.com>
+In-Reply-To: <20250220013604.263489-4-dave@stgolabs.net>
+References: <20250220013604.263489-1-dave@stgolabs.net>
+	<20250220013604.263489-4-dave@stgolabs.net>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 13/18] cxl/region: Add function to find a port's switch
- decoder by range
-To: Robert Richter <rrichter@amd.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Davidlohr Bueso <dave@stgolabs.net>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- Gregory Price <gourry@gourry.net>,
- "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
- Terry Bowman <terry.bowman@amd.com>
-References: <20250211095349.981096-1-rrichter@amd.com>
- <20250211095349.981096-14-rrichter@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250211095349.981096-14-rrichter@amd.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
+On Wed, 19 Feb 2025 17:36:03 -0800
+Davidlohr Bueso <dave@stgolabs.net> wrote:
 
-
-On 2/11/25 2:53 AM, Robert Richter wrote:
-> Factor out code to find the switch decoder of a port for a specific
-> address range. Reuse the code to search a root decoder, create the
-> function cxl_port_find_switch_decoder() and rework
-> match_root_decoder_by_range() to be usable for switch decoders too.
+> Similar to how the acpi_nfit driver exports Optane dirty shutdown count,
+> introduce:
 > 
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-> Reviewed-by: Gregory Price <gourry@gourry.net>
-> Tested-by: Gregory Price <gourry@gourry.net>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-> ---
->  drivers/cxl/core/region.c | 48 +++++++++++++++++++++++----------------
->  1 file changed, 28 insertions(+), 20 deletions(-)
+>   /sys/bus/cxl/devices/nvdimm-bridge0/ndbusX/nmemY/cxl/dirty_shutdown
 > 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index cfcd235f311e..72e991e7d9ab 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -3189,28 +3189,44 @@ static int devm_cxl_add_dax_region(struct cxl_region *cxlr)
->  	return rc;
+> Under the conditions that 1) dirty shutdown can be set, 2) Device GPF
+> DVSEC exists, and 3) the count itself can be retrieved.
+> 
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+One trivial thing otherwise
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+
+> diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
+> index 6b284962592f..cb039cfc62cb 100644
+> --- a/drivers/cxl/pmem.c
+> +++ b/drivers/cxl/pmem.c
+> @@ -38,19 +38,48 @@ static ssize_t id_show(struct device *dev, struct device_attribute *attr, char *
+>  	struct cxl_nvdimm *cxl_nvd = nvdimm_provider_data(nvdimm);
+>  	struct cxl_dev_state *cxlds = cxl_nvd->cxlmd->cxlds;
+>  
+> -	return sysfs_emit(buf, "%lld\n", cxlds->serial);
+> +	return sysfs_emit(buf, "%llu\n", cxlds->serial);
+
+I guess you 'fixed' the wrong one?
+
 >  }
+>  static DEVICE_ATTR_RO(id);
 >  
-> -static int match_root_decoder_by_range(struct device *dev,
-> -				       const void *data)
-> +static int match_decoder_by_range(struct device *dev, const void *data)
->  {
->  	const struct range *r1, *r2 = data;
-> -	struct cxl_root_decoder *cxlrd;
-> +	struct cxl_decoder *cxld;
->  
-> -	if (!is_root_decoder(dev))
-> +	if (!is_switch_decoder(dev))
->  		return 0;
->  
-> -	cxlrd = to_cxl_root_decoder(dev);
-> -	r1 = &cxlrd->cxlsd.cxld.hpa_range;
-> +	cxld = to_cxl_decoder(dev);
-> +	r1 = &cxld->hpa_range;
->  	return range_contains(r1, r2);
->  }
->  
-> +static struct cxl_decoder *
-> +cxl_port_find_switch_decoder(struct cxl_port *port, struct range *hpa)
+> +static ssize_t dirty_shutdown_show(struct device *dev,
+> +				   struct device_attribute *attr, char *buf)
 > +{
-> +	/*
-> +	 * device_find_child() increments the reference count of the
-> +	 * the switch decoder's parent port to protect the reference
-> +	 * to its child. The port is already a parent of the endpoint
-> +	 * decoder's port, at least indirectly in the port hierarchy.
-> +	 * Thus, the endpoint already holds a reference for the parent
-> +	 * port of the switch decoder. Free the unnecessary reference
-> +	 * here.
-> +	 */
-> +	struct device *cxld_dev __free(put_device) =
-> +		device_find_child(&port->dev, hpa, match_decoder_by_range);
+> +	struct nvdimm *nvdimm = to_nvdimm(dev);
+> +	struct cxl_nvdimm *cxl_nvd = nvdimm_provider_data(nvdimm);
 > +
-> +	return cxld_dev ? to_cxl_decoder(cxld_dev) : NULL;
+> +	return sysfs_emit(buf, "%lld\n", cxl_nvd->dirty_shutdowns);
+
+It's unsigned so %llu though I hope no one ever tests that by
+doing that many dirty shutdowns.
+
 > +}
-> +
->  static struct cxl_root_decoder *
->  cxl_find_root_decoder(struct cxl_endpoint_decoder *cxled)
->  {
->  	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
->  	struct cxl_port *iter = cxled_to_port(cxled);
-> -	struct cxl_decoder *cxld = &cxled->cxld;
-> +	struct cxl_decoder *root, *cxld = &cxled->cxld;
->  	struct range *hpa = &cxld->hpa_range;
-> -	struct device *cxlrd_dev;
->  
->  	while (iter && !is_cxl_root(iter))
->  		iter = to_cxl_port(iter->dev.parent);
-> @@ -3218,9 +3234,8 @@ cxl_find_root_decoder(struct cxl_endpoint_decoder *cxled)
->  	if (!iter)
->  		return NULL;
->  
-> -	cxlrd_dev = device_find_child(&iter->dev, hpa,
-> -				      match_root_decoder_by_range);
-> -	if (!cxlrd_dev) {
-> +	root = cxl_port_find_switch_decoder(iter, hpa);
-> +	if (!root) {
->  		dev_err(cxlmd->dev.parent,
->  			"%s:%s no CXL window for range %#llx:%#llx\n",
->  			dev_name(&cxlmd->dev), dev_name(&cxld->dev),
-> @@ -3228,16 +3243,9 @@ cxl_find_root_decoder(struct cxl_endpoint_decoder *cxled)
->  		return NULL;
->  	}
->  
-> -	/*
-> -	 * device_find_child() created a reference to the root
-> -	 * decoder. Since the root decoder exists as long as the root
-> -	 * port exists and the endpoint already holds a reference to
-> -	 * the root port, this additional reference is not needed.
-> -	 * Free it here.
-> -	 */
-> -	put_device(cxlrd_dev);
->  
-> -	return to_cxl_root_decoder(cxlrd_dev);
-> +
-> +	return to_cxl_root_decoder(&root->dev);
->  }
->  
->  static int match_region_by_range(struct device *dev, const void *data)
+> +static DEVICE_ATTR_RO(dirty_shutdown);
+
 
