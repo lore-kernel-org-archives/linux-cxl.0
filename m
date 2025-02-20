@@ -1,98 +1,164 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B4E2641C3
-	for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 19:43:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30B5621480E
+	for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 19:44:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740080602; cv=none; b=ldE0kadZEgFJer+Smz9VUsrkSfRo8VV301i34aZN3XxWqdaj4HyXxoNm6kQjD7mPm3Vz5UAj8tSGR/JX4OfNQ1bYwXb7V2gQ2cc0xbBK65kOZDrC1O3Z8r1yqP7ErDaF6PNhw3TwmGFagvSMq/CLqNpE96MSsUwyPNe/R9m4b6M=
+	t=1740080681; cv=none; b=aRDn2MwWVTtDKbEMbT1kc0JuwenMJjwZGbWQ3dKAjuuEo5Wai/jxPsnhNWD/FmyADiqkJzB6u4WRAMVFq4IsLdr3z96IXA6+BFary0NuHs5S9W7SJ2mPEozgpLX3sQFuO+IA6RKaXZbQOdW1Xzx0l5FsZ9sDz045Y0Q+KKpHBsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740080602; c=relaxed/simple;
-	bh=CQZh1hGW51X6+MKJqFHzqzZmBj8e2sGYeqjGA0wC2r4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GQ/Nm2M7hHSUx3peDm3Ls3Xq/l/NmT6/9glzI0/vaYS4Hu1eyKRlTmVLCZg7mZcBfO5uDi9sYqJnv2+jpRr9R45gerb40rXFL+mGrmHBpUG41T0o05/eYzKGp0Zez1drD+I/4S0Jn6etay/A+nI5q9LXsKFT7PsNeL6b6HbBE7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=LthYqdyv; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="LthYqdyv"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7be8efa231aso137744785a.2
-        for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 11:43:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1740080597; x=1740685397; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BKXoW+AQZeUkigvC87NIB17R97sV2qU5a0HdEFayysQ=;
-        b=LthYqdyv5NLj2SUCk5xSMEvDAeaRlAxaEMLHex+C3XnL4jnOovKcVFcUgt2Nj93JrV
-         yKdDHNBx0ayUpACMDeGXhbrQoB+eMpEM/rivGVZ7Cn15NNJEM7umkoa1q6YzKUP4HGLT
-         9uEHfOeoRb4p0z1W5yusU1fSeM+4k1/N2eLMi/6SnXbXvH7lC6dU2gb9vitHDWF23X41
-         FC4WHPcEqOVTafL6oqJjKkxGtyH4JPKmNty4BcW9xXYzVSGM61XtDBQ5DIh4oRWP/eW0
-         O32axZNWFGS0ryMgTD3TJ4sp4T4xE7sMLoJyns8nRa6CkOQA9DXDKKt7i/KB6X3E3leE
-         7daA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740080597; x=1740685397;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BKXoW+AQZeUkigvC87NIB17R97sV2qU5a0HdEFayysQ=;
-        b=k+pXviPOVo/Sx48uEN2FPke/QrL804/IVN5I9gqH7B5v7NnGipYmCmc55iIw1grwT4
-         9BqwaHcBn10lfnC++EH0p9zuEYl/mo3CQBJUOGjhkAqudNKBImwOHDG0lrToDjf9kkn0
-         69wYVSFz3BiQ50bO2o0QvbxzY9wsXDUWAGYG7wMSMMJpLjyU4Z8szPhpvOljJwYbU6FS
-         kHUPg9rBWTFz0vL3VY9YO5bmPzIM/85ruIBI4k2qltoYF8KTovahcK0RjjVphRKWSyeD
-         FYANpi1jI6bJVa3i2j0tuQDDq3XLMeKICPWquPxio7q1Wfuqd+Pk5QZDr0RY5aP0kP2U
-         Ugfg==
-X-Forwarded-Encrypted: i=1; AJvYcCV5WjPTnHkbvNP4+0vtMObplh4nyjbmeVtLBSK1hpLIpwLvAa8qW0g8DhZE/F6o9UrT6xgTJUJIWLk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKrv+azmskR9SvbVB931vwwRGfkF1F0d/DS+xqVD0LqCdNzgqw
-	xhMqftamyZv6nAa0FStLBTfDdsRBVe7wu1ClbptPt/O4fvET1MrkOPXdIU3e0/Y=
-X-Gm-Gg: ASbGncsd6Bn15FWWkynuwGce/SSZyWV4IrPXcuAt64nZHh+04pRRTHhc1Fjy/PkeMOp
-	DbN3kA2AvXWV6vsrVP0HMTOfHWqStl1h+eqmAQs/5r/cRnnoQ6j6p48L93jn7HyOonGmK+iXzqY
-	2NGiHruXgJLJWUMFrNXLIhYuCQMhNAaF7yG+y/Wg0/Zi8rKRO9Ezjx/eAocimWlcU1oYlgz68V2
-	X74r6fMXolmDY16E8SAtkl050SSJ4hF7QOYXOqttsKDvk14FbiL0y/+eQHMHM5IZqv143V9VHK2
-	B4KjamFF4GgttzqIdgsnXnNhFkRdQMGlybp1qBGwqnDMq03zZwWkNrBqwMzCJ/NBJgdp9Q7WSQ=
-	=
-X-Google-Smtp-Source: AGHT+IFkRBvFtjCgVNrmnWtpZGK+MU4yinBj+hI3wWaAiYndlO+MZu3xzUHT50RI7AcRiLnUL0Ns2A==
-X-Received: by 2002:a05:620a:2495:b0:7c0:a16e:e83f with SMTP id af79cd13be357-7c0cf96f05bmr2517685a.52.1740080597543;
-        Thu, 20 Feb 2025 11:43:17 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c0b2bb3d00sm289265585a.17.2025.02.20.11.43.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2025 11:43:17 -0800 (PST)
-Date: Thu, 20 Feb 2025 14:43:15 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Robert Richter <rrichter@amd.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v2 10/15] cxl/region: Use root decoders interleaving
- parameters to create a region
-Message-ID: <Z7eF04PLfr5rhiLT@gourry-fedora-PF4VCD3F>
-References: <20250218132356.1809075-1-rrichter@amd.com>
- <20250218132356.1809075-11-rrichter@amd.com>
+	s=arc-20240116; t=1740080681; c=relaxed/simple;
+	bh=eQL5by2JCusLMI+DrWpwmry7J72/v3pQQq04nw8vfnc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gSLvRB+/PX8+bQZYhWZ+nnqABcc0aod3K2NgiExSNzCTOOsXGE7VxamXTGwAKO2Obxida/YQgEHvNvJixl2wXOcHgodvKNu5R3BnahKxVrCXgXCKLBwoiwYXUUC/7tw740Axv4AWmnvu/wwaVLI8r+uDFmpAHFvqfR12tR8pBV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B7EEC4CED6;
+	Thu, 20 Feb 2025 19:44:40 +0000 (UTC)
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org
+Cc: dan.j.williams@intel.com,
+	ira.weiny@intel.com,
+	vishal.l.verma@intel.com,
+	alison.schofield@intel.com,
+	Jonathan.Cameron@huawei.com,
+	dave@stgolabs.net,
+	jgg@nvidia.com,
+	shiju.jose@huawei.com
+Subject: [PATCH v7 00/14] cxl: Add CXL feature commands support via fwctl 
+Date: Thu, 20 Feb 2025 12:42:38 -0700
+Message-ID: <20250220194438.2281088-1-dave.jiang@intel.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250218132356.1809075-11-rrichter@amd.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 18, 2025 at 02:23:51PM +0100, Robert Richter wrote:
-... snip ...
->  static int find_pos_and_ways(struct cxl_port *port, struct range *range,
-> -			     int *pos, int *ways)
-> +			     int *pos, int *ways, int *granularity)
+v7:
+- Move the flex array bits to where it is used. (Jonathan)
+- Use uuid from defined struct instead of cast from byte stream. (Jonathan)
 
-Function name starting to diverge from functionality
+v6:
+- Drop info callback. (Saeed)
+- Embed hw operation in the input payload. (Saeed)
+- Move set_features check bits to the set_features enabling patch. (Saeed)
+- Update user example in documentation to support embedded operation in payload
+- See individual patches for detailed changes from v5.
 
-find_interleave_config() ?
+v5:
+- Add devm action to fwctl. (Dan)
+- Fix return of NULL instead of ERR_PTR() for get features. (Ming)
+- Make cxl_get/set_feature() internal to cxl/core (Dan)
+- Add missing NULL check for cxl_set_feature() (Dan)
+- Remove cxlmd back pointer from fwctl. (Dan)
+- Add missing CONFIG_FWCTL dependency to Kconfig.
+- Fix index of for loop for fwctl get features. (Ming)
+- See individual patches for detailed changes from v4.
 
-~Gregory
+v4:
+- Rebase to FWCTL series v4 based on v6.14-rc1
+- Merge patch 1/16 from v3 into cxl/next ahead. (Jonathan)
+- Move everything to core/features.c and behind CONFIG_CXL_FEATURES. (Dan)
+- Split the registration of features into 2 parts. Do the registration in
+  PCI probe. One before memdev enumeration to enable kernel feature support,
+  and one after memdev enumeration to support FWCTL. (Dan)
+- Fix incrememt of pointer after copying feature data. (Ming)
+- Add check for no immediate change effect and no reset change effects. (Dan, Jonathan)
+- Remove IDs and use opcodes directly. (Dan)
+- See individual patches for detailed changes from v3.
+
+v3:
+- Rearrange code and shift code forward to reduce diffs. (Jonathan)
+- Use struct_size() in appropriate locations. (Jonathan)
+- Remove usage of __weak and refactor accordingly. (Jason)
+- Return NULL for allocation functions. (Jonathan)
+- See individual patches for detailed changes from v2.
+
+v2:
+- Drop features device and driver. Move features enabling to cxl_memdev. (Dan)
+- Drop sysfs attribute of number of features. (Dan)
+- Drop moving of include/uapi/linux/cxl_mem.h. (Dan)
+- Set get driver info ioctl to return reserved 32bit. Set behavior of issue
+  ioctl successful as indicating Feature commands supported.
+- Set 'Set Feature Size' to 0 for kernel exclusive Features.
+- See individual patches for detailed changes from v1.
+- Hide FWCTL bits behind CONFIG_CXL_FWCTL. (Dan)
+
+v1:
+- Create a CXL features driver to handle all feature command related bits
+  including FWCTL support. (Dan)
+- Tested against CXL CLI unit tests for FWCTL.
+- See individual patches for detailed changes from RFC v2.
+
+RFC v2:
+- Dropped 1/13 and 2/13 from previous version. Merged upstream already.
+- Combined changes from Shiju for "get supported features"
+- Addressed comments from Jonathan and Jason
+- See specific changes in individual patch revision history
+- Added hardware command info to FWCTL
+- Added filtering to set feature command
+- Added documentation
+
+This series add support for CXL feature commands using the FWCTL framework [1].
+The code has been tested with CXL CLI unit tests for FWCTL.
+
+Patches 1-6 are shared with EDAC series [1] and there will be an immutable branch
+once accepted post review.
+
+CXL Features support is added behind the CXL mem driver. The 3 mailbox commands
+"Get Supported Features", "Get Feature", and "Set Feature" are implemented. The
+"Get" commands are under the FWCTL_RPC_CONFIGURATION policy, the "Set" command
+checks the policy depending on the set effects of the feature defined by the
+device via the Feature set effects field. All mailbox commands for CXL provides
+an effects table that describes the effects of a command when performed on the
+device.  For CXL features, there is also an effects field that describes the
+effects a feature set operation has on the device per feature. The security
+policy is checked against this feature specific effects field. 
+
+The code is based off of v4 of FWCTL series [2] posted by Jason and rebased on top of
+v6.14-rc1 plus 1 patch in
+cxl/next 43ca2463df9d ("cxl: Refactor user ioctl command path from mds to mailbox").
+A kernel branch [3] is provided for convience of testing and review.
+
+[1]: https://lore.kernel.org/linux-cxl/20250106121017.1620-1-shiju.jose@huawei.com/T/#t
+[2]: https://lore.kernel.org/linux-cxl/0-v3-960f17f90f17+516-fwctl_jgg@nvidia.com/#r
+[3]: https://git.kernel.org/pub/scm/linux/kernel/git/djiang/linux.git/log/?h=cxl/fwctl
+
+---
+Dave Jiang (12):
+      cxl: Enumerate feature commands
+      cxl: Add Get Supported Features command for kernel usage
+      cxl/test: Add Get Supported Features mailbox command support
+      cxl: Setup exclusive CXL features that are reserved for the kernel
+      cxl: Add FWCTL support to CXL
+      cxl: Move cxl feature command structs to user header
+      cxl: Add support for fwctl RPC command to enable CXL feature commands
+      cxl: Add support to handle user feature commands for get feature
+      cxl: Add support to handle user feature commands for set feature
+      cxl/test: Add Get Feature support to cxl_test
+      cxl/test: Add Set Feature support to cxl_test
+      fwctl/cxl: Add documentation to FWCTL CXL
+
+Shiju Jose (2):
+      cxl/mbox: Add GET_FEATURE mailbox command
+      cxl/mbox: Add SET_FEATURE mailbox command
+
+ Documentation/userspace-api/fwctl/fwctl-cxl.rst | 144 +++++++++
+ Documentation/userspace-api/fwctl/index.rst     |   1 +
+ MAINTAINERS                                     |   1 +
+ drivers/cxl/Kconfig                             |  12 +
+ drivers/cxl/core/Makefile                       |   1 +
+ drivers/cxl/core/core.h                         |  11 +
+ drivers/cxl/core/features.c                     | 710 ++++++++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/core/mbox.c                         |  36 ++-
+ drivers/cxl/cxlmem.h                            |   7 +
+ drivers/cxl/pci.c                               |   8 +
+ include/cxl/features.h                          |  91 ++++++
+ include/cxl/mailbox.h                           |   3 +
+ include/uapi/cxl/features.h                     | 128 ++++++++
+ include/uapi/fwctl/cxl.h                        |  55 ++++
+ include/uapi/fwctl/fwctl.h                      |   1 +
+ tools/testing/cxl/Kbuild                        |   1 +
+ tools/testing/cxl/test/mem.c                    | 185 ++++++++++++
+ 17 files changed, 1394 insertions(+), 1 deletion(-)
