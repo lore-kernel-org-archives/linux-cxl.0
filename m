@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089592638A3
-	for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 19:44:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9DC021480E
+	for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 19:44:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740080691; cv=none; b=GYDalCtx4xfATxeovZRo9PdLs1MN8W4owePoF5/DXrHLRSBtNmcyZq1jJ00Bg3Nx5PLHsJLx7q0xvETIR4M/S+0lNPxUi16wsHf/xReq7DkSG76FYz1GCGY1vlO6vD3AcJiHGBmu5H3Oq7EZRULbINBGdZt8FmaVbDn5LihK14w=
+	t=1740080693; cv=none; b=heI3AjxYr1Ws82UhSHe7js2Tdtz7adSk5HDZPO8mKG0NE4ei/srYDEc17qgOiuBdjFcb3r0F1x0CdxC3X1nLifmetTo4GN82wmYpYSFvPHUskvfBxcdkJqRqewoqUg6Ft9rdk7ZLqut/8MQY21io6OCMbBBZLsXN+kvhrc7W4R0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740080691; c=relaxed/simple;
-	bh=AWqpL8hZCds+IihWyp5cM7vTz6Sbzhqqr3IGYa4bqwY=;
+	s=arc-20240116; t=1740080693; c=relaxed/simple;
+	bh=rQSDRwjjBEMixjHj4C/eMFoeaZv+OwfA9QVMg1KcGbU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qoHNj4qcrte0L6qFznf/mXNm9Lhjr9c/R5IYiGy8+qLOnQvwsjpUg2Q+Nwdjy6Lqts7NTPJ9s/cvI7kJK4f6JPSHOL/iOhNvfdNBxxbxdE6GSVkpXmBzU3bBLk8Ku/Sawq46bJ5PBtCSmN1Hkh/Fi8xJXCMKHjQTYu8HjzPQ2i4=
+	 MIME-Version; b=cOfqXyPy1i0Z5ttjJ34cSs3kn4s9EeIqhrybWk80YUG/Y+LED8feiOAy+Es1GctYbK5GZQX8bYI3/M1+PMqu5bjOAU4O5Dtb3g2Z4hAAKOdpmPqMeCpGDOmRbmzkGh9LoXNSo2m8w2juIWhSvXntGHiZ07MA+hANx5YXFSu6N+o=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C04DAC4CED1;
-	Thu, 20 Feb 2025 19:44:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C338C4CED1;
+	Thu, 20 Feb 2025 19:44:52 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: dan.j.williams@intel.com,
@@ -25,9 +25,9 @@ Cc: dan.j.williams@intel.com,
 	jgg@nvidia.com,
 	shiju.jose@huawei.com,
 	Li Ming <ming.li@zohomail.com>
-Subject: [PATCH v7 07/14] cxl: Add FWCTL support to CXL
-Date: Thu, 20 Feb 2025 12:42:45 -0700
-Message-ID: <20250220194438.2281088-8-dave.jiang@intel.com>
+Subject: [PATCH v7 08/14] cxl: Move cxl feature command structs to user header
+Date: Thu, 20 Feb 2025 12:42:46 -0700
+Message-ID: <20250220194438.2281088-9-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250220194438.2281088-1-dave.jiang@intel.com>
 References: <20250220194438.2281088-1-dave.jiang@intel.com>
@@ -39,215 +39,282 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add fwctl support code to allow sending of CXL feature commands from
-userspace through as ioctls via FWCTL. Provide initial setup bits. The
-CXL PCI probe function will call devm_cxl_setup_fwctl() after the
-cxl_memdev has been enumerated in order to setup FWCTL char device under
-the cxl_memdev like the existing memdev char device for issuing CXL raw
-mailbox commands from userspace via ioctls.
+In preparation for cxl fwctl enabling, move data structures related to
+cxl feature commands to a user header file.
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by; Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 Reviewed-by: Li Ming <ming.li@zohomail.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/cxl/Kconfig          |  1 +
- drivers/cxl/core/features.c  | 74 ++++++++++++++++++++++++++++++++++++
- drivers/cxl/pci.c            |  4 ++
- include/cxl/features.h       | 10 +++++
- include/uapi/fwctl/fwctl.h   |  1 +
- tools/testing/cxl/test/mem.c |  4 ++
- 6 files changed, 94 insertions(+)
+ include/cxl/features.h      | 112 +------------------------------
+ include/uapi/cxl/features.h | 127 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 128 insertions(+), 111 deletions(-)
+ create mode 100644 include/uapi/cxl/features.h
 
-diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-index ad2e796e4ac6..2b6e662c89bf 100644
---- a/drivers/cxl/Kconfig
-+++ b/drivers/cxl/Kconfig
-@@ -105,6 +105,7 @@ config CXL_MEM
- config CXL_FEATURES
- 	bool "CXL: Features"
- 	depends on CXL_PCI
-+	select FWCTL
- 	help
- 	  Enable support for CXL Features. A CXL device that includes a mailbox
- 	  supports commands that allows listing, getting, and setting of
-diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-index 048ba4fc3538..846de3294a5e 100644
---- a/drivers/cxl/core/features.c
-+++ b/drivers/cxl/core/features.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /* Copyright(c) 2024-2025 Intel Corporation. All rights reserved. */
-+#include <linux/fwctl.h>
- #include <linux/device.h>
- #include <cxl/mailbox.h>
- #include <cxl/features.h>
-@@ -331,3 +332,76 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox,
- 		}
- 	} while (true);
- }
-+
-+/* FWCTL support */
-+
-+static inline struct cxl_memdev *fwctl_to_memdev(struct fwctl_device *fwctl_dev)
-+{
-+	return to_cxl_memdev(fwctl_dev->dev.parent);
-+}
-+
-+static int cxlctl_open_uctx(struct fwctl_uctx *uctx)
-+{
-+	return 0;
-+}
-+
-+static void cxlctl_close_uctx(struct fwctl_uctx *uctx)
-+{
-+}
-+
-+static void *cxlctl_fw_rpc(struct fwctl_uctx *uctx, enum fwctl_rpc_scope scope,
-+			   void *in, size_t in_len, size_t *out_len)
-+{
-+	/* Place holder */
-+	return ERR_PTR(-EOPNOTSUPP);
-+}
-+
-+static const struct fwctl_ops cxlctl_ops = {
-+	.device_type = FWCTL_DEVICE_TYPE_CXL,
-+	.uctx_size = sizeof(struct fwctl_uctx),
-+	.open_uctx = cxlctl_open_uctx,
-+	.close_uctx = cxlctl_close_uctx,
-+	.fw_rpc = cxlctl_fw_rpc,
-+};
-+
-+DEFINE_FREE(free_fwctl_dev, struct fwctl_device *, if (_T) fwctl_put(_T))
-+
-+static void free_memdev_fwctl(void *_fwctl_dev)
-+{
-+	struct fwctl_device *fwctl_dev = _fwctl_dev;
-+
-+	fwctl_unregister(fwctl_dev);
-+	fwctl_put(fwctl_dev);
-+}
-+
-+int devm_cxl_setup_fwctl(struct cxl_memdev *cxlmd)
-+{
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+	struct cxl_features_state *cxlfs;
-+	int rc;
-+
-+	cxlfs = to_cxlfs(cxlds);
-+	if (!cxlfs)
-+		return -ENODEV;
-+
-+	/* No need to setup FWCTL if there are no user allowed features found */
-+	if (!cxlfs->entries->num_user_features)
-+		return -ENODEV;
-+
-+	struct fwctl_device *fwctl_dev __free(free_fwctl_dev) =
-+		_fwctl_alloc_device(&cxlmd->dev, &cxlctl_ops, sizeof(*fwctl_dev));
-+	if (!fwctl_dev)
-+		return -ENOMEM;
-+
-+	rc = fwctl_register(fwctl_dev);
-+	if (rc)
-+		return rc;
-+
-+	cxlfs->fwctl_dev = fwctl_dev;
-+
-+	return devm_add_action_or_reset(&cxlmd->dev, free_memdev_fwctl,
-+					no_free_ptr(fwctl_dev));
-+}
-+EXPORT_SYMBOL_NS_GPL(devm_cxl_setup_fwctl, "CXL");
-+
-+MODULE_IMPORT_NS("FWCTL");
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 3e666ec51580..993fa60fe453 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -1013,6 +1013,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (rc)
- 		return rc;
- 
-+	rc = devm_cxl_setup_fwctl(cxlmd);
-+	if (rc)
-+		dev_dbg(&pdev->dev, "No CXL FWCTL setup\n");
-+
- 	pmu_count = cxl_count_regblock(pdev, CXL_REGLOC_RBI_PMU);
- 	if (pmu_count < 0)
- 		return pmu_count;
 diff --git a/include/cxl/features.h b/include/cxl/features.h
-index d2cde46b0fec..fce3c2dbde5a 100644
+index fce3c2dbde5a..ead63573b0b4 100644
 --- a/include/cxl/features.h
 +++ b/include/cxl/features.h
-@@ -4,6 +4,7 @@
- #define __CXL_FEATURES_H__
+@@ -5,6 +5,7 @@
  
  #include <linux/uuid.h>
-+#include <linux/fwctl.h>
+ #include <linux/fwctl.h>
++#include <uapi/cxl/features.h>
  
  /* Feature UUIDs used by the kernel */
  #define CXL_FEAT_PATROL_SCRUB_UUID						\
-@@ -162,6 +163,7 @@ enum cxl_set_feat_flag_data_transfer {
-  * @entries: CXl feature entry context
-  *	@num_features: total Features supported by the device
-  *	@ent: Flex array of Feature detail entries from the device
-+ * @fwctl_dev: Firmware Control device
-  */
- struct cxl_features_state {
- 	struct cxl_dev_state *cxlds;
-@@ -170,12 +172,15 @@ struct cxl_features_state {
- 		int num_user_features;
- 		struct cxl_feat_entry ent[] __counted_by(num_features);
- 	} *entries;
-+	struct fwctl_device *fwctl_dev;
+@@ -46,117 +47,6 @@ enum cxl_features_capability {
+ 	CXL_FEATURES_RW,
  };
  
- struct cxl_mailbox;
-+struct cxl_memdev;
- #ifdef CONFIG_CXL_FEATURES
- inline struct cxl_features_state *to_cxlfs(struct cxl_dev_state *cxlds);
- int devm_cxl_setup_features(struct cxl_dev_state *cxlds);
-+int devm_cxl_setup_fwctl(struct cxl_memdev *cxlmd);
- #else
- static inline struct cxl_features_state *to_cxlfs(struct cxl_dev_state *cxlds)
- {
-@@ -186,6 +191,11 @@ static inline int devm_cxl_setup_features(struct cxl_dev_state *cxlds)
- {
- 	return -EOPNOTSUPP;
- }
+-/* Get Supported Features (0x500h) CXL r3.2 8.2.9.6.1 */
+-struct cxl_mbox_get_sup_feats_in {
+-	__le32 count;
+-	__le16 start_idx;
+-	u8 reserved[2];
+-} __packed;
+-
+-/* CXL spec r3.2 Table 8-87 command effects */
+-#define CXL_CMD_CONFIG_CHANGE_COLD_RESET	BIT(0)
+-#define CXL_CMD_CONFIG_CHANGE_IMMEDIATE		BIT(1)
+-#define CXL_CMD_DATA_CHANGE_IMMEDIATE		BIT(2)
+-#define CXL_CMD_POLICY_CHANGE_IMMEDIATE		BIT(3)
+-#define CXL_CMD_LOG_CHANGE_IMMEDIATE		BIT(4)
+-#define CXL_CMD_SECURITY_STATE_CHANGE		BIT(5)
+-#define CXL_CMD_BACKGROUND			BIT(6)
+-#define CXL_CMD_BGCMD_ABORT_SUPPORTED		BIT(7)
+-#define CXL_CMD_EFFECTS_VALID			BIT(9)
+-#define CXL_CMD_CONFIG_CHANGE_CONV_RESET	BIT(10)
+-#define CXL_CMD_CONFIG_CHANGE_CXL_RESET		BIT(11)
+-
+-/*
+- * CXL spec r3.2 Table 8-109
+- * Get Supported Features Supported Feature Entry
+- */
+-struct cxl_feat_entry {
+-	uuid_t uuid;
+-	__le16 id;
+-	__le16 get_feat_size;
+-	__le16 set_feat_size;
+-	__le32 flags;
+-	u8 get_feat_ver;
+-	u8 set_feat_ver;
+-	__le16 effects;
+-	u8 reserved[18];
+-} __packed;
+-
+-/* @flags field for 'struct cxl_feat_entry' */
+-#define CXL_FEATURE_F_CHANGEABLE		BIT(0)
+-#define CXL_FEATURE_F_PERSIST_FW_UPDATE		BIT(4)
+-#define CXL_FEATURE_F_DEFAULT_SEL		BIT(5)
+-#define CXL_FEATURE_F_SAVED_SEL			BIT(6)
+-
+-/*
+- * CXL spec r3.2 Table 8-108
+- * Get supported Features Output Payload
+- */
+-struct cxl_mbox_get_sup_feats_out {
+-	__struct_group(cxl_mbox_get_sup_feats_out_hdr, hdr, /* no attrs */,
+-		__le16 num_entries;
+-		__le16 supported_feats;
+-		__u8 reserved[4];
+-	);
+-	struct cxl_feat_entry ents[] __counted_by_le(num_entries);
+-} __packed;
+-
+-/*
+- * Get Feature CXL spec r3.2 Spec 8.2.9.6.2
+- */
+-
+-/*
+- * Get Feature input payload
+- * CXL spec r3.2 section 8.2.9.6.2 Table 8-99
+- */
+-struct cxl_mbox_get_feat_in {
+-	uuid_t uuid;
+-	__le16 offset;
+-	__le16 count;
+-	u8 selection;
+-}  __packed;
+-
+-/* Selection field for 'struct cxl_mbox_get_feat_in' */
+-enum cxl_get_feat_selection {
+-	CXL_GET_FEAT_SEL_CURRENT_VALUE,
+-	CXL_GET_FEAT_SEL_DEFAULT_VALUE,
+-	CXL_GET_FEAT_SEL_SAVED_VALUE,
+-	CXL_GET_FEAT_SEL_MAX
+-};
+-
+-/*
+- * Set Feature CXL spec r3.2  8.2.9.6.3
+- */
+-
+-/*
+- * Set Feature input payload
+- * CXL spec r3.2 section 8.2.9.6.3 Table 8-101
+- */
+-struct cxl_mbox_set_feat_in {
+-	__struct_group(cxl_mbox_set_feat_hdr, hdr, /* no attrs */,
+-		uuid_t uuid;
+-		__le32 flags;
+-		__le16 offset;
+-		u8 version;
+-		u8 rsvd[9];
+-	);
+-	__u8 feat_data[];
+-}  __packed;
+-
+-/* Set Feature flags field */
+-enum cxl_set_feat_flag_data_transfer {
+-	CXL_SET_FEAT_FLAG_FULL_DATA_TRANSFER = 0,
+-	CXL_SET_FEAT_FLAG_INITIATE_DATA_TRANSFER,
+-	CXL_SET_FEAT_FLAG_CONTINUE_DATA_TRANSFER,
+-	CXL_SET_FEAT_FLAG_FINISH_DATA_TRANSFER,
+-	CXL_SET_FEAT_FLAG_ABORT_DATA_TRANSFER,
+-	CXL_SET_FEAT_FLAG_DATA_TRANSFER_MAX
+-};
+-
+-#define CXL_SET_FEAT_FLAG_DATA_TRANSFER_MASK	GENMASK(2, 0)
+-
+-#define CXL_SET_FEAT_FLAG_DATA_SAVED_ACROSS_RESET	BIT(3)
+-
+ /**
+  * struct cxl_features_state - The Features state for the device
+  * @cxlds: Pointer to CXL device state
+diff --git a/include/uapi/cxl/features.h b/include/uapi/cxl/features.h
+new file mode 100644
+index 000000000000..17f9da63f982
+--- /dev/null
++++ b/include/uapi/cxl/features.h
+@@ -0,0 +1,127 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++/*
++ * Copyright (c) 2024,2025, Intel Corporation
++ *
++ * These are definitions for the mailbox command interface of CXL subsystem.
++ */
++#ifndef _UAPI_CXL_FEATURES_H_
++#define _UAPI_CXL_FEATURES_H_
 +
-+static inline int devm_cxl_setup_fwctl(struct cxl_memdev *cxlmd)
-+{
-+	return -EOPNOTSUPP;
-+}
- #endif
- 
- #endif
-diff --git a/include/uapi/fwctl/fwctl.h b/include/uapi/fwctl/fwctl.h
-index 518f054f02d2..f57f6d86b12f 100644
---- a/include/uapi/fwctl/fwctl.h
-+++ b/include/uapi/fwctl/fwctl.h
-@@ -43,6 +43,7 @@ enum {
- enum fwctl_device_type {
- 	FWCTL_DEVICE_TYPE_ERROR = 0,
- 	FWCTL_DEVICE_TYPE_MLX5 = 1,
-+	FWCTL_DEVICE_TYPE_CXL = 2,
- 	FWCTL_DEVICE_TYPE_BNXT = 3,
- };
- 
-diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-index 4809a90ff9b6..848db399102c 100644
---- a/tools/testing/cxl/test/mem.c
-+++ b/tools/testing/cxl/test/mem.c
-@@ -1646,6 +1646,10 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
- 	if (rc)
- 		return rc;
- 
-+	rc = devm_cxl_setup_fwctl(cxlmd);
-+	if (rc)
-+		dev_dbg(dev, "No CXL FWCTL setup\n");
++#include <linux/types.h>
++#ifndef __KERNEL__
++#include <uuid/uuid.h>
++#else
++#include <linux/uuid.h>
++#endif
 +
- 	cxl_mem_get_event_records(mds, CXLDEV_EVENT_STATUS_ALL);
- 
- 	return 0;
++/* Get Supported Features (0x500h) CXL r3.2 8.2.9.6.1 */
++struct cxl_mbox_get_sup_feats_in {
++	__le32 count;
++	__le16 start_idx;
++	__u8 reserved[2];
++} __attribute__ ((__packed__));
++
++/* CXL spec r3.2 Table 8-87 command effects */
++#define CXL_CMD_CONFIG_CHANGE_COLD_RESET	BIT(0)
++#define CXL_CMD_CONFIG_CHANGE_IMMEDIATE		BIT(1)
++#define CXL_CMD_DATA_CHANGE_IMMEDIATE		BIT(2)
++#define CXL_CMD_POLICY_CHANGE_IMMEDIATE		BIT(3)
++#define CXL_CMD_LOG_CHANGE_IMMEDIATE		BIT(4)
++#define CXL_CMD_SECURITY_STATE_CHANGE		BIT(5)
++#define CXL_CMD_BACKGROUND			BIT(6)
++#define CXL_CMD_BGCMD_ABORT_SUPPORTED		BIT(7)
++#define CXL_CMD_EFFECTS_VALID			BIT(9)
++#define CXL_CMD_CONFIG_CHANGE_CONV_RESET	BIT(10)
++#define CXL_CMD_CONFIG_CHANGE_CXL_RESET		BIT(11)
++
++/*
++ * CXL spec r3.2 Table 8-109
++ * Get Supported Features Supported Feature Entry
++ */
++struct cxl_feat_entry {
++	uuid_t uuid;
++	__le16 id;
++	__le16 get_feat_size;
++	__le16 set_feat_size;
++	__le32 flags;
++	__u8 get_feat_ver;
++	__u8 set_feat_ver;
++	__le16 effects;
++	__u8 reserved[18];
++} __attribute__ ((__packed__));
++
++/* @flags field for 'struct cxl_feat_entry' */
++#define CXL_FEATURE_F_CHANGEABLE		BIT(0)
++#define CXL_FEATURE_F_PERSIST_FW_UPDATE		BIT(4)
++#define CXL_FEATURE_F_DEFAULT_SEL		BIT(5)
++#define CXL_FEATURE_F_SAVED_SEL			BIT(6)
++
++/*
++ * CXL spec r3.2 Table 8-108
++ * Get supported Features Output Payload
++ */
++struct cxl_mbox_get_sup_feats_out {
++	__struct_group(cxl_mbox_get_sup_feats_out_hdr, hdr, /* no attrs */,
++		__le16 num_entries;
++		__le16 supported_feats;
++		__u8 reserved[4];
++	);
++	struct cxl_feat_entry ents[] __counted_by_le(num_entries);
++} __attribute__ ((__packed__));
++
++/*
++ * Get Feature CXL spec r3.2 Spec 8.2.9.6.2
++ */
++
++/*
++ * Get Feature input payload
++ * CXL spec r3.2 section 8.2.9.6.2 Table 8-99
++ */
++struct cxl_mbox_get_feat_in {
++	uuid_t uuid;
++	__le16 offset;
++	__le16 count;
++	__u8 selection;
++} __attribute__ ((__packed__));
++
++/* Selection field for 'struct cxl_mbox_get_feat_in' */
++enum cxl_get_feat_selection {
++	CXL_GET_FEAT_SEL_CURRENT_VALUE,
++	CXL_GET_FEAT_SEL_DEFAULT_VALUE,
++	CXL_GET_FEAT_SEL_SAVED_VALUE,
++	CXL_GET_FEAT_SEL_MAX
++};
++
++/*
++ * Set Feature CXL spec r3.2  8.2.9.6.3
++ */
++
++/*
++ * Set Feature input payload
++ * CXL spec r3.2 section 8.2.9.6.3 Table 8-101
++ */
++struct cxl_mbox_set_feat_in {
++	__struct_group(cxl_mbox_set_feat_hdr, hdr, /* no attrs */,
++		uuid_t uuid;
++		__le32 flags;
++		__le16 offset;
++		__u8 version;
++		__u8 rsvd[9];
++	);
++	__u8 feat_data[];
++}  __packed;
++
++/* Set Feature flags field */
++enum cxl_set_feat_flag_data_transfer {
++	CXL_SET_FEAT_FLAG_FULL_DATA_TRANSFER = 0,
++	CXL_SET_FEAT_FLAG_INITIATE_DATA_TRANSFER,
++	CXL_SET_FEAT_FLAG_CONTINUE_DATA_TRANSFER,
++	CXL_SET_FEAT_FLAG_FINISH_DATA_TRANSFER,
++	CXL_SET_FEAT_FLAG_ABORT_DATA_TRANSFER,
++	CXL_SET_FEAT_FLAG_DATA_TRANSFER_MAX
++};
++
++#define CXL_SET_FEAT_FLAG_DATA_TRANSFER_MASK		GENMASK(2, 0)
++#define CXL_SET_FEAT_FLAG_DATA_SAVED_ACROSS_RESET	BIT(3)
++
++#endif
 -- 
 2.48.1
 
