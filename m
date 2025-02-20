@@ -1,453 +1,180 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 141142641CA
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670A421480E
 	for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 19:44:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740080684; cv=none; b=lwnWka4q7Hnljjev4FaM+uergI/QGa90jrO06GeTR9c9giVpoR4W9qHL7YV2NG9LZtBS9SHuI4lx3SgMvMqEMn7FhmpmDAjc6XLdbLh/oHxl0SQn+9c5Zu5oDqYgI2XH5cVyEHOgaXRGZlRUQXF3DJZv//lRpbJ5Ot1XDNi0Mb8=
+	t=1740080685; cv=none; b=Tg4uvAylGbZcGrUlxMDPZaH5cROCJ8+a1NUUkIt10bRjfEVhkSlyBRABxaCNpcAUcVRnU1hzr7W4T0t1WDsKJsNX/UW1OVuN75Ett5TOi1zr6BCFCMUe739nCqbqQhl2X8QYM7nYq0Cmzw9XOfwZnWdMg+bVLbSj5/Qa2QsI53k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740080684; c=relaxed/simple;
-	bh=JgXGtBmbuOQYgiM+/+pu9/l45aBJaBiS38dwtLWuDy0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=E/4eAR11hrxlohWR9WIgGNBInwkowh8cSHDDlo5yMpC3wu77TihMFY6HvpAiMtRzakjlc29o+3lUMs/YAppsHfpmRdtwAtXQb3ziOQduKSqc8pLr9dU5ej1E3DM4c3B3+5ANu8WNU7J2H6g1REiCtmTUn/cfK234QTmNz/31LbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71692C4CED1;
-	Thu, 20 Feb 2025 19:44:43 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: dan.j.williams@intel.com,
-	ira.weiny@intel.com,
-	vishal.l.verma@intel.com,
-	alison.schofield@intel.com,
-	Jonathan.Cameron@huawei.com,
-	dave@stgolabs.net,
-	jgg@nvidia.com,
-	shiju.jose@huawei.com,
-	Li Ming <ming.li@zohomail.com>
-Subject: [PATCH v7 02/14] cxl: Add Get Supported Features command for kernel usage
-Date: Thu, 20 Feb 2025 12:42:40 -0700
-Message-ID: <20250220194438.2281088-3-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250220194438.2281088-1-dave.jiang@intel.com>
-References: <20250220194438.2281088-1-dave.jiang@intel.com>
+	s=arc-20240116; t=1740080685; c=relaxed/simple;
+	bh=epM/mbQGx5bYcIYYnKhe8inHgl0+75yjKwuSm3koulk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RVd8k1LA/40ukNp864a99ICPqC0n0+dpOwwHVHkrwxXccvI3O+Z1aOyoojmJjUOeSarrBR4nLfdTTqK6yC8D7tNl6nUHUMqrKwYCewriz9FUejVA48UM02sq8MERoN0d3a1/STo2N44kCV9A6loy0vEqBkwhRYh+Zo7JUc2cIdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ilQ8PT1N; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ilQ8PT1N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740080682;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=13tc3PZGlJhjHRFttOUYRjhUqm6ZIOA8cqgOLipjY0s=;
+	b=ilQ8PT1Np+/Ebx8Pt6wtba03h+Mta53wtOleppdf8qW4Xky0KITjGApj+ueRa5ELfI13qK
+	2zRZZ0C5wOhG4hESbHHDO0K0leNOJCvZSm0uIcdyKWDy2DZL9CoAmBG+2Ws22Mzp/fhNNU
+	YB+SMM5m++54fvscJfbpyBXytwNBxRc=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-176-ATw_CzPwOL6kv2WyUnvYWA-1; Thu, 20 Feb 2025 14:44:41 -0500
+X-MC-Unique: ATw_CzPwOL6kv2WyUnvYWA-1
+X-Mimecast-MFC-AGG-ID: ATw_CzPwOL6kv2WyUnvYWA_1740080680
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4393ed818ccso8781335e9.3
+        for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 11:44:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740080680; x=1740685480;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=13tc3PZGlJhjHRFttOUYRjhUqm6ZIOA8cqgOLipjY0s=;
+        b=hlz+sGIFCjYnK/GAgB2j17iSM0P+F4PPs8Sm7764S/TJLR9J48gZuOC2/D4JSinXU0
+         vzMtgFK5SjQAKPSKT4jHA1nqex+FnHB7cJBHiZ3EysNNM1Olic/uMdQwLQbNbFmyelAR
+         3LT2FkH6K9I4jZFDU4r447onHO+x+YN9IXdrcerg3+GCarFBfDNqsTEk4PCS8/SGhQAZ
+         Hj/OYIkMYjf8gJu3sYIhM1oOP5kS3chEbhnBx28pNE0HWIe54i5j6UU+J12H6q10kFSV
+         eg2/PKtUAP5kktVyu1CbT1xt+YOcB3eWg72uSuCkTpyTJz7N4vB3bnDxvGVJnxRHEwkg
+         TP1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUQEPkSd4mGXuVIHxaWmgSmhLUGcJ/JzSp1ZNJ5KmFW5W8eagsTtyi6/q6AuGVYcGQWC4p4lgHlE7k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGnp/uZJEmTNHBjd7T20DTRqmWXQ/8DwbZhguVwVZQt1NQU4MV
+	h8aUgm1+t2fnen0s7l1DihyDFW7HblxZhZzdRMyXjrrepg7f4q5AQ33n9qzuhypLrgxJLe7Cxu+
+	69vNKtL5DEGMtdTCRUsUGru2HPhWfSJZcJFkO5GHOOfOi9b2O8q2Gj2wseQ==
+X-Gm-Gg: ASbGncvjA1yc7WH1RDue1boIFdhU1hfPLpzN6P7Fr8oyggz8z5/LzT2Tp53drav5NiS
+	zwenEdXmLOXK+HeGo6I6qbeVu01+/uTGgZB3DnERn7MOTXMLypH4VHrIYBjTBA1vbr+kiphYpj7
+	+FmCiwzxMsBPzpLnYy4PMVvv2hwPY8iYFj1CtE3TiD8llQ5ASQV9JW3z7wG9VHv0OibFled79jI
+	37Xbn1i5RIHzCfUlQGAPlKl+Epeu66XdYjSQ4g6RRCRkGMjqSOTK7Ox9tJoSYSdOJ8GS42gKnhh
+	QHc8M/l6R0H7BD4sbwzv7wDhwm9QWsWWEDLaRggEI6AAd4Q1P46mwgsGgirxeJFK9VZvEZExrUd
+	t4W0kJg8o5au/XvtJoo7CB6eUOKCCqQ==
+X-Received: by 2002:a05:600c:1d82:b0:438:a240:c63 with SMTP id 5b1f17b1804b1-439ae3bd798mr2636555e9.2.1740080679777;
+        Thu, 20 Feb 2025 11:44:39 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEFQ/oyfYBUK3fUiKh0XjQS+69Txr3N9lLGYrS/0bgP4TwCTcZvVA7yprzpMPBstpyFgr/mqg==
+X-Received: by 2002:a05:600c:1d82:b0:438:a240:c63 with SMTP id 5b1f17b1804b1-439ae3bd798mr2636355e9.2.1740080679293;
+        Thu, 20 Feb 2025 11:44:39 -0800 (PST)
+Received: from ?IPV6:2003:cb:c706:2000:e44c:bc46:d8d3:be5? (p200300cbc7062000e44cbc46d8d30be5.dip0.t-ipconnect.de. [2003:cb:c706:2000:e44c:bc46:d8d3:be5])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f258ccef7sm21822570f8f.31.2025.02.20.11.44.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Feb 2025 11:44:37 -0800 (PST)
+Message-ID: <b4b312c8-1117-45cd-a3c3-c8747aca51bd@redhat.com>
+Date: Thu, 20 Feb 2025 20:44:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: CXL Boot to Bash - Section 3: Memory (block) Hotplug
+To: Gregory Price <gourry@gourry.net>
+Cc: Yang Shi <shy828301@gmail.com>, lsf-pc@lists.linux-foundation.org,
+ linux-mm@kvack.org, linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
+ <Z7OWmDXEYhT0BB0X@gourry-fedora-PF4VCD3F>
+ <CAHbLzkq6Me6nRaL6b09YxJ_nFkxb+n+M3-q_aJwOs2ZO4q8VCg@mail.gmail.com>
+ <Z7TLwtQY3vGUw2bO@gourry-fedora-PF4VCD3F>
+ <1b4c6442-a2b0-4290-8b89-c7b82a66d358@redhat.com>
+ <Z7TswQbpPV590ADr@gourry-fedora-PF4VCD3F>
+ <bda4cf52-d81a-4935-b45a-09e9439e33b6@redhat.com>
+ <CAHbLzkqDQcrHLPzk8n0SMgkidH2ByCqdwfYXX=uBPQfOArWf8A@mail.gmail.com>
+ <Z7d3vVdJ8UWU5oex@gourry-fedora-PF4VCD3F>
+ <4ae838ee-b079-408e-8799-e9530ca50417@redhat.com>
+ <Z7eEGwFltjWaoX-r@gourry-fedora-PF4VCD3F>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <Z7eEGwFltjWaoX-r@gourry-fedora-PF4VCD3F>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: ugJ1h-hGk0qHPioOj_EssqsgSfbraRyBaPOHNvQULkA_1740080680
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-CXL spec r3.2 8.2.9.6.1 Get Supported Features (Opcode 0500h)
-The command retrieve the list of supported device-specific features
-(identified by UUID) and general information about each Feature.
+On 20.02.25 20:35, Gregory Price wrote:
+> On Thu, Feb 20, 2025 at 08:26:21PM +0100, David Hildenbrand wrote:
+>> On 20.02.25 19:43, Gregory Price wrote:
+>>
+>> There were ideas in how to optimize that (e.g., requiring  a new sysfs
+>> interface to expose variable-sized blocks), if anybody is interested, please
+>> reach out.
+>>
+> 
+> Multiple block sizes would allow managing the misaligned issues I
+> discussed earlier as well (where a memory region is not aligned to the
+> arch-preferred block size).  At least in that scenario, the misaligned
+> regions could be brought online as minimal block size (256MB) while the
+> aligned portions could be brought online in larger (2GB) chunks.
+> 
+> Do you think this would this require a lot of churn to enable? Last I dug
+> through hotplug, it seemed to assume block sizes would be uniform. I was
+> hesitant to start ripping through it.
 
-The driver will retrieve the Feature entries in order to make checks and
-provide information for the Get Feature and Set Feature command. One of
-the main piece of information retrieved are the effects a Set Feature
-command would have for a particular feature. The retrieved Feature
-entries are stored in the cxl_mailbox context.
+There were some discussions around variable-sized memory blocks. But we 
+cannot rip out the old stuff, because it breaks API and thereby Linux 
+user space. There would have to be a world switch (e.g., kernel cmdline, 
+config option)
 
-The setup of Features is initiated via devm_cxl_setup_features() during the
-pci probe function before the cxl_memdev is enumerated.
+... and some corner cases are rather nasty (e.g., hotunplugging boot 
+memory, where we only learn from ACPI which regions actually belong to a 
+single DIMM; dlpar hotunplugging individual memory blocks of boot memory 
+IIRC).
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Li Ming <ming.li@zohomail.com>
-Tested-by: Shiju Jose <shiju.jose@huawei.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- drivers/cxl/Kconfig          |  11 +++
- drivers/cxl/core/Makefile    |   1 +
- drivers/cxl/core/features.c  | 175 +++++++++++++++++++++++++++++++++++
- drivers/cxl/cxlmem.h         |   4 +
- drivers/cxl/pci.c            |   4 +
- include/cxl/features.h       |  87 +++++++++++++++++
- tools/testing/cxl/Kbuild     |   1 +
- tools/testing/cxl/test/mem.c |   4 +
- 8 files changed, 287 insertions(+)
- create mode 100644 drivers/cxl/core/features.c
-
-diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-index 876469e23f7a..ad2e796e4ac6 100644
---- a/drivers/cxl/Kconfig
-+++ b/drivers/cxl/Kconfig
-@@ -102,6 +102,17 @@ config CXL_MEM
- 
- 	  If unsure say 'm'.
- 
-+config CXL_FEATURES
-+	bool "CXL: Features"
-+	depends on CXL_PCI
-+	help
-+	  Enable support for CXL Features. A CXL device that includes a mailbox
-+	  supports commands that allows listing, getting, and setting of
-+	  optionally defined features such as memory sparing or post package
-+	  sparing. Vendors may define custom features for the device.
-+
-+	  If unsure say 'n'
-+
- config CXL_PORT
- 	default CXL_BUS
- 	tristate
-diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-index 9259bcc6773c..b0bfbd9eac9b 100644
---- a/drivers/cxl/core/Makefile
-+++ b/drivers/cxl/core/Makefile
-@@ -16,3 +16,4 @@ cxl_core-y += pmu.o
- cxl_core-y += cdat.o
- cxl_core-$(CONFIG_TRACING) += trace.o
- cxl_core-$(CONFIG_CXL_REGION) += region.o
-+cxl_core-$(CONFIG_CXL_FEATURES) += features.o
-diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-new file mode 100644
-index 000000000000..f2898a56bd63
---- /dev/null
-+++ b/drivers/cxl/core/features.c
-@@ -0,0 +1,175 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright(c) 2024-2025 Intel Corporation. All rights reserved. */
-+#include <linux/device.h>
-+#include <cxl/mailbox.h>
-+#include <cxl/features.h>
-+#include "cxl.h"
-+#include "cxlmem.h"
-+
-+inline struct cxl_features_state *to_cxlfs(struct cxl_dev_state *cxlds)
-+{
-+	return cxlds->cxlfs;
-+}
-+EXPORT_SYMBOL_NS_GPL(to_cxlfs, "CXL");
-+
-+static int cxl_get_supported_features_count(struct cxl_mailbox *cxl_mbox)
-+{
-+	struct cxl_mbox_get_sup_feats_out mbox_out;
-+	struct cxl_mbox_get_sup_feats_in mbox_in;
-+	struct cxl_mbox_cmd mbox_cmd;
-+	int rc;
-+
-+	memset(&mbox_in, 0, sizeof(mbox_in));
-+	mbox_in.count = cpu_to_le32(sizeof(mbox_out));
-+	memset(&mbox_out, 0, sizeof(mbox_out));
-+	mbox_cmd = (struct cxl_mbox_cmd) {
-+		.opcode = CXL_MBOX_OP_GET_SUPPORTED_FEATURES,
-+		.size_in = sizeof(mbox_in),
-+		.payload_in = &mbox_in,
-+		.size_out = sizeof(mbox_out),
-+		.payload_out = &mbox_out,
-+		.min_out = sizeof(mbox_out),
-+	};
-+	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
-+	if (rc < 0)
-+		return rc;
-+
-+	return le16_to_cpu(mbox_out.supported_feats);
-+}
-+
-+static struct cxl_feat_entries *
-+get_supported_features(struct cxl_features_state *cxlfs)
-+{
-+	int remain_feats, max_size, max_feats, start, rc, hdr_size;
-+	struct cxl_mailbox *cxl_mbox = &cxlfs->cxlds->cxl_mbox;
-+	int feat_size = sizeof(struct cxl_feat_entry);
-+	struct cxl_mbox_get_sup_feats_in mbox_in;
-+	struct cxl_feat_entry *entry;
-+	struct cxl_mbox_cmd mbox_cmd;
-+	int count;
-+
-+	count = cxl_get_supported_features_count(cxl_mbox);
-+	if (count <= 0)
-+		return NULL;
-+
-+	struct cxl_feat_entries *entries __free(kvfree) =
-+		kvmalloc(struct_size(entries, ent, count), GFP_KERNEL);
-+	if (!entries)
-+		return NULL;
-+
-+	struct cxl_mbox_get_sup_feats_out *mbox_out __free(kvfree) =
-+		kvmalloc(cxl_mbox->payload_size, GFP_KERNEL);
-+	if (!mbox_out)
-+		return NULL;
-+
-+	hdr_size = struct_size(mbox_out, ents, 0);
-+	max_size = cxl_mbox->payload_size - hdr_size;
-+	/* max feat entries that can fit in mailbox max payload size */
-+	max_feats = max_size / feat_size;
-+	entry = entries->ent;
-+
-+	start = 0;
-+	remain_feats = count;
-+	do {
-+		int retrieved, alloc_size, copy_feats;
-+		int num_entries;
-+
-+		if (remain_feats > max_feats) {
-+			alloc_size = struct_size(mbox_out, ents, max_feats);
-+			remain_feats = remain_feats - max_feats;
-+			copy_feats = max_feats;
-+		} else {
-+			alloc_size = struct_size(mbox_out, ents, remain_feats);
-+			copy_feats = remain_feats;
-+			remain_feats = 0;
-+		}
-+
-+		memset(&mbox_in, 0, sizeof(mbox_in));
-+		mbox_in.count = cpu_to_le32(alloc_size);
-+		mbox_in.start_idx = cpu_to_le16(start);
-+		memset(mbox_out, 0, alloc_size);
-+		mbox_cmd = (struct cxl_mbox_cmd) {
-+			.opcode = CXL_MBOX_OP_GET_SUPPORTED_FEATURES,
-+			.size_in = sizeof(mbox_in),
-+			.payload_in = &mbox_in,
-+			.size_out = alloc_size,
-+			.payload_out = mbox_out,
-+			.min_out = hdr_size,
-+		};
-+		rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
-+		if (rc < 0)
-+			return NULL;
-+
-+		if (mbox_cmd.size_out <= hdr_size)
-+			return NULL;
-+
-+		/*
-+		 * Make sure retrieved out buffer is multiple of feature
-+		 * entries.
-+		 */
-+		retrieved = mbox_cmd.size_out - hdr_size;
-+		if (retrieved % feat_size)
-+			return NULL;
-+
-+		num_entries = le16_to_cpu(mbox_out->num_entries);
-+		/*
-+		 * If the reported output entries * defined entry size !=
-+		 * retrieved output bytes, then the output package is incorrect.
-+		 */
-+		if (num_entries * feat_size != retrieved)
-+			return NULL;
-+
-+		memcpy(entry, mbox_out->ents, retrieved);
-+		entry += num_entries;
-+		/*
-+		 * If the number of output entries is less than expected, add the
-+		 * remaining entries to the next batch.
-+		 */
-+		remain_feats += copy_feats - num_entries;
-+		start += num_entries;
-+	} while (remain_feats);
-+
-+	entries->num_features = count;
-+
-+	return no_free_ptr(entries);
-+}
-+
-+static void free_cxlfs(void *_cxlfs)
-+{
-+	struct cxl_features_state *cxlfs = _cxlfs;
-+	struct cxl_dev_state *cxlds = cxlfs->cxlds;
-+
-+	cxlds->cxlfs = NULL;
-+	kvfree(cxlfs->entries);
-+	kfree(cxlfs);
-+}
-+
-+/**
-+ * devm_cxl_setup_features() - Allocate and initialize features context
-+ * @cxlds: CXL device context
-+ *
-+ * Return 0 on success or -errno on failure.
-+ */
-+int devm_cxl_setup_features(struct cxl_dev_state *cxlds)
-+{
-+	struct cxl_mailbox *cxl_mbox = &cxlds->cxl_mbox;
-+
-+	if (cxl_mbox->feat_cap < CXL_FEATURES_RO)
-+		return -ENODEV;
-+
-+	struct cxl_features_state *cxlfs __free(kfree) =
-+		kzalloc(sizeof(*cxlfs), GFP_KERNEL);
-+	if (!cxlfs)
-+		return -ENOMEM;
-+
-+	cxlfs->cxlds = cxlds;
-+
-+	cxlfs->entries = get_supported_features(cxlfs);
-+	if (!cxlfs->entries)
-+		return -ENOMEM;
-+
-+	cxlds->cxlfs = cxlfs;
-+
-+	return devm_add_action_or_reset(cxlds->dev, free_cxlfs, no_free_ptr(cxlfs));
-+}
-+EXPORT_SYMBOL_NS_GPL(devm_cxl_setup_features, "CXL");
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 55c55685cb39..0dc2682eb379 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -392,6 +392,7 @@ struct cxl_dpa_perf {
-  * @serial: PCIe Device Serial Number
-  * @type: Generic Memory Class device or Vendor Specific Memory device
-  * @cxl_mbox: CXL mailbox context
-+ * @cxl_features: CXL features context
-  */
- struct cxl_dev_state {
- 	struct device *dev;
-@@ -407,6 +408,9 @@ struct cxl_dev_state {
- 	u64 serial;
- 	enum cxl_devtype type;
- 	struct cxl_mailbox cxl_mbox;
-+#ifdef CONFIG_CXL_FEATURES
-+	struct cxl_features_state *cxlfs;
-+#endif
- };
- 
- static inline struct cxl_dev_state *mbox_to_cxlds(struct cxl_mailbox *cxl_mbox)
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index a96e54c6259e..3e666ec51580 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -997,6 +997,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (rc)
- 		return rc;
- 
-+	rc = devm_cxl_setup_features(cxlds);
-+	if (rc)
-+		dev_dbg(&pdev->dev, "No CXL Features discovered\n");
-+
- 	cxlmd = devm_cxl_add_memdev(&pdev->dev, cxlds);
- 	if (IS_ERR(cxlmd))
- 		return PTR_ERR(cxlmd);
-diff --git a/include/cxl/features.h b/include/cxl/features.h
-index 357d3acf8429..5b3485eb0f77 100644
---- a/include/cxl/features.h
-+++ b/include/cxl/features.h
-@@ -3,6 +3,8 @@
- #ifndef __CXL_FEATURES_H__
- #define __CXL_FEATURES_H__
- 
-+#include <linux/uuid.h>
-+
- /* Feature commands capability supported by a device */
- enum cxl_features_capability {
- 	CXL_FEATURES_NONE = 0,
-@@ -10,4 +12,89 @@ enum cxl_features_capability {
- 	CXL_FEATURES_RW,
- };
- 
-+/* Get Supported Features (0x500h) CXL r3.2 8.2.9.6.1 */
-+struct cxl_mbox_get_sup_feats_in {
-+	__le32 count;
-+	__le16 start_idx;
-+	u8 reserved[2];
-+} __packed;
-+
-+/* CXL spec r3.2 Table 8-87 command effects */
-+#define CXL_CMD_CONFIG_CHANGE_COLD_RESET	BIT(0)
-+#define CXL_CMD_CONFIG_CHANGE_IMMEDIATE		BIT(1)
-+#define CXL_CMD_DATA_CHANGE_IMMEDIATE		BIT(2)
-+#define CXL_CMD_POLICY_CHANGE_IMMEDIATE		BIT(3)
-+#define CXL_CMD_LOG_CHANGE_IMMEDIATE		BIT(4)
-+#define CXL_CMD_SECURITY_STATE_CHANGE		BIT(5)
-+#define CXL_CMD_BACKGROUND			BIT(6)
-+#define CXL_CMD_BGCMD_ABORT_SUPPORTED		BIT(7)
-+#define CXL_CMD_EFFECTS_VALID			BIT(9)
-+#define CXL_CMD_CONFIG_CHANGE_CONV_RESET	BIT(10)
-+#define CXL_CMD_CONFIG_CHANGE_CXL_RESET		BIT(11)
-+
-+/*
-+ * CXL spec r3.2 Table 8-109
-+ * Get Supported Features Supported Feature Entry
-+ */
-+struct cxl_feat_entry {
-+	uuid_t uuid;
-+	__le16 id;
-+	__le16 get_feat_size;
-+	__le16 set_feat_size;
-+	__le32 flags;
-+	u8 get_feat_ver;
-+	u8 set_feat_ver;
-+	__le16 effects;
-+	u8 reserved[18];
-+} __packed;
-+
-+/* @flags field for 'struct cxl_feat_entry' */
-+#define CXL_FEATURE_F_CHANGEABLE		BIT(0)
-+#define CXL_FEATURE_F_PERSIST_FW_UPDATE		BIT(4)
-+#define CXL_FEATURE_F_DEFAULT_SEL		BIT(5)
-+#define CXL_FEATURE_F_SAVED_SEL			BIT(6)
-+
-+/*
-+ * CXL spec r3.2 Table 8-108
-+ * Get supported Features Output Payload
-+ */
-+struct cxl_mbox_get_sup_feats_out {
-+	__struct_group(cxl_mbox_get_sup_feats_out_hdr, hdr, /* no attrs */,
-+		__le16 num_entries;
-+		__le16 supported_feats;
-+		__u8 reserved[4];
-+	);
-+	struct cxl_feat_entry ents[] __counted_by_le(num_entries);
-+} __packed;
-+
-+/**
-+ * struct cxl_features_state - The Features state for the device
-+ * @cxlds: Pointer to CXL device state
-+ * @entries: CXl feature entry context
-+ *	@num_features: total Features supported by the device
-+ *	@ent: Flex array of Feature detail entries from the device
-+ */
-+struct cxl_features_state {
-+	struct cxl_dev_state *cxlds;
-+	struct cxl_feat_entries {
-+		int num_features;
-+		struct cxl_feat_entry ent[] __counted_by(num_features);
-+	} *entries;
-+};
-+
-+#ifdef CONFIG_CXL_FEATURES
-+inline struct cxl_features_state *to_cxlfs(struct cxl_dev_state *cxlds);
-+int devm_cxl_setup_features(struct cxl_dev_state *cxlds);
-+#else
-+static inline struct cxl_features_state *to_cxlfs(struct cxl_dev_state *cxlds)
-+{
-+	return NULL;
-+}
-+
-+static inline int devm_cxl_setup_features(struct cxl_dev_state *cxlds)
-+{
-+	return -EOPNOTSUPP;
-+}
-+#endif
-+
- #endif
-diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-index b1256fee3567..0a6572ab6f37 100644
---- a/tools/testing/cxl/Kbuild
-+++ b/tools/testing/cxl/Kbuild
-@@ -63,6 +63,7 @@ cxl_core-y += $(CXL_CORE_SRC)/pmu.o
- cxl_core-y += $(CXL_CORE_SRC)/cdat.o
- cxl_core-$(CONFIG_TRACING) += $(CXL_CORE_SRC)/trace.o
- cxl_core-$(CONFIG_CXL_REGION) += $(CXL_CORE_SRC)/region.o
-+cxl_core-$(CONFIG_CXL_FEATURES) += $(CXL_CORE_SRC)/features.o
- cxl_core-y += config_check.o
- cxl_core-y += cxl_core_test.o
- cxl_core-y += cxl_core_exports.o
-diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-index 8d731bd63988..e9494cd446ef 100644
---- a/tools/testing/cxl/test/mem.c
-+++ b/tools/testing/cxl/test/mem.c
-@@ -1558,6 +1558,10 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
- 	if (rc)
- 		return rc;
- 
-+	rc = devm_cxl_setup_features(cxlds);
-+	if (rc)
-+		dev_dbg(dev, "No CXL Features discovered\n");
-+
- 	cxl_mock_add_event_logs(&mdata->mes);
- 
- 	cxlmd = devm_cxl_add_memdev(&pdev->dev, cxlds);
 -- 
-2.48.1
+Cheers,
+
+David / dhildenb
 
