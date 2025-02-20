@@ -1,137 +1,87 @@
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 123CA1D79BE
-	for <linux-cxl@vger.kernel.org>; Wed, 19 Feb 2025 23:32:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740007971; cv=none; b=rA2CBS1XFRCJrwGhikntPG2+kT0U8OYbjz4J2ZcmdAHFGrsdh6Tntx5fXqRu7V9UoynD9oWY9+l8WOGXryeS/EVJ7kj+i8SJAmzblX/zhcMK4hCxOP6J/t5UNBmRW/PYT5aXV+fwvlWN4Wwew4RxhyYJd2x3WpsD9L574kXIAJA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740007971; c=relaxed/simple;
-	bh=3Qpi59IwyoeIc+HODTOPdRs+OhUPUgKytanIj4rGMlM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kSZslucnjHgtzQVq+gbXhfeu0DWGM4F7xLCx87N4YwiQi2rkCokL+lIvXCSxNRgQ04YgRs9EplAgoDG4rYt2QM/RpedoNwmPIZN/gIqs+Dxd6GiO/y+6ZgIqIC2yDLNvB9Pj/CaO1teuomdcYpxws0SAAR+VK3TYuctC9N4mX5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=S44wyVWX; arc=none smtp.client-ip=209.85.219.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F7572AE6A;
+	Thu, 20 Feb 2025 00:43:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740012220; cv=pass; b=pBo0EB2CW5wlLJJ/yfomrhXTvTRcR1X35qswNGS8iJfSTueRFky2PmR0DtduYuk6maRF6tWS2/vkf2ADd2cP9cY0RnxozrokEnPY7X5wpiy2GkMi+cRHm2h6iCTwWxpx1N7eTgw3vHbLYOhkVdVwgJy1gNl8DSk81v9cZg+ZVQE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740012220; c=relaxed/simple;
+	bh=U0gVlj+iCEw+dVy2968HB1D+X9dLArZ6qqVaMh9h8xo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Y+9kWaUiRCmd08Z029dLVVdqsHRshpQxUjDa6kgZxe/smJj1kfZuGcnOB1uyLcJM6pBQFvb8X2UtxD0THsiYqbUW4dPoXvnvzp77Q4Ce3QXZpVUHxCzMTTKRFrEG/vLKL+zrKnaPu6pfYWSCN9f0zzeDv1J/H9ZDmLt72cmWthM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=RPKL5Faa; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="S44wyVWX"
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6e677921db0so2464796d6.0
-        for <linux-cxl@vger.kernel.org>; Wed, 19 Feb 2025 15:32:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1740007968; x=1740612768; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=BuJ8MnTrLLKgSkkWBdG51HCA8Qkyi0aXGWMt1dCxiM4=;
-        b=S44wyVWXSFRWrX9p0tc8MphkaYAy+ql4+wXN6T2wP0qjNqpEXvhFXjfeeZv5zEo9l1
-         JxNYsaHNcJIl6fMtDooaC4SKGJfctspyxJJ74OB97ezOYzwvigl3MhZ6opJ1u+IQkT/U
-         eOfV2H5TWTuLf9yIJsraJy0fNeww7sY3a8EZmwuqSQeVvbJYhn/bKFIgDpu9McqliC2/
-         mFe/zV9zTHPiRTTD0h3T5Q/yKXppI1FYJCijYd5mtnzXAcWCljCNbiOqBWqLL9DfI19X
-         1Qm9/hG3M1dESMP9NcQBSOIamYZ1AG7daVlYAGj6vHPjOot5UqHCBKxqwooqVBYRFy1W
-         st1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740007968; x=1740612768;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BuJ8MnTrLLKgSkkWBdG51HCA8Qkyi0aXGWMt1dCxiM4=;
-        b=FGSs2G376e/8eH6CG5XqFHRFaDVPYRHbS2Hcdu3P/Z2ke7hi4LQ9IHQRAdWfMtWbrI
-         qV4qB98efPSXKg+x4ZJvO5uhLndcNUA7uKfLiTyDy+RAKKNCdqrPfIJUmHaoUel4F2y8
-         Ki/36ljYj6swp916E0jd0YWjxo6bLbw13s9DeezUtj1eXAEKQMjERVPI5xDOQBDf+CzX
-         elH/clbAq8hnTrLroHBQNTT1pSr0nmSocYq18qx547Y6s3bfJANPj/o0IYA8A0bGzwyR
-         ncAGWbd46DLe7zyNvsC9JsEIwsEppXtpFJ3tC6CiMTBgCKbU0v2PEvLEbTlAKqCT6y2M
-         MBEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUc92wMBh7BQ2gPwFEOWU/alEjvqDdk00nrkLKpbGu+MreVIZ3OEpww+sOIPVd/A3XvwCF0Agp/nno=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaDVsYtUUC4TsjXPyLWZYAchE6tiWA/C/5PW2Ql+yo7gEcYB8J
-	BlOBbTySv/4Eo4fjf1uDLoEbZ5FyzaqreVJdHCKkNfuyxf7VbAHFQn82enTYDPQ=
-X-Gm-Gg: ASbGncueJDPQFiXVrApD5RUU05RyA4L+smZTiUOhR5bE/vAWhGvyZ+VyaAnkyAbyQhM
-	C8mEN9I0T/gJvbqJdgXEWWB8ISGAY0xC/SyZpgQVvasI4jaT6kIjuM/zEB2W3wREjI8U3bfG8w5
-	msReziG2ttwHQcmxNtXJjdiDATypVFzOUWB6I61JbA52ccLAv1ucHbBdQx5Gbz186ugpHeG5QYr
-	zd8ZciyxncAmL0J7+9kgj/xZNHPEShbsZ8zCVmGTH78PDbe4bgmi2TSoSlPpxMA5MJDSQ6v0MNI
-	qxFz7KlfMO54fv0vwOR32lfNUgL6/EN39WN5+6mwKWo8enmaZA0otjEq3asXZKAmJkw54Dp+dQ=
-	=
-X-Google-Smtp-Source: AGHT+IEb1NSA6KP9GRyN2gqcBNFucCfbTKdR4b3/RwdPjgrLvsacTXJUjiUUYluNqmcUzxHzBNnpzQ==
-X-Received: by 2002:a05:6214:d46:b0:6e4:4484:f357 with SMTP id 6a1803df08f44-6e66cd19ecamr248188026d6.30.1740007967718;
-        Wed, 19 Feb 2025 15:32:47 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e65d784e99sm80839416d6.28.2025.02.19.15.32.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2025 15:32:47 -0800 (PST)
-Date: Wed, 19 Feb 2025 18:32:45 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Robert Richter <rrichter@amd.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v2 04/15] cxl/region: Calculate endpoint's region
- position during init
-Message-ID: <Z7ZqHc44qLU73hpS@gourry-fedora-PF4VCD3F>
-References: <20250218132356.1809075-1-rrichter@amd.com>
- <20250218132356.1809075-5-rrichter@amd.com>
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="RPKL5Faa"
+ARC-Seal: i=1; a=rsa-sha256; t=1740012204; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=hlQE2P/S0nWodvTsDk/EmbirdEIuv7zb9dyAjbToFvnfpluX63hnOff6b/tZIaRaL0vUUj9Uqbb9/MdEhT/Z69/E78FpLIuSI7lwTxYTzf3nrnzYRzwgg9e7tb1ALa70JkKq0nToI3+y0SDhzpLnN/lOPOS1I6haZ3lFPpk6tlA=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1740012204; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=U0gVlj+iCEw+dVy2968HB1D+X9dLArZ6qqVaMh9h8xo=; 
+	b=IOylOM/vqRr366fnsr4u21fLCF4phsP6WAOgTTyQBLukDEtMoUBhGLQ7aBziDYMTePPRFoFeEvxWUAcKy+7Fg8jvj2AG7ck1dmv3pjIQdcPyk0dLhPZF0Cr1+Naithxj3E7AXkZGkMNDt2dJQd7vdbsmojKmy9CZXH08VzM24xc=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740012204;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=U0gVlj+iCEw+dVy2968HB1D+X9dLArZ6qqVaMh9h8xo=;
+	b=RPKL5FaaLOCQOLNsS0wYUq9piKr5fu7P5E1BiSoISYlgiBCJNqIWK/51aaPWBTST
+	hY/VRIS950I5s1or60Wtk3B34J2vY1EfJ+f+JACiPKrhbJhZId1NPn05gZg6+hKgx6J
+	SOZkfkQyZGnoMesIYHolsyWotuEVq1R/DRoddh8s=
+Received: by mx.zohomail.com with SMTPS id 1740012202707209.0923034936219;
+	Wed, 19 Feb 2025 16:43:22 -0800 (PST)
+Message-ID: <58269f53-03a0-4cd4-9335-686c770b1f60@zohomail.com>
+Date: Thu, 20 Feb 2025 08:43:21 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250218132356.1809075-5-rrichter@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/7] Use guard() instead of rwsem locking
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dave@stgolabs.net, jonathan.cameron@huawei.com, vishal.l.verma@intel.com,
+ ira.weiny@intel.com, dan.j.williams@intel.com, alison.schofield@intel.com
+References: <20250217144828.30651-1-ming.li@zohomail.com>
+ <07d8bd01-ed09-4106-81fb-0e7b6793e3aa@intel.com>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <07d8bd01-ed09-4106-81fb-0e7b6793e3aa@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Feedback-ID: rr08011227f881d169d98f44a974826f0b0000786a47c29c3264d0ced742f64105cc13a5fc6c8b66eef8645c:zu0801122761aa9d1e0fa7c399a31e1ad60000ef55fb2281806115fdd9c035e727f61e1698cfb684f6bfc747:rf0801122d35abf1defa27ac5c35b1c21b000033a49f76b2b797019133d66d675539999d4004667260bd182c4cdb839b62ed:ZohoMail
+X-ZohoMailClient: External
 
-On Tue, Feb 18, 2025 at 02:23:45PM +0100, Robert Richter wrote:
-> The calculation of an endpoint's position in a region traverses all
-> ports up to the root port and determines the corresponding decoders
-> for that particular address range. For address translation the HPA
-> range must be recalculated between ports. In order to prepare the
-> implementation of address translation, move code to
-> cxl_endpoint_decoder_initialize() and reuse the existing iterator
-> there.
-> 
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-> ---
->  drivers/cxl/core/region.c | 25 +++++++++++++++++++++----
->  1 file changed, 21 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index ad4a6ce37216..6f106bfa115f 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -1903,7 +1903,6 @@ static int cxl_region_sort_targets(struct cxl_region *cxlr)
->  	for (i = 0; i < p->nr_targets; i++) {
->  		struct cxl_endpoint_decoder *cxled = p->targets[i];
->  
-> -		cxled->pos = cxl_calc_interleave_pos(cxled);
->  		/*
->  		 * Record that sorting failed, but still continue to calc
->  		 * cxled->pos so that follow-on code paths can reliably
-> @@ -3264,10 +3263,22 @@ static int cxl_endpoint_decoder_initialize(struct cxl_endpoint_decoder *cxled)
->  	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
->  	struct cxl_port *iter = cxled_to_port(cxled);
->  	struct cxl_decoder *root, *cxld = &cxled->cxld;
-> -	struct range *hpa = &cxld->hpa_range;
-> +	struct range hpa = cxld->hpa_range;
+On 2/20/2025 5:09 AM, Dave Jiang wrote:
+>
+> On 2/17/25 7:48 AM, Li Ming wrote:
+>> Use scoped resource management to replace open-coded locking operation
+>> is recommended. CXL subsystem still remains some down_read()/up_read()
+>> and down_write()/up_write() which can be replaced by guard() simply.
+>>
+>> This patchset includes simply using guard() instead of some
+>> down_read()/up_read() and down_write()/up_write() cases. Besides, it
+>> also includes some function code cleanup after using guard().
+>>
+>> base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3 (tag: v6.14-rc2)
+>>
+>> v2:
+>> - Drop some local variables. (Jonathan)
+>> - Rename __construct_region() to construct_auto_region(). (Jonathan and Dave)
+> Hi Ming,
+> Can you please do me a favor and rebase this against cxl/next for a v3? I think there are some conflicts against the DPA cleanup that's not easily resolved. Thanks!
+>
+> DJ
 
-I believe you have a build error here:
+Sure, will do that.
 
-drivers/cxl/core/region.c: In function ‘cxl_endpoint_decoder_initialize’:
-drivers/cxl/core/region.c:3286:51: error: incompatible type for argument 2 of ‘cxl_port_find_switch_decoder’
- 3286 |         root = cxl_port_find_switch_decoder(iter, hpa);
-      |                                                   ^~~
-      |                                                   |
-      |                                                   struct range
-drivers/cxl/core/region.c:3244:67: note: expected ‘struct range *’ but argument is of type ‘struct range’
- 3244 | cxl_port_find_switch_decoder(struct cxl_port *port, struct range *hpa)
-      |                                                     ~~~~~~~~~~~~~~^~~
 
-Just a missed & later in the function
+Ming
 
-~Gregory
