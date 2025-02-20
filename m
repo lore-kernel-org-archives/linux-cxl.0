@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F0A1E4BE;
-	Thu, 20 Feb 2025 17:45:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2053F21324F;
+	Thu, 20 Feb 2025 17:46:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740073523; cv=none; b=Z2pS8NOnkmFWHUQlMzHq/0z1s6iDO4Dzj7LB03UkE5sCfGWqXt+/skNZiQY8kJvcfvAeVpfJkfgz/izsiUKwopJc7O907EPBP4zXGKgFGpy/rjFztdJ9nrD3Gf6CASybysSSOjr0deeY79u9DTmEfdA3QLBzhG+5GWPSn0/xtz4=
+	t=1740073570; cv=none; b=h9ulSGq9WT74KuICi5HTQbBaT19tRfHf28I1mcRxI8WEnni/9dyDNw7M5WkKVIvuW3lN1NKJkYqKtxm37ZdcmOfJfqJC6xp1Ma2xCAUVk1L9SDNWaaUEKJoKTU2htpZ2CdsjIUmRk20YydlRn/pYIUok66zPrHbulMVtuoxrf9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740073523; c=relaxed/simple;
-	bh=FRyLEQOvImjuJcCxe9IpLknE2A6wIIYzLraFhaPRycM=;
+	s=arc-20240116; t=1740073570; c=relaxed/simple;
+	bh=Ndz1AhMQJxf/vpfOi3X2uISTFtPQQoDdhovYdkguK1E=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OkM7ZLW697c1EHVHLR2rqrEFR5Li5vVUwqIkAG++7CJl28SAyjVwWX4mUwOnIHtK5UJBuVSe+kPXziKBf7EAxtk1c5elERPQK2kCSfkdlfi4DSd14jl5eJLnFSMtvEKj9HNmHi6EgUIwbN8inAYje8CCQb6iWGL9LQRqWFasm7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VhXijt8b; arc=none smtp.client-ip=198.175.65.20
+	 In-Reply-To:Content-Type; b=Sky8xuSYWs213d/O7CbHTV5FlYHxBYSzdjzei6U4WEIefz2zKtqJ63MUJo9/7V/Syl7obwNiO9bgIxSblVtuyodM4NqCDN1VoAC5wXvf7RLuzy6Ekz1qIWljzvHjGfWGLy/1ZWijhd5jdoD/Vf/tJ+jfKcyUUktAyR1bBmu1Wmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GyiGtsSx; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VhXijt8b"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GyiGtsSx"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740073522; x=1771609522;
+  t=1740073569; x=1771609569;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=FRyLEQOvImjuJcCxe9IpLknE2A6wIIYzLraFhaPRycM=;
-  b=VhXijt8bPv5J0nAAjS7HZsV88nJT5i8fuSzU9DtuwKWF28Hs8f5ROqZr
-   lgmU2w3s4RHk0nFkGlsqG4Cb+vjlGGYiK6b2PiQloFs0tr7lryFMz3jDK
-   cpbnM51RNwdYJo3ET489mblpHyaqcPFdlGxcMGoCIp9tqZbRCotf7ihnu
-   4JpAS2Xv+piFvhd5jeRMZ7UKJBcOgby/7/EKplkTqIWKM5qLAyfjxxqvT
-   DZIHoe9/yAyVympiM/iWoS177qZ7lPznL8ecqMeGZ7w3qQD87bSTbyOSa
-   M1QG0WLgx9kVMvCe4teGcbEHwCAl5uU3+JI4t5goRLp0wc7QMzX6asWNp
+  bh=Ndz1AhMQJxf/vpfOi3X2uISTFtPQQoDdhovYdkguK1E=;
+  b=GyiGtsSxOy3C9bIjhP8PCrgqg3lvoMblCHl9YDmejw/jKicBiUDD+oQa
+   276Fv3i7jlsKDP6sBQdT9Mw+KrU+WHFQqxInR+bTJOBg4N5f5uBIkJ+kE
+   uTSz+H097QSgG2319xGAlxL86O0vOYepnRQI6uOjIlSnP3ySxMxPrOuDB
+   wVa2msjnf7uutjLnzirRqp3K5JFyQfcNQY81bGBiR1EuFAED/uzQt0OPL
+   u709uRgnYAzMxiw5bhZ0OmgyDsOSkFAPFTnxjQF+lb0XMUAIh8cjYfIUn
+   7qNinKjKshOT5P/3NqOAm0II5aKXGxt78oLLygzyN5r6hbNE8/QpmYUzA
    A==;
-X-CSE-ConnectionGUID: lbN5JAeEQ7W4Uqk931AIrQ==
-X-CSE-MsgGUID: 9Pt6OFDGSG2irPVPur4aAQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11351"; a="40582911"
+X-CSE-ConnectionGUID: s1ogsvEvS8+rDY5IQ8PtaQ==
+X-CSE-MsgGUID: 3M+FBuhsTR+DerhS3r0mmg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11351"; a="44650459"
 X-IronPort-AV: E=Sophos;i="6.13,302,1732608000"; 
-   d="scan'208";a="40582911"
+   d="scan'208";a="44650459"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 09:45:21 -0800
-X-CSE-ConnectionGUID: a13ai/qEStKtU2LxXDqxtA==
-X-CSE-MsgGUID: patW+wXYTWGOylL5EFbSRQ==
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 09:46:08 -0800
+X-CSE-ConnectionGUID: RwNAgTMfSamLFmZx8BdcsQ==
+X-CSE-MsgGUID: p12JbVWhRXOcLCOEXeZiHw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,302,1732608000"; 
-   d="scan'208";a="145967164"
+   d="scan'208";a="145967440"
 Received: from puneetse-mobl.amr.corp.intel.com (HELO [10.125.110.112]) ([10.125.110.112])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 09:45:20 -0800
-Message-ID: <fc1c2896-cd90-4e24-b211-41ad090aad6c@intel.com>
-Date: Thu, 20 Feb 2025 10:45:17 -0700
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 09:46:07 -0800
+Message-ID: <98940e54-a4da-4362-b137-75580da4a2fe@intel.com>
+Date: Thu, 20 Feb 2025 10:46:04 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,8 +52,8 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 17/18] cxl: Add a dev_dbg() when a decoder was added to
- a port
+Subject: Re: [PATCH v3 18/18] cxl/acpi: Unify CFMWS memory log messages with
+ SRAT messages
 To: Robert Richter <rrichter@amd.com>,
  Alison Schofield <alison.schofield@intel.com>,
  Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
@@ -65,76 +65,47 @@ Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
  "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
  Terry Bowman <terry.bowman@amd.com>
 References: <20250211095349.981096-1-rrichter@amd.com>
- <20250211095349.981096-18-rrichter@amd.com>
+ <20250211095349.981096-19-rrichter@amd.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250211095349.981096-18-rrichter@amd.com>
+In-Reply-To: <20250211095349.981096-19-rrichter@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
 On 2/11/25 2:53 AM, Robert Richter wrote:
-> Improve debugging by adding and unifying messages whenever a decoder
-> was added to a port. It is especially useful to get the decoder
-> mapping of the involved CXL host bridge or PCI device. This avoids a
-> complex lookup of the decoder/port/device mappings in sysfs.
+> CFMWS entries have a similar importance as SRAT table entries to
+> describe memory regions. For CXL error analysis and memory debugging
+> information of both is needed. Unify output of both messages to
+> improve logging. Change the style of CFMWS message according to SRAT
+> output. Also, turn messages into a dev_info() same as for SRAT.
 > 
-> Example log messages:
+> SRAT pr_info() for reference:
 > 
->   cxl_acpi ACPI0017:00: decoder0.0 added to root0
->   cxl_acpi ACPI0017:00: decoder0.1 added to root0
->   ...
->    pci0000:e0: decoder1.0 added to port1
->    pci0000:e0: decoder1.1 added to port1
->   ...
->   cxl_mem mem0: decoder5.0 added to endpoint5
->   cxl_mem mem0: decoder5.1 added to endpoint5
+> drivers/acpi/numa/srat.c:
+>   pr_info("SRAT: Node %u PXM %u [mem %#010Lx-%#010Lx]%s%s\n",
 > 
 > Signed-off-by: Robert Richter <rrichter@amd.com>
 > Reviewed-by: Gregory Price <gourry@gourry.net>
 > Tested-by: Gregory Price <gourry@gourry.net>
 
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
 > ---
->  drivers/cxl/acpi.c     | 10 +++++++++-
->  drivers/cxl/core/hdm.c |  3 ++-
->  2 files changed, 11 insertions(+), 2 deletions(-)
+>  drivers/cxl/acpi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> index cb14829bb9be..3e75e612cbc4 100644
+> index 3e75e612cbc4..93c73b163c28 100644
 > --- a/drivers/cxl/acpi.c
 > +++ b/drivers/cxl/acpi.c
-> @@ -421,7 +421,15 @@ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
->  	rc = cxl_decoder_add(cxld, target_map);
->  	if (rc)
->  		return rc;
-> -	return cxl_root_decoder_autoremove(dev, no_free_ptr(cxlrd));
-> +
-> +	rc = cxl_root_decoder_autoremove(dev, no_free_ptr(cxlrd));
-> +	if (rc)
-> +		return rc;
-> +
-> +	dev_dbg(root_port->dev.parent, "%s added to %s\n",
-> +		dev_name(&cxld->dev), dev_name(&root_port->dev));
-> +
-> +	return 0;
->  }
+> @@ -447,7 +447,7 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
+>  			cfmws->base_hpa,
+>  			cfmws->base_hpa + cfmws->window_size - 1, rc);
+>  	else
+> -		dev_dbg(dev, "decode range: node: %d range [%#llx - %#llx]\n",
+> +		dev_info(dev, "ACPI: CFMWS: Node %u [mem %#010Lx-%#010Lx]\n",
+>  			phys_to_target_node(cfmws->base_hpa), cfmws->base_hpa,
+>  			cfmws->base_hpa + cfmws->window_size - 1);
 >  
->  static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index d705dec1471e..467e4fef6a53 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -34,7 +34,8 @@ static int add_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
->  	if (rc)
->  		return rc;
->  
-> -	dev_dbg(&cxld->dev, "Added to port %s\n", dev_name(&port->dev));
-> +	dev_dbg(port->uport_dev, "%s added to %s\n",
-> +		dev_name(&cxld->dev), dev_name(&port->dev));
->  
->  	return 0;
->  }
 
