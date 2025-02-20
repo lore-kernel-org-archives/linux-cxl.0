@@ -1,87 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA5B264638
-	for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 18:58:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C8324BD1C
+	for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 19:13:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740077903; cv=none; b=dMAGt7tqvirZByIQupLIK6Ts+Rds8ghU9KjJNbty007n9zSlDbaAvvqUV659jPCM3cH53Wi6uLpPvCpI1Q2CNuIUtw7fY04M4H0Ijo/S/Yi7gxGz2HuX13sZw1uAHIqdn1NS7uqEbbOb+ER6hOUOfJMHwG7uKu6Nqd9zUhlptlM=
+	t=1740078804; cv=none; b=JKOoy1BlXgMcEWpPqOzT5l+uJFqfisx15Vxpc3F8eWv2W68X0aW5nCcdW7DmOvMYjCPrXkmM7+IY46/PUmyMl+qwz//64zCgjbn9gbBSmsIh1XurIH7pOwffaA3TryznjGlH64j4XRp7g9D8LZcHkf5/sQwuipPWGDKMA+Xb05k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740077903; c=relaxed/simple;
-	bh=i3Q3CuGdFFADBwB0oqo4wWNubJ8gV5Q9uMib1b58gpw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mjTz67czv+dmtcNDY01bP4MjFDUMr1qRwTxrQQJjHim2juD+MrCjKG8XFU2jjb1vjAGYM2mnRF8OVOfsGddKxpTGBG8pYIga7sx8H9oLbf6OvHhrV84m2zgMifYQlS4CcL17AgHO6S00Gje95Iw9NVXbDVQ0ip+m8tf22q6BC5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TToYjoUG; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1740078804; c=relaxed/simple;
+	bh=3ju+Fge1vefH4rJ7oHab4mwdT63sJzOAo2WkeZe1IsE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZHeJ90LrG0xMtP6bgWTNwJGldEExRSavWeX/kEmxwO7YGLi/J9B3hbCQhFUz4ic0U40YupeGCmRhIkU8ZNBvzxnmaTeeLYw/vBhLW7bZAxMjUEfulV9PeDDPA9rCz3G1LpDOULMGYJlQxjRhXBLtappNG7HKAEhiI+n02K7dpa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=YRe0ouD8; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TToYjoUG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740077903; x=1771613903;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=i3Q3CuGdFFADBwB0oqo4wWNubJ8gV5Q9uMib1b58gpw=;
-  b=TToYjoUGStH4oCreBeZot1ytVPB2yLHSAa3K2c9PbSBLPCxVbeXLd2vV
-   hnE9pvtsYKUX5l0lSLqJcXAbXk1LGuXzL9PrPPfWJ3xeTtZFBWqHgDQAw
-   QfGNP86OO3jqZPdjeK9WuleKxOGvjq60oKAiwV9kPpxvDl4GBxwXjWH/a
-   B7m9K+1JZdlRLcNLX3IUYVdfhViBCkEJumptiOYzDVkswWdSYJv2CiWx1
-   KASN/VZ6NVHLj6a0qc5Z33UjtrGVvLrbMB3F9+u/YhQuHNFfvqwYP51DD
-   M31/o5sTC+1bLfEJxC00RHm1uEy3l0jiy8RaOhSTyNqSbKbBQhvObbDM3
-   g==;
-X-CSE-ConnectionGUID: ynXuBUHyRHGed3QiPIy3Eg==
-X-CSE-MsgGUID: muYxNEG1S4K0jEGrKtQIzw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11351"; a="44658054"
-X-IronPort-AV: E=Sophos;i="6.13,302,1732608000"; 
-   d="scan'208";a="44658054"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 10:58:22 -0800
-X-CSE-ConnectionGUID: SuiXAHq2QRmRREf6Sgzxvg==
-X-CSE-MsgGUID: YHtO3NA/S2OIx4Qxb91vew==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,302,1732608000"; 
-   d="scan'208";a="120110514"
-Received: from puneetse-mobl.amr.corp.intel.com (HELO [10.125.110.112]) ([10.125.110.112])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 10:58:21 -0800
-Message-ID: <e50697b7-bed9-40e0-ac18-37e894029c94@intel.com>
-Date: Thu, 20 Feb 2025 11:58:18 -0700
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="YRe0ouD8"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7c0a1677aebso122522085a.0
+        for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 11:13:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1740078802; x=1740683602; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=qNx9JrIVabkYve1PD6+5XRax/4bHll/Ja/FL4uUPxuM=;
+        b=YRe0ouD8vryCVVMEU/Wf9SG3jLxWgZZY3b0m+wZtLy+O9/srHa6sfPbXdlcsb1WeNw
+         Cip8lhHRudkVU9Vt8twQ+qYohTfpjQHdM9cnOmb79JwkldVVutTWr4XvmZczOYGBYdHr
+         ZIBPoAhFkVXqsPWtCK2+dBPNs1mrfJMReUtN6tht86ZejSN75yR+LTAC+At5x1w0zVUj
+         MkX2+A6bCOe+BjCoJz7xVsObj73R7WW2P8+wh16BK40dgEX9fqDJnSYbA3o41QxdGzeC
+         BkejS4Fnmfe1d1m7M7BPHaCHyFov2uk2iGdHIf5GQ1ka6MIIuY2QTH0EEBS4hvRWR7hJ
+         gIGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740078802; x=1740683602;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qNx9JrIVabkYve1PD6+5XRax/4bHll/Ja/FL4uUPxuM=;
+        b=ry3HuMAMjNQRXJ7JZMTFEz373B1sVZUXQNg+HeyVS84ThIz9DWIIcXtyUYLKjH/mA7
+         Iy/0C9sTpm48itWv7BnCXAMbuKnZNcbRhYyjfuy+yi+OfBv6eGjkRSF+iCtXv9M0xoSN
+         IU/aaZuqIApAZR6FHGwBFgU77edv/xLRbDJioOqRHv6n9SZZ61/SkvDCMxfCMnSozqD7
+         LvRDDT/NUBsWK8+n3LSR5BpD4gjJBV5VB89TSXxeSyQ1UMqOjSousbQ+RpUslqO8Xic/
+         qoC3bNi/YpwDPeMxw6aYdXDMl2IB4RmsJ2U7X4OcwTN0nCujwya1qh0IQZoHOPav2Cyf
+         BSbg==
+X-Forwarded-Encrypted: i=1; AJvYcCV0h6C8KyS5dwh37TDXdGWJ3G4KDgo5D0Z6II3IQALKs2zA6kl5u1EM8W1CWQbE+JJQIq0GgbAqWXw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyr188HoTbfCdVKUWaolRu/5G3ErYrajToAzxGCow3i4VXYl+pv
+	5yMLSvSy2BoUBFOeBhY64gnv+KtAURvJLFNb8QxNsxX4gsfqy1gHIUuqI5GczuI=
+X-Gm-Gg: ASbGnctgtAUSnauOatiNQ9Q3TAVpq7x7DHSK0fXUgujs3Z/diZy3eFb4mEdl74cRMpI
+	zOAnV+NsJr3ujv2qxqwB8Bwor3cFSSEmyq4PdO7sPmUprbIPz2/AHLPd+lwDbqfLJ0C+Z/bxhnG
+	8+NtaclFSzQ6/mT94t+TyF5H69RGqUwim+88G95klMvLRcGfCQCqai0V34J1T482CV536Ca4yUa
+	w+AdulQCGPx+OfNrzX2V9aIuMgOJa2W9eronNGq9plaejsWyiOoNDXbPc2g/K01pi65wiUkJxQS
+	5oPs+BXC0vdlUsMgxa0j0VDQhtymmuFtmZC/KOL8wmgZGG8eTbG6k3EQk40eUTEZJD0vY17ylg=
+	=
+X-Google-Smtp-Source: AGHT+IFQN9nUHNkBphF2rvfCIhCVm6Hj1N0F070dzNmNKy/cVT7UuqEFg+GppUV0fFHN/1S/dwR13Q==
+X-Received: by 2002:a05:620a:191f:b0:7c0:bb63:5377 with SMTP id af79cd13be357-7c0cef66889mr51580985a.39.1740078800600;
+        Thu, 20 Feb 2025 11:13:20 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c0b424d51bsm269027185a.77.2025.02.20.11.13.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2025 11:13:20 -0800 (PST)
+Date: Thu, 20 Feb 2025 14:13:18 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v2 07/15] cxl/region: Use translated HPA ranges to find
+ the port's decoder
+Message-ID: <Z7d-zqJBVD7KNR4_@gourry-fedora-PF4VCD3F>
+References: <20250218132356.1809075-1-rrichter@amd.com>
+ <20250218132356.1809075-8-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/2] cxl: Some ABI doc updates
-To: Davidlohr Bueso <dave@stgolabs.net>
-Cc: dan.j.williams@intel.com, Jonathan.Cameron@huawei.com,
- ira.weiny@intel.com, alison.schofield@intel.com, linux-cxl@vger.kernel.org
-References: <20250218224853.67457-1-dave@stgolabs.net>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250218224853.67457-1-dave@stgolabs.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250218132356.1809075-8-rrichter@amd.com>
 
+On Tue, Feb 18, 2025 at 02:23:48PM +0100, Robert Richter wrote:
+> This is the second step to find the port's decoder with address
+> translation enabled. The translated HPA range must be used to find a
+> decoder. The port's HPA range is determined by applying address
+> translation when crossing memory domains for the HPA range to each
+> port while traversing the topology from the endpoint up to the port.
+> 
+> Introduce a function cxl_find_auto_decoder() that calculates the
+> port's translated address range to determine the corresponding
+> decoder. Use the existing helper function cxl_port_calc_hpa() for HPA
+> range calculation.
+> 
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> ---
+>  drivers/cxl/core/region.c | 60 +++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 58 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 5048511f9de5..6d5ede5b4c43 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -887,6 +887,63 @@ static int match_auto_decoder(struct device *dev, const void *data)
+>  	return 0;
+>  }
+>  
+> +static struct device *
+> +cxl_find_auto_decoder(struct cxl_port *port, struct cxl_endpoint_decoder *cxled,
+> +		      struct cxl_region *cxlr)
+> +{
+> +	struct cxl_port *parent, *iter = cxled_to_port(cxled);
+> +	struct cxl_decoder *cxld = &cxled->cxld;
+> +	struct range hpa = cxld->hpa_range;
+> +	struct cxl_region_ref *rr;
+> +
+> +	while (iter != port) {
 
+I understand this is used to map an endpoint to a region associated with
+the given port.  Is there a scenario where `port` is *not* a root decoder?
 
-On 2/18/25 3:48 PM, Davidlohr Bueso wrote:
-> Hi, Two small ABI doc fixes.
-> 
-> Changes from v1: - picked up review
->                  - s/Mb/MB in patch 2 (Jonathan)
-> 
-> Thanks!
-> 
-> Davidlohr Bueso (2):
->   cxl: Plug typos in ABI doc
->   cxl: Document missing sysfs files
-> 
->  Documentation/ABI/testing/sysfs-bus-cxl | 26 +++++++++++++++++++++----
->  1 file changed, 22 insertions(+), 4 deletions(-)
-> 
-> --
-> 2.39.5
-> 
+Seems like port will (should) always be a root decoder here in practice.
 
-Applied to cxl/next
+May or may not be a useful check on input, either way:
+
+Reviewed-by: Gregory Price <gourry@gourry.net>
