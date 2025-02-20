@@ -1,198 +1,149 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 107AF19DF6A
-	for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 05:07:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EF4DA926
+	for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 05:28:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740028040; cv=none; b=X483KZUozBBB+VYRe1Zk5sS1Jqk4DgVmXKoWpx2KfppirL5CU5Gizavtkn4BNfj3FjOsq4DBupPG6fl9i5Cigeei/kVZt7CI/rX/DqBuQiag33c9dgqWHLrAkOueGygMB9N571O86gMq84/Q+d7J5vbxL5GdI6rms8AJDKQuglY=
+	t=1740029325; cv=none; b=gs/XLYsjgb2WvgZsX8MSabZ3UJd1VvEhmG+9ZRuN0TsG8CvuVPOAQucK713vRzt/DoEGu2PuXj6HiqUaWEgM4qFV0GVTik/MMo0aox/FsDM4w7fTOo8HHfeAVQiKE0t3Hfk0EEMMuC/AU/9guBWmIKkX501QewgYGT7AG53D+V8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740028040; c=relaxed/simple;
-	bh=+zGT9HMfLBKh3wm+v5YZoofF1vQky54kXeBcJo25lKw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jvIjQQsMqbZis6EQqtv36qhUsUkJwyu06Rzn1t/ScGmJh3Ve60q5zTW27ijGjdpwtydbhILEQS+Tg5EV/t9HxKlrwoY3MGKYZGFH/C/7YiaP1Ix5V0VsckdIG54x3coDycNvE9o3YVdSGqohT0XlyDASVcAzNiQXXg2EPXqXeZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gEOn0vJW; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1740029325; c=relaxed/simple;
+	bh=XYO9x23QipmHCzayg2wi+2jfRHupdtUkefQ8+5YwVeg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=XGgEliw1Vxon/KadXj945J6jJWYEdR1t8lWTux7KUK126f4q2ziSNKwL/MWAjXAxHmfqpnPCJudNePhyOhQPXwYD33fwktGUFbEOcyXQbJSZqUi5QOgKebXE6QsNYjqCewGffpLIL75kMxFGF7jagdhvOX+b0ocV6qj6wewIBaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=fXi7k2Ft; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gEOn0vJW"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51K20aGH022914;
-	Thu, 20 Feb 2025 05:07:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=rFJU0Q
-	zHYdII9CLhrJj36qLKvQhtQdbRpo+DZAgAMrI=; b=gEOn0vJW9sclpRhE9BXC2G
-	e2FOCEVS7noyzQ4JR0q2KFpSQlE3ayEsWJj8RNuHFsHVmfwoVh3PSPixRut0Va1p
-	aRFV1SWnF+4HIrDhYLXCvbJU5rPiH28DmDFn29677v/ufpA/UIzbBgycHAWNIufP
-	KGdR322K2ggGUH/WPb/UAWBE7zj7yLtI+is6TFI2EJJM58ipvHtiHp4DMv8t6Nqe
-	+JDOCQ8kJXoiR2env8VKNjYLh+tZQRQvQqTFhTxvZd2Cs/m7eip/zBCbdvwj+xHr
-	JEhOLb5+VfIaGfljun/V4mqQBKr2peItbZ2Zk7BU1bmAteQ6l5xHQoT+qRVsFnKA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44wu808msa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Feb 2025 05:07:11 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51K56uw7001240;
-	Thu, 20 Feb 2025 05:07:11 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44wu808ms8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Feb 2025 05:07:11 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51K48bGK009772;
-	Thu, 20 Feb 2025 05:07:09 GMT
-Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 44w03y84vb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Feb 2025 05:07:09 +0000
-Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
-	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51K578mM32047806
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 20 Feb 2025 05:07:08 GMT
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 62C0E58052;
-	Thu, 20 Feb 2025 05:07:08 +0000 (GMT)
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 22C9058045;
-	Thu, 20 Feb 2025 05:07:06 +0000 (GMT)
-Received: from [9.109.211.20] (unknown [9.109.211.20])
-	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 20 Feb 2025 05:07:05 +0000 (GMT)
-Message-ID: <e2379e35-68cc-4f39-b16b-4c605c753f7d@linux.ibm.com>
-Date: Thu, 20 Feb 2025 10:37:04 +0530
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fXi7k2Ft"
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250220052840epoutp01a6b517307bc88c16acd0878806c78664~l03KaIdj52966929669epoutp01y
+	for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 05:28:40 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250220052840epoutp01a6b517307bc88c16acd0878806c78664~l03KaIdj52966929669epoutp01y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1740029320;
+	bh=gknErlnI/nCVhLXNlXf6Oh7Q/wQGR8b/boj1h9A7aHM=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=fXi7k2Ftd16Doumc9FY4PbneheWKx4LG1BTDtsVsOHKtrTyQWSlIc8uh1aS8Zo0gJ
+	 nHYQD/x3TL5FzrqhlSx2ETzlzAd3xpcpuiXDNXxU1Cm4XARMNmx9oKzUzfJn7kAOOa
+	 aMOAn38v0/6Oscj9aLiLhQ5PxUxUaQsrj9vBM9sk=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+	20250220052839epcas5p27a9d99cc7bee8f05f27be0550f185afe~l03KCVCbP0943109431epcas5p2g;
+	Thu, 20 Feb 2025 05:28:39 +0000 (GMT)
+Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.175]) by
+	epsnrtp4.localdomain (Postfix) with ESMTP id 4Yz1yF3Mv0z4x9Q2; Thu, 20 Feb
+	2025 05:28:37 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	0A.8D.19710.58DB6B76; Thu, 20 Feb 2025 14:28:37 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20250220052733epcas5p41f847e5d0233a62703693565ee37374c~l02L-rwUX1131811318epcas5p4f;
+	Thu, 20 Feb 2025 05:27:33 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250220052733epsmtrp260d87358903477cfd659449d7ba6c55f~l02L_LBIz3134831348epsmtrp28;
+	Thu, 20 Feb 2025 05:27:33 +0000 (GMT)
+X-AuditID: b6c32a44-36bdd70000004cfe-2f-67b6bd85d841
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	75.43.18949.54DB6B76; Thu, 20 Feb 2025 14:27:33 +0900 (KST)
+Received: from test-PowerEdge-R740xd.samsungds.net (unknown [107.99.41.79])
+	by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250220052731epsmtip2d2200820c508c1bde73ac9e15a0d59ad~l02KlSmSN1358513585epsmtip2X;
+	Thu, 20 Feb 2025 05:27:31 +0000 (GMT)
+From: Vinayak Holikatti <vinayak.kh@samsung.com>
+To: qemu-devel@nongnu.org
+Cc: gost.dev@samsung.com, linux-cxl@vger.kernel.org, nifan.cxl@gmail.com,
+	dave@stgolabs.net, vishak.g@samsung.com, krish.reddy@samsung.com,
+	a.manzanares@samsung.com, alok.rathore@samsung.com, Vinayak Holikatti
+	<vinayak.kh@samsung.com>
+Subject: [PATCH v3 0/3] CXL CCI Media Operations
+Date: Thu, 20 Feb 2025 10:57:21 +0530
+Message-Id: <20250220052724.1256642-1-vinayak.kh@samsung.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ndctl: json: Region capabilities are not displayed if any
- of the BTT, PFN, or DAX are not present
-To: Jeff Moyer <jmoyer@redhat.com>
-Cc: Alison Schofield <alison.schofield@intel.com>, nvdimm@lists.linux.dev,
-        linux-cxl@vger.kernel.org, Ritesh Harjani <ritesh.list@gmail.com>,
-        Li Zhijian <lizhijian@fujitsu.com>
-References: <20250219094049.5156-1-donettom@linux.ibm.com>
- <x494j0pj3ar.fsf@segfault.usersys.redhat.com>
-Content-Language: en-US
-From: Donet Tom <donettom@linux.ibm.com>
-In-Reply-To: <x494j0pj3ar.fsf@segfault.usersys.redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 7yQ3eL-WICp1Z_u1zDBE9-FGi7I9sumK
-X-Proofpoint-ORIG-GUID: BrIPKKV2bf4jbXBN4MFA1bPfPUMAhMLV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-19_11,2025-02-20_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 spamscore=0 phishscore=0 malwarescore=0 mlxscore=0
- adultscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0 lowpriorityscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502200032
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAJsWRmVeSWpSXmKPExsWy7bCmum7r3m3pBlv2S1pMP6xo8eX0HjaL
+	1TfXMFrcPLCTyWLhxmVMFudnnWKx+LttL6PF8d4dLBYnTm5nB4rNYXfg8tg56y67x5Nrm5k8
+	+rasYvSYOrve4/MmuQDWqGybjNTElNQihdS85PyUzLx0WyXv4HjneFMzA0NdQ0sLcyWFvMTc
+	VFslF58AXbfMHKCblBTKEnNKgUIBicXFSvp2NkX5pSWpChn5xSW2SqkFKTkFJgV6xYm5xaV5
+	6Xp5qSVWhgYGRqZAhQnZGbvfv2YvmMVZsWbGbNYGxr3sXYycHBICJhJvl9wEsrk4hAR2M0o8
+	e7eQEcL5xChx/8MRNgjnG6PEkf1v4FpmbjrHApHYyyixuWsrE4TTwCRxeNkHFpAqNgEDiQfN
+	x8E6RAQkJX53nWYGsZkFPjBKLHqqC2ILA9Xs3bCPDcRmEVCVeP/zBlg9r4CtxN8bZ5ggtslL
+	7D94lhkiLihxcuYTFog58hLNW2czgyyWEHjELvFxwwxWiAYXie7fXWwQtrDEq+NboM6Wkvj8
+	bi9UvFji3MVPjBB2jcTrrhXMELa9ROupfiCbA2iBpsT6XfoQYVmJqafWMUHs5ZPo/f0E6jZe
+	iR3zQGwOIFtFYunbTJhNX541Q033kLi7cglYuZBArMTbZctZJjDKz0LyzSwk38xCWLyAkXkV
+	o2RqQXFuemqyaYFhXmo5PGKT83M3MYKTppbLDsYb8//pHWJk4mA8xCjBwawkwttWvyVdiDcl
+	sbIqtSg/vqg0J7X4EKMpMIgnMkuJJucD03ZeSbyhiaWBiZmZmYmlsZmhkjhv886WdCGB9MSS
+	1OzU1ILUIpg+Jg5OqQamuTllpyyqlzOseeLf9sJNaMLO/66VXLkcxuEro8T/Gp3lFDUOfShv
+	9eHClT1/1kw+qaTbb1PPKzCFXVW3Vv4/07wcif+5EaUF8XmnDGYdWSN3/6HPEsneRe18R1Za
+	aXRuyE7dMSG4UG3my6Xte2u7501c8XrHD/Wgd25+R5qyPpqeLJnQ2B8aqRf37Lz77pPfG7bw
+	GPzq+7HkpIEZ30ur09tYpl3P+Dp7zhz2MxMeW+z4uOTr7V/Ts1VZ+//d1tTx4k+UapRa71j5
+	dGbrmzelszOOvZmx/saRCAOWTdNOPVXafZTbK/j00QSHtTfnvKh8+D1G6naUheGn9TPaok80
+	GOatsGqXnhYkvGNNk7rgNSWW4oxEQy3mouJEAHSHY7EjBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrLLMWRmVeSWpSXmKPExsWy7bCSvK7r3m3pBtfvsFlMP6xo8eX0HjaL
+	1TfXMFrcPLCTyWLhxmVMFudnnWKx+LttL6PF8d4dLBYnTm5nB4rNYXfg8tg56y67x5Nrm5k8
+	+rasYvSYOrve4/MmuQDWKC6blNSczLLUIn27BK6M3e9fsxfM4qxYM2M2awPjXvYuRk4OCQET
+	iZmbzrF0MXJxCAnsZpQ4/eMuM0RCSuLYzp9sELawxMp/z9khiv4xStz90cQEkmATMJB40Hwc
+	bJKIgKTE767TzCBFzAK/GCWe7r4PlhAGKtq7YR/YJBYBVYn3P2+AxXkFbCX+3jjDBLFBXmL/
+	wbPMEHFBiZMzn7CA2MxA8eats5knMPLNQpKahSS1gJFpFaNkakFxbnpusWGBUV5quV5xYm5x
+	aV66XnJ+7iZGcAhrae1g3LPqg94hRiYOxkOMEhzMSiK8bfVb0oV4UxIrq1KL8uOLSnNSiw8x
+	SnOwKInzfnvdmyIkkJ5YkpqdmlqQWgSTZeLglGpg6tra6Ox80X9BaficSoegeXb2D2+z3Tk2
+	PWqK5d7apcGXff6erVRbXiJdymR5/rF86SyDJTP8c2ztbx37UXle4lrUIemppUz/hGP2rAll
+	+jxTVDSL3WHF7VsHpkh2rU5etEtqmhlL8byt25OTP8W2bf9z7VTrcVm9t2Ydsl/6FB6sfDAl
+	eV9Mz3cm40OnYnbt/3f5RFnmnMlr1vzff8HU0XRtp3zHGebke3Y3F+9IrZB6uv3xR42uiY4P
+	HzEmyhaULJu8rfzFPIkLq6fdXXrhTNbexbz7J7xcnMHG8T60WvZWa7dLVFSnbFBuzrHF/y9b
+	r9bRD/nhN6/ngfWugkqFVXs8gqvsWY5wGT3mvOB2eo8SS3FGoqEWc1FxIgCmdxUm0AIAAA==
+X-CMS-MailID: 20250220052733epcas5p41f847e5d0233a62703693565ee37374c
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250220052733epcas5p41f847e5d0233a62703693565ee37374c
+References: <CGME20250220052733epcas5p41f847e5d0233a62703693565ee37374c@epcas5p4.samsung.com>
 
+CXL CCI media operations commands implmented as per CXL Specification
+3.2 8.2.10.9.5.3
+1) General(00h) - Discovery (00h)
+2) Sanitize(01h - Sanitize (00h)
+                  Write zeros (01h)
 
-On 2/19/25 22:10, Jeff Moyer wrote:
-> Donet Tom <donettom@linux.ibm.com> writes:
->
->> If any one of BTT, PFN, or DAX is not present, but the other two
->> are, then the region capabilities are not displayed in the
->> ndctl list -R -C command.
->>
->> This is because util_region_capabilities_to_json() returns NULL
->> if any one of BTT, PFN, or DAX is not present.
->>
->> In this patch, we have changed the logic to display all the region
->> capabilities that are present.
->>
->> Test Results with CONFIG_BTT disabled
->> =====================================
->> Without this patch
->> ------------------
->>   # ./build/ndctl/ndctl  list -R -C
->>   [
->>    {
->>      "dev":"region1",
->>      "size":549755813888,
->>      "align":16777216,
->>      "available_size":549755813888,
->>      "max_available_extent":549755813888,
->>      "type":"pmem",
->>      "iset_id":11510624209454722969,
->>      "persistence_domain":"memory_controller"
->>    },
->>
->> With this patch
->> ---------------
->>   # ./build/ndctl/ndctl  list -R -C
->>   [
->>    {
->>      "dev":"region1",
->>      "size":549755813888,
->>      "align":16777216,
->>      "available_size":549755813888,
->>      "max_available_extent":549755813888,
->>      "type":"pmem",
->>      "iset_id":11510624209454722969,
->>      "capabilities":[
->>        {
->>          "mode":"fsdax",
->>          "alignments":[
->>            65536,
->>            16777216
->>          ]
->>        },
->>        {
->>          "mode":"devdax",
->>          "alignments":[
->>            65536,
->>            16777216
->>          ]
->>        }
->>      ],
->>      "persistence_domain":"memory_controller"
->>    },
->>
->> Signed-off-by: Donet Tom <donettom@linux.ibm.com>
->> ---
->>   ndctl/json.c | 6 ++----
->>   1 file changed, 2 insertions(+), 4 deletions(-)
->>
->> diff --git a/ndctl/json.c b/ndctl/json.c
->> index 23bad7f..3df3bc4 100644
->> --- a/ndctl/json.c
->> +++ b/ndctl/json.c
->> @@ -381,9 +381,6 @@ struct json_object *util_region_capabilities_to_json(struct ndctl_region *region
->>   	struct ndctl_pfn *pfn = ndctl_region_get_pfn_seed(region);
->>   	struct ndctl_dax *dax = ndctl_region_get_dax_seed(region);
->>   
->> -	if (!btt || !pfn || !dax)
->> -		return NULL;
->> -
-> I think this was meant to be:
->
-> 	if (!btt && !pfn && !dax)
-> 		return NULL;
->
-> I think that would be the more appropriate fix.
-Yes. I will add it and send V2.
->
-> Cheers,
-> Jeff
->
->>   	jcaps = json_object_new_array();
->>   	if (!jcaps)
->>   		return NULL;
->> @@ -436,7 +433,8 @@ struct json_object *util_region_capabilities_to_json(struct ndctl_region *region
->>   		json_object_object_add(jcap, "alignments", jobj);
->>   	}
->>   
->> -	return jcaps;
->> +	if (btt || pfn || dax)
->> +		return jcaps;
->>   err:
->>   	json_object_put(jcaps);
->>   	return NULL;
+The patches are generated against the Johnathan's tree
+https://gitlab.com/jic23/qemu.git and branch cxl-2024-11-27.
+
+Changes V2 -> V3
+- Addressed review comments from Jonathan Cameron.
+- Updated CXL Spec r3.2 references
+
+Changes V1->V2
+- Addressed the review comments from Jonathan Cameron.
+
+- Modularied the media operations class & subclass handling
+into separate functions.
+
+Signed-off-by: Vinayak Holikatti <vinayak.kh@samsung.com>
+
+Vinayak Holikatti (3):
+  hw/cxl/cxl-mailbox-utils: Add support for Media operations discovery
+    commands cxl r3.2 (8.2.10.9.5.3)
+  hw/cxl: factor out calculation of sanitize duration from
+    cmd_santize_overwrite
+  hw/cxl/cxl-mailbox-utils: Add support for Media operations Sanitize
+    and Write Zeros commands cxl r3.2(8.2.10.9.5.3)
+
+ hw/cxl/cxl-mailbox-utils.c  | 402 +++++++++++++++++++++++++++++++++---
+ include/hw/cxl/cxl_device.h |   4 +
+ 2 files changed, 380 insertions(+), 26 deletions(-)
+
+-- 
+2.34.1
+
