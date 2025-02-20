@@ -1,43 +1,67 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78F8D29D0D;
-	Thu, 20 Feb 2025 01:42:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740015758; cv=pass; b=AvN1ruXvrV7wgX1BKFh+UEED6SRehLkKsH7nikNz554PS/NAzj+ijM4JEn5V4VoKgrebQLpm0KAo04N0DjCafNWOp0IEvRFYrqbjnTiarmfiDGcRjKZlSnifLjEmnPul8b51U2nDZceRpZv2Z7EFdN+GktTf7LBCr+/PmVbeazY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740015758; c=relaxed/simple;
-	bh=zFNbcqKh5rsboW8gsA3IUH6XZSvliopp2lNve/OTK0g=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D23E198E81
+	for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 05:06:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740027961; cv=none; b=cXKdPQVR/qbwR/bMqzMN7RUAJe3mUpLkXUwIw2xWEvJBEbkvo+4x5zE7LC8whBj0p0bN7G3/2yaBxpyXEqEGGGmUf5b74AZC3P4lO6fLUuHJ/sDSxPYuxmDQG2S1Ae9iTzC9XsYOo/lLVzrWmutSgHNQ1JE6Y65B01YhcgLSa6k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740027961; c=relaxed/simple;
+	bh=me2wlBZokS2lJdfdzkF0naNrcnUGGpgLGv6ViKpHTqw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z48MkU2pq+DoZM4Zt8V2jx7TMI98cbmq9g/K/XvntN5bKDgrlD+OY6M9gAKrn1Ej2hKfJcpr7+O+1gwVcgNDEsReEK/j9WjPZt1j87Zc3YisaPvnn+NYy7RCradMXsuKkT47/0ycceZKHarmYICSd72PFaDrGn35rSTQ641oiw4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=NP/tPj6i; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	 In-Reply-To:Content-Type; b=LV3LhcAIKTnzfYH+g8vBs8mlz4Cp9oHx3acX9thDzk4AAntMr9taudAO6h/rMq142C9wYZAot6OLMmVSuhXELe99x5tkRQh4ezdV6ax5pp+uRL1Ab9QZPcPXs+1PLI2TSiNU8hvoxe9UmFKuFjvJ05EdlU3VjIZlRy11ONtmHrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ap/JTq2/; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="NP/tPj6i"
-ARC-Seal: i=1; a=rsa-sha256; t=1740015747; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=R9XHGTDcorqZmWQEYzabkGQRjAL7fkhJD+pXNP9MTWNAtHLGU5KeuGYSsuv0whmZpSO0j2GfcsYOifczGQF96erxO7h8Y+Xu2omCZwCy5SdVcMgnDw3kTZnzQy42o1IDCowlKKBc/LmXxVwFkNzww/wzwcqaSL1mkN+B2ta9BCs=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740015747; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=uZwfI69b4MxD4n/d6i4oZ1tFnkBKhIzMhzj+nwnoqTc=; 
-	b=ipZtSqKuc/9SCgMfmtOTSQrz6GFt9nzOBWi9t9K8ormxoLmuY1WH1mzvGg2Sn5FlpVzgnC4TFKxnqieXkCc7+nNBW93R9Uf930+W6uiRp+WfyaBV1wxwT2+ULIel/F0CPy4Iv0KYuAYjWgQG25gaM5C/ppG5B7n9rAvAJfOS1iw=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740015747;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=uZwfI69b4MxD4n/d6i4oZ1tFnkBKhIzMhzj+nwnoqTc=;
-	b=NP/tPj6idhgjkHihdW71oHupql5Eanm/LVxvFnT5XJ9hIOn6fi/NzRM2wJ5GQuQT
-	Z/Uy+DQDYDp4Wm+EMKGnBCpnY7z9pYjjGrtfNDzu6+nDf/4/CR0ju7FOxKiTMV6jN1r
-	8/x6lkoKGbPyETxHfhQDU1R0WqZFa1RMnyGpGNVI=
-Received: by mx.zohomail.com with SMTPS id 1740015743937664.1925940226711;
-	Wed, 19 Feb 2025 17:42:23 -0800 (PST)
-Message-ID: <c2388b52-fba1-43a2-93c8-0700dd5aea92@zohomail.com>
-Date: Thu, 20 Feb 2025 09:42:23 +0800
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ap/JTq2/"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51JNr6rg022236;
+	Thu, 20 Feb 2025 05:05:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=DKA3gW
+	yp6j0xehF8IDp31eW3i/PhGjdOqTi9pDRccLU=; b=ap/JTq2/eWlaH2IUV506Uz
+	RSnxSrYwxgjuCPUfLlvIoGtfLh8h0wbWTHX89R3lCHWo5yneSdSK1SFoY90JPu0H
+	N8rY/XLN3uwEafp7iZ3lW9HaWuZ4OxpJmD3GSXniXdq0UdzaceHJd5uNOi+x7qlw
+	Gz7njTc3CEncyxllhohmzPsSl5emS5cuzxJLiL7TCbqY5r1RT7VlNkyz9h5znUCx
+	slClbCZZ1PIst43lWs7J8lk17s0HQSbHmkGUkR9LQOKbCQB5xxOeJPQbP5cd7Ilq
+	R9CKggwxBE+VXf+0RyZyYUSnsMv9KEShtT+tpV9ejdn8tLLfEAFgvFEwDuVki6zg
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44wahjwtcm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Feb 2025 05:05:50 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51K50tCH010071;
+	Thu, 20 Feb 2025 05:05:50 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44wahjwtcg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Feb 2025 05:05:50 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51K4dOjQ005817;
+	Thu, 20 Feb 2025 05:05:49 GMT
+Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44w02xg38m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Feb 2025 05:05:49 +0000
+Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
+	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51K55mwa25887410
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 20 Feb 2025 05:05:48 GMT
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1C6D458052;
+	Thu, 20 Feb 2025 05:05:48 +0000 (GMT)
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DE55458050;
+	Thu, 20 Feb 2025 05:05:45 +0000 (GMT)
+Received: from [9.109.211.20] (unknown [9.109.211.20])
+	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 20 Feb 2025 05:05:45 +0000 (GMT)
+Message-ID: <60b8ee2a-a3c5-4904-bdb0-a0e2ebef5ff2@linux.ibm.com>
+Date: Thu, 20 Feb 2025 10:35:42 +0530
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -45,67 +69,141 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 7/7] cxl/region: Drop goto pattern of
- construct_region()
-To: Dan Williams <dan.j.williams@intel.com>, dave.jiang@intel.com,
- jonathan.cameron@huawei.com
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- dave@stgolabs.net, alison.schofield@intel.com, vishal.l.verma@intel.com,
- ira.weiny@intel.com
-References: <20250217144828.30651-1-ming.li@zohomail.com>
- <20250217144828.30651-8-ming.li@zohomail.com>
- <67b67f9d670d1_2d1e2947@dwillia2-xfh.jf.intel.com.notmuch>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <67b67f9d670d1_2d1e2947@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH] ndctl: json: Region capabilities are not displayed if any
+ of the BTT, PFN, or DAX are not present
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+        Ritesh Harjani <ritesh.list@gmail.com>,
+        Li Zhijian <lizhijian@fujitsu.com>, Jeff Moyer <jmoyer@redhat.com>
+References: <20250219094049.5156-1-donettom@linux.ibm.com>
+ <Z7YQnXuIMcw-wPMg@aschofie-mobl2.lan>
+Content-Language: en-US
+From: Donet Tom <donettom@linux.ibm.com>
+In-Reply-To: <Z7YQnXuIMcw-wPMg@aschofie-mobl2.lan>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Feedback-ID: rr08011227788f0509d750d4c7c3768cdd0000ff26b77b22ba79e96a9c37242129125d16643b780af16d106c:zu0801122718c71f38a234954100f57c0b00009843a68b46768c7933f4099e15c020441e0cb686d19a900e4b:rf0801122d1c750ac6637da0df73689e9a00003ab4bc8609cc9a4ae2eaa5bf6cf34a32bdd19b7d3ebfa9cc601c53d7329bf7:ZohoMail
-X-ZohoMailClient: External
-
-On 2/20/2025 9:04 AM, Dan Williams wrote:
-> Li Ming wrote:
->> Some operations need to be protected by the cxl_region_rwsem in
->> construct_region(). Currently, construct_region() uses down_write() and
->> up_write() for the cxl_region_rwsem locking, so there is a goto pattern
->> after down_write() invoked to release cxl_region_rwsem.
->>
->> construct region() can be optimized to remove the goto pattern. The
->> changes are creating a new function called construct_auto_region() which
->> will include all checking and operations protected by the
->> cxl_region_rwsem, and using guard(rwsem_write) to replace down_write()
->> and up_write() in construct_auto_region().
->>
->> Signed-off-by: Li Ming <ming.li@zohomail.com>
->> ---
->> v2:
->> - Rename __construct_region() to construct_auto_region(). (Jonathan and Dave)
->> ---
->>  drivers/cxl/core/region.c | 71 +++++++++++++++++++++------------------
->>  1 file changed, 39 insertions(+), 32 deletions(-)
->>
->> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->> index 320a3f218131..7a9e51aba9f4 100644
->> --- a/drivers/cxl/core/region.c
->> +++ b/drivers/cxl/core/region.c
->> @@ -3216,49 +3216,31 @@ static int match_region_by_range(struct device *dev, const void *data)
->>  	return 0;
->>  }
->>  
->> -/* Establish an empty region covering the given HPA range */
->> -static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
->> -					   struct cxl_endpoint_decoder *cxled)
->> +static int construct_auto_region(struct cxl_region *cxlr,
-> ...probably would have called this __construct_region() since there is
-> little distinction that merits adding the "auto" qualifier.
-
-Sure, will revert this renaming, continue to use __construct_region(), thanks for review.
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: a48eF_mVPlKoaADzhnSugVCS65bKGL6_
+X-Proofpoint-ORIG-GUID: fHy3ClR393h_24Gc8t2eWfV9-QGgzpz0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-19_11,2025-02-20_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ spamscore=0 clxscore=1015 priorityscore=1501 mlxlogscore=999
+ lowpriorityscore=0 impostorscore=0 malwarescore=0 bulkscore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502200032
 
 
-Ming
-
+On 2/19/25 22:40, Alison Schofield wrote:
+> On Wed, Feb 19, 2025 at 03:40:49AM -0600, Donet Tom wrote:
 >
-> Other than that, for this and the others you can add:
 >
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-
-
+> Thanks Tom!
+>
+> Please v2 with patch prefix and commit msg of:
+> [ndctl PATCH v2] ndctl/list: display region caps for any of BTT, PFN, DAX
+Sure.
+>
+>
+>> If any one of BTT, PFN, or DAX is not present, but the other two
+>> are, then the region capabilities are not displayed in the
+>> ndctl list -R -C command.
+>>
+>> This is because util_region_capabilities_to_json() returns NULL
+>> if any one of BTT, PFN, or DAX is not present.
+>>
+>> In this patch, we have changed the logic to display all the region
+>> capabilities that are present.
+>>
+>> Test Results with CONFIG_BTT disabled
+>> =====================================
+>> Without this patch
+>> ------------------
+>>   # ./build/ndctl/ndctl  list -R -C
+>>   [
+>>    {
+>>      "dev":"region1",
+>>      "size":549755813888,
+>>      "align":16777216,
+>>      "available_size":549755813888,
+>>      "max_available_extent":549755813888,
+>>      "type":"pmem",
+>>      "iset_id":11510624209454722969,
+>>      "persistence_domain":"memory_controller"
+>>    },
+>>
+>> With this patch
+>> ---------------
+>>   # ./build/ndctl/ndctl  list -R -C
+>>   [
+>>    {
+>>      "dev":"region1",
+>>      "size":549755813888,
+>>      "align":16777216,
+>>      "available_size":549755813888,
+>>      "max_available_extent":549755813888,
+>>      "type":"pmem",
+>>      "iset_id":11510624209454722969,
+>>      "capabilities":[
+>>        {
+>>          "mode":"fsdax",
+>>          "alignments":[
+>>            65536,
+>>            16777216
+>>          ]
+>>        },
+>>        {
+>>          "mode":"devdax",
+>>          "alignments":[
+>>            65536,
+>>            16777216
+>>          ]
+>>        }
+>>      ],
+>>      "persistence_domain":"memory_controller"
+>>    },
+>>
+> Please add a formatted fixes tag.
+> Double check, but I believe this was introduced with commit 965fa02e372f,
+> util: Distribute 'filter' and 'json' helpers to per-tool objects
+> It seems we broke it in ndctl release v73.
+Sure. I will add.
+>> Signed-off-by: Donet Tom <donettom@linux.ibm.com>
+>> ---
+>>   ndctl/json.c | 6 ++----
+>>   1 file changed, 2 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/ndctl/json.c b/ndctl/json.c
+>> index 23bad7f..3df3bc4 100644
+>> --- a/ndctl/json.c
+>> +++ b/ndctl/json.c
+>> @@ -381,9 +381,6 @@ struct json_object *util_region_capabilities_to_json(struct ndctl_region *region
+>>   	struct ndctl_pfn *pfn = ndctl_region_get_pfn_seed(region);
+>>   	struct ndctl_dax *dax = ndctl_region_get_dax_seed(region);
+>>   
+>> -	if (!btt || !pfn || !dax)
+>> -		return NULL;
+>> -
+> How about a one line change that avoids getting the jcaps array
+> needlessly:
+>
+> 	if (!btt && !pfn && !dax)
+> 		return NULL;
+Yes . This is the correct fix. I will add it and send V2.
+>>   	jcaps = json_object_new_array();
+>>   	if (!jcaps)
+>>   		return NULL;
+>> @@ -436,7 +433,8 @@ struct json_object *util_region_capabilities_to_json(struct ndctl_region *region
+>>   		json_object_object_add(jcap, "alignments", jobj);
+>>   	}
+>>   
+>> -	return jcaps;
+>> +	if (btt || pfn || dax)
+>> +		return jcaps;
+>>   err:
+>>   	json_object_put(jcaps);
+>>   	return NULL;
+>> -- 
+>> 2.43.5
+>>
