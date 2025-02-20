@@ -1,80 +1,80 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCCD121480E
-	for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 19:31:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22EEB264625
+	for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 19:35:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740079920; cv=none; b=Inex7ZF7jiP8brs6jOyiscY9Mhn+KCqvOLUiVtWYIanAZwesLZZwTz1l+KlYwlGHMgBAVM+V06mgnhJqY1j2wI+Ytud7YlGxFnpPIWaGoaFCwL6aTvTKOjqQg8hoednwsFwWO+XrOQlgkjTrc8YyZV6cvGRT5IX85tAb9T3sM38=
+	t=1740080160; cv=none; b=WpQ2/HQa6qRrAJND5Jfi8E1/RvMkWeh0or0WKlFNsECKAFgjueuABii0OvxMgsimQ4WcFvRshf+xyeFpWwQ8633aLufDQO+vPVl12ehiBg/gwNkCVEj8JpD7jbi7q2I1QWeLczLTwyTiW+AtfrGrqNZjBohjWs10W4lOU4k6Ou4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740079920; c=relaxed/simple;
-	bh=zKZRbmlMfiArVhLDPOtXDkIrEe3d98jChT9V5NFyQL8=;
+	s=arc-20240116; t=1740080160; c=relaxed/simple;
+	bh=r9sumPUkFDAwd49TGJqDeaX3rB6YkrFT+aTeUwfTG8Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j3qMb+cpJ0wBjm1vvRmc7nKAVMPVnyTic+ONprUDhon4Q217+EfCpOKeaWF76urjHs8qlh1sEMx8JLOlesVaiqf1qqda/TKjqWPdjZZaj6ci0OydUGwzEYfhO8Y2MGAYtwuXwP27llvbqAXo8iO4HdiojgkfOmQWI2mF4lGwqEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Fgg6DbOH; arc=none smtp.client-ip=209.85.160.170
+	 Content-Type:Content-Disposition:In-Reply-To; b=XwRQph57B3xr/2IyLDhU693nUI1PpelHH9Nxf0TJDud+D3/SPupa5fZF0nQFc1ETdFhbOIR9L78CImewipyapHZSikOPqSh0sMfoBX13+vlgXYxhkjrAA1yXQKbcZs5Z44emq+ORiLCanv9g4G1KJkks1hJviTM00jUpo2Fu4f4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=P6q3WhjE; arc=none smtp.client-ip=209.85.222.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Fgg6DbOH"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4720a115d15so20211371cf.1
-        for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 11:31:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="P6q3WhjE"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c0a159ded2so130072785a.0
+        for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 11:35:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1740079917; x=1740684717; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1740080158; x=1740684958; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5B3VvCvglVGU8mE6rfo8Oq9Xi4U6GIxDpJLBxzVgoWs=;
-        b=Fgg6DbOHQr0YEpHX+8VRRJWLvqoFFEiJWHl7ZKBzIISFDv/wnbEL+te2Ub38obsSRV
-         sXm7as4Efv2gXyWyRewNEYEZznp7lO6MztYjmjzUL7J6VyCyYXgxXQNsW9nJc3LwsSGs
-         MzCZDv9uu1mhdEjp5Nl2TwO1Wz2eDC1jQfSlH4mtkwhbmaJLDL3h9jmqV1cPeda9RqNy
-         IcVIv4xJ1MAMhtalHMxY0p/WzR+2GPhwe4hkKDg5WLpef2ym171+vlcTxB1+68YE89NR
-         9ogu2URwNEGFk11w96TX9h1Z01bUAaUikHmw+PElIfuVGkz3UTA8sFv/r9o7XjvMYkTe
-         CT0Q==
+        bh=aq0auaV2gz0U2k7ZsV3xhtnt/Z87hJ6m6ZAx0KCC4ZY=;
+        b=P6q3WhjEO/55iw+vaIfRatEQB8PzMI7Sbdu9qiLc5FG/+cLwtOerlJFRd9OEK+53Db
+         7occM8KGTcT3DIMS9aL8TqznfurrCJXP1zCFfugEaUWK1cAjh3Nwn4X/Ru14M4btWkge
+         LWf6bAA++h1G7lU3GDXjMUni0yRXV98FBb+i0qShXvl0LSnLiafi8aPdE4hQ0sQhfPDn
+         15bIuL3wVrsM4kmYIo+xVdHsbw4+mfIQQhy8Ktsj8yNAX0sCZnePVMElM+tl2JrlkQQc
+         pxaGudevsXhv2zxpcWJu23TvpheMiMFawHZUYuA0nHfVQh6IMorT8PfIRS1hzwTXTiGs
+         nIVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740079917; x=1740684717;
+        d=1e100.net; s=20230601; t=1740080158; x=1740684958;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5B3VvCvglVGU8mE6rfo8Oq9Xi4U6GIxDpJLBxzVgoWs=;
-        b=AuZ43K6fP6eijoyhCZipuboxrVgTn1Tgn3oClr86Nuh4a5fbqmq6onit21YPVHfcVB
-         eeHKUHy2fHaGR6hVoeXUnL1dKwjR7Klx7oFV93RT5QBLWMKNQ5+n7GEWxW9laRCVodCl
-         u1cSLJsuHQCPTOHfHlh/AWTA9yju29UMfQgCQDj6JxP5WuruCwKWQIAfxxmc/XAgcFhw
-         QxwFESoHKj/bu96TUhp2X6RxjYrYLCVtomFEOmtT3+SqGd1YnzhTxgHIbdJIyO8Xynep
-         VQUFt7bUguMG6x5Uy16X4Q/dlximCnVF7OX/eMphON49LG3iv90ztNhLpfitry8f8fvy
-         SHkw==
-X-Forwarded-Encrypted: i=1; AJvYcCW4fTsvLPLaPrMXtHi2qET/dPsBjtMXB8wV4jDUbBgWwQRi/itubw+remKC6pQMqnessNAR0zGEjxk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMhRTYLV7B0B8o8KJCqeIyPpAcVERL60cP9z3vKnRn73FxUqG1
-	8hwLNzhTsuSz0qEUSGLsv9b/wV9iI7Qa1NADnkBlKKq6LrbB526Lpm77OUGNSpg=
-X-Gm-Gg: ASbGnctQZS/L8KGLZkqam18I3CcOC3z6I1kLNS4XzEHHlThaFjzFiMfXuNJzYw8Nygt
-	cWjZ36jLw4HuntvtMcgO25bRMTmHRuS6C/HeCwpLJEg33J81S7ff+C7Rnt7+1/nOcO7xotCCBIb
-	iFp4VEk5mIschY29Pt1/cFYzeXR6ELDQqXEa1P4XvP/5GLr6A3tXyg2SUE+e1Vm/MUDukqcmSKJ
-	eUFh77axtAirUO7FAtGaSNmTViaOilDFZtu+9wf51ooW7B9NJedkjS/CXzj7whCEZ2401vvXiB0
-	Jflm+NwkVTBvVRQExEJ28cAfUGxuHpOffcdSDN40erZHgH58We9FT0H11bkaDsXbF0Cs/RDNAg=
+        bh=aq0auaV2gz0U2k7ZsV3xhtnt/Z87hJ6m6ZAx0KCC4ZY=;
+        b=nNkFFU1QSXO+KmcjLPDD/iVOi+haWvXpXw2fU+mWsDdmx9wgkCdohGPSRZVjMytxQU
+         tOhuHy8xyr21ljh5ZOH65Usnmpss5Nr43laI7FgqNsNCx6IHHVWVviXWNyHKE9tDrZS+
+         cNkLn6jqoLTgCdhFHIzZzdT1Na6aQssJLnr66VWTL/aXJ4gh1i7YZ5WmfBbrw6pr1ziC
+         b6i/wR6QHt6150gDKHfk29Uidch2EeI70Af7oX8CHoAXbeMSpwAe517gE38bX37fKyLf
+         TcnedHstMRKMCYPS3dg+VsjbLnOssushmKIaL8bnugxWB8JxSaWOuGW8Im5g/tEiKfut
+         fwnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVma/narNAlU8SId8pUTMMsgryVPFIapIkcpiW41k1gNPpQhFVhMMW5Q2lnHKIR+nsa4aWNIv2sDiI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNBvHiW556apurHQ3EHrEHN/kKdkl/n7G0iScI49Zif73UHzCT
+	9aU3xTPoas96kd465cZE4wxE/ShjqsFHeq2R+PtzXdhrTkok2KGIEMi5JlFyY+g=
+X-Gm-Gg: ASbGncstTVwQ5xKC0PlSXDrjd4m2tecmCaWUbYhGGIdi8bDCxQcFEJWyX21iqwsL+Cu
+	EO2+nJ+MOvPiB8gA5yGgyoF0vK2a8AgRTEHkGdg+1g6tSxhFdfsmFfZL0GWVCi+bOGJ2kN0WuCD
+	cz14a1Ce3RTNjfE+DCHckdE+182cfT4hsGKIqZsi4YxXTL5EGWvISOPNFLwAU1XZPXgx1UxC+tk
+	0ryP3+fkHZn3vCRlmyq+RVIjA97heoi22z+M6ZQ2zSYUfbA453z18kY6mlWioNL+w0C4nzsbsfQ
+	qerIDZ+Tgi/O1PG0zQX7wCjp1I+ZYhILXGuVEwpzksXfn9v4y80PPa1uFuJy7wz4VkfU+BKM1A=
 	=
-X-Google-Smtp-Source: AGHT+IFIoH2n7atYbRZlP+y6O4TJiqvU2UuxiHPMwz2VbHTgGdB81yXveIX9y8r445vXk2WbBopA1A==
-X-Received: by 2002:ac8:5f14:0:b0:471:80ef:35e7 with SMTP id d75a77b69052e-47214ffad1amr59567541cf.4.1740079917672;
-        Thu, 20 Feb 2025 11:31:57 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH6lIxZerlRr77ih8We+DvTCu5urzGeLg20c0jFu0pBr5a/Hqe/QBdSDGwo66aHfXOcSlUTMQ==
+X-Received: by 2002:a05:620a:2444:b0:7c0:9f12:2b9b with SMTP id af79cd13be357-7c0cef53633mr82056685a.35.1740080157909;
+        Thu, 20 Feb 2025 11:35:57 -0800 (PST)
 Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47207d1dc11sm25157871cf.6.2025.02.20.11.31.56
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e65d7a4430sm89493726d6.65.2025.02.20.11.35.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2025 11:31:56 -0800 (PST)
-Date: Thu, 20 Feb 2025 14:31:55 -0500
+        Thu, 20 Feb 2025 11:35:57 -0800 (PST)
+Date: Thu, 20 Feb 2025 14:35:55 -0500
 From: Gregory Price <gourry@gourry.net>
-To: Robert Richter <rrichter@amd.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v2 09/15] cxl/region: Use the endpoint's SPA range to
- create a region
-Message-ID: <Z7eDK5pk0qLbo3BA@gourry-fedora-PF4VCD3F>
-References: <20250218132356.1809075-1-rrichter@amd.com>
- <20250218132356.1809075-10-rrichter@amd.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Yang Shi <shy828301@gmail.com>, lsf-pc@lists.linux-foundation.org,
+	linux-mm@kvack.org, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: CXL Boot to Bash - Section 3: Memory (block) Hotplug
+Message-ID: <Z7eEGwFltjWaoX-r@gourry-fedora-PF4VCD3F>
+References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
+ <Z7OWmDXEYhT0BB0X@gourry-fedora-PF4VCD3F>
+ <CAHbLzkq6Me6nRaL6b09YxJ_nFkxb+n+M3-q_aJwOs2ZO4q8VCg@mail.gmail.com>
+ <Z7TLwtQY3vGUw2bO@gourry-fedora-PF4VCD3F>
+ <1b4c6442-a2b0-4290-8b89-c7b82a66d358@redhat.com>
+ <Z7TswQbpPV590ADr@gourry-fedora-PF4VCD3F>
+ <bda4cf52-d81a-4935-b45a-09e9439e33b6@redhat.com>
+ <CAHbLzkqDQcrHLPzk8n0SMgkidH2ByCqdwfYXX=uBPQfOArWf8A@mail.gmail.com>
+ <Z7d3vVdJ8UWU5oex@gourry-fedora-PF4VCD3F>
+ <4ae838ee-b079-408e-8799-e9530ca50417@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -83,13 +83,24 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250218132356.1809075-10-rrichter@amd.com>
+In-Reply-To: <4ae838ee-b079-408e-8799-e9530ca50417@redhat.com>
 
-On Tue, Feb 18, 2025 at 02:23:50PM +0100, Robert Richter wrote:
-> To create a region, SPA ranges must be used. With address translation
-> the endpoint's HPA range is not the same as the SPA range. Use the
-> previously calculated SPA range instead.
+On Thu, Feb 20, 2025 at 08:26:21PM +0100, David Hildenbrand wrote:
+> On 20.02.25 19:43, Gregory Price wrote:
 > 
-> Signed-off-by: Robert Richter <rrichter@amd.com>
+> There were ideas in how to optimize that (e.g., requiring  a new sysfs
+> interface to expose variable-sized blocks), if anybody is interested, please
+> reach out.
+> 
 
-Reviewed-by: Gregory Price <gourry@gourry.net>
+Multiple block sizes would allow managing the misaligned issues I
+discussed earlier as well (where a memory region is not aligned to the
+arch-preferred block size).  At least in that scenario, the misaligned
+regions could be brought online as minimal block size (256MB) while the
+aligned portions could be brought online in larger (2GB) chunks.
+
+Do you think this would this require a lot of churn to enable? Last I dug
+through hotplug, it seemed to assume block sizes would be uniform. I was
+hesitant to start ripping through it.
+
+~Gregory
