@@ -1,74 +1,74 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2044.outbound.protection.outlook.com [40.107.100.44])
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2043.outbound.protection.outlook.com [40.107.95.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E869E2E630
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB35F1E570E
 	for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 20:00:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.44
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.43
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740081659; cv=fail; b=eISO9JuzTKYmxqXIAtevecqm9t4Ww8qUrSmMEhx2ki8jm58E/nmFUSd7O2cZt8uZICKwykZB0ZqWNR1kZZA4K9oiJP6zY4RKAGM8rhJScMhQaMrUh1/xpRsbzA+tzkqByNQRLr1A4DSvKMRzRtf5dlDLoQaJ5HoYRLUfuBgpVio=
+	t=1740081660; cv=fail; b=lc1AoJew+UecJlUMAsCWK7kbdZjYtLU+Qvwco3/xE9ShpB8Wxb6XFpko2Njub/EnHBn9Hq6D1keW1P91QX/qp9PIN+AwkFKfPgJ1mQZ6+aTqlCH61PpA6qWLPGosf7yKWoMzNh7pFrv+ITypiMrZTnS+j+w2JPXq0Xk69qaFE4s=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740081659; c=relaxed/simple;
-	bh=tXYCGHfB6Z3Y4HHdoIRYSYNS0q73AFwT1rptBa2WE0c=;
+	s=arc-20240116; t=1740081660; c=relaxed/simple;
+	bh=TikHlPTJ9R2NT/OdwaHmgTwvtbJmuA+o+1n3Qq0XYE8=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rGzGSNV2se4GxZxQx11c0NAxJzf4lsHTT0xzkSUK+qSGZBDJjgczFjspHSqsL+DSeHH4+s5hoJ1G9eRfPq04E8eUJbAR0W842484cuX22FJN8KaJhJOIcyoyJ+QBC9MzZwJaXUQSQG7vui85TgOSrESIT8qM1rmLrpmW0p6Go7k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=f/UEAEci; arc=fail smtp.client-ip=40.107.100.44
+	 MIME-Version:Content-Type; b=hoWrrEYbb/BNR0RdSHPOXhD/np+k57M6t7GbnNrS7aR8NAU0R8jWfBSldxnbktjZHF688DlYG91Oyzu3YrQfc/w2HEHsIKg0sXR54lcfN72nLuDpBFzsHTskLi8ZWfT5xS0iVR1StzPeC5PlQhhZf6Ft9jTWQKi4O+g4BstlVT0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=GrmwJHjS; arc=fail smtp.client-ip=40.107.95.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="f/UEAEci"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="GrmwJHjS"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=aMs+uy6lFyQhLry+HO6t63hwqCT8Pi7ARWJ57YFXWFd4r5s9m200tN6kPsTVyHVtJOluhZ7kx+vHwFJ3i3OkGJc9mkLqmbVYAKxNPNddlwuBB5Pg4SiCfCeuXQ/s7wmFn/JUcOL4MHSsBIoDZ6TfVdqIvJDWTuQXRcKhJ7dm0hiRgjqJXbFZqDB1EYSFukV1PXiIyPj5xf0vA2pB+e7Agl2Qk+OMAHhDWNItYa9uw4fG3lWSbA7vaMtKVu5i+oDpe+gG5LmlpgYHIac1w+wn4BHdduGViyfDQGR/HoNw6dvJ+lL8Bhk0SKcuN1R4G20FwvvJ16ir/o9QsG5/vsOE4Q==
+ b=k4PayyhVwi5x3BZWewn967WAclV+ty52f0PYI7lwFadtDrH2C0iQQlF3zt0JBA2yImHCC4/PaK4L6i7QAyXQ7bWjQkfDPmo27DF0eQeD/qX+jkAizNQ98jN5FuSVugzvrXQOWFc+nCmoBSvLiq5iwa87XTSttTbEcMf/fZUrtxNGBbZXH5UnFP/CG9dCqVPj2MCr4wXg9e4kYXh66k+94TnZhx3/QROGuWCWTaOjUEa9Pm4yvdgf4Zm7UQcprYFhUTUpeOpl+WVBIjR5Y6pKyhsjwk18ItDGivZ8NyWrRq28RydfugP04Rcw3cbFumhbRcGnagRQ8OPrZtNseGZnEA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XuX5p2EVaZJC2GrEIGvccgxunBzx54/xXf3cb6M9TVQ=;
- b=OD8szFDl0Uw6LjYjg28c1ZYb9wtLm1COgJ9tWq96IKL3JZ6lYE86hpPHxgVcl7W2v3krNRFIV4w1Tc1zntlQf82WzgR2w0JmqVkrisyFRQ7L0gdvo85omgrH3OMDf1hkAialKwJOBjF1kwy6d8a3KnnZwhPZqqJXZiTlcURSZtXf3aOO+SNFWxXZWfEeA0MHUHaMFzLNRfl8a1KTzh3UpeVzTDBvZnktX1wm5P9oFMlTM/dH9uZhpP89xUWE37j6h1a/9CZ4PQXqysv/bCs3kfQMupFckMUKfbGbWTuiwrk2kZchuB/LuaESaesxgQDrwF7QOyP1ESl0GUHogxMRpA==
+ bh=a+fd6CgBzoHjoOi4QfPOvQ6E3QhlSZiJITppVDGNMKU=;
+ b=rJrfWy7sfSPXUqLj7pRqU/sRrDybOqQH5aAK/feoDHeWBjdOc7yrphjOo7s374FMGx40jN+H8lEXwyX2Y8JmtLd6tAmJJ6RayDqALWm0X1wwEHynEJK9U2uwYuoZMJPNrp/KzDd4MrYQnK/pal87qdITG8usBQsGcoNOnNlGwkPdUXTNVLlsQ4Q0Gtciy9rRxOqC6tCJ9xoc58YjlRpijC/EttT2Ig40sM4sqAd6wqwug+QV5zW25eBFoUQNN8eTvdRYcBYZ9nGIB7ka85/CMfv4x21BBJgRhsV7tFd/mYi5PWont8MAPjbg+UKqVruMt3BCgkGAW1cGnKpCnQ3KIg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XuX5p2EVaZJC2GrEIGvccgxunBzx54/xXf3cb6M9TVQ=;
- b=f/UEAEciVV23rLVTmPzYceNvTMJSNdPOTagQbv2nSq6Gqe553lPuVh1s5DWlTdsOQ7+QUgLQRKavlEPoFoELKWCPMapyzB1gQBnWoD5DJTs+57ZVyUOgaWq5PnrYFkaC+jw+dxnGRbvwp4hjeMwnjxRt3x9rKHk1mXdH2Mhq5c4=
-Received: from MW4PR03CA0194.namprd03.prod.outlook.com (2603:10b6:303:b8::19)
- by MW4PR12MB7032.namprd12.prod.outlook.com (2603:10b6:303:1e9::12) with
+ bh=a+fd6CgBzoHjoOi4QfPOvQ6E3QhlSZiJITppVDGNMKU=;
+ b=GrmwJHjSOuMB/J2kz0Vgq82u9Va9MW4P8E/8kWBMcB1Q8A8sZD77ivX534FnFfvUj4HfKCd6R00CPSjYciY/6Gnonrw6u14NkuWFtOY2bkeIoVrxC6pmZeGvyd1BXbR6qoJUD4ubNMIBQGKtUL6zYC3DCMzQGS2PvcplEcov5dg=
+Received: from CH5P223CA0003.NAMP223.PROD.OUTLOOK.COM (2603:10b6:610:1f3::19)
+ by MW4PR12MB5604.namprd12.prod.outlook.com (2603:10b6:303:18d::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.16; Thu, 20 Feb
- 2025 20:00:53 +0000
-Received: from CY4PEPF0000E9D5.namprd05.prod.outlook.com
- (2603:10b6:303:b8:cafe::43) by MW4PR03CA0194.outlook.office365.com
- (2603:10b6:303:b8::19) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.14 via Frontend Transport; Thu,
- 20 Feb 2025 20:00:53 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.15; Thu, 20 Feb
+ 2025 20:00:52 +0000
+Received: from CH2PEPF0000013D.namprd02.prod.outlook.com
+ (2603:10b6:610:1f3:cafe::75) by CH5P223CA0003.outlook.office365.com
+ (2603:10b6:610:1f3::19) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.16 via Frontend Transport; Thu,
+ 20 Feb 2025 20:00:52 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
 Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000E9D5.mail.protection.outlook.com (10.167.241.68) with Microsoft
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ CH2PEPF0000013D.mail.protection.outlook.com (10.167.244.69) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8466.11 via Frontend Transport; Thu, 20 Feb 2025 20:00:53 +0000
-Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ 15.20.8466.11 via Frontend Transport; Thu, 20 Feb 2025 20:00:52 +0000
+Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 20 Feb
- 2025 14:00:52 -0600
+ 2025 14:00:51 -0600
 Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB05.amd.com
  (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 20 Feb
- 2025 14:00:52 -0600
+ 2025 14:00:51 -0600
 Received: from xcbalucerop40x.xilinx.com (10.180.168.240) by
  SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Thu, 20 Feb 2025 14:00:51 -0600
+ 15.1.2507.39 via Frontend Transport; Thu, 20 Feb 2025 14:00:50 -0600
 From: <alejandro.lucero-palau@amd.com>
 To: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>
 CC: Alejandro Lucero <alucerop@amd.com>
-Subject: [RFC type cxl initialization 2/2] sfc: add cxl support
-Date: Thu, 20 Feb 2025 20:00:41 +0000
-Message-ID: <20250220200041.3891165-3-alejandro.lucero-palau@amd.com>
+Subject: [RFC type cxl initialization 1/2] cxl: add type2 device basic support
+Date: Thu, 20 Feb 2025 20:00:40 +0000
+Message-ID: <20250220200041.3891165-2-alejandro.lucero-palau@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250220200041.3891165-1-alejandro.lucero-palau@amd.com>
 References: <20250220200041.3891165-1-alejandro.lucero-palau@amd.com>
@@ -84,278 +84,759 @@ Received-SPF: None (SATLEXMB05.amd.com: alejandro.lucero-palau@amd.com does
  not designate permitted sender hosts)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D5:EE_|MW4PR12MB7032:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2546a352-50f6-4cd0-2363-08dd51e947ff
+X-MS-TrafficTypeDiagnostic: CH2PEPF0000013D:EE_|MW4PR12MB5604:EE_
+X-MS-Office365-Filtering-Correlation-Id: 01413782-e540-4e91-fac3-08dd51e94741
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|36860700013|82310400026;
+	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700013;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?tCpk3YjzUQz8I6sI66s9IHBcv+36EwEdO13mgbUFLwhYlfHpoY1J370MT1pt?=
- =?us-ascii?Q?J6RdBWZMSswheuvRsBUPUHsD0UCi4LhKfLTwvoGMcaA4PIrAYqUz3BRF9Gfo?=
- =?us-ascii?Q?6st/GaOJjXoE7DHXfDpBI4kFks/aROfk7tURTe+AH5CXJgwRLhr9S9eHH9jj?=
- =?us-ascii?Q?gMhUCxjbQpqNdbYROQFmVJ5V9KIr7MR5NHWe7O9mfuMxy6jSnYgym2nOwfez?=
- =?us-ascii?Q?QSFJ/tlziJP0/z6Ekz0oDtaRRNbRmOEFaeZJ1Q1XmR8t4BYzgsUd/zSWgkyk?=
- =?us-ascii?Q?vO0PjXxcsto/6LlXxL1ai+R89/eaxaDgWKm7xw2knm7/3/TkO3zn7fQ+QAm6?=
- =?us-ascii?Q?YjQCaEgdr343BlxJNOnLLZpmXaA0pvRHvNfoRGSPbp22jTPBAEQtsaOiUQI1?=
- =?us-ascii?Q?74m2ihAuFsDA1+9pbNPOYEMwoi8Uyt7dFvpaM1wtI7JfGcLvnSGwx58pvC6W?=
- =?us-ascii?Q?uvxx5RYOPQlLKNJd9TSUj6OnH3cQkpBKqWQROXSQKVZXahMz2gWWu2tMdHi0?=
- =?us-ascii?Q?hp0aps7redZ3EdKTXHajphOsJ1WmOjnuvPaYpIZI1v5O1Uwdvnu9BhAwoig+?=
- =?us-ascii?Q?aFzXWipWvjKQOWEVo9N1NeghZktOOfU+9Pi8GD0NEu0DTeCqUh1gX9yd3FXm?=
- =?us-ascii?Q?fTzg/nB+33SzGHGsZAsLzwvph7FwmNNAOdtDMfPUrIGwYdsA5gp1csd4PxlJ?=
- =?us-ascii?Q?Bz6k1gVl6VmAWmypDbDCnmW7y3Yun2HtpU89rHpAxXE00Gr/JWJLormpBtyN?=
- =?us-ascii?Q?MEbeGkZUvqR4I7spSR4lYnPWPV4H/MqC64xupEdIWPChaGSUGxDEPlroVe+/?=
- =?us-ascii?Q?iI5y0S6KgKFxlDIARAFhxBTTcrORlQgL8rmrjnTr1yvFrIySiNcnlLUoz/mA?=
- =?us-ascii?Q?Pq/9vjfNohFZ/kHCbhalLYerQV/GVUfXGmxBf2DaYrndePbDjn1/CRB/pK2v?=
- =?us-ascii?Q?nSGc8NAQoTNTsYofiJoxmg5FILhNWSJDCY13/PIQ26d4Bs2qazIMT/7D1pLG?=
- =?us-ascii?Q?hb/x1uC40Sq3+XZEoUd9oiR/DSYraJL0mYwkzhlXjx1vIXMm6QSKVcI40qvW?=
- =?us-ascii?Q?7kvrNE8RH6YBNg0iAjLi3D8/bqoYrNVK0q7gPpfkQrrHxrt+nKgCGOHBvc+6?=
- =?us-ascii?Q?4N0wYgiezTAkahXvYn8AnwcPpfFjwfPcXrBYnC5j29w8NapsZEBz3jdqqGZc?=
- =?us-ascii?Q?5QlBq2K5fVjsbtGfW3qWpChRI5pVGAGaRU3e/KFewSe/T0ONo4ULXgCwMpbH?=
- =?us-ascii?Q?IlQJJE7wkKtLHatv0Qip8beW0B14AFJB47xT2ykjmdAdUwAa2pcXlJfWP4SD?=
- =?us-ascii?Q?mb3MYWiRfK7s4Ak174Rgssn2IhKZtSzIsF/WzBEzc9VDkIgx64iqayK2v7+y?=
- =?us-ascii?Q?Ry1I+pcjxSFv1ZPIBzdZ3wPagobdNLb2m9x55XAuXc7wXA4Z3WmELq1egTPi?=
- =?us-ascii?Q?atBRF1oQalVG8hnCsB0XivxwQNKh+Xg1DKkanKm4pHMcmSPfH0n6HWtQAs9O?=
- =?us-ascii?Q?S6FauwNVUvRnWFY=3D?=
+	=?us-ascii?Q?p3P0rUWThlA1D3Vl88xl5Xgbg3s1xk++iJlw3tVaSP/nTRGA9hA6HjXLx309?=
+ =?us-ascii?Q?hLB4Un3qJYRLhjJSw5AFH3GWaB2ZoVEnTY7kuT4ygVzaQw/1Cp1tEP3dIiCC?=
+ =?us-ascii?Q?zTnfoE6Ul5AhS5PMrQGlWIz+OK6wahvrsmfTGowrdUALQPuB9EKp9fOEZccU?=
+ =?us-ascii?Q?3QQ7TqreK90Ty3QwbM0JFAZh+zK9UNYDrC1NDRcHzlGctWVqAm3JZQQ6h+IG?=
+ =?us-ascii?Q?B7AHlCiRMPVtroAgCnt/alFnRSAgM69cZ5qFYBXryepWtT3k8XGFrzPGRKvr?=
+ =?us-ascii?Q?AAQ0uJqVkYe7yhEZKyesodspD8Jtzlv2883I+irLPRZi+BwFFBEjhNDtUr/0?=
+ =?us-ascii?Q?D/DseUUYHQLk9nJwRd8EB/CvlyTAbEt8Uzfk86bsgEfJJKkRwocHhS9vkxDq?=
+ =?us-ascii?Q?zh5VVIqBqTo9zcxMaO9kQNiqS1TZuidEr7YaOVx66aFaI2Z+PrlvHimfpil/?=
+ =?us-ascii?Q?XhQjVSc3iUoicvJL/MDIpIpbPKFj6UCA0Ales935igYhfpWxSKvsXQ/aqbdR?=
+ =?us-ascii?Q?Fj8wagRJRYQ27OruPZMDzEgqoN7wQ+NxIs3t/qEvpp51f3eHFpwkZewzo0JE?=
+ =?us-ascii?Q?SqIk9soVJiR8aC175qCdgeO7ouH2KMF51OjFWykf/Ed5AyDb5JswEstyt+s9?=
+ =?us-ascii?Q?xdOt5fh9SuqmpRAPmQ9R02pbhWNTg3d411i+jenuLEdncDG0JIBJTa10v+ch?=
+ =?us-ascii?Q?yaMQc5IDQaQP2YGVR4URKpQ0I6XnDinl/I25X1wBtp6R2DzCRnPsbWFFyf06?=
+ =?us-ascii?Q?t3wUN3WBqA/cL9/5wgH84WRKbFebgD+EP00aPqQhHJ301TjwMWUgqXXoyd9K?=
+ =?us-ascii?Q?/R2HAE2O9oQZ5mAA4V7WK9kUlHdXQ062+ZWitPxYQDtRy7dWbUiVzFmekbhK?=
+ =?us-ascii?Q?S3I8jKWp5sf/O2s6ApuHUX4o9WjRRZ2hli3S2yJYC0XM6DICv/waOQHoR4V2?=
+ =?us-ascii?Q?NYOThJPgNmeC3LLGsLe/dUr9tIA8zNLa+rDmUjpfYhcVsH9SC8wwX/WxeyXE?=
+ =?us-ascii?Q?y+h2ujWZCs0g1CHyrX1o7VgB4UwRyHH+GWXnBx4ZMzn25riDWY9fhLtKikKK?=
+ =?us-ascii?Q?9ISf3HpMAMy0/WJv0/m4JDVIqI0bmQC27McPr4Q2wgI0EEMlvI2lSqXIdgpQ?=
+ =?us-ascii?Q?M5A6z5is1aMMStWL3a5p06UMpvvtBwjQ68NwxRswMrtwVhiTMUv+f7lHjhGo?=
+ =?us-ascii?Q?KtR/yHnjWvVJW5nF2jlT24nqWCXd7H11Wge7NpJwndxMxj7Z3rcITfGrQIWx?=
+ =?us-ascii?Q?2byMin8rPJ/dNaHVcDvtIwm8ippyCdS1V2lvgJ8+C1yJtQ9aofsPRDUVYw1/?=
+ =?us-ascii?Q?/J95j43eaFuMb9qfZCntKI9x4dZG6iJWIgxnobrbxQMx5ADlooyN51c/NPOB?=
+ =?us-ascii?Q?Djw8GN1Y2y5DOF793AKbONkuDSBlzAFH4EwqgsNFD7JMzu9ADJvzGVtz4VEm?=
+ =?us-ascii?Q?DKd1RboI+FGaa3Wm/V/S07pW2XahQqHrD2jvR1H8pGezSnwvDVkSP5FJPpNL?=
+ =?us-ascii?Q?GN4jZEviBEvwI4k=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(36860700013)(82310400026);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700013);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2025 20:00:53.1892
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2025 20:00:52.0589
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2546a352-50f6-4cd0-2363-08dd51e947ff
+X-MS-Exchange-CrossTenant-Network-Message-Id: 01413782-e540-4e91-fac3-08dd51e94741
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000E9D5.namprd05.prod.outlook.com
+	CH2PEPF0000013D.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7032
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB5604
 
 From: Alejandro Lucero <alucerop@amd.com>
 
-Add CXL initialization based on new CXL API for accel drivers and make
-it dependent on kernel CXL configuration.
+Differentiate CXL memory expanders (type 3) from CXL device accelerators
+(type 2) with a new function for initializing cxl_dev_state and a macro
+for helping accel drivers to embed cxl_dev_state inside a private
+struct.
+
+Move structs to include/cxl as the size of the accel driver private
+struct embedding cxl_dev_state needs to know the size of this struct.
 
 Signed-off-by: Alejandro Lucero <alucerop@amd.com>
 ---
- drivers/net/ethernet/sfc/Kconfig      |  6 +++
- drivers/net/ethernet/sfc/Makefile     |  1 +
- drivers/net/ethernet/sfc/efx.c        | 15 +++++++-
- drivers/net/ethernet/sfc/efx_cxl.c    | 53 +++++++++++++++++++++++++++
- drivers/net/ethernet/sfc/efx_cxl.h    | 40 ++++++++++++++++++++
- drivers/net/ethernet/sfc/net_driver.h | 10 +++++
- 6 files changed, 124 insertions(+), 1 deletion(-)
- create mode 100644 drivers/net/ethernet/sfc/efx_cxl.c
- create mode 100644 drivers/net/ethernet/sfc/efx_cxl.h
+ drivers/cxl/core/mbox.c   |   3 +-
+ drivers/cxl/core/memdev.c |  25 +++++
+ drivers/cxl/core/pci.c    |   1 +
+ drivers/cxl/core/regs.c   |   1 +
+ drivers/cxl/cxl.h         |  98 +----------------
+ drivers/cxl/cxlmem.h      | 108 +-----------------
+ drivers/cxl/cxlpci.h      |  21 ----
+ drivers/cxl/pci.c         |  17 +--
+ include/cxl/cxl.h         | 225 ++++++++++++++++++++++++++++++++++++++
+ include/cxl/pci.h         |  23 ++++
+ 10 files changed, 293 insertions(+), 229 deletions(-)
+ create mode 100644 include/cxl/cxl.h
+ create mode 100644 include/cxl/pci.h
 
-diff --git a/drivers/net/ethernet/sfc/Kconfig b/drivers/net/ethernet/sfc/Kconfig
-index 3eb55dcfa8a6..459db14e5ef9 100644
---- a/drivers/net/ethernet/sfc/Kconfig
-+++ b/drivers/net/ethernet/sfc/Kconfig
-@@ -65,6 +65,12 @@ config SFC_MCDI_LOGGING
- 	  Driver-Interface) commands and responses, allowing debugging of
- 	  driver/firmware interaction.  The tracing is actually enabled by
- 	  a sysfs file 'mcdi_logging' under the PCI device.
-+config SFC_CXL
-+	bool "Solarflare SFC9100-family CXL support"
-+	depends on SFC && CXL_BUS && !(SFC=y && CXL_BUS=m)
-+	depends on CXL_BUS >= SFC
-+	default SFC
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index c5eedcae3b02..ae92db38a921 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -1426,7 +1426,8 @@ int cxl_mailbox_init(struct cxl_mailbox *cxl_mbox, struct device *host)
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_mailbox_init, "CXL");
+ 
+-struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev)
++struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev, u64 serial,
++						 u16 dvsec)
+ {
+ 	struct cxl_memdev_state *mds;
+ 
+diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+index 2914e3ff104b..14bd74823467 100644
+--- a/drivers/cxl/core/memdev.c
++++ b/drivers/cxl/core/memdev.c
+@@ -636,6 +636,31 @@ static void detach_memdev(struct work_struct *work)
+ 
+ static struct lock_class_key cxl_memdev_key;
+ 
++void cxl_dev_state_init(struct cxl_dev_state *cxlds, struct device *dev,
++			enum cxl_devtype type, u64 serial, u16 dvsec)
++{
++	cxlds->dev = dev;
++	cxlds->type = type;
++	cxlds->serial = serial;
++	cxlds->cxl_dvsec = dvsec;
++	cxlds->reg_map.host = dev;
++	cxlds->reg_map.resource = CXL_RESOURCE_NONE;
++}
 +
- 
- source "drivers/net/ethernet/sfc/falcon/Kconfig"
- source "drivers/net/ethernet/sfc/siena/Kconfig"
-diff --git a/drivers/net/ethernet/sfc/Makefile b/drivers/net/ethernet/sfc/Makefile
-index 8f446b9bd5ee..e909cafd5908 100644
---- a/drivers/net/ethernet/sfc/Makefile
-+++ b/drivers/net/ethernet/sfc/Makefile
-@@ -13,6 +13,7 @@ sfc-$(CONFIG_SFC_SRIOV)	+= sriov.o ef10_sriov.o ef100_sriov.o ef100_rep.o \
-                            mae.o tc.o tc_bindings.o tc_counters.o \
-                            tc_encap_actions.o tc_conntrack.o
- 
-+sfc-$(CONFIG_SFC_CXL)	+= efx_cxl.o
- obj-$(CONFIG_SFC)	+= sfc.o
- 
- obj-$(CONFIG_SFC_FALCON) += falcon/
-diff --git a/drivers/net/ethernet/sfc/efx.c b/drivers/net/ethernet/sfc/efx.c
-index 650136dfc642..f60f9153f018 100644
---- a/drivers/net/ethernet/sfc/efx.c
-+++ b/drivers/net/ethernet/sfc/efx.c
-@@ -34,6 +34,7 @@
- #include "selftest.h"
- #include "sriov.h"
- #include "efx_devlink.h"
-+#include "efx_cxl.h"
- 
- #include "mcdi_port_common.h"
- #include "mcdi_pcol.h"
-@@ -1004,12 +1005,15 @@ static void efx_pci_remove(struct pci_dev *pci_dev)
- 	efx_pci_remove_main(efx);
- 
- 	efx_fini_io(efx);
++struct cxl_dev_state *_cxl_dev_state_create(struct device *dev,
++					   u64 serial, u16 dvsec,
++					   size_t size)
++{
++	struct cxl_dev_state *cxlds __free(kfree) = kzalloc(size, GFP_KERNEL);
 +
-+	probe_data = container_of(efx, struct efx_probe_data, efx);
-+	efx_cxl_exit(probe_data);
++	if (!cxlds)
++		return NULL;
 +
- 	pci_dbg(efx->pci_dev, "shutdown successful\n");
++	cxl_dev_state_init(cxlds, dev, CXL_DEVTYPE_DEVMEM, serial, dvsec);
++	return_ptr(cxlds);
++}
++EXPORT_SYMBOL_NS_GPL(_cxl_dev_state_create, "CXL");
++
+ static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
+ 					   const struct file_operations *fops)
+ {
+diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+index a5c65f79db18..36a1cf4e59fb 100644
+--- a/drivers/cxl/core/pci.c
++++ b/drivers/cxl/core/pci.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /* Copyright(c) 2021 Intel Corporation. All rights reserved. */
++#include <cxl/pci.h>
+ #include <linux/units.h>
+ #include <linux/io-64-nonatomic-lo-hi.h>
+ #include <linux/device.h>
+diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+index 117c2e94c761..58a942a4946c 100644
+--- a/drivers/cxl/core/regs.c
++++ b/drivers/cxl/core/regs.c
+@@ -4,6 +4,7 @@
+ #include <linux/device.h>
+ #include <linux/slab.h>
+ #include <linux/pci.h>
++#include <cxl/pci.h>
+ #include <cxlmem.h>
+ #include <cxlpci.h>
+ #include <pmu.h>
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 6baec4ba9141..556b1ed24f0e 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -9,8 +9,8 @@
+ #include <linux/notifier.h>
+ #include <linux/bitops.h>
+ #include <linux/log2.h>
+-#include <linux/node.h>
+ #include <linux/io.h>
++#include <cxl/cxl.h>
  
- 	efx_fini_devlink_and_unlock(efx);
- 	efx_fini_struct(efx);
- 	free_netdev(efx->net_dev);
--	probe_data = container_of(efx, struct efx_probe_data, efx);
- 	kfree(probe_data);
+ extern const struct nvdimm_security_ops *cxl_security_ops;
+ 
+@@ -200,97 +200,6 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
+ #define   CXLDEV_MBOX_BG_CMD_COMMAND_VENDOR_MASK GENMASK_ULL(63, 48)
+ #define CXLDEV_MBOX_PAYLOAD_OFFSET 0x20
+ 
+-/*
+- * Using struct_group() allows for per register-block-type helper routines,
+- * without requiring block-type agnostic code to include the prefix.
+- */
+-struct cxl_regs {
+-	/*
+-	 * Common set of CXL Component register block base pointers
+-	 * @hdm_decoder: CXL 2.0 8.2.5.12 CXL HDM Decoder Capability Structure
+-	 * @ras: CXL 2.0 8.2.5.9 CXL RAS Capability Structure
+-	 */
+-	struct_group_tagged(cxl_component_regs, component,
+-		void __iomem *hdm_decoder;
+-		void __iomem *ras;
+-	);
+-	/*
+-	 * Common set of CXL Device register block base pointers
+-	 * @status: CXL 2.0 8.2.8.3 Device Status Registers
+-	 * @mbox: CXL 2.0 8.2.8.4 Mailbox Registers
+-	 * @memdev: CXL 2.0 8.2.8.5 Memory Device Registers
+-	 */
+-	struct_group_tagged(cxl_device_regs, device_regs,
+-		void __iomem *status, *mbox, *memdev;
+-	);
+-
+-	struct_group_tagged(cxl_pmu_regs, pmu_regs,
+-		void __iomem *pmu;
+-	);
+-
+-	/*
+-	 * RCH downstream port specific RAS register
+-	 * @aer: CXL 3.0 8.2.1.1 RCH Downstream Port RCRB
+-	 */
+-	struct_group_tagged(cxl_rch_regs, rch_regs,
+-		void __iomem *dport_aer;
+-	);
+-
+-	/*
+-	 * RCD upstream port specific PCIe cap register
+-	 * @pcie_cap: CXL 3.0 8.2.1.2 RCD Upstream Port RCRB
+-	 */
+-	struct_group_tagged(cxl_rcd_regs, rcd_regs,
+-		void __iomem *rcd_pcie_cap;
+-	);
+-};
+-
+-struct cxl_reg_map {
+-	bool valid;
+-	int id;
+-	unsigned long offset;
+-	unsigned long size;
+-};
+-
+-struct cxl_component_reg_map {
+-	struct cxl_reg_map hdm_decoder;
+-	struct cxl_reg_map ras;
+-};
+-
+-struct cxl_device_reg_map {
+-	struct cxl_reg_map status;
+-	struct cxl_reg_map mbox;
+-	struct cxl_reg_map memdev;
+-};
+-
+-struct cxl_pmu_reg_map {
+-	struct cxl_reg_map pmu;
+-};
+-
+-/**
+- * struct cxl_register_map - DVSEC harvested register block mapping parameters
+- * @host: device for devm operations and logging
+- * @base: virtual base of the register-block-BAR + @block_offset
+- * @resource: physical resource base of the register block
+- * @max_size: maximum mapping size to perform register search
+- * @reg_type: see enum cxl_regloc_type
+- * @component_map: cxl_reg_map for component registers
+- * @device_map: cxl_reg_maps for device registers
+- * @pmu_map: cxl_reg_maps for CXL Performance Monitoring Units
+- */
+-struct cxl_register_map {
+-	struct device *host;
+-	void __iomem *base;
+-	resource_size_t resource;
+-	resource_size_t max_size;
+-	u8 reg_type;
+-	union {
+-		struct cxl_component_reg_map component_map;
+-		struct cxl_device_reg_map device_map;
+-		struct cxl_pmu_reg_map pmu_map;
+-	};
+-};
+-
+ void cxl_probe_component_regs(struct device *dev, void __iomem *base,
+ 			      struct cxl_component_reg_map *map);
+ void cxl_probe_device_regs(struct device *dev, void __iomem *base,
+@@ -480,11 +389,6 @@ struct cxl_region_params {
+ 	int nr_targets;
  };
  
-@@ -1214,6 +1218,15 @@ static int efx_pci_probe(struct pci_dev *pci_dev,
- 	if (rc)
- 		goto fail2;
+-enum cxl_partition_mode {
+-	CXL_PARTMODE_RAM,
+-	CXL_PARTMODE_PMEM,
+-};
+-
+ /*
+  * Indicate whether this region has been assembled by autodetection or
+  * userspace assembly. Prevent endpoint decoders outside of automatic
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index 8e1e46c348f5..0bdf581044da 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -4,9 +4,9 @@
+ #define __CXL_MEM_H__
+ #include <uapi/linux/cxl_mem.h>
+ #include <linux/pci.h>
+-#include <linux/cdev.h>
+ #include <linux/uuid.h>
+ #include <linux/node.h>
++#include <cxl/cxl.h>
+ #include <cxl/event.h>
+ #include <cxl/mailbox.h>
+ #include "cxl.h"
+@@ -34,30 +34,6 @@
+ 	(FIELD_GET(CXLMDEV_RESET_NEEDED_MASK, status) !=                       \
+ 	 CXLMDEV_RESET_NEEDED_NOT)
  
-+	/* A successful cxl initialization implies a CXL region created to be
-+	 * used for PIO buffers. If there is no CXL support, or initialization
-+	 * fails, efx_cxl_pio_initialised wll be false and legacy PIO buffers
-+	 * defined at specific PCI BAR regions will be used.
-+	 */
-+	rc = efx_cxl_init(probe_data);
-+	if (rc)
-+		pci_err(pci_dev, "CXL initialization failed with error %d\n", rc);
-+
- 	rc = efx_pci_probe_post_io(efx);
- 	if (rc) {
- 		/* On failure, retry once immediately.
-diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
-new file mode 100644
-index 000000000000..d34aedbcaddf
---- /dev/null
-+++ b/drivers/net/ethernet/sfc/efx_cxl.c
-@@ -0,0 +1,53 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/****************************************************************************
-+ *
-+ * Driver for AMD network controllers and boards
-+ * Copyright (C) 2024, Advanced Micro Devices, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License version 2 as published
-+ * by the Free Software Foundation, incorporated herein by reference.
-+ */
-+
+-/**
+- * struct cxl_memdev - CXL bus object representing a Type-3 Memory Device
+- * @dev: driver core device object
+- * @cdev: char dev core object for ioctl operations
+- * @cxlds: The device state backing this device
+- * @detach_work: active memdev lost a port in its ancestry
+- * @cxl_nvb: coordinate removal of @cxl_nvd if present
+- * @cxl_nvd: optional bridge to an nvdimm if the device supports pmem
+- * @endpoint: connection to the CXL port topology for this memory device
+- * @id: id number of this memdev instance.
+- * @depth: endpoint port depth
+- */
+-struct cxl_memdev {
+-	struct device dev;
+-	struct cdev cdev;
+-	struct cxl_dev_state *cxlds;
+-	struct work_struct detach_work;
+-	struct cxl_nvdimm_bridge *cxl_nvb;
+-	struct cxl_nvdimm *cxl_nvd;
+-	struct cxl_port *endpoint;
+-	int id;
+-	int depth;
+-};
+-
+ static inline struct cxl_memdev *to_cxl_memdev(struct device *dev)
+ {
+ 	return container_of(dev, struct cxl_memdev, dev);
+@@ -357,83 +333,6 @@ struct cxl_security_state {
+ 	struct kernfs_node *sanitize_node;
+ };
+ 
+-/*
+- * enum cxl_devtype - delineate type-2 from a generic type-3 device
+- * @CXL_DEVTYPE_DEVMEM - Vendor specific CXL Type-2 device implementing HDM-D or
+- *			 HDM-DB, no requirement that this device implements a
+- *			 mailbox, or other memory-device-standard manageability
+- *			 flows.
+- * @CXL_DEVTYPE_CLASSMEM - Common class definition of a CXL Type-3 device with
+- *			   HDM-H and class-mandatory memory device registers
+- */
+-enum cxl_devtype {
+-	CXL_DEVTYPE_DEVMEM,
+-	CXL_DEVTYPE_CLASSMEM,
+-};
+-
+-/**
+- * struct cxl_dpa_perf - DPA performance property entry
+- * @dpa_range: range for DPA address
+- * @coord: QoS performance data (i.e. latency, bandwidth)
+- * @cdat_coord: raw QoS performance data from CDAT
+- * @qos_class: QoS Class cookies
+- */
+-struct cxl_dpa_perf {
+-	struct range dpa_range;
+-	struct access_coordinate coord[ACCESS_COORDINATE_MAX];
+-	struct access_coordinate cdat_coord[ACCESS_COORDINATE_MAX];
+-	int qos_class;
+-};
+-
+-/**
+- * struct cxl_dpa_partition - DPA partition descriptor
+- * @res: shortcut to the partition in the DPA resource tree (cxlds->dpa_res)
+- * @perf: performance attributes of the partition from CDAT
+- * @mode: operation mode for the DPA capacity, e.g. ram, pmem, dynamic...
+- */
+-struct cxl_dpa_partition {
+-	struct resource res;
+-	struct cxl_dpa_perf perf;
+-	enum cxl_partition_mode mode;
+-};
+-
+-/**
+- * struct cxl_dev_state - The driver device state
+- *
+- * cxl_dev_state represents the CXL driver/device state.  It provides an
+- * interface to mailbox commands as well as some cached data about the device.
+- * Currently only memory devices are represented.
+- *
+- * @dev: The device associated with this CXL state
+- * @cxlmd: The device representing the CXL.mem capabilities of @dev
+- * @reg_map: component and ras register mapping parameters
+- * @regs: Parsed register blocks
+- * @cxl_dvsec: Offset to the PCIe device DVSEC
+- * @rcd: operating in RCD mode (CXL 3.0 9.11.8 CXL Devices Attached to an RCH)
+- * @media_ready: Indicate whether the device media is usable
+- * @dpa_res: Overall DPA resource tree for the device
+- * @part: DPA partition array
+- * @nr_partitions: Number of DPA partitions
+- * @serial: PCIe Device Serial Number
+- * @type: Generic Memory Class device or Vendor Specific Memory device
+- * @cxl_mbox: CXL mailbox context
+- */
+-struct cxl_dev_state {
+-	struct device *dev;
+-	struct cxl_memdev *cxlmd;
+-	struct cxl_register_map reg_map;
+-	struct cxl_regs regs;
+-	int cxl_dvsec;
+-	bool rcd;
+-	bool media_ready;
+-	struct resource dpa_res;
+-	struct cxl_dpa_partition part[CXL_NR_PARTITIONS_MAX];
+-	unsigned int nr_partitions;
+-	u64 serial;
+-	enum cxl_devtype type;
+-	struct cxl_mailbox cxl_mbox;
+-};
+-
+ static inline resource_size_t cxl_pmem_size(struct cxl_dev_state *cxlds)
+ {
+ 	/*
+@@ -812,7 +711,10 @@ int cxl_dev_state_identify(struct cxl_memdev_state *mds);
+ int cxl_await_media_ready(struct cxl_dev_state *cxlds);
+ int cxl_enumerate_cmds(struct cxl_memdev_state *mds);
+ int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info);
+-struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev);
++struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev, u64 serial,
++						 u16 dvsec);
++void cxl_dev_state_init(struct cxl_dev_state *cxlds, struct device *dev,
++			enum cxl_devtype type, u64 serial, u16 dvsec);
+ void set_exclusive_cxl_commands(struct cxl_memdev_state *mds,
+ 				unsigned long *cmds);
+ void clear_exclusive_cxl_commands(struct cxl_memdev_state *mds,
+diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+index 54e219b0049e..570e53e26f11 100644
+--- a/drivers/cxl/cxlpci.h
++++ b/drivers/cxl/cxlpci.h
+@@ -7,29 +7,8 @@
+ 
+ #define CXL_MEMORY_PROGIF	0x10
+ 
+-/*
+- * See section 8.1 Configuration Space Registers in the CXL 2.0
+- * Specification. Names are taken straight from the specification with "CXL" and
+- * "DVSEC" redundancies removed. When obvious, abbreviations may be used.
+- */
+ #define PCI_DVSEC_HEADER1_LENGTH_MASK	GENMASK(31, 20)
+ 
+-/* CXL 2.0 8.1.3: PCIe DVSEC for CXL Device */
+-#define CXL_DVSEC_PCIE_DEVICE					0
+-#define   CXL_DVSEC_CAP_OFFSET		0xA
+-#define     CXL_DVSEC_MEM_CAPABLE	BIT(2)
+-#define     CXL_DVSEC_HDM_COUNT_MASK	GENMASK(5, 4)
+-#define   CXL_DVSEC_CTRL_OFFSET		0xC
+-#define     CXL_DVSEC_MEM_ENABLE	BIT(2)
+-#define   CXL_DVSEC_RANGE_SIZE_HIGH(i)	(0x18 + (i * 0x10))
+-#define   CXL_DVSEC_RANGE_SIZE_LOW(i)	(0x1C + (i * 0x10))
+-#define     CXL_DVSEC_MEM_INFO_VALID	BIT(0)
+-#define     CXL_DVSEC_MEM_ACTIVE	BIT(1)
+-#define     CXL_DVSEC_MEM_SIZE_LOW_MASK	GENMASK(31, 28)
+-#define   CXL_DVSEC_RANGE_BASE_HIGH(i)	(0x20 + (i * 0x10))
+-#define   CXL_DVSEC_RANGE_BASE_LOW(i)	(0x24 + (i * 0x10))
+-#define     CXL_DVSEC_MEM_BASE_LOW_MASK	GENMASK(31, 28)
+-
+ #define CXL_DVSEC_RANGE_MAX		2
+ 
+ /* CXL 2.0 8.1.4: Non-CXL Function Map DVSEC */
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index b2c943a4de0a..006a0036e779 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -1,5 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /* Copyright(c) 2020 Intel Corporation. All rights reserved. */
++#include <cxl/cxl.h>
 +#include <cxl/pci.h>
-+#include <linux/pci.h>
-+
-+#include "net_driver.h"
-+#include "efx_cxl.h"
-+
-+#define EFX_CTPIO_BUFFER_SIZE	SZ_256M
-+
-+int efx_cxl_init(struct efx_probe_data *probe_data)
-+{
-+	struct efx_nic *efx = &probe_data->efx;
-+	struct pci_dev *pci_dev = efx->pci_dev;
-+	struct efx_cxl *cxl;
+ #include <linux/unaligned.h>
+ #include <linux/io-64-nonatomic-lo-hi.h>
+ #include <linux/moduleparam.h>
+@@ -911,6 +913,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	int rc, pmu_count;
+ 	unsigned int i;
+ 	bool irq_avail;
 +	u16 dvsec;
-+
-+	probe_data->cxl_pio_initialised = false;
-+
-+	dvsec = pci_find_dvsec_capability(pci_dev, PCI_VENDOR_ID_CXL,
+ 
+ 	/*
+ 	 * Double check the anonymous union trickery in struct cxl_regs
+@@ -924,19 +927,19 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 		return rc;
+ 	pci_set_master(pdev);
+ 
+-	mds = cxl_memdev_state_create(&pdev->dev);
++	dvsec = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
 +					  CXL_DVSEC_PCIE_DEVICE);
 +	if (!dvsec)
-+		return 0;
++		dev_warn(&pdev->dev,
++			 "Device DVSEC not present, skip CXL.mem init\n");
 +
-+	pci_dbg(pci_dev, "CXL_DVSEC_PCIE_DEVICE capability found\n");
-+
-+	cxl = cxl_dev_state_create(&pci_dev->dev, pci_dev->dev.id,
-+					  dvsec, struct efx_cxl, cxlds);
-+
-+	if (!cxl)
-+		return -ENOMEM;
-+
-+	probe_data->cxl = cxl;
-+
-+	return 0;
-+}
-+
-+void efx_cxl_exit(struct efx_probe_data *probe_data)
-+{
-+	if (probe_data->cxl)
-+		kfree(probe_data->cxl);
-+}
-+
-+MODULE_IMPORT_NS("CXL");
-diff --git a/drivers/net/ethernet/sfc/efx_cxl.h b/drivers/net/ethernet/sfc/efx_cxl.h
++	mds = cxl_memdev_state_create(&pdev->dev, pci_get_dsn(pdev), dvsec);
+ 	if (IS_ERR(mds))
+ 		return PTR_ERR(mds);
+ 	cxlds = &mds->cxlds;
+ 	pci_set_drvdata(pdev, cxlds);
+ 
+ 	cxlds->rcd = is_cxl_restricted(pdev);
+-	cxlds->serial = pci_get_dsn(pdev);
+-	cxlds->cxl_dvsec = pci_find_dvsec_capability(
+-		pdev, PCI_VENDOR_ID_CXL, CXL_DVSEC_PCIE_DEVICE);
+-	if (!cxlds->cxl_dvsec)
+-		dev_warn(&pdev->dev,
+-			 "Device DVSEC not present, skip CXL.mem init\n");
+ 
+ 	rc = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_MEMDEV, &map);
+ 	if (rc)
+diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
 new file mode 100644
-index 000000000000..67be714b57d1
+index 000000000000..dc8a68104bfa
 --- /dev/null
-+++ b/drivers/net/ethernet/sfc/efx_cxl.h
-@@ -0,0 +1,40 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/****************************************************************************
-+ * Driver for AMD network controllers and boards
-+ * Copyright (C) 2024, Advanced Micro Devices, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License version 2 as published
-+ * by the Free Software Foundation, incorporated herein by reference.
++++ b/include/cxl/cxl.h
+@@ -0,0 +1,225 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Copyright(c) 2025 Advanced Micro Devices, Inc. */
++
++#ifndef __CXL_H
++#define __CXL_H
++
++#include <linux/cdev.h>
++#include <linux/node.h>
++#include <linux/ioport.h>
++#include <cxl/mailbox.h>
++
++/*
++ * enum cxl_devtype - delineate type-2 from a generic type-3 device
++ * @CXL_DEVTYPE_DEVMEM - Vendor specific CXL Type-2 device implementing HDM-D or
++ *			 HDM-DB, no requirement that this device implements a
++ *			 mailbox, or other memory-device-standard manageability
++ *			 flows.
++ * @CXL_DEVTYPE_CLASSMEM - Common class definition of a CXL Type-3 device with
++ *			   HDM-H and class-mandatory memory device registers
 + */
-+
-+#ifndef EFX_CXL_H
-+#define EFX_CXL_H
-+
-+#ifdef CONFIG_SFC_CXL
-+
-+#include <cxl/cxl.h>
-+
-+struct cxl_root_decoder;
-+struct cxl_port;
-+struct cxl_endpoint_decoder;
-+struct cxl_region;
-+struct efx_probe_data;
-+
-+struct efx_cxl {
-+	struct cxl_dev_state cxlds;
-+	struct cxl_memdev *cxlmd;
-+	struct cxl_root_decoder *cxlrd;
-+	struct cxl_port *endpoint;
-+	struct cxl_endpoint_decoder *cxled;
-+	struct cxl_region *efx_region;
-+	void __iomem *ctpio_cxl;
++enum cxl_devtype {
++	CXL_DEVTYPE_DEVMEM,
++	CXL_DEVTYPE_CLASSMEM,
 +};
 +
-+int efx_cxl_init(struct efx_probe_data *probe_data);
-+void efx_cxl_exit(struct efx_probe_data *probe_data);
-+#else
-+inline int efx_cxl_init(struct efx_probe_data *probe_data) { return 0; }
-+inline void efx_cxl_exit(struct efx_probe_data *probe_data) {}
-+#endif
-+#endif
-diff --git a/drivers/net/ethernet/sfc/net_driver.h b/drivers/net/ethernet/sfc/net_driver.h
-index f70a7b7d6345..a2626bcd6a41 100644
---- a/drivers/net/ethernet/sfc/net_driver.h
-+++ b/drivers/net/ethernet/sfc/net_driver.h
-@@ -1201,14 +1201,24 @@ struct efx_nic {
- 	atomic_t n_rx_noskb_drops;
- };
- 
-+#ifdef CONFIG_SFC_CXL
-+struct efx_cxl;
-+#endif
++struct device;
 +
- /**
-  * struct efx_probe_data - State after hardware probe
-  * @pci_dev: The PCI device
-  * @efx: Efx NIC details
-+ * @cxl: details of related cxl objects
-+ * @cxl_pio_initialised: cxl initialization outcome.
-  */
- struct efx_probe_data {
- 	struct pci_dev *pci_dev;
- 	struct efx_nic efx;
-+#ifdef CONFIG_SFC_CXL
-+	struct efx_cxl *cxl;
-+	bool cxl_pio_initialised;
++/*
++ * Using struct_group() allows for per register-block-type helper routines,
++ * without requiring block-type agnostic code to include the prefix.
++ */
++struct cxl_regs {
++	/*
++	 * Common set of CXL Component register block base pointers
++	 * @hdm_decoder: CXL 2.0 8.2.5.12 CXL HDM Decoder Capability Structure
++	 * @ras: CXL 2.0 8.2.5.9 CXL RAS Capability Structure
++	 */
++	struct_group_tagged(cxl_component_regs, component,
++		void __iomem *hdm_decoder;
++		void __iomem *ras;
++	);
++	/*
++	 * Common set of CXL Device register block base pointers
++	 * @status: CXL 2.0 8.2.8.3 Device Status Registers
++	 * @mbox: CXL 2.0 8.2.8.4 Mailbox Registers
++	 * @memdev: CXL 2.0 8.2.8.5 Memory Device Registers
++	 */
++	struct_group_tagged(cxl_device_regs, device_regs,
++		void __iomem *status, *mbox, *memdev;
++	);
++
++	struct_group_tagged(cxl_pmu_regs, pmu_regs,
++		void __iomem *pmu;
++	);
++
++	/*
++	 * RCH downstream port specific RAS register
++	 * @aer: CXL 3.0 8.2.1.1 RCH Downstream Port RCRB
++	 */
++	struct_group_tagged(cxl_rch_regs, rch_regs,
++		void __iomem *dport_aer;
++	);
++
++	/*
++	 * RCD upstream port specific PCIe cap register
++	 * @pcie_cap: CXL 3.0 8.2.1.2 RCD Upstream Port RCRB
++	 */
++	struct_group_tagged(cxl_rcd_regs, rcd_regs,
++		void __iomem *rcd_pcie_cap;
++	);
++};
++
++struct cxl_reg_map {
++	bool valid;
++	int id;
++	unsigned long offset;
++	unsigned long size;
++};
++
++struct cxl_component_reg_map {
++	struct cxl_reg_map hdm_decoder;
++	struct cxl_reg_map ras;
++};
++
++struct cxl_device_reg_map {
++	struct cxl_reg_map status;
++	struct cxl_reg_map mbox;
++	struct cxl_reg_map memdev;
++};
++
++struct cxl_pmu_reg_map {
++	struct cxl_reg_map pmu;
++};
++
++/**
++ * struct cxl_register_map - DVSEC harvested register block mapping parameters
++ * @host: device for devm operations and logging
++ * @base: virtual base of the register-block-BAR + @block_offset
++ * @resource: physical resource base of the register block
++ * @max_size: maximum mapping size to perform register search
++ * @reg_type: see enum cxl_regloc_type
++ * @component_map: cxl_reg_map for component registers
++ * @device_map: cxl_reg_maps for device registers
++ * @pmu_map: cxl_reg_maps for CXL Performance Monitoring Units
++ */
++struct cxl_register_map {
++	struct device *host;
++	void __iomem *base;
++	resource_size_t resource;
++	resource_size_t max_size;
++	u8 reg_type;
++	union {
++		struct cxl_component_reg_map component_map;
++		struct cxl_device_reg_map device_map;
++		struct cxl_pmu_reg_map pmu_map;
++	};
++};
++
++/**
++ * struct cxl_dpa_perf - DPA performance property entry
++ * @dpa_range: range for DPA address
++ * @coord: QoS performance data (i.e. latency, bandwidth)
++ * @cdat_coord: raw QoS performance data from CDAT
++ * @qos_class: QoS Class cookies
++ */
++struct cxl_dpa_perf {
++	struct range dpa_range;
++	struct access_coordinate coord[ACCESS_COORDINATE_MAX];
++	struct access_coordinate cdat_coord[ACCESS_COORDINATE_MAX];
++	int qos_class;
++};
++
++enum cxl_partition_mode {
++	CXL_PARTMODE_RAM,
++	CXL_PARTMODE_PMEM,
++};
++
++/**
++ * struct cxl_dpa_partition - DPA partition descriptor
++ * @res: shortcut to the partition in the DPA resource tree (cxlds->dpa_res)
++ * @perf: performance attributes of the partition from CDAT
++ * @mode: operation mode for the DPA capacity, e.g. ram, pmem, dynamic...
++ */
++struct cxl_dpa_partition {
++	struct resource res;
++	struct cxl_dpa_perf perf;
++	enum cxl_partition_mode mode;
++};
++
++/**
++ * struct cxl_memdev - CXL bus object representing a Type-3 Memory Device
++ * @dev: driver core device object
++ * @cdev: char dev core object for ioctl operations
++ * @cxlds: The device state backing this device
++ * @detach_work: active memdev lost a port in its ancestry
++ * @cxl_nvb: coordinate removal of @cxl_nvd if present
++ * @cxl_nvd: optional bridge to an nvdimm if the device supports pmem
++ * @endpoint: connection to the CXL port topology for this memory device
++ * @id: id number of this memdev instance.
++ * @depth: endpoint port depth
++ */
++struct cxl_memdev {
++	struct device dev;
++	struct cdev cdev;
++	struct cxl_dev_state *cxlds;
++	struct work_struct detach_work;
++	struct cxl_nvdimm_bridge *cxl_nvb;
++	struct cxl_nvdimm *cxl_nvd;
++	struct cxl_port *endpoint;
++	int id;
++	int depth;
++};
++
++#define CXL_NR_PARTITIONS_MAX 2
++
++/**
++ * struct cxl_dev_state - The driver device state
++ *
++ * cxl_dev_state represents the CXL driver/device state.  It provides an
++ * interface to mailbox commands as well as some cached data about the device.
++ * Currently only memory devices are represented.
++ *
++ * @dev: The device associated with this CXL state
++ * @cxlmd: The device representing the CXL.mem capabilities of @dev
++ * @reg_map: component and ras register mapping parameters
++ * @regs: Parsed register blocks
++ * @cxl_dvsec: Offset to the PCIe device DVSEC
++ * @rcd: operating in RCD mode (CXL 3.0 9.11.8 CXL Devices Attached to an RCH)
++ * @media_ready: Indicate whether the device media is usable
++ * @dpa_res: Overall DPA resource tree for the device
++ * @part: DPA partition array
++ * @nr_partitions: Number of DPA partitions
++ * @serial: PCIe Device Serial Number
++ * @type: Generic Memory Class device or Vendor Specific Memory device
++ * @cxl_mbox: CXL mailbox context
++ */
++struct cxl_dev_state {
++	struct device *dev;
++	struct cxl_memdev *cxlmd;
++	struct cxl_register_map reg_map;
++	struct cxl_regs regs;
++	int cxl_dvsec;
++	bool rcd;
++	bool media_ready;
++	struct resource dpa_res;
++	struct cxl_dpa_partition part[CXL_NR_PARTITIONS_MAX];
++	unsigned int nr_partitions;
++	u64 serial;
++	enum cxl_devtype type;
++	struct cxl_mailbox cxl_mbox;
++};
++
++struct cxl_dev_state *_cxl_dev_state_create(struct device *dev,
++					   u64 serial, u16 dvsec,
++					   size_t size);
++
++#define cxl_dev_state_create(parent, serial, dvsec, drv_struct, member) \
++	({								      \
++	 	static_assert(__same_type(struct cxl_dev_state, 	      \
++					((drv_struct *)NULL)->member));	      \
++		static_assert(offsetof(drv_struct, member) == 0);	      \
++		(drv_struct *)_cxl_dev_state_create(parent, serial, dvsec,    \
++						    sizeof(drv_struct));\
++	})
 +#endif
- };
- 
- static inline struct efx_nic *efx_netdev_priv(struct net_device *dev)
+diff --git a/include/cxl/pci.h b/include/cxl/pci.h
+new file mode 100644
+index 000000000000..ad63560caa2c
+--- /dev/null
++++ b/include/cxl/pci.h
+@@ -0,0 +1,23 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/* Copyright(c) 2020 Intel Corporation. All rights reserved. */
++
++#ifndef __CXL_ACCEL_PCI_H
++#define __CXL_ACCEL_PCI_H
++
++/* CXL 2.0 8.1.3: PCIe DVSEC for CXL Device */
++#define CXL_DVSEC_PCIE_DEVICE					0
++#define   CXL_DVSEC_CAP_OFFSET		0xA
++#define     CXL_DVSEC_MEM_CAPABLE	BIT(2)
++#define     CXL_DVSEC_HDM_COUNT_MASK	GENMASK(5, 4)
++#define   CXL_DVSEC_CTRL_OFFSET		0xC
++#define     CXL_DVSEC_MEM_ENABLE	BIT(2)
++#define   CXL_DVSEC_RANGE_SIZE_HIGH(i)	(0x18 + ((i) * 0x10))
++#define   CXL_DVSEC_RANGE_SIZE_LOW(i)	(0x1C + ((i) * 0x10))
++#define     CXL_DVSEC_MEM_INFO_VALID	BIT(0)
++#define     CXL_DVSEC_MEM_ACTIVE	BIT(1)
++#define     CXL_DVSEC_MEM_SIZE_LOW_MASK	GENMASK(31, 28)
++#define   CXL_DVSEC_RANGE_BASE_HIGH(i)	(0x20 + ((i) * 0x10))
++#define   CXL_DVSEC_RANGE_BASE_LOW(i)	(0x24 + ((i) * 0x10))
++#define     CXL_DVSEC_MEM_BASE_LOW_MASK	GENMASK(31, 28)
++
++#endif
 -- 
 2.34.1
 
