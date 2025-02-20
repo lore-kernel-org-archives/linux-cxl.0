@@ -1,114 +1,102 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC52214218
-	for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 20:06:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49ED222087;
+	Thu, 20 Feb 2025 21:03:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740081980; cv=none; b=qsq80a5Y+tOfwilf9wzDriNdXdvnlorsrsVpSMwGpdOhUo5/5oNEJJyNM1YUDFc3eTd5Q14W9BXaLBgVv/SLt5vmxUT69kSKKehiUdb/YQfJeVhSAtaT9CTPFtJEgPQuQureAbnh5wsxjUiBEzMDMS0JXu4qSrMMLsJYi1nIFhk=
+	t=1740085427; cv=none; b=lp+dWA+vwjO5NHyW7qE8z3MKltAmz8w0e0RBb9ioMR6PUc2Y8o0TDz36OGrso1z5Kv982wJhBzNtGHG4gT8kmIEIsoWlIFVdqUvk0gdXyHlojrDToPuAVNZeTrID94sa2iDmMOBoUuVywYUeNBxl9Kn5uHHcHgZ24wFuFPf9Tgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740081980; c=relaxed/simple;
-	bh=Lu62kKHMAjMzflS7Jlf2vQo4LhUNA22Sn176RTqDkwY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X6ZeS2lRmIu86zW2ju7p9/ADYn+qT9b1Qk0MrFKeTmqjIPpW/7LM8b5zswDNBJc19U147RCN/55u0Fl/nZq6xEjn4twQR4hKA6A1I4FFfLDy/nxcUiFhvDTPMlh4Sr7tRgIeGVIzd0Zd3Tt4dqKIy6trptQRIjyS0eMs6QfwiGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=ovXM+/vW; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1740085427; c=relaxed/simple;
+	bh=rkSiACBg6yH6Wh57AsJ2Ha+dHnFxsBhGAna6YaneR7Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WEEFaiK3mxSNLm7EDc+ywaMVbg1STODpgbHfsOohqFW31Z7uv4IXvKVm8OgQVxuj5mYIQV8TX0NWpdIse6yPOBh70jg8GJx914EJLTApSTMeikqQuYN1WvZhR6zalMcT/bqq1v6tf5KDnLDm3Nw9SJO4nrqj34aMFuf5pOmvY8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cV/p1Gqh; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="ovXM+/vW"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-46fd4bf03cbso19806851cf.0
-        for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 12:06:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1740081977; x=1740686777; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=K1KlFOn7Hg/ku1RTZ3R0CMdwBj99t0GI1rv1OK6Mr2w=;
-        b=ovXM+/vWrkZBcNky/EZT6KkymxwUILtIhEBx0FDrm8vblAWSmFGjy5ULAFdee9cRje
-         tbazEfal6L57f22h9rWyzAv8H2A9QCb+nmqmqXQr3NCrC2XfU2Pi3bXToYY0Ah1E6mIx
-         oIaamsoCRumKV7OSeAHSRde2D7PcstFsw0qBWjTXAP16RtXkpeW7yuKP5KXS2Hww6uh2
-         Aj8ffWZBBdCW4hno5CPiRq8KiwS4TGxLJsuLltvsLGUohxJxyEkZsBOlutY53Xjtqb2R
-         o3upJL9aPg4ItdXyf2MVyidvX/EjUVQ/0hwuzsvtTFzjLu1i/YiCbizzqGGlfrzHiOn/
-         6+sQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740081977; x=1740686777;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K1KlFOn7Hg/ku1RTZ3R0CMdwBj99t0GI1rv1OK6Mr2w=;
-        b=WBn1a3cH1poQjllH3SVmrSNa7nXu8f+So194uGCRGRa3vZxQTcwoQjjyNyuUlRhpfY
-         ggEO1j3PYOcxmLhlKoRYODiMMRZ7OlxbnWPjmu4QrHfrMJF87nXvA4VAMauNQN9hpjvh
-         vki3JKNZArh2KdVyQE5eBrNCtDr6YXXpAkOD86bjwXwXc74CQhBtkISs1AxbItW3Rthq
-         4OrHQ5vflq47Nn0w1f3eJWr2VF2Kn16te0dVeicVPHxT0NPsqgC2ooVCJ8lG8dXN2bPS
-         qgckbSy+yER62JGcbYPUfY2m+venlcTBsUJgXXvj+knuwRYdrlT9OYKpjRGqP4dPS6H8
-         nMAA==
-X-Forwarded-Encrypted: i=1; AJvYcCX1WR2tDjQC+26OQzmGTfR2KrPYTjkOk9dveMKeRiOJtQx7bylPwBd5dqZjZ8VQe5Lmzp32ZJZZPR0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5KQiltwG6DF2AA7/HEKpKSoHzMLBgK0uDan9OiGWHfVQUk/50
-	otB3G1hqQQAP8IbOTKgLNh4rjOfzE8eMuEyYuH6mLpfa/cHdFuhCnUSlYf4UZdg=
-X-Gm-Gg: ASbGncucdVpssNXQSq0cR58PuywPV9fVEYchcXP5JOvfdwqpuNO7VVbxHgD5D97Pzp8
-	ZoBw+9e+L1UvRyT9EIulYjUvhc4zc9u/SA6yzZTLlya+edlg+XMJtmIlmp7ZV6lGO6dWz06TsIk
-	5mjGe36qvQB8lGUiXkwejYS2kPKolXosmkqOPCBkGDX0MqjBL+p+77VyeAcgvWUulaSe2L2gn0f
-	jxoTAKQFDhMtE7W5wGXHHccGWMOMXr0WVRqIWkP0gSM+zCcqNKD0b65iZVQSktXEIPdpAyaiDev
-	6K0eLa76N4JE/ylXhYcVep6lku6pcedZtJ3WhKvu1/0UyKiWr5HeKfN0MH7uJzdkAtwScfWDVg=
-	=
-X-Google-Smtp-Source: AGHT+IFqBXc3noHLl5J5ssCf0WWyGmo3wgivenGX96bW8nMSdpZU57GvoBw1O5ge2vFl9td66zPrCg==
-X-Received: by 2002:a05:622a:13c7:b0:471:f3f2:62eb with SMTP id d75a77b69052e-472228ce17amr8517751cf.19.1740081977267;
-        Thu, 20 Feb 2025 12:06:17 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-471ead6bdeesm51910061cf.32.2025.02.20.12.06.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2025 12:06:16 -0800 (PST)
-Date: Thu, 20 Feb 2025 15:06:15 -0500
-From: Gregory Price <gourry@gourry.net>
-To: David Hildenbrand <david@redhat.com>
-Cc: Yang Shi <shy828301@gmail.com>, lsf-pc@lists.linux-foundation.org,
-	linux-mm@kvack.org, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: CXL Boot to Bash - Section 3: Memory (block) Hotplug
-Message-ID: <Z7eLNyB230-wYof-@gourry-fedora-PF4VCD3F>
-References: <CAHbLzkq6Me6nRaL6b09YxJ_nFkxb+n+M3-q_aJwOs2ZO4q8VCg@mail.gmail.com>
- <Z7TLwtQY3vGUw2bO@gourry-fedora-PF4VCD3F>
- <1b4c6442-a2b0-4290-8b89-c7b82a66d358@redhat.com>
- <Z7TswQbpPV590ADr@gourry-fedora-PF4VCD3F>
- <bda4cf52-d81a-4935-b45a-09e9439e33b6@redhat.com>
- <CAHbLzkqDQcrHLPzk8n0SMgkidH2ByCqdwfYXX=uBPQfOArWf8A@mail.gmail.com>
- <Z7d3vVdJ8UWU5oex@gourry-fedora-PF4VCD3F>
- <4ae838ee-b079-408e-8799-e9530ca50417@redhat.com>
- <Z7eEGwFltjWaoX-r@gourry-fedora-PF4VCD3F>
- <b4b312c8-1117-45cd-a3c3-c8747aca51bd@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cV/p1Gqh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740085425; x=1771621425;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=rkSiACBg6yH6Wh57AsJ2Ha+dHnFxsBhGAna6YaneR7Y=;
+  b=cV/p1GqhDkiXxIAAWPe3etX77LiC/SYxgKoolh0rYCRQoCIFZ+8NFnta
+   CirH6Su3XUYOLA+Wcd87lNyA5NQxrB3lsq5D7nBwtvNhlf0eH8Ku/Hbef
+   BwoJdFhjwb31qLKU/64lIs4HXQ0/8yP50imian45GQ48fivhDMk36fcnM
+   7OyphbC9ibZvIIkeyW4oVEEDEUAMp2IolwH97DEK5uLJGBxmnFUp5VqV1
+   VFvsXZJLX6l6WYGCnDexHX63HtM9c1Q+TCmoEIuOlDyiVxZWGLyvv0ue0
+   +2H4+ThIdA2ZaTSNYoBs10ytMK0r5Z/T+ZTfEqRXpFQojeX4K6SZlzmpZ
+   w==;
+X-CSE-ConnectionGUID: VqtrV4z/QtiGG/xah4yd4w==
+X-CSE-MsgGUID: TcZCSIz/SF+biMl10Pub+w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11351"; a="41150841"
+X-IronPort-AV: E=Sophos;i="6.13,302,1732608000"; 
+   d="scan'208";a="41150841"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 13:03:45 -0800
+X-CSE-ConnectionGUID: iWasBvpKR1q5d8ehRJGJnw==
+X-CSE-MsgGUID: 1apVVLN1RjSTQH3UniS6ow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="120401941"
+Received: from puneetse-mobl.amr.corp.intel.com (HELO [10.125.110.112]) ([10.125.110.112])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 13:03:44 -0800
+Message-ID: <6db41e2e-4a88-4b1b-9cd3-6cb74ea2e846@intel.com>
+Date: Thu, 20 Feb 2025 14:03:41 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b4b312c8-1117-45cd-a3c3-c8747aca51bd@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 01/15] cxl: Modify address translation callback for
+ generic use
+To: Gregory Price <gourry@gourry.net>, Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+ Terry Bowman <terry.bowman@amd.com>
+References: <20250218132356.1809075-1-rrichter@amd.com>
+ <20250218132356.1809075-2-rrichter@amd.com>
+ <Z7dRrz9D22p3urfI@gourry-fedora-PF4VCD3F>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <Z7dRrz9D22p3urfI@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 20, 2025 at 08:44:36PM +0100, David Hildenbrand wrote:
-> On 20.02.25 20:35, Gregory Price wrote:
+
+
+On 2/20/25 9:00 AM, Gregory Price wrote:
+> On Tue, Feb 18, 2025 at 02:23:42PM +0100, Robert Richter wrote:
+>> The root decoder address translation callback could be reused for
+>> other decoders too. For generic use of the callback, change the
+>> function interface to use a decoder argument instead of the root
+>> decoder.
+>>
+>> Note that a root decoder's HPA is equal to its SPA, but else it may be
 > 
-> There were some discussions around variable-sized memory blocks. But we
-> cannot rip out the old stuff, because it breaks API and thereby Linux user
-> space. There would have to be a world switch (e.g., kernel cmdline, config
-> option)
+> slighlty better wording:
+> "but it may different for non-root decoders"
+
+This change helped me understand what that sentence was trying to say.
+
 > 
-> ... and some corner cases are rather nasty (e.g., hotunplugging boot memory,
-> where we only learn from ACPI which regions actually belong to a single
-> DIMM; dlpar hotunplugging individual memory blocks of boot memory IIRC).
+>> different. Thus, change the name of the function type to
+>> cxl_to_hpa_fn.
+
+I would also drop the "thus" so it's in imperative tone. 
+
+>>
+>> Signed-off-by: Robert Richter <rrichter@amd.com>
+> 
+> Reviewed-by: Gregory Price <gourry@gourry.net>
 > 
 
-Probably we just end back up between a rock and a hard place then.  Let
-me finish this documentation series and cleaning up corrections and I'll
-come back around on this and figure out if it's feasible.
-
-If variable sized memory blocks in infeasible, then the only solution to
-misaligned memory regions seems to be to wag a finger at hardware vendors
-as Dan suggests.
-
-Thinking about my current acpi/block size extension, it does seem bad
-that the user can't choose to force a larger block sizes without a
-boot parameter - but i hesitate to add *yet another* switch on top of
-that. The problem is complicated enough.
-
-~Gregory
