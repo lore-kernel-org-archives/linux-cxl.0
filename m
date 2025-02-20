@@ -1,79 +1,81 @@
-Received: from skyblue.cherry.relay.mailchannels.net (skyblue.cherry.relay.mailchannels.net [23.83.223.167])
+Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F9D7082E
-	for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 01:37:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.167
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAC701BD014
+	for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 01:37:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=23.83.212.17
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740015433; cv=pass; b=sMfa5gYGFnNiXgSIXySJy19fAL4RXWES4m+BgHWMCmg8+vOw4yWPcX1oUXrLwdUOiYvwY20iD+k90ptN/pqy8fPVYPL+901pD/ocE/yLVJzAYLEFnn8SzoDE3G/yDVV+Q9q+UwGPtABLp38LIe4HsTVh6GtVrwa6XfdZZoTisac=
+	t=1740015435; cv=fail; b=LZ1/ROaATYV8lEFRtFhVNpu5UUo3JMbgXakg6PteDE8wAWAHF1F6iWaMrYyPGyxzO3KGLVBg3SEcezLBvmpdecpBcFzp+ZYOvX6d2ODaz+BITwn4kBL9lrsylckn1w4W67OA60kqX5EBeD58Byv2JSIaQVT4CNdOkjhRs/sDhro=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740015433; c=relaxed/simple;
-	bh=BGI77eKeaeFsMMl8cTHw3jIZ+XbtifyRkFPNJxDUNVY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hwK4byg8yIYUQmySut0auaqIvz362tLKwhgVPQD0pmKiZYRvR/B78r8JtqU4fJukspH/1BZ3FrbH8vF3lQe7krwb6kPMzWKLznI+nbbxwbtj0E9z4wvvWLgQuxG7YAbq39UUzgLU6p92qH76Jfr6CgK2ED3vu84XtaCty5l2FHI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=WmCgpsDf; arc=pass smtp.client-ip=23.83.223.167
+	s=arc-20240116; t=1740015435; c=relaxed/simple;
+	bh=uwmn7BVjOSiw7Yjrd5YJobf2/4TUvp527FZOl3ymLqw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=RSFqjOkbc+QBV0uucsGo0omFyL1Vd060VANOlsc0975K7djn9qRVmY/P49X5htuQoK53oJmjyYmtRBhuA1hgboswTnp2ikTkehbFW6QFDsdKQIyd3QvVUWoocWsDMB3gzpRXOvCi+RPuvf+0vJqRM5TGpqT2gj48Yv2hRafdFyg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=cjLswAjw; arc=fail smtp.client-ip=23.83.212.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="WmCgpsDf"
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="cjLswAjw"
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 7671D21A4D;
-	Thu, 20 Feb 2025 01:37:05 +0000 (UTC)
-Received: from pdx1-sub0-mail-a300.dreamhost.com (100-97-164-218.trex-nlb.outbound.svc.cluster.local [100.97.164.218])
+	by relay.mailchannels.net (Postfix) with ESMTP id 1353E901B3E;
+	Thu, 20 Feb 2025 01:37:07 +0000 (UTC)
+Received: from pdx1-sub0-mail-a300.dreamhost.com (100-97-27-146.trex-nlb.outbound.svc.cluster.local [100.97.27.146])
 	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id E991921674;
-	Thu, 20 Feb 2025 01:37:04 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1740015425; a=rsa-sha256;
+	by relay.mailchannels.net (Postfix) with ESMTPA id 9EF33902691;
+	Thu, 20 Feb 2025 01:37:06 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1740015426; a=rsa-sha256;
 	cv=none;
-	b=QHkE58AXrZb/GeZi5M1rbupkJecZXkSMlXYXlDSQLwNWDEiYELmctoEKjmmLaS1D+cJNWe
-	s0AArpOZQz7TbAsABg2XgxkhkV1BfZtMD0mmYwArRlUqLYadlbqo3C/EirI7k6b2tRBXUw
-	umFsKHcOZrsSTr6iEl0mSbAx76Y9usco0aXG1zozBW7FDie1d1toSRjAsN/QkqSXItNLg9
-	ORw0m12c2hurBwsnibNJVmjfPw/e37pIvnMs0rteYHvm5yqPOuePgVem1zYmuXDeHXm1PN
-	rS7XABR6FDDMvNMNyctNbi9E/27d5eF+vgbvMtkbbn1sRy7b0XnRKSnO97TLxA==
+	b=QTrgPHj9fSB8m0whExptLGWY/aWkFRq/vj/hsutqHKE8xcBVhtwDQM11n3CdZ2HqXI4j+v
+	p1lzTEBeXIsHwStLaPhvEej+PQogrKldnCOZoUGcVRcBajLRmAbc0y/GiHFidhsNJl/WD9
+	EsAhvXfFQVOZLgFkTe4vC+hrvTmHvxNkbYJrN13IdESnk3Bsc5RgjHEQlsqW/2Zzkugkf/
+	Mgt5g9XcFoLI3kmY2WQt9qSfaSONfYLJQrcB577R6i2+k6m42ucehMEy5htfkmV4hJ/I80
+	J8kYYz1aGGcLsWf7KW8omaykszIzFK7MIGFHSViDlpfdL3QBcZW7pIa+rfStsg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-	s=arc-2022; t=1740015425;
+	s=arc-2022; t=1740015426;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:dkim-signature;
-	bh=yua+vOvKX+n/KJq7D8gGNEaAcecckegDE8L9Zb8pFKo=;
-	b=eMbVNE+qPXBfkh2ZlJ5owx0QsI3YwSTSwEPNJOmTykVXfCX245yTGLE1t76skISsO3JQjC
-	6+sj8McllG0xcDWwMiHpsVg1d/fWmEoiZxrXcFT8tqHF0RB3tHm8MvvYkgnRNLFA0vBLfU
-	p2kbylZFqfT7BX3gkq+Ke6pII7pXxPo2IGrTsERF4D6Le5LkOnanCBPaUgTwZxY1fuTa9K
-	nhZanLgygpAITDNnPHoUEVRXY6QBCzb77oFItEDURzo4/WZ7mvgFtiovQZ7YrRoUtUGLcJ
-	8Y+Xnl8Nb6243nAde0IjQcmn6GCpNvnxqRYFdeX931pJo0uVQ0uExTDT83IfEg==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=dP5fD5Lj/OskC/JhcJ7KYBHPzFU0UrZygNcBx9OEUr4=;
+	b=KmTzRvk9uhYq+ZcAQXEu6pJv5MjXf4Pjyijxz7PDD1hO/nkw4mWH+cyVDpxGH/Jo8dT/SZ
+	HK51Zgdj6jyLYxdz34of6+UWxJHMfZSUWB0hTnSaOqVuAa6Ecf9rmFUqj2nb70z8sgtp99
+	mq7NAYdOWqfquOmP+GLJJtTF5+RrpVEuqSY4HTtbsgTc+Oimc0dz7PrAlB+rv8A2GkI29O
+	4+KWmgCOnRlj/JwfRd82WVOkJ6fVAWSuPFqRIcnyGWfBEoenirD3Nn3gFp6texuDG3RUgh
+	TOLwZu79MLuDZBsRIAC57KS3kQayajCiPU0ODxl6iSIDj2/ZuH9QE8jKt5ew3g==
 ARC-Authentication-Results: i=1;
-	rspamd-6d7cc6b78d-bd6dx;
+	rspamd-6d7cc6b78d-8pd7z;
 	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Invention-Industry: 107ed3d7727f10b6_1740015425268_1646942895
-X-MC-Loop-Signature: 1740015425268:277209885
-X-MC-Ingress-Time: 1740015425268
+X-Shelf-Lettuce: 25b7a42e3b33d690_1740015426959_3929177649
+X-MC-Loop-Signature: 1740015426959:1990725372
+X-MC-Ingress-Time: 1740015426958
 Received: from pdx1-sub0-mail-a300.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.97.164.218 (trex/7.0.2);
-	Thu, 20 Feb 2025 01:37:05 +0000
+	by 100.97.27.146 (trex/7.0.2);
+	Thu, 20 Feb 2025 01:37:06 +0000
 Received: from localhost.localdomain (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a300.dreamhost.com (Postfix) with ESMTPSA id 4Yywq40mz1zY0;
-	Wed, 19 Feb 2025 17:37:04 -0800 (PST)
+	by pdx1-sub0-mail-a300.dreamhost.com (Postfix) with ESMTPSA id 4Yywq55bwKzY0;
+	Wed, 19 Feb 2025 17:37:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1740015424;
-	bh=yua+vOvKX+n/KJq7D8gGNEaAcecckegDE8L9Zb8pFKo=;
+	s=dreamhost; t=1740015426;
+	bh=+z/h6H2QSLkOm/4RiNFIPp69ioOFW5rVG2F/XpJLmlo=;
 	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-	b=WmCgpsDfrj8KrSJAC9dPigN18xGhAMefMr5+0hdN4OsSk+egvjRAdoX8ZFNGzM4Kl
-	 y+5m5qcwNBYqBqXO/a+AAV987oUT7d2P3Rfua3WC/dE8tvd0muG+yGfDDiFrj94J9q
-	 V4ifOki/6QREiPfsi3AXCqkQrcejnZW4sXrchS+pkQvwDayojntUzsL350v64fvkCE
-	 IaBkzYlGkDxgGOf1H3p6Ir1UNnmC5AG0LJSnoLOsLblyVesxnwNeV0VboEP8+5tZmH
-	 5Ad1OFLrOxzbmYC8MRz9Rj2wbxvUfmOxN/5TAmHIyDYRgfeM/Ees/cu4c4Zv/dXgcq
-	 Sx9XLIUdS/jpg==
+	b=cjLswAjw5j8jAIU8rsKNUHiMProGfXSAZxEyJyRyb+Q6ts/N7f2PO6DXNG+bvums7
+	 MWjWQigUlooD2MxQpBYkSBRxAdgq/j0mlls18ID93hZUUU7FVmffh/2/2g4q+JHzrs
+	 F+MPMUYzDDnSO/a0MExgAVr4aoUkZmTiaSJ+ino6K0oawKmmO86psAgPptVBIZ5puY
+	 1hkuCeKp3PPbWdurTvmEqgUewyfR77eSF9uzUD6WTTt+5DwZzs3sPDc5ahrwRlXC/s
+	 CITYh3dEMH1AnEjM3L99qzEpl/dM1E1eyD+H8tMT2M3LDQ01yCTEolxAoHAnIdP55p
+	 L+VkhlYeU268A==
 From: Davidlohr Bueso <dave@stgolabs.net>
 To: dave.jiang@intel.com,
 	dan.j.williams@intel.com
@@ -88,10 +90,12 @@ Cc: jonathan.cameron@huawei.com,
 	anisa.su@samsung.com,
 	dave@stgolabs.net,
 	linux-cxl@vger.kernel.org
-Subject: [PATCH v4 0/4] cxl: Dirty shutdown followups
-Date: Wed, 19 Feb 2025 17:36:00 -0800
-Message-Id: <20250220013604.263489-1-dave@stgolabs.net>
+Subject: [PATCH 2/4] cxl/pmem: Rename cxl_dirty_shutdown_state()
+Date: Wed, 19 Feb 2025 17:36:02 -0800
+Message-Id: <20250220013604.263489-3-dave@stgolabs.net>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250220013604.263489-1-dave@stgolabs.net>
+References: <20250220013604.263489-1-dave@stgolabs.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -100,39 +104,65 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Changes from v3 (https://lore.kernel.org/linux-cxl/20250219062832.237881-1-dave@stgolabs.net/):
-  - pickup reviews
-  - simplify patch 1 (DaveJ)
-  - change -1 to ULLONG_MAX in patch 3 (Ira)
-  - patch 4 replace int for u8 for shutdown state (DaveJ)
+... to a better suited 'cxl_arm_dirty_shutdown()'.
 
-Hi,
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Li Ming <ming.li@zohomail.com>
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+---
+ drivers/cxl/core/mbox.c | 4 ++--
+ drivers/cxl/cxlmem.h    | 2 +-
+ drivers/cxl/pmem.c      | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-Some followup patches to the GPF work. First two patches are from feedback
-provided by DaveJ. The third patch adds a $platform/dirty_shutdown sysfs
-attribute to expose the count to userspace. Fourth patch adds support
-emulating the set shutdown state command for the mock device.
-
-Applies against the -next branch of cxl.git.
-
-Thanks!
-
-Davidlohr Bueso (4):
-  cxl/pci: Introduce cxl_gpf_get_dvsec()
-  cxl/pmem: Rename cxl_dirty_shutdown_state()
-  cxl/pmem: Export dirty shutdown count via sysfs
-  tools/testing/cxl: Set Shutdown State support
-
- Documentation/ABI/testing/sysfs-bus-cxl       | 12 +++
- Documentation/driver-api/cxl/maturity-map.rst |  2 +-
- drivers/cxl/core/mbox.c                       | 25 +++++-
- drivers/cxl/core/pci.c                        | 30 ++++---
- drivers/cxl/cxl.h                             |  3 +
- drivers/cxl/cxlmem.h                          | 15 +++-
- drivers/cxl/pmem.c                            | 79 ++++++++++++++++---
- tools/testing/cxl/test/mem.c                  | 23 ++++++
- 8 files changed, 166 insertions(+), 23 deletions(-)
-
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index c5eedcae3b02..86d13f4a1c18 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -1281,7 +1281,7 @@ int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_mem_dpa_fetch, "CXL");
+ 
+-int cxl_dirty_shutdown_state(struct cxl_memdev_state *mds)
++int cxl_arm_dirty_shutdown(struct cxl_memdev_state *mds)
+ {
+ 	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
+ 	struct cxl_mbox_cmd mbox_cmd;
+@@ -1297,7 +1297,7 @@ int cxl_dirty_shutdown_state(struct cxl_memdev_state *mds)
+ 
+ 	return cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
+ }
+-EXPORT_SYMBOL_NS_GPL(cxl_dirty_shutdown_state, "CXL");
++EXPORT_SYMBOL_NS_GPL(cxl_arm_dirty_shutdown, "CXL");
+ 
+ int cxl_set_timestamp(struct cxl_memdev_state *mds)
+ {
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index 8e1e46c348f5..6d60030139df 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -822,7 +822,7 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+ 			    enum cxl_event_log_type type,
+ 			    enum cxl_event_type event_type,
+ 			    const uuid_t *uuid, union cxl_event *evt);
+-int cxl_dirty_shutdown_state(struct cxl_memdev_state *mds);
++int cxl_arm_dirty_shutdown(struct cxl_memdev_state *mds);
+ int cxl_set_timestamp(struct cxl_memdev_state *mds);
+ int cxl_poison_state_init(struct cxl_memdev_state *mds);
+ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
+index a39e2c52d7ab..6b284962592f 100644
+--- a/drivers/cxl/pmem.c
++++ b/drivers/cxl/pmem.c
+@@ -90,7 +90,7 @@ static int cxl_nvdimm_probe(struct device *dev)
+ 	 * clear it upon a successful GPF flow. The exception to this
+ 	 * is upon Viral detection, per CXL 3.2 section 12.4.2.
+ 	 */
+-	if (cxl_dirty_shutdown_state(mds))
++	if (cxl_arm_dirty_shutdown(mds))
+ 		dev_warn(dev, "GPF: could not dirty shutdown state\n");
+ 
+ 	dev_set_drvdata(dev, nvdimm);
 -- 
 2.39.5
 
