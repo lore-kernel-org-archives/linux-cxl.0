@@ -1,257 +1,226 @@
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2044.outbound.protection.outlook.com [40.107.96.44])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8081212D86;
-	Thu, 20 Feb 2025 18:17:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740075437; cv=fail; b=ovx9P6/0p/9Btcgg20i28dZbjn48tSfQB2LG7nOG3fe+EUeGvWHPD+mpTlfhEDVJfGMSIKXnIranDm6zvpZiSRhgt2D6cydGgJGh51N40coqGx/ldo1C6nzFMO9x8uWlOjXUCKlm3V7w0sjRbcETwZei6XMAsc96wV3MyRH8k/M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740075437; c=relaxed/simple;
-	bh=hM5QNnvzC6hvcyX7DkwkwBs9y+ODe+VUgeL4+ogWe2Y=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=c94NvPwdOG/UEnIRZogE1/pufEWBpNEmejyB68wWwuIvBoxsGRGrCTc8nvE+vnncEay1hJcHH151bocJ28gjndBILRWLBsu22q2CbJpqeJuTfx/GBOjg7/LzcSbGsL2yxWtSWG0paPjH3AcTow8FLX0tkVRa8CAIxhkp8m0I4Wk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=25Xq+fyf; arc=fail smtp.client-ip=40.107.96.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBE26257D;
+	Thu, 20 Feb 2025 18:34:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740076480; cv=none; b=VFEGml/stOequypEL52NUeMK+Zf6t24FI90ubn6pPaPKiQD7UGmGkXEYpqjt0VMaknjTT971tl6m7m1SV9f7Ixt34G70V6wo4NXvt3qdAmk1OLeuGVkG56k4t85DubIYOYhpwSFwOpVqW3233ed8rqTfykAkp8Jh1GQ/sVtIi9A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740076480; c=relaxed/simple;
+	bh=/LnWcPRyXKEHQ3gAWHDyZ1PtFJgSTS4Ppsf/IrPzcsU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Fyl4wST2PMYkXYhNCZ6m8qcwmfeNWP6/Q0GeBUg4AlKs5iXmbxfJ4BBVbjoRHBg8z6/vP/FyqporxoY5w0jbR1IXhSmZtilzLe7eTYjCsX3TO6heMWvZjGn+AVcNYBFx9SfdWO0zhW8tHaVf+JFYQv1eRO2wZO7jS1jrFwvXYYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=GxmdfoZg; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="25Xq+fyf"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HRMvr6XwKTl7RiWwVkMtIHxYXRrAxEOLG6i0ldgQB0QUUQS30uC7Ik9Lp9oPtgegEQ97lAkxYlxxbuDF6IzspUulWu/YooGwKgq76DCLMIkiS88+e93yELopNTV2f6Z9m3nD7zKygKFjnP3GrTxW2ZcesnxWz/uQxXwylBrFJjzTAlRICKV6SSrHaLV7dx47ek1vPSleO4oQD+yNUZH/9knCH8mVrDQpNoAFfpQqOFjYy6HRdR93YUDJ2nplOUZ10P5Gwb9oItaGDBq50ShuF3nsAJuye1Sflq/xPEFFF5UlkpjFN/Pc/fjQWqoSyxQPJw3fqBeLzuW5lT4t+iCoew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bJmCzNy2163m4rsF5y9Y47Ek69A4L4/HAlAORhEikIs=;
- b=nsDYVvAUC/KIzNj0md6aIU1qV4RL6Yc92oLfIgZkwoGzZrW9Grmzpj5ck6+YM4BAouffIKdVA0hVfSlmYasN4mF5+jsamzlqzjh17OQYTvTbEVfgAD+9xlADzEFSG4JLHOrERTLnHJ4IfuQN7nTBv93+9aH08MUCNX65CJHsrf3hXlmALyNA7u/pyRsOhxQQ0TXJ+51YU/1MtV38m+Jjqa2vj/6GOrxYJrpSrXmaPDZVWK1cqSRRjqRUTG74WJVbZA1VG0z5KXf9Z3YIYMOCcR2dw96FAhvUtUjud2mCVGkttSyB2I1mAOXZXQyt0wG4bvRkryVwUcf664oTFnZl7Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bJmCzNy2163m4rsF5y9Y47Ek69A4L4/HAlAORhEikIs=;
- b=25Xq+fyfVDfvbQQ+b3qM0l/i91BTGbb0IKZrH7LlKOB0B8L41gt06lR88IqX24j406SPg3tgD2OutDuK7GVKaus7q1QL1oH5k+XzPLT/6I1x9KVCgzd/xz1k6FHFOp4ZybQFAZjNJxvKXxEQrosvYm2fmdZBG3cC2we0g5xrUR4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
- by IA1PR12MB9524.namprd12.prod.outlook.com (2603:10b6:208:596::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.14; Thu, 20 Feb
- 2025 18:17:12 +0000
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79%7]) with mapi id 15.20.8466.015; Thu, 20 Feb 2025
- 18:17:11 +0000
-Message-ID: <390c6b69-bbf4-47cb-95d9-215a92ee3cbf@amd.com>
-Date: Thu, 20 Feb 2025 18:17:06 +0000
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 01/26] cxl: make memdev creation type agnostic
-Content-Language: en-US
-To: Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
- netdev@vger.kernel.org, edward.cree@amd.com, davem@davemloft.net,
- kuba@kernel.org, pabeni@redhat.com, edumazet@google.com, dave.jiang@intel.com
-References: <20250205151950.25268-1-alucerop@amd.com>
- <20250205151950.25268-2-alucerop@amd.com>
- <67a50f7fbdfb_2d2c29447@dwillia2-xfh.jf.intel.com.notmuch>
- <33aceef3-9e01-4b28-bc3e-7dc11b59a1f6@amd.com>
- <67b5421cd91d2_2d2c294ad@dwillia2-xfh.jf.intel.com.notmuch>
-From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <67b5421cd91d2_2d2c294ad@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PA7P264CA0293.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:102:370::19) To DM6PR12MB4202.namprd12.prod.outlook.com
- (2603:10b6:5:219::22)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="GxmdfoZg"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51KH1cvh029326;
+	Thu, 20 Feb 2025 18:33:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=FcxwqK
+	Cj7AI2VdyyanA1j8RnG7hQzzrm45++xUtPV78=; b=GxmdfoZgDml6SEejBGbeZ+
+	Y77j8DNOaz2mXRpM6AbAAxSet/c5sdfX/1F+tPUMHMSeX6v5qqnHjyZe/MPG8HLb
+	QSM8SuFAYSIdcRkhO600xhqJEswznyYSspSBjplVbNhzQYWlzN49L/Hm5O0+2Hr6
+	sgUKjsIO4Xyf9Aw1vOEh3fsdtvpk1bTuxU/L6UK2X9xS1211KKdtQr/bUyb18CiU
+	p4CL3V0cC4kVkNzTOpw6ADR6na+EWrdSRTGaB3UfMctLCsaYEYOlmNRKk66melyb
+	2rgHDW+6aPz3ncY3WbeRWlD9fmzwXTPGPuunqBnEAgu0duw9YNa9vhRSMxbCmsuQ
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44wx78kust-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Feb 2025 18:33:40 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51KISnU6023517;
+	Thu, 20 Feb 2025 18:33:40 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44wx78kusk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Feb 2025 18:33:40 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51KIMhXj027077;
+	Thu, 20 Feb 2025 18:33:38 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44w025bjes-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Feb 2025 18:33:38 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51KIXbFU59965808
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 20 Feb 2025 18:33:37 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0DE4220043;
+	Thu, 20 Feb 2025 18:33:37 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6433720040;
+	Thu, 20 Feb 2025 18:33:36 +0000 (GMT)
+Received: from thinkpad-T15 (unknown [9.152.212.30])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 20 Feb 2025 18:33:36 +0000 (GMT)
+Date: Thu, 20 Feb 2025 19:33:34 +0100
+From: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+To: Alistair Popple <apopple@nvidia.com>
+Cc: akpm@linux-foundation.org, dan.j.williams@intel.com, linux-mm@kvack.org,
+        Alison Schofield <alison.schofield@intel.com>, lina@asahilina.net,
+        zhang.lyra@gmail.com, vishal.l.verma@intel.com, dave.jiang@intel.com,
+        logang@deltatee.com, bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca,
+        catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au,
+        npiggin@gmail.com, dave.hansen@linux.intel.com, ira.weiny@intel.com,
+        willy@infradead.org, djwong@kernel.org, tytso@mit.edu,
+        linmiaohe@huawei.com, david@redhat.com, peterx@redhat.com,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+        nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
+        david@fromorbit.com, chenhuacai@kernel.org, kernel@xen0n.name,
+        loongarch@lists.linux.dev, vgoyal@redhat.com, stefanha@redhat.com
+Subject: Re: [PATCH v8 20/20] device/dax: Properly refcount device dax pages
+ when mapping
+Message-ID: <20250220193334.0f7f4071@thinkpad-T15>
+In-Reply-To: <9d9d33b418dd1aab9323203488305085389f62c1.1739850794.git-series.apopple@nvidia.com>
+References: <cover.a782e309b1328f961da88abddbbc48e5b4579021.1739850794.git-series.apopple@nvidia.com>
+	<9d9d33b418dd1aab9323203488305085389f62c1.1739850794.git-series.apopple@nvidia.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|IA1PR12MB9524:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6e6ed26d-7fdd-4dfe-33fa-08dd51dacb96
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?dUs3alJJb3BrclVldVZpbnFXREZxQzlnNExxQnRmSHVlQ1R6Qzc3M01RQjRr?=
- =?utf-8?B?TUFGY3pLLzNFZ0lVY1FHb0ZHaTdUUGZtdVFYdHlZZWxPSHBIWUlQNnZPdHRS?=
- =?utf-8?B?SWdvYXRFcmxkKy9HTGJWaFZYOURlVEhJeDNSTks1TzBCc0E5OXNMSjFyQnAw?=
- =?utf-8?B?dGFQZXdNOVVZdmpMMlAvb0YwOXlZVFQyczJSMGVnQXZKKzBsYnpqcVk3SlZQ?=
- =?utf-8?B?VzlSVFQvbXVLZlFjN2c4SzRyODEyYmFCc2pidEllYnhxdVVUdHN6MTBPQzVq?=
- =?utf-8?B?SDN6RGNWZU56TEZnb3h0M3AzUklQSkFkdUNhSmszWE5uZ2liYVBweE0zVzEz?=
- =?utf-8?B?ME82RXZCUzErRVdaMGRRcWUyak02WjFma2xuem00V1ZoaXdEZmkrYWFhaWRY?=
- =?utf-8?B?VlczREI0Z1hjQ3c0RDJwa0todkdqRklsb0tjZlJ5eklVN3Q0L3hkTXVUaENL?=
- =?utf-8?B?c25LZ09NODkrZE9xNWEzVVNtb05kNFQ0bmRtUXc5Y2FxK0t5aC9sanZZU3FK?=
- =?utf-8?B?TGNpZ3ZuMFFpU2JTY0hLS2VLRmt6SC9yYjcwTFFlRHc5TTNGQTJjYWwrL2lN?=
- =?utf-8?B?WHdWNXlFQmdSZzZ4bFhIcUMrVXNEOHlUK3FtY3VWYzFyeE5HejZQbWFSUFpy?=
- =?utf-8?B?SEtpeGZkSTBERlVTUWErYkdJRlZueUlRQnM3U1lUQllpeW5JM01WRGxYS0lU?=
- =?utf-8?B?c1FZSGs5T002UEtvdTRNMVoya003WE1ucHVrQlFvNnE4dG1LSGhvKzVsRTVy?=
- =?utf-8?B?a1ZRdDEzb2lUQnUyT2plY3RpdU5NbkVlK1RNbzZ5NUpaNWxVUCtqdGZiaUFH?=
- =?utf-8?B?UklPS0FmUmxnTWNrTFptbnJnQ1JjUUtwaHhqY2hCVEtlQ2VqKzRtaytjZE9G?=
- =?utf-8?B?WlRhaVlpR213aWdpMmZHZ2szanVKQVl2Q0NrYUE3ZUR6OTlDb09tN0RwTlhJ?=
- =?utf-8?B?THNSTzhheWQxWFZ1STVwVHp5NGpYejk2dU5Dc0tSTm0zQ2Eza2xFT0syMjhs?=
- =?utf-8?B?YkNVNnh3bkVOeVpEZTJWN1IvUW44aFlEREdPWWNZYnJKNnBmeEdUT2F1YVZY?=
- =?utf-8?B?MFZFWDFJZEtRMXplWmRRbS95MkxIMEhRbC9XQjN6NmRCVjlBTnE4ZHRQMXdN?=
- =?utf-8?B?WFNnMXcyNENoOEZ6YmdyMmhtQ1pjbVJEVTN4cWg4TjJkZnU2ZlNLQVAzZkhN?=
- =?utf-8?B?eGdVOFhqb1AyNElLSFlJR0hEVGo2Y1kva0J3WmJ6QW81T1M1bTZhdDhsNm9K?=
- =?utf-8?B?UWhuYzF4QzBsNzZqRmhPNmx0Y2JoMjhPOHBqVDRjSDNzQWZJK3JiQnp1VU1O?=
- =?utf-8?B?ZC9vR1BXNUFvVURNS2cvS28zQzN5L2dyWG90Qlo1RUY0ZlN2MmF3eUh5RlRt?=
- =?utf-8?B?eW8yNks3dTEyQ1ZRYy9mdnNzaGhwdDlHL1NKenRndm52SkEzaEJOaE03RUZE?=
- =?utf-8?B?YzZ5dExFZ0t4cCtwem1SV1U0VDJRRXdBQVVKNDY2cG41aFc2QzlNejNJNmtF?=
- =?utf-8?B?eFM3MUFLMnV6aEl4K2t6R2VjWGpEb05EWkE2V2laZEdTRzR2MHF6cDJqcFZL?=
- =?utf-8?B?QWxpS1dlanNKUy9pd1FOZWIyT3ZYYXRTL3RpbmhJY0JjRmc4VnlQVVlvemRw?=
- =?utf-8?B?S1ZEMW9Uc0YwYm9ReHJhdEJrbVM2RW1kK3ZOVnk2SnArMFJDeDJ2OWZIYmFz?=
- =?utf-8?B?cUViL2w0dXBUdG9tRDFobEFLZ3VDSnFtREpkYk1WNWM3eFFURFYzaHIvYWdh?=
- =?utf-8?B?MUtwSk1ESVFucW84YmlFenVGR3pUTE5sbFJhQ0xwQlVpS3VHS24xQTFjd1Uz?=
- =?utf-8?B?K1drK1QwaVhMcUROeHpwMjAvK0hqb2dBS2EzM0xkYUprMk4xaEtTTHZGQ0Fl?=
- =?utf-8?Q?j2nG92QXLpyqy?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?OXpqWkdYeGRmbDQ1aE1TT0NXbUtXRW5GaFFjcTJnMDJ2ZnlzMXVWMVBMTGFl?=
- =?utf-8?B?dEc4OXlxVkJ5NTRxak9kczdrS1N0U1pVenFNaE9vcVpUMjlwM3JSaG9YYS96?=
- =?utf-8?B?VVFwRWd4RndiYjlCNDEvVlZLOEpQV212VlZKdGFHb2pDU242bWM0Z2JMZnVl?=
- =?utf-8?B?QktNaUVIMHdoN3JsVnA2aWdtdFd4aC96Yk9LRWFFWkdXR3VOeTBidndkWGxY?=
- =?utf-8?B?Uk5iQ3NSbEFTZ2FiQko0ejJxWUpPK2RleG1hdXFrdnNPdG5BWE5STlE2ZVQz?=
- =?utf-8?B?R0h3bElySmtLTllibVhGclU3NVErN29ONW1YWWJhSVFSYmNWcTc0N25XN1hG?=
- =?utf-8?B?RnQ2TzhDVitUU3g3VDFmdStqd1hFZHRwOHB2c01tZndDY3BiSTJEVk9EVzk4?=
- =?utf-8?B?eUZrQkxiNjE0UkF0Ylh6bVFrVVhOQXQvZGNZUmg1ekhIUE9nNkhsaFhFVWM4?=
- =?utf-8?B?YmpSSnVFcXpldHlFZWorZWtzNEJvWTJhMjR3TEZzaU5PTHFJWVUxUG02cllW?=
- =?utf-8?B?eXlEck83Uld6ek1PQ0dBQzY5V01CMFdZZ3pHVWZuWWsvZkFzVGNQR0VoN0Zm?=
- =?utf-8?B?SVZDbm5CQ2VGaUFaOTlXdGpJNGZ6SW1KSnl2TDhqcEYwU3JtN0p1eUloVkZl?=
- =?utf-8?B?WmdGQWNLSC9LMThKbndLSC9CenBhZUF0Q1hQLyt6dDU4RHlXWkJMRXQzZGRv?=
- =?utf-8?B?ZVRMVFdhSE9HMHR0YnRVSGdJWE41RWx0eEU3OEkxZW1sYzRFNTErRDVWT09H?=
- =?utf-8?B?R0x6VjNxbXp1eVBtOHpzdVBDYTJEZUlmOGNaTmN4UVNVejhodkZpOE1kTEhG?=
- =?utf-8?B?Kzcwd1lNakdmeXVVZGp6dHY4RVRnSFpnQ1M5d3d2SlBodVp4dDdjbWRWRXpL?=
- =?utf-8?B?N016NzEweTlXOTFsbXp3U3R6RnFNS2hQMEhCUEhCV0pKZ29lMlNRMFNRT3Vi?=
- =?utf-8?B?TXFFRnE5bGRNSzN6RnN1R2tpUTMydWdRRVJuUnZ4MUcrLzhEajFrTGliN1dw?=
- =?utf-8?B?aGg3V1puNk5LY3dmbThYQnhmMjRVY2FJeGcvMWY2UStZbmN1b3E1ZUx2LzNl?=
- =?utf-8?B?YytMVU1JRjV3cm8rU3lIcWJCZmFCQUorblNoTWJHdzlxUG5OeS9MMzg3QjZo?=
- =?utf-8?B?M2pzMFdUNzFsRXNrMG9jV3h6R2NNY1lqaFJzK01wWkg0VkhBU0Y3YmRMZzY4?=
- =?utf-8?B?ZkJNNjdEc1JpMGRQeWpiRzVCZTM1VG1uUTJINUtNalM3bnA4Z1FwTjE3K0w0?=
- =?utf-8?B?NDNiMERqaWlxK0JVdStpWmIrUSt2ZmphYW1haEF2cDh0bUpJY2Q1aWl1MS90?=
- =?utf-8?B?SWhoZVpvcVorNkZ6Yzc4cHpFeElwR1QrQlBVL1ZKcXJzcjloTmQyZ282U3p0?=
- =?utf-8?B?b01udks2Wk5YM293OVp6SDIrQ3NGSHQ5OFRaOGE0MEppWjVFSkNWNGJsRnJl?=
- =?utf-8?B?QmJEejZXc1Y4QnRPQ25zNHlnUDRjcUdiUW1xempkRGYwUG0zVXcyanl1aEp1?=
- =?utf-8?B?OC9sR0ZIZENDM2RkR2RiRkpudWdyQUg0aHhZMGg2UWkraksyN3ZtblUxTmtt?=
- =?utf-8?B?YW9jVnVTeTgwSDQ3L1pUbTFQL2lDcmg5ZkhJY0pmVHlxeUtSakh6YjhIS1Ri?=
- =?utf-8?B?cjdrbDIwSld4UVRmbllpMmdHTjlNYzFOSkdPUllkaDlkdFg5UGFseEgzQk1p?=
- =?utf-8?B?Zm1SK21WNkIzTXVOQ0FCSGo4L0pieGNCOGIvbjBTVkdBOUFUaUJ6S2dyYmNi?=
- =?utf-8?B?R056R0lOZFdtVzZnOEcxdjFCVG1uOFhMYnU5VEZzYitTZXFSRFltd3psaWJt?=
- =?utf-8?B?MndJRElpRG0xaEgvTzBXakFjNlJJVyt1anhGZDBudnlTZlFYWW5ERkZUTzl4?=
- =?utf-8?B?bG92WHFMTnpCdGpHdzEvMkgrRVFsTHpXSHdPczdzT0o0Vnc4VXg0QlhGanRL?=
- =?utf-8?B?VC9Na3lSLzIrdUVPT0hwV3U3Mks3RlZPN045dlJzcExYK2J4QUQ5akxnczUr?=
- =?utf-8?B?MkhXWjlaMGFwRFBXNmJCKzhZNVR2N0tNYUpMV01YMWw4Rm43Q2tMdDBBcXB2?=
- =?utf-8?B?aHFmM1JyVjZSc3YrWHN2SU1aL3RUNUhjRHgzaVhrbVZpWHc1amY0L21FS3px?=
- =?utf-8?Q?yywAUftjAaTKo6F9cMAk8YTiA?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6e6ed26d-7fdd-4dfe-33fa-08dd51dacb96
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2025 18:17:11.8396
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rx5rsJFeaGRRx5jk3kC26DrtonQR84GUU3W3BGlqhFW8QauMJYv63OoXLTOV/RQnIC/UfLdVxAuIVkevpGyt9Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB9524
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: zuIWejWRNtbRCsuLFOLDp6zAMkoHhC6z
+X-Proofpoint-ORIG-GUID: y5u7NXx-QaNlJj2myfsdElRbcx1OeQjd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-20_08,2025-02-20_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 phishscore=0 malwarescore=0 mlxscore=0 clxscore=1011
+ spamscore=0 suspectscore=0 mlxlogscore=999 lowpriorityscore=0 bulkscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502200128
 
+On Tue, 18 Feb 2025 14:55:36 +1100
+Alistair Popple <apopple@nvidia.com> wrote:
 
-On 2/19/25 02:29, Dan Williams wrote:
-> Alejandro Lucero Palau wrote:
->> On 2/6/25 19:37, Dan Williams wrote:
->>>
->>> I was envisioning that accelerators only consider 'struct cxl_dev_state'
->>> and that 'struct cxl_memdev_state' is exclusively for
->>> CXL_DEVTYPE_CLASSMEM memory expander use case.
->>
->> That was the original idea and what I have followed since the RFC, but
->> since the patchset has gone through some assumptions which turned wrong,
->> I seized the "revolution" for changing this as well.
->>
->>
->> A type2 is a memdev, and what makes it different is the exposure, so I
->> can not see why an accel driver, at least a Type2, should not use a
->> cxl_memdev_state struct. This simplifies the type2 support and after
->> all, a Type2 could require the exact same things like a type3, like
->> mbox, perf, poison, ... .
-> I disagree, I think it avoids the discipline of maintaining Accelerator
-> CXL.mem infrastructure alongside the sometimes super-set sometimes
-> disjoint-set of generic CXL memory expander support.
->
-> Specifically, the reason I think the implementation is worse off reusing
-> cxl_memdev_state for accelerators is because accelerators are not
-> subject to the same requirements as "memory device" expanders that emit
-> the class code from CXL 3.1 8.1.12.1 "PCI Header - Class Code Register
-> (Offset 09h)".
->
-> The whole point of the CXL_DEVTYPE_CLASSMEM vs CXL_DEVTYPE_DEVMEM
-> distinction was for cases where accelerators are not mandated to support
-> the same functionality as a generic expander.
->
-> It is not until patch12 that this set notices that to_cxl_memdev_state()
-> has been returning NULL for accelerator created 'cxl_memdev_state'
-> instances. However, patch12 is confused because to_cxl_memdev_state()
-> has no reason to exist if it can be assumed that 'struct
-> cxl_memdev_state' always wraps 'struct cxl_dev_state'.
->
-> The fact that it requires thought and care to decide how accelerators
-> can share code paths with the generic memory class device case is a
-> *feature*.
->
-> So either 'enum cxl_devtype' needs to be removed altogether (would need
-> a strong argument that is currently absent from this set), or we need to
-> carefully think about the optional functionality that an accelerator may
-> want to reuse from expanders. As it stands, most of cxl_memdev_state
-> makes little sense for an accelerator:
+[...]
+> diff --git a/mm/memremap.c b/mm/memremap.c
+> index 9a8879b..532a52a 100644
+> --- a/mm/memremap.c
+> +++ b/mm/memremap.c
+> @@ -460,11 +460,10 @@ void free_zone_device_folio(struct folio *folio)
+>  {
+>  	struct dev_pagemap *pgmap = folio->pgmap;
+>  
+> -	if (WARN_ON_ONCE(!pgmap->ops))
+> -		return;
+> -
+> -	if (WARN_ON_ONCE(pgmap->type != MEMORY_DEVICE_FS_DAX &&
+> -			 !pgmap->ops->page_free))
+> +	if (WARN_ON_ONCE((!pgmap->ops &&
+> +			  pgmap->type != MEMORY_DEVICE_GENERIC) ||
+> +			 (pgmap->ops && !pgmap->ops->page_free &&
+> +			  pgmap->type != MEMORY_DEVICE_FS_DAX)))
 
+Playing around with dcssblk, adding devm_memremap_pages() and
+pgmap.type = MEMORY_DEVICE_FS_DAX, similar to the other two existing
+FS_DAX drivers drivers/nvdimm/pmem.c and fs/fuse/virtio_fs.c, I hit
+this warning when executing binaries from DAX-mounted fs.
 
-OK. I'll go back to using cxl_dev_state. More about this below.
+I do not set up pgmap->ops, similar to fs/fuse/virtio_fs.c, and I don't see
+why they would be needed here anyway, at least for MEMORY_DEVICE_FS_DAX.
+drivers/nvdimm/pmem.c does set up pgmap->ops, but only ->memory_failure,
+which is still good enough to not trigger the warning here, probably just
+by chance.
 
->>>    Something roughly like
->>> the below. Note, this borrows from the fwctl_alloc_device() example
->>> which captures the spirit of registering a c4ore object wrapped by an end
->>> driver provided structure).
->>>
->>> #define cxl_dev_state_create(parent, serial, dvsec, type, drv_struct, member)  \
->>>           ({                                                                     \
->>>                   static_assert(__same_type(struct cxl_dev_state,                \
->>>                                             ((drv_struct *)NULL)->member));      \
->>>                   static_assert(offsetof(drv_struct, member) == 0);              \
->>>                   (drv_struct *)_cxl_dev_state_create(parent, serial, dvsec,     \
->>>                                                       type, sizeof(drv_struct)); \
->>>           })
->>
->> If you prefer the accel driver keeping a struct embedding the core cxl
->> object, that is fine. I can not see a reason for not doing it, although
->> I can not see a reason either for imposing this.
-> The cxl_pci driver would use it to align on a single way to wrap its class device
-> driver context around 'struct cxl_dev_state'. So it is more about
-> setting common expectations across cxl_pci and accelerator drivers for
-> how they wrap 'struct cxl_dev_state'.
->
-> [..]
+Now I wonder:
+1) What is this check / warning good for, when this function only ever
+   calls pgmap->ops->page_free(), but not for MEMORY_DEVICE_FS_DAX and
+   not for MEMORY_DEVICE_GENERIC (the latter only after this patch)?
+2) Is the warning also seen for virtio DAX mappings (added Vivek and
+   Stefan on CC)? No pgmap->ops set up there, so I would guess "yes",
+   and already before this series, with the old check / warning.
+3) Could this be changed to only check / warn if pgmap->ops (or maybe
+   rather pgmap->ops->page_free) is not set up, but not for
+   MEMORY_DEVICE_GENERIC and MEMORY_DEVICE_FS_DAX where this is not
+   being called?
+4) Or is there any reason why pgmap->ops would be required for
+   MEMORY_DEVICE_FS_DAX?
 
+Apart from the warning, we would also miss out on the
+wake_up_var(&folio->page) in the MEMORY_DEVICE_FS_DAX case, when no
+pgmap->ops was set up. IIUC, even before this change / series (i.e.
+for virtio DAX only, since dcssblk was not using ZONE_DEVICE before,
+and pmem seems to work by chance because they have ops->memory_failure).
 
-I have tried this but it is not so simple as with the fwctl case where 
-the embedded struct is simpler.
+>  		return;
+>  
+>  	mem_cgroup_uncharge(folio);
+> @@ -494,7 +493,8 @@ void free_zone_device_folio(struct folio *folio)
+>  	 * zero which indicating the page has been removed from the file
+>  	 * system mapping.
+>  	 */
+> -	if (pgmap->type != MEMORY_DEVICE_FS_DAX)
+> +	if (pgmap->type != MEMORY_DEVICE_FS_DAX &&
+> +	    pgmap->type != MEMORY_DEVICE_GENERIC)
+>  		folio->mapping = NULL;
+>  
+>  	switch (pgmap->type) {
+> @@ -509,7 +509,6 @@ void free_zone_device_folio(struct folio *folio)
+>  		 * Reset the refcount to 1 to prepare for handing out the page
+>  		 * again.
+>  		 */
+> -		pgmap->ops->page_free(folio_page(folio, 0));
 
-As a result, a good bunch of until now internal CXL structs need to go 
-to include/cxl/cxl.h, otherwise the size for the whole accel driver 
-struct embedding cxl_dev_state can not be known.
+Ok, this is probably the reason why you adjusted the check above, since
+no more pgmap->ops needed for MEMORY_DEVICE_GENERIC.
+Still, the MEMORY_DEVICE_FS_DAX case also does not seem to need
+pgmap->ops, and at least the existing virtio DAX should already be
+affected, and of course future dcssblk DAX.
 
-That makes those struct visible to accel drivers which we tried to 
-avoid, but I guess this is fine and we should ensure accel drivers do 
-not use those structs freely, whatever the reason.
+But maybe that should be addressed in a separate patch, since your changes
+here seem consistent, and not change or worsen anything wrt !pgmap->ops
+and MEMORY_DEVICE_FS_DAX.
 
+>  		folio_set_count(folio, 1);
+>  		break;
+>  
 
-I will post a RFC just with that change, so only first two patches of 
-the whole type2 support patchset. Let's be sure we agree on how the 
-accel driver does this first initialization before I send the whole 
-patchset again.
+For reference, this is call trace I see when I hit the warning:
 
-
-
-
+[  283.567945] ------------[ cut here ]------------
+[  283.567947] WARNING: CPU: 12 PID: 878 at mm/memremap.c:436 free_zone_device_folio+0x6e/0x140
+[  283.567959] Modules linked in:
+[  283.567963] CPU: 12 UID: 0 PID: 878 Comm: ls Not tainted 6.14.0-rc3-next-20250220-00012-gd072dabf62e8-dirty #44
+[  283.567968] Hardware name: IBM 3931 A01 704 (z/VM 7.4.0)
+[  283.567971] Krnl PSW : 0704d00180000000 000001ec0548b44a (free_zone_device_folio+0x72/0x140)
+[  283.567978]            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:1 PM:0 RI:0 EA:3
+[  283.567982] Krnl GPRS: 0000000000000038 0000000000000000 0000000000000003 000001ec06cc42e8
+[  283.567986]            00000004cc38e400 0000000000000000 0000000000000003 0000000093eacd00
+[  283.567990]            000000009a68413f 0000016614010940 000000009553a640 0000016614010940
+[  283.567994]            0000000000000000 0000000000000000 000001ec0548b416 0000016c05da3bf8
+[  283.568004] Krnl Code: 000001ec0548b43e: a70e0003		chi	%r0,3
+                          000001ec0548b442: a7840006		brc	8,000001ec0548b44e
+                         #000001ec0548b446: af000000		mc	0,0
+                         >000001ec0548b44a: a7f4005f		brc	15,000001ec0548b508
+                          000001ec0548b44e: c00400000008	brcl	0,000001ec0548b45e
+                          000001ec0548b454: b904002b		lgr	%r2,%r11
+                          000001ec0548b458: c0e5001dcd84	brasl	%r14,000001ec05844f60
+                          000001ec0548b45e: 9101b01f		tm	31(%r11),1
+[  283.568035] Call Trace:
+[  283.568038]  [<000001ec0548b44a>] free_zone_device_folio+0x72/0x140 
+[  283.568042] ([<000001ec0548b416>] free_zone_device_folio+0x3e/0x140)
+[  283.568045]  [<000001ec057a4c1c>] wp_page_copy+0x34c/0x6e0 
+[  283.568050]  [<000001ec057ac640>] __handle_mm_fault+0x220/0x4d0 
+[  283.568054]  [<000001ec057ac97e>] handle_mm_fault+0x8e/0x160 
+[  283.568057]  [<000001ec054ca006>] do_exception+0x1a6/0x450 
+[  283.568061]  [<000001ec06264992>] __do_pgm_check+0x132/0x1e0 
+[  283.568065]  [<000001ec0627057e>] pgm_check_handler+0x11e/0x170 
+[  283.568069] Last Breaking-Event-Address:
+[  283.568070]  [<000001ec0548b428>] free_zone_device_folio+0x50/0x140
+[  283.568074] ---[ end trace 0000000000000000 ]---
