@@ -1,226 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13F8C2641D4
-	for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 19:45:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDD471DED7C
+	for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 19:50:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740080701; cv=none; b=eU6U/dmq7xBr0ln5wuZRgia4bRSlT7/AOU9ZfAZM8qiA5KHVf8kI1t1BW8hYQDcqr6XJnTngU8MxVSOCLqTUEiNUna+nyotfETVbVQoYxBwAximEZm6+uUCI3oZMNXpiPZ17AogJmf2W/Zr8S2gdNjH8x2Qv8coVTbQoLe78BoE=
+	t=1740081025; cv=none; b=BRRtGw9vhTKlNF9C3XWgdnDBaOPVa/BU3F/Rrsr6vmkhWTABp0AKKYbmZ1OIV0v/niULAx8yNQLqYPEeOEODvGDU+Y7WE0drrd+XL8zBnKnm+s+4Y6dqlwkd2RTOXok3I7vK9764us9dNwjCjxgbBjeVE5Aie3pPwL3yDTsU6MU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740080701; c=relaxed/simple;
-	bh=Iu3OA89/GkcbqRPZmKWpHpJrLfKZ00zZllKEyabLVjo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=C0aGC7xMNKNkEC3r4d3taJ37guclJyCThHG8Jdzo6/cBxZGA1t3G4YzRrGEd6t0TCYSSANZF9oCigKJBiTbDEAVe+PllF70Snm5qMSgVvqCEcdJTmP0AuSQ66y9VWU4LEmAfX4X4GmCbgKmcpOPmI6LUC5VBe+THDKGKnBoUSMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3F1EC4CED1;
-	Thu, 20 Feb 2025 19:45:00 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: dan.j.williams@intel.com,
-	ira.weiny@intel.com,
-	vishal.l.verma@intel.com,
-	alison.schofield@intel.com,
-	Jonathan.Cameron@huawei.com,
-	dave@stgolabs.net,
-	jgg@nvidia.com,
-	shiju.jose@huawei.com
-Subject: [PATCH v7 14/14] fwctl/cxl: Add documentation to FWCTL CXL
-Date: Thu, 20 Feb 2025 12:42:52 -0700
-Message-ID: <20250220194438.2281088-15-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250220194438.2281088-1-dave.jiang@intel.com>
-References: <20250220194438.2281088-1-dave.jiang@intel.com>
+	s=arc-20240116; t=1740081025; c=relaxed/simple;
+	bh=hrA9p38IDspEkGP1O2nHIhWSgfQXQd2krV1yHoiJhZc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VvM4+byjHPKWLVBT7I7Iz0SK/wxKFD9siidhWvBCdCMVn1AB5PK49hIwqWIkC+dYOSX7Cqdw4T/Z9Lj7kY4zVLmZ5GG740dUJP1w/4YbFI/six/Yir63P6vngy4GEk7w2Dk5gYKJXzxIuwz/UCZsbeBFe76SccAIXJ4CIskmEIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=XreyP/6V; arc=none smtp.client-ip=209.85.222.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="XreyP/6V"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7c04df48a5bso137461585a.2
+        for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 11:50:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1740081021; x=1740685821; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vsR/rhOtN1rjKKzwMCE+sYzTv4I88D0Di854W37LUUs=;
+        b=XreyP/6VZR+/YlqqsKyd/jk6z18yFsNjCesyjq1uzTTXdRqQI6zR6xijGstcs8KBYM
+         wER5BnvKL5jg3oMtzvYCc/UoJpI50wZvZIqz/UF0yY2fRAv+xQ+Oellzny35NYn9wk2D
+         qytqRcU0jHxCSZ4s1YRR2cG4aWOz3wwDTu+Lt+GU9TXyd6g9wL+ejrYESAuf2yjxpyIx
+         LYe8E8CHrHCXU6F+p6epRmVC7MDXTUnvevQrLSXb4rcUXwkk16tEr/vrWBpcpYXTQlKq
+         kyA/rR3Ob2wl8tAqrds6C21gn2tRau7sN2Ovgi4YYhURT/f7SAejJ7RQf8IeXQI1qKlf
+         8ZaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740081021; x=1740685821;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vsR/rhOtN1rjKKzwMCE+sYzTv4I88D0Di854W37LUUs=;
+        b=W7TGeJyB407u2hOQ2UYtZKlJ8CuOWQKJyul69vnt206+nVIKCaSAZucHvLVv4PzkQO
+         jrhKFhcAx0mJjCyF3rkDIeRZUIAutckxpNc+OG8w2ACMomNmre1g28VKsKWR/AvoJ+F4
+         Ng6BA8/tjl2BjT7Ir2G/weisHKqF6hViCsIMBsDWzocHN6zW/CNhjf/+/ZGPLe30Mbel
+         R95MVDwuTE58pg/ZKEJQHzoUJdqMqCn3q9xSTU3+oQ5n8quX6EOzVxT2ondqdrOreZuU
+         nmb95scdR7YxTXRPNL74MVigs0YKOTtRYCXYdgyVXjDKOZmnaJt/KrwkFF+cn596AxEY
+         qZ6w==
+X-Forwarded-Encrypted: i=1; AJvYcCUfXOZZnq+VQWUc5faN5NmMySQ7il6wxXnITv+3GFQVv7ow/I9p8taegsrs2G3xQ/ce3/75tdRXGl8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yznevi638TEZ3QRpaZj5QiScnvZ39ZufIrEKCTeEPHj1XI4N2o4
+	Uo5vevgzTuXLcI7FWtVoV90PwZjfTQocVQWufs7hC58fHltbVBJC/DVbWw4uRGY=
+X-Gm-Gg: ASbGncvLLbFNfhRLoCQwyhUwxwQi8XL435Thfeo0n/qAV1Teoca/UwwAT3cpJA5ozZ8
+	vm3mu6PxX8FJwM03pziAvqRpzJbOSOBdebyjg6chE+4W/ZmxprYHYuFA10F8m/KsL4YcOEWNvG+
+	ddcSaWhUDg5a8FzddmqMzsML/vfan/SMpBURJKAZUe/hD/nu82aAAup463vjkiuoMSlrKtyjqKU
+	0CYfYqH2JZkdvfnItRytsFyYPbHFC0gKT/5cW9oemwPGmum9zHuMJlJ+Z1dqcREJhKUIv8uF+9r
+	YQVtJSOxCI8+yZV9sPNtk4XIP8xjal9VuxmloMcAuUW9QXYH3s/xh+XG7eklBO1OYaw0HRSW8w=
+	=
+X-Google-Smtp-Source: AGHT+IEpdlOT13ijaiv8n6s5j9ITcvCGGzuTUZDlk5Q68kLQIU9M+/yqHtmw3jOZcJB0IM4LCuCABQ==
+X-Received: by 2002:a05:620a:444c:b0:7c0:ae2e:630d with SMTP id af79cd13be357-7c0ceefe6c0mr64848485a.16.1740081021543;
+        Thu, 20 Feb 2025 11:50:21 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c0c46f59cbsm98364485a.41.2025.02.20.11.50.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2025 11:50:20 -0800 (PST)
+Date: Thu, 20 Feb 2025 14:50:18 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v2 11/15] cxl/region: Use the endpoint's SPA range to
+ check a region
+Message-ID: <Z7eHeuikvako1Xhh@gourry-fedora-PF4VCD3F>
+References: <20250218132356.1809075-1-rrichter@amd.com>
+ <20250218132356.1809075-12-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250218132356.1809075-12-rrichter@amd.com>
 
-Add policy and operational documentation for FWCTL CXL.
+On Tue, Feb 18, 2025 at 02:23:52PM +0100, Robert Richter wrote:
+> Endpoints or switches requiring address translation might not be aware
+> of the system's interleaving configuration. Then, the configured
+> endpoint's address range might not match the expected range. In
+> contrast, the SPA range of an endpoint is calculated applying platform
+> specific address translation. That range is correct and can be used to
+> check a region range.
+> 
+> Adjust the region range check and use the endpoint's SPA range to
+> check it.
+> 
+> Signed-off-by: Robert Richter <rrichter@amd.com>
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- .../userspace-api/fwctl/fwctl-cxl.rst         | 144 ++++++++++++++++++
- Documentation/userspace-api/fwctl/index.rst   |   1 +
- MAINTAINERS                                   |   1 +
- 3 files changed, 146 insertions(+)
- create mode 100644 Documentation/userspace-api/fwctl/fwctl-cxl.rst
+Explanation could be a little clearer, something like:
 
-diff --git a/Documentation/userspace-api/fwctl/fwctl-cxl.rst b/Documentation/userspace-api/fwctl/fwctl-cxl.rst
-new file mode 100644
-index 000000000000..4e7b4bae0057
---- /dev/null
-+++ b/Documentation/userspace-api/fwctl/fwctl-cxl.rst
-@@ -0,0 +1,144 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+================
-+fwctl cxl driver
-+================
-+
-+:Author: Dave Jiang
-+
-+Overview
-+========
-+
-+The CXL spec defines a set of commands that can be issued to the mailbox of a
-+CXL device or switch. It also left room for vendor specific commands to be
-+issued to the mailbox as well. fwctl provides a path to issue a set of allowed
-+mailbox commands from user space to the device moderated by the kernel driver.
-+
-+The following 3 commands will be used to support CXL Features:
-+CXL spec r3.1 8.2.9.6.1 Get Supported Features (Opcode 0500h)
-+CXL spec r3.1 8.2.9.6.2 Get Feature (Opcode 0501h)
-+CXL spec r3.1 8.2.9.6.3 Set Feature (Opcode 0502h)
-+
-+The "Get Supported Features" return data may be filtered by the kernel driver to
-+drop any features that are forbidden by the kernel or being exclusively used by
-+the kernel. The driver will set the "Set Feature Size" of the "Get Supported
-+Features Supported Feature Entry" to 0 to indicate that the Feature cannot be
-+modified. The "Get Supported Features" command and the "Get Features" falls
-+under the fwctl policy of FWCTL_RPC_CONFIGURATION.
-+
-+For "Set Feature" command, the access policy currently is broken down into two
-+categories depending on the Set Feature effects reported by the device. If the
-+Set Feature will cause immediate change to the device, the fwctl access policy
-+must be FWCTL_RPC_DEBUG_WRITE_FULL. The effects for this level are
-+"immediate config change", "immediate data change", "immediate policy change",
-+or "immediate log change" for the set effects mask. If the effects are "config
-+change with cold reset" or "config change with conventional reset", then the
-+fwctl access policy must be FWCTL_RPC_DEBUG_WRITE or higher.
-+
-+fwctl cxl User API
-+==================
-+
-+.. kernel-doc:: include/uapi/fwctl/cxl.h
-+.. kernel-doc:: include/uapi/cxl/features.h
-+
-+1. Driver info query
-+--------------------
-+
-+First step for the app is to issue the ioctl(FWCTL_CMD_INFO). Successful
-+invocation of the ioctl implies the Features capability is operational and
-+returns an all zeros 32bit payload. A ``struct fwctl_info`` needs to be filled
-+out with the ``fwctl_info.out_device_type`` set to ``FWCTL_DEVICE_TYPE_CXL``.
-+The return data should be ``struct fwctl_info_cxl`` that contains a reserved
-+32bit field that should be all zeros.
-+
-+2. Send hardware commands
-+-------------------------
-+
-+Next step is to send the 'Get Supported Features' command to the driver from
-+user space via ioctl(FWCTL_RPC). A ``struct fwctl_rpc_cxl`` is pointed to
-+by ``fwctl_rpc.in``. ``struct fwctl_rpc_cxl.in_payload`` points to
-+the hardware input structure that is defined by the CXL spec. ``fwctl_rpc.out``
-+points to the buffer that contains a ``struct fwctl_rpc_cxl_out`` that includes
-+the hardware output data inlined as ``fwctl_rpc_cxl_out.payload``. This command
-+is called twice. First time to retrieve the number of features supported.
-+A second time to retrieve the specific feature details as the output data.
-+
-+After getting the specific feature details, a Get/Set Feature command can be
-+appropriately programmed and sent. For a "Set Feature" command, the retrieved
-+feature info contains an effects field that details the resulting
-+"Set Feature" command will trigger. That will inform the user whether
-+the system is configured to allowed the "Set Feature" command or not.
-+
-+Code example of a Get Feature
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+
-+.. code-block:: c
-+
-+        static int cxl_fwctl_rpc_get_test_feature(int fd, struct test_feature *feat_ctx,
-+                                                  const uint32_t expected_data)
-+        {
-+                struct cxl_mbox_get_feat_in *feat_in;
-+                struct fwctl_rpc_cxl_out *out;
-+                struct fwctl_rpc rpc = {0};
-+                struct fwctl_rpc_cxl *in;
-+                size_t out_size, in_size;
-+                uint32_t val;
-+                void *data;
-+                int rc;
-+
-+                in_size = sizeof(*in) + sizeof(*feat_in);
-+                rc = posix_memalign((void **)&in, 16, in_size);
-+                if (rc)
-+                        return -ENOMEM;
-+                memset(in, 0, in_size);
-+                feat_in = &in->get_feat_in;
-+
-+                uuid_copy(feat_in->uuid, feat_ctx->uuid);
-+                feat_in->count = feat_ctx->get_size;
-+
-+                out_size = sizeof(*out) + feat_ctx->get_size;
-+                rc = posix_memalign((void **)&out, 16, out_size);
-+                if (rc)
-+                        goto free_in;
-+                memset(out, 0, out_size);
-+
-+                in->opcode = CXL_MBOX_OPCODE_GET_FEATURE;
-+                in->op_size = sizeof(*feat_in);
-+
-+                rpc.size = sizeof(rpc);
-+                rpc.scope = FWCTL_RPC_CONFIGURATION;
-+                rpc.in_len = in_size;
-+                rpc.out_len = out_size;
-+                rpc.in = (uint64_t)(uint64_t *)in;
-+                rpc.out = (uint64_t)(uint64_t *)out;
-+
-+                rc = send_command(fd, &rpc, out);
-+                if (rc)
-+                        goto free_all;
-+
-+                data = out->payload;
-+                val = le32toh(*(__le32 *)data);
-+                if (memcmp(&val, &expected_data, sizeof(val)) != 0) {
-+                        rc = -ENXIO;
-+                        goto free_all;
-+                }
-+
-+        free_all:
-+                free(out);
-+        free_in:
-+                free(in);
-+                return rc;
-+        }
-+
-+Take a look at CXL CLI test directory
-+<https://github.com/pmem/ndctl/tree/main/test/fwctl.c> for a detailed user code
-+for examples on how to exercise this path.
-+
-+
-+fwctl cxl Kernel API
-+====================
-+
-+.. kernel-doc:: drivers/cxl/core/features.c
-+.. kernel-doc:: drivers/cxl/features.c
-+   :export:
-+.. kernel-doc:: include/cxl/features.h
-diff --git a/Documentation/userspace-api/fwctl/index.rst b/Documentation/userspace-api/fwctl/index.rst
-index 06959fbf1547..d9d40a468a31 100644
---- a/Documentation/userspace-api/fwctl/index.rst
-+++ b/Documentation/userspace-api/fwctl/index.rst
-@@ -10,3 +10,4 @@ to securely construct and execute RPCs inside device firmware.
-    :maxdepth: 1
- 
-    fwctl
-+   fwctl-cxl
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 413ab79bf2f4..b450c960687c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5837,6 +5837,7 @@ M:	Dan Williams <dan.j.williams@intel.com>
- L:	linux-cxl@vger.kernel.org
- S:	Maintained
- F:	Documentation/driver-api/cxl
-+F:	Documentation/userspace-api/fwctl/fwctl-cxl.rst
- F:	drivers/cxl/
- F:	include/cxl/
- F:	include/uapi/linux/cxl_mem.h
--- 
-2.48.1
+Endpoint and switch decoders may have an HPA range that differs from
+the memory region's SPA range.  Utilize the device's calculated
+spa_range instead of its hpa_range to validate the region mapping.
 
+
+The interleave comments don't seem particularly relevant here unless i'm
+missing something.
+
+The content of the patch looks good.
+
+Reviewed-by: Gregory Price <gourry@gourry.net>
+
+> ---
+>  drivers/cxl/core/region.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 3afcc9ca06ae..2ca24565757a 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -1531,22 +1531,26 @@ static int cxl_port_setup_targets(struct cxl_port *port,
+>  	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
+>  		if (cxld->interleave_ways != iw ||
+>  		    cxld->interleave_granularity != ig ||
+> -		    cxld->hpa_range.start != p->res->start ||
+> -		    cxld->hpa_range.end != p->res->end ||
+> +		    cxled->spa_range.start != p->res->start ||
+> +		    cxled->spa_range.end != p->res->end ||
+>  		    ((cxld->flags & CXL_DECODER_F_ENABLE) == 0)) {
+>  			dev_err(&cxlr->dev,
+>  				"%s:%s %s expected iw: %d ig: %d %pr\n",
+>  				dev_name(port->uport_dev), dev_name(&port->dev),
+>  				__func__, iw, ig, p->res);
+>  			dev_err(&cxlr->dev,
+> -				"%s:%s %s got iw: %d ig: %d state: %s %#llx:%#llx\n",
+> +				"%s:%s %s got iw: %d ig: %d state: %s %#llx-%#llx:%#llx-%#llx(%s):%#llx-%#llx(%s)\n",
+>  				dev_name(port->uport_dev), dev_name(&port->dev),
+>  				__func__, cxld->interleave_ways,
+>  				cxld->interleave_granularity,
+>  				(cxld->flags & CXL_DECODER_F_ENABLE) ?
+>  					"enabled" :
+>  					"disabled",
+> -				cxld->hpa_range.start, cxld->hpa_range.end);
+> +				p->res->start, p->res->end,
+> +				cxled->spa_range.start, cxled->spa_range.end,
+> +				dev_name(&cxled->cxld.dev),
+> +				cxld->hpa_range.start, cxld->hpa_range.end,
+> +				dev_name(&cxld->dev));
+>  			return -ENXIO;
+>  		}
+>  	} else {
+> -- 
+> 2.39.5
+> 
