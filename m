@@ -1,81 +1,81 @@
-Received: from slategray.cherry.relay.mailchannels.net (slategray.cherry.relay.mailchannels.net [23.83.223.169])
+Received: from sienna.cherry.relay.mailchannels.net (sienna.cherry.relay.mailchannels.net [23.83.223.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A53AC7082E
-	for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 01:37:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5DD813DDD3
+	for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 01:37:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.165
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740015436; cv=pass; b=CMTx3sY3WxdqWuNg28q/GAtobUTbhpwaeh4dbJ29+jj6Vzh7ApEgZYXgeuFh/kTRkA7m3z+/ysve9PJlBs+HIHuZKfPIyI1HOT0GY0kFSzmbNVOurKB6lmi92E2DBAsSdpbha1MnZ9ttZXGjnj/DWRp0jrs0WurQ8u4aeiPNUI4=
+	t=1740015436; cv=pass; b=r1/jf5MWK/bRRoivo2ahmR1HcgpIPOXm0XfylDDMMpU7hEE82zmUbtB+JjrwMODmd4EiIr0p5kORvV6A4QNiU75EbWhsqKYwI/M18s3hoSH3U8Tmu9TZB9TV5fin+vXWbH/5M3qnKmyiK2JNN/SfclWw6rVA8uXNIq/L74gTua8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740015436; c=relaxed/simple;
-	bh=3vwAkv1d0jHerRD1PW3RmRZIoCCsKpnZmMJph/NVB+o=;
+	bh=oiHRrKGlluql4Dz8RS2LrxPuSLsg4MRxKuAD4UyjqOg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=t2mpwBBUxDijsI6rh3Rbqg4RR5RkhLqUzkYycWVA3caxpMICcULcrb8EWk6C+zqFY4H82hxx+EW3CHUfBiva/wFTjSV9IVX6oGMk78vB/V/mRSlx5JqMecSUI2zdQ6MysjWaHe+VfjJFzSzfT4d8bvJVaGFFnmztKQXhbldho7I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=G8FJlFgJ; arc=pass smtp.client-ip=23.83.223.169
+	 MIME-Version; b=PtgleBrRQI6bJSti23y0T6dPx25A+eBK3IZCB09ufq1gIWQlZUH/4XfbZoJRXWsdhaCgP93wM3/0o4V9a9mGt8s241txcr8AGLboSfNZl2L9jYiGlB964r3z1QPPWMf5q7+sr8Cb2fQv8840+DvT9m50Qz+SDT4wosPlmLMmaL4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=ndzuAZuJ; arc=pass smtp.client-ip=23.83.223.165
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="G8FJlFgJ"
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="ndzuAZuJ"
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id ABE052C3527;
-	Thu, 20 Feb 2025 01:37:08 +0000 (UTC)
-Received: from pdx1-sub0-mail-a300.dreamhost.com (100-99-192-59.trex-nlb.outbound.svc.cluster.local [100.99.192.59])
+	by relay.mailchannels.net (Postfix) with ESMTP id E15687807B0;
+	Thu, 20 Feb 2025 01:37:07 +0000 (UTC)
+Received: from pdx1-sub0-mail-a300.dreamhost.com (100-102-124-192.trex-nlb.outbound.svc.cluster.local [100.102.124.192])
 	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 46CEB2C2CF6;
-	Thu, 20 Feb 2025 01:37:08 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1740015428; a=rsa-sha256;
+	by relay.mailchannels.net (Postfix) with ESMTPA id 7498778260A;
+	Thu, 20 Feb 2025 01:37:07 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1740015427; a=rsa-sha256;
 	cv=none;
-	b=91hbCsLeFmfl4kfY2ihS1Ib47/AYgHZJdyRiIdlKy1H7PYORmd1X9Egbrd6UNIg0/36UHy
-	rkdoC3DMX8CRoHpm2x5vnuAlE1XNR0+puic67IMmvgxc1ZWMa7h1kst+peBWnBXSOadiMP
-	hfj3xvIhefrm0J95mZxpzE8WjKL9frdzgNVCoVJll5Yx1O7diCOlWg7CCPfwe6dsckWDRV
-	mheq+h6yNsKc6fgztced6VjqC7fTsaEjfifmlmgyzHotDalqDcbCg4JilQ9Sup2i1L5bss
-	5WJIBp7JUxsWzwObuGd7rjmI7T23eN9c1fQvHj9lgqnn8fyc9+lWMQQ/ZbQ5rA==
+	b=IcDOQOBtELYKoQA4uuNxYSTHVx3s/Qd16jBPoVxT0WHvyWIe77uNiukD+jS1qEOkDyw44Q
+	z5uxnQcVevJCnFSP5CLAevb7sb7ZxryrRsjSqtapgS9UkDX2lhVhw3aZ61WN359dmejN9f
+	zM+xuMRHpfHYtp+Ef2x38rTxVLd0c/0SmYWL5lKLpYXc32JfLH9XsFhNybpH3Yyk4uXIo+
+	3Az0rECVthFrwDke87fD3RUqIX2OKD1lGy6jp3HszLAmRFCK3lHFV6notT0cTsgK0MELQL
+	Gt12dekKOhJD1Khv78qEzYTTdIhAXvnDjga2YEB4+r4hEHMzA4ceCaYZcwXLTw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-	s=arc-2022; t=1740015428;
+	s=arc-2022; t=1740015427;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=ObteXauFVE4bYK5zXDJLlupkYnUT4Pw33ZZc+ElpCgY=;
-	b=9RPBaDTd1ImTJYuyBAD2ReQbaYff+S+eAj4LeOZj7ysOuIPZzcU5VCuQ2HjVykJo6PVG48
-	FgFqnTAeT6gyFPxV1eQTpnKb1kLvMbiGFWLGOeaPB6QGy5hjJSae/JRm/1heVQEQNM3GpJ
-	TUEl1ChMMxQhMaV5LFiCecZNdi+PVCiOHWVGQzSC9CV7cunh2bViGcxNKkcGbJQd/13rQO
-	DKxQOIpon8/QKEU3tiOwMpn1D7eqt2szODYfWhZP1TbLYsJRLyAFWPgsCfbqU8ztmJ4omc
-	3eVgiUmf8wWpQbFVSo9EDBhdi0VEzUis+hHih5XsuY+v0acL5hHkevkd2e25lQ==
+	bh=8n1f09kplx46bD/CSHMXPdCWSdvZipyzzSILkaeyvJI=;
+	b=8sJX5tINYQimiSBqP2a0MEZ5EJUv0a/4ezjLeBT2xmf5XKHfx2yRE4tc+SZU3PU5YXN6Se
+	pbKUyYD8zb9MD+tFG7+cA+mnwHnm7o0/WnGZKK3rGAplff8e3yqTw10X8JLeUfsNucQxWb
+	7X+w3x1eTXsYVrn5q6xarOzXaoZEWrAOwan6z8O1KzuLnZnxAgtR1UmDDRPzT+FAXiPuj1
+	viF5uSrOkG6jGC4UTxr8fAPWvKriSkUt7EB27JM77woud2gg/8Fzx5eu8ZBDG2Wrlfm0yk
+	Hjixw9L3LiP4astqh2QEburcDJFILSB22o+pLMA+G658Q5AfTcDaN8yyYclBlw==
 ARC-Authentication-Results: i=1;
-	rspamd-6d7cc6b78d-56wzv;
+	rspamd-6d7cc6b78d-bd6dx;
 	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Arch-Language: 1173aa28569dd3ee_1740015428585_3768806492
-X-MC-Loop-Signature: 1740015428585:3646154081
-X-MC-Ingress-Time: 1740015428585
+X-Squirrel-Sponge: 2a3ae1f62a04ff17_1740015427788_439790444
+X-MC-Loop-Signature: 1740015427788:3552898818
+X-MC-Ingress-Time: 1740015427788
 Received: from pdx1-sub0-mail-a300.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.99.192.59 (trex/7.0.2);
-	Thu, 20 Feb 2025 01:37:08 +0000
+	by 100.102.124.192 (trex/7.0.2);
+	Thu, 20 Feb 2025 01:37:07 +0000
 Received: from localhost.localdomain (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a300.dreamhost.com (Postfix) with ESMTPSA id 4Yywq73LQ6zY0;
-	Wed, 19 Feb 2025 17:37:07 -0800 (PST)
+	by pdx1-sub0-mail-a300.dreamhost.com (Postfix) with ESMTPSA id 4Yywq64Zqnz5y;
+	Wed, 19 Feb 2025 17:37:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1740015428;
-	bh=ObteXauFVE4bYK5zXDJLlupkYnUT4Pw33ZZc+ElpCgY=;
+	s=dreamhost; t=1740015427;
+	bh=8n1f09kplx46bD/CSHMXPdCWSdvZipyzzSILkaeyvJI=;
 	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-	b=G8FJlFgJkkgLjqLu+PiwlVaLxIJ2pXizKqu7w68iTUrH12G/pXQhtgAt9xOVSZppO
-	 3sCv3xslHxBApJ2K85DVrSvFcmaq3nn939eAzdVSzjUpZwjw9UuJrkS6YpkhJBkzfz
-	 3kSpdo4bE9UNWRhbevA7JqwCnC8LSA5/MNRsKaVWmSgDGENG8r1rBq7wcUphESU+GH
-	 BbjM3hab6kHrgO0uI6wO2aprnAKl4lcgrrTHDv48dcV4KXNpsDOsitH4CKKODk0EBu
-	 z5oKwIigrwDjTZGO0FTUnniuhgl9nycO/tx9QzpzgR9x57I/Zigjque0PlFFxsjcWQ
-	 dEFPcUl6k4AFg==
+	b=ndzuAZuJGOsisJEfwF8YEYF6UdNHxf6QMzzeXOI22d6trcOI1BIE/JHVyvqD0Hatf
+	 W+ZmRslvGoK99H0AiJxkWlWzN55JmIqYp22wBEnAsKVPppGqSt9lCQvjlzFpl4HZil
+	 ZedZDYFCVsxOSp1YYz2dLzH34zuTUQaUOAc7IuJeuuiz6rmOTMmKCUUDcxDKKPOHLC
+	 yA0uNrUMvGRtt4CjST4iGShXufPAs85NKb53dsRrZz8MfouhGW6y5/6rm8F+QMYMbp
+	 5lb+6nxdfMkUAH/cQ3AUMbwhnD7f2hapB/0VsvrwMIkP2RHvlVwdjaKWTzqpYhwcft
+	 vHkhbTocmzImQ==
 From: Davidlohr Bueso <dave@stgolabs.net>
 To: dave.jiang@intel.com,
 	dan.j.williams@intel.com
@@ -90,9 +90,9 @@ Cc: jonathan.cameron@huawei.com,
 	anisa.su@samsung.com,
 	dave@stgolabs.net,
 	linux-cxl@vger.kernel.org
-Subject: [PATCH 4/4] tools/testing/cxl: Set Shutdown State support
-Date: Wed, 19 Feb 2025 17:36:04 -0800
-Message-Id: <20250220013604.263489-5-dave@stgolabs.net>
+Subject: [PATCH 3/4] cxl/pmem: Export dirty shutdown count via sysfs
+Date: Wed, 19 Feb 2025 17:36:03 -0800
+Message-Id: <20250220013604.263489-4-dave@stgolabs.net>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250220013604.263489-1-dave@stgolabs.net>
 References: <20250220013604.263489-1-dave@stgolabs.net>
@@ -104,70 +104,256 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add support to emulate the CXL Set Shutdown State operation.
+Similar to how the acpi_nfit driver exports Optane dirty shutdown count,
+introduce:
 
+  /sys/bus/cxl/devices/nvdimm-bridge0/ndbusX/nmemY/cxl/dirty_shutdown
+
+Under the conditions that 1) dirty shutdown can be set, 2) Device GPF
+DVSEC exists, and 3) the count itself can be retrieved.
+
+Suggested-by: Dan Williams <dan.j.williams@intel.com>
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Li Ming <ming.li@zohomail.com>
 Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 ---
- tools/testing/cxl/test/mem.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ Documentation/ABI/testing/sysfs-bus-cxl       | 12 +++
+ Documentation/driver-api/cxl/maturity-map.rst |  2 +-
+ drivers/cxl/core/mbox.c                       | 21 +++++
+ drivers/cxl/cxl.h                             |  1 +
+ drivers/cxl/cxlmem.h                          | 13 +++
+ drivers/cxl/pmem.c                            | 79 ++++++++++++++++---
+ 6 files changed, 118 insertions(+), 10 deletions(-)
 
-diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-index 495199238335..9ca210b80e27 100644
---- a/tools/testing/cxl/test/mem.c
-+++ b/tools/testing/cxl/test/mem.c
-@@ -65,6 +65,10 @@ static struct cxl_cel_entry mock_cel[] = {
- 		.opcode = cpu_to_le16(CXL_MBOX_OP_GET_HEALTH_INFO),
- 		.effect = CXL_CMD_EFFECT_NONE,
- 	},
-+	{
-+		.opcode = cpu_to_le16(CXL_MBOX_OP_SET_SHUTDOWN_STATE),
-+		.effect = POLICY_CHANGE_IMMEDIATE,
-+	},
- 	{
- 		.opcode = cpu_to_le16(CXL_MBOX_OP_GET_POISON),
- 		.effect = CXL_CMD_EFFECT_NONE,
-@@ -161,6 +165,7 @@ struct cxl_mockmem_data {
- 	u8 event_buf[SZ_4K];
- 	u64 timestamp;
- 	unsigned long sanitize_timeout;
-+	u8 shutdown_state;
+diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+index 3f5627a1210a..a7491d214098 100644
+--- a/Documentation/ABI/testing/sysfs-bus-cxl
++++ b/Documentation/ABI/testing/sysfs-bus-cxl
+@@ -586,3 +586,15 @@ Description:
+ 		See Documentation/ABI/stable/sysfs-devices-node. access0 provides
+ 		the number to the closest initiator and access1 provides the
+ 		number to the closest CPU.
++
++
++What:		/sys/bus/cxl/devices/nvdimm-bridge0/ndbusX/nmemY/cxl/dirty_shutdown
++Date:		Feb, 2025
++KernelVersion:	v6.15
++Contact:	linux-cxl@vger.kernel.org
++Description:
++		(RO) The device dirty shutdown count value, which is the number
++		of times the device could have incurred in potential data loss.
++		The count is persistent across power loss and wraps back to 0
++		upon overflow. If this file is not present, the device does not
++		have the necessary support for dirty tracking.
+diff --git a/Documentation/driver-api/cxl/maturity-map.rst b/Documentation/driver-api/cxl/maturity-map.rst
+index 99dd2c841e69..a2288f9df658 100644
+--- a/Documentation/driver-api/cxl/maturity-map.rst
++++ b/Documentation/driver-api/cxl/maturity-map.rst
+@@ -130,7 +130,7 @@ Mailbox commands
+ * [0] Switch CCI
+ * [3] Timestamp
+ * [1] PMEM labels
+-* [1] PMEM GPF / Dirty Shutdown
++* [3] PMEM GPF / Dirty Shutdown
+ * [0] Scan Media
+ 
+ PMU
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index 86d13f4a1c18..6bc398182a5d 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -1281,6 +1281,27 @@ int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_mem_dpa_fetch, "CXL");
+ 
++int cxl_get_dirty_count(struct cxl_memdev_state *mds, u32 *count)
++{
++	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
++	struct cxl_mbox_get_health_info_out hi;
++	struct cxl_mbox_cmd mbox_cmd;
++	int rc;
++
++	mbox_cmd = (struct cxl_mbox_cmd) {
++		.opcode = CXL_MBOX_OP_GET_HEALTH_INFO,
++		.size_out = sizeof(hi),
++		.payload_out = &hi,
++	};
++
++	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
++	if (!rc)
++		*count = le32_to_cpu(hi.dirty_shutdown_cnt);
++
++	return rc;
++}
++EXPORT_SYMBOL_NS_GPL(cxl_get_dirty_count, "CXL");
++
+ int cxl_arm_dirty_shutdown(struct cxl_memdev_state *mds)
+ {
+ 	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 29f2ab0d5bf6..8bdfa536262e 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -542,6 +542,7 @@ struct cxl_nvdimm {
+ 	struct device dev;
+ 	struct cxl_memdev *cxlmd;
+ 	u8 dev_id[CXL_DEV_ID_LEN]; /* for nvdimm, string of 'serial' */
++	u64 dirty_shutdowns;
  };
  
- static struct mock_event_log *event_find_log(struct device *dev, int log_type)
-@@ -1088,6 +1093,21 @@ static int mock_health_info(struct cxl_mbox_cmd *cmd)
- 	return 0;
- }
+ struct cxl_pmem_region_mapping {
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index 6d60030139df..3b6ef9e936c3 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -681,6 +681,18 @@ struct cxl_mbox_set_partition_info {
  
-+static int mock_set_shutdown_state(struct cxl_mockmem_data *mdata,
-+				   struct cxl_mbox_cmd *cmd)
+ #define  CXL_SET_PARTITION_IMMEDIATE_FLAG	BIT(0)
+ 
++/* Get Health Info Output Payload CXL 3.2 Spec 8.2.10.9.3.1 Table 8-148 */
++struct cxl_mbox_get_health_info_out {
++	u8 health_status;
++	u8 media_status;
++	u8 additional_status;
++	u8 life_used;
++	__le16 device_temperature;
++	__le32 dirty_shutdown_cnt;
++	__le32 corrected_volatile_error_cnt;
++	__le32 corrected_persistent_error_cnt;
++} __packed;
++
+ /* Set Shutdown State Input Payload CXL 3.2 Spec 8.2.10.9.3.5 Table 8-152 */
+ struct cxl_mbox_set_shutdown_state_in {
+ 	u8 state;
+@@ -822,6 +834,7 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+ 			    enum cxl_event_log_type type,
+ 			    enum cxl_event_type event_type,
+ 			    const uuid_t *uuid, union cxl_event *evt);
++int cxl_get_dirty_count(struct cxl_memdev_state *mds, u32 *count);
+ int cxl_arm_dirty_shutdown(struct cxl_memdev_state *mds);
+ int cxl_set_timestamp(struct cxl_memdev_state *mds);
+ int cxl_poison_state_init(struct cxl_memdev_state *mds);
+diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
+index 6b284962592f..cb039cfc62cb 100644
+--- a/drivers/cxl/pmem.c
++++ b/drivers/cxl/pmem.c
+@@ -38,19 +38,48 @@ static ssize_t id_show(struct device *dev, struct device_attribute *attr, char *
+ 	struct cxl_nvdimm *cxl_nvd = nvdimm_provider_data(nvdimm);
+ 	struct cxl_dev_state *cxlds = cxl_nvd->cxlmd->cxlds;
+ 
+-	return sysfs_emit(buf, "%lld\n", cxlds->serial);
++	return sysfs_emit(buf, "%llu\n", cxlds->serial);
+ }
+ static DEVICE_ATTR_RO(id);
+ 
++static ssize_t dirty_shutdown_show(struct device *dev,
++				   struct device_attribute *attr, char *buf)
 +{
-+	struct cxl_mbox_set_shutdown_state_in *ss = cmd->payload_in;
++	struct nvdimm *nvdimm = to_nvdimm(dev);
++	struct cxl_nvdimm *cxl_nvd = nvdimm_provider_data(nvdimm);
 +
-+	if (cmd->size_in != sizeof(*ss))
-+		return -EINVAL;
++	return sysfs_emit(buf, "%lld\n", cxl_nvd->dirty_shutdowns);
++}
++static DEVICE_ATTR_RO(dirty_shutdown);
 +
-+	if (cmd->size_out != 0)
-+		return -EINVAL;
+ static struct attribute *cxl_dimm_attributes[] = {
+ 	&dev_attr_id.attr,
+ 	&dev_attr_provider.attr,
++	&dev_attr_dirty_shutdown.attr,
+ 	NULL
+ };
+ 
++#define CXL_INVALID_DIRTY_SHUTDOWN_COUNT ULLONG_MAX
++static umode_t cxl_dimm_visible(struct kobject *kobj,
++				struct attribute *a, int n)
++{
++	if (a == &dev_attr_dirty_shutdown.attr) {
++		struct device *dev = kobj_to_dev(kobj);
++		struct nvdimm *nvdimm = to_nvdimm(dev);
++		struct cxl_nvdimm *cxl_nvd = nvdimm_provider_data(nvdimm);
 +
-+	mdata->shutdown_state = ss->state;
-+	return 0;
++		if (cxl_nvd->dirty_shutdowns ==
++		    CXL_INVALID_DIRTY_SHUTDOWN_COUNT)
++			return 0;
++	}
++
++	return a->mode;
 +}
 +
- static struct mock_poison {
- 	struct cxl_dev_state *cxlds;
- 	u64 dpa;
-@@ -1421,6 +1441,9 @@ static int cxl_mock_mbox_send(struct cxl_mailbox *cxl_mbox,
- 	case CXL_MBOX_OP_PASSPHRASE_SECURE_ERASE:
- 		rc = mock_passphrase_secure_erase(mdata, cmd);
- 		break;
-+	case CXL_MBOX_OP_SET_SHUTDOWN_STATE:
-+		rc = mock_set_shutdown_state(mdata, cmd);
-+		break;
- 	case CXL_MBOX_OP_GET_POISON:
- 		rc = mock_get_poison(cxlds, cmd);
- 		break;
+ static const struct attribute_group cxl_dimm_attribute_group = {
+ 	.name = "cxl",
+ 	.attrs = cxl_dimm_attributes,
++	.is_visible = cxl_dimm_visible
+ };
+ 
+ static const struct attribute_group *cxl_dimm_attribute_groups[] = {
+@@ -58,6 +87,38 @@ static const struct attribute_group *cxl_dimm_attribute_groups[] = {
+ 	NULL
+ };
+ 
++static void cxl_nvdimm_setup_dirty_tracking(struct cxl_nvdimm *cxl_nvd)
++{
++	struct cxl_memdev *cxlmd = cxl_nvd->cxlmd;
++	struct cxl_dev_state *cxlds = cxlmd->cxlds;
++	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
++	struct device *dev = &cxl_nvd->dev;
++	u32 count;
++
++	/*
++	 * Dirty tracking is enabled and exposed to the user, only when:
++	 *   - dirty shutdown on the device can be set, and,
++	 *   - the device has a Device GPF DVSEC (albeit unused), and,
++	 *   - the Get Health Info cmd can retrieve the device's dirty count.
++	 */
++	cxl_nvd->dirty_shutdowns = CXL_INVALID_DIRTY_SHUTDOWN_COUNT;
++
++	if (cxl_arm_dirty_shutdown(mds)) {
++		dev_warn(dev, "GPF: could not set dirty shutdown state\n");
++		return;
++	}
++
++	if (!cxl_gpf_get_dvsec(cxlds->dev, false))
++		return;
++
++	if (cxl_get_dirty_count(mds, &count)) {
++		dev_warn(dev, "GPF: could not retrieve dirty count\n");
++		return;
++	}
++
++	cxl_nvd->dirty_shutdowns = count;
++}
++
+ static int cxl_nvdimm_probe(struct device *dev)
+ {
+ 	struct cxl_nvdimm *cxl_nvd = to_cxl_nvdimm(dev);
+@@ -78,20 +139,20 @@ static int cxl_nvdimm_probe(struct device *dev)
+ 	set_bit(ND_CMD_GET_CONFIG_SIZE, &cmd_mask);
+ 	set_bit(ND_CMD_GET_CONFIG_DATA, &cmd_mask);
+ 	set_bit(ND_CMD_SET_CONFIG_DATA, &cmd_mask);
+-	nvdimm = __nvdimm_create(cxl_nvb->nvdimm_bus, cxl_nvd,
+-				 cxl_dimm_attribute_groups, flags,
+-				 cmd_mask, 0, NULL, cxl_nvd->dev_id,
+-				 cxl_security_ops, NULL);
+-	if (!nvdimm)
+-		return -ENOMEM;
+ 
+ 	/*
+ 	 * Set dirty shutdown now, with the expectation that the device
+ 	 * clear it upon a successful GPF flow. The exception to this
+ 	 * is upon Viral detection, per CXL 3.2 section 12.4.2.
+ 	 */
+-	if (cxl_arm_dirty_shutdown(mds))
+-		dev_warn(dev, "GPF: could not dirty shutdown state\n");
++	cxl_nvdimm_setup_dirty_tracking(cxl_nvd);
++
++	nvdimm = __nvdimm_create(cxl_nvb->nvdimm_bus, cxl_nvd,
++				 cxl_dimm_attribute_groups, flags,
++				 cmd_mask, 0, NULL, cxl_nvd->dev_id,
++				 cxl_security_ops, NULL);
++	if (!nvdimm)
++		return -ENOMEM;
+ 
+ 	dev_set_drvdata(dev, nvdimm);
+ 	return devm_add_action_or_reset(dev, unregister_nvdimm, nvdimm);
 -- 
 2.39.5
 
