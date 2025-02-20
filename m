@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5565D21480E
-	for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 19:44:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C753C2641D3
+	for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 19:44:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740080695; cv=none; b=DePd/gzgBG8GubcHM10TYiz+CFJWlwDSZN4SfL8zP11T2otVRqIe7flPxeiq4ymoTA1nbARxzi05E7YIBl5wJYLgcLlspHTB2l4CeyMyILAha/3W1InE0kP5nk+5RYqGciZ6djmyk1c8Y23+Ah4uLu9l87vWt+mZv+eqLZYRuaY=
+	t=1740080696; cv=none; b=ETlrqY/PjS60N9p1cZL7VR2zZnuFP39bVy3yViogx+MTpLcS8q+lefhERqwt0FN2+LglWe9W7G0o+WO75MWKSl/mFzMo0NFCk8fSvHpr9VIO8b7fXyjKP+lX2TAHqZs/qCAV29IxUKmqnjHINye6Nv6JGqUUWrHxseSmnq6kbe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740080695; c=relaxed/simple;
-	bh=hsFc2tIIn6b/GGu3ATQsMW5ZLmNNY1aLn1aQr7VzxmI=;
+	s=arc-20240116; t=1740080696; c=relaxed/simple;
+	bh=lVq5aPQVgzzv7bcKu6Sr5ss7QbeOryHahWHN2f/gnSQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NLFYi8Enz7JXB6LPOL1C1HtiWqEU0SFBRGi5fWZbEiCewuqmNBX3mhehRyibV94CM2LFEpSUgE93IImtWrQObmn+viNBFBSsBDwilDbUUMaBLeb3x40ngFSZxdcMOT5oVbQKgAPTDretVWn3jlF49OdyuTYvTSMcGe65a2CRVDo=
+	 MIME-Version; b=fVMwCEdZvPvSl20q4NIOy279cmWo38YQCxsybGEeJCozkwIFks7PY0X5mMuz2f7hhv1N7xSzUkS5ZV0rTa3pJ5dYzcqyFtIpzyRl1SjG8RihBHhdt5OTTJuemYet2ZxAa/5JqT72dropUxjXcrkNNuIftfw7RMxIGcti723xovE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA348C4CED6;
-	Thu, 20 Feb 2025 19:44:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9239AC4CED6;
+	Thu, 20 Feb 2025 19:44:56 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: dan.j.williams@intel.com,
@@ -25,9 +25,9 @@ Cc: dan.j.williams@intel.com,
 	jgg@nvidia.com,
 	shiju.jose@huawei.com,
 	Li Ming <ming.li@zohomail.com>
-Subject: [PATCH v7 09/14] cxl: Add support for fwctl RPC command to enable CXL feature commands
-Date: Thu, 20 Feb 2025 12:42:47 -0700
-Message-ID: <20250220194438.2281088-10-dave.jiang@intel.com>
+Subject: [PATCH v7 11/14] cxl: Add support to handle user feature commands for set feature
+Date: Thu, 20 Feb 2025 12:42:49 -0700
+Message-ID: <20250220194438.2281088-12-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250220194438.2281088-1-dave.jiang@intel.com>
 References: <20250220194438.2281088-1-dave.jiang@intel.com>
@@ -39,245 +39,234 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-fwctl provides a fwctl_ops->fw_rpc() callback in order to issue ioctls
-to a device. The cxl fwctl driver will start by supporting the CXL
-Feature commands: Get Supported Features, Get Feature, and Set Feature.
+Add helper function to parse the user data from fwctl RPC ioctl and
+send the parsed input parameters to cxl_set_feature() call.
 
-The fw_rpc() callback provides 'enum fwctl_rpc_scope' parameter where
-it indicates the security scope of the call. The Get Supported Features
-and Get Feature calls can be executed with the scope of
-FWCTL_RPC_CONFIGRATION. The Set Feature call is gated by the effects
-of the Feature reported by Get Supported Features call for the specific
-Feature.
-
-Only "Get Supported Features" is supported in this patch. Additional
-commands will be added in follow on patches. "Get Supported Features"
-will filter the Features that are exclusive to the kernel. The flag
-field of the Feature details will be cleared of the "Changeable"
-field and the "set feat size" will be set to 0 to indicate that
-the feature is not changeable.
-
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 Reviewed-by: Li Ming <ming.li@zohomail.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
 v7:
-- Point feat_out to rpc_out->get_sup_feats_out. (Jonathan)
-- Move flex_array declare to when used. (Jonathan)
+- Set uuid to set_feat->uuid. (Jonathan)
 ---
- drivers/cxl/core/features.c | 121 +++++++++++++++++++++++++++++++++++-
- include/uapi/cxl/features.h |   1 +
- include/uapi/fwctl/cxl.h    |  46 ++++++++++++++
- 3 files changed, 166 insertions(+), 2 deletions(-)
- create mode 100644 include/uapi/fwctl/cxl.h
+ drivers/cxl/core/features.c | 146 +++++++++++++++++++++++++++++++++++-
+ include/uapi/fwctl/cxl.h    |   2 +
+ 2 files changed, 146 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-index 846de3294a5e..6cec89977fa0 100644
+index 2a35581d2677..caf92e9cea21 100644
 --- a/drivers/cxl/core/features.c
 +++ b/drivers/cxl/core/features.c
-@@ -4,6 +4,7 @@
- #include <linux/device.h>
- #include <cxl/mailbox.h>
- #include <cxl/features.h>
-+#include <uapi/fwctl/cxl.h>
- #include "cxl.h"
- #include "core.h"
- #include "cxlmem.h"
-@@ -349,11 +350,127 @@ static void cxlctl_close_uctx(struct fwctl_uctx *uctx)
+@@ -21,16 +21,21 @@ static const uuid_t cxl_exclusive_feats[] = {
+ 	CXL_FEAT_RANK_SPARING_UUID,
+ };
+ 
+-static bool is_cxl_feature_exclusive(struct cxl_feat_entry *entry)
++static bool is_cxl_feature_exclusive_by_uuid(const uuid_t *uuid)
+ {
+ 	for (int i = 0; i < ARRAY_SIZE(cxl_exclusive_feats); i++) {
+-		if (uuid_equal(&entry->uuid, &cxl_exclusive_feats[i]))
++		if (uuid_equal(uuid, &cxl_exclusive_feats[i]))
+ 			return true;
+ 	}
+ 
+ 	return false;
+ }
+ 
++static bool is_cxl_feature_exclusive(struct cxl_feat_entry *entry)
++{
++	return is_cxl_feature_exclusive_by_uuid(&entry->uuid);
++}
++
+ inline struct cxl_features_state *to_cxlfs(struct cxl_dev_state *cxlds)
+ {
+ 	return cxlds->cxlfs;
+@@ -350,6 +355,27 @@ static void cxlctl_close_uctx(struct fwctl_uctx *uctx)
  {
  }
  
-+static void *cxlctl_get_supported_features(struct cxl_features_state *cxlfs,
-+					   const struct fwctl_rpc_cxl *rpc_in,
-+					   size_t *out_len)
++static struct cxl_feat_entry *
++get_support_feature_info(struct cxl_features_state *cxlfs,
++			 const struct fwctl_rpc_cxl *rpc_in)
 +{
-+	const struct cxl_mbox_get_sup_feats_in *feat_in;
-+	struct cxl_mbox_get_sup_feats_out *feat_out;
-+	struct cxl_feat_entry *pos;
-+	size_t out_size;
-+	int requested;
-+	u32 count;
-+	u16 start;
-+	int i;
++	struct cxl_feat_entry *feat;
++	const uuid_t *uuid;
 +
-+	if (rpc_in->op_size != sizeof(*feat_in))
++	if (rpc_in->op_size < sizeof(uuid))
 +		return ERR_PTR(-EINVAL);
 +
-+	feat_in = &rpc_in->get_sup_feats_in;
-+	count = le32_to_cpu(feat_in->count);
-+	start = le16_to_cpu(feat_in->start_idx);
-+	requested = count / sizeof(*pos);
++	uuid = &rpc_in->set_feat_in.uuid;
 +
-+	/*
-+	 * Make sure that the total requested number of entries is not greater
-+	 * than the total number of supported features allowed for userspace.
-+	 */
-+	if (start >= cxlfs->entries->num_features)
++	for (int i = 0; i < cxlfs->entries->num_features; i++) {
++		feat = &cxlfs->entries->ent[i];
++		if (uuid_equal(uuid, &feat->uuid))
++			return feat;
++	}
++
++	return ERR_PTR(-EINVAL);
++}
++
+ static void *cxlctl_get_supported_features(struct cxl_features_state *cxlfs,
+ 					   const struct fwctl_rpc_cxl *rpc_in,
+ 					   size_t *out_len)
+@@ -468,6 +494,116 @@ static void *cxlctl_get_feature(struct cxl_features_state *cxlfs,
+ 	return no_free_ptr(rpc_out);
+ }
+ 
++static void *cxlctl_set_feature(struct cxl_features_state *cxlfs,
++				const struct fwctl_rpc_cxl *rpc_in,
++				size_t *out_len)
++{
++	struct cxl_mailbox *cxl_mbox = &cxlfs->cxlds->cxl_mbox;
++	const struct cxl_mbox_set_feat_in *feat_in;
++	size_t out_size, data_size;
++	u16 offset, return_code;
++	u32 flags;
++	int rc;
++
++	if (rpc_in->op_size <= sizeof(feat_in->hdr))
 +		return ERR_PTR(-EINVAL);
 +
-+	requested = min_t(int, requested, cxlfs->entries->num_features - start);
++	feat_in = &rpc_in->set_feat_in;
 +
-+	out_size = sizeof(struct fwctl_rpc_cxl_out) +
-+		struct_size(feat_out, ents, requested);
++	if (is_cxl_feature_exclusive_by_uuid(&feat_in->uuid))
++		return ERR_PTR(-EPERM);
++
++	offset = le16_to_cpu(feat_in->offset);
++	flags = le32_to_cpu(feat_in->flags);
++	out_size = *out_len;
 +
 +	struct fwctl_rpc_cxl_out *rpc_out __free(kvfree) =
 +		kvzalloc(out_size, GFP_KERNEL);
 +	if (!rpc_out)
 +		return ERR_PTR(-ENOMEM);
 +
-+	rpc_out->size = struct_size(feat_out, ents, requested);
-+	feat_out = &rpc_out->get_sup_feats_out;
-+	if (requested == 0) {
-+		feat_out->num_entries = cpu_to_le16(requested);
-+		feat_out->supported_feats =
-+			cpu_to_le16(cxlfs->entries->num_features);
-+		rpc_out->retval = CXL_MBOX_CMD_RC_SUCCESS;
-+		*out_len = out_size;
++	rpc_out->size = 0;
++
++	data_size = rpc_in->op_size - sizeof(feat_in->hdr);
++	rc = cxl_set_feature(cxl_mbox, &feat_in->uuid,
++			     feat_in->version, feat_in->feat_data,
++			     data_size, flags, offset, &return_code);
++	if (rc) {
++		rpc_out->retval = return_code;
 +		return no_free_ptr(rpc_out);
 +	}
 +
-+	for (i = start, pos = &feat_out->ents[0];
-+	     i < cxlfs->entries->num_features; i++, pos++) {
-+		if (i - start == requested)
-+			break;
-+
-+		memcpy(pos, &cxlfs->entries->ent[i], sizeof(*pos));
-+		/*
-+		 * If the feature is exclusive, set the set_feat_size to 0 to
-+		 * indicate that the feature is not changeable.
-+		 */
-+		if (is_cxl_feature_exclusive(pos)) {
-+			u32 flags;
-+
-+			pos->set_feat_size = 0;
-+			flags = le32_to_cpu(pos->flags);
-+			flags &= ~CXL_FEATURE_F_CHANGEABLE;
-+			pos->flags = cpu_to_le32(flags);
-+		}
-+	}
-+
-+	feat_out->num_entries = cpu_to_le16(requested);
-+	feat_out->supported_feats = cpu_to_le16(cxlfs->entries->num_features);
 +	rpc_out->retval = CXL_MBOX_CMD_RC_SUCCESS;
-+	*out_len = out_size;
++	*out_len = sizeof(*rpc_out);
 +
 +	return no_free_ptr(rpc_out);
 +}
 +
-+static bool cxlctl_validate_hw_command(struct cxl_features_state *cxlfs,
-+				       const struct fwctl_rpc_cxl *rpc_in,
-+				       enum fwctl_rpc_scope scope,
-+				       u16 opcode)
++static bool cxlctl_validate_set_features(struct cxl_features_state *cxlfs,
++					 const struct fwctl_rpc_cxl *rpc_in,
++					 enum fwctl_rpc_scope scope)
 +{
-+	struct cxl_mailbox *cxl_mbox = &cxlfs->cxlds->cxl_mbox;
++	u16 effects, imm_mask, reset_mask;
++	struct cxl_feat_entry *feat;
++	u32 flags;
 +
-+	switch (opcode) {
-+	case CXL_MBOX_OP_GET_SUPPORTED_FEATURES:
-+		if (cxl_mbox->feat_cap < CXL_FEATURES_RO)
++	feat = get_support_feature_info(cxlfs, rpc_in);
++	if (IS_ERR(feat))
++		return false;
++
++	/* Ensure that the attribute is changeable */
++	flags = le32_to_cpu(feat->flags);
++	if (!(flags & CXL_FEATURE_F_CHANGEABLE))
++		return false;
++
++	effects = le16_to_cpu(feat->effects);
++
++	/*
++	 * Reserved bits are set, rejecting since the effects is not
++	 * comprehended by the driver.
++	 */
++	if (effects & CXL_CMD_EFFECTS_RESERVED) {
++		dev_warn_once(cxlfs->cxlds->dev,
++			      "Reserved bits set in the Feature effects field!\n");
++		return false;
++	}
++
++	/* Currently no user background command support */
++	if (effects & CXL_CMD_BACKGROUND)
++		return false;
++
++	/* Effects cause immediate change, highest security scope is needed */
++	imm_mask = CXL_CMD_CONFIG_CHANGE_IMMEDIATE |
++		   CXL_CMD_DATA_CHANGE_IMMEDIATE |
++		   CXL_CMD_POLICY_CHANGE_IMMEDIATE |
++		   CXL_CMD_LOG_CHANGE_IMMEDIATE;
++
++	reset_mask = CXL_CMD_CONFIG_CHANGE_COLD_RESET |
++		     CXL_CMD_CONFIG_CHANGE_CONV_RESET |
++		     CXL_CMD_CONFIG_CHANGE_CXL_RESET;
++
++	/* If no immediate or reset effect set, The hardware has a bug */
++	if (!(effects & imm_mask) && !(effects & reset_mask))
++		return false;
++
++	/*
++	 * If the Feature setting causes immediate configuration change
++	 * then we need the full write permission policy.
++	 */
++	if (effects & imm_mask && scope >= FWCTL_RPC_DEBUG_WRITE_FULL)
++		return true;
++
++	/*
++	 * If the Feature setting only causes configuration change
++	 * after a reset, then the lesser level of write permission
++	 * policy is ok.
++	 */
++	if (!(effects & imm_mask) && scope >= FWCTL_RPC_DEBUG_WRITE)
++		return true;
++
++	return false;
++}
++
+ static bool cxlctl_validate_hw_command(struct cxl_features_state *cxlfs,
+ 				       const struct fwctl_rpc_cxl *rpc_in,
+ 				       enum fwctl_rpc_scope scope,
+@@ -483,6 +619,10 @@ static bool cxlctl_validate_hw_command(struct cxl_features_state *cxlfs,
+ 		if (scope >= FWCTL_RPC_CONFIGURATION)
+ 			return true;
+ 		return false;
++	case CXL_MBOX_OP_SET_FEATURE:
++		if (cxl_mbox->feat_cap < CXL_FEATURES_RW)
 +			return false;
-+		if (scope >= FWCTL_RPC_CONFIGURATION)
-+			return true;
-+		return false;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static void *cxlctl_handle_commands(struct cxl_features_state *cxlfs,
-+				    const struct fwctl_rpc_cxl *rpc_in,
-+				    size_t *out_len, u16 opcode)
-+{
-+	switch (opcode) {
-+	case CXL_MBOX_OP_GET_SUPPORTED_FEATURES:
-+		return cxlctl_get_supported_features(cxlfs, rpc_in, out_len);
-+	default:
-+		return ERR_PTR(-EOPNOTSUPP);
-+	}
-+}
-+
- static void *cxlctl_fw_rpc(struct fwctl_uctx *uctx, enum fwctl_rpc_scope scope,
- 			   void *in, size_t in_len, size_t *out_len)
- {
--	/* Place holder */
--	return ERR_PTR(-EOPNOTSUPP);
-+	struct fwctl_device *fwctl_dev = uctx->fwctl;
-+	struct cxl_memdev *cxlmd = fwctl_to_memdev(fwctl_dev);
-+	struct cxl_features_state *cxlfs = to_cxlfs(cxlmd->cxlds);
-+	const struct fwctl_rpc_cxl *rpc_in = in;
-+	u16 opcode = rpc_in->opcode;
-+
-+	if (!cxlctl_validate_hw_command(cxlfs, rpc_in, scope, opcode))
-+		return ERR_PTR(-EINVAL);
-+
-+	return cxlctl_handle_commands(cxlfs, rpc_in, out_len, opcode);
- }
- 
- static const struct fwctl_ops cxlctl_ops = {
-diff --git a/include/uapi/cxl/features.h b/include/uapi/cxl/features.h
-index 17f9da63f982..eae0ce008c3a 100644
---- a/include/uapi/cxl/features.h
-+++ b/include/uapi/cxl/features.h
-@@ -33,6 +33,7 @@ struct cxl_mbox_get_sup_feats_in {
- #define CXL_CMD_EFFECTS_VALID			BIT(9)
- #define CXL_CMD_CONFIG_CHANGE_CONV_RESET	BIT(10)
- #define CXL_CMD_CONFIG_CHANGE_CXL_RESET		BIT(11)
-+#define CXL_CMD_EFFECTS_RESERVED		GENMASK(15, 12)
- 
- /*
-  * CXL spec r3.2 Table 8-109
++		return cxlctl_validate_set_features(cxlfs, rpc_in, scope);
+ 	default:
+ 		return false;
+ 	}
+@@ -497,6 +637,8 @@ static void *cxlctl_handle_commands(struct cxl_features_state *cxlfs,
+ 		return cxlctl_get_supported_features(cxlfs, rpc_in, out_len);
+ 	case CXL_MBOX_OP_GET_FEATURE:
+ 		return cxlctl_get_feature(cxlfs, rpc_in, out_len);
++	case CXL_MBOX_OP_SET_FEATURE:
++		return cxlctl_set_feature(cxlfs, rpc_in, out_len);
+ 	default:
+ 		return ERR_PTR(-EOPNOTSUPP);
+ 	}
 diff --git a/include/uapi/fwctl/cxl.h b/include/uapi/fwctl/cxl.h
-new file mode 100644
-index 000000000000..4bbfd7727526
---- /dev/null
+index 3dc7ffeb3eae..becdada348d9 100644
+--- a/include/uapi/fwctl/cxl.h
 +++ b/include/uapi/fwctl/cxl.h
-@@ -0,0 +1,46 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+/*
-+ * Copyright (c) 2024-2025 Intel Corporation
-+ *
-+ * These are definitions for the mailbox command interface of CXL subsystem.
-+ */
-+#ifndef _UAPI_FWCTL_CXL_H_
-+#define _UAPI_FWCTL_CXL_H_
-+
-+#include <linux/types.h>
-+#include <linux/stddef.h>
-+#include <cxl/features.h>
-+
-+/**
-+ * struct fwctl_rpc_cxl - ioctl(FWCTL_RPC) input for CXL
-+ * @opcode: CXL mailbox command opcode
-+ * @flags: Flags for the command (input).
-+ * @op_size: Size of input payload.
-+ * @reserved1: Reserved. Must be 0s.
-+ * @get_sup_feats_in: Get Supported Features input
-+ */
-+struct fwctl_rpc_cxl {
-+	__struct_group(fwctl_rpc_cxl_hdr, hdr, /* no attrs */,
-+		__u32 opcode;
-+		__u32 flags;
-+		__u32 op_size;
-+		__u32 reserved1;
-+	);
-+	struct cxl_mbox_get_sup_feats_in get_sup_feats_in;
-+};
-+
-+/**
-+ * struct fwctl_rpc_cxl_out - ioctl(FWCTL_RPC) output for CXL
-+ * @size: Size of the output payload
-+ * @retval: Return value from device
-+ * @get_sup_feats_out: Get Supported Features output
-+ */
-+struct fwctl_rpc_cxl_out {
-+	__struct_group(fwctl_rpc_cxl_out_hdr, hdr, /* no attrs */,
-+		__u32 size;
-+		__u32 retval;
-+	);
-+	struct cxl_mbox_get_sup_feats_out get_sup_feats_out;
-+};
-+
-+#endif
+@@ -19,6 +19,7 @@
+  * @reserved1: Reserved. Must be 0s.
+  * @get_sup_feats_in: Get Supported Features input
+  * @get_feat_in: Get Feature input
++ * @set_feat_in: Set Feature input
+  */
+ struct fwctl_rpc_cxl {
+ 	__struct_group(fwctl_rpc_cxl_hdr, hdr, /* no attrs */,
+@@ -30,6 +31,7 @@ struct fwctl_rpc_cxl {
+ 	union {
+ 		struct cxl_mbox_get_sup_feats_in get_sup_feats_in;
+ 		struct cxl_mbox_get_feat_in get_feat_in;
++		struct cxl_mbox_set_feat_in set_feat_in;
+ 	};
+ };
+ 
 -- 
 2.48.1
 
