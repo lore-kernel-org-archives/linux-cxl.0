@@ -1,201 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3816A20D4E5;
-	Thu, 20 Feb 2025 16:39:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1301920487F
+	for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 16:41:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740069546; cv=none; b=f8MLMjCZycvMq7Z8i6cMDi6vQsmXxltlgroN9xisD1SWcOGd6mcS4U8osCb0ikOOI1BVHOumMBeksJoxO1YbbivnTv3evKk6VDjzb6xBjzGjOGdHSAkGq/beUmjENf0qBdJR+1uRa5Z3gk8SygWwpFdyrMFdul1VyDrH2Ow6u90=
+	t=1740069674; cv=none; b=rV32V9sXylBeEoosS6ZmA0mrA+hEvgSh3WTh9UE5ZJbaTTAqI64wjcVhSoZDW77hbdumhK0VTr/sZ+JOGmN/7duSlsNFg9xiZoZ8+mqMZ34yExnBYrSWA9zJkAn4oxOLBf8GHKRGGCIpBNYHSSuD+pGrImHqx4lVlch3VenDc4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740069546; c=relaxed/simple;
-	bh=6c3M3/H3d/rB8boAVdOTFz8yVLhF9V4baexn6AsQYTw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Obk9dJqEbxr1EQXLGavTd1jiLfgwiowXkhq3HJj4eQBHSDjncSeVksFCFzzBfohZuYjvBFMj3MyEIVqwhsASJgQgh0lAFBZ/l/tIadTY8DHSsxvLWbUsYqSf8UyxTigcfdmh4agCKLl0ZQwh5KXdC8DYt0eXvGnmuq+6pi6uUuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F/JKprIb; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1740069674; c=relaxed/simple;
+	bh=wtVm1OReLkO+WQiX2RY76tqiMRy5uIw9+ikeo3KDP0o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RaBppbepg945o5YQ7wdl9J50pupmYBn7gY9DA6u998FvY+GUpEjvJnI0czxluynCDdcasNuKCNdoiAVAsyyN6SJDxxTtlW6Scrrb6D2kYUBzNBAxC3fLQ1Jo8a1gIknPuvti0n2PfCxV+rHX7msCPkvIwHdrNjpuLX5P0kKKKZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Y2tqgT8P; arc=none smtp.client-ip=209.85.222.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F/JKprIb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740069544; x=1771605544;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=6c3M3/H3d/rB8boAVdOTFz8yVLhF9V4baexn6AsQYTw=;
-  b=F/JKprIbO0vGHiK6UH/+d/bus+hs8Sl/M6JdyzJRk6m8gFqrbgbWgN2F
-   WvLRy0pkLGmyZV8o9dKRBsnFNE3vPv9iPSdFC5VHJla5M/NIBW1vp5Zen
-   wO+PJWtybuxi3QucmZU2qqTyY+Qug8owIkDZq+9jJRjLt6a8pP8PlaigM
-   LgK2krnZQinQePfjmpbf8Le59jkAx8ImX8937mIL89UmoBCM7zoJfybDF
-   c96X97M+GQPjpMoE7r00fgdbvzXpiLntAN1M8jtK9sQlQB0X/KvVjdYHN
-   dmHcPqKg4XNSHYbtYO/eF87Bra72+9tt5AiQ8Gw4XbCHk915R2rGeOHDT
-   w==;
-X-CSE-ConnectionGUID: 87SbP4zaSfuiYFtsFRzOIQ==
-X-CSE-MsgGUID: T0KwY2GMQR2DrqBJhlPQFg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11351"; a="40092962"
-X-IronPort-AV: E=Sophos;i="6.13,302,1732608000"; 
-   d="scan'208";a="40092962"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 08:39:03 -0800
-X-CSE-ConnectionGUID: 2DMaJdWlSfChCTtu1Lllnw==
-X-CSE-MsgGUID: jIlDam7STi6ri8i2miXBLw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,302,1732608000"; 
-   d="scan'208";a="120035861"
-Received: from puneetse-mobl.amr.corp.intel.com (HELO [10.125.110.112]) ([10.125.110.112])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 08:39:02 -0800
-Message-ID: <d8056909-abd0-480a-862a-4ed472eab699@intel.com>
-Date: Thu, 20 Feb 2025 09:39:01 -0700
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Y2tqgT8P"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7c0ba89dda9so124075985a.0
+        for <linux-cxl@vger.kernel.org>; Thu, 20 Feb 2025 08:41:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1740069672; x=1740674472; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=wvT9hr4wyRdgqH4GD8vWiYOLKGLcsbZRX76Llb1LL6s=;
+        b=Y2tqgT8Pjo3g7ZZPfYB6vqKamFXy9a/mwd/St0nRqbx85XVIRfZYl5bcdr90Fyqo/E
+         jtX1mKjR4wsR+ZL0J7yvyvdHGjwAfaTknUc98dedqPDCynkrMMgNjj9M4n4kGbNmoKhw
+         yd0h8fHXDV4Hd1NxvXVhsN8fRUroy2ya9Qm5KbMgm1Hyh6mkhBhOMVxtSOOjcyWcucqi
+         AH5+o/8Tq4MICedCyzIXoA1JU6XLJTha/cawWTxeCVap4SniIR9rghA8JGy09To/LpQy
+         sg9n6E7gtlB1hA7El7K4u3o9ekh2L5YqSJlI49XPQKjdkB3isCMTzGERFyhgsfCSSTup
+         lENg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740069672; x=1740674472;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wvT9hr4wyRdgqH4GD8vWiYOLKGLcsbZRX76Llb1LL6s=;
+        b=V4m/v9qlkLuro1Ebcsj7UbiOAdszbavN5KETksoyisCW5/5nMLHLAPRHh3+foBl0hF
+         PAhhM8sfQKgX4GLLeVzTUBV/gUJdGtJBn9e2cxf4RwF4XkrXcn8vayTdndkKpLQuvYhV
+         Jg89WGRqBzz4dJBvhy6+h2MKSd/zze7qWhlKtbjJ49WjAN0MEeYR5LZ6EnbcBRe4b2S/
+         hiBJfyX2qtWw6s9kPiVuvNYGwyG63WAnunKKYHtdk/eXuPwXCPHQso7KkOlPY9J+D5uh
+         67jW+cRAjeqwWMe/qG00DrS6+B3gsikbZNcqsTxkZTM47txdvfdSCsv+SYkKTKovJJpk
+         E58Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXBPgSSchDwapl2kk7Peq3qaGvPzwFMuIy0gSsRr1VcAOOBxJW44BAynpy2xesiiAHat9RR1Lu7zKQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRElEkNBWFyHIqzyz6QYNtee4CR8U+EuYuu2eP623AjJFDeof4
+	LieGQv4e/SlBMA3BAUw69xx/vpZ0j9P028FBg/RHkUTWz37P+czylECcXPPa8zo=
+X-Gm-Gg: ASbGncuOibS/FNRMYsKUpcYRfSQOCfy/IPWomLaIi+pNPmMFXfoZqg2mXGdKMKh3f3F
+	+pkvCTcJ05d7OwRcVtk4A6kLF9HQZ4SmvKDWLwarp21U+JSl2QdqMyPbcbsDP/1RXy3tjyTuDre
+	f10hH6PruBtL742yCGMaFMnJcugyYBaPxrs9J9YprxYuXcMb8fTp3w7hScNbHUbEUUbv8Z+cKXk
+	APxR2i0ZJ5UEPnY4iHDJrUX5dkWcwvSHvmDQ+aFsP64T5npJj59nZ65ik8eSEal1yMpOgXagIxN
+	HajlDUBy0NLz8nQ3Hto/roIRn4SuCuEmE65L8itlqBkDshBN3Kwrv63e5bEwwq3T5YbHpcNsfA=
+	=
+X-Google-Smtp-Source: AGHT+IGlH80zk+2PBNQ/ZB5qRD43YHH9jlASFS3zwf6R7lUXwObcQaUrgnHIjK3rfriVXd+k7XVBog==
+X-Received: by 2002:a05:620a:1927:b0:7c0:9df3:a0d7 with SMTP id af79cd13be357-7c09df3aa60mr2071684885a.41.1740069671990;
+        Thu, 20 Feb 2025 08:41:11 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c0c6d41b5asm70688485a.73.2025.02.20.08.41.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2025 08:41:11 -0800 (PST)
+Date: Thu, 20 Feb 2025 11:41:09 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v2 03/15] cxl/region: Factor out code for interleaving
+ calculations
+Message-ID: <Z7dbJfr-qVrXj6ek@gourry-fedora-PF4VCD3F>
+References: <20250218132356.1809075-1-rrichter@amd.com>
+ <20250218132356.1809075-4-rrichter@amd.com>
+ <Z7dYODuRrRv1bXpV@gourry-fedora-PF4VCD3F>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 08/18] cxl/region: Move find_cxl_root() to
- cxl_add_to_region()
-To: Robert Richter <rrichter@amd.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Davidlohr Bueso <dave@stgolabs.net>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- Gregory Price <gourry@gourry.net>,
- "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
- Terry Bowman <terry.bowman@amd.com>
-References: <20250211095349.981096-1-rrichter@amd.com>
- <20250211095349.981096-9-rrichter@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250211095349.981096-9-rrichter@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z7dYODuRrRv1bXpV@gourry-fedora-PF4VCD3F>
 
-
-
-On 2/11/25 2:53 AM, Robert Richter wrote:
-> When adding an endpoint to a region, the root port is determined
-> first. Move this directly into cxl_add_to_region(). This is in
-> preparation of the initialization of endpoints that iterates the port
-> hierarchy from the endpoint up to the root port.
+On Thu, Feb 20, 2025 at 11:28:40AM -0500, Gregory Price wrote:
+> On Tue, Feb 18, 2025 at 02:23:44PM +0100, Robert Richter wrote:
+> I get that this will be used later to pass information back, but this
+> patch by itself is a little confusing because ctx seems pointless since
+> the function still returns the position and accesses the hpa_range directly
 > 
-> As a side-effect the root argument is removed from the argument lists
-> of cxl_add_to_region() and related functions. Now, the endpoint is the
-> only parameter to add a region. This simplifies the function
-> interface.
+> Looked at in isolation, having the context structure change in this
+> patch than just adding the hpa_range as an argument and adding the
+> context later when it's actually relevant.
 > 
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-> Reviewed-by: Gregory Price <gourry@gourry.net>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Tested-by: Gregory Price <gourry@gourry.net>
+> static int cxl_port_calc_interleave(struct cxl_port *port,
+> 				    struct range *hpa_range);
+>
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  drivers/cxl/core/region.c |  6 ++++--
->  drivers/cxl/cxl.h         |  6 ++----
->  drivers/cxl/port.c        | 15 +++------------
->  3 files changed, 9 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index b8201c2faa87..0e38bcb43be6 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -3312,9 +3312,11 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
->  	return ERR_PTR(rc);
->  }
->  
-> -int cxl_add_to_region(struct cxl_port *root, struct cxl_endpoint_decoder *cxled)
-> +int cxl_add_to_region(struct cxl_endpoint_decoder *cxled)
->  {
->  	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> +	struct cxl_port *port = cxled_to_port(cxled);
-> +	struct cxl_root *cxl_root __free(put_cxl_root) = find_cxl_root(port);
->  	struct range *hpa = &cxled->cxld.hpa_range;
->  	struct cxl_decoder *cxld = &cxled->cxld;
->  	struct device *cxlrd_dev, *region_dev;
-> @@ -3324,7 +3326,7 @@ int cxl_add_to_region(struct cxl_port *root, struct cxl_endpoint_decoder *cxled)
->  	bool attach = false;
->  	int rc;
->  
-> -	cxlrd_dev = device_find_child(&root->dev, &cxld->hpa_range,
-> +	cxlrd_dev = device_find_child(&cxl_root->port.dev, &cxld->hpa_range,
->  				      match_root_decoder_by_range);
->  	if (!cxlrd_dev) {
->  		dev_err(cxlmd->dev.parent,
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 0d7aff8b97b3..85dfc8df0a80 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -854,8 +854,7 @@ struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_port *port);
->  #ifdef CONFIG_CXL_REGION
->  bool is_cxl_pmem_region(struct device *dev);
->  struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev);
-> -int cxl_add_to_region(struct cxl_port *root,
-> -		      struct cxl_endpoint_decoder *cxled);
-> +int cxl_add_to_region(struct cxl_endpoint_decoder *cxled);
->  struct cxl_dax_region *to_cxl_dax_region(struct device *dev);
->  #else
->  static inline bool is_cxl_pmem_region(struct device *dev)
-> @@ -866,8 +865,7 @@ static inline struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev)
->  {
->  	return NULL;
->  }
-> -static inline int cxl_add_to_region(struct cxl_port *root,
-> -				    struct cxl_endpoint_decoder *cxled)
-> +static inline int cxl_add_to_region(struct cxl_endpoint_decoder *cxled)
->  {
->  	return 0;
->  }
-> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-> index d2bfd1ff5492..74587a403e3d 100644
-> --- a/drivers/cxl/port.c
-> +++ b/drivers/cxl/port.c
-> @@ -30,7 +30,7 @@ static void schedule_detach(void *cxlmd)
->  	schedule_cxl_memdev_detach(cxlmd);
->  }
->  
-> -static int discover_region(struct device *dev, void *root)
-> +static int discover_region(struct device *dev, void *unused)
->  {
->  	struct cxl_endpoint_decoder *cxled;
->  	int rc;
-> @@ -49,7 +49,7 @@ static int discover_region(struct device *dev, void *root)
->  	 * Region enumeration is opportunistic, if this add-event fails,
->  	 * continue to the next endpoint decoder.
->  	 */
-> -	rc = cxl_add_to_region(root, cxled);
-> +	rc = cxl_add_to_region(cxled);
->  	if (rc)
->  		dev_dbg(dev, "failed to add to region: %#llx-%#llx\n",
->  			cxled->cxld.hpa_range.start, cxled->cxld.hpa_range.end);
-> @@ -95,7 +95,6 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
->  	struct cxl_memdev *cxlmd = to_cxl_memdev(port->uport_dev);
->  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
->  	struct cxl_hdm *cxlhdm;
-> -	struct cxl_port *root;
->  	int rc;
->  
->  	rc = cxl_dvsec_rr_decode(cxlds, &info);
-> @@ -126,19 +125,11 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
->  	if (rc)
->  		return rc;
->  
-> -	/*
-> -	 * This can't fail in practice as CXL root exit unregisters all
-> -	 * descendant ports and that in turn synchronizes with cxl_port_probe()
-> -	 */
-> -	struct cxl_root *cxl_root __free(put_cxl_root) = find_cxl_root(port);
-> -
-> -	root = &cxl_root->port;
-> -
->  	/*
->  	 * Now that all endpoint decoders are successfully enumerated, try to
->  	 * assemble regions from committed decoders
->  	 */
-> -	device_for_each_child(&port->dev, root, discover_region);
-> +	device_for_each_child(&port->dev, NULL, discover_region);
->  
->  	return 0;
->  }
+Disregard my note here, I missed that pos has to be carried through.
 
+Didn't notice until I looked at patch 3 and 4 together.
+
+> +	ctx->pos = ctx->pos * parent_ways + parent_pos;
+> +
+> +	return ctx->pos;
+
+This looks fine
+
+Reviewed-by: Gregory Price <gourry@gourry.net>
