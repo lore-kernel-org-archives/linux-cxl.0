@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDB421F1506;
-	Fri, 21 Feb 2025 16:31:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C4C1B0406;
+	Fri, 21 Feb 2025 23:45:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740155474; cv=none; b=MXxVjcFixdinYm8E+hUgcY0x9LAVv/5aTViHK4K2rJkGHIypE7QumnovWoOPfwK47r40LlYhB62OfQWXYSxiVdgEoFaakrUqfhU2dlzzC5sPAf2yFX3N+zZo+WUbrSqT1RrLeYlE6hmPY77K9qjIAjS5zH/WlCSEZYKIOwnnXIQ=
+	t=1740181523; cv=none; b=IbcshsW51HY9uJ4OU4Ej5J+ulEcRT3pBCgxBOdY/SGsc/XVY3x2j0VsYNs3hVzCvFuoU6yC5C3MYgK5q7aTz7FZ6iZGNil89pOirxvAQJ1fNUacmVoGJGJJiH3nNoOHpOC1bfHcpoBb9/WCw+BHUz+iaQgwe1CWSnLrd5FVQUPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740155474; c=relaxed/simple;
-	bh=irguvaW4ZDyHOQ4VjIoMpbSmgH5YwZYJd0OZO144sjw=;
+	s=arc-20240116; t=1740181523; c=relaxed/simple;
+	bh=n1uOkd2WTyFLnabtKo8iPrPj0R4GF47XIeQXJkTYGDM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CzRxFashBuUFM82MBOec/2+4HSj9Q64TLgl7g6TA5LCesi2iDqji7kDnDIJvxHaLTbwjgiPGpI+xNcyIpjFLqd/hbvN1TZV8rtDlyjukz2+9UyksVrIf2jPfTdkSXDy9DPzbchLcjLrhxc64M4DWlm190YhKDQGZETcbjNXoP7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E9c6Vp8q; arc=none smtp.client-ip=198.175.65.15
+	 In-Reply-To:Content-Type; b=OBXQDONaVEEZfoZbapM7+Ba84tszmQxAHoy7uakWaba2160yNojR/g5QvZCeiJi7DuYL0kSrjfQTEP3H6rEfd4l+uYcJTo5ySoZO0uAPyTz7GKBss8ebcnEbS7f9KdDh3o9XeS0vM0YLDNN6KfH7gitc5LvxxnN8ZRYrmEQyAAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gU+7D4ta; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E9c6Vp8q"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gU+7D4ta"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740155473; x=1771691473;
+  t=1740181521; x=1771717521;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=irguvaW4ZDyHOQ4VjIoMpbSmgH5YwZYJd0OZO144sjw=;
-  b=E9c6Vp8qheyKGjRMRgRyFUW7FvLRN5YuCE/RYPbTkiXm03EOPjTkFjh9
-   u+CaYRrrJII/Hl91ET7i68N5i9Zn4FKLpmLb0bhlt6v5RE32iYsqVj4pC
-   HV5TpneVx09VJpHqw2aNsybNX133uJBIQylrHMvJUfsnDeFrQYrl1yKX4
-   ryj0aj3ZsGSqK9Pd3JD0i4J1x8NjGIXqHk6/KOxoWjK8btGqrKrvgnnyi
-   0hAIlxeBImwHIjulO2uBD/6w7h5SsDDqH3+9x9aaZEDOhHu6GRfPWxTRx
-   iD7duMX4pXx9cZ/DHGYv8uhywvMsy7jMjj83rPBMyFwJ+OHj/+BsLp4pM
-   g==;
-X-CSE-ConnectionGUID: G3o3OMIERgyse0bM+evzjg==
-X-CSE-MsgGUID: UANdtXwZSXKWjSvKeW0/xg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11352"; a="44625958"
-X-IronPort-AV: E=Sophos;i="6.13,305,1732608000"; 
-   d="scan'208";a="44625958"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 08:31:13 -0800
-X-CSE-ConnectionGUID: 2Z/vM83URUqksJET5tHwyQ==
-X-CSE-MsgGUID: qNK1JJjtRf+ulNr65R6iqQ==
+  bh=n1uOkd2WTyFLnabtKo8iPrPj0R4GF47XIeQXJkTYGDM=;
+  b=gU+7D4taR06/2gvwyz/hK8I13Yn/ArFBFunSNPYdjRgzJaHZvT0HqUkS
+   8God1pk9eLYJ6j3sykyOXdR62XFwEDkpbUAdd+MWddoOTzYLLkUqr7bGn
+   e29pst/C4400KFJmKODud2XpG2IR2ZhlaOuDHVOsuSffr3m1EPS5kQMkg
+   sxOU28o11VnCCTLUEIPQ/2ZZj+pUCeLCoT4yvtceUiAOFrPjOhU1pWHV6
+   EtdZg7NjNMBy0HY0dtxDsQ0+gQo6wZZbjLVfGRVcugFNDd4jxCgIky3UJ
+   vIYzLWs9fw5phPp3ZsNUFbh0hikxMHW+y6VFDtlmqqy45q1DLot0lIt/F
+   Q==;
+X-CSE-ConnectionGUID: lq2+6vQgQwuiQFa5qFZUfA==
+X-CSE-MsgGUID: K+6JRHNgTKaQVF5UsSp73A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11352"; a="44924717"
+X-IronPort-AV: E=Sophos;i="6.13,306,1732608000"; 
+   d="scan'208";a="44924717"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 15:45:20 -0800
+X-CSE-ConnectionGUID: gKjhdNyrTASknoP4/hi5Rg==
+X-CSE-MsgGUID: KlhlnnSfTiepEJlmviWwnw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,305,1732608000"; 
-   d="scan'208";a="120513464"
-Received: from inaky-mobl1.amr.corp.intel.com (HELO [10.125.110.189]) ([10.125.110.189])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 08:31:11 -0800
-Message-ID: <17a8be14-988c-4199-8304-827f679cceb2@intel.com>
-Date: Fri, 21 Feb 2025 09:31:09 -0700
+X-IronPort-AV: E=Sophos;i="6.13,306,1732608000"; 
+   d="scan'208";a="115518467"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO [10.125.110.216]) ([10.125.110.216])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 15:45:19 -0800
+Message-ID: <cbf6d9d3-eadc-40ad-be41-70a80a4aa6b1@intel.com>
+Date: Fri, 21 Feb 2025 16:45:18 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,55 +52,140 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/7] Use guard() instead of rwsem locking
-To: Li Ming <ming.li@zohomail.com>, dave@stgolabs.net,
- jonathan.cameron@huawei.com, alison.schofield@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250221012453.126366-1-ming.li@zohomail.com>
+Subject: Re: [PATCH v3 1/4] acpi: numa: Add support to enumerate and store
+ extended linear address mode
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org, rafael@kernel.org,
+ bp@alien8.de, dan.j.williams@intel.com, tony.luck@intel.com,
+ dave@stgolabs.net, jonathan.cameron@huawei.com, ira.weiny@intel.com,
+ ming.li@zohomail.com
+References: <20250117173054.4147877-1-dave.jiang@intel.com>
+ <20250117173054.4147877-2-dave.jiang@intel.com>
+ <Z7faINPWuDaWtq1C@aschofie-mobl2.lan>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250221012453.126366-1-ming.li@zohomail.com>
+In-Reply-To: <Z7faINPWuDaWtq1C@aschofie-mobl2.lan>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 2/20/25 6:24 PM, Li Ming wrote:
-> Use scoped resource management to replace open-coded locking operation
-> is recommended. CXL subsystem still remains some down_read()/up_read()
-> and down_write()/up_write() which can be replaced by guard() simply.
+On 2/20/25 6:42 PM, Alison Schofield wrote:
+> On Fri, Jan 17, 2025 at 10:28:30AM -0700, Dave Jiang wrote:
+>> Store the address mode as part of the cache attriutes. Export the mode
+>> attribute to sysfs as all other cache attributes.
+>>
+>> Link: https://lore.kernel.org/linux-cxl/668333b17e4b2_5639294fd@dwillia2-xfh.jf.intel.com.notmuch/
+>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>>  Documentation/ABI/stable/sysfs-devices-node | 6 ++++++
+>>  drivers/acpi/numa/hmat.c                    | 5 +++++
+>>  drivers/base/node.c                         | 2 ++
+>>  include/linux/node.h                        | 7 +++++++
+>>  4 files changed, 20 insertions(+)
+>>
+>> diff --git a/Documentation/ABI/stable/sysfs-devices-node b/Documentation/ABI/stable/sysfs-devices-node
+>> index 402af4b2b905..c46b910dfe00 100644
+>> --- a/Documentation/ABI/stable/sysfs-devices-node
+>> +++ b/Documentation/ABI/stable/sysfs-devices-node
+>> @@ -177,6 +177,12 @@ Description:
+>>  		The cache write policy: 0 for write-back, 1 for write-through,
+>>  		other or unknown.
+>>  
+>> +What:		/sys/devices/system/node/nodeX/memory_side_cache/indexY/address_mode
+>> +Date:		December 2024
+>> +Contact:	Dave Jiang <dave.jiang@intel.com>
+>> +Description:
+>> +		The address mode: 0 for reserved, 1 for extended-linear.
+>> +
 > 
-> This patchset includes simply using guard() instead of some
-> down_read()/up_read() and down_write()/up_write() cases. Besides, it
-> also includes some function code cleanup after using guard().
+> I was going to say something about the brevity of the description,
+> but when I looked in the file, I see this is like all the other
+> memory_side_cache descriptions.
 > 
-> base-commit: d5d2106e2118c4e09fef131d9889f79559b95bfc cxl/next
+> So - I'll just say - update that Date :)
+> 
+> 
+>>  What:		/sys/devices/system/node/nodeX/x86/sgx_total_bytes
+>>  Date:		November 2021
+>>  Contact:	Jarkko Sakkinen <jarkko@kernel.org>
+>> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+>> index 80a3481c0470..a9172cf90002 100644
+>> --- a/drivers/acpi/numa/hmat.c
+>> +++ b/drivers/acpi/numa/hmat.c
+>> @@ -506,6 +506,11 @@ static __init int hmat_parse_cache(union acpi_subtable_headers *header,
+>>  	switch ((attrs & ACPI_HMAT_CACHE_ASSOCIATIVITY) >> 8) {
+>>  	case ACPI_HMAT_CA_DIRECT_MAPPED:
+>>  		tcache->cache_attrs.indexing = NODE_CACHE_DIRECT_MAP;
+>> +		/* Extended Linear mode is only valid if cache is direct mapped */
+>> +		if (cache->address_mode == ACPI_HMAT_CACHE_MODE_EXTENDED_LINEAR) {
+>> +			tcache->cache_attrs.address_mode =
+>> +				NODE_CACHE_ADDR_MODE_EXTENDED_LINEAR;
+>> +		}
+>>  		break;
+>>  	case ACPI_HMAT_CA_COMPLEX_CACHE_INDEXING:
+>>  		tcache->cache_attrs.indexing = NODE_CACHE_INDEXED;
+>> diff --git a/drivers/base/node.c b/drivers/base/node.c
+>> index 0ea653fa3433..cd13ef287011 100644
+>> --- a/drivers/base/node.c
+>> +++ b/drivers/base/node.c
+>> @@ -244,12 +244,14 @@ CACHE_ATTR(size, "%llu")
+>>  CACHE_ATTR(line_size, "%u")
+>>  CACHE_ATTR(indexing, "%u")
+>>  CACHE_ATTR(write_policy, "%u")
+>> +CACHE_ATTR(address_mode, "%#x")
+> 
+> why not "%u" fmt ?
 
-thanks for the rebase. applied to cxl/next
+It's a bitfield value and not decimal. 
+
+DJ
 
 > 
-> v3:
-> - Drop the renaming of __construct_region() to construct_auto_region(). (Dan)
-> - Rebase to the top of cxl/next. (Dave)
-> v2:
-> - Drop some local variables. (Jonathan)
-> - Rename __construct_region() to construct_auto_region(). (Jonathan and Dave)
-> 
-> Li Ming (7):
->   cxl/core: Use guard() to replace open-coded down_read/write()
->   cxl/core: cxl_mem_sanitize() cleanup
->   cxl/memdev: cxl_memdev_ioctl() cleanup
->   cxl/core: Use guard() to drop the goto pattern of cxl_dpa_free()
->   cxl/core: Use guard() to drop goto pattern of cxl_dpa_alloc()
->   cxl/region: Drop goto pattern in cxl_dax_region_alloc()
->   cxl/region: Drop goto pattern of construct_region()
-> 
->  drivers/cxl/core/hdm.c    |  69 ++++++++++---------------
->  drivers/cxl/core/mbox.c   |  10 ++--
->  drivers/cxl/core/memdev.c |  17 +++---
->  drivers/cxl/core/port.c   |   8 +--
->  drivers/cxl/core/region.c | 105 +++++++++++++++++++-------------------
->  5 files changed, 91 insertions(+), 118 deletions(-)
-> 
+>>  
+>>  static struct attribute *cache_attrs[] = {
+>>  	&dev_attr_indexing.attr,
+>>  	&dev_attr_size.attr,
+>>  	&dev_attr_line_size.attr,
+>>  	&dev_attr_write_policy.attr,
+>> +	&dev_attr_address_mode.attr,
+>>  	NULL,
+>>  };
+>>  ATTRIBUTE_GROUPS(cache);
+>> diff --git a/include/linux/node.h b/include/linux/node.h
+>> index 9a881c2208b3..2b7517892230 100644
+>> --- a/include/linux/node.h
+>> +++ b/include/linux/node.h
+>> @@ -57,6 +57,11 @@ enum cache_write_policy {
+>>  	NODE_CACHE_WRITE_OTHER,
+>>  };
+>>  
+>> +enum cache_mode {
+>> +	NODE_CACHE_ADDR_MODE_RESERVED,
+>> +	NODE_CACHE_ADDR_MODE_EXTENDED_LINEAR,
+>> +};
+>> +
+>>  /**
+>>   * struct node_cache_attrs - system memory caching attributes
+>>   *
+>> @@ -65,6 +70,7 @@ enum cache_write_policy {
+>>   * @size:		Total size of cache in bytes
+>>   * @line_size:		Number of bytes fetched on a cache miss
+>>   * @level:		The cache hierarchy level
+>> + * @address_mode:		The address mode
+>>   */
+>>  struct node_cache_attrs {
+>>  	enum cache_indexing indexing;
+>> @@ -72,6 +78,7 @@ struct node_cache_attrs {
+>>  	u64 size;
+>>  	u16 line_size;
+>>  	u8 level;
+>> +	u16 address_mode;
+>>  };
+>>  
+>>  #ifdef CONFIG_HMEM_REPORTING
+>> -- 
+>> 2.47.1
+>>
 
