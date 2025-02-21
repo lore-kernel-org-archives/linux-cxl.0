@@ -1,381 +1,219 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2078.outbound.protection.outlook.com [40.107.237.78])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8421EB1B9;
-	Fri, 21 Feb 2025 12:43:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.78
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740141808; cv=fail; b=HWL/ZIL4qIKT0eE/7k0u6N2GaG4celO5hlebiUKrxRGhkrhiBBSdo/6zozn/fnjinSUCLq40xlrKcTTziXTOAOjEGsr2A/mC9I1PYzWw4Sx0ZFyuej6FKGFVGkGbhDXGJNCX69CKKb00cPOU4rooWOsfxlcgufnb2f32Y4VEdB8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740141808; c=relaxed/simple;
-	bh=rQICHf5cFcJIYQwt3IRBjb6sooJCHUffzzZ3n62AGtk=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=INnO4VymwUKQHwydkQIiERLr5aulqGFaTO1WdjJ/jdMNsxJp4cMIwhZdi2yTLHamRk4TUOJirLXeZ2IwwJVM5hgnajTyf8Vq9LIVTK15qMgDQc1cVaXrxNioZMGrxpCw4db+Bif+02yai2HNaokRWYfJgEBGVmFWYwKHZdM8WL4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=F2Cwkj0G; arc=fail smtp.client-ip=40.107.237.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D906F1E493
+	for <linux-cxl@vger.kernel.org>; Fri, 21 Feb 2025 12:57:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740142627; cv=none; b=Qzue8CWXGTc6A580NI3hPyywVjj0/G/57Ls5C4o46JLtRrJsH8Zpgn1xmjSxPujPLKuVyMleH+Zqiwhi7ppsjnXX4AjRO5Hf9e0Gn+FAfzLtGEB5mmCtGFctI4lm9vo9JVaBZFUfi4JZoXuNtM5YLKRdxp0pjg0sQzR3Ratq444=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740142627; c=relaxed/simple;
+	bh=4qLdujKKnEWLelUyw6r+Rdjco9RzA92ibO8fCyMc4is=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=piXT0BDIjRAm7qQ4lWS93kdxPZ/vtiuLD6AILVNwKYc1i6caDUkZSY6Uf1pmekCf/WDyW3/HPRmdKil9wJpuzXp9hp/eU367HsbgkeDx08jGhjP8Ro96UwecoDMe99Y2xSRw/O2oGo2/4UkTgjZv1/IsKAAuESHoktt7gHlk2sk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KLVQpTfO; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="F2Cwkj0G"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=V1NvjK87x5l3mcnAX6ycmLryg/0277z2ouqgcZeOToI02mRWRe8LWU9zJH1DOr4GGUAkieyekLBYTTI10aemQSy2EovDMy3+zhLEfQtFCnfs+cnlsZ30fBnG7f54d3QHJE33dAl4HgJ5RMxGyVlaMQsbOTNmZy1CTYf8QEl/BAb4yS4RJi3XS6GP39IM0jdQyQ2xXTRzg6zUr90eWgRxhyekooPAL++jxYkdcMDvPMAoJLCeyqt0kaDsJ/gDqjreNMGEw2wcOWPJKbbqZtjB8tNGVDoT6+mcJ1u4Fwb1HbrsVCXk4G0U2LXpb87kpDK1ty5Ar/BDiA6PtmGW2BiK7w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eyKOynNY6tg/7urKsVZfZuoTzWIvlKBcUONHFUrM5xs=;
- b=hl3lwhTa+vwenCLvC7fjfQUVL6KJMYWwBxZInza1uTJwBhY5FL4H6l20csGnca788xICiyx4PDDVb+6F82NA8EqYJ0fFYBdFJRzKZBtvguPGudbGbzdyD9VhcDwizGoHkl1P8wvexNH536LJtjAGgMyJB8MyACCcZnfJSXebFCbM2zCkOdn4mNr5CwWYODg8qV/yRnh1J2yKk5hV+ltqiEqAOJOoeoLT6aL2GLzUqHqq0B2WMPKUqWj+43LWkUJ0ancUCQheVKbWpUoTosQEt344NQDpOixHHSqqBuIrT/FBtLumwmfr3qfKs+jS1AmWjV8zE0TjsXqcbU11KNqV6Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eyKOynNY6tg/7urKsVZfZuoTzWIvlKBcUONHFUrM5xs=;
- b=F2Cwkj0GcGAv8nIBusC5TTDNni/1dDMX6YyxZ4f960IKmEh4cAMiE/ox7b7G8DtljOW6D12TUGw/Om57kv+p6AbSZQyEGLQHbS9GmJptUJe3q9EnullHyI8ZeL5yp7Xgvn0IOK9owstegtf+W+xBVgym8S1HPoCZvQDiJK6S2Dg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
- by SJ2PR12MB7797.namprd12.prod.outlook.com (2603:10b6:a03:4c5::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.15; Fri, 21 Feb
- 2025 12:43:23 +0000
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79%7]) with mapi id 15.20.8466.016; Fri, 21 Feb 2025
- 12:43:23 +0000
-Message-ID: <0e88f930-ac33-4455-88f9-c1b4039d2dd0@amd.com>
-Date: Fri, 21 Feb 2025 12:43:16 +0000
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] cxl: add support for cxl reset
-Content-Language: en-US
-To: Srirangan Madhavan <smadhavan@nvidia.com>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>
-Cc: Zhi Wang <zhiw@nvidia.com>, Vishal Aslot <vaslot@nvidia.com>,
- Shanker Donthineni <sdonthineni@nvidia.com>, linux-cxl@vger.kernel.org,
- Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-References: <20250221043906.1593189-1-smadhavan@nvidia.com>
- <20250221043906.1593189-3-smadhavan@nvidia.com>
-From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <20250221043906.1593189-3-smadhavan@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO2P265CA0149.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:9::17) To DM6PR12MB4202.namprd12.prod.outlook.com
- (2603:10b6:5:219::22)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KLVQpTfO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740142626; x=1771678626;
+  h=date:from:to:cc:subject:message-id;
+  bh=4qLdujKKnEWLelUyw6r+Rdjco9RzA92ibO8fCyMc4is=;
+  b=KLVQpTfOK2RzTwX/AdKpJ+KHKrYvu+6tBn1hyQMMwQOejX/sWS/VHjPL
+   +H6q5oklcRBNU1jdXYI9XtebNjOm0AaBjilVMXMFShAvI6xXM3HslKuSC
+   CVroXZVqFPONFZM6sppS7gxYZ3lKqDijtfWn+d8gywnP0bDZw8P/A3SBh
+   ty+FCi9iOBMXakYq8bYqkq8DpwdIg+/WvUC8ruimXOdWHhbSTmsfDK5x+
+   u5cbtElCA9nKXq7qaqzJ0Fx56VymEhxsb+PMXr906RJVp2HOaBwerIggi
+   bs1ugJwVTux+cXZwINqdNzaGpA8kZQEGQvbIzB09n+E/U4VjMMdjTQLFO
+   w==;
+X-CSE-ConnectionGUID: T6bRWsfcSnSzhnMzHfKixA==
+X-CSE-MsgGUID: yxJEnD1tQge4KSvx/4BdhA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11351"; a="51176569"
+X-IronPort-AV: E=Sophos;i="6.13,304,1732608000"; 
+   d="scan'208";a="51176569"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 04:57:05 -0800
+X-CSE-ConnectionGUID: v5+EZWi2RbiawcaaRdC8QA==
+X-CSE-MsgGUID: CLXBI4T3T1axABkQFRPH1w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="146248778"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by fmviesa001.fm.intel.com with ESMTP; 21 Feb 2025 04:57:03 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tlSaS-0005Wp-2S;
+	Fri, 21 Feb 2025 12:57:00 +0000
+Date: Fri, 21 Feb 2025 20:56:54 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Subject: [cxl:next] BUILD SUCCESS
+ d5d2106e2118c4e09fef131d9889f79559b95bfc
+Message-ID: <202502212048.CFsYOV74-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|SJ2PR12MB7797:EE_
-X-MS-Office365-Filtering-Correlation-Id: f7c58f97-97d3-4b16-ba38-08dd52755419
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TVBzZlNxR2lKbkNXNGx2N3J0ejhLZUtIeDZkUXhGTjBCeFpKLzVjL3VzaUpS?=
- =?utf-8?B?ZzdFLzZoTXM0ZFF6NW9rVktNZmdnT2JNK3JBRDNPMzNIRmc2bStadW9vamRX?=
- =?utf-8?B?Zjh2Ni9Tako1R1NaZnRLZk9KdWFINEJManNucFZpS2lwbDVRL3UwY2RuOUdF?=
- =?utf-8?B?eUp0UWZDeUo0R1BDb0doR2ZuSkQvMDU5VENVa1hHb3NKOXdlT2x2S2VZUzd6?=
- =?utf-8?B?R3lVeTFuSWowTXNvT3h6Mk1IemJxYVl2bk8rRlhybG1YTXg2dXpkTmF5dzVW?=
- =?utf-8?B?MnY5THo0M1ZTNkV2ZmM0bzdtcDNXV2hncDJwaGxYcjNsQ0M2d3Q1a3B3Q1M1?=
- =?utf-8?B?N1hOZHVvMXdKKzNnMUFLMy9hSHloTzM3MXAvOHJjS0htUUc3WUlMZm1qMzBh?=
- =?utf-8?B?aXIxNFJGQVRYLy8yc0NBV3RtcmhtbXM2RXkvakxnLzVSMmp5T0NuSUNrVWZ3?=
- =?utf-8?B?Y0xxYnNoR2hiMUV1T3c0UU5aZnh3Ums4N1RRMDRSNndwTDlxQXhsSU5SQmp5?=
- =?utf-8?B?ODJoMktPc0J0VTVTZEJnYVAxUWsrNmhweHN5ZG9LWnc2WStjaklwaVNuclVL?=
- =?utf-8?B?Tm54a2ZpZzF6MXlmM0V0bHZad21RNjBId2IwdktTOWZ0azZWRFlDQ3BlcWRu?=
- =?utf-8?B?NVVPSElISVVkK2oxanVGY2ZkQWwvNmFrenUzZHpaT1J6bm1xbnpwNTJZTzk4?=
- =?utf-8?B?Q0YvS2h2cUx0RU11WVlxdktNZnk0VkxpbTdXSTVuV3RmbWplZmUyRGFIRkcw?=
- =?utf-8?B?TjdEck13QzE5UDdaRDlOQkNZZk5RT3lJQVdTY0QvVUZLNTNYRUVYdjdBanpF?=
- =?utf-8?B?ODdPWS9FWlNlakVaZjdyRUdvZ3NiTkhWcHFJV1kvMXQzcnZmTmVVWW9sQWUv?=
- =?utf-8?B?UW81KzlWVTRZMk52a3VqOHE0dkpnazJ5V2gvQm85WStPWWZPc1JneW9ITG5W?=
- =?utf-8?B?MS9NNzNhTkVGb2NDTGNhSkpod1pORTcwOXoxbDRiTTdKVVhHblBJVUhZN1B2?=
- =?utf-8?B?NUNvbHNEV0ttVC9NUFBUcVZma2VZTzQ0TUlDMjQ4R1djaDdrQ29jdlJxaVUv?=
- =?utf-8?B?M1RnZXpXM1JsY0gzYVNEbkFNSnZRa1hBVFNvMFlReUpYZDg3YVNLZ0VRMy9p?=
- =?utf-8?B?NklSVFVsZ1RpbUdSVHVac2l0NCtraGFvTysyZUlKWUFWTGg3N1BoTG9hMzA3?=
- =?utf-8?B?MGNTL2E5TTVzMGtkQ3B5dzJOYzdpQldScHo2RytkUlExR0lVa3doT0N0VkQ3?=
- =?utf-8?B?UHo5Y2VWZnhRdERZNUMvampPeWFQNmw2UFZKdG03TEo1Yk9Zem4yc0xNMGlP?=
- =?utf-8?B?eTJEdEFvKzJqRm9xSWpPY2hGNXU1M0pPNFhMOHorb0xqNk5lUTlBUmViaXh3?=
- =?utf-8?B?eW1yVEFvRmFJOEw3WExQT2pnZzhTSlkzMllOclJoZnNCcU8yUWRLWVhxY09W?=
- =?utf-8?B?anVhVGdMdTJpcnoyTVZjc3pEbnZaZUhaeHNLMDE1cE1JdFNOS0VLZWJacmFa?=
- =?utf-8?B?M3ZPcHFwRDZlL1NSbVA4bDJhRkk5ZTBoazhBaDFCcElIeVkxZUNQb1BmSkIv?=
- =?utf-8?B?NDh4UWV3dnY2eDAwbG1ybnlxZTlvT08ydDQzZUU0QkNybHNncUUrMWtqVXdP?=
- =?utf-8?B?M2xBODVHN0N3c3hkcnl6L213UUlNVlRMWURLbzY2dWdhdzU5WDFOc2Y0NWVy?=
- =?utf-8?B?OHUwZUhkcUpwVVBOQzQzVGMwUFpWNmhxc2pyS2VIb2lNZFNpUi9kYU1aVmYy?=
- =?utf-8?B?UThnaHZlV3dmSzFwZk9DSjVXTGdqL1N6NFNVQ1lNOHhWQ1R3cDBrczB1bFZJ?=
- =?utf-8?B?VlNrejVFdUY0VVFuS2RTbEFoeHl4RnNIajhra08xZXUvM1VyVCtBUzBsY3lF?=
- =?utf-8?Q?8FyIcpNKQ6d+C?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MmI0cXYreW5lZG8waDY0andxR00zQmVicFYyYkhNQS9ZM3ozT0tqaldSVnJS?=
- =?utf-8?B?c0FKbkRaczZ5RjdYUDE5RXRGZGR4ODhtWVBWRVY0MEc1aFV4by9TUU1nYzBT?=
- =?utf-8?B?R2xXc3RFR1N1bi85L0hqMkkvWUhVMFd0S212NkIvWUpGa3Q3TmtPbDhWSXF3?=
- =?utf-8?B?NThVUnRTU1VtbTE1UTFETFg1N2c3bjBzc1dWTy95MUUvWFBYRHgwZEpGR2Fo?=
- =?utf-8?B?TDNQdEQvNlBZY1NpeGpQeE80T2RVYVFNeU55RUFTYVVkVTFKaHFRWXh3UG9B?=
- =?utf-8?B?eFcvenlXS05ZbmJaS0lZWW9IeDNPR3RQVHZaWXNTT216aWtMNDZRQVNkaHJD?=
- =?utf-8?B?UlVtSzNnY21qMmNQNmh3c2tEMHkrazNuekxWQ2QyOFc2TTZmMi85QkJYNXUz?=
- =?utf-8?B?WHdWS05Kb2JYTWJYVTFuRjdyUEpSQ2FSSHB6a1VnUFRIQ3BFcEhPQlVRNVRs?=
- =?utf-8?B?TDd5dkcxSlRMWVozUUVOVk9FV2VDK1h1dnN0K0dydDA2MnFxVkxXRS95TFZw?=
- =?utf-8?B?ZzlvRzdLZVM1bDFkN3o5V3M2WmxLRmZUWkQrS1RHdTBNRDIzTmxWTEV2d0s0?=
- =?utf-8?B?RnViK2EyNGVjYXJmSTJzZFFnenpkcFlpelpGazY4aHQxSm5jUExTWkJxWDV2?=
- =?utf-8?B?RXFIUGhQSjRSRGtiNWxuckJDL28vQml1MittSW1ncVI1NWpUalgxUGlQckFV?=
- =?utf-8?B?MFhqM2FLL3I5VVhPcm94T3FMWTdpWTN4bEVGQzhvVUsyRG9Fc2hSSTY5VEFw?=
- =?utf-8?B?NXJtaGxFOXFnY0J2ZW1veUpRL3g3SWZKZmIwbWVYcnlKRFpmOVgzQmdwQWdj?=
- =?utf-8?B?eXZjOWFUZDdYM2tTSS8yL2E1THVEQytTZmxyaE1acG1XMUhIRlB5TUFTdmRn?=
- =?utf-8?B?UWVwNTNCbGxZdkxuQjJZMHg2eUxVMitmSEdXY3k2UjdkdFBQSmdZVHU2cWpU?=
- =?utf-8?B?Y3RSWjV6T2F2VTJDYWc2RWsrQk93bjRqRy9tRzlpemk3MHBYK2tML3IwN0dW?=
- =?utf-8?B?SjlwclZhWWJPcWdTaGlONUZjRDN0NkIvT04yN2hYcFBzYVgrSnoySU8zWEhu?=
- =?utf-8?B?RXphdUdoZVEvaXZ2YTdLSDVpUVA2S0xtS0gzRk11NkZzVHY5QTJEQzBBYjdN?=
- =?utf-8?B?OTl2OWhNSkxRcEhya3pIZFRuU3ZuNDRqcXE0dklEeGV5R3NJQVJYWGtoRENa?=
- =?utf-8?B?R1ozY2dyUUZObmJNS0E5K0huN21vdHEyK1FZWUFCaXR4UnNwNkZ5QUtZcEhO?=
- =?utf-8?B?VW5oUSt4aU5mVFN5dFFIaDZiRng1T050eUV6VDRrcUdRQUZacWVjaDNCL3gr?=
- =?utf-8?B?TkxHTW5VeDN5dndiM0lxbzJ4OXBCS2VIeWI3ZHhKbmR3YytOclRvL1RxeGtn?=
- =?utf-8?B?NEFoZC8rMWVmN0dBeElGUmRYeitMeTVpWTNBbktDREN6dFgvSXd5UkgxUnl5?=
- =?utf-8?B?ckdEQlo1U0tLNW55MmpsR0ROUlpRSXB0VHVoeEhoTVdraE4yUXJMQnBvZTNF?=
- =?utf-8?B?S1dWMjRlZVJkeHNVbVBkSlE5Szh4ak5uK2g5emJqbWJ1RHlYZGhMcjczMlQx?=
- =?utf-8?B?UnhSU3ZXOEFUYjZSMEhnNUxWOUhlSnpmeG9WcXdhQW85U2M5bWtEZm5GUFR1?=
- =?utf-8?B?N3JrekpGN2RLU3d5dWsvNHdaUW9aSkNwR3ZJelpkWnRzd2h0UHFIMDVZaHFS?=
- =?utf-8?B?QW5kNlpaUE8reEROYnZ1ZDhuVUpyT052c2dVV3VPZ29LSyt0K25kOGt2emtp?=
- =?utf-8?B?STM5SUpPZEJGV3RUNGVMdHdzaFZhOGRmUUhkQmFaT2hZYWpaN1Q5UEpyL2xW?=
- =?utf-8?B?ek53TVVVUVExSTR4RGhId1JNZkZrbHY0NkJOdkRUcnJwYk44RTgvOXJKM01i?=
- =?utf-8?B?MmVneUtwd0VydTMxR2pTRklta05VeTJya3hSMnh5K0hCSUlvcWgxOGFmeVp3?=
- =?utf-8?B?Y1pRL1ZYVnJVL2ZRcjNnTEN0S2c5NG5hMy9QSmNVTjNaSnRicmNsTStlWGhu?=
- =?utf-8?B?QUdXMytwSmowRFR5ZDdUZldtTTVMcXNkY2JNLzdFbkFjaHNQMCs0S2hya2NE?=
- =?utf-8?B?cTNXaFd0ZERkMDNXUUtyRE5yc3ZPWFV0cXdHdDAyWVNJMTRoRmp3a0Vaclph?=
- =?utf-8?Q?0x0XNuOeTQWxxVRprrtG0Jm46?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f7c58f97-97d3-4b16-ba38-08dd52755419
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Feb 2025 12:43:23.4581
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KrM6qBrxvVlhVNOM30gQzJMlw5kR3/suuYEK6bDAQZar0ccKDm5IeKKdTjwjLmud9aCn02iAaEP5NDtXIu9h2g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB7797
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
+branch HEAD: d5d2106e2118c4e09fef131d9889f79559b95bfc  cxl: Document missing sysfs files
 
-On 2/21/25 04:39, Srirangan Madhavan wrote:
-> Type 2 devices are being introduced and will require finer-grained
-> reset mechanisms beyond bus-wide reset methods.
->
-> Add support for CXL reset per CXL v3.2 Section 9.6/9.7
+elapsed time: 1069m
 
+configs tested: 139
+configs skipped: 5
 
-Hi,
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+alpha                               defconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-13.2.0
+arc                              allyesconfig    gcc-13.2.0
+arc                                 defconfig    gcc-13.2.0
+arc                   randconfig-001-20250221    gcc-13.2.0
+arc                   randconfig-002-20250221    gcc-13.2.0
+arc                           tb10x_defconfig    gcc-13.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-17
+arm                              allyesconfig    gcc-14.2.0
+arm                     am200epdkit_defconfig    gcc-14.2.0
+arm                        clps711x_defconfig    clang-19
+arm                                 defconfig    clang-21
+arm                           h3600_defconfig    gcc-14.2.0
+arm                         lpc18xx_defconfig    clang-19
+arm                   randconfig-001-20250221    gcc-14.2.0
+arm                   randconfig-002-20250221    clang-19
+arm                   randconfig-003-20250221    gcc-14.2.0
+arm                   randconfig-004-20250221    clang-21
+arm                         s5pv210_defconfig    gcc-14.2.0
+arm                           u8500_defconfig    gcc-14.2.0
+arm                    vt8500_v6_v7_defconfig    gcc-14.2.0
+arm64                            allmodconfig    clang-18
+arm64                             allnoconfig    gcc-14.2.0
+arm64                               defconfig    gcc-14.2.0
+arm64                 randconfig-001-20250221    clang-15
+arm64                 randconfig-002-20250221    clang-21
+arm64                 randconfig-003-20250221    clang-21
+arm64                 randconfig-004-20250221    gcc-14.2.0
+csky                              allnoconfig    gcc-14.2.0
+csky                                defconfig    gcc-14.2.0
+csky                  randconfig-001-20250221    gcc-14.2.0
+csky                  randconfig-002-20250221    gcc-14.2.0
+hexagon                          allmodconfig    clang-21
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-18
+hexagon                             defconfig    clang-21
+hexagon               randconfig-001-20250221    clang-21
+hexagon               randconfig-002-20250221    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250221    gcc-12
+i386        buildonly-randconfig-002-20250221    gcc-12
+i386        buildonly-randconfig-003-20250221    gcc-12
+i386        buildonly-randconfig-004-20250221    gcc-12
+i386        buildonly-randconfig-005-20250221    clang-19
+i386        buildonly-randconfig-006-20250221    clang-19
+i386                                defconfig    clang-19
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch                           defconfig    gcc-14.2.0
+loongarch             randconfig-001-20250221    gcc-14.2.0
+loongarch             randconfig-002-20250221    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                                defconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+microblaze                          defconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                            gpr_defconfig    clang-21
+mips                         rt305x_defconfig    clang-19
+nios2                             allnoconfig    gcc-14.2.0
+nios2                               defconfig    gcc-14.2.0
+nios2                 randconfig-001-20250221    gcc-14.2.0
+nios2                 randconfig-002-20250221    gcc-14.2.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250221    gcc-14.2.0
+parisc                randconfig-002-20250221    gcc-14.2.0
+parisc64                            defconfig    gcc-14.1.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-16
+powerpc                     kmeter1_defconfig    gcc-14.2.0
+powerpc               randconfig-001-20250221    clang-21
+powerpc               randconfig-002-20250221    clang-21
+powerpc               randconfig-003-20250221    clang-17
+powerpc                    socrates_defconfig    gcc-14.2.0
+powerpc64                        alldefconfig    clang-21
+powerpc64             randconfig-001-20250221    clang-21
+powerpc64             randconfig-002-20250221    clang-21
+powerpc64             randconfig-003-20250221    clang-19
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-21
+riscv                               defconfig    clang-19
+riscv                 randconfig-001-20250221    clang-21
+riscv                 randconfig-002-20250221    clang-21
+s390                             allmodconfig    clang-19
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    clang-15
+s390                  randconfig-001-20250221    gcc-14.2.0
+s390                  randconfig-002-20250221    gcc-14.2.0
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-14.2.0
+sh                    randconfig-001-20250221    gcc-14.2.0
+sh                    randconfig-002-20250221    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250221    gcc-14.2.0
+sparc                 randconfig-002-20250221    gcc-14.2.0
+sparc                       sparc64_defconfig    gcc-14.2.0
+sparc64                             defconfig    gcc-14.2.0
+sparc64               randconfig-001-20250221    gcc-14.2.0
+sparc64               randconfig-002-20250221    gcc-14.2.0
+um                               allmodconfig    clang-21
+um                                allnoconfig    clang-18
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250221    gcc-12
+um                    randconfig-002-20250221    gcc-12
+um                           x86_64_defconfig    clang-15
+x86_64                            allnoconfig    clang-19
+x86_64                           allyesconfig    clang-19
+x86_64      buildonly-randconfig-001-20250221    gcc-12
+x86_64      buildonly-randconfig-002-20250221    clang-19
+x86_64      buildonly-randconfig-003-20250221    clang-19
+x86_64      buildonly-randconfig-004-20250221    clang-19
+x86_64      buildonly-randconfig-005-20250221    clang-19
+x86_64      buildonly-randconfig-006-20250221    clang-19
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250221    gcc-14.2.0
+xtensa                randconfig-002-20250221    gcc-14.2.0
 
-This seems too early as there is no plans for supporting CXL.cache yet. 
-It is the second part of the current ongoing type2 support though.
-
-
-I guess starting the discussion about how to proceed is not a problem, 
-so my comments below, but my first comment is if the decisions about 
-what to do should be generic. I think having some helpers for accel 
-drivers will be good, but the invocation should be in the hands of the 
-accel driver.
-
-
-> Signed-off-by: Srirangan Madhavan <smadhavan@nvidia.com>
-> ---
->   drivers/pci/pci.c   | 146 ++++++++++++++++++++++++++++++++++++++++++++
->   include/cxl/pci.h   |  40 ++++++++----
->   include/linux/pci.h |   2 +-
->   3 files changed, 174 insertions(+), 14 deletions(-)
->
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 3ab1871ecf8a..9108daae252b 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -5117,6 +5117,151 @@ static int cxl_reset_bus_function(struct pci_dev *dev, bool probe)
->   	return rc;
->   }
->   
-> +static int cxl_reset_prepare(struct pci_dev *dev, u16 dvsec)
-> +{
-> +	u32 timeout_us = 100, timeout_tot_us = 10000;
-> +	u16 reg, cap;
-> +	int rc;
-> +
-> +	if (!pci_wait_for_pending_transaction(dev))
-> +		pci_err(dev, "timed out waiting for pending transaction; performing cxl reset anyway\n");
-> +
-> +	/* Check if the device is cache capable. */
-> +	rc = pci_read_config_word(dev, dvsec + CXL_DVSEC_CAP_OFFSET, &cap);
-> +	if (rc)
-> +		return rc;
-> +
-> +	if (!(cap & CXL_DVSEC_CACHE_CAPABLE))
-> +		return 0;
-> +
-> +	/* Disable cache. WB and invalidate cache if capability is advertised */
-
-
-I do not know how safe is this. IMO, this needs to be synchronized by 
-the accel driver which could imply to tell user space first. In our case 
-it would imply to stop rx queues in the netdev for CXL.cache, and tx 
-queues for CXL.mem. Doing it unconditionally could make current CXL 
-transactions to stall ... although it could be argued the reset event 
-implies something is broken, but let's try to do it properly if there is 
-a chance of the system not unreliable.
-
-
-> +	rc = pci_read_config_word(dev, dvsec + CXL_DVSEC_CTRL2_OFFSET, &reg);
-> +	if (rc)
-> +		return rc;
-> +	reg |= CXL_DVSEC_DISABLE_CACHING;
-> +	/*
-> +	 * DEVCTL2 bits are written only once. So check WB+I capability while
-> +	 * keeping disable caching set.
-> +	 */
-> +	if (cap & CXL_DVSEC_CACHE_WBI_CAPABLE)
-> +		reg |= CXL_DVSEC_INIT_CACHE_WBI;
-> +	pci_write_config_word(dev, dvsec + CXL_DVSEC_CTRL2_OFFSET, reg);
-> +
-> +	/*
-> +	 * From Section 9.6: "Software may leverage the cache size reported in
-> +	 * the DVSEC CXL Capability2 register to compute a suitable timeout
-> +	 * value".
-> +	 * Given there is no conversion factor for cache size -> timeout,
-> +	 * setting timer for default 10ms.
-> +	 */
-> +	do {
-> +		if (timeout_tot_us == 0)
-> +			return -ETIMEDOUT;
-> +		usleep_range(timeout_us, timeout_us + 1);
-> +		timeout_tot_us -= timeout_us;
-> +		rc = pci_read_config_word(dev, dvsec + CXL_DVSEC_CTRL2_OFFSET,
-> +					  &reg);
-> +		if (rc)
-> +			return rc;
-> +	} while (!(reg & CXL_DVSEC_CACHE_INVALID));
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_reset_init(struct pci_dev *dev, u16 dvsec)
-
-
-I think cxl_reset_start after the *_prepare call makes more sense here.
-
-
-> +{
-> +	/*
-> +	 * Timeout values ref CXL Spec v3.2 Ch 8 Control and Status Registers,
-> +	 * under section 8.1.3.1 DVSEC CXL Capability.
-> +	 */
-> +	u32 reset_timeouts_ms[] = { 10, 100, 1000, 10000, 100000 };
-> +	u16 reg;
-> +	u32 timeout_ms;
-> +	int rc, ind;
-> +
-> +	/* Check if CXL Reset MEM CLR is supported. */
-> +	rc = pci_read_config_word(dev, dvsec + CXL_DVSEC_CAP_OFFSET, &reg);
-> +	if (rc)
-> +		return rc;
-> +
-> +	if (reg & CXL_DVSEC_CXL_RST_MEM_CLR_CAPABLE) {
-> +		rc = pci_read_config_word(dev, dvsec + CXL_DVSEC_CTRL2_OFFSET,
-> +					  &reg);
-> +		if (rc)
-> +			return rc;
-> +
-> +		reg |= CXL_DVSEC_CXL_RST_MEM_CLR_ENABLE;
-> +		pci_write_config_word(dev, dvsec + CXL_DVSEC_CTRL2_OFFSET, reg);
-> +	}
-> +
-> +	/* Read timeout value. */
-> +	rc = pci_read_config_word(dev, dvsec + CXL_DVSEC_CAP_OFFSET, &reg);
-> +	if (rc)
-> +		return rc;
-> +	ind = FIELD_GET(CXL_DVSEC_CXL_RST_TIMEOUT_MASK, reg);
-> +	timeout_ms = reset_timeouts_ms[ind];
-> +
-> +	/* Write reset config. */
-> +	rc = pci_read_config_word(dev, dvsec + CXL_DVSEC_CTRL2_OFFSET, &reg);
-> +	if (rc)
-> +		return rc;
-> +
-> +	reg |= CXL_DVSEC_INIT_CXL_RESET;
-> +	pci_write_config_word(dev, dvsec + CXL_DVSEC_CTRL2_OFFSET, reg);
-> +
-> +	/* Wait till timeout and then check reset status is complete. */
-> +	msleep(timeout_ms);
-> +	rc = pci_read_config_word(dev, dvsec + CXL_DVSEC_STATUS2_OFFSET, &reg);
-> +	if (rc)
-> +		return rc;
-> +	if (reg & CXL_DVSEC_CXL_RESET_ERR ||
-> +	    ~reg & CXL_DVSEC_CXL_RST_COMPLETE)
-> +		return -ETIMEDOUT;
-> +
-> +	rc = pci_read_config_word(dev, dvsec + CXL_DVSEC_CTRL2_OFFSET, &reg);
-> +	if (rc)
-> +		return rc;
-> +	reg &= (~CXL_DVSEC_DISABLE_CACHING);
-> +	pci_write_config_word(dev, dvsec + CXL_DVSEC_CTRL2_OFFSET, reg);
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * cxl_reset - initiate a cxl reset
-> + * @dev: device to reset
-> + * @probe: if true, return 0 if device can be reset this way
-> + *
-> + * Initiate a cxl reset on @dev.
-> + */
-> +static int cxl_reset(struct pci_dev *dev, bool probe)
-> +{
-> +	u16 dvsec, reg;
-> +	int rc;
-> +
-> +	dvsec = pci_find_dvsec_capability(dev, PCI_VENDOR_ID_CXL,
-> +					  CXL_DVSEC_PCIE_DEVICE);
-> +	if (!dvsec)
-> +		return -ENOTTY;
-> +
-> +	/* Check if CXL Reset is supported. */
-> +	rc = pci_read_config_word(dev, dvsec + CXL_DVSEC_CAP_OFFSET, &reg);
-> +	if (rc)
-> +		return -ENOTTY;
-> +
-> +	if (reg & CXL_DVSEC_CXL_RST_CAPABLE == 0)
-> +		return -ENOTTY;
-> +
-> +	if (probe)
-> +		return 0;
-> +
-> +	rc = cxl_reset_prepare(dev, dvsec);
-> +	if (rc)
-> +		return rc;
-> +
-> +	return cxl_reset_init(dev, dvsec);
-
-
-One thing this does not cover, and I do not know if it should, is the 
-fact that the device CXL regs will be reset, so the question is if the 
-old values should be restored or the device/driver should go through the 
-same initialization, if a hotplug device, or do it specifically if 
-already present at boot time and the BIOS doing that first 
-initialization. In one case the restoration needs to happen, in the 
-other the old values/objects need to be removed. I think the second case 
-is more problematic because this is likely involving CXL root complex 
-configuration performed by the BIOS ... Not trivial at all IMO.
-
-
-This is the main concern I expressed some time ago when looking at how 
-type2 should support resets.
-
-
-Anyway, thank you for sending this series which will foster further 
-discussions about all this.
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
