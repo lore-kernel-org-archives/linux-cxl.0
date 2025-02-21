@@ -1,137 +1,262 @@
-Received: from crimson.yew.relay.mailchannels.net (crimson.yew.relay.mailchannels.net [23.83.220.44])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC80CA94A
-	for <linux-cxl@vger.kernel.org>; Fri, 21 Feb 2025 01:28:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.220.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740101319; cv=pass; b=HLymByelZUYsJ3/bA5rbXmLpu+6MLEWbMe0LXMN/FKFYiPnlt5oPpe8HSVPVqeinkulB68iA2fG+SRUz7cP3uWAF8/69ShA+TEaWaWQPo+JXDSm3ItpWgJd+t5epRlmU/JTu38y6NvAluH//uk72LjLzkXNDm++R3isD0Vk0wjQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740101319; c=relaxed/simple;
-	bh=0oU9nGLRctraxB/S/SeupYsQh4DMcej1ca5Zw+kel1U=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lBD9hSNzcDU0/WSmkTW+RSKGWptnQ+cmI85maAJS6yqoHTcQVa4HeikKswyQOTNFIdOKS18dIfix7Hm0vYb+NnnXBjbNcz5ml6aX7V9SBtPlKZcyraFDsUT5rPLg+7C0qREp+NvtnKC9oH4KArF8lxvUUNe+EeEVNM4YHoBFZMc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=Ml4Sdwx1; arc=pass smtp.client-ip=23.83.220.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13C15156CA;
+	Fri, 21 Feb 2025 01:30:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740101415; cv=none; b=EOvzuqmznJlBSfOh/1QITOtMu3xSfr0TSiw+oiBbJxp1Boyj57J6xE2HnvZSTUUy26Imy0vVWiVuInXubxyQOo464gY1nTuT59KrCVl3dnfhir3YmgYKRWYjjpkXgPxK0TFl1EooCKoE3S66zwVBbT1UQv97Xl0Ggd49BCl8wDM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740101415; c=relaxed/simple;
+	bh=TylAkjyZ/Mrio1T0XJzQhjNWcDz4osUS7nibUACN/24=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kqfhrX5cYfO85kzXZHpbhUR+rH40/BgbO6wdUzpFM4+B9ofpSPInIX2IueshpVZO1j9dZtBeeClP9GwbmAmp3YyfDhJvWBdeQmUMf5VZtxe9Mq9wjzQBJNjiU5LIv/vfAhFXIihh7ptmRi6zb1SIgHOgvxrTk3zHqipBxtYN7fg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AJ9Az+Nz; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="Ml4Sdwx1"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 0FFFF322E00;
-	Thu, 20 Feb 2025 22:02:42 +0000 (UTC)
-Received: from pdx1-sub0-mail-a229.dreamhost.com (100-97-28-76.trex-nlb.outbound.svc.cluster.local [100.97.28.76])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 5508D322F18;
-	Thu, 20 Feb 2025 22:02:41 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1740088961; a=rsa-sha256;
-	cv=none;
-	b=5BmYYP3A7Tko5IoUzJtYvDFY5rQvbjAOJZXWy9yDDVQFM425ORm5DTjzb7163LzWeyzGEw
-	ZUT6dAexziWoQfXpRDhnIjh77rFO8c1Eoe+xt/24BO9qFWawczEDXvlx1swn55sc175oyz
-	QmBDPmLpAZWXwDDdfRejSgLOaD1Cw6nZA0D0c0vC8anBjrceLtThwmSkpA47cejCeIpBcu
-	MHTWUF35swWCVx1nuHo98KrqlaW0ojbDB9LGfklhAA1N2sz46pDmXcIBhRwlpccc+tqxBq
-	6Spl4pC0ti8apXgXuesUxWXws0MJbNe2JzdmFwx00TuHEsWrZnpimngfcJp/6g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1740088961;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:dkim-signature;
-	bh=an6uVolBgKwPu5v0qfdukWY/y+90pz+FF04pCiJ6z74=;
-	b=fIUvSvhRUps4czHkQCGGh8zLKGtCGllk5XeMOIiIhnBQxP7phvZcAt7QCWYtHUB07WW59+
-	pbgqia/1xPOGqsoC4aWlI00CDOKGrS1jro8lPlvK+UqR6VbElhx85gIAKR0JJHo1qyJs0u
-	wEOQZ9PUpj4DqoAOcJHa2ALsk8xGpHU1T3GiAeZAnX5LOqbr5vMubi93MFoTCoW5vofFjt
-	Jr3uoS6BCNGa6QPMvg05yfchdkZaxlTJErrOQCMmzlub77fCJ69U4a1xlQOF76kKeQrKm6
-	g7LUIeOLUfGd3/fWyz0dwHM4NSjUQoLteOOI4fLxPjy24f1cPxakrukuCweiDg==
-ARC-Authentication-Results: i=1;
-	rspamd-6d7cc6b78d-fvkg7;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Good
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Relation-Society: 0028685e37ec1c5f_1740088961810_399080677
-X-MC-Loop-Signature: 1740088961810:802406110
-X-MC-Ingress-Time: 1740088961810
-Received: from pdx1-sub0-mail-a229.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.97.28.76 (trex/7.0.2);
-	Thu, 20 Feb 2025 22:02:41 +0000
-Received: from localhost.localdomain (unknown [104.36.25.240])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a229.dreamhost.com (Postfix) with ESMTPSA id 4YzS1D2t1vz7L;
-	Thu, 20 Feb 2025 14:02:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1740088961;
-	bh=an6uVolBgKwPu5v0qfdukWY/y+90pz+FF04pCiJ6z74=;
-	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-	b=Ml4Sdwx1p9OHU8QLkCuyc59WfHliMjf/1eCGv5lNzCyy6yNnEvSdEhSEGEByzS+eN
-	 UyM0PjxN+KmASTVFIwzISPU/NwEL2vBf3HwXn+x6uWsFKUt9Zd8t9woM6OO/9ZzE1F
-	 VvrTLsoKaos8KmOlBFZM+TUX78ZQehfa/k3QrcWUZJaCIKuC1pT+fpNXeLjkV8oEZ3
-	 OlmWqLpOJ2IF8ala5Tqz1c5ma1TBK4mL9xOu69x63EGrfMPLroR4PNbv4yP/ihh3Bj
-	 9ZS5WDFkjldVE2n0OO/faBB0AwrBn6zFtslaykPCgfIDIZXnDyZbQTmmjtdm/OCrJY
-	 6NObUjUWwSaWQ==
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: dave.jiang@intel.com,
-	dan.j.williams@intel.com
-Cc: jonathan.cameron@huawei.com,
-	alison.schofield@intel.com,
-	ira.weiny@intel.com,
-	vishal.l.verma@intel.com,
-	seven.yi.lee@gmail.com,
-	ming.li@zohomail.com,
-	a.manzanares@samsung.com,
-	fan.ni@samsung.com,
-	anisa.su@samsung.com,
-	dave@stgolabs.net,
-	linux-cxl@vger.kernel.org
-Subject: [PATCH v5 0/4] cxl: Dirty shutdown followups
-Date: Thu, 20 Feb 2025 14:02:31 -0800
-Message-Id: <20250220220235.276831-1-dave@stgolabs.net>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AJ9Az+Nz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740101413; x=1771637413;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=TylAkjyZ/Mrio1T0XJzQhjNWcDz4osUS7nibUACN/24=;
+  b=AJ9Az+NzYh2o4KGR+9x5TN7rUHQe/G/P0A1KKW7n6zThbXxsVGf2GGP+
+   75lpLqSWKfS1voK62xxNUHO/AReocz1ttW6lKU+dv+Y1TonLfCQx35BnI
+   2yDlwlqXora7OC3SV+snIn7pTWFdGR1cNztZQOFaxrFo+dhq6m6dh9gTa
+   71G+rTrhULopZOmF1W9KQNzebaHKBQVZ1kJQbgvATvubJ4guhN2Jomulo
+   4W/eHQVDeQn+Ybeovgnu7uRsGFluXMNkKddCKMIYMk8YZYCN06fhjkKbE
+   WJNCFnEe2yqvQWIk1jf/SHeK9OmUHFlkf3s7NbxhsCjC9CNwsabiaItpS
+   A==;
+X-CSE-ConnectionGUID: kyIC6N5yTcmQ/Lk2q5uEtQ==
+X-CSE-MsgGUID: pw7IR1fMRKywmTiC3dAVgw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11351"; a="40921023"
+X-IronPort-AV: E=Sophos;i="6.13,303,1732608000"; 
+   d="scan'208";a="40921023"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 17:30:12 -0800
+X-CSE-ConnectionGUID: iuT9FOiSQPGAQ9L8BWEE5g==
+X-CSE-MsgGUID: ydfAOs4oRWGwbrUJW3IeQA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,303,1732608000"; 
+   d="scan'208";a="115875231"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.110.117])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 17:30:11 -0800
+Date: Thu, 20 Feb 2025 17:30:09 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
+	rafael@kernel.org, bp@alien8.de, dan.j.williams@intel.com,
+	tony.luck@intel.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
+	ira.weiny@intel.com, ming.li@zohomail.com
+Subject: Re: [PATCH v3 3/4] cxl: Add extended linear cache address alias
+ emission for cxl events
+Message-ID: <Z7fXIQKTG9pCRtS7@aschofie-mobl2.lan>
+References: <20250117173054.4147877-1-dave.jiang@intel.com>
+ <20250117173054.4147877-4-dave.jiang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250117173054.4147877-4-dave.jiang@intel.com>
 
-Changes from v4:
-  - use %llu on the correct sysfs file in patch 3 (Jonathan)
-  - s/cxl_nvdimm_setup_dirty_tracking()/cxl_nvdimm_arm_dirty_shutdown_tracking()
-    in patch 3 which was feedback from v1.
+On Fri, Jan 17, 2025 at 10:28:32AM -0700, Dave Jiang wrote:
+> Add the aliased address of extended linear cache when emitting event
+> trace for DRAM and general media of CXL events.
+> 
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+> v3:
+> - Drop unused region to nid function
+> - Make sure hpa_alias defaults to ~0ULL. (Jonathan)
+> ---
+>  drivers/cxl/core/mbox.c  | 28 ++++++++++++++++++++++++----
+>  drivers/cxl/core/trace.h | 24 ++++++++++++++++--------
+>  2 files changed, 40 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index 548564c770c0..f42c4c56dc43 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -856,6 +856,23 @@ int cxl_enumerate_cmds(struct cxl_memdev_state *mds)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_enumerate_cmds, "CXL");
+>  
+> +static u64 cxlr_hpa_cache_alias(struct cxl_region *cxlr, u64 hpa)
+> +{
+> +	struct cxl_region_params *p;
+> +
+> +	if (!cxlr)
+> +		return ~0ULL;
+> +
+> +	p = &cxlr->params;
+> +	if (!p->cache_size)
+> +		return ~0ULL;
+> +
+> +	if (hpa >= p->res->start + p->cache_size)
+> +		return hpa - p->cache_size;
+> +
+> +	return hpa + p->cache_size;
+> +}
+> +
+>  void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+>  			    enum cxl_event_log_type type,
+>  			    enum cxl_event_type event_type,
+> @@ -871,7 +888,7 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+>  	}
+>  
+>  	if (trace_cxl_general_media_enabled() || trace_cxl_dram_enabled()) {
+> -		u64 dpa, hpa = ULLONG_MAX;
+> +		u64 dpa, hpa = ULLONG_MAX, hpa_alias = ~0ULL;
 
-Hi,
+A bit odd to use 2 different notations for same thing.
+Prefer ULLONG_MAX here and in previous function.
 
-Some followup patches to the GPF work. First two patches are from feedback
-provided by DaveJ. The third patch adds a $platform/dirty_shutdown sysfs
-attribute to expose the count to userspace. Fourth patch adds support
-emulating the set shutdown state command for the mock device.
 
-Applies against the -next branch of cxl.git.
+>  		struct cxl_region *cxlr;
+>  
+>  		/*
+> @@ -884,14 +901,17 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+>  
+>  		dpa = le64_to_cpu(evt->media_hdr.phys_addr) & CXL_DPA_MASK;
+>  		cxlr = cxl_dpa_to_region(cxlmd, dpa);
+> -		if (cxlr)
+> +		if (cxlr) {
+>  			hpa = cxl_dpa_to_hpa(cxlr, cxlmd, dpa);
+> +			hpa_alias = cxlr_hpa_cache_alias(cxlr, hpa);
+> +		}
+>  
+>  		if (event_type == CXL_CPER_EVENT_GEN_MEDIA)
+>  			trace_cxl_general_media(cxlmd, type, cxlr, hpa,
+> -						&evt->gen_media);
+> +						hpa_alias, &evt->gen_media);
+>  		else if (event_type == CXL_CPER_EVENT_DRAM)
+> -			trace_cxl_dram(cxlmd, type, cxlr, hpa, &evt->dram);
+> +			trace_cxl_dram(cxlmd, type, cxlr, hpa, hpa_alias,
+> +				       &evt->dram);
+>  	}
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_event_trace_record, "CXL");
+> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+> index 8389a94adb1a..257f60f16e4c 100644
+> --- a/drivers/cxl/core/trace.h
+> +++ b/drivers/cxl/core/trace.h
+> @@ -316,9 +316,10 @@ TRACE_EVENT(cxl_generic_event,
+>  TRACE_EVENT(cxl_general_media,
+>  
+>  	TP_PROTO(const struct cxl_memdev *cxlmd, enum cxl_event_log_type log,
+> -		 struct cxl_region *cxlr, u64 hpa, struct cxl_event_gen_media *rec),
+> +		 struct cxl_region *cxlr, u64 hpa, u64 hpa_alias,
+> +		 struct cxl_event_gen_media *rec),
+>  
+> -	TP_ARGS(cxlmd, log, cxlr, hpa, rec),
+> +	TP_ARGS(cxlmd, log, cxlr, hpa, hpa_alias, rec),
+>  
+>  	TP_STRUCT__entry(
+>  		CXL_EVT_TP_entry
+> @@ -332,6 +333,7 @@ TRACE_EVENT(cxl_general_media,
+>  		__array(u8, comp_id, CXL_EVENT_GEN_MED_COMP_ID_SIZE)
+>  		/* Following are out of order to pack trace record */
+>  		__field(u64, hpa)
+> +		__field(u64, hpa_alias)
 
-Thanks!
+I saw Jonathan's ask for hpa_alias to be hpa_alias0 or something?
+That's done in the CXL_EVT_TP_printk output below. It needs to be
+used here in the field name to be picked up in the trace event.
+(same for cxl_dram event)
 
-Davidlohr Bueso (4):
-  cxl/pci: Introduce cxl_gpf_get_dvsec()
-  cxl/pmem: Rename cxl_dirty_shutdown_state()
-  cxl/pmem: Export dirty shutdown count via sysfs
-  tools/testing/cxl: Set Shutdown State support
+But...what's the deal with hpa_alias0. If we anticipate an array
+of aliases, then maybe an array like is done for comp_id would
+work. Expect that's overkill at the moment.
 
- Documentation/ABI/testing/sysfs-bus-cxl       | 12 +++
- Documentation/driver-api/cxl/maturity-map.rst |  2 +-
- drivers/cxl/core/mbox.c                       | 25 +++++-
- drivers/cxl/core/pci.c                        | 30 +++++---
- drivers/cxl/cxl.h                             |  3 +
- drivers/cxl/cxlmem.h                          | 15 +++-
- drivers/cxl/pmem.c                            | 77 +++++++++++++++++--
- tools/testing/cxl/test/mem.c                  | 23 ++++++
- 8 files changed, 165 insertions(+), 22 deletions(-)
 
--- 
-2.39.5
+>  		__field_struct(uuid_t, region_uuid)
+>  		__field(u16, validity_flags)
+>  		__field(u8, rank)
+> @@ -358,6 +360,7 @@ TRACE_EVENT(cxl_general_media,
+>  			CXL_EVENT_GEN_MED_COMP_ID_SIZE);
+>  		__entry->validity_flags = get_unaligned_le16(&rec->media_hdr.validity_flags);
+>  		__entry->hpa = hpa;
+> +		__entry->hpa_alias = hpa_alias;
+>  		if (cxlr) {
+>  			__assign_str(region_name);
+>  			uuid_copy(&__entry->region_uuid, &cxlr->params.uuid);
+> @@ -370,7 +373,7 @@ TRACE_EVENT(cxl_general_media,
+>  	CXL_EVT_TP_printk("dpa=%llx dpa_flags='%s' " \
+>  		"descriptor='%s' type='%s' transaction_type='%s' channel=%u rank=%u " \
+>  		"device=%x comp_id=%s validity_flags='%s' " \
+> -		"hpa=%llx region=%s region_uuid=%pUb",
+> +		"hpa=%llx hpa_alias0=%llx region=%s region_uuid=%pUb",
+>  		__entry->dpa, show_dpa_flags(__entry->dpa_flags),
+>  		show_event_desc_flags(__entry->descriptor),
+>  		show_gmer_mem_event_type(__entry->type),
+> @@ -378,7 +381,8 @@ TRACE_EVENT(cxl_general_media,
+>  		__entry->channel, __entry->rank, __entry->device,
+>  		__print_hex(__entry->comp_id, CXL_EVENT_GEN_MED_COMP_ID_SIZE),
+>  		show_valid_flags(__entry->validity_flags),
+> -		__entry->hpa, __get_str(region_name), &__entry->region_uuid
+> +		__entry->hpa, __entry->hpa_alias, __get_str(region_name),
+> +		&__entry->region_uuid
+>  	)
+>  );
+>  
+> @@ -424,9 +428,10 @@ TRACE_EVENT(cxl_general_media,
+>  TRACE_EVENT(cxl_dram,
+>  
+>  	TP_PROTO(const struct cxl_memdev *cxlmd, enum cxl_event_log_type log,
+> -		 struct cxl_region *cxlr, u64 hpa, struct cxl_event_dram *rec),
+> +		 struct cxl_region *cxlr, u64 hpa, u64 hpa_alias,
+> +		 struct cxl_event_dram *rec),
+>  
+> -	TP_ARGS(cxlmd, log, cxlr, hpa, rec),
+> +	TP_ARGS(cxlmd, log, cxlr, hpa, hpa_alias, rec),
+>  
+>  	TP_STRUCT__entry(
+>  		CXL_EVT_TP_entry
+> @@ -442,6 +447,7 @@ TRACE_EVENT(cxl_dram,
+>  		__field(u32, row)
+>  		__array(u8, cor_mask, CXL_EVENT_DER_CORRECTION_MASK_SIZE)
+>  		__field(u64, hpa)
+> +		__field(u64, hpa_alias)
+>  		__field_struct(uuid_t, region_uuid)
+>  		__field(u8, rank)	/* Out of order to pack trace record */
+>  		__field(u8, bank_group)	/* Out of order to pack trace record */
+> @@ -472,6 +478,7 @@ TRACE_EVENT(cxl_dram,
+>  		memcpy(__entry->cor_mask, &rec->correction_mask,
+>  			CXL_EVENT_DER_CORRECTION_MASK_SIZE);
+>  		__entry->hpa = hpa;
+> +		__entry->hpa_alias = hpa_alias;
+>  		if (cxlr) {
+>  			__assign_str(region_name);
+>  			uuid_copy(&__entry->region_uuid, &cxlr->params.uuid);
+> @@ -485,7 +492,7 @@ TRACE_EVENT(cxl_dram,
+>  		"transaction_type='%s' channel=%u rank=%u nibble_mask=%x " \
+>  		"bank_group=%u bank=%u row=%u column=%u cor_mask=%s " \
+>  		"validity_flags='%s' " \
+> -		"hpa=%llx region=%s region_uuid=%pUb",
+> +		"hpa=%llx hpa_alias0=%llx region=%s region_uuid=%pUb",
+>  		__entry->dpa, show_dpa_flags(__entry->dpa_flags),
+>  		show_event_desc_flags(__entry->descriptor),
+>  		show_dram_mem_event_type(__entry->type),
+> @@ -495,7 +502,8 @@ TRACE_EVENT(cxl_dram,
+>  		__entry->row, __entry->column,
+>  		__print_hex(__entry->cor_mask, CXL_EVENT_DER_CORRECTION_MASK_SIZE),
+>  		show_dram_valid_flags(__entry->validity_flags),
+> -		__entry->hpa, __get_str(region_name), &__entry->region_uuid
+> +		__entry->hpa_alias, __entry->hpa, __get_str(region_name),
 
+Needs swapping -  hpa then hpa_alias
+
+
+> +		&__entry->region_uuid
+>  	)
+>  );
+>  
+> -- 
+> 2.47.1
+> 
