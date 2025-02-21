@@ -1,262 +1,221 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13C15156CA;
-	Fri, 21 Feb 2025 01:30:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740101415; cv=none; b=EOvzuqmznJlBSfOh/1QITOtMu3xSfr0TSiw+oiBbJxp1Boyj57J6xE2HnvZSTUUy26Imy0vVWiVuInXubxyQOo464gY1nTuT59KrCVl3dnfhir3YmgYKRWYjjpkXgPxK0TFl1EooCKoE3S66zwVBbT1UQv97Xl0Ggd49BCl8wDM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740101415; c=relaxed/simple;
-	bh=TylAkjyZ/Mrio1T0XJzQhjNWcDz4osUS7nibUACN/24=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kqfhrX5cYfO85kzXZHpbhUR+rH40/BgbO6wdUzpFM4+B9ofpSPInIX2IueshpVZO1j9dZtBeeClP9GwbmAmp3YyfDhJvWBdeQmUMf5VZtxe9Mq9wjzQBJNjiU5LIv/vfAhFXIihh7ptmRi6zb1SIgHOgvxrTk3zHqipBxtYN7fg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AJ9Az+Nz; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48D3578F20;
+	Fri, 21 Feb 2025 01:32:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740101565; cv=pass; b=OcQDXwA7fzwFLDYaUpNuFtjV+RN5OU00xMgHJac1SMx+gtwmqZvvzCx8o+sf0Vwq7J5KEg+J7q7/E8nkz2VTNarEAxrVUs8RN8KcVcmrRU/H9PW/W0WuepyhRzfGCFm/UFO5qgwn9qPyAYLXAe8bVPEUePgcQncNP6GCcXwawEw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740101565; c=relaxed/simple;
+	bh=l2ia1P25YQ3Mf4mDhF0k4Q5xMVysd29f7M4fX3GmTKQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=VFSNs41dVpvDVZ51BUn4JyxDvjHxBioq7qzeg8cdmwraerBzltB7o/cLNX8AmMsf3z8oYwTOKxz1ZqupZJIbxusdfzguce6qwWFmxE0+B7nrRkTBhoe1IbSztr1qXxPSLSbQO9eOyyaB8sz4x6DRMMllxU3A+Y7rPSubgq1PoU4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=FB+m5EbW; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AJ9Az+Nz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740101413; x=1771637413;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=TylAkjyZ/Mrio1T0XJzQhjNWcDz4osUS7nibUACN/24=;
-  b=AJ9Az+NzYh2o4KGR+9x5TN7rUHQe/G/P0A1KKW7n6zThbXxsVGf2GGP+
-   75lpLqSWKfS1voK62xxNUHO/AReocz1ttW6lKU+dv+Y1TonLfCQx35BnI
-   2yDlwlqXora7OC3SV+snIn7pTWFdGR1cNztZQOFaxrFo+dhq6m6dh9gTa
-   71G+rTrhULopZOmF1W9KQNzebaHKBQVZ1kJQbgvATvubJ4guhN2Jomulo
-   4W/eHQVDeQn+Ybeovgnu7uRsGFluXMNkKddCKMIYMk8YZYCN06fhjkKbE
-   WJNCFnEe2yqvQWIk1jf/SHeK9OmUHFlkf3s7NbxhsCjC9CNwsabiaItpS
-   A==;
-X-CSE-ConnectionGUID: kyIC6N5yTcmQ/Lk2q5uEtQ==
-X-CSE-MsgGUID: pw7IR1fMRKywmTiC3dAVgw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11351"; a="40921023"
-X-IronPort-AV: E=Sophos;i="6.13,303,1732608000"; 
-   d="scan'208";a="40921023"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 17:30:12 -0800
-X-CSE-ConnectionGUID: iuT9FOiSQPGAQ9L8BWEE5g==
-X-CSE-MsgGUID: ydfAOs4oRWGwbrUJW3IeQA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,303,1732608000"; 
-   d="scan'208";a="115875231"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.110.117])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 17:30:11 -0800
-Date: Thu, 20 Feb 2025 17:30:09 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
-	rafael@kernel.org, bp@alien8.de, dan.j.williams@intel.com,
-	tony.luck@intel.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
-	ira.weiny@intel.com, ming.li@zohomail.com
-Subject: Re: [PATCH v3 3/4] cxl: Add extended linear cache address alias
- emission for cxl events
-Message-ID: <Z7fXIQKTG9pCRtS7@aschofie-mobl2.lan>
-References: <20250117173054.4147877-1-dave.jiang@intel.com>
- <20250117173054.4147877-4-dave.jiang@intel.com>
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="FB+m5EbW"
+ARC-Seal: i=1; a=rsa-sha256; t=1740101546; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Lu43KBZtEt7AFdDQImnyCTD3tI9u93k787RdZoT6lrq3GoQZYN5BqYIG0eXgxICwGaZ3Om9SX1IJcM6aOxGdzcjdRpbxsNDGckDo814Zvvwb4qGO572whzKtTCNzEB65rh1GAPE9qlRdJs9YEq3BiC5csIyRAcr6Kq+jc2XlvGs=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1740101546; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=XbeiqXG68L38/7TIuRvqSKkNvkHaENKByIF8L8Iwwag=; 
+	b=F8/XI/oxXmoQfCNgjVsCrcOLh++tQOuZ2uiQs8HhmHQEJlA5XO4jQU02gdVtlXyUWZ+vfXp7MQ4kp5w+inTu9euoP8kxCM4tgaMzgtnvyZ6cT5gqkAk/XZX9atWfZS0v1dQIHJxi4Jgx5kK5uhAs3JfIlA8t9zGV7fIKyozIkFg=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740101546;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
+	bh=XbeiqXG68L38/7TIuRvqSKkNvkHaENKByIF8L8Iwwag=;
+	b=FB+m5EbWp8c4V+L0koNO9ccyGNA3SXW3VbajxyHTW8A1EzD6VvrNPJFZm49G0a4L
+	ZIGOtge210cC97PMTe141zlNDiGeJAT+lCI8Px7654uhzNPuwvsSdyrY4SlKFOlLKR+
+	mR2/I30Nfno2X70JLHDBLMnhvAlnfmB9Ma+igDH8=
+Received: by mx.zohomail.com with SMTPS id 174010154362018.66000672863879;
+	Thu, 20 Feb 2025 17:32:23 -0800 (PST)
+From: Li Ming <ming.li@zohomail.com>
+To: dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Li Ming <ming.li@zohomail.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH v3 7/7] cxl/region: Drop goto pattern of construct_region()
+Date: Fri, 21 Feb 2025 09:32:05 +0800
+Message-Id: <20250221013205.126419-1-ming.li@zohomail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250221012453.126366-1-ming.li@zohomail.com>
+References: <20250221012453.126366-1-ming.li@zohomail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250117173054.4147877-4-dave.jiang@intel.com>
+Content-Transfer-Encoding: 8bit
+Feedback-ID: rr0801122787e1089ae2cfd4493ccb2d0100005e49b58b3a16a64b6ce805ef390e6ff2bee79d0789ac43cbcf:zu080112271e8ff87ffc2ac7730f475cf80000f6a46113b88e0ffe05cc23c5ad4e1571e5f568cb4cbceef50c:rf0801122df3d6a5f08848c75d152a743800008096e50ab0d2c03a46f4357e7c1ba25604d2764f294324b0c49bbc4ad15a92:ZohoMail
+X-ZohoMailClient: External
 
-On Fri, Jan 17, 2025 at 10:28:32AM -0700, Dave Jiang wrote:
-> Add the aliased address of extended linear cache when emitting event
-> trace for DRAM and general media of CXL events.
-> 
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> ---
-> v3:
-> - Drop unused region to nid function
-> - Make sure hpa_alias defaults to ~0ULL. (Jonathan)
-> ---
->  drivers/cxl/core/mbox.c  | 28 ++++++++++++++++++++++++----
->  drivers/cxl/core/trace.h | 24 ++++++++++++++++--------
->  2 files changed, 40 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 548564c770c0..f42c4c56dc43 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -856,6 +856,23 @@ int cxl_enumerate_cmds(struct cxl_memdev_state *mds)
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_enumerate_cmds, "CXL");
->  
-> +static u64 cxlr_hpa_cache_alias(struct cxl_region *cxlr, u64 hpa)
-> +{
-> +	struct cxl_region_params *p;
-> +
-> +	if (!cxlr)
-> +		return ~0ULL;
-> +
-> +	p = &cxlr->params;
-> +	if (!p->cache_size)
-> +		return ~0ULL;
-> +
-> +	if (hpa >= p->res->start + p->cache_size)
-> +		return hpa - p->cache_size;
-> +
-> +	return hpa + p->cache_size;
-> +}
-> +
->  void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
->  			    enum cxl_event_log_type type,
->  			    enum cxl_event_type event_type,
-> @@ -871,7 +888,7 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
->  	}
->  
->  	if (trace_cxl_general_media_enabled() || trace_cxl_dram_enabled()) {
-> -		u64 dpa, hpa = ULLONG_MAX;
-> +		u64 dpa, hpa = ULLONG_MAX, hpa_alias = ~0ULL;
+Some operations need to be protected by the cxl_region_rwsem in
+construct_region(). Currently, construct_region() uses down_write() and
+up_write() for the cxl_region_rwsem locking, so there is a goto pattern
+after down_write() invoked to release cxl_region_rwsem.
 
-A bit odd to use 2 different notations for same thing.
-Prefer ULLONG_MAX here and in previous function.
+construct region() can be optimized to remove the goto pattern. The
+changes are creating a new function called __construct_region() which
+will include all checking and operations protected by the
+cxl_region_rwsem, and using guard(rwsem_write) to replace down_write()
+and up_write() in __construct_region().
 
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Acked-by: Davidlohr Bueso <dave@stgolabs.net>
+Signed-off-by: Li Ming <ming.li@zohomail.com>
+---
+v3:
+- Drop the renaming of __construct_region() to construct_auto_region(). (Dan)
+v2:
+- Rename __construct_region() to construct_auto_region(). (Jonathan and Dave)
+---
+ drivers/cxl/core/region.c | 81 +++++++++++++++++++++------------------
+ 1 file changed, 44 insertions(+), 37 deletions(-)
 
->  		struct cxl_region *cxlr;
->  
->  		/*
-> @@ -884,14 +901,17 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
->  
->  		dpa = le64_to_cpu(evt->media_hdr.phys_addr) & CXL_DPA_MASK;
->  		cxlr = cxl_dpa_to_region(cxlmd, dpa);
-> -		if (cxlr)
-> +		if (cxlr) {
->  			hpa = cxl_dpa_to_hpa(cxlr, cxlmd, dpa);
-> +			hpa_alias = cxlr_hpa_cache_alias(cxlr, hpa);
-> +		}
->  
->  		if (event_type == CXL_CPER_EVENT_GEN_MEDIA)
->  			trace_cxl_general_media(cxlmd, type, cxlr, hpa,
-> -						&evt->gen_media);
-> +						hpa_alias, &evt->gen_media);
->  		else if (event_type == CXL_CPER_EVENT_DRAM)
-> -			trace_cxl_dram(cxlmd, type, cxlr, hpa, &evt->dram);
-> +			trace_cxl_dram(cxlmd, type, cxlr, hpa, hpa_alias,
-> +				       &evt->dram);
->  	}
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_event_trace_record, "CXL");
-> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
-> index 8389a94adb1a..257f60f16e4c 100644
-> --- a/drivers/cxl/core/trace.h
-> +++ b/drivers/cxl/core/trace.h
-> @@ -316,9 +316,10 @@ TRACE_EVENT(cxl_generic_event,
->  TRACE_EVENT(cxl_general_media,
->  
->  	TP_PROTO(const struct cxl_memdev *cxlmd, enum cxl_event_log_type log,
-> -		 struct cxl_region *cxlr, u64 hpa, struct cxl_event_gen_media *rec),
-> +		 struct cxl_region *cxlr, u64 hpa, u64 hpa_alias,
-> +		 struct cxl_event_gen_media *rec),
->  
-> -	TP_ARGS(cxlmd, log, cxlr, hpa, rec),
-> +	TP_ARGS(cxlmd, log, cxlr, hpa, hpa_alias, rec),
->  
->  	TP_STRUCT__entry(
->  		CXL_EVT_TP_entry
-> @@ -332,6 +333,7 @@ TRACE_EVENT(cxl_general_media,
->  		__array(u8, comp_id, CXL_EVENT_GEN_MED_COMP_ID_SIZE)
->  		/* Following are out of order to pack trace record */
->  		__field(u64, hpa)
-> +		__field(u64, hpa_alias)
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 9f082bc0f4e3..3cb91cf0e2dd 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -3215,53 +3215,31 @@ static int match_region_by_range(struct device *dev, const void *data)
+ 	return 0;
+ }
+ 
+-/* Establish an empty region covering the given HPA range */
+-static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+-					   struct cxl_endpoint_decoder *cxled)
++static int __construct_region(struct cxl_region *cxlr,
++			      struct cxl_root_decoder *cxlrd,
++			      struct cxl_endpoint_decoder *cxled)
+ {
+ 	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+-	struct cxl_port *port = cxlrd_to_port(cxlrd);
+-	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+ 	struct range *hpa = &cxled->cxld.hpa_range;
+-	int rc, part = READ_ONCE(cxled->part);
+ 	struct cxl_region_params *p;
+-	struct cxl_region *cxlr;
+ 	struct resource *res;
++	int rc;
+ 
+-	if (part < 0)
+-		return ERR_PTR(-EBUSY);
+-
+-	do {
+-		cxlr = __create_region(cxlrd, cxlds->part[part].mode,
+-				       atomic_read(&cxlrd->region_id));
+-	} while (IS_ERR(cxlr) && PTR_ERR(cxlr) == -EBUSY);
+-
+-	if (IS_ERR(cxlr)) {
+-		dev_err(cxlmd->dev.parent,
+-			"%s:%s: %s failed assign region: %ld\n",
+-			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
+-			__func__, PTR_ERR(cxlr));
+-		return cxlr;
+-	}
+-
+-	down_write(&cxl_region_rwsem);
++	guard(rwsem_write)(&cxl_region_rwsem);
+ 	p = &cxlr->params;
+ 	if (p->state >= CXL_CONFIG_INTERLEAVE_ACTIVE) {
+ 		dev_err(cxlmd->dev.parent,
+ 			"%s:%s: %s autodiscovery interrupted\n",
+ 			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
+ 			__func__);
+-		rc = -EBUSY;
+-		goto err;
++		return -EBUSY;
+ 	}
+ 
+ 	set_bit(CXL_REGION_F_AUTO, &cxlr->flags);
+ 
+ 	res = kmalloc(sizeof(*res), GFP_KERNEL);
+-	if (!res) {
+-		rc = -ENOMEM;
+-		goto err;
+-	}
++	if (!res)
++		return -ENOMEM;
+ 
+ 	*res = DEFINE_RES_MEM_NAMED(hpa->start, range_len(hpa),
+ 				    dev_name(&cxlr->dev));
+@@ -3284,7 +3262,7 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+ 
+ 	rc = sysfs_update_group(&cxlr->dev.kobj, get_cxl_region_target_group());
+ 	if (rc)
+-		goto err;
++		return rc;
+ 
+ 	dev_dbg(cxlmd->dev.parent, "%s:%s: %s %s res: %pr iw: %d ig: %d\n",
+ 		dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev), __func__,
+@@ -3293,14 +3271,43 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+ 
+ 	/* ...to match put_device() in cxl_add_to_region() */
+ 	get_device(&cxlr->dev);
+-	up_write(&cxl_region_rwsem);
+ 
+-	return cxlr;
++	return 0;
++}
+ 
+-err:
+-	up_write(&cxl_region_rwsem);
+-	devm_release_action(port->uport_dev, unregister_region, cxlr);
+-	return ERR_PTR(rc);
++/* Establish an empty region covering the given HPA range */
++static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
++					   struct cxl_endpoint_decoder *cxled)
++{
++	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
++	struct cxl_port *port = cxlrd_to_port(cxlrd);
++	struct cxl_dev_state *cxlds = cxlmd->cxlds;
++	int rc, part = READ_ONCE(cxled->part);
++	struct cxl_region *cxlr;
++
++	if (part < 0)
++		return ERR_PTR(-EBUSY);
++
++	do {
++		cxlr = __create_region(cxlrd, cxlds->part[part].mode,
++				       atomic_read(&cxlrd->region_id));
++	} while (IS_ERR(cxlr) && PTR_ERR(cxlr) == -EBUSY);
++
++	if (IS_ERR(cxlr)) {
++		dev_err(cxlmd->dev.parent,
++			"%s:%s: %s failed assign region: %ld\n",
++			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
++			__func__, PTR_ERR(cxlr));
++		return cxlr;
++	}
++
++	rc = __construct_region(cxlr, cxlrd, cxled);
++	if (rc) {
++		devm_release_action(port->uport_dev, unregister_region, cxlr);
++		return ERR_PTR(rc);
++	}
++
++	return cxlr;
+ }
+ 
+ int cxl_add_to_region(struct cxl_port *root, struct cxl_endpoint_decoder *cxled)
+-- 
+2.34.1
 
-I saw Jonathan's ask for hpa_alias to be hpa_alias0 or something?
-That's done in the CXL_EVT_TP_printk output below. It needs to be
-used here in the field name to be picked up in the trace event.
-(same for cxl_dram event)
-
-But...what's the deal with hpa_alias0. If we anticipate an array
-of aliases, then maybe an array like is done for comp_id would
-work. Expect that's overkill at the moment.
-
-
->  		__field_struct(uuid_t, region_uuid)
->  		__field(u16, validity_flags)
->  		__field(u8, rank)
-> @@ -358,6 +360,7 @@ TRACE_EVENT(cxl_general_media,
->  			CXL_EVENT_GEN_MED_COMP_ID_SIZE);
->  		__entry->validity_flags = get_unaligned_le16(&rec->media_hdr.validity_flags);
->  		__entry->hpa = hpa;
-> +		__entry->hpa_alias = hpa_alias;
->  		if (cxlr) {
->  			__assign_str(region_name);
->  			uuid_copy(&__entry->region_uuid, &cxlr->params.uuid);
-> @@ -370,7 +373,7 @@ TRACE_EVENT(cxl_general_media,
->  	CXL_EVT_TP_printk("dpa=%llx dpa_flags='%s' " \
->  		"descriptor='%s' type='%s' transaction_type='%s' channel=%u rank=%u " \
->  		"device=%x comp_id=%s validity_flags='%s' " \
-> -		"hpa=%llx region=%s region_uuid=%pUb",
-> +		"hpa=%llx hpa_alias0=%llx region=%s region_uuid=%pUb",
->  		__entry->dpa, show_dpa_flags(__entry->dpa_flags),
->  		show_event_desc_flags(__entry->descriptor),
->  		show_gmer_mem_event_type(__entry->type),
-> @@ -378,7 +381,8 @@ TRACE_EVENT(cxl_general_media,
->  		__entry->channel, __entry->rank, __entry->device,
->  		__print_hex(__entry->comp_id, CXL_EVENT_GEN_MED_COMP_ID_SIZE),
->  		show_valid_flags(__entry->validity_flags),
-> -		__entry->hpa, __get_str(region_name), &__entry->region_uuid
-> +		__entry->hpa, __entry->hpa_alias, __get_str(region_name),
-> +		&__entry->region_uuid
->  	)
->  );
->  
-> @@ -424,9 +428,10 @@ TRACE_EVENT(cxl_general_media,
->  TRACE_EVENT(cxl_dram,
->  
->  	TP_PROTO(const struct cxl_memdev *cxlmd, enum cxl_event_log_type log,
-> -		 struct cxl_region *cxlr, u64 hpa, struct cxl_event_dram *rec),
-> +		 struct cxl_region *cxlr, u64 hpa, u64 hpa_alias,
-> +		 struct cxl_event_dram *rec),
->  
-> -	TP_ARGS(cxlmd, log, cxlr, hpa, rec),
-> +	TP_ARGS(cxlmd, log, cxlr, hpa, hpa_alias, rec),
->  
->  	TP_STRUCT__entry(
->  		CXL_EVT_TP_entry
-> @@ -442,6 +447,7 @@ TRACE_EVENT(cxl_dram,
->  		__field(u32, row)
->  		__array(u8, cor_mask, CXL_EVENT_DER_CORRECTION_MASK_SIZE)
->  		__field(u64, hpa)
-> +		__field(u64, hpa_alias)
->  		__field_struct(uuid_t, region_uuid)
->  		__field(u8, rank)	/* Out of order to pack trace record */
->  		__field(u8, bank_group)	/* Out of order to pack trace record */
-> @@ -472,6 +478,7 @@ TRACE_EVENT(cxl_dram,
->  		memcpy(__entry->cor_mask, &rec->correction_mask,
->  			CXL_EVENT_DER_CORRECTION_MASK_SIZE);
->  		__entry->hpa = hpa;
-> +		__entry->hpa_alias = hpa_alias;
->  		if (cxlr) {
->  			__assign_str(region_name);
->  			uuid_copy(&__entry->region_uuid, &cxlr->params.uuid);
-> @@ -485,7 +492,7 @@ TRACE_EVENT(cxl_dram,
->  		"transaction_type='%s' channel=%u rank=%u nibble_mask=%x " \
->  		"bank_group=%u bank=%u row=%u column=%u cor_mask=%s " \
->  		"validity_flags='%s' " \
-> -		"hpa=%llx region=%s region_uuid=%pUb",
-> +		"hpa=%llx hpa_alias0=%llx region=%s region_uuid=%pUb",
->  		__entry->dpa, show_dpa_flags(__entry->dpa_flags),
->  		show_event_desc_flags(__entry->descriptor),
->  		show_dram_mem_event_type(__entry->type),
-> @@ -495,7 +502,8 @@ TRACE_EVENT(cxl_dram,
->  		__entry->row, __entry->column,
->  		__print_hex(__entry->cor_mask, CXL_EVENT_DER_CORRECTION_MASK_SIZE),
->  		show_dram_valid_flags(__entry->validity_flags),
-> -		__entry->hpa, __get_str(region_name), &__entry->region_uuid
-> +		__entry->hpa_alias, __entry->hpa, __get_str(region_name),
-
-Needs swapping -  hpa then hpa_alias
-
-
-> +		&__entry->region_uuid
->  	)
->  );
->  
-> -- 
-> 2.47.1
-> 
