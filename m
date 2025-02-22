@@ -1,293 +1,150 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C264C6C;
-	Sat, 22 Feb 2025 00:14:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E95C71D517E;
+	Sat, 22 Feb 2025 05:45:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740183246; cv=none; b=Rv+YK0c9YaobyjawB1FcNFaoZegkKMNoaBWsPuuSK+NPcJzLywqD+sP7kKjnAfGs+ie5bABg6Yh11zcwnHJQJFiQpsFeP3uzrFhjuS0fhoeVOri4+2re12NZm67Xhw++WE+kgu3p0w3gnBqEXJ6EJBWoUgOumcEJDiA4Am/vgqA=
+	t=1740203149; cv=none; b=pfZkN0f9xk/037xaaU3aIF31ouXhDxbj/4nIHM55Deg8nRr0NGS7J0RI5Jd3r1umJWpow9T92xUngmhDbOphiFvqmgtu91vDMk9uqpqeBK9835CGwJDppaeYU5X1nJcgdc+o72Rv2e/DlWNX71QzTjEHZKzHZLu0s2+lcdWHSuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740183246; c=relaxed/simple;
-	bh=FhaAb+o2q4cjC3r7FNjr29+OHsDlRbTeTNYv9vD7+/0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B3ojwENAUvzFc22N8VemjTNqyhQzpwAF/d7ZJPWUTb433RnInvnFM9K/MH338T/ugf05+yEmZcK9Q+9vbIsOwD0zGK+8aSC3Xc/r6dibrv2WPrZNkwWyzkQ97AYYWIh2cHoaAoUKs1HjgjrsVEo4qgFMKzPK4TrBlVL1Pq8WV5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nthkAB1S; arc=none smtp.client-ip=192.198.163.19
+	s=arc-20240116; t=1740203149; c=relaxed/simple;
+	bh=jCJ/Ps9q7tIKnBa3VmtIrgjARPK0Q61a4HCoXGnTxuk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SPDD1uh0x3vPg4autcKKhlGG41ff09MFpyyUf6Cc+bxsJKSYSN//8iSyNVmQ56I/LQIhbrAIr4jD5qfnAp4omSLR3vgGE4/3YxS7nGeLmPls0Uc4PoYHjCF+Gk9sv1Hrej6+4CH5aiSfO0M3Q+9PvOklcdZ8TV02FoboOLOSNNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RPq3q08D; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nthkAB1S"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RPq3q08D"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740183245; x=1771719245;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=FhaAb+o2q4cjC3r7FNjr29+OHsDlRbTeTNYv9vD7+/0=;
-  b=nthkAB1SBkDWajgFXbmBrEgI7Q5i/MHiAYKqYqYcq+1yaz/5j7z/T3mm
-   VwcAb248UWbLTToIAT1hFOvFJkk0xjzs3pCF48fSK/SIrOeLAMaZ39+HR
-   c9tcit3jmmShnoPKnL57hUJHPG7ztXC0FEYZSwpCFcOTZKQoDzI1Kz1pV
-   U6k6Axa/8wyXN6pqgsa3mk3maqu+vdZd7LxEKdJew0E7na/jnXQEi7PIX
-   vJ5641n6IhE43l31cdvWWwkBtRWJbTh441ktIgaa6tbCULuYug3SqBdb7
-   TkUkzKh7gvFnjjzk/G9bifipV7mJE5mYCpI00v9c1gZ2gPknu9NnP9qQg
-   Q==;
-X-CSE-ConnectionGUID: OxV4SFrqQayIyq2Qh7I6aA==
-X-CSE-MsgGUID: PgBAzxQPRrCOmmO2Fvjapg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11352"; a="40206216"
-X-IronPort-AV: E=Sophos;i="6.13,306,1732608000"; 
-   d="scan'208";a="40206216"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 16:14:04 -0800
-X-CSE-ConnectionGUID: ZPD06VIdRcOy33zBGbnrVA==
-X-CSE-MsgGUID: 6SIW7wHuR2ep36wfJeBnow==
+  t=1740203146; x=1771739146;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=jCJ/Ps9q7tIKnBa3VmtIrgjARPK0Q61a4HCoXGnTxuk=;
+  b=RPq3q08D7+nZkw1eYKuX41sq4JtdJnBi7AhLgv+c7eALCldFbXlp4lvQ
+   1CfWPV7p9S1CQH16KXnfy+St15DV6a5bMKCqiEk38suDEju2oKnuBQ36c
+   1MeL9Ppo5VKmy8zM9yb4DCJGu8+E4v8pn6VRy7mqP6BcwvRYAu5ICe1T8
+   Y9AqEzOBHLkbV3/S2E0KHZw7rBgMkMKsDMriNPf6y8bRU3vFHcD5QSlNT
+   LFs1cYIiXI3ORtRqsMWtyXlldZILL7JgNXi4sq6rD2OHQRjNAFQaSME16
+   FY/MQ6c+FwKm4VIrrOwMKSo0VDdrgXBvPjT2HFksqaP+JQkqBMYW4iCYB
+   A==;
+X-CSE-ConnectionGUID: YbF0VnhATkiNE3uCsA+O3Q==
+X-CSE-MsgGUID: MMl+fxblQPqDQqFF3k14jQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11352"; a="51654874"
+X-IronPort-AV: E=Sophos;i="6.13,307,1732608000"; 
+   d="scan'208";a="51654874"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 21:45:45 -0800
+X-CSE-ConnectionGUID: GLFnOl5gRHOQ6Eve3uw0yQ==
+X-CSE-MsgGUID: 8SHzO4SIRWSdEqdEqBHSJw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,306,1732608000"; 
-   d="scan'208";a="120606311"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO [10.125.110.216]) ([10.125.110.216])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 16:14:02 -0800
-Message-ID: <22cc0953-aee2-4008-85fb-fdbf9f4f9110@intel.com>
-Date: Fri, 21 Feb 2025 17:13:59 -0700
+X-IronPort-AV: E=Sophos;i="6.13,307,1732608000"; 
+   d="scan'208";a="115271136"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by orviesa009.jf.intel.com with ESMTP; 21 Feb 2025 21:45:42 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tliKZ-0006Kl-0v;
+	Sat, 22 Feb 2025 05:45:39 +0000
+Date: Sat, 22 Feb 2025 13:45:30 +0800
+From: kernel test robot <lkp@intel.com>
+To: Srirangan Madhavan <smadhavan@nvidia.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>
+Cc: oe-kbuild-all@lists.linux.dev, Zhi Wang <zhiw@nvidia.com>,
+	Vishal Aslot <vaslot@nvidia.com>,
+	Shanker Donthineni <sdonthineni@nvidia.com>,
+	linux-cxl@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] cxl: add support for cxl reset
+Message-ID: <202502221354.Zmyi5Mgf-lkp@intel.com>
+References: <20250221043906.1593189-3-smadhavan@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/4] acpi/hmat / cxl: Add extended linear cache support
- for CXL
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org, rafael@kernel.org,
- bp@alien8.de, dan.j.williams@intel.com, tony.luck@intel.com,
- dave@stgolabs.net, jonathan.cameron@huawei.com, ira.weiny@intel.com,
- ming.li@zohomail.com
-References: <20250117173054.4147877-1-dave.jiang@intel.com>
- <20250117173054.4147877-3-dave.jiang@intel.com>
- <Z7fudpMdKOSef8TH@aschofie-mobl2.lan>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <Z7fudpMdKOSef8TH@aschofie-mobl2.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250221043906.1593189-3-smadhavan@nvidia.com>
+
+Hi Srirangan,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on next-20250220]
+[cannot apply to pci/next pci/for-linus linus/master v6.14-rc3 v6.14-rc2 v6.14-rc1 v6.14-rc3]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Srirangan-Madhavan/cxl-de-duplicate-cxl-DVSEC-reg-defines/20250221-124043
+base:   next-20250220
+patch link:    https://lore.kernel.org/r/20250221043906.1593189-3-smadhavan%40nvidia.com
+patch subject: [PATCH v2 2/2] cxl: add support for cxl reset
+config: arc-randconfig-001-20250222 (https://download.01.org/0day-ci/archive/20250222/202502221354.Zmyi5Mgf-lkp@intel.com/config)
+compiler: arc-elf-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250222/202502221354.Zmyi5Mgf-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502221354.Zmyi5Mgf-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/pci/pci.c: In function 'cxl_reset':
+>> drivers/pci/pci.c:5258:17: warning: suggest parentheses around comparison in operand of '&' [-Wparentheses]
+    5258 |         if (reg & CXL_DVSEC_CXL_RST_CAPABLE == 0)
+         |                 ^
 
 
+vim +5258 drivers/pci/pci.c
 
-On 2/20/25 8:09 PM, Alison Schofield wrote:
-> On Fri, Jan 17, 2025 at 10:28:31AM -0700, Dave Jiang wrote:
->> The current cxl region size only indicates the size of the CXL memory
->> region without accounting for the extended linear cache size. Retrieve the
->> cache size from HMAT and append that to the cxl region size for the cxl
->> region range that matches the SRAT range that has extended linear cache
->> enabled.
->>
->> The SRAT defines the whole memory range that includes the extended linear
->> cache and the CXL memory region. The new HMAT ECN/ECR to the Memory Side
->> Cache Information Structure defines the size of the extended linear cache
->> size and matches to the SRAT Memory Affinity Structure by the memory
->> proxmity domain. Add a helper to match the cxl range to the SRAT memory
->> range in order to retrieve the cache size.
->>
->> There are several places that checks the cxl region range against the
->> decoder range. Use new helper to check between the two ranges and address
->> the new cache size.
-> 
-> This reads like we are inflating the region size by cache size, and then
-> changing region set up code to account for the inflation. So, I'm going
-> to question where we need to do that inflation.
-> 
-> When the new region param p->cache_size is calculated it is added directly
-> to the p->res and that leads to much of the other work in region.c
-> 
-> Could p->cache_size be used as an addend when needed, like:
-> - Add it to the insert_resource in construct_region().
-> - Add it to the sysfs show's for region resource start and resource size.
-> 
-> Then when we get to dpa to hpa address translation, the p->res start
-> doesn't need adjusting either. As it is now, it's the cache start
-> and I think it should be the cxl resource start.
-> 
-> The touchpoints may grow in the direction I'm suggesting that make
-> it a poorer choice than what is here now. Maybe its time for the
-> something like a cxl_resource and a non_cxl_resource that add together
-> to make the region_resource.
-> 
-> I haven't been following this patch set all along, just started looking
-> yesterday, so I'm prepared to be  way off base. Figure blurting it out
-> at this point is the faster path forward. 
-> 
-> More comments related below...
-> 
-> 
->> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-> snip
-> 
->> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-> snip
-> 
->> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->> index b98b1ccffd1c..2d8699a86b24 100644
->> --- a/drivers/cxl/core/region.c
->> +++ b/drivers/cxl/core/region.c
->> @@ -824,6 +824,21 @@ static int match_free_decoder(struct device *dev, void *data)
->>  	return 1;
->>  }
->>  
->> +static bool region_res_match_cxl_range(struct cxl_region_params *p,
->> +				       struct range *range)
->> +{
->> +	if (!p->res)
->> +		return false;
->> +
->> +	/*
->> +	 * If an extended linear cache region then the CXL range is assumed
->> +	 * to be fronted by the DRAM range in current known implementation.
->> +	 * This assumption will be made until a variant implementation exists.
->> +	 */
->> +	return p->res->start + p->cache_size == range->start &&
->> +		p->res->end == range->end;
->> +}
->> +
->>  static int match_auto_decoder(struct device *dev, void *data)
->>  {
->>  	struct cxl_region_params *p = data;
->> @@ -836,7 +851,7 @@ static int match_auto_decoder(struct device *dev, void *data)
->>  	cxld = to_cxl_decoder(dev);
->>  	r = &cxld->hpa_range;
->>  
->> -	if (p->res && p->res->start == r->start && p->res->end == r->end)
->> +	if (region_res_match_cxl_range(p, r))
->>  		return 1;
-> 
-> if we don't change p->res directly, this isn't needed.
+  5235	
+  5236	/**
+  5237	 * cxl_reset - initiate a cxl reset
+  5238	 * @dev: device to reset
+  5239	 * @probe: if true, return 0 if device can be reset this way
+  5240	 *
+  5241	 * Initiate a cxl reset on @dev.
+  5242	 */
+  5243	static int cxl_reset(struct pci_dev *dev, bool probe)
+  5244	{
+  5245		u16 dvsec, reg;
+  5246		int rc;
+  5247	
+  5248		dvsec = pci_find_dvsec_capability(dev, PCI_VENDOR_ID_CXL,
+  5249						  CXL_DVSEC_PCIE_DEVICE);
+  5250		if (!dvsec)
+  5251			return -ENOTTY;
+  5252	
+  5253		/* Check if CXL Reset is supported. */
+  5254		rc = pci_read_config_word(dev, dvsec + CXL_DVSEC_CAP_OFFSET, &reg);
+  5255		if (rc)
+  5256			return -ENOTTY;
+  5257	
+> 5258		if (reg & CXL_DVSEC_CXL_RST_CAPABLE == 0)
+  5259			return -ENOTTY;
+  5260	
+  5261		if (probe)
+  5262			return 0;
+  5263	
+  5264		rc = cxl_reset_prepare(dev, dvsec);
+  5265		if (rc)
+  5266			return rc;
+  5267	
+  5268		return cxl_reset_init(dev, dvsec);
+  5269	}
+  5270	
 
-It does get changed so it's needed. A lot of these changes are done after tripping setup failures during testing and debugging.
-
-> 
->>  	return 0;
->> @@ -1424,8 +1439,7 @@ static int cxl_port_setup_targets(struct cxl_port *port,
->>  	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
->>  		if (cxld->interleave_ways != iw ||
->>  		    cxld->interleave_granularity != ig ||
->> -		    cxld->hpa_range.start != p->res->start ||
->> -		    cxld->hpa_range.end != p->res->end ||
->> +		    !region_res_match_cxl_range(p, &cxld->hpa_range) ||
-> 
-> similar
-> 
->>  		    ((cxld->flags & CXL_DECODER_F_ENABLE) == 0)) {
->>  			dev_err(&cxlr->dev,
->>  				"%s:%s %s expected iw: %d ig: %d %pr\n",
->> @@ -1949,7 +1963,7 @@ static int cxl_region_attach(struct cxl_region *cxlr,
->>  		return -ENXIO;
->>  	}
->>  
->> -	if (resource_size(cxled->dpa_res) * p->interleave_ways !=
->> +	if (resource_size(cxled->dpa_res) * p->interleave_ways + p->cache_size !=
->>  	    resource_size(p->res)) {
-> 
-> similar
-> 
->>  		dev_dbg(&cxlr->dev,
->>  			"%s:%s: decoder-size-%#llx * ways-%d != region-size-%#llx\n",
->> @@ -3221,6 +3235,45 @@ static int match_region_by_range(struct device *dev, void *data)
->>  	return rc;
->>  }
->>  
->> +static int cxl_extended_linear_cache_resize(struct cxl_region *cxlr,
->> +					    struct resource *res)
->> +{
->> +	struct cxl_region_params *p = &cxlr->params;
->> +	int nid = phys_to_target_node(res->start);
->> +	resource_size_t size, cache_size;
->> +	int rc;
->> +
->> +	size = resource_size(res);
->> +	if (!size)
->> +		return -EINVAL;
->> +
->> +	rc = cxl_acpi_get_extended_linear_cache_size(res, nid, &cache_size);
->> +	if (rc)
->> +		return rc;
->> +
->> +	if (!cache_size)
->> +		return 0;
->> +
->> +	if (size != cache_size) {
->> +		dev_warn(&cxlr->dev, "Extended Linear Cache is not 1:1, unsupported!");
->> +		return -EOPNOTSUPP;
->> +	}
->> +
->> +	/*
->> +	 * Move the start of the range to where the cache range starts. The
->> +	 * implementation assumes that the cache range is in front of the
->> +	 * CXL range. This is not dictated by the HMAT spec but is how the
->> +	 * current known implementation is configured.
->> +	 *
->> +	 * The cache range is expected to be within the CFMWS. The adjusted
->> +	 * res->start should not be less than cxlrd->res->start.
-> 
-> Check for 'cache range is expected to be within the CFMWS' ?
-
-Will add
-
-> 
-> 
->> +	 */
->> +	res->start -= cache_size;
->> +	p->cache_size = cache_size;
->> +
->> +	return 0;
->> +}
->> +
->>  /* Establish an empty region covering the given HPA range */
->>  static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
->>  					   struct cxl_endpoint_decoder *cxled)
->> @@ -3267,6 +3320,18 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
->>  
->>  	*res = DEFINE_RES_MEM_NAMED(hpa->start, range_len(hpa),
->>  				    dev_name(&cxlr->dev));
->> +
->> +	rc = cxl_extended_linear_cache_resize(cxlr, res);
->> +	if (rc) {
->> +		/*
->> +		 * Failing to support extended linear cache region resize does not
->> +		 * prevent the region from functioning. Only causes cxl list showing
->> +		 * incorrect region size.
-> 
-> Also cxlr_hpa_cache_alias() lookups will fail for cxl events, so no
-> hpa_alias in trace events.
-
-Right. But it needs to report the near memory alias vs the CXL address. hpa_alias is used interchangeably and not necessarily specific to near or far memory.
- 
-> 
->> +		 */
->> +		dev_warn(cxlmd->dev.parent,
->> +			 "Failed to support extended linear cache.\n");
-> 
-> Maybe more specifics of what is/isn't present.
-
-It's just a general catch all for whatever failures from retrieving the cache size and calculate the start address.
-
-> 
->> +	}
->> +
->>  	rc = insert_resource(cxlrd->res, res);
-> 
-> Cut off in this diff is the "p->res = res" assignment that follows,
-> which then makes all the previous changes regarding matching decoder
-> ranges necessary.
-
-yes
-
-> 
-> 
->>  	if (rc) {
->>  		/*
->> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> snip
-> 
->> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> snip
-> 
->> diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-> snip
-> 
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
