@@ -1,53 +1,53 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E95C71D517E;
-	Sat, 22 Feb 2025 05:45:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E19E1EF0B2;
+	Sat, 22 Feb 2025 07:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740203149; cv=none; b=pfZkN0f9xk/037xaaU3aIF31ouXhDxbj/4nIHM55Deg8nRr0NGS7J0RI5Jd3r1umJWpow9T92xUngmhDbOphiFvqmgtu91vDMk9uqpqeBK9835CGwJDppaeYU5X1nJcgdc+o72Rv2e/DlWNX71QzTjEHZKzHZLu0s2+lcdWHSuQ=
+	t=1740208103; cv=none; b=D46bgdr8e0CQnwyd4M+25Bj0PADjBa6qZylAdOozDNvNWR+gTnrLgFWGsKaO0ZxPbQK62tV+lDX2q6CmgELONKVqCi0xOFgTtV3javWHi1CVU0d+PDTKLaocb3DKQ6jP0Tjxk9q7cZB9wwr2z/S4OJe5hi7nkjM2+7Z5dzkC0tI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740203149; c=relaxed/simple;
-	bh=jCJ/Ps9q7tIKnBa3VmtIrgjARPK0Q61a4HCoXGnTxuk=;
+	s=arc-20240116; t=1740208103; c=relaxed/simple;
+	bh=fsY5t112Q8WM/mdH96kIkcjOJgGQNS0f/svA6RtETtk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SPDD1uh0x3vPg4autcKKhlGG41ff09MFpyyUf6Cc+bxsJKSYSN//8iSyNVmQ56I/LQIhbrAIr4jD5qfnAp4omSLR3vgGE4/3YxS7nGeLmPls0Uc4PoYHjCF+Gk9sv1Hrej6+4CH5aiSfO0M3Q+9PvOklcdZ8TV02FoboOLOSNNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RPq3q08D; arc=none smtp.client-ip=192.198.163.11
+	 Content-Type:Content-Disposition:In-Reply-To; b=rJEd1bWfPWHg/2jljRYZlwMYaWmwVGIf2roe0xv/OUehTSsDkk0Uudt+LyXkurePTitSIjPREM+d+j/Ae6+F1KUYPvdOIbE/iz4ZXzGscAb+3rU8iWINYCiYCNxMXXEl8e0bKQdJU7ZUgbxNfRA40O1XQEN4SglOdoWMlZpcjhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SqwunMRA; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RPq3q08D"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SqwunMRA"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740203146; x=1771739146;
+  t=1740208101; x=1771744101;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=jCJ/Ps9q7tIKnBa3VmtIrgjARPK0Q61a4HCoXGnTxuk=;
-  b=RPq3q08D7+nZkw1eYKuX41sq4JtdJnBi7AhLgv+c7eALCldFbXlp4lvQ
-   1CfWPV7p9S1CQH16KXnfy+St15DV6a5bMKCqiEk38suDEju2oKnuBQ36c
-   1MeL9Ppo5VKmy8zM9yb4DCJGu8+E4v8pn6VRy7mqP6BcwvRYAu5ICe1T8
-   Y9AqEzOBHLkbV3/S2E0KHZw7rBgMkMKsDMriNPf6y8bRU3vFHcD5QSlNT
-   LFs1cYIiXI3ORtRqsMWtyXlldZILL7JgNXi4sq6rD2OHQRjNAFQaSME16
-   FY/MQ6c+FwKm4VIrrOwMKSo0VDdrgXBvPjT2HFksqaP+JQkqBMYW4iCYB
-   A==;
-X-CSE-ConnectionGUID: YbF0VnhATkiNE3uCsA+O3Q==
-X-CSE-MsgGUID: MMl+fxblQPqDQqFF3k14jQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11352"; a="51654874"
+  bh=fsY5t112Q8WM/mdH96kIkcjOJgGQNS0f/svA6RtETtk=;
+  b=SqwunMRAQM6s901/4UrngrC+CIJxFiwUoW8Tx9xLz9DbeKRNNxL4Ejb5
+   GAsvuuuCR4IA2HvS25bhy6YD8W9SOP0vvh0WGt3300rqx2jkPafe4aDrw
+   ifMzOTlXUizxUBi+Zz3HzVIviUFx7iDC91yNE0IAB+IvhfYjdQGE9J6rl
+   /fwj4HPJJQI6RlDDeeW8xFWOT5My+3F24eNhiCJwvmTeSFNO1G+f5uowr
+   LhDxfo+tUCYf7fWMbCZteigrs0BXt+zWTJl32kOqZCEElu0e+PtETz0eE
+   s7w87LCw343jzN6oG10W4TQ3/ecD311Xq83PmzbiZBt8hX+3CMHJxQOai
+   w==;
+X-CSE-ConnectionGUID: d1v5ws1gStWRgWk1+e+Cog==
+X-CSE-MsgGUID: hAdDTQWDRfqiNDBptn/cHQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11352"; a="66400784"
 X-IronPort-AV: E=Sophos;i="6.13,307,1732608000"; 
-   d="scan'208";a="51654874"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 21:45:45 -0800
-X-CSE-ConnectionGUID: GLFnOl5gRHOQ6Eve3uw0yQ==
-X-CSE-MsgGUID: 8SHzO4SIRWSdEqdEqBHSJw==
+   d="scan'208";a="66400784"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 23:08:20 -0800
+X-CSE-ConnectionGUID: ac7/Se+NRD+BbfAHzKfzKA==
+X-CSE-MsgGUID: gfp972L3RJKUyasanhGhfw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,307,1732608000"; 
-   d="scan'208";a="115271136"
+   d="scan'208";a="115763826"
 Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by orviesa009.jf.intel.com with ESMTP; 21 Feb 2025 21:45:42 -0800
+  by fmviesa008.fm.intel.com with ESMTP; 21 Feb 2025 23:08:16 -0800
 Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1tliKZ-0006Kl-0v;
-	Sat, 22 Feb 2025 05:45:39 +0000
-Date: Sat, 22 Feb 2025 13:45:30 +0800
+	id 1tljcR-0006Mh-12;
+	Sat, 22 Feb 2025 07:08:12 +0000
+Date: Sat, 22 Feb 2025 15:08:04 +0800
 From: kernel test robot <lkp@intel.com>
 To: Srirangan Madhavan <smadhavan@nvidia.com>,
 	Davidlohr Bueso <dave@stgolabs.net>,
@@ -57,13 +57,13 @@ To: Srirangan Madhavan <smadhavan@nvidia.com>,
 	Vishal Verma <vishal.l.verma@intel.com>,
 	Ira Weiny <ira.weiny@intel.com>,
 	Dan Williams <dan.j.williams@intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, Zhi Wang <zhiw@nvidia.com>,
-	Vishal Aslot <vaslot@nvidia.com>,
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Zhi Wang <zhiw@nvidia.com>, Vishal Aslot <vaslot@nvidia.com>,
 	Shanker Donthineni <sdonthineni@nvidia.com>,
 	linux-cxl@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
 	linux-pci@vger.kernel.org
 Subject: Re: [PATCH v2 2/2] cxl: add support for cxl reset
-Message-ID: <202502221354.Zmyi5Mgf-lkp@intel.com>
+Message-ID: <202502221438.j0UgOryU-lkp@intel.com>
 References: <20250221043906.1593189-3-smadhavan@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -89,21 +89,27 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Srirangan-Madhavan/cxl-de
 base:   next-20250220
 patch link:    https://lore.kernel.org/r/20250221043906.1593189-3-smadhavan%40nvidia.com
 patch subject: [PATCH v2 2/2] cxl: add support for cxl reset
-config: arc-randconfig-001-20250222 (https://download.01.org/0day-ci/archive/20250222/202502221354.Zmyi5Mgf-lkp@intel.com/config)
-compiler: arc-elf-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250222/202502221354.Zmyi5Mgf-lkp@intel.com/reproduce)
+config: arm64-randconfig-003-20250222 (https://download.01.org/0day-ci/archive/20250222/202502221438.j0UgOryU-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250222/202502221438.j0UgOryU-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502221354.Zmyi5Mgf-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502221438.j0UgOryU-lkp@intel.com/
 
 All warnings (new ones prefixed by >>):
 
-   drivers/pci/pci.c: In function 'cxl_reset':
->> drivers/pci/pci.c:5258:17: warning: suggest parentheses around comparison in operand of '&' [-Wparentheses]
+>> drivers/pci/pci.c:5258:10: warning: & has lower precedence than ==; == will be evaluated first [-Wparentheses]
     5258 |         if (reg & CXL_DVSEC_CXL_RST_CAPABLE == 0)
-         |                 ^
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/pci/pci.c:5258:10: note: place parentheses around the '==' expression to silence this warning
+    5258 |         if (reg & CXL_DVSEC_CXL_RST_CAPABLE == 0)
+         |                 ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/pci/pci.c:5258:10: note: place parentheses around the & expression to evaluate it first
+    5258 |         if (reg & CXL_DVSEC_CXL_RST_CAPABLE == 0)
+         |             ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+   1 warning generated.
 
 
 vim +5258 drivers/pci/pci.c
