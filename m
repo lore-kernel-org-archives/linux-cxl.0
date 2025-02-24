@@ -1,277 +1,152 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D920170A13;
-	Mon, 24 Feb 2025 17:43:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2207B263F2C;
+	Mon, 24 Feb 2025 18:22:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740418982; cv=none; b=kLa6o/fj6x1g1APlefvvz3P1V/A3+tZoaaNPkvDdTyl3vIec7jxzvqhCl8klHHs9Fcg5tFAKLPaLN2xI1lZMaB8QPyIXqriQ0VAHWj+Ir2gTNrr21aUs19D4oUJ0KViahKP0M2ytqpUCPVVx8dlOS80fJvklqba+V/XrK9cEtK0=
+	t=1740421325; cv=none; b=i+nplHDs5/Jv3ZhHn5i7F8iNYn6ofwaOHsyW7XeZcoK0K6TsrSU9N3UPkSr0bCHnI78jpmHE8B2XuBSykt1BDfVYUzJcM4SkINF4O5ut6oKbmCKhflrZCp6rUHekFD55HuUbrhhwU+ZeuiNKqUx9NR4gkoFHkGQ22UpPubHpV+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740418982; c=relaxed/simple;
-	bh=/FUvw7XYwn0qNqcLkrfaYzsdpAoFB4FS51Xw/H2tBJk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JeBu5BQrQZYGA57eMVBQxKF+Zq6Kf90rbhph/T19F8UQNBdoLDAEf98SPRAot/yt2j0zyBshZHXBpZbsjUBGyn4hMbw1PU7SeyGj1oxnOnRon3QqVHsWdWfYj77QQN37/TRI9TSkQx2mROjx6O4tBW4rERISOkt4oPRpNjMILB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lsfCwUOU; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lsfCwUOU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740418980; x=1771954980;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=/FUvw7XYwn0qNqcLkrfaYzsdpAoFB4FS51Xw/H2tBJk=;
-  b=lsfCwUOUcxYTU6I4Hqps3RgDGQtUE2AEWiWXgkO3a/rJ8gYTMuLJHXTc
-   C1gxR181hqV61cyFGGb3bY29Q/jQpNlNAHnrnzVxfSPFL1W7iQ5TYpa2Z
-   NF0nIcplibgSwDM4imn1jb7egvNI4Vo6NHzDnKNnycSV9RCFmNY3Ghq/a
-   mzMYUof17tHRvHgQuqtceGneWD5Qru5HsgoTHkykQhzHhdjt4bb/PF5Pm
-   QW1z9aUQ2R/e3mz0BNVInCU4cPCXksqSk486/oM7nKz6TIEygPz+LYGfY
-   fn1dG0z4qfIZQ6m6+4+JW4NwVzItgCjIUEYYxnBuhKS0l23Jng4CD2xHb
-   g==;
-X-CSE-ConnectionGUID: 8r0/JlvfQYmvNUpKjoqoIQ==
-X-CSE-MsgGUID: P8pvnb61RKGR0whQB1gAxA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11355"; a="66556656"
-X-IronPort-AV: E=Sophos;i="6.13,312,1732608000"; 
-   d="scan'208";a="66556656"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 09:32:46 -0800
-X-CSE-ConnectionGUID: 5vP1Awm+RCuzKtptHqGkhQ==
-X-CSE-MsgGUID: RNPeUYYLQNGIJlAfVA7p4g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,312,1732608000"; 
-   d="scan'208";a="115876582"
-Received: from iherna2-mobl4.amr.corp.intel.com (HELO [10.125.111.71]) ([10.125.111.71])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 09:32:45 -0800
-Message-ID: <e3ac044f-f3d2-439b-82c2-6044a3a7769c@intel.com>
-Date: Mon, 24 Feb 2025 10:32:44 -0700
+	s=arc-20240116; t=1740421325; c=relaxed/simple;
+	bh=aCJ+nbVASt0MwwpQocKYy83JEtAcckYJxweFWo7afRg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ObYeihVaN7xKwJg5GBGUYwK0zRZNw5oVnlhUwJ0JtF+wvR22alIqRBBDEM8q0b/4gkiXRaxdzqg2s432wtKL2KS6KNM0AhWJaw6c3jM3tBT8v2GTd3rK1Zu2OwkvJrQ5wp2PQXXAFNHAwL09sTeAdouqxdXBhPDpL33bKwtPxqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 774D3C4CEDD;
+	Mon, 24 Feb 2025 18:22:04 +0000 (UTC)
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Cc: rafael@kernel.org,
+	bp@alien8.de,
+	dan.j.williams@intel.com,
+	tony.luck@intel.com,
+	dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	alison.schofield@intel.com,
+	ira.weiny@intel.com,
+	ming.li@zohomail.com
+Subject: [PATCH v4 0/4] acpi/hmat / cxl: Add exclusive caching enumeration and RAS support
+Date: Mon, 24 Feb 2025 11:20:58 -0700
+Message-ID: <20250224182202.1683380-1-dave.jiang@intel.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/4] cxl: Add extended linear cache address alias
- emission for cxl events
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org, rafael@kernel.org,
- bp@alien8.de, dan.j.williams@intel.com, tony.luck@intel.com,
- dave@stgolabs.net, jonathan.cameron@huawei.com, ira.weiny@intel.com,
- ming.li@zohomail.com
-References: <20250117173054.4147877-1-dave.jiang@intel.com>
- <20250117173054.4147877-4-dave.jiang@intel.com>
- <Z7fXIQKTG9pCRtS7@aschofie-mobl2.lan>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <Z7fXIQKTG9pCRtS7@aschofie-mobl2.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+v3:
+- Drop region to nid function, deadcode.
+- Set hpa_alias default to ~0ULL to indicate no alias. (Jonathan)
+- Add endpoint check for mce handler. (Ming)
+- Add mce notifier unregister. (Ming)
 
+v2:
+- Fix 0-day issues
+- Fix checking of cache flag. (Ming)
+- Add comment about cache range vs CFMWS. (Ming)
+- Update EXPORT_SYMBOL_(). (Jonathan)
+- Fix various code comments. (Jonathan)
+- Emit hpa_alias0 instead of hpa_alias. (Jonathan)
+- Introduce CONFIG_CXL_MCE to address kernel build dep issues.
 
-On 2/20/25 6:30 PM, Alison Schofield wrote:
-> On Fri, Jan 17, 2025 at 10:28:32AM -0700, Dave Jiang wrote:
->> Add the aliased address of extended linear cache when emitting event
->> trace for DRAM and general media of CXL events.
->>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->> v3:
->> - Drop unused region to nid function
->> - Make sure hpa_alias defaults to ~0ULL. (Jonathan)
->> ---
->>  drivers/cxl/core/mbox.c  | 28 ++++++++++++++++++++++++----
->>  drivers/cxl/core/trace.h | 24 ++++++++++++++++--------
->>  2 files changed, 40 insertions(+), 12 deletions(-)
->>
->> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
->> index 548564c770c0..f42c4c56dc43 100644
->> --- a/drivers/cxl/core/mbox.c
->> +++ b/drivers/cxl/core/mbox.c
->> @@ -856,6 +856,23 @@ int cxl_enumerate_cmds(struct cxl_memdev_state *mds)
->>  }
->>  EXPORT_SYMBOL_NS_GPL(cxl_enumerate_cmds, "CXL");
->>  
->> +static u64 cxlr_hpa_cache_alias(struct cxl_region *cxlr, u64 hpa)
->> +{
->> +	struct cxl_region_params *p;
->> +
->> +	if (!cxlr)
->> +		return ~0ULL;
->> +
->> +	p = &cxlr->params;
->> +	if (!p->cache_size)
->> +		return ~0ULL;
->> +
->> +	if (hpa >= p->res->start + p->cache_size)
->> +		return hpa - p->cache_size;
->> +
->> +	return hpa + p->cache_size;
->> +}
->> +
->>  void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
->>  			    enum cxl_event_log_type type,
->>  			    enum cxl_event_type event_type,
->> @@ -871,7 +888,7 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
->>  	}
->>  
->>  	if (trace_cxl_general_media_enabled() || trace_cxl_dram_enabled()) {
->> -		u64 dpa, hpa = ULLONG_MAX;
->> +		u64 dpa, hpa = ULLONG_MAX, hpa_alias = ~0ULL;
-> 
-> A bit odd to use 2 different notations for same thing.
-> Prefer ULLONG_MAX here and in previous function.
+v1:
+- Drop RFC prefix
+- Drop MMIO hole discovery. Will implement if there's real world implementation.
+- Drop MCE_PRI_CXL. Use MCE_PRI_UC. (Boris)
+- Minor refactors and grammar fixes. (Jonathan)
+- Rename 'mode' to 'address_mode'. (Jonathan)
 
-Will fix
+RFCv2:
+- Dropped 1/6 (ACPICA definition merged)
+- Change UNKNOWN to RESERVED for cache definition. (Jonathan)
+- Fix spelling errors (Jonathan)
+- Rename region_res_match_range() to region_res_match_cxl_range(). (Jonathan)
+- Add warning when cache is not 1:1 with backing region. (Jonathan)
+- Code and comments cleanup. (Jonathan)
+- Make MCE code access in CXL arch independent. (Jonathan)
+- Fixup 0-day reports.
 
-> 
-> 
->>  		struct cxl_region *cxlr;
->>  
->>  		/*
->> @@ -884,14 +901,17 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
->>  
->>  		dpa = le64_to_cpu(evt->media_hdr.phys_addr) & CXL_DPA_MASK;
->>  		cxlr = cxl_dpa_to_region(cxlmd, dpa);
->> -		if (cxlr)
->> +		if (cxlr) {
->>  			hpa = cxl_dpa_to_hpa(cxlr, cxlmd, dpa);
->> +			hpa_alias = cxlr_hpa_cache_alias(cxlr, hpa);
->> +		}
->>  
->>  		if (event_type == CXL_CPER_EVENT_GEN_MEDIA)
->>  			trace_cxl_general_media(cxlmd, type, cxlr, hpa,
->> -						&evt->gen_media);
->> +						hpa_alias, &evt->gen_media);
->>  		else if (event_type == CXL_CPER_EVENT_DRAM)
->> -			trace_cxl_dram(cxlmd, type, cxlr, hpa, &evt->dram);
->> +			trace_cxl_dram(cxlmd, type, cxlr, hpa, hpa_alias,
->> +				       &evt->dram);
->>  	}
->>  }
->>  EXPORT_SYMBOL_NS_GPL(cxl_event_trace_record, "CXL");
->> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
->> index 8389a94adb1a..257f60f16e4c 100644
->> --- a/drivers/cxl/core/trace.h
->> +++ b/drivers/cxl/core/trace.h
->> @@ -316,9 +316,10 @@ TRACE_EVENT(cxl_generic_event,
->>  TRACE_EVENT(cxl_general_media,
->>  
->>  	TP_PROTO(const struct cxl_memdev *cxlmd, enum cxl_event_log_type log,
->> -		 struct cxl_region *cxlr, u64 hpa, struct cxl_event_gen_media *rec),
->> +		 struct cxl_region *cxlr, u64 hpa, u64 hpa_alias,
->> +		 struct cxl_event_gen_media *rec),
->>  
->> -	TP_ARGS(cxlmd, log, cxlr, hpa, rec),
->> +	TP_ARGS(cxlmd, log, cxlr, hpa, hpa_alias, rec),
->>  
->>  	TP_STRUCT__entry(
->>  		CXL_EVT_TP_entry
->> @@ -332,6 +333,7 @@ TRACE_EVENT(cxl_general_media,
->>  		__array(u8, comp_id, CXL_EVENT_GEN_MED_COMP_ID_SIZE)
->>  		/* Following are out of order to pack trace record */
->>  		__field(u64, hpa)
->> +		__field(u64, hpa_alias)
-> 
-> I saw Jonathan's ask for hpa_alias to be hpa_alias0 or something?
-> That's done in the CXL_EVT_TP_printk output below. It needs to be
-> used here in the field name to be picked up in the trace event.
-> (same for cxl_dram event)
-> 
-> But...what's the deal with hpa_alias0. If we anticipate an array
-> of aliases, then maybe an array like is done for comp_id would
-> work. Expect that's overkill at the moment.
+Certain systems provide an exclusive caching memory configurations where a
+1:1 layout of DRAM and far memory (FM) such as CXL memory is utilized. In
+this configuration, the memory region is provided as a single memory region
+to the OS. For example such as below:
 
-So basically the spec language allows for multiple aliases, but the current implementation only has 1. So this is basically allowing for that happen in the future but not doing much more than that until actual implementation happens.
+             128GB DRAM                         128GB CXL memory
+|------------------------------------|------------------------------------|
 
-> 
-> 
->>  		__field_struct(uuid_t, region_uuid)
->>  		__field(u16, validity_flags)
->>  		__field(u8, rank)
->> @@ -358,6 +360,7 @@ TRACE_EVENT(cxl_general_media,
->>  			CXL_EVENT_GEN_MED_COMP_ID_SIZE);
->>  		__entry->validity_flags = get_unaligned_le16(&rec->media_hdr.validity_flags);
->>  		__entry->hpa = hpa;
->> +		__entry->hpa_alias = hpa_alias;
->>  		if (cxlr) {
->>  			__assign_str(region_name);
->>  			uuid_copy(&__entry->region_uuid, &cxlr->params.uuid);
->> @@ -370,7 +373,7 @@ TRACE_EVENT(cxl_general_media,
->>  	CXL_EVT_TP_printk("dpa=%llx dpa_flags='%s' " \
->>  		"descriptor='%s' type='%s' transaction_type='%s' channel=%u rank=%u " \
->>  		"device=%x comp_id=%s validity_flags='%s' " \
->> -		"hpa=%llx region=%s region_uuid=%pUb",
->> +		"hpa=%llx hpa_alias0=%llx region=%s region_uuid=%pUb",
->>  		__entry->dpa, show_dpa_flags(__entry->dpa_flags),
->>  		show_event_desc_flags(__entry->descriptor),
->>  		show_gmer_mem_event_type(__entry->type),
->> @@ -378,7 +381,8 @@ TRACE_EVENT(cxl_general_media,
->>  		__entry->channel, __entry->rank, __entry->device,
->>  		__print_hex(__entry->comp_id, CXL_EVENT_GEN_MED_COMP_ID_SIZE),
->>  		show_valid_flags(__entry->validity_flags),
->> -		__entry->hpa, __get_str(region_name), &__entry->region_uuid
->> +		__entry->hpa, __entry->hpa_alias, __get_str(region_name),
->> +		&__entry->region_uuid
->>  	)
->>  );
->>  
->> @@ -424,9 +428,10 @@ TRACE_EVENT(cxl_general_media,
->>  TRACE_EVENT(cxl_dram,
->>  
->>  	TP_PROTO(const struct cxl_memdev *cxlmd, enum cxl_event_log_type log,
->> -		 struct cxl_region *cxlr, u64 hpa, struct cxl_event_dram *rec),
->> +		 struct cxl_region *cxlr, u64 hpa, u64 hpa_alias,
->> +		 struct cxl_event_dram *rec),
->>  
->> -	TP_ARGS(cxlmd, log, cxlr, hpa, rec),
->> +	TP_ARGS(cxlmd, log, cxlr, hpa, hpa_alias, rec),
->>  
->>  	TP_STRUCT__entry(
->>  		CXL_EVT_TP_entry
->> @@ -442,6 +447,7 @@ TRACE_EVENT(cxl_dram,
->>  		__field(u32, row)
->>  		__array(u8, cor_mask, CXL_EVENT_DER_CORRECTION_MASK_SIZE)
->>  		__field(u64, hpa)
->> +		__field(u64, hpa_alias)
->>  		__field_struct(uuid_t, region_uuid)
->>  		__field(u8, rank)	/* Out of order to pack trace record */
->>  		__field(u8, bank_group)	/* Out of order to pack trace record */
->> @@ -472,6 +478,7 @@ TRACE_EVENT(cxl_dram,
->>  		memcpy(__entry->cor_mask, &rec->correction_mask,
->>  			CXL_EVENT_DER_CORRECTION_MASK_SIZE);
->>  		__entry->hpa = hpa;
->> +		__entry->hpa_alias = hpa_alias;
->>  		if (cxlr) {
->>  			__assign_str(region_name);
->>  			uuid_copy(&__entry->region_uuid, &cxlr->params.uuid);
->> @@ -485,7 +492,7 @@ TRACE_EVENT(cxl_dram,
->>  		"transaction_type='%s' channel=%u rank=%u nibble_mask=%x " \
->>  		"bank_group=%u bank=%u row=%u column=%u cor_mask=%s " \
->>  		"validity_flags='%s' " \
->> -		"hpa=%llx region=%s region_uuid=%pUb",
->> +		"hpa=%llx hpa_alias0=%llx region=%s region_uuid=%pUb",
->>  		__entry->dpa, show_dpa_flags(__entry->dpa_flags),
->>  		show_event_desc_flags(__entry->descriptor),
->>  		show_dram_mem_event_type(__entry->type),
->> @@ -495,7 +502,8 @@ TRACE_EVENT(cxl_dram,
->>  		__entry->row, __entry->column,
->>  		__print_hex(__entry->cor_mask, CXL_EVENT_DER_CORRECTION_MASK_SIZE),
->>  		show_dram_valid_flags(__entry->validity_flags),
->> -		__entry->hpa, __get_str(region_name), &__entry->region_uuid
->> +		__entry->hpa_alias, __entry->hpa, __get_str(region_name),
-> 
-> Needs swapping -  hpa then hpa_alias
+The kernel sees the region as a 256G system memory region. Data can reside
+in either DRAM or FM with no replication. Hot data is swapped into DRAM by
+the hardware behind the scenes.
 
-Will fix
-> 
-> 
->> +		&__entry->region_uuid
->>  	)
->>  );
->>  
->> -- 
->> 2.47.1
->>
+This kernel series introduces code to enumerate the side cache by the kernel
+when configured in a exclusive-cache configuration. It also adds RAS support
+to deal with the aliased memory addresses.
 
+A new ECN [1] to ACPI HMAT table was introduced and was approved to describe
+the "extended-linear" addressing for direct-mapped memory-side caches. A
+reserved field in the Memory Side Cache Information Structure of HMAT is
+redefined as "Address Mode" where a value of 1 is defined as Extended-linear
+mode. This value is valid if the cache is direct mapped. "It indicates that
+the associated address range (SRAT.MemoryAffinityStructure.Length) is
+comprised of the backing store capacity extended by the cache capacity." By
+augmenting the HMAT and SRAT parsing code, this new information can be stored
+by the HMAT handling code.
+
+Current CXL region enumeration code is not enlightened with the side cache
+configuration and therefore only presents the region size as the size of the
+CXL region. Add support to allow CXL region enumeration code to query the HMAT 
+handling code and retrieve the information regarding the side cache and adjust
+the region size accordingly. This should allow the CXL CLI to display the
+full region size rather than just the CXL only region size.
+
+There are 3 sources where the kernel may be notified that error is detected for
+memory.
+1. CXL DRAM event. This is a CXL event that is generated when an error is
+   detected by the CXL device patrol or demand scrubber. The trace_event is
+   augmented to display the aliased System Phyiscal Address (SPA) in addition
+   to the alerted address.  However, reporting of memory failure is TBD until
+   the discussion [2] of failure reporting is settled upstream.
+2. UCNA event from DRAM patrol or demand scrubber. This should eventually go
+   through the MCE callback chain.
+3. MCE from kernel consume poison.
+
+It is possible that all 3 sources may report at the same time and all report
+at the error.
+
+For 2 and 3, a MCE notifier callback is registered by the CXL on a per device
+basis. The callback will determine if the reported address is in one of the
+special regions and offline the aliased address if that is the case.
+
+[1]: https://lore.kernel.org/linux-cxl/668333b17e4b2_5639294fd@dwillia2-xfh.jf.intel.com.notmuch/
+[2]: https://lore.kernel.org/linux-cxl/20240808151328.707869-2-ruansy.fnst@fujitsu.com/
+
+---
+
+Dave Jiang (4):
+      acpi: numa: Add support to enumerate and store extended linear address mode
+      acpi/hmat / cxl: Add extended linear cache support for CXL
+      cxl: Add extended linear cache address alias emission for cxl events
+      cxl: Add mce notifier to emit aliased address for extended linear cache
+
+ Documentation/ABI/stable/sysfs-devices-node |   6 +++
+ arch/x86/mm/pat/set_memory.c                |   1 +
+ drivers/acpi/numa/hmat.c                    |  44 ++++++++++++++++++++
+ drivers/base/node.c                         |   2 +
+ drivers/cxl/Kconfig                         |   4 ++
+ drivers/cxl/core/Makefile                   |   2 +
+ drivers/cxl/core/acpi.c                     |  11 +++++
+ drivers/cxl/core/core.h                     |   3 ++
+ drivers/cxl/core/mbox.c                     |  34 +++++++++++++--
+ drivers/cxl/core/mce.c                      |  65 +++++++++++++++++++++++++++++
+ drivers/cxl/core/mce.h                      |  20 +++++++++
+ drivers/cxl/core/region.c                   | 108 +++++++++++++++++++++++++++++++++++++++++++++---
+ drivers/cxl/core/trace.h                    |  22 ++++++----
+ drivers/cxl/cxl.h                           |   8 ++++
+ drivers/cxl/cxlmem.h                        |   2 +
+ include/linux/acpi.h                        |  11 +++++
+ include/linux/node.h                        |   7 ++++
+ tools/testing/cxl/Kbuild                    |   2 +
+ 18 files changed, 335 insertions(+), 17 deletions(-)
