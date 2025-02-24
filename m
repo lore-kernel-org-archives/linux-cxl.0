@@ -1,124 +1,117 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2154438DEC;
-	Mon, 24 Feb 2025 18:30:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9D4F1D8E1A;
+	Mon, 24 Feb 2025 18:32:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740421855; cv=none; b=uTkJdB1gAO8M86LdUFh/9D9pmFYn8ca9oLVDoQjs+CjNmhaOf39L6pE+bfF0hD2vja11BFYVFpIqqvSVLNp5OwkaWxDSSunodIAAbTc7c49SozuoDU+OYPX1f07ljW/0Fvo3zySohjNDLykh/EK6qHpYpHDER9VAt/8au4itslU=
+	t=1740421927; cv=none; b=fRMt7NV+iSiZITUI4ykhJmxrGWSnizikAgD9NUPfSsHsXkIfIvTdVCKAATxymofOKw+/+HhjvIvQ6//J4FHF80+v9Ave+ZS2Pu0MgXmnztpCAydHzs9f/X964MFFViY6ZK0fYkFQJqucsOH9XK8B0Cc/2yUzVa/WUYx38WwxlbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740421855; c=relaxed/simple;
-	bh=tEtVvuwWHlDXcAj0n/08mNkgMs0+lM9v7CgaWRalZ9A=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=BW7tsmmZCEThH5zzrt79gRAOTvQLZJ5pp9j9LxXrCsMSI/qXVGZvLeu0AUndHLr0ofTxwx/g0CopyUvfdPENVJYNlV6L2FAgW+mQlmMCYn6gLu/Zb2wgKwSddOuV+QHu7xMt6N5cH8JnfuecZn/++G5DFdRPLP1VRjVyB8CZUB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Z1q3m4wqkz6M4ny;
-	Tue, 25 Feb 2025 02:28:04 +0800 (CST)
-Received: from frapeml100007.china.huawei.com (unknown [7.182.85.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id B6424140B63;
-	Tue, 25 Feb 2025 02:30:48 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (7.182.85.172) by
- frapeml100007.china.huawei.com (7.182.85.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 24 Feb 2025 19:30:48 +0100
-Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
- frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
- Mon, 24 Feb 2025 19:30:48 +0100
-From: Shiju Jose <shiju.jose@huawei.com>
-To: Borislav Petkov <bp@alien8.de>
-CC: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>, "tony.luck@intel.com" <tony.luck@intel.com>,
-	"rafael@kernel.org" <rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
-	"mchehab@kernel.org" <mchehab@kernel.org>, "dan.j.williams@intel.com"
-	<dan.j.williams@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
-	"Jonathan Cameron" <jonathan.cameron@huawei.com>, "dave.jiang@intel.com"
-	<dave.jiang@intel.com>, "alison.schofield@intel.com"
-	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
-	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
-	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
-	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
-	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
-	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "naoya.horiguchi@nec.com"
-	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
-	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
-	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
-	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
-	<duenwen@google.com>, "gthelen@google.com" <gthelen@google.com>,
-	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
-	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
-	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
-	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, tanxiaofei
-	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, "Roberto
- Sassu" <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
-	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
-	Linuxarm <linuxarm@huawei.com>
-Subject: RE: [PATCH v20 00/15] EDAC: Scrub: introduce generic EDAC RAS control
- feature driver + CXL/ACPI-RAS2 drivers
-Thread-Topic: [PATCH v20 00/15] EDAC: Scrub: introduce generic EDAC RAS
- control feature driver + CXL/ACPI-RAS2 drivers
-Thread-Index: AQHbfVuaekLsP7SN9UOZsd1dS/TdhbNWWP4AgAB+X0A=
-Date: Mon, 24 Feb 2025 18:30:48 +0000
-Message-ID: <71ad0c8c6a304b2d9a62f49983c3d787@huawei.com>
-References: <20250212143654.1893-1-shiju.jose@huawei.com>
- <20250224115002.GCZ7xc6o3yA1Q2j85i@fat_crate.local>
-In-Reply-To: <20250224115002.GCZ7xc6o3yA1Q2j85i@fat_crate.local>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1740421927; c=relaxed/simple;
+	bh=PvY0vNGIV2nrW6cWOBfrLF3KmywdDgPWMWumXt7kQCQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E0VAjAe13VCq+E7+eDo0YxMe8dUn8tdi91LiQxXhwsmHx9G5ZBQ/Jq8rPXWmk3xij0DHZXu3xVkAkLrkJPLiAn9o37I64+axfv9/D/sRhzjGA+5lgVKat2YW8WfLjSMWn5mrz5mOogrQ/59i9TPm+33D6wx7ltEr/+pnRuCC7BU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZVOfNOqi; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZVOfNOqi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740421926; x=1771957926;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=PvY0vNGIV2nrW6cWOBfrLF3KmywdDgPWMWumXt7kQCQ=;
+  b=ZVOfNOqi3TC+7tX0gybAfuMXefaKNiukXogQLaSJFZY0PgC6qDDDlGXY
+   4zuE6sxvwREjtCO9OThM89U4feFCA9SQ8y6+6mvO0juD05998YKUp5I3P
+   0KsAXjHovc+GyCwErdWn1Gv2MlJyys9rcKijhmOFlfnI/I5RwVdk5cACK
+   JlJp8aY3gw4QjMqyOz5nw77aiWLwSgdxpBPisyuVXWubXJwlqbtGvaKTf
+   4/aDoE/rDCvCjvYZ+nihHp9T2xtEkzF8oQSgePSVvXgAbG3BLZ/OXHUN3
+   t0NvN03UyWaNsNMbCUUJ/L2VB58VRG2+igqOiGSjcm7QV+cKm9pvUlJQT
+   Q==;
+X-CSE-ConnectionGUID: cEMVdVoySvO2EN9X2s4BQA==
+X-CSE-MsgGUID: MxB+H7GQRVCrDtQlWHVicg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11355"; a="51409366"
+X-IronPort-AV: E=Sophos;i="6.13,312,1732608000"; 
+   d="scan'208";a="51409366"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 10:32:05 -0800
+X-CSE-ConnectionGUID: o+AFoa3CRp6RA4OjFkFi/g==
+X-CSE-MsgGUID: CY4OW9ShQoizvgSgFWyM9A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,312,1732608000"; 
+   d="scan'208";a="121105550"
+Received: from iherna2-mobl4.amr.corp.intel.com (HELO [10.125.111.71]) ([10.125.111.71])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 10:32:04 -0800
+Message-ID: <5b866a4a-2cd0-4b17-bf0e-7eeb2a778f7a@intel.com>
+Date: Mon, 24 Feb 2025 11:32:04 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cxl/Documentation: Remove 'mixed' from sysfs mode doc
+To: Ira Weiny <ira.weiny@intel.com>, Alejandro Lucero <alucerop@amd.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, Fan Ni <fan.ni@samsung.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org
+References: <20250224-remove-mixed-sysfs-v1-1-a329db313dac@intel.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250224-remove-mixed-sysfs-v1-1-a329db313dac@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogQm9yaXNsYXYgUGV0a292IDxicEBh
-bGllbjguZGU+DQo+U2VudDogMjQgRmVicnVhcnkgMjAyNSAxMTo1MA0KPlRvOiBTaGlqdSBKb3Nl
-IDxzaGlqdS5qb3NlQGh1YXdlaS5jb20+DQo+Q2M6IGxpbnV4LWVkYWNAdmdlci5rZXJuZWwub3Jn
-OyBsaW51eC1jeGxAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj5hY3BpQHZnZXIua2VybmVsLm9y
-ZzsgbGludXgtbW1Aa3ZhY2sub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPmxp
-bnV4LWRvY0B2Z2VyLmtlcm5lbC5vcmc7IHRvbnkubHVja0BpbnRlbC5jb207IHJhZmFlbEBrZXJu
-ZWwub3JnOw0KPmxlbmJAa2VybmVsLm9yZzsgbWNoZWhhYkBrZXJuZWwub3JnOyBkYW4uai53aWxs
-aWFtc0BpbnRlbC5jb207DQo+ZGF2ZUBzdGdvbGFicy5uZXQ7IEpvbmF0aGFuIENhbWVyb24gPGpv
-bmF0aGFuLmNhbWVyb25AaHVhd2VpLmNvbT47DQo+ZGF2ZS5qaWFuZ0BpbnRlbC5jb207IGFsaXNv
-bi5zY2hvZmllbGRAaW50ZWwuY29tOyB2aXNoYWwubC52ZXJtYUBpbnRlbC5jb207DQo+aXJhLndl
-aW55QGludGVsLmNvbTsgZGF2aWRAcmVkaGF0LmNvbTsgVmlsYXMuU3JpZGhhcmFuQGFtZC5jb207
-DQo+bGVvLmR1cmFuQGFtZC5jb207IFlhemVuLkdoYW5uYW1AYW1kLmNvbTsgcmllbnRqZXNAZ29v
-Z2xlLmNvbTsNCj5qaWFxaXlhbkBnb29nbGUuY29tOyBKb24uR3JpbW1AYW1kLmNvbTsgZGF2ZS5o
-YW5zZW5AbGludXguaW50ZWwuY29tOw0KPm5hb3lhLmhvcmlndWNoaUBuZWMuY29tOyBqYW1lcy5t
-b3JzZUBhcm0uY29tOyBqdGhvdWdodG9uQGdvb2dsZS5jb207DQo+c29tYXN1bmRhcmFtLmFAaHBl
-LmNvbTsgZXJkZW1ha3Rhc0Bnb29nbGUuY29tOyBwZ29uZGFAZ29vZ2xlLmNvbTsNCj5kdWVud2Vu
-QGdvb2dsZS5jb207IGd0aGVsZW5AZ29vZ2xlLmNvbTsNCj53c2Nod2FydHpAYW1wZXJlY29tcHV0
-aW5nLmNvbTsgZGZlcmd1c29uQGFtcGVyZWNvbXB1dGluZy5jb207DQo+d2JzQG9zLmFtcGVyZWNv
-bXB1dGluZy5jb207IG5pZmFuLmN4bEBnbWFpbC5jb207IHRhbnhpYW9mZWkNCj48dGFueGlhb2Zl
-aUBodWF3ZWkuY29tPjsgWmVuZ3RhbyAoQikgPHByaW1lLnplbmdAaGlzaWxpY29uLmNvbT47IFJv
-YmVydG8NCj5TYXNzdSA8cm9iZXJ0by5zYXNzdUBodWF3ZWkuY29tPjsga2FuZ2thbmcuc2hlbkBm
-dXR1cmV3ZWkuY29tOw0KPndhbmdodWlxaWFuZyA8d2FuZ2h1aXFpYW5nQGh1YXdlaS5jb20+OyBM
-aW51eGFybQ0KPjxsaW51eGFybUBodWF3ZWkuY29tPg0KPlN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIw
-IDAwLzE1XSBFREFDOiBTY3J1YjogaW50cm9kdWNlIGdlbmVyaWMgRURBQyBSQVMNCj5jb250cm9s
-IGZlYXR1cmUgZHJpdmVyICsgQ1hML0FDUEktUkFTMiBkcml2ZXJzDQo+DQo+T24gV2VkLCBGZWIg
-MTIsIDIwMjUgYXQgMDI6MzY6MzhQTSArMDAwMCwgc2hpanUuam9zZUBodWF3ZWkuY29tIHdyb3Rl
-Og0KPj4gRnJvbTogU2hpanUgSm9zZSA8c2hpanUuam9zZUBodWF3ZWkuY29tPg0KPj4NCj4+IFRo
-ZSBDWEwgcGF0Y2hlcyBvZiB0aGlzIHNlcmllcyBoYXMgZGVwZW5kZW5jeSBvbiBEYXZlJ3MgQ1hM
-IGZ3Y3RsDQo+PiBzZXJpZXMgWzFdLg0KPg0KPkZpcnN0IDUgcGF0Y2hlcyBtYXNzYWdlZCBhbmQg
-cXVldWVkIGhlcmU6DQo+DQo+aHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tl
-cm5lbC9naXQvYnAvYnAuZ2l0L2xvZy8/aD1lZGFjLWN4bA0KPg0KPlBsZWFzZSBydW4gdGhlbSB3
-aXRoIHRoZSByZXN0IG9mIHlvdXIgdGVzdCBjYXNlcyB0byBtYWtlIHN1cmUgSSBoYXZlbid0IGZh
-dC0NCj5maW5nZXJlZCBhbnl0aGluZy4NCg0KSGkgQm9yaXMsDQoNClRoYW5rcyBmb3Igc2hhcmlu
-ZyB0aGUgdXBkYXRlZCBicmFuY2guDQoNClRlc3RpbmcgcmVzdCBvZiB0aGUgcGF0Y2hlcyBmb3Ig
-Q1hMIFJBUyBmZWF0dXJlcyBhbmQgQUNQSSBSQVMyIHNjcnViIGZlYXR1cmUNCmluIHRoaXMgYnJh
-bmNoIGFyZSB3b3JrZWQgZmluZS4NCg0KVGhhbmtzLA0KU2hpanUNCg0KPg0KPlRoeC4NCj4NCj4t
-LQ0KPlJlZ2FyZHMvR3J1c3MsDQo+ICAgIEJvcmlzLg0KPg0KPmh0dHBzOi8vcGVvcGxlLmtlcm5l
-bC5vcmcvdGdseC9ub3Rlcy1hYm91dC1uZXRpcXVldHRlDQo=
+
+
+On 2/24/25 11:29 AM, Ira Weiny wrote:
+> Commit 188e9529a606 ("cxl: Remove the CXL_DECODER_MIXED mistake")
+> removed the mixed mode.
+> 
+> Remove it from the sysfs documentation.
+> 
+> Fixes: 188e9529a606 ("cxl: Remove the CXL_DECODER_MIXED mistake")
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
+> ---
+>  Documentation/ABI/testing/sysfs-bus-cxl | 15 +++++++--------
+>  1 file changed, 7 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> index 3f5627a1210a16aca7c18d17131a56491048a0c2..3ba551ed10e29f33b9eb873bab9b542c8afb66f0 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> @@ -321,14 +321,13 @@ KernelVersion:	v6.0
+>  Contact:	linux-cxl@vger.kernel.org
+>  Description:
+>  		(RW) When a CXL decoder is of devtype "cxl_decoder_endpoint" it
+> -		translates from a host physical address range, to a device local
+> -		address range. Device-local address ranges are further split
+> -		into a 'ram' (volatile memory) range and 'pmem' (persistent
+> -		memory) range. The 'mode' attribute emits one of 'ram', 'pmem',
+> -		'mixed', or 'none'. The 'mixed' indication is for error cases
+> -		when a decoder straddles the volatile/persistent partition
+> -		boundary, and 'none' indicates the decoder is not actively
+> -		decoding, or no DPA allocation policy has been set.
+> +		translates from a host physical address range, to a device
+> +		local address range. Device-local address ranges are further
+> +		split into a 'ram' (volatile memory) range and 'pmem'
+> +		(persistent memory) range. The 'mode' attribute emits one of
+> +		'ram', 'pmem', or 'none'. The 'none' indicates the decoder is
+> +		not actively decoding, or no DPA allocation policy has been
+> +		set.
+>  
+>  		'mode' can be written, when the decoder is in the 'disabled'
+>  		state, with either 'ram' or 'pmem' to set the boundaries for the
+> 
+> ---
+> base-commit: 8760c1c0bf7eee63a56b5f9edb42d93737a6a378
+> change-id: 20250224-remove-mixed-sysfs-e3baa7616bcc
+> 
+> Best regards,
+
