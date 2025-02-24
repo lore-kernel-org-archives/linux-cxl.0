@@ -1,116 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DFF618C0C;
-	Sat, 22 Feb 2025 18:29:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A445EB666;
+	Mon, 24 Feb 2025 11:50:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740248944; cv=none; b=JH/IwZQBFFNekofaTgiarorPQYdbFfmYdjjxLBXyAGDknV37U9PA6qTWB+vjmsy4t5n161xdnVZ7RbmtZ7UE83mJ3GFkMRSktA/FffxD4GEBgPdSbJReWPFufnSzHW75iBC/xiiILRaXbo97yOveiamhBrc42dzZaefobRc0NQ0=
+	t=1740397857; cv=none; b=AvfCh8eLgsxNtFItRsKSYmBgTE31EtD5I8rkn00741wJiasypnibwlnEqz2TyAmum5AzA2w7JDQxJmSB2c5s1s6hycrx3gWZx3FM0te9ExX0Ba+jK6RlDEjarzEI5BMNde1u7kza+NOc7lvim1y/FCaaKhdcpKjx36IyVgakNIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740248944; c=relaxed/simple;
-	bh=2ihQX9u9K3sL0h1y3ZuxOKbm7qAky/Nw4YGKusOjRos=;
+	s=arc-20240116; t=1740397857; c=relaxed/simple;
+	bh=3pOmWWotVeFG7/aCwZCOGG1H2P+WnR8cfNlGlq4bbTk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pCJHery+bUhiGk6lld0FGLR7M19Ft2VNNYhdVcM7J2r91dA7EbbLgB2t/ShjBIxyW8m94MOhalhp4oKHb8apZP42s2guAnvoUbW/O4V+zPSnyAjsBMGrkLcOyLw2OgFPuXxRhbsSNjqHe5t0aTAlZdJO9mqahKUQ/TumQR/2vz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nc3fpnuV; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=m6F9wmVrg2CzG285igD+CWJPJaTaapbqtWITYftWUyksn6cMcI/ADImoAhQPk4Gp2vVOvA/wHwkhHIq5aGNgnYjeRW2Y8w1/OGRwwG1Bf+tKBAL7is+aLhQC5rcg2NTV+JjUNA/NXRYVvhDHBO+TLXh7wRHLe47eDbxcngrClpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=BgY5xZRZ; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nc3fpnuV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE3FEC4CED1;
-	Sat, 22 Feb 2025 18:29:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740248943;
-	bh=2ihQX9u9K3sL0h1y3ZuxOKbm7qAky/Nw4YGKusOjRos=;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="BgY5xZRZ"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id D08E140E0184;
+	Mon, 24 Feb 2025 11:50:51 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id ivEoj6-VbOC3; Mon, 24 Feb 2025 11:50:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1740397847; bh=M+1Oj8yUN4/F9fqehf8NtiUeOEnlB2Q9pV11IJcCOkY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nc3fpnuViIVxv5g5qSVEO0+QoHzF+Vc0eo9P4Kw+jXhtQFIKNAGsGfV8HYdtJrvH/
-	 h9Cv0skM+N5iT0LA2XeYupWmP7s7H9l4rbG1YEjjJ2Abviju53lrs/1hFILW7JeFym
-	 8GU+r7i35+15XNx56MY76tfKRafkIHv+oZ4VuMvqz7YCNNVjLEk8luknVdU/Yj1MGC
-	 byKZtShKWYiK5hJjoD1z/krswnW+wGElMSN6MII1K2nDKQ6ze4N4O9AAFJadsSi00J
-	 Ju5iyisL07EVGpZ2twSqWkPOh7Cd/NqRM6f1M5kxY4Ie4Pjrdok6OP4iarfQTKpXgY
-	 ng+PGdjmZlXpg==
-Date: Sat, 22 Feb 2025 20:29:00 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: "Nelson, Shannon" <shannon.nelson@amd.com>
-Cc: jgg@nvidia.com, andrew.gospodarek@broadcom.com,
-	aron.silverton@oracle.com, dan.j.williams@intel.com,
-	daniel.vetter@ffwll.ch, dave.jiang@intel.com, dsahern@kernel.org,
-	gospo@broadcom.com, hch@infradead.org, itayavr@nvidia.com,
-	jiri@nvidia.com, Jonathan.Cameron@huawei.com, kuba@kernel.org,
-	lbloch@nvidia.com, saeedm@nvidia.com, linux-cxl@vger.kernel.org,
-	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-	brett.creeley@amd.com
-Subject: Re: [RFC PATCH fwctl 3/5] pds_fwctl: initial driver framework
-Message-ID: <20250222182900.GU53094@unreal>
-References: <20250211234854.52277-1-shannon.nelson@amd.com>
- <20250211234854.52277-4-shannon.nelson@amd.com>
- <20250218195132.GB53094@unreal>
- <39ec35d0-56a2-4473-a67d-9a6727c61693@amd.com>
- <20250219082554.GD53094@unreal>
- <6e023017-27ac-4182-8a87-313d2b34f5e4@amd.com>
+	b=BgY5xZRZyyHcbymG/jlbXrNXaFXfSDbO8i45nhWQ2V37YX1k/XgK7zh0PMKMkh/iP
+	 JYFV5SVHJhISD29fe8Yi2WfoH6Kzp3RyCBosloGJWp5RTwfexJRt3a3CnkJmHR18cB
+	 GhXk1q7dyeHrU/i23LderkJ+mDkqvku0svXVEsTEkY9JC18UDrqB/aQgX9ThzNRJPM
+	 QgyESfyhiO40lpHb8vxQeLATC+0od69Bzjp0SsobfmuAWUszuurHZOUshNXFkcIFov
+	 InE6AA/L6TfQGfFqn1lseK3ejIZcomiFw0Daw2HxjeUbBHaUp+3t0t66J8bVftxgAk
+	 V+f+tdNol9JQPvE4KuDd665W5Sop/JfoEpPE50eeS6LDsc9xd2UMOoFZ7nRNXFzwul
+	 txFEL0mb1/Xih0owGH9mSNLqLA1kOpj8p+ZK5Om9DUeyv5dSIhI/dIVmv/3VQbrF9T
+	 qRjYKNrrEPyD2jNI3oGF/yWLIpa+MBCts9F7kKiERC9+G3NRmogprmUACPJVbBnxDf
+	 9HR3MVeMz/UJZv9MPlgq9wDm4fFHjOlRKWeUAOG1CD9hhOySbA3BM0ZafgJBWAny+o
+	 k85O8qB1OeGz0AkxnS39MKSGpvtNYzaLjC9xHHnledxZC8ayNIBoA4yOuNkV1QKEN0
+	 KIq8H30qDwp/QIbq1jk+8ab0=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4B2F840E0176;
+	Mon, 24 Feb 2025 11:50:03 +0000 (UTC)
+Date: Mon, 24 Feb 2025 12:50:02 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: shiju.jose@huawei.com
+Cc: linux-edac@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	tony.luck@intel.com, rafael@kernel.org, lenb@kernel.org,
+	mchehab@kernel.org, dan.j.williams@intel.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, david@redhat.com, Vilas.Sridharan@amd.com,
+	leo.duran@amd.com, Yazen.Ghannam@amd.com, rientjes@google.com,
+	jiaqiyan@google.com, Jon.Grimm@amd.com, dave.hansen@linux.intel.com,
+	naoya.horiguchi@nec.com, james.morse@arm.com, jthoughton@google.com,
+	somasundaram.a@hpe.com, erdemaktas@google.com, pgonda@google.com,
+	duenwen@google.com, gthelen@google.com,
+	wschwartz@amperecomputing.com, dferguson@amperecomputing.com,
+	wbs@os.amperecomputing.com, nifan.cxl@gmail.com,
+	tanxiaofei@huawei.com, prime.zeng@hisilicon.com,
+	roberto.sassu@huawei.com, kangkang.shen@futurewei.com,
+	wanghuiqiang@huawei.com, linuxarm@huawei.com
+Subject: Re: [PATCH v20 00/15] EDAC: Scrub: introduce generic EDAC RAS
+ control feature driver + CXL/ACPI-RAS2 drivers
+Message-ID: <20250224115002.GCZ7xc6o3yA1Q2j85i@fat_crate.local>
+References: <20250212143654.1893-1-shiju.jose@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <6e023017-27ac-4182-8a87-313d2b34f5e4@amd.com>
+In-Reply-To: <20250212143654.1893-1-shiju.jose@huawei.com>
 
-On Thu, Feb 20, 2025 at 03:27:37PM -0800, Nelson, Shannon wrote:
-> On 2/19/2025 12:25 AM, Leon Romanovsky wrote:
-> > 
-> > On Tue, Feb 18, 2025 at 02:19:03PM -0800, Nelson, Shannon wrote:
-> > > On 2/18/2025 11:51 AM, Leon Romanovsky wrote:
-> > > > 
-> > > > On Tue, Feb 11, 2025 at 03:48:52PM -0800, Shannon Nelson wrote:
-> > > > > Initial files for adding a new fwctl driver for the AMD/Pensando PDS
-> > > > > devices.  This sets up a simple auxiliary_bus driver that registers
-> > > > > with fwctl subsystem.  It expects that a pds_core device has set up
-> > > > > the auxiliary_device pds_core.fwctl
-> > > > > 
-> > > > > Signed-off-by: Shannon Nelson <shannon.nelson@amd.com>
-> > > > > ---
-> > > > >    MAINTAINERS                    |   7 ++
-> > > > >    drivers/fwctl/Kconfig          |  10 ++
-> > > > >    drivers/fwctl/Makefile         |   1 +
-> > > > >    drivers/fwctl/pds/Makefile     |   4 +
-> > > > >    drivers/fwctl/pds/main.c       | 195 +++++++++++++++++++++++++++++++++
-> > > > >    include/linux/pds/pds_adminq.h |  77 +++++++++++++
-> > > > >    include/uapi/fwctl/fwctl.h     |   1 +
-> > > > >    include/uapi/fwctl/pds.h       |  27 +++++
-> > > > >    8 files changed, 322 insertions(+)
-> > > > >    create mode 100644 drivers/fwctl/pds/Makefile
-> > > > >    create mode 100644 drivers/fwctl/pds/main.c
-> > > > >    create mode 100644 include/uapi/fwctl/pds.h
-> > > > 
-> > > > <...>
-> > 
-> > <...>
-> > 
-> > > > > +             return err;
-> > > > > +     }
-> > > > > +
-> > > > > +     cmd.fwctl_ident.opcode = PDS_FWCTL_CMD_IDENT;
-> > > > > +     cmd.fwctl_ident.version = 0;
-> > > > 
-> > > > How will you manage this version field?
-> > > 
-> > > Since there is only version 0 at this point, there is not much to manage.  I
-> > > wanted to explicitly show the setting to version 0, but maybe that can be
-> > > assumed by the basic struct init.
-> > 
-> > But the question is slightly different "How will you manage this version field?"
+On Wed, Feb 12, 2025 at 02:36:38PM +0000, shiju.jose@huawei.com wrote:
+> From: Shiju Jose <shiju.jose@huawei.com>
 > 
-> If we find we have to change the interface in a non-backward-compatable way,
-> we'll increment the version number that we support, and watch for the
-> version number supported by the firmware as reported in the ident struct
-> data and interpret the data appropriately.  Similarly, if the firmware sees
-> that the host driver is at a lower version number, it will handle data in
-> the older format.
+> The CXL patches of this series has dependency on Dave's CXL fwctl
+> series [1].
 
-Thanks.
+First 5 patches massaged and queued here:
 
-> 
-> sln
-> 
-> 
-> 
+https://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git/log/?h=edac-cxl
+
+Please run them with the rest of your test cases to make sure I haven't
+fat-fingered anything.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
