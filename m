@@ -1,154 +1,277 @@
-Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4352D2571DA;
-	Mon, 24 Feb 2025 15:25:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D920170A13;
+	Mon, 24 Feb 2025 17:43:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740410745; cv=none; b=EzCfQyCZjb+X2E21B4HFzvBepL8p/z8qc2HJ19h4XCe8y0b56JyMPTIA/XmyB8humJYFazb+gYgFgugnWCnAm08e16oj587KgrQboRnlDWqsi3R0PHuItpOyfXZlo9X+EMWrYzjsjiyhTPIZTXb/R+4VUW1m+WVAon1jMzSomhY=
+	t=1740418982; cv=none; b=kLa6o/fj6x1g1APlefvvz3P1V/A3+tZoaaNPkvDdTyl3vIec7jxzvqhCl8klHHs9Fcg5tFAKLPaLN2xI1lZMaB8QPyIXqriQ0VAHWj+Ir2gTNrr21aUs19D4oUJ0KViahKP0M2ytqpUCPVVx8dlOS80fJvklqba+V/XrK9cEtK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740410745; c=relaxed/simple;
-	bh=krAMUD2jS9jCEEz+rn7iQ1DYd+ZjNcJ2ciQY4ybjJ18=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RQ2rxW6mJ7D7YhFHYshN6xntDhhVnVaeNg6cSmKPevD9J6vGFC6izgOtrEhoU3G/puSMVWYzr2XNFbAtU3euYN0HPLTKfaZY3B/DNq/HgWpzJ5QEC3bIugOJYfdijctOL1oLo0xnrxYvz+blbJKLYe3gCO17rOCfHMRYIWewPQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=haadp9GU; arc=none smtp.client-ip=209.85.160.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740418982; c=relaxed/simple;
+	bh=/FUvw7XYwn0qNqcLkrfaYzsdpAoFB4FS51Xw/H2tBJk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JeBu5BQrQZYGA57eMVBQxKF+Zq6Kf90rbhph/T19F8UQNBdoLDAEf98SPRAot/yt2j0zyBshZHXBpZbsjUBGyn4hMbw1PU7SeyGj1oxnOnRon3QqVHsWdWfYj77QQN37/TRI9TSkQx2mROjx6O4tBW4rERISOkt4oPRpNjMILB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lsfCwUOU; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="haadp9GU"
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-2bcdf5ea8faso2307120fac.2;
-        Mon, 24 Feb 2025 07:25:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740410742; x=1741015542; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=LK6RdHoQKdH3EpiJb5QWP6V4egccM/Y0BpmitxzGnEE=;
-        b=haadp9GUtQfkX47B38IILNfyNEGSgvBkf1T/CQ4INMimvm98FL3+/6DXcvJ4gapWck
-         TjzCASozH74fcIhU5LC37v0Debx6UFKfOc/RXzjONlmYG4CZB/KzDE/i5klRmeUJ/WXF
-         vpJByKD21MQz/q25F/utc9mSMTJMbyD2eXtH4AvLyoye4dzxz4CGlh5i0OKwCToPtnRw
-         +AIncYKLDSv50SPX1k5QFzxv4rbOu80a+tR8dzBu5faOazW07c7zqiV2rcmvhSgprpYR
-         IpoclF8VXeN1NNhyRkLUVGxGmCUm+GksIMF1FKb+8hvr8wqSVN6FG1WIQyGw3Pjul3K1
-         IaTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740410742; x=1741015542;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LK6RdHoQKdH3EpiJb5QWP6V4egccM/Y0BpmitxzGnEE=;
-        b=xHFUkEZFXqCuudxvrMMxcOhviJhUowJwDw/rlR3H/vtYZOCQrGq/9wR7SNYl8JyO/g
-         7UCuc+kzSknV3V87QFvdWenFmGWGdyTq4yaEArhw5AbQ5FCNGuZQzWDtzymkuKhE0Pn9
-         aa1XCQRaKP8MhNUEDdybvaJNfMHbP3afUmynmJLYluQv2wm2pbZ3hGSRYQeMU+6gfNC1
-         xMwYENfrpIO/8yWdRJR0IfRi/TzAV8aX2JPjKwlPAMQgmcCMxMZ3SlE/WD14TjZCxIcq
-         9VQYIQtUBHlNiewuFxJndDxbM5c8UP8vdofoRZXlPpN30zsTlTOX5mkAbHsYetj5qcSf
-         l8IQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWuBzOGiTrwNZ1e6L6DHQ8d81qHxOw62w9fNo7HnZMadiXrLF19cq3Ay0QVvMD0bVLHxWq37mn6qn8yLeb+XA==@vger.kernel.org, AJvYcCX4AFR3SDi065DUQKRGPkrj2mnvfDE8JPQJ0R31pWnyEJ0JaiKMtfqS9bYN9KEHmNi1Bg7DlZ5nkJQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+sSQ9mhPh9Qz9vPlU+zHJ3l/snLBI6v92yeG2oMRMdjzC33q9
-	eN7SnJzxiGU+4MfOznQo4bs4WVk6fUmYWoQpOdHRTGLWa7jfnjmf
-X-Gm-Gg: ASbGncvMl59bJbzN081rDh8cf9sKYozdD3kSKMguoQQSYUsvGrASHHIo2Bl14uK6GXd
-	ArTcl0h7zW5nwUVrYieNjgGeG6NN2/TBcyOf1RbppX/22fHVd3C9zRHxwy5x0gDg2U///VCWYVL
-	FxW7Ee2+sMZ8yK8kwMkP35HUmH8F3VaAbHinF0OAi455yixQ/BznHT4VjepQ6WE5783KQrLpcu+
-	lsI4mxteeOsxBp3Ikdm1/BeYnmfuc8B13Idzi419ILWLCJNeM9gA4uwdxxBtqKUOT9NUOBW4dI5
-	4hidCh7UWss6Y7YnLhjFropbBbOcCceM003SsHQMszVF9pT5fxJgyg==
-X-Google-Smtp-Source: AGHT+IHXTOWEqzcqrYmLmNHEWXjIANdS7SkI/VxCGwV2UXbOVtO6m5FKOoKlzuZIjamVm9SrU/GhxQ==
-X-Received: by 2002:a05:6871:6a5:b0:2bc:9915:aeaa with SMTP id 586e51a60fabf-2bd514e6553mr10820583fac.5.1740410742051;
-        Mon, 24 Feb 2025 07:25:42 -0800 (PST)
-Received: from localhost.localdomain ([2603:8080:1500:3d89:9bc:7b3d:b287:e40a])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b9548878b9sm8265355fac.20.2025.02.24.07.25.39
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 24 Feb 2025 07:25:41 -0800 (PST)
-Sender: John Groves <grovesaustin@gmail.com>
-From: John Groves <John@Groves.net>
-X-Google-Original-From: John Groves <john@groves.net>
-To: Miklos Szeredi <miklos@szeredi.hu>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Bernd Schubert <bernd.schubert@fastmail.fm>,
-	Stefan Hajnoczi <shajnocz@redhat.com>
-Cc: Josef Bacik <josef@toxicpanda.com>,
-	Joanne Koong <joannelkoong@gmail.com>,
-	John Groves <John@Groves.net>,
-	John Groves <jgroves@micron.com>,
-	linux-fsdevel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	Aravind Ramesh <arramesh@micron.com>,
-	Ajay Joshi <ajayjoshi@micron.com>,
-	Eishan Mirakhur <emirakhur@micron.com>
-Subject: famfs port to fuse - questions
-Date: Mon, 24 Feb 2025 09:25:35 -0600
-Message-Id: <20250224152535.42380-1-john@groves.net>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lsfCwUOU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740418980; x=1771954980;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=/FUvw7XYwn0qNqcLkrfaYzsdpAoFB4FS51Xw/H2tBJk=;
+  b=lsfCwUOUcxYTU6I4Hqps3RgDGQtUE2AEWiWXgkO3a/rJ8gYTMuLJHXTc
+   C1gxR181hqV61cyFGGb3bY29Q/jQpNlNAHnrnzVxfSPFL1W7iQ5TYpa2Z
+   NF0nIcplibgSwDM4imn1jb7egvNI4Vo6NHzDnKNnycSV9RCFmNY3Ghq/a
+   mzMYUof17tHRvHgQuqtceGneWD5Qru5HsgoTHkykQhzHhdjt4bb/PF5Pm
+   QW1z9aUQ2R/e3mz0BNVInCU4cPCXksqSk486/oM7nKz6TIEygPz+LYGfY
+   fn1dG0z4qfIZQ6m6+4+JW4NwVzItgCjIUEYYxnBuhKS0l23Jng4CD2xHb
+   g==;
+X-CSE-ConnectionGUID: 8r0/JlvfQYmvNUpKjoqoIQ==
+X-CSE-MsgGUID: P8pvnb61RKGR0whQB1gAxA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11355"; a="66556656"
+X-IronPort-AV: E=Sophos;i="6.13,312,1732608000"; 
+   d="scan'208";a="66556656"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 09:32:46 -0800
+X-CSE-ConnectionGUID: 5vP1Awm+RCuzKtptHqGkhQ==
+X-CSE-MsgGUID: RNPeUYYLQNGIJlAfVA7p4g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,312,1732608000"; 
+   d="scan'208";a="115876582"
+Received: from iherna2-mobl4.amr.corp.intel.com (HELO [10.125.111.71]) ([10.125.111.71])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 09:32:45 -0800
+Message-ID: <e3ac044f-f3d2-439b-82c2-6044a3a7769c@intel.com>
+Date: Mon, 24 Feb 2025 10:32:44 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-
-Miklos et. al.:
-
-Here are some specific questions related to the famfs port into fuse [1][2]
-that I hope Miklos (and others) can give me feedback on soonish.
-
-This work is active and serious, although you haven't heard much from me
-recently. I'm showing a famfs poster at Usenix FAST '25 this week [3].
-
-I'm generally following the approach in [1] - in a famfs file system,
-LOOKUP is followed by GET_FMAP to retrieve the famfs file/dax metadata.
-It's tempting to merge the fmap into the LOOKUP reply, but this seems like
-an optimization to consider once basic function is established.
-
-Q: Do you think it makes sense to make the famfs fmap an optional,
-   variable sized addition to the LOOKUP response?
-
-Whenever an fmap references a dax device that isn't already known to the
-famfs/fuse kernel code, a GET_DAXDEV message is sent, with the reply
-providing the info required to open teh daxdev. A file becomes available
-when the fmap is complete and all referenced daxdevs are "opened".
-
-Q: Any heartburn here?
-
-When GET_FMAP is separate from LOOKUP, READDIRPLUS won't add value unless it
-receives fmaps as part of the attributes (i.e. lookups) that come back in
-its response - since a READDIRPLUS that gets 12 files will still need 12
-GET_FMAP messages/responses to be complete. Merging fmaps as optional,
-variable-length components of the READDIRPLUS response buffers could
-eventualy make sense, but a cleaner solution intially would seem to be
-to disable READDIRPLUS in famfs. But...
-
-* The libfuse/kernel ABI appears to allow low-level fuse servers that don't
-  support READDIRPLUS...
-* But libfuse doesn't look at conn->want for the READDIRPLUS related
-  capabilities
-* I have overridden that, but the kernel still sends the READDIRPLUS
-  messages. It's possible I'm doing something hinky, and I'll keep looking
-  for it.
-* When I just return -ENOSYS to READDIRPLUS, things don't work well. Still
-  looking into this.
-
-Q: Do you know whether the current fuse kernel mod can handle a low-level
-   fuse server that doesn't support READDIRPLUS? This may be broken.
-
-Q: If READDIRPLUS isn't actually optional, do you think the same attribute
-   reply merge (attr + famfs fmap) is viable for READDIRPLUS? I'd very much
-   like to do this part "later".
-
-Q: Are fuse lowlevel file systems like famfs expected to use libfuse and its
-   message handling (particularly init), or is it preferred that they not
-   do so? Seems a shame to throw away all that api version checking, but
-   turning off READDIRPLUS would require changes that might affect other
-   libfuse clients. Please advise...
-
-Note that the intended use cases for famfs generally involve large files
-rather than *many* files, so giving up READDIRPLUS may not matter very much,
-at least in the early going.
-
-I'm hoping to get an initial RFC patch set out in a few weeks, but these
-questions address [some of] the open issues that need to be [at least
-initially] resolved first.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/4] cxl: Add extended linear cache address alias
+ emission for cxl events
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org, rafael@kernel.org,
+ bp@alien8.de, dan.j.williams@intel.com, tony.luck@intel.com,
+ dave@stgolabs.net, jonathan.cameron@huawei.com, ira.weiny@intel.com,
+ ming.li@zohomail.com
+References: <20250117173054.4147877-1-dave.jiang@intel.com>
+ <20250117173054.4147877-4-dave.jiang@intel.com>
+ <Z7fXIQKTG9pCRtS7@aschofie-mobl2.lan>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <Z7fXIQKTG9pCRtS7@aschofie-mobl2.lan>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-Regards,
-John
 
-[1] https://lore.kernel.org/linux-fsdevel/20241029011308.24890-1-john@groves.net/
-[2] https://lwn.net/Articles/983105/
-[3] https://www.usenix.org/conference/fast25/poster-session
+On 2/20/25 6:30 PM, Alison Schofield wrote:
+> On Fri, Jan 17, 2025 at 10:28:32AM -0700, Dave Jiang wrote:
+>> Add the aliased address of extended linear cache when emitting event
+>> trace for DRAM and general media of CXL events.
+>>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>> v3:
+>> - Drop unused region to nid function
+>> - Make sure hpa_alias defaults to ~0ULL. (Jonathan)
+>> ---
+>>  drivers/cxl/core/mbox.c  | 28 ++++++++++++++++++++++++----
+>>  drivers/cxl/core/trace.h | 24 ++++++++++++++++--------
+>>  2 files changed, 40 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+>> index 548564c770c0..f42c4c56dc43 100644
+>> --- a/drivers/cxl/core/mbox.c
+>> +++ b/drivers/cxl/core/mbox.c
+>> @@ -856,6 +856,23 @@ int cxl_enumerate_cmds(struct cxl_memdev_state *mds)
+>>  }
+>>  EXPORT_SYMBOL_NS_GPL(cxl_enumerate_cmds, "CXL");
+>>  
+>> +static u64 cxlr_hpa_cache_alias(struct cxl_region *cxlr, u64 hpa)
+>> +{
+>> +	struct cxl_region_params *p;
+>> +
+>> +	if (!cxlr)
+>> +		return ~0ULL;
+>> +
+>> +	p = &cxlr->params;
+>> +	if (!p->cache_size)
+>> +		return ~0ULL;
+>> +
+>> +	if (hpa >= p->res->start + p->cache_size)
+>> +		return hpa - p->cache_size;
+>> +
+>> +	return hpa + p->cache_size;
+>> +}
+>> +
+>>  void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+>>  			    enum cxl_event_log_type type,
+>>  			    enum cxl_event_type event_type,
+>> @@ -871,7 +888,7 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+>>  	}
+>>  
+>>  	if (trace_cxl_general_media_enabled() || trace_cxl_dram_enabled()) {
+>> -		u64 dpa, hpa = ULLONG_MAX;
+>> +		u64 dpa, hpa = ULLONG_MAX, hpa_alias = ~0ULL;
+> 
+> A bit odd to use 2 different notations for same thing.
+> Prefer ULLONG_MAX here and in previous function.
+
+Will fix
+
+> 
+> 
+>>  		struct cxl_region *cxlr;
+>>  
+>>  		/*
+>> @@ -884,14 +901,17 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+>>  
+>>  		dpa = le64_to_cpu(evt->media_hdr.phys_addr) & CXL_DPA_MASK;
+>>  		cxlr = cxl_dpa_to_region(cxlmd, dpa);
+>> -		if (cxlr)
+>> +		if (cxlr) {
+>>  			hpa = cxl_dpa_to_hpa(cxlr, cxlmd, dpa);
+>> +			hpa_alias = cxlr_hpa_cache_alias(cxlr, hpa);
+>> +		}
+>>  
+>>  		if (event_type == CXL_CPER_EVENT_GEN_MEDIA)
+>>  			trace_cxl_general_media(cxlmd, type, cxlr, hpa,
+>> -						&evt->gen_media);
+>> +						hpa_alias, &evt->gen_media);
+>>  		else if (event_type == CXL_CPER_EVENT_DRAM)
+>> -			trace_cxl_dram(cxlmd, type, cxlr, hpa, &evt->dram);
+>> +			trace_cxl_dram(cxlmd, type, cxlr, hpa, hpa_alias,
+>> +				       &evt->dram);
+>>  	}
+>>  }
+>>  EXPORT_SYMBOL_NS_GPL(cxl_event_trace_record, "CXL");
+>> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+>> index 8389a94adb1a..257f60f16e4c 100644
+>> --- a/drivers/cxl/core/trace.h
+>> +++ b/drivers/cxl/core/trace.h
+>> @@ -316,9 +316,10 @@ TRACE_EVENT(cxl_generic_event,
+>>  TRACE_EVENT(cxl_general_media,
+>>  
+>>  	TP_PROTO(const struct cxl_memdev *cxlmd, enum cxl_event_log_type log,
+>> -		 struct cxl_region *cxlr, u64 hpa, struct cxl_event_gen_media *rec),
+>> +		 struct cxl_region *cxlr, u64 hpa, u64 hpa_alias,
+>> +		 struct cxl_event_gen_media *rec),
+>>  
+>> -	TP_ARGS(cxlmd, log, cxlr, hpa, rec),
+>> +	TP_ARGS(cxlmd, log, cxlr, hpa, hpa_alias, rec),
+>>  
+>>  	TP_STRUCT__entry(
+>>  		CXL_EVT_TP_entry
+>> @@ -332,6 +333,7 @@ TRACE_EVENT(cxl_general_media,
+>>  		__array(u8, comp_id, CXL_EVENT_GEN_MED_COMP_ID_SIZE)
+>>  		/* Following are out of order to pack trace record */
+>>  		__field(u64, hpa)
+>> +		__field(u64, hpa_alias)
+> 
+> I saw Jonathan's ask for hpa_alias to be hpa_alias0 or something?
+> That's done in the CXL_EVT_TP_printk output below. It needs to be
+> used here in the field name to be picked up in the trace event.
+> (same for cxl_dram event)
+> 
+> But...what's the deal with hpa_alias0. If we anticipate an array
+> of aliases, then maybe an array like is done for comp_id would
+> work. Expect that's overkill at the moment.
+
+So basically the spec language allows for multiple aliases, but the current implementation only has 1. So this is basically allowing for that happen in the future but not doing much more than that until actual implementation happens.
+
+> 
+> 
+>>  		__field_struct(uuid_t, region_uuid)
+>>  		__field(u16, validity_flags)
+>>  		__field(u8, rank)
+>> @@ -358,6 +360,7 @@ TRACE_EVENT(cxl_general_media,
+>>  			CXL_EVENT_GEN_MED_COMP_ID_SIZE);
+>>  		__entry->validity_flags = get_unaligned_le16(&rec->media_hdr.validity_flags);
+>>  		__entry->hpa = hpa;
+>> +		__entry->hpa_alias = hpa_alias;
+>>  		if (cxlr) {
+>>  			__assign_str(region_name);
+>>  			uuid_copy(&__entry->region_uuid, &cxlr->params.uuid);
+>> @@ -370,7 +373,7 @@ TRACE_EVENT(cxl_general_media,
+>>  	CXL_EVT_TP_printk("dpa=%llx dpa_flags='%s' " \
+>>  		"descriptor='%s' type='%s' transaction_type='%s' channel=%u rank=%u " \
+>>  		"device=%x comp_id=%s validity_flags='%s' " \
+>> -		"hpa=%llx region=%s region_uuid=%pUb",
+>> +		"hpa=%llx hpa_alias0=%llx region=%s region_uuid=%pUb",
+>>  		__entry->dpa, show_dpa_flags(__entry->dpa_flags),
+>>  		show_event_desc_flags(__entry->descriptor),
+>>  		show_gmer_mem_event_type(__entry->type),
+>> @@ -378,7 +381,8 @@ TRACE_EVENT(cxl_general_media,
+>>  		__entry->channel, __entry->rank, __entry->device,
+>>  		__print_hex(__entry->comp_id, CXL_EVENT_GEN_MED_COMP_ID_SIZE),
+>>  		show_valid_flags(__entry->validity_flags),
+>> -		__entry->hpa, __get_str(region_name), &__entry->region_uuid
+>> +		__entry->hpa, __entry->hpa_alias, __get_str(region_name),
+>> +		&__entry->region_uuid
+>>  	)
+>>  );
+>>  
+>> @@ -424,9 +428,10 @@ TRACE_EVENT(cxl_general_media,
+>>  TRACE_EVENT(cxl_dram,
+>>  
+>>  	TP_PROTO(const struct cxl_memdev *cxlmd, enum cxl_event_log_type log,
+>> -		 struct cxl_region *cxlr, u64 hpa, struct cxl_event_dram *rec),
+>> +		 struct cxl_region *cxlr, u64 hpa, u64 hpa_alias,
+>> +		 struct cxl_event_dram *rec),
+>>  
+>> -	TP_ARGS(cxlmd, log, cxlr, hpa, rec),
+>> +	TP_ARGS(cxlmd, log, cxlr, hpa, hpa_alias, rec),
+>>  
+>>  	TP_STRUCT__entry(
+>>  		CXL_EVT_TP_entry
+>> @@ -442,6 +447,7 @@ TRACE_EVENT(cxl_dram,
+>>  		__field(u32, row)
+>>  		__array(u8, cor_mask, CXL_EVENT_DER_CORRECTION_MASK_SIZE)
+>>  		__field(u64, hpa)
+>> +		__field(u64, hpa_alias)
+>>  		__field_struct(uuid_t, region_uuid)
+>>  		__field(u8, rank)	/* Out of order to pack trace record */
+>>  		__field(u8, bank_group)	/* Out of order to pack trace record */
+>> @@ -472,6 +478,7 @@ TRACE_EVENT(cxl_dram,
+>>  		memcpy(__entry->cor_mask, &rec->correction_mask,
+>>  			CXL_EVENT_DER_CORRECTION_MASK_SIZE);
+>>  		__entry->hpa = hpa;
+>> +		__entry->hpa_alias = hpa_alias;
+>>  		if (cxlr) {
+>>  			__assign_str(region_name);
+>>  			uuid_copy(&__entry->region_uuid, &cxlr->params.uuid);
+>> @@ -485,7 +492,7 @@ TRACE_EVENT(cxl_dram,
+>>  		"transaction_type='%s' channel=%u rank=%u nibble_mask=%x " \
+>>  		"bank_group=%u bank=%u row=%u column=%u cor_mask=%s " \
+>>  		"validity_flags='%s' " \
+>> -		"hpa=%llx region=%s region_uuid=%pUb",
+>> +		"hpa=%llx hpa_alias0=%llx region=%s region_uuid=%pUb",
+>>  		__entry->dpa, show_dpa_flags(__entry->dpa_flags),
+>>  		show_event_desc_flags(__entry->descriptor),
+>>  		show_dram_mem_event_type(__entry->type),
+>> @@ -495,7 +502,8 @@ TRACE_EVENT(cxl_dram,
+>>  		__entry->row, __entry->column,
+>>  		__print_hex(__entry->cor_mask, CXL_EVENT_DER_CORRECTION_MASK_SIZE),
+>>  		show_dram_valid_flags(__entry->validity_flags),
+>> -		__entry->hpa, __get_str(region_name), &__entry->region_uuid
+>> +		__entry->hpa_alias, __entry->hpa, __get_str(region_name),
+> 
+> Needs swapping -  hpa then hpa_alias
+
+Will fix
+> 
+> 
+>> +		&__entry->region_uuid
+>>  	)
+>>  );
+>>  
+>> -- 
+>> 2.47.1
+>>
+
