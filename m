@@ -1,99 +1,230 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D39002571B2;
-	Mon, 24 Feb 2025 22:34:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 260CB2571AD;
+	Mon, 24 Feb 2025 23:41:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740436486; cv=none; b=sGmikj96rb+MIGcJLao4ELZM+uYpg9F3+GsEE0K2qVUgPNKAo9+bH5ltDF/04xBSo5G3H8GsF0MPtYX6xKpTXKIE3gbUf2WEdse5Z0eeKmnrQV/lsTTLTsrFKuLjP94aWcMFbyho5j+/0unIZy2m67oQfrzSSIDLOgjrMpsbqbI=
+	t=1740440469; cv=none; b=pEh8nLWRrMvgSzQpZX5KR+Se/9Yh5E7EIQC2KahXzBw65wo17pig3OEaI1lYTC1EX2ffZgYsCsaUfZ5ZSpg2zXiUZ9iodytg52qgHWdBCtmVsQ2Yz/E1eU0iSEA5IizHKOQtCvZDkR/CpAqC3UCJOLjnOmyLNJjsq6KDhLxV+Is=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740436486; c=relaxed/simple;
-	bh=9UzjkUJJ6ahaV2ilmu37ZIHZwB37SMdQMRt71KBRxAY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j4AVCs5oEVGmaAv830IfYLXLUAzFqwAGmYin9udtlErqi76voFnthtVARSHH2YaC36kgZ+ipx17vSY9xuERTGvDmUqi43U8r3ZYjCWd7SDpWRxP4aKEOr3q7Y0J7BmkYtDjZJxJs40ncx4dmlg51Hy/Bxvn0yWDCygTmrv4QVGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PJEj6Wri; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740440469; c=relaxed/simple;
+	bh=HuwPjSd+Ieq420aTOaET9+4Zo8XlqBvhJjzTKzAEEIM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Gdq8LjhlNAxYqVHNaAmRrgr+d54TChnvqalaoOz9rdmSJ5N2wp9D1T9/RnYwJFAYovGDCrl/6NkzIELqGsJerIsUGIwkGz/GhADp/DTocR7AHAVwlWMlgwaXcM25jGFf1/gLKMDEtcNkQ7nXzDPD4oX3yX9DYC3xvSFoTGoEbuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=auF9L8i6; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PJEj6Wri"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 314AFC4CED6;
-	Mon, 24 Feb 2025 22:34:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740436482;
-	bh=9UzjkUJJ6ahaV2ilmu37ZIHZwB37SMdQMRt71KBRxAY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PJEj6WriSN4ss2MJnIpX3EY9nDWMtyz/RwrgaVsRroWKzVDeI1+dh44RMz71W4gGo
-	 xpCWIzTSBYWjQMDKlXXYPghNfOrvPCumO9fvvUsBGcjXehHuL27WmfoarX+l+whg4v
-	 52nmqzreQaStCmHSBaUTudNJv3nsY9LDNh+EzLoUrk8NdlEaXB4l7Ui/oTdgmw451R
-	 9XK7Jv1Kj/zG0PCoXVwU60OCXw9c/xJe3dB01b4PYl936zNjkhhnfw5uzF2lncKoQi
-	 cwYgllTcbWPZnIm6IeQpkYQCVWdzVm6W074ctUrXrQ/y+DoLFoM9sxOoHRKRTb8GGw
-	 sHqh0Cf3d4MoQ==
-Date: Mon, 24 Feb 2025 14:34:40 -0800
-From: Saeed Mahameed <saeed@kernel.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: David Ahern <dsahern@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Andy Gospodarek <andrew.gospodarek@broadcom.com>,
-	Aron Silverton <aron.silverton@oracle.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Daniel Vetter <daniel.vetter@ffwll.ch>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Andy Gospodarek <gospo@broadcom.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Itay Avraham <itayavr@nvidia.com>, Jiri Pirko <jiri@nvidia.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Leonid Bloch <lbloch@nvidia.com>,
-	Leon Romanovsky <leonro@nvidia.com>, linux-cxl@vger.kernel.org,
-	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-	"Nelson, Shannon" <shannon.nelson@amd.com>,
-	Michael Chan <michael.chan@broadcom.com>
-Subject: Re: [PATCH v4 10/10] bnxt: Create an auxiliary device for fwctl_bnxt
-Message-ID: <Z7z0ADkimCkhr7Xz@x130>
-References: <CACDg6nU_Dkte_GASNRpkvSSCihpg52FBqNr0KR3ud1YRvrRs3w@mail.gmail.com>
- <20250207073648.1f0bad47@kernel.org>
- <Z6ZsOMLq7tt3ijX_@x130>
- <20250207135111.6e4e10b9@kernel.org>
- <20250208011647.GH3660748@nvidia.com>
- <20250210170423.62a2f746@kernel.org>
- <a74484b3-9f69-45ef-a040-a46fbc2607d6@kernel.org>
- <20250218200520.GI4183890@nvidia.com>
- <532d2530-5c12-43b7-973f-ce43dbc36e67@kernel.org>
- <20250218153110.0c10e72c@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="auF9L8i6"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-46fd4bf03cbso80165851cf.0;
+        Mon, 24 Feb 2025 15:41:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740440467; x=1741045267; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IyC9yWt0ihuJwz9KECLNyHPrySoIePQO8WmxTvAC7oo=;
+        b=auF9L8i6mTz/js6qMByaTK0dVfe3yfDK+HAp2ukes/WBRL29AFdmMygnQFxzAUiiv5
+         /jOZ77eq//Ff3tOfPbF1bVtBpVVEXtuvGFuHFfpY4OsmIi8qSw9WJ80imbs0j+R34Mtv
+         3FPDJGCZFIlVltrr6bCRW0Zxn6SVw7F/4KfGC7tucbfSuu1hQhivGpAHyztTC0HxEgyf
+         q/e0+ACosFZXvgRpZCOGS15J9X5Cmm7bp3+zwLckZQdsCZJuBuYRvZc6hTLEVziirCx3
+         R37X7owUGMj8Sp7Uiap8lUfHF20GgcaE9v446SmlU39/+oPj3HldytvoLMXn9CPPpRwh
+         lTyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740440467; x=1741045267;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IyC9yWt0ihuJwz9KECLNyHPrySoIePQO8WmxTvAC7oo=;
+        b=OVeNjAq5gDci7g8ephWjwWO85Fryku9z8Dedva2iTWi5qk4/gH6ZPz4Iu9dqkRwucp
+         tjSlBzkcUEUxULscOP2rtGU8lFdQlVjYQ84els6hChzklDSYj/FNaZZriBvKLSnAA5JQ
+         pjRW1WY80OMDQrIcU89OpSq878WLvXQ1wAyIf98NAGT3ktqY/8Cf283Ldx8rVf8vPYIo
+         Xo2Qi4h3zHHU1b8OzuzLl2SvYac0Ywc/RJ6JQq1JmxGM/HSiApytXue3Ly59h+rWu9sW
+         ogcDwFco9ZBlSk+x6aV/qoXaaADLFrMl4t6R8iPwKYEx6FmLIIS+aBxtCNWas1LnzmlG
+         34kw==
+X-Forwarded-Encrypted: i=1; AJvYcCVOx8K6Z1XKlu6KQqNvskDuSWclnuWY0wWer2+hSlHRauSDqB32xo9yUFu63Ykm3D+dglo0zQcwnv0z2ZLe8A==@vger.kernel.org, AJvYcCWNaYgqutlLFhIa4dTLPn/z8G++J3Fiuzr/uNoZ0GXgmiaWTbrjZTdpSkE7PWZdL0U3n7eT/rZNPk0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyt6hLfBAjJbfpwTfCf91BR9sa+w9kFpmMYQqO9bGdpF2AEKK92
+	uucZnPGuDoC0CH3JDjpo2oulR9wF+ajCsQuzIEVr4agrykM7hKZQt90O+BDDaZbMIsMU7przWdq
+	CHoeIo+SiJybOpGJATv3JtuxCYiw=
+X-Gm-Gg: ASbGncu56cYn4etA8KMZvsHgcFV2a7Us+YbrAwHij4x90bIcBeuNPDkGtOj+TPcbXIB
+	11bDniXRKXlyXT9PUuPc6nS9UModDtjSwKs4Vm8jNHRpM8u+gLp4muNmsFwuBgUveTQndN1URYI
+	2Swy5vuyia
+X-Google-Smtp-Source: AGHT+IEos+Te3LWAJ6vPcdvAntGUnPzNwwKMe1HnRxzFBeYkq54gslMy1TycuqYBfPz1yhq3Ksv4VBS2buWCI3XlaoY=
+X-Received: by 2002:ac8:7d8a:0:b0:472:116f:94ec with SMTP id
+ d75a77b69052e-4737725cda1mr19583941cf.32.1740440466849; Mon, 24 Feb 2025
+ 15:41:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250218153110.0c10e72c@kernel.org>
+References: <20250224152535.42380-1-john@groves.net>
+In-Reply-To: <20250224152535.42380-1-john@groves.net>
+From: Joanne Koong <joannelkoong@gmail.com>
+Date: Mon, 24 Feb 2025 15:40:55 -0800
+X-Gm-Features: AWEUYZnQfkFnxoExaZjo3T7N6gKii1d37AJEki2fWBvtbmPjhXc_57Tso91H6Ug
+Message-ID: <CAJnrk1bJ5jE5qWdRju6xz+DipYHUrj8w4PdL80J1M6ujMxXJ1g@mail.gmail.com>
+Subject: Re: famfs port to fuse - questions
+To: John Groves <John@groves.net>
+Cc: Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, 
+	Bernd Schubert <bernd.schubert@fastmail.fm>, Stefan Hajnoczi <shajnocz@redhat.com>, 
+	Josef Bacik <josef@toxicpanda.com>, John Groves <jgroves@micron.com>, linux-fsdevel@vger.kernel.org, 
+	linux-cxl@vger.kernel.org, Aravind Ramesh <arramesh@micron.com>, 
+	Ajay Joshi <ajayjoshi@micron.com>, Eishan Mirakhur <emirakhur@micron.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 18 Feb 15:31, Jakub Kicinski wrote:
->On Tue, 18 Feb 2025 14:42:48 -0700 David Ahern wrote:
->> On 2/18/25 1:05 PM, Jason Gunthorpe wrote:
->> > On Tue, Feb 11, 2025 at 09:24:35AM -0700, David Ahern wrote:
->> >
->> >> "Any resources in use by the netdev stack can only be created and
->> >> modified by established netdev tools."
->> >
->> > That is already a restriction described in the doc, not just netdev,
->> > but any kernel driver running with any kernel owned resource. You
->> > can't reach in and change kernel owned objects.
->>
->> ok, then Jakub's concerns should be met.
+On Mon, Feb 24, 2025 at 7:25=E2=80=AFAM John Groves <John@groves.net> wrote=
+:
 >
->I appreciate the doc, but no, it's not enough. The fwctl interface must
->not be exposed if RDMA is disabled or driver not loaded.
+> Miklos et. al.:
+>
+> Here are some specific questions related to the famfs port into fuse [1][=
+2]
+> that I hope Miklos (and others) can give me feedback on soonish.
+>
+> This work is active and serious, although you haven't heard much from me
+> recently. I'm showing a famfs poster at Usenix FAST '25 this week [3].
+>
+> I'm generally following the approach in [1] - in a famfs file system,
+> LOOKUP is followed by GET_FMAP to retrieve the famfs file/dax metadata.
+> It's tempting to merge the fmap into the LOOKUP reply, but this seems lik=
+e
+> an optimization to consider once basic function is established.
+>
+> Q: Do you think it makes sense to make the famfs fmap an optional,
+>    variable sized addition to the LOOKUP response?
+>
+> Whenever an fmap references a dax device that isn't already known to the
+> famfs/fuse kernel code, a GET_DAXDEV message is sent, with the reply
+> providing the info required to open teh daxdev. A file becomes available
+> when the fmap is complete and all referenced daxdevs are "opened".
+>
+> Q: Any heartburn here?
+>
+> When GET_FMAP is separate from LOOKUP, READDIRPLUS won't add value unless=
+ it
+> receives fmaps as part of the attributes (i.e. lookups) that come back in
+> its response - since a READDIRPLUS that gets 12 files will still need 12
+> GET_FMAP messages/responses to be complete. Merging fmaps as optional,
+> variable-length components of the READDIRPLUS response buffers could
+> eventualy make sense, but a cleaner solution intially would seem to be
+> to disable READDIRPLUS in famfs. But...
 >
 
-Jason's proposal was completely different, he asked that if only netdev is
-present then we can explicitly block fwctl. Tying fwctl to RDMA makes no
-sense for most of the drivers that will be using it, so I don't support
-such suggestion not even blocking fwctl for netdev only systems, if one
-can load RDMA and still can control the device, then Jakub's concerns are
-not met, so what's the point?
+Hi John,
 
-The whole Idea of blocking fwctl in specific configurations has no
-technical merit, if someone doesn't want fwctl in their system, then let's
-implement a devlink knob like we have for all ulps.
-  
+> * The libfuse/kernel ABI appears to allow low-level fuse servers that don=
+'t
+>   support READDIRPLUS...
+> * But libfuse doesn't look at conn->want for the READDIRPLUS related
+>   capabilities
+> * I have overridden that, but the kernel still sends the READDIRPLUS
+>   messages. It's possible I'm doing something hinky, and I'll keep lookin=
+g
+>   for it.
 
+On the kernel side, FUSE_READDIR / FUSE_READDIRPLUS requests are sent
+in fuse_readdir_uncached(). I don't see anything there that skips
+sending readdir / readdirplus requests if the server doesn't have
+.readdir / .readdirplus implemented. For some request types (eg
+FUSE_RENAME2, FUSE_LINK, FUSE_FSYNCDIR, FUSE_CREATE, ...), we do track
+if a request type isn't implemented by the server and then skip
+sending that request in the future (for example, see fuse_tmpfile()).
+If we wanted to do this skipping for readdir as well, it'd probably
+look something like
+
+--- a/fs/fuse/fuse_i.h
++++ b/fs/fuse/fuse_i.h
+@@ -870,6 +870,9 @@ struct fuse_conn {
+        /* Is link not implemented by fs? */
+        unsigned int no_link:1;
+
++       /* Is readdir/readdirplus not implemented by fs? */
++       unsigned int no_readdir:1;
++
+        /* Use io_uring for communication */
+        unsigned int io_uring;
+
+diff --git a/fs/fuse/readdir.c b/fs/fuse/readdir.c
+index 17ce9636a2b1..176d6ce953e5 100644
+--- a/fs/fuse/readdir.c
++++ b/fs/fuse/readdir.c
+@@ -341,6 +341,9 @@ static int fuse_readdir_uncached(struct file
+*file, struct dir_context *ctx)
+        u64 attr_version =3D 0, evict_ctr =3D 0;
+        bool locked;
+
++       if (fm->fc->no_readdir)
++               return -ENOSYS;
++
+        folio =3D folio_alloc(GFP_KERNEL, 0);
+        if (!folio)
+                return -ENOMEM;
+@@ -376,6 +379,8 @@ static int fuse_readdir_uncached(struct file
+*file, struct dir_context *ctx)
+                        res =3D parse_dirfile(folio_address(folio), res, fi=
+le,
+                                            ctx);
+                }
++       } else if (res =3D=3D -ENOSYS) {
++               fm->fc->no_readdir =3D 1;
+        }
+
+        folio_put(folio);
+
+> * When I just return -ENOSYS to READDIRPLUS, things don't work well. Stil=
+l
+>   looking into this.
+>
+> Q: Do you know whether the current fuse kernel mod can handle a low-level
+>    fuse server that doesn't support READDIRPLUS? This may be broken.
+
+From what I see, the fuse kernel code can handle servers that don't
+support readdir/readdirplus. The fuse readdir path gets invoked from
+file_operations->iterate_shared callback, which from what i see, the
+only ramification of this always returning an error is that the
+syscalls calling into this (eg getdents(), readdir()) fail.
+
+>
+> Q: If READDIRPLUS isn't actually optional, do you think the same attribut=
+e
+>    reply merge (attr + famfs fmap) is viable for READDIRPLUS? I'd very mu=
+ch
+>    like to do this part "later".
+>
+> Q: Are fuse lowlevel file systems like famfs expected to use libfuse and =
+its
+>    message handling (particularly init), or is it preferred that they not
+>    do so? Seems a shame to throw away all that api version checking, but
+>    turning off READDIRPLUS would require changes that might affect other
+>    libfuse clients. Please advise...
+>
+
+imo, I don't see any benefits from using a custom-written library
+instead of libfuse. I think there'd end up being a lot of overlap
+between the two and wouldn't be worth the hassle.
+
+> Note that the intended use cases for famfs generally involve large files
+> rather than *many* files, so giving up READDIRPLUS may not matter very mu=
+ch,
+> at least in the early going.
+>
+> I'm hoping to get an initial RFC patch set out in a few weeks, but these
+> questions address [some of] the open issues that need to be [at least
+> initially] resolved first.
+>
+
+Looking forward to reading your RFC patch.
+
+Thanks,
+Joanne
+>
+> Regards,
+> John
+>
+> [1] https://lore.kernel.org/linux-fsdevel/20241029011308.24890-1-john@gro=
+ves.net/
+> [2] https://lwn.net/Articles/983105/
+> [3] https://www.usenix.org/conference/fast25/poster-session
