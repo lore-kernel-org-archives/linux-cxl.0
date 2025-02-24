@@ -1,178 +1,154 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A42332571B6
-	for <linux-cxl@vger.kernel.org>; Mon, 24 Feb 2025 12:09:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4352D2571DA;
+	Mon, 24 Feb 2025 15:25:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740398973; cv=none; b=ocD8K9UHFYJd7O0Qy9yDQZv0qbfn82z2ZPHvRUE3Co1sQwvbJzAyGvDdxUdR9W+siXrsnrE7HJwz7uKlOZLE4vIOAVFv29HDfxR1ON4Dtoi+0StVdtbWrcdiE0fI6ZpT73AabTarKAuhiUa7kI2JXc5AbnC1+VHaGlmdLrzne/8=
+	t=1740410745; cv=none; b=EzCfQyCZjb+X2E21B4HFzvBepL8p/z8qc2HJ19h4XCe8y0b56JyMPTIA/XmyB8humJYFazb+gYgFgugnWCnAm08e16oj587KgrQboRnlDWqsi3R0PHuItpOyfXZlo9X+EMWrYzjsjiyhTPIZTXb/R+4VUW1m+WVAon1jMzSomhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740398973; c=relaxed/simple;
-	bh=QUxvXD/lqa4kewkovEL8x4VQ8lhLWejloKN/XvKR2RQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=oFecz74a7YYHVgd+vaaaqlaibplR1fyGq+Qr1hx58Xl48Dy/6YnAg51VRXMfupQ7+0JlwrJZFwCxMTfg41jwyGeagk/skzD7WFdLM+fq6qVGZu6/1pKaOvt3vrf7/N1L0gOUb8SM61vzrc4rrtNBP4q+7RHsn4+DxeF3pbUZVc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=T+1xLOJF; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1740410745; c=relaxed/simple;
+	bh=krAMUD2jS9jCEEz+rn7iQ1DYd+ZjNcJ2ciQY4ybjJ18=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RQ2rxW6mJ7D7YhFHYshN6xntDhhVnVaeNg6cSmKPevD9J6vGFC6izgOtrEhoU3G/puSMVWYzr2XNFbAtU3euYN0HPLTKfaZY3B/DNq/HgWpzJ5QEC3bIugOJYfdijctOL1oLo0xnrxYvz+blbJKLYe3gCO17rOCfHMRYIWewPQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=haadp9GU; arc=none smtp.client-ip=209.85.160.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="T+1xLOJF"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250224120920epoutp03d108932b350adf8de9615ff0aa716cb8~nI6IXGGzy1135011350epoutp03a
-	for <linux-cxl@vger.kernel.org>; Mon, 24 Feb 2025 12:09:20 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250224120920epoutp03d108932b350adf8de9615ff0aa716cb8~nI6IXGGzy1135011350epoutp03a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1740398960;
-	bh=1NUcUQzLB4jSDqrWTmTrd9HIrmpyHzp0hL88WCVOg3U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=T+1xLOJFTrcXtnp7Wfp7dFc3Aiti03Q/ob2sfO4G7Gb8dZxITsFmAJYMROky/HbBt
-	 NFQltDMiW4dWt80cRZ1G0+DrSW8+RHt29Qp9oq2PXujTdLe9pSjRBiPK182FMJ3c0I
-	 8Oe0n58Ox3Hyome8hksA/8Ro7XCCMNWgulEKafc0=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-	20250224120919epcas5p1a9f2363b6727dae763f0827d0982ca52~nI6H5gw-R0499204992epcas5p1c;
-	Mon, 24 Feb 2025 12:09:19 +0000 (GMT)
-Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.180]) by
-	epsnrtp4.localdomain (Postfix) with ESMTP id 4Z1ffj5LMWz4x9Px; Mon, 24 Feb
-	2025 12:09:17 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	BF.E2.19710.D616CB76; Mon, 24 Feb 2025 21:09:17 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250224115417epcas5p17e6d29167d3398ae896fab2ea6470e16~nIs-jxtf00884308843epcas5p16;
-	Mon, 24 Feb 2025 11:54:17 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250224115417epsmtrp24c206b77d9789587af7f9a426e2b7bc5~nIs-i-GjU2202222022epsmtrp26;
-	Mon, 24 Feb 2025 11:54:17 +0000 (GMT)
-X-AuditID: b6c32a44-36bdd70000004cfe-c4-67bc616d0bdf
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	99.66.23488.9ED5CB76; Mon, 24 Feb 2025 20:54:17 +0900 (KST)
-Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250224115415epsmtip1afebfc676ab6f5c6064d406add1d8568~nIs_FcorM2341623416epsmtip13;
-	Mon, 24 Feb 2025 11:54:15 +0000 (GMT)
-Date: Mon, 24 Feb 2025 17:24:01 +0530
-From: Arpit Kumar <arpit1.kumar@samsung.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: qemu-devel@nongnu.org, gost.dev@samsung.com, linux-cxl@vger.kernel.org,
-	nifan.cxl@gmail.com, dave@stgolabs.net, vishak.g@samsung.com,
-	krish.reddy@samsung.com, a.manzanares@samsung.com, alok.rathore@samsung.com
-Subject: Re: [PATCH v2 0/3] CXL CCI Log Commands implementation
-Message-ID: <20250224115401.scb6hmf55pb4e3uy@test-PowerEdge-R740xd>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="haadp9GU"
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-2bcdf5ea8faso2307120fac.2;
+        Mon, 24 Feb 2025 07:25:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740410742; x=1741015542; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=LK6RdHoQKdH3EpiJb5QWP6V4egccM/Y0BpmitxzGnEE=;
+        b=haadp9GUtQfkX47B38IILNfyNEGSgvBkf1T/CQ4INMimvm98FL3+/6DXcvJ4gapWck
+         TjzCASozH74fcIhU5LC37v0Debx6UFKfOc/RXzjONlmYG4CZB/KzDE/i5klRmeUJ/WXF
+         vpJByKD21MQz/q25F/utc9mSMTJMbyD2eXtH4AvLyoye4dzxz4CGlh5i0OKwCToPtnRw
+         +AIncYKLDSv50SPX1k5QFzxv4rbOu80a+tR8dzBu5faOazW07c7zqiV2rcmvhSgprpYR
+         IpoclF8VXeN1NNhyRkLUVGxGmCUm+GksIMF1FKb+8hvr8wqSVN6FG1WIQyGw3Pjul3K1
+         IaTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740410742; x=1741015542;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LK6RdHoQKdH3EpiJb5QWP6V4egccM/Y0BpmitxzGnEE=;
+        b=xHFUkEZFXqCuudxvrMMxcOhviJhUowJwDw/rlR3H/vtYZOCQrGq/9wR7SNYl8JyO/g
+         7UCuc+kzSknV3V87QFvdWenFmGWGdyTq4yaEArhw5AbQ5FCNGuZQzWDtzymkuKhE0Pn9
+         aa1XCQRaKP8MhNUEDdybvaJNfMHbP3afUmynmJLYluQv2wm2pbZ3hGSRYQeMU+6gfNC1
+         xMwYENfrpIO/8yWdRJR0IfRi/TzAV8aX2JPjKwlPAMQgmcCMxMZ3SlE/WD14TjZCxIcq
+         9VQYIQtUBHlNiewuFxJndDxbM5c8UP8vdofoRZXlPpN30zsTlTOX5mkAbHsYetj5qcSf
+         l8IQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWuBzOGiTrwNZ1e6L6DHQ8d81qHxOw62w9fNo7HnZMadiXrLF19cq3Ay0QVvMD0bVLHxWq37mn6qn8yLeb+XA==@vger.kernel.org, AJvYcCX4AFR3SDi065DUQKRGPkrj2mnvfDE8JPQJ0R31pWnyEJ0JaiKMtfqS9bYN9KEHmNi1Bg7DlZ5nkJQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+sSQ9mhPh9Qz9vPlU+zHJ3l/snLBI6v92yeG2oMRMdjzC33q9
+	eN7SnJzxiGU+4MfOznQo4bs4WVk6fUmYWoQpOdHRTGLWa7jfnjmf
+X-Gm-Gg: ASbGncvMl59bJbzN081rDh8cf9sKYozdD3kSKMguoQQSYUsvGrASHHIo2Bl14uK6GXd
+	ArTcl0h7zW5nwUVrYieNjgGeG6NN2/TBcyOf1RbppX/22fHVd3C9zRHxwy5x0gDg2U///VCWYVL
+	FxW7Ee2+sMZ8yK8kwMkP35HUmH8F3VaAbHinF0OAi455yixQ/BznHT4VjepQ6WE5783KQrLpcu+
+	lsI4mxteeOsxBp3Ikdm1/BeYnmfuc8B13Idzi419ILWLCJNeM9gA4uwdxxBtqKUOT9NUOBW4dI5
+	4hidCh7UWss6Y7YnLhjFropbBbOcCceM003SsHQMszVF9pT5fxJgyg==
+X-Google-Smtp-Source: AGHT+IHXTOWEqzcqrYmLmNHEWXjIANdS7SkI/VxCGwV2UXbOVtO6m5FKOoKlzuZIjamVm9SrU/GhxQ==
+X-Received: by 2002:a05:6871:6a5:b0:2bc:9915:aeaa with SMTP id 586e51a60fabf-2bd514e6553mr10820583fac.5.1740410742051;
+        Mon, 24 Feb 2025 07:25:42 -0800 (PST)
+Received: from localhost.localdomain ([2603:8080:1500:3d89:9bc:7b3d:b287:e40a])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b9548878b9sm8265355fac.20.2025.02.24.07.25.39
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Mon, 24 Feb 2025 07:25:41 -0800 (PST)
+Sender: John Groves <grovesaustin@gmail.com>
+From: John Groves <John@Groves.net>
+X-Google-Original-From: John Groves <john@groves.net>
+To: Miklos Szeredi <miklos@szeredi.hu>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Bernd Schubert <bernd.schubert@fastmail.fm>,
+	Stefan Hajnoczi <shajnocz@redhat.com>
+Cc: Josef Bacik <josef@toxicpanda.com>,
+	Joanne Koong <joannelkoong@gmail.com>,
+	John Groves <John@Groves.net>,
+	John Groves <jgroves@micron.com>,
+	linux-fsdevel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	Aravind Ramesh <arramesh@micron.com>,
+	Ajay Joshi <ajayjoshi@micron.com>,
+	Eishan Mirakhur <emirakhur@micron.com>
+Subject: famfs port to fuse - questions
+Date: Mon, 24 Feb 2025 09:25:35 -0600
+Message-Id: <20250224152535.42380-1-john@groves.net>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250220160850.00003016@huawei.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEJsWRmVeSWpSXmKPExsWy7bCmlm5u4p50g3tr1CymH1a0+HJ6D5vF
-	6ptrGC1uHtjJZLFq4TU2i4UblzFZnJ91isXi77a9jBbHe3ewALlz2B24PHbOusvu0XLkLavH
-	k2ubmTz6tqxi9Jg6u97j8ya5ALaobJuM1MSU1CKF1Lzk/JTMvHRbJe/geOd4UzMDQ11DSwtz
-	JYW8xNxUWyUXnwBdt8wcoMOUFMoSc0qBQgGJxcVK+nY2RfmlJakKGfnFJbZKqQUpOQUmBXrF
-	ibnFpXnpenmpJVaGBgZGpkCFCdkZ705+ZirYIFyx69MzlgbG7/xdjJwcEgImEvduz2fuYuTi
-	EBLYzSjx+tYzKOcTo8SBm1+ZQKqEBL4xShzayQvTsW7KbHaIor2MEjdnNzLCdVyfP4cRpIpF
-	QFVidvcVMJtNQEfi/O25bCC2iICRxLsbk8AamAVuMko0TnoGlhAWsJdY8ekRmM0r4Czx4uAz
-	VghbUOLkzCcsIDangKHEu0enWUCaJQR6OSS+vfnGDHGTi8SfhXeZIGxhiVfHt7BD2FISn9/t
-	ZYOwsyX+zG+HsgskFv2cCVVjL9F6qh9sDrNAhsT7T2tZIOKyElNPrWOCiPNJ9P5+AjWfV2LH
-	PBhbTaJ9x3yoOTISb34thprvITHlyQl2SNjtZJT426E7gVFuFpJ/ZiFZB2FbSXR+aGKdxcgB
-	ZEtLLP/HAWFqSqzfpb+AkXUVo2RqQXFuemqyaYFhXmo5PJaT83M3MYITq5bLDsYb8//pHWJk
-	4mA8xCjBwawkwqtbsiNdiDclsbIqtSg/vqg0J7X4EKMpMIImMkuJJucDU3teSbyhiaWBiZmZ
-	mYmlsZmhkjhv886WdCGB9MSS1OzU1ILUIpg+Jg5OqQam6/5aygyLncOqtDYp2YRUPf0m71q8
-	teDs2YmndP7fe/PN1c+K9eaaaW/1+pWbOlXuL547MyQ+9vuLT9tOc3NxKKSmRAfqpU3I09hu
-	/eP6uxUFDVuUnayfn+f93zujaPWDx696bDI6D5W5b7uy0f7Yh7mnTm+RveUZXFVa8I272urM
-	pgqtQ93cZ91VjHYYbCyfZBB8IPHF3/kr/ubP6piw70HcRfEOB5UbLfYv9S7u4VmxPkF408Le
-	DXqidTsPFjXPMgwrf61579LEiokiWv0FYW+8Lu65Jnjkp2rU6p077m/02W7Wv0WZcXHi9tXz
-	Ys1t4/NrfznWRZstfLlUVMdp85FHeSsWRXhJb+m6fjunUImlOCPRUIu5qDgRAEkHwsQ1BAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrKLMWRmVeSWpSXmKPExsWy7bCSnO7L2D3pBqfec1pMP6xo8eX0HjaL
-	1TfXMFrcPLCTyWLVwmtsFgs3LmOyOD/rFIvF3217GS2O9+5gAXLnsDtweeycdZfdo+XIW1aP
-	J9c2M3n0bVnF6DF1dr3H501yAWxRXDYpqTmZZalF+nYJXBn9u7ewFDwSqGib3c7cwHiYt4uR
-	k0NCwERi3ZTZ7F2MXBxCArsZJXYt7maHSMhIXJz5mAXCFpZY+e85VNEHRomVl4+ygSRYBFQl
-	ZndfYQSx2QR0JM7fngsWFxEwknh3YxIjSAOzwG1Gid+774FNEhawl1jx6RFYEa+As8SLg89Y
-	IabuZJToft3OCpEQlDg58wlYA7OAmcS8zQ+Zuxg5gGxpieX/OEDCnAKGEu8enWaZwCgwC0nH
-	LCQdsxA6FjAyr2KUTC0ozk3PTTYsMMxLLdcrTswtLs1L10vOz93ECI4JLY0djO++NekfYmTi
-	YDzEKMHBrCTCq1uyI12INyWxsiq1KD++qDQntfgQozQHi5I470rDiHQhgfTEktTs1NSC1CKY
-	LBMHp1QDU5L51len5+78pzV17qbdxktbXslNnVK94cQr34UitjPmC7/flbq0+e8LEx928yzO
-	QAvOY3ci/LM59mQ6rzKv/aRQ7bJ4tkvC2nXSzxu/lK9zP/TilO4lh6sBl91XSM+XWjxL8H6h
-	wPdpYdYr/tlUaCd8Neu37nhp6fypu0dccMIfsZURxROl7nAuZPnZMeXKYqYTRw5x3zkep85m
-	r7RVVfIs8xrxX1am9znOdod7XtwvPfHVkWML77P2fHicsMTPu6ffPqum9Ov2I9GPbrrtrjGd
-	U/NvteG9Lbu2JM5alLMhcLvA1c//T8goVv6S1G7ZuSZiyQGLRXZLpQ0Yyv3rt0oYPX06Sbhd
-	sKLQ+DNDvpMSS3FGoqEWc1FxIgD4bHyU+AIAAA==
-X-CMS-MailID: 20250224115417epcas5p17e6d29167d3398ae896fab2ea6470e16
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----MTAFpDJBIS7x0DorxmyomC-IKR7RHdtq514vGN5lDcSFRf5o=_7e4f3_"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250218085809epcas5p3ee3d79ffec77b13bb097c6d15bb24710
-References: <CGME20250218085809epcas5p3ee3d79ffec77b13bb097c6d15bb24710@epcas5p3.samsung.com>
-	<20250218085731.550029-1-arpit1.kumar@samsung.com>
-	<20250220160850.00003016@huawei.com>
+Content-Transfer-Encoding: 8bit
 
-------MTAFpDJBIS7x0DorxmyomC-IKR7RHdtq514vGN5lDcSFRf5o=_7e4f3_
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Disposition: inline
+Miklos et. al.:
 
-On 20/02/25 04:08PM, Jonathan Cameron wrote:
->On Tue, 18 Feb 2025 14:27:28 +0530
->Arpit Kumar <arpit1.kumar@samsung.com> wrote:
->
->> CXL CCI log commands implmented as per CXL Specification 3.2 8.2.10.5
->> 1) get_log_capabilities (Opcode 0402h)
->> 2) clear_log (Opcode 0403h)
->> 3) populate_log (Opcode 0404h)
->>
->> This v2 patch addresses the feedback from the v1 patch and include some new changes.
->
->I'll apply these to my staging tree, but it is a little odd
->to have the last two commands without any logs that they actually apply to.
->
->Maybe we should make up a component state dump?
->I think that currently the populate only really applies to that
->one (or the vendor defined one).
->
->We can also look at wiring up the ECS logs and some suitable error
->injection as clear log would apply to those.  I like the idea
->of having media test longer term as well as the use cases for that in
->kernel are interesting to explore.
->
->Jonathan
+Here are some specific questions related to the famfs port into fuse [1][2]
+that I hope Miklos (and others) can give me feedback on soonish.
 
-Thanks for the suggestion Jonathan. I will go in depth of stated log 
-commands and will plan the same.
->>
->> Changes in from v1 to v2:
->> - Added descriptive text for each patches
->> - Added reference from CXL spec 3.2
->> - Updated naming for better comprehension
->> - Modified find_log_index() to return supported log
->> - Handled array of log capabilities as static const pointers
->> - Replaced bit fields for param_flags with defines for individual bits
->> - Disabled support of clear & populate log command for command effect log
->>
->> The patches are generated against the Johnathan's tree
->> https://gitlab.com/jic23/qemu.git and branch cxl-2024-11-27.
->>
->> Arpit Kumar (3):
->>   hw/cxl/cxl-mailbox-utils.c: Added support for Get Log Capabilities
->>     (Opcode 0402h)
->>   hw/cxl/cxl-mailbox-utils.c: Added support for Clear Log (Opcode 0403h)
->>   hw/cxl/cxl-mailbox-utils.c: Added support for Populate Log (Opcode
->>     0404h)
->>
->>  hw/cxl/cxl-mailbox-utils.c   | 100 +++++++++++++++++++++++++++++++++++
->>  include/hw/cxl/cxl_device.h  |  20 +++++++
->>  include/hw/cxl/cxl_mailbox.h |   5 ++
->>  3 files changed, 125 insertions(+)
->>
->
+This work is active and serious, although you haven't heard much from me
+recently. I'm showing a famfs poster at Usenix FAST '25 this week [3].
 
-------MTAFpDJBIS7x0DorxmyomC-IKR7RHdtq514vGN5lDcSFRf5o=_7e4f3_
-Content-Type: text/plain; charset="utf-8"
+I'm generally following the approach in [1] - in a famfs file system,
+LOOKUP is followed by GET_FMAP to retrieve the famfs file/dax metadata.
+It's tempting to merge the fmap into the LOOKUP reply, but this seems like
+an optimization to consider once basic function is established.
+
+Q: Do you think it makes sense to make the famfs fmap an optional,
+   variable sized addition to the LOOKUP response?
+
+Whenever an fmap references a dax device that isn't already known to the
+famfs/fuse kernel code, a GET_DAXDEV message is sent, with the reply
+providing the info required to open teh daxdev. A file becomes available
+when the fmap is complete and all referenced daxdevs are "opened".
+
+Q: Any heartburn here?
+
+When GET_FMAP is separate from LOOKUP, READDIRPLUS won't add value unless it
+receives fmaps as part of the attributes (i.e. lookups) that come back in
+its response - since a READDIRPLUS that gets 12 files will still need 12
+GET_FMAP messages/responses to be complete. Merging fmaps as optional,
+variable-length components of the READDIRPLUS response buffers could
+eventualy make sense, but a cleaner solution intially would seem to be
+to disable READDIRPLUS in famfs. But...
+
+* The libfuse/kernel ABI appears to allow low-level fuse servers that don't
+  support READDIRPLUS...
+* But libfuse doesn't look at conn->want for the READDIRPLUS related
+  capabilities
+* I have overridden that, but the kernel still sends the READDIRPLUS
+  messages. It's possible I'm doing something hinky, and I'll keep looking
+  for it.
+* When I just return -ENOSYS to READDIRPLUS, things don't work well. Still
+  looking into this.
+
+Q: Do you know whether the current fuse kernel mod can handle a low-level
+   fuse server that doesn't support READDIRPLUS? This may be broken.
+
+Q: If READDIRPLUS isn't actually optional, do you think the same attribute
+   reply merge (attr + famfs fmap) is viable for READDIRPLUS? I'd very much
+   like to do this part "later".
+
+Q: Are fuse lowlevel file systems like famfs expected to use libfuse and its
+   message handling (particularly init), or is it preferred that they not
+   do so? Seems a shame to throw away all that api version checking, but
+   turning off READDIRPLUS would require changes that might affect other
+   libfuse clients. Please advise...
+
+Note that the intended use cases for famfs generally involve large files
+rather than *many* files, so giving up READDIRPLUS may not matter very much,
+at least in the early going.
+
+I'm hoping to get an initial RFC patch set out in a few weeks, but these
+questions address [some of] the open issues that need to be [at least
+initially] resolved first.
 
 
-------MTAFpDJBIS7x0DorxmyomC-IKR7RHdtq514vGN5lDcSFRf5o=_7e4f3_--
+Regards,
+John
+
+[1] https://lore.kernel.org/linux-fsdevel/20241029011308.24890-1-john@groves.net/
+[2] https://lwn.net/Articles/983105/
+[3] https://www.usenix.org/conference/fast25/poster-session
