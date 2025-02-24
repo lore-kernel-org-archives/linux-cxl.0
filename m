@@ -1,345 +1,243 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB1A26739C;
-	Mon, 24 Feb 2025 18:22:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740421331; cv=none; b=BBQJ8lltNwMtJ50uRztaSi3BZqDI4X0ooo5xZnESVvzmz08bIVTpBMlyyyuFm3Tp3Uw/rRgq7FyZvO7WMZmuPRgnsy7TVWsQ5PbqG1zAlpX3CF/JYAYPOnFHJVyKGPNxPtaTsurMvzw9Z50bCpw+SASlymufDCwHpafnheZqKzE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740421331; c=relaxed/simple;
-	bh=onJ9LGeMhE9Q5ncotmPkiu1BiqksCnxQd0BfxeGoIDg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NzNU00AB4WGWkVE9a9Qac4UamayJx1yzcq0moZxwxQ5vmVsebJCh1t4ZM0HtBPOVbCzw9Co4JfYkdzouXWWN67jjEkBZzy7xFXrTxm4xe9wa5wDNXVU3XCFTXzbH//Jq5DdvSwRv4G1SDXA5RhqIpSsqOmX4a7aeRYcDmhz/xq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2D18C4CEE7;
-	Mon, 24 Feb 2025 18:22:10 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org,
-	linux-acpi@vger.kernel.org
-Cc: rafael@kernel.org,
-	bp@alien8.de,
-	dan.j.williams@intel.com,
-	tony.luck@intel.com,
-	dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	alison.schofield@intel.com,
-	ira.weiny@intel.com,
-	ming.li@zohomail.com,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v4 4/4] cxl: Add mce notifier to emit aliased address for extended linear cache
-Date: Mon, 24 Feb 2025 11:21:02 -0700
-Message-ID: <20250224182202.1683380-5-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250224182202.1683380-1-dave.jiang@intel.com>
-References: <20250224182202.1683380-1-dave.jiang@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC42DB674;
+	Mon, 24 Feb 2025 18:29:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.18
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740421797; cv=fail; b=ODTaF6trxWw7fINer3+Q1a4savhVRIVLbmOFSIDioAU8W7LwUCQjiMT7HfcXAlGvAfQqCcid3zeI8Iv5rzJh3j8TnVKKW3jSmtQOF7FF1yov/iDJaMAw5rPrgDHh4nrVsD7SwL6ovRiqV+bSbbLOYIm3JJ6VyvOnnWbBgA8FIvQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740421797; c=relaxed/simple;
+	bh=xs3C6v66z4q6RVYIlCRuXhh2tWnryPuZp82DLnu1hOc=;
+	h=From:Date:Subject:Content-Type:Message-ID:To:CC:MIME-Version; b=kljFJSiwc5boeYo/n5QHrmOs7xXetN/6W/iFbWoUhSlmtXVyKFzmW2k5sGW9X18bcrHxKxMewmOujKm5ph/EUkcGjNicV5Fu3zYSC/RRWyx8LY1xUixihRaqtu5eexHBlnxFf3DeOMfC3c28XQUdUaNJMIye8EIzalR4WlCGMI4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D9A4TFvN; arc=fail smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D9A4TFvN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740421796; x=1771957796;
+  h=from:date:subject:content-transfer-encoding:message-id:
+   to:cc:mime-version;
+  bh=xs3C6v66z4q6RVYIlCRuXhh2tWnryPuZp82DLnu1hOc=;
+  b=D9A4TFvN6u0469AMzWjfwmzoM35X8OJrV30rVJgpaDX9SRXMxb/sy5qS
+   jxMwGZChXpYpeEjZaGntJNK3ZIEkOpjpUih9APRWjaD71hgUf7MTH/aP/
+   D9dxwwf6jmN4D+lHJYkcxQVFffVYcKXG4ezdC/S8SvCTOgAoWq05yOTZH
+   3OXjLtS6UTdyWSGkrpmFTYovqFePL+pL83KAqnkabrTMAdQDXyJDnj//s
+   L/bKp07GjR72SJfvJOOOwJPbQH44HtRtrHb0A+sxS4jjcXXfhV+HOix2T
+   THfaYEGMSRQhxT2p6vJWMHtaVlqW1QXSyQiFiSgjd+K4TLRq0jY8q7uCZ
+   g==;
+X-CSE-ConnectionGUID: yyiEv4z5TCOFkI2Gqd07Lg==
+X-CSE-MsgGUID: WQ8q4geDSkab9cD6AlKlRw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11355"; a="40431371"
+X-IronPort-AV: E=Sophos;i="6.13,312,1732608000"; 
+   d="scan'208";a="40431371"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 10:29:55 -0800
+X-CSE-ConnectionGUID: /NI/o7qVRfqWLvE0WDNcUA==
+X-CSE-MsgGUID: vm2akRbuQf6bWLt9gI0FFg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="121392298"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orviesa005.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 24 Feb 2025 10:29:55 -0800
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Mon, 24 Feb 2025 10:29:54 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Mon, 24 Feb 2025 10:29:54 -0800
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.47) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Mon, 24 Feb 2025 10:29:51 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=jPdwrXizZXj/SDJpQ9q61obV+Vu3c6MpC4DcdIOItGzHH2oX7zLXylt17DfXvwnl7krI92Vrm7DxPdxqBnekBLRSDfbLGyat5ziPcPgTmBKBLO56Ye+MeBxxjVG89HdnbRqyLCdMfqs9S07k9b0bSZ8JhzF1q8T030w2QoPdrV13bADwa9cV+UCgfADXdvdR842Q7FBnla2RSYhUkb1Jfan/ocicvg7wqhUKmWMB7PfK8KkYqgCEXg3cMMwB19/cm1fcP9VjMpsojwbfwVP3AsY3WoXvRtRFovVWqdNsVR9KQ266E1cWAkAVkVxD44jRaiytlDx70Ywu3O8THIdetw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Lh648gH9ynoPgz/tGh4PB76wXDI6xFpgciLeOoBtJEM=;
+ b=Pb4ux2KFpFTqAjQC+BWyT3v7tYuVfAagd5mmNkfN6OaM2WqnIqeDNAyJnosb3n84wpSbLq3qA7Z6LoJAdCeOkFHphcQCW70vPCU+TZCIWYouBKb3bo7VDqOIC7aNvCEWBZP876eivV2oFlZ/AYuDEN5dOzhJ/I9GpRk1XvrbjuE+OY4WXggKemtwvN352axFNf8V3Fj1PtR99ydzbURKXzNGHsSTy/36fc8tlTQsHm7UlDrWoTA6G8k6J6YCgx9tjWnc4MNr3HFgAy7ixCjZejMo0rbTa2n6ieTnz30d5VlZeVWSd0RC6MltuCBIC3Ujv6pe0OK/sbjiTq3stFcQOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by SA2PR11MB4828.namprd11.prod.outlook.com (2603:10b6:806:110::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.21; Mon, 24 Feb
+ 2025 18:29:45 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57%5]) with mapi id 15.20.8466.015; Mon, 24 Feb 2025
+ 18:29:45 +0000
+From: Ira Weiny <ira.weiny@intel.com>
+Date: Mon, 24 Feb 2025 12:29:29 -0600
+Subject: [PATCH] cxl/Documentation: Remove 'mixed' from sysfs mode doc
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250224-remove-mixed-sysfs-v1-1-a329db313dac@intel.com>
+X-B4-Tracking: v=1; b=H4sIAIi6vGcC/xWMSwqAMBDFriKzdqBWreBVxEWtT52FHzoginh36
+ zKE5CFFFCi12UMRp6jsW4IizygsfpvBMiYma2xtrK04Yt1P8CoXRtZbJ2WUg/eNK9wQAqXwiJi
+ S/qdd/74f/a7AzGQAAAA=
+X-Change-ID: 20250224-remove-mixed-sysfs-e3baa7616bcc
+To: Dave Jiang <dave.jiang@intel.com>, Alejandro Lucero <alucerop@amd.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Fan Ni <fan.ni@samsung.com>
+CC: Dan Williams <dan.j.williams@intel.com>, <linux-kernel@vger.kernel.org>,
+	Ira Weiny <ira.weiny@intel.com>, <linux-cxl@vger.kernel.org>
+X-Mailer: b4 0.15-dev-2a633
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740421789; l=2078;
+ i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
+ bh=xs3C6v66z4q6RVYIlCRuXhh2tWnryPuZp82DLnu1hOc=;
+ b=7CDW5ePisSOe0PnqQ8Lnk2+q8b4DAGXryePrNRsFlL12yDqRopPyEFwaoqBYp55Q/hOH7vm68
+ qBDf3mTtsWJAxgJTBSkFp/vWJ9cBZTvDS/pxqfif6nZliCcq3ZRx73O
+X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
+ pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
+X-ClientProxiedBy: MW4P221CA0013.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:303:8b::18) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|SA2PR11MB4828:EE_
+X-MS-Office365-Filtering-Correlation-Id: dbf5feee-6700-4757-2a80-08dd5501364e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?cm15aXhrRTBzMDJyUWxMK0pLRWZMaCswME1lUlM5WEZ3TXFqcTA1U2JzVEZ1?=
+ =?utf-8?B?ckYxK3hsTXJmbzZzUmdXSVdySnA0aTdTSG9QUE55Wks0eWNRc2E1UVI2MnI1?=
+ =?utf-8?B?c3ZOYU85THZVUjliZWhhRm9BNCtnTDRzbUNYY2hYTmtVQ1B3SkpHUmNYUHRS?=
+ =?utf-8?B?bmIxWlphZ0l5N1NlUFdlTkNwbnZnaS9XT1F0ZEJFUWRRK2xlcllmZE0rY2Nw?=
+ =?utf-8?B?VzRmR1k0TWtNbHdVYW1UYW5iM0RwL0N6dFgwbC85eTBZWjZQTm9Ha29WSytp?=
+ =?utf-8?B?MEhpWGs2Z09ORVF3RnlSWjkzODA2QnRydFZzMGI4UkduM3ptY2ExNnZXeFNp?=
+ =?utf-8?B?VWk5UW9LdjRSZU1ORUhWMTI0SU9SWDl6MklENVF0NC95Z3I3bUlnbTluLzBt?=
+ =?utf-8?B?elR3NnlKMGpBZFVMZmlob2lOUWxCOXlZV0FrRlZjNm1NMThyaTh5c2FYTmFu?=
+ =?utf-8?B?ams3WVVnUWV6cnhxbnFIdGlsSVhaMVFjWm5tSXFHcitQQ3lVUDBLUklXMkpM?=
+ =?utf-8?B?WTNLMy84RkM0QmwvV0V6MmU0WXpMRVRSRUE1eCtxNE9PNitjR1IvV3h1VkNz?=
+ =?utf-8?B?SHZrQVVtVEp2SitaVnFJbFhWdFNVdVJKVjlYdFUvTGhDd2FpL3RIRVc0L1RR?=
+ =?utf-8?B?Vk4ybDVhWE1kRzZKY2tXbE51SzIxK0h2NlhOeWxoRkVjaUdaN1gvNGFDNGw2?=
+ =?utf-8?B?aENDRkRXdG9DdTA1eWYzWUFrNjMrQUNsRHBuMHVwMmRwVCtVU0xJY2pwUm9M?=
+ =?utf-8?B?V25yVUFwcUZsKzJmVGpQMW11Y2ZCZkZsWDdQSFpOYnpWNmN5UTRRVzZqY2hj?=
+ =?utf-8?B?TXVYc0JPejI3Tk4xK0lJdVpkcWVCRm1pbHNIRHFpdmZNNFp1K2xzWkJnOFdt?=
+ =?utf-8?B?b3FoVVpYMmFNcjQ2Ti9pTEYyeEVoZU5SN0pRKzBPMHAvUEIrdUtHZHpDOWVQ?=
+ =?utf-8?B?MVR3N0xFL1dKdE1yZ080N1BIdU9jSWE4WC9PWEFSdWU5c2tNVFZOZ2NDcCsr?=
+ =?utf-8?B?WWtFbUlMc215L3dSNTRETldsNzFtbkdtNG5pVCt5ZjFsT1prRjh2anZUOUQ0?=
+ =?utf-8?B?SzRhdHkyRU4rOExMN1E0OGxESjVmU3JtREhSbktHR1JNYWhjRzRIYlJZNU8z?=
+ =?utf-8?B?UVV0bkZaUDJQaGxTU2xPVWdMUXFONHJyVnVJbFpiYWVoRHBTM1JNNmNwa2lv?=
+ =?utf-8?B?dXNrTm54WW80Z3lBZEJkdnB2KzlVb2ZwTGhjckdTeUxSV1VIY0FnL0ZsaHNi?=
+ =?utf-8?B?K0lMTGVtdGV1NXdsVzZFTHU0VkdNcll2V25pbVovRjBjQVNJUS95U0x4QTEy?=
+ =?utf-8?B?Q2NXVVpHTDJnT3RCQ1pWNGZXeG0yQzAxaGhxMnFnSXdjZGZ0MkYxRzhYdVVs?=
+ =?utf-8?B?MnRGNTNUKzE1eTcxbVM3UWozZ1lhQThTVmhxWXpiK0x0UGRyVCsxR0RtSGlK?=
+ =?utf-8?B?bk1TUmxmN012NkNGNFZ5ZkNqSXBkYzNVQTRKU0NoMTJhR2dEK2NkdTd3anJq?=
+ =?utf-8?B?b2NSZXlIc0tKZHF0ZDFvdlhxZjdUc0EyVVJLUm15TlBEbGNBdjJPa1VVRWZY?=
+ =?utf-8?B?MThRcnpsQUhMRUhsYlBoOURLam9OeDZ3aVlLVzJxMkdrNTQraDBRdnlpWlZj?=
+ =?utf-8?B?dmZ6Yi80a3EwcU9zQlNsM3RCTWZObW4rTXlaai8rMmpscDhpUWZqbWRLQlhI?=
+ =?utf-8?B?RG1DVXhmMVZUWmtJVUt4alpsTWFVT01rN3k4bWlzTUlYcFpqRDhDWFZHdkpm?=
+ =?utf-8?B?RlFGTXRTVUYveGtTOGNyZFFYL0xleUx0clRZS0JXME9UUDdFbWp0dHRCRTZT?=
+ =?utf-8?B?eFNWY1pycDRPTzVKMkFWRm9OcGdCdHhRT1hTcXVEcnUwOE5BTTd4YkprWFVh?=
+ =?utf-8?Q?uZ+CkKXsU/0Tl?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Y3RjOEs2WVBwYngvNzNoNXl0L1M0dWRoazVlYTRmL2Vmb0hyd2FUZjBRL0p2?=
+ =?utf-8?B?aFhmVWlab1B0ZVhBUWs4a3pyejlJRVRkWlZ4eEJZOEtkRUUzMnhLUlZaaTgz?=
+ =?utf-8?B?NXRtUEx1SHhyT3YrU0N4ME5qMUtFcEYrWU9CSXpZZTdWejJLVGNiNTd1d1Fl?=
+ =?utf-8?B?YzRDM1R4WmpRRzBTU1RhY01aVG1saitXNll6c29LbldhWTZ6RGV0WGd5Rnpv?=
+ =?utf-8?B?QmxCMWYzcFhPMmRoNEJaTVhYSXQ3aGpMaHFIc3BGZUlEY01ZZVZjRnd0RlQv?=
+ =?utf-8?B?UzZYalRKVDNkaEYyb0gwR3BhK2Y2dTFkZlJKcEZuSnAyQUJha2R0dW9DUzM1?=
+ =?utf-8?B?Mm1PVndGeVdTdDMvOVdPVitpMmY0Rm1Bb1JaYjhhQUl1ZDVDM09jTG1aTkNI?=
+ =?utf-8?B?T3hOYmZyWDlsRHd5eGlueXdyRXlqSjZyYlNFbjhpcThpRlVsbEYvYXBrQnZU?=
+ =?utf-8?B?SytDMUhHbkFNc0dmZTI1ZVhBazR6alV0cVA3aG1nclg4enRKUlBTd3hiNXox?=
+ =?utf-8?B?K0VoWFFyR2ZXT3pwNWpwNTA3elBFNFNGeVpXaFMxaVFCSG42REYweHUyTlZV?=
+ =?utf-8?B?c2Z3bXVZYmxVUXlQckJTTGFqMXpZN01wcE0zTlVVS0RqSzVZU3FMTzYvdDND?=
+ =?utf-8?B?VEtoMklOekI1d2piM21XQ0R6RWRVN0sxbzZPa3JSVmxoSUp4MkZyTDlhd2pj?=
+ =?utf-8?B?eVNXeFJvb0xzVjh2MXJYc1JyN3dCRCsxL2doOUN4YkF1VzE0bzE3MmFzMzA0?=
+ =?utf-8?B?cGtQQjI0MFYxcnFtS0JNNVRJUnQ2aE4wcExXaThKbDdmbFRieUU3Q3N1Q2F6?=
+ =?utf-8?B?bWk1T3d4a1RtQVhRR3RPWDdtelVsR3lML2pSRi9KTVM5dDc4cXZqTU50Q3du?=
+ =?utf-8?B?eXhFa1VHR1RJcGxsNTNFSXhhZlMyRFp5a1ZHOGNEN0FaY3lnaWZtSDlZN2Nv?=
+ =?utf-8?B?VlltdHJqSFBZUm16THl2R0lZcFNDWFFFdHNQRUptbzRXZWpKbDNqREFtRGpT?=
+ =?utf-8?B?VHZLbi9ld01ZRk4xaWhPMUM5blNwT29kL0RJOVBKNThtMklEUDZEdzhHYWgw?=
+ =?utf-8?B?L3FvRy94Z2dVanFlWW4xMFlmQWphK3dJZktXZnY0WUM2R3JPNU54OWFlZWZo?=
+ =?utf-8?B?TEdhN0ZpQ2hZblg2dnRxZzdmRmZ5YTl0bldzdXJaUXNMQXUzT2RxQ0tOUmNk?=
+ =?utf-8?B?b3BYQ0x5bVlxeWlWdHJ1MkM0T05uMVN5emg5TFpmR1NJOXBMenQvckJKa1ZM?=
+ =?utf-8?B?YVRtTFJ2bUs1VDBEcG5EL2tQTHFibW00SUVJejNwd2NoODdrWm5ZWG94bnZP?=
+ =?utf-8?B?QkdrcEx4NTVZdlBaUlFKRUZoQ2VGME1DS0lNaDZMSG9UTUdYcERrSVprRnk2?=
+ =?utf-8?B?aitINWtqbjRVb242WjJLdkxicTdud1JiNkxsNTFXRllsNHBZWCtVNVdMbVZp?=
+ =?utf-8?B?aXlPeXREYmVCZHArZGoxREcrNi85QzFpTUFtVi9kL2hwTi9Ib0lnU3F6aXpp?=
+ =?utf-8?B?NFR5bTJHY09SOWszRS9jQVFpMmoxR2JINVR1K3ZiRUxDenozU1IwMndtOW1h?=
+ =?utf-8?B?MVZyMXVaNnliSzlYQmxVUlFNLzZtNlFFTmRUb0RYb0VhcjNZR3B5Q0J3ZThq?=
+ =?utf-8?B?b253V3gxdE9xcGpsZEpNVEdLTnoyWXE4c2QyMG5kZUpkbWFBckxzSlEzVWlt?=
+ =?utf-8?B?UldKQjlVd0x1SjdYTFdFTW9JUzFrZGJhdzg0czRoc2Z3Ri9HZkNGRk5JNW5H?=
+ =?utf-8?B?anFVSlR5QzFINHJFa015YmxmQTRQajM1RFMrenRMOXpLcGx5dlQzdFNkVDdq?=
+ =?utf-8?B?bWdjaDdFMTVaVHpIN2NyOU9tV3RIREhrMTIxWFpzNDdURzgrdXBPMXFTd3pL?=
+ =?utf-8?B?QTJaYzB6citUKzk2OWRCNFVYZk5tNmN6TjFuM0R4QnRNOHdiTXcxTXdob2pP?=
+ =?utf-8?B?TzNOSHpmNUJsVzdrMWVPcnBTWjl6UW1pUHhhMXY5VGEybnVmbVlTNnJJQnVr?=
+ =?utf-8?B?RFRrSE5HRUFnY1JzUXg4SkNWcmxsUXVVbXhBeFdnbUtvMTVZYmdENmtqcGl3?=
+ =?utf-8?B?V1VWbGNHV3ZOcE5LaHJTRXFxVHBQZUw2YWVLUUMvWDNteXhaM2dFMlBzcWg1?=
+ =?utf-8?Q?rQaQS6f3sdckRbCBoo+JzYORy?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: dbf5feee-6700-4757-2a80-08dd5501364e
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2025 18:29:45.2913
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: eEoP+QWFHtMscI051Ml8JntJ4DoqODgVYnCtix1G2WujULjuCFvo7FfLcXCcwuFOTWLzO73ulcEyWL8SCxk2JQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR11MB4828
+X-OriginatorOrg: intel.com
 
-Below is a setup with extended linear cache configuration with an example
-layout of memory region shown below presented as a single memory region
-consists of 256G memory where there's 128G of DRAM and 128G of CXL memory.
-The kernel sees a region of total 256G of system memory.
+Commit 188e9529a606 ("cxl: Remove the CXL_DECODER_MIXED mistake")
+removed the mixed mode.
 
-              128G DRAM                          128G CXL memory
-|-----------------------------------|-------------------------------------|
+Remove it from the sysfs documentation.
 
-Data resides in either DRAM or far memory (FM) with no replication. Hot
-data is swapped into DRAM by the hardware behind the scenes. When error is
-detected in one location, it is possible that error also resides in the
-aliased location. Therefore when a memory location that is flagged by MCE
-is part of the special region, the aliased memory location needs to be
-offlined as well.
-
-Add an mce notify callback to identify if the MCE address location is part
-of an extended linear cache region and handle accordingly.
-
-Added symbol export to set_mce_nospec() in x86 code in order to call
-set_mce_nospec() from the CXL MCE notify callback.
-
-Link: https://lore.kernel.org/linux-cxl/668333b17e4b2_5639294fd@dwillia2-xfh.jf.intel.com.notmuch/
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Fixes: 188e9529a606 ("cxl: Remove the CXL_DECODER_MIXED mistake")
+Cc: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 ---
-v4:
-- Move devm_add_action_or_reset() to devm_cxl_add_mce_notifier() (Ming)
----
- arch/x86/mm/pat/set_memory.c |  1 +
- drivers/cxl/Kconfig          |  4 +++
- drivers/cxl/core/Makefile    |  1 +
- drivers/cxl/core/mbox.c      |  6 ++++
- drivers/cxl/core/mce.c       | 65 ++++++++++++++++++++++++++++++++++++
- drivers/cxl/core/mce.h       | 20 +++++++++++
- drivers/cxl/core/region.c    | 28 ++++++++++++++++
- drivers/cxl/cxl.h            |  6 ++++
- drivers/cxl/cxlmem.h         |  2 ++
- tools/testing/cxl/Kbuild     |  1 +
- 10 files changed, 134 insertions(+)
- create mode 100644 drivers/cxl/core/mce.c
- create mode 100644 drivers/cxl/core/mce.h
+ Documentation/ABI/testing/sysfs-bus-cxl | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-index ef4514d64c05..255a3d176956 100644
---- a/arch/x86/mm/pat/set_memory.c
-+++ b/arch/x86/mm/pat/set_memory.c
-@@ -2081,6 +2081,7 @@ int set_mce_nospec(unsigned long pfn)
- 		pr_warn("Could not invalidate pfn=0x%lx from 1:1 map\n", pfn);
- 	return rc;
- }
-+EXPORT_SYMBOL_GPL(set_mce_nospec);
+diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+index 3f5627a1210a16aca7c18d17131a56491048a0c2..3ba551ed10e29f33b9eb873bab9b542c8afb66f0 100644
+--- a/Documentation/ABI/testing/sysfs-bus-cxl
++++ b/Documentation/ABI/testing/sysfs-bus-cxl
+@@ -321,14 +321,13 @@ KernelVersion:	v6.0
+ Contact:	linux-cxl@vger.kernel.org
+ Description:
+ 		(RW) When a CXL decoder is of devtype "cxl_decoder_endpoint" it
+-		translates from a host physical address range, to a device local
+-		address range. Device-local address ranges are further split
+-		into a 'ram' (volatile memory) range and 'pmem' (persistent
+-		memory) range. The 'mode' attribute emits one of 'ram', 'pmem',
+-		'mixed', or 'none'. The 'mixed' indication is for error cases
+-		when a decoder straddles the volatile/persistent partition
+-		boundary, and 'none' indicates the decoder is not actively
+-		decoding, or no DPA allocation policy has been set.
++		translates from a host physical address range, to a device
++		local address range. Device-local address ranges are further
++		split into a 'ram' (volatile memory) range and 'pmem'
++		(persistent memory) range. The 'mode' attribute emits one of
++		'ram', 'pmem', or 'none'. The 'none' indicates the decoder is
++		not actively decoding, or no DPA allocation policy has been
++		set.
  
- /* Restore full speculative operation to the pfn. */
- int clear_mce_nospec(unsigned long pfn)
-diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-index 876469e23f7a..d1c91dacae56 100644
---- a/drivers/cxl/Kconfig
-+++ b/drivers/cxl/Kconfig
-@@ -146,4 +146,8 @@ config CXL_REGION_INVALIDATION_TEST
- 	  If unsure, or if this kernel is meant for production environments,
- 	  say N.
- 
-+config CXL_MCE
-+	def_bool y
-+	depends on X86_MCE && MEMORY_FAILURE
-+
- endif
-diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-index 1a0c9c6ca818..61c9332b3582 100644
---- a/drivers/cxl/core/Makefile
-+++ b/drivers/cxl/core/Makefile
-@@ -17,3 +17,4 @@ cxl_core-y += cdat.o
- cxl_core-y += acpi.o
- cxl_core-$(CONFIG_TRACING) += trace.o
- cxl_core-$(CONFIG_CXL_REGION) += region.o
-+cxl_core-$(CONFIG_CXL_MCE) += mce.o
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 808b6a3c577b..cdef2c8809eb 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -11,6 +11,7 @@
- 
- #include "core.h"
- #include "trace.h"
-+#include "mce.h"
- 
- static bool cxl_raw_allow_all;
- 
-@@ -1458,6 +1459,7 @@ EXPORT_SYMBOL_NS_GPL(cxl_mailbox_init, "CXL");
- struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev)
- {
- 	struct cxl_memdev_state *mds;
-+	int rc;
- 
- 	mds = devm_kzalloc(dev, sizeof(*mds), GFP_KERNEL);
- 	if (!mds) {
-@@ -1473,6 +1475,10 @@ struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev)
- 	mds->ram_perf.qos_class = CXL_QOS_CLASS_INVALID;
- 	mds->pmem_perf.qos_class = CXL_QOS_CLASS_INVALID;
- 
-+	rc = devm_cxl_register_mce_notifier(dev, &mds->mce_notifier);
-+	if (rc)
-+		return ERR_PTR(rc);
-+
- 	return mds;
- }
- EXPORT_SYMBOL_NS_GPL(cxl_memdev_state_create, "CXL");
-diff --git a/drivers/cxl/core/mce.c b/drivers/cxl/core/mce.c
-new file mode 100644
-index 000000000000..ff8d078c6ca1
---- /dev/null
-+++ b/drivers/cxl/core/mce.c
-@@ -0,0 +1,65 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright(c) 2024 Intel Corporation. All rights reserved. */
-+#include <linux/mm.h>
-+#include <linux/notifier.h>
-+#include <linux/set_memory.h>
-+#include <asm/mce.h>
-+#include <cxlmem.h>
-+#include "mce.h"
-+
-+static int cxl_handle_mce(struct notifier_block *nb, unsigned long val,
-+			  void *data)
-+{
-+	struct cxl_memdev_state *mds = container_of(nb, struct cxl_memdev_state,
-+						    mce_notifier);
-+	struct cxl_memdev *cxlmd = mds->cxlds.cxlmd;
-+	struct cxl_port *endpoint = cxlmd->endpoint;
-+	struct mce *mce = data;
-+	u64 spa, spa_alias;
-+	unsigned long pfn;
-+
-+	if (!mce || !mce_usable_address(mce))
-+		return NOTIFY_DONE;
-+
-+	if (!endpoint)
-+		return NOTIFY_DONE;
-+
-+	spa = mce->addr & MCI_ADDR_PHYSADDR;
-+
-+	pfn = spa >> PAGE_SHIFT;
-+	if (!pfn_valid(pfn))
-+		return NOTIFY_DONE;
-+
-+	spa_alias = cxl_port_get_spa_cache_alias(endpoint, spa);
-+	if (spa_alias == ~0ULL)
-+		return NOTIFY_DONE;
-+
-+	pfn = spa_alias >> PAGE_SHIFT;
-+
-+	/*
-+	 * Take down the aliased memory page. The original memory page flagged
-+	 * by the MCE will be taken cared of by the standard MCE handler.
-+	 */
-+	dev_emerg(mds->cxlds.dev, "Offlining aliased SPA address0: %#llx\n",
-+		  spa_alias);
-+	if (!memory_failure(pfn, 0))
-+		set_mce_nospec(pfn);
-+
-+	return NOTIFY_OK;
-+}
-+
-+static void cxl_unregister_mce_notifier(void *mce_notifier)
-+{
-+	mce_unregister_decode_chain(mce_notifier);
-+}
-+
-+int devm_cxl_register_mce_notifier(struct device *dev,
-+				   struct notifier_block *mce_notifier)
-+{
-+	mce_notifier->notifier_call = cxl_handle_mce;
-+	mce_notifier->priority = MCE_PRIO_UC;
-+	mce_register_decode_chain(mce_notifier);
-+
-+	return devm_add_action_or_reset(dev, cxl_unregister_mce_notifier,
-+					mce_notifier);
-+}
-diff --git a/drivers/cxl/core/mce.h b/drivers/cxl/core/mce.h
-new file mode 100644
-index 000000000000..ace73424eeb6
---- /dev/null
-+++ b/drivers/cxl/core/mce.h
-@@ -0,0 +1,20 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/* Copyright(c) 2024 Intel Corporation. All rights reserved. */
-+#ifndef _CXL_CORE_MCE_H_
-+#define _CXL_CORE_MCE_H_
-+
-+#include <linux/notifier.h>
-+
-+#ifdef CONFIG_CXL_MCE
-+int devm_cxl_register_mce_notifier(struct device *dev,
-+				   struct notifier_block *mce_notifer);
-+#else
-+static inline int
-+devm_cxl_register_mce_notifier(struct device *dev,
-+			       struct notifier_block *mce_notifier)
-+{
-+	return -EOPNOTSUPP;
-+}
-+#endif
-+
-+#endif
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index cd7b0c31ebf7..0023b38f9ba4 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -3445,6 +3445,34 @@ int cxl_add_to_region(struct cxl_port *root, struct cxl_endpoint_decoder *cxled)
- }
- EXPORT_SYMBOL_NS_GPL(cxl_add_to_region, "CXL");
- 
-+u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint, u64 spa)
-+{
-+	struct cxl_region_ref *iter;
-+	unsigned long index;
-+
-+	if (!endpoint)
-+		return ~0ULL;
-+
-+	guard(rwsem_write)(&cxl_region_rwsem);
-+
-+	xa_for_each(&endpoint->regions, index, iter) {
-+		struct cxl_region_params *p = &iter->region->params;
-+
-+		if (p->res->start <= spa && spa <= p->res->end) {
-+			if (!p->cache_size)
-+				return ~0ULL;
-+
-+			if (spa > p->res->start + p->cache_size)
-+				return spa - p->cache_size;
-+
-+			return spa + p->cache_size;
-+		}
-+	}
-+
-+	return ~0ULL;
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_port_get_spa_cache_alias, "CXL");
-+
- static int is_system_ram(struct resource *res, void *arg)
- {
- 	struct cxl_region *cxlr = arg;
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 7ee96867ac73..4785cff5209f 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -877,6 +877,7 @@ struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev);
- int cxl_add_to_region(struct cxl_port *root,
- 		      struct cxl_endpoint_decoder *cxled);
- struct cxl_dax_region *to_cxl_dax_region(struct device *dev);
-+u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint, u64 spa);
- #else
- static inline bool is_cxl_pmem_region(struct device *dev)
- {
-@@ -895,6 +896,11 @@ static inline struct cxl_dax_region *to_cxl_dax_region(struct device *dev)
- {
- 	return NULL;
- }
-+static inline u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint,
-+					       u64 spa)
-+{
-+	return 0;
-+}
- #endif
- 
- void cxl_endpoint_parse_cdat(struct cxl_port *port);
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 2a25d1957ddb..55752cbf408c 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -477,6 +477,7 @@ static inline struct cxl_dev_state *mbox_to_cxlds(struct cxl_mailbox *cxl_mbox)
-  * @poison: poison driver state info
-  * @security: security driver state info
-  * @fw: firmware upload / activation state
-+ * @mce_notifier: MCE notifier
-  *
-  * See CXL 3.0 8.2.9.8.2 Capacity Configuration and Label Storage for
-  * details on capacity parameters.
-@@ -503,6 +504,7 @@ struct cxl_memdev_state {
- 	struct cxl_poison_state poison;
- 	struct cxl_security_state security;
- 	struct cxl_fw_state fw;
-+	struct notifier_block mce_notifier;
- };
- 
- static inline struct cxl_memdev_state *
-diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-index 1ae13987a8a2..f625eb2d2dc5 100644
---- a/tools/testing/cxl/Kbuild
-+++ b/tools/testing/cxl/Kbuild
-@@ -64,6 +64,7 @@ cxl_core-y += $(CXL_CORE_SRC)/cdat.o
- cxl_core-y += $(CXL_CORE_SRC)/acpi.o
- cxl_core-$(CONFIG_TRACING) += $(CXL_CORE_SRC)/trace.o
- cxl_core-$(CONFIG_CXL_REGION) += $(CXL_CORE_SRC)/region.o
-+cxl_core-$(CONFIG_CXL_MCE) += $(CXL_CORE_SRC)/mce.o
- cxl_core-y += config_check.o
- cxl_core-y += cxl_core_test.o
- cxl_core-y += cxl_core_exports.o
+ 		'mode' can be written, when the decoder is in the 'disabled'
+ 		state, with either 'ram' or 'pmem' to set the boundaries for the
+
+---
+base-commit: 8760c1c0bf7eee63a56b5f9edb42d93737a6a378
+change-id: 20250224-remove-mixed-sysfs-e3baa7616bcc
+
+Best regards,
 -- 
-2.48.1
+Ira Weiny <ira.weiny@intel.com>
 
