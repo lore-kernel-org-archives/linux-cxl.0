@@ -1,254 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from skyblue.cherry.relay.mailchannels.net (skyblue.cherry.relay.mailchannels.net [23.83.223.167])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F192E20C46B;
-	Tue, 25 Feb 2025 20:35:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740515742; cv=none; b=CGdSKOrS6YSG48wZya6i3PLxITHxLeG64KXK37q75aHdCxOSUc97zH4DXBMML5p5EPAsr0u8gh/1/bwH2emw59jhuOBsQEuMHBSkYqltw50V8B3MuixOXJt97VBxXdNLuDe094sSqMW7pL18Nf+7NwzlAPAoXO9Bi0NlJ8K3VVQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740515742; c=relaxed/simple;
-	bh=2E1PhlxnKJqJ5tITsq3SqYNLWLrm1dHU9bVkcFq7VwI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S4trwdqeYu9tF2Gfr4dBFkLh+TbbeA9ZDdsbF/DROenfItKscfdkP7YokMdTaR3EBTV+jkqHKnMp5HO7iowwH1XfA2oXWc5O+aKVc4sS0Sv7OYPDJv0qGerU/zluuaux2Qn5hBSJ8wz2I1O6ZdgvB03rWSy8eB9RC+JgHUhVdzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dnKSovsW; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67A11ACED7
+	for <linux-cxl@vger.kernel.org>; Tue, 25 Feb 2025 21:09:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.167
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740517760; cv=pass; b=nTOL9Xyv0OnzeGOgTs241FOKLJdpXM5nDlh5qBNXYFcFtgCHxHHzgH7tCNTxeefB483gLalc+W6WGrH4IbngrobC4xz25SPSFZdd9zhNuXVme/fJtdiYfLPIE+Shn4vTJ7GnaEYI9RfqZMUq11mvaQpSP9y2oiDVx5P8rdMi06A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740517760; c=relaxed/simple;
+	bh=WC4wZMjvccSprhFHnDMHW1RQddXS3vti/2BUWCP/vm8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GIQOZDyCNfTygUL0FlW1Hl5kUksM6TRC5IWlbOGBxOcxeR8it5lJ1v3xonshqAICtoTkAZBD8/zIza62xjbwqQimC7GA16yBUBKwvpZAymfNWxUDooGgzeiFhZAq7PxU+uviUHVd7wcRKVxZ15/leLunyBxiRwcfjzCx1uRUEgQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=bhgO745J; arc=pass smtp.client-ip=23.83.223.167
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dnKSovsW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740515741; x=1772051741;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=2E1PhlxnKJqJ5tITsq3SqYNLWLrm1dHU9bVkcFq7VwI=;
-  b=dnKSovsWxodAgEfvV500xhS2BAxrk1Rh/KJdHb6JqY1LPBSx/MBMimgW
-   lZ5vBUpw9n5Eix9LL3hN/WBYDYBrWgz/KpECLnOc1NoqDeQsUM7CI2di4
-   2YjUTxN6/1sLzU8k6+9mbP3LfeerqkvkTUf/N704wo02BaYkVuAGZvbBp
-   ln8XNWLY1zAe34byg51NbhbqUwbCJXY9Eg+E9/CLk7FSvOx+3MJKmBXyQ
-   wVHeb5AP+co8TjyxOFzz5W9vuHvk1dU7seTVJhVOCIF5KhbNHBvuYp2F5
-   4tlNteCv4smUkkc1GoE30W7X8J/saWvh34JKSxBk6HGvunn3hrS2uON6Z
-   w==;
-X-CSE-ConnectionGUID: ChQWCkdySXCjrIo1sDmIZA==
-X-CSE-MsgGUID: HAHt1OEaRA+CVI/KbBEFtA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="28934297"
-X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
-   d="scan'208";a="28934297"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 12:35:40 -0800
-X-CSE-ConnectionGUID: eLS6B6hFRzGtfA09e63G+g==
-X-CSE-MsgGUID: SO7UbDaITFCxhipfKmVEUA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
-   d="scan'208";a="116512009"
-Received: from puneetse-mobl.amr.corp.intel.com (HELO [10.125.111.168]) ([10.125.111.168])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 12:35:39 -0800
-Message-ID: <987b39f0-fc61-44eb-8ac7-6a3d11b6c497@intel.com>
-Date: Tue, 25 Feb 2025 13:35:36 -0700
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="bhgO745J"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id A19852C1795;
+	Tue, 25 Feb 2025 21:09:12 +0000 (UTC)
+Received: from pdx1-sub0-mail-a218.dreamhost.com (100-102-124-192.trex-nlb.outbound.svc.cluster.local [100.102.124.192])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 3AA772C1339;
+	Tue, 25 Feb 2025 21:09:12 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1740517752; a=rsa-sha256;
+	cv=none;
+	b=DUZKRw01ddZFkpwj8bWcfISZLnrXjczkC/X8JqJaZ0yFvwFb1j+3U/7MlcizOKPweFIHzU
+	s4uovuTVOA0fsJaIecdBM8XKk4OSD1mOw2H226+cHp+sNcUJGuCUOFU00Au5pYnopMrL1C
+	5uxPndQvdMbMfWvYJ21Keqmpguv99AfWYlrd0WGl91eGKbsopvTCNUQgz73Zluep6S+0sE
+	2+8WBlNzHRVDlbx7Jmd1eG/JEjqQYjorpNl5o6c6IcUkRBtGV/eEKfoH2KO3ZKNYqFopdt
+	CgiRlRwH2z/lhH+vxu7k8C3iC91Y30e9D87Wdl6iwU/I3BteFgyfZnNeOEpf3A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1740517752;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=WC4wZMjvccSprhFHnDMHW1RQddXS3vti/2BUWCP/vm8=;
+	b=Edajc+fyJZJMlIp1lnw4gPWIMF85vGyTFnKMa+oT3aQW0JjCDmTYlR/AKcK07eekGhtsiU
+	SEUyNcWZ7JnyKuldx8OVqZ0OutH6GcauUfTh3hLXdJl4mSk8mFba7dEhfGebIeQRBdbSbV
+	/78zIJ6YYXOxBGqCigjWRKvxjett6p0qxwhDatGE0ZDEmN9K5mwL0/weRHLjZ/CcYgIgTW
+	AM46g2aOm3UrT/jD0Iu+ZkSKj6skmgs3S4beAmGU93wXcNihP61pudHMKNg+5zAK6jzXMV
+	Rqi+r5shgK0dZaesLSpA8EPkhCEOWP0AMibZ7wdwDP3X5E2VXqvjXOBw/lOtlg==
+ARC-Authentication-Results: i=1;
+	rspamd-6d7cc6b78d-zrpw6;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Power-Inform: 4b42a68a331c34a0_1740517752512_3073116100
+X-MC-Loop-Signature: 1740517752512:1963909159
+X-MC-Ingress-Time: 1740517752512
+Received: from pdx1-sub0-mail-a218.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.102.124.192 (trex/7.0.2);
+	Tue, 25 Feb 2025 21:09:12 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a218.dreamhost.com (Postfix) with ESMTPSA id 4Z2VbC3xlCz4g;
+	Tue, 25 Feb 2025 13:09:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1740517752;
+	bh=WC4wZMjvccSprhFHnDMHW1RQddXS3vti/2BUWCP/vm8=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=bhgO745JZMznxM8aeS7/tHthTbKnC4+dk/AouWFIlpoqlPSrLub5bdkgJm6XuU5Cc
+	 OT1XYpotSJ1gxZ3jFiAjFow+DXYkLLVl6DPF6egq5+kURoIecPgx6xgkNE0rSUdQJO
+	 mMt4cbttJ/KLofYf05JsPQiLmhtlWK5/uU/CpdpmK0Nl9uHSpsEDpa+mZ2K5ZDaGQ/
+	 FNe12L2pwopt+Ea4wQUTom/WajPTJfQ8S6D+d5Ls5ZN66mvAFXVB8DxKCv9k6b3V27
+	 cPaR4vlj4htX7jsXspHP+XJD3Vf96kji/XNLy5wXyEgITPNTGq6E4xxGR9xu1WpmnX
+	 yFMYwlgD/lW7g==
+Date: Tue, 25 Feb 2025 13:09:08 -0800
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
+	ira.weiny@intel.com, vishal.l.verma@intel.com,
+	alison.schofield@intel.com, Jonathan.Cameron@huawei.com,
+	jgg@nvidia.com, shiju.jose@huawei.com,
+	Li Ming <ming.li@zohomail.com>
+Subject: Re: [PATCH v7 01/14] cxl: Enumerate feature commands
+Message-ID: <20250225210908.d3leh62kcikm3yi5@offworld>
+References: <20250220194438.2281088-1-dave.jiang@intel.com>
+ <20250220194438.2281088-2-dave.jiang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/4] acpi/hmat / cxl: Add extended linear cache support
- for CXL
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org, rafael@kernel.org,
- bp@alien8.de, dan.j.williams@intel.com, tony.luck@intel.com,
- dave@stgolabs.net, jonathan.cameron@huawei.com, ira.weiny@intel.com,
- ming.li@zohomail.com
-References: <20250224182202.1683380-1-dave.jiang@intel.com>
- <20250224182202.1683380-3-dave.jiang@intel.com>
- <Z74haZFA80TKeCUH@aschofie-mobl2.lan>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <Z74haZFA80TKeCUH@aschofie-mobl2.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250220194438.2281088-2-dave.jiang@intel.com>
+User-Agent: NeoMutt/20220429
 
+On Thu, 20 Feb 2025, Dave Jiang wrote:
 
+>Add feature commands enumeration code in order to detect and enumerate
+>the 3 feature related commands "get supported features", "get feature",
+>and "set feature". The enumeration will help determine whether the driver
+>can issue any of the 3 commands to the device.
+>
+>Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+>Reviewed-by: Li Ming <ming.li@zohomail.com>
+>Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>Tested-by: Shiju Jose <shiju.jose@huawei.com>
+>Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
-On 2/25/25 1:00 PM, Alison Schofield wrote:
-> On Mon, Feb 24, 2025 at 11:21:00AM -0700, Dave Jiang wrote:
->> The current cxl region size only indicates the size of the CXL memory
->> region without accounting for the extended linear cache size. Retrieve the
->> cache size from HMAT and append that to the cxl region size for the cxl
->> region range that matches the SRAT range that has extended linear cache
->> enabled.
->>
->> The SRAT defines the whole memory range that includes the extended linear
->> cache and the CXL memory region. The new HMAT ECN/ECR to the Memory Side
->> Cache Information Structure defines the size of the extended linear cache
->> size and matches to the SRAT Memory Affinity Structure by the memory
->> proxmity domain. Add a helper to match the cxl range to the SRAT memory
->> range in order to retrieve the cache size.
->>
->> There are several places that checks the cxl region range against the
->> decoder range. Use new helper to check between the two ranges and address
->> the new cache size.
->>
->> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->> v4:
->> - Add adjustment for cxl_dpa_to_hpa() (Alison)
->> - Add check of adjusted region start against CFMWS. (Alison)
->> - Update dev_warn() to be more precise. (Alison)
->> ---
->>  drivers/acpi/numa/hmat.c  | 39 +++++++++++++++++++
->>  drivers/cxl/core/Makefile |  1 +
->>  drivers/cxl/core/acpi.c   | 11 ++++++
->>  drivers/cxl/core/core.h   |  3 ++
->>  drivers/cxl/core/region.c | 80 ++++++++++++++++++++++++++++++++++++---
->>  drivers/cxl/cxl.h         |  2 +
->>  include/linux/acpi.h      | 11 ++++++
->>  tools/testing/cxl/Kbuild  |  1 +
->>  8 files changed, 143 insertions(+), 5 deletions(-)
->>  create mode 100644 drivers/cxl/core/acpi.c
->>
->> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
->> index 2630511937f5..9d9052258e92 100644
->> --- a/drivers/acpi/numa/hmat.c
->> +++ b/drivers/acpi/numa/hmat.c
->> @@ -108,6 +108,45 @@ static struct memory_target *find_mem_target(unsigned int mem_pxm)
->>  	return NULL;
->>  }
->>  
->> +/**
->> + * hmat_get_extended_linear_cache_size - Retrieve the extended linear cache size
->> + * @backing_res: resource from the backing media
->> + * @nid: node id for the memory region
->> + * @cache_size: (Output) size of extended linear cache.
->> + *
->> + * Return: 0 on success. Errno on failure.
->> + *
->> + */
->> +int hmat_get_extended_linear_cache_size(struct resource *backing_res, int nid,
->> +					resource_size_t *cache_size)
->> +{
->> +	unsigned int pxm = node_to_pxm(nid);
->> +	struct memory_target *target;
->> +	struct target_cache *tcache;
->> +	struct resource *res;
->> +
->> +	target = find_mem_target(pxm);
->> +	if (!target)
->> +		return -ENOENT;
-> 
-> Remember this -ENOENT 
-> 
->> +
->> +	list_for_each_entry(tcache, &target->caches, node) {
->> +		if (tcache->cache_attrs.address_mode !=
->> +				NODE_CACHE_ADDR_MODE_EXTENDED_LINEAR)
->> +			continue;
->> +
->> +		res = &target->memregions;
->> +		if (!resource_contains(res, backing_res))
->> +			continue;
->> +
->> +		*cache_size = tcache->cache_attrs.size;
->> +		return 0;
->> +	}
->> +
->> +	*cache_size = 0;
->> +	return 0;
->> +}
-> 
-> snip
-> 
->> +static int cxl_extended_linear_cache_resize(struct cxl_region *cxlr,
->> +					    struct resource *res)
->> +{
->> +	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
->> +	struct cxl_region_params *p = &cxlr->params;
->> +	int nid = phys_to_target_node(res->start);
->> +	resource_size_t size, cache_size, start;
->> +	int rc;
->> +
->> +	size = resource_size(res);
->> +	if (!size)
->> +		return -EINVAL;
->> +
->> +	rc = cxl_acpi_get_extended_linear_cache_size(res, nid, &cache_size);
->> +	if (rc)
->> +		return rc;
-> 
-> Remember this - passing thru the -ENOENT
-> 
-> 
->> +
->> +	if (!cache_size)
->> +		return 0;
->> +
->> +	if (size != cache_size) {
->> +		dev_warn(&cxlr->dev, "Extended Linear Cache is not 1:1, unsupported!");
-> 
-> maybe emit the numbers, so in the next step we know what the mismatch was,
-> and how much cache goes unused.
-> 
->> +		return -EOPNOTSUPP;
-> 
-> EOPNOTSUPP is only other possible rc
-> 
-> 
->> +	}
->> +
->> +	/*
->> +	 * Move the start of the range to where the cache range starts. The
->> +	 * implementation assumes that the cache range is in front of the
->> +	 * CXL range. This is not dictated by the HMAT spec but is how the
->> +	 * current known implementation is configured.
->> +	 *
->> +	 * The cache range is expected to be within the CFMWS. The adjusted
->> +	 * res->start should not be less than cxlrd->res->start.
->> +	 */
->> +	start = res->start - cache_size;
->> +	if (start < cxlrd->res->start)
->> +		return -ENXIO;
->> +
->> +	res->start = start;
->> +	p->cache_size = cache_size;
->> +
->> +	return 0;
->> +}
->> +
->>  /* Establish an empty region covering the given HPA range */
->>  static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
->>  					   struct cxl_endpoint_decoder *cxled)
->> @@ -3270,6 +3328,18 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
->>  
->>  	*res = DEFINE_RES_MEM_NAMED(hpa->start, range_len(hpa),
->>  				    dev_name(&cxlr->dev));
->> +
->> +	rc = cxl_extended_linear_cache_resize(cxlr, res);
->> +	if (rc) {
->> +		/*
->> +		 * Failing to support extended linear cache region resize does not
->> +		 * prevent the region from functioning. Only causes cxl list showing
->> +		 * incorrect region size.
->> +		 */
->> +		dev_warn(cxlmd->dev.parent,
->> +			 "Extended linear cache calculation failed.\n");
->> +	}
->> +
-> 
-> Do you want to handle ENOENT same as EOPNOTSUPP?
-> Include rc in error message. 
-
-I think it's ok to consider all errnos as no support for extended cache. All memory are usable as intended. You just won't get the correct region size in 'cxl list' or get MCE notification for the aliased address. So there is no loss of resources. Mainly you just lose full RAS support. 
-
-> 
-> I'm still confused about this message and the state behind it.
-> 
-> Is this saying the region functions but only at it's lesser cxl resource
-> size, or is it saying the region functions at its extended size?
-> 
-> Is there any 'thanks for the cache but we cannot use it' type
-> response to acpi. Wondering if it can be reclaimed.
-> 
-> 
-> snip
-
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
