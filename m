@@ -1,205 +1,244 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C58A19340D
-	for <linux-cxl@vger.kernel.org>; Tue, 25 Feb 2025 17:54:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B943119B5A3;
+	Tue, 25 Feb 2025 20:00:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740506096; cv=none; b=ROr9/iv+dCqTxN5dK5pHPufZEjpLwvmqtzQKmFV7r2eHxXNtR1ejuNpOeuk+wcDc/psvS6VDSJqErlsfZerZLVq7dE7wkDgsXJ+Cz0bhCXB0lxHpja/718t6+8YhW+EHIP4GBj02HNfVjv/EOLrY6s30K6CG5cWGdGTSsuTRfGQ=
+	t=1740513647; cv=none; b=j7YG/LoF4F2triyfTPobt7bQzEzH2ZMIDUz41tCOTuL7h6jtiBP9OO1Aca5/69vlvtW867YoQaERvyapobqz+HwWTD3y4t7ZKAe2ueOjDD0n2SbwIuPrjMN1JYSfhiMmQ+6NUQvWJYqdL/nT2Uk81npI+XW7QG7qfiY60cWSOXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740506096; c=relaxed/simple;
-	bh=AAFrt35S/abh6MA1MlM7HvrcNVQB/W5Kymm/5ulCVXs=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=BSgiNjr44MnGO8h4396CtqY3Pwt/V6vmA15JRNzNgcSbFKz/cm7PzPhIwRGt1br2oQtg4YcIcSQjZVRsmxQtkcVxwPNq3/cPtWcKZMjqNqp5p7Gx0QX0futRA4y2Ml1+RsOZLpC4VFDzyQpUrFCQdYOtESG2j3iNyhh+dkOI3pc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dUfEFMWK; arc=none smtp.client-ip=198.175.65.16
+	s=arc-20240116; t=1740513647; c=relaxed/simple;
+	bh=QBdo7qVG+CWgP4+1WWNENaiFva/r2JtUBnLhUNznoP4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G5yLfYFrGj0n/UWafJ3Vmd61HYJjMtK2kKiOEDL5QMVouoOfz2K/FQ+23euDLyy7GfSBfxetQBiGHXtwS+jyIFI1HsgXQtFn50TDUjL1qFZn/K2T7m7eZ82uVttN1aRrCSxiSSGDp0sSi7IkTZv/XYE7izeM4VOSNqpJGpCCzek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JKZWxbaO; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dUfEFMWK"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JKZWxbaO"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740506094; x=1772042094;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=AAFrt35S/abh6MA1MlM7HvrcNVQB/W5Kymm/5ulCVXs=;
-  b=dUfEFMWK4HqE6z4ClJw1ubdIwO9oIoulyKTPA7M5sUHm3cqo8j+vRdYs
-   FziCG4jJxQ/x+EteKipddigx0MJC2fyP74xaqqiO5RzwlASvUCoomJ85Z
-   8SIRFVJWSx6ztq4m985UXg9+MyeuYvsRKIwc3GvmF+yKVpXcYeeW0pRZW
-   AK7Zt0+yRJoNp7WriWuAsxiGRFSzOtE6Q/OEILtJG9c+MJY9J5gzN8IMB
-   eiUKXN+gB51nQPDUy8xOo/ze0PHl8obIu0W3zVRd2exHnb5HDnz1Az1Ks
-   ZNEeCtuVKs33tWdNPHgtjOUgcwsW3NnPcrWuHVT1cShOUOy5wtax+rgBU
-   w==;
-X-CSE-ConnectionGUID: Lq3+09WqQFu7OAaqrFu4fQ==
-X-CSE-MsgGUID: zRUnCZ3/Q0anEDhI90N86Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="41455093"
-X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
-   d="scan'208";a="41455093"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 09:54:52 -0800
-X-CSE-ConnectionGUID: pAcMV7nBRbyaP/vlkp91cA==
-X-CSE-MsgGUID: /JHq+S+/SCS+dFZmrEYBNQ==
+  t=1740513646; x=1772049646;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=QBdo7qVG+CWgP4+1WWNENaiFva/r2JtUBnLhUNznoP4=;
+  b=JKZWxbaOxWmjQZWcAbrp245nVZNcmqreF0n8TE0mEPHGYSGay1a/abOh
+   mlTS+2lOyKzl9SrdeUV6SSy7H9r0sKdbSnw0bQRH6soGAAHlLQTaTPMWc
+   P2HKnvLT73H1Ahw2iwGEoRDYE7+q7KvsNoJnRJBNWAz2ZoFpD+bmCMfUp
+   ANQRDc0eXqAu5zzA1bMD0RbmyoUuzoM/fyepQ+H/g/l1yAruf1JoqFEJW
+   rtLr77W9nYkaVod3Yd4QH9VJpUNRXihKD0f6kMp+vknnLMakwC8iapbuW
+   6rMzK9okDf+c918TSUKNEFKqE5dX9+zZlX3DG4W2eCo1uTQ81rTZF1KA8
+   A==;
+X-CSE-ConnectionGUID: DFzAB4e/TMO5dba9BxjKqA==
+X-CSE-MsgGUID: +nZumI3HRYmkLnopX321Ww==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="52760245"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="52760245"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 12:00:44 -0800
+X-CSE-ConnectionGUID: rQp3OqC6RommgQIfU4r7fQ==
+X-CSE-MsgGUID: qg7FR9bGRGOgZi6r6ZH8Sw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
-   d="scan'208";a="139697062"
-Received: from puneetse-mobl.amr.corp.intel.com (HELO [10.125.111.168]) ([10.125.111.168])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 09:54:50 -0800
-Message-ID: <7950d8fc-886d-4895-a2b7-53453eca20cf@intel.com>
-Date: Tue, 25 Feb 2025 10:54:47 -0700
+   d="scan'208";a="116981353"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.111.175])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 12:00:43 -0800
+Date: Tue, 25 Feb 2025 12:00:41 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
+	rafael@kernel.org, bp@alien8.de, dan.j.williams@intel.com,
+	tony.luck@intel.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
+	ira.weiny@intel.com, ming.li@zohomail.com
+Subject: Re: [PATCH v4 2/4] acpi/hmat / cxl: Add extended linear cache
+ support for CXL
+Message-ID: <Z74haZFA80TKeCUH@aschofie-mobl2.lan>
+References: <20250224182202.1683380-1-dave.jiang@intel.com>
+ <20250224182202.1683380-3-dave.jiang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 00/14] cxl: Add CXL feature commands support via fwctl
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: dan.j.williams@intel.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
- alison.schofield@intel.com, Jonathan.Cameron@huawei.com, dave@stgolabs.net,
- jgg@nvidia.com, shiju.jose@huawei.com
-References: <20250220194438.2281088-1-dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <20250220194438.2281088-1-dave.jiang@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250224182202.1683380-3-dave.jiang@intel.com>
 
-
-
-On 2/20/25 12:42 PM, Dave Jiang wrote:
-> v7:
-> - Move the flex array bits to where it is used. (Jonathan)
-> - Use uuid from defined struct instead of cast from byte stream. (Jonathan)
-
-Patches 1-6 have been merged into cxl/next:
-0f5f03069721 Merge branch 'for-6.15/features' into cxl-for-next
-
-Patches 7-14 will be picked up by Jason with his fwctl PR
-Thanks Jason.
-
+On Mon, Feb 24, 2025 at 11:21:00AM -0700, Dave Jiang wrote:
+> The current cxl region size only indicates the size of the CXL memory
+> region without accounting for the extended linear cache size. Retrieve the
+> cache size from HMAT and append that to the cxl region size for the cxl
+> region range that matches the SRAT range that has extended linear cache
+> enabled.
 > 
-> v6:
-> - Drop info callback. (Saeed)
-> - Embed hw operation in the input payload. (Saeed)
-> - Move set_features check bits to the set_features enabling patch. (Saeed)
-> - Update user example in documentation to support embedded operation in payload
-> - See individual patches for detailed changes from v5.
+> The SRAT defines the whole memory range that includes the extended linear
+> cache and the CXL memory region. The new HMAT ECN/ECR to the Memory Side
+> Cache Information Structure defines the size of the extended linear cache
+> size and matches to the SRAT Memory Affinity Structure by the memory
+> proxmity domain. Add a helper to match the cxl range to the SRAT memory
+> range in order to retrieve the cache size.
 > 
-> v5:
-> - Add devm action to fwctl. (Dan)
-> - Fix return of NULL instead of ERR_PTR() for get features. (Ming)
-> - Make cxl_get/set_feature() internal to cxl/core (Dan)
-> - Add missing NULL check for cxl_set_feature() (Dan)
-> - Remove cxlmd back pointer from fwctl. (Dan)
-> - Add missing CONFIG_FWCTL dependency to Kconfig.
-> - Fix index of for loop for fwctl get features. (Ming)
-> - See individual patches for detailed changes from v4.
+> There are several places that checks the cxl region range against the
+> decoder range. Use new helper to check between the two ranges and address
+> the new cache size.
 > 
-> v4:
-> - Rebase to FWCTL series v4 based on v6.14-rc1
-> - Merge patch 1/16 from v3 into cxl/next ahead. (Jonathan)
-> - Move everything to core/features.c and behind CONFIG_CXL_FEATURES. (Dan)
-> - Split the registration of features into 2 parts. Do the registration in
->   PCI probe. One before memdev enumeration to enable kernel feature support,
->   and one after memdev enumeration to support FWCTL. (Dan)
-> - Fix incrememt of pointer after copying feature data. (Ming)
-> - Add check for no immediate change effect and no reset change effects. (Dan, Jonathan)
-> - Remove IDs and use opcodes directly. (Dan)
-> - See individual patches for detailed changes from v3.
-> 
-> v3:
-> - Rearrange code and shift code forward to reduce diffs. (Jonathan)
-> - Use struct_size() in appropriate locations. (Jonathan)
-> - Remove usage of __weak and refactor accordingly. (Jason)
-> - Return NULL for allocation functions. (Jonathan)
-> - See individual patches for detailed changes from v2.
-> 
-> v2:
-> - Drop features device and driver. Move features enabling to cxl_memdev. (Dan)
-> - Drop sysfs attribute of number of features. (Dan)
-> - Drop moving of include/uapi/linux/cxl_mem.h. (Dan)
-> - Set get driver info ioctl to return reserved 32bit. Set behavior of issue
->   ioctl successful as indicating Feature commands supported.
-> - Set 'Set Feature Size' to 0 for kernel exclusive Features.
-> - See individual patches for detailed changes from v1.
-> - Hide FWCTL bits behind CONFIG_CXL_FWCTL. (Dan)
-> 
-> v1:
-> - Create a CXL features driver to handle all feature command related bits
->   including FWCTL support. (Dan)
-> - Tested against CXL CLI unit tests for FWCTL.
-> - See individual patches for detailed changes from RFC v2.
-> 
-> RFC v2:
-> - Dropped 1/13 and 2/13 from previous version. Merged upstream already.
-> - Combined changes from Shiju for "get supported features"
-> - Addressed comments from Jonathan and Jason
-> - See specific changes in individual patch revision history
-> - Added hardware command info to FWCTL
-> - Added filtering to set feature command
-> - Added documentation
-> 
-> This series add support for CXL feature commands using the FWCTL framework [1].
-> The code has been tested with CXL CLI unit tests for FWCTL.
-> 
-> Patches 1-6 are shared with EDAC series [1] and there will be an immutable branch
-> once accepted post review.
-> 
-> CXL Features support is added behind the CXL mem driver. The 3 mailbox commands
-> "Get Supported Features", "Get Feature", and "Set Feature" are implemented. The
-> "Get" commands are under the FWCTL_RPC_CONFIGURATION policy, the "Set" command
-> checks the policy depending on the set effects of the feature defined by the
-> device via the Feature set effects field. All mailbox commands for CXL provides
-> an effects table that describes the effects of a command when performed on the
-> device.  For CXL features, there is also an effects field that describes the
-> effects a feature set operation has on the device per feature. The security
-> policy is checked against this feature specific effects field. 
-> 
-> The code is based off of v4 of FWCTL series [2] posted by Jason and rebased on top of
-> v6.14-rc1 plus 1 patch in
-> cxl/next 43ca2463df9d ("cxl: Refactor user ioctl command path from mds to mailbox").
-> A kernel branch [3] is provided for convience of testing and review.
-> 
-> [1]: https://lore.kernel.org/linux-cxl/20250106121017.1620-1-shiju.jose@huawei.com/T/#t
-> [2]: https://lore.kernel.org/linux-cxl/0-v3-960f17f90f17+516-fwctl_jgg@nvidia.com/#r
-> [3]: https://git.kernel.org/pub/scm/linux/kernel/git/djiang/linux.git/log/?h=cxl/fwctl
-> 
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 > ---
-> Dave Jiang (12):
->       cxl: Enumerate feature commands
->       cxl: Add Get Supported Features command for kernel usage
->       cxl/test: Add Get Supported Features mailbox command support
->       cxl: Setup exclusive CXL features that are reserved for the kernel
->       cxl: Add FWCTL support to CXL
->       cxl: Move cxl feature command structs to user header
->       cxl: Add support for fwctl RPC command to enable CXL feature commands
->       cxl: Add support to handle user feature commands for get feature
->       cxl: Add support to handle user feature commands for set feature
->       cxl/test: Add Get Feature support to cxl_test
->       cxl/test: Add Set Feature support to cxl_test
->       fwctl/cxl: Add documentation to FWCTL CXL
+> v4:
+> - Add adjustment for cxl_dpa_to_hpa() (Alison)
+> - Add check of adjusted region start against CFMWS. (Alison)
+> - Update dev_warn() to be more precise. (Alison)
+> ---
+>  drivers/acpi/numa/hmat.c  | 39 +++++++++++++++++++
+>  drivers/cxl/core/Makefile |  1 +
+>  drivers/cxl/core/acpi.c   | 11 ++++++
+>  drivers/cxl/core/core.h   |  3 ++
+>  drivers/cxl/core/region.c | 80 ++++++++++++++++++++++++++++++++++++---
+>  drivers/cxl/cxl.h         |  2 +
+>  include/linux/acpi.h      | 11 ++++++
+>  tools/testing/cxl/Kbuild  |  1 +
+>  8 files changed, 143 insertions(+), 5 deletions(-)
+>  create mode 100644 drivers/cxl/core/acpi.c
 > 
-> Shiju Jose (2):
->       cxl/mbox: Add GET_FEATURE mailbox command
->       cxl/mbox: Add SET_FEATURE mailbox command
-> 
->  Documentation/userspace-api/fwctl/fwctl-cxl.rst | 144 +++++++++
->  Documentation/userspace-api/fwctl/index.rst     |   1 +
->  MAINTAINERS                                     |   1 +
->  drivers/cxl/Kconfig                             |  12 +
->  drivers/cxl/core/Makefile                       |   1 +
->  drivers/cxl/core/core.h                         |  11 +
->  drivers/cxl/core/features.c                     | 710 ++++++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/core/mbox.c                         |  36 ++-
->  drivers/cxl/cxlmem.h                            |   7 +
->  drivers/cxl/pci.c                               |   8 +
->  include/cxl/features.h                          |  91 ++++++
->  include/cxl/mailbox.h                           |   3 +
->  include/uapi/cxl/features.h                     | 128 ++++++++
->  include/uapi/fwctl/cxl.h                        |  55 ++++
->  include/uapi/fwctl/fwctl.h                      |   1 +
->  tools/testing/cxl/Kbuild                        |   1 +
->  tools/testing/cxl/test/mem.c                    | 185 ++++++++++++
->  17 files changed, 1394 insertions(+), 1 deletion(-)
-> 
+> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+> index 2630511937f5..9d9052258e92 100644
+> --- a/drivers/acpi/numa/hmat.c
+> +++ b/drivers/acpi/numa/hmat.c
+> @@ -108,6 +108,45 @@ static struct memory_target *find_mem_target(unsigned int mem_pxm)
+>  	return NULL;
+>  }
+>  
+> +/**
+> + * hmat_get_extended_linear_cache_size - Retrieve the extended linear cache size
+> + * @backing_res: resource from the backing media
+> + * @nid: node id for the memory region
+> + * @cache_size: (Output) size of extended linear cache.
+> + *
+> + * Return: 0 on success. Errno on failure.
+> + *
+> + */
+> +int hmat_get_extended_linear_cache_size(struct resource *backing_res, int nid,
+> +					resource_size_t *cache_size)
+> +{
+> +	unsigned int pxm = node_to_pxm(nid);
+> +	struct memory_target *target;
+> +	struct target_cache *tcache;
+> +	struct resource *res;
+> +
+> +	target = find_mem_target(pxm);
+> +	if (!target)
+> +		return -ENOENT;
 
+Remember this -ENOENT 
+
+> +
+> +	list_for_each_entry(tcache, &target->caches, node) {
+> +		if (tcache->cache_attrs.address_mode !=
+> +				NODE_CACHE_ADDR_MODE_EXTENDED_LINEAR)
+> +			continue;
+> +
+> +		res = &target->memregions;
+> +		if (!resource_contains(res, backing_res))
+> +			continue;
+> +
+> +		*cache_size = tcache->cache_attrs.size;
+> +		return 0;
+> +	}
+> +
+> +	*cache_size = 0;
+> +	return 0;
+> +}
+
+snip
+
+> +static int cxl_extended_linear_cache_resize(struct cxl_region *cxlr,
+> +					    struct resource *res)
+> +{
+> +	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
+> +	struct cxl_region_params *p = &cxlr->params;
+> +	int nid = phys_to_target_node(res->start);
+> +	resource_size_t size, cache_size, start;
+> +	int rc;
+> +
+> +	size = resource_size(res);
+> +	if (!size)
+> +		return -EINVAL;
+> +
+> +	rc = cxl_acpi_get_extended_linear_cache_size(res, nid, &cache_size);
+> +	if (rc)
+> +		return rc;
+
+Remember this - passing thru the -ENOENT
+
+
+> +
+> +	if (!cache_size)
+> +		return 0;
+> +
+> +	if (size != cache_size) {
+> +		dev_warn(&cxlr->dev, "Extended Linear Cache is not 1:1, unsupported!");
+
+maybe emit the numbers, so in the next step we know what the mismatch was,
+and how much cache goes unused.
+
+> +		return -EOPNOTSUPP;
+
+EOPNOTSUPP is only other possible rc
+
+
+> +	}
+> +
+> +	/*
+> +	 * Move the start of the range to where the cache range starts. The
+> +	 * implementation assumes that the cache range is in front of the
+> +	 * CXL range. This is not dictated by the HMAT spec but is how the
+> +	 * current known implementation is configured.
+> +	 *
+> +	 * The cache range is expected to be within the CFMWS. The adjusted
+> +	 * res->start should not be less than cxlrd->res->start.
+> +	 */
+> +	start = res->start - cache_size;
+> +	if (start < cxlrd->res->start)
+> +		return -ENXIO;
+> +
+> +	res->start = start;
+> +	p->cache_size = cache_size;
+> +
+> +	return 0;
+> +}
+> +
+>  /* Establish an empty region covering the given HPA range */
+>  static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+>  					   struct cxl_endpoint_decoder *cxled)
+> @@ -3270,6 +3328,18 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+>  
+>  	*res = DEFINE_RES_MEM_NAMED(hpa->start, range_len(hpa),
+>  				    dev_name(&cxlr->dev));
+> +
+> +	rc = cxl_extended_linear_cache_resize(cxlr, res);
+> +	if (rc) {
+> +		/*
+> +		 * Failing to support extended linear cache region resize does not
+> +		 * prevent the region from functioning. Only causes cxl list showing
+> +		 * incorrect region size.
+> +		 */
+> +		dev_warn(cxlmd->dev.parent,
+> +			 "Extended linear cache calculation failed.\n");
+> +	}
+> +
+
+Do you want to handle ENOENT same as EOPNOTSUPP?
+Include rc in error message. 
+
+I'm still confused about this message and the state behind it.
+
+Is this saying the region functions but only at it's lesser cxl resource
+size, or is it saying the region functions at its extended size?
+
+Is there any 'thanks for the cache but we cannot use it' type
+response to acpi. Wondering if it can be reclaimed.
+
+
+snip
