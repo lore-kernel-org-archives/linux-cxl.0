@@ -1,43 +1,50 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC8026A1BD;
-	Tue, 25 Feb 2025 14:12:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740492739; cv=pass; b=AGrzLOmLuR76A0N2uLn1vHP3hBfjyo5mCvU/05o7EqSECw8ueGEooATXaoURpbHxNvSHXqNLOCcKGnhG7ddd4gcIxE53yHz/MoP8j7AV/3oI5dB/bH5AzTWY07onchz4EHbrLf+znQuKdaILHM23eEc/7ntTEwB+IxPJXBeyzew=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740492739; c=relaxed/simple;
-	bh=RXETdaJQjGckWcQ+1o+Stl2ijbxP5K69YX/we00DGkU=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 059B0156960
+	for <linux-cxl@vger.kernel.org>; Tue, 25 Feb 2025 15:41:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740498118; cv=none; b=h6XkS9BaUttvihOEIDMq+VpBeS6tfSVHDBnjXrM1ME2X+4mv80nmlvFy7SH6GAAPHzE0DElrjn2M5PP4z/pIMmljrC377OD2Invgv8BRpmHDUylu9RZ04gS1IvDpkSy/SuEJgGZ45x1voqwh2Io9VJcHE38yXpHMgtl7UuxNZg0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740498118; c=relaxed/simple;
+	bh=Oy5T1WomdJknb/G6FK/XgwG8gFLlpKt5VcZGwRq14VE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HOMKioij4/nrZraDtHCFt3j2a9Dh6CA5+iOGS5Iu0JbzTDyEGIvIsNySdDLCI4BNaM7Z7Y1ovQhf0MR6E2gZP44mdSi72U3mPx/QH8omZMxGpQ6rsh2UAqyCoYdDfRezbOM1URS8vXFPBVFctEe1pNBYJWaCawIaEeFo2Kp3/eo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=fKodRmYR; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	 In-Reply-To:Content-Type; b=LkdM2gsLNb4jbmyrwjT2XCB6PdN51Sii8fY7Zayga/3MyhWZuQXOfmuDp9lv6DSvgPpGLF6lO55zL6jUJ1VD33/5l8uI3Kw+nh7j97PdrKBYFl59XEqpWedtMO/4dM8y4H0bKS6JSFYx+FOwJlGqSjO9s/ZrfcLMSR0YlGUMi6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pkfj0KzW; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="fKodRmYR"
-ARC-Seal: i=1; a=rsa-sha256; t=1740492713; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=OZndYgqANuZNXF7T/VvyVfBujsjkZhUos3I3aNMnIYUz7Vgt4THWUGzb7ZudTFTXw+whuW/d8/YYt9Ejst6+RMOYyfTgUP8to9bWJSDkGoAZL2LU9zJjZXZCXLDO4EWiL006GM0Qmzm0UMlphRBMrbIw5rCUx1GTKYugQbqh/VI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740492713; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=1XvaMRD+vkbBUUclMyHLmtvPUEgmRspiAu6Im4VAnGo=; 
-	b=HwKrT3Mfv9/vtAXUTm1XWkGx3cn9RskfWSbDHhuBb9P8JDx6uv3NYPJnVckKC7IqhRXi1GHYeryFF0rvYKTz2+hcMQdRx1Iwl3VwJuouoePQ1aToccUyyaMOK+oinO1wVX9fHv03mBdHng6PQXtONrGr/RzesNSxxIwiSRrrdSw=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740492713;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=1XvaMRD+vkbBUUclMyHLmtvPUEgmRspiAu6Im4VAnGo=;
-	b=fKodRmYR2GoD1iw7GI9RYwccKQu8u5a0HiX7nO+L9qH9j9vsjFIp5LSPrQ/o9IGW
-	bapa05YDEkV4Uy5Hmo+ld0d/IrpbJMIiVsbfcYeT3jtl1AACwqnux5DnKClLycz32b4
-	ysSLvk6hYaTBDFGqIWbePci9BiGSxRl7RxYZ9ec4=
-Received: by mx.zohomail.com with SMTPS id 1740492710136779.3645926287403;
-	Tue, 25 Feb 2025 06:11:50 -0800 (PST)
-Message-ID: <3bff8405-d970-4e2d-b630-e84ed702359b@zohomail.com>
-Date: Tue, 25 Feb 2025 22:11:44 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pkfj0KzW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740498117; x=1772034117;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Oy5T1WomdJknb/G6FK/XgwG8gFLlpKt5VcZGwRq14VE=;
+  b=Pkfj0KzWIp4VMQaIbS/5RtM//K6S10NI6/Ftr4C0zeZsEEXaNpXF4NhQ
+   SjjxDn4vFuuk8wH+KcpenAe8x0Nseufejc/GUeQFn2IkYnn1C120R3Zuk
+   IKybjNAHLih+HyAg7EvjKAKU55TUqkfoWBvYTVKWCFL0r854Unh31b34T
+   gIAve0Kiwy/L7qzefvpo4WbvQ6aWA7hGspp1bFqDijriWPUgE1dTkElt0
+   A4KU2DCDj4B7A+VWUedefGuBm32zEbpD4oeVxbKQpQ3JaWD67R2gTpiWc
+   rL4FnlOXUyFSbiIYzLMuD9VkSLdgK5fJYz6FGY2IRAgGTjdQkFKK8G/uZ
+   g==;
+X-CSE-ConnectionGUID: oy7NnhjDRL6fWwjS2REFHQ==
+X-CSE-MsgGUID: gPq1xq57Tge47dURW4YQPQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="51523731"
+X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
+   d="scan'208";a="51523731"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 07:41:56 -0800
+X-CSE-ConnectionGUID: O4gljl6mToeVOfF3dzkfQg==
+X-CSE-MsgGUID: /rXfqrTNQ0CKDmlOvJyxUA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="116270529"
+Received: from puneetse-mobl.amr.corp.intel.com (HELO [10.125.111.168]) ([10.125.111.168])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 07:41:56 -0800
+Message-ID: <648bd488-a93f-4e6a-93cc-cc1841bebfc0@intel.com>
+Date: Tue, 25 Feb 2025 08:41:54 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -45,45 +52,124 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/4] cxl: Add mce notifier to emit aliased address for
- extended linear cache
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: rafael@kernel.org, bp@alien8.de, dan.j.williams@intel.com,
- tony.luck@intel.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
- alison.schofield@intel.com, ira.weiny@intel.com, linux-cxl@vger.kernel.org,
- linux-acpi@vger.kernel.org
-References: <20250224182202.1683380-1-dave.jiang@intel.com>
- <20250224182202.1683380-5-dave.jiang@intel.com>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <20250224182202.1683380-5-dave.jiang@intel.com>
+Subject: Re: [PATCH] cxl/region: Allow 6 & 12 way regions on 3-way HB
+ interleaves
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+References: <20250224235817.2259508-1-alison.schofield@intel.com>
+ <010e16c3-0f90-41b0-8939-4cc8cb26de7a@intel.com>
+ <Z70qiCzzusQ6XXhd@aschofie-mobl2.lan>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <Z70qiCzzusQ6XXhd@aschofie-mobl2.lan>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Feedback-ID: rr080112275ff5750f318b3d3c2e788d950000123141e005eaff449cbb22841913dd2b41aa0af807b4821069:zu0801122771f162b56dfe2b2b3e0c8fe100008c3dfec84d01d18911d744c495d857ca5f40d3951bc33088f6:rf0801122da69ae5d3e46b87eb2855ac9200009941810445eb6814c1e3853d582e3504c03a8e28d4a56900627f60dcd44463:ZohoMail
-X-ZohoMailClient: External
 
-On 2/25/2025 2:21 AM, Dave Jiang wrote:
-> Below is a setup with extended linear cache configuration with an example
-> layout of memory region shown below presented as a single memory region
-> consists of 256G memory where there's 128G of DRAM and 128G of CXL memory.
-> The kernel sees a region of total 256G of system memory.
->
->               128G DRAM                          128G CXL memory
-> |-----------------------------------|-------------------------------------|
->
-> Data resides in either DRAM or far memory (FM) with no replication. Hot
-> data is swapped into DRAM by the hardware behind the scenes. When error is
-> detected in one location, it is possible that error also resides in the
-> aliased location. Therefore when a memory location that is flagged by MCE
-> is part of the special region, the aliased memory location needs to be
-> offlined as well.
->
-> Add an mce notify callback to identify if the MCE address location is part
-> of an extended linear cache region and handle accordingly.
->
-> Added symbol export to set_mce_nospec() in x86 code in order to call
-> set_mce_nospec() from the CXL MCE notify callback.
->
-> Link: https://lore.kernel.org/linux-cxl/668333b17e4b2_5639294fd@dwillia2-xfh.jf.intel.com.notmuch/
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Li Ming <ming.li@zohomail.com>
+
+
+On 2/24/25 7:27 PM, Alison Schofield wrote:
+> On Mon, Feb 24, 2025 at 05:41:20PM -0700, Dave Jiang wrote:
+>>
+>>
+>> On 2/24/25 4:58 PM, alison.schofield@intel.com wrote:
+>>> From: Alison Schofield <alison.schofield@intel.com>
+>>>
+>>> The CXL driver requires the granularity of a region and it's root
+>>
+>> s/it's/its/
+> 
+> got it
+> 
+>>
+>>> decoder to be the same. This is particularly restrictive for 3-way
+>>> host bridge interleaves where the only spec defined interleave
+>>> configurations for creating 6-way and 12-way regions on a 3-way HB
+>> configuration?
+>>> interleave require mixed granularities.
+>> requries?
+> 
+> considering that 
+> 
+>>
+>>>
+>>> CXL 3.1 Specification 9.13.1.1:
+>>
+>> May as well go to 3.2
+>>
+> 
+> got it
+> 
+> 
+>>> Legal Interleaving Configurations: 12-way, 6-way, and 3-way
+>>>
+>>> Adding support for these new interleaves touches these areas:
+>>>
+>>> 1) User created regions employing "cxl create-region" fail when the
+>>> ndctl tool gets a mixed granularity request. That is addressed in
+>> s/ndctl/CXL CLI/
+>>
+> 
+> got it
+> 
+> 
+>>> a patch to the ndctl tool.
+>>>
+> 
+> snip
+> 
+>>>  
+>>> +static bool interleave_granularity_allow(struct cxl_decoder *cxld, u16 ig)
+>>> +{
+>>> +	/*
+>>> +	 * When the host-bridge is interleaved, disallow region granularity
+>>> +	 * != root granularity with the exception of 3-way HB interleaves.
+>>> +	 * Allow the CXL Spec defined 3-way HB interleaves that can only be
+>>> +	 * configured when host-bridge interleave is greater that the
+>>> +	 * region interleave. (CXL 3.1 Specification 9.13.1.1)
+>> spec 3.2
+>>
+>>> +	 * Allow 2+2+2 interleave where HB gran is 2 * region granularity
+>>> +	 *	 4+4+4 interleave where HB gran is 4 * region granularity
+>>> +	 *
+>>> +	 * Regions with a granularity greater than the root interleave result
+>>> +	 * in invalid DPA translations (invalid to support).
+>>> +	 */
+>>> +	if (cxld->interleave_ways > 1 && ig != cxld->interleave_granularity) {
+>>> +		if (cxld->interleave_ways != 3)
+>>> +			return false;
+>>> +
+>>> +		if (cxld->interleave_granularity % (2 * ig) &&
+>>> +		    cxld->interleave_granularity % (4 * ig))
+>>> +			return false;
+>>
+>> Can you please explain how the math works here? I'm not understanding the code here vs the comments above.
+> 
+> I'm guessing you are talking about the last chunk only. We get there
+> after discovering a 3-way HB interleave. (HB interleave and root decoder
+> interleave are the same thing.) Once we know it's a 3-way, there are
+> only 2 possible values and those are defined in the spec as:
+> 	2+2+2 interleave where HB gran is 2 * region granularity
+> 	4+4+4 interleave where HB gran is 4 * region granularity
+> 
+> And now that I've gotten to this part of the explanation I think
+> the code is allowing multiples of 2*ig and 4*ig, when it should
+> be a stricter check for exactly 2*ig or 4*ig.
+> 
+> updating that to:
+> 	if (cxld->interleave_granularity != 2 * ig &&
+> 	    cxld->interleave_granularity != 4 * ig)
+> 		return false;
+> 
+
+Ok the new code make sense to me now. :) 
+
+> Thanks for that Dave!
+>>
+>> DJ
+>>
+> 
+> snip
+
