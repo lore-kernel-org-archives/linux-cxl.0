@@ -1,60 +1,60 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CE2B20DD79;
-	Tue, 25 Feb 2025 20:11:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD1B21019A;
+	Tue, 25 Feb 2025 20:34:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740514273; cv=none; b=YtxRPbh11PiuAHLuzDMjJ3VYPQOPqYzI2E/lSXmP438AH2AfwkjdChEBbvCQt4yL90HLEUNnlvcOj2nGIflQMt6nhObJOWi8lGP8UCYVZF4dmCZu0qYnKNBxMi2c5VBG4AJF8gyxFja6VzJOw3/8J3DCia099QhkId43nFNjbR0=
+	t=1740515648; cv=none; b=gLKnI65BvQ4wuFGH4aXtAMRevC5U1zABwSxNqnIVRi9h5n5FAI5C1PT12MxnumJe87ZxxjxqED0H1kd9ABENGl1qFGCYavNyyBPIUmUicI/vqnxCWj+21/rPf2q2LgNVMc/12QEBpF3I6Hx2Ej5CeNe1YmenPRvamLlYQFDjFCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740514273; c=relaxed/simple;
-	bh=DdDqk2Z2Hrl4FOy6YQnAYyODnlggw7XDfQs4VFw/ZyY=;
+	s=arc-20240116; t=1740515648; c=relaxed/simple;
+	bh=8dfBXFcm2KXc+38ebzZPgXW5cc2mMwtUf+GAA5/SQCs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gtECf/Y4/mu1m+yr73+Tv3JHBMOFsjBCcKhcKk5QWa2K+T0p/1jdXrZTYSMh6cSPFn0GfjP/Dw+1z9wZHsZnEC2dQZpwipwZYTpWv4duWeCFQBeRy+RttAAdSt6x1j1KNH/E1Z5WtRnSpQGayr+HP9rCQ79PRN3qDEmt3el6JcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e4xgsujB; arc=none smtp.client-ip=192.198.163.9
+	 Content-Type:Content-Disposition:In-Reply-To; b=YTorgEY9q8U9ltSZlMDhgFbxvA20u7fKNyRnssh7KpJYENLTKH9vaSBUAZKDl5srRM/Fk6rBDjekVqPbewyWBej+tRIXTW4zeFiTOtRLU+kBbhYGRxK+2Mv7vyZ3MuoTDOSXsLfSR0IypImsOn2crLlxGIXOcZHioqdICcnXxxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Yg8Wadpe; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e4xgsujB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Yg8Wadpe"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740514272; x=1772050272;
+  t=1740515646; x=1772051646;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=DdDqk2Z2Hrl4FOy6YQnAYyODnlggw7XDfQs4VFw/ZyY=;
-  b=e4xgsujBDOHgy1u1+NZkPlqHks0QshmPTG7El9PZJQCam5YwHLeiEZDf
-   kwWqF2fI+siKpw4gwpt7cQINdTlZjnPkXkrhpc1y3zq/Zx5Ex+noZPSM8
-   wVjs6kYHeGF7h9y46MJMGnho7ODrlIhMTmDd9dTOxq4bfo8V4dlk0paKk
-   +fnvFZkUWjfIK1fShbppopVPy/UxvQwHjBt5KcR6VKckd1OeEkBQF6MNN
-   LVZ2LZQyC86ZBHtttOyfb9YVqYStQ8n+qP6el5aEW3KOHpE4bLk/jler3
-   LgJVSKY0huF/vQqSEDCitGPbuaXXbe46cuR3zbJTwkgpp52lC6es09JIC
-   w==;
-X-CSE-ConnectionGUID: 3grGumGjSoOaHcfb+tObvQ==
-X-CSE-MsgGUID: gzXGkVLPTvy5+W9Xk3JugQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="51977375"
+  bh=8dfBXFcm2KXc+38ebzZPgXW5cc2mMwtUf+GAA5/SQCs=;
+  b=Yg8WadpeMBDJRp6bNv1X/LhA9jVA+4ozO2kUyz6yzq1f5MZLnCg2afIj
+   QanK3NB7Bifyym8IbhMYkRdb7iWlTwyX39b0S4KAYg1/ArwGEpFf4zXmK
+   ISNZQSTJBRgl6I+fUQH1P0OLKVy9FbtjBbz17UwagwB5oH5URROJSz4Zj
+   x9Is6QQ4EfII3ICMTrQuzr00jjEYvQ7iHn5aAiln5atzsBIOSNDNFYUjk
+   Gzt+qoOrGVkq1EcNwQBWWGz4rrd56HRNGOgcayQoc4EEiY8uuOWzDbvbU
+   qzWl3GhxO/zyWjjuK7kiLCK2NWFSs93rQzUNB265SinmxG07g7D99Ki94
+   g==;
+X-CSE-ConnectionGUID: geG8jLD4S9mbfPeYDUPQgA==
+X-CSE-MsgGUID: KxLfY4EpTCay0EVx3hLRfA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="41470384"
 X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
-   d="scan'208";a="51977375"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 12:11:11 -0800
-X-CSE-ConnectionGUID: oTi7FKmqTHS6RNkcKn4SeA==
-X-CSE-MsgGUID: 5O33ic4hTDSdchjwE1AALw==
+   d="scan'208";a="41470384"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 12:34:05 -0800
+X-CSE-ConnectionGUID: W3lKAR7/T8CiLK0rPVRKtQ==
+X-CSE-MsgGUID: hjM7KtZfROK2aRmC3f4wKA==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
-   d="scan'208";a="121576450"
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="116990410"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.111.175])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 12:11:11 -0800
-Date: Tue, 25 Feb 2025 12:11:09 -0800
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 12:34:06 -0800
+Date: Tue, 25 Feb 2025 12:34:03 -0800
 From: Alison Schofield <alison.schofield@intel.com>
 To: Dave Jiang <dave.jiang@intel.com>
 Cc: linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
 	rafael@kernel.org, bp@alien8.de, dan.j.williams@intel.com,
 	tony.luck@intel.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
 	ira.weiny@intel.com, ming.li@zohomail.com
-Subject: Re: [PATCH v4 2/4] acpi/hmat / cxl: Add extended linear cache
- support for CXL
-Message-ID: <Z74j3U_60B2YEDQS@aschofie-mobl2.lan>
+Subject: Re: [PATCH v4 3/4] cxl: Add extended linear cache address alias
+ emission for cxl events
+Message-ID: <Z74pO6m10psBdJns@aschofie-mobl2.lan>
 References: <20250224182202.1683380-1-dave.jiang@intel.com>
- <20250224182202.1683380-3-dave.jiang@intel.com>
+ <20250224182202.1683380-4-dave.jiang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -63,42 +63,104 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250224182202.1683380-3-dave.jiang@intel.com>
+In-Reply-To: <20250224182202.1683380-4-dave.jiang@intel.com>
 
-On Mon, Feb 24, 2025 at 11:21:00AM -0700, Dave Jiang wrote:
+On Mon, Feb 24, 2025 at 11:21:01AM -0700, Dave Jiang wrote:
+> Add the aliased address of extended linear cache when emitting event
+> trace for DRAM and general media of CXL events.
 
-snip to a dev_dbg message of interest -
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index e8d11a988fd9..cd7b0c31ebf7 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
+What about cxl_poison trace events?
 
-snip
-> @@ -1951,7 +1965,7 @@ static int cxl_region_attach(struct cxl_region *cxlr,
->  		return -ENXIO;
+When cxl device poison lists are read, or poison is injected
+or cleared, an HPA is included in the trace event. Seems the
+hpa_alias0 belong there too. 
+
+
+> 
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+> v4:
+> - Make error using ULLONG_MAX consistently. (Alison)
+> - Make hpa_alias0 naming consistent. (Alison)
+> - Swap incorrect position of hpa and hpa_alias0. (Alison)
+> ---
+>  drivers/cxl/core/mbox.c  | 28 ++++++++++++++++++++++++----
+>  drivers/cxl/core/trace.h | 22 ++++++++++++++--------
+>  2 files changed, 38 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index 548564c770c0..808b6a3c577b 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -856,6 +856,23 @@ int cxl_enumerate_cmds(struct cxl_memdev_state *mds)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_enumerate_cmds, "CXL");
+>  
+> +static u64 cxlr_hpa_cache_alias(struct cxl_region *cxlr, u64 hpa)
+> +{
+> +	struct cxl_region_params *p;
+> +
+> +	if (!cxlr)
+> +		return ULLONG_MAX;
+
+checked cxlr in caller
+
+> +
+> +	p = &cxlr->params;
+> +	if (!p->cache_size)
+> +		return ULLONG_MAX;
+> +
+> +	if (hpa >= p->res->start + p->cache_size)
+> +		return hpa - p->cache_size;
+> +
+> +	return hpa + p->cache_size;
+
+Since a DPA can only be in the cxl resource half of the p->res, not in
+the extended cache, is alias always hpa - cache.
+
+
+>  void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+>  			    enum cxl_event_log_type type,
+>  			    enum cxl_event_type event_type,
+> @@ -871,7 +888,7 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
 >  	}
 >  
-> -	if (resource_size(cxled->dpa_res) * p->interleave_ways !=
-> +	if (resource_size(cxled->dpa_res) * p->interleave_ways + p->cache_size !=
->  	    resource_size(p->res)) {
->  		dev_dbg(&cxlr->dev,
->  			"%s:%s: decoder-size-%#llx * ways-%d != region-size-%#llx\n",
+>  	if (trace_cxl_general_media_enabled() || trace_cxl_dram_enabled()) {
+> -		u64 dpa, hpa = ULLONG_MAX;
+> +		u64 dpa, hpa = ULLONG_MAX, hpa_alias = ULLONG_MAX;
+>  		struct cxl_region *cxlr;
+>  
+>  		/*
+> @@ -884,14 +901,17 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+>  
+>  		dpa = le64_to_cpu(evt->media_hdr.phys_addr) & CXL_DPA_MASK;
+>  		cxlr = cxl_dpa_to_region(cxlmd, dpa);
+> -		if (cxlr)
+> +		if (cxlr) {
+>  			hpa = cxl_dpa_to_hpa(cxlr, cxlmd, dpa);
+> +			hpa_alias = cxlr_hpa_cache_alias(cxlr, hpa);
+> +		}
+>  
 
-Add cache to this message since used in calculation above.
-Took the liberty of trimming 'decoder-size' to '-size' since the decoder name
-already precedes '-size'.
-
-
-
- 		dev_dbg(&cxlr->dev,
--			"%s:%s: decoder-size-%#llx * ways-%d != region-size-%#llx\n",
-+			"%s:%s-size-%#llx * ways-%d + cache-%#llx != region-size-%#llx\n",
- 			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
- 			(u64)resource_size(cxled->dpa_res), p->interleave_ways,
--			(u64)resource_size(p->res));
-+			(u64)p->cache_size, (u64)resource_size(p->res));
- 		return -EINVAL;
- 	}
+How about something like this to eliminate cxlr_hpa_cache_alias():
  
+ 	if (trace_cxl_general_media_enabled() || trace_cxl_dram_enabled()) {
+-		u64 dpa, hpa = ULLONG_MAX, hpa_alias = ULLONG_MAX;
++		u64 dpa, cache_size, hpa = ULLONG_MAX, hpa_alias = ULLONG_MAX;
+ 		struct cxl_region *cxlr;
+ 
+ 		/*
+@@ -904,7 +887,9 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+ 		cxlr = cxl_dpa_to_region(cxlmd, dpa);
+ 		if (cxlr) {
+ 			hpa = cxl_dpa_to_hpa(cxlr, cxlmd, dpa);
+-			hpa_alias = cxlr_hpa_cache_alias(cxlr, hpa);
++			cache_size = cxlr->params.cache_size;
++			if (cache_size)
++				hpa_alias = hpa - cache_size;
+ 		}
+
 
 snip
+
