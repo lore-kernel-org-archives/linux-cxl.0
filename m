@@ -1,219 +1,245 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC03A214206
-	for <linux-cxl@vger.kernel.org>; Wed, 26 Feb 2025 11:56:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6354D224884;
+	Wed, 26 Feb 2025 15:14:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740570994; cv=none; b=nQEHGocQuMT3+rvDQWrZ9Vu4dOTEDm4bQuOdsmtX28kaFdV28o1xdPcYgSOMTp00sJZsbq4ffnCp6BoKalF/VmL53fZ6B5YIRzfzhfmENvb4Mgbh+ZqHQ5UOpfV8gYR90FBgnT1zp6kBIuhp2pv+7OMqCPXB9W1aH+XD0BciTn4=
+	t=1740582879; cv=none; b=o6H+oFCFS1MkwrVRC55AsrkbRlxBUNx3haHw1ZyNKXKfnrFyxA5X1+6tKHnvoX902ehqaYRIPkWnCB6YpN1sio2CHov9cl0E74DskBMKdWv3cPOZm6wJJDvCnkVSvFqFOVdHUjfuOfVFRPxGdgyWyq8oO5QPopO1vIMitZe2p+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740570994; c=relaxed/simple;
-	bh=Brz56oZqMewT+LQ8AAC9e5nWkTkjBHEF5BMz6o5THSk=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=kkD4s/DzDjvYGdzc922qfbf2ki9n0Lw4wiuRnjfZyj+T8LksPCLv7lVdX49ptoST/NhbgoAuNY2vbEYAz+KYIKd9Zx/GD7V5ks08uDvazS7D2wvfNWzoo6/lEV8+6CWh3Y8qJ3H2I1sj5XpqAwfggFKSWyd4J/vR8r3FxJmNaSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LbVbakxP; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1740582879; c=relaxed/simple;
+	bh=yyRE6mh4Xnw6o929p+0BwjDI3r6fmKQ8r+qGIXYy/c0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NcsqLEKdpwOricXZ6l96MtNYwdCZWaPZbhKDaXWoC0jgiyHC9u0em8jEsBHmieGkIiFYKk4sZlRiBuxia9it+7u8owwjr+pgg1lFMdomYqKp+D0XsUdQ1qyqXiaRtigMiu3UIUkUVunJfTAy9hato9zvifj4gxb93IAbHThyKQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TG8E7+GN; arc=none smtp.client-ip=209.85.210.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LbVbakxP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740570993; x=1772106993;
-  h=date:from:to:cc:subject:message-id;
-  bh=Brz56oZqMewT+LQ8AAC9e5nWkTkjBHEF5BMz6o5THSk=;
-  b=LbVbakxPFAmVC6W0FKZFXAS5p937SNQsvHMzJ5ACrbk6w7pqP2SwlnIv
-   qQIDdh/RRAQz97ZUwg085R/+kFyTeVyUTOKCe8Rmkdjh78bRI+pyxW1gk
-   v6RTwp1QR6Tx4t9Jc6Ytk6JLAs6QrOqzyaWlP6rfbKxCypk4BCaUqkFtt
-   OHUWpX8P+3qcGJ3+09Np/c4nYDIEveMtvfwSwUTYF8DrcMUT2txpXFpEg
-   sBxKppnvjjs8jmanCYs05u1ESyh48dtFSdKwYPEjZqBAFtHM0hHvmsTo4
-   vjzxWIC+VRk4OPyc57ubqSGDhAahMF3+6B/GeukuikKjF8CRf7vjAtT7c
-   g==;
-X-CSE-ConnectionGUID: cuW0oZPwSHGvxv49u7nGDw==
-X-CSE-MsgGUID: qVeZ/L3hQO2Nl39OMerwfg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="29004432"
-X-IronPort-AV: E=Sophos;i="6.13,317,1732608000"; 
-   d="scan'208";a="29004432"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 03:56:32 -0800
-X-CSE-ConnectionGUID: 2bEqUAfEQ7ON1Y6m4LT4uQ==
-X-CSE-MsgGUID: GI2/lM7rReSe9CB49AXheg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,317,1732608000"; 
-   d="scan'208";a="121679166"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by orviesa004.jf.intel.com with ESMTP; 26 Feb 2025 03:56:30 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tnG1S-000BdP-1O;
-	Wed, 26 Feb 2025 11:56:23 +0000
-Date: Wed, 26 Feb 2025 19:56:02 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Subject: [cxl:next] BUILD SUCCESS
- 0f5f030697213244d627b9e26276a494472087df
-Message-ID: <202502261956.m0ixJzDX-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TG8E7+GN"
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-7272f9b4132so4599674a34.0;
+        Wed, 26 Feb 2025 07:14:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740582876; x=1741187676; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YTaqEjHKJlm5xW0aHmbRjCVb26Fl7uOxN3rlFjPKc5g=;
+        b=TG8E7+GNUK+uiiNhEYKIxdgrsjgZzyLC/IbGKqxS65xNs2GmXcO2n1J34bKRdcpImV
+         Rjn/c+lNfxTWdAaUT692pVZEi+IKWOb74ydpaTwxrcRBeaLJ5QbKvAfDpZTrKvOXzydk
+         4a9pteby1sDtRFIYLjxmNLZ4nE4MKU03rIlPYEYgiUYPCcqIxRGIdns/pl9lyGg1YfJ/
+         zgTWzst7vDjsxo4T0M9zDHiXx4mTUJDIQOcQvCFitYGC3XS7jVTXvMkCGiFzV+E6eKGs
+         8La7lgGLunRmuOuLeEG48he563NgtzwoBZ1Y91HUv2CIv7ZsjBjJe8HctwSwOt+lmE1H
+         0E9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740582876; x=1741187676;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YTaqEjHKJlm5xW0aHmbRjCVb26Fl7uOxN3rlFjPKc5g=;
+        b=iA39TCnrCiACwCL7bJcS0hXCwImiBv0HADz8F74S77CmguMaRdh0gnQeTRxtzthpVw
+         D/nf9MR7PjGmKI9Rw70u6i+KzvvvHzB8DIC1E/F5jXY0VFlOfXAveDHd1FOKnTXwzENx
+         pyDTc9cREUnbTb2/+p4iRqUXd4bPPH+VLUbEadwoWcD7eZ4M+PNaP4075SBqElVy+pUY
+         0FCaO6ynH7vfEDsxENpZcj+XeelypkupNk0CKqIH0DsX6yV9ChJu9tvpGhMKtv2eshvv
+         vuaDE7vl2mKFWjHmwHt3JIYA9GVrh+yOSHcWDcFh/JGu+QLsqHUcVSwk+xnMw9YZJr9V
+         qyUw==
+X-Forwarded-Encrypted: i=1; AJvYcCVbVZhekUcabyoKcEeqSIaib9RqttzCaqJfZpltjRnlTIfU29IR1YuzkrurZsSSp/Jv33yW/iDcnvQ=@vger.kernel.org, AJvYcCViU2O1wrCfA82o9jE01FwLT4Ss2St8nuceuD0ucsh6NyZDn0PjvWcvdIZzFQIWcoUc7wAiXESVZuDjA+79rg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyT4Qk7SfnX7JRvggKaf8NfdTj6wKK4g/R9bFwZ7x1R2VFSBjM
+	jAFbJib7Lt7CZvynB3IuJP4D3puQimp54IF5fqLhCSMcFescOypK
+X-Gm-Gg: ASbGncvbme28y3hWByUzMgX2Cs7lAjeSEVJpd2abfjo+0H3pyz3W2s7/PNiWCYPhAv7
+	g0D1KL9bB1ZY1coWecMMbUn5ZZx5lKKe43HtgJ8aMSlTtmxe8gaWFfgI4msGfGKIqZrqfsDfz/L
+	Dfj7C7sbBxUnFyquzBGgo91zqvRbU4lgv+8UkeBxuK/BG9Wq6A15L7oaGtg9GC3tD3Du7gdzZmI
+	lgs1u095cHy3CD8A7+SBBJPrguHBtq1wZeE/Yi+ONtRMetfIKBfHg3x/eb7cmYmUxzOOlUQrP9V
+	D1dGMt67w0jyzQNqlUrhWA45w5Bdsy0MQOKvUH4kNPhlUjRJThU=
+X-Google-Smtp-Source: AGHT+IFXvQvNF6xGlaCntn82YWM+O67cZSUzPNRpQyiDPwpgs4JUvvnvml+EYrg7Nml54IB99R+kcw==
+X-Received: by 2002:a05:6830:909:b0:71d:f97a:7b with SMTP id 46e09a7af769-728a522897amr2171041a34.20.1740582876222;
+        Wed, 26 Feb 2025 07:14:36 -0800 (PST)
+Received: from Borg-518.local ([2603:8080:1500:3d89:75cd:812f:f5ed:53af])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2c111286232sm885024fac.13.2025.02.26.07.14.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 07:14:35 -0800 (PST)
+Sender: John Groves <grovesaustin@gmail.com>
+Date: Wed, 26 Feb 2025 09:14:34 -0600
+From: John Groves <John@groves.net>
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: Miklos Szeredi <miklos@szeredi.hu>, 
+	Bernd Schubert <bernd.schubert@fastmail.fm>, Stefan Hajnoczi <shajnocz@redhat.com>, 
+	Josef Bacik <josef@toxicpanda.com>, Joanne Koong <joannelkoong@gmail.com>, 
+	John Groves <jgroves@micron.com>, linux-fsdevel <linux-fsdevel@vger.kernel.org>, 
+	linux-cxl@vger.kernel.org, Aravind Ramesh <arramesh@micron.com>, 
+	Ajay Joshi <ajayjoshi@micron.com>, Eishan Mirakhur <emirakhur@micron.com>
+Subject: Re: famfs port to fuse - questions
+Message-ID: <o4pw7dvbqq34dn7ui22b6vfyno6xmwxc7cisbt4w5z4bhpfqvd@tsijcoyue2ky>
+References: <20250224152535.42380-1-john@groves.net>
+ <CAOQ4uxjwn+PacrG1kWf7uki+cigDo9cWXNkg5e987r8hfKiDQw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOQ4uxjwn+PacrG1kWf7uki+cigDo9cWXNkg5e987r8hfKiDQw@mail.gmail.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-branch HEAD: 0f5f030697213244d627b9e26276a494472087df  Merge branch 'for-6.15/features' into cxl-for-next
+On 25/02/25 05:59AM, Amir Goldstein wrote:
+> Sorry for html reply... Writing from mobile
+> But wanted you to have the feedback pre RFC patch
+> 
+> On Mon, Feb 24, 2025, 4:25 PM John Groves <John@groves.net> wrote:
+> 
+> > Miklos et. al.:
+> >
+> > Here are some specific questions related to the famfs port into fuse [1][2]
+> > that I hope Miklos (and others) can give me feedback on soonish.
+> >
+> > This work is active and serious, although you haven't heard much from me
+> > recently. I'm showing a famfs poster at Usenix FAST '25 this week [3].
+> >
+> > I'm generally following the approach in [1] - in a famfs file system,
+> > LOOKUP is followed by GET_FMAP to retrieve the famfs file/dax metadata.
+> > It's tempting to merge the fmap into the LOOKUP reply, but this seems like
+> > an optimization to consider once basic function is established.
+> >
+> > Q: Do you think it makes sense to make the famfs fmap an optional,
+> >    variable sized addition to the LOOKUP response?
+> >
+> 
+> Please see two other email threads from last few days about extending
+> LOOKUP response for PASSTHROUGH to backing inode and related question on
+> io_uring and PASSTHROUGH
+> 
+> I think the answer to you question, how to best extend LOOKUP response,
+> should be bundled with the answer to the questions on those other threads.
 
-elapsed time: 1102m
+Thanks for the quick reply, Amir. I'm traveling this week with a hectic
+schedule (Usenix FAST++), so I won't get much actual work done.
 
-configs tested: 139
-configs skipped: 5
+I'll stipulate that my list-participation skills need improvement, but
+I haven't figured out which threads those are. If somebody can point me
+directly to them, you will have my gratitude.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Time frame for my initial RFC is probably still a few weeks out.
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-alpha                               defconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-13.2.0
-arc                              allyesconfig    gcc-13.2.0
-arc                                 defconfig    gcc-13.2.0
-arc                   randconfig-001-20250226    gcc-13.2.0
-arc                   randconfig-002-20250226    gcc-13.2.0
-arc                        vdk_hs38_defconfig    gcc-13.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-17
-arm                              allyesconfig    gcc-14.2.0
-arm                                 defconfig    clang-21
-arm                           h3600_defconfig    gcc-14.2.0
-arm                             pxa_defconfig    gcc-14.2.0
-arm                   randconfig-001-20250226    gcc-14.2.0
-arm                   randconfig-002-20250226    clang-21
-arm                   randconfig-003-20250226    gcc-14.2.0
-arm                   randconfig-004-20250226    gcc-14.2.0
-arm64                            allmodconfig    clang-18
-arm64                             allnoconfig    gcc-14.2.0
-arm64                               defconfig    gcc-14.2.0
-arm64                 randconfig-001-20250226    gcc-14.2.0
-arm64                 randconfig-002-20250226    gcc-14.2.0
-arm64                 randconfig-003-20250226    clang-21
-arm64                 randconfig-004-20250226    gcc-14.2.0
-csky                              allnoconfig    gcc-14.2.0
-csky                                defconfig    gcc-14.2.0
-csky                  randconfig-001-20250226    gcc-14.2.0
-csky                  randconfig-002-20250226    gcc-14.2.0
-hexagon                          allmodconfig    clang-21
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-18
-hexagon                             defconfig    clang-21
-hexagon               randconfig-001-20250226    clang-21
-hexagon               randconfig-002-20250226    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250226    gcc-12
-i386        buildonly-randconfig-002-20250226    gcc-12
-i386        buildonly-randconfig-003-20250226    gcc-12
-i386        buildonly-randconfig-004-20250226    clang-19
-i386        buildonly-randconfig-005-20250226    gcc-12
-i386        buildonly-randconfig-006-20250226    gcc-12
-i386                                defconfig    clang-19
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch                           defconfig    gcc-14.2.0
-loongarch             randconfig-001-20250226    gcc-14.2.0
-loongarch             randconfig-002-20250226    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                                defconfig    gcc-14.2.0
-m68k                       m5208evb_defconfig    gcc-14.2.0
-m68k                        m5272c3_defconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                          defconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                          ath25_defconfig    clang-16
-mips                       bmips_be_defconfig    gcc-14.2.0
-mips                      bmips_stb_defconfig    clang-18
-mips                          eyeq5_defconfig    gcc-14.2.0
-mips                          rb532_defconfig    clang-17
-nios2                             allnoconfig    gcc-14.2.0
-nios2                               defconfig    gcc-14.2.0
-nios2                 randconfig-001-20250226    gcc-14.2.0
-nios2                 randconfig-002-20250226    gcc-14.2.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-14.2.0
-parisc                randconfig-001-20250226    gcc-14.2.0
-parisc                randconfig-002-20250226    gcc-14.2.0
-parisc64                            defconfig    gcc-14.1.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-16
-powerpc                     mpc5200_defconfig    clang-21
-powerpc                      ppc6xx_defconfig    gcc-14.2.0
-powerpc               randconfig-001-20250226    gcc-14.2.0
-powerpc               randconfig-002-20250226    clang-18
-powerpc               randconfig-003-20250226    clang-21
-powerpc                     stx_gp3_defconfig    gcc-14.2.0
-powerpc64             randconfig-001-20250226    clang-18
-powerpc64             randconfig-002-20250226    gcc-14.2.0
-powerpc64             randconfig-003-20250226    gcc-14.2.0
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-21
-riscv                               defconfig    clang-19
-riscv                 randconfig-001-20250226    clang-18
-riscv                 randconfig-002-20250226    gcc-14.2.0
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-15
-s390                             allyesconfig    gcc-14.2.0
-s390                                defconfig    clang-15
-s390                  randconfig-001-20250226    gcc-14.2.0
-s390                  randconfig-002-20250226    clang-15
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                                  defconfig    gcc-14.2.0
-sh                    randconfig-001-20250226    gcc-14.2.0
-sh                    randconfig-002-20250226    gcc-14.2.0
-sh                          rsk7269_defconfig    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250226    gcc-14.2.0
-sparc                 randconfig-002-20250226    gcc-14.2.0
-sparc64                             defconfig    gcc-14.2.0
-sparc64               randconfig-001-20250226    gcc-14.2.0
-sparc64               randconfig-002-20250226    gcc-14.2.0
-um                               allmodconfig    clang-21
-um                                allnoconfig    clang-18
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-21
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250226    clang-18
-um                    randconfig-002-20250226    gcc-12
-um                           x86_64_defconfig    clang-15
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20250226    clang-19
-x86_64      buildonly-randconfig-002-20250226    clang-19
-x86_64      buildonly-randconfig-003-20250226    gcc-12
-x86_64      buildonly-randconfig-004-20250226    clang-19
-x86_64      buildonly-randconfig-005-20250226    gcc-12
-x86_64      buildonly-randconfig-006-20250226    gcc-12
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250226    gcc-14.2.0
-xtensa                randconfig-002-20250226    gcc-14.2.0
-xtensa                    smp_lx200_defconfig    gcc-14.2.0
+> 
+> 
+> > Whenever an fmap references a dax device that isn't already known to the
+> > famfs/fuse kernel code, a GET_DAXDEV message is sent, with the reply
+> > providing the info required to open teh daxdev. A file becomes available
+> > when the fmap is complete and all referenced daxdevs are "opened".
+> >
+> > Q: Any heartburn here?
+> >
+> 
+> See also similar discussions on those other email threads about alternative
+> and more efficient APIs for mapping backing files.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Same, see above about my questionable list-searching skills
+
+> 
+> As Miklos said before mapping file ranges to backing file also makes sense
+> for passthrough use cases so if there are similarities with GET_FMAP maybe
+> there is room for sharing design goals, but I am not sure if this is the
+> case?
+
+I hope so...
+
+> 
+> 
+> > When GET_FMAP is separate from LOOKUP, READDIRPLUS won't add value unless
+> > it
+> > receives fmaps as part of the attributes (i.e. lookups) that come back in
+> > its response - since a READDIRPLUS that gets 12 files will still need 12
+> > GET_FMAP messages/responses to be complete. Merging fmaps as optional,
+> > variable-length components of the READDIRPLUS response buffers could
+> > eventualy make sense, but a cleaner solution intially would seem to be
+> > to disable READDIRPLUS in famfs. But...
+> >
+> > * The libfuse/kernel ABI appears to allow low-level fuse servers that don't
+> >   support READDIRPLUS...
+> > * But libfuse doesn't look at conn->want for the READDIRPLUS related
+> >   capabilities
+> > * I have overridden that, but the kernel still sends the READDIRPLUS
+> >   messages. It's possible I'm doing something hinky, and I'll keep looking
+> >   for it.
+> > * When I just return -ENOSYS to READDIRPLUS, things don't work well. Still
+> >   looking into this.
+> >
+> > Q: Do you know whether the current fuse kernel mod can handle a low-level
+> >    fuse server that doesn't support READDIRPLUS? This may be broken.
+> >
+> 
+> Did you try returning zero d_ino from readdirplus? I thinks that's the
+> server way of saying I do not know how to reply as readdirplus.
+
+No, but I'll try that when I get back home. I found documentation somewhere
+that said ENOSYS was the answer.
+
+> 
+> I would have liked it if there was an FOPEN_NOREADDIRPLUS per opendir.
+> This could be more efficient than having to get the first readdirplus
+> request.
+
+I don't know enough to have an opinion here (yet), but I'll start thinking
+it through.
+
+> 
+> 
+> > Q: If READDIRPLUS isn't actually optional, do you think the same attribute
+> >    reply merge (attr + famfs fmap) is viable for READDIRPLUS? I'd very much
+> >    like to do this part "later".
+> 
+> 
+> > Q: Are fuse lowlevel file systems like famfs expected to use libfuse and
+> > its
+> >    message handling (particularly init), or is it preferred that they not
+> >    do so? Seems a shame to throw away all that api version checking, but
+> >    turning off READDIRPLUS would require changes that might affect other
+> >    libfuse clients. Please advise...
+> >
+> > Note that the intended use cases for famfs generally involve large files
+> > rather than *many* files, so giving up READDIRPLUS may not matter very
+> > much,
+> > at least in the early going.
+> >
+> 
+> If famfs does not need readdirplus you should not have to deal with it.
+
+Technically it's not that readdirplus can't be helpful for famfs - it's just
+that readdirplus is not much help if the response doesn't include famfs
+fmaps. 
+
+But I do think the nicest bringup path would be to disable readdirplus, 
+so what I should see is a bunch of READDIRs followed by (or alternating 
+with?) a bunch of LOOKUPs. That route should aid bringup by avoiding 
+new variable payloads on existing commands in the immediate term.
+
+But if said payloads are being designed or considered, I should definitely
+get the famfs requirements into that discussion, so we can do something that
+works for all of us!
+
+> 
+> I don't see a problem with adding noreaddirplus config to libfuse, but not
+> sure you even need this to be in init. I would prefer it per opendir.
+> 
+> Thanks,
+> Amir.
+> 
+> 
+> > I'm hoping to get an initial RFC patch set out in a few weeks, but these
+> > questions address [some of] the open issues that need to be [at least
+> > initially] resolved first.
+> >
+> >
+> > Regards,
+> > John
+> >
+> > [1]
+> > https://lore.kernel.org/linux-fsdevel/20241029011308.24890-1-john@groves.net/
+> > [2] https://lwn.net/Articles/983105/
+> > [3] https://www.usenix.org/conference/fast25/poster-session
+> >
+
+Thanks,
+John
+
