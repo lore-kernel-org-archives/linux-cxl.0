@@ -1,127 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A2D125CC6D
-	for <linux-cxl@vger.kernel.org>; Wed, 26 Feb 2025 22:19:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84C9525CC63
+	for <linux-cxl@vger.kernel.org>; Wed, 26 Feb 2025 22:19:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740608353; cv=none; b=pLZzOZnjzJ8Yi7UBfig8I6hFUIIbTY3X8i9xt/kvrM6hh+PcuToZGws5808HeKeg5OY0iaAiP1tBDJl/VvCaWXLpWWuUgl+E0Cdx6bPQ92fLAL0IXyAFaXb/bN3e+BbHAdjAbhzVmmJ4hUpPq8vvILuXB+b1YqbfJGscjRBZa8g=
+	t=1740608377; cv=none; b=pBLm/t7nX1Uhmpsd8m1vn6WR9OzXfDuEbxHwBxszo9g5tAeZa4k6nXLHypQUb17qI5PDefv7WJyMLgJ2Oq/c381huskLHsqPZeeDz4mgkNwgBHVm9nMdCsfVp0vAg5/WXCDdPEP9Eb4TH+iDpCMoTioDvYcA+U0O6/wyRnMGiFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740608353; c=relaxed/simple;
-	bh=jEOFg8frT8YJYi7OlQkEwTDcm8s14AZi1RF7mROuwHY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gsBOli80ewQEEiJe1Nxjkd9+h7WE6R0SXVUOuMMKWmbzQCKTVGelCATGjmsUM5RTHViVLVI2Y/iLoqKWyRrEznkloeC5b679IwYHWKu2TeAs0T+mRkhL5PPQiNWjriL84nApRzMCf8kz16uZbNMLvGzC8qYqTQimroG91a+7Kto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JCb6CjyV; arc=none smtp.client-ip=192.198.163.10
+	s=arc-20240116; t=1740608377; c=relaxed/simple;
+	bh=tX9Qw+jvwnNFm8WgSx05jKoda/vtEhLx+e/AZtx7LVc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MyM1lH3pvktLnhPo3Z2Bk/unYbFcpLFQQOhh58eIt5sq0BWSnHrB6PPvtMlrJzO8Ns86LZuNr+Fzo0ECpHF+gvIocuuRf9kfbtQng1tFH0jgA0eE8WQ1WwVQjm4aK4dCSGZ4GQBHCMw5zejX3Ovsgsd2PmlGA8Z+fNHcSX1Ns8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fcmXoVjk; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JCb6CjyV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fcmXoVjk"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740608351; x=1772144351;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jEOFg8frT8YJYi7OlQkEwTDcm8s14AZi1RF7mROuwHY=;
-  b=JCb6CjyVEvztDcc65/2pUCmvfhwnJ+ow8I0GcYDasz/zAiwyZ0i4o+DB
-   5+aoVfOoQ8XTeqUssg8CMVOkSxuLWahMGazeU1/zF0cqlOTqQFaghlxVi
-   fD6u7mitQI+jsKwwDAF8z2H2JIkcfLkNik2AlTGmNzW86BmY+9bzhpyXF
-   ZUB5ZIk8H3tak6G7F3XZelnGSdkJiRMmgDSzKJN0oxg9utHv7lQDIwK+L
-   XNrLp0FxzTnB/ctwdzAo7THeJskFD0jYGJEtOME8DjjTAOZNpdaS/Aots
-   u1H+mQ+V0U0Z+p4RU0pe0gWo8lW8BIxKdo44SLo1TkrWhoAKFalhdmmeX
-   g==;
-X-CSE-ConnectionGUID: f5fTdfvFTT2AggwuuiMgsw==
-X-CSE-MsgGUID: qzcL9vbASwighlwlNRzxog==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="52893856"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="52893856"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 14:19:09 -0800
-X-CSE-ConnectionGUID: DSI7+0FJSDuoM8abZ7PnzQ==
-X-CSE-MsgGUID: oIamJs8iRRSDCBy4gdf9bw==
+  t=1740608376; x=1772144376;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=tX9Qw+jvwnNFm8WgSx05jKoda/vtEhLx+e/AZtx7LVc=;
+  b=fcmXoVjkjLHjhUbx/L5ddm/hWH+PTqdkPD7GmkRP2iEJpSCuTlYvP89j
+   QJIoJ+0WchgGfhoLl5iSGMIV6RTpr+I28slDnIg9KSJI0aYfuDUglTZNf
+   68oi63ODvW3Cyl7tLj81dsXda2h5/V7QsWRvtIQA7Wm13gaf3Si103rQy
+   dyCMALTiLAZzTayzEOtMmj+jrUakfwpQCms8N0+Is1XvKXtgiV9zpjMPX
+   MY5CwEoBtgo67oGUGq7zBjCuB44fBwy7CGWeDyiffCsXcqthfr7haQyYZ
+   S1v8fVccNlAdzHuT0wWtHrs5ZeNjVEX7lxz5wZbl8bFoAKY4G8KPRH4dU
+   A==;
+X-CSE-ConnectionGUID: GbP0AjzsQh648/PDlY2Ipw==
+X-CSE-MsgGUID: wva+vAXDTiq3Bbr8e9bWIg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="29080105"
+X-IronPort-AV: E=Sophos;i="6.13,318,1732608000"; 
+   d="scan'208";a="29080105"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 14:19:35 -0800
+X-CSE-ConnectionGUID: 9l1b8GefSeCsdA8EctVfpA==
+X-CSE-MsgGUID: bbR202YJQguWT7UyPfrD3g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="120956361"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.108.13])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 14:19:09 -0800
-Date: Wed, 26 Feb 2025 14:19:07 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: Ira Weiny <ira.weiny@intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
+   d="scan'208";a="117338255"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.125.108.13])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 14:19:34 -0800
+From: alison.schofield@intel.com
+To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jonathan.cameron@huawei.com>,
 	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
 	Vishal Verma <vishal.l.verma@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH] cxl/test: Define a CFMWS capable of a 3 way HB interleave
-Message-ID: <Z7-TWwA6q6fBoJIB@aschofie-mobl2.lan>
-References: <20250224235032.2259058-1-alison.schofield@intel.com>
- <67bf7a8a66180_5bbaf29425@iweiny-mobl.notmuch>
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>
+Cc: linux-cxl@vger.kernel.org,
+	Li Zhijian <lizhijian@fujitsu.com>
+Subject: [PATCH v2] cxl/test: Define a CFMWS capable of a 3 way HB interleave
+Date: Wed, 26 Feb 2025 14:19:27 -0800
+Message-ID: <20250226221931.2352061-1-alison.schofield@intel.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <67bf7a8a66180_5bbaf29425@iweiny-mobl.notmuch>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 26, 2025 at 02:33:14PM -0600, Ira Weiny wrote:
-> alison.schofield@ wrote:
-> > From: Alison Schofield <alison.schofield@intel.com>
-> > 
-> > The CXL unit test cxl-xor-region.sh is skipping a 1+1+1 region
-> > interleave test case because the window is not defined.
-> > 
-> > Additionally, upcoming expansion of 3 way HB interleave test cases
-> > (like 2+2+2) require the same window.
-> > 
-> > Replace an unused CFMWS with a 3-way capable CFMWS in the set of
-> > CFMWS's loaded when interleave_arithmetic=1.
-> > 
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> > ---
-> >  tools/testing/cxl/test/cxl.c | 8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-> > index 083a66a52731..e5cd874614d2 100644
-> > --- a/tools/testing/cxl/test/cxl.c
-> > +++ b/tools/testing/cxl/test/cxl.c
-> > @@ -331,14 +331,14 @@ static struct {
-> >  				.length = sizeof(mock_cedt.cfmws8),
-> >  			},
-> >  			.interleave_arithmetic = ACPI_CEDT_CFMWS_ARITHMETIC_XOR,
-> > -			.interleave_ways = 2,
-> > -			.granularity = 0,
-> > +			.interleave_ways = 8,
-> > +			.granularity = 1,
-> >  			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
-> >  					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
-> >  			.qtg_id = FAKE_QTG_ID,
-> > -			.window_size = SZ_256M * 16UL,
-> > +			.window_size = SZ_512M * 6UL,
-> >  		},
-> > -		.target = { 0, 1, 0, 1, },
-> > +		.target = { 0, 1, 2, },
-> 
-> Minor nit:
-Not a nit. Thanks, revving!
+From: Alison Schofield <alison.schofield@intel.com>
 
-> 
-> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-> 
-> Should this also include:
-> 
-> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-> index cc8948f49117..f0b5b7b8d1d0 100644
-> --- a/tools/testing/cxl/test/cxl.c
-> +++ b/tools/testing/cxl/test/cxl.c
-> @@ -155,7 +155,7 @@ static struct {
->         } cfmws7;
->         struct {
->                 struct acpi_cedt_cfmws cfmws;
-> -               u32 target[4];
-> +               u32 target[3];
->         } cfmws8;
->         struct {
->                 struct acpi_cedt_cxims cxims;
+The CXL unit test cxl-xor-region.sh is skipping a 1+1+1 region
+interleave test case because the window is not defined.
+
+Additionally, upcoming expansion of 3 way HB interleave test cases
+(like 2+2+2) require the same window.
+
+Replace an unused CFMWS with a 3-way capable CFMWS in the set of
+CFMWS's loaded when interleave_arithmetic=1.
+
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Tested-by: Li Zhijian <lizhijian@fujitsu.com>
+---
+
+v2: Adjust target list length (Ira)
+
+ tools/testing/cxl/test/cxl.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+index 083a66a52731..1c3336095923 100644
+--- a/tools/testing/cxl/test/cxl.c
++++ b/tools/testing/cxl/test/cxl.c
+@@ -155,7 +155,7 @@ static struct {
+ 	} cfmws7;
+ 	struct {
+ 		struct acpi_cedt_cfmws cfmws;
+-		u32 target[4];
++		u32 target[3];
+ 	} cfmws8;
+ 	struct {
+ 		struct acpi_cedt_cxims cxims;
+@@ -331,14 +331,14 @@ static struct {
+ 				.length = sizeof(mock_cedt.cfmws8),
+ 			},
+ 			.interleave_arithmetic = ACPI_CEDT_CFMWS_ARITHMETIC_XOR,
+-			.interleave_ways = 2,
+-			.granularity = 0,
++			.interleave_ways = 8,
++			.granularity = 1,
+ 			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
+ 					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
+ 			.qtg_id = FAKE_QTG_ID,
+-			.window_size = SZ_256M * 16UL,
++			.window_size = SZ_512M * 6UL,
+ 		},
+-		.target = { 0, 1, 0, 1, },
++		.target = { 0, 1, 2, },
+ 	},
+ 	.cxims0 = {
+ 		.cxims = {
+
+base-commit: 2bb67004903cfd35710750654669a77e7223fcd1
+-- 
+2.37.3
+
