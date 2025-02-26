@@ -1,335 +1,199 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2074.outbound.protection.outlook.com [40.107.94.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFFD62561D6
-	for <linux-cxl@vger.kernel.org>; Wed, 26 Feb 2025 22:07:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740607652; cv=none; b=iaNJoTzora96/oEHm/5EDIqdZLzAPANJSqWEjZGFTZ3kXG7R9q1KfRoR525j3+QQgMccld/y5I+vRe4FjMHBhaH3D1BltC7GyJsMgTAZxYE/uHy65itJuR8xqlh6YaQ4/FRskviLcVjen7Gfz62Ysw1VWmuT6FW3zLAfcPm0Lzk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740607652; c=relaxed/simple;
-	bh=dcm+ETNVtmA/WYGg2gNwvpq5i28IO9C5g89U3kn7D0I=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=FKNH1bxtxfRBQcnWUtLyLrk7T1Nz3bdbdekT08eRRWoWM4HVxnk3lLD67EDr0rfObXwWLtHuYMC9ZHtWiMqhM4KHrgFEOjGlEwX3/AWM1BoqaouDOv86xNsd2k6zUONnCsYuNDub+3bMGAnmUET5xcVA4g43ymgMe6HInRiWuy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Y7YQ+SX3; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13A0326B95B;
+	Wed, 26 Feb 2025 22:12:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.74
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740607934; cv=fail; b=idg8nNQ1jHKVKyW9/iWVRz8DW2DTe4r68n/XwsUpVqTuvXfjkqtNR6vDEfe78NztP/Q7rSW/0l1lTky1pmRBC8ULVamuQwoK0pKOzfgBx9QaFqCm/6VjGTc8XRG0KI72qQpGupNA1CIgXdxE9NKJ568ziOFWSMcwbAZaVueId6U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740607934; c=relaxed/simple;
+	bh=hwUyM4njh4cOzXYWT3DVA5BzxB3mOlJ/W9tw1gUn+SQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZF/jwO0qc0n/JlmsLMH9rVG5jOC9TD2noBPVXi29Rl3MYcmWdH5bPgcmj8jd6kjL4aB4q4zfN+4gegjiX1hWmU9Z444UCsCAfc8fV8aJWVYaP2FuYXsrDLXp5RsdgdGmQQffL0fZqRKIA89fBB6FUT43zG8EzrAuebyB0iB6+a4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Nf3HlTkc; arc=fail smtp.client-ip=40.107.94.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Y7YQ+SX3"
-Content-Type: text/plain;
-	charset=utf-8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740607647;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3lQ4AGSalYh+hETuox+eE+LFUu/Gd8ek6p1w1jAQ7WA=;
-	b=Y7YQ+SX3bo2P8oC93QDo/Gu8CN0kF5RiCYDEpe+PegEDyXbZRtwj14OZHGtGZSxkxD0eYv
-	MXsuIIfklsKR4b+fCgk/8yh6wJigcK45blnjnNw+sk16zcJeXiOQ5eSuaTAofkwZa0Z/pp
-	jCjegzL/J8M/lsLIKrnvf9JP4YrREeM=
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Nf3HlTkc"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=naz9pkjJ/wycxfYZM9YM9lB3ZE4SaKLDVvem7GFE9MGY/ZgYCyXMGABRz+aW4FfyzgyeajF5oXDIqjsVNuO39SuraK0kbBzjcLvKQ6bVsT33gLAGAJs6t2N+LheWCXmDjDDSF0NxcAhc3bmjmziLG+z+fem1oELz0cfRe0N19Ib3Ay71qoWypyzJ7c7m4EcXcdI3XPt4XIYHmxV1sDZa1Fn13+MFPW93BlPQGV6Z/fJptLMIvJpv7UrmSpeV3t4U1Sx/lqIveKri9raLGBgbNxiRKu73BvR7HMEiZNrZenRixm4XCMQau8TxBNSQFspDEOP6ny++xrMZg+P17hgS0A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aY6CDvkfOchfnWgnYB2zpRg1IBAbWUnObA1PEMpsQHo=;
+ b=sk+zE5UzXmcqhTp9Jwa7aqDt4263XoVUKlltVPlU5k5f24dPpF9OSe+WBgOpnO4OCq9iFcsM9WcCISODMbiH6t3287JVlGhIudMR/OZB7M6h+uV18bo6/E/O8nzxeH33E4eRaX1KYA7TN4poDWW5xGlFkRlutpkTNRaiVP++dydw8X3QwWZ1yhW+uHeJq7XZKabSno2L16YBn8tYSYnwdZYIML7CscbvyWHRSHjOxOHRifmpYBKpJYigauDs9do3Ru3ppvY/LlkjJGNFy/wQ0Wv0Oq0XAguN5/g91IMooc9X6MKs7kk+UQ8yw5og3R0WCpGo+qNSygdVdWR0mEWq5Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aY6CDvkfOchfnWgnYB2zpRg1IBAbWUnObA1PEMpsQHo=;
+ b=Nf3HlTkcdcbwZvbMh/v1YJJqZZW2s6XIbls2GsoVGW9/W6NEWEJ011ZQ2mgC/bjBcMfGrW5haNrcfollXNMkIabURn203eZuWGH5fS6QmGdfXgq1bpkQbcrdBnB+pWJWfkeLzX9ANaNiGKP1JbIdMMz6Nvb2ezbhELbcmFX6vqU=
+Received: from BL1PR13CA0357.namprd13.prod.outlook.com (2603:10b6:208:2c6::32)
+ by SJ1PR12MB6172.namprd12.prod.outlook.com (2603:10b6:a03:459::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.20; Wed, 26 Feb
+ 2025 22:12:09 +0000
+Received: from BN1PEPF0000467F.namprd03.prod.outlook.com
+ (2603:10b6:208:2c6:cafe::83) by BL1PR13CA0357.outlook.office365.com
+ (2603:10b6:208:2c6::32) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8489.16 via Frontend Transport; Wed,
+ 26 Feb 2025 22:12:08 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN1PEPF0000467F.mail.protection.outlook.com (10.167.243.84) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8489.16 via Frontend Transport; Wed, 26 Feb 2025 22:12:08 +0000
+Received: from ethanolx50f7host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Feb
+ 2025 16:12:07 -0600
+From: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+To: <linux-efi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>
+CC: Ard Biesheuvel <ardb@kernel.org>, Alison Schofield
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
+ Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Yazen Ghannam
+	<yazen.ghannam@amd.com>, Terry Bowman <terry.bowman@amd.com>, "Smita
+ Koralahalli" <Smita.KoralahalliChannabasappa@amd.com>
+Subject: [PATCH v7 0/2] acpi/ghes, cper, cxl: Process CXL CPER Protocol errors
+Date: Wed, 26 Feb 2025 22:11:55 +0000
+Message-ID: <20250226221157.149406-1-Smita.KoralahalliChannabasappa@amd.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
-Subject: Re: ndctl cxl test suite fails in arm64 QEMU
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Itaru Kitayama <itaru.kitayama@linux.dev>
-In-Reply-To: <Z79hPyNMymvM9Hlp@aschofie-mobl2.lan>
-Date: Thu, 27 Feb 2025 07:07:13 +0900
-Cc: Marc Herbert <Marc.Herbert@linux.intel.com>,
- linux-cxl@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <FD7BD8C3-7BB7-47E6-A296-D7939A322B27@linux.dev>
-References: <43568B03-6832-4EB1-BF46-EF0F176509E2@linux.dev>
- <9b1492d7-ffa8-4d61-a101-4fa9c2d71ae3@linux.intel.com>
- <AD05AE2B-9AA4-4E60-AEF7-705281368838@linux.dev>
- <Z75IpiYqA1sylXYx@aschofie-mobl2.lan>
- <CE9B21EB-B7D5-4E40-901C-306689C4B4FA@linux.dev>
- <Z79hPyNMymvM9Hlp@aschofie-mobl2.lan>
-To: Alison Schofield <alison.schofield@intel.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN1PEPF0000467F:EE_|SJ1PR12MB6172:EE_
+X-MS-Office365-Filtering-Correlation-Id: 69665647-2886-4412-6369-08dd56b29c90
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|376014|36860700013|1800799024|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ngpnM336q24PkebbtTUvzQKzTZwy3Zxjkg1bfe7altb+c/VAN2Tf8/toh6/i?=
+ =?us-ascii?Q?E8f2p/ysWV/0wUNEyH7+pj2Jswq2RmY7dJolOHXPRkQDNqVYoulyZNOyInpr?=
+ =?us-ascii?Q?2EYLCbEfZOV5M4do8D8fAFcFTJYbzuhXkb8WNM6PRWrmABfIbKB3XWu5hMHR?=
+ =?us-ascii?Q?dZWZ0fjqyaLJS9Q6/6TmUi31XLmBWUwrUfizAIPtE0tE/zeHXH50J/UfD/MK?=
+ =?us-ascii?Q?ORa9N5cvzLdeFtXEROFXe1iM/mmmxC79SqdZJBdQCoglAJapb/F4ZRy3Sl9h?=
+ =?us-ascii?Q?ZQkjSPZCA7+nUN3THzt0L0PtXQ+Xi2GPqqHolPNPGhH637zTKPNeVoy5fVMa?=
+ =?us-ascii?Q?3o1yqVJmEwzZOHF7wyqeDmyY9KyDZyEad5gF+5nVTsiLb13yR3VPKj4xX7+e?=
+ =?us-ascii?Q?5Yn6G3FuQnLHGBWmi3thdaojHUQk9ENfP0Lqk/+2JJX0j4qq0UW9V+6Ccx9Y?=
+ =?us-ascii?Q?88/Z2Y7L3yxJNDtooEhxEzrY3LMKIYD3NxAm4BqEVcsjDoG/pbzQHM5zHRy4?=
+ =?us-ascii?Q?1Rh3WBBw49hxcw1F36za07Z6VJnbftmEBJch78PaNAyfh+DJ0HdUcBNJrRnR?=
+ =?us-ascii?Q?l8F65FvMcz5FgXc2xH7XcLa6qV7sCClfBx1EkQbIjwGVMvuyG6y+0FQAwadV?=
+ =?us-ascii?Q?l3NZNRQ+SF9cLNeIVhqviswamsEgjKm5lZQ6Xy+4+koDjCkcdvgwdxJLOWAS?=
+ =?us-ascii?Q?vaeJ9P1+QLQo32J9ptbRTk1zSuiY3hPi/BQISJe9sCiYcvcKIM6t+1cmzpqT?=
+ =?us-ascii?Q?FI7ammB/DwQ1/8fkjgvII/fa5kgt4XrgFzMs+k9aMJzhsguSXNbmRj3789nV?=
+ =?us-ascii?Q?9zmmqw7+CpbStiwXrpxF69rjpddxvWywzObLhaYeL3DsfYZV2wsbWnojeYpY?=
+ =?us-ascii?Q?idx9KmAQcdVy9E13oStgAJSJBFeBIXJyL7sCvLnTwvuDyvSvJzF3pj83Izb4?=
+ =?us-ascii?Q?4C95lYTfRCRmX8Hf9taNgIt8S2yuf9RddmHG49HfcSMo41pagy7PoplxCzxz?=
+ =?us-ascii?Q?Cr9rDXNQenpHrf7nV7u7Ts+PBAV7QrCzYxmkXiP7HhnGc+crfPKAY953DUfE?=
+ =?us-ascii?Q?Yd9oQbFj5tjBLMC8EwfJSGW0GjMJKm637GoBzQLFXfLbk7dQf4hO4E72G2Ej?=
+ =?us-ascii?Q?ZHD2IV5RpLKRDx/QLCAs62tUornL3aFFg8ICYW7TMy+BL80ccC/x70575zPx?=
+ =?us-ascii?Q?vzBOoz/eo2TB83ylfyTVCoOEIpsfLRsedeRZCCkqsLpWUg6lMM+k8PsCoIe5?=
+ =?us-ascii?Q?wzVP0lgczlE8MBiXvE37EvQ4PatPRTbtPhfRaINIOpvC6TsarZs1zESjyl2N?=
+ =?us-ascii?Q?g8j7BWP2QlhJxdXhg3XCIJl8ZvfmCWcl7BWnfCoBv1rPrzTmO6ynjypPw3GJ?=
+ =?us-ascii?Q?WpKd3pVWUHLh7wKTpIeixQwhpZVI8ADTTeoD0DiHjSMLTZpyRM+jihXPUKxc?=
+ =?us-ascii?Q?/JlOg0u7XevX/dKC4vZwVj+lS6Af9OaWLEWyBO9+dKf+E6QE9RASqehhiRTI?=
+ =?us-ascii?Q?8wjFTHlX67n1qnU=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(36860700013)(1800799024)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2025 22:12:08.6729
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 69665647-2886-4412-6369-08dd56b29c90
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN1PEPF0000467F.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6172
 
+This patchset adds logging support for CXL CPER endpoint and port Protocol
+errors.
 
+Based on top of cxl-next.
 
-> On Feb 27, 2025, at 3:45, Alison Schofield =
-<alison.schofield@intel.com> wrote:
->=20
-> On Wed, Feb 26, 2025 at 08:53:12AM +0900, Itaru Kitayama wrote:
->> Hi Alison,
->>=20
->>> On Feb 26, 2025, at 7:48, Alison Schofield =
-<alison.schofield@intel.com> wrote:
->>>=20
->>> On Wed, Feb 26, 2025 at 07:37:58AM +0900, Itaru Kitayama wrote:
->>>> Hi Marc,
->>>>=20
->>>>> On Feb 26, 2025, at 2:08, Marc Herbert =
-<Marc.Herbert@linux.intel.com> wrote:
->>>>>=20
->>>>> On 2025-02-24 20:09, Itaru Kitayama wrote:
->>>>>>=20
->>>>>> Has anyone noticed the ndctl cxl test suite failures I reported =
-below on arm64, QEMU emulation?
->>>>>>=20
->>>>>> https://github.com/pmem/ndctl/issues/278
->>>>>>=20
->>>>>> I=E2=80=99m using Jonathan=E2=80=99s latest CXL capable QEMU [1], =
-and the latest CXL kernel [2].
->>>>>>=20
->>>>>=20
->>>>>=20
->>>>> Hi,
->>>>>=20
->>>>> Sorry I wanted to spend more time and share a more detailed answer =
-and
->>>>> of course I got side-tracked.
->>>>>=20
->>>>> Do you have CONFIG_RANDOMIZE_MEMORY on?
->>>>>=20
->>>>> If yes then please try this either this:
->>>>>=20
->>>>> cd kernel
->>>>> ./scripts/config -d CONFIG_RANDOMIZE_MEMORY
->>>>>=20
->>>>> ... or this:
->>>>>=20
->>>>> --- a/run_qemu.sh
->>>>> +++ b/run_qemu.sh
->>>>> @@ -681,6 +681,7 @@ build_kernel_cmdline()
->>>>> "initcall_debug"
->>>>> "log_buf_len=3D20M"
->>>>> "memory_hotplug.memmap_on_memory=3Dforce"
->>>>> + "nokaslr"
->>>>> )
->>>>> if [[ $_arg_gdb =3D=3D "on" ]]; then
->>>>> kcmd+=3D(
->>>>=20
->>>> I chose the kernel configuration change and rebuilt the kernel, =
-modules installed, then finally cxl_test kernel module installed on the =
-emulated system, but I got worth results (occasionally, the kernel OOPS =
-as well):
->>>=20
->>> Yikes.
->>>=20
->>> What is your ndctl --version
->>=20
->> I=E2=80=99m using GitHub=E2=80=99s latest.
->>=20
->>>=20
->>> What is your run_qemu cmdline?
->>=20
->> Unfortunately, it is x86 centric, at this moment it=E2=80=99s hard to =
-use.
->>=20
->>> I think you said kernel is cxl/next ?
->>=20
->> Yes, I did.
->>=20
->>>=20
->>> The simplest one when I intend to use cxl-test is:
->>> run_qemu.sh --git-qemu --cxl-test --cxl-debug -r kmod
->>=20
->> Instead, here are the options I use when emulating on arm64:
->>=20
->> /home/itaru/projects/qemu/build/qemu-system-aarch64 \
->>         -M =
-virt,virtualization=3Doff,pflash0=3Drom,pflash1=3Defivars,gic-version=3D3,=
-cxl=3Don,acpi=3Don -m 16384 \
->>         -cpu max \
->>         -smp 2 \
->>         -accel tcg \
->>         -nographic \
->>         -display none \
->>         -kernel $HOME/projects/linux/arch/arm64/boot/Image \
->>         -append "root=3D/dev/vda rw acpi=3Dforce" \
->>         -drive =
-format=3Draw,if=3Dnone,file=3D/home/itaru/ubuntu24.img,id=3Dhd0 \
->>         -device virtio-blk-pci,drive=3Dhd0,serial=3D"dummyserial" \
->>         -nodefaults \
->>         -device virtio-net-pci,netdev=3Dnet0 \
->>         -netdev user,id=3Dnet0,hostfwd=3Dtcp::8024-:22 \
->>         -blockdev =
-node-name=3Drom,driver=3Dfile,filename=3Dedk2-aarch64-code.fd,read-only=3D=
-true \
->>         -blockdev =
-node-name=3Defivars,driver=3Dfile,filename=3Dqemu-arm64-efivars.test \
->>         -object =
-memory-backend-file,id=3Dcxl-mem1,share=3Don,mem-path=3D/tmp/cxltest.raw,s=
-ize=3D256M \
->>         -object =
-memory-backend-file,id=3Dcxl-lsa1,share=3Don,mem-path=3D/tmp/lsa.raw,size=3D=
-256M \
->>         -device pxb-cxl,bus_nr=3D12,bus=3Dpcie.0,id=3Dcxl.1 \
->>         -device =
-cxl-rp,port=3D0,bus=3Dcxl.1,id=3Droot_port13,chassis=3D0,slot=3D2 \
->>         -device =
-cxl-type3,bus=3Droot_port13,memdev=3Dcxl-mem1,lsa=3Dcxl-lsa1,id=3Dcxl-pmem=
-0 \
->>         -M cxl-fmw.0.targets.0=3Dcxl.1,cxl-fmw.0.size=3D4G \
->>         -serial mon:stdio \
->>         -device virtio-9p-device,fsdev=3Dshr0,mount_tag=3Dshr0 \
->>         -fsdev local,security_model=3Dnone,path=3D/home/itaru,id=3Dshr0=
+Link to v6:
+https://lore.kernel.org/linux-cxl/20250123084421.127697-1-Smita.KoralahalliChannabasappa@amd.com
 
->>=20
->> Thanks,
->> Itaru.
->=20
-> Hi Itaru,
->=20
-> I am able to reproduce your original issue on x86. It occurs, like =
-Marc
-> suggested, when RANDOMIZE_MEMORY is enabled. (The nokaslr kernel param
-> disables both RANDOMIZE_BASE and RANDOMIZE_MEMORY in x86.)
->=20
-> Poking around arm64 related configs, it doesn't have a direct =
-equivalent
-> to RANDOMIZE_MEMORY. Maybe ARM64_MODULE_PLTS or =
-RANDOMIZE_MODULE_REGION_FULL,
-> both of which seem to affect how modules are loaded into memory are=20
-> causing the problem.
->=20
-> Are you familiar with those, able to try those out?
+Changes in v6 -> v7:
+Reworked to move registration and protocol error handling into a new
+file inside CXL core. (cxl/core/ras.c).
 
-I did disable as much as I can see those address randomizations in the =
-arm64 config, and now I get:
+Changes in v5 -> v6:
+[Dave, Jonathan, Ira]: Reviewed-by tags.
+[Dave]: Check for cxlds before assigning fe.
+Merge one of the patches (Port error trace logging) from Terry's Port
+error handling.
+Rename host -> parent.
 
-[  333.304967] cxl_mock_mem cxl_mem.0: probe with driver cxl_mock_mem =
-failed with error -95
-[  333.337294] cxl_mock_mem cxl_mem.1: probe with driver cxl_mock_mem =
-failed with error -95
-[  333.353640] cxl_mock_mem cxl_mem.3: probe with driver cxl_mock_mem =
-failed with error -95
-[  333.384297] cxl_mock_mem cxl_mem.4: probe with driver cxl_mock_mem =
-failed with error -95
-[  333.402259] cxl_mock_mem cxl_mem.6: probe with driver cxl_mock_mem =
-failed with error -95
-[  333.483253] cxl_mock_mem cxl_mem.9: probe with driver cxl_mock_mem =
-failed with error -95
-[  333.520117] cxl_mock_mem cxl_rcd.10: probe with driver cxl_mock_mem =
-failed with error -95
-[  333.617582] cxl_mock_mem cxl_mem.2: probe with driver cxl_mock_mem =
-failed with error -95
-[  333.669481] cxl_mock_mem cxl_mem.5: probe with driver cxl_mock_mem =
-failed with error -95
-[  333.711813] cxl_mock_mem cxl_mem.7: probe with driver cxl_mock_mem =
-failed with error -95
-[  333.745580] cxl_mock_mem cxl_mem.8: probe with driver cxl_mock_mem =
-failed with error -95
+Changes in v4 -> v5:
+[Dave]: Reviewed-by tags.
+[Jonathan]: Remove blank line.
+[Jonathan, Ira]: Change CXL -> "CXL".
+[Ira]: Fix build error for CONFIG_ACPI_APEI_PCIEAER.
 
-Itaru.
+Changes in v3 -> v4:
+[Ira]: Use memcpy() for RAS Cap struct.
+[Jonathan]: Commit description edits.
+[Jonathan]: Use separate work registration functions for protocol and
+component errors.
+[Jonathan, Ira]: Replace flags with separate functions for port and
+device errors.
+[Jonathan]: Use goto for register and unregister calls.
 
->=20
-> --Alison
->=20
->>=20
->>>=20
->>>>=20
->>>> Log of Meson test suite run on 2025-02-26T07:32:24.101461
->>>>=20
->>>> Inherited environment: LANG=3DC.UTF-8 LS_COLORS=3D'' =
-TERM=3Dxterm-256color =
-PATH=3D/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/=
-bin MAIL=3D/var/mail/root LOGNAME=3Droot USER=3Droot HOME=3D/root =
-SHELL=3D/bin/bash SUDO_COMMAND=3D'/usr/bin/meson test =
-cxl-region-sysfs.sh' SUDO_USER=3Drealm SUDO_UID=3D1000 SUDO_GID=3D1000=20=
+Changes in v2 -> v3:
+[Dan]: Define a new workqueue for CXL CPER Protocol errors and avoid
+reusing existing workqueue which handles CXL CPER events.
+[Dan] Update function and struct names.
+[Ira] Don't define common function get_cxl_devstate().
+[Dan] Use switch cases rather than defining array of structures.
+[Dan] Pass the entire cxl_cper_prot_err struct for CXL subsystem.
+[Dan] Use pr_err_ratelimited().
+[Dan] Use AER_ severities directly. Don't define CXL_ severities.
+[Dan] Limit either to Device ID or Agent Info check.
+[Dan] Validate size of RAS field matches expectations.
 
->>>>=20
->>>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D 1/1 =
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>>> test:         ndctl:cxl / cxl-region-sysfs.sh
->>>> start time:   22:32:24
->>>> duration:     0.71s
->>>> result:       exit status 1
->>>> command:      NDCTL=3D/home/realm/projects/ndctl/build/ndctl/ndctl =
-DAXCTL=3D/home/realm/projects/ndctl/build/daxctl/daxctl =
-TEST_PATH=3D/home/realm/projects/ndctl/build/test =
-UBSAN_OPTIONS=3Dhalt_on_error=3D1:abort_on_error=3D1:print_summary=3D1:pri=
-nt_stacktrace=3D1 =
-ASAN_OPTIONS=3Dhalt_on_error=3D1:abort_on_error=3D1:print_summary=3D1 =
-MALLOC_PERTURB_=3D29 =
-MSAN_OPTIONS=3Dhalt_on_error=3D1:abort_on_error=3D1:print_summary=3D1:prin=
-t_stacktrace=3D1 DATA_PATH=3D/home/realm/projects/ndctl/test =
-MESON_TEST_ITERATION=3D1 =
-LD_LIBRARY_PATH=3D/home/realm/projects/ndctl/build/daxctl/lib:/home/realm/=
-projects/ndctl/build/ndctl/lib:/home/realm/projects/ndctl/build/cxl/lib =
-/bin/bash /home/realm/projects/ndctl/test/cxl-region-sysfs.sh
->>>> ----------------------------------- stdout =
------------------------------------
->>>> test/cxl-region-sysfs.sh: failed at line 40
->>>> ----------------------------------- stderr =
------------------------------------
->>>> + trap 'err $LINENO' ERR
->>>> + check_prereq jq
->>>> + command -v jq
->>>> + modprobe -r cxl_test
->>>> + modprobe cxl_test
->>>> + rc=3D1
->>>> ++ ./cxl/cxl list -b cxl_test -D -d root
->>>> ++ jq -r '.[] |
->>>> select(.pmem_capable =3D=3D true) |
->>>> select(.nr_targets =3D=3D 2) |
->>>> .decoder'
->>>> Warning: no matching devices found
->>>>=20
->>>> + decoder=3D
->>>> + readarray -t mem
->>>> ++ ./cxl/cxl list -M -d
->>>> ++ jq -r '.[].memdev'
->>>> Error: switch `d' requires a value
->>>>=20
->>>> usage: cxl list [<options>]
->>>>=20
->>>>   -d, --decoder <decoder device name>
->>>>                         filter by CXL decoder device name(s) / =
-class
->>>> + readarray -t endpoint
->>>> ++ ./cxl/cxl reserve-dpa -t pmem -s 268435456
->>>> ++ jq -r '.[] | .decoder.decoder'
->>>>=20
->>>> usage: cxl reserve-dpa <mem0> [<mem1>..<memn>] [<options>]
->>>>=20
->>>>   -b, --bus <bus name>  Limit operation to the specified bus
->>>>   -v, --verbose         turn on debug
->>>>   -S, --serial          use serial numbers to id memdevs
->>>>   -s, --size <size>     size in bytes (Default: all available =
-capacity)
->>>>   -d, --decoder <decoder instance id>
->>>>                         override the automatic decoder selection
->>>>   -t, --type <type>     'pmem' or 'ram' (volatile) (Default: =
-'pmem')
->>>>   -f, --force           Attempt 'expected to fail' operations
->>>>=20
->>>> ++ cat /sys/bus/cxl/devices//create_pmem_region
->>>> cat: /sys/bus/cxl/devices//create_pmem_region: No such file or =
-directory
->>>> + region=3D
->>>> ++ err 40
->>>> +++ basename /home/realm/projects/ndctl/test/cxl-region-sysfs.sh
->>>> ++ echo test/cxl-region-sysfs.sh: failed at line 40
->>>> ++ '[' -n '' ']'
->>>> ++ exit 1
->>>> =
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
->>>>=20
->>>>=20
->>>> Summary of Failures:
->>>>=20
->>>> 1/1 ndctl:cxl / cxl-region-sysfs.sh FAIL             0.71s   exit =
-status 1
->>>>=20
->>>> Ok:                 0  =20
->>>> Expected Fail:      0  =20
->>>> Fail:               1  =20
->>>> Unexpected Pass:    0  =20
->>>> Skipped:            0  =20
->>>> Timeout:            0  =20
+Changes in v2 -> v1:
+[Jonathan] Refactor code for trace support. Rename get_cxl_dev()
+to get_cxl_devstate().
+[Jonathan] Cleanups for get_cxl_devstate().
+[Alison, Jonathan]: Define array of structures for Device ID and Serial
+number comparison.
+[Dave] p_err -> rec/p_rec.
+[Jonathan] Remove pr_warn.
 
+Smita Koralahalli (2):
+  acpi/ghes, cxl/pci: Process CXL CPER Protocol Errors
+  cxl/pci: Add trace logging for CXL PCIe Port RAS errors
+
+ drivers/acpi/apei/ghes.c  |  49 +++++++++++++++
+ drivers/cxl/core/Makefile |   1 +
+ drivers/cxl/core/core.h   |   3 +
+ drivers/cxl/core/port.c   |   7 +++
+ drivers/cxl/core/ras.c    | 122 ++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/core/trace.h  |  47 +++++++++++++++
+ include/cxl/event.h       |  15 +++++
+ 7 files changed, 244 insertions(+)
+ create mode 100644 drivers/cxl/core/ras.c
+
+-- 
+2.17.1
 
