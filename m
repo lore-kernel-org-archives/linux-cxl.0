@@ -1,192 +1,214 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from esa13.fujitsucc.c3s2.iphmx.com (esa13.fujitsucc.c3s2.iphmx.com [68.232.156.96])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F3AB19DF62
-	for <linux-cxl@vger.kernel.org>; Wed, 26 Feb 2025 07:13:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 109E11E502
+	for <linux-cxl@vger.kernel.org>; Wed, 26 Feb 2025 07:24:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.156.96
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740553984; cv=pass; b=n/0JTJ+MV6HgBrsAx0C9wqko1ZxkBOHOAAiKxL3TqkgOD9LqrFyezZVP5nK04ADpPalpdTlGrwht5BUPTMTqRN1haDUbAjW3h/MpTyMkfYWN/LB71jUZCOvg9vr/FWWn1vRBRphguxSplhz/l73KyFNthEF7N6yFxJT+0nstnd4=
+	t=1740554659; cv=fail; b=i/hpJUZgZgJEJZ9OSbyRps3ir70J45+W/qZr66Df7J1nKi1X6s1Qp6wpFfQ+uGoMrHAsXmCdjgSY9y0ly2+vbe3ZbdItK8nCKPy2X/5aRTjeoQzyKkoMj3LwgbBqrZ5JH2CJGJA/4EgUi8oycbOhBv7GoCkd+s6qNSEIFDMuWUI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740553984; c=relaxed/simple;
-	bh=fS4hv3OuLKWRiVJqrpdued9a01S9RZ5yLRmDGILjx3c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NfmvQ0JX5lqvoJdH+JgNOezjSW2tYEN28eKTDaYilIXT2P7HikNK18dsE7i4L/oz6+x6qrBDMM4jh2Unlba6MBipQJIfJB/eAnX4D8kCDY9oE9Sefz/se7S+C0DfhBE3nz72+WTlsTn4fn/L5Ge3/QWa24SGwzyPqyxlKWEEDrQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=IG6Lc6SZ; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	s=arc-20240116; t=1740554659; c=relaxed/simple;
+	bh=kwzNdxmblE/oVCuBJSdXo7ISWUlGbo7KXD3LkK++XGo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=nGrqZU2sgsomVs09foFHCsFDBIArvv8qVaDZC8BSGu39UWvivPz491/b4gUfuLiZVCEIcnt7BaBG+h+kj1E8CiW3LgR6bXg/I3eqa0gSMtnH9vAGbwlxjDfHjf4qFuviY3HMSIFNrNr4zEjX0rSmIZlFjplmCH93cROiKX5K+BA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=s5qGWTGZ; arc=fail smtp.client-ip=68.232.156.96
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="IG6Lc6SZ"
-ARC-Seal: i=1; a=rsa-sha256; t=1740553972; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=RL/DlidX47wO64+HnGRmvBchk16r5veNb4FJNDs86nKppviqlenjhkyALe9SAPiFNsPfs82obyqtclRKzj0+W+Ef+bY5a6DtCRQo8JuPRsrVOpGn3x/mxIQEU4lVZdyo+aZjP2mq+rqGwVJ1tPKCappcWMiUP37fec397p1dlSI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740553972; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=3+aLdy1rhd0D9qEHZ3/a6H+A31r+aU4h9t1BCXeDeig=; 
-	b=N6sSYHvSYiWNI2JXXqzbCO9LoA/eRs8myf0VzNeMClXq9P+3X4ebeRVCLfObGQtq8/YEjtuPI89Q8g9jolm8JCrnVkqWOkgtGHBSWFk3z2BN5QbVsldT03Ti+Dp7oTOTaiRXVDkxYlE8Iwzb+EBBsiUz8aa85gbpwI95MH7ATOQ=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740553972;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=3+aLdy1rhd0D9qEHZ3/a6H+A31r+aU4h9t1BCXeDeig=;
-	b=IG6Lc6SZGTZqMYS5WSfghSgFe06BfdxY3YIZIeAG60wndP+ZBXu425B55o6utycL
-	C93jMW1LkCmNDKvHzHHY5DeIvYitccilRLiBT46JHKqirBUum+XU8rwbLKYnclphuqa
-	JXeC2rfbPN0x9oMwsu1AQ6PaElzSLqKOd+mSzo9o=
-Received: by mx.zohomail.com with SMTPS id 1740553969711432.83493523903314;
-	Tue, 25 Feb 2025 23:12:49 -0800 (PST)
-Message-ID: <71f703fc-5171-46ad-86b5-f74432a728ae@zohomail.com>
-Date: Wed, 26 Feb 2025 15:12:46 +0800
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="s5qGWTGZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
+  t=1740554656; x=1772090656;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=kwzNdxmblE/oVCuBJSdXo7ISWUlGbo7KXD3LkK++XGo=;
+  b=s5qGWTGZ5E5xNEB/Feoy7VBqFQQmZo41X4I/50rGQJcR/hDYkwu4hACw
+   EjTOS8dJkyrAt90TaIUuXD9zyvdRJ1gsTFYeZnxW5VFxhyeZWOiwEQBFb
+   1UutWykbwL90O0AyxMNg22vPcnSgAwLkPbEMr6TwA6pm1tYkYzgKPUYWQ
+   jAF1JdyzEFqGtv/xnxLD5QRFNdgaY3ZVtbDKRvTmVxtZTfRWcyKReaFrP
+   KtzRASktEGakoTLSuRBFriK5ozXyllynHnUf9jTvjFIq0gChmBlYCFGN0
+   0Lb+cdoshGaq0hX+3NiPqDnr8QWnwHhQqQEry6xENfDJtcOPc1jw1SKiM
+   Q==;
+X-CSE-ConnectionGUID: flXaOA1gTYSaJXxZZiuvMg==
+X-CSE-MsgGUID: zHQc/y0lQGC7DRydJhe+gg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="147146711"
+X-IronPort-AV: E=Sophos;i="6.13,316,1732546800"; 
+   d="scan'208";a="147146711"
+Received: from mail-japanwestazlp17011028.outbound.protection.outlook.com (HELO OS0P286CU010.outbound.protection.outlook.com) ([40.93.130.28])
+  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 16:23:04 +0900
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CZy01QxL0QJpfz6yPdHXSBOXOPX+fYYdF+X9Whif/JLcGmixzyJhP4zp66Tf6eLBYIV0jUiaJHEAakKDFfm6On5cTFszVka8MP7QKbOexxwzcq/OOzWYoOQaCONUgxLSh5Pcaw41dtPqRZPPa9ChDZlZN+N5+cW09RhwnjCjnZcM0r9nfi3vUxmPQvLiil0wDlHauvvL6g8izR68m6qDC5FGhc4M8YSEUiuTijOOG5c6Wc7vcRyBECu9fWyK3MoidN7rNcociAmSt/3IvPcrikmWmvkzgbvdozBVwESbTy8kOM263jwQsS2tb3NtWAupcz8yNfgSD9L1ssEIW2J8Bw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kwzNdxmblE/oVCuBJSdXo7ISWUlGbo7KXD3LkK++XGo=;
+ b=wKT4sP7eSZrvy9uUewYuBHyQ3otkPoicaLAUcGmu1l3Nc23nQVi8kBSaOr1WHp76ja5s0qd3Ft6sYGWakdw/JQ2Ef+4GGR1i1MpkQd7Hx0WLcPeZKGCaP93OOysUFNcHiuTv0sJI8hBbaoctM5qx4QCfbVcTyltvyvyndEnxgbNbXlqSqr+lTBKBnK6flEfwxn8d1xwmM3fg4dc7QWcln3ssU+HuKH2Y3kbQncM7LNFZxgA6mVwTLiCACLgCP0lz4D75qT+Xj/vOUbIgOaqKZWXFC6Pe5glawDz32kLIiyP/xlMjg3lRLHFGe1zP12AHMcVur6SWp435Vq7ArtSIfg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
+ dkim=pass header.d=fujitsu.com; arc=none
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com (2603:1096:403:6::12)
+ by TYCPR01MB9400.jpnprd01.prod.outlook.com (2603:1096:400:194::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.21; Wed, 26 Feb
+ 2025 07:22:59 +0000
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::d9ba:425a:7044:6377]) by TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::d9ba:425a:7044:6377%5]) with mapi id 15.20.8466.016; Wed, 26 Feb 2025
+ 07:22:59 +0000
+From: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
+To: "alison.schofield@intel.com" <alison.schofield@intel.com>, Davidlohr Bueso
+	<dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, Dave
+ Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ira
+ Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>
+CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH] cxl/test: Define a CFMWS capable of a 3 way HB interleave
+Thread-Topic: [PATCH] cxl/test: Define a CFMWS capable of a 3 way HB
+ interleave
+Thread-Index: AQHbhxbx7HiMmLCGQUirjPESV4XakLNZMFaA
+Date: Wed, 26 Feb 2025 07:22:59 +0000
+Message-ID: <fac0fbb7-ffe7-4688-927b-218e64249a9f@fujitsu.com>
+References: <20250224235032.2259058-1-alison.schofield@intel.com>
+In-Reply-To: <20250224235032.2259058-1-alison.schofield@intel.com>
+Accept-Language: en-US, zh-CN
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Mozilla Thunderbird
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=fujitsu.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TY1PR01MB1562:EE_|TYCPR01MB9400:EE_
+x-ms-office365-filtering-correlation-id: 7fbabb8d-9fe1-4a04-7172-08dd563665f2
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|376014|1800799024|38070700018|7053199007|1580799027;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?R0hKWlNHRTV2cXIweWdDWVdUV2ZQMmQ0NTFwUGpMMExMb21meHBVTWpsL05s?=
+ =?utf-8?B?c0dUTjNVZ3RHcng4U2IxcEdpMFhyd0NMNGRCVmRaV0JxcUY3bG5wb2FwVzJH?=
+ =?utf-8?B?S09BMHE3TFZvSHFFSUs2T3E5MW1qczFaN3F1aGpQcEVIa1FxSHEwMDJocFRh?=
+ =?utf-8?B?UTV1OW4ycXJmV1AwMEhPZzhHVEdqdlRkbzVQcUtjWi9pRmZGVG9ZZVFpdmtI?=
+ =?utf-8?B?YVRRTlBiRktyMnRWS3gvTy9WOG1QVmw5SWNOTitSYnN6ZUNkNlpaczBHSHhl?=
+ =?utf-8?B?V2c4c2dnUi9kQXBid1RLWDZ5MmI0amhNVEZMaTV6ZGVHeHlMTWFFVjF2Z2pk?=
+ =?utf-8?B?WkJLWkpjVUVOQjFGS2Y3RHpZSWdlazkzY2hwTHpXbWhQb2lGdEorWHloaFE5?=
+ =?utf-8?B?Y3RWVW51QnlGME5CaW04cU5YZWZPdGZQRWxRZnpORjAySzdhNnBQUnJpcmt4?=
+ =?utf-8?B?VWZXcmFTQSsybUJIeVJlS2RyMWhKTDh6d1NwRElqdmJWVEZZR081bXg4YUVK?=
+ =?utf-8?B?TjNNMWkxMW1KQ1RCNjJHZENDdTVqcE56ZEg2cUtLcFVCVTE3dEV1cHhpelpw?=
+ =?utf-8?B?cC8rcHFHZVBhQ3k3enRJNzgyT1d1SzZucllJdEpNUDdkcmRabUpyT3RZOXRQ?=
+ =?utf-8?B?OHR6K0E3dUtQWjNiSVZUSHdQTjhZY285ek9nZGoyVU54RWRuZ3JFU3VRUlFv?=
+ =?utf-8?B?VUQyN0VEUXpQdW5XSmNubVE1aW5uQVU3TUgzczI4TEo1Si9mdEVLR0FuSjJ4?=
+ =?utf-8?B?UWNMQlpmOFpOMkVlUVRrUHdnRTNSa3dtY1J0VENaUTNPMEF3cUlQYi9UNHNX?=
+ =?utf-8?B?dFFLTDNXYm0wOXhnSThlL3VOZUVjV1hlVHhkZlJYa2RodWRkQjcxMUlnVUhx?=
+ =?utf-8?B?Q3BOU0NTcEUwY1BVK0VTb1g3MlZLdHlBUkxZTnR2bWwxTTRZby9lWHRRQVM1?=
+ =?utf-8?B?ZU9Ec1V6YVVqUFMzWm1VZEpMZ205dHlneUpCamVINWdhWHhOME02NnRDSEpo?=
+ =?utf-8?B?WExuWTJmTFpoY095YVFoTEVLdG9HaE52bTM0VWRDT1hrR1Rldy9pTXp2SUc5?=
+ =?utf-8?B?VmJqS2x6bnpCWFhPaWJmZnZ5YTF1ak9Za0FwQWxBb01VOC9EL1RaN09memdP?=
+ =?utf-8?B?ZE1OL2ozaWE2Tlh2akJpK2VUVUk4WUYxcmN5U3k2SlgvWGcrRjBRcVUxeVVG?=
+ =?utf-8?B?d0doM01kaWx3SmJkUUJnRFNLalk5M0Q3WE1VWWtHcG1weHBtelBObE9neTk0?=
+ =?utf-8?B?S3ltcE85cEQ1Y0lrdlBydmovbmhxa1kwRXJjUmY2MjQxV2hEblBlS2k0REtq?=
+ =?utf-8?B?TFB0UEFSYzN1ZjFPYzN2cUVkZGtTODlxNVdkN0h2dzc4Y2ZIc2VHRTR0MHVP?=
+ =?utf-8?B?QnNDT00rTkNqeTdKWGZqNHp3UEl2cER2bExHQXA1WWduYlpZTGx4TmhjSjdn?=
+ =?utf-8?B?czNoYllMd1o0MWk2SVpyd00yVlNkWUZOU1R4QkJEWGwxdHl3MFZuc2pxY0V3?=
+ =?utf-8?B?eUNkQ243UitOREFBdE11emo5bGl5dEMwRHRiNGZRNjZhNThkUDRHWWlCSlha?=
+ =?utf-8?B?Uktvc1E5MXRoVVFORi9NODlaSkVLWndYL1pVWFIzNmtMRk15WDd4bmhmWkpG?=
+ =?utf-8?B?VEFtWkgwVVJFbUgvamVjalJUM1ZxdXp0ZFpIbWVBNkNFWXVNSTkxckg5L0Rt?=
+ =?utf-8?B?dXdYQlNJWXBUQ24yTXFOaHBITmE4Mm5WV3dMTEo1V1pxN1R5Q2RLSjlqWC90?=
+ =?utf-8?B?VjVSTDZJUmVJRGxpUTV5cW5PSmVPMlVub2pPZ1NmOS9sbkFKa29xVzB6Q3Vp?=
+ =?utf-8?B?b2FjMWRIZ1k5S2NPZmZ6bllMQXcybjN2ZmJSQnBzY3ZrUlhMQlpVOXE4Q1NK?=
+ =?utf-8?B?ZEJBekg1ZmUwVkpBcnZDc053eTBlYjJnSlVXTS9MMUlxWlNGYjFoWmlBRlkr?=
+ =?utf-8?B?WUpEbU05YThCbzlaZVZjSHNUNmF3eDkzMDZubmZ0dlRSWGwvYWFrNVlIemFj?=
+ =?utf-8?B?eURLanliQnl3PT0=?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY1PR01MB1562.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700018)(7053199007)(1580799027);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?amEvRUd0L3lLOEwyR1pWZTVweUJWZjBldFM0K2s5RTNLeVI4amdESFN6RTlE?=
+ =?utf-8?B?d1NOV1RIalZZa3FHRi9uUGtndk9yTFdSL0dRS3BDUTFMRnlXNWV3WGF6a3E4?=
+ =?utf-8?B?QllTai9EMEVvcnpFT3ZuSXB5SkZRTlVCaURnRGc4eVkzT3VGRUJCS2gxbnZu?=
+ =?utf-8?B?RWVlTngxdzNub0s1RkRDUmdYRWJUdnV3OU9KOFhpNXR2bHpocWUyRnQrUk9J?=
+ =?utf-8?B?cFNzMnB1VStRQ2R0NG5reHZXWUg2RXNLTmNXcFNBV2M1MWRhZkdtcTJhZWx5?=
+ =?utf-8?B?dmdoOHViZ3VOOEttd0tqTWhpTXpuT09IMGtBQy8wT09TN2YzSjVqSzBqcGpS?=
+ =?utf-8?B?dmVEanBnT2l3UnhCbW14REVwbDBZZzRXKzlsWnV5R3ZNODgzb3lIb05xelkv?=
+ =?utf-8?B?SUlxUmV3SHdhUFVPeVFRWG9ER0x4N2xEL3djUGVSckk3M2ZjYXQxcHdXQUZy?=
+ =?utf-8?B?aGpXV2RGbHZ4NGFkYm5hNytNYXFjSm5OS3JjT0Z4OW4rbFpTOGJQMEVhZnpo?=
+ =?utf-8?B?dHMvWmNpemRWdkFwbmN5dGxzcnRDTExpbTI0SXNGdStBalpra3d1VDFiYnp3?=
+ =?utf-8?B?NjJlOW1pM0pkMVZGV1RPSXhUaDdlb202OWF6anBPV0hTRFR2U0JhWExKNHNN?=
+ =?utf-8?B?YWx0SjdzWmlFZDh5eDg4STRBRlkweHJXNExDRTdNNStvYnR2STJaNkppZy9j?=
+ =?utf-8?B?a0FucEtyT1NZSmJHRjdscTk2TG9XeUN0ai8yNHowSUNaWEdKMmUzbWdMVEEr?=
+ =?utf-8?B?aWpReUg0RGh5d1I4NFc5cGpZMEtHaThJZ2hyTFBob21tUHN5eWhuRzgyUFV2?=
+ =?utf-8?B?SHdHR2dXRFZOREdJYks5VUh5OHZ0ZDR4RWl5ckwvTzlidXphTmE2MTdCVkFq?=
+ =?utf-8?B?S3ZjVkdBQThkRWVyVUR1TEJXWDdNTEhmb1RMNTZnTmRVRTd4RWRjSjVuVmxr?=
+ =?utf-8?B?WU5FZXNxeTlZUFJ2U2xqamwxWmRPVHdib2VZc3VmVVlrNUpaNzJvTHAyTE9U?=
+ =?utf-8?B?TmhWUER5K3pVSU9sUkprUUcraHpzUHhkenFlSXVGSW9ONlQyU0pmS1d2YnZK?=
+ =?utf-8?B?WlBleWNaZG5lTEhZTHVScVc4Q1RpK2JOeUNhTHJrRVhQaTVCeGliNHA3RXFR?=
+ =?utf-8?B?N3k1WWl1VTgzSWhQK2ltbjd5MEtCRlZQQnlrbEd6eGFmT3p5WjNBcHJpQlRU?=
+ =?utf-8?B?Zm13SncyQklwK2V6NGRTQXlVa3N0U2NpdHEwRG5aOWVtWnpOTHkzckdWb1BT?=
+ =?utf-8?B?YUVtNk52Y3Q5Nm5XVW1Dd1lqdkdKMDF5Z0VuQ3pHN2xOeTJtdEtvQ1FGVTlW?=
+ =?utf-8?B?NEtOR3NEa0FnN2plVGRhVWVRS1RwVUg2eUJQcmV4Wlo2QWhtUXg5dDFBQkl5?=
+ =?utf-8?B?dUNPb3lwZXA1cGMzVGtTdUs5cWRFTXNTKzNueGhjREZaY3oxNUZWajlyZUVj?=
+ =?utf-8?B?cENDQzkrMVA0b0M0WjhObWRDdXJrUTh1SE1HbXRMeHF3T1p2dStFRXkxUllS?=
+ =?utf-8?B?RjFmVGFnNTB6ZjFqRFBXcldCVXhpTnQvcDdBdWwyV0JDcmdTbnU1N0MrSWps?=
+ =?utf-8?B?eG9tUjBBbm1UWGNrVG5zMk1FK1A4cDRlTkRNTW5EOGZIWW4rTjlReThsU1Zn?=
+ =?utf-8?B?di9hWnlCNVlBbHFYVTlvemlLcWpPVkczNWxkVlE3ODlkeUdkNUxlalBpUzBM?=
+ =?utf-8?B?QkdYc0F5alIxNzhDV0x0YnJSMGNhQjZTZ2JjcXZBVXZvaUNrRHJFRE91Qmlm?=
+ =?utf-8?B?RWxKeXY0Tk9zVFlEZGJtSlFaT0dxOUwreGFLUkxjS0hYbmRJU1duZ1M1QWEw?=
+ =?utf-8?B?R2E3YndpOFVoZmRydEFXUVQ0ekFuNlB6d1BNMDdrbEc5S0svcFF2dU9nMFNa?=
+ =?utf-8?B?VTJaTzQyYzd0Vy90T0pRL0tnUkF6dmd6WDVIYWJEUi9qa2NURDh2TDdYdk9u?=
+ =?utf-8?B?U0xBRzYvVHJmaVZwZ0JkSng2SlJ1eVNBR3hGT3cvV2Q3Smt0Q2VPTnREMk1K?=
+ =?utf-8?B?ZFYvNjNWTHplQzJOL0EwVllwU1FWWXBHWUdzaG9BYklxcGhRc25HYjh0STBk?=
+ =?utf-8?B?MTN5UU5EYXBWb0xrUzFKcENCV3VFQ1plL0VXOWVlN2M4Mkx5RmFpRzNUdnkw?=
+ =?utf-8?B?KzRtUEMzOWhITkdCSm1ENS9ZbE9PMTJKcmlOcFd5RGxKRjRTSm1FMFJEWjQ2?=
+ =?utf-8?B?ZVE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A529D0A10246E248AF5392664A9AE56F@jpnprd01.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl/region: Allow 6 & 12 way regions on 3-way HB
- interleaves
-To: alison.schofield@intel.com
-Cc: linux-cxl@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>
-References: <20250224235817.2259508-1-alison.schofield@intel.com>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <20250224235817.2259508-1-alison.schofield@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Feedback-ID: rr08011227f9ca53ba9f848d80b5aa7f180000b16a3f8d3445f2fbeef2aae977f3db34ecf53745233cd95e3d:zu0801122732f516a52b532aee280b1b4d000031d9b8369545895919ad32f783145d43beb211e072e80a2de8:rf0801122d41ba2b921678cbb560a83e53000056d8780013443920e5b4a811b4a5fcfa2fb496a8013efd8c25497aa7fd17d6:ZohoMail
-X-ZohoMailClient: External
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	hdIMIHhSX3VCjdlZhQS8ooMfmUu7i8DLbktE0kz58UVQAP+b6PjJJ1Gz51uGmqfaZTqUW6FTZ65z0QbpoICSATOE4+XMj9ihO+UIdsROInSFaTAHNSGQ4cbHpm28WIZn4knN24BuK3MDKMdPZ/6B4n6JuhjpVhcH6d01z0g796kjzI/J93/NNMPNrChNee2SuL6dfgvBjDViNKmsMfRD7L7GZD3pndPgzofg1GI6SZxSv949ZM5Qc/VMColtTrky4kiwoywPqJH7L1QIBLviqpvV9mL51AxMYBVl+/zi0OXbdAtt/XRemsfQ2QUykSTOUT06cBFaG1msFF70TnZzNlvWnvptLQvCXW89ZZHDl0nTjGQ6AYXX2DS26foNxU+yXmRrnptLoJdFaiXDeiMBshOnhrtT+aPvJuPUF9oa/wXHNDgBUjr0nxwkMIPDnJUnz0fHPcibYUOuHIx6ZR6qz0NIRWJ2VVDNAEg9lFRnvX5x4V2cJHMxpA8zFYSgxpxzy1nNIKVfL0QGfY7Aln7Yw/retZVEdPtQvxEr4p4gN8t2W2yHluSzI8EXxOupf1VVtS5PKdY/7+CSV1MdsTsMNJdHiG01fg18TpF3rNBOqF5O00mHSgmNCFSfVWD4qE1g
+X-OriginatorOrg: fujitsu.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TY1PR01MB1562.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7fbabb8d-9fe1-4a04-7172-08dd563665f2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Feb 2025 07:22:59.4914
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: MXfftgBsAnJQ5kGE0c1XrLS4pNMjS0/i9NxBMDRueshd5IO/M+kbvdLuxGUdb4U3Q4QUCHpJOpX5V7phipM+Kg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB9400
 
-On 2/25/2025 7:58 AM, alison.schofield@intel.com wrote:
-> From: Alison Schofield <alison.schofield@intel.com>
->
-> The CXL driver requires the granularity of a region and it's root
-> decoder to be the same. This is particularly restrictive for 3-way
-> host bridge interleaves where the only spec defined interleave
-> configurations for creating 6-way and 12-way regions on a 3-way HB
-> interleave require mixed granularities.
->
-> CXL 3.1 Specification 9.13.1.1:
-> Legal Interleaving Configurations: 12-way, 6-way, and 3-way
->
-> Adding support for these new interleaves touches these areas:
->
-> 1) User created regions employing "cxl create-region" fail when the
-> ndctl tool gets a mixed granularity request. That is addressed in
-> a patch to the ndctl tool.
->
-> 2) User created regions employing sysfs directly fail at the sysfs
-> store of the non-matching region granularity. That restriction is
-> lifted here. Note that the driver immediately allows any reasonable
-> 3-way HB granularity, but the region config may still fail later
-> if the ways/gran between region and root decoder are incompatible.
->
-> 3) Auto created regions, in which the drivers role is to reflect
-> the BIOS created region and provide RAS support, basically sneak on
-> by. The driver ignores the root decoders granularity and assumes it
-> is the same as the regions. The impact being that endpoint devices
-> appear out of order and DPA to HPA address translations that depend
-> on that order are invalid. Here the driver stops making that same
-> granularity assumption and checks for an allowable granularity.
->
-> A new helper, interleave_granularity_allow(), is used in both the
-> user and auto creation path to allow the newly supported configs.
->
-> Another new helper, gran_multiple(), is used in sorting, target
-> list searching, and distance calculations, supporting the new
-> root granularity to region granularity multiples.
->
-> And, as noted in 2), there's an added check to see if the
-> selected sysfs ways/gran make sense when considered together.
->
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> ---
->  drivers/cxl/core/region.c | 101 +++++++++++++++++++++++++++++++-------
->  1 file changed, 82 insertions(+), 19 deletions(-)
->
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 3cb91cf0e2dd..9d4716b7fcf8 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -532,6 +532,31 @@ static ssize_t interleave_granularity_show(struct device *dev,
->  	return rc;
->  }
->  
-> +static bool interleave_granularity_allow(struct cxl_decoder *cxld, u16 ig)
-> +{
-> +	/*
-> +	 * When the host-bridge is interleaved, disallow region granularity
-> +	 * != root granularity with the exception of 3-way HB interleaves.
-> +	 * Allow the CXL Spec defined 3-way HB interleaves that can only be
-> +	 * configured when host-bridge interleave is greater that the
-> +	 * region interleave. (CXL 3.1 Specification 9.13.1.1)
-> +	 * Allow 2+2+2 interleave where HB gran is 2 * region granularity
-> +	 *	 4+4+4 interleave where HB gran is 4 * region granularity
-> +	 *
-> +	 * Regions with a granularity greater than the root interleave result
-> +	 * in invalid DPA translations (invalid to support).
-> +	 */
-> +	if (cxld->interleave_ways > 1 && ig != cxld->interleave_granularity) {
-> +		if (cxld->interleave_ways != 3)
-> +			return false;
-> +
-> +		if (cxld->interleave_granularity % (2 * ig) &&
-> +		    cxld->interleave_granularity % (4 * ig))
-> +			return false;
-> +	}
-> +	return true;
-> +}
-> +
->  static ssize_t interleave_granularity_store(struct device *dev,
->  					    struct device_attribute *attr,
->  					    const char *buf, size_t len)
-> @@ -551,15 +576,7 @@ static ssize_t interleave_granularity_store(struct device *dev,
->  	if (rc)
->  		return rc;
->  
-> -	/*
-> -	 * When the host-bridge is interleaved, disallow region granularity !=
-> -	 * root granularity. Regions with a granularity less than the root
-> -	 * interleave result in needing multiple endpoints to support a single
-> -	 * slot in the interleave (possible to support in the future). Regions
-> -	 * with a granularity greater than the root interleave result in invalid
-> -	 * DPA translations (invalid to support).
-> -	 */
-> -	if (cxld->interleave_ways > 1 && val != cxld->interleave_granularity)
-> +	if (!interleave_granularity_allow(cxld, val))
->  		return -EINVAL;
->  
->  	rc = down_write_killable(&cxl_region_rwsem);
-> @@ -1290,6 +1307,23 @@ static int check_interleave_cap(struct cxl_decoder *cxld, int iw, int ig)
->  	return 0;
->  }
->  
-> +static int gran_multiple(struct cxl_region *cxlr)
-> +{
-> +	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
-> +	int root_decoder_gran = cxlrd->cxlsd.cxld.interleave_granularity;
-> +	int region_gran = cxlr->params.interleave_granularity;
-> +
-> +	/*
-> +	 * In regions built upon 3-way HB interleaves, the root decoder
-> +	 * granularity can be a multiple of the region granularity. The
-> +	 * multiple value is used in sorting and distance calculations.
-> +	 */
-> +	if (cxlrd->cxlsd.cxld.interleave_ways != 3 || !root_decoder_gran)
-> +		return 1;
-
-Hi Alison,
-
-
-root decoder granularity is possible to be 0 here? I checked the code, the minimal value of it should be 256(CXL_DECODER_MIN_GRANULARITY), it was set in __cxl_parse_cfmws().
-
-maybe this '!root_decoder_gran' checking is not needed?
-
-
-Ming
-
-[snip]
-
+DQoNCk9uIDI1LzAyLzIwMjUgMDc6NTAsIGFsaXNvbi5zY2hvZmllbGRAaW50ZWwuY29tIHdyb3Rl
+Og0KPiBGcm9tOiBBbGlzb24gU2Nob2ZpZWxkIDxhbGlzb24uc2Nob2ZpZWxkQGludGVsLmNvbT4N
+Cj4gDQo+IFRoZSBDWEwgdW5pdCB0ZXN0IGN4bC14b3ItcmVnaW9uLnNoIGlzIHNraXBwaW5nIGEg
+MSsxKzEgcmVnaW9uDQo+IGludGVybGVhdmUgdGVzdCBjYXNlIGJlY2F1c2UgdGhlIHdpbmRvdyBp
+cyBub3QgZGVmaW5lZC4NCj4gDQo+IEFkZGl0aW9uYWxseSwgdXBjb21pbmcgZXhwYW5zaW9uIG9m
+IDMgd2F5IEhCIGludGVybGVhdmUgdGVzdCBjYXNlcw0KPiAobGlrZSAyKzIrMikgcmVxdWlyZSB0
+aGUgc2FtZSB3aW5kb3cuDQo+IA0KPiBSZXBsYWNlIGFuIHVudXNlZCBDRk1XUyB3aXRoIGEgMy13
+YXkgY2FwYWJsZSBDRk1XUyBpbiB0aGUgc2V0IG9mDQo+IENGTVdTJ3MgbG9hZGVkIHdoZW4gaW50
+ZXJsZWF2ZV9hcml0aG1ldGljPTEuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBBbGlzb24gU2Nob2Zp
+ZWxkIDxhbGlzb24uc2Nob2ZpZWxkQGludGVsLmNvbT4NCg0KVGVzdGVkLWJ5OiBMaSBaaGlqaWFu
+IDxsaXpoaWppYW5AZnVqaXRzdS5jb20+DQoNCg0KPiAtLS0NCj4gICB0b29scy90ZXN0aW5nL2N4
+bC90ZXN0L2N4bC5jIHwgOCArKysrLS0tLQ0KPiAgIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlv
+bnMoKyksIDQgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvdG9vbHMvdGVzdGluZy9j
+eGwvdGVzdC9jeGwuYyBiL3Rvb2xzL3Rlc3RpbmcvY3hsL3Rlc3QvY3hsLmMNCj4gaW5kZXggMDgz
+YTY2YTUyNzMxLi5lNWNkODc0NjE0ZDIgMTAwNjQ0DQo+IC0tLSBhL3Rvb2xzL3Rlc3RpbmcvY3hs
+L3Rlc3QvY3hsLmMNCj4gKysrIGIvdG9vbHMvdGVzdGluZy9jeGwvdGVzdC9jeGwuYw0KPiBAQCAt
+MzMxLDE0ICszMzEsMTQgQEAgc3RhdGljIHN0cnVjdCB7DQo+ICAgCQkJCS5sZW5ndGggPSBzaXpl
+b2YobW9ja19jZWR0LmNmbXdzOCksDQo+ICAgCQkJfSwNCj4gICAJCQkuaW50ZXJsZWF2ZV9hcml0
+aG1ldGljID0gQUNQSV9DRURUX0NGTVdTX0FSSVRITUVUSUNfWE9SLA0KPiAtCQkJLmludGVybGVh
+dmVfd2F5cyA9IDIsDQo+IC0JCQkuZ3JhbnVsYXJpdHkgPSAwLA0KPiArCQkJLmludGVybGVhdmVf
+d2F5cyA9IDgsDQo+ICsJCQkuZ3JhbnVsYXJpdHkgPSAxLA0KPiAgIAkJCS5yZXN0cmljdGlvbnMg
+PSBBQ1BJX0NFRFRfQ0ZNV1NfUkVTVFJJQ1RfVFlQRTMgfA0KPiAgIAkJCQkJQUNQSV9DRURUX0NG
+TVdTX1JFU1RSSUNUX1BNRU0sDQo+ICAgCQkJLnF0Z19pZCA9IEZBS0VfUVRHX0lELA0KPiAtCQkJ
+LndpbmRvd19zaXplID0gU1pfMjU2TSAqIDE2VUwsDQo+ICsJCQkud2luZG93X3NpemUgPSBTWl81
+MTJNICogNlVMLA0KPiAgIAkJfSwNCj4gLQkJLnRhcmdldCA9IHsgMCwgMSwgMCwgMSwgfSwNCj4g
+KwkJLnRhcmdldCA9IHsgMCwgMSwgMiwgfSwNCj4gICAJfSwNCj4gICAJLmN4aW1zMCA9IHsNCj4g
+ICAJCS5jeGltcyA9IHsNCj4gDQo+IGJhc2UtY29tbWl0OiAyYmI2NzAwNDkwM2NmZDM1NzEwNzUw
+NjU0NjY5YTc3ZTcyMjNmY2Qx
