@@ -1,578 +1,313 @@
-Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
+Received: from out-185.mta1.migadu.com (out-185.mta1.migadu.com [95.215.58.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D30F31AA1E4;
-	Thu, 27 Feb 2025 03:12:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCBC41EB5CD
+	for <linux-cxl@vger.kernel.org>; Thu, 27 Feb 2025 05:31:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740625951; cv=none; b=bFimsrGtStY/CJqTNFRbEgr09hW5ypG5dbJ4XLHqVMYAXiPmW9iPBAdClfO/4I3LF6z1947fFMVnGK7Iv/8N5NX9luwbE4hit7MZeoG8PKwzOCEOvQLF8w7087a7vbwqY+81O4zSSFi1CIosspSLmnNJOX5kMbgcBQqBxvzDK3M=
+	t=1740634320; cv=none; b=m9BZrSvMMFpZhLnHyArHqERDKpW2VzpgkAFFDV21XElL6i9WM+w/pD9MpSxspBoO/ju1D/gPEt3NY8ok02NH7LsUcofK4KlaF5dFxXYwQREAxTIBr9e6bo5qGQjTW0eIUSVAWmV8vT1xxvlK7p6DyeqZv8HAN9W2FiF2I7TpnIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740625951; c=relaxed/simple;
-	bh=oLc6vRpYJ0xDVs2Dp2SxK42oRhdIET3pEOCkPPlQDTk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ocImuJMpYwdht4L6GbW13dJiqs5R/eWehlwKhl1NqHOHBbUIf2AUYUMkUPpGYsrZwgd05xqkF5jZd3jbuSVh1EtdJkQrj0OVOGLTUeGfT5gF6xBnWhSBvXSLLyX5cuehzchpMoCeuaVazBUcEFe4zVNTsgZdF1ynXHfOr42wodk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alistair23.me; spf=pass smtp.mailfrom=alistair23.me; dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b=HamN6V9y; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Iu21XGJ5; arc=none smtp.client-ip=202.12.124.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alistair23.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alistair23.me
+	s=arc-20240116; t=1740634320; c=relaxed/simple;
+	bh=OUsRaW9YHMGHrp2ocFcWcFvP1HtWJNM9p73UCnAUFDY=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=pvg007R2Xi/NvYHXrqFEeXMdXL9WNH1PQGTPDk6FE3rfIesYO+1Hj9QAqxaYj6e2iN8zJrczeRDW0qvEAq2fQsHikwlGsZgDhgeq2K6w4s5xtnIxDsGb8YE47HtDstX1OFkWAuxx/ToUwAZXjUpT8BAWN3QjeRRa0F5/jcN/PQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dY8zVcE9; arc=none smtp.client-ip=95.215.58.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b="HamN6V9y";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Iu21XGJ5"
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfout.stl.internal (Postfix) with ESMTP id 9F82411401BD;
-	Wed, 26 Feb 2025 22:12:28 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-06.internal (MEProxy); Wed, 26 Feb 2025 22:12:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alistair23.me;
-	 h=cc:cc:content-transfer-encoding:content-type:date:date:from
-	:from:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1740625948; x=
-	1740712348; bh=gvplroEYlID/SuFvQTVuGaL+OgftQDgU+sH7ibNw/EY=; b=H
-	amN6V9ykH3sBV6UobUMbew3hkf75Yw6PYVR0ys3kaNBYBUTqe5imt/gEaTSfJnDM
-	oIEd24RF0wqzWagEX+E/2ZHvEOVnM7/GraGg2q2WEADiYkaPCcWZrlQCHwNQTBVi
-	U8Et3NsljPvdAJQ5Cg8dak1N8DQkp22i+G0Oh+ufqDNLUrLneXKOzrh6z5Mu2lp7
-	jOTUU27pVVxMfkmOERra6j31XCI8gvufuINrgVvpWEu1LYJg5IEPlkqazerFaIvn
-	xaFnmcSE9Bth0afhNtVXWlnW0MSjLJtZr+1/5zsbxdbc7HYDM9CH5YjyUXv2kbHw
-	H0E7Q8wfiUIa0Akjxe6IQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm1; t=1740625948; x=1740712348; bh=g
-	vplroEYlID/SuFvQTVuGaL+OgftQDgU+sH7ibNw/EY=; b=Iu21XGJ5gtoE3EMn2
-	2pe/AJr/BA6qKaH3n1mUOPEB0/QOgmIPpxrbuDLH572NiB5KxYxGs27mh7ClqRZg
-	WtDD7bbUFYOWG/QlCoG8D7hj9Vs052kSV6hZPhucnILkoxvHI5ILfGeekIsxXk6o
-	xL2ldfRj0kL+3LDlPjOy/BajMdl1kHM5WEUUNRhEGQk0PF60yyQAUzEi+MffV4iI
-	DsuzkvKa19ZDoFCPVgvBY2GEVtUpcloZhfYI49jDkhl9dseGJrFQrA6dVkNhhDh6
-	lNBYq4UYnSl8fk7yHD3Uwk2KW1GcYA4tyAtb8IQ1vd28BTFs3XtrKARMisQ2k2io
-	q1m2g==
-X-ME-Sender: <xms:HNi_ZyxzSEYMkoPXgkDXUQEo5XyzmPmElVOprQFLfMjnVI9NxVvK7Q>
-    <xme:HNi_Z-St2KA9xD4eyRiPX-Pai05bheRFHzf_IrKGqr4MOejFVAt9-C_l_GNKdFTSy
-    F14EB-2tENw2LXRkQY>
-X-ME-Received: <xmr:HNi_Z0U6DSbdrn4r4lKbTwuZ3x6mBtHVSwOxlyxThX0AKUBWLGSVpARgXjIJPQ1yj3E9sT_pzDg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekieefiecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecuogfuohhrthgvugftvg
-    gtihhpvdculdegtddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttden
-    ucfhrhhomheptehlihhsthgrihhrucfhrhgrnhgtihhsuceorghlihhsthgrihhrsegrlh
-    hishhtrghirhdvfedrmhgvqeenucggtffrrghtthgvrhhnpefhvedvvdefjeduffeujefh
-    hfeigfelheelvdfgfeejueeuhfelieffleehleekudenucffohhmrghinhepsggrshgvpg
-    grshihmhgpvghntgdrrghspdgsrghsvggphhgrshhhpggrlhhgpghnrghmvgdrrghspdht
-    rhgrnhhstghrihhpthdrrghspdhophgrqhhuvggpuggrthgrpghlvghnrdhtohenucevlh
-    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrlhhishhtrghi
-    rhesrghlihhsthgrihhrvdefrdhmvgdpnhgspghrtghpthhtohepvddtpdhmohguvgepsh
-    hmthhpohhuthdprhgtphhtthhopehlihhnuhigqdgtgihlsehvghgvrhdrkhgvrhhnvghl
-    rdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvg
-    hlrdhorhhgpdhrtghpthhtoheplhhukhgrshesfihunhhnvghrrdguvgdprhgtphhtthho
-    pehlihhnuhigqdhptghisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsg
-    hhvghlghgrrghssehgohhoghhlvgdrtghomhdprhgtphhtthhopehjohhnrghthhgrnhdr
-    tggrmhgvrhhonheshhhurgifvghirdgtohhmpdhrtghpthhtoheprhhushhtqdhfohhrqd
-    hlihhnuhigsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghkphhmsehl
-    ihhnuhigqdhfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopegsohhquhhnrdhfvg
-    hnghesghhmrghilhdrtghomh
-X-ME-Proxy: <xmx:HNi_Z4g5e-gJlj5dNHfOSCrEYFiQ7AxYBJa6YwIipygxqHP03hzdyw>
-    <xmx:HNi_Z0Bzy-fliv8Nultky-CL6ATf-1M5APsYgvUyl0aLYkFhuRPSKA>
-    <xmx:HNi_Z5IuErvlxoe9HLEdJFIfrkTJ_nHkggdWGA7TNCECeIIPHiGhHg>
-    <xmx:HNi_Z7CRyvk-ON-LBaKU-kyzK17L7hAn0IC1_1Z5hMOh5hvqE1cHoA>
-    <xmx:HNi_Z7Bkc0q9Y5W16gG_bXvRhmhmewbDgfUhMO9SrCXELr3eUz5XHO_7>
-Feedback-ID: ifd214418:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 26 Feb 2025 22:12:22 -0500 (EST)
-From: Alistair Francis <alistair@alistair23.me>
-To: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lukas@wunner.de,
-	linux-pci@vger.kernel.org,
-	bhelgaas@google.com,
-	Jonathan.Cameron@huawei.com,
-	rust-for-linux@vger.kernel.org,
-	akpm@linux-foundation.org
-Cc: boqun.feng@gmail.com,
-	bjorn3_gh@protonmail.com,
-	wilfred.mallawa@wdc.com,
-	aliceryhl@google.com,
-	ojeda@kernel.org,
-	alistair23@gmail.com,
-	a.hindborg@kernel.org,
-	tmgross@umich.edu,
-	gary@garyguo.net,
-	alex.gaynor@gmail.com,
-	benno.lossin@proton.me,
-	Alistair Francis <alistair@alistair23.me>
-Subject: [RFC v2 20/20] lib: rspdm: Support SPDM challenge
-Date: Thu, 27 Feb 2025 13:09:52 +1000
-Message-ID: <20250227030952.2319050-21-alistair@alistair23.me>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250227030952.2319050-1-alistair@alistair23.me>
-References: <20250227030952.2319050-1-alistair@alistair23.me>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dY8zVcE9"
+Content-Type: text/plain;
+	charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1740634313;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=F1Vp9T1YOvCzfZJGzMhac85K2gz9jdGgCjwyc3PFKuM=;
+	b=dY8zVcE9fdg0GRVAg/Jp9/WXyc0VO6aaJEOxnx31VHLuFpuZyVylxuZElT1wfdoeaog4Nh
+	zVqIprKqO3wt4RvgkMnsJ8W3XJZ8iuWIqzKi2uF3zziYb5AN7H6QbWfSWc/BkABq0kYCZ1
+	Pi7pUxsc200xm6Vnr/rZClBCEJ9GSLc=
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
+Subject: Re: ndctl cxl test suite fails in arm64 QEMU
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Itaru Kitayama <itaru.kitayama@linux.dev>
+In-Reply-To: <Z79hPyNMymvM9Hlp@aschofie-mobl2.lan>
+Date: Thu, 27 Feb 2025 14:31:27 +0900
+Cc: Marc Herbert <Marc.Herbert@linux.intel.com>,
+ linux-cxl@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <B8159E2E-3FD5-4ED3-AA91-A7987C22CFAF@linux.dev>
+References: <43568B03-6832-4EB1-BF46-EF0F176509E2@linux.dev>
+ <9b1492d7-ffa8-4d61-a101-4fa9c2d71ae3@linux.intel.com>
+ <AD05AE2B-9AA4-4E60-AEF7-705281368838@linux.dev>
+ <Z75IpiYqA1sylXYx@aschofie-mobl2.lan>
+ <CE9B21EB-B7D5-4E40-901C-306689C4B4FA@linux.dev>
+ <Z79hPyNMymvM9Hlp@aschofie-mobl2.lan>
+To: Alison Schofield <alison.schofield@intel.com>
+X-Migadu-Flow: FLOW_OUT
 
-Signed-off-by: Alistair Francis <alistair@alistair23.me>
----
- lib/rspdm/consts.rs             |   6 +
- lib/rspdm/lib.rs                |   8 +-
- lib/rspdm/state.rs              | 212 ++++++++++++++++++++++++++++++--
- lib/rspdm/validator.rs          |  65 +++++++++-
- rust/bindings/bindings_helper.h |   1 +
- 5 files changed, 283 insertions(+), 9 deletions(-)
 
-diff --git a/lib/rspdm/consts.rs b/lib/rspdm/consts.rs
-index ffaf36ec583b..af4e1a98dc5b 100644
---- a/lib/rspdm/consts.rs
-+++ b/lib/rspdm/consts.rs
-@@ -98,6 +98,8 @@ pub(crate) enum SpdmErrorCode {
- 
- pub(crate) const SPDM_GET_CERTIFICATE: u8 = 0x82;
- 
-+pub(crate) const SPDM_CHALLENGE: u8 = 0x83;
-+
- #[cfg(CONFIG_CRYPTO_RSA)]
- pub(crate) const SPDM_ASYM_RSA: u32 =
-     SPDM_ASYM_RSASSA_2048 | SPDM_ASYM_RSASSA_3072 | SPDM_ASYM_RSASSA_4096;
-@@ -127,3 +129,7 @@ pub(crate) enum SpdmErrorCode {
- // pub(crate) const SPDM_MAX_REQ_ALG_STRUCT: usize = 4;
- 
- pub(crate) const SPDM_OPAQUE_DATA_FMT_GENERAL: u8 = 1 << 1;
-+
-+pub(crate) const SPDM_PREFIX_SZ: usize = 64;
-+pub(crate) const SPDM_COMBINED_PREFIX_SZ: usize = 100;
-+pub(crate) const SPDM_MAX_OPAQUE_DATA: usize = 1024;
-diff --git a/lib/rspdm/lib.rs b/lib/rspdm/lib.rs
-index b7ad3b8c659e..c0e3e039c14f 100644
---- a/lib/rspdm/lib.rs
-+++ b/lib/rspdm/lib.rs
-@@ -137,17 +137,23 @@
-         provisioned_slots &= !(1 << slot);
-     }
- 
-+    let mut verify = true;
-     let mut provisioned_slots = state.provisioned_slots;
-     while (provisioned_slots as usize) > 0 {
-         let slot = provisioned_slots.trailing_zeros() as u8;
- 
-         if let Err(e) = state.validate_cert_chain(slot) {
--            return e.to_errno() as c_int;
-+            pr_debug!("Certificate in slot {slot} failed to verify: {e:?}");
-+            verify = false;
-         }
- 
-         provisioned_slots &= !(1 << slot);
-     }
- 
-+    if let Err(e) = state.challenge(state.provisioned_slots.trailing_zeros() as u8, verify) {
-+        return e.to_errno() as c_int;
-+    }
-+
-     0
- }
- 
-diff --git a/lib/rspdm/state.rs b/lib/rspdm/state.rs
-index 974d2ee8c0ce..4629c12a1b81 100644
---- a/lib/rspdm/state.rs
-+++ b/lib/rspdm/state.rs
-@@ -14,23 +14,27 @@
-     bindings,
-     error::{code::EINVAL, from_err_ptr, to_result, Error},
-     str::CStr,
-+    str::CString,
-     validate::Untrusted,
- };
- 
- use crate::consts::{
-     SpdmErrorCode, SPDM_ASYM_ALGOS, SPDM_ASYM_ECDSA_ECC_NIST_P256, SPDM_ASYM_ECDSA_ECC_NIST_P384,
-     SPDM_ASYM_ECDSA_ECC_NIST_P521, SPDM_ASYM_RSASSA_2048, SPDM_ASYM_RSASSA_3072,
--    SPDM_ASYM_RSASSA_4096, SPDM_ERROR, SPDM_GET_VERSION_LEN, SPDM_HASH_ALGOS, SPDM_HASH_SHA_256,
--    SPDM_HASH_SHA_384, SPDM_HASH_SHA_512, SPDM_KEY_EX_CAP, SPDM_MAX_VER, SPDM_MEAS_CAP_MASK,
--    SPDM_MEAS_SPEC_DMTF, SPDM_MIN_DATA_TRANSFER_SIZE, SPDM_MIN_VER, SPDM_OPAQUE_DATA_FMT_GENERAL,
-+    SPDM_ASYM_RSASSA_4096, SPDM_COMBINED_PREFIX_SZ, SPDM_ERROR, SPDM_GET_VERSION_LEN,
-+    SPDM_HASH_ALGOS, SPDM_HASH_SHA_256, SPDM_HASH_SHA_384, SPDM_HASH_SHA_512, SPDM_KEY_EX_CAP,
-+    SPDM_MAX_OPAQUE_DATA, SPDM_MAX_VER, SPDM_MEAS_CAP_MASK, SPDM_MEAS_SPEC_DMTF,
-+    SPDM_MIN_DATA_TRANSFER_SIZE, SPDM_MIN_VER, SPDM_OPAQUE_DATA_FMT_GENERAL, SPDM_PREFIX_SZ,
-     SPDM_REQ, SPDM_RSP_MIN_CAPS, SPDM_SLOTS, SPDM_VER_10, SPDM_VER_11, SPDM_VER_12,
- };
- use crate::validator::{
--    GetCapabilitiesReq, GetCapabilitiesRsp, GetCertificateReq, GetCertificateRsp, GetDigestsReq,
--    GetDigestsRsp, GetVersionReq, GetVersionRsp, NegotiateAlgsReq, NegotiateAlgsRsp, RegAlg,
--    SpdmErrorRsp, SpdmHeader,
-+    ChallengeReq, ChallengeRsp, GetCapabilitiesReq, GetCapabilitiesRsp, GetCertificateReq,
-+    GetCertificateRsp, GetDigestsReq, GetDigestsRsp, GetVersionReq, GetVersionRsp,
-+    NegotiateAlgsReq, NegotiateAlgsRsp, RegAlg, SpdmErrorRsp, SpdmHeader,
- };
- 
-+const SPDM_CONTEXT: &str = "responder-challenge_auth signing";
-+
- /// The current SPDM session state for a device. Based on the
- /// C `struct spdm_state`.
- ///
-@@ -78,6 +82,12 @@
- /// @slot_sz: Certificate chain size (in bytes).
- /// @leaf_key: Public key portion of leaf certificate against which to check
- ///  responder's signatures.
-+/// @transcript: Concatenation of all SPDM messages exchanged during an
-+///  authentication or measurement sequence.  Used to verify the signature,
-+///  as it is computed over the hashed transcript.
-+/// @next_nonce: Requester nonce to be used for the next authentication
-+///  sequence.  Populated from user space through sysfs.
-+///  If user space does not provide a nonce, the kernel uses a random one.
- ///
- /// `authenticated`: Whether device was authenticated successfully.
- pub struct SpdmState {
-@@ -113,6 +123,10 @@ pub struct SpdmState {
-     pub(crate) slot: [Option<KVec<u8>>; SPDM_SLOTS],
-     slot_sz: [usize; SPDM_SLOTS],
-     pub(crate) leaf_key: Option<*mut bindings::public_key>,
-+
-+    transcript: KVec<u8>,
-+
-+    next_nonce: Option<&'static mut [u8]>,
- }
- 
- #[repr(C, packed)]
-@@ -156,6 +170,8 @@ pub(crate) fn new(
-             slot: [const { None }; SPDM_SLOTS],
-             slot_sz: [0; SPDM_SLOTS],
-             leaf_key: None,
-+            transcript: KVec::new(),
-+            next_nonce: None,
-         }
-     }
- 
-@@ -263,7 +279,7 @@ fn spdm_err(&self, rsp: &SpdmErrorRsp) -> Result<(), Error> {
-     /// The data in `request_buf` is sent to the device and the response is
-     /// stored in `response_buf`.
-     pub(crate) fn spdm_exchange(
--        &self,
-+        &mut self,
-         request_buf: &mut [u8],
-         response_buf: &mut [u8],
-     ) -> Result<i32, Error> {
-@@ -271,6 +287,8 @@ pub(crate) fn spdm_exchange(
-         let request: &mut SpdmHeader = Untrusted::new_mut(request_buf).validate_mut()?;
-         let response: &SpdmHeader = Untrusted::new_ref(response_buf).validate()?;
- 
-+        self.transcript.extend_from_slice(request_buf, GFP_KERNEL)?;
-+
-         let transport_function = self.transport.ok_or(EINVAL)?;
-         // SAFETY: `transport_function` is provided by the new(), we are
-         // calling the function.
-@@ -337,6 +355,12 @@ pub(crate) fn get_version(&mut self) -> Result<(), Error> {
-         unsafe { response_vec.set_len(rc as usize) };
- 
-         let response: &mut GetVersionRsp = Untrusted::new_mut(&mut response_vec).validate_mut()?;
-+        let rsp_sz = core::mem::size_of::<SpdmHeader>()
-+            + 2
-+            + response.version_number_entry_count as usize * 2;
-+
-+        self.transcript
-+            .extend_from_slice(&response_vec[..rsp_sz], GFP_KERNEL)?;
- 
-         let mut foundver = false;
-         for i in 0..response.version_number_entry_count {
-@@ -400,6 +424,9 @@ pub(crate) fn get_capabilities(&mut self) -> Result<(), Error> {
-         let response: &mut GetCapabilitiesRsp =
-             Untrusted::new_mut(&mut response_vec).validate_mut()?;
- 
-+        self.transcript
-+            .extend_from_slice(&response_vec[..rsp_sz], GFP_KERNEL)?;
-+
-         self.rsp_caps = u32::from_le(response.flags);
-         if (self.rsp_caps & SPDM_RSP_MIN_CAPS) != SPDM_RSP_MIN_CAPS {
-             to_result(-(bindings::EPROTONOSUPPORT as i32))?;
-@@ -539,6 +566,9 @@ pub(crate) fn negotiate_algs(&mut self) -> Result<(), Error> {
-         let response: &mut NegotiateAlgsRsp =
-             Untrusted::new_mut(&mut response_vec).validate_mut()?;
- 
-+        self.transcript
-+            .extend_from_slice(&response_vec[..rsp_sz], GFP_KERNEL)?;
-+
-         self.base_asym_alg = response.base_asym_sel;
-         self.base_hash_alg = response.base_hash_sel;
-         self.meas_hash_alg = response.measurement_hash_algo;
-@@ -598,6 +628,10 @@ pub(crate) fn get_digests(&mut self) -> Result<(), Error> {
-         unsafe { response_vec.set_len(rc as usize) };
- 
-         let response: &mut GetDigestsRsp = Untrusted::new_mut(&mut response_vec).validate_mut()?;
-+        let rsp_sz = core::mem::size_of::<SpdmHeader>() + response.param2 as usize * self.hash_len;
-+
-+        self.transcript
-+            .extend_from_slice(&response_vec[..rsp_sz], GFP_KERNEL)?;
- 
-         if rc
-             < (core::mem::size_of::<GetDigestsReq>()
-@@ -659,6 +693,10 @@ fn get_cert_exchange(
-         unsafe { response_vec.set_len(rc as usize) };
- 
-         let response: &mut GetCertificateRsp = Untrusted::new_mut(response_vec).validate_mut()?;
-+        let rsp_sz = core::mem::size_of::<SpdmHeader>() + 4 + response.portion_length as usize;
-+
-+        self.transcript
-+            .extend_from_slice(&response_vec[..rsp_sz], GFP_KERNEL)?;
- 
-         if rc
-             < (core::mem::size_of::<GetCertificateRsp>() + response.portion_length as usize) as i32
-@@ -836,4 +874,164 @@ pub(crate) fn validate_cert_chain(&mut self, slot: u8) -> Result<(), Error> {
- 
-         Ok(())
-     }
-+
-+    pub(crate) fn challenge_rsp_len(&mut self, nonce_len: usize, opaque_len: usize) -> usize {
-+        let mut length =
-+            core::mem::size_of::<SpdmHeader>() + self.hash_len + nonce_len + opaque_len + 2;
-+
-+        if self.version >= 0x13 {
-+            length += 8;
-+        }
-+
-+        length + self.sig_len
-+    }
-+
-+    fn verify_signature(&mut self, response_vec: &mut [u8]) -> Result<(), Error> {
-+        let sig_start = response_vec.len() - self.sig_len;
-+        let mut sig = bindings::public_key_signature::default();
-+        let mut mhash: KVec<u8> = KVec::new();
-+
-+        sig.s = &mut response_vec[sig_start..] as *mut _ as *mut u8;
-+        sig.s_size = self.sig_len as u32;
-+        sig.encoding = self.base_asym_enc.as_ptr();
-+        sig.hash_algo = self.base_hash_alg_name.as_ptr();
-+
-+        let mut m: KVec<u8> = KVec::new();
-+        m.extend_with(SPDM_COMBINED_PREFIX_SZ + self.hash_len, 0, GFP_KERNEL)?;
-+
-+        if let Some(desc) = &mut self.desc {
-+            desc.tfm = self.shash;
-+
-+            unsafe {
-+                to_result(bindings::crypto_shash_digest(
-+                    *desc,
-+                    self.transcript.as_ptr(),
-+                    (self.transcript.len() - self.sig_len) as u32,
-+                    m[SPDM_COMBINED_PREFIX_SZ..].as_mut_ptr(),
-+                ))?;
-+            };
-+        } else {
-+            to_result(-(bindings::EPROTO as i32))?;
-+        }
-+
-+        if self.version <= 0x11 {
-+            sig.digest = m[SPDM_COMBINED_PREFIX_SZ..].as_mut_ptr();
-+        } else {
-+            let major = self.version >> 4;
-+            let minor = self.version & 0xF;
-+
-+            let output = CString::try_from_fmt(fmt!("dmtf-spdm-v{major:x}.{minor:x}.*dmtf-spdm-v{major:x}.{minor:x}.*dmtf-spdm-v{major:x}.{minor:x}.*dmtf-spdm-v{major:x}.{minor:x}.*"))?;
-+            let mut buf = output.take_buffer();
-+            let zero_pad_len = SPDM_COMBINED_PREFIX_SZ - SPDM_PREFIX_SZ - SPDM_CONTEXT.len() - 1;
-+
-+            buf.extend_with(zero_pad_len, 0, GFP_KERNEL)?;
-+            buf.extend_from_slice(SPDM_CONTEXT.as_bytes(), GFP_KERNEL)?;
-+
-+            m[..SPDM_COMBINED_PREFIX_SZ].copy_from_slice(&buf);
-+
-+            mhash.extend_with(self.hash_len, 0, GFP_KERNEL)?;
-+
-+            if let Some(desc) = &mut self.desc {
-+                desc.tfm = self.shash;
-+
-+                unsafe {
-+                    to_result(bindings::crypto_shash_digest(
-+                        *desc,
-+                        m.as_ptr(),
-+                        m.len() as u32,
-+                        mhash.as_mut_ptr(),
-+                    ))?;
-+                };
-+            } else {
-+                to_result(-(bindings::EPROTO as i32))?;
-+            }
-+
-+            sig.digest = mhash.as_mut_ptr();
-+        }
-+
-+        sig.digest_size = self.hash_len as u32;
-+
-+        if let Some(leaf_key) = self.leaf_key {
-+            unsafe { to_result(bindings::public_key_verify_signature(leaf_key, &sig)) }
-+        } else {
-+            to_result(-(bindings::EPROTO as i32))
-+        }
-+    }
-+
-+    pub(crate) fn challenge(&mut self, slot: u8, verify: bool) -> Result<(), Error> {
-+        let mut request = ChallengeReq::default();
-+        request.version = self.version;
-+        request.param1 = slot;
-+
-+        let nonce_len = request.nonce.len();
-+
-+        if let Some(nonce) = &self.next_nonce {
-+            request.nonce.copy_from_slice(&nonce);
-+            self.next_nonce = None;
-+        } else {
-+            unsafe {
-+                bindings::get_random_bytes(&mut request.nonce as *mut _ as *mut c_void, nonce_len)
-+            };
-+        }
-+
-+        let req_sz = if self.version <= 0x12 {
-+            core::mem::size_of::<ChallengeReq>() - 8
-+        } else {
-+            core::mem::size_of::<ChallengeReq>()
-+        };
-+
-+        let rsp_sz = self.challenge_rsp_len(nonce_len, SPDM_MAX_OPAQUE_DATA);
-+
-+        // SAFETY: `request` is repr(C) and packed, so we can convert it to a slice
-+        let request_buf = unsafe { from_raw_parts_mut(&mut request as *mut _ as *mut u8, req_sz) };
-+
-+        let mut response_vec: KVec<u8> = KVec::with_capacity(rsp_sz, GFP_KERNEL)?;
-+        // SAFETY: `request` is repr(C) and packed, so we can convert it to a slice
-+        let response_buf = unsafe { from_raw_parts_mut(response_vec.as_mut_ptr(), rsp_sz) };
-+
-+        let rc = self.spdm_exchange(request_buf, response_buf)?;
-+
-+        if rc < (core::mem::size_of::<ChallengeRsp>() as i32) {
-+            pr_err!("Truncated challenge response\n");
-+            to_result(-(bindings::EIO as i32))?;
-+        }
-+
-+        // SAFETY: `rc` bytes where inserted to the raw pointer by spdm_exchange
-+        unsafe { response_vec.set_len(rc as usize) };
-+
-+        let _response: &mut ChallengeRsp = Untrusted::new_mut(&mut response_vec).validate_mut()?;
-+
-+        let opaque_len_offset = core::mem::size_of::<SpdmHeader>() + self.hash_len + nonce_len;
-+        let opaque_len = u16::from_le_bytes(
-+            response_vec[opaque_len_offset..(opaque_len_offset + 2)]
-+                .try_into()
-+                .unwrap_or([0, 0]),
-+        );
-+
-+        let rsp_sz = self.challenge_rsp_len(nonce_len, opaque_len as usize);
-+
-+        if rc < rsp_sz as i32 {
-+            pr_err!("Truncated challenge response\n");
-+            to_result(-(bindings::EIO as i32))?;
-+        }
-+
-+        self.transcript
-+            .extend_from_slice(&response_vec[..rsp_sz], GFP_KERNEL)?;
-+
-+        if verify {
-+            /* Verify signature at end of transcript against leaf key */
-+            match self.verify_signature(&mut response_vec[..rsp_sz]) {
-+                Ok(()) => {
-+                    pr_info!("Authenticated with certificate slot {slot}");
-+                    self.authenticated = true;
-+                }
-+                Err(e) => {
-+                    pr_err!("Cannot verify challenge_auth signature: {e:?}");
-+                    self.authenticated = false;
-+                }
-+            };
-+        }
-+
-+        Ok(())
-+    }
- }
-diff --git a/lib/rspdm/validator.rs b/lib/rspdm/validator.rs
-index a8bc3378676f..f8a5337841f0 100644
---- a/lib/rspdm/validator.rs
-+++ b/lib/rspdm/validator.rs
-@@ -17,7 +17,7 @@
- };
- 
- use crate::consts::{
--    SPDM_ASYM_ALGOS, SPDM_CTEXPONENT, SPDM_GET_CAPABILITIES, SPDM_GET_CERTIFICATE,
-+    SPDM_ASYM_ALGOS, SPDM_CHALLENGE, SPDM_CTEXPONENT, SPDM_GET_CAPABILITIES, SPDM_GET_CERTIFICATE,
-     SPDM_GET_DIGESTS, SPDM_GET_VERSION, SPDM_HASH_ALGOS, SPDM_MEAS_SPEC_DMTF, SPDM_NEGOTIATE_ALGS,
-     SPDM_REQ_CAPS,
- };
-@@ -424,3 +424,66 @@ fn validate(unvalidated: &mut Unvalidated<KVec<u8>>) -> Result<Self, Self::Err>
-         Ok(rsp)
-     }
- }
-+
-+#[repr(C, packed)]
-+pub(crate) struct ChallengeReq {
-+    pub(crate) version: u8,
-+    pub(crate) code: u8,
-+    pub(crate) param1: u8,
-+    pub(crate) param2: u8,
-+
-+    pub(crate) nonce: [u8; 32],
-+    pub(crate) context: [u8; 8],
-+}
-+
-+impl Default for ChallengeReq {
-+    fn default() -> Self {
-+        ChallengeReq {
-+            version: 0,
-+            code: SPDM_CHALLENGE,
-+            param1: 0,
-+            param2: 0,
-+            nonce: [0; 32],
-+            context: [0; 8],
-+        }
-+    }
-+}
-+
-+#[repr(C, packed)]
-+pub(crate) struct ChallengeRsp {
-+    pub(crate) version: u8,
-+    pub(crate) code: u8,
-+    pub(crate) param1: u8,
-+    pub(crate) param2: u8,
-+
-+    pub(crate) cert_chain_hash: __IncompleteArrayField<u8>,
-+    pub(crate) nonce: [u8; 32],
-+    pub(crate) message_summary_hash: __IncompleteArrayField<u8>,
-+
-+    pub(crate) opaque_data_len: u16,
-+    pub(crate) opaque_data: __IncompleteArrayField<u8>,
-+
-+    pub(crate) context: [u8; 8],
-+    pub(crate) signature: __IncompleteArrayField<u8>,
-+}
-+
-+impl Validate<&mut Unvalidated<KVec<u8>>> for &mut ChallengeRsp {
-+    type Err = Error;
-+
-+    fn validate(unvalidated: &mut Unvalidated<KVec<u8>>) -> Result<Self, Self::Err> {
-+        let raw = unvalidated.raw_mut();
-+        if raw.len() < mem::size_of::<ChallengeRsp>() {
-+            return Err(EINVAL);
-+        }
-+
-+        let ptr = raw.as_mut_ptr();
-+        // CAST: `ChallengeRsp` only contains integers and has `repr(C)`.
-+        let ptr = ptr.cast::<ChallengeRsp>();
-+        // SAFETY: `ptr` came from a reference and the cast above is valid.
-+        let rsp: &mut ChallengeRsp = unsafe { &mut *ptr };
-+
-+        // rsp.opaque_data_len = rsp.opaque_data_len.to_le();
-+
-+        Ok(rsp)
-+    }
-+}
-diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-index daeb599fb990..16b8602c6d1a 100644
---- a/rust/bindings/bindings_helper.h
-+++ b/rust/bindings/bindings_helper.h
-@@ -7,6 +7,7 @@
-  */
- 
- #include <crypto/hash.h>
-+#include <crypto/public_key.h>
- #include <kunit/test.h>
- #include <linux/blk-mq.h>
- #include <linux/blk_types.h>
--- 
-2.48.1
+
+> On Feb 27, 2025, at 3:45, Alison Schofield =
+<alison.schofield@intel.com> wrote:
+>=20
+> On Wed, Feb 26, 2025 at 08:53:12AM +0900, Itaru Kitayama wrote:
+>> Hi Alison,
+>>=20
+>>> On Feb 26, 2025, at 7:48, Alison Schofield =
+<alison.schofield@intel.com> wrote:
+>>>=20
+>>> On Wed, Feb 26, 2025 at 07:37:58AM +0900, Itaru Kitayama wrote:
+>>>> Hi Marc,
+>>>>=20
+>>>>> On Feb 26, 2025, at 2:08, Marc Herbert =
+<Marc.Herbert@linux.intel.com> wrote:
+>>>>>=20
+>>>>> On 2025-02-24 20:09, Itaru Kitayama wrote:
+>>>>>>=20
+>>>>>> Has anyone noticed the ndctl cxl test suite failures I reported =
+below on arm64, QEMU emulation?
+>>>>>>=20
+>>>>>> https://github.com/pmem/ndctl/issues/278
+>>>>>>=20
+>>>>>> I=E2=80=99m using Jonathan=E2=80=99s latest CXL capable QEMU [1], =
+and the latest CXL kernel [2].
+>>>>>>=20
+>>>>>=20
+>>>>>=20
+>>>>> Hi,
+>>>>>=20
+>>>>> Sorry I wanted to spend more time and share a more detailed answer =
+and
+>>>>> of course I got side-tracked.
+>>>>>=20
+>>>>> Do you have CONFIG_RANDOMIZE_MEMORY on?
+>>>>>=20
+>>>>> If yes then please try this either this:
+>>>>>=20
+>>>>> cd kernel
+>>>>> ./scripts/config -d CONFIG_RANDOMIZE_MEMORY
+>>>>>=20
+>>>>> ... or this:
+>>>>>=20
+>>>>> --- a/run_qemu.sh
+>>>>> +++ b/run_qemu.sh
+>>>>> @@ -681,6 +681,7 @@ build_kernel_cmdline()
+>>>>> "initcall_debug"
+>>>>> "log_buf_len=3D20M"
+>>>>> "memory_hotplug.memmap_on_memory=3Dforce"
+>>>>> + "nokaslr"
+>>>>> )
+>>>>> if [[ $_arg_gdb =3D=3D "on" ]]; then
+>>>>> kcmd+=3D(
+>>>>=20
+>>>> I chose the kernel configuration change and rebuilt the kernel, =
+modules installed, then finally cxl_test kernel module installed on the =
+emulated system, but I got worth results (occasionally, the kernel OOPS =
+as well):
+>>>=20
+>>> Yikes.
+>>>=20
+>>> What is your ndctl --version
+>>=20
+>> I=E2=80=99m using GitHub=E2=80=99s latest.
+>>=20
+>>>=20
+>>> What is your run_qemu cmdline?
+>>=20
+>> Unfortunately, it is x86 centric, at this moment it=E2=80=99s hard to =
+use.
+>>=20
+>>> I think you said kernel is cxl/next ?
+>>=20
+>> Yes, I did.
+>>=20
+>>>=20
+>>> The simplest one when I intend to use cxl-test is:
+>>> run_qemu.sh --git-qemu --cxl-test --cxl-debug -r kmod
+>>=20
+>> Instead, here are the options I use when emulating on arm64:
+>>=20
+>> /home/itaru/projects/qemu/build/qemu-system-aarch64 \
+>>         -M =
+virt,virtualization=3Doff,pflash0=3Drom,pflash1=3Defivars,gic-version=3D3,=
+cxl=3Don,acpi=3Don -m 16384 \
+>>         -cpu max \
+>>         -smp 2 \
+>>         -accel tcg \
+>>         -nographic \
+>>         -display none \
+>>         -kernel $HOME/projects/linux/arch/arm64/boot/Image \
+>>         -append "root=3D/dev/vda rw acpi=3Dforce" \
+>>         -drive =
+format=3Draw,if=3Dnone,file=3D/home/itaru/ubuntu24.img,id=3Dhd0 \
+>>         -device virtio-blk-pci,drive=3Dhd0,serial=3D"dummyserial" \
+>>         -nodefaults \
+>>         -device virtio-net-pci,netdev=3Dnet0 \
+>>         -netdev user,id=3Dnet0,hostfwd=3Dtcp::8024-:22 \
+>>         -blockdev =
+node-name=3Drom,driver=3Dfile,filename=3Dedk2-aarch64-code.fd,read-only=3D=
+true \
+>>         -blockdev =
+node-name=3Defivars,driver=3Dfile,filename=3Dqemu-arm64-efivars.test \
+>>         -object =
+memory-backend-file,id=3Dcxl-mem1,share=3Don,mem-path=3D/tmp/cxltest.raw,s=
+ize=3D256M \
+>>         -object =
+memory-backend-file,id=3Dcxl-lsa1,share=3Don,mem-path=3D/tmp/lsa.raw,size=3D=
+256M \
+>>         -device pxb-cxl,bus_nr=3D12,bus=3Dpcie.0,id=3Dcxl.1 \
+>>         -device =
+cxl-rp,port=3D0,bus=3Dcxl.1,id=3Droot_port13,chassis=3D0,slot=3D2 \
+>>         -device =
+cxl-type3,bus=3Droot_port13,memdev=3Dcxl-mem1,lsa=3Dcxl-lsa1,id=3Dcxl-pmem=
+0 \
+>>         -M cxl-fmw.0.targets.0=3Dcxl.1,cxl-fmw.0.size=3D4G \
+>>         -serial mon:stdio \
+>>         -device virtio-9p-device,fsdev=3Dshr0,mount_tag=3Dshr0 \
+>>         -fsdev local,security_model=3Dnone,path=3D/home/itaru,id=3Dshr0=
+
+>>=20
+>> Thanks,
+>> Itaru.
+>=20
+> Hi Itaru,
+>=20
+> I am able to reproduce your original issue on x86. It occurs, like =
+Marc
+> suggested, when RANDOMIZE_MEMORY is enabled. (The nokaslr kernel param
+> disables both RANDOMIZE_BASE and RANDOMIZE_MEMORY in x86.)
+>=20
+> Poking around arm64 related configs, it doesn't have a direct =
+equivalent
+> to RANDOMIZE_MEMORY. Maybe ARM64_MODULE_PLTS or =
+RANDOMIZE_MODULE_REGION_FULL,
+> both of which seem to affect how modules are loaded into memory are=20
+> causing the problem.
+>=20
+> Are you familiar with those, able to try those out?
+>=20
+> --Alison
+>=20
+>>=20
+>>>=20
+>>>>=20
+>>>> Log of Meson test suite run on 2025-02-26T07:32:24.101461
+>>>>=20
+>>>> Inherited environment: LANG=3DC.UTF-8 LS_COLORS=3D'' =
+TERM=3Dxterm-256color =
+PATH=3D/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/=
+bin MAIL=3D/var/mail/root LOGNAME=3Droot USER=3Droot HOME=3D/root =
+SHELL=3D/bin/bash SUDO_COMMAND=3D'/usr/bin/meson test =
+cxl-region-sysfs.sh' SUDO_USER=3Drealm SUDO_UID=3D1000 SUDO_GID=3D1000=20=
+
+>>>>=20
+>>>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D 1/1 =
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>>>> test:         ndctl:cxl / cxl-region-sysfs.sh
+>>>> start time:   22:32:24
+>>>> duration:     0.71s
+>>>> result:       exit status 1
+>>>> command:      NDCTL=3D/home/realm/projects/ndctl/build/ndctl/ndctl =
+DAXCTL=3D/home/realm/projects/ndctl/build/daxctl/daxctl =
+TEST_PATH=3D/home/realm/projects/ndctl/build/test =
+UBSAN_OPTIONS=3Dhalt_on_error=3D1:abort_on_error=3D1:print_summary=3D1:pri=
+nt_stacktrace=3D1 =
+ASAN_OPTIONS=3Dhalt_on_error=3D1:abort_on_error=3D1:print_summary=3D1 =
+MALLOC_PERTURB_=3D29 =
+MSAN_OPTIONS=3Dhalt_on_error=3D1:abort_on_error=3D1:print_summary=3D1:prin=
+t_stacktrace=3D1 DATA_PATH=3D/home/realm/projects/ndctl/test =
+MESON_TEST_ITERATION=3D1 =
+LD_LIBRARY_PATH=3D/home/realm/projects/ndctl/build/daxctl/lib:/home/realm/=
+projects/ndctl/build/ndctl/lib:/home/realm/projects/ndctl/build/cxl/lib =
+/bin/bash /home/realm/projects/ndctl/test/cxl-region-sysfs.sh
+>>>> ----------------------------------- stdout =
+-----------------------------------
+>>>> test/cxl-region-sysfs.sh: failed at line 40
+>>>> ----------------------------------- stderr =
+-----------------------------------
+>>>> + trap 'err $LINENO' ERR
+>>>> + check_prereq jq
+>>>> + command -v jq
+>>>> + modprobe -r cxl_test
+>>>> + modprobe cxl_test
+>>>> + rc=3D1
+>>>> ++ ./cxl/cxl list -b cxl_test -D -d root
+>>>> ++ jq -r '.[] |
+>>>> select(.pmem_capable =3D=3D true) |
+>>>> select(.nr_targets =3D=3D 2) |
+>>>> .decoder'
+>>>> Warning: no matching devices found
+>>>>=20
+>>>> + decoder=3D
+>>>> + readarray -t mem
+>>>> ++ ./cxl/cxl list -M -d
+>>>> ++ jq -r '.[].memdev'
+>>>> Error: switch `d' requires a value
+>>>>=20
+>>>> usage: cxl list [<options>]
+>>>>=20
+>>>>   -d, --decoder <decoder device name>
+>>>>                         filter by CXL decoder device name(s) / =
+class
+>>>> + readarray -t endpoint
+>>>> ++ ./cxl/cxl reserve-dpa -t pmem -s 268435456
+>>>> ++ jq -r '.[] | .decoder.decoder'
+>>>>=20
+>>>> usage: cxl reserve-dpa <mem0> [<mem1>..<memn>] [<options>]
+>>>>=20
+>>>>   -b, --bus <bus name>  Limit operation to the specified bus
+>>>>   -v, --verbose         turn on debug
+>>>>   -S, --serial          use serial numbers to id memdevs
+>>>>   -s, --size <size>     size in bytes (Default: all available =
+capacity)
+>>>>   -d, --decoder <decoder instance id>
+>>>>                         override the automatic decoder selection
+>>>>   -t, --type <type>     'pmem' or 'ram' (volatile) (Default: =
+'pmem')
+>>>>   -f, --force           Attempt 'expected to fail' operations
+>>>>=20
+>>>> ++ cat /sys/bus/cxl/devices//create_pmem_region
+>>>> cat: /sys/bus/cxl/devices//create_pmem_region: No such file or =
+directory
+>>>> + region=3D
+>>>> ++ err 40
+>>>> +++ basename /home/realm/projects/ndctl/test/cxl-region-sysfs.sh
+>>>> ++ echo test/cxl-region-sysfs.sh: failed at line 40
+>>>> ++ '[' -n '' ']'
+>>>> ++ exit 1
+>>>> =
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+>>>>=20
+>>>>=20
+>>>> Summary of Failures:
+>>>>=20
+>>>> 1/1 ndctl:cxl / cxl-region-sysfs.sh FAIL             0.71s   exit =
+status 1
+>>>>=20
+>>>> Ok:                 0  =20
+>>>> Expected Fail:      0  =20
+>>>> Fail:               1  =20
+>>>> Unexpected Pass:    0  =20
+>>>> Skipped:            0  =20
+>>>> Timeout:            0  =20
+
+Now I am having an Invalid argument. It seems only value 0 is accepted =
+to the sysfs entry.
+
+I paste the .config I am using.
+
+
+
 
