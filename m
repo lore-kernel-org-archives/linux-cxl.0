@@ -1,40 +1,40 @@
 Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C007421D5BD;
-	Thu, 27 Feb 2025 10:46:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DEA821D5BD;
+	Thu, 27 Feb 2025 10:46:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740653170; cv=pass; b=i3O758Ra4VmswP/sdVJ44n8bLghYCzh+Ze1D48JJ6+plAq6/BhBZcKFmd5L6X/4sR3EI1bomZw/LuysN0z/l4XChwDMeFdOmuc6T8WUoSktpUWtEplEhPDj7dMmIi7KyeRegxSNND5YKKcHgfnHAgBy4fr33cP1WfgX9F4AwcBM=
+	t=1740653186; cv=pass; b=PmHU8/oxoolCg8Zl16Zfxm0aCa5RsjKZR8FwUsoaJAl+Dz7X1Zbl7I8xB6dwhpctPcD6mH3Nc8KaSxpizT0TmkEQu6cq6gj59VcLS3YkAnsTVFN44Zb0s14T3aS71Utd9qW853hkb7RupliNHDKBtjYlsd1B/ZOWA3MMGd+AJSM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740653170; c=relaxed/simple;
-	bh=RXp2uaebMws9GNxExFb5p/bX6mABVj8stv4/Nt9JqqE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=I49j/62Q+Vrf9XR2I3tWjeMHgVHdniSmMlgFqd7d1ifZLG/aFSPrL9Pi9MGpypZr7p9pMFHa8rm9eam3JnaiQFywx1Q7Dk6y6Xrq7tCiuSvrwlY/MKiUNrcETpjpUt1lcbmgYMqXb3TsEdGrYEXVadwV1QdEam6a3JdAzVJ6n5U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=HzBrk/ch; arc=pass smtp.client-ip=136.143.188.94
+	s=arc-20240116; t=1740653186; c=relaxed/simple;
+	bh=jErgEQ+TUOucGrZZAhpmYkoPvjxC4e7WR4Mn6W94J2k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=f3MNoecjo3JU9BYqVDpv43fS8uJ7kpkPoACMFofo9HBE8+HO3QoAJDISE1P+6CPlEFkRuZ4MF38ih/+7UZo9PGoflaZ4MZxSQHbznB6MXWKsNqsm35JjX0WyLFilQwjaPruWVYbqN180LxE4yEAJcn4JG3dNIcwaRKjwB87Joi0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=F1LekHHU; arc=pass smtp.client-ip=136.143.188.94
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="HzBrk/ch"
-ARC-Seal: i=1; a=rsa-sha256; t=1740653142; cv=none; 
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="F1LekHHU"
+ARC-Seal: i=1; a=rsa-sha256; t=1740653169; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=QAqzH5e51QC84Asy5Gl6+jDY5aBORBuqA/YYneZYe++tHqB4ySvWRpbyVED+qn4z2uYqIq8Re2ZLdxe32tAzrqjFO07xlXaN+ZfbXy1Am8H9VIywDBL8fTqB+nnGC+ZQmKSnddZIvYFmHw8oscZyJVTT6w9Uh8+QtgqZACvlGYo=
+	b=dg8P0nJK5JPcFugLoKt0xIYPkUVtQmKGkV5bvVaHL7tlGB4Hr65TunHF6Sdi1ndX3A44gl8lyvSF3J7wOonIBUeCbfsrkSDI+/A91WtVWWSE2jd31VUEUnUdnbdhiSAGKNb9vb0gni31QF+F5ZfMu/KNYMFY2SJB8qEF9Yk8WFI=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740653142; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Wq4e2lGDf1gHX1jSVAhR7jrg4z/HzsOIQlyDC5+tZVw=; 
-	b=b5lWyWkHbT53yMUATnvFKjV2OqmhV43NhHwKGJCpx49IVzNfFOmM80SjLml1XZu1Puzrw7UbLQ31E4Qj/3IhDC3lQIlxBEx3OVvAWFxpZSSVFcEGNzrJj4uIo6ip6XteVvclI/mBQM8dge2k0Y1DFsTpUOh7bgbD9feiQtG4F8g=
+	t=1740653169; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=P07Y9+em6TQ0YpcdOuQLsw4N5WzWQShNoV6rX/vAwp0=; 
+	b=jpDQ2nVh/ReuUm/frgAKuagA7MbowZmgAdWZLGy+/vvPRkX2KiS485MU9OyUBsNfaHl73jBDd4DJH8Jup84r2PeBXMPXU3eKLxaGYvoS7hG3yledjb/MOPHsPsmaTWXKWsg4/Zoa2cw/CoLWSZqJZDrXvGH3PYjLiJcvmwboHB8=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=zohomail.com;
 	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
 	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740653142;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740653169;
 	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
 	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
-	bh=Wq4e2lGDf1gHX1jSVAhR7jrg4z/HzsOIQlyDC5+tZVw=;
-	b=HzBrk/ch7TSIAAEK9P9IqNeuu0hbXLlCk6nlqbhFwnuJ+VTVf7fvGJ2eACP+WMeq
-	AnrKCa3JpxEZUdA5qJ3scY0aRtIE8LFgUpaN5a185P4Q3NIgIJnn1ZP6+MwenvFVgS1
-	eqsQELM1xit8D4dVXsqIc1VqIAL5UgGs+3AEf2K0=
-Received: by mx.zohomail.com with SMTPS id 174065153918225.04211908368677;
-	Thu, 27 Feb 2025 02:18:59 -0800 (PST)
+	bh=P07Y9+em6TQ0YpcdOuQLsw4N5WzWQShNoV6rX/vAwp0=;
+	b=F1LekHHU+XYWrxz2ToxORCrdnh/pnLbGUsDiRy8eDuaNOBS6WX8UD2wUva8AsdXz
+	GrCWdOwTWQNSAs/tQ1b3zRBGQQmkBx6lTMHIlj0snGQlsaqw5KEpueQJ9LlUtlDqSjJ
+	rS+Yt3OjF1iQUVdKCQiPcfz1DTG5fYg4Wlf/iW4Y=
+Received: by mx.zohomail.com with SMTPS id 1740652387816361.8871097135559;
+	Thu, 27 Feb 2025 02:33:07 -0800 (PST)
 From: Li Ming <ming.li@zohomail.com>
 To: dave@stgolabs.net,
 	jonathan.cameron@huawei.com,
@@ -46,9 +46,9 @@ To: dave@stgolabs.net,
 Cc: linux-cxl@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Li Ming <ming.li@zohomail.com>
-Subject: [PATCH v1 1/1] cxl/mem: Do not return error if CONFIG_CXL_MCE unset
-Date: Thu, 27 Feb 2025 18:18:48 +0800
-Message-Id: <20250227101848.388595-1-ming.li@zohomail.com>
+Subject: [PATCH v1 1/1] cxl/hdm: Verify HDM decoder capabilities after parsing
+Date: Thu, 27 Feb 2025 18:32:51 +0800
+Message-Id: <20250227103251.390147-1-ming.li@zohomail.com>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -57,57 +57,73 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Feedback-ID: rr0801122716de977bd9e00a2b5c28e18100002d32307e1d5f90d233a291772ea7b3708ac78ed75be54432b0:zu08011227ef38a246c8a88b2f526a8e4500005b3e5ae75bf88b4d49f780fc15784300101d8f7c1cd7676f21:rf0801122d33b1b5e1b2c61fe3edadcd170000391eae13e37c3bc7e9c9e8a25b36e94bcccdc3cb3223ad2b7bad279585b042:ZohoMail
+Feedback-ID: rr08011227c0943d90364cb82e43977bd3000036146dae4918cde90a0f48e2b54b1f01c60f3825064a82e4ee:zu08011227d3f19496acc2fe87961957450000a1e5773b687733c8bf686330abbf024704b5232d2550ba6eff:rf0801122dd0313017268c95b673f66f9f00006272b51ab9fc857ccf2ea6766b3c7c171d5b8fab80748d0d6dfa19fa842c50:ZohoMail
 X-ZohoMailClient: External
 
-CONFIG_CXL_MCE depends on CONFIG_MEMORY_FAILURE, if
-CONFIG_CXL_MCE is not set, devm_cxl_register_mce_notifier() will return
-an -EOPNOTSUPP, it will cause cxl_mem_state_create() failure , and then
-cxl pci device probing failed. In this case, it should not break cxl pci
-device probing.
+devm_cxl_setup_hdm() only checks if decoder_count is 0 after parsing HDM
+decoder capability, But according to the implementation of
+cxl_hdm_decoder_count(), cxlhdm->decoder_count will never be 0.
 
-Add a checking in cxl_mem_state_create() to check if the returned value
-of devm_cxl_register_mce_notifier() is -EOPNOTSUPP, if yes, just output
-a warning log, do not let cxl_mem_state_create() return an error.
+Per CXL specification, the values ranges of decoder_count and
+target_count are limited. Adding a checking for the values of them
+in case hardware initialized them with wrong values.
 
 Signed-off-by: Li Ming <ming.li@zohomail.com>
 ---
-I hit this issue on my cxl_test environment with latest cxl-next. If
-CONFIG_MEMORY_FAILURE is unset, all cxl pci devices will fail to probe.
-
-...
-[    6.337952] cxl_mock_mem cxl_mem.6: probe with driver cxl_mock_mem failed with error -95
-[    6.338880] cxl_mock_mem cxl_mem.4: probe with driver cxl_mock_mem failed with error -95
-[    6.339593] cxl_mock_mem cxl_mem.9: probe with driver cxl_mock_mem failed with error -95
-[    6.340588] cxl_mock_mem cxl_mem.2: probe with driver cxl_mock_mem failed with error -95
-[    6.340914] cxl_mock_mem cxl_mem.0: probe with driver cxl_mock_mem failed with error -95
-[    6.345762] cxl_mock_mem cxl_rcd.10: probe with driver cxl_mock_mem failed with error -95
-[    6.345793] cxl_mock_mem cxl_mem.7: probe with driver cxl_mock_mem failed with error -95
-...
-[    6.519824] cxl_pci 0000:c4:00.0: probe with driver cxl_pci failed with error -95
-[    6.520178] cxl_pci 0000:38:00.0: probe with driver cxl_pci failed with error -95
-...
-
 base-commit: 22eea823f69ae39dc060c4027e8d1470803d2e49 cxl/next
 ---
- drivers/cxl/core/mbox.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/cxl/core/hdm.c | 31 ++++++++++++++++++++++++++++++-
+ 1 file changed, 30 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 13cac98846bc..d72764056ce6 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -1503,7 +1503,9 @@ struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev)
- 	mds->cxlds.type = CXL_DEVTYPE_CLASSMEM;
+diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+index 70cae4ebf8a4..a98191867c22 100644
+--- a/drivers/cxl/core/hdm.c
++++ b/drivers/cxl/core/hdm.c
+@@ -138,6 +138,34 @@ static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
+ 	return true;
+ }
  
- 	rc = devm_cxl_register_mce_notifier(dev, &mds->mce_notifier);
--	if (rc)
-+	if (rc == -EOPNOTSUPP)
-+		dev_warn(dev, "CXL MCE unsupported\n");
-+	else if (rc)
- 		return ERR_PTR(rc);
++static int cxlhdm_decoder_caps_verify(struct cxl_hdm *cxlhdm)
++{
++	/*
++	 * CXL r3.2 section 8.2.4.20.1
++	 * CXL devices shall not advertise more than 10 decoders,
++	 * CXL switches and HBs may advertise up to 32 decoders.
++	 */
++	if (is_cxl_endpoint(cxlhdm->port) && cxlhdm->decoder_count > 10)
++		return -EINVAL;
++	else if (cxlhdm->decoder_count > 32)
++		return -EINVAL;
++
++	/*
++	 * CXL r3.2 section 8.2.4.20.1
++	 * target count is applicable only to CXL upstream port and HB.
++	 * The number of target ports each decoder supports should be
++	 * one of the numbers 1, 2, 4 or 8.
++	 */
++	if (!is_cxl_endpoint(cxlhdm->port) &&
++	    cxlhdm->target_count != 1 &&
++	    cxlhdm->target_count != 2 &&
++	    cxlhdm->target_count != 4 &&
++	    cxlhdm->target_count != 8)
++		return -EINVAL;
++
++	return 0;
++}
++
+ /**
+  * devm_cxl_setup_hdm - map HDM decoder component registers
+  * @port: cxl_port to map
+@@ -182,7 +210,8 @@ struct cxl_hdm *devm_cxl_setup_hdm(struct cxl_port *port,
+ 	}
  
- 	return mds;
+ 	parse_hdm_decoder_caps(cxlhdm);
+-	if (cxlhdm->decoder_count == 0) {
++	rc = cxlhdm_decoder_caps_verify(cxlhdm);
++	if (rc) {
+ 		dev_err(dev, "Spec violation. Caps invalid\n");
+ 		return ERR_PTR(-ENXIO);
+ 	}
 -- 
 2.34.1
 
