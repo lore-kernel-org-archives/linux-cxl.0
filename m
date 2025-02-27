@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6535726A0B9;
-	Thu, 27 Feb 2025 15:16:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7371923535E;
+	Thu, 27 Feb 2025 15:21:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740669420; cv=none; b=aLIZJ7RgK2uyQR0tjRsdYvBwrv7NkyULcBd7obH9LbjSvtlGFwliHNf0yygLDYscEL/v2y6K5Tilbp8FQlM92siL6Nwt5E/Y9do+QK+ZaXWs30rZG/wGLCt1lTLl7Q8skxjXrRVSUWLwYgGu4Wl35kWvbCKDMOp3Qaie92ftwH0=
+	t=1740669721; cv=none; b=gmRwnopYRjMMV/H311ZuUJFNZBwCJ30NkIc0YWOlKOI3F7EMB+gx/rSM1Kdvzvo/cKEzGhv68f+SnwQyOaIcvEm/Phdv2aLg4BvtRUDasTuoQOkEoeTHCbzPOFOzjxAke8AtZ1WZXXRYrbbfaIZCYqlFaqT7gnDKIb0JPDSqTnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740669420; c=relaxed/simple;
-	bh=xpitV625HIqwx7eYcgXZnDV02z63z9DmbM4MzyVJtxk=;
+	s=arc-20240116; t=1740669721; c=relaxed/simple;
+	bh=ZbFHvEVs/StgTBF2XpBIeDqG6mLo1uxwQtkaK+V1oa0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G4o65xOgrkvU0hs4rJOYcyiTdmFc6FCaErFdIlBpcZSXaPmVC/Py19kh4lP0S5Jw/ipqRogyAMoa86cKNNt3Rl4cQlr7Pt215AgiHAm6W9QVdk0mM7HRFxNlU0o0QzB+4R5Ju0PwztY5fu3TxuPnXHxWsmbfvVec0X7gOKEOYog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UDj3IAiS; arc=none smtp.client-ip=192.198.163.15
+	 In-Reply-To:Content-Type; b=hr3ntN9OY+fpF8ZwIoJRllHBlBlTns7Q+Tc8CNvd3+CyOyuYeEA2acWe3Iyib05Jv7VK3NXscUxc3+a/os1lUqcLhfo8O+eIMYORuuPLeQo7lciq5u69Eq5J38fsiycqWX0Ge/hVIT7B5vTJ2JBCgaQURBZ1Z26p0xSEW34MInM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bcrJDwMZ; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UDj3IAiS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bcrJDwMZ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740669419; x=1772205419;
+  t=1740669719; x=1772205719;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=xpitV625HIqwx7eYcgXZnDV02z63z9DmbM4MzyVJtxk=;
-  b=UDj3IAiSMxQUSWa9vpe7IY3ZZffg76cQl1+7yvUE8MYLaHJ2YP3hetmq
-   vKG7yf9d+3Cho4F/bwCP085KfU/QoY2sLQv0ZcyyeOK3bFYBhsU4ThSzL
-   WsiYzOmnuXYrFirLdES+w+Soumc8JYvEi3YM9akuaxA+Uoyr7giEQmlby
-   TroxQTjG877hE841Nmvm6VZYPI87QKxO3m6UHr60slvHtkxd7+dJ3DBvv
-   wiYwHobZXBCs/ak+mRAMJbPItA9DKe/34YMrfee17vMGkfnbtgOLhUgqF
-   CVo498AiQmMT6GPNkwNHFFN2KG1yAqcP0szW3wwI/8y2K5AIbMtRdk6Vq
+  bh=ZbFHvEVs/StgTBF2XpBIeDqG6mLo1uxwQtkaK+V1oa0=;
+  b=bcrJDwMZQOzrTx4484503dZDYj11aEx69Cq0usdEqlIjKpAsKRiGKA6z
+   BMFTvhKYnyHo2gNsj4jaIsO7YwyexJVcKZ9Law2tmZtHMgQly/82DZLWS
+   jqX7QQS6WZH1/7hTjoEkbdede4eUzChffk60Agm2PCATrAptForgQ5s9E
+   Pu3HHWO4h+NSoavWO7E9wDAuGfPEbRuygtp1IdacztMyuefroPiP00trU
+   ebv/FpVqemvrX7Z0xec+ZjLHt6+8SnJ1b1OU2IaHrmsLs8prqz9l28FZD
+   dRLH+ROS5QqLloS9l0Glriq9NtpyWhgg+RHekuEaoT8htEgb2fFVBw73W
    Q==;
-X-CSE-ConnectionGUID: CZP4swWJQU6+0z+XJU8+rQ==
-X-CSE-MsgGUID: 7wn/7ikGRUyE0zdiy2Btaw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="41688964"
+X-CSE-ConnectionGUID: lyEAPzfZRF+95xDBYTIWgQ==
+X-CSE-MsgGUID: 5XNhtjXHQIqxL+ebf5TqSA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="52206183"
 X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
-   d="scan'208";a="41688964"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 07:16:58 -0800
-X-CSE-ConnectionGUID: K4R4qhFgQ2WEBZVJyuvK8Q==
-X-CSE-MsgGUID: qtA4MuLTRUi+OSUgJdkI7w==
+   d="scan'208";a="52206183"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 07:21:58 -0800
+X-CSE-ConnectionGUID: sc33+yjhRC+aHNm171099g==
+X-CSE-MsgGUID: zm9t+1H0SnmLMUEOxChHDg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
-   d="scan'208";a="117549868"
+   d="scan'208";a="122000348"
 Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.108.89]) ([10.125.108.89])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 07:16:58 -0800
-Message-ID: <e272e791-3ada-4630-b3c5-ee8113248eec@intel.com>
-Date: Thu, 27 Feb 2025 08:16:56 -0700
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 07:21:58 -0800
+Message-ID: <34a30d8d-f4e2-4c3b-8386-d07f7b8cfaa1@intel.com>
+Date: Thu, 27 Feb 2025 08:21:57 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,73 +52,91 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/1] cxl/mem: Do not return error if CONFIG_CXL_MCE
- unset
+Subject: Re: [PATCH v1 1/1] cxl/hdm: Verify HDM decoder capabilities after
+ parsing
 To: Li Ming <ming.li@zohomail.com>, dave@stgolabs.net,
  jonathan.cameron@huawei.com, alison.schofield@intel.com,
  vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com
 Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250227101848.388595-1-ming.li@zohomail.com>
+References: <20250227103251.390147-1-ming.li@zohomail.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250227101848.388595-1-ming.li@zohomail.com>
+In-Reply-To: <20250227103251.390147-1-ming.li@zohomail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 2/27/25 3:18 AM, Li Ming wrote:
-> CONFIG_CXL_MCE depends on CONFIG_MEMORY_FAILURE, if
-> CONFIG_CXL_MCE is not set, devm_cxl_register_mce_notifier() will return
-> an -EOPNOTSUPP, it will cause cxl_mem_state_create() failure , and then
-> cxl pci device probing failed. In this case, it should not break cxl pci
-> device probing.
+On 2/27/25 3:32 AM, Li Ming wrote:
+> devm_cxl_setup_hdm() only checks if decoder_count is 0 after parsing HDM
+> decoder capability, But according to the implementation of
+> cxl_hdm_decoder_count(), cxlhdm->decoder_count will never be 0.
 > 
-> Add a checking in cxl_mem_state_create() to check if the returned value
-> of devm_cxl_register_mce_notifier() is -EOPNOTSUPP, if yes, just output
-> a warning log, do not let cxl_mem_state_create() return an error.
+> Per CXL specification, the values ranges of decoder_count and
+> target_count are limited. Adding a checking for the values of them
+> in case hardware initialized them with wrong values.
 > 
 > Signed-off-by: Li Ming <ming.li@zohomail.com>
-
-Thanks!
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
 > ---
-> I hit this issue on my cxl_test environment with latest cxl-next. If
-> CONFIG_MEMORY_FAILURE is unset, all cxl pci devices will fail to probe.
-> 
-> ...
-> [    6.337952] cxl_mock_mem cxl_mem.6: probe with driver cxl_mock_mem failed with error -95
-> [    6.338880] cxl_mock_mem cxl_mem.4: probe with driver cxl_mock_mem failed with error -95
-> [    6.339593] cxl_mock_mem cxl_mem.9: probe with driver cxl_mock_mem failed with error -95
-> [    6.340588] cxl_mock_mem cxl_mem.2: probe with driver cxl_mock_mem failed with error -95
-> [    6.340914] cxl_mock_mem cxl_mem.0: probe with driver cxl_mock_mem failed with error -95
-> [    6.345762] cxl_mock_mem cxl_rcd.10: probe with driver cxl_mock_mem failed with error -95
-> [    6.345793] cxl_mock_mem cxl_mem.7: probe with driver cxl_mock_mem failed with error -95
-> ...
-> [    6.519824] cxl_pci 0000:c4:00.0: probe with driver cxl_pci failed with error -95
-> [    6.520178] cxl_pci 0000:38:00.0: probe with driver cxl_pci failed with error -95
-> ...
-> 
 > base-commit: 22eea823f69ae39dc060c4027e8d1470803d2e49 cxl/next
 > ---
->  drivers/cxl/core/mbox.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  drivers/cxl/core/hdm.c | 31 ++++++++++++++++++++++++++++++-
+>  1 file changed, 30 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 13cac98846bc..d72764056ce6 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -1503,7 +1503,9 @@ struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev)
->  	mds->cxlds.type = CXL_DEVTYPE_CLASSMEM;
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index 70cae4ebf8a4..a98191867c22 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -138,6 +138,34 @@ static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
+>  	return true;
+>  }
 >  
->  	rc = devm_cxl_register_mce_notifier(dev, &mds->mce_notifier);
-> -	if (rc)
-> +	if (rc == -EOPNOTSUPP)
-> +		dev_warn(dev, "CXL MCE unsupported\n");
-> +	else if (rc)
->  		return ERR_PTR(rc);
+> +static int cxlhdm_decoder_caps_verify(struct cxl_hdm *cxlhdm)
+> +{
+> +	/*
+> +	 * CXL r3.2 section 8.2.4.20.1
+> +	 * CXL devices shall not advertise more than 10 decoders,
+> +	 * CXL switches and HBs may advertise up to 32 decoders.
+> +	 */
+> +	if (is_cxl_endpoint(cxlhdm->port) && cxlhdm->decoder_count > 10)
+
+#define the limit please
+
+> +		return -EINVAL;
+> +	else if (cxlhdm->decoder_count > 32)
+
+same here
+
+DJ
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * CXL r3.2 section 8.2.4.20.1
+> +	 * target count is applicable only to CXL upstream port and HB.
+> +	 * The number of target ports each decoder supports should be
+> +	 * one of the numbers 1, 2, 4 or 8.
+> +	 */
+> +	if (!is_cxl_endpoint(cxlhdm->port) &&
+> +	    cxlhdm->target_count != 1 &&
+> +	    cxlhdm->target_count != 2 &&
+> +	    cxlhdm->target_count != 4 &&
+> +	    cxlhdm->target_count != 8)
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+>  /**
+>   * devm_cxl_setup_hdm - map HDM decoder component registers
+>   * @port: cxl_port to map
+> @@ -182,7 +210,8 @@ struct cxl_hdm *devm_cxl_setup_hdm(struct cxl_port *port,
+>  	}
 >  
->  	return mds;
+>  	parse_hdm_decoder_caps(cxlhdm);
+> -	if (cxlhdm->decoder_count == 0) {
+> +	rc = cxlhdm_decoder_caps_verify(cxlhdm);
+> +	if (rc) {
+>  		dev_err(dev, "Spec violation. Caps invalid\n");
+>  		return ERR_PTR(-ENXIO);
+>  	}
 
