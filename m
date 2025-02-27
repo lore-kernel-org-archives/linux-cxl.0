@@ -1,102 +1,131 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4816D14EC5B;
-	Thu, 27 Feb 2025 16:47:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 386C425D911
+	for <linux-cxl@vger.kernel.org>; Thu, 27 Feb 2025 19:24:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740674835; cv=none; b=ZOcZBtFmhElx3XeCN39HSBWNpbvq7zZw+CzWTNsAnqV2ieaLGc25N2aaCKmj8zKsRLg6kFBsRPX/rRncLfE/hSZD/7NOswIyDaeIOkj0vv8gNpEKKfIJuWi/5KReZMnEI9HgCVL66GsxcgJ/MhXpRmu+z8wmGxLFFFnToY28oA0=
+	t=1740684289; cv=none; b=cm2YAZIsdctRiq6CYlKGR4jdjwSO7yuCfHjkLEkb4Egd9GdUjl5MDIaaxYJOdcT1WwJYsylOezTKp6q0BXZi+h2U2jRborU/XavVhoYO7zk/uj+8RqhnVMaFdqN+oS1bn0pONjamcwpS1S0nPHuU2E9D72dZHjKXfLrb3p1hS98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740674835; c=relaxed/simple;
-	bh=PkXZ8moBOc6RsNmidcc+UGjDgfkiuoVB1RmC6o21XW8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PMe8l1xNbE1F5vsWM54+a+thwRrR2Cf0tARhJz0ceQ/doZg0Xfe2cBqypx1A8g9KDOlsK8+4yrVN21ucDDGRmBtYTAsONMW/RzvAlP7w4ExZJMcMjHj8ciKwMc9BdhKmWEEuKPNlvieDwHO5ufOiITFXoHE+TzeMYKTx1zvMczw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C0Ec7Nbc; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740684289; c=relaxed/simple;
+	bh=+mSdTOZVS3QbwoBx5zBczSmSUBia+jWbOP87F2iJPfg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=K8OdK5BsgnCLDekKs78JaHzEd/dpr44867o4kIWOIvYJiu9dwn5Fc932Y7VXyikNXsVgKFKQWRAZwyQNitlKSD8N/XIDTMpN4XzwLvq6jlkcBF5Um1nkj2A66JrHiDHo1q3VUD3XY7DT5VteSC90kJG+DTz3nYlgoFwN7YP0Wek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fNkiZNe2; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C0Ec7Nbc"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2fe99d5f1e8so300550a91.1;
-        Thu, 27 Feb 2025 08:47:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740674833; x=1741279633; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=F9jSky1hj2tIhqu9jP7zhhU7JSzIy8xPtEaJx9bRobQ=;
-        b=C0Ec7NbcfHFmwRcEPUFc9KUQ0Fw12Nux7MFlkw9/9cgcRBfgQUV4nTCOIFqhrAVS0+
-         HEmct8sd+spL5dcK5avwtvH4f1Ekb6FIysBplLM65d98XAqY9Eb9c0NeTwOmAbFCO2Ar
-         sDwWZou5xEei4+WJKd9j3+wyFXP4BGjjH4tyUk/t4BFwyph3S5KsDkc6BblmEnVkB1zJ
-         yMK3gx/gfN6Lfb+3ewPt29P3a575v207POGbko9sWNqk9UBLpWyLHLswErBYsu81VgXZ
-         xoj4FYLXGSGep7IP4+4Wk5b2hMfb1Hr/CPqa6NIiwJXKpTU4+wX3gP8UHW/SCvwBElhe
-         tvdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740674833; x=1741279633;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=F9jSky1hj2tIhqu9jP7zhhU7JSzIy8xPtEaJx9bRobQ=;
-        b=AoCWNRGnTH6CEeP0caDN6WbhdAaELAb+krgJejoavnZGTpOEe6P3THtJuhnUc1L/1T
-         ckdzmZD/3o6/khjz0NEaCtA3mVok+cFWbNLQBpclUrGNdwbPXNnzdAwHrgMnsBTkAfP8
-         9uY3NglFiAHkRZKSbsT5LCWpidhiZcRYjaO9Vv66t3UTMKH4xVM4iOoUjoYN+U01/Rsr
-         Ngz4CeL9kUcgSTVivFfdyOEx0Ln1xJUbzr4e0Bzu6MXvXtnzSJeA2zU/VYFLygLzMXp+
-         JEvXQg5n5PnkdUek5CQD2blAxqaQGdgxa4Skqdcb09/5pHnIXHEbIIXN4MzoZYI0/uCV
-         ABDw==
-X-Forwarded-Encrypted: i=1; AJvYcCU9dkNLDVbpjkB+Z43evi4b4N7TQqkIOIoIyr997yKSfxFTl8yQIERscxwAjcX6BhpNISkuSjI0JWYPWrNL@vger.kernel.org, AJvYcCUA3AhAQJAzB61T7dNPSa8EiOYm++ZjNJ6e5CPwc0dLeqI2UaXeG8W4F0SVljsmoCZUU4+t+xVObko=@vger.kernel.org, AJvYcCUE0b2aKbmX2Bv9Pr02XDRVkBxxcsv6xzP+WqJ4yksDRU6evOdqOmnKZ7eBfy8mAHA4Cgzn2A3QsHfrzZ+t258=@vger.kernel.org, AJvYcCVoD5qJ8R3+5negMPajYhVtw2LsrF0l2lPZtdc9gCWwIloRXKxZxd3f2MRlbtfocfWTHbgnZEOctwVi@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0hqH5sSlJvpVp8netDag9U6zhtA+laXTGY+EeGgd+lqGEdeQt
-	lLBNq9LivdpVnfSidgwS0GoqzPxK7jErHbz4G/XtaRmrcYaBOs62yvm+gqBPEQfD9CkwBahichS
-	th+NeiqB2nd9BVYy1bvXCJ/RREy4=
-X-Gm-Gg: ASbGnctyS5CQlD+d58+XwZgdFyPy+jWUhMR1bHpPvUD8ip6UMIUxsM2DJVAOk54uH94
-	E/JcziBOUCsx8AWiYexXJJqamZybkjisL9T5cf3GCJdjBv8vRSSH1uPmUx6pyMOcXcfUHF/J1tK
-	mgWpEIu9U=
-X-Google-Smtp-Source: AGHT+IFajF7dRCPy5k5DPrcc95sWKa3zdcOgFu+u7rZcCg6jcEy1yjm1f49y8tftlSkNgxdbYDUEmJTmwUABm1pFvmQ=
-X-Received: by 2002:a17:90b:4a03:b0:2fe:b1b7:788 with SMTP id
- 98e67ed59e1d1-2feb1b707f8mr1033941a91.3.1740674833558; Thu, 27 Feb 2025
- 08:47:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fNkiZNe2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740684288; x=1772220288;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=+mSdTOZVS3QbwoBx5zBczSmSUBia+jWbOP87F2iJPfg=;
+  b=fNkiZNe2nfKAVB/HNDcgIL2hP40FzzfDi53N6qo4MrzUXHq2CZhx7CBP
+   rIO//o53N5+6TjJJYwWW68jgvdgO8ZWBGgEQUc2ItH7/DioVMUTHP7fU1
+   349+LwLSaVYLD/JMS7RuWjGKP/vYaC5mY5134XOuZNx4Ae0e5RkvbpBuE
+   Ic7oG8Wtmflvq9yhJve6Q+XoTBQRw4NsgipVF3g6SWCGb7A/pJ7C5tQzd
+   aUsEW8xJaBxgSGpizWM7gyTumCupUn6xQv3oyI44WXNo6TF3Ses1x3bPX
+   dJqKYODOpVpYKokeV/kfl0+ZUuobBcLn1kRDOaCaV66oIffEnUkZe/mHP
+   g==;
+X-CSE-ConnectionGUID: himYsqvFQVGwtCq+z4WbYA==
+X-CSE-MsgGUID: NldQqq40QvGhx/myMscFCA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="45510822"
+X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
+   d="scan'208";a="45510822"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 11:24:47 -0800
+X-CSE-ConnectionGUID: gKs4bkFUTK+v2SQp0QyyNg==
+X-CSE-MsgGUID: +gjaTpg0QS+Rt3JKp8J0ng==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
+   d="scan'208";a="117613714"
+Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.108.89]) ([10.125.108.89])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 11:24:46 -0800
+Message-ID: <2c4ccd08-1e8c-46f3-9f3b-eb13648f02cf@intel.com>
+Date: Thu, 27 Feb 2025 12:24:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250227030952.2319050-1-alistair@alistair23.me>
- <20250227030952.2319050-10-alistair@alistair23.me> <2025022717-dictate-cortex-5c05@gregkh>
- <CAH5fLgiQAdZMUEBsWS0v1M4xX+1Y5mzE3nBHduzzk+rG0ueskg@mail.gmail.com>
- <2025022752-pureblood-renovator-84a8@gregkh> <CAH5fLghbScOTBnLLRDMdhE4RBhaPfhaqPr=Xivh8VL09wd5XGQ@mail.gmail.com>
- <2025022741-handwoven-game-df08@gregkh>
-In-Reply-To: <2025022741-handwoven-game-df08@gregkh>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 27 Feb 2025 17:47:01 +0100
-X-Gm-Features: AQ5f1JrXLnDZJJpbXLybXz3GUfi862adk1qwXJKlDFQtb9StNutkKGNXSf57pXs
-Message-ID: <CANiq72n4UFUraYeHa6ar3=F61C_UxEJ1rq92aOF_hH9rtjN+Dg@mail.gmail.com>
-Subject: Re: [RFC v2 09/20] PCI/CMA: Expose in sysfs whether devices are authenticated
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Alice Ryhl <aliceryhl@google.com>, Alistair Francis <alistair@alistair23.me>, 
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, lukas@wunner.de, 
-	linux-pci@vger.kernel.org, bhelgaas@google.com, Jonathan.Cameron@huawei.com, 
-	rust-for-linux@vger.kernel.org, akpm@linux-foundation.org, 
-	boqun.feng@gmail.com, bjorn3_gh@protonmail.com, wilfred.mallawa@wdc.com, 
-	ojeda@kernel.org, alistair23@gmail.com, a.hindborg@kernel.org, 
-	tmgross@umich.edu, gary@garyguo.net, alex.gaynor@gmail.com, 
-	benno.lossin@proton.me, Alistair Francis <alistair.francis@wdc.com>, 
-	=?UTF-8?Q?Emilio_Cobos_=C3=81lvarez?= <emilio@crisal.io>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] cxl/test: Define a CFMWS capable of a 3 way HB
+ interleave
+To: alison.schofield@intel.com, Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>
+Cc: linux-cxl@vger.kernel.org, Li Zhijian <lizhijian@fujitsu.com>
+References: <20250226221931.2352061-1-alison.schofield@intel.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250226221931.2352061-1-alison.schofield@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 27, 2025 at 3:04=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org=
-> wrote:
->
-> As this seems like it's going to be a longer-term issue, has anyone
-> thought of how it's going to be handled?  Build time errors when
-> functions change is the key here, no one remembers to manually verify
-> each caller to verify the variables are correct anymore, that would be a
-> big step backwards.
 
-I can look into it, after other build system things are done.
 
-I talked to Emilio some months ago about this and he told me Firefox
-solves the problem both ways, so we may be able to do something
-similar.
+On 2/26/25 3:19 PM, alison.schofield@intel.com wrote:
+> From: Alison Schofield <alison.schofield@intel.com>
+> 
+> The CXL unit test cxl-xor-region.sh is skipping a 1+1+1 region
+> interleave test case because the window is not defined.
+> 
+> Additionally, upcoming expansion of 3 way HB interleave test cases
+> (like 2+2+2) require the same window.
+> 
+> Replace an unused CFMWS with a 3-way capable CFMWS in the set of
+> CFMWS's loaded when interleave_arithmetic=1.
+> 
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> Tested-by: Li Zhijian <lizhijian@fujitsu.com>
 
-Cheers,
-Miguel
+Applied to cxl/next
+
+> ---
+> 
+> v2: Adjust target list length (Ira)
+> 
+>  tools/testing/cxl/test/cxl.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+> index 083a66a52731..1c3336095923 100644
+> --- a/tools/testing/cxl/test/cxl.c
+> +++ b/tools/testing/cxl/test/cxl.c
+> @@ -155,7 +155,7 @@ static struct {
+>  	} cfmws7;
+>  	struct {
+>  		struct acpi_cedt_cfmws cfmws;
+> -		u32 target[4];
+> +		u32 target[3];
+>  	} cfmws8;
+>  	struct {
+>  		struct acpi_cedt_cxims cxims;
+> @@ -331,14 +331,14 @@ static struct {
+>  				.length = sizeof(mock_cedt.cfmws8),
+>  			},
+>  			.interleave_arithmetic = ACPI_CEDT_CFMWS_ARITHMETIC_XOR,
+> -			.interleave_ways = 2,
+> -			.granularity = 0,
+> +			.interleave_ways = 8,
+> +			.granularity = 1,
+>  			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
+>  					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
+>  			.qtg_id = FAKE_QTG_ID,
+> -			.window_size = SZ_256M * 16UL,
+> +			.window_size = SZ_512M * 6UL,
+>  		},
+> -		.target = { 0, 1, 0, 1, },
+> +		.target = { 0, 1, 2, },
+>  	},
+>  	.cxims0 = {
+>  		.cxims = {
+> 
+> base-commit: 2bb67004903cfd35710750654669a77e7223fcd1
+
