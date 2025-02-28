@@ -1,134 +1,167 @@
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B15925757;
-	Fri, 28 Feb 2025 02:28:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740709685; cv=none; b=DPiw4sbd97v0G4mjtIiSds4YimkIOrBB/NRiR6s2qBej6WHTeReuSLhxVGIJ6MUhXu2IpjALSQ9VxoCFVCKGtTg53xCfSZwUQNiIYQxTFAM8446DvBO8HW86kHaQ06nTMMwBw5wO/RanjWmz4cv2N/OXDMBUegN0qS3gU2k4kto=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740709685; c=relaxed/simple;
-	bh=aDVkzuDCBgq4xYPepBaFXsSK789trfyEWC75waTnaFI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cT8gg69cXjSrLujx0gGfZuEVyj5rhq9SyDgRpfxg+yqZ+ZACkLfL74WvAFwsuJCs0Uu0xJQy6yZRQ7LxzJ7Lrh3aQwHZkseAp1F2vhvGn13iEMOEiy9bQxSPmT7fwgRBuMwge5WDfHI5l2pVnHu3X3mK33z8C27MMHTe5b1IVW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I8swovPk; arc=none smtp.client-ip=209.85.222.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8170742A87;
+	Fri, 28 Feb 2025 02:47:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740710854; cv=pass; b=YzjS0f/JPHFVkckpDZAz3iUN9LhOnEo/AhsxIGQ3An9KwPMVybtXqrPoHGE2UXdcsc05RXtdiK0ENhB17+5JJJ4HjLS2Mgqmr13ZcNwUkFXBYTs1+z3OSrKFxOuewid5KuXgme/Ww977ySgs8ObMXLmJHYsFGFyS5Gcj7rxWCw4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740710854; c=relaxed/simple;
+	bh=jRnyotKrIz3xE9KAt8CfF5YQ2e5ZHfWxfwXfBWEtk44=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OI+6cPjxl1pPfhpxv8bE5YfTaklfpyL4JfoMw3YHYt8x89QxV9SVyTw1FDbzFcvFozBBdN4+itrWbgHsdSnjM0qQGSmwhWwpL7z+YED9Ar/CEdGA9mRm66e5v7I7bDHND1LSzHDmamCqfbhCKPENDkxZR36gSdYjMZBdzO/eTPU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=S4fBoN9I; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I8swovPk"
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-86911fd168dso655235241.1;
-        Thu, 27 Feb 2025 18:28:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740709683; x=1741314483; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w6CtTLnUlZkpeEsnmmvTInGqChea3z0s5g1Y+wiPVGI=;
-        b=I8swovPkcGi60M3D10k1EixTXkLlkLQfm+3MgLQGCfwoQ1U6v/+kAPm8eHMcs4WBjt
-         MX4OPnKkhD3HbDw69O7DeNPsMLBaoOTrYc/3ESsG33fv5T5NytEVc5puth3+wG7w1g/v
-         klDEpvlKVOcRZBuA/uwZ5lrLCr1q+hA7AXK59AM5o1NSF1vNsCxdYdJHbhyHEDMFXuai
-         FPLzaVs9ySfjoei0WbsOP97nx36xd0Q9YGdM3H6rG4cAcBw4wPXuRV+jyq/+MttQvQQI
-         +gkG0H32j+btwYelggvNxCM25SzetWKRrxRJbzna9UvmKxzuhEAHyWjlHECGfNayO+dL
-         FxMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740709683; x=1741314483;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=w6CtTLnUlZkpeEsnmmvTInGqChea3z0s5g1Y+wiPVGI=;
-        b=eBf/ZrafjKWsr0uPpnZGH6L9xTX0wRyoOZfK83vF+YVld4U9umTVVTj1IvaVM/GSXS
-         XLDpkl7g38R+n0i0p2pwXSTHGrtLXv0jmaKcBczW9U9rpibfdN4kEe5e4fP+YPIhCHmj
-         1zl6ty8QbRXVZ0GGZSDmQijo0FeOwYlWdwVVkosxNZ8vRClkWka9iZbjkwwvCNkHCdp/
-         1Z79DhAoGEFHj8PwWSRyPLbrMAyWdae8UZJOBhA+C73q6iOWqVYH5sckgO+UrEmCachP
-         3t813EHji78RpgQB8YbIftUSJXBkifihoB/6fCbF8vwMIqVn82U5fSKb296zahf0EL+7
-         5OYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUUVJMn4psZbrytNML4aWfJNudqRGBpHIqeMvATyxzmgUZCFIv5LflxWla9csh+OjIf+iR7osOmQvsMHpks@vger.kernel.org, AJvYcCUzbazAz7Z+IpXIWyEHN7IeoVM9E86fWpNjsh/TB40RqBT9z+E6F3SZgWcNZZlHaP2b4qj20o65zzJn@vger.kernel.org, AJvYcCWBuBC10hjK2TN0uqx/3PjuPxBLvTbvyW1P1umvsrBe3I6ZyAx5CHY3mICVqQ7l34xTIKfJ3/8NMhY=@vger.kernel.org, AJvYcCXHVQ2+lzvu8LzjJrxP6qP5m3KXYRUMP2X1So6/SPv3D6ekjqz8MkQn9Q5mCM5K1rEBk0FgD5GHJwt9sQuS+bI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwjuFZV2KXyvx2SU27CQEQ7LM/qs3lqynD0hxEZCeCRom/5G8+
-	pfH6MUFAaB7Y0NYdnhtHjg0eVb1XiBYMhkyfpY3ofVoneNvI0CcSscrJGpLXJPHUGha/78l+C2D
-	B9QZiL+KbNRu9ZcoQ0p04W+zEOY8=
-X-Gm-Gg: ASbGnctpyFOhXXAj0exEJl9WoasPA6dBYDNTILx2EHxZif2yO2ogY0BnEvWwE615eYC
-	qXonnuT6/UnqfwRXT4U3kUdvbzz9ztbNzeBrlgZ6pZ4r4GSWmjVReN76IBL0QhVofYdFuwd0GOc
-	HyUrrMb5Dh8VYwXj9jZmiHEB+2kr2PUx8AlcKR
-X-Google-Smtp-Source: AGHT+IHYxnsFG3B8+nagcRcL/Ba9q8piG9tBUzdtcgwFD+X0mUW7p1c/rKHvh5LhmTEiiTQ4vIZpmlSGKwXsalm1f48=
-X-Received: by 2002:a05:6102:1512:b0:4b2:c391:7d16 with SMTP id
- ada2fe7eead31-4c0448b9b00mr1397468137.7.1740709682893; Thu, 27 Feb 2025
- 18:28:02 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="S4fBoN9I"
+ARC-Seal: i=1; a=rsa-sha256; t=1740710839; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=frC96BHeX3wXQzjLQOr0igZe6s4G2mHnP6CNSYWRTEEvGN9ERdumrEfU+X4JFfca9HtnC+fBWTZLInJzZRyT3AHfv3tajCzaCRIl78eCPgLafnvqyAfkNC2nULOYy4tbVLtJwE5xR8PRpxDMG7FxlskstYGvXMMMs3wwpXJJkrs=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1740710839; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=tmh5ew+H6kLNXBeX0vCkVQk8CqBaGCCXYfCYinqFqiM=; 
+	b=JzyfN+bMu++l28o+dOFiG2Iqt6agBUxHoMEUp0G5AJP8aFa5rVDnywK3YzuzEb1A6pRlYfTxDMkfAk/12fTw6SSOTuVRa2oFmftwTnSRR1q4PMsdowIqFdUEh5yELCtC+qaxQn2SCPFRgc1FMgAfX5Tjry/t79jnnPZFMFF0yyY=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740710839;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=tmh5ew+H6kLNXBeX0vCkVQk8CqBaGCCXYfCYinqFqiM=;
+	b=S4fBoN9IKgU3ZOB38Nag1WdV2ARMqNOrigZnPZLzw1DJvkOSqEEcjCk4utfif8Im
+	9296kJ3u6t3Emx3DciYNf49EAzXZAaXr/a3i/H+upktcCkRPIlM+JR+mgWLyL+AXle1
+	Z42MADCNaKz+yympN3iry/AZLELDbMr7tt/x3BMU=
+Received: by mx.zohomail.com with SMTPS id 1740710836113177.21630475431164;
+	Thu, 27 Feb 2025 18:47:16 -0800 (PST)
+Message-ID: <4c97ec3a-3435-4e79-8265-6a82ae930c3e@zohomail.com>
+Date: Fri, 28 Feb 2025 10:47:12 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250227030952.2319050-1-alistair@alistair23.me>
- <20250227030952.2319050-10-alistair@alistair23.me> <2025022717-dictate-cortex-5c05@gregkh>
- <CAH5fLgiQAdZMUEBsWS0v1M4xX+1Y5mzE3nBHduzzk+rG0ueskg@mail.gmail.com>
- <2025022752-pureblood-renovator-84a8@gregkh> <CANiq72kS8=1R-0yoGP5wwNT2XKSwofjfvXMk2qLZkO9z_QQzXg@mail.gmail.com>
- <2025022749-gummy-survivor-c03a@gregkh>
-In-Reply-To: <2025022749-gummy-survivor-c03a@gregkh>
-From: Alistair Francis <alistair23@gmail.com>
-Date: Fri, 28 Feb 2025 12:27:36 +1000
-X-Gm-Features: AQ5f1JomfSVKBqp82WCWYnRIwxFU_ExnTkp6XsHs-orkc52LW_GeuvuLpBHWN7k
-Message-ID: <CAKmqyKNei==TWCFASFvBC48g_DsFwncmO=KYH_i9JrpFmeRu+w@mail.gmail.com>
-Subject: Re: [RFC v2 09/20] PCI/CMA: Expose in sysfs whether devices are authenticated
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Alice Ryhl <aliceryhl@google.com>, 
-	Alistair Francis <alistair@alistair23.me>, linux-cxl@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, lukas@wunner.de, linux-pci@vger.kernel.org, 
-	bhelgaas@google.com, Jonathan.Cameron@huawei.com, 
-	rust-for-linux@vger.kernel.org, akpm@linux-foundation.org, 
-	boqun.feng@gmail.com, bjorn3_gh@protonmail.com, wilfred.mallawa@wdc.com, 
-	ojeda@kernel.org, a.hindborg@kernel.org, tmgross@umich.edu, gary@garyguo.net, 
-	alex.gaynor@gmail.com, benno.lossin@proton.me, 
-	Alistair Francis <alistair.francis@wdc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/1] cxl/hdm: Verify HDM decoder capabilities after
+ parsing
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250227103251.390147-1-ming.li@zohomail.com>
+ <Z8DdafbX6_tbM4DW@aschofie-mobl2.lan>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <Z8DdafbX6_tbM4DW@aschofie-mobl2.lan>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Feedback-ID: rr08011227bda5bc386ac7805229bd7b7f0000ebd037d407201db7b3a960f81788134882b82c30e525ef0d46:zu08011227648d5c086ae41ed457b75b3c00000de38bb4fe29b1586f95748c1a14fdd72171a11a158fd6c6aa:rf0801122dafa3877bbf6afd3e80a3bef10000939289b6fe9ee8a39cb3997948a5bad320c2d57bc932ae6f5692edd6086f45:ZohoMail
+X-ZohoMailClient: External
 
-On Fri, Feb 28, 2025 at 5:33=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org=
-> wrote:
->
-> On Thu, Feb 27, 2025 at 05:45:02PM +0100, Miguel Ojeda wrote:
-> > On Thu, Feb 27, 2025 at 1:01=E2=80=AFPM Greg KH <gregkh@linuxfoundation=
-.org> wrote:
-> > >
-> > > Sorry, you are right, it does, and of course it happens (otherwise ho=
-w
-> > > would bindings work), but for small functions like this, how is the C
-> > > code kept in sync with the rust side?  Where is the .h file that C
-> > > should include?
+On 2/28/2025 5:47 AM, Alison Schofield wrote:
+> On Thu, Feb 27, 2025 at 06:32:51PM +0800, Li Ming wrote:
+>> devm_cxl_setup_hdm() only checks if decoder_count is 0 after parsing HDM
+>> decoder capability, But according to the implementation of
+>> cxl_hdm_decoder_count(), cxlhdm->decoder_count will never be 0.
+> How does a check against the spec maximums benefit this driver? Is there
+> a bad path we avoid by checking and quitting at this point.
 
-This I can address with something like Alice mentioned earlier to
-ensure the C and Rust functions stay in sync.
 
-> >
-> > What you were probably remembering is that it still needs to be
-> > justified, i.e. we don't want to generally/freely start replacing
-> > "individual functions" and doing FFI both ways everywhere, i.e. the
-> > goal is to build safe abstractions wherever possible.
->
-> Ah, ok, that's what I was remembering.
->
-> Anyway, the "pass a void blob from C into rust" that this patch is doing
-> feels really odd to me, and hard to verify it is "safe" at a simple
-> glance.
+My understanding is that no a bad path on driver side if the decoder_count is greater than the maximum number spec defines.
 
-I agree, it's a bit odd. Ideally I would like to use a sysfs binding,
-but there isn't one today.
+Driver just allocates cxl decoders on the port based on the value of decoder_count. But I am not sure if hardware will have other potential problems when it didn't follow the spec.
 
-I had a quick look and a Rust sysfs binding implementation seems like
-a lot of work, which I wasn't convinced I wanted to invest in for this
-series. This is only a single sysfs attribute and I didn't want to
-slow down this series on a whole sysfs Rust implementation.
-
-If this approach isn't ok for now, I will just drop the sysfs changes
-from the series so the SPDM implementation doesn't stall on sysfs
-changes. Then come back to the sysfs attributes in the future.
-
-So the high level question, is "pass[ing] a void blob from C into
-rust" ok or should I defer for a future safer implementation?
-
-Alistair
 
 >
-> thanks,
+> Might this catch silly decoder counts that the driver previously
+> ignored?
 >
-> greg k-h
+>> Per CXL specification, the values ranges of decoder_count and
+>> target_count are limited. Adding a checking for the values of them
+>> in case hardware initialized them with wrong values.
+> Similar question - is this catching something sooner, rather than
+> later?
+
+
+Yes, the check is at the beginning of HDM setup during port probing, if value is wrong, will break HDM setup.
+
+I'm not sure if I fully understand your question, please correct me if I misunderstand it. thanks.
+
+
+>
+>> Signed-off-by: Li Ming <ming.li@zohomail.com>
+>> ---
+>> base-commit: 22eea823f69ae39dc060c4027e8d1470803d2e49 cxl/next
+>> ---
+>>  drivers/cxl/core/hdm.c | 31 ++++++++++++++++++++++++++++++-
+>>  1 file changed, 30 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+>> index 70cae4ebf8a4..a98191867c22 100644
+>> --- a/drivers/cxl/core/hdm.c
+>> +++ b/drivers/cxl/core/hdm.c
+>> @@ -138,6 +138,34 @@ static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
+>>  	return true;
+>>  }
+>>  
+>> +static int cxlhdm_decoder_caps_verify(struct cxl_hdm *cxlhdm)
+>> +{
+>> +	/*
+>> +	 * CXL r3.2 section 8.2.4.20.1
+>> +	 * CXL devices shall not advertise more than 10 decoders,
+>> +	 * CXL switches and HBs may advertise up to 32 decoders.
+>> +	 */
+>> +	if (is_cxl_endpoint(cxlhdm->port) && cxlhdm->decoder_count > 10)
+>> +		return -EINVAL;
+>> +	else if (cxlhdm->decoder_count > 32)
+>> +		return -EINVAL;
+>> +
+>> +	/*
+>> +	 * CXL r3.2 section 8.2.4.20.1
+>> +	 * target count is applicable only to CXL upstream port and HB.
+>> +	 * The number of target ports each decoder supports should be
+>> +	 * one of the numbers 1, 2, 4 or 8.
+>> +	 */
+>> +	if (!is_cxl_endpoint(cxlhdm->port) &&
+>> +	    cxlhdm->target_count != 1 &&
+>> +	    cxlhdm->target_count != 2 &&
+>> +	    cxlhdm->target_count != 4 &&
+>> +	    cxlhdm->target_count != 8)
+>> +		return -EINVAL;
+> Maybe instead of manual bitwise checks try
+> 	(!is_power_of_2(cxlhdm->target_count) || cxlhdm->target_count > 8))
+
+
+Yes, It is clearer, thanks for that.
+
+
+>
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  /**
+>>   * devm_cxl_setup_hdm - map HDM decoder component registers
+>>   * @port: cxl_port to map
+>> @@ -182,7 +210,8 @@ struct cxl_hdm *devm_cxl_setup_hdm(struct cxl_port *port,
+>>  	}
+>>  
+>>  	parse_hdm_decoder_caps(cxlhdm);
+>> -	if (cxlhdm->decoder_count == 0) {
+>> +	rc = cxlhdm_decoder_caps_verify(cxlhdm);
+>> +	if (rc) {
+>>  		dev_err(dev, "Spec violation. Caps invalid\n");
+> Can you move the dev_err to the verify function and include the
+> specific invalid capability.
+>
+>
+> --Alison
+
+Sure, will do that, thanks.
+
+
+Ming
+
+
