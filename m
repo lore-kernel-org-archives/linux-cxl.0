@@ -1,270 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480FE276D11;
-	Fri, 28 Feb 2025 01:41:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B15925757;
+	Fri, 28 Feb 2025 02:28:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740706864; cv=none; b=PBcZiW8ydf1Dj/idS40O4aePRiQLjxyThbUEyMGWN9qXwgw/Q4d5LV5BG+1X1x5xqfK2oJyD6uOgIJlKy/kQJTohnIc977biy/07t4mC7ccLg4RVMVrUHuSWMfgBWIa8BBRvNsw5jah3oybXnzNVBa5wr3HqYiCzeqbTirSy2QA=
+	t=1740709685; cv=none; b=DPiw4sbd97v0G4mjtIiSds4YimkIOrBB/NRiR6s2qBej6WHTeReuSLhxVGIJ6MUhXu2IpjALSQ9VxoCFVCKGtTg53xCfSZwUQNiIYQxTFAM8446DvBO8HW86kHaQ06nTMMwBw5wO/RanjWmz4cv2N/OXDMBUegN0qS3gU2k4kto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740706864; c=relaxed/simple;
-	bh=7Ao72ZSN+JGWeghAFVfYDlkSLS7LdTHxr30TmAU4vkE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Llm/sjm8Mfn86U2t+Ia2snHWt0UWzAPYdO+SvabRRTbRSoLJttnFwzi7LPmyYdJu5SkIckVwy+9KPc8Vpg7snIvLu/xD7x8A4nadFGctk0ON1DUMNXqNqwRl6fYH95K3IiXXgMhWeBtyuCieO8K20vUl5XsL5riXYksKbt1cTyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=T7pRl/DJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740709685; c=relaxed/simple;
+	bh=aDVkzuDCBgq4xYPepBaFXsSK789trfyEWC75waTnaFI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cT8gg69cXjSrLujx0gGfZuEVyj5rhq9SyDgRpfxg+yqZ+ZACkLfL74WvAFwsuJCs0Uu0xJQy6yZRQ7LxzJ7Lrh3aQwHZkseAp1F2vhvGn13iEMOEiy9bQxSPmT7fwgRBuMwge5WDfHI5l2pVnHu3X3mK33z8C27MMHTe5b1IVW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I8swovPk; arc=none smtp.client-ip=209.85.222.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="T7pRl/DJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F866C4CEDD;
-	Fri, 28 Feb 2025 01:41:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1740706863;
-	bh=7Ao72ZSN+JGWeghAFVfYDlkSLS7LdTHxr30TmAU4vkE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T7pRl/DJsxzZ+ib93e1hwB+ZcGmQj5mXqTI0GIxi5+XlzEApYSXVY23640qOhXeGY
-	 rq0Qj+AMH41PDhmGEVOpmEF45FppD7OSb6Xrcc7BIvb7G9A6sn+9onL4JbeZ7vfSF+
-	 y8L8HwlNFWbr48lq+OW8NbT/jKdWKvfa67N4RSXM=
-Date: Thu, 27 Feb 2025 17:39:53 -0800
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Alistair Francis <alistair@alistair23.me>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	bhelgaas@google.com, Jonathan.Cameron@huawei.com,
-	rust-for-linux@vger.kernel.org, akpm@linux-foundation.org,
-	boqun.feng@gmail.com, bjorn3_gh@protonmail.com,
-	wilfred.mallawa@wdc.com, aliceryhl@google.com, ojeda@kernel.org,
-	alistair23@gmail.com, a.hindborg@kernel.org, tmgross@umich.edu,
-	gary@garyguo.net, alex.gaynor@gmail.com, benno.lossin@proton.me,
-	Alistair Francis <alistair.francis@wdc.com>
-Subject: Re: [RFC v2 09/20] PCI/CMA: Expose in sysfs whether devices are
- authenticated
-Message-ID: <2025022748-flock-verbalize-b66a@gregkh>
-References: <20250227030952.2319050-1-alistair@alistair23.me>
- <20250227030952.2319050-10-alistair@alistair23.me>
- <2025022717-dictate-cortex-5c05@gregkh>
- <Z8DqZlE5ccujbJ80@wunner.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I8swovPk"
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-86911fd168dso655235241.1;
+        Thu, 27 Feb 2025 18:28:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740709683; x=1741314483; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=w6CtTLnUlZkpeEsnmmvTInGqChea3z0s5g1Y+wiPVGI=;
+        b=I8swovPkcGi60M3D10k1EixTXkLlkLQfm+3MgLQGCfwoQ1U6v/+kAPm8eHMcs4WBjt
+         MX4OPnKkhD3HbDw69O7DeNPsMLBaoOTrYc/3ESsG33fv5T5NytEVc5puth3+wG7w1g/v
+         klDEpvlKVOcRZBuA/uwZ5lrLCr1q+hA7AXK59AM5o1NSF1vNsCxdYdJHbhyHEDMFXuai
+         FPLzaVs9ySfjoei0WbsOP97nx36xd0Q9YGdM3H6rG4cAcBw4wPXuRV+jyq/+MttQvQQI
+         +gkG0H32j+btwYelggvNxCM25SzetWKRrxRJbzna9UvmKxzuhEAHyWjlHECGfNayO+dL
+         FxMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740709683; x=1741314483;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=w6CtTLnUlZkpeEsnmmvTInGqChea3z0s5g1Y+wiPVGI=;
+        b=eBf/ZrafjKWsr0uPpnZGH6L9xTX0wRyoOZfK83vF+YVld4U9umTVVTj1IvaVM/GSXS
+         XLDpkl7g38R+n0i0p2pwXSTHGrtLXv0jmaKcBczW9U9rpibfdN4kEe5e4fP+YPIhCHmj
+         1zl6ty8QbRXVZ0GGZSDmQijo0FeOwYlWdwVVkosxNZ8vRClkWka9iZbjkwwvCNkHCdp/
+         1Z79DhAoGEFHj8PwWSRyPLbrMAyWdae8UZJOBhA+C73q6iOWqVYH5sckgO+UrEmCachP
+         3t813EHji78RpgQB8YbIftUSJXBkifihoB/6fCbF8vwMIqVn82U5fSKb296zahf0EL+7
+         5OYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUUVJMn4psZbrytNML4aWfJNudqRGBpHIqeMvATyxzmgUZCFIv5LflxWla9csh+OjIf+iR7osOmQvsMHpks@vger.kernel.org, AJvYcCUzbazAz7Z+IpXIWyEHN7IeoVM9E86fWpNjsh/TB40RqBT9z+E6F3SZgWcNZZlHaP2b4qj20o65zzJn@vger.kernel.org, AJvYcCWBuBC10hjK2TN0uqx/3PjuPxBLvTbvyW1P1umvsrBe3I6ZyAx5CHY3mICVqQ7l34xTIKfJ3/8NMhY=@vger.kernel.org, AJvYcCXHVQ2+lzvu8LzjJrxP6qP5m3KXYRUMP2X1So6/SPv3D6ekjqz8MkQn9Q5mCM5K1rEBk0FgD5GHJwt9sQuS+bI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwjuFZV2KXyvx2SU27CQEQ7LM/qs3lqynD0hxEZCeCRom/5G8+
+	pfH6MUFAaB7Y0NYdnhtHjg0eVb1XiBYMhkyfpY3ofVoneNvI0CcSscrJGpLXJPHUGha/78l+C2D
+	B9QZiL+KbNRu9ZcoQ0p04W+zEOY8=
+X-Gm-Gg: ASbGnctpyFOhXXAj0exEJl9WoasPA6dBYDNTILx2EHxZif2yO2ogY0BnEvWwE615eYC
+	qXonnuT6/UnqfwRXT4U3kUdvbzz9ztbNzeBrlgZ6pZ4r4GSWmjVReN76IBL0QhVofYdFuwd0GOc
+	HyUrrMb5Dh8VYwXj9jZmiHEB+2kr2PUx8AlcKR
+X-Google-Smtp-Source: AGHT+IHYxnsFG3B8+nagcRcL/Ba9q8piG9tBUzdtcgwFD+X0mUW7p1c/rKHvh5LhmTEiiTQ4vIZpmlSGKwXsalm1f48=
+X-Received: by 2002:a05:6102:1512:b0:4b2:c391:7d16 with SMTP id
+ ada2fe7eead31-4c0448b9b00mr1397468137.7.1740709682893; Thu, 27 Feb 2025
+ 18:28:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z8DqZlE5ccujbJ80@wunner.de>
+References: <20250227030952.2319050-1-alistair@alistair23.me>
+ <20250227030952.2319050-10-alistair@alistair23.me> <2025022717-dictate-cortex-5c05@gregkh>
+ <CAH5fLgiQAdZMUEBsWS0v1M4xX+1Y5mzE3nBHduzzk+rG0ueskg@mail.gmail.com>
+ <2025022752-pureblood-renovator-84a8@gregkh> <CANiq72kS8=1R-0yoGP5wwNT2XKSwofjfvXMk2qLZkO9z_QQzXg@mail.gmail.com>
+ <2025022749-gummy-survivor-c03a@gregkh>
+In-Reply-To: <2025022749-gummy-survivor-c03a@gregkh>
+From: Alistair Francis <alistair23@gmail.com>
+Date: Fri, 28 Feb 2025 12:27:36 +1000
+X-Gm-Features: AQ5f1JomfSVKBqp82WCWYnRIwxFU_ExnTkp6XsHs-orkc52LW_GeuvuLpBHWN7k
+Message-ID: <CAKmqyKNei==TWCFASFvBC48g_DsFwncmO=KYH_i9JrpFmeRu+w@mail.gmail.com>
+Subject: Re: [RFC v2 09/20] PCI/CMA: Expose in sysfs whether devices are authenticated
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Alice Ryhl <aliceryhl@google.com>, 
+	Alistair Francis <alistair@alistair23.me>, linux-cxl@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, lukas@wunner.de, linux-pci@vger.kernel.org, 
+	bhelgaas@google.com, Jonathan.Cameron@huawei.com, 
+	rust-for-linux@vger.kernel.org, akpm@linux-foundation.org, 
+	boqun.feng@gmail.com, bjorn3_gh@protonmail.com, wilfred.mallawa@wdc.com, 
+	ojeda@kernel.org, a.hindborg@kernel.org, tmgross@umich.edu, gary@garyguo.net, 
+	alex.gaynor@gmail.com, benno.lossin@proton.me, 
+	Alistair Francis <alistair.francis@wdc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 27, 2025 at 11:42:46PM +0100, Lukas Wunner wrote:
-> On Thu, Feb 27, 2025 at 03:16:40AM -0800, Greg KH wrote:
-> > On Thu, Feb 27, 2025 at 01:09:41PM +1000, Alistair Francis wrote:
-> > > The PCI core has just been amended to authenticate CMA-capable devices
-> > > on enumeration and store the result in an "authenticated" bit in struct
-> > > pci_dev->spdm_state.
-> > > 
-> > > Expose the bit to user space through an eponymous sysfs attribute.
-> > > 
-> > > Allow user space to trigger reauthentication (e.g. after it has updated
-> > > the CMA keyring) by writing to the sysfs attribute.
-> > > 
-> > > Implement the attribute in the SPDM library so that other bus types
-> > > besides PCI may take advantage of it.  They just need to add
-> > > spdm_attr_group to the attribute groups of their devices and amend the
-> > > dev_to_spdm_state() helper which retrieves the spdm_state for a given
-> > > device.
-> > > 
-> > > The helper may return an ERR_PTR if it couldn't be determined whether
-> > > SPDM is supported by the device.  The sysfs attribute is visible in that
-> > > case but returns an error on access.  This prevents downgrade attacks
-> > > where an attacker disturbs memory allocation or DOE communication
-> > > in order to create the appearance that SPDM is unsupported.
-> > 
-> > I don't like this "if it's present we still don't know if the device
-> > supports this", as that is not normally the "sysfs way" here.  Why must
-> > it be present in those situations?
-> 
-> That's explained above.
+On Fri, Feb 28, 2025 at 5:33=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org=
+> wrote:
+>
+> On Thu, Feb 27, 2025 at 05:45:02PM +0100, Miguel Ojeda wrote:
+> > On Thu, Feb 27, 2025 at 1:01=E2=80=AFPM Greg KH <gregkh@linuxfoundation=
+.org> wrote:
+> > >
+> > > Sorry, you are right, it does, and of course it happens (otherwise ho=
+w
+> > > would bindings work), but for small functions like this, how is the C
+> > > code kept in sync with the rust side?  Where is the .h file that C
+> > > should include?
 
-Not really, you just say "downgrade attacks", which is not something
-that we need to worry about, right?  If so, I think this bit is the
-least of our worries.
+This I can address with something like Alice mentioned earlier to
+ensure the C and Rust functions stay in sync.
 
-> Unfortunately there is no (signed) bit in Config Space which tells us
-> whether authentication is supported by a PCI device.  Rather, it is
-> necessary to exchange several messages with the device through a
-> DOE mailbox in config space to determine that.  I'm worried that an
-> attacker deliberately "glitches" those DOE exchanges and thus creates
-> the appearance that the device does not support authentication.
+> >
+> > What you were probably remembering is that it still needs to be
+> > justified, i.e. we don't want to generally/freely start replacing
+> > "individual functions" and doing FFI both ways everywhere, i.e. the
+> > goal is to build safe abstractions wherever possible.
+>
+> Ah, ok, that's what I was remembering.
+>
+> Anyway, the "pass a void blob from C into rust" that this patch is doing
+> feels really odd to me, and hard to verify it is "safe" at a simple
+> glance.
 
-That's a hardware glitch, and if that happens, then it will show a 0 and
-that's the same as not being present at all, right?  Otherwise you just
-pound on the file to try to see if the glitch was not real?  That's not
-going to go over well.
+I agree, it's a bit odd. Ideally I would like to use a sysfs binding,
+but there isn't one today.
 
-> Let's say the user's policy is to trust legacy devices which do not
-> support authentication, but require authentication for newer NVMe drives
-> from a certain vendor.  An attacker may manipulate an authentication-capable
-> NVMe drive from that vendor, whereupon it will fail authentication.
-> But the attacker can trick the user into trusting the device by glitching
-> the DOE exchanges.
+I had a quick look and a Rust sysfs binding implementation seems like
+a lot of work, which I wasn't convinced I wanted to invest in for this
+series. This is only a single sysfs attribute and I didn't want to
+slow down this series on a whole sysfs Rust implementation.
 
-Again, are we now claiming that Linux needs to support "hardware
-glitching"?  Is that required somewhere?  I think if the DOE exchanges
-fail, we just trust the device as we have to trust something, right?
+If this approach isn't ok for now, I will just drop the sysfs changes
+from the series so the SPDM implementation doesn't stall on sysfs
+changes. Then come back to the sysfs attributes in the future.
 
-> Of course, this is an abnormal situation that users won't encounter
-> unless they're being attacked.  Normally the attribute is only present
-> if authentication is supported.
-> 
-> I disagree with your assessment that we have bigger problems.
-> For security protocols like this we have to be very careful
-> to prevent trivial circumvention.  We cannot just shrug this off
-> as unimportant.
+So the high level question, is "pass[ing] a void blob from C into
+rust" ok or should I defer for a future safer implementation?
 
-hardware glitching is not trivial.  Let's only worry about that if the
-hardware people somehow require it, and if so, we can push back and say
-"stop making us fix your broken designs" :)
+Alistair
 
-> The "authenticated" attribute tells user space whether the device
-> is authenticated.  User space needs to handle errors anyway when
-> reading the attribute.  Users will get an error if authentication
-> support could not be determined.  Simple.
-
-No, if it's not determined, it shouldn't be present.
-
-> > What is going to happen to suddenly
-> > allow it to come back to be "alive" and working while the device is
-> > still present in the system?
-> 
-> The device needs to be re-enumerated by the PCI core to retry
-> determining its authentication capability.  That's why the
-> sysfs documentation says the user may exercise the "remove"
-> and "rescan" attributes to retry authentication.
-
-But how does it know that?  remove and recan is a huge sledgehammer, and
-an amazing one if it even works on most hardware.  Don't make it part of
-any normal process please.
-
-> > I'd prefer it to be "if the file is there, this is supported by the
-> > device.  If the file is not there, it is not supported", as that makes
-> > things so much simpler for userspace (i.e. you don't want userspace to
-> > have to both test if the file is there AND read all entries just to see
-> > if the kernel knows what is going on or not.)
-> 
-> Huh?  Read all entries?  The attribute contains only 0 or 1!
-> 
-> Or you'll get an error reading it.
-
-It's the error, don't do that.  If an error is going to happen, then
-don't have the file there.  That's the way sysfs works, it's not a
-"let's add all possible files and then make userspace open them all and
-see if an error happens to determine what really is present for this
-device" model.  It's a "if a file is there, that attribute is there and
-we can read it".
-
-> > > Alternatively, authentication success might be signaled to user space
-> > > through a uevent, whereupon it may bind a (blacklisted) driver.
-> > 
-> > How will that happen?
-> 
-> The SPDM library can be amended to signal a uevent when authentication
-> succeeds or fails and user space can then act on it.  I imagine systemd
-> or some other daemon might listen to such events and do interesting things,
-> such as binding a driver once authentication succeeds.
-
-That's a new user/kernel api and should be designed ONLY if you actually
-need it and have a user.  Otherwise let's just wait for later for that.
-
-> Maybe you have better ideas.  Be constructive!  Make suggestions!
-
-Again, have the file there only if this is something that the hardware
-supports.  Don't fail a read just because the hardware does not seem to
-support it, but it might sometime in the future if you just happen to
-unplug/plug it back in.
-
-> > > +		This prevents downgrade attacks where an attacker consumes
-> > > +		memory or disturbs communication in order to create the
-> > > +		appearance that a device does not support authentication.
-> > 
-> > If an attacker can consume kernel memory to cause this to happen you
-> > have bigger problems.  That's not the kernel's issue here at all.
-> > 
-> > And "disable communication" means "we just don't support it as the
-> > device doesn't say it does", so again, why does that matter?
-> 
-> Reacting to potential attacks sure is the kernel's business.
-
-Reacting to real, software attacks is the kernel's business.  Reacting
-to possible hardware issues that are just theoretical is not.
-
-> > > +		The reason why authentication support could not be determined
-> > > +		is apparent from "dmesg".  To re-probe authentication support
-> > > +		of PCI devices, exercise the "remove" and "rescan" attributes.
-> > 
-> > Don't make userspace parse kernel logs for this type of thing.  And
-> > asking userspace to rely on remove and recan is a mess, either show it
-> > works or not.
-> 
-> I'd say looking in dmesg to determine whether the user is being attacked
-> is perfectly fine, as is requiring the user to explicitly act on a
-> potential attack.
-> 
-> 
-> > > --- a/drivers/pci/cma.c
-> > > +++ b/drivers/pci/cma.c
-> > > @@ -171,8 +171,10 @@ void pci_cma_init(struct pci_dev *pdev)
-> > >  {
-> > >  	struct pci_doe_mb *doe;
-> > >  
-> > > -	if (IS_ERR(pci_cma_keyring))
-> > > +	if (IS_ERR(pci_cma_keyring)) {
-> > > +		pdev->spdm_state = ERR_PTR(-ENOTTY);
-> > 
-> > Why ENOTTY?
-> 
-> We use -ENOTTY as return value for unsupported reset methods in the
-> PCI core, see e.g. pcie_reset_flr(), pcie_af_flr(), pci_pm_reset(),
-> pci_parent_bus_reset(), pci_reset_hotplug_slot(), ...
-> 
-> We also use -ENOTTY in pci_bridge_wait_for_secondary_bus() and
-> pci_dev_wait().
-> 
-> It was used here to be consistent with those existing occurrences
-> in the PCI core.
-> 
-> If you'd prefer something else, please make a suggestion.
-
-Ah, didn't realize that was a pci thing, ok, nevermind.
-
-> > > +static ssize_t authenticated_store(struct device *dev,
-> > > +				   struct device_attribute *attr,
-> > > +				   const char *buf, size_t count)
-> > > +{
-> > > +	void *spdm_state = dev_to_spdm_state(dev);
-> > > +	int rc;
-> > > +
-> > > +	if (IS_ERR_OR_NULL(spdm_state))
-> > > +		return PTR_ERR(spdm_state);
-> > > +
-> > > +	if (sysfs_streq(buf, "re")) {
-> > 
-> > I don't like sysfs files that when reading show a binary, but require a
-> > "magic string" to be written to them to have them do something else.
-> > that way lies madness.  What would you do if each sysfs file had a
-> > custom language that you had to look up for each one?  Be consistant
-> > here.  But again, I don't think you need a store function at all, either
-> > the device supports this, or it doesn't.
-> 
-> I'm not sure if you've even read the ABI documentation in full.
-> 
-> The store method is needed to reauthenticate the device,
-> e.g. after a new trusted root certificate was added to the
-> kernel's .cma keyring.
-
-Why not have a different file called "reauthentication" that only allows
-a write to it of a 1/Y/y to do the reauthentication.  sysfs is a "one
-file per thing" interface, not a "parse a command and do something but
-when read from return a different value" interface.
-
-Let's keep it dirt simple please.
-
-thanks,
-
-greg k-h
+>
+> thanks,
+>
+> greg k-h
