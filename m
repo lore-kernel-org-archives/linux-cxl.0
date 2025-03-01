@@ -1,101 +1,113 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3F421DFFC;
-	Sat,  1 Mar 2025 03:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740798024; cv=pass; b=V5F3LVY1fDowRDqB1aD+WH1LaOmuUb/cScQeY+FNcuaa39gohdUDwNJyzR1tkYMVN3FZ+O2rZdF3v9mPMAFR0Z+2/yaKrO8tjgTynfvPEsPP93ydT5aPEboiRdMJ8Suxj0RBWFTlSwWvh14Iz7C84zkRlaYNWzWUhPmHvJNT6f8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740798024; c=relaxed/simple;
-	bh=s6wHvNcoVBg3+4pdzsn5oRlUN88czm5v5BrRXH0Ufrs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XD7NTEGyEhrgk6j+sMzK8pCtMqBFKCa/ZQ3ki1Vb7fNsxTpGVjTdMD4c0xs4HaIpfRks/pLzLtUKhYjNoLg2gbZpUW3oRrE/CMJWXmuuN70HxBgUiWvDGZEbLNqcd64+uge0FMzHSJ6riFehoa7aDSL9CIszYS3IoS3PwWlDmyE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=VV6Tye0s; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 101D71C5F18;
+	Sat,  1 Mar 2025 05:32:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740807142; cv=none; b=tRNx2Lo33KvC4aa42QKV/UqqX6xhXzfVSDOi9DvBo53exv1+C33dFf97FQ0mr6rkr1kx30jMhedckxQGwLOhXeUsX5EwF+1rQJdG0iHFR8D3m7pjO1sn7Trz7wh0kqMvt6LXDlArxp5ngMsI6pSYPxHkasKnTF0+T0BT+M+VNkI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740807142; c=relaxed/simple;
+	bh=TdB0mwgEyxYmgov8Ed3f89rKpgIPCvGHHfJfd3FzNLA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gxVatbivLh7wJgdRzaGzmyahIbw+H/cEClZ3mPiUB0aWDN6giEvuz9Xr8yfu9HTVE4u7fE8ogMaU+jASahB1LT2cK4vxdaY0Sfsu/WXwDL62k4nfaFr4GPSMvE6Sgt4ujzRbYlaMk0U83u9A6eOCsyVdd7IGucPEDKhwRvBkL7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=WkSu3mBR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="VV6Tye0s"
-ARC-Seal: i=1; a=rsa-sha256; t=1740798005; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=l3mJJ0oizngCiWR5yk6Mi2hwhDS67xmdGw3OK5dwJ+62wrsoUM3/x5e8h3q2cdQGo/H249vrhSde3XdQOhbw+7NFxusJ7Cii84HvakMvbwQK1EcHeW5q2e1D3fP4hMhBVzYZG/K3f4MmFsPTAaQ7eW3LO6TuG4ZUHHT95UkEGKI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740798005; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=cZF6XzsvCR1XR8oqjw3BHQdejOWrm4ZSbzyxGwvVlH8=; 
-	b=kgkwGgQ2ZHgzj+lJP23vGkZX7h2ZqMKuz/h3laAxR7U+mEGZ3I16udU6x6x5vjiwyxV7a8lYlTukXf7ClAKn4G5TT/iO9yqr+EyoAmEwUnTA12J47h8CV23Q6H+73tLzC3TDxd6g8MOJ0ixb5QBm/VXXJfHmUgPIe1cSkl7Klrg=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740798005;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=cZF6XzsvCR1XR8oqjw3BHQdejOWrm4ZSbzyxGwvVlH8=;
-	b=VV6Tye0swami4jGO/829GSCGko9XYWdG1JsqhP8vXw9n+yf9G5mNSkRy65Ep6B9V
-	6foS5BtxBpcv02TGOkj4jPG55CrMd1KH4/Krtzs81vuSgrnVnUO0rd256v3HlJcCXU/
-	Yw8HXweZo7x8zoVYFXF/xkeGVll/4klZMfSwryTo=
-Received: by mx.zohomail.com with SMTPS id 1740798002751500.5632278646382;
-	Fri, 28 Feb 2025 19:00:02 -0800 (PST)
-Message-ID: <d11bd4d3-2e8c-4e2f-9b2f-6bbe424058d3@zohomail.com>
-Date: Sat, 1 Mar 2025 11:00:01 +0800
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="WkSu3mBR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A866C4CEDD;
+	Sat,  1 Mar 2025 05:32:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1740807141;
+	bh=TdB0mwgEyxYmgov8Ed3f89rKpgIPCvGHHfJfd3FzNLA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WkSu3mBRdikSkb9e2lpn894O1h8MCoZmHitj20Na1smd1/rusQ3C11Atdytx0MgWQ
+	 2qZcmsuLG7HPgFQZmdt1OKh1U7jHWkH+iGfxXkNJRLviDMx0qwkINqPdELznsYqjES
+	 HJy+dm+OnOzrRz4uUGY4RwBPBi5oC67OLHzbyy7A=
+Date: Fri, 28 Feb 2025 20:27:10 -0800
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Alistair Francis <alistair23@gmail.com>
+Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Alistair Francis <alistair@alistair23.me>,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	lukas@wunner.de, linux-pci@vger.kernel.org, bhelgaas@google.com,
+	Jonathan.Cameron@huawei.com, rust-for-linux@vger.kernel.org,
+	akpm@linux-foundation.org, boqun.feng@gmail.com,
+	bjorn3_gh@protonmail.com, wilfred.mallawa@wdc.com, ojeda@kernel.org,
+	a.hindborg@kernel.org, tmgross@umich.edu, gary@garyguo.net,
+	alex.gaynor@gmail.com, benno.lossin@proton.me,
+	Alistair Francis <alistair.francis@wdc.com>
+Subject: Re: [RFC v2 09/20] PCI/CMA: Expose in sysfs whether devices are
+ authenticated
+Message-ID: <2025022851-usual-backshift-7ea6@gregkh>
+References: <20250227030952.2319050-1-alistair@alistair23.me>
+ <20250227030952.2319050-10-alistair@alistair23.me>
+ <2025022717-dictate-cortex-5c05@gregkh>
+ <CAH5fLgiQAdZMUEBsWS0v1M4xX+1Y5mzE3nBHduzzk+rG0ueskg@mail.gmail.com>
+ <2025022752-pureblood-renovator-84a8@gregkh>
+ <CANiq72kS8=1R-0yoGP5wwNT2XKSwofjfvXMk2qLZkO9z_QQzXg@mail.gmail.com>
+ <2025022749-gummy-survivor-c03a@gregkh>
+ <CAKmqyKNei==TWCFASFvBC48g_DsFwncmO=KYH_i9JrpFmeRu+w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/1] cxl/hdm: Verify HDM decoder capabilities after
- parsing
-To: Dan Williams <dan.j.williams@intel.com>,
- Alison Schofield <alison.schofield@intel.com>
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250227103251.390147-1-ming.li@zohomail.com>
- <Z8DdafbX6_tbM4DW@aschofie-mobl2.lan>
- <4c97ec3a-3435-4e79-8265-6a82ae930c3e@zohomail.com>
- <Z8IBuE714QNscgfJ@aschofie-mobl2.lan>
- <67c24a88bb358_1a7729481@dwillia2-xfh.jf.intel.com.notmuch>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <67c24a88bb358_1a7729481@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Feedback-ID: rr08011227d46a6e82f5a9e6e01583c3d70000e9db9a12217fdf05a65132789f6dea16da2d72dc7f14fa9d30:zu0801122783ef9dae2e8277d6e44d144500004c79635f8fc426a1a4d391c2c55b4f5649275bd484c4301695:rf0801122d9b87e4d4b1754ae2d76601e80000502543d7623ddec995aabde8ac9bb1ea608cebcb8670dbe0e2abecfc5a5b79:ZohoMail
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKmqyKNei==TWCFASFvBC48g_DsFwncmO=KYH_i9JrpFmeRu+w@mail.gmail.com>
 
-On 3/1/2025 7:45 AM, Dan Williams wrote:
-> Alison Schofield wrote:
->> On Fri, Feb 28, 2025 at 10:47:12AM +0800, Li Ming wrote:
->>> On 2/28/2025 5:47 AM, Alison Schofield wrote:
->>>> On Thu, Feb 27, 2025 at 06:32:51PM +0800, Li Ming wrote:
->>>>> devm_cxl_setup_hdm() only checks if decoder_count is 0 after parsing HDM
->>>>> decoder capability, But according to the implementation of
->>>>> cxl_hdm_decoder_count(), cxlhdm->decoder_count will never be 0.
->>>> How does a check against the spec maximums benefit this driver? Is there
->>>> a bad path we avoid by checking and quitting at this point.
->>>
->>> My understanding is that no a bad path on driver side if the decoder_count is greater than the maximum number spec defines.
->>>
->>> Driver just allocates cxl decoders on the port based on the value of decoder_count. But I am not sure if hardware will have other potential problems when it didn't follow the spec.
->> I had the general thought that the driver is not responsible for
->> compliance checking the device, unless it affects function. Excessive
->> decoder_count's sound like they cause needless allocations, so let's
->> stop doing that - as best we can. 
-> Only if we see a device in the wild that causes an actual problem.
-> Otherwise this is a losing theoretical game of adding checks for things
-> that will likely never be violated. The way to address devices that
-> violate spec expectations *and* cause end user visible pain is to add
-> quirks. The allocation of a few extra decoders is does not amount to
-> that standard.
->
-> Lets not add checks for benign issues "just because", or "just in case".
-> If the check is cheap and we need to do it for the driver's own internal
-> sanity, fine, but if it's just being strict for strictness sake, please
-> no.
+On Fri, Feb 28, 2025 at 12:27:36PM +1000, Alistair Francis wrote:
+> On Fri, Feb 28, 2025 at 5:33 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Thu, Feb 27, 2025 at 05:45:02PM +0100, Miguel Ojeda wrote:
+> > > On Thu, Feb 27, 2025 at 1:01 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > >
+> > > > Sorry, you are right, it does, and of course it happens (otherwise how
+> > > > would bindings work), but for small functions like this, how is the C
+> > > > code kept in sync with the rust side?  Where is the .h file that C
+> > > > should include?
+> 
+> This I can address with something like Alice mentioned earlier to
+> ensure the C and Rust functions stay in sync.
 
-Got it, thanks for explanation.
+Yes, that looks to be fixed up now and should not be an issue.
 
+> > > What you were probably remembering is that it still needs to be
+> > > justified, i.e. we don't want to generally/freely start replacing
+> > > "individual functions" and doing FFI both ways everywhere, i.e. the
+> > > goal is to build safe abstractions wherever possible.
+> >
+> > Ah, ok, that's what I was remembering.
+> >
+> > Anyway, the "pass a void blob from C into rust" that this patch is doing
+> > feels really odd to me, and hard to verify it is "safe" at a simple
+> > glance.
+> 
+> I agree, it's a bit odd. Ideally I would like to use a sysfs binding,
+> but there isn't one today.
+> 
+> I had a quick look and a Rust sysfs binding implementation seems like
+> a lot of work, which I wasn't convinced I wanted to invest in for this
+> series. This is only a single sysfs attribute and I didn't want to
+> slow down this series on a whole sysfs Rust implementation.
+> 
+> If this approach isn't ok for now, I will just drop the sysfs changes
+> from the series so the SPDM implementation doesn't stall on sysfs
+> changes. Then come back to the sysfs attributes in the future.
 
-Ming
+Please do that, we can revisit the sysfs stuff later.
 
+> So the high level question, is "pass[ing] a void blob from C into
+> rust" ok or should I defer for a future safer implementation?
+
+I don't think we want random void * blobs being passed between C and
+Rust like that as ensuring that both sides really know what is happening
+and keep that in sync is going to be impossible over time.  Type safety
+is our friend :)
+
+thanks,
+
+greg k-h
