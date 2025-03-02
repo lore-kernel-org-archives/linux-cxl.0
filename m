@@ -1,229 +1,158 @@
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2054.outbound.protection.outlook.com [40.107.96.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2570A8BF8;
-	Sat,  1 Mar 2025 18:01:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740852111; cv=none; b=Tbc+7cbQXv4+NmmjlU5lZhfvsOU1vdf+3GPRqCyGG4DqCWKFlzdAReIXhcSefckVsMwaKu8x8YnYc3WtdCQFS8qs1ljFpejsePly1J6uDP0YmoIAzGRlCoNwRqVp7S3hrUiOvFHHpX7VzFABNfjum9wlY8ZpErq9wIWKbvIgRAg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740852111; c=relaxed/simple;
-	bh=klqCN48Ny/H3BoJ3S0qc0BU0Owh8CJ6llnu/vJfC6BI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S9o8FeIGVgcSpcJWlXIJZJCAS9kuxGYt9nmQxxWGpu9engGSYC+iGhRhBQAF46IQXE6mDqzcN2IOb/0zqOX8DS+fsngSjCoXynw5fcQoknlECpJsQBhbiaA4TdJ8eng+tvMgr1ss79tIm3JqKR3hYp6J65Xy/1IKobMfeMM5FZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 4A030280C374E;
-	Sat,  1 Mar 2025 19:01:39 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 347955E0BCC; Sat,  1 Mar 2025 19:01:39 +0100 (CET)
-Date: Sat, 1 Mar 2025 19:01:39 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Alistair Francis <alistair@alistair23.me>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	bhelgaas@google.com, Jonathan.Cameron@huawei.com,
-	rust-for-linux@vger.kernel.org, akpm@linux-foundation.org,
-	boqun.feng@gmail.com, bjorn3_gh@protonmail.com,
-	wilfred.mallawa@wdc.com, aliceryhl@google.com, ojeda@kernel.org,
-	alistair23@gmail.com, a.hindborg@kernel.org, tmgross@umich.edu,
-	gary@garyguo.net, alex.gaynor@gmail.com, benno.lossin@proton.me,
-	Alistair Francis <alistair.francis@wdc.com>
-Subject: Re: [RFC v2 09/20] PCI/CMA: Expose in sysfs whether devices are
- authenticated
-Message-ID: <Z8NLgxmDbcC9_C3F@wunner.de>
-References: <20250227030952.2319050-1-alistair@alistair23.me>
- <20250227030952.2319050-10-alistair@alistair23.me>
- <2025022717-dictate-cortex-5c05@gregkh>
- <Z8DqZlE5ccujbJ80@wunner.de>
- <2025022748-flock-verbalize-b66a@gregkh>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FC3F1C5D4B;
+	Sun,  2 Mar 2025 12:09:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740917366; cv=fail; b=okj5NIGPzqxW90LTHprtA5l+D58rnZ4KAulMDchrPu2pKmejQjkG//4+u/d+TJiyKfkBQkqRvgYGZcbTb8dj/hLZcuAej2tztoVS9/mlNwmFTuSUatMQTADiKmD0iKdjdrQ8AhQmprF9ccfM4MmpJo6Xgkw7P9kBnrifNlz+i6c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740917366; c=relaxed/simple;
+	bh=AqbWMNTuIgm8nnQN4zKy8r00SnyKYrzJYIHLmGJ9Ydg=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kUrp9Rv+mQ8rkRcUFb8CJhFnKgTyPRMHoGYTTt9ZBHnnVSfkn7RbN9kRQR4oGQmHIjgyJxTrDJ3wPK2RDeAji1+peGKtYmrxOH+9ab2ih/bkX77usnBaGvOY6YYNJCmHegjYhBOfI/PBJDuskXTVd7PYN8I9xPWDqUYEYlvsi3Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=BBIxSkjc; arc=fail smtp.client-ip=40.107.96.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="BBIxSkjc"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Qmjb/z3YRKv2KQm7kA7niXpHKHdThQn2xiC0HjOc8n33IeXYh8Tng+/UnWI9vHhc3bSjed4bZWCZf+1kdMtudNFDvdzgzGpZ/UYiaB6pKnShU2wqwWvcGN44I8wuPBORW3S/x+VOepdDk++a79VJhRBtG8lfDtm0As2jUvIooaiqEsxOk8Ud+AU6o/WL9R6AjDMY7YrtnUo4Uiv60SmRDGfN+tCsp4gBVZPeksJjp+Q81ZX+03dWPWxm61u8uB4+hbeZ1V8/Xu+QiNyvY+mEPgf8MHHegHcnImOkioJMCOiqvi/e3dSIo+KVTim5uJ3AsFzhXmqTGjrMWSd5F8a/FQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dt7pmrG/MXY4SlAdX1nBXiCp4i/xvLjxyUkkgnzXDwk=;
+ b=JotbM1LkeVC4vnYMbrW1PkPT8YxuhAb7RmwNnpRpy31IuuP1qaPIxJ3yHYmAhxOsTa0bm6sfSenfsqkjOflLPC00TcirmTxdFsnuu1pKN9YcjfaShsvNMRXtZULMRqcbCm3K40eh/9+enzw2lCzzWV0HYjlCQWhkSA1of1GDI0FmyX3KK4Txs2Qv4f1ZyRvKo4JQCXzOAeUNJooYlrbkZJV60HPUDFrCbRooM6XnZULAM4vGJgjrdfFvJacGqLQskAUmM+7TYX9//6TExhChuEPMQyC4FIljvwXZUch1fCp5Qb8mgYWy3ekFD6G8iEQ9oenn7MShexCTAOaaXLqj2Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dt7pmrG/MXY4SlAdX1nBXiCp4i/xvLjxyUkkgnzXDwk=;
+ b=BBIxSkjcTCqPDvxOPUTOLSUWLHK2VF/kQwXw1qL699BicM4G2s+KVXpZ9DV9xF0XbPYgJopy0kQ5aT1lVGDRAmDThXM8FwozNUyZSYsRIVMWlyaB1WMJsaIJsBIJPYgtQ9En9gYmoQVxcbp92Zrx93YDWfXLxkCv9/VmtuKGchqRzu50HTfcBR8BVUwQ+cDFOFs9A2LyZAkjyboAwoYh8o1Ka30vVmHpacdEUmAtBEuGZJncqUTw2w3gCDuXqPzdDuIWYtu/dazQznpGBxkcjKzoXDBhzofBIfgYcwLi9QIjFSgwnz2XLt0BOwuJU4p7sDFw3bR3JbcPgUTgWvPmKA==
+Received: from SA1P222CA0063.NAMP222.PROD.OUTLOOK.COM (2603:10b6:806:2c1::12)
+ by MN2PR12MB4208.namprd12.prod.outlook.com (2603:10b6:208:1d0::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.24; Sun, 2 Mar
+ 2025 12:09:19 +0000
+Received: from SN1PEPF000397B5.namprd05.prod.outlook.com
+ (2603:10b6:806:2c1:cafe::e5) by SA1P222CA0063.outlook.office365.com
+ (2603:10b6:806:2c1::12) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8489.26 via Frontend Transport; Sun,
+ 2 Mar 2025 12:09:19 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ SN1PEPF000397B5.mail.protection.outlook.com (10.167.248.59) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8489.16 via Frontend Transport; Sun, 2 Mar 2025 12:09:19 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Sun, 2 Mar 2025
+ 04:09:11 -0800
+Received: from localhost (10.126.231.35) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Sun, 2 Mar
+ 2025 04:09:10 -0800
+Date: Sun, 2 Mar 2025 14:09:05 +0200
+From: Leon Romanovsky <leonro@nvidia.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: Andy Gospodarek <andrew.gospodarek@broadcom.com>, Aron Silverton
+	<aron.silverton@oracle.com>, Dan Williams <dan.j.williams@intel.com>, "Daniel
+ Vetter" <daniel.vetter@ffwll.ch>, Dave Jiang <dave.jiang@intel.com>, "David
+ Ahern" <dsahern@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Christoph Hellwig <hch@infradead.org>, Itay Avraham <itayavr@nvidia.com>,
+	Jiri Pirko <jiri@nvidia.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Jakub Kicinski <kuba@kernel.org>, Leonid Bloch <lbloch@nvidia.com>,
+	<linux-cxl@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+	<netdev@vger.kernel.org>, Saeed Mahameed <saeedm@nvidia.com>, "Nelson,
+ Shannon" <shannon.nelson@amd.com>
+Subject: Re: [PATCH v5 8/8] mlx5: Create an auxiliary device for fwctl_mlx5
+Message-ID: <20250302120905.GA1539246@unreal>
+References: <0-v5-642aa0c94070+4447f-fwctl_jgg@nvidia.com>
+ <8-v5-642aa0c94070+4447f-fwctl_jgg@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <2025022748-flock-verbalize-b66a@gregkh>
+In-Reply-To: <8-v5-642aa0c94070+4447f-fwctl_jgg@nvidia.com>
+X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF000397B5:EE_|MN2PR12MB4208:EE_
+X-MS-Office365-Filtering-Correlation-Id: ebd3ab66-968f-4668-6a25-08dd59830fbb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|1800799024|36860700013|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?OXT1p2qmJ90bLfrGkqiYweKWagGPHVV+ps2Y9ymIG1VOirH9KB+PAkldy6pb?=
+ =?us-ascii?Q?OpBOSiDsnj+Q32rORW0kXUzAzOyCI5wDXAXYdNei+kDa7CbGnrbRv2Sok+tY?=
+ =?us-ascii?Q?vj0ggKE1fyispyFZhsUjWTYaDQtKAyjPI7XHa/8pfhgk0T3vRfXexb7yjjx9?=
+ =?us-ascii?Q?OI6fzTS0dPB40fA9E8WNZvcIZjexVR9/HxIG/GnhZie75jTDtowpYQu4bYOC?=
+ =?us-ascii?Q?GNq1cwv/aZNXcH0ILr8IHQLQAHcAY5uchFOLNhfhaxQ4fQqvIzawRk4n705S?=
+ =?us-ascii?Q?UoENExWvRTaKTcyb2QBmidOXV4/c/EViHE+tK7kE3/LrYY5WrzDsyVtjLSgs?=
+ =?us-ascii?Q?36G6XcwE8kpj6hRooqANFs9bgLy8FPPl58WeDvnuZUFkDJUru8MP2okLTVkq?=
+ =?us-ascii?Q?xl3RA4hfYmG++YySWabmPbzjO6Cc0yyzCOPTBVd8/cK6GCaxNPd0PkDMNiin?=
+ =?us-ascii?Q?jsftZ4UsJFpyYra7m+t6PBYwKm50GEWe74ySvoa6u5+rOpLoyhnvFyDuPm1x?=
+ =?us-ascii?Q?kaGfhr8nGlqLmaTjfHCPasw+ywNce2MkdzIBdypRH6L1Wt9sGsZ5bAPzHDuv?=
+ =?us-ascii?Q?c6oPeyIT2xeRhTUrQ6ywYtiETOtx28BTKrCT7/EwQjd1oVwNiJFvxrXaWi/F?=
+ =?us-ascii?Q?oNHM0qDAcl/qIqKRoTwrjDFcs0izeegE9fPLPXycDyD7vhh4kbKtsf2Z7N++?=
+ =?us-ascii?Q?eDiboSOOXeBKhtbP1eKlMzCjV1wyXsAVCg7yFV6lAN4qHpSuEbZMHOyTJJ1z?=
+ =?us-ascii?Q?n8CUQE3jTbUSQtRNUw6SpUBR7u4IbW1yWVJiS93vAuUCSNfDwAKiU7VIJuOM?=
+ =?us-ascii?Q?LAPBbvgY1o39AjrS6OMQyQzxfyAEfYSnWxBDLauuZ5hU6Efl5bqy+ZRDrXUL?=
+ =?us-ascii?Q?jYSnQ2Et1dJ1+XYf4GLcw0gHXr3fESK8j2RVcSVbFc2/JL+3IwBxKn/XGCcj?=
+ =?us-ascii?Q?iXgu9oX+Bzj+WgPY8idO0RNf40/lhrRD872wzf9icU4SgCFwC1zEEm89ZkDp?=
+ =?us-ascii?Q?X4ItW79123OdmBoZxGK/9jCHFSr9QIIx++LWWtyoWoAUUvgSrZcNSA5YYM/t?=
+ =?us-ascii?Q?+hWk6EGqKiasX0r5qIdNbSf8uReA3rUaYKwoq7pcBaYIyM2CBev2ctjk5S6f?=
+ =?us-ascii?Q?h86ymQvjS9Wvfy8zrzGuLtASbZYCGofqLxcKzI0eZRo1mcik8hqec7KKv+tt?=
+ =?us-ascii?Q?m15in7EtzbN5a57Oz4yaYsLk9C46GR2DHREeK2w0xpUMFz/v2ylb0usonrAS?=
+ =?us-ascii?Q?ady6FRlvyuU2SuV+6On2yu11dUX3X8lqGryz6H9/hZBhBcs2p4AL4kUoIC9D?=
+ =?us-ascii?Q?s/Az8yb0Lqf/z/2LcnUNDUgNZqecXbsiwPAsNO4E7ynGoFVX6+pagcOS5E49?=
+ =?us-ascii?Q?UvQthSOI+BYuqDL2Z40OxbMxVwIUN04Z0gZyKvnwLUaLcm9MaMKXclWIa3dz?=
+ =?us-ascii?Q?TZBSzF525ufxKLTbNQDSF4deXCpnwDW6W2OUeBifRYvWN05aqEJ3og=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(36860700013)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Mar 2025 12:09:19.4600
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ebd3ab66-968f-4668-6a25-08dd59830fbb
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF000397B5.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4208
 
-On Thu, Feb 27, 2025 at 05:39:53PM -0800, Greg KH wrote:
-> On Thu, Feb 27, 2025 at 11:42:46PM +0100, Lukas Wunner wrote:
-> > On Thu, Feb 27, 2025 at 03:16:40AM -0800, Greg KH wrote:
-> > > I don't like this "if it's present we still don't know if the device
-> > > supports this", as that is not normally the "sysfs way" here.  Why must
-> > > it be present in those situations?
-> > 
-> > That's explained above.
+On Thu, Feb 27, 2025 at 08:26:36PM -0400, Jason Gunthorpe wrote:
+> From: Saeed Mahameed <saeedm@nvidia.com>
 > 
-> Not really, you just say "downgrade attacks", which is not something
-> that we need to worry about, right?
-
-A downgrade attack means duping the victim into believing that only
-a weaker security mode is supported.  E.g. only sha1, but not sha256.
-
-In this context, downgrade attack means duping the kernel or user
-into believing that SPDM authentication is unsupported, even though it is.
-
-https://en.wikipedia.org/wiki/Downgrade_attack
-
-That's definitely something we need to be aware of and guard against,
-otherwise what's the point of authenticating in the first place.
-
-
-> > Unfortunately there is no (signed) bit in Config Space which tells us
-> > whether authentication is supported by a PCI device.  Rather, it is
-> > necessary to exchange several messages with the device through a
-> > DOE mailbox in config space to determine that.  I'm worried that an
-> > attacker deliberately "glitches" those DOE exchanges and thus creates
-> > the appearance that the device does not support authentication.
+> If the device supports User Context then it can support fwctl. Create an
+> auxiliary device to allow fwctl to bind to it.
 > 
-> That's a hardware glitch, and if that happens, then it will show a 0 and
-> that's the same as not being present at all, right?
-
-No, the "authenticated" attribute is not present in sysfs if authentication
-is unsupported.
-
-The downgrade attack protection comprises exposing the attribute if it
-could not be determined whether authentication is supported or not,
-and returning an error (ENOTTY) on read or write.
-
-User space applications need to check anyway whether read() or write()
-failed for some reason.  E.g. if the device is hot-removed concurrently,
-the read() system call returns ENODEV.  So returning ENOTTY is just
-another error that can occur on access to the attribute.
-
-The idea is that user space typically wants to check whether the attribute
-contains "1", signifying that the device was authenticated successfully.
-Hence a return value of "0" or any error code signifies that the device
-is not authenticated.
-
-And if user space wants to check whether authentication is supported at all,
-it checks for presence of the sysfs attribute.  Hence exposing the attribute
-if support could not be determined is a safety net to not mislead user space
-that the device does not support authentication.
-
-For PCIe, glitching the hardware (the electric signals exchanged with
-the device) is indeed one way to disrupt the DOE and SPDM exchanges.
-
-However the SPDM protocol has not only been adopted by PCIe, but also
-other buses, in particular SCSI and ATA.  And in those cases, glitching
-the SPDM exchanges may be a pure software thing.  (Think iSCSI communication
-with storage devices in a remote rack or data center.)
-
-Damien Le Moal has explicitly requested that the user space ABI for SPDM
-is consistent across buses.  So the downgrade attack protection can be
-taken advantage of by those other buses as well.
-
-
-> > Let's say the user's policy is to trust legacy devices which do not
-> > support authentication, but require authentication for newer NVMe drives
-> > from a certain vendor.  An attacker may manipulate an authentication-capable
-> > NVMe drive from that vendor, whereupon it will fail authentication.
-> > But the attacker can trick the user into trusting the device by glitching
-> > the DOE exchanges.
+> Create a sysfs like:
 > 
-> Again, are we now claiming that Linux needs to support "hardware
-> glitching"?  Is that required somewhere?
-
-Required?  It's simply prudent to protect users from being duped into
-thinking the device doesn't support authentication.
-
-
-> I think if the DOE exchanges
-> fail, we just trust the device as we have to trust something, right?
-
-If the DOE exchanges fail, something fishy is going on.
-Why should we hide that fact from the user?
-
-
-> > The device needs to be re-enumerated by the PCI core to retry
-> > determining its authentication capability.  That's why the
-> > sysfs documentation says the user may exercise the "remove"
-> > and "rescan" attributes to retry authentication.
+> $ ls /sys/devices/pci0000:00/0000:00:0a.0/mlx5_core.fwctl.0/driver -l
+> lrwxrwxrwx 1 root root 0 Apr 25 19:46 /sys/devices/pci0000:00/0000:00:0a.0/mlx5_core.fwctl.0/driver -> ../../../../bus/auxiliary/drivers/mlx5_fwctl.mlx5_fwctl
 > 
-> But how does it know that?
-
-Because reads and writes to the attribute return ENOTTY.
-
-> remove and recan is a huge sledgehammer, and
-> an amazing one if it even works on most hardware.  Don't make it part of
-> any normal process please.
-
-It's not a normal process.  It's manual recovery in case of a
-potential attack.  The user can also choose to unplug the device
-or reboot the machine.  That's arguably a bigger sledgehammer.
-
-
-> It's the error, don't do that.  If an error is going to happen, then
-> don't have the file there.  That's the way sysfs works, it's not a
-> "let's add all possible files and then make userspace open them all and
-> see if an error happens to determine what really is present for this
-> device" model.  It's a "if a file is there, that attribute is there and
-> we can read it".
-
-The point is that if the file isn't there even though the device might
-support authentication, we're creating a false and dangerous illusion.
-This is different from other attributes which don't have that quality.
-
-
-> > > > Alternatively, authentication success might be signaled to user space
-> > > > through a uevent, whereupon it may bind a (blacklisted) driver.
-> > > 
-> > > How will that happen?
-> > 
-> > The SPDM library can be amended to signal a uevent when authentication
-> > succeeds or fails and user space can then act on it.  I imagine systemd
-> > or some other daemon might listen to such events and do interesting things,
-> > such as binding a driver once authentication succeeds.
+> Signed-off-by: Saeed Mahameed <saeedm@nvidia.com>
+> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> ---
+>  drivers/net/ethernet/mellanox/mlx5/core/dev.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
-> That's a new user/kernel api and should be designed ONLY if you actually
-> need it and have a user.  Otherwise let's just wait for later for that.
-
-Of course.  Again, the commit message makes suggestions for future
-extensions to justify the change.  Those are just ideas.  Whether
-and how they are implemented remains to be seen.  Signaling a uevent
-on authentication success or failure seems like an obvious idea,
-hence I included it in the commit message.
-
-I fear if I don't include those ideas in the commit message, someone
-will come along and ask "why do you need this at all?", thus putting
-into question the whole set of authentication patches.
-
-
-> > > If an attacker can consume kernel memory to cause this to happen you
-> > > have bigger problems.  That's not the kernel's issue here at all.
-> > > 
-> > > And "disable communication" means "we just don't support it as the
-> > > device doesn't say it does", so again, why does that matter?
-> > 
-> > Reacting to potential attacks sure is the kernel's business.
-> 
-> Reacting to real, software attacks is the kernel's business.  Reacting
-> to possible hardware issues that are just theoretical is not.
-
-We have fundamental disagreement whether certain attacks need to be taken
-seriously.  Which reminds me of...
-
-   "the final topic on the agenda was the corporate attempt at
-    security consciousness raising; a shouting match ensued,
-    in the course of which several and various reputations
-    were sullied, certain paranoid reactions were taken less
-    than seriously, and no great meeting of the minds was met."
-
-   [minutes of the uucp-lovers interest group, 20 April 1983,
-    from "A Quarter Century of UNIX" (1994) page 113]
-    https://wiki.tuhs.org/lib/exe/fetch.php?media=publications:qcu.pdf
-
-Looks like we're just upholding the time honored tradition of
-UNIX security disagreements!
 
 Thanks,
-
-Lukas
+Acked-by: Leon Romanovsky <leonro@nvidia.com>
