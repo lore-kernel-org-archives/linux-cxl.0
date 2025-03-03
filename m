@@ -1,117 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from beeline3.cc.itu.edu.tr (beeline3.cc.itu.edu.tr [160.75.25.117])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CF17207DE6;
-	Tue,  4 Mar 2025 17:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D5BF23956D
+	for <linux-cxl@vger.kernel.org>; Tue,  4 Mar 2025 18:17:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=160.75.25.117
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741112268; cv=fail; b=ocjQeQfmPINONRAsqHu1w//9VTC5VX8r0aiY45CCh7N6HuemwdmB+xFwuZI130O60hg5fcL8B8mRCqpRwcy9i6zftGSLBbpYv4FvwcDOPUgbCqSyY/LemkGvRx9JDeatuP/iqR6ZbTfU0a0z9Em+le6J9mh02LXmvR68SmKdSuc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741112268; c=relaxed/simple;
+	bh=Q140J512fl+FeFdkGEjwsUDtH0BF9JSpJtTf4QOgqro=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=qJJLZBdriXzQRPCvZ1wAAap1nh8tQOYX+QhI47CkRElsywjMNfthVzKPywMnDYQhQWi9IVgY9iSZ/8ERCoWI/6zBO1DDdvKXmdH33yBpCI68VPeHLXnNrMJy54KRyNUSGWy45/VVhhXcx3JxgmVVW7iHvawbIym7NU6dIeRGhb8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com; spf=none smtp.mailfrom=cc.itu.edu.tr; arc=none smtp.client-ip=185.176.79.56; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=fail smtp.client-ip=160.75.25.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cc.itu.edu.tr
+Received: from lesvatest1.cc.itu.edu.tr (unknown [10.146.128.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by beeline3.cc.itu.edu.tr (Postfix) with ESMTPS id 80DC140D00FE
+	for <linux-cxl@vger.kernel.org>; Tue,  4 Mar 2025 21:17:42 +0300 (+03)
+X-Envelope-From: <root@cc.itu.edu.tr>
+Received: from lesva1.cc.itu.edu.tr (unknown [160.75.70.79])
+	by lesvatest1.cc.itu.edu.tr (Postfix) with ESMTP id 4Z6fMq2pb9zFyfB
+	for <linux-cxl@vger.kernel.org>; Tue,  4 Mar 2025 18:13:43 +0300 (+03)
+Received: by le1 (Postfix, from userid 0)
+	id C80E742722; Tue,  4 Mar 2025 18:13:33 +0300 (+03)
+X-Envelope-From: <linux-kernel+bounces-541356-bozkiru=itu.edu.tr@vger.kernel.org>
+Received: from fgw2.itu.edu.tr (fgw2.itu.edu.tr [160.75.25.104])
+	by le2 (Postfix) with ESMTP id 5D07142F1B
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 13:21:54 +0300 (+03)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by fgw2.itu.edu.tr (Postfix) with SMTP id 347A72DCEB
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 13:21:54 +0300 (+03)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 06A8D1891482
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 10:22:01 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D39E51F236E;
+	Mon,  3 Mar 2025 10:21:38 +0000 (UTC)
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABB531EDA04;
+	Mon,  3 Mar 2025 10:21:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741111179; cv=none; b=QroyOMlQlEiD3nTzgrcP3wuCZMrDw+8vE9qYRfZWHPWQUfQw8MMJy4zAs1xHi4LUGqE/ZXV+FEW/2QcEVFaZLXhxmfUGlpz4CIw1FIubkz1595srISCPg2dWMBCrpkLGHOUSml0UEILqBg/fVaUDAilXWvQan0WKntwPOkXiidQ=
+	t=1740997297; cv=none; b=tdR5lQNGrdVWS5SAWs5gQ4Z2b2aHEQL5QS/uLFmAdbQsRpPbJU+667KIzEz2mAEmA31HywegkJ1LfIMUKNi3SNnbFOnGEE1e/Q3xKCpPw+Rp8YFo+jCDY4NVBXP3p9dKF5IFNh5Fi8mX/u5YF2yvRq+OKlmx0mok/PnDt6Y4ruA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741111179; c=relaxed/simple;
-	bh=YVZdnIYU5dWmx6KvKoMzGZLeD/aY3dyAs8KrL9Pjvxs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YxuEgp/AmI0anlBX1R3/e5jUEmtvfoFWX7bbqY0OIorLEJa2C5c/Ho7hj30cgb38hjICD5XMxP9l6FdNqGL51m52FXO5nB/6/vhEkCSf9CmQrC6fFATYdQVvGjmbdorcJ1YMACkXpm1RIBzXhgtaweZQ+5ztQ3FBPTFIJYm4biU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c8KYe4Jp; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c8KYe4Jp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0C6CC4CEE5;
-	Tue,  4 Mar 2025 17:59:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741111178;
-	bh=YVZdnIYU5dWmx6KvKoMzGZLeD/aY3dyAs8KrL9Pjvxs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c8KYe4Jp6/Sx/x93RVneDKiT6giUhpqeUWQgkD8WFbqlLUzv1XqnMaZiVVmmwoU56
-	 pA8rTblZCA/GJXZIZuQ3isx7eYAcyx19c4QKfUEVLdvCkgJCKvm45VsSHhNUexFOeU
-	 iGMqChatgjFhlkSj1SGzU319VYsGUxLdu+Dz8srAIhmDJcsSY2yZJ5T0QH10+loH3N
-	 WBQuOkrTCINa9nJI1H9P+/eXuc3Bv9Cz5VNk3UMZHtHv3UaV/BQxr/yMYiwjcFNINq
-	 O8J+W1MxvESlz3Y44Cm9zgoFWUH3086IZxU0N58cx5WN9v0VXLaL+vXF/WW0l7chxu
-	 IP/PNUHcFlKyA==
-Date: Tue, 4 Mar 2025 09:59:37 -0800
-From: Saeed Mahameed <saeed@kernel.org>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Jakub Kicinski <kuba@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andy Gospodarek <andrew.gospodarek@broadcom.com>,
-	Aron Silverton <aron.silverton@oracle.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Daniel Vetter <daniel.vetter@ffwll.ch>,
-	Dave Jiang <dave.jiang@intel.com>, David Ahern <dsahern@kernel.org>,
-	Christoph Hellwig <hch@infradead.org>,
-	Itay Avraham <itayavr@nvidia.com>, Jiri Pirko <jiri@nvidia.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Leonid Bloch <lbloch@nvidia.com>,
-	Leon Romanovsky <leonro@nvidia.com>, linux-cxl@vger.kernel.org,
-	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	"Nelson, Shannon" <shannon.nelson@amd.com>
-Subject: Re: [PATCH v5 0/8] Introduce fwctl subystem
-Message-ID: <Z8c_iRE-XWuv5mrD@x130>
-References: <0-v5-642aa0c94070+4447f-fwctl_jgg@nvidia.com>
- <20250303175358.4e9e0f78@kernel.org>
- <20250304140036.GK133783@nvidia.com>
+	s=arc-20240116; t=1740997297; c=relaxed/simple;
+	bh=a2xSJ3T1g8IXcDpYxc901qp4tAn/pEbOH9ZKAL1qU7U=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Z447CwWm+yrqV3ZWc6vrIR8ru6Fb3td3ZKi0NGqXFJ+BIdXk4j8scitc9HTAZUhjU8UvSBMiCYKgLYyKTttgDxahUQoNz0PAh9z+IvwaNo2JgJGCx1VNb9OYMdj1mzbI/+H7e2Jha/R8+TiWx/nGZk7RSKZJkhKpUKrIdJGidH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Z5vtd4j18z6K9SC;
+	Mon,  3 Mar 2025 18:19:21 +0800 (CST)
+Received: from frapeml100006.china.huawei.com (unknown [7.182.85.201])
+	by mail.maildlp.com (Postfix) with ESMTPS id 01139140A70;
+	Mon,  3 Mar 2025 18:21:31 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (7.182.85.172) by
+ frapeml100006.china.huawei.com (7.182.85.201) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 3 Mar 2025 11:21:30 +0100
+Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
+ frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
+ Mon, 3 Mar 2025 11:21:30 +0100
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+CC: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"rafael@kernel.org" <rafael@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
+	"tony.luck@intel.com" <tony.luck@intel.com>, "lenb@kernel.org"
+	<lenb@kernel.org>, "mchehab@kernel.org" <mchehab@kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "j.williams@intel.com" <j.williams@intel.com>,
+	"dave@stgolabs.net" <dave@stgolabs.net>, "dave.jiang@intel.com"
+	<dave.jiang@intel.com>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
+	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
+	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
+	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
+	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "naoya.horiguchi@nec.com"
+	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
+	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
+	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
+	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
+	<duenwen@google.com>, "gthelen@google.com" <gthelen@google.com>,
+	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
+	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
+	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
+	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, tanxiaofei
+	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, "Roberto
+ Sassu" <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
+	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
+	Linuxarm <linuxarm@huawei.com>
+Subject: RE: [PATCH linux-next 0/2] ACPI: Add support for ACPI RAS2 feature
+ table
+Thread-Topic: [PATCH linux-next 0/2] ACPI: Add support for ACPI RAS2 feature
+ table
+Thread-Index: AQHbidw989DsJKt5skazfuISb8i7/7NhGsIAgAAbu7A=
+Date: Mon, 3 Mar 2025 10:21:30 +0000
+Message-ID: <ed550760111d4061869949c90598ff5b@huawei.com>
+References: <20250228122752.2062-1-shiju.jose@huawei.com>
+ <20250303173538.000007cd@huawei.com>
+In-Reply-To: <20250303173538.000007cd@huawei.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Precedence: bulk
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250304140036.GK133783@nvidia.com>
+X-ITU-Libra-ESVA-Information: Please contact Istanbul Teknik Universitesi for more information
+X-ITU-Libra-ESVA-ID: 4Z6fMq2pb9zFyfB
+X-ITU-Libra-ESVA: No virus found
+X-ITU-Libra-ESVA-From: root@cc.itu.edu.tr
+X-ITU-Libra-ESVA-Watermark: 1741716961.82204@Ajb1kFnJH9hopXqYbM+PZQ
+X-ITU-MailScanner-SpamCheck: not spam
+Message-ID: <20250303102130.qPjYsZsKkoYp25-b-lk_mCExCY0FZuB9exZBteoCxHw@z>
 
-On 04 Mar 10:00, Jason Gunthorpe wrote:
->On Mon, Mar 03, 2025 at 05:53:58PM -0800, Jakub Kicinski wrote:
->> On Thu, 27 Feb 2025 20:26:28 -0400 Jason Gunthorpe wrote:
->> > v5:
->> >  - Move hunks between patches to make more sense
->> >  - Rename ucmd_buffer to fwctl_ucmd_buffer
->> >  - Update comments and commit messages
->> >  - Copyright to 2025
->> >  - Drop bxnt WIP patches
->> >  - Allow a NULL ops->info
->> >  - Decode more op codes for mlx5 and the sub-operation for
->> >    MLX5_CMD_OP_ACCESS_REG/_USER
+>-----Original Message-----
+>From: Jonathan Cameron <jonathan.cameron@huawei.com>
+>Sent: 03 March 2025 09:36
+>To: Shiju Jose <shiju.jose@huawei.com>
+>Cc: linux-edac@vger.kernel.org; linux-acpi@vger.kernel.org; rafael@kernel.=
+org;
+>bp@alien8.de; tony.luck@intel.com; lenb@kernel.org; mchehab@kernel.org;
+>linux-mm@kvack.org; linux-kernel@vger.kernel.org; linux-cxl@vger.kernel.or=
+g;
+>j.williams@intel.com; dave@stgolabs.net; dave.jiang@intel.com;
+>alison.schofield@intel.com; vishal.l.verma@intel.com; ira.weiny@intel.com;
+>david@redhat.com; Vilas.Sridharan@amd.com; leo.duran@amd.com;
+>Yazen.Ghannam@amd.com; rientjes@google.com; jiaqiyan@google.com;
+>Jon.Grimm@amd.com; dave.hansen@linux.intel.com;
+>naoya.horiguchi@nec.com; james.morse@arm.com; jthoughton@google.com;
+>somasundaram.a@hpe.com; erdemaktas@google.com; pgonda@google.com;
+>duenwen@google.com; gthelen@google.com;
+>wschwartz@amperecomputing.com; dferguson@amperecomputing.com;
+>wbs@os.amperecomputing.com; nifan.cxl@gmail.com; tanxiaofei
+><tanxiaofei@huawei.com>; Zengtao (B) <prime.zeng@hisilicon.com>; Roberto
+>Sassu <roberto.sassu@huawei.com>; kangkang.shen@futurewei.com;
+>wanghuiqiang <wanghuiqiang@huawei.com>; Linuxarm
+><linuxarm@huawei.com>
+>Subject: Re: [PATCH linux-next 0/2] ACPI: Add support for ACPI RAS2 featur=
+e
+>table
+>
+>On Fri, 28 Feb 2025 12:27:48 +0000
+><shiju.jose@huawei.com> wrote:
+>
+>> From: Shiju Jose <shiju.jose@huawei.com>
 >>
->> Did you address my feedback? I asked for the mlx5 support to only be
->> enabled in RDMA is in use. Saeed who wrote the mlx5 parts of this
->> patchset clearly admitted on v4:
-
-When I said fwctl is not needed for netdev, I meant that it will not be used
-for netdev object configuration and as I said before FW will block that
-anyways. fwctl in mlx5 is not only for RDMA, So I don't know how to address
-your comment. 
-
-Not to mention that fwctl is a very great tool to debug netdev problems.
-
->
->I never agreed to that formulation. I suggested that perhaps runtime
->configurations where netdev is the only driver using the HW could be
->disabled (ie a netdev exclusion, not a rdma inclusion).
->
->However, there is not agreement on this from Saeed who is responsible
->for mlx5:
->
-> https://lore.kernel.org/all/Z7z0ADkimCkhr7Xz@x130/
->
->I also surveyed other stakeholders on a netdev-exclusion proposal and
->did not hear support. You need to convince people this is a good idea.
->
->However, I would agree fwctl should not accept any fwctl drivers for
->simple networking devices. However, "smart nics" and RDMA capable
->devices are in-scope.
->
-
->I could also probably agree to using kconfig to disable fwctl drivers
->on kernels that statically compile out rdma, vdpa, nvme and related,
->though I agree with Saeed that it seems to lack technical merit.
->
->> Greg, I've been asking for this interface to be scoped to when RDMA
->> (/CXL/storage) is in enabled on these NICs since pretty much the first
->> RFC.
->
->You only started asking for this more limited approach in v4. All your
->previous arguments were that fwctl should be entirely killed for any
->networking HW.
->
->Jason
->
+>> Add support for ACPI RAS2 feature table (RAS2) defined in the ACPI 6.5
+>> specification, section 5.2.21 and RAS2 HW based memory scrubbing feature=
