@@ -1,46 +1,46 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2070.outbound.protection.outlook.com [40.107.94.70])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2084.outbound.protection.outlook.com [40.107.236.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 106191F03C4
-	for <linux-cxl@vger.kernel.org>; Mon,  3 Mar 2025 21:26:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41DAD148316
+	for <linux-cxl@vger.kernel.org>; Mon,  3 Mar 2025 21:26:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.84
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741037194; cv=fail; b=byBHRI1a9bl/vb3gwPq36wO+4UQFYAJ95QdJYpzeHord+MNNzYAwzGt+JFk1HJBNxP65Mqlx2Tj1Ad4Nd1D5CWgT8SEMTbBeOG1Oer+1b+eDl3CyuoBcSHsbRTQSRRQiOE1goURj71BWZabqyNew2mEcMnwLqfsIVBKDbdSSlBI=
+	t=1741037200; cv=fail; b=Uu7P6cNMJbR+s4F3yrVkPbq1HTC6xImbrkutr2CQf4tU5xz49K1QAx5EgbFUP4CWbwK1Rbsm96tzTVPUxWq2Rd5HmgC5LzyHqbM10dHuMbDPY7NhSawigeAEvfBfjOeLoY/23WCHguKACyXQ6cRa2N+j7meLXRg+JPtCUwnA7Fo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741037194; c=relaxed/simple;
-	bh=/qO3icOs8rWdouferYxPmCh+CqV8VrwIQEPLoqDuK0w=;
+	s=arc-20240116; t=1741037200; c=relaxed/simple;
+	bh=oRQ4vMImDZ+wELVqYW4JllB9AIgCrHuwtmwXT3BCQ+8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=b7K+oGhhw6wNMR9aklPhEL9/Cm7DYLiuHcsvHaKxQ1lY5rWfFUi1ozjve0g5p1FTPshZHxweG/Fmb0CkOfleZdGbaGxfxG1663YqV2o3mBy7bt5DDfjNpkMpbYciTNKw8w9Hc2yyNf8dbSO8+S9PLoUJMGUpQTCoH88gKQWzM90=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Iy7eFn+W; arc=fail smtp.client-ip=40.107.94.70
+	 In-Reply-To:Content-Type; b=lOX275KZ0X5dCvBaKnYCZ5UgpPNi8UtNElJ2N5DLXzHVhnklOAQrDgwuiSiogbXel2aBu2eA5Nx9dcbokiC5EtQRnnVpRnfEfUTaU6Soa+SNv213N38uw+tkkjAcOWY3xeOF5k4q9AzxEzt4+PtTj3j12ieuaYGC4ucMSkPceKE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=yREKmcqC; arc=fail smtp.client-ip=40.107.236.84
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Iy7eFn+W"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="yREKmcqC"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=a0/59x1ywKrYueNfLhH2ULE0k7Uc9OSNQ3ZeasytaJmPaqpWnD/NNBeGgcaujYwmBJV+3TAGMAxIDhidtq9FpCIrVi3SAxROdTiaYsqwgIWgmFd32/ZSknKCcvrxOeT4foeZameGaxQwGf2j2eOgI1Rn/8B9zleu3GEsiwCBCrDXvoG2JwifGRJeW0NUNORrFE+WSzAGrmUTlIB3jGRES3bSGdArbMeqG+cbXpUA6OwM4hF7mVltGPAGOpepV8EC6fLwHw+coiHe5gqigkvgcY7nvHy4kUqyZLTeZEFPHqPflUF6dnkCyQERGRg2sQCWPsfjEwqq41UQVqPbBONfcA==
+ b=ZjthNF3j7VEBzI0nD2SJMaY+KHMzmIo6IdXSwoz4kXKJVS4036eMF5V6GHE6LNdbEhBsok1ZvHf3DlezSj9H01iFAxp/+x7Ne6iT1psapJGQibnVh8b4E9/hb736WI0n/oFfBnPgqu+9/kHUuSlzhLSgQIr6jMinY8lb1ymhdoHJz+WQjnkfdzl4Qbrg/jEnv6d2j6riOrX27dytVmR0jgLYeeJ+12cGpB4/QGVobxXKjfIcWt/ggzROoAiY8lu4uh8X4DczqWo0m2Fvj/sz35ItQPV9TSeelfG0DoIvJ4LkSkjo/U50krk8/jqmrw3ZZw1WTbTdR21Wnrd905JmJg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gFL2lnZMlfqf0t/9KG/Q0mFNyCmQy7HUBV0GpHBudIg=;
- b=d3TKMaaH152h3ppI/G+bC9OAMjxAguhhZ0KAMdVk9Bh7cZfhwYdv/qHWMPCmO/Vp1yNGq6HaxVNpSD/nItrfErcYCRzH/jBCyltDQ2+29gAf7D88Hk/k5cFT+c17AxJOWnBn+4WiEc3e4ydBrZ0KmAbYnPBePooBRKF9eCEDtUpD2nMGtHYSpxyT4kRHMBljip/OOqSaNqY3WYfMAiRZvxqvooLr5zWfihEIQow5a685MB1SHU1RxF7nZj2iFKuZ9a/84zT+9AZHZQLt7EXoxfD2RuSJU6tQ1RmSyjAOhyrKjKBQEu5OeZz5oXOoMCMPI0KSJTumGOMhAKNhjv9fHg==
+ bh=kah0odLgECQkFiPFrRvdTMGp5qUmrXdGcV7xHs6cMWo=;
+ b=qBEXcXYDjp1AxG1KzsYkZiOqwSBC1VzHCriC2EmkaYJAu9758qqTz7xGnbIRIdMlHMXB8kE7X0UfAnLbVXjzjOlBPFDNC4OoebJ9eCQNP2enThLnrznyoYXeV8fDjpgtvuvRSoGkfwla3cpw4bYzRRouQiZsKXmSaGFU7IxNmpCvTev9eNdE9E4OL6fSyn/FvP11LahbYALJWsEVHU/Ul3AuMMXaJx1D2u8exeq2rV27K1A46aKn6FLzOTRgluS+f3bZigWvTxjgSucMc/8piIYtFWQU75zj+7xax9SD2nvBDGQeJWzjxM2F3y8DWFSlJUoNA/uBAMZIf+KuSW2n+g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gFL2lnZMlfqf0t/9KG/Q0mFNyCmQy7HUBV0GpHBudIg=;
- b=Iy7eFn+WTiltwCFGJ/ur+UFj6Evefe+PA1/i6EJ6+3nh48sQxXjCJdEscQnUg9p/RU9QC3AYhaLl6t8oUC7l3TLQ0bZIyn6ofuvmzLCRMDnGhpXly1gyCLmwlvbvWRGTVHfbP5S1PXrhRDg5HZSq8eBttX0jgOvrgrSEl1k9bYU=
-Received: from SN4PR0501CA0013.namprd05.prod.outlook.com
- (2603:10b6:803:40::26) by SJ2PR12MB8739.namprd12.prod.outlook.com
- (2603:10b6:a03:549::10) with Microsoft SMTP Server (version=TLS1_2,
+ bh=kah0odLgECQkFiPFrRvdTMGp5qUmrXdGcV7xHs6cMWo=;
+ b=yREKmcqCdSHRkS8njm1wAErvMc6e6J9/Jfy9V9F/tmqylMHwnupPluWHvkJlD0L9dgJH4cdS4ytocsVohKVu3Xv83ue4N1ezVTDW7L6mHtRz1hgFlfUqQ6Qw2Yp25ov7T9GuFt/bjUCkFIdW0Pz1siQpBtucC13MH3timZzmS/U=
+Received: from SN4PR0501CA0030.namprd05.prod.outlook.com
+ (2603:10b6:803:40::43) by SA1PR12MB7442.namprd12.prod.outlook.com
+ (2603:10b6:806:2b5::15) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.25; Mon, 3 Mar
- 2025 21:26:30 +0000
+ 2025 21:26:29 +0000
 Received: from SA2PEPF00003F64.namprd04.prod.outlook.com
- (2603:10b6:803:40:cafe::76) by SN4PR0501CA0013.outlook.office365.com
- (2603:10b6:803:40::26) with Microsoft SMTP Server (version=TLS1_3,
+ (2603:10b6:803:40:cafe::7) by SN4PR0501CA0030.outlook.office365.com
+ (2603:10b6:803:40::43) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.13 via Frontend Transport; Mon,
- 3 Mar 2025 21:26:30 +0000
+ 3 Mar 2025 21:26:29 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -50,13 +50,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
  SA2PEPF00003F64.mail.protection.outlook.com (10.167.248.39) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8511.15 via Frontend Transport; Mon, 3 Mar 2025 21:26:30 +0000
+ 15.20.8511.15 via Frontend Transport; Mon, 3 Mar 2025 21:26:29 +0000
 Received: from [10.236.179.218] (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 3 Mar
- 2025 15:26:28 -0600
-Message-ID: <9de17a5d-3f2d-4417-b45b-78f9d55ae8d1@amd.com>
-Date: Mon, 3 Mar 2025 15:26:24 -0600
+ 2025 15:26:27 -0600
+Message-ID: <e1af2fcf-339e-4cda-8c0b-88f540499518@amd.com>
+Date: Mon, 3 Mar 2025 15:26:20 -0600
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -64,146 +64,140 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC type cxl initialization 1/2] cxl: add type2 device basic
- support
+Subject: Re: [RFC 0/2] type2 cxl initialization
 To: Dan Williams <dan.j.williams@intel.com>, <alejandro.lucero-palau@amd.com>
 CC: Alejandro Lucero <alucerop@amd.com>, <linux-cxl@vger.kernel.org>
 References: <20250220200041.3891165-1-alejandro.lucero-palau@amd.com>
- <20250220200041.3891165-2-alejandro.lucero-palau@amd.com>
- <602d20fb-ab1b-41cd-9f51-98ca690b18c8@amd.com>
- <67c61643c3cfa_1a77294b9@dwillia2-xfh.jf.intel.com.notmuch>
+ <289fc275-43b6-424c-8c0c-28c5d527ac35@amd.com>
+ <67c615da5dd98_1a772947d@dwillia2-xfh.jf.intel.com.notmuch>
 Content-Language: en-US
 From: Ben Cheatham <benjamin.cheatham@amd.com>
-In-Reply-To: <67c61643c3cfa_1a77294b9@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <67c615da5dd98_1a772947d@dwillia2-xfh.jf.intel.com.notmuch>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00003F64:EE_|SJ2PR12MB8739:EE_
-X-MS-Office365-Filtering-Correlation-Id: cd3ba833-72fd-4345-2d14-08dd5a9a104d
+X-MS-TrafficTypeDiagnostic: SA2PEPF00003F64:EE_|SA1PR12MB7442:EE_
+X-MS-Office365-Filtering-Correlation-Id: 15480e7a-53c4-43be-6dc4-08dd5a9a0fcc
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|376014|36860700013|1800799024;
+	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VWNJOTdDT0Z0SXBEU3ZXYzg1Y1lrRXNIcm1yVmU3akJmZUdwby9TNi9pbzRq?=
- =?utf-8?B?enpwOVlIeXZrQi9JYkpUYXdQVURSZXpuNW4zU2JGSEJLenNFYWo0ZldyV3Rw?=
- =?utf-8?B?T2lScWRlYWRhQlhad045VUY3MVk5NlFHTUdnRzRNMHJSV2lPT1lqaVhDdTRJ?=
- =?utf-8?B?OXRxUlY2dHpsak43NzR1cmc5azVEZm02a1QreFpCRFJMTVJRRTBHU3pvei82?=
- =?utf-8?B?R0Z4OHRXMUdvYjFnb1lON3RTVnZPQ1paVHdqYU9la3E4V2ttZXVBdTlGUkVK?=
- =?utf-8?B?eVF3RjNCQjVYeWpuaTI3K215bnpTRk1Ec3Q5RGJoOHJmL1dKWi93aVdpV3pB?=
- =?utf-8?B?cUQwZmRTLzBtVUtWV3dQZzRURllYeXRqYkhuU0RaMW45ZldHdXg3R2FEWkVU?=
- =?utf-8?B?ZjN5Z29LdjB2cFEySVhrL0hlWEFoSHRGb1REc2NVQVl2L1JKTHhNb3ZtRDZ5?=
- =?utf-8?B?NUoxQkNkLzFwSGZxNmV4VWtTTVZUbmJ5LzlZYXBGRko2STRJQzdKSkVxaGcy?=
- =?utf-8?B?TUtzTDVCQWpvRVZVRk5oYUIvenNmWSt0NTRIRERhQ0dqQXN3RHFEdWNiSjFw?=
- =?utf-8?B?blJhTnp3RDdwWk5qZTlBbHhGMHAwcTJOL2NidVlPblhYYUZOcFZYMCs0dHNB?=
- =?utf-8?B?c1lhM2dhTFJra1RzQlRiNVNZTmdyWml2MmZsWGtzK2JjMk9sbUFtL0pQM3Jv?=
- =?utf-8?B?UXRweks3WnZCVEc0TS9xNm1wY2pIVnU1Sk90MGQxTFY4T0huWU16Q2R1L2tB?=
- =?utf-8?B?eTZXTkFqcWY5MTdERThuZ3RjbDZhNXN6ODB3aHVNS1FOUFJkeWxtYUppT0hZ?=
- =?utf-8?B?a09Fb3pXQVk4OW9lY1VPZ3p6eWEzY0FIN0tNNjJYYW53OVBicnJ6dG1rSitp?=
- =?utf-8?B?bkREMHhOYkJWK3JoaEVQOGpFSEVxRzJrUVNjVmdpYUtWZjFMaWk1amNvSVpp?=
- =?utf-8?B?S2xUNnBhMHFiOE1jbE5iNTM2OFVtWDdFUzRFYkpuTVNNSkNNTE1uSTEyaVhj?=
- =?utf-8?B?ekVhVmtiaDJTS01BTU5QTFNJU3JmNXJLcThXVEE1cmZGd1RMdzRGRFBvR0dS?=
- =?utf-8?B?Q2NnMGtIRld0Y243MkpoVTNkWkZ0eTZZeWNNRnB3SFhkU3RrOHBNNnhkcnZW?=
- =?utf-8?B?ZFN1R2llczE3ZW54dUIxbzVDN0tWNm1vbUxEQ0ZFZmEveXp0UjZwSEFJM001?=
- =?utf-8?B?Z0xSZ0RhVDdPRHE5Y2F1d0VSbUxKVk5raWZ1dGdzb0UyOTROYm9JeXMvbmZw?=
- =?utf-8?B?dWEvNEQwcVdIL1pCdVRvdDBqVE5PMi94TEJWa2p0eWVvYXFoWVJMcXlNdVhT?=
- =?utf-8?B?dDVKUGljWHVLZXJ0OFJpVWJwMnZiT2VTdys4VFVNZFJ4NFQ4RkRBTCtjYUdi?=
- =?utf-8?B?b2N6TXgvcjVDVVZyQ3dtWmNXbWRIazgyYThBb0dsNlZYY2VZMlJtKytHU3gx?=
- =?utf-8?B?UlNHRzh6SHk4UGxHVzNVUlJ6SUMzTURCM2thK3Aza0ozc2pwY3h0NWpJZkJY?=
- =?utf-8?B?cFVZbmRRNlc2UCtyRm9IeUFETThSeFVQSEs0b3BVVW1ReFFURlJBRWdTQ3Fi?=
- =?utf-8?B?bFUrZUk2T3pWaWtJamNpcVhLd1cyUjBtblZXQ0VGMSt4QzZPeitTMFNTMEht?=
- =?utf-8?B?eHpOdWg0WFF6OUowWldjY3B6cWdPdWdlbXluY2tHbmczNW8rM1EySmZGb0NR?=
- =?utf-8?B?bU9GdTZMME5ZSGxjRlBscyt4aFlyNDJQSHJlMnZkaU5mYmgxNWY1NGZ0NTJk?=
- =?utf-8?B?Y1hUNk92RDlmODU2M2o2dHR4Yk14RCt2d2xnaU1IY0hsTXNmU08yZm9TODZ2?=
- =?utf-8?B?UTZkSFQxeEE4WEo4SjBGOUJSWndNcEYyRGNpMzUxZ0lvcEtXdUFTUXRMV1g0?=
- =?utf-8?B?QlAybkg4cFBudjB6OWNxcHd4djA0eC9qcFd0Nk1HTkVnZmp1MWFlRE9EcEVU?=
- =?utf-8?B?MUthejlsOFJIZVB4SjJlOENpN05qY0J5VHcyeVgxK2Z2RmVvbXc0K0NNbXBE?=
- =?utf-8?Q?tJuW2prBcCYALmwXeWJP3vviRxrw44=3D?=
+	=?utf-8?B?V0loM3psMHpBTU5sUk0xWm5odEg2OEZYMzNpcmhCTkVGMjJJVSswS3pQbFls?=
+ =?utf-8?B?N1ozM3h5MDBza1M2VzJQeHZRRFBJblRxbU1DRTBIazJWQ2FZSUVOK2ZDb05J?=
+ =?utf-8?B?b0s5Wit0OUIvUzhQRFhmMXZuV1FCUjVSRXkwb2lYZFVWRDFVU01nZldGME5z?=
+ =?utf-8?B?bklYQS8vaGxhNERwb2gxbk14aWw4dkJabk9FL0FZeXcvUjZJbmQ0NjJMaWt1?=
+ =?utf-8?B?NkNpbk1EWW12Z2E0cFZqb2FPaHo4cXlveUNyUldkTHV1YlFIUjRPNWFsN1ow?=
+ =?utf-8?B?Q2UzY2NsYnRlTHJLMEE2SmdiZnhwdW8yMjlXNHhqRUF4SjVQMzlvUkRtZEho?=
+ =?utf-8?B?dWxQOWlFU1hDREo5MkVoeWtHaCtEeTBuY1RmT0F2L1R2djVkQ1ZOdWdoNXZH?=
+ =?utf-8?B?dTJrblB6WEJmWTM1K08wWjBSejdUeWdWS0FhNEFpRi9EaExnTTExL3JyZlVG?=
+ =?utf-8?B?VjhiQUpSalFBLzVqaVlBTVZrdlpDYnVrbDQ0ZlIzSDFIL0d0SWxGNlZ0d1Fv?=
+ =?utf-8?B?MjMxMXpKcml3SHZOWTBlaTRCZXVHSzEyWkRiT0FpeUpsZFpEalRBM1JBeW1L?=
+ =?utf-8?B?UjdXaG52NDJRL3VPemdDaERid1BObmpGSTIwc2xvczNvU3c0dUpubXZNYzI4?=
+ =?utf-8?B?Q2NBMnJyY1Zpd0x2TnFQNTNqZFhvUm1iSkI0alp3amlpQ0haWGlCdlpsUHNk?=
+ =?utf-8?B?TEFFc0FDL3pGVjZWQmlleFc4cTZxWmlLRms0eEd1S28zNUEvMnMva0l3bXlI?=
+ =?utf-8?B?elgrSDJzd1l5cWpxdVg5ajVpUjVHSlQ5YVFNblZRckQwZVA1Q0xHWU1McWR1?=
+ =?utf-8?B?WjN3REFLaUVHNHJ1b0xpQ3hHRVlVTllaK1lReS9zSk1va3hhWnpKQjNFSTlM?=
+ =?utf-8?B?YVpPWWs4YWJvUVJQaUlwMk93ODhubFMzNEFZRUFqZzRyVUNVVCtqOHpqSk1p?=
+ =?utf-8?B?M3oyVGRLeWZuMGt3Mjk0b3dWeVZOdTlBM28zV1RoWUlLanlJUmxGcnV3cUVv?=
+ =?utf-8?B?dHd6dm8xWDdVVXlFaFIxMTk1VUFTRUk5SysrOW1PM1ArejBEcWYwWVY4ZkVL?=
+ =?utf-8?B?R3JicTd4eVN1U2Z1WmJXZHFvVmZuVk13WlFlbVJJNFFSUVVqaG43RWtlREVv?=
+ =?utf-8?B?S3RMQjRxc2JFNkkwZ1dGYTQzRlM5M1dNNUNxOWpXMURVaE9VbUhTcHJCZUo5?=
+ =?utf-8?B?ZFAxWUJPYmQwbVcvSnVoUGp2OXhJTjBpZ0U0b2ZFMmF4UW8vMCswYVJidEhX?=
+ =?utf-8?B?b2N0bzJzand4Z1lCZ2UvL3NDU0NsOXlGSG9ROFU4WExyNDkzSlNPZ2tBNXh2?=
+ =?utf-8?B?YzNFTytmaW94cnBUbTNlZG1HYk81VTRKVU1UOU1rNkFiTk01Y0tJUHIvZ3Bq?=
+ =?utf-8?B?empncE5oQ2ZCc1BOVW5MaUxhbEJaRFAwVVFKL0xhcytlVjJ3Nk9ZTm9iV3R6?=
+ =?utf-8?B?VURUL0ZYNm5xNnFTYXRxd3lqM01DeGV1UEV3UHhqeVZ4YllESThzRllhdjNI?=
+ =?utf-8?B?ZFVYZE5McVJXWDQ5dlg0ZmYyUyt2RWdmcTA2QkxxaUlMeHRZVllsanZlclJL?=
+ =?utf-8?B?WmM3L2RZQWIzQlUwa3R1NTJZdU9OclhON2NXSG13QTlLRGNMSnF4WlBPVXVC?=
+ =?utf-8?B?TzhweitZWHNyb201d2h5anJ6aGRlbVl4bkRJb1N2K2hvRzNYU1p2QkJBUTR3?=
+ =?utf-8?B?S3NsdzRwSlNzc1RRWnJHQkZWcXd5QWZmL3lQQlBhSHA0dlpZUVd1MmxlQUhu?=
+ =?utf-8?B?L2w2QWZnM3crdW0vMzNickZCY0pUcHJacnJqMTNFWkMxZk9FdDdINzNxRVVG?=
+ =?utf-8?B?UldLV1ErYlNIWUxMYjNQNGNrQU1iK09NSjQwdmVwUndpTU05VzhCekF4YU10?=
+ =?utf-8?B?bFBVOHFtS05CVnJ0czA2LzFwMy9kei9SazhnT01ZVndYbFdYT0ZEM05PaGk5?=
+ =?utf-8?B?blRPTytZbCt1T0w3QkpOc3hPNk44V3JnbTJHTkdNcWFpRWVoUjc5c0RtMVhX?=
+ =?utf-8?Q?WV67CgPCX1R0sS1gOI7uH76uz4A5vc=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(36860700013)(1800799024);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2025 21:26:30.0653
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2025 21:26:29.2216
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: cd3ba833-72fd-4345-2d14-08dd5a9a104d
+X-MS-Exchange-CrossTenant-Network-Message-Id: 15480e7a-53c4-43be-6dc4-08dd5a9a0fcc
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	SA2PEPF00003F64.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8739
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7442
 
 
 
-On 3/3/25 2:51 PM, Dan Williams wrote:
+On 3/3/25 2:49 PM, Dan Williams wrote:
 > Ben Cheatham wrote:
 >> On 2/20/25 2:00 PM, alejandro.lucero-palau@amd.com wrote:
 >>> From: Alejandro Lucero <alucerop@amd.com>
 >>>
->>> Differentiate CXL memory expanders (type 3) from CXL device accelerators
->>> (type 2) with a new function for initializing cxl_dev_state and a macro
->>> for helping accel drivers to embed cxl_dev_state inside a private
->>> struct.
+>>> Avoiding to send the full type2 support patchset until there is an
+>>> agreement about how to do the cxl initialization from accel drivers.
 >>>
->>> Move structs to include/cxl as the size of the accel driver private
->>> struct embedding cxl_dev_state needs to know the size of this struct.
+>>> Using the idea from fwctl for embedding cxl_dev_state in a private
+>>> accel driver struct and a macro helping for the allocation and
+>>> initialization of such struct.
 >>>
->>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> [..]
->> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
->> index 2c49e33851b2..14d7f93e4584 100644
->> --- a/drivers/cxl/core/mbox.c
->> +++ b/drivers/cxl/core/mbox.c
->> @@ -1484,24 +1484,31 @@ int cxl_mailbox_init(struct cxl_mailbox *cxl_mbox, struct device *host)
->>  }
->>  EXPORT_SYMBOL_NS_GPL(cxl_mailbox_init, "CXL");
+>>> The main problem is the amount of internal cxl structs which need to be
+>>> public for accel drivers which we tried to avoid since v1 of the type2
+>>> patchset history.
 >>
->> +static void cxl_memdev_state_destroy(void *cxlmds)
->> +{
->> +       kfree(cxlmds);
->> +}
->> +
->>  struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev, u64 serial,
->>                                                  u16 dvsec)
->>  {
->>         struct cxl_memdev_state *mds;
->>         int rc;
->>
->> -       mds = devm_kzalloc(dev, sizeof(*mds), GFP_KERNEL);
->> +       mds = cxl_dev_state_create(dev, serial, dvsec,
->> +                                  CXL_DEVTYPE_CLASSMEM,
->> +                                  struct cxl_memdev_state,
->> +                                  cxlds);
->>         if (!mds) {
->>                 dev_err(dev, "No memory available\n");
->>                 return ERR_PTR(-ENOMEM);
->>         }
->>
->> +       rc = devm_add_action_or_reset(dev, cxl_memdev_state_destroy, mds);
->> +       if (rc)
->> +               return ERR_PTR(rc);
->> +
->>         mutex_init(&mds->event.log_lock);
->> -       mds->cxlds.dev = dev;
->> -       mds->cxlds.reg_map.host = dev;
->> -       mds->cxlds.cxl_mbox.host = dev;
->> -       mds->cxlds.reg_map.resource = CXL_RESOURCE_NONE;
->> -       mds->cxlds.type = CXL_DEVTYPE_CLASSMEM;
->>
->>
->> Looking at the above, it occurs to me that it may be good to either:
->>
->> a) Have a devm version of cxl_dev_state_create() or,
->> b) Have an init macro (in addition) that takes a pointer so that you can use an
->> allocator of your choice
+>> I have a suggestion or two in the next patch, but in my opinion the only
+>> potentially problematic exports are the cxl register structs. I'm assuming
+>> allowing accelerator drivers access to those may cause stale values in the
+>> CXL driver, but I haven't looked. The only suggestion I have there is to
+>> use pointers to the struct instead, but I imagine achieving could be a
+>> non-trivial amount of effort.
 > 
-> The caller can always wrap the result with devm_add_action_or_reset().
-> No need to force comsumer drivers into an allocation regime.
-Sounds good to me, figured I would suggest it more as a convenience option
-than anything.
+> Hmm, say more about why you think those are a problem. Those are
+> "write-once at init" things, why would an accelerator driver have any
+> reason to play with those post init?
+> 
 
-Thanks,
-Ben
+I could see a scenario where an accelerator driver tries to do some concurrent
+setup with the CXL driver and may cause an issue. For example if a type 2 driver
+tried to do something with HDM during setup, but I think a driver touching
+any of these registers when the CXL driver already does this stuff is pretty
+unlikely.
+
+So that leads me to think it's better to not expose this at all, but I think
+that would require more work than it's worth.
+
+>> The only other member that may be a problem is the DPA partition info,
+>> but I don't know enough about that to comment.
+> 
+> I think it is sufficient to mark the bulk of 'struct cxl_dev_state' as
+> private and then move things into the public space as needed, something
+> like:
+> 
+> struct cxl_dev_state {
+> /* public */
+>         struct device *dev;
+>         struct cxl_memdev *cxlmd;
+> /* private */
+>         struct cxl_register_map reg_map;
+>         struct cxl_regs regs;
+>         int cxl_dvsec;
+>         bool rcd;
+>         bool media_ready;
+>         struct resource dpa_res;
+>         struct cxl_dpa_partition part[CXL_NR_PARTITIONS_MAX];
+>         unsigned int nr_partitions;
+>         u64 serial;
+>         enum cxl_devtype type;
+>         struct cxl_mailbox cxl_mbox;
+> };
+> 
+> ...but otherwise let accelerator drivers see the full definition of that
+> struct for constainer_of() operations.
+That's fine by me.
