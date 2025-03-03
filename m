@@ -1,117 +1,107 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 547DA23F383;
-	Mon,  3 Mar 2025 10:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5477B215048
+	for <linux-cxl@vger.kernel.org>; Mon,  3 Mar 2025 15:55:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740998189; cv=none; b=IhiOdTUStJHhVOW9/yf8BjdUXxKVgZpJYQoG17cY/JV5Myo6AjmmaGSuNIie94s23ld4KYAd0BcDuChqz7hO8xk4Sa+5otou2d57Vy8nPpA937TQZgyPx8R0EsVL2UlqHIEoVowDbPkpElqTmTt8jLVbP0VWcdmrREkq9cP60lQ=
+	t=1741017339; cv=none; b=b637+t8SkwVrfbuag5eqlYMXvtm5GbS8Q91En8MdAlgx1f35QDsMTnZTqf/c9rTLohQpt4x6gJL5KMQ57T2pE1Js046DJk4kR+OT7zbO+hmGJ5GGJ4roY+a+GIL+ol6xda7tipURWeKS454L1X+6LnUU6UhI5sawQRK9oOCKfQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740998189; c=relaxed/simple;
-	bh=N3sPKcpbk+N345Z6QfXw1a68D9uC0IXP2GiFiY2vjV8=;
+	s=arc-20240116; t=1741017339; c=relaxed/simple;
+	bh=z/KmatcQ+OaKvAP+zAPyuRr4Y7ztXaiC7ZErKwUhdO8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j8B+cx1QCludubWhoJ5eKe+mVfzOY6WGyR1tzRy3RFULimmx48v2WXc+3C9BY/fTpirJkv1SyAcDF0vng0CwoH5IOQcRFxYulqv0HMh80JkHjBEf5OlayxftQ8FKMIWarvFCdBMXPBlo+eGoO1ioARRdP7Mly4u5oFd7V9LcVn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=CIeizD2K; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=IwU6Z177M0pOT0iQB6jvvLy6f8O0MHVXK40WWztA02stSpsMFDdDph3aac1Gnb276rOSdcv7LQ0+AGWXmU0nFQL5+0QrXejJ9ixXWk6UDF+zRNr3/PRLkxQfslJ+wTWnW+J5Z25gPYMvDsYNi7hlxsUvQLEkqyudrIsygtqP1Vk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=eSjbnVQL; arc=none smtp.client-ip=209.85.222.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="CIeizD2K"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id AE1BE40E0202;
-	Mon,  3 Mar 2025 10:36:23 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id bd2HeietVv99; Mon,  3 Mar 2025 10:36:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1740998178; bh=XNI3SnVJolAxVhmPjt2JrEwot6jN/8zHjxYEktMG+4Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CIeizD2KFeTbtYEKdnNDnpUDBbCjZpqwAkO17eGwBzpecuIzivjikXY8+BLNqxtL2
-	 TfnD+4lmhvBtg1RPiedflnah3OqDiwlBEBTHScYraeZze7/vUBJVWbqOtLh/XIEfjf
-	 vn/H+X1OHwlS2JlD8EBWQMFyYz/AgvkAOLcqLSgOtfU4Szlas4X45SSXuDPsVsV4Do
-	 Q7ZFUIHAXlbqcNetihj/DrGOUoaMkmc9qwyrh5qv72T88BBIbMpkWzY1kvcEiCVVWH
-	 F+vMqJ1sz3KLAeG2gLiG+Q+iwVsztkq8WEwP8NTNzwMyDJSXxV3GowCo7DzwWVSuyS
-	 rTwrDZtqJWLGIi3sq8VTlwCqmYP1JEhwzQMkNt+zboA+0kjJp/ufc0cVIsN9uWI5rT
-	 KADNathwh6qa4OElEeBSQ+KHdgd5GosTf/1l4FXVgdfjUUW0j2W5RIklyg3XpjXNn9
-	 8UoqEkzjBKx7RzqCx7/fG+/iIAANKeTrCYJv5O0dqlv8dcqZXFbR/QHjgYSuPpvGTV
-	 zqweiOFcXs/A/sbIvjqzKFK/yw9U/5dTi1XPNk4jyk8uMBmgV8ICdpd0kzMELYqAmK
-	 JdJnxk878YZy4HeTp+fgj+qZ/OFOXuPRXHUaXQS3+x4U6yPqmh0o+MOSmbIAM1magZ
-	 KbUuiDvnDuZkQIiP7vXiu4eo=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CAC8940E01D1;
-	Mon,  3 Mar 2025 10:35:34 +0000 (UTC)
-Date: Mon, 3 Mar 2025 11:35:29 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: shiju.jose@huawei.com, linux-edac@vger.kernel.org,
-	linux-acpi@vger.kernel.org, rafael@kernel.org, tony.luck@intel.com,
-	lenb@kernel.org, mchehab@kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	j.williams@intel.com, dave@stgolabs.net, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, david@redhat.com, Vilas.Sridharan@amd.com,
-	leo.duran@amd.com, Yazen.Ghannam@amd.com, rientjes@google.com,
-	jiaqiyan@google.com, Jon.Grimm@amd.com, dave.hansen@linux.intel.com,
-	naoya.horiguchi@nec.com, james.morse@arm.com, jthoughton@google.com,
-	somasundaram.a@hpe.com, erdemaktas@google.com, pgonda@google.com,
-	duenwen@google.com, gthelen@google.com,
-	wschwartz@amperecomputing.com, dferguson@amperecomputing.com,
-	wbs@os.amperecomputing.com, nifan.cxl@gmail.com,
-	tanxiaofei@huawei.com, prime.zeng@hisilicon.com,
-	roberto.sassu@huawei.com, kangkang.shen@futurewei.com,
-	wanghuiqiang@huawei.com, linuxarm@huawei.com
-Subject: Re: [PATCH linux-next 0/2] ACPI: Add support for ACPI RAS2 feature
- table
-Message-ID: <20250303103529.GBZ8WF8flezRahE-1h@fat_crate.local>
-References: <20250228122752.2062-1-shiju.jose@huawei.com>
- <20250303173538.000007cd@huawei.com>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="eSjbnVQL"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7c0818add57so506698485a.3
+        for <linux-cxl@vger.kernel.org>; Mon, 03 Mar 2025 07:55:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1741017336; x=1741622136; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=g0yVVWEkLRZzQAPET4irodYuHGeDUDxcACxGBbqbp38=;
+        b=eSjbnVQLfelyQA+c00jNevkIs4Xndl4LPGS6CDFU4ohRFnJjuoDEe/vYeljEyZMz2Z
+         CwXhfKH4b6zE0gY0ExyqtRVP8b6hP35Hhq9secr0eqbDYd6UqpP2kajr3vtB1/JOlT6X
+         iHXEwCnZch9UcBzH7L2RBGVJauHoAjFNlzF3T9rCveMvXX7wIyLJlMRmzIbzs7XIp6Sh
+         qMpuf9rrkisPex6jMOmkU37tiW2OPmdwxvIs/tgSQaggJSV/dfRiXWnhOEMNmL90Otkg
+         GCZ59kAudsksCcNeEFz/PLRlDymcFrkc93WdcER4lNkD/45nH4Qu5zrhMwys8kZ42qpj
+         mf+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741017336; x=1741622136;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=g0yVVWEkLRZzQAPET4irodYuHGeDUDxcACxGBbqbp38=;
+        b=i5zK0YMfv9RiiX0woxLdYCEhRE3PH+CwNvr3e0j5wv8AaLsV6YSiXMHE2u0bZlu8Wz
+         bAC+vdmUdfYeLgbwOI9gzsFv893QTHenek3ZuvRDDsLS3jIAaYqeLpvIEMKyKaCFz+l9
+         +ZkZw6lTXsVXkpA61zY/muZShtHN94K2kZAgbBsQzxX3CxBXClkO69QRZusYPGlsmZ2z
+         dgIGAw34hag0NTDvjP7PckUACC33DKwlGVmJvF6e6kxDK2OUGbDprYHndKAQHDr9dFLM
+         MOt7gySs7qvSkTm4iDcTgtD3U5tvlkaDyMURwLBLFnY6ggGkGLvRFn2eRZqj3IPIiiGk
+         NbEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX3+gkM/c2/HYnZudKjl5DJKkoATQoKjRzgbpCbXJ0fPrrA31O0eHPn0755nLgq4XEftUdp8qCk7nM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwE099CrLkQuZHvlgokbn3rWt9lzRvlqa+mWM2gmS+FkOKzHu8
+	1vQBz2Aga0VI3PiO2tmeEmRoFaNTg9RQUAcgGbHS5zphNKBvYIKfjxqbSxjQRXc=
+X-Gm-Gg: ASbGncsLPIy7E5lZh3+/sC4d3fa57H2T+yyVwlEvvuG6EiG0Tm3H32AYrLyq6k/RBs+
+	miNdHGEEvDLZccr8HMJIrotM+Hr9cnfAU1XVaoQu9g0LA4TSWfOTgz6sjWUZNUiVsw6BdfgyhtJ
+	oUhohgtNSK93/rKO/krknllNM+BzPGdItRw4l/h4Br4tCS+3u5TPWVg/GYRv06AGc3sJc0SwkJP
+	GX0jCIHV9EKA23mgLbeHeDcUotOQnE+eDxJOizlQjiz8Ds4EhYjjq2g0bQ5BCuSvIwN7CFF1BTN
+	6Vc6cEs5sTb68UdkRsqJKP1Kuw6LROd2Xc/Iajf0yO6PmIqc6KnZTVGQQxnUAPD6vwWJs8ul9HP
+	uQiPvA7LDrC/m9h6vSS4SVcjtdw8=
+X-Google-Smtp-Source: AGHT+IFM0tip0IK1EmFEl/X5vlqq96cpWyeJ5x7wplFHlaZ1k9Ww/s40ZReUyRobKusoOZOQPH4L2w==
+X-Received: by 2002:a05:620a:d88:b0:7c0:a46d:fa87 with SMTP id af79cd13be357-7c39c4c8911mr2016730085a.27.1741017336181;
+        Mon, 03 Mar 2025 07:55:36 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c3b80dfde4sm165557685a.36.2025.03.03.07.55.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Mar 2025 07:55:35 -0800 (PST)
+Date: Mon, 3 Mar 2025 10:55:33 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Byungchul Park <byungchul@sk.com>
+Cc: "Harry (Hyeonggon) Yoo" <42.hyeyoo@gmail.com>,
+	Honggyu Kim <honggyu.kim@sk.com>, kernel_team@skhynix.com,
+	Matthew Wilcox <willy@infradead.org>,
+	lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
+	linux-cxl@vger.kernel.org
+Subject: Re: [LSF/MM/BPF TOPIC] Restricting or migrating unmovable kernel
+ allocations from slow tier
+Message-ID: <Z8XQ9VXGOCjsjxDI@gourry-fedora-PF4VCD3F>
+References: <Z54p4QOnAlTYm6DG@casper.infradead.org>
+ <20250207072024.GA48419@system.software.com>
+ <Z6XLCeU0vjIOYGKe@gourry-fedora-PF4VCD3F>
+ <ada54160-461c-4942-a4dc-43f7eab0f1bf@sk.com>
+ <Z6XYQjCLK6umaoIS@gourry-fedora-PF4VCD3F>
+ <Z6lli5cRHh1Ffvql@MacBook-Air-5.local>
+ <Z6mV4vwkP0weiLie@gourry-fedora-PF4VCD3F>
+ <20250210071741.GB39454@system.software.com>
+ <Z6ofrm1u7itAP32b@gourry-fedora-PF4VCD3F>
+ <20250225050643.GB38036@system.software.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250303173538.000007cd@huawei.com>
+In-Reply-To: <20250225050643.GB38036@system.software.com>
 
-On Mon, Mar 03, 2025 at 05:35:38PM +0800, Jonathan Cameron wrote:
-> Borislav via ras.git, or Rafael via acpi.git?  I don't really
-> have any preference other than making sure it doesn't fall down
-> the cracks!
+On Tue, Feb 25, 2025 at 02:06:43PM +0900, Byungchul Park wrote:
+> On Mon, Feb 10, 2025 at 10:47:58AM -0500, Gregory Price wrote:
+> > I also think someone should actively ask whether `struct page` can be
+> > hosted on remote memory without performance loss.  I may look into this.
+> 
+> Could you share the plan or what you have been thinking about it?
+> 
+> We'd be happy to discuss this topic together, and furthermore, it'd be
+> even better to work on it together.
+> 
 
-It's probably easier if I take it.
+Apologies for the late reply, i've been on some R&R.
 
-However, just from a cursory look, it would need some scrubbing. There's stuff
-like:
+I haven't written up any specific plan for this, but it is *reasonably*
+simple to test with memmap_on_memory.
 
-+               ps_sm->params.requested_address_range[0] = 0;
-+               ps_sm->params.requested_address_range[1] = 0;
-+               ps_sm->params.scrub_params_in &= ~RAS2_PATROL_SCRUB_SCHRS_IN_MASK;
-+               ps_sm->params.scrub_params_in |= FIELD_PREP(RAS2_PATROL_SCRUB_SCHRS_IN_MASK,
-+                                                           ras2_ctx->scrub_cycle_hrs);
-+               ps_sm->params.patrol_scrub_command = RAS2_START_PATROL_SCRUBBER;
-
-
-which definitely needs shortening. There's no need for a wholly written out
-"requested_address_range". I know variables should have meaningfull names but
-writing fiction shouldn't be either.
-
-+static int ras2_acpi_parse_table(struct acpi_table_header *pAcpiTable)
-
-Yuck, CamelCase?!
-
-And I'm pretty sure if I start looking more, I'll find more funky stuff.
-
-HTH.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+~Gregory
