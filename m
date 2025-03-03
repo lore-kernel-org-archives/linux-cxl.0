@@ -1,195 +1,176 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2047.outbound.protection.outlook.com [40.107.236.47])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C48BFC0E;
-	Sun,  2 Mar 2025 12:34:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740918899; cv=fail; b=kZunpdkUvLymhuA10RjPsJ5GIDxX7+5JZYVOkdImPF9rOrGRxDTIbJ6Dyv1wWkdGdbiZI3IXRa/ct303dD/XIw+fIK347+Yspl1kAGSeZ6AmZ/7NN+4GEmwcoOafnAKAeDFW14iS+miP+o0gsY+TXG5nAh0d3ceTUGqCsAAlBrE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740918899; c=relaxed/simple;
-	bh=xjoYyvnKPX+WQHzwRqdIppZZogehZctjwy3jEIpDCVM=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SIDQOhZbTzt1J07pMkXVSIzcoQkZnd34zEsT0nMjuZnefZg2/Ia2QUFExXA+zz03sljuPh76RSzQK7qTcwu4ebUqhTtRVI9KkJYXw1jBh5oML/LlCGjjPrIPwMHtthRDjXAWaSCpMuUp1LJ5AHU2PjasZamcKpe2auK3AGKJTiM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=oA2lMdw8; arc=fail smtp.client-ip=40.107.236.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E63C1EFFA9
+	for <linux-cxl@vger.kernel.org>; Mon,  3 Mar 2025 08:58:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740992305; cv=none; b=PQMOAC3IhJYGcI2Ttid0xJ0IqEYEf0FWqe2tk63K6w4XF+w2OuWNoxngpfj5ahunG/54/aIteNv0kMjhSedGud03UjpCEG79+60J8c/IR6+QVSwe1cOPsr++A5zJ0gbnrwCOchzEnSZWX4pby7hHyi5eq1M/4vFd4n5mh8iNw9k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740992305; c=relaxed/simple;
+	bh=eXllzOnoRt5/aqD3OK5q+LXzVWXzKgBZPq0p3jULFrA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a3FeNi6wkrpDwY09BzQPomiypp59S3L0reebJXfUnJ5PRZyY6AM7eXNdhfkUqFMCnqBh7Sf5/5ILo2VyRVlu1fCfgFxYCpKDRlpwW3AnJXgtb9bXqmtS67qm7irAvv0SD9r8qzWbW61zfuP1BT4uwxltkUWxTkIacv/JZV6A6co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FlLTRNph; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="oA2lMdw8"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YAa7dPLXZDRPPy3ffDqlbdc4KNTdZNE2aXjbMQp0WWFbFNlUt+Ak1GVTz1QhyqIAEIF4ovsVrYDHYCI/Hj+QULz417xyJw/KugBA7rghZz7On6XgoPs5KYUSALRYg19wiQ+c+7hItBWZaX3TezyATKGDbZLuu2EE48OTv3MwFAM5SzBmjAwtNTRBmFtNqGCRrW+bxP7csz0Ay1mszemCtydXsykszIOl1e9V5HyKVdyFrzMjfVx641PaP3ShGT7AzdLIx5TFvrAO5Q7MP1SOoNh/f9QGRUQT0gPxNkSEattmLzTo+vRVJ5MpWc6BmVJgoumHDbPwA+L6m2zrEhDN0A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qUwyjZSvM/tYRMoOXdRoege+tE9RiRBjrXLKI0fMzHY=;
- b=A2y0u7hPo8OH5sOGCExZC5gtI8nMOOUIwpgdm9Rcqno5Ns1oBA3o3uNoYDQXHtEQd+49CO9c5CpEUSiCDnYxQ4VD+rMpNifca+mFg/i5BvZc1m3iOq5eonqtqFS0CFFXAB87XoMeXUhKPHZ5hDy33/ZpSnWJA/Iq3XIUeXLuv8JEXo6GUUNY/4Gc73ZKfP9+do+s97AY8S3T/j5lz56YtrazsOsh5hgFyAG5CSKRSXbrv8jeNwfnqkL/AN3OqriSrQ7spAno8SuNLHRObwryasaTy+fNh9Z5OmNrVfkWgCGlYxXO81e9TJOvqo0kSpe5ku7o+04XTIlQJMusXikKJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=amd.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qUwyjZSvM/tYRMoOXdRoege+tE9RiRBjrXLKI0fMzHY=;
- b=oA2lMdw8mDQKrBrNnWFcHitsylwdBuLV/M7AsO5Rw/Sz5Q0PmNYhK6M72Jt9EI4SR/WEcgIpom4ip3caHsEwBGC6mXD5GL2n4o/HAYusuM+5tctiBHMe9PQR062KYFWp8McOVW6LneV7era16skji5XMg5hR57f+ZnhBKMLnANADQuExiIuvtdKlbGTh7EbwRkgOlF+y5fJOutQLubRZpoxiYpC/3hGAEddYv2KyTwdu2u9peMdHVRboTQlSvLZ17Heoqz0ZDlJJGbg0ktirt2gMzFjVqds0ajiZVaJrkU0ZhgCn5Lj0Or1g/Tqg5IvrpiWn7/fri0QVf65dIWJLdg==
-Received: from PH8PR07CA0037.namprd07.prod.outlook.com (2603:10b6:510:2cf::17)
- by SA0PR12MB7003.namprd12.prod.outlook.com (2603:10b6:806:2c0::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.22; Sun, 2 Mar
- 2025 12:34:54 +0000
-Received: from CY4PEPF0000EE38.namprd03.prod.outlook.com
- (2603:10b6:510:2cf:cafe::99) by PH8PR07CA0037.outlook.office365.com
- (2603:10b6:510:2cf::17) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8489.26 via Frontend Transport; Sun,
- 2 Mar 2025 12:34:54 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- CY4PEPF0000EE38.mail.protection.outlook.com (10.167.242.10) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8489.16 via Frontend Transport; Sun, 2 Mar 2025 12:34:53 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Sun, 2 Mar 2025
- 04:34:42 -0800
-Received: from localhost (10.126.230.35) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Sun, 2 Mar
- 2025 04:34:41 -0800
-Date: Sun, 2 Mar 2025 14:34:37 +0200
-From: Leon Romanovsky <leonro@nvidia.com>
-To: Shannon Nelson <shannon.nelson@amd.com>
-CC: <jgg@nvidia.com>, <andrew.gospodarek@broadcom.com>,
-	<aron.silverton@oracle.com>, <dan.j.williams@intel.com>,
-	<daniel.vetter@ffwll.ch>, <dave.jiang@intel.com>, <dsahern@kernel.org>,
-	<gregkh@linuxfoundation.org>, <hch@infradead.org>, <itayavr@nvidia.com>,
-	<jiri@nvidia.com>, <Jonathan.Cameron@huawei.com>, <kuba@kernel.org>,
-	<lbloch@nvidia.com>, <linux-cxl@vger.kernel.org>,
-	<linux-rdma@vger.kernel.org>, <netdev@vger.kernel.org>, <saeedm@nvidia.com>,
-	<brett.creeley@amd.com>
-Subject: Re: [PATCH v2 0/6] pds_fwctl: fwctl for AMD/Pensando core devices
-Message-ID: <20250302123437.GD1539246@unreal>
-References: <20250301013554.49511-1-shannon.nelson@amd.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FlLTRNph"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740992301;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=yhKA0PWZzkHsCkSvRw6WIRSjH0fQoXRBt2BANeFnGaI=;
+	b=FlLTRNphcbOuuY9Lk+b+bJ3bQi0912o4Xn3MpyCyRB2nHnJSy8lH/5o+MnVUXN4l8gEXN8
+	zG+HB87chsKAO4Rzy2BRyu//4Fo1oEVSfXmopwGYxnmWSUYpafB8U9Th3dlj1BgpcjgGED
+	Dt8lli1sskf9ONOHdFPu/eu+JD0DBu8=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-176-8GBD5LHjPnyvkpMlbRlzcQ-1; Mon, 03 Mar 2025 03:58:19 -0500
+X-MC-Unique: 8GBD5LHjPnyvkpMlbRlzcQ-1
+X-Mimecast-MFC-AGG-ID: 8GBD5LHjPnyvkpMlbRlzcQ_1740992299
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-390eefb2913so1717294f8f.0
+        for <linux-cxl@vger.kernel.org>; Mon, 03 Mar 2025 00:58:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740992298; x=1741597098;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=yhKA0PWZzkHsCkSvRw6WIRSjH0fQoXRBt2BANeFnGaI=;
+        b=ST1VpI9kZ1IfU5ZT0IA28QGCSdq+7Ti6acM3CVbPHncXHB4f6X+Lnq36M9dsAtA7ey
+         nmAeQ2v9viwQ5cpX3Uy1DAEgaRLySsxWr7heQ/x8vDdw2KMdNg9wkWYMW7cVwWxl55ZE
+         AU5oThVjQfoiGrplGj2P56eq8uUCXzRFyAv6qZV6hknmEjhIXue9ypBmn0FXZqJlp+AF
+         656jV7Y5x5FxhuDpO9W97d8YqA2jGWx2dUs/hn99UHgbbsMaEYAJlTNxAphHZUG/SQkP
+         DYGTimn4hfDdItoErqynmP5QN004quJwNTb/tFzuDX8BqrG/aJTC+pqwAzM5mI0LCDjL
+         qdTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWLhK+lVMhkA18DiZp1kDCxaPXlhDSEeArYnuUaQXsuqw5JOxO/KKbsef0IOvR38Bgn8wMFZoJ6YgA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKLGIswe1JEr2AvuhTBRnlPU+QsrVyxJZn5F5JByIKd/Ev/5/n
+	gtLqayjl14MXx/gHPyRe/nK7IyVQUNZsQpuwq5FlyR2Od9nuT1AnEcy66HwoXFL82AXmEMH3TnK
+	DxP5o8yYQI0aYAP14nr2XeDng3YOZUBLHzs+WyUC8nLthgfQ01ZpGadvxyQ==
+X-Gm-Gg: ASbGnct+PWcj/xXDro7SYyqV56uqRZ68qzJ3hCJygYk5gPKF/3LBUzpjj4OpWDj1Q9J
+	j7pFPQ2DAKjv3U+3KpvvPndCNzwjeQ6rjggNDRp1/F8loWN7IbdLp4Xxx49spXZhKoyl2wcHkxb
+	xn31Jsk9EPMlU7J+Z9jSRUs9FbtnzeI332QMYgWCx+QXK8xQ9To/CX2sQUcXjxCBtaZniTBOYZY
+	Q7aTtr+Xwhzx6q5kAx0mVpkngTpSIY0Gn/YUbf/hBrq7vfMnJ3JJ/Lf9hqFYeYw6BD5SqPbPC1O
+	8MpMvbPxSji5uqKDjb+Ia4gfJnDRE46BETQm2NjXTcnmPjwL0ui2oL7ipjkAMHHYmhqHzDMf7rq
+	hv+nXO6ZHRAz9Ty8bKV4Pe9zri08CvwxPf37nMgFv9ZE=
+X-Received: by 2002:a5d:59ae:0:b0:391:10f9:f3a1 with SMTP id ffacd0b85a97d-39110f9f4ffmr1082138f8f.35.1740992298645;
+        Mon, 03 Mar 2025 00:58:18 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHrOB8TUQnl8FpqKRAFyy2zHk+Etq0hy84HKx7V6iLK+hyXpCu8bZkk/epZdl6ibKYIEl0N0g==
+X-Received: by 2002:a5d:59ae:0:b0:391:10f9:f3a1 with SMTP id ffacd0b85a97d-39110f9f4ffmr1082091f8f.35.1740992298255;
+        Mon, 03 Mar 2025 00:58:18 -0800 (PST)
+Received: from ?IPV6:2003:cb:c734:9600:af27:4326:a216:2bfb? (p200300cbc7349600af274326a2162bfb.dip0.t-ipconnect.de. [2003:cb:c734:9600:af27:4326:a216:2bfb])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e485e61csm13948947f8f.98.2025.03.03.00.58.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Mar 2025 00:58:17 -0800 (PST)
+Message-ID: <964e8991-44c0-4ff7-91cc-033ed7c09835@redhat.com>
+Date: Mon, 3 Mar 2025 09:58:15 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250301013554.49511-1-shannon.nelson@amd.com>
-X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE38:EE_|SA0PR12MB7003:EE_
-X-MS-Office365-Filtering-Correlation-Id: a9b238f9-a611-4570-284c-08dd5986a25b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|7416014|376014|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?hqrqxDLQcZbj+ABrUEOt6dyWnXdfU/lEnnMJR5DJFJi7fCeHJYNovcfHs8mn?=
- =?us-ascii?Q?Bs31oD2QIE75GPRDI9bfKzT3ag+CuchJeCqGbI0Du8DpK0p9QUjkOSwDP3c5?=
- =?us-ascii?Q?gB9KZ+DeKVQSsqoisDjexQFN03QuWwiqhwB5VUR4x8fo1wfG03H1jomS/KPl?=
- =?us-ascii?Q?a85zU+X8bOLhHtUcqhqUBEB3q2cXwcQGmsyVyLHllPcSpTtZhWMG+BA3MK7J?=
- =?us-ascii?Q?EPYZgUDhtE9pzLEbCic98VUQ6AvMkueK7fwW7mJnU5uiYOwC+G1Xm/mkG2oM?=
- =?us-ascii?Q?KU/+f0NAhzQy2TpX+JpayanJ8b5mj51snLF6s+rpcLrnPJwHdSRrYKgdq8pR?=
- =?us-ascii?Q?Kw0EuyeWOZkUFZFWJwrfUtiJ+/qeEkV1h5Gomt6eEsnJXeVGpwcKoQHobEVh?=
- =?us-ascii?Q?TBJnUh8v1bTqQA7QbZWm0zCPBBe92KDbkaj3QDlTfVdOWg40fH1qpbn9EsOb?=
- =?us-ascii?Q?e2Gn8R/bczKZy1DbyJPO85I7S/gQHeTHAOz7qRT4lqWlIIs8ZoXEeIbhUMUo?=
- =?us-ascii?Q?6DTM4AaKr1TRsObeAfdu4Bp6XXhOSuMKCOuPcdYwirrrdjEPd/pDlOY3JPtW?=
- =?us-ascii?Q?jUWrYXHavaY5Mffxg1P18oqnuELFQNvNAkkAA7gG6vnpQOYQdEiL6CUbUKEa?=
- =?us-ascii?Q?yMbC7Lnxb+5KrpYH6c6WtLzBfeTPSFKPEUtIeFw+QnBAY7QNJDfIemrYgav0?=
- =?us-ascii?Q?249NU0WbGRvKQ8/TaZNXiDNM09h9CoZFgnBJeK2pkh8rD7aDqzysFMJx+E4/?=
- =?us-ascii?Q?XvOH6OwNB8VJOCY/tdIkqnf7wXLEhgfaflFUT1zOpR1vuOimbD9js0p1eySp?=
- =?us-ascii?Q?yD0/duwiAvuk7EF/apGsA3tgfvB+ilgKE/1QYWGRrakujXTwncQJHgt08ZnR?=
- =?us-ascii?Q?9Nm7kl6lTA2bk5az8pgqKXhEAO0YuzjT9ryP66QYk5VQCs3NnGXfpM1MwL/M?=
- =?us-ascii?Q?SSAC1lM53LGhIaVPOYhzPN6vjUlFKgoMSbpZAesCyT9yNimOHjYwqJsz6H2T?=
- =?us-ascii?Q?4ZuQhGQUAbvnLo/UKfhgNt4bqddsegRcEtLulQqtAbShpfuaLS95cdVdLLVc?=
- =?us-ascii?Q?FsOQUwuArSkp5rIZ/5OzbgbLDptGfXMGc1nmvgEFnLNmUgqmyeoBHC7h5i1f?=
- =?us-ascii?Q?yOyJDTmtu4rHXxtIQhi+HdCOkAEO6RPAmIAFTUy2v1YlgDonIbbbAnYTd4I3?=
- =?us-ascii?Q?ssGILoH4W3mLmyEwveQUzSzHwxOdWDQIIOeplIQaQAirTIs5i9duYr6Aunnu?=
- =?us-ascii?Q?7vJ0rYX/CRAh81skU5u6TfpJEVlgCnh8dJ9MB0iDOQrcbnO8cI7Wphej0/Dc?=
- =?us-ascii?Q?G1LtoUhDw9Dt+F3IDHxG+W9LNwIvK8RUUzoIOXQjt5DYx2wbiGSIWzGOraV9?=
- =?us-ascii?Q?yfrlA/BoqSOe065J3YLNdXfpTzqDsjo7BZgz1f9DMrY693hqpkucnPKRq26D?=
- =?us-ascii?Q?DNAJAkuWyreBwofhzfMcDERZU0vTYE9/yKoRAfpTjj3PUDTd+04ALEH0XpCM?=
- =?us-ascii?Q?Nl9jq47rKcAFwMg=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(7416014)(376014)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Mar 2025 12:34:53.9132
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a9b238f9-a611-4570-284c-08dd5986a25b
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EE38.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB7003
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 19/20] fs/dax: Properly refcount fs dax pages
+To: Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org,
+ dan.j.williams@intel.com, linux-mm@kvack.org
+Cc: Alison Schofield <alison.schofield@intel.com>, lina@asahilina.net,
+ zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com,
+ vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com,
+ bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com,
+ will@kernel.org, mpe@ellerman.id.au, npiggin@gmail.com,
+ dave.hansen@linux.intel.com, ira.weiny@intel.com, willy@infradead.org,
+ djwong@kernel.org, tytso@mit.edu, linmiaohe@huawei.com, peterx@redhat.com,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+ nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+ linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
+ david@fromorbit.com, chenhuacai@kernel.org, kernel@xen0n.name,
+ loongarch@lists.linux.dev
+References: <cover.8068ad144a7eea4a813670301f4d2a86a8e68ec4.1740713401.git-series.apopple@nvidia.com>
+ <c7d886ad7468a20452ef6e0ddab6cfe220874e7c.1740713401.git-series.apopple@nvidia.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <c7d886ad7468a20452ef6e0ddab6cfe220874e7c.1740713401.git-series.apopple@nvidia.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: yrt8Q7I3Pc8-31b2nV0ucwU-SF9fnjtOr8dHonU1hm4_1740992299
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Feb 28, 2025 at 05:35:48PM -0800, Shannon Nelson wrote:
-> Following along from Jason's work [1] we have our initial patchset
-> for pds_fwctl - an auxiliary_bus driver for supporting fwctl through the
-> pds_core driver and its PDS core device.
-> 
-> The PDS core is PCI device that is separate and distinct from the
-> ionic Eth device and from the other PCI devices that can be supported
-> by the AMD/Pensando DSC.  It is used by pds_vdpa and pds_vfio_pci to
-> coordinate/communicate with the FW for setting up their services.
-> 
-> Until now the DSC's basic configurations for defining what devices to
-> support and for getting low-level device debug information have been
-> through internal commands not available from the host side, requiring
-> access into the DSC's own OS.  Adding the fwctl service allows us to start
-> bringing these capabilities up into the host, but they don't replace the
-> existing function-specific tools.  For example, these are things that make
-> the Eth PCI device appear on the PCI bus, while the tuning of the specific
-> Eth features still go through the standard ethtool/devlink/ip/etc tools.
-> 
-> The first two patches are a bit of clean up for pds_core's add and delete
-> of auxiliary_devices.  Those are followed by a patch to add the new
-> pds_core.fwctl auxiliary_device.  This is only supported by the pds_core
-> PF and not on any VFs.
-> 
-> The remaining patches add the pds_fwctl driver framework and then fill
-> in the details for the fwctl services.
-> 
-> [1] https://lore.kernel.org/netdev/0-v5-642aa0c94070+4447f-fwctl_jgg@nvidia.com/
-> 
-> v2:
->   - removed the RFC tag
->   - add a patch to make pdsc_auxbus_dev_del() a void type (Jonathan)
->   - fix up error handling if pdsc_auxbus_dev_add() fails in probe (Jonathan)
->   - fix auxiliary spelling in commit subject header (Jonathan)
->   - clean up of code around use of __free() gizmo (Jonathan, David)
->   - removed extra whitespace and dev_xxx() calls (Leon)
->   - copy ident info from DMA and release DMA memory in probe (Jonathan)
->   - use dev_err_probe() (Jonathan)
->   - add counted_by_le(num_entries) (Jonathan, David)
->   - convert num_entries from __le32 to host in get_endpoints() (Jonathan)
->   - remove unnecessary variable inits (Jonathan, Leon)
-> 
-> v1: https://lore.kernel.org/netdev/20250211234854.52277-1-shannon.nelson@amd.com/
-> 
-> Brett Creeley (1):
->   pds_fwctl: add rpc and query support
-> 
-> Shannon Nelson (5):
->   pds_core: make pdsc_auxbus_dev_del() void
->   pds_core: specify auxiliary_device to be created
->   pds_core: add new fwctl auxiliary_device
->   pds_fwctl: initial driver framework
->   pds_fwctl: add Documentation entries
-> 
 
-Unfortunately, you didn't remove useless defines :(
+> -static inline unsigned long dax_folio_share_put(struct folio *folio)
+> +static inline unsigned long dax_folio_put(struct folio *folio)
+>   {
+> -	return --folio->page.share;
+> +	unsigned long ref;
+> +	int order, i;
+> +
+> +	if (!dax_folio_is_shared(folio))
+> +		ref = 0;
+> +	else
+> +		ref = --folio->share;
+> +
 
-Thanks,
-Reviewed-by: Leon Romanovsky <leonro@nvidia.com>
+It would still be good to learn how this non-atomic update here is safe 
+(@Dan?), but that's independent of this series.
+
+Staring at it, I would have thought we have to us an atomic_t here.
+
+Acked-by: David Hildenbrand <david@redhat.com>
+
+-- 
+Cheers,
+
+David / dhildenb
+
