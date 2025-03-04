@@ -1,203 +1,185 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2084.outbound.protection.outlook.com [40.107.236.84])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41DAD148316
-	for <linux-cxl@vger.kernel.org>; Mon,  3 Mar 2025 21:26:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.84
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741037200; cv=fail; b=Uu7P6cNMJbR+s4F3yrVkPbq1HTC6xImbrkutr2CQf4tU5xz49K1QAx5EgbFUP4CWbwK1Rbsm96tzTVPUxWq2Rd5HmgC5LzyHqbM10dHuMbDPY7NhSawigeAEvfBfjOeLoY/23WCHguKACyXQ6cRa2N+j7meLXRg+JPtCUwnA7Fo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741037200; c=relaxed/simple;
-	bh=oRQ4vMImDZ+wELVqYW4JllB9AIgCrHuwtmwXT3BCQ+8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=lOX275KZ0X5dCvBaKnYCZ5UgpPNi8UtNElJ2N5DLXzHVhnklOAQrDgwuiSiogbXel2aBu2eA5Nx9dcbokiC5EtQRnnVpRnfEfUTaU6Soa+SNv213N38uw+tkkjAcOWY3xeOF5k4q9AzxEzt4+PtTj3j12ieuaYGC4ucMSkPceKE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=yREKmcqC; arc=fail smtp.client-ip=40.107.236.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F0EC27713
+	for <linux-cxl@vger.kernel.org>; Tue,  4 Mar 2025 00:32:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741048369; cv=none; b=ssC5LXwU2ZCu6DVf6xIWRkzd3imhIgR8P++wRUfldULClMS6gnAfYlLSpGxQ3B54sS+xJnYeEahz5MLHYbfpf/ke34Pw/ZqrEDLfWnlCXLi2SJZ19WQdlKMAT6zjYVKvAjXBDvOMoBQEmdFuUnqrcrZWeyQVrLFQ0WdEy+ye78U=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741048369; c=relaxed/simple;
+	bh=bFQHniKIvSuR78w711suUM8eKtNcV3Kas3fecaB9ie0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nLOHMdSAbExvmwbsb1l1mBkNNyVfK1t/uVEomzwVlv9fmgYTa7YCkTJ9d92ooa+JC073l76Horug6yI/0eZmhXK2AkE3qjQwIHaMHNPAbdpo7YxHDTnK2cdzVsM9+oY0vdHMVXnFGLClPWZYt1DVuNA5AF2cgMhApqzdItbu/RI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=kpzoPATY; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="yREKmcqC"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZjthNF3j7VEBzI0nD2SJMaY+KHMzmIo6IdXSwoz4kXKJVS4036eMF5V6GHE6LNdbEhBsok1ZvHf3DlezSj9H01iFAxp/+x7Ne6iT1psapJGQibnVh8b4E9/hb736WI0n/oFfBnPgqu+9/kHUuSlzhLSgQIr6jMinY8lb1ymhdoHJz+WQjnkfdzl4Qbrg/jEnv6d2j6riOrX27dytVmR0jgLYeeJ+12cGpB4/QGVobxXKjfIcWt/ggzROoAiY8lu4uh8X4DczqWo0m2Fvj/sz35ItQPV9TSeelfG0DoIvJ4LkSkjo/U50krk8/jqmrw3ZZw1WTbTdR21Wnrd905JmJg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kah0odLgECQkFiPFrRvdTMGp5qUmrXdGcV7xHs6cMWo=;
- b=qBEXcXYDjp1AxG1KzsYkZiOqwSBC1VzHCriC2EmkaYJAu9758qqTz7xGnbIRIdMlHMXB8kE7X0UfAnLbVXjzjOlBPFDNC4OoebJ9eCQNP2enThLnrznyoYXeV8fDjpgtvuvRSoGkfwla3cpw4bYzRRouQiZsKXmSaGFU7IxNmpCvTev9eNdE9E4OL6fSyn/FvP11LahbYALJWsEVHU/Ul3AuMMXaJx1D2u8exeq2rV27K1A46aKn6FLzOTRgluS+f3bZigWvTxjgSucMc/8piIYtFWQU75zj+7xax9SD2nvBDGQeJWzjxM2F3y8DWFSlJUoNA/uBAMZIf+KuSW2n+g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kah0odLgECQkFiPFrRvdTMGp5qUmrXdGcV7xHs6cMWo=;
- b=yREKmcqCdSHRkS8njm1wAErvMc6e6J9/Jfy9V9F/tmqylMHwnupPluWHvkJlD0L9dgJH4cdS4ytocsVohKVu3Xv83ue4N1ezVTDW7L6mHtRz1hgFlfUqQ6Qw2Yp25ov7T9GuFt/bjUCkFIdW0Pz1siQpBtucC13MH3timZzmS/U=
-Received: from SN4PR0501CA0030.namprd05.prod.outlook.com
- (2603:10b6:803:40::43) by SA1PR12MB7442.namprd12.prod.outlook.com
- (2603:10b6:806:2b5::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.25; Mon, 3 Mar
- 2025 21:26:29 +0000
-Received: from SA2PEPF00003F64.namprd04.prod.outlook.com
- (2603:10b6:803:40:cafe::7) by SN4PR0501CA0030.outlook.office365.com
- (2603:10b6:803:40::43) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.13 via Frontend Transport; Mon,
- 3 Mar 2025 21:26:29 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SA2PEPF00003F64.mail.protection.outlook.com (10.167.248.39) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8511.15 via Frontend Transport; Mon, 3 Mar 2025 21:26:29 +0000
-Received: from [10.236.179.218] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 3 Mar
- 2025 15:26:27 -0600
-Message-ID: <e1af2fcf-339e-4cda-8c0b-88f540499518@amd.com>
-Date: Mon, 3 Mar 2025 15:26:20 -0600
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="kpzoPATY"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-474bc1aaf5fso67897661cf.0
+        for <linux-cxl@vger.kernel.org>; Mon, 03 Mar 2025 16:32:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1741048367; x=1741653167; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pw+9bjqD0Zwi6XTLWN9K32oaqVMQWYgDhTNGSzicq5Y=;
+        b=kpzoPATYMbZMbPf0Vpx6VaacPuNow19UKVT3D+io/hffzg82D+2BeoihlnnvJ7tWRI
+         rRpgg0YsX51CzWadboxgcN0QHb+LPea0YziNdQDcM+BM8PGtx1mqZ7bfU94Y/FFg54gN
+         qbK/8OUYUmBD7vdXqmwhLkLr+MIKMHjKmOYL5Ic1Io8NITO5f7Xw0z5XoB2nd/+lUA2G
+         mngb0Mu4PhVm/pVXnAQaPAAGyup+gPR2rlv/zysqBY+9vq7COrsD6nTS34wMBwd2DV0j
+         zu3HCBhnYRZiKy+d++28RQIm31ueyV5kHYW223/A3JW0+Ku0SfknX0hGL5ErY1FPDI2d
+         Z7lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741048367; x=1741653167;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pw+9bjqD0Zwi6XTLWN9K32oaqVMQWYgDhTNGSzicq5Y=;
+        b=O5q9v9be2zRIU/1ISen929yMLjpvFvOp0cAkaLnQsBbHtkWPETJgux+EdPTegKUF/I
+         GAuadEzcWQf/umiXgG2oxx8dbQjGzxHdBZbC8hmtXQs53iwKrM5BT+3LzZZ2XCEsQdEN
+         dg06a+Cml3riBBvRfJEt+FlPYUnaJcchCqPCoBhj3Ya78wtiMclVfvHb8Mk4ZRjzDnty
+         AjSV9kvkiEwUsqBGujn+LZMS9vfJLoHIO1W4rtcDaKz4OhyOpKShckZiSLpTT2CPSMWq
+         FaOKbQ4VZV3jsjzLuim26UUpM2oG49sAyaJAoaYUyM/meslBk8Ql2S/IpdZ3ZgdCZE9i
+         XKOw==
+X-Forwarded-Encrypted: i=1; AJvYcCVZ48v2z7pCWYLDTJiPewuMdKWO0xi9NTR5Pf7HxaCuxkKeQuzFAXxiRyLoHTLCT7HYV1pc26e31lE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbKcNF+48SYlvXSmge7ZCzxZViBwCxM+78yU6nfeQ9KwmZ0wRm
+	oH4mvVe4UcAQ2CZN2x/MSiMErtrqqxxcZGvuKPdZkrciXo39INoynRSEgt5wkDFnk2bU4KF63BM
+	b
+X-Gm-Gg: ASbGncuMkmgXOpgyEXbkxvgRLpECGp7m3NHL3DEF2OWX3N5O7gZ5tZMK7v6Tla7R7QQ
+	jvRtvZKcb0X4xebSvi2nq+pZF4EXi2a+jb7z7i++6okrfzDg5r3MghDl0lz+OHXXODZTvUmNyVL
+	L78XPdkJ4tz5yTMMPEL2J68kDXG3XgXWrdtfL06M3RVUysF83K2Zy6HNSMW9P+bY/bSzgX5XSSY
+	KFCw6D5K/FxgwCSF1aJn97Xdud7W51/1sGTKoqMP2gCcvfEQeIMvasNSBxWIXiyiMSb+FU3Trot
+	wxsQRJN8RkWSn5ZE2vC0LX9ODe3Ojltz0CY22Q9LOYgtBkM9DaK1gD6vbQTPXuXJYsmxDSQIRss
+	di+iXKu8h1b0G5Z1IqevEpTwZPGU=
+X-Google-Smtp-Source: AGHT+IEVAevyW2OR0o4+vVHk933xbD+rCHnDoRi5qyqfNQX2/sa4Qf+bjeIiSl09eve86dbBFG8pFA==
+X-Received: by 2002:a05:622a:5c6:b0:472:1275:6967 with SMTP id d75a77b69052e-474bc08782dmr261346811cf.21.1741048366820;
+        Mon, 03 Mar 2025 16:32:46 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4747242fe2dsm64847301cf.75.2025.03.03.16.32.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Mar 2025 16:32:45 -0800 (PST)
+Date: Mon, 3 Mar 2025 19:32:43 -0500
+From: Gregory Price <gourry@gourry.net>
+To: lsf-pc@lists.linux-foundation.org
+Cc: linux-mm@kvack.org, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [LSF/MM] CXL Boot to Bash - Section 1: BIOS, EFI, and Early Boot
+Message-ID: <Z8ZKKwDnuAjtyohz@gourry-fedora-PF4VCD3F>
+References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
+ <Z6LKJZkcdjuit2Ck@gourry-fedora-PF4VCD3F>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 0/2] type2 cxl initialization
-To: Dan Williams <dan.j.williams@intel.com>, <alejandro.lucero-palau@amd.com>
-CC: Alejandro Lucero <alucerop@amd.com>, <linux-cxl@vger.kernel.org>
-References: <20250220200041.3891165-1-alejandro.lucero-palau@amd.com>
- <289fc275-43b6-424c-8c0c-28c5d527ac35@amd.com>
- <67c615da5dd98_1a772947d@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Language: en-US
-From: Ben Cheatham <benjamin.cheatham@amd.com>
-In-Reply-To: <67c615da5dd98_1a772947d@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00003F64:EE_|SA1PR12MB7442:EE_
-X-MS-Office365-Filtering-Correlation-Id: 15480e7a-53c4-43be-6dc4-08dd5a9a0fcc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?V0loM3psMHpBTU5sUk0xWm5odEg2OEZYMzNpcmhCTkVGMjJJVSswS3pQbFls?=
- =?utf-8?B?N1ozM3h5MDBza1M2VzJQeHZRRFBJblRxbU1DRTBIazJWQ2FZSUVOK2ZDb05J?=
- =?utf-8?B?b0s5Wit0OUIvUzhQRFhmMXZuV1FCUjVSRXkwb2lYZFVWRDFVU01nZldGME5z?=
- =?utf-8?B?bklYQS8vaGxhNERwb2gxbk14aWw4dkJabk9FL0FZeXcvUjZJbmQ0NjJMaWt1?=
- =?utf-8?B?NkNpbk1EWW12Z2E0cFZqb2FPaHo4cXlveUNyUldkTHV1YlFIUjRPNWFsN1ow?=
- =?utf-8?B?Q2UzY2NsYnRlTHJLMEE2SmdiZnhwdW8yMjlXNHhqRUF4SjVQMzlvUkRtZEho?=
- =?utf-8?B?dWxQOWlFU1hDREo5MkVoeWtHaCtEeTBuY1RmT0F2L1R2djVkQ1ZOdWdoNXZH?=
- =?utf-8?B?dTJrblB6WEJmWTM1K08wWjBSejdUeWdWS0FhNEFpRi9EaExnTTExL3JyZlVG?=
- =?utf-8?B?VjhiQUpSalFBLzVqaVlBTVZrdlpDYnVrbDQ0ZlIzSDFIL0d0SWxGNlZ0d1Fv?=
- =?utf-8?B?MjMxMXpKcml3SHZOWTBlaTRCZXVHSzEyWkRiT0FpeUpsZFpEalRBM1JBeW1L?=
- =?utf-8?B?UjdXaG52NDJRL3VPemdDaERid1BObmpGSTIwc2xvczNvU3c0dUpubXZNYzI4?=
- =?utf-8?B?Q2NBMnJyY1Zpd0x2TnFQNTNqZFhvUm1iSkI0alp3amlpQ0haWGlCdlpsUHNk?=
- =?utf-8?B?TEFFc0FDL3pGVjZWQmlleFc4cTZxWmlLRms0eEd1S28zNUEvMnMva0l3bXlI?=
- =?utf-8?B?elgrSDJzd1l5cWpxdVg5ajVpUjVHSlQ5YVFNblZRckQwZVA1Q0xHWU1McWR1?=
- =?utf-8?B?WjN3REFLaUVHNHJ1b0xpQ3hHRVlVTllaK1lReS9zSk1va3hhWnpKQjNFSTlM?=
- =?utf-8?B?YVpPWWs4YWJvUVJQaUlwMk93ODhubFMzNEFZRUFqZzRyVUNVVCtqOHpqSk1p?=
- =?utf-8?B?M3oyVGRLeWZuMGt3Mjk0b3dWeVZOdTlBM28zV1RoWUlLanlJUmxGcnV3cUVv?=
- =?utf-8?B?dHd6dm8xWDdVVXlFaFIxMTk1VUFTRUk5SysrOW1PM1ArejBEcWYwWVY4ZkVL?=
- =?utf-8?B?R3JicTd4eVN1U2Z1WmJXZHFvVmZuVk13WlFlbVJJNFFSUVVqaG43RWtlREVv?=
- =?utf-8?B?S3RMQjRxc2JFNkkwZ1dGYTQzRlM5M1dNNUNxOWpXMURVaE9VbUhTcHJCZUo5?=
- =?utf-8?B?ZFAxWUJPYmQwbVcvSnVoUGp2OXhJTjBpZ0U0b2ZFMmF4UW8vMCswYVJidEhX?=
- =?utf-8?B?b2N0bzJzand4Z1lCZ2UvL3NDU0NsOXlGSG9ROFU4WExyNDkzSlNPZ2tBNXh2?=
- =?utf-8?B?YzNFTytmaW94cnBUbTNlZG1HYk81VTRKVU1UOU1rNkFiTk01Y0tJUHIvZ3Bq?=
- =?utf-8?B?empncE5oQ2ZCc1BOVW5MaUxhbEJaRFAwVVFKL0xhcytlVjJ3Nk9ZTm9iV3R6?=
- =?utf-8?B?VURUL0ZYNm5xNnFTYXRxd3lqM01DeGV1UEV3UHhqeVZ4YllESThzRllhdjNI?=
- =?utf-8?B?ZFVYZE5McVJXWDQ5dlg0ZmYyUyt2RWdmcTA2QkxxaUlMeHRZVllsanZlclJL?=
- =?utf-8?B?WmM3L2RZQWIzQlUwa3R1NTJZdU9OclhON2NXSG13QTlLRGNMSnF4WlBPVXVC?=
- =?utf-8?B?TzhweitZWHNyb201d2h5anJ6aGRlbVl4bkRJb1N2K2hvRzNYU1p2QkJBUTR3?=
- =?utf-8?B?S3NsdzRwSlNzc1RRWnJHQkZWcXd5QWZmL3lQQlBhSHA0dlpZUVd1MmxlQUhu?=
- =?utf-8?B?L2w2QWZnM3crdW0vMzNickZCY0pUcHJacnJqMTNFWkMxZk9FdDdINzNxRVVG?=
- =?utf-8?B?UldLV1ErYlNIWUxMYjNQNGNrQU1iK09NSjQwdmVwUndpTU05VzhCekF4YU10?=
- =?utf-8?B?bFBVOHFtS05CVnJ0czA2LzFwMy9kei9SazhnT01ZVndYbFdYT0ZEM05PaGk5?=
- =?utf-8?B?blRPTytZbCt1T0w3QkpOc3hPNk44V3JnbTJHTkdNcWFpRWVoUjc5c0RtMVhX?=
- =?utf-8?Q?WV67CgPCX1R0sS1gOI7uH76uz4A5vc=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2025 21:26:29.2216
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 15480e7a-53c4-43be-6dc4-08dd5a9a0fcc
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF00003F64.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7442
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6LKJZkcdjuit2Ck@gourry-fedora-PF4VCD3F>
 
-
-
-On 3/3/25 2:49 PM, Dan Williams wrote:
-> Ben Cheatham wrote:
->> On 2/20/25 2:00 PM, alejandro.lucero-palau@amd.com wrote:
->>> From: Alejandro Lucero <alucerop@amd.com>
->>>
->>> Avoiding to send the full type2 support patchset until there is an
->>> agreement about how to do the cxl initialization from accel drivers.
->>>
->>> Using the idea from fwctl for embedding cxl_dev_state in a private
->>> accel driver struct and a macro helping for the allocation and
->>> initialization of such struct.
->>>
->>> The main problem is the amount of internal cxl structs which need to be
->>> public for accel drivers which we tried to avoid since v1 of the type2
->>> patchset history.
->>
->> I have a suggestion or two in the next patch, but in my opinion the only
->> potentially problematic exports are the cxl register structs. I'm assuming
->> allowing accelerator drivers access to those may cause stale values in the
->> CXL driver, but I haven't looked. The only suggestion I have there is to
->> use pointers to the struct instead, but I imagine achieving could be a
->> non-trivial amount of effort.
+On Tue, Feb 04, 2025 at 09:17:09PM -0500, Gregory Price wrote:
+> ------------------------------------------------------------------
+> Step 2: BIOS / EFI generates the CEDT (CXL Early Detection Table).
+> ------------------------------------------------------------------
 > 
-> Hmm, say more about why you think those are a problem. Those are
-> "write-once at init" things, why would an accelerator driver have any
-> reason to play with those post init?
+> This table is responsible for reporting each "CXL Host Bridge" and
+> "CXL Fixed Memory Window" present at boot - which enables early boot
+> software to manage those devices and the memory capacity presented
+> by those devices.
+> 
+> Example CEDT Entries (truncated) 
+>          Subtable Type : 00 [CXL Host Bridge Structure]
+>               Reserved : 00
+>                 Length : 0020
+> Associated host bridge : 00000005
+> 
+>          Subtable Type : 01 [CXL Fixed Memory Window Structure]
+>               Reserved : 00
+>                 Length : 002C
+>               Reserved : 00000000
+>    Window base address : 000000C050000000
+>            Window size : 0000003CA0000000
+> 
+> If this memory is NOT marked "Special Purpose" by BIOS (next section),
+> you should find a matching entry EFI Memory Map and /proc/iomem
+> 
+> BIOS-e820:   [mem 0x000000c050000000-0x000000fcefffffff] usable
+> /proc/iomem: c050000000-fcefffffff : System RAM
+> 
+> 
+> Observation: This memory is treated as 100% normal System RAM
+> 
+>    1) This memory may be placed in any zone (ZONE_NORMAL, typically)
+>    2) The kernel may use this memory for arbitrary allocations
+>    4) The driver still enumerates CXL devices and memory regions, but
+>    3) The CXL driver CANNOT manage this memory (as of today)
+>       (Caveat: *some* RAS features may still work, possibly)
+> 
+> This creates an nuanced management state.
+> 
+> The memory is online by default and completely usable, AND the driver
+> appears to be managing the devices - BUT the memory resources and the
+> management structure are fundamentally separate.
+>    1) CXL Driver manages CXL features
+>    2) Non-CXL SystemRAM mechanisms surface the memory to allocators.
 > 
 
-I could see a scenario where an accelerator driver tries to do some concurrent
-setup with the CXL driver and may cause an issue. For example if a type 2 driver
-tried to do something with HDM during setup, but I think a driver touching
-any of these registers when the CXL driver already does this stuff is pretty
-unlikely.
+Adding some additional context here
 
-So that leads me to think it's better to not expose this at all, but I think
-that would require more work than it's worth.
+-------------------------------------
+Nuance X: NUMA Nodes and ACPI Tables.
+-------------------------------------
 
->> The only other member that may be a problem is the DPA partition info,
->> but I don't know enough about that to comment.
-> 
-> I think it is sufficient to mark the bulk of 'struct cxl_dev_state' as
-> private and then move things into the public space as needed, something
-> like:
-> 
-> struct cxl_dev_state {
-> /* public */
->         struct device *dev;
->         struct cxl_memdev *cxlmd;
-> /* private */
->         struct cxl_register_map reg_map;
->         struct cxl_regs regs;
->         int cxl_dvsec;
->         bool rcd;
->         bool media_ready;
->         struct resource dpa_res;
->         struct cxl_dpa_partition part[CXL_NR_PARTITIONS_MAX];
->         unsigned int nr_partitions;
->         u64 serial;
->         enum cxl_devtype type;
->         struct cxl_mailbox cxl_mbox;
-> };
-> 
-> ...but otherwise let accelerator drivers see the full definition of that
-> struct for constainer_of() operations.
-That's fine by me.
+ACPI Table parsing is partially architecture/platform dependent, but
+there is common code that affects boot-time creation of NUMA nodes.
+
+NUMA-nodes are not a dynamic resource.  They are (presently, Feb 2025)
+statically configured during kernel init, and the number of possible
+NUMA nodes (N_POSSIBLE) may not change during runtime.
+
+CEDT/CFMW and SRAT/Memory Affinity entries describe memory regions
+associated with CXL devices.  These tables are used to allocate NUMA
+node IDs during _init.
+
+The "System Resource Affinity Table" has "Memory Affinity" entries
+which associate memory regions with a "Proximity Domain"
+
+        Subtable Type : 01 [Memory Affinity]
+               Length : 28
+     Proximity Domain : 00000001
+            Reserved1 : 0000
+         Base Address : 000000C050000000
+       Address Length : 0000003CA0000000
+
+The "Proximity Domain" utilized by the kernel ACPI driver to match this
+region with a NUMA node (in most cases, the proximity domains here will
+directly translate to a NUMA node ID - but not always).
+
+CEDT/CFMWS do not have a proximity domain - so the kernel will assign it
+a NUMA node association IFF no SRAT Memory Affinity entry is present.
+
+SRAT entries are optional, CFMWS are required for each host bridge.
+
+If SRAT entries are present, one NUMA node is created for each detected
+proximity domain in the SRAT. Additional NUMA nodes are created for each
+CFMWS without a matching SRAT entry.
+
+CFMWS describes host-bridge information, and so if SRAT is missing - all
+devices behind the host bridge will become naturally associated with the
+same NUMA node.
+
+
+big long TL;DR:
+
+This creates the subtle assumption that each host-bridge will have
+devices with similar performance characteristics if they're intended
+for use as general purpose memory and/or interleave.
+
+This means you should expect to have to reboot your machine if a
+different NUMA topology is needed (for example, if you are physically
+hotunplugging a volatile device to plug in a non-volatile device).
+
+
+
+Stay tuned for more Fun and Profit with ACPI tables :]
+~Gregory
