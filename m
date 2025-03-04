@@ -1,87 +1,44 @@
-Received: from beeline3.cc.itu.edu.tr (beeline3.cc.itu.edu.tr [160.75.25.117])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D5BF23956D
-	for <linux-cxl@vger.kernel.org>; Tue,  4 Mar 2025 18:17:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=160.75.25.117
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741112268; cv=fail; b=ocjQeQfmPINONRAsqHu1w//9VTC5VX8r0aiY45CCh7N6HuemwdmB+xFwuZI130O60hg5fcL8B8mRCqpRwcy9i6zftGSLBbpYv4FvwcDOPUgbCqSyY/LemkGvRx9JDeatuP/iqR6ZbTfU0a0z9Em+le6J9mh02LXmvR68SmKdSuc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741112268; c=relaxed/simple;
-	bh=Q140J512fl+FeFdkGEjwsUDtH0BF9JSpJtTf4QOgqro=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=qJJLZBdriXzQRPCvZ1wAAap1nh8tQOYX+QhI47CkRElsywjMNfthVzKPywMnDYQhQWi9IVgY9iSZ/8ERCoWI/6zBO1DDdvKXmdH33yBpCI68VPeHLXnNrMJy54KRyNUSGWy45/VVhhXcx3JxgmVVW7iHvawbIym7NU6dIeRGhb8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com; spf=none smtp.mailfrom=cc.itu.edu.tr; arc=none smtp.client-ip=185.176.79.56; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=fail smtp.client-ip=160.75.25.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cc.itu.edu.tr
-Received: from lesvatest1.cc.itu.edu.tr (unknown [10.146.128.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by beeline3.cc.itu.edu.tr (Postfix) with ESMTPS id 80DC140D00FE
-	for <linux-cxl@vger.kernel.org>; Tue,  4 Mar 2025 21:17:42 +0300 (+03)
-X-Envelope-From: <root@cc.itu.edu.tr>
-Received: from lesva1.cc.itu.edu.tr (unknown [160.75.70.79])
-	by lesvatest1.cc.itu.edu.tr (Postfix) with ESMTP id 4Z6fMq2pb9zFyfB
-	for <linux-cxl@vger.kernel.org>; Tue,  4 Mar 2025 18:13:43 +0300 (+03)
-Received: by le1 (Postfix, from userid 0)
-	id C80E742722; Tue,  4 Mar 2025 18:13:33 +0300 (+03)
-X-Envelope-From: <linux-kernel+bounces-541356-bozkiru=itu.edu.tr@vger.kernel.org>
-Received: from fgw2.itu.edu.tr (fgw2.itu.edu.tr [160.75.25.104])
-	by le2 (Postfix) with ESMTP id 5D07142F1B
-	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 13:21:54 +0300 (+03)
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by fgw2.itu.edu.tr (Postfix) with SMTP id 347A72DCEB
-	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 13:21:54 +0300 (+03)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 06A8D1891482
-	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 10:22:01 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D39E51F236E;
-	Mon,  3 Mar 2025 10:21:38 +0000 (UTC)
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABB531EDA04;
-	Mon,  3 Mar 2025 10:21:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 156C827CB25;
+	Tue,  4 Mar 2025 18:20:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740997297; cv=none; b=tdR5lQNGrdVWS5SAWs5gQ4Z2b2aHEQL5QS/uLFmAdbQsRpPbJU+667KIzEz2mAEmA31HywegkJ1LfIMUKNi3SNnbFOnGEE1e/Q3xKCpPw+Rp8YFo+jCDY4NVBXP3p9dKF5IFNh5Fi8mX/u5YF2yvRq+OKlmx0mok/PnDt6Y4ruA=
+	t=1741112404; cv=none; b=I/T+Z4j2KDM+wbxS22lP1ZA9VxXqdFOgdKoKzZESgRhEY6hLbL+ENlI3YMjDO1zITdKSOk56lsbImPZtP131jIOPTb7PwRfEqJ0uFQNzsi/Pju7N63eHbMEXpT5eC5/my4KQpRc3GXpUQYEPzEJ+AzePRuMHh0YKv08uN5sKnBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740997297; c=relaxed/simple;
-	bh=a2xSJ3T1g8IXcDpYxc901qp4tAn/pEbOH9ZKAL1qU7U=;
+	s=arc-20240116; t=1741112404; c=relaxed/simple;
+	bh=/iUAAOt679TeIoxp6g2heJgXYc2AHhUqUX4EiIEiMWM=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Z447CwWm+yrqV3ZWc6vrIR8ru6Fb3td3ZKi0NGqXFJ+BIdXk4j8scitc9HTAZUhjU8UvSBMiCYKgLYyKTttgDxahUQoNz0PAh9z+IvwaNo2JgJGCx1VNb9OYMdj1mzbI/+H7e2Jha/R8+TiWx/nGZk7RSKZJkhKpUKrIdJGidH0=
+	 Content-Type:MIME-Version; b=Ex3hKURPWf2ZcxE3xYFuKMfJURouJM30g7rSzR5HjSP6AwVWi/RNtFT6g85ttSSVMm3vRI7GHDp4IkWMP8CoPWpqhOyH6fIJvDmttQqv4yEZI7bGO4EOmgaErd6AFAig7udnjXyXlRe51mXySkg5LTHbyj0G0sb0DEp1qqv2Pfs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Z5vtd4j18z6K9SC;
-	Mon,  3 Mar 2025 18:19:21 +0800 (CST)
-Received: from frapeml100006.china.huawei.com (unknown [7.182.85.201])
-	by mail.maildlp.com (Postfix) with ESMTPS id 01139140A70;
-	Mon,  3 Mar 2025 18:21:31 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Z6kRL2lxYz6M4J6;
+	Wed,  5 Mar 2025 02:17:02 +0800 (CST)
+Received: from frapeml100008.china.huawei.com (unknown [7.182.85.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6C2D61400D7;
+	Wed,  5 Mar 2025 02:19:58 +0800 (CST)
 Received: from frapeml500007.china.huawei.com (7.182.85.172) by
- frapeml100006.china.huawei.com (7.182.85.201) with Microsoft SMTP Server
+ frapeml100008.china.huawei.com (7.182.85.131) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 3 Mar 2025 11:21:30 +0100
+ 15.1.2507.39; Tue, 4 Mar 2025 19:19:58 +0100
 Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
  frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
- Mon, 3 Mar 2025 11:21:30 +0100
+ Tue, 4 Mar 2025 19:19:58 +0100
 From: Shiju Jose <shiju.jose@huawei.com>
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Borislav Petkov <bp@alien8.de>, Jonathan Cameron
+	<jonathan.cameron@huawei.com>
 CC: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
 	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"rafael@kernel.org" <rafael@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-	"tony.luck@intel.com" <tony.luck@intel.com>, "lenb@kernel.org"
-	<lenb@kernel.org>, "mchehab@kernel.org" <mchehab@kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
+	"rafael@kernel.org" <rafael@kernel.org>, "tony.luck@intel.com"
+	<tony.luck@intel.com>, "lenb@kernel.org" <lenb@kernel.org>,
+	"mchehab@kernel.org" <mchehab@kernel.org>, "linux-mm@kvack.org"
+	<linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
 	<linux-kernel@vger.kernel.org>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>, "j.williams@intel.com" <j.williams@intel.com>,
-	"dave@stgolabs.net" <dave@stgolabs.net>, "dave.jiang@intel.com"
-	<dave.jiang@intel.com>, "alison.schofield@intel.com"
+	<linux-cxl@vger.kernel.org>, "dave@stgolabs.net" <dave@stgolabs.net>,
+	"dave.jiang@intel.com" <dave.jiang@intel.com>, "alison.schofield@intel.com"
 	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
 	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
 	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
@@ -107,64 +64,71 @@ Subject: RE: [PATCH linux-next 0/2] ACPI: Add support for ACPI RAS2 feature
  table
 Thread-Topic: [PATCH linux-next 0/2] ACPI: Add support for ACPI RAS2 feature
  table
-Thread-Index: AQHbidw989DsJKt5skazfuISb8i7/7NhGsIAgAAbu7A=
-Date: Mon, 3 Mar 2025 10:21:30 +0000
-Message-ID: <ed550760111d4061869949c90598ff5b@huawei.com>
+Thread-Index: AQHbidw989DsJKt5skazfuISb8i7/7NhGsIAgAAQuYCAAh5NIA==
+Date: Tue, 4 Mar 2025 18:19:58 +0000
+Message-ID: <977a011b1ede4093a8e49d9cbcf49d19@huawei.com>
 References: <20250228122752.2062-1-shiju.jose@huawei.com>
  <20250303173538.000007cd@huawei.com>
-In-Reply-To: <20250303173538.000007cd@huawei.com>
+ <20250303103529.GBZ8WF8flezRahE-1h@fat_crate.local>
+In-Reply-To: <20250303103529.GBZ8WF8flezRahE-1h@fat_crate.local>
 Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ITU-Libra-ESVA-Information: Please contact Istanbul Teknik Universitesi for more information
-X-ITU-Libra-ESVA-ID: 4Z6fMq2pb9zFyfB
-X-ITU-Libra-ESVA: No virus found
-X-ITU-Libra-ESVA-From: root@cc.itu.edu.tr
-X-ITU-Libra-ESVA-Watermark: 1741716961.82204@Ajb1kFnJH9hopXqYbM+PZQ
-X-ITU-MailScanner-SpamCheck: not spam
-Message-ID: <20250303102130.qPjYsZsKkoYp25-b-lk_mCExCY0FZuB9exZBteoCxHw@z>
 
->-----Original Message-----
->From: Jonathan Cameron <jonathan.cameron@huawei.com>
->Sent: 03 March 2025 09:36
->To: Shiju Jose <shiju.jose@huawei.com>
->Cc: linux-edac@vger.kernel.org; linux-acpi@vger.kernel.org; rafael@kernel.=
-org;
->bp@alien8.de; tony.luck@intel.com; lenb@kernel.org; mchehab@kernel.org;
->linux-mm@kvack.org; linux-kernel@vger.kernel.org; linux-cxl@vger.kernel.or=
-g;
->j.williams@intel.com; dave@stgolabs.net; dave.jiang@intel.com;
->alison.schofield@intel.com; vishal.l.verma@intel.com; ira.weiny@intel.com;
->david@redhat.com; Vilas.Sridharan@amd.com; leo.duran@amd.com;
->Yazen.Ghannam@amd.com; rientjes@google.com; jiaqiyan@google.com;
->Jon.Grimm@amd.com; dave.hansen@linux.intel.com;
->naoya.horiguchi@nec.com; james.morse@arm.com; jthoughton@google.com;
->somasundaram.a@hpe.com; erdemaktas@google.com; pgonda@google.com;
->duenwen@google.com; gthelen@google.com;
->wschwartz@amperecomputing.com; dferguson@amperecomputing.com;
->wbs@os.amperecomputing.com; nifan.cxl@gmail.com; tanxiaofei
-><tanxiaofei@huawei.com>; Zengtao (B) <prime.zeng@hisilicon.com>; Roberto
->Sassu <roberto.sassu@huawei.com>; kangkang.shen@futurewei.com;
->wanghuiqiang <wanghuiqiang@huawei.com>; Linuxarm
-><linuxarm@huawei.com>
->Subject: Re: [PATCH linux-next 0/2] ACPI: Add support for ACPI RAS2 featur=
-e
->table
->
->On Fri, 28 Feb 2025 12:27:48 +0000
-><shiju.jose@huawei.com> wrote:
->
->> From: Shiju Jose <shiju.jose@huawei.com>
->>
->> Add support for ACPI RAS2 feature table (RAS2) defined in the ACPI 6.5
->> specification, section 5.2.21 and RAS2 HW based memory scrubbing feature=
+Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogQm9yaXNsYXYgUGV0a292IDxicEBh
+bGllbjguZGU+DQo+U2VudDogMDMgTWFyY2ggMjAyNSAxMDozNQ0KPlRvOiBKb25hdGhhbiBDYW1l
+cm9uIDxqb25hdGhhbi5jYW1lcm9uQGh1YXdlaS5jb20+DQo+Q2M6IFNoaWp1IEpvc2UgPHNoaWp1
+Lmpvc2VAaHVhd2VpLmNvbT47IGxpbnV4LWVkYWNAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj5h
+Y3BpQHZnZXIua2VybmVsLm9yZzsgcmFmYWVsQGtlcm5lbC5vcmc7IHRvbnkubHVja0BpbnRlbC5j
+b207DQo+bGVuYkBrZXJuZWwub3JnOyBtY2hlaGFiQGtlcm5lbC5vcmc7IGxpbnV4LW1tQGt2YWNr
+Lm9yZzsgbGludXgtDQo+a2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtY3hsQHZnZXIua2Vy
+bmVsLm9yZzsgai53aWxsaWFtc0BpbnRlbC5jb207DQo+ZGF2ZUBzdGdvbGFicy5uZXQ7IGRhdmUu
+amlhbmdAaW50ZWwuY29tOyBhbGlzb24uc2Nob2ZpZWxkQGludGVsLmNvbTsNCj52aXNoYWwubC52
+ZXJtYUBpbnRlbC5jb207IGlyYS53ZWlueUBpbnRlbC5jb207IGRhdmlkQHJlZGhhdC5jb207DQo+
+VmlsYXMuU3JpZGhhcmFuQGFtZC5jb207IGxlby5kdXJhbkBhbWQuY29tOyBZYXplbi5HaGFubmFt
+QGFtZC5jb207DQo+cmllbnRqZXNAZ29vZ2xlLmNvbTsgamlhcWl5YW5AZ29vZ2xlLmNvbTsgSm9u
+LkdyaW1tQGFtZC5jb207DQo+ZGF2ZS5oYW5zZW5AbGludXguaW50ZWwuY29tOyBuYW95YS5ob3Jp
+Z3VjaGlAbmVjLmNvbTsNCj5qYW1lcy5tb3JzZUBhcm0uY29tOyBqdGhvdWdodG9uQGdvb2dsZS5j
+b207IHNvbWFzdW5kYXJhbS5hQGhwZS5jb207DQo+ZXJkZW1ha3Rhc0Bnb29nbGUuY29tOyBwZ29u
+ZGFAZ29vZ2xlLmNvbTsgZHVlbndlbkBnb29nbGUuY29tOw0KPmd0aGVsZW5AZ29vZ2xlLmNvbTsg
+d3NjaHdhcnR6QGFtcGVyZWNvbXB1dGluZy5jb207DQo+ZGZlcmd1c29uQGFtcGVyZWNvbXB1dGlu
+Zy5jb207IHdic0Bvcy5hbXBlcmVjb21wdXRpbmcuY29tOw0KPm5pZmFuLmN4bEBnbWFpbC5jb207
+IHRhbnhpYW9mZWkgPHRhbnhpYW9mZWlAaHVhd2VpLmNvbT47IFplbmd0YW8gKEIpDQo+PHByaW1l
+LnplbmdAaGlzaWxpY29uLmNvbT47IFJvYmVydG8gU2Fzc3UgPHJvYmVydG8uc2Fzc3VAaHVhd2Vp
+LmNvbT47DQo+a2FuZ2thbmcuc2hlbkBmdXR1cmV3ZWkuY29tOyB3YW5naHVpcWlhbmcgPHdhbmdo
+dWlxaWFuZ0BodWF3ZWkuY29tPjsNCj5MaW51eGFybSA8bGludXhhcm1AaHVhd2VpLmNvbT4NCj5T
+dWJqZWN0OiBSZTogW1BBVENIIGxpbnV4LW5leHQgMC8yXSBBQ1BJOiBBZGQgc3VwcG9ydCBmb3Ig
+QUNQSSBSQVMyIGZlYXR1cmUNCj50YWJsZQ0KPg0KWy4uLl0NCj4NCj5Ib3dldmVyLCBqdXN0IGZy
+b20gYSBjdXJzb3J5IGxvb2ssIGl0IHdvdWxkIG5lZWQgc29tZSBzY3J1YmJpbmcuIFRoZXJlJ3Mg
+c3R1ZmYNCj5saWtlOg0KPg0KPisgICAgICAgICAgICAgICBwc19zbS0+cGFyYW1zLnJlcXVlc3Rl
+ZF9hZGRyZXNzX3JhbmdlWzBdID0gMDsNCj4rICAgICAgICAgICAgICAgcHNfc20tPnBhcmFtcy5y
+ZXF1ZXN0ZWRfYWRkcmVzc19yYW5nZVsxXSA9IDA7DQo+KyAgICAgICAgICAgICAgIHBzX3NtLT5w
+YXJhbXMuc2NydWJfcGFyYW1zX2luICY9DQo+flJBUzJfUEFUUk9MX1NDUlVCX1NDSFJTX0lOX01B
+U0s7DQo+KyAgICAgICAgICAgICAgIHBzX3NtLT5wYXJhbXMuc2NydWJfcGFyYW1zX2luIHw9DQo+
+RklFTERfUFJFUChSQVMyX1BBVFJPTF9TQ1JVQl9TQ0hSU19JTl9NQVNLLA0KPisgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJhczJfY3R4
+LT5zY3J1Yl9jeWNsZV9ocnMpOw0KPisgICAgICAgICAgICAgICBwc19zbS0+cGFyYW1zLnBhdHJv
+bF9zY3J1Yl9jb21tYW5kID0NCj4rIFJBUzJfU1RBUlRfUEFUUk9MX1NDUlVCQkVSOw0KPg0KPg0K
+PndoaWNoIGRlZmluaXRlbHkgbmVlZHMgc2hvcnRlbmluZy4gVGhlcmUncyBubyBuZWVkIGZvciBh
+IHdob2xseSB3cml0dGVuIG91dA0KPiJyZXF1ZXN0ZWRfYWRkcmVzc19yYW5nZSIuIEkga25vdyB2
+YXJpYWJsZXMgc2hvdWxkIGhhdmUgbWVhbmluZ2Z1bGwgbmFtZXMNCj5idXQgd3JpdGluZyBmaWN0
+aW9uIHNob3VsZG4ndCBiZSBlaXRoZXIuDQoNCkhpIEJvcmlzbGF2LA0KDQpTb21lIG9mIHRoZXNl
+IHZhcmlhYmxlcywgZm9yIGUuZy4gcmVxdWVzdGVkX2FkZHJlc3NfcmFuZ2UgYXJlIG5vdCBkZWZp
+bmVkIA0KaW4gdGhpcyBwYXRjaCwgYnV0IGluIHRoZSAnaW5jbHVkZS9hY3BpL2FjdGJsMi5oJy4N
+Ck15IHVuZGVyc3RhbmRpbmcgaXMgdGhhdCB0aG9zZSBjaGFuZ2VzIHJlcXVpcmVkIHRvIHVwc3Ry
+ZWFtIGZpcnN0IHZpYQ0KaHR0cHM6Ly9naXRodWIuY29tL2FjcGljYS9hY3BpY2EgPw0KPg0KPitz
+dGF0aWMgaW50IHJhczJfYWNwaV9wYXJzZV90YWJsZShzdHJ1Y3QgYWNwaV90YWJsZV9oZWFkZXIg
+KnBBY3BpVGFibGUpDQo+DQo+WXVjaywgQ2FtZWxDYXNlPyENCkZpeGVkLg0KDQo+DQo+QW5kIEkn
+bSBwcmV0dHkgc3VyZSBpZiBJIHN0YXJ0IGxvb2tpbmcgbW9yZSwgSSdsbCBmaW5kIG1vcmUgZnVu
+a3kgc3R1ZmYuDQpXaWxsIGNoZWNrIGFuZCBmaXguDQo+DQo+SFRILg0KPg0KPi0tDQo+UmVnYXJk
+cy9HcnVzcywNCj4gICAgQm9yaXMuDQo+DQo+aHR0cHM6Ly9wZW9wbGUua2VybmVsLm9yZy90Z2x4
+L25vdGVzLWFib3V0LW5ldGlxdWV0dGUNCg0KVGhhbmtzLA0KU2hpanUNCg==
