@@ -1,60 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from esa2.hc1455-7.c3s2.iphmx.com (esa2.hc1455-7.c3s2.iphmx.com [207.54.90.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ACDD79F5
-	for <linux-cxl@vger.kernel.org>; Tue,  4 Mar 2025 04:33:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F4B31EB5E9;
+	Tue,  4 Mar 2025 04:35:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741062807; cv=none; b=f2usB+3/vlbBe7Blw9FyGrUVYML8eZpf4DJ0Ty+2RswmrOmQv28Vs7Fha+zc2YFNrG62U/4boXxqNHYdaXdiHdPECnAU0l/EB1YqBEHQdQhNq31Gx1TL3PsIR06LH4LEdbiIFVxO8siL5yeh0P6t0azwqgar8In8D0tMMC6sWYo=
+	t=1741062940; cv=none; b=e9r+yBgQd0Kp2yz1BG3+X9GTLjjG6Dk9HUBQ/1Mwp+Xh7ZeDIcC3Z/kOeY364uLLbMjNHpfY3ws1NWkLRXEEH1T2LGoLRlhOLO8fqmSjiRWgMYDhYeuezMJJ/4p0FVNTTE9F9Xbdbe5ahYivPxOZ9Xo6RlloYDk/PJUVza7GtYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741062807; c=relaxed/simple;
-	bh=TvXv9fhX6/0IuaAOw1+LyZux0HZUvTwLIQs7SaHscFo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UjJQN0AR+9DXF5TexQTlqStp6aHsLR8lvNNMGa+LL78X93cjSJqIf07VDpwgn5TySxdtJEPfBdRmTZlkt6/UmN1LfWH0tAkOLio3DqyxVLh97jxNK63YRCD/GoW1eM/6XielM7LveZi4jgis66DeN4rsRN4MnxUHV4r8BOl5TGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=isxz9U8v; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1741062940; c=relaxed/simple;
+	bh=gYBY0hZtBx51WKtIGPm5uQcaBCRVh+AkWb1F+ZYyODA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mE9+swKztZ3SjbvARDyYX3+lXhXlfx2cZ0z+LfibtoyO+zoICBN9VMsmsIZdIv8uiI5qORw622dpIfuOX39hfOfBMvnkX3Cs3UjPARgHg7wgF9j0DeErwTdYpvTC1PYy+qn3wSljxJ4iCKJ9wqzSGGLwZL2GHbJCDxaAcC4u/Rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=XEh47JHX; arc=none smtp.client-ip=207.54.90.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="isxz9U8v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741062805; x=1772598805;
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="XEh47JHX"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1741062939; x=1772598939;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=TvXv9fhX6/0IuaAOw1+LyZux0HZUvTwLIQs7SaHscFo=;
-  b=isxz9U8vqF05qlD69H+9JdnATPFKAiMBsqa/ssJX8gNeTg5p3JNizowH
-   i8w7lxOkuMu4xwMamEKzDSq/m153vHdZBawW4JZwdbiu2+Ft/ln+bSR55
-   jbhLWowvlxuuTkcCPjy6BlvT6ZUwjQGSc5KzdcJx0Tf21DZJDTH3dzxw6
-   AD0NhoZB5pHFPuoev8Se+BC2U70SHgUVh/2d/7o/1YbWy5Au0mOyUuVo5
-   samqfGlb1lk2MqBYaLPB63Pegie1TVRJ3YR5BeT1w2w2OuzOgKFomXPOI
-   4cbPCOL4ujKpSz/EIMBoiBoK+NcwF08tjf/y56UWGuSJzGc6JDa5+YDc7
-   A==;
-X-CSE-ConnectionGUID: /Au6k1v5Td6EqDez6WMB2A==
-X-CSE-MsgGUID: +OewWPIAQta8K2l74/d+gQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="44771478"
-X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
-   d="scan'208";a="44771478"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 20:33:24 -0800
-X-CSE-ConnectionGUID: ezdMhkxORj63ATKWArxFFw==
-X-CSE-MsgGUID: bBeMPdkwQzGRKu2+s1nBiA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="118774197"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.125.109.46])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 20:33:24 -0800
-From: alison.schofield@intel.com
-To: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH] cxl/region: Quiet some dev_warn()s in extended linear cache setup
-Date: Mon,  3 Mar 2025 20:33:12 -0800
-Message-ID: <20250304043315.2502110-1-alison.schofield@intel.com>
-X-Mailer: git-send-email 2.47.0
+  bh=gYBY0hZtBx51WKtIGPm5uQcaBCRVh+AkWb1F+ZYyODA=;
+  b=XEh47JHXWRJ1nDSsHZXJNlbcjeMF6ctRWz8OctU9rmmwFn+HEY/qbaX8
+   0QWWWfnlKWs0SxPJugL8mQm2nWJ+S/vectAY9twSjE2fGk2XYf3zOwC3X
+   DMQVWR8nSrFU6ZpnqdFfxmVFd2//8kT2T289bDxXoWo8oLicNGYfsVbaI
+   zT5Bx9FyfxX+yHIrcauXzxoK2RQGyNa62e/vjptNZ+vR0HloG3yitfaPv
+   9P8E3zH+6zLnjIoD/gjshLcNgjlA/1nxHuIXby3nsw0Z2s4QYnAsXZ5rJ
+   fm8EiJYWQzBHHUm4qoiZsplTVrsBdgkhiSPgC3K7WJq4nnLTmftfrK1Mi
+   Q==;
+X-CSE-ConnectionGUID: fYK0OVvVT/morF69C1S9ig==
+X-CSE-MsgGUID: 04GlfqwwTguLRzxRtnbyNA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="191879144"
+X-IronPort-AV: E=Sophos;i="6.13,331,1732546800"; 
+   d="scan'208";a="191879144"
+Received: from unknown (HELO oym-r1.gw.nic.fujitsu.com) ([210.162.30.89])
+  by esa2.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 13:34:26 +0900
+Received: from oym-m4.gw.nic.fujitsu.com (oym-nat-oym-m4.gw.nic.fujitsu.com [192.168.87.61])
+	by oym-r1.gw.nic.fujitsu.com (Postfix) with ESMTP id 77A9DD480D;
+	Tue,  4 Mar 2025 13:34:24 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+	by oym-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id 38407D4BC8;
+	Tue,  4 Mar 2025 13:34:24 +0900 (JST)
+Received: from iaas-rpma.. (unknown [10.167.135.44])
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id 79C301A0078;
+	Tue,  4 Mar 2025 12:34:22 +0800 (CST)
+From: Li Zhijian <lizhijian@fujitsu.com>
+To: linux-kernel@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	ilpo.jarvinen@linux.intel.com,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Ying Huang <huang.ying.caritas@gmail.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	linux-cxl@vger.kernel.org,
+	Li Zhijian <lizhijian@fujitsu.com>
+Subject: [PATCH] resource: Fix resource leak in get_free_mem_region()
+Date: Tue,  4 Mar 2025 12:34:15 +0800
+Message-Id: <20250304043415.610286-1-lizhijian@fujitsu.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -63,83 +68,42 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Alison Schofield <alison.schofield@intel.com>
+The leak is detected by the kernel memory leak detector (`kmemleak`)
+following a `cxl create-region` failure:
 
-Extended Linear Cache (ELC) setup code emits a dev_warn(), "Extended
-linear cache calculation failed." for issues found while setting up
-the ELC.
+ cxl_acpi ACPI0017:00: decoder0.0: created region2
+ cxl region2: HPA allocation error (-34) for size:0x0000000100000000 in CXL Window 0 [mem 0xa90000000-0x1a8fffffff flags 0x200]
+ kmemleak: 1 new suspected memory leaks (see /sys/kernel/debug/kmemleak)
 
-For platforms without CONFIG_ACPI_HMAT, every auto region setup will
-emit the warning because the default !ACPI_HMAT return value is
-EOPNOTSUPP. Suppress it by skipping the warn for EOPNOTSUPP. Change
-the EOPNOTSUPP in the actual ELC failure path to ENXIO.
+    __kmalloc_cache_noprof+0x28c/0x350
+    get_free_mem_region+0x45/0x380
+    alloc_free_mem_region+0x1d/0x30
+    size_store+0x180/0x290 [cxl_core]
+    kernfs_fop_write_iter+0x13f/0x1e0
+    vfs_write+0x37c/0x540
+    ksys_write+0x68/0xe0
+    do_syscall_64+0x6e/0x190
+    entry_SYSCALL_64_after_hwframe+0x76/0x7e
 
-In a much less likely path, the dev_warn() is emitted if the size of
-the region resource is NULL. Move that size check out of the ELC setup
-code since NULL resource size is unrelated to the ELC setup and should
-cause an immediate failure to construct the auto region.
-
-For good measure, add the rc value to the dev_warn(). It will either
-be the -ENOENT returned by HMAT if the mem target is not found, or
-the -ENXIO from the region driver calculation.
-
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+Fixes: 14b80582c43e ("resource: Introduce alloc_free_mem_region()")
+Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
 ---
- drivers/cxl/core/region.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ kernel/resource.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 8537b6a9ca18..2d2d2f221902 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -3235,13 +3235,10 @@ static int cxl_extended_linear_cache_resize(struct cxl_region *cxlr,
- 	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
- 	struct cxl_region_params *p = &cxlr->params;
- 	int nid = phys_to_target_node(res->start);
--	resource_size_t size, cache_size, start;
-+	resource_size_t size = resource_size(res);
-+	resource_size_t cache_size, start;
- 	int rc;
+diff --git a/kernel/resource.c b/kernel/resource.c
+index 12004452d999..aa0b1da143eb 100644
+--- a/kernel/resource.c
++++ b/kernel/resource.c
+@@ -2000,6 +2000,8 @@ get_free_mem_region(struct device *dev, struct resource *base,
+ 		devres_free(dr);
+ 	} else if (dev)
+ 		devm_release_action(dev, remove_free_mem_region, res);
++	else
++		free_resource(res);
  
--	size = resource_size(res);
--	if (!size)
--		return -EINVAL;
--
- 	rc = cxl_acpi_get_extended_linear_cache_size(res, nid, &cache_size);
- 	if (rc)
- 		return rc;
-@@ -3253,7 +3250,7 @@ static int cxl_extended_linear_cache_resize(struct cxl_region *cxlr,
- 		dev_warn(&cxlr->dev,
- 			 "Extended Linear Cache size %pa != CXL size %pa. No Support!",
- 			 &cache_size, &size);
--		return -EOPNOTSUPP;
-+		return -ENXIO;
- 	}
- 
- 	/*
-@@ -3304,15 +3301,18 @@ static int __construct_region(struct cxl_region *cxlr,
- 	*res = DEFINE_RES_MEM_NAMED(hpa->start, range_len(hpa),
- 				    dev_name(&cxlr->dev));
- 
-+	if (!resource_size(res))
-+		return -EINVAL;
-+
- 	rc = cxl_extended_linear_cache_resize(cxlr, res);
--	if (rc) {
-+	if (rc && rc != -EOPNOTSUPP) {
- 		/*
- 		 * Failing to support extended linear cache region resize does not
- 		 * prevent the region from functioning. Only causes cxl list showing
- 		 * incorrect region size.
- 		 */
- 		dev_warn(cxlmd->dev.parent,
--			 "Extended linear cache calculation failed.\n");
-+			 "Extended linear cache calculation failed rc:%d\n", rc);
- 	}
- 
- 	rc = insert_resource(cxlrd->res, res);
-
-base-commit: 26600bf10173beda5358d194ec425a1cfafa2fe2
+ 	return ERR_PTR(-ERANGE);
+ }
 -- 
-2.37.3
+2.47.0
 
