@@ -1,134 +1,151 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 156C827CB25;
-	Tue,  4 Mar 2025 18:20:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D1281EE7AD;
+	Tue,  4 Mar 2025 18:56:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741112404; cv=none; b=I/T+Z4j2KDM+wbxS22lP1ZA9VxXqdFOgdKoKzZESgRhEY6hLbL+ENlI3YMjDO1zITdKSOk56lsbImPZtP131jIOPTb7PwRfEqJ0uFQNzsi/Pju7N63eHbMEXpT5eC5/my4KQpRc3GXpUQYEPzEJ+AzePRuMHh0YKv08uN5sKnBg=
+	t=1741114616; cv=none; b=cvxNE6hD8wQXNSMMd3mqiGrdyXfC/Cp01pBSR95hmbeqv9KtqNfLMgx6i9qFE5r7xR+EhcWFryIq4H04STJhosZ53Mhntve6RIoJJaiyKXNS6T3EzstMBvAb+Kl0ECBWwcFDL3Z6xiJYbSOVc3EiGh+a4IVJfvBOTiWFr5a0jys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741112404; c=relaxed/simple;
-	bh=/iUAAOt679TeIoxp6g2heJgXYc2AHhUqUX4EiIEiMWM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Ex3hKURPWf2ZcxE3xYFuKMfJURouJM30g7rSzR5HjSP6AwVWi/RNtFT6g85ttSSVMm3vRI7GHDp4IkWMP8CoPWpqhOyH6fIJvDmttQqv4yEZI7bGO4EOmgaErd6AFAig7udnjXyXlRe51mXySkg5LTHbyj0G0sb0DEp1qqv2Pfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Z6kRL2lxYz6M4J6;
-	Wed,  5 Mar 2025 02:17:02 +0800 (CST)
-Received: from frapeml100008.china.huawei.com (unknown [7.182.85.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6C2D61400D7;
-	Wed,  5 Mar 2025 02:19:58 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (7.182.85.172) by
- frapeml100008.china.huawei.com (7.182.85.131) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 4 Mar 2025 19:19:58 +0100
-Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
- frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
- Tue, 4 Mar 2025 19:19:58 +0100
-From: Shiju Jose <shiju.jose@huawei.com>
-To: Borislav Petkov <bp@alien8.de>, Jonathan Cameron
-	<jonathan.cameron@huawei.com>
-CC: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"rafael@kernel.org" <rafael@kernel.org>, "tony.luck@intel.com"
-	<tony.luck@intel.com>, "lenb@kernel.org" <lenb@kernel.org>,
-	"mchehab@kernel.org" <mchehab@kernel.org>, "linux-mm@kvack.org"
-	<linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>, "dave@stgolabs.net" <dave@stgolabs.net>,
-	"dave.jiang@intel.com" <dave.jiang@intel.com>, "alison.schofield@intel.com"
-	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
-	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
-	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
-	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
-	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
-	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "naoya.horiguchi@nec.com"
-	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
-	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
-	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
-	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
-	<duenwen@google.com>, "gthelen@google.com" <gthelen@google.com>,
-	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
-	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
-	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
-	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, tanxiaofei
-	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, "Roberto
- Sassu" <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
-	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
-	Linuxarm <linuxarm@huawei.com>
-Subject: RE: [PATCH linux-next 0/2] ACPI: Add support for ACPI RAS2 feature
- table
-Thread-Topic: [PATCH linux-next 0/2] ACPI: Add support for ACPI RAS2 feature
- table
-Thread-Index: AQHbidw989DsJKt5skazfuISb8i7/7NhGsIAgAAQuYCAAh5NIA==
-Date: Tue, 4 Mar 2025 18:19:58 +0000
-Message-ID: <977a011b1ede4093a8e49d9cbcf49d19@huawei.com>
-References: <20250228122752.2062-1-shiju.jose@huawei.com>
- <20250303173538.000007cd@huawei.com>
- <20250303103529.GBZ8WF8flezRahE-1h@fat_crate.local>
-In-Reply-To: <20250303103529.GBZ8WF8flezRahE-1h@fat_crate.local>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1741114616; c=relaxed/simple;
+	bh=jNN+ALkVqBLsOraGBngdWfjn4aWXUrvS6kha8AJ+uSM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TFu+QYdjjZep8dmEdWxQdql8/N2JV//R8kMsmhgBmPLUvWJIlQyvU7GsQEtuyy7wf1nqpg7Bhcpbygqyn+NsRnph16Q5cGE4doy/KKK/zV3bHIM43d13FoZNB66tLGjnnB/xVVD5wVDGOoCG0a+VzV1vG3/vvVzQwNBaOs1RfQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I46g0O7L; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I46g0O7L"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741114615; x=1772650615;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=jNN+ALkVqBLsOraGBngdWfjn4aWXUrvS6kha8AJ+uSM=;
+  b=I46g0O7LVd1cW3o5u7weSQ8zzlf4+IFRiX06NLxiVhHTAsMpgHBBikaI
+   YC7ZNxxG+TdiNMF3saQwnwW8xPUxzc8R8SRy5mUBP2Hu/AI/3Z12gGHc5
+   OFUsfpVR5Sjina4wTDaHlGvvg41E/ayMhLgOZpE0PeZ3m5CwEbfk1KcUP
+   qtKUXO+s8na6fWWxu7eJRJxpqyxiVzCHs+yUNm5QxAC8L+JJE/nIf35b9
+   Qj5ZIym2hDy6FylDmG28Hk8Iap90MwxSwOMY1fdpa0Uev87t9vhLE1K1i
+   HU1y/UTHknD34h7TNkI1Llz3VEx1vBZnZVFgJwxOyaPVGLNQN2nqAQNhv
+   Q==;
+X-CSE-ConnectionGUID: ikVJiX1MSAq7rpeQHe9aeg==
+X-CSE-MsgGUID: KebMXSuqSNmojcqb7qJRSg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="53453054"
+X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
+   d="scan'208";a="53453054"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 10:56:54 -0800
+X-CSE-ConnectionGUID: xUXsFrzMQ0SJUDL3yqgfMQ==
+X-CSE-MsgGUID: mxMoLTajRYW6mo2UUB6DVw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
+   d="scan'208";a="118284175"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.109.132])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 10:56:53 -0800
+Date: Tue, 4 Mar 2025 10:56:51 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v7 2/2] cxl/pci: Add trace logging for CXL PCIe Port RAS
+ errors
+Message-ID: <Z8dM80wy5Q8UQomz@aschofie-mobl2.lan>
+References: <20250226221157.149406-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20250226221157.149406-3-Smita.KoralahalliChannabasappa@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250226221157.149406-3-Smita.KoralahalliChannabasappa@amd.com>
 
-Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogQm9yaXNsYXYgUGV0a292IDxicEBh
-bGllbjguZGU+DQo+U2VudDogMDMgTWFyY2ggMjAyNSAxMDozNQ0KPlRvOiBKb25hdGhhbiBDYW1l
-cm9uIDxqb25hdGhhbi5jYW1lcm9uQGh1YXdlaS5jb20+DQo+Q2M6IFNoaWp1IEpvc2UgPHNoaWp1
-Lmpvc2VAaHVhd2VpLmNvbT47IGxpbnV4LWVkYWNAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj5h
-Y3BpQHZnZXIua2VybmVsLm9yZzsgcmFmYWVsQGtlcm5lbC5vcmc7IHRvbnkubHVja0BpbnRlbC5j
-b207DQo+bGVuYkBrZXJuZWwub3JnOyBtY2hlaGFiQGtlcm5lbC5vcmc7IGxpbnV4LW1tQGt2YWNr
-Lm9yZzsgbGludXgtDQo+a2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtY3hsQHZnZXIua2Vy
-bmVsLm9yZzsgai53aWxsaWFtc0BpbnRlbC5jb207DQo+ZGF2ZUBzdGdvbGFicy5uZXQ7IGRhdmUu
-amlhbmdAaW50ZWwuY29tOyBhbGlzb24uc2Nob2ZpZWxkQGludGVsLmNvbTsNCj52aXNoYWwubC52
-ZXJtYUBpbnRlbC5jb207IGlyYS53ZWlueUBpbnRlbC5jb207IGRhdmlkQHJlZGhhdC5jb207DQo+
-VmlsYXMuU3JpZGhhcmFuQGFtZC5jb207IGxlby5kdXJhbkBhbWQuY29tOyBZYXplbi5HaGFubmFt
-QGFtZC5jb207DQo+cmllbnRqZXNAZ29vZ2xlLmNvbTsgamlhcWl5YW5AZ29vZ2xlLmNvbTsgSm9u
-LkdyaW1tQGFtZC5jb207DQo+ZGF2ZS5oYW5zZW5AbGludXguaW50ZWwuY29tOyBuYW95YS5ob3Jp
-Z3VjaGlAbmVjLmNvbTsNCj5qYW1lcy5tb3JzZUBhcm0uY29tOyBqdGhvdWdodG9uQGdvb2dsZS5j
-b207IHNvbWFzdW5kYXJhbS5hQGhwZS5jb207DQo+ZXJkZW1ha3Rhc0Bnb29nbGUuY29tOyBwZ29u
-ZGFAZ29vZ2xlLmNvbTsgZHVlbndlbkBnb29nbGUuY29tOw0KPmd0aGVsZW5AZ29vZ2xlLmNvbTsg
-d3NjaHdhcnR6QGFtcGVyZWNvbXB1dGluZy5jb207DQo+ZGZlcmd1c29uQGFtcGVyZWNvbXB1dGlu
-Zy5jb207IHdic0Bvcy5hbXBlcmVjb21wdXRpbmcuY29tOw0KPm5pZmFuLmN4bEBnbWFpbC5jb207
-IHRhbnhpYW9mZWkgPHRhbnhpYW9mZWlAaHVhd2VpLmNvbT47IFplbmd0YW8gKEIpDQo+PHByaW1l
-LnplbmdAaGlzaWxpY29uLmNvbT47IFJvYmVydG8gU2Fzc3UgPHJvYmVydG8uc2Fzc3VAaHVhd2Vp
-LmNvbT47DQo+a2FuZ2thbmcuc2hlbkBmdXR1cmV3ZWkuY29tOyB3YW5naHVpcWlhbmcgPHdhbmdo
-dWlxaWFuZ0BodWF3ZWkuY29tPjsNCj5MaW51eGFybSA8bGludXhhcm1AaHVhd2VpLmNvbT4NCj5T
-dWJqZWN0OiBSZTogW1BBVENIIGxpbnV4LW5leHQgMC8yXSBBQ1BJOiBBZGQgc3VwcG9ydCBmb3Ig
-QUNQSSBSQVMyIGZlYXR1cmUNCj50YWJsZQ0KPg0KWy4uLl0NCj4NCj5Ib3dldmVyLCBqdXN0IGZy
-b20gYSBjdXJzb3J5IGxvb2ssIGl0IHdvdWxkIG5lZWQgc29tZSBzY3J1YmJpbmcuIFRoZXJlJ3Mg
-c3R1ZmYNCj5saWtlOg0KPg0KPisgICAgICAgICAgICAgICBwc19zbS0+cGFyYW1zLnJlcXVlc3Rl
-ZF9hZGRyZXNzX3JhbmdlWzBdID0gMDsNCj4rICAgICAgICAgICAgICAgcHNfc20tPnBhcmFtcy5y
-ZXF1ZXN0ZWRfYWRkcmVzc19yYW5nZVsxXSA9IDA7DQo+KyAgICAgICAgICAgICAgIHBzX3NtLT5w
-YXJhbXMuc2NydWJfcGFyYW1zX2luICY9DQo+flJBUzJfUEFUUk9MX1NDUlVCX1NDSFJTX0lOX01B
-U0s7DQo+KyAgICAgICAgICAgICAgIHBzX3NtLT5wYXJhbXMuc2NydWJfcGFyYW1zX2luIHw9DQo+
-RklFTERfUFJFUChSQVMyX1BBVFJPTF9TQ1JVQl9TQ0hSU19JTl9NQVNLLA0KPisgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJhczJfY3R4
-LT5zY3J1Yl9jeWNsZV9ocnMpOw0KPisgICAgICAgICAgICAgICBwc19zbS0+cGFyYW1zLnBhdHJv
-bF9zY3J1Yl9jb21tYW5kID0NCj4rIFJBUzJfU1RBUlRfUEFUUk9MX1NDUlVCQkVSOw0KPg0KPg0K
-PndoaWNoIGRlZmluaXRlbHkgbmVlZHMgc2hvcnRlbmluZy4gVGhlcmUncyBubyBuZWVkIGZvciBh
-IHdob2xseSB3cml0dGVuIG91dA0KPiJyZXF1ZXN0ZWRfYWRkcmVzc19yYW5nZSIuIEkga25vdyB2
-YXJpYWJsZXMgc2hvdWxkIGhhdmUgbWVhbmluZ2Z1bGwgbmFtZXMNCj5idXQgd3JpdGluZyBmaWN0
-aW9uIHNob3VsZG4ndCBiZSBlaXRoZXIuDQoNCkhpIEJvcmlzbGF2LA0KDQpTb21lIG9mIHRoZXNl
-IHZhcmlhYmxlcywgZm9yIGUuZy4gcmVxdWVzdGVkX2FkZHJlc3NfcmFuZ2UgYXJlIG5vdCBkZWZp
-bmVkIA0KaW4gdGhpcyBwYXRjaCwgYnV0IGluIHRoZSAnaW5jbHVkZS9hY3BpL2FjdGJsMi5oJy4N
-Ck15IHVuZGVyc3RhbmRpbmcgaXMgdGhhdCB0aG9zZSBjaGFuZ2VzIHJlcXVpcmVkIHRvIHVwc3Ry
-ZWFtIGZpcnN0IHZpYQ0KaHR0cHM6Ly9naXRodWIuY29tL2FjcGljYS9hY3BpY2EgPw0KPg0KPitz
-dGF0aWMgaW50IHJhczJfYWNwaV9wYXJzZV90YWJsZShzdHJ1Y3QgYWNwaV90YWJsZV9oZWFkZXIg
-KnBBY3BpVGFibGUpDQo+DQo+WXVjaywgQ2FtZWxDYXNlPyENCkZpeGVkLg0KDQo+DQo+QW5kIEkn
-bSBwcmV0dHkgc3VyZSBpZiBJIHN0YXJ0IGxvb2tpbmcgbW9yZSwgSSdsbCBmaW5kIG1vcmUgZnVu
-a3kgc3R1ZmYuDQpXaWxsIGNoZWNrIGFuZCBmaXguDQo+DQo+SFRILg0KPg0KPi0tDQo+UmVnYXJk
-cy9HcnVzcywNCj4gICAgQm9yaXMuDQo+DQo+aHR0cHM6Ly9wZW9wbGUua2VybmVsLm9yZy90Z2x4
-L25vdGVzLWFib3V0LW5ldGlxdWV0dGUNCg0KVGhhbmtzLA0KU2hpanUNCg==
+On Wed, Feb 26, 2025 at 10:11:57PM +0000, Smita Koralahalli wrote:
+
+Kind of a nit, but since these are exposed to user space suggest 
+matching these names now.
+
+> +++ b/drivers/cxl/core/trace.h
+> @@ -48,6 +48,34 @@
+>  	{ CXL_RAS_UC_IDE_RX_ERR, "IDE Rx Error" }			  \
+>  )
+>  
+> +TRACE_EVENT(cxl_port_aer_uncorrectable_error,
+> +	TP_PROTO(struct device *dev, u32 status, u32 fe, u32 *hl),
+> +	TP_ARGS(dev, status, fe, hl),
+> +	TP_STRUCT__entry(
+> +		__string(devname, dev_name(dev))
+> +		__string(parent, dev_name(dev->parent))
+
+Above devname, parent 
+
+> +		__field(u32, status)
+> +		__field(u32, first_error)
+> +		__array(u32, header_log, CXL_HEADERLOG_SIZE_U32)
+> +	),
+> +	TP_fast_assign(
+> +		__assign_str(devname);
+> +		__assign_str(parent);
+> +		__entry->status = status;
+> +		__entry->first_error = fe;
+> +		/*
+> +		 * Embed the 512B headerlog data for user app retrieval and
+> +		 * parsing, but no need to print this in the trace buffer.
+> +		 */
+> +		memcpy(__entry->header_log, hl, CXL_HEADERLOG_SIZE);
+> +	),
+> +	TP_printk("device=%s host=%s status: '%s' first_error: '%s'",
+
+Above device, host
+
+> +		  __get_str(devname), __get_str(parent),
+> +		  show_uc_errs(__entry->status),
+> +		  show_uc_errs(__entry->first_error)
+> +	)
+> +);
+> +
+>  TRACE_EVENT(cxl_aer_uncorrectable_error,
+>  	TP_PROTO(const struct cxl_memdev *cxlmd, u32 status, u32 fe, u32 *hl),
+>  	TP_ARGS(cxlmd, status, fe, hl),
+> @@ -96,6 +124,25 @@ TRACE_EVENT(cxl_aer_uncorrectable_error,
+>  	{ CXL_RAS_CE_PHYS_LAYER_ERR, "Received Error From Physical Layer" }	\
+>  )
+>  
+
+same thing below -
+
+
+> +TRACE_EVENT(cxl_port_aer_correctable_error,
+> +	TP_PROTO(struct device *dev, u32 status),
+> +	TP_ARGS(dev, status),
+> +	TP_STRUCT__entry(
+> +		__string(devname, dev_name(dev))
+> +		__string(parent, dev_name(dev->parent))
+> +		__field(u32, status)
+> +	),
+> +	TP_fast_assign(
+> +		__assign_str(devname);
+> +		__assign_str(parent);
+> +		__entry->status = status;
+> +	),
+> +	TP_printk("device=%s host=%s status='%s'",
+> +		  __get_str(devname), __get_str(parent),
+> +		  show_ce_errs(__entry->status)
+> +	)
+> +);
+> +
+>  TRACE_EVENT(cxl_aer_correctable_error,
+>  	TP_PROTO(const struct cxl_memdev *cxlmd, u32 status),
+>  	TP_ARGS(cxlmd, status),
+> -- 
+> 2.17.1
+> 
