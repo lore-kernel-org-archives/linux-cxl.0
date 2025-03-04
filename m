@@ -1,140 +1,110 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B93261F4629
-	for <linux-cxl@vger.kernel.org>; Tue,  4 Mar 2025 05:15:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741065305; cv=pass; b=jQ2Wk9n3AXKi03wVoEhgsIA6nk6QJDzwf7WaLBlA48jfH44NUhDUo40BVpRZesoyfymjvGJ2q3hfQhsK0fRjPkievw8v6UjMnSKAdkOxtivVVl3OjWyQYF073Fk2ZtQR3y+l3pEBrZM7Bxo1NKVNvrC0JgpSy0Z2KzH38oFKefc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741065305; c=relaxed/simple;
-	bh=LtrNu9Yd52lzFzinD0O3LJkKYFyWMwZBVO1OQzj7L44=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fgXgATRawUEss+NsVKy6kA9o3PPdS4jKWQ1lyzV99MlbszBRwNK23ueZYtIYzKgAoqhqWzfxUDv2mR7nJwmU2XTvqCUSoVzEDGPZ6goLbFGDTxJA4lSIZf4nZ0YOrqRQ7GRuh2cRcAwolwGHp0RV/cB8vb/to1NfbxZBZWkCvWk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=bN6iLfDP; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="bN6iLfDP"
-ARC-Seal: i=1; a=rsa-sha256; t=1741065289; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=h/2cLFMKNrJqpm8WMhMtb1QllylfHpHLqchU70ABc+EhJ4CDOHDLk8QkFt9ic5roAnyuwI4L0ZyEaFLBJG+7kv3CXMvcKnyZNuGPQPnivmEoHJ9YilW6TKnhADXCU5WjlwjOZsrM3TjkIOmmf4Q33QJ1iH9vZ8N2U1g6sG4YGkw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1741065289; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Rx8Vm//UvZEd1HL14rVs2AifwiEOtyM7jf8nUf2KPts=; 
-	b=fsjqrxspCocmx1f2yw+mhPvmZfY12fvf6RDZ6ZNhu9dvtvrjXR5CRKo65/oxUR/0rWKApaIxHZ2bBmXl4c9eqQWyL+ouFtzULZfhkiCqlVMax8xDW5LrHRDKNCbt6u2LpUEyBz8pds1yxMaUrGOTyystusdt2+MEoTJXSnEZfmQ=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1741065289;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=Rx8Vm//UvZEd1HL14rVs2AifwiEOtyM7jf8nUf2KPts=;
-	b=bN6iLfDP+y3rq+gFH8OewpzetV0NsX3MJ7ydkYLsLksRGTQreMUSKNaRrgOP7qtb
-	+qnncXSiRVODt9iQ3Z4QaziAUmCczrpWaToeZMQ8vprq1jFkzu/xPRoiBwFvPNCu1li
-	7MWiHK/kiW03INW1tLR4aBSF8jG48no5KVESv0bw=
-Received: by mx.zohomail.com with SMTPS id 174106528693438.0015988179905;
-	Mon, 3 Mar 2025 21:14:46 -0800 (PST)
-Message-ID: <12e0d842-0ff3-4c8a-9bc2-b5c1436521e1@zohomail.com>
-Date: Tue, 4 Mar 2025 13:14:47 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B211F55ED;
+	Tue,  4 Mar 2025 06:42:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741070524; cv=none; b=aVO8IJYvqhft02hJz8sw1pcihKRCqbNvmqY98eAfDxuAreJiTuZh/sKw/0x/mIvgJAr3P0j6ZsPvgLmv76wlG2xcjxs7nT5/YDzyphKg/Ig1d42v9mZHiE4qhUNHfkglb594xoSKHhN3s1oF8IBOJt7XMPKTvga8IYrc4rUMlVM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741070524; c=relaxed/simple;
+	bh=DurccOWeYyopOYQ2zUIsfyrkxG07YsyetCenllD8sHA=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BR+F/yuJ4LxKdSBXYBu3Zqv9xNc0ywyAWiSzJt9qfEG6Wwrd+LgbUEEFJB2Tll6oA7BXCUA4nNXfsza22vk175mYlKINKadqu76JxquTzIVqHtK6GCehGcCGvKLWgfr1bidQeJ3HXdnnSzfwvcuqUajrGJpPAG+ffnq/uamDSIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Z6Qwh32lYz6L56X;
+	Tue,  4 Mar 2025 14:37:56 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 97A00140A36;
+	Tue,  4 Mar 2025 14:41:58 +0800 (CST)
+Received: from localhost (10.96.237.92) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 4 Mar
+ 2025 07:41:56 +0100
+Date: Tue, 4 Mar 2025 14:41:51 +0800
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Ira Weiny <ira.weiny@intel.com>
+CC: Dave Jiang <dave.jiang@intel.com>, Alejandro Lucero <alucerop@amd.com>,
+	Fan Ni <fan.ni@samsung.com>, Dan Williams <dan.j.williams@intel.com>,
+	<linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH] cxl/Documentation: Remove 'mixed' from sysfs mode doc
+Message-ID: <20250304144151.000016c3@huawei.com>
+In-Reply-To: <20250224-remove-mixed-sysfs-v1-1-a329db313dac@intel.com>
+References: <20250224-remove-mixed-sysfs-v1-1-a329db313dac@intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl/region: Quiet some dev_warn()s in extended linear
- cache setup
-To: alison.schofield@intel.com
-Cc: linux-cxl@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>
-References: <20250304043315.2502110-1-alison.schofield@intel.com>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <20250304043315.2502110-1-alison.schofield@intel.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Feedback-ID: rr08011227dfcebd93137af0a8ede3e761000026ef6a9896466aa73a7e7d0914a26a6e9692b65f8a17b4e0b1:zu08011227311d3aa624e650a17f532fb20000bb642265411a24ccd671ccaf883b6059a4fd223eebc0298bd2:rf0801122d36c0e728352e8a64dce6dbb900009f8404d9dd74a166a819f1d07391e4760e7e4d3de5601153398d4e0a264c8b:ZohoMail
-X-ZohoMailClient: External
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On 3/4/2025 12:33 PM, alison.schofield@intel.com wrote:
-> From: Alison Schofield <alison.schofield@intel.com>
->
-> Extended Linear Cache (ELC) setup code emits a dev_warn(), "Extended
-> linear cache calculation failed." for issues found while setting up
-> the ELC.
->
-> For platforms without CONFIG_ACPI_HMAT, every auto region setup will
-> emit the warning because the default !ACPI_HMAT return value is
-> EOPNOTSUPP. Suppress it by skipping the warn for EOPNOTSUPP. Change
-> the EOPNOTSUPP in the actual ELC failure path to ENXIO.
->
-> In a much less likely path, the dev_warn() is emitted if the size of
-> the region resource is NULL. Move that size check out of the ELC setup
-> code since NULL resource size is unrelated to the ELC setup and should
-> cause an immediate failure to construct the auto region.
->
-> For good measure, add the rc value to the dev_warn(). It will either
-> be the -ENOENT returned by HMAT if the mem target is not found, or
-> the -ENXIO from the region driver calculation.
->
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+On Mon, 24 Feb 2025 12:29:29 -0600
+Ira Weiny <ira.weiny@intel.com> wrote:
+
+> Commit 188e9529a606 ("cxl: Remove the CXL_DECODER_MIXED mistake")
+> removed the mixed mode.
+> 
+> Remove it from the sysfs documentation.
+> 
+> Fixes: 188e9529a606 ("cxl: Remove the CXL_DECODER_MIXED mistake")
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Would be nice to put wrap back in text we aren't changing
+as creates unnecessary churn / staring at text to see if
+it is different...
+
+Either way
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
 > ---
->  drivers/cxl/core/region.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 8537b6a9ca18..2d2d2f221902 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -3235,13 +3235,10 @@ static int cxl_extended_linear_cache_resize(struct cxl_region *cxlr,
->  	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
->  	struct cxl_region_params *p = &cxlr->params;
->  	int nid = phys_to_target_node(res->start);
-> -	resource_size_t size, cache_size, start;
-> +	resource_size_t size = resource_size(res);
-> +	resource_size_t cache_size, start;
->  	int rc;
+>  Documentation/ABI/testing/sysfs-bus-cxl | 15 +++++++--------
+>  1 file changed, 7 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> index 3f5627a1210a16aca7c18d17131a56491048a0c2..3ba551ed10e29f33b9eb873bab9b542c8afb66f0 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> @@ -321,14 +321,13 @@ KernelVersion:	v6.0
+>  Contact:	linux-cxl@vger.kernel.org
+>  Description:
+>  		(RW) When a CXL decoder is of devtype "cxl_decoder_endpoint" it
+> -		translates from a host physical address range, to a device local
+> -		address range. Device-local address ranges are further split
+> -		into a 'ram' (volatile memory) range and 'pmem' (persistent
+> -		memory) range. The 'mode' attribute emits one of 'ram', 'pmem',
+> -		'mixed', or 'none'. The 'mixed' indication is for error cases
+> -		when a decoder straddles the volatile/persistent partition
+> -		boundary, and 'none' indicates the decoder is not actively
+> -		decoding, or no DPA allocation policy has been set.
+> +		translates from a host physical address range, to a device
+
+Ideally avoid the extra diff from wrap changes in text that isn't changing.
+
+
+> +		local address range. Device-local address ranges are further
+> +		split into a 'ram' (volatile memory) range and 'pmem'
+> +		(persistent memory) range. The 'mode' attribute emits one of
+
+I think actual changes only happen here.
+
+> +		'ram', 'pmem', or 'none'. The 'none' indicates the decoder is
+> +		not actively decoding, or no DPA allocation policy has been
+> +		set.
 >  
-> -	size = resource_size(res);
-> -	if (!size)
-> -		return -EINVAL;
-> -
->  	rc = cxl_acpi_get_extended_linear_cache_size(res, nid, &cache_size);
->  	if (rc)
->  		return rc;
-> @@ -3253,7 +3250,7 @@ static int cxl_extended_linear_cache_resize(struct cxl_region *cxlr,
->  		dev_warn(&cxlr->dev,
->  			 "Extended Linear Cache size %pa != CXL size %pa. No Support!",
->  			 &cache_size, &size);
-> -		return -EOPNOTSUPP;
-> +		return -ENXIO;
->  	}
->  
->  	/*
-> @@ -3304,15 +3301,18 @@ static int __construct_region(struct cxl_region *cxlr,
->  	*res = DEFINE_RES_MEM_NAMED(hpa->start, range_len(hpa),
->  				    dev_name(&cxlr->dev));
->  
-> +	if (!resource_size(res))
-> +		return -EINVAL;
-> +
-
-Hi Alison,
-
-
-There is a 'res = kmalloc(sizeof(*res), GFP_KERNEL);' in __construct_region() before this return, I think that you should release 'res' before returning -EINVAL.
-
-Other looks good to me.
-
-Reviewed-by: Li Ming <ming.li@zohomail.com>
-
-
-Ming
-
-[snip]
-
+>  		'mode' can be written, when the decoder is in the 'disabled'
+>  		state, with either 'ram' or 'pmem' to set the boundaries for the
+> 
+> ---
+> base-commit: 8760c1c0bf7eee63a56b5f9edb42d93737a6a378
+> change-id: 20250224-remove-mixed-sysfs-e3baa7616bcc
+> 
+> Best regards,
 
