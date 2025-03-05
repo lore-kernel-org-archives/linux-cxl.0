@@ -1,396 +1,190 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2066.outbound.protection.outlook.com [40.107.243.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44C9D2E339F;
-	Wed,  5 Mar 2025 22:44:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741214657; cv=none; b=qQoIMXPVOrR25+Q+RBetprXxJRCxfW9xYb47+vi6m9J8XzirMBF4nHXUf7ZwsUxuWl9198nZHjxTFiboTtMsEmlGdz2JrQzUG2/f17xmvf22xgb1lc/j4KX4pzAF99OWaz9hQn0Ic6qIeSeHfzZQGKFm0tOCMI0Nd3ytUS4EUZA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741214657; c=relaxed/simple;
-	bh=sIWPNe1sDkCNXWyhYlSpIXOLZLQV67vXvBhITwEc69I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LpSgD4DFSOr6WTZNzkY3dSnJ+barUtqKHmazT84A5iv4G3pccjo2JiOMKppcGTJIm7iFc2FSaJ46QfTtKdwxQT6YxIgWPF6uMKkJGctNEJqICQyK6gl1XfX5rs9uEeUio+Hzn+JiSRIjI+ey9Q54LaIX7eBVrzPIa3m8ZEyc2B4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X6GXA3bj; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D81202C55;
+	Wed,  5 Mar 2025 23:21:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741216922; cv=fail; b=kI5kqZ2CVrycWVUtGX6jLIYhvnVgDtZiwjSYXmrPaD3KklM3+F3YJ/XROrcYaZXpX+s1spnGy43SMLiSPh/L/zxWbFERuP8IPxkU7wAqQP3LCaRdnegeB1busXeEvVVAm27arVJttrpOmSipEyFd6hle8c9hYGJOiXvLwbMe+pM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741216922; c=relaxed/simple;
+	bh=JohjprtWKbqPhrOzLJ2HhP4Z5focF1UFP8AAnkcVry4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=LiTx6dB+J3/10mqp0caOmQhbmt9ASnoIWtcwDNEl/+wrN+naULzs4ITOtM4fpoB7W2MTTOUfMn/oE5J9C1gip4c5SYxqNHr9PQWdgCBsHD4XDGz4MBfYKvskDNd7QQ6abrUBSpxzBAe5uJjAAnZwezU8Wrcog2+yqQ2aShgswG0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=D3xt25un; arc=fail smtp.client-ip=40.107.243.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X6GXA3bj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741214656; x=1772750656;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=sIWPNe1sDkCNXWyhYlSpIXOLZLQV67vXvBhITwEc69I=;
-  b=X6GXA3bjTfMa0K/LJupHySeCgTRULp9eTlEXoAPX6Jl+jBQ4MtZvtC7p
-   PI2tKMFNLGLev6ic3S2b0onyKL/hWomuA6NU67pcmWPvpOite8a/oJotJ
-   O38VpsKvxU498SH8Gf2S1YzANnqtyK/gq+2Hrb0GSdOSRxcAgqRsyX95P
-   bFlplCh5ksFX5ytJ8APRoZtEsV4frlsWbgXko7PRi+PesMqQ+pFUtiUsc
-   qXqX0JWySQWizAl/X+Fo9RIsfyapcf5XNEcql2i2GPhHHSZc8pGUtr44b
-   ToOaRCyvmUxPjaoBhMeoNemIcOBXfTFnrZiycnpQgfEzCWWOy2N7c5ycH
-   g==;
-X-CSE-ConnectionGUID: HBDUAkbcSCKIFrKKMNPLqg==
-X-CSE-MsgGUID: J2rziOB7TVaRuwnSVm0QKw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="59610183"
-X-IronPort-AV: E=Sophos;i="6.14,224,1736841600"; 
-   d="scan'208";a="59610183"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 14:44:15 -0800
-X-CSE-ConnectionGUID: KlF0OOMuQtS4DJ7Z5kCdXQ==
-X-CSE-MsgGUID: xuJLBWHUTHWxHqd+neYSwg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="119330537"
-Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.109.222]) ([10.125.109.222])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 14:44:14 -0800
-Message-ID: <04e77063-5676-4435-854c-9488075114c5@intel.com>
-Date: Wed, 5 Mar 2025 15:44:13 -0700
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="D3xt25un"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=F18oCs0Kfrmh7oPfuQRNJ6UR8SshI1rY9hpJJLSCJibuQ4TVKcZINDutV5i7+VO6eOAYHkx2Offk76T3S70GTThfTWFNPKZYGhX05Pnf7meMrIoDsTWgGakCQujiC11TrZVWyJvEYldUN910jD8inQQSnQIxZr4nDNDhGqyGxNVNt4AmOKsnNzDUCf/50SpxfF1T1THxPe9Ab+FMHsf/1vZcr5M6I9PHZcYd4xC5p2sBIGmX83unT3491i4lPcAeKvHJdbeUDdEgrbsK4V0zHe+M8/9FvTqdm0WYnpKIh5flFinZOgWZwexyVGmSTYEydnDo+ezg8MSEnY0fGfPJvw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JohjprtWKbqPhrOzLJ2HhP4Z5focF1UFP8AAnkcVry4=;
+ b=pVgjbAFDI01kcGzCpdf5hXVpwzsykB1VDubqgYlvhiM4Vi/x9Y558TIRNl7TfW5fWVIFzk8OEEYe0PakBLVj+0Pt7wdwB9M8l0ZE8MtdJHOjc5WajJt+XYfWMt5fcj0JB/BILnfPWH7O+r9UBhKtGuI52g6/BY1IscwguhOKy/Zx2kFhxnywQbTBd+VW5hCDxot6wXk+U1f9wBVkoYtvFW1FsXff6rvEJnk/aAoeZmcglEFCoS03KpYj5qP8ujARDwltd/nwDxc8lRSW4CzEcUWEZ9Dgp/BPfHP9w1QH0VWp9+B0aOu2nC9weKvfeF57A/rTE7Nd+19+FJFn0Uvjag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JohjprtWKbqPhrOzLJ2HhP4Z5focF1UFP8AAnkcVry4=;
+ b=D3xt25unhqauGHzNUkRp7aS3L9IKeyNaKTyCIF7lmeUAFQV+sp4260qtJEv8dd1dlU+zyuo5206ODQKuxKgrXSGSHaafSmUCsiXMuBF1021uGU69V3+Ak7YiWA4n6g3bYgZdEeUmDefg7B6V44xmQKMDaFOjIDJcQGiikgbCOUs+Xaq4lAGGI7XJLce95f7Eh97deXek3IRCkx+KBi6qqxARYMSWoSEoGKa11eURakIh6BgPwLZv+B0l6HfZdXWGqJ8iJPWLwegWHgs+JASIeKkQf2Zq5QguZCjjQtGYJljW+7C2VgXttPPPfKf6aadw70TvhIhyuh8f4aOCLlvETQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by MW6PR12MB9020.namprd12.prod.outlook.com (2603:10b6:303:240::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.18; Wed, 5 Mar
+ 2025 23:21:56 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.8511.017; Wed, 5 Mar 2025
+ 23:21:56 +0000
+Date: Wed, 5 Mar 2025 19:21:54 -0400
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Saeed Mahameed <saeed@kernel.org>
+Cc: Leon Romanovsky <leon@kernel.org>, David Ahern <dsahern@kernel.org>,
+	Jiri Pirko <jiri@resnulli.us>, Jakub Kicinski <kuba@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andy Gospodarek <andrew.gospodarek@broadcom.com>,
+	Aron Silverton <aron.silverton@oracle.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Daniel Vetter <daniel.vetter@ffwll.ch>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Itay Avraham <itayavr@nvidia.com>, Jiri Pirko <jiri@nvidia.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Leonid Bloch <lbloch@nvidia.com>, linux-cxl@vger.kernel.org,
+	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	"Nelson, Shannon" <shannon.nelson@amd.com>
+Subject: Re: [PATCH v5 0/8] Introduce fwctl subystem
+Message-ID: <20250305232154.GB354511@nvidia.com>
+References: <0-v5-642aa0c94070+4447f-fwctl_jgg@nvidia.com>
+ <20250303175358.4e9e0f78@kernel.org>
+ <20250304140036.GK133783@nvidia.com>
+ <20250304164203.38418211@kernel.org>
+ <20250305133254.GV133783@nvidia.com>
+ <mxw4ngjokr3vumdy5fp2wzxpocjkitputelmpaqo7ungxnhnxp@j4yn5tdz3ief>
+ <bcafcf60-47a8-4faf-bea3-19cf0cbc4e08@kernel.org>
+ <20250305182853.GO1955273@unreal>
+ <Z8i2_9G86z14KbpB@x130>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z8i2_9G86z14KbpB@x130>
+X-ClientProxiedBy: BN9PR03CA0324.namprd03.prod.outlook.com
+ (2603:10b6:408:112::29) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [LSF/MM] CXL Boot to Bash - Section 0: ACPI and Linux Resources
-To: Gregory Price <gourry@gourry.net>, lsf-pc@lists.linux-foundation.org
-Cc: linux-mm@kvack.org, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
- <Z8jORKIWC3ZwtzI4@gourry-fedora-PF4VCD3F>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <Z8jORKIWC3ZwtzI4@gourry-fedora-PF4VCD3F>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|MW6PR12MB9020:EE_
+X-MS-Office365-Filtering-Correlation-Id: c71d493e-e3fe-4ab7-75c1-08dd5c3c8539
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?FjkJeceh/Lcv4Vrybxo/rTeraxsNZ7p6Nrf0nUmzms2p9L1ON/xVrmACFF3q?=
+ =?us-ascii?Q?I0OYWWS6ZnBpNuiKHLMZ5B/cTvcYMij0Vcp8UZ1Zj9r6Ob263sn77HUP1phl?=
+ =?us-ascii?Q?vsUFeGVGUgvREacVpUYx8qhPlj1eozZsNryNhrIETYEdVDPwr1ZT8EwEBlpR?=
+ =?us-ascii?Q?2vOzPj/PTbX0zBMeKedlt3ubttTIXF8d6nAAw0TMI1+NHP2itxRH9ZB2DrUc?=
+ =?us-ascii?Q?lQYW0dtdhxz4YfcXwC2uvpUjDvvqFSUo931sEqNVp2fhYri29D2KsMoI1mwu?=
+ =?us-ascii?Q?Tpg2fI+tebrPyeqxcWVJhIMYxE59hS8BH8H2yIGFh4SvAA2uB9ZpG6+H6a6s?=
+ =?us-ascii?Q?rTI1HbrToRNRqC26AF0QaMQyCJlXnucopkpnd0Lu2MFhfJqJJi99p32FibjK?=
+ =?us-ascii?Q?wUbQNG/qSsrKZhBHtMDnET0zy9xYgrhMXjLdbLCGODy6UoGS57oNinrS3qG1?=
+ =?us-ascii?Q?rLzNJI2g2dOVC6RAvV+QY4r5W1OFetG88SMggY+MUEJZzOTheTdpcTldFITm?=
+ =?us-ascii?Q?bmLpDJAaVynVmfX7it3UFDBLvZOgrb70W2Owwd8pzUfxjNL+jLW3rxFb3pFi?=
+ =?us-ascii?Q?ZITWvR+LT232kHFGJW6KJNnhVwLqsqtx4ehrxO8yMdza1X+8iF92Rv313iIR?=
+ =?us-ascii?Q?jqKUlQ7sMNCyP+wG826YuD5tnX/IT0HtI7x5RSVra92/bO9ZyUJV103oeR33?=
+ =?us-ascii?Q?VydScnfVLNkvcA6GYuQDpel0w0DdaSljv+1rMJWd9mwKRax34nexRI8QUbR4?=
+ =?us-ascii?Q?uSd/aKe3IAtWhjw19R6X8WBNNWwO1zkIuq3xRfp44knyAL/vS8wPYollKXY5?=
+ =?us-ascii?Q?EBPhHCYp/a+HLHyxXvrkEDTH9hG0ml+XTuePztXsAOzvBpLs230Mvih4G780?=
+ =?us-ascii?Q?b8M+X4Rrfu1a1LFMRLUO6teOoFUbWOzv7AlgPAkxZXSodmo505W98HhE1SRH?=
+ =?us-ascii?Q?GW9v9W2kafo7L9/gsq9gCwZydsum/dx5TcwUT5YszhDoBfwTFb6FCSMKqlm2?=
+ =?us-ascii?Q?GKKy3FmyrjaFdlAul/m1cxk/IgYTzhq1lArBnCNpMqbhUHGSpiL/5v/ysIP9?=
+ =?us-ascii?Q?c7WP1BQcEBXc8Fc5MUDfHKraQ76XYkmpXpkgcacTHgreP5ch5SErxWdF6f9a?=
+ =?us-ascii?Q?K6hPn/Lh38JR478ZEdDGnRyjdVsBFzAkjXIgfpBPUZc3l+uaRyqJaZh9/+DZ?=
+ =?us-ascii?Q?BsMqz0bnIoDo4RuPDumJwwARm6tzBQTGAWA2YwUjw+EXbrs4IHUqkDFbkAg/?=
+ =?us-ascii?Q?FMrz6/djjhtKxYEygOA9l70Trcd20jQGsuz8oBeLOlz/opcXogir+ZEl9fpM?=
+ =?us-ascii?Q?jX3SY0zPnKZi9XJsiyBz5+iTULWovykw6aFn5XD4yL9/Ldaor6ywklaoTQ2B?=
+ =?us-ascii?Q?I2ZvE7hTbIwB0DmwUpMuOPhvSbt8?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?BSjE06GlIMmSLdwwyKE9q/vqaqi3YAFUBr8/zawSWJmzZj4jBFpYDcaoG4wD?=
+ =?us-ascii?Q?MNxKGKypsS7dEyFW4I8Opag35liAgdxA7rcjJ5mBIjWuEWja+NikfmwrQj9w?=
+ =?us-ascii?Q?46FMQnbydZPZhboI2v8XrRBQMh6JZF9ZTIWX/9u0Zy2wLNes6H8foENnANHW?=
+ =?us-ascii?Q?e57HUUFXqzT7Xu92Vm7iQwEIciWOtwnKtVZ7iABk2fwNLwnnAhc0UKORfw3o?=
+ =?us-ascii?Q?G5UAaJr4L4uTxvr2bA4ohLhRITH70yyNRBvHx48DsCUHU2ImSEJbs544QZTp?=
+ =?us-ascii?Q?NQgMUt4YQ7HaKcfKdPLgDZZ+ln+SKWqDBAgPTmXsWeArvoP3tMjeadwnEsMw?=
+ =?us-ascii?Q?xxvqZ1s54bzDBbAd+40bHq/xrkahvhCZPplCZwZ5E7CsCEWRNcUaUR+3vbmI?=
+ =?us-ascii?Q?Akd0uI9DDAyXQH4hvCFKGGzgSRy/UIXWGHPW3zridoVMxi9ypsd1juoEr9SR?=
+ =?us-ascii?Q?6fKKepZ5w+ATs+ADOAIFafsgcEybOuLt7soA1y8kFSW8LZkB3PBZ7PRsJANf?=
+ =?us-ascii?Q?mbMyRHjI9KLHuU2ykv18+yZPm36OfNru3W6LYo50Gd8SECLy8l6uYfVtPZqx?=
+ =?us-ascii?Q?QX3rANu+zC00sXL4UEfhKWCYYhj7JFz3OOZs20x523lvV2HCJ3ml4LJmUuiQ?=
+ =?us-ascii?Q?uSaZ59Xt3PY0w/n/z4Wa57up9Egblilf1U472Es2jgDqRRgTZBr76uP2KvSn?=
+ =?us-ascii?Q?rj67/8eFdOLMAWXyvU8ORuGlQkPcj99kfM3h0F5B2o9Y88whhNiV/h9mUuMN?=
+ =?us-ascii?Q?RjmA5Rj9htW+MsKh8HBi0+2/jxEoNSyhfJRmxiaNlv9jCKxp1oT+t3iFd0g9?=
+ =?us-ascii?Q?LLEEZehcuJwmTERQqQT5Vm7zOkJNmdFfw7/lQBym9Xzn+HGDChYeBMvuAK4+?=
+ =?us-ascii?Q?/O/sTuiop6qnI7VNs/tsZErDicXRLtGiHcY8wnx992VQbHIt3RCNd42imGBC?=
+ =?us-ascii?Q?C9sKb6eIFGyTrFqrsRpnFrfQDC4K3ypI3n1AE5PKTcUn+uue1xEdSx3At/WE?=
+ =?us-ascii?Q?QW5TrDw/q9SKc0pZ1fQmG/ViTcq0dCPktSpauE12NClyAtnvIgVO+NiAWFy0?=
+ =?us-ascii?Q?GzFE68JFQYoClQn+lmJtlftLs4WBBlVSvHy3drIvOViVhI+V+gSr9J+b81j0?=
+ =?us-ascii?Q?a+sevbbzfPpcjv21u0j8Zf1XjOrzAo+PexWKSLXIEw9BqaYm0S+ijTEG3M+d?=
+ =?us-ascii?Q?IDwfgDMUI7DHmqCqYdi0S25S4KWRNQX7UqpgqnWJmG8FFR+lE3uDJJJhrWyr?=
+ =?us-ascii?Q?4gpSvxMGIpj/QyRNFN5sPdHdhV4yaE7LeCSHyWL0Kj5vJEVqjeL2BQjJfYPY?=
+ =?us-ascii?Q?d68rRPC4n2judmJg1p3SkMczzUDatZWlDznLtTp8Ws9VmD9vIwlGwXgAkwps?=
+ =?us-ascii?Q?hrZrjSCjaGFFskBrgyh8wl9gadOdzWy4CJptzLNtSgM0k3B5CF8iwDvgrq/y?=
+ =?us-ascii?Q?CZebrj46xm02F1MbbI4ihDgeB/XF0mgKIlu4MBlYL8Hw/3C4RHzovEqtJNNY?=
+ =?us-ascii?Q?WoxgR9w9r8Dwpp4o0Ui27bMHGrP9tSUeztNK05e7lHM4LXKkxFMm2l9XvVx8?=
+ =?us-ascii?Q?t9Ty1BKc5JhE/T6bXLM=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c71d493e-e3fe-4ab7-75c1-08dd5c3c8539
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2025 23:21:56.1924
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: DtDOsBYjokjnZQnaCwL/z7tXAkLL5plcxnVi5pnuLjNBgZt1eLymbFPZxCY/3MnD
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB9020
 
+On Wed, Mar 05, 2025 at 12:41:35PM -0800, Saeed Mahameed wrote:
 
+> How do you imagine this driver/core structure should look like? Who
+> will be the top dir maintainer?
 
-On 3/5/25 3:20 PM, Gregory Price wrote:
-> --------------------
-> Part 0: ACPI Tables.
-> --------------------
-> I considered publishing this section first, or at least under
-> "Platform", but I've found this information largely useful in
-> debugging interleave configurations and tiering mechanisms -
-> which are higher level concepts.
+I would set something like this up more like DRM. Every driver
+maintainer gets commit rights, some rules about no uAPIs, or at least
+other acks before merging uAPI. Use the tree for staging shared
+branches.
 
-Hi Gregory,
-Thanks for detailing all this information. It has been a really good read.
+Driver maintainers with the most commits per cycle does the PR or
+something like that.
 
-Do you intend to also add CDAT information and device performance data calculation related to that? The SRAT/HMAT info only covers CXL memory that are already setup by the BIOS as system memory. Otherwise it only contains performance data for the Generic Port and not the rest of the path to the endpoint.
+There is no subsystem or cross-driver entanglement so there is no real
+need for gatekeeping.
 
-DJ  
+It would be a good opportunity to help more people engage with the
+kernel process and learn the full maintainer flow.
 
-> 
-> Much of the information in this section is most relevant to
-> Interleave (yet to be published Section 4).
-> 
-> I promise not to simply regurgitate the entire ACPI specification
-> and limit this to necessary commentary to describe how these tables
-> relate to actual Linux resources (like numa nodes and tiers).
-> 
-> At the very least, if you find yourself trying to figure out why
-> your CXL system isn't producing NUMA nodes, memory tiers, root
-> decoders, memory regions - etc - I would check these tables
-> first for aberrations.  Almost all my personal strife has been
-> associated with ACPI table misconfiguration.
-> 
-> 
-> ACPI tables can be inspected with the `acpica-tools` package.
->    mkdir acpi_tables && cd acpi_tables
->    acpidump -b
->    iasl -d *
->    -- inpect the *.dsl files
-> 
-> ====
-> CEDT
-> ====
-> The CXL Early Discovery Table is generated by BIOS to describe
-> the CXL devices present and configured (to some extent) at boot
-> by the BIOS.
-> 
-> # CHBS
-> The CXL Host Bridge Structure describes CXL host bridges.  Other
-> than describing device register information, it reports the specific
-> host bridge UID for this host bridge.  These host bridge ID's will
-> be referenced in other tables.
-> 
-> Debug hint: check that the host bridge IDs between tables are
->             consistent - stuff breaks oddly if they're not!
-> 
-> ```
->          Subtable Type : 00 [CXL Host Bridge Structure]
->               Reserved : 00
->                 Length : 0020
-> Associated host bridge : 00000007    <- Host bridge _UID
->  Specification version : 00000001
->               Reserved : 00000000
->          Register base : 0000010370400000
->        Register length : 0000000000010000
-> ```
-> 
-> # CFMWS
-> The CXL Fixed Memory Window structure describes a memory region
-> associated with one or more CXL host bridges (as described by the
-> CHBS).  It additionally describes any inter-host-bridge interleave
-> configuration that may have been programmed by BIOS. (Section 4)
-> 
-> ```
->            Subtable Type : 01 [CXL Fixed Memory Window Structure]
->                 Reserved : 00
->                   Length : 002C
->                 Reserved : 00000000
->      Window base address : 000000C050000000   <- Memory Region
->              Window size : 0000003CA0000000
-> Interleave Members (2^n) : 01               <- Interleave configuration
->    Interleave Arithmetic : 00
->                 Reserved : 0000
->              Granularity : 00000000
->             Restrictions : 0006
->                    QtgId : 0001
->             First Target : 00000007         <- Host Bridge _UID
->              Next Target : 00000006         <- Host Bridge _UID
-> ```
-> 
-> INTER-host-bridge interleave (multiple devices on one host bridge) is
-> NOT reported in this structure, and is solely defined via CXL device
-> decoder programming (host bridge and endpoint decoders).  This will be
-> described later (Section 4 - Interleave)
-> 
-> 
-> ====
-> SRAT
-> ====
-> The System/Static Resource Affinity Table describes resource (CPU,
-> Memory) affinity to "Proximity Domains". This table is technically
-> optional, but for performance information (see "HMAT") to be enumerated
-> by linux it must be present.
-> 
-> 
-> # Proximity Domain
-> A proximity domain is ROUGHLY equivalent to "NUMA Node" - though a
-> 1-to-1 mapping is not guaranteed.  There are scenarios where "Proximity
-> Domain 4" may map to "NUMA Node 3", for example.  (See "NUMA Node Creation")
-> 
-> # Memory Affinity
-> Generally speaking, if a host does any amount of CXL fabric (decoder)
-> programming in BIOS - an SRAT entry for that memory needs to be present.
-> 
-> ```
->         Subtable Type : 01 [Memory Affinity]
->                Length : 28
->      Proximity Domain : 00000001          <- NUMA Node 1
->             Reserved1 : 0000
->          Base Address : 000000C050000000  <- Physical Memory Region
->        Address Length : 0000003CA0000000
->             Reserved2 : 00000000
-> Flags (decoded below) : 0000000B
->              Enabled : 1
->        Hot Pluggable : 1
->         Non-Volatile : 0
-> ```
-> 
-> # Generic Initiator / Port
-> In the scenario where CXL devices are not present or configured by
-> BIOS, we may still want to generate proximity domain configurations
-> for those devices.   The Generic Initiator interfaces are intended to
-> fill this gap, so that performance information can still be utilized
-> when the devices become available at runtime.
-> 
-> I won't cover the details here, for now, but I will link to the
-> proosal from Dan Williams and Jonathan Cameron if you would like
-> more information.
-> https://lore.kernel.org/all/e1a52da9aec90766da5de51b1b839fd95d63a5af.camel@intel.com/
-> 
-> ====
-> HMAT
-> ====
-> The Heterogeneous Memory Attributes Table contains information such as
-> cache attributes and bandwidth and latency details for memory proximity
-> domains.  For the purpose of this document, we will only discuss the
-> SSLIB entry.
-> 
-> # SLLBI
-> The System Locality Latency and Bandwidth Information records latency
-> and bandwidth information for proximity domains. This table is used by
-> Linux to configure interleave weights and memory tiers.
-> 
-> ```
-> Heavily truncated for brevity
->               Structure Type : 0001 [SLLBI]
->                    Data Type : 00         <- Latency
-> Target Proximity Domain List : 00000000
-> Target Proximity Domain List : 00000001
->                        Entry : 0080       <- DRAM LTC
->                        Entry : 0100       <- CXL LTC
-> 
->               Structure Type : 0001 [SLLBI]
->                    Data Type : 03         <- Bandwidth
-> Target Proximity Domain List : 00000000
-> Target Proximity Domain List : 00000001
->                        Entry : 1200       <- DRAM BW
->                        Entry : 0200       <- CXL BW
-> ```
-> 
-> 
-> ---------------------------------
-> Part 00: Linux Resource Creation.
-> ---------------------------------
-> 
-> ==================
-> NUMA node creation
-> ===================
-> NUMA nodes are *NOT* hot-pluggable.  All *POSSIBLE* NUMA nodes are
-> identified at `__init` time, more specifically during `mm_init`.
-> 
-> What this means is that the CEDT and SRAT must contain sufficient
-> `proximity domain` information for linux to identify how many NUMA
-> nodes are required (and what memory regions to associate with them).
-> 
-> The relevant code exists in: linux/drivers/acpi/numa/srat.c
-> ```
-> static int __init
-> acpi_parse_memory_affinity(union acpi_subtable_headers *header,
->                            const unsigned long table_end)
-> {
-> ... heavily truncated for brevity
->         pxm = ma->proximity_domain;
->         node = acpi_map_pxm_to_node(pxm);
->         if (numa_add_memblk(node, start, end) < 0)
->             ....
->         node_set(node, numa_nodes_parsed);    <--- mark node N_POSSIBLE
-> }
-> 
-> static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
->                                    void *arg, const unsigned long table_end)
-> {
-> ... heavily truncated for brevity
->         /*
->          * The SRAT may have already described NUMA details for all,
->          * or a portion of, this CFMWS HPA range. Extend the memblks
->          * found for any portion of the window to cover the entire
->          * window.
->          */
->         if (!numa_fill_memblks(start, end))
->                 return 0;
-> 
->         /* No SRAT description. Create a new node. */
->         node = acpi_map_pxm_to_node(*fake_pxm);
->         if (numa_add_memblk(node, start, end) < 0)
-> 	        ....
->         node_set(node, numa_nodes_parsed);    <--- mark node N_POSSIBLE
-> }
-> 
-> int __init acpi_numa_init(void)
-> {
-> ...
->     if (!acpi_table_parse(ACPI_SIG_SRAT, acpi_parse_srat)) {
->         cnt = acpi_table_parse_srat(ACPI_SRAT_TYPE_MEMORY_AFFINITY,
->                                     acpi_parse_memory_affinity, 0);
->     }
->     /* fake_pxm is the next unused PXM value after SRAT parsing */
->     acpi_table_parse_cedt(ACPI_CEDT_TYPE_CFMWS, acpi_parse_cfmws,
->                           &fake_pxm);
-> 
-> ```
-> 
-> Basically, the heuristic is as follows:
-> 1) Add one NUMA node per Proximity Domain described in SRAT
-> 2) If the SRAT describes all memory described by all CFMWS
->    - do not create nodes for CFMWS
-> 3) If SRAT does not describe all memory described by CFMWS
->    - create a node for that CFMWS
-> 
-> Generally speaking, you will see one NUMA node per Host bridge, unless
-> inter-host-bridge interleave is in use (see Section 4 - Interleave).
-> 
-> 
-> ============
-> Memory Tiers
-> ============
-> The `abstract distance` of a node dictates what tier it lands in (and
-> therefore, what tiers are created).  This is calculated based on the
-> following heuristic, using HMAT data:
-> 
-> ```
-> int mt_perf_to_adistance(struct access_coordinate *perf, int *adist)
-> {
->  ...
->     /*
->      * The abstract distance of a memory node is in direct proportion to
->      * its memory latency (read + write) and inversely proportional to its
->      * memory bandwidth (read + write).  The abstract distance, memory
->      * latency, and memory bandwidth of the default DRAM nodes are used as
->      * the base.
->      */
->     *adist = MEMTIER_ADISTANCE_DRAM *
->         (perf->read_latency + perf->write_latency) /
->         (default_dram_perf.read_latency + default_dram_perf.write_latency) *
->         (default_dram_perf.read_bandwidth + default_dram_perf.write_bandwidth) /
->         (perf->read_bandwidth + perf->write_bandwidth);
->     return 0;
-> }
-> ```
-> 
-> Debugging hint: If you have DRAM and CXL memory in separate numa nodes
->                 but only find 1 memory tier, validate the HMAT!
-> 
-> 
-> ============================
-> Memory Tier Demotion Targets
-> ============================
-> When `demotion` is enabled (see Section 5 - allocation), the reclaim
-> system may opportunistically demote a page from one memory tier to
-> another.  The selection of a `demotion target` is partially based on
-> Abstract Distance and Performance Data.
-> 
-> ```
-> An example of demotion targets from memory-tiers.c
-> /* Example 1:
->  *
->  * Node 0 & 1 are CPU + DRAM nodes, node 2 & 3 are PMEM nodes.
->  *
->  * node distances:
->  * node   0    1    2    3
->  *    0  10   20   30   40
->  *    1  20   10   40   30
->  *    2  30   40   10   40
->  *    3  40   30   40   10
->  *
->  * memory_tiers0 = 0-1
->  * memory_tiers1 = 2-3
->  *
->  * node_demotion[0].preferred = 2
->  * node_demotion[1].preferred = 3
->  * node_demotion[2].preferred = <empty>
->  * node_demotion[3].preferred = <empty>
->  */
-> ```
-> 
-> =============================
-> Mempolicy Weighted Interleave
-> =============================
-> The `weighted interleave` functionality of `mempolicy` utilizes weights
-> to distribute memory across NUMA nodes according to some set weight.
-> There is a proposal to auto-configure these weights based on HMAT data.
-> 
-> https://lore.kernel.org/linux-mm/20250305200506.2529583-1-joshua.hahnjy@gmail.com/T/#u
-> 
-> See Section 4 - Interleave, for more information on weighted interleave.
-> 
-> 
-> 
-> --------------
-> Build Options.
-> --------------
-> We can add these build configurations to our complexity picture.
-> 
-> CONFIG_NUMA        - req for ACPI numa, mempolicy, and memory tiers
-> CONFIG_ACPI_NUMA   -- enables srat and cedt parsing
-> CONFIG_ACPI_HMAT   -- enables hmat parsing
-> 
-> 
-> ~Gregory
-> 
+> It should be something that is tightly coupled with aux, currently
+> aux is under drivers/base/auxiliary.c I think it should move to
+> drivers/aux/auxiliary.c and device drivers should implement their
+> own aux buses, WH access APIs and probing/init logic under that
+> directory e.g: drivers/aux/mlx5/..
 
+That makes sense to me. I would expect everything in this collection
+to be PCI drivers spawing aux devices.
+
+drivers/aux_core/ or something like that, perhaps?
+
+Jason
