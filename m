@@ -1,29 +1,29 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A61A92045B0
-	for <linux-cxl@vger.kernel.org>; Wed,  5 Mar 2025 09:27:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC6741F5826
+	for <linux-cxl@vger.kernel.org>; Wed,  5 Mar 2025 09:28:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741166861; cv=none; b=Qas6nCygrcxTdC+eYRaYh3D5jhQ3as4GA/wpdRhD0z/fFuW7nyQR5w8a+VCvm5fWz7Da6eDF8q8XRtHz/ni3CMqg6HuM7OA/NY56Qz559gc9I1uvCsLLWTmhyIpu13Ym8zDQSOwJ7pXCVnkqNMJlqoh06ZwQPMjaQX9P1SeHnzM=
+	t=1741166893; cv=none; b=tgVr/BIvHPjdUT9C9a5OiDG7TJSJyEF4jqKnuaWD7/j/sl3uWgfsa2umNJilCLuQitWKB9P7nCeZDOpws1CmFYKrlOTJ551HltNUae1tk5Dk5jbjuEDHoG1EOFks5oIWAjc1Uqcl1rxSQNMA5yO6GNNhoHDaIJjyEpH6gs2XG4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741166861; c=relaxed/simple;
-	bh=ND0b/ZBQxo53Kjtw9exCuEcClic3EfG6U4M0S/JMybE=;
+	s=arc-20240116; t=1741166893; c=relaxed/simple;
+	bh=9doAse/ctfLSheDaLrIWQGjR5HGH2ueu36o+QjOJo04=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GTUklgx1zIXUUefqz0dnyOCaMp7r268b4ic6poHN+o0AyLzj0G0mVuUzBg4qi2uHAl1KwZeKn3/1ZF0fY427Q8qMxd98S4Ll0IfWTEbizbOre5zU1GV1efS0X9qKJ1S6FIRLISNKnX8adlreNV7yhREZEKPTAX2fjWD1JJv9VB4=
+	 MIME-Version:Content-Type; b=PXEnqKDPvs5jwssn6Ak8+I13DThA/OOg1VGSNe4z/Vj56+Y6BDlFHRW6qqBqOEWS0IcDjZgnEEuIDgnFsV+Pwn6pryfcfCqUX3+Rct3Xx6mN1bNlR8veU9ZMuYM5t/CqQY/aWKfzdY0fVqqB5AMfHVdPS9enIwi9hqYIbnc2u0c=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Z76Zc5FzDz6M4lD;
-	Wed,  5 Mar 2025 17:24:40 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Z76Yv19Nxz6L54Y;
+	Wed,  5 Mar 2025 17:24:03 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id B55C11400D7;
-	Wed,  5 Mar 2025 17:27:37 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 0711D140A34;
+	Wed,  5 Mar 2025 17:28:09 +0800 (CST)
 Received: from SecurePC-101-06.china.huawei.com (10.122.19.247) by
  frapeml500008.china.huawei.com (7.182.85.71) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 5 Mar 2025 10:27:37 +0100
+ 15.1.2507.39; Wed, 5 Mar 2025 10:28:08 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To: <linux-cxl@vger.kernel.org>, <qemu-devel@nongnu.org>, <mst@redhat.com>
 CC: <linuxarm@huawei.com>, <fan.ni@samsung.com>, Yuquan Wang
@@ -31,9 +31,9 @@ CC: <linuxarm@huawei.com>, <fan.ni@samsung.com>, Yuquan Wang
 	Sweta Kumari <s5.kumari@samsung.com>, Vinayak Holikatti
 	<vinayak.kh@samsung.com>, Davidlohr Bueso <dave@stgolabs.net>, Ajay Joshi
 	<ajay.opensrc@micron.com>
-Subject: [PATCH qemu 5/8] hw/cxl/cxl-mailbox-utils: Media operations Sanitize and Write Zeros commands CXL r3.2(8.2.10.9.5.3)
-Date: Wed, 5 Mar 2025 09:24:56 +0000
-Message-ID: <20250305092501.191929-6-Jonathan.Cameron@huawei.com>
+Subject: [PATCH qemu 6/8] hw/cxl/cxl-mailbox-utils: CXL CCI Get/Set alert config commands
+Date: Wed, 5 Mar 2025 09:24:57 +0000
+Message-ID: <20250305092501.191929-7-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250305092501.191929-1-Jonathan.Cameron@huawei.com>
 References: <20250305092501.191929-1-Jonathan.Cameron@huawei.com>
@@ -48,283 +48,221 @@ Content-Type: text/plain
 X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-From: Vinayak Holikatti <vinayak.kh@samsung.com>
+From: Sweta Kumari <s5.kumari@samsung.com>
 
-CXL spec 3.2 section 8.2.10.9.5.3 describes media operations commands.
-CXL devices supports media operations Sanitize and Write zero command.
+1) get alert configuration(Opcode 4201h)
+2) set alert configuration(Opcode 4202h)
 
-Signed-off-by: Vinayak Holikatti <vinayak.kh@samsung.com>
+Signed-off-by: Sweta Kumari <s5.kumari@samsung.com>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- include/hw/cxl/cxl_device.h |   4 +
- hw/cxl/cxl-mailbox-utils.c  | 204 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 208 insertions(+)
+ include/hw/cxl/cxl_device.h |  15 ++++++
+ hw/cxl/cxl-mailbox-utils.c  | 105 ++++++++++++++++++++++++++++++++++++
+ hw/mem/cxl_type3.c          |  14 +++++
+ 3 files changed, 134 insertions(+)
 
 diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-index d21695507f..3ec7be3809 100644
+index 3ec7be3809..ed6cd50c67 100644
 --- a/include/hw/cxl/cxl_device.h
 +++ b/include/hw/cxl/cxl_device.h
-@@ -540,6 +540,8 @@ typedef struct CXLSetFeatureInfo {
-     size_t data_size;
- } CXLSetFeatureInfo;
+@@ -542,6 +542,19 @@ typedef struct CXLSetFeatureInfo {
  
-+struct CXLSanitizeInfo;
+ struct CXLSanitizeInfo;
+ 
++typedef struct CXLAlertConfig {
++    uint8_t valid_alerts;
++    uint8_t enable_alerts;
++    uint8_t life_used_crit_alert_thresh;
++    uint8_t life_used_warn_thresh;
++    uint16_t over_temp_crit_alert_thresh;
++    uint16_t under_temp_crit_alert_thresh;
++    uint16_t over_temp_warn_thresh;
++    uint16_t under_temp_warn_thresh;
++    uint16_t cor_vmem_err_warn_thresh;
++    uint16_t cor_pmem_err_warn_thresh;
++} QEMU_PACKED CXLAlertConfig;
 +
  struct CXLType3Dev {
      /* Private */
      PCIDevice parent_obj;
-@@ -606,6 +608,8 @@ struct CXLType3Dev {
-         uint8_t num_regions; /* 0-8 regions */
-         CXLDCRegion regions[DCD_MAX_NUM_REGION];
-     } dc;
-+
-+    struct CXLSanitizeInfo *media_op_sanitize;
- };
+@@ -563,6 +576,8 @@ struct CXLType3Dev {
+     CXLCCI vdm_fm_owned_ld_mctp_cci;
+     CXLCCI ld0_cci;
  
- #define TYPE_CXL_TYPE3 "cxl-type3"
++    CXLAlertConfig alert_config;
++
+     /* PCIe link characteristics */
+     PCIExpLinkSpeed speed;
+     PCIExpLinkWidth width;
 diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-index 9f9d475678..2c6db70e5f 100644
+index 2c6db70e5f..299f232f26 100644
 --- a/hw/cxl/cxl-mailbox-utils.c
 +++ b/hw/cxl/cxl-mailbox-utils.c
-@@ -1715,6 +1715,131 @@ static CXLRetCode cmd_sanitize_overwrite(const struct cxl_cmd *cmd,
-     return CXL_MBOX_BG_STARTED;
- }
+@@ -28,6 +28,11 @@
+ #define CXL_DC_EVENT_LOG_SIZE 8
+ #define CXL_NUM_EXTENTS_SUPPORTED 512
+ #define CXL_NUM_TAGS_SUPPORTED 0
++#define CXL_ALERTS_LIFE_USED_WARN_THRESH (1 << 0)
++#define CXL_ALERTS_OVER_TEMP_WARN_THRESH (1 << 1)
++#define CXL_ALERTS_UNDER_TEMP_WARN_THRESH (1 << 2)
++#define CXL_ALERTS_COR_VMEM_ERR_WARN_THRESH (1 << 3)
++#define CXL_ALERTS_COR_PMEM_ERR_WARN_THRESH (1 << 4)
  
-+struct dpa_range_list_entry {
-+    uint64_t starting_dpa;
-+    uint64_t length;
-+} QEMU_PACKED;
-+
-+struct CXLSanitizeInfo {
-+    uint32_t dpa_range_count;
-+    uint8_t fill_value;
-+    struct dpa_range_list_entry dpa_range_list[];
-+} QEMU_PACKED;
-+
-+static uint64_t get_vmr_size(CXLType3Dev *ct3d, MemoryRegion **vmr)
-+{
-+    MemoryRegion *mr;
-+    if (ct3d->hostvmem) {
-+        mr = host_memory_backend_get_memory(ct3d->hostvmem);
-+        if (vmr) {
-+            *vmr = mr;
-+        }
-+        return memory_region_size(mr);
-+    }
-+    return 0;
-+}
-+
-+static uint64_t get_pmr_size(CXLType3Dev *ct3d, MemoryRegion **pmr)
-+{
-+    MemoryRegion *mr;
-+    if (ct3d->hostpmem) {
-+        mr = host_memory_backend_get_memory(ct3d->hostpmem);
-+        if (pmr) {
-+            *pmr = mr;
-+        }
-+        return memory_region_size(mr);
-+    }
-+    return 0;
-+}
-+
-+static uint64_t get_dc_size(CXLType3Dev *ct3d, MemoryRegion **dc_mr)
-+{
-+    MemoryRegion *mr;
-+    if (ct3d->dc.host_dc) {
-+        mr = host_memory_backend_get_memory(ct3d->dc.host_dc);
-+        if (dc_mr) {
-+            *dc_mr = mr;
-+        }
-+        return memory_region_size(mr);
-+    }
-+    return 0;
-+}
-+
-+static int validate_dpa_addr(CXLType3Dev *ct3d, uint64_t dpa_addr,
-+                             size_t length)
-+{
-+    uint64_t vmr_size, pmr_size, dc_size;
-+
-+    if ((dpa_addr % CXL_CACHE_LINE_SIZE) ||
-+        (length % CXL_CACHE_LINE_SIZE)  ||
-+        (length <= 0)) {
-+        return -EINVAL;
-+    }
-+
-+    vmr_size = get_vmr_size(ct3d, NULL);
-+    pmr_size = get_pmr_size(ct3d, NULL);
-+    dc_size = get_dc_size(ct3d, NULL);
-+
-+    if (dpa_addr + length > vmr_size + pmr_size + dc_size) {
-+        return -EINVAL;
-+    }
-+
-+    if (dpa_addr > vmr_size + pmr_size) {
-+        if (!ct3_test_region_block_backed(ct3d, dpa_addr, length)) {
-+            return -ENODEV;
-+        }
-+    }
-+
-+    return 0;
-+}
-+
-+static int sanitize_range(CXLType3Dev *ct3d, uint64_t dpa_addr, size_t length,
-+                          uint8_t fill_value)
-+{
-+
-+    uint64_t vmr_size, pmr_size;
-+    AddressSpace *as = NULL;
-+    MemTxAttrs mem_attrs = {};
-+
-+    vmr_size = get_vmr_size(ct3d, NULL);
-+    pmr_size = get_pmr_size(ct3d, NULL);
-+
-+    if (dpa_addr < vmr_size) {
-+        as = &ct3d->hostvmem_as;
-+    } else if (dpa_addr < vmr_size + pmr_size) {
-+        as = &ct3d->hostpmem_as;
-+    } else {
-+        if (!ct3_test_region_block_backed(ct3d, dpa_addr, length)) {
-+            return -ENODEV;
-+        }
-+        as = &ct3d->dc.host_dc_as;
-+    }
-+
-+    return address_space_set(as, dpa_addr, fill_value, length, mem_attrs);
-+}
-+
-+/* Perform the actual device zeroing */
-+static void __do_sanitize(CXLType3Dev *ct3d)
-+{
-+    struct CXLSanitizeInfo  *san_info = ct3d->media_op_sanitize;
-+    int dpa_range_count = san_info->dpa_range_count;
-+    int rc = 0;
-+    int i;
-+
-+    for (i = 0; i < dpa_range_count; i++) {
-+        rc = sanitize_range(ct3d, san_info->dpa_range_list[i].starting_dpa,
-+                            san_info->dpa_range_list[i].length,
-+                            san_info->fill_value);
-+        if (rc) {
-+            goto exit;
-+        }
-+    }
-+exit:
-+    g_free(ct3d->media_op_sanitize);
-+    ct3d->media_op_sanitize = NULL;
-+    return;
-+}
-+
- enum {
-     MEDIA_OP_CLASS_GENERAL  = 0x0,
-         #define MEDIA_OP_GEN_SUBC_DISCOVERY 0x0
-@@ -1799,6 +1924,65 @@ static CXLRetCode media_operations_discovery(uint8_t *payload_in,
+ /*
+  * How to add a new command, example. The command set FOO, with cmd BAR.
+@@ -86,6 +91,9 @@ enum {
+         #define GET_PARTITION_INFO     0x0
+         #define GET_LSA       0x2
+         #define SET_LSA       0x3
++    HEALTH_INFO_ALERTS = 0x42,
++        #define GET_ALERT_CONFIG 0x1
++        #define SET_ALERT_CONFIG 0x2
+     SANITIZE    = 0x44,
+         #define OVERWRITE     0x0
+         #define SECURE_ERASE  0x1
+@@ -1610,6 +1618,97 @@ static CXLRetCode cmd_ccls_set_lsa(const struct cxl_cmd *cmd,
      return CXL_MBOX_SUCCESS;
  }
  
-+static CXLRetCode media_operations_sanitize(CXLType3Dev *ct3d,
-+                                            uint8_t *payload_in,
-+                                            size_t len_in,
-+                                            uint8_t *payload_out,
-+                                            size_t *len_out,
-+                                            uint8_t fill_value,
-+                                            CXLCCI *cci)
++/* CXL r3.2 Section 8.2.10.9.3.2 Get Alert Configuration (Opcode 4201h) */
++static CXLRetCode cmd_get_alert_config(const struct cxl_cmd *cmd,
++                                       uint8_t *payload_in,
++                                       size_t len_in,
++                                       uint8_t *payload_out,
++                                       size_t *len_out,
++                                       CXLCCI *cci)
 +{
-+    struct media_operations_sanitize {
-+        uint8_t media_operation_class;
-+        uint8_t media_operation_subclass;
-+        uint8_t rsvd[2];
-+        uint32_t dpa_range_count;
-+        struct dpa_range_list_entry dpa_range_list[];
-+    } QEMU_PACKED *media_op_in_sanitize_pl = (void *)payload_in;
-+    uint32_t dpa_range_count = media_op_in_sanitize_pl->dpa_range_count;
-+    uint64_t total_mem = 0;
-+    size_t dpa_range_list_size;
-+    int secs = 0, i;
++    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
++    CXLAlertConfig *out = (CXLAlertConfig *)payload_out;
 +
-+    if (dpa_range_count == 0) {
-+        return CXL_MBOX_SUCCESS;
-+    }
++    memcpy(out, &ct3d->alert_config, sizeof(ct3d->alert_config));
++    *len_out = sizeof(ct3d->alert_config);
 +
-+    dpa_range_list_size = dpa_range_count * sizeof(struct dpa_range_list_entry);
-+    if (len_in < (sizeof(*media_op_in_sanitize_pl) + dpa_range_list_size)) {
-+        return CXL_MBOX_INVALID_PAYLOAD_LENGTH;
-+    }
-+
-+    for (i = 0; i < dpa_range_count; i++) {
-+        uint64_t start_dpa =
-+            media_op_in_sanitize_pl->dpa_range_list[i].starting_dpa;
-+        uint64_t length = media_op_in_sanitize_pl->dpa_range_list[i].length;
-+
-+        if (validate_dpa_addr(ct3d, start_dpa, length)) {
-+            return CXL_MBOX_INVALID_INPUT;
-+        }
-+        total_mem += length;
-+    }
-+    ct3d->media_op_sanitize = g_malloc0(sizeof(struct CXLSanitizeInfo) +
-+                                        dpa_range_list_size);
-+
-+    ct3d->media_op_sanitize->dpa_range_count = dpa_range_count;
-+    ct3d->media_op_sanitize->fill_value = fill_value;
-+    memcpy(ct3d->media_op_sanitize->dpa_range_list,
-+           media_op_in_sanitize_pl->dpa_range_list,
-+           dpa_range_list_size);
-+    secs = get_sanitize_duration(total_mem >> 20);
-+
-+    /* EBUSY other bg cmds as of now */
-+    cci->bg.runtime = secs * 1000UL;
-+    *len_out = 0;
-+    /*
-+     * media op sanitize is targeted so no need to disable media or
-+     * clear event logs
-+     */
-+    return CXL_MBOX_BG_STARTED;
++    return CXL_MBOX_SUCCESS;
 +}
 +
- static CXLRetCode cmd_media_operations(const struct cxl_cmd *cmd,
-                                        uint8_t *payload_in,
-                                        size_t len_in,
-@@ -1812,6 +1996,7 @@ static CXLRetCode cmd_media_operations(const struct cxl_cmd *cmd,
-         uint8_t rsvd[2];
-         uint32_t dpa_range_count;
-     } QEMU_PACKED *media_op_in_common_pl = (void *)payload_in;
++/* CXL r3.2 Section 8.2.10.9.3.3 Set Alert Configuration (Opcode 4202h) */
++static CXLRetCode cmd_set_alert_config(const struct cxl_cmd *cmd,
++                                       uint8_t *payload_in,
++                                       size_t len_in,
++                                       uint8_t *payload_out,
++                                       size_t *len_out,
++                                       CXLCCI *cci)
++{
 +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
-     uint8_t media_op_cl = 0;
-     uint8_t media_op_subclass = 0;
- 
-@@ -1830,6 +2015,19 @@ static CXLRetCode cmd_media_operations(const struct cxl_cmd *cmd,
- 
-         return media_operations_discovery(payload_in, len_in, payload_out,
-                                              len_out);
-+    case MEDIA_OP_CLASS_SANITIZE:
-+        switch (media_op_subclass) {
-+        case MEDIA_OP_SAN_SUBC_SANITIZE:
-+            return media_operations_sanitize(ct3d, payload_in, len_in,
-+                                             payload_out, len_out, 0xF,
-+                                             cci);
-+        case MEDIA_OP_SAN_SUBC_ZERO:
-+            return media_operations_sanitize(ct3d, payload_in, len_in,
-+                                             payload_out, len_out, 0,
-+                                             cci);
-+        default:
-+            return CXL_MBOX_UNSUPPORTED;
++    CXLAlertConfig *alert_config = &ct3d->alert_config;
++    struct {
++        uint8_t valid_alert_actions;
++        uint8_t enable_alert_actions;
++        uint8_t life_used_warn_thresh;
++        uint8_t rsvd;
++        uint16_t over_temp_warn_thresh;
++        uint16_t under_temp_warn_thresh;
++        uint16_t cor_vmem_err_warn_thresh;
++        uint16_t cor_pmem_err_warn_thresh;
++    } QEMU_PACKED *in = (void *)payload_in;
++
++    if (in->valid_alert_actions & CXL_ALERTS_LIFE_USED_WARN_THRESH) {
++        /*
++         * CXL r3.2 Table 8-149 The life used warning threshold shall be
++         * less than the life used critical alert value.
++         */
++        if (in->life_used_warn_thresh >=
++            alert_config->life_used_crit_alert_thresh) {
++            return CXL_MBOX_INVALID_INPUT;
 +        }
-     default:
-         return CXL_MBOX_UNSUPPORTED;
++        alert_config->life_used_warn_thresh = in->life_used_warn_thresh;
++        alert_config->enable_alerts |= CXL_ALERTS_LIFE_USED_WARN_THRESH;
++    }
++
++    if (in->valid_alert_actions & CXL_ALERTS_OVER_TEMP_WARN_THRESH) {
++        /*
++         * CXL r3.2 Table 8-149 The Device Over-Temperature Warning Threshold
++         * shall be less than the the Device Over-Temperature Critical
++         * Alert Threshold.
++         */
++        if (in->over_temp_warn_thresh >=
++            alert_config->over_temp_crit_alert_thresh) {
++            return CXL_MBOX_INVALID_INPUT;
++        }
++        alert_config->over_temp_warn_thresh = in->over_temp_warn_thresh;
++        alert_config->enable_alerts |= CXL_ALERTS_OVER_TEMP_WARN_THRESH;
++    }
++
++    if (in->valid_alert_actions & CXL_ALERTS_UNDER_TEMP_WARN_THRESH) {
++        /*
++         * CXL r3.2 Table 8-149 The Device Under-Temperature Warning Threshold
++         * shall be higher than the the Device Under-Temperature Critical
++         * Alert Threshold.
++         */
++        if (in->under_temp_warn_thresh <=
++            alert_config->under_temp_crit_alert_thresh) {
++            return CXL_MBOX_INVALID_INPUT;
++        }
++        alert_config->under_temp_warn_thresh = in->under_temp_warn_thresh;
++        alert_config->enable_alerts |= CXL_ALERTS_UNDER_TEMP_WARN_THRESH;
++    }
++
++    if (in->valid_alert_actions & CXL_ALERTS_COR_VMEM_ERR_WARN_THRESH) {
++        alert_config->cor_vmem_err_warn_thresh = in->cor_vmem_err_warn_thresh;
++        alert_config->enable_alerts |= CXL_ALERTS_COR_VMEM_ERR_WARN_THRESH;
++    }
++
++    if (in->valid_alert_actions & CXL_ALERTS_COR_PMEM_ERR_WARN_THRESH) {
++        alert_config->cor_pmem_err_warn_thresh = in->cor_pmem_err_warn_thresh;
++        alert_config->enable_alerts |= CXL_ALERTS_COR_PMEM_ERR_WARN_THRESH;
++    }
++    return CXL_MBOX_SUCCESS;
++}
++
+ /* Perform the actual device zeroing */
+ static void __do_sanitization(CXLType3Dev *ct3d)
+ {
+@@ -3173,6 +3272,12 @@ static const struct cxl_cmd cxl_cmd_set[256][256] = {
+     [CCLS][GET_LSA] = { "CCLS_GET_LSA", cmd_ccls_get_lsa, 8, 0 },
+     [CCLS][SET_LSA] = { "CCLS_SET_LSA", cmd_ccls_set_lsa,
+         ~0, CXL_MBOX_IMMEDIATE_CONFIG_CHANGE | CXL_MBOX_IMMEDIATE_DATA_CHANGE },
++    [HEALTH_INFO_ALERTS][GET_ALERT_CONFIG] = {
++        "HEALTH_INFO_ALERTS_GET_ALERT_CONFIG",
++        cmd_get_alert_config, 0, 0 },
++    [HEALTH_INFO_ALERTS][SET_ALERT_CONFIG] = {
++        "HEALTH_INFO_ALERTS_SET_ALERT_CONFIG",
++        cmd_set_alert_config, 12, CXL_MBOX_IMMEDIATE_POLICY_CHANGE },
+     [SANITIZE][OVERWRITE] = { "SANITIZE_OVERWRITE", cmd_sanitize_overwrite, 0,
+         (CXL_MBOX_IMMEDIATE_DATA_CHANGE |
+          CXL_MBOX_SECURITY_STATE_CHANGE |
+diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+index be670ae3f3..73845dd50d 100644
+--- a/hw/mem/cxl_type3.c
++++ b/hw/mem/cxl_type3.c
+@@ -843,6 +843,19 @@ static DOEProtocol doe_cdat_prot[] = {
+     { }
+ };
+ 
++/* Initialize CXL device alerts with default threshold values. */
++static void init_alert_config(CXLType3Dev *ct3d)
++{
++    ct3d->alert_config = (CXLAlertConfig) {
++        .life_used_crit_alert_thresh = 75,
++        .life_used_warn_thresh = 40,
++        .over_temp_crit_alert_thresh = 35,
++        .under_temp_crit_alert_thresh = 10,
++        .over_temp_warn_thresh = 25,
++        .under_temp_warn_thresh = 20
++    };
++}
++
+ static void ct3_realize(PCIDevice *pci_dev, Error **errp)
+ {
+     ERRP_GUARD();
+@@ -910,6 +923,7 @@ static void ct3_realize(PCIDevice *pci_dev, Error **errp)
+         goto err_msix_uninit;
      }
-@@ -3147,6 +3345,12 @@ static void bg_timercb(void *opaque)
-             cxl_dev_enable_media(&ct3d->cxl_dstate);
-         }
-         break;
-+        case 0x4402: /* Media Operations sanitize */
-+        {
-+            CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
-+            __do_sanitize(ct3d);
-+        }
-+        break;
-         case 0x4304: /* scan media */
-         {
-             CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
+ 
++    init_alert_config(ct3d);
+     pcie_cap_deverr_init(pci_dev);
+     /* Leave a bit of room for expansion */
+     rc = pcie_aer_init(pci_dev, PCI_ERR_VER, 0x200, PCI_ERR_SIZEOF, errp);
 -- 
 2.43.0
 
