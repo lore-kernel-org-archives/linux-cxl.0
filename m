@@ -1,134 +1,115 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B55024A056
-	for <linux-cxl@vger.kernel.org>; Wed,  5 Mar 2025 15:57:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 245481C6FF9;
+	Wed,  5 Mar 2025 18:02:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741190226; cv=none; b=I8vLqDRdt63HYzN4/yLX9oJM2v1X9j9UMDuDx2nbo7exqc61d/bXRMPQhuSVczjWjqrCX1qYE6dhBVrg/5/cMhNoxbJ25kliyu05fY4H17gr3e3OStoOTay55EUycSIoMsINFK04XqdYgPcibrfJ/dCyLoSo9E5Te90Q+eyMWak=
+	t=1741197779; cv=none; b=jh1+wOz7WdYchZJU4ZTf/esYRluifnKCBkzwGRN1YOsjUVGf9V/oG2G7oVcPGTWRzPnLocW0s+nSz2QghoYV0XXNFq2RL5Cgk8HQnwLe2U+6x7Kl5ObPs6yLjs0izpmILqL2XqeXqpRAOsm7newsfrlzJk0Xc+ZJ6TVAolDqXu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741190226; c=relaxed/simple;
-	bh=bRxUtaUk0u2voWoajB4eggtyrghl5vl1a8lOJlOU1hU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jMOJ/cLnS7Afc7tyLeVcyqA3chLdB1JgnO+FMNv5wICqS2+oE7yUBE6yKJ4lU6/+wZ/GqvUUznIiUlWgxxaW1a+DSrP6VfQQS5/j1Ol+wTgQ5BPtWYvY0hOC5rSsrXg0VkwwLWTxzv6XkCSaUDhdetzini54w8YQAhYv3Q4xn24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=Ooxxxohv; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="Ooxxxohv"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43bc48ff815so7055005e9.0
-        for <linux-cxl@vger.kernel.org>; Wed, 05 Mar 2025 07:57:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1741190222; x=1741795022; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=z3T/3u+j7/Jo1rfv0A0TN7eDrmWcMEwwVKj9zMBqnPs=;
-        b=OoxxxohvKHBDnuiV+kQaQejRiNhbvBkJgWO1j8K25gSVH1hu9pJeZTQzVDbOUCZD+E
-         ZDwH8v8Xg/OK4uHCp4fGdKb8eUS5bFis55Q4MtsIr8dugKpkYmTv8NfaGioVAnh3zPNJ
-         W9kpwOQA7dyTC08J1pDtrLfAk5xU5rsOHRl3MUedfuflys5ebj7MQ28C5o9ExXc/sgFp
-         ivUkwq36G3G/O4zOrTXC+A6ScM3Ed9O0iD745NghrsPLgWU4+MZ6GmfZr2/IbbtpN282
-         TbA7avN6O3JSTkY+olAy+lmyIGdlNyTsdBK8/+J+OxY+CqYpti3AZ6Vnn1abZcUswWxH
-         Voug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741190222; x=1741795022;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z3T/3u+j7/Jo1rfv0A0TN7eDrmWcMEwwVKj9zMBqnPs=;
-        b=iEb/WfDAGIOShXdRuvW8S9A8TmkbrP+fEgBb25i4OLgHNJD9ZK0npShwogVZ+u+ML/
-         U/MPY58GZjFsTisuk28DZkPcn4fjtfxXvvF5VCE+kekSHO/5IjJ12h47Skajuf8ClHUJ
-         Dc1YROPMN5AyoJcUVXYxKH8tW8fy82o9kySazX+5w5DfR0sAPAbG01ykdPJVillALFpk
-         IvlmSRItadB5tHIwRe1u+E2ZyDk34VFGYlzIztyHTokdJPME7TPLYFkqKZ8+zJ+YNtOl
-         Oeu21S7x+Uupb5LjBTWMUHdtFC0f56PKMyTPmJAji+ZzMM86jkG1828zdgoAXSNE42kU
-         lHzg==
-X-Forwarded-Encrypted: i=1; AJvYcCUYNRjwyx2OX2EsoHdmfrI8cahA0B2K4XvlIH7TPOmY7vcCYtz//7VwY37acxI8+DHDYVbS80obq4A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3fovCW+AK52cvUowGds7XAMZkLSmCKdMtLZHrUrUeRee8AS/w
-	/y9p4A1rSD/5YPczVlLyqFbAlNzlYnonuAX+mxVGb8L/p36EGFvazfMaSJMIDTk=
-X-Gm-Gg: ASbGncvaKUE72lD0EczOTyHb7m5EgxdQaccu9dfV1KEZCtkY55nvrxO6/KqqG2gPDtG
-	ImAuQhEp9XfE7ghwmZcypHBTly/1lkJ/E2qPCd5LBnkNWDs7AgodC4ojkeTQsbeW5FgXvKYJd7D
-	0gmf7VaTWp/2WRPkqqgI5ot50W87vTcpGCtiCQeSwdc5PBu9xQWF/L36eLLot8WNVB0GDlMg92W
-	xqZs3PgRXTap49odWZS5kZk/q4X9sbAySciZZISHYrtsHSQ9xRyP3SKq82IP5NcN8r/RpOhQl3k
-	iFXtQYBsqiVE+Wdbmttd7/DflIJxFc4BvUSoV3lsUQsTWaSR3AjptalJOwV1egpL7CxESqTm
-X-Google-Smtp-Source: AGHT+IFtw0Hk8fmzbrtRVg0aHkG3EgoEbyDVivLKnSWP+zHu0SX579EPeM8VPDZakD+B9BVYslk0EQ==
-X-Received: by 2002:a05:600c:3b92:b0:43b:c7f0:6173 with SMTP id 5b1f17b1804b1-43bd209da3dmr30654755e9.4.1741190222103;
-        Wed, 05 Mar 2025 07:57:02 -0800 (PST)
-Received: from jiri-mlt.client.nvidia.com ([140.209.217.212])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bd42c5cd9sm21217265e9.20.2025.03.05.07.56.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 07:57:01 -0800 (PST)
-Date: Wed, 5 Mar 2025 16:56:58 +0100
-From: Jiri Pirko <jiri@resnulli.us>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Jason Gunthorpe <jgg@nvidia.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Gospodarek <andrew.gospodarek@broadcom.com>, 
-	Aron Silverton <aron.silverton@oracle.com>, Dan Williams <dan.j.williams@intel.com>, 
-	Daniel Vetter <daniel.vetter@ffwll.ch>, Dave Jiang <dave.jiang@intel.com>, 
-	David Ahern <dsahern@kernel.org>, Christoph Hellwig <hch@infradead.org>, 
-	Itay Avraham <itayavr@nvidia.com>, Jiri Pirko <jiri@nvidia.com>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Leonid Bloch <lbloch@nvidia.com>, linux-cxl@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, netdev@vger.kernel.org, Saeed Mahameed <saeedm@nvidia.com>, 
-	"Nelson, Shannon" <shannon.nelson@amd.com>
-Subject: Re: [PATCH v5 0/8] Introduce fwctl subystem
-Message-ID: <3tp5h65qxje47nwg5u3dw6kp4ak735uj6g7ryk3vsf3qvkqosq@q3e6fx5skgyw>
-References: <0-v5-642aa0c94070+4447f-fwctl_jgg@nvidia.com>
- <20250303175358.4e9e0f78@kernel.org>
- <20250304140036.GK133783@nvidia.com>
- <20250304164203.38418211@kernel.org>
- <20250305133254.GV133783@nvidia.com>
- <mxw4ngjokr3vumdy5fp2wzxpocjkitputelmpaqo7ungxnhnxp@j4yn5tdz3ief>
- <20250305152246.GM1955273@unreal>
+	s=arc-20240116; t=1741197779; c=relaxed/simple;
+	bh=1GMSArG03C7iHnBvKa7KTRSKeZrEaZU/jlO0kyc68LM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fNmq+2RkHJ6z3HmQW3fd2U/WHeeTAJNiEsBYtsgB9TLkO/04g99uVd2DYuLx+alICw/LdIgV/mYTWi2LG82hQF2yvF5v//M1fR4Pmb0q7ZNPNVOoNjXxEJQGZf+79ZpM0tq8ZMUZHayQ1GRZ2pZiQcHV6rBx0OUlptv39xz5KbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Z7Kzp1nrpz6L57s;
+	Thu,  6 Mar 2025 01:58:46 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
+	by mail.maildlp.com (Postfix) with ESMTPS id 39DE61409EA;
+	Thu,  6 Mar 2025 02:02:53 +0800 (CST)
+Received: from P_UKIT01-A7bmah.china.huawei.com (10.48.145.140) by
+ frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 5 Mar 2025 19:02:51 +0100
+From: <shiju.jose@huawei.com>
+To: <linux-edac@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+	<bp@alien8.de>, <tony.luck@intel.com>, <rafael@kernel.org>,
+	<lenb@kernel.org>, <mchehab@kernel.org>, <leo.duran@amd.com>,
+	<Yazen.Ghannam@amd.com>
+CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
+	<dave@stgolabs.net>, <jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <david@redhat.com>, <Vilas.Sridharan@amd.com>,
+	<linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, <rientjes@google.com>,
+	<jiaqiyan@google.com>, <Jon.Grimm@amd.com>, <dave.hansen@linux.intel.com>,
+	<naoya.horiguchi@nec.com>, <james.morse@arm.com>, <jthoughton@google.com>,
+	<somasundaram.a@hpe.com>, <erdemaktas@google.com>, <pgonda@google.com>,
+	<duenwen@google.com>, <gthelen@google.com>, <wschwartz@amperecomputing.com>,
+	<dferguson@amperecomputing.com>, <wbs@os.amperecomputing.com>,
+	<nifan.cxl@gmail.com>, <yazen.ghannam@amd.com>, <tanxiaofei@huawei.com>,
+	<prime.zeng@hisilicon.com>, <roberto.sassu@huawei.com>,
+	<kangkang.shen@futurewei.com>, <wanghuiqiang@huawei.com>,
+	<linuxarm@huawei.com>, <shiju.jose@huawei.com>
+Subject: [PATCH v2 0/3] ACPI: Add support for ACPI RAS2 feature table
+Date: Wed, 5 Mar 2025 18:02:21 +0000
+Message-ID: <20250305180225.1226-1-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.43.0.windows.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250305152246.GM1955273@unreal>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ frapeml500007.china.huawei.com (7.182.85.172)
 
-Wed, Mar 05, 2025 at 04:22:46PM +0100, leon@kernel.org wrote:
->On Wed, Mar 05, 2025 at 04:08:19PM +0100, Jiri Pirko wrote:
->> Wed, Mar 05, 2025 at 02:32:54PM +0100, jgg@nvidia.com wrote:
->> >On Tue, Mar 04, 2025 at 04:42:03PM -0800, Jakub Kicinski wrote:
->> >> On Tue, 4 Mar 2025 10:00:36 -0400 Jason Gunthorpe wrote:
->> >> > I never agreed to that formulation. I suggested that perhaps runtime
->> >> > configurations where netdev is the only driver using the HW could be
->> >> > disabled (ie a netdev exclusion, not a rdma inclusion).
->> >> 
->> >> I thought you were arguing that me opposing the addition was
->> >> "maintainer overreach". As in me telling other parts of the kernel
->> >> what is and isn't allowed. Do I not get a say what gets merged under
->> >> drivers/net/ now?
->> >
->> >The PCI core drivers are a shared resource jointly maintained by all
->> >the subsytems that use them. They are maintained by their respective
->> >maintainers. Saeed/etc in this case.
->> >
->> >It would be inappropriate for your preferences to supersede Saeed's
->> >when he is a maintainer of the mlx5_core driver and fwctl. Please try
->> >and get Saeed on board with your plan.
->> >
->> >If the placement under drivers/net makes this confusing then we can
->> >certainly change the directory names.
->> 
->> According to how mlx5 driver is structured, and the rest of the advanced
->> drivers in the same area are becoming as well, it would make sense to me
->> to have mlx5 core in separate core directory, maintained directly by driver
->> maintainer:
->> drivers/core/mlx5/
->> then each of the protocol auxiliary device lands in appropriate
->> subsystem directory.
->
->In my vision, the write access to that drivers/core/ will be given to all
->relevant subsystem maintainers, so it will operate like shared branch, but
->foe everyone.
->
->It means that series for netdev that changes mlx5_core and netdev code
->will be sent to netdev and applied by netdev maintainers. In similar
->way, series which targets RDMA will be handled by RDMA crew.
->
->It will allow us to make sure that every piece of code in shared
->repository is actually used.
+From: Shiju Jose <shiju.jose@huawei.com>
 
-Makes perfect sense to me.
+Add support for ACPI RAS2 feature table (RAS2) defined in the
+ACPI 6.5 specification, section 5.2.21 and RAS2 HW based memory
+scrubbing feature.
+
+ACPI RAS2 patches were part of the EDAC series [1].
+
+The code is based on ras.git: edac-cxl branch [2].
+
+1. https://lore.kernel.org/linux-cxl/20250212143654.1893-1-shiju.jose@huawei.com/ 
+2. https://web.git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git/log/?h=edac-cxl
+
+Changes
+=======
+v1 -> v2:
+1.  Changes for feedbacks from Borislav.
+    - Shorten ACPI RAS2 structures and variables names in "include/acpi/actbl2.h".
+    - Shorten some of the other variables in the RAS2 drivers.
+    - Fixed few CamelCases.
+
+2.  Changes for feedbacks from Yazen.
+    - Added newline after number of '}' and return statements.
+    - Changed return type for "ras2_add_aux_device() to 'int'.
+    - Deleted a duplication of acpi_get_table("RAS2",...) in the ras2_acpi_parse_table().
+    - Add "FW_WARN" to few error logs in the ras2_acpi_parse_table().
+    - Rename ras2_acpi_init() to acpi_ras2_init() and modified to call acpi_ras2_init()
+      function from the acpi_init().
+    - Moved scrub related variables from the struct ras2_mem_ctx from  patch
+      "ACPI:RAS2: Add ACPI RAS2 driver" to "ras: mem: Add memory ACPI RAS2 driver".
+	  
+3. Rename file include/acpi/acpi_ras2.h to include/acpi/ras2.h
+	  
+Shiju Jose (3):
+  ACPI: ACPI 6.5: RAS2: Shorten RAS2 table structure and variable names
+  ACPI:RAS2: Add ACPI RAS2 driver
+  ras: mem: Add memory ACPI RAS2 driver
+
+ Documentation/edac/scrub.rst |  73 ++++++
+ drivers/acpi/Kconfig         |  11 +
+ drivers/acpi/Makefile        |   1 +
+ drivers/acpi/bus.c           |   3 +
+ drivers/acpi/ras2.c          | 416 +++++++++++++++++++++++++++++++++++
+ drivers/ras/Kconfig          |  11 +
+ drivers/ras/Makefile         |   1 +
+ drivers/ras/acpi_ras2.c      | 391 ++++++++++++++++++++++++++++++++
+ include/acpi/actbl2.h        |  38 ++--
+ include/acpi/ras2.h          |  54 +++++
+ 10 files changed, 980 insertions(+), 19 deletions(-)
+ create mode 100755 drivers/acpi/ras2.c
+ create mode 100644 drivers/ras/acpi_ras2.c
+ create mode 100644 include/acpi/ras2.h
+
+-- 
+2.43.0
+
