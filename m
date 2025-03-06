@@ -1,392 +1,210 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2067.outbound.protection.outlook.com [40.107.220.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A4BC2054E6;
-	Thu,  6 Mar 2025 11:21:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741260118; cv=none; b=oqCvZHr26U+Ths71r9iWZ6SQZSlMoaAMyx95nkcEyR5xUuAAVJGZrsKL8yMDUtIT4Ps92CbvS4DloB1DhcL5ObMkhENrtxNgRrGO5pOJmqis+rEQFQB+NLoLpuF2GL0nWgnkkf8h7exMvX51UxIheyVqVlHLPKKCuhWoJ4lRH2c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741260118; c=relaxed/simple;
-	bh=F1gT/Y0PtPKhMaUsbc7IMab+4kGCUja253A9grKICHc=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=huR0FCSHDaVmrNVDQWUW91UH3xYOmc0tIptnVLNPFLXgF6BZyZeHsJbI6vOcUnQQpmMejdg2rurNKigrXnkhssVTK0hauxF9AymzdErq3NXjyCh0iK1zP5bzFjojJphdI/fUhDaTLaSTBKItbJJPpV6i4rdS9jBwSP/WiraMNC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Z7n2Z3c3mz6L5Qc;
-	Thu,  6 Mar 2025 19:17:42 +0800 (CST)
-Received: from frapeml100008.china.huawei.com (unknown [7.182.85.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id C1C11140593;
-	Thu,  6 Mar 2025 19:21:51 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (7.182.85.172) by
- frapeml100008.china.huawei.com (7.182.85.131) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 6 Mar 2025 12:21:51 +0100
-Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
- frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
- Thu, 6 Mar 2025 12:21:51 +0100
-From: Shiju Jose <shiju.jose@huawei.com>
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
-CC: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "bp@alien8.de"
-	<bp@alien8.de>, "tony.luck@intel.com" <tony.luck@intel.com>,
-	"rafael@kernel.org" <rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
-	"mchehab@kernel.org" <mchehab@kernel.org>, "leo.duran@amd.com"
-	<leo.duran@amd.com>, "Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"dan.j.williams@intel.com" <dan.j.williams@intel.com>, "dave@stgolabs.net"
-	<dave@stgolabs.net>, "dave.jiang@intel.com" <dave.jiang@intel.com>,
-	"alison.schofield@intel.com" <alison.schofield@intel.com>,
-	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>, "ira.weiny@intel.com"
-	<ira.weiny@intel.com>, "david@redhat.com" <david@redhat.com>,
-	"Vilas.Sridharan@amd.com" <Vilas.Sridharan@amd.com>, "linux-mm@kvack.org"
-	<linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "rientjes@google.com" <rientjes@google.com>,
-	"jiaqiyan@google.com" <jiaqiyan@google.com>, "Jon.Grimm@amd.com"
-	<Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "naoya.horiguchi@nec.com"
-	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
-	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
-	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
-	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
-	<duenwen@google.com>, "gthelen@google.com" <gthelen@google.com>,
-	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
-	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
-	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
-	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, tanxiaofei
-	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, "Roberto
- Sassu" <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
-	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
-	Linuxarm <linuxarm@huawei.com>
-Subject: RE: [PATCH v2 2/3] ACPI:RAS2: Add ACPI RAS2 driver
-Thread-Topic: [PATCH v2 2/3] ACPI:RAS2: Add ACPI RAS2 driver
-Thread-Index: AQHbjfjU3SdB6rbarkWzBYMyJX3PgbNlxP+AgAAg7jA=
-Date: Thu, 6 Mar 2025 11:21:51 +0000
-Message-ID: <a0b319b4f42c4286a120fbb88a88adeb@huawei.com>
-References: <20250305180225.1226-1-shiju.jose@huawei.com>
-	<20250305180225.1226-3-shiju.jose@huawei.com>
- <20250306171925.00002721@huawei.com>
-In-Reply-To: <20250306171925.00002721@huawei.com>
-Accept-Language: en-GB, en-US
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78F7033FD;
+	Thu,  6 Mar 2025 13:50:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741269022; cv=fail; b=B/h3BEg0a6z/veCi7t9xH1LdanxsLTaNh3zlyn4sZsbjYoVTa8UMCpixXdTkrl6IqBe3m6kAhvLXIqEQGzJnJCeFjLTPyV9KEkM32WxQ9qrCHDawDvG433vW20ITlgMfvIjqe3HL6Al2pWyXLFw0uMtr2yxzN93xAr3txrehPY4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741269022; c=relaxed/simple;
+	bh=UJD4m+AdgZ/ao2Eq9Ig+r1yVYPP0JkzAWV8BxR5zrwI=;
+	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=NDYZvC9fGxAck4H8VooSF25elm5lVPUuWl57MQrEeszsEbqeneZY2mWXqIZuj+mCMQvqT+qij2Wx7KCtXCacuoTpFHDfrw9YgwCoDfimfnEMAJgwV+dmpyqN9w3RMZ4JXJgFr5l/aKGpCLpYm4xCGftbaaDyHDMCYJDkyf0mCz8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=H3pDfzg4; arc=fail smtp.client-ip=40.107.220.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="H3pDfzg4"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=D74lcYaAXLOMXqDwlqlNpDHlSbsqL0CJCiNayvdUXt2uMz40tMKXAFD+V63rDO30QXW4vMEAeuSr4VcKWXR9Qt2MPLi85Yit5sXB1t9bSU+6Pfg+h2faRfZAWMuDbbusiaLz7McNYQ2kLRv16WfjxpIVYYF0kHBNLjgaVdsTpmvYbvuS83hfuyV54M9GjO47AlEef6tCMYfR/8jFhaeKYyAUc44pDMnRjhUvvuL+2eEBTBQF7QqpQKchr3SI6lZU/TnBgIYFqcOJAqIvUiF3na32m64tVxn7y0aAai2oWXSk2el44bnoLSUlZCBcAn61FN8vMCrUvGMtPKylU+byxg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UJD4m+AdgZ/ao2Eq9Ig+r1yVYPP0JkzAWV8BxR5zrwI=;
+ b=vBv4tMdNeX96BhMAXl3UMyyGu6ScK7nwz/EI9dvk1/PrkLzhdz+9Zw3g3WZQXLGYKzAaa1f8UKhf3Fhps64Kc01w4Q9bHY+hkVwTiH/5evNPgo7w6ETVnjETV/Bsi7YVQzQJHap1FQ7VvKYAamoko5sbZpRpT+NWDyg98kD1RmqP8OTljJ4NQl8PSccJmMDTUOiv5kM7yh9YCFrxweIzLdDJKArZxHkoTYx1AEyK1i9+eOmTBEiYsGJCw1IJzbUa0PL9lXcK8pIcApy9UOkgWxbhi8yeiZiJa0/kbfsxgvnaAKjSHFU61w2IJptJrwMkJfIzuTgH5McSlLHKfp0Rqw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UJD4m+AdgZ/ao2Eq9Ig+r1yVYPP0JkzAWV8BxR5zrwI=;
+ b=H3pDfzg4fq3EqKL2WM1FnPLHs18E2GIknTpso1mjv/dBZKQBZAjL9xHwr/obxeKDhrZ2p3P4kHbAryYB00eKy4WLSv0COIiiWJzMjGerHGp6ZmxW7/kxCLfI3WX5lU5wZO3VqkfO7+Cpq29jigMBFcw3m2DlbDD7EinsQlyoYHQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
+ DM6PR12MB4043.namprd12.prod.outlook.com (2603:10b6:5:216::14) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8511.19; Thu, 6 Mar 2025 13:50:17 +0000
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f%3]) with mapi id 15.20.8511.017; Thu, 6 Mar 2025
+ 13:50:16 +0000
+Message-ID: <bb5883b9-8b32-45f9-863a-0df1c9243fdd@amd.com>
+Date: Thu, 6 Mar 2025 07:50:12 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 12/17] cxl/pci: Add error handler for CXL PCIe Port RAS
+ errors
+To: Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ nifan.cxl@gmail.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
+ dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
+ oohall@gmail.com, Benjamin.Cheatham@amd.com, rrichter@amd.com,
+ nathan.fontenot@amd.com, Smita.KoralahalliChannabasappa@amd.com,
+ lukas@wunner.de, ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com
+References: <20250211192444.2292833-1-terry.bowman@amd.com>
+ <20250211192444.2292833-13-terry.bowman@amd.com>
+ <67c7994bd79b1_1327329455@iweiny-mobl.notmuch>
 Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+From: "Bowman, Terry" <terry.bowman@amd.com>
+In-Reply-To: <67c7994bd79b1_1327329455@iweiny-mobl.notmuch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA0PR11CA0039.namprd11.prod.outlook.com
+ (2603:10b6:806:d0::14) To DS0PR12MB6390.namprd12.prod.outlook.com
+ (2603:10b6:8:ce::7)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|DM6PR12MB4043:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8f972339-b4b7-42a2-697d-08dd5cb5d3a0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?aTg4N0VnQjZUdTcvekxSUmF0WlYvZS85UVBQMmRxOUFBTnBrUmlFQnRETjNj?=
+ =?utf-8?B?Y0lGRSsxaE1sSHh3OHp5VTVqQzhuazVSdERIVXBtYWlqVzNvUkhZU0VsSVRn?=
+ =?utf-8?B?d0dLOHFWU2FGV1Zlc05jRDBocUJlc2pibWhtYXpCbDVyK3VsdWJJVTZCaHRm?=
+ =?utf-8?B?anJnQVJnSk1TYk1taEZja09MRFAxQVE5bTBCc2ZZektvYVhtVUExUEV3Wjd5?=
+ =?utf-8?B?cXBzK0t4NUFuci8rOEVSb2JZYVpwVFk5MEtDZW9YNzQ1ZUwzTnl5N1Fvc2pS?=
+ =?utf-8?B?K3FvWkliOFgxMHJRVGx4a3F5UEJnR0EvTEJXUStPUTdVL1pDVXZCbTY3cUp4?=
+ =?utf-8?B?UHNnQ2Q3eVRFdDMzY3VFTjJoVXhEOWU4bHB6bFkra0ZWaEo3NldqenJ2VkhQ?=
+ =?utf-8?B?bTU2L2tLb2s3U043UlNwbEJSNWYwKzF1TzViVUgyS09PcDVlcjluL1Y1bjhK?=
+ =?utf-8?B?eDZOckhKNWMxUUVsOUN1V0U5M1Q4Wkhsa2RXVkVacnB1THR0WlNOU1dYUk1B?=
+ =?utf-8?B?b0U3aFRIYk5Nb0JJS1hyN3Y1TG81bGVQV0tLd1B6UDFyZThLOVBzR0g4cWcz?=
+ =?utf-8?B?L25KR2tCMzNRK3ZjNGRMWEZJSFdUWkw2ZlpVREhxYnpZaTdtamFsSW5GMFQx?=
+ =?utf-8?B?STlEMW95VEdrRDU4YnpGczNuOTQ4bE43QkU0Mk1nVGsyUnM1c1U1M1I1dE5Y?=
+ =?utf-8?B?SVY1OWtNUjMvcjdCMGo0Nm9pLy96U2NadmdTMVFQVlhHZWNJdzl6N3BCUzVj?=
+ =?utf-8?B?Z0tmWS9PNTJVM0ltejBWL09uQmtRTU5jUGFNb09HWlFabU01ZlV5V1ZZWFVV?=
+ =?utf-8?B?ZTVHaU9NYzhFS1ExTEVNT3JiV1JrL3BXUW1JdEttTTBoYU56WFVDNThkQXRp?=
+ =?utf-8?B?ZzNNcFNxQ1E1aEx5RVg4RWpQSnllVUxOeHNMZEZFVG9NUmVOYytvOHI2Tm1B?=
+ =?utf-8?B?Vnd1bUZIU2FsOHBSK2pkdTVHQjNTUkF1MUh5MUtyb2hKVncxQ3k3bHp2cis3?=
+ =?utf-8?B?SjNuSDdocDlMWU1oRC9YdUdTZUlSVjlnSTM5alU5aXcwMTMxSUlpUGtFWWcw?=
+ =?utf-8?B?OEtGVC83c3R6WDlzbVBkVlYwT0E4QzFlVFNGYzRwRURzc2k0UzdPRkd3VG5B?=
+ =?utf-8?B?dSt0MWlMYjdZRkV3amNFLzJnRkhzVkFwVDJHWXdmZXk2c0J2dmJXdkp4cVBl?=
+ =?utf-8?B?dDJoaVBaYlF3bU9PMllKNytNZTNSbFZWRXdyRGlHM1NFUllYMGhQbUlnNlR0?=
+ =?utf-8?B?ZzdRQ0pLWjJieEtJY1ZYOTk1YU9Zd3A5NDYyY3RQWHZFYUhJRmNoSU9pQWpL?=
+ =?utf-8?B?WVp6cG1yd1lJZm90c0hqN0FnNnBrdFJDN1FpR2pvSDMyVWlxUytFbHdWbGJF?=
+ =?utf-8?B?YzFJdGh6bDdkNi95TlQ4OTNydUlZQWhLZXBzZHdodjFoSVR1M2hIbUhBRUpx?=
+ =?utf-8?B?ZkNCcW80akpYK1h0cEVTMDJEMFdNUUREV0F4QzhEYnV0V3l6bGJKdExZbGtn?=
+ =?utf-8?B?cW0rQkRhZzlqQWwwNnBzS3Jvb3I0UUNuVkVVb3BkZFc1VExSTHpMNXQ3V2l3?=
+ =?utf-8?B?NVJzeE1sR1cvMEtqTHFJTUdUQlBNQmRsVXZxRDdMZUgzRU5NS09nL29yY013?=
+ =?utf-8?B?WThmQVFEK255U0YzaVFOSmFveE5YMjZWYUdCK0gxOERHRndrVG91SlRNazQ3?=
+ =?utf-8?B?ejB0SVI1OENScC9BYWx3WDhucmFqYmhEVGFEWS9hWER0UjlpK2tqYklTR2tO?=
+ =?utf-8?B?aGtybmVHLzV5bHZsMG1ZM1NBVnZpVEN4VENWMUdaVmd3em9WdnJETitJTXZ1?=
+ =?utf-8?B?YmRWQkxRNm9xRmFOZFo5d1R1RXNHNWZqb0dMaThwTW9aaEM1bWRka2JNVUdF?=
+ =?utf-8?B?M2h4b3VSelBGQm9YdDQrRGRVMU9VNUFnanlkcUxQSFVoY3F4TGEzbkk5eURS?=
+ =?utf-8?Q?4rdngT8VhS0=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NkhYeFNlUURXd1UyV1hyUzFCazdRZU9ibWh0UkNJcHo0cmkwSlQ4NndYT0lX?=
+ =?utf-8?B?SFZweDRQWkxWTGxaNklBempsRUgwYkxWRXh4YWk1d201bERUMnpFM1BadjVh?=
+ =?utf-8?B?dEZIS0gzWXJkUTZmVFRJWG5PczA3K1RJemV1WjRDZUxJUisyZ0JKYVd2UExH?=
+ =?utf-8?B?N2FjNHZWdXNLcm0zdU5XUVp4Qkk2aU82emRmWi92bXRRLzlXM09ydmVQQUNG?=
+ =?utf-8?B?V2IwQzZDYnFMbmsrc0UvVWlWNmV3ZnZ2WWZOdUtTYWRaL21rTWwxYmZ3NXRK?=
+ =?utf-8?B?QWpTdmQ5WE1GQTY4R0s2WmQ5K0VJdXcyWFV4RldoUjRrU2RlTDNhdlA5ZU9i?=
+ =?utf-8?B?R3NjSFhFLzBrbUcrTEhrWG9TQTRqaWliWXJTOXU2cTc0WDdyRUladi9KcWFT?=
+ =?utf-8?B?ODJ3aWR5UmdqQzlNY3lRekk5QzJDSWViMEpwSmFYTFYvTmtoTjhJKzRmcGk0?=
+ =?utf-8?B?NmhNY1Fic1FXakdBU3l1S3JWM0Y0TFE5czh2ZXFjYnYxalBZV3U3clJHdFY0?=
+ =?utf-8?B?YUlacURLSHhaQjRxcGtEVmRiUmZtZFRJdWNHcTY3dlZmOVlNaDZkZFd5bjBZ?=
+ =?utf-8?B?bFRMT3BOZnhXOEFSOW9qcWR3MmhOcGNxMkJ4TmFMNEkvS0VySW94LzM4Skw0?=
+ =?utf-8?B?c3RDdWRiU05pc2dHVUtaNlFwcEFhRDFlbFJqMk1mL25nOFRPOS96MytMWHlx?=
+ =?utf-8?B?ZXpjSWJwcEJiNGZ2QWhuU0ZvNDlicEtBNlhWZ3I1bnRjNVltdXVHVitpNmNa?=
+ =?utf-8?B?UDZubkFTeDBaYStTTUpwTTNrcC9ISFBFcGx3ckxqbWdxdngreENhbnhGWFp5?=
+ =?utf-8?B?Snh5N2JJb3UwbXAzeEx6cHZEbFZlMWxBdUczSnNEc3liVUI2dzVnanhtWjNX?=
+ =?utf-8?B?NW5tNzhZeEI4NGJicm1LTTJFdVYwM0ZPdUZtSGxHdzkrU2VibWoyeTRzdFNk?=
+ =?utf-8?B?NEdaVG0yZkhoTWZydWM2QTRxazQzWWxVWUVOaDEzVFRzTm5haDdMZ2s0VVU5?=
+ =?utf-8?B?a1VKSkF0N2tjdzYvb29ydHZwV1R0enZmTzRBMzNpZ1NDNzhsZy83MlFCVjV2?=
+ =?utf-8?B?MVpKWldlc1NYSS8xb1lYRVRwYndzRHlWaTF6K1d1YXZlcnpDdFpjNUV2S0RM?=
+ =?utf-8?B?RG9zZ3ZvTnJvdWRhcnR5clJ5dXVBZitPemdNQlNnaGJuaHpjdC9RR2w3bGU0?=
+ =?utf-8?B?aUJ3UjF3YWsraVJ6MGt4c0hLWEVPUGIrNFJPbzI4L0h5dng2SGllOUk5MFIw?=
+ =?utf-8?B?aGZkRURFVWJmQ1J6eGdyRkNvMm9yRzBwR0ZHMk9lR2RLbmdBYmZ4cnkwaTVi?=
+ =?utf-8?B?RGF3SlBjVzBKR3crZDBKbHJsdHFtRnRZUml5b2ZULy9tcWdsRDJ6SWhKdmxp?=
+ =?utf-8?B?RjQ2MWNDQWYwcUZmcyt2Q2Fyd0Z5SXAvemxydXd5UTQzN3dVamFNWFkzNElu?=
+ =?utf-8?B?QWZnV2V1NG9KN001UXdiLzdaeXlOd2NaazJBYnhRL2taYkRqWXNITVdjS1Er?=
+ =?utf-8?B?MlVsMHAwWEVod01aN3JVYjVhSWZVSVNBWGhFZWp5MnJ4aEx0SnB0MXhwdlFF?=
+ =?utf-8?B?MFVJVU5HTHJrWURBcENnczhmMkhKcGcxT1FSeHlNc1VSQjdLMTJXNDdKcWZR?=
+ =?utf-8?B?WXptQkZlOHRYOXBQcWFjMG0wb2tFalhJczlaSDFFMmNweGZTQnR4NHU4Z3Nz?=
+ =?utf-8?B?TE1PVUpiV1ZPMEFyQjVKTWxROFgzN0ZKUktWRU84OXpFWHVSaFBQM0FBWXNh?=
+ =?utf-8?B?TjZ0bE1iekZoaFJyWVhYckZYQUxXWFlwL2dQSDVDZVFmSUpJWlBmK21IbWxj?=
+ =?utf-8?B?VjJQRXJEcDVRcmhTeXI0ck1XYlhZUUQ2NVlldjJnNUFTVUpJSFNZY0J1VWp5?=
+ =?utf-8?B?ZUtqWU15emtGMUpzTjVPSVpaV0dzZWIxaUI0UzBmYktYd0IxU1pwMnE4a1h6?=
+ =?utf-8?B?MndhMFpyOW45c0t5WE5LTktiVHpYdTdjNDNVRTVOTHJwY1ZpMHlYWjFxMzVv?=
+ =?utf-8?B?aEZ1QXFDNmJWVDgxalRoUEYzWi9GR2FnbFhOUEE1d2FQNjYxSWxJV2ViUnJh?=
+ =?utf-8?B?SlVBcGRlUmhaLzJjTzQ2Y29Fa01qbkxsRjdycjBoSi9XS0J1NFcvZ202c0hz?=
+ =?utf-8?Q?YBBF8IZx9fzkZC2ro6ejczHrY?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8f972339-b4b7-42a2-697d-08dd5cb5d3a0
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2025 13:50:16.8418
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: prIBMsPq7oNuT9Bxk0UWqs0eZJ5np+629a6GLnu19Nirg/gxhIv0Bu2VtMVp+FYbyMiQjTWwLs3iWSbqDnp4yA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4043
 
->-----Original Message-----
->From: Jonathan Cameron <jonathan.cameron@huawei.com>
->Sent: 06 March 2025 09:19
->To: Shiju Jose <shiju.jose@huawei.com>
->Cc: linux-edac@vger.kernel.org; linux-acpi@vger.kernel.org; bp@alien8.de;
->tony.luck@intel.com; rafael@kernel.org; lenb@kernel.org;
->mchehab@kernel.org; leo.duran@amd.com; Yazen.Ghannam@amd.com; linux-
->cxl@vger.kernel.org; dan.j.williams@intel.com; dave@stgolabs.net;
->dave.jiang@intel.com; alison.schofield@intel.com; vishal.l.verma@intel.com=
-;
->ira.weiny@intel.com; david@redhat.com; Vilas.Sridharan@amd.com; linux-
->mm@kvack.org; linux-kernel@vger.kernel.org; rientjes@google.com;
->jiaqiyan@google.com; Jon.Grimm@amd.com; dave.hansen@linux.intel.com;
->naoya.horiguchi@nec.com; james.morse@arm.com; jthoughton@google.com;
->somasundaram.a@hpe.com; erdemaktas@google.com; pgonda@google.com;
->duenwen@google.com; gthelen@google.com;
->wschwartz@amperecomputing.com; dferguson@amperecomputing.com;
->wbs@os.amperecomputing.com; nifan.cxl@gmail.com; tanxiaofei
-><tanxiaofei@huawei.com>; Zengtao (B) <prime.zeng@hisilicon.com>; Roberto
->Sassu <roberto.sassu@huawei.com>; kangkang.shen@futurewei.com;
->wanghuiqiang <wanghuiqiang@huawei.com>; Linuxarm
-><linuxarm@huawei.com>
->Subject: Re: [PATCH v2 2/3] ACPI:RAS2: Add ACPI RAS2 driver
->
->On Wed, 5 Mar 2025 18:02:23 +0000
-><shiju.jose@huawei.com> wrote:
->
->> From: Shiju Jose <shiju.jose@huawei.com>
+
+
+On 3/4/2025 6:22 PM, Ira Weiny wrote:
+> Terry Bowman wrote:
+>> Introduce correctable and uncorrectable (UCE) CXL PCIe Port Protocol Error
+>> handlers.
 >>
->> Add support for ACPI RAS2 feature table (RAS2) defined in the ACPI 6.5
->> Specification, section 5.2.21.
->> Driver defines RAS2 Init, which extracts the RAS2 table and driver
->> adds auxiliary device for each memory feature which binds to the
->> RAS2 memory driver.
+>> The handlers will be called with a 'struct pci_dev' parameter
+>> indicating the CXL Port device requiring handling. The CXL PCIe Port
+>> device's underlying 'struct device' will match the port device in the
+>> CXL topology.
 >>
->> Driver uses PCC mailbox to communicate with the ACPI HW and the driver
->> adds OSPM interfaces to send RAS2 commands.
+>> Use the PCIe Port's device object to find the matching CXL Upstream Switch
+>> Port, CXL Downstream Switch Port, or CXL Root Port in the CXL topology. The
+>> matching CXL Port device should contain a cached reference to the RAS
+>> register block. The cached RAS block will be used in handling the error.
 >>
->> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->> Co-developed-by: A Somasundaram <somasundaram.a@hpe.com>
->> Signed-off-by: A Somasundaram <somasundaram.a@hpe.com>
->> Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> Tested-by: Daniel Ferguson <danielf@os.amperecomputing.com>
->> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+>> Invoke the existing __cxl_handle_ras() or __cxl_handle_cor_ras() using
+>> a reference to the RAS registers as a parameter. These functions will use
+>> the RAS register reference to indicate an error and clear the device's RAS
+>> status.
+>>
+>> Update __cxl_handle_ras() to return PCI_ERS_RESULT_PANIC in the case
+>> an error is present in the RAS status. Otherwise, return
+>> PCI_ERS_RESULT_NONE.
+>>
+>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> [snip]
 >
->Hi Shiju,
+>> +
+>> +static void cxl_port_cor_error_detected(struct pci_dev *pdev)
+> This causes a build error in this patch because it is defined but not used
+> until later.
 >
->I took another look through as it's been a while and I've pretty much forg=
-otten
->this code :(
+> Might be worth deferring to the future patch?
 >
->Anyhow, a few minor comments inline.
+> Ira
+Hi Ira,
 
-Hi Jonathan,
+Thanks. I moved the patchset to prevent the warning.
 
-Thanks for the feedbacks.
+Terry
 
-Please find reply inline.
 
-Thanks,
-Shiju
->
->Thanks,
->
->Jonathan
->
->> diff --git a/drivers/acpi/ras2.c b/drivers/acpi/ras2.c new file mode
->> 100755 index 000000000000..8831a2bd5fab
->> --- /dev/null
->> +++ b/drivers/acpi/ras2.c
->
->
->
->
->> +static int ras2_register_pcc_channel(struct ras2_mem_ctx *ras2_ctx, int
->pcc_id)
->> +{
->> +	struct ras2_pcc_subspace *pcc_subspace;
->> +	struct pcc_mbox_chan *pcc_chan;
->> +	struct mbox_client *mbox_cl;
->> +
->> +	if (pcc_id < 0)
->> +		return -EINVAL;
->> +
->> +	mutex_lock(&ras2_pcc_lock);
->> +	list_for_each_entry(pcc_subspace, &ras2_pcc_subspaces, elem) {
->> +		if (pcc_subspace->pcc_id !=3D pcc_id)
->> +			continue;
->> +		ras2_ctx->pcc_subspace =3D pcc_subspace;
->> +		pcc_subspace->ref_count++;
->> +		mutex_unlock(&ras2_pcc_lock);
->> +		return 0;
->> +	}
->> +	mutex_unlock(&ras2_pcc_lock);
->> +
->> +	pcc_subspace =3D kcalloc(1, sizeof(*pcc_subspace), GFP_KERNEL);
->
->if allocating a count of 1, why not kzalloc?
-
-Will use kzalloc.
->
->> +	if (!pcc_subspace)
->> +		return -ENOMEM;
->
->
->
->
->> +static int acpi_ras2_parse(void)
->> +{
->> +	struct acpi_ras2_pcc_desc *pcc_desc_list;
->> +	int pcc_id;
->> +	u8 count =3D 0;
->> +	int rc, i;
->> +
->> +	if (ras2_tab->header.length  < sizeof(struct acpi_table_ras2)) {
->
->extra space before <
-
-Will fix.=20
->
->Maybe sizeof(*ras2_tab) is cleaner.
-Sure.
->
->> +		pr_warn(FW_WARN "ACPI RAS2 table present but broken (too
->short #1)\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	if (!ras2_tab->num_pcc_descs) {
->> +		pr_warn(FW_WARN "No PCC descs in ACPI RAS2 table\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	pcc_desc_list =3D (struct acpi_ras2_pcc_desc *)(ras2_tab + 1);
->> +	/* Double scan for the case of only one actual controller */
->> +	pcc_id =3D -1;
->> +	count =3D 0;
->
->Already set above, so no need to do it again.  I'd do it just here.  Can
->put it in the loop init though.
-Will change.
->
->> +	for (i =3D 0; i < ras2_tab->num_pcc_descs; i++, pcc_desc_list++) {
->> +		if (pcc_desc_list->feature_type !=3D RAS2_FEAT_TYPE_MEMORY)
->> +			continue;
->> +		if (pcc_id =3D=3D -1) {
->> +			pcc_id =3D pcc_desc_list->channel_id;
->> +			count++;
->> +		}
->> +		if (pcc_desc_list->channel_id !=3D pcc_id)
->> +			count++;
->> +	}
->> +
->> +	/*
->> +	 * Workaround for the client platform with multiple scrub devices
->> +	 * but uses single PCC subspace for communication.
->> +	 */
->> +	if (count =3D=3D 1) {
->> +		/* Add auxiliary device and bind ACPI RAS2 memory driver */
->> +		rc =3D ras2_add_aux_device(RAS2_MEM_DEV_ID_NAME, pcc_id);
->> +		if (rc)
->> +			return rc;
->> +
->> +		return 0;
->> +	}
->> +
->> +	pcc_desc_list =3D (struct acpi_ras2_pcc_desc *)(ras2_tab + 1);
->> +	count =3D 0;
->
->Maybe set in loop init.
-Sure.
->
->> +	for (i =3D 0; i < ras2_tab->num_pcc_descs; i++, pcc_desc_list++) {
->> +		if (pcc_desc_list->feature_type !=3D RAS2_FEAT_TYPE_MEMORY)
->> +			continue;
->> +		pcc_id =3D pcc_desc_list->channel_id;
->> +		/* Add auxiliary device and bind ACPI RAS2 memory driver */
->obvious enough to drop the comment I think.
-Will do.
->
->> +		rc =3D ras2_add_aux_device(RAS2_MEM_DEV_ID_NAME, pcc_id);
->					 pcc_desc_list->channel_id);
->and no local variable.
-Ok.
->
->> +		if (rc)
->> +			return rc;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +void __init acpi_ras2_init(void)
->> +{
->> +	acpi_status status;
->> +	int rc;
->> +
->> +	status =3D acpi_get_table(ACPI_SIG_RAS2, 0,
->> +				(struct acpi_table_header **)&ras2_tab);
->> +	if (ACPI_FAILURE(status) || !ras2_tab) {
->> +		const char *msg =3D acpi_format_exception(status);
->> +
->> +		pr_err("Failed to get table, %s\n", msg);
->
->If only going to use it here maybe
->		pr_err("Failed to get table, %s\n",
->		       acpi_format_exception(status));
->and save on the local variable.
-Will change.
->
->> +		return;
->> +	}
->> +
->> +	rc =3D acpi_ras2_parse();
->> +	if (rc) {
->> +		acpi_put_table((struct acpi_table_header *)ras2_tab);
->> +		pr_err("Failed to parse RAS2 table\n");
->> +	}
->> +}
->> diff --git a/include/acpi/ras2.h b/include/acpi/ras2.h
->> new file mode 100644
->> index 000000000000..5b27c1f30096
->> --- /dev/null
->> +++ b/include/acpi/ras2.h
->> @@ -0,0 +1,48 @@
->> +/* SPDX-License-Identifier: GPL-2.0-only */
->> +/*
->> + * ACPI RAS2 driver header file
->> + *
->> + * Copyright (c) 2024-2025 HiSilicon Limited
->> + */
->> +
->> +#ifndef _ACPI_RAS2_H
->> +#define _ACPI_RAS2_H
->> +
->> +#include <linux/acpi.h>
->> +#include <linux/auxiliary_bus.h>
->> +#include <linux/mailbox_client.h>
->> +#include <linux/mutex.h>
->> +#include <linux/types.h>
->> +
->> +#define RAS2_PCC_CMD_COMPLETE	BIT(0)
->> +#define RAS2_PCC_CMD_ERROR	BIT(2)
->> +
->I think these bits are from table 14.11 and
->generic to all PCC status registers? Should these
->have more generic names rather than ras2 specific ones?
-Yes.
-Instead will use PCC_STATUS_CMD_ COMPLETE and  PCC_STATUS_ ERROR
-from include/acpi/pcc.h.=20
-
->
->> +/* RAS2 specific PCC commands */
->> +#define RAS2_PCC_CMD_EXEC 0x01
->Are we mixing commands and field definitions both
->with prefix RAS2_PCC_CMD_ ?  That is somewhat
->confusing.
-Will add Table 5.82: .. here in the comment and=20
-Is rename to PCC_CMD_ EXEC_RAS2  better?
->
->> +
->> +#define RAS2_AUX_DEV_NAME "ras2"
->> +#define RAS2_MEM_DEV_ID_NAME "acpi_ras2_mem"
->> +
->I would add a forwards def
->struct device;
-Sure.
->
->whilst it is really unlikely that headers would ever be reorganized
->such that auxiliary_bus.h would not include device.h given the embedded
->device we shouldn't rely on that here.
->
->> +/* Data structure RAS2 table */
->> +struct ras2_mem_ctx {
->> +	struct auxiliary_device adev;
->> +	/* Lock to provide mutually exclusive access to PCC channel */
->> +	struct mutex lock;
->> +	struct device *dev;
->> +	struct acpi_ras2_shmem __iomem *comm_addr;
->> +	void *pcc_subspace;
->> +	int id;
->> +};
->> +
->> +#ifdef CONFIG_ACPI_RAS2
->> +void __init acpi_ras2_init(void);
->> +int ras2_send_pcc_cmd(struct ras2_mem_ctx *ras2_ctx, u16 cmd);
->> +#else
->> +static inline void acpi_ras2_init(void) { }
->> +
->> +static inline int ras2_send_pcc_cmd(struct ras2_mem_ctx *ras2_ctx, u16
->cmd)
->
->Is this stub ever needed?  To me it seems unlikely
->we would have a user that is built without a dependency
->on CONFIG_ACPI_RAS2.  This is different from acpi_ras2_init()
->which makes much more sense to me.
-Ok will remove.
->
->> +{
->> +	return -EOPNOTSUPP;
->> +}
->> +#endif
->> +#endif /* _ACPI_RAS2_H */
-
-Thanks,
-Shiju
 
