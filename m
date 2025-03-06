@@ -1,184 +1,112 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5BE336D;
-	Thu,  6 Mar 2025 06:06:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2894F1DC98B;
+	Thu,  6 Mar 2025 07:29:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741241171; cv=none; b=BLLH29zDNAZURltm1MkQbYkuRHxl15xvanIFHX8xxTv5gZMQpeBIz5szaC8JpvtxTnMGjJyAh2GUK0Y7YLdeio0FQDmV1jbrws7o7Rr8s41FV5el5QfhrXQozUltDEivyKd1OuD9p2x6q7EhxNXDlkjYQUMkr2SZUoJ3wbLGhkA=
+	t=1741246160; cv=none; b=HnYntg1vocZ0XwWnvP/7hJr6onrt3z8cspZVRWxl0dzFoz9v6KtCPnYxma425CeiTMDCkErvSr24LGRMeCJ2Xh6AWamiigDwt7hjX6SFDGKGpUGX6+ItFZvA+YqYms5xfQy8xEa2ICPlXrt+Px5WYzHKkf7pl5CFtB9KsGL7Jqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741241171; c=relaxed/simple;
-	bh=0QBriMyrr0S+pdFueoHFAgKI7U8TnsRyaMmjpWja/LY=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ul/g4cuPg0SxT81dtZVIVBC6fqUSLoqt2Hhta+SK55E+I0MhHzxv6zRY/kAzjTOwV2yi2ewZzoYOBvYHBL/RzjSrT8kCub6yYBC/+BU0nLqjM2QxA5Lp+WRECSGuo+5Q1RISD73Ou0BdmZ5nZBMW01Zp0JqbdWWmxvrRr8HIuCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Z7f4N3mY6z6K61Y;
-	Thu,  6 Mar 2025 14:03:48 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id D0AF5140CB1;
-	Thu,  6 Mar 2025 14:06:05 +0800 (CST)
-Received: from localhost (10.96.237.92) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 6 Mar
- 2025 07:05:55 +0100
-Date: Thu, 6 Mar 2025 14:05:50 +0800
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <shiju.jose@huawei.com>
-CC: <linux-edac@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-	<bp@alien8.de>, <tony.luck@intel.com>, <rafael@kernel.org>,
-	<lenb@kernel.org>, <mchehab@kernel.org>, <leo.duran@amd.com>,
-	<Yazen.Ghannam@amd.com>, <linux-cxl@vger.kernel.org>,
-	<dan.j.williams@intel.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>, <david@redhat.com>, <Vilas.Sridharan@amd.com>,
-	<linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, <rientjes@google.com>,
-	<jiaqiyan@google.com>, <Jon.Grimm@amd.com>, <dave.hansen@linux.intel.com>,
-	<naoya.horiguchi@nec.com>, <james.morse@arm.com>, <jthoughton@google.com>,
-	<somasundaram.a@hpe.com>, <erdemaktas@google.com>, <pgonda@google.com>,
-	<duenwen@google.com>, <gthelen@google.com>, <wschwartz@amperecomputing.com>,
-	<dferguson@amperecomputing.com>, <wbs@os.amperecomputing.com>,
-	<nifan.cxl@gmail.com>, <tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
-	<roberto.sassu@huawei.com>, <kangkang.shen@futurewei.com>,
-	<wanghuiqiang@huawei.com>, <linuxarm@huawei.com>
-Subject: Re: [PATCH v2 1/3] ACPI: ACPI 6.5: RAS2: Shorten RAS2 table
- structure and variable names
-Message-ID: <20250306140550.00001016@huawei.com>
-In-Reply-To: <20250305180225.1226-2-shiju.jose@huawei.com>
-References: <20250305180225.1226-1-shiju.jose@huawei.com>
-	<20250305180225.1226-2-shiju.jose@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1741246160; c=relaxed/simple;
+	bh=ZNaVEPVAXCzdL9St42uwm7LoXpS2rX6afC6PTXfNAK0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BtUOYd2zcsNgWdU++8Ct7fiAPU7pGrWkxZlQM3uj3LktgeWQAt0j3Hr3HmQfQ0iiuaWpJ4P+xQboN+NhadzNtoKTqodfRXXELeB+Jxit69D2PFomu5ibXLkm/p8tZb22c4PSoTnvfyTKeRxUgheKYWI6d9lREDUTJZN2srpRSJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TZF1LCtK; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TZF1LCtK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14202C4CEE0;
+	Thu,  6 Mar 2025 07:29:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741246160;
+	bh=ZNaVEPVAXCzdL9St42uwm7LoXpS2rX6afC6PTXfNAK0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TZF1LCtKBFC9ylRr9B71V4vKBBglWxRMWez0za7qNmcMKiuAEKv/VUP08VrhxdLEI
+	 SVkrpND+ODsVlh6oRfVzk1BewPHa4LdERkwhReCVDlQodjqVHs84GkWF7o1bYrkYjK
+	 qETAhSIyM4Z9SmJjCbEp8qXXrMNt9s9HmYTHGeZQNAmy1k6+aLTiq24TmsOMHEa2Gk
+	 aOsqbe9YFy614aR2KLScLPuI/SDDnybS0pw4I8yZXl4vb0u0PWZkGI+8pvL4+UBauU
+	 r7U60zuyPZt2JYgW8Mbn5br2O9jbnBKCahp7DoD3b+gPcbTe3PukA6deUqq8/Jynqq
+	 MoeA/fTtBGQvw==
+Date: Thu, 6 Mar 2025 09:29:16 +0200
+From: Leon Romanovsky <leon@kernel.org>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Saeed Mahameed <saeed@kernel.org>, David Ahern <dsahern@kernel.org>,
+	Jiri Pirko <jiri@resnulli.us>, Jakub Kicinski <kuba@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andy Gospodarek <andrew.gospodarek@broadcom.com>,
+	Aron Silverton <aron.silverton@oracle.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Daniel Vetter <daniel.vetter@ffwll.ch>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Itay Avraham <itayavr@nvidia.com>, Jiri Pirko <jiri@nvidia.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Leonid Bloch <lbloch@nvidia.com>, linux-cxl@vger.kernel.org,
+	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	"Nelson, Shannon" <shannon.nelson@amd.com>
+Subject: Re: [PATCH v5 0/8] Introduce fwctl subystem
+Message-ID: <20250306072916.GQ1955273@unreal>
+References: <0-v5-642aa0c94070+4447f-fwctl_jgg@nvidia.com>
+ <20250303175358.4e9e0f78@kernel.org>
+ <20250304140036.GK133783@nvidia.com>
+ <20250304164203.38418211@kernel.org>
+ <20250305133254.GV133783@nvidia.com>
+ <mxw4ngjokr3vumdy5fp2wzxpocjkitputelmpaqo7ungxnhnxp@j4yn5tdz3ief>
+ <bcafcf60-47a8-4faf-bea3-19cf0cbc4e08@kernel.org>
+ <20250305182853.GO1955273@unreal>
+ <Z8i2_9G86z14KbpB@x130>
+ <20250305232154.GB354511@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250305232154.GB354511@nvidia.com>
 
-On Wed, 5 Mar 2025 18:02:22 +0000
-<shiju.jose@huawei.com> wrote:
-
-> From: Shiju Jose <shiju.jose@huawei.com>
+On Wed, Mar 05, 2025 at 07:21:54PM -0400, Jason Gunthorpe wrote:
+> On Wed, Mar 05, 2025 at 12:41:35PM -0800, Saeed Mahameed wrote:
 > 
-> Shorten RAS2 table structure and variable names.
+> > How do you imagine this driver/core structure should look like? Who
+> > will be the top dir maintainer?
 > 
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-Hi Shiju,
-
-Generally looks reasonable to me, but I'm not sure what your
-decision process was for which to shorten and which to leave alone.
-Perhaps it is worth mentioning that in the patch description?
-
-> ---
->  include/acpi/actbl2.h | 38 +++++++++++++++++++-------------------
->  1 file changed, 19 insertions(+), 19 deletions(-)
+> I would set something like this up more like DRM. Every driver
+> maintainer gets commit rights, some rules about no uAPIs, or at least
+> other acks before merging uAPI. Use the tree for staging shared
+> branches.
 > 
-> diff --git a/include/acpi/actbl2.h b/include/acpi/actbl2.h
-> index 2e917a8f8bca..5cfc65ba6e9e 100644
-> --- a/include/acpi/actbl2.h
-> +++ b/include/acpi/actbl2.h
-> @@ -2802,20 +2802,20 @@ struct acpi_ras2_pcc_desc {
->  
->  /* RAS2 Platform Communication Channel Shared Memory Region */
->  
-> -struct acpi_ras2_shared_memory {
-> +struct acpi_ras2_shmem {
->  	u32 signature;
-> -	u16 command;
-> +	u16 cmd;
->  	u16 status;
->  	u16 version;
->  	u8 features[16];
-> -	u8 set_capabilities[16];
-> -	u16 num_parameter_blocks;
-> -	u32 set_capabilities_status;
-> +	u8 set_caps[16];
-> +	u16 num_param_blks;
-> +	u32 set_caps_status;
+> Driver maintainers with the most commits per cycle does the PR or
+> something like that.
+> 
+> There is no subsystem or cross-driver entanglement so there is no real
+> need for gatekeeping.
 
-I assume focus was on fields that were leading to long line lengths? 
-If it was just generally shortening things to common form
-sig, sts, ver, feats etc would also seem reasonable to me
-(all subject to Tony's question on whether we can touch this at all.)
+Yes, it can be structured like you proposed too or/and combined with my
+idea https://lore.kernel.org/netdev/20250303150015.GA1926949@unreal/
 
->  };
->  
->  /* RAS2 Parameter Block Structure for PATROL_SCRUB */
->  
-> -struct acpi_ras2_parameter_block {
-> +struct acpi_ras2_param_blk {
->  	u16 type;
->  	u16 version;
->  	u16 length;
-> @@ -2823,11 +2823,11 @@ struct acpi_ras2_parameter_block {
->  
->  /* RAS2 Parameter Block Structure for PATROL_SCRUB */
->  
-> -struct acpi_ras2_patrol_scrub_parameter {
-> -	struct acpi_ras2_parameter_block header;
-> -	u16 patrol_scrub_command;
-> -	u64 requested_address_range[2];
-> -	u64 actual_address_range[2];
-> +struct acpi_ras2_patrol_scrub_param {
-> +	struct acpi_ras2_param_blk header;
-> +	u16 cmd;
-> +	u64 req_addr_range[2];
-> +	u64 actl_addr_range[2];
->  	u32 flags;
->  	u32 scrub_params_out;
->  	u32 scrub_params_in;
-> @@ -2839,12 +2839,12 @@ struct acpi_ras2_patrol_scrub_parameter {
->  
->  /* RAS2 Parameter Block Structure for LA2PA_TRANSLATION */
->  
-> -struct acpi_ras2_la2pa_translation_parameter {
-> -	struct acpi_ras2_parameter_block header;
-> -	u16 addr_translation_command;
-> +struct acpi_ras2_la2pa_transln_param {
-> +	struct acpi_ras2_param_blk header;
-> +	u16 cmd;
->  	u64 sub_inst_id;
-> -	u64 logical_address;
-> -	u64 physical_address;
-> +	u64 logical_addr;
-> +	u64 phy_addr;
->  	u32 status;
->  };
->  
-> @@ -2863,7 +2863,7 @@ enum acpi_ras2_features {
->  
->  /* RAS2 Patrol Scrub Commands */
->  
-> -enum acpi_ras2_patrol_scrub_commands {
-> +enum acpi_ras2_patrol_scrub_cmds {
->  	ACPI_RAS2_GET_PATROL_PARAMETERS = 1,
->  	ACPI_RAS2_START_PATROL_SCRUBBER = 2,
->  	ACPI_RAS2_STOP_PATROL_SCRUBBER = 3
-> @@ -2871,13 +2871,13 @@ enum acpi_ras2_patrol_scrub_commands {
->  
->  /* RAS2 LA2PA Translation Commands */
->  
-> -enum acpi_ras2_la2_pa_translation_commands {
-> +enum acpi_ras2_la2_pa_transln_cmds {
->  	ACPI_RAS2_GET_LA2PA_TRANSLATION = 1,
->  };
->  
->  /* RAS2 LA2PA Translation Status values */
->  
-> -enum acpi_ras2_la2_pa_translation_status {
-> +enum acpi_ras2_la2_pa_transln_status {
+The most important part is that it needs to be group of maintainers.
 
-Do we touch this in the main code?  If not I'd be tempted
-to leave decision to shorten this or not to whowever
-writes code that uses it.
+> 
+> It would be a good opportunity to help more people engage with the
+> kernel process and learn the full maintainer flow.
+> 
+> > It should be something that is tightly coupled with aux, currently
+> > aux is under drivers/base/auxiliary.c I think it should move to
+> > drivers/aux/auxiliary.c and device drivers should implement their
+> > own aux buses, WH access APIs and probing/init logic under that
+> > directory e.g: drivers/aux/mlx5/..
+> 
+> That makes sense to me. I would expect everything in this collection
+> to be PCI drivers spawing aux devices.
+> 
+> drivers/aux_core/ or something like that, perhaps?
 
->  	ACPI_RAS2_LA2PA_TRANSLATION_SUCCESS = 0,
->  	ACPI_RAS2_LA2PA_TRANSLATION_FAIL = 1,
->  };
+I like Saeed's proposal "drivers/aux/", it is more short and catchy.
 
+Thanks
+
+> 
+> Jason
+> 
