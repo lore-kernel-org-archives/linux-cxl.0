@@ -1,60 +1,81 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E7918DB32
-	for <linux-cxl@vger.kernel.org>; Fri,  7 Mar 2025 18:12:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA30E1A7AF7;
+	Fri,  7 Mar 2025 18:20:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741371142; cv=none; b=bxSoymi5fBHN1MzQGnWSmgkYfnC5rl/0iLfZGV3q7ioy0soCcJbXJAix1wIsxl6eXOTl+cv34DbKHflEuZTXtITz2DnoOO1ImcVv7d5Dyr72TIqMopslie4QAILYvAj/cHrn9l3qu56WRlAVhG502akn0GvvxHmBftwsJHGAZms=
+	t=1741371620; cv=none; b=ACxlu1ep8WSN/CtrKlosdq2CN28cFxa1g0jyQOR9peovvCRuvKJ/c72JByMmD3Yjw1vN77iVA02phzH4gxN2f2xHzko6yXw8jyEnMUJoe44/rYRewfHHZMwmBB1V6XvKUaHeWdrskbSLhTyGYitXN4KxzoSQIYsAc49Sid7naRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741371142; c=relaxed/simple;
-	bh=lmpT2KLULqG7FkNeXsNTXPH4a3cSJ6tQLNPVWjqQTMY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VdvQADEXwbrXXwgS2QXJzEGkJtjq5SW2GdBk7G6mUrbgny6K19T2resviPZ4QAt6sIWTBgzAg/VKFLult0/a463AgeGniDGkkrx76ha4EPmKWkbnkaDIVzL03jMBGZhYsgPBRvCAEOd1BFPLV4fCbiH578BorvXo1Q93EV5tLmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hbazAONf; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1741371620; c=relaxed/simple;
+	bh=rqrIgGVQ6M5vVw6p4Jr1p0YFHYVdn2Xj93tZ/3VW8rc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fs8GlkedPXvSouInn7Hy3PuTW3r6IdBFPmaOksVW34fo3m8qIy6SZrJWhrYqja/yfgCg31uMbnq9q7fyhZEMDihxLkQa2AWe0aAu8/1NimhfbEEViZHiNhKKlZuxOWwd7YcUW2BYCflhZK5/7jX9XhDyYq64lnYreLm/b4xIN9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E+mHNaBF; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hbazAONf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741371140; x=1772907140;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=lmpT2KLULqG7FkNeXsNTXPH4a3cSJ6tQLNPVWjqQTMY=;
-  b=hbazAONffeyrOpcSwaFTtHcB3HccDZxszjd/mNxLp7EaKJcga+Y0SCn2
-   uReIbKwtnjtPukOPtBu3m/gqXPhReHTAo/r5sWMnFaQk6Y8phIjJp6B0Y
-   04+TCLeL3J4jaaXSkOFeMscDP1ovkKcof5ci0Eu8XERtABX6JSrc+kg/t
-   Rz7AEu9fZL41vl6e5pDuRaFfayWFglZgTSL/v08Skgk/hP+HNHAQ7hCnq
-   xCds1owozeeH6V2tY2Z9bu+1ba8eUA7gw3C8hOCN4RYbEJSiEYtF6KvkY
-   HHT+W7JFaQ4vls3rOcVZ7o7kI2eKV2LZtrbApDxhRBUPLLb6jgC9/9TBQ
-   Q==;
-X-CSE-ConnectionGUID: dxRJIEcXQGaw/I2iWDYfzw==
-X-CSE-MsgGUID: mLuVuwiURjKE1YXr23XZLw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="64869089"
-X-IronPort-AV: E=Sophos;i="6.14,229,1736841600"; 
-   d="scan'208";a="64869089"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 10:12:20 -0800
-X-CSE-ConnectionGUID: Lqb6MsUtSt6jfCNdMZKNzQ==
-X-CSE-MsgGUID: vlM9z5XlTkK426krbTvnTg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,229,1736841600"; 
-   d="scan'208";a="150188608"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.125.110.159])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 10:12:20 -0800
-From: alison.schofield@intel.com
-To: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH] cxl: Restore opcode order in enum cxl_opcode
-Date: Fri,  7 Mar 2025 10:12:10 -0800
-Message-ID: <20250307181214.2624147-1-alison.schofield@intel.com>
-X-Mailer: git-send-email 2.47.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E+mHNaBF"
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-6fed0620395so678157b3.3;
+        Fri, 07 Mar 2025 10:20:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741371618; x=1741976418; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FeJw1/wk13slq8SaTOaUUmP/IYv8V17ltprOZMyg7cg=;
+        b=E+mHNaBFmFiS0Iocn7UQu6+0CFNC3fjcWs5SNuHm+4btnQsj+t3ugV3+d/4SauQGiq
+         N8xtil+Tn3toaPP0kB7UfGPojnMC1T/FAAFaMEY2s6Gqnax83u3fZEQ5q5AQyjA3GHzE
+         d7IvW/t3NHdx8VncHs4pMuI/3h0VtcibbSAdMDmbkBp0XP93o3isL4eFdMmyAGSFVWwA
+         xLreJvhXPpKh/gEW3Enu8nfD2nTtOG8IALwS/ngRhuRE6K/22v41vJ7GZiYqWZcJ2uFk
+         KQgwbSeopmh1WMb3kuuCvpnssV0P/aMdgG15DajkjxbHo1mZvTcKxR11IgsXJC7HITdc
+         j0vQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741371618; x=1741976418;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FeJw1/wk13slq8SaTOaUUmP/IYv8V17ltprOZMyg7cg=;
+        b=e6emIJ3ytodKFKfbKi2IY22OyK1OHShD2fiYTDbrpQ/oO4URoPNwkvCXb7WE8jUvCO
+         BGvqep+lDpanPFBkYWI00Swp2cvV9F6D8jU2x1k4V+680HQmIxP8bkr6lcmsYWfGqXl7
+         PegfikZMsPWIk5UlRoYWEJdLI9KGnjEBfy4cCV3fHBpTIe+W9EGSa5Z1K98L5AwGfZ5+
+         XeIIQBZKXyAaEYA9XvF+ZM6WnI3drJMmoKjCZtUdF37cdkJ8EiyfdVGL5FtyN+hZDP/i
+         Szgf3Wgwc8RJ6nQX3mjEnji+6MygAareHsbfDLrWnCjEW8SWr/Ws+LuedKNXUDepW8Vq
+         z7Ew==
+X-Forwarded-Encrypted: i=1; AJvYcCUIroZEMTwTXtgaJAFFFHFCHjl1b0JoCuZD9haxD6zq21DrCcAP1lIuIUnXNJH+af0bsNZcYrrt6a4=@vger.kernel.org, AJvYcCWwMZHZDfBfSA9U/hf9EeIadnKkc5gotr68vdtZL8+RLhR5RMex7mWiFYO1xO/DM8CJ4DdCR6iX8m+zB9yH@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnJws5drAkwxQTd+6ogKz4pdo2zcKNeiDvPzHpEpgAvuedWisd
+	/i4dVXrCV93IJZw850I0O9dRwAKziYOuH1O1E0A8lzdfpGRZxqOi
+X-Gm-Gg: ASbGncsn/Gw0GT1JJ68mo+QojsOfyrqihWj7EooRHwtpwRFfPni9/FyLIbqkAeanCdE
+	5hBbLF1KoTLTbibEz1H6zeP+hF9GDufvuJokiLZfJVdMOn0r2rqcS/Z1CRKI+BD0x37ZVCYKqqi
+	NyCTgn3YIMYPNyK7ezYZIXizjevdBifRRgHwZUu/o6BXRkYbxw2oknwySoALgXSAsw3ZvFRAFfv
+	sd4HWfnJE34JC2LDFMkAnP5P2T4Ix/RjH3Eo9e4HpjW+BA+2CQ32t4LO7EhTI/d1HftpihgRgVr
+	lyDMUgzkby9iiiiu70aICwa4f2NPDFtze2tldt5LnZw=
+X-Google-Smtp-Source: AGHT+IG2YFy9NIzuiSU0JWQXIeYFv/n1+QFXy6BL1HyvwEsV80P0bUaURpLNAaL1ozbvN4gTQ0q7mA==
+X-Received: by 2002:a05:690c:998e:b0:6f9:ac35:4483 with SMTP id 00721157ae682-6febf3a9308mr61829397b3.25.1741371617759;
+        Fri, 07 Mar 2025 10:20:17 -0800 (PST)
+Received: from localhost ([2a03:2880:25ff:2::])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6feb2a5c217sm8348817b3.38.2025.03.07.10.20.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Mar 2025 10:20:17 -0800 (PST)
+From: Joshua Hahn <joshua.hahnjy@gmail.com>
+To: Rakie Kim <rakie.kim@sk.com>
+Cc: gourry@gourry.net,
+	akpm@linux-foundation.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	joshua.hahnjy@gmail.com,
+	dan.j.williams@intel.com,
+	ying.huang@linux.alibaba.com,
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com
+Subject: Re: [PATCH 2/4] mm/mempolicy: Enable sysfs support for memory hotplug in weighted interleave
+Date: Fri,  7 Mar 2025 10:19:59 -0800
+Message-ID: <20250307182015.489780-1-joshua.hahnjy@gmail.com>
+X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20250307063534.540-3-rakie.kim@sk.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -63,47 +84,106 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Alison Schofield <alison.schofield@intel.com>
+On Fri,  7 Mar 2025 15:35:31 +0900 Rakie Kim <rakie.kim@sk.com> wrote:
 
-The opcodes recently drifted out of order. Restore for readability.
+Hi Rakie, thank you for your work on this patch! I think it makes a lot of
+sense, given the discussion between Gregory & Honggyu in the weighted
+interleave auto-tuning patch.
 
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
----
+I have a few small nits and questions that I wanted to raise, but none that
+should change the behavior at all : -)
 
-This just went out of order in cxl/next w FEATURES. I only noticed
-while reviewing Shiju's PERFORM_MAINTENANCE patch, where 0x0600 is
-being inserting in the middle. Let's keep this orderly.
+> Previously, sysfs entries for weighted interleave were only created during
+> initialization, preventing dynamically added memory nodes from being recognized.
+> 
+> This patch enables sysfs registration for nodes added via memory hotplug,
+> allowing weighted interleave settings to be updated as the system memory
+> configuration changes.
+> 
+> Signed-off-by: Rakie Kim <rakie.kim@sk.com>
+> ---
+>  mm/mempolicy.c | 51 +++++++++++++++++++++++++++++++-------------------
+>  1 file changed, 32 insertions(+), 19 deletions(-)
+> 
+> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> index 385607179ebd..fc10a9a4be86 100644
+> --- a/mm/mempolicy.c
+> +++ b/mm/mempolicy.c
+> @@ -3389,6 +3389,13 @@ struct iw_node_attr {
+>  	int nid;
+>  };
+>  
+> +struct iw_node_group {
+> +	struct kobject *wi_kobj;
+> +	struct iw_node_attr **nattrs;
+> +};
+> +
+> +static struct iw_node_group *ngrp;
+> +
+>  static ssize_t node_show(struct kobject *kobj, struct kobj_attribute *attr,
+>  			 char *buf)
+>  {
+> @@ -3431,8 +3438,6 @@ static ssize_t node_store(struct kobject *kobj, struct kobj_attribute *attr,
+>  	return count;
+>  }
+>  
+> -static struct iw_node_attr **node_attrs;
+> -
+>  static void sysfs_wi_node_release(struct iw_node_attr *node_attr,
+>  				  struct kobject *parent)
+>  {
+> @@ -3448,7 +3453,7 @@ static void sysfs_wi_release(struct kobject *wi_kobj)
+>  	int i;
+>  
+>  	for (i = 0; i < nr_node_ids; i++)
+> -		sysfs_wi_node_release(node_attrs[i], wi_kobj);
+> +		sysfs_wi_node_release(ngrp->nattrs[i], wi_kobj);
 
+Nit: I think it is slightly awkward to have a global struct ngrp, and then have
+its members passed individually like this. Of course there's nothing that
+we can do for sysfs_wi_release's argument, but I think we can make the
+arguments for sysfs_wi_node_release a bit cleaner. An idea would just be to
+pass an integer (nid) instead of the nattrs[i] pointer. We also don't need
+to pass wi_kobj, since it is accessible from within sysfs_wi_node_release.
 
- drivers/cxl/cxlmem.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Once we make both these changes, patch 3 becomes a little bit cleaner (IMHO),
+where we acquire the lock for the ngrp struct, then access its contents,
+and we don't have to pass two pointers as arguments when they are already
+accessible via the global struct anyways.
 
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 3ec6b906371b..f60d96f97500 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -524,9 +524,6 @@ enum cxl_opcode {
- 	CXL_MBOX_OP_GET_LOG_CAPS	= 0x0402,
- 	CXL_MBOX_OP_CLEAR_LOG           = 0x0403,
- 	CXL_MBOX_OP_GET_SUP_LOG_SUBLIST = 0x0405,
--	CXL_MBOX_OP_GET_SUPPORTED_FEATURES	= 0x0500,
--	CXL_MBOX_OP_GET_FEATURE		= 0x0501,
--	CXL_MBOX_OP_SET_FEATURE		= 0x0502,
- 	CXL_MBOX_OP_IDENTIFY		= 0x4000,
- 	CXL_MBOX_OP_GET_PARTITION_INFO	= 0x4100,
- 	CXL_MBOX_OP_SET_PARTITION_INFO	= 0x4101,
-@@ -551,6 +548,9 @@ enum cxl_opcode {
- 	CXL_MBOX_OP_UNLOCK		= 0x4503,
- 	CXL_MBOX_OP_FREEZE_SECURITY	= 0x4504,
- 	CXL_MBOX_OP_PASSPHRASE_SECURE_ERASE	= 0x4505,
-+	CXL_MBOX_OP_GET_SUPPORTED_FEATURES	= 0x0500,
-+	CXL_MBOX_OP_GET_FEATURE		= 0x0501,
-+	CXL_MBOX_OP_SET_FEATURE		= 0x0502,
- 	CXL_MBOX_OP_MAX			= 0x10000
- };
- 
+>  	kobject_put(wi_kobj);
+>  }
+>  
+> @@ -3486,12 +3491,10 @@ static int add_weight_node(int nid, struct kobject *wi_kobj)
+>  		return -ENOMEM;
+>  	}
+>  
+> -	node_attrs[nid] = node_attr;
+> +	ngrp->nattrs[nid] = node_attr;
+>  	return 0;
+>  }
+>  
+> -struct kobject *wi_kobj;
+> -
+>  static int wi_node_notifier(struct notifier_block *nb,
+>  			       unsigned long action, void *data)
+>  {
+> @@ -3504,10 +3507,10 @@ static int wi_node_notifier(struct notifier_block *nb,
+>  
+>  	switch(action) {
+>  	case MEM_ONLINE:
+> -		err = add_weight_node(nid, wi_kobj);
+> +		err = add_weight_node(nid, ngrp->wi_kobj);
 
-base-commit: 0a14566be090ca51a32ebdd8a8e21678062dac08
--- 
-2.37.3
+Same idea here, we probably don't need to pass wi_kobj into add_weight_node.
+With that said, I can also see the argument for passing the struct itself,
+since it saves a line of variable declaration & definition.
+
+[...snip...]
+
+Please let me know what you think! I hope you have a great day, thank you
+again for this patch!
+Joshua
+
+Sent using hkml (https://github.com/sjp38/hackermail)
 
