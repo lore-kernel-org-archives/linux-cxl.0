@@ -1,109 +1,195 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A697E28FF;
-	Fri,  7 Mar 2025 01:02:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3095B28FF;
+	Fri,  7 Mar 2025 01:04:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741309324; cv=none; b=kXsmnaBuEWp9Aa0Rn44pRwSVgFcYf95Xe2sYSFpAy25z/FK/KaBp4fnotJbsjug+J+6PvV4gUwJf2yGoQX0yBv6v9NONVQP6nwhZTirf0f+b+XJTUpRX8Ust7P//iM9PmG45s9DR1OicriyexM3r8rod3oyQTvwvdEUbIXkMqfs=
+	t=1741309492; cv=none; b=f4/0rBMk4PX4xev9b2jdc+oB2DSbUpmh4F7BwdrOJwGa+i7jblr1NVDw+VBHbG42ZxOP70BbGJOCVpXjVrVt6ElJHYronf84KgDeJYe22bnGBxEUdfVLAQcT1AdLH+55fmnjssbGbZUC4aM8gVBBR9cryyEHsmXanYpqJVL2V40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741309324; c=relaxed/simple;
-	bh=xkHJgHv1hq6vVqHXKJBL8m/9XUZ+TOSka++iVqVosPs=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G6fAs0d4YhrhxenNuWGmxniDaIbVBJjYsvGEz4lRUqYh8xnVz3uTf9s8zqr0NP8lRg0nwt8ENX1kbHovKD2O0w5jUQeFDcblFNQWt7EIyYul6gPUJcVTIhvcaVdJD31i8CtUBYbPOI8zrZt5Zh1Uen8cMPdvXv2vjr9m2etHCog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Z87Gz49BKz6K8Rw;
-	Fri,  7 Mar 2025 08:59:39 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3A7DF1403D2;
-	Fri,  7 Mar 2025 09:01:59 +0800 (CST)
-Received: from localhost (10.48.43.65) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 7 Mar
- 2025 02:01:48 +0100
-Date: Fri, 7 Mar 2025 09:01:43 +0800
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <shiju.jose@huawei.com>
-CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
-	<dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>, <david@redhat.com>,
-	<Vilas.Sridharan@amd.com>, <linux-edac@vger.kernel.org>,
-	<linux-acpi@vger.kernel.org>, <linux-mm@kvack.org>,
-	<linux-kernel@vger.kernel.org>, <bp@alien8.de>, <tony.luck@intel.com>,
-	<rafael@kernel.org>, <lenb@kernel.org>, <mchehab@kernel.org>,
-	<leo.duran@amd.com>, <Yazen.Ghannam@amd.com>, <rientjes@google.com>,
-	<jiaqiyan@google.com>, <Jon.Grimm@amd.com>, <dave.hansen@linux.intel.com>,
-	<naoya.horiguchi@nec.com>, <james.morse@arm.com>, <jthoughton@google.com>,
-	<somasundaram.a@hpe.com>, <erdemaktas@google.com>, <pgonda@google.com>,
-	<duenwen@google.com>, <gthelen@google.com>, <wschwartz@amperecomputing.com>,
-	<dferguson@amperecomputing.com>, <wbs@os.amperecomputing.com>,
-	<nifan.cxl@gmail.com>, <tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
-	<roberto.sassu@huawei.com>, <kangkang.shen@futurewei.com>,
-	<wanghuiqiang@huawei.com>, <linuxarm@huawei.com>
-Subject: Re: [PATCH 3/8] cxl/memfeature: Add CXL memory device ECS control
- feature
-Message-ID: <20250307090143.00003e3f@huawei.com>
-In-Reply-To: <20250227223816.2036-4-shiju.jose@huawei.com>
-References: <20250227223816.2036-1-shiju.jose@huawei.com>
-	<20250227223816.2036-4-shiju.jose@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1741309492; c=relaxed/simple;
+	bh=oDrfQqiYXqiLn0JVeuGrsRgK5P6HmYH2KIyp8Qky3l8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cHNTmahksGO40wc4iEY7oN5Nuh4GeIoJue7XxX5aKhU4mqO5FSC2s6klgFxMitY65Dpg0l8hgG69M865hBUEmVAYSbGbOF+3V8+7z1iwPvgOjEZBlHy/3vvqR6qqO9Wq2orIhwgj5GH0Q/IhHrQUY352ErnbOw4KGJHJGqHT9jk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sv3S7TzU; arc=none smtp.client-ip=209.85.221.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sv3S7TzU"
+Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-523dc3649edso384670e0c.0;
+        Thu, 06 Mar 2025 17:04:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741309490; x=1741914290; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FpgNsP0RsTTpLOpERJI2CJLUOC16l+9Hasgl+r3eevc=;
+        b=Sv3S7TzUlpMolCGk33QawcMxtKNbctN5ntahHoTZupguBRmyKStq7LoZt2QxG1WEZA
+         NGJaiqQh1MKp0x+U3F4m9H1klNathg/GU87K1+V2h+lDOzmRabfFiMoZg7ZcQo2hyW4b
+         a+ifR8SauPKW+g4FiuqNFCMUMmojZklMw4edDwWFyhoAapScO4OUw2u1ADS6KV7FHG0Y
+         I0jDTiDqIluyfjW+4dH86UAYdfeZAj+bLSJvJy4+25BRq6UYvMeUul3jltd+8s/oaGLS
+         K5JRIkhFeQCFPmJAttLDA0LBXmMVq+4jTvORlOXWXJiKJTRMvKlde2DSwo3KA1Vzgl3n
+         l8kA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741309490; x=1741914290;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FpgNsP0RsTTpLOpERJI2CJLUOC16l+9Hasgl+r3eevc=;
+        b=F4J2APvnxDvSyYhMX3xITMYmz1cjh911J0ZDMV/1NKqicactEOr7/J2hcdCh4LVKVH
+         iI4hudq7TKlbEG2EI4GnFAZQmV8zA5ANNbQ6/a/6UjC4Qsn+ZevXf+BDF1840bOYH/N/
+         EiEh3ntJE5gjBV6dRjMsHaf7FnmtD2FU8gYM6SAWUHvEvdq154DLQqVa4NWeSLyiIa8l
+         HpbWbNlqzCJNbgvZU9361Nqe7PG1I7cvJb7GuIVLKfwQ93M/z4czv8MAOeStJOGKVxoR
+         3eiVKKYhFTWCdf4Y5Os9HQmjuW4Okg1SV+E7pHNZeGPmHuXZN33MLKK/8O6XDexSxBG+
+         ecWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVjy5NiK5L1+GU5rR9LcgfUuI3O4RrvPe/DrRfu57wlzhIjAA4I42QonR40y6yye9qnNvPI+WxFx342+Q8lmBY=@vger.kernel.org, AJvYcCWHKZjFHCU8NpzAJX5o5SU/l2ipoMn+GKHBKHSaHa7Iu6pkx6HCjT+qvMFmCIHahdGgoK9oSxhxr5s=@vger.kernel.org, AJvYcCWpA/gxY1lwtlvkg2ip3hBjUJoM9kYs+Xtkhgu+jgOH5DKiUGcxsBetcFnFPRubIO1oepoCgOcesdvU@vger.kernel.org, AJvYcCXUW3ZC70C60UtKOCgrRtK2fBrIVWhDN4Gub7/ad4lWNOk9kI3IVguXcPYy9Mp7vDMN8i+u4bxDer68P2mB@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNTKgKKdUg5IxP/sm4mhXq3lOkMWUPpRGtMYjgiXrM0qkktRkR
+	hUo0z46vPWIUJ4anDcLuGeei7i1zrVtbdtXSFGoRRxHy3i+H2Y0CUJlHAGuhd05Qzd7QLmjKL1Z
+	/tYUgIzAy6E9hcTktp44eDP9K2es=
+X-Gm-Gg: ASbGncvWtN2BiuzHsGqFzYKKfYklVna+AJ5oT1oUOhHLoNSihWV2+1tuR+tfd8TubQB
+	C0RcSgBClojC521uWTmMGHYzT3md+3D2fkdD6B6H2AlWoJ1A0YTqJsd3c6rMDSM+nuUzW6MjsLD
+	kRQSjlu478ZZaMpTyD+bxgloA9FODQs5BugmYLWHwFFoX62kMq9lW6JCeJ
+X-Google-Smtp-Source: AGHT+IGbwmafUFC0g3M/wodTSstZb8EnCAH6b9gBxI+jfvUYZxWjuOY7Y5eVL2Cn7rIG2fpCOUE53vdi5hXO2D0kVEU=
+X-Received: by 2002:a05:6122:c86:b0:520:6773:e5bf with SMTP id
+ 71dfb90a1353d-523e3ff02fcmr1565400e0c.1.1741309489887; Thu, 06 Mar 2025
+ 17:04:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
- frapeml500008.china.huawei.com (7.182.85.71)
+References: <20250227030952.2319050-1-alistair@alistair23.me>
+ <20250227030952.2319050-10-alistair@alistair23.me> <2025022717-dictate-cortex-5c05@gregkh>
+ <CAH5fLgiQAdZMUEBsWS0v1M4xX+1Y5mzE3nBHduzzk+rG0ueskg@mail.gmail.com>
+ <2025022752-pureblood-renovator-84a8@gregkh> <CANiq72kS8=1R-0yoGP5wwNT2XKSwofjfvXMk2qLZkO9z_QQzXg@mail.gmail.com>
+ <2025022749-gummy-survivor-c03a@gregkh> <CAKmqyKNei==TWCFASFvBC48g_DsFwncmO=KYH_i9JrpFmeRu+w@mail.gmail.com>
+ <67c8abffd2deb_1a7f294d5@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <67c8abffd2deb_1a7f294d5@dwillia2-xfh.jf.intel.com.notmuch>
+From: Alistair Francis <alistair23@gmail.com>
+Date: Fri, 7 Mar 2025 11:04:23 +1000
+X-Gm-Features: AQ5f1JqcTJhjy1IWJHBHvzqfhRy4UX4pT0bM7wOi79bttO_uR-yCHqTUQrbxBnM
+Message-ID: <CAKmqyKORk5n_b2DUDfCVmttE4T+S-LQvcp0NoQD_O7D-csdEvA@mail.gmail.com>
+Subject: Re: [RFC v2 09/20] PCI/CMA: Expose in sysfs whether devices are authenticated
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, 
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Alice Ryhl <aliceryhl@google.com>, 
+	Alistair Francis <alistair@alistair23.me>, linux-cxl@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, lukas@wunner.de, linux-pci@vger.kernel.org, 
+	bhelgaas@google.com, Jonathan.Cameron@huawei.com, 
+	rust-for-linux@vger.kernel.org, akpm@linux-foundation.org, 
+	boqun.feng@gmail.com, bjorn3_gh@protonmail.com, wilfred.mallawa@wdc.com, 
+	ojeda@kernel.org, a.hindborg@kernel.org, tmgross@umich.edu, gary@garyguo.net, 
+	alex.gaynor@gmail.com, benno.lossin@proton.me, 
+	Alistair Francis <alistair.francis@wdc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 27 Feb 2025 22:38:10 +0000
-<shiju.jose@huawei.com> wrote:
+On Thu, Mar 6, 2025 at 5:55=E2=80=AFAM Dan Williams <dan.j.williams@intel.c=
+om> wrote:
+>
+> Alistair Francis wrote:
+> > On Fri, Feb 28, 2025 at 5:33=E2=80=AFAM Greg KH <gregkh@linuxfoundation=
+.org> wrote:
+> > >
+> > > On Thu, Feb 27, 2025 at 05:45:02PM +0100, Miguel Ojeda wrote:
+> > > > On Thu, Feb 27, 2025 at 1:01=E2=80=AFPM Greg KH <gregkh@linuxfounda=
+tion.org> wrote:
+> > > > >
+> > > > > Sorry, you are right, it does, and of course it happens (otherwis=
+e how
+> > > > > would bindings work), but for small functions like this, how is t=
+he C
+> > > > > code kept in sync with the rust side?  Where is the .h file that =
+C
+> > > > > should include?
+> >
+> > This I can address with something like Alice mentioned earlier to
+> > ensure the C and Rust functions stay in sync.
+> >
+> > > >
+> > > > What you were probably remembering is that it still needs to be
+> > > > justified, i.e. we don't want to generally/freely start replacing
+> > > > "individual functions" and doing FFI both ways everywhere, i.e. the
+> > > > goal is to build safe abstractions wherever possible.
+> > >
+> > > Ah, ok, that's what I was remembering.
+> > >
+> > > Anyway, the "pass a void blob from C into rust" that this patch is do=
+ing
+> > > feels really odd to me, and hard to verify it is "safe" at a simple
+> > > glance.
+> >
+> > I agree, it's a bit odd. Ideally I would like to use a sysfs binding,
+> > but there isn't one today.
+> >
+> > I had a quick look and a Rust sysfs binding implementation seems like
+> > a lot of work, which I wasn't convinced I wanted to invest in for this
+> > series. This is only a single sysfs attribute and I didn't want to
+> > slow down this series on a whole sysfs Rust implementation.
+> >
+> > If this approach isn't ok for now, I will just drop the sysfs changes
+> > from the series so the SPDM implementation doesn't stall on sysfs
+> > changes. Then come back to the sysfs attributes in the future.
+>
+> This highlights a concern I have about what this means for ongoing
+> collaboration between this native PCI device-authentication (CMA)
+> enabling and the platform TEE Security Manager (TSM) based
+> device-security enabling.
+>
+> First, I think Rust for a security protocol like SPDM makes a lot of
+> sense. However, I have also been anticipating overlap between the ABIs
+> for conveying security collateral like measurements, transcripts, nonces
+> etc between PCI CMA and PCI TSM. I.e. potential opportunities to
+> refactor SPDM core helpers for reuse. A language barrier and an ABI
+> barrier (missing Rust integrations for sysfs and netlink ABIs that were
+> discussed at Plumbers) limits that potential collaboration.
 
-> From: Shiju Jose <shiju.jose@huawei.com>
-> 
-> CXL spec 3.2 section 8.2.10.9.11.2 describes the DDR5 ECS (Error Check
-> Scrub) control feature.
-> The Error Check Scrub (ECS) is a feature defined in JEDEC DDR5 SDRAM
-> Specification (JESD79-5) and allows the DRAM to internally read, correct
-> single-bit errors, and write back corrected data bits to the DRAM array
-> while providing transparency to error counts.
-> 
-> The ECS control allows the requester to change the log entry type, the ECS
-> threshold count (provided the request falls within the limits specified in
-> DDR5 mode registers), switch between codeword mode and row count mode, and
-> reset the ECS counter.
-> 
-> Register with EDAC device driver, which retrieves the ECS attribute
-> descriptors from the EDAC ECS and exposes the ECS control attributes to
-> userspace via sysfs. For example, the ECS control for the memory media FRU0
-> in CXL mem0 device is located at /sys/bus/edac/devices/cxl_mem0/ecs_fru0/
-> 
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-Hmm. No idea why I didn't tag this before. It's been fine for ages.
+I see your concern, but I'm not sure it's as bad as you think.
 
-One really small thing if respinning for some other reason,
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+We will need to expose the Rust code to C no matter what. The CMA,
+NVMe, SATA and SAS is all C code, so the Rust library will have a nice
+C style ABI to allow those subsystems to call the code.
 
+The sysfs issue is mostly because I am trying to write as much of the
+sysfs code in Rust, but there aren't bindings yet.
 
-> +static int cxl_mem_ecs_set_attrs(struct device *dev,
-> +				 struct cxl_ecs_context *cxl_ecs_ctx,
-> +				 int fru_id, struct cxl_ecs_params *params,
-> +				 u8 param_type)
-> +{
-...
-> +
-> +	/*
-> +	 * Fill attribute to be set for the media FRU
+So if we want to re-use code (such as measurements, transcripts or
+nonces) we just need to expose a C style function in Rust which can
+then can then be used.
 
-Trivial but could be a single line comment.
+So I don't think this really limits code re-use. Obviously there might
+need to be some refactoring to share the code, but that will be true
+of C or Rust code.
 
-> +	 */
-> +	ecs_config = le16_to_cpu(fru_rd_attrs[fru_id].ecs_config);
-> +	switch (param_type) {
-> +	case CXL_ECS_PARAM_LOG_ENTRY_TYPE:
+>
+> Now if you told me the C SPDM work will continue and the Rust SPDM
+> implementation will follow in behind until this space settles down in a
+> year or so, great. I am not sure it works the other way, drop the C
 
+That was kind of my original plan (see the first RFC), but maintaining
+both, with at least one being out of tree, will be a huge pain and
+prone to breakage.
+
+Also I suspect the Rust implementation will struggle to keep up if the
+C version is merged (and hence has more people looking at it) compared
+to just me working on the Rust code.
+
+> side, when the Rust side is not ready / able to invest in some ABI
+> integrations that C consumers need.
+>
+> Otherwise this thread seems to be suggesting that people like me need to
+> accelerate nascent cross C / Rust refactoring skills, or lean on Rust
+> folks to care about that refactoring work.
+
+I'm happy to help maintain the C / Rust code and help refactor as
+required. The current ABI to this library is all "C style" Rust to
+keep it simple and easily compatible with the out of tree C SPDM
+implementation and callers of the code.
+
+So hopefully it doesn't require much Rust knowledge to refactor the ABI.
+
+This is the type of feedback that I wanted to get though. Before this
+goes too far is it something that is going to be accepted upstream?
+
+Alistair
