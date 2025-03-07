@@ -1,128 +1,156 @@
-Received: from out-175.mta1.migadu.com (out-175.mta1.migadu.com [95.215.58.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4CCD143748
-	for <linux-cxl@vger.kernel.org>; Fri,  7 Mar 2025 01:45:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 017AD85931;
+	Fri,  7 Mar 2025 01:58:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741311905; cv=none; b=JGgHRSc9SO6jbajmoQmLktQWJzSb88NmKmcKYFdPZWYPVvpx/DNRN9dZU31CuIija71RfUpJ1Igpq8BmsA4cQvIbQrb/jL4IsfLyrQGOC0BaWoBtGS+nelgXM9c3eo43o8RGAr6F0J/BngHE83lsjpcW34qijvKGSB0ySYpC/pw=
+	t=1741312740; cv=none; b=jOHncw6KNRv6O5JTjsA8mCUm2UCw/EyazvbjwcVBntpyHFwAN5nvd5KTCK4mO8bc8d+TixCL261MI86Nn26lfrwDP5BmQOjnS46T5K+6ABXxJhBmr5JK/nca+oTgUO5yHjHpXTcrVvh6EZhaOTz92ud6xpEbU8MhCQecjZZxfzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741311905; c=relaxed/simple;
-	bh=iQRwdXWwOkqudGH6CLUUMRxPEb7i4/3wmKSEvV5Uk8M=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=RFtDK4eTW+EYrKBDKGROxbPM9UutaJTyWsWPImr9tMFfvFKMM2gL7/mSwO082fyGMtE4+7jWAGNCPZOugc31DRDWAaI6W5GSl1T1IoeTTnIMYLZ9DIqnTvEy/Eq1SD6hePhhWOtNNu/gAPTd1FSY8DfdC7ZECP8dOQsRHlDhnq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TZjjf+gs; arc=none smtp.client-ip=95.215.58.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1741312740; c=relaxed/simple;
+	bh=SO5dJfUAzOaReuCv9zTayxuehk9CekNpUpgtIP8rz9I=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A7Kx2aaRBK1tJLaVFFdTM1/xqCoOchQCuphUZ7FvT2R0ZQEEr6tXWTjqJRiEc5bN8zambbGfnYa8eIjpJKv+kTFcaR/iG/+hPfte4AjyfvMckO1bGNVd3aCw6Fj4IdTlmLyUi9sln6tNn8q4zW4g4KVvu42RN3DAPuTCZMrgUMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HS3UycWY; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TZjjf+gs"
-Content-Type: text/plain;
-	charset=utf-8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1741311900;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t2bFMbfMVXDYoGzv6lqjOkbH2mDLTHmTH76icIt/9qA=;
-	b=TZjjf+gs6e7iSFwZLvxXGeKsdFqrnSMxPtCCdeOYrmzl5aRoRTk7QWztCii2nM+vfyK4qi
-	5nUCVLCmWH9dWZkCkxvnNJIKZn4fOvPkXQWvNkwGc87JlbsLk+kYDUmpJehWkxnU6djUOb
-	Ln78K624MbO/GDzkE2FnVgNRV19Ys/U=
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HS3UycWY"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2239f8646f6so25421295ad.2;
+        Thu, 06 Mar 2025 17:58:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741312738; x=1741917538; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ECoNV4kHAT50hvGTY86CJfgCjEmWaFi+qU8bYOh0B0Q=;
+        b=HS3UycWY8ZyS81S0HhRV1+gNt7WDtkZcak+omKAlW/7lDj133dsGMjj7ezDE6w+zhn
+         XH1Gk5x5g2BUvf1ezH4nDBAQn6j1v6dRPu2U1ljbfORgl1q5HCVvQmhPNNQnZKGO7r+v
+         C9jg6hwr9cgtK0pw7dC/5jJ92RP4j+KlWTuJAVnhwiqEDQIlnFbx/HQNs6OzDBhOutNq
+         F2GMV2i4uJmin9Nn0g6sBJUPxFI4oryRbzATYXMyO1Sts4KH6A2xsCkIuCMy1E3atcbR
+         2zaah0i8BZqOgpniM7+qLEAt8CbDs/ojYdOUOMAQsTBeoZmL66x4TFdquF3KoqEf7ngK
+         99nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741312738; x=1741917538;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ECoNV4kHAT50hvGTY86CJfgCjEmWaFi+qU8bYOh0B0Q=;
+        b=vwVwWk6qYwkFY6QOM9YjOr7WgrHmr/YCKRset6RpSS4euH+xVHx1/zHYDlzc9OP+wW
+         zkwRJg6RAENP1KU6kwdE8PcyZZBsbqa0KJ3gTV35cJTy0jLVzJUjwJxo1/efIJ+m0nAF
+         Urh66c0Tfv6mOopmODhV+Blwle4yXgzF8DS9s/CTKrH+QtV8OcqvpHKFd0cNtSuhExrs
+         vZxiba6hgN52f6Btch3vF72Mc7nd6dphTl6lZpSC+TaLh7h9jl8SvZNBNfHEbHgjuOtN
+         YD2eIb/TQsBGVK4xztRwzm8pChkvu7IU6ScqjR6RxELnEkrEkKgQ1SmHqUD2Yx2/wS+a
+         rufw==
+X-Forwarded-Encrypted: i=1; AJvYcCUmRk4c16H7wwrg0W/T2r56l7xPbTqCYQ41MMWTp+IbWChdcAJmQa50RPhkmgEtCZt2+0tIWEujidhgtw==@vger.kernel.org, AJvYcCVrAAkKLt4ISqGQyXuQ9KyuGo0S7QsBEGKRuQxllpcnNh1yhMijCvaUnK6yAfQFD8PFtiBVemNYEU1BDmk7@vger.kernel.org, AJvYcCX+L0ZCgkrWi4oCwGQ9nsKTxGqgm0EPSdaT/mSpDF8qggBeHuq6j2M38jlj7N8PUfkyWd18HpH3Eyqw@vger.kernel.org
+X-Gm-Message-State: AOJu0YwH0kS2ZglMRCXZ0Y8CRrKJG8LNlTA7J6H2rZPBm2T6+RWFQm2K
+	ZL6SpvhTmJZj1X47iNqTwhqS+0kWKpOQTyJmNQ9Qoi5v4CDPO8yG
+X-Gm-Gg: ASbGnctftrot2wKq50itRjchsxyJdUKA0PPNVqxcI+E2FyG6BXgF/PGL38BMYhmKUqy
+	cc2eb4E8jfcbOUG94DZuuhn2+N7EzId3hZ2iqhCkj8kHbLkA4be94Pi3HACnKa4ngMovosPfse1
+	4yOGmE0L0OF5ETGMzb2/Z8UikVvTrqFgPuqzTjmQktGnsUw//cg60K98sdlb+uhIZIrAP9buiah
+	nTzU+aHS9Ma5mgfeGx0HJNpeCjL65q+GtNqtBWukOA1BUXi/T3zJv1zqyDP+60sNV5LAfRbnVlQ
+	e85yjdqlXluP09k7M4ZoFSzPOU4BsFhxhAAwsAo=
+X-Google-Smtp-Source: AGHT+IEjw6rCh3qXzIOYCz6LrbC5tDDItMPSnIX6vQ3xn2TeukYDLpMq4pY2PvjifGCV+mnZTC2cGA==
+X-Received: by 2002:a17:903:283:b0:216:2bd7:1c2f with SMTP id d9443c01a7336-2242888d06amr21833985ad.18.1741312738064;
+        Thu, 06 Mar 2025 17:58:58 -0800 (PST)
+Received: from debian ([2601:646:8f03:9fee:e44d:748a:50ed:471f])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22410ab9e39sm19138105ad.252.2025.03.06.17.58.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Mar 2025 17:58:57 -0800 (PST)
+From: Fan Ni <nifan.cxl@gmail.com>
+X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
+Date: Thu, 6 Mar 2025 17:58:38 -0800
+To: shiju.jose@huawei.com
+Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, david@redhat.com, Vilas.Sridharan@amd.com,
+	linux-edac@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, bp@alien8.de,
+	tony.luck@intel.com, rafael@kernel.org, lenb@kernel.org,
+	mchehab@kernel.org, leo.duran@amd.com, Yazen.Ghannam@amd.com,
+	rientjes@google.com, jiaqiyan@google.com, Jon.Grimm@amd.com,
+	dave.hansen@linux.intel.com, naoya.horiguchi@nec.com,
+	james.morse@arm.com, jthoughton@google.com, somasundaram.a@hpe.com,
+	erdemaktas@google.com, pgonda@google.com, duenwen@google.com,
+	gthelen@google.com, wschwartz@amperecomputing.com,
+	dferguson@amperecomputing.com, wbs@os.amperecomputing.com,
+	nifan.cxl@gmail.com, tanxiaofei@huawei.com,
+	prime.zeng@hisilicon.com, roberto.sassu@huawei.com,
+	kangkang.shen@futurewei.com, wanghuiqiang@huawei.com,
+	linuxarm@huawei.com
+Subject: Re: [PATCH 1/8] cxl: Add helper function to retrieve a feature entry
+Message-ID: <Z8pSzpmzHfimDxEH@debian>
+References: <20250227223816.2036-1-shiju.jose@huawei.com>
+ <20250227223816.2036-2-shiju.jose@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
-Subject: Re: ndctl cxl test suite fails in arm64 QEMU
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Itaru Kitayama <itaru.kitayama@linux.dev>
-In-Reply-To: <Z8HJbMkV6mzikTI8@vm4>
-Date: Fri, 7 Mar 2025 10:44:23 +0900
-Cc: linux-cxl@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <4135507A-DECD-4944-8B39-737A7C90D40A@linux.dev>
-References: <43568B03-6832-4EB1-BF46-EF0F176509E2@linux.dev>
- <Z75G2UKmx7G59u7P@aschofie-mobl2.lan> <Z8HJbMkV6mzikTI8@vm4>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250227223816.2036-2-shiju.jose@huawei.com>
 
-Hi Jonathan, Alison,
+On Thu, Feb 27, 2025 at 10:38:08PM +0000, shiju.jose@huawei.com wrote:
+> From: Shiju Jose <shiju.jose@huawei.com>
+> 
+> Add helper function to retrieve a feature entry from the supported
+> features list, if supported.
+> 
+> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 
-> On Feb 28, 2025, at 23:34, Itaru Kitayama <itaru.kitayama@linux.dev> =
-wrote:
->=20
-> On Tue, Feb 25, 2025 at 02:40:25PM -0800, Alison Schofield wrote:
->> On Tue, Feb 25, 2025 at 01:09:57PM +0900, Itaru Kitayama wrote:
->>> Hi,
->>>=20
->>> Has anyone noticed the ndctl cxl test suite failures I reported =
-below on arm64, QEMU emulation?
->>>=20
->>> https://github.com/pmem/ndctl/issues/278
->>>=20
->>> I=E2=80=99m using Jonathan=E2=80=99s latest CXL capable QEMU [1], =
-and the latest CXL kernel [2].
->>=20
->> Hi Itaru,
->>=20
->> Looking at region.c:size_store() it seems that alloc_hpa() is =
-failing.
->> (kstrtou64 is arch independent and it works for me with same script &
->> value)
->>=20
->> Check the dmesg log at the time of the failure. alloc_hpa() may be
->> emitting a message.  (In the run_qemu.sh cmdline add '--cxl-debug')
->=20
-> dynamic debug reported this (kernel is without kaslr, today's =
-cxl/next):
->=20
-> [  193.267649] device: 'region4': device_add
-> [  193.267931] bus: 'cxl': add device region4
-> [  193.268284] cxl region4: bus: 'cxl': __driver_probe_device: matched =
-device with driver cxl_region
-> [  193.268333] cxl region4: bus: 'cxl': really_probe: probing driver =
-cxl_region with device
-> [  193.268401] cxl_region region4: no default pinctrl state
-> [  193.268482] cxl_region region4: probe with driver cxl_region =
-rejects match -6
->=20
-> does the above show the region4 was not added properly? The sysfs
-> entries are there after the out of range failure.
+Reviewed-by: Fan Ni <fan.ni@samsung.com>
 
-The driver/cxl/core/region.c=E2=80=99s size_store() triggers a sequence =
-of:=20
-
-alloc_hpa()
-alloc_free_mem_region()
-get_free_mem_region() // with flags set to 0, retruns -ERANGE
-
-While I am looking at the resource core code, do you think this is =
-caused by the old firmware I am using
-when booting QEMU built off of your CXL topic branch? Suggestions are =
-welcome.
-
-Itaru.=20
-
->=20
-> Itaru.
->=20
->>=20
->> Sounds like Marc is on to something and maybe the KASLR is known
->> to cause this problem.
->>=20
->> Thanks for posting to this list and send any further questions or
->> comments. Happy to have you using run_qemu.sh and the cxl tests!
->>=20
->> Alison
->>=20
->>=20
->>>=20
->>> [1] https://gitlab.com/jic23/qemu/ cxl-2025-02-20
->>> [2] https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/
->>>=20
->>> Thanks,
->>> Itaru.
-
-
+> ---
+>  drivers/cxl/core/core.h     |  2 ++
+>  drivers/cxl/core/features.c | 20 ++++++++++++++++++++
+>  2 files changed, 22 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> index 3d3b00835446..6c83f6f18122 100644
+> --- a/drivers/cxl/core/core.h
+> +++ b/drivers/cxl/core/core.h
+> @@ -120,6 +120,8 @@ int cxl_port_get_switch_dport_bandwidth(struct cxl_port *port,
+>  int cxl_gpf_port_setup(struct device *dport_dev, struct cxl_port *port);
+>  
+>  #ifdef CONFIG_CXL_FEATURES
+> +struct cxl_feat_entry *cxl_get_feature_entry(struct cxl_dev_state *cxlds,
+> +					     const uuid_t *feat_uuid);
+>  size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
+>  		       enum cxl_get_feat_selection selection,
+>  		       void *feat_out, size_t feat_out_size, u16 offset,
+> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
+> index 048ba4fc3538..c822fb4a8c33 100644
+> --- a/drivers/cxl/core/features.c
+> +++ b/drivers/cxl/core/features.c
+> @@ -203,6 +203,26 @@ int devm_cxl_setup_features(struct cxl_dev_state *cxlds)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(devm_cxl_setup_features, "CXL");
+>  
+> +struct cxl_feat_entry *cxl_get_feature_entry(struct cxl_dev_state *cxlds,
+> +					     const uuid_t *feat_uuid)
+> +{
+> +	struct cxl_features_state *cxlfs = to_cxlfs(cxlds);
+> +	struct cxl_feat_entry *feat_entry;
+> +	int count;
+> +
+> +	/*
+> +	 * Retrieve the feature entry from the supported features list,
+> +	 * if the feature is supported.
+> +	 */
+> +	feat_entry = cxlfs->entries->ent;
+> +	for (count = 0; count < cxlfs->entries->num_features; count++, feat_entry++) {
+> +		if (uuid_equal(&feat_entry->uuid, feat_uuid))
+> +			return feat_entry;
+> +	}
+> +
+> +	return ERR_PTR(-ENOENT);
+> +}
+> +
+>  size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
+>  		       enum cxl_get_feat_selection selection,
+>  		       void *feat_out, size_t feat_out_size, u16 offset,
+> -- 
+> 2.43.0
+> 
