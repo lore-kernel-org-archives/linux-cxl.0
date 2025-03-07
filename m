@@ -1,73 +1,74 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA6461A4F3C;
-	Fri,  7 Mar 2025 19:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4DE27346F
+	for <linux-cxl@vger.kernel.org>; Fri,  7 Mar 2025 20:01:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741377204; cv=none; b=noU3pF+q6Ax2vnIqyf2dTJ6zOF9e/ozZTqCkROHx8Dgncx8YjAAs+wM6OWVqPN2cZw7S7/ZkgR4VNw3BjxQAUKdk31XIBYnkCzHamCOp75o1E+sjROeBtMDe3VzlTgHEAy8JD4cxa1Q7uzr9U33fc0L6ZD9s68qwAcL/gphezpw=
+	t=1741377683; cv=none; b=MqNGZPKcuBgLfo9gE7sUjz/q6KUQhl1E4TNcjPILTAYW96yky3xzt12dG6BdCBX/vcEBH2YTRCGri1TxTepcrXBwnVqsevEe7Mgtg+26pp+H17HhnhFGLNeQx5HI8LzTLGxpWmq1o/itojul7toeXiAumTZu9ycoBRb5IgKZin0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741377204; c=relaxed/simple;
-	bh=jW13cb5LfXx1elX2HCWSeQ4XXS/LTqhw13X2BO7S/yM=;
+	s=arc-20240116; t=1741377683; c=relaxed/simple;
+	bh=DBVgDdif6yxRg+snp0WJEq1J1tjrHAlyP2uDA8cpPRQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jnh0ecQrvKjheGtosCXZqKTrLNB8lZ8oC8wSk0SGwNw5MomIHK8uzhCvnHzjK0cMtgOetyHNF/hkY4xBcTFwiz9Ec75eBqpB4SPVnvg2u+2LyI80x0ca45TyWG473vZkwl4SupWtV5E7PGasbwg5UsQW8a9xaxIFzG7ESWEe184=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N+TaZrMh; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yn4cPOrKLY8i/0sXutxS2qdDSgU2dLYZxpUNDv06VcbIokkx9iyR41fmLWUyox4XdSiREc6IKuEnXCmU1TrB9gcGktVpYsBmG5svoXkiHc11M1HwPAKtErvJb4ERib1E0LKBamePYBrikPL4wsp77XQCi14cgV0xYzK70A/uzr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Jjur+hcL; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N+TaZrMh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741377203; x=1772913203;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jW13cb5LfXx1elX2HCWSeQ4XXS/LTqhw13X2BO7S/yM=;
-  b=N+TaZrMhFn/uJ51M/UAPMDzC/Zul7pAp7yBy1ikQcJUkycQeIjPEfUWd
-   8K0YtDzdxo4ESXLlfasyLS687EGLQewSmGRiHjt98lXNPYTKRc0h8oK98
-   lnC34WYQeiiv9rtN/KtqIx5o369J7l4ODvKl+kPTO+z1oRVy9JFplgNN0
-   zSndKBwuWIeGRmJ8q1Gh9lUIrqtW07rJlGPxn58QuSCoL+CbuKtowRiok
-   3VVYYR26l38aHXXK2/LaS1JIWwhpVUmmv5xjWTrSm58Jkvz77oLawMDNC
-   8RfdtlsyXvMJCn3yUXI956RVCR81Ojs4U6r/jSUYjC0Vnpg6W6swopcwD
-   Q==;
-X-CSE-ConnectionGUID: hRdI6WlESoWa7MnNxKOgFg==
-X-CSE-MsgGUID: 5hwMx20RRcCkfKtreUVApQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11366"; a="46362199"
-X-IronPort-AV: E=Sophos;i="6.14,230,1736841600"; 
-   d="scan'208";a="46362199"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 11:53:22 -0800
-X-CSE-ConnectionGUID: 2GvcInyMSbeO20ibsiAMuA==
-X-CSE-MsgGUID: fLxSYKcnScOnnm+4wTrZrA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,230,1736841600"; 
-   d="scan'208";a="124430688"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.110.159])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 11:53:21 -0800
-Date: Fri, 7 Mar 2025 11:53:18 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: shiju.jose@huawei.com
-Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com, david@redhat.com,
-	Vilas.Sridharan@amd.com, linux-edac@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, bp@alien8.de, tony.luck@intel.com,
-	rafael@kernel.org, lenb@kernel.org, mchehab@kernel.org,
-	leo.duran@amd.com, Yazen.Ghannam@amd.com, rientjes@google.com,
-	jiaqiyan@google.com, Jon.Grimm@amd.com, dave.hansen@linux.intel.com,
-	naoya.horiguchi@nec.com, james.morse@arm.com, jthoughton@google.com,
-	somasundaram.a@hpe.com, erdemaktas@google.com, pgonda@google.com,
-	duenwen@google.com, gthelen@google.com,
-	wschwartz@amperecomputing.com, dferguson@amperecomputing.com,
-	wbs@os.amperecomputing.com, nifan.cxl@gmail.com,
-	tanxiaofei@huawei.com, prime.zeng@hisilicon.com,
-	roberto.sassu@huawei.com, kangkang.shen@futurewei.com,
-	wanghuiqiang@huawei.com, linuxarm@huawei.com
-Subject: Re: [PATCH 2/8] cxl/memfeature: Add CXL memory device patrol scrub
- control feature
-Message-ID: <Z8tOrqOnkv-ZUsEy@aschofie-mobl2.lan>
-References: <20250227223816.2036-1-shiju.jose@huawei.com>
- <20250227223816.2036-3-shiju.jose@huawei.com>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Jjur+hcL"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c08f9d0ef3so141705585a.2
+        for <linux-cxl@vger.kernel.org>; Fri, 07 Mar 2025 12:01:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1741377680; x=1741982480; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IvEuekTxOytRYuPmu7QBv1qKPH0J2Un5a/QcUV2hplY=;
+        b=Jjur+hcLIvrC8m3JMaNst4r0w72yyBSzgibuan3nZ6Zq/xpmZVORyVPTBO5Cz1RVhf
+         C8OcvDHyy1eW7ROtYilfgOdS7LB+Jhub/zO9bKMddDlgQpQzH4Y6CuNEiz5xfYSkyAG3
+         5xmH/g6VJfJLhxsBV0dsSTpJ1JPNXRvLUULXNc8T+noxrA24yj+G53mdt3R7MTvLF/F4
+         bvbUL81PD2m7kLwnTYZiHtZznUv4ONOvmCfsTwHs1OjF/dCrxcpW+9EaAWb4TLozizQc
+         82LqXuLjJO+PQ2fc7fLu8cAdta+iuP0OCImB56/TafUuhnWFt00SCJFFIXHVpabupFG4
+         k5hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741377680; x=1741982480;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IvEuekTxOytRYuPmu7QBv1qKPH0J2Un5a/QcUV2hplY=;
+        b=S1M1HsFeDtRlfWI4/akWWltbr2UK8ksyTXfcyQPO8ocPzD8S1Kn7qC1stfoNAbjuL+
+         ug+GY4+II8J0TeNJ3lKCt7f41J9AZf7elAEm8JbfJhCNe3veMggv0Q5JlN39dhuyWXVv
+         GbrPTP+jeXn2JhE+GSBItM+3tORKp3nuhmLk7Ccq8XxTXYb3X/51RR4kMvPLR4RDBRzB
+         BDnJ9I4FZyt/yOQvtlDKnByieWISfYnk+BgUQXt4dqWXm7k6mraxdjNVzrhP6XjnYJAm
+         S2m3osfTzpN5XwB8h4eVFNW4yGKa5ei4GzyJ69I0NAlspUaYxKnC6EjJFrkywLh+Rk8Z
+         ClXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWqs4iBjNmVk5E0q2sa9RuHjYbGQOboo2iJZu7Mt0ERQFieedH7fcE5Fc54cw4koNuLLRSZvs9EoZI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwliTkebBovRnadCPr+nuI3G59MEzv8AallV/RcxJ9QFqMveGRb
+	5oSKm1uKYyMt+laviAW3mEfJUUBd1HLa7SKcrsksrZi4zn29R+WD5nenrAwj+zk=
+X-Gm-Gg: ASbGnct2bgk0UdHRWjaYSyVYWwE7NIfkWqEgzaSP8idiu6293lz4s/WmqddT+7pwX4v
+	qdvQE/zsvf7egz2a5s9E5u+g4gqsChRJnCRTP/q+6sLmb7q5Nxnat1Qu79UNtWfB3n8O5pFI6IZ
+	s5VV9fbjUTe1qLk5p7UgRQG4XI6L8nCU6sg0+m7u1HEKydGDTP5zYdvhb6goyX/l05S+3G0WWlo
+	6cHTsog+QAa2ki8tUvVPHaDO5w/MKolQI/MhFmHk0bqaKUeONW8kV1sSYsi2MvLgrmRAgfM6tXa
+	Ub/kjjeag7EY2OrlIHf8oCdZiJ1zC1+JbS3MlW2cSjjN6QrKbD5Qzlw4tyavegdUG4NKjcBaIH6
+	QVByJYc7VVoKpgqjzOIVOIRUmPhw=
+X-Google-Smtp-Source: AGHT+IEtnZaQvm8ewVuq2G9dOb9koQirc0O2ZB9U6pXE4Ihad86+Bm+bVLhCRd2TqcDPzF2YM6W+KA==
+X-Received: by 2002:a05:6214:2464:b0:6e8:9a55:824f with SMTP id 6a1803df08f44-6e900601223mr47549496d6.6.1741377680514;
+        Fri, 07 Mar 2025 12:01:20 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e8f71709aesm22793246d6.116.2025.03.07.12.01.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Mar 2025 12:01:20 -0800 (PST)
+Date: Fri, 7 Mar 2025 15:01:18 -0500
+From: Gregory Price <gourry@gourry.net>
+To: alison.schofield@intel.com
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH] cxl: Restore opcode order in enum cxl_opcode
+Message-ID: <Z8tQjmjseVgEyFCd@gourry-fedora-PF4VCD3F>
+References: <20250307181214.2624147-1-alison.schofield@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -76,65 +77,30 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250227223816.2036-3-shiju.jose@huawei.com>
+In-Reply-To: <20250307181214.2624147-1-alison.schofield@intel.com>
 
-On Thu, Feb 27, 2025 at 10:38:09PM +0000, shiju.jose@huawei.com wrote:
-> From: Shiju Jose <shiju.jose@huawei.com>
+On Fri, Mar 07, 2025 at 10:12:10AM -0800, alison.schofield@intel.com wrote:
+>  	CXL_MBOX_OP_GET_LOG_CAPS	= 0x0402,
+>  	CXL_MBOX_OP_CLEAR_LOG           = 0x0403,
+>  	CXL_MBOX_OP_GET_SUP_LOG_SUBLIST = 0x0405,
+> -	CXL_MBOX_OP_GET_SUPPORTED_FEATURES	= 0x0500,
+> -	CXL_MBOX_OP_GET_FEATURE		= 0x0501,
+> -	CXL_MBOX_OP_SET_FEATURE		= 0x0502,
+>  	CXL_MBOX_OP_IDENTIFY		= 0x4000,
+>  	CXL_MBOX_OP_GET_PARTITION_INFO	= 0x4100,
+>  	CXL_MBOX_OP_SET_PARTITION_INFO	= 0x4101,
+> @@ -551,6 +548,9 @@ enum cxl_opcode {
+>  	CXL_MBOX_OP_UNLOCK		= 0x4503,
+>  	CXL_MBOX_OP_FREEZE_SECURITY	= 0x4504,
+>  	CXL_MBOX_OP_PASSPHRASE_SECURE_ERASE	= 0x4505,
+> +	CXL_MBOX_OP_GET_SUPPORTED_FEATURES	= 0x0500,
+> +	CXL_MBOX_OP_GET_FEATURE		= 0x0501,
+> +	CXL_MBOX_OP_SET_FEATURE		= 0x0502,
+>  	CXL_MBOX_OP_MAX			= 0x10000
+>  };
+>  
 
-snip
+[04, 05, 45] seems like the right ordering for an enum, is this
+based on spec ordering?
 
-> 
-> +static int cxl_ps_get_attrs(struct cxl_patrol_scrub_context *cxl_ps_ctx,
-> +			    struct cxl_memdev_ps_params *params)
-> +{
-> +	struct cxl_mailbox *cxl_mbox;
-> +	struct cxl_memdev *cxlmd;
-> +	u16 min_scrub_cycle = 0;
-> +	int i, ret;
-> +
-> +	if (cxl_ps_ctx->cxlr) {
-> +		struct cxl_region *cxlr = cxl_ps_ctx->cxlr;
-> +		struct cxl_region_params *p = &cxlr->params;
-> +
-> +		ret = cxl_hold_region_and_dpa();
-> +		if (ret)
-> +			return ret;
-> +		for (i = p->interleave_ways - 1; i >= 0; i--) {
-> +			struct cxl_endpoint_decoder *cxled = p->targets[i];
-> +
-
-Hi Shiju,
-
-Although not functionally wrong, the above for loop caught my eye.
-
-p->nr_targets is a better loop initializer when walking p->targets[]
-(at this point nr_targets better equal interleave ways but lets use
-the count intended for the array being walked)
-
-Is there a reason to walk in reverse? This seems clearer:
-for (i = 0; i < p->nr_targets; i++)
-
-The same for loop header repeats below in:
-cxl_ps_set_attrs()
-cxl_region_scrub_init()
-If you change for one, change for all.
-
-snip
-
-> +static int cxl_memdev_scrub_init(struct cxl_memdev *cxlmd,
-> +				 struct edac_dev_feature *ras_feature, u8 scrub_inst)
-> +{
-> +	struct cxl_patrol_scrub_context *cxl_ps_ctx;
-> +	struct cxl_feat_entry *feat_entry;
-> +
-> +	feat_entry = cxl_get_feature_entry(cxlmd->cxlds, &CXL_FEAT_PATROL_SCRUB_UUID);
-> +	if (IS_ERR(feat_entry))
-> +		return -EOPNOTSUPP;
-> +
-
-Along w patch 1 comment, perhaps just check for (!feat_entry) here 
-and in a couple of other places below.
-
-snip
-
-> 
+~Gregory
