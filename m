@@ -1,420 +1,244 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E663F14A8B
-	for <linux-cxl@vger.kernel.org>; Sat,  8 Mar 2025 03:23:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA68442A93;
+	Sun,  9 Mar 2025 22:58:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741404191; cv=none; b=eD1FGGzZnyLvFXhWdEIwcRP36NVe1jN8bshSgEQuImiYcmH3BXFs06NsqOhOZb7MqZ3MeRWDJlG6+6N7HPlA2FDrkPgaxlmCnR+XA9xuL5Kxgc+bIefKH5s4AboCLrglk452jzBcp56AyCgUas8LwcXtOY4hXqaD/t1+1NzVllA=
+	t=1741561093; cv=none; b=hKND+l0DNctUr0bdHxFqjIwaweXj5uP7pasqS+RjyTVG+TJwufKXItshVw2KpW/QyU0EhlstT0C1ftvQgCsuG9Qa5qGGQcn3K2g4foZ7yNQVwjWYSlrjperQqp97c+A5C8UGtWkiOkOj1ULosO1VDHuTOse3PoBFS/gHqxaGaI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741404191; c=relaxed/simple;
-	bh=MmzQsLxDKIXvY+Hbb0XgX5cimXDJJg45pGRDylUKdgE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C8EiVFEI6mhC8OTUEzL72m5jgzH1Ci3NKpc5YWEitH23MmyYi/VXDSI+BQegPWYZ5LpycNVi095VaiMxK39dUA9YzMZKJo6c+TH8BcMBbOQ55Sw43HdygbfzBUuqtwR9nUSw4VOPT/QICDBZiSlo59fKTQ0Ymz/5RANNkZHqNTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=G3FIXI9/; arc=none smtp.client-ip=209.85.222.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1741561093; c=relaxed/simple;
+	bh=wvkUc42hPFWxQzCi87XYn+FmEj0IYv93TWp91k1aAjY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qUKhyERZLalqbUnn/RVzn9qxwUGob5gXwjjCeKXjnmdgqUVMbF6GRlKl9mV1/3B8ssGNKj+IFS2QPHBnCun3uq/NdCP/jyrZylh4O1unwJAdTYFZMyrorfa8ysRAttjtscI7kVQGjONlXXyxiQ63TeQJ8KPOLamnoMPHvJqtDKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eq8dfpLf; arc=none smtp.client-ip=209.85.221.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="G3FIXI9/"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7c3d1664ed5so311940285a.2
-        for <linux-cxl@vger.kernel.org>; Fri, 07 Mar 2025 19:23:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eq8dfpLf"
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-523f670ca99so479546e0c.1;
+        Sun, 09 Mar 2025 15:58:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1741404188; x=1742008988; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9kkDaiYn8BNq9wXK9Bp+xqS98ju01c1lv7vbYke9egk=;
-        b=G3FIXI9/QgS6b7p9ZKeChZXfnJbfsBaKwiMp3MmplqM0SDwuySwiSvtHDPpvk10lnl
-         6ynhbpCsGWYhU8lLF8chc9f0yu4xylAyBYwok8uyb75bjsRGS5SX0Ev7QqqgwayENzZq
-         IDiyceOQHhpG/vGc80p+phcoqOt/CTAU/Qee3bwbKNt4CFxuVTUa1jqcz4VNvJFAINqy
-         eUzrnawfrKrohuqSEo17BDBsjkv4qKVsEGaDODprJ778umm5TV5MvVeMjLLWLraQGlnu
-         3Ct56NtALTcoGsBOIFigi4+ykG2xeZFOLZsT4GhHVDgVnIwlhm4IxY8X41eVIcAsi6Kk
-         hDRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741404188; x=1742008988;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1741561090; x=1742165890; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9kkDaiYn8BNq9wXK9Bp+xqS98ju01c1lv7vbYke9egk=;
-        b=ehkpC+wZwfrO/w5mvrIr5vw1JuBTwyqzejq90jJWM7qCBnMgIicLdoZ8rm7Y4fGBH/
-         0vp4gY/ZgGNwrWHLWbhKqIyIDS74evRnhbEvJom+5XVjtq+VXuNiedqmbXn48aWzN1Gx
-         uenlxxoyZqOj4U0Yn9bUhMvdCp4xvZVZA5bz4vuggeoRRV+5lEGxpiK735EF6w909PJ+
-         KWpQptSXoYjcqC498rOVaMIPlt+DW8PEIjRe3g36JZqSumdQHQdWB+kWmTsh2AJIXqYG
-         qHVMkIkEUKvt1Mbeu3YIFdg6ObM6Bzn9OiX+j1LeH/UJ98B0gRNyx0zibywOEGO89M0k
-         DNLA==
-X-Forwarded-Encrypted: i=1; AJvYcCXN/HjS1C+i+SrEt/Uu867+BDknbaeRE1LEcXFwxbnB/4E4afwAzQOkKHY4vX0D/oh5oGnucCRO0Z8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIP3yC+KYCPifHPgbQp9quuWvqCeKlIev9gTHbUbgHzhzAHVW+
-	KqEcdYWMvsb1bPxj/xseHylXHJHDQlkILVbx8xgG5u2wh1Fy3O93yi4by4zN3T0=
-X-Gm-Gg: ASbGncv5wYAyVg/xlp79CfvSVcOq8941BpcVEkr2BE5zJjORmqQVLy00i6uiC2Mc68B
-	n4hlF/3oJ4hhHQmINDxcAn77Id/59ctW0Bc7Q66DaFAll76tJm2Qjlk4bVc3Op7uDzCYFRDCPsI
-	p9XRM01qk6lmgt0SbDAKYgtYeQ2xfGrRbK/kknmsmxCNOigy4S3rsV74ssnDqnyYyxnA88GU/Ro
-	74jx6oCEk3WmKZNn/fYIdm1wnWM+l5GAqy1KrFf7rZNGRMgqVhpu5Ww9JXidSpydjwdR7wObvyi
-	ibVHhjTNhPnW1p4jK6o1R6/jspGyKp2YnGYobk+ZFm+F7XOOFhBEBgddxYH6xDiW6DDN9EfswcL
-	+thv6oHMypNZZDRtVHLrGP/yZ3q8=
-X-Google-Smtp-Source: AGHT+IEcBkI69lUrjBbxyKItEz6GSDDrzJ/inNMnbTU6xoigcZCvrVlOh6zAGVKFHLwBZbuUjdRTMg==
-X-Received: by 2002:a05:620a:86ce:b0:7c3:d316:1d8e with SMTP id af79cd13be357-7c4e6194783mr917562385a.53.1741404187604;
-        Fri, 07 Mar 2025 19:23:07 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c3e534e924sm331448985a.39.2025.03.07.19.23.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Mar 2025 19:23:07 -0800 (PST)
-Date: Fri, 7 Mar 2025 22:23:05 -0500
-From: Gregory Price <gourry@gourry.net>
-To: lsf-pc@lists.linux-foundation.org
-Cc: linux-mm@kvack.org, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [LSF/MM] CXL Boot to Bash - Section 0a: CFMWS and NUMA Flexiblity
-Message-ID: <Z8u4GTrr-UytqXCB@gourry-fedora-PF4VCD3F>
-References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
- <Z8jORKIWC3ZwtzI4@gourry-fedora-PF4VCD3F>
+        bh=CV2gOKsKlbj4j9gbHkJuaQwCeDFrffbEAAVvwDimsKo=;
+        b=eq8dfpLfkpunLeMA/DWWv46fjl6IevGkBSe20Xik+nLkMXMnpSbhqurnk45qfMqWsM
+         CyyHk74mGLoTTzHD7Pvg7aIZt0H2pXYyzducHnr33FLceK44ZewqlswVeQyKhSA6nvzc
+         7ZLl8PSzsX2RUAwt0BoHUw8w/pRC/t9LzEhjk68yJIvS/ynGJ8pGGsA7PXYYlCJoFW6y
+         C7Y6o68I/kp9Mh4qMG/P3B7CGh32sLeru47WDIXbEdaZ4xiaEa/4lOjAF/14mHkeR4E7
+         bJscFVxPXOZAg3lT4fqWCZ/q+94kj/xTD3IObVXWSlIkve0/IKfAOfQ12Nlm6bakfUX2
+         Mudg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741561090; x=1742165890;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CV2gOKsKlbj4j9gbHkJuaQwCeDFrffbEAAVvwDimsKo=;
+        b=pKi/+yWYilNYc7keEN4Ak/3VagLWYIwxW2Hp0xL5hEqjbOxrKoH/mOGvrSETXAvQnL
+         /veZLcNWM3qIzJUgQ29Y/ys/EZohP3Hn25C5IaITAy+B4PDwKcRhVLLQY52jKgDD3uCb
+         9IIwZoG8E84Nm2o0iAj70X32I65avOOJkghIhrgNkMjQC+a9tFm+6zaQvuK7n5SctSt1
+         RrBv5IprfEk6tEmsX621VfVNdCBO4pkatyrYtY84u+0o9YizKoUmv6IcG9ATQpWNE20M
+         Tc/buk+0rUMs7ESqYom4NPjbElXNJ8anBvV1KnaXtNHWp9ZCGWAyMHfV9LVx3tlRnK8I
+         VP1w==
+X-Forwarded-Encrypted: i=1; AJvYcCVUOvdtJ5qk8Od+dFWHFf1nlmzjPkJ2WCWMLlOdaGY6q9xXD54t8UgCwvLG4gKcf+VMzifk46d1mCY=@vger.kernel.org, AJvYcCWTdyW7tCzO9xikadcAHttdLd03Bbo3Om+tXrnLeuJpafWki/1oD5pKfBqwZZNEzaSAwjrzGTFEDfGp8PuV3PM=@vger.kernel.org, AJvYcCXOrucR0xxkkdYc0SA7Rss4jplZt0yAvZ1lFRMlVDJ3/bnZtsYqGUlle6Wqae4nBpADOC1mnQlJp833@vger.kernel.org, AJvYcCXeLSCSf7t6Ie6RQV9++4uWygz+34VG9YF07NaqBOJoQpNh5TQh6OJ10nxI1Qgx4nQNk7SQBS2YyinZJnKJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhYsK8P2L7m1MP4jSA1XxW0GYAKh2Iq6GINJjsklmkiP735SlO
+	uDKgSPiiWi1WI4Ph6pU6DUMGwiistrNVqVUgygAeGaqEUI4QKiyJFb4mpvIzp9/DsxaQG4MAtj6
+	VNh7fhO2fuLDGmwvfSkyp2gidWpw=
+X-Gm-Gg: ASbGncsH2E1pWr1cv/v3l2yQdwaaG2aCoMABQK6r1dap00VkqueGrp0G0QkGGPkYjQ3
+	O1OQpTkbfpvRe7BliTbGoM9GMLTLqTCSIKq78280DzuDO/wqJvKlMAk5Vd2e4mmbXc/97mVq5Cm
+	RHbjBk55aMLQUUxo5QzWnrXLp59eyJ+SpOYYZvnnvBDvvGULKAnUIwb0A=
+X-Google-Smtp-Source: AGHT+IEwOoOMmFUjNxHNrfepI418l5Ifkn4uw4xRbHYTbtlLmbbH2E57rd0IT5s8haY8kJDHDKUPM8o5mbc5p45iZ0A=
+X-Received: by 2002:a05:6122:2011:b0:518:965c:34a with SMTP id
+ 71dfb90a1353d-523e40c8aa6mr7396671e0c.2.1741561090461; Sun, 09 Mar 2025
+ 15:58:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z8jORKIWC3ZwtzI4@gourry-fedora-PF4VCD3F>
+References: <20250227030952.2319050-1-alistair@alistair23.me>
+ <20250227030952.2319050-10-alistair@alistair23.me> <2025022717-dictate-cortex-5c05@gregkh>
+ <CAH5fLgiQAdZMUEBsWS0v1M4xX+1Y5mzE3nBHduzzk+rG0ueskg@mail.gmail.com>
+ <2025022752-pureblood-renovator-84a8@gregkh> <CANiq72kS8=1R-0yoGP5wwNT2XKSwofjfvXMk2qLZkO9z_QQzXg@mail.gmail.com>
+ <2025022749-gummy-survivor-c03a@gregkh> <CAKmqyKNei==TWCFASFvBC48g_DsFwncmO=KYH_i9JrpFmeRu+w@mail.gmail.com>
+ <67c8abffd2deb_1a7f294d5@dwillia2-xfh.jf.intel.com.notmuch>
+ <CAKmqyKORk5n_b2DUDfCVmttE4T+S-LQvcp0NoQD_O7D-csdEvA@mail.gmail.com> <67cb834117c15_24b6429474@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <67cb834117c15_24b6429474@dwillia2-xfh.jf.intel.com.notmuch>
+From: Alistair Francis <alistair23@gmail.com>
+Date: Mon, 10 Mar 2025 08:57:44 +1000
+X-Gm-Features: AQ5f1Jraag0X8uqn6eZ4prR62wfKovqGEuVYhObyXbvcIwNrW--XWB8Ar9rnjL0
+Message-ID: <CAKmqyKMryu=u8KUCYEVBwcbrmND8OFipMMwwDohXZUZg9qOqaQ@mail.gmail.com>
+Subject: Re: [RFC v2 09/20] PCI/CMA: Expose in sysfs whether devices are authenticated
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, 
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Alice Ryhl <aliceryhl@google.com>, 
+	Alistair Francis <alistair@alistair23.me>, linux-cxl@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, lukas@wunner.de, linux-pci@vger.kernel.org, 
+	bhelgaas@google.com, Jonathan.Cameron@huawei.com, 
+	rust-for-linux@vger.kernel.org, akpm@linux-foundation.org, 
+	boqun.feng@gmail.com, bjorn3_gh@protonmail.com, wilfred.mallawa@wdc.com, 
+	ojeda@kernel.org, a.hindborg@kernel.org, tmgross@umich.edu, gary@garyguo.net, 
+	alex.gaynor@gmail.com, benno.lossin@proton.me, 
+	Alistair Francis <alistair.francis@wdc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In the last section we discussed how the CEDT CFMWS and SRAT Memory
-Affinity structures are used by linux to "create" NUMA nodes (or at
-least mark them as possible). However, the examples I used suggested
-that there was a 1-to-1 relationship between CFMWS and devices or
-host bridges.
+On Sat, Mar 8, 2025 at 9:38=E2=80=AFAM Dan Williams <dan.j.williams@intel.c=
+om> wrote:
+>
+> Alistair Francis wrote:
+> > On Thu, Mar 6, 2025 at 5:55=E2=80=AFAM Dan Williams <dan.j.williams@int=
+el.com> wrote:
+> > >
+> > > Alistair Francis wrote:
+> > > > On Fri, Feb 28, 2025 at 5:33=E2=80=AFAM Greg KH <gregkh@linuxfounda=
+tion.org> wrote:
+> > > > >
+> > > > > On Thu, Feb 27, 2025 at 05:45:02PM +0100, Miguel Ojeda wrote:
+> > > > > > On Thu, Feb 27, 2025 at 1:01=E2=80=AFPM Greg KH <gregkh@linuxfo=
+undation.org> wrote:
+> > > > > > >
+> > > > > > > Sorry, you are right, it does, and of course it happens (othe=
+rwise how
+> > > > > > > would bindings work), but for small functions like this, how =
+is the C
+> > > > > > > code kept in sync with the rust side?  Where is the .h file t=
+hat C
+> > > > > > > should include?
+> > > >
+> > > > This I can address with something like Alice mentioned earlier to
+> > > > ensure the C and Rust functions stay in sync.
+> > > >
+> > > > > >
+> > > > > > What you were probably remembering is that it still needs to be
+> > > > > > justified, i.e. we don't want to generally/freely start replaci=
+ng
+> > > > > > "individual functions" and doing FFI both ways everywhere, i.e.=
+ the
+> > > > > > goal is to build safe abstractions wherever possible.
+> > > > >
+> > > > > Ah, ok, that's what I was remembering.
+> > > > >
+> > > > > Anyway, the "pass a void blob from C into rust" that this patch i=
+s doing
+> > > > > feels really odd to me, and hard to verify it is "safe" at a simp=
+le
+> > > > > glance.
+> > > >
+> > > > I agree, it's a bit odd. Ideally I would like to use a sysfs bindin=
+g,
+> > > > but there isn't one today.
+> > > >
+> > > > I had a quick look and a Rust sysfs binding implementation seems li=
+ke
+> > > > a lot of work, which I wasn't convinced I wanted to invest in for t=
+his
+> > > > series. This is only a single sysfs attribute and I didn't want to
+> > > > slow down this series on a whole sysfs Rust implementation.
+> > > >
+> > > > If this approach isn't ok for now, I will just drop the sysfs chang=
+es
+> > > > from the series so the SPDM implementation doesn't stall on sysfs
+> > > > changes. Then come back to the sysfs attributes in the future.
+> > >
+> > > This highlights a concern I have about what this means for ongoing
+> > > collaboration between this native PCI device-authentication (CMA)
+> > > enabling and the platform TEE Security Manager (TSM) based
+> > > device-security enabling.
+> > >
+> > > First, I think Rust for a security protocol like SPDM makes a lot of
+> > > sense. However, I have also been anticipating overlap between the ABI=
+s
+> > > for conveying security collateral like measurements, transcripts, non=
+ces
+> > > etc between PCI CMA and PCI TSM. I.e. potential opportunities to
+> > > refactor SPDM core helpers for reuse. A language barrier and an ABI
+> > > barrier (missing Rust integrations for sysfs and netlink ABIs that we=
+re
+> > > discussed at Plumbers) limits that potential collaboration.
+> >
+> > I see your concern, but I'm not sure it's as bad as you think.
+> >
+> > We will need to expose the Rust code to C no matter what. The CMA,
+> > NVMe, SATA and SAS is all C code, so the Rust library will have a nice
+> > C style ABI to allow those subsystems to call the code.
+>
+> That indeed alleviates a significant amount of the concern. I.e.
+> multiple planned C users makes it less likely that the needs of yet one
+> more C user, PCI TSM, get buried deep in the Rust implementation.
+>
+> > The sysfs issue is mostly because I am trying to write as much of the
+> > sysfs code in Rust, but there aren't bindings yet.
+> >
+> > So if we want to re-use code (such as measurements, transcripts or
+> > nonces) we just need to expose a C style function in Rust which can
+> > then can then be used.
+>
+> Makes sense.
+>
+> > > Now if you told me the C SPDM work will continue and the Rust SPDM
+> > > implementation will follow in behind until this space settles down in=
+ a
+> > > year or so, great. I am not sure it works the other way, drop the C
+> >
+> > That was kind of my original plan (see the first RFC), but maintaining
+> > both, with at least one being out of tree, will be a huge pain and
+> > prone to breakage.
+> >
+> > Also I suspect the Rust implementation will struggle to keep up if the
+> > C version is merged (and hence has more people looking at it) compared
+> > to just me working on the Rust code.
+>
+> The practical questions that come to mind are:
+>
+>    Do we have time?:
+>    I.e. How long can we continue to develop both out of tree? Presumably,
+>    until the device ecosystem matures, when is that?
 
-This is not true - in fact, CFMWS are a simply a carve out of System
-Physical Address space which may be used to map any number of endpoint
-devices behind the associated Host Bridge(s).
+I guess that's a difficult question to answer. There are SPDM capable
+devices on the market now ([1] and [2] for example).
 
-The limiting factor is what your platform vendor BIOS supports.
+While the ecosystem isn't mature, having something upstream makes it a
+lot easier to build and improve on. For example MCTP/I2C/SMBus support
+could be built on top of this series by someone if/when they are
+interested. We are also working on SPDM storage support, which builds
+on this. It is always harder to work with when the code is out of
+tree.
 
-This section describes a handful of *possible* configurations, what NUMA
-structure they will create, and what flexibility this provides.
+The other big plus of having something upstream is it will encourage
+vendors to test against the kernel implementation. Which might help
+catch buggy devices before they ship.
 
-All of these CFMWS configurations are made up, and may or may not exist
-in real machines. They are a conceptual teching tool, not a roadmap.
+Note that at the moment the C and Rust implementations are ABI
+compatible and can be easily swapped out.
 
-(When discussing interleave in this section, please note that I am
- intentionally omitting details about decoder programming, as this
- will be covered later.)
+>
+>    Are all users served by Rust SPDM?:
 
+That's my hope
 
--------------------------------
-One 2GB Device, Multiple CFMWS.
--------------------------------
-Lets imagine we have one 2GB device attached to a host bridge.
+>    Once the device ecosystem matures can all architectures and
+>    distributions get their needs met with a Rust dependency?
 
-In this example, the device hosts 2GB of persistent memory - but we
-might want the flexibility to map capacity as volatile or persistent.
+That's a good question. I don't have a complete answer. I do think all
+architectures that are interested in SPDM (think servers and PC class)
+support Rust, so that should be ok.
 
-The platform vendor may decide that they want to reserve two entirely
-separate system physical address ranges to represent the capacity.
+As for distributions, I also think every major distro supports Rust,
+so extending that to the kernel shouldn't be too difficult if it isn't
+already supported today.
 
-```
-           Subtable Type : 01 [CXL Fixed Memory Window Structure]
-                Reserved : 00
-                  Length : 002C
-                Reserved : 00000000
-     Window base address : 0000000100000000   <- Memory Region
-             Window size : 0000000080000000   <- 2GB
-Interleave Members (2^n) : 00
-   Interleave Arithmetic : 00
-                Reserved : 0000
-             Granularity : 00000000
-            Restrictions : 0006               <- Bit(2) - Volatile
-                   QtgId : 0001
-            First Target : 00000007           <- Host Bridge _UID
+The decision is really up to the kernel community if you are ready for
+this. Note that this series can't be merged today as it depends on
+some other patches which aren't yet upstream. So this is still a
+release or two away from being actually mergable.
 
-           Subtable Type : 01 [CXL Fixed Memory Window Structure]
-                Reserved : 00
-                  Length : 002C
-                Reserved : 00000000
-     Window base address : 0000000200000000   <- Memory Region
-             Window size : 0000000080000000   <- 2GB
-Interleave Members (2^n) : 00
-   Interleave Arithmetic : 00
-                Reserved : 0000
-             Granularity : 00000000
-            Restrictions : 000A               <- Bit(3) - Persistant
-                   QtgId : 0001
-            First Target : 00000007           <- Host Bridge _UID
+1: https://www.microchip.com/en-us/tools-resources/reference-designs/ocp-po=
+wer-supply-spdm-solution-demonstration-application
+2: https://docs.nvidia.com/networking/display/nvidiadeviceattestationandcor=
+imbasedreferencemeasurementsharingv20
 
-NUMA effect: 2 nodes marked POSSIBLE (1 for each CFMWS)
-```
-
-You might have a CEDT with two CFMWS as above, where the base addresses
-are `0x100000000` and `0x200000000` respectively, but whose window sizes
-cover the entire 2GB capacity of the device.  This affords the user 
-flexibility in where the memory is mapped depending on if it is mapped
-as volatile or persistent while keeping the two SPA ranges separate.
-
-This is allowed because the endpoint decoders commit device physical
-address space *in order*, meaning no two regions of device physical
-address space can be mapped to more than one system physical address.
-
-i.e.: DPA(0) can only map to SPA(0x200000000) xor SPA(0x100000000)
-
-(See Section 2a - decoder programming).
-
--------------------------------
-Two Devices On One Host Bridge.
--------------------------------
-Lets say we have two CXL 2GB devices behind a single host bridge, and we
-may or may not want to interleave some or all of those devices.
-
-There are (at least) 2 ways to provide this flexibility.
-
-First, we might simply have two CFMWS.
-```
-           Subtable Type : 01 [CXL Fixed Memory Window Structure]
-                Reserved : 00
-                  Length : 002C
-                Reserved : 00000000
-     Window base address : 0000000100000000   <- Memory Region
-             Window size : 0000000080000000   <- 2GB
-Interleave Members (2^n) : 00
-   Interleave Arithmetic : 00
-                Reserved : 0000
-             Granularity : 00000000
-            Restrictions : 0006               <- Bit(2) - Volatile
-                   QtgId : 0001
-            First Target : 00000007           <- Host Bridge _UID
-
-           Subtable Type : 01 [CXL Fixed Memory Window Structure]
-                Reserved : 00
-                  Length : 002C
-                Reserved : 00000000
-     Window base address : 0000000200000000   <- Memory Region
-             Window size : 0000000080000000
-Interleave Members (2^n) : 00
-   Interleave Arithmetic : 00
-                Reserved : 0000
-             Granularity : 00000000
-            Restrictions : 0006               <- Bit(2) - Volatile
-                   QtgId : 0001
-            First Target : 00000007           <- Host Bridge _UID
-
-NUMA effect: 2 nodes marked POSSIBLE (1 for each CFMWS)
-```
-
-These CFMWS target the same host bridge, but are NOT necessarily limited
-to mapping memory from any one device. We could program decoders in
-either of the following ways.
-
-Example: Host bridge and endpoints are programmed WITHOUT interleave.
-```
-Decoders
-                               CXL  Root
-                             /           \
-                    decoder0.0           decoder1.0
-    [0x100000000, 0x17FFFFFFF]           [0x200000000, 0x27FFFFFFF]
-                             \           /
-                              Host Bridge
-                             /           \
-                    decoder2.0           decoder2.1
-    [0x100000000, 0x17FFFFFFFF]           [0x200000000, 0x27FFFFFFF]
-                        |                    |
-                    Endpoint 0           Endpoint 1
-                        |                    |
-                    decoder4.0           decoder5.0
-    [0x100000000, 0x17FFFFFFF]           [0x200000000, 0x27FFFFFFF]
-
-NUMA effect:
-   All of Endpoint 0 memory is on NUMA node A
-   All of Endpoint 1 memory is on NUMA node B
-```
-
-Alternatively, these decoders could be programmed to interleave memory
-accesses across endpoints.  We'll cover this configuration in-depth
-later. For now, just know the above structure means that each endpoint
-has its own NUMA node - but this is not required.
-
-
--------------------------------------------------------------
-Two Devices On One Host Bridge - With and Without Interleave.
--------------------------------------------------------------
-What if we wanted some capacity on each endpoint hosted on its own NUMA
-node, and wanted to interleave a portion of each device capacity?
-
-We could produce the following CFMWS configuration.
-```
-           Subtable Type : 01 [CXL Fixed Memory Window Structure]
-                Reserved : 00
-                  Length : 002C
-                Reserved : 00000000
-     Window base address : 0000000100000000   <- Memory Region 1
-             Window size : 0000000080000000   <- 2GB
-Interleave Members (2^n) : 00
-   Interleave Arithmetic : 00
-                Reserved : 0000
-             Granularity : 00000000
-            Restrictions : 0006               <- Bit(2) - Volatile
-                   QtgId : 0001
-            First Target : 00000007           <- Host Bridge _UID
-
-           Subtable Type : 01 [CXL Fixed Memory Window Structure]
-                Reserved : 00
-                  Length : 002C
-                Reserved : 00000000
-     Window base address : 0000000200000000   <- Memory Region 2
-             Window size : 0000000080000000   <- 2GB
-Interleave Members (2^n) : 00
-   Interleave Arithmetic : 00
-                Reserved : 0000
-             Granularity : 00000000
-            Restrictions : 0006               <- Bit(2) - Volatile
-                   QtgId : 0001
-            First Target : 00000007           <- Host Bridge _UID
-
-           Subtable Type : 01 [CXL Fixed Memory Window Structure]
-                Reserved : 00
-                  Length : 002C
-                Reserved : 00000000
-     Window base address : 0000000300000000   <- Memory Region 3
-             Window size : 0000000100000000   <- 4GB
-Interleave Members (2^n) : 00
-   Interleave Arithmetic : 00
-                Reserved : 0000
-             Granularity : 00000000
-            Restrictions : 0006               <- Bit(2) - Volatile
-                   QtgId : 0001
-            First Target : 00000007           <- Host Bridge _UID
-
-NUMA effect: 3 nodes marked POSSIBLE (1 for each CFMWS)
-```
-
-In this configuration, we could still do what we did with the prior
-configuration (2 CFMWS), but we could also use the third root decoder
-to simplify decoder programming of interleave.
-
-Since the third region has sufficient capacity (4GB) to cover both
-devices (2GB/each), we can actually associate the entire capacity of
-both devices in that region.
-
-We'll discuss this decoder structure in-depth in Section 4.
-
-
--------------------------------------
-Two devices on separate host bridges.
--------------------------------------
-We may have placed the devices on separate host bridges.
-
-In this case we may naturally have one CFMWS per host bridge.
-
-```
-           Subtable Type : 01 [CXL Fixed Memory Window Structure]
-                Reserved : 00
-                  Length : 002C
-                Reserved : 00000000
-     Window base address : 0000000100000000   <- Memory Region 1
-             Window size : 0000000080000000   <- 2GB
-Interleave Members (2^n) : 00
-   Interleave Arithmetic : 00
-                Reserved : 0000
-             Granularity : 00000000
-            Restrictions : 0006               <- Bit(2) - Volatile
-                   QtgId : 0001
-            First Target : 00000007           <- Host Bridge _UID
-
-           Subtable Type : 01 [CXL Fixed Memory Window Structure]
-                Reserved : 00
-                  Length : 002C
-                Reserved : 00000000
-     Window base address : 0000000200000000   <- Memory Region 2
-             Window size : 0000000080000000   <- 2GB
-Interleave Members (2^n) : 00
-   Interleave Arithmetic : 00
-                Reserved : 0000
-             Granularity : 00000000
-            Restrictions : 0006               <- Bit(2) - Volatile
-                   QtgId : 0001
-            First Target : 00000006           <- Host Bridge _UID
-
-NUMA Effects: 2 NUMA nodes marked POSSIBLE
-```
-
-But we may also want to interleave *across* host bridges. To do this,
-the platform vendor may add the following CFMWS (either by itself if
-done statically, or in addition to the above two for flexibility).
-
-```
-           Subtable Type : 01 [CXL Fixed Memory Window Structure]
-                Reserved : 00
-                  Length : 002C
-                Reserved : 00000000
-     Window base address : 0000000300000000   <- Memory Region
-             Window size : 0000000100000000   <- 4GB
-Interleave Members (2^n) : 01                 <- 2-way interleave
-   Interleave Arithmetic : 00
-                Reserved : 0000
-             Granularity : 00000000
-            Restrictions : 0006               <- Bit(2) - Volatile
-                   QtgId : 0001
-            First Target : 00000007           <- Host Bridge 7
-             Next Target : 00000006           <- Host Bridge 6
-
-NUMA Effect: an additional NUMA node marked POSSIBLE
-```
-
-This greatly simplifies the decoder programming structure, and allows
-us to aggregate bandwidth across host bridges.  The decoder programming
-might look as follows in this setup.
-
-```
-Decoders:
-                             CXL  Root
-                                 |
-                             decoder0.0
-                    [0x300000000, 0x3FFFFFFFF]
-                             /         \
-                Host Bridge 7           Host Bridge 6
-                /                                    \
-           decoder1.0                             decoder2.0
-  [0x300000000, 0x3FFFFFFFFF]             [0x300000000, 0x3FFFFFFFF]
-               |                                      |
-           Endpoint 0                             Endpoint 1
-               |                                      |
-           decoder3.0                             decoder4.0
-  [0x300000000, 0x3FFFFFFFF]              [0x300000000, 0x3FFFFFFFF]
-```
-
-We'll discuss this more in-depth in section 4 - but you can see how
-straight-forward this is.  All the decoders are programmed the same.
-
-----------
-SRAT Note.
-----------
-If you remember from the first portion of Section 0, the SRAT may be
-used to statically assign memory regions to specific proximity domains.
-
-```
-        Subtable Type : 01 [Memory Affinity]
-               Length : 28
-     Proximity Domain : 00000001          <- NUMA Node 1
-            Reserved1 : 0000
-         Base Address : 000000C050000000  <- Physical Memory Region
-       Address Length : 0000003CA0000000
-```
-
-There is a careful dance between the CEDT and SRAT tables and how NUMA
-nodes are created.  If things don't look quite the way you expect - check
-the SRAT Memory Affinity entries and CEDT CFMWS to determine what your
-platform actually supports in terms of flexible topologies.
-
---------
-Summary.
---------
-In the first part of Section 0 we showed how CFMWS and SRAT affect how
-Linux creates NUMA nodes.  Here we demonstrated that CFMWS are not a
-1-to-1 relationship to either CXL devices or Host Bridges.
-
-Instead, CFMWS are simply a System Physical Address carve out which can
-be used in a number of ways to define your memory topology in software.
-
-This is a core piece of the "Software Defined Memory" puzzle.
-
-How your platform vendor decides to program the CEDT will dictate how
-flexibly you can manage CXL devices in software.
-
-
-~Gregory
+Alistair
