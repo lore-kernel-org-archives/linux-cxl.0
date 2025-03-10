@@ -1,59 +1,37 @@
-Received: from out203-205-221-205.mail.qq.com (out203-205-221-205.mail.qq.com [203.205.221.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDBE2223308
-	for <linux-cxl@vger.kernel.org>; Mon, 10 Mar 2025 08:11:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.205
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5546F14A09E;
+	Mon, 10 Mar 2025 08:23:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741594310; cv=none; b=ftWYyYJY1jMx3854oA/Rmdx3IOA2w6wk5ucJ0ukvmxbsMA8FR4yFEeieCNqyfPwLfQM6pcTd2RNgbjebugfKW82M/DFkMOyrwxLu9eU55VNv/ICYsZNUoPuHOkfYlAA4vKAGWvn7E/kc/5vO34HZPR1l0jqh12e8SwNa6d6fBj0=
+	t=1741595018; cv=none; b=GH9nLrPE5W1yQbTlFU8NfOHLnA+Qpv8Ui7LLPr6GbmIikBKHCzXTM3SrXbOnjv3xRT9OgPD+d1ShVE0+sGMkb+IK6mYa15ODs16le0rrlRUlg7mzI+lmisMuqIWo81zGtvM51PH9uUzUOCEjMnqyBcFnV+6j/A9Kr40rpdaOUZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741594310; c=relaxed/simple;
-	bh=evZipJUd2k+N8QHCMIjDngVMRsYVv89bzSlXpKkK5uQ=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=imdBANWHgp9GBp3teez7SrxhfSCOGy+RSSKHSiBAltqrTbtpnD+RGSXAruU6MO/DmDjw/O7N9PcW3oL7hmMLQvnP4HwCjBV4Fvu+vdAWH5MsC+0Ywl4AOEbsvg8wVAX8/lrWk+ZG/1F6+SBt9Xzp+0zhvvDWQ3jtUNg1jwJIOdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Lr+kdzdA; arc=none smtp.client-ip=203.205.221.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Lr+kdzdA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1741593997; bh=1m3NpkLP/3kCEEfq6yVIpcmTeGIdXnJV/p1gVEI3Baw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Lr+kdzdAwSolZjPMmgDA3ZWPUJzbKFWfeOUN5ufNg2OG9Xsc5etqcM8MDogoRQuHW
-	 eQvzdWhh3p6hG08n23igfpYieecJz3ipPVuLBdw7TZk4uAmrRB4o5AQpRGx51+wqFH
-	 LGaP5auHh1TQZQSXOZBa4SU3qoi7oIGyZBa7slRw=
-Received: from localhost.localdomain ([2408:8409:1921:9c88:8c6b:6c8:9ab7:c93e])
-	by newxmesmtplogicsvrsza36-0.qq.com (NewEsmtp) with SMTP
-	id 1469C4ED; Mon, 10 Mar 2025 16:05:06 +0800
-X-QQ-mid: xmsmtpt1741593906tf5rqj6n6
-Message-ID: <tencent_E9F3F01E0D2303378E16505CE4CF208AA908@qq.com>
-X-QQ-XMAILINFO: NzOHSugmTg7X1YVOCHdceq8Z1QLyi0d59A5grrf3cTfFXKpskIKhksx1fYvO3I
-	 ij/gK6eaWDYGapxhRzn/UpsIxMAqrFgAT9Fq7ULEZ5RW1POj5fRgfT6onhddhwoV1Qb80+1pKXmk
-	 mFGn/Uw/OgmgEpQeEZ76wkv22amBskHid/yKTYB40o89ypuWtQlkkkB8H66cBFxY+G4NxPaCzgv9
-	 pvwcCp7lwP/B9ISvisSCnZoRkIPog6M87djiXH/Qvdr97FqO/V9YUcP4KhIjyfNUWfzIYxHqQ/TJ
-	 H9JK66RVr3wYBxd0qnl9ip9gehTeW5P/1V0nY28iS4rBXjydCnlC3YpEAqpx9bl96gJJEk5xY3An
-	 dCOvxnFK/2BSKepkhb1hOi0DYiOQmJPiMGlFEmCRvUSJD4sFPaV1lkEKlOBscYazKTt04PnkYtHf
-	 j8JzaU0DBQ1r62gADqsXqEkAalPIvvZBpwyXxZ3ChE+udTHibw+YfwD7+y1uZvjl8f7jL6/LdpAg
-	 7dscFvLVZpiXpYCj2yOcDYy+OJYmPb/rPFl04u9kXNVUQpTO8C3SN0pYa2yVLQt/pKCyZ4ivk4E/
-	 f+LfYtQW8JU0ON3nOkq9I5e4rDRETnHDcJdaObKUeBiWq1+ANUjgo1LsH00lq02UxfSi/dGc0RaD
-	 Kl5M+gUcb8gY0VI7UPmbQ2kuJ/IjD86Y7/KNzUCWx94LdZbU4jRFK1f86iJo331MApHse0DU3Efz
-	 uZ6Ul2Du27vLEPLq1IHz+qeGaJzdnqmGMkqZaBAH663pIxZwjlEW07w41bcprFqJQxEBcs1wpDOn
-	 NoeWiZTijdwdcpa3S6TJPl4TRUWVk5bG/QAEEKisqEt+fDk8qZ0iWDmt6rICPnIG/jvj66EmVal1
-	 GGZaHa7DL88FFsaUPOpJalyqxN5YpH9q8ZRmoSxStQ9IvSzhojNs7j84fDvHdTWXSVdMGUHHr//t
-	 cyASLnTU0=
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-From: Junjie Fu <fujunjie1@qq.com>
-To: qemu-devel@nongnu.org
-Cc: Jonathan.Cameron@Huawei.com,
+	s=arc-20240116; t=1741595018; c=relaxed/simple;
+	bh=AjPlA6/0Vt2/ykNJB2kiR4TJT7iqwwM1ouKE+3LBPIc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=IRKh3AJ82NqIWc+1dsM9wug1WMh5D/Ij5pizVg7b1Cto+61pKvA4KgW0FtvaTBIhQJWEJllCxoZHFbcYFvGv4SNPb9762Qtgz5CEetP4mextk29A0HPg6U+63KHk/+Hj+JKJODs25oop6PjWomVMQA9dft+fNPyzgOFBJ8ELSeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-3c9ff7000001d7ae-45-67cea17bf4e7
+From: Rakie Kim <rakie.kim@sk.com>
+To: Gregory Price <gourry@gourry.net>
+Cc: akpm@linux-foundation.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
 	linux-cxl@vger.kernel.org,
-	viacheslav.dubeyko@bytedance.com,
-	zhitingz@cs.utexas.edu
-Subject: CXL memory pooling emulation inqury
-Date: Mon, 10 Mar 2025 16:02:45 +0800
-X-OQ-MSGID: <20250310080245.291632-1-fujunjie1@qq.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230215151854.00003e34@Huawei.com>
-References: <20230215151854.00003e34@Huawei.com>
+	joshua.hahnjy@gmail.com,
+	dan.j.williams@intel.com,
+	ying.huang@linux.alibaba.com,
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com,
+	Rakie Kim <rakie.kim@sk.com>
+Subject: Re: [PATCH 4/4] mm/mempolicy: Fix memory leaks in mempolicy_sysfs_init()
+Date: Mon, 10 Mar 2025 17:23:03 +0900
+Message-ID: <20250310082313.584-1-rakie.kim@sk.com>
+X-Mailer: git-send-email 2.48.1.windows.1
+In-Reply-To: <Z8sPjdXmFGO9-y7D@gourry-fedora-PF4VCD3F>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -61,30 +39,58 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFLMWRmVeSWpSXmKPExsXC9ZZnkW71wnPpBlNPGljMWb+GzWL61AuM
+	Fj/vHme3OL51HrvF+VmnWCwu75rDZnFvzX9Wi9VrMhw4PHbOusvu0d12md1j8Z6XTB6bPk1i
+	9zgx4zeLx86Hlh6fN8kFsEdx2aSk5mSWpRbp2yVwZfx4+ZO1oImj4tfDsAbGbWxdjJwcEgIm
+	Ems/HmCBsX82PQeKc3CwCShJHNsbA2KKCKhKtF1x72Lk4mAWWM8k8XrTLLBWYYFAiVszvjKC
+	2CxANWs2HAKL8woYS5xYu4wJYqSmRMOle2A2p4CZxMyTk8BWCQnwSLzasJ8Rol5Q4uTMJ2Bx
+	ZgF5ieats5kheo+wSbxrUYSwJSUOrrjBMoGRfxaSlllIWhYwMq1iFMrMK8tNzMwx0cuozMus
+	0EvOz93ECAzhZbV/oncwfroQfIhRgINRiYf3wbyz6UKsiWXFlbmHGCU4mJVEeNW2n0oX4k1J
+	rKxKLcqPLyrNSS0+xCjNwaIkzmv0rTxFSCA9sSQ1OzW1ILUIJsvEwSnVwFgf/OOKy4vsWyYp
+	WdsXtqt/LZ67kHvtZd8FLGnStcvsyqrj3U5uy5DaO//V0o4LpdF7bPbt211erRoiYX+9O6lv
+	RtRWW9as0gKG8EITyfqNmr8UNnj0xa6TuKz85ckJ+3M/r03mWLN4ZUZ/5cp913ZuTbsvxjpD
+	pOvm323q7D3Xy+V6OM37W5RYijMSDbWYi4oTAQq63LVdAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrKLMWRmVeSWpSXmKPExsXCNUNNS7d64bl0g8971SzmrF/DZjF96gVG
+	i593j7NbfH72mtni+NZ57BaH555ktTg/6xSLxeVdc9gs7q35z2px6NpzVovVazIsfm9bwebA
+	47Fz1l12j+62y+wei/e8ZPLY9GkSu8eJGb9ZPHY+tPT4dtvDY/GLD0wenzfJBXBGcdmkpOZk
+	lqUW6dslcGX8ePmTtaCJo+LXw7AGxm1sXYycHBICJhI/m54D2RwcbAJKEsf2xoCYIgKqEm1X
+	3LsYuTiYBdYzSbzeNAusXFggUOLWjK+MIDYLUM2aDYfA4rwCxhIn1i5jghipKdFw6R6YzSlg
+	JjHz5CQWEFtIgEfi1Yb9jBD1ghInZz4BizMLyEs0b53NPIGRZxaS1CwkqQWMTKsYRTLzynIT
+	M3NM9YqzMyrzMiv0kvNzNzECA3dZ7Z+JOxi/XHY/xCjAwajEw/tg3tl0IdbEsuLK3EOMEhzM
+	SiK8attPpQvxpiRWVqUW5ccXleakFh9ilOZgURLn9QpPTRASSE8sSc1OTS1ILYLJMnFwSjUw
+	VtfU1B424nN71FzTcenQ3Y1n2YWKjJpnZZ+2dq9hvLVrdtsrnvLansv/rr1UO3Kl7Xuqx5mL
+	d3PtHTe2dKy9ZX3twqZn/TUu61J1TunGiB9ZKN/ULBHk0MB0+e+G7d+endz2wuf1Pvej32dV
+	K2q3bE33LjULCpCZdUYg49v/uUFPjmzJSJ8uqMRSnJFoqMVcVJwIAPNFUWVYAgAA
+X-CFilter-Loop: Reflected
 
-> Note though that there is a long way to go before we can do what you
-> want.  The steps I'd expect to see along the way:
+On Fri, 7 Mar 2025 10:23:57 -0500 Gregory Price <gourry@gourry.net> wrote:
+
+Hi Gregory
+
+ On Fri, Mar 07, 2025 at 03:35:33PM +0900, Rakie Kim wrote:
+> > Improper cleanup of sysfs attributes caused kobject and memory leaks when
+> > initialization failed or nodes were removed.
+> >
+> 
+> Is this fixing something in your patch set or fixing something in the
+> current upstream code?  If in the current patch set, roll this into the
+> patch that causes it.
+> 
+> If this is fixing something upstream, I recommend submitting this
+> separately to stable and rebasing on top of it.
+
+Thank you for your response regarding this patch.
+This patch isn't a modification of my hotplug-related patch but rather
+a fix addressing issues in the existing implementation of the commit
+listed below.
+I will proceed to update it as a separate patch based on the mentioned
+commit.
+
+mm/mempolicy: implement the sysfs-based weighted_interleave interface
+(dce41f5ae2539d1c20ae8de4e039630aec3c3f3c)
+
+Rakie
+
 >
-> 1) Emulate an Multi Headed Device.
->    Initially connect two heads to different host bridges on a single QEMU
->    machine.  That lets us test most of the code flows without needing
->    to handle tests that involve multiple machines.
->    Later, we could add a means to connect between two instances of QEMU.
-> 2) Add DCD support (we'll need the kernel side of that as well)
-> 3) Wire it all up.
-> 4) Do the same for a Switch with MLDs behind it so we can poke the fun
->    corners.
-
-
-Hi,Jonathan
-
-Given your previous exploration, I would like to ask the following questions:
-1.Does QEMU currently support simulating the above CXL memory pooling scenario?
-
-2.If not fully supported yet, are there any available development branches 
-or patches that implement this functionality?
-
-3.Are there any guidelines or considerations for configuring and testing CXL memory pooling in QEMU?
-
-I sincerely appreciate your time and guidance on this topic!
-
+> 
+> ~Gregory
