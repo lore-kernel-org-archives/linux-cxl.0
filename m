@@ -1,184 +1,206 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2068.outbound.protection.outlook.com [40.107.94.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF21CEC5;
-	Mon, 10 Mar 2025 20:28:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741638519; cv=none; b=kssGcObmDWt3uEWBRhH2lbiGsy8VRCCCFM7IEF6ZqLx9oym9EZ3vQgoKZiYh641dywnbXru4DBdQqpdAwQz29FsbWlpI+7ovliZiI+GH5RtUuuqrgFew6f7dE1Mae7esrEA9yueLTZk0kSkntgEtN76dWdhHrgxGyKkyzfI9HOA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741638519; c=relaxed/simple;
-	bh=HSsMnI4cC6mW97nelx12+H+5tkQ+KC89ClBZc2VpfjA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DFXT/Xo/V0gr+UFNAjBg+8TYWLVsKvcyOuALKUJEAlpdTBl7aq0fWDrg3eOZCQeU2iPxgY9mQ3iZrnWVVL8qy9H7GWFgsrUp6AxZlb4j7pH2ML1YKJX3FS1i2R12o+oprCtMQvJPKYd80atGNXgVXt2Fnx3q0wD/Y8Dy3Wim5s0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gJ1fYbVK; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E4581C5F1B;
+	Mon, 10 Mar 2025 21:03:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741640635; cv=fail; b=GrbYyzZ8x2QfOBZ7SMxe1EVrp1+omvKt3rrWE6EkKMbbgrnoThj4QuQGPWqv1O6ZsW2g6SRQkOPNPRRxduvDjPriHvP3oBBG7jh4te+yDgcGWi6Ty3mJo6ePBgxMaigdCuOq8X+2pTV2I60iMgPprqOE5iExoU7ioGe/Z1fWoB0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741640635; c=relaxed/simple;
+	bh=S7slVHm56z909KddfElQGbSWFigw2rtyCqi1LUOyxgU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Na5sjiE563zSJkarbCMq+d6yAu/vEcRnKCXhxB1GJXN0IE2xK6+53YoNF8XV061K2aCeqOn+Q3dv6oDp2LAH+SIP7fHOB3UOK6eJ0xTUtXtJkawNYrPjEpRKhB/4ifQi9X9CtISKeV/dsGZnV8birqWFQytq21Ii/q04+Be214o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ldIG6h8a; arc=fail smtp.client-ip=40.107.94.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gJ1fYbVK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741638518; x=1773174518;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=HSsMnI4cC6mW97nelx12+H+5tkQ+KC89ClBZc2VpfjA=;
-  b=gJ1fYbVKWx7lk0+nRyTGH7QX6MRmLfgh05FgPvlU5RupZrpwIlGgRlnC
-   crlG1rozB1Wq0W1rKnV4DLA1YgxlQNIGVBnHXqvV8LSMUJeQxUQC/jQZb
-   YMVa4OhSGw+WBh6k+DmwoM0ulkOV0gN4bSoWOcLYP61uJfwejdIqrRMvv
-   JA7iDSiNkyHIcFGoCYZBypZ0aL4VeOLF0bDKYjP6dZVGmwD6z58NZn8vm
-   j/e3X4DdrfB6ocYeFhGlg3wRGnGOvzqK6ah19x0d4ZnYzzD2RgnYU1qIZ
-   PVbujRyN8mW1K6e4u7A3iqYS4rs2uc/6ibREyQg0bH0NU6FbTBrNgnAxL
-   g==;
-X-CSE-ConnectionGUID: wtHPDtytSxWeDYHRw3tXcw==
-X-CSE-MsgGUID: jE2CWlK9RVKwojzh7Kdujg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11369"; a="53281775"
-X-IronPort-AV: E=Sophos;i="6.14,237,1736841600"; 
-   d="scan'208";a="53281775"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 13:28:36 -0700
-X-CSE-ConnectionGUID: Io1LQZW1SMCWx8jlCrJC6w==
-X-CSE-MsgGUID: TkRSYNbZTDiqa6hIOx+iIQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,237,1736841600"; 
-   d="scan'208";a="157305575"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.111.66])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 13:28:35 -0700
-Date: Mon, 10 Mar 2025 13:28:33 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Shiju Jose <shiju.jose@huawei.com>
-Cc: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-	"dave@stgolabs.net" <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	"dave.jiang@intel.com" <dave.jiang@intel.com>,
-	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-	"ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"david@redhat.com" <david@redhat.com>,
-	"Vilas.Sridharan@amd.com" <Vilas.Sridharan@amd.com>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"bp@alien8.de" <bp@alien8.de>,
-	"tony.luck@intel.com" <tony.luck@intel.com>,
-	"rafael@kernel.org" <rafael@kernel.org>,
-	"lenb@kernel.org" <lenb@kernel.org>,
-	"mchehab@kernel.org" <mchehab@kernel.org>,
-	"leo.duran@amd.com" <leo.duran@amd.com>,
-	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>,
-	"rientjes@google.com" <rientjes@google.com>,
-	"jiaqiyan@google.com" <jiaqiyan@google.com>,
-	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"naoya.horiguchi@nec.com" <naoya.horiguchi@nec.com>,
-	"james.morse@arm.com" <james.morse@arm.com>,
-	"jthoughton@google.com" <jthoughton@google.com>,
-	"somasundaram.a@hpe.com" <somasundaram.a@hpe.com>,
-	"erdemaktas@google.com" <erdemaktas@google.com>,
-	"pgonda@google.com" <pgonda@google.com>,
-	"duenwen@google.com" <duenwen@google.com>,
-	"gthelen@google.com" <gthelen@google.com>,
-	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
-	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
-	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
-	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
-	tanxiaofei <tanxiaofei@huawei.com>,
-	"Zengtao (B)" <prime.zeng@hisilicon.com>,
-	Roberto Sassu <roberto.sassu@huawei.com>,
-	"kangkang.shen@futurewei.com" <kangkang.shen@futurewei.com>,
-	wanghuiqiang <wanghuiqiang@huawei.com>,
-	Linuxarm <linuxarm@huawei.com>
-Subject: Re: [PATCH 1/8] cxl: Add helper function to retrieve a feature entry
-Message-ID: <Z89LcUIWO9m8Vtru@aschofie-mobl2.lan>
-References: <20250227223816.2036-1-shiju.jose@huawei.com>
- <20250227223816.2036-2-shiju.jose@huawei.com>
- <Z8tGz33l9vDzuJLy@aschofie-mobl2.lan>
- <e8e33d46aa1b478db601de29e047cb5f@huawei.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ldIG6h8a"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=jEW/oaGlTAG52hLuOGHdlwYKT52Sl0JwXyjULKjigbCN0H8xbGxIeACDd7y12vArSIHW7ivSv2oWLPKN8MElioc6lksg8iiaHQrl17rqkRULow/vIM7VoFhYgEp3P0tmhYaJvhclJQBIujU75fKjRwCjT+lRA1UhJCElWf3jk/URVhH1QZDCjqvM018yYvxJd3XKPIMZrbizuE7F0T2W5fMGqXhOs/5gmuB2ct3yGtT583W3Knaq+96cI97J6dArYBrmXccwbfTkklN3vWKyQQxckT98mvHfOVn4p5Bb+uFl7b6WBmghbVUMdm7ftg4ID5OeR0ewGKCq9pqCl82rsg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Emj8awQIz7ElOl+PbE1aRiOHDpFCGyqtr+fiC96UTGE=;
+ b=DuRCQNdO4g25ivBiaYUYvXcyD+nHqR2bjpPXf34J7jzc4jUTkWSYzhZJQ1eg4rz7e1yuegyRjYYo2729dfn/bPu5qtt1SR9ynppByaqrQ+gV4/YYKEgVmaY+YOVa5uxAMSm9L1LqJSPmDwQdAXYulhu8Fp5e0Ijr5/uHpg5C5DPHjigA5JznaOA+4GMXVohOx2rpWlv1uBej3pkXYoi1mMs+Nml+GiEJCcQy8aKrHZXkthgEzQYMGCmP5slNPVT2/FzPET9cMPChb5I7A5T/QJEuJRxwdjHDyKVoNp4nqNmvhjgzaG4+raS+YAh89IDk+qglK+zao770xiXU18jMIw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Emj8awQIz7ElOl+PbE1aRiOHDpFCGyqtr+fiC96UTGE=;
+ b=ldIG6h8aJEYcens4qlVkbPNxWD+geFPWznwwAnWc21U3bULwVYiB6ABf/r4NNFIIobCcOszRH3yPYTGSw994w8+xApoFyokdtw3cEPv+H4sDR6HbK8rGqRWPqQdR1wqX0Mlsem+xSw6sGug32EnQSbdXTjF9e533a09hrwm5S9w=
+Received: from BYAPR07CA0038.namprd07.prod.outlook.com (2603:10b6:a03:60::15)
+ by MN6PR12MB8514.namprd12.prod.outlook.com (2603:10b6:208:474::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Mon, 10 Mar
+ 2025 21:03:51 +0000
+Received: from SJ5PEPF000001D3.namprd05.prod.outlook.com
+ (2603:10b6:a03:60:cafe::63) by BYAPR07CA0038.outlook.office365.com
+ (2603:10b6:a03:60::15) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.26 via Frontend Transport; Mon,
+ 10 Mar 2025 21:03:51 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ SJ5PEPF000001D3.mail.protection.outlook.com (10.167.242.55) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8534.20 via Frontend Transport; Mon, 10 Mar 2025 21:03:51 +0000
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 10 Mar
+ 2025 16:03:49 -0500
+Received: from xcbalucerop40x.xilinx.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Mon, 10 Mar 2025 16:03:48 -0500
+From: <alejandro.lucero-palau@amd.com>
+To: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<dan.j.williams@intel.com>, <edward.cree@amd.com>, <davem@davemloft.net>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>,
+	<dave.jiang@intel.com>
+CC: Alejandro Lucero <alucerop@amd.com>
+Subject: [PATCH v11 00/23] add type2 device basic support
+Date: Mon, 10 Mar 2025 21:03:17 +0000
+Message-ID: <20250310210340.3234884-1-alejandro.lucero-palau@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e8e33d46aa1b478db601de29e047cb5f@huawei.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB03.amd.com: alejandro.lucero-palau@amd.com does
+ not designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D3:EE_|MN6PR12MB8514:EE_
+X-MS-Office365-Filtering-Correlation-Id: f393ce43-c200-4ac0-ab29-08dd60170f73
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?+FZCX0LSFHul1ycBJb1oFPL18vWPrKl1MoH7I8+AwCGS3lthP4Duk5w+/RUE?=
+ =?us-ascii?Q?PICwm269QZdzmod9CK3aD+twL3rAwVxpNnBjGtt0Dewe77Jo7dD4uPl0XZXi?=
+ =?us-ascii?Q?AxKbnAFzyzvNrm3k3AueMhee2QMHDCo0p3u21/fMfFEyoOQt/zLOw5ajv3iN?=
+ =?us-ascii?Q?QgRPCdMXs37XoO23PM1Lir9ywk8P5xDhxAxhgWH5p4k95t3wXRN6TZ3FEZet?=
+ =?us-ascii?Q?GrUvp4fbQUAI8VSoWzVjokUTMFDiqo1AjKSmBIIVampUHixgDhicRgKzY23/?=
+ =?us-ascii?Q?0oUxOqWw16GeB6S/yHq7hGNUD/5T9tJ/f9qTH9U0BUn848asA5ATC2pqbSE7?=
+ =?us-ascii?Q?+5kH1j85rBnOluHhji0zoRvKaCQPvoH9DK8D7ThULKT2wj0s30RMAkryMsZU?=
+ =?us-ascii?Q?1DnFmaQ6T68vWZPof1Cn4qZNkEssdSMNWw+H4vQqMt4vRtyKr2+A0llyG4lO?=
+ =?us-ascii?Q?cgA/Iue5lSGm76eeFbVi1typcjHrCei+kIbAYvmL3tTj/vqJzd+zM8h3LACv?=
+ =?us-ascii?Q?hsm+zYrbN9DK434CTRikistOKSddNdqIDr9vl6obA8jVV8cXNBs4AIfEmcR+?=
+ =?us-ascii?Q?/+oo5/nt9gFMKkDoB2mlKZpi07iAxP9zONlFXfVFBYO8RSLwtTf8IGSvlYZ/?=
+ =?us-ascii?Q?FGefkugtAm1r1cxNWCOM5JOAxRlPLFoQMuy7MCP99p0EpdBp4emijT0Ue2jl?=
+ =?us-ascii?Q?oh82QMnyFoVNsop1254fZmwnlV9rk7OzTD8lx2dLPzB5qzup3e6VAC/suptt?=
+ =?us-ascii?Q?sC9EvDmJ43r3SvPI1mAAaVzodeTQgGCZG0ZU8n9iZMDZTCVwdLvO2tMDMc6W?=
+ =?us-ascii?Q?vn9Xo7FnpA5fmaFsnKRrhkmbw+vcNUXVx9ANqfIn6YKERKbqTEJHSxbe14P/?=
+ =?us-ascii?Q?Z6KjQmfz7zpQUPwbk1LBlWKpsBRGS0HlLo6aLjPCZtQxO6UEglYvuR8zZw7P?=
+ =?us-ascii?Q?DqxpmfueqcSGFsEcuhOF9C8ctp8ej28C5YxMH+eX6n8VaH1Vgyv/22shnJZ+?=
+ =?us-ascii?Q?9OwdjCCjWbNsbO/PuOk+DhcX0aDXsxlyZrySTO0dGPh2BUJt/xPkiEr7BOjg?=
+ =?us-ascii?Q?eYfVUs5pGdNO5DTetJ2iItDeK7jIlXQhThGS7v4/BK4h1PHw20pJ9gBdXOQN?=
+ =?us-ascii?Q?QLdA+d8A9iftS1VaxFUXtv9rbhwuYkFQxcKqpMHUAb0GiR8LZ3zPDbpH3Dzg?=
+ =?us-ascii?Q?32VZwHZQWIXj5xyDduQxa0lLO4cSogxLt/6PBjiVtQSEpbrQvl78+MWDqTAW?=
+ =?us-ascii?Q?FNqW6VKJht9zn4FnQlZc8IjJbpnfG4Ce+zzJgGtGkB1UME5Wz5hriS1NSo/i?=
+ =?us-ascii?Q?EyPXoI5VXB0shJWe/lkWkMk/gZsG/VV0Li/UlfeWQAqFpx243s6mOixI+A5P?=
+ =?us-ascii?Q?3DUfsNjSmV/BMc2SJupeYSeJ78Vzhv3DlfAdtAswm1cPKUJs1DOHi13GFi/r?=
+ =?us-ascii?Q?Y2K4x0Uo2xgUXp2MrzKgbK+KBjHcdxUAFcqqk1lm8SrIJAzJPFK7CeUKJ66D?=
+ =?us-ascii?Q?/eFGdWT4g8hhU+M=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2025 21:03:51.4512
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f393ce43-c200-4ac0-ab29-08dd60170f73
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001D3.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR12MB8514
 
-On Mon, Mar 10, 2025 at 06:15:38PM +0000, Shiju Jose wrote:
-> >-----Original Message-----
-> >From: Alison Schofield <alison.schofield@intel.com>
-> >Sent: 07 March 2025 19:20
-> >To: Shiju Jose <shiju.jose@huawei.com>
-> [...]
-> >> +struct cxl_feat_entry *cxl_get_feature_entry(struct cxl_dev_state *cxlds,
-> >> +					     const uuid_t *feat_uuid)
-> >> +{
-> >> +	struct cxl_features_state *cxlfs = to_cxlfs(cxlds);
-> >> +	struct cxl_feat_entry *feat_entry;
-> >> +	int count;
-> >> +
-> >> +	/*
-> >> +	 * Retrieve the feature entry from the supported features list,
-> >> +	 * if the feature is supported.
-> >> +	 */
-> >> +	feat_entry = cxlfs->entries->ent;
-> >
-> >Do we need some NULL checking here on cxlfs, entries
-> 
-> Hi Alison,
-> 
-> Thanks for the feedbacks.
-> We had check on cxlfs before
-> https://lore.kernel.org/all/20250122235159.2716036-5-dave.jiang@intel.com/
-> but removed because of the following comment.
-> https://lore.kernel.org/all/20250124150150.GZ5556@nvidia.com/
+From: Alejandro Lucero <alucerop@amd.com>
 
-Hi Shiju,
+v11 changes:
+ - Dropping the use of cxl_memdev_state and going back to using
+   cxl_dev_state.
+ - Using a helper for an accel driver to allocate its own cxl-related
+   struct embedding cxl_dev_state.
+ - Exporting the required structs in include/cxl/cxl.h for an accel
+   driver being able to know the cxl_dev_state size required in the
+   previously mentioned helper for allocation.
+ - Avoid using any struct for dpa initialization by the accel driver
+   adding a specific function for creating dpa partitions by accel
+   drivers without a mailbox.
 
-I have not followed all along, so yeah my questions may be a bit pesky
-at this point. I did see the comment linked above about how the driver
-must be bound at this point. I think my question is a bit different.
+Alejandro Lucero (23):
+  cxl: add type2 device basic support
+  sfc: add cxl support
+  cxl: move pci generic code
+  cxl: move register/capability check to driver
+  cxl: add function for type2 cxl regs setup
+  sfc: make regs setup with checking and set media ready
+  cxl: support dpa initialization without a mailbox
+  sfc: initialize dpa
+  cxl: prepare memdev creation for type2
+  sfc: create type2 cxl memdev
+  cxl: define a driver interface for HPA free space enumeration
+  fc: obtain root decoder with enough HPA free space
+  cxl: define a driver interface for DPA allocation
+  sfc: get endpoint decoder
+  cxl: make region type based on endpoint type
+  cxl/region: factor out interleave ways setup
+  cxl/region: factor out interleave granularity setup
+  cxl: allow region creation by type2 drivers
+  cxl: add region flag for precluding a device memory to be used for dax
+  sfc: create cxl region
+  cxl: add function for obtaining region range
+  sfc: update MCDI protocol headers
+  sfc: support pio mapping based on cxl
 
-Are each of these guaranteed not to be NULL here:
+ drivers/cxl/core/core.h               |     2 +
+ drivers/cxl/core/hdm.c                |    83 +
+ drivers/cxl/core/mbox.c               |    30 +-
+ drivers/cxl/core/memdev.c             |    47 +-
+ drivers/cxl/core/pci.c                |   115 +
+ drivers/cxl/core/port.c               |     8 +-
+ drivers/cxl/core/region.c             |   411 +-
+ drivers/cxl/core/regs.c               |    39 +-
+ drivers/cxl/cxl.h                     |   112 +-
+ drivers/cxl/cxlmem.h                  |   103 +-
+ drivers/cxl/cxlpci.h                  |    23 +-
+ drivers/cxl/mem.c                     |    26 +-
+ drivers/cxl/pci.c                     |   118 +-
+ drivers/cxl/port.c                    |     5 +-
+ drivers/net/ethernet/sfc/Kconfig      |     9 +
+ drivers/net/ethernet/sfc/Makefile     |     1 +
+ drivers/net/ethernet/sfc/ef10.c       |    50 +-
+ drivers/net/ethernet/sfc/efx.c        |    15 +-
+ drivers/net/ethernet/sfc/efx_cxl.c    |   162 +
+ drivers/net/ethernet/sfc/efx_cxl.h    |    40 +
+ drivers/net/ethernet/sfc/mcdi_pcol.h  | 13645 +++++++++---------------
+ drivers/net/ethernet/sfc/net_driver.h |    12 +
+ drivers/net/ethernet/sfc/nic.h        |     3 +
+ include/cxl/cxl.h                     |   269 +
+ include/cxl/pci.h                     |    36 +
+ tools/testing/cxl/Kbuild              |     1 -
+ tools/testing/cxl/test/mock.c         |    17 -
+ 27 files changed, 6186 insertions(+), 9196 deletions(-)
+ create mode 100644 drivers/net/ethernet/sfc/efx_cxl.c
+ create mode 100644 drivers/net/ethernet/sfc/efx_cxl.h
+ create mode 100644 include/cxl/cxl.h
+ create mode 100644 include/cxl/pci.h
 
-to_cxlfs(cxlds)
-cxlfs->entries
-cxlfs->entries->ent
 
-If these cannot be NULL, then all good.
+base-commit: 0a14566be090ca51a32ebdd8a8e21678062dac08
+-- 
+2.34.1
 
---Alison
-
-
-
-> >
-> >
-> >> +	for (count = 0; count < cxlfs->entries->num_features; count++,
-> >> +feat_entry++) {
-> >
-> >Was num_features previously validated?
-> Not in the caller. Had check for num_features here before in cxl_get_feature_entry()
-> as seen in the above link.
-> >
-> >> +		if (uuid_equal(&feat_entry->uuid, feat_uuid))
-> >> +			return feat_entry;
-> >> +	}
-> >> +
-> >> +	return ERR_PTR(-ENOENT);
-> >
-> >Why not just return NULL?
-> Will do.
-> >
-> >
-> >> +}
-> >> +
-> >>  size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
-> >>  		       enum cxl_get_feat_selection selection,
-> >>  		       void *feat_out, size_t feat_out_size, u16 offset,
-> >> --
-> >> 2.43.0
-> >>
-> 
-> Thanks,
-> Shiju
-> 
