@@ -1,45 +1,46 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2068.outbound.protection.outlook.com [40.107.94.68])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2045.outbound.protection.outlook.com [40.107.223.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E4581C5F1B;
-	Mon, 10 Mar 2025 21:03:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAA8B1D6DBF;
+	Mon, 10 Mar 2025 21:03:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.45
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741640635; cv=fail; b=GrbYyzZ8x2QfOBZ7SMxe1EVrp1+omvKt3rrWE6EkKMbbgrnoThj4QuQGPWqv1O6ZsW2g6SRQkOPNPRRxduvDjPriHvP3oBBG7jh4te+yDgcGWi6Ty3mJo6ePBgxMaigdCuOq8X+2pTV2I60iMgPprqOE5iExoU7ioGe/Z1fWoB0=
+	t=1741640637; cv=fail; b=YqI2ercVGuOUye13unmQHHwTIBuxDCLWQpVat+8RUEgu2c3z+6MAdGvoH1lFCb+fP9+eN73tRm5vt8YPXefWUv3jhpkF0PKREdYwfQJZuZ+zfCyqQ1Ld9pSQX/pfLFiUAcxf8n+hlrXen1CXhBQcYzYLmHhy3WI8czssNGa0khs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741640635; c=relaxed/simple;
-	bh=S7slVHm56z909KddfElQGbSWFigw2rtyCqi1LUOyxgU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Na5sjiE563zSJkarbCMq+d6yAu/vEcRnKCXhxB1GJXN0IE2xK6+53YoNF8XV061K2aCeqOn+Q3dv6oDp2LAH+SIP7fHOB3UOK6eJ0xTUtXtJkawNYrPjEpRKhB/4ifQi9X9CtISKeV/dsGZnV8birqWFQytq21Ii/q04+Be214o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ldIG6h8a; arc=fail smtp.client-ip=40.107.94.68
+	s=arc-20240116; t=1741640637; c=relaxed/simple;
+	bh=yAZcRjDucgOc7+o4/ZbM10grjHRJZdyDE3uIh54FxT8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OzMq/kVTxo96pmP4SPFObZI6NRg+N+tW1zaHbcXbc3330PdNwAYMYuyPawS42U6QWtAzpm50oRB4N8zsP2S6CBZumUd8BxtIZoOieXahG2o3kYHv9teynEL+npjG+/LCgFhmSbixIH0zHxYby3vuDHSBg+XUyJzQYm1pDzupPxg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=w+yUbSnf; arc=fail smtp.client-ip=40.107.223.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ldIG6h8a"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="w+yUbSnf"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jEW/oaGlTAG52hLuOGHdlwYKT52Sl0JwXyjULKjigbCN0H8xbGxIeACDd7y12vArSIHW7ivSv2oWLPKN8MElioc6lksg8iiaHQrl17rqkRULow/vIM7VoFhYgEp3P0tmhYaJvhclJQBIujU75fKjRwCjT+lRA1UhJCElWf3jk/URVhH1QZDCjqvM018yYvxJd3XKPIMZrbizuE7F0T2W5fMGqXhOs/5gmuB2ct3yGtT583W3Knaq+96cI97J6dArYBrmXccwbfTkklN3vWKyQQxckT98mvHfOVn4p5Bb+uFl7b6WBmghbVUMdm7ftg4ID5OeR0ewGKCq9pqCl82rsg==
+ b=X4Q7BfrN7RkJniwfdgfqEjwM1LQ9vf+ipeuQncGYmjsuGY2yP3ydjWTANO+pQ3AD2ENPYi9qWQrwlz81XlG/jD5gAqNYRuZ7NjuIUXSmIb7vT0gGwWoy6omb6KO5sRI8LIKMhtPSTgp4q8Mu3Qk5fN8hE6lYD+21Avh5LYJxLcf6iu3qLtpyi1v3BsZ9oQd+AnTWhOhRBTky7Y59+5tBT9s9Vu2kWUJRUeoqryFme/rllGr+UjSjCkWGMv2UOtBr5VKy/hlxHrCkvSGCIP78Gi2QAOBbzu6ptOfBD528Zh86oFq+M/rHTujXQ3/Di7nZIMgcqBS1rRUsZLc+qb4CgA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Emj8awQIz7ElOl+PbE1aRiOHDpFCGyqtr+fiC96UTGE=;
- b=DuRCQNdO4g25ivBiaYUYvXcyD+nHqR2bjpPXf34J7jzc4jUTkWSYzhZJQ1eg4rz7e1yuegyRjYYo2729dfn/bPu5qtt1SR9ynppByaqrQ+gV4/YYKEgVmaY+YOVa5uxAMSm9L1LqJSPmDwQdAXYulhu8Fp5e0Ijr5/uHpg5C5DPHjigA5JznaOA+4GMXVohOx2rpWlv1uBej3pkXYoi1mMs+Nml+GiEJCcQy8aKrHZXkthgEzQYMGCmP5slNPVT2/FzPET9cMPChb5I7A5T/QJEuJRxwdjHDyKVoNp4nqNmvhjgzaG4+raS+YAh89IDk+qglK+zao770xiXU18jMIw==
+ bh=na12sOs20qehhrJZ4bUOn10+SJlQsbDZC9sJmsgtvMM=;
+ b=paV+yY+4npiWwzQu4+Z1cfVPkU8WxxVzA1sIVRUrw19XVVeUmHeaixLIQuP7FxOvMrNMPeEn8qaNX0vKrWvgWr83Xs9jONhBgllK5y7GjLV2lKu5nJFl7/mCGtu8OTwl/zc/ev5w3SlSlfBuDzOJfOKRTutps9Gw0tpAXXf0K0Sz9sfRb6jItSCSJG69YJxWfdASWwHcdrjpPMuV4X3dm6PEpQb8+Zoh7WLFj+zyW1PCU15HXZ0rOi+7oAtE8EDQ644xzimTaqecYmI9m5o6SkTtGbnQsfbN3ip5KtTvjwXCLec4W0YnNk1Hpz0qT9AHxahownuIDR/RAQvkNXnm+w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Emj8awQIz7ElOl+PbE1aRiOHDpFCGyqtr+fiC96UTGE=;
- b=ldIG6h8aJEYcens4qlVkbPNxWD+geFPWznwwAnWc21U3bULwVYiB6ABf/r4NNFIIobCcOszRH3yPYTGSw994w8+xApoFyokdtw3cEPv+H4sDR6HbK8rGqRWPqQdR1wqX0Mlsem+xSw6sGug32EnQSbdXTjF9e533a09hrwm5S9w=
-Received: from BYAPR07CA0038.namprd07.prod.outlook.com (2603:10b6:a03:60::15)
- by MN6PR12MB8514.namprd12.prod.outlook.com (2603:10b6:208:474::16) with
+ bh=na12sOs20qehhrJZ4bUOn10+SJlQsbDZC9sJmsgtvMM=;
+ b=w+yUbSnfXTJixbRi9K0J5iijdBauxrdm+1qT2ua4wt9VhqaL1BnZjtEjyZwdJ78wyMWHLIec/XzWgi6XdyOFul9ITmQDs+Thf0wH+R1ci1746O2f/3WRysmS+ss6JLhYu5qYV8AQ8U8vCr2NZ3cmKu4K7UITDEomwGg73cb1rxc=
+Received: from BYAPR07CA0037.namprd07.prod.outlook.com (2603:10b6:a03:60::14)
+ by PH8PR12MB6674.namprd12.prod.outlook.com (2603:10b6:510:1c1::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Mon, 10 Mar
- 2025 21:03:51 +0000
+ 2025 21:03:53 +0000
 Received: from SJ5PEPF000001D3.namprd05.prod.outlook.com
- (2603:10b6:a03:60:cafe::63) by BYAPR07CA0038.outlook.office365.com
- (2603:10b6:a03:60::15) with Microsoft SMTP Server (version=TLS1_3,
+ (2603:10b6:a03:60:cafe::51) by BYAPR07CA0037.outlook.office365.com
+ (2603:10b6:a03:60::14) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.26 via Frontend Transport; Mon,
- 10 Mar 2025 21:03:51 +0000
+ 10 Mar 2025 21:03:53 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -49,25 +50,27 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB03.amd.com (165.204.84.17) by
  SJ5PEPF000001D3.mail.protection.outlook.com (10.167.242.55) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8534.20 via Frontend Transport; Mon, 10 Mar 2025 21:03:51 +0000
+ 15.20.8534.20 via Frontend Transport; Mon, 10 Mar 2025 21:03:53 +0000
 Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB03.amd.com
  (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 10 Mar
- 2025 16:03:49 -0500
+ 2025 16:03:52 -0500
 Received: from xcbalucerop40x.xilinx.com (10.180.168.240) by
  SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Mon, 10 Mar 2025 16:03:48 -0500
+ 15.1.2507.39 via Frontend Transport; Mon, 10 Mar 2025 16:03:51 -0500
 From: <alejandro.lucero-palau@amd.com>
 To: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
 	<dan.j.williams@intel.com>, <edward.cree@amd.com>, <davem@davemloft.net>,
 	<kuba@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>,
 	<dave.jiang@intel.com>
 CC: Alejandro Lucero <alucerop@amd.com>
-Subject: [PATCH v11 00/23] add type2 device basic support
-Date: Mon, 10 Mar 2025 21:03:17 +0000
-Message-ID: <20250310210340.3234884-1-alejandro.lucero-palau@amd.com>
+Subject: [PATCH v11 02/23] sfc: add cxl support
+Date: Mon, 10 Mar 2025 21:03:19 +0000
+Message-ID: <20250310210340.3234884-3-alejandro.lucero-palau@amd.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250310210340.3234884-1-alejandro.lucero-palau@amd.com>
+References: <20250310210340.3234884-1-alejandro.lucero-palau@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -80,127 +83,282 @@ Received-SPF: None (SATLEXMB03.amd.com: alejandro.lucero-palau@amd.com does
  not designate permitted sender hosts)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D3:EE_|MN6PR12MB8514:EE_
-X-MS-Office365-Filtering-Correlation-Id: f393ce43-c200-4ac0-ab29-08dd60170f73
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D3:EE_|PH8PR12MB6674:EE_
+X-MS-Office365-Filtering-Correlation-Id: b20962b1-5dbb-41f0-db31-08dd60171066
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|376014;
+	BCL:0;ARA:13230040|82310400026|376014|36860700013|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?+FZCX0LSFHul1ycBJb1oFPL18vWPrKl1MoH7I8+AwCGS3lthP4Duk5w+/RUE?=
- =?us-ascii?Q?PICwm269QZdzmod9CK3aD+twL3rAwVxpNnBjGtt0Dewe77Jo7dD4uPl0XZXi?=
- =?us-ascii?Q?AxKbnAFzyzvNrm3k3AueMhee2QMHDCo0p3u21/fMfFEyoOQt/zLOw5ajv3iN?=
- =?us-ascii?Q?QgRPCdMXs37XoO23PM1Lir9ywk8P5xDhxAxhgWH5p4k95t3wXRN6TZ3FEZet?=
- =?us-ascii?Q?GrUvp4fbQUAI8VSoWzVjokUTMFDiqo1AjKSmBIIVampUHixgDhicRgKzY23/?=
- =?us-ascii?Q?0oUxOqWw16GeB6S/yHq7hGNUD/5T9tJ/f9qTH9U0BUn848asA5ATC2pqbSE7?=
- =?us-ascii?Q?+5kH1j85rBnOluHhji0zoRvKaCQPvoH9DK8D7ThULKT2wj0s30RMAkryMsZU?=
- =?us-ascii?Q?1DnFmaQ6T68vWZPof1Cn4qZNkEssdSMNWw+H4vQqMt4vRtyKr2+A0llyG4lO?=
- =?us-ascii?Q?cgA/Iue5lSGm76eeFbVi1typcjHrCei+kIbAYvmL3tTj/vqJzd+zM8h3LACv?=
- =?us-ascii?Q?hsm+zYrbN9DK434CTRikistOKSddNdqIDr9vl6obA8jVV8cXNBs4AIfEmcR+?=
- =?us-ascii?Q?/+oo5/nt9gFMKkDoB2mlKZpi07iAxP9zONlFXfVFBYO8RSLwtTf8IGSvlYZ/?=
- =?us-ascii?Q?FGefkugtAm1r1cxNWCOM5JOAxRlPLFoQMuy7MCP99p0EpdBp4emijT0Ue2jl?=
- =?us-ascii?Q?oh82QMnyFoVNsop1254fZmwnlV9rk7OzTD8lx2dLPzB5qzup3e6VAC/suptt?=
- =?us-ascii?Q?sC9EvDmJ43r3SvPI1mAAaVzodeTQgGCZG0ZU8n9iZMDZTCVwdLvO2tMDMc6W?=
- =?us-ascii?Q?vn9Xo7FnpA5fmaFsnKRrhkmbw+vcNUXVx9ANqfIn6YKERKbqTEJHSxbe14P/?=
- =?us-ascii?Q?Z6KjQmfz7zpQUPwbk1LBlWKpsBRGS0HlLo6aLjPCZtQxO6UEglYvuR8zZw7P?=
- =?us-ascii?Q?DqxpmfueqcSGFsEcuhOF9C8ctp8ej28C5YxMH+eX6n8VaH1Vgyv/22shnJZ+?=
- =?us-ascii?Q?9OwdjCCjWbNsbO/PuOk+DhcX0aDXsxlyZrySTO0dGPh2BUJt/xPkiEr7BOjg?=
- =?us-ascii?Q?eYfVUs5pGdNO5DTetJ2iItDeK7jIlXQhThGS7v4/BK4h1PHw20pJ9gBdXOQN?=
- =?us-ascii?Q?QLdA+d8A9iftS1VaxFUXtv9rbhwuYkFQxcKqpMHUAb0GiR8LZ3zPDbpH3Dzg?=
- =?us-ascii?Q?32VZwHZQWIXj5xyDduQxa0lLO4cSogxLt/6PBjiVtQSEpbrQvl78+MWDqTAW?=
- =?us-ascii?Q?FNqW6VKJht9zn4FnQlZc8IjJbpnfG4Ce+zzJgGtGkB1UME5Wz5hriS1NSo/i?=
- =?us-ascii?Q?EyPXoI5VXB0shJWe/lkWkMk/gZsG/VV0Li/UlfeWQAqFpx243s6mOixI+A5P?=
- =?us-ascii?Q?3DUfsNjSmV/BMc2SJupeYSeJ78Vzhv3DlfAdtAswm1cPKUJs1DOHi13GFi/r?=
- =?us-ascii?Q?Y2K4x0Uo2xgUXp2MrzKgbK+KBjHcdxUAFcqqk1lm8SrIJAzJPFK7CeUKJ66D?=
- =?us-ascii?Q?/eFGdWT4g8hhU+M=3D?=
+	=?us-ascii?Q?DDcOYda1Jh+mtwHr7c/jhi7+yZpbDkK3hxzW2va2TsCxROOspBlHj1HVrO90?=
+ =?us-ascii?Q?XfNPA8nIYQ26QsL6EWXBqht5SooRODSQGv/H1USfLpzXfckIRFNQHfh+l614?=
+ =?us-ascii?Q?Ljtes7ekRwLEY+TfaQh6disJuhbF90kHkVYPaEF1aNdAX61bs4hXJVP3fsmL?=
+ =?us-ascii?Q?Ymx6+Crt1v9A+QxhGLk016N+x1FIWnkjxjNHKZWd8Bml5qelfRn/5UxoqZm0?=
+ =?us-ascii?Q?pnmC/SJf3esfWP/MNx4cSc8cBjjf7+PxsGM05VMnm+vH7Dr3W9pnaHv+8t1D?=
+ =?us-ascii?Q?+aoz37gJBrW1OsI7defK33Z+FDiFlei0M8SGNORDgmIJoqBJoZ01vsPAcNuL?=
+ =?us-ascii?Q?UD8+vg9FWX/pyXUu7bfQ5N+HDe/cg4mSuFe4vym+hGQKbg5z8bfAO2SP45xf?=
+ =?us-ascii?Q?sItNB7wKkc1PnJPTcOOI120lxci1DYg+cBRvk3EQAZ2/emCklCedZC2qNc0w?=
+ =?us-ascii?Q?S1U6O/SxpEstEC3Q7/F2XzMpUjnd/DmgH8AJjdofjfcj39mHnkoZ9xZMEh74?=
+ =?us-ascii?Q?bVB2vhJXzmM4pTncn7GATxy2nvhnc+JdlpSxRb2SsKqfjvu4AEa3AIOsly+u?=
+ =?us-ascii?Q?4nv7P64d2Jcv8tCU7rjsYziyTRfMtdWjZu2zCDyh3ESXLpp/e1gBbeIGuZjp?=
+ =?us-ascii?Q?4gY6Nbsoqdz5k5r2wz8kUKJcAHUsAWrWNJthUaxWdkbLFmVdE7XtKN7wgAuW?=
+ =?us-ascii?Q?CIChD3GGtiNc8O6OTUmszMMKRhBhjso+LiidjKEIn2HvAJBcYlkxT9r9WsJZ?=
+ =?us-ascii?Q?5eGfHF2ocCooPrx0H/Dj+YskdPzLLeTDH2nz9yEW3ART66KyfVl1lodrJK7K?=
+ =?us-ascii?Q?JpFXrOXLj0ksQBPWIoqoep+TqLMx8eukYwDRLg2AOGN+rNkW5/DbGNO3RVFq?=
+ =?us-ascii?Q?AeeI7sccpIeKovfODbDHLHgzuyKxlfAi111V83QgkmobE+QJmO0R4ILypg/v?=
+ =?us-ascii?Q?6Xq0daHXea7bTpJtlR+k61GjlYn3Wg+37r6B7l8QIkGgzt0Xu31aYZYr+yGM?=
+ =?us-ascii?Q?NobGqigqF+Yh99C8LVvCPxdEysbJ8Jd7sgrRQI7Q8UI1hsJzkcf15YUqo7xc?=
+ =?us-ascii?Q?wxr51TfBy2IcxRMNcB2LbLzir+Y2Q+GF082LVFPFkswi6ohFWMJKsjrYYRh1?=
+ =?us-ascii?Q?iumTkJZlEUgO+jEjgOaK5U2y53uS2AG7CagAKJyX7mUrg9SND2+O5pQiEPki?=
+ =?us-ascii?Q?KdAZJ1Rn7/N0tzs/1omQJ7SJBAY4tjAIBows0yYM5Zas7HwsmgczOI+klje+?=
+ =?us-ascii?Q?yCEZn6hFlvP7AIp4ksg1lX8WQWHSnzb17aVfmTlK2NSafgCtOeAc0902QhTy?=
+ =?us-ascii?Q?7i4J2mmhgflX26cWld6I7DyjjnXrL7Vf0IHmRgkyl/BloYSLkt5tIzXKGQ0I?=
+ =?us-ascii?Q?pClIngRROeIjM/ciTzxPcFeQ5ujmRG8E5kIL1DwCCOMIrXtPVGpUrpcntAa2?=
+ =?us-ascii?Q?1/SsomOnp4lJLFGlslcalpg67+GNwxhD6qVU5bPJ0pTY6GrDmQbwwIct50t6?=
+ =?us-ascii?Q?95+rHv2NL9bqGFE=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(376014);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(36860700013)(1800799024);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2025 21:03:51.4512
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2025 21:03:53.0450
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f393ce43-c200-4ac0-ab29-08dd60170f73
+X-MS-Exchange-CrossTenant-Network-Message-Id: b20962b1-5dbb-41f0-db31-08dd60171066
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	SJ5PEPF000001D3.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR12MB8514
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6674
 
 From: Alejandro Lucero <alucerop@amd.com>
 
-v11 changes:
- - Dropping the use of cxl_memdev_state and going back to using
-   cxl_dev_state.
- - Using a helper for an accel driver to allocate its own cxl-related
-   struct embedding cxl_dev_state.
- - Exporting the required structs in include/cxl/cxl.h for an accel
-   driver being able to know the cxl_dev_state size required in the
-   previously mentioned helper for allocation.
- - Avoid using any struct for dpa initialization by the accel driver
-   adding a specific function for creating dpa partitions by accel
-   drivers without a mailbox.
+Add CXL initialization based on new CXL API for accel drivers and make
+it dependent on kernel CXL configuration.
 
-Alejandro Lucero (23):
-  cxl: add type2 device basic support
-  sfc: add cxl support
-  cxl: move pci generic code
-  cxl: move register/capability check to driver
-  cxl: add function for type2 cxl regs setup
-  sfc: make regs setup with checking and set media ready
-  cxl: support dpa initialization without a mailbox
-  sfc: initialize dpa
-  cxl: prepare memdev creation for type2
-  sfc: create type2 cxl memdev
-  cxl: define a driver interface for HPA free space enumeration
-  fc: obtain root decoder with enough HPA free space
-  cxl: define a driver interface for DPA allocation
-  sfc: get endpoint decoder
-  cxl: make region type based on endpoint type
-  cxl/region: factor out interleave ways setup
-  cxl/region: factor out interleave granularity setup
-  cxl: allow region creation by type2 drivers
-  cxl: add region flag for precluding a device memory to be used for dax
-  sfc: create cxl region
-  cxl: add function for obtaining region range
-  sfc: update MCDI protocol headers
-  sfc: support pio mapping based on cxl
-
- drivers/cxl/core/core.h               |     2 +
- drivers/cxl/core/hdm.c                |    83 +
- drivers/cxl/core/mbox.c               |    30 +-
- drivers/cxl/core/memdev.c             |    47 +-
- drivers/cxl/core/pci.c                |   115 +
- drivers/cxl/core/port.c               |     8 +-
- drivers/cxl/core/region.c             |   411 +-
- drivers/cxl/core/regs.c               |    39 +-
- drivers/cxl/cxl.h                     |   112 +-
- drivers/cxl/cxlmem.h                  |   103 +-
- drivers/cxl/cxlpci.h                  |    23 +-
- drivers/cxl/mem.c                     |    26 +-
- drivers/cxl/pci.c                     |   118 +-
- drivers/cxl/port.c                    |     5 +-
- drivers/net/ethernet/sfc/Kconfig      |     9 +
- drivers/net/ethernet/sfc/Makefile     |     1 +
- drivers/net/ethernet/sfc/ef10.c       |    50 +-
- drivers/net/ethernet/sfc/efx.c        |    15 +-
- drivers/net/ethernet/sfc/efx_cxl.c    |   162 +
- drivers/net/ethernet/sfc/efx_cxl.h    |    40 +
- drivers/net/ethernet/sfc/mcdi_pcol.h  | 13645 +++++++++---------------
- drivers/net/ethernet/sfc/net_driver.h |    12 +
- drivers/net/ethernet/sfc/nic.h        |     3 +
- include/cxl/cxl.h                     |   269 +
- include/cxl/pci.h                     |    36 +
- tools/testing/cxl/Kbuild              |     1 -
- tools/testing/cxl/test/mock.c         |    17 -
- 27 files changed, 6186 insertions(+), 9196 deletions(-)
+Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+---
+ drivers/net/ethernet/sfc/Kconfig      |  8 ++++
+ drivers/net/ethernet/sfc/Makefile     |  1 +
+ drivers/net/ethernet/sfc/efx.c        | 15 +++++++-
+ drivers/net/ethernet/sfc/efx_cxl.c    | 55 +++++++++++++++++++++++++++
+ drivers/net/ethernet/sfc/efx_cxl.h    | 40 +++++++++++++++++++
+ drivers/net/ethernet/sfc/net_driver.h | 10 +++++
+ 6 files changed, 128 insertions(+), 1 deletion(-)
  create mode 100644 drivers/net/ethernet/sfc/efx_cxl.c
  create mode 100644 drivers/net/ethernet/sfc/efx_cxl.h
- create mode 100644 include/cxl/cxl.h
- create mode 100644 include/cxl/pci.h
 
-
-base-commit: 0a14566be090ca51a32ebdd8a8e21678062dac08
+diff --git a/drivers/net/ethernet/sfc/Kconfig b/drivers/net/ethernet/sfc/Kconfig
+index 3eb55dcfa8a6..c5fb71e601e7 100644
+--- a/drivers/net/ethernet/sfc/Kconfig
++++ b/drivers/net/ethernet/sfc/Kconfig
+@@ -65,6 +65,14 @@ config SFC_MCDI_LOGGING
+ 	  Driver-Interface) commands and responses, allowing debugging of
+ 	  driver/firmware interaction.  The tracing is actually enabled by
+ 	  a sysfs file 'mcdi_logging' under the PCI device.
++config SFC_CXL
++	bool "Solarflare SFC9100-family CXL support"
++	depends on SFC && CXL_BUS >= SFC
++	default SFC
++	help
++	  This enables SFC CXL support if the kernel is configuring CXL for
++	  using CTPIO with CXL.mem
++
+ 
+ source "drivers/net/ethernet/sfc/falcon/Kconfig"
+ source "drivers/net/ethernet/sfc/siena/Kconfig"
+diff --git a/drivers/net/ethernet/sfc/Makefile b/drivers/net/ethernet/sfc/Makefile
+index 8f446b9bd5ee..e909cafd5908 100644
+--- a/drivers/net/ethernet/sfc/Makefile
++++ b/drivers/net/ethernet/sfc/Makefile
+@@ -13,6 +13,7 @@ sfc-$(CONFIG_SFC_SRIOV)	+= sriov.o ef10_sriov.o ef100_sriov.o ef100_rep.o \
+                            mae.o tc.o tc_bindings.o tc_counters.o \
+                            tc_encap_actions.o tc_conntrack.o
+ 
++sfc-$(CONFIG_SFC_CXL)	+= efx_cxl.o
+ obj-$(CONFIG_SFC)	+= sfc.o
+ 
+ obj-$(CONFIG_SFC_FALCON) += falcon/
+diff --git a/drivers/net/ethernet/sfc/efx.c b/drivers/net/ethernet/sfc/efx.c
+index 650136dfc642..f60f9153f018 100644
+--- a/drivers/net/ethernet/sfc/efx.c
++++ b/drivers/net/ethernet/sfc/efx.c
+@@ -34,6 +34,7 @@
+ #include "selftest.h"
+ #include "sriov.h"
+ #include "efx_devlink.h"
++#include "efx_cxl.h"
+ 
+ #include "mcdi_port_common.h"
+ #include "mcdi_pcol.h"
+@@ -1004,12 +1005,15 @@ static void efx_pci_remove(struct pci_dev *pci_dev)
+ 	efx_pci_remove_main(efx);
+ 
+ 	efx_fini_io(efx);
++
++	probe_data = container_of(efx, struct efx_probe_data, efx);
++	efx_cxl_exit(probe_data);
++
+ 	pci_dbg(efx->pci_dev, "shutdown successful\n");
+ 
+ 	efx_fini_devlink_and_unlock(efx);
+ 	efx_fini_struct(efx);
+ 	free_netdev(efx->net_dev);
+-	probe_data = container_of(efx, struct efx_probe_data, efx);
+ 	kfree(probe_data);
+ };
+ 
+@@ -1214,6 +1218,15 @@ static int efx_pci_probe(struct pci_dev *pci_dev,
+ 	if (rc)
+ 		goto fail2;
+ 
++	/* A successful cxl initialization implies a CXL region created to be
++	 * used for PIO buffers. If there is no CXL support, or initialization
++	 * fails, efx_cxl_pio_initialised wll be false and legacy PIO buffers
++	 * defined at specific PCI BAR regions will be used.
++	 */
++	rc = efx_cxl_init(probe_data);
++	if (rc)
++		pci_err(pci_dev, "CXL initialization failed with error %d\n", rc);
++
+ 	rc = efx_pci_probe_post_io(efx);
+ 	if (rc) {
+ 		/* On failure, retry once immediately.
+diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
+new file mode 100644
+index 000000000000..753d5b7d49b6
+--- /dev/null
++++ b/drivers/net/ethernet/sfc/efx_cxl.c
+@@ -0,0 +1,55 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/****************************************************************************
++ *
++ * Driver for AMD network controllers and boards
++ * Copyright (C) 2025, Advanced Micro Devices, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 as published
++ * by the Free Software Foundation, incorporated herein by reference.
++ */
++
++#include <cxl/pci.h>
++#include <linux/pci.h>
++
++#include "net_driver.h"
++#include "efx_cxl.h"
++
++#define EFX_CTPIO_BUFFER_SIZE	SZ_256M
++
++int efx_cxl_init(struct efx_probe_data *probe_data)
++{
++	struct efx_nic *efx = &probe_data->efx;
++	struct pci_dev *pci_dev = efx->pci_dev;
++	struct efx_cxl *cxl;
++	u16 dvsec;
++
++	probe_data->cxl_pio_initialised = false;
++
++	dvsec = pci_find_dvsec_capability(pci_dev, PCI_VENDOR_ID_CXL,
++					  CXL_DVSEC_PCIE_DEVICE);
++	if (!dvsec)
++		return 0;
++
++	pci_dbg(pci_dev, "CXL_DVSEC_PCIE_DEVICE capability found\n");
++
++	/* Create a cxl_dev_state embedded in the cxl struct using cxl core api
++	 * specifying no mbox available.
++	 */
++	cxl = cxl_dev_state_create(&pci_dev->dev, CXL_DEVTYPE_DEVMEM,
++				   pci_dev->dev.id, dvsec, struct efx_cxl,
++				   cxlds, false);
++
++	if (!cxl)
++		return -ENOMEM;
++
++	probe_data->cxl = cxl;
++
++	return 0;
++}
++
++void efx_cxl_exit(struct efx_probe_data *probe_data)
++{
++}
++
++MODULE_IMPORT_NS("CXL");
+diff --git a/drivers/net/ethernet/sfc/efx_cxl.h b/drivers/net/ethernet/sfc/efx_cxl.h
+new file mode 100644
+index 000000000000..e0391293a2bf
+--- /dev/null
++++ b/drivers/net/ethernet/sfc/efx_cxl.h
+@@ -0,0 +1,40 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/****************************************************************************
++ * Driver for AMD network controllers and boards
++ * Copyright (C) 2025, Advanced Micro Devices, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 as published
++ * by the Free Software Foundation, incorporated herein by reference.
++ */
++
++#ifndef EFX_CXL_H
++#define EFX_CXL_H
++
++#ifdef CONFIG_SFC_CXL
++
++#include <cxl/cxl.h>
++
++struct cxl_root_decoder;
++struct cxl_port;
++struct cxl_endpoint_decoder;
++struct cxl_region;
++struct efx_probe_data;
++
++struct efx_cxl {
++	struct cxl_dev_state cxlds;
++	struct cxl_memdev *cxlmd;
++	struct cxl_root_decoder *cxlrd;
++	struct cxl_port *endpoint;
++	struct cxl_endpoint_decoder *cxled;
++	struct cxl_region *efx_region;
++	void __iomem *ctpio_cxl;
++};
++
++int efx_cxl_init(struct efx_probe_data *probe_data);
++void efx_cxl_exit(struct efx_probe_data *probe_data);
++#else
++inline int efx_cxl_init(struct efx_probe_data *probe_data) { return 0; }
++inline void efx_cxl_exit(struct efx_probe_data *probe_data) {}
++#endif
++#endif
+diff --git a/drivers/net/ethernet/sfc/net_driver.h b/drivers/net/ethernet/sfc/net_driver.h
+index f70a7b7d6345..a2626bcd6a41 100644
+--- a/drivers/net/ethernet/sfc/net_driver.h
++++ b/drivers/net/ethernet/sfc/net_driver.h
+@@ -1201,14 +1201,24 @@ struct efx_nic {
+ 	atomic_t n_rx_noskb_drops;
+ };
+ 
++#ifdef CONFIG_SFC_CXL
++struct efx_cxl;
++#endif
++
+ /**
+  * struct efx_probe_data - State after hardware probe
+  * @pci_dev: The PCI device
+  * @efx: Efx NIC details
++ * @cxl: details of related cxl objects
++ * @cxl_pio_initialised: cxl initialization outcome.
+  */
+ struct efx_probe_data {
+ 	struct pci_dev *pci_dev;
+ 	struct efx_nic efx;
++#ifdef CONFIG_SFC_CXL
++	struct efx_cxl *cxl;
++	bool cxl_pio_initialised;
++#endif
+ };
+ 
+ static inline struct efx_nic *efx_netdev_priv(struct net_device *dev)
 -- 
 2.34.1
 
