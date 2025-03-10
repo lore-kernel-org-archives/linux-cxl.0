@@ -1,36 +1,36 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7318C221F35;
-	Mon, 10 Mar 2025 08:29:00 +0000 (UTC)
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9B311BDAA0;
+	Mon, 10 Mar 2025 09:03:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741595347; cv=none; b=afoJBJeEV8r6ihmesu3YSe4ZKLpblq9cx1yoFoxXuNEwHXqtvUCJ1r5smwCMRJQfKDpU3QIJK5cisFNdJh5HklnpgmdHVja4zFBF8uCNK+shiRQh3HcDTEktX1s9KTR5UaeHYpYn5b8c3H13zL6t4ny8punEqyc35Isiw3FCv/8=
+	t=1741597435; cv=none; b=mBVOcGdt2dM9Ny0FoQptk8D728BRYmIK6XVXn1zw+/qAcbkw1ZakMOQEB5kZezxwZnXkXT7hNzkCgEu5Jg3nzS9YL/aIiCEvNoJI7cVQQ0CKgWrV+EbVdtXjYCYd8LvYpnBHxJ42T+PizrrZMLVSDNcY1vPy9j0TCEhuv36l0sI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741595347; c=relaxed/simple;
-	bh=6M1UyAd8d/M18H5uFCfbe/Orf+WJZ8oMBL9WVomey2c=;
+	s=arc-20240116; t=1741597435; c=relaxed/simple;
+	bh=x5y52ORsIAdc8VJ9E9ytWhkH3OBDUo5wo5YehwWbcr4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=I8Ceo/MziswsZzSHe7uV/oALactZHqS2SM99LZ/etWC/n4qWPPsJj52qD97YLGU84W40Gl1tFzTDe7EhXRHftKiSODJMATFzEtIUUt7vA2PSS81yXd768RcwCiF2fmykiTzfmdALurEFI9ioERR1opuhPl0kVNviKUqwmKhydSA=
+	 MIME-Version; b=VyhgOAerITaO411EHUaEEFyjy4uLPSAWUi6k3QMSm4Kkj59akj3t3YdNn6Yfer5t0H9xv8KW5r5UmwhT7R7e9ps1cnVZVEWPIv8PBsecZ+B2++kd4XzJ8/+f5b9qj8xb5PAFAt2ksV/PENUHhXaldB3SL7r8L/ITuly1qFe3LGI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-3c9ff7000001d7ae-62-67cea2ca9924
+X-AuditID: a67dfc5b-3c9ff7000001d7ae-de-67ceaaf00db8
 From: Rakie Kim <rakie.kim@sk.com>
-To: Joshua Hahn <joshua.hahnjy@gmail.com>
-Cc: gourry@gourry.net,
-	akpm@linux-foundation.org,
+To: Gregory Price <gourry@gourry.net>
+Cc: akpm@linux-foundation.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
 	linux-cxl@vger.kernel.org,
+	joshua.hahnjy@gmail.com,
 	dan.j.williams@intel.com,
 	ying.huang@linux.alibaba.com,
 	kernel_team@skhynix.com,
 	honggyu.kim@sk.com,
 	yunjeong.mun@sk.com,
 	Rakie Kim <rakie.kim@sk.com>
-Subject: Re: [PATCH 2/4] mm/mempolicy: Enable sysfs support for memory hotplug in weighted interleave
-Date: Mon, 10 Mar 2025 17:28:38 +0900
-Message-ID: <20250310082854.606-1-rakie.kim@sk.com>
+Subject: Re: [PATCH 0/4] mm/mempolicy: Add memory hotplug support in weighted interleave
+Date: Mon, 10 Mar 2025 18:03:34 +0900
+Message-ID: <20250310090340.620-1-rakie.kim@sk.com>
 X-Mailer: git-send-email 2.48.1.windows.1
-In-Reply-To: <20250307182015.489780-1-joshua.hahnjy@gmail.com>
+In-Reply-To: <Z8sXFGBYFlG2Z1s4@gourry-fedora-PF4VCD3F>
 References: 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -39,149 +39,94 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNLMWRmVeSWpSXmKPExsXC9ZZnoe6pRefSDT7/0bOYs34Nm8X0qRcY
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNLMWRmVeSWpSXmKPExsXC9ZZnoe7HVefSDfY9ZLSYs34Nm8X0qRcY
 	LX7ePc5ucXzrPHaL87NOsVhc3jWHzeLemv+sFqvXZDhweOycdZfdo7vtMrvH4j0vmTw2fZrE
-	7nFixm8Wj50PLT0+b5ILYI/isklJzcksSy3St0vgymh5V1twWKmi/cdOtgbGNukuRg4OCQET
-	id3nvboYOcHM9i0L2UHCbAJKEsf2xoCERQQ0JU60TmLuYuTiYBZYySTRtuA0M0hCWCBV4ti6
-	6ewgNouAqsTkQ1PYQGxeAWOJ5acesEHM1JRouHSPCcTmFLCT2PVjCVivkACPxKsN+xkh6gUl
-	Ts58wgJiMwvISzRvnQ22TELgDJvEz5N/WSAGSUocXHGDZQIj/ywkPbOQ9CxgZFrFKJSZV5ab
-	mJljopdRmZdZoZecn7uJERjEy2r/RO9g/HQh+BCjAAejEg/vg3ln04VYE8uKK3MPMUpwMCuJ
-	8KptP5UuxJuSWFmVWpQfX1Sak1p8iFGag0VJnNfoW3mKkEB6YklqdmpqQWoRTJaJg1OqgVGt
-	89h8YcepLb3/L+xIncVy6aPOsuOVX49d2enuu2aBd8upay8X7fUorGu7d2raRjVRpbLqeaG6
-	GzwmLC/qbq64uu0D81n152JZs7Rf/Vqr2vI+bf3iX4H5hXoZB+TqHz8VPvFHb9rU4PORKd4z
-	Ow7oNl53zjDfUbvMjSVs95arW27H30rlztNVYinOSDTUYi4qTgQA8vUg2l4CAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGLMWRmVeSWpSXmKPExsXCNUNNS/fUonPpBr/OKlrMWb+GzWL61AuM
+	7nFixm8Wj50PLT0+b5ILYI/isklJzcksSy3St0vgyvixpI2poE284lzjUtYGxhVCXYycHBIC
+	JhKPV81i6mLkALNXHTYCMdkElCSO7Y0BMUUEVCXarrh3MXJxMAusZ5J4vWkWG0insECExNMz
+	LawgNgtQzeZtN8HivALGEpvfP2GCmK4p0XDpHpjNKWAm8XLDB3YQW0iAR+LVhv2MEPWCEidn
+	PmEBsZkF5CWat85mBlkmIXCCTaJh2XJmiEGSEgdX3GCZwMg/C0nPLCQ9CxiZVjEKZeaV5SZm
+	5pjoZVTmZVboJefnbmIEBvGy2j/ROxg/XQg+xCjAwajEw/tg3tl0IdbEsuLK3EOMEhzMSiK8
+	attPpQvxpiRWVqUW5ccXleakFh9ilOZgURLnNfpWniIkkJ5YkpqdmlqQWgSTZeLglGpgTGdh
+	uvtuUdnvTxIBjeeOe1/smO3G6X/r/ULtuj2SZU+NuAN/2nO3qvR8XrS2Ymm/x0zDNrEPhWn1
+	y+Yd5Ny98JLQtwNpZ72vH/36Xl+H+9p7lZbXcz8Z7X9bvbVcbNZWxhlaR54o6E2I/nRva6jv
+	vAeRKnesLBoko31fpW16wvKIc+v1g3q7+5RYijMSDbWYi4oTAfMnmo1eAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrKLMWRmVeSWpSXmKPExsXCNUNNS/fDqnPpBsv+GVnMWb+GzWL61AuM
 	Fj/vHme3+PzsNbPF8a3z2C0Ozz3JanF+1ikWi8u75rBZ3Fvzn9Xi0LXnrBar12RY/N62gs2B
 	x2PnrLvsHt1tl9k9Fu95yeSx6dMkdo8TM36zeOx8aOnx7baHx+IXH5g8Pm+SC+CM4rJJSc3J
-	LEst0rdL4MpoeVdbcFipov3HTrYGxjbpLkZODgkBE4n2LQvZuxg5ONgElCSO7Y0BCYsIaEqc
-	aJ3E3MXIxcEssJJJom3BaWaQhLBAqsSxddPZQWwWAVWJyYemsIHYvALGEstPPWCDmKkp0XDp
-	HhOIzSlgJ7HrxxKwXiEBHolXG/YzQtQLSpyc+YQFxGYWkJdo3jqbeQIjzywkqVlIUgsYmVYx
-	imTmleUmZuaY6hVnZ1TmZVboJefnbmIEhu6y2j8TdzB+uex+iFGAg1GJh/fBvLPpQqyJZcWV
-	uYcYJTiYlUR41bafShfiTUmsrEotyo8vKs1JLT7EKM3BoiTO6xWemiAkkJ5YkpqdmlqQWgST
-	ZeLglGpgrHE4eSR5/YXCL+ohm9/aLLl/vHWWclD7ksW3eav/Vd53Mu44cWLiBdnlC79kMj89
-	zHey6U3d/o09+Su3vDm4n9/0weLAnFdTos8oeXXFJ+3NivRNXpvgWLrgaZBL3XKzEzaHrE6d
-	y6r+XP3m4Kq6xsX69YIJ39pma/HN7/48q5tn2kRvrkLvfCWW4oxEQy3mouJEAKmylgZZAgAA
+	LEst0rdL4Mr4saSNqaBNvOJc41LWBsYVQl2MHBwSAiYSqw4bgZhsAkoSx/bGgJgiAqoSbVfc
+	uxi5OJgF1jNJvN40i62LkZNDWCBC4umZFlYQmwWoZvO2m2BxXgFjic3vnzCB2BICmhINl+6B
+	2ZwCZhIvN3xgB7GFBHgkXm3YzwhRLyhxcuYTFhCbWUBeonnrbOYJjDyzkKRmIUktYGRaxSiS
+	mVeWm5iZY6pXnJ1RmZdZoZecn7uJERi4y2r/TNzB+OWy+yFGAQ5GJR7eB/POpguxJpYVV+Ye
+	YpTgYFYS4VXbfipdiDclsbIqtSg/vqg0J7X4EKM0B4uSOK9XeGqCkEB6YklqdmpqQWoRTJaJ
+	g1OqgdHAS/xNycSb/QYL2AIfHdBzVdzH4/5gzfWqlMid/KZ7lkzg21Bz62LXJPkS2YAlgqFv
+	bWpqN2WIh/e/KmdZkvQv6MLbTRIBvZteiM9xLpBd6sih/rnr1DfO3KD7DmL6GZsYl0z5cdao
+	P+8af0Vs2wwxyTtphTka/KYv/iUFLLoj+DtVws3KXYmlOCPRUIu5qDgRAECD5n5YAgAA
 X-CFilter-Loop: Reflected
 
-On Fri,  7 Mar 2025 10:19:59 -0800 Joshua Hahn <joshua.hahnjy@gmail.com> wrote:
+On Fri, 7 Mar 2025 10:56:04 -0500 Gregory Price <gourry@gourry.net> wrote:
 
-Hi Joshua
+Hi Gregory
 Thank you for your response regarding this patch.
 
-> On Fri,  7 Mar 2025 15:35:31 +0900 Rakie Kim <rakie.kim@sk.com> wrote:
+> On Fri, Mar 07, 2025 at 03:35:29PM +0900, Rakie Kim wrote:
+> > Unnecessary sysfs entries: Nodes without memory were included in sysfs
+> > at boot.
+> > Missing hotplug support: Nodes that became online after initialization
+> > were not recognized, causing incomplete interleave configurations.
 > 
-> Hi Rakie, thank you for your work on this patch! I think it makes a lot of
-> sense, given the discussion between Gregory & Honggyu in the weighted
-> interleave auto-tuning patch.
+> This comment is misleading.  Nodes can "come online" but they are
+> absolutely detected during init - as nodes cannot be "hotplugged"
+> themselves.  Resources can be added *to* nodes, but nodes themselves
+> cannot be added or removed.
 > 
-> I have a few small nits and questions that I wanted to raise, but none that
-> should change the behavior at all : -)
+> I think what you're trying to say here is:
 > 
-> > Previously, sysfs entries for weighted interleave were only created during
-> > initialization, preventing dynamically added memory nodes from being recognized.
-> > 
-> > This patch enables sysfs registration for nodes added via memory hotplug,
-> > allowing weighted interleave settings to be updated as the system memory
-> > configuration changes.
-> > 
-> > Signed-off-by: Rakie Kim <rakie.kim@sk.com>
-> > ---
-> >  mm/mempolicy.c | 51 +++++++++++++++++++++++++++++++-------------------
-> >  1 file changed, 32 insertions(+), 19 deletions(-)
-> > 
-> > diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> > index 385607179ebd..fc10a9a4be86 100644
-> > --- a/mm/mempolicy.c
-> > +++ b/mm/mempolicy.c
-> > @@ -3389,6 +3389,13 @@ struct iw_node_attr {
-> >  	int nid;
-> >  };
-> >  
-> > +struct iw_node_group {
-> > +	struct kobject *wi_kobj;
-> > +	struct iw_node_attr **nattrs;
-> > +};
-> > +
-> > +static struct iw_node_group *ngrp;
-> > +
-> >  static ssize_t node_show(struct kobject *kobj, struct kobj_attribute *attr,
-> >  			 char *buf)
-> >  {
-> > @@ -3431,8 +3438,6 @@ static ssize_t node_store(struct kobject *kobj, struct kobj_attribute *attr,
-> >  	return count;
-> >  }
-> >  
-> > -static struct iw_node_attr **node_attrs;
-> > -
-> >  static void sysfs_wi_node_release(struct iw_node_attr *node_attr,
-> >  				  struct kobject *parent)
-> >  {
-> > @@ -3448,7 +3453,7 @@ static void sysfs_wi_release(struct kobject *wi_kobj)
-> >  	int i;
-> >  
-> >  	for (i = 0; i < nr_node_ids; i++)
-> > -		sysfs_wi_node_release(node_attrs[i], wi_kobj);
-> > +		sysfs_wi_node_release(ngrp->nattrs[i], wi_kobj);
+> 1) The current system creates 1 entry per possible node (explicitly)
+> 2) Not all nodes may have memory at all times (memory can be hotplugged)
+> 3) It would be nice to let sysfs and weighted interleave omit memoryless
+>    nodes until those nodes had memory hotplugged into them.
 > 
-> Nit: I think it is slightly awkward to have a global struct ngrp, and then have
-> its members passed individually like this. Of course there's nothing that
-> we can do for sysfs_wi_release's argument, but I think we can make the
-> arguments for sysfs_wi_node_release a bit cleaner. An idea would just be to
-> pass an integer (nid) instead of the nattrs[i] pointer. We also don't need
-> to pass wi_kobj, since it is accessible from within sysfs_wi_node_release.
+> > Dynamic sysfs updates for hotplugged nodes  New memory nodes are
+> > recognized and integrated via the memory hotplug mechanism.
+> > Subsequent patches refine this functionality:
+> >
 > 
-> Once we make both these changes, patch 3 becomes a little bit cleaner (IMHO),
-> where we acquire the lock for the ngrp struct, then access its contents,
-> and we don't have to pass two pointers as arguments when they are already
-> accessible via the global struct anyways.
+> Just going to reiterate that that there's no such this as a hotplug node
+> or "new nodes" - only nodes that have their attributes changed (i.e.
+> !N_MEMORY -> N_MEMORY).  The node exists, it may just not have anything
+> associated with it.
 > 
+> Maybe semantic nits, but it matters.  The nodes are present and can be
+> operated on before memory comes online, and that has implications for
+> users.  Depending on how that hardware comes online, it may or may not
+> report its performance data prior to memory hotplug.
 
-I completely agree with your observations about the use of
-ngrp and wi_kobj.
-When I was working on this patch, I aimed to minimize changes to the
-existing code. This approach led to the creation of similar code being
-used differently, as you pointed out. I'll make the necessary adjustments
-and update the patch to version 2.
-
-
-> >  	kobject_put(wi_kobj);
-> >  }
-> >  
-> > @@ -3486,12 +3491,10 @@ static int add_weight_node(int nid, struct kobject *wi_kobj)
-> >  		return -ENOMEM;
-> >  	}
-> >  
-> > -	node_attrs[nid] = node_attr;
-> > +	ngrp->nattrs[nid] = node_attr;
-> >  	return 0;
-> >  }
-> >  
-> > -struct kobject *wi_kobj;
-> > -
-> >  static int wi_node_notifier(struct notifier_block *nb,
-> >  			       unsigned long action, void *data)
-> >  {
-> > @@ -3504,10 +3507,10 @@ static int wi_node_notifier(struct notifier_block *nb,
-> >  
-> >  	switch(action) {
-> >  	case MEM_ONLINE:
-> > -		err = add_weight_node(nid, wi_kobj);
-> > +		err = add_weight_node(nid, ngrp->wi_kobj);
-> 
-> Same idea here, we probably don't need to pass wi_kobj into add_weight_node.
-> With that said, I can also see the argument for passing the struct itself,
-> since it saves a line of variable declaration & definition.
-> 
-> [...snip...]
-> 
-> Please let me know what you think! I hope you have a great day, thank you
-> again for this patch!
-> Joshua
-
-I will also update this issue in version 2.
+I agree with your assessment. The existing comments, as you pointed out,
+might indeed be confusing or misleading. I'll make sure this issue is
+addressed in version 2.
 
 > 
-> Sent using hkml (https://github.com/sjp38/hackermail)
+> If it doesn't report its performance data, then hiding the node before
+> it hotplugs memory means a user can't pre-configure the system for when
+> the memory is added (which could be used immediately).
 > 
+> Hiding the node until hotplug also means we have hidden state.  We need
+> to capture pre-hotplug reported performance data so that if it comes
+> online the auto-calculation of weights is correct.  But if the user has
+> already switched from auto to manual mode, then a node suddenly
+> appearing will have an unknown state.
+> 
+> This is why I initially chose to just expose N_POSSIBLE entries in
+> sysfs, because the transition state causes hidden information - and that
+> felt worse than extra entries.  I suppose I should add some
+> documentation somewhere that discusses this issue.
+> 
+> I think the underlying issue you're dealing with is that the system is
+> creating more nodes for you than it should.
+
+I will reply to your next comment on this issue soon.
+
+> 
+> ~Gregory
 
 Rakie
