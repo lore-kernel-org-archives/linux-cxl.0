@@ -1,165 +1,184 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D73BF1DDA09;
-	Mon, 10 Mar 2025 20:27:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF21CEC5;
+	Mon, 10 Mar 2025 20:28:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741638442; cv=none; b=jceEnBtV78JrQjFkycYj0ohvLjT0lkkQLacZS2RSn12uOP5yTTW3OKIF2sxforrXhWyaRw1KuE8xu8QB27/BSUCXNxNAv/LhRdsRdFGxaqM3Xjv0otGYH6R9eYGGrVhn3yuM+aWzBCdYZTbGdn6PCET4VSMaqhdDjlzsDlLdP+Q=
+	t=1741638519; cv=none; b=kssGcObmDWt3uEWBRhH2lbiGsy8VRCCCFM7IEF6ZqLx9oym9EZ3vQgoKZiYh641dywnbXru4DBdQqpdAwQz29FsbWlpI+7ovliZiI+GH5RtUuuqrgFew6f7dE1Mae7esrEA9yueLTZk0kSkntgEtN76dWdhHrgxGyKkyzfI9HOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741638442; c=relaxed/simple;
-	bh=/kz9J001nUCJ1TInU9c7H+CswaI1MEjTlNKpcpq1z8c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BqqBqRULpAVDb+IO0Jlg/ZleblMPfmxQr65gX0yupm9rgPY5uCFUBpGnM2Gv0dfsUpPVpJmcQeXSR5qqxeWYmm3VZhDuXwNDoFZ+26bDL8uAJevJlPeHiv4SCejBjl3bPlp46hY6YzMTvhlYHkoCYU4vbsa5vn1H5OYzSZ+U6oI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BxelR1C/; arc=none smtp.client-ip=192.198.163.16
+	s=arc-20240116; t=1741638519; c=relaxed/simple;
+	bh=HSsMnI4cC6mW97nelx12+H+5tkQ+KC89ClBZc2VpfjA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DFXT/Xo/V0gr+UFNAjBg+8TYWLVsKvcyOuALKUJEAlpdTBl7aq0fWDrg3eOZCQeU2iPxgY9mQ3iZrnWVVL8qy9H7GWFgsrUp6AxZlb4j7pH2ML1YKJX3FS1i2R12o+oprCtMQvJPKYd80atGNXgVXt2Fnx3q0wD/Y8Dy3Wim5s0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gJ1fYbVK; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BxelR1C/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gJ1fYbVK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741638441; x=1773174441;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=/kz9J001nUCJ1TInU9c7H+CswaI1MEjTlNKpcpq1z8c=;
-  b=BxelR1C/ZHf6LRuNYI6EyIV7au6yFfmNZfvNjNJzAtkQ57MyiryLh9s8
-   vo/v5ua6KUqaGbQBmQZYAjQ97fyJfdjV50o5sO4CGTGiFL0S2EaKmKfxR
-   XXLnQINeZxObhLMWuoRdlKuFGSyDhwjRcfcpZKcxx7stPACLJg/PNtqB8
-   a7yqtdmxQa0oesll6HOgDdxeG0yvDwmMGvebFTSA/lJfuXgrcufGr5UsC
-   P6ra92NU6iRWtzDI9B0QCjLQ4rwkZY6kvOviJ2NZy/80U6azI+1P6IYQj
-   14l2V6GuZ5ENj2kKqcpkMRftlazkASYT2SdH/pAqxI5OT0wY8CDRV1oI0
+  t=1741638518; x=1773174518;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=HSsMnI4cC6mW97nelx12+H+5tkQ+KC89ClBZc2VpfjA=;
+  b=gJ1fYbVKWx7lk0+nRyTGH7QX6MRmLfgh05FgPvlU5RupZrpwIlGgRlnC
+   crlG1rozB1Wq0W1rKnV4DLA1YgxlQNIGVBnHXqvV8LSMUJeQxUQC/jQZb
+   YMVa4OhSGw+WBh6k+DmwoM0ulkOV0gN4bSoWOcLYP61uJfwejdIqrRMvv
+   JA7iDSiNkyHIcFGoCYZBypZ0aL4VeOLF0bDKYjP6dZVGmwD6z58NZn8vm
+   j/e3X4DdrfB6ocYeFhGlg3wRGnGOvzqK6ah19x0d4ZnYzzD2RgnYU1qIZ
+   PVbujRyN8mW1K6e4u7A3iqYS4rs2uc/6ibREyQg0bH0NU6FbTBrNgnAxL
    g==;
-X-CSE-ConnectionGUID: 8FfhGRwzQEWGEUaHa/P9og==
-X-CSE-MsgGUID: PKe7omp8Qt6mZjeaYmu3RA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11369"; a="30229720"
+X-CSE-ConnectionGUID: wtHPDtytSxWeDYHRw3tXcw==
+X-CSE-MsgGUID: jE2CWlK9RVKwojzh7Kdujg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11369"; a="53281775"
 X-IronPort-AV: E=Sophos;i="6.14,237,1736841600"; 
-   d="scan'208";a="30229720"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 13:27:19 -0700
-X-CSE-ConnectionGUID: GHxaZoHHRsKjuwlzRHBtxw==
-X-CSE-MsgGUID: uk8CqsdMSyeoXL2SGEupmg==
+   d="scan'208";a="53281775"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 13:28:36 -0700
+X-CSE-ConnectionGUID: Io1LQZW1SMCWx8jlCrJC6w==
+X-CSE-MsgGUID: TkRSYNbZTDiqa6hIOx+iIQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,237,1736841600"; 
-   d="scan'208";a="120988504"
-Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.111.63]) ([10.125.111.63])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 13:27:19 -0700
-Message-ID: <ce0c9c98-c507-40c1-8bd5-5fe37ba624f6@intel.com>
-Date: Mon, 10 Mar 2025 13:27:17 -0700
+   d="scan'208";a="157305575"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.111.66])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 13:28:35 -0700
+Date: Mon, 10 Mar 2025 13:28:33 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Shiju Jose <shiju.jose@huawei.com>
+Cc: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+	"dave@stgolabs.net" <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	"dave.jiang@intel.com" <dave.jiang@intel.com>,
+	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+	"ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"david@redhat.com" <david@redhat.com>,
+	"Vilas.Sridharan@amd.com" <Vilas.Sridharan@amd.com>,
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"bp@alien8.de" <bp@alien8.de>,
+	"tony.luck@intel.com" <tony.luck@intel.com>,
+	"rafael@kernel.org" <rafael@kernel.org>,
+	"lenb@kernel.org" <lenb@kernel.org>,
+	"mchehab@kernel.org" <mchehab@kernel.org>,
+	"leo.duran@amd.com" <leo.duran@amd.com>,
+	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>,
+	"rientjes@google.com" <rientjes@google.com>,
+	"jiaqiyan@google.com" <jiaqiyan@google.com>,
+	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"naoya.horiguchi@nec.com" <naoya.horiguchi@nec.com>,
+	"james.morse@arm.com" <james.morse@arm.com>,
+	"jthoughton@google.com" <jthoughton@google.com>,
+	"somasundaram.a@hpe.com" <somasundaram.a@hpe.com>,
+	"erdemaktas@google.com" <erdemaktas@google.com>,
+	"pgonda@google.com" <pgonda@google.com>,
+	"duenwen@google.com" <duenwen@google.com>,
+	"gthelen@google.com" <gthelen@google.com>,
+	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
+	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
+	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
+	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
+	tanxiaofei <tanxiaofei@huawei.com>,
+	"Zengtao (B)" <prime.zeng@hisilicon.com>,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	"kangkang.shen@futurewei.com" <kangkang.shen@futurewei.com>,
+	wanghuiqiang <wanghuiqiang@huawei.com>,
+	Linuxarm <linuxarm@huawei.com>
+Subject: Re: [PATCH 1/8] cxl: Add helper function to retrieve a feature entry
+Message-ID: <Z89LcUIWO9m8Vtru@aschofie-mobl2.lan>
+References: <20250227223816.2036-1-shiju.jose@huawei.com>
+ <20250227223816.2036-2-shiju.jose@huawei.com>
+ <Z8tGz33l9vDzuJLy@aschofie-mobl2.lan>
+ <e8e33d46aa1b478db601de29e047cb5f@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 6/6] pds_fwctl: add Documentation entries
-To: Shannon Nelson <shannon.nelson@amd.com>, jgg@nvidia.com,
- andrew.gospodarek@broadcom.com, aron.silverton@oracle.com,
- dan.j.williams@intel.com, daniel.vetter@ffwll.ch, dsahern@kernel.org,
- gregkh@linuxfoundation.org, hch@infradead.org, itayavr@nvidia.com,
- jiri@nvidia.com, Jonathan.Cameron@huawei.com, kuba@kernel.org,
- lbloch@nvidia.com, leonro@nvidia.com, linux-cxl@vger.kernel.org,
- linux-rdma@vger.kernel.org, netdev@vger.kernel.org, saeedm@nvidia.com
-Cc: brett.creeley@amd.com
-References: <20250307185329.35034-1-shannon.nelson@amd.com>
- <20250307185329.35034-7-shannon.nelson@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250307185329.35034-7-shannon.nelson@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e8e33d46aa1b478db601de29e047cb5f@huawei.com>
 
-
-
-On 3/7/25 11:53 AM, Shannon Nelson wrote:
-> Add pds_fwctl to the driver and fwctl documentation pages.
+On Mon, Mar 10, 2025 at 06:15:38PM +0000, Shiju Jose wrote:
+> >-----Original Message-----
+> >From: Alison Schofield <alison.schofield@intel.com>
+> >Sent: 07 March 2025 19:20
+> >To: Shiju Jose <shiju.jose@huawei.com>
+> [...]
+> >> +struct cxl_feat_entry *cxl_get_feature_entry(struct cxl_dev_state *cxlds,
+> >> +					     const uuid_t *feat_uuid)
+> >> +{
+> >> +	struct cxl_features_state *cxlfs = to_cxlfs(cxlds);
+> >> +	struct cxl_feat_entry *feat_entry;
+> >> +	int count;
+> >> +
+> >> +	/*
+> >> +	 * Retrieve the feature entry from the supported features list,
+> >> +	 * if the feature is supported.
+> >> +	 */
+> >> +	feat_entry = cxlfs->entries->ent;
+> >
+> >Do we need some NULL checking here on cxlfs, entries
 > 
-> Reviewed-by: Leon Romanovsky <leonro@nvidia.com>
-> Signed-off-by: Shannon Nelson <shannon.nelson@amd.com>
-> ---
->  Documentation/userspace-api/fwctl/fwctl.rst   |  1 +
->  Documentation/userspace-api/fwctl/index.rst   |  1 +
->  .../userspace-api/fwctl/pds_fwctl.rst         | 40 +++++++++++++++++++
->  3 files changed, 42 insertions(+)
->  create mode 100644 Documentation/userspace-api/fwctl/pds_fwctl.rst
+> Hi Alison,
 > 
-> diff --git a/Documentation/userspace-api/fwctl/fwctl.rst b/Documentation/userspace-api/fwctl/fwctl.rst
-> index 04ad78a7cd48..fdcfe418a83f 100644
-> --- a/Documentation/userspace-api/fwctl/fwctl.rst
-> +++ b/Documentation/userspace-api/fwctl/fwctl.rst
-> @@ -150,6 +150,7 @@ fwctl User API
->  
->  .. kernel-doc:: include/uapi/fwctl/fwctl.h
->  .. kernel-doc:: include/uapi/fwctl/mlx5.h
-> +.. kernel-doc:: include/uapi/fwctl/pds.h
->  
->  sysfs Class
->  -----------
-> diff --git a/Documentation/userspace-api/fwctl/index.rst b/Documentation/userspace-api/fwctl/index.rst
-> index d9d40a468a31..316ac456ad3b 100644
-> --- a/Documentation/userspace-api/fwctl/index.rst
-> +++ b/Documentation/userspace-api/fwctl/index.rst
-> @@ -11,3 +11,4 @@ to securely construct and execute RPCs inside device firmware.
->  
->     fwctl
->     fwctl-cxl
-> +   pds_fwctl
-> diff --git a/Documentation/userspace-api/fwctl/pds_fwctl.rst b/Documentation/userspace-api/fwctl/pds_fwctl.rst
-> new file mode 100644
-> index 000000000000..e8a63d4215d0
-> --- /dev/null
-> +++ b/Documentation/userspace-api/fwctl/pds_fwctl.rst
-> @@ -0,0 +1,40 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +================
-> +fwctl pds driver
-> +================
-> +
-> +:Author: Shannon Nelson
-> +
-> +Overview
-> +========
-> +
-> +The PDS Core device makes an fwctl service available through an
+> Thanks for the feedbacks.
+> We had check on cxlfs before
+> https://lore.kernel.org/all/20250122235159.2716036-5-dave.jiang@intel.com/
+> but removed because of the following comment.
+> https://lore.kernel.org/all/20250124150150.GZ5556@nvidia.com/
 
-s/an fwctl/a fwctl/
+Hi Shiju,
 
-> +auxiliary_device named pds_core.fwctl.N.  The pds_fwctl driver binds to
-> +this device and registers itself with the fwctl subsystem.  The resulting
-> +userspace interface is used by an application that is a part of the
-> +AMD/Pensando software package for the Distributed Service Card (DSC).
-> +
-> +The pds_fwctl driver has little knowledge of the firmware's internals,
-> +only knows how to send commands through pds_core's message queue to the
-s/ , only/. It only/
+I have not followed all along, so yeah my questions may be a bit pesky
+at this point. I did see the comment linked above about how the driver
+must be bound at this point. I think my question is a bit different.
 
-> +firmware for fwctl requests.  The set of fwctl operations available
-> +depends on the firmware in the DSC, and the userspace application
-> +version must match the firmware so that they can talk to each other.
-> +
-> +When a connection is created the pds_fwctl driver requests from the
-> +firmware a list of firmware object endpoints, and for each endpoint the
-> +driver requests a list of operations for the endpoint.  Each operation
-> +description includes a minimum scope level that the pds_fwctl driver can
-> +use for filtering privilege levels.
+Are each of these guaranteed not to be NULL here:
 
-Maybe a bit more details on the privilege levels?
+to_cxlfs(cxlds)
+cxlfs->entries
+cxlfs->entries->ent
 
-> +
-> +pds_fwctl User API
-> +==================
-> +
-> +.. kernel-doc:: include/uapi/fwctl/pds.h
-> +
-> +Each RPC request includes the target endpoint and the operation id, and in
-> +and out buffer lengths and pointers.  The driver verifies the existence
-> +of the requested endpoint and operations, then checks the current scope
-s/then/and then it/
+If these cannot be NULL, then all good.
 
-> +against the required scope of the operation.  The request is then put
-> +together with the request data and sent through pds_core's message queue
-> +to the firmware, and the results are returned to the caller.
+--Alison
 
-May be a good idea to touch on each of the ioctls being exported as well as maybe provide some sample user code on how to perform the RPCs. This documentation should serve as a guide to an application programmer on how to write the user application that accesses the fwctl char dev. 
 
+
+> >
+> >
+> >> +	for (count = 0; count < cxlfs->entries->num_features; count++,
+> >> +feat_entry++) {
+> >
+> >Was num_features previously validated?
+> Not in the caller. Had check for num_features here before in cxl_get_feature_entry()
+> as seen in the above link.
+> >
+> >> +		if (uuid_equal(&feat_entry->uuid, feat_uuid))
+> >> +			return feat_entry;
+> >> +	}
+> >> +
+> >> +	return ERR_PTR(-ENOENT);
+> >
+> >Why not just return NULL?
+> Will do.
+> >
+> >
+> >> +}
+> >> +
+> >>  size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
+> >>  		       enum cxl_get_feat_selection selection,
+> >>  		       void *feat_out, size_t feat_out_size, u16 offset,
+> >> --
+> >> 2.43.0
+> >>
+> 
+> Thanks,
+> Shiju
+> 
