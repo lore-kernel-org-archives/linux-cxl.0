@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4214622DFAA;
-	Mon, 10 Mar 2025 18:28:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D73BF1DDA09;
+	Mon, 10 Mar 2025 20:27:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741631308; cv=none; b=BAJx7/NYF9NJQbMtgxcpQ+/jwS/7Lr7qyOgcfDSNM9BMMfUTWSEBpm7qzC9dCbU/lh/muX5mHUlF4YXygjWEy0J8rHo5nLNrRLb36EliMruZHeNBti948NTkOZX1LRkgltRMmk7R7bJlIZL0otXYECHmW8wdN5rb8j9OH/eVxKs=
+	t=1741638442; cv=none; b=jceEnBtV78JrQjFkycYj0ohvLjT0lkkQLacZS2RSn12uOP5yTTW3OKIF2sxforrXhWyaRw1KuE8xu8QB27/BSUCXNxNAv/LhRdsRdFGxaqM3Xjv0otGYH6R9eYGGrVhn3yuM+aWzBCdYZTbGdn6PCET4VSMaqhdDjlzsDlLdP+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741631308; c=relaxed/simple;
-	bh=WN9gP5Aw/arF+ZuJdWRA+y8xB6kB6OmkY3uMuaop8Xk=;
+	s=arc-20240116; t=1741638442; c=relaxed/simple;
+	bh=/kz9J001nUCJ1TInU9c7H+CswaI1MEjTlNKpcpq1z8c=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tWLNhdjevIdMf9QCp6ns+X2O67hQ1r/4n0St2XvVQ3BXlR9rV5xnCm65eTVLSH7Zn4mUj4ogO67/ThcXLLNPc7h+vNURHOffMX/DiMZmouzJUvGYAhOQW+43eHejqrXu2sUkJN2V7PHRFkQRuos0B7AsY7D4A0VxM77MpR4kl+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eo51pVEE; arc=none smtp.client-ip=192.198.163.15
+	 In-Reply-To:Content-Type; b=BqqBqRULpAVDb+IO0Jlg/ZleblMPfmxQr65gX0yupm9rgPY5uCFUBpGnM2Gv0dfsUpPVpJmcQeXSR5qqxeWYmm3VZhDuXwNDoFZ+26bDL8uAJevJlPeHiv4SCejBjl3bPlp46hY6YzMTvhlYHkoCYU4vbsa5vn1H5OYzSZ+U6oI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BxelR1C/; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eo51pVEE"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BxelR1C/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741631306; x=1773167306;
+  t=1741638441; x=1773174441;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=WN9gP5Aw/arF+ZuJdWRA+y8xB6kB6OmkY3uMuaop8Xk=;
-  b=eo51pVEEWszyUO2dnMGfX7+OCG+JDs6d3UM3+1/n7PpkWwJpC3SbUsHJ
-   MYLtvfXt4Ul/NrAxfowZ2do93rHDtiLaWBBSHNyIwBroiPnFrrXUR5WjE
-   EES5ajEkMmZ059gci6KEn62ZShu60mzvpdUZE7bI8rLU5qCat4V7Gm8tN
-   9NtbrlyXX078YTaWrWaKgY5wOZfC4WTePFg8SAb4gVqKjI3fBvLO6DRaa
-   hxuRONl3lPIGot1yXRs7+kXk467TNZySGkBx6AzLNVazy9u8khq4UWC8i
-   PUbWQiO0V7dIIqMwF76ra/3jxTz5ssmrQz3DphVaClqsNIG+2u+f6G6kZ
+  bh=/kz9J001nUCJ1TInU9c7H+CswaI1MEjTlNKpcpq1z8c=;
+  b=BxelR1C/ZHf6LRuNYI6EyIV7au6yFfmNZfvNjNJzAtkQ57MyiryLh9s8
+   vo/v5ua6KUqaGbQBmQZYAjQ97fyJfdjV50o5sO4CGTGiFL0S2EaKmKfxR
+   XXLnQINeZxObhLMWuoRdlKuFGSyDhwjRcfcpZKcxx7stPACLJg/PNtqB8
+   a7yqtdmxQa0oesll6HOgDdxeG0yvDwmMGvebFTSA/lJfuXgrcufGr5UsC
+   P6ra92NU6iRWtzDI9B0QCjLQ4rwkZY6kvOviJ2NZy/80U6azI+1P6IYQj
+   14l2V6GuZ5ENj2kKqcpkMRftlazkASYT2SdH/pAqxI5OT0wY8CDRV1oI0
    g==;
-X-CSE-ConnectionGUID: IIOp3qL/Qp2qtn0b8Xf13Q==
-X-CSE-MsgGUID: he7DC3AqSqaAKLYfPbB5mw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11369"; a="42775203"
-X-IronPort-AV: E=Sophos;i="6.14,236,1736841600"; 
-   d="scan'208";a="42775203"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 11:28:25 -0700
-X-CSE-ConnectionGUID: 7wgKKWYRTC693PR9ydLnIw==
-X-CSE-MsgGUID: kdZHiZVuTlWzzikodWuqPg==
+X-CSE-ConnectionGUID: 8FfhGRwzQEWGEUaHa/P9og==
+X-CSE-MsgGUID: PKe7omp8Qt6mZjeaYmu3RA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11369"; a="30229720"
+X-IronPort-AV: E=Sophos;i="6.14,237,1736841600"; 
+   d="scan'208";a="30229720"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 13:27:19 -0700
+X-CSE-ConnectionGUID: GHxaZoHHRsKjuwlzRHBtxw==
+X-CSE-MsgGUID: uk8CqsdMSyeoXL2SGEupmg==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,236,1736841600"; 
-   d="scan'208";a="150870063"
+X-IronPort-AV: E=Sophos;i="6.14,237,1736841600"; 
+   d="scan'208";a="120988504"
 Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.111.63]) ([10.125.111.63])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 11:28:24 -0700
-Message-ID: <d1c78d12-854f-48e7-a588-4e6cf0991156@intel.com>
-Date: Mon, 10 Mar 2025 11:28:23 -0700
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 13:27:19 -0700
+Message-ID: <ce0c9c98-c507-40c1-8bd5-5fe37ba624f6@intel.com>
+Date: Mon, 10 Mar 2025 13:27:17 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,7 +52,7 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/6] pds_fwctl: initial driver framework
+Subject: Re: [PATCH v3 6/6] pds_fwctl: add Documentation entries
 To: Shannon Nelson <shannon.nelson@amd.com>, jgg@nvidia.com,
  andrew.gospodarek@broadcom.com, aron.silverton@oracle.com,
  dan.j.williams@intel.com, daniel.vetter@ffwll.ch, dsahern@kernel.org,
@@ -62,428 +62,104 @@ To: Shannon Nelson <shannon.nelson@amd.com>, jgg@nvidia.com,
  linux-rdma@vger.kernel.org, netdev@vger.kernel.org, saeedm@nvidia.com
 Cc: brett.creeley@amd.com
 References: <20250307185329.35034-1-shannon.nelson@amd.com>
- <20250307185329.35034-5-shannon.nelson@amd.com>
+ <20250307185329.35034-7-shannon.nelson@amd.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250307185329.35034-5-shannon.nelson@amd.com>
+In-Reply-To: <20250307185329.35034-7-shannon.nelson@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
 On 3/7/25 11:53 AM, Shannon Nelson wrote:
-> Initial files for adding a new fwctl driver for the AMD/Pensando PDS
-> devices.  This sets up a simple auxiliary_bus driver that registers
-> with fwctl subsystem.  It expects that a pds_core device has set up
-> the auxiliary_device pds_core.fwctl
+> Add pds_fwctl to the driver and fwctl documentation pages.
 > 
 > Reviewed-by: Leon Romanovsky <leonro@nvidia.com>
 > Signed-off-by: Shannon Nelson <shannon.nelson@amd.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-minor comment below.
 > ---
->  MAINTAINERS                    |   7 ++
->  drivers/fwctl/Kconfig          |  10 ++
->  drivers/fwctl/Makefile         |   1 +
->  drivers/fwctl/pds/Makefile     |   4 +
->  drivers/fwctl/pds/main.c       | 169 +++++++++++++++++++++++++++++++++
->  include/linux/pds/pds_adminq.h |  83 ++++++++++++++++
->  include/uapi/fwctl/fwctl.h     |   1 +
->  include/uapi/fwctl/pds.h       |  26 +++++
->  8 files changed, 301 insertions(+)
->  create mode 100644 drivers/fwctl/pds/Makefile
->  create mode 100644 drivers/fwctl/pds/main.c
->  create mode 100644 include/uapi/fwctl/pds.h
+>  Documentation/userspace-api/fwctl/fwctl.rst   |  1 +
+>  Documentation/userspace-api/fwctl/index.rst   |  1 +
+>  .../userspace-api/fwctl/pds_fwctl.rst         | 40 +++++++++++++++++++
+>  3 files changed, 42 insertions(+)
+>  create mode 100644 Documentation/userspace-api/fwctl/pds_fwctl.rst
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 3381e41dcf37..c63fd76a3684 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9576,6 +9576,13 @@ L:	linux-kernel@vger.kernel.org
->  S:	Maintained
->  F:	drivers/fwctl/mlx5/
+> diff --git a/Documentation/userspace-api/fwctl/fwctl.rst b/Documentation/userspace-api/fwctl/fwctl.rst
+> index 04ad78a7cd48..fdcfe418a83f 100644
+> --- a/Documentation/userspace-api/fwctl/fwctl.rst
+> +++ b/Documentation/userspace-api/fwctl/fwctl.rst
+> @@ -150,6 +150,7 @@ fwctl User API
 >  
-> +FWCTL PDS DRIVER
-> +M:	Brett Creeley <brett.creeley@amd.com>
-> +R:	Shannon Nelson <shannon.nelson@amd.com>
-> +L:	linux-kernel@vger.kernel.org
-> +S:	Maintained
-> +F:	drivers/fwctl/pds/
-> +
->  GALAXYCORE GC0308 CAMERA SENSOR DRIVER
->  M:	Sebastian Reichel <sre@kernel.org>
->  L:	linux-media@vger.kernel.org
-> diff --git a/drivers/fwctl/Kconfig b/drivers/fwctl/Kconfig
-> index f802cf5d4951..b5583b12a011 100644
-> --- a/drivers/fwctl/Kconfig
-> +++ b/drivers/fwctl/Kconfig
-> @@ -19,5 +19,15 @@ config FWCTL_MLX5
->  	  This will allow configuration and debug tools to work out of the box on
->  	  mainstream kernel.
+>  .. kernel-doc:: include/uapi/fwctl/fwctl.h
+>  .. kernel-doc:: include/uapi/fwctl/mlx5.h
+> +.. kernel-doc:: include/uapi/fwctl/pds.h
 >  
-> +	  If you don't know what to do here, say N.
-> +
-> +config FWCTL_PDS
-> +	tristate "AMD/Pensando pds fwctl driver"
-> +	depends on PDS_CORE
-> +	help
-> +	  The pds_fwctl driver provides an fwctl interface for a user process
-> +	  to access the debug and configuration information of the AMD/Pensando
-> +	  DSC hardware family.
-> +
->  	  If you don't know what to do here, say N.
->  endif
-> diff --git a/drivers/fwctl/Makefile b/drivers/fwctl/Makefile
-> index 1c535f694d7f..c093b5f661d6 100644
-> --- a/drivers/fwctl/Makefile
-> +++ b/drivers/fwctl/Makefile
-> @@ -1,5 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0
->  obj-$(CONFIG_FWCTL) += fwctl.o
->  obj-$(CONFIG_FWCTL_MLX5) += mlx5/
-> +obj-$(CONFIG_FWCTL_PDS) += pds/
+>  sysfs Class
+>  -----------
+> diff --git a/Documentation/userspace-api/fwctl/index.rst b/Documentation/userspace-api/fwctl/index.rst
+> index d9d40a468a31..316ac456ad3b 100644
+> --- a/Documentation/userspace-api/fwctl/index.rst
+> +++ b/Documentation/userspace-api/fwctl/index.rst
+> @@ -11,3 +11,4 @@ to securely construct and execute RPCs inside device firmware.
 >  
->  fwctl-y += main.o
-> diff --git a/drivers/fwctl/pds/Makefile b/drivers/fwctl/pds/Makefile
+>     fwctl
+>     fwctl-cxl
+> +   pds_fwctl
+> diff --git a/Documentation/userspace-api/fwctl/pds_fwctl.rst b/Documentation/userspace-api/fwctl/pds_fwctl.rst
 > new file mode 100644
-> index 000000000000..cc2317c07be1
+> index 000000000000..e8a63d4215d0
 > --- /dev/null
-> +++ b/drivers/fwctl/pds/Makefile
-> @@ -0,0 +1,4 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +obj-$(CONFIG_FWCTL_PDS) += pds_fwctl.o
+> +++ b/Documentation/userspace-api/fwctl/pds_fwctl.rst
+> @@ -0,0 +1,40 @@
+> +.. SPDX-License-Identifier: GPL-2.0
 > +
-> +pds_fwctl-y += main.o
-> diff --git a/drivers/fwctl/pds/main.c b/drivers/fwctl/pds/main.c
-> new file mode 100644
-> index 000000000000..27942315a602
-> --- /dev/null
-> +++ b/drivers/fwctl/pds/main.c
-> @@ -0,0 +1,169 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright(c) Advanced Micro Devices, Inc */
+> +================
+> +fwctl pds driver
+> +================
 > +
-> +#include <linux/module.h>
-> +#include <linux/auxiliary_bus.h>
-> +#include <linux/pci.h>
-> +#include <linux/vmalloc.h>
+> +:Author: Shannon Nelson
 > +
-> +#include <uapi/fwctl/fwctl.h>
-> +#include <uapi/fwctl/pds.h>
-> +#include <linux/fwctl.h>
+> +Overview
+> +========
 > +
-> +#include <linux/pds/pds_common.h>
-> +#include <linux/pds/pds_core_if.h>
-> +#include <linux/pds/pds_adminq.h>
-> +#include <linux/pds/pds_auxbus.h>
-> +
-> +struct pdsfc_uctx {
-> +	struct fwctl_uctx uctx;
-> +	u32 uctx_caps;
-> +};
-> +
-> +struct pdsfc_dev {
-> +	struct fwctl_device fwctl;
-> +	struct pds_auxiliary_dev *padev;
-> +	u32 caps;
-> +	struct pds_fwctl_ident ident;
-> +};
-> +
-> +static int pdsfc_open_uctx(struct fwctl_uctx *uctx)
-> +{
-> +	struct pdsfc_dev *pdsfc = container_of(uctx->fwctl, struct pdsfc_dev, fwctl);
-> +	struct pdsfc_uctx *pdsfc_uctx = container_of(uctx, struct pdsfc_uctx, uctx);
-> +
-> +	pdsfc_uctx->uctx_caps = pdsfc->caps;
-> +
-> +	return 0;
-> +}
-> +
-> +static void pdsfc_close_uctx(struct fwctl_uctx *uctx)
-> +{
-> +}
-> +
-> +static void *pdsfc_info(struct fwctl_uctx *uctx, size_t *length)
-> +{
-> +	struct pdsfc_uctx *pdsfc_uctx = container_of(uctx, struct pdsfc_uctx, uctx);
-> +	struct fwctl_info_pds *info;
-> +
-> +	info = kzalloc(sizeof(*info), GFP_KERNEL);
-> +	if (!info)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	info->uctx_caps = pdsfc_uctx->uctx_caps;
-> +
-> +	return info;
-> +}
-> +
-> +static int pdsfc_identify(struct pdsfc_dev *pdsfc)
-> +{
-> +	struct device *dev = &pdsfc->fwctl.dev;
-> +	union pds_core_adminq_comp comp = {0};
-> +	union pds_core_adminq_cmd cmd;
-> +	struct pds_fwctl_ident *ident;
-> +	dma_addr_t ident_pa;
-> +	int err;
-> +
-> +	ident = dma_alloc_coherent(dev->parent, sizeof(*ident), &ident_pa, GFP_KERNEL);
-> +	err = dma_mapping_error(dev->parent, ident_pa);
-> +	if (err) {
-> +		dev_err(dev, "Failed to map ident buffer\n");
-> +		return err;
-> +	}
-> +
-> +	cmd = (union pds_core_adminq_cmd) {
-> +		.fwctl_ident = {
-> +			.opcode = PDS_FWCTL_CMD_IDENT,
-> +			.version = 0,
-> +			.len = cpu_to_le32(sizeof(*ident)),
-> +			.ident_pa = cpu_to_le64(ident_pa),
-> +		}
-> +	};
-> +
-> +	err = pds_client_adminq_cmd(pdsfc->padev, &cmd, sizeof(cmd), &comp, 0);
-> +	if (err)
-> +		dev_err(dev, "Failed to send adminq cmd opcode: %u err: %d\n",
-> +			cmd.fwctl_ident.opcode, err);
-> +	else
-> +		pdsfc->ident = *ident;
-> +
-> +	dma_free_coherent(dev->parent, sizeof(*ident), ident, ident_pa);
-> +
-> +	return err;
-> +}
-> +
-> +static void *pdsfc_fw_rpc(struct fwctl_uctx *uctx, enum fwctl_rpc_scope scope,
-> +			  void *in, size_t in_len, size_t *out_len)
-> +{
-> +	return NULL;
-> +}
-> +
-> +static const struct fwctl_ops pdsfc_ops = {
-> +	.device_type = FWCTL_DEVICE_TYPE_PDS,
-> +	.uctx_size = sizeof(struct pdsfc_uctx),
-> +	.open_uctx = pdsfc_open_uctx,
-> +	.close_uctx = pdsfc_close_uctx,
-> +	.info = pdsfc_info,
-> +	.fw_rpc = pdsfc_fw_rpc,
-> +};
-> +
-> +static int pdsfc_probe(struct auxiliary_device *adev,
-> +		       const struct auxiliary_device_id *id)
-> +{
-> +	struct pds_auxiliary_dev *padev =
-> +			container_of(adev, struct pds_auxiliary_dev, aux_dev);
-> +	struct device *dev = &adev->dev;
-> +	struct pdsfc_dev *pdsfc;
-> +	int err;
-> +
-> +	pdsfc = fwctl_alloc_device(&padev->vf_pdev->dev, &pdsfc_ops,
-> +				   struct pdsfc_dev, fwctl);
-> +	if (!pdsfc)
-> +		return dev_err_probe(dev, -ENOMEM, "Failed to allocate fwctl device struct\n");
-> +	pdsfc->padev = padev;
-> +
-> +	err = pdsfc_identify(pdsfc);
-> +	if (err) {
-> +		fwctl_put(&pdsfc->fwctl);
-> +		return dev_err_probe(dev, err, "Failed to identify device\n");
-> +	}
-> +
-> +	err = fwctl_register(&pdsfc->fwctl);
-> +	if (err) {
-> +		fwctl_put(&pdsfc->fwctl);
-> +		return dev_err_probe(dev, err, "Failed to register device\n");
-> +	}
-> +
-> +	auxiliary_set_drvdata(adev, pdsfc);
-> +
-> +	return 0;
-> +}
-> +
-> +static void pdsfc_remove(struct auxiliary_device *adev)
-> +{
-> +	struct pdsfc_dev *pdsfc = auxiliary_get_drvdata(adev);
-> +
-> +	fwctl_unregister(&pdsfc->fwctl);
-> +	fwctl_put(&pdsfc->fwctl);
-> +}
-> +
-> +static const struct auxiliary_device_id pdsfc_id_table[] = {
-> +	{.name = PDS_CORE_DRV_NAME "." PDS_DEV_TYPE_FWCTL_STR },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(auxiliary, pdsfc_id_table);
-> +
-> +static struct auxiliary_driver pdsfc_driver = {
-> +	.name = "pds_fwctl",
-> +	.probe = pdsfc_probe,
-> +	.remove = pdsfc_remove,
-> +	.id_table = pdsfc_id_table,
-> +};
-> +
-> +module_auxiliary_driver(pdsfc_driver);
-> +
-> +MODULE_IMPORT_NS("FWCTL");
-> +MODULE_DESCRIPTION("pds fwctl driver");
-> +MODULE_AUTHOR("Shannon Nelson <shannon.nelson@amd.com>");
-> +MODULE_AUTHOR("Brett Creeley <brett.creeley@amd.com>");
-> +MODULE_LICENSE("GPL");
-> diff --git a/include/linux/pds/pds_adminq.h b/include/linux/pds/pds_adminq.h
-> index 4b4e9a98b37b..22c6d77b3dcb 100644
-> --- a/include/linux/pds/pds_adminq.h
-> +++ b/include/linux/pds/pds_adminq.h
-> @@ -1179,6 +1179,84 @@ struct pds_lm_host_vf_status_cmd {
->  	u8     status;
->  };
->  
-> +enum pds_fwctl_cmd_opcode {
-> +	PDS_FWCTL_CMD_IDENT = 70,
-> +};
-> +
-> +/**
-> + * struct pds_fwctl_cmd - Firmware control command structure
-> + * @opcode: Opcode
-> + * @rsvd:   Reserved
-> + * @ep:     Endpoint identifier
-> + * @op:     Operation identifier
-> + */
-> +struct pds_fwctl_cmd {
-> +	u8     opcode;
-> +	u8     rsvd[3];
-> +	__le32 ep;
-> +	__le32 op;
-> +} __packed;
-> +
-> +/**
-> + * struct pds_fwctl_comp - Firmware control completion structure
-> + * @status:     Status of the firmware control operation
-> + * @rsvd:       Reserved
-> + * @comp_index: Completion index in little-endian format
-> + * @rsvd2:      Reserved
-> + * @color:      Color bit indicating the state of the completion
-> + */
-> +struct pds_fwctl_comp {
-> +	u8     status;
-> +	u8     rsvd;
-> +	__le16 comp_index;
-> +	u8     rsvd2[11];
-> +	u8     color;
-> +} __packed;
-> +
-> +/**
-> + * struct pds_fwctl_ident_cmd - Firmware control identification command structure
-> + * @opcode:   Operation code for the command
-> + * @rsvd:     Reserved
-> + * @version:  Interface version
-> + * @rsvd2:    Reserved
-> + * @len:      Length of the identification data
-> + * @ident_pa: Physical address of the identification data
-> + */
-> +struct pds_fwctl_ident_cmd {
-> +	u8     opcode;
-> +	u8     rsvd;
-> +	u8     version;
-> +	u8     rsvd2;
-> +	__le32 len;
-> +	__le64 ident_pa;
-> +} __packed;
-> +
-> +/* future feature bits here
-> + * enum pds_fwctl_features {
-> + * };
-> + * (compilers don't like empty enums)
-> + */
-> +
-> +/**
-> + * struct pds_fwctl_ident - Firmware control identification structure
-> + * @features:    Supported features (enum pds_fwctl_features)
-> + * @version:     Interface version
-> + * @rsvd:        Reserved
-> + * @max_req_sz:  Maximum request size
-> + * @max_resp_sz: Maximum response size
-> + * @max_req_sg_elems:  Maximum number of request SGs
-> + * @max_resp_sg_elems: Maximum number of response SGs
-> + */
-> +struct pds_fwctl_ident {
-> +	__le64 features;
-> +	u8     version;
-> +	u8     rsvd[3];
-> +	__le32 max_req_sz;
-> +	__le32 max_resp_sz;
-> +	u8     max_req_sg_elems;
-> +	u8     max_resp_sg_elems;
-> +} __packed;
-> +
->  union pds_core_adminq_cmd {
->  	u8     opcode;
->  	u8     bytes[64];
-> @@ -1216,6 +1294,9 @@ union pds_core_adminq_cmd {
->  	struct pds_lm_dirty_enable_cmd	  lm_dirty_enable;
->  	struct pds_lm_dirty_disable_cmd	  lm_dirty_disable;
->  	struct pds_lm_dirty_seq_ack_cmd	  lm_dirty_seq_ack;
-> +
-> +	struct pds_fwctl_cmd		  fwctl;
-> +	struct pds_fwctl_ident_cmd	  fwctl_ident;
->  };
->  
->  union pds_core_adminq_comp {
-> @@ -1243,6 +1324,8 @@ union pds_core_adminq_comp {
->  
->  	struct pds_lm_state_size_comp	  lm_state_size;
->  	struct pds_lm_dirty_status_comp	  lm_dirty_status;
-> +
-> +	struct pds_fwctl_comp		  fwctl;
->  };
->  
->  #ifndef __CHECKER__
-> diff --git a/include/uapi/fwctl/fwctl.h b/include/uapi/fwctl/fwctl.h
-> index c2d5abc5a726..716ac0eee42d 100644
-> --- a/include/uapi/fwctl/fwctl.h
-> +++ b/include/uapi/fwctl/fwctl.h
-> @@ -44,6 +44,7 @@ enum fwctl_device_type {
->  	FWCTL_DEVICE_TYPE_ERROR = 0,
->  	FWCTL_DEVICE_TYPE_MLX5 = 1,
->  	FWCTL_DEVICE_TYPE_CXL = 2,
-> +	FWCTL_DEVICE_TYPE_PDS = 4,
->  };
->  
->  /**
-> diff --git a/include/uapi/fwctl/pds.h b/include/uapi/fwctl/pds.h
-> new file mode 100644
-> index 000000000000..558e030b7583
-> --- /dev/null
-> +++ b/include/uapi/fwctl/pds.h
-> @@ -0,0 +1,26 @@
-> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> +/* Copyright(c) Advanced Micro Devices, Inc */
-> +
-> +/*
-> + * fwctl interface info for pds_fwctl
-> + */
-> +
-> +#ifndef _UAPI_FWCTL_PDS_H_
-> +#define _UAPI_FWCTL_PDS_H_
-> +
-> +#include <linux/types.h>
-> +
-> +/*
-> + * struct fwctl_info_pds
-> + *
-> + * Return basic information about the FW interface available.
-> + */
+> +The PDS Core device makes an fwctl service available through an
 
-Please use proper kdoc formatting for the comment block.
+s/an fwctl/a fwctl/
 
-> +struct fwctl_info_pds {
-> +	__u32 uctx_caps;
-> +};
+> +auxiliary_device named pds_core.fwctl.N.  The pds_fwctl driver binds to
+> +this device and registers itself with the fwctl subsystem.  The resulting
+> +userspace interface is used by an application that is a part of the
+> +AMD/Pensando software package for the Distributed Service Card (DSC).
 > +
-> +enum pds_fwctl_capabilities {
-> +	PDS_FWCTL_QUERY_CAP = 0,
-> +	PDS_FWCTL_SEND_CAP,
-> +};
-> +#endif /* _UAPI_FWCTL_PDS_H_ */
+> +The pds_fwctl driver has little knowledge of the firmware's internals,
+> +only knows how to send commands through pds_core's message queue to the
+s/ , only/. It only/
+
+> +firmware for fwctl requests.  The set of fwctl operations available
+> +depends on the firmware in the DSC, and the userspace application
+> +version must match the firmware so that they can talk to each other.
+> +
+> +When a connection is created the pds_fwctl driver requests from the
+> +firmware a list of firmware object endpoints, and for each endpoint the
+> +driver requests a list of operations for the endpoint.  Each operation
+> +description includes a minimum scope level that the pds_fwctl driver can
+> +use for filtering privilege levels.
+
+Maybe a bit more details on the privilege levels?
+
+> +
+> +pds_fwctl User API
+> +==================
+> +
+> +.. kernel-doc:: include/uapi/fwctl/pds.h
+> +
+> +Each RPC request includes the target endpoint and the operation id, and in
+> +and out buffer lengths and pointers.  The driver verifies the existence
+> +of the requested endpoint and operations, then checks the current scope
+s/then/and then it/
+
+> +against the required scope of the operation.  The request is then put
+> +together with the request data and sent through pds_core's message queue
+> +to the firmware, and the results are returned to the caller.
+
+May be a good idea to touch on each of the ioctls being exported as well as maybe provide some sample user code on how to perform the RPCs. This documentation should serve as a guide to an application programmer on how to write the user application that accesses the fwctl char dev. 
 
