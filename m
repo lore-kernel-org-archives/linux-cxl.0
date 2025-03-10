@@ -1,108 +1,100 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18CC2253E6;
-	Mon, 10 Mar 2025 12:44:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52EFA21E0AE;
+	Mon, 10 Mar 2025 13:51:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741610665; cv=none; b=dBDjrdQTyO1t1+ZWQ5W3A4U7NoY082ZzNEeoF1BevlMBUzGcKsRG159qX20x2PKx+taZQYv4OKhs9NDIz9vhQ0nJJp4Oved0cVeP6/iPaUFyfqEnB+ETNmTVqqW96a7hWkv/LXAhM8T/9GZ/zPJB8eV/PJbK59iJfbsYBEbFSMk=
+	t=1741614685; cv=none; b=r9yrE/VI86R3hiCOkY/R2+zUW73vrtpFGEfj+XiKBIQKJUpL8toprrlcnFK3KKG9vpLiFz//zKETj/7wETfPo5odh4M5i6jIDAS53JSl8h65WwUuYuBtnmgiSC3lAX2HbRycc9H0zLRCgm4zvMtnguQGE5l5mU+gq97NVYJv/Cc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741610665; c=relaxed/simple;
-	bh=uH+sZDT/+u9Xsuiowtq09BO7Ga7yEOnPdwZTgyvS4HQ=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aAN/+i6ZEb5aNpx0LIPepTE1bvKNRIbyidltl/yrtIYCnHg6ceuz+Wht7P8nVFxxwgyUNeywwQgZtgHFVKd1xPsk1/njYBLrTYorxe6CCE4yNYPQzVpVQWuNotl8HsOEt/VVkPctbr+uP7a8Uqc3l2y13C4H9gQExA79jxscI9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZBGj534jzz67Ldy;
-	Mon, 10 Mar 2025 20:41:13 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id AC6691405E3;
-	Mon, 10 Mar 2025 20:44:18 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 10 Mar
- 2025 13:44:17 +0100
-Date: Mon, 10 Mar 2025 12:44:15 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Shiju Jose <shiju.jose@huawei.com>, "dferguson@amperecomputing.com"
-	<dferguson@amperecomputing.com>
-CC: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "bp@alien8.de"
-	<bp@alien8.de>, "tony.luck@intel.com" <tony.luck@intel.com>,
-	"rafael@kernel.org" <rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
-	"mchehab@kernel.org" <mchehab@kernel.org>, "leo.duran@amd.com"
-	<leo.duran@amd.com>, "Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"dan.j.williams@intel.com" <dan.j.williams@intel.com>, "dave@stgolabs.net"
-	<dave@stgolabs.net>, "dave.jiang@intel.com" <dave.jiang@intel.com>,
-	"alison.schofield@intel.com" <alison.schofield@intel.com>,
-	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>, "ira.weiny@intel.com"
-	<ira.weiny@intel.com>, "david@redhat.com" <david@redhat.com>,
-	"Vilas.Sridharan@amd.com" <Vilas.Sridharan@amd.com>, "linux-mm@kvack.org"
-	<linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "rientjes@google.com" <rientjes@google.com>,
-	"jiaqiyan@google.com" <jiaqiyan@google.com>, "Jon.Grimm@amd.com"
-	<Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "naoya.horiguchi@nec.com"
-	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
-	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
-	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
-	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
-	<duenwen@google.com>, "gthelen@google.com" <gthelen@google.com>,
-	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
-	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
-	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, tanxiaofei
-	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, Roberto
- Sassu <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
-	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
-	Linuxarm <linuxarm@huawei.com>
-Subject: Re: [PATCH v2 2/3] ACPI:RAS2: Add ACPI RAS2 driver
-Message-ID: <20250310124415.0000710a@huawei.com>
-In-Reply-To: <a0b319b4f42c4286a120fbb88a88adeb@huawei.com>
-References: <20250305180225.1226-1-shiju.jose@huawei.com>
-	<20250305180225.1226-3-shiju.jose@huawei.com>
-	<20250306171925.00002721@huawei.com>
-	<a0b319b4f42c4286a120fbb88a88adeb@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1741614685; c=relaxed/simple;
+	bh=PIYugoZwhEs2hJs1UPNoqX04pDcVa6iAsRDXNI4cWSU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OzTyDZCGPRwYI601m8BH4VusDlDpCAGzU+1g/u5JboO1P+of71ECFkX8LhuBr2L0b7Hwamv+BvG8f5n2C4k1TUKnG6ZwQXBmAIswgizTdd82515CTM9w57/0Cva+FxlDXXzBBm3j1qCgYPd8+BoqymssJ3A55DLrEYf872bvwFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QTEHYWIT; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QTEHYWIT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1B8CC4CEF0;
+	Mon, 10 Mar 2025 13:51:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741614684;
+	bh=PIYugoZwhEs2hJs1UPNoqX04pDcVa6iAsRDXNI4cWSU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=QTEHYWITads7vGifSYT6DMpFSt2a9gANjZXVYp20puC4EBx2529IEKHCPB3ECdIyo
+	 FwrTbY8bT2EUIQwWMtdDAeahbavOHipZ6xun6QzRweTCaJbFZUDchQ71X/upS5z9Ng
+	 Z3YzgaConUz+7VWjW32hM1TBcbNr9Xn4ISK5juqu1mKkA1qh+RbZ55XBSDA+cCepvh
+	 8OMnwm2RXfUm7K8HEIwlewMmTnHRwD01ki2QLI61GBpgSRpICEyXkd2QnnR4E0sh8U
+	 VQrAf18v35aM7JaE7mYriVaRg5jDLM5AM6twKQxI2sRXz0RLzbjJi/d4k1CuBKOb9Z
+	 9uwj562pNFh/A==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Li Ming <ming.li@zohomail.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Robert Richter <rrichter@amd.com>,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] cxl: fix FWCTL dependency
+Date: Mon, 10 Mar 2025 14:51:15 +0100
+Message-Id: <20250310135119.4168933-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Transfer-Encoding: 8bit
 
-> >> +#define RAS2_PCC_CMD_COMPLETE	BIT(0)
-> >> +#define RAS2_PCC_CMD_ERROR	BIT(2)
-> >> +  
-> >I think these bits are from table 14.11 and
-> >generic to all PCC status registers? Should these
-> >have more generic names rather than ras2 specific ones?  
-> Yes.
-> Instead will use PCC_STATUS_CMD_ COMPLETE and  PCC_STATUS_ ERROR
-> from include/acpi/pcc.h. 
-> 
-> >  
-> >> +/* RAS2 specific PCC commands */
-> >> +#define RAS2_PCC_CMD_EXEC 0x01  
-> >Are we mixing commands and field definitions both
-> >with prefix RAS2_PCC_CMD_ ?  That is somewhat
-> >confusing.  
-> Will add Table 5.82: .. here in the comment and 
-> Is rename to PCC_CMD_ EXEC_RAS2  better?
+From: Arnd Bergmann <arnd@arndb.de>
 
-That seems OK to me.
+The 'FWCTL' subsystem is selected by CXL_FEATURES, which is a 'bool' symbol
+with a dependency on CXL_PCI, but referenced by the cxl_core.ko.
+When cxl_core is built-in, but the cxl_pci.ko driver is a loadable mdoule,
+this results in a link failure:
 
+ld.lld-21: error: undefined symbol: _fwctl_alloc_device
+>>> referenced by features.c:695 (/home/arnd/arm-soc/drivers/cxl/core/features.c:695)
+ld.lld-21: error: undefined symbol: fwctl_register
+>>> referenced by features.c:699 (/home/arnd/arm-soc/drivers/cxl/core/features.c:699)
+ld.lld-21: error: undefined symbol: fwctl_unregister
+>>> referenced by features.c:676 (/home/arnd/arm-soc/drivers/cxl/core/features.c:676)
 
-For things you agree with feel free to just crop out that bit
-of the email so it is easier to spot the remaining questions.
+Move the 'select' into the symbol that controls the core module instead.
 
-Thanks,
+Fixes: a53a6004e7a5 ("cxl: Add FWCTL support to CXL")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/cxl/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Jonathan
+diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+index ed49e7e7e5bc..cf1ba673b8c2 100644
+--- a/drivers/cxl/Kconfig
++++ b/drivers/cxl/Kconfig
+@@ -7,6 +7,7 @@ menuconfig CXL_BUS
+ 	select PCI_DOE
+ 	select FIRMWARE_TABLE
+ 	select NUMA_KEEP_MEMINFO if NUMA_MEMBLKS
++	select FWCTL if CXL_FEATURES
+ 	help
+ 	  CXL is a bus that is electrically compatible with PCI Express, but
+ 	  layers three protocols on that signalling (CXL.io, CXL.cache, and
+@@ -105,7 +106,6 @@ config CXL_MEM
+ config CXL_FEATURES
+ 	bool "CXL: Features"
+ 	depends on CXL_PCI
+-	select FWCTL
+ 	help
+ 	  Enable support for CXL Features. A CXL device that includes a mailbox
+ 	  supports commands that allows listing, getting, and setting of
+-- 
+2.39.5
 
