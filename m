@@ -1,143 +1,107 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7975215B543;
-	Mon, 10 Mar 2025 10:16:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+Received: from zg8tmtyylji0my4xnjqumte4.icoremail.net (zg8tmtyylji0my4xnjqumte4.icoremail.net [162.243.164.118])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F105225408;
+	Mon, 10 Mar 2025 10:45:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.164.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741601796; cv=none; b=EiwEthtbFpTKfWQG184G5gS5tIzp3ASWevV3Wmu25MIA2eBemMTNZGzZths/a3R+AR4H09awH8x+ePE6o616WhBgaP2Vi0b807qEt649/R+o9NX4Qbte5b8N3EHUibIQ9T9kb+4/1+KoD21gGnnKRafUUDtZg4FsdRhwRZ5OhnA=
+	t=1741603532; cv=none; b=TJD4vQ4A+fj4lKy9Uni/3Mce2lhJxKQmcCw3uLBRM/GrLYqo6O9kHUF1DFQFgKqMGTze12HORfHVXDAPFtGL8NA2HYaC7sbFme5p6SxPGyVK53Aom4fCMOTTW2O2fTuE4kCBdfyLK4gCtDhd9SeA5UCog5FXOvit+Ndz9hiMHOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741601796; c=relaxed/simple;
-	bh=Pp92InC5gFyJ7GuSjZ4HIOHep6belOTPM6GU5HEuFBo=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=mL+vAg61vLNaslRznTnwYPGrroubOfTrell/Wq0vvQGxaRrqo52xn7cy5iJrh4vlyxTYI8r3uotolraM9vQZJyFGE1+4od47hyC+5nW015EkpAoMxrcMRmfcBCfzkF6yfqVrU0E+5klQkJp8HhimPFepcM+mXJyjF5cKe8d0qC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZBCQR60Gpz6M4mh;
-	Mon, 10 Mar 2025 18:13:19 +0800 (CST)
-Received: from frapeml500006.china.huawei.com (unknown [7.182.85.219])
-	by mail.maildlp.com (Postfix) with ESMTPS id EF6C8140B55;
-	Mon, 10 Mar 2025 18:16:24 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (7.182.85.172) by
- frapeml500006.china.huawei.com (7.182.85.219) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 10 Mar 2025 11:16:24 +0100
-Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
- frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
- Mon, 10 Mar 2025 11:16:24 +0100
-From: Shiju Jose <shiju.jose@huawei.com>
-To: Daniel Ferguson <danielf@os.amperecomputing.com>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-CC: "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "bp@alien8.de"
-	<bp@alien8.de>, "tony.luck@intel.com" <tony.luck@intel.com>,
-	"rafael@kernel.org" <rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
-	"mchehab@kernel.org" <mchehab@kernel.org>, "dan.j.williams@intel.com"
-	<dan.j.williams@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
-	"Jonathan Cameron" <jonathan.cameron@huawei.com>, "dave.jiang@intel.com"
-	<dave.jiang@intel.com>, "alison.schofield@intel.com"
-	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
-	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
-	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
-	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
-	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
-	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "naoya.horiguchi@nec.com"
-	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
-	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
-	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
-	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
-	<duenwen@google.com>, "gthelen@google.com" <gthelen@google.com>,
-	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
-	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
-	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
-	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, tanxiaofei
-	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, "Roberto
- Sassu" <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
-	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
-	Linuxarm <linuxarm@huawei.com>
-Subject: RE: [PATCH v20 00/15] EDAC: Scrub: introduce generic EDAC RAS control
- feature driver + CXL/ACPI-RAS2 drivers
-Thread-Topic: [PATCH v20 00/15] EDAC: Scrub: introduce generic EDAC RAS
- control feature driver + CXL/ACPI-RAS2 drivers
-Thread-Index: AQHbfVuaekLsP7SN9UOZsd1dS/TdhbNmfMuAgAXLMYA=
-Date: Mon, 10 Mar 2025 10:16:24 +0000
-Message-ID: <b954cf71abee477193b5a877d7f93542@huawei.com>
-References: <20250212143654.1893-1-shiju.jose@huawei.com>
- <6d8e89d4-e0b8-4e89-8a18-6f9d4f2989ee@os.amperecomputing.com>
-In-Reply-To: <6d8e89d4-e0b8-4e89-8a18-6f9d4f2989ee@os.amperecomputing.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1741603532; c=relaxed/simple;
+	bh=vfcznpiO+5LQe5G67Dh6BaKUSS2Guls6YPJQjsLCV2M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c/bzQOB0suF40T08/zpIUHMKK7Ok0c5rWRQpTw5ySTnjqp6lDMytUW4ZpovEFyvF7l3AcKyU8A+qmFF9U/3MFb57PftolnquZixVO1eswF5r4p8sAznyHFJrDx6/3Zhk602oBtrAkhTbzx1E59kCne4AmW61f5BHJmjCB20mtXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=162.243.164.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
+Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
+	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwA3P6+7ws5n8M9SCA--.19558S2;
+	Mon, 10 Mar 2025 18:45:15 +0800 (CST)
+Received: from localhost (unknown [123.150.8.50])
+	by mail (Coremail) with SMTP id AQAAfwD394O4ws5nqbhBAA--.4972S2;
+	Mon, 10 Mar 2025 18:45:14 +0800 (CST)
+Date: Mon, 10 Mar 2025 18:45:12 +0800
+From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+To: Gregory Price <gourry@gourry.net>
+Cc: lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [LSF/MM] CXL Boot to Bash - Section 1: BIOS, EFI, and Early Boot
+Message-ID: <Z87CuDBMeIcPIWvV@phytium.com.cn>
+References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
+ <Z6LKJZkcdjuit2Ck@gourry-fedora-PF4VCD3F>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6LKJZkcdjuit2Ck@gourry-fedora-PF4VCD3F>
+X-CM-TRANSID:AQAAfwD394O4ws5nqbhBAA--.4972S2
+X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAFAWfN84QD-gACsn
+Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=wangyuquan
+	1236@phytium.com.cn;
+X-Coremail-Antispam: 1Uk129KBjvJXoW7ArWDAF18ArWftFW3Xw1UWrg_yoW8Kw1fpr
+	nxJryxGr4kGryxJr18Zw1rJr1UJw1YkF45Jr18Jr10kw15Cryjvr47tr18Zr9rGryUAF1U
+	XrWjqryDtF4DAaDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
+	UUUUU
 
-Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogRGFuaWVsIEZlcmd1c29uIDxkYW5p
-ZWxmQG9zLmFtcGVyZWNvbXB1dGluZy5jb20+DQo+U2VudDogMDYgTWFyY2ggMjAyNSAxODoxOA0K
-PlRvOiBTaGlqdSBKb3NlIDxzaGlqdS5qb3NlQGh1YXdlaS5jb20+OyBsaW51eC1lZGFjQHZnZXIu
-a2VybmVsLm9yZzsgbGludXgtDQo+Y3hsQHZnZXIua2VybmVsLm9yZzsgbGludXgtYWNwaUB2Z2Vy
-Lmtlcm5lbC5vcmc7IGxpbnV4LW1tQGt2YWNrLm9yZzsgbGludXgtDQo+a2VybmVsQHZnZXIua2Vy
-bmVsLm9yZw0KPkNjOiBsaW51eC1kb2NAdmdlci5rZXJuZWwub3JnOyBicEBhbGllbjguZGU7IHRv
-bnkubHVja0BpbnRlbC5jb207DQo+cmFmYWVsQGtlcm5lbC5vcmc7IGxlbmJAa2VybmVsLm9yZzsg
-bWNoZWhhYkBrZXJuZWwub3JnOw0KPmRhbi5qLndpbGxpYW1zQGludGVsLmNvbTsgZGF2ZUBzdGdv
-bGFicy5uZXQ7IEpvbmF0aGFuIENhbWVyb24NCj48am9uYXRoYW4uY2FtZXJvbkBodWF3ZWkuY29t
-PjsgZGF2ZS5qaWFuZ0BpbnRlbC5jb207DQo+YWxpc29uLnNjaG9maWVsZEBpbnRlbC5jb207IHZp
-c2hhbC5sLnZlcm1hQGludGVsLmNvbTsgaXJhLndlaW55QGludGVsLmNvbTsNCj5kYXZpZEByZWRo
-YXQuY29tOyBWaWxhcy5TcmlkaGFyYW5AYW1kLmNvbTsgbGVvLmR1cmFuQGFtZC5jb207DQo+WWF6
-ZW4uR2hhbm5hbUBhbWQuY29tOyByaWVudGplc0Bnb29nbGUuY29tOyBqaWFxaXlhbkBnb29nbGUu
-Y29tOw0KPkpvbi5HcmltbUBhbWQuY29tOyBkYXZlLmhhbnNlbkBsaW51eC5pbnRlbC5jb207DQo+
-bmFveWEuaG9yaWd1Y2hpQG5lYy5jb207IGphbWVzLm1vcnNlQGFybS5jb207IGp0aG91Z2h0b25A
-Z29vZ2xlLmNvbTsNCj5zb21hc3VuZGFyYW0uYUBocGUuY29tOyBlcmRlbWFrdGFzQGdvb2dsZS5j
-b207IHBnb25kYUBnb29nbGUuY29tOw0KPmR1ZW53ZW5AZ29vZ2xlLmNvbTsgZ3RoZWxlbkBnb29n
-bGUuY29tOw0KPndzY2h3YXJ0ekBhbXBlcmVjb21wdXRpbmcuY29tOyBkZmVyZ3Vzb25AYW1wZXJl
-Y29tcHV0aW5nLmNvbTsNCj53YnNAb3MuYW1wZXJlY29tcHV0aW5nLmNvbTsgbmlmYW4uY3hsQGdt
-YWlsLmNvbTsgdGFueGlhb2ZlaQ0KPjx0YW54aWFvZmVpQGh1YXdlaS5jb20+OyBaZW5ndGFvIChC
-KSA8cHJpbWUuemVuZ0BoaXNpbGljb24uY29tPjsgUm9iZXJ0bw0KPlNhc3N1IDxyb2JlcnRvLnNh
-c3N1QGh1YXdlaS5jb20+OyBrYW5na2FuZy5zaGVuQGZ1dHVyZXdlaS5jb207DQo+d2FuZ2h1aXFp
-YW5nIDx3YW5naHVpcWlhbmdAaHVhd2VpLmNvbT47IExpbnV4YXJtDQo+PGxpbnV4YXJtQGh1YXdl
-aS5jb20+DQo+U3ViamVjdDogUmU6IFtQQVRDSCB2MjAgMDAvMTVdIEVEQUM6IFNjcnViOiBpbnRy
-b2R1Y2UgZ2VuZXJpYyBFREFDIFJBUw0KPmNvbnRyb2wgZmVhdHVyZSBkcml2ZXIgKyBDWEwvQUNQ
-SS1SQVMyIGRyaXZlcnMNCj4NCj4+ICArLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0rLS0tLS0t
-LS0tLS0rLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0rDQo+PiAgfCAgICAgICAgICAgICAgfCAgICAg
-ICAgICAgfCAgICAgICAgICAgfCAgICAgICAgICAgfCAgICAgICAgICAgfA0KPj4gIHwgU2V0dGlu
-ZyAgICAgIHwgU3VwcG9ydGVkIHwgU3VwcG9ydGVkIHwgTm8gICAgICAgIHwgTm8gICAgICAgIHwN
-Cj4+ICB8IHNjcnViIHJhdGUgICB8ICAgICAgICAgICB8ICAgICAgICAgICB8ICAgICAgICAgICB8
-ICAgICAgICAgICB8DQo+PiAgfCAgICAgICAgICAgICAgfCAgICAgICAgICAgfCAgICAgICAgICAg
-fCAgICAgICAgICAgfCAgICAgICAgICAgfA0KPj4gICstLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0t
-LSstLS0tLS0tLS0tLSstLS0tLS0tLS0tLSstLS0tLS0tLS0tLSsNCj4+ICB8ICAgICAgICAgICAg
-ICB8ICAgICAgICAgICB8ICAgICAgICAgICB8ICAgICAgICAgICB8ICAgICAgICAgICB8DQo+PiAg
-fCBVbml0IGZvciAgICAgfCBOb3QgICAgICAgfCBpbiBob3VycyAgfCBObyAgICAgICAgfCBObyAg
-ICAgICAgfA0KPj4gIHwgc2NydWIgcmF0ZSAgIHwgRGVmaW5lZCAgIHwgICAgICAgICAgIHwgICAg
-ICAgICAgIHwgICAgICAgICAgIHwNCj4+ICB8ICAgICAgICAgICAgICB8ICAgICAgICAgICB8ICAg
-ICAgICAgICB8ICAgICAgICAgICB8ICAgICAgICAgICB8DQo+DQo+SXQgaXMgb3VyIG9waW5pb24g
-dGhhdCB0aGUgVW5pdCBmb3Igc2NydWIgcmF0ZSBzaG91bGQgYmUgdW5pdCBhZ25vc3RpYw0KPihp
-bXBsZW1lbnRhdGlvbiBkZWZpbmVkKSwgYW5kIGRlZmluaXRlbHkgbm90IHNwZWNpZmllZCBpbiBI
-b3Vycy4gV2UgYmVsaWV2ZSB0aGF0DQo+dGhlIHNwaXJpdCBvZiB0aGUgUkFTMiBzY3J1YiByYXRl
-IHdhcyBpbnRlbmRlZCB0byBiZSBpbXBsZW1lbnRhdGlvbiBkZWZpbmVkLg0KPg0KPkl0IHRha2Vz
-IG91ciBoYXJkd2FyZSBsZXNzIHRoYW4gYSBmZXcgc2Vjb25kcyB0byBzY3J1YiBhIHRvbiBvZiBt
-ZW1vcnkuDQpIaSBEYW5pZWwsIA0KDQpUaGUgdGFibGUgaWxsdXN0cmF0ZXMgdGhlIHVuaXQgZm9y
-IHRoZSBzY3J1YiByYXRlIG9mIHRoZSBBQ1BJIFJBUzIgc2NydWIgZmVhdHVyZSBhcyAiTm90IERl
-ZmluZWQiIGFjY29yZGluZyB0byB0aGUgQUNQSSA2LjUgc3BlY2lmaWNhdGlvbiwgYW5kIGZvciB0
-aGUgQ1hMIHNjcnViIGZlYXR1cmUsIGl0IGlzIGRlZmluZWQgYXMgImluIGhvdXJzIiBhY2NvcmRp
-bmcgdG8gdGhlIENYTCBzcGVjIHJldiAzLjIuDQoNCkN1cnJlbnRseSwgdGhlIFJBUzIgZHJpdmVy
-IGNvbnZlcnRzIHRoZSBzY3J1YiByYXRlIHNldCBpbiBzZWNvbmRzIHZpYSB0aGUgRURBQyBzY3J1
-YiBzeXNmcyB0byBob3VycyBhbmQgcGFzc2VzIGl0IHRvIHRoZSBmaXJtd2FyZSBpbiB0aGUgIGZp
-ZWxkOiBDb25maWd1cmUgU2NydWIgUGFyYW1ldGVycyAoSU5QVVQpIC0gQml0cyBbMTU6OF06IFJl
-cXVlc3RlZCBzY3J1YiByYXRlIG9mIFRhYmxlIDUuODc6IFBhcmFtZXRlciBCbG9jayBTdHJ1Y3R1
-cmUgZm9yIFBBVFJPTF9TQ1JVQi4NCg0KRGlkIHlvdSBtZWFuIHRoYXQgdGhlIFJBUzIgZHJpdmVy
-IG5lZWRzIHRvIHBhc3MgdGhlIHNjcnViIHJhdGUgaW4gc2Vjb25kcyB0byB0aGUgZmlybXdhcmU/
-ICB0aGVuIEkgdGhpbmsgdGhlIG1heCBzY3J1YiByYXRlIHN1cHBvcnRlZCBpcyBsaW1pdGVkIHRv
-IDI1NiBzZWNvbmRzPw0KDQpUaGFua3MsDQpTaGlqdQ0K
+On Tue, Feb 04, 2025 at 09:17:09PM -0500, Gregory Price wrote:
+> 
+> Platform / BIOS / EFI Configuraiton
+> ===================================
+> ---------------------------------------
+> Step 1: BIOS-time hardware programming.
+> ---------------------------------------
+> 
+> I don't want to focus on platform specifics, so really all you need
+> to know about this phase for the purpose of MM is that platforms may
+> program the CXL device heirarchy and lock the configuration.
+> 
+This question can be very naive, what's the meaning of 'MM' here?
+
+And since I am not familiar with cxl bios configurations, based on my
+understanding of its acpi results, there are roughly two configuration
+schemes in my analysis: a) users should enter some configuration
+information manually (like region base/size). b) bios could provide a
+recommendatory configuration by device information.
+
+Is my understanding right?
+> In practice it means you probably can't reconfigure things after boot
+> without doing major teardowns of the devices and resetting them -
+> assuming the platform doesn't have major quirks that prevent this.
+> 
+> This has implications for Hotplug, Interleave, and RAS, but we'll
+> cover those explicitly elsewhere. Otherwise, if something gets mucked
+> up at this stage - complain to your platform / hardware vendor.
+> 
+> 
+> ------------------------------------------------------------------
+> Step 2: BIOS / EFI generates the CEDT (CXL Early Detection Table).
+> ------------------------------------------------------------------
+> 
+> This table is responsible for reporting each "CXL Host Bridge" and
+> "CXL Fixed Memory Window" present at boot - which enables early boot
+> software to manage those devices and the memory capacity presented
+> by those devices.
+> 
+> Example CEDT Entries (truncated) 
+>          Subtable Type : 00 [CXL Host Bridge Structure]
+>               Reserved : 00
+>                 Length : 0020
+> Associated host bridge : 00000005
+> 
+>          Subtable Type : 01 [CXL Fixed Memory Window Structure]
+>               Reserved : 00
+>                 Length : 002C
+>               Reserved : 00000000
+>    Window base address : 000000C050000000
+>            Window size : 0000003CA0000000
+> 
+> If this memory is NOT marked "Special Purpose" by BIOS (next section),
+> you should find a matching entry EFI Memory Map and /proc/iomem
+> 
+> BIOS-e820:   [mem 0x000000c050000000-0x000000fcefffffff] usable
+> /proc/iomem: c050000000-fcefffffff : System RAM
+> 
+
