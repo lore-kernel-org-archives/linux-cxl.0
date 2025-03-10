@@ -1,117 +1,169 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B579222B5B8
-	for <linux-cxl@vger.kernel.org>; Mon, 10 Mar 2025 14:19:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E94019004A;
+	Mon, 10 Mar 2025 14:36:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741616397; cv=none; b=euxIOa93Jzayi4pnuomYogRQaBsdLfSL7oI+IWldg9+k+HPLOzYr20fXKC3XjKgimylLGPt3w3kniaCVwl0meC5aQRzcZd/TlgKSjH9+MjjJs2j1MDTYFbEBHaXF4KF2v0/RxFYyotxFwT4OpGwd8Ai7+A5238bF5jS5NXe7KiM=
+	t=1741617381; cv=none; b=jCQIdHCM96vry13nZ1i3v7kSPH4doC1qu6QJTQwfYPe5+UgJ7dUvZGQGp9itD6OTKxJ8MyvFZga+h/o4V4RxIJXzY7obTIoTOu98o9uqnsvTYQl1pxzyple0SuFbDMseLKWnxXW+2APA5tAJg3K6m+jxFffdvlec4gNsDzQDeiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741616397; c=relaxed/simple;
-	bh=KWu8zDSYCkOIHDj4bVHZMVBK5paBYHLwqNrwSoppf4Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IdF35jp2C1EyyHr7PQJdWSTUxWZ/JnEJe+ubQ61s4uFMHZQZTHmUuvLLS8OX7doZBWtDXPNs8LQ2HpzXFJrEo6eunQiad5mX/8sWf6U6WFOndVe7UYIySq+vCfbhnTcK1f1zgC/pxLzk0tTu84OdUYAHm/1ZoGfoW3BCE27KChw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=kwgCcwKQ; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="kwgCcwKQ"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4766631a6a4so20313891cf.2
-        for <linux-cxl@vger.kernel.org>; Mon, 10 Mar 2025 07:19:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1741616394; x=1742221194; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZFZo8zPwzqdWQJxqcj4qgZS2PvMRMOgjbkxudd5sQoM=;
-        b=kwgCcwKQBSDOOnqPDxaJhqV85i9+y2dtmXgk+H6ogRzo28zdmImbeYfpKYgk1K9jm9
-         GOuB02jIMQNJZuTeMNvlYpOhZ2poCRQGAqaKOv4CtZCGWia96Y2stKDUuFqes3ajvF2H
-         TU19b48ATv6dAUufi8VvKxySo229qsU/Abd4Tu/wJi7zN+CQfjh7MXuAGcu/yjy0ZdSk
-         CmKVG/bcvbjB38SzQ7d9XKpGmzaFFJ4wvA/tGTAOYsQul8iKCwU74Vat0WejCZPGVcpt
-         j7kwiYKL9sOlqO7l/iCN75E4PRWZJOorKQYM/jfa50aZ53LG0NdJPYJ3hhYYM0IlZEeE
-         Gtnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741616394; x=1742221194;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZFZo8zPwzqdWQJxqcj4qgZS2PvMRMOgjbkxudd5sQoM=;
-        b=iWHVW1vkKaLmBZxkDGdTAdRym9xlLLCgzgKf1he725aImgSBt5F1JGNcNobdDtMJyH
-         fcGheS3A7VqP0fMqXXdpmWNEPxjmuHx7n0HZPr+RtsPHkOL8imrNLyNY1pIfwG7LRs6T
-         oSwBknE3OFOclJS3fv7/4+oqTG0+i65ZPKFIw1ibD1plR6tW73BIRv5R7ysxVhRCpKaW
-         LXc3p9o7dJMahMq1YLjLHt75Hgodt4udTKEnG0tSlYgUTN4aA3NrHIDkTAquSE5vZY5N
-         lWw4EAs5iYmpPmJ5Q5XwH9z3hCKfZhqqyMl+/+4QiN33HiHBKIJ72dcxcjd8+icgzxWa
-         TcBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVCwsFJBh5lUbIWVEAAWvVIhFb8aD2J8mqqdHcIMWpy/LabQE2Mucs9jTc7V5zeTJlpKqrN5mdxgds=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxaPh/qgQK4HJL3fhwVudDZsyMqQwV6KkFqHKXyTwBphG/6abzY
-	ynRglLh74k8DM1QFvwxjc01gF6Tu7D7i6QPLIVFQckrWOEpMI9LW1hCEJIN/99w4gizMSTuW+WW
-	Q
-X-Gm-Gg: ASbGnct7IaQg/iKpl+0Pvd7iP5ysYsiEUcwZgQza4ZSVOCVc+tSg6l95w3NzrKxc3iw
-	wImZo8TbUctdwKYqFGqjpfzhbJ5TdXRAOIaS6AoD0pmE7Ak4vRNSPCoItRyGHbBwzPJ4+qExTKu
-	5o4ZGwmyNxb1VeKuzOgwKyretezV2YenDyrvDRi2QkksbtrbgiSmmr4lYyVnWnTSN+YYfFSnqgy
-	6SJIvbOVlGboLLeMKDiJKPnxQRRvVylO1t83LwY1gVh8TLcmnaGiJcp9Xyt/lnBdXe2z3KJ3a0o
-	aJzGPM49/bGf7xdDTfics+vX5k4Vk0eOfsS9VBFB+hu2JGRMPa/823pe7dFRta/YrQbb3aeP4Bc
-	ND9zDKdy+Zcu0nHSk3JjJhLAwCwE=
-X-Google-Smtp-Source: AGHT+IGMJpR5j6TAtQib68qhOoxtIvV+O/W/i3w2HAax+rxX7rMLW1/8B437NQlpd0ajBQv1DIt3fQ==
-X-Received: by 2002:ad4:5d49:0:b0:6e8:fbb7:6764 with SMTP id 6a1803df08f44-6e9006ba2fbmr185600916d6.45.1741616393666;
-        Mon, 10 Mar 2025 07:19:53 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e8f707c4cbsm58904436d6.22.2025.03.10.07.19.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Mar 2025 07:19:53 -0700 (PDT)
-Date: Mon, 10 Mar 2025 10:19:51 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-Cc: lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [LSF/MM] CXL Boot to Bash - Section 1: BIOS, EFI, and Early Boot
-Message-ID: <Z871B9WVRaeIYuOs@gourry-fedora-PF4VCD3F>
-References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
- <Z6LKJZkcdjuit2Ck@gourry-fedora-PF4VCD3F>
- <Z87CuDBMeIcPIWvV@phytium.com.cn>
+	s=arc-20240116; t=1741617381; c=relaxed/simple;
+	bh=PPUAW324s9FnCWnqHp2rvkUmA0he9McwMTCRN9udlbg=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=HVuKrjla/JnjiC7qwXK/yHsXI3yPO7EBFxj7DqCO6e15y4EYbRPY0gKUDzqPolYCNUw0f9UWjagZ6Wjlech5jJJdJioHkwlGI+G/qKxeOtriwi/7QWIbtuIpeN6b8Ry9wdXq7arm3QSqLoyNTkOvK9U4kaTRYvwFbEYYOHGdto8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZBKBF0Zcqz6H7Ym;
+	Mon, 10 Mar 2025 22:33:09 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
+	by mail.maildlp.com (Postfix) with ESMTPS id 763A5140CB9;
+	Mon, 10 Mar 2025 22:36:14 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (7.182.85.172) by
+ frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 10 Mar 2025 15:36:14 +0100
+Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
+ frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
+ Mon, 10 Mar 2025 15:36:14 +0100
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Daniel Ferguson <danielf@os.amperecomputing.com>,
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "bp@alien8.de"
+	<bp@alien8.de>, "tony.luck@intel.com" <tony.luck@intel.com>,
+	"rafael@kernel.org" <rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
+	"mchehab@kernel.org" <mchehab@kernel.org>, "leo.duran@amd.com"
+	<leo.duran@amd.com>, "Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>
+CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"dan.j.williams@intel.com" <dan.j.williams@intel.com>, "dave@stgolabs.net"
+	<dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>,
+	"dave.jiang@intel.com" <dave.jiang@intel.com>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
+	<Vilas.Sridharan@amd.com>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"rientjes@google.com" <rientjes@google.com>, "jiaqiyan@google.com"
+	<jiaqiyan@google.com>, "Jon.Grimm@amd.com" <Jon.Grimm@amd.com>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"naoya.horiguchi@nec.com" <naoya.horiguchi@nec.com>, "james.morse@arm.com"
+	<james.morse@arm.com>, "jthoughton@google.com" <jthoughton@google.com>,
+	"somasundaram.a@hpe.com" <somasundaram.a@hpe.com>, "erdemaktas@google.com"
+	<erdemaktas@google.com>, "pgonda@google.com" <pgonda@google.com>,
+	"duenwen@google.com" <duenwen@google.com>, "gthelen@google.com"
+	<gthelen@google.com>, "wschwartz@amperecomputing.com"
+	<wschwartz@amperecomputing.com>, "dferguson@amperecomputing.com"
+	<dferguson@amperecomputing.com>, "wbs@os.amperecomputing.com"
+	<wbs@os.amperecomputing.com>, "nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
+	tanxiaofei <tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>,
+	Roberto Sassu <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
+	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
+	Linuxarm <linuxarm@huawei.com>
+Subject: RE: [PATCH v2 3/3] ras: mem: Add memory ACPI RAS2 driver
+Thread-Topic: [PATCH v2 3/3] ras: mem: Add memory ACPI RAS2 driver
+Thread-Index: AQHbjfjWvkdDRJ1spk2t3VxaCsibfrNoKYKAgAQFsPCAAEZGcA==
+Date: Mon, 10 Mar 2025 14:36:14 +0000
+Message-ID: <b6be7c698cd04f7d8a93f74693e9436a@huawei.com>
+References: <20250305180225.1226-1-shiju.jose@huawei.com>
+ <20250305180225.1226-4-shiju.jose@huawei.com>
+ <0d9066de-769a-44d0-bece-26f1313ce006@os.amperecomputing.com>
+ <85e788be5df3483082744a8904560979@huawei.com>
+In-Reply-To: <85e788be5df3483082744a8904560979@huawei.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z87CuDBMeIcPIWvV@phytium.com.cn>
 
-On Mon, Mar 10, 2025 at 06:45:12PM +0800, Yuquan Wang wrote:
-> On Tue, Feb 04, 2025 at 09:17:09PM -0500, Gregory Price wrote:
-> > 
-> > Platform / BIOS / EFI Configuraiton
-> > ===================================
-> > ---------------------------------------
-> > Step 1: BIOS-time hardware programming.
-> > ---------------------------------------
-> > 
-> > I don't want to focus on platform specifics, so really all you need
-> > to know about this phase for the purpose of MM is that platforms may
-> > program the CXL device heirarchy and lock the configuration.
-> > 
-> This question can be very naive, what's the meaning of 'MM' here?
-> 
-
-Memory Management - linux/mm
-
-> And since I am not familiar with cxl bios configurations, based on my
-> understanding of its acpi results, there are roughly two configuration
-> schemes in my analysis: a) users should enter some configuration
-> information manually (like region base/size). b) bios could provide a
-> recommendatory configuration by device information.
-> 
-
-The BIOS must produce ACPI tables to set aside system physical memory
-address space.  *How* BIOS produces these ACPI tables (CEDT + SRAT vs
-CEDT only) dictates whether this configuration is static or dynamic.
-
-The devices will provide a CDAT (coherent device attribute table) used
-by BIOS to generate these ACPI tables.
-
-All of this dictates how linux configures its NUMA topology, programs
-CXL HDM decoders, and how it associates device physical memory with numa
-nodes and such.
-
-~Gregory
+Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogU2hpanUgSm9zZQ0KPlNlbnQ6IDEw
+IE1hcmNoIDIwMjUgMTE6MTINCj5UbzogJ0RhbmllbCBGZXJndXNvbicgPGRhbmllbGZAb3MuYW1w
+ZXJlY29tcHV0aW5nLmNvbT47IGxpbnV4LQ0KPmVkYWNAdmdlci5rZXJuZWwub3JnOyBsaW51eC1h
+Y3BpQHZnZXIua2VybmVsLm9yZzsgYnBAYWxpZW44LmRlOw0KPnRvbnkubHVja0BpbnRlbC5jb207
+IHJhZmFlbEBrZXJuZWwub3JnOyBsZW5iQGtlcm5lbC5vcmc7DQo+bWNoZWhhYkBrZXJuZWwub3Jn
+OyBsZW8uZHVyYW5AYW1kLmNvbTsgWWF6ZW4uR2hhbm5hbUBhbWQuY29tDQo+Q2M6IGxpbnV4LWN4
+bEB2Z2VyLmtlcm5lbC5vcmc7IGRhbi5qLndpbGxpYW1zQGludGVsLmNvbTsgZGF2ZUBzdGdvbGFi
+cy5uZXQ7DQo+Sm9uYXRoYW4gQ2FtZXJvbiA8am9uYXRoYW4uY2FtZXJvbkBodWF3ZWkuY29tPjsg
+ZGF2ZS5qaWFuZ0BpbnRlbC5jb207DQo+YWxpc29uLnNjaG9maWVsZEBpbnRlbC5jb207IHZpc2hh
+bC5sLnZlcm1hQGludGVsLmNvbTsgaXJhLndlaW55QGludGVsLmNvbTsNCj5kYXZpZEByZWRoYXQu
+Y29tOyBWaWxhcy5TcmlkaGFyYW5AYW1kLmNvbTsgbGludXgtbW1Aa3ZhY2sub3JnOyBsaW51eC0N
+Cj5rZXJuZWxAdmdlci5rZXJuZWwub3JnOyByaWVudGplc0Bnb29nbGUuY29tOyBqaWFxaXlhbkBn
+b29nbGUuY29tOw0KPkpvbi5HcmltbUBhbWQuY29tOyBkYXZlLmhhbnNlbkBsaW51eC5pbnRlbC5j
+b207DQo+bmFveWEuaG9yaWd1Y2hpQG5lYy5jb207IGphbWVzLm1vcnNlQGFybS5jb207IGp0aG91
+Z2h0b25AZ29vZ2xlLmNvbTsNCj5zb21hc3VuZGFyYW0uYUBocGUuY29tOyBlcmRlbWFrdGFzQGdv
+b2dsZS5jb207IHBnb25kYUBnb29nbGUuY29tOw0KPmR1ZW53ZW5AZ29vZ2xlLmNvbTsgZ3RoZWxl
+bkBnb29nbGUuY29tOw0KPndzY2h3YXJ0ekBhbXBlcmVjb21wdXRpbmcuY29tOyBkZmVyZ3Vzb25A
+YW1wZXJlY29tcHV0aW5nLmNvbTsNCj53YnNAb3MuYW1wZXJlY29tcHV0aW5nLmNvbTsgbmlmYW4u
+Y3hsQGdtYWlsLmNvbTsgdGFueGlhb2ZlaQ0KPjx0YW54aWFvZmVpQGh1YXdlaS5jb20+OyBaZW5n
+dGFvIChCKSA8cHJpbWUuemVuZ0BoaXNpbGljb24uY29tPjsgUm9iZXJ0bw0KPlNhc3N1IDxyb2Jl
+cnRvLnNhc3N1QGh1YXdlaS5jb20+OyBrYW5na2FuZy5zaGVuQGZ1dHVyZXdlaS5jb207DQo+d2Fu
+Z2h1aXFpYW5nIDx3YW5naHVpcWlhbmdAaHVhd2VpLmNvbT47IExpbnV4YXJtDQo+PGxpbnV4YXJt
+QGh1YXdlaS5jb20+DQo+U3ViamVjdDogUkU6IFtQQVRDSCB2MiAzLzNdIHJhczogbWVtOiBBZGQg
+bWVtb3J5IEFDUEkgUkFTMiBkcml2ZXINCj4NCj4+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0N
+Cj4+RnJvbTogRGFuaWVsIEZlcmd1c29uIDxkYW5pZWxmQG9zLmFtcGVyZWNvbXB1dGluZy5jb20+
+DQo+PlNlbnQ6IDA3IE1hcmNoIDIwMjUgMjE6NTINCj4+VG86IFNoaWp1IEpvc2UgPHNoaWp1Lmpv
+c2VAaHVhd2VpLmNvbT47IGxpbnV4LWVkYWNAdmdlci5rZXJuZWwub3JnOw0KPj5saW51eC0gYWNw
+aUB2Z2VyLmtlcm5lbC5vcmc7IGJwQGFsaWVuOC5kZTsgdG9ueS5sdWNrQGludGVsLmNvbTsNCj4+
+cmFmYWVsQGtlcm5lbC5vcmc7IGxlbmJAa2VybmVsLm9yZzsgbWNoZWhhYkBrZXJuZWwub3JnOw0K
+Pj5sZW8uZHVyYW5AYW1kLmNvbTsgWWF6ZW4uR2hhbm5hbUBhbWQuY29tDQo+PkNjOiBsaW51eC1j
+eGxAdmdlci5rZXJuZWwub3JnOyBkYW4uai53aWxsaWFtc0BpbnRlbC5jb207DQo+PmRhdmVAc3Rn
+b2xhYnMubmV0OyBKb25hdGhhbiBDYW1lcm9uIDxqb25hdGhhbi5jYW1lcm9uQGh1YXdlaS5jb20+
+Ow0KPj5kYXZlLmppYW5nQGludGVsLmNvbTsgYWxpc29uLnNjaG9maWVsZEBpbnRlbC5jb207DQo+
+PnZpc2hhbC5sLnZlcm1hQGludGVsLmNvbTsgaXJhLndlaW55QGludGVsLmNvbTsgZGF2aWRAcmVk
+aGF0LmNvbTsNCj4+VmlsYXMuU3JpZGhhcmFuQGFtZC5jb207IGxpbnV4LW1tQGt2YWNrLm9yZzsg
+bGludXgtDQo+Pmtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IHJpZW50amVzQGdvb2dsZS5jb207IGpp
+YXFpeWFuQGdvb2dsZS5jb207DQo+Pkpvbi5HcmltbUBhbWQuY29tOyBkYXZlLmhhbnNlbkBsaW51
+eC5pbnRlbC5jb207DQo+Pm5hb3lhLmhvcmlndWNoaUBuZWMuY29tOyBqYW1lcy5tb3JzZUBhcm0u
+Y29tOyBqdGhvdWdodG9uQGdvb2dsZS5jb207DQo+PnNvbWFzdW5kYXJhbS5hQGhwZS5jb207IGVy
+ZGVtYWt0YXNAZ29vZ2xlLmNvbTsgcGdvbmRhQGdvb2dsZS5jb207DQo+PmR1ZW53ZW5AZ29vZ2xl
+LmNvbTsgZ3RoZWxlbkBnb29nbGUuY29tOw0KPndzY2h3YXJ0ekBhbXBlcmVjb21wdXRpbmcuY29t
+Ow0KPj5kZmVyZ3Vzb25AYW1wZXJlY29tcHV0aW5nLmNvbTsgd2JzQG9zLmFtcGVyZWNvbXB1dGlu
+Zy5jb207DQo+Pm5pZmFuLmN4bEBnbWFpbC5jb207IHRhbnhpYW9mZWkgPHRhbnhpYW9mZWlAaHVh
+d2VpLmNvbT47IFplbmd0YW8gKEIpDQo+PjxwcmltZS56ZW5nQGhpc2lsaWNvbi5jb20+OyBSb2Jl
+cnRvIFNhc3N1IDxyb2JlcnRvLnNhc3N1QGh1YXdlaS5jb20+Ow0KPj5rYW5na2FuZy5zaGVuQGZ1
+dHVyZXdlaS5jb207IHdhbmdodWlxaWFuZyA8d2FuZ2h1aXFpYW5nQGh1YXdlaS5jb20+Ow0KPj5M
+aW51eGFybSA8bGludXhhcm1AaHVhd2VpLmNvbT4NCj4+U3ViamVjdDogUmU6IFtQQVRDSCB2MiAz
+LzNdIHJhczogbWVtOiBBZGQgbWVtb3J5IEFDUEkgUkFTMiBkcml2ZXINCj4+DQo+Pg0KPj4+ICtz
+dGF0aWMgaW50IHJhczJfaHdfc2NydWJfcmVhZF9zaXplKHN0cnVjdCBkZXZpY2UgKmRldiwgdm9p
+ZA0KPj4+ICsqZHJ2X2RhdGEsIHU2NCAqc2l6ZSkgew0KPj4+ICsJc3RydWN0IHJhczJfbWVtX2N0
+eCAqcmFzMl9jdHggPSBkcnZfZGF0YTsNCj4+PiArCWludCByZXQ7DQo+Pj4gKw0KPj4+ICsJaWYg
+KHJhczJfY3R4LT5iZ19zY3J1YikNCj4+PiArCQlyZXR1cm4gLUVCVVNZOw0KPj4+ICsNCj4+PiAr
+CXJldCA9IHJhczJfdXBkYXRlX3BhdHJvbF9zY3J1Yl9wYXJhbXNfY2FjaGUocmFzMl9jdHgpOw0K
+Pj4+ICsJaWYgKHJldCkNCj4+PiArCQlyZXR1cm4gcmV0Ow0KPj4+ICsNCj4+PiArCSpzaXplID0g
+cmFzMl9jdHgtPnNpemU7DQo+Pj4gKw0KPj4+ICsJcmV0dXJuIDA7DQo+Pj4gK30NCj4+DQo+PkNh
+bGxpbmcgcmFzMl91cGRhdGVfcGF0cm9sX3NjcnViX3BhcmFtc19jYWNoZSBoZXJlIGlzIHByb2Js
+ZW1hdGljLg0KPj4NCj4+SW1hZ2luZToNCj4+ICBlY2hvIDB4MTAwMCA+IHNpemUNCj4+ICBjYXQg
+c2l6ZQ0KPj4gIGVjaG8gMHgyMDAwMDAwMDAwID4gYWRkcg0KPj4NCj4+V2hhdCBoYXBwZW5zIGhl
+cmU/IFdoYXQgaGFwcGVucyBpcyB0aGUgc2NydWIgcmFuZ2UgaXMgbm90IHdoYXQgeW91DQo+PmV4
+cGVjdCBpdCB0byBiZS4gIE9uY2UgeW91IGNhdCBzaXplLCB5b3UgcmVzZXQgdGhlIHNpemUgZnJv
+bSB3aGF0IHlvdSBpbml0aWFsbHkgc2V0DQo+aXQgdG8uDQo+PkkgZG9uJ3QgdGhpbmsgdGhhdCBp
+cyB3aGF0IGFueW9uZSB3aWxsIGV4cGVjdC4gSXQgY2VydGFpbmx5IGNhdXNlZCB1cw0KPj50byBz
+dHVtYmxlIHdoaWxlIHRlc3RpbmcuDQo+DQo+VGhpcyBpcyBhbiBleHBlY3RlZCBiZWhhdmlvciBh
+bmQgdGhpcyBleHRyYSBjYWxsIHdhcyBhZGRlZCBoZXJlIHdoZW4gY2hhbmdlZA0KPnVzaW5nIGF0
+dHJpYnV0ZSAnYWRkcicgdG8gc3RhcnQgdGhlIG9uLWRlbWFuZCAgc2NydWIgb3BlcmF0aW9uIGlu
+c3RlYWQgb2YNCj5wcmV2aW91cyBzZXBhcmF0ZSBhdHRyaWJ1dGUgJyBlbmFibGVfb25fZGVtYW5k
+JyB0byBzdGFydCB0aGUgb24tZGVtYW5kIHNjcnViDQo+b3BlcmF0aW9uLCBhY2NvcmRpbmcgdG8g
+Qm9yaXNsYXYncyBzdWdnZXN0aW9uIGluIHYxMy4NCj4NCj4gUGxlYXNlIHNlZSB0aGUgZm9sbG93
+aW5nIGNvbW1lbnQgaW4gdGhlIHJhczJfaHdfc2NydWJfcmVhZF9hZGRyKCkgZm5jdGlvbiwNCj4i
+VXNlcnNwYWNlIHdpbGwgZ2V0IHRoZSBzdGF0dXMgb2YgdGhlIGRlbWFuZCBzY3J1YmJpbmcgdGhy
+b3VnaCB0aGUgYWRkcmVzcw0KPnJhbmdlIHJlYWQgZnJvbSB0aGUgZmlybXdhcmUuIFdoZW4gdGhl
+IGRlbWFuZCBzY3J1YmJpbmcgaXMgZmluaXNoZWQNCj5maXJtd2FyZSBtdXN0IHJlc2V0IGFjdHVh
+bCBhZGRyZXNzIHJhbmdlIHRvIDAuIE90aGVyd2lzZSB1c2Vyc3BhY2UgYXNzdW1lcw0KPmRlbWFu
+ZCBzY3J1YmJpbmcgaXMgaW4gcHJvZ3Jlc3MuIg0KPg0KPkhlcmUgc3lzZnMgYXR0cmlidXRlcyAn
+YWRkcicgYW5kICdzaXplJyBpcyByZWFkaW5nIHRoZSBmaWVsZDogQWN0dWFsIEFkZHJlc3MgUmFu
+Z2UNCj5vZiBUYWJsZSA1Ljg3OiBQYXJhbWV0ZXIgQmxvY2sgU3RydWN0dXJlIGZvciBQQVRST0xf
+U0NSVUIsIHdyaXR0ZW4gYnkgdGhlDQo+ZmlybXdhcmUuDQo+DQo+SW4gbXkgb3BpbmlvbiwgcmVh
+ZGluZyBiYWNrIHRoZSBhZGRyZXNzIHJhbmdlIHNpemUgc2V0IGluIHRoZSBzeXNmcyBiZWZvcmUN
+Cj5hY3R1YWxseSB3cml0aW5nIHRoZSBhZGRyZXNzIHJhbmdlIHRvIHRoZSBmaXJtd2FyZSBhbmQg
+c3RhcnRpbmcgdGhlIG9uLWRlbWFuZA0KPnNjcnViIG9wZXJhdGlvbiBkb2Vzbid0IGhvbGQgbXVj
+aCBzaWduaWZpY2FuY2U/DQoNCkFmdGVyIGZ1cnRoZXIgZGlzY3Vzc2lvbiwgSSB3aWxsIGFkZCBh
+IGZpeCBmb3IgdGhpcyBjYXNlIHRvIHJldHVybiB0aGUgJ3NpemUnIHdoaWNoIHRoZSB1c2VyIHNl
+dCBpbiB0aGUgc3lzZnMNCnVudGlsIHRoZSBzY3J1YmJpbmcgaXMgc3RhcnRlZC4NCg0KVGhhbmtz
+LA0KU2hpanUgDQo+DQoNCg==
