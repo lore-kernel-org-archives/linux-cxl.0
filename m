@@ -1,193 +1,251 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2086.outbound.protection.outlook.com [40.107.94.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56CC7224AEF;
-	Tue, 11 Mar 2025 19:12:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741720373; cv=none; b=hQIxVCPXTK73xCQgsUVyGu6sC+bjS+IOihbhVGt6qCcdkSO3HDAJlHlSzhk8kWYd+tNtam4tnyt4LyRzpcA4CQS3tsDvvziF7wHzbjZA6PNtMlfQPhx0zAMhj4+tIV0TOpa/WCPIZNLMWatumIjkoKuU2vtZMFmAOwNoW8gObas=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741720373; c=relaxed/simple;
-	bh=xrRDKOf2+PF6EATz3wS7Q0fED9bKXNaY1L719rEfo0c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DMNt9+4mPbG1dtM5ohicLI7ig6VLX3Ocf7MLA5c876ktq4IqTBY2PF+6VTnUD5Zf42Jz94XCGRIx2/KZWl/am585gOYIOB+RBrKhuT6NzKFgI1NB09bTZgPqL5863vXALzAvdsVLOXcTd11SehK7zQWfLBDSMvhmmWH7y6e7zyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SdPLpmx+; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5018F1EDA20;
+	Tue, 11 Mar 2025 20:05:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.86
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741723516; cv=fail; b=qLgSedvMvLcH8ffKkksy0Kpf/a7aUofWXvqfWWQJdS9WEbScPlJqUTnkkNU8tihVjCj/zKBO0p7NThJg3bviG5jnTQRPnZW3HxMUtaCJw6Zw6V8dz76Gb+ehMJvRdQiFP0brGbc8Pcy5NPKXpZeO3PSZGIKkJeJoUJ0SjqzBcJ0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741723516; c=relaxed/simple;
+	bh=zzQLXJnp+2zJf9j1GW2pi6WsbvVJ97FOwHx4D03rel4=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
+	 In-Reply-To:Content-Type; b=HYWkEvUn/gy6LXL07XCLhxype81wpZynknXA+c1vKHwUXsz3NnJza9dNPGmFBjQeN/sYarZOpheOn1FB4KJk5H8Loq56e3zCfCVqo/uD9Vv+woB6niZi9WXbNX9bBj2JZW32mM5sUCDb+oKvsq3GeqwtXRXviyDWbjwRE856QjY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=P+mZlUZ2; arc=fail smtp.client-ip=40.107.94.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SdPLpmx+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741720371; x=1773256371;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=xrRDKOf2+PF6EATz3wS7Q0fED9bKXNaY1L719rEfo0c=;
-  b=SdPLpmx+C7lBkYTdQMN3PRUoQHSlEkHISvSvUUy5FJ96NrZ3KxJDQ6nG
-   uvK/wdP84vmjam2yzUccfTXWe9/93zFCNEeK9g17T2LYshYWF1sZP7rQJ
-   b4WjdEkFwYD1AdPZFksWFz026q/ESzmV2fHIEiv9G7OtA/Zv/mhkwmWXm
-   jrgNK7N+saZWL9x1RMyxLJ2rYAMbkKN3ySBLRdsxrWyNfIWQZSQELjl55
-   6bHylH1mg6e9uPb4CtO1JBANr7pIGMP7hUXam58933BpM2r1qdlwMbxSP
-   aP17cf2Ti6vRGIKkQOMpRBARJCRdF4u+BoYT4VK2hbd0VsnNawaW7TVw/
-   w==;
-X-CSE-ConnectionGUID: 2qQL8lX2Q6Oa8GSD+EvS9A==
-X-CSE-MsgGUID: fWbPvBuoQeqRcNAo4bAH9A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11370"; a="46688935"
-X-IronPort-AV: E=Sophos;i="6.14,239,1736841600"; 
-   d="scan'208";a="46688935"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 12:12:50 -0700
-X-CSE-ConnectionGUID: tz4UNyw6T1iQm4SaMak9zQ==
-X-CSE-MsgGUID: xSaGxqUOSry0JVKvRFLkkg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,239,1736841600"; 
-   d="scan'208";a="143605116"
-Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
-  by fmviesa002.fm.intel.com with ESMTP; 11 Mar 2025 12:12:48 -0700
-Received: from kbuild by a4747d147074 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ts51x-0007lM-20;
-	Tue, 11 Mar 2025 19:12:45 +0000
-Date: Wed, 12 Mar 2025 03:12:08 +0800
-From: kernel test robot <lkp@intel.com>
-To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
-	netdev@vger.kernel.org, dan.j.williams@intel.com,
-	edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
-	pabeni@redhat.com, edumazet@google.com, dave.jiang@intel.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Alejandro Lucero <alucerop@amd.com>
-Subject: Re: [PATCH v11 13/23] cxl: define a driver interface for DPA
- allocation
-Message-ID: <202503120207.vNlP2uB3-lkp@intel.com>
-References: <20250310210340.3234884-14-alejandro.lucero-palau@amd.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="P+mZlUZ2"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JW3BLX1J6cVvTpG/Ae6DJq2yAVtMMBmWuuycbsqLii5z50dWN+F8lylWjct0aKFBjoNobdTCJZ8DRTqlRuIBX8GaAlkIbqKLipJlUtu7zI7VNa2wqwbimW6bNfRiAxcOdooDesiLMCQpr1kqurIF37U3R+Ibp7aEHa9wG7v6y154OkZHA+igAWa0Pjczpcwlz07imyYGcFgBpPaDQVKqi0OKYul2d4hs2AJcA4Q9Xrs1Lisy07ggAafTCSZplgm/UtM/yj/Ybwayswq5agYGFOcxwd3VX0Vc0fjAHfoZnUuZkWhooN1SW/gm4J5SeSZiMQn7ttjAsvFt4lwyRN+OIw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=je75xAV1ZL6wEL9aPWDLWa/sTAP1b7By+imt8+gomBA=;
+ b=hSr05sfa1gkfzJ+z2gSte2TGQAScnpYUapP//CgEWKAahlrZkL3L9GcIp6qj7/JWvm8jaaAZmpIGp+T+tzhp7rNSPZIH3eFXUOsSv+A/DUvxn0eaZ2NJTcIavu4G+uLFSsAZ9G7qbjj7+CF1DCRnrL+c4/TNVKoFoI/lSLa99krkH5JBL8cDsiesU5uGF/x7Igoh0pUMr9UEd9nd30XuJ8+8s5Qd4MeyG98KOjoL7caF264R8z8ulMPQ6BtusUscMd2rlNiGDIl2ttR/gMlHC3k81HWIOCjem4jhFph/KJolBh3HBLOJN1KG3PrAae9RKsduGb0kKx6e7nkNch7NGg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=je75xAV1ZL6wEL9aPWDLWa/sTAP1b7By+imt8+gomBA=;
+ b=P+mZlUZ2poMOJuvwyP+UG7yjY3CLw6srk1XaJuN4C03HPRQXw8bpssKX5RnxY9SAiKOozPNPgSoUhzR3JhpUNCn1SDIpX6RTRhUhuj5ibMRZdbWJmpTlJs6rMFpgxRBG9+OF0bybIMZWq/NwKLjGKEroAYfy+zfSDKA/nTJUmnU=
+Received: from MN0P222CA0028.NAMP222.PROD.OUTLOOK.COM (2603:10b6:208:531::30)
+ by MW4PR12MB6828.namprd12.prod.outlook.com (2603:10b6:303:209::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Tue, 11 Mar
+ 2025 20:05:07 +0000
+Received: from BL02EPF0001A102.namprd05.prod.outlook.com
+ (2603:10b6:208:531:cafe::5) by MN0P222CA0028.outlook.office365.com
+ (2603:10b6:208:531::30) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.21 via Frontend Transport; Tue,
+ 11 Mar 2025 20:05:06 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL02EPF0001A102.mail.protection.outlook.com (10.167.241.134) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8534.20 via Frontend Transport; Tue, 11 Mar 2025 20:05:06 +0000
+Received: from [10.236.184.9] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 11 Mar
+ 2025 15:05:05 -0500
+Message-ID: <bf26b669-860c-493e-8126-733615f47b13@amd.com>
+Date: Tue, 11 Mar 2025 15:05:04 -0500
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250310210340.3234884-14-alejandro.lucero-palau@amd.com>
+User-Agent: Mozilla Thunderbird
+From: Ben Cheatham <benjamin.cheatham@amd.com>
+Subject: Re: [PATCH v11 01/23] cxl: add type2 device basic support
+To: <alejandro.lucero-palau@amd.com>
+CC: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<dan.j.williams@intel.com>, <edward.cree@amd.com>, <davem@davemloft.net>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>,
+	<dave.jiang@intel.com>, "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
+References: <20250310210340.3234884-1-alejandro.lucero-palau@amd.com>
+ <20250310210340.3234884-2-alejandro.lucero-palau@amd.com>
+Content-Language: en-US
+In-Reply-To: <20250310210340.3234884-2-alejandro.lucero-palau@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL02EPF0001A102:EE_|MW4PR12MB6828:EE_
+X-MS-Office365-Filtering-Correlation-Id: 883f18a5-7631-418d-44d1-08dd60d80503
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SzBlSW1weHJQNldLUkR4MzF1UkMxTHd6d1RMTVlvOHpFRWc0dy8xVGQ1aHVx?=
+ =?utf-8?B?V3NRcjNXblc2Y2JRZGpSeG9OOVVyaitwVHpVM0NHWDRzMFJ2ZW90OWFqK3BK?=
+ =?utf-8?B?QmFPQW1FNGM0bWJsNmhDMklDb2pQVDJocTl3ZDduTk9CeXhkaDRlWmJxMUhF?=
+ =?utf-8?B?blNBaGFGYzVmaTlES01INHpSMnVDUDc3SWxXTzRnOCtRVXpndTBza1E0L0JE?=
+ =?utf-8?B?SEVPTUNjQWYrUXo4S1V0WVVUTTZBSWRScTU0UmRhVHBYWmJwcndTdElhZkM0?=
+ =?utf-8?B?ZGlXLzNER3lIaXNaY1ZKYXV5WkswbUthS3ROL2w4c21HUVBYMXJMVlRaalZM?=
+ =?utf-8?B?emZDNjQ3MENyZElwUlVyMG92dzlldmV0ZDJRL2xobjRncGNuNHNzT0laVzBS?=
+ =?utf-8?B?VUk3WkZsY2xGVkoxRmpiTTFGb2lwLysvUitpdzZrelZsaDNWOUU1aWFDZHQz?=
+ =?utf-8?B?U05CQnlURllFWFk4Wk43K2tJMXAxOVB2M2hNYTlubmQyQWZpNU5qWWVQWVhn?=
+ =?utf-8?B?WGlKVU1BeWZQZitjQ1RrMVd1aExrNmlWUlNlZnduT3VxZmVzMXdXRmJXMDg1?=
+ =?utf-8?B?RWx5eXVuZ2oyOWRvNm80TWNBTVpBMkoyRzc2Z2E4VjFncFlGRGZNM3lwa0xt?=
+ =?utf-8?B?N3hGeUJFQklaOTR6eVFWOFUwSEc2ZHo2Mm9JdlZBL3RpVlZHK2phM1dBMm8v?=
+ =?utf-8?B?Z3IzMkZ3N2kxY2xnOTcyU0RKdGw2UXJIOHI0Nk4wMEFHanBwZU1vM1VkMGdP?=
+ =?utf-8?B?NzdXWGJPMzlhNFJlY2NGdENLL3dRbnNJZkFDVDZ1ZlJuYmdWWFhuMTdDWDNE?=
+ =?utf-8?B?dmE3dW5aMitqSFFqSXJic21GUHpZUzVsQ0VQbGlMQnVPdG5zMW1UL3hEMGwy?=
+ =?utf-8?B?MDN2MXlGWTVDRHQzZWRpaDJCVDdjaVE3RGRjWHkyb3FtUXplN1NXMFhnNEF3?=
+ =?utf-8?B?dnhBdTFhc2FYWFNwbXJZRWhBY1NjU2pIc3ZZN2x1NlVnRnBoVUNNenpCRjJ5?=
+ =?utf-8?B?Mkk1cnNWQTFWQ0RlQkFnbk5GZXB5c2lHWlpBUHMwSXdwT0xqa3krSW1ZUXRL?=
+ =?utf-8?B?UmxOTHhYNFJuN0E5U2U3ekVybnhYdDJmS1RzR09uWUpqY2J5SlBLTUR5b09N?=
+ =?utf-8?B?VnRyQklzeTJKd1BhNk4xVzJZb3ZuL3lLYWdTODl2ZVZPVVRIODFUZ2h3Qll5?=
+ =?utf-8?B?VkE0SXJ6TmlRS3VEaWlDWWMzalMxd1NsL0NOVU52UVB3QjY1Y1dreTY0YmZy?=
+ =?utf-8?B?eU5vYU5iakpwUURNMDdiUGVzWTN2QmZMZGpvajlMemM3YmRaOWZSNzNBdmJK?=
+ =?utf-8?B?d2VFK0NiTU1XZC9ON3dHYWN3SDVBQzR5YlhwK096alFWRStLcGlLeEtpaHdI?=
+ =?utf-8?B?amhqV3hBS1dkS1ExWUVZQWg5TzFZUXpMVlorcW81eFhSQ05VY05tV0R4SWF1?=
+ =?utf-8?B?VkR2M0kzMHdlM0VaeW04N1prenAzcjdZdzVmZDkzUnlNZXpxdEphVWRRNWQy?=
+ =?utf-8?B?UG5wNld2dWgveERnOTRDcjlzTGVQQUQ2SVpudWxWYmFxR0NUamVRUnpmTjRL?=
+ =?utf-8?B?eGJ6NlVTY3ZZc3NOK29PWUtYYUozazVTNHdJSWttcHo1c2g5dTJyNTV4RlBo?=
+ =?utf-8?B?djFCZlJQTm9YYnN5KzJKUzFpODhUTEdMLzRGMkl2L0Z3V0p6Ym85YjU5ZFFH?=
+ =?utf-8?B?TnRaL2taZGxKYW9kN1Q5WG50dWV3VDRtUVpUS3JYTlpRWXJZRGdEWU9CanF0?=
+ =?utf-8?B?YWN5TDR2b0kzcS9RWWVVMzF6MGpVbWM0Y2FiMkZIYlF1YjdBeTNBazNXM3lE?=
+ =?utf-8?B?YnpqTlVGUGZJQnZPdTV5OTF4QjhJSmw0a2I5aEU0SUl0b3NMemtqRlJOcVFM?=
+ =?utf-8?B?L3dtSVV1VGlITkpiVGFwUlMwanptSFpxYVlUekxuSk5oenFydit6bVdmOFdy?=
+ =?utf-8?B?QVJoWU50ZGtGcVFNWWl6aG9mQnBCQ3VMQnB2RFBwN2RSelVZVytMNWdLYXNt?=
+ =?utf-8?Q?eE7NTUT8sz30g88XOw7OeKB2/Wttxw=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2025 20:05:06.9312
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 883f18a5-7631-418d-44d1-08dd60d80503
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL02EPF0001A102.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6828
 
-Hi,
+On 3/10/25 4:03 PM, alejandro.lucero-palau@amd.com wrote:
+> From: Alejandro Lucero <alucerop@amd.com>
+> 
+> Differentiate CXL memory expanders (type 3) from CXL device accelerators
+> (type 2) with a new function for initializing cxl_dev_state and a macro
+> for helping accel drivers to embed cxl_dev_state inside a private
+> struct.
+> 
+> Move structs to include/cxl as the size of the accel driver private
+> struct embedding cxl_dev_state needs to know the size of this struct.
+> 
+> Use same new initialization with the type3 pci driver.
+> 
+> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> ---
+>  drivers/cxl/core/mbox.c   |  12 +--
+>  drivers/cxl/core/memdev.c |  32 ++++++
+>  drivers/cxl/core/pci.c    |   1 +
+>  drivers/cxl/core/regs.c   |   1 +
+>  drivers/cxl/cxl.h         |  97 +-----------------
+>  drivers/cxl/cxlmem.h      |  88 ++--------------
+>  drivers/cxl/cxlpci.h      |  21 ----
+>  drivers/cxl/pci.c         |  17 ++--
+>  include/cxl/cxl.h         | 206 ++++++++++++++++++++++++++++++++++++++
+>  include/cxl/pci.h         |  23 +++++
+>  10 files changed, 285 insertions(+), 213 deletions(-)
+>  create mode 100644 include/cxl/cxl.h
+>  create mode 100644 include/cxl/pci.h
+> 
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index d72764056ce6..20df6f78f148 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -1484,23 +1484,21 @@ int cxl_mailbox_init(struct cxl_mailbox *cxl_mbox, struct device *host)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_mailbox_init, "CXL");
+>  
+> -struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev)
+> +struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev, u64 serial,
+> +						 u16 dvsec)
+>  {
+>  	struct cxl_memdev_state *mds;
+>  	int rc;
+>  
+> -	mds = devm_kzalloc(dev, sizeof(*mds), GFP_KERNEL);
+> +	mds = (struct cxl_memdev_state *)
+> +		_cxl_dev_state_create(dev, CXL_DEVTYPE_CLASSMEM, serial, dvsec,
+> +				      sizeof(struct cxl_memdev_state), true);
 
-kernel test robot noticed the following build errors:
+I would use sizeof(*mds) instead of sizeof(struct cxl_memdev_state) above.
 
-[auto build test ERROR on 0a14566be090ca51a32ebdd8a8e21678062dac08]
+What's the reason to not use the cxl_dev_state_create() macro here instead? Based on the commit
+message I'm assuming it's because it's meant for accelerator drivers and this is a type 3 driver,
+but I'm going to suggest using it here anyway (and maybe amending the commit message).
 
-url:    https://github.com/intel-lab-lkp/linux/commits/alejandro-lucero-palau-amd-com/cxl-add-type2-device-basic-support/20250311-050914
-base:   0a14566be090ca51a32ebdd8a8e21678062dac08
-patch link:    https://lore.kernel.org/r/20250310210340.3234884-14-alejandro.lucero-palau%40amd.com
-patch subject: [PATCH v11 13/23] cxl: define a driver interface for DPA allocation
-config: csky-randconfig-002-20250312 (https://download.01.org/0day-ci/archive/20250312/202503120207.vNlP2uB3-lkp@intel.com/config)
-compiler: csky-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250312/202503120207.vNlP2uB3-lkp@intel.com/reproduce)
+>  	if (!mds) {
+>  		dev_err(dev, "No memory available\n");
+>  		return ERR_PTR(-ENOMEM);
+>  	}
+>  
+>  	mutex_init(&mds->event.log_lock);
+> -	mds->cxlds.dev = dev;
+> -	mds->cxlds.reg_map.host = dev;
+> -	mds->cxlds.cxl_mbox.host = dev;
+> -	mds->cxlds.reg_map.resource = CXL_RESOURCE_NONE;
+> -	mds->cxlds.type = CXL_DEVTYPE_CLASSMEM;
+>  
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503120207.vNlP2uB3-lkp@intel.com/
+[snip]
 
-All errors (new ones prefixed by >>):
+> +/**
+> + * struct cxl_dev_state - The driver device state
+> + *
+> + * cxl_dev_state represents the CXL driver/device state.  It provides an
+> + * interface to mailbox commands as well as some cached data about the device.
+> + * Currently only memory devices are represented.
+> + *
+> + * @dev: The device associated with this CXL state
+> + * @cxlmd: The device representing the CXL.mem capabilities of @dev
+> + * @reg_map: component and ras register mapping parameters
+> + * @regs: Parsed register blocks
+> + * @cxl_dvsec: Offset to the PCIe device DVSEC
+> + * @rcd: operating in RCD mode (CXL 3.0 9.11.8 CXL Devices Attached to an RCH)
+> + * @media_ready: Indicate whether the device media is usable
+> + * @dpa_res: Overall DPA resource tree for the device
+> + * @part: DPA partition array
+> + * @nr_partitions: Number of DPA partitions
+> + * @serial: PCIe Device Serial Number
+> + * @type: Generic Memory Class device or Vendor Specific Memory device
+> + * @cxl_mbox: CXL mailbox context
+> + * @cxlfs: CXL features context
+> + */
+> +struct cxl_dev_state {
+> +	struct device *dev;
+> +	struct cxl_memdev *cxlmd;
+> +	struct cxl_register_map reg_map;
+> +	struct cxl_regs regs;
+> +	int cxl_dvsec;
+> +	bool rcd;
+> +	bool media_ready;
+> +	struct resource dpa_res;
+> +	struct cxl_dpa_partition part[CXL_NR_PARTITIONS_MAX];
+> +	unsigned int nr_partitions;
+> +	u64 serial;
+> +	enum cxl_devtype type;
+> +	struct cxl_mailbox cxl_mbox;
+> +#ifdef CONFIG_CXL_FEATURES
+> +	struct cxl_features_state *cxlfs;
+> +#endif
+> +};
 
-   In file included from drivers/cxl/core/hdm.c:6:
->> include/cxl/cxl.h:150:22: error: field 'dpa_range' has incomplete type
-     150 |         struct range dpa_range;
-         |                      ^~~~~~~~~
->> include/cxl/cxl.h:221:30: error: field 'range' has incomplete type
-     221 |                 struct range range;
-         |                              ^~~~~
-
-
-vim +/dpa_range +150 include/cxl/cxl.h
-
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  141  
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  142  /**
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  143   * struct cxl_dpa_perf - DPA performance property entry
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  144   * @dpa_range: range for DPA address
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  145   * @coord: QoS performance data (i.e. latency, bandwidth)
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  146   * @cdat_coord: raw QoS performance data from CDAT
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  147   * @qos_class: QoS Class cookies
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  148   */
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  149  struct cxl_dpa_perf {
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10 @150  	struct range dpa_range;
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  151  	struct access_coordinate coord[ACCESS_COORDINATE_MAX];
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  152  	struct access_coordinate cdat_coord[ACCESS_COORDINATE_MAX];
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  153  	int qos_class;
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  154  };
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  155  
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  156  enum cxl_partition_mode {
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  157  	CXL_PARTMODE_RAM,
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  158  	CXL_PARTMODE_PMEM,
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  159  };
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  160  
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  161  /**
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  162   * struct cxl_dpa_partition - DPA partition descriptor
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  163   * @res: shortcut to the partition in the DPA resource tree (cxlds->dpa_res)
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  164   * @perf: performance attributes of the partition from CDAT
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  165   * @mode: operation mode for the DPA capacity, e.g. ram, pmem, dynamic...
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  166   */
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  167  struct cxl_dpa_partition {
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  168  	struct resource res;
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  169  	struct cxl_dpa_perf perf;
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  170  	enum cxl_partition_mode mode;
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  171  };
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  172  
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  173  #define CXL_NR_PARTITIONS_MAX 2
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  174  
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  175  /**
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  176   * struct cxl_dev_state - The driver device state
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  177   *
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  178   * cxl_dev_state represents the CXL driver/device state.  It provides an
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  179   * interface to mailbox commands as well as some cached data about the device.
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  180   * Currently only memory devices are represented.
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  181   *
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  182   * @dev: The device associated with this CXL state
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  183   * @cxlmd: The device representing the CXL.mem capabilities of @dev
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  184   * @reg_map: component and ras register mapping parameters
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  185   * @regs: Parsed register blocks
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  186   * @cxl_dvsec: Offset to the PCIe device DVSEC
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  187   * @rcd: operating in RCD mode (CXL 3.0 9.11.8 CXL Devices Attached to an RCH)
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  188   * @media_ready: Indicate whether the device media is usable
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  189   * @dpa_res: Overall DPA resource tree for the device
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  190   * @part: DPA partition array
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  191   * @nr_partitions: Number of DPA partitions
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  192   * @serial: PCIe Device Serial Number
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  193   * @type: Generic Memory Class device or Vendor Specific Memory device
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  194   * @cxl_mbox: CXL mailbox context
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  195   * @cxlfs: CXL features context
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  196   */
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  197  struct cxl_dev_state {
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  198  	struct device *dev;
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  199  	struct cxl_memdev *cxlmd;
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  200  	struct cxl_register_map reg_map;
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  201  	struct cxl_regs regs;
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  202  	int cxl_dvsec;
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  203  	bool rcd;
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  204  	bool media_ready;
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  205  	struct resource dpa_res;
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  206  	struct cxl_dpa_partition part[CXL_NR_PARTITIONS_MAX];
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  207  	unsigned int nr_partitions;
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  208  	u64 serial;
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  209  	enum cxl_devtype type;
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  210  	struct cxl_mailbox cxl_mbox;
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  211  #ifdef CONFIG_CXL_FEATURES
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  212  	struct cxl_features_state *cxlfs;
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  213  #endif
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  214  };
-98e0e4ae7d20491 Alejandro Lucero 2025-03-10  215  
-fe6f26dd4c64059 Alejandro Lucero 2025-03-10  216  #define CXL_NR_PARTITIONS_MAX 2
-fe6f26dd4c64059 Alejandro Lucero 2025-03-10  217  
-fe6f26dd4c64059 Alejandro Lucero 2025-03-10  218  struct cxl_dpa_info {
-fe6f26dd4c64059 Alejandro Lucero 2025-03-10  219  	u64 size;
-fe6f26dd4c64059 Alejandro Lucero 2025-03-10  220  	struct cxl_dpa_part_info {
-fe6f26dd4c64059 Alejandro Lucero 2025-03-10 @221  		struct range range;
-fe6f26dd4c64059 Alejandro Lucero 2025-03-10  222  		enum cxl_partition_mode mode;
-fe6f26dd4c64059 Alejandro Lucero 2025-03-10  223  	} part[CXL_NR_PARTITIONS_MAX];
-fe6f26dd4c64059 Alejandro Lucero 2025-03-10  224  	int nr_partitions;
-fe6f26dd4c64059 Alejandro Lucero 2025-03-10  225  };
-fe6f26dd4c64059 Alejandro Lucero 2025-03-10  226  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+What happened to the comments for private/public fields for this struct that Dan suggested in
+your RFC? If you don't think they're needed that's fine, I'm just curious!
