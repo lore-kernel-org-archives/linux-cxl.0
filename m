@@ -1,109 +1,172 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BEE31386DA
-	for <linux-cxl@vger.kernel.org>; Tue, 11 Mar 2025 08:08:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261B11DE4CC;
+	Tue, 11 Mar 2025 09:51:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741680500; cv=none; b=cw060Y7i71brwMs4U7AT7SxFeTSvGN62AAxPnS4wQ8QRkMHe2BdtGsWQO4XENElkD784S8pxNjsHxR3GRXWVJUuvY4iYgnyMA9y+pJ2LF25+bOQYLbmRQryv4bAEHDuVenD6KbP/18caXNj+8qNVa6HdfKo1y+zVOeKunAQ2uBk=
+	t=1741686700; cv=none; b=XuBGs+iz2UIvNrvmIKUZbAHH0ZZihTi6qg/dDhUgPf5LMnabSHgeu/rZQVCMVkIbOEVjm4Jt6CjpFo5OmPTp6HcrQx7IE5VzAYLST0LD+PBtDqmGRQLOP9MkdVhpwpAiCqgGeeJ8YvaVLOt+BtPpXQxt5kPkUseUL0cslvOXjaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741680500; c=relaxed/simple;
-	bh=XVEwwl1sXhLq3T4qtLMdypX08nnxiS3k9CcvMiSKkJI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z6PeGGKVHsmqS6PsuwAJnhUetzVBFOpmSaXzbdNoHB05GJ4JhMYsiidQ7R4k7TbB8WdaOdYuqW8NBqNwzcL0h5ZV66LZ8Pb5OeYjLCUy0zjbO2NS9hu0ewjBeYjqEEkUr+dCC3othCM8lSMlLZyHxjEosthk3QvuV3uvI6gTdUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KcWhXrxF; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KcWhXrxF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741680495;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SkJjeRoc6mEUAou/LZwl/I3fpPe7ZBYGaQFkpeBI7yE=;
-	b=KcWhXrxFGO4SQSjyeYzIBXr4ySGqsLgTUTejzwkOG9g2AJjEmfS3MKfHKePqtUUdETLk9U
-	iANB8M/gjyJ7Y4CHkod8vxS6TU9evY/54vMIaIQYkdjzRm+hGTnSegEO8u8LWOyMEGtKUJ
-	XSMY0jZFCap5+K8n1ghsUQYO3Fv5pck=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-459-pCwD9KUKPBuN_fgRTvdx9g-1; Tue,
- 11 Mar 2025 04:08:11 -0400
-X-MC-Unique: pCwD9KUKPBuN_fgRTvdx9g-1
-X-Mimecast-MFC-AGG-ID: pCwD9KUKPBuN_fgRTvdx9g_1741680490
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D034A19560BB;
-	Tue, 11 Mar 2025 08:08:09 +0000 (UTC)
-Received: from sirius.home.kraxel.org (unknown [10.45.224.205])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E00E81828A8C;
-	Tue, 11 Mar 2025 08:08:08 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-	id 6F41018000A3; Tue, 11 Mar 2025 09:08:06 +0100 (CET)
-Date: Tue, 11 Mar 2025 09:08:06 +0100
-From: Gerd Hoffmann <kraxel@redhat.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>, 
-	qemu-devel@nongnu.org, pbonzini@redhat.com, mtosatti@redhat.com, mst@redhat.com, 
-	marcel.apfelbaum@gmail.com, jon.grimm@amd.com, santosh.shukla@amd.com, vasant.hegde@amd.com, 
-	Wei.Huang2@amd.com, bsd@redhat.com, berrange@redhat.com, ddutile@redhat.com, 
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH] pci-ids.rst: Add Red Hat pci-id for AMD IOMMU device
-Message-ID: <o4swru5qsoemfs3acxcsifrzy45n4mptxh2vg3ulvnfwgirbv7@6iqvfqb76nh7>
-References: <20250304183747.639382-1-suravee.suthikulpanit@amd.com>
- <20250310135731.00005b1f@huawei.com>
+	s=arc-20240116; t=1741686700; c=relaxed/simple;
+	bh=A/ZMzq5lRkJdNzhIJNDhVGV+dXchg6pzREW1g6BrqKI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=BTCDP9/hgNkok7PLtpHLrvIF8RLeAi3mNZqMBGlnKudpQcpKvWEtqQi1Ic50BiLyra+h0nTkU6PhBochN+JGqxyTY6uBMeXewg+AlKTprmnlu349Z+hrG6k8L6/HOOV8CnwDQFhLi3WkMiWlNfJAzMCIbVq8TiR0JZd59hNRnvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZBpqJ0FnGz6H8Y6;
+	Tue, 11 Mar 2025 17:48:28 +0800 (CST)
+Received: from frapeml500005.china.huawei.com (unknown [7.182.85.13])
+	by mail.maildlp.com (Postfix) with ESMTPS id 985221404FC;
+	Tue, 11 Mar 2025 17:51:34 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (7.182.85.172) by
+ frapeml500005.china.huawei.com (7.182.85.13) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 11 Mar 2025 10:51:34 +0100
+Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
+ frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
+ Tue, 11 Mar 2025 10:51:34 +0100
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Alison Schofield <alison.schofield@intel.com>
+CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"dan.j.williams@intel.com" <dan.j.williams@intel.com>, "dave@stgolabs.net"
+	<dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>,
+	"dave.jiang@intel.com" <dave.jiang@intel.com>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
+	<Vilas.Sridharan@amd.com>, "linux-edac@vger.kernel.org"
+	<linux-edac@vger.kernel.org>, "linux-acpi@vger.kernel.org"
+	<linux-acpi@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bp@alien8.de"
+	<bp@alien8.de>, "tony.luck@intel.com" <tony.luck@intel.com>,
+	"rafael@kernel.org" <rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
+	"mchehab@kernel.org" <mchehab@kernel.org>, "leo.duran@amd.com"
+	<leo.duran@amd.com>, "Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>,
+	"rientjes@google.com" <rientjes@google.com>, "jiaqiyan@google.com"
+	<jiaqiyan@google.com>, "Jon.Grimm@amd.com" <Jon.Grimm@amd.com>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"naoya.horiguchi@nec.com" <naoya.horiguchi@nec.com>, "james.morse@arm.com"
+	<james.morse@arm.com>, "jthoughton@google.com" <jthoughton@google.com>,
+	"somasundaram.a@hpe.com" <somasundaram.a@hpe.com>, "erdemaktas@google.com"
+	<erdemaktas@google.com>, "pgonda@google.com" <pgonda@google.com>,
+	"duenwen@google.com" <duenwen@google.com>, "gthelen@google.com"
+	<gthelen@google.com>, "wschwartz@amperecomputing.com"
+	<wschwartz@amperecomputing.com>, "dferguson@amperecomputing.com"
+	<dferguson@amperecomputing.com>, "wbs@os.amperecomputing.com"
+	<wbs@os.amperecomputing.com>, "nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
+	tanxiaofei <tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>,
+	Roberto Sassu <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
+	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
+	Linuxarm <linuxarm@huawei.com>
+Subject: RE: [PATCH 1/8] cxl: Add helper function to retrieve a feature entry
+Thread-Topic: [PATCH 1/8] cxl: Add helper function to retrieve a feature entry
+Thread-Index: AQHbiWhwo9sEMJAQkEWXFE66V5STnbNoCC6AgASyHwCAABgagIAA7UaA
+Date: Tue, 11 Mar 2025 09:51:34 +0000
+Message-ID: <00c0910dab404d8ab72db1e8a6e1b190@huawei.com>
+References: <20250227223816.2036-1-shiju.jose@huawei.com>
+ <20250227223816.2036-2-shiju.jose@huawei.com>
+ <Z8tGz33l9vDzuJLy@aschofie-mobl2.lan>
+ <e8e33d46aa1b478db601de29e047cb5f@huawei.com>
+ <Z89LcUIWO9m8Vtru@aschofie-mobl2.lan>
+In-Reply-To: <Z89LcUIWO9m8Vtru@aschofie-mobl2.lan>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250310135731.00005b1f@huawei.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-  Hi,
+>-----Original Message-----
+>From: Alison Schofield <alison.schofield@intel.com>
+>Sent: 10 March 2025 20:29
+>To: Shiju Jose <shiju.jose@huawei.com>
+>Cc: linux-cxl@vger.kernel.org; dan.j.williams@intel.com; dave@stgolabs.net=
+;
+>Jonathan Cameron <jonathan.cameron@huawei.com>; dave.jiang@intel.com;
+>vishal.l.verma@intel.com; ira.weiny@intel.com; david@redhat.com;
+>Vilas.Sridharan@amd.com; linux-edac@vger.kernel.org; linux-
+>acpi@vger.kernel.org; linux-mm@kvack.org; linux-kernel@vger.kernel.org;
+>bp@alien8.de; tony.luck@intel.com; rafael@kernel.org; lenb@kernel.org;
+>mchehab@kernel.org; leo.duran@amd.com; Yazen.Ghannam@amd.com;
+>rientjes@google.com; jiaqiyan@google.com; Jon.Grimm@amd.com;
+>dave.hansen@linux.intel.com; naoya.horiguchi@nec.com;
+>james.morse@arm.com; jthoughton@google.com; somasundaram.a@hpe.com;
+>erdemaktas@google.com; pgonda@google.com; duenwen@google.com;
+>gthelen@google.com; wschwartz@amperecomputing.com;
+>dferguson@amperecomputing.com; wbs@os.amperecomputing.com;
+>nifan.cxl@gmail.com; tanxiaofei <tanxiaofei@huawei.com>; Zengtao (B)
+><prime.zeng@hisilicon.com>; Roberto Sassu <roberto.sassu@huawei.com>;
+>kangkang.shen@futurewei.com; wanghuiqiang <wanghuiqiang@huawei.com>;
+>Linuxarm <linuxarm@huawei.com>
+>Subject: Re: [PATCH 1/8] cxl: Add helper function to retrieve a feature en=
+try
+>
+>On Mon, Mar 10, 2025 at 06:15:38PM +0000, Shiju Jose wrote:
+>> >-----Original Message-----
+>> >From: Alison Schofield <alison.schofield@intel.com>
+>> >Sent: 07 March 2025 19:20
+>> >To: Shiju Jose <shiju.jose@huawei.com>
+>> [...]
+>> >> +struct cxl_feat_entry *cxl_get_feature_entry(struct cxl_dev_state *c=
+xlds,
+>> >> +					     const uuid_t *feat_uuid) {
+>> >> +	struct cxl_features_state *cxlfs =3D to_cxlfs(cxlds);
+>> >> +	struct cxl_feat_entry *feat_entry;
+>> >> +	int count;
+>> >> +
+>> >> +	/*
+>> >> +	 * Retrieve the feature entry from the supported features list,
+>> >> +	 * if the feature is supported.
+>> >> +	 */
+>> >> +	feat_entry =3D cxlfs->entries->ent;
+>> >
+>> >Do we need some NULL checking here on cxlfs, entries
+>>
+>> Hi Alison,
+>>
+>> Thanks for the feedbacks.
+>> We had check on cxlfs before
+>> https://lore.kernel.org/all/20250122235159.2716036-5-dave.jiang@intel.
+>> com/ but removed because of the following comment.
+>> https://lore.kernel.org/all/20250124150150.GZ5556@nvidia.com/
+>
+>Hi Shiju,
 
-> As a heads up, I believe we have a similar problem with a few of the CXL IDs.
-> The root port and type 3 device both use Intel IDs that were not reserved
-> for this purpose.  VID=0x8086, DID=0x7075 and DID=0x0d93
+Hi Alison,
+>
+>I have not followed all along, so yeah my questions may be a bit pesky at =
+this
+>point. I did see the comment linked above about how the driver must be bou=
+nd
+>at this point. I think my question is a bit different.
 
-Essentially we have two kinds of PCI devices in qemu.
+The feedback was added to remove defensive checks present in this function.
+>
+>Are each of these guaranteed not to be NULL here:
+>
+>to_cxlfs(cxlds)
 
- * The ones which try to mimic existing hardware, they usually have the
-   PCI ID of the device they are emulating (and use the qemu subsystem ID).
-   The classic example is the cirrus vga.  There are also many intel
-   chipset devices for piix4 ('pc' machine type) and ich9 ('q35' machine
-   type) with intel IDs.
+to_cxlfs(cxlds) cannot be NULL if cxl_get_feature_entry() is called after
+devm_cxl_setup_features(),  otherwise will be NULL.
+=20
+>cxlfs->entries
+>cxlfs->entries->ent
+Both fields will be NULL if the firmware does not support any features.
+>
+>If these cannot be NULL, then all good.
+>
+>--Alison
+>
+[...]
+>>
 
- * The ones which are PCI class implementations and do not need a
-   specific ID for drivers to accept them.  Most of them have a
-   PCI device ID from the 1b36 vendor ID range.
-
-The former tend to be older devices (before hardware standardization was
-a thing, also before we got a range from 1b36 for qemu), and the latter
-tend to be newer devices.  There are also a bunch of exceptions for
-historical reasons.  The ahci emulation has a ich9 id.  xhci even has
-two variants (one mimicking a NEC host adapter, one with qemu device id).
-
-So, in short, using the intel IDs is not necessarily a problem.  Depends
-a bit on what kind of device we are talking about.  For PCI class
-devices it usually is more useful to have a qemu ID though.
-
-> Switch ports and switch-cci are using valid Hisilicon IDs that are for
-> emulation of these device only and are registered in our tracker
-> for these IDs so won't get 'reused'.
-
-That is perfectly fine.  There is no need to change IDs, although it
-makes sense to document that fact in docs/specs/pci-ids.rst
-
-Moving them to qemu pci id range is an option too if you prefer that.
-Your choice.
-
-take care,
-  Gerd
+Thanks,
+Shiju
 
