@@ -1,73 +1,96 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25AF81C3BE9;
-	Wed, 12 Mar 2025 18:29:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A128258CC4;
+	Wed, 12 Mar 2025 18:58:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741804182; cv=none; b=jd41s8ijLhGlxrYsmj5paqMSN7Q94nvmGN6yVyjzAt+jeEK1RSC+USVL0ZSYVjmbi4RrCb9TQpOcIGwvwfm0vHipjPPc9r+owpAhwK4LGUMn2RBr/lhPLEY3UJOZ4n+j+XLdngQ00n5AZW+NXVHSAt6VYwj7DzMneKTUldVC2cU=
+	t=1741805943; cv=none; b=XATYxDtrYm8AgIZyL5f2JHTVaXyZ/z4/Mc5e9vASN7T06okoBuJfBhusun5VB2OS9gXRKX81OKSn+zP1sIrQUI2s/qxeN6k0yJE9CnYV3FTpvkm8CGwFtacNvlT+oxBz85T9GZ5eWOCowFNb1bLelv2iQH3MrmGOfdr/oiPOyMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741804182; c=relaxed/simple;
-	bh=PYlpPJU0rTAjzg14cckvJhKxsxB9tVoWv24PR0KgHko=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=C6tmTLRwlQKnyV6naiklE3dpi5OFranSPXfAADXMLo3quTMUAf07cfAMJEXciOSL7hzamhFS4WWU3nWAtHIO+b6QZIqQhMQd6qbF3lbiLC3wgiA5bObty41OVuGe0vEO4KCEtphVpPKH9uWAIRB0AGr7DBN+Gu3Mhq3IZ+ukNTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZCfH96Q1lz6J9vP;
-	Thu, 13 Mar 2025 02:27:01 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id BCEF7140736;
-	Thu, 13 Mar 2025 02:29:37 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 12 Mar
- 2025 19:29:36 +0100
-Date: Wed, 12 Mar 2025 18:29:35 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Shannon Nelson <shannon.nelson@amd.com>
-CC: <jgg@nvidia.com>, <andrew.gospodarek@broadcom.com>,
-	<aron.silverton@oracle.com>, <dan.j.williams@intel.com>,
-	<daniel.vetter@ffwll.ch>, <dave.jiang@intel.com>, <dsahern@kernel.org>,
-	<gregkh@linuxfoundation.org>, <hch@infradead.org>, <itayavr@nvidia.com>,
-	<jiri@nvidia.com>, <kuba@kernel.org>, <lbloch@nvidia.com>,
-	<leonro@nvidia.com>, <linux-cxl@vger.kernel.org>,
-	<linux-rdma@vger.kernel.org>, <netdev@vger.kernel.org>, <saeedm@nvidia.com>,
-	<brett.creeley@amd.com>
-Subject: Re: [PATCH v3 5/6] pds_fwctl: add rpc and query support
-Message-ID: <20250312182935.00002f49@huawei.com>
-In-Reply-To: <20250307185329.35034-6-shannon.nelson@amd.com>
-References: <20250307185329.35034-1-shannon.nelson@amd.com>
-	<20250307185329.35034-6-shannon.nelson@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1741805943; c=relaxed/simple;
+	bh=2PhGjCIWYy/NlbwWINkGifXYuBI7hQgpOCZLpdiv+2Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VfBueQuf+/j6Jb8+XFYqYnpy4ai6j1h8Q/GAzSLdeZ6k+zDFOOY7k8Vnco7fMO5rNtx12DSLW2x8WpvgvK3CuayiTu0psEp1pEbNYKk8TgE0eWnuxMR5paUU8jS+XQ9G7Ctg75r36zlmpM/rjNGj28yc/HI67T/KJ0cCJfqF3ZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KcpDhpxf; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KcpDhpxf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741805938; x=1773341938;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2PhGjCIWYy/NlbwWINkGifXYuBI7hQgpOCZLpdiv+2Q=;
+  b=KcpDhpxf2AZyCObFPPg60iOP/ZYK7jF3a0GAwssiLSBd9zJX7KSC4STn
+   3Z/hvI/ssAqF57NEulHUuTEL4zj23UHcmHTo4+G/Bj0M/ZSSyAFnYxdKk
+   zXs/XFvTXZrSijiwk163Auuvpg+l8qQqJ413ca5EXPu0MV7CgyUQGPSMw
+   m1hjyYJfu2vr1b2KtpeEENY2S9g3+bQylZxpvOChC1b/8J//6byDMDuFc
+   zg7DiCq8rR1joFn6WA+h4OFyRMiMAp8uIQAwFwsbViZ9TYlC6fXAgkJCX
+   lmOY/DU2zgzzQ/oIBtt+AYzkcbiy9bRFw+DYBS46XlOgfcJd1s51t1yo6
+   g==;
+X-CSE-ConnectionGUID: R0Y6LehdT4ulPLlH7C1xSw==
+X-CSE-MsgGUID: evHzHz16QZWu8PwicaAeyQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11371"; a="42762942"
+X-IronPort-AV: E=Sophos;i="6.14,242,1736841600"; 
+   d="scan'208";a="42762942"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 11:58:56 -0700
+X-CSE-ConnectionGUID: rt/mLQJXRnaWfn9VeZYr2Q==
+X-CSE-MsgGUID: Q99PyXViQWe5x7VORJVQmg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,242,1736841600"; 
+   d="scan'208";a="125790262"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.108.10])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 11:58:56 -0700
+Date: Wed, 12 Mar 2025 11:58:54 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v8 1/2] acpi/ghes, cxl/pci: Process CXL CPER Protocol
+ Errors
+Message-ID: <Z9HZbh_2f0_vbKhI@aschofie-mobl2.lan>
+References: <20250310223839.31342-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20250310223839.31342-2-Smita.KoralahalliChannabasappa@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250310223839.31342-2-Smita.KoralahalliChannabasappa@amd.com>
 
-On Fri, 7 Mar 2025 10:53:28 -0800
-Shannon Nelson <shannon.nelson@amd.com> wrote:
-
-> From: Brett Creeley <brett.creeley@amd.com>
+On Mon, Mar 10, 2025 at 10:38:38PM +0000, Smita Koralahalli wrote:
+> When PCIe AER is in FW-First, OS should process CXL Protocol errors from
+> CPER records. Introduce support for handling and logging CXL Protocol
+> errors.
 > 
-> The pds_fwctl driver doesn't know what RPC operations are available
-> in the firmware, so also doesn't know what scope they might have.  The
-> userland utility supplies the firmware "endpoint" and "operation" id values
-> and this driver queries the firmware for endpoints and their available
-> operations.  The operation descriptions include the scope information
-> which the driver uses for scope testing.
+> The defined trace events cxl_aer_uncorrectable_error and
+> cxl_aer_correctable_error trace native CXL AER endpoint errors. Reuse them
+> to trace FW-First Protocol errors.
 > 
-> Reviewed-by: Leon Romanovsky <leonro@nvidia.com>
-> Signed-off-by: Brett Creeley <brett.creeley@amd.com>
-> Signed-off-by: Shannon Nelson <shannon.nelson@amd.com>
+> Since the CXL code is required to be called from process context and
+> GHES is in interrupt context, use workqueues for processing.
+> 
+> Similar to CXL CPER event handling, use kfifo to handle errors as it
+> simplifies queue processing by providing lock free fifo operations.
+> 
+> Add the ability for the CXL sub-system to register a workqueue to
+> process CXL CPER protocol errors.
+> 
+> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-(obviously with bitfield.h!)
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 
+snip
+
+> 
