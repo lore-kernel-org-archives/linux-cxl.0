@@ -1,42 +1,44 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B39A1D5173
-	for <linux-cxl@vger.kernel.org>; Wed, 12 Mar 2025 18:10:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E795D1BD01F
+	for <linux-cxl@vger.kernel.org>; Wed, 12 Mar 2025 18:18:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741803043; cv=none; b=jVLkWjxh2tEj3QLNz4LuY78D5O64onoiO3W4+IDsael0XmBai9X4ZTYyss6QaVJJcjqjpzrX86oc6paZoUhoWyAh0dEepByI/Zo9MrRwWScHSmgB1T8mI0d8a/iGuTJ1mUC6UMYRJNI76uxFF4dvxfH+rP9UGs8X+kfSuC0/pBU=
+	t=1741803513; cv=none; b=lP2oAmxGiB0ihhAkUkmLP4fd6vntalkDHgbctZ6MZ/zs+xwVoUeDgrHn3EYgysWZf84slxGHnjJYVFC0NrVy6W5DTGOPO3qB1w/ohzrQAK3NFVYwkDmT15KOi6dzxZXhsM0Xhbv3D1KZmYr8ZHmgYw/h0YVnkirs9unqep2BGi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741803043; c=relaxed/simple;
-	bh=IBlcJr4U3fZCO3sZwvTmhdkfgv2ln2uWBDT39wfvKec=;
+	s=arc-20240116; t=1741803513; c=relaxed/simple;
+	bh=ovcJOkbgm785WszM94USHPbv5uo5gWHR2B5ksyoaAko=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PqVQ1GK78KFZ1L86uCIpn1b0u12BIx5qsbbeSo0e71YNgrNDBiMRSf7lGddg+cr4K0wsuzchw6hLfIvVMZ/jL+o0FFBVm1+YtRP57LCtYbngHJmomhmaSVWVlureLTtxbSj6bPUMe2IxLlAnVKNqMBVphYt75gA2VLaEE3KoyrQ=
+	 MIME-Version:Content-Type; b=oEx/9meCpI8+TI4GTfMXAVruXxSU9kdfILT9E8UTc3l0oineaL+P5e0OJw4k+73rAKzMx+2Xf0ab1l0Q48lSdQdrikfA9N0QCEHZxOBBvd8gxTugISOhka3UUv2J2JNVIyyt23HDsmm1B8PNlzaG6IvmXuYKyj6qpQzkUZ+95a0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZCdsG2tfSz6JB0t;
-	Thu, 13 Mar 2025 02:08:02 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZCf1h0T7kz6M4KQ;
+	Thu, 13 Mar 2025 02:15:20 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7642B140D26;
-	Thu, 13 Mar 2025 02:10:38 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id A1D65140736;
+	Thu, 13 Mar 2025 02:18:28 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 12 Mar
- 2025 19:10:36 +0100
-Date: Wed, 12 Mar 2025 18:10:35 +0000
+ 2025 19:18:28 +0100
+Date: Wed, 12 Mar 2025 18:18:26 +0000
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-CC: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH] docs/cxl: Add serial number for persistent-memdev
-Message-ID: <20250312181035.00006e32@huawei.com>
-In-Reply-To: <4752672.2b5f.19565e01b65.Coremail.wangyuquan1236@phytium.com.cn>
-References: <20250217112039.138650-1-wangyuquan1236@phytium.com.cn>
-	<20250220161213.000049a9@huawei.com>
-	<20250221065509-mutt-send-email-mst@kernel.org>
-	<17b91a9f.2847.1955fd23d78.Coremail.wangyuquan1236@phytium.com.cn>
-	<20250305141359.00001288@huawei.com>
-	<4752672.2b5f.19565e01b65.Coremail.wangyuquan1236@phytium.com.cn>
+To: Gerd Hoffmann <kraxel@redhat.com>
+CC: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+	<qemu-devel@nongnu.org>, <pbonzini@redhat.com>, <mtosatti@redhat.com>,
+	<mst@redhat.com>, <marcel.apfelbaum@gmail.com>, <jon.grimm@amd.com>,
+	<santosh.shukla@amd.com>, <vasant.hegde@amd.com>, <Wei.Huang2@amd.com>,
+	<bsd@redhat.com>, <berrange@redhat.com>, <ddutile@redhat.com>,
+	<linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH] pci-ids.rst: Add Red Hat pci-id for AMD IOMMU device
+Message-ID: <20250312181826.0000473d@huawei.com>
+In-Reply-To: <o4swru5qsoemfs3acxcsifrzy45n4mptxh2vg3ulvnfwgirbv7@6iqvfqb76nh7>
+References: <20250304183747.639382-1-suravee.suthikulpanit@amd.com>
+	<20250310135731.00005b1f@huawei.com>
+	<o4swru5qsoemfs3acxcsifrzy45n4mptxh2vg3ulvnfwgirbv7@6iqvfqb76nh7>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -44,100 +46,76 @@ List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Wed, 5 Mar 2025 18:35:40 +0800
-Yuquan Wang <wangyuquan1236@phytium.com.cn> wrote:
+On Tue, 11 Mar 2025 09:08:06 +0100
+Gerd Hoffmann <kraxel@redhat.com> wrote:
 
-> >=20
-> > On Tue, 4 Mar 2025 14:22:48 +0800
-> > Yuquan Wang <wangyuquan1236@phytium.com.cn> wrote:
-> >  =20
-> > > >=20
-> > > > On Thu, Feb 20, 2025 at 04:12:13PM +0000, Jonathan Cameron wrote:  =
- =20
-> > > > > On Mon, 17 Feb 2025 19:20:39 +0800
-> > > > > Yuquan Wang <wangyuquan1236@phytium.com.cn> wrote:
-> > > > >    =20
-> > > > > > Add serial number parameter in the cxl persistent examples.
-> > > > > >=20
-> > > > > > Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>   =20
-> > > > > Looks good.  I've queued it up on my gitlab staging tree, but
-> > > > > Michael if you want to pick this one directly that's fine as well=
-.   =20
-> > > >=20
-> > > > See no reason to, I was not even CC'd.   =20
-> > >=20
-> > > Hi, Michael
-> > >=20
-> > > I'm sorry, this is my fault. I used "get_maintainer.pl" to check this
-> > > patch's maintainers but it shows "No maintainers found, printing rece=
-nt
-> > > contributors".=20
-> > >  =20
-> > I usually stage up multiple series together and send on to Michael.
-> > So it was be being lazy for a minor change rather than anything much
-> > that you did wrong.
-> >=20
-> > If I get time I'll post a series with this a few other patches
-> > later today. =20
-> >=20
-> > Jonathan
-> >  =20
-> Thank you!
->=20
-> BTW, I found a corner case in CXL numa node creation.
->=20
-> Condition:=20
-> 1) A UMA/NUMA system without SRAT, but with CEDT.CFMWS
-> 2=EF=BC=89Enable CONFIG_ACPI_NUMA
->=20
-> Results:
-> 1) acpi_numa_init: the fake_pxm will be 0 and send to acpi_parse_cfmws()
-> 2=EF=BC=89If dynamically create cxl ram region, the cxl memory would be a=
-ssigned
-> to node0 rather than a new node
->=20
-> Confusions:
-> 1) Is a numa system a requirement for CXL memory usage?
+>   Hi,
+> 
+> > As a heads up, I believe we have a similar problem with a few of the CXL IDs.
+> > The root port and type 3 device both use Intel IDs that were not reserved
+> > for this purpose.  VID=0x8086, DID=0x7075 and DID=0x0d93  
+> 
+> Essentially we have two kinds of PCI devices in qemu.
+> 
+>  * The ones which try to mimic existing hardware, they usually have the
+>    PCI ID of the device they are emulating (and use the qemu subsystem ID).
+>    The classic example is the cirrus vga.  There are also many intel
+>    chipset devices for piix4 ('pc' machine type) and ich9 ('q35' machine
+>    type) with intel IDs.
+> 
+>  * The ones which are PCI class implementations and do not need a
+>    specific ID for drivers to accept them.  Most of them have a
+>    PCI device ID from the 1b36 vendor ID range.
+> 
+> The former tend to be older devices (before hardware standardization was
+> a thing, also before we got a range from 1b36 for qemu), and the latter
+> tend to be newer devices.  There are also a bunch of exceptions for
+> historical reasons.  The ahci emulation has a ich9 id.  xhci even has
+> two variants (one mimicking a NEC host adapter, one with qemu device id).
+> 
+> So, in short, using the intel IDs is not necessarily a problem.  Depends
+> a bit on what kind of device we are talking about.  For PCI class
+> devices it usually is more useful to have a qemu ID though.
 
-Obviously discussion has gone on elsewhere, but I'd say in general it
-would be a bad idea to not have an SRAT because the moment we add CXL
-it is definitely a NUMA system and we want the Generic Port entry to
-allow us to get perf information.
+They are not valid IDs, so they may get used in future for real
+hardware of an entirely different type. We don't want these to
+correspond to real hardware either because the aim is to test
+out corners of the spec, so we may well implement completely different
+sets of features to any real implementation.
 
-So I wouldn't mind if we fail CXL init in this case, but maybe
-it is worth papering over things.
+> 
+> > Switch ports and switch-cci are using valid Hisilicon IDs that are for
+> > emulation of these device only and are registered in our tracker
+> > for these IDs so won't get 'reused'.  
+> 
+> That is perfectly fine.  There is no need to change IDs, although it
+> makes sense to document that fact in docs/specs/pci-ids.rst
+
+Ah. I wasn't aware of the ID space reserved for QEMU or that doc.
+
+We can leave the HiSilicon ones alone.  I'll sort a docs patch for
+the 3 of those soon.
+
+For the Intel ones can I have a pair for the root port and the CXL
+type 3 device (so 2 IDs)?  We will probably need one shortly for
+the type2 emulation test device as well.
+
+Thanks,
 
 Jonathan
 
 
-> 2) Should we forbid this situation by adding fake_pxm check and returning
-> error in acpi_numa_init()?=20
-> 3=EF=BC=89Or we can add some kernel code to allow create these fake nodes=
- on a
-> system without SRAT?
->=20
-> Yuquan
->=20
->=20
->=20
->=20
->=20
-> =E4=BF=A1=E6=81=AF=E5=AE=89=E5=85=A8=E5=A3=B0=E6=98=8E=EF=BC=9A=E6=9C=AC=
-=E9=82=AE=E4=BB=B6=E5=8C=85=E5=90=AB=E4=BF=A1=E6=81=AF=E5=BD=92=E5=8F=91=E4=
-=BB=B6=E4=BA=BA=E6=89=80=E5=9C=A8=E7=BB=84=E7=BB=87=E6=89=80=E6=9C=89,=E5=
-=8F=91=E4=BB=B6=E4=BA=BA=E6=89=80=E5=9C=A8=E7=BB=84=E7=BB=87=E5=AF=B9=E8=AF=
-=A5=E9=82=AE=E4=BB=B6=E6=8B=A5=E6=9C=89=E6=89=80=E6=9C=89=E6=9D=83=E5=88=A9=
-=E3=80=82=E8=AF=B7=E6=8E=A5=E6=94=B6=E8=80=85=E6=B3=A8=E6=84=8F=E4=BF=9D=E5=
-=AF=86,=E6=9C=AA=E7=BB=8F=E5=8F=91=E4=BB=B6=E4=BA=BA=E4=B9=A6=E9=9D=A2=E8=
-=AE=B8=E5=8F=AF,=E4=B8=8D=E5=BE=97=E5=90=91=E4=BB=BB=E4=BD=95=E7=AC=AC=E4=
-=B8=89=E6=96=B9=E7=BB=84=E7=BB=87=E5=92=8C=E4=B8=AA=E4=BA=BA=E9=80=8F=E9=9C=
-=B2=E6=9C=AC=E9=82=AE=E4=BB=B6=E6=89=80=E5=90=AB=E4=BF=A1=E6=81=AF=E3=80=82
-> Information Security Notice: The information contained in this mail is so=
-lely property of the sender's organization.This mail communication is confi=
-dential.Recipients named above are obligated to maintain secrecy and are no=
-t permitted to disclose the contents of this communication to others.
+> 
+> Moving them to qemu pci id range is an option too if you prefer that.
+> Your choice.
+> 
+> take care,
+>   Gerd
+> 
+> 
+
