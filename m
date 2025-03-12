@@ -1,20 +1,20 @@
 Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A891723026F;
-	Wed, 12 Mar 2025 07:56:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9829E1DB356;
+	Wed, 12 Mar 2025 08:18:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741766210; cv=none; b=bJyB52ry/+CsYO067rQwuRXSx452QG6IKAJa3EGwdUnz0ubzlxjeKHv08RRMD6EULRTuN9DZlT2EXJYy32srrwhZFpOSC8QhPRKx7nQWal8jx8cIXE4mc/mPy1RdZF7eafldDBQ7UjwgsaDyR8h+TDIPyXsQ6h66/9AsftS01mQ=
+	t=1741767529; cv=none; b=nhG9Rn7vlXc6hlbvl1NqvpymsXxdZu+YbMYGPN5ZgNKosqxBuX4HXuGy5JV0VSqJMsRia5O6M0nzhr8F5wVI357uS5dkxzumm6FS01ePdakEaCTntKjkbNvReaoohyy0TMf+iVMIO31RLQc5rbH0jQbUPVRRBT/cgYaRTkwxMLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741766210; c=relaxed/simple;
-	bh=GTPuNwymZ+04io2yMrPM0InKHZ4HpkEy8pbRYEMU+GI=;
+	s=arc-20240116; t=1741767529; c=relaxed/simple;
+	bh=Y9Oz+IZbOUM2+x/HvSwyP9LZmB89nzhbPQ65rCT8kAs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=J8kVhyqIEA7ZUuxgc83Z3T7AISwKYtB8e+n6gI7DCvcv7MZht+nnWdmeubUH65//jYmIpWkmo+HOBrvMZZpUWFjz5+ZS6k3P4dD6BMG6coDF7Z3LTdu5wOIJ/+pmV+gKgCyk7c0Yh7VfVyowHOGonVMt6TU2J4FdrlTo1eU6peI=
+	 MIME-Version; b=GuNlJOcRVYtsDReXMfWM4DNyAVpoNb8X6IZSQ+3FdXwwW5GoL5YkVcay5QMhKwzg/tOxkJTrIh/KTaRdJkRjaUB5fZoLSdilk8qNMFhqT9GCUd3Hbeop5CF8uAkR5kpsaPcLoA9z+/Lp1YFkEhxIAYAr3jL1e6E3FHSzPuPubTE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-17-67d13e3b6a68
+X-AuditID: a67dfc5b-681ff7000002311f-9d-67d14360e15c
 From: Rakie Kim <rakie.kim@sk.com>
-To: gourry@gourry.net
+To: Gregory Price <gourry@gourry.net>
 Cc: akpm@linux-foundation.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
@@ -25,13 +25,13 @@ Cc: akpm@linux-foundation.org,
 	kernel_team@skhynix.com,
 	honggyu.kim@sk.com,
 	yunjeong.mun@sk.com,
-	rakie.kim@sk.com
-Subject: [PATCH v2 4/4] mm/mempolicy: Fix duplicate node addition in sysfs for weighted interleave
-Date: Wed, 12 Mar 2025 16:56:27 +0900
-Message-ID: <20250312075628.648-4-rakie.kim@sk.com>
+	Rakie Kim <rakie.kim@sk.com>
+Subject: Re: [PATCH 0/4] mm/mempolicy: Add memory hotplug support in weighted interleave
+Date: Wed, 12 Mar 2025 17:18:21 +0900
+Message-ID: <20250312081836.665-1-rakie.kim@sk.com>
 X-Mailer: git-send-email 2.48.1.windows.1
-In-Reply-To: <20250312075628.648-1-rakie.kim@sk.com>
-References: <20250312075628.648-1-rakie.kim@sk.com>
+In-Reply-To: <Z87zpg3TLRReikgu@gourry-fedora-PF4VCD3F>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -39,154 +39,89 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLLMWRmVeSWpSXmKPExsXC9ZZnka613cV0g3+LBCzmrF/DZjF96gVG
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNLMWRmVeSWpSXmKPExsXC9ZZnkW6C88V0gz9LLC3mrF/DZjF96gVG
 	i593j7NbHN86j93i/KxTLBaXd81hs7i35j+rxeo1GQ4cHjtn3WX36G67zO6xeM9LJo9Nnyax
-	e5yY8ZvFY+dDS4/Pm+QC2KO4bFJSczLLUov07RK4Mv6fmMdc8Fym4kPrDPYGxjfiXYycHBIC
-	JhJtE66xwNjTHnYxdjFycLAJKEkc2xsDEhYREJWYd3Q2UAkXB7PAYiaJhYfXM4EkhAWSJHo/
-	P2cGsVkEVCUOPXrICGLzChhLXH47lxFipqZEw6V7YPWcQPNffL4GZgsB1SxfNx2qXlDi5Mwn
-	YDcwC8hLNG+dzQyyTELgBJvEw4u7WSEGSUocXHGDZQIj/ywkPbOQ9CxgZFrFKJSZV5abmJlj
-	opdRmZdZoZecn7uJERjIy2r/RO9g/HQh+BCjAAejEg+vQM6FdCHWxLLiytxDjBIczEoivKtt
-	gUK8KYmVValF+fFFpTmpxYcYpTlYlMR5jb6VpwgJpCeWpGanphakFsFkmTg4pRoYixdz5s00
-	Wtp58klRe+3XNcfVMltvqO1XXG6xts7o8mLGfnfNt2+E3mu9iY4/bn3w5uQTzysqPrF8maJ7
-	9q9vrX5Zw8V/l9R1PXb4trfO9Lq9NuPxvYZ9hzaHMC9flLCzuEUy+s+nR/4fHzfU9sTO2Lh3
-	8pKwDwsrrs6JfbnSwM5d89imdG6NI0osxRmJhlrMRcWJAM+avFBgAgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrOLMWRmVeSWpSXmKPExsXCNUNNS9fa7mK6wZXtHBZz1q9hs5g+9QKj
+	e5yY8ZvFY+dDS4/Pm+QC2KO4bFJSczLLUov07RK4Mm5fPMBS8FOkYtqxe0wNjKcEuhg5OCQE
+	TCTaZhV3MXKCmbeuvmYHCbMJKEkc2xsDYooIqEq0XXHvYuTiYBZYzyTxetMsNpByYYEIiadn
+	WlhBbBagmts/HzOD2LwCxhK9p+awQYzUlGi4dI8JxOYUMJN403uEHcQWEuCReLVhPyNEvaDE
+	yZlPWEBsZgF5ieats5lBlkkInGGTmLNzJtQgSYmDK26wTGDkn4WkZxaSngWMTKsYhTLzynIT
+	M3NM9DIq8zIr9JLzczcxAoN4We2f6B2Mny4EH2IU4GBU4uEVyLmQLsSaWFZcmXuIUYKDWUmE
+	d7UtUIg3JbGyKrUoP76oNCe1+BCjNAeLkjiv0bfyFCGB9MSS1OzU1ILUIpgsEwenVAOj7gNG
+	/43qzp7B7xfZVzjVMjyImCBz/OI5pXd6JfFfVxxRzWXl+/WEz21RwFwJ9fqZGkJZj07fOXP0
+	DovJ0cd3V9adWiWwxVbogFbgEYVZqsKvL58+3vnmnmeBUXF/UeJa/8uve9XUu+ovCazq5Ci8
+	VSCy7pB1nWPM6ZXb13VMu1a39sSexov8SizFGYmGWsxFxYkAX0UZtl4CAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGLMWRmVeSWpSXmKPExsXCNUNNSzfB+WK6wfwnRhZz1q9hs5g+9QKj
 	xc+7x9ktPj97zWxxfOs8dovDc0+yWpyfdYrF4vKuOWwW99b8Z7U4dO05q8XqNRkWv7etYHPg
 	8dg56y67R3fbZXaPxXteMnls+jSJ3ePEjN8sHjsfWnp8u+3hsfjFByaPz5vkAjijuGxSUnMy
-	y1KL9O0SuDL+n5jHXPBcpuJD6wz2BsY34l2MnBwSAiYS0x52MXYxcnCwCShJHNsbAxIWERCV
-	mHd0NksXIxcHs8BiJomFh9czgSSEBZIkej8/ZwaxWQRUJQ49esgIYvMKGEtcfjuXEWKmpkTD
-	pXtg9ZxA8198vgZmCwHVLF83HapeUOLkzCcsIDazgLxE89bZzBMYeWYhSc1CklrAyLSKUSQz
-	ryw3MTPHVK84O6MyL7NCLzk/dxMjMHiX1f6ZuIPxy2X3Q4wCHIxKPLwHVC+kC7EmlhVX5h5i
-	lOBgVhLhXW0LFOJNSaysSi3Kjy8qzUktPsQozcGiJM7rFZ6aICSQnliSmp2aWpBaBJNl4uCU
-	amAsc6q5P0t43c7S+AsqSelhaa7nfkwNNe4plGMv2V0jq/jpBE/xpUfia5cqfpNPdC/4LXDu
-	5YJo9kDm3uRnV5Mz56dVP2nfvKq34o7VhdjrR26sNVDaXirHOnv7HN1stewuFv7yvQ+SPNcs
-	62A8Jbaj0rZiY8uLWTV3FvxbzXav1WCRXM3d5lolluKMREMt5qLiRACMy050WgIAAA==
+	y1KL9O0SuDJuXzzAUvBTpGLasXtMDYynBLoYOTkkBEwkbl19zd7FyMHBJqAkcWxvDIgpIqAq
+	0XbFvYuRi4NZYD2TxOtNs9hAyoUFIiSenmlhBbFZgGpu/3zMDGLzChhL9J6awwYxUlOi4dI9
+	JhCbU8BM4k3vEXYQW0iAR+LVhv2MEPWCEidnPmEBsZkF5CWat85mnsDIMwtJahaS1AJGplWM
+	Ipl5ZbmJmTmmesXZGZV5mRV6yfm5mxiBobus9s/EHYxfLrsfYhTgYFTi4T2geiFdiDWxrLgy
+	9xCjBAezkgjvalugEG9KYmVValF+fFFpTmrxIUZpDhYlcV6v8NQEIYH0xJLU7NTUgtQimCwT
+	B6dUA+PJ6BxDRcXPHTP2REzS/fZGwSGNZUJPJIeQ1zGHXW3JNYnPbhv3bCusWjfNwKGr++Zc
+	09MvJ18oatkcFtHbtrr96NRvka9jj36Ys1xH6dtnLfF3CXf0Qlt9Xr9MFr+iJ+a1tnnPv3O5
+	+62Ms5MatH733exN+fd4X47z4+qL//aemTDXkfFPRasSS3FGoqEWc1FxIgDli6M4WQIAAA==
 X-CFilter-Loop: Reflected
 
-Sysfs attributes for interleave control were registered both at initialization
-and when new nodes were detected via hotplug, leading to potential duplicates.
+On Mon, 10 Mar 2025 10:13:58 -0400 Gregory Price <gourry@gourry.net> wrote:
 
-This patch ensures that each node is registered only once, preventing conflicts
-and redundant sysfs entries.
+Hi Gregory,
 
-Signed-off-by: Rakie Kim <rakie.kim@sk.com>
----
- mm/mempolicy.c | 66 +++++++++++++++++++++++++++++++++++---------------
- 1 file changed, 46 insertions(+), 20 deletions(-)
+I have updated version 2 of the patch series, incorporating the feedback from
+you and Joshua.
+However, this version does not yet include updates to the commit messages
+regarding the points you previously mentioned.
 
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 71aff1276d4d..5f20521036ec 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -3391,6 +3391,7 @@ struct iw_node_attr {
- 
- struct iw_node_group {
- 	struct kobject *wi_kobj;
-+	struct mutex kobj_lock;
- 	struct iw_node_attr **nattrs;
- };
- 
-@@ -3440,12 +3441,17 @@ static ssize_t node_store(struct kobject *kobj, struct kobj_attribute *attr,
- 
- static void sysfs_wi_node_release(int nid)
- {
--	if (!ngrp->nattrs[nid])
-+	mutex_lock(&ngrp->kobj_lock);
-+	if (!ngrp->nattrs[nid]) {
-+		mutex_unlock(&ngrp->kobj_lock);
- 		return;
-+	}
- 
- 	sysfs_remove_file(ngrp->wi_kobj, &ngrp->nattrs[nid]->kobj_attr.attr);
- 	kfree(ngrp->nattrs[nid]->kobj_attr.attr.name);
- 	kfree(ngrp->nattrs[nid]);
-+	ngrp->nattrs[nid] = NULL;
-+	mutex_unlock(&ngrp->kobj_lock);
- }
- 
- static void sysfs_wi_release(struct kobject *wi_kobj)
-@@ -3464,35 +3470,54 @@ static const struct kobj_type wi_ktype = {
- 
- static int sysfs_wi_node_add(int nid)
- {
--	struct iw_node_attr *node_attr;
-+	int ret = 0;
- 	char *name;
- 
--	node_attr = kzalloc(sizeof(*node_attr), GFP_KERNEL);
--	if (!node_attr)
--		return -ENOMEM;
-+	if (nid < 0 || nid >= nr_node_ids) {
-+		pr_err("Invalid node id: %d\n", nid);
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	mutex_lock(&ngrp->kobj_lock);
-+	if (!ngrp->nattrs[nid]) {
-+		ngrp->nattrs[nid] = kzalloc(sizeof(struct iw_node_attr), GFP_KERNEL);
-+	} else {
-+		mutex_unlock(&ngrp->kobj_lock);
-+		pr_info("Node [%d] is already existed\n", nid);
-+		goto out;
-+	}
-+	mutex_unlock(&ngrp->kobj_lock);
-+
-+	if (!ngrp->nattrs[nid]) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
- 
- 	name = kasprintf(GFP_KERNEL, "node%d", nid);
- 	if (!name) {
--		kfree(node_attr);
--		return -ENOMEM;
-+		kfree(ngrp->nattrs[nid]);
-+		ret = -ENOMEM;
-+		goto out;
- 	}
- 
--	sysfs_attr_init(&node_attr->kobj_attr.attr);
--	node_attr->kobj_attr.attr.name = name;
--	node_attr->kobj_attr.attr.mode = 0644;
--	node_attr->kobj_attr.show = node_show;
--	node_attr->kobj_attr.store = node_store;
--	node_attr->nid = nid;
-+	sysfs_attr_init(&ngrp->nattrs[nid]->kobj_attr.attr);
-+	ngrp->nattrs[nid]->kobj_attr.attr.name = name;
-+	ngrp->nattrs[nid]->kobj_attr.attr.mode = 0644;
-+	ngrp->nattrs[nid]->kobj_attr.show = node_show;
-+	ngrp->nattrs[nid]->kobj_attr.store = node_store;
-+	ngrp->nattrs[nid]->nid = nid;
- 
--	if (sysfs_create_file(ngrp->wi_kobj, &node_attr->kobj_attr.attr)) {
--		kfree(node_attr->kobj_attr.attr.name);
--		kfree(node_attr);
--		pr_err("failed to add attribute to weighted_interleave\n");
--		return -ENOMEM;
-+	ret = sysfs_create_file(ngrp->wi_kobj, &ngrp->nattrs[nid]->kobj_attr.attr);
-+	if (ret) {
-+		kfree(ngrp->nattrs[nid]->kobj_attr.attr.name);
-+		kfree(ngrp->nattrs[nid]);
-+		pr_err("failed to add attribute to weighted_interleave: %d\n", ret);
-+		goto out;
- 	}
- 
--	ngrp->nattrs[nid] = node_attr;
--	return 0;
-+out:
-+	return ret;
- }
- 
- static int wi_node_notifier(struct notifier_block *nb,
-@@ -3588,6 +3613,7 @@ static int __init mempolicy_sysfs_init(void)
- 		err = -ENOMEM;
- 		goto err_out;
- 	}
-+	mutex_init(&ngrp->kobj_lock);
- 
- 	ngrp->nattrs = kcalloc(nr_node_ids, sizeof(struct iw_node_attr *),
- 			       GFP_KERNEL);
--- 
-2.34.1
+Your detailed explanations have been incredibly valuable in helping us analyze
+the system, and I sincerely appreciate your insights.
 
+> 2) We need to clearly define what the weight of a node will be when
+>    in manual mode and a node goes (memory -> no memory -> memory)
+
+Additionally, I will soon provide an updated document addressing this and
+other points you raised in your emails.
+
+Thank you again for your guidance and support.
+
+Rakie
+
+> On Mon, Mar 10, 2025 at 06:03:59PM +0900, Rakie Kim wrote:
+> > On Fri, 7 Mar 2025 16:55:40 -0500 Gregory Price <gourry@gourry.net> wrote:
+> > > On Fri, Mar 07, 2025 at 10:56:04AM -0500, Gregory Price wrote:
+> > > > 
+> > > > I think the underlying issue you're dealing with is that the system is
+> > > > creating more nodes for you than it should.
+> > > > 
+> > > 
+> > > Looking into this for other reasons, I think you are right that multiple
+> > > numa nodes can exist that cover the same memory - just different
+> > > regions.
+> > > 
+> > 
+> > I understand your concerns, and I agree that the most critical issue at the
+> > moment is that the system is generating more nodes than necessary.
+> > We need to conduct a more thorough analysis of this problem, but a detailed
+> > investigation will require a significant amount of time. In this context,
+> > these patches might offer a quick solution to address the issue.
+> > 
+> 
+> I dug into the expected CEDT / CFMWS behaviors and had some discussions
+> with Dan and Jonathan - assuming your CEDT has multiple CFMWS to cover
+> the same set of devices, this is the expected behavior.
+> 
+> https://lore.kernel.org/linux-mm/Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F/T/#m2780e47df7f0962a79182502afc99843bb046205
+> 
+> Basically your BIOS is likely creating one per device and likely one
+> per host bridge (to allow intra-host-bridge interleave).
+> 
+> This puts us in an awkward state, and I need some time to consider
+> whether we should expose N_POSSIBLE nodes or N_MEMORY nodes.
+> 
+> Probably it makes sense to expose N_MEMORY nodes and allow for hidden
+> state, as the annoying corner condition of a DCD coming and going
+> most likely means a user wouldn't be using weighted interleave anyway.
+> 
+> So if you can confirm what you CEDT says compared to the notes above, I
+> think we can move forward with this.
+> 
+> ~Gregory
