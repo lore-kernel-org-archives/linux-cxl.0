@@ -1,154 +1,116 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7882E1ACEB0
-	for <linux-cxl@vger.kernel.org>; Wed, 12 Mar 2025 19:33:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27FAD1E9B26;
+	Wed, 12 Mar 2025 20:00:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741807999; cv=none; b=lCloIDo/VdB1i+JUvMAdrIAvDSIl0intXf3jpnUOPL9g5CQeO57tbzxAXQR10ZSczevTy9V98a8tIouRep3RrpsHYANSo22o0X/kUKTU6dyDR9aVeju4bZGnhKMil0HP9m7ZUD3dxhhuEA3lyC4uCpUzVp94vRS0/boB+pisnWw=
+	t=1741809614; cv=none; b=QXlb/CRZTO+dgQMA2mhXqyg4NWT2YIRwHZFZyUbU2cUQMYjraoqJggDrCUQz7nBpsBY1ffcowkqV/uXygqiHB5XOjDXWnWQKj9lPMbnysJKuZdoyUMsIJXLiulTaqEtD1QzANQvODyGSNKVlB1KpgyZXak+NQ9Y4QvY4ReQhkW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741807999; c=relaxed/simple;
-	bh=76T8NNNNn0Adxoh38qDdyHZqJcE1/kXuzYRX2EWQJXA=;
+	s=arc-20240116; t=1741809614; c=relaxed/simple;
+	bh=wIWV7Qfa1ypEt4gMlcGsPNnSnDWGWRpDmCt8AWSxX3s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Set5TQA+UibJRWFp5Mb73TNuiXNvxWJSDJZUMSLr7KczKuWRKOfEwd1v8oGFQz4bNz//M/Z4hxw0kitdf3yK4zZ5syaNzJ1UB5k04Dl3+lxphwrex+SJEMZaUuRshmkihzkh/XQJOwPnXkAGC4lk7DE1rZRCdN8tdESt0TK7bRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=AjRGJycW; arc=none smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=nhj+g8HCBF9JFWorZpiCCFqhtFO7wAEv/vbBhZOmejaIdHsC0NDhEL2Sf6bcMZ7KUWon4A1nPub2uBMkuDPKW2Mci6Kr4qiTS4sRrXCxDnXTO9LsLcwmCsOM+AbQOetghGtVN4Zh5eowAXpoJif1eg2GBKbgE7I2at+jVgjO9xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P2UQ/ONo; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="AjRGJycW"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6ddcff5a823so2513506d6.0
-        for <linux-cxl@vger.kernel.org>; Wed, 12 Mar 2025 12:33:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1741807995; x=1742412795; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4lSj5k8zELNyNV8ADskYGKCYpCr2239a+4acaXM4eO0=;
-        b=AjRGJycW066PM/cLKYVosD1gxbu7DkVpdNrXSetoBusVX7viVhthVuujiHrHjg5GfY
-         u026KUjj5i6Vow9oqOMn/zaqUlwf9aVRmLvvSIHVU07YfQkE4fumDbiGvaHZqADF0vP5
-         G3C+AAO7smv/jCjyWTRf9963rDMoBLMM3zTX+geWOOL7aC+lJ0NTq+EEl81NTgPoRyso
-         a4d2nbKRSUM+67yk7qlGVZIIDo7MUQC+BpYUa4zlZXKAgwgLQzNusqAuu+l8hynv0BOd
-         gFApnhCMhz4Q4LqO6BwZWwY9Ij8S9IO7rDqu1BUx7xLpt3wiyEJVHzmtdEHLas5BigW3
-         mwZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741807995; x=1742412795;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4lSj5k8zELNyNV8ADskYGKCYpCr2239a+4acaXM4eO0=;
-        b=XCrmc05+BrQeoupImKWbjx7WrUGI3NwXNH7AXVuwI+BFfMBpAPGLdVWLxls81/Nnfw
-         OHY82JRUQA/Of+ep1ROpnK9sNBjxjQq6JntIlTresn6UkLXzpyJPfMkL7Ksjo/8vM8Rn
-         FfePAtYYffroy4fFuYcUCodUOzRGwt/xu47lBBZHgCsjt1hZOsVRgtRksr5Ew2TEpll0
-         qVT8ukbiE8sFuNT6YYMfQ4kix0NE9tBqd3aJWwvTdhwTdagQxxRcLFw4iLGIwX77pXEN
-         2wC+o2as0hXaXYUjP+oAh2Bt4jSKL6A2Bj/qyMLVqLK+hq0hQ75rScmb50j/kw1EXB19
-         mMaw==
-X-Forwarded-Encrypted: i=1; AJvYcCU7oI8JNbQGphbLtw6l+elpkgBKZQ5FVsP0GbxigBEUgrjyqKhK5eXbnNxVNzLqDWfRx6HNTFSSvlQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDHSdioSfIB1Z2k1YETKhIb9s7cDm5rcsTEVhN7tL8eGjpOZ15
-	qZYmhlweUxPFFdfWnOeE5jjv76aF6d//mRbVdpvBM9eM/TTVuJzpFN+8iHWZKes=
-X-Gm-Gg: ASbGncsC4ndQUVFvCo3cIXW9vHmYXGqlh0e2LbvIXlzp/IUpzUcV1EDA2boX/Vt0aZ9
-	H8p8uItw1tMfVl5io3kyqGXn+0f8XYdnYRs6WwDtk+5dyqZdkiJSipYRcKKZw9qmwZCAYpy3yjv
-	yZAArTGCL+k1nt9YIE0bIVAsnY+R1LUMI46Ufaa0f0O74WjMCmmmoiQRxgcIt4qeO4yyHmIWtL4
-	FJqJDsfJbf47ZwhAhRNBOF9mOMl1f7M+zSzAG6RFSDpghzZ+Z7kA+1t3TjEDwI4/MW2/E/g1L6w
-	Fe6mlc5SNN8SESRviHbB+opTSfvM55ZNX7FbqopGRxrQijFg6S6k9P4CAcB+EV4K8IXTQ5p3Fsy
-	265bUHhTCo1+sma6nmEVq4og708Q=
-X-Google-Smtp-Source: AGHT+IE8Wv9W2LFd3SjqsjDb1ASTUBm3QlDnMDYoy+21dIVTqr1Ac3ElC6HUJGyQiIjvs6vR9X715A==
-X-Received: by 2002:a05:6214:29ef:b0:6e8:9d00:3d71 with SMTP id 6a1803df08f44-6e90063cdc2mr301059276d6.21.1741807995269;
-        Wed, 12 Mar 2025 12:33:15 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e8f7185065sm88409476d6.124.2025.03.12.12.33.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Mar 2025 12:33:14 -0700 (PDT)
-Date: Wed, 12 Mar 2025 15:33:12 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Junjie Fu <fujunjie1@qq.com>, qemu-devel@nongnu.org,
-	linux-cxl@vger.kernel.org, viacheslav.dubeyko@bytedance.com,
-	zhitingz@cs.utexas.edu, svetly.todorov@memverge.com
-Subject: Re: CXL memory pooling emulation inqury
-Message-ID: <Z9HheFFgOdGE9BcW@gourry-fedora-PF4VCD3F>
-References: <20230215151854.00003e34@Huawei.com>
- <tencent_E9F3F01E0D2303378E16505CE4CF208AA908@qq.com>
- <20250312180543.00002132@huawei.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P2UQ/ONo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741809612; x=1773345612;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=wIWV7Qfa1ypEt4gMlcGsPNnSnDWGWRpDmCt8AWSxX3s=;
+  b=P2UQ/ONoHEabslW9os88abankrqkGCSjZbPCpccJ+64zlf1ajFQj62Lp
+   B5YEjj06pJmcnX9F4DEzoFyWUt1Bdo/m007CwDuhp0VnWyE5XCt2JfGtH
+   WI+KlnnVC43P+D3+tzFkx/QmPIVag+o/jV0+ml77O+1zAuHtA8Z8u6QZw
+   YXgsk6kyvrM7lx7LcQBUJ3N0L+hQn6YCiY7dbRV8lDirPdr9S4i2XAgnN
+   XLu+ocgNwb9x2irR0/uPJPabxs7pzzG7BHUkADev7LxDjdnr6b5dP1cY3
+   a9nuV5C/DBpzDo0fOtJCQDULnww2UTHF9Jcj261vxBaCCQznE/GK2fWVQ
+   w==;
+X-CSE-ConnectionGUID: R+bodVigRKWwYtiDpZD/WQ==
+X-CSE-MsgGUID: 7wtOtn9aTK6TNfbk1iF59A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11371"; a="43109753"
+X-IronPort-AV: E=Sophos;i="6.14,242,1736841600"; 
+   d="scan'208";a="43109753"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 13:00:11 -0700
+X-CSE-ConnectionGUID: S62y2uoZR06tFF3LdFK9Dg==
+X-CSE-MsgGUID: pntIlsi7SWOYoRcJjshttg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,242,1736841600"; 
+   d="scan'208";a="121659649"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.108.10])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 13:00:11 -0700
+Date: Wed, 12 Mar 2025 13:00:09 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: alejandro.lucero-palau@amd.com
+Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
+	dan.j.williams@intel.com, edward.cree@amd.com, davem@davemloft.net,
+	kuba@kernel.org, pabeni@redhat.com, edumazet@google.com,
+	dave.jiang@intel.com, Alejandro Lucero <alucerop@amd.com>
+Subject: Re: [PATCH v11 01/23] cxl: add type2 device basic support
+Message-ID: <Z9HnyctYzFkVBW5u@aschofie-mobl2.lan>
+References: <20250310210340.3234884-1-alejandro.lucero-palau@amd.com>
+ <20250310210340.3234884-2-alejandro.lucero-palau@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250312180543.00002132@huawei.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250310210340.3234884-2-alejandro.lucero-palau@amd.com>
 
-On Wed, Mar 12, 2025 at 06:05:43PM +0000, Jonathan Cameron wrote:
+On Mon, Mar 10, 2025 at 09:03:18PM +0000, alejandro.lucero-palau@amd.com wrote:
+> From: Alejandro Lucero <alucerop@amd.com>
 > 
-> Longer term I remain a little unconvinced by whether this is the best approach
-> because I also want a single management path (so fake CCI etc) and that may
-> need to be exposed to one of the hosts for tests purposes.  In the current
-> approach commands are issued to each host directly to surface memory.
->
-
-Lets say we implement this
-
-  -----------         -----------
-  |  Host 1 |         | Host 2  |
-  |    |    |         |         |
-  |    v    |   Add   |         |
-  |   CCI   | ------> | Evt Log |
-  -----------         -----------
-                 ^ 
-	    What mechanism
-	   do you use here?
-
-And how does it not just replicate QMP logic?
-
-Not arguing against it, I just see what amounts to more code than
-required to test the functionality.  QMP fits the bill so split the CCI
-interface for single-host management testing and the MHSLD interface.
-
-Why not leave the 1-node DCD with inbound CCI interface for testing and
-leave QMP interface for development of a reference fabric manager
-outside the scope of another host?
-
-TL;DR:  :[ distributed systems are hard to test
-
-> > 
-> > 2.If not fully supported yet, are there any available development branches 
-> > or patches that implement this functionality?
-> > 
-> > 3.Are there any guidelines or considerations for configuring and testing CXL memory pooling in QEMU?
+> Differentiate CXL memory expanders (type 3) from CXL device accelerators
+> (type 2) with a new function for initializing cxl_dev_state and a macro
+> for helping accel drivers to embed cxl_dev_state inside a private
+> struct.
 > 
-> There is some information in that patch series cover letter.
->
+> Move structs to include/cxl as the size of the accel driver private
+> struct embedding cxl_dev_state needs to know the size of this struct.
+> 
+> Use same new initialization with the type3 pci driver.
+> 
+> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> ---
+>  drivers/cxl/core/mbox.c   |  12 +--
+>  drivers/cxl/core/memdev.c |  32 ++++++
+>  drivers/cxl/core/pci.c    |   1 +
+>  drivers/cxl/core/regs.c   |   1 +
+>  drivers/cxl/cxl.h         |  97 +-----------------
+>  drivers/cxl/cxlmem.h      |  88 ++--------------
+>  drivers/cxl/cxlpci.h      |  21 ----
+>  drivers/cxl/pci.c         |  17 ++--
+>  include/cxl/cxl.h         | 206 ++++++++++++++++++++++++++++++++++++++
+>  include/cxl/pci.h         |  23 +++++
+>  10 files changed, 285 insertions(+), 213 deletions(-)
+>  create mode 100644 include/cxl/cxl.h
+>  create mode 100644 include/cxl/pci.h
+> 
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index d72764056ce6..20df6f78f148 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -1484,23 +1484,21 @@ int cxl_mailbox_init(struct cxl_mailbox *cxl_mbox, struct device *host)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_mailbox_init, "CXL");
+>  
+> -struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev)
+> +struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev, u64 serial,
+> +						 u16 dvsec)
 
-The attached series implements an MHSLD, but implementing the pooling
-mechanism (i.e. fabric manager logic) is left to the imagination of the
-reader.   You will want to look at Fan Ni's DCD patch set to understand
-the QMP Add/Remove logic for DCD capacity.  This patch set just enables
-you to manage 2+ QEMU Guests sharing a DCD State in shared memory.
+Please fixup cxl-test usage to avoid:
 
-So you'll have to send DCD commands individual guest QEMU via QMP, but
-the underlying logic manages the shared state via locks to emulate real
-MHSLD behavior.
-                     QMP|---> Host 1 --------v
-               [FM]-----|              [Shared State]
-	             QMP|---> Host 2 --------^
+test/mem.c:1614:15: error: too few arguments to function ‘cxl_memdev_state_create’
+ 1614 |         mds = cxl_memdev_state_create(dev);
+      |               ^~~~~~~~~~~~~~~~~~~~~~~
 
-This differs from a real DCD in that a real DCD is a single endpoint for
-management, rather than N endpoints (1 per vm).
 
-                                  |---> Host 1
-                [FM] ---> [DCD] --|
-		                  |---> Host 2
-
-However this is an implementation detail on the FM side, so I chose to
-do it this way to simplify the QEMU MHSLD implementation.  There's far
-fewer interactions this way - with the downside that having one of the
-hosts manage the shared state isn't possible via the current emulation.
-
-It could probably be done, but I'm not sure what value it has since the
-FM implementation difference is a matter a small amount of python.
-
-It's been a while since I played with this patch set and I do not have a
-reference pooling manager available to me any longer unfortunately. But
-I'm happy to provide some guidance where I can.
-
-~Gregory
+snip
