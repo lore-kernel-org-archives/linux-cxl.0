@@ -1,100 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A302C182;
-	Wed, 12 Mar 2025 06:42:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67E1822DFBB;
+	Wed, 12 Mar 2025 07:56:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741761770; cv=none; b=Iaz97sstRwVq/ObT7tXTAu7fWIY4HPZg0wGSIa1tHoY2r/56xIvrAx6tZnc2kGYUZuEOF9420IA4UTEST5k91l0VIWyE2C3eG49pUbx/3WnnM7+//GIXEyUgCwgTCv5OMOEs60kJHxuyLsYdey9jK/1TiWfr/cKwhhmZ+iTzRfo=
+	t=1741766206; cv=none; b=kirKzFoh84X6dSa3UL05Q1Zzi/kkUSfTi+7hwqm3SuTz8c5h5nvV+mH6IZo7CXWVqsyGmA3lxWRARUIR+fkRBGLVElFVTWF20nTbC2VatZvW/w1xguXkrRScTo2AI4fG1lMwcu86rHhE6a6BpYOgqIgODlD5FcNYMWbrdtXZR54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741761770; c=relaxed/simple;
-	bh=+0kb6hprsvRt3Ann0dpGja/F2LgMfmRYXyZsPkWNVmA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hrS+iU93hRrG5LDwpndcihDLFbe56tAONDZ7g9PD8yUb84HEVAzY8MkRD0tuXrfDGqp8gcfjUe7iE3QSbP+Dy+vCqn7dHtEDHnZwMeSNpRM8y9fD+CYxBuSEiiDkVnFjl7+DLZwZ25c8s01pP9WSjU5kcSOJTi1zEYP0XZSxIYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dPwAIg+g; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dPwAIg+g"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741761770; x=1773297770;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+0kb6hprsvRt3Ann0dpGja/F2LgMfmRYXyZsPkWNVmA=;
-  b=dPwAIg+gjQaSAXBGz5JtjyQW8INGiXUB/TdmC8hzi47kUMoL3oQVD7RI
-   2F7WikXk9CXZKEQ0qg6Ful8QZdgVKGqS5RlPcUNXkzPsIyTNZw9H+DF9u
-   JC08LSFN6NeoPyDm9RLZ1ptbyZvlnaS8/Q8/WE45oJ1C+0eZgSJriSIDg
-   KaRDO0rjfwBS+DR+WoRnm3BmIv7smEP7JtlhK8n2JZIM4OhjIycMAX/lk
-   p7TDk67WXBHYz2WcpBFr2HqP8B2HP5DmN/60UTy8+xOWzKGDq3AcefCvt
-   LysHiXYKpDaQJpTswoR4DePcJ5DaIkcifmYeLWgUWZTnDLHBXH9WPTLTo
-   A==;
-X-CSE-ConnectionGUID: m4Y2c3axRZaeZWzC/pzFQg==
-X-CSE-MsgGUID: fcgx8DXWT7mYuWNaz8a+cw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11370"; a="42682013"
-X-IronPort-AV: E=Sophos;i="6.14,240,1736841600"; 
-   d="scan'208";a="42682013"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 23:42:49 -0700
-X-CSE-ConnectionGUID: 5+7kawooS0ScDp3uA+u/ng==
-X-CSE-MsgGUID: VW6yWhDOTUe5fA99Ecs9gA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,241,1736841600"; 
-   d="scan'208";a="121050021"
-Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
-  by fmviesa010.fm.intel.com with ESMTP; 11 Mar 2025 23:42:44 -0700
-Received: from kbuild by a4747d147074 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tsFne-0008CO-0F;
-	Wed, 12 Mar 2025 06:42:42 +0000
-Date: Wed, 12 Mar 2025 14:42:07 +0800
-From: kernel test robot <lkp@intel.com>
-To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
-	netdev@vger.kernel.org, dan.j.williams@intel.com,
-	edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
-	pabeni@redhat.com, edumazet@google.com, dave.jiang@intel.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Alejandro Lucero <alucerop@amd.com>,
-	Edward Cree <ecree.xilinx@gmail.com>
-Subject: Re: [PATCH v11 23/23] sfc: support pio mapping based on cxl
-Message-ID: <202503121456.SDEFIg2L-lkp@intel.com>
-References: <20250310210340.3234884-24-alejandro.lucero-palau@amd.com>
+	s=arc-20240116; t=1741766206; c=relaxed/simple;
+	bh=dCE/P16YkVl+KIUZa+MHrNEuJMA21cffbL94Jk48VuA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HVRujRt/+EhoeTzSQU3kzi/+ln/+Vtovk+rmGmrDtsIT246lQdrDEs6m9eNk/hkatwVDYqfm6yqaLvV5k9tZ7/s6iBVymbH9wNW1JNyraufoaXUvkgnY4xMYUM+Q+h3XJzK4lriWwmmBkOiirLAUButax7QN+42IBnp6Yhf1MjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-02-67d13e357e71
+From: Rakie Kim <rakie.kim@sk.com>
+To: gourry@gourry.net
+Cc: akpm@linux-foundation.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	joshua.hahnjy@gmail.com,
+	dan.j.williams@intel.com,
+	ying.huang@linux.alibaba.com,
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com,
+	rakie.kim@sk.com
+Subject: [PATCH v2 1/4] mm/mempolicy: Fix memory leaks in mempolicy_sysfs_init()
+Date: Wed, 12 Mar 2025 16:56:24 +0900
+Message-ID: <20250312075628.648-1-rakie.kim@sk.com>
+X-Mailer: git-send-email 2.48.1.windows.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250310210340.3234884-24-alejandro.lucero-palau@amd.com>
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrKLMWRmVeSWpSXmKPExsXC9ZZnka6p3cV0g9U9whZz1q9hs5g+9QKj
+	xc+7x9ktjm+dx25xftYpFovLu+awWdxb85/VYvWaDAcOj52z7rJ7dLddZvdYvOclk8emT5PY
+	PU7M+M3isfOhpcfnTXIB7FFcNimpOZllqUX6dglcGXfftTAWdAlUrD3/kKWBsZO3i5GTQ0LA
+	ROLFtE5WGHva/g0sXYwcHGwCShLH9saAhEUERCXmHZ0NFObiYBZYzCSx8PB6JpCEsECAxPpj
+	c9hBbBYBVYlbnY1gc3gFjCVmb5oGNVNTouHSPSaIuKDEyZlPWEBsZgF5ieats5lBhkoIbGCT
+	aHp/gQmiQVLi4IobLBMYeWch6ZmFpGcBI9MqRqHMvLLcxMwcE72MyrzMCr3k/NxNjMDAXFb7
+	J3oH46cLwYcYBTgYlXh4BXIupAuxJpYVV+YeYpTgYFYS4V1tCxTiTUmsrEotyo8vKs1JLT7E
+	KM3BoiTOa/StPEVIID2xJDU7NbUgtQgmy8TBKdXAGL90z40VmxN38xQvPfuX6dG2H0kvlH4e
+	4j9x86+NynXuicmGB9y57Is1ntr5lYo57m6I7Qq3L2/0lllwbdeGevZdzefbHhjEb0q9deK0
+	PvsHgwNfuhvTvB48PhZ8dl758XsRfdf7tFNyPZvKvURXXPsrcMvxlIW7Azfnf+sID7U5uxg+
+	sprfV2Ipzkg01GIuKk4EAN4JA+VIAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPLMWRmVeSWpSXmKPExsXCNUNNS9fU7mK6waVnLBZz1q9hs5g+9QKj
+	xc+7x9ktPj97zWxxfOs8dovDc0+yWpyfdYrF4vKuOWwW99b8Z7U4dO05q8XqNRkWv7etYHPg
+	8dg56y67R3fbZXaPxXteMnls+jSJ3ePEjN8sHjsfWnp8u+3hsfjFByaPz5vkAjijuGxSUnMy
+	y1KL9O0SuDLuvmthLOgSqFh7/iFLA2MnbxcjJ4eEgInEtP0bWLoYOTjYBJQkju2NAQmLCIhK
+	zDs6GyjMxcEssJhJYuHh9UwgCWGBAIn1x+awg9gsAqoStzobWUFsXgFjidmbprFCzNSUaLh0
+	jwkiLihxcuYTFhCbWUBeonnrbOYJjFyzkKRmIUktYGRaxSiSmVeWm5iZY6pXnJ1RmZdZoZec
+	n7uJERiMy2r/TNzB+OWy+yFGAQ5GJR7eA6oX0oVYE8uKK3MPMUpwMCuJ8K62BQrxpiRWVqUW
+	5ccXleakFh9ilOZgURLn9QpPTRASSE8sSc1OTS1ILYLJMnFwSjUwbtFMz9984bPo7zipBRkX
+	e+pEwkICP/92f7Hu5OubZhl9X4wfyWu/PB0wOfK/0cSbCarFsxUi5ZjfcGdZ+n5NWa89Q9ii
+	i9Py75y3TIWra07etWI3VdArSNbolmeIzTIW5WGLMJz0o1a6s9NMLvbvKjextQ+E7Rfsmr/e
+	eE1HzH6Nk1PYe4WVWIozEg21mIuKEwEOm2ZYQgIAAA==
+X-CFilter-Loop: Reflected
 
-Hi,
+Improper cleanup of sysfs attributes caused kobject and memory leaks when
+initialization failed or nodes were removed.
 
-kernel test robot noticed the following build errors:
+This patch ensures proper deallocation of kobjects and memory, preventing
+resource leaks and improving stability.
 
-[auto build test ERROR on 0a14566be090ca51a32ebdd8a8e21678062dac08]
+Fixes: dce41f5ae253 ("mm/mempolicy: implement the sysfs-based weighted_interleave interface")
+Signed-off-by: Rakie Kim <rakie.kim@sk.com>
+---
+ mm/mempolicy.c | 29 +++++++++++++++--------------
+ 1 file changed, 15 insertions(+), 14 deletions(-)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/alejandro-lucero-palau-amd-com/cxl-add-type2-device-basic-support/20250311-050914
-base:   0a14566be090ca51a32ebdd8a8e21678062dac08
-patch link:    https://lore.kernel.org/r/20250310210340.3234884-24-alejandro.lucero-palau%40amd.com
-patch subject: [PATCH v11 23/23] sfc: support pio mapping based on cxl
-config: parisc-allmodconfig (https://download.01.org/0day-ci/archive/20250312/202503121456.SDEFIg2L-lkp@intel.com/config)
-compiler: hppa-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250312/202503121456.SDEFIg2L-lkp@intel.com/reproduce)
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index bbaadbeeb291..1691748badb2 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -3541,39 +3541,40 @@ static int __init mempolicy_sysfs_init(void)
+ 	int err;
+ 	static struct kobject *mempolicy_kobj;
+ 
+-	mempolicy_kobj = kzalloc(sizeof(*mempolicy_kobj), GFP_KERNEL);
+-	if (!mempolicy_kobj) {
++	node_attrs = kcalloc(nr_node_ids, sizeof(struct iw_node_attr *),
++			     GFP_KERNEL);
++	if (!node_attrs) {
+ 		err = -ENOMEM;
+ 		goto err_out;
+ 	}
+ 
+-	node_attrs = kcalloc(nr_node_ids, sizeof(struct iw_node_attr *),
+-			     GFP_KERNEL);
+-	if (!node_attrs) {
++	mempolicy_kobj = kzalloc(sizeof(*mempolicy_kobj), GFP_KERNEL);
++	if (!mempolicy_kobj) {
+ 		err = -ENOMEM;
+-		goto mempol_out;
++		goto node_out;
+ 	}
+ 
+ 	err = kobject_init_and_add(mempolicy_kobj, &mempolicy_ktype, mm_kobj,
+ 				   "mempolicy");
+-	if (err)
+-		goto node_out;
++	if (err) {
++		kobject_put(mempolicy_kobj);
++		goto err_out;
++	}
+ 
+ 	err = add_weighted_interleave_group(mempolicy_kobj);
+ 	if (err) {
+-		pr_err("mempolicy sysfs structure failed to initialize\n");
+ 		kobject_put(mempolicy_kobj);
+-		return err;
++		goto err_out;
+ 	}
+ 
+-	return err;
++	return 0;
++
+ node_out:
+ 	kfree(node_attrs);
+-mempol_out:
+-	kfree(mempolicy_kobj);
+ err_out:
+-	pr_err("failed to add mempolicy kobject to the system\n");
++	pr_err("mempolicy sysfs structure failed to initialize\n");
+ 	return err;
++
+ }
+ 
+ late_initcall(mempolicy_sysfs_init);
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503121456.SDEFIg2L-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   hppa-linux-ld: drivers/net/ethernet/sfc/ef10.o: in function `efx_cxl_init':
->> (.text.efx_cxl_init+0x0): multiple definition of `efx_cxl_init'; drivers/net/ethernet/sfc/efx.o:(.text.efx_cxl_init+0x0): first defined here
-   hppa-linux-ld: drivers/net/ethernet/sfc/ef10.o: in function `efx_cxl_exit':
->> (.text.efx_cxl_exit+0x0): multiple definition of `efx_cxl_exit'; drivers/net/ethernet/sfc/efx.o:(.text.efx_cxl_exit+0x0): first defined here
-
+base-commit: 80e54e84911a923c40d7bee33a34c1b4be148d7a
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
