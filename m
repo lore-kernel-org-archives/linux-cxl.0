@@ -1,340 +1,201 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B562505D7
-	for <linux-cxl@vger.kernel.org>; Wed, 12 Mar 2025 16:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741798781; cv=none; b=DLGh93Jdk2ccHWvVmi9OPdMUu+ds+as6/coFXiGP006oZxvnNByBnnhVJwfESV1LmQtj1nsKDCljg43gWHAmtCZ/PAsQ0P5z+AYz3aLQWS+me/3i10qdKZmTjN3bb8IafxPhB+TP29TgWqHNLRvG9qHQKAtE5n2NWaWt6f7q1lQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741798781; c=relaxed/simple;
-	bh=QPITIayDAokS/bvRg33ZG+IYKp/pJmDW4UeB6o1oLcY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cV7HFe3VOotokvzbooeUqnGHDB8q2C0X5kl7CmQmlF2WpXHKX7iSACZZHoANeotxpvFvdls+2LrZH1uj7EDK0G6su07KQxNVg2BYL6aL/zzyT13Onkhy00+OVn5VhR6ci7/KCLBupYWjDkzS1VR2FFSuXZgF+tUzAkGBkNiuFbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GGgvznA5; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63D8B1C1F07;
+	Wed, 12 Mar 2025 17:56:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741802203; cv=fail; b=GkC4O720xgK0oK8Gz3AFMp9TjunO7C3LG7CeBlpDJm7AdRYqpqPrQ3Lc6TeR/TwUV2GT3gTWGWIDlXAHc2mi3fv+rtT6whm17ahwAowJPiWPwdbePip2PZOI4esXDldkg66IXc7G79iDdOGKGzh0JvQdIXTjrcXJXB2OBcrZNYA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741802203; c=relaxed/simple;
+	bh=X24va5bFJ2xXPyjxdNUqJ2UELYUNR2y6Spg4r5JobrI=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=pQWnZ4QUepmdznPZxs+5yweePTABtoDQ5XQJDlcXoC5mfKl/1iScMyNcwthNmaOS1N/4npIgTcHTj/63LZO6UeZPSznkLBrh5lWo5EToeOLT1eQu7p86g0+u3ivG9DW4zUi8V2W2uPZWshtyT1rFMuo44fIbaAaZrOsIi2zC3yI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bc93h2Yg; arc=fail smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GGgvznA5"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bc93h2Yg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741798779; x=1773334779;
+  t=1741802202; x=1773338202;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=QPITIayDAokS/bvRg33ZG+IYKp/pJmDW4UeB6o1oLcY=;
-  b=GGgvznA5yoKzWX4qVn7g+SH+QL8el3eU3LSeT+9YGbfm4XVqtL/orWN9
-   SUxAe5isCixoVNsUV5ZqibRPCsjjGrXz8XfUu6t4UpDxFIxHaD4LvBRTI
-   Vkr0F8YSZhnYGLZ19LujO7goqeaQD8LPpaCFfUX63OaP500dfmy1TpFkp
-   1hsDbqtpfwKDgz+eGnCbLv5E35vyexAD4dPjDZuIF3fki9ASwwBPIziJN
-   M6RPLqGwAXPIwl18xlemrZTWyl3sRaVjVwaDki8/p0Sg7GKLnWnnOQqrZ
-   fU0N45Xjmlvu4A0YxzZtEHOt6/9sU9t5z2VraxqiB1nC2MQ/CtaNChXsA
-   Q==;
-X-CSE-ConnectionGUID: yo9Y0MaHQC2vidvJGV9qSQ==
-X-CSE-MsgGUID: 3wNZC69kRambYCBdO+oYSA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11371"; a="30473247"
+   in-reply-to:mime-version;
+  bh=X24va5bFJ2xXPyjxdNUqJ2UELYUNR2y6Spg4r5JobrI=;
+  b=Bc93h2YgJHQD4vy12O9dUeC7pbtED3oeV80TAILO398YTb3wJLrw11VM
+   M0pgAALLOSyBSrtjMrobyor3SDo78bztkK3XzV/7VdD+KyTswxiL6waeN
+   eHWCYfU9fMnuXdlQonhzxeE2VfgjN94s4SySDRfNEWaZZrwr9oJhrzF0u
+   HSw8Ww7/PS9AH89UdNgicSSCODI+oRxJ2GycveQq1B6efNVaSUMMZNI1l
+   r/eavQoU6QyMZisv+WmRNhgpfg7+pHd2TvPynbgFzSqWsvuvcH5GN5wr4
+   9TJoDqtfAxCgfDJ9382M1GMcJfffaaEJBJZtXBIyi/h1bpnr5SvUQBfps
+   w==;
+X-CSE-ConnectionGUID: v0QC07+rQqaAWEwyZIgujA==
+X-CSE-MsgGUID: ly6VyHmXSYqTpM2/20TPRQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11371"; a="53889609"
 X-IronPort-AV: E=Sophos;i="6.14,242,1736841600"; 
-   d="scan'208";a="30473247"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 09:59:38 -0700
-X-CSE-ConnectionGUID: FOP5PI2vRJeBGftkNzYaDA==
-X-CSE-MsgGUID: tgP+ztGgQCmXCNW++IaeEQ==
+   d="scan'208";a="53889609"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 10:56:41 -0700
+X-CSE-ConnectionGUID: ktU2ZJuNQaaNRPQI0yauDg==
+X-CSE-MsgGUID: ssgYph6ARiCZ7vbpUoPs3A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,242,1736841600"; 
-   d="scan'208";a="120712686"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.108.10])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 09:59:38 -0700
-Date: Wed, 12 Mar 2025 09:59:36 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2] cxl/region: Allow 6 & 12 way regions on 3-way HB
- interleaves
-Message-ID: <Z9G9eOXTY1y10qUE@aschofie-mobl2.lan>
-References: <20250306232239.2609017-1-alison.schofield@intel.com>
- <67ca3c87a1dbe_1a7f29493@dwillia2-xfh.jf.intel.com.notmuch>
+   d="scan'208";a="125780536"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 10:56:39 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Wed, 12 Mar 2025 10:56:40 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Wed, 12 Mar 2025 10:56:40 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.40) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Wed, 12 Mar 2025 10:56:39 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=pR9I2sYQQt3D+AsK8Fn83f3/8hQH6HV23aDjCLwUu3eTdfKG0I0VuhnEmC/PNSq/THqeTwAdyZudk4WEP1pQ1FZfi6Xlw0fFbyAzSZzOfjfwMHS9aEANG9tjfCYCboAjScycOSMtBFex6+59mX4IpRrfv3ggIEls2Faw/XAJdFS0Y6ijcbw2Os9JoazvHAYvl2pnKjSOjzq5iD9Lz8+6pXTTLEl0Sl3waGPqKxcAm7hsayHccrJ7t4/z+lvL0e1y9K0eOgw6073TxposT9HMXmtlQnc0HaLoLn9GGPipboQmKvNjnGa+671Cfu3F06n/w8APkT5JEpP6OH9MF2aEuQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=S2+UZEQnbNFw3MdrRxSr6Lv5+CJwMma351xxU42EKzc=;
+ b=V561tLC5IvoVBqy6cw0joCZtA2mGAV1qE/A50TaNEg6EI6+/SJDz5OQ03gl1lj2pZnJAzlfigkmzoD67wxT672aRi0w1VYKyXNMt8XHfIcL7LC7FjCfRkYehk3OFs7sAnqLfDA1mYjuruGw5cEYROXDssPCLnVnDQflXLPVKRiVo2qFCnLA5ec/zvHJXL5/GFb65sB9gHp2kFeTx9nsQdQ7F+UT554oMKXScoyZLepJA6hfxZOoyYxNpmhuswBHeKcaVx/GX/I01ZluNY1HDyPWbMsiDw3brFHPh9aDzO3jDxMCcgbrsW90xwkgztN4qt/Dr9odWQggOX04+nxryVA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by MW5PR11MB5809.namprd11.prod.outlook.com (2603:10b6:303:197::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Wed, 12 Mar
+ 2025 17:55:56 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57%5]) with mapi id 15.20.8511.026; Wed, 12 Mar 2025
+ 17:55:56 +0000
+Date: Wed, 12 Mar 2025 12:56:05 -0500
+From: Ira Weiny <ira.weiny@intel.com>
+To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+	<linux-efi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>
+CC: Ard Biesheuvel <ardb@kernel.org>, Alison Schofield
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
+ Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Yazen Ghannam
+	<yazen.ghannam@amd.com>, Terry Bowman <terry.bowman@amd.com>, "Smita
+ Koralahalli" <Smita.KoralahalliChannabasappa@amd.com>
+Subject: Re: [PATCH v8 1/2] acpi/ghes, cxl/pci: Process CXL CPER Protocol
+ Errors
+Message-ID: <67d1cab5e4210_eb013294b3@iweiny-mobl.notmuch>
+References: <20250310223839.31342-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20250310223839.31342-2-Smita.KoralahalliChannabasappa@amd.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250310223839.31342-2-Smita.KoralahalliChannabasappa@amd.com>
+X-ClientProxiedBy: MW4PR03CA0070.namprd03.prod.outlook.com
+ (2603:10b6:303:b6::15) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <67ca3c87a1dbe_1a7f29493@dwillia2-xfh.jf.intel.com.notmuch>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|MW5PR11MB5809:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7e60aff3-e660-4775-cc05-08dd618f23a4
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?10YTfKCJ90bto1f6lkhq3neJhbYO7nRxs/RkcvIT8ve1u7dqHJK8/v/72Qky?=
+ =?us-ascii?Q?UakQyHuujTetkb9tCJmM4gi2W6X93yszypcMpMat57B0ONYl+5mkSh4RAHrc?=
+ =?us-ascii?Q?biZKrThuMShBGcjEEwypdH+BbBLY9ZzxD/DY2DkBpPdBgiuGb97Y8wDcwuoX?=
+ =?us-ascii?Q?6uht3wBd5RSWCQKN//EzwXYEv3WhPek2o2H9wgMZ1Ent6J9PGA1J2d2MKjSc?=
+ =?us-ascii?Q?ke3zIrfxUIKRxlSIlKUM8MiSc5tDQuPdpr7GPLXdIrWo8Yyldy6fZZi3nxUZ?=
+ =?us-ascii?Q?rfW/XeEdkYgToljOyYStO35PPCRsXJ4hLoKHPplyhm8FOTXQBwmbvgwzhlMq?=
+ =?us-ascii?Q?deEeGLagjPjiE9HZvz/d7Ala8C4q+OP3isNTKKL+s2oHXyXXLg7RxlkVDJ7j?=
+ =?us-ascii?Q?mOYhab+fm/IQs2Jxj+VZ4Jp/nAa9Ko0AUfaf2gcPGlRKDuSBKekvcDRqfa+2?=
+ =?us-ascii?Q?G4Zwbuqi+bIGG9j5vczI8DQXiHjaba7tT6qHS768ZMsfeB7soOnz10LgwuR+?=
+ =?us-ascii?Q?a6HDbPEsy9jornlQ5xI1IV9RBo3AZmpTMRkui2SIPqHwDhEFIoTsLrlpeUt/?=
+ =?us-ascii?Q?6j810BfXeuv7yQfgw1szmps6IOmyzxRZsTmzXgSyBjplHZ+WIKSgQj7Ief+0?=
+ =?us-ascii?Q?L1d1o4V4modwexTYE0p2ha2wKCyvKi9x+m7fRZvzNQlSMSWX9TBwciCXQfp0?=
+ =?us-ascii?Q?NvdP+fjX0OEJHENMBZqoc9yuRt0k5ILlNFeswqB4BmeUC2CZBYyLDFfZnX7O?=
+ =?us-ascii?Q?LhbqVZbieML+TNklq74vJIaIQlq2tskQSxEnZUYNOFsZq1lOANqWoGfCpqQ6?=
+ =?us-ascii?Q?zWRSmqCZNllPE23dZnNa2p7e/icsA2o9ZPXJNeAWtC3bzQoARisGkAOm5RMh?=
+ =?us-ascii?Q?I/joPPyrTPxKuryKHAsLs5lnWCYkZwuaWlNlV31jQOFRBb+Bm0V+szEAsgMt?=
+ =?us-ascii?Q?Y5f1qSB5WMGtTnu9AA3AZBNFmzISUnnrH/fPYShKUR4MtTpjBR7l+y7VWgpq?=
+ =?us-ascii?Q?KA6HBI8fbS0aKQUHDbrk9Y3ztraulRhjyazhcYeowQSUUdo3Qq9b3ucnXUTw?=
+ =?us-ascii?Q?voCx8+X2nCDXUEwNRLJ4SqJwZZ0h2HYPkqMJnMlGuXLQOFqXNTzinpgmVYZ7?=
+ =?us-ascii?Q?rDVvZx9NMEJXj23jrQjiYxquD2a7HhS3kckfoTF0ct8iAWlk9etjdXhaRMiD?=
+ =?us-ascii?Q?kitGZrBd2McWLyZ3fOkt+no0pRHIeURNKAFYWzXjGr/XqU9360Z68ZFMR028?=
+ =?us-ascii?Q?lt270PGAEhJEP67wAJd4UbWGlN8/WfRJCO7XOBMcoCy7v8G9w7tYpKLxmbwO?=
+ =?us-ascii?Q?XSRViXLiGKj0ZwAvTQFA9FdWpu5j62mRJFCnaw6NDrFmQZNw1P+RMlxFeDBk?=
+ =?us-ascii?Q?GAJ1TSL9ZndrTRXMWp1HYPD1tDqr?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?8DK5tSx8nrDcBcoDCG1ZMe0SA/dSNIdc7mB9G70tDR3Tt2XmBU/SOLkPjbkU?=
+ =?us-ascii?Q?9+L4cL2FEYa4bguSO+yY+Lc1ZRCDoUmgiVBhBdo7d4cCeW/E++jov379dxCI?=
+ =?us-ascii?Q?KkBgJn16K8eAWVi25dT4yMCJg6FmuDbZ4BcGUm1HUkSOU6P5HrfHFj4YGzgJ?=
+ =?us-ascii?Q?baPGnMV3R7JAcz0OAGiOgEHXb/lD58Rz3W+nGXF/nt/r/gWNSEEbIXnE+BeF?=
+ =?us-ascii?Q?Wsl71kp9aOpyLzq//rSqesIIUcx7F5Fgj/Y0ajSbeYcy1c67Oh3qBKoPrQeT?=
+ =?us-ascii?Q?wz/5NKue6yxiCPCXF9mRdCO0NmUll2tbt8nNjW2Oex+VFa/vnB+Yz2tqD9r0?=
+ =?us-ascii?Q?WG2UM+8ksy5QsqrDu5ecifjJJ1EE6a2nhfwYqw5np19KSSkGcJeI25PtyQ/k?=
+ =?us-ascii?Q?AcnQynOX/7U3VvsWP9eD9OVxlzbEvkrR8ZwVSK3wfxmr6NHCQB5IsP0Y2m8O?=
+ =?us-ascii?Q?IBQXrgARKcCtYqVFbOIcwX+Q6G2C/P9vReT7sZd6YK/UP5S4yMDBRyJB8/Yg?=
+ =?us-ascii?Q?M5350PB4598GdxdnLGVIqJA7OVp3TVTeKV+WSSoR2581ar4dLqsKyKrUPP5h?=
+ =?us-ascii?Q?bymYU5yemCkjiYoV2GbdC4zoTfb6X/tFR9I8r+4TDSVyWJc+ocw/I1jZEimL?=
+ =?us-ascii?Q?ATfoRKVOP5WVoc8DtjiGykkYBRNvJKMj6AYmbojYd16Hdp5k8wL85FvbCbyS?=
+ =?us-ascii?Q?r+GO4c4xl4uM1dyYyvJp10Vk1QR2HjlWd+JoMOxGfhYcjRSAZpAnQ/Jd5pio?=
+ =?us-ascii?Q?WHFvGETRq6SdEaJE+oI9X9mLWqiOxLXH8+6UA/He201dcjIJusWi0XK4CPOY?=
+ =?us-ascii?Q?2BpdT52QPCDfAZm1GOjFlYKToSjExmRfq2g4A0F0RmMbtYeB6x5r/ZG6oI9v?=
+ =?us-ascii?Q?mOZD/oMs6zFLMxZARE5eqMBYU2wfBXrJUAPs9adAg6OgBGWBkhmZGKsachk0?=
+ =?us-ascii?Q?ADf5VNMvF3DrEefHvOGg3lUNRqPsmIsVPIOOHTU21VQsD9uH1z45c7H44nLf?=
+ =?us-ascii?Q?Jx5xwEAO3eEpWiG9j/1vIfDkS8EvjirE0V3ZrwhVvww0D8OZQvgvCV4+qiTt?=
+ =?us-ascii?Q?wJOCzkR3ap06PZdVJV+vTD25hJayWi1/fTCDXb/GXVaO0uN9EO2gLuAGHAWX?=
+ =?us-ascii?Q?XthJln0BTV5fveWp58npMCm09DZuWO4hf18EjXuPUQnCxA9CrqQlZun+2TXp?=
+ =?us-ascii?Q?WQORHYkzSnh33MRhyFZWxOPYuFv/Fa3XXUboRWwTPDGWQWHod1BlR9RoTMwd?=
+ =?us-ascii?Q?W1itvXRdyJegYNDuwnrwQrEFFvJx4RCd8oowRKDV8cS1yQWOZto3xag3mEPf?=
+ =?us-ascii?Q?z+VOzZlsNH2Ioaz7gMxw4qPove4Cvy4j0eYG27zEw1/goTKrhNaPTd6+WaJj?=
+ =?us-ascii?Q?Z3UIDQdjfClMfWKvEDYlPJ6W5rXtx/FQXvtH30Uw1RyButjTTt21dgKw66gw?=
+ =?us-ascii?Q?QrG2yWUw/Gx147IbHdfdFBKCVUM86tMS+ei3GVTv5F6q3Ed+Vkvhx8ZrDOJ/?=
+ =?us-ascii?Q?14/H8TPCdBIW5WxIBEKLqA0qFciARmRDaxKFjyKOXP66UT9FGIjrBMXHUR3p?=
+ =?us-ascii?Q?6jFvqglelE6z70s6y0mtK8ZZGIG/+ZLG9BOE5gf5?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7e60aff3-e660-4775-cc05-08dd618f23a4
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2025 17:55:56.5251
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: LPPO6HbhS5orUa/UlVTZAceR+ybnMpwWp5x8LyxQ2hvJeYKnPamXG7+8Sf7LUUgMp68bvvlP5LeWMnrOU/Py/w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR11MB5809
+X-OriginatorOrg: intel.com
 
-On Thu, Mar 06, 2025 at 04:23:35PM -0800, Dan Williams wrote:
-> alison.schofield@ wrote:
-> > From: Alison Schofield <alison.schofield@intel.com>
-> > 
-> > The CXL driver requires the granularity of a region and its root
-> > decoder to be the same. This is particularly restrictive for 3-way
-> > host bridge interleaves where the only spec defined interleave
-> > configurations for creating 6-way and 12-way regions on a 3-way HB
-> > interleave require mixed granularities.
-> > 
-> > CXL 3.2 Specification 9.13.1.1:
-> > Legal Interleaving Configurations: 12-way, 6-way, and 3-way
-> > 
-> > Adding support for these new interleaves touches these areas:
-> > 
-> > 1) User created regions employing "cxl create-region" fail when the
-> > CXL CLI tool gets a mixed granularity request. That is addressed in
-> > a patch to the ndctl tool.
-> > 
-> > 2) User created regions employing sysfs directly fail at the sysfs
-> > store of the non-matching region granularity. That restriction is
-> > lifted here. Note that the driver immediately allows any reasonable
-> > 3-way HB granularity, but the region config may still fail later
-> > if the ways/gran between region and root decoder are incompatible.
-> > 
-> > 3) Auto created regions, in which the drivers role is to reflect
-> > the BIOS created region and provide RAS support, basically sneak on
-> > by. The driver ignores the root decoders granularity and assumes it
-> > is the same as the regions. The impact being that endpoint devices
-> > appear out of order and DPA to HPA address translations that depend
-> > on that order are invalid.
+Smita Koralahalli wrote:
+> When PCIe AER is in FW-First, OS should process CXL Protocol errors from
+> CPER records. Introduce support for handling and logging CXL Protocol
+> errors.
 > 
-> I.e. that is a bug. The question is do we backport a "fix" to make that
-> config start failing per old expectations, or do we backport this patch
-> to fix those known configs?
+> The defined trace events cxl_aer_uncorrectable_error and
+> cxl_aer_correctable_error trace native CXL AER endpoint errors. Reuse them
+> to trace FW-First Protocol errors.
 > 
-
-For this specific config -> fix it. For all the others quietly
-misassembling -> start failing.  More...
-
-> I would lean to backporting this patch so this needs a Fixes tag.
-
-Thanks for the review Dan. Here's a response in general, and afterwards
-responses to your embedded code review comments.
-
-I should have said this was a no switches solution. This is a no
-switches solution as that meets the use case needing repair. More
-on that below.
-
-I see where this can be more restrictive so as not to let any configs
-slip through that are not 100% supported by the CXL driver. Let's
-discuss which configs the driver will fully support versus explicitly
-reject.
-
-Appended is a list of the 3-6-12 way interleaves described in the CXL
-Spec 3.2 Table. The complete list is appended because it's important
-to see all the flavors. If we only talk switch, no_switch, or mixed,
-no_mixed, combinations are omitted and complexity may be underestimated.
-The driver supports 3 of the 11 configs correctly: 3-A, 6-A, 12-A.
-Those are the configs with cross-host bridge interleave only.
-
-The driver may pretend to support, but fails on all others. I use the
-word 'may' because user created regions fail to create, so there is
-no pretending there. It is the auto regions, (BIOS configured regions)
-that will appear to be recognized by the CXL driver, but in fact the
-assembly is misunderstood and so RAS support is broken.
-
-That pretend is not just for MOD3 regions. Barring a safeguard I've
-missed, any auto config with mixed granularity is quietly misassembled.
-
-That suggests a lead in patch here that shuts down the quiet misassembly
-of any mixed granularity auto regions. Again, no need to shut it down
-for user-created as they are already blocked. User-created regions will
-require new allowances.
-
-Which mixed granularity regions require support?
-
-I have a user that needs config 6-B fixed. That is the 6 way region
-built on a 3-way Host Bridge Interleave, no switches. It is one of
-those that are quietly misassembling as an auto region. Two similar
-12-ways configs, 12-B&D come along for minimal additional effort yet
-I am not aware of a use case for these.
-
-Proposal is that this patch(set) protects against the mis-assembled
-configs and adds support 6-B. That would fully meet the use case at hand
-and protect users against the mis-assembled regions.
-
-I do wonder if the shutdown of mis-assembled auto regions might bring
-some use cases to light 
-
-I expect I'll work a v3 with the updates noted here while listening
-for upstream feedback on driver supported configs.
-
-
---------
-Section 9.13.1.1
-Legal Interleaving Configurations: 12-way, 6-way, and 3-way 
-
-Table 9-8: 3-Way Device-level Interleave at 1GB
-3-A:	Cross-host Bridge: 3 way at 1GB
-	Host Bridge: No interleaving
-	Switch: No interleaving or absent
-
-Table 9-7: 6-Way Device-level Interleave at 1GB
-6-A:	Cross-host Bridge: 6 way at 1GB
-	Host Bridge: No interleaving
-	Switch: No interleaving or absent
-6-B:	Cross-host Bridge: 3 way at 2 times 1GB
-	Host Bridge: 2 way at 1GB
-	Switch: No interleaving
-6-C:	Cross-host Bridge: 3 way at 2 times 1GB
-	Host Bridge: No interleaving
-	Switch: 2 way at 1GB
-
-Table 9-6: 12-Way Device-level Interleave at 1GB
-12-A:	Cross-host Bridge: 12 way at 1GB
-	Host Bridge: No interleaving
-	Switch: No interleaving or absent
-12-B:	Cross-host Bridge: 6 way at 2 times 1GB
-	Host Bridge: 2 way at 1GB
-	Switch: No interleaving or absent
-12-C:	Cross-host Bridge: 6 way at 2 times 1GB
-	Host Bridge: No interleaving
-	Switch: 2 way at 1GB
-12-D:	Cross-host Bridge: 3 way at 4 times 1GB
-	Host Bridge: 4 way at 1GB
-	Switch: No interleaving
-12-E:	Cross-host Bridge: 3 way at 4 times 1GB
-	Host Bridge: No interleaving
-	Switch: 4 way at 1GB
-12-F:	Cross-host Bridge: 3 way at 4 times 1GB
-	Host Bridge: 2 way at 1GB
-	Switch: 2 way at 2 times 1GB
-12-G:	Cross-host Bridge: 3 way at 4 times 1GB
-	Host Bridge: 2 way at 2 times 1GB
-	Switch: 2 way at 1GB
-
-
+> Since the CXL code is required to be called from process context and
+> GHES is in interrupt context, use workqueues for processing.
 > 
-> > Here the driver stops making that same
-> > granularity assumption and checks for an allowable granularity.
-> > 
-> > A new helper, interleave_granularity_allow(), is used in both the
-> > user and auto creation path to allow the newly supported configs.
+> Similar to CXL CPER event handling, use kfifo to handle errors as it
+> simplifies queue processing by providing lock free fifo operations.
 > 
-> Minor but the function is not performing an "allow" operation it is
-> evaluating an "allowed" condition, so I would have expected this to be
-> named:
+> Add the ability for the CXL sub-system to register a workqueue to
+> process CXL CPER protocol errors.
 > 
->     is_interleave_granularity_allowed()
-> 
+> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
 
-got it.
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 
-
-> > Another new helper, gran_multiple(), is used in sorting, target
-> > list searching, and distance calculations, supporting the new
-> > root granularity to region granularity multiples.
-> > 
-> > And, as noted in 2), there's an added check to see if the
-> > selected sysfs ways/gran make sense when considered together.
-> > 
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> > ---
-> > 
-> > Changes in v2:
-> > - Allow exactly 2*ig or 4*ig in interleave_granularity_allow()(DaveJ)
-> > - Remove needless !root_decoder_gran check in gran_multiple()(Ming)
-> > - Update spec references to 3.2 (DaveJ)
-> > - Commit log grammar cleanup (DaveJ)
-> > - Describe param 'multiple' in cxl_calc_interleave_pos() (lkp)
-> > 
-> > 
-> >  drivers/cxl/core/region.c | 104 +++++++++++++++++++++++++++++++-------
-> >  1 file changed, 85 insertions(+), 19 deletions(-)
-> > 
-> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > index 8537b6a9ca18..cc2687407a3e 100644
-> > --- a/drivers/cxl/core/region.c
-> > +++ b/drivers/cxl/core/region.c
-> > @@ -532,6 +532,31 @@ static ssize_t interleave_granularity_show(struct device *dev,
-> >  	return rc;
-> >  }
-> >  
-> > +static bool interleave_granularity_allow(struct cxl_decoder *cxld, u16 ig)
-> 
-> I don't like that this function takes a plain 'struct cxl_decoder *',
-> this function is only relevant for root decoders so make that clear by
-> requring that it is passed a 'struct cxl_root_decoder *'. Yes, it means
-> redoing the "cxld = &cxlrd->cxlsd.cxld" conversion.
-> 
-
-got it: s/cxl_decoder/cxl_root_decoder
-
-
-> > +{
-> > +	/*
-> > +	 * When the host-bridge is interleaved, disallow region granularity
-> > +	 * != root granularity with the exception of 3-way HB interleaves.
-> > +	 * Allow the CXL Spec defined 3-way HB interleaves that can only be
-> > +	 * configured when host-bridge interleave is greater that the
-> > +	 * region interleave. (CXL 3.2 Specification 9.13.1.1)
-> > +	 * Allow 2+2+2 interleave where HB gran is 2 * region granularity
-> > +	 *	 4+4+4 interleave where HB gran is 4 * region granularity
-> 
-> Only an Intel person might understand X+X+X notation topology notation.
-> Just describe these configs in plain english.
-
-Can do.
-
-> 
->     Allow 6 endpoints across 3 host-bridges when the root-decoder
->     granularity is 2x region granularity.
-> 
->     Allow 12 endpoints across 3 host-bridges when the root-decoder 
->     granularity is 4x region granularity.
-> 
-> The problem is that this comment assumes direct-attached endpoints. If
-> you had switches between a host-bridge and endpoints then the region
-> granularity is not valid to compare to the root decoder granularity.
-> 
-
-Yes it does.
-
-> > +	 *
-> > +	 * Regions with a granularity greater than the root interleave result
-> > +	 * in invalid DPA translations (invalid to support).
-> > +	 */
-> > +	if (cxld->interleave_ways > 1 && ig != cxld->interleave_granularity) {
-> > +		if (cxld->interleave_ways != 3)
-> > +			return false;
-> > +
-> > +		if (cxld->interleave_granularity != 2 * ig &&
-> > +		    cxld->interleave_granularity != 4 * ig)
-> > +			return false;
-> > +	}
-> > +	return true;
-> > +}
-> > +
-
-snip
-
-> > @@ -1347,12 +1382,17 @@ static int cxl_port_setup_targets(struct cxl_port *port,
-> >  		 * always 1 as every index targets a different host-bridge. At
-> >  		 * each subsequent switch level those ports map every Nth region
-> >  		 * position where N is the width of the switch == distance.
-> > +		 *
-> > +		 * With the introduction of mixed granularities in 3-way HB
-> > +		 * interleaves, divide N by a multiple that represents the root
-> > +		 * decoder to region granularity.
-> 
-> I go into more detail later, but region granularity is not relevant when
-> switches are present.
-
-No switches present. I take another look to see if any of this
-doesn't clearly preclude switches.
-
-> 
-> > +	/*
-> > +	 * Protect against improper gran mixes on 3-way HB interleave
-> > +	 * Expect decoder gran*ways == region gran*ways
-> > +	 */
-> > +	if (cxlrd->cxlsd.cxld.interleave_ways == 3) {
-> > +		if ((cxlrd->cxlsd.cxld.interleave_granularity * 3) !=
-> > +		    (p->interleave_ways * p->interleave_granularity)) {
-> 
-> When switches are present p->interleave_ways and
-> p->interleave_granularity are not relevant for 3-way validation. For
-> example imagine an x3 HB, with x6 switches, and x12 endpoints. The mixed
-> granularity is resolved at the switch level, not the region level.
-
-No switches.
+[snip]
