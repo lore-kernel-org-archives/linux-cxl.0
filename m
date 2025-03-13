@@ -1,109 +1,84 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 902931531C1;
-	Thu, 13 Mar 2025 19:08:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E36BF5464E;
+	Thu, 13 Mar 2025 19:38:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741892895; cv=none; b=cYxUyKUDP119N7qI66uKs0xhstGGDBfDSVrVZchigfnvrTG9BLXaLY+0T9ZxGYVJTJowr6b6BTkIQ5scxeJOByk63oktBuo0dTkeQXFHiI0jVu+3/GVMdeZ476FceXSYZahBavI6EG7Wv2CR3V895j1o/ibOvxoJq6j+jaGt11Q=
+	t=1741894711; cv=none; b=d6wVWPeksUAvCYKuLOhdh8r48gS5AyjfHNCbvfUm9qXLSlDnoxJuKH7GsGzELwbtluCHzC0reBDHrXzz9hS45Xg09VZNPLTlx8pqEEXp7+9emmBNjhaV12ZjbRhTbz6FQAIUj7xxZcphuUmwgodggjhdvTOSzjiEToLTRTSBcT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741892895; c=relaxed/simple;
-	bh=nm0Ya04Vg82w2RGUGMDU1iYfl4yIv2Kv4S5DHdr6bAg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FwqVEyGpk3qLip6Gq9KLMjMs/hoBjATua+Wc0r0A9mp1KEOA7nSfSPI1DZlpUfMxHGD7S0r+HrUgdauJQTshh6czi/lpkzKKcr6CXxxBuklvwOs7y7dahzXk8NZc7cEJXeytjnMrdqvM5QAXb8GYRJkgIn6xD2m2VkQBP13GQl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jm8m0jmk; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741894711; c=relaxed/simple;
+	bh=V1Ch0wSo81DMawR++dmrxZcbrNPbwcgUzALo7nNs0ng=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=undq8DRh5Rq8pU6tUMtpApFL6ZYvktnI527pZ+Rlvk97tQS4r3W0IgqWJLQppl0OcvuNm2qw3UTuwyMkZzCbnNEHg85FQuAqvrTolIyh9m+MwcScyvmKny4nASl6hrD/P6t2HyYPBMqRXisVEwUhQEunr/2YUwr+uYo5ERipjAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jJRpfV2e; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jm8m0jmk"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7c3e04b0b0cso5093485a.0;
-        Thu, 13 Mar 2025 12:08:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741892892; x=1742497692; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vjP1jqzw3aFfI1W891IJ2foRzLCTmZUncr4EWC31DvM=;
-        b=jm8m0jmkIkZRIWtOwNCcNw42OFw5by6pBe13bYXJyj0a19iPVdAGAnRr28I62tHm3r
-         OMqrlKMxQzPlAMhnRJVYDZpoL0iP/HD4WXRqk3vUjxdnhrttmEzBV88nRKMslJZ3a9In
-         y+l/twUTZOhY5RQpBzFWDOuGu2L8kDG5BB81Tn5Iv46HVy7S2qwSgQLy4wdJ/xLh1Dw/
-         v8OGFFrHE3G6OVaLc1a8hr1+zsK1ixN8Z25n4dlCnwbUVgZOYvkdde4xWEkztE9Bioz0
-         w7zoMGb1mVB1up/GEkQ8cNaEKMiF/RZdRfg/ePjUkRALtZWsp2830SOTGWu5Ng4/1k8l
-         U7nA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741892892; x=1742497692;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vjP1jqzw3aFfI1W891IJ2foRzLCTmZUncr4EWC31DvM=;
-        b=v2J+cqWrp4CTkeu1Gux8w1ILCMWiudMAL8dFOPKyc7pWDWNG1M0RC5r3K+0GOXakYo
-         QHNm0TnzqwNMckHTjnShZ1BIenPgSKfWcegENWdXrOkN1j0MB1WUcXO6HFqWNLDFaOte
-         hl9g6z0/quIsM406FIMGgRZS5D0iw/YFWxykh89YON25u/0/0KSSp68ZIRGHwVnRYhz9
-         E8qX5yFSsUSy6GGqzxqNtndtKxi3uTPMhcdlo7mh+3IX5yuGoU4bkrsMHpcYyAV1ADBq
-         FZFrTOBmNHr28VSsM5UmBvEDxiNs3Ergk9BF3ZgMCF5Y9S8WQtT1xpDjRPlA1EoELSk6
-         Xx5g==
-X-Forwarded-Encrypted: i=1; AJvYcCX9k6v3IBYbTfZWA63NsC0ODfS1gsHahZ8j7sPYhSIAiD4T9qZkpLkQCgW5257AXDtoGh/YneUpTLLX14E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YywQW9xyDVrIgOSEKJy5cbvJx+Oc9rcetpYiKD2t1yINgOgSfQO
-	5/EWwuZMa4Jq1+vOr5XPSqb+KX6pNWxVqpGXOGi5tjucV3HTwME=
-X-Gm-Gg: ASbGncvOIKUZUGTvUBDlSstxvpQlfmHZwtfBSbGQrSNyW9pHA/6e39F+zId4DzSgwTi
-	XSJgWkkvFJ3Laf42GHGbplbbKPPNBrZH3XNdQszLnIKTbMCRywQ7X7zm7CJqKvn3OfzkcA71zqv
-	5a1NNSbGOoGBBlt6n1p2qcJPtdUC5fpO16lhnrpw2r6A1N2R8dNrD4yztZPVpQU7KUFzxZKpBNT
-	9Rk//LMG0jNdU9cvLK9WeUuNNhek5RLyR6q/NujyjW5WNbucwX8QoyxQXretEXFFIqpC5H42BSK
-	sx5cZmUaVnNmpZIu+d6gvOYhrsySXu3pJDrBCeJDRA==
-X-Google-Smtp-Source: AGHT+IHd6yq6pRWlKC88GyuQ5iVSYeVB96w7LvHh3l1vdqqVE0zMKBYVkgQ+qgg/Jdpm+QZKJzclXw==
-X-Received: by 2002:a05:620a:410b:b0:7c0:bd67:7dd9 with SMTP id af79cd13be357-7c55e90a7cfmr693357285a.11.1741892892295;
-        Thu, 13 Mar 2025 12:08:12 -0700 (PDT)
-Received: from ise-alpha.. ([2620:0:e00:550a:642:1aff:fee8:511b])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c573d6fb61sm131540885a.73.2025.03.13.12.08.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 12:08:11 -0700 (PDT)
-From: Chenyuan Yang <chenyuan0y@gmail.com>
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chenyuan Yang <chenyuan0y@gmail.com>
-Subject: [PATCH] cxl/acpi: Add Null check for adev
-Date: Thu, 13 Mar 2025 14:07:53 -0500
-Message-Id: <20250313190753.450546-1-chenyuan0y@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jJRpfV2e"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741894710; x=1773430710;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=V1Ch0wSo81DMawR++dmrxZcbrNPbwcgUzALo7nNs0ng=;
+  b=jJRpfV2eChUEJgZvlE/0WQARZMqoi5qbxeoIU3V+PuCRIap41xe193CF
+   z6mIrZee0XzaRZpzmRjr6gKWrBBCJb0SDIZVuaA2+gJETzX8Zq7Z+SUJR
+   cK+WKRUcaSLeR9zbAnrlXEh9yx7yRXI/8wLy1s4ELzl4gmu6aUeYA3w8X
+   lH8PKFovxHXAzbLFqz3smGW/O24822Vk77Aom0okncCf7wpAzTQsUHIt+
+   BvOblqT9a4WVqZ6mSzG5+Tae58BPOVUntIaePddKu00EFVGi8U+mwbXlC
+   zytRXJVqYssFal6ZuUYolRTpwu/9dwtB40KwGDekqfEduQh6+xaxDqYLn
+   A==;
+X-CSE-ConnectionGUID: ZMacXrYzTDyyILW1Z+AbNQ==
+X-CSE-MsgGUID: 0u/WqbyASp6bWb7AEGMocA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11372"; a="43237767"
+X-IronPort-AV: E=Sophos;i="6.14,245,1736841600"; 
+   d="scan'208";a="43237767"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 12:38:29 -0700
+X-CSE-ConnectionGUID: AuNVzmnSQ4qYaepR2rbqJA==
+X-CSE-MsgGUID: 2FsDA+a8STyEE2KH8ZdO1g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,245,1736841600"; 
+   d="scan'208";a="151990008"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.70])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 12:38:29 -0700
+Date: Thu, 13 Mar 2025 12:38:27 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v8 0/2] acpi/ghes, cper, cxl: Process CXL CPER Protocol
+ errors
+Message-ID: <Z9M0M4RzHPnwWoTS@agluck-desk3>
+References: <20250310223839.31342-1-Smita.KoralahalliChannabasappa@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250310223839.31342-1-Smita.KoralahalliChannabasappa@amd.com>
 
-Not all devices have an ACPI companion fwnode, so adev might be NULL.
-This is similar to the commit cd2fd6eab480
-("platform/x86: int3472: Check for adev == NULL").
+On Mon, Mar 10, 2025 at 10:38:37PM +0000, Smita Koralahalli wrote:
+> This patchset adds logging support for CXL CPER endpoint and port Protocol
+> errors.
+> 
+> Based on top of cxl-next.
 
-Add a check for adev not being set and return -ENODEV in that case to
-avoid a possible NULL pointer deref in cxl_acpi_probe().
+Seems like a a lot of stuff happening in patch 1, but I don't see an
+obvious place to split it.
 
-Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
----
- drivers/cxl/acpi.c | 3 +++
- 1 file changed, 3 insertions(+)
+Reviewed-by: Tony Luck <tony.luck@intel.com>
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index cb14829bb9be..9195001db3c1 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -823,6 +823,9 @@ static int cxl_acpi_probe(struct platform_device *pdev)
- 	struct acpi_device *adev = ACPI_COMPANION(host);
- 	struct cxl_cfmws_context ctx;
- 
-+	if (!adev)
-+		return -ENODEV;
-+
- 	device_lock_set_class(&pdev->dev, &cxl_root_key);
- 	rc = devm_add_action_or_reset(&pdev->dev, cxl_acpi_lock_reset_class,
- 				      &pdev->dev);
--- 
-2.34.1
+-Tony
 
