@@ -1,217 +1,127 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7030E6F2F2;
-	Thu, 13 Mar 2025 17:20:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88FED433C4
+	for <linux-cxl@vger.kernel.org>; Thu, 13 Mar 2025 17:20:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741886411; cv=none; b=edDNT3EwUnzEYsRcACkjnJnNFgsAZzu6cnR1wjhNFe9oXpVPuFJCEYtUQ+irt7avGokhBtppoe+A7r8tz02W53a+2PKrQwVYga6x+c6RYzqoAQ+HOkPtI4yQutmzY0rLmMWWRphnGDZQ/Cw8kMFi0tNhHi0BwvIelC3MHpo5MO8=
+	t=1741886426; cv=none; b=tnUFVKLtqDNfGWGh/BDVOG38AAPfz2NXqU1kudQ4as1IHL3tl03AF9h4HduKCSTFngd66u8V8mvimXV172AuysZkKkvbwq0ceTOD6JL2vfpCP8zPLn89ylhLBTntqKz6b+gIX9AV/ZRA23W64LnRA3odLlhxevmYuG0cOGnP5VY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741886411; c=relaxed/simple;
-	bh=wUu2k/gOAC75lo1DbAQYafqLjazUfcLpetWtvNUoxEY=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EdOI433AXsjGpeLVtjAJ2ESQDtpE/DyYX0dPjqu0IPcplbavD80v3EQyv3kpxDQQfJ2DlhEqXXgGFOPWQOQ2ezf5MU6LEVQCQAeHpZKcCNaWiu5SqGHHjBk9bXgB2q2QMYmfsCzHwb2xXB7vau+l2D6i8Xh57qquhVNndjSWT7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZDDgq5jzNz67MmR;
-	Fri, 14 Mar 2025 01:16:55 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id CA15A140418;
-	Fri, 14 Mar 2025 01:20:05 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 13 Mar
- 2025 18:20:05 +0100
-Date: Thu, 13 Mar 2025 17:20:04 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Gregory Price <gourry@gourry.net>
-CC: <lsf-pc@lists.linux-foundation.org>, <linux-mm@kvack.org>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [LSF/MM] CXL Boot to Bash - Section 0a: CFMWS and NUMA
- Flexiblity
-Message-ID: <20250313172004.00002236@huawei.com>
-In-Reply-To: <Z8u4GTrr-UytqXCB@gourry-fedora-PF4VCD3F>
+	s=arc-20240116; t=1741886426; c=relaxed/simple;
+	bh=ytKnJ9KP84KTImnJGlrWYjrWTIpLk3zRxii5NGsffng=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gBXE+GNPWfsSFx0nr3fR0e0IiU46PdpoNP2W1S8UXCgFzFAG/ltux+PmbftDnH6PsBjmuIlFaWVB34s1siMNEhZ7l2+1CsLVyGaIUGviocEpLHkgJlUyf1UJyKI5suq7AFiv5jo/WBC+OVsOkZvv+89NDGRf6EDqBNiR0I3xXMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=IeYVjt4q; arc=none smtp.client-ip=209.85.219.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="IeYVjt4q"
+Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6e86b92d3b0so11004816d6.2
+        for <linux-cxl@vger.kernel.org>; Thu, 13 Mar 2025 10:20:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1741886423; x=1742491223; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=P9es5s5/MUGI5ZSuPglHG3X5LeltCJdtthknEMRc3Xk=;
+        b=IeYVjt4qdD1EGKP5UuMVPW4UuG6dSwkhkmnpO2cqni8gKXWg4ZaCfh9zo3FMrZQnoU
+         CCsWw1O4GtJ8v2/8noMxFHMHqNOL6+y9Hgci1ycTlAtZ6+0v2axGDQ6QPyx5aEOq159J
+         0RokqF3eHulH9apvmG+xtdSXSwRYgH2io4uVqrxZUPtRcIlCYvEoLK2HjekTsEzB81fs
+         +DI7m3DYdAk954K/u6xs3wJK/9adwzUo1hYH1bpyLolPd87Tb9uRnWIZojeIQjhZUyxe
+         4d1JoANyllWrPMn06F6gV2S9Dq2klqMCGCpxnDG5n0CVnoR0/aBIPMIyykXyfCIJyTTO
+         yuAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741886423; x=1742491223;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P9es5s5/MUGI5ZSuPglHG3X5LeltCJdtthknEMRc3Xk=;
+        b=lXxrZ3l7tjlX7Ic0rECVLumEBlp8B4KkPLmB7Fkl4l121cnKdCXZC7CWz6jphtvVf8
+         DnfPNmGMZXRfr14zU0aHoYeOmws4KbxlJIp/BsuPuNPOjF9ff/YMy2WIzI0OmGM3mMRj
+         1TNzu4+ZOU/BxOnCUIvCDUeCXTsSfUdML6R6DB6VAMszcg12+R6neqNTvnj1cZjVjwdu
+         HnxoUdRT1Zu6ye5KlO+qVth/H5I/mTaBHY8Ag6d1w3FxBsE2qLyrtdNjvbwLHZsswwvV
+         qTAmdZgMtpwsIP7rLJv1ohkbesXqQHfdkhd/inaGvBQU6+3W4Zmoo2JayNkG/S3cd+Pr
+         pT/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWDqrHxmJvb9jXlR9rRUjePqBvYjnH86dwVyAj2FNQnPcTUM4FlnD8J2Ns17SQF/NzZw0Uq2ayJc4Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrpKRPHOERds3KR8QY7bgfKlPXDAUqU7sVMfh/aJKYWxCVE9Ek
+	efMI6i56i5CzX3EAAnIYaQfHyvuUzfWrsASdmJNfWVsTqiWqNoQdX5nuCRPtQs4=
+X-Gm-Gg: ASbGncv3AWn7j2qgiGhhvUmeLq34VMkZfj1S2U+IeRyDMY7tjoljDAiDc6Z1aGqHKSr
+	3fAnrzK+0LPZQC4PCPI5cd+kdeBAHL2C2XL+rgRj8asn/FMPg073b/tb0jnTtrIkG7QSrpoil+f
+	Ptc0yDbHuTXs3s/v79cbaeRITxPIb5FBSEbrc4V25d/wuqal5v4B94PuTDZe3Epxx+rGTqMji9l
+	GowO3/5Qq1PWpZ00rwJ0RzjnrHdnI33/B5Afhqm7FhXM6ntZ4YqYlRtPysiwPcONvz4wdDBAjsP
+	IEELkoCE+LtJ79cBeQ1DoyUKjsHuxROmE3HHNPAbE3wDRSTeOSJkUub5Oo/hgMAiTAvBVkfXUaA
+	ppveASxZriSEuffzdwbHdZats/VM=
+X-Google-Smtp-Source: AGHT+IFdpX1W9er/zHGcaKcZDK6P6IdlPFmMWpHoDJmGALEDc3Dy7cqy8u/Hi7dFktDcXjTw7QG47A==
+X-Received: by 2002:a05:6214:27ee:b0:6e4:3c52:d67e with SMTP id 6a1803df08f44-6eae7a11135mr7201476d6.18.1741886423325;
+        Thu, 13 Mar 2025 10:20:23 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eade209313sm11867186d6.19.2025.03.13.10.20.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Mar 2025 10:20:22 -0700 (PDT)
+Date: Thu, 13 Mar 2025 13:20:21 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [LSF/MM] CXL Boot to Bash - Section 1: BIOS, EFI, and Early Boot
+Message-ID: <Z9MT1fIKu0v1r9ss@gourry-fedora-PF4VCD3F>
 References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
-	<Z8jORKIWC3ZwtzI4@gourry-fedora-PF4VCD3F>
-	<Z8u4GTrr-UytqXCB@gourry-fedora-PF4VCD3F>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+ <Z6LKJZkcdjuit2Ck@gourry-fedora-PF4VCD3F>
+ <Z8ZKKwDnuAjtyohz@gourry-fedora-PF4VCD3F>
+ <20250313161226.00000038@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250313161226.00000038@huawei.com>
 
-On Fri, 7 Mar 2025 22:23:05 -0500
-Gregory Price <gourry@gourry.net> wrote:
+On Thu, Mar 13, 2025 at 04:12:26PM +0000, Jonathan Cameron wrote:
+> On Mon, 3 Mar 2025 19:32:43 -0500
+> Gregory Price <gourry@gourry.net> wrote:
+> 
+> > 
+> > SRAT entries are optional, CFMWS are required for each host bridge.
+> 
+> They aren't required for each HB.  You could have multiple host bridge and one CFMWS
+> as long as you have decided to only support interleave.
+> I would only expect to see this where the bios is instantiating CFMWS
+> entries to match a specific locked down config though.
+>
 
-> In the last section we discussed how the CEDT CFMWS and SRAT Memory
-> Affinity structures are used by linux to "create" NUMA nodes (or at
-> least mark them as possible). However, the examples I used suggested
-> that there was a 1-to-1 relationship between CFMWS and devices or
-> host bridges.
-> 
-> This is not true - in fact, CFMWS are a simply a carve out of System
-> Physical Address space which may be used to map any number of endpoint
-> devices behind the associated Host Bridge(s).
-> 
-> The limiting factor is what your platform vendor BIOS supports.
-> 
-> This section describes a handful of *possible* configurations, what NUMA
-> structure they will create, and what flexibility this provides.
-> 
-> All of these CFMWS configurations are made up, and may or may not exist
-> in real machines. They are a conceptual teching tool, not a roadmap.
-> 
-> (When discussing interleave in this section, please note that I am
->  intentionally omitting details about decoder programming, as this
->  will be covered later.)
-> 
-> 
-> -------------------------------
-> One 2GB Device, Multiple CFMWS.
-> -------------------------------
-> Lets imagine we have one 2GB device attached to a host bridge.
-> 
-> In this example, the device hosts 2GB of persistent memory - but we
-> might want the flexibility to map capacity as volatile or persistent.
+The further I dived into this, the more I realized CFMWS are the
+opposite of required lol.  Platform vendors can kind of do whatever they
+want here.
 
-Fairly sure we block persistent in a volatile CFMWS in the kernel.
-Any bios actually does this?
+I'll be taking another pass at this section since i've done more diving
+in to write the interleave section.  I probably got a handful of
+comments here subtly wrong.
 
-You might have a variable partition device but I thought in kernel at
-least we decided that no one was building that crazy?
+> > 
+> > If SRAT entries are present, one NUMA node is created for each detected
+> > proximity domain in the SRAT. Additional NUMA nodes are created for each
+> > CFMWS without a matching SRAT entry.
+> 
+> Don't forget the fun of CFMWS covering multiple SRAT entries (I think
+> we just go with the first one?)
+>
 
-Maybe a QoS split is a better example to motivate one range, two places?
+Oh yeah, I guess that's technically possible. And technically each SRAT
+could have a different proximity domain, because you know - value.
 
-> 
-> The platform vendor may decide that they want to reserve two entirely
-> separate system physical address ranges to represent the capacity.
-> 
-> ```
->            Subtable Type : 01 [CXL Fixed Memory Window Structure]
->                 Reserved : 00
->                   Length : 002C
->                 Reserved : 00000000
->      Window base address : 0000000100000000   <- Memory Region
->              Window size : 0000000080000000   <- 2GB
-> Interleave Members (2^n) : 00
->    Interleave Arithmetic : 00
->                 Reserved : 0000
->              Granularity : 00000000
->             Restrictions : 0006               <- Bit(2) - Volatile
->                    QtgId : 0001
->             First Target : 00000007           <- Host Bridge _UID
-> 
->            Subtable Type : 01 [CXL Fixed Memory Window Structure]
->                 Reserved : 00
->                   Length : 002C
->                 Reserved : 00000000
->      Window base address : 0000000200000000   <- Memory Region
->              Window size : 0000000080000000   <- 2GB
-> Interleave Members (2^n) : 00
->    Interleave Arithmetic : 00
->                 Reserved : 0000
->              Granularity : 00000000
->             Restrictions : 000A               <- Bit(3) - Persistant
->                    QtgId : 0001
->             First Target : 00000007           <- Host Bridge _UID
-> 
-> NUMA effect: 2 nodes marked POSSIBLE (1 for each CFMWS)
-> ```
-> 
-> You might have a CEDT with two CFMWS as above, where the base addresses
-> are `0x100000000` and `0x200000000` respectively, but whose window sizes
-> cover the entire 2GB capacity of the device.  This affords the user 
-> flexibility in where the memory is mapped depending on if it is mapped
-> as volatile or persistent while keeping the two SPA ranges separate.
-> 
-> This is allowed because the endpoint decoders commit device physical
-> address space *in order*, meaning no two regions of device physical
-> address space can be mapped to more than one system physical address.
-> 
-> i.e.: DPA(0) can only map to SPA(0x200000000) xor SPA(0x100000000)
-> 
-> (See Section 2a - decoder programming).
-> 
+The dance between CFMWS and SRAT is quite intricate isn't it.
 
-> -------------------------------------------------------------
-> Two Devices On One Host Bridge - With and Without Interleave.
-> -------------------------------------------------------------
-> What if we wanted some capacity on each endpoint hosted on its own NUMA
-> node, and wanted to interleave a portion of each device capacity?
+> > 
+> > CFMWS describes host-bridge information, and so if SRAT is missing - all
+> > devices behind the host bridge will become naturally associated with the
+> > same NUMA node.
+> 
+> I wouldn't go with naturally for the reason below.  It happens, but maybe
+> not natural :)
+>
 
-If anyone hits the lock on commit (i.e. annoying BIOS) the ordering
-checks on HPA kick in here and restrict flexibility a lot
-(assuming I understand them correctly that is)
+Yeah as above, I got this subtly wrong.  Thanks for the notes.
 
-This is a good illustration of why we should at some point revisit
-multiple NUMA nodes per CFMWS.  We have to burn SPA space just
-to get nodes.  From a spec point of view all that is needed here
-is a single CFMWS. 
-
-> 
-> We could produce the following CFMWS configuration.
-> ```
->            Subtable Type : 01 [CXL Fixed Memory Window Structure]
->                 Reserved : 00
->                   Length : 002C
->                 Reserved : 00000000
->      Window base address : 0000000100000000   <- Memory Region 1
->              Window size : 0000000080000000   <- 2GB
-> Interleave Members (2^n) : 00
->    Interleave Arithmetic : 00
->                 Reserved : 0000
->              Granularity : 00000000
->             Restrictions : 0006               <- Bit(2) - Volatile
->                    QtgId : 0001
->             First Target : 00000007           <- Host Bridge _UID
-> 
->            Subtable Type : 01 [CXL Fixed Memory Window Structure]
->                 Reserved : 00
->                   Length : 002C
->                 Reserved : 00000000
->      Window base address : 0000000200000000   <- Memory Region 2
->              Window size : 0000000080000000   <- 2GB
-> Interleave Members (2^n) : 00
->    Interleave Arithmetic : 00
->                 Reserved : 0000
->              Granularity : 00000000
->             Restrictions : 0006               <- Bit(2) - Volatile
->                    QtgId : 0001
->             First Target : 00000007           <- Host Bridge _UID
-> 
->            Subtable Type : 01 [CXL Fixed Memory Window Structure]
->                 Reserved : 00
->                   Length : 002C
->                 Reserved : 00000000
->      Window base address : 0000000300000000   <- Memory Region 3
->              Window size : 0000000100000000   <- 4GB
-> Interleave Members (2^n) : 00
->    Interleave Arithmetic : 00
->                 Reserved : 0000
->              Granularity : 00000000
->             Restrictions : 0006               <- Bit(2) - Volatile
->                    QtgId : 0001
->             First Target : 00000007           <- Host Bridge _UID
-> 
-> NUMA effect: 3 nodes marked POSSIBLE (1 for each CFMWS)
-> ```
-> 
-> In this configuration, we could still do what we did with the prior
-> configuration (2 CFMWS), but we could also use the third root decoder
-> to simplify decoder programming of interleave.
-> 
-> Since the third region has sufficient capacity (4GB) to cover both
-> devices (2GB/each), we can actually associate the entire capacity of
-> both devices in that region.
-> 
-> We'll discuss this decoder structure in-depth in Section 4.
-> 
-
+~Gregory
