@@ -1,510 +1,135 @@
-Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A188261373;
-	Thu, 13 Mar 2025 08:31:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C3B1FA14E
+	for <linux-cxl@vger.kernel.org>; Thu, 13 Mar 2025 09:11:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741854721; cv=none; b=YqTi5ruRfxPLBSZwZoo0EDmHFmLV3i4QSmf572Xf2IxnsCe05ysDBLI+IwWw7goZSXaB013FqAjrDoDQ+VK0WFmuXzMJHSuyQh6Msl4P8gkSRbL4Dn2xqPIlRvFIz9TbpRtD5s6LXyKcZa8Bv/wgJrh9tnD5Yokcyi3eE/l72I8=
+	t=1741857091; cv=none; b=cCPbrwMVd4lwmbs4Lm/p8Ujrtt3WwM/QhzKbb0RCsWK7XYEpkAMdFYLmLWVOrJ2lR8YEAbxHnGbBGNN9HS6ca5XDwMqs1hrXr/BRt0wiUuY9e5i7Lz+/dyzhQ/NcN40br6kXTVsWs9daHEXLClmhiW0RZnLPfbYcXSgG4MaSvxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741854721; c=relaxed/simple;
-	bh=XTTYnmNGgeyrE6yFYiIIQ9QKfgbzEm74hCOrvm7UyiM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hP1D1Dlfncmj6vs5WJy6gGuOp/CjPlhQpDzM90nA3Kh1Ac9VJQ/mO232dm85S9n5scrOFabi+l2tE7gdrajY9w8bq+SzN1JLjoyLjRXDE6JpvnG6G88XeAZFduLbZrkv1rYs6kPMrbQW+ay8TEp2a20p9Ia5lnMWqNEw7VFiPjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=129.150.39.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwCHj6f0l9Jn3NB7CQ--.36558S2;
-	Thu, 13 Mar 2025 16:31:48 +0800 (CST)
-Received: from localhost (unknown [123.150.8.50])
-	by mail (Coremail) with SMTP id AQAAfwCHiYXzl9JnkcVGAA--.16807S2;
-	Thu, 13 Mar 2025 16:31:47 +0800 (CST)
-Date: Thu, 13 Mar 2025 16:31:31 +0800
-From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-To: Gregory Price <gourry@gourry.net>
-Cc: lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [LSF/MM] CXL Boot to Bash - Section 4: Interleave
-Message-ID: <Z9KX4/zF6/yFdWLQ@phytium.com.cn>
-References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
- <Z9DQnjPWbkjqrI9n@gourry-fedora-PF4VCD3F>
+	s=arc-20240116; t=1741857091; c=relaxed/simple;
+	bh=lcDtcf2tk1grIuVwkC66XWaNiJ0lE+tWdRycEcMyPyk=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Y3McqVd0pYq8TwtoX/aRHVYp2+kW+mipVC/aiiq21GF6We6kluvcqvTaGw/Id9JijgEqjvc1t0WRF/+at6utQ6oHJlENVjUYtTN49n17wpJYlOxkBRlyRMaBNUSfr/uXpUlLgPJjM4amqZZX0ZFVnTo6So4EHYzj5u/SgECLb/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZD1pQ3qy9z6J6pH;
+	Thu, 13 Mar 2025 17:06:54 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id C87A7140A70;
+	Thu, 13 Mar 2025 17:11:25 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 13 Mar
+ 2025 10:11:25 +0100
+Date: Thu, 13 Mar 2025 09:11:26 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Itaru Kitayama <itaru.kitayama@linux.dev>
+CC: Alison Schofield <alison.schofield@intel.com>, <linux-cxl@vger.kernel.org>
+Subject: Re: ndctl cxl test suite fails in arm64 QEMU
+Message-ID: <20250313091126.000040db@huawei.com>
+In-Reply-To: <4135507A-DECD-4944-8B39-737A7C90D40A@linux.dev>
+References: <43568B03-6832-4EB1-BF46-EF0F176509E2@linux.dev>
+	<Z75G2UKmx7G59u7P@aschofie-mobl2.lan>
+	<Z8HJbMkV6mzikTI8@vm4>
+	<4135507A-DECD-4944-8B39-737A7C90D40A@linux.dev>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z9DQnjPWbkjqrI9n@gourry-fedora-PF4VCD3F>
-X-CM-TRANSID:AQAAfwCHiYXzl9JnkcVGAA--.16807S2
-X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAIAWfR6CADVQAGsm
-Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=wangyuquan
-	1236@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjvAXoW3CF4fGryxtFykArW7Kr4Uurg_yoW8GFW3Jo
-	Wjvw1ruw48Wr15Cr1UCF1kJryUZryrJF1xXr47CrWUGFnrWF1UGryUWr4UGF98GF45GFW7
-	J34xJw1DG34UJFs7n29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXasCq-sGcSsGvf
-	J3UbIjqfuFe4nvWSU8nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2KfnxnUUI43ZEXa7xR_UU
-	UUUUUUU==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, Mar 11, 2025 at 08:09:02PM -0400, Gregory Price wrote:
-> 
-> -----------------------------
-> Intra-Host-Bridge Interleave.
-> -----------------------------
-> Now lets consider a system where we've placed 2 CXL devices on the same
-> Host Bridge.  Maybe each CXL device is only capable of x8 PCIE, and we
-> want to make full use of a single x16 link.
-> 
-> This setup only requires the BIOS to create a CEDT CFMWS which reports
-> the entire capacity of all devices under the host bridge, but does not
-> need to set up any interleaving.
-> 
-> In the follow case, the BIOS has configured as single 4GB memory region
-> which only targets the single host bridge, but maps the entire memory
-> capacity of both devices (2GB).
-> 
-> ```
-> CFMWS:
->           Subtable Type : 01 [CXL Fixed Memory Window Structure]
->                 Reserved : 00
->                   Length : 002C
->                 Reserved : 00000000
->      Window base address : 0000000300000000   <- Memory Region
->              Window size : 0000000080000000   <- 2GB
+On Fri, 7 Mar 2025 10:44:23 +0900
+Itaru Kitayama <itaru.kitayama@linux.dev> wrote:
 
-I think is "Window size : 0000000100000000   <- 4GB" here.
+> Hi Jonathan, Alison,
+>=20
+> > On Feb 28, 2025, at 23:34, Itaru Kitayama <itaru.kitayama@linux.dev> wr=
+ote:
+> >=20
+> > On Tue, Feb 25, 2025 at 02:40:25PM -0800, Alison Schofield wrote: =20
+> >> On Tue, Feb 25, 2025 at 01:09:57PM +0900, Itaru Kitayama wrote: =20
+> >>> Hi,
+> >>>=20
+> >>> Has anyone noticed the ndctl cxl test suite failures I reported below=
+ on arm64, QEMU emulation?
+> >>>=20
+> >>> https://github.com/pmem/ndctl/issues/278
+> >>>=20
+> >>> I=E2=80=99m using Jonathan=E2=80=99s latest CXL capable QEMU [1], and=
+ the latest CXL kernel [2]. =20
+> >>=20
+> >> Hi Itaru,
+> >>=20
+> >> Looking at region.c:size_store() it seems that alloc_hpa() is failing.
+> >> (kstrtou64 is arch independent and it works for me with same script &
+> >> value)
+> >>=20
+> >> Check the dmesg log at the time of the failure. alloc_hpa() may be
+> >> emitting a message.  (In the run_qemu.sh cmdline add '--cxl-debug') =20
+> >=20
+> > dynamic debug reported this (kernel is without kaslr, today's cxl/next):
+> >=20
+> > [  193.267649] device: 'region4': device_add
+> > [  193.267931] bus: 'cxl': add device region4
+> > [  193.268284] cxl region4: bus: 'cxl': __driver_probe_device: matched =
+device with driver cxl_region
+> > [  193.268333] cxl region4: bus: 'cxl': really_probe: probing driver cx=
+l_region with device
+> > [  193.268401] cxl_region region4: no default pinctrl state
+> > [  193.268482] cxl_region region4: probe with driver cxl_region rejects=
+ match -6
+> >=20
+> > does the above show the region4 was not added properly? The sysfs
+> > entries are there after the out of range failure. =20
+>=20
+> The driver/cxl/core/region.c=E2=80=99s size_store() triggers a sequence o=
+f:=20
+>=20
+> alloc_hpa()
+> alloc_free_mem_region()
+> get_free_mem_region() // with flags set to 0, retruns -ERANGE
+>=20
+> While I am looking at the resource core code, do you think this is caused=
+ by the old firmware I am using
+> when booting QEMU built off of your CXL topic branch? Suggestions are wel=
+come.
+Unlikely as I don't think there have been any relevant changes in edk2 for
+a long long time.
 
-> Interleave Members (2^n) : 00                 <- No host bridge interleave
->    Interleave Arithmetic : 00
->                 Reserved : 0000
->              Granularity : 00000000
->             Restrictions : 0006               <- Bit(2) - Volatile
->                    QtgId : 0001
->             First Target : 00000007           <- Host Bridge _UID
-> ```
-> 
-> Assuming no other CEDT or SRAT entries exist, this will result in linux
-> creating the following NUMA topology, where all CXL memory is in Node 1.
-> 
-> ```
-> NUMA Structure:
->         ---------     --------   |    ----------
->         | cpu0  |-----| DRAM |---|----| Node 0 |
->         ---------     --------   |    ----------
->             |                    |
->          -------                 |    ----------
->          | HB0 |-----------------|----| Node 1 |
->          -------                 |    ----------
->         /       \                |
->    CXL Dev     CXL Dev           |
-> ```
-> 
-> In this scenario, we program the decoders like so:
-> ```
-> Decoders
->                            CXL Root
->                               |
->                           decoder0.0
->                          IW:1  IG:256
->                   [0x300000000, 0x3FFFFFFFF]
->                               |
->                           Host Bridge
->                               |
->                           decoder1.0
->                          IW:2  IG:256
->                    [0x300000000, 0x3FFFFFFFF]
->                              /   \
->                    Endpoint 0     Endpoint 1
->                        |              |
->                    decoder2.0     decoder3.0
->                  IW:2  IG:256     IW:2  IG:256
->     [0x300000000, 0x3FFFFFFFF]    [0x300000000, 0x3FFFFFFFF]
-> ```
-> 
-> The root decoder in this scenario does not participate in interleave,
-> it simply forwards all accesses in this range to the host bridge.
-> 
-> The host bridge then applies the interleave across its connected devices
-> and the decodes apply translation accordingly.
-> 
-> -----------------------
-> Combination Interleave.
-> -----------------------
-> Lets consider now a system where 2 Host Bridges have 2 CXL devices each,
-> and we want to interleave the entire set.  This requires us to make use
-> of both inter and intra host bridge interleave.
-> 
-> First, we can interleave this with the a single CEDT entry, the same as
-> the first inter-host-bridge CEDT (now assuming 1GB per device).
-> 
-> ```
->            Subtable Type : 01 [CXL Fixed Memory Window Structure]
->                 Reserved : 00
->                   Length : 002C
->                 Reserved : 00000000
->      Window base address : 0000000300000000   <- Memory Region
->              Window size : 0000000100000000   <- 4GB
-> Interleave Members (2^n) : 01                 <- 2-way interleave
->    Interleave Arithmetic : 00
->                 Reserved : 0000
->              Granularity : 00000000
->             Restrictions : 0006               <- Bit(2) - Volatile
->                    QtgId : 0001
->             First Target : 00000007           <- Host Bridge _UID
->              Next Target : 00000006           <- Host Bridge _UID
-> ```
-> 
-> This gives us a NUMA structure as follows:
-> ```
-> NUMA Structure:
-> 
->          ----------     --------    |   ----------
->          |  cpu0  |-----| DRAM |----|---| Node 0 |
->          ----------     --------    |   ----------
->         /         \                 |
->     -------     -------             |   ----------
->     | HB0 |-----| HB1 |-------------|---| Node 1 |
->     -------     -------             |   ----------
->       / \         / \               |
->   CXL0   CXL1  CXL2  CXL3           |
-> ```
-> 
-> And the respective decoder programming looks as follows
-> ```
-> Decoders:
->                              CXL  Root
->                                  |
->                              decoder0.0
->                             IW:2   IG:256
->                       [0x300000000, 0x3FFFFFFFF]
->                              /         \
->                 Host Bridge 7           Host Bridge 6
->                 /                                    \
->            decoder1.0                             decoder2.0
->           IW:2   IG:512                          IW:2   IG:512
->   [0x300000000, 0x3FFFFFFFFF]             [0x300000000, 0x3FFFFFFFF]
->             /    \                                  /    \
->    endpoint0      endpoint1                endpoint2      endpoint3
->       |               |                       |               |
->   decoder3.0      decoder4.0              decoder5.0      decoder6.0
->           IW:4  IG:256                            IW:4  IG:256
->   [0x300000000, 0x3FFFFFFFF]              [0x300000000, 0x3FFFFFFFF]
-> ```
-> 
-> Notice at both the root and the host bridge, the Interleave Ways is 2.
-> There are two targets at each level.  The host bridge has a granularity
-> of 512 to capture its parent's ways and granularity (`2*256`).
-> 
-> Each decoder is programmed with the total number of targets (4) and the
-> overall granularity (256B).
+Jonathan
 
-Is there any relationship between endpoints'decoder setup(IW&IG) and
-others decoder?
-
-> 
-> We might use this setup if each CXL device is capable of x8 PCIE, and
-> we have 2 Host Bridges capable of full x16 - utilizing all bandwidth
-> available.
-> 
-> ---------------------------------------------
-> Nuance: Hardware Interleave and Memory Holes.
-> ---------------------------------------------
-> You may encounter a system which cannot place the entire memory capacity
-> into a single contiguous System Physical Address range.  That's ok,
-> because we can just use multiple decoders to capture this nuance.
-> 
-> Most CXL devices allow for multiple decoders.
-> 
-> This may require an SRAT entry to keep these regions on the same node.
-> (Obviously the relies on your platform vendor's BIOS)
-> 
-> ```
-> CFMWS:
->          Subtable Type : 01 [CXL Fixed Memory Window Structure]
->                 Reserved : 00
->                   Length : 002C
->                 Reserved : 00000000
->      Window base address : 0000000300000000   <- Memory Region
->              Window size : 0000000080000000   <- 2GB
-> Interleave Members (2^n) : 00                 <- No host bridge interleave
->    Interleave Arithmetic : 00
->                 Reserved : 0000
->              Granularity : 00000000
->             Restrictions : 0006               <- Bit(2) - Volatile
->                    QtgId : 0001
->             First Target : 00000007           <- Host Bridge 7
-> 
->          Subtable Type : 01 [CXL Fixed Memory Window Structure]
->                 Reserved : 00
->                   Length : 002C
->                 Reserved : 00000000
->      Window base address : 0000000400000000   <- Memory Region
->              Window size : 0000000080000000   <- 2GB
-> Interleave Members (2^n) : 00                 <- No host bridge interleave
->    Interleave Arithmetic : 00
->                 Reserved : 0000
->              Granularity : 00000000
->             Restrictions : 0006               <- Bit(2) - Volatile
->                    QtgId : 0001
->             First Target : 00000007           <- Host Bridge 7
-> 
-> SRAT:
->         Subtable Type : 01 [Memory Affinity]
->                Length : 28
->      Proximity Domain : 00000001          <- NUMA Node 1
->             Reserved1 : 0000
->          Base Address : 0000000300000000  <- Physical Memory Region
->        Address Length : 0000000080000000  <- first 2GB
-> 
->         Subtable Type : 01 [Memory Affinity]
->                Length : 28
->      Proximity Domain : 00000001          <- NUMA Node 1
->             Reserved1 : 0000
->          Base Address : 0000000400000000  <- Physical Memory Region
->        Address Length : 0000000080000000  <- second 2GB
-> ```
-> 
-> The SRAT entries allow us to keep the regions attached to the same node.
-> ```
-> 
-> NUMA Structure:
->         ---------     --------   |    ----------
->         | cpu0  |-----| DRAM |---|----| Node 0 |
->         ---------     --------   |    ----------
->             |                    |
->          -------                 |    ----------
->          | HB0 |-----------------|----| Node 1 |
->          -------                 |    ----------
->         /       \                |
->    CXL Dev     CXL Dev           |
-> ```
->
-Hi, Gregory
-
-Seeing this, I have an assumption to discuss.
-
-If the same system uses tables like below:
-
-CFMWS:
-         Subtable Type : 01 [CXL Fixed Memory Window Structure]
-                Reserved : 00
-                  Length : 002C
-                Reserved : 00000000
-     Window base address : 0000000300000000   <- Memory Region
-             Window size : 0000000080000000   <- 2GB
-Interleave Members (2^n) : 00                 <- No host bridge interleave
-   Interleave Arithmetic : 00
-                Reserved : 0000
-             Granularity : 00000000
-            Restrictions : 0006               <- Bit(2) - Volatile
-                   QtgId : 0001
-            First Target : 00000007           <- Host Bridge 7
-
-         Subtable Type : 01 [CXL Fixed Memory Window Structure]
-                Reserved : 00
-                  Length : 002C
-                Reserved : 00000000
-     Window base address : 0000000400000000   <- Memory Region
-             Window size : 0000000080000000   <- 2GB
-Interleave Members (2^n) : 00                 <- No host bridge interleave
-   Interleave Arithmetic : 00
-                Reserved : 0000
-             Granularity : 00000000
-            Restrictions : 0006               <- Bit(2) - Volatile
-                   QtgId : 0001
-            First Target : 00000007           <- Host Bridge 7
-
-SRAT:
-        Subtable Type : 01 [Memory Affinity]
-               Length : 28
-     Proximity Domain : 00000000          <- NUMA Node 0
-            Reserved1 : 0000
-         Base Address : 0000000300000000  <- Physical Memory Region
-       Address Length : 0000000080000000  <- first 2GB
-
-        Subtable Type : 01 [Memory Affinity]
-               Length : 28
-     Proximity Domain : 00000001          <- NUMA Node 1
-            Reserved1 : 0000
-         Base Address : 0000000400000000  <- Physical Memory Region
-       Address Length : 0000000080000000  <- second 2GB
-
-
-The first 2GB cxl memory region would locate at node0 with DRAM.
-
-NUMA Structure:
-
-        ---------     --------   |            ----------
-        | cpu0  |-----| DRAM |---|------------| Node 0 |
-        ---------     --------   |   /        ----------
-            |                    |  /first 2GB
-         -------                 | /          ----------
-         | HB0 |-----------------|------------| Node 1 |
-         -------                 |second 2GB  ----------
-        /       \                |
-   CXL Dev     CXL Dev           |
-```
-
-Is above configuration and structure valid?
-
-Yuquan
-> And the decoder programming would look like so
-> ```
-> Decoders:
->                                CXL  Root
->                              /           \
->                     decoder0.0           decoder0.1
->                   IW:1  IG:256           IW:1  IG:256
->     [0x300000000, 0x37FFFFFFF]           [0x400000000, 0x47FFFFFFF]
->                              \           /
->                               Host Bridge
->                              /           \
->                     decoder1.0           decoder1.1
->                   IW:2  IG:256           IW:2  IG:256
->     [0x300000000, 0x37FFFFFFF]           [0x400000000, 0x47FFFFFFF]
->               /   \                                /   \
->     Endpoint 0     Endpoint 1            Endpoint 0     Endpoint 1
->         |              |                     |              |
->     decoder2.0     decoder3.0            decoder2.1     decoder3.1
->             IW:2 IG:256                          IW:2 IG:256
->     [0x300000000, 0x37FFFFFFF]           [0x400000000, 0x47FFFFFFF]
-> ```
-> 
-> Linux manages decoders in relation to the associated component, so
-> decoders are N.M where N is the component and M is the decoder number.
-> 
-> If you look, you'll see each side of this tree looks individually
-> equivalent to the intra-host-bridge interleave example, just with one
-> half of the total memory each (matching the CFMWS ranges).
-> 
-> Each of the root decoders still has an interleave width of 1 because
-> they both only target one host bridge (despite it being the same one).
-> 
-> 
-> --------------------------------
-> Software Interleave (Mempolicy).
-> --------------------------------
-> Linux provides a software mechanism to allow tasks to to interleave its
-> memory across NUMA nodes - which may have different performance
-> characteristics.  This component is called `mempolicy`, and is primarily
-> operated on with the `set_mempolicy()` and `mbind()` syscalls.
-> 
-> These syscalls take a nodemask (bitmask representing NUMA node ids) as
-> an argument to describe the intended allocation policy of the task.
-> 
-> The following policies are presently supported (as of v6.13)
-> ```
-> enum {
->         MPOL_DEFAULT,
->         MPOL_PREFERRED,
->         MPOL_BIND,
->         MPOL_INTERLEAVE,
->         MPOL_LOCAL,
->         MPOL_PREFERRED_MANY,
->         MPOL_WEIGHTED_INTERLEAVE,
-> };
-> ```
-> 
-> Let's look at `MPOL_INTERLEAVE` and `MPOL_WEIGHTED_INTERLEAVE`.
-> 
-> To quote the man page:
-> ```
-> MPOL_INTERLEAVE
->     This  mode  interleaves  page  allocations  across the nodes specified
->     in nodemask in numeric node ID order.  This optimizes for bandwidth
->     instead of latency by spreading out pages and memory accesses to those
->     pages across multiple nodes.  However, accesses to a single page will
->     still be limited to the memory bandwidth of a single node.
-> 
-> MPOL_WEIGHTED_INTERLEAVE (since Linux 6.9)
->     This mode interleaves page allocations across the nodes specified in
->     nodemask according to the weights in
->         /sys/kernel/mm/mempolicy/weighted_interleave
->     For example, if bits 0, 2, and 5 are set in nodemask and the contents of
->         /sys/kernel/mm/mempolicy/weighted_interleave/node0
->         /sys/ ... /node2
->         /sys/ ... /node5
->     are 4, 7, and 9, respectively, then pages in this region will be
->     allocated on nodes 0, 2, and 5 in a 4:7:9 ratio.
-> ```
-> 
-> To put it simply, MPOL_INTERLEAVE will interleave allocations at a page
-> granularity (4KB, 2MB, etc) across nodes in a 1:1 ratio, while
-> MPOL_WEIGHTED_INTERLEAVE takes into account weights - which presumably
-> map to the bandwidth of each respective node.
-> 
-> Or more concretely:
-> 
-> MPOL_INTERLEAVE
->     1:1 Interleave between two nodes.
->     malloc(4096)  ->  node0
->     malloc(4096)  ->  node1
->     malloc(4096)  ->  node0
->     malloc(4096)  ->  node1
->     ... and so on ...
-> 
-> MPOL_WEIGHTED_INTERLEAVE
->     2:1 Interleave between two nodes.
->     malloc(4096)  ->  node0
->     malloc(4096)  ->  node0
->     malloc(4096)  ->  node1
->     malloc(4096)  ->  node0
->     malloc(4096)  ->  node0
->     malloc(4096)  ->  node1
->     ... and so on ...
-> 
-> This is the preferred mechanism for *heterogeneous interleave* on Linux,
-> as it allows for predictable performance based on the explicit (and
-> visible) placement of memory.
-> 
-> It also allows for memory ZONE restrictions to enable better performance
-> predictability (e.g. keeping kernel locks out of CXL while allowing
-> workloads to leverage it for expansion or bandwidth).
-> 
-> ======================
-> Mempolicy Limitations.
-> ======================
-> Mempolicy is a *per-task* allocation policy that is inherited by
-> child-tasks on clone/fork. It can only be changed by the task itself,
-> though cgroups may affect the effective nodemask via cpusets.
-> 
-> This means once a task has been launched, and external actor cannot
-> change the policy of a running task - except possibly by migrating that
-> task between cgroups or changing the cpusets.mems value of the cgroup
-> the task lives in.
-> 
-> Additionally, If capacity on a given node is not available, allocations
-> will fall back to another node in the node mask - which may cause
-> interleave to become unbalanced.
-> 
-> ================================
-> Hardware Interleave Limitations.
-> ================================
-> Granularities:
->    granularities are limited on hardware
->    (typically 256B up to 16KB by power of 2)
-> 
-> Ways:
->    Ways are limited by the CXL configuration to:
->    2,4,8,16,3,6,12
-> 
-> Balance:
->    Linux does not allow imbalanced interleave configurations
->    (e.g. 3-way interleave where 2 targets are on 1 HB and 1 on another)
-> 
-> Depending on your platform vendor and type of interleave, you may not
-> be able to deconstruct an interleave region at all (decoders may be
-> locked).  In this case, you may not have the flexiblity to convert
-> operation from interleaved to non-interleave via the driver interface.
-> 
-> In the scenario where your interleave configuration is entirely driver
-> managed, you cannot adjust the size of an interleave set without
-> deconstructing the entire set.
-> 
-> ------------------------------------------------------------------------
-> 
-> Next we'll discuss how memory allocations occur in a CXL-enabled system,
-> which may be affected by things like Reclaim and Tiering systems.
-> 
-> ~Gregory
+>=20
+> Itaru.=20
+>=20
+> >=20
+> > Itaru.
+> >  =20
+> >>=20
+> >> Sounds like Marc is on to something and maybe the KASLR is known
+> >> to cause this problem.
+> >>=20
+> >> Thanks for posting to this list and send any further questions or
+> >> comments. Happy to have you using run_qemu.sh and the cxl tests!
+> >>=20
+> >> Alison
+> >>=20
+> >>  =20
+> >>>=20
+> >>> [1] https://gitlab.com/jic23/qemu/ cxl-2025-02-20
+> >>> [2] https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/
+> >>>=20
+> >>> Thanks,
+> >>> Itaru. =20
+>=20
+>=20
+>=20
 
