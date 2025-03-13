@@ -1,75 +1,61 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238A3269CE6
-	for <linux-cxl@vger.kernel.org>; Thu, 13 Mar 2025 16:23:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E5E32690E6;
+	Thu, 13 Mar 2025 16:28:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741883004; cv=none; b=InbvQsHMivxrMXG0nNwzm8cfS/ECqkjomsMD/hKB0B+cZ2xI2t5eylcRIBBi9MgkvJIzaUlwaNPyYojEmYzWSkUdxfKzUiLIDSWyz/2ai89czRIBEQq4Vfp4ce42isal1Q8ckN5vSzhjAeSg853RxpA2A9T2+OOJ0Dws1bEAKKM=
+	t=1741883341; cv=none; b=XkjmbZm9fN2N58M8DYM00rM1RVnCzI6/Ph27pDD1fbNXRm0yNEuKZyECTQYJW6hUNpBUvnnMKROEQ2Zh0rVzaaEIy0hf3hqtZ7IyQsTnorLFObQLD4gqfRavNmTCFII+vY5i6qFCFlZfkA9FL5e0hwsCou7uVarr4vTzEU8Lq+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741883004; c=relaxed/simple;
-	bh=l5Bu+TyRNUWlmGj5EcMKN9XpyeX6l5pAcSIM2YB0SJM=;
+	s=arc-20240116; t=1741883341; c=relaxed/simple;
+	bh=3Y/eakNnsmh65MrzAH4cER1Z1Z+jb7p5eK8T1XTASY4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WPTYJ2gMBWQ8d+EeGy3eRvCMK2Tzz3tjrs+M7OOM4fbqcdDyhH6og2CBhRAoOj/xG/NdOlUi84tzxVOUyPo20AXXjWbtWtBe2tniqGsR60tk9E1b7MX5q7P84RzpqAmAnNWpKOzEyeecI73bsFNB1CAXAgnabsqeYsQOoQa8PKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=XRifKj/6; arc=none smtp.client-ip=209.85.222.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=XH3dzKM8eougF7pQJZWq53pPh9aXYqoIs60VZXh6OdjoCzxst8B6DhNZpg9WRt8pxp7XO7JYSCItP+ec6TKBHvKsm/iVcwtok5HyVsqg+qLppu2aL2p8EtSnvEfXtcGZlNEuFNpBKbdCX42xdNy6lzNAJfuSwylnl6TmsSu9mf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fazykuw/; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="XRifKj/6"
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7c089b2e239so129259685a.0
-        for <linux-cxl@vger.kernel.org>; Thu, 13 Mar 2025 09:23:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1741883002; x=1742487802; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KrRFUJhkeyaL1R2Vv0+vn3p6ZJnpUo2ZC2Z7tEGAZfw=;
-        b=XRifKj/6NoYLbHvC701UzsyhxZSTvFSeO1lVMk2NpESGpCaKV3EcC5mGeTClMgHQn7
-         PMt9mxPlKbQbLeqKw8Q6jvOWMh55gQefjLdK6QnDBNs/VnycTJ2wOUGN0xMdc7mxjxUi
-         0x1wuRlzmokhZLE/1Pw1OmvRWbS0puaPU8olfH43w++S/lskaGGgABJ7d0RAS2gyCuHO
-         GQaA52KaaZ4aotNe4h0DzslNBL2CGLX78irH3KRoxjpTGcRL3XdfzIeKicAEiizdDkx2
-         37okxbG36tf9yWxqc5DMJeepcBDvOVl513iB2X7T58XC85+ygDLMk0diu8GhvZwtYsWW
-         1ZIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741883002; x=1742487802;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KrRFUJhkeyaL1R2Vv0+vn3p6ZJnpUo2ZC2Z7tEGAZfw=;
-        b=Ed/wFnack+iFQbkuxO4iUT6LyHh7k+Ow2BKd1r1GoAoxzpXTFjiiaXPDs/vlJka4SV
-         j6WVtCCyA6zdcEdv3tlxgpGcGNMRq0J5NGtVwdXyOc2IOQIAZhBvtLcy1iF9kOZEfoP8
-         KjdiqrOSRzJGTTr5f7rpJOJmsbkbqsx3RmlusrRFNyU3WRRH8fN2f+DCDqmCFfqmzMGs
-         J7UK4okRM1SSWBuliUzv1P3Wxj/HORvs87+/2wCa7NgCY7+/Xy+Z97HsY2TQiT7Vf/Yf
-         ADuid4arF6xgEA7A8qBQy9ZkuryxUiM7T3cMBodm9JRNvtwH4szOPSjvPWHrWELzOr6o
-         dKlg==
-X-Forwarded-Encrypted: i=1; AJvYcCXwTnX05ix0OFVmxCpkB5OuFzeTvNB+V7cGL8ZOeWaFq20swxXzhCbPtysIt1pvzXOdCxLbtg0ludg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzm3Mb1nz8SbtH6CvelpLiJhNTfRnnoVQaM4M2CQRF65RR/5sYQ
-	dLoDgsTXAzK85zIdBXHHhjxlaPr6NcJpo07Q1D36pBpw8IzO2lpH9+CKXTqFZ0o=
-X-Gm-Gg: ASbGnctO3oAfl+cqUwgAdO2Ls/tm48H6I/QxWUg8BNttYuTn5MOmsRP7w0UJcjFND1j
-	PV5viPlK86QqjXedOQxbh79o6Fi4Gbsi4sxEf301OgZHRYAeDu4ru1Jvp1RVd16/w7q7TZ1YQCm
-	lc/ZuCEpY3CgYMePYRDEacMLvkEyK141965d5g0EQCiUrQw3visoEb56aiVI22gdheQj34rBlzZ
-	AoDPCjvE73n1Jp+LsRD/CfPaTtZH7LQmc8sMzzvJF43hL0eLG/SWs46T+x4z/Mf7b6Bt/ommQJn
-	HCQwwuC8l+N49SLe1MKvhz/PT0GGR3xMByp5KzVXO7ffggqqgCckLuSxSA2Oqkc6+fC8mFhOaTB
-	RhWtcTc+rla9oXtaNDemH5gB2Xms=
-X-Google-Smtp-Source: AGHT+IFmSrDkHOW9CD4C+SfuWoYsDhx22Nfs217sGKgO8g7l8OBfmKzMb0gcROREHfpiz274St3PtA==
-X-Received: by 2002:a05:620a:8323:b0:7c5:3da4:5bcb with SMTP id af79cd13be357-7c57376cde3mr447561585a.10.1741883001932;
-        Thu, 13 Mar 2025 09:23:21 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c573da455dsm114957785a.115.2025.03.13.09.23.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 09:23:21 -0700 (PDT)
-Date: Thu, 13 Mar 2025 12:23:19 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Rakie Kim <rakie.kim@sk.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	joshua.hahnjy@gmail.com, dan.j.williams@intel.com,
-	ying.huang@linux.alibaba.com, kernel_team@skhynix.com,
-	honggyu.kim@sk.com, yunjeong.mun@sk.com, david@redhat.com
-Subject: Re: [PATCH v2 2/4] mm/mempolicy: Support memory hotplug in weighted
- interleave
-Message-ID: <Z9MGdwrgX8dYeHha@gourry-fedora-PF4VCD3F>
-References: <Z9GwNWNC9VfR3Y6A@gourry-fedora-PF4VCD3F>
- <20250313063351.692-1-rakie.kim@sk.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fazykuw/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741883340; x=1773419340;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=3Y/eakNnsmh65MrzAH4cER1Z1Z+jb7p5eK8T1XTASY4=;
+  b=Fazykuw/T0uga3mLbAWmWHU/VtL1Q+Y9H4hduhtbTpeVsuiTQa+hmIj+
+   74vK/60P63GqSle+mNqYtVE0ogpMRY5VIktnWSpGVtjK78yLFTTcEBI0j
+   fp1qGOaW9LZUWzissv3RuqLHdpL5TlcBuXPZKan2ys4GUPpcULvr7+tJm
+   D/21L8GiHlJGFu/ldYA6qVC9ZGqZFUJdqPBSpa15NJfVjhiLbaqayUvNf
+   RzUAJDbbzCBjw3thX6KAzwaagzTqVstDevdZc1nDgy0Gac2yjEl4SMLza
+   KM4j07V0rTD9fdJnwF/jcgn00+6YILgoiuFoiUtF9h83RhhptY77XdpBj
+   w==;
+X-CSE-ConnectionGUID: p+BgED3QRYCzzxtwzmTLxA==
+X-CSE-MsgGUID: 2uUcfhD0RNym+PqX+0l9wQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11372"; a="42897193"
+X-IronPort-AV: E=Sophos;i="6.14,245,1736841600"; 
+   d="scan'208";a="42897193"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 09:28:49 -0700
+X-CSE-ConnectionGUID: 5mNvFJCwSGiCj+4H9GUFsQ==
+X-CSE-MsgGUID: 27ex/FQqQ2+R9CovM2FI7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,245,1736841600"; 
+   d="scan'208";a="144198762"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.108.96])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 09:28:49 -0700
+Date: Thu, 13 Mar 2025 09:28:46 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+Cc: rafael@kernel.org, lenb@kernel.org, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, rrichter@amd.com, bfaccini@nvidia.com,
+	rppt@kernel.org, haibo1.xu@intel.com, chenbaozi@phytium.com.cn,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v2] ACPI: NUMA: debug invalid unused PXM value for CFMWs
+Message-ID: <Z9MHvp6GA_iGwfg0@aschofie-mobl2.lan>
+References: <20250313060907.2381416-1-wangyuquan1236@phytium.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -78,79 +64,88 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250313063351.692-1-rakie.kim@sk.com>
+In-Reply-To: <20250313060907.2381416-1-wangyuquan1236@phytium.com.cn>
 
-On Thu, Mar 13, 2025 at 03:33:37PM +0900, Rakie Kim wrote:
-> > I'm fairly certain this logic is wrong.  If I add two memory blocks and
-> > then remove one, would this logic not remove the sysfs entries despite
-> > there being a block remaining?
+On Thu, Mar 13, 2025 at 02:09:07PM +0800, Yuquan Wang wrote:
+> The absence of SRAT would cause the fake_pxm to be -1 and increment
+> to 0, then send to acpi_parse_cfmws(). If there exists CXL memory
+> ranges that are defined in the CFMWS and not already defined in the
+> SRAT, the new node (node0) for the CXL memory would be invalid, as
+> node0 is already in "used".
 > 
-> Regarding the assumption about node configuration:
-> Are you assuming that a node has two memory blocks and that
-> MEM_OFFLINE is triggered when one of them is offlined? If so, then
-> you are correct that this logic would need modification.
+> This utilizes disable_srat() & srat_disabled() to fail CXL init.
+
+Seems like this fixup has drifted from adjusting the fake_pxm to 
+shutting down CXL parsing. More below -
+
 > 
-> I performed a simple test by offlining a single memory block:
-> # echo 0 > /sys/devices/system/node/node2/memory100/online
+> Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+> ---
 > 
-> In this case, MEM_OFFLINE was not triggered. However, I need to
-> conduct further analysis to confirm this behavior under different
-> conditions. I will review this in more detail and share my
-> findings, including the test methodology and results.
->
+> Changes in v2:
+> - Add disable_srat() when fake_pxm is invalid
+> - Add srat_disabled() check in cxl_acpi_probe() and acpi_parse_cfmws()
+> 
+> 
+>  drivers/acpi/numa/srat.c | 10 ++++++++++
+>  drivers/cxl/acpi.c       |  4 ++++
+>  2 files changed, 14 insertions(+)
+> 
+> diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
+> index 00ac0d7bb8c9..2dac25c9258a 100644
+> --- a/drivers/acpi/numa/srat.c
+> +++ b/drivers/acpi/numa/srat.c
+> @@ -441,6 +441,11 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
+>  	start = cfmws->base_hpa;
+>  	end = cfmws->base_hpa + cfmws->window_size;
+>  
+> +	if (srat_disabled()) {
+> +		pr_err("SRAT is missing or bad while processing CFMWS.\n");
+> +		return -EINVAL;
+> +	}
+> +
 
-+David - might have a quick answer to this.  I would have expected a
-single memory block going offline to cause a notification.
+This goes too far by shutting down cfmws parsing for lack of SRAT.
 
+>  	/*
+>  	 * The SRAT may have already described NUMA details for all,
+>  	 * or a portion of, this CFMWS HPA range. Extend the memblks
+> @@ -646,6 +651,11 @@ int __init acpi_numa_init(void)
+>  		if (node_to_pxm_map[i] > fake_pxm)
+>  			fake_pxm = node_to_pxm_map[i];
+>  	}
+> +
+> +	/* Make sure CFMWs fake nodes start at node[1] */
+> +	if (fake_pxm < 0)
+> +		disable_srat();
+> +
 
-I think the logic we care about is here:
+How does the code above make sure fake node starts at node[1]?
+Would an explicit adjustment like this work?
 
-static void node_states_check_changes_online(unsigned long nr_pages,
-        struct zone *zone, struct memory_notify *arg)
-{
-        int nid = zone_to_nid(zone);
+-       last_real_pxm = fake_pxm;
+-       fake_pxm++;
++       fake_pxm = max(fake_pxm, 1);
++       last_real_pxm = fake_pxm--;
 
-        arg->status_change_nid = NUMA_NO_NODE;
-        arg->status_change_nid_normal = NUMA_NO_NODE;
-
-        if (!node_state(nid, N_MEMORY))
-                arg->status_change_nid = nid;
-        if (zone_idx(zone) <= ZONE_NORMAL && !node_state(nid, N_NORMAL_MEMORY))
-                arg->status_change_nid_normal = nid;
-}
-
-static void node_states_set_node(int node, struct memory_notify *arg)
-{
-        if (arg->status_change_nid_normal >= 0)
-                node_set_state(node, N_NORMAL_MEMORY);
-
-        if (arg->status_change_nid >= 0)
-                node_set_state(node, N_MEMORY);
-}
-
-int online_pages(unsigned long pfn, unsigned long nr_pages,
-                       struct zone *zone, struct memory_group *group)
-{
-	...
-        node_states_check_changes_online(nr_pages, zone, &arg);
-	...
-        node_states_set_node(nid, &arg);
-	...
-        memory_notify(MEM_ONLINE, &arg);
-}
-
-In the callback i think you want to check whether N_MEMORY is set
-
-+	case MEM_OFFLINE:
-++              if (node is !N_MEMORY)
-++			sysfs_wi_node_release(node_attrs[nid], wi_kobj);
-+		break;
-+	}
-
-Similar with online (don't want to double-add).
-
-
-also from what I can tell, N_MEMORY implies N_ONLINE because N_ONLINE
-occurs when memory blocks are added (regardless of state).
-
-~Gregory 
+>  	last_real_pxm = fake_pxm;
+>  	fake_pxm++;
+>  	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CFMWS, acpi_parse_cfmws,
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index cb14829bb9be..e75a8ead99f6 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -829,6 +829,10 @@ static int cxl_acpi_probe(struct platform_device *pdev)
+>  	if (rc)
+>  		return rc;
+>  
+> +	/* CXL must be in a NUMA system */
+> +	if (srat_disabled())
+> +		return -EINVAL;
+> +
+>  	cxl_res = devm_kzalloc(host, sizeof(*cxl_res), GFP_KERNEL);
+>  	if (!cxl_res)
+>  		return -ENOMEM;
+> -- 
+> 2.34.1
+> 
