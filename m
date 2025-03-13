@@ -1,135 +1,136 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C3B1FA14E
-	for <linux-cxl@vger.kernel.org>; Thu, 13 Mar 2025 09:11:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4621F267392;
+	Thu, 13 Mar 2025 12:31:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741857091; cv=none; b=cCPbrwMVd4lwmbs4Lm/p8Ujrtt3WwM/QhzKbb0RCsWK7XYEpkAMdFYLmLWVOrJ2lR8YEAbxHnGbBGNN9HS6ca5XDwMqs1hrXr/BRt0wiUuY9e5i7Lz+/dyzhQ/NcN40br6kXTVsWs9daHEXLClmhiW0RZnLPfbYcXSgG4MaSvxA=
+	t=1741869063; cv=none; b=KLO7G5IdgUeDyfWEXtvaa0PukZR0DgaPdk0SYtDU3FLAcFtfztQFjD4J0p5/Glwm+cbw9JYNzknU9QkWUGtXleCzVdOho69QTotuaElUqBody4Or3qkY+8px7iD3Tj1jmff0sKoKMXVh+65omrf+DTKZ8V/mI7eIsB6qQClcuqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741857091; c=relaxed/simple;
-	bh=lcDtcf2tk1grIuVwkC66XWaNiJ0lE+tWdRycEcMyPyk=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Y3McqVd0pYq8TwtoX/aRHVYp2+kW+mipVC/aiiq21GF6We6kluvcqvTaGw/Id9JijgEqjvc1t0WRF/+at6utQ6oHJlENVjUYtTN49n17wpJYlOxkBRlyRMaBNUSfr/uXpUlLgPJjM4amqZZX0ZFVnTo6So4EHYzj5u/SgECLb/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZD1pQ3qy9z6J6pH;
-	Thu, 13 Mar 2025 17:06:54 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id C87A7140A70;
-	Thu, 13 Mar 2025 17:11:25 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 13 Mar
- 2025 10:11:25 +0100
-Date: Thu, 13 Mar 2025 09:11:26 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Itaru Kitayama <itaru.kitayama@linux.dev>
-CC: Alison Schofield <alison.schofield@intel.com>, <linux-cxl@vger.kernel.org>
-Subject: Re: ndctl cxl test suite fails in arm64 QEMU
-Message-ID: <20250313091126.000040db@huawei.com>
-In-Reply-To: <4135507A-DECD-4944-8B39-737A7C90D40A@linux.dev>
-References: <43568B03-6832-4EB1-BF46-EF0F176509E2@linux.dev>
-	<Z75G2UKmx7G59u7P@aschofie-mobl2.lan>
-	<Z8HJbMkV6mzikTI8@vm4>
-	<4135507A-DECD-4944-8B39-737A7C90D40A@linux.dev>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1741869063; c=relaxed/simple;
+	bh=QgE87WHgL2/gqEFScRfoLhAuXcv2irxjXM40eLEwnIs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rB9XZVLUJxu+QHA74SL77SxhtTDQjrrpLV3sMFUkkNfoKWs7whkB+DN8qJ6UIacp/EudASas7xWsoRq741VwkKbTDrsNVufyBIsqE3rVoORYDCwFM3LZ1CGF59IiyeZhvWc+V3x6Pu8i/1Ed6Wo74ta191E7lYI9TOBlRFqBgpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ERQXSeyR; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ERQXSeyR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6ABE5C4CEDD;
+	Thu, 13 Mar 2025 12:30:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741869062;
+	bh=QgE87WHgL2/gqEFScRfoLhAuXcv2irxjXM40eLEwnIs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ERQXSeyRE9t28Z4oqh6LIcVzuMe7PveKvj/B9Jfn9xgkwKMQ0VgYB67mQyHBOqrDO
+	 Xj+WHhYlBXSEweu22HgblRQTWSVamuIupvMhWQxOD0uHT2xLIiZVo68tNDi4oT2LAi
+	 Lu8q5nBvjgtog41OTrk86HpKkFVjByFVItHOlRO1VDjaYtdTGBTthhbZhm8oQ2I+ZO
+	 7KuuomW955duKW0XkrCVFJAMfVBp9I1mTeQXv5v1Rwq6PGOxePjZqH4M3HT4hLytV2
+	 somtbxUVY7Vb9DHi3wt59LflIw9uYBFDYkKMoTh+D3QIeAyF0pCAsXm3NHYBQDoEn3
+	 Nlc1D69nv8iKQ==
+Message-ID: <dc72c6fe-4998-4dba-9442-73ded86470f5@kernel.org>
+Date: Thu, 13 Mar 2025 13:30:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
- frapeml500008.china.huawei.com (7.182.85.71)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 0/8] Introduce fwctl subystem
+Content-Language: en-US
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Jiri Pirko <jiri@resnulli.us>, Jason Gunthorpe <jgg@nvidia.com>,
+ Jakub Kicinski <kuba@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Andy Gospodarek <andrew.gospodarek@broadcom.com>,
+ Aron Silverton <aron.silverton@oracle.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Daniel Vetter <daniel.vetter@ffwll.ch>, Dave Jiang <dave.jiang@intel.com>,
+ Christoph Hellwig <hch@infradead.org>, Itay Avraham <itayavr@nvidia.com>,
+ Jiri Pirko <jiri@nvidia.com>, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>, Leonid Bloch <lbloch@nvidia.com>,
+ linux-cxl@vger.kernel.org, linux-rdma@vger.kernel.org,
+ netdev@vger.kernel.org, Saeed Mahameed <saeedm@nvidia.com>,
+ "Nelson, Shannon" <shannon.nelson@amd.com>,
+ "Sinyuk, Konstantin" <konstantin.sinyuk@intel.com>
+References: <0-v5-642aa0c94070+4447f-fwctl_jgg@nvidia.com>
+ <20250303175358.4e9e0f78@kernel.org> <20250304140036.GK133783@nvidia.com>
+ <20250304164203.38418211@kernel.org> <20250305133254.GV133783@nvidia.com>
+ <mxw4ngjokr3vumdy5fp2wzxpocjkitputelmpaqo7ungxnhnxp@j4yn5tdz3ief>
+ <bcafcf60-47a8-4faf-bea3-19cf0cbc4e08@kernel.org>
+ <20250305182853.GO1955273@unreal>
+From: David Ahern <dsahern@kernel.org>
+In-Reply-To: <20250305182853.GO1955273@unreal>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, 7 Mar 2025 10:44:23 +0900
-Itaru Kitayama <itaru.kitayama@linux.dev> wrote:
+On 3/5/25 7:28 PM, Leon Romanovsky wrote:
+> On Wed, Mar 05, 2025 at 11:17:19AM -0700, David Ahern wrote:
+>> On 3/5/25 8:08 AM, Jiri Pirko wrote:
+>>> Wed, Mar 05, 2025 at 02:32:54PM +0100, jgg@nvidia.com wrote:
+>>>> On Tue, Mar 04, 2025 at 04:42:03PM -0800, Jakub Kicinski wrote:
+>>>>> I thought you were arguing that me opposing the addition was
+>>>>> "maintainer overreach". As in me telling other parts of the kernel
+>>>>> what is and isn't allowed. Do I not get a say what gets merged under
+>>>>> drivers/net/ now?
+>>>>
+>>>> The PCI core drivers are a shared resource jointly maintained by all
+>>>> the subsytems that use them. They are maintained by their respective
+>>>> maintainers. Saeed/etc in this case.
+>>>>
+>>>> It would be inappropriate for your preferences to supersede Saeed's
+>>>> when he is a maintainer of the mlx5_core driver and fwctl. Please try
+>>>> and get Saeed on board with your plan.
+>>>>
+>>>> If the placement under drivers/net makes this confusing then we can
+>>>> certainly change the directory names.
+>>>
+>>> According to how mlx5 driver is structured, and the rest of the advanced
+>>> drivers in the same area are becoming as well, it would make sense to me
+>>> to have mlx5 core in separate core directory, maintained directly by driver
+>>> maintainer:
+>>> drivers/core/mlx5/
+>>> then each of the protocol auxiliary device lands in appropriate
+>>> subsystem directory.
+>>
+>> +1
+>>
+>> This is how I have structured our drivers -- core driver for owning the
+>> PCI device and hosting the APIs to communicate with hardware, an aux bus
+>> and then smaller subsystem focused drivers for the aux devices that make
+>> the device usable from different contexts.
+>>
+>> I think we are ready to start upstreaming, but I am waiting to see how
+>> this falls out - to see if our core driver can land in a non-subsystem
+>> specific location (e.g., drivers/core) or if it needs to go with fwctl
+>> as a generic location.
+> 
+> Do it right, and push it to drivers/core. I'm aware of at least one
+> driver from huge company (not Nvidia) which is in preparation phase
+> before upstreaming, and will fit nicely into this model.
+> 
+> They have separated blocks for PCI, eth, RDMA and GPU.
+> 
 
-> Hi Jonathan, Alison,
->=20
-> > On Feb 28, 2025, at 23:34, Itaru Kitayama <itaru.kitayama@linux.dev> wr=
-ote:
-> >=20
-> > On Tue, Feb 25, 2025 at 02:40:25PM -0800, Alison Schofield wrote: =20
-> >> On Tue, Feb 25, 2025 at 01:09:57PM +0900, Itaru Kitayama wrote: =20
-> >>> Hi,
-> >>>=20
-> >>> Has anyone noticed the ndctl cxl test suite failures I reported below=
- on arm64, QEMU emulation?
-> >>>=20
-> >>> https://github.com/pmem/ndctl/issues/278
-> >>>=20
-> >>> I=E2=80=99m using Jonathan=E2=80=99s latest CXL capable QEMU [1], and=
- the latest CXL kernel [2]. =20
-> >>=20
-> >> Hi Itaru,
-> >>=20
-> >> Looking at region.c:size_store() it seems that alloc_hpa() is failing.
-> >> (kstrtou64 is arch independent and it works for me with same script &
-> >> value)
-> >>=20
-> >> Check the dmesg log at the time of the failure. alloc_hpa() may be
-> >> emitting a message.  (In the run_qemu.sh cmdline add '--cxl-debug') =20
-> >=20
-> > dynamic debug reported this (kernel is without kaslr, today's cxl/next):
-> >=20
-> > [  193.267649] device: 'region4': device_add
-> > [  193.267931] bus: 'cxl': add device region4
-> > [  193.268284] cxl region4: bus: 'cxl': __driver_probe_device: matched =
-device with driver cxl_region
-> > [  193.268333] cxl region4: bus: 'cxl': really_probe: probing driver cx=
-l_region with device
-> > [  193.268401] cxl_region region4: no default pinctrl state
-> > [  193.268482] cxl_region region4: probe with driver cxl_region rejects=
- match -6
-> >=20
-> > does the above show the region4 was not added properly? The sysfs
-> > entries are there after the out of range failure. =20
->=20
-> The driver/cxl/core/region.c=E2=80=99s size_store() triggers a sequence o=
-f:=20
->=20
-> alloc_hpa()
-> alloc_free_mem_region()
-> get_free_mem_region() // with flags set to 0, retruns -ERANGE
->=20
-> While I am looking at the resource core code, do you think this is caused=
- by the old firmware I am using
-> when booting QEMU built off of your CXL topic branch? Suggestions are wel=
-come.
-Unlikely as I don't think there have been any relevant changes in edk2 for
-a long long time.
+Adding that group here after an offlist discussion with that team. If I
+understand correctly, their preferred driver breakout is:
 
-Jonathan
 
->=20
-> Itaru.=20
->=20
-> >=20
-> > Itaru.
-> >  =20
-> >>=20
-> >> Sounds like Marc is on to something and maybe the KASLR is known
-> >> to cause this problem.
-> >>=20
-> >> Thanks for posting to this list and send any further questions or
-> >> comments. Happy to have you using run_qemu.sh and the cxl tests!
-> >>=20
-> >> Alison
-> >>=20
-> >>  =20
-> >>>=20
-> >>> [1] https://gitlab.com/jic23/qemu/ cxl-2025-02-20
-> >>> [2] https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/
-> >>>=20
-> >>> Thanks,
-> >>> Itaru. =20
->=20
->=20
->=20
+      ┌───────────────────────────────────────────────────────────┐
+      │                      Platform Driver                      │
+      │                      habanalabs                           │
+      └────────▲───────────────────▲────────────────────▲─────────┘
+               │AUX                │AUX                 │AUX
+      ┌────────┴────────┐ ┌────────┴────────┐ ┌─────────┴─────────┐
+      │ Accel Driver    │ │ Ethernet Driver │ │ InfiniBand Driver │
+      │ habanalabs_accel│ │ habanalabs_en   │ │ habanalabs_ib     │
+      └─────────────────┘ └─────────────────┘ └───────────────────┘
+
+So that means 3 different vendors and 3 different devices looking for a
+similar auxbus based hierarchy with a core driver not buried within one
+of the subsystems.
+
+I guess at this point we just need to move forward with the proposal and
+start sending patches.
+
+Seems like drivers/core is the consensus for the core driver?
 
