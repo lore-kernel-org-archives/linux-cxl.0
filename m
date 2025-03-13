@@ -1,61 +1,75 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E5E32690E6;
-	Thu, 13 Mar 2025 16:28:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 733F626B081
+	for <linux-cxl@vger.kernel.org>; Thu, 13 Mar 2025 16:40:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741883341; cv=none; b=XkjmbZm9fN2N58M8DYM00rM1RVnCzI6/Ph27pDD1fbNXRm0yNEuKZyECTQYJW6hUNpBUvnnMKROEQ2Zh0rVzaaEIy0hf3hqtZ7IyQsTnorLFObQLD4gqfRavNmTCFII+vY5i6qFCFlZfkA9FL5e0hwsCou7uVarr4vTzEU8Lq+0=
+	t=1741884008; cv=none; b=F9gy52SE4Pl7vhDGVloR2foXtB5ZBzJ+qPEscmKbU3+nY8P1W30Dm78E5bYybG6SDVQ5og6lf4Rje5kdO2rTFupA8dycv2ZG8ju5CtEyk4yR8vbeAtDuJvGVCr3nXp+VkzEPJcZympXtWJ2YdU/AVEQVG7uN5nTs6YCzJmkotYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741883341; c=relaxed/simple;
-	bh=3Y/eakNnsmh65MrzAH4cER1Z1Z+jb7p5eK8T1XTASY4=;
+	s=arc-20240116; t=1741884008; c=relaxed/simple;
+	bh=GWLwb/in/ljzG15bf2lZCq2gdMYjM1TmRRBfkCLRuqc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XH3dzKM8eougF7pQJZWq53pPh9aXYqoIs60VZXh6OdjoCzxst8B6DhNZpg9WRt8pxp7XO7JYSCItP+ec6TKBHvKsm/iVcwtok5HyVsqg+qLppu2aL2p8EtSnvEfXtcGZlNEuFNpBKbdCX42xdNy6lzNAJfuSwylnl6TmsSu9mf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fazykuw/; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=dIKYZV3uKtOwwryOROq6DNLeOyW3ZXtIBx0dpF0UL9GNyGK1z7Nl5Nd8FcMhPZvgy5M3IJnQ04H9p/43vt77y+XyJVP0yE5t35K0ktdIr/xBeOUjs1yic1D0ByqUBwNb9lbHUvYSSLLMdViCSKM74p8nkVeTu9jex8qWJZ+RtqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=rWqf+0PM; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fazykuw/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741883340; x=1773419340;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3Y/eakNnsmh65MrzAH4cER1Z1Z+jb7p5eK8T1XTASY4=;
-  b=Fazykuw/T0uga3mLbAWmWHU/VtL1Q+Y9H4hduhtbTpeVsuiTQa+hmIj+
-   74vK/60P63GqSle+mNqYtVE0ogpMRY5VIktnWSpGVtjK78yLFTTcEBI0j
-   fp1qGOaW9LZUWzissv3RuqLHdpL5TlcBuXPZKan2ys4GUPpcULvr7+tJm
-   D/21L8GiHlJGFu/ldYA6qVC9ZGqZFUJdqPBSpa15NJfVjhiLbaqayUvNf
-   RzUAJDbbzCBjw3thX6KAzwaagzTqVstDevdZc1nDgy0Gac2yjEl4SMLza
-   KM4j07V0rTD9fdJnwF/jcgn00+6YILgoiuFoiUtF9h83RhhptY77XdpBj
-   w==;
-X-CSE-ConnectionGUID: p+BgED3QRYCzzxtwzmTLxA==
-X-CSE-MsgGUID: 2uUcfhD0RNym+PqX+0l9wQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11372"; a="42897193"
-X-IronPort-AV: E=Sophos;i="6.14,245,1736841600"; 
-   d="scan'208";a="42897193"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 09:28:49 -0700
-X-CSE-ConnectionGUID: 5mNvFJCwSGiCj+4H9GUFsQ==
-X-CSE-MsgGUID: 27ex/FQqQ2+R9CovM2FI7A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,245,1736841600"; 
-   d="scan'208";a="144198762"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.108.96])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 09:28:49 -0700
-Date: Thu, 13 Mar 2025 09:28:46 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-Cc: rafael@kernel.org, lenb@kernel.org, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, rrichter@amd.com, bfaccini@nvidia.com,
-	rppt@kernel.org, haibo1.xu@intel.com, chenbaozi@phytium.com.cn,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2] ACPI: NUMA: debug invalid unused PXM value for CFMWs
-Message-ID: <Z9MHvp6GA_iGwfg0@aschofie-mobl2.lan>
-References: <20250313060907.2381416-1-wangyuquan1236@phytium.com.cn>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="rWqf+0PM"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-476a304a8edso11575071cf.3
+        for <linux-cxl@vger.kernel.org>; Thu, 13 Mar 2025 09:40:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1741884005; x=1742488805; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=AU1db5kv6b5O3y8o3SsJx1lUw+kz3Y+K2K5M1PC6NRk=;
+        b=rWqf+0PMKiCEcaZkh/n/kSfZHXtA7YK7bKZ5XT9cGoHGO4qPuc5/gUpqrb+O6nUW78
+         6CrObp3C3UZqq35+BOgM2pJDk56a6Phf7jcgiCLWEG/u5sKv+8Q6wMymR1DAaIzPBTJp
+         hCmqiYrRxiFdmziM/xnKCrGEw+0lLH/rkaDtl3OXpWsTUJrkKHxxFnlf1rRw1OKtHtLu
+         A6XKWLEkAxrIkgE6JEMvKLI/24Y3IRWPQtBSulPjFM6etFLU6sUHRee8QfDdElDxZ/L2
+         QnGa/LjUwYQKYVFNIdK0y9EyVUP0a9doLQ4f9Nq4iGDfWzl7RNIvfCLCN1gv7R2LPAP5
+         NR9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741884005; x=1742488805;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AU1db5kv6b5O3y8o3SsJx1lUw+kz3Y+K2K5M1PC6NRk=;
+        b=ipv6ZSVi/m+ZfBfGLCecpPlUlz2tJhdxAlV6EQ1LsFn2RAlwNXBfDXvbJHe7krr/dx
+         Gp0AuXVLEIQuDRZpa0vRd0shnMxHfGxNq1EE0x1saOfjuGjdUhT3ySOihsOmDS0+jPJq
+         j2gj/wtSWo4IG9JF8+PxJVWqICjGUXhR6rL0V2GV6+itGxSHJBcvtKwUOTKiRF60kl+A
+         VT3kJO535VFZJ4MkY6DJY8Ng5X0aiQvSdNJdlrjMvmoLAeBf67z/+z5NoOdIJdRQQd/V
+         sGMSS+8/wpGLrjkhnRWK/7X3FH4rX9QGrbhEPnduli7MGoUaqE2HB1rfiqhnp7jF9hqQ
+         KvfA==
+X-Forwarded-Encrypted: i=1; AJvYcCUyPBUMofc9SFpKB6SWhnh9oL1lWekVZ4jD3uk0XsaA+h2tWURtmUnSQoawzsdIuzDx5iIoBhSe0mQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLNwfGnSbidxpU2KHSspbpHr7DQKbDnto9GoiHsnXBK1kx22FR
+	f0zDh6rR8n2gJ5oSeiE8snmvq5Fo/0R9gWHjTgGiX5GgHIwE5IV5zskCuRsUq9I=
+X-Gm-Gg: ASbGncvvf28cOKTHIfCvEuj3IdNcpGg/2fDHczgVvtJe2eTuJzKn6DnOgdye1cueEmh
+	YtDssbE2W93PKiLGfsFVP18VFBy15/orcgF+/Uit/tVN7KAbAbwi+II6t+mhtL9QatKFJXLIrgo
+	9LuB+7JrPZhCCDCCNrZtV4x18vcLoVIpBZQU0byaxVIem2gPhUwaEhqo2TQ0RSbLhaKQSZCFkLS
+	qBZ0mHQGZPd5osmgq9mp3X9HhH/glVdC0IwU3jzAuwsV8Pa6cwBxrF4UkxicVJiH5K1H7VRj3Us
+	UEhCkcN0d2b+Z5fKeHbbU+Rt2T51NaKdrcwwA2AbXAQNtedncCf/cmyNBfkF65ii0VOClA2eqSz
+	2bCDfcybzhFQPOiFpZNxyHRAfokY=
+X-Google-Smtp-Source: AGHT+IFkbHVcwllGuGBIJA3zC1/en1QL/cRzQlTpw+FJ8AJ/Tz+liHnNiv/rq/e44ltwNEtCG6qzGw==
+X-Received: by 2002:a05:6214:f62:b0:6e8:9526:5788 with SMTP id 6a1803df08f44-6ea23b41e51mr182171836d6.0.1741884005199;
+        Thu, 13 Mar 2025 09:40:05 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eade24ea07sm11488136d6.66.2025.03.13.09.40.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Mar 2025 09:40:04 -0700 (PDT)
+Date: Thu, 13 Mar 2025 12:40:02 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Rakie Kim <rakie.kim@sk.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+	joshua.hahnjy@gmail.com, dan.j.williams@intel.com,
+	ying.huang@linux.alibaba.com, kernel_team@skhynix.com,
+	honggyu.kim@sk.com, yunjeong.mun@sk.com
+Subject: Re: [PATCH v2 3/4] mm/mempolicy: Enable sysfs support for memory
+ hotplug in weighted interleave
+Message-ID: <Z9MKYlJW9WtotzR3@gourry-fedora-PF4VCD3F>
+References: <Z9Gy-No6pXFWZAyc@gourry-fedora-PF4VCD3F>
+ <20250313063416.703-1-rakie.kim@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -64,88 +78,30 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250313060907.2381416-1-wangyuquan1236@phytium.com.cn>
+In-Reply-To: <20250313063416.703-1-rakie.kim@sk.com>
 
-On Thu, Mar 13, 2025 at 02:09:07PM +0800, Yuquan Wang wrote:
-> The absence of SRAT would cause the fake_pxm to be -1 and increment
-> to 0, then send to acpi_parse_cfmws(). If there exists CXL memory
-> ranges that are defined in the CFMWS and not already defined in the
-> SRAT, the new node (node0) for the CXL memory would be invalid, as
-> node0 is already in "used".
+On Thu, Mar 13, 2025 at 03:34:10PM +0900, Rakie Kim wrote:
+> On Wed, 12 Mar 2025 12:14:48 -0400 Gregory Price <gourry@gourry.net> wrote:
 > 
-> This utilizes disable_srat() & srat_disabled() to fail CXL init.
+> Given that this adjustment is part of integrating the refactored
+> structure, I believe this patch does not need to be split into two.
+> However, I would appreciate any further input you may have on this.
+>
 
-Seems like this fixup has drifted from adjusting the fake_pxm to 
-shutting down CXL parsing. More below -
+Another way of saying this is: can you please change the ordering of
+patch 2 and 3 and place the functional changes into "make mempolicy
+support memory hotplug" patch.
 
-> 
-> Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-> ---
-> 
-> Changes in v2:
-> - Add disable_srat() when fake_pxm is invalid
-> - Add srat_disabled() check in cxl_acpi_probe() and acpi_parse_cfmws()
-> 
-> 
->  drivers/acpi/numa/srat.c | 10 ++++++++++
->  drivers/cxl/acpi.c       |  4 ++++
->  2 files changed, 14 insertions(+)
-> 
-> diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-> index 00ac0d7bb8c9..2dac25c9258a 100644
-> --- a/drivers/acpi/numa/srat.c
-> +++ b/drivers/acpi/numa/srat.c
-> @@ -441,6 +441,11 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
->  	start = cfmws->base_hpa;
->  	end = cfmws->base_hpa + cfmws->window_size;
->  
-> +	if (srat_disabled()) {
-> +		pr_err("SRAT is missing or bad while processing CFMWS.\n");
-> +		return -EINVAL;
-> +	}
-> +
+It's a little odd to "make mempolicy support memory hotplug" and then
+follow that up with a patch that says "now make it REALLY support it".
 
-This goes too far by shutting down cfmws parsing for lack of SRAT.
+Patch 2 should read:
+   "Refactor weighted_interleave sysfs to allow node structure to be
+    dynamic"
+Patch 3 should read:
+   "Make weighted interleave sysfs structure support memory hotplug"
 
->  	/*
->  	 * The SRAT may have already described NUMA details for all,
->  	 * or a portion of, this CFMWS HPA range. Extend the memblks
-> @@ -646,6 +651,11 @@ int __init acpi_numa_init(void)
->  		if (node_to_pxm_map[i] > fake_pxm)
->  			fake_pxm = node_to_pxm_map[i];
->  	}
-> +
-> +	/* Make sure CFMWs fake nodes start at node[1] */
-> +	if (fake_pxm < 0)
-> +		disable_srat();
-> +
+I think you'll find the patches end up looking much cleaner this way as
+well.
 
-How does the code above make sure fake node starts at node[1]?
-Would an explicit adjustment like this work?
-
--       last_real_pxm = fake_pxm;
--       fake_pxm++;
-+       fake_pxm = max(fake_pxm, 1);
-+       last_real_pxm = fake_pxm--;
-
->  	last_real_pxm = fake_pxm;
->  	fake_pxm++;
->  	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CFMWS, acpi_parse_cfmws,
-> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> index cb14829bb9be..e75a8ead99f6 100644
-> --- a/drivers/cxl/acpi.c
-> +++ b/drivers/cxl/acpi.c
-> @@ -829,6 +829,10 @@ static int cxl_acpi_probe(struct platform_device *pdev)
->  	if (rc)
->  		return rc;
->  
-> +	/* CXL must be in a NUMA system */
-> +	if (srat_disabled())
-> +		return -EINVAL;
-> +
->  	cxl_res = devm_kzalloc(host, sizeof(*cxl_res), GFP_KERNEL);
->  	if (!cxl_res)
->  		return -ENOMEM;
-> -- 
-> 2.34.1
-> 
+~Gregory
