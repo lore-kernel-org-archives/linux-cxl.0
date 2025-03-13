@@ -1,151 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E1FE42052;
-	Thu, 13 Mar 2025 12:48:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B91268C57
+	for <linux-cxl@vger.kernel.org>; Thu, 13 Mar 2025 15:02:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741870134; cv=none; b=ChshtTYIAo2BqzqRTmCK1exnqZqdbEtcw7TnSMWLOQrrJQMrp5+Tb4yK5iu7FpFr1s+Hz5DMBLBLjHxt0IKvdCS9/pwBzoq4V54iJHWoc23uENcuzp0YU2j8WS3nht8atNSb1eSShm41HJJZMFDgecR7y2s5+UEcIVxurb/SSf4=
+	t=1741878164; cv=none; b=VJhBQfdVDmB8rgsmtalWAwpygfoNpZymdwcMA/Vg1KfO0IPAGqosTj4twrMROPm4v3XkEO8cOvOAJ+tRIAxFaZKOZbfk2gkR5SqhrqJ4yelsAorSOHHygnhK6ncUWHgV/8wdg97E/J3sc2hiWrPdzclnFqo9QefiIbAYLURCWcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741870134; c=relaxed/simple;
-	bh=IgK5NTQVJ4ndLcVx8X26Yq65Ki9bz6QeXktpQ+rC+jQ=;
+	s=arc-20240116; t=1741878164; c=relaxed/simple;
+	bh=7zDs/4jK42T9rjEWm6oQy/xsWRIMK8LilWON+YAA9gg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hRMRfkGwacjVMC/ZAxRn7VGwm+XVIOul/NlmT6No8iw30ZX/+Bp2SrnbPPHGuR6KwFNwm1RknNoZaoiLjwWC7Evlny1YQHygjEYlzbxAqs9ctVqykAds8FoWfDgLlKuFkJ766F+ybvXXNXysSLUpvZPXTzrwxmUCfCkNhWKYjrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Na9vtaZz; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=RRtnAGIhToDsA9AHRkvm9QmzBWoayWMxNAzncXub7m0bBmFbGD8V/zXWnK5cBjYjXt+b5I74b/m8/rhmGJ2VNfp1XpMEs3jkD2fMciq44JMf7HJ1za/nDBM9kQPxe3FokFxIxRGpWp2/20AysRK9j87dbYP2h+8+Ouapverhx+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=SmhlXohl; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Na9vtaZz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEA78C4CEE5;
-	Thu, 13 Mar 2025 12:48:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741870133;
-	bh=IgK5NTQVJ4ndLcVx8X26Yq65Ki9bz6QeXktpQ+rC+jQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Na9vtaZzWnrl00UAI6t9ajPnmhLddOufTG4FtBqL8v/gjKjtNzUGaI35JWz9xA7nl
-	 xkOlBHoXEKfWTY4ZuXuS1Rjx79+TgCayF2Uzp842iFRp6vCBfRiV9/aY2wrTBFxzLS
-	 WjlNy0akOxiKHA1fDw7v5CSsPJ6Vk6EnrAXiSdKWM7Aqd44VidqVjeS/hPJjYcfeS+
-	 Swm4X3nJLrUQbrc4Q/Ws05gzAWe39rS2z3UDQUZdoGBtyg0Wsdaz82QSLmtmSKGeVa
-	 X1btDUKNM36evwqDUeww8b+jnFDBRKBkHiaLxO4zQLOdYhSlkrXpVC6o/88zEv7K7L
-	 E5ZsK6zvcDRzQ==
-Date: Thu, 13 Mar 2025 14:48:47 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: David Ahern <dsahern@kernel.org>
-Cc: Jiri Pirko <jiri@resnulli.us>, Jason Gunthorpe <jgg@nvidia.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andy Gospodarek <andrew.gospodarek@broadcom.com>,
-	Aron Silverton <aron.silverton@oracle.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Daniel Vetter <daniel.vetter@ffwll.ch>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Itay Avraham <itayavr@nvidia.com>, Jiri Pirko <jiri@nvidia.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Leonid Bloch <lbloch@nvidia.com>, linux-cxl@vger.kernel.org,
-	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	"Nelson, Shannon" <shannon.nelson@amd.com>,
-	"Sinyuk, Konstantin" <konstantin.sinyuk@intel.com>
-Subject: Re: [PATCH v5 0/8] Introduce fwctl subystem
-Message-ID: <20250313124847.GM1322339@unreal>
-References: <0-v5-642aa0c94070+4447f-fwctl_jgg@nvidia.com>
- <20250303175358.4e9e0f78@kernel.org>
- <20250304140036.GK133783@nvidia.com>
- <20250304164203.38418211@kernel.org>
- <20250305133254.GV133783@nvidia.com>
- <mxw4ngjokr3vumdy5fp2wzxpocjkitputelmpaqo7ungxnhnxp@j4yn5tdz3ief>
- <bcafcf60-47a8-4faf-bea3-19cf0cbc4e08@kernel.org>
- <20250305182853.GO1955273@unreal>
- <dc72c6fe-4998-4dba-9442-73ded86470f5@kernel.org>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="SmhlXohl"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6dd420f82e2so15389926d6.1
+        for <linux-cxl@vger.kernel.org>; Thu, 13 Mar 2025 08:02:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1741878162; x=1742482962; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZHY1pG2tvmLOjvUIEAkagny8teglkhED6Z4pC45W9lk=;
+        b=SmhlXohlhOkw1inTkuCmudxJb2FtoXioVgM0AuPDIpjTaw4nhQDVMH33mTYf0ayYh3
+         NlVUxUQpMSsWyvFZ4d6wJwbdCxwDNqNuoIXnLomTJgKbBJsxXtDDtwqZlyxtUYtZYp7T
+         XUDnY2u2/GQdNS4oVr2MB5MGrsbEwlmBW7yiVBqcu7O1dEhmzbTio+MZD7FBpd+dbNN9
+         GW+Tgn+xricC2tjHWeXkWOvChI6dSx7hera8rrWEkFlXxZYh9mgK29Ue/hHDNaNBzZOt
+         d4SCQKtNU82r0c0NXdkmMNJFuIokn2w4a+8KaJc+WUSbPtqMP729pE4a0arqDEF4glJu
+         ubmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741878162; x=1742482962;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZHY1pG2tvmLOjvUIEAkagny8teglkhED6Z4pC45W9lk=;
+        b=lKmC4OudLhTkeNEuXcq6+e5bDtvYTQttaXlcfL+I951tnyHlVrgu1bJYLufzkmXA4o
+         cr7/04L0eA5L4Z0RWKkibKuCEDp6PL1qIrXLqHEGQ13SV01NTQuQ0Y+zVBl50N1n5HEZ
+         DLGuO0IchdvggqlUa3TJzoUugr0NX8haIhfYgrt+LP5EkDcIqPcx8p8m2Yz9C3HaiW4F
+         vKrfRcgJkoJW6nC4DQXwtA4uiWNxci6voQeh668TauiNJ2be6Kv/xYTD/HSRdGmvUZ/K
+         vMTgjXFe5ukSnxfEZXZgOs8iWOVlvdLk1+oTo6DggOCa/mUpLLg9LRtIpi8eOK8UAJeo
+         LS4g==
+X-Forwarded-Encrypted: i=1; AJvYcCVF1vdwGXEqgSpIFv5Hw7ng3KV41tWXzZ6YHEkIWiHgAHRyb9VGbRWs0zh9+TRfVl+PLNqBw76KkgY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzN7lR1knMkPwDMppVTIbVRpOJFHvRs/lCM/HHlWKz70lPxpwdb
+	dKn3krbObFnlEuZuqYjccgAE39oOglfRjzZV8Qta2DoP0a1pMs5kKNasi8Iq9aw=
+X-Gm-Gg: ASbGncs9P6Xiw84/FJ9MyQlWV12UERqQokVitgFoZZ6UpLZemNefOZ/HSqDdeO+qhy6
+	9js0091oMCxvaJr0OffqyGKw31Trrf9kLdcU9P6VUKYu5HTs7/ErNFVd7Er+VKnF/vapsC12QUH
+	6ETSQe7z0H08R2Yv5MmU4Lrwuxxrn12pRzYfBIa1melpB6peZFx+pvObj6qCFNn7A+qqOvN94/P
+	VjhvbdtoVez9sMcREUFk5jLXeJpIZgNthuS8R0OxGPKUrCj6vZfs/dHwBrL2luLIyl4GM4ktlQS
+	MWfr3j9olHLj55zLjIuFoN+PSQ41e6PECJeZHCLJM80HMrGx2C0FiylEYgRyfO7awAETRqG3DNH
+	AthzfjnWWZ/bTiuKXiasE5ltLpXXseOP2RTn1tA==
+X-Google-Smtp-Source: AGHT+IFAMWILyZ8bMRGv7bdKKe5rM96j+5H6aHjq4gkCifNGEy5AffkMBaHGkUHELx5174kUe35U8A==
+X-Received: by 2002:a05:6214:518f:b0:6d4:1680:612d with SMTP id 6a1803df08f44-6eae78613admr673006d6.0.1741878161817;
+        Thu, 13 Mar 2025 08:02:41 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eade24d025sm10481686d6.51.2025.03.13.08.02.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Mar 2025 08:02:41 -0700 (PDT)
+Date: Thu, 13 Mar 2025 11:02:37 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+Cc: rafael@kernel.org, lenb@kernel.org, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com, rrichter@amd.com,
+	bfaccini@nvidia.com, rppt@kernel.org, haibo1.xu@intel.com,
+	chenbaozi@phytium.com.cn, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v2] ACPI: NUMA: debug invalid unused PXM value for CFMWs
+Message-ID: <Z9LzjQCKFfsdE2yJ@gourry-fedora-PF4VCD3F>
+References: <20250313060907.2381416-1-wangyuquan1236@phytium.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <dc72c6fe-4998-4dba-9442-73ded86470f5@kernel.org>
+In-Reply-To: <20250313060907.2381416-1-wangyuquan1236@phytium.com.cn>
 
-On Thu, Mar 13, 2025 at 01:30:52PM +0100, David Ahern wrote:
-> On 3/5/25 7:28 PM, Leon Romanovsky wrote:
-> > On Wed, Mar 05, 2025 at 11:17:19AM -0700, David Ahern wrote:
-> >> On 3/5/25 8:08 AM, Jiri Pirko wrote:
-> >>> Wed, Mar 05, 2025 at 02:32:54PM +0100, jgg@nvidia.com wrote:
-> >>>> On Tue, Mar 04, 2025 at 04:42:03PM -0800, Jakub Kicinski wrote:
-> >>>>> I thought you were arguing that me opposing the addition was
-> >>>>> "maintainer overreach". As in me telling other parts of the kernel
-> >>>>> what is and isn't allowed. Do I not get a say what gets merged under
-> >>>>> drivers/net/ now?
-> >>>>
-> >>>> The PCI core drivers are a shared resource jointly maintained by all
-> >>>> the subsytems that use them. They are maintained by their respective
-> >>>> maintainers. Saeed/etc in this case.
-> >>>>
-> >>>> It would be inappropriate for your preferences to supersede Saeed's
-> >>>> when he is a maintainer of the mlx5_core driver and fwctl. Please try
-> >>>> and get Saeed on board with your plan.
-> >>>>
-> >>>> If the placement under drivers/net makes this confusing then we can
-> >>>> certainly change the directory names.
-> >>>
-> >>> According to how mlx5 driver is structured, and the rest of the advanced
-> >>> drivers in the same area are becoming as well, it would make sense to me
-> >>> to have mlx5 core in separate core directory, maintained directly by driver
-> >>> maintainer:
-> >>> drivers/core/mlx5/
-> >>> then each of the protocol auxiliary device lands in appropriate
-> >>> subsystem directory.
-> >>
-> >> +1
-> >>
-> >> This is how I have structured our drivers -- core driver for owning the
-> >> PCI device and hosting the APIs to communicate with hardware, an aux bus
-> >> and then smaller subsystem focused drivers for the aux devices that make
-> >> the device usable from different contexts.
-> >>
-> >> I think we are ready to start upstreaming, but I am waiting to see how
-> >> this falls out - to see if our core driver can land in a non-subsystem
-> >> specific location (e.g., drivers/core) or if it needs to go with fwctl
-> >> as a generic location.
-> > 
-> > Do it right, and push it to drivers/core. I'm aware of at least one
-> > driver from huge company (not Nvidia) which is in preparation phase
-> > before upstreaming, and will fit nicely into this model.
-> > 
-> > They have separated blocks for PCI, eth, RDMA and GPU.
-> > 
-> 
-> Adding that group here after an offlist discussion with that team. If I
-> understand correctly, their preferred driver breakout is:
-> 
-> 
->       ┌───────────────────────────────────────────────────────────┐
->       │                      Platform Driver                      │
->       │                      habanalabs                           │
->       └────────▲───────────────────▲────────────────────▲─────────┘
->                │AUX                │AUX                 │AUX
->       ┌────────┴────────┐ ┌────────┴────────┐ ┌─────────┴─────────┐
->       │ Accel Driver    │ │ Ethernet Driver │ │ InfiniBand Driver │
->       │ habanalabs_accel│ │ habanalabs_en   │ │ habanalabs_ib     │
->       └─────────────────┘ └─────────────────┘ └───────────────────┘
+On Thu, Mar 13, 2025 at 02:09:07PM +0800, Yuquan Wang wrote:
+> @@ -441,6 +441,11 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
+>  	start = cfmws->base_hpa;
+>  	end = cfmws->base_hpa + cfmws->window_size;
+>  
+> +	if (srat_disabled()) {
+> +		pr_err("SRAT is missing or bad while processing CFMWS.\n");
+> +		return -EINVAL;
+> +	}
+> +
 
-You got it right.
+I thought the srat was optional regardless of the presence of a CFMWS.
+Is this not the case?
 
-> 
-> So that means 3 different vendors and 3 different devices looking for a
-> similar auxbus based hierarchy with a core driver not buried within one
-> of the subsystems.
-> 
-> I guess at this point we just need to move forward with the proposal and
-> start sending patches.
-> 
-> Seems like drivers/core is the consensus for the core driver?
-
-Yes, anything that is not aux_core is fine by me.
-
-drivers/core or drivers/aux.
-
-Thanks
-
-> 
+~Gregory
