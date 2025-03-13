@@ -1,75 +1,77 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0045926ACD
-	for <linux-cxl@vger.kernel.org>; Thu, 13 Mar 2025 15:52:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA4E92698AE
+	for <linux-cxl@vger.kernel.org>; Thu, 13 Mar 2025 16:03:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741881143; cv=none; b=nArd2CbAksipSSa4NTBnihvP1X3uqNwdk3o1jsyUiyWRo/NJJtIIIhJ3ApqxWhlhUWF4xt4vk/sMEioIhyFMQxBAKjc15T/gyZzHTjT13yNA3sjhrkzklCdDB3bnqycHWiEdIcTJ/F4k3YMyk+/eCmjaoOKvaE0KiMWHxn30yJY=
+	t=1741881826; cv=none; b=onYMP1WsOFBvCVVNnnpL3wGKe6qNpyQPfxg6V6FW6J+HWveeaxLYDFyoKLJJgx1sbE4DJZfMYTMy9eweBP4s4uPxX5JHVl/6mysHPpdC7XRTggQJYgXbVEeLsp3eXKXOo6/65nOhlTC/2Vfl2yvG/F1TgIQ0/KYa+SjwxQKHT+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741881143; c=relaxed/simple;
-	bh=A8AtJQ9TXJXCum6G19u7JfO6nSprHwo4DLUis4JKzdM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m4zPdzvcvPGK2kBRLN36mk0QSbqppLmw9Hf37g5V4BU7VjjdPacBLbBmOhTOsAetC5v/sym8QZNnEDpB5+gRi9h8uOQNyEHu28eS1OSZGclXwYN1FHB2dRyqFkVs6yKN5l8VHQOzubHwcUUFQkH3jNSp2qy84Yb9mF4blbJPD4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=irWk5vig; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1741881826; c=relaxed/simple;
+	bh=NTwKdweeXghmMb8e5gqNnBO78ci15QwSO8R0xG0Qo5U=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lxLTFyO7IcugE3ZwnFl+2NqpLuK7a9XMNTjxz4ct+SbPmh33EGdYH38KK+bu4Aew+WSyO0Kpjb8TcMwVeizE83BU2wlqC9R6tWJ/YwiVNoDFAvjujaVyVgqQPTdojFC8UBFxm4lsmMzwHgqZoPWHApBU+77LQPn7JrzTpL8Pr1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I2woZiJZ; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="irWk5vig"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c07cd527e4so91105685a.3
-        for <linux-cxl@vger.kernel.org>; Thu, 13 Mar 2025 08:52:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I2woZiJZ"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-301302a328bso2428128a91.2
+        for <linux-cxl@vger.kernel.org>; Thu, 13 Mar 2025 09:03:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1741881141; x=1742485941; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1741881822; x=1742486622; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4w37FL3B+Ve9xBUgAXtVYhnw9ChVr8Pqzg/e4uFmP8Q=;
-        b=irWk5vigg7fORmZoRWqpPeLUaDAN45YovRW/66jhxR/2xAquXaqFgpd6uUdmys7t7l
-         d4Oo1tq1RrUC+9OeXJtzQZbJVZ1WFsVdTRVz5dWXEp1nO3hVJ6OTTj1pgOmzXlWBwJb+
-         4ohIebc/XcH0muc6t0lbKcEzws/eyP9JK54a/2gJUSb5+lwsFeQMqNbDrTgjihofgq2p
-         jhKNs9UG1Hfcvxl6i7N5RwM30jCWC5EvBsWtRmDUMbj9TIsUlq0fkgqpbFAdaTPZ6bQ8
-         q5ixIT0pH97SBXTQ83kwGtJVFHOUWvvRHGTEQeYWKwlRgWwaO9vdRfb6WqW7o9p68p+j
-         hbxg==
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sIkb5arOEkqODDz9dzsL9/lmEx2EyxAguJsBahIivbs=;
+        b=I2woZiJZNXqgMeeMFuDe21Ipg9bBevisTkOscolfeoNAhYsfulthYEPoYC64x43Qda
+         5ZeD3nRIGwLHbVxrJLbEESwps7VbSh83FzYOmRXsfXiKyhtpzjxGi/qddNUxL+JnYOpc
+         c0yRvENy2hfLD7iWXHPr6rOSupS6b+76+LumG2xz1LmUWfEPk5GGauJ/JhttMoUCpzGA
+         skH+XJ5R1s1W0U5zeanm0gLmMjk/IicPZ3Lv1vvhai9lBgRDGlCykVuqQbo0jIRyvLJ2
+         G+qqyUCXU6MMA9fDalvE9l2TRb28GAZZjS4z9U8xN6DlEEbspmHL6i6wOIGH5utNY2AL
+         EQTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741881141; x=1742485941;
+        d=1e100.net; s=20230601; t=1741881822; x=1742486622;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4w37FL3B+Ve9xBUgAXtVYhnw9ChVr8Pqzg/e4uFmP8Q=;
-        b=a5B54ZrAd7oVJODHSsAmPnrjqU2NVhsFlk5CCmkMyB6IWKIPbhOodObsRAPEE3pJ7V
-         wQtthDpQiV+QBt9nGQSTU+I9TEzKNSfqvpTWtRaEu+h8byBZO4wiDbUmrG57KX1nXYAS
-         GjGYtu8UYzgrsuDIxdjXIB/haU03ed7i6Dd9/zLL14TNoxa4MzfarrJgJjYU2CfVWgg2
-         btXwjHLmDzo8cG9No16b+kYPW308f35E7RK09zvO1UgA5Bcjeg4AmcA+1o7zluKo33Dw
-         iCw082U90nQVRQ606OKlf0sc2XxvEP51B8h4+DpuQpqKFup5l9Vo0borDXjz/ENFJ5zW
-         uDIg==
-X-Forwarded-Encrypted: i=1; AJvYcCX3FAQBwHyQb0yIOnbsx1ZCOaTuHsY5KstZRsNSdViJ0/5JR34bRpQG6WNzO2FL1RGHHL6ZcU/s1FY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDxPfyz6YMyUJ4WKde63JQv/IU6+UR4ALCyV5Lh8U8uq+IlmXf
-	h5ycWHIGNzctZKDAV97otzhWXhKCvM/TWRSnvkNEbgp/gW24ABlAabtoGxsugB8=
-X-Gm-Gg: ASbGncsPx6v0KFsOTdWFacxZ+w5iAxMxcXGfdZV2hg4afQsbEPP1UXLcDG9PlJkergM
-	AFHKSOTytgtqeqfELagHfWjeO4bUum68Rtx/vonxswp6O/4c64K/T/+IxmcVGfD41Nz2JfS7Sxj
-	FG4JkC041Cgu6lc7cebMnfsMYqKEgKzpj8+D1bMQ0tODEnQzLSvRrrb2HORgvMmgdZTZQ8/SVZI
-	mKtHoAQPb124XOj07sDIalcTHKLVMbXZ5gTfk2absRJluxUSJgzctpY59Un3sZ7SH3D3b4eAoy7
-	wQzj7xbo3ojFrQk7UaiZkpPs0+z2ZlifFOphhlGW1q0QQ46yk0skPVRxpOGCQMkcKNATWevmxjW
-	NV8Ff65sQL5E9q5hExSPVcd1YRU4=
-X-Google-Smtp-Source: AGHT+IEsoyWweiNgBmaWSKSfpN7pyNhVfLT8lOAAvmtKf+Ddah15RIIeIcih94D/NjT9dh4sWhGcyw==
-X-Received: by 2002:a05:620a:43aa:b0:7c5:5909:18f3 with SMTP id af79cd13be357-7c55e90fe47mr2004594185a.37.1741881140875;
-        Thu, 13 Mar 2025 08:52:20 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c573d89815sm112187185a.91.2025.03.13.08.52.19
+        bh=sIkb5arOEkqODDz9dzsL9/lmEx2EyxAguJsBahIivbs=;
+        b=EzGwM+DJl/QPMWA5HRicGnwSvSlhTv592kOBwF8xImrGtOLNYdYWBClPkbUapkK6IO
+         +Xa+fL8P9ioQIbsmHISG6512X8Obx1mvCJVGZicabsKp1ZNx4hffXlrZSeMh8C2TyYVR
+         6zYXS5MBAIs54+z3XCD5XotnP8Ibp+dT+9qNQQUHwDOmuVfAWMZb25WWCf5hvbQWvWJ0
+         swI+H0RUnMx2lLiJ8ZMctv/SzvpfqLmlfjRuMPHM3otTdNJlKu9izo8hWJt/aGvtrcu4
+         I3avQvV/lHoAaCP1KmTILecTAmiNcWEZqZpK/Onw3rrDLTZsiVe8H1uuCeuaEwXuhiNg
+         /HPg==
+X-Forwarded-Encrypted: i=1; AJvYcCXXxso1gjOH64sq9ydl1TpAQnQ4/Ek5fvsK2yWhgNJa1nNA5iqvMx+9WAdRTDrg2Q6b6l6Ql/4jHoE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIHFwvIuv5szV9AyiefuJR1e7EUAmuEQW++ttrJC4v21UBb6Uq
+	RaxAT/WLQqbYv2HaVFUPe2wbItQQayuQ6rMo55ZkEixyTMTxBoz8
+X-Gm-Gg: ASbGncsafjmGGtS9FWEcWXppVP0tiLJhf287bYmnhY50m7DkulVtsgG3L/LXmNkA8hz
+	mYpRTod8u+QUz9Dad1QPO9CY4vu0SD0Th2QRNDNTCVkt5DZEvx4dxdUWzidTU3E35pvjq7jdNjD
+	fK3lzc3xtJMclpiwGUTYCk5kdE12hAr586Sz7A5Dxv3OagNALEfxtRea4IC+o1ki0v3twwBOOfu
+	aJ39+mxsApkb+FjLxtnwnrIJVXc9aPw3tX18NH4XLXd9qDwP7L3FnGU3ZCV2j2OtBBgO2BuOC9S
+	jiSDQJ28kPoMghqJE7UT1u9aiC1xZY3DwQl3uyURWgyvVo+I+g==
+X-Google-Smtp-Source: AGHT+IFUWruZuGkMW1jbmnyjoZN66WwgopSQq4sJ/Fn8+F7Mq8lCY19EnN8b/20bLhsAxbkUdjfqew==
+X-Received: by 2002:a17:90b:2802:b0:2ef:2f49:7d7f with SMTP id 98e67ed59e1d1-3014e861a2dmr108612a91.18.1741881821778;
+        Thu, 13 Mar 2025 09:03:41 -0700 (PDT)
+Received: from debian ([2601:646:8f03:9fee:1e89:f144:8d88:9d5c])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30138b3b2bdsm1688969a91.5.2025.03.13.09.03.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 08:52:20 -0700 (PDT)
-Date: Thu, 13 Mar 2025 11:52:18 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Rakie Kim <rakie.kim@sk.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	joshua.hahnjy@gmail.com, dan.j.williams@intel.com,
-	ying.huang@linux.alibaba.com, kernel_team@skhynix.com,
-	honggyu.kim@sk.com, yunjeong.mun@sk.com
-Subject: Re: [PATCH v2 1/4] mm/mempolicy: Fix memory leaks in
- mempolicy_sysfs_init()
-Message-ID: <Z9L_MgjuhrploEUm@gourry-fedora-PF4VCD3F>
-References: <Z9Gs8i1FhJJ0eaiA@gourry-fedora-PF4VCD3F>
- <20250313063247.681-1-rakie.kim@sk.com>
+        Thu, 13 Mar 2025 09:03:41 -0700 (PDT)
+From: Fan Ni <nifan.cxl@gmail.com>
+X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
+Date: Thu, 13 Mar 2025 09:03:37 -0700
+To: Gregory Price <gourry@gourry.net>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Junjie Fu <fujunjie1@qq.com>, qemu-devel@nongnu.org,
+	linux-cxl@vger.kernel.org, viacheslav.dubeyko@bytedance.com,
+	zhitingz@cs.utexas.edu, svetly.todorov@memverge.com,
+	a.manzanares@samsung.com, fan.ni@samsung.com, anisa.su887@gmail.com,
+	dave@stgolabs.net
+Subject: Re: CXL memory pooling emulation inqury
+Message-ID: <Z9MB2bl2mUXjgetJ@debian>
+References: <20230215151854.00003e34@Huawei.com>
+ <tencent_E9F3F01E0D2303378E16505CE4CF208AA908@qq.com>
+ <20250312180543.00002132@huawei.com>
+ <Z9HheFFgOdGE9BcW@gourry-fedora-PF4VCD3F>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -78,111 +80,105 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250313063247.681-1-rakie.kim@sk.com>
+In-Reply-To: <Z9HheFFgOdGE9BcW@gourry-fedora-PF4VCD3F>
 
-On Thu, Mar 13, 2025 at 03:31:38PM +0900, Rakie Kim wrote:
-> > Is this correct? If kobject_init_and_add fails, from other examples we
-> > need only free the mempolicy_kobj - because it failed to initialize and
-> > therefore should not have any references.  I think this causes an
-> > underflow.
+On Wed, Mar 12, 2025 at 03:33:12PM -0400, Gregory Price wrote:
+> On Wed, Mar 12, 2025 at 06:05:43PM +0000, Jonathan Cameron wrote:
+> > 
+> > Longer term I remain a little unconvinced by whether this is the best approach
+> > because I also want a single management path (so fake CCI etc) and that may
+> > need to be exposed to one of the hosts for tests purposes.  In the current
+> > approach commands are issued to each host directly to surface memory.
+> >
 > 
-> Regarding the reordering of mempolicy_kobj allocation:
-> 1) In kobject_init_and_add(), kobject_init() is always called, which
+> Lets say we implement this
+> 
+>   -----------         -----------
+>   |  Host 1 |         | Host 2  |
+>   |    |    |         |         |
+>   |    v    |   Add   |         |
+>   |   CCI   | ------> | Evt Log |
+>   -----------         -----------
+>                  ^ 
+> 	    What mechanism
+> 	   do you use here?
+> 
+> And how does it not just replicate QMP logic?
+> 
+> Not arguing against it, I just see what amounts to more code than
+> required to test the functionality.  QMP fits the bill so split the CCI
+> interface for single-host management testing and the MHSLD interface.
 
-Quite right, mea culpa.
+We have recently discussed the approach internally. Our idea is to do
+something similar to what you have done with MHSLD emulation, use shmem
+dev to share information (mailbox???) between the two devices. 
+> 
+> Why not leave the 1-node DCD with inbound CCI interface for testing and
+> leave QMP interface for development of a reference fabric manager
+> outside the scope of another host?
+
+For this two hosts setup, for now I can see benefits,
+the two hosts can have different kernel, that is to say, the one served
+as FM only need to support for exmaple out-of-band communication with
+the hardware (MCTP over i2c), and do not need to evolve with what we
+want to test on the target host (boot with kernel with features we care).
+That is very important at least for test purpose, as mctp over i2c
+support for x86 support is not upstreamed yet, we do not want to rebase
+whenever the kernel is updated.
+
+More speficially, let's say, we deploy libcxlmi test framework on the FM
+host, and then we can test the target host whatever features needed to
+test (DCD etc). Again the FM host does not need to have dcd kernel support.
+
+Compared to qmp interface, since libcxlmi already supports a lot of
+commands and more commands are being included. It should be much more
+convinient than implementing them with qmp interface.
+
+Fan
+
 
 > 
-> 2) The release function for mempolicy_kobj is responsible for freeing
->    associated memory:
+> TL;DR:  :[ distributed systems are hard to test
 > 
->    static void mempolicy_kobj_release(struct kobject *kobj)
->    {
->        ...
->        kfree(ngrp->nattrs);
->        kfree(ngrp);
->        kfree(kobj);
->    }
+> > > 
+> > > 2.If not fully supported yet, are there any available development branches 
+> > > or patches that implement this functionality?
+> > > 
+> > > 3.Are there any guidelines or considerations for configuring and testing CXL memory pooling in QEMU?
+> > 
+> > There is some information in that patch series cover letter.
+> >
 > 
-
-I see what you're trying to do now after looking at the free-ordering
-at little closer.
-
-Lets do the following:
-
-1) allocate node_attrs and mempolicy_kobj up front and keep your
-   reordering, this lets us clean up allocations on failure before
-   kobject_init is called
-
-2) after this remove all the other code and just let
-   mempolicy_kobj_release clean up node_attrs
-
-3) Add a (%d) to the error message to differentiate failures
-
-This is a little bit cleaner and is a bit less code. (Not built or
-tested, just a recommendation).
-
-I'd recommend submitting this patch by itself to mm-stable, since the
-remainder of the patch line changes functionality and this fixes a bug
-in LTS kernels.
-
-~Gregory
-
----
-
-
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 530e71fe9147..05a410db08b4 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -3541,38 +3541,34 @@ static int __init mempolicy_sysfs_init(void)
- 	int err;
- 	static struct kobject *mempolicy_kobj;
-
--	mempolicy_kobj = kzalloc(sizeof(*mempolicy_kobj), GFP_KERNEL);
--	if (!mempolicy_kobj) {
-+	node_attrs = kcalloc(nr_node_ids, sizeof(struct iw_node_attr *),
-+			     GFP_KERNEL);
-+	if (!node_attrs) {
- 		err = -ENOMEM;
- 		goto err_out;
- 	}
-
--	node_attrs = kcalloc(nr_node_ids, sizeof(struct iw_node_attr *),
--			     GFP_KERNEL);
--	if (!node_attrs) {
-+	mempolicy_kobj = kzalloc(sizeof(*mempolicy_kobj), GFP_KERNEL);
-+	if (!mempolicy_kobj) {
- 		err = -ENOMEM;
--		goto mempol_out;
-+		kfree(node_attrs);
-+		goto err_out;
- 	}
-
- 	err = kobject_init_and_add(mempolicy_kobj, &mempolicy_ktype, mm_kobj,
- 				   "mempolicy");
- 	if (err)
--		goto node_out;
-+		goto mempol_out;
-
- 	err = add_weighted_interleave_group(mempolicy_kobj);
--	if (err) {
--		pr_err("mempolicy sysfs structure failed to initialize\n");
--		kobject_put(mempolicy_kobj);
--		return err;
--	}
-+	if (err)
-+		goto mempol_out;
-
--	return err;
--node_out:
--	kfree(node_attrs);
-+	return 0;
- mempol_out:
--	kfree(mempolicy_kobj);
-+	kobject_put(mempolicy_kobj);
- err_out:
--	pr_err("failed to add mempolicy kobject to the system\n");
-+	pr_err("mempolicy sysfs structure failed to initialize (%d)\n", err);
- 	return err;
- }
-
+> The attached series implements an MHSLD, but implementing the pooling
+> mechanism (i.e. fabric manager logic) is left to the imagination of the
+> reader.   You will want to look at Fan Ni's DCD patch set to understand
+> the QMP Add/Remove logic for DCD capacity.  This patch set just enables
+> you to manage 2+ QEMU Guests sharing a DCD State in shared memory.
+> 
+> So you'll have to send DCD commands individual guest QEMU via QMP, but
+> the underlying logic manages the shared state via locks to emulate real
+> MHSLD behavior.
+>                      QMP|---> Host 1 --------v
+>                [FM]-----|              [Shared State]
+> 	             QMP|---> Host 2 --------^
+> 
+> This differs from a real DCD in that a real DCD is a single endpoint for
+> management, rather than N endpoints (1 per vm).
+> 
+>                                   |---> Host 1
+>                 [FM] ---> [DCD] --|
+> 		                  |---> Host 2
+> 
+> However this is an implementation detail on the FM side, so I chose to
+> do it this way to simplify the QEMU MHSLD implementation.  There's far
+> fewer interactions this way - with the downside that having one of the
+> hosts manage the shared state isn't possible via the current emulation.
+> 
+> It could probably be done, but I'm not sure what value it has since the
+> FM implementation difference is a matter a small amount of python.
+> 
+> It's been a while since I played with this patch set and I do not have a
+> reference pooling manager available to me any longer unfortunately. But
+> I'm happy to provide some guidance where I can.
+> 
+> ~Gregory
