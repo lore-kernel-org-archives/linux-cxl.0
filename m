@@ -1,45 +1,37 @@
-Received: from zg8tmtyylji0my4xnjqumte4.icoremail.net (zg8tmtyylji0my4xnjqumte4.icoremail.net [162.243.164.118])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 081BA1FAC5A;
-	Thu, 13 Mar 2025 06:10:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.164.118
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D0EF78F4A;
+	Thu, 13 Mar 2025 06:33:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741846213; cv=none; b=VygJYVyUofo1x/XcgAdBFLO9tlssUPA9PCk7k0ZZ62niTPuDii5YRZxJSco1K4/a/xgZHQeIoacg0A6pxH3ibTkoVhsYi8oefAlIFNVz9ELUEmuadOdL4D1+4US78lKvpMz2GnbIBzm8BRdA9W9xRrlp7+Srmw/SSbvMKOC9JJA=
+	t=1741847602; cv=none; b=nGrZUckqGrdDRLu4qeGsVx5uOmQdyuikO7elRxRKkGwn7YvndDB7bpiiKAt6zAMivO5hQD1Vw3xoadimcBgJzu1TTo/RsT6GUsQRJj46tGJTbEiCsvq4FmLxVDpw3koTaHxfHRDTFD3udJkmUYu88zsAsCHM7dx96IRB7b0Hlzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741846213; c=relaxed/simple;
-	bh=haDKOhb9ripu8pCRPsDyANNnE4vbQebVtFppu+s+GgE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PWreuOWsJbN7R9BDgp28jkWDsnPuOHeq/3ZhC+Ridavy5b+PHwrEK7v9sOtaizRBQegPRsAC6xJXlzJOxhOf/xKYZm7WASWddd9VzhB0fWtQ4TP+3XWE+Vio5ZkOcDMKN8kDKanyLw2oQ33O2FceX73MpZukTR/3P1b4z5WOMIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=162.243.164.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-6 (Coremail) with SMTP id AQAAfwAXHw+zdtJn3HhxCQ--.12654S2;
-	Thu, 13 Mar 2025 14:09:55 +0800 (CST)
-Received: from phytium.com.cn (unknown [123.150.8.50])
-	by mail (Coremail) with SMTP id AQAAfwBHSYWxdtJnHJFGAA--.19030S3;
-	Thu, 13 Mar 2025 14:09:54 +0800 (CST)
-From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-To: rafael@kernel.org,
-	lenb@kernel.org,
-	dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	rrichter@amd.com,
-	bfaccini@nvidia.com,
-	rppt@kernel.org,
-	haibo1.xu@intel.com
-Cc: chenbaozi@phytium.com.cn,
-	linux-acpi@vger.kernel.org,
+	s=arc-20240116; t=1741847602; c=relaxed/simple;
+	bh=efFAatAqfWxQxOdra+Laiqaxb24NnK9PV+fwmqpE1y0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=s4VqREZ4NwSFeiN9yH3cifZ2WsAR8RnWMbsth2kBV53IflCABuHLnaac4NZJGV4DE4CEHAgtDu4GCnqAOH5lRr/WPCsVysLqDSo0wdg0xUIZzYz4eeu8JmWLHjeSoH91x36c/j//6Er3HIwOt6nMsi9DgHBCGF+P86AWNlD9C9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-fc-67d27c215fcf
+From: Rakie Kim <rakie.kim@sk.com>
+To: Gregory Price <gourry@gourry.net>
+Cc: akpm@linux-foundation.org,
+	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
 	linux-cxl@vger.kernel.org,
-	Yuquan Wang <wangyuquan1236@phytium.com.cn>
-Subject: [PATCH v2] ACPI: NUMA: debug invalid unused PXM value for CFMWs
-Date: Thu, 13 Mar 2025 14:09:07 +0800
-Message-Id: <20250313060907.2381416-1-wangyuquan1236@phytium.com.cn>
-X-Mailer: git-send-email 2.34.1
+	joshua.hahnjy@gmail.com,
+	dan.j.williams@intel.com,
+	ying.huang@linux.alibaba.com,
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com,
+	Rakie Kim <rakie.kim@sk.com>
+Subject: Re: [PATCH v2 1/4] mm/mempolicy: Fix memory leaks in mempolicy_sysfs_init()
+Date: Thu, 13 Mar 2025 15:31:38 +0900
+Message-ID: <20250313063247.681-1-rakie.kim@sk.com>
+X-Mailer: git-send-email 2.48.1.windows.1
+In-Reply-To: <Z9Gs8i1FhJJ0eaiA@gourry-fedora-PF4VCD3F>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -47,79 +39,172 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAfwBHSYWxdtJnHJFGAA--.19030S3
-X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAIAWfR6CADUgAAsn
-Authentication-Results: hzbj-icmmx-6; spf=neutral smtp.mail=wangyuquan
-	1236@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjvJXoW7Kry7JrWxWr18Kw1xuw13twb_yoW8Zw45pF
-	Z7AFyFyry7XFWI9F4Dtw17WFyrC3WjkFWxKF9ru3sxZanxGryDArs3KFyjvFyDJry8Cw4f
-	tFs5t3W5WFy8uF7anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
-	UUUUU
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNLMWRmVeSWpSXmKPExsXC9ZZnoa5izaV0g0XrLS3mrF/DZjF96gVG
+	i593j7NbHN86j93i/KxTLBaXd81hs7i35j+rxeo1GQ4cHjtn3WX36G67zO6xeM9LJo9Nnyax
+	e5yY8ZvFY+dDS4/Pm+QC2KO4bFJSczLLUov07RK4Mn7/Pcde8ESlYuG/dawNjHtkuhg5OSQE
+	TCS+fJ/JBmMv2raZvYuRg4NNQEni2N4YEFNEQFWi7Yp7FyMXB7PAeiaJ15tmgZULC4RIrLu1
+	GKycBaim8SLYRF4BY4n+n2sZISZqSjRcuscEYnMKmElc+/WaBcQWEuCReLVhPyNEvaDEyZlP
+	wOLMAvISzVtnM4PskhA4wSYxc+oTJohBkhIHV9xgmcDIPwtJzywkPQsYmVYxCmXmleUmZuaY
+	6GVU5mVW6CXn525iBAbxsto/0TsYP10IPsQowMGoxMObMPliuhBrYllxZe4hRgkOZiUR3tW2
+	F9KFeFMSK6tSi/Lji0pzUosPMUpzsCiJ8xp9K08REkhPLEnNTk0tSC2CyTJxcEo1MBqfUzul
+	Ly1ouuPoxFM7/mwQXrdw1p5slTmFN7MbXA8+ueUewPnZ9uHUh4m8tdMz7Ot2/bU8e9q2fPc8
+	HafbOj+3OnxvbFvsNSnaVcIwpM+ZSTj7jdO5pm+uF1VDU64yPBGMkFiwQqg0wd+zY4575e/D
+	Xz9sYTp/9e+bL7JfQ/LVU1PYQuakrVRiKc5INNRiLipOBADkTu32XgIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrKLMWRmVeSWpSXmKPExsXCNUNNS1ex5lK6wYHjhhZz1q9hs5g+9QKj
+	xc+7x9ktPj97zWxxfOs8dovDc0+yWpyfdYrF4vKuOWwW99b8Z7U4dO05q8XqNRkWv7etYHPg
+	8dg56y67R3fbZXaPxXteMnls+jSJ3ePEjN8sHjsfWnp8u+3hsfjFByaPz5vkAjijuGxSUnMy
+	y1KL9O0SuDJ+/z3HXvBEpWLhv3WsDYx7ZLoYOTkkBEwkFm3bzN7FyMHBJqAkcWxvDIgpIqAq
+	0XbFvYuRi4NZYD2TxOtNs9hAyoUFQiTW3VoMVs4CVNN4EWwKr4CxRP/PtYwQEzUlGi7dYwKx
+	OQXMJK79es0CYgsJ8Ei82rCfEaJeUOLkzCdgcWYBeYnmrbOZJzDyzEKSmoUktYCRaRWjSGZe
+	WW5iZo6pXnF2RmVeZoVecn7uJkZg4C6r/TNxB+OXy+6HGAU4GJV4eBMmX0wXYk0sK67MPcQo
+	wcGsJMK72vZCuhBvSmJlVWpRfnxRaU5q8SFGaQ4WJXFer/DUBCGB9MSS1OzU1ILUIpgsEwen
+	VAPj+gq5wCk+R+z0RT6mVTzMkP5VtWpfXsnmG49+Kljeu7D5d5iKrpcd4yZ7u58SB3vfdsju
+	esR1IETi68UVildUVY2e+pZmfWj+uegZI4/9ko6ubS/LFhXv/VGyVtOvvz7m372NL1xU3+rl
+	3A6ZlauTb9xw3cJw2baHOz7tT/3+rHuJ7nXrFNNeJZbijERDLeai4kQA/UUOuFgCAAA=
+X-CFilter-Loop: Reflected
 
-The absence of SRAT would cause the fake_pxm to be -1 and increment
-to 0, then send to acpi_parse_cfmws(). If there exists CXL memory
-ranges that are defined in the CFMWS and not already defined in the
-SRAT, the new node (node0) for the CXL memory would be invalid, as
-node0 is already in "used".
+On Wed, 12 Mar 2025 11:49:06 -0400 Gregory Price <gourry@gourry.net> wrote:
 
-This utilizes disable_srat() & srat_disabled() to fail CXL init.
+Hi Gregory
+Thank you for your response regarding this patch.
 
-Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
----
+> On Wed, Mar 12, 2025 at 04:56:24PM +0900, Rakie Kim wrote:
+> > Improper cleanup of sysfs attributes caused kobject and memory leaks when
+> > initialization failed or nodes were removed.
+> > 
+> > This patch ensures proper deallocation of kobjects and memory, preventing
+> > resource leaks and improving stability.
+> >
+> 
+> This patch does multiple things, please split these changes into
+> multiple patches.
 
-Changes in v2:
-- Add disable_srat() when fake_pxm is invalid
-- Add srat_disabled() check in cxl_acpi_probe() and acpi_parse_cfmws()
+This patch should remain as a single patch since all changes address
+kobject-related memory issues in mempolicy_sysfs_init(). If you still
+believe it should be split, I would appreciate your suggestion on
+which parts should be separated.
 
+> 
+> > Fixes: dce41f5ae253 ("mm/mempolicy: implement the sysfs-based weighted_interleave interface")
+> > Signed-off-by: Rakie Kim <rakie.kim@sk.com>
+> > ---
+> >  mm/mempolicy.c | 29 +++++++++++++++--------------
+> >  1 file changed, 15 insertions(+), 14 deletions(-)
+> > 
+> > diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> > index bbaadbeeb291..1691748badb2 100644
+> > --- a/mm/mempolicy.c
+> > +++ b/mm/mempolicy.c
+> > @@ -3541,39 +3541,40 @@ static int __init mempolicy_sysfs_init(void)
+> >  	int err;
+> >  	static struct kobject *mempolicy_kobj;
+> >  
+> > -	mempolicy_kobj = kzalloc(sizeof(*mempolicy_kobj), GFP_KERNEL);
+> > -	if (!mempolicy_kobj) {
+> > +	node_attrs = kcalloc(nr_node_ids, sizeof(struct iw_node_attr *),
+> > +			     GFP_KERNEL);
+> > +	if (!node_attrs) {
+> >  		err = -ENOMEM;
+> >  		goto err_out;
+> >  	}
+> >  
+> > -	node_attrs = kcalloc(nr_node_ids, sizeof(struct iw_node_attr *),
+> > -			     GFP_KERNEL);
+> > -	if (!node_attrs) {
+> > +	mempolicy_kobj = kzalloc(sizeof(*mempolicy_kobj), GFP_KERNEL);
+> > +	if (!mempolicy_kobj) {
+> >  		err = -ENOMEM;
+> > -		goto mempol_out;
+> > +		goto node_out;
+> >  	}
+> 
+> It's not clear to me why you re-ordered these allocations, it seems
+> superfluous.
+> 
+> >  
+> >  	err = kobject_init_and_add(mempolicy_kobj, &mempolicy_ktype, mm_kobj,
+> >  				   "mempolicy");
+> > -	if (err)
+> > -		goto node_out;
+> > +	if (err) {
+> > +		kobject_put(mempolicy_kobj);
+> 
+> Is this correct? If kobject_init_and_add fails, from other examples we
+> need only free the mempolicy_kobj - because it failed to initialize and
+> therefore should not have any references.  I think this causes an
+> underflow.
 
- drivers/acpi/numa/srat.c | 10 ++++++++++
- drivers/cxl/acpi.c       |  4 ++++
- 2 files changed, 14 insertions(+)
+Regarding the reordering of mempolicy_kobj allocation:
+1) In kobject_init_and_add(), kobject_init() is always called, which
+   increments the kobject's refcount. Therefore, even if
+   kobject_init_and_add() fails, kobject_put() must be called to ensure
+   proper memory cleanup.
 
-diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-index 00ac0d7bb8c9..2dac25c9258a 100644
---- a/drivers/acpi/numa/srat.c
-+++ b/drivers/acpi/numa/srat.c
-@@ -441,6 +441,11 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
- 	start = cfmws->base_hpa;
- 	end = cfmws->base_hpa + cfmws->window_size;
- 
-+	if (srat_disabled()) {
-+		pr_err("SRAT is missing or bad while processing CFMWS.\n");
-+		return -EINVAL;
-+	}
-+
- 	/*
- 	 * The SRAT may have already described NUMA details for all,
- 	 * or a portion of, this CFMWS HPA range. Extend the memblks
-@@ -646,6 +651,11 @@ int __init acpi_numa_init(void)
- 		if (node_to_pxm_map[i] > fake_pxm)
- 			fake_pxm = node_to_pxm_map[i];
- 	}
-+
-+	/* Make sure CFMWs fake nodes start at node[1] */
-+	if (fake_pxm < 0)
-+		disable_srat();
-+
- 	last_real_pxm = fake_pxm;
- 	fake_pxm++;
- 	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CFMWS, acpi_parse_cfmws,
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index cb14829bb9be..e75a8ead99f6 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -829,6 +829,10 @@ static int cxl_acpi_probe(struct platform_device *pdev)
- 	if (rc)
- 		return rc;
- 
-+	/* CXL must be in a NUMA system */
-+	if (srat_disabled())
-+		return -EINVAL;
-+
- 	cxl_res = devm_kzalloc(host, sizeof(*cxl_res), GFP_KERNEL);
- 	if (!cxl_res)
- 		return -ENOMEM;
--- 
-2.34.1
+   int kobject_init_and_add(struct kobject *kobj, const struct kobj_type *ktype,
+                           struct kobject *parent, const char *fmt, ...)
+   {
+   ...
+       kobject_init(kobj, ktype);
+       retval = kobject_add_varg(kobj, parent, fmt, args);
+   ...
+       return retval;
+   }
 
+2) The release function for mempolicy_kobj is responsible for freeing
+   associated memory:
+
+   static void mempolicy_kobj_release(struct kobject *kobj)
+   {
+       ...
+       kfree(ngrp->nattrs);
+       kfree(ngrp);
+       kfree(kobj);
+   }
+
+   Once mempolicy_kobj is passed to kobject_init_and_add(), the memory
+   for ngrp->attrs and ngrp should be released via mempolicy_kobj_release().
+   The allocation order was changed to ensure that kobject_put() properly
+   invokes mempolicy_kobj_release() when required.
+
+> 
+> > +		goto err_out;
+> > +	}
+> >  
+> >  	err = add_weighted_interleave_group(mempolicy_kobj);
+> >  	if (err) {
+> > -		pr_err("mempolicy sysfs structure failed to initialize\n");
+> >  		kobject_put(mempolicy_kobj);
+> > -		return err;
+> > +		goto err_out;
+> >  	}
+> >  
+> > -	return err;
+> > +	return 0;
+> > +
+> 
+> Please keep functional changes and refactors separate.  There's more
+> churn in this patch than is needed to accomplish what the changelog
+> states is the intent.
+
+As mentioned earlier, I believe this patch does not need to be split.
+However, if you have further concerns or suggestions, I would
+appreciate your input.
+
+> 
+> >  node_out:
+> >  	kfree(node_attrs);
+> > -mempol_out:
+> > -	kfree(mempolicy_kobj);
+> >  err_out:
+> > -	pr_err("failed to add mempolicy kobject to the system\n");
+> > +	pr_err("mempolicy sysfs structure failed to initialize\n");
+> >  	return err;
+> > +
+> >  }
+> >  
+> >  late_initcall(mempolicy_sysfs_init);
+> > 
+> > base-commit: 80e54e84911a923c40d7bee33a34c1b4be148d7a
+> > -- 
+> > 2.34.1
+> > 
