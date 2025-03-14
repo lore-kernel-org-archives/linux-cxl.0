@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B1DA1F4275;
-	Fri, 14 Mar 2025 11:37:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00B421FDE1E;
+	Fri, 14 Mar 2025 11:37:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741952257; cv=none; b=LJ1uQMwssA4bg609gJ/qXewrFXi1l/0aBlHwGpN4urAstPl/RtOJZlEqZwi/uqCgq4veOcyjU5l7RDLIpFNFXSgehdTb0L2JAbI+eWANw28740GOBX09aMsVbM/4f9osWQr1SsWTwxA/DBudfwAGYLd+t2dXkYrFzn4fAE9s9ms=
+	t=1741952261; cv=none; b=JsY3XdSjDaFMpOqib56dMP87USnro2qWx8n8vH1rpiWiNqyuX0F8cDDqthv8IVi8UlMSuhGP2Gazf/+vbP8BOEgTkETwrC2Ge+LcsJ570HvNc3pU8Y1rEks4ty4bvQiazo+J8lrzvQs8213e6JAQMfqwgNVq8WctKwChX/Lb2Wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741952257; c=relaxed/simple;
-	bh=yoz7vzPBQbojGartel9sBsofEoAKwjMmDsSeksIb9GQ=;
+	s=arc-20240116; t=1741952261; c=relaxed/simple;
+	bh=AAolH3eVvDN1fp3/Izn+Wkxmg1SmgxnM6q/6Ix3GxjU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IplClxpLyIYwsqMxLoZeVF/IeVzBmSQe3egtyLFgtNppBLu+xV+77C/4aK2iKcXpfxodsBWjw8MEHQbawm7Ic1BMFMiGAjHc9YvtgavM/Xx9T1xQ6GtCUWjyMh8D9ADbeyVb+izaFwohSK1nGM7d55nk6ULYd3zUQjotxp7zR6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k2IIDiFc; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version; b=cIBdzTprP3oJms5OXuqFrTG0R3Rh8EWAGG7PApE1ZYWT29EtdtD15fRFetEfV7YKeHkQupPDNiNxDpX9P7UYq2hqnysnFT5eenmr9hPOHOv4lJkKJdUoBQlrgBw413i9mMD5S0yqTOrX1aF9Ok2VfYNx6aHNUSOhp4xCRXBs7/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UM0bpX4X; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k2IIDiFc"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UM0bpX4X"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741952256; x=1773488256;
+  t=1741952260; x=1773488260;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=yoz7vzPBQbojGartel9sBsofEoAKwjMmDsSeksIb9GQ=;
-  b=k2IIDiFcFGEdY6ElxHBk+RSzYO0rszSE2FQ7JeabgLDKVozEUidmqtzk
-   XLrX/IC5cH8SLYJwKAmlhhRaCO9ara3U35XutwwTOqMut8qEaf98v7Hox
-   WdkMYJkj3CLuXF7PdHsVWbHwnNu9OlrB5dj+cJi6AXtQYgmbctKCAsqLJ
-   GIxCIXy7bQ11bk5uzVgkXELcBclVkN4/h7PgVoPg5CS5GYP5FfHR7E46z
-   gZuVfVJBJ8PcWKguEIlpO9wjF6VdvVL2c6jiQJX+LDUt1BNgNqZ5a8xtV
-   LMYL4DBdtL5UqLCXq3QPEurQIt7T80ePhBzuvgs4eZiJ2UojXpYLWQQug
-   w==;
-X-CSE-ConnectionGUID: CGPBwaO5RDqnQpMvnJzgQA==
-X-CSE-MsgGUID: TW290A5VTnu6NIDKJ/SypA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11372"; a="60497547"
+  bh=AAolH3eVvDN1fp3/Izn+Wkxmg1SmgxnM6q/6Ix3GxjU=;
+  b=UM0bpX4XIm/QheDbSeU1IA5UX/1MId8fzZJ0EU3Vx/poGJz3VDVkcYlT
+   R8JM1dq0+YzrjXG0G4Q9W7t3U+oWGM38w4r7RNAyakXI+kbsFnS6j/9L2
+   D74/vNL75P7p3cT7mm6zNHUFbDMR4Pvl2Gx3YzyIz7Cm1D6f4AHqokULm
+   lk8NEcpS/MuH8HgzdjpkEDDDTULl4RjOcPU55xnu9d2LK6eN8PS6SdzdX
+   TCH2Tc/CyfHc8opoGtH3C3AFQQfVYjXgzQ9eBlT6qyJhCx1SjvK4VNyTP
+   EQs+sCIRt8GeZNUtP+mCZcN9v/eWIyWcjIO9svZ29WHdDjwQl9HBO28Hd
+   A==;
+X-CSE-ConnectionGUID: geelo6IjTgSksA74vnTJWQ==
+X-CSE-MsgGUID: 4gA7diRTRfmM58YH4debGg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11372"; a="60497553"
 X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
-   d="scan'208";a="60497547"
+   d="scan'208";a="60497553"
 Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 04:37:36 -0700
-X-CSE-ConnectionGUID: 43E+oxghRHSz+JHAHcb8lA==
-X-CSE-MsgGUID: QTW9fdbJS1iCKa51OFgiSg==
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 04:37:40 -0700
+X-CSE-ConnectionGUID: T+aokh08Rha7dGFGLp7JwA==
+X-CSE-MsgGUID: /swWRN2qQMyVmmhXiLRz+Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
-   d="scan'208";a="121751415"
+   d="scan'208";a="121751440"
 Received: from jkrzyszt-mobl2.ger.corp.intel.com (HELO fdefranc-mobl3.intel.com) ([10.245.246.211])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 04:37:31 -0700
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 04:37:37 -0700
 From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jonathan.cameron@huawei.com>,
@@ -56,9 +56,9 @@ Cc: Robert Richter <rrichter@amd.com>,
 	linux-kernel@vger.kernel.org,
 	linux-cxl@vger.kernel.org,
 	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-Subject: [PATCH 3/4 v3] cxl/core: Enable Region creation on x86 with Low Memory Hole
-Date: Fri, 14 Mar 2025 12:36:32 +0100
-Message-ID: <20250314113708.759808-4-fabio.m.de.francesco@linux.intel.com>
+Subject: [PATCH 4/4 v3] cxl/test: Simulate an x86 Low Memory Hole for tests
+Date: Fri, 14 Mar 2025 12:36:33 +0100
+Message-ID: <20250314113708.759808-5-fabio.m.de.francesco@linux.intel.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250314113708.759808-1-fabio.m.de.francesco@linux.intel.com>
 References: <20250314113708.759808-1-fabio.m.de.francesco@linux.intel.com>
@@ -70,212 +70,177 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The CXL Fixed Memory Window Structure (CFMWS) describes zero or more Host
-Physical Address (HPA) windows that are associated with each CXL Host
-Bridge. Each window represents a contiguous HPA that may be interleaved
-with one or more targets (CXL v3.1 - 9.18.1.3).
+Simulate an x86 Low Memory Hole for the CXL tests by changing the first
+mock CFMWS range size to 768MB and the CXL Endpoint Decoder HPA range sizes
+to 1GB.
 
-The Low Memory Hole (LMH) of x86 is a range of addresses of physical low
-memory to which systems cannot send transactions. In some cases the size
-of that hole is not compatible with the CXL hardware decoder constraint
-that the size is always aligned to 256M * Interleave Ways.
+Since the auto-created region of cxl-test uses mock_cfmws[0], whose range
+base address is typically different from the one published by the BIOS on
+real hardware, the driver would fail to create and attach CXL Regions if
+it was run on the mock environment created by cxl-tests.
 
-On those systems, BIOS publishes CFMWS which communicate the active System
-Physical Address (SPA) ranges that map to a subset of the Host Physical
-Address (HPA) ranges. The SPA range trims out the hole, and capacity in
-the endpoint is lost with no SPA to map to CXL HPA in that hole.
+Therefore, save the mock_cfmsw[0] range base_hpa and reuse it to match CXL
+Root Decoders and Regions with Endpoint Decoders when the driver is run on
+mock devices.
 
-In the early stages of CXL Regions construction and attach on platforms
-with Low Memory Holes, cxl_add_to_region() fails and returns an error
-because it can't find any CXL Window that matches a given CXL Endpoint
-Decoder.
-
-Detect a Low Memory Hole by comparing Root Decoders and Endpoint Decoders
-ranges with the use of arch_match_{spa,region}() helpers.
-
-Match Root Decoders and CXL Regions with corresponding CXL Endpoint
-Decoders. Currently a Low Memory Holes would prevent the matching functions
-to return true.
-
-Construct CXL Regions with HPA range's end adjusted to the matching SPA.
-
-Allow the attach target process to complete by allowing Regions to not
-comply with alignment constraints (i.e., alignment to NIW * 256M rule).
+Since the auto-created region of cxl-test uses mock_cfmws[0], the
+LMH path in the CXL Driver will be exercised every time the cxl-test
+module is loaded. Executing unit test: cxl-topology.sh, confirms the
+region created successfully with a LMH.
 
 Cc: Alison Schofield <alison.schofield@intel.com>
 Cc: Dan Williams <dan.j.williams@intel.com>
 Cc: Ira Weiny <ira.weiny@intel.com>
 Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
 ---
- drivers/cxl/Kconfig       |  5 ++++
- drivers/cxl/core/Makefile |  1 +
- drivers/cxl/core/region.c | 56 +++++++++++++++++++++++++++++++++------
- tools/testing/cxl/Kbuild  |  1 +
- 4 files changed, 55 insertions(+), 8 deletions(-)
+ drivers/cxl/core/lmh.c               | 35 ++++++++++++++++++++++++----
+ drivers/cxl/core/lmh.h               |  2 ++
+ tools/testing/cxl/cxl_core_exports.c |  2 ++
+ tools/testing/cxl/test/cxl.c         | 10 ++++++++
+ 4 files changed, 45 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-index 205547e5543a..3bb282ef01df 100644
---- a/drivers/cxl/Kconfig
-+++ b/drivers/cxl/Kconfig
-@@ -139,6 +139,11 @@ config CXL_REGION
+diff --git a/drivers/cxl/core/lmh.c b/drivers/cxl/core/lmh.c
+index 2e32f867eb94..9c55670c1c84 100644
+--- a/drivers/cxl/core/lmh.c
++++ b/drivers/cxl/core/lmh.c
+@@ -1,11 +1,28 @@
+ // SPDX-License-Identifier: GPL-2.0-only
  
- 	  If unsure say 'y'
- 
-+config CXL_ARCH_LOW_MEMORY_HOLE
-+	def_bool y
-+	depends on CXL_REGION
-+	depends on X86
+ #include <linux/range.h>
++#include <linux/pci.h>
 +
- config CXL_REGION_INVALIDATION_TEST
- 	bool "CXL: Region Cache Management Bypass (TEST)"
- 	depends on CXL_REGION
-diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-index 139b349b3a52..3dccd3c224f1 100644
---- a/drivers/cxl/core/Makefile
-+++ b/drivers/cxl/core/Makefile
-@@ -17,6 +17,7 @@ cxl_core-y += cdat.o
- cxl_core-y += acpi.o
- cxl_core-y += ras.o
- cxl_core-$(CONFIG_TRACING) += trace.o
-+cxl_core-$(CONFIG_CXL_ARCH_LOW_MEMORY_HOLE) += lmh.o
- cxl_core-$(CONFIG_CXL_REGION) += region.o
- cxl_core-$(CONFIG_CXL_FEATURES) += features.o
- cxl_core-$(CONFIG_CXL_MCE) += mce.o
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 97122d645cc1..9eb23ecedecf 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -13,6 +13,7 @@
- #include <cxlmem.h>
- #include <cxl.h>
- #include "core.h"
-+#include "lmh.h"
+ #include "lmh.h"
  
- /**
-  * DOC: cxl core region
-@@ -835,6 +836,8 @@ static int match_free_decoder(struct device *dev, const void *data)
- static bool region_res_match_cxl_range(const struct cxl_region_params *p,
- 				       struct range *range)
+ /* Start of CFMWS range that end before x86 Low Memory Holes */
+ #define LMH_CFMWS_RANGE_START 0x0ULL
+ 
++static u64 mock_cfmws0_range_start = ULLONG_MAX;
++
++void set_mock_cfmws0_range_start(const u64 start)
++{
++	mock_cfmws0_range_start = start;
++}
++
++static u64 get_cfmws_range_start(const struct device *dev)
++{
++	if (dev_is_pci(dev))
++		return LMH_CFMWS_RANGE_START;
++
++	return mock_cfmws0_range_start;
++}
++
+ /*
+  * Match CXL Root and Endpoint Decoders by comparing SPA and HPA ranges.
+  *
+@@ -19,14 +36,19 @@ bool arch_match_spa(const struct cxl_root_decoder *cxlrd,
+ 		    const struct cxl_endpoint_decoder *cxled)
  {
-+	struct cxl_decoder *cxld;
-+
- 	if (!p->res)
- 		return false;
- 
-@@ -843,8 +846,15 @@ static bool region_res_match_cxl_range(const struct cxl_region_params *p,
- 	 * to be fronted by the DRAM range in current known implementation.
- 	 * This assumption will be made until a variant implementation exists.
- 	 */
--	return p->res->start + p->cache_size == range->start &&
--		p->res->end == range->end;
-+	if (p->res->start + p->cache_size == range->start &&
-+	    p->res->end == range->end)
-+		return true;
-+
-+	cxld = container_of(range, struct cxl_decoder, hpa_range);
-+	if (arch_match_region(p, cxld))
-+		return true;
-+
-+	return false;
- }
- 
- static int match_auto_decoder(struct device *dev, const void *data)
-@@ -1760,6 +1770,7 @@ static int match_switch_decoder_by_range(struct device *dev,
- {
- 	const struct cxl_endpoint_decoder *cxled = data;
- 	struct cxl_switch_decoder *cxlsd;
-+	struct cxl_root_decoder *cxlrd;
  	const struct range *r1, *r2;
++	u64 cfmws_range_start;
+ 	int niw;
  
- 	if (!is_switch_decoder(dev))
-@@ -1769,8 +1780,13 @@ static int match_switch_decoder_by_range(struct device *dev,
- 	r1 = &cxlsd->cxld.hpa_range;
- 	r2 = &cxled->cxld.hpa_range;
- 
--	if (is_root_decoder(dev))
--		return range_contains(r1, r2);
-+	if (is_root_decoder(dev)) {
-+		if (range_contains(r1, r2))
-+			return 1;
-+		cxlrd = to_cxl_root_decoder(dev);
-+		if (arch_match_spa(cxlrd, cxled))
-+			return 1;
-+	}
- 	return (r1->start == r2->start && r1->end == r2->end);
- }
- 
-@@ -1978,7 +1994,7 @@ static int cxl_region_attach(struct cxl_region *cxlr,
- 	}
- 
- 	if (resource_size(cxled->dpa_res) * p->interleave_ways + p->cache_size !=
--	    resource_size(p->res)) {
-+	    resource_size(p->res) && !arch_match_spa(cxlrd, cxled)) {
- 		dev_dbg(&cxlr->dev,
- 			"%s:%s-size-%#llx * ways-%d + cache-%#llx != region-size-%#llx\n",
- 			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
-@@ -3213,7 +3229,12 @@ static int match_root_decoder_by_range(struct device *dev,
++	cfmws_range_start = get_cfmws_range_start(&cxled->cxld.dev);
++	if (cfmws_range_start == ULLONG_MAX)
++		return false;
++
  	r1 = &cxlrd->cxlsd.cxld.hpa_range;
  	r2 = &cxled->cxld.hpa_range;
+ 	niw = cxled->cxld.interleave_ways;
  
--	return range_contains(r1, r2);
-+	if (range_contains(r1, r2))
-+		return true;
-+	if (arch_match_spa(cxlrd, cxled))
-+		return true;
+-	if (r1->start == LMH_CFMWS_RANGE_START && r1->start == r2->start &&
+-	    r1->end < (LMH_CFMWS_RANGE_START + SZ_4G) && r1->end < r2->end &&
++	if (r1->start == cfmws_range_start && r1->start == r2->start &&
++	    r1->end < (cfmws_range_start + SZ_4G) && r1->end < r2->end &&
+ 	    IS_ALIGNED(range_len(r2), niw * SZ_256M))
+ 		return true;
+ 
+@@ -40,9 +62,14 @@ bool arch_match_region(const struct cxl_region_params *p,
+ 	const struct range *r = &cxld->hpa_range;
+ 	const struct resource *res = p->res;
+ 	int niw = cxld->interleave_ways;
++	u64 cfmws_range_start;
 +
-+	return false;
- }
++	cfmws_range_start = get_cfmws_range_start(&cxld->dev);
++	if (cfmws_range_start == ULLONG_MAX)
++		return false;
  
- static int match_region_by_range(struct device *dev, const void *data)
-@@ -3230,8 +3251,12 @@ static int match_region_by_range(struct device *dev, const void *data)
- 	p = &cxlr->params;
+-	if (res->start == LMH_CFMWS_RANGE_START && res->start == r->start &&
+-	    res->end < (LMH_CFMWS_RANGE_START + SZ_4G) && res->end < r->end &&
++	if (res->start == cfmws_range_start && res->start == r->start &&
++	    res->end < (cfmws_range_start + SZ_4G) && res->end < r->end &&
+ 	    IS_ALIGNED(range_len(r), niw * SZ_256M))
+ 		return true;
  
- 	guard(rwsem_read)(&cxl_region_rwsem);
--	if (p->res && p->res->start == r->start && p->res->end == r->end)
--		return 1;
-+	if (p->res) {
-+		if (p->res->start == r->start && p->res->end == r->end)
-+			return 1;
-+		if (arch_match_region(p, &cxled->cxld))
-+			return 1;
-+	}
+diff --git a/drivers/cxl/core/lmh.h b/drivers/cxl/core/lmh.h
+index 16746ceac1ed..b6337120ee17 100644
+--- a/drivers/cxl/core/lmh.h
++++ b/drivers/cxl/core/lmh.h
+@@ -2,6 +2,8 @@
+ 
+ #include "cxl.h"
+ 
++void set_mock_cfmws0_range_start(u64 start);
++
+ #ifdef CONFIG_CXL_ARCH_LOW_MEMORY_HOLE
+ bool arch_match_spa(const struct cxl_root_decoder *cxlrd,
+ 		    const struct cxl_endpoint_decoder *cxled);
+diff --git a/tools/testing/cxl/cxl_core_exports.c b/tools/testing/cxl/cxl_core_exports.c
+index f088792a8925..7b20f9fcf0d7 100644
+--- a/tools/testing/cxl/cxl_core_exports.c
++++ b/tools/testing/cxl/cxl_core_exports.c
+@@ -2,6 +2,8 @@
+ /* Copyright(c) 2022 Intel Corporation. All rights reserved. */
+ 
+ #include "cxl.h"
++#include "lmh.h"
+ 
+ /* Exporting of cxl_core symbols that are only used by cxl_test */
+ EXPORT_SYMBOL_NS_GPL(cxl_num_decoders_committed, "CXL");
++EXPORT_SYMBOL_NS_GPL(set_mock_cfmws0_range_start, "CXL");
+diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+index 1c3336095923..8c69ce0a272f 100644
+--- a/tools/testing/cxl/test/cxl.c
++++ b/tools/testing/cxl/test/cxl.c
+@@ -9,6 +9,7 @@
+ #include <linux/pci.h>
+ #include <linux/mm.h>
+ #include <cxlmem.h>
++#include <core/lmh.h>
+ 
+ #include "../watermark.h"
+ #include "mock.h"
+@@ -212,7 +213,11 @@ static struct {
+ 			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
+ 					ACPI_CEDT_CFMWS_RESTRICT_VOLATILE,
+ 			.qtg_id = FAKE_QTG_ID,
++#if defined(CONFIG_CXL_ARCH_LOW_MEMORY_HOLE)
++			.window_size = SZ_256M * 3UL,
++#else
+ 			.window_size = SZ_256M * 4UL,
++#endif
+ 		},
+ 		.target = { 0 },
+ 	},
+@@ -454,6 +459,7 @@ static int populate_cedt(void)
+ 			return -ENOMEM;
+ 		window->base_hpa = res->range.start;
+ 	}
++	set_mock_cfmws0_range_start(mock_cfmws[0]->base_hpa);
  
  	return 0;
  }
-@@ -3319,6 +3344,21 @@ static int __construct_region(struct cxl_region *cxlr,
- 			 "Extended linear cache calculation failed rc:%d\n", rc);
- 	}
- 
-+	/*
-+	 * Trim the HPA retrieved from hardware to fit the SPA mapped by the
-+	 * platform
-+	 */
-+	if (arch_match_spa(cxlrd, cxled)) {
-+		dev_dbg(cxlmd->dev.parent, "(LMH) Resource (%s: %pr)\n",
-+			dev_name(&cxled->cxld.dev), res);
-+
-+		arch_adjust_region_resource(res, cxlrd);
-+
-+		dev_dbg(cxlmd->dev.parent,
-+			"(LMH) has been adjusted (%s: %pr)\n",
-+			dev_name(&cxled->cxld.dev), res);
-+	}
-+
- 	rc = insert_resource(cxlrd->res, res);
- 	if (rc) {
- 		/*
-diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-index 4efcc0606bd6..3b3c24b1496e 100644
---- a/tools/testing/cxl/Kbuild
-+++ b/tools/testing/cxl/Kbuild
-@@ -64,6 +64,7 @@ cxl_core-y += $(CXL_CORE_SRC)/cdat.o
- cxl_core-y += $(CXL_CORE_SRC)/acpi.o
- cxl_core-y += $(CXL_CORE_SRC)/ras.o
- cxl_core-$(CONFIG_TRACING) += $(CXL_CORE_SRC)/trace.o
-+cxl_core-$(CONFIG_CXL_ARCH_LOW_MEMORY_HOLE) += $(CXL_CORE_SRC)/lmh.o
- cxl_core-$(CONFIG_CXL_REGION) += $(CXL_CORE_SRC)/region.o
- cxl_core-$(CONFIG_CXL_FEATURES) += $(CXL_CORE_SRC)/features.o
- cxl_core-$(CONFIG_CXL_MCE) += $(CXL_CORE_SRC)/mce.o
+@@ -744,7 +750,11 @@ static void mock_init_hdm_decoder(struct cxl_decoder *cxld)
+ 	struct cxl_endpoint_decoder *cxled;
+ 	struct cxl_switch_decoder *cxlsd;
+ 	struct cxl_port *port, *iter;
++#if defined(CONFIG_CXL_ARCH_LOW_MEMORY_HOLE)
++	const int size = SZ_1G;
++#else
+ 	const int size = SZ_512M;
++#endif
+ 	struct cxl_memdev *cxlmd;
+ 	struct cxl_dport *dport;
+ 	struct device *dev;
 -- 
 2.48.1
 
