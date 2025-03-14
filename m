@@ -1,78 +1,75 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A994A1FF7CF
-	for <linux-cxl@vger.kernel.org>; Fri, 14 Mar 2025 13:42:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCA3712FF6F
+	for <linux-cxl@vger.kernel.org>; Fri, 14 Mar 2025 13:46:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741959757; cv=none; b=Bnvrk4x9C9r9gM6JM78mCIQFtblV6BmCZMCu50kLukb09URtcoePqRxcEojmvtVfGj4I3r7zR3noiaOvzE0ypM0iOqqGoDdMVpLRWlivIb5BPTHpAApe5dLHbBbN59BnbnbYT57aR1wPxVIqptC/MunSAGLskX0NSdShoDuTd94=
+	t=1741960005; cv=none; b=kVSRoReZoLKkwdYJTDGGoAuPj6Qr18R/eSDCgrfKR1YZDUCmGvLqmsX7gRFCjGywbpl5K5uYAV7giLXzFYCSL+MuxIbcOx7C44GKRUFiX+/THBhzg/HikSbaVjIGlkSR/TEmZ7hkxa949A2rz7WxEOTGZgAUYWb7INB/GOHM7mA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741959757; c=relaxed/simple;
-	bh=9LDdxVMmfAwVLZ75Sv27qRjzqf3Pi98p73DWbKx/oMQ=;
+	s=arc-20240116; t=1741960005; c=relaxed/simple;
+	bh=qsF+GCSSP1hKNdJdQJMBEH9O2/UfBdYkuS3yMvSb0LU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qo+mXvXnV4Wo7K7kaC/4luLZpSXNvxByg+zmZd6tmHPPPm93EIN02bgL/9oTC6yDTsQ/LXVvAldxYR3lHf8Iq+7n061W6yxcRIgZPSKUfCrkwOUNMp7KNOxMVg5bUaMFwQuRch+N+3TNdQb1T8m1u8yncXThFbj90YTRrCtaupo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=DjoS4jAY; arc=none smtp.client-ip=209.85.219.45
+	 Content-Type:Content-Disposition:In-Reply-To; b=fjQiG39iaBmD4sZ4RzEunAShoYfc/I/0AtRGHjxS4wZ+jDWQkPNaY+9pQc/Nlg5Kbr/LVWp6mv32lMz4C6cLbq4HY8aKeLwTvWn/nympguPXlHrUVoFc6vAxBS+4FfIeMo5Ts1tIH67ywviz7mjWx8BjsV5qFP4ysbWi4GzEUEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=HnMhbbh5; arc=none smtp.client-ip=209.85.222.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="DjoS4jAY"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6e8ec399427so17271586d6.2
-        for <linux-cxl@vger.kernel.org>; Fri, 14 Mar 2025 06:42:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="HnMhbbh5"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7c546334bdeso169311685a.2
+        for <linux-cxl@vger.kernel.org>; Fri, 14 Mar 2025 06:46:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1741959754; x=1742564554; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1741960003; x=1742564803; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OPmTde2UkY8hmMygpptvq6ZcJy0VG5G4ypKl+rd41pc=;
-        b=DjoS4jAYysdPEWX8EnRiWU0K9Mw4/k1fDmqhapb80Kg6ktkJydlDzOZtlBlKDOf433
-         I3YH6bcHwcBohTTSS1rxn+gdBkffL7VJdVpNRwChuNSER8iyzt/ctrOlCou0dXAcLnlS
-         yejrp7BUppDmnN4QvwmEY8o0gesX7TQXkkRWgcFAl8eK+2SZJTZGGsIy3rig3iLhHoy4
-         6WlLcBdVRv26+vvZtj3aHRqesyFAdL9ZBfyfZGSc4GhDGdMxDtWHylSNt9N7HI/rmnKG
-         zYiueTMT1gA4tnzlsu89xxfv5XF5/H1ndaQP/exQ3RLY7CBWKvvR+NKBK+rP8m9jVQtm
-         iJOQ==
+        bh=7rcbULF3LHd0+z4mfmpPo+xxeDyKnDv8t+oi3P4Vssk=;
+        b=HnMhbbh5M3OD+hE7ogrGRbRRNb/XMlihPuSLhTcpEoMtSFnFYn4KZKz9CpBaCV7SwO
+         CaLdskppYuvDjjL5rLLARIXEE85kyxDP/GrTQGUiELM0j0zVqOFomnuslMfIlyCVr8Vs
+         2PeDPXxONxvgBy9wgb/HrCbWtLn+xQ/GpL2E2T11L4eTJLaJho5oWrLBP5BSnXGCTm8E
+         Qy4mcXABN7pgFBBNHtmi1F1CGzhSsng22WA7DZGSFzb/JvWX/HMimtETM9/pRlQcAOux
+         BTWVTl2a6xPYk++uKk/twBFqux/p9+/ChGrne5uaF+BcCj5ynr9bdCtZAn7YfmjcDYb5
+         8Jow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741959754; x=1742564554;
+        d=1e100.net; s=20230601; t=1741960003; x=1742564803;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OPmTde2UkY8hmMygpptvq6ZcJy0VG5G4ypKl+rd41pc=;
-        b=qqCA1fBMAIPYibyamwMde77lqisuCpuwUj+QU0frn25Iy5om1ILHL865W0U1TO02W1
-         nYjSakWXDc3KJ8IwsbFniwEPlXlaEXJoRYZHs9vvRC+sbElZdRLbZ1H86oSzkbhklTQv
-         l2rQs0ICOHnbVXiTdGScGqrZhLaZSPXqUfX1honsv2mVUurY0FoUhDwN47wqq24UcDXV
-         aTIEeqjZnpbwF5lWdXYkDizfoRPDgUp91qUkdWvJkEz1+eMOzlKKRUibG8PxxI1P7khM
-         kMNPOvcv80fRIYSVfNxxVrJolwaOaVF6lPmK/SZ20TYQK7mpHOfjlMnauRZ1iO9HYyvp
-         LNAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXyN95eofTV28urAk8pBFseVlAnJstk9wQxSrayqXVbIhibXPgA/9lw3NNclBHz8b4/sPX2rRMYwkw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzyfxW0cpzE5IXBcm7SMX3z/dRLNLzmNTYYIPg/ETXfaIaOrMa4
-	JbUIYm3WrPq+lIeULQgkpOrgCy6EPCqVueLLT34VjgJ7ngLGwQkBTSykc3JANVL+zm/PvoGg7qW
-	p
-X-Gm-Gg: ASbGncuiI9CARI2TMlXLcvyDDT5/mKEERjhwJV6MIZXw044dsn/51nUNal2MXNQKQ2S
-	zgynvdk085HcHIvIGWqpmiThsimOZ4eaI0SCGjg+f0pdjYSVUr3jApPHhHlLDQORGVzEccIf3FJ
-	jRrlzc/N9WPIUou+SSNPz30dHCgRVrUHha6K9dBGF6jc+0fRKdO6hQ0JJDvUH4PB6EL0o3R0db/
-	MHuUV6al04oflSuYg52ZwDgs48VgvrPWLTQqnfbRZFDOphN53/PGRam3uN3kzb83+TcoeJDmSaB
-	IltxBlrWWLmOlLXCXOfsTgtsFuAMwn6CRDj5MGm+NHnkSO/i/5C+g2QV4EfgQ5RrmZh247ScigV
-	UCK/JMMZdQtN9gKAVWJMwJafr5cs=
-X-Google-Smtp-Source: AGHT+IGPUbrzvzxuTFoznGJ1NMG5BctIcsuLHRaOHo5xqKBuPTb1ZQUOrATYZjhY4w0Hpk5vfoVj8A==
-X-Received: by 2002:ad4:5b8d:0:b0:6d8:8fdd:9791 with SMTP id 6a1803df08f44-6eaeaa98f3amr36986026d6.25.1741959754512;
-        Fri, 14 Mar 2025 06:42:34 -0700 (PDT)
+        bh=7rcbULF3LHd0+z4mfmpPo+xxeDyKnDv8t+oi3P4Vssk=;
+        b=e1pIC9nNTeILS1tRvYy2QirRkxB03EJgXDcN1dwSw+9rn4xZFrSJca2apseLoauFi0
+         pmzo54HWQPxamUJjT+S5msTBELU8HoTfOdIFTrjddS5a4f6kwDqtrrxVECA+JWgUBLNP
+         7TPFNoPIExuN7wmONpoRumYG8oRYmEyLw1mTuv7+aox82TyTJhswDA59WAXhPQh+tybe
+         0+QQhFeARao2vKXrF+4vwT59dBDTFae8mL5Fwq5yObQnDEFQeHDnj00MwiN5uzzZaKdM
+         ChyiKrSz7cvruX+4itSdCqENpuMOgE8jG/unlh3gPqu8zMbyxZFov8qcb+yQIPyCrz+H
+         ZxrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWX77Dmk3JsImv2hkmQCzcUvzIfqLQB1VeaCOw775b6cXRxfd26/uWIUsT4npyNjZGZdGcxNt66xeU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXY9xkQbJf/dk1UGTksXEpilckiLpihc6PaEVVnd6n9gT97syb
+	WMW3N59S4SNd+e8+rnsmWA2S7vjcjHxAEroBNtaAQOyLLDqpt5YhY0Ilcc0vCrI=
+X-Gm-Gg: ASbGncta5G1UcjI/F9lIM6+A3TZPNJ+BYc5POY7KSxVewSeXKxb2e0h2d2LKmPQtsV8
+	mnIH4WPg0xZMh63VbGoVQDDY3+Q1TmtWBbQ6GmxlSYB59NT9ZjPC9pCdhnwztpt9+C7jtFHGdI6
+	ewHgmrp+jxKBuSCaWZR+TAzToq2FX6YaD/+xYA1SZfSB8Turu5chOTjxRSE7wzZcATtYIk+8QPQ
+	KRg0lWMURIlfxjiBF0bV21YQkNo2U6Byu+1QmUzYEMXPqmcn1bH2KLQDRhfx6STvLqe6gTYEtfi
+	6YyLtAeV9pD7jba3IWzWlOihcnWBXf6o2tbFYSALVg8sHI5EVYlR2oy7YjK4KQWVwiWo2wR6T1H
+	3/JNOF9jPuRb6qnAUy+phS6oMGbs=
+X-Google-Smtp-Source: AGHT+IHVQBuUbLZtTeB8fDk67fek3JEC0e06LBLUL+yeI3ow/ytEEdIxrurvEd3+ik7VQtEVYcYhqg==
+X-Received: by 2002:a05:620a:40ce:b0:7c5:59a6:bae2 with SMTP id af79cd13be357-7c57c769737mr291429885a.4.1741960002746;
+        Fri, 14 Mar 2025 06:46:42 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eade209329sm23898726d6.16.2025.03.14.06.42.33
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-476bb7f31f0sm22865331cf.64.2025.03.14.06.46.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Mar 2025 06:42:34 -0700 (PDT)
-Date: Fri, 14 Mar 2025 09:42:31 -0400
+        Fri, 14 Mar 2025 06:46:42 -0700 (PDT)
+Date: Fri, 14 Mar 2025 09:46:40 -0400
 From: Gregory Price <gourry@gourry.net>
 To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Rakie Kim <rakie.kim@sk.com>, akpm@linux-foundation.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, joshua.hahnjy@gmail.com,
-	dan.j.williams@intel.com, ying.huang@linux.alibaba.com,
-	kernel_team@skhynix.com, honggyu.kim@sk.com, yunjeong.mun@sk.com
-Subject: Re: [PATCH v2 1/4] mm/mempolicy: Fix memory leaks in
- mempolicy_sysfs_init()
-Message-ID: <Z9QyR3mHw76u_Sq9@gourry-fedora-PF4VCD3F>
-References: <Z9Gs8i1FhJJ0eaiA@gourry-fedora-PF4VCD3F>
- <20250313063247.681-1-rakie.kim@sk.com>
- <Z9L_MgjuhrploEUm@gourry-fedora-PF4VCD3F>
- <20250314105500.00000157@huawei.com>
+Cc: lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [LSF/MM] CXL Boot to Bash - Section 0a: CFMWS and NUMA Flexiblity
+Message-ID: <Z9QzQEzcpHjZQI7U@gourry-fedora-PF4VCD3F>
+References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
+ <Z8jORKIWC3ZwtzI4@gourry-fedora-PF4VCD3F>
+ <Z8u4GTrr-UytqXCB@gourry-fedora-PF4VCD3F>
+ <20250313172004.00002236@huawei.com>
+ <Z9MhVZmFVTPpuRe1@gourry-fedora-PF4VCD3F>
+ <20250314110942.0000476a@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -81,30 +78,37 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250314105500.00000157@huawei.com>
+In-Reply-To: <20250314110942.0000476a@huawei.com>
 
-On Fri, Mar 14, 2025 at 10:55:00AM +0000, Jonathan Cameron wrote:
+On Fri, Mar 14, 2025 at 11:09:42AM +0000, Jonathan Cameron wrote:
 > > 
-> > 1) allocate node_attrs and mempolicy_kobj up front and keep your
-> >    reordering, this lets us clean up allocations on failure before
-> >    kobject_init is called
-> > 
-> > 2) after this remove all the other code and just let
-> >    mempolicy_kobj_release clean up node_attrs
-> > 
-> > 3) Add a (%d) to the error message to differentiate failures
+> > I was unaware that we blocked mapping persistent as volatile.  I was
+> > working off the assumption that could be flexible mapped similar to...
+> > er... older, non-cxl hardware... cough.
 > 
-> Given how unlikely (and noisy) a memory allocation failure is,
-> maybe just drop the printing at all in those paths - allowing
-> early returns.
-> 
-> The lifetime rules around node_attrs in here are making readability
-> poor. It is implicitly owned by the mempolicy_kobj, but no direct association.
-> Maybe just encapsulating the kobject in a structure that contains
-> this as a [] array at the end.  Then we end up with single allocation of
-> stuff that is effectively one thing.
+> You can use it as volatile, but that doesn't mean we allow it in a CFMWS
+> that says the host PA range is not suitable for persistent.
+> A BIOS might though I think.
 >
 
-Even better recommendation, lets do as Jonathan suggests. <3
+aaaaaaaaaaaaah this helps.  Ok, we can repurpose the hardware, but not
+the CFMWS.  Even more pressure on platforms to get it right :P.
+
+> > 
+> > Along with the above note, and as mentioned on discord, I think this
+> > whole section naturally evolves into a library of "Sane configurations"
+> > and "We promise nothing for `reasons`" configurations.
+> 
+> :)  Snag is that as Dan pointed out on discord we assume this applies
+> even without the lock.  So it is possible to have device and host 
+> hardware combinations where things are forced to be very non-intuitive.
+>
+
+Right, but i think that falls into "We promise nothing, for `reasons`".
+
+At the very least it would give us a communication tool that helps
+bridge the gap between platform, linux, and end-users.
+
+Or it'd just makes it all worse, one of the two.
 
 ~Gregory
