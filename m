@@ -1,75 +1,63 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCA3712FF6F
-	for <linux-cxl@vger.kernel.org>; Fri, 14 Mar 2025 13:46:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DB941FCFE3
+	for <linux-cxl@vger.kernel.org>; Fri, 14 Mar 2025 14:44:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741960005; cv=none; b=kVSRoReZoLKkwdYJTDGGoAuPj6Qr18R/eSDCgrfKR1YZDUCmGvLqmsX7gRFCjGywbpl5K5uYAV7giLXzFYCSL+MuxIbcOx7C44GKRUFiX+/THBhzg/HikSbaVjIGlkSR/TEmZ7hkxa949A2rz7WxEOTGZgAUYWb7INB/GOHM7mA=
+	t=1741963466; cv=none; b=dwf2P3s6VwPOcLrYjRlKTU6aGjimorGvrgBufPk/WlzHhUwAJo77Ysqd1bxregp3VpH7f3rxspZZj9EaIicH5wPJAeNHHwSkFdL9CnKBvTwxVhqhck4Za+aY8XEJ2vt6ZftNOnZYmbnPUQQThgCp9j15TWmrv9QAamGWwBvPgvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741960005; c=relaxed/simple;
-	bh=qsF+GCSSP1hKNdJdQJMBEH9O2/UfBdYkuS3yMvSb0LU=;
+	s=arc-20240116; t=1741963466; c=relaxed/simple;
+	bh=vzG51rFcm5EamKilCTzfA0KJqwuhT+EdYpY0LGde4cs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fjQiG39iaBmD4sZ4RzEunAShoYfc/I/0AtRGHjxS4wZ+jDWQkPNaY+9pQc/Nlg5Kbr/LVWp6mv32lMz4C6cLbq4HY8aKeLwTvWn/nympguPXlHrUVoFc6vAxBS+4FfIeMo5Ts1tIH67ywviz7mjWx8BjsV5qFP4ysbWi4GzEUEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=HnMhbbh5; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=NSDCBJkRwYUOyfDOVmx0c5Cq5hIFClgDfog30LzugukPokB8GVGPut4IjoCYa47WVrNnVV2Lqp8SCvamDh0fQsaMUrvs+M9Af6ASntN1fjWMyrWG7bXc0ZUNumHSnQfF/4/05Y/Q7KTeYnNeBgJGWBH8HSpqvmFg4RkIuGWvDek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VCxbQgGv; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="HnMhbbh5"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7c546334bdeso169311685a.2
-        for <linux-cxl@vger.kernel.org>; Fri, 14 Mar 2025 06:46:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1741960003; x=1742564803; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7rcbULF3LHd0+z4mfmpPo+xxeDyKnDv8t+oi3P4Vssk=;
-        b=HnMhbbh5M3OD+hE7ogrGRbRRNb/XMlihPuSLhTcpEoMtSFnFYn4KZKz9CpBaCV7SwO
-         CaLdskppYuvDjjL5rLLARIXEE85kyxDP/GrTQGUiELM0j0zVqOFomnuslMfIlyCVr8Vs
-         2PeDPXxONxvgBy9wgb/HrCbWtLn+xQ/GpL2E2T11L4eTJLaJho5oWrLBP5BSnXGCTm8E
-         Qy4mcXABN7pgFBBNHtmi1F1CGzhSsng22WA7DZGSFzb/JvWX/HMimtETM9/pRlQcAOux
-         BTWVTl2a6xPYk++uKk/twBFqux/p9+/ChGrne5uaF+BcCj5ynr9bdCtZAn7YfmjcDYb5
-         8Jow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741960003; x=1742564803;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7rcbULF3LHd0+z4mfmpPo+xxeDyKnDv8t+oi3P4Vssk=;
-        b=e1pIC9nNTeILS1tRvYy2QirRkxB03EJgXDcN1dwSw+9rn4xZFrSJca2apseLoauFi0
-         pmzo54HWQPxamUJjT+S5msTBELU8HoTfOdIFTrjddS5a4f6kwDqtrrxVECA+JWgUBLNP
-         7TPFNoPIExuN7wmONpoRumYG8oRYmEyLw1mTuv7+aox82TyTJhswDA59WAXhPQh+tybe
-         0+QQhFeARao2vKXrF+4vwT59dBDTFae8mL5Fwq5yObQnDEFQeHDnj00MwiN5uzzZaKdM
-         ChyiKrSz7cvruX+4itSdCqENpuMOgE8jG/unlh3gPqu8zMbyxZFov8qcb+yQIPyCrz+H
-         ZxrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWX77Dmk3JsImv2hkmQCzcUvzIfqLQB1VeaCOw775b6cXRxfd26/uWIUsT4npyNjZGZdGcxNt66xeU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXY9xkQbJf/dk1UGTksXEpilckiLpihc6PaEVVnd6n9gT97syb
-	WMW3N59S4SNd+e8+rnsmWA2S7vjcjHxAEroBNtaAQOyLLDqpt5YhY0Ilcc0vCrI=
-X-Gm-Gg: ASbGncta5G1UcjI/F9lIM6+A3TZPNJ+BYc5POY7KSxVewSeXKxb2e0h2d2LKmPQtsV8
-	mnIH4WPg0xZMh63VbGoVQDDY3+Q1TmtWBbQ6GmxlSYB59NT9ZjPC9pCdhnwztpt9+C7jtFHGdI6
-	ewHgmrp+jxKBuSCaWZR+TAzToq2FX6YaD/+xYA1SZfSB8Turu5chOTjxRSE7wzZcATtYIk+8QPQ
-	KRg0lWMURIlfxjiBF0bV21YQkNo2U6Byu+1QmUzYEMXPqmcn1bH2KLQDRhfx6STvLqe6gTYEtfi
-	6YyLtAeV9pD7jba3IWzWlOihcnWBXf6o2tbFYSALVg8sHI5EVYlR2oy7YjK4KQWVwiWo2wR6T1H
-	3/JNOF9jPuRb6qnAUy+phS6oMGbs=
-X-Google-Smtp-Source: AGHT+IHVQBuUbLZtTeB8fDk67fek3JEC0e06LBLUL+yeI3ow/ytEEdIxrurvEd3+ik7VQtEVYcYhqg==
-X-Received: by 2002:a05:620a:40ce:b0:7c5:59a6:bae2 with SMTP id af79cd13be357-7c57c769737mr291429885a.4.1741960002746;
-        Fri, 14 Mar 2025 06:46:42 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-476bb7f31f0sm22865331cf.64.2025.03.14.06.46.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Mar 2025 06:46:42 -0700 (PDT)
-Date: Fri, 14 Mar 2025 09:46:40 -0400
-From: Gregory Price <gourry@gourry.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VCxbQgGv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741963464; x=1773499464;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=vzG51rFcm5EamKilCTzfA0KJqwuhT+EdYpY0LGde4cs=;
+  b=VCxbQgGv7TOgcDFHCDkLwRaD7HQZtSspxLDaQ/7iVlj9SuOOckr5q7dW
+   MjjLo4Zp9JMCmQLEUKmzVlRF8UTeqsyPGeXrHg4zd5LGCQLXLMFF3DulJ
+   Hsae54pTA2JjH6sFxzLNkxtHgq5j6vM9zl3x6CYh24AT/q0o5qkKcc2h1
+   yqclAAyT8htHzCMTt/k91li8rTJLg/CBKx3gjOE5v0AWRpE2NCJWF8sBq
+   AEROkXpzIjfMCyzV7SEEKRBBhfuW2c3rfLoaECn/xBNYqzraiIlumyyFL
+   Ytbc1S7A1TFxen0Bv4woNYMqMC42VJute4nq5UbHDDUK9Ro6T99jvPX4/
+   w==;
+X-CSE-ConnectionGUID: OKkXxCwiR/q40QUW4XaWXQ==
+X-CSE-MsgGUID: 7YJ1ZjjXQGa0fVArYsh1yA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11373"; a="42846139"
+X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
+   d="scan'208";a="42846139"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 07:44:23 -0700
+X-CSE-ConnectionGUID: 85JZLnFqSPaMWGMPiYapfA==
+X-CSE-MsgGUID: U3jPBaRcR0OY12scIGW8Mg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
+   d="scan'208";a="121804517"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 07:44:21 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tt6Go-00000002UH8-2R4T;
+	Fri, 14 Mar 2025 16:44:18 +0200
+Date: Fri, 14 Mar 2025 16:44:18 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [LSF/MM] CXL Boot to Bash - Section 0a: CFMWS and NUMA Flexiblity
-Message-ID: <Z9QzQEzcpHjZQI7U@gourry-fedora-PF4VCD3F>
-References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
- <Z8jORKIWC3ZwtzI4@gourry-fedora-PF4VCD3F>
- <Z8u4GTrr-UytqXCB@gourry-fedora-PF4VCD3F>
- <20250313172004.00002236@huawei.com>
- <Z9MhVZmFVTPpuRe1@gourry-fedora-PF4VCD3F>
- <20250314110942.0000476a@huawei.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, akpm@linux-foundation.org,
+	Li Zhijian <lizhijian@fujitsu.com>, linux-cxl@vger.kernel.org,
+	mika.westerberg@linux.intel.com, ilpo.jarvinen@linux.intel.com,
+	bhelgaas@google.com, huang.ying.caritas@gmail.com
+Subject: Re: [PATCH] resource: Fix resource leak in get_free_mem_region()
+Message-ID: <Z9RAwm7zNZ796z1a@smile.fi.intel.com>
+References: <174114125011.1367354.2670882864492961789.stgit@dwillia2-xfh.jf.intel.com>
+ <20250314114901.00000b99@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -78,37 +66,84 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250314110942.0000476a@huawei.com>
+In-Reply-To: <20250314114901.00000b99@huawei.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Mar 14, 2025 at 11:09:42AM +0000, Jonathan Cameron wrote:
-> > 
-> > I was unaware that we blocked mapping persistent as volatile.  I was
-> > working off the assumption that could be flexible mapped similar to...
-> > er... older, non-cxl hardware... cough.
+On Fri, Mar 14, 2025 at 11:49:01AM +0000, Jonathan Cameron wrote:
+> On Tue, 04 Mar 2025 18:22:53 -0800
+> Dan Williams <dan.j.williams@intel.com> wrote:
+
+...
+
+> > +	struct region_devres *dr __free(kfree) = NULL;
+> > +	struct resource *res;
+> > +
+> 	Avoid split of the constructor / destructor with a ternary though
+> 	error check is worse... Hmm.
 > 
-> You can use it as volatile, but that doesn't mean we allow it in a CFMWS
-> that says the host PA range is not suitable for persistent.
-> A BIOS might though I think.
->
-
-aaaaaaaaaaaaah this helps.  Ok, we can repurpose the hardware, but not
-the CFMWS.  Even more pressure on platforms to get it right :P.
-
-> > 
-> > Along with the above note, and as mentioned on discord, I think this
-> > whole section naturally evolves into a library of "Sane configurations"
-> > and "We promise nothing for `reasons`" configurations.
+> 	struct region_devres *dr __free(kfree) =
+> 		dev ? devres_alloc(devm_region_release, sizeof(*dr), GFP_KERNEL) : NULL;
+> 	if (dev && !dr)
+> 		return ERR_PTR(-ENOMEM);
 > 
-> :)  Snag is that as Dan pointed out on discord we assume this applies
-> even without the lock.  So it is possible to have device and host 
-> hardware combinations where things are forced to be very non-intuitive.
->
+> So on balance up to you,
 
-Right, but i think that falls into "We promise nothing, for `reasons`".
+I'm against ternary, it looks unreadable in this case.
 
-At the very least it would give us a communication tool that helps
-bridge the gap between platform, linux, and end-users.
+...
 
-Or it'd just makes it all worse, one of the two.
+> but at very least put that __free(kfree) direclty
+> above the set.
 
-~Gregory
+This I am neutral about. Any thing works for me.
+
+The rest you suggested is +1 from me.
+
+> > +	if (dev) {
+> > +		dr = devres_alloc(devm_region_release,
+> > +				  sizeof(struct region_devres), GFP_KERNEL);
+> > +		if (!dr)
+> > +			return ERR_PTR(-ENOMEM);
+> > +	}
+> > +
+> > +	res = __get_free_mem_region(base, size, align, name, desc, flags);
+> > +
+> Probably no blank line here would be nicer.
+> 
+> > +	if (IS_ERR(res) || !dr)
+> 
+> This conflates error and don't care if error cases and briefly
+> made me scratch my head.
+> 
+> Maybe though it increase indent don't do early
+> return on the !dr case.
+> 
+> 	if (IS_ERR(res))
+> 		return res;
+> 
+> 	if (dr) {
+> 		dr->parent = base;
+> 
+> 		...
+> 
+> 	}
+> 
+> 	return res;
+> 
+> > +		return res;
+> > +
+> > +	dr->parent = base;
+> > +	dr->start = res->start;
+> > +	dr->n = resource_size(res);
+> > +
+> > +	/* See 'struct region_devres' definition for details */
+> > +	if ((flags & GFR_REQUEST_REGION) == 0)
+> > +		dr->res = res;
+> > +
+> > +	devres_add(dev, no_free_ptr(dr));
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
