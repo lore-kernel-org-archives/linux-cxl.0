@@ -1,281 +1,115 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A8E82E3398;
-	Fri, 14 Mar 2025 13:01:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3DC61FF1CF
+	for <linux-cxl@vger.kernel.org>; Fri, 14 Mar 2025 13:38:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741957320; cv=none; b=sEImh2laAICMUCesyAFlDQwDhEBJVpe1kctpKRM7fMfggKFrs/JvKbFVT4bTGnEz3llqkM4SUNGgaa8pIFL0fmK0IG5w/NSojoIjxCPMgSiv1P96kEvLBKYsAh8yWgfuiCgDAU96fSa+ZN9IYL2NdDzgeJ7zbi3k9ewbJ3+Ssro=
+	t=1741959511; cv=none; b=j944YWfnVBVTTmoijw0OCycmideYRtC0D7gNaG/rPBL9/nC4H0JTIbzpXObpdqJVBUmDHRdT5NYtILfDZsyFpHqqUhVQV0TnSHEffdgyPqCYP/mYKpTBCikjrzxr5iqECu+HTh2ZSibrzhhEcXuOqE/IPBmV35SbWeW1IgnZni4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741957320; c=relaxed/simple;
-	bh=XbI0s9hltLxjOgAOnZRtTprETFytgxrucjh1kd2mXSU=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Np2pyy1AAjA2lt+b02V25b6kJ1qVsPMloB4jSJRFbhiEEZ7X8YHFEswbN8MDVfIAwCgaa9lVQeDxNytiWqsOLs62bmDD6Puhl7Xbfedf7WukRV9lKG9KD8SgMq85uaF4p9HDH9sVLxlfPSqWz4VW7SLbGxDrFj1Ak7K6kZElAog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZDkvR3SPPz67FR3;
-	Fri, 14 Mar 2025 20:58:43 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id B0246140CF4;
-	Fri, 14 Mar 2025 21:01:54 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 14 Mar
- 2025 14:01:54 +0100
-Date: Fri, 14 Mar 2025 13:01:52 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Robert Richter <rrichter@amd.com>
-CC: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Davidlohr
- Bueso" <dave@stgolabs.net>, Terry Bowman <terry.bowman@amd.com>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Gregory Price
-	<gourry@gourry.net>, "Fabio M. De Francesco"
-	<fabio.m.de.francesco@linux.intel.com>
-Subject: Re: [PATCH v2 14/15] cxl/amd: Enable Zen5 address translation using
- ACPI PRMT
-Message-ID: <20250314130152.00004d11@huawei.com>
-In-Reply-To: <20250218132356.1809075-15-rrichter@amd.com>
-References: <20250218132356.1809075-1-rrichter@amd.com>
-	<20250218132356.1809075-15-rrichter@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1741959511; c=relaxed/simple;
+	bh=dTUfZaUXUhKnc6MxStAvrcDIpBExFEEzoAT/Dkc+VrE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T5PBuaFKdNgyjhuR9ZIk0JozLzFeo9UYYxGvf2YjBDcYjYCC6M+3v1h+AoKSGZo4t0MYRWUM778Y1tH/PdQNiPcgfMiGLb4XC+GorTHcSvjlk7c3teBg8Zi/vjZ+OqnCWY1lNKH/7PbA0zh9TnmjCW4z1fUn2yvoCXcmcie0f00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=p6nGZVBm; arc=none smtp.client-ip=209.85.219.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="p6nGZVBm"
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6eaddbfcbc9so29782476d6.2
+        for <linux-cxl@vger.kernel.org>; Fri, 14 Mar 2025 06:38:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1741959507; x=1742564307; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=eoF44ugI6vP8IjcPcTkZmDI6ldOJ1uZycxinDR8ZEfE=;
+        b=p6nGZVBmO0bijMurW7dBY9nfCMRPL1ayrrJ6qXySYAajiquWdM0P+oyYQCsXCR7jKj
+         A7Od7FpV+Ql9MH9vpEF1V59M+7FmZF7gWY0cgBRTT0Z3lkgmNalaQGa5PLVhnBltilDl
+         YQPPY+aLw12p5VxVfp0UtRWrc46Rf3tX/0SuzaHwwESYFpFrfGut37bR1WbV6nFnPIf8
+         xVKWJK8BFL9eqLzTVq2N8+qTspB8hh7hIV59kcli9W/st9MLnRfQgXB3pp1TJvlW4qCB
+         UMGSpSi2pfK5McPCzbg/APXYaycmxrr97AbTEAc5MXLCcCiLbFtVJPUleydn97Mt6EuP
+         hOPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741959507; x=1742564307;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eoF44ugI6vP8IjcPcTkZmDI6ldOJ1uZycxinDR8ZEfE=;
+        b=q4vRPjOfPNNfa9M9Gg67njIWMYIbhW9lOLjYRWimyae1SpS2qikwgiGqkW6s6QcYXC
+         QHulNS+FJLfkJF9NE1ep2tI+fXuQKM0zA6xfp82PavcwiGjzT4CwaT9zn93T/d94YCy5
+         uUBzC+bajlilBlkmZcW2YuXrQXh6Lm81WS+FamlLkvbxqEZjsDCXtnS5eU2Ijq0ZnXNB
+         z9K5Yelci0Uh9L+Vey8oACe4XByBiGu/WddX5VmYo7mm3+nJgHpBW6HgT31aZXgJ4r02
+         b7vJ+PePkkpBcdloeAZrQleykan+oYvUeJlvz+exH9DT5O11TtUQRiUIHGcLzlbW3yW7
+         xmgg==
+X-Forwarded-Encrypted: i=1; AJvYcCWH4XRucJijQ2s/Wp/3OEa7sdt2nErcB6Wx00SlKaxgBlKEfjp+mgAbs3AL++GE6WXPAIEopJc/+7U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXxtAeOQ1FoppHuTCKFKwDKu3sMRFHhzu9he8vvddYPjtCGQ3O
+	FuGsEbI4dcc6hJRquQFssg3KI+sR6jOBvTosFogCb3qBlPFTkm9xvnMJTJ+ZalI=
+X-Gm-Gg: ASbGnctr1ojDaYGl6EgCNF79rWBJ4hsEch5JwO9pQzYj7a+pqYsvyCV2H1kvXP14TFz
+	cyirX4tOjV/i4PAA8RP04axAEkpkdHArjQWc+Zl88eZO2TNM1ITNnSQU22SMR1osD+xnnULQp28
+	JZ97QFLQK2vm18FbMfEWJ9nWveBCNtyhxv5UBtQU9V4cSxmRlUmaVO8L9Yn21QyeH7/I4qgnIGP
+	8+ge+7ylvmQlaCAdh4xG3Lzh9Nll0uavELE98M1x/WbTLxHnZull6WlA68NxQ0SBXIYI3TOgrC6
+	zBE6qzUWggDB8XOL9WFb3ggVkYPixIzQyvIZPYk9u59XCoaFWiNtMDSglwYd3Q7Y1a7QRbpkVrk
+	UkDAP6UKNuuk+/a/9ZDWmfZ6+sEk=
+X-Google-Smtp-Source: AGHT+IEgUXDqQalq0QLNm6R9nYlOpQxNyi5UlXIxkWp5LsR9Xb92fZqa2be466apd51bhbUPRrp8/A==
+X-Received: by 2002:a05:6214:b64:b0:6ea:d69c:a247 with SMTP id 6a1803df08f44-6eaea9e88a0mr39382126d6.4.1741959506662;
+        Fri, 14 Mar 2025 06:38:26 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eade349801sm23632916d6.94.2025.03.14.06.38.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Mar 2025 06:38:26 -0700 (PDT)
+Date: Fri, 14 Mar 2025 09:38:24 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Yuquan Wang <wangyuquan1236@phytium.com.cn>, rafael@kernel.org,
+	lenb@kernel.org, dave@stgolabs.net, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com, rrichter@amd.com,
+	bfaccini@nvidia.com, rppt@kernel.org, haibo1.xu@intel.com,
+	chenbaozi@phytium.com.cn, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v2] ACPI: NUMA: debug invalid unused PXM value for CFMWs
+Message-ID: <Z9QxUNP2aqTGpnMJ@gourry-fedora-PF4VCD3F>
+References: <20250313060907.2381416-1-wangyuquan1236@phytium.com.cn>
+ <Z9LzjQCKFfsdE2yJ@gourry-fedora-PF4VCD3F>
+ <20250314101226.00003830@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250314101226.00003830@huawei.com>
 
-On Tue, 18 Feb 2025 14:23:55 +0100
-Robert Richter <rrichter@amd.com> wrote:
+On Fri, Mar 14, 2025 at 10:12:26AM +0000, Jonathan Cameron wrote:
+> On Thu, 13 Mar 2025 11:02:37 -0400
+> Gregory Price <gourry@gourry.net> wrote:
+> 
+> > On Thu, Mar 13, 2025 at 02:09:07PM +0800, Yuquan Wang wrote:
+> > > @@ -441,6 +441,11 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
+> > >  	start = cfmws->base_hpa;
+> > >  	end = cfmws->base_hpa + cfmws->window_size;
+> > >  
+> > > +	if (srat_disabled()) {
+> > > +		pr_err("SRAT is missing or bad while processing CFMWS.\n");
+> > > +		return -EINVAL;
+> > > +	}
+> > > +  
+> > 
+> > I thought the srat was optional regardless of the presence of a CFMWS.
+> > Is this not the case?
+> 
+> True in theory, but do we want to support it?
+> 
+> I'd vote no unless someone is shipping such a system and can't fix it up.
+> 
+> Jonathan
+> 
 
-> Add AMD platform specific Zen5 support for address translation.
->=20
-> Zen5 systems may be configured to use 'Normalized addresses'. Then,
-> CXL endpoints use their own physical address space and are programmed
-> passthrough (DPA =3D=3D HPA), the number of interleaving ways for the
-> endpoint is set to one. The Host Physical Addresses (HPAs) need to be
-> translated from the endpoint to its CXL host bridge. The HPA of a CXL
-> host bridge is equivalent to the System Physical Address (SPA).
->=20
-> ACPI Platform Runtime Mechanism (PRM) is used to translate the CXL
-> Device Physical Address (DPA) to its System Physical Address. This is
-> documented in:
->=20
->  AMD Family 1Ah Models 00h=E2=80=930Fh and Models 10h=E2=80=931Fh
->  ACPI v6.5 Porting Guide, Publication # 58088
->  https://www.amd.com/en/search/documentation/hub.html
->=20
-> To implement AMD Zen5 address translation the following steps are
-> needed:
->=20
-> Apply platform specific changes to each port where necessary using
-> platform detection and the existing architectural framework.
->=20
-> Add a function cxl_port_setup_amd() to implement AMD platform specific
-> code. Use Kbuild and Kconfig options respectively to enable the code
-> depending on architecture and platform options. Handle architecture
-> specifics in arch_cxl_port_platform_setup() and create a new file
-> core/x86/amd.c for this.
->=20
-> Introduce a function cxl_zen5_init() to handle Zen5 specific
-> enablement. Zen5 platforms are detected using the PCIe vendor and
-> device ID of the corresponding CXL root port. There is a check for
-> ACPI PRMT CXL address translation support.
->=20
-> Apply cxl_zen5_to_hpa() as cxl_port->to_hpa() callback to Zen5 CXL
-> host bridges to enable platform specific address translation.
->=20
-> Use ACPI PRM DPA-to-SPA translation to determine an endpoint's
-> interleaving configuration and base address during the early
-> initialization process. This is used to determine an endpoint's SPA
-> range and to check the address translation setup.
->=20
-> The configuration can be determined calling the PRM for specific HPAs
-> given. The resulting SPAs are used to calculate interleaving
-> parameters of the host bridge and root port. The maximum granularity
-> (chunk size) is 16k, minimum is 256. Use the following calculation for
-> the given HPAs:
->=20
->  ways    =3D hpa_len(SZ_16K) / SZ_16K
->  gran    =3D (hpa_len(SZ_16K) - hpa_len(SZ_16K - SZ_256) - SZ_256)
->           / (ways - 1)
->  pos     =3D (hpa_len(SZ_16K) - ways * SZ_16K) / gran
->=20
-> Before the endpoint is attached to a region the translation is checked
-> for reasonable values.
->=20
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-Some trivial comments inline.  The rest I may take another look at as
-not gotten my head fully around it yet.
+Well, this is really the patch trying to deal with that I suppose. The
+code here already states its creating 1 node per CFMWS in the absense of
+srat - but this patch just changes that and says "no nodes 4 u".  I
+don't think that's what we want either.
 
-> diff --git a/drivers/cxl/core/x86/amd.c b/drivers/cxl/core/x86/amd.c
-> new file mode 100644
-> index 000000000000..483c92c18054
-> --- /dev/null
-> +++ b/drivers/cxl/core/x86/amd.c
-> @@ -0,0 +1,259 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (C) 2025 Advanced Micro Devices, Inc.
-> + */
-> +
-> +#include <linux/prmt.h>
-> +#include <linux/pci.h>
-> +
-> +#include <cxlmem.h>
-> +#include "../core.h"
-> +
-> +#define PCI_DEVICE_ID_AMD_ZEN5_ROOT		0x153e
-
-Might as well just put it inline unless you have lots of uses.
-
-> +
-> +static const struct pci_device_id zen5_root_port_ids[] =3D {
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_ZEN5_ROOT) },
-> +	{},
-	{}
-
-Don't want to make it easy to add stuff after.
-
-> +};
-> +
-> +static int is_zen5_root_port(struct device *dev, void *unused)
-> +{
-> +	if (!dev_is_pci(dev))
-> +		return 0;
-> +
-> +	return !!pci_match_id(zen5_root_port_ids, to_pci_dev(dev));
-> +}
-> +
-> +static bool is_zen5(struct cxl_port *port)
-> +{
-> +	if (!IS_ENABLED(CONFIG_ACPI_PRMT))
-> +		return false;
-> +
-> +	/* To get the CXL root port, find the CXL host bridge first. */
-> +	if (is_cxl_root(port) ||
-> +	    !port->host_bridge ||
-combine a few of these on same line perhaps?
-> +	    !is_cxl_root(to_cxl_port(port->dev.parent)))
-> +		return false;
-
-> +
-> +/* Bits used for interleaving. */
-> +#define SPA_INTERLEAVING_BITS	GENMASK_ULL(14, 8)
-> +
-> +static u64 cxl_zen5_to_hpa(struct cxl_decoder *cxld, u64 hpa)
-> +{
-
-
-> +	port =3D to_cxl_port(cxld->dev.parent);
-> +	cxlmd =3D port ? to_cxl_memdev(port->uport_dev) : NULL;
-> +	if (!port || !dev_is_pci(cxlmd->dev.parent)) {
-
-Given you are going to dereference cxlmd, maybe more logical to do
-
-	if (!cxlmd || !dev_is_pci()
-
-> +		dev_dbg(&cxld->dev, "No endpoint found: %s, range %#llx-%#llx\n",
-> +			dev_name(cxld->dev.parent), cxld->hpa_range.start,
-> +			cxld->hpa_range.end);
-> +		return ULLONG_MAX;
-> +	}
-> +	pci_dev =3D to_pci_dev(cxlmd->dev.parent);
-> +
-> +	/*
-> +	 * If the decoder is already attached we are past the decoder
-> +	 * initialization, do not determine the address mapping and
-> +	 * just return here.
-> +	 */
-> +	if (cxld->region)
-> +		return prm_cxl_dpa_spa(pci_dev, hpa);
-> +
->
-> +	/*
-> +	 * Check the mapping: Number of ways is power of 2 or a
-> +	 * multiple of 3 ways (len =3D=3D ways * SZ_16K), granularitys is
-
-granularity is=20
-
-> +	 * power of 2.
-> +	 */
-> +	if (len & ~(3ULL << (ways_bits + 14)) ||
-> +	    granularity !=3D 1 << gran_bits || offset !=3D pos << gran_bits) {
-> +		dev_dbg(&cxld->dev, "Error determining address mapping: base: %#llx sp=
-a: %#llx spa2: %#llx ways: %d pos: %d granularity: %llu\n",
-> +			base, spa, spa2, ways, pos, granularity);
-> +		return ULLONG_MAX;
-> +	}
-> +
-> +	spa =3D prm_cxl_dpa_spa(pci_dev, hpa);
-> +
-> +	/*
-> +	 * Check SPA using a PRM call for the closest DPA calculated
-> +	 * for the HPA. If the HPA matches a different interleaving
-> +	 * position other than the decoder's, determine its offset to
-> +	 * adjust the SPA.
-> +	 */
-> +
-> +	gran_mask =3D GENMASK_ULL(gran_bits, 0);
-> +	spa2 =3D base + (hpa & ~gran_mask) * ways + (hpa & gran_mask);
-> +	base =3D base - pos * granularity;
-> +
-> +	dev_dbg(&cxld->dev,
-> +		"address mapping found for %s (hpa -> spa): %#llx -> %#llx (%#llx+%#ll=
-x) ways: %d pos: %d granularity: %llu\n",
-> +		pci_name(pci_dev), hpa, spa, base, spa - base, ways, pos,
-> +		granularity);
-> +
-> +
-> +	if ((spa ^ spa2) & ~SPA_INTERLEAVING_BITS) {
-> +		dev_dbg(&cxld->dev, "SPA calculation failed: %#llx:%#llx\n",
-> +			spa, spa2);
-> +		return ULLONG_MAX;
-> +	}
-> +
-> +	return spa;
-> +}
-> +
-> +static void cxl_zen5_init(struct cxl_port *port)
-> +{
-> +	u64 spa;
-> +	struct prm_cxl_dpa_spa_data data =3D { .out =3D &spa, };
-> +	int rc;
-> +
-> +	if (!is_zen5(port))
-> +		return;
-> +
-> +	/* Check kernel and firmware support */
-> +	rc =3D acpi_call_prm_handler(prm_cxl_dpa_spa_guid, &data);
-> +
-No blank line here. Keen the error check right up against the call.
-> +	if (rc =3D=3D -EOPNOTSUPP) {
-> +		pr_warn_once("ACPI PRMT: PRM address translation not supported by kern=
-el\n");
-> +		return;
-> +	}
-> +
-> +	if (rc =3D=3D -ENODEV) {
-> +		pr_warn_once("ACPI PRMT: PRM address translation not supported by firm=
-ware\n");
-> +		return;
-> +	}
-> +
-> +	port->to_hpa =3D cxl_zen5_to_hpa;
-> +
-> +	dev_dbg(port->host_bridge, "PRM address translation enabled for %s.\n",
-> +		dev_name(&port->dev));
-> +}
-> +
-> +void cxl_port_setup_amd(struct cxl_port *port)
-> +{
-> +	cxl_zen5_init(port);
-> +}
-
+~Gregory
