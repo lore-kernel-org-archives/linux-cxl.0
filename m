@@ -1,246 +1,168 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00B421FDE1E;
-	Fri, 14 Mar 2025 11:37:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECBBD166F32
+	for <linux-cxl@vger.kernel.org>; Fri, 14 Mar 2025 11:49:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741952261; cv=none; b=JsY3XdSjDaFMpOqib56dMP87USnro2qWx8n8vH1rpiWiNqyuX0F8cDDqthv8IVi8UlMSuhGP2Gazf/+vbP8BOEgTkETwrC2Ge+LcsJ570HvNc3pU8Y1rEks4ty4bvQiazo+J8lrzvQs8213e6JAQMfqwgNVq8WctKwChX/Lb2Wo=
+	t=1741952948; cv=none; b=Pr9ULs2SQzc3Ivi7YwJsobBHRUF7hHrOanxvI1wuYsyDDfk7UedFKo/F2ACc22ti4F2UStI0Gt4NEIQUjvzaKiQzVRjxDZ4EWJ51LJcf8URjbozmzECvKJ/WuzFzS6PQfZfDJAUbFvTuUAT2TI6Y0V9UPhqTEc04fIWoqI9idMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741952261; c=relaxed/simple;
-	bh=AAolH3eVvDN1fp3/Izn+Wkxmg1SmgxnM6q/6Ix3GxjU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cIBdzTprP3oJms5OXuqFrTG0R3Rh8EWAGG7PApE1ZYWT29EtdtD15fRFetEfV7YKeHkQupPDNiNxDpX9P7UYq2hqnysnFT5eenmr9hPOHOv4lJkKJdUoBQlrgBw413i9mMD5S0yqTOrX1aF9Ok2VfYNx6aHNUSOhp4xCRXBs7/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UM0bpX4X; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UM0bpX4X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741952260; x=1773488260;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=AAolH3eVvDN1fp3/Izn+Wkxmg1SmgxnM6q/6Ix3GxjU=;
-  b=UM0bpX4XIm/QheDbSeU1IA5UX/1MId8fzZJ0EU3Vx/poGJz3VDVkcYlT
-   R8JM1dq0+YzrjXG0G4Q9W7t3U+oWGM38w4r7RNAyakXI+kbsFnS6j/9L2
-   D74/vNL75P7p3cT7mm6zNHUFbDMR4Pvl2Gx3YzyIz7Cm1D6f4AHqokULm
-   lk8NEcpS/MuH8HgzdjpkEDDDTULl4RjOcPU55xnu9d2LK6eN8PS6SdzdX
-   TCH2Tc/CyfHc8opoGtH3C3AFQQfVYjXgzQ9eBlT6qyJhCx1SjvK4VNyTP
-   EQs+sCIRt8GeZNUtP+mCZcN9v/eWIyWcjIO9svZ29WHdDjwQl9HBO28Hd
-   A==;
-X-CSE-ConnectionGUID: geelo6IjTgSksA74vnTJWQ==
-X-CSE-MsgGUID: 4gA7diRTRfmM58YH4debGg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11372"; a="60497553"
-X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
-   d="scan'208";a="60497553"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 04:37:40 -0700
-X-CSE-ConnectionGUID: T+aokh08Rha7dGFGLp7JwA==
-X-CSE-MsgGUID: /swWRN2qQMyVmmhXiLRz+Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
-   d="scan'208";a="121751440"
-Received: from jkrzyszt-mobl2.ger.corp.intel.com (HELO fdefranc-mobl3.intel.com) ([10.245.246.211])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 04:37:37 -0700
-From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>
-Cc: Robert Richter <rrichter@amd.com>,
-	ming.li@zohomail.com,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-Subject: [PATCH 4/4 v3] cxl/test: Simulate an x86 Low Memory Hole for tests
-Date: Fri, 14 Mar 2025 12:36:33 +0100
-Message-ID: <20250314113708.759808-5-fabio.m.de.francesco@linux.intel.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250314113708.759808-1-fabio.m.de.francesco@linux.intel.com>
-References: <20250314113708.759808-1-fabio.m.de.francesco@linux.intel.com>
+	s=arc-20240116; t=1741952948; c=relaxed/simple;
+	bh=rshHOHTD1bxdLP+oopn+oEtDhvYxrjZd7AaQNgVhK5M=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=j+KyclrSQ/9nC2hsxulGBKuVupY2x6vd1Lu02fvm7kx2SSmjAxSCOkBZREVhpSV83JQc+ISNvtkJFhapODztM4g/TWuI6UoK3cjjInrlUXtSvtnlaXI5pH70c8gDa36xgOtc/b0wXxmUZHjvvgFRGZo2ZFnqwhEgls9fJ3fWDC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZDjHy6fk8z6K5l2;
+	Fri, 14 Mar 2025 19:46:22 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id BCCC7140155;
+	Fri, 14 Mar 2025 19:49:03 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 14 Mar
+ 2025 12:49:03 +0100
+Date: Fri, 14 Mar 2025 11:49:01 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: <akpm@linux-foundation.org>, Li Zhijian <lizhijian@fujitsu.com>,
+	<linux-cxl@vger.kernel.org>, <andriy.shevchenko@linux.intel.com>,
+	<mika.westerberg@linux.intel.com>, <ilpo.jarvinen@linux.intel.com>,
+	<bhelgaas@google.com>, <huang.ying.caritas@gmail.com>
+Subject: Re: [PATCH] resource: Fix resource leak in get_free_mem_region()
+Message-ID: <20250314114901.00000b99@huawei.com>
+In-Reply-To: <174114125011.1367354.2670882864492961789.stgit@dwillia2-xfh.jf.intel.com>
+References: <174114125011.1367354.2670882864492961789.stgit@dwillia2-xfh.jf.intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-Simulate an x86 Low Memory Hole for the CXL tests by changing the first
-mock CFMWS range size to 768MB and the CXL Endpoint Decoder HPA range sizes
-to 1GB.
+On Tue, 04 Mar 2025 18:22:53 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-Since the auto-created region of cxl-test uses mock_cfmws[0], whose range
-base address is typically different from the one published by the BIOS on
-real hardware, the driver would fail to create and attach CXL Regions if
-it was run on the mock environment created by cxl-tests.
+> Li reports a kmemleak detection in get_free_mem_region() error unwind
+> path:
+> 
+>   cxl region2: HPA allocation error (-34) for size:0x0000000100000000 in CXL Window 0 [mem 0xa90000000-0x1a8fffffff flags 0x200]
+>   kmemleak: 1 new suspected memory leaks (see /sys/kernel/debug/kmemleak)
+> 
+>      __kmalloc_cache_noprof+0x28c/0x350
+>      get_free_mem_region+0x45/0x380
+>      alloc_free_mem_region+0x1d/0x30
+>      size_store+0x180/0x290 [cxl_core]
+>      kernfs_fop_write_iter+0x13f/0x1e0
+>      vfs_write+0x37c/0x540
+>      ksys_write+0x68/0xe0
+>      do_syscall_64+0x6e/0x190
+>      entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> 
+> It turns out it not only leaks memory, also fails to unwind changes to
+> the resource tree (@base, usually iomem_resource).
+> 
+> Fix this by consolidating the devres and devm paths into just devres,
+> and move those details to a wrapper function. So now
+> __get_free_mem_region() only needs to worry about alloc_resource()
+> unwinding, and the devres failure path is resolved before touching the
+> resource tree.
+> 
+> Fixes: 14b80582c43e ("resource: Introduce alloc_free_mem_region()")
+> Reported-by: Li Zhijian <lizhijian@fujitsu.com>
+> Closes: http://lore.kernel.org/20250304043415.610286-1-lizhijian@fujitsu.com
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+> 
+> Andrew, here is a replacement patch for
+> resource-fix-resource-leak-in-get_free_mem_region.patch in your tree. It
+> addresses missing calls to remove_resource() in addition to
+> free_resource() in the error path.
 
-Therefore, save the mock_cfmsw[0] range base_hpa and reuse it to match CXL
-Root Decoders and Regions with Endpoint Decoders when the driver is run on
-mock devices.
+Fiddly code.  So feel free to ignore comments below as even
+if these help, it's still code that requires more coffee than I have
+had today to follow easily.
 
-Since the auto-created region of cxl-test uses mock_cfmws[0], the
-LMH path in the CXL Driver will be exercised every time the cxl-test
-module is loaded. Executing unit test: cxl-topology.sh, confirms the
-region created successfully with a LMH.
+Jonathan
 
-Cc: Alison Schofield <alison.schofield@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
----
- drivers/cxl/core/lmh.c               | 35 ++++++++++++++++++++++++----
- drivers/cxl/core/lmh.h               |  2 ++
- tools/testing/cxl/cxl_core_exports.c |  2 ++
- tools/testing/cxl/test/cxl.c         | 10 ++++++++
- 4 files changed, 45 insertions(+), 4 deletions(-)
+>  
+> +static struct resource *
+> +get_free_mem_region(struct device *dev, struct resource *base,
+> +		    resource_size_t size, const unsigned long align,
+> +		    const char *name, const unsigned long desc,
+> +		    const unsigned long flags)
+> +{
+> +
+> +	struct region_devres *dr __free(kfree) = NULL;
+> +	struct resource *res;
+> +
+	Avoid split of the constructor / destructor with a ternary though
+	error check is worse... Hmm.
 
-diff --git a/drivers/cxl/core/lmh.c b/drivers/cxl/core/lmh.c
-index 2e32f867eb94..9c55670c1c84 100644
---- a/drivers/cxl/core/lmh.c
-+++ b/drivers/cxl/core/lmh.c
-@@ -1,11 +1,28 @@
- // SPDX-License-Identifier: GPL-2.0-only
- 
- #include <linux/range.h>
-+#include <linux/pci.h>
-+
- #include "lmh.h"
- 
- /* Start of CFMWS range that end before x86 Low Memory Holes */
- #define LMH_CFMWS_RANGE_START 0x0ULL
- 
-+static u64 mock_cfmws0_range_start = ULLONG_MAX;
-+
-+void set_mock_cfmws0_range_start(const u64 start)
-+{
-+	mock_cfmws0_range_start = start;
-+}
-+
-+static u64 get_cfmws_range_start(const struct device *dev)
-+{
-+	if (dev_is_pci(dev))
-+		return LMH_CFMWS_RANGE_START;
-+
-+	return mock_cfmws0_range_start;
-+}
-+
- /*
-  * Match CXL Root and Endpoint Decoders by comparing SPA and HPA ranges.
-  *
-@@ -19,14 +36,19 @@ bool arch_match_spa(const struct cxl_root_decoder *cxlrd,
- 		    const struct cxl_endpoint_decoder *cxled)
- {
- 	const struct range *r1, *r2;
-+	u64 cfmws_range_start;
- 	int niw;
- 
-+	cfmws_range_start = get_cfmws_range_start(&cxled->cxld.dev);
-+	if (cfmws_range_start == ULLONG_MAX)
-+		return false;
-+
- 	r1 = &cxlrd->cxlsd.cxld.hpa_range;
- 	r2 = &cxled->cxld.hpa_range;
- 	niw = cxled->cxld.interleave_ways;
- 
--	if (r1->start == LMH_CFMWS_RANGE_START && r1->start == r2->start &&
--	    r1->end < (LMH_CFMWS_RANGE_START + SZ_4G) && r1->end < r2->end &&
-+	if (r1->start == cfmws_range_start && r1->start == r2->start &&
-+	    r1->end < (cfmws_range_start + SZ_4G) && r1->end < r2->end &&
- 	    IS_ALIGNED(range_len(r2), niw * SZ_256M))
- 		return true;
- 
-@@ -40,9 +62,14 @@ bool arch_match_region(const struct cxl_region_params *p,
- 	const struct range *r = &cxld->hpa_range;
- 	const struct resource *res = p->res;
- 	int niw = cxld->interleave_ways;
-+	u64 cfmws_range_start;
-+
-+	cfmws_range_start = get_cfmws_range_start(&cxld->dev);
-+	if (cfmws_range_start == ULLONG_MAX)
-+		return false;
- 
--	if (res->start == LMH_CFMWS_RANGE_START && res->start == r->start &&
--	    res->end < (LMH_CFMWS_RANGE_START + SZ_4G) && res->end < r->end &&
-+	if (res->start == cfmws_range_start && res->start == r->start &&
-+	    res->end < (cfmws_range_start + SZ_4G) && res->end < r->end &&
- 	    IS_ALIGNED(range_len(r), niw * SZ_256M))
- 		return true;
- 
-diff --git a/drivers/cxl/core/lmh.h b/drivers/cxl/core/lmh.h
-index 16746ceac1ed..b6337120ee17 100644
---- a/drivers/cxl/core/lmh.h
-+++ b/drivers/cxl/core/lmh.h
-@@ -2,6 +2,8 @@
- 
- #include "cxl.h"
- 
-+void set_mock_cfmws0_range_start(u64 start);
-+
- #ifdef CONFIG_CXL_ARCH_LOW_MEMORY_HOLE
- bool arch_match_spa(const struct cxl_root_decoder *cxlrd,
- 		    const struct cxl_endpoint_decoder *cxled);
-diff --git a/tools/testing/cxl/cxl_core_exports.c b/tools/testing/cxl/cxl_core_exports.c
-index f088792a8925..7b20f9fcf0d7 100644
---- a/tools/testing/cxl/cxl_core_exports.c
-+++ b/tools/testing/cxl/cxl_core_exports.c
-@@ -2,6 +2,8 @@
- /* Copyright(c) 2022 Intel Corporation. All rights reserved. */
- 
- #include "cxl.h"
-+#include "lmh.h"
- 
- /* Exporting of cxl_core symbols that are only used by cxl_test */
- EXPORT_SYMBOL_NS_GPL(cxl_num_decoders_committed, "CXL");
-+EXPORT_SYMBOL_NS_GPL(set_mock_cfmws0_range_start, "CXL");
-diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index 1c3336095923..8c69ce0a272f 100644
---- a/tools/testing/cxl/test/cxl.c
-+++ b/tools/testing/cxl/test/cxl.c
-@@ -9,6 +9,7 @@
- #include <linux/pci.h>
- #include <linux/mm.h>
- #include <cxlmem.h>
-+#include <core/lmh.h>
- 
- #include "../watermark.h"
- #include "mock.h"
-@@ -212,7 +213,11 @@ static struct {
- 			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
- 					ACPI_CEDT_CFMWS_RESTRICT_VOLATILE,
- 			.qtg_id = FAKE_QTG_ID,
-+#if defined(CONFIG_CXL_ARCH_LOW_MEMORY_HOLE)
-+			.window_size = SZ_256M * 3UL,
-+#else
- 			.window_size = SZ_256M * 4UL,
-+#endif
- 		},
- 		.target = { 0 },
- 	},
-@@ -454,6 +459,7 @@ static int populate_cedt(void)
- 			return -ENOMEM;
- 		window->base_hpa = res->range.start;
- 	}
-+	set_mock_cfmws0_range_start(mock_cfmws[0]->base_hpa);
- 
- 	return 0;
- }
-@@ -744,7 +750,11 @@ static void mock_init_hdm_decoder(struct cxl_decoder *cxld)
- 	struct cxl_endpoint_decoder *cxled;
- 	struct cxl_switch_decoder *cxlsd;
- 	struct cxl_port *port, *iter;
-+#if defined(CONFIG_CXL_ARCH_LOW_MEMORY_HOLE)
-+	const int size = SZ_1G;
-+#else
- 	const int size = SZ_512M;
-+#endif
- 	struct cxl_memdev *cxlmd;
- 	struct cxl_dport *dport;
- 	struct device *dev;
--- 
-2.48.1
+	struct region_devres *dr __free(kfree) =
+		dev ? devres_alloc(devm_region_release, sizeof(*dr), GFP_KERNEL) : NULL;
+	if (dev && !dr)
+		return ERR_PTR(-ENOMEM);
+
+So on balance up to you, but at very least put that __free(kfree) direclty
+above the set.
+
+> +	if (dev) {
+> +		dr = devres_alloc(devm_region_release,
+> +				  sizeof(struct region_devres), GFP_KERNEL);
+> +		if (!dr)
+> +			return ERR_PTR(-ENOMEM);
+> +	}
+> +
+> +	res = __get_free_mem_region(base, size, align, name, desc, flags);
+> +
+Probably no blank line here would be nicer.
+
+> +	if (IS_ERR(res) || !dr)
+
+This conflates error and don't care if error cases and briefly
+made me scratch my head.
+
+Maybe though it increase indent don't do early
+return on the !dr case.
+
+	if (IS_ERR(res))
+		return res;
+
+	if (dr) {
+		dr->parent = base;
+
+		...
+
+	}
+
+	return res;
+
+> +		return res;
+> +
+> +	dr->parent = base;
+> +	dr->start = res->start;
+> +	dr->n = resource_size(res);
+> +
+> +	/* See 'struct region_devres' definition for details */
+> +	if ((flags & GFR_REQUEST_REGION) == 0)
+> +		dr->res = res;
+> +
+> +	devres_add(dev, no_free_ptr(dr));
+> +
+> +	return res;
+> +}
+> +
+>  /**
+>   * devm_request_free_mem_region - find free region for device private memory
+>   *
+> 
+> 
 
