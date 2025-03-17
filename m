@@ -1,101 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80EE1B21B8;
-	Mon, 17 Mar 2025 17:59:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261144A06;
+	Mon, 17 Mar 2025 19:00:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742234369; cv=none; b=bajxZMXofnik+klinGa4EWLm5ENvi2a4/OPzZT/A5oMxmegyQePlXgfE+YALDjoVYdTnSNnlhU+ZZCQ6d64wy129c4m3Ow782zeseMnhybuXx/+9m2ZGNRwtRWaNVVrjOlw6TjfEHfHY2NTcfhiUaxDE0MxI1XcynFt1IChQtGI=
+	t=1742238045; cv=none; b=SAD5kw4qFNg3wpemlB7rk6TuR4pQHqMnrHXkFJS1KSgzVagguLR6cgKH3aZnt+coV/vteTxU9hxsuERt8wBRsG74dIU0BbiRgBmuajyYCPQSWbpcX9PkjamnwaBl1KZAXwW+jhdoTMODH5VaUUSO081yGS9qWqNR92OP3PdfzXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742234369; c=relaxed/simple;
-	bh=kzN3DDqc8hAjqb/rDQcWukQAiIn4lKxU/b/iu1LB/Xw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m73vjNkaRYsa1vd6eLh7GssrbYyFijcaKllHiuW7Agz43dlDV2/h1qxMa3VWfIxSE5vB2YMJwpguR66f+9UOSe5N3xt4G756tKwPsXC3T6KDC3iWXPtG2/v45MsZi9IRM8VTaOWcPYMUylVnORX3ngU2ibkIeOeXqRKzvNUjIr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PXUqe1Er; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1742238045; c=relaxed/simple;
+	bh=Wo2wfzfhNxnL2ZL+LVpIzigSCTl/akQguM98mUvOi+w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XETxLc3b+Kn6AoeA4/toqH4x1hIf/yHNti7CbepAK/QI6sMnSv07pzGBBaJw9Ie+DJnQksNXEJNlOQZ4OIf5t3xD6ViSWUe8Hgkv3hHvdiiSiLad5vpsCXnTnQdgwCTmaAxd6IOCfblViVd2d+u/UOxyjiry0817hRI8UYTQa0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JeQzc7BL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PXUqe1Er"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742234368; x=1773770368;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=kzN3DDqc8hAjqb/rDQcWukQAiIn4lKxU/b/iu1LB/Xw=;
-  b=PXUqe1ErVH6i9Bxu/K4B7k97hWyH3IFkgL/5X8CFFPhgmpR+TQ4XwCxn
-   zstCC87NBPgBYsIQcTGeQmyYj/QT1b+QegdHyeYnbZPTdpYTMU2v30DKL
-   ohUjfMSuR8RVImHjldCDMwODes/egDvNrGjqdnwV6YgkfzaTMvtoztE6c
-   fAOSWWNnEUR6hFGpLA1Sc+rpW9A7/k7o/jrjjcC097mBqFknR8SpXOAGb
-   2efL9XUYTT64TQHpJvmTEp6w8RimCpnihRMwkjsBCvi8I/01vkRJO2Ln6
-   SpnyJ5bc6FccTGve0f86Sir1g0PMM3bBlmI197/v63ZajJMjTDqwjUzat
-   w==;
-X-CSE-ConnectionGUID: fFI0nDcbQv6G1w/rItEcRg==
-X-CSE-MsgGUID: e0fZicAbSo6oqdShtyO55g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="53969539"
-X-IronPort-AV: E=Sophos;i="6.14,254,1736841600"; 
-   d="scan'208";a="53969539"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 10:59:27 -0700
-X-CSE-ConnectionGUID: V2iqJnXATROcths5wXtyqQ==
-X-CSE-MsgGUID: c7H+1jwFRse9NFLq+0u/eA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,254,1736841600"; 
-   d="scan'208";a="127031858"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.109.118])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 10:59:26 -0700
-Date: Mon, 17 Mar 2025 10:59:24 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Li Ming <ming.li@zohomail.com>
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] cxl/region: Fix the first aliased address
- miscalculation
-Message-ID: <Z9hi_OBA4P_111oc@aschofie-mobl2.lan>
-References: <20250317070124.815028-1-ming.li@zohomail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JeQzc7BL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DEB7C4CEE3;
+	Mon, 17 Mar 2025 19:00:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742238045;
+	bh=Wo2wfzfhNxnL2ZL+LVpIzigSCTl/akQguM98mUvOi+w=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=JeQzc7BLWlfhPaSn+zaHHp4mLtyYzC9KuIFsri9MX1nfgbXdPM3nSzXRttXIA8032
+	 sCK6mCC9ByNS1KiQ/wKMc7quXIdPZEYCM6FBTvy9uAsnCTlhSzjHJvL7yHie8JVK/0
+	 rdKpesJMYs5F1rT7Y+Mu2sMrSQUaUPe7pRuewODruuLLAIUV37CCMp8TknbB2WGfA8
+	 87IlqnO4OeULooRQa5tYXp/TTJ5zrsi9NPs6qgyDMHA+tSqGUT/K1R4jjOWanPZfxq
+	 o9YwEtVrmJLtGhaFN6M/iALR++tYhEWfAR8hvbH9fBIrSqvgBVsxRjj6/oCrFrGI8e
+	 QSvP3OzliqCXg==
+Message-ID: <1eae139c-f678-4b28-a466-5c47967b5d13@kernel.org>
+Date: Mon, 17 Mar 2025 13:00:43 -0600
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250317070124.815028-1-ming.li@zohomail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 0/8] Introduce fwctl subystem
+Content-Language: en-US
+To: Jason Gunthorpe <jgg@nvidia.com>, Jacob Keller <jacob.e.keller@intel.com>
+Cc: "Nelson, Shannon" <shannon.nelson@amd.com>,
+ Leon Romanovsky <leon@kernel.org>, Jiri Pirko <jiri@resnulli.us>,
+ Jakub Kicinski <kuba@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Andy Gospodarek <andrew.gospodarek@broadcom.com>,
+ Aron Silverton <aron.silverton@oracle.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Daniel Vetter <daniel.vetter@ffwll.ch>, Dave Jiang <dave.jiang@intel.com>,
+ Christoph Hellwig <hch@infradead.org>, Itay Avraham <itayavr@nvidia.com>,
+ Jiri Pirko <jiri@nvidia.com>, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>, Leonid Bloch <lbloch@nvidia.com>,
+ linux-cxl@vger.kernel.org, linux-rdma@vger.kernel.org,
+ netdev@vger.kernel.org, Saeed Mahameed <saeedm@nvidia.com>,
+ "Sinyuk, Konstantin" <konstantin.sinyuk@intel.com>
+References: <20250304140036.GK133783@nvidia.com>
+ <20250304164203.38418211@kernel.org> <20250305133254.GV133783@nvidia.com>
+ <mxw4ngjokr3vumdy5fp2wzxpocjkitputelmpaqo7ungxnhnxp@j4yn5tdz3ief>
+ <bcafcf60-47a8-4faf-bea3-19cf0cbc4e08@kernel.org>
+ <20250305182853.GO1955273@unreal>
+ <dc72c6fe-4998-4dba-9442-73ded86470f5@kernel.org>
+ <20250313124847.GM1322339@unreal>
+ <54781c0c-a1e7-4e97-acf1-1fc5a2ee548c@amd.com>
+ <d0e95c47-c812-4aa8-812f-f5d7f6abbbb1@intel.com>
+ <20250317123333.GB9311@nvidia.com>
+From: David Ahern <dsahern@kernel.org>
+In-Reply-To: <20250317123333.GB9311@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 17, 2025 at 03:01:24PM +0800, Li Ming wrote:
-> In extended linear cache(ELC) case, cxl_port_get_spa_cache_alias() helps
-> to get the aliased address of a SPA, it considers the first address in
-> CXL memory range is "region start + region cache size + 1", but it
-> should be "region start + region cache size".
+On 3/17/25 1:33 PM, Jason Gunthorpe wrote:
+> On Fri, Mar 14, 2025 at 11:09:47AM -0700, Jacob Keller wrote:
 > 
-> So if a SPA is equal to "region start + region cache size", its aliased
-> address should be "SPA - region cache size".
+>> I'd throw my hat in for drivers/core as well, I think it makes the most
+>> sense and is the most subsystem neutral name. Hopefully any issue with
+>> tooling can be solved relatively easily.
+> 
+> Given Greg's point about core dump files sometimes being in .gitignore
+> maybe "shared_core", or something along that path is a better name?
+> 
 
-Nice catch Ming!
+Not seeing the conflict on drivers/core:
 
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+$ find . -name .gitignore | xargs grep core
+./tools/testing/selftests/powerpc/ptrace/.gitignore:core-pkey
+./tools/testing/selftests/cgroup/.gitignore:test_core
+./tools/testing/selftests/mincore/.gitignore:mincore_selftest
+./arch/mips/crypto/.gitignore:poly1305-core.S
+./arch/arm/crypto/.gitignore:aesbs-core.S
+./arch/arm/crypto/.gitignore:sha256-core.S
+./arch/arm/crypto/.gitignore:sha512-core.S
+./arch/arm/crypto/.gitignore:poly1305-core.S
+./arch/arm64/crypto/.gitignore:sha256-core.S
+./arch/arm64/crypto/.gitignore:sha512-core.S
+./arch/arm64/crypto/.gitignore:poly1305-core.S
 
-> 
-> Signed-off-by: Li Ming <ming.li@zohomail.com>
-> ---
->  drivers/cxl/core/region.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 6d8bdb53f258..c3f4dc244df7 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -3460,7 +3460,7 @@ u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint, u64 spa)
->  			if (!p->cache_size)
->  				return ~0ULL;
->  
-> -			if (spa > p->res->start + p->cache_size)
-> +			if (spa >= p->res->start + p->cache_size)
->  				return spa - p->cache_size;
->  
->  			return spa + p->cache_size;
-> -- 
-> 2.34.1
-> 
