@@ -1,170 +1,91 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2391F170A26;
-	Sun, 16 Mar 2025 07:34:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742110473; cv=none; b=qOcQk9yAjlx62hmHSnwO+pQqKLtjesoOJASKhkKF2mGxNPw/1d/MH32bUYelSCC71GW5pvM3Tl9JPDxUk3v2m5sVwQ4Fl3mXC0xlTMdfxmjKqV66Z4wZ8HAR1fV23Zhm/9/h/FsfC7yjg2ufGttTqNbkkAmbsOHINq1W+oJ7DLc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742110473; c=relaxed/simple;
-	bh=Z9wPWp6+P2sAIkQ+dPlfUdBxy9fqCl3k28djjN/AVTU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=re6lylAIUK8NA9ex6ZFMGOkQWRGKqi95sfaRV7xCUfRBQ8BIjgU35mgFv2St7BZsm1gDt+Ar02Svo5ZNXh7G4o+feGskbsPe7M9x1vc00CsJEDftY7tQMMhwR9z2IbZPbn2bKf3HIDv/4zW3nhBbvFOpGPJ/VoOWmoMo2uTNfEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fwpvwc6u; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A5D121A452;
+	Mon, 17 Mar 2025 07:02:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742194933; cv=pass; b=VM/7kT+kzHlbDLkFMt6cdTR1Q+0HMO/ujlF0FxJRMOJScRDRGeerbL26oKuavTHeaSeNUqfKNA0ZS6EsTo8vZuy+Q/Zs5H12lmgpXc6HBJi6CTAUuyfq+cBNPBAitFQ5WHbQXt+DI6ZUZXSFawmBrbBLn8q+Of8HFY6Z6FpS8Us=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742194933; c=relaxed/simple;
+	bh=8fReS3rxRVLc5d/1XePRj/z4Ry1ZED+zpk3vKn3fSUc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Pv1tAAf3sTBR1rKsdlaBL1tkJ5QcCKlCVI7MrhmXcIgERrh8IKh3j/9hF5A1rkhc51+HB4TJe81Ubrv3EWsqiaQnOlD9uKR+3Lt2mGpAO7OKKMaHOQWImXR+OPyXG6WLM0q7KMCjS1Yen8IC2X46AfPNer5W2TxupW+mzrZblGo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=JMH2Q7ha; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fwpvwc6u"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-224341bbc1dso62612685ad.3;
-        Sun, 16 Mar 2025 00:34:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742110470; x=1742715270; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=E+gozQzsknkpf8jQFSMMeHCraSNuUy0stS4Y3VFb4FQ=;
-        b=Fwpvwc6u6Q15wd+7BnAkIgMmRpcBRFcn9wFic22sNMEMBWefqO9SSsU6/PccUIlnAr
-         VpmY5DsIXjM8N6mM5v7jvncDCpQXbHIOF9zt4duTXEqoVf56xk7n9oA0nEsBQIrmPCzR
-         6jFkCI6iJuYBse0oulMN7aS6yDnz/m6bx1S9Xg7ArtEMd6JsDHYal2zzT4bhEorBxfaq
-         sbIa8y9KBjYg/edX+zKlKIe67EPu7eE6V7EdJETgR7BVUCBqpAjjr4p3jCz3PTMniLg1
-         hpg2aWUrTsXckjEm+E2U7ZtXjkVh1cnWRTJFHf4zEffZLjkUS5dw55d8F2Ut3JXNeYb/
-         eQvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742110470; x=1742715270;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=E+gozQzsknkpf8jQFSMMeHCraSNuUy0stS4Y3VFb4FQ=;
-        b=DcOtB3FT8Wx9uC7IO57z41lZllLRO7x/hhNRJqcnyPW3w/ISOMmen4uBryl5NKpv3a
-         RlMz1Xji5yK2d1KCH9iyxvl0utmnc5SZUxZ8XiMQBSTwaAI0NyCwHwQHoRPIOpPC9zqs
-         KwSUv00gbl6BWFJpBNX4I+PimOGfxGLG1e1RSGMqnyo2Owursb25EIZL3la9zA+yadm5
-         sHld7gZgtUrn14SJVh4Kkczb5ibiubGIPOlbgvUiCf4mBn0eKZ+i6SJafWp+PG31U6x+
-         jrBx6an96ETHe/9ThtyFcAjfWb8dTR0iCIVnNjlx/mx/fc+4thaM+PIhmLHw3LHOql4S
-         ts4A==
-X-Forwarded-Encrypted: i=1; AJvYcCUUHxRbIgThVFILKYnnWT7aU1ckGGIgGwYxXg4UEwoEw3l0DErPxfC1q9fPhPnQmvfin18h6HKIF5Wcog==@vger.kernel.org, AJvYcCUo0M6eS9L/Y8zJ1lWQGsPGtzE1+ZDw2RtT/C0zum870LEpwbONvHLNHUCgM6WNhGTLOF6+o1iL@vger.kernel.org, AJvYcCUvbyKizCLZd0J7wWnF+J5mKvcGKL1HC8uHDDwwHOwDAv8AiyTm6ibaNvqxr1rnAGgdCZ+CkSZ8kzw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLKXb+L3s4ppz8nFOemWoBpW0TZVdSFa5som6BZna6IJPBsseW
-	EedqMUbuy57akCH2fiYwjtR5nbKpt2BJdujzSjY/Do1SuZwp+XU=
-X-Gm-Gg: ASbGncuAn98mTRoIzeTEkQljXDD/0WUZ1G6MxeDZryznXvDeaJWTvuRdWfalsW371cW
-	chv56JytnH9Ry8kD0AQqma2aJctzczD4eNcKVIR+gORyVAjW7RLLycfBBUeeV98oOoGfRbDgW0P
-	K2oWL702CBntl4mu0tWErNmI6n+RIRoX4LKpephYgEk+/z7zVaF5Yt6E01qaq5BTwyn1GgsCcY5
-	zEv2NralOcfTW48grTVht57fMkJr03cgGZThovpLwspZNi58xeDqHHz2/1+N2UkV6Vv6Qup6JaS
-	UswRf8CoJt1Y0k49ymf4MosnAt6C67TjACmwWnyT8zSF
-X-Google-Smtp-Source: AGHT+IE5vLbTjYBfblWOIuX+QWW+b07Y4rCAaXiimUw+vC72ThBiuU6sW4iz0gpXG5qpZIbbGmW3Kg==
-X-Received: by 2002:a17:902:e88a:b0:224:c46:d167 with SMTP id d9443c01a7336-225e0a4fca6mr103698895ad.16.1742110470149;
-        Sun, 16 Mar 2025 00:34:30 -0700 (PDT)
-Received: from localhost ([2601:646:9e00:f56e:2844:3d8f:bf3e:12cc])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-225c6bd4df4sm53754055ad.240.2025.03.16.00.34.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Mar 2025 00:34:29 -0700 (PDT)
-Date: Sun, 16 Mar 2025 00:34:28 -0700
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: David Ahern <dsahern@kernel.org>
-Cc: Leon Romanovsky <leon@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>,
-	Saeed Mahameed <saeed@kernel.org>, Jiri Pirko <jiri@resnulli.us>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andy Gospodarek <andrew.gospodarek@broadcom.com>,
-	Aron Silverton <aron.silverton@oracle.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Daniel Vetter <daniel.vetter@ffwll.ch>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Itay Avraham <itayavr@nvidia.com>, Jiri Pirko <jiri@nvidia.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Leonid Bloch <lbloch@nvidia.com>, linux-cxl@vger.kernel.org,
-	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	"Nelson, Shannon" <shannon.nelson@amd.com>
-Subject: Re: [PATCH v5 0/8] Introduce fwctl subystem
-Message-ID: <Z9Z_BC4GBTiFsONJ@mini-arch>
-References: <mxw4ngjokr3vumdy5fp2wzxpocjkitputelmpaqo7ungxnhnxp@j4yn5tdz3ief>
- <bcafcf60-47a8-4faf-bea3-19cf0cbc4e08@kernel.org>
- <20250305182853.GO1955273@unreal>
- <Z8i2_9G86z14KbpB@x130>
- <20250305232154.GB354511@nvidia.com>
- <6af1429e-c36a-459c-9b35-6a9f55c3b2ac@kernel.org>
- <20250311135921.GF7027@unreal>
- <4c55e1ae-8cc1-463e-b81f-2bbae4ae4eed@kernel.org>
- <Z9FjJAgdmWcepxkg@mini-arch>
- <553dff52-f61a-4f16-af4c-72d2d2c6bc3d@kernel.org>
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="JMH2Q7ha"
+ARC-Seal: i=1; a=rsa-sha256; t=1742194916; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=O4xq25xONEXQxWg4pE2JZ+7l5PoPdDZxyOgotY+QAhcM8XFFBp52rDPHbzSf4o5AUhA36Bwise4gqqv4gRoKrqc6dhLo+UH73GAYAfwdF6kCpkDpBQqDglXgw3ngwe19gQ7mCnejolI6GcCZLZsscVFvHm7hEe4aiRPaLuh7tXk=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1742194916; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=j7VLNHpvlqympmTHXfhbQdNBsjuGwlw6SBiAnCPTfQE=; 
+	b=e+7qFKZCrSQ+uqMyIIKTJ/NAIcYVEk1ErmnoUHO1VWuHyhYpmWINWrS6Vi1Xv7PImpNcBirbU/Mc9F7PymYFkMn6L9Rw6/S4suILozN8L5h7dmSKnOyz70aigmrHo6pHWvdErRxZMS6fPCvzq9Po/JmTmuF6+mztmoLKNXUrz5Y=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1742194916;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
+	bh=j7VLNHpvlqympmTHXfhbQdNBsjuGwlw6SBiAnCPTfQE=;
+	b=JMH2Q7hajefkUkt7i4zanZrItjWFNx4FCKbJNs72EG5BG7LYAFzX1HhkFFgBXs2o
+	Jae3ULTCNlL5KjB+vpumX/cIw5P0sJXNE6LHXWM23dmSgB8NF9ZRSmwayuM/d4oD0S6
+	shzPPJVx26pAMEWr0bxemc/g1ry+kMziu0OPlh1k=
+Received: by mx.zohomail.com with SMTPS id 1742194912719350.78126542977304;
+	Mon, 17 Mar 2025 00:01:52 -0700 (PDT)
+From: Li Ming <ming.li@zohomail.com>
+To: dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Li Ming <ming.li@zohomail.com>
+Subject: [PATCH 1/1] cxl/region: Fix the first aliased address miscalculation
+Date: Mon, 17 Mar 2025 15:01:24 +0800
+Message-Id: <20250317070124.815028-1-ming.li@zohomail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <553dff52-f61a-4f16-af4c-72d2d2c6bc3d@kernel.org>
+Feedback-ID: rr08011227e788ca486aab4208182a1cab0000b35e43420a2b75935596d1412138f64f148e61396ad1b5d4f5:zu08011227fc7aa54d9e1a2d7e3346b5fa0000b234697d1a157c4cac0af96a601a0d03cc4ed46ac4beec2f36:rf0801122d59bd6280a59f82665331de6d000072a928510dbd8bd066b863ea7c12d0cd486603449d7ffc0f51c2fb4e535f74:ZohoMail
+X-ZohoMailClient: External
 
-On 03/14, David Ahern wrote:
-> On 3/12/25 11:34 AM, Stanislav Fomichev wrote:
-> >> More specifically, I do not see netdev APIs ever recognizing RDMA
-> >> concepts like domains and memory regions. For us, everything is relative
-> >> to a domain and a region - e.g., whether a queue is created for a netdev
-> >> device or an IB QP both use the same common internal APIs.  I would
-> >> prefer not to use fwctl for something so basic.
-> > 
-> > What specifically do you mean here by 'memory regions'? Ne
-> 
-> netdev queues and flows are a subset of RDMA operations, so I mean MRs
-> as in:
-> 
-> IBV_REG_MR(3)  Libibverbs Programmer's Manual
-> 
-> 
-> NAME
->        ibv_reg_mr, ibv_reg_mr_iova, ibv_reg_dmabuf_mr, ibv_dereg_mr -
-> register or deregister a memory region (MR)
-> 
-> SYNOPSIS
->        #include <infiniband/verbs.h>
-> 
->        struct ibv_mr *ibv_reg_mr(struct ibv_pd *pd, void *addr,
->                                  size_t length, int access);
-> 
->        struct ibv_mr *ibv_reg_mr_iova(struct ibv_pd *pd, void *addr,
->                                       size_t length, uint64_t hca_va,
->                                       int access);
-> 
->        struct ibv_mr *ibv_reg_dmabuf_mr(struct ibv_pd *pd, uint64_t offset,
->                                         size_t length, uint64_t iova,
->                                         int fd, int access);
-> 
->        int ibv_dereg_mr(struct ibv_mr *mr);
-> 
-> DESCRIPTION
->        ibv_reg_mr() registers a memory region (MR) associated with the
-> protection domain pd.  The MR's starting address is addr and its size is
-> length.  The argument access describes the desired mem‐
->        ory protection attributes; it is either 0 or the bitwise OR of
-> one or more of the following flags:
-> 
-> ...
+In extended linear cache(ELC) case, cxl_port_get_spa_cache_alias() helps
+to get the aliased address of a SPA, it considers the first address in
+CXL memory range is "region start + region cache size + 1", but it
+should be "region start + region cache size".
 
-Sure, and netdev has:
+So if a SPA is equal to "region start + region cache size", its aliased
+address should be "SPA - region cache size".
 
-    -
-      name: bind-rx
-      doc: Bind dmabuf to netdev
-      attribute-set: dmabuf
-      flags: [ admin-perm ]
-      do:
-        request:
-          attributes:
-            - ifindex
-            - fd
-            - queues
-        reply:
-          attributes:
-            - id
+Signed-off-by: Li Ming <ming.li@zohomail.com>
+---
+ drivers/cxl/core/region.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Which accepts dmabuf fd. Looks very similar to ibv_reg_dmabuf_mr to me.
-And I think we can safely ignore ibv_reg_mr_iova which needs things
-like proprietary nvidia-peermem to function.
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 6d8bdb53f258..c3f4dc244df7 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -3460,7 +3460,7 @@ u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint, u64 spa)
+ 			if (!p->cache_size)
+ 				return ~0ULL;
+ 
+-			if (spa > p->res->start + p->cache_size)
++			if (spa >= p->res->start + p->cache_size)
+ 				return spa - p->cache_size;
+ 
+ 			return spa + p->cache_size;
+-- 
+2.34.1
 
-My point is: I don't think netdev is as opposed to memory regions as
-you think it is. As long as you come up with sensible new UAPI and
-as long as everything is in the open, it's up for discussion.
