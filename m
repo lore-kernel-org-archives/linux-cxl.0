@@ -1,171 +1,141 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2071.outbound.protection.outlook.com [40.107.212.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64EF3156F45;
-	Mon, 17 Mar 2025 12:33:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742214819; cv=fail; b=kZmMDjwfxgNMt6jkNaHawydAgL0jXXKnU76tV1O7MsK45MDjo1SICbDARuDBeclNXXH7UrTsdvapfFGudbv1tT0PMGFQlImYGErqP6Mn3rloDL/X66651kJgC1PXKD6hQJo44qSCyNAlzCfAblU/rS32YfnavoV316yKD89vbd8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742214819; c=relaxed/simple;
-	bh=/9T0M1waPRcJzQF2bjtkRBokRkcSgkqJ+4Z2/kJkHY8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=fu82HBFZLmGk6z2rz24r1aBsS3Gpd2BLL4VDwDCopbInYLUJesepJ3kMz9UH1drzUpUvoo7QSgm7YLKnLjPsmXQUCl94iLIzRjkK3tCfLvyJrcMB4L4eQ2ggddkj6fb855idTlKCJIRHygBOVqfk0NmW4hgsnbnCdnKrYCwBtuE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=YNbIRjZT; arc=fail smtp.client-ip=40.107.212.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480D21AF0A4
+	for <linux-cxl@vger.kernel.org>; Mon, 17 Mar 2025 16:43:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742229806; cv=none; b=Ffi0qLCEUCxnoSOPdovz2nWEPVe7j27v6kUSCeqlD0kuEYponktPT3RMjhOSrqV71L3LFko6NQrrjaroGxzECrSSYzWsPdnqMDFhZCKEK3eFApVaVhXGmMZ+B+3RLwoEqEuq7TAGwb0c2gs0YIERZZ3KXJojoiEdUJ0dEDWe5Qk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742229806; c=relaxed/simple;
+	bh=yG5pcePs1Hv96fgpM+zJefjAd+fkOPeolfRYYG/yRwg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LZUyhzpm92T2bvLQhXethCH48RTHMjEX9DHsMnkTcNeLKnAvRsSaG3DbgJv/u34xjU6tCTUbq8u/08qTWODB+Saat0xdbAJQeAUk/fawdYiY/wwlLVmFuC0TxUt9Sgl6LkjMO2umQBKrtTZrf9XxaiBrlkENXZQgfjZj1WBIKAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hp8ZJVG5; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="YNbIRjZT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=AM1I/yjtMtWr+ZAxNv+d4c413p9o4KZBzTtpLsgICIg2hiFg/vk00ezSpMed5HGwH//wpC36ETDqG7SS/NqepFuRu1KHUncIoDXQRDYGLIbG9UwKCRfLqShHvTSgJpko4352oGZcypeyIYak1r4EKm4IvbbDPvWfrKomHapB1nMGZ7QakHDeIkMHR1ytrDWJkmiVhGDCGTZxD1C9lqYZkRI3ARfEi+IIazDOpF8NB10P2B4xnsZnTZcDFoS9e45RgZu8V697zyz+yZIaAkHC0nF3FUxwITbY3FDcteGJjwX8+rOvi5dzTTGcK42RNoJAE6ATTTQE+WDc28Do+QdfaQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/9T0M1waPRcJzQF2bjtkRBokRkcSgkqJ+4Z2/kJkHY8=;
- b=sevV/LzS+tLiiMTzc3gWJq0Iipz0asiJZEZb1OzVrNUZLTN/vEvK3VNyOc5ML8O5+t0kMJcTBUKykb0RNtJTL51TjlLU27qFJW9jmCEJxhhzEyk1LKsl/SUCSmg3efbCLM1hVAxzbDxX9g/lY6PLDcVLwCeugBBeWr+ADm3qBuXF/pSw6F/unG4oVYQGKQACBl987qZJCrCBzphrJn+sjMl+c4gqO48RjpqKZK2/2TFy5nn59SOS/xwAhIhVYUUwlMlYh40FnHEf+pJHftgbdJLWQuGc/Qbskrbg8kakOvWXn7L+LkWY2EUTtNmvxhNDt/jx/xZBAV4//+1n0Q0gdQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/9T0M1waPRcJzQF2bjtkRBokRkcSgkqJ+4Z2/kJkHY8=;
- b=YNbIRjZT8Z/2My+jgihvhLQqv2w8mzchf2CYE3nRL2yJEoMirAstSk5A+s2zjcLydNUcJl/BFfnAPt95qmFFH2XYDmcLchcPk4GyTejFccUZBxniOMMvwNiO+8CDYyPGkIEdwEciF6yvzC1t/gucFA4daONSADYGdNMTz9+PDURc0/QgOXR08D/tIAm2jb5C0NOHSEN5+0q9bioLzNBnr7rsh7e1lGolAL4z4nHuWRmR1hGq3db/M83SxRTGL0Pihp2P+wbYvh2T/szF1kcOlmN7bErA2h+xMXM13foMjdS7pf9vGV+laM+6873m1gyb39LObiX1JFRRqmNRB16/Jw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by SA1PR12MB8985.namprd12.prod.outlook.com (2603:10b6:806:377::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Mon, 17 Mar
- 2025 12:33:34 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.8534.031; Mon, 17 Mar 2025
- 12:33:34 +0000
-Date: Mon, 17 Mar 2025 09:33:33 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Jacob Keller <jacob.e.keller@intel.com>
-Cc: "Nelson, Shannon" <shannon.nelson@amd.com>,
-	Leon Romanovsky <leon@kernel.org>, David Ahern <dsahern@kernel.org>,
-	Jiri Pirko <jiri@resnulli.us>, Jakub Kicinski <kuba@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andy Gospodarek <andrew.gospodarek@broadcom.com>,
-	Aron Silverton <aron.silverton@oracle.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Daniel Vetter <daniel.vetter@ffwll.ch>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Itay Avraham <itayavr@nvidia.com>, Jiri Pirko <jiri@nvidia.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Leonid Bloch <lbloch@nvidia.com>, linux-cxl@vger.kernel.org,
-	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	"Sinyuk, Konstantin" <konstantin.sinyuk@intel.com>
-Subject: Re: [PATCH v5 0/8] Introduce fwctl subystem
-Message-ID: <20250317123333.GB9311@nvidia.com>
-References: <20250304140036.GK133783@nvidia.com>
- <20250304164203.38418211@kernel.org>
- <20250305133254.GV133783@nvidia.com>
- <mxw4ngjokr3vumdy5fp2wzxpocjkitputelmpaqo7ungxnhnxp@j4yn5tdz3ief>
- <bcafcf60-47a8-4faf-bea3-19cf0cbc4e08@kernel.org>
- <20250305182853.GO1955273@unreal>
- <dc72c6fe-4998-4dba-9442-73ded86470f5@kernel.org>
- <20250313124847.GM1322339@unreal>
- <54781c0c-a1e7-4e97-acf1-1fc5a2ee548c@amd.com>
- <d0e95c47-c812-4aa8-812f-f5d7f6abbbb1@intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d0e95c47-c812-4aa8-812f-f5d7f6abbbb1@intel.com>
-X-ClientProxiedBy: MN2PR15CA0052.namprd15.prod.outlook.com
- (2603:10b6:208:237::21) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hp8ZJVG5"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-226185948ffso22897925ad.0
+        for <linux-cxl@vger.kernel.org>; Mon, 17 Mar 2025 09:43:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742229804; x=1742834604; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZKWGb0xW/VNXy4e+PoryomDkITqKcXXBo5BJIUKrMV8=;
+        b=Hp8ZJVG5uYJARDLX7bTE9YLihQvJt6yA+6A01tUGYEEg3iloenLGZi3hMhzdX7mcAe
+         vhCvckh46B8G6bRPm89TPoTsiKrwAfrzzoUCavqp/VqXxwOlhKWJKUrG7qQ3T53PtC5f
+         X5HaaWYK4A512PA9Ux5mjzrw5cjTJj2NfklzPkCwEdKM2KBd3ejubDdPBrq4olh3mMBw
+         wkz29pJVsYrBFBo5z4vT/EppPsoS0KLhiK79LB4R1I+QFGBLjKYOkXOGBOxTD7qStKG/
+         BECf1y+SRGFfG0178OOAluPP1iWSPY6tFfHu9JLE7GqHjg02nQtM4i9gp58e4dKYaTf5
+         BFAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742229804; x=1742834604;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZKWGb0xW/VNXy4e+PoryomDkITqKcXXBo5BJIUKrMV8=;
+        b=bWrppQl+3EZLEnvaFBXlhL/vSfDIZvfGf0/N2MujecvX/yB/nt5zGIs5bDWFeg1eMr
+         eWmcAdFXSovh/0LixXyIt5C3P66yFtXd7JnItuSlFfzZjMVhZZivfONwObSmfOO+guMi
+         aUmKjVLZGLm0FxzeEFtw+h6JX0I3/rob026VUB4Zf1lrGqm1RknBvV1KTxC7ZNBm9tZi
+         4cd/SOQI/CZEPgj6gJHQlRV3foRm7a0j0OI2mpoUOzhIxrROfplZ2hFxseyRCXqcPffX
+         52MeNjPm0ZLBsfwOOdUovD0L9di3hmWJX7ERPKpdNQ4zS2TzVGu9PS8zya7QePUaMGQD
+         h9ig==
+X-Forwarded-Encrypted: i=1; AJvYcCVLKlGacyHbPMQTa4ZjlEyo1IxYh65C2fMwtszpDxzJGvLrsQW318pF/FeXlTSjSPjcU1ju+FFQSgU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvQypjqGG8OVlIggCP4D1jLDxu9o52685BEG+i00O7KM08XNcE
+	ZGCVqATrAVAGJfA1igyBMcO+YsLP/WBncwHvlCAwtZ7cBQxbjaCi
+X-Gm-Gg: ASbGncsZKCyScJQwfDKvVbXfjyXSap4OqobaBIx7xJyEYRrYGibm2BQma9/Y/5SJEpt
+	mbX6zDFTFBmyDwgd038O6PZXk02QMfqw9161baM8dfOzuROJ9WUEQPbWX3qGJDbrIOJPbSa6iKL
+	GRnZhmVJY15X6/xGkvZuscR0z3qa0kssd8I13FDLmC9LTzC8ZJ2WGqXfrnv3VoJoUYdXS8LD9wi
+	2Q04A/tZNg/99QbDCBjlVRWMfNw8Bt8lji5lpqy3OIun8n6jlepQ23CgWPkgchwbMcdUA9w7BRt
+	DXtDrCIZThZn3m/Jm6JQRZShC7AL94+mTEy7b7U/9gN/mqo/KK4v3oC2XaWPc+Sc6EnefudZr9x
+	+
+X-Google-Smtp-Source: AGHT+IH9p6E0f1a89GLwu2C7cg2ESZb+bq8ju/C/Z66+M78p2Lkv4/2MGDvYhXh2yH5uQ4mdRDnvlQ==
+X-Received: by 2002:a17:902:da8a:b0:223:62f5:fd44 with SMTP id d9443c01a7336-2262c5f0c94mr2111025ad.40.1742229804444;
+        Mon, 17 Mar 2025 09:43:24 -0700 (PDT)
+Received: from deb-101020-bm01.dtc.local ([149.97.161.244])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6888461sm77810085ad.23.2025.03.17.09.43.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Mar 2025 09:43:24 -0700 (PDT)
+From: anisa.su887@gmail.com
+To: qemu-devel@nongnu.org
+Cc: jonathan.cameron@huawei.com,
+	nifan.cxl@gmail.com,
+	dave@stgolabs.net,
+	linux-cxl@vger.kernel.org,
+	Anisa Su <anisa.su@samsung.com>
+Subject: [PATCH 0/9] CXL: FMAPI DCD Management Commands 0x5600-0x5605
+Date: Mon, 17 Mar 2025 16:31:27 +0000
+Message-ID: <20250317164204.2299371-1-anisa.su887@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|SA1PR12MB8985:EE_
-X-MS-Office365-Filtering-Correlation-Id: 33245ad7-d1b4-4aab-273f-08dd654fef0f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?vFcxh0XizH8F+0TdH0pChBCkoP4vtaxnW4r8+JXiXNUgrKEzmxhUJ5ar9bYN?=
- =?us-ascii?Q?FyyA1Ks3iC306qNKaai+mvP+44PE7L+Ydz9vzXtfbT/ph/hjbtxeazCj4siG?=
- =?us-ascii?Q?zBxa+03jmsTK8x10csesy+1fVa8boCh6taXxwAmPJTBU+H7vhtHq2EgBsXpB?=
- =?us-ascii?Q?86JlC5IG+eO9/v9x8dqDCfHusFAkqi1W7ryFV/0LHMddagG/oJRv7RWEMNSc?=
- =?us-ascii?Q?qYSL1W3J04iKUlqxdkarmBN44tufYrimrTw4X7/nrs96f1rYZsapUprCeJv0?=
- =?us-ascii?Q?qaeAKL77YoxUi4MNT4va8+HQuujLEdOKlSnyQ8XmXz2gGOpJQ2/boY1FUwvX?=
- =?us-ascii?Q?aPyEl58zJL2A7BoC0xyZzMATMMUVk7/USPEGIV0dcKlmYHbDW6FnjFO1oACT?=
- =?us-ascii?Q?yK0FrKkqF6sHv4FymvrCfA9KFMc7bqDpbiUKaOyyD+fOlysJBXzHvUB8yesq?=
- =?us-ascii?Q?CFBgKgJZuL0Eg9qj4T6CliejaiVoM7WtV6eGP+U7+p2z23KD1SpaZyd1FmiD?=
- =?us-ascii?Q?iFfwpSYRAfOaGzKR+cf9WOcn30BprMHEkuHgvbBYF+I67DGrAuRyiBd0hZri?=
- =?us-ascii?Q?n37dVfh6sbOE8iws9s4aVA//UQoPU9lRlmv3X3dB4fI1rgeBZSxj1KwiVR9h?=
- =?us-ascii?Q?/6pIqzQ2E6cyor6DMzwjB0JFFF3DGX+N8VK8jZmqNrI3p6J77n+cPSaalE7I?=
- =?us-ascii?Q?BRr/sAXEzFFvfJCECycuFSzSdBQ0ZxEF++N0Ohe4+5/Dvm/iU82z+337w+9N?=
- =?us-ascii?Q?C8/xRoawremeb67YyBCHhAkynMpq8G9DOYCaBE++5ozMhRw2AVuOsRP+2Rrp?=
- =?us-ascii?Q?JqOpOlhZ/F8S4LQoaFyThagfTJTCXOrACGDtv1CiJ+q2zmCJUB+apiFeJIIc?=
- =?us-ascii?Q?uY3zprqikhz4h8+3j6Uc06clIxL8Dp2JZI4D9HC6MhpsaQ5JDUy+1bK8CrtI?=
- =?us-ascii?Q?crX1uecHLDk0NWmLwYMqUEg8o6og9lA0O2Gf6o6sqmBtDGK06slDvjlK1uWQ?=
- =?us-ascii?Q?pm+JRqc1uuVIPtESMM2JHbF8Aq1OT2SeL8i9pCNm9iC6ILkHKBVR+8Vm6YD1?=
- =?us-ascii?Q?JdO/DXMezu4a45ImSMbzic/lpepeTC7xH4xN1LgejxM+TgK0H4fxWsr2fmwJ?=
- =?us-ascii?Q?j3vehIVQ1iCeZwZIU61MbuAc4C/9HW53yYXFkMi1jUAOy0pRqsiVHhYFlDMQ?=
- =?us-ascii?Q?Q9nvwJl29zsQMljzD4x/wLfd3AHNeYDKxYaq4nSQ3C8n20weX5TtxYuEo+ai?=
- =?us-ascii?Q?b+ZCzwBXOCIcFjmm3damuLz6NBWsL4Fai6Etkq3r8zBeoOxHIhhEDWwxEdE7?=
- =?us-ascii?Q?phnCYwP7Fdxc0OuXCLVuMToSK1QHmm/NCzmes+RbNuFQKgxLsNrPMN4euCm+?=
- =?us-ascii?Q?xW0ze28SBUkD4nhaTVDXTBuRu6Ww?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?A9sVutwX/IGUQvS8qLJv0Y3Rj6Rq8ijwdfUmnMoQsxt5XSvqVPv8fQkUOTZu?=
- =?us-ascii?Q?bL8MuuvWbGgUnF8uIFwRfG/vdMiXGBC1kyXBLvVxEAbtkwwP7Obw/2u1KaIO?=
- =?us-ascii?Q?LKjZMzdMFq/NpQIulaxsUo3+vY7gIJYAcyjinw0tbgzMQRz5AUTVi3b10bnO?=
- =?us-ascii?Q?UgBci5yYIBdR15uLBac+G+m+rIQe4bFhyfuQTskzqwElIG1kp93MtzF8WJQ5?=
- =?us-ascii?Q?ODQbsmONYzH78ac18igG/D1r2C60rNBRtLgUxZhY2DFooBe/P8WUptcD3YWS?=
- =?us-ascii?Q?a+k+u8ude/32bqgA6PZyKzd4z6Po0RU2ZMWsAcbp2eREmwpsoKMyFO0I0uB9?=
- =?us-ascii?Q?CK3ElsLtC64PWUKWOWdd46OHUrCS3zDnJS/4CA9OWXTfKxlH0IcOeH4LIu4u?=
- =?us-ascii?Q?LCJDHlK+amL+QBR0u89K/Jq7tVj8S67PVjmIXs+KCLuOJIdCVW77j0hnVL0h?=
- =?us-ascii?Q?AcbBvgp7bhRRt37SOoD3B1usAC0yfxv1i354zSA3xhrmj69EPXWcHVEw9LY9?=
- =?us-ascii?Q?nB+KkY3r/5ofOcutLHjjcZ5OV1+hg6KPmruQb9H8l4Amuy4r9hgg0cG0LUT7?=
- =?us-ascii?Q?0nzOG7NBsmIvwYKZnY6AFBUIY/ghtUWt8dplpEZuXy09eXt7HmU0QtzAQPgj?=
- =?us-ascii?Q?jDzyeyUPkjRmPbtZXF74uEnhy5HiNN2ksIWQNyT3s3c2weCyynDC5RAm+AqR?=
- =?us-ascii?Q?Fpuz68Gr6HvaDySHx1rsEwOE7g+s9fzAXz9lONq1w9P/fS0LYf/i/QCIaxda?=
- =?us-ascii?Q?tBk2/ghQmKzSwaM8rpgh8NIehuTGyOYiLuRkY15gmB18sBd4QUCkJTboB3Rk?=
- =?us-ascii?Q?vITWHr8BG1aNTHhxR1Szsy/n7ZlXUk47LIjd5KtRY/cGNchILjB6+fhm9f+Q?=
- =?us-ascii?Q?3u06YYBOvubDwC4++k/tq8LiRiAflnGmlXPtq0JZJVDjjHF7L1MksJqL6ohH?=
- =?us-ascii?Q?7mdBTbzjGSvUoEKT5vjQC5wx46CbJt7VGPU682kyNSNLX3f/ZF0a1lUyM6ZO?=
- =?us-ascii?Q?OPU9Evk9IQxXjYUvNyxOkea+w5UBTosg9l0UebhVhu5lZ1pjHk2RXJ+N03Tf?=
- =?us-ascii?Q?e4Qtit1inbmcWhOqWPP0earSmWGuBi1gT7HhlNSYp63Bgj+P9P3bTE/lfW/+?=
- =?us-ascii?Q?jDO2jLfF684cS5aWLz5+vULI/Jutk2+500vqh7OkdD2eeZF1iTYxCIt3Rq7U?=
- =?us-ascii?Q?2AvykmiYSENxMkNEHIfre+nao9x7DyxpD2MMU8Vsoaw9MM4DFAXSe8xTe7Am?=
- =?us-ascii?Q?CUI8pUoKdaeNu5xXL9Qy/1JPav5rEWmiOhUvm0Rg10fGnZIqQt1DU2fVEj2P?=
- =?us-ascii?Q?px+YkC9JZERWHtnFiJqV/0HOFxmRF5MGZk6BcVCsnWX1hjMX7O8z0Ixrtxfx?=
- =?us-ascii?Q?jY7iSe9waCmfMmixRhWLe+UxAY0nkDumaLvTgBLG8V3JIPM3UEIGwlYNxcEz?=
- =?us-ascii?Q?4Vg2K3sgfXu7s0jdna5SNznQmTWz13uZU6tmSGmj3zCUBRugTjtwa/U5rACj?=
- =?us-ascii?Q?oEgAu0mNo/WQhCSVlG0TvfrQ5/94BAeDv9y5NZ9ay81fiP2ettPcgY1M6HVI?=
- =?us-ascii?Q?NiPQbf92b5NBn1OvfsY=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 33245ad7-d1b4-4aab-273f-08dd654fef0f
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2025 12:33:34.6173
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 363fMJNKF/NbHkuEZO1ZHABh5Kx6i+WkdCi3Odj3wmW+y3h5SLSHuqcIIV84WuLC
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8985
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 14, 2025 at 11:09:47AM -0700, Jacob Keller wrote:
+From: Anisa Su <anisa.su@samsung.com>
 
-> I'd throw my hat in for drivers/core as well, I think it makes the most
-> sense and is the most subsystem neutral name. Hopefully any issue with
-> tooling can be solved relatively easily.
+This patchset adds support for 6 FM API DCD Management commands (0x5600-0x5605)
+according to the CXL r3.2 Spec. It is based on the following branch:
+https://gitlab.com/jic23/qemu/-/tree/cxl-2025-02-20.
 
-Given Greg's point about core dump files sometimes being in .gitignore
-maybe "shared_core", or something along that path is a better name?
+The code was tested with libcxlmi, which runs in the QEMU VM and sends 56xxh
+commands to the device (QEMU emulated) through MCTP messages over I2C
+bus. To perform end-to-end tests, both MCTP and DCD support are needed
+for the kernel, so the needed MCTP patches are applied on top of Ira's DCD
+branch https://github.com/weiny2/linux-kernel/tree/dcd-v4-2024-12-11.
 
-Jason
+For the tests of commands 0x5600 (Get DCD Info), 0x5601 (Get Host DC Region
+Config), and 0x5603 (Get DC Region Extent Lists), DCD kernel code is not involved.
+The libcxlmi test program is used to send the command to the device and results
+are collected and verified.
+
+For command 0x5602 (Set DC Region Config): device creates an event record with type
+DC_EVENT_REGION_CONFIG_UPDATED and triggers an interrupt to the host
+if the configuration changes as a result of the command. Currently, the kernel
+version used to test this only supports Add/Release type events. Thus, this
+request essentially gets ignored but did not cause problems besides the host
+not knowing about the configuration change when tested.
+
+For the command 0x5604 (Initiate DC Add) and 0x5605 (Initiate DC Release), the
+tests involve libcxlmi test program (acting as the FM), kernel DCD
+code (host) and QEMU device. The test workflow follows that in cxl r3.2 section
+7.6.7.6.5 and 7.6.7.6.6. More specifically, the tests involve following
+steps,
+1. Start a VM with CXL topology: https://github.com/moking/cxl-test-tool/blob/main/utils/cxl.py#L54.
+2. Load the CXL related drivers in the VM;
+3. Create a DC region for the DCD device attached.
+4. add/release DC extents by sending 0x5604 and 0x5605 respectively through
+the out-of-tree libcxlmi test program
+(https://github.com/anisa-su993/libcxlmi/blob/dcd_management_cmds/tests/test-fmapi.c).
+5. Check and verify the extents by retrieving the extents list through
+command 0x5603 in the test program.
+
+The remaining 3 commands in this series (0x5606-0x5608) are related to tags
+and sharing, thus have not been implemented.
+
+Anisa Su (9):
+  cxl/type3: Add supported block sizes bitmask to CXLDCRegion struct
+  cxl-mailbox-utils: 0x5600 - FMAPI Get DCD Info
+  cxl/type3: Add dsmas_flags to CXLDCRegion struct
+  cxl-mailbox-utils: 0x5601 - FMAPI Get Host Region Config
+  cxl_events.h: move definition for dynamic_capacity_uuid and enum for
+    DC event types
+  cxl-mailbox-utils: 0x5602 - FMAPI Set DC Region Config
+  cxl-mailbox-utils: 0x5603 - FMAPI Get DC Region Extent Lists
+  cxl-mailbox-utils: 0x5604 -  FMAPI Initiate DC Add
+  cxl-mailbox-utils: 0x5605 - FMAPI Initiate DC Release
+
+ hw/cxl/cxl-mailbox-utils.c   | 615 +++++++++++++++++++++++++++++++++++
+ hw/cxl/i2c_mctp_cxl.c        |   6 +-
+ hw/mem/cxl_type3.c           |  30 +-
+ include/hw/cxl/cxl_device.h  |   9 +
+ include/hw/cxl/cxl_events.h  |  15 +
+ include/hw/cxl/cxl_mailbox.h |   6 +
+ 6 files changed, 660 insertions(+), 21 deletions(-)
+
+-- 
+2.47.2
+
