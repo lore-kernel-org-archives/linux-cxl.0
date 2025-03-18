@@ -1,195 +1,130 @@
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 789B81A2643;
-	Tue, 18 Mar 2025 06:53:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B222838DD1;
+	Tue, 18 Mar 2025 13:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742280817; cv=none; b=uVSs6d3ICtoc0ho6/NlKGd0rA79p2BCi+ptMLHsGlDrln5j+cn2aFwqA9DHbVHvDQvXRnDTyB4NCSyXctVtyjrmOzXh6yih9jUND1OZGtBwWukRhgvfCJ2t4FZfMpVKbqbFeSgsSSlVl0P67iohbsvKtaGYte09wOXWFHxd/ZmY=
+	t=1742304123; cv=none; b=pkyxp0eNQbAMqwVEUo0N2VwGKcG64DICmfh0k3nLlBI/I6FXgVXghQqxxuvu9lOT6KcRiRf1LSIqwyuH/Dv+LfPGk6iQIqMr+u+dJN5UcfyMvE1IlLc5sS0mT/H8MoE4g3Cmp1lgrCDVYe5ac5BEtWYgRBPtip1F2U/1C7rt9fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742280817; c=relaxed/simple;
-	bh=FRAcuRcyfjK2vsi/p7eiYS7Mv5TYPG4QdBuhO0/m2/0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fizMyZdW5JyW6VWKeKTYxuPSyRRt3RjM2MhhQc/Svd/onJZwQN0sl1CBZj9y//YEZd7VShoSNDLJuXv8+xy2gf2keAmP0J4uXgMzdVYspvEqp/x15ZhiLoqldZKySYp25sV3b8Rhcl4DaYPVpkkoKOJn+3u3k0dgLR5M+AvukxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D/yu8Tz7; arc=none smtp.client-ip=209.85.222.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742304123; c=relaxed/simple;
+	bh=fOS7iDxZOHk1sgoULcRxPlweKfANq7xiKpKVn+nE5RA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z9QL4FpkH56qNfu63xI8mmOckSdrKvnNJVoX86zuh5A1CmMB8XVz3t0t4NuAe9HFKyVv+95wjgcmpx2d3xc7/PMHuyAv5YAMP4I9fFBjJS5TuseVahPwsRxNf58UVcFDbNtylHz0i80C/Yu/2dbkFMNclbrPvlMyqiD6vmC182s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=scgWkin2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D/yu8Tz7"
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-86d36e41070so2220021241.3;
-        Mon, 17 Mar 2025 23:53:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742280814; x=1742885614; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BR7STtbjDPO6lmSbp4QD6SK3P/KeQf8lIol2C5kgJAI=;
-        b=D/yu8Tz7k6amxc+2QGzv9TVjYSC9kuJWCgW4/lGtO4OKMK1ysoJiCgLMMsuZOLlGzN
-         hamNpCiY4Y87IVC69+jeVRdynfNdLB/rQ1qX3+jgihDp7yNJHz+qyfrgLIDK3uClpbu3
-         dSkytCU8i6Uic2VOxByfmIJUKLtXG6L6iBR1a4T5goBC69vwdsDEutxweQUbBLagEeMK
-         /P1BvvSRlY+eW5NnR/5D0QPwIuf5XQgG6xZcoeI9yypOdV8ojy9UKFBjyPERhAHq4NWN
-         dVg5jQAqNF/KW+wcUgSQcJ3LEFbb9QgyjYNsENRqfoijC/MajEwiJifC5lpeKxyD3j31
-         P7aA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742280814; x=1742885614;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BR7STtbjDPO6lmSbp4QD6SK3P/KeQf8lIol2C5kgJAI=;
-        b=bL/DNF9J+HPL+w5AfXA8hcDKVUsd2cVPuut5TCD3U6w09qXVhRsCdfsHarLFt82Her
-         T+4yC1e+VK1G/+qZdfKw5O8gGv9yNurbw9rolmTui5gR1B4kdIJTJTTR8wb9uE/WfjfV
-         JWWMtMf0LEjAbtmGRYkFUB/tbjbfGWFvCPLuaCA1LXDXzs0gOCjXJU74cMOrJbv1QfxF
-         pc16xbGl75BnDaJeW8wLjBfoYiBzqy4GTpyVoCLJMIU1JZuso2tUpuXRv4XEw+V6SGCq
-         8SmRDEbfbUHL7KFEsEvfmC7HIYUhq7zSeUbyDdF7bxUTqlNZCgM6rjZAxXV2cFUihOPK
-         fpOw==
-X-Forwarded-Encrypted: i=1; AJvYcCUvdLh8+9xaXmqPDe3eBvrQMa9w4jbbdFT7CQxloTQtHptttpRNUGyxPXsrB25+H2oABGaaMiNKQ24=@vger.kernel.org, AJvYcCVOgKUZcXL7pgpuDiY4EIfHPD4PXv+M7WO42XW9E1V4UQTrB/+8hceR8Q8hcmGa96i20/JkkoRLrSF1xSn/@vger.kernel.org, AJvYcCWQuLGjmXmRTfgAB6gJxknF2FKwmramS97TO1vzMYBvnhQIKJ+F74ShqB8v4pK7SpVC/MD5scI6+z2gk4YMHA8=@vger.kernel.org, AJvYcCWuJpfc6tgOgtuHZfBUbg56+NSmIx+tDoeCcQynv7fI/9YZjVGELvmhVK28hK26xFJgGycfB2a5MmBN@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSpT5BbH4YKZZ4DUD0FiapbUHvxXyf7BH1MiNjKEkfefVLA/rH
-	4cVfhZUDOIsEo0RVZ+6O1IcF2cF89LQzrxrHrQ0yaFJHhSicIu9iMa8dk6VHMyvsYVE7yWq7Ft2
-	BRG+eU77eHX/E7h5Irx45WantSSD7xQ==
-X-Gm-Gg: ASbGncuLQBXQbaVwAV71KgalB14zECehV/RbX4VV30g25lPhYUpYvoNL+LnDahVvvIe
-	Goh46gUrD0Da/Tbv7k1PeHF6vg5Eb6C2QVAKySXu570tcm4ZQF8VTgznkX3wy4QmYnX9/Cw0Uwb
-	xRQeRouVE2P1jv7GBBym8M1mhGYPrDiDAw7iOCpXn7IErFImlRbXJ/+Eg=
-X-Google-Smtp-Source: AGHT+IGE7hhWr4lBUp2iXX61mOHrHkLHcdsZ+lfSmDPcbezM6eWo2r4cHmhD0lVawhY5flsil/9O0ciB1HTJ1THSObY=
-X-Received: by 2002:a05:6102:3908:b0:4bb:eb4a:f9ec with SMTP id
- ada2fe7eead31-4c4d91601c2mr2350382137.16.1742280814182; Mon, 17 Mar 2025
- 23:53:34 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="scgWkin2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FAD2C4CEF1;
+	Tue, 18 Mar 2025 13:22:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1742304123;
+	bh=fOS7iDxZOHk1sgoULcRxPlweKfANq7xiKpKVn+nE5RA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=scgWkin2QlN9YrIo/cNjwSpPCn64Yan7wPU1EUHcqKeawbmYYsriNBR1As2q2l4iq
+	 Ei+n3uuhmBsIWq0CYZzneTba8QRk2UXPlzn0G3aqp533p3NqnONvrbQmxV6kBUiKuy
+	 aoElyPGmmzp3RdQOlUeQq7g8zH9SC0/NQ0gFW4FA=
+Date: Tue, 18 Mar 2025 14:20:45 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: "Keller, Jacob E" <jacob.e.keller@intel.com>
+Cc: David Ahern <dsahern@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>,
+	"Nelson, Shannon" <shannon.nelson@amd.com>,
+	Leon Romanovsky <leon@kernel.org>, Jiri Pirko <jiri@resnulli.us>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Andy Gospodarek <andrew.gospodarek@broadcom.com>,
+	Aron Silverton <aron.silverton@oracle.com>,
+	"Williams, Dan J" <dan.j.williams@intel.com>,
+	Daniel Vetter <daniel.vetter@ffwll.ch>,
+	"Jiang, Dave" <dave.jiang@intel.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Itay Avraham <itayavr@nvidia.com>, Jiri Pirko <jiri@nvidia.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Leonid Bloch <lbloch@nvidia.com>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	"Sinyuk, Konstantin" <konstantin.sinyuk@intel.com>
+Subject: Re: [PATCH v5 0/8] Introduce fwctl subystem
+Message-ID: <2025031840-phrasing-rink-c7bb@gregkh>
+References: <mxw4ngjokr3vumdy5fp2wzxpocjkitputelmpaqo7ungxnhnxp@j4yn5tdz3ief>
+ <bcafcf60-47a8-4faf-bea3-19cf0cbc4e08@kernel.org>
+ <20250305182853.GO1955273@unreal>
+ <dc72c6fe-4998-4dba-9442-73ded86470f5@kernel.org>
+ <20250313124847.GM1322339@unreal>
+ <54781c0c-a1e7-4e97-acf1-1fc5a2ee548c@amd.com>
+ <d0e95c47-c812-4aa8-812f-f5d7f6abbbb1@intel.com>
+ <20250317123333.GB9311@nvidia.com>
+ <1eae139c-f678-4b28-a466-5c47967b5d13@kernel.org>
+ <CO1PR11MB5089AB36220DFEACBF7A5D1CD6DF2@CO1PR11MB5089.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <PsAMnW6hScU1fLV8ucb6wOkHECGXCrwXeSEfeVs3Hc-zbwrML674jGT8H_XNvWiF6EdymYJZSusanBrtAsZjAg==@protonmail.internalid>
- <20250107035058.818539-1-alistair@alistair23.me> <878qrm6e2p.fsf@kernel.org> <CAKmqyKO+O6H8+Y2ybz+qiAtgGbLeHMzswo9weWbg0Wc--gEiMA@mail.gmail.com>
-In-Reply-To: <CAKmqyKO+O6H8+Y2ybz+qiAtgGbLeHMzswo9weWbg0Wc--gEiMA@mail.gmail.com>
-From: Alistair Francis <alistair23@gmail.com>
-Date: Tue, 18 Mar 2025 16:53:08 +1000
-X-Gm-Features: AQ5f1Joy-EDdMlhXi465AXJ7d9QJ1VvxVVGStzCd-Shl2lbZ3RxltcRyszgw8bw
-Message-ID: <CAKmqyKMFAUp0=FzNfhs+r+RfLK0n_Fp7YhUhjY2m=p7wSgFONg@mail.gmail.com>
-Subject: Re: [PATCH v5 00/11] rust: bindings: Auto-generate inline static functions
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Alistair Francis <alistair@alistair23.me>, bhelgaas@google.com, 
-	rust-for-linux@vger.kernel.org, lukas@wunner.de, gary@garyguo.net, 
-	akpm@linux-foundation.org, tmgross@umich.edu, boqun.feng@gmail.com, 
-	ojeda@kernel.org, linux-cxl@vger.kernel.org, bjorn3_gh@protonmail.com, 
-	me@kloenk.dev, linux-kernel@vger.kernel.org, aliceryhl@google.com, 
-	alistair.francis@wdc.com, linux-pci@vger.kernel.org, benno.lossin@proton.me, 
-	alex.gaynor@gmail.com, Jonathan.Cameron@huawei.com, wilfred.mallawa@wdc.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CO1PR11MB5089AB36220DFEACBF7A5D1CD6DF2@CO1PR11MB5089.namprd11.prod.outlook.com>
 
-On Tue, Jan 14, 2025 at 4:02=E2=80=AFPM Alistair Francis <alistair23@gmail.=
-com> wrote:
->
-> On Tue, Jan 7, 2025 at 9:48=E2=80=AFPM Andreas Hindborg <a.hindborg@kerne=
-l.org> wrote:
-> >
-> > "Alistair Francis" <alistair@alistair23.me> writes:
-> >
-> > > The kernel includes a large number of static inline functions that ar=
-e
-> > > defined in header files. One example is the crypto_shash_descsize()
-> > > function which is defined in hash.h as
+On Mon, Mar 17, 2025 at 08:33:04PM +0000, Keller, Jacob E wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: David Ahern <dsahern@kernel.org>
+> > Sent: Monday, March 17, 2025 12:01 PM
+> > To: Jason Gunthorpe <jgg@nvidia.com>; Keller, Jacob E
+> > <jacob.e.keller@intel.com>
+> > Cc: Nelson, Shannon <shannon.nelson@amd.com>; Leon Romanovsky
+> > <leon@kernel.org>; Jiri Pirko <jiri@resnulli.us>; Jakub Kicinski
+> > <kuba@kernel.org>; Greg Kroah-Hartman <gregkh@linuxfoundation.org>; Andy
+> > Gospodarek <andrew.gospodarek@broadcom.com>; Aron Silverton
+> > <aron.silverton@oracle.com>; Williams, Dan J <dan.j.williams@intel.com>; Daniel
+> > Vetter <daniel.vetter@ffwll.ch>; Jiang, Dave <dave.jiang@intel.com>; Christoph
+> > Hellwig <hch@infradead.org>; Itay Avraham <itayavr@nvidia.com>; Jiri Pirko
+> > <jiri@nvidia.com>; Jonathan Cameron <Jonathan.Cameron@huawei.com>;
+> > Leonid Bloch <lbloch@nvidia.com>; linux-cxl@vger.kernel.org; linux-
+> > rdma@vger.kernel.org; netdev@vger.kernel.org; Saeed Mahameed
+> > <saeedm@nvidia.com>; Sinyuk, Konstantin <konstantin.sinyuk@intel.com>
+> > Subject: Re: [PATCH v5 0/8] Introduce fwctl subystem
+> > 
+> > On 3/17/25 1:33 PM, Jason Gunthorpe wrote:
+> > > On Fri, Mar 14, 2025 at 11:09:47AM -0700, Jacob Keller wrote:
 > > >
-> > > ```
-> > > static inline unsigned int crypto_shash_descsize(struct crypto_shash =
-*tfm)
-> > > {
-> > >         return tfm->descsize;
-> > > }
-> > > ```
+> > >> I'd throw my hat in for drivers/core as well, I think it makes the most
+> > >> sense and is the most subsystem neutral name. Hopefully any issue with
+> > >> tooling can be solved relatively easily.
 > > >
-> > > bindgen is currently unable to generate bindings to these functions a=
-s
-> > > they are not publically exposed (they are static after all).
+> > > Given Greg's point about core dump files sometimes being in .gitignore
+> > > maybe "shared_core", or something along that path is a better name?
 > > >
-> > > The Rust code currently uses rust_helper_* functions, such as
-> > > rust_helper_alloc_pages() for example to call the static inline
-> > > functions. But this is a hassle as someone needs to write a C helper
-> > > function.
-> > >
-> > > Instead we can use the bindgen wrap-static-fns feature. The feature
-> > > is marked as experimental, but has recently been promoted to
-> > > non-experimental (depending on your version of bindgen).
-> > >
-> > > By supporting wrap-static-fns we automatically generate a C file call=
-ed
-> > > extern.c that exposes the static inline functions, for example like t=
-his
-> > >
-> > > ```
-> > > unsigned int crypto_shash_descsize__extern(struct crypto_shash *tfm) =
-{ return crypto_shash_descsize(tfm); }
-> > > ```
-> > >
-> > > The nice part is that this is auto-generated.
-> > >
-> > > We then also get a bindings_generate_static.rs file with the Rust
-> > > binding, like this
-> > >
-> > > ```
-> > > extern "C" {
-> > >     #[link_name =3D "crypto_shash_descsize__extern"]
-> > >     pub fn crypto_shash_descsize(tfm: *mut crypto_shash) -> core::ffi=
-::c_uint;
-> > > }
-> > > ```
-> > >
-> > > So now we can use the static inline functions just like normal
-> > > functions.
-> > >
-> > > There are a bunch of static inline functions that don't work though, =
-because
-> > > the C compiler fails to build extern.c:
-> > >  * functions with inline asm generate "operand probably does not matc=
-h constraints"
-> > >    errors (rip_rel_ptr() for example)
-> > >  * functions with bit masks (u32_encode_bits() and friends) result in
-> > >    "call to =E2=80=98__bad_mask=E2=80=99 declared with attribute erro=
-r: bad bitfield mask"
-> > >    errors
-> > >
-> > > As well as that any static inline function that calls a function that=
- has been
-> > > kconfig-ed out will fail to link as the function being called isn't b=
-uilt
-> > > (mdio45_ethtool_gset_npage for example)
-> > >
-> > > Due to these failures we use a allow-list system (where functions mus=
-t
-> > > be manually enabled).
-> > >
-> > > This series adds support for bindgen generating wrappers for inline s=
-tatics and
-> > > then converts the existing helper functions to this new method. This =
-doesn't
-> > > work for C macros, so we can't reamove all of the helper functions, b=
-ut we
-> > > can remove most.
-> > >
-> > > v5:
-> > >  - Rebase on latest rust-next on top of v6.13-rc6
-> > >  - Allow support for LTO inlining (not in this series, see
-> > >    https://github.com/alistair23/linux/commit/e6b847324b4f5e904e007c0=
-e288c88d2483928a8)
-> >
-> > Thanks! Since Gary just sent v2 of the LTO patch [1], could you rebase
-> > on that and list it as a dependency? If you are using b4 there is a nic=
-e
->
-> I can't get Gary's series to apply on rust-next (it does apply on
-> master though).
->
-> I might just wait until Gary's series gets picked up to rust-next as
-> there is already a lot of manual rebasing going on and my series
-> currently applies on rust-next.
->
-> Unfortunately there are just constant conflicts as the number of
-> manual C helpers are continually growing.
->
-> Obviously when/if this series is approved I can do a final rebase, I
-> would just like to avoid unnecessary churn in the meantime
+> > 
+> > Not seeing the conflict on drivers/core:
+> > 
+> > $ find . -name .gitignore | xargs grep core
+> > ./tools/testing/selftests/powerpc/ptrace/.gitignore:core-pkey
+> > ./tools/testing/selftests/cgroup/.gitignore:test_core
+> > ./tools/testing/selftests/mincore/.gitignore:mincore_selftest
+> > ./arch/mips/crypto/.gitignore:poly1305-core.S
+> > ./arch/arm/crypto/.gitignore:aesbs-core.S
+> > ./arch/arm/crypto/.gitignore:sha256-core.S
+> > ./arch/arm/crypto/.gitignore:sha512-core.S
+> > ./arch/arm/crypto/.gitignore:poly1305-core.S
+> > ./arch/arm64/crypto/.gitignore:sha256-core.S
+> > ./arch/arm64/crypto/.gitignore:sha512-core.S
+> > ./arch/arm64/crypto/.gitignore:poly1305-core.S
+> 
+> I would guess its people putting core in their own ignore lists, not necessarily what we commit to the kernel tree.
 
-Any more thoughts on this?
+Yes, note, the issue came up in the 2.5.x kernel days, _WAY_ before we
+had git, so this wasn't a git issue.  I'm all for "drivers/core/" but
+note, that really looks like "the driver core" area of the kernel, so
+maybe pick a different name?
 
-Alistair
+Maybe drivers/lib/ as this is common stuff for a variety of different
+drivers?  I don't know, naming is hard, sorry.  I've been defaulting to
+just using dutch words for projects these days as they don't seem to be
+used much.  Hey, that might work here, drivers/kern/ perhaps?  Nah...
+
+thanks,
+
+greg k-h
