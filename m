@@ -1,138 +1,220 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A4EF210F5A
-	for <linux-cxl@vger.kernel.org>; Tue, 18 Mar 2025 17:10:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E4A211497
+	for <linux-cxl@vger.kernel.org>; Tue, 18 Mar 2025 18:14:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742317807; cv=none; b=m6Uw5Nd+axtRkHecMnpDCI66/IRXMbzpU/S5a+zBc59/nA1wNqQVrPNhj6ExbbNQhJ1RZYwMcczCJXuT+/7sK2XaHFJ3N19zHrUSIlCR/x1vC4hvmk6SPdKr3FEaKqxSKkDkBkwoLN4T6y4ZVq4OuKp6uWB+HbBCl/jPDgUm/A8=
+	t=1742321655; cv=none; b=C7j8zlAu5b0FzHR3gVKATSD+4K4ZGGnEvJ/bFMHE//mX8Z6dYPnW9urc1tJkzOKusi5idFJaYj1iTQIQi+MTxHg9vcOsxtL1iXfYNQF5FPP0Rdk//v3UqKVBqf74Z8k4qw9eck2iH5Eq4T9DjOH4n36tex9cWbKK+hO1N3aELPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742317807; c=relaxed/simple;
-	bh=N0zGmGCDO+CYY/XH/Tk/8edyEkzgiw7X4BHO55vHXT8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j2djV6dKpxIb8An7gE94iWfJ5a/VrJbFfpcraTen6OZZpteR10pMqSYY+XlPi424xaSfZ0DPWLhAVDrANvILndQcU4f6m3Dq5D9LxonWgwsBZ/w8OfirLHJFiolYRA8hkKWLIGEwct0LsnxYwBYXVWLUPJ0y+S5Qdt2upk5ICgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=dHXWNiM5; arc=none smtp.client-ip=209.85.219.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1742321655; c=relaxed/simple;
+	bh=0kNfTmHuCgmmrrF7fgb8A9noDzbSJTSrxwT0quRm/uA=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=U77OCyfqmxaVRRGklz4DtLRibFQgzLuTo3ZIriq0nqxmZ+jWPsPP6D8JrIn8Fa6DdGphLn3TA5KCWHA1yr5X8Pipk33ZPWAVQVVMGWtq1gyRunMWYW6WhKc4uq0tbHHdkPdbTWQ95dC4Ls17PegeOuHPcAo2fW6tXTfEID8tnnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YFlfPG5/; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="dHXWNiM5"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6e8f916e75fso76527616d6.1
-        for <linux-cxl@vger.kernel.org>; Tue, 18 Mar 2025 10:10:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1742317801; x=1742922601; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EAoBcA4JtXxpzIjbx779EoaKbfBPS1llR5iDCjOnQKA=;
-        b=dHXWNiM5rdwm4hHJY/WBAJJTukHK4yz/RRSoCxldsoMziCqeRo5y6SktpxC8ZFM4aK
-         HmUmPhwKFCQy6KkV+MijFyBvLzsFWc01/aCHNq5jwJ2rwgqiiJ9gGrX1b25ZaRa5UULf
-         sUj66kh+N+jNL2rhgY5X48jA0SezB1NWJzqIH+q42ec2q8I5dMT/zEstTnPjBRCuK5l8
-         Qmd4/h+KOhfRMYw9JiSxv8y/yoU7CmaLFlF7/lci/F2UbedcydRkV+VmNFfp55DCsXV9
-         mdGwb6sFY8BdmPX80gWidcxvLBVQJa2MUDNsfOcdHHwDmXwn0B12XM/Y6MmQqn/lN85T
-         2EVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742317801; x=1742922601;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EAoBcA4JtXxpzIjbx779EoaKbfBPS1llR5iDCjOnQKA=;
-        b=rF0xrYVYZWvA4NKS9yDmKSJDLjv3tQQ40jZA6VDz6DZ2iSVqgNKsJluQz29KmpaLBs
-         zzS5/JxKgnlaqQrqSaz3vqp1GdVbOg4Hi3kL1T5DPZQJ8AkaDsL3ihUVBNy9sj1G5WAb
-         oFL7fm2D1GHtkTHUhVuQy67oOVul8JD2IUzqSRR1G6vi56txOXHRHRboytRZS2tBRngb
-         XO5LbRMlr+mBf5er/sF4/9TvbwaFt0hv3PQTmiRSkTuIFPvvKdPDOoZghZHjkXg4dOD4
-         IuGUvuhKPV8pREZbnf7LsjknYItYqLqqWSrR0mg8Mvu9kozl8mExrY5g2Tk6b1C+NYDR
-         iD6w==
-X-Forwarded-Encrypted: i=1; AJvYcCUj9OAhuUOjaArPTLk5pjBez16+TWkj0IskCdwzO1Jo6W2xoDaeHipXoF5d0pmZNO4A/cEdscpkyy4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhsJwffcpyrcU9cpd76GpQytptxxTj2VpbE6RWzJCdH3yHaCaZ
-	C9nwOk66GH6zaGze9SfQOJqKlE84bRXvrMV4KUeiBTgsSdr6Y5QBFpvJ09kZ0an2ttgKxdXn4pc
-	P
-X-Gm-Gg: ASbGncurjm6WEFAGVJ1qoS2SHZoxUADgqo97pKbqXDEFI9BjjNlkLZTIB++onrC7S1z
-	U/RMWXxEm8/ovi0NZtID3RqCnMupicNOiKEp7IBec8ep5AgEnoFK6lpInpHaNUanka4NKC4Tuwn
-	NAypriXqQ/YfOXoRRNoNLlNeoy0oJN3u9H7j5N/3kl3siRdFxtE8DqN/mVZbqSicH53b4muV7YU
-	4SPFUX8vBlqq/qL4m3d42a/gQ685GJrI/IZbCSbAGTPc5gtUt4u4k9p5kRQS0ep64Y7a8WSk+PK
-	N1j8zAJVnwP6Ik6104eMI0e4vENlCZv0CJgYtuBDKZdUlPnc7OSrOW92K/R9Jp/7RT8Zk73ywmv
-	j6NDZB49jA4QSTH+iAfXdUz4dS9I=
-X-Google-Smtp-Source: AGHT+IGDKMLKrW98rtnIQnYwYyplJuQKNFT9i7Ymkc7/amGmSQWmmu9JY7piNnTLzFpuWgwVF1lrSQ==
-X-Received: by 2002:a05:6214:2d49:b0:6e6:5a25:e118 with SMTP id 6a1803df08f44-6eb1bbc7675mr60892246d6.6.1742317800825;
-        Tue, 18 Mar 2025 10:10:00 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eade231bb5sm69811136d6.34.2025.03.18.10.10.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Mar 2025 10:10:00 -0700 (PDT)
-Date: Tue, 18 Mar 2025 13:09:58 -0400
-From: Gregory Price <gourry@gourry.net>
-To: lsf-pc@lists.linux-foundation.org
-Cc: linux-mm@kvack.org, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, mhocko@suse.com
-Subject: [LSFMM] Updated: Linux Management of Volatile CXL Memory Devices
-Message-ID: <Z9mo5qCpdlE-KZ7P@gourry-fedora-PF4VCD3F>
-References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YFlfPG5/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742321654; x=1773857654;
+  h=date:from:to:cc:subject:message-id;
+  bh=0kNfTmHuCgmmrrF7fgb8A9noDzbSJTSrxwT0quRm/uA=;
+  b=YFlfPG5/Xn0INZJd8HFHWih6m3ml/dMoW4b2Q5dOct/WbH/eWBd7eaZ7
+   fAALDzY0koo2aEC1UNIqm1gx3Zp1O+j5/U0Dfzt4tVlphHDtl8woj1X4W
+   8pvJmQHx70vh1d058ydB83a+GzdouvGXD+IHU3GKkbU+6k3A/QhHPqdzj
+   TjYx7eNM6/z3A7EDwEj/4cXM157dR4HJ9yz+jwLN5uzGbzQ0zCGxeuZkS
+   BtNNCVnkr8IHGaKvdMplto6LOgyO8z5llaIAbtnML2glj6l0/N8cRpZri
+   i9HhfEHiUFr+3T2TgeU9sQVjCqqnCTuvM2WtM9K14KjR4aOfK2z3XYMOs
+   g==;
+X-CSE-ConnectionGUID: wgENhn3PSWeP5KpRCtZNsQ==
+X-CSE-MsgGUID: /huJvozpTouX3MP1MIdp4A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11377"; a="43216505"
+X-IronPort-AV: E=Sophos;i="6.14,257,1736841600"; 
+   d="scan'208";a="43216505"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 11:14:13 -0700
+X-CSE-ConnectionGUID: l7cHFRYSTSWM1RwtcG8Geg==
+X-CSE-MsgGUID: 3c+XvVF1SneCyP72rclrZw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,257,1736841600"; 
+   d="scan'208";a="153193517"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by orviesa002.jf.intel.com with ESMTP; 18 Mar 2025 11:14:12 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tubS4-000E3K-2l;
+	Tue, 18 Mar 2025 18:14:08 +0000
+Date: Wed, 19 Mar 2025 02:13:35 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Subject: [cxl:next] BUILD SUCCESS
+ 3b5d43245f0a56390baaa670e1b6d898772266b3
+Message-ID: <202503190224.WYkmCCZT-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
+branch HEAD: 3b5d43245f0a56390baaa670e1b6d898772266b3  Merge branch 'for-6.15/features' into cxl-for-next
 
-Updating the summary to this because the old one no longer describes the
-goal of the session well enough.
+elapsed time: 1472m
 
----
+configs tested: 140
+configs skipped: 4
 
-I'd like to propose a discussion of how CXL volatile memory device
-configuration is creating a complex memory initialization/allocation
-process.  This is making it difficult for users to get "what they want".
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Example issues for discussion:
-- Linux-arch defined memory block size and alignment requirements
-- CXL as ZONE_NORMAL vs ZONE_MOVABLE impacts on memmap and performance
-- NUMA node and memory tier allocations, and new evolutions
-  a) multiple NUMA-nodes per device
-  b) confusing state of memory-tier component
-- cma and 1GB hugepage allocation from ZONE_MOVABLE on CXL
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+alpha                               defconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-13.2.0
+arc                              allyesconfig    gcc-13.2.0
+arc                                 defconfig    gcc-13.2.0
+arc                   randconfig-001-20250318    gcc-13.2.0
+arc                   randconfig-002-20250318    gcc-13.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-14.2.0
+arm                                 defconfig    clang-14
+arm                      footbridge_defconfig    clang-17
+arm                   randconfig-001-20250318    gcc-14.2.0
+arm                   randconfig-002-20250318    clang-21
+arm                   randconfig-003-20250318    gcc-14.2.0
+arm                   randconfig-004-20250318    clang-21
+arm                        spear3xx_defconfig    clang-17
+arm                        spear6xx_defconfig    clang-15
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-14.2.0
+arm64                               defconfig    gcc-14.2.0
+arm64                 randconfig-001-20250318    clang-21
+arm64                 randconfig-002-20250318    clang-14
+arm64                 randconfig-003-20250318    gcc-14.2.0
+arm64                 randconfig-004-20250318    gcc-14.2.0
+csky                              allnoconfig    gcc-14.2.0
+csky                                defconfig    gcc-14.2.0
+csky                  randconfig-001-20250318    gcc-14.2.0
+csky                  randconfig-002-20250318    gcc-14.2.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon                             defconfig    clang-21
+hexagon               randconfig-001-20250318    clang-21
+hexagon               randconfig-002-20250318    clang-17
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250318    clang-20
+i386        buildonly-randconfig-002-20250318    clang-20
+i386        buildonly-randconfig-003-20250318    clang-20
+i386        buildonly-randconfig-004-20250318    clang-20
+i386        buildonly-randconfig-005-20250318    clang-20
+i386        buildonly-randconfig-006-20250318    clang-20
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch                           defconfig    gcc-14.2.0
+loongarch                 loongson3_defconfig    gcc-14.2.0
+loongarch             randconfig-001-20250318    gcc-14.2.0
+loongarch             randconfig-002-20250318    gcc-14.2.0
+m68k                             alldefconfig    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                         amcore_defconfig    gcc-14.2.0
+m68k                                defconfig    gcc-14.2.0
+m68k                            mac_defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+microblaze                          defconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                       rbtx49xx_defconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                               defconfig    gcc-14.2.0
+nios2                 randconfig-001-20250318    gcc-14.2.0
+nios2                 randconfig-002-20250318    gcc-14.2.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250318    gcc-14.2.0
+parisc                randconfig-002-20250318    gcc-14.2.0
+parisc64                            defconfig    gcc-14.1.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-21
+powerpc                    amigaone_defconfig    gcc-14.2.0
+powerpc                     ep8248e_defconfig    gcc-14.2.0
+powerpc               randconfig-001-20250318    clang-21
+powerpc               randconfig-002-20250318    clang-21
+powerpc               randconfig-003-20250318    gcc-14.2.0
+powerpc                     redwood_defconfig    clang-21
+powerpc64             randconfig-001-20250318    clang-21
+powerpc64             randconfig-002-20250318    gcc-14.2.0
+powerpc64             randconfig-003-20250318    gcc-14.2.0
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    clang-21
+riscv                    nommu_k210_defconfig    clang-21
+riscv                 randconfig-001-20250318    clang-21
+riscv                 randconfig-002-20250318    clang-21
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-15
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    clang-15
+s390                  randconfig-001-20250318    clang-15
+s390                  randconfig-002-20250318    gcc-14.2.0
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-14.2.0
+sh                    randconfig-001-20250318    gcc-14.2.0
+sh                    randconfig-002-20250318    gcc-14.2.0
+sh                   rts7751r2dplus_defconfig    gcc-14.2.0
+sh                     sh7710voipgw_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250318    gcc-14.2.0
+sparc                 randconfig-002-20250318    gcc-14.2.0
+sparc64                             defconfig    gcc-14.2.0
+sparc64               randconfig-001-20250318    gcc-14.2.0
+sparc64               randconfig-002-20250318    gcc-14.2.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250318    clang-21
+um                    randconfig-002-20250318    gcc-12
+um                           x86_64_defconfig    clang-15
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250318    clang-20
+x86_64      buildonly-randconfig-002-20250318    clang-20
+x86_64      buildonly-randconfig-003-20250318    clang-20
+x86_64      buildonly-randconfig-004-20250318    clang-20
+x86_64      buildonly-randconfig-005-20250318    gcc-12
+x86_64      buildonly-randconfig-006-20250318    gcc-12
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250318    gcc-14.2.0
+xtensa                randconfig-002-20250318    gcc-14.2.0
 
-Most of this complexity is being generated by how BIOS, ACPI, build, and
-boot config options interactions with each other. The best documented
-description of these interactions is: "Complicated, Subtle, and Scary".
-
-Having better documentation on "Linux Expectations for CXL Platforms"
-will help guide innovations in this space - but requires some agreement
-on limitations to keep existing components functional. This is becoming
-increasingly important as more CXL hardware is placed into production.
-
-The live session will not cover the full initialization process, which
-I've attempted to describe and discuss in [1][2][3][4][5][6][7][8].
-
-The intent is to evolve this series into more explicit documentation for
-platform developers and help bridge the gap between maintainers that
-need background on "Why the heck does CXL need this?".
-
-[1] Section 0: ACPI Tables
-https://lore.kernel.org/linux-mm/Z8jORKIWC3ZwtzI4@gourry-fedora-PF4VCD3F/
-
-[2] Section 0a: CFMWS and NUMA Flexibility
-https://lore.kernel.org/linux-mm/Z8u4GTrr-UytqXCB@gourry-fedora-PF4VCD3F/
-
-[3] Section 1: BIOS, EFI, and Early Boot
-https://lore.kernel.org/linux-mm/Z6LKJZkcdjuit2Ck@gourry-fedora-PF4VCD3F/
-
-[4] Section 2: The Drivers
-https://lore.kernel.org/linux-mm/Z6OMcLt3SrsZjgvw@gourry-fedora-PF4VCD3F/
-
-[5] Section 2a: CXL Decoder Programming
-https://lore.kernel.org/linux-mm/Z8o2HfVd0P_tMhV2@gourry-fedora-PF4VCD3F/
-
-[6] Section 3: Memory (block) Hotplug
-https://lore.kernel.org/linux-mm/Z7OWmDXEYhT0BB0X@gourry-fedora-PF4VCD3F/
-
-[7] Section 4: Interleave
-https://lore.kernel.org/linux-mm/Z9DQnjPWbkjqrI9n@gourry-fedora-PF4VCD3F/
-
-[8] Section 5: Page Allocation
-https://lore.kernel.org/linux-mm/Z9Ogp9fCEPoORfnh@gourry-fedora-PF4VCD3F/
-
-
-~Gregory
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
