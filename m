@@ -1,217 +1,242 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2070.outbound.protection.outlook.com [40.107.237.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A444D2288D2;
-	Thu, 20 Mar 2025 19:44:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742499887; cv=fail; b=LcMDFBFfuBfbHYaf8d2uzbL7G403STGEcBlv4PpEBK4tlSQv732KF48c/pZVgZpIfqskoMIbtTo7dBldBcOuEnxOuzegp8XQcYJndks+D6crI/SfRAQDex+I7F7nGSbmJvq7bVw+TKrNEAV4tUNXkO56403gW5BSqmBnu36kdzo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742499887; c=relaxed/simple;
-	bh=I7FKqGLVUWm71ENHgR9771lzDXvQTYAhJCUzSllQgNU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qXmk1F/CPOGDlGIQ8htM678GljKQ9o3LfL3UFUuLkq87POZdbAFSNkvGD7F+S651xcQ9lNCxB0aRKTbCWVUZeO6EkjQLj9tAOv0jn+GZgYIb1Mnla+r6T9rlUT2QXpBmPOdMZv9li2uNQr16SKOVAv3ZcZv18js/ANZm8nA/8G8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=kThonj/E; arc=fail smtp.client-ip=40.107.237.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88F32214228;
+	Thu, 20 Mar 2025 21:09:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742504950; cv=none; b=GrPM3bHqhLE3PwSGq+PWLbo73R6DmXyR5TejEVfrW1wBqhlPnB1jBQ4ZreCDZCZHB7yXt86+SS8Y1EDCkmAFmWVODRZMedgAkuf6FPaKW1a0TATWH1hw2nYW7SsyEREGA6uEkLGWIMap7QAJcWbvdxPWGcuD8vLDhF07xMovnoc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742504950; c=relaxed/simple;
+	bh=PS6fFvcAl29nzssEdMgCy3wzRuOB3rUjwBjydmfFqC0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BPbe38zxKAsMApa48xQK2K7cHo41OVtuwVLxKg0gHVJNAwQ5sIsl76oKHG6Jn/3N/Pmx5cmpo+lpVg7IFcX66gxwSOGYNk7tlAZupP0wSAl9funu1RGzORpKzFX0Iy/xxk9a7md684oqofARMUFNT/NmVjOHXklm5x0e1lenktM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CmG/yG+R; arc=none smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="kThonj/E"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ue95DLArxPp0pfObkzyGOWjUXMsxbMhWG1xsERvv45Hi300roeDY5FsHx2jRPJ7sKOQRDOcdoQRqumL406xM8p8siz5wah5xc4czaB08YeQFYYXZmzcKCnNiE5Joplker77FoGXonG+o8uuQsG0i1u1OdDIroRcR38Ypg1A5a9T5IbuhS0a/U9neUMmhddGD+PTaBXJWF9vhwbQV0pO/xEYd9ZRvurLgSmsUlqCP6NSulEIObC/lSSRzYTmM/A5Hp4O+jM3t0g16vimMu2yGLmkCHchY0iHnPDpoynnFoWtSQiT49weTp8hsCKLliQlMlM7O3fM3yk5LP0Z7WWwvSQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Buh2JjXl8fE7wIFly8+U++NyVsGuTVAD9EhfkxZlZxI=;
- b=F4Q8w1aiRUr3NpCWXPz1zshWmqOBc4UXYiLkD2UjcZbXA/zufs99kkxs0/XF+4F79Kigj5UR1PPwpzPY2md8jfyaKb6w8R3Ciwn2pEJu7S13lEO+552qXAwdDCbBqSLMeP0O/XRd2t/JRIMPybaYfNiYMiVmTBpx3OP9U641IlcUT7CHPcgzrGWcjU3o/z7rb0A+sby/e5Z4e58bifBWtXkyDA75FThzz39lDFXA3ujX5bOK6dAj6KU6b0AuXXtG2EwM1aaoLuC21C0X9vMbsdUKRUWcIMmBeksL6hyNSliLgym5zvDIdqSCs+rDzWVBm7B9LPXHzWqV4aAheGWMbg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=nvidia.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Buh2JjXl8fE7wIFly8+U++NyVsGuTVAD9EhfkxZlZxI=;
- b=kThonj/ECWXp5eVeZc408Nf/TQmZ14oJ+kCeoupk/BxXfYwj02QArHnqdcfT8LMfBYjHz8vStH5atGvkMCz0lE99AUzd7ccURP2pa4I/fKXJyGtnbDyCtKwfKL5OHCHi/wo9jsbHmB8DM/zafli44EAPf5cWUB5bW8O3wRncSfI=
-Received: from BN9PR03CA0944.namprd03.prod.outlook.com (2603:10b6:408:108::19)
- by SJ2PR12MB8943.namprd12.prod.outlook.com (2603:10b6:a03:547::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.34; Thu, 20 Mar
- 2025 19:44:40 +0000
-Received: from BL02EPF0001A0F9.namprd03.prod.outlook.com
- (2603:10b6:408:108:cafe::bd) by BN9PR03CA0944.outlook.office365.com
- (2603:10b6:408:108::19) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.33 via Frontend Transport; Thu,
- 20 Mar 2025 19:44:40 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL02EPF0001A0F9.mail.protection.outlook.com (10.167.242.100) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8534.20 via Frontend Transport; Thu, 20 Mar 2025 19:44:39 +0000
-Received: from driver-dev1.pensando.io (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 20 Mar
- 2025 14:44:37 -0500
-From: Shannon Nelson <shannon.nelson@amd.com>
-To: <jgg@nvidia.com>, <andrew.gospodarek@broadcom.com>,
-	<aron.silverton@oracle.com>, <dan.j.williams@intel.com>,
-	<daniel.vetter@ffwll.ch>, <dave.jiang@intel.com>, <dsahern@kernel.org>,
-	<gregkh@linuxfoundation.org>, <hch@infradead.org>, <itayavr@nvidia.com>,
-	<jiri@nvidia.com>, <Jonathan.Cameron@huawei.com>, <kuba@kernel.org>,
-	<lbloch@nvidia.com>, <leonro@nvidia.com>, <linux-cxl@vger.kernel.org>,
-	<linux-rdma@vger.kernel.org>, <netdev@vger.kernel.org>, <saeedm@nvidia.com>
-CC: <brett.creeley@amd.com>, Shannon Nelson <shannon.nelson@amd.com>
-Subject: [PATCH v5 6/6] pds_fwctl: add Documentation entries
-Date: Thu, 20 Mar 2025 12:44:12 -0700
-Message-ID: <20250320194412.67983-7-shannon.nelson@amd.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20250320194412.67983-1-shannon.nelson@amd.com>
-References: <20250320194412.67983-1-shannon.nelson@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CmG/yG+R"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-4766cb762b6so12236161cf.0;
+        Thu, 20 Mar 2025 14:09:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742504947; x=1743109747; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=k2MJ72UEvg61Oantat2YobsO8uU55tvuh/BJhVCEG2g=;
+        b=CmG/yG+RcLAws1AHN9juOQ6avk5F27ZlgxqygDmYXZzsW7826RCLwSE8eeiBi/43Hd
+         2HiRtroKoq0kl2jr6u2N8hKKmhenOb6ePTQ//5O2UO80EH5qrYmt09bEdYFR3IPsiQ7P
+         8op1ZOvgzua3Ae7DfgPArtPo3M8+h+QAybDGQ5pm4/ArO2ivj+zEPaNrxvxD98vnOZjo
+         cFptMxxgVvbuj6popt9TjoIFAY+1IZFIG2SO+kt78jKSpx0aiL2QHNrQ3P3AAOw+hkSE
+         TdAqkogZv51kdnxtfRfSZsu0wheY0B5qWWBnnhiZCzmLteAI43wa3Gl8W85EBAVSmoR5
+         GXiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742504947; x=1743109747;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=k2MJ72UEvg61Oantat2YobsO8uU55tvuh/BJhVCEG2g=;
+        b=LYT3N9oM+CDWUbV4ZAWDLT2OAwjFy7Z1xM0th4vSEAypQCEbkE5hCEb2DVq9FXa6so
+         hUCOl3bRHVgR1vynJ7DC9136pFZl3cC7UkqHx4q0XAPBVYMzPIzri6j1R3+CCGkiyrIp
+         1zyl5BnibypdYDPJUUQmB4MeC+c+muI8NWSRbWhsO/sWNV/rcktoN+Saq768heWl+NAC
+         Gm38EsgFsjsmESMy3echx7aDIx2RZRhnveR+e/6xzAMwkzOI0DHC3HKCfWqJXDN6IgO5
+         6/g6ePzu8WcLsGlFFXHOboNkD7XcnlI4FtxyEDCKRK7nnGlANoCqfstKDLid9KKu26NG
+         tSLg==
+X-Forwarded-Encrypted: i=1; AJvYcCWnoCOTw30eJkTcf00E32oKLQ8T0TuXE6O2jcoe5SJYK/e1DI7l8Hsxlo9eA7+IgeaLIKDRMQwe6GIbHt++Og==@vger.kernel.org, AJvYcCXsVdRzKw6/GxpVM+QBLYkA+zrwJFyQ9KBPeTDxy4bVEfOmOoSbE4f//+cv73WUDNfB2WKXsmeTG0s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7O47xMiPujBTIufxgCDyp9+spw3KPHhBqz4uNX2SrPPhw5xCF
+	VGIFZsQy/Grl6l0PxCdAkQC9slS4tcK4WHIu4t23LzlZLtuZH33ZOnUjZtsa2XKGxKJSBopnHQI
+	0TWrcg6SshtyCA73hGfn6GfX2f4w=
+X-Gm-Gg: ASbGncvf/+LA/YDXt51yKEY886S+hb/zo7LkG1nuHCkbimJwYvT5dkHUqMt47IWvRoB
+	zRJqLI98d5why754GywLaSWsHVo06zSNuv3c0QF/r10JWivDAKaey+nEM9oAn5YqFVjsCd813vy
+	omtsxOTgNuWVnlLlUAbd6mhEprizvBb4buxyx6jg==
+X-Google-Smtp-Source: AGHT+IF6iA5nRUBc4UG6ruLMgy4gGU7nnBGrJJk930IKNV6pq4WFjyglm5x5lzrx0yq8iMLu7h0ZqRtKx+mJiAsah3o=
+X-Received: by 2002:a05:622a:4109:b0:477:bd4:6a4c with SMTP id
+ d75a77b69052e-4771d90c07amr13585791cf.1.1742504947293; Thu, 20 Mar 2025
+ 14:09:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF0001A0F9:EE_|SJ2PR12MB8943:EE_
-X-MS-Office365-Filtering-Correlation-Id: 98bf3507-d149-4e06-693d-08dd67e7a764
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|7416014|376014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?6OeViLWjXXRkKft2qLhfGxKUautkcJfUpnwv2RsYQsgsuBPX36wkpshQR1rX?=
- =?us-ascii?Q?2GtlpypUGKh22gsTyu2nToKZM9RsUyUb61iLDxBl0fFevOGyDqu4Ai3aiVXr?=
- =?us-ascii?Q?4WeuLouYbny9Lv3eWBgql513HYzBK/z14lbwqpf2ihlAew9wP72JlXUjdanN?=
- =?us-ascii?Q?OIheDeVnxcV0QsMG7sfjQRzeK4sEUz2YJ1rzEXIHEnsDG7vgJeOU1X9Qmy/Z?=
- =?us-ascii?Q?zb5eLa2yaCh34KCeritm0ko4KQkIWjtaKJWO/LTq6acM+2cxRxyJqGb58nY3?=
- =?us-ascii?Q?U7iP3zDAdDDoiacSyArakJs6Ig211MXXw/QWPmOb+su8D48X4mrRzDf1+MLj?=
- =?us-ascii?Q?ncz91jH3CUkLNiyAN/FbLMDC2EWSXNoNM+whn4+AY2lRHPe7cbGeh+z68kpO?=
- =?us-ascii?Q?N37N6mmMgBs40romX6PJ3PNhIP/w5Q6ev0DGtC9EABJCQq/aKUzLZLK0341c?=
- =?us-ascii?Q?nmfLlmyxrG1XoQeAJcDDflPYDTaeuGM2DD1uyh5+0OVnBgS2//2nxGbMARTQ?=
- =?us-ascii?Q?IMveOxDzQmbcDtysmSIIhEAhtMkIUZFToXzgwhXuamHLPuFIDVCDUJxjDNgn?=
- =?us-ascii?Q?j9dyE4vvkUm/qByB7MvLqXYLMfdY+jQx7lWHXKHTdGxGPpHZatt339clgeXY?=
- =?us-ascii?Q?Qhg396Yh5goHnp25q0acGIVDLeqlaixS0m2pNjlvQrWBUqLdblwZmTdN79FD?=
- =?us-ascii?Q?k30Nscr1LIhTMuOhI7LDf7hy+/kLqYyZNjM3p29Vic4lYgQl1uvAWJuy7kys?=
- =?us-ascii?Q?VElM5Zs8nM4fJXQehALCVgmU2hC5mpqxoXoKiHKv/KyZDBwgTJw4QtGGHZBd?=
- =?us-ascii?Q?ZV1VJGsvw0tDuzRduDP8HEdSL17ZUWKlAyappU90RALyLkLtMjrhAq4+uAgb?=
- =?us-ascii?Q?7FT4i7AazlwJury2MrQazbf31U217HnsY1DBgl2Gg+vQHve8o/nPfu0poK1F?=
- =?us-ascii?Q?oTMz0nHVqczQwqWo5B1Bm6IcZVhvc+0WbYZQN3LpOrLbaexJwidhcby3zfAA?=
- =?us-ascii?Q?znuBQiQL3RYF8kFi+GAUNg+NhGyeVYEOk2+SWz3ja6Nu7kF0v2Y1pBf+48pq?=
- =?us-ascii?Q?n0JQJgU31OyYLPGXUSp3EKY4dfeL337zPKp87UwJpdgn/wuQYmkp8emOifZf?=
- =?us-ascii?Q?MSdHP0V1sYZKbNEb6QW8xYA13w8nsZ/KkCWdWxRNEXym+cKOFC7d68RcRyAQ?=
- =?us-ascii?Q?TEKZ7QtBd5mo3GSPwIqd8I0BvIinQBDv46A9xkm9BhGyO7HDruGDkv2XnGMO?=
- =?us-ascii?Q?zEdEf3ojUQ9Ed7oc45pz+S8foLemkjAEVYqRqo04GK5/jNvtam6i12V5Dbcm?=
- =?us-ascii?Q?YjEdtIrN7oiOQh0K6EAe4TDfIGTE42tOZMLDwgRRWcIYolnWiN3PDSM36PZQ?=
- =?us-ascii?Q?3DNTGxFXOc4bL/FSmBxmMJP20ihHa4F8qVk3joAI4rA+U4uTkQut7AVy4UNB?=
- =?us-ascii?Q?5zjVvaYCLflsL7ICEMnGJ99cCqTUcYWnE50RUrFwAZxPABdGpVNtSNg8S1IQ?=
- =?us-ascii?Q?0yHVhySmARl2Jannwb7s23cJDDt77ZqZY82n?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(7416014)(376014)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2025 19:44:39.9647
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 98bf3507-d149-4e06-693d-08dd67e7a764
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL02EPF0001A0F9.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8943
+References: <20250224152535.42380-1-john@groves.net> <CAJnrk1bJ5jE5qWdRju6xz+DipYHUrj8w4PdL80J1M6ujMxXJ1g@mail.gmail.com>
+ <eqcigeptla4obqqaix737tfqmkjdet3fzmq2kqttm5etab2us5@vqignnrha2m5>
+In-Reply-To: <eqcigeptla4obqqaix737tfqmkjdet3fzmq2kqttm5etab2us5@vqignnrha2m5>
+From: Joanne Koong <joannelkoong@gmail.com>
+Date: Thu, 20 Mar 2025 14:08:56 -0700
+X-Gm-Features: AQ5f1Jo7yxYjSPZp8L2xj1R42EDQFygEwZrpHIYzzhMLiKSbgKM9qNX-e_2D2lI
+Message-ID: <CAJnrk1a1dU0r-ztPHUHzzixKDV8=sN9-_pqZaPZwhevXW0SQ2w@mail.gmail.com>
+Subject: Re: famfs port to fuse - questions
+To: John Groves <John@groves.net>
+Cc: Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, 
+	Bernd Schubert <bernd.schubert@fastmail.fm>, Stefan Hajnoczi <shajnocz@redhat.com>, 
+	Josef Bacik <josef@toxicpanda.com>, John Groves <jgroves@micron.com>, linux-fsdevel@vger.kernel.org, 
+	linux-cxl@vger.kernel.org, Aravind Ramesh <arramesh@micron.com>, 
+	Ajay Joshi <ajayjoshi@micron.com>, Eishan Mirakhur <emirakhur@micron.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add pds_fwctl to the driver and fwctl documentation pages.
+On Thu, Mar 20, 2025 at 6:06=E2=80=AFAM John Groves <John@groves.net> wrote=
+:
+>
+> On 25/02/24 03:40PM, Joanne Koong wrote:
+> > On Mon, Feb 24, 2025 at 7:25=E2=80=AFAM John Groves <John@groves.net> w=
+rote:
+> > >
+> > > Miklos et. al.:
+> > >
+> > > Here are some specific questions related to the famfs port into fuse =
+[1][2]
+> > > that I hope Miklos (and others) can give me feedback on soonish.
+> > >
+> > > This work is active and serious, although you haven't heard much from=
+ me
+> > > recently. I'm showing a famfs poster at Usenix FAST '25 this week [3]=
+.
+> > >
+> > > I'm generally following the approach in [1] - in a famfs file system,
+> > > LOOKUP is followed by GET_FMAP to retrieve the famfs file/dax metadat=
+a.
+> > > It's tempting to merge the fmap into the LOOKUP reply, but this seems=
+ like
+> > > an optimization to consider once basic function is established.
+> > >
+> > > Q: Do you think it makes sense to make the famfs fmap an optional,
+> > >    variable sized addition to the LOOKUP response?
+> > >
+> > > Whenever an fmap references a dax device that isn't already known to =
+the
+> > > famfs/fuse kernel code, a GET_DAXDEV message is sent, with the reply
+> > > providing the info required to open teh daxdev. A file becomes availa=
+ble
+> > > when the fmap is complete and all referenced daxdevs are "opened".
+> > >
+> > > Q: Any heartburn here?
+> > >
+> > > When GET_FMAP is separate from LOOKUP, READDIRPLUS won't add value un=
+less it
+> > > receives fmaps as part of the attributes (i.e. lookups) that come bac=
+k in
+> > > its response - since a READDIRPLUS that gets 12 files will still need=
+ 12
+> > > GET_FMAP messages/responses to be complete. Merging fmaps as optional=
+,
+> > > variable-length components of the READDIRPLUS response buffers could
+> > > eventualy make sense, but a cleaner solution intially would seem to b=
+e
+> > > to disable READDIRPLUS in famfs. But...
+> > >
+> >
+> > Hi John,
+> >
+> > > * The libfuse/kernel ABI appears to allow low-level fuse servers that=
+ don't
+> > >   support READDIRPLUS...
+> > > * But libfuse doesn't look at conn->want for the READDIRPLUS related
+> > >   capabilities
+> > > * I have overridden that, but the kernel still sends the READDIRPLUS
+> > >   messages. It's possible I'm doing something hinky, and I'll keep lo=
+oking
+> > >   for it.
+> >
+> > On the kernel side, FUSE_READDIR / FUSE_READDIRPLUS requests are sent
+> > in fuse_readdir_uncached(). I don't see anything there that skips
+> > sending readdir / readdirplus requests if the server doesn't have
+> > .readdir / .readdirplus implemented. For some request types (eg
+> > FUSE_RENAME2, FUSE_LINK, FUSE_FSYNCDIR, FUSE_CREATE, ...), we do track
+> > if a request type isn't implemented by the server and then skip
+> > sending that request in the future (for example, see fuse_tmpfile()).
+> > If we wanted to do this skipping for readdir as well, it'd probably
+> > look something like
+> >
+> > --- a/fs/fuse/fuse_i.h
+> > +++ b/fs/fuse/fuse_i.h
+> > @@ -870,6 +870,9 @@ struct fuse_conn {
+> >         /* Is link not implemented by fs? */
+> >         unsigned int no_link:1;
+> >
+> > +       /* Is readdir/readdirplus not implemented by fs? */
+> > +       unsigned int no_readdir:1;
+> > +
+> >         /* Use io_uring for communication */
+> >         unsigned int io_uring;
+> >
+> > diff --git a/fs/fuse/readdir.c b/fs/fuse/readdir.c
+> > index 17ce9636a2b1..176d6ce953e5 100644
+> > --- a/fs/fuse/readdir.c
+> > +++ b/fs/fuse/readdir.c
+> > @@ -341,6 +341,9 @@ static int fuse_readdir_uncached(struct file
+> > *file, struct dir_context *ctx)
+> >         u64 attr_version =3D 0, evict_ctr =3D 0;
+> >         bool locked;
+> >
+> > +       if (fm->fc->no_readdir)
+> > +               return -ENOSYS;
+> > +
+> >         folio =3D folio_alloc(GFP_KERNEL, 0);
+> >         if (!folio)
+> >                 return -ENOMEM;
+> > @@ -376,6 +379,8 @@ static int fuse_readdir_uncached(struct file
+> > *file, struct dir_context *ctx)
+> >                         res =3D parse_dirfile(folio_address(folio), res=
+, file,
+> >                                             ctx);
+> >                 }
+> > +       } else if (res =3D=3D -ENOSYS) {
+> > +               fm->fc->no_readdir =3D 1;
+> >         }
+> >
+> >         folio_put(folio);
+> >
+> > > * When I just return -ENOSYS to READDIRPLUS, things don't work well. =
+Still
+> > >   looking into this.
+> > >
+> > > Q: Do you know whether the current fuse kernel mod can handle a low-l=
+evel
+> > >    fuse server that doesn't support READDIRPLUS? This may be broken.
+> >
+> > From what I see, the fuse kernel code can handle servers that don't
+> > support readdir/readdirplus. The fuse readdir path gets invoked from
+> > file_operations->iterate_shared callback, which from what i see, the
+> > only ramification of this always returning an error is that the
+> > syscalls calling into this (eg getdents(), readdir()) fail.
+>
+> Thanks for doing some of the digging Joanne. I'm not sure what was going =
+wrong
+> a few weeks ago when I initially disabled readdirplus, but I have it work=
+ing
+> now - in fact I now have famfs "fully" working under fuse (for some defin=
+ition
+> of fully ;).
+>
+> I have a gnarly rebase plus some documentation to write, but I may go ahe=
+ad
+> and share branches this week, in case anybody wants to take a look. That =
+will
+> be a fuse kernel branch, and a famfs user space branch...
+>
 
-Reviewed-by: Leon Romanovsky <leonro@nvidia.com>
-Signed-off-by: Shannon Nelson <shannon.nelson@amd.com>
----
- Documentation/userspace-api/fwctl/fwctl.rst   |  1 +
- Documentation/userspace-api/fwctl/index.rst   |  1 +
- .../userspace-api/fwctl/pds_fwctl.rst         | 46 +++++++++++++++++++
- 3 files changed, 48 insertions(+)
- create mode 100644 Documentation/userspace-api/fwctl/pds_fwctl.rst
+Looking forward to seeing this.
 
-diff --git a/Documentation/userspace-api/fwctl/fwctl.rst b/Documentation/userspace-api/fwctl/fwctl.rst
-index 04ad78a7cd48..fdcfe418a83f 100644
---- a/Documentation/userspace-api/fwctl/fwctl.rst
-+++ b/Documentation/userspace-api/fwctl/fwctl.rst
-@@ -150,6 +150,7 @@ fwctl User API
- 
- .. kernel-doc:: include/uapi/fwctl/fwctl.h
- .. kernel-doc:: include/uapi/fwctl/mlx5.h
-+.. kernel-doc:: include/uapi/fwctl/pds.h
- 
- sysfs Class
- -----------
-diff --git a/Documentation/userspace-api/fwctl/index.rst b/Documentation/userspace-api/fwctl/index.rst
-index d9d40a468a31..316ac456ad3b 100644
---- a/Documentation/userspace-api/fwctl/index.rst
-+++ b/Documentation/userspace-api/fwctl/index.rst
-@@ -11,3 +11,4 @@ to securely construct and execute RPCs inside device firmware.
- 
-    fwctl
-    fwctl-cxl
-+   pds_fwctl
-diff --git a/Documentation/userspace-api/fwctl/pds_fwctl.rst b/Documentation/userspace-api/fwctl/pds_fwctl.rst
-new file mode 100644
-index 000000000000..b5a31f82c883
---- /dev/null
-+++ b/Documentation/userspace-api/fwctl/pds_fwctl.rst
-@@ -0,0 +1,46 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+================
-+fwctl pds driver
-+================
-+
-+:Author: Shannon Nelson
-+
-+Overview
-+========
-+
-+The PDS Core device makes a fwctl service available through an
-+auxiliary_device named pds_core.fwctl.N.  The pds_fwctl driver binds to
-+this device and registers itself with the fwctl subsystem.  The resulting
-+userspace interface is used by an application that is a part of the
-+AMD Pensando software package for the Distributed Service Card (DSC).
-+
-+The pds_fwctl driver has little knowledge of the firmware's internals.
-+It only knows how to send commands through pds_core's message queue to the
-+firmware for fwctl requests.  The set of fwctl operations available
-+depends on the firmware in the DSC, and the userspace application
-+version must match the firmware so that they can talk to each other.
-+
-+When a connection is created the pds_fwctl driver requests from the
-+firmware a list of firmware object endpoints, and for each endpoint the
-+driver requests a list of operations for that endpoint.
-+
-+Each operation description includes a firmware defined command attribute
-+that maps to the FWCTL scope levels.  The driver translates those firmware
-+values into the FWCTL scope values which can then be used for filtering the
-+scoped user requests.
-+
-+pds_fwctl User API
-+==================
-+
-+Each RPC request includes the target endpoint and the operation id, and in
-+and out buffer lengths and pointers.  The driver verifies the existence
-+of the requested endpoint and operations, then checks the request scope
-+against the required scope of the operation.  The request is then put
-+together with the request data and sent through pds_core's message queue
-+to the firmware, and the results are returned to the caller.
-+
-+The RPC endpoints, operations, and buffer contents are defined by the
-+particular firmware package in the device, which varies across the
-+available product configurations.  The details are available in the
-+specific product SDK documentation.
--- 
-2.17.1
+> Also: any plans for a fuse BOF at LSFMM?
 
+I'm definitely interested if there is one. There was some discussion
+about this on this thread [1] a few months ago - Miklos said he won't
+be able to make it to LSF this year and I think Bernd said he won't be
+able to as well, but if there are some other interested FUSE people at
+LSF, maybe we could have a fuse meetup that would be video-callable
+in?
+
+Thanks,
+Joanne
+
+[1] https://lore.kernel.org/linux-fsdevel/43474a67d1af7ec03e2fade9e83c7702b=
+74fe66b.camel@kernel.org/T/#ma4968312a21f8bd0da3431d818c1b5bff75aefcc
+
+>
+> <snip>
+>
+> Thanks,
+> John
+>
