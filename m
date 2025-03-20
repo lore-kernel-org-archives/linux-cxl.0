@@ -1,108 +1,149 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A01281E25EB
-	for <linux-cxl@vger.kernel.org>; Thu, 20 Mar 2025 16:59:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4216F1EDA06;
+	Thu, 20 Mar 2025 17:41:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742489977; cv=none; b=IiqN9P91z/A6gobCCl8J2Vs053XDVxEGE9YwI9eHJ+NMPObn1tjB4VrxsmMIeQYeHonoOSNGpXOWhuxBXrYN/UKsF/IVlRzC1SV8ipVaXZkXRld6Q0PquV4Qx3T9u8Pi3J1QvCEbN4IpplTjvoqtCtTTkh2BxeHBA77XaaQeJh8=
+	t=1742492491; cv=none; b=mUNus2WUgmuVRrl3NGV/x/DZbZvAe56TuZLSTrR5as6vM8g5D90Q/2UczoUUcIrp0RKJ3YltWYS6p4zm8T6LuQgDsY0DISJvXm+Qw46iksRF8mBQo33NFPLkueudDbBUAC1IQGnY1SvPfJ9WqszzedfF5P1ErOurFS99OndjLPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742489977; c=relaxed/simple;
-	bh=1Yk7hgNgZeHmwZa8RkOaLbHEcPIA8EWKztrD4+fPyyE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HhSTzdb/lWHeSP7XrUzUlsbGUrRX61qszWtYPgGnJPC/7QmtRTXIXuMktxwOB+8eYweKKSRcw58+Rt95KRtwXFDc5lsvrSRgUtBRjxAhHhfHpl+iB2EebXQDjmL1uX8s6TaSuqfEOAYN0Hmgf8FuZ7rzWDko+31XDpQakdB/xOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=dPzcQ9fa; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="dPzcQ9fa"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7c5b8d13f73so34117485a.0
-        for <linux-cxl@vger.kernel.org>; Thu, 20 Mar 2025 09:59:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1742489974; x=1743094774; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ipib33z3sn+yQKX9c566UprPG9ZeHYaheF0uNRUCV3M=;
-        b=dPzcQ9faTxWJ9okbH/bncnjZodsRWNYW5ufiWdJOmnnaeFltcSYqqphKZzzeAUTrZx
-         ZpObSzAEd6KA3JgjPFHY7IisPih1mcCXGGMdR3yXHjTYnu6J1HrxfpygizWbrLiJs9pS
-         KNI9fSgR9JcFEVcV6E9PGKGkksiVmmCSFEtji3PP+J7kq81cH83NSn2k8aFgvB2G+88m
-         n1j5mGruBfmTDcB5NSl61x5rRMcoEDiFca9x5a+SNfuMxB7Gt1diB3CQtqASDUE3UXSu
-         kfErwEgM0LtNwqHqOitiZwIv5VdzNlSktI1Tsk0ml/P7JpN0HBztwkv1c6YiE1FetfQK
-         UKyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742489974; x=1743094774;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ipib33z3sn+yQKX9c566UprPG9ZeHYaheF0uNRUCV3M=;
-        b=ORX2lTldF1WC+2EK9Z4F6aaTBIxw37kgjWtyyqYQiuOVyTJ56Pj1Z5GES/LBhJ8JAw
-         hr6dp/Xun4LabWgI5mpVL3hsGdmz4mUhK//vY1OinSg0xma5dtZYou7rfbcpCPwvNrmw
-         UUTBcYKK7XPjyOr5HdJfjt7LYy0brJKW3LRtfO1X84N4HOj+YjEZprnxIfwGPbN/XeSk
-         ePGXloqQdYQt4HebeaDxv3JGtqoZHSHFhH7Q+RVcq05SMi5ChufXth+xSg9W5Re2xbBM
-         mk3Uw64DOHFk97S3wlnw3Nb1tixRWUgdiGJ8olnRqXX9az+n96UiZeqAlbG97ZrLg02W
-         U5qw==
-X-Forwarded-Encrypted: i=1; AJvYcCWslIzmwiP8ygxMRrdWHRGGKtl+GYi2uiPztXVHN0scbdq0Dx0UxpqBM2pp24hRJMOO+O5eWXXDfc4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxfpnV6DhVEzMtK1JfekdVWry8szRZhcjpxOvR8fnNBKkLOoVj
-	fma8zzHIPeGNSMocD9T3mybbfuMEFRv/M2Wt45xXS56G0B9sDa1WLGzDi1mNaiA=
-X-Gm-Gg: ASbGnctFE1kZpGAmjMbx0I9uGME7Cg99rhODdqmBqXScQ0rBRm6LTcn3NCtT9LgDEpF
-	KauIdw+KgihvLdSdl4P5hw/TfqmV1XPyLRhgAsaeRbk8mO44K4gWSL7FQBBSOb0V7EcxYKhQFhO
-	/djryPWEMN52t4I7QCp6m301ddT/r7/xEO97gS6B+c+RU2NQqNks7HBAs3WZY8JFspFYcY0qP1j
-	HIUrcqDv8/xRFniUFPhzB35VopjfcXRpCbmKJ/7gaCu82PH4hYeCfHcpyolAdXNGfyGIDGTy7FN
-	ALNa5mV7tHHPISbaWPYUJ+07GSNF6f8ygFHK4Pwcjv54HuKRC+oFxbJJ5umaTapKK9uSZsdwZEc
-	HK7mUgUl9h+WUDrLS5o2SRXQxAt8=
-X-Google-Smtp-Source: AGHT+IElzU98u73kWcMh/UGf7sxJFt1GG443MOL7RYcIkJXTEKBGeUAa+MD93tb0ZxGrkPDd7DzAKA==
-X-Received: by 2002:a05:620a:c4c:b0:7c5:5909:18d8 with SMTP id af79cd13be357-7c5b0c8875dmr458154585a.14.1742489974499;
-        Thu, 20 Mar 2025 09:59:34 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5b92ec688sm11579385a.64.2025.03.20.09.59.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Mar 2025 09:59:34 -0700 (PDT)
-Date: Thu, 20 Mar 2025 12:59:32 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Rakie Kim <rakie.kim@sk.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	joshua.hahnjy@gmail.com, dan.j.williams@intel.com,
-	ying.huang@linux.alibaba.com, david@redhat.com,
-	Jonathan.Cameron@huawei.com, kernel_team@skhynix.com,
-	honggyu.kim@sk.com, yunjeong.mun@sk.com
-Subject: Re: [PATCH v3 1/3] mm/mempolicy: Fix memory leaks in weighted
- interleave sysfs
-Message-ID: <Z9xJdP29XEz6CljB@gourry-fedora-PF4VCD3F>
-References: <20250320041749.881-2-rakie.kim@sk.com>
- <20250320054010.914-1-rakie.kim@sk.com>
+	s=arc-20240116; t=1742492491; c=relaxed/simple;
+	bh=hxjPa9gLyx/uSoYJ8lGX6yMc386x4cSQCX5Ayf/sbug=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Gu/kVT2Qd8fjiu0nWU6MRpo/8UZ9Siho+PtwSLc+EpHciEiNCKBuFP+PrJ8YBhqFEXjFotAygVafnBj0oxheYpOl0+q8lAFXaQq++6RBvpeUxL9fEoN/BkB615YaUeijeMHDSWkrswwH5DyR/H4winQLshCY0nGYTiHLxzlFScE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZJXpw37tQz6M4k2;
+	Fri, 21 Mar 2025 01:38:00 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id B399614050A;
+	Fri, 21 Mar 2025 01:41:20 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.19.247) by
+ frapeml500008.china.huawei.com (7.182.85.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 20 Mar 2025 18:41:19 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: <linux-cxl@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<james.morse@arm.com>, <conor@kernel.org>, Yicong Yang
+	<yangyicong@huawei.com>, <linux-acpi@vger.kernel.org>
+CC: <linux-arch@vger.kernel.org>, <linuxarm@huawei.com>, Yushan Wang
+	<wangyushan12@huawei.com>, <linux-mm@kvack.org>,
+	<gregkh@linuxfoundation.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, Mark
+ Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Dan Williams <dan.j.williams@intel.com>
+Subject: [RFC PATCH 0/6] Cache coherency management subsystem
+Date: Thu, 20 Mar 2025 17:41:12 +0000
+Message-ID: <20250320174118.39173-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250320054010.914-1-rakie.kim@sk.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, Mar 20, 2025 at 02:40:01PM +0900, Rakie Kim wrote:
-> On Thu, 20 Mar 2025 13:17:46 +0900 Rakie Kim <rakie.kim@sk.com> wrote:
-> 
-> Hi Gregory
-> 
-> I initially planned to separate this patch from the hotplug-related patch
-> series as an independent update. However, after reviewing the code following
-> Jonathan's suggestion to consolidate `kobject` and `node_attrs` into a single
-> struct, I realized that most of the intended functionality for Patch 2 was
-> already incorporated.
-> 
-> As a result, Patch 1 now only contains the `kobject_put` fix, while the
-> struct consolidation work has been included in Patch 2. Given the current
-> design, it seems more natural to keep Patch 1 and Patch 2 together as part
-> of the same patch series rather than separating them.
-> 
-> Rakie
-> 
+Note that I've only a vague idea of who will care about this
+so please do +CC others as needed.
 
-The point of submitting separately was to backport this to LTS via
--stable.  We probably still want this since it ostensibly solves a
-memory leak - even if the design is to support this work.
+On x86 there is the much loved WBINVD instruction that causes a write back
+and invalidate of all caches in the system. It is expensive but it is
+necessary in a few corner cases. These are cases where the contents of
+Physical Memory may change without any writes from the host. Whilst there
+are a few reasons this might happen, the one I care about here is when
+we are adding or removing mappings on CXL. So typically going from
+there being actual memory at a host Physical Address to nothing there
+(reads as zero, writes dropped) or visa-versa. That involves the
+reprogramming of address decoders (HDM Decoders); in the near future
+it may also include the device offering dynamic capacity extents. The
+thing that makes it very hard to handle with CPU flushes is that the
+instructions are normally VA based and not guaranteed to reach beyond
+the Point of Coherence or similar. You might be able to (ab)use
+various flush operations intended to ensure persistence memory but
+in general they don't work either.
 
-~Gregory
+So on other architectures such as ARM64 we have no instruction similar to
+WBINVD but we may have device interfaces in the system that provide a way
+to ensure a PA range undergoes the write back and invalidate action. This
+RFC is to find a way to support those cache maintenance device interfaces.
+The ones I know about are much more flexible than WBINVD, allowing
+invalidation of particular PA ranges, or a much richer set of flush types
+(not supported yet as not needed for upstream use cases).
+
+To illustrate how a solution might work, I've taken both a HiSilicon
+design (slight quirk as registers overlap with existing PMU driver)
+and more controversially a firmware interface proposal from ARM
+(wrapped up in made up ACPI) that was dropped from the released spec
+but for which the alpha spec is still available.
+
+Why drivers/cache?
+- Mainly because it exists and smells like a reasonable place.
+- Conor, you are maintainer for this currently do you mind us putting this
+  stuff in there?
+
+Why not just register a singleton function pointer?
+- Systems may include multiple cache control devices, responsible
+  for different parts of the PA address range (interleaving etc make
+  this complex).  They may not all share a common hardware interface.
+- A device class is more convenient than managing multiple homogeneous
+  device instances within a driver.
+- Disadvantage is that we need this small class
+
+Generalizing to more arch?
+- I've started with ARM64, but if useful elsewhere the small amount
+  of arch code could be moved to a generic location.
+
+QEMU emulation code at
+http://gitlab.com/jic23/qemu cxl-2025-03-20 
+
+Why an RFC?
+- I'm really just looking for feedback on whether the class approach
+  is the way to go at this stage.  I'm not strongly attached to it but
+  it feels like the right balance of complexity and flexibility to me.
+- I made up the ACPI spec - it's not documented, non official and
+  honestly needs work. I would however like to get feedback on whether
+  it is something we want to try and get through the ACPI Working group
+  as a much improved code first proposal?  The potential justification
+  being to avoid the need for lots trivial drivers where maybe a bit
+  of DSDT interpreted code does the job better.
+
+Jonathan Cameron (3):
+  cache: coherency device class
+  acpi: PoC of Cache control via ACPI0019 and _DSM
+  Hack: Pretend we have PSCI 1.2
+
+Yicong Yang (3):
+  memregion: Support fine grained invalidate by
+    cpu_cache_invalidate_memregion()
+  arm64: Support ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
+  cache: Support cache maintenance for HiSilicon SoC Hydra Home Agent
+
+ arch/arm64/Kconfig                  |   1 +
+ arch/arm64/include/asm/cacheflush.h |  14 ++
+ arch/arm64/mm/flush.c               |  42 ++++++
+ arch/x86/mm/pat/set_memory.c        |   2 +-
+ drivers/acpi/Makefile               |   1 +
+ drivers/cache/Kconfig               |  26 ++++
+ drivers/cache/Makefile              |   4 +
+ drivers/cache/acpi_cache_control.c  | 157 ++++++++++++++++++++++
+ drivers/cache/coherency_core.c      | 130 +++++++++++++++++++
+ drivers/cache/hisi_soc_hha.c        | 193 ++++++++++++++++++++++++++++
+ drivers/cxl/core/region.c           |   6 +-
+ drivers/firmware/psci/psci.c        |   2 +
+ drivers/nvdimm/region.c             |   3 +-
+ drivers/nvdimm/region_devs.c        |   3 +-
+ include/linux/cache_coherency.h     |  60 +++++++++
+ include/linux/memregion.h           |   8 +-
+ 16 files changed, 646 insertions(+), 6 deletions(-)
+ create mode 100644 drivers/cache/acpi_cache_control.c
+ create mode 100644 drivers/cache/coherency_core.c
+ create mode 100644 drivers/cache/hisi_soc_hha.c
+ create mode 100644 include/linux/cache_coherency.h
+
+-- 
+2.43.0
 
