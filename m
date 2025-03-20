@@ -1,18 +1,18 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31A8B26AF5;
-	Thu, 20 Mar 2025 04:18:24 +0000 (UTC)
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCEFB1D5142;
+	Thu, 20 Mar 2025 04:18:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742444310; cv=none; b=rhMFfVJ31jVu1mvJds4x7uPcWFYdWO5ZiWsLJV6fP3V1a+GmgEVl7MRSLSKt03YqiCUuuom/LVeTgIJ4Vvo/EkZhl6QuhPiM92WkVxL3j1/Hlx/tNMqC2Blyr2639gI1sti6Cb9JZq9uIm5/rrVkGhD5z3vzfJi6xplGRLS9ufo=
+	t=1742444312; cv=none; b=Cqujl/1hPlQycLWZ3pwjhe0hvoE3LaZX8RRdQeqtcz0nVa5VRG4p8U66Y6OKeqzRTNnaZumQYKCtry2d6VtqfK/rL/v/E0eAD60lTo89y2C5B0YPJQnzmHYOGoJlhdMWS10T1PIvr5ekUnSu5xFq03MzKNgqICOGnbiVmQfTWxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742444310; c=relaxed/simple;
-	bh=omRFjI677DXrKz25HAQAntUmct9Jv09QAfbIdxrT2EM=;
+	s=arc-20240116; t=1742444312; c=relaxed/simple;
+	bh=EgH2C2M8SiOQiV1U+C0+wkoRva2Z7YbBNKya0LAI9Pw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WOMT7MfjLqlarWpirNqnzta2b/6Dr4Jk+RAdSJeHDpNbS9EQoqAuHnYfAFgmzvHmYWMhCjkpzKyxfW5V8fQ6mYx4bqg2Qz4cKiM3ksMgbyCWE/JFLwb7CzwNuOsnlYRBbZk1NCTWUdnUUIht0f1T/sILfIkGYqAqqM4+nNA9BHk=
+	 MIME-Version; b=GTA/K0h5hj+xL1C5X10AVkcdKhlW/m9AZZYS4NWQxx/jmlUZmePqhqQrG8SBapQ116Xpl80vC6+oLFJoaqknzXfyfsuQbKXSMS//mYXhls8YAaXyFFh6bub8OZwnHcCgYDgErV/hRFokA4MKgeOODeMT1kwa9gbS8XfWXVVjSEk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-681ff7000002311f-3c-67db9707c9b5
+X-AuditID: a67dfc5b-681ff7000002311f-41-67db970a4ef9
 From: Rakie Kim <rakie.kim@sk.com>
 To: gourry@gourry.net
 Cc: akpm@linux-foundation.org,
@@ -28,9 +28,9 @@ Cc: akpm@linux-foundation.org,
 	honggyu.kim@sk.com,
 	yunjeong.mun@sk.com,
 	rakie.kim@sk.com
-Subject: [PATCH v3 1/3] mm/mempolicy: Fix memory leaks in weighted interleave sysfs
-Date: Thu, 20 Mar 2025 13:17:46 +0900
-Message-ID: <20250320041749.881-2-rakie.kim@sk.com>
+Subject: [PATCH v3 2/3] mm/mempolicy: Support dynamic sysfs updates for weighted interleave
+Date: Thu, 20 Mar 2025 13:17:47 +0900
+Message-ID: <20250320041749.881-3-rakie.kim@sk.com>
 X-Mailer: git-send-email 2.48.1.windows.1
 In-Reply-To: <20250320041749.881-1-rakie.kim@sk.com>
 References: <20250320041749.881-1-rakie.kim@sk.com>
@@ -41,167 +41,184 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrALMWRmVeSWpSXmKPExsXC9ZZnoS779NvpBi9PWlnMWb+GzWL61AuM
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrALMWRmVeSWpSXmKPExsXC9ZZnoS7X9NvpBudncFnMWb+GzWL61AuM
 	Fl/X/2K2+Hn3OLvFqoXX2CyOb53HbnF+1ikWi8u75rBZ3Fvzn9Vi9ZoMBy6PnbPusnt0t11m
-	92g58pbVY/Gel0wemz5NYvc4MeM3i8fOh5Ye7/ddZfP4vEkugDOKyyYlNSezLLVI3y6BK2Pb
-	4wbGgo/SFb27WpkaGI+LdTFyckgImEhMWHWQEcZ+u28iexcjBwebgJLEsb0xIGERAVGJeUdn
-	s3QxcnEwC1xjkjjw+SYLSEJYIFjix8LjbCA2i4CqxOyXp8DivALGEuvm3GeGmKkp0XDpHhOI
-	zQk0f8rV+Wwg84WAat6e44UoF5Q4OfMJWCuzgLxE89bZzCC7JARes0nsfnSKFWKOpMTBFTdY
-	JjDyz0LSMwtJzwJGplWMQpl5ZbmJmTkmehmVeZkVesn5uZsYgeG+rPZP9A7GTxeCDzEKcDAq
-	8fC+uHIrXYg1say4MvcQowQHs5IIr0jH7XQh3pTEyqrUovz4otKc1OJDjNIcLErivEbfylOE
-	BNITS1KzU1MLUotgskwcnFINjDMZd32LztdzXGq/evN//bCULVuiv24tivkTLHinKO/wud9L
-	WnJfiedcXX2Rs25bXx/Db78b1r8eLV5iEpRpacx51lFL9rt91zxDl01rIi+3qm96pn3xfVhm
-	2osTfBs/tOQ43nvgYyTBmrFEwc+7a+Ylbjf2TZIrXDxrWu+u3HGnrfynusixJUosxRmJhlrM
-	RcWJAAhuJmRzAgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrFLMWRmVeSWpSXmKPExsXCNUNNS5d9+u10gx1v9SzmrF/DZjF96gVG
+	92g58pbVY/Gel0wemz5NYvc4MeM3i8fOh5Ye7/ddZfP4vEkugDOKyyYlNSezLLVI3y6BK2P+
+	1XnsBf8UKrZMPc3SwPhIqouRk0NCwETi8JRb7DD2yeM9jF2MHBxsAkoSx/bGgIRFBEQl5h2d
+	zdLFyMXBLHCNSeLA55ssIAlhgWiJPW/2g9ksAqoSk3/eZQaxeQWMJda/OsYMMVNTouHSPSYQ
+	mxNo/pSr89lA5gsB1bw9xwtRLihxcuYTsDHMAvISzVtnM4PskhB4zSbRfXouG8QcSYmDK26w
+	TGDkn4WkZxaSngWMTKsYhTLzynITM3NM9DIq8zIr9JLzczcxAsN9We2f6B2Mny4EH2IU4GBU
+	4uF9ceVWuhBrYllxZe4hRgkOZiURXpGO2+lCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeY2+lacI
+	CaQnlqRmp6YWpBbBZJk4OKUaGN2eiqgLWJ0/t2T5iUZ7//uWmYUm4TMUeWLja6oDFQp5Yyx3
+	Pr44XYDxcNBf3XvPAss//Ppo+m31pmf57t7l3PKdtwPCb0QuVl+6Z1tRQ11qMNeJ/Ze4f19K
+	66o4+m6Ts82CzzxPJ7lc/fLU7C1DS7L3K+OJd724zDoOmc+4xK/NbSKec3JWlxJLcUaioRZz
+	UXEiAJziUDpzAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrFLMWRmVeSWpSXmKPExsXCNUNNS5dr+u10g91nGS3mrF/DZjF96gVG
 	i6/rfzFb/Lx7nN3i87PXzBarFl5jszi+dR67xeG5J1ktzs86xWJxedccNot7a/6zWhy69pzV
 	YvWaDIvf21awOfB57Jx1l92ju+0yu0fLkbesHov3vGTy2PRpErvHiRm/WTx2PrT0eL/vKpvH
-	t9seHotffGDy+LxJLoA7issmJTUnsyy1SN8ugStj2+MGxoKP0hW9u1qZGhiPi3UxcnJICJhI
-	vN03kb2LkYODTUBJ4tjeGJCwiICoxLyjs1m6GLk4mAWuMUkc+HyTBSQhLBAs8WPhcTYQm0VA
-	VWL2y1NgcV4BY4l1c+4zQ8zUlGi4dI8JxOYEmj/l6nw2kPlCQDVvz/FClAtKnJz5BKyVWUBe
-	onnrbOYJjDyzkKRmIUktYGRaxSiSmVeWm5iZY6pXnJ1RmZdZoZecn7uJERjiy2r/TNzB+OWy
-	+yFGAQ5GJR7eF1dupQuxJpYVV+YeYpTgYFYS4RXpuJ0uxJuSWFmVWpQfX1Sak1p8iFGag0VJ
-	nNcrPDVBSCA9sSQ1OzW1ILUIJsvEwSnVwLjHLqztw+xfDgo/PkWITHu4b8XHgseZyovv26S/
-	qXm2RI67xeG27jObZaL+nRWPLujmb3X/nmi+rWvXy2SjR7KpfZ5Pnpq8PiC80/z3kSetPDcd
-	lk51nTwvySGlfOlR1dtT3E32dH+4MmVZ3LRKs1M7Yie8u2dd6rokb8/co6Hp9X/m3zB+x9uj
-	xFKckWioxVxUnAgARxErfG0CAAA=
+	t9seHotffGDy+LxJLoA7issmJTUnsyy1SN8ugStj/tV57AX/FCq2TD3N0sD4SKqLkZNDQsBE
+	4uTxHsYuRg4ONgEliWN7Y0DCIgKiEvOOzmbpYuTiYBa4xiRx4PNNFpCEsEC0xJ43+8FsFgFV
+	ick/7zKD2LwCxhLrXx1jhpipKdFw6R4TiM0JNH/K1flsIPOFgGrenuOFKBeUODnzCdgYZgF5
+	ieats5knMPLMQpKahSS1gJFpFaNIZl5ZbmJmjqlecXZGZV5mhV5yfu4mRmCIL6v9M3EH45fL
+	7ocYBTgYlXh4X1y5lS7EmlhWXJl7iFGCg1lJhFek43a6EG9KYmVValF+fFFpTmrxIUZpDhYl
+	cV6v8NQEIYH0xJLU7NTUgtQimCwTB6dUA+M10V1rc5dJW8UqlemXuE/jT3BacOIsS+DWxLBt
+	kTba9zY2m3h4rU/hL5l3jfdc9FQN5V/3mnbclr/CLXCulHXVzeJbkyduTHYvWJSy9kPPl5tR
+	Qc/XpFxYv2nmN+GSQ88VZlevl3+9dXdbl77UXLkpZuWx+mWLQh7vPnfIird8W8m38pcxBvJK
+	LMUZiYZazEXFiQCZ0tl5bQIAAA==
 X-CFilter-Loop: Reflected
 
-Memory leaks occurred when removing sysfs attributes for weighted
-interleave. Improper kobject deallocation led to unreleased memory
-when initialization failed or when nodes were removed.
+Previously, the weighted interleave sysfs structure was statically
+managed, preventing dynamic updates when nodes were added or removed.
 
-This patch resolves the issue by replacing unnecessary `kfree()`
-calls with `kobject_put()`, ensuring proper cleanup and preventing
-memory leaks.
+This patch restructures the weighted interleave sysfs to support
+dynamic insertion and deletion. The sysfs that was part of
+the 'weighted_interleave_group' is now globally accessible,
+allowing external access to that sysfs.
 
-By correctly using `kobject_put()`, the release function now
-properly deallocates memory without causing resource leaks,
-thereby improving system stability.
+With this change, sysfs management for weighted interleave is
+more flexible, supporting hotplug events and runtime updates
+more effectively.
 
-Fixes: dce41f5ae253 ("mm/mempolicy: implement the sysfs-based weighted_interleave interface")
 Signed-off-by: Rakie Kim <rakie.kim@sk.com>
 ---
- mm/mempolicy.c | 61 +++++++++++++++++++++++++-------------------------
- 1 file changed, 31 insertions(+), 30 deletions(-)
+ mm/mempolicy.c | 70 ++++++++++++++++++++++----------------------------
+ 1 file changed, 30 insertions(+), 40 deletions(-)
 
 diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index bbaadbeeb291..5950d5d5b85e 100644
+index 5950d5d5b85e..6c8843114afd 100644
 --- a/mm/mempolicy.c
 +++ b/mm/mempolicy.c
-@@ -3448,7 +3448,9 @@ static void sysfs_wi_release(struct kobject *wi_kobj)
+@@ -3388,6 +3388,13 @@ struct iw_node_attr {
+ 	int nid;
+ };
  
- 	for (i = 0; i < nr_node_ids; i++)
- 		sysfs_wi_node_release(node_attrs[i], wi_kobj);
--	kobject_put(wi_kobj);
++struct sysfs_wi_group {
++	struct kobject wi_kobj;
++	struct iw_node_attr *nattrs[];
++};
 +
-+	kfree(node_attrs);
-+	kfree(wi_kobj);
++static struct sysfs_wi_group *sgrp;
++
+ static ssize_t node_show(struct kobject *kobj, struct kobj_attribute *attr,
+ 			 char *buf)
+ {
+@@ -3430,27 +3437,23 @@ static ssize_t node_store(struct kobject *kobj, struct kobj_attribute *attr,
+ 	return count;
+ }
+ 
+-static struct iw_node_attr **node_attrs;
+-
+-static void sysfs_wi_node_release(struct iw_node_attr *node_attr,
+-				  struct kobject *parent)
++static void sysfs_wi_node_release(int nid)
+ {
+-	if (!node_attr)
++	if (!sgrp->nattrs[nid])
+ 		return;
+-	sysfs_remove_file(parent, &node_attr->kobj_attr.attr);
+-	kfree(node_attr->kobj_attr.attr.name);
+-	kfree(node_attr);
++
++	sysfs_remove_file(&sgrp->wi_kobj, &sgrp->nattrs[nid]->kobj_attr.attr);
++	kfree(sgrp->nattrs[nid]->kobj_attr.attr.name);
++	kfree(sgrp->nattrs[nid]);
+ }
+ 
+ static void sysfs_wi_release(struct kobject *wi_kobj)
+ {
+-	int i;
+-
+-	for (i = 0; i < nr_node_ids; i++)
+-		sysfs_wi_node_release(node_attrs[i], wi_kobj);
++	int nid;
+ 
+-	kfree(node_attrs);
+-	kfree(wi_kobj);
++	for (nid = 0; nid < nr_node_ids; nid++)
++		sysfs_wi_node_release(nid);
++	kfree(sgrp);
  }
  
  static const struct kobj_type wi_ktype = {
-@@ -3494,15 +3496,22 @@ static int add_weighted_interleave_group(struct kobject *root_kobj)
- 	struct kobject *wi_kobj;
+@@ -3458,7 +3461,7 @@ static const struct kobj_type wi_ktype = {
+ 	.release = sysfs_wi_release,
+ };
+ 
+-static int add_weight_node(int nid, struct kobject *wi_kobj)
++static int sysfs_wi_node_add(int nid)
+ {
+ 	struct iw_node_attr *node_attr;
+ 	char *name;
+@@ -3480,57 +3483,44 @@ static int add_weight_node(int nid, struct kobject *wi_kobj)
+ 	node_attr->kobj_attr.store = node_store;
+ 	node_attr->nid = nid;
+ 
+-	if (sysfs_create_file(wi_kobj, &node_attr->kobj_attr.attr)) {
++	if (sysfs_create_file(&sgrp->wi_kobj, &node_attr->kobj_attr.attr)) {
+ 		kfree(node_attr->kobj_attr.attr.name);
+ 		kfree(node_attr);
+ 		pr_err("failed to add attribute to weighted_interleave\n");
+ 		return -ENOMEM;
+ 	}
+ 
+-	node_attrs[nid] = node_attr;
++	sgrp->nattrs[nid] = node_attr;
+ 	return 0;
+ }
+ 
+-static int add_weighted_interleave_group(struct kobject *root_kobj)
++static int add_weighted_interleave_group(struct kobject *mempolicy_kobj)
+ {
+-	struct kobject *wi_kobj;
  	int nid, err;
  
--	wi_kobj = kzalloc(sizeof(struct kobject), GFP_KERNEL);
--	if (!wi_kobj)
-+	node_attrs = kcalloc(nr_node_ids, sizeof(struct iw_node_attr *),
-+			     GFP_KERNEL);
-+	if (!node_attrs)
- 		return -ENOMEM;
- 
-+	wi_kobj = kzalloc(sizeof(struct kobject), GFP_KERNEL);
-+	if (!wi_kobj) {
-+		err = -ENOMEM;
-+		goto node_out;
-+	}
-+
- 	err = kobject_init_and_add(wi_kobj, &wi_ktype, root_kobj,
- 				   "weighted_interleave");
- 	if (err) {
--		kfree(wi_kobj);
--		return err;
-+		kobject_put(wi_kobj);
-+		goto err_out;
- 	}
- 
- 	for_each_node_state(nid, N_POSSIBLE) {
-@@ -3512,9 +3521,17 @@ static int add_weighted_interleave_group(struct kobject *root_kobj)
- 			break;
- 		}
- 	}
--	if (err)
-+	if (err) {
- 		kobject_put(wi_kobj);
-+		goto err_out;
-+	}
-+
- 	return 0;
-+
-+node_out:
-+	kfree(node_attrs);
-+err_out:
-+	return err;
- }
- 
- static void mempolicy_kobj_release(struct kobject *kobj)
-@@ -3528,7 +3545,6 @@ static void mempolicy_kobj_release(struct kobject *kobj)
- 	mutex_unlock(&iw_table_lock);
- 	synchronize_rcu();
- 	kfree(old);
--	kfree(node_attrs);
- 	kfree(kobj);
- }
- 
-@@ -3542,37 +3558,22 @@ static int __init mempolicy_sysfs_init(void)
- 	static struct kobject *mempolicy_kobj;
- 
- 	mempolicy_kobj = kzalloc(sizeof(*mempolicy_kobj), GFP_KERNEL);
--	if (!mempolicy_kobj) {
--		err = -ENOMEM;
--		goto err_out;
--	}
--
 -	node_attrs = kcalloc(nr_node_ids, sizeof(struct iw_node_attr *),
 -			     GFP_KERNEL);
--	if (!node_attrs) {
+-	if (!node_attrs)
++	sgrp = kzalloc(sizeof(struct sysfs_wi_group) + 			\
++		       nr_node_ids * sizeof(struct iw_node_attr *),	\
++		       GFP_KERNEL);
++	if (!sgrp)
+ 		return -ENOMEM;
+ 
+-	wi_kobj = kzalloc(sizeof(struct kobject), GFP_KERNEL);
+-	if (!wi_kobj) {
 -		err = -ENOMEM;
--		goto mempol_out;
--	}
-+	if (!mempolicy_kobj)
-+		return -ENOMEM;
- 
- 	err = kobject_init_and_add(mempolicy_kobj, &mempolicy_ktype, mm_kobj,
- 				   "mempolicy");
- 	if (err)
 -		goto node_out;
-+		goto err_out;
- 
- 	err = add_weighted_interleave_group(mempolicy_kobj);
--	if (err) {
--		pr_err("mempolicy sysfs structure failed to initialize\n");
--		kobject_put(mempolicy_kobj);
--		return err;
 -	}
+-
+-	err = kobject_init_and_add(wi_kobj, &wi_ktype, root_kobj,
++	err = kobject_init_and_add(&sgrp->wi_kobj, &wi_ktype, mempolicy_kobj,
+ 				   "weighted_interleave");
+-	if (err) {
+-		kobject_put(wi_kobj);
 +	if (err)
-+		goto err_out;
-+
-+	return 0;
+ 		goto err_out;
+-	}
  
--	return err;
+ 	for_each_node_state(nid, N_POSSIBLE) {
+-		err = add_weight_node(nid, wi_kobj);
++		err = sysfs_wi_node_add(nid);
+ 		if (err) {
+ 			pr_err("failed to add sysfs [node%d]\n", nid);
+-			break;
++			goto err_out;
+ 		}
+ 	}
+-	if (err) {
+-		kobject_put(wi_kobj);
+-		goto err_out;
+-	}
+ 
+ 	return 0;
+ 
 -node_out:
 -	kfree(node_attrs);
--mempol_out:
--	kfree(mempolicy_kobj);
  err_out:
--	pr_err("failed to add mempolicy kobject to the system\n");
-+	kobject_put(mempolicy_kobj);
++	kobject_put(&sgrp->wi_kobj);
  	return err;
  }
  
-
-base-commit: 4701f33a10702d5fc577c32434eb62adde0a1ae1
 -- 
 2.34.1
 
