@@ -1,185 +1,205 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2073.outbound.protection.outlook.com [40.107.94.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E090279C4;
-	Thu, 20 Mar 2025 11:22:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742469764; cv=fail; b=ArVr6knpkYvyQa+A8vDJJ4suK7AQ2xFy9h0yiDaaRww3Jq9wn6jo1xf9g8jvuextnM7OUgqwbB+lBPVjFQnn2Nut1Qs/n8x9gfShFwwQXfoIoA7ypLt5wEv/B+RM1wvypDmly/KRkt9tv0AanpHjWTsAa2vTHI/26WYyt3J4Itg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742469764; c=relaxed/simple;
-	bh=Km1LncM0+4Ui7FNmLwv3fSi3RA0UI1OMWEMh1F9nYEo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sipTnFniqzIElK+0MTxcFNkZ0pvW90TT70+NFHZSwUQ7NizXx1wr4fFZeAX5z8xkISnvuKdRNI14ySsxqEVShnLR+YrLqPyz+8XS/6uakFyrd57SxIhFvTlcuvBcUr4zsFi3K+PTnzctsyU3GJxkDoUwhAzU8hE/PtGOwZOPvP8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=hLxoDFdD; arc=fail smtp.client-ip=40.107.94.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C4129A1;
+	Thu, 20 Mar 2025 13:06:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742475983; cv=none; b=V9ZegP2f2emBYng6Rw61V1mFiy1sqK44tYHtYyoLVpsoMhyNy4iCEnMmXj0apCMTLwuF9kXxzNEFxZhaOJJ0rj/uwf7SFNky5cHTF5nnZ9lveoIm5e18/LubMc49J2FPfI+gFktgHVd2r6f3FGJ4IELzhPYc2oC8lh7m/6lCHNA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742475983; c=relaxed/simple;
+	bh=tcq3Zpp8Cjo3AgGj7Pb+Yz8TsC7q7a54VIwoPlnJTwU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GMihnH+N54lXGJZDwauqGsgwsyXi6Mx13RcmZ8dJr0a6TU+0jmZ0COCJSH8uBENhEYTSwsTuua89iWHw2ETwsHZnVrsZUuPTqqWaGuWBw4LBp92nSNTWhG8mNGuvuph2QeMmSLO9MtzDeb9BnXP6r0lhILhCd/SHc+9WtTUJ7w4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J4tQQU3P; arc=none smtp.client-ip=209.85.161.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="hLxoDFdD"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IOOdK4AO4q6aTh1PzKzvWYb+H3d3823U4J8SPF/rqzA7/b8tij+hi8G/frvIXBLzX2kHHFERuavv/pa0NgRDSlvtWIu/EX/QL3pdZbLf7CnrzEnTbv+QPvVjZx+vA2IEzu4axF6y1DNyD4PraVGRP3pz5ElhghNr6xAp+ZPotwyithjJhD9GVE7F3RbtUP/7IKP53IeqrAJXbyC0ZfUO+M4cdoyAMEuPE1ohNvcN9JsLi5sutwF0OBObgyudsK9dobzvkxLFwYWSrECG6kDj7P2M8QZMy8dsG3dM7IzyuznImwbP2hg8cd+7puuFXaRC3Rtrb737pYnYm5ksp3TXTw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QP1ZzqNrLwtYyNmyyrVc6yukQK6DnxNqv7HSo/xGRYk=;
- b=bC0gKZ5eZEQBzp1PikaOaT/3krWyVHMtCJnxZr9elmvZVibV9mGgyVnLYlJm9cBzGlaufHzL8zvG3Me22/wkbU8P4wOd0K5VlWP+lQWxzLjaJD1VU65CByPlOToyd1iUakkWZf5BytS2F9xSFrXkMivWY+yo/R3NnwXC8WHoCdWQNsSlEcT+riBe3gGnn4yto3wLD6n5Pg4tofk2k8cqyPukZkSnim/5BNpfEmOSVsXZhpia3+Yq2HI9sSLK1HsiDN7KGadB4llnWZj215y0ch4WGLkEQi0/r42Mb0Z/qV2Zye3GigB0gdbJB6UX/ISWEJ5nLhO583wLhSW/VcIWyQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QP1ZzqNrLwtYyNmyyrVc6yukQK6DnxNqv7HSo/xGRYk=;
- b=hLxoDFdDwVVXwj1V8DaqGgs7jQAmtYTZ4ua/BEPGwZS00Gs0Dzjdesyw+DrypP5TPNLtVVKj9JVWpg6xPfC46vKDv6uP9eddPbZTlzjo2+3ZFsDNvy6a+IAJ2FAeZp5olrsmKDgQ7LbF9aT9hjBIGYqZ8esALJc4bm+7F80FHGg=
-Received: from BYAPR21CA0005.namprd21.prod.outlook.com (2603:10b6:a03:114::15)
- by MW4PR12MB6780.namprd12.prod.outlook.com (2603:10b6:303:20e::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.34; Thu, 20 Mar
- 2025 11:22:39 +0000
-Received: from SJ1PEPF00001CEB.namprd03.prod.outlook.com
- (2603:10b6:a03:114:cafe::ca) by BYAPR21CA0005.outlook.office365.com
- (2603:10b6:a03:114::15) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8583.9 via Frontend Transport; Thu,
- 20 Mar 2025 11:22:39 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF00001CEB.mail.protection.outlook.com (10.167.242.27) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8534.20 via Frontend Transport; Thu, 20 Mar 2025 11:22:39 +0000
-Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 20 Mar
- 2025 06:22:36 -0500
-From: Robert Richter <rrichter@amd.com>
-To: Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>
-CC: Alison Schofield <alison.schofield@intel.com>, Jonathan Cameron
-	<Jonathan.Cameron@huawei.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Davidlohr Bueso <dave@stgolabs.net>, "Gregory
- Price" <gourry@gourry.net>, Terry Bowman <terry.bowman@amd.com>, "Robert
- Richter" <rrichter@amd.com>, Pankaj Gupta <pankaj.gupta@amd.com>,
-	<nvdimm@lists.linux.dev>
-Subject: [PATCH v2] libnvdimm/labels: Fix divide error in nd_label_data_init()
-Date: Thu, 20 Mar 2025 12:22:22 +0100
-Message-ID: <20250320112223.608320-1-rrichter@amd.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J4tQQU3P"
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5fcef5dc742so191255eaf.1;
+        Thu, 20 Mar 2025 06:06:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742475980; x=1743080780; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ygMKS1E4qG7XXUm9+PlSPlMx++048YekvAsHTICfd2g=;
+        b=J4tQQU3PiNTHa5T/VgVdMAnxFP6b5U6E2vCO3a/cEKYtMOXchib/DO4PS4NbTfjNN1
+         xz6/fdYA7TFlLN9T79QA/JLqnJmx1aMtIbPlWSm9ETCg/YdexlIM4aHGh+xpn9qh1xww
+         jTTzx8YGjE77LjBGispuxr3yx40qSNVbyebXW/CPUTCbDNU2xek5N04YudF3oO5jPGxd
+         avn5usaYfVWfGdsKfwxQhdaiNMTLPboKf08G3U75EsqCsYFkadjvPGXIxoh+f99YQhs4
+         ozMgsw0sn67JXhOsK25Qkaw3qOKmkwqjIRSG9KyAYtQUhpTt4UisXkh/3cCjvvWbPZ72
+         +pNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742475980; x=1743080780;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ygMKS1E4qG7XXUm9+PlSPlMx++048YekvAsHTICfd2g=;
+        b=NTVqe42kD+tS9gFi6V6e3YQfMzjS9G+D3sR3dVHFChcWRWJCDpoApEIyKaSOU70Lkf
+         dx75v0LRhyiH+DioAQL6mm72Dua4VhcoiAZkwMhvzi/IFTIpf+yGTGPbkigfMfv/mhfR
+         jtLQAC/Je8HJ6dCeqzL4BJ3uMRCLwNLZxFBZBiA2sKlOR5gZKXdX6oS9d1HOCBEut/vW
+         hhJALWWdUat1pAKK1EEMwusPD/nNh73gBQSBCjiukCDDzpeOVt0Zj0tTe3i+QmHwbnZs
+         46bnt/lACO0r4MkGfEwrmF7nLLoXeWBTel3bEHVlKIYI5hOUnRA/zhJZx0P6VpWFSUvr
+         +Zkg==
+X-Forwarded-Encrypted: i=1; AJvYcCUFSxHz8qaEZeCYdANPIewg8CnWUEwaqWApmvw3dgcterSHpwuN42sF7KIo37dV1rSWIcfDgTIZSgsku+jcBg==@vger.kernel.org, AJvYcCWsXk730e+VxfgrhfZbOijp/RAEaBXp+vi2+K/6PYpxLAKG1iEEIF40bYEhCxEuzQlDaWd5F6rFoDM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+txZ0twHt8u7Qnh29anqLA15YyDtMXVJ70JpMMoAMooiOtKAf
+	WHTcgN3tW0Him/qIvgKJ21unEOTUfm1gIByO85Ox095RDtmXzTnL
+X-Gm-Gg: ASbGnctGaNZmS/YJOB9pX1Lepkz1YH7z1jLeefAMH1/Q1q8ZYarDNoimJshIjvMOXvK
+	EQYP8UqCQ6xo8V8vTPJzAtC72JhlCFbw7OYsX2slgBA7PyN4JEujX2XiXbQAYu5jFHC3s032mRh
+	Q+jSTg1kMM3rfBR9yGc/AP5HuNymh3p+p6GV7xP53Pp7dRlmrxkVB946GUbQm+mIyr/9o3lJqXq
+	YmKBjFI+ejNhRB+JUPN0WyKPBD61gp2BFnxeGVx4qw0MbD2vAQqHX7UtEmEjENv+p21jzDISpY0
+	fCbsaGyjIpSstEJfyGwWIoh40Klf3IBmvYVwfUXSUQQ6YS2Sm1TvOhc4
+X-Google-Smtp-Source: AGHT+IGwV/c5mK56KHQxiHSoNgxmTQNI/mLVJS2gCgNQJZUDy/VIz4gmSfPgUjFHygDx7IJsokEffQ==
+X-Received: by 2002:a4a:cb17:0:b0:602:2e4f:94f3 with SMTP id 006d021491bc7-6022e4f9a49mr581029eaf.2.1742475979896;
+        Thu, 20 Mar 2025 06:06:19 -0700 (PDT)
+Received: from Borg-550 ([2603:8080:1500:3d89:30eb:b380:b0a9:db6a])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-601db69d4dbsm3012548eaf.19.2025.03.20.06.06.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Mar 2025 06:06:19 -0700 (PDT)
+Sender: John Groves <grovesaustin@gmail.com>
+Date: Thu, 20 Mar 2025 08:06:17 -0500
+From: John Groves <John@groves.net>
+To: Joanne Koong <joannelkoong@gmail.com>
+Cc: Miklos Szeredi <miklos@szeredi.hu>, 
+	Amir Goldstein <amir73il@gmail.com>, Bernd Schubert <bernd.schubert@fastmail.fm>, 
+	Stefan Hajnoczi <shajnocz@redhat.com>, Josef Bacik <josef@toxicpanda.com>, 
+	John Groves <jgroves@micron.com>, linux-fsdevel@vger.kernel.org, linux-cxl@vger.kernel.org, 
+	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
+	Eishan Mirakhur <emirakhur@micron.com>
+Subject: Re: famfs port to fuse - questions
+Message-ID: <eqcigeptla4obqqaix737tfqmkjdet3fzmq2kqttm5etab2us5@vqignnrha2m5>
+References: <20250224152535.42380-1-john@groves.net>
+ <CAJnrk1bJ5jE5qWdRju6xz+DipYHUrj8w4PdL80J1M6ujMxXJ1g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CEB:EE_|MW4PR12MB6780:EE_
-X-MS-Office365-Filtering-Correlation-Id: 31734f59-9c0c-44b8-d652-08dd67a18652
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?bSPy4SAevFeZMtdAJAu8TRzL59sAxt55Iyd0Unl40LBiJkZIQ3BpKk5C2VbA?=
- =?us-ascii?Q?8iCCC5uxSYeffpUKUyr1MCQyCBQRKkCuJ/dpG8btyVHaHnCbjmlVK6OJohFt?=
- =?us-ascii?Q?doNBgUYzP887fTt3Dtl4ahJUC++1aLvDes8Ei3NrPjwd5X55OVthba7ywn2G?=
- =?us-ascii?Q?Scvzz4GtWrOFCyQgtXb23sPfLaW8gZz8VyTE7ryw789nExFXTE/OIMEgbfhW?=
- =?us-ascii?Q?Jl2/m/XpCj7J1bSe9NvePYU37PP8RiZxFyemgEwfXG9gg8MrenXmHckr7RDZ?=
- =?us-ascii?Q?fUIw3tSHrUxr+yqu7neqGjn1tLsJZmC5qm3Du8xBbCK66CRg2wEDunU7TD7D?=
- =?us-ascii?Q?ofo+dKCeQ96JLk9wlMsi5TBHCUSMiAhKufyU57CUkGp/ZlvoG//VUW/J1jWt?=
- =?us-ascii?Q?NU2pjij1y9IpfKf+qwWXlzodM+aAvxp1kaQ+l469vAxJjwQ+yRh5wYJ2yPDB?=
- =?us-ascii?Q?f3AkRlRGdvq4H69aDqFV3wn2090tQ2U4yLu1hK3FK3DRhZk7RSGz4+ePjC07?=
- =?us-ascii?Q?ElPnnZyDoeKq6o8Z4vr+TBjh0Zfu2I6voU6sDpbb+e0mUXXw/41mx49NwQPQ?=
- =?us-ascii?Q?DlJITPLMCvvVILhldf88AeVlyZ8zeexfz5Re1n4151EcOROQWkKR8k08fT7k?=
- =?us-ascii?Q?/se6b51v4StvQgAXLy7e8L98ZRYBKE3Mt2VNosjKlY7WBtNJScwbkB4j7oBZ?=
- =?us-ascii?Q?xIAxf2+UV1yk2cKZ23EyY67shotsfn4fxwjkcM57b2njkkNSRYlevOwExMuE?=
- =?us-ascii?Q?iLVJkH1aD6gTi6IV5C1iUs9xEhcB1DGkNxLjQDMmczf1uZTItF+1CVsQf4p1?=
- =?us-ascii?Q?aYIra7ZMSSaDkoytc1B9/VpUe94OU7iR28OaOLeuzLVErs9P0xHSCjFRy+FV?=
- =?us-ascii?Q?ukTT/GxSkxCz6T9FdhmnJ1PElBbK9QeD427x3nD5+FhuKmMOI9ETMRlslruc?=
- =?us-ascii?Q?bqaS4kq9h61Y+pdsltF8bJOwc83NLw0drFYOp36JcoZFls9FgAUeqAaMUGoy?=
- =?us-ascii?Q?RYy/+/L+Mhr7cAnnX5eAJqPwn5Jl8JcO1L221/J6IoC/gXqQjdMyiKrL3uSB?=
- =?us-ascii?Q?Rk7yrgX12Pd8dXgvlk+CE3UZU0kuvHoFuuQV3i2P3cqMwGPQ64KoaiBD3XpN?=
- =?us-ascii?Q?QmtYHPNuA5zPJpbxUi9zYlgKjJ4AAqY8/5YYdY204tsjuxPipPAkzaKN1Etg?=
- =?us-ascii?Q?p2/3EyUiRYF0V3KTjp244fDx09d8yB9n+6zxrdf8um+tYvI0HmL1XXoQwaLh?=
- =?us-ascii?Q?Gj34EN2xRYYsbBov7qkMkFVjwFwXEcUyRDi/MVU5ZuV/2jTCjNnWaHSk4LqS?=
- =?us-ascii?Q?gS6LoPBS1oMQgU5srkWHS8g2EjOD/jn/GT4Naq+JLIfOcnm95d2GRphimQU1?=
- =?us-ascii?Q?CypqTf5sDjV+bb7rgPST1amJY/yv76fZJ5lpEMucI4mo4BCRaTXsnNfp9/6D?=
- =?us-ascii?Q?qIuhwlZZ8Spl3gXBhoMM1Wyig2FQW9b05EPFsqObYk+jvLbCrZxi7Q/8UwTG?=
- =?us-ascii?Q?q57xEevc2gYRO7Y=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2025 11:22:39.6199
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 31734f59-9c0c-44b8-d652-08dd67a18652
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00001CEB.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6780
+In-Reply-To: <CAJnrk1bJ5jE5qWdRju6xz+DipYHUrj8w4PdL80J1M6ujMxXJ1g@mail.gmail.com>
 
-If a faulty CXL memory device returns a broken zero LSA size in its
-memory device information (Identify Memory Device (Opcode 4000h), CXL
-spec. 3.1, 8.2.9.9.1.1), a divide error occurs in the libnvdimm
-driver:
+On 25/02/24 03:40PM, Joanne Koong wrote:
+> On Mon, Feb 24, 2025 at 7:25 AM John Groves <John@groves.net> wrote:
+> >
+> > Miklos et. al.:
+> >
+> > Here are some specific questions related to the famfs port into fuse [1][2]
+> > that I hope Miklos (and others) can give me feedback on soonish.
+> >
+> > This work is active and serious, although you haven't heard much from me
+> > recently. I'm showing a famfs poster at Usenix FAST '25 this week [3].
+> >
+> > I'm generally following the approach in [1] - in a famfs file system,
+> > LOOKUP is followed by GET_FMAP to retrieve the famfs file/dax metadata.
+> > It's tempting to merge the fmap into the LOOKUP reply, but this seems like
+> > an optimization to consider once basic function is established.
+> >
+> > Q: Do you think it makes sense to make the famfs fmap an optional,
+> >    variable sized addition to the LOOKUP response?
+> >
+> > Whenever an fmap references a dax device that isn't already known to the
+> > famfs/fuse kernel code, a GET_DAXDEV message is sent, with the reply
+> > providing the info required to open teh daxdev. A file becomes available
+> > when the fmap is complete and all referenced daxdevs are "opened".
+> >
+> > Q: Any heartburn here?
+> >
+> > When GET_FMAP is separate from LOOKUP, READDIRPLUS won't add value unless it
+> > receives fmaps as part of the attributes (i.e. lookups) that come back in
+> > its response - since a READDIRPLUS that gets 12 files will still need 12
+> > GET_FMAP messages/responses to be complete. Merging fmaps as optional,
+> > variable-length components of the READDIRPLUS response buffers could
+> > eventualy make sense, but a cleaner solution intially would seem to be
+> > to disable READDIRPLUS in famfs. But...
+> >
+> 
+> Hi John,
+> 
+> > * The libfuse/kernel ABI appears to allow low-level fuse servers that don't
+> >   support READDIRPLUS...
+> > * But libfuse doesn't look at conn->want for the READDIRPLUS related
+> >   capabilities
+> > * I have overridden that, but the kernel still sends the READDIRPLUS
+> >   messages. It's possible I'm doing something hinky, and I'll keep looking
+> >   for it.
+> 
+> On the kernel side, FUSE_READDIR / FUSE_READDIRPLUS requests are sent
+> in fuse_readdir_uncached(). I don't see anything there that skips
+> sending readdir / readdirplus requests if the server doesn't have
+> .readdir / .readdirplus implemented. For some request types (eg
+> FUSE_RENAME2, FUSE_LINK, FUSE_FSYNCDIR, FUSE_CREATE, ...), we do track
+> if a request type isn't implemented by the server and then skip
+> sending that request in the future (for example, see fuse_tmpfile()).
+> If we wanted to do this skipping for readdir as well, it'd probably
+> look something like
+> 
+> --- a/fs/fuse/fuse_i.h
+> +++ b/fs/fuse/fuse_i.h
+> @@ -870,6 +870,9 @@ struct fuse_conn {
+>         /* Is link not implemented by fs? */
+>         unsigned int no_link:1;
+> 
+> +       /* Is readdir/readdirplus not implemented by fs? */
+> +       unsigned int no_readdir:1;
+> +
+>         /* Use io_uring for communication */
+>         unsigned int io_uring;
+> 
+> diff --git a/fs/fuse/readdir.c b/fs/fuse/readdir.c
+> index 17ce9636a2b1..176d6ce953e5 100644
+> --- a/fs/fuse/readdir.c
+> +++ b/fs/fuse/readdir.c
+> @@ -341,6 +341,9 @@ static int fuse_readdir_uncached(struct file
+> *file, struct dir_context *ctx)
+>         u64 attr_version = 0, evict_ctr = 0;
+>         bool locked;
+> 
+> +       if (fm->fc->no_readdir)
+> +               return -ENOSYS;
+> +
+>         folio = folio_alloc(GFP_KERNEL, 0);
+>         if (!folio)
+>                 return -ENOMEM;
+> @@ -376,6 +379,8 @@ static int fuse_readdir_uncached(struct file
+> *file, struct dir_context *ctx)
+>                         res = parse_dirfile(folio_address(folio), res, file,
+>                                             ctx);
+>                 }
+> +       } else if (res == -ENOSYS) {
+> +               fm->fc->no_readdir = 1;
+>         }
+> 
+>         folio_put(folio);
+> 
+> > * When I just return -ENOSYS to READDIRPLUS, things don't work well. Still
+> >   looking into this.
+> >
+> > Q: Do you know whether the current fuse kernel mod can handle a low-level
+> >    fuse server that doesn't support READDIRPLUS? This may be broken.
+> 
+> From what I see, the fuse kernel code can handle servers that don't
+> support readdir/readdirplus. The fuse readdir path gets invoked from
+> file_operations->iterate_shared callback, which from what i see, the
+> only ramification of this always returning an error is that the
+> syscalls calling into this (eg getdents(), readdir()) fail.
 
- Oops: divide error: 0000 [#1] PREEMPT SMP NOPTI
- RIP: 0010:nd_label_data_init+0x10e/0x800 [libnvdimm]
+Thanks for doing some of the digging Joanne. I'm not sure what was going wrong
+a few weeks ago when I initially disabled readdirplus, but I have it working 
+now - in fact I now have famfs "fully" working under fuse (for some definition
+of fully ;).
 
-Code and flow:
+I have a gnarly rebase plus some documentation to write, but I may go ahead 
+and share branches this week, in case anybody wants to take a look. That will
+be a fuse kernel branch, and a famfs user space branch...
 
-1) CXL Command 4000h returns LSA size = 0
-2) config_size is assigned to zero LSA size (CXL pmem driver):
+Also: any plans for a fuse BOF at LSFMM?
 
-drivers/cxl/pmem.c:             .config_size = mds->lsa_size,
+<snip>
 
-3) max_xfer is set to zero (nvdimm driver):
-
-drivers/nvdimm/label.c: max_xfer = min_t(size_t, ndd->nsarea.max_xfer, config_size);
-
-4) A subsequent DIV_ROUND_UP() causes a division by zero:
-
-drivers/nvdimm/label.c: /* Make our initial read size a multiple of max_xfer size */
-drivers/nvdimm/label.c: read_size = min(DIV_ROUND_UP(read_size, max_xfer) * max_xfer,
-drivers/nvdimm/label.c-                 config_size);
-
-Fix this by checking the config size parameter by extending an
-existing check.
-
-Signed-off-by: Robert Richter <rrichter@amd.com>
-Reviewed-by: Pankaj Gupta <pankaj.gupta@amd.com>
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
----
-v2:
- * modified description to correct the instruction that is causing
-   the div by zero (Ira)
- * updated tags
----
- drivers/nvdimm/label.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/nvdimm/label.c b/drivers/nvdimm/label.c
-index 082253a3a956..04f4a049599a 100644
---- a/drivers/nvdimm/label.c
-+++ b/drivers/nvdimm/label.c
-@@ -442,7 +442,8 @@ int nd_label_data_init(struct nvdimm_drvdata *ndd)
- 	if (ndd->data)
- 		return 0;
- 
--	if (ndd->nsarea.status || ndd->nsarea.max_xfer == 0) {
-+	if (ndd->nsarea.status || ndd->nsarea.max_xfer == 0 ||
-+	    ndd->nsarea.config_size == 0) {
- 		dev_dbg(ndd->dev, "failed to init config data area: (%u:%u)\n",
- 			ndd->nsarea.max_xfer, ndd->nsarea.config_size);
- 		return -ENXIO;
--- 
-2.39.5
+Thanks,
+John
 
