@@ -1,238 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF0E51E5B7E;
-	Thu, 20 Mar 2025 21:13:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCC0B22E403;
+	Thu, 20 Mar 2025 22:09:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742505216; cv=none; b=tMUYL740RmojMHkcuC6jiiRm9TUIJzaQS1ms2Q5Mtuq2JvRhv1c6TbQIJe2ns+Op10ATzf8n3MYeFlaeHNjH+Y3eG5JKPi+FkJelR0MWWjgvYacAX2ENaIb/RsOn2z6GCl+gJHA1SE+BH0hVXfsqdxuWmPCkY5PHci201+XNbDw=
+	t=1742508597; cv=none; b=CHddM26EzeXYo2vWZpilUYhXs3Fzrx2OSucCJud4ZMJHbr1unXyGWZamaq0+RvZS+m760GZkCLL+JqXKcJgtI+rnQzOGcWElJ+JuJa26Ac8J9vu1ojCfYTDgg+osGBrDJFv+9ZUm+gOv/yoQZThKKXuklPivWJTNacKeR7kySso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742505216; c=relaxed/simple;
-	bh=qT3pRQIRt1i35oXtu0ODXFreqqI/+Y7zQS4P0enG44U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qFLP9rJN421yN2FCYYVq4Pp2at8LvlIYUekpNWy9/cP77CsMee7b5EOJl9eC1Yqzecjdm3PYc7/pQ1ehiwDpGVGUdtZRnVu/ymzkBDKcDv5PrW16XiFNpKQEL2BzI5JZ8OiAeQNbOJCZ3Zy0O9sVkS4YF5O9t0jWcIJCyo82BQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=iaMJ49FB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742508597; c=relaxed/simple;
+	bh=6f7orNFdsm9t4VeuOI8mJFl42v9q6nq7Ds/4R+jUFTs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Nw/FKejxT9K9jmMi6WYdGoqZl6cIG5cWC6/u6O+lRWT9Xw6VDCyJLCkMU0m4TUo7GJZtpK6DCfjxsrDzIbR7UGWUwb3bhputc9RE6eYI05LWHck5oYTSXTnATm0V/bDleQcc+qkdnlT2TUwCw12EQx6MKqOJI/rNhIg6yIgx1Kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KcvExi1p; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="iaMJ49FB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F231C4CEDD;
-	Thu, 20 Mar 2025 21:13:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1742505215;
-	bh=qT3pRQIRt1i35oXtu0ODXFreqqI/+Y7zQS4P0enG44U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iaMJ49FB16G+FlJRuy97OCfjA+ZbWBl3XVzcBMcaKwrB06G5d36541muYB5cmaXHu
-	 YMMt/nHuOhUyOpB+eQ4xO2cyWMn+axk3d7aTdXz2tEEpUBygHFk0M9oDEEwHS0uJPd
-	 EKgLazyXP8IsrH66Cm5uouuHXXVNfRPzAwLWxRrU=
-Date: Thu, 20 Mar 2025 14:12:15 -0700
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: linux-cxl@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	james.morse@arm.com, conor@kernel.org,
-	Yicong Yang <yangyicong@huawei.com>, linux-acpi@vger.kernel.org,
-	linux-arch@vger.kernel.org, linuxarm@huawei.com,
-	Yushan Wang <wangyushan12@huawei.com>, linux-mm@kvack.org,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [RFC PATCH 3/6] cache: coherency device class
-Message-ID: <2025032013-venus-request-b026@gregkh>
-References: <20250320174118.39173-1-Jonathan.Cameron@huawei.com>
- <20250320174118.39173-4-Jonathan.Cameron@huawei.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KcvExi1p"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742508595; x=1774044595;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=6f7orNFdsm9t4VeuOI8mJFl42v9q6nq7Ds/4R+jUFTs=;
+  b=KcvExi1pnybTeGxdFxA8CYAspZWHHG6Af7I1nLYJuZhTagJvqcQEYboO
+   /sekhph/0g5Vha0FMHutAWg1zplph4ootpEbYYjUkKsLq5w+8xRwd6WQm
+   PgubQlBrwQrHt6S6iDcedoZcH1fc01YLavDeLjG7roZZH4byjsho4yOaQ
+   OtLCbGDahg1Cq5Rnl/KAfNO5p90jIFF34JqD/HWXguPx2wyLDYZjDGfRK
+   ndAY9lLEcua2X6MwpZ+dBGVvW7gyLD/VXWN0WLsFuF0xJ7i61HIOlz7DQ
+   wciDkkmdKU3Lz719aqtct+ABckKcgqpbYTis2p7yrAgBuB5W7FqKdpUvQ
+   g==;
+X-CSE-ConnectionGUID: feHvyByhS5uNdSOxYW+PBw==
+X-CSE-MsgGUID: DQa51wPQQX6XwVMTB3XfcQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11379"; a="66229623"
+X-IronPort-AV: E=Sophos;i="6.14,262,1736841600"; 
+   d="scan'208";a="66229623"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2025 15:09:55 -0700
+X-CSE-ConnectionGUID: 3QlSYfosQDO2XPTeFkrQAg==
+X-CSE-MsgGUID: T6Ln0k3TQi6U5DziJqh8jg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,262,1736841600"; 
+   d="scan'208";a="154113566"
+Received: from iherna2-mobl4.amr.corp.intel.com (HELO [10.125.110.123]) ([10.125.110.123])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2025 15:09:55 -0700
+Message-ID: <68826571-44cf-4abb-9be6-00b64d5ab54d@intel.com>
+Date: Thu, 20 Mar 2025 15:09:53 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250320174118.39173-4-Jonathan.Cameron@huawei.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] cxl/region: Fix the first aliased address
+ miscalculation
+To: Li Ming <ming.li@zohomail.com>, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250317070124.815028-1-ming.li@zohomail.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250317070124.815028-1-ming.li@zohomail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 20, 2025 at 05:41:15PM +0000, Jonathan Cameron wrote:
-> --- a/drivers/cache/Kconfig
-> +++ b/drivers/cache/Kconfig
-> @@ -1,6 +1,12 @@
->  # SPDX-License-Identifier: GPL-2.0
->  menu "Cache Drivers"
+
+
+On 3/17/25 12:01 AM, Li Ming wrote:
+> In extended linear cache(ELC) case, cxl_port_get_spa_cache_alias() helps
+> to get the aliased address of a SPA, it considers the first address in
+> CXL memory range is "region start + region cache size + 1", but it
+> should be "region start + region cache size".
+> 
+> So if a SPA is equal to "region start + region cache size", its aliased
+> address should be "SPA - region cache size".
+> 
+> Signed-off-by: Li Ming <ming.li@zohomail.com>
+
+Applied to cxl/next
+
+> ---
+>  drivers/cxl/core/region.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 6d8bdb53f258..c3f4dc244df7 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -3460,7 +3460,7 @@ u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint, u64 spa)
+>  			if (!p->cache_size)
+>  				return ~0ULL;
 >  
-> +config CACHE_COHERENCY_CLASS
-> +	bool "Cache coherency control class"
+> -			if (spa > p->res->start + p->cache_size)
+> +			if (spa >= p->res->start + p->cache_size)
+>  				return spa - p->cache_size;
+>  
+>  			return spa + p->cache_size;
 
-Why can't this be a module?  And why would anyone want to turn it off?
-
-> +	help
-> +	  Class to which coherency control drivers register allowing core kernel
-> +	  subsystems to issue invalidations and similar coherency operations.
-
-What "core kernel subsystems"?
-
-> +
->  config AX45MP_L2_CACHE
->  	bool "Andes Technology AX45MP L2 Cache controller"
->  	depends on RISCV
-
-Shouldn't all of these now depend on CACHE_COHERENCY_CLASS?
-
-> diff --git a/drivers/cache/Makefile b/drivers/cache/Makefile
-> index 55c5e851034d..b72b20f4248f 100644
-> --- a/drivers/cache/Makefile
-> +++ b/drivers/cache/Makefile
-> @@ -3,3 +3,5 @@
->  obj-$(CONFIG_AX45MP_L2_CACHE)		+= ax45mp_cache.o
->  obj-$(CONFIG_SIFIVE_CCACHE)		+= sifive_ccache.o
->  obj-$(CONFIG_STARFIVE_STARLINK_CACHE)	+= starfive_starlink_cache.o
-> +
-> +obj-$(CONFIG_CACHE_COHERENCY_CLASS)	+= coherency_core.o
-
-Why the blank line?
-
-> diff --git a/drivers/cache/coherency_core.c b/drivers/cache/coherency_core.c
-> new file mode 100644
-> index 000000000000..52cb4ceae00c
-> --- /dev/null
-> +++ b/drivers/cache/coherency_core.c
-> @@ -0,0 +1,130 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Class to manage OS controlled coherency agents within the system.
-> + * Specifically to enable operations such as write back and invalidate.
-> + *
-> + * Copyright: Huawei 2025
-> + * Some elements based on fwctl class as an example of a modern
-> + * lightweight class.
-> + */
-> +
-> +#include <linux/cache_coherency.h>
-> +#include <linux/container_of.h>
-> +#include <linux/idr.h>
-> +#include <linux/fs.h>
-> +#include <linux/module.h>
-> +#include <linux/slab.h>
-> +
-> +#include <asm/cacheflush.h>
-> +
-> +static DEFINE_IDA(cache_coherency_ida);
-> +
-> +static void cache_coherency_device_release(struct device *device)
-> +{
-> +	struct cache_coherency_device *ccd =
-> +		container_of(device, struct cache_coherency_device, dev);
-> +
-> +	ida_free(&cache_coherency_ida, ccd->id);
-> +}
-> +
-> +static struct class cache_coherency_class = {
-> +	.name = "cache_coherency",
-> +	.dev_release = cache_coherency_device_release,
-> +};
-> +
-> +static int cache_inval_one(struct device *dev, void *data)
-> +{
-> +	struct cache_coherency_device *ccd =
-> +		container_of(dev, struct cache_coherency_device, dev);
-> +
-> +	if (!ccd->ops)
-> +		return -EINVAL;
-> +
-> +	return ccd->ops->wbinv(ccd, data);
-> +}
-> +
-> +static int cache_inval_done_one(struct device *dev, void *data)
-> +{
-> +	struct cache_coherency_device *ccd =
-> +		container_of(dev, struct cache_coherency_device, dev);
-> +	if (!ccd->ops)
-> +		return -EINVAL;
-> +
-> +	return ccd->ops->done(ccd);
-> +}
-> +
-> +static int cache_invalidate_memregion(int res_desc,
-> +				      phys_addr_t addr, size_t size)
-> +{
-> +	int ret;
-> +	struct cc_inval_params params = {
-> +		.addr = addr,
-> +		.size = size,
-> +	};
-> +
-> +	ret = class_for_each_device(&cache_coherency_class, NULL, &params,
-> +				    cache_inval_one);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return class_for_each_device(&cache_coherency_class, NULL, NULL,
-> +				     cache_inval_done_one);
-> +}
-> +
-> +static const struct system_cache_flush_method cache_flush_method = {
-> +	.invalidate_memregion = cache_invalidate_memregion,
-> +};
-> +
-> +struct cache_coherency_device *
-> +_cache_coherency_alloc_device(struct device *parent,
-> +			      const struct coherency_ops *ops, size_t size)
-> +{
-> +
-> +	if (!ops || !ops->wbinv)
-> +		return NULL;
-> +
-> +	struct cache_coherency_device *ccd __free(kfree) = kzalloc(size, GFP_KERNEL);
-> +
-> +	if (!ccd)
-> +		return NULL;
-> +
-> +	ccd->dev.class = &cache_coherency_class;
-> +	ccd->dev.parent = parent;
-> +	ccd->ops = ops;
-> +	ccd->id = ida_alloc(&cache_coherency_ida, GFP_KERNEL);
-> +
-> +	if (dev_set_name(&ccd->dev, "cache_coherency%d", ccd->id))
-> +		return NULL;
-> +
-> + 	device_initialize(&ccd->dev);
-> +
-> +	return_ptr(ccd);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(_cache_coherency_alloc_device, "CACHE_COHERENCY");
-> +
-> +int cache_coherency_device_register(struct cache_coherency_device *ccd)
-> +{
-> +	return device_add(&ccd->dev);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cache_coherency_device_register, "CACHE_COHERENCY");
-> +
-> +void cache_coherency_device_unregister(struct cache_coherency_device *ccd)
-> +{
-> +	device_del(&ccd->dev);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cache_coherency_device_unregister, "CACHE_COHERENCY");
-> +
-> +static int __init cache_coherency_init(void)
-> +{
-> +	int ret;
-> +
-> +	ret = class_register(&cache_coherency_class);
-> +	if (ret)
-> +		return ret;
-> +
-> +	//TODO: generalize
-> +	arm64_set_sys_cache_flush_method(&cache_flush_method);
-
-I'm guessing this will blow up the build on non-x86 builds :)
-
-> +struct cache_coherency_device {
-> +	struct device dev;
-> +	const struct coherency_ops *ops;
-> +	int id;
-> +};
-
-Classes are normally for user/kernel apis, what is this going to be used
-for?  I don't see any new user/kernel apis happening, so why do you need
-a struct device to be created?
-
-thanks,
-
-greg k-h
