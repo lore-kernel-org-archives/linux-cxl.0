@@ -1,224 +1,206 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 950941A3152;
-	Thu, 20 Mar 2025 05:40:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742449227; cv=none; b=Gh20z42ZXktWVd4cg9E5YC2/FWKXpuHzcabrWy92DC9uzkCmlD+ast7BEGI7xgAFwmb8GW3W1jONOTlCbvhPwvi5KVA0bJI0PYKvNRsAHTiqaX/MjsBZiGkRYSVDHFUdyj9Mi6FiFt2oaRdqb4TE7jW+Fx+RKlR28LcnyFWdLKQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742449227; c=relaxed/simple;
-	bh=Upjw/yWb4OlnCEBwTmspWkyp0uJZb1mknb6860OYb5Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QLw+zzKv2oAFIw/GpUMrriKN9kZVslWHQ/W0rgu3XDyHufrinVJddz/zAzORsO7dY6HC7PnuIHyMYMPNYBzpkRhb4P9LTlFyF5E7KGLDk38v8RvHZkU2NrM6E4UmXJwJUryGjGq1M9ok1tP2Uj5JPWZJJc8l6ZqSSFjg9avwxH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-6e-67dbaa401ae0
-From: Rakie Kim <rakie.kim@sk.com>
-To: Rakie Kim <rakie.kim@sk.com>
-Cc: akpm@linux-foundation.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	joshua.hahnjy@gmail.com,
-	dan.j.williams@intel.com,
-	ying.huang@linux.alibaba.com,
-	david@redhat.com,
-	Jonathan.Cameron@huawei.com,
-	kernel_team@skhynix.com,
-	honggyu.kim@sk.com,
-	yunjeong.mun@sk.com,
-	gourry@gourry.net
-Subject: Re: [PATCH v3 1/3] mm/mempolicy: Fix memory leaks in weighted interleave sysfs
-Date: Thu, 20 Mar 2025 14:40:01 +0900
-Message-ID: <20250320054010.914-1-rakie.kim@sk.com>
-X-Mailer: git-send-email 2.48.1.windows.1
-In-Reply-To: <20250320041749.881-2-rakie.kim@sk.com>
-References: 
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2056.outbound.protection.outlook.com [40.107.243.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D364B1581F0;
+	Thu, 20 Mar 2025 11:07:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742468864; cv=fail; b=o6qE1TvYha2L5mn15xA9NzGQ9PUjq7h/2+Zf280dDpPKmdXZVjMWMMhgThCE+f1LoKfXVQ2/mIHnphHH2UlvyaHBek7kio6fyyohAa9ziajaP5wYNMdGH0o1amBa4QnDuJBT5lKgnjuwUr9GokpNmg4q10y5KXW2QEQ0muASCMQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742468864; c=relaxed/simple;
+	bh=+E6e8eMc8FwwoK48uwwXQ6Ls6aUo34RxNyg5fKhefko=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=O01nbsVw2mk5zvOZNys1lWEKLaLTU33M1uGhMQ5dN7DB60tO1nykGmFePvIAkFhy4KFp5jaabe/4sDQgbRNaUBST2jmNID/Lc9g9Z1FuRdGUGBgXYOdPF179PcZ+yqOJbWGWFzs13i4ovkt7QxYZeTuxHk/8asDKtIHcieCLZqA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=UO/h1Vns; arc=fail smtp.client-ip=40.107.243.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="UO/h1Vns"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=BZ0geWx2A8T/7wcS3T7XcKbYkTbXKw2ZmpqTV19culYiKKejqnqE4qCRK+aWWpbbYWKciVR/EO7D87rXXvGfqqVbyBr2krIjXOYPpV0lDdMCb5P3OecLG22kaXHZXbSXHazmpWocDkvBtc3rqXet9i4IOn49MhsH/wwztdyBwgA+BiWK4lwrg1QmS2VmGry2Nrk+dwPIoB33zLQk+bMD2ODhY9H5x8yVAY0F6Aw4haFkZ24fsRPvEfAfUxn3XstejWTkR6ZnIrYUJtJvb6oBtL2RAb05lTfGFo4oi9ReIdL/vGl8Oa3k6kV1kjPCalfzD2DDblEvsJTtEArEiS9Wgw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=w0enQEsZd06zD7hSGIhFpyAZYv3Fmn428iT1NV6GYM8=;
+ b=XrwUqqbg+0/Ok4NexMn6fmA7oboZL4TuIknrYhB9e95rPHH4BLdNXfrbLKjOyaxjyPFvB9yVGZpUOqiwXCke+WQ/vxbwFZSucUH6LRwa1Rc0RpF8w3puCzH/oRwe1Z1Ywb3rN56h6bsQLGGUOW+sw4uxe2skzxeNj+aRRum6sTS7ZIvUREiM9oze5/AO8oE9QQv3GkVZsDLVCvvaQeplJtp/cOeZrhyCIDILJ87hkn78XVtb66QiFxL0xaEUGIDiXOEUFKa1pmqO02AP5nqZF7zGo2ubxcnH+qzQqYvGbCOKtQtOzeaJrJmtgJGeUoeAt+Wb2Rc5193NKea9WNzI/g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=w0enQEsZd06zD7hSGIhFpyAZYv3Fmn428iT1NV6GYM8=;
+ b=UO/h1VnsdCf7SHg2ARse92FkXQGCf4l7hzvGne7nHYTGesZ8JOqV0Uovh5rORpAhtmeEpKB8Mth1j6ovz6ZsQTZgGXMUYmNJUxjELJW1csWcqdhukCqSrsk6Q8Fe9UJlGn8xyxSvJ6SsfevzpNyyWRJG+a9zMzF/RvQmfElDLGQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CYYPR12MB8750.namprd12.prod.outlook.com (2603:10b6:930:be::18)
+ by IA1PR12MB6577.namprd12.prod.outlook.com (2603:10b6:208:3a3::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.34; Thu, 20 Mar
+ 2025 11:07:39 +0000
+Received: from CYYPR12MB8750.namprd12.prod.outlook.com
+ ([fe80::b965:1501:b970:e60a]) by CYYPR12MB8750.namprd12.prod.outlook.com
+ ([fe80::b965:1501:b970:e60a%7]) with mapi id 15.20.8534.034; Thu, 20 Mar 2025
+ 11:07:39 +0000
+Date: Thu, 20 Mar 2025 12:07:31 +0100
+From: Robert Richter <rrichter@amd.com>
+To: Ira Weiny <ira.weiny@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Gregory Price <gourry@gourry.net>,
+	Terry Bowman <terry.bowman@amd.com>, nvdimm@lists.linux.dev
+Subject: Re: [PATCH] libnvdimm/labels: Fix divide error in
+ nd_label_data_init()
+Message-ID: <Z9v28_y6ZYEISqqH@rric.localdomain>
+References: <20250319113215.520902-1-rrichter@amd.com>
+ <67db1c22365_551042948@iweiny-mobl.notmuch>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <67db1c22365_551042948@iweiny-mobl.notmuch>
+X-ClientProxiedBy: FR4P281CA0042.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:c7::12) To CYYPR12MB8750.namprd12.prod.outlook.com
+ (2603:10b6:930:be::18)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrLLMWRmVeSWpSXmKPExsXC9ZZnoa7DqtvpBrOvqFnMWb+GzWL61AuM
-	Fl/X/2K2+Hn3OLvFqoXX2CyOb53HbnF+1ikWi8u75rBZ3Fvzn9Vi9ZoMBy6PnbPusnt0t11m
-	92g58pbVY/Gel0wemz5NYvc4MeM3i8fOh5Ye7/ddZfP4vEkugDOKyyYlNSezLLVI3y6BK2P7
-	iR2sBWeUKy5t7WVsYJwi08XIySEhYCKx+eleti5GDjC7+5gBiMkmoCRxbG8MiCkioCBx6F90
-	FyMXB7PAdSaJsw8Ws4PEhQXCJVpniIIMYRFQlbiwfiM7iM0rYCwx7dthVojhmhINl+4xgdic
-	QMNv9fxmA7GFBHgkXm3YzwhRLyhxcuYTFhCbWUBeonnrbGaI3tdsEvfPB0DYkhIHV9xgmcDI
-	PwtJyywkLQsYmVYxCmXmleUmZuaY6GVU5mVW6CXn525iBAb6sto/0TsYP10IPsQowMGoxMP7
-	4sqtdCHWxLLiytxDjBIczEoivCIdt9OFeFMSK6tSi/Lji0pzUosPMUpzsCiJ8xp9K08REkhP
-	LEnNTk0tSC2CyTJxcEo1MMau/qS39tH3Beb9+3Pm992MUq8NWsS4YvvhkNAddwXfCC4XuJuY
-	3yLZOqWuhdv+cPWS0IafdtMCjK8u6m868JqFXfruyzJlrwqnOZaCTsfufnYxTeo4UF1b5cy+
-	jmFWpcHV0HwxY0bOXS7FCb8CtHNcg/boTmrk+ftAU9dzzhmVoIvdr2qclFiKMxINtZiLihMB
-	pzuOM3ACAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrBLMWRmVeSWpSXmKPExsXCNUNNS9dh1e10g0OfZC3mrF/DZjF96gVG
-	i6/rfzFb/Lx7nN3i87PXzBarFl5jszi+dR67xeG5J1ktzs86xWJxedccNot7a/6zWhy69pzV
-	YvWaDIvf21awOfB57Jx1l92ju+0yu0fLkbesHov3vGTy2PRpErvHiRm/WTx2PrT0eL/vKpvH
-	t9seHotffGDy+LxJLoA7issmJTUnsyy1SN8ugStj+4kdrAVnlCsube1lbGCcItPFyMEhIWAi
-	0X3MAMRkE1CSOLY3BsQUEVCQOPQvuouRi4NZ4DqTxNkHi9lB4sIC4RKtM0S7GDk5WARUJS6s
-	38gOYvMKGEtM+3aYFcSWENCUaLh0jwnE5gQafqvnNxuILSTAI/Fqw35GiHpBiZMzn7CA2MwC
-	8hLNW2czT2DkmYUkNQtJagEj0ypGkcy8stzEzBxTveLsjMq8zAq95PzcTYzA8F5W+2fiDsYv
-	l90PMQpwMCrx8L64citdiDWxrLgy9xCjBAezkgivSMftdCHelMTKqtSi/Pii0pzU4kOM0hws
-	SuK8XuGpCUIC6YklqdmpqQWpRTBZJg5OqQbGmrpN29YWG5x5N+WatN2C2zefqjZNF7gb+7yr
-	TCfr7kq+BI89LE6v3nAzmapVTZ4gFyJauYzfx5Xr4QH+f1NlXe0MffLdNnz7ILswUVvPICii
-	6wnv7ove5nvk3EyvKVxjWpGwnN1ruf6Xd0YMT7eLN5WmJnjnL5dfnjB5Ql/zBtcfahc7dwsr
-	sRRnJBpqMRcVJwIAooshrGsCAAA=
-X-CFilter-Loop: Reflected
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CYYPR12MB8750:EE_|IA1PR12MB6577:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0bc0d15f-d34d-4a32-1dd0-08dd679f6d4e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?W4IVR2KxjgS+Oc0mvu00AnjFp9UrmYNjBrSAltD7GLF2xXwICU4adfMytb3A?=
+ =?us-ascii?Q?n08Dr8slbX6UFIRFUh9faO061xWpixTDN614Oq9m/AucOLKYT1G/t2vQYBpc?=
+ =?us-ascii?Q?0ZsHWOTrdkA/PDNkWLzpBlVkW4H9X+jz9M1hpK0+pwODWj1Oyk9tNG/qdYK0?=
+ =?us-ascii?Q?gkr7sBAtn6zn9aOQ7Xz4Q9JMBtNxT6xeNDBXxuUj5ytqxSQue4ziYu5I1Boq?=
+ =?us-ascii?Q?ZUeY8YYGwj9hF2PltJ9x5pbTTMwTWCM2bN1ffQvoejAhpw8kg6FG064kyHWp?=
+ =?us-ascii?Q?3Bw7cGM/pC3jZKEdR/Kw2MUG++961kzWDkiDyio2yQ8Yylh4Z53HyjaG0+QM?=
+ =?us-ascii?Q?vfK3mlrPBzn9Jh1j9GrForLie0J5+FnUQXTVPCzuV3e3H0BNkcPssrZWWYfS?=
+ =?us-ascii?Q?o7DX4f1AclO9grxtnDPwBg/y9QXDFPv+UXtzo+9zYJbWF+yhwmX7CkKsLmIM?=
+ =?us-ascii?Q?GS6pGDb/iS2zetpbahMZLLW+Cx7Mv5lp9map5PkVH8+T0JBAQGS9Fr1ts+mX?=
+ =?us-ascii?Q?xW+IVTZfBgHJIq9rrsdE32+m2mK9jO8srFbGfCaKuhcNdRpHSqnSnD+v4i1p?=
+ =?us-ascii?Q?HXCswMbk5I1ne95fRhBI0wq0K4AKKf3zOLDIk0vb3V+2Ucs7zcIGiiIewxZA?=
+ =?us-ascii?Q?m/2BOLrma1uvXywRGNuGNp4JdgjSA+HCkTx8jByLQZsBIw7be8hhMwcjCarh?=
+ =?us-ascii?Q?ehgCjJpETFf1iJ/Ky7ym9wmlW0mAYrt6RxrzkKRovuM1yMBqNOtyxJgRpKBY?=
+ =?us-ascii?Q?2NH5myVAvW5XWN9LopW9XscItnSHv916fpA+ELC+/S+iD9v4pQ5KRfICWs0W?=
+ =?us-ascii?Q?hbHC3y3ma4FbZAk83rp0wK9oPBmqnfrhaJBKWRY1TUcY1ChhG3dx6618ozj1?=
+ =?us-ascii?Q?MhHesMEry4qql2lbRqkIAFsE8UnpSQkm1ju50ZJpjSZD2E+IMKLIs8y21eYu?=
+ =?us-ascii?Q?DmjN91WI2T3mX7UL3XKTWa3faoRP6DThBnDl2MgYpM+EitTe9x97UOYBcoK+?=
+ =?us-ascii?Q?XgJ94qngrnMXhLN3JBdbyRnJQEyCim14qGf6I5kui2HAx82xlXJPuil2mCpv?=
+ =?us-ascii?Q?DV3eg0FwgqxpgVmMXaY3UgFanNEX1FKeYk96FfStEU5QnnwkPikFTg87DZwW?=
+ =?us-ascii?Q?tVhveb6/wQabYvhjKURUGBEJQWPT/f6pJgKl04zK3HCMEsL9y69NEHXYdxCB?=
+ =?us-ascii?Q?AHMfdHgf3wJ2g8cowrdPIYDQllsL1+z/PpbLLu2lD74qRSiyPLed4v8lsMbH?=
+ =?us-ascii?Q?BMBFeRJafQOeC68WyNV1Iyqjb72ZgcPCHHz9uokZEDFRZiXkpg0NkCakvKw+?=
+ =?us-ascii?Q?e/bZOwI/qN+/bD+XSdxKeOZiazPAu6QoBhhr6f/LewoTj8IgPD1CsHOgpf60?=
+ =?us-ascii?Q?LzUTf19QzCI4phBTrWxHATsoym/s?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?MNp6DdMcBuAG+mTicl9svmREmR3vjSBu0/AA016xt01RVTT40VO5st3d4BHc?=
+ =?us-ascii?Q?eDh25ysb0Lz8tm8bwpzglTZ92bqEpoJWCXcO+hNMyGhKZmABIV2V8x1ae3Ly?=
+ =?us-ascii?Q?g0AI0tAdkxgc7XiyJHEuh/dGZYsNzXKdwoik68aCzlyKorZnYP/Qs6c/v298?=
+ =?us-ascii?Q?KudcA5WF0pDhQcTYfBrekw5CZ+/iiO9yFtKEhg1FW+3yoMP0nC3g42Y/Shvh?=
+ =?us-ascii?Q?4jWL5r5da4J5+0fD0fLhkYIq9Erusi+58dUscdnA7/B4rseiLN2MGLtYI2rh?=
+ =?us-ascii?Q?0fo2HEWXGWVOZ/C2yiYH5uBHy+G261RK+2egrNUchdQNWZAPh5Zdv3wMDQDx?=
+ =?us-ascii?Q?wLHv2ZSK4/oxaCWnOwBhzr0ypAGcOYGHZuQkE+niCcQUct15zWt+8B0LDPkx?=
+ =?us-ascii?Q?03U1+e9D+SDZXc/y3aIuAJ0pX1KkK/G5qZHG3KkOVQfsj5LRyVbBILQNia/D?=
+ =?us-ascii?Q?HvYmDdJIvvTtcqoubaPkQ+Zzl2Xi3W0VyufXl6muzjF8eUyUJ6wewyQQMEtQ?=
+ =?us-ascii?Q?7iAg8yCLwE65+rcbtcJnp4rirM7z5BwRU+3y7sGRTZJ6zBZiDX9u0FMUz6qj?=
+ =?us-ascii?Q?m/bU6CSFnK5NCN+1jtlsrgQVMt0rXRBYUOS5ljbk6IpPTkJ0mnG0ClssooD8?=
+ =?us-ascii?Q?trTfuGN7dW0QDMaZo1LnWb8CeVej0bCMfJiMmdTAh9F0+1E7K5bnkT8Jx7By?=
+ =?us-ascii?Q?4K+emdo1CsAkoGeSgZcKo2XSt7UqQ5AoQFops5fPh0e/qWFptYLWEL6ORwBT?=
+ =?us-ascii?Q?J+NNxqd5yFCakZgY6/lm4vRvt9rawVzH0J3qsspwW73Fol4ALykC0QOPgcM1?=
+ =?us-ascii?Q?mJTmprgDPgSVDaFeN/6/Imr+71jKTm7165dBtyeVEaBtGoVvfhmwqFQEHEi4?=
+ =?us-ascii?Q?5YQGJDDoU5krDj+HRkhCjBcT91Eu4RaAWFVEsF2XrOXP9EeMPGckJygJwvtO?=
+ =?us-ascii?Q?B266/aUpp9tNKf//pAzhh/r4mQKRoQQRILGtt6ZSvpqDRXp/OaXCez+H+K4x?=
+ =?us-ascii?Q?XyU9AmcvVLdiRoevEp2LlHl4X5LiZU+gPMFkabljS7PPqcm4Gm21vKYWnzVM?=
+ =?us-ascii?Q?P7m57xignHFEMI+YvuvQEOgQMPeeHPU/dyrx76Yjk2uNjyGbyclKxjp90njK?=
+ =?us-ascii?Q?SMAISNZE3YaS/na8uTVbAd1sawjH1PbmqLzzjYZD4Tkz4u5/v8p36Eagv4MA?=
+ =?us-ascii?Q?6ajjryYP/nERcMsZCg5dOdTo/ld5iRjDxYMaLQHZ+Ct3Ky4hPX2Lp8cbBmQ2?=
+ =?us-ascii?Q?luEp4S5FmgRJO+x0XRP5+87wqUxy6WOiV77JoRbc9geJBdpdc9jNLOG+DTfc?=
+ =?us-ascii?Q?1c3+MAb29mYlaiKD1r3LZ++FPrhNF4BQteeBuG0nV1W/wjzJcK0WmevVzFCx?=
+ =?us-ascii?Q?Lu/e74d+zUxmAfJqrUg3vVAZxjhb5YFEdNjYQHLMvRD2yheqFBu2ZBecQZM1?=
+ =?us-ascii?Q?2pZj33PPl8y1NryytT+Unw5nMs30Xuy0HY2gTp0b1ssqFngo6O2ykuW5Yd4x?=
+ =?us-ascii?Q?GUCr8zAtgCfpAlM+hfJMQNYGE9CcF+/UpAqFSDUo9R7HFIW3BAl0ChWwKova?=
+ =?us-ascii?Q?CUBmCHNMVhA105+2KfmXA7Ca1HJTprAa73FX+PaS?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0bc0d15f-d34d-4a32-1dd0-08dd679f6d4e
+X-MS-Exchange-CrossTenant-AuthSource: CYYPR12MB8750.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2025 11:07:39.1159
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Cy2zHtFYwFGNJp/N5elAzI+tWmR/a6cIGk7GY7JREjv/RcqhAuZ1f5h3WWvzohgF2GjnyB5xg1rKzaOVxEr/bw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6577
 
-On Thu, 20 Mar 2025 13:17:46 +0900 Rakie Kim <rakie.kim@sk.com> wrote:
+On 19.03.25 14:33:54, Ira Weiny wrote:
+> Robert Richter wrote:
+> > If a CXL memory device returns a broken zero LSA size in its memory
+> > device information (Identify Memory Device (Opcode 4000h), CXL
+> > spec. 3.1, 8.2.9.9.1.1), a divide error occurs in the libnvdimm
+> > driver:
+> > 
+> >  Oops: divide error: 0000 [#1] PREEMPT SMP NOPTI
+> >  RIP: 0010:nd_label_data_init+0x10e/0x800 [libnvdimm]
+> > 
+> > Code and flow:
+> > 
+> > 1) CXL Command 4000h returns LSA size = 0,
+> > 2) config_size is assigned to zero LSA size (CXL pmem driver):
+> > 
+> > drivers/cxl/pmem.c:             .config_size = mds->lsa_size,
+> > 
+> > 3) max_xfer is set to zero (nvdimm driver):
+> > 
+> > drivers/nvdimm/label.c: max_xfer = min_t(size_t, ndd->nsarea.max_xfer, config_size);
+> > drivers/nvdimm/label.c: if (read_size < max_xfer) {
+> > drivers/nvdimm/label.c-         /* trim waste */
+> > 
+> > 4) DIV_ROUND_UP() causes division by zero:
+> > 
+> > drivers/nvdimm/label.c:         max_xfer -= ((max_xfer - 1) - (config_size - 1) % max_xfer) /
+> > drivers/nvdimm/label.c:                     DIV_ROUND_UP(config_size, max_xfer);
+> 
+> I think this is the wrong DIV_ROUND_UP which is failing because read_size is
+> never less than max_xfer is it?
+> 
+> I believe the failing DIV_ROUND_UP is after if statement here:
+> 
+>  489         /* Make our initial read size a multiple of max_xfer size */
+>  490         read_size = min(DIV_ROUND_UP(read_size, max_xfer) * max_xfer,
+>  491                         config_size);
 
-Hi Gregory
+Yes, it is this one.
 
-I initially planned to separate this patch from the hotplug-related patch
-series as an independent update. However, after reviewing the code following
-Jonathan's suggestion to consolidate `kobject` and `node_attrs` into a single
-struct, I realized that most of the intended functionality for Patch 2 was
-already incorporated.
+> 
+> Apparently nvdimm_get_config_data() was intended to check for this implicitly
+> but it is too late.
+> 
+> Anyway all this side tracked me a bit.
+> 
+> I assume this is a broken device which is in the real world?  The fix looks
+> fine.  But could you re-spin with a clean up of the commit message and I'll
+> queue it up.
 
-As a result, Patch 1 now only contains the `kobject_put` fix, while the
-struct consolidation work has been included in Patch 2. Given the current
-design, it seems more natural to keep Patch 1 and Patch 2 together as part
-of the same patch series rather than separating them.
+Yes, it was caused by a faulty device.
 
-Rakie
+Sure, will update description and resend.
 
-> Memory leaks occurred when removing sysfs attributes for weighted
-> interleave. Improper kobject deallocation led to unreleased memory
-> when initialization failed or when nodes were removed.
 > 
-> This patch resolves the issue by replacing unnecessary `kfree()`
-> calls with `kobject_put()`, ensuring proper cleanup and preventing
-> memory leaks.
-> 
-> By correctly using `kobject_put()`, the release function now
-> properly deallocates memory without causing resource leaks,
-> thereby improving system stability.
-> 
-> Fixes: dce41f5ae253 ("mm/mempolicy: implement the sysfs-based weighted_interleave interface")
-> Signed-off-by: Rakie Kim <rakie.kim@sk.com>
-> ---
->  mm/mempolicy.c | 61 +++++++++++++++++++++++++-------------------------
->  1 file changed, 31 insertions(+), 30 deletions(-)
-> 
-> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> index bbaadbeeb291..5950d5d5b85e 100644
-> --- a/mm/mempolicy.c
-> +++ b/mm/mempolicy.c
-> @@ -3448,7 +3448,9 @@ static void sysfs_wi_release(struct kobject *wi_kobj)
->  
->  	for (i = 0; i < nr_node_ids; i++)
->  		sysfs_wi_node_release(node_attrs[i], wi_kobj);
-> -	kobject_put(wi_kobj);
-> +
-> +	kfree(node_attrs);
-> +	kfree(wi_kobj);
->  }
->  
->  static const struct kobj_type wi_ktype = {
-> @@ -3494,15 +3496,22 @@ static int add_weighted_interleave_group(struct kobject *root_kobj)
->  	struct kobject *wi_kobj;
->  	int nid, err;
->  
-> -	wi_kobj = kzalloc(sizeof(struct kobject), GFP_KERNEL);
-> -	if (!wi_kobj)
-> +	node_attrs = kcalloc(nr_node_ids, sizeof(struct iw_node_attr *),
-> +			     GFP_KERNEL);
-> +	if (!node_attrs)
->  		return -ENOMEM;
->  
-> +	wi_kobj = kzalloc(sizeof(struct kobject), GFP_KERNEL);
-> +	if (!wi_kobj) {
-> +		err = -ENOMEM;
-> +		goto node_out;
-> +	}
-> +
->  	err = kobject_init_and_add(wi_kobj, &wi_ktype, root_kobj,
->  				   "weighted_interleave");
->  	if (err) {
-> -		kfree(wi_kobj);
-> -		return err;
-> +		kobject_put(wi_kobj);
-> +		goto err_out;
->  	}
->  
->  	for_each_node_state(nid, N_POSSIBLE) {
-> @@ -3512,9 +3521,17 @@ static int add_weighted_interleave_group(struct kobject *root_kobj)
->  			break;
->  		}
->  	}
-> -	if (err)
-> +	if (err) {
->  		kobject_put(wi_kobj);
-> +		goto err_out;
-> +	}
-> +
->  	return 0;
-> +
-> +node_out:
-> +	kfree(node_attrs);
-> +err_out:
-> +	return err;
->  }
->  
->  static void mempolicy_kobj_release(struct kobject *kobj)
-> @@ -3528,7 +3545,6 @@ static void mempolicy_kobj_release(struct kobject *kobj)
->  	mutex_unlock(&iw_table_lock);
->  	synchronize_rcu();
->  	kfree(old);
-> -	kfree(node_attrs);
->  	kfree(kobj);
->  }
->  
-> @@ -3542,37 +3558,22 @@ static int __init mempolicy_sysfs_init(void)
->  	static struct kobject *mempolicy_kobj;
->  
->  	mempolicy_kobj = kzalloc(sizeof(*mempolicy_kobj), GFP_KERNEL);
-> -	if (!mempolicy_kobj) {
-> -		err = -ENOMEM;
-> -		goto err_out;
-> -	}
-> -
-> -	node_attrs = kcalloc(nr_node_ids, sizeof(struct iw_node_attr *),
-> -			     GFP_KERNEL);
-> -	if (!node_attrs) {
-> -		err = -ENOMEM;
-> -		goto mempol_out;
-> -	}
-> +	if (!mempolicy_kobj)
-> +		return -ENOMEM;
->  
->  	err = kobject_init_and_add(mempolicy_kobj, &mempolicy_ktype, mm_kobj,
->  				   "mempolicy");
->  	if (err)
-> -		goto node_out;
-> +		goto err_out;
->  
->  	err = add_weighted_interleave_group(mempolicy_kobj);
-> -	if (err) {
-> -		pr_err("mempolicy sysfs structure failed to initialize\n");
-> -		kobject_put(mempolicy_kobj);
-> -		return err;
-> -	}
-> +	if (err)
-> +		goto err_out;
-> +
-> +	return 0;
->  
-> -	return err;
-> -node_out:
-> -	kfree(node_attrs);
-> -mempol_out:
-> -	kfree(mempolicy_kobj);
->  err_out:
-> -	pr_err("failed to add mempolicy kobject to the system\n");
-> +	kobject_put(mempolicy_kobj);
->  	return err;
->  }
->  
-> 
-> base-commit: 4701f33a10702d5fc577c32434eb62adde0a1ae1
-> -- 
-> 2.34.1
-> 
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+
+Thanks for review,
+
+-Robert
