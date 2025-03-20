@@ -1,205 +1,122 @@
-Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C4129A1;
-	Thu, 20 Mar 2025 13:06:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FD1017B402;
+	Thu, 20 Mar 2025 16:18:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742475983; cv=none; b=V9ZegP2f2emBYng6Rw61V1mFiy1sqK44tYHtYyoLVpsoMhyNy4iCEnMmXj0apCMTLwuF9kXxzNEFxZhaOJJ0rj/uwf7SFNky5cHTF5nnZ9lveoIm5e18/LubMc49J2FPfI+gFktgHVd2r6f3FGJ4IELzhPYc2oC8lh7m/6lCHNA=
+	t=1742487532; cv=none; b=TRJdAHOKyVszYna9ZUyLbqAwphV14BsWcTJIszvBMpspYxdB7inudAIhAok/HjiRm5HRP2DL4izbOx+DHHWygJBI3OwvEBHEBmMS/yza5WEAWtiEDAkHvlOskqzwl37plam4uHuKgH9uVl/L3VRaO68I+SxYXsxbtvVDZWCAnJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742475983; c=relaxed/simple;
-	bh=tcq3Zpp8Cjo3AgGj7Pb+Yz8TsC7q7a54VIwoPlnJTwU=;
+	s=arc-20240116; t=1742487532; c=relaxed/simple;
+	bh=43aNJV5MNYzkazpkxcqLf53/KEplAMSqtRgL10jyR/M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GMihnH+N54lXGJZDwauqGsgwsyXi6Mx13RcmZ8dJr0a6TU+0jmZ0COCJSH8uBENhEYTSwsTuua89iWHw2ETwsHZnVrsZUuPTqqWaGuWBw4LBp92nSNTWhG8mNGuvuph2QeMmSLO9MtzDeb9BnXP6r0lhILhCd/SHc+9WtTUJ7w4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J4tQQU3P; arc=none smtp.client-ip=209.85.161.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=pf8Uz9z6zn6jJT4JPvyTF80czGabfSY/WtrN5W7wVHGiEx5CPXIf2z68QUchoAUOnssSW3XAl0Hae+eX9jh30tLRHxWjpL04948SfiJuwnIYa33DWHSlhaRMs7M6nTJeKNKvU8t/338HuROkQ7ax8Ey+hv8eSrRcRoK4ZvoyOTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LXIRXZBC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J4tQQU3P"
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5fcef5dc742so191255eaf.1;
-        Thu, 20 Mar 2025 06:06:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742475980; x=1743080780; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ygMKS1E4qG7XXUm9+PlSPlMx++048YekvAsHTICfd2g=;
-        b=J4tQQU3PiNTHa5T/VgVdMAnxFP6b5U6E2vCO3a/cEKYtMOXchib/DO4PS4NbTfjNN1
-         xz6/fdYA7TFlLN9T79QA/JLqnJmx1aMtIbPlWSm9ETCg/YdexlIM4aHGh+xpn9qh1xww
-         jTTzx8YGjE77LjBGispuxr3yx40qSNVbyebXW/CPUTCbDNU2xek5N04YudF3oO5jPGxd
-         avn5usaYfVWfGdsKfwxQhdaiNMTLPboKf08G3U75EsqCsYFkadjvPGXIxoh+f99YQhs4
-         ozMgsw0sn67JXhOsK25Qkaw3qOKmkwqjIRSG9KyAYtQUhpTt4UisXkh/3cCjvvWbPZ72
-         +pNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742475980; x=1743080780;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ygMKS1E4qG7XXUm9+PlSPlMx++048YekvAsHTICfd2g=;
-        b=NTVqe42kD+tS9gFi6V6e3YQfMzjS9G+D3sR3dVHFChcWRWJCDpoApEIyKaSOU70Lkf
-         dx75v0LRhyiH+DioAQL6mm72Dua4VhcoiAZkwMhvzi/IFTIpf+yGTGPbkigfMfv/mhfR
-         jtLQAC/Je8HJ6dCeqzL4BJ3uMRCLwNLZxFBZBiA2sKlOR5gZKXdX6oS9d1HOCBEut/vW
-         hhJALWWdUat1pAKK1EEMwusPD/nNh73gBQSBCjiukCDDzpeOVt0Zj0tTe3i+QmHwbnZs
-         46bnt/lACO0r4MkGfEwrmF7nLLoXeWBTel3bEHVlKIYI5hOUnRA/zhJZx0P6VpWFSUvr
-         +Zkg==
-X-Forwarded-Encrypted: i=1; AJvYcCUFSxHz8qaEZeCYdANPIewg8CnWUEwaqWApmvw3dgcterSHpwuN42sF7KIo37dV1rSWIcfDgTIZSgsku+jcBg==@vger.kernel.org, AJvYcCWsXk730e+VxfgrhfZbOijp/RAEaBXp+vi2+K/6PYpxLAKG1iEEIF40bYEhCxEuzQlDaWd5F6rFoDM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+txZ0twHt8u7Qnh29anqLA15YyDtMXVJ70JpMMoAMooiOtKAf
-	WHTcgN3tW0Him/qIvgKJ21unEOTUfm1gIByO85Ox095RDtmXzTnL
-X-Gm-Gg: ASbGnctGaNZmS/YJOB9pX1Lepkz1YH7z1jLeefAMH1/Q1q8ZYarDNoimJshIjvMOXvK
-	EQYP8UqCQ6xo8V8vTPJzAtC72JhlCFbw7OYsX2slgBA7PyN4JEujX2XiXbQAYu5jFHC3s032mRh
-	Q+jSTg1kMM3rfBR9yGc/AP5HuNymh3p+p6GV7xP53Pp7dRlmrxkVB946GUbQm+mIyr/9o3lJqXq
-	YmKBjFI+ejNhRB+JUPN0WyKPBD61gp2BFnxeGVx4qw0MbD2vAQqHX7UtEmEjENv+p21jzDISpY0
-	fCbsaGyjIpSstEJfyGwWIoh40Klf3IBmvYVwfUXSUQQ6YS2Sm1TvOhc4
-X-Google-Smtp-Source: AGHT+IGwV/c5mK56KHQxiHSoNgxmTQNI/mLVJS2gCgNQJZUDy/VIz4gmSfPgUjFHygDx7IJsokEffQ==
-X-Received: by 2002:a4a:cb17:0:b0:602:2e4f:94f3 with SMTP id 006d021491bc7-6022e4f9a49mr581029eaf.2.1742475979896;
-        Thu, 20 Mar 2025 06:06:19 -0700 (PDT)
-Received: from Borg-550 ([2603:8080:1500:3d89:30eb:b380:b0a9:db6a])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-601db69d4dbsm3012548eaf.19.2025.03.20.06.06.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Mar 2025 06:06:19 -0700 (PDT)
-Sender: John Groves <grovesaustin@gmail.com>
-Date: Thu, 20 Mar 2025 08:06:17 -0500
-From: John Groves <John@groves.net>
-To: Joanne Koong <joannelkoong@gmail.com>
-Cc: Miklos Szeredi <miklos@szeredi.hu>, 
-	Amir Goldstein <amir73il@gmail.com>, Bernd Schubert <bernd.schubert@fastmail.fm>, 
-	Stefan Hajnoczi <shajnocz@redhat.com>, Josef Bacik <josef@toxicpanda.com>, 
-	John Groves <jgroves@micron.com>, linux-fsdevel@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
-	Eishan Mirakhur <emirakhur@micron.com>
-Subject: Re: famfs port to fuse - questions
-Message-ID: <eqcigeptla4obqqaix737tfqmkjdet3fzmq2kqttm5etab2us5@vqignnrha2m5>
-References: <20250224152535.42380-1-john@groves.net>
- <CAJnrk1bJ5jE5qWdRju6xz+DipYHUrj8w4PdL80J1M6ujMxXJ1g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LXIRXZBC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFC33C4CEDD;
+	Thu, 20 Mar 2025 16:18:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742487532;
+	bh=43aNJV5MNYzkazpkxcqLf53/KEplAMSqtRgL10jyR/M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LXIRXZBCbBuGyYIxC94ZF/bs+SebcH+9vtYa/MoyGQi+oKCff8fNOeFxO7u9aRHQF
+	 /7Lva1Z2iOA2pRk5ZE77emUC03Lsg9fwN8nuUT8/vCB43AztdX7q8ruoYoOTC3wuxO
+	 ZrPhCA6t/i+32O2NDSSSZJLVN6kcfmVQmFmu7q40HWCo0BYVg9nIA7eyB3hdOwh3tr
+	 pXboDyyUK4UKe1mx2yDH2OBJCPp4nqqPmPVOQr3UHbogeB9Kv1rCuixxVa/GN5+rbz
+	 r2XJB8Ky3Luwrsca/AEfwY3LSi4XxQnyUEx31QhFn/kFK1C/PMm/abBHX6sPC9EuY9
+	 VJLrYgrbyq0/A==
+Date: Thu, 20 Mar 2025 16:18:47 +0000
+From: Simon Horman <horms@kernel.org>
+To: alejandro.lucero-palau@amd.com
+Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
+	dan.j.williams@intel.com, edward.cree@amd.com, davem@davemloft.net,
+	kuba@kernel.org, pabeni@redhat.com, edumazet@google.com,
+	dave.jiang@intel.com, Alejandro Lucero <alucerop@amd.com>
+Subject: Re: [PATCH v11 13/23] cxl: define a driver interface for DPA
+ allocation
+Message-ID: <20250320161847.GA892515@horms.kernel.org>
+References: <20250310210340.3234884-1-alejandro.lucero-palau@amd.com>
+ <20250310210340.3234884-14-alejandro.lucero-palau@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJnrk1bJ5jE5qWdRju6xz+DipYHUrj8w4PdL80J1M6ujMxXJ1g@mail.gmail.com>
+In-Reply-To: <20250310210340.3234884-14-alejandro.lucero-palau@amd.com>
 
-On 25/02/24 03:40PM, Joanne Koong wrote:
-> On Mon, Feb 24, 2025 at 7:25 AM John Groves <John@groves.net> wrote:
-> >
-> > Miklos et. al.:
-> >
-> > Here are some specific questions related to the famfs port into fuse [1][2]
-> > that I hope Miklos (and others) can give me feedback on soonish.
-> >
-> > This work is active and serious, although you haven't heard much from me
-> > recently. I'm showing a famfs poster at Usenix FAST '25 this week [3].
-> >
-> > I'm generally following the approach in [1] - in a famfs file system,
-> > LOOKUP is followed by GET_FMAP to retrieve the famfs file/dax metadata.
-> > It's tempting to merge the fmap into the LOOKUP reply, but this seems like
-> > an optimization to consider once basic function is established.
-> >
-> > Q: Do you think it makes sense to make the famfs fmap an optional,
-> >    variable sized addition to the LOOKUP response?
-> >
-> > Whenever an fmap references a dax device that isn't already known to the
-> > famfs/fuse kernel code, a GET_DAXDEV message is sent, with the reply
-> > providing the info required to open teh daxdev. A file becomes available
-> > when the fmap is complete and all referenced daxdevs are "opened".
-> >
-> > Q: Any heartburn here?
-> >
-> > When GET_FMAP is separate from LOOKUP, READDIRPLUS won't add value unless it
-> > receives fmaps as part of the attributes (i.e. lookups) that come back in
-> > its response - since a READDIRPLUS that gets 12 files will still need 12
-> > GET_FMAP messages/responses to be complete. Merging fmaps as optional,
-> > variable-length components of the READDIRPLUS response buffers could
-> > eventualy make sense, but a cleaner solution intially would seem to be
-> > to disable READDIRPLUS in famfs. But...
-> >
+On Mon, Mar 10, 2025 at 09:03:30PM +0000, alejandro.lucero-palau@amd.com wrote:
+> From: Alejandro Lucero <alucerop@amd.com>
 > 
-> Hi John,
+> Region creation involves finding available DPA (device-physical-address)
+> capacity to map into HPA (host-physical-address) space. Define an API,
+> cxl_request_dpa(), that tries to allocate the DPA memory the driver
+> requires to operate. The memory requested should not be bigger than the
+> max available HPA obtained previously with cxl_get_hpa_freespace.
 > 
-> > * The libfuse/kernel ABI appears to allow low-level fuse servers that don't
-> >   support READDIRPLUS...
-> > * But libfuse doesn't look at conn->want for the READDIRPLUS related
-> >   capabilities
-> > * I have overridden that, but the kernel still sends the READDIRPLUS
-> >   messages. It's possible I'm doing something hinky, and I'll keep looking
-> >   for it.
+> Based on https://lore.kernel.org/linux-cxl/168592158743.1948938.7622563891193802610.stgit@dwillia2-xfh.jf.intel.com/
 > 
-> On the kernel side, FUSE_READDIR / FUSE_READDIRPLUS requests are sent
-> in fuse_readdir_uncached(). I don't see anything there that skips
-> sending readdir / readdirplus requests if the server doesn't have
-> .readdir / .readdirplus implemented. For some request types (eg
-> FUSE_RENAME2, FUSE_LINK, FUSE_FSYNCDIR, FUSE_CREATE, ...), we do track
-> if a request type isn't implemented by the server and then skip
-> sending that request in the future (for example, see fuse_tmpfile()).
-> If we wanted to do this skipping for readdir as well, it'd probably
-> look something like
-> 
-> --- a/fs/fuse/fuse_i.h
-> +++ b/fs/fuse/fuse_i.h
-> @@ -870,6 +870,9 @@ struct fuse_conn {
->         /* Is link not implemented by fs? */
->         unsigned int no_link:1;
-> 
-> +       /* Is readdir/readdirplus not implemented by fs? */
-> +       unsigned int no_readdir:1;
-> +
->         /* Use io_uring for communication */
->         unsigned int io_uring;
-> 
-> diff --git a/fs/fuse/readdir.c b/fs/fuse/readdir.c
-> index 17ce9636a2b1..176d6ce953e5 100644
-> --- a/fs/fuse/readdir.c
-> +++ b/fs/fuse/readdir.c
-> @@ -341,6 +341,9 @@ static int fuse_readdir_uncached(struct file
-> *file, struct dir_context *ctx)
->         u64 attr_version = 0, evict_ctr = 0;
->         bool locked;
-> 
-> +       if (fm->fc->no_readdir)
-> +               return -ENOSYS;
-> +
->         folio = folio_alloc(GFP_KERNEL, 0);
->         if (!folio)
->                 return -ENOMEM;
-> @@ -376,6 +379,8 @@ static int fuse_readdir_uncached(struct file
-> *file, struct dir_context *ctx)
->                         res = parse_dirfile(folio_address(folio), res, file,
->                                             ctx);
->                 }
-> +       } else if (res == -ENOSYS) {
-> +               fm->fc->no_readdir = 1;
->         }
-> 
->         folio_put(folio);
-> 
-> > * When I just return -ENOSYS to READDIRPLUS, things don't work well. Still
-> >   looking into this.
-> >
-> > Q: Do you know whether the current fuse kernel mod can handle a low-level
-> >    fuse server that doesn't support READDIRPLUS? This may be broken.
-> 
-> From what I see, the fuse kernel code can handle servers that don't
-> support readdir/readdirplus. The fuse readdir path gets invoked from
-> file_operations->iterate_shared callback, which from what i see, the
-> only ramification of this always returning an error is that the
-> syscalls calling into this (eg getdents(), readdir()) fail.
+> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
 
-Thanks for doing some of the digging Joanne. I'm not sure what was going wrong
-a few weeks ago when I initially disabled readdirplus, but I have it working 
-now - in fact I now have famfs "fully" working under fuse (for some definition
-of fully ;).
+Hi Alejandro,
 
-I have a gnarly rebase plus some documentation to write, but I may go ahead 
-and share branches this week, in case anybody wants to take a look. That will
-be a fuse kernel branch, and a famfs user space branch...
+As reported by the Kernel Test Robot, in some circumstances this
+patch fails to build.
 
-Also: any plans for a fuse BOF at LSFMM?
+I did not see this with x86_64 or arm64 allmodconfig.
+But I did see the problem on ARM and was able to reproduce it (quickly)
+like this using the toolchain here [*].
 
-<snip>
+$ PATH=.../gcc-12.3.0-nolibc/arm-linux-gnueabi/bin:$PATH
 
-Thanks,
-John
+$ ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- make allmodconfig
+$ echo CONFIG_GCC_PLUGINS=n >> .config
+$ ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- make oldconfig
 
+$ ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- make drivers/cxl/core/hdm.o
+...
+  CC [M]  drivers/cxl/core/hdm.o
+In file included from drivers/cxl/core/hdm.c:6:
+./include/cxl/cxl.h:150:22: error: field 'dpa_range' has incomplete type
+  150 |         struct range dpa_range;
+      |                      ^~~~~~~~~
+./include/cxl/cxl.h:221:30: error: field 'range' has incomplete type
+  221 |                 struct range range;
+      | 
+
+[*] https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/14.2.0/
+
+...
+
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+
+...
+
+> +/**
+> + * cxl_request_dpa - search and reserve DPA given input constraints
+> + * @cxlmd: memdev with an endpoint port with available decoders
+> + * @is_ram: DPA operation mode (ram vs pmem)
+> + * @min: the minimum amount of capacity the call needs
+
+nit: @alloc should be documented instead of @min
+
+> + *
+> + * Given that a region needs to allocate from limited HPA capacity it
+> + * may be the case that a device has more mappable DPA capacity than
+> + * available HPA. So, the expectation is that @min is a driver known
+> + * value for how much capacity is needed, and @max is the limit of
+> + * how much HPA space is available for a new region.
+> + *
+> + * Returns a pinned cxl_decoder with at least @min bytes of capacity
+> + * reserved, or an error pointer. The caller is also expected to own the
+> + * lifetime of the memdev registration associated with the endpoint to
+> + * pin the decoder registered as well.
+> + */
+> +struct cxl_endpoint_decoder *cxl_request_dpa(struct cxl_memdev *cxlmd,
+> +					     bool is_ram,
+> +					     resource_size_t alloc)
+
+...
