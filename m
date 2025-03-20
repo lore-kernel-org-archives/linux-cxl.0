@@ -1,127 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE50D17991;
-	Thu, 20 Mar 2025 01:46:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3655AA926;
+	Thu, 20 Mar 2025 04:18:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742435179; cv=none; b=aEyfXy53XQaCjpB9MAabhGeXxlvPnNnirgwbYNTpM1+kzL5HB66V/JaD9wL0qXoPZsbsOOHUcuvmkIpBFJ9Gd4RsII83EDJ0RkHH96PN9sZlLZ/XWYb/+Oxp308SJeusL2zPQxSdupURw5+W/jtNAbzztLMxekqjzZ1PQtF3Gp8=
+	t=1742444308; cv=none; b=LZo0iZwKbNPj6hQVvgRrAvw1VGJsWiRzQN26eS/apn+kmdrzY2tCYPc/KA3P3g51Z3tOTaJ0Tp811K0Cdpz/klOpLgXQlFdeMcjR5MJwiUnbaTHEbpDxFRGkHA5Z35Nyss5L+Gq+09gw19SeICpRJbCl4VQUSDo+2ZEOfWCsYXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742435179; c=relaxed/simple;
-	bh=SvcwQS4Iw/lWUXoRVbyZKH9s2y37xApp15yT3jr2J0E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AzEureImmr2nj1Xk2t9pZYxUU+KVgYCfrC4KCZBdhzG9QACct17mx1mgzJ1koGRMiC3KUOGwU6eDGXtY84oz323/poZApX40zc5SquQOJoUJL/YrvzXCdWdmS/nY6SSw5IB0/UIh2mY7R1wCATgM/eeP01QRqmqJWRDSVy7bY2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SfOUSRdy; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SfOUSRdy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742435177; x=1773971177;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=SvcwQS4Iw/lWUXoRVbyZKH9s2y37xApp15yT3jr2J0E=;
-  b=SfOUSRdy2HM0a8qCwPUlaGQfcF3Ge667Q9JgkddO2Vkha/UoNRxqz6I9
-   1+PsGF31gSQKRMTvFlDmOwuPlIO+jZJBF3QWwdm/vjIy57tKat5D0djkJ
-   MBn2+w7Ah1Cm3a9/sHwFb4sp1+J4gqGSYG3qH4EXTaexHwm6dPT7apIoI
-   1Ul//9zfk5fn7QYdZxR6uaaYFCxiPr8p+cuP0vthBL3NZu+eGXcZi4EoB
-   I3zO1zTQVVoxe2dPWVNYwF+Vs/bhTEmQe+LIBuwSHjUEzMdR1YIIa5va8
-   xrZPvVBUIxjgRXEOwXP+XwO99s+tTIb/7OAlNde5TbC4n3cDJfSeV8wqT
-   w==;
-X-CSE-ConnectionGUID: 0x9a8GO3RlyRgoOo21+sbQ==
-X-CSE-MsgGUID: DjXREx82SL6nDQSFiUlMAw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11378"; a="47425326"
-X-IronPort-AV: E=Sophos;i="6.14,260,1736841600"; 
-   d="scan'208";a="47425326"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 18:46:17 -0700
-X-CSE-ConnectionGUID: eHHtwSwSQRyIPckfsL7QyQ==
-X-CSE-MsgGUID: /sKVIWVWR4yXttnHRf7jwg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,260,1736841600"; 
-   d="scan'208";a="123394916"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.110.43])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 18:46:16 -0700
-Date: Wed, 19 Mar 2025 18:46:14 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Robert Richter <rrichter@amd.com>, ming.li@zohomail.com,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 0/4 v3] cxl/core: Enable Region creation on x86 with Low
- Mem Hole
-Message-ID: <Z9tzZkn1rqd2Uk_6@aschofie-mobl2.lan>
-References: <20250314113708.759808-1-fabio.m.de.francesco@linux.intel.com>
+	s=arc-20240116; t=1742444308; c=relaxed/simple;
+	bh=FPbR/DP+L1yR3sywDhC/tWZmkgjAgkz5vfDZao5Rrr0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m2P+PH+utFc2EQKqoYXAWB9/Erb+mXHJDx0bobdXu5/vo/1edjNMvLjQ53azYqxZs7VQAGw+k0yOzuwx6KXyYDBWA4Lvl+iMoFE6ZTBvB5PUC9Dfh9QyEi8qjzhe067DtwEadvHeCyWD3oEuTDSSO3RU5clKM8hXBY2tLQnL48E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-39-67db9705e331
+From: Rakie Kim <rakie.kim@sk.com>
+To: gourry@gourry.net
+Cc: akpm@linux-foundation.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	joshua.hahnjy@gmail.com,
+	dan.j.williams@intel.com,
+	ying.huang@linux.alibaba.com,
+	david@redhat.com,
+	Jonathan.Cameron@huawei.com,
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com,
+	rakie.kim@sk.com
+Subject: [PATCH v3 0/3] Enhance sysfs handling for memory hotplug in weighted interleave
+Date: Thu, 20 Mar 2025 13:17:45 +0900
+Message-ID: <20250320041749.881-1-rakie.kim@sk.com>
+X-Mailer: git-send-email 2.48.1.windows.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250314113708.759808-1-fabio.m.de.francesco@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrJLMWRmVeSWpSXmKPExsXC9ZZnoS7r9NvpBg+mKFnMWb+GzWL61AuM
+	Fl/X/2K2+Hn3OLvFqoXX2CyOb53HbnF+1ikWi8u75rBZ3Fvzn9Vi9ZoMBy6PnbPusnt0t11m
+	92g58pbVY/Gel0wemz5NYvc4MeM3i8fOh5Ye7/ddZfP4vEkugDOKyyYlNSezLLVI3y6BK2PZ
+	jCbmgk7hisNbJ7A1MN7j72Lk5JAQMJE4830TG4y9/tJnpi5GDg42ASWJY3tjQMIiAqIS847O
+	Zuli5OJgFrjGJHHg800WkISwQITEz7+XwHpZBFQlDj/vBLN5BYwlPi+6xAwxU1Oi4dI9Joi4
+	oMTJmU/AepkF5CWat85mBhkqIXCZTeJZZzM7RIOkxMEVN1gmMPLOQtIzC0nPAkamVYxCmXll
+	uYmZOSZ6GZV5mRV6yfm5mxiBAbys9k/0DsZPF4IPMQpwMCrx8L64citdiDWxrLgy9xCjBAez
+	kgivSMftdCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8Rt/KU4QE0hNLUrNTUwtSi2CyTBycUg2M
+	7YsdUtpm+Vl8Md133VM+W9c9ZPMjH/brwcKHWDYsU3LIbjm57EqEW9NfqVczm0td0rkfr6iZ
+	1/tQboJcxq/NPFPs5P5d3LDA921hgselZexLUhZYnHqfOHuJgA+fiWJVvditOL/Efdzz/9Zu
+	uFZ3gz39lMrkjlMPM83mO6iXFBg53r+uIb5EiaU4I9FQi7moOBEAzlTsYlwCAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrMLMWRmVeSWpSXmKPExsXCNUNNS5d1+u10g+WbhCzmrF/DZjF96gVG
+	i6/rfzFb/Lx7nN3i87PXzBarFl5jszi+dR67xeG5J1ktzs86xWJxedccNot7a/6zWhy69pzV
+	YvWaDIvf21awOfB57Jx1l92ju+0yu0fLkbesHov3vGTy2PRpErvHiRm/WTx2PrT0eL/vKpvH
+	t9seHotffGDy+LxJLoA7issmJTUnsyy1SN8ugStj2Ywm5oJO4YrDWyewNTDe4+9i5OSQEDCR
+	WH/pM1MXIwcHm4CSxLG9MSBhEQFRiXlHZ7N0MXJxMAtcY5I48PkmC0hCWCBC4uffS2wgNouA
+	qsTh551gNq+AscTnRZeYIWZqSjRcuscEEReUODnzCVgvs4C8RPPW2cwTGLlmIUnNQpJawMi0
+	ilEkM68sNzEzx1SvODujMi+zQi85P3cTIzBol9X+mbiD8ctl90OMAhyMSjy8L67cShdiTSwr
+	rsw9xCjBwawkwivScTtdiDclsbIqtSg/vqg0J7X4EKM0B4uSOK9XeGqCkEB6YklqdmpqQWoR
+	TJaJg1OqgfEhh98qxtCjVhPWekTeCjgQP1Ftd8019U13OLnOZD/9UX9Kp7hohnNfg4DF0vNf
+	XdatXnwh5frEtKf2KSVlWyNMKu3y1+qXzJ9uInjC49qqRyvM1vJM1n6kJvCiRHaKtNfHvJ4V
+	hetF9G9q7t0R1dt8PcGtb0mc+bx3Gut/3QmNPj4/cuUj5wdKLMUZiYZazEXFiQDQhcXKVgIA
+	AA==
+X-CFilter-Loop: Reflected
 
-On Fri, Mar 14, 2025 at 12:36:29PM +0100, Fabio M. De Francesco wrote:
-> The CXL Fixed Memory Window Structure (CFMWS) describes zero or more Host
-> Physical Address (HPA) windows that are associated with each CXL Host
-> Bridge. Each window represents a contiguous HPA that may be interleaved
-> with one or more targets (CXL v3.1 - 9.18.1.3).
-> 
-> The Low Memory Hole (LMH) of x86 is a range of addresses of physical low
-> memory to which systems cannot send transactions. On those systems, BIOS
-> publishes CFMWS which communicate the active System Physical Address (SPA)
-> ranges that map to a subset of the Host Physical Address (HPA) ranges. The
-> SPA range trims out the hole, and capacity in the endpoint is lost with no
-> SPA to map to CXL HPA in that hole.
-> 
-> In the early stages of CXL Regions construction and attach on platforms
-> with Low Memory Holes, the driver fails and returns an error because it
-> expects that the CXL Endpoint Decoder range is a subset of the Root
-> Decoder's (SPA >= HPA). On x86 with LMH's, it happens that SPA < HPA.
-> 
-> Therefore, detect x86 Low Memory Holes, match CXL Root and Endpoint
-> Decoders or already made CXL Regions and Decoders to allow the
-> construction of new CXL Regions and the attachment of Endpoint Decoders,
-> even if SPA < HPA. If needed because of LMH's, adjust the Endpoint Decoder
-> range end to match Root Decoder's.
+The following patch series enhances the weighted interleave policy in the
+memory management subsystem by improving sysfs handling, fixing memory leaks,
+and introducing dynamic sysfs updates for memory hotplug support.
 
-I think the dpa_res field of the endpoint decoder needs adjusting.
-After the region is setup, the cxled->dpa_res has the unadjusted value
-and that leads to region warning and address translation failure because
-the driver 'thinks' that DPA is within a region, but when it tries
-to translate to an HPA in that region, it fails.
+### Background
+The weighted interleave policy distributes memory allocations across multiple
+NUMA nodes based on their performance weight, thereby optimizing memory
+bandwidth utilization. The weight values are configured through sysfs.
 
-Here's where I looked at it: using the cxl-test LMH auto-region (nice!)
-each endpoint decoder is programmed to contribute 512MB to the 1024MB region.
-The LMH adjustment shrunk the region to 768MB, so each endpoint is only
-contributing 384MB to the region. 
+Previously, sysfs entries for weighted interleave were managed statically
+at initialization. This led to several issues:
+- Memory Leaks: Improper `kobject` deallocation caused memory leaks
+  when initialization failed or when nodes were removed.
+- Lack of Dynamic Updates: Sysfs attributes were created only during
+  initialization, preventing nodes added at runtime from being recognized.
+- Handling of Unusable Nodes: Sysfs entries were generated for all
+  possible nodes (`N_POSSIBLE`), including memoryless or unavailable nodes,
+  leading to unnecessary sysfs attributes and misconfiguration issues.
 
-DPA->HPA address translations of DPA addresses in the 384->512 gap cause
-a problem. The driver will needlessly warn that they are in a region for
-any poison inject or clear, and will fail address translations for any
-poison, general media or dram event.
+### Patch Overview
+1. [PATCH 1/3] Fix memory leaks in weighted interleave sysfs
+   - Ensures proper cleanup of `kobject` allocations.
+   - Replaces unnecessary `kfree()` calls with `kobject_put()`, preventing
+     memory leaks and improving system stability.
 
-I think this should fail in region.c: __cxl_dpa_to_region()
-        if (dpa > cxled->dpa_res->end || dpa < cxled->dpa_res->start)
-                return 0;
+2. [PATCH 2/3] Enable dynamic updates for weighted interleave sysfs
+   - Restructures sysfs handling to allow runtime updates.
+   - The sysfs attributes are now globally accessible, enabling external
+     modules to manage interleave settings dynamically.
 
-For that to fail, LMH code needs to adjust cxled->dpa_res too. 
+3. [PATCH 3/3] Support memory hotplug in weighted interleave
+   - Modifies sysfs creation logic to restrict entries to nodes that are
+     online and have memory, excluding unusable nodes.
+   - Introduces a memory hotplug mechanism to dynamically add and remove
+     sysfs attributes when nodes transition into or out of the `N_MEMORY` set.
+   - Ensures that sysfs attributes are properly removed when nodes go offline,
+     preventing stale or redundant entries from persisting.
+
+These patches have been tested under CXL-based memory configurations,
+including hotplug scenarios, to ensure proper behavior and stability.
+
+ mm/mempolicy.c | 191 +++++++++++++++++++++++++++++++------------------
+ 1 file changed, 123 insertions(+), 68 deletions(-)
 
 
-To test is using clear_poison you can:
-# echo 536866816 > /sys/kernel/debug/cxl/mem1/clear_poison
-  (536866816 = 512MB - 4096)
+base-commit: 4701f33a10702d5fc577c32434eb62adde0a1ae1
+-- 
+2.34.1
 
-[ ] cxl_core:__cxl_dpa_to_region:2860: cxl decoder18.0: dpa:0x1ffff000 mapped in region:region0
-[ ] cxl_core:cxl_dpa_to_hpa:2963: cxl_region region0: Addr trans fail: hpa 0x3ff04fffe000 not in region
-
-
-snip
-> 
