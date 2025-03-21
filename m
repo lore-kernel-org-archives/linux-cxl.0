@@ -1,180 +1,112 @@
-Received: from cornsilk.maple.relay.mailchannels.net (cornsilk.maple.relay.mailchannels.net [23.83.214.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3E2A1C174A;
-	Fri, 21 Mar 2025 03:59:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.214.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742529571; cv=pass; b=iz6+C4BELn4Ir+LYUoUezwWjPflTx8Qs6KwjXa2ImnCIkwQyMoYSsu6mQbxsie0iDEiTb9nRHl6WrTq38kA0Hxi8gurFLlhSniLT5SMLonKhknL6CkbQB4afdtHH9qSHMfBTbCbMcZ8uJRufyzxejgiT7HCLZtNB3C5FCPaJi7A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742529571; c=relaxed/simple;
-	bh=aFfYjpXXJ4M+8hXi2SGYDgMHE4lcqymrONqlLwxg3Bg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W1QIaZb6XIC9C9OGW86KtrJKm+7MhZYqPdwmgXwxL5+vM4NV7+L7XxWY7HI+k3MsBcg88zLimKkWHgtPsm2ocrsOXY9+ZapBaNMzCvgC8ZIp7Xqy7kAxPcf3axDaLfNpHojy7xqEmTS+iUoq617cPMb/Xy3uN308vG3xUhuJqAA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=oTJOjUSb; arc=pass smtp.client-ip=23.83.214.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="oTJOjUSb"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id B84C8163D85;
-	Fri, 21 Mar 2025 03:59:23 +0000 (UTC)
-Received: from pdx1-sub0-mail-a231.dreamhost.com (100-96-207-186.trex-nlb.outbound.svc.cluster.local [100.96.207.186])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 85980164D80;
-	Fri, 21 Mar 2025 03:59:22 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1742529562; a=rsa-sha256;
-	cv=none;
-	b=F0RJXvSWSHTnIhpNgzln5OTRXDJ9b/hlQAED+zxrgHM0CH1mO5Bxk2toF2oBnBPiCnHDCz
-	m+mdGqbI/KHWH8Mkju2L713I1Fo5vBzkCIKsyKeehR3WDkn9IJDQVobMSmJgMfIrOf+V9W
-	APlq46XB+aGfNV+LOV7O6duRATf/P525HKX/MJI/W0A++f6FfaCBjnMi8lc4aJr4+JWXuH
-	ub4p2KLErUvM2J6VqyyKRwaVUnb8QZQzGwc2gVEsh2OtaJAGINq5hto2VYI0TuFqAztK0B
-	oTM6PhhUgOCSlqfgnEcIaBZ1tjscbmAITg59ODRXQ+bAYHdqd2/0r1e3bcB/JQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1742529562;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=f09muvj1zbZ8O3iLc/6V5qba8mC06vgAkUEv+s5LLiA=;
-	b=7Ru7q2LL7fqhZP3sJwW3zsNaxOJo7ptkwFBtUvvaGkm5nuhflwBqVuOil95ePgDGYnzHAB
-	x6WYLlja0toJaKCUYkfTemB5dJJpdk8u5YmbTcM3IVKOn4WhY1LxdABs6BKE/gvV3w8W9u
-	LejPCXz1sfbjR5pyhTX54s2dJ2xOnwQovRQYu5n2Gw3Kmv/CMK9MeL5XBeuZWD1YrKFtxe
-	zi9Kweu/6CUVv1gP2/ksLlSvr9RDTkewkPkIrypBiP7VeFpcevB6VRIGitoOUV8iN5iv21
-	uZFILXqECrIxduh3HLC6610rUUCDEWXh6f2k4mQ3GmtYBHnRPGJNwzWXQRNJxQ==
-ARC-Authentication-Results: i=1;
-	rspamd-67d8974966-4drm9;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Company-Tart: 459bdddb1dbe7e5e_1742529563640_1315007263
-X-MC-Loop-Signature: 1742529563640:1402950586
-X-MC-Ingress-Time: 1742529563640
-Received: from pdx1-sub0-mail-a231.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.96.207.186 (trex/7.0.2);
-	Fri, 21 Mar 2025 03:59:23 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a231.dreamhost.com (Postfix) with ESMTPSA id 4ZJpbs6mGfzB9;
-	Thu, 20 Mar 2025 20:59:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1742529562;
-	bh=f09muvj1zbZ8O3iLc/6V5qba8mC06vgAkUEv+s5LLiA=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=oTJOjUSbpxweUwhJyVmmtbN8AGWutqwPeEYOFSLX3YFMgUbJizPqNiB4WQ3XKNIt+
-	 lT46XQQfeyZbW8ag5a8IDIopf3ivroVKkM9K9DiPTuzs9zHdvTlZTs/HkSdjuzkKJw
-	 +RvEmirdmHY0XDFgYH+gHwlmwWMam9xDNfrUgrccA+tsHWrd+I1onmp7HCDMzfqowL
-	 RAYKTbCvpz0JEZovzS69ILXxkoWCJNlFBwzF13x+hv3XorAPpeeVOC895FQxPd5MeK
-	 LW5KJuXKwawuuoGUSzjN3Wfim+FWXRfLObYQLipDb7Gz/aDlfx2HX6uOR8rWXbYyjy
-	 ZnhyMKWIKGHwA==
-Date: Thu, 20 Mar 2025 20:59:18 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Li Ming <ming.li@zohomail.com>
-Cc: jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, dan.j.williams@intel.com,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC Patch v1 0/3] Fix using wrong GPF DVSEC location issue
-Message-ID: <20250321035918.yyicfmvmpm7selin@offworld>
-References: <20250319035516.222054-1-ming.li@zohomail.com>
- <20250321021441.vdmo5txhvb6kya3a@offworld>
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA50D78F5B;
+	Fri, 21 Mar 2025 04:37:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742531843; cv=none; b=D8w9U89ywLN0A2TrkRVELaKVtvWC64u7zj76v0Y5AyQnhWGfz4hlpt1plxLdSB5j2L3tXpdqvaILOYhtCA5QT+Sm0A40z5oGW9EJO1mA3vyGvj0Ol2zx9MRjHbhkpgdtFM8JzeHnTEnktBMZlm8FUwhM9RoV5KaLpmHLek6hOLw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742531843; c=relaxed/simple;
+	bh=7Q8BslervTr6dSGNEOeNQ9GeYiDLBdnSZjhgnoZmtYQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=biwglQ5k+fvCCOQ8dE6h9TFGsiOgvsG4p3D72jLnINQ4vqCMlA/w/h05sGjsFYd/FFyXhZYwOLfBq+4JW2ghfgMOx49IyZjnIcCcw6RlOxSrR3yQDUMFrFc5JKGt5VVR1CwRltHkCeoMQ51Va3Rv2N+aAgd3DDXa0zXbl0UXHOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-d6-67dcecf2c08f
+From: Rakie Kim <rakie.kim@sk.com>
+To: Gregory Price <gourry@gourry.net>
+Cc: akpm@linux-foundation.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	joshua.hahnjy@gmail.com,
+	dan.j.williams@intel.com,
+	ying.huang@linux.alibaba.com,
+	david@redhat.com,
+	Jonathan.Cameron@huawei.com,
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com,
+	Rakie Kim <rakie.kim@sk.com>
+Subject: Re: [PATCH v3 1/3] mm/mempolicy: Fix memory leaks in weighted interleave sysfs
+Date: Fri, 21 Mar 2025 13:36:55 +0900
+Message-ID: <20250321043701.928-1-rakie.kim@sk.com>
+X-Mailer: git-send-email 2.48.1.windows.1
+In-Reply-To: <Z9xJdP29XEz6CljB@gourry-fedora-PF4VCD3F>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250321021441.vdmo5txhvb6kya3a@offworld>
-User-Agent: NeoMutt/20220429
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrPLMWRmVeSWpSXmKPExsXC9ZZnoe6nN3fSDf7fs7CYs34Nm8X0qRcY
+	Lb6u/8Vs8fPucXaLVQuvsVkc3zqP3eL8rFMsFpd3zWGzuLfmP6vF6jUZDlweO2fdZffobrvM
+	7tFy5C2rx+I9L5k8Nn2axO5xYsZvFo+dDy093u+7yubxeZNcAGcUl01Kak5mWWqRvl0CV8a+
+	e/NYC6bxVXyb1MbcwDiDu4uRk0NCwERi7alX7DD2zY0nmboYOTjYBJQkju2NATFFBFQl2q64
+	dzFycTALPGKSON2+lBUkLiwQLtE6QxSkkwWoZNrnTWwgNq+AscTCT3+ZISZqSjRcuscEYnMK
+	mEmcubYXrEZIgEfi1Yb9jBD1ghInZz5hAbGZBeQlmrfOZgbZJSHwmk1i9YZHjBCDJCUOrrjB
+	MoGRfxaSnllIehYwMq1iFMrMK8tNzMwx0cuozMus0EvOz93ECAz2ZbV/oncwfroQfIhRgINR
+	iYfX4s/tdCHWxLLiytxDjBIczEoivCIdQCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8Rt/KU4QE
+	0hNLUrNTUwtSi2CyTBycUg2M8mmTeMpqKgtfHHwgsMhZ3/A2e7Mf94nJXotKk1cu+hmgmn77
+	mHpYokfInpvip7VPLnpyuOXjYXa/23snHOATniWTFJ3df1KP/bJNXJwkR2JrzAeWz29+3lzr
+	yh0neSrOYP6BnWuceDnlffs3GM67+IL9vcuzmqkpT37/XHmM7c2xc2f8y78FK7EUZyQaajEX
+	FScCACO+hSFyAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrJLMWRmVeSWpSXmKPExsXCNUNNS/fTmzvpBlev61jMWb+GzWL61AuM
+	Fl/X/2K2+Hn3OLvF52evmS1WLbzGZnF86zx2i8NzT7JanJ91isXi8q45bBb31vxntTh07Tmr
+	xeo1GRa/t61gc+Dz2DnrLrtHd9tldo+WI29ZPRbvecnksenTJHaPEzN+s3jsfGjp8X7fVTaP
+	b7c9PBa/+MDk8XmTXAB3FJdNSmpOZllqkb5dAlfGvnvzWAum8VV8m9TG3MA4g7uLkZNDQsBE
+	4ubGk0xdjBwcbAJKEsf2xoCYIgKqEm1X3LsYuTiYBR4xSZxuX8oKEhcWCJdonSEK0skCVDLt
+	8yY2EJtXwFhi4ae/zBATNSUaLt1jArE5BcwkzlzbC1YjJMAj8WrDfkaIekGJkzOfsIDYzALy
+	Es1bZzNPYOSZhSQ1C0lqASPTKkaRzLyy3MTMHFO94uyMyrzMCr3k/NxNjMAAX1b7Z+IOxi+X
+	3Q8xCnAwKvHwWvy5nS7EmlhWXJl7iFGCg1lJhFekAyjEm5JYWZValB9fVJqTWnyIUZqDRUmc
+	1ys8NUFIID2xJDU7NbUgtQgmy8TBKdXAmH8pU/Hemc1Tkw8/nvTspHSystI9/5fLmTYVFlyq
+	srgYvXFptvEU9hRri0fRkvstVzZ/TUj6fHlPyNWrlaeL4+Y/OSP91Cd1Qc8eh71iaz8d2BQ4
+	793Rg7NXBjYIT17sbM5/vvPCwcqwgjVV80zubeefmLOA8ePSlm8Ldto0LGKTXa7ady/ExkWJ
+	pTgj0VCLuag4EQB+26AAbAIAAA==
+X-CFilter-Loop: Reflected
 
-On Thu, 20 Mar 2025, Davidlohr Bueso wrote:
+On Thu, 20 Mar 2025 12:59:32 -0400 Gregory Price <gourry@gourry.net> wrote:
+> On Thu, Mar 20, 2025 at 02:40:01PM +0900, Rakie Kim wrote:
+> > On Thu, 20 Mar 2025 13:17:46 +0900 Rakie Kim <rakie.kim@sk.com> wrote:
+> > 
+> > Hi Gregory
+> > 
+> > I initially planned to separate this patch from the hotplug-related patch
+> > series as an independent update. However, after reviewing the code following
+> > Jonathan's suggestion to consolidate `kobject` and `node_attrs` into a single
+> > struct, I realized that most of the intended functionality for Patch 2 was
+> > already incorporated.
+> > 
+> > As a result, Patch 1 now only contains the `kobject_put` fix, while the
+> > struct consolidation work has been included in Patch 2. Given the current
+> > design, it seems more natural to keep Patch 1 and Patch 2 together as part
+> > of the same patch series rather than separating them.
+> > 
+> > Rakie
+> > 
+> 
+> The point of submitting separately was to backport this to LTS via
+> -stable.  We probably still want this since it ostensibly solves a
+> memory leak - even if the design is to support this work.
+> 
+> ~Gregory
+> 
 
->On Wed, 19 Mar 2025, Li Ming wrote:
->
->>But I am not sure if all dports under a same port will have same
->>configuration space layout, if yes, that will not be a problem. If I am
->>wrong, please let me know, thanks.
->
->Yes, when caching the dvsec was suggested, it was my assumption that the
->config space would be the same.
+Patch 1 and Patch 2 are closely related, and I believe that both patches
+need to be combined to fully support the functionality.
 
-Ultimately I don't know what the expectation is here, but your updates
-do allow more flexibility from vendors, I guess(?). It's a bit late
-in the cycle, unfortunately, so if these are to go in for v6.15, they
-would be considered a fix imo, otherwise perhaps they are wanted for
-v6.16 or not at all (patch 3 does look useful regardless)?
+Initially, I thought that Patch 1 was the fix for the original issue and
+considered it the candidate for a backport.
+However, upon further reflection, I believe that all changes in Patch 1
+through Patch 3 are necessary to fully address the underlying problem.
 
-Based on some of the topologies listed in qemu, I did some testing (and
-this was also why the same dvsec config layout) and see things working as
-expected.
+Therefore, I now think it makes more sense to merge Patch 1 and Patch 2
+into a single patch, then renumber the current Patch 3 as Patch 2,
+and treat the entire set as a proper -stable backport candidate.
 
-https://www.qemu.org/docs/master/system/devices/cxl.html#example-command-lines
+I'd appreciate your thoughts on this suggestion.
 
-(i) 2 direct-attached Type3 devices:
--next
-[    3.938238] cxl_core:update_gpf_port_dvsec:1125: pcieport 0000:0c:00.0: Port GPF phase 1 timeout: 20 secs
-[    3.939323] cxl_core:update_gpf_port_dvsec:1125: pcieport 0000:0c:00.0: Port GPF phase 2 timeout: 20 secs
-[    4.003074] cxl_core:update_gpf_port_dvsec:1125: pcieport 0000:0c:01.0: Port GPF phase 1 timeout: 20 secs
-[    4.003676] cxl_core:update_gpf_port_dvsec:1125: pcieport 0000:0c:01.0: Port GPF phase 2 timeout: 20 secs
--next+fix
-[    3.969841] cxl_core:update_gpf_port_dvsec:1131: pcieport 0000:0c:00.0: Port GPF phase 1 timeout: 20 secs
-[    3.970957] cxl_core:update_gpf_port_dvsec:1131: pcieport 0000:0c:00.0: Port GPF phase 2 timeout: 20 secs
-[    3.971622] cxl_core:update_gpf_port_dvsec:1131: pcieport 0000:0c:01.0: Port GPF phase 1 timeout: 20 secs
-[    3.972664] cxl_core:update_gpf_port_dvsec:1131: pcieport 0000:0c:01.0: Port GPF phase 2 timeout: 20 secs
+Rakie
 
-(ii) 2 CXL host bridges. Each host bridge has 2 CXL Root Ports, with the CXL Type3 device directly attached:
--next
-[    6.182333] cxl_core:update_gpf_port_dvsec:1125: pcieport 0000:de:00.0: Port GPF phase 1 timeout: 20 secs
-[    6.182352] cxl_core:update_gpf_port_dvsec:1125: pcieport 0000:de:00.0: Port GPF phase 2 timeout: 20 secs
-[    6.183938] cxl_core:update_gpf_port_dvsec:1125: pcieport 0000:0c:01.0: Port GPF phase 1 timeout: 20 secs
-[    6.183955] cxl_core:update_gpf_port_dvsec:1125: pcieport 0000:0c:01.0: Port GPF phase 2 timeout: 20 secs
-[    6.204324] cxl_core:update_gpf_port_dvsec:1125: pcieport 0000:0c:00.0: Port GPF phase 1 timeout: 20 secs
-[    6.205407] cxl_core:update_gpf_port_dvsec:1125: pcieport 0000:0c:00.0: Port GPF phase 2 timeout: 20 secs
-[    6.210006] cxl_core:update_gpf_port_dvsec:1125: pcieport 0000:de:01.0: Port GPF phase 1 timeout: 20 secs
-[    6.210921] cxl_core:update_gpf_port_dvsec:1125: pcieport 0000:de:01.0: Port GPF phase 2 timeout: 20 secs
--next+fix
-[    6.153093] cxl_core:update_gpf_port_dvsec:1131: pcieport 0000:0c:01.0: Port GPF phase 1 timeout: 20 secs
-[    6.153107] cxl_core:update_gpf_port_dvsec:1131: pcieport 0000:0c:01.0: Port GPF phase 2 timeout: 20 secs
-[    6.154170] cxl_core:update_gpf_port_dvsec:1131: pcieport 0000:de:01.0: Port GPF phase 1 timeout: 20 secs
-[    6.154187] cxl_core:update_gpf_port_dvsec:1131: pcieport 0000:de:01.0: Port GPF phase 2 timeout: 20 secs
-[    6.195279] cxl_core:update_gpf_port_dvsec:1131: pcieport 0000:de:00.0: Port GPF phase 1 timeout: 20 secs
-[    6.195859] cxl_core:update_gpf_port_dvsec:1131: pcieport 0000:de:00.0: Port GPF phase 2 timeout: 20 secs
-[    6.255782] cxl_core:update_gpf_port_dvsec:1131: pcieport 0000:0c:00.0: Port GPF phase 1 timeout: 20 secs
-[    6.257152] cxl_core:update_gpf_port_dvsec:1131: pcieport 0000:0c:00.0: Port GPF phase 2 timeout: 20 secs
-
-(iii) 4 Type3 devices below a CXL Switch:
--next
-[    3.940200] cxl_core:update_gpf_port_dvsec:1125: pcieport 0000:0e:01.0: Port GPF phase 1 timeout: 20 secs
-[    3.940218] cxl_core:update_gpf_port_dvsec:1125: pcieport 0000:0e:01.0: Port GPF phase 2 timeout: 20 secs
-[    3.940231] cxl_core:update_gpf_port_dvsec:1125: pcieport 0000:0e:00.0: Port GPF phase 1 timeout: 20 secs
-[    3.940245] cxl_core:update_gpf_port_dvsec:1125: pcieport 0000:0e:00.0: Port GPF phase 2 timeout: 20 secs
-[    3.940340] cxl_core:update_gpf_port_dvsec:1125: pcieport 0000:0c:00.0: Port GPF phase 1 timeout: 20 secs
-[    3.940350] cxl_core:update_gpf_port_dvsec:1125: pcieport 0000:0c:00.0: Port GPF phase 2 timeout: 20 secs
-[    3.948114] cxl_core:update_gpf_port_dvsec:1125: pcieport 0000:0e:02.0: Port GPF phase 1 timeout: 20 secs
-[    3.949203] cxl_core:update_gpf_port_dvsec:1125: pcieport 0000:0e:02.0: Port GPF phase 2 timeout: 20 secs
-[    3.997620] cxl_core:update_gpf_port_dvsec:1125: pcieport 0000:0e:03.0: Port GPF phase 1 timeout: 20 secs
-[    3.997641] cxl_core:update_gpf_port_dvsec:1125: pcieport 0000:0e:03.0: Port GPF phase 2 timeout: 20 secs
--next+fix
-[    3.983632] cxl_core:update_gpf_port_dvsec:1131: pcieport 0000:0e:01.0: Port GPF phase 1 timeout: 20 secs
-[    3.983649] cxl_core:update_gpf_port_dvsec:1131: pcieport 0000:0e:01.0: Port GPF phase 2 timeout: 20 secs
-[    3.984525] cxl_core:update_gpf_port_dvsec:1131: pcieport 0000:0c:00.0: Port GPF phase 1 timeout: 20 secs
-[    3.984539] cxl_core:update_gpf_port_dvsec:1131: pcieport 0000:0c:00.0: Port GPF phase 2 timeout: 20 secs
-[    3.984667] cxl_core:update_gpf_port_dvsec:1131: pcieport 0000:0e:03.0: Port GPF phase 1 timeout: 20 secs
-[    3.984692] cxl_core:update_gpf_port_dvsec:1131: pcieport 0000:0e:03.0: Port GPF phase 2 timeout: 20 secs
-[    3.985074] cxl_core:update_gpf_port_dvsec:1131: pcieport 0000:0e:02.0: Port GPF phase 1 timeout: 20 secs
-[    3.985090] cxl_core:update_gpf_port_dvsec:1131: pcieport 0000:0e:02.0: Port GPF phase 2 timeout: 20 secs
-[    3.988954] cxl_core:update_gpf_port_dvsec:1131: pcieport 0000:0e:00.0: Port GPF phase 1 timeout: 20 secs
-[    3.990464] cxl_core:update_gpf_port_dvsec:1131: pcieport 0000:0e:00.0: Port GPF phase 2 timeout: 20 secs
-
-Thanks,
-Davidlohr
