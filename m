@@ -1,125 +1,175 @@
-Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A3ED7494
-	for <linux-cxl@vger.kernel.org>; Fri, 21 Mar 2025 17:44:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.189.100.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55D7522D4EB
+	for <linux-cxl@vger.kernel.org>; Fri, 21 Mar 2025 18:07:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742579060; cv=none; b=PU8IPHrneLheXN9SID506/XT23qZT2hYAtt5+tYuAbKXv0KXK7H6gTED5GJ8OMPg1ie441CKWUXNPfA79D+WeKYFzfMJ2deQYsw8TGzA4Be8/e5pBKXvZRbUu2qMsuHBS73iaeJz5wkKJ5Z1oZP/oA5S5b5F0owhxTIkV4hlzXs=
+	t=1742580457; cv=none; b=uKIYEHFCY4ymkAkn8l2akpfNBLxJeo7h7Ya4WbyWjWuFEpPIZjY9OfBmnyOzc0kVL6T1xIhSuiMdrWciSJV36+NnOmrbPLbQF6se9FjFpeeQvBsnEUHTbQa4WPil00SWE1xEqGT0uOsKERvnJNHu8jkWNxm78hQLL6CQkFUhDGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742579060; c=relaxed/simple;
-	bh=50CAvgM2Vx7mRZuIP2hdqV4GT0stFE0r4d6oKfYrFlM=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version:
-	 References; b=FZrStEnEQi2sCCSUUro+Uyvux0SEznjiJmnO+h6WS7DYhve9tUE58RpETHc2jPQOK3RXOMatQW11a6sUy0O9cpQPmSQqmWRL7DGUS/qisbP/vfmojvBWeVoyaYHq9TzPQ4Q4ywcXonwilqK3/RrsHAalcCLnpnGauHcGCGFGGvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=SAcZIJ5r; arc=none smtp.client-ip=211.189.100.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1742580457; c=relaxed/simple;
+	bh=47Y8hQip99iCf7c6Dmi/CZyHe8FpzUoY9ZGUEv+WWks=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=i8+mD5T1AdPAAtQMpp7ibi9CZpDTmaidrJFcFn1BMf6mTYryHuahNYqo7NadJBjFr/KCIIT50GVtmJd7koZAOocxF7BzWEmoZczyMr86nb3TRw2sTwaB/XeuCo/AxSA4AcJ/f/5Q0trpwBBK6Bjzu8+TgcYuoPKZkc/vBW55iuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Lcm9xCdZ; arc=none smtp.client-ip=209.85.222.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="SAcZIJ5r"
-Received: from uscas1p1.samsung.com (unknown [182.198.245.206])
-	by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20250321173545usoutp014ef65c7425bdbf279e92cc3cbc821586~u4fRluVro2518125181usoutp010;
-	Fri, 21 Mar 2025 17:35:45 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20250321173545usoutp014ef65c7425bdbf279e92cc3cbc821586~u4fRluVro2518125181usoutp010
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1742578545;
-	bh=50CAvgM2Vx7mRZuIP2hdqV4GT0stFE0r4d6oKfYrFlM=;
-	h=From:To:CC:Subject:Date:References:From;
-	b=SAcZIJ5rP0ZvdV2+1YDrhXFwDhaByDCRdgpMzrZeKD6ZOl5tyU34miwtZaTDYJcXR
-	 JbCv1rL+WiojRNhYIWwirlS899d+HyHId/kPn98COt1vNhaC51Yc1xvcxcbmoclXw7
-	 fRSeD4bVDHq+ITctCpPZ8oh+gdDvn9tqGlJoqY6Q=
-Received: from ussmges3new.samsung.com (u112.gpu85.samsung.co.kr
-	[203.254.195.112]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20250321173545uscas1p2ceb4d01aba6bcc2e880b514eec7d4ead~u4fRay0vw2811728117uscas1p2f;
-	Fri, 21 Mar 2025 17:35:45 +0000 (GMT)
-Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
-	ussmges3new.samsung.com (USCPEMTA) with SMTP id 21.4B.10853.173ADD76; Fri,
-	21 Mar 2025 13:35:45 -0400 (EDT)
-Received: from ussmgxs2new.samsung.com (u91.gpu85.samsung.co.kr
-	[203.254.195.91]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20250321173545uscas1p13ddcb034757adaf41dcc3f64dbedb509~u4fRELpyE1469214692uscas1p11;
-	Fri, 21 Mar 2025 17:35:45 +0000 (GMT)
-X-AuditID: cbfec370-4b7ff70000002a65-ab-67dda3717642
-Received: from SSI-EX3.ssi.samsung.com ( [105.128.3.67]) by
-	ussmgxs2new.samsung.com (USCPEXMTA) with SMTP id C3.CC.23118.073ADD76; Fri,
-	21 Mar 2025 13:35:44 -0400 (EDT)
-Received: from SSI-EX3.ssi.samsung.com (105.128.2.228) by
-	SSI-EX3.ssi.samsung.com (105.128.2.228) with Microsoft SMTP Server
-	(version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-	15.1.2507.44; Fri, 21 Mar 2025 10:35:44 -0700
-Received: from SSI-EX3.ssi.samsung.com ([105.128.8.30]) by
-	SSI-EX3.ssi.samsung.com ([105.128.8.30]) with mapi id 15.01.2507.044; Fri,
-	21 Mar 2025 10:35:44 -0700
-From: Adam Manzanares <a.manzanares@samsung.com>
-To: "lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
-	Michal Hocko <mhocko@suse.com>
-CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Subject: [LSF/MM/BPF BoF] CXL F2F
-Thread-Topic: [LSF/MM/BPF BoF] CXL F2F
-Thread-Index: AQHbmoes1f9CEVbsykW9UHBtqvxF3A==
-Date: Fri, 21 Mar 2025 17:35:44 +0000
-Message-ID: <Z92jav0f71F50-pI@sjvm-adma01.eng.stellus.in>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <34B238BD4E60A447B0B1870B18E821DF@ssi.samsung.com>
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Lcm9xCdZ"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7c55500cf80so182387485a.1
+        for <linux-cxl@vger.kernel.org>; Fri, 21 Mar 2025 11:07:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1742580454; x=1743185254; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YLZ7c8PVq08fNJyONQLIT/0eP11NvUsx2TyTerL7XHc=;
+        b=Lcm9xCdZx3SU4zIQeK0307UQBIHvzFmf/PvKMcOr1rwqqwY7dxAsvEhHXgMB8oLDbi
+         W8He2l8z0QUaqpWNKzk4Xzwm4stCtCpfgrNuexEcfdvAPY5Zs0DWHdUW3zaKBjhvF2k4
+         BomHBcCf8EvIwSW8xDthRPI2H/VSnP6h2xgfBYAlsWKDR9N2pM2Qpfrc9USAE/LXmHT6
+         enTLFUcC1Z/8FULl3V+X0w636KSuphDbWiukF3qchEsquaaHFX6NYP4N1WjmRrzFlBAz
+         Ov63OOb6a1sPOUiSNlrY/Bx5dvgIgpKwlSc9Fy9NaKsKSYXRqZa+6sRUorYaKxufK1FA
+         WESw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742580454; x=1743185254;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YLZ7c8PVq08fNJyONQLIT/0eP11NvUsx2TyTerL7XHc=;
+        b=KWWd7a2e3etT1y0vetP/pFfaHS+KDijC1PR0UCV70dI6RRfJt3dk6EhLuADcpNHLxL
+         5uYpNIbV3qDD8vi20Z6Qqp35R4rDMMLCZbDK2iLCL5zC0kcPeCTcXjcpW/rmyfBEEF5a
+         XrBX6FUNVwwoBHFaZGghBSSVWnnY/FCJrVMNtnRqEeZazzFGEBrHXWC7Bxoq0C0jOnGY
+         bPoPaJfxUco7nXrfjHX5GTdLltQRkyQcAkR5Zp20WyK4pL9pRzkf7B/Fj+MjYu8j3nhb
+         vS7fPR20RSnmQOtddwfXB/+h47o4ClPg3LD7Ejs/xm3plkp7HUC7pS/A9jwPLTZjBD1p
+         KcWw==
+X-Gm-Message-State: AOJu0Ywkch5FQx3Pjb5Lm0rRLnQo03xqcwTaE5SXLKOPkAPbodLdwsoF
+	x1izGxw110UDKGmQy5ufrsGNci9YdLM+DQa/zY2dmdRSHGwsC1P5FWvfWiRvRDaus0JixsnMITJ
+	f
+X-Gm-Gg: ASbGncsGegQber6GKzVonKBGvEhzXm8x8GK21g8/Bf/IxuL3TYPMdai9sKxMAfkngZ7
+	QRcIDZTHGXSLzht9yGmlEAKg9l7cW/QlClaFuoAuBfRPO/D+Zf5WdRYOsd9p/FdXwULh5+KghJr
+	5EhkdX92RnYSEOWKzuhjUCNKuWAO73k2bEScR8EbnZa4zyWpMNdZrSjfxnQJf0RfLDnRsZQJg1v
+	FgC4O6THM7scIGc5+y4epA3GMdSC3f10YMSoY8pdaYPf5anPeV32wcn05l1pnmhqo0Q8NiU+XB5
+	D7YJUkftHMGb8j3AFi7dpDCrNlKrEBIGNDrqkjGS/sfNyTs4hEoBR2bnppTWbcmJznIX8Qwo2D9
+	fk6Jk3Qx2SzFFAhHl3IK1bAzPyz8aAUOr
+X-Google-Smtp-Source: AGHT+IFUnfQhtjCQYv7DzHsq6hKskzByzvAs8wuY7quw/aYR00Op6Rp9Y4a5IxpqPKPkNuMTQdbM5g==
+X-Received: by 2002:a05:620a:269a:b0:7c5:3ca5:58fe with SMTP id af79cd13be357-7c5ba15a54emr539420085a.22.1742580454012;
+        Fri, 21 Mar 2025 11:07:34 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5b92b2bb6sm158643885a.11.2025.03.21.11.07.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Mar 2025 11:07:33 -0700 (PDT)
+From: Gregory Price <gourry@gourry.net>
+To: linux-cxl@vger.kernel.org
+Cc: nvdimm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kernel-team@meta.com,
+	dan.j.williams@intel.com,
+	vishal.l.verma@intel.com,
+	dave.jiang@intel.com
+Subject: [PATCH] DAX: warn when kmem regions are truncated for memory block alignment.
+Date: Fri, 21 Mar 2025 14:07:31 -0400
+Message-ID: <20250321180731.568460-1-gourry@gourry.net>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuphleLIzCtJLcpLzFFi42LZduzred3CxXfTDb6vkrA4P+sUi8W+13uZ
-	Le73OTgwe0y+sZzRY/2WqywenzfJBTBHcdmkpOZklqUW6dslcGXsePmcreA0U8X0u3kNjE1M
-	XYycHBICJhJvv0xl7WLk4hASWMko8XHGb2YIp5VJYvq0lcwwVYsvb2OESKxhlFjy5jYrSEJI
-	4BOjxKwTHBCJJYwSyyavYAFJsAkYSPw+vhGsW0QgV+LB5C3sIDazgLVE/+mzYHFhAUWJqy8+
-	sUDUqEnMn7iUFcLWk5h9ah7YfSwCqhL3T5wE6+UVsJTY8fMhI4jNKCAm8f3UGiaImeISt57M
-	h/pHUGLR7D1QV4tJ/Nv1kA3CVpS4//0l1A06Egt2f2KDsO0k7l16BDVHW2LZwtfMELsEJU7O
-	fMIC0SspcXDFDRaQJyUEOjkkJnRegFrmIrFv63RWCFta4u/dZVDxfIldbVegjqiQuPq6G+oI
-	a4mFf9ZDLeOT+PvrEeMERuVZSH6YheS+WUjum4XkvllI7lvAyLqKUby0uDg3PbXYOC+1XK84
-	Mbe4NC9dLzk/dxMjMMGc/ne4YAfjrVsf9Q4xMnEwHmKU4GBWEuEV6bidLsSbklhZlVqUH19U
-	mpNafIhRmoNFSZxX5UBrupBAemJJanZqakFqEUyWiYNTqoGpp2DKU9d3bH5L1YU1VHZ/nWIr
-	f3RjlfTpU8+/ZqbXvrRtib/jsrAiSuhm9iPh/16lxtsivv3Sl3dX3/bGgfESg/WDsrqQA0pK
-	1ZuOh9Uc7v1xWGPNVK7Lk4/Ur4lYs0Vve6F00mfLPSdebr+S0Fn1yHeqyf32nUKrZbZ+S3YR
-	j/vg4LorexGzvrPatMuvhc38DvlFex/WPfIue827M6LnxPLllmf8XHH28ubiUj25B/6Ci6Za
-	/+w+sV15sqp1SWL+Tr+W+bWxcxpDSqrCrG42TxMOijuW3PYv1L88bt6zGcGSF94uNpsda34t
-	f+FLsQf1zAxt61tt/3wW/DhzetaDHU2duxiaD28TVlNn0hRVYinOSDTUYi4qTgQANUYdCJ8D
-	AAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprEIsWRmVeSWpSXmKPExsWS2cDsrFuw+G66wew11hbnZ51isdj3ei+z
-	xf0+Bwdmj8k3ljN6rN9ylcXj8ya5AOYoLpuU1JzMstQifbsErowdL5+zFZxmqph+N6+BsYmp
-	i5GTQ0LARGLx5W2MXYxcHEICqxgldkx4yQ7hfGKUmDptNpSzhFHiVPc8NpAWNgEDid/HNzKD
-	2CICuRIPJm9hB7GZBawl+k+fBYsLCyhKXH3xiQWiRk1i/sSlrBC2nsTsU/PAVrMIqErcP3ES
-	rJdXwFJix8+HjCA2o4CYxPdTa5ggZopL3HoyH+pUAYkle84zQ9iiEi8f/2OFsBUl7n9/CXWD
-	jsSC3Z/YIGw7iXuXHkHN0ZZYtvA1M8QuQYmTM5+wQPRKShxccYNlAqPYLCTrZiEZNQvJqFlI
-	Rs1CMmoBI+sqRvHS4uLc9Ipio7zUcr3ixNzi0rx0veT83E2MwGg7/e9w9A7G27c+6h1iZOJg
-	PMQowcGsJMIr0nE7XYg3JbGyKrUoP76oNCe1+BCjNAeLkjjv3QcaqUIC6YklqdmpqQWpRTBZ
-	Jg5OqQam5Gtb7nXkhshrzZFlTE0W5GWUmCKyfc1FjnN8X3hcFDZIbpqctMB61VZ/RcGvAkuz
-	GVwan2tVC0/13f/MZC1XT82c7e8DZk/4uzhle3yD1z8TEb6kk5YbEhReSBgeWv/121SLkoP8
-	8gU5H5gVFtzMrrfatfq11Z0Z67okNk9+MfFxUHqTlU1ZfkDXnqaf88JD36w9Ycu3pCnyN8dB
-	8yAjXaNAgW+L9l6RNe19/cMo8oJK9trI9MlXnmX7rT2W+HjVe8PMO5cy7gtvDVnUJzHjsvDv
-	uXyH2+dbm5yuOV978EpJv3Hh7uJ6s8xHT0pYTxWvUctfc+zvvPJVoi3lr1c4qrz/mBd0T0P8
-	aWv6biU/JZbijERDLeai4kQAiMgCqSUDAAA=
-X-CMS-MailID: 20250321173545uscas1p13ddcb034757adaf41dcc3f64dbedb509
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20250321173545uscas1p13ddcb034757adaf41dcc3f64dbedb509
-References: <CGME20250321173545uscas1p13ddcb034757adaf41dcc3f64dbedb509@uscas1p1.samsung.com>
+Content-Transfer-Encoding: 8bit
 
+Device capacity intended for use as system ram should be aligned to the
+architecture-defined memory block size or that capacity will be silently
+truncated and capacity stranded.
 
-Hello,
+As hotplug dax memory becomes more prevelant, the memory block size
+alignment becomes more important for platform and device vendors to
+pay attention to - so this truncation should not be silent.
 
-I would like to have a BOF/encourage hallway chat for those interested
-in CXL driver development. A couple of suggested topics:
+This issue is particularly relevant for CXL Dynamic Capacity devices,
+whose capacity may arrive in spec-aligned but block-misaligned chunks.
 
-- Type2 Support
-- DCD support
-- RAS evolution
-- CXL Device virtualization
-- CXL.io control plane + non cxl data plane
+Example:
+ [...] kmem dax0.0: dax region truncated 2684354560 bytes - alignment
+ [...] kmem dax1.0: dax region truncated 1610612736 bytes - alignment
 
-Please add others who many be interested.
+Signed-off-by: Gregory Price <gourry@gourry.net>
+---
+ drivers/dax/kmem.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-Take care,
-Adam=
+diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
+index e97d47f42ee2..15b6807b703d 100644
+--- a/drivers/dax/kmem.c
++++ b/drivers/dax/kmem.c
+@@ -28,7 +28,8 @@ static const char *kmem_name;
+ /* Set if any memory will remain added when the driver will be unloaded. */
+ static bool any_hotremove_failed;
+ 
+-static int dax_kmem_range(struct dev_dax *dev_dax, int i, struct range *r)
++static int dax_kmem_range(struct dev_dax *dev_dax, int i, struct range *r,
++			  unsigned long *truncated)
+ {
+ 	struct dev_dax_range *dax_range = &dev_dax->ranges[i];
+ 	struct range *range = &dax_range->range;
+@@ -41,6 +42,9 @@ static int dax_kmem_range(struct dev_dax *dev_dax, int i, struct range *r)
+ 		r->end = range->end;
+ 		return -ENOSPC;
+ 	}
++
++	if (truncated && (r->start != range->start || r->end != range->end))
++		*truncated = (r->start - range->start) + (range->end - r->end);
+ 	return 0;
+ }
+ 
+@@ -75,6 +79,7 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
+ 	mhp_t mhp_flags;
+ 	int numa_node;
+ 	int adist = MEMTIER_DEFAULT_DAX_ADISTANCE;
++	unsigned long ttl_trunc = 0;
+ 
+ 	/*
+ 	 * Ensure good NUMA information for the persistent memory.
+@@ -97,7 +102,7 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
+ 	for (i = 0; i < dev_dax->nr_range; i++) {
+ 		struct range range;
+ 
+-		rc = dax_kmem_range(dev_dax, i, &range);
++		rc = dax_kmem_range(dev_dax, i, &range, NULL);
+ 		if (rc) {
+ 			dev_info(dev, "mapping%d: %#llx-%#llx too small after alignment\n",
+ 					i, range.start, range.end);
+@@ -130,8 +135,9 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
+ 	for (i = 0; i < dev_dax->nr_range; i++) {
+ 		struct resource *res;
+ 		struct range range;
++		unsigned long truncated = 0;
+ 
+-		rc = dax_kmem_range(dev_dax, i, &range);
++		rc = dax_kmem_range(dev_dax, i, &range, &truncated);
+ 		if (rc)
+ 			continue;
+ 
+@@ -180,8 +186,12 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
+ 				continue;
+ 			goto err_request_mem;
+ 		}
++
++		ttl_trunc += truncated;
+ 		mapped++;
+ 	}
++	if (ttl_trunc)
++		dev_warn(dev, "dax region truncated %ld bytes - alignment\n", ttl_trunc);
+ 
+ 	dev_set_drvdata(dev, data);
+ 
+@@ -216,7 +226,7 @@ static void dev_dax_kmem_remove(struct dev_dax *dev_dax)
+ 		struct range range;
+ 		int rc;
+ 
+-		rc = dax_kmem_range(dev_dax, i, &range);
++		rc = dax_kmem_range(dev_dax, i, &range, NULL);
+ 		if (rc)
+ 			continue;
+ 
+-- 
+2.48.1
+
