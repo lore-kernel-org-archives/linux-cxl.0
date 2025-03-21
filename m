@@ -1,163 +1,121 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BFA726ACB;
-	Fri, 21 Mar 2025 07:50:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742543407; cv=none; b=uPtQJxg/sw6WTilRssFVW3iHVsE1WkJxYmLPHrNRZUt7fD70fZ11ey7DUR9fdK/RudHo6NXQGNbMYMOEVY/G5JeMS43p/Ui1i0BEPIeWbM4LjeDVxIEJsN52CJUOyOSAFtXsHs77/610h1HUA6t2vDLQeicZi4exrofWeUU9c2M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742543407; c=relaxed/simple;
-	bh=6hI6HTb0SjrdNqP1YFqTh6hXn9ZSUNy1APKZfKSSCjY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DBoC8pIpZswCPs8stqF06r3JQHt9gNBxu8fQwARvxEqIt5EGQ90G8XiG8/zUzl2uubNRmb/kmrgw0eMUQtii6QJ7SjfSb16dZpZTJm8TsiO3fwnF/lY4O3BBFnPrVUX+ze1ciM1dGFHkvtDFdq7A1ZR5aVF7MX7s1ngVaB3ZYbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4ZJvVF4Pn7z9sRy;
-	Fri, 21 Mar 2025 08:39:49 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id F-EBTBk1L9WD; Fri, 21 Mar 2025 08:39:49 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4ZJvVF2zQJz9sRs;
-	Fri, 21 Mar 2025 08:39:49 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 427FB8B79C;
-	Fri, 21 Mar 2025 08:39:49 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id 6L_KAMM1K10W; Fri, 21 Mar 2025 08:39:49 +0100 (CET)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 491FB8B763;
-	Fri, 21 Mar 2025 08:39:47 +0100 (CET)
-Message-ID: <eff21b9b-0b03-4dbc-aa0a-7d3771df9082@csgroup.eu>
-Date: Fri, 21 Mar 2025 08:39:46 +0100
+Received: from buffalo.birch.relay.mailchannels.net (buffalo.birch.relay.mailchannels.net [23.83.209.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B063F1388;
+	Fri, 21 Mar 2025 07:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.209.24
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742543886; cv=pass; b=bBa13RX73Do6KKF4FXjg1uqXqCpIaiExB0FCKla5t0hfoPq9W/ZbOBGATkun1kQt/TYlYFANJ3gH9wgLwUjh5Rsw/XC4mNKm6LuaslBt1sDJ9Cnq7V4kbQFKWclHm22P39RWc3TLjU/ACEFSGw4pcBqozfySOMBJ5qznJBNHcZU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742543886; c=relaxed/simple;
+	bh=UnHOO/0o9icAYmNqnO8vLCcu+VibrNBPds8KJJ7Npxk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YvwsGGsH5CPR0MZDAKAZrlmokIGKyKYddtR81IPcv5cP6Y7gvijKbexG7JFNqlmR/Aou8a5l02vOLMwB4aI8v3yOUsyOHDrlVlIwFbXs/kMFBDFFq4n74XNWlAJdoFNRG2SLU8NsBuCE4HVYgdbzAJsXXOP2qi/m024t/w2GYRs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=kuKl/0mo; arc=pass smtp.client-ip=23.83.209.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="kuKl/0mo"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id DB568783891;
+	Fri, 21 Mar 2025 07:41:58 +0000 (UTC)
+Received: from pdx1-sub0-mail-a313.dreamhost.com (100-115-57-189.trex-nlb.outbound.svc.cluster.local [100.115.57.189])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 49CFB783AD4;
+	Fri, 21 Mar 2025 07:41:58 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1742542918; a=rsa-sha256;
+	cv=none;
+	b=Hbx8zXOcZyoxUGVupNsX0ffRV7DcEB/I82G3hcrfPWh9ma9Rnng+IYpN5BENlRYapTwiRK
+	dOAdeacR2drQyTG2wfPaS6Q7/4IgWPQaoxEw7XIl/DiRZ4YWaGisygwnGqehT0lZpfGH+J
+	HW5sYk/6iHovETTwtinyuLDcThMhE8WXug7ZjQsu0Dp4UHmew9KphJswdY/2hWt5NgSmpl
+	DVgd98X4bdshBb8hwYzVEdkrLAriTyNEyW2l9JJVM++VDGJ2XcE/Jnp/D85zuZzijCrQ/S
+	chihqY6mtYyhjKb6bqpO4L9V3BMEI+nCwTeA3+hGDMl40m1ub6UDlNBCHnMJNw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1742542918;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=UnHOO/0o9icAYmNqnO8vLCcu+VibrNBPds8KJJ7Npxk=;
+	b=gR8gf6Nl8w7ddJCpRMf/Uobr5PuG0wjI4s6hdy1J0T303a5l/KfEPVV63S8b4vE8/0OQb0
+	ozidmvxEDXJLpHh5E9QhufSrMkbU78K8zlSgIPsrYpQ4EsVvKOuvxAz3GPFuNkjvnY2FY/
+	lbJbfKBmdyFmmhFimlIKpfDEKFrmp/0IL4ObF5AB2soFGHvTm5P96H4ZKTDotRCJ7Uv+Hs
+	YgsWf5Z9yXDQLgA9lS1gN9OkIn+VDUrjnZza+ncPuoQGpRFbRdkSC/10ImVrqo5mx06N9r
+	m5koxqog39iBCPwnQPRfA163lT2w4uVhBUYzzl/0hFjN1QVHQN40RsH84UzSiw==
+ARC-Authentication-Results: i=1;
+	rspamd-74d566c845-79ct4;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Company-Shrill: 57d17fdc02ed3bcc_1742542918638_1087039239
+X-MC-Loop-Signature: 1742542918638:2043952214
+X-MC-Ingress-Time: 1742542918638
+Received: from pdx1-sub0-mail-a313.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.115.57.189 (trex/7.0.2);
+	Fri, 21 Mar 2025 07:41:58 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a313.dreamhost.com (Postfix) with ESMTPSA id 4ZJvXj4RyhzK7;
+	Fri, 21 Mar 2025 00:41:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1742542918;
+	bh=UnHOO/0o9icAYmNqnO8vLCcu+VibrNBPds8KJJ7Npxk=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=kuKl/0moaPMMiu00g+Dwi8N0RpHD7dAoJ557Qdoicv7j6qWqYEc7ozSjUwCX6Rewu
+	 Z7vYm1snSfU0XC38Nu90Cgz5nf4DmLFCnRDkikX6WiM0MvFxTLey9Ipe/93x4EeSMV
+	 gOGwc5Qr8W9ZxBZdtXG7rZahkqOgWqurKxS3NWu9T9/ezCNa6y/FCAeVcYbW9HRFV/
+	 mrZrrWCeNblzPRW4G9H5LLSkWHJbDxYtfpYq6M+GJ/GcmDxlT7ce5VRa2/881wBaM3
+	 1FFYwcCmJw+eQxfI6qF4rtgH0EjtXAjvoATwT6vgOwKpR/AfsEGyK0hQ1ahlXhzR7K
+	 MKEzZzn68OdKg==
+Date: Fri, 21 Mar 2025 00:41:54 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Li Ming <ming.li@zohomail.com>
+Cc: jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC Patch v1 1/3] cxl/core: Fix caching dport GPF DVSEC issue
+Message-ID: <20250321074154.ltenxqprgxizh5kx@offworld>
+References: <20250319035516.222054-1-ming.li@zohomail.com>
+ <20250319035516.222054-2-ming.li@zohomail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/8] cxl: support CXL memory RAS features
-To: shiju.jose@huawei.com, linux-cxl@vger.kernel.org,
- dan.j.williams@intel.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
- dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
- ira.weiny@intel.com, david@redhat.com, Vilas.Sridharan@amd.com
-Cc: linux-edac@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, bp@alien8.de,
- tony.luck@intel.com, rafael@kernel.org, lenb@kernel.org, mchehab@kernel.org,
- leo.duran@amd.com, Yazen.Ghannam@amd.com, rientjes@google.com,
- jiaqiyan@google.com, Jon.Grimm@amd.com, dave.hansen@linux.intel.com,
- naoya.horiguchi@nec.com, james.morse@arm.com, jthoughton@google.com,
- somasundaram.a@hpe.com, erdemaktas@google.com, pgonda@google.com,
- duenwen@google.com, gthelen@google.com, wschwartz@amperecomputing.com,
- dferguson@amperecomputing.com, wbs@os.amperecomputing.com,
- nifan.cxl@gmail.com, tanxiaofei@huawei.com, prime.zeng@hisilicon.com,
- roberto.sassu@huawei.com, kangkang.shen@futurewei.com,
- wanghuiqiang@huawei.com, linuxarm@huawei.com
-References: <20250320180450.539-1-shiju.jose@huawei.com>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <20250320180450.539-1-shiju.jose@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250319035516.222054-2-ming.li@zohomail.com>
+User-Agent: NeoMutt/20220429
 
+On Wed, 19 Mar 2025, Li Ming wrote:
 
+>Per Table 8-2 in CXL r3.2 section 8.1.1 and CXL r3.2 section 8.1.6, only
+>CXL Downstream switch ports and CXL root ports have GPF DVSEC for CXL
+>Port(DVSEC ID 04h).
+>
+>CXL subsystem has a gpf_dvsec in struct cxl_port which is used to cache
+>the offset of a GPF DVSEC in PCIe configuration space. It will be
+>updated during the first EP attaching to the cxl_port, so the gpf_dvsec
+>can only cache the GPF DVSEC offset of the dport which the first EP is
+>under. Will not have chance to update it during other EPs attaching.
+>That means CXL subsystem will use the same GPF DVSEC offset for all
+>dports under the port, it will be a problem if the GPF DVSEC offset
+>cached in cxl_port is not the right offset for a dport.
+>
+>Moving gpf_dvsec from struct cxl_port to struct cxl_dport, make every
+>cxl dport has their own GPF DVSEC offset caching, and each cxl dport
+>uses its own GPF DVSEC offset for GPF DVSEC accessing.
 
-Le 20/03/2025 à 19:04, shiju.jose@huawei.com a écrit :
-> From: Shiju Jose <shiju.jose@huawei.com>
-> 
-> Support for CXL memory RAS features: patrol scrub, ECS, soft-PPR and
-> memory sparing.
-> 
-> This CXL series was part of the EDAC series [1].
-> 
-> The code is based on cxl.git next branch [2] merged with ras.git edac-cxl
-> branch [3].
-> 
-> 1. https://lore.kernel.org/linux-cxl/20250212143654.1893-1-shiju.jose@huawei.com/
-> 2. https://web.git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/log/?h=next
-> 3. https://web.git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git/log/?h=edac-cxl
-> 
-> Userspace code for CXL memory repair features [4] and
-> sample boot-script for CXL memory repair [5].
-> 
-> [4]: https://lore.kernel.org/lkml/20250207143028.1865-1-shiju.jose@huawei.com/
-> [5]: https://lore.kernel.org/lkml/20250207143028.1865-5-shiju.jose@huawei.com/
+This conversion looks good if necessary.
 
-The title for the series is quite confusing, CXL seems to be something 
-else. There is a series here [1] that removes CXL driver, but after 
-looking it seems to be something completely different.
-
-[1] https://lore.kernel.org/all/20250219070007.177725-1-ajd@linux.ibm.com/
-
-Christophe
-
-
-> 
-> Changes
-> =======
-> v1 -> v2:
-> 1. Feedbacks from Dan Williams on v1,
->     https://lore.kernel.org/linux-mm/20250307091137.00006a0a@huawei.com/T/
->    - Fixed lock issues in region scrubbing, added local cxl_acquire()
->      and cxl_unlock.
->    - Replaced CXL examples using cat and echo from EDAC .rst docs
->      with short description and ref to ABI docs. Also corrections
->      in existing descriptions as suggested by Dan.
->    - Add policy description for the scrub control feature.
->      However this may require inputs from CXL experts.
->    - Replaced CONFIG_CXL_RAS_FEATURES with CONFIG_CXL_EDAC_MEM_FEATURES.
->    - Few changes to depends part of CONFIG_CXL_EDAC_MEM_FEATURES.
->    - Rename drivers/cxl/core/memfeatures.c as drivers/cxl/core/edac.c
->    - snprintf() -> kasprintf() in few places.
->    
-> 2. Feedbacks from Alison on v1,
->    - In cxl_get_feature_entry()(patch 1), return NULL on failures and
->      reintroduced checks in cxl_get_feature_entry().
->    - Changed logic in for loop in region based scrubbing code.
->    - Replace cxl_are_decoders_committed() to cxl_is_memdev_memory_online()
->      and add as a local function to drivers/cxl/core/edac.c
->    - Changed few multiline comments to single line comments.
->    - Removed unnecessary comments from the code.
->    - Reduced line length of few macros in ECS and memory repair code.
->    - In new files, changed "GPL-2.0-or-later" -> "GPL-2.0-only".
->    - Ran clang-format for new files and updated.
-> 3. Changes for feedbacks from Jonathan on v1.
->    - Changed few multiline comments to single line comments.
-> 
-> Shiju Jose (8):
->    cxl: Add helper function to retrieve a feature entry
->    EDAC: Update documentation for the CXL memory patrol scrub control
->      feature
->    cxl/edac: Add CXL memory device patrol scrub control feature
->    cxl/edac: Add CXL memory device ECS control feature
->    cxl/mbox: Add support for PERFORM_MAINTENANCE mailbox command
->    cxl: Support for finding memory operation attributes from the current
->      boot
->    cxl/memfeature: Add CXL memory device soft PPR control feature
->    cxl/memfeature: Add CXL memory device memory sparing control feature
-> 
->   Documentation/edac/memory_repair.rst |   31 +
->   Documentation/edac/scrub.rst         |   47 +
->   drivers/cxl/Kconfig                  |   27 +
->   drivers/cxl/core/Makefile            |    1 +
->   drivers/cxl/core/core.h              |    2 +
->   drivers/cxl/core/edac.c              | 1730 ++++++++++++++++++++++++++
->   drivers/cxl/core/features.c          |   23 +
->   drivers/cxl/core/mbox.c              |   45 +-
->   drivers/cxl/core/memdev.c            |    9 +
->   drivers/cxl/core/ras.c               |  145 +++
->   drivers/cxl/core/region.c            |    5 +
->   drivers/cxl/cxlmem.h                 |   73 ++
->   drivers/cxl/mem.c                    |    4 +
->   drivers/cxl/pci.c                    |    3 +
->   drivers/edac/mem_repair.c            |    9 +
->   include/linux/edac.h                 |    7 +
->   16 files changed, 2159 insertions(+), 2 deletions(-)
->   create mode 100644 drivers/cxl/core/edac.c
-> 
-
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
