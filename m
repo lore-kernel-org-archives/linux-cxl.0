@@ -1,216 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D89122A81D;
-	Fri, 21 Mar 2025 13:41:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742564499; cv=fail; b=esz46liOtb+CW5wUBdgcIp7vTS4ogvE40/wBd76gdf3v9xO4wXRWV6xJuxZLnLoMJHPwziFhh9A0i655YIy0Eov15koeLPIQ54Dl/M61wkL+Sn1VHIpHKSwkXHN+KuYzsA7E9IqtPlZytWJVOfHS93DBLZDygBWh9RPtw/uvVS0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742564499; c=relaxed/simple;
-	bh=1ldajKprA4POSjWwza+ySugY6calZzMTUIUjMSGF9ss=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=eKTyv4iNXIxi+/rw1ntLdU5hoZt/iE2ySDyGKIFjOYAjzAy211jk46n1SpHI4uNOO8dyTjjJ4ANJ2VOfFkOr9AUGjsvB81TKW7DNUqeoLb8Sic9EVdcnC67NbcUv+eAjLN1DnxlMkCO9iKHPoql1RHu9HF4MUxwAyJIFZXJsSp8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aOPiWavl; arc=fail smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5EC413C914
+	for <linux-cxl@vger.kernel.org>; Fri, 21 Mar 2025 13:59:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742565590; cv=none; b=RHLyhHsDhh3PXw/tbAHd6zO2frltFt7ofb9dyGn8vplmsc+V0b9g9ROqd8bT21xtgrrVTl9jiH9NdkKd8DNYNzsIMKyINV0WfCxH2RpPjbD8BLQGdET3MUvl6SqbLxzLGOlmqLLZeykVN5UxO6hIkPudb2g2HLqQs+vdSXWZZU0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742565590; c=relaxed/simple;
+	bh=HqRt79DUsL4J+Cje/U08ihks64TvmbBB60ER7m4KqIQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fnz+I2hzARGexcWb8tFQJ51ST1YO0uKqL2dKS3skereuc2vz7gLvMaMNOVIXfTcw20lEdbUu9FUovJpvvigRCN5iyRHs6drTNxt/Tzc6tBMedjLJUE/8ldaX1QiiqP8i6/Cne8eWfP6UvWrQCAktN9lzbrVOlOMJAue9w437QsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=hCWJY4H/; arc=none smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aOPiWavl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742564497; x=1774100497;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=1ldajKprA4POSjWwza+ySugY6calZzMTUIUjMSGF9ss=;
-  b=aOPiWavlDhN+ppMXtOd9lV6pi83vtzzY/wvrKH4IxBUKPjulvpxCo+V9
-   Y2oC6zlZv/AzdPCj3EbVO1OujXN/CJ649FEcUz9u7jCXCBunsCakFMbae
-   LD4k5pdcM861hRsDb7YHOaC3jR4PM96Nv4auroJQKS5Vx12ajvN9DTCf5
-   uG7lDJHYkUAVP7vMLDvhdURR3Hsg5s91s4HMcsk1UGsSyz21HzmBaWzKG
-   ueCKu75fCY4/sdaN+3CHhBuRHcROT/5+/+czy4HuskEjyjDJyLaX5Nq+M
-   4rGatXm7A02YM2MX7kHR9zqO+Bv0xg4VqrzXs7MXnr4B08xlYaH5B7MTM
-   A==;
-X-CSE-ConnectionGUID: UfuL6za4SuyVhwylGJWchg==
-X-CSE-MsgGUID: ZofR0uQiS6uQrHsSMsRBVQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11380"; a="43949476"
-X-IronPort-AV: E=Sophos;i="6.14,264,1736841600"; 
-   d="scan'208";a="43949476"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 06:41:37 -0700
-X-CSE-ConnectionGUID: Qp4zOncnT3yMy9qSRQVb9g==
-X-CSE-MsgGUID: 9HrQgk48STCRELSSkV6z4w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,264,1736841600"; 
-   d="scan'208";a="124347210"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 06:41:36 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Fri, 21 Mar 2025 06:41:36 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Fri, 21 Mar 2025 06:41:36 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.168)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Fri, 21 Mar 2025 06:41:36 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=A/7mUQOK/Gx9XSLjbd1NpF1ZTd2EnubFurg5SeKp+uzHUAb6JA6Q+SDuw6ObViQlOIxI9NVKEMRIM+cc6q1EDnKonN/WtKsXxAAB+0IGjerrVMy3isFpQcJPKadYe31I58PH8EStg2/IbwIF/BC2OtJk/Mr6NWRY+AckqWSNeLlyd1IsZJhBUs0onD9TE3EQpP/jc7spRS5EAlGqekJz5Cy9CjW0G+Wyd1KrsG3wBmlSpJH4pdD6qCCc4u/2y2EZXhpTVamcqRXtrNED2Px43e55QMF8bbnqX0+iTuwmuATkHnEjY0tfUtPx4pgjMUmQxiBAa6UYwEPuvt8fTw8Zqw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pRIMuJzbBzrS9dYpTMcJ8dFsy2hMZ6UksqLvhkfwPQE=;
- b=anLL4eWxxfbgD0xcAQO6XqbGpkolGJfGrK9waBn6solocbhD806j0OEfIvMtTP7J3U4iSG8KwTwupcIGDsCABhfg4sJf26Ou83oTX5vV5bDz1dFIj8S4/+uCtWSNEZ3UTW8l7dOu9y4N7ZgBkmmjjeX3+j7gu7Q1hWLfikX/YjgGxwWRzAHwyZ/ijdPOVifIwP33FKBGroKJZOO1J8OVPhcBA0k/f2za7ZwwgeIdlveRMaOzp+aKpsoLE2pZRDn6hdEBHOR52WEeprtIiIXTNbjuhWLQvJMUq1FU3KsAU1A0DhL1V0fXkUYw1mL41rhdUgtW9K5zBCmNgEYCLo/0uA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by CH3PR11MB8703.namprd11.prod.outlook.com (2603:10b6:610:1cd::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.36; Fri, 21 Mar
- 2025 13:41:34 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::cf7d:9363:38f4:8c57]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::cf7d:9363:38f4:8c57%5]) with mapi id 15.20.8534.036; Fri, 21 Mar 2025
- 13:41:34 +0000
-Date: Fri, 21 Mar 2025 08:41:47 -0500
-From: Ira Weiny <ira.weiny@intel.com>
-To: Robert Richter <rrichter@amd.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>
-CC: Alison Schofield <alison.schofield@intel.com>, Jonathan Cameron
-	<Jonathan.Cameron@huawei.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Davidlohr Bueso <dave@stgolabs.net>, "Gregory
- Price" <gourry@gourry.net>, Terry Bowman <terry.bowman@amd.com>, "Robert
- Richter" <rrichter@amd.com>, Pankaj Gupta <pankaj.gupta@amd.com>,
-	<nvdimm@lists.linux.dev>
-Subject: Re: [PATCH v2] libnvdimm/labels: Fix divide error in
- nd_label_data_init()
-Message-ID: <67dd6c9b3727d_7836e2947@iweiny-mobl.notmuch>
-References: <20250320112223.608320-1-rrichter@amd.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250320112223.608320-1-rrichter@amd.com>
-X-ClientProxiedBy: MW4PR03CA0250.namprd03.prod.outlook.com
- (2603:10b6:303:b4::15) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="hCWJY4H/"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-476a57a9379so27878851cf.1
+        for <linux-cxl@vger.kernel.org>; Fri, 21 Mar 2025 06:59:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1742565587; x=1743170387; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+9dAeMLXO1UL2jebDZiJp6MgSYhpvl7GGhlGkzkHYBE=;
+        b=hCWJY4H/HvCvnT1jLdtUK2ei//S4FKzJ86TrxA+ffD7axcaxJ8tsd+5Qm83KmnsBSW
+         Usm77Egw5Ca975GFTLgsm96hanNsvwwcf4C4bwXBQO4Sr+vRUpDD9H2kvQ9xN6gc3oxI
+         zQ3LmuBXFBAej+pvIU4/d9Q7sTpYw+NJCldr/JI5iTxK20T+a26I+LIIQ8QYB5vmJ3z/
+         Gv7iUWS58K0ZjwsLZ8DXmxrd0le4j2Fkajuxt/opVMzX1QyZW3CBBevVAVL6xyePNTTK
+         yFULwQSy/CtFmc/rA92vKZ0NLorkJSvMDYr5dt5VvG0tMeZxtzZQ8R/Ia1k2g9MtAn+G
+         yk4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742565587; x=1743170387;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+9dAeMLXO1UL2jebDZiJp6MgSYhpvl7GGhlGkzkHYBE=;
+        b=dXnCLE/uYnqtDBrsgrrU8zm8p4ku3fyU16M0nU/BnnMFr0IiXsuM44TtKJ3dsajOng
+         DjJMir/0Ro6qWex1QNn5Xsh8x2OYok/RSj0xBnomM0O1P0gkfeqomGdMNjpHpWIbKn4B
+         8klQZg3+Gc7Cv42I/lWqkZcbbpxSpQFLCUM3zPrF9rjnxUbkyQUe09jkU1V4eMZIxhhV
+         WjE1B/NIfegeVmMfzeYk8qXp9g5tmQD5lvWAxazMTcBVJGOVTrGPwBsRn1EnzKsPwb31
+         FAj6PAKCAJ/f8ZFaFXWZSwCSwvMQC6X4cwOZPNqEx2LhxVT9DNR5+0PHUbl4+cvWS2/b
+         DNtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVGGo2ftxLiWEZHi0GV8iBKBtL32ggoZ5Dt0h7Vkrol+zBgTO1Ou/0jyPRUMq4bW0luGo3NRbdqKg0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxz3dc4COn5fVEd5NgVinLBmlNViSrOtAX1iW4CmPP0Jut6iut6
+	L+vojH3O74TnApiGXCEtA8wWgfcpTVmfgAFFVGqDVGvpSkRGQsQEMYmOKnvlfvQ=
+X-Gm-Gg: ASbGnctyGoQuXL3332pfmQoya80DZAMeztVWRSSP1bDShXDPF48VAsU2YcYHsOF9bxw
+	0pcr+fDzOnj2ADSmh9U4P7UdUmaob96ThBT/9pEMx3OqKmvLPGEXO05xRAXL5XWgGSVY5UAtu9I
+	KkKjWEFIt3XQXJbjx/2LfNeAV/Lblh11i5kJhqD2raXVR+3rAvmuolKQUT/TQKRTLeHns/9duXy
+	iWXZPxh/BnZNWOrJQ+w3xH8sDgFsUEA1PbZ3mLfSmklJL9fpKXvRZuJU9vH/8f/emZi9HOSfS6h
+	QnTG+4wixDrdXKdP+l5p46GChydNPZHADHC8NpHAEng49WxMtv9ZFOdx5TiLp9+kME5cVYZGPbE
+	PVu80fLCty6qg2YL7ZRW+TbH6f0M=
+X-Google-Smtp-Source: AGHT+IE40rw76FodwmzMUd5ZJ5Utk+psc3XwsJk0EM0cBH/ak9gdBIcEuV42/YBp1/X9s3GgwHKeSQ==
+X-Received: by 2002:a05:622a:1148:b0:476:b783:aae8 with SMTP id d75a77b69052e-4771ddc9124mr46926961cf.26.1742565587375;
+        Fri, 21 Mar 2025 06:59:47 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4771d18f7d4sm12292181cf.37.2025.03.21.06.59.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Mar 2025 06:59:46 -0700 (PDT)
+Date: Fri, 21 Mar 2025 09:59:44 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Rakie Kim <rakie.kim@sk.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+	joshua.hahnjy@gmail.com, dan.j.williams@intel.com,
+	ying.huang@linux.alibaba.com, david@redhat.com,
+	Jonathan.Cameron@huawei.com, kernel_team@skhynix.com,
+	honggyu.kim@sk.com, yunjeong.mun@sk.com
+Subject: Re: [PATCH v3 1/3] mm/mempolicy: Fix memory leaks in weighted
+ interleave sysfs
+Message-ID: <Z91w0FQ_CeWCHZRF@gourry-fedora-PF4VCD3F>
+References: <20250320041749.881-1-rakie.kim@sk.com>
+ <20250320041749.881-2-rakie.kim@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|CH3PR11MB8703:EE_
-X-MS-Office365-Filtering-Correlation-Id: ca0cf64f-a6e5-45a9-d686-08dd687e1841
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?f5L+yVN1aUhK9IFG13UJFZA7XRzWeXQDupBNwnx3aaBfGjxFoh4qNDVi/g2C?=
- =?us-ascii?Q?QxZ2DZopr+L802//nNg2CCrx2iDGVySvH1JsDtisTZNeCg5UOLG1gCpsYqFs?=
- =?us-ascii?Q?FsBXPhLzLeuBRErOjlCxr6olpcugcjELtYEHc2E/TVpLuPwbA1JzqqdEOEN7?=
- =?us-ascii?Q?faCShV9GYU/1nPU20nuTCEy1ACrcbSuWtXwStAgEfM+UGkkwtJu0/WKPEz0C?=
- =?us-ascii?Q?jG4fH/sFOE1UgUxyTIrosBOP6vzV46Zboi4TYVag9ealpnkg3bJ5FEkZ8h+A?=
- =?us-ascii?Q?4D43j8aK/KcRxf/SxwJtXogIXZ2kINRFlkaidtWJs0b5fp3/D2eN1vQeeVHX?=
- =?us-ascii?Q?V2lOli1hxR3zZkj8OR9+EqfFfizOkCJ1X2F1NZplasSxaOBoEck4+rtG9s5B?=
- =?us-ascii?Q?DCu0PhLor0FkTJDbJWsm3LXS7i9uOREigWzGOyLqz5yXDUBKOElopzEkfJbY?=
- =?us-ascii?Q?LSUc/Ojc6hN6AYWcpNypaU2YksIW5sJy1BLa/vPC/AblW9ZtppIiD77H9Ojl?=
- =?us-ascii?Q?Dp9+L4LkzMfD7ae3I3zhW9CCgMcJ57a8x2aVv9pCw7jZ+Lau59fhjn+EsXbA?=
- =?us-ascii?Q?9U9N5RFxPA2pblJY4GnMk5sxj1LZAwyjYn096l4B124PX7a1/u0kj58LXo3S?=
- =?us-ascii?Q?Y8qIcGvuyzZLRCAbuhj73kArZvhBl1Notirk7x/ca8KadF6ZGlMui0tM5j/C?=
- =?us-ascii?Q?utDhutpkfnDjHG9POPk9BPgFtTggzB9LKn1AfBF66Gy42K7g43oWlBCU+TIK?=
- =?us-ascii?Q?KT3IE/iQJdZscL3BvZQ1e3Jd35xMIVqgCwOIC9btgZ/3h1dntQmVqqI3xiOF?=
- =?us-ascii?Q?LqS1ewGGUfyubHmrXkNvVZEsNgJU1jcVsBGWZFLr2RZFSyUWLbnjwVqpiaZq?=
- =?us-ascii?Q?i28/wx+4czDJ1rx45Zp5259ri+i2/UqXvyms4nK0/BlmiaBILj6XCjnZoLsm?=
- =?us-ascii?Q?Zj0WEQ3hAF4LfEW0Mub2KFWA78Ek5kjZEv/EJBFdFuepZOokog5pZ3Iswdbv?=
- =?us-ascii?Q?pO+cEbxLzHycJv66XXgnJ5Ah4ZxxA+J1TuO0sja8miPBrij8Tih+nZgQJR/Q?=
- =?us-ascii?Q?RuJPwkMgVZ/RGw/otSJ6Pl9KqIoJph0qRLoYJw0DhDeFFHtLG+3O1+EvKIEk?=
- =?us-ascii?Q?PeKwH43QgUlicqgTPY1q11X4Wo24RQs01dBKi5MxXkwLKdppA4lVZ48vz37w?=
- =?us-ascii?Q?mCJWCr5G3ijGKXhAu51TzQ24EyKPBGGdqE7fLiSbPFDBVw04Va8uZNuLcaBa?=
- =?us-ascii?Q?CM7sljxdSTQBd5ZBAeyRcLX7aq77/e92GpWos/sg1JiCBFM5JmGcqYeoFxAz?=
- =?us-ascii?Q?LqCeaycGB14BNuK1sRtJ4finlcFgkfwkJZeFRMhfRo5luJGybIlRcp2Sy00u?=
- =?us-ascii?Q?ndWiZ+sK2Wb7Oj3gxT2Sf2MNnZEv?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?M1TcLVhjhti6BlhnCCiEsiM6TG0RPpvXFEf+BaOIZuxM8SnNtGxqjGK9zWpC?=
- =?us-ascii?Q?j+0y6Y+TxckiXyewhkwZaM0XqziZP2/4DawAmmTNNRhHxZVoHIraEHAIS13Y?=
- =?us-ascii?Q?Rzbbywg8+OhXIrPMaSHY+Ipk9XZWS4lu7JGSstIMg5xrmyy0xnsdI432KA0P?=
- =?us-ascii?Q?w6IcSHYBTOO6r2tB3ryj1swv+eWsjOKRYgDc3Y75+jCTrYkKuxOs5BYHL6/k?=
- =?us-ascii?Q?i8GwxcUEeBf2r65BsmIXkZyibgYfyI73rebi8NlCXO7H5YYbI6LNNYSJEa1J?=
- =?us-ascii?Q?RCCnU7CMp/l5Vqar5Gw9mLblW5JnQU+8BU+KkmKGaCnD33OX5N0XyGRLPAyb?=
- =?us-ascii?Q?/WpLjLbgGO76FwKQ3tFJyy4WxUWB36B/ibh62JSpgoWi0CAJFhsZOAtXYDxI?=
- =?us-ascii?Q?oUJy2Mnnau+zgDqIMV21dD9CSyUG74TjO8BRZmEx5srg6u1YUN9usAEufRKU?=
- =?us-ascii?Q?2IkacsUhexCFLgIgB3SfoQ5xshlsBREkA9Jpk3Kx2KGxr8AVT0RerXLtjKwX?=
- =?us-ascii?Q?U6wtrT/KCa1p3RGoCvVcEIl43MG6SRzZMOZ6qlvczT2Fp0SN4Q7vhbY4Va8k?=
- =?us-ascii?Q?sSn8vdw6RbFohbC4vWEJp23ibYEIorWARuyzhvxM1y4boGKkJhERe089Enkc?=
- =?us-ascii?Q?tODGycxzTuWqZ5Qn83K1QDJH2VR7HlXzrWcQbylE0TzhlrYxD5mMv15uoF8H?=
- =?us-ascii?Q?3RrzBKFkqELJYB2TN7PHMeslpoWlJeWsyjTDiaucaUA6/yOkMXtviEg2CvUj?=
- =?us-ascii?Q?RQOnMb9UVh2MiIZ3QkD2utO7uFAiH3TbGukW2YJ75jcnRU3Sb8YBTcNyORuH?=
- =?us-ascii?Q?985bodNZTDDsVhDqSdp2fZ5k3KPaF0AO4B+HErzvT2IjFrNE/pfHX7E4SLS1?=
- =?us-ascii?Q?KKwKzX3P6JyZoO49bsBcOhcWKNV45lxBBt5mZo/sthznxgNgQ2IKUmWjgsh8?=
- =?us-ascii?Q?11FEN9sO/Vu4ZkpBcER3SX8UzjC3jMC+ScG5eSA3XuVJiKmW5fC45JdcuTeG?=
- =?us-ascii?Q?j4sdo+JZtDVJCywa5ffaKe1VQSXgFhRT8SssyoWRvy349ox8rYpsta47YNWJ?=
- =?us-ascii?Q?34whZOH9voqs3Jy8nFihOjsbOJ/wAJjxXaw1mygt4Le7rCoW9KiAP/Incf80?=
- =?us-ascii?Q?AH6axcLojvSdfrjYpHGx3aWWc1bVrod8WPEybwe7f8Mdc973HUapK2jQUycP?=
- =?us-ascii?Q?ste8hsU2CNyEW4oUSMNfYR9kkU4UoozpXpBytKI+IOO25bzCLZTVicRHu9b3?=
- =?us-ascii?Q?B9IeDbGmY9x0wBwR9bnHDC92+UD4yTU11DHaExzvehQMv0/uKYZSc2O8MfDJ?=
- =?us-ascii?Q?EzgU/vFgEz2N3WC/M9CbPrHVT6KEOGNWI33LMaY6ZNrRng+bULzd83V3Np3l?=
- =?us-ascii?Q?Lv+gsMNH4BKMXrI+DThWIurWSJ1emO/nJXN/zd0HT7JmNzT4S0u8m4ISnA5c?=
- =?us-ascii?Q?mNTzUs64x7wDDRrX+jZOBQRuCDw8728eJfeWMuiCljKfnUfnH938NRgzFHZC?=
- =?us-ascii?Q?T8nwv+LEZAOUeD7cCwOdVlbXIcRmrwjyTZNoEs3UKVC/X/cO7OXYPaKW0wcU?=
- =?us-ascii?Q?mL0X1fV3rjfqsDKLbYEGV2/FVSVs1R5cksR4BN3j?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: ca0cf64f-a6e5-45a9-d686-08dd687e1841
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Mar 2025 13:41:34.0395
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Xocrks0E7UNvB0d4t6xbNtrN8CKyI1HpnOnf+HudOCSpn6LTwmegBQat9yU+6UfYIJ/vlnEQ5JuCnQwekS+fsg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB8703
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250320041749.881-2-rakie.kim@sk.com>
 
-Robert Richter wrote:
-> If a faulty CXL memory device returns a broken zero LSA size in its
-> memory device information (Identify Memory Device (Opcode 4000h), CXL
-> spec. 3.1, 8.2.9.9.1.1), a divide error occurs in the libnvdimm
-> driver:
+On Thu, Mar 20, 2025 at 01:17:46PM +0900, Rakie Kim wrote:
+> Memory leaks occurred when removing sysfs attributes for weighted
+> interleave. Improper kobject deallocation led to unreleased memory
+> when initialization failed or when nodes were removed.
 > 
->  Oops: divide error: 0000 [#1] PREEMPT SMP NOPTI
->  RIP: 0010:nd_label_data_init+0x10e/0x800 [libnvdimm]
+> This patch resolves the issue by replacing unnecessary `kfree()`
+> calls with `kobject_put()`, ensuring proper cleanup and preventing
+> memory leaks.
 > 
-> Code and flow:
+> By correctly using `kobject_put()`, the release function now
+> properly deallocates memory without causing resource leaks,
+> thereby improving system stability.
 > 
-> 1) CXL Command 4000h returns LSA size = 0
-> 2) config_size is assigned to zero LSA size (CXL pmem driver):
-> 
-> drivers/cxl/pmem.c:             .config_size = mds->lsa_size,
-> 
-> 3) max_xfer is set to zero (nvdimm driver):
-> 
-> drivers/nvdimm/label.c: max_xfer = min_t(size_t, ndd->nsarea.max_xfer, config_size);
-> 
-> 4) A subsequent DIV_ROUND_UP() causes a division by zero:
-> 
-> drivers/nvdimm/label.c: /* Make our initial read size a multiple of max_xfer size */
-> drivers/nvdimm/label.c: read_size = min(DIV_ROUND_UP(read_size, max_xfer) * max_xfer,
-> drivers/nvdimm/label.c-                 config_size);
-> 
-> Fix this by checking the config size parameter by extending an
-> existing check.
-> 
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-> Reviewed-by: Pankaj Gupta <pankaj.gupta@amd.com>
-> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> Fixes: dce41f5ae253 ("mm/mempolicy: implement the sysfs-based weighted_interleave interface")
+> Signed-off-by: Rakie Kim <rakie.kim@sk.com>
 
-Applied to nvdimm/next
+Reviewed-by: Gregory Price <gourry@gourry.net>
 
-Thanks,
-Ira
-
-[snip]
