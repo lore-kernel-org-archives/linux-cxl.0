@@ -1,92 +1,92 @@
-Received: from seahorse.cherry.relay.mailchannels.net (seahorse.cherry.relay.mailchannels.net [23.83.223.161])
+Received: from panther.cherry.relay.mailchannels.net (panther.cherry.relay.mailchannels.net [23.83.223.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94EE6B664;
-	Fri, 21 Mar 2025 05:23:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1284A208A7;
+	Fri, 21 Mar 2025 05:48:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=23.83.223.141
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742534602; cv=pass; b=n9s5GClSbpUiGP1aBUxqyi1wmPSJ9cZcSqEX0JdH3JVvRLldHEWanXyInSbLtWGk+XGdh98unhc0XLLK5pu4dzBrL05R8CQwE5wf/AFAFRK6nNd18mXYKR8uJcrinw+divwBmUUgaiMdFLtNr9/WABRKwcqULGXBjwLPTtOOT4A=
+	t=1742536136; cv=fail; b=Nv97+kNAA1vBrHM94RwIoxjmPALRdDQ/6cZA+JUA240gLzy+tnZ9V5BTyNBkcwSM5p4z7QWdLu4dnP5dKP2zmLMA+7ooUG8jnZm2R7DuqdU6ciTRgxBgTBHPChYoOc9upnWpFQJDUsMNrL8BS3pot/YEYaJ0E/RYcWWuvw5Zv7o=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742534602; c=relaxed/simple;
-	bh=t1naq+VCEMf0ogURBrW9QjucvZMdFB3JeOJdmjydhZ0=;
+	s=arc-20240116; t=1742536136; c=relaxed/simple;
+	bh=53FJt8Nl3aXBuorygGMCbOuRq+BG25RLd2YX5y4RzbE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bUn2+4tFuY1PkSqcxTAXnWdbkA2tAxrUi6ynt4ywb181ieEKkIkOMC1Sf1atjP+r8hOs40DeSVzqlNuFQZWwW4NCrpclY2cMkyfjdVFzvCsBmPoXcmjZe1j+Ncqr2WBNkajosC/Rr04YN1+RP1OaatvVv3sulXFF8woYkegbOco=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=X+Zzo/3m; arc=pass smtp.client-ip=23.83.223.161
+	 Content-Type:Content-Disposition:In-Reply-To; b=rhKWRLOLATGllWel3j3rQzKZv/JRiy+Tu03Iv4EGgstztLieLws7YKdYfd1QtlyG+f0H+9C2pR9ujx7rji062WilCvWIMb8hlJnY5tuAEh4pfe45Zeqz/m6QLly8ryw4V6iVtPtxeNkeaRotKmZ6e3uy6gGE4krbFEE/xONUMxg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=RHsqvk/1; arc=fail smtp.client-ip=23.83.223.141
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="X+Zzo/3m"
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="RHsqvk/1"
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id F2EE121705;
-	Fri, 21 Mar 2025 05:23:13 +0000 (UTC)
-Received: from pdx1-sub0-mail-a223.dreamhost.com (100-118-196-111.trex-nlb.outbound.svc.cluster.local [100.118.196.111])
+	by relay.mailchannels.net (Postfix) with ESMTP id 5A99C1A3DC0;
+	Fri, 21 Mar 2025 05:40:11 +0000 (UTC)
+Received: from pdx1-sub0-mail-a223.dreamhost.com (trex-7.trex.outbound.svc.cluster.local [100.97.52.66])
 	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 8E69B20D49;
-	Fri, 21 Mar 2025 05:23:13 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1742534593; a=rsa-sha256;
+	by relay.mailchannels.net (Postfix) with ESMTPA id D06681A4113;
+	Fri, 21 Mar 2025 05:40:10 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1742535610; a=rsa-sha256;
 	cv=none;
-	b=5o4My6UazYdZWIoblHdCnhPo1KaCeyncsficcjUzTAas5Z81VGpJboRRmeRIgOoR3vwwmw
-	O2/S37I6vbl3naBBOKmh8MdJE/tIm9z8dp7OMPNBkknnmIjIAHIyP2cQ/Lj9bWzxKyEIE7
-	i85qQZQvSo1m1ecc7mamSPVB1HNY5wtIjXwPAuUy+SbkqnHMuBW7nf2HRvuv+u2zxZtarz
-	V5yZnPmQslriZgqTvucZygezhPwkexDhgv7hxRybq0BDGIkqZQDaVamDbbTz6QiLdR8lQ8
-	/Idb9KXpQ6ylFXMM3H74nisihbr+bXSElPtnipUWwY5W2U6n+9NRCg3ssYjqQA==
+	b=KkOOAJK/RAPYuED448YYtciDVpjjGB5NkuOL0nfT5QX/20bjsWfwiwFAWRwKOWfps6XZGI
+	1Bl88lbIzFQBbyHw+SvxY02iugHgeG9axX9JW12q+j6MlP2HiKaSejN/3713pkr4LgfZ26
+	gkRW314A8SdlLcwaBtan4TF7zcN52CeTuaFCBtMj4tu5LQ4lX8UDBZgVK1vMvTo+DthVmr
+	MXlybxob76sYS2IypL/mxBmdB+Xrsh9j93qQYC9wVrqNaefnESeDRBlsI6TMDE3Yt9ymNT
+	U8dGst+XPyi7rJMRlY5I6+7Xmg2506bIzpxY7zppZYXcIvCARO8sOe5tiksgOw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-	s=arc-2022; t=1742534593;
+	s=arc-2022; t=1742535610;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=t1naq+VCEMf0ogURBrW9QjucvZMdFB3JeOJdmjydhZ0=;
-	b=GvKaoqwKYSs5MZRZVZ/+pi/XU2IhUhCd99/vMbM2UhOmV0VxWwjn1MTJALwmGW/7oNR5LE
-	BivP3jJLevtQP4lItmlSJPThDlM0N+z3W/US+LHF0BcGUMsJGD9tDR16z5G19eWKF4bAbZ
-	ydyBYbdoN9nSesfJjASR9SUIoxwfJUOAbIM1J97bnQcwHND+2cUJaJTALAjS86hGIF/uoL
-	P1QvnWInppU1bjSHN8MI8sAWiKjgz2JjI6OSZFWE+mkBsh9Jepib9UyFsWZDnZ39eJ+6+h
-	jRuGmZyx48vVKneX/gBKLMSr2moRHnrK1XWxm9HYEKImsgrnVJJj53NzSfQDNQ==
+	bh=0PS513F+RSzcE7ufaJ1VV9J2RalenEzSdXL1qjKWnms=;
+	b=OoYV9OvX8osBCWuo1z4lXevDHb7ctaR//ds0EAxfbEBLTOF69FTRHifaubz8qs/N/a3y5q
+	Ka2MUzle+QmjX9Ky6A1sC2IpuwOgcEfFlD+gGGg7DOsBrv7S7k/7USrshax8ItDJwYHYrO
+	WTiHUwerlAddn/YKgEQaFKowbDlWDpdES4YRcrG0hgtYvq6LbA//oA6lA8Dx1GSpJYEEIC
+	8aLLNPqcyfV+c27nftJalilFAk/UqAa/AoyaDlSLzhqjFN+n/C9weQnOguqubUJh5yG4kI
+	X46fnZTOygbig2GOAtRuGNu4q4JLixqCTIwudX1LNz/1ZGvyUyOJUsUsiuRVTA==
 ARC-Authentication-Results: i=1;
-	rspamd-74d566c845-wkfks;
+	rspamd-67d8974966-r82qp;
 	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Shoe-Illegal: 7fd6764676d829a3_1742534593843_3088180186
-X-MC-Loop-Signature: 1742534593843:2888225149
-X-MC-Ingress-Time: 1742534593843
+X-Whistle-Unite: 26a4e5d0610e8f75_1742535611133_93697085
+X-MC-Loop-Signature: 1742535611133:926574431
+X-MC-Ingress-Time: 1742535611133
 Received: from pdx1-sub0-mail-a223.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.118.196.111 (trex/7.0.2);
-	Fri, 21 Mar 2025 05:23:13 +0000
+	by 100.97.52.66 (trex/7.0.2);
+	Fri, 21 Mar 2025 05:40:11 +0000
 Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a223.dreamhost.com (Postfix) with ESMTPSA id 4ZJrSc6sFqzZT;
-	Thu, 20 Mar 2025 22:23:12 -0700 (PDT)
+	by pdx1-sub0-mail-a223.dreamhost.com (Postfix) with ESMTPSA id 4ZJrrB0STTzJt;
+	Thu, 20 Mar 2025 22:40:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1742534593;
-	bh=t1naq+VCEMf0ogURBrW9QjucvZMdFB3JeOJdmjydhZ0=;
+	s=dreamhost; t=1742535610;
+	bh=BA6hsN3yvUC4+OlJ0/XH6ZXiSbYXeRCoV1wEkucA7r0=;
 	h=Date:From:To:Cc:Subject:Content-Type;
-	b=X+Zzo/3mWBvQGMN5MFcze3kcDpjb4ryN0Dwbv90Wr/sXi0ycz4imzJufFIhez2Knx
-	 AJmmEfON1V4KP5myMuuPMLQl15XXiM+ZQsh+uzGq/6muPlPW3Gb7+IuS8gOFzMvA4d
-	 J1iouYQMZzDjiEJqTBKimwSoTUR7KiDVS6H/sgedpvT7RZrKt+bzgWtOXdAq/zLJJe
-	 RdehBluLhEfF2SNEjbcBLgPTPVHsjp1dqUzUiikmINmMOr/tyAlu5g7k3v2a8JQ+Z/
-	 NbCYvCH0/24SMZYXZyVc/wSTaSO1dvkSBF7ywfNH33J2IH26F4hP72eW6aVclhepAG
-	 8slb6/dtMQ7tg==
-Date: Thu, 20 Mar 2025 22:23:09 -0700
+	b=RHsqvk/1568KqhWp9X5bbEj2n24ZOEV1YOO8kcs6xbEmZ1jzhUy+wjOWy4iXFwFB1
+	 7DGjQOe7gVErt6/XvFFTE8lRGU4hUz5a4cWnasX1+qM/yOqY3e0aykzzhtSgeFP22f
+	 wX57AgpIyJqX5J8RNBYaWtKB+TUFgUmlqRdN5aHugGDAxkYskNhM+YT2JQ6y08PVvP
+	 4OCW8J82RCXS203ybMuXuIf6idmlNwtmcclt7kSzlrzSg41CFhuiVKcjEfBHh1bVIF
+	 VeMxFfESwGO6EnL8kLgjZH3s50sWkCsAoPgTcbgBiPVDD+PofVyStbF7l2LtJb2kA8
+	 w0PDCKs3o1hzw==
+Date: Thu, 20 Mar 2025 22:40:07 -0700
 From: Davidlohr Bueso <dave@stgolabs.net>
 To: Li Ming <ming.li@zohomail.com>
 Cc: jonathan.cameron@huawei.com, dave.jiang@intel.com,
 	alison.schofield@intel.com, vishal.l.verma@intel.com,
 	ira.weiny@intel.com, dan.j.williams@intel.com,
 	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC Patch v1 3/3] cxl/pci: Drop the parameter is_port of
- cxl_gpf_get_dvsec()
-Message-ID: <20250321052309.qkhlyabmcgbxtmtf@offworld>
+Subject: Re: [RFC Patch v1 2/3] cxl/pci: Update Port GPF timeout only when
+ the first EP attaching
+Message-ID: <20250321054007.fidkwiemotwqyui3@offworld>
 References: <20250319035516.222054-1-ming.li@zohomail.com>
- <20250319035516.222054-4-ming.li@zohomail.com>
+ <20250319035516.222054-3-ming.li@zohomail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -95,16 +95,36 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20250319035516.222054-4-ming.li@zohomail.com>
+In-Reply-To: <20250319035516.222054-3-ming.li@zohomail.com>
 User-Agent: NeoMutt/20220429
 
 On Wed, 19 Mar 2025, Li Ming wrote:
 
->The first parameter of cxl_gpf_get_dvsec() is a struct device, can be
->used to distinguish if the device is a cxl dport or a cxl pci device by
->checking the PCIe type of it, so the parameter is_port is unnecessary
->to cxl_gpf_get_dvsec(), using parameter struct device is enough.
->
->Signed-off-by: Li Ming <ming.li@zohomail.com>
+>If a CXL switch is under a CXL root port, The Port GPF Phase timeout
+>will be updated on the CXL root port when each cxl memory device under
+>the CXL switch is attaching. It is possible to be updated more than
+>once. Actually, it is enough to initialize once, other extra
+>initializations are redundant.
+
+It's actually not updated more than necessary because update_gpf_port_dvsec()
+checks first:
+
+	if (FIELD_GET(base, ctrl) == GPF_TIMEOUT_BASE_MAX &&
+	    FIELD_GET(scale, ctrl) == GPF_TIMEOUT_SCALE_MAX)
+		return 0;
+
+>When the first EP attaching, it always triggers its ancestor dports to
+>locate their own Port GPF DVSEC. The change is that updating Port GPF
+>Phase timeout on these ancestor dports after ancestor dport locating a
+>Port GPF DVSEC. It guaranttess that Port GPF Phase timeout updating on a
+
+s/guaranttess/guarantees
+
+>dport only happens during the first EP attaching.
+
+... but yeah, I think this is still better, logically.
 
 Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+
+(with the caveat that if patch 1 is not necessary then this would need to
+be redone).
