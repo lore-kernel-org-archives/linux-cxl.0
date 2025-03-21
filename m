@@ -1,76 +1,76 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5EC413C914
-	for <linux-cxl@vger.kernel.org>; Fri, 21 Mar 2025 13:59:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAAEA288BA
+	for <linux-cxl@vger.kernel.org>; Fri, 21 Mar 2025 14:03:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742565590; cv=none; b=RHLyhHsDhh3PXw/tbAHd6zO2frltFt7ofb9dyGn8vplmsc+V0b9g9ROqd8bT21xtgrrVTl9jiH9NdkKd8DNYNzsIMKyINV0WfCxH2RpPjbD8BLQGdET3MUvl6SqbLxzLGOlmqLLZeykVN5UxO6hIkPudb2g2HLqQs+vdSXWZZU0=
+	t=1742565814; cv=none; b=p/Oe2ImFNkH9uChrlcTGT5eiSp5QJ/IAHp7uauqUNMV7jNN+vyu6l0nCvOIj6nohVAkcGtIVqVwECdbPPWHRfMGohblG6nYNf013JCvpteP0w2RUwqe07OexhPOaAPEn9y4XIrrqZlqmgnYEu2uvjpsS85Qfp9Hp8JqZTgqHu1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742565590; c=relaxed/simple;
-	bh=HqRt79DUsL4J+Cje/U08ihks64TvmbBB60ER7m4KqIQ=;
+	s=arc-20240116; t=1742565814; c=relaxed/simple;
+	bh=dmQtTS/HM5impIz+F6T6ur8Go17p7rMrlpLMnE5hxNo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fnz+I2hzARGexcWb8tFQJ51ST1YO0uKqL2dKS3skereuc2vz7gLvMaMNOVIXfTcw20lEdbUu9FUovJpvvigRCN5iyRHs6drTNxt/Tzc6tBMedjLJUE/8ldaX1QiiqP8i6/Cne8eWfP6UvWrQCAktN9lzbrVOlOMJAue9w437QsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=hCWJY4H/; arc=none smtp.client-ip=209.85.160.181
+	 Content-Type:Content-Disposition:In-Reply-To; b=lDKZ6mj5gX5MVEPL0KjunmRhnHMep23OPsBOOmHPGZ7Gvs6WmohjJbEwvqsNzVXGcNk6nXpU+0LAaAtQXgOHzQ1vJi8ag/npaJ6p7tGiLn1PH2NEuzweZsfq8WAiSg5IUQefTFiSxLCbrZMQgY2Z0PZD3zuB4RadEidZ+HCw2NA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=GyCZ7mdQ; arc=none smtp.client-ip=209.85.219.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="hCWJY4H/"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-476a57a9379so27878851cf.1
-        for <linux-cxl@vger.kernel.org>; Fri, 21 Mar 2025 06:59:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="GyCZ7mdQ"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6e8fc176825so16639386d6.0
+        for <linux-cxl@vger.kernel.org>; Fri, 21 Mar 2025 07:03:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1742565587; x=1743170387; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1742565811; x=1743170611; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+9dAeMLXO1UL2jebDZiJp6MgSYhpvl7GGhlGkzkHYBE=;
-        b=hCWJY4H/HvCvnT1jLdtUK2ei//S4FKzJ86TrxA+ffD7axcaxJ8tsd+5Qm83KmnsBSW
-         Usm77Egw5Ca975GFTLgsm96hanNsvwwcf4C4bwXBQO4Sr+vRUpDD9H2kvQ9xN6gc3oxI
-         zQ3LmuBXFBAej+pvIU4/d9Q7sTpYw+NJCldr/JI5iTxK20T+a26I+LIIQ8QYB5vmJ3z/
-         Gv7iUWS58K0ZjwsLZ8DXmxrd0le4j2Fkajuxt/opVMzX1QyZW3CBBevVAVL6xyePNTTK
-         yFULwQSy/CtFmc/rA92vKZ0NLorkJSvMDYr5dt5VvG0tMeZxtzZQ8R/Ia1k2g9MtAn+G
-         yk4w==
+        bh=Uh0IrT1w8SpjDCYcv9mtaMhDrGwZvUvL6QFs1cEwHMU=;
+        b=GyCZ7mdQRxRwPbuQfvVlFj6b3BNM2f3j6LLTIgdu4DetZOUor9yfYRjZWweiWBNkF3
+         /WYZkgoOua5v8Yuk5BIKoRbh2HHdKHrM97eMf8+NDgt530yvksUcwVZCLtAeZHbOLwQa
+         EaZwKyzsz4swiJclXXGEPPN0BknkIFerXr0abpuJMCrr2LzguKq2hS2F07YaWPqbrTDk
+         FDms3nog+WoDmaNaHBLs8fZdS1Ubqx0sCBG6JJ7+Iv5SfVinvCH5Iu5RjlnDktizn5uJ
+         Tee4ZijZiShbzvMDvhrRGGvZWr/6Tyqdt692hYbUCxIsgS386H7JaaKdcDoOmA6WxEih
+         GZ0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742565587; x=1743170387;
+        d=1e100.net; s=20230601; t=1742565811; x=1743170611;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+9dAeMLXO1UL2jebDZiJp6MgSYhpvl7GGhlGkzkHYBE=;
-        b=dXnCLE/uYnqtDBrsgrrU8zm8p4ku3fyU16M0nU/BnnMFr0IiXsuM44TtKJ3dsajOng
-         DjJMir/0Ro6qWex1QNn5Xsh8x2OYok/RSj0xBnomM0O1P0gkfeqomGdMNjpHpWIbKn4B
-         8klQZg3+Gc7Cv42I/lWqkZcbbpxSpQFLCUM3zPrF9rjnxUbkyQUe09jkU1V4eMZIxhhV
-         WjE1B/NIfegeVmMfzeYk8qXp9g5tmQD5lvWAxazMTcBVJGOVTrGPwBsRn1EnzKsPwb31
-         FAj6PAKCAJ/f8ZFaFXWZSwCSwvMQC6X4cwOZPNqEx2LhxVT9DNR5+0PHUbl4+cvWS2/b
-         DNtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVGGo2ftxLiWEZHi0GV8iBKBtL32ggoZ5Dt0h7Vkrol+zBgTO1Ou/0jyPRUMq4bW0luGo3NRbdqKg0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxz3dc4COn5fVEd5NgVinLBmlNViSrOtAX1iW4CmPP0Jut6iut6
-	L+vojH3O74TnApiGXCEtA8wWgfcpTVmfgAFFVGqDVGvpSkRGQsQEMYmOKnvlfvQ=
-X-Gm-Gg: ASbGnctyGoQuXL3332pfmQoya80DZAMeztVWRSSP1bDShXDPF48VAsU2YcYHsOF9bxw
-	0pcr+fDzOnj2ADSmh9U4P7UdUmaob96ThBT/9pEMx3OqKmvLPGEXO05xRAXL5XWgGSVY5UAtu9I
-	KkKjWEFIt3XQXJbjx/2LfNeAV/Lblh11i5kJhqD2raXVR+3rAvmuolKQUT/TQKRTLeHns/9duXy
-	iWXZPxh/BnZNWOrJQ+w3xH8sDgFsUEA1PbZ3mLfSmklJL9fpKXvRZuJU9vH/8f/emZi9HOSfS6h
-	QnTG+4wixDrdXKdP+l5p46GChydNPZHADHC8NpHAEng49WxMtv9ZFOdx5TiLp9+kME5cVYZGPbE
-	PVu80fLCty6qg2YL7ZRW+TbH6f0M=
-X-Google-Smtp-Source: AGHT+IE40rw76FodwmzMUd5ZJ5Utk+psc3XwsJk0EM0cBH/ak9gdBIcEuV42/YBp1/X9s3GgwHKeSQ==
-X-Received: by 2002:a05:622a:1148:b0:476:b783:aae8 with SMTP id d75a77b69052e-4771ddc9124mr46926961cf.26.1742565587375;
-        Fri, 21 Mar 2025 06:59:47 -0700 (PDT)
+        bh=Uh0IrT1w8SpjDCYcv9mtaMhDrGwZvUvL6QFs1cEwHMU=;
+        b=G+kBYHR8A/M1AHxKFNDh+h3NrhWLM1gdq5JJQNdrDbOvSUDxqwC6uNGFiHfw2jd2YL
+         qxoeeDbqPd4lwjVWdBQOatVJQ9bU5OMaNCG5rzaniT6AZA6ObnfM9bFx5QEWWXKhYNKF
+         Ghh0+AIxh4xCJovb9UGcIz/IKSZeN9oPWMvzqgK/Z3HNA0BW/39hT3PqvJoc921txGzL
+         n19AVp4qbyMwoUiOGkG7Ftp79KTNGqWlgqZTq0UJ/pi+N18zoXaceRb/Nd3PCpdNWqBA
+         hw524LdQuxBCnx2GFLFduqIk1+T/HfU0m5qx287A354T5MRiXwW63+1bDH0p795rsIyY
+         +/tw==
+X-Forwarded-Encrypted: i=1; AJvYcCXN8jTUKbsKQKoPOeeAUe08CvNnCXejgelNsZbycGZyxJzqTLGN3kVijCeB6mKLuowk6/3fBxBT0Mg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz743jIrqgJI5nuvD3tDgc2hUf+rqDDpJygs58niTTlHnQ74aDH
+	PBT0epCMbre5TW8vmHEE9uygY7uZeueEDqHUi0DocKFHcaPG5O+u9W76qSwMt5Q=
+X-Gm-Gg: ASbGncv5BwIrnBelTMnUbmrIEotkREIalRhi5mtys2omfFk6cpJkIgU6eIdiHt+bZf4
+	kqQIzKWMiYbkwPn2Dum9QYvhZDHBdFWYE2K3YSKlwCq95q2mi3fVFGziGqT+LRLL8ALmJU7w1Wc
+	lIrm7LMDAtAUPRJQU9D8puhGibs8P95Fp7RskMWcULfyKggpDimlS65umoHxNZBSgALog3YnLFN
+	eEuQYPRgTw9yUBY07DJHx3KD0El3Mcbk/02wnVb0taMcjodhG0KygFvf1TvmmLsN9qU3qTknzY7
+	tXUB3zdXsaQG08/HeSpdja8AAfZn+u6+kdLYIltW4FkxJ1pePdTImUkigjGWSQ6qEYYMFvxzJVw
+	stPLxxz/FVcEs0GNaysZ4xAiCLno=
+X-Google-Smtp-Source: AGHT+IEsR9SqinX2KEraGDeefNZOjnaeKRUcenWDJRbEfEjhwa6N5Cjx0RY1yuslTrclVtYFfhgnzA==
+X-Received: by 2002:a05:6214:b6d:b0:6e4:4164:8baa with SMTP id 6a1803df08f44-6eb3f27f5f3mr39953556d6.6.1742565811373;
+        Fri, 21 Mar 2025 07:03:31 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4771d18f7d4sm12292181cf.37.2025.03.21.06.59.46
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eb3ef1f51esm11628666d6.26.2025.03.21.07.03.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 06:59:46 -0700 (PDT)
-Date: Fri, 21 Mar 2025 09:59:44 -0400
+        Fri, 21 Mar 2025 07:03:30 -0700 (PDT)
+Date: Fri, 21 Mar 2025 10:03:29 -0400
 From: Gregory Price <gourry@gourry.net>
 To: Rakie Kim <rakie.kim@sk.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	joshua.hahnjy@gmail.com, dan.j.williams@intel.com,
+Cc: Joshua Hahn <joshua.hahnjy@gmail.com>, akpm@linux-foundation.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
 	ying.huang@linux.alibaba.com, david@redhat.com,
 	Jonathan.Cameron@huawei.com, kernel_team@skhynix.com,
 	honggyu.kim@sk.com, yunjeong.mun@sk.com
 Subject: Re: [PATCH v3 1/3] mm/mempolicy: Fix memory leaks in weighted
  interleave sysfs
-Message-ID: <Z91w0FQ_CeWCHZRF@gourry-fedora-PF4VCD3F>
-References: <20250320041749.881-1-rakie.kim@sk.com>
- <20250320041749.881-2-rakie.kim@sk.com>
+Message-ID: <Z91xsVv98wp7TVrq@gourry-fedora-PF4VCD3F>
+References: <20250320164532.1313581-1-joshua.hahnjy@gmail.com>
+ <20250321043729.939-1-rakie.kim@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -79,23 +79,35 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250320041749.881-2-rakie.kim@sk.com>
+In-Reply-To: <20250321043729.939-1-rakie.kim@sk.com>
 
-On Thu, Mar 20, 2025 at 01:17:46PM +0900, Rakie Kim wrote:
-> Memory leaks occurred when removing sysfs attributes for weighted
-> interleave. Improper kobject deallocation led to unreleased memory
-> when initialization failed or when nodes were removed.
+On Fri, Mar 21, 2025 at 01:37:22PM +0900, Rakie Kim wrote:
+> As you mentioned, I agree that Patch 1 may be a bit unclear.
+> In fact, Patch 1 and Patch 2 share similar goals, and in my view,
+> they only provide complete functionality when applied together.
 > 
-> This patch resolves the issue by replacing unnecessary `kfree()`
-> calls with `kobject_put()`, ensuring proper cleanup and preventing
-> memory leaks.
+> Initially, I thought that Patch 1 was the fix for the original issue and
+> considered it the candidate for a backport.
+> However, upon further reflection, I believe that all changes in Patch 1
+> through Patch 3 are necessary to fully address the underlying problem.
 > 
-> By correctly using `kobject_put()`, the release function now
-> properly deallocates memory without causing resource leaks,
-> thereby improving system stability.
-> 
-> Fixes: dce41f5ae253 ("mm/mempolicy: implement the sysfs-based weighted_interleave interface")
-> Signed-off-by: Rakie Kim <rakie.kim@sk.com>
 
-Reviewed-by: Gregory Price <gourry@gourry.net>
+Patch 1 does address the immediate issue of calling kfree instead of the
+appropriate put() routine, so it is fine to keep this separate.
 
+> Therefore, I now think it makes more sense to merge Patch 1 and Patch 2
+> into a single patch, then renumber the current Patch 3 as Patch 2,
+> and treat the entire set as a proper -stable backport candidate.
+>
+
+The set adds functionality and changes the original behavior of the
+interface - I'm not clear on the rules on backports in this way.
+
+Would need input from another maintainer on that.
+
+Either way, I would keep it separate for now in case just the first
+patch is desired for backport.  Maintainers can always pick up the set
+if that's desired.
+
+(It also makes these changes easier to review)
+~Gregory
