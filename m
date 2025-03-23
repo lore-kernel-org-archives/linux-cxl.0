@@ -1,41 +1,41 @@
 Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F4E20010A;
-	Sun, 23 Mar 2025 09:34:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F766201006;
+	Sun, 23 Mar 2025 09:34:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742722460; cv=pass; b=q3sO3OtaCPBPFW1PLfPXHMiH/XRDVaJcOfD90hs9/DUl03frnYn8cILw8of1U6xTo20uw0AHomv2zXFBiXTfmVlLyESgloj19sMkfsszdiKX3yBbmryT5NkvUzJOaeyAWNIY6s+oLWcTbz4v/M0nrX+kPVqm/3+MD5liqKWzrjw=
+	t=1742722474; cv=pass; b=ScrPxWK3X6BeNuer70dYSYFC0/GgomvnL7u5J9fUWR78FSlUDzT206AOUBA7Ecy9uaYW08+ht3DsTKs4csGgQRXHlaIBATFvknv3P3rMVubWW2fn0FKyKGz/pAJzL+NhRr4VhYww7eb1fJpjxxgNHTvorm/opABJMbS/IrVfeFk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742722460; c=relaxed/simple;
-	bh=ShRA8ZBoRFnVe0Wl7B/SZm4cKibBbHPKuwpH1fR39Mo=;
+	s=arc-20240116; t=1742722474; c=relaxed/simple;
+	bh=3MTYhQELhhmoAHr2itXBrGDEDVYaZP97mblWMNS7zPg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pEN5Rz6X+/A5BClXjuvUy8WXKbt0p/eM7jTJadNJBwOkWc05NfwIA99VDQyy26pKZyHypTESSPIiIiMaLI16B8Ix/WV8BxAbriZOYn5tZqkbMgOy7LZr2I3eAJJztme87zWu+jQ9qmTT0QthJK3PO4d7MX+18WwcZt5JPo4tDm0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=VsPSyc/z; arc=pass smtp.client-ip=136.143.188.94
+	 MIME-Version; b=AKgrY/Fa4hLqwS6/MAmkifWg0oazN5/KZMYLEsp3IzbTX500hhOfq7GmvnMqWnRMDTzC9LpT+09iUchY4jOHuCkfzCINY+8cbPDZxvgTR0PAKH7LK480Wqf+NCi7exUfhqB6rTVpxVUyd4nmU6QgjbtduKyzNOOViv+qU2vfgV8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=F8LcahXK; arc=pass smtp.client-ip=136.143.188.94
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="VsPSyc/z"
-ARC-Seal: i=1; a=rsa-sha256; t=1742722309; cv=none; 
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="F8LcahXK"
+ARC-Seal: i=1; a=rsa-sha256; t=1742722319; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=cbNvGfxBKw3j6fDb6u44jRtg2QyJaTnamxrQWs2J9OCvNxjwL0ueXQ5vKpEeTvVhEMYP+BRw5PtJAZpkCH24sifI2hLdzFiEX7VGl8BjW+vzNrVk6Y4LHmTzzld9vYANHl3azyhsgLshnfomLokKHa09qAvJlRgQC8JwU5ADWEg=
+	b=a8QfsJuyFZcgRtuAuuGMwEzoZMYkq9k7xjJvNignIvulGwR3T5w8WxeUjSgHdD/D0XLllMY0cd5AWVBXf8vzG2H5YA8ix/O9/4AojV6BR1NVLGtxtzHxwn/9+hZ7AmNm750/4JyVDucmqWSlwD9VNZlBqGiLk6yZ7ruMY1OXDkQ=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1742722309; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=ZLARjwAi2392p8qFoWGnePnOKEDFNhB7tQ3qGWk+kKE=; 
-	b=Y/R9Rxzg3pX52JY4+BEGy9Ph+0ul4MlqVmRd6oICOCpNeD34PzGuGSLZIvNCgHbiEwqjtdPBjP5kW6jbXLsCtdL9YWYpSd7TUvvJVJDmTo4cRaGcWRx7NKJXzd6/OoOhsrLlA2Ik4U2RAQEOU0tFfOK1676KRwYVXhPLHHNAOoM=
+	t=1742722319; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=uYKpGB1btXham6jc3sUGgsKSa89IKrQ8n0M2pm4m9A4=; 
+	b=n8jCbMqR9M/vylpBsr0JZgOwe/0h1UMgwNUPdHz87QL4aTmeWqye3LW48ZYPANdBJCKEt3NJkDG/tZbm7o5ZegvgQuoPjbMr1MaBm8bO6VrVezkZBons72/zpDVufnHpc71bdHruo9RIFdbgXQURtp8qAir/YjO3WSRB4Z5fdjE=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=zohomail.com;
 	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
 	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1742722309;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1742722319;
 	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
 	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
-	bh=ZLARjwAi2392p8qFoWGnePnOKEDFNhB7tQ3qGWk+kKE=;
-	b=VsPSyc/zZFU7Fpaj3JLnE2wD3mxqU3JnUwUEn43/lxlu0gtbkEP0pbR/gvyAzwd/
-	jxfvPw3G3T6FHeAm2YHpCYY8htSV+iA9WvV2502O9sNCNztlAof28hZVPWnem1Ta37C
-	CsW1fXioG6I6PJks5An7dBmguVy0sTfHIwO24fvU=
-Received: by mx.zohomail.com with SMTPS id 1742722308773820.132550490878;
-	Sun, 23 Mar 2025 02:31:48 -0700 (PDT)
+	bh=uYKpGB1btXham6jc3sUGgsKSa89IKrQ8n0M2pm4m9A4=;
+	b=F8LcahXKKlinpMnD40o2pEhUWMR1uAplXSvmq0tC4kLXOfxpnxFZosZwYDjOFCjB
+	M33LYqGzyzrC4JC4RLGz+qBn8qLMooR9geMNa976QpinZLL1u2t9ejsHvGdb3Galmce
+	ETi+3L+38tTTyXHl3olKSixfXzG/DvqVD4aDWqrc=
+Received: by mx.zohomail.com with SMTPS id 1742722317848132.1813064848485;
+	Sun, 23 Mar 2025 02:31:57 -0700 (PDT)
 From: Li Ming <ming.li@zohomail.com>
 To: dave@stgolabs.net,
 	jonathan.cameron@huawei.com,
@@ -48,9 +48,9 @@ Cc: linux-cxl@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Li Ming <ming.li@zohomail.com>,
 	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v2 2/3] cxl/pci: Update Port GPF timeout only when the first EP attaching
-Date: Sun, 23 Mar 2025 17:31:09 +0800
-Message-Id: <20250323093110.233040-3-ming.li@zohomail.com>
+Subject: [PATCH v2 3/3] cxl/pci: Drop the parameter is_port of cxl_gpf_get_dvsec()
+Date: Sun, 23 Mar 2025 17:31:10 +0800
+Message-Id: <20250323093110.233040-4-ming.li@zohomail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250323093110.233040-1-ming.li@zohomail.com>
 References: <20250323093110.233040-1-ming.li@zohomail.com>
@@ -61,19 +61,13 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Feedback-ID: rr080112272c91780d6c5df78b68f6195f00000d8cc653897a034d35ae8cb727c3355149c8eb984fcbc587e5:zu0801122770b2788d9b14d8742fed872f0000ea9ade01511b63d93c673046a85b8c558303d8404a7772c6c4:rf0801122dc6eafe463c03ceba032e5d93000090526bea9f4fe57b589f3d522acae1d80418a58ff590f9b44663410d5f2f21:ZohoMail
+Feedback-ID: rr08011227d9758ba022786c95310414780000b5abe8c267f9b74a4c09fef03e4bd902e5986ac2f5c3ad5261:zu0801122731e06d6555dbd7671af0ea8a00009be04fed6129c7ea4828dbf6c32c9468ea7f10710a36a5e727:rf0801122de4eb419cef64a976b494f4b000005880f0732d085e7595e45ffb44e5993faf2edc1741558a31419133dfbcc936:ZohoMail
 X-ZohoMailClient: External
 
-update_gpf_port_dvsec() is used to update GPF Phase timeout, if a CXL
-switch is under a CXL root port, update_gpf_port_dvsec() will be invoked
-on the CXL root port when each cxl memory device under the CXL switch is
-attaching. It is enough to be invoked once, others are redundant.
-
-When the first EP attaching, it always triggers its ancestor dports to
-locate their own Port GPF DVSEC. The change is that invoking
-update_gpf_port_dvsec() on these ancestor dports after ancestor dport
-locating a Port GPF DVSEC. It guarantees that update_gpf_port_dvsec() is
-invoked on a dport only happens during the first EP attaching.
+The first parameter of cxl_gpf_get_dvsec() is a struct device, can be
+used to distinguish if the device is a cxl dport or a cxl pci device by
+checking the PCIe type of it, so the parameter is_port is unnecessary
+to cxl_gpf_get_dvsec(), using parameter struct device is enough.
 
 Signed-off-by: Li Ming <ming.li@zohomail.com>
 Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
@@ -81,42 +75,72 @@ Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 Tested-by: Davidlohr Bueso <dave@stgolabs.net>
 ---
- drivers/cxl/core/pci.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ drivers/cxl/core/pci.c | 12 +++++++++---
+ drivers/cxl/cxl.h      |  2 +-
+ drivers/cxl/pmem.c     |  2 +-
+ 3 files changed, 11 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index aab0a505d527..edbdaf1681e8 100644
+index edbdaf1681e8..3b80e9a76ba8 100644
 --- a/drivers/cxl/core/pci.c
 +++ b/drivers/cxl/core/pci.c
-@@ -1130,12 +1130,11 @@ static int update_gpf_port_dvsec(struct pci_dev *pdev, int dvsec, int phase)
+@@ -1072,14 +1072,20 @@ int cxl_pci_get_bandwidth(struct pci_dev *pdev, struct access_coordinate *c)
+ #define GPF_TIMEOUT_BASE_MAX 2
+ #define GPF_TIMEOUT_SCALE_MAX 7 /* 10 seconds */
  
- int cxl_gpf_port_setup(struct cxl_dport *dport)
+-u16 cxl_gpf_get_dvsec(struct device *dev, bool is_port)
++u16 cxl_gpf_get_dvsec(struct device *dev)
  {
--	struct pci_dev *pdev;
--
- 	if (!dport)
- 		return -EINVAL;
++	struct pci_dev *pdev;
++	bool is_port = true;
+ 	u16 dvsec;
  
- 	if (!dport->gpf_dvsec) {
-+		struct pci_dev *pdev;
+ 	if (!dev_is_pci(dev))
+ 		return 0;
+ 
+-	dvsec = pci_find_dvsec_capability(to_pci_dev(dev), PCI_VENDOR_ID_CXL,
++	pdev = to_pci_dev(dev);
++	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_ENDPOINT)
++		is_port = false;
++
++	dvsec = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
+ 			is_port ? CXL_DVSEC_PORT_GPF : CXL_DVSEC_DEVICE_GPF);
+ 	if (!dvsec)
+ 		dev_warn(dev, "%s GPF DVSEC not present\n",
+@@ -1137,7 +1143,7 @@ int cxl_gpf_port_setup(struct cxl_dport *dport)
+ 		struct pci_dev *pdev;
  		int dvsec;
  
- 		dvsec = cxl_gpf_get_dvsec(dport->dport_dev, true);
-@@ -1143,11 +1142,10 @@ int cxl_gpf_port_setup(struct cxl_dport *dport)
+-		dvsec = cxl_gpf_get_dvsec(dport->dport_dev, true);
++		dvsec = cxl_gpf_get_dvsec(dport->dport_dev);
+ 		if (!dvsec)
  			return -EINVAL;
  
- 		dport->gpf_dvsec = dvsec;
-+		pdev = to_pci_dev(dport->dport_dev);
-+		update_gpf_port_dvsec(pdev, dport->gpf_dvsec, 1);
-+		update_gpf_port_dvsec(pdev, dport->gpf_dvsec, 2);
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 2d81ccd83916..a9ab46eb0610 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -910,6 +910,6 @@ bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port);
+ #define __mock static
+ #endif
+ 
+-u16 cxl_gpf_get_dvsec(struct device *dev, bool is_port);
++u16 cxl_gpf_get_dvsec(struct device *dev);
+ 
+ #endif /* __CXL_H__ */
+diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
+index d061fe3d2b86..e197883690ef 100644
+--- a/drivers/cxl/pmem.c
++++ b/drivers/cxl/pmem.c
+@@ -108,7 +108,7 @@ static void cxl_nvdimm_arm_dirty_shutdown_tracking(struct cxl_nvdimm *cxl_nvd)
+ 		return;
  	}
  
--	pdev = to_pci_dev(dport->dport_dev);
--	update_gpf_port_dvsec(pdev, dport->gpf_dvsec, 1);
--	update_gpf_port_dvsec(pdev, dport->gpf_dvsec, 2);
--
- 	return 0;
- }
+-	if (!cxl_gpf_get_dvsec(cxlds->dev, false))
++	if (!cxl_gpf_get_dvsec(cxlds->dev))
+ 		return;
+ 
+ 	if (cxl_get_dirty_count(mds, &count)) {
 -- 
 2.34.1
 
