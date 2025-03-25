@@ -1,194 +1,172 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2050.outbound.protection.outlook.com [40.107.93.50])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 520BD1A316E;
-	Tue, 25 Mar 2025 15:46:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742917577; cv=fail; b=JW4T56XCU5ic+S2l0w6CzjarCIYn6lTkY1tOy2wNEyRi9AhY/OiA2BQy+qW0OOi6+hB8nTO6cthieZuESWEHJFe1VrDWHLmc/xSS+1tbk+lfgJifjne2lYKjVnGTC4cX6FhPEzeXPP2qnfIpGdNm9frx67FOGPXmvIK80pCCUgo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742917577; c=relaxed/simple;
-	bh=siTG1+gNADFp3ZPQHTnm4uh02DcPKYlxMgCXkgILUEo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=O1AcAvRHgB/9Bb2gVGh1LFPmj9MeTeA42ltZyNlRGWoXLZ+Xy0lK4yaQvRh7U2qGlHrVsVxv6qyoQFCjmftDEnIx7Vfnb+YPLABsyhS/XAwCrX3y9oJJhG/bZe9wttXcswRmXOTR0q6qI9g6NpyHjJKOqDY5QsPV0OiqJtZZJsE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=POztQXkr; arc=fail smtp.client-ip=40.107.93.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A38A925743E;
+	Tue, 25 Mar 2025 16:13:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742919240; cv=none; b=bTbHzXQGOgN5PhXlfFXroceqiGZ2nih4AI5QOsaPtZl8k82YEfhZDS/Xs1R8M5DEE8+2wu7XtK3exVQeejvO05WyBZnMcY2wGiWLa0JYF2443+NzvxJteOKHuGDPMpJJVbtoYo8hJJkK9T1rfKpMd2x3hwePdXSO3J8XNIq8Po4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742919240; c=relaxed/simple;
+	bh=L38YafdGDToQKYrS5NH2Bol95qw3fc/pF70+LVdbHvg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eH9jzSK5Umv0s9MrmADgeY7WnnUJ7C69znWkWnA4H75M37bN6qEvC793WZnX4TlI6biYpV/TCPwFp1gx9QUlB9SKyKu1wiXenMnriUPyCiVmRTUCng4WDN23fK0Wv3hKIkboA+5jRofTgEfmFb3NU+9as1e+WkNLVUXY7HWJ9L8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NbWcFSoH; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="POztQXkr"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ak29ZNp1fzjIL5Kn62zMUXV2nArQFNnIEcC/s9eqEEwWNT2kNSIXjP8vCS5u1hX1ijm0cF1W2D/ZZITQFy1Ys6SuHrUOUNWBr9E+FBwUpWt+0+bqLfbyPlcCaCEtdDrun01tBRbHNq3KV8Vc9GQTXtRruvzxlagHLNanAuBE/9uOrRPcBe2PfZFJNg+AS7qtXop3nBtqrkJY25R04eXG2sOhW+YnqWPKa4rkxdjCgdW9h9kvVCKM+/4bAT9wizUGeq6UMXDZztpqH/PuGNHPXW6JwOxqr4+4ZyUnqCBRn2G0BssQqLmDkLGRInXry1dtWQbdu1ahC875hA19X4Pxmg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VfqgUEmjSHrjBz+Kn0FHJvIl5amHgn0dZEnHsfnSoTE=;
- b=GjXIj+3FvlKkH4yZciqKWRwyD31mcb5sbuvF7NpNhx7ldEpZX74b9y0p/jipjldixy2Gvj/5EPrR9fs1toOb0SxSaIWqIMwRlqsN/+obW9Fm2VQMZmzaa/YZ1xS/nrNOP1phFyHJZqpP/42CqEwWOzrY3vpmRvy0APvU6y3ru5Bk3fHtfSypooY+Iv+HrddWGOyBvZag6iaEkP/SadC7eHYd4AC24T30LI6V+UfQYthEan4OQeguNGgOlNY3p10sZHhMnwG4L4zVLeC4mPQVCB24BcxLbUYz0uWLcqEDJu0p4mUiLXumQz8XRHfpL9XrcnkPULgGY3p1Euo+LPJpGg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=huawei.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VfqgUEmjSHrjBz+Kn0FHJvIl5amHgn0dZEnHsfnSoTE=;
- b=POztQXkroWzokeI4SPVNWErIdNhhrZJtpuCC7FZ5edqypKNjNuuyrowkaxGFnayIo5CZN27KhoJffcTCjvbW6InI/hAx01NGGvJ7Le9JE9AAm/kQhH06zPQFXlEDoiB04V5y0zoJatye74kWH1zPT3OOgX67V8EzagDVh8PdXa0=
-Received: from SA0PR11CA0013.namprd11.prod.outlook.com (2603:10b6:806:d3::18)
- by DS4PR12MB9586.namprd12.prod.outlook.com (2603:10b6:8:27e::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.42; Tue, 25 Mar
- 2025 15:46:13 +0000
-Received: from SN1PEPF000397B2.namprd05.prod.outlook.com
- (2603:10b6:806:d3:cafe::12) by SA0PR11CA0013.outlook.office365.com
- (2603:10b6:806:d3::18) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.42 via Frontend Transport; Tue,
- 25 Mar 2025 15:46:13 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SN1PEPF000397B2.mail.protection.outlook.com (10.167.248.56) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8534.20 via Frontend Transport; Tue, 25 Mar 2025 15:46:12 +0000
-Received: from [10.236.181.93] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 25 Mar
- 2025 10:46:06 -0500
-Message-ID: <ab4f2017-9e40-4923-8f6e-6514a511dd4c@amd.com>
-Date: Tue, 25 Mar 2025 10:46:05 -0500
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NbWcFSoH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742919238; x=1774455238;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=L38YafdGDToQKYrS5NH2Bol95qw3fc/pF70+LVdbHvg=;
+  b=NbWcFSoHLiW8ZfXoeOjssV4DVuzFDjlABemc4+f/UrM/uwkYr9kb7iP2
+   KBy1dXnqQ4CrEyAKKxdGeqxXUAELH5a9nd3tqtGPaIfGLEC32ZzVj0s+D
+   ZDAQpq3usj5hHhW+eLf6jtp4KGxEpoYFoisiyHVYm0P9QaX1rgkd2pURz
+   PkWXt9R4J23KOanx3PBkekLRYP9QYJc93T+FzG2UDLtBlSlLfaLYgU+jt
+   CWHQJpJ2QK7gR1oXDEbJzXK5EagOv1ctg4BY5ziDpPZJQ9KypODE6Vb8S
+   xzSDEwWA93SyRLTUX3otezqACa/VyI0uqlxPM4PnlHOabfUe2nZqOWMS6
+   g==;
+X-CSE-ConnectionGUID: 9XEQ4AtpSpq83EirBHHXbQ==
+X-CSE-MsgGUID: 2kRAhACNT6+gac1VsQ9EzA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11384"; a="66631400"
+X-IronPort-AV: E=Sophos;i="6.14,275,1736841600"; 
+   d="scan'208";a="66631400"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2025 09:13:58 -0700
+X-CSE-ConnectionGUID: EJqbkwASQk6s/dCmkDO/Cw==
+X-CSE-MsgGUID: Uf/tgZ+rQzWWEbdPOM5NbQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,275,1736841600"; 
+   d="scan'208";a="129263578"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.169])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2025 09:13:55 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: Robert Richter <rrichter@amd.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, ming.li@zohomail.com,
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
+Subject:
+ Re: [PATCH 0/4 v3] cxl/core: Enable Region creation on x86 with Low Mem Hole
+Date: Tue, 25 Mar 2025 17:13:50 +0100
+Message-ID: <3301434.hkbZ0PkbqX@fdefranc-mobl3>
+In-Reply-To: <Z91Au5en7r6D7IsW@rric.localdomain>
+References:
+ <20250314113708.759808-1-fabio.m.de.francesco@linux.intel.com>
+ <Z91Au5en7r6D7IsW@rric.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 11/23] cxl: define a driver interface for HPA free
- space enumeration
-To: Alejandro Lucero Palau <alucerop@amd.com>,
-	<alejandro.lucero-palau@amd.com>
-CC: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	<linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<dan.j.williams@intel.com>, <edward.cree@amd.com>, <davem@davemloft.net>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>,
-	<dave.jiang@intel.com>
-References: <20250310210340.3234884-1-alejandro.lucero-palau@amd.com>
- <20250310210340.3234884-12-alejandro.lucero-palau@amd.com>
- <34efb2e9-a2fe-4362-a1d3-43b63a4d7c76@amd.com>
- <72025133-8d0e-4ae8-af7a-410c1aaced06@amd.com>
-Content-Language: en-US
-From: Ben Cheatham <benjamin.cheatham@amd.com>
-In-Reply-To: <72025133-8d0e-4ae8-af7a-410c1aaced06@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF000397B2:EE_|DS4PR12MB9586:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4553bc1b-775e-44c4-5f49-08dd6bb42b45
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?U0Zmb0pZSzM2enV0VjZFWVY0dVVGOXFJT1JGRlQ2RHlFRGdMZW8wNEV5Wldh?=
- =?utf-8?B?VGErM0ZHWHpndFhQMzBVZ2MwSEFUZkhQelJOVkZMdEN4b1hTc1cwNGVqelp1?=
- =?utf-8?B?RFIzb0c4ZEh2MjRYSWFxRnFla3ZmVVNUNFpCODlBRmJZcllQbHU5QUVhYnQ4?=
- =?utf-8?B?NmZJUXo0c3lHbG8xdmtmVDVQV2RSeTRIVFVjSU1TLzdHTmU1U2lCc2NIM21s?=
- =?utf-8?B?WFZwSDh4N29pT1NvYkJSajJZSnV0SEdDUXdaYkRsaDR0WjRNV1JPVmtaeTk0?=
- =?utf-8?B?SUpTeWFFaDRIZDFrZWFTZjdhUVczWUIxbkY1NlFNZXk2aEprY0pwcVlUU1pR?=
- =?utf-8?B?a01qbmYwV2xjVnlNZFNkdmk2M216MWtRelJrazdyTTZJOTAveUszQjAyOUZ6?=
- =?utf-8?B?VzMrcnNFQk04cjBDZGtvazE3bzUyMUZhM1NzbXYwa1RnaTJjeEY0QjhIQWdL?=
- =?utf-8?B?QzV0NVFoekxFTFdxRXd4QmhoeXE1SXlnM1BmRU1idHA0clpHenRwWTNHN1Vr?=
- =?utf-8?B?Z0RIVmxyU3hWckl1SExDUkttbWU3anRkMHMzTS9iRjQ1Y1JOSDNyRkR2QVhB?=
- =?utf-8?B?R29XbC91TVg2WTcyd1R2dEdoa0ZDa3NaajEvZDY4RlRlNmtJanBMbDhJSHli?=
- =?utf-8?B?U29aV24zVTJNVGJnRHFVYzFYNVErUS9weC90czRTVGU1aGZnNXhYdDFrOUNn?=
- =?utf-8?B?blF6WDM3TkI2MXdTNGtvS0JVR2pYTExvenZtQS9PVmJYZTlUdWxHcE9rODlx?=
- =?utf-8?B?bmRjWjN3aytET3NNaVg3SEZ5U0tGZmFYL2JmdStRMjRnMWU5VlZtTGV5aWpv?=
- =?utf-8?B?anM1eGhBU0JXWGluOXNyaUpYeDUwTDZ5QUx4Ymw1T3NkN29Kamp2b2hELy9Q?=
- =?utf-8?B?c2JlVWZ2RitsY2o5cEFqaytSMHgrdjQ4ZklyZjd4YWFEeXJmdnRLMndJaDFK?=
- =?utf-8?B?YXhSVHA0SlhxN29WS2dFL3RxeE16Q01QZ25McWY0RzEvUWJhbDU5TXNJZ2cr?=
- =?utf-8?B?ckpYOWM0ZlFINFlWdjB2TE5FdmdpdUVaUmNCbmhUNDM0MDhUbm1EMUhBQzd6?=
- =?utf-8?B?R09Ia2ZWNm5RQzVXcDMwdS9ETnpJVDdIa0tXdlFCSlIvQWtwa09TTmQwZXNH?=
- =?utf-8?B?dEcyK0dleHcyVHRKYmFMWGJrRWplbmhtMlRVd3ZGVFdVYnhNZUFWUVZsYnky?=
- =?utf-8?B?aHZ6VVRLOWR2dmpwdXdzQkc0NXVvVWNteEZsQ2lxRk1tUkFIS29rak12SCtm?=
- =?utf-8?B?YjhDcERyRjFERkZUUkF4bHhiZXJNVHpyZmZIWldwelE1dWVtN080UDRoTzJN?=
- =?utf-8?B?ZnJCcDJQN2ExaitZNW5JOHBmTVlDbitHYkhlM2FKTUcyRkgyQTB6aUxNYXV6?=
- =?utf-8?B?YUVtK3RFY1h4UHVxU0o0Z2thZWJHT3hkRnJZSkw3KzgyRitIWGpPTm5VeWdw?=
- =?utf-8?B?OXRwU0FSQTVmNXVYTFFzVFFiaG1hUWtaUi9XanNOYXVIYlI4d3M5RFNlcjZ5?=
- =?utf-8?B?bWpUeGFlNlJMaE9NU1dGMlR0UHI3S2szeFFsZjlhYUU5dng3eis5bHdIVThZ?=
- =?utf-8?B?QkdOd2tHWFVybEROSERad3JYdGVSM1dTaU1sNTlsWDJhUlFwY045a1pncTdi?=
- =?utf-8?B?MmZ1eEgvV3FBZkd5cHAvMjZSMEZDT1dDZWxHaDBHZG1KZUxIaUJPTnFyYzZJ?=
- =?utf-8?B?cVA4Zkh4Tjh1UzZNaFRXQkdFejh3ZVgrVkVNbVhHMU02allQdUtaU1h1S0wv?=
- =?utf-8?B?OS90WGplOVFYcys0M3o0ZUZpcGd2LzRnQysvWTJmd3RLYTE4U09ERVdUUU56?=
- =?utf-8?B?eEpaQXdjWTZ6VW5ZWUN4ZFd2THhzU1M1RVRoc21xYWpYbXR2ZzJaaWxPM1k1?=
- =?utf-8?B?TUlaRVp4bGYzT01BWjFzTWRVNzZMZmNpNThSZVBic2xZaU94cXlhYXYyOUpL?=
- =?utf-8?B?VDFDbks2dGM0cU1XVUdET2hNNldJVHpNdGFGeW84cEROc2puYTQxdEJNdDdR?=
- =?utf-8?Q?ByAF+OQ7ZouFDWQXaudGG4jQ6KK8Po=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2025 15:46:12.0105
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4553bc1b-775e-44c4-5f49-08dd6bb42b45
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF000397B2.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS4PR12MB9586
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
->>> +
->>> +    for (int i = 0; i < ctx->interleave_ways; i++)
->>> +        for (int j = 0; j < ctx->interleave_ways; j++)
->>> +            if (ctx->host_bridges[i] == cxlsd->target[j]->dport_dev) {
->>> +                found++;
->>> +                break;
->>> +            }
->> I think kernel coding style requires braces on the above for statements, but I may be wrong here.
-> 
-> 
-> I can not see a specific reference to this case. But, do you mean both for clauses requiring it or just the second one?
-> 
+On Friday, March 21, 2025 11:34:35=E2=80=AFAM Central European Standard Tim=
+e Robert Richter wrote:
+> Fabio,
+>=20
+> On 14.03.25 12:36:29, Fabio M. De Francesco wrote:
+> > The CXL Fixed Memory Window Structure (CFMWS) describes zero or more Ho=
+st
+> > Physical Address (HPA) windows that are associated with each CXL Host
+> > Bridge. Each window represents a contiguous HPA that may be interleaved
+> > with one or more targets (CXL v3.1 - 9.18.1.3).
+> >=20
+> > The Low Memory Hole (LMH) of x86 is a range of addresses of physical low
+> > memory to which systems cannot send transactions. On those systems, BIOS
+> > publishes CFMWS which communicate the active System Physical Address (S=
+PA)
+> > ranges that map to a subset of the Host Physical Address (HPA) ranges. =
+The
+> > SPA range trims out the hole, and capacity in the endpoint is lost with=
+ no
+> > SPA to map to CXL HPA in that hole.
+> >=20
+> > In the early stages of CXL Regions construction and attach on platforms
+> > with Low Memory Holes, the driver fails and returns an error because it
+> > expects that the CXL Endpoint Decoder range is a subset of the Root
+> > Decoder's (SPA >=3D HPA). On x86 with LMH's, it happens that SPA < HPA.
+> >=20
+> > Therefore, detect x86 Low Memory Holes, match CXL Root and Endpoint
+> > Decoders or already made CXL Regions and Decoders to allow the
+> > construction of new CXL Regions and the attachment of Endpoint Decoders,
+> > even if SPA < HPA. If needed because of LMH's, adjust the Endpoint Deco=
+der
+> > range end to match Root Decoder's.
+> >=20
+> > - Patch 1/4 changes the calling conventions of three match_*_by_range()
+> >   helpers in preparation of 3/4.
+> > - Patch 2/4 Introduces helpers to detect LMH's and also one to adjust
+> >   the HPA range end for CXL Regions construction.
+> > - Patch 3/4 enables CXL Regions construction and Endpoint Decoders
+> >   attachment by matching Root Decoders or Regions with Endpoint
+> >   Decoders, adjusting Endpoint Decoders HPA range end, and relaxing
+> >   constraints while Endpoints decoders' attachment.
+> > - Patch 4/4 simulates a LMH for the CXL tests on patched CXL driver.
+> >=20
+> > Many thanks to Alison, Dan, and Ira for their help and for their reviews
+> > of my RFC on Intel's internal ML.
+> >=20
+> > Commenting on v1, Alison wrote a couple of observations on what users
+> > will see. I suggest anyone interested to see how this series affect
+> > users to take a look at her observations.[0] Thank you!
+> >=20
+> > Changes for v3:
+> >=20
+> >   Re-base the series on cxl/next.
+> >=20
+> >   1/4 - 2/4:
+> > 	Constify local variables.
+> >   3/4:
+> > 	Call arch_match_region() from region_res_match_cxl_range().
+> >   4/4:
+> > 	arch_match_region() - Check that region end is under start + 4G;
+> > 	arch_match_spa() - Check that SPA range start is cfmws_range_start.
+>=20
+> I have sent comments for version 1 and suggested a simpler approach
+> for this to implement.
+>
+I replied to your comments for version 1. Please find my message at=20
+https://lore.kernel.org/linux-cxl/9930375.eNJFYEL58v@fdefranc-mobl3/.
+>
+> My comments haven't been addressed yet,
+>
+I think it's not possible to detect an LMH while still in cxl_port_add().
+Therefore, I think that this is the best way to go. It works to prevent
+the driver to fail to create Regions and attach Endpoint Decoders on x86
+with Low Memory Holes, provided that the lower SPA range starts at 0x0.
 
-I think it should be:
+On platforms with other kind of holes, the driver will continue to fail
+as it currently does.=20
+>
+> but we
+> need better isolation to reduce interference with other platforms and
+> archs. Please take a look again.
+>
+Interference? Do you mean that this series would make the driver fail on=20
+other platforms?=20
 
-	for (int i = 0; i < ctx->interleave_ways; i++) {
-		for (int j = 0 ; j < ctx->interleave_ways; j++) {
-			...
-		}
-	}
-
-But it's a style nit, if whoever is taking the patch doesn't care then I don't really either.
-
-> 
-
-[snip]
-
->>> +
->>> +/**
->>> + * cxl_get_hpa_freespace - find a root decoder with free capacity per constraints
->>> + * @cxlmd: the CXL memory device with an endpoint that is mapped by the returned
->>> + *        decoder
->>> + * @interleave_ways: number of entries in @host_bridges
->>> + * @flags: CXL_DECODER_F flags for selecting RAM vs PMEM, and HDM-H vs HDM-D[B]
->> Looking below, the HDM-H vs HDM-D[B] flag is called CXL_DECODER_F_TYPE2, so I think
->> it would be good to reference that either here or in include/cxl/cxl.h.
-> 
-> 
-> Well, it is not that but I agree the description requires an update like;
-> 
-> 
-> "flags for selecting RAM vs PMEM, and Type2 device."
-> 
-> 
-> I think because the patch does not define the HDM-* as it is not needed yet, it should not be there.
-> 
-
-Sounds good to me.
+Of course I don't want anything like that. I'm not clear about it...
+Would you please describe how would this series interfere and what
+would happen on other platforms?
 
 Thanks,
-Ben
+
+=46abio
+>
+> Many thanks,
+>=20
+> -Robert
+>=20
+
+
+
+
