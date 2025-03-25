@@ -1,99 +1,122 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D38A53B1A4;
-	Mon, 24 Mar 2025 16:40:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC21A8460
+	for <linux-cxl@vger.kernel.org>; Tue, 25 Mar 2025 07:49:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742834461; cv=none; b=nwN0ssC7xx2hhH4oEcV2/LG5ICZr6S4rZUsAh14gw1aSzCHeUXGOSaeNPgLyKYzYFI0uu7c6rmGw2pRnwlUCTOhFxR/eL7njc62TgzsjLGlH3UhtVQuI5hZSIak93uhzuLamy/F89T1wBHgOgzWFoZhJiN5+QrvdI2mvqH5CF1s=
+	t=1742888997; cv=none; b=hQd71UXpTKmTYZUVmn7Cax5H41CwcqPkYMY+0V3051VUVfLaFfOkGZwfFj8YttR/kMwzJwOYS+y507DXo+EYcesJ11Rw/m2suGlpinTcldvzwX3JWorBmuYj/rUc/AptsXIOUzLQ/MBpDpR1P2CataH3TAU803MH+zBYJp5ELOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742834461; c=relaxed/simple;
-	bh=/rRjucx91ifCHglFRPYOdFhd3kU4du9TzWNb328YWEs=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=OIU/bRWqYvQ9CnXkWEamcp4Lr31cQcIN73uWaLKU+tCgKjSn9Q5qH26N1nmGv7pQafs5OQuNrlvStX7LRpldt8A0MPx6BSII0QhI7nQahgTpGkL5OEWGBPDka2kBT+sSyb9R6vUrdnFjioEsept0VpXtO3niU9XY00MUjb9FY6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=bIYthxNn; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="bIYthxNn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1742834418; x=1743439218; i=markus.elfring@web.de;
-	bh=/rRjucx91ifCHglFRPYOdFhd3kU4du9TzWNb328YWEs=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=bIYthxNni1NNrGMtMBN4yZXVCA+VCmXcIVuEM+FE75hRirrtu5QpGw10SZvfIy3u
-	 PtylrD4161N7xNz4AsWweuL486niZvLl9GtRQj3aGRa0WgvrKFfopAHmvYbtTiLMj
-	 /Af1ncCOTPIFbx9/DPYTXYI5I3MnXUo8itnNRUEOGiGBGEKQl0R/AIbZ5hobp5Xj9
-	 bLm6M0P0MMo8KMc1AIJFyLFtV9lQ6XKWvmS66s6tJtcd0qIWmJmUWiK2+uyiRGJOq
-	 gf5vZsDZy0MxD2bAjv6qdkV1nb6wPsFnG8NkZfKt/HESqrXredfrYQJZmlCdp6W3s
-	 fERaYlKDvH8zdZtHAQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.33]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MSIJA-1tYeNe0plw-00R0lK; Mon, 24
- Mar 2025 17:40:18 +0100
-Message-ID: <fca457c2-f0af-4fb8-9771-06916737f9db@web.de>
-Date: Mon, 24 Mar 2025 17:40:10 +0100
+	s=arc-20240116; t=1742888997; c=relaxed/simple;
+	bh=z40NpjwQtQ7ak2jbbOy18YExxHtplfFu/4fCj7GvZhw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=KpgILKCOuhBeQuXTxDeMS4MheBV5KHiIwtu2duAzSbCcEsLXKuWze0qNisgAA59hesUNQ25bqjJYawrj0ZLqOM1M+DEOMlmLVl0HPXRCMsqd8w+ERJf9BSwPG3/V2aGNetoupVw3IczZMEpubzjhh1RweSw0lFrEwiAVzpEX6OI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=129.150.39.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
+Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
+	by hzbj-icmmx-6 (Coremail) with SMTP id AQAAfwBXWVkSYOJn49RUDQ--.37694S2;
+	Tue, 25 Mar 2025 15:49:38 +0800 (CST)
+Received: from wangyuquan1236$phytium.com.cn ( [218.76.62.144] ) by
+ ajax-webmail-mail (Coremail) ; Tue, 25 Mar 2025 15:49:37 +0800 (GMT+08:00)
+Date: Tue, 25 Mar 2025 15:49:37 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: "Yuquan Wang" <wangyuquan1236@phytium.com.cn>
+To: "Jonathan Cameron" <Jonathan.Cameron@huawei.com>
+Cc: qemu-devel@nongnu.org, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH] docs/cxl: Add serial number for persistent-memdev
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version 2024.1-cmXT6 build
+ 20240812(cfb32469) Copyright (c) 2002-2025 www.mailtech.cn
+ mispb-4edfefde-e422-4ddc-8a36-c3f99eb8cd32-icoremail.net
+In-Reply-To: <20250312181035.00006e32@huawei.com>
+References: <20250217112039.138650-1-wangyuquan1236@phytium.com.cn>
+ <20250220161213.000049a9@huawei.com>
+ <20250221065509-mutt-send-email-mst@kernel.org>
+ <17b91a9f.2847.1955fd23d78.Coremail.wangyuquan1236@phytium.com.cn>
+ <20250305141359.00001288@huawei.com>
+ <4752672.2b5f.19565e01b65.Coremail.wangyuquan1236@phytium.com.cn>
+ <20250312181035.00006e32@huawei.com>
+Content-Transfer-Encoding: base64
+X-CM-CTRLDATA: rc52s2Zvb3Rlcl90eHQ9MjkyMDozODM=
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Rakie Kim <rakie.kim@sk.com>, linux-mm@kvack.org,
- linux-cxl@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, kernel_team@skhynix.com,
- Andrew Morton <akpm@linux-foundation.org>,
- Dan Williams <dan.j.williams@intel.com>, David Hildenbrand
- <david@redhat.com>, Gregory Price <gourry@gourry.net>,
- Honggyu Kim <honggyu.kim@sk.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>,
- Ying Huang <ying.huang@linux.alibaba.com>, Yunjeong Mun <yunjeong.mun@sk.com>
-References: <20250320041749.881-2-rakie.kim@sk.com>
-Subject: Re: [PATCH v3 1/3] mm/mempolicy: Fix memory leaks in weighted
- interleave sysfs
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250320041749.881-2-rakie.kim@sk.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:vxBGvwS+EWZlmP/W7uoetSnf9UKACodThYGYygfRGKVZk+mygbS
- CwF0SCA3f02mHf8S3wRybjPH9CLqmVtfaSIuXSiJ+jzmuKXf0WJCUvUabLrLG6WvgMqAF70
- gRrEifpNTMNgMkmBzve8Itic2FUr8LVFriHQQ40zgkMFGB7bWYXkJEaAVs/AC9l264f5jvU
- 78FKWmQPh6/bu38Hjq8bw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:CS8vjuGqyOY=;Bl6LXBxXiN8N+Uk50ucBm4GLFDZ
- nEQJGuaoAv7iHslz2wf1KzVrid4ay9FW//7ridLaa7XqNRk9e1Wlsl7eUYdgSRgn4E6jdPLqw
- PoTGuGThAK2CS4co8K3MC8NFYCkMRAwBHcA1bC/RFdeXGVZHaDY+8beFbbNz+w8sztCy//w0k
- 1DDLj3KtoxkJboeL+6bIchcsHRDXfB1/TpNjQBrauuiPsPblxwE5MCizlzHyBcWipb8o8sRvF
- r8B/ReOAjlqu6gEaR2FbaopBhP/4S+vmWACkUcnXg0AZhs2w2TykNWNK7RvSs0orwEHFfx4dd
- 4dv222dDMbJuOuEpm13dMhqL2k2ZnLEpu40BgCLGv4VGUwYEp77t2pLtFwI9h4kLIa5jKwLSh
- bIoy9Nbg07o/iT0qkBhXXZTEtcW3JN9t24uS1V+aHCEvnYWpshSmdK8+pSwIs/OhCdpqk6lq8
- uUfxiTKASkx1B0i9Z0dc6zs5UgnEF8BiaaSON8K419G5JiUbZpNWOvM1BMiXIwg+K5OI/vcf1
- o/bGR1d09jQBcQCOrVNdSJ5Tx8Kd001ygGFftQXbgdUHV3n/GVqsUYbcRMWZ84TNrL0neKWjg
- cwALEzRJATiKzLKdcsti8JK/gbKGwDfgz7TyxsZM/Aq8XIOZ5zrvE1cEU4mYRYm0Z5a9+XiB+
- pfRjPyBRWBG3XIyXl8JDY0Vdo17I0OQWqHaYDmhK/CjeNPfjQXCQF80MKhH04IcjN3gje32J6
- qQYZhyscB9dOvm0bim9LXC3krMs2AD5y63VRw3CQ/6U5X1v+Qc1kw47ETIsoLXg2k1l3jjVcH
- 9IUGtR9Zw/+J6pVxeyajthdlnmm3ISPp3QhCVPMpu8s5ysJwLhCZDB5SSHjBOEcI1xhzjd8nQ
- tH29+h+41BWdbQUozPaewEe2c2XoHUXlu9uxW1SYktqehcXM6LBoSoGhVCx6LFz61ESu0f8Sv
- t+CK4e0439vPHD7qPQ2ID8DmplS44Q28B0COzYbn9W+mQF3qYIjlq0pvHdyQCOAsff9BBYAeS
- lnstsWpECJJNsjvPWFxGMCsU89fjv5cdTVRTkIvwug1cJT0L+P3SDbJlzbtm9dJaEUKinT0ne
- UWp27HlM2pLJe5lI0qY8CX6XQfb0AAxX3xuCXn7/UItjAPI1YUNhxmq7xd0uv0GUVRTvDbG16
- 5kzFu/i/DCenoU/dPC2hqjNZxgVwUQw6DWz+JFPLpwNcXUOIAe3PIrbMvXhY4V+OXlCBuGHr5
- u7d9h/i3gWCWdSakCsGN1dKAjMVvAHPAG5p7UdsP5IMJ//DZQ4gaiu/CenmCrLkxwE4qQ2I9E
- th0ZyAO8KkFaVQ0Q1scPXhvui22ElRUcxuRvzRg9/rof1Brut1KVPQVxZhNGZdkHlHr2oYyzd
- 9plwUimYymvOdeKcONMixv2Zp0K6FuIpAj1bmjITdkdbIkPAWINWcntcHaeIs8PGG93wEZYtT
- reCZtZSPncqE/4OFbWTto0TedlyLBwHJKq7D6YLeMEi5FxVEz
+Message-ID: <243092c2.4d3c.195cc474586.Coremail.wangyuquan1236@phytium.com.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:AQAAfwBna4cRYOJn6cdTAA--.8322W
+X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAAAWfhujoEA
+	wABsA
+Authentication-Results: hzbj-icmmx-6; spf=neutral smtp.mail=wangyuquan
+	1236@phytium.com.cn;
+X-Coremail-Antispam: 1Uk129KBjvJXoW3WFy5CF13tr17Ar1kZF4Dtwb_yoW3Gr1rp3
+	W8Aa48Aw1UK3W7G3ySkw18AryUK3yUGr47Xw1vy390ywnrJrn8XrnxKFZ7J3Wjgay5trs8
+	t3W7X390qr1UtrUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
+	UUUUU
 
-=E2=80=A6
-> This patch resolves the issue =E2=80=A6
+CgoKPiAtLS0tLeWOn+Wni+mCruS7ti0tLS0tCj4g5Y+R5Lu25Lq6OiAiSm9uYXRoYW4gQ2FtZXJv
+biIgPEpvbmF0aGFuLkNhbWVyb25AaHVhd2VpLmNvbT4KPiDlj5HpgIHml7bpl7Q6MjAyNS0wMy0x
+MyAwMjoxMDozNSAo5pif5pyf5ZubKQo+IOaUtuS7tuS6ujogIll1cXVhbiBXYW5nIiA8d2FuZ3l1
+cXVhbjEyMzZAcGh5dGl1bS5jb20uY24+Cj4g5oqE6YCBOiBxZW11LWRldmVsQG5vbmdudS5vcmcs
+IGxpbnV4LWN4bEB2Z2VyLmtlcm5lbC5vcmcKPiDkuLvpopg6IFJlOiBbUEFUQ0hdIGRvY3MvY3hs
+OiBBZGQgc2VyaWFsIG51bWJlciBmb3IgcGVyc2lzdGVudC1tZW1kZXYKPiAKPiBPbiBXZWQsIDUg
+TWFyIDIwMjUgMTg6MzU6NDAgKzA4MDAKPiBZdXF1YW4gV2FuZyA8d2FuZ3l1cXVhbjEyMzZAcGh5
+dGl1bS5jb20uY24+IHdyb3RlOgo+IAo+ID4gPiAKPiA+ID4gT24gVHVlLCA0IE1hciAyMDI1IDE0
+OjIyOjQ4ICswODAwCj4gPiA+IFl1cXVhbiBXYW5nIDx3YW5neXVxdWFuMTIzNkBwaHl0aXVtLmNv
+bS5jbj4gd3JvdGU6Cj4gPiA+ICAgCj4gPiA+ID4gPiAKPiA+ID4gPiA+IE9uIFRodSwgRmViIDIw
+LCAyMDI1IGF0IDA0OjEyOjEzUE0gKzAwMDAsIEpvbmF0aGFuIENhbWVyb24gd3JvdGU6ICAgIAo+
+ID4gPiA+ID4gPiBPbiBNb24sIDE3IEZlYiAyMDI1IDE5OjIwOjM5ICswODAwCj4gPiA+ID4gPiA+
+IFl1cXVhbiBXYW5nIDx3YW5neXVxdWFuMTIzNkBwaHl0aXVtLmNvbS5jbj4gd3JvdGU6Cj4gPiA+
+ID4gPiA+ICAgICAKPiA+ID4gPiA+ID4gPiBBZGQgc2VyaWFsIG51bWJlciBwYXJhbWV0ZXIgaW4g
+dGhlIGN4bCBwZXJzaXN0ZW50IGV4YW1wbGVzLgo+ID4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiA+
+IFNpZ25lZC1vZmYtYnk6IFl1cXVhbiBXYW5nIDx3YW5neXVxdWFuMTIzNkBwaHl0aXVtLmNvbS5j
+bj4gICAgCj4gPiA+ID4gPiA+IExvb2tzIGdvb2QuICBJJ3ZlIHF1ZXVlZCBpdCB1cCBvbiBteSBn
+aXRsYWIgc3RhZ2luZyB0cmVlLCBidXQKPiA+ID4gPiA+ID4gTWljaGFlbCBpZiB5b3Ugd2FudCB0
+byBwaWNrIHRoaXMgb25lIGRpcmVjdGx5IHRoYXQncyBmaW5lIGFzIHdlbGwuICAgIAo+ID4gPiA+
+ID4gCj4gPiA+ID4gPiBTZWUgbm8gcmVhc29uIHRvLCBJIHdhcyBub3QgZXZlbiBDQydkLiAgICAK
+PiA+ID4gPiAKPiA+ID4gPiBIaSwgTWljaGFlbAo+ID4gPiA+IAo+ID4gPiA+IEknbSBzb3JyeSwg
+dGhpcyBpcyBteSBmYXVsdC4gSSB1c2VkICJnZXRfbWFpbnRhaW5lci5wbCIgdG8gY2hlY2sgdGhp
+cwo+ID4gPiA+IHBhdGNoJ3MgbWFpbnRhaW5lcnMgYnV0IGl0IHNob3dzICJObyBtYWludGFpbmVy
+cyBmb3VuZCwgcHJpbnRpbmcgcmVjZW50Cj4gPiA+ID4gY29udHJpYnV0b3JzIi4gCj4gPiA+ID4g
+ICAKPiA+ID4gSSB1c3VhbGx5IHN0YWdlIHVwIG11bHRpcGxlIHNlcmllcyB0b2dldGhlciBhbmQg
+c2VuZCBvbiB0byBNaWNoYWVsLgo+ID4gPiBTbyBpdCB3YXMgYmUgYmVpbmcgbGF6eSBmb3IgYSBt
+aW5vciBjaGFuZ2UgcmF0aGVyIHRoYW4gYW55dGhpbmcgbXVjaAo+ID4gPiB0aGF0IHlvdSBkaWQg
+d3JvbmcuCj4gPiA+IAo+ID4gPiBJZiBJIGdldCB0aW1lIEknbGwgcG9zdCBhIHNlcmllcyB3aXRo
+IHRoaXMgYSBmZXcgb3RoZXIgcGF0Y2hlcwo+ID4gPiBsYXRlciB0b2RheS4gIAo+ID4gPiAKPiA+
+ID4gSm9uYXRoYW4KPiA+ID4gICAKPiA+IFRoYW5rIHlvdSEKPiA+IAo+ID4gQlRXLCBJIGZvdW5k
+IGEgY29ybmVyIGNhc2UgaW4gQ1hMIG51bWEgbm9kZSBjcmVhdGlvbi4KPiA+IAo+ID4gQ29uZGl0
+aW9uOiAKPiA+IDEpIEEgVU1BL05VTUEgc3lzdGVtIHdpdGhvdXQgU1JBVCwgYnV0IHdpdGggQ0VE
+VC5DRk1XUwo+ID4gMu+8iUVuYWJsZSBDT05GSUdfQUNQSV9OVU1BCj4gPiAKPiA+IFJlc3VsdHM6
+Cj4gPiAxKSBhY3BpX251bWFfaW5pdDogdGhlIGZha2VfcHhtIHdpbGwgYmUgMCBhbmQgc2VuZCB0
+byBhY3BpX3BhcnNlX2NmbXdzKCkKPiA+IDLvvIlJZiBkeW5hbWljYWxseSBjcmVhdGUgY3hsIHJh
+bSByZWdpb24sIHRoZSBjeGwgbWVtb3J5IHdvdWxkIGJlIGFzc2lnbmVkCj4gPiB0byBub2RlMCBy
+YXRoZXIgdGhhbiBhIG5ldyBub2RlCj4gPiAKPiA+IENvbmZ1c2lvbnM6Cj4gPiAxKSBJcyBhIG51
+bWEgc3lzdGVtIGEgcmVxdWlyZW1lbnQgZm9yIENYTCBtZW1vcnkgdXNhZ2U/Cj4gCj4gT2J2aW91
+c2x5IGRpc2N1c3Npb24gaGFzIGdvbmUgb24gZWxzZXdoZXJlLCBidXQgSSdkIHNheSBpbiBnZW5l
+cmFsIGl0Cj4gd291bGQgYmUgYSBiYWQgaWRlYSB0byBub3QgaGF2ZSBhbiBTUkFUIGJlY2F1c2Ug
+dGhlIG1vbWVudCB3ZSBhZGQgQ1hMCj4gaXQgaXMgZGVmaW5pdGVseSBhIE5VTUEgc3lzdGVtIGFu
+ZCB3ZSB3YW50IHRoZSBHZW5lcmljIFBvcnQgZW50cnkgdG8KPiBhbGxvdyB1cyB0byBnZXQgcGVy
+ZiBpbmZvcm1hdGlvbi4KPiAKPiBTbyBJIHdvdWxkbid0IG1pbmQgaWYgd2UgZmFpbCBDWEwgaW5p
+dCBpbiB0aGlzIGNhc2UsIGJ1dCBtYXliZQo+IGl0IGlzIHdvcnRoIHBhcGVyaW5nIG92ZXIgdGhp
+bmdzLgo+IAo+IEpvbmF0aGFuCj4gCgpIaSwgSm9uYXRoYW4KClJlY2VudGx0eSBJIG1hbmFnZWQg
+dG8gZG8gc29tZSBob3QtcGx1ZyB0ZXN0cyBvbiBjeGwgdHlwZTMgZGV2aWNlIG9uIFFFTVUuCkkg
+dHJpZWQgdXNlICJkZXZpY2UgYWRkIiBxZW11IGNvbW1hbmQgaW4gbW9uaXRvciwgYnV0IGl0IGZh
+aWxlZC4gSSBhbHNvIHVzZWQKdW5iaW5kL2JpbmQgY3hsX3BjaSBkcml2ZXIgaW4gc3lzZnMsIEkg
+Y2FuIHNlZSB0aGUgc29mdHdhcmUgZmxvdyBvbiBkZXZpY2UgYnV0Cm5vIGV4cGVjdGVkIGFjdGlv
+bnMgb24gY3hsIHJvb3QgcG9ydHMgbGlua2VkKGxpa2UgcGNpZSBob3QtcGx1ZyBpbnRlcnJ1cHQg
+YW5kCnNvIG9uKS4KCkNvdWxkIHdlIHNpbXVsYXRlIGEgaG90LWFkZCBmbG93IG9mIHR5cGUzIGRl
+dmljZSBpbiBxZW11IG5vdz8gTWF5YmUgSSB1c2VkIHRoZQp3cm9uZyBtZXRob2QgOigKCll1cXVh
+bgoNCg0K5L+h5oGv5a6J5YWo5aOw5piO77ya5pys6YKu5Lu25YyF5ZCr5L+h5oGv5b2S5Y+R5Lu2
+5Lq65omA5Zyo57uE57uH5omA5pyJLOWPkeS7tuS6uuaJgOWcqOe7hOe7h+WvueivpemCruS7tuaL
+peacieaJgOacieadg+WIqeOAguivt+aOpeaUtuiAheazqOaEj+S/neWvhizmnKrnu4/lj5Hku7bk
+urrkuabpnaLorrjlj68s5LiN5b6X5ZCR5Lu75L2V56ys5LiJ5pa557uE57uH5ZKM5Liq5Lq66YCP
+6Zyy5pys6YKu5Lu25omA5ZCr5L+h5oGv44CCDQpJbmZvcm1hdGlvbiBTZWN1cml0eSBOb3RpY2U6
+IFRoZSBpbmZvcm1hdGlvbiBjb250YWluZWQgaW4gdGhpcyBtYWlsIGlzIHNvbGVseSBwcm9wZXJ0
+eSBvZiB0aGUgc2VuZGVyJ3Mgb3JnYW5pemF0aW9uLlRoaXMgbWFpbCBjb21tdW5pY2F0aW9uIGlz
+IGNvbmZpZGVudGlhbC5SZWNpcGllbnRzIG5hbWVkIGFib3ZlIGFyZSBvYmxpZ2F0ZWQgdG8gbWFp
+bnRhaW4gc2VjcmVjeSBhbmQgYXJlIG5vdCBwZXJtaXR0ZWQgdG8gZGlzY2xvc2UgdGhlIGNvbnRl
+bnRzIG9mIHRoaXMgY29tbXVuaWNhdGlvbiB0byBvdGhlcnMu
 
-See also:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
-e/Documentation/process/submitting-patches.rst?h=3Dv6.14#n94
-
-Regards,
-Markus
