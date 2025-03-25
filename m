@@ -1,122 +1,255 @@
-Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC21A8460
-	for <linux-cxl@vger.kernel.org>; Tue, 25 Mar 2025 07:49:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90CED2CA6
+	for <linux-cxl@vger.kernel.org>; Tue, 25 Mar 2025 10:15:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742888997; cv=none; b=hQd71UXpTKmTYZUVmn7Cax5H41CwcqPkYMY+0V3051VUVfLaFfOkGZwfFj8YttR/kMwzJwOYS+y507DXo+EYcesJ11Rw/m2suGlpinTcldvzwX3JWorBmuYj/rUc/AptsXIOUzLQ/MBpDpR1P2CataH3TAU803MH+zBYJp5ELOo=
+	t=1742897719; cv=none; b=uvDpzPIt46OYcMFHtVPyIpCUvu+wIdDqoafLzl2kCe9SfCmgzEUkgeUo16EKhTt5+jIwb15cGZ2WJ+Ocif7/DPpAjvJX8fF2NqVMRnHwFR03qaagQEsTa6YuT61r7Y5HgUWKkzLMh6p5TYSpTKAGXH4rywnzwbH2yoVHpJeBZnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742888997; c=relaxed/simple;
-	bh=z40NpjwQtQ7ak2jbbOy18YExxHtplfFu/4fCj7GvZhw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=KpgILKCOuhBeQuXTxDeMS4MheBV5KHiIwtu2duAzSbCcEsLXKuWze0qNisgAA59hesUNQ25bqjJYawrj0ZLqOM1M+DEOMlmLVl0HPXRCMsqd8w+ERJf9BSwPG3/V2aGNetoupVw3IczZMEpubzjhh1RweSw0lFrEwiAVzpEX6OI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=129.150.39.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-6 (Coremail) with SMTP id AQAAfwBXWVkSYOJn49RUDQ--.37694S2;
-	Tue, 25 Mar 2025 15:49:38 +0800 (CST)
-Received: from wangyuquan1236$phytium.com.cn ( [218.76.62.144] ) by
- ajax-webmail-mail (Coremail) ; Tue, 25 Mar 2025 15:49:37 +0800 (GMT+08:00)
-Date: Tue, 25 Mar 2025 15:49:37 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: "Yuquan Wang" <wangyuquan1236@phytium.com.cn>
-To: "Jonathan Cameron" <Jonathan.Cameron@huawei.com>
-Cc: qemu-devel@nongnu.org, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH] docs/cxl: Add serial number for persistent-memdev
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2024.1-cmXT6 build
- 20240812(cfb32469) Copyright (c) 2002-2025 www.mailtech.cn
- mispb-4edfefde-e422-4ddc-8a36-c3f99eb8cd32-icoremail.net
-In-Reply-To: <20250312181035.00006e32@huawei.com>
-References: <20250217112039.138650-1-wangyuquan1236@phytium.com.cn>
- <20250220161213.000049a9@huawei.com>
- <20250221065509-mutt-send-email-mst@kernel.org>
- <17b91a9f.2847.1955fd23d78.Coremail.wangyuquan1236@phytium.com.cn>
- <20250305141359.00001288@huawei.com>
- <4752672.2b5f.19565e01b65.Coremail.wangyuquan1236@phytium.com.cn>
- <20250312181035.00006e32@huawei.com>
-Content-Transfer-Encoding: base64
-X-CM-CTRLDATA: rc52s2Zvb3Rlcl90eHQ9MjkyMDozODM=
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1742897719; c=relaxed/simple;
+	bh=4iPFTXe+L6jziIEnF83Q4jrEpgEtykq3pb9PYGpmcME=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=kXqRF8t8yigL/u9Wzbexlck3RuHxOGs/9Lb6XLkUbQD05ufCs/kESxKsHjWKON7vsY8CPnztm4q/753ALD9u4SDFEj9JhJnU/BBeHYmlGyPFaok+HLDyguqUk2UOxxXI5VUb0szVlBNFxKyF2ZsLYtu8eqbh5aCystncd7sOYis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=WyigAgM6; arc=none smtp.client-ip=95.215.58.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="WyigAgM6"
+Content-Type: text/plain;
+	charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1742897714;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I7slmv3tk1IMeSIKAwJUElSlb3+YrO7DlGquM5zYbks=;
+	b=WyigAgM61tfB53pHOUDpDvSkVVGsSbU0aua7jm4x48mxoJl1a375djy3YKMfZh61hK/qPg
+	LkdfP9b1rPqp/AiTgyloMV7AnHrx7a4Ct/zshG/LbsbNnxCLszS4IYgEr+w+jJsF5fmU7l
+	BnWIOjoWSt0FzCcQXDjy9djeyjXSVQg=
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-ID: <243092c2.4d3c.195cc474586.Coremail.wangyuquan1236@phytium.com.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:AQAAfwBna4cRYOJn6cdTAA--.8322W
-X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAAAWfhujoEA
-	wABsA
-Authentication-Results: hzbj-icmmx-6; spf=neutral smtp.mail=wangyuquan
-	1236@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjvJXoW3WFy5CF13tr17Ar1kZF4Dtwb_yoW3Gr1rp3
-	W8Aa48Aw1UK3W7G3ySkw18AryUK3yUGr47Xw1vy390ywnrJrn8XrnxKFZ7J3Wjgay5trs8
-	t3W7X390qr1UtrUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
-	UUUUU
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
+Subject: Re: ndctl cxl test suite fails in arm64 QEMU
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Itaru Kitayama <itaru.kitayama@linux.dev>
+In-Reply-To: <20250313091126.000040db@huawei.com>
+Date: Tue, 25 Mar 2025 19:14:47 +0900
+Cc: Alison Schofield <alison.schofield@intel.com>,
+ linux-cxl@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <C7FF28D4-FFBD-4279-B107-7461B0C9A68B@linux.dev>
+References: <43568B03-6832-4EB1-BF46-EF0F176509E2@linux.dev>
+ <Z75G2UKmx7G59u7P@aschofie-mobl2.lan> <Z8HJbMkV6mzikTI8@vm4>
+ <4135507A-DECD-4944-8B39-737A7C90D40A@linux.dev>
+ <20250313091126.000040db@huawei.com>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+X-Migadu-Flow: FLOW_OUT
 
-CgoKPiAtLS0tLeWOn+Wni+mCruS7ti0tLS0tCj4g5Y+R5Lu25Lq6OiAiSm9uYXRoYW4gQ2FtZXJv
-biIgPEpvbmF0aGFuLkNhbWVyb25AaHVhd2VpLmNvbT4KPiDlj5HpgIHml7bpl7Q6MjAyNS0wMy0x
-MyAwMjoxMDozNSAo5pif5pyf5ZubKQo+IOaUtuS7tuS6ujogIll1cXVhbiBXYW5nIiA8d2FuZ3l1
-cXVhbjEyMzZAcGh5dGl1bS5jb20uY24+Cj4g5oqE6YCBOiBxZW11LWRldmVsQG5vbmdudS5vcmcs
-IGxpbnV4LWN4bEB2Z2VyLmtlcm5lbC5vcmcKPiDkuLvpopg6IFJlOiBbUEFUQ0hdIGRvY3MvY3hs
-OiBBZGQgc2VyaWFsIG51bWJlciBmb3IgcGVyc2lzdGVudC1tZW1kZXYKPiAKPiBPbiBXZWQsIDUg
-TWFyIDIwMjUgMTg6MzU6NDAgKzA4MDAKPiBZdXF1YW4gV2FuZyA8d2FuZ3l1cXVhbjEyMzZAcGh5
-dGl1bS5jb20uY24+IHdyb3RlOgo+IAo+ID4gPiAKPiA+ID4gT24gVHVlLCA0IE1hciAyMDI1IDE0
-OjIyOjQ4ICswODAwCj4gPiA+IFl1cXVhbiBXYW5nIDx3YW5neXVxdWFuMTIzNkBwaHl0aXVtLmNv
-bS5jbj4gd3JvdGU6Cj4gPiA+ICAgCj4gPiA+ID4gPiAKPiA+ID4gPiA+IE9uIFRodSwgRmViIDIw
-LCAyMDI1IGF0IDA0OjEyOjEzUE0gKzAwMDAsIEpvbmF0aGFuIENhbWVyb24gd3JvdGU6ICAgIAo+
-ID4gPiA+ID4gPiBPbiBNb24sIDE3IEZlYiAyMDI1IDE5OjIwOjM5ICswODAwCj4gPiA+ID4gPiA+
-IFl1cXVhbiBXYW5nIDx3YW5neXVxdWFuMTIzNkBwaHl0aXVtLmNvbS5jbj4gd3JvdGU6Cj4gPiA+
-ID4gPiA+ICAgICAKPiA+ID4gPiA+ID4gPiBBZGQgc2VyaWFsIG51bWJlciBwYXJhbWV0ZXIgaW4g
-dGhlIGN4bCBwZXJzaXN0ZW50IGV4YW1wbGVzLgo+ID4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiA+
-IFNpZ25lZC1vZmYtYnk6IFl1cXVhbiBXYW5nIDx3YW5neXVxdWFuMTIzNkBwaHl0aXVtLmNvbS5j
-bj4gICAgCj4gPiA+ID4gPiA+IExvb2tzIGdvb2QuICBJJ3ZlIHF1ZXVlZCBpdCB1cCBvbiBteSBn
-aXRsYWIgc3RhZ2luZyB0cmVlLCBidXQKPiA+ID4gPiA+ID4gTWljaGFlbCBpZiB5b3Ugd2FudCB0
-byBwaWNrIHRoaXMgb25lIGRpcmVjdGx5IHRoYXQncyBmaW5lIGFzIHdlbGwuICAgIAo+ID4gPiA+
-ID4gCj4gPiA+ID4gPiBTZWUgbm8gcmVhc29uIHRvLCBJIHdhcyBub3QgZXZlbiBDQydkLiAgICAK
-PiA+ID4gPiAKPiA+ID4gPiBIaSwgTWljaGFlbAo+ID4gPiA+IAo+ID4gPiA+IEknbSBzb3JyeSwg
-dGhpcyBpcyBteSBmYXVsdC4gSSB1c2VkICJnZXRfbWFpbnRhaW5lci5wbCIgdG8gY2hlY2sgdGhp
-cwo+ID4gPiA+IHBhdGNoJ3MgbWFpbnRhaW5lcnMgYnV0IGl0IHNob3dzICJObyBtYWludGFpbmVy
-cyBmb3VuZCwgcHJpbnRpbmcgcmVjZW50Cj4gPiA+ID4gY29udHJpYnV0b3JzIi4gCj4gPiA+ID4g
-ICAKPiA+ID4gSSB1c3VhbGx5IHN0YWdlIHVwIG11bHRpcGxlIHNlcmllcyB0b2dldGhlciBhbmQg
-c2VuZCBvbiB0byBNaWNoYWVsLgo+ID4gPiBTbyBpdCB3YXMgYmUgYmVpbmcgbGF6eSBmb3IgYSBt
-aW5vciBjaGFuZ2UgcmF0aGVyIHRoYW4gYW55dGhpbmcgbXVjaAo+ID4gPiB0aGF0IHlvdSBkaWQg
-d3JvbmcuCj4gPiA+IAo+ID4gPiBJZiBJIGdldCB0aW1lIEknbGwgcG9zdCBhIHNlcmllcyB3aXRo
-IHRoaXMgYSBmZXcgb3RoZXIgcGF0Y2hlcwo+ID4gPiBsYXRlciB0b2RheS4gIAo+ID4gPiAKPiA+
-ID4gSm9uYXRoYW4KPiA+ID4gICAKPiA+IFRoYW5rIHlvdSEKPiA+IAo+ID4gQlRXLCBJIGZvdW5k
-IGEgY29ybmVyIGNhc2UgaW4gQ1hMIG51bWEgbm9kZSBjcmVhdGlvbi4KPiA+IAo+ID4gQ29uZGl0
-aW9uOiAKPiA+IDEpIEEgVU1BL05VTUEgc3lzdGVtIHdpdGhvdXQgU1JBVCwgYnV0IHdpdGggQ0VE
-VC5DRk1XUwo+ID4gMu+8iUVuYWJsZSBDT05GSUdfQUNQSV9OVU1BCj4gPiAKPiA+IFJlc3VsdHM6
-Cj4gPiAxKSBhY3BpX251bWFfaW5pdDogdGhlIGZha2VfcHhtIHdpbGwgYmUgMCBhbmQgc2VuZCB0
-byBhY3BpX3BhcnNlX2NmbXdzKCkKPiA+IDLvvIlJZiBkeW5hbWljYWxseSBjcmVhdGUgY3hsIHJh
-bSByZWdpb24sIHRoZSBjeGwgbWVtb3J5IHdvdWxkIGJlIGFzc2lnbmVkCj4gPiB0byBub2RlMCBy
-YXRoZXIgdGhhbiBhIG5ldyBub2RlCj4gPiAKPiA+IENvbmZ1c2lvbnM6Cj4gPiAxKSBJcyBhIG51
-bWEgc3lzdGVtIGEgcmVxdWlyZW1lbnQgZm9yIENYTCBtZW1vcnkgdXNhZ2U/Cj4gCj4gT2J2aW91
-c2x5IGRpc2N1c3Npb24gaGFzIGdvbmUgb24gZWxzZXdoZXJlLCBidXQgSSdkIHNheSBpbiBnZW5l
-cmFsIGl0Cj4gd291bGQgYmUgYSBiYWQgaWRlYSB0byBub3QgaGF2ZSBhbiBTUkFUIGJlY2F1c2Ug
-dGhlIG1vbWVudCB3ZSBhZGQgQ1hMCj4gaXQgaXMgZGVmaW5pdGVseSBhIE5VTUEgc3lzdGVtIGFu
-ZCB3ZSB3YW50IHRoZSBHZW5lcmljIFBvcnQgZW50cnkgdG8KPiBhbGxvdyB1cyB0byBnZXQgcGVy
-ZiBpbmZvcm1hdGlvbi4KPiAKPiBTbyBJIHdvdWxkbid0IG1pbmQgaWYgd2UgZmFpbCBDWEwgaW5p
-dCBpbiB0aGlzIGNhc2UsIGJ1dCBtYXliZQo+IGl0IGlzIHdvcnRoIHBhcGVyaW5nIG92ZXIgdGhp
-bmdzLgo+IAo+IEpvbmF0aGFuCj4gCgpIaSwgSm9uYXRoYW4KClJlY2VudGx0eSBJIG1hbmFnZWQg
-dG8gZG8gc29tZSBob3QtcGx1ZyB0ZXN0cyBvbiBjeGwgdHlwZTMgZGV2aWNlIG9uIFFFTVUuCkkg
-dHJpZWQgdXNlICJkZXZpY2UgYWRkIiBxZW11IGNvbW1hbmQgaW4gbW9uaXRvciwgYnV0IGl0IGZh
-aWxlZC4gSSBhbHNvIHVzZWQKdW5iaW5kL2JpbmQgY3hsX3BjaSBkcml2ZXIgaW4gc3lzZnMsIEkg
-Y2FuIHNlZSB0aGUgc29mdHdhcmUgZmxvdyBvbiBkZXZpY2UgYnV0Cm5vIGV4cGVjdGVkIGFjdGlv
-bnMgb24gY3hsIHJvb3QgcG9ydHMgbGlua2VkKGxpa2UgcGNpZSBob3QtcGx1ZyBpbnRlcnJ1cHQg
-YW5kCnNvIG9uKS4KCkNvdWxkIHdlIHNpbXVsYXRlIGEgaG90LWFkZCBmbG93IG9mIHR5cGUzIGRl
-dmljZSBpbiBxZW11IG5vdz8gTWF5YmUgSSB1c2VkIHRoZQp3cm9uZyBtZXRob2QgOigKCll1cXVh
-bgoNCg0K5L+h5oGv5a6J5YWo5aOw5piO77ya5pys6YKu5Lu25YyF5ZCr5L+h5oGv5b2S5Y+R5Lu2
-5Lq65omA5Zyo57uE57uH5omA5pyJLOWPkeS7tuS6uuaJgOWcqOe7hOe7h+WvueivpemCruS7tuaL
-peacieaJgOacieadg+WIqeOAguivt+aOpeaUtuiAheazqOaEj+S/neWvhizmnKrnu4/lj5Hku7bk
-urrkuabpnaLorrjlj68s5LiN5b6X5ZCR5Lu75L2V56ys5LiJ5pa557uE57uH5ZKM5Liq5Lq66YCP
-6Zyy5pys6YKu5Lu25omA5ZCr5L+h5oGv44CCDQpJbmZvcm1hdGlvbiBTZWN1cml0eSBOb3RpY2U6
-IFRoZSBpbmZvcm1hdGlvbiBjb250YWluZWQgaW4gdGhpcyBtYWlsIGlzIHNvbGVseSBwcm9wZXJ0
-eSBvZiB0aGUgc2VuZGVyJ3Mgb3JnYW5pemF0aW9uLlRoaXMgbWFpbCBjb21tdW5pY2F0aW9uIGlz
-IGNvbmZpZGVudGlhbC5SZWNpcGllbnRzIG5hbWVkIGFib3ZlIGFyZSBvYmxpZ2F0ZWQgdG8gbWFp
-bnRhaW4gc2VjcmVjeSBhbmQgYXJlIG5vdCBwZXJtaXR0ZWQgdG8gZGlzY2xvc2UgdGhlIGNvbnRl
-bnRzIG9mIHRoaXMgY29tbXVuaWNhdGlvbiB0byBvdGhlcnMu
+
+
+> On Mar 13, 2025, at 18:11, Jonathan Cameron =
+<Jonathan.Cameron@huawei.com> wrote:
+>=20
+> On Fri, 7 Mar 2025 10:44:23 +0900
+> Itaru Kitayama <itaru.kitayama@linux.dev> wrote:
+>=20
+>> Hi Jonathan, Alison,
+>>=20
+>>> On Feb 28, 2025, at 23:34, Itaru Kitayama <itaru.kitayama@linux.dev> =
+wrote:
+>>>=20
+>>> On Tue, Feb 25, 2025 at 02:40:25PM -0800, Alison Schofield wrote: =20=
+
+>>>> On Tue, Feb 25, 2025 at 01:09:57PM +0900, Itaru Kitayama wrote: =20
+>>>>> Hi,
+>>>>>=20
+>>>>> Has anyone noticed the ndctl cxl test suite failures I reported =
+below on arm64, QEMU emulation?
+>>>>>=20
+>>>>> https://github.com/pmem/ndctl/issues/278
+>>>>>=20
+>>>>> I=E2=80=99m using Jonathan=E2=80=99s latest CXL capable QEMU [1], =
+and the latest CXL kernel [2]. =20
+>>>>=20
+>>>> Hi Itaru,
+>>>>=20
+>>>> Looking at region.c:size_store() it seems that alloc_hpa() is =
+failing.
+>>>> (kstrtou64 is arch independent and it works for me with same script =
+&
+>>>> value)
+>>>>=20
+>>>> Check the dmesg log at the time of the failure. alloc_hpa() may be
+>>>> emitting a message.  (In the run_qemu.sh cmdline add '--cxl-debug') =
+=20
+>>>=20
+>>> dynamic debug reported this (kernel is without kaslr, today's =
+cxl/next):
+>>>=20
+>>> [  193.267649] device: 'region4': device_add
+>>> [  193.267931] bus: 'cxl': add device region4
+>>> [  193.268284] cxl region4: bus: 'cxl': __driver_probe_device: =
+matched device with driver cxl_region
+>>> [  193.268333] cxl region4: bus: 'cxl': really_probe: probing driver =
+cxl_region with device
+>>> [  193.268401] cxl_region region4: no default pinctrl state
+>>> [  193.268482] cxl_region region4: probe with driver cxl_region =
+rejects match -6
+>>>=20
+>>> does the above show the region4 was not added properly? The sysfs
+>>> entries are there after the out of range failure. =20
+>>=20
+>> The driver/cxl/core/region.c=E2=80=99s size_store() triggers a =
+sequence of:=20
+>>=20
+>> alloc_hpa()
+>> alloc_free_mem_region()
+>> get_free_mem_region() // with flags set to 0, retruns -ERANGE
+>>=20
+>> While I am looking at the resource core code, do you think this is =
+caused by the old firmware I am using
+>> when booting QEMU built off of your CXL topic branch? Suggestions are =
+welcome.
+> Unlikely as I don't think there have been any relevant changes in edk2 =
+for
+> a long long time.
+
+I am trying to run the run_qemu.sh script which is maintained by the =
+Intel CXL folk with:
+
+$ qemu=3D$HOME/projects/qemu/build/qemu-system-aarch64 run_qemu.sh =
+--roots ~/ubuntu24.img -r none --no-cxl --no-kvm  --hmat
+
+and I get:
+
+mkosi 12
+/home/itaru/projects/qemu/build/qemu-system-aarch64 -machine =
+virt,accel=3Dtcg,nvdimm=3Don,hmat=3Don -m 8192M,slots=3D4,maxmem=3D40964M =
+-smp 4,sockets=3D2,cores=3D2,threads=3D1 -display none -nographic -drive =
+if=3Dpflash,format=3Draw,unit=3D0,file=3D/home/itaru/edk2-aarch64-code.fd,=
+readonly=3Don -drive =
+if=3Dpflash,format=3Draw,unit=3D1,file=3D/home/itaru/qemu-arm64-efivars.te=
+st -drive file=3D/home/itaru/ubuntu24.img,format=3Draw,media=3Ddisk =
+-device e1000,netdev=3Dnet0,mac=3D52:54:00:12:34:56 -netdev =
+user,id=3Dnet0,hostfwd=3Dtcp::10022-:22 -snapshot -object =
+memory-backend-ram,id=3Dmem0,size=3D2048M -numa =
+node,nodeid=3D0,memdev=3Dmem0,initiator=3D0 -numa =
+cpu,node-id=3D0,socket-id=3D0 -object =
+memory-backend-ram,id=3Dmem1,size=3D2048M -numa =
+node,nodeid=3D1,memdev=3Dmem1,initiator=3D1 -numa =
+cpu,node-id=3D1,socket-id=3D1 -object =
+memory-backend-ram,id=3Dmem2,size=3D2048M -numa =
+node,nodeid=3D2,memdev=3Dmem2,initiator=3D0 -object =
+memory-backend-ram,id=3Dmem3,size=3D2048M -numa =
+node,nodeid=3D3,memdev=3Dmem3,initiator=3D1 -numa =
+node,nodeid=3D4,initiator=3D0 -object =
+memory-backend-file,id=3Dnvmem0,share=3Don,mem-path=3Dnvdimm-0,size=3D1638=
+4M,align=3D1G -device nvdimm,memdev=3Dnvmem0,id=3Dnv0,label-size=3D2M,node=
+=3D4 -numa node,nodeid=3D5,initiator=3D1 -object =
+memory-backend-file,id=3Dnvmem1,share=3Don,mem-path=3Dnvdimm-1,size=3D1638=
+4M,align=3D1G -device nvdimm,memdev=3Dnvmem1,id=3Dnv1,label-size=3D2M,node=
+=3D5 -numa dist,src=3D0,dst=3D0,val=3D10 -numa dist,src=3D0,dst=3D1,val=3D=
+21 -numa dist,src=3D0,dst=3D2,val=3D12 -numa dist,src=3D0,dst=3D3,val=3D21=
+ -numa dist,src=3D0,dst=3D4,val=3D17 -numa dist,src=3D0,dst=3D5,val=3D28 =
+-numa dist,src=3D1,dst=3D1,val=3D10 -numa dist,src=3D1,dst=3D2,val=3D21 =
+-numa dist,src=3D1,dst=3D3,val=3D12 -numa dist,src=3D1,dst=3D4,val=3D28 =
+-numa dist,src=3D1,dst=3D5,val=3D17 -numa dist,src=3D2,dst=3D2,val=3D10 =
+-numa dist,src=3D2,dst=3D3,val=3D21 -numa dist,src=3D2,dst=3D4,val=3D28 =
+-numa dist,src=3D2,dst=3D5,val=3D28 -numa dist,src=3D3,dst=3D3,val=3D10 =
+-numa dist,src=3D3,dst=3D4,val=3D28 -numa dist,src=3D3,dst=3D5,val=3D28 =
+-numa dist,src=3D4,dst=3D4,val=3D10 -numa dist,src=3D4,dst=3D5,val=3D28 =
+-numa dist,src=3D5,dst=3D5,val=3D10 -numa =
+hmat-lb,initiator=3D0,target=3D0,hierarchy=3Dmemory,data-type=3Daccess-lat=
+ency,latency=3D5 -numa =
+hmat-lb,initiator=3D0,target=3D0,hierarchy=3Dmemory,data-type=3Daccess-ban=
+dwidth,bandwidth=3D2000M -numa =
+hmat-lb,initiator=3D0,target=3D1,hierarchy=3Dmemory,data-type=3Daccess-lat=
+ency,latency=3D20 -numa =
+hmat-lb,initiator=3D0,target=3D1,hierarchy=3Dmemory,data-type=3Daccess-ban=
+dwidth,bandwidth=3D1000M -numa =
+hmat-lb,initiator=3D0,target=3D2,hierarchy=3Dmemory,data-type=3Daccess-lat=
+ency,latency=3D10 -numa =
+hmat-lb,initiator=3D0,target=3D2,hierarchy=3Dmemory,data-type=3Daccess-ban=
+dwidth,bandwidth=3D1500M -numa =
+hmat-lb,initiator=3D0,target=3D3,hierarchy=3Dmemory,data-type=3Daccess-lat=
+ency,latency=3D20 -numa =
+hmat-lb,initiator=3D0,target=3D3,hierarchy=3Dmemory,data-type=3Daccess-ban=
+dwidth,bandwidth=3D1000M -numa =
+hmat-lb,initiator=3D0,target=3D4,hierarchy=3Dmemory,data-type=3Daccess-lat=
+ency,latency=3D30 -numa =
+hmat-lb,initiator=3D0,target=3D4,hierarchy=3Dmemory,data-type=3Daccess-ban=
+dwidth,bandwidth=3D1000M -numa =
+hmat-lb,initiator=3D0,target=3D5,hierarchy=3Dmemory,data-type=3Daccess-lat=
+ency,latency=3D40 -numa =
+hmat-lb,initiator=3D0,target=3D5,hierarchy=3Dmemory,data-type=3Daccess-ban=
+dwidth,bandwidth=3D500M -numa =
+hmat-cache,node-id=3D0,size=3D10K,level=3D1,associativity=3Ddirect,policy=3D=
+write-back,line=3D64 -numa =
+hmat-lb,initiator=3D1,target=3D0,hierarchy=3Dmemory,data-type=3Daccess-lat=
+ency,latency=3D20 -numa =
+hmat-lb,initiator=3D1,target=3D0,hierarchy=3Dmemory,data-type=3Daccess-ban=
+dwidth,bandwidth=3D1000M -numa =
+hmat-lb,initiator=3D1,target=3D1,hierarchy=3Dmemory,data-type=3Daccess-lat=
+ency,latency=3D5 -numa =
+hmat-lb,initiator=3D1,target=3D1,hierarchy=3Dmemory,data-type=3Daccess-ban=
+dwidth,bandwidth=3D2000M -numa =
+hmat-lb,initiator=3D1,target=3D2,hierarchy=3Dmemory,data-type=3Daccess-lat=
+ency,latency=3D20 -numa =
+hmat-lb,initiator=3D1,target=3D2,hierarchy=3Dmemory,data-type=3Daccess-ban=
+dwidth,bandwidth=3D1000M -numa =
+hmat-lb,initiator=3D1,target=3D3,hierarchy=3Dmemory,data-type=3Daccess-lat=
+ency,latency=3D10 -numa =
+hmat-lb,initiator=3D1,target=3D3,hierarchy=3Dmemory,data-type=3Daccess-ban=
+dwidth,bandwidth=3D1500M -numa =
+hmat-lb,initiator=3D1,target=3D4,hierarchy=3Dmemory,data-type=3Daccess-lat=
+ency,latency=3D40 -numa =
+hmat-lb,initiator=3D1,target=3D4,hierarchy=3Dmemory,data-type=3Daccess-ban=
+dwidth,bandwidth=3D500M -numa =
+hmat-lb,initiator=3D1,target=3D5,hierarchy=3Dmemory,data-type=3Daccess-lat=
+ency,latency=3D30 -numa =
+hmat-lb,initiator=3D1,target=3D5,hierarchy=3Dmemory,data-type=3Daccess-ban=
+dwidth,bandwidth=3D1000M -numa =
+hmat-cache,node-id=3D1,size=3D10K,level=3D1,associativity=3Ddirect,policy=3D=
+write-back,line=3D64
+qemu-system-aarch64: -device =
+nvdimm,memdev=3Dnvmem0,id=3Dnv0,label-size=3D2M,node=3D4: memory hotplug =
+is not enabled: missing acpi-ged device
+
+QEMU is built off of your latest update, and I could not find the =
+acpi-ged device what do I do?
+
+Thanks,
+Itaru.
+
+>=20
+> Jonathan
+>=20
+>>=20
+>> Itaru.=20
+>>=20
+>>>=20
+>>> Itaru.
+>>>=20
+>>>>=20
+>>>> Sounds like Marc is on to something and maybe the KASLR is known
+>>>> to cause this problem.
+>>>>=20
+>>>> Thanks for posting to this list and send any further questions or
+>>>> comments. Happy to have you using run_qemu.sh and the cxl tests!
+>>>>=20
+>>>> Alison
+>>>>=20
+>>>>=20
+>>>>>=20
+>>>>> [1] https://gitlab.com/jic23/qemu/ cxl-2025-02-20
+>>>>> [2] https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/
+>>>>>=20
+>>>>> Thanks,
+>>>>> Itaru. =20
+
 
