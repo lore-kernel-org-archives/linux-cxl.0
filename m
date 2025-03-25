@@ -1,222 +1,111 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D3327706;
-	Tue, 25 Mar 2025 15:08:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A790581749;
+	Tue, 25 Mar 2025 15:23:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742915331; cv=none; b=bJKDrVRc80k1xKXM59Rp/IgJEYhiwGEt7G7PahMIWkFq0Ogh6fvN5MnKS8SN6YmdjdkS+ln3B8yTVy8MxiYtoFirHszNjiWhD3HHQVlkvnfpzIQ5BVVtlXOqJ9QCv3bXweiTrEhi68gM9L42WUo685Ctu/6du+c7ex10ywMZx4g=
+	t=1742916236; cv=none; b=ldnRvWQWd1yM2k4QGn88b7tXkcTo+u7m1ju2HU7Jyb9BWgxs3p69icJRiukCNIV4dkZ0s2z9IyHZgB2MKKBO9m/ukE3maPTO9KgYmJ9EfBZKEfNXPlNxH7m0MxtFDOkc7MPPusNLEE29p4/TcnqoZCosf4DPG7zHFKswV3rA/M8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742915331; c=relaxed/simple;
-	bh=D+gJE+BgoJHFY+2QR+wwmhv93dFRwJgFNuy/vrLwQmM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IK7tR+2vDVvnOFJWbxIjdViU1WJKdxDPGB0zhAehvZGCzYSAYCANhhGTf8bx1mUyDXMG+8CqIgh5mMj71gCvAn1jfD0kVML8Mr0mSCDo2o1KXlerZbgghpJkloo0GF70lDbeZVErjQrFUO8kMUerFQBlqcSxbet6sRLfLh9YROs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=UWWdRn2u; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1742916236; c=relaxed/simple;
+	bh=/exxyeix3TXgoxDMiFUprsNekll1tQICKKyQseLBw60=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iXRtLQElo/ghq9kdhFb52Ln0G4Dh66BaZ0LcvUgZEHpaE9rFbcb298/1Il2DsJQnsQ7Ci5j+XJEU2M70l/7upX0gVjruDsR4ENZVI+CRThPCkrxFfI0UbjlFctd5HOrStjQaPEXz8WLw3o+GehgjtH8PMP/wbgdFaYDx7DfKSmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d9xjUrfY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UWWdRn2u"
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52PBftiQ028252;
-	Tue, 25 Mar 2025 15:08:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=corp-2023-11-20; bh=49WQ0+VXvpw4t+yWVOTCQc5o2SAhj
-	y8/rSQGINzSnNY=; b=UWWdRn2ub03OvX5H3iHewoVtc5od3yhgwLDTe80FEwj36
-	1s7Tj5DkK4eOLM/BlloTOorrR8lzKBO7Babdu+iw98/6XCGXtCI6c2yzBSmvZqQd
-	bxmo4GsQszlgPQPItPEFRrcRt7BU5VZlxuI0SNtxbyCw23pVLrPEYOa8EQv9QtMQ
-	8NmjJXXDb46mBxZ4LqRn5L6j3mZzGmNz5fu414HA3R2zCYpJHQu9QasKYER2KSVB
-	kKiGerzM+NmBuWwyhpi+aIT9DC37VrXfCMbzA/LFD7yG5H5ZHeNbU3h5n0c3tWei
-	+OcBSDXo69z/DWyQp759GH5m6uGxFqg2aIMJIThiA==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45hnd67ae5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 25 Mar 2025 15:08:01 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 52PEimXC015178;
-	Tue, 25 Mar 2025 15:08:01 GMT
-Received: from kstolare-e5-ol8.osdevelopmeniad.oraclevcn.com (kstolare-e5-ol8.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.254.20])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 45jj921a63-1;
-	Tue, 25 Mar 2025 15:08:01 +0000
-From: Karolina Stolarek <karolina.stolarek@oracle.com>
-To: linux-pci@vger.kernel.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Jon Pan-Doh <pandoh@google.com>,
-        Terry Bowman <terry.bowman@amd.com>, Len Brown <lenb@kernel.org>,
-        James Morse <james.morse@arm.com>, Tony Luck <tony.luck@intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Ben Cheatham <Benjamin.Cheatham@amd.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>,
-        Liu Xinpeng <liuxp11@chinatelecom.cn>,
-        Darren Hart <darren@os.amperecomputing.com>,
-        Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] PCI/AER: Consolidate CXL, ACPI GHES and native AER reporting paths
-Date: Tue, 25 Mar 2025 15:07:47 +0000
-Message-ID: <81c040d54209627de2d8b150822636b415834c7f.1742900213.git.karolina.stolarek@oracle.com>
-X-Mailer: git-send-email 2.43.5
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d9xjUrfY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58A78C4CEED;
+	Tue, 25 Mar 2025 15:23:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742916236;
+	bh=/exxyeix3TXgoxDMiFUprsNekll1tQICKKyQseLBw60=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=d9xjUrfYpCJVEDuc6UqP+9nRxapQq4WXzi+6ATNwvT7zMa+aU3S9bHM9A+hWmOFz4
+	 0dfpAYKNxz+kngK3PyNHVUJVysZmeVJHmlx+usRSa6Eui4BErhwvmkNpF2o4M/YFU/
+	 bIT2qAf/35163FzT8Z18rkNY0B4aoLM/c8/ws/rPCgfruZrKQegvxja70bCHgDZOxA
+	 O+/Smvh6SVHzPsHKtvay0iahBagbo85ukwd/36iN7741Na5y1Uh0kiogXNG1g2+bWD
+	 9I000wcr1u44r2Eyi0xnhkNUKNz0/5awXlLf82rvWQbWtuS+zV6r0kkjCrvpd7IwEs
+	 QPBaSs/G02DlQ==
+Date: Tue, 25 Mar 2025 15:23:52 +0000
+From: Simon Horman <horms@kernel.org>
+To: Alejandro Lucero Palau <alucerop@amd.com>
+Cc: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
+	netdev@vger.kernel.org, dan.j.williams@intel.com,
+	edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
+	pabeni@redhat.com, edumazet@google.com, dave.jiang@intel.com
+Subject: Re: [PATCH v11 13/23] cxl: define a driver interface for DPA
+ allocation
+Message-ID: <20250325152352.GT892515@horms.kernel.org>
+References: <20250310210340.3234884-1-alejandro.lucero-palau@amd.com>
+ <20250310210340.3234884-14-alejandro.lucero-palau@amd.com>
+ <20250320161847.GA892515@horms.kernel.org>
+ <3af51327-7745-4b18-a478-f47c57683576@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-25_06,2025-03-25_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 adultscore=0
- mlxlogscore=999 mlxscore=0 phishscore=0 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
- definitions=main-2503250106
-X-Proofpoint-ORIG-GUID: Vtkg1UMxfgyZJT3N2TsIkXeD8M33rmCb
-X-Proofpoint-GUID: Vtkg1UMxfgyZJT3N2TsIkXeD8M33rmCb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3af51327-7745-4b18-a478-f47c57683576@amd.com>
 
-Currently, CXL and GHES feature use pci_print_aer() function to
-log AER errors. Its implementation is pretty similar to aer_print_error(),
-duplicating the way how native PCIe devices report errors. We shouldn't
-log messages differently only because they are coming from a different
-code path.
+On Mon, Mar 24, 2025 at 04:16:05PM +0000, Alejandro Lucero Palau wrote:
+> 
+> On 3/20/25 16:18, Simon Horman wrote:
+> > On Mon, Mar 10, 2025 at 09:03:30PM +0000, alejandro.lucero-palau@amd.com wrote:
+> > > From: Alejandro Lucero <alucerop@amd.com>
+> > > 
+> > > Region creation involves finding available DPA (device-physical-address)
+> > > capacity to map into HPA (host-physical-address) space. Define an API,
+> > > cxl_request_dpa(), that tries to allocate the DPA memory the driver
+> > > requires to operate. The memory requested should not be bigger than the
+> > > max available HPA obtained previously with cxl_get_hpa_freespace.
+> > > 
+> > > Based on https://lore.kernel.org/linux-cxl/168592158743.1948938.7622563891193802610.stgit@dwillia2-xfh.jf.intel.com/
+> > > 
+> > > Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> > Hi Alejandro,
+> 
+> 
+> Hi Simon,
+> 
+> 
+> > 
+> > As reported by the Kernel Test Robot, in some circumstances this
+> > patch fails to build.
+> > 
+> > I did not see this with x86_64 or arm64 allmodconfig.
+> > But I did see the problem on ARM and was able to reproduce it (quickly)
+> > like this using the toolchain here [*].
+> > 
+> > $ PATH=.../gcc-12.3.0-nolibc/arm-linux-gnueabi/bin:$PATH
+> > 
+> > $ ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- make allmodconfig
+> > $ echo CONFIG_GCC_PLUGINS=n >> .config
+> > $ ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- make oldconfig
+> > 
+> > $ ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- make drivers/cxl/core/hdm.o
+> > ...
+> >    CC [M]  drivers/cxl/core/hdm.o
+> > In file included from drivers/cxl/core/hdm.c:6:
+> > ./include/cxl/cxl.h:150:22: error: field 'dpa_range' has incomplete type
+> >    150 |         struct range dpa_range;
+> >        |                      ^~~~~~~~~
+> > ./include/cxl/cxl.h:221:30: error: field 'range' has incomplete type
+> >    221 |                 struct range range;
+> >        |
+> > 
+> > [*] https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/14.2.0/
+> > 
+> > ...
+> 
+> 
+> Thanks for the references. I'll try it and figure out what is required.
 
-Make CXL devices and GHES to call aer_print_error() when reporting
-AER errors. Add a wrapper, aer_print_platform_error(), that translates
-aer_capabilities_regs to aer_err_info so we can use pci_print_aer()
-function.
+Thanks,
 
-Signed-off-by: Karolina Stolarek <karolina.stolarek@oracle.com>
----
-v2:
-  - Don't expose aer_err_info to the world; as aer_recover_queue()
-    is tightly connected to the ghes code, introduce a wrapper for
-    aer_print_error()
-  - Move aer_err_info memset to the wrapper, don't expect the
-    caller to clean it for us
+I realised after posting that PATH above uses gcc-12.3 while the link
+above is for gcc-14.2.0. Which is inconsistent. But in practice I tried both :)
 
-  I'm still working on the logs; in the meantime, I think, we can
-  continue reviewing the patch.
-
- drivers/cxl/core/pci.c |  2 +-
- drivers/pci/pcie/aer.c | 64 ++++++++++++++++++++----------------------
- include/linux/aer.h    |  4 +--
- 3 files changed, 33 insertions(+), 37 deletions(-)
-
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index 013b869b66cb..9ba711365388 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -885,7 +885,7 @@ static void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds)
- 	if (!cxl_rch_get_aer_severity(&aer_regs, &severity))
- 		return;
- 
--	pci_print_aer(pdev, severity, &aer_regs);
-+	aer_print_platform_error(pdev, severity, &aer_regs);
- 
- 	if (severity == AER_CORRECTABLE)
- 		cxl_handle_rdport_cor_ras(cxlds, dport);
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index a1cf8c7ef628..ec34bc9b2332 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -760,47 +760,42 @@ int cper_severity_to_aer(int cper_severity)
- EXPORT_SYMBOL_GPL(cper_severity_to_aer);
- #endif
- 
--void pci_print_aer(struct pci_dev *dev, int aer_severity,
--		   struct aer_capability_regs *aer)
-+static void populate_aer_err_info(struct aer_err_info *info, int severity,
-+				  struct aer_capability_regs *aer_regs)
- {
--	int layer, agent, tlp_header_valid = 0;
--	u32 status, mask;
--	struct aer_err_info info;
--
--	if (aer_severity == AER_CORRECTABLE) {
--		status = aer->cor_status;
--		mask = aer->cor_mask;
--	} else {
--		status = aer->uncor_status;
--		mask = aer->uncor_mask;
--		tlp_header_valid = status & AER_LOG_TLP_MASKS;
--	}
--
--	layer = AER_GET_LAYER_ERROR(aer_severity, status);
--	agent = AER_GET_AGENT(aer_severity, status);
-+	int tlp_header_valid;
- 
- 	memset(&info, 0, sizeof(info));
--	info.severity = aer_severity;
--	info.status = status;
--	info.mask = mask;
--	info.first_error = PCI_ERR_CAP_FEP(aer->cap_control);
- 
--	pci_err(dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
--	__aer_print_error(dev, &info);
--	pci_err(dev, "aer_layer=%s, aer_agent=%s\n",
--		aer_error_layer[layer], aer_agent_string[agent]);
-+	info->severity = severity;
-+	info->first_error = PCI_ERR_CAP_FEP(aer_regs->cap_control);
- 
--	if (aer_severity != AER_CORRECTABLE)
--		pci_err(dev, "aer_uncor_severity: 0x%08x\n",
--			aer->uncor_severity);
-+	if (severity == AER_CORRECTABLE) {
-+		info->id = aer_regs->cor_err_source;
-+		info->status = aer_regs->cor_status;
-+		info->mask = aer_regs->cor_mask;
-+	} else {
-+		info->id = aer_regs->uncor_err_source;
-+		info->status = aer_regs->uncor_status;
-+		info->mask = aer_regs->uncor_mask;
-+		tlp_header_valid = info->status & AER_LOG_TLP_MASKS;
-+
-+		if (tlp_header_valid) {
-+			info->tlp_header_valid = tlp_header_valid;
-+			info->tlp = aer_regs->header_log;
-+		}
-+	}
-+}
- 
--	if (tlp_header_valid)
--		pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
-+void aer_print_platform_error(struct pci_dev *pdev, int severity,
-+			      struct aer_capability_regs *aer_regs)
-+{
-+	struct aer_err_info info;
- 
--	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
--			aer_severity, tlp_header_valid, &aer->header_log);
-+	populate_aer_err_info(&info, severity, aer_regs);
-+	aer_print_error(pdev, &info);
- }
--EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
-+EXPORT_SYMBOL_NS_GPL(aer_print_platform_error, "CXL");
- 
- /**
-  * add_error_device - list device to be handled
-@@ -1146,7 +1141,8 @@ static void aer_recover_work_func(struct work_struct *work)
- 			       PCI_SLOT(entry.devfn), PCI_FUNC(entry.devfn));
- 			continue;
- 		}
--		pci_print_aer(pdev, entry.severity, entry.regs);
-+
-+		aer_print_platform_error(pdev, entry.severity, entry.regs);
- 
- 		/*
- 		 * Memory for aer_capability_regs(entry.regs) is being
-diff --git a/include/linux/aer.h b/include/linux/aer.h
-index 02940be66324..5593352dfb51 100644
---- a/include/linux/aer.h
-+++ b/include/linux/aer.h
-@@ -64,8 +64,8 @@ static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
- static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
- #endif
- 
--void pci_print_aer(struct pci_dev *dev, int aer_severity,
--		    struct aer_capability_regs *aer);
-+void aer_print_platform_error(struct pci_dev *pdev, int severity,
-+			      struct aer_capability_regs *aer_regs);
- int cper_severity_to_aer(int cper_severity);
- void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
- 		       int severity, struct aer_capability_regs *aer_regs);
--- 
-2.43.5
-
+...
