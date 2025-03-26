@@ -1,58 +1,51 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF9741F4276;
-	Wed, 26 Mar 2025 16:23:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65CA11F5827;
+	Wed, 26 Mar 2025 16:25:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743006211; cv=none; b=t1aZxXhAX/zCQejrW67eg1EJ79TLtgKkSoZcG32Scfsvq/EV15dCrrQ6+A8mkLwYE61ggCoWqzHoXCoX3pCiwhmHiSFELspxForuM9sNZnE0WWwvfjcF8day9hmteJnsTYfo5XRZaq28pgBCsygiY7AhyHoPJk76w+iWeySlZSw=
+	t=1743006312; cv=none; b=FljJ6euMdVHHO5sUK8iUEzhGd0Tmqc0r8R/yDe+4H+SDWJXQUHFdsd2AHLnyu46ABVynKeHcCOVUN+hYh0EXYXwJhva96GjwLR7j/4e76p9uYW8q3tTtjCY6pbDVvfyhOAA0ze1VzwwvLx+/GfF2fN78AZ4+XLlGqDzwO66jx8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743006211; c=relaxed/simple;
-	bh=nPnx3oYTirJDrOHIV1nZVRXcnxyFBQz9FCV+07VhSgY=;
+	s=arc-20240116; t=1743006312; c=relaxed/simple;
+	bh=jGR6TH7lmaXbUnYdLB6AEH91R7R56KeOS6Jwnspn2Yg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pmk5ny0y/DwDnLqkCKIJdXIA4XNs81y4cWjQLUNXJzxMq5GxiJvdSnBbgoluArPzJObMQhGujw+IIFxTP3krr4X+wghCa8ZjYUQ/j9TxnsLkjSCi3ohrzXzjsaa2Wd3bS/WLrKUblWTYKu3w4DpMF2DAWgaq5vneKP+AuCb34/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Shbe3zOi; arc=none smtp.client-ip=198.175.65.13
+	 MIME-Version:Content-Type; b=dhywV8Itw57WxNkFjDZtSG1V2eJzSqSLItW+UKWJjBjMpu7O1KdIpL3aLA6aitqMZ9CZHJRo/zCG2tkBq0sl/lhq3TGk6B8gNBZT92HOj5bjgsDIstTGWolLyvjoI+QAiY/xv0EwNDm5cQk5kP1PHOTyE11XMMmoMJKWQ7mT5A4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VCJj9c2/; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Shbe3zOi"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VCJj9c2/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743006210; x=1774542210;
+  t=1743006312; x=1774542312;
   h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=nPnx3oYTirJDrOHIV1nZVRXcnxyFBQz9FCV+07VhSgY=;
-  b=Shbe3zOixLWIV82FLHOv31Y2jZnynFbTuFNKMO19kIgqMAZA36mJwRv7
-   eJOWxoBcynEKRsyTcwu/JMuTl70X1AS2B7axfxFLkKTTkoPuqZv1RjCUB
-   vAcd8aeQfrp7L0vi1pbC+AiuO1oARa70rA0KjM8CIlKOc51tCUKiLd8Xe
-   VXTxy6VBnSaTrmKI2iaLkYPA7Fwc7OLlE6sGiW4b7WiQawPIlT+d2VH5Y
-   HukWfHTMipeVrbTevQGCw0mOYruYJTySIxSM+4F+zrb705gZ0yOYDMJpi
-   nFq8Ypzq1i7KPUJKj2I1+7b5FyZRu6nQy9PNhe4Hd4pmWktz8eOv5rj3E
-   A==;
-X-CSE-ConnectionGUID: wuOm4dRbT9KJxuaAqiysKw==
-X-CSE-MsgGUID: DfLgHkQPQn6N0LMvaR1tKQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="55304854"
+   references:mime-version;
+  bh=jGR6TH7lmaXbUnYdLB6AEH91R7R56KeOS6Jwnspn2Yg=;
+  b=VCJj9c2/A21kXHv5NsTiRa6V59UrHQYSBjDLH3P0aN8wKbyRqeQ7NTFc
+   UxWBsSh07HSM+5XlV2HVFQxiO6hPcQRqmN9xjKLIm6VgiIrfna+4lhWKL
+   DfyFEpZL4YCPYADJsCTBhzPSy9FnVVyiMPDxHvoTu2vN2IHV6oABwBR86
+   /MLS6Gbu0KrFn+O600B+Pd+mvS+23IJcdxewEef72r5OfmtM9QYAOq0dR
+   C0PJ5RVbWCFwCaX+kZOrRV5XrrcXZQeHoHLFxIhg0C/rwkbNgilDFQV9Z
+   oyFU+YL0kIhA26hTWSdhyirkBJMKvWNXhdvbO6lytakxYr8ov6meD1X6o
+   w==;
+X-CSE-ConnectionGUID: jyCgU7+TSUySbBzU5/oPsw==
+X-CSE-MsgGUID: 7ZZWKcOMToWN3x/QLLTD4w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="44029457"
 X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
-   d="scan'208";a="55304854"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 09:23:29 -0700
-X-CSE-ConnectionGUID: aDgz8b89RN6LcvD7b/+3Vg==
-X-CSE-MsgGUID: p7pyJBusSmGGGnMVg6+/mg==
+   d="asc'?scan'208";a="44029457"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 09:25:07 -0700
+X-CSE-ConnectionGUID: lC6LfFX7Q6q6iHVtdrMh+g==
+X-CSE-MsgGUID: b9Va13FhSJSrh1sDn2dNnQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
-   d="scan'208";a="124789951"
+   d="asc'?scan'208";a="130016133"
 Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.239])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 09:23:23 -0700
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 09:25:02 -0700
 From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: Alison Schofield <alison.schofield@intel.com>,
- Alison Schofield <alison.schofield@intel.com>
+To: Alison Schofield <alison.schofield@intel.com>
 Cc: Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
- Robert Richter <rrichter@amd.com>, ming.li@zohomail.com,
- linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
- Davidlohr Bueso <dave@stgolabs.net>,
  Jonathan Cameron <jonathan.cameron@huawei.com>,
  Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
  Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
@@ -60,22 +53,32 @@ Cc: Davidlohr Bueso <dave@stgolabs.net>,
  linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
 Subject:
  Re: [PATCH 0/4 v3] cxl/core: Enable Region creation on x86 with Low Mem Hole
-Date: Wed, 26 Mar 2025 17:23:21 +0100
-Message-ID: <3304445.h6RI2rZIcs@fdefranc-mobl3>
-In-Reply-To: <Z9tzZkn1rqd2Uk_6@aschofie-mobl2.lan>
+Date: Wed, 26 Mar 2025 17:24:59 +0100
+Message-ID: <3287167.Hq7AAxBmiT@fdefranc-mobl3>
+In-Reply-To: <Z9xaBaM8Mzc8rQ90@aschofie-mobl2.lan>
 References:
  <20250314113708.759808-1-fabio.m.de.francesco@linux.intel.com>
- <Z9tzZkn1rqd2Uk_6@aschofie-mobl2.lan>
+ <Z9xaBaM8Mzc8rQ90@aschofie-mobl2.lan>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Type: multipart/signed; boundary="nextPart4709506.aCxCBeP46V";
+ micalg="pgp-sha256"; protocol="application/pgp-signature"
 
-On Thursday, March 20, 2025 2:46:14=E2=80=AFAM Central European Standard Ti=
+--nextPart4709506.aCxCBeP46V
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: Alison Schofield <alison.schofield@intel.com>
+Date: Wed, 26 Mar 2025 17:24:50 +0100
+Message-ID: <3287167.Hq7AAxBmiT@fdefranc-mobl3>
+In-Reply-To: <Z9xaBaM8Mzc8rQ90@aschofie-mobl2.lan>
+MIME-Version: 1.0
+
+On Thursday, March 20, 2025 7:10:13=E2=80=AFPM Central European Standard Ti=
 me Alison Schofield wrote:
 > On Fri, Mar 14, 2025 at 12:36:29PM +0100, Fabio M. De Francesco wrote:
 > > The CXL Fixed Memory Window Structure (CFMWS) describes zero or more Ho=
@@ -106,49 +109,38 @@ The
 der
 > > range end to match Root Decoder's.
 >=20
-> I think the dpa_res field of the endpoint decoder needs adjusting.
-> After the region is setup, the cxled->dpa_res has the unadjusted value
-> and that leads to region warning and address translation failure because
-> the driver 'thinks' that DPA is within a region, but when it tries
-> to translate to an HPA in that region, it fails.
+> Unless dev_dbg() is on, LMH handling won't be apparent. How about adding
+> a dev_info() that informs the user that a region was adjusted to account
+> for a LMH. I'm foreseeing looking at logs and divining a LMH, when a
+> simple log message would be a nice shortcut.
 >=20
-> Here's where I looked at it: using the cxl-test LMH auto-region (nice!)
-> each endpoint decoder is programmed to contribute 512MB to the 1024MB reg=
-ion.
-> The LMH adjustment shrunk the region to 768MB, so each endpoint is only
-> contributing 384MB to the region.=20
+> CXL subsystem is quiet with only 8 dev_info()'s, so if this breaks some
+> vow of silence, nevermind :)
 >=20
-> DPA->HPA address translations of DPA addresses in the 384->512 gap cause
-> a problem. The driver will needlessly warn that they are in a region for
-> any poison inject or clear, and will fail address translations for any
-> poison, general media or dram event.
->=20
-> I think this should fail in region.c: __cxl_dpa_to_region()
->         if (dpa > cxled->dpa_res->end || dpa < cxled->dpa_res->start)
->                 return 0;
->=20
-> For that to fail, LMH code needs to adjust cxled->dpa_res too.=20
->=20
->=20
-> To test is using clear_poison you can:
-> # echo 536866816 > /sys/kernel/debug/cxl/mem1/clear_poison
->   (536866816 =3D 512MB - 4096)
->=20
-> [ ] cxl_core:__cxl_dpa_to_region:2860: cxl decoder18.0: dpa:0x1ffff000 ma=
-pped in region:region0
-> [ ] cxl_core:cxl_dpa_to_hpa:2963: cxl_region region0: Addr trans fail: hp=
-a 0x3ff04fffe000 not in region
->=20
->=20
-> snip
-> >=20
->=20
-Alison,
+Yes, sure. It sounds good.
 
-I'll adjust cxled->dpa_res too.
-Thank you for noticing this issue.
+Thanks,
 
-=46abio=20
+=46abio
+
+--nextPart4709506.aCxCBeP46V
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEPKnol7Erd70tN+Lb50DaXiQpiWEFAmfkKlIACgkQ50DaXiQp
+iWEG5Af9ECvIutsuqXs34y38zMpXJKO0TYGbJE5mwT47maGrQnjAVBTFKEsGYCx+
+Pvi/weuhuCk03RrjaQuX5ztiyF8poLq8EEiFtkdwoVlw9er0j3WF3hTJ99BS5aYB
+Y5TfW+cAFrgLvgjEjRffMW3tauNbtofku41v5c0D3WRmBzS/v/zQiDEB4rE/AL4S
+WibVPlmwU7xMVnXWJQT1U/tuMjXdrZoLweI3G93dux2U5NpCn1UINoNSjq3Swvuh
+Tnvv+z3+DhT6/33QK/7r49mSmMRUGwcexVhx0e/N7d8DDdah+pgbNQGIofdNSnYJ
+AL/po9xXiod3IiIou0ZS0aG1VbOVUg==
+=ExJA
+-----END PGP SIGNATURE-----
+
+--nextPart4709506.aCxCBeP46V--
 
 
 
