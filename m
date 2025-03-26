@@ -1,72 +1,48 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B009A1C84A3
-	for <linux-cxl@vger.kernel.org>; Wed, 26 Mar 2025 12:53:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3E9235968;
+	Wed, 26 Mar 2025 15:00:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742993602; cv=none; b=XliPw3BMeLIcmzoxfxsQdXfaDALUDqKjNhgRUAWmG+qxW/MtL2+iYJ0RXx0u/EadJTLgPORTQxm8Sqqq6K8n4Q1xlZXnkzqCaeWIS31y6vT14P4wtQ+9iJNFgj8LkvBhOSGQVfd230yfOswJgB6KUyRKT/qisX8ZelnQ31eSJR8=
+	t=1743001235; cv=none; b=m7rfpxlNC7OKd7iI6QvvlR3obZloEbE2URkIE4JT6r+Vlyeacs8qvndiwsA+yb1bDcJUD2OAaIOW2Pft9vuttqF7YBMDCfdVU4PdTDufWIoZM+CLtn6z8S4IH5BnoCcdBIoGZxgmylKfv3LneXBjm5WjzIOIJozJlvl+an3zl2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742993602; c=relaxed/simple;
-	bh=8HHp1uBdC+4gdzNJZq59DdfqIQAiw0gMCqs4ThMiGLY=;
+	s=arc-20240116; t=1743001235; c=relaxed/simple;
+	bh=2eBfpGTXDD24FL4ei3Eshn77s6yu+IfAOgKSh5SyMZ4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=paRq3cT+SzMVSDNZ5unf9RvffTX5rQLMwEKfC7xI25+AUciGkDQaB0G1XYzI95+eD0pJaNYisdmrX8AWAjsrJIKbew8hsxKPtRhZMD6r9xHKnlEsdhOBgn36jUF6dpyhAjj1HT1La91bUo+OLDFZH02kj5vDKhImJMArDqG3Oho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=KTur8psl; arc=none smtp.client-ip=209.85.222.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=R1s5XN0EZwVTQ0i6FragcIlFMC4gLQ+BhLA+c/bT2+gT8GQBSsyYDpZXhKwx20Jy8tXIu8PiLvZO42S4nIweiSvaFVdwtz69YMQTuaHbYuq9PIWnPtRA/Ug+DrrSbiMbFAyXcXRCoHi4fwgHfPYid+dFrFUsdYQSrZckOjmRPDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hLvVqDNP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="KTur8psl"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7c592764e54so770844585a.3
-        for <linux-cxl@vger.kernel.org>; Wed, 26 Mar 2025 05:53:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1742993597; x=1743598397; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=unBBZW4o0XvmaaTwB/+3iSkpD4sIQERsLXl81RTyoyQ=;
-        b=KTur8pslGSHJ8IVvochTjVgBVpVZpF37vPvfn4u9I+ekOv3fxfxZsYWkQW86ryGvNX
-         YIos6QbYkPgFaPLvnd+aJpX6D7tOwq8/GLlP8j4VzktsC6z3n/MtIy99sfT9/yltPlam
-         pRNMIGzywkBN51M+PMSB5dEsdE+9JMqwjoAUwRTmmzcb3DbHPx3nHuk7Mh24HdWPoW2j
-         8Imxch9Sm8o/IcVM/CCEJIExL71kutg3FWJB8ELkf0X6P5Yk5I/D8RIlviCgiTnPtqbO
-         lh62y4N5dewBMZ77t9FkX9P590UkroY2HdRp7o5nKoNe6XPVXZURr5k4Ac/HnUH9fUIj
-         ys1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742993597; x=1743598397;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=unBBZW4o0XvmaaTwB/+3iSkpD4sIQERsLXl81RTyoyQ=;
-        b=F1dIivYBWV/dCw3dcquqc72GjLjsD7My6oNFsVCltlQVJhYQXz2itKBOMS8QOJeejV
-         8+Dkuj4kMoyHAEVKBjg7CbqhfYnFgH+0MfSICDzN3qdPVllLo4DmO5LToAflt01AmAox
-         mQZM+c8y9SStvrWjPP+SlUyuckBiSvW/vTy4WXc87wGnu/dTOngIrL1PYpJgHpjMayMy
-         bytBz4qSzGr42YvO+pUrsJ+LMWg5wqnEI4BESp7gQd0rq3u4IWyK7qZN+IG6snRyQcTS
-         kBKePYoe2lMySEvp9ZvgTbxdDTtDDgcFrc7blDua7zF4IZnzNFxwfXjNAuohubv2icg8
-         NtPw==
-X-Forwarded-Encrypted: i=1; AJvYcCXEEDWMwhl6XL8WBrtlzfJCzJaWvDg7RkGMa1ahMHPKPhNWBr4SnxRTN9rfBSxzhjmz16R8JRSPI8Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxaQ13CIZXkF7+GbEmfd/ZqCA6LOL2Vkf5MPqtqLmid5w/o8/XJ
-	ZJypmbB9BfEZSbNSttR0JBmG5nqt1+4yIEeJgL6eSMlarcBVnPXxsrOtcQasXHk4eV+5A98afnk
-	QsyU=
-X-Gm-Gg: ASbGncuBkC2EXAJM5hEIK1gMtkqgV1aZPTAq9T4neORmOTzKMoaGVFR7Av0vIqw5ibs
-	kAp9Lx0oI/MmU8TZ93vaL38ew0wYyO0tLeK31sQ5+m/ecYBnBWRuq2oBGEzg3mGi+SdkzXI0NVE
-	GhwkwmGYZ1N646McZ6p78DEem/O45zsxESJRq29H7cHk0gfTYahBinqXfvwIdDWAdoQsEm9/HZz
-	FubnmUGYWyrn0DwUh7kIUTciDQTYVjWaU/ASQ2OrApI73Cvt0mffHLl+HAvywEp7ErlfwqtFHw/
-	VcuE6epK15mK4tWTTYyV2SbVClq92PLWmGkdrqIt5b1e94r/B2jccA==
-X-Google-Smtp-Source: AGHT+IEyK007wueidBJdaxRdr4xRWmnbMteuuUEM+eIwVWK6Vpov8l7x9HZXE3tKIEMisQ/zDeiPqg==
-X-Received: by 2002:a05:620a:29d0:b0:7c5:3c62:804c with SMTP id af79cd13be357-7c5ba157d0amr3415424585a.21.1742993597358;
-        Wed, 26 Mar 2025 05:53:17 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F ([99.209.85.25])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5b92ec688sm760794885a.64.2025.03.26.05.53.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Mar 2025 05:53:16 -0700 (PDT)
-Date: Wed, 26 Mar 2025 08:53:14 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-Cc: lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [LSF/MM] CXL Boot to Bash - Section 4: Interleave
-Message-ID: <Z-P4ulrFQAbJBC_A@gourry-fedora-PF4VCD3F>
-References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
- <Z9DQnjPWbkjqrI9n@gourry-fedora-PF4VCD3F>
- <Z+PIoAGgz33R2c3P@phytium.com.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hLvVqDNP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98978C4CEE2;
+	Wed, 26 Mar 2025 15:00:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743001234;
+	bh=2eBfpGTXDD24FL4ei3Eshn77s6yu+IfAOgKSh5SyMZ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hLvVqDNPG/H7z6VVnoN8G1VvPThguZkSI3q9N+P80U1b5sP6vfOi2egH+S5PB7FzH
+	 MZfebzSL2SRtlOWFLNPAUgcQdp7gCTC6GUQnDSlVNxivIZckt6OpL3qUmpFHCVew7M
+	 iNbxRIiRmhdQtaYz9OiUojwhn5M/1BibdzQ/TCxXbIAORl0G3sBX1bIbd4iBoqSCT6
+	 NZ9LemcnQBCSarASuJB1ZcmgEnG6PIaV/VcyFYKBeTQFR1DuWOpUaBGOT4jRApRT0D
+	 xsgwVhQzl4yIhGl7keGYyeJJw2gcFQUcACrWY1MWxTKvpCA5qmr4kBTlvSXuLWdCbm
+	 E96sMPr+fF76g==
+Date: Wed, 26 Mar 2025 11:00:30 -0400
+From: Mike Rapoport <rppt@kernel.org>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Yuquan Wang <wangyuquan1236@phytium.com.cn>, dan.j.williams@intel.com,
+	akpm@linux-foundation.org, david@redhat.com, bfaccini@nvidia.com,
+	rafael@kernel.org, lenb@kernel.org, dave@stgolabs.net,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com, rrichter@amd.com,
+	haibo1.xu@intel.com, linux-acpi@vger.kernel.org,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	chenbaozi@phytium.com.cn
+Subject: Re: [RFC PATCH v3 2/2] ACPI: NUMA: debug invalid unused PXM value
+ for CFMWs
+Message-ID: <Z-QWjpisq8TB9s4W@kernel.org>
+References: <20250321023602.2609614-1-wangyuquan1236@phytium.com.cn>
+ <20250321023602.2609614-3-wangyuquan1236@phytium.com.cn>
+ <20250321115116.00007ae7@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -75,33 +51,111 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z+PIoAGgz33R2c3P@phytium.com.cn>
+In-Reply-To: <20250321115116.00007ae7@huawei.com>
 
-On Wed, Mar 26, 2025 at 05:28:00PM +0800, Yuquan Wang wrote:
+Hi,
+
+On Fri, Mar 21, 2025 at 11:51:16AM +0000, Jonathan Cameron wrote:
+> On Fri, 21 Mar 2025 10:36:02 +0800
+> Yuquan Wang <wangyuquan1236@phytium.com.cn> wrote:
+> 
+> > The absence of SRAT would cause the fake_pxm to be -1 and increment
+> > to 0, then send to acpi_parse_cfmws(). If there exists CXL memory
+> > ranges that are defined in the CFMWS and not already defined in the
+> > SRAT, the new node (node0) for the CXL memory would be invalid, as
+> > node0 is already in "used", and all CXL memory might be online on
+> > node0.
 > > 
-> > Notice at both the root and the host bridge, the Interleave Ways is 2.
-> > There are two targets at each level.  The host bridge has a granularity
-> > of 512 to capture its parent's ways and granularity (`2*256`).
+> > This utilizes node_set(0, nodes_found_map) to set pxm&node map. With
+> > this setting, acpi_map_pxm_to_node() could return the expected node
+> > value even if no SRAT.
 > > 
-> > Each decoder is programmed with the total number of targets (4) and the
-> > overall granularity (256B).
-> >
+> > If SRAT is valid, the numa_memblks_init() would then utilize
+> > numa_move_tail_memblk() to move the numa_memblk from numa_meminfo to
+> > numa_reserved_meminfo in CFMWs fake node situation.
 > 
-> Sorry, I tried to set this topology on Qemu Virt and used:
-> "cxl create-region -d decoder0.0 -t ram -m mem0,mem1,mem2,mem3"
+> I would call out that numa_move_tail_memblk() is called in
+> numa_cleanup_meminfo() which is indeed called by num_memblks_init()
 > 
-> but it failed with:
-> "cxl region: validate_ways: Interleave ways 2 is less than number of memdevs specified: 4"
+> > 
+> > If SRAT is missing or bad, the numa_memblks_init() would fail since
+> > init_func() would fail. And it causes that no numa_memblk in
+> > numa_reserved_meminfo list and the following dax_cxl driver could
+> > find the expected fake node.
+> > 
+> > Use numa_add_reserved_memblk() to replace numa_add_memblk(), since
+> > the cxl numa_memblk added by numa_add_memblk() would finally be moved
+> > to numa_reserved_meminfo, and numa_add_reserved_memblk() here could
+> > add cxl numa_memblk into reserved list directly. Hence, no matter
+> > SRAT is good or not, cxl numa_memblk could be allocated to reserved
+> > list.
+> > 
+> > Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
 > 
-> It seems like the CFMWs IW should be 4?
->
+> This definitely wants input from Mike Rapoport.
+> Looks fine to me, but there may be some subtle corners I'm missing.
 
-It has been a while since i've interacted with QEMU's interleave stuff,
-but IIRC (at least back when I was working on it) most configurations
-had 1 device per host bridge - in which case the CFMWS IW should be 4
-with each of the host bridges described in it.
+I'm fine with exposing numa_add_reserved_memblk(), but I don't understand
+CXL discovery enough to say if adding CXL ranges directly to
+numa_reserved_meminfo.
 
-I'm not sure you can do multiple devices per host bridge without a
-switch setup.
+If this is always the case that CFMW regions end up on
+numa_reserved_meminfo, adding them there in the first place does make
+sense.
+ 
+> > ---
+> >  drivers/acpi/numa/srat.c | 11 ++++++++---
+> >  1 file changed, 8 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
+> > index 00ac0d7bb8c9..50bfecfb9c16 100644
+> > --- a/drivers/acpi/numa/srat.c
+> > +++ b/drivers/acpi/numa/srat.c
+> > @@ -458,11 +458,12 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
+> >  		return -EINVAL;
+> >  	}
+> >  
+> > -	if (numa_add_memblk(node, start, end) < 0) {
+> > +	if (numa_add_reserved_memblk(node, start, end) < 0) {
+> >  		/* CXL driver must handle the NUMA_NO_NODE case */
+> >  		pr_warn("ACPI NUMA: Failed to add memblk for CFMWS node %d [mem %#llx-%#llx]\n",
+> >  			node, start, end);
+> >  	}
+> > +
+> 
+> Unrelated change.  Always give patches a final look through to spot
+> things like this.  Trivial, but they all add noise to what we are focusing on.
+> 
+> >  	node_set(node, numa_nodes_parsed);
+> >  
+> >  	/* Set the next available fake_pxm value */
+> > @@ -646,8 +647,12 @@ int __init acpi_numa_init(void)
+> >  		if (node_to_pxm_map[i] > fake_pxm)
+> >  			fake_pxm = node_to_pxm_map[i];
+> >  	}
+> > -	last_real_pxm = fake_pxm;
+> > -	fake_pxm++;
+> > +
+> > +	/* Make sure CFMWs fake node >= 1 */
+> > +	fake_pxm = max(fake_pxm, 0);
+> > +	last_real_pxm = fake_pxm++;
 
-~Gregory
+I'd make it more explicit:
+
+	/*
+	 * Make sure CFMWs fake nodes follow last_real_pxm, even when SRAT
+	 * is invalid
+	 */
+	last_real_pxm = max(fake_pxm, 0);
+	fake_pxm = last_real_pxm + 1;	
+
+> > +	node_set(0, nodes_found_map);
+> > +
+> >  	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CFMWS, acpi_parse_cfmws,
+> >  			      &fake_pxm);
+> >  
+> 
+
+-- 
+Sincerely yours,
+Mike.
