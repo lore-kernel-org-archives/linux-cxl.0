@@ -1,161 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3E9235968;
-	Wed, 26 Mar 2025 15:00:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF9741F4276;
+	Wed, 26 Mar 2025 16:23:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743001235; cv=none; b=m7rfpxlNC7OKd7iI6QvvlR3obZloEbE2URkIE4JT6r+Vlyeacs8qvndiwsA+yb1bDcJUD2OAaIOW2Pft9vuttqF7YBMDCfdVU4PdTDufWIoZM+CLtn6z8S4IH5BnoCcdBIoGZxgmylKfv3LneXBjm5WjzIOIJozJlvl+an3zl2I=
+	t=1743006211; cv=none; b=t1aZxXhAX/zCQejrW67eg1EJ79TLtgKkSoZcG32Scfsvq/EV15dCrrQ6+A8mkLwYE61ggCoWqzHoXCoX3pCiwhmHiSFELspxForuM9sNZnE0WWwvfjcF8day9hmteJnsTYfo5XRZaq28pgBCsygiY7AhyHoPJk76w+iWeySlZSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743001235; c=relaxed/simple;
-	bh=2eBfpGTXDD24FL4ei3Eshn77s6yu+IfAOgKSh5SyMZ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R1s5XN0EZwVTQ0i6FragcIlFMC4gLQ+BhLA+c/bT2+gT8GQBSsyYDpZXhKwx20Jy8tXIu8PiLvZO42S4nIweiSvaFVdwtz69YMQTuaHbYuq9PIWnPtRA/Ug+DrrSbiMbFAyXcXRCoHi4fwgHfPYid+dFrFUsdYQSrZckOjmRPDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hLvVqDNP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743006211; c=relaxed/simple;
+	bh=nPnx3oYTirJDrOHIV1nZVRXcnxyFBQz9FCV+07VhSgY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pmk5ny0y/DwDnLqkCKIJdXIA4XNs81y4cWjQLUNXJzxMq5GxiJvdSnBbgoluArPzJObMQhGujw+IIFxTP3krr4X+wghCa8ZjYUQ/j9TxnsLkjSCi3ohrzXzjsaa2Wd3bS/WLrKUblWTYKu3w4DpMF2DAWgaq5vneKP+AuCb34/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Shbe3zOi; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hLvVqDNP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98978C4CEE2;
-	Wed, 26 Mar 2025 15:00:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743001234;
-	bh=2eBfpGTXDD24FL4ei3Eshn77s6yu+IfAOgKSh5SyMZ4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hLvVqDNPG/H7z6VVnoN8G1VvPThguZkSI3q9N+P80U1b5sP6vfOi2egH+S5PB7FzH
-	 MZfebzSL2SRtlOWFLNPAUgcQdp7gCTC6GUQnDSlVNxivIZckt6OpL3qUmpFHCVew7M
-	 iNbxRIiRmhdQtaYz9OiUojwhn5M/1BibdzQ/TCxXbIAORl0G3sBX1bIbd4iBoqSCT6
-	 NZ9LemcnQBCSarASuJB1ZcmgEnG6PIaV/VcyFYKBeTQFR1DuWOpUaBGOT4jRApRT0D
-	 xsgwVhQzl4yIhGl7keGYyeJJw2gcFQUcACrWY1MWxTKvpCA5qmr4kBTlvSXuLWdCbm
-	 E96sMPr+fF76g==
-Date: Wed, 26 Mar 2025 11:00:30 -0400
-From: Mike Rapoport <rppt@kernel.org>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Yuquan Wang <wangyuquan1236@phytium.com.cn>, dan.j.williams@intel.com,
-	akpm@linux-foundation.org, david@redhat.com, bfaccini@nvidia.com,
-	rafael@kernel.org, lenb@kernel.org, dave@stgolabs.net,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com, rrichter@amd.com,
-	haibo1.xu@intel.com, linux-acpi@vger.kernel.org,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	chenbaozi@phytium.com.cn
-Subject: Re: [RFC PATCH v3 2/2] ACPI: NUMA: debug invalid unused PXM value
- for CFMWs
-Message-ID: <Z-QWjpisq8TB9s4W@kernel.org>
-References: <20250321023602.2609614-1-wangyuquan1236@phytium.com.cn>
- <20250321023602.2609614-3-wangyuquan1236@phytium.com.cn>
- <20250321115116.00007ae7@huawei.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Shbe3zOi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743006210; x=1774542210;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=nPnx3oYTirJDrOHIV1nZVRXcnxyFBQz9FCV+07VhSgY=;
+  b=Shbe3zOixLWIV82FLHOv31Y2jZnynFbTuFNKMO19kIgqMAZA36mJwRv7
+   eJOWxoBcynEKRsyTcwu/JMuTl70X1AS2B7axfxFLkKTTkoPuqZv1RjCUB
+   vAcd8aeQfrp7L0vi1pbC+AiuO1oARa70rA0KjM8CIlKOc51tCUKiLd8Xe
+   VXTxy6VBnSaTrmKI2iaLkYPA7Fwc7OLlE6sGiW4b7WiQawPIlT+d2VH5Y
+   HukWfHTMipeVrbTevQGCw0mOYruYJTySIxSM+4F+zrb705gZ0yOYDMJpi
+   nFq8Ypzq1i7KPUJKj2I1+7b5FyZRu6nQy9PNhe4Hd4pmWktz8eOv5rj3E
+   A==;
+X-CSE-ConnectionGUID: wuOm4dRbT9KJxuaAqiysKw==
+X-CSE-MsgGUID: DfLgHkQPQn6N0LMvaR1tKQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="55304854"
+X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
+   d="scan'208";a="55304854"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 09:23:29 -0700
+X-CSE-ConnectionGUID: aDgz8b89RN6LcvD7b/+3Vg==
+X-CSE-MsgGUID: p7pyJBusSmGGGnMVg6+/mg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
+   d="scan'208";a="124789951"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.239])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 09:23:23 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: Alison Schofield <alison.schofield@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+ Robert Richter <rrichter@amd.com>, ming.li@zohomail.com,
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+ Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+ Robert Richter <rrichter@amd.com>, ming.li@zohomail.com,
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
+Subject:
+ Re: [PATCH 0/4 v3] cxl/core: Enable Region creation on x86 with Low Mem Hole
+Date: Wed, 26 Mar 2025 17:23:21 +0100
+Message-ID: <3304445.h6RI2rZIcs@fdefranc-mobl3>
+In-Reply-To: <Z9tzZkn1rqd2Uk_6@aschofie-mobl2.lan>
+References:
+ <20250314113708.759808-1-fabio.m.de.francesco@linux.intel.com>
+ <Z9tzZkn1rqd2Uk_6@aschofie-mobl2.lan>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250321115116.00007ae7@huawei.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-Hi,
+On Thursday, March 20, 2025 2:46:14=E2=80=AFAM Central European Standard Ti=
+me Alison Schofield wrote:
+> On Fri, Mar 14, 2025 at 12:36:29PM +0100, Fabio M. De Francesco wrote:
+> > The CXL Fixed Memory Window Structure (CFMWS) describes zero or more Ho=
+st
+> > Physical Address (HPA) windows that are associated with each CXL Host
+> > Bridge. Each window represents a contiguous HPA that may be interleaved
+> > with one or more targets (CXL v3.1 - 9.18.1.3).
+> >=20
+> > The Low Memory Hole (LMH) of x86 is a range of addresses of physical low
+> > memory to which systems cannot send transactions. On those systems, BIOS
+> > publishes CFMWS which communicate the active System Physical Address (S=
+PA)
+> > ranges that map to a subset of the Host Physical Address (HPA) ranges. =
+The
+> > SPA range trims out the hole, and capacity in the endpoint is lost with=
+ no
+> > SPA to map to CXL HPA in that hole.
+> >=20
+> > In the early stages of CXL Regions construction and attach on platforms
+> > with Low Memory Holes, the driver fails and returns an error because it
+> > expects that the CXL Endpoint Decoder range is a subset of the Root
+> > Decoder's (SPA >=3D HPA). On x86 with LMH's, it happens that SPA < HPA.
+> >=20
+> > Therefore, detect x86 Low Memory Holes, match CXL Root and Endpoint
+> > Decoders or already made CXL Regions and Decoders to allow the
+> > construction of new CXL Regions and the attachment of Endpoint Decoders,
+> > even if SPA < HPA. If needed because of LMH's, adjust the Endpoint Deco=
+der
+> > range end to match Root Decoder's.
+>=20
+> I think the dpa_res field of the endpoint decoder needs adjusting.
+> After the region is setup, the cxled->dpa_res has the unadjusted value
+> and that leads to region warning and address translation failure because
+> the driver 'thinks' that DPA is within a region, but when it tries
+> to translate to an HPA in that region, it fails.
+>=20
+> Here's where I looked at it: using the cxl-test LMH auto-region (nice!)
+> each endpoint decoder is programmed to contribute 512MB to the 1024MB reg=
+ion.
+> The LMH adjustment shrunk the region to 768MB, so each endpoint is only
+> contributing 384MB to the region.=20
+>=20
+> DPA->HPA address translations of DPA addresses in the 384->512 gap cause
+> a problem. The driver will needlessly warn that they are in a region for
+> any poison inject or clear, and will fail address translations for any
+> poison, general media or dram event.
+>=20
+> I think this should fail in region.c: __cxl_dpa_to_region()
+>         if (dpa > cxled->dpa_res->end || dpa < cxled->dpa_res->start)
+>                 return 0;
+>=20
+> For that to fail, LMH code needs to adjust cxled->dpa_res too.=20
+>=20
+>=20
+> To test is using clear_poison you can:
+> # echo 536866816 > /sys/kernel/debug/cxl/mem1/clear_poison
+>   (536866816 =3D 512MB - 4096)
+>=20
+> [ ] cxl_core:__cxl_dpa_to_region:2860: cxl decoder18.0: dpa:0x1ffff000 ma=
+pped in region:region0
+> [ ] cxl_core:cxl_dpa_to_hpa:2963: cxl_region region0: Addr trans fail: hp=
+a 0x3ff04fffe000 not in region
+>=20
+>=20
+> snip
+> >=20
+>=20
+Alison,
 
-On Fri, Mar 21, 2025 at 11:51:16AM +0000, Jonathan Cameron wrote:
-> On Fri, 21 Mar 2025 10:36:02 +0800
-> Yuquan Wang <wangyuquan1236@phytium.com.cn> wrote:
-> 
-> > The absence of SRAT would cause the fake_pxm to be -1 and increment
-> > to 0, then send to acpi_parse_cfmws(). If there exists CXL memory
-> > ranges that are defined in the CFMWS and not already defined in the
-> > SRAT, the new node (node0) for the CXL memory would be invalid, as
-> > node0 is already in "used", and all CXL memory might be online on
-> > node0.
-> > 
-> > This utilizes node_set(0, nodes_found_map) to set pxm&node map. With
-> > this setting, acpi_map_pxm_to_node() could return the expected node
-> > value even if no SRAT.
-> > 
-> > If SRAT is valid, the numa_memblks_init() would then utilize
-> > numa_move_tail_memblk() to move the numa_memblk from numa_meminfo to
-> > numa_reserved_meminfo in CFMWs fake node situation.
-> 
-> I would call out that numa_move_tail_memblk() is called in
-> numa_cleanup_meminfo() which is indeed called by num_memblks_init()
-> 
-> > 
-> > If SRAT is missing or bad, the numa_memblks_init() would fail since
-> > init_func() would fail. And it causes that no numa_memblk in
-> > numa_reserved_meminfo list and the following dax_cxl driver could
-> > find the expected fake node.
-> > 
-> > Use numa_add_reserved_memblk() to replace numa_add_memblk(), since
-> > the cxl numa_memblk added by numa_add_memblk() would finally be moved
-> > to numa_reserved_meminfo, and numa_add_reserved_memblk() here could
-> > add cxl numa_memblk into reserved list directly. Hence, no matter
-> > SRAT is good or not, cxl numa_memblk could be allocated to reserved
-> > list.
-> > 
-> > Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-> 
-> This definitely wants input from Mike Rapoport.
-> Looks fine to me, but there may be some subtle corners I'm missing.
+I'll adjust cxled->dpa_res too.
+Thank you for noticing this issue.
 
-I'm fine with exposing numa_add_reserved_memblk(), but I don't understand
-CXL discovery enough to say if adding CXL ranges directly to
-numa_reserved_meminfo.
+=46abio=20
 
-If this is always the case that CFMW regions end up on
-numa_reserved_meminfo, adding them there in the first place does make
-sense.
- 
-> > ---
-> >  drivers/acpi/numa/srat.c | 11 ++++++++---
-> >  1 file changed, 8 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-> > index 00ac0d7bb8c9..50bfecfb9c16 100644
-> > --- a/drivers/acpi/numa/srat.c
-> > +++ b/drivers/acpi/numa/srat.c
-> > @@ -458,11 +458,12 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
-> >  		return -EINVAL;
-> >  	}
-> >  
-> > -	if (numa_add_memblk(node, start, end) < 0) {
-> > +	if (numa_add_reserved_memblk(node, start, end) < 0) {
-> >  		/* CXL driver must handle the NUMA_NO_NODE case */
-> >  		pr_warn("ACPI NUMA: Failed to add memblk for CFMWS node %d [mem %#llx-%#llx]\n",
-> >  			node, start, end);
-> >  	}
-> > +
-> 
-> Unrelated change.  Always give patches a final look through to spot
-> things like this.  Trivial, but they all add noise to what we are focusing on.
-> 
-> >  	node_set(node, numa_nodes_parsed);
-> >  
-> >  	/* Set the next available fake_pxm value */
-> > @@ -646,8 +647,12 @@ int __init acpi_numa_init(void)
-> >  		if (node_to_pxm_map[i] > fake_pxm)
-> >  			fake_pxm = node_to_pxm_map[i];
-> >  	}
-> > -	last_real_pxm = fake_pxm;
-> > -	fake_pxm++;
-> > +
-> > +	/* Make sure CFMWs fake node >= 1 */
-> > +	fake_pxm = max(fake_pxm, 0);
-> > +	last_real_pxm = fake_pxm++;
 
-I'd make it more explicit:
 
-	/*
-	 * Make sure CFMWs fake nodes follow last_real_pxm, even when SRAT
-	 * is invalid
-	 */
-	last_real_pxm = max(fake_pxm, 0);
-	fake_pxm = last_real_pxm + 1;	
-
-> > +	node_set(0, nodes_found_map);
-> > +
-> >  	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CFMWS, acpi_parse_cfmws,
-> >  			      &fake_pxm);
-> >  
-> 
-
--- 
-Sincerely yours,
-Mike.
