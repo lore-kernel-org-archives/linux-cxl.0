@@ -1,472 +1,380 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2057.outbound.protection.outlook.com [40.107.93.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0845F19ABAB;
-	Thu, 27 Mar 2025 01:47:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE601A239A;
+	Thu, 27 Mar 2025 01:48:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.57
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743040079; cv=fail; b=ZOvZDgXuL/ALFNexnRhl9qpQrdHXadOUD9+CmYemLd8wbeK3Tzq8FwwAty+MRjs/n5kPtKru7pyJ6uEsl+6JdOmRqACUSW7i5KYJq5tF1PsK4Bc2HnGMvmzoYeGDXsS28g46fbzHSxR5G/Bb5+HevTob5Eoxw7OZAIhhSx3nUio=
+	t=1743040085; cv=fail; b=QXVXebo0/cmP4fFJgJsi+1cNJKpZwY6v9S7QFyB8ETskR4P/x3ZARsmUYNGIPSjgSrpWPPjhJRJjUy7pZ26bz0nPnEbUlabNVCRe5VzqUnwJAsEfC2vb662GsuYOWqARc+4lb7kDAlOfmQOT5/fhRp+tVXfdc+Oms4AsPAlChdA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743040079; c=relaxed/simple;
-	bh=7Irr8NK7G455uFpiRkXRAN9aSx3WYM2Ed8jy0336pwU=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ZpaYFzNKtDF8WTlJcC8zOxCYs5dhmI+exnQcGlCAjgc/tr1ZZbY+yVijHY1XZpzhu2gWfFIHg5Z2K4klpUx3lnRH37IO2HltlkmJv66zyAI9cvXUaMsisxII6IWzjei9c+2GRv70EQHTwB9NUpACFld2nWje/frMkOZdgcYTdUY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dYDxTkNB; arc=fail smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743040085; c=relaxed/simple;
+	bh=SBj5d5I1sClvT1svuTrCfmF8BhSgKqWo15vw+t7qA48=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=glm5LxkWENjIr9L8+9/1CFyvXmauCGx2jt0yCqugDog+76yIlmRt4FTZBxOJ9XAnZHBaym5qiTERWpjJ7sjtCnCH197w1ZjIs0fSsMXwTegd1EoQ3mxkZuYc7RNlbi4tZ2b6MPCi25q52nF4hyvwNUVY0bOgmOpAaqbhhCKMAbc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=3FSET8Mm; arc=fail smtp.client-ip=40.107.93.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dYDxTkNB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743040077; x=1774576077;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=7Irr8NK7G455uFpiRkXRAN9aSx3WYM2Ed8jy0336pwU=;
-  b=dYDxTkNBM0083zqGt56ywyuVH2HGc13cq3L8xJPftWn3kA2bjuHfKcNm
-   y0MJ3h1cjltej8R+sK5yUshi64YWn16/6dxWmthB6fX1trbluk3mfrs5i
-   Ae12/gPVlCHxdm99Fg1sdTxjWSW49MilZXlCCBgL5eMjM7sQ9q3nONek8
-   zsijWxzHgzYWUcw5FEC5Xhg2CC6TDanvGF/33vCz2mrAgYghRK4Di+RIv
-   yV/VLujfwk9eUhDDedla9RVdxVtCzCNG1a10G2+cjsFlVuPKnM8gxXncA
-   fj8uHJ9Ra7GtlhyG4s+15I6bgFEEwByw4HlEkBtHD4C5TEAs52mWwUPJD
-   w==;
-X-CSE-ConnectionGUID: nZTlF7HzQ9aEk829ftsDig==
-X-CSE-MsgGUID: gyi9AgzhTZqoCjoXOuDiBw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="54557400"
-X-IronPort-AV: E=Sophos;i="6.14,279,1736841600"; 
-   d="scan'208";a="54557400"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 18:47:55 -0700
-X-CSE-ConnectionGUID: xyb1D1KrQcmOrCu2u5+FwA==
-X-CSE-MsgGUID: jkhFA3oCQwyDWVL5Yy6kjQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,279,1736841600"; 
-   d="scan'208";a="125804260"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 18:47:54 -0700
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1544.14; Wed, 26 Mar 2025 18:47:53 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Wed, 26 Mar 2025 18:47:53 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.46) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 26 Mar 2025 18:47:53 -0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="3FSET8Mm"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nDz8eaWTraxNBn2a/wqDImDH3rwRxIMouqlNS00wsrb1fcrko7iHAeG0s2yo7z9yxhOTVCVOOcAHncL+YzyAf7J4X7NQf8dkc+pezqq8I7b0ZOxIutYPsA/skrIZPRcWBIJiYVAkX55FtUF+oXbsQhSUsB4B7olb1rQad0R2D1iS4sKSVqzoK4PmH3z6ui5UPJw2uJj+G9x+YNVFEJ5hTMOGlFhlerQuZrpazm/iUXMIhZHlbfPSbU8sqHAGCJnIRzbzXeZGZhilrEMOQMWyrUWPse1z11wvAIsv6J+/C47N1ZYeAkP2DoxTH5cXRRn/20A953G4BpcyFefoRH2rww==
+ b=xwJxYC7s7ey5ZJoyG9U6gCPtdS9dsSyvl86sBjJiVrK7GOhUk85BBS+EfHIQiuiFD5rxGlcFIvS3Y5ZJ0R31VEsVIv2HfmukSAQPdpYoYAIJhKoxRrd+R0ssN0eCznUX4F4IXjAlR5mQqEveg+wDoF+Mj4XZKnsTPFZ/B7RlCgrfAb1Vs70LPLbM1uCzv6ZtqNGP+rmhaneV/G6jLUpZTwdbhbrNv8RCwg2nd5aBj91JwA0be7q9mKptv9grP6uu5hS+nHdGmtIlABdOSJSgwK3uyq3WgyTTENUJ8VwGtnD6uW9rQDWodm/Me09rdLC2CTc4mZh6iCCGJJfG4IQzGg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KpNRxZC1bYF4TSKaaICXxbsUw9Wbh9NrHE1z0kPV3j8=;
- b=VAPhoXts9E0WfNvx49fHmrzW/nT4lpAcb08xNzyn61LS0WyF+dwByK7SYMCGTppYG/d6KQs3dyzn6EHkmnJFkW2ayrhdjXdh22Gz8HAtWWjkQE8L2EX1/xpn2wMUNV7h5sPGUvP6Bej2njaNTPBlVKLi7DBBll7aitYFsOrTJ3GGMahaEmVVPkgNZ7vqc+ljvRQW0B0Q+0pnF8FWgdLsEpgK4Vl+b3tK6uCsD3uIoiMRHzxc5EJ6WK+lJRBoWTFuvU/pgv9cWcd6JMjB3/DgzE8xuXY3IjCSIk5bLxwcJ6tQY1ks3GpK5ZAVPBE6OGG5OoE6hhSH84WXogQyJHhxAQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by DM3PR11MB8735.namprd11.prod.outlook.com (2603:10b6:0:4b::20) with
- Microsoft SMTP Server (version=TLS1_2,
+ bh=sxWG9JxvSxjfV1iPOfvMwj7sVWNlHSEELFOyA9lJN1k=;
+ b=mesrUhWTtLcbql3yV7vrj9H4m+RFhRms2cJsp2F6N+IpBfdBsZubDv7N/fXbVDgc1EARjT8BE//sJpE+EIL+4yjGf5Zb6G5+ySiF6onOU+/gFzkfb0vIm8xQjxYN8ux117TXIDzRgGz6+OANKKo5akKkOhXNOEg09BaeQw3bXNq9UUsTkwdHoMpnEU8ew1Ks1dZ1nMgtu11RxfI0oqkPJVBK2/o36Bq02SfWlGw9m2Spkflppc8UP5Z2/BgqIE+IRvurvJhos/y3HTdlmv61OcNo+aN5abAlqGiTBrpt5M6dZ9e7Ch+/6SddKNfq9mQFu5tAxXe7kM3ANMp5rK/M1Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sxWG9JxvSxjfV1iPOfvMwj7sVWNlHSEELFOyA9lJN1k=;
+ b=3FSET8MmbZXug9hevybw88JHG3Knnx39FVDiM78m5azpzBMFHEDCIeKPKt9jSAvRVPwX4VwGVHJsjPfRV1x/GfCQVSkjJ2BKM+JWqxHNGnMrB7eUciCr8BP2YmVqbObU8zA7AtLcC4DxfXGsdB06h68Qe5oy5yFOU+eTeaAepmE=
+Received: from BL0PR1501CA0011.namprd15.prod.outlook.com
+ (2603:10b6:207:17::24) by PH0PR12MB7077.namprd12.prod.outlook.com
+ (2603:10b6:510:21d::7) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Thu, 27 Mar
- 2025 01:47:20 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8534.043; Thu, 27 Mar 2025
- 01:47:19 +0000
-Date: Wed, 26 Mar 2025 21:47:08 -0400
-From: Dan Williams <dan.j.williams@intel.com>
-To: <shiju.jose@huawei.com>, <linux-cxl@vger.kernel.org>,
-	<dan.j.williams@intel.com>, <dave@stgolabs.net>,
+ 2025 01:47:59 +0000
+Received: from BL6PEPF00022575.namprd02.prod.outlook.com
+ (2603:10b6:207:17:cafe::d) by BL0PR1501CA0011.outlook.office365.com
+ (2603:10b6:207:17::24) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.34 via Frontend Transport; Thu,
+ 27 Mar 2025 01:47:58 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL6PEPF00022575.mail.protection.outlook.com (10.167.249.43) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8534.20 via Frontend Transport; Thu, 27 Mar 2025 01:47:58 +0000
+Received: from ethanolx7ea3host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Mar
+ 2025 20:47:57 -0500
+From: Terry Bowman <terry.bowman@amd.com>
+To: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, <nifan.cxl@gmail.com>, <dave@stgolabs.net>,
 	<jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
 	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>, <david@redhat.com>, <Vilas.Sridharan@amd.com>
-CC: <linux-edac@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-	<linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, <bp@alien8.de>,
-	<tony.luck@intel.com>, <rafael@kernel.org>, <lenb@kernel.org>,
-	<mchehab@kernel.org>, <leo.duran@amd.com>, <Yazen.Ghannam@amd.com>,
-	<rientjes@google.com>, <jiaqiyan@google.com>, <Jon.Grimm@amd.com>,
-	<dave.hansen@linux.intel.com>, <naoya.horiguchi@nec.com>,
-	<james.morse@arm.com>, <jthoughton@google.com>, <somasundaram.a@hpe.com>,
-	<erdemaktas@google.com>, <pgonda@google.com>, <duenwen@google.com>,
-	<gthelen@google.com>, <wschwartz@amperecomputing.com>,
-	<dferguson@amperecomputing.com>, <wbs@os.amperecomputing.com>,
-	<nifan.cxl@gmail.com>, <tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
-	<roberto.sassu@huawei.com>, <kangkang.shen@futurewei.com>,
-	<wanghuiqiang@huawei.com>, <linuxarm@huawei.com>, <shiju.jose@huawei.com>
-Subject: Re: [PATCH v2 3/8] cxl/edac: Add CXL memory device patrol scrub
- control feature
-Message-ID: <67e4ae1cb0cdd_152c29462@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <20250320180450.539-1-shiju.jose@huawei.com>
- <20250320180450.539-4-shiju.jose@huawei.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250320180450.539-4-shiju.jose@huawei.com>
-X-ClientProxiedBy: MW4PR04CA0119.namprd04.prod.outlook.com
- (2603:10b6:303:83::34) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <mahesh@linux.ibm.com>,
+	<ira.weiny@intel.com>, <oohall@gmail.com>, <Benjamin.Cheatham@amd.com>,
+	<rrichter@amd.com>, <nathan.fontenot@amd.com>, <terry.bowman@amd.com>,
+	<Smita.KoralahalliChannabasappa@amd.com>, <lukas@wunner.de>,
+	<ming.li@zohomail.com>, <PradeepVineshReddy.Kodamati@amd.com>
+Subject: [PATCH v8 03/16] CXL/AER: Introduce Kfifo for forwarding CXL errors
+Date: Wed, 26 Mar 2025 20:47:04 -0500
+Message-ID: <20250327014717.2988633-4-terry.bowman@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250327014717.2988633-1-terry.bowman@amd.com>
+References: <20250327014717.2988633-1-terry.bowman@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DM3PR11MB8735:EE_
-X-MS-Office365-Filtering-Correlation-Id: bc03042f-6ee8-47d4-3b39-08dd6cd14f50
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-TrafficTypeDiagnostic: BL6PEPF00022575:EE_|PH0PR12MB7077:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8327ed30-da9d-4b67-892a-08dd6cd166ec
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014|921020|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?lv0m/AZdiRhiOcdLTmiT4jIcFTL5/aEzpVI/0TVilgQEvOgG4PYo4jEdSK9R?=
- =?us-ascii?Q?13A+EgVbKyt+DpgOoX0NOf6v8xxSF4ms8BdkS8dr9kKxpCHt7aav8X7uf5ul?=
- =?us-ascii?Q?qH4tE6B9LR4MLAhKGMGe9lsIniGiEtx/hSDKv00laZZ26GZQX99D2xVUumRU?=
- =?us-ascii?Q?6Ks7qhGq2BIqCbLFOGb8SDKNd7XZ2MvxZVIOqDJ2QtA74PAIOTNYEXir3HGW?=
- =?us-ascii?Q?tQTcsJ8niIFq/iebg09n1qZBGdSKhCzVemJlq+2A0TkDUemxVdeziTJFGl6O?=
- =?us-ascii?Q?sffNIglnY+fCdDxbZRywOWhFPkgJS/+nENl2YyHYhQyLFhVWCqOyXYkeY/WX?=
- =?us-ascii?Q?ClQDuIzLLV4bfvJ2GNfdYff9HdY/r7J8+3mCWOpRq+1/qN9BbfGAeZ7bVW17?=
- =?us-ascii?Q?DJ3lJoJBOkHqhhQDyst45LWr7tmVwG1hlM/YGVZ59/1Lhsl3tniuGrsHNM3j?=
- =?us-ascii?Q?4B3sFsgTqa3CfgWYUGTf/jjEbDv02Fsd5MB1ox9870CKmoEeyE+3UBAMe+3e?=
- =?us-ascii?Q?esXIhPwBKbKeoa+2Ti6ZropZOiLoczOMfvoC+/Az0OVtVo40TwypcDHaekMw?=
- =?us-ascii?Q?X0/2NwVAH19Y5KTQQJ8QslUMJVV8WCPoKM/WxpOwe88hPA1rVV39anzeRJzk?=
- =?us-ascii?Q?0GDOV803ky9YeQ0ldffiNLSp6zVwgWqOzPnq18RXhBVwXjJM+knWm4uodspa?=
- =?us-ascii?Q?xXsPm/drgt8asOi9hqkjbxZSaF0843wEWF0V7uV3P2aRyi0lQycnPnhhjEVM?=
- =?us-ascii?Q?poQ7NrlscjY565PdtiR6t8wmZhN/sZrliYchG8euQVr89XzyClDp9mMRNN87?=
- =?us-ascii?Q?Ok5wp3KYemCF+uIWwFNnMNph1r81lf4gyldhmTcQr9MLeMvJ5jpPudhbMWCu?=
- =?us-ascii?Q?4woO1h7PsEGAUfid7hQTJZkuLf0GTG3FDsN3uVsuvFS5vTGLzgx09cKZcglh?=
- =?us-ascii?Q?HoxHtA9l/NxpoyF5MpkI6dFe23085fMnZdRzodMc7EcFAMeEdFzxWOgEO7OO?=
- =?us-ascii?Q?DidMpT+QyWt5SZJoUxrq3k/2SDE14XMDraGj1bJfr3G5X2ho0QPEgSiOEGaN?=
- =?us-ascii?Q?f9POTmMC+iK8WQUrVc1EBb9PJquWkwzzvB/LuRGPynho8OqtYwk1fy/JApPd?=
- =?us-ascii?Q?3tEbxSqwrQOVRuT/LE5QxuAYFB6L0Fq6WZDgrbps2qwt2o00mdUC2vJwrEG9?=
- =?us-ascii?Q?V3sKABVNoikqLU6CrFP4jhjSvbzQRmrcRV0Y6j8qN/b84lyGLnibeuBemAp7?=
- =?us-ascii?Q?vN5ycEolVmzWoQfXgrYvooKp/ad3r0+8PP2BVSYiW4MbgBRijRN+xBlnOwET?=
- =?us-ascii?Q?HvE5YTFvjIcPCTudZRtv4rGYZYoVBj7Rwp7AFfugBHGDk8dWpacVAigd/ubE?=
- =?us-ascii?Q?ICtVvj3R9bWqR1Rj9nyXlPDaKaxePkHAxgy4IkMhbV8q7JqedSbJTwle3Hyv?=
- =?us-ascii?Q?lAr4UyUwQ6fhprCOLQIKuI/asa4+epUcqeJylvgaNzVyAxKTd1fz1A=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(921020)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?9IozETgtEwY++yn2DAcD8x1UjD7HM7BpVQzCBZwidq8yjlq7hraVWpRysoHc?=
- =?us-ascii?Q?HJ7M0EAk9rhXzmwcWA0DzSUkBy0S1hHDPFi47r5qt8/2fWCGhJbJizFnGKZw?=
- =?us-ascii?Q?6eZTADLICV7LlPPu6DfAuAyS/iNdWSwA9I38wdBdqcD7cLvwquZ1p92T0fhl?=
- =?us-ascii?Q?FeG4ufmwS+gytnaTPjo3QLq2O4X9Q+VFoOWFWY/HChzNSOWV38Vwmmtr5ALr?=
- =?us-ascii?Q?nMIgIpjXH3NSW7H1V2OWYy3jyW8BFjWaP/x68ybahLwdu/DvVOcd7JXz8R/r?=
- =?us-ascii?Q?bb1v1A9+ryodwYrk2vS2yP2qdi/jYkryphQaiKkkC6Oo4dCGkPh0EXmi/MYI?=
- =?us-ascii?Q?nhgBB06WLJWl4ZTzBhUD5AoLTDOdAj3unNYQT60q+clmCOJkims73Zm20QAs?=
- =?us-ascii?Q?vISgVSt9I56W99aPayximiDw4l2WgaeQ5V+sFrVDZuTIz76Onhg4wmr0hWYd?=
- =?us-ascii?Q?kUbcKeRbpSdt3ppBLIU7xL3HaMoZ46c/PtjxpKpcKZe4B102CcE8YzeYpKr3?=
- =?us-ascii?Q?1rf5uEVjQRwiamvfC8DmfaTHxBzwblpXFAetAVa0VdNA/NEFrO+WYtMglOGl?=
- =?us-ascii?Q?ctbaVBiC65k/gv0zhzWgKds1bugkobBLL66DqzOMmV9F4sEEdir9JNzO/iFI?=
- =?us-ascii?Q?D8jCXpsTlHz3UntYT6V4uWEFvdXyFDIPFwP/E2V+VM4WTEEKbw4fRqjOMr/b?=
- =?us-ascii?Q?mG8k3mmXHRsJkCfcC16kDeVObpdeasAUDABd8KPXfadSWqUqrSLJrHdHrMFF?=
- =?us-ascii?Q?wvjBpXDTcfnWaQaMvWG6zSAsZZiL01WKON3q7sHbUw0psEYxQlkJh0VvKLyx?=
- =?us-ascii?Q?egmIgK+1W+53j56dmFYcvOPmZ6J6+xHCYJov+VaugJsy9GTa60SY0tpkmpkE?=
- =?us-ascii?Q?mfBTd3K+1SoKe3nrFs/RtgN75mxxDYhgHt8Rj6Z3MJc5DAv4GkTtnfz8Qoj1?=
- =?us-ascii?Q?DxnS71mHNjJVI4n9ANomd6ijSuoFFOdWy3dD27E9vxtjKl7u0i3NpvZSnyox?=
- =?us-ascii?Q?nD7o5N6Yoklocfhg5dmxaL8any2j0bqxVM6qGQ4lRxFP12es9xPGGMMwMx5h?=
- =?us-ascii?Q?/wVarW4fZJvYJYn1Cl4TYTc7zObOniBYxIy01FHCwioc9620gSAI+cVXC3mV?=
- =?us-ascii?Q?VwTVQnmW4ym8q5T5BZOdUtVH+mcGkqZB4MAq2xEaOE7jnXwO/QUxKZXtH4wu?=
- =?us-ascii?Q?3qz7spMzjeq8Z51JaPudhe6Hr2zodPwpLyuGGR532NFtN6OAZBxdhCcJyBX+?=
- =?us-ascii?Q?kE+26mJ9/PcF1K3wyOJRm0t0It8GHReTasz/o58Rm+XZV0bGruoolTOGydD5?=
- =?us-ascii?Q?XKm5R/pzZwOOKHWa5pKnq0AdWZ8z/vT97QDlP6oDKvStiPM5nkUzLmx+gTj7?=
- =?us-ascii?Q?AMQxqb85kH/HD4NAYVe/FGefLKw1WmD2BUN6vCQF+IE/+MyJ57c84UN9oxpj?=
- =?us-ascii?Q?x1Rv+qPDvT1eeEB+M1nzpRRMWdsutsDc5f0EYyNHca2v40j8fdXIK3VUmimb?=
- =?us-ascii?Q?53xp6JyGrj6/XiNeVFRawAvyednIvU7gjtXC5CBNzaN6GQ9lwh9fOEOo3B+P?=
- =?us-ascii?Q?kvMB53SVu1KxrWTA4EisJp2ZqVmu36LxHNwxZVyIsltGCqjpWGpfv4LOsGSm?=
- =?us-ascii?Q?xw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: bc03042f-6ee8-47d4-3b39-08dd6cd14f50
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2025 01:47:19.4406
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|7416014|376014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?5talz5bcjj2xJl+ZD14fLTb25F72ciZKHaFBNyDzEduXzwiwLeqDDUyPsGQT?=
+ =?us-ascii?Q?eiJwPFALrKDIP9POien6nmSq8AESVQgEf6f0012kHqsy+mn0hy7PrHbuUIy0?=
+ =?us-ascii?Q?mpGsI8Nbku6JA/X76mko1P3qBcUX8MwJzYh6tDw0T2BboKRckuFwgkulkCHy?=
+ =?us-ascii?Q?fbAVXaBjx8X8f+vDUoyDBp8L4we4NH+eSEICz86xk2FBz/fSYYvovialDyLG?=
+ =?us-ascii?Q?GFbwMskzlqEaAmmKqr0NEQQT55kcNHXnwp7nu6IkldTgpGsf9oUI+PkPqniG?=
+ =?us-ascii?Q?+6OdB948LYTCIXWCcIGkVkeb5XXv9uLURSWn71hzhzXBU7GiUGQrBGvcLZYR?=
+ =?us-ascii?Q?Nc8fJDKTo3o/nk661Bu9tAr+Nd5axCrhHumcTTLRiknFSHfg2I91fVgAWrUp?=
+ =?us-ascii?Q?XWXPGaQye1reye4pr+wg+hlM1BS9h8CjvjTqQae17j2hDPL3kjAh5waZfZrz?=
+ =?us-ascii?Q?a5hyG9MUC+PQE+QTADIWFTzYYYGZEr5HkOC2Kqzv+Wfi3a5hUzcAr+cqbbrk?=
+ =?us-ascii?Q?ePyktGDbOq/LR/gqWSnqNbSvmHMq/xrcvFK2SRl63MAN+RT8242maKCXzR20?=
+ =?us-ascii?Q?VWqoYxLpldtg+NrKOd5pBvGkym43DRGiueo/cIKU2svM9n6JLx1Q9YMLimyk?=
+ =?us-ascii?Q?TLe1c325mfJAlmVOWEJmsuGUnhHkU1qLZ3WuxCGqcRPBo7+iQFUJQD0ky8nk?=
+ =?us-ascii?Q?p/LqZVyNwiMVFSte63Ko/3ZbWyY8Qllw7US0x39X9Jmu4riaKiInrQELwBjM?=
+ =?us-ascii?Q?vXkcfKiLtlZkE2lX2/ne1W29FvwXlEqueZTwefkGgodOW5nKlLdIy5gjdpux?=
+ =?us-ascii?Q?5X3rl8o5Uhd+l2/pr+sHJnvvgM0psTecm9LzfDx/w7Rv/lbKW8C3li7yJGbY?=
+ =?us-ascii?Q?H5cvZLvIpTJrxzperotnLu64kljKBZLSuGChcnitLg1CyuP3FI60HgZViKp0?=
+ =?us-ascii?Q?MBfDcjxSDLBoVhwvGUhch1bdBATroH4zmoiB3iX5KCVCZOgBgvC/skz9xrTC?=
+ =?us-ascii?Q?pR6nPcOy3ib3lDcNxqi+jLhCWVC5RISu0UqAPCyOa/u1/Ccq2JOX1vvCeG8g?=
+ =?us-ascii?Q?CtOzhPezn2cmhJyRx3EuP7FGjisygre9vt2416Dwenw5sGMoc94WBb562VQ3?=
+ =?us-ascii?Q?+D7lJjU/ygjg7dZnSnEdJeExnN4fnRhi36OCmWjJj20ZPlyO/vixcrAHDUJ7?=
+ =?us-ascii?Q?+osrIzegc6Q6FJrf1y1hIVHQxZwFp2Cyp88G2+0djRpjezKX6LHrbkQzUdaA?=
+ =?us-ascii?Q?JnFsSh7QHXm0S3kL1XlDhBAVo/lPRdSomu1kz5SVkAR+VDmqCtK2nPxleP7z?=
+ =?us-ascii?Q?czch4vpYFh612cRus/Z+tMJiM3saOuEUdIMg9wIyphpIK/9Pw5eKy05paxRa?=
+ =?us-ascii?Q?fThrvkDwm9utWVmMRq/fFgQsvnDyzXAhEa0kn1xVwUZB0Gw2K9qNaY8P8HEQ?=
+ =?us-ascii?Q?L11xOdCXHu4JbSp+iFs831yYC3IHZpkGIP+orUCFKd+KMJE8npufWaPsYKO+?=
+ =?us-ascii?Q?29zPdWSVIejK/ZSDP4SsRuWHjlypgJwKkgP3?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(7416014)(376014)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2025 01:47:58.6752
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: STvWqv3BavjWjMPXzRsjyI2XjuIAihpwAp9z4uZhOvGRYIZgSgcAXnXYI715IXpHrDTBYyXlzc99eopyVkRFsBJ5J/SeIMZF5rhRzI8qLQ8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR11MB8735
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8327ed30-da9d-4b67-892a-08dd6cd166ec
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF00022575.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7077
 
-shiju.jose@ wrote:
-> From: Shiju Jose <shiju.jose@huawei.com>
-> 
-> CXL spec 3.2 section 8.2.10.9.11.1 describes the device patrol scrub
-> control feature. The device patrol scrub proactively locates and makes
-> corrections to errors in regular cycle.
-> 
-> Allow specifying the number of hours within which the patrol scrub must be
-> completed, subject to minimum and maximum limits reported by the device.
-> Also allow disabling scrub allowing trade-off error rates against
-> performance.
-> 
-> Add support for patrol scrub control on CXL memory devices.
-> Register with the EDAC device driver, which retrieves the scrub attribute
-> descriptors from EDAC scrub and exposes the sysfs scrub control attributes
-> to userspace. For example, scrub control for the CXL memory device
-> "cxl_mem0" is exposed in /sys/bus/edac/devices/cxl_mem0/scrubX/.
-> 
-> Additionally, add support for region-based CXL memory patrol scrub control.
-> CXL memory regions may be interleaved across one or more CXL memory
-> devices. For example, region-based scrub control for "cxl_region1" is
-> exposed in /sys/bus/edac/devices/cxl_region1/scrubX/.
-> 
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-> ---
->  drivers/cxl/Kconfig       |  25 ++
->  drivers/cxl/core/Makefile |   1 +
->  drivers/cxl/core/edac.c   | 474 ++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/core/region.c |   5 +
->  drivers/cxl/cxlmem.h      |  10 +
->  drivers/cxl/mem.c         |   4 +
->  6 files changed, 519 insertions(+)
->  create mode 100644 drivers/cxl/core/edac.c
-> 
-> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> index 205547e5543a..b5ede1308425 100644
-> --- a/drivers/cxl/Kconfig
-> +++ b/drivers/cxl/Kconfig
-> @@ -113,6 +113,31 @@ config CXL_FEATURES
->  
->  	  If unsure say 'n'
->  
-> +config CXL_EDAC_MEM_FEATURES
-> +	bool "CXL: EDAC Memory Features"
-> +	depends on EXPERT
-> +	depends on CXL_MEM
-> +	depends on CXL_FEATURES
-> +	depends on EDAC >= CXL_BUS
-> +	depends on EDAC_SCRUB
-> +	help
-> +	  The CXL EDAC memory feature control is optional and allows host
-> +	  to control the EDAC memory features configurations of CXL memory
-> +	  expander devices.
-> +
-> +	  When enabled 'cxl_mem' and 'cxl_region' EDAC devices are published
-> +	  with memory scrub control attributes as described by
-> +	  Documentation/ABI/testing/sysfs-edac-scrub.
-> +
-> +	  When enabled 'cxl_mem' EDAC devices are published with memory ECS
-> +	  and repair control attributes as described by
-> +	  Documentation/ABI/testing/sysfs-edac-ecs and
-> +	  Documentation/ABI/testing/sysfs-edac-memory-repair respectively.
-> +
-> +	  Say 'y/m' if you have an expert need to change default settings
-> +	  of a memory RAS feature established by the platform/device (eg.
-> +	  scrub rates for the patrol scrub feature). otherwise say 'n'.
-> +
->  config CXL_PORT
->  	default CXL_BUS
->  	tristate
-> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-> index 139b349b3a52..9b86fb22e5de 100644
-> --- a/drivers/cxl/core/Makefile
-> +++ b/drivers/cxl/core/Makefile
-> @@ -19,4 +19,5 @@ cxl_core-y += ras.o
->  cxl_core-$(CONFIG_TRACING) += trace.o
->  cxl_core-$(CONFIG_CXL_REGION) += region.o
->  cxl_core-$(CONFIG_CXL_FEATURES) += features.o
-> +cxl_core-$(CONFIG_CXL_EDAC_MEM_FEATURES) += edac.o
->  cxl_core-$(CONFIG_CXL_MCE) += mce.o
-> diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
-> new file mode 100644
-> index 000000000000..5ec3535785e1
-> --- /dev/null
-> +++ b/drivers/cxl/core/edac.c
-> @@ -0,0 +1,474 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * CXL EDAC memory feature driver.
-> + *
-> + * Copyright (c) 2024-2025 HiSilicon Limited.
-> + *
-> + *  - Supports functions to configure EDAC features of the
-> + *    CXL memory devices.
-> + *  - Registers with the EDAC device subsystem driver to expose
-> + *    the features sysfs attributes to the user for configuring
-> + *    CXL memory RAS feature.
-> + */
-> +
-> +#include <linux/cleanup.h>
-> +#include <linux/edac.h>
-> +#include <linux/limits.h>
-> +#include <cxl/features.h>
-> +#include <cxl.h>
-> +#include <cxlmem.h>
-> +#include "core.h"
-> +
-> +#define CXL_NR_EDAC_DEV_FEATURES 1
-> +
-> +static struct rw_semaphore *cxl_acquire(struct rw_semaphore *rwsem)
-> +{
-> +	if (down_read_interruptible(rwsem))
-> +		return NULL;
-> +
-> +	return rwsem;
-> +}
-> +
-> +DEFINE_FREE(cxl_unlock, struct rw_semaphore *, if (_T) up_read(_T))
+CXL error handling will soon be moved from the AER driver into the CXL
+driver. This requires a notification mechanism for the AER driver to share
+the AER interrupt details with CXL driver. The notification is required for
+the CXL drivers to then handle CXL RAS errors.
 
-I know I suggested cxl_acquire() and cxl_unlock(), but this really is a
-generic facility.
+Add a kfifo work queue to be used by the AER driver and CXL driver. The AER
+driver will be the sole kfifo producer adding work. The cxl_core will be
+the sole kfifo consumer removing work. Add the boilerplate kfifo support.
 
-Let's call it rwsem_read_intr_acquire() and rwsem_read_release(), and
-I'll follow up later with Peter to see if he wants this to graduate from
-CXL.
+Add CXL work queue handler registration functions in the AER driver. Export
+the functions allowing CXL driver to access. Implement the registration
+functions for the CXL driver to assign or clear the work handler function.
 
-Also, go ahead and define it in cxl.h for now as I think other places in
-the subsystem could benefit from this approach.
+Create a work queue handler function, cxl_prot_err_work_fn(), as a stub for
+now. The CXL specific handling will be added in future patch.
 
-> +
-> +/*
-> + * CXL memory patrol scrub control
-> + */
-> +struct cxl_patrol_scrub_context {
+Introduce 'struct cxl_prot_err_info'. This structure caches CXL error
+details used in completing error handling. This avoid duplicating some
+function calls and allows the error to be treated generically when
+possible.
 
-I like "patrol_scrub" spelled out here compared to "ps" used everywhere
-else.
+Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+---
+ drivers/cxl/core/ras.c | 54 +++++++++++++++++++++++++++++++++++++++++-
+ drivers/cxl/cxlpci.h   |  3 +++
+ drivers/pci/pcie/aer.c | 39 ++++++++++++++++++++++++++++++
+ include/linux/aer.h    | 37 +++++++++++++++++++++++++++++
+ 4 files changed, 132 insertions(+), 1 deletion(-)
 
-> +	u8 instance;
-> +	u16 get_feat_size;
-> +	u16 set_feat_size;
-> +	u8 get_version;
-> +	u8 set_version;
-> +	u16 effects;
-> +	struct cxl_memdev *cxlmd;
-> +	struct cxl_region *cxlr;
-> +};
-> +
-> +/**
-> + * struct cxl_memdev_ps_params - CXL memory patrol scrub parameter data structure.
-> + * @enable:     [IN & OUT] enable(1)/disable(0) patrol scrub.
-> + * @scrub_cycle_changeable: [OUT] scrub cycle attribute of patrol scrub is changeable.
-> + * @scrub_cycle_hrs:    [IN] Requested patrol scrub cycle in hours.
-> + *                      [OUT] Current patrol scrub cycle in hours.
-> + * @min_scrub_cycle_hrs:[OUT] minimum patrol scrub cycle in hours supported.
-> + */
-> +struct cxl_memdev_ps_params {
-> +	bool enable;
-> +	bool scrub_cycle_changeable;
+diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
+index 485a831695c7..ecb60a5962de 100644
+--- a/drivers/cxl/core/ras.c
++++ b/drivers/cxl/core/ras.c
+@@ -5,6 +5,7 @@
+ #include <linux/aer.h>
+ #include <cxl/event.h>
+ #include <cxlmem.h>
++#include <cxlpci.h>
+ #include "trace.h"
+ 
+ static void cxl_cper_trace_corr_port_prot_err(struct pci_dev *pdev,
+@@ -107,13 +108,64 @@ static void cxl_cper_prot_err_work_fn(struct work_struct *work)
+ }
+ static DECLARE_WORK(cxl_cper_prot_err_work, cxl_cper_prot_err_work_fn);
+ 
++int cxl_create_prot_err_info(struct pci_dev *_pdev, int severity,
++			     struct cxl_prot_error_info *err_info)
++{
++	struct pci_dev *pdev __free(pci_dev_put) = pci_dev_get(_pdev);
++	struct cxl_dev_state *cxlds;
++
++	if (!pdev || !err_info) {
++		pr_warn_once("Error: parameter is NULL");
++		return -ENODEV;
++	}
++
++	if ((pci_pcie_type(pdev) != PCI_EXP_TYPE_ENDPOINT) &&
++	    (pci_pcie_type(pdev) != PCI_EXP_TYPE_RC_END)) {
++		pci_warn_once(pdev, "Error: Unsupported device type (%X)", pci_pcie_type(pdev));
++		return -ENODEV;
++	}
++
++	cxlds = pci_get_drvdata(pdev);
++	struct device *dev __free(put_device) = get_device(&cxlds->cxlmd->dev);
++
++	if (!dev)
++		return -ENODEV;
++
++	*err_info = (struct cxl_prot_error_info){ 0 };
++	err_info->ras_base = cxlds->regs.ras;
++	err_info->severity = severity;
++	err_info->pdev = pdev;
++	err_info->dev = dev;
++
++	return 0;
++}
++
++struct work_struct cxl_prot_err_work;
++
+ int cxl_ras_init(void)
+ {
+-	return cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work);
++	int rc;
++
++	rc = cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work);
++	if (rc) {
++		pr_err("Failed to register CPER kfifo with AER driver");
++		return rc;
++	}
++
++	rc = cxl_register_prot_err_work(&cxl_prot_err_work, cxl_create_prot_err_info);
++	if (rc) {
++		pr_err("Failed to register kfifo with AER driver");
++		return rc;
++	}
++
++	return rc;
+ }
+ 
+ void cxl_ras_exit(void)
+ {
+ 	cxl_cper_unregister_prot_err_work(&cxl_cper_prot_err_work);
+ 	cancel_work_sync(&cxl_cper_prot_err_work);
++
++	cxl_unregister_prot_err_work();
++	cancel_work_sync(&cxl_prot_err_work);
+ }
+diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+index 54e219b0049e..92d72c0423ab 100644
+--- a/drivers/cxl/cxlpci.h
++++ b/drivers/cxl/cxlpci.h
+@@ -4,6 +4,7 @@
+ #define __CXL_PCI_H__
+ #include <linux/pci.h>
+ #include "cxl.h"
++#include "linux/aer.h"
+ 
+ #define CXL_MEMORY_PROGIF	0x10
+ 
+@@ -135,4 +136,6 @@ void read_cdat_data(struct cxl_port *port);
+ void cxl_cor_error_detected(struct pci_dev *pdev);
+ pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
+ 				    pci_channel_state_t state);
++int cxl_create_prot_err_info(struct pci_dev *_pdev, int severity,
++			     struct cxl_prot_error_info *err_info);
+ #endif /* __CXL_PCI_H__ */
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 83f2069f111e..46123b70f496 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -110,6 +110,16 @@ struct aer_stats {
+ static int pcie_aer_disable;
+ static pci_ers_result_t aer_root_reset(struct pci_dev *dev);
+ 
++#if defined(CONFIG_PCIEAER_CXL)
++#define CXL_ERROR_SOURCES_MAX          128
++static DEFINE_KFIFO(cxl_prot_err_fifo, struct cxl_prot_err_work_data,
++		    CXL_ERROR_SOURCES_MAX);
++static DEFINE_SPINLOCK(cxl_prot_err_fifo_lock);
++struct work_struct *cxl_prot_err_work;
++static int (*cxl_create_prot_err_info)(struct pci_dev*, int severity,
++				       struct cxl_prot_error_info*);
++#endif
++
+ void pci_no_aer(void)
+ {
+ 	pcie_aer_disable = 1;
+@@ -1577,6 +1587,35 @@ static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
+ 	return rc ? PCI_ERS_RESULT_DISCONNECT : PCI_ERS_RESULT_RECOVERED;
+ }
+ 
++
++#if defined(CONFIG_PCIEAER_CXL)
++int cxl_register_prot_err_work(struct work_struct *work,
++			       int (*_cxl_create_prot_err_info)(struct pci_dev*, int,
++								struct cxl_prot_error_info*))
++{
++	guard(spinlock)(&cxl_prot_err_fifo_lock);
++	cxl_prot_err_work = work;
++	cxl_create_prot_err_info = _cxl_create_prot_err_info;
++	return 0;
++}
++EXPORT_SYMBOL_NS_GPL(cxl_register_prot_err_work, "CXL");
++
++int cxl_unregister_prot_err_work(void)
++{
++	guard(spinlock)(&cxl_prot_err_fifo_lock);
++	cxl_prot_err_work = NULL;
++	cxl_create_prot_err_info = NULL;
++	return 0;
++}
++EXPORT_SYMBOL_NS_GPL(cxl_unregister_prot_err_work, "CXL");
++
++int cxl_prot_err_kfifo_get(struct cxl_prot_err_work_data *wd)
++{
++	return kfifo_get(&cxl_prot_err_fifo, wd);
++}
++EXPORT_SYMBOL_NS_GPL(cxl_prot_err_kfifo_get, "CXL");
++#endif
++
+ static struct pcie_port_service_driver aerdriver = {
+ 	.name		= "aer",
+ 	.port_type	= PCIE_ANY_PORT,
+diff --git a/include/linux/aer.h b/include/linux/aer.h
+index 947b63091902..761d6f5cd792 100644
+--- a/include/linux/aer.h
++++ b/include/linux/aer.h
+@@ -10,6 +10,7 @@
+ 
+ #include <linux/errno.h>
+ #include <linux/types.h>
++#include <linux/workqueue_types.h>
+ 
+ #define AER_NONFATAL			0
+ #define AER_FATAL			1
+@@ -45,6 +46,24 @@ struct aer_capability_regs {
+ 	u16 uncor_err_source;
+ };
+ 
++/**
++ * struct cxl_prot_err_info - Error information used in CXL error handling
++ * @pdev: PCI device with CXL error
++ * @dev: CXL device with error. From CXL topology using ACPI/platform discovery
++ * @ras_base: Mapped address of CXL RAS registers
++ * @severity: CXL AER/RAS severity: AER_CORRECTABLE, AER_FATAL, AER_NONFATAL
++ */
++struct cxl_prot_error_info {
++	struct pci_dev *pdev;
++	struct device *dev;
++	void __iomem *ras_base;
++	int severity;
++};
++
++struct cxl_prot_err_work_data {
++	struct cxl_prot_error_info err_info;
++};
++
+ #if defined(CONFIG_PCIEAER)
+ int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
+ int pcie_aer_is_native(struct pci_dev *dev);
+@@ -56,6 +75,24 @@ static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
+ static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
+ #endif
+ 
++#if defined(CONFIG_PCIEAER_CXL)
++int cxl_register_prot_err_work(struct work_struct *work,
++			       int (*_cxl_create_proto_err_info)(struct pci_dev*, int,
++								 struct cxl_prot_error_info*));
++int cxl_unregister_prot_err_work(void);
++int cxl_prot_err_kfifo_get(struct cxl_prot_err_work_data *wd);
++#else
++static inline int
++cxl_register_prot_err_work(struct work_struct *work,
++			   int (*_cxl_create_proto_err_info)(struct pci_dev*, int,
++							     struct cxl_prot_error_info*))
++{
++	return 0;
++}
++static inline int cxl_unregister_prot_err_work(void) { return 0; }
++static inline int cxl_prot_err_kfifo_get(struct cxl_prot_err_work_data *wd) { return 0; }
++#endif
++
+ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+ 		    struct aer_capability_regs *aer);
+ int cper_severity_to_aer(int cper_severity);
+-- 
+2.34.1
 
-This is set but unused. Even if it were to be used I would expect it to
-be set in the cxl_patrol_scrub_context.
-
-> +	u8 scrub_cycle_hrs;
-> +	u8 min_scrub_cycle_hrs;
-> +};
-
-I do not understand the point of this extra object and would prefer to
-keep intermediate data structures to a minimum.
-
-It looks like all this does is provide for short lived parsed caching of
-the raw hardware patrol scrube attributes. Just pass those raw objects
-around and provide helpers to do the conversion.
-
-The less data structures the less confusion for the next person that has
-to read this code a few years down the road.
-
-> +
-> +enum cxl_scrub_param {
-> +	CXL_PS_PARAM_ENABLE,
-> +	CXL_PS_PARAM_SCRUB_CYCLE,
-> +};
-
-This seems unforuntate, why not make non-zero scrub rate an implied
-enable and zero to disable? A non-zero sentinel value like U32_MAX can
-indicate "keep scrub rate unchanged".
-
-> +#define CXL_MEMDEV_PS_SCRUB_CYCLE_CHANGE_CAP_MASK BIT(0)
-
-This CXL_MEMDEV_PS prefix is awkward due to overload with 'struct
-cxl_memdev'. Minimize it to something like:
-
-CXL_SCRUB_CONTROL_CHANGEABLE
-CXL_SCRUB_CONTROL_REALTIME
-CXL_SCRUB_CONTROL_CYCLE_MASK
-CXL_SCRUB_CONTROL_MIN_CYCLE_MASK
-
-> +#define CXL_MEMDEV_PS_SCRUB_CYCLE_REALTIME_REPORT_CAP_MASK BIT(1)
-> +#define CXL_MEMDEV_PS_CUR_SCRUB_CYCLE_MASK GENMASK(7, 0)
-> +#define CXL_MEMDEV_PS_MIN_SCRUB_CYCLE_MASK GENMASK(15, 8)
-> +#define CXL_MEMDEV_PS_FLAG_ENABLED_MASK BIT(0)
-
-CXL_SCRUB_CONTROL_ENABLE
-
-...no need to call it a mask when it is just a single-bit, and when it
-is both the status and the control just call it "enable".
-
-> +
-> +/*
-> + * See CXL spec rev 3.2 @8.2.10.9.11.1 Table 8-222 Device Patrol Scrub Control
-> + * Feature Readable Attributes.
-> + */
-> +struct cxl_memdev_ps_rd_attrs {
-> +	u8 scrub_cycle_cap;
-> +	__le16 scrub_cycle_hrs;
-
-"hours" is just 2 more characters than "hrs", I think we can afford the
-extra bytes.
-
-[..]
-> +int devm_cxl_memdev_edac_register(struct cxl_memdev *cxlmd)
-> +{
-> +	struct edac_dev_feature ras_features[CXL_NR_EDAC_DEV_FEATURES];
-> +	int num_ras_features = 0;
-> +	u8 scrub_inst = 0;
-> +	int rc;
-> +
-> +	rc = cxl_memdev_scrub_init(cxlmd, &ras_features[num_ras_features],
-> +				   scrub_inst);
-> +	if (rc < 0 && rc != -EOPNOTSUPP)
-> +		return rc;
-> +
-> +	if (rc != -EOPNOTSUPP)
-> +		num_ras_features++;
-> +
-> +	char *cxl_dev_name __free(kfree) =
-> +		kasprintf(GFP_KERNEL, "cxl_%s", dev_name(&cxlmd->dev));
-
-if (!cxl_dev_name)
-	return -ENOMEM;
-
-> +
-> +	return edac_dev_register(&cxlmd->dev, cxl_dev_name, NULL,
-> +				 num_ras_features, ras_features);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(devm_cxl_memdev_edac_register, "CXL");
-> +
-> +int devm_cxl_region_edac_register(struct cxl_region *cxlr)
-> +{
-> +	struct edac_dev_feature ras_features[CXL_NR_EDAC_DEV_FEATURES];
-> +	int num_ras_features = 0;
-> +	u8 scrub_inst = 0;
-> +	int rc;
-> +
-> +	rc = cxl_region_scrub_init(cxlr, &ras_features[num_ras_features],
-> +				   scrub_inst);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	num_ras_features++;
-> +
-> +	char *cxl_dev_name __free(kfree) =
-> +		kasprintf(GFP_KERNEL, "cxl_%s", dev_name(&cxlr->dev));
-> +
-> +	return edac_dev_register(&cxlr->dev, cxl_dev_name, NULL,
-> +				 num_ras_features, ras_features);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(devm_cxl_region_edac_register, "CXL");
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index b3260d433ec7..2aa6eb675fdf 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -3542,6 +3542,11 @@ static int cxl_region_probe(struct device *dev)
->  	case CXL_PARTMODE_PMEM:
->  		return devm_cxl_add_pmem_region(cxlr);
->  	case CXL_PARTMODE_RAM:
-> +		rc = devm_cxl_region_edac_register(cxlr);
-
-Why do only volatile regions get EDAC support? PMEM patrol scrub seems
-equally valid.
