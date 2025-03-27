@@ -1,115 +1,336 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F17ABF9FE;
-	Thu, 27 Mar 2025 17:02:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 985D3161302;
+	Thu, 27 Mar 2025 17:08:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743094978; cv=none; b=tF6XW4qqRwp8C2A8BxX98qF+QWPSlUzp8/Zt1enBoGsB1cogkuHIuCiekp1VdwPH6nhFAUv8P5dzSxR1nSyLsYKACN+i/DVPOw/BkbDhCJI6VXSwXbaULZ9C5l69wk+6oCc55vsmGVnXjS8I9dJF77Ir4H+VzuYV0Gu3BObw5G4=
+	t=1743095284; cv=none; b=kUSQ8K2MfSF+A/FbU7LcQ3r9uhLkl7wIZJu/BsDyQFCNq1x83DRzkHMgfGyJB+Qx7LqCUE6qSlUrhmMQqajiPkcEAcVr8FALgxcyF+wl012hMcMgEBqob4iEeVjUzjc1VR8WgSJnMco9uZFe66xwVWQNrNsu59YHPxTXogrtYyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743094978; c=relaxed/simple;
-	bh=+UJ3ZfnrEWAe92blxZH9heLkwYRbmnDsgPjcauBk7AA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m3+KSwR6EKngtScZRc6njsTQBhjixo8ZID9OCWMiLbnyEmZiz14m4B5Mc6wlUFMvymEpkh3vqqZpibzWlPdAhSmxw/zrVvM0zWxnEkazYRu6H2dbEryTa2peFiF0TMNPl2aDtSM0pjtV/102F4QCl/61RyutO0BZAxkMNCbVOMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=U4cVd5wO; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1743095284; c=relaxed/simple;
+	bh=TF0IXwuKo6252D3KFgSv9anh+pSOkAocOgawPYSgWLY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=imimT2ShJwHiIpPXiESvEzCGIysbUK684tIiUGYeyPauOH8Vbz0oJP6aqsS5SDm66JHp8j67bSlq/a4qzjK3QILj0aZ9yZgZMPTjt4HP8M/QNeVsmizUz5953j9GkMAlanpXbulSzxo/WLocwa6C8dtYONoCLRWyFi5eLS1aihk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DggovowI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="U4cVd5wO"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 16E0140E020E;
-	Thu, 27 Mar 2025 17:02:52 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id XYkpMZ1b9u1p; Thu, 27 Mar 2025 17:02:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1743094965; bh=IRroS5Aq4fm3j99yiL8SYLl/wPiF4M3AoqI3PR/tB7E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=U4cVd5wOPnxt4yWyBLfmqQ+WUieDZ99QsIYy/WEAR+7FhmXt3ZsIaUuHmqeG5Byxc
-	 WnDS9D2PXn6v9coYLoqKa47clsCYYTISfxbBgT1/VPR2mWzAAXaYGEd2DI49k6Y6Zp
-	 2JBSU56Vt7UIlGD3znx8NyX56QNIFfbGyRnhNEtJL+NOd3VnvxxwOkuYGOTG3oUhvb
-	 9hCol2/o+qPy+mE6mP8TFg8fEZ3VQbYgB3XmDi+6yZIk/zFTD0cUib8aduoGUXC4XM
-	 TOfLxk3k8gA6Pm3fxDcr7lpZ+dji+dO/qVPOG2cbyhkZnTQDwGObUAkxeQAKro/V6/
-	 GWK7tg9r8fkx5U11UjE6Vr5YW97tBdtzHJ3IxeO73ys7vo/bmelVhbfM7hGCPQgOAI
-	 AibW/XCexM2Jy0RoPw0BGyv0irML1HCy5U2npjM4kLZlsRbDx01SaiaqCC5GWRQyw9
-	 qhepP8UbRKuUqfbZSDlX/MOnjonNIjrNgrYBOqNHIW6U9M8PSzes5FQAJE1vwcyiqO
-	 IUtrjfnmwY65WU+k+nI1xM1CYg6gDFoD0D13ZHDEEYACyGoPzT5tHcmXeYqPoNgChO
-	 +CHAuuMz8QFNI22EpYTrs6eDKL/k+pOCiEAjCfU4wJwV6pQ32JQbjuaQN18unQy3na
-	 4/dhhv1pkI56QyswR0Pc5QXU=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 579A840E0196;
-	Thu, 27 Mar 2025 17:02:02 +0000 (UTC)
-Date: Thu, 27 Mar 2025 18:01:56 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: shiju.jose@huawei.com
-Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com, dave@stgolabs.net,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DggovowI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9C4FC4CEDD;
+	Thu, 27 Mar 2025 17:08:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743095284;
+	bh=TF0IXwuKo6252D3KFgSv9anh+pSOkAocOgawPYSgWLY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=DggovowIE/Kq4oZSqwCqMOGHPS6UTDfuFZ+zOw/4xNvrfUyOHVC+thEVZnQwxqA4q
+	 mD5Z6Vgr7y29XAYfpHqHNcBCHAJVEVF2T3cyxdhxleDBy62JxZG7QmvgMzNRf7fIee
+	 PwFIf2tNOTvv+0INeJ8ZbDccyn2v2Vx3eMMh3jAIQ44NzOpOAmChztj899E/cBN99M
+	 7yZtIhY6g6VwfIOMdhZ/1TWDOByeWeaF6kHZWkI5Ire67D3bBBanx3hzQf18TdVJch
+	 rlHbYYX5tRSVKHLKjSqXdb3gpavn+z2OC7w8vPVSXDVw1DENFM7e2pBqnZBIHb6jhx
+	 wGFi6Z5qYMl9g==
+Date: Thu, 27 Mar 2025 12:08:02 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Terry Bowman <terry.bowman@amd.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
 	jonathan.cameron@huawei.com, dave.jiang@intel.com,
 	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, david@redhat.com, Vilas.Sridharan@amd.com,
-	linux-edac@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	tony.luck@intel.com, rafael@kernel.org, lenb@kernel.org,
-	mchehab@kernel.org, leo.duran@amd.com, Yazen.Ghannam@amd.com,
-	rientjes@google.com, jiaqiyan@google.com, Jon.Grimm@amd.com,
-	dave.hansen@linux.intel.com, naoya.horiguchi@nec.com,
-	james.morse@arm.com, jthoughton@google.com, somasundaram.a@hpe.com,
-	erdemaktas@google.com, pgonda@google.com, duenwen@google.com,
-	gthelen@google.com, wschwartz@amperecomputing.com,
-	dferguson@amperecomputing.com, wbs@os.amperecomputing.com,
-	nifan.cxl@gmail.com, tanxiaofei@huawei.com,
-	prime.zeng@hisilicon.com, roberto.sassu@huawei.com,
-	kangkang.shen@futurewei.com, wanghuiqiang@huawei.com,
-	linuxarm@huawei.com
-Subject: Re: [PATCH v2 7/8] cxl/memfeature: Add CXL memory device soft PPR
- control feature
-Message-ID: <20250327170156.GCZ-WEhNREaxQaH_ya@fat_crate.local>
-References: <20250320180450.539-1-shiju.jose@huawei.com>
- <20250320180450.539-8-shiju.jose@huawei.com>
+	dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
+	ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
+	rrichter@amd.com, nathan.fontenot@amd.com,
+	Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
+	ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com
+Subject: Re: [PATCH v8 03/16] CXL/AER: Introduce Kfifo for forwarding CXL
+ errors
+Message-ID: <20250327170802.GA1435872@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250320180450.539-8-shiju.jose@huawei.com>
+In-Reply-To: <20250327014717.2988633-4-terry.bowman@amd.com>
 
-On Thu, Mar 20, 2025 at 06:04:44PM +0000, shiju.jose@huawei.com wrote:
-> diff --git a/drivers/edac/mem_repair.c b/drivers/edac/mem_repair.c
-> index 3b1a845457b0..bf7e01a8b4dd 100755
-> --- a/drivers/edac/mem_repair.c
-> +++ b/drivers/edac/mem_repair.c
-> @@ -45,6 +45,11 @@ struct edac_mem_repair_context {
->  	struct attribute_group group;
+On Wed, Mar 26, 2025 at 08:47:04PM -0500, Terry Bowman wrote:
+> CXL error handling will soon be moved from the AER driver into the CXL
+> driver. This requires a notification mechanism for the AER driver to share
+> the AER interrupt details with CXL driver. The notification is required for
+> the CXL drivers to then handle CXL RAS errors.
+> 
+> Add a kfifo work queue to be used by the AER driver and CXL driver. The AER
+> driver will be the sole kfifo producer adding work. The cxl_core will be
+> the sole kfifo consumer removing work. Add the boilerplate kfifo support.
+> 
+> Add CXL work queue handler registration functions in the AER driver. Export
+> the functions allowing CXL driver to access. Implement the registration
+> functions for the CXL driver to assign or clear the work handler function.
+> 
+> Create a work queue handler function, cxl_prot_err_work_fn(), as a stub for
+> now. The CXL specific handling will be added in future patch.
+> 
+> Introduce 'struct cxl_prot_err_info'. This structure caches CXL error
+> details used in completing error handling. This avoid duplicating some
+> function calls and allows the error to be treated generically when
+> possible.
+> ...
+
+> +++ b/drivers/cxl/core/ras.c
+> @@ -5,6 +5,7 @@
+>  #include <linux/aer.h>
+>  #include <cxl/event.h>
+>  #include <cxlmem.h>
+> +#include <cxlpci.h>
+>  #include "trace.h"
+>  
+>  static void cxl_cper_trace_corr_port_prot_err(struct pci_dev *pdev,
+> @@ -107,13 +108,64 @@ static void cxl_cper_prot_err_work_fn(struct work_struct *work)
+>  }
+>  static DECLARE_WORK(cxl_cper_prot_err_work, cxl_cper_prot_err_work_fn);
+>  
+> +int cxl_create_prot_err_info(struct pci_dev *_pdev, int severity,
+> +			     struct cxl_prot_error_info *err_info)
+> +{
+> +	struct pci_dev *pdev __free(pci_dev_put) = pci_dev_get(_pdev);
+> +	struct cxl_dev_state *cxlds;
+> +
+> +	if (!pdev || !err_info) {
+> +		pr_warn_once("Error: parameter is NULL");
+> +		return -ENODEV;
+
+This is CXL code, so your call, but I'm always skeptical about testing
+for NULL and basically ignoring a code defect that got us here with a
+NULL pointer.  I would rather take the NULL pointer dereference fault
+and force a fix in the caller.
+
+> +	}
+> +
+> +	if ((pci_pcie_type(pdev) != PCI_EXP_TYPE_ENDPOINT) &&
+> +	    (pci_pcie_type(pdev) != PCI_EXP_TYPE_RC_END)) {
+> +		pci_warn_once(pdev, "Error: Unsupported device type (%X)", pci_pcie_type(pdev));
+> +		return -ENODEV;
+
+Similar.  A pci_warn_once() here seems like a debugging aid during
+development, not necessarily a production kind of thing.
+
+Thanks for printing the type.  I would use "%#x" to make it clear that
+it's hex.  There are about 1900 %X uses compared with 33K
+%x uses, but maybe you have a reason to capitalize it?
+
+> +	}
+> +
+> +	cxlds = pci_get_drvdata(pdev);
+> +	struct device *dev __free(put_device) = get_device(&cxlds->cxlmd->dev);
+> +
+> +	if (!dev)
+> +		return -ENODEV;
+> +
+> +	*err_info = (struct cxl_prot_error_info){ 0 };
+
+Neat, I hadn't seen this idiom.
+
+> +	err_info->ras_base = cxlds->regs.ras;
+> +	err_info->severity = severity;
+> +	err_info->pdev = pdev;
+> +	err_info->dev = dev;
+> +
+> +	return 0;
+> +}
+> +
+> +struct work_struct cxl_prot_err_work;
+> +
+>  int cxl_ras_init(void)
+>  {
+> -	return cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work);
+> +	int rc;
+> +
+> +	rc = cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work);
+> +	if (rc) {
+> +		pr_err("Failed to register CPER kfifo with AER driver");
+> +		return rc;
+> +	}
+> +
+> +	rc = cxl_register_prot_err_work(&cxl_prot_err_work, cxl_create_prot_err_info);
+> +	if (rc) {
+> +		pr_err("Failed to register kfifo with AER driver");
+> +		return rc;
+> +	}
+> +
+> +	return rc;
+>  }
+>  
+>  void cxl_ras_exit(void)
+>  {
+>  	cxl_cper_unregister_prot_err_work(&cxl_cper_prot_err_work);
+>  	cancel_work_sync(&cxl_cper_prot_err_work);
+> +
+> +	cxl_unregister_prot_err_work();
+> +	cancel_work_sync(&cxl_prot_err_work);
+>  }
+> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+> index 54e219b0049e..92d72c0423ab 100644
+> --- a/drivers/cxl/cxlpci.h
+> +++ b/drivers/cxl/cxlpci.h
+> @@ -4,6 +4,7 @@
+>  #define __CXL_PCI_H__
+>  #include <linux/pci.h>
+>  #include "cxl.h"
+> +#include "linux/aer.h"
+>  
+>  #define CXL_MEMORY_PROGIF	0x10
+>  
+> @@ -135,4 +136,6 @@ void read_cdat_data(struct cxl_port *port);
+>  void cxl_cor_error_detected(struct pci_dev *pdev);
+>  pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
+>  				    pci_channel_state_t state);
+> +int cxl_create_prot_err_info(struct pci_dev *_pdev, int severity,
+> +			     struct cxl_prot_error_info *err_info);
+
+What does the "_" in "_pdev" signify?  Looks unnecessarily different
+than the decls above.
+
+>  #endif /* __CXL_PCI_H__ */
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 83f2069f111e..46123b70f496 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -110,6 +110,16 @@ struct aer_stats {
+>  static int pcie_aer_disable;
+>  static pci_ers_result_t aer_root_reset(struct pci_dev *dev);
+>  
+> +#if defined(CONFIG_PCIEAER_CXL)
+> +#define CXL_ERROR_SOURCES_MAX          128
+> +static DEFINE_KFIFO(cxl_prot_err_fifo, struct cxl_prot_err_work_data,
+> +		    CXL_ERROR_SOURCES_MAX);
+> +static DEFINE_SPINLOCK(cxl_prot_err_fifo_lock);
+> +struct work_struct *cxl_prot_err_work;
+> +static int (*cxl_create_prot_err_info)(struct pci_dev*, int severity,
+> +				       struct cxl_prot_error_info*);
+
+Space before "*" in the parameters.
+
+> +#endif
+> +
+>  void pci_no_aer(void)
+>  {
+>  	pcie_aer_disable = 1;
+> @@ -1577,6 +1587,35 @@ static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
+>  	return rc ? PCI_ERS_RESULT_DISCONNECT : PCI_ERS_RESULT_RECOVERED;
+>  }
+>  
+> +
+> +#if defined(CONFIG_PCIEAER_CXL)
+> +int cxl_register_prot_err_work(struct work_struct *work,
+> +			       int (*_cxl_create_prot_err_info)(struct pci_dev*, int,
+> +								struct cxl_prot_error_info*))
+
+Ditto.  Rewrap to fit in 80 columns, unindent this function pointer
+decl to make it fit.  Same below in aer.h.
+
+> +{
+> +	guard(spinlock)(&cxl_prot_err_fifo_lock);
+> +	cxl_prot_err_work = work;
+> +	cxl_create_prot_err_info = _cxl_create_prot_err_info;
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_register_prot_err_work, "CXL");
+> +
+> +int cxl_unregister_prot_err_work(void)
+> +{
+> +	guard(spinlock)(&cxl_prot_err_fifo_lock);
+> +	cxl_prot_err_work = NULL;
+> +	cxl_create_prot_err_info = NULL;
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_unregister_prot_err_work, "CXL");
+> +
+> +int cxl_prot_err_kfifo_get(struct cxl_prot_err_work_data *wd)
+> +{
+> +	return kfifo_get(&cxl_prot_err_fifo, wd);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_prot_err_kfifo_get, "CXL");
+> +#endif
+> +
+>  static struct pcie_port_service_driver aerdriver = {
+>  	.name		= "aer",
+>  	.port_type	= PCIE_ANY_PORT,
+> diff --git a/include/linux/aer.h b/include/linux/aer.h
+> index 947b63091902..761d6f5cd792 100644
+> --- a/include/linux/aer.h
+> +++ b/include/linux/aer.h
+> @@ -10,6 +10,7 @@
+>  
+>  #include <linux/errno.h>
+>  #include <linux/types.h>
+> +#include <linux/workqueue_types.h>
+>  
+>  #define AER_NONFATAL			0
+>  #define AER_FATAL			1
+> @@ -45,6 +46,24 @@ struct aer_capability_regs {
+>  	u16 uncor_err_source;
 >  };
 >  
-> +const char * const edac_repair_type[] = {
-> +	[EDAC_PPR] = "ppr",
+> +/**
+> + * struct cxl_prot_err_info - Error information used in CXL error handling
+> + * @pdev: PCI device with CXL error
+> + * @dev: CXL device with error. From CXL topology using ACPI/platform discovery
+> + * @ras_base: Mapped address of CXL RAS registers
+> + * @severity: CXL AER/RAS severity: AER_CORRECTABLE, AER_FATAL, AER_NONFATAL
+> + */
+> +struct cxl_prot_error_info {
+> +	struct pci_dev *pdev;
+> +	struct device *dev;
+> +	void __iomem *ras_base;
+> +	int severity;
+
+What does the "prot" in "cxl_prot_error_info" refer to?
+
+There's basically no error info here other than "severity".
+
+I guess "dev" and "pdev" are separate devices (otherwise you would
+just use "&pdev->dev"), but I don't have any intuition about how they
+might be related, which is a little disconcerting.
+
+I would have thought that "ras_base" would be a property of "dev" (the
+CXL device) and wouldn't need to be separate.
+
+From above, I guess "ras_base" is a property of cxlds, not
+cxlds->cxlmd->dev.  Maybe we should be keeping &cxlds here instead and
+letting the consumer look up cxlds->cxlmd->dev?
+
 > +};
-> +EXPORT_SYMBOL_GPL(edac_repair_type);
-
-Why is this thing exported instead of adding a getter function and having all
-its users pass in proper defines as arguments?
-
-And "EDAC_PPR" is not a proper define - it doesn't tell me what it is.
-
-It should be more likely a
-
-EDAC_REPAIR_PPR,
-EDAC_REPAIR_ROW_SPARING,
-EDAC_REPAIR_BANK_SPARING,
-
-and so on.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+> +
+> +struct cxl_prot_err_work_data {
+> +	struct cxl_prot_error_info err_info;
+> +};
+> +
+>  #if defined(CONFIG_PCIEAER)
+>  int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
+>  int pcie_aer_is_native(struct pci_dev *dev);
+> @@ -56,6 +75,24 @@ static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
+>  static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
+>  #endif
+>  
+> +#if defined(CONFIG_PCIEAER_CXL)
+> +int cxl_register_prot_err_work(struct work_struct *work,
+> +			       int (*_cxl_create_proto_err_info)(struct pci_dev*, int,
+> +								 struct cxl_prot_error_info*));
+> +int cxl_unregister_prot_err_work(void);
+> +int cxl_prot_err_kfifo_get(struct cxl_prot_err_work_data *wd);
+> +#else
+> +static inline int
+> +cxl_register_prot_err_work(struct work_struct *work,
+> +			   int (*_cxl_create_proto_err_info)(struct pci_dev*, int,
+> +							     struct cxl_prot_error_info*))
+> +{
+> +	return 0;
+> +}
+> +static inline int cxl_unregister_prot_err_work(void) { return 0; }
+> +static inline int cxl_prot_err_kfifo_get(struct cxl_prot_err_work_data *wd) { return 0; }
+> +#endif
+> +
+>  void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>  		    struct aer_capability_regs *aer);
+>  int cper_severity_to_aer(int cper_severity);
+> -- 
+> 2.34.1
+> 
