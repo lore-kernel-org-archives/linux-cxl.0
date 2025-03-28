@@ -1,45 +1,40 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D152B14A0BC;
-	Fri, 28 Mar 2025 17:39:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D44B1D0F5A;
+	Fri, 28 Mar 2025 18:22:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743183549; cv=none; b=oBk2E2L7+4L235ONS4x6d2Y0dnuiCHQagMt3PcIjwfIV0VMATS6gHqdmx47pOZwWb7s8OYRR8VG+tQbBF3Vc9yPnC0GlJSHomdwhFzar9QOjw7JubZXMvCs2xYUgQEyLt7zwGbA3INIIUH2uCBj7AhmKpMlu6+tcUv3dr1ouD4k=
+	t=1743186165; cv=none; b=b8M3hkdckV9M/r18FSGOfIxJvN70cjc1RtalrJ7uWBN74DXcNrWKT2P1l+hG6s8kV4uHj2Ig7SM7e9sWkb1qfWa+Xh+KUnrE55Ni5Y2Bmfasr1VIiLZL5yYvgdyO+9nWSgCrHAAmAkPppee2TdoFCDAfPMWxM2i9+iO9lQ7xz+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743183549; c=relaxed/simple;
-	bh=3Hnco4Lq8j7mav0v3HLC9HQFOXmI4etu/xJ3XVVScKQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=heY1NAX4MNX+T7mvssxSGxKndctOFAVdmgzdr9u9KrDclXucSbWbVld+xR7wVHxqD46cVCAlu5MkGNTHusChDqJjn0fnLuFw6jMnOhgxJyh78V15Mpc4NTl26MfYLk0ZvNeQTXgPnL/J48GztDZncaiM9Uul1QDzUOelQTozgjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jYheuJGP; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jYheuJGP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F1E5C4CEE8;
-	Fri, 28 Mar 2025 17:39:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743183549;
-	bh=3Hnco4Lq8j7mav0v3HLC9HQFOXmI4etu/xJ3XVVScKQ=;
-	h=Date:From:To:Cc:Subject:Reply-To:From;
-	b=jYheuJGPM7cnLp6002uFjKreQKpT2+G8eOGHUGBoCJb5/j9CPgXI62NDmCB10WFm1
-	 BjHZKKKiKBhzS4ZaJOVD8YU3Jy3u9ij3vLRKybTYiCpiLezCkAfnsc1Rrml7CzS4yd
-	 FJqooUkazg6p+qRHivkgHvwBvVwMWGJnZsx4vjRxDq10IVBybhVukUUsFXvyvtY7w0
-	 EPLjKOg0vNC5ger/asB+yAXdUosVu6/LD6D9g/8FtVyVWb1NQIKRP7jZvV83LHSbxm
-	 nLSuuGr8USXkpKmorvQxp/NMKJdee+Oe8FO7uoEmdlBDh2BcQLzJeNyqdf2LEXwrMY
-	 9WnFupj84dBZg==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id E379BCE077C; Fri, 28 Mar 2025 10:39:08 -0700 (PDT)
-Date: Fri, 28 Mar 2025 10:39:08 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: linux-cxl@vger.kernel.org
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, dan.j.williams@intel.com, gourry@gourry.net,
-	linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
-	sfr@canb.auug.org.au
-Subject: [BUG -next] ./usr/include/cxl/features.h:11:10: fatal error:
- uuid/uuid.h: No such file or directory
-Message-ID: <f6489337-67c7-48c8-b48a-58603ec15328@paulmck-laptop>
-Reply-To: paulmck@kernel.org
+	s=arc-20240116; t=1743186165; c=relaxed/simple;
+	bh=Ny0RjglG9ntzXvLkOv5t+0QuNIJ/nl9JHX8l5aV8dto=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JErMCbqpNx1yRX1YG+tNsE/oNGoWi6muZ4xtvyQay1lREIS5XmgZOTWfUxcvwPyejqYMXLM4QtIUOM4cCpJOuZcSRrxKSYIshzK427qKq7f5Vx/WFRLbNo935gZ+UB9ovcWTBzJOKEquyP+GWi4yqNfc2l4ZnGqhGmXyKiFWt18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EE997FEC;
+	Fri, 28 Mar 2025 11:22:45 -0700 (PDT)
+Received: from arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 43F0D3F694;
+	Fri, 28 Mar 2025 11:22:39 -0700 (PDT)
+Date: Fri, 28 Mar 2025 18:22:36 +0000
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: linux-cxl@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	james.morse@arm.com, conor@kernel.org,
+	Yicong Yang <yangyicong@huawei.com>, linux-acpi@vger.kernel.org,
+	linux-arch@vger.kernel.org, linuxarm@huawei.com,
+	Yushan Wang <wangyushan12@huawei.com>, linux-mm@kvack.org,
+	gregkh@linuxfoundation.org,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>,
+	Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [RFC PATCH 2/6] arm64: Support
+ ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
+Message-ID: <Z-bo7AQ1h6VQr65V@arm.com>
+References: <20250320174118.39173-1-Jonathan.Cameron@huawei.com>
+ <20250320174118.39173-3-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -48,20 +43,26 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250320174118.39173-3-Jonathan.Cameron@huawei.com>
 
-Hello!
+On Thu, Mar 20, 2025 at 05:41:14PM +0000, Jonathan Cameron wrote:
+> +struct system_cache_flush_method {
+> +	int (*invalidate_memregion)(int res_desc,
+> +				    phys_addr_t start, size_t len);
+> +};
+[...]
+> +int cpu_cache_invalidate_memregion(int res_desc, phys_addr_t start, size_t len)
+> +{
+> +	guard(spinlock_irqsave)(&scfm_lock);
+> +	if (!scfm_data)
+> +		return -EOPNOTSUPP;
+> +
+> +	return scfm_data->invalidate_memregion(res_desc, start, len);
+> +}
 
-In next-20250328 and next-20250327, allmodconfig builds get me:
+WBINVD on x86 deals with the CPU caches as well. Even the API naming in
+Linux implies CPU caches. IIUC, devices registering to the above on Arm
+SoCs can only deal with system caches. Is it sufficient?
 
-./usr/include/cxl/features.h:11:10: fatal error: uuid/uuid.h: No such file or directory
-
-This file is apparently auto-generated, because when I change the #include
-to the more likely linux/uuid.h, my changes are overwritten by the build.
-
-Gregory Price noted that something similar has happened recently and been fixed:
-
-https://lore.kernel.org/all/70ba4e80-53c4-4583-82f3-2851e0829aa6@linux.ibm.com/
-
-Perhaps someone unfixed it?
-
-								Thanx, Paul
+-- 
+Catalin
