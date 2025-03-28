@@ -1,68 +1,108 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D44B1D0F5A;
-	Fri, 28 Mar 2025 18:22:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F296D1E4B2;
+	Fri, 28 Mar 2025 20:03:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743186165; cv=none; b=b8M3hkdckV9M/r18FSGOfIxJvN70cjc1RtalrJ7uWBN74DXcNrWKT2P1l+hG6s8kV4uHj2Ig7SM7e9sWkb1qfWa+Xh+KUnrE55Ni5Y2Bmfasr1VIiLZL5yYvgdyO+9nWSgCrHAAmAkPppee2TdoFCDAfPMWxM2i9+iO9lQ7xz+Y=
+	t=1743192210; cv=none; b=NkVZTHHSfX+In0NvXCuyGFMj6D0m5RtUp7jngRNUYThlOVwT8iNJFW88DkwI9ie/qnyfpEQ5uk+nvu2DMCi/+/g6W1MdYqlRn0v+kPx/8aoqGppbkAk1mEXnb0faVVtH/V9z4RqePtsBgKcomE3sQJBo3wQBu38h6AbOalG5HWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743186165; c=relaxed/simple;
-	bh=Ny0RjglG9ntzXvLkOv5t+0QuNIJ/nl9JHX8l5aV8dto=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JErMCbqpNx1yRX1YG+tNsE/oNGoWi6muZ4xtvyQay1lREIS5XmgZOTWfUxcvwPyejqYMXLM4QtIUOM4cCpJOuZcSRrxKSYIshzK427qKq7f5Vx/WFRLbNo935gZ+UB9ovcWTBzJOKEquyP+GWi4yqNfc2l4ZnGqhGmXyKiFWt18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EE997FEC;
-	Fri, 28 Mar 2025 11:22:45 -0700 (PDT)
-Received: from arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 43F0D3F694;
-	Fri, 28 Mar 2025 11:22:39 -0700 (PDT)
-Date: Fri, 28 Mar 2025 18:22:36 +0000
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: linux-cxl@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	james.morse@arm.com, conor@kernel.org,
-	Yicong Yang <yangyicong@huawei.com>, linux-acpi@vger.kernel.org,
-	linux-arch@vger.kernel.org, linuxarm@huawei.com,
-	Yushan Wang <wangyushan12@huawei.com>, linux-mm@kvack.org,
-	gregkh@linuxfoundation.org,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>,
-	Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [RFC PATCH 2/6] arm64: Support
- ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
-Message-ID: <Z-bo7AQ1h6VQr65V@arm.com>
-References: <20250320174118.39173-1-Jonathan.Cameron@huawei.com>
- <20250320174118.39173-3-Jonathan.Cameron@huawei.com>
+	s=arc-20240116; t=1743192210; c=relaxed/simple;
+	bh=oXvEdptZ4699fzer6hFygk1UxVBd4LiQGME//n0kV8A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gpWnru0lOZ7hUaYpRtqzxUUbCmoTvUlfOJlbs+z8HatVSsAjkzf3JTPkDmAimBM8CDqyPS6Yn4hixIAzz31YgNp+IR0ssCRRgdePDqYSphOP6MdoZCZt32OTGsdzSgfqCnUvqQZ88IdR0lnDf2e3hMooIL/zFFdlGLyY3uTQPhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QVIUN62/; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QVIUN62/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743192209; x=1774728209;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=oXvEdptZ4699fzer6hFygk1UxVBd4LiQGME//n0kV8A=;
+  b=QVIUN62/VWRiiMVDxwK2F3phHaDHpbn6lBpexnz3giwuSo+7j8sYBugV
+   CTLFiqeT7U2LCGUoc1jVyZtwXihE2QbmumKXj9b2JdI9N/8Xe27947pMJ
+   sbRKOztagnDTzgrGAgA5+lr9cGJ94jRtWZDuKQm4lUdEWhNUCzRPk0mFG
+   MjjMVGYCUyrflwbd6vwqXr6x4qVr/3XQ4dSErK0VeNR+B5ohQUqv0X1QX
+   nY08jM0YzsVrGMUYZagkwa8rVFb+jT3DTXQdn9GJCgy7G0sF3QSTYO4ou
+   wY+1wgZOj3p0jfjAS37DrDA6ZHrcn9XL8skBcxCKKHY232pTXm0wIkqi9
+   g==;
+X-CSE-ConnectionGUID: bXc0tTpyRcqo4LNFm5nXmw==
+X-CSE-MsgGUID: eeiBfQ7rQ/m1qCF2shreIA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11387"; a="48223367"
+X-IronPort-AV: E=Sophos;i="6.14,284,1736841600"; 
+   d="scan'208";a="48223367"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 13:03:24 -0700
+X-CSE-ConnectionGUID: 0nv0FfAHR0uFwkookyPZ1g==
+X-CSE-MsgGUID: r0S/NuprRKiZ9NfzAR3Ntg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,284,1736841600"; 
+   d="scan'208";a="156528100"
+Received: from iherna2-mobl4.amr.corp.intel.com (HELO [10.125.108.185]) ([10.125.108.185])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 13:03:22 -0700
+Message-ID: <14bfcfa0-5999-49e4-854e-ff8810d6df3c@intel.com>
+Date: Fri, 28 Mar 2025 13:03:19 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250320174118.39173-3-Jonathan.Cameron@huawei.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [BUG -next] ./usr/include/cxl/features.h:11:10: fatal error:
+ uuid/uuid.h: No such file or directory
+To: paulmck@kernel.org, linux-cxl@vger.kernel.org
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com, gourry@gourry.net, linux-kernel@vger.kernel.org,
+ linux-next@vger.kernel.org, sfr@canb.auug.org.au
+References: <f6489337-67c7-48c8-b48a-58603ec15328@paulmck-laptop>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <f6489337-67c7-48c8-b48a-58603ec15328@paulmck-laptop>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 20, 2025 at 05:41:14PM +0000, Jonathan Cameron wrote:
-> +struct system_cache_flush_method {
-> +	int (*invalidate_memregion)(int res_desc,
-> +				    phys_addr_t start, size_t len);
-> +};
-[...]
-> +int cpu_cache_invalidate_memregion(int res_desc, phys_addr_t start, size_t len)
-> +{
-> +	guard(spinlock_irqsave)(&scfm_lock);
-> +	if (!scfm_data)
-> +		return -EOPNOTSUPP;
-> +
-> +	return scfm_data->invalidate_memregion(res_desc, start, len);
-> +}
 
-WBINVD on x86 deals with the CPU caches as well. Even the API naming in
-Linux implies CPU caches. IIUC, devices registering to the above on Arm
-SoCs can only deal with system caches. Is it sufficient?
 
--- 
-Catalin
+On 3/28/25 10:39 AM, Paul E. McKenney wrote:
+> Hello!
+> 
+> In next-20250328 and next-20250327, allmodconfig builds get me:
+> 
+> ./usr/include/cxl/features.h:11:10: fatal error: uuid/uuid.h: No such file or directory
+> 
+> This file is apparently auto-generated, because when I change the #include
+> to the more likely linux/uuid.h, my changes are overwritten by the build.
+> 
+> Gregory Price noted that something similar has happened recently and been fixed:
+> 
+> https://lore.kernel.org/all/70ba4e80-53c4-4583-82f3-2851e0829aa6@linux.ibm.com/
+> 
+> Perhaps someone unfixed it?
+> 
+> 								Thanx, Paul
+
+
+I can't get the powerpc cross build to build to reproduce the issue from next-20250328. Does the change below address the issue for you?
+
+---
+diff --git a/include/uapi/cxl/features.h b/include/uapi/cxl/features.h
+index d6db8984889f..691eeda9c892 100644
+--- a/include/uapi/cxl/features.h
++++ b/include/uapi/cxl/features.h
+@@ -8,11 +8,7 @@
+ #define _UAPI_CXL_FEATURES_H_
+ 
+ #include <linux/types.h>
+-#ifndef __KERNEL__
+-#include <uuid/uuid.h>
+-#else
+ #include <linux/uuid.h>
+-#endif
+ 
+ /*
+  * struct cxl_mbox_get_sup_feats_in - Get Supported Features input
