@@ -1,47 +1,47 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2050.outbound.protection.outlook.com [40.107.223.50])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2051.outbound.protection.outlook.com [40.107.94.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9820C2144A0;
-	Fri, 28 Mar 2025 10:26:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B352C1E833C;
+	Fri, 28 Mar 2025 10:52:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.51
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743157573; cv=fail; b=INDw68ZBKZlTthvK9abcsS7MGMRK6/+WSVFIgqgPMrRebsHzhY978pdYPpsXBdZZU7yRTy6nOfs/a+9GcouUMoezv9ZbHLlY4UqXgJ8/ZPjhfLsAB/6Xf0mtdlb42a4tg/3tpjehLDJCWeECleH/IKG6K9zggyw12sJSopYpfPg=
+	t=1743159134; cv=fail; b=GFSM/e4rk0Od1ctps3jIPXBEJosrvc1ajP/Gf0mAZ2UUZukRpYDHFUn1Gtfb/k0T6vQZnNLIwJfvTm+1lLEa6EL32tQM9yHezUPmBw239aSUtAgMsOJU9g4aBQs1L0ZPCF7lea1B4Ew5Cqg+DF14nUU3fqIUoEwSEMAGbhBtV4A=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743157573; c=relaxed/simple;
-	bh=skuH/qoynhCN0pWSg/Ikwk9oNnDOt8Bg8fkYIBwR0FY=;
+	s=arc-20240116; t=1743159134; c=relaxed/simple;
+	bh=yqTyTVX8Eg4yTltwArmDStthTQddMOUcT0ltbDB1XeY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ZT00IGWaxYMuEkxANWBdWrfchQ1M1qpMpGyDn7SnyBspjvb3FKDpi1X0Y1UWmq5jjsm6Xr7/u4hfc1yvOxGA589dj9Aj+qlwRV/5FB9BZ8xH7GBH7FW5/vdqXXy5z5NtNCB97xFtDDBApqDxmm0tVjGHIpoeFTB8zBTmyj5vdDI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4mu/t3Or; arc=fail smtp.client-ip=40.107.223.50
+	 Content-Disposition:In-Reply-To:MIME-Version; b=PaCDaR+q9Jx4JL+ytb3xyyWyUf17Ih9GD/Bm64VVQwSVQUtedUvwPEnu8qKJy7x7MI6T+HCa/sGZ8GqGpPoPYjCmSJA287HYBd4xrrfrtMkqkJsGE8zeyrn3tdfAi7uCVZj49+1Am3TPbHbXWLu9zJ9ECQoG6F+89GnWz6I0L50=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=WOs78xQ/; arc=fail smtp.client-ip=40.107.94.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4mu/t3Or"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="WOs78xQ/"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rh2aALouxAzb5DeaRY1WNbJGhI/6hqEcuSrWqQRfqK/y9A8bz9WaKoSbuNyMbpTuaFGxXIBGGTq7cD1h40FUKXOHEwfD+bXGdJmmZaI40DPhy06cyyGq8Krk7SskJWwseEjd5Pm9bznnQEylxzOmDqX+lHZY6IURcbjQLRLnxGx5ESFy3iRplzjOK/he9XABMG7+U6edtJEQo/afVkuvq3t5lmmsNb5zTr0D2TIEVY6es+3pB4pEwr5e30K0AJwvMuwT8UQ0WDnu0eIlZJSA4vSZluF1rVuOKD/oVgilbPJ9OwyvEZOtPXyCxYc/EKypF7dkNE9PJqhqzDX3n9hubg==
+ b=TTA0zwXLHIu2kJXok84c0HDY9uuT6qkDHDi6i2V2+ZlnhuzqIBs54t1gVXkxmyf5EVaTmC8SkgkOy6ixgnlKNMeAGVWM+1AG5OO9Zg++2sbgw9x3Z3zZ37hT3hoYQIDg/+6BSr+Bey84TmSglzYmXl9wM0L8QPTotcCXlsbolP0b1SeI2q8wIe8XnUJ5ErwJYbSb5oQPTiDwFLGTNGo1o2VKBbz2TJOIzIIumdpeVsuq05LdcrGcupNmj/9bmmCaI4mvHNqCU4ukPtxsan7Fa02arqm1YHROc0NBWFJjlhXggIQ4IDDIXPdNxRfAXBMdl2hoscHsLlGeD6ZcsdBPzA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DiG5JK01sWg5oUufHx+Xqa9KFyOrg73HYkPU+w61b+c=;
- b=iPc89XAkBcpHj8kby98QTVw7pGN3YcVoJoXlvR/jLiHrrz252yOlaAIOl45H/ArLNCJpA2wApcNIGamK0RThCy0UMymKsvvmRo0xWT7arvmGzXJPfs6hPCWe++zRHtT3iUKI1cKd1Z1SUb5MNb4+z4X+1jZD0r3Q9MoPP1IoNWtW+meH7lKcR6vRKKmOz3pCOoeqijUTLNU2FvzL6LOV2aq+fgq6K3R4ahSPJb5sQsiQecUHVgWdPtakzsv6tvNernWDIbtU8JKobtJAxawcZtXsOORv50pcy+hLX1Fo+DNiDjtmGisgxSEO3/hXW6UhehzmTrvOzqDYNQkjrbpwHg==
+ bh=ZneJAkxnZmp9ZLaGchnJlN7k7rHNF0rSofPrHiaNId0=;
+ b=gG1FI03A4TuXwydHYv6GXG9KVZMtp7zWKTTrOeXcUmukXi/5OWTfd9KQY75eZHDtoejc8P1TZK7DGrcUfpA/COhu4cpo0Mmz58IhAMHfEhRx2jkTDcmRFnVGR1n0oP5Vb3lYsHmkHBeVbsIqMOmnyDrJj63JXrcdP0qurJAGH44NrEaYmwRncXSnNQgsuKsqX5mf/AfMTJY4ijJpQXoFAmYlSB9WHLYqpi5LwbYNXvuTbhInvYJLLChhu5Adej4G6OBp3ZouV1C4MQomMj/54qQaDB975H06iaibLz8FmXLNXmQeZIYh0au5eC3QvB+LQ6v/Sc8+9X0v+x1Br0PFMw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DiG5JK01sWg5oUufHx+Xqa9KFyOrg73HYkPU+w61b+c=;
- b=4mu/t3OrkHqYhfu2HCCSbrupCapWnBZLhKfm/E56cDuit3ZH/3zYdZh6H2YIreeG0AX0d7iY5cjycUvF1YhY9nrscXIwfXWQAGrIhofy3DVWKjVXhIjrnkucoGaDuwHB+qhx27AWqfx9Ne2hs2xmXZPD8JilUK9qazpVfI3o7Vw=
+ bh=ZneJAkxnZmp9ZLaGchnJlN7k7rHNF0rSofPrHiaNId0=;
+ b=WOs78xQ/762XkjSIEg6r986RaUJw8HLbD9iVihV9EAkB1C4WyAByk9l0emv4aGjFKa7o3dvMHhrsxPUe8Bwa7XjsrJo2gmQWrj95970j6RZiq0p+vxhV3ZMqfXQnrtvzaiGY7v+h7v/j0mgR+HpEgerRi5vC3CdAwqfQ+8FAksI=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from CYYPR12MB8750.namprd12.prod.outlook.com (2603:10b6:930:be::18)
- by MN2PR12MB4048.namprd12.prod.outlook.com (2603:10b6:208:1d5::8) with
+ by IA1PR12MB9497.namprd12.prod.outlook.com (2603:10b6:208:593::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Fri, 28 Mar
- 2025 10:26:08 +0000
+ 2025 10:52:09 +0000
 Received: from CYYPR12MB8750.namprd12.prod.outlook.com
  ([fe80::b965:1501:b970:e60a]) by CYYPR12MB8750.namprd12.prod.outlook.com
  ([fe80::b965:1501:b970:e60a%7]) with mapi id 15.20.8534.043; Fri, 28 Mar 2025
- 10:26:08 +0000
-Date: Fri, 28 Mar 2025 11:26:01 +0100
+ 10:52:09 +0000
+Date: Fri, 28 Mar 2025 11:52:03 +0100
 From: Robert Richter <rrichter@amd.com>
 To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
 Cc: Davidlohr Bueso <dave@stgolabs.net>,
@@ -52,19 +52,19 @@ Cc: Davidlohr Bueso <dave@stgolabs.net>,
 	Ira Weiny <ira.weiny@intel.com>,
 	Dan Williams <dan.j.williams@intel.com>, ming.li@zohomail.com,
 	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 2/4 v3] cxl/core: Add helpers to detect Low memory Holes
- on x86
-Message-ID: <Z-Z5OcJ90VDwQb4j@rric.localdomain>
+Subject: Re: [PATCH 4/4 v3] cxl/test: Simulate an x86 Low Memory Hole for
+ tests
+Message-ID: <Z-Z_U7rBJFKeB33A@rric.localdomain>
 References: <20250314113708.759808-1-fabio.m.de.francesco@linux.intel.com>
- <20250314113708.759808-3-fabio.m.de.francesco@linux.intel.com>
- <Z909uPbvRVlZ_J1Z@rric.localdomain>
- <8700175.W097sEU6C4@fdefranc-mobl3>
+ <20250314113708.759808-5-fabio.m.de.francesco@linux.intel.com>
+ <Z91CgQjzXzKWNXPX@rric.localdomain>
+ <7393617.eO5KgaWL5Y@fdefranc-mobl3>
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <8700175.W097sEU6C4@fdefranc-mobl3>
-X-ClientProxiedBy: FR4P281CA0427.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:d1::8) To CYYPR12MB8750.namprd12.prod.outlook.com
+In-Reply-To: <7393617.eO5KgaWL5Y@fdefranc-mobl3>
+X-ClientProxiedBy: FR4P281CA0239.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:e9::16) To CYYPR12MB8750.namprd12.prod.outlook.com
  (2603:10b6:930:be::18)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -73,331 +73,154 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CYYPR12MB8750:EE_|MN2PR12MB4048:EE_
-X-MS-Office365-Filtering-Correlation-Id: 54b738eb-df67-4c8d-7e3b-08dd6de2f3c5
+X-MS-TrafficTypeDiagnostic: CYYPR12MB8750:EE_|IA1PR12MB9497:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0d988dce-5085-4cf2-8d97-08dd6de69662
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|7053199007;
+	BCL:0;ARA:13230040|366016|1800799024|7416014|376014|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bVh4aTl1S2NMMmJQL2FScmZEUk9ZQ1NFSldtaVhQMlJ6MEs1SFZvc1VOZ084?=
- =?utf-8?B?Q2JHY3N4VGJldTNCVGtpYzREeGdFTzhMREVVc2dRdU1GVUx5VDk3NmJmVzl1?=
- =?utf-8?B?NElUdzJkQUpOMHBNY3hFRFkwRDg1TzUrY0xXa2xlc2kyeDlvREMzMWREYnFV?=
- =?utf-8?B?eStyMHhWalhzQklsTGhpNDFURlgvM1RLRWtIV29kam15bGdOQzQ2blBydkRR?=
- =?utf-8?B?SDhVNEhHV1c4ckxRMGJsY3lURXRRWEllcnQweXo3Sm1raG9lYlR2NmIwUGVN?=
- =?utf-8?B?ZmlBRmFOWmRUR0pkZXQ4Q3BoK1BueklRQnBTL3J5RlJMZ25Oc3VRZEJnVTM3?=
- =?utf-8?B?WWpNWnNLN0RVVHljK2ZWMWNCVGtuVkNSRW1xR2E5aDlkdGcwSEkyKzRiak8v?=
- =?utf-8?B?QjcweEdnSGVJc0ZzblZkSE5kQ3lRWkZzWGhZY0pzWGF3TVl0M3ptaHh3Y1FI?=
- =?utf-8?B?VjR0cFExL2dIRFBLUmZxZWFXUVFORUNiYmFqZm41R3JQTWtsUnFjOUlRZS9u?=
- =?utf-8?B?SFlVb0VkWmdORVZmbnp0UGV2elRFaDJkeVhMOFdCTXVzeEpOVFVkZGNabVR1?=
- =?utf-8?B?UE5FMEdVeHJ3L1JaLzB2TFM1L1k5STRQajUrQi9LRnoxYStUeXZxVWtFN0xn?=
- =?utf-8?B?dDJWRmY3ajdKTVpiRU1LVFhTWUNCQ1VDd0FsZFk2ZEY4bytZTmpvbTdhZm5o?=
- =?utf-8?B?UmZTRVdlWXJhU0FlTFpFMTd0NFRqbnZTaUhFTXIvbW9wRWUzSVk2MEdsU0Y2?=
- =?utf-8?B?SG1sZ0krMHZhdDB0R1d4YzRtSVkwSXRzMmd6WVNuL1VOSjFaK2k4Y2tsZjI0?=
- =?utf-8?B?bFU3aWhXeDJ1UjE2eEtUQVNrWXluYmZETGlGQW5aUU5UU2pqVzh1NVdweStL?=
- =?utf-8?B?bk8wbFdQc1Y2QUVFS01ESUxyZ0VYZVpONmlHZFlqcXZsUFFDQU5BV3lzU3Uz?=
- =?utf-8?B?bkNKTUFoWGRiaE5SUXJPMko0ZXBFejUwNUFjdGFwMTB2MkpHRmJGT3hOZk9r?=
- =?utf-8?B?MVlrck1GbEZ2amwzanBBamwrbHZpclo0amRlYjNuWHFmMjBrREF3STUrVkNj?=
- =?utf-8?B?QnIrckpjSWJrc1dOanUyNC9ncWU1WGUzcnZjdHptVHV6V1pvOXAzWFVONGYr?=
- =?utf-8?B?V3BGSTRRSEJnZDl5ME9GMmxnSyszUEpEWG5BdXZXdGY0S0VycDkxaFUrZnA4?=
- =?utf-8?B?Q3E0NHBBcXh3MnUxaWpYWDFENGVaSHZiTnA1Q2RzMXFtSEppNWVvOHVmVTQ1?=
- =?utf-8?B?S3NCcVZhNTZtODZLTlJSUGY1ZFo1SDNHdEdDaElDWGdwcXowY25WQzhGbTFQ?=
- =?utf-8?B?RGtvNDZLWDdRb0oxY3NLQzNFNkdhME1DS04yREl2TmJhem9kNXVFQTJzOE81?=
- =?utf-8?B?dTFVUlVvK0ZpT1RpM2Qyb1RWTCtYT1ltNnVZSFd6czlFSmMyM01Ed0hFQitn?=
- =?utf-8?B?Snd2clVVcEpyV2wrRm1qTk5OSDQyOEhqL01xbzZ6M2djWi9ST2M1QmJ4QlVj?=
- =?utf-8?B?L0NEQXJwWGhQVnYvdnhCTm9BSmM5K3JUQ0x3SE5sV1NuNlNhYjU4ajdtWmRL?=
- =?utf-8?B?c2NWNHh2eWJFYTJ5QjY0Q3pOM01VaW1VMFREYnFXZmwvZDQzZzFMcEk0RUxr?=
- =?utf-8?B?RFMyVCtDSzJISkJhNHdsOU1JL28wZUZqSzMwUTRLbXkrbmg2ZHBkSDlJSHNq?=
- =?utf-8?B?L1VsQk9sMzlLSmJnN1B4KzZSdmtRbWJBK0tCNjBzajkrUHhqM0JHMVNjV3dw?=
- =?utf-8?B?S3NSQTdGNWE5M2E1elVtZENia1Y0b25uQzU3TmFPNjJseTFCWGJpTDFkRmoy?=
- =?utf-8?B?V3c3cGZKZHZXSDFKWkRQd0VyaHg3Z0pldkt3M2o2c2x0bFpBK0UwSDdFMHp5?=
- =?utf-8?Q?AE8mmtqEh+KbB?=
+	=?utf-8?B?d2xpMjlqWFZIeHBjdmxkMTJCd3NwZkFYN3FXTGdFSU9sTWQ5Z2FuQi9hUGVS?=
+ =?utf-8?B?OE94QURaYUc0cE8xcys5aVVhYnBYQTNWdWxPeWI0UnUrMnhxSzlCN3ZhMi81?=
+ =?utf-8?B?cG1xWk1WMzcyb3U4YUJDZmpXa0ZFSENEbnVOdGdHanpGUGM1eThiU09hZ001?=
+ =?utf-8?B?R3pnVmo3VmFSRG14Q2V3YmxDTlVFeVpPQ0FBSmhlNHBmL3hPd3lBcVhTQUc2?=
+ =?utf-8?B?UzhBR2FrRU9RWndqNUduS200VG0vbExTdXlvVCszSGJGNUlYaEpCcmJ6RCsw?=
+ =?utf-8?B?RnVSNmtqNmZmaUdHayt6amo0Z3JkcDRQUEQzRXdRL3gwbnpLald1QUdyQ0s0?=
+ =?utf-8?B?Sm52SlZnTU83ajZzZmJ2QzI2MkViU3l1NHpRNmlFTWtIRFVYOFBPSi8rdDc4?=
+ =?utf-8?B?SUlDSms1OFV6cEgyMHpQWkIxOTRZZURsTitRK2xlcVpLYVhMREJ0WXRidVRQ?=
+ =?utf-8?B?WUJjWVFicGE1b2V4RE1wdDlScjZZajNnVnJxQkphRkpkRkZkSWJVSFR0czdn?=
+ =?utf-8?B?RzhQYzdiV2gxV3g5YmlkeXdEZ3Z6MXBQVCtNWnM4cThlTzZ4M091c2FhbFdX?=
+ =?utf-8?B?TjBOYjlOcVZXaUp5dDE4UUNNdTVtKzl2SlB4eDFZMkY2WWtSNVEwN1Y1T1pn?=
+ =?utf-8?B?d25ZWFRCNUJhbXcyQkNuRzc4RVgxUjBJRFEwM05KUG9uUS9wUUZNYjN4RUlu?=
+ =?utf-8?B?SmRtTWE1bE0wWGxMZ0lKUElaeUlWdlhMb3N0MzBGYTcrMVhQMHk2QW1MQjZu?=
+ =?utf-8?B?T3N4SEhadHhmMm10MUIxTC9NazFJaS9aMVp3V2RhcFZydkV2OEJ4bkh1VlhP?=
+ =?utf-8?B?RHJiMVVzYk9MRG9pZkhDVU9rNEJGalFjbUxVczJNcjQ1THBIeURIODZOMTNm?=
+ =?utf-8?B?Z0VRcGIzK0NVZW1WME95NWhoWmRRM2FkeWdtL2w5blJRMWxwdTBSbE9mc1BJ?=
+ =?utf-8?B?cWRXRm9abWVYdnhJV3YxN0JoMUZPZFNWcTNvOGFoZGhqUTd0UW1LaDZ3cVF6?=
+ =?utf-8?B?VHB3b3VPVUg1R0dIaGhRdmFITS8xeGxiT01pRUxRN0wyQXRuY01iR05PZ3NJ?=
+ =?utf-8?B?QW1HSzR2dlBPc0FtNytNaXBuK1had0JZVnZNTUc4dWpFUmpjVU9INXJ4WTQ4?=
+ =?utf-8?B?czBPVlhadGxWZmxhWlh6ZlZDbEJhUkIvL3ptOHlGL2xIQjFDNU5SNWlWQjh2?=
+ =?utf-8?B?RFhvWU5wUzM1dHUzVHRyMXNLSHpMb2ozWitVT3luR21INUQzV2ZHR3VXWTU3?=
+ =?utf-8?B?YkM2MGhKOWhHY1htY2UxSFZxczloQzNBUUhSTzJjdWM2S29NaWMwUGdjUUZV?=
+ =?utf-8?B?L2M5SVZIdlNyM1NDa3BQNkI4T0NqZTdRaFlBaTM0UUVOc1pSNjVmcEJVY0hB?=
+ =?utf-8?B?ZFdqQVc1dUdZWWpPYStQSEVBMFdQWXQyWHdHczdtWW9HbWZkOWQzdFROZjRs?=
+ =?utf-8?B?dHF1Mk9vUzlWS2E5QlJvY1RKZ1R0MS84UmNYc2R6SUppeWdTSFNzRi9nZWxZ?=
+ =?utf-8?B?OHZJRlpoTFQ5MHpNNXltT0U3bTVRVGJES1ZRZ3kxL3dzZGFac3J4YWl4TUVj?=
+ =?utf-8?B?N3B5b3ZnNFIxb1pJK3B4U09XTEJBUldhN29Nc3piVzIxQ2c4WFhsYmNGVWtw?=
+ =?utf-8?B?L1dnSEU3VVdKcytzYXBoZElncDJCZWg2YVV4ZEYxU1VTOHlzNTl4Ylh3dW5P?=
+ =?utf-8?B?dzlCQlY5cmpGdGZIRFdZdUt4ZTZaQkpObFB4aHZMV2Q4ZVMwckk3d1pSbVV4?=
+ =?utf-8?B?U24xeEtvN05LcFR2UExMVWtmdEtVVDVUVTBBNDBHVEVacXJ5TGNVaXpJcUIx?=
+ =?utf-8?B?eDRZb0Jza290L25WTnVORUQzSjhvYk9yTGVrT09NZ3E5UDRSaHlKUWtnR1NM?=
+ =?utf-8?B?VXo0em1NYTlhWXU2L0pyVUg2WjJQV1NTU1REWkNNS0pMZXc9PQ==?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bS8za0pkcm1Rb1MyS2N4SGtZL0N1RHNxWTdBQ2FjRnh2ZCswbWd4VjJxdjRE?=
- =?utf-8?B?UUhFL0ZUNTdvZmZQeXUyMGJVS2dZZ2c3OUpjRDBpbUpRZ092TFdkTGRkWXMz?=
- =?utf-8?B?VXJNS2hsT1FzaW9CODAzTnUzT2JqbkJKOE1BU1pWWGhtWklCU2htbzVHTlZL?=
- =?utf-8?B?dURlMUhOQktUNjNBOTZ4SjdscWk4OFlaSHE3RkgwUkR2dHAzeEZwdjZxb2Nu?=
- =?utf-8?B?a3NwdlRTbkdzdE5WdGcyQm5CZGlvQk40VTdMWTlRV3l5K3ZFc214UTY2SnJ5?=
- =?utf-8?B?Z1doaEtPZXhwb0NoVVp3MHVaNHNQaXFzR0Y0dE1icnFHdHhrMXMzTTJPV3RL?=
- =?utf-8?B?bTFSTTFrUmdVY0RTQVlKSU91ZnJNaWdJV0MvaVVXVFlBaVY2ZVE0YXZHd210?=
- =?utf-8?B?WjlYYVpMaFdISFNNWERtVWJGZHpka1I1cVY4aVpsNUFFU3lOdU9UN1Fzc1JB?=
- =?utf-8?B?d2wwejBoTUZ4bkRacGRsWExOK2JqczQzb2ZlWUdGazE1SHMrb2FNY09ZTVBa?=
- =?utf-8?B?KzVuZG5rZWxaNEszUTN0aWZRN0hZU0NCTloyOVRoVzIzM1FOT2Nab3U5bENB?=
- =?utf-8?B?V0FCUS9EMjBxVUxKUkZ3TWVJQnUwUW1KVUplTVZXM1k5UUh5QThFMkUwcWoz?=
- =?utf-8?B?eVlSSTZYYnN6TXBlWWh2TkNmamdLdkprdVhaNmpPRlFBRkpaNGFnc1VUZm1p?=
- =?utf-8?B?K1d4dTN0WUFtT1FCeTJKNVJsc3NVQkRqVHNCUDFGTzZrK1ZwU2FjWW1BNEt3?=
- =?utf-8?B?RXEzaGlObUxHYmUwZVFwVW5yckRDZHJ3Z251ang4R0Y4V3ZNQXpqRW5IbUlR?=
- =?utf-8?B?ekVTazlyRnZmWHB5d1BldUJNbG5adUdxaXRGcmhuTUhHTzBZZ1dkc3B6d2hx?=
- =?utf-8?B?SmhrdysrVllHWDJxcTE5VHRoeHhYdmZrWmh5R0VEUk5Mdm05Y01BTVV1VVgw?=
- =?utf-8?B?YlBBOUJEU0w4UE1OZVRIMGF0L2JVazlHZHVFM24zQWVEelhhRnBVWkpkZGRn?=
- =?utf-8?B?VUFONDBwd2lhbHc5cUpWK3pBd3RoSUFjVnFENTFFWi9peEtCRmlULzVmU2FT?=
- =?utf-8?B?eVFEekgxbmlja1pqc1NhTFJadkF5enUrQ01WQi9kd3Z6MDZjSmY4MXRXMVFq?=
- =?utf-8?B?SWsya1dEa0tZek1iRW1NMkpSMlpWaW9UalZRT0Mzb0FNNExnRElVZ0h2R0Qz?=
- =?utf-8?B?cmhrV0RjL1F1aWx6MDcxdkJCYUtNSnVIbmx6eWRLbExFR1MzUmQ1WnRrbTdD?=
- =?utf-8?B?dEExSnVJNExGRzVNMVN0c1VYWlVaQlhnMlVIbkMxSmxIay82c2M4cWs4NytZ?=
- =?utf-8?B?V25Tbk1OQytaS1YrUEswaEZBUy9pUmwwdEVlRldIZXU1N0xycjQ0WDJ1cW15?=
- =?utf-8?B?bkg2QnA3U05aWkRvQzBkYUt1eS9wNlpPT0I3bURCTHJuVDJoNWxVQ21xQXFw?=
- =?utf-8?B?bU53ZlV2Q2RrNVVYT1JtajRlUCt4TFpTSEVaT3pqQ2M5RnF3UmFWRzhqWURx?=
- =?utf-8?B?M2F6a1YxK0gySFQ0dkNQVGQ1UENWcUYxelVtdnBmODE1MDBnbmIyT1QrUEV5?=
- =?utf-8?B?V3lvQTNweHpuR2tvOEpQZW1VbG54SklaMS9ieWcvQTdmWU1BeGg5MG5JdzZp?=
- =?utf-8?B?N1RWaUJJNXZTc3hLUkdDejBxdWdFcUJ4cDRqY0Q0aXRSUzJ3b3FaSTNpL2ZX?=
- =?utf-8?B?SmpyRng3bTdaNkhPbXBUT0FPQmU4Ky9qQU1XSkpBdU5XQUxNMHNiQ2QvZFZS?=
- =?utf-8?B?WDlOUjFxTVVmN2VKMUpoMjRGUlR6dis3VEh3Z0VscWlnL241a2hIVXdzemVG?=
- =?utf-8?B?b1FXRDlwL0I2cGtzb2tVUUJKZnFVcXZ4QnIwNkY4R21kY1E3bnJaenpzUXdz?=
- =?utf-8?B?S28zMDNhUWo2UWxWbTJiTkwvMC9GQTdQSTcxTlRaYjBUNXloZHdoSlNrYlVx?=
- =?utf-8?B?bkUwQlZWcGZ3aFBzQjR5V1pVZ05MRnR5WHRIMUNib05pU3pKN2NJTEhGcEhp?=
- =?utf-8?B?a09uY3BCMGQwR3hJZ201ZE9SS29zbTFpOWRORS96Z3VtQ29BVmt5NzBLYTZE?=
- =?utf-8?B?NnZmUUFINlgzME1FMjVKVlNndStORFFUMVB4QjhpemFNMVVWazZac1NFUWkw?=
- =?utf-8?Q?TIK1IUUbgtP9UwMp5FqA9A/hb?=
+	=?utf-8?B?MnhOVlhnM1p2cWtWVVFDcEJvWkZDL08xY2VxOUZzVzNPa2lHTHQ4d2htcHNO?=
+ =?utf-8?B?Wnd3aFlBREIvSVhvODNEZHg3OVVNdElrY0RlVEZlZjhtTHVJUTlKZUNhaVM0?=
+ =?utf-8?B?OERFWXpJS0pYUGNlOFNURE54Y1Z3dlVtOVI4Uy94MTVtdTU5Qk5PdDJ3Y3JJ?=
+ =?utf-8?B?OXkrN0w2S2NTcm1hSHlZU2hTWXcyeUcvajJ5SXRwRENBSFMxejdlTDV3QlFz?=
+ =?utf-8?B?eXk5NTd2TFNQUkpFMGUrZUtwYlljRU44SUdwdGdkdWlINjlWcUh5N0UyOEw4?=
+ =?utf-8?B?bXlaSmFIMmh2V3p1bWZ0emFLNmZYQmdYeGdHK05WcVZvRStCOFFzSmo0NGYv?=
+ =?utf-8?B?aXgvTnV0L1pya0grZ0dWcHBTTjIvTkhxcWw0YVE1WWNGanRFdngzLzBhRU9i?=
+ =?utf-8?B?d3AxUklTRjZiRUtLYmcrQ3FaK0lzT1dMMHlGM1haZ2dFWmRUNmxMRUF1dlRV?=
+ =?utf-8?B?Nk9NSzh4QjJEM0FMbGNMOCtuZ3kyZ2pGbUFyTlFuZVBwejJKa3lvK0FVR0hv?=
+ =?utf-8?B?VVVqYjBENVNnTFZMc0o3TTNTN3dwRnl5K0tTZm1MbFFhdmFxZVNxM1ZDY1BM?=
+ =?utf-8?B?MDNqMFZNbmFXanVodjEwbi9HZTBQQ0NvNEJCandFU3o3eDhLSjhpcjJVZG5n?=
+ =?utf-8?B?bXJjNjQvZnBiWkhURHVSaVVlaytiSWQwMGM3c3BSWDFJNk0wcHg1dVQrdWow?=
+ =?utf-8?B?Q1ZtNnVkWTNqN2J0M1EyeFcrRk8zV2FtZ1B0UTE1K3FYV3JhVnp0QWNWQVNJ?=
+ =?utf-8?B?MFpRdkI2Tk0vTk9Fb0xPMFlNcjY0eklZK2Fna3JVS0dXK3Mra0I5QUI0OVJu?=
+ =?utf-8?B?eEF6bEpWN3U5NnJrWXM2dTYyS2tVdE9LeTA2YTJKZlBlRFdQVkYxOVZzSndX?=
+ =?utf-8?B?RWVPcTJJYTFHeDJOc1FqM1pnUFVVVFZhM2Z0czRxVy9la0YvVkQxeThpRHVN?=
+ =?utf-8?B?QThGVHRmRHNHRytWQTNST0xTUjZjSm9kVU5vTTVpOHB4OVNERnJFQVAxazli?=
+ =?utf-8?B?TlYrUEw1TlVnTFllSXVFK3FXdWMyclRoSmFiMEZHb0pGK2p1R051ZEZVbjJV?=
+ =?utf-8?B?M28vQ1YrWkwxTFFPMUhBRVF4NWZsWkFQVnBUZ2tXZm5rT2FkVUJLRTNYYzIr?=
+ =?utf-8?B?Y1JlTDY4ZG9EMjZYUU1EQXFqK09yMVFBcUNvd2dWWEMwU0hDMDhRUzBad3lx?=
+ =?utf-8?B?VDczWUdwZzhERnliVTNJVm10Y0pXbnNPNWRpOVkybXJhbmlEOVo1Zy82OTI5?=
+ =?utf-8?B?TTdrb1plUUpBakN2SUNxeGcvaGlnQVkzZkJNRzhpUmt0ZEZHSTZDcy9HOGlV?=
+ =?utf-8?B?QXpJZVBtOEFzS1lMWWdOUGhYOEh3b2k4dWE3ME9JRUJ6WkNpMy8vZU5RSmR1?=
+ =?utf-8?B?ZnJ4VFZTdDZzK3lhWDM2N3ZYWmFKT2IyZjU5VEwxaVlYbTY4eXRmNFBKNW5V?=
+ =?utf-8?B?UnNEbVZ2U3BFbVVqbUhJYTgvZnowZk9Pb1c3TG8xaU9BaXNaTno2bS96QXE3?=
+ =?utf-8?B?Nzh0cnhBZnQvY1lXZFVkVzhnUjY2ekEya0Z4WFJKYlI1V00vWDNSY3NQZmlP?=
+ =?utf-8?B?bGMvR3BPanVBOUJmbzNuMHcxM0ZkcUY3cmUwYkpsNmY5c2NZVEdMQVJ5WE40?=
+ =?utf-8?B?Um5vUFc0aXZUcWgyWFhiR0hES3ZzTGVtNUJFVmh5RWpGUitNT3QyNE9aZDZq?=
+ =?utf-8?B?WkFkb3NIQUVRUmFEakVQOFJGRjk3MldzVlpibTkrQ3FueFVkZzZjREljSXRt?=
+ =?utf-8?B?R1N0dW8xTVJLekxYQXlXdnJNU2czYldoL255N2dxMlhSUFFvZWdqUGphUStO?=
+ =?utf-8?B?RlRobDRXU21UOEdDNFY5cHk3WWpYTlQ2R0c2ejZRR2I0dmJScG12N1l4N1Zw?=
+ =?utf-8?B?T3ByTGpITXZWbkk1WTdCcXFQMFpRcjFCRko4VmVTVHdTbGpKd0pHRmtSM3ZQ?=
+ =?utf-8?B?YkFvdmJnNjd2bUYyQXJWclNpdlc0WHRBZ25NQUVmTlFqam1ZcW42N0RnMlBh?=
+ =?utf-8?B?c2xYdXhTYk5rS3Mzb2dPS1NYdnpreGpHZWpScnB1UDQwZ0V6Qld5RVFoUHN1?=
+ =?utf-8?B?UkNtVTFhOGk3cDZHMC9HOWRBYlBFL0RyRXpGRHhCOXFjdXQ3SzZVdlEzbjFq?=
+ =?utf-8?Q?7fNaDbQvY5C2IpZgV+OjPfv+I?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 54b738eb-df67-4c8d-7e3b-08dd6de2f3c5
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0d988dce-5085-4cf2-8d97-08dd6de69662
 X-MS-Exchange-CrossTenant-AuthSource: CYYPR12MB8750.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2025 10:26:07.9833
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2025 10:52:09.1726
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rH0N1cbTI4W578aKbf5AyqjKYjjBHngU+9iPYB7QKVZf8D/vvV2ccEcD2uFRNaIdnjldHHBPaAsWf3yIW2E4Aw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4048
+X-MS-Exchange-CrossTenant-UserPrincipalName: I7rUIB1X0LUg1aOUxB7bOEVSPY7bhlx3X9Mns/drZGpEcOFiqfwF1sIWZXj3F6cCIyyvyGjUzSFIWAY2TvVhTg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB9497
 
-On 26.03.25 17:47:26, Fabio M. De Francesco wrote:
-> On Friday, March 21, 2025 11:21:44 AM Central European Standard Time Robert Richter wrote:
-> > On 14.03.25 12:36:31, Fabio M. De Francesco wrote:
-> > > In x86 with Low memory Hole, the BIOS may publishes CFMWS that describe
-> > > SPA ranges which are subsets of the corresponding CXL Endpoint Decoders
-> > > HPA's because the CFMWS never intersects LMH's while EP Decoders HPA's
-> > > ranges are always guaranteed to align to the NIW * 256M rule.
+On 26.03.25 17:58:50, Fabio M. De Francesco wrote:
+> On Friday, March 21, 2025 11:42:09 AM Central European Standard Time Robert Richter wrote:
+> > On 14.03.25 12:36:33, Fabio M. De Francesco wrote:
+> > > Simulate an x86 Low Memory Hole for the CXL tests by changing the first
+> > > mock CFMWS range size to 768MB and the CXL Endpoint Decoder HPA range sizes
+> > > to 1GB.
 > > > 
-> > > In order to construct Regions and attach Decoders, the driver needs to
-> > > match Root Decoders and Regions with Endpoint Decoders, but it fails and
-> > > the entire process returns errors because it doesn't expect to deal with
-> > > SPA range lengths smaller than corresponding HPA's.
+> > > Since the auto-created region of cxl-test uses mock_cfmws[0], whose range
+> > > base address is typically different from the one published by the BIOS on
+> > > real hardware, the driver would fail to create and attach CXL Regions if
+> > > it was run on the mock environment created by cxl-tests.
 > > > 
-> > > Introduce functions that indirectly detect x86 LMH's by comparing SPA's
-> > > with corresponding HPA's. They will be used in the process of Regions
-> > > creation and Endpoint attachments to prevent driver failures in a few
-> > > steps of the above-mentioned process.
+> > > Therefore, save the mock_cfmsw[0] range base_hpa and reuse it to match CXL
+> > > Root Decoders and Regions with Endpoint Decoders when the driver is run on
+> > > mock devices.
 > > > 
-> > > The helpers return true when HPA/SPA misalignments are detected under
-> > > specific conditions: both the SPA and HPA ranges must start at
-> > > LMH_CFMWS_RANGE_START (that in x86 with LMH's is 0x0), SPA range sizes
-> > 
-> > "... that for Intel with LMHs is 0x0", not true for AMD.
-> > 
-> > > be less than HPA's, SPA's range's size be less than 4G, HPA's size be
-> > > aligned to the NIW * 256M rule.
-> > > 
-> > > Also introduce a function to adjust the range end of the Regions to be
-> > > created on x86 with LMH's.
+> > > Since the auto-created region of cxl-test uses mock_cfmws[0], the
+> > > LMH path in the CXL Driver will be exercised every time the cxl-test
+> > > module is loaded. Executing unit test: cxl-topology.sh, confirms the
+> > > region created successfully with a LMH.
 > > > 
 > > > Cc: Alison Schofield <alison.schofield@intel.com>
 > > > Cc: Dan Williams <dan.j.williams@intel.com>
 > > > Cc: Ira Weiny <ira.weiny@intel.com>
 > > > Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
 > > > ---
-> > >  drivers/cxl/core/lmh.c | 56 ++++++++++++++++++++++++++++++++++++++++++
-> > >  drivers/cxl/core/lmh.h | 29 ++++++++++++++++++++++
+> > >  drivers/cxl/core/lmh.c               | 35 ++++++++++++++++++++++++----
+> > >  drivers/cxl/core/lmh.h               |  2 ++
 > > 
-> > The split of the code in patch #2 and #3 does not make sense. The
-> > "interface" you introduce here is out of context which is patch #3.
-> > And in patch #3 the functions are actually used, so you need to switch
-> > back to this one. Other than that, the code is not enabled here at
-> > all, it is even not built.
-> > 
-> I prefer to split the introduction of helpers and the use of them in
-> separate patches.
-
-You introduce dead code here. If you want to split it, then add an
-empty stub function that is actually called in the first patch and add
-the actual implementation in the second.
-
-> >
-> > >  2 files changed, 85 insertions(+)
-> > >  create mode 100644 drivers/cxl/core/lmh.c
-> > >  create mode 100644 drivers/cxl/core/lmh.h
-> > > 
-> > > diff --git a/drivers/cxl/core/lmh.c b/drivers/cxl/core/lmh.c
-> > > new file mode 100644
-> > > index 000000000000..2e32f867eb94
-> > > --- /dev/null
-> > > +++ b/drivers/cxl/core/lmh.c
-> > > @@ -0,0 +1,56 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-only
-> > > +
-> > > +#include <linux/range.h>
-> > > +#include "lmh.h"
-> > > +
-> > > +/* Start of CFMWS range that end before x86 Low Memory Holes */
-> > > +#define LMH_CFMWS_RANGE_START 0x0ULL
-> > 
-> > This looks arbitrary. An endpoint decoder's zero base address could
-> > have other reasons too, e.g. the need of address translation. So you
-> > need a different check for the mem hole.
-> > 
-> > In my previous review comment I have requested a platform check for
-> > this code to enable.
-> > 
-> > > +
-> > > +/*
-> > > + * Match CXL Root and Endpoint Decoders by comparing SPA and HPA ranges.
-> > > + *
-> > > + * On x86, CFMWS ranges never intersect memory holes while endpoint decoders
-> > > + * HPA range sizes are always guaranteed aligned to NIW * 256MB; therefore,
-> > > + * the given endpoint decoder HPA range size is always expected aligned and
-> > > + * also larger than that of the matching root decoder. If there are LMH's,
-> > > + * the root decoder range end is always less than SZ_4G.
-> > > + */
-> > > +bool arch_match_spa(const struct cxl_root_decoder *cxlrd,
-> > > +		    const struct cxl_endpoint_decoder *cxled)
-> > > +{
-> > > +	const struct range *r1, *r2;
-> > > +	int niw;
-> > > +
-> > > +	r1 = &cxlrd->cxlsd.cxld.hpa_range;
-> > > +	r2 = &cxled->cxld.hpa_range;
-> > > +	niw = cxled->cxld.interleave_ways;
-> > > +
-> > > +	if (r1->start == LMH_CFMWS_RANGE_START && r1->start == r2->start &&
-> > > +	    r1->end < (LMH_CFMWS_RANGE_START + SZ_4G) && r1->end < r2->end &&
-> > 
-> > How about removing LMH_CFMWS_RANGE_START at all? It is zero anyway and
-> > would make this check much easier.
-> >
-> I think that in the next version I'll check that the range start is a multiple 
-> of Number of Interleave Ways * 256M (it would include 0x0).
-
-The code suggests that r2->start is zero, but shouldn't be the base of
-the endpoint non-zero? And r2->end is greater than SZ_4G which is the
-case for all ranges above 4G. Confused, how do you determine the
-endpoint fits into the LMH range?
-
-> >  
-> > Can this being modified to reuse this codes for "holes" other than
-> > below 4G?
-> > 
-> This series enables CXL Regions creation and Endpoints attach for x86 LOW 
-> Memory Holes. I prefer not to enable regions on platforms with memory holes 
-> beyond 4G until I'm sure it's needed. arch_match_spa() and arch_match_region()
-> can be easily modified if in future they need to be.
-> >
-> > > +	    IS_ALIGNED(range_len(r2), niw * SZ_256M))
-
-Isn't that length check of the endpoint always true, since this is a
-CXL range?
-
-> > > +		return true;
-
-The whole check looks odd, please clarify.
-
-> > > +
-> > > +	return false;
-> > > +}
-> > > +
-> > > +/* Similar to arch_match_spa(), it matches regions and decoders */
-> > > +bool arch_match_region(const struct cxl_region_params *p,
-> > > +		       const struct cxl_decoder *cxld)
-> > > +{
-> > > +	const struct range *r = &cxld->hpa_range;
-> > > +	const struct resource *res = p->res;
-> > > +	int niw = cxld->interleave_ways;
-> > > +
-> > > +	if (res->start == LMH_CFMWS_RANGE_START && res->start == r->start &&
-> > > +	    res->end < (LMH_CFMWS_RANGE_START + SZ_4G) && res->end < r->end &&
-> > 
-> > Same here.
-> > 
-> > > +	    IS_ALIGNED(range_len(r), niw * SZ_256M))
-> > > +		return true;
-> > > +
-> > > +	return false;
-> > > +}
-> > 
-> > Right now the default check is:
-> > 
-> >   (p->res->start == r->start && p->res->end == r->end)
-> > 
-> > Can't we just calculate a matching spa range for the decoder and
-> > region and then check if both match? Both match functions would be
-> > obsolete then.
-> > 
-> I prefer to keep the design untouched. Anyway, I'll check for other aligned 
-> res->start, as said above.
-> >
-> > > +
-> > > +void arch_adjust_region_resource(struct resource *res,
-> > > +				 struct cxl_root_decoder *cxlrd)
-> > > +{
-> > > +	res->end = cxlrd->res->end;
-> > > +}
-> > 
-> > This should be squashed with arch_match_spa(): same style and
-> > interface as for cxl_extended_linear_cache_resize(). Please generalize
-> > the interface of cxl_extended_linear_cache_resize() first.
-> > 
-> Do you mean that arch_match_spa() should adjust res->end? I don't think
-> it should.
-
-Yes, it should follow the style of already existing code with unified
-interfaces.
-
-> >
-> > > diff --git a/drivers/cxl/core/lmh.h b/drivers/cxl/core/lmh.h
-> > > new file mode 100644
-> > > index 000000000000..16746ceac1ed
-> > > --- /dev/null
-> > > +++ b/drivers/cxl/core/lmh.h
-> > > @@ -0,0 +1,29 @@
-> > > +/* SPDX-License-Identifier: GPL-2.0-only */
-> > > +
-> > > +#include "cxl.h"
-> > > +
-> > > +#ifdef CONFIG_CXL_ARCH_LOW_MEMORY_HOLE
-> > > +bool arch_match_spa(const struct cxl_root_decoder *cxlrd,
-> > > +		    const struct cxl_endpoint_decoder *cxled);
-> > > +bool arch_match_region(const struct cxl_region_params *p,
-> > > +		       const struct cxl_decoder *cxld);
-> > > +void arch_adjust_region_resource(struct resource *res,
-> > > +				 struct cxl_root_decoder *cxlrd);
-> > > +#else
-> > > +static bool arch_match_spa(struct cxl_root_decoder *cxlrd,
-> > > +			   struct cxl_endpoint_decoder *cxled)
-> > > +{
-> > > +	return false;
-> > > +}
-> > > +
-> > > +static bool arch_match_region(struct cxl_region_params *p,
-> > > +			      struct cxl_decoder *cxld)
-> > > +{
-> > > +	return false;
-> > > +}
-> > > +
-> > > +static void arch_adjust_region_resource(struct resource *res,
-> > > +					struct cxl_root_decoder *cxlrd)
-> > > +{
-> > > +}
-> > > +#endif /* CXL_ARCH_LOW_MEMORY_HOLE */
-> > 
-> > I don't think we will need all this helpers if there are platform
-> > specific callbacks as suggested in a comment to v1.
+> > Can you take a look to move all those changes to testing/? This
+> > indicates the interface of your mock functions need improvement.
 > > 
 > > -Robert
 > > 
-> As said in a reply to 0/4, I'm not yet aware of issues that would interfere
-> with non Intel x86. Anyway, I'll think a bit more about using platform
-> specific callbacks, even if currently I don't think they are necessary. 
+> > >  tools/testing/cxl/cxl_core_exports.c |  2 ++
+> > >  tools/testing/cxl/test/cxl.c         | 10 ++++++++
+> > >  4 files changed, 45 insertions(+), 4 deletions(-)
+> > 
+> Your comment is not very detailed but I think you are suggesting to 
+> override the lmh functions in testing. If that is the case, I don't think 
+> that any function which is exported from and also called by cxl-core 
+> can be override by testing with the strong/weak mechanism. 
 
-Please do, thanks.
+I think you need to modify cxl_test to create a LMH hole (register a
+mock bridge and root port with the necessary parameters, etc.) and
+then run cxl_core unmodified.
 
 -Robert
 
-> > 
+> 
+> But I'm not an expert of linker related topics and not even sure that I 
+> understood what you suggested.
+> 
+> Would you please elaborate more?
+> 
 > Thanks,
 > 
 > Fabio
-> 
-> 
-> 
+
+
