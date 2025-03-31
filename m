@@ -1,73 +1,42 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 004FD1E2613
-	for <linux-cxl@vger.kernel.org>; Mon, 31 Mar 2025 18:27:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B071DE3A5;
+	Mon, 31 Mar 2025 18:31:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743445663; cv=none; b=MxxUluoB9Yj4R8Xlgo8mQzcwFAJMAbScdwN5NOTM8OBNoAHg/Q8RpZQnohU07R/E0qXTPJjA1GRofhcJTyceY/Q/RpYGVhEQxY1pUCkXQOqCfw0e+pPdyv/qQKd0YITkRJF1Rhiij01r1dYFYZOtebJ5gZ1WZLEX9VL7teyYpz0=
+	t=1743445880; cv=none; b=JFemOyFh1f3UsWRjz2SVmIAwdHCbpRoD/QUsidIlP5fevTGaYMj5xlKUyQRk5p0F6ZAdvgG/2ZRorTiRIGPUQzjff/XK7QjLsIbHqljG2TjiNVHCFevtsmv/oQJIzvVKZjmoY0puCkx4Zb6U8cwLyulJv3zlPHg4XLq0Bb3pgSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743445663; c=relaxed/simple;
-	bh=zRT/zRjU6jVJSZn+qcLAB6z0VYtkrXkjOuI/iNaf2A0=;
+	s=arc-20240116; t=1743445880; c=relaxed/simple;
+	bh=2QhJhyZweJegw6w8Qqbk89k/YUlGN7JAZ3aC1DGnFf0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jQ9EgB/VDmf+E4seMJuRXDnXvorRuOqZ5vqSa6YmQYRH8RhNMqE4c7yPH8IOT6AJQKbyrQGGBK3gLmyRLaAhc/AE1uUDTa+d6sp/ABpK+VVGHDxDENor3/a9atkrgsD0T9hh6OJKhrRwFep+J9to+YKwsSjzc++gFs8yQ9mFq9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Hr0CFKmc; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=PHa7eNDIiNwFhuSJYfCSmnynrkCNzVb8A+nm0GSY9qOqNoPshn9hlydWU3Ei+5uIsNEO1ivv+ojYmeZzeSACsolM9KwdEsHGe04m43sDM4k+7y7uPhzV+CU6cjldY9JuJtgVaA5sy+NRqpuKFrLE9GmyqDrIrFIzcgm/UScd4+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uMOgiko8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Hr0CFKmc"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4769f3e19a9so32881841cf.0
-        for <linux-cxl@vger.kernel.org>; Mon, 31 Mar 2025 11:27:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1743445659; x=1744050459; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LZeAYSY+ZaMayGoTv0WvIa7xoyxPKFeQjfsqEI/he9A=;
-        b=Hr0CFKmc6aTXjFYmGIb/Ic/JbwC0VwzTBlpdrqyn/G+cMvxK+rlx/BLAMUG4u6Er96
-         Drgt7gJYhMRdERelbsFOalfAyiXpaWyO0gyruA8K7LW3/W/LhP5Q+am0YuSmcD1gn5WY
-         4NAnHwdF+eP5uRPpOfU1sAK6gr/14WtzTKueReecbwVsu6DFwqurfqP7sKfPegseIx1q
-         yi/zENZ3mXXrCjjbiZsJwibhMCC3tzTnjA1gzDgWIOsT3czqwb19RR6Mfj6WVnEBMf2g
-         9GaDV9f6loxLqCWQmVzF3EynWc6nQtcQnGttC7YsRJeYMIPIDBx3IDSGKQ8oK/3HE8ZK
-         EEYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743445659; x=1744050459;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LZeAYSY+ZaMayGoTv0WvIa7xoyxPKFeQjfsqEI/he9A=;
-        b=tEzCJucxUXwhROJ3tLFGrGKLaVuo5OEfLuns0t/9AGB2TOdfw7xj3vNRODhZeoNAf6
-         3gzJOhO6VM9vQky+gDbQER0buietejMB9Yzkbz9RRd12ZIrdaZ8SvqaPF0xTVMdS3sUD
-         Y3XQPUjfCEcGNOQJVPjoG6mmbQooDyYHF6MskO66zYA7vI0eHug0i3vY3/8L0S1p7pGW
-         BQ+Ugi0fld0nKhJWJIrvlB9TUxvbVtNvudqTRDBRPnRk2lLu/rPYgZfhvybLTLL7ENCd
-         AgflSmQEq6eGtO0mQpz0iSE5o2nom74l/m2XnwOEfWkKy/B+/YTwnEYuPP9noGYncs5x
-         +BNg==
-X-Forwarded-Encrypted: i=1; AJvYcCXqHjDXw5jQK/YUysP5gjBmJBG+svI6U855lj4MrzskSOhQRYwfLD4U059+3jI1osaAOCSRhoqEE7o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywv+e4KgmINJPEqzPpnlTxXPZAB1kUM3TTnfKv9QzP2nrxMPs2t
-	pggoExv1G56epu+eP7oJ99Y6wkJxTMS2UHa7t91OiTfandnPi9Lld9+jGTXSHOc=
-X-Gm-Gg: ASbGncv1VoJIe44/c7E7ndHtRZ5bVK3Bg2GY3G/E/+MZPv0leM7CcTjMjBABuRb5dzg
-	mLw7V6f3OvPsSSpudbbaBYiys4VykAkGiLgbJ+bH8oNf6kDuSR+JyodVCINQ/9Mz3ULOe4/K2XF
-	j8oRhzBr0aVUJWAY0yyaKI59pNKlkAvapePoqoypHxmJEL2KnVHWCkCSPx2bBdT7SZ/Z+tnhs1e
-	LBnzl7Hf5JoGfnzCMRszCFETQtGX7bouFpNCxyP8A0YnYuPjdbG5dawNoSTiLdhNcrDgKrnLgz3
-	+SMgUO9/3nKbeNBD70irErkVGgpcaP66hH0UZ33V56P7zJPuyyMxvAy5bjlXd8xkY+CCQe7QiDi
-	DKwqObLS85CX30pIm3BvIBmtIKyk=
-X-Google-Smtp-Source: AGHT+IEd+3g87j+NE/c3E2rg8hxwNLiV/aqryel6Odt64jpWEXnougpu8f4ZHVyaNCsH9/emYY2gMw==
-X-Received: by 2002:a05:622a:291:b0:477:7007:7055 with SMTP id d75a77b69052e-477ed7c96cemr130037061cf.12.1743445658865;
-        Mon, 31 Mar 2025 11:27:38 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-477831a4446sm53218521cf.80.2025.03.31.11.27.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 11:27:38 -0700 (PDT)
-Date: Mon, 31 Mar 2025 14:27:36 -0400
-From: Gregory Price <gourry@gourry.net>
-To: dan.j.williams@intel.com
-Cc: nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org,
-	kernel-team@meta.com, dan.j.williams@intel.com,
-	vishal.l.verma@intel.com, dave.jiang@intel.com,
-	linux-cxl@vger.kernel.org, david@redhat.com
-Subject: Re: [PATCH] DAX: warn when kmem regions are truncated for memory
- block alignment.
-Message-ID: <Z-remBNWEej6KX3-@gourry-fedora-PF4VCD3F>
-References: <20250321180731.568460-1-gourry@gourry.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uMOgiko8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3750CC4CEE3;
+	Mon, 31 Mar 2025 18:31:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743445879;
+	bh=2QhJhyZweJegw6w8Qqbk89k/YUlGN7JAZ3aC1DGnFf0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uMOgiko8Oby62xNgaIMkVcL0Tv5EUH5EZjFppUBodrpkeOmi/ven8fFfp51FLFjlc
+	 0ZIgeicQje8lAagQHiLiarHRTzw0uCn+JQRWVnCkbkrwe6cWo9h7P38y3Iex3Vb8JT
+	 hLUEAmCgNmBIoBU079/WTcMEEZPaUJB6t5L0zZXOfKi4ZRQNSEy4ouL16Dx9GXSujo
+	 ioUKr3Lc1lByz7vIEUHV3vfiTbTXvvgiV431OmuMu2ekizw5O8cmZCs9Khh1SBiWhk
+	 +oJ32mCqn/tnSLOz/5s3ytoxI1KXDqQFY99HlM3MLRwUCOGmnGr3Gi6irfVbvriCwX
+	 3Nv4b+7uXBAjg==
+Date: Mon, 31 Mar 2025 19:31:14 +0100
+From: Simon Horman <horms@kernel.org>
+To: alejandro.lucero-palau@amd.com
+Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
+	dan.j.williams@intel.com, edward.cree@amd.com, davem@davemloft.net,
+	kuba@kernel.org, pabeni@redhat.com, edumazet@google.com,
+	dave.jiang@intel.com, Alejandro Lucero <alucerop@amd.com>
+Subject: Re: [PATCH v12 02/23] sfc: add cxl support
+Message-ID: <20250331183114.GE185681@horms.kernel.org>
+References: <20250331144555.1947819-1-alejandro.lucero-palau@amd.com>
+ <20250331144555.1947819-3-alejandro.lucero-palau@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -76,56 +45,40 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250321180731.568460-1-gourry@gourry.net>
+In-Reply-To: <20250331144555.1947819-3-alejandro.lucero-palau@amd.com>
 
-On Fri, Mar 21, 2025 at 02:07:31PM -0400, Gregory Price wrote:
-> Device capacity intended for use as system ram should be aligned to the
-> architecture-defined memory block size or that capacity will be silently
-> truncated and capacity stranded.
+On Mon, Mar 31, 2025 at 03:45:34PM +0100, alejandro.lucero-palau@amd.com wrote:
+> From: Alejandro Lucero <alucerop@amd.com>
 > 
-> As hotplug dax memory becomes more prevelant, the memory block size
-> alignment becomes more important for platform and device vendors to
-> pay attention to - so this truncation should not be silent.
+> Add CXL initialization based on new CXL API for accel drivers and make
+> it dependent on kernel CXL configuration.
 > 
-> This issue is particularly relevant for CXL Dynamic Capacity devices,
-> whose capacity may arrive in spec-aligned but block-misaligned chunks.
-> 
-> Example:
->  [...] kmem dax0.0: dax region truncated 2684354560 bytes - alignment
->  [...] kmem dax1.0: dax region truncated 1610612736 bytes - alignment
-> 
-> Signed-off-by: Gregory Price <gourry@gourry.net>
+> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
 
-Gentle pokes.  There were a couple questions last week whether we should
-warn here or actually fix something in memory-hotplug.
+...
 
-Notes from CXL Boot to Bash session discussions:
+> diff --git a/drivers/net/ethernet/sfc/efx.c b/drivers/net/ethernet/sfc/efx.c
 
+...
 
-We discussed [1] how this auto-sizing can cause 1GB huge page
-allocation failures (assuming you online as ZONE_NORMAL). That means
-ACPI-informed sizing by default would potentially be harmful to existing
-systems and adding yet-another-boot-option just seems nasty.
+> @@ -1214,6 +1218,15 @@ static int efx_pci_probe(struct pci_dev *pci_dev,
+>  	if (rc)
+>  		goto fail2;
+>  
+> +	/* A successful cxl initialization implies a CXL region created to be
+> +	 * used for PIO buffers. If there is no CXL support, or initialization
+> +	 * fails, efx_cxl_pio_initialised wll be false and legacy PIO buffers
 
-I've since dropped acpi-informed block size patch[2].  If there are opinions
-otherwise, I can continue pushing it.
+nit: will
 
+> +	 * defined at specific PCI BAR regions will be used.
+> +	 */
+> +	rc = efx_cxl_init(probe_data);
+> +	if (rc)
+> +		pci_err(pci_dev, "CXL initialization failed with error %d\n", rc);
+> +
+>  	rc = efx_pci_probe_post_io(efx);
+>  	if (rc) {
+>  		/* On failure, retry once immediately.
 
-We also discussed[3] variable-sized blocks having some nasty corner cases.
-Not unsolvable, but doesn't help users in the short term.
-
-
-There was some brief discussion about whether a hotplug memblock with a
-portion as offline pages would be possible.  This seems hacky?  There
-was another patch set discussing this, but I can't seem to find it.
-
-
-I debated whether to warn here or in ACPI.  This seemed more accurate,
-as platforms could simply over-reserve HPA space to avoid the issue.
-
-Thoughts?
-~Gregory
-
-[1] https://lore.kernel.org/all/bda4cf52-d81a-4935-b45a-09e9439e33b6@redhat.com/
-[2] https://lore.kernel.org/linux-mm/20250127153405.3379117-1-gourry@gourry.net/
-[3]https://lore.kernel.org/all/b4b312c8-1117-45cd-a3c3-c8747aca51bd@redhat.com/
+...
