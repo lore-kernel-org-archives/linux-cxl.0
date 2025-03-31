@@ -1,123 +1,298 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A8281DF748
-	for <linux-cxl@vger.kernel.org>; Mon, 31 Mar 2025 16:53:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743439994; cv=none; b=Qv3eE2NcpcQtF50FSm4HC6BuV8WadTeZ/St7R+yXQJlgOVjs61FmfYLslk6j9Aq91yCltom7gsulXPYHChdDYDx9g0JM4iMCVStuU/z8y20G2JdLsCxWAITIDyGh0i510H4Fle4OumC2sNHFLLJvqPungevDtJNkHzNQV29jxso=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743439994; c=relaxed/simple;
-	bh=dGxdrcfn2W7G9AYcMDBtp/foFYPOpu6GpogE5T91uPs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t/GfY9MDpWLYsAR8MH35B5fTcYkWZL7vcxgVd4Yy54tqdWuncMRPzPUyTM6wCwEiXclJVJZUKaGBzW81JTQz4gubNuCjhQaUaN44j1cr0/53kRYK+/Xkvz8YcoX1mezb0TfOA8koJ3IiVid7kSO8xjNsQXLjj2A2Ioa2ORB7O24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=TBb/Dbyg; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FD7C155725;
+	Mon, 31 Mar 2025 16:55:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743440107; cv=fail; b=Xb2NUiCxrtst57gKfhPmMbghWyfIqpwUV6hxG3GMaNa6qcqdP+WU8tMdrbGW8OFC5XznsHNqGz4sVT7MRBKaAvSKNElobEmffBfpIkeBf9xhuyAJeFGjDG3pG4H8u0iMdhyWuRJtxhnCYSn/L+hKMA/XmkDWCApE1eINtdzrlEY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743440107; c=relaxed/simple;
+	bh=IjQKRFRrqTLmkImgnBrW1WZ76XX/cXBqxY36Vu5B5EQ=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=HScRexPdvw/LIpnP5FkKmxLLd4C4NcrGxANIXhS3eXaW1nJIaRx36q4xvBOCGMw5Go+uP1byxs+UYAmGI1N3bJ7QpqiRWicYN7mjot4Utiu6GczJDoTL1Bkd4r6CjBYWX/IYVRPm1VjiWMyTXK65w4qqurECgx6/h7UzRawe0jA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WZ24fBou; arc=fail smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="TBb/Dbyg"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6ecfbf8fa76so53555706d6.0
-        for <linux-cxl@vger.kernel.org>; Mon, 31 Mar 2025 09:53:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1743439991; x=1744044791; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=AiUKTo61WkrGilNB9SYxNkhCryPehlR+RK/PdoXLPcM=;
-        b=TBb/Dbygck0KuU34BkdZ22+mvgrE+EZyDSfQDIlriw0+Xu7da4afwOEh5csp5hlGKI
-         8zaPh/Pv11DchGesfJrgQWPd+nu+eU3WIacinKSv7jMz4JhlG8D0LVjOgpHUH0GEjxoj
-         vUOT24zVPG4XR2e+hK7AmrwDYSSzcTeM/AVne66uXIVGNykeecq0JcdcG0uBAPuko/rl
-         XdWJqYOdUaWuyy+XZf2b5YMIC+DXRIgfQGzuEjyYbByxCoeqxzQiNGjM9TvU7YNfhuB7
-         gQgLISjdwcayO+2iTrmYUgKLkQpmOTmEaA7VjktfYKiZhrIY+lVC19qhtr7D5Be0K8R/
-         YK1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743439991; x=1744044791;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AiUKTo61WkrGilNB9SYxNkhCryPehlR+RK/PdoXLPcM=;
-        b=mmhUpxDNTe3WejKyPwYhcPekdflWTugpg+FLO+K2kdTYxNBBk5XS2P/Wzs7xMHa9gi
-         x5H9tXKU6s2a8U20jmXua+om7ETMtAd6rHMugh50TGazYciObkQ/nX7lalhAppXOFaqu
-         VpkIuvIPB76O6I5MKPUGklQpt8DLQNaQob/bRpL5aw2WNHpDjoXmtG8ttSNTW9wxTJLr
-         OFcFjCbqscC4i7IPiXIt0pAzRORKfS0PPLxSULef7gPzkVSbPiiFdNPi06kFiSYQFGMO
-         8gSW6HIkDNJGn7qjf8fNrXgJLIvHpJtReaDUXxU37pgwigQBJ6zp1O2/2L0h31B+oREJ
-         Npkg==
-X-Forwarded-Encrypted: i=1; AJvYcCWJ/ylxBI/nIlguDaAPo8tLLa1sfpQZpJfAelkQBKaZHQQ90qg4nVRhFc8Bg9aHOXNGNGYT80dGPY0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWhzNtq03tGfkem+2H3Eu71jGton23XZGSOXZObPvD3BmRko+O
-	EYDhflQe83y7LsTSlHfr0YfB3yM/ARSUQOpL4WjNxVm1M6Pn0CrAkrBYoCp6cUI=
-X-Gm-Gg: ASbGncuwfa6S+KdG4Gwjkdqe/H3rj4FCDNPIElAmWn4XySwPp/k5yzvwFiVAk4FuLLs
-	RHKu0K6BwzF9EyblQ5GJIUj9vIJU8jK7QPzK/2MstPyi7S6EOrsGiDbQ2VHu2eIrMuReBe3wR7X
-	+y0hL3FpJEFCQdWsvMBS01i7JEP7sQf1G5siOKmbkrjQKrF9O4AOXbu4OlUv24fy/jRn9ADqnun
-	NLlshAnp4Ugjnm0v102AvAFnZZT3UXtOVAnRRUpYoMv8FRjufoHwlng9LcL5tM2DkcBGJVtUBI1
-	2ItrS/mph4n/OrvmKFu+3DtPZUOtcenhyYV9Uf98N3k=
-X-Google-Smtp-Source: AGHT+IFd+qsosdQQtA0DsjOuFOjNzDgnTDzOhpn2WIRyqS+ggjdGBL/fAbxW/5YG2w4V0Rf+gmk9vg==
-X-Received: by 2002:a05:6214:1d2e:b0:6d8:846b:cd8d with SMTP id 6a1803df08f44-6eed627129bmr126446056d6.30.1743439991034;
-        Mon, 31 Mar 2025 09:53:11 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6eec9797218sm48420876d6.110.2025.03.31.09.53.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 09:53:10 -0700 (PDT)
-Date: Mon, 31 Mar 2025 12:53:06 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Yosry Ahmed <yosry.ahmed@linux.dev>
-Cc: Nhat Pham <nphamcs@gmail.com>, linux-mm@kvack.org,
-	akpm@linux-foundation.org, chengming.zhou@linux.dev, sj@kernel.org,
-	kernel-team@meta.com, linux-kernel@vger.kernel.org,
-	gourry@gourry.net, willy@infradead.org,
-	ying.huang@linux.alibaba.com, jonathan.cameron@huawei.com,
-	dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
-	minchan@kernel.org, senozhatsky@chromium.org
-Subject: Re: [RFC PATCH 0/2] zswap: fix placement inversion in memory tiering
- systems
-Message-ID: <20250331165306.GC2110528@cmpxchg.org>
-References: <20250329110230.2459730-1-nphamcs@gmail.com>
- <2759fa95d0071f3c5e33a9c6369f0d0bcecd76b7@linux.dev>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WZ24fBou"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743440106; x=1774976106;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=IjQKRFRrqTLmkImgnBrW1WZ76XX/cXBqxY36Vu5B5EQ=;
+  b=WZ24fBouITgakca9ujr8t6tBObb8nP1imdQ8svut9VGhnyupei3Kd3ot
+   GAqLf1sEFMXFZblNqzxlOUcvfgLTU7OHg1toVF/7rWmJivv5OioNajORw
+   4gs5Epb/6iQSErlJlKXtj3/128aJGG9+w7nMVUZjYwgq8Gju7enScr/kz
+   dTKfMb57XO0c3CWNIdNcDgTiSsktt4PgR1agPjo5atJmc0PPBJSU/4ukP
+   SD+Gb2mmu2BJnE1xZdAx6D38F74pIAiIXKNtSTJvF3Z8ScxutnnUF5/zX
+   m242lTTMH5W+91G+Fbovd0LmZ0YiytlD4sTrZ7XA3+FO6QXCthujqFtN2
+   g==;
+X-CSE-ConnectionGUID: FIZvm+1qR5KSBYt/n7VgWw==
+X-CSE-MsgGUID: gNReHTtjT8iaKYbIGAQfNQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11390"; a="55394788"
+X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
+   d="scan'208";a="55394788"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 09:55:04 -0700
+X-CSE-ConnectionGUID: v+YSU/ocSjecvi6JEgRFOQ==
+X-CSE-MsgGUID: N3SG/9XuQd+/CcRzInu3DA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
+   d="scan'208";a="125894346"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orviesa009.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 31 Mar 2025 09:55:04 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Mon, 31 Mar 2025 09:55:03 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Mon, 31 Mar 2025 09:55:03 -0700
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.40) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Mon, 31 Mar 2025 09:55:01 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=j2HM+rJvvLvlHRtMN10og8tzsyfEhPOF3HoVHKlcIFQtiN0eCh4mfgWHoQ0eQsdj/W31S57ApNZ5vZqMfvalADS9Or5EYpWdK6RvUWAkENkvb+/UlQu8M/mDgPJuVuBp8D/8yB4NVVIsV5GRTL/t0LQjLwlael4SNoN1nzX72fuo2YAIs6GJTKwaRDd7k5wgwFRdQiJYflA7v9QZcC5HumgjVurQ74lcLHikRFPrWQX4Ftkbm+2srYBWORvzvLKLXhQpp65dzkyy8B02SanSrRewWWFV+KJWg8J5ahEMMtHhQYY0Cn0wfOOqCgsliIQ5jKX/JB9S0C3c34inuLyOwA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lZ41ZShVTqCA6BxS+ep8Q3NdpWz48u8I7QyRUxxvBfE=;
+ b=qwc/esa9aOP+Erw59jwsSI5GSjdv9Uk7aKBuKoHsMYMF4VevF46zhjjOXz36yRKv3WRoruuQsNsCvg/VZYuXuI8p2guT912h69TW0ftH6T1dfl4ChDBFqRRLGEcqlEKoMBCApQEBXUOl9pnWH7RcipcVNma7USlBCDbxGAGmDzEbQW9vzHFPm8DE0HtlIjspo3800SrkfCzqM48qSY6pFc3PD7JvrNU9ths+5nignBODsSxPP3cBoChFUUh0hNSpfO9F+lRRTrkOOXla06GkukJB2tqww0uVpkq9oBwuYnsmstnXWiT26jmVRVuZg0nZDnTRELZ26QK7Ph0gyHLCbA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by SJ2PR11MB7671.namprd11.prod.outlook.com (2603:10b6:a03:4c4::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.50; Mon, 31 Mar
+ 2025 16:54:58 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8534.043; Mon, 31 Mar 2025
+ 16:54:58 +0000
+Date: Mon, 31 Mar 2025 09:54:55 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: Jason Gunthorpe <jgg@nvidia.com>, Dave Jiang <dave.jiang@intel.com>
+CC: Dan Williams <dan.j.williams@intel.com>, "Paul E. McKenney"
+	<paulmck@kernel.org>, <linux-cxl@vger.kernel.org>, <dave@stgolabs.net>,
+	<jonathan.cameron@huawei.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>, <gourry@gourry.net>,
+	<linux-kernel@vger.kernel.org>, <linux-next@vger.kernel.org>,
+	<sfr@canb.auug.org.au>
+Subject: Re: [BUG -next] ./usr/include/cxl/features.h:11:10: fatal error:
+ uuid/uuid.h: No such file or directory
+Message-ID: <67eac8df3e217_201f02948d@dwillia2-xfh.jf.intel.com.notmuch>
+References: <f6489337-67c7-48c8-b48a-58603ec15328@paulmck-laptop>
+ <14bfcfa0-5999-49e4-854e-ff8810d6df3c@intel.com>
+ <52a34c97-88d2-415e-a899-6583ae3ba620@paulmck-laptop>
+ <30a7f782-4388-45b6-bb3c-a0faf85b7445@intel.com>
+ <51e9823c-784c-4b91-99d4-0500aaf5cec0@paulmck-laptop>
+ <67e7301dc8ad7_201f0294a5@dwillia2-xfh.jf.intel.com.notmuch>
+ <1f48ba3b-9ba8-44e5-98c7-4c9abf95a935@intel.com>
+ <20250331132439.GD10839@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250331132439.GD10839@nvidia.com>
+X-ClientProxiedBy: MW2PR16CA0064.namprd16.prod.outlook.com
+ (2603:10b6:907:1::41) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2759fa95d0071f3c5e33a9c6369f0d0bcecd76b7@linux.dev>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SJ2PR11MB7671:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1e9b0f57-093f-4d9d-68ee-08dd7074c4e9
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7053199007;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?aVduR3ZMUnRxRUVrWTVvdHByNTNrRHZIamQzUE8vRXRYNDJ4N3VzZVFRbisy?=
+ =?utf-8?B?UmMrWE1iMkpoUS90bk1GSnE5SENaclpSdkxLQUpZNDNaT3hRaFZFSW9kanM2?=
+ =?utf-8?B?T2podFMwRTZxdjU1TC9ZZVJNR0poc2FJalJ5WWg2TWNDczltQTBXYU5GTGhi?=
+ =?utf-8?B?dnV6eTQvUUtSak5EcXI5blRrcEdaVGdhTENzRE56cDc1dC8xeEFMTzZXZW5R?=
+ =?utf-8?B?RHhFaWY3MFQ2ZzFjVGd0M29UelJZNm5scjI5SmlZdmJlNTVYUFlIYTZrcnJP?=
+ =?utf-8?B?K3pWV3cyOHZmWE1kZzM5M2FvUmVxRUs3anVCQ3RuZGZ4Z285TGg4UHV1VlRH?=
+ =?utf-8?B?NHc4N0pSRCtmb1RUWDc0THczeUVtVXBUYitvSlBnQUUrZzc3UXVzQkQ0bEJu?=
+ =?utf-8?B?bkh1c003Q0ZHZnVsYU5QTzBhWm5FbVBqV00ycVB4bUliQUFzbHU5cENaRVpE?=
+ =?utf-8?B?S2p4UlIyRDg3aVpDR1Rpa01iMlZLSjB1MDUwcWZPYzZraWRVZG8zUCt0WmIv?=
+ =?utf-8?B?Y3JRL01JSzBXQ2tJMW5wRFYvU3FYSzR0SUhBN2dOSmxEbjI2dkJTWDRmUTY4?=
+ =?utf-8?B?ZW1sK2JNL3A2bmYweUFWczVlTTREM2tLeUdpOHhsQWU0NXBWbllLWFJJeUxW?=
+ =?utf-8?B?NXU3dytuZXc3M096L3I1RFJkTTlUT2drbTFqbUVlQk1xTjhwSlZoRDQvNElv?=
+ =?utf-8?B?VENDZ3daZ09UOUZoaVZmQlAvLzNJQ04xcHVNb2N2WGlZOWlpU3lSaGJFbVJo?=
+ =?utf-8?B?SGZYUHFzYXdsMU4yOEpHLy83QzFtM21RUlVka3dqWGxhRlFyL1dGaTArRTdC?=
+ =?utf-8?B?a2lyV2lmazgzRkgyajQyTDNGTXJ4RlF0dThOeHVPTk5MQitvcHdBTjdNbHJ1?=
+ =?utf-8?B?b3VZbVcyUkJ6NnpMVnNIY09TNGkvMXhiS0JyQVd0M2MzR2ZNVWlvRXkxaTV0?=
+ =?utf-8?B?akI5WW52WU1DTlBudC9hSWpsUmQySFB1NnpvWHh2RkQrK2NFY0VJak1HOW5L?=
+ =?utf-8?B?YmRkU3NYaHQ0cjVmRG5od0Y5Nyt3dHpTUzBHeDhvUDBncGxQTFRRQnBpQkxn?=
+ =?utf-8?B?cEQrdWEvZ1FMblJJN2xBUFplUnBjcTVJUTFQRkU3YndROWNTLzdtbEFXdGlj?=
+ =?utf-8?B?S1BwY2tWcSttWis5ZERiOUhuU01ERGhiWSt4YngxMTdJUWNVMGN0R3pDT25p?=
+ =?utf-8?B?S04yZDRBYlFzUnpiakZuR1loS0JhN01TdVRqZUxZYmVWaWw3emNYU2JqZVdW?=
+ =?utf-8?B?RFo1U0xHeUtEdjhsSktTSEdCamNwNW51NW1lTm9FUUxmc3g4WVVVTEhVUVV1?=
+ =?utf-8?B?NWZWRXpBZG02L3hQcEc4UVd1Uk9MNVpxbkdzSXNMSGM5dGVGTTRhWlI0VEd3?=
+ =?utf-8?B?Sk9XVDBCa2NFaXBwK2w0UjYzTSsvWXIyaSsxdXozNjhMUnBheXdtM3hDQ1dE?=
+ =?utf-8?B?b1hoajdYQXdaN24zbVgwSzZVQTlGcXRMZGdpY1VtaTFXL2VKakRROVBTV2dO?=
+ =?utf-8?B?WHZMZXVnSUYwUlF2ZERiWVAzVzRBczU5K1VwWTk2WG8vak1uZXcrS3Nxb0E5?=
+ =?utf-8?B?WWVmWG44cHI0NmRXREsvWk5hbldWTmh4dkltUHF2VjV4a1RIRE9YZGVncVlG?=
+ =?utf-8?B?cGJYbTlyeHRHNkp4eEU5SWhUeWdtU1dVOWJoSVNuWGQyV1VlelNyTm90aUJB?=
+ =?utf-8?B?c051RWZ2MUg2Q3hnaEJhNFhCUGRMODVNU0pZRW00ZEd2T2VUVmEwaGh5dE9m?=
+ =?utf-8?B?dFhlMUlJcHZhYlNOV01TNHBER3BLbWpHelRKN3p1bEcxSFNMVnhRWGJkWUFt?=
+ =?utf-8?Q?ffmOzdzvvSFt6DeESakAiWR9dAuu4kYhIG9IQ=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZEFRNjFiSGJScXVzdG5MajlxcTduamhqNHY2MC80THRrMnRidzY5am5BVzdN?=
+ =?utf-8?B?Q0htcFJYTExwcC9qNmw4VmUvWHBRbEFEUGpjSmRCRGtpZmhIeUUwdFFVRHMr?=
+ =?utf-8?B?S1cyMWxwdk5CMmZDOXdTamtuOGF4UDhWbHZldDZjNDVxUXBSN3gvdXpVTHVJ?=
+ =?utf-8?B?eUpBa0NZajI2WDFaNFFya2V1eUkyVVA5Mk42K2lUVU05QVl2UVpTSWtYUitE?=
+ =?utf-8?B?dTBXdld1dzhIRG1VR016bjFJTlhUUFIrU3AxdG9RenZTRXp3a3Z6RDRsTlF6?=
+ =?utf-8?B?bGdaQjhobEFET0t5ZWg2TGxZNEhqcU51dGpPOVA2RmF4d0l6VlB1em1NYkxt?=
+ =?utf-8?B?VUhSc1QxUjdpaUJuMkF4L0pJelg2MUljTkt5amlZM0FBdHQ2bk80Qm80UUsw?=
+ =?utf-8?B?cjRHeXE2R2Jvd0ZRbHgwbFhFU0R1ZVlnbVNSdmtYRXBzRVNJSjZ4TFRFdlA5?=
+ =?utf-8?B?TGFla2t2SG5RUzlJSDRQZlFxTk5pa2JkR1RQUFdtZmJ3SVhvK3lYRWtkZm5l?=
+ =?utf-8?B?a2lMNmVjeUYxTFhtZURsWnBWSWIvNVFEVUVKdkRhWkEwK1hhQ2hlUVJaMzFq?=
+ =?utf-8?B?aXhCK24yZG4vckJwN2NpQU9pN1JpM0I3M2xnaWJwN0h5QTR0U0F0MjRBdlpq?=
+ =?utf-8?B?K3lkVXFTRWFudXg2bSsyZFJYRjlINHl1dmhmUXYrTmRxTkNQQ1pCRVk4UkRN?=
+ =?utf-8?B?UEh0ZHRyMVYreTFTenpDTW1HZ29qWlNkMjAyZGd1aHAzQ0thK29hbXdlc2tB?=
+ =?utf-8?B?Ym9lbTVuTUJKT1NhV2Y3S0dQVEY1WW8wY2gvNGtsQ0pRR0lWOVd3Z3NRRERC?=
+ =?utf-8?B?bUpySnRWMkRRS0I2Q1BDWXRiaWtaZXAwczRTU2Q4T3dVdFpPRmJJTU1lS29p?=
+ =?utf-8?B?czZDWDY2UzRENnVGWVpYRW9Gc1lIWUFqNTc3czArM3Rkcmd0VEthbk1mUi9Q?=
+ =?utf-8?B?ZExDTXgrM0t1L3IwYmpCOEN3alJxc1FISUJOc3krVFRQaWhBV0hZay81MXB1?=
+ =?utf-8?B?bEt3Y0ZmN00xanQ3NVFHczYxVDZialpGaWNwWnU2TDdPZUNQelpoVlAxSFVz?=
+ =?utf-8?B?Y0x3YkV5U3pvY3ZIU0VXR3daakd1ZnB6NTNnQXpKVFE4K2Evb0U1R0JRRGw3?=
+ =?utf-8?B?REJoZlI4R1F6UG10V0xRV1NieTZXY0llQ25EV2dqL1duYVc3OGhpWDVYT3Fl?=
+ =?utf-8?B?YzZNeHZtdTNyN2hxbEhOaURqcVc4ejU0VFdPbWlqQ2Rac3RTRmF0SS91OXZu?=
+ =?utf-8?B?QkhEOStUSEQwZjlLYlZmdzhBMEhSVVh1TWV2a0wrWko1RVllejlISEwzR3Vj?=
+ =?utf-8?B?Y2ZVWDdhYVVyMUhmbExqMWtUSVdGSm1ITlo2Snd4NnFDSmIvNzkrMDQ2Qmhz?=
+ =?utf-8?B?emZ6M1BtMk4rSFh4ZlZnSUVPSUtkdDJ5MGxaRmJYZXRUanVJMVJlaUxtc08r?=
+ =?utf-8?B?M2gvOEVDdUU0Qms3WnpmYk41blBzWTU3TnUzaUpUY0oxa1U2eXR0RDcyeThr?=
+ =?utf-8?B?dHZkbkpZQ1BRM1VGYURUeDhtbTRFaUQ2aElvTS80WVg1RlJmd2szSjRMeDZO?=
+ =?utf-8?B?NTluTzdTUGxVVVFZeDBFYmQxY2Z6WjZGSWZtSjczZStSUi9lUFR4Z3JuWmJU?=
+ =?utf-8?B?YkhCc0Fua3BheDRKY1RxVm9KN05xT2l5dE51czVrMzNOSW9wR3drV1UrajdX?=
+ =?utf-8?B?R0tuZzNIYjB5eUZ5ck5Od2ZYdndBVSsrRit1MGw2Z3Vja3BSMFhkZ1hobVRj?=
+ =?utf-8?B?YXdUdnhpMnFTMWptUzJIc2RXSXUxK3JaRjlPOFF4M1lJUVVFcE5La0VDb09U?=
+ =?utf-8?B?OGxRRkZSaVk2OHJWWTRVQUNCUWFjOTJoYkNoemZjN3RhT2dIL1NOdXdLMzNx?=
+ =?utf-8?B?OTlnRUNCUFBXbnhycis0c2pHeE1oR0tWUE52aGE5OGpwMjVuMk4xVHZMK2Zz?=
+ =?utf-8?B?dk5BMFh4VC9FUGpCeFZkaUZraG9GYzY4dUovSHZhdFFlV0ZkZDJtbmxheDFB?=
+ =?utf-8?B?RGt4M3hYcVJmNkJEM3hLQmZjeEdhNUs5L0hrS0grbFF3WmNNZkxPN3pUM09P?=
+ =?utf-8?B?THZDYnZmUmlyclZmK1JHbXRhay9WRkVkbWM5QlpTQy9VSnJsaU9HMEVmTmt3?=
+ =?utf-8?B?eThDVnk1TEdXSmpBaWF1bVBCQ3VlZjlxR3BvYkxZYnFkdytoRWl5YXRYSUpU?=
+ =?utf-8?B?eGc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e9b0f57-093f-4d9d-68ee-08dd7074c4e9
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2025 16:54:58.0010
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UsgFcvG8kjHgPsAdz+FQafA8+8JSPawOuL6r+PKsCxTuT1MU2sd62VKYmUqHmQbMR2XjCu7Bh0Xaurgk2wYEnuLykoDIkfqin/8/4/h5fyk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB7671
+X-OriginatorOrg: intel.com
 
-On Sat, Mar 29, 2025 at 07:53:23PM +0000, Yosry Ahmed wrote:
-> March 29, 2025 at 1:02 PM, "Nhat Pham" <nphamcs@gmail.com> wrote:
+Jason Gunthorpe wrote:
+> On Fri, Mar 28, 2025 at 05:26:42PM -0700, Dave Jiang wrote:
+> > > For now the following builds for me, but it is a quite a mess to undo
+> > > the assumption that that the hardware object definitions can not use
+> > > uuid_t:
+> > 
+> > +Jason.
 > 
-> > Currently, systems with CXL-based memory tiering can encounter the
-> > following inversion with zswap: the coldest pages demoted to the CXL
-> > tier can return to the high tier when they are zswapped out,
-> > creating memory pressure on the high tier.
-> > This happens because zsmalloc, zswap's backend memory allocator, does
-> > not enforce any memory policy. If the task reclaiming memory follows
-> > the local-first policy for example, the memory requested for zswap can
-> > be served by the upper tier, leading to the aformentioned inversion.
-> > This RFC fixes this inversion by adding a new memory allocation mode
-> > for zswap (exposed through a zswap sysfs knob), intended for
-> > hosts with CXL, where the memory for the compressed object is requested
-> > preferentially from the same node that the original page resides on.
-> 
-> I didn't look too closely, but why not just prefer the same node by
-> default? Why is a knob needed?
+> Seems invasive?
 
-+1 It should really be the default.
+Yeah, it left a bad taste for me as well.
 
-Even on regular NUMA setups this behavior makes more sense. Consider a
-direct reclaimer scanning nodes in order of allocation preference. If
-it ventures into remote nodes, the memory it compresses there should
-stay there. Trying to shift those contents over to the reclaiming
-thread's preferred node further *increases* its local pressure, and
-provoking more spills. The remote node is also the most likely to
-refault this data again. This is just bad for everybody.
+> Maybe just like below?
 
-> Or maybe if there's a way to tell the "tier" of the node we can
-> prefer to allocate from the same "tier"?
+I like that this avoids converting to the kernel's uuid API, however,
+not quite happy that it forces userspace to contend with the
+type-conflict with uuid/uuid.h.
 
-Presumably, other nodes in the same tier would come first in the
-fallback zonelist of that node, so page_to_nid() should just work.
+So how about one more riff on your idea?
 
-I wouldn't complicate this until somebody has real systems where it
-does the wrong thing.
+-- 8< --
+From 6fbca9bb3e29f3a205861b9489a8fba46506e107 Mon Sep 17 00:00:00 2001
+From: Dan Williams <dan.j.williams@intel.com>
+Date: Mon, 31 Mar 2025 09:43:48 -0700
+Subject: [PATCH] fwctl/cxl: Fix uuid_t usage in uapi
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-My vote is to stick with page_to_nid(), but do it unconditionally.
+The uuid_t type is kernel internal, and Paul reports the following build
+error when it is used in a uapi header:
 
+    usr/include/cxl/features.h:59:9: error: unknown type name ‘uuid_t’
+
+Create a uuid type (__uapi_uuid_t) compatible with the longstanding
+definition uuid/uuid.h for userspace builds, and use uuid_t directly for
+kernel builds.
+
+Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+Reported-by: "Paul E. McKenney" <paulmck@kernel.org>
+Closes: http://lore.kernel.org/f6489337-67c7-48c8-b48a-58603ec15328@paulmck-laptop
+Fixes: 9b8e73cdb141 ("cxl: Move cxl feature command structs to user header")
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+ include/uapi/cxl/features.h | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
+
+diff --git a/include/uapi/cxl/features.h b/include/uapi/cxl/features.h
+index d6db8984889f..dd8874860cec 100644
+--- a/include/uapi/cxl/features.h
++++ b/include/uapi/cxl/features.h
+@@ -8,10 +8,14 @@
+ #define _UAPI_CXL_FEATURES_H_
+ 
+ #include <linux/types.h>
+-#ifndef __KERNEL__
+-#include <uuid/uuid.h>
+-#else
++
++typedef unsigned char __uapi_uuid_t[16];
++
++#ifdef __KERNEL__
+ #include <linux/uuid.h>
++static_assert(sizeof(__uapi_uuid_t) == sizeof(uuid_t) &&
++	      __alignof__(__uapi_uuid_t) == __alignof__(uuid_t));
++#define __uapi_uuid_t uuid_t
+ #endif
+ 
+ /*
+@@ -60,7 +64,7 @@ struct cxl_mbox_get_sup_feats_in {
+  * Get Supported Features Supported Feature Entry
+  */
+ struct cxl_feat_entry {
+-	uuid_t uuid;
++	__uapi_uuid_t uuid;
+ 	__le16 id;
+ 	__le16 get_feat_size;
+ 	__le16 set_feat_size;
+@@ -110,7 +114,7 @@ struct cxl_mbox_get_sup_feats_out {
+  * CXL spec r3.2 section 8.2.9.6.2 Table 8-99
+  */
+ struct cxl_mbox_get_feat_in {
+-	uuid_t uuid;
++	__uapi_uuid_t uuid;
+ 	__le16 offset;
+ 	__le16 count;
+ 	__u8 selection;
+@@ -143,7 +147,7 @@ enum cxl_get_feat_selection {
+  */
+ struct cxl_mbox_set_feat_in {
+ 	__struct_group(cxl_mbox_set_feat_hdr, hdr, /* no attrs */,
+-		uuid_t uuid;
++		__uapi_uuid_t uuid;
+ 		__le32 flags;
+ 		__le16 offset;
+ 		__u8 version;
+-- 
+2.48.1
