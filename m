@@ -1,168 +1,194 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44FF838FB0;
-	Mon, 31 Mar 2025 23:03:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743462202; cv=none; b=uPM1pjXvvLu2drwf/LJ5R22myBUxcahKjok1AOqs9tLiNg0BjuLY11rzGiwi2PW2XznhHFYMnLLTjZJ1TMdlVVLUKdfOsGGxIQ7+Lo2i31HWbLd4i/kaUy2LvHKioH94AGk3KW/xOmXqYOcTpjdWCko9tI/JhJDQ8UMylWfUzJ8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743462202; c=relaxed/simple;
-	bh=x7+Z8Pc1cSudYWgsVu66IHizHde/+DtFe/nyvb+QJXc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=vGwMuh8J01p8SwiqzNH37Nixqu0I4y3Qp9EF989NmCaKwONo8i4QJRIsTSUMQx3ZWCqEaXx/aqmv5IRBP98ELTmc69pkWxUDu+r/+56I/xqGRV3xn8YUvRLKB7oeYAyyGa8U92MXgOyD0dwTu2VhOMS8TGjANUI0VqbLpOx+0w4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g2HTH4PM; arc=none smtp.client-ip=209.85.219.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A353E47B;
+	Mon, 31 Mar 2025 23:23:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743463382; cv=fail; b=iNBvn4ZQ9vQ/wVI+jpdKmhBg9oeYucDWNxzIrBaQ1mKvMJk+b4QF/FX2F1TgXhNT5OfCVHjrl3N2rx6qMC248YLTCi+cIzqeHt889W4gzZRy4gzTv+Iw/q2t9SmYfyt+r0/qsNxi67KM4zDWZk3IcT9O2rXLmcaq/QhWk/vJr5k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743463382; c=relaxed/simple;
+	bh=gWFn0r3C4FkjD8HvOMLjYOp5swFB/L11EoJ0rLJkcr4=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=d6cwMRXTTTrz4RN4yjf2Ph4kB7vziEN9vRSeuuSQ3octhAyjgwrtM6K7KYBPpkO3Odsvp71PMDwz+qufRtk7Ucas3OK5RHbgmg0prkbJRB6fvwGxi4CqiA62oe0Fl9WVJywGvlPs35PDti//c2/rvL9l/U9qayVEP11l/+MYVhw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DwQihNrI; arc=fail smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g2HTH4PM"
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6eeb7589db4so52290576d6.1;
-        Mon, 31 Mar 2025 16:03:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743462200; x=1744067000; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NWwPmCk/bFrl3o6dHPfyYz2Jq8FW3LKwskkgzUQA7CQ=;
-        b=g2HTH4PMQUWqfBWFMNIUvZNtO9zeHm/Yg86Yj6UYSxjYMsxOZWhr/7wn+4/dy5QsfY
-         ONyb/3dUlAQYNurp0xk8WeFdOoW17pmhPLVooDNp8L4JXfAxt+hTrp6ABP/vRQAUpzK3
-         n7/vlEplkFUGhx2Zm1IPZvN3ugjXZfVqrZ08Wm9aguITt62HMf9Pa8IyWgGB+E6AqPqx
-         JUTxkxOs3Yp6w3ZY4eNtNWLt9kS6+w3WpzY5agBsdRLCvsMYoct9wK1stI7QGPtcR6mf
-         61/AN6JpLqILm01AISfKwRyLCdtFZD+BAFNX2uxCRN3RUbFHUEg5d8p2ZjcYJh2+UVHK
-         KoEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743462200; x=1744067000;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NWwPmCk/bFrl3o6dHPfyYz2Jq8FW3LKwskkgzUQA7CQ=;
-        b=T6dwQXsBDb9MP1oc9EC/UTWoe0NpG8ptiaC210QpvB83m/oRKoAQB7yB6Fm7kqQubk
-         K7f7xowjjj+ZkLmXRCEGJhlg7P+CR1cDlj1T9Yl0nvTx5T4C1vWKfnhb4qjSaZI3zuYd
-         lO7tfCHHzqZGegWvjas+25JMoI6NAA69Mu/8WFxC4IGHAUZWrg9PcI7bmbhQjyt9hwmN
-         A17xI49FF0Pl6seXJuy4P4O6RjiByCvV1DloVd6FOfOSZNji+OaKmdPceLJAUng4zg6X
-         1XKNDSVlsfGmNbSn9bIC2iffIvyvAXhOcyC+AL0uuaftsNgYM1sZdUVt4XK+LEBPAyFy
-         4Bag==
-X-Forwarded-Encrypted: i=1; AJvYcCVr9Jkxy3NkTq8ocvyD6E2+BXEpul9XbO7IqaeZjkGnizOc4KWFgFnNdb9thzekevB6RH6nuka5KqU=@vger.kernel.org, AJvYcCXBHx3xL4XYV87XRAKhiObA2Nd7fEB8YtYdwt412eD5V13QihUrD7lLe58yzoUcqAUjIQNOL36JxsOFX17o@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNVdu7Ge7wOrMz+XtuVhpPiRnYjbXtbyQaS6R+EkhYcKi9QYzE
-	JRFpgaEJYc+dYLXmC6nJO4EbhWgcStCnPGKa6q+uJqytyU4TVFyP+Yhee9KjvsckCMvrElY+IUt
-	97kBlU63A+e6xnAK/p5r49Anv46o=
-X-Gm-Gg: ASbGnctyp9KN5w3mtMx3ihV9FQ9z/hNzbfi+voVdkNC9bNBxQMnmbtnlqNqPL/5iJ6Z
-	gwtAERRPFVBYSPoFDIAe0Pp2URw6qLAVyt/Yi/cGRKJ1NFgTnTC11tfOo5umWuHG8HUA8DyIl4q
-	BTTS6HLI1ZW9Zr2TCXuu9bMZgpCSx0yXqVEkLiC7OGXvpD+LW9KRYj
-X-Google-Smtp-Source: AGHT+IF1XNzfdEdI5a/KuIRD1Tv1xoYFpxj9+QumwGIhqynrvYAvG1rLCLaa6IdtCDkTmp4jEb2Q8uUGWC2C58hGufM=
-X-Received: by 2002:a05:6214:2507:b0:6e6:61a5:aa4c with SMTP id
- 6a1803df08f44-6eed629a9admr176232946d6.31.1743462199977; Mon, 31 Mar 2025
- 16:03:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DwQihNrI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743463382; x=1774999382;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=gWFn0r3C4FkjD8HvOMLjYOp5swFB/L11EoJ0rLJkcr4=;
+  b=DwQihNrI1g5gC0BJyF08kiDGmEzx42YHwQiuu2FI7QZu2++MPNPp3B1L
+   LDtQbEHKu2zKrfCC2gID2V1M7OPJ3x7R6UT9L1IHCgp1DbNu57JZBQkCL
+   7jkVHgSp72yM2RqhVbz+Jq2FtBC1vAn72onkAtDC00oSa74Ztjuxhspdi
+   HiRobbs7PVgNrK2QS4qv+FZvGBLW4GckGutUgrg4ZMOgM5fFnXDyNUAXr
+   UmAFTae4J8ImW1z1/p5ZKKKpoM7DuLqVEmqzaSReuSX9crPtLAJV4LQ2p
+   UM/2/YhObUzKIjpEAU3lrIuRa3q02F/e6jXCjJnZRg0roeL/3GUNDGWuj
+   g==;
+X-CSE-ConnectionGUID: /K4nrvUUTWiQe1wT9HhgEw==
+X-CSE-MsgGUID: HltOQHtpTjuC+1mL1+z0Fw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11390"; a="32369920"
+X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
+   d="scan'208";a="32369920"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 16:23:01 -0700
+X-CSE-ConnectionGUID: wJZTFgIfRPKqWL2FfCVHGQ==
+X-CSE-MsgGUID: 1AbpBD7kRrKZ3gr3/XkzAA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
+   d="scan'208";a="163452168"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orviesa001.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 31 Mar 2025 16:23:00 -0700
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Mon, 31 Mar 2025 16:23:00 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Mon, 31 Mar 2025 16:23:00 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.42) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Mon, 31 Mar 2025 16:22:57 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=N9E+KG4xlj6+1su57i9Oi8LbMi6qbc1zqi+QNnF3jjw8TMoQYgxRo+aVhMGDE4cXnGxMUkoedckiWaIFKanzOC6Zx/GQsDhYxvMETCi8q20qSA0g2SUP7RzmqicLqwe00r7JzjrU1/rJrL1qnsvVHoc+rYPsQDVj9RR7oGpcRWRF6ZcR3EOZ4yMvRHHmzIA1d3GgLfhsegA/aj4ADthUbdQmiRgdUyi7HH173U/pc0j0iTAKw6AqcYVOn7DGuegAFaZs1dr8EodGtLZ+N1Aj2ZMHLvVFSvDbSnPEuqHj2QFHYtk3pjieVbwD+d5gFOKa1PEVUTsy8Vs215aFjHZ0aQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gWFn0r3C4FkjD8HvOMLjYOp5swFB/L11EoJ0rLJkcr4=;
+ b=Kl2OwoH7BGLwq56ktA6mJR84fQsI3J/YuXiqQTRsW9ax4Lf9DwArt85ULURAliM2SpnApmKpLOvGO3wtJQcOZkPD2Q9PGKN5U1d5AZ6NYYBe8jK95cN3hq9sYth8A4kLVC9f9Uv8qqTvoQ+Ma1YMq4t4uSC8g9ulnKKOR061XrpsdxYz67Wx6R8AVfhBOuxST6Yfy2oQ08rjkPjYCAmr+TW7qXU8PUrjZXG4GMKyJCMK5UrVP6AXz1QRkm9TMG7OAv4NEF7yIk1ZWEL4Sl6Drh5NvUiiYWjVMNEXaY/CrqU8PArPJ4UNPXeROFS6s8q0QATbctke7YitaMSucONwuQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by SN7PR11MB7466.namprd11.prod.outlook.com (2603:10b6:806:34c::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Mon, 31 Mar
+ 2025 23:22:54 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8534.043; Mon, 31 Mar 2025
+ 23:22:54 +0000
+Date: Mon, 31 Mar 2025 16:22:51 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: Nhat Pham <nphamcs@gmail.com>, Dan Williams <dan.j.williams@intel.com>
+CC: <linux-mm@kvack.org>, <akpm@linux-foundation.org>, <hannes@cmpxchg.org>,
+	<yosry.ahmed@linux.dev>, <chengming.zhou@linux.dev>, <sj@kernel.org>,
+	<kernel-team@meta.com>, <linux-kernel@vger.kernel.org>, <gourry@gourry.net>,
+	<willy@infradead.org>, <ying.huang@linux.alibaba.com>,
+	<jonathan.cameron@huawei.com>, <linux-cxl@vger.kernel.org>,
+	<minchan@kernel.org>, <senozhatsky@chromium.org>
+Subject: Re: [RFC PATCH 1/2] zsmalloc: let callers select NUMA node to store
+ the compressed objects
+Message-ID: <67eb23cbcd0b7_11987294fd@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20250329110230.2459730-1-nphamcs@gmail.com>
+ <20250329110230.2459730-2-nphamcs@gmail.com>
+ <67eb148e1f818_7baf294b9@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <CAKEwX=OEQKdoWbyAO=LKE--ssLzBH0UVhz3EYaCiodpbMtQvKw@mail.gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAKEwX=OEQKdoWbyAO=LKE--ssLzBH0UVhz3EYaCiodpbMtQvKw@mail.gmail.com>
+X-ClientProxiedBy: MW4P222CA0014.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:303:114::19) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250329110230.2459730-1-nphamcs@gmail.com> <20250329110230.2459730-2-nphamcs@gmail.com>
- <67eb148e1f818_7baf294b9@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-In-Reply-To: <67eb148e1f818_7baf294b9@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-From: Nhat Pham <nphamcs@gmail.com>
-Date: Mon, 31 Mar 2025 16:03:09 -0700
-X-Gm-Features: AQ5f1JrJa0OI2zK8nR3gBptJMvPGRmf2NcF6lSF3CCpW8PAHL9JjLfK12YT14xI
-Message-ID: <CAKEwX=OEQKdoWbyAO=LKE--ssLzBH0UVhz3EYaCiodpbMtQvKw@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/2] zsmalloc: let callers select NUMA node to store
- the compressed objects
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hannes@cmpxchg.org, 
-	yosry.ahmed@linux.dev, chengming.zhou@linux.dev, sj@kernel.org, 
-	kernel-team@meta.com, linux-kernel@vger.kernel.org, gourry@gourry.net, 
-	willy@infradead.org, ying.huang@linux.alibaba.com, 
-	jonathan.cameron@huawei.com, linux-cxl@vger.kernel.org, minchan@kernel.org, 
-	senozhatsky@chromium.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SN7PR11MB7466:EE_
+X-MS-Office365-Filtering-Correlation-Id: d764ce11-aa84-49ed-4823-08dd70aaf6d4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?tKOBcgWM8GlcPQPz8LjIjXPDTZ6s2WpzAymKIqE3ffvrdTUXNyojoWBZ4xQS?=
+ =?us-ascii?Q?3SWSw4bRMDu7oDcBLYRmaadyWhohVcOjCkG2vboGhzj02sIs7gOWpuv4fsZy?=
+ =?us-ascii?Q?DUc2ggzUkAf2s6h4TjKnepuyrdGQ7ba41o5ybUydMr5B5PqnyHO8GfyiYJH1?=
+ =?us-ascii?Q?QTuYB2pgXIlZ657W7/z4zesZvY8WVlIJ/Q/hrYK/CZxWHrOLKxuzuKdNjWZP?=
+ =?us-ascii?Q?OFfkjVper6nKuz77OPAOA16GWswuy7yeiAlBR7OFTlwpia/Tn8VhSOhe5O6Y?=
+ =?us-ascii?Q?VL4oItTXep5UmZnMW3R9s6KxsEc3mzr9NS9G0ih+f21xXxZXW/ch5PfN8df6?=
+ =?us-ascii?Q?tWTeKSsfYywmzCS0mPe6ekgzPLaCTKvrO6EUSfwl8TXetV2VITNf+m9r+hoi?=
+ =?us-ascii?Q?V42BN8aagO5FjMLDMD1XOQeqzQKfsK5gH1g0Nn3m+LPK+zKz9JQ9AHPY8PVp?=
+ =?us-ascii?Q?tfPMG7kesFYqNfQ4ThGtu5ZqzAFD/Mm//KdgaM+VO8vCf7AGpzPVPUEE7TKD?=
+ =?us-ascii?Q?OGznlfQ3FaBh5WFE1gGR5vh1/hKxMq8E/4s2Aw8hdjdVVYuVamTFKGVpTENQ?=
+ =?us-ascii?Q?gu40rkDNBFaCWMXW11TeX1wkZWp3JJnx++rKyy0ZpPmEjIKunCC9dLE2dyji?=
+ =?us-ascii?Q?2HyKm+Pu1MxonpgUNENWEjN5aiEVvrALXdeBqwWCxwWmDe0Ca7qycTnWIMa5?=
+ =?us-ascii?Q?dViiFTAiNSeGXAc0jY5TXJ97KYvrkGMrqotXStWG1TkE5DNSbrMqDvjpeB7+?=
+ =?us-ascii?Q?vcpvm/5HSPW00u7HrwoMQwmsajfD5t2LRbZL68PivDzLCKiP2r1hTXSoB1Hc?=
+ =?us-ascii?Q?9D1Uyjy2WEvedVVkaoziBzeEfMRdPsiheYH2X3s7XjocQ3veJudNJMH73Un4?=
+ =?us-ascii?Q?9KqJb+2SD4uhtrRLrdtnGZPUMWGA2QBQftNknnWGNAOpxaQf1XB9qBvDIEj5?=
+ =?us-ascii?Q?BufurAYCREDbgmbM+JM7k98yVSoGtziitAnMjKATTx6T6/sx/i1U3ny2LeJ0?=
+ =?us-ascii?Q?Xt4SO2gLyTzZeyAyKFMmLT7+hfL4zZLDqQ2nFIohB51T2Xg8KyW3i0/xTbDm?=
+ =?us-ascii?Q?/jblB3G6rr0K4g+aysJtm+KXzcOiPEluG9mrXOCkbno1Heu3N9OXvjVA6qKM?=
+ =?us-ascii?Q?wfJHDZBhuS9C9IP4HnJ52JJ1mtQMe4lbg5OJu31kqpRtZfBDQJDv6K179vVv?=
+ =?us-ascii?Q?Q8RiGDuNTIjQuEaH8k59qfJjsDnsJkSi3VhT3uvnJV9U7Xo33721so5cd1hV?=
+ =?us-ascii?Q?DgS7xL7bkwmiIyhj0HOOMMserbRY/zMh7a0DMCLAEbGLXawCnVaxoedM8XgG?=
+ =?us-ascii?Q?zbjypOffWrWxN1i9DAYzZdrPTCQOwf9lCxm9sWKzwsdctCPEVd2p/OZE/Ibd?=
+ =?us-ascii?Q?Uikg5Oms8yYv9ImBE3AB960EPhJH?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?sQ32U4W90arUwaBYSR+o0+jULmjYmG8Xr/K0Np0ZnKRpOuIYSCtbP4wgZxMS?=
+ =?us-ascii?Q?GBqTvITsCl/NbPWYLRYzVkCyGYvEuNgOITFcUP+J74y+fKB2QWIfH+hKRMBn?=
+ =?us-ascii?Q?gFGb1nBKcioKkygj3GnjkpHaacMrAPp8w8qX+9Bh84LuAwJQYYH5tsPW3HKt?=
+ =?us-ascii?Q?kM65VnnYD42yjx8CRkn7HC6ZdQhcO7i8QyHgdw9atnsT9WUa6D2FC2LLOJMz?=
+ =?us-ascii?Q?FPpVV9XZAm7Y2IDGxN/2X/i/xWynFCk/kN0bcZnqT56fbjcH9o8XU7OZ2Eb3?=
+ =?us-ascii?Q?JLlpCWIHuADyqSIG/iNz83B/Al6m7atSnjBQwP9VhJPusSc2dsJ64UNaWhNm?=
+ =?us-ascii?Q?m1MDiraW8xCuKkxqtZA9KTwJ0+teESZ8rIRsMBCCYRFv3esaPYK4vprfaoCf?=
+ =?us-ascii?Q?iIEGUFqB1D1lNKAjNzDgP7P5+q7nrFLRhow6lJAmsJ1odNdYB+7juZ94FN2u?=
+ =?us-ascii?Q?cE41fdaS6obU3eU83Uy34aU+XzAdVHpmqMxOWeeZuGSwLe9QBvZ9MvVuKn/r?=
+ =?us-ascii?Q?CBBEqzvQCLE1e6vOoFmXBJqPgbAgOLXaNadlbC5CZSgNomwPcZLh5RoQqGfI?=
+ =?us-ascii?Q?QPzJeUklgelLp+ytbXqq9LgOhLJkXKtv3N65YzHtQcp21EHH+n8QrdajRCuq?=
+ =?us-ascii?Q?7BdSQQfKUPSJnuooOfUJ5zTtGUnNfEgQLkWJt99xy67muzJTGb68XQUk2l1O?=
+ =?us-ascii?Q?GiMUocdpR1ozfNJCD/SR5/ALByaKYk8BAK3ApiAQrhZSzAQtZTP58ihPvQr0?=
+ =?us-ascii?Q?EiV+EKD7rvOhiXA5rJACyOIg2bGHukSABIk1cXC4KckrdIpWlt6VJ9rVkj0a?=
+ =?us-ascii?Q?1xyG00FdSV2M8M7AtEnWJgFRqRffWw+kRkUL2EmIeYsNLJm6KuH4z77348N2?=
+ =?us-ascii?Q?Csx31pzYM3GmwvaitWERsmSRL3WMEWCtN38SQmy9gefTBSYbAvxkd9ruPHAj?=
+ =?us-ascii?Q?RH/qgaV7ehWnqHub3C0J+SIW6xJTIt2OPYrFiGmVPmeosYTBk1gJawrh8jDO?=
+ =?us-ascii?Q?miqSSpO8Pa0L0UnGhAi4VWY4QZYiDJYGM4hgeUEdpdbjxVEOSFFFZLNd71Et?=
+ =?us-ascii?Q?kl0nYOVeGFe08wFQnMBrJpeBvBXYebmhD2Z2vkAU4N9u7MJCbrzs8HtUxfkF?=
+ =?us-ascii?Q?C0i3xcRAGEL2S97uU14EdusVWl/V6pvghsBpkjiD204sMXoU99SA2WdH2K25?=
+ =?us-ascii?Q?ay2nk3IuRn48OZLuhg+Wa8CYv4U9Y0+OecVmK60Ht7YWW2hxBCuWr1gQ/joV?=
+ =?us-ascii?Q?C31TTS2WkZSwPUh96nnYLYAyT7rfsN3j99Z09qJENV9vBP0P8vwcuQIW9niM?=
+ =?us-ascii?Q?jAB7g62pNn3qjmpkzG5fNd9VzqND9zH8rmJVQhw0r5SxPjrIAdg5D/OEcJqo?=
+ =?us-ascii?Q?g71rgS+JbaFQqwGxvOcUZ8794K1ErhR2DFVNj5kCtPOo9Ppjm/TeXYpBDoTI?=
+ =?us-ascii?Q?7tLljQcZPbZyNPAAAMTb1KVJCQ3oQ9tE5JBbhUHTCuL3B8tptzqlBPUuVYFH?=
+ =?us-ascii?Q?vMkpp3PDptnQ/FGw+djKioBU7Nw0l8NgoTzVD4WjbPeXxpu8v/8G4avBDFqt?=
+ =?us-ascii?Q?il4uQQyIo3qMAHH9kal9+MWnMd6Cz1zroyoSU5Xokz9o+XhV1FNnojJjmTDn?=
+ =?us-ascii?Q?dA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: d764ce11-aa84-49ed-4823-08dd70aaf6d4
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2025 23:22:54.5872
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: OWhqG/iUEGhXj15M+I23R+OtxEu8vKDX+5jdZzcCcDiH8vgPOmUgTX6wfdAg9V3S1R55CRR+h9icbukXqe9JsGP/V4voEgUZa9HyvE/GWl8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB7466
+X-OriginatorOrg: intel.com
 
-On Mon, Mar 31, 2025 at 3:18=E2=80=AFPM Dan Williams <dan.j.williams@intel.=
-com> wrote:
->
-> Nhat Pham wrote:
-> > Curerntly, zsmalloc does not specify any memory policy when it allocate=
-s
-> > memory for the compressed objects.
-> >
-> > Let users select the NUMA node for the memory allocation, through the
-> > zpool-based API. Direct callers (i.e zram) should not observe any
-> > behavioral change.
-> >
-> > Signed-off-by: Nhat Pham <nphamcs@gmail.com>
-> > ---
-> >  include/linux/zpool.h |  4 ++--
-> >  mm/zpool.c            |  8 +++++---
-> >  mm/zsmalloc.c         | 28 +++++++++++++++++++++-------
-> >  mm/zswap.c            |  2 +-
-> >  4 files changed, 29 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/include/linux/zpool.h b/include/linux/zpool.h
-> > index 52f30e526607..0df8722e13d7 100644
-> > --- a/include/linux/zpool.h
-> > +++ b/include/linux/zpool.h
-> > @@ -22,7 +22,7 @@ const char *zpool_get_type(struct zpool *pool);
-> >  void zpool_destroy_pool(struct zpool *pool);
-> >
-> >  int zpool_malloc(struct zpool *pool, size_t size, gfp_t gfp,
-> > -                     unsigned long *handle);
-> > +                     unsigned long *handle, int *nid);
->
-> I agree with Johannes about the policy knob, so I'll just comment on the
-> implementation.
->
-> Why not just pass a "const int" for @nid, and use "NUMA_NO_NODE" for the
-> "default" case. alloc_pages_node_noprof() is already prepared for a
-> NUMA_NO_NODE argument.
+Nhat Pham wrote:
+[..]
+> That still leaves zram though. zram is more complicated than zswap -
+> it has multiple allocation paths, so I don't want to touch it quite
+> yet (and preferably a zram maintainer/developer should do it). :) Or
+> if zram maintainers are happy with NUMA_NO_NODE, then we can
+> completely get rid of the pointer arguments etc.
 
-Gregory and Johannes gave me that suggestion too! However, my
-understanding was that alloc_pages_node(NUMA_NO_NODE, ...) !=3D
-alloc_page(...), and I was trying to preserve the latter since it is
-the "original behavior" (primarily for !same_node_mode, but also for
-zram, which I tried not to change in this patch).
+At a minimum make the argument a "const int *" so it does not look like
+the value can be changed by the leaf functions.
 
-Please correct me if I'm mistaken, but IIUC:
-
-1. alloc_pages_node(NUMA_NO_NODE, ...) would go to the local/closest node:
-
-/*
- * Allocate pages, preferring the node given as nid. When nid =3D=3D NUMA_N=
-O_NODE,
- * prefer the current CPU's closest node. Otherwise node must be valid and
- * online.
- */
-static inline struct page *alloc_pages_node_noprof(int nid, gfp_t gfp_mask,
-   unsigned int order)
-{
-    if (nid =3D=3D NUMA_NO_NODE)
-        nid =3D numa_mem_id();
-
-
-2. whereas, alloc_page(...) (i.e the "original" behavior) would
-actually adopt the allocation policy of the task entering reclaim, by
-calling:
-
-struct page *alloc_frozen_pages_noprof(gfp_t gfp, unsigned order)
-{
-    struct mempolicy *pol =3D &default_policy;
-
-    /*
-    * No reference counting needed for current->mempolicy
-    * nor system default_policy
-    */
-    if (!in_interrupt() && !(gfp & __GFP_THISNODE))
-        pol =3D get_task_policy(current);
-
-Now, I think the "original" behavior is dumb/broken, and should be
-changed altogether. We should probably always pass the page's node id.
-On the zswap side, in the next version I'll remove same_node_mode
-sysfs knob and always pass the page's node id to zsmalloc and the page
-allocator. That will clean up the zpool path per your (and Johannes'
-and Gregory's) suggestion.
-
-That still leaves zram though. zram is more complicated than zswap -
-it has multiple allocation paths, so I don't want to touch it quite
-yet (and preferably a zram maintainer/developer should do it). :) Or
-if zram maintainers are happy with NUMA_NO_NODE, then we can
-completely get rid of the pointer arguments etc.
+...but I would challenge zram folks to ack/nak that change rather than
+maintain old behavior based purely on momentum. I.e. add to the commit
+message an "exclude zswap from this policy for $explicit_reason"
+statement rather than the current $implicit_guess that the old behavior
+is there for "reasons".
