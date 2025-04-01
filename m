@@ -1,285 +1,202 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 619AB1EDA00;
-	Tue,  1 Apr 2025 09:10:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFAF41EA7FC
+	for <linux-cxl@vger.kernel.org>; Tue,  1 Apr 2025 09:34:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743498645; cv=none; b=qrX2WONxniH5P+GIsSMssNut84+nOhkzeZPN7X1S5mq0LkN8BBN0q1Lupg7jc+iM+mU2l1XotiUXIyYSFIQAROJ6D4nPFzMyzJmcoAfh0jo6hjUt64NhIjgLLncioODVYJ8idtwXBNpBYssJKnQKw3KYmU4CRYhwG29GaQzpKtc=
+	t=1743500046; cv=none; b=rAA0YYfpJ9l79Slb8QAsWxKa14QDfbVjKiOq7GWLd4TzDjcSLjQQMq15VmaFAFi1rwdg1MMD5e6suUjoMLuPH/JeBSmdGmNfC29y8lnlBzxwpS51hHSpyUIc4pNXnpijSVmbeg6Snxwg8SfA5CLhzgOxV8LMtPSUj4EjRYw6HFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743498645; c=relaxed/simple;
-	bh=u7y5RQ3yhvPve+ym+NdXHsq0oUcG0iSL6jH8XakV10w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=R2dJNvXXzuin77TYdz0xjby9o/BQmmd0vxwN8ziVywCaU+6phapgUczyTReclTmTlJlp/NOn+8uzFHvJah4DuAuCB0J7XMkumWPd+1t8vpiyEfyf3R02aSSeVcbiC6crOC17xxYZDcFSUnju9NCgKiYUqnCdkdwu9Dcfx62PgWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-44-67ebad8d6b2a
-From: Rakie Kim <rakie.kim@sk.com>
-To: gourry@gourry.net
-Cc: akpm@linux-foundation.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	joshua.hahnjy@gmail.com,
-	dan.j.williams@intel.com,
-	ying.huang@linux.alibaba.com,
-	david@redhat.com,
-	Jonathan.Cameron@huawei.com,
-	kernel_team@skhynix.com,
-	honggyu.kim@sk.com,
-	yunjeong.mun@sk.com,
-	rakie.kim@sk.com
-Subject: [PATCH v4 3/3] mm/mempolicy: Support memory hotplug in weighted interleave
-Date: Tue,  1 Apr 2025 18:08:59 +0900
-Message-ID: <20250401090901.1050-4-rakie.kim@sk.com>
-X-Mailer: git-send-email 2.48.1.windows.1
-In-Reply-To: <20250401090901.1050-1-rakie.kim@sk.com>
-References: <20250401090901.1050-1-rakie.kim@sk.com>
+	s=arc-20240116; t=1743500046; c=relaxed/simple;
+	bh=iMKn0ausjfwYR6lIOx0cH6PZ301JCLh8GZ6gFWn89o8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W6/2ywLSzfTRlYQoLoCg5UdTiqNYBBxRKUmlWfWsSTEKrJluoSHR9Hn+Txg3DE/YQFu6sZ03sFgVDhCd52UI4BQhvMWiGHwHtqFpSU5lQpG3PZXQ9rpS9IgpsJmy4SvDRZwZv+gmXJWhnVjj56z+uQ/cHKTLh2tia57/MxLJnes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gyUDAZkL; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gyUDAZkL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743500043;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=yLW4M7GQepknRN85JoLE8ZSwVeAqp3fUrjLO1RbXEVY=;
+	b=gyUDAZkL3a/Zs2+yT2DuYvE/FBgXKJaV8APJ3qxsy1vQgaj4MdsTrjiF21IBRo5MR19DCK
+	NQZWh5SV/SjLSKCsB3JcbaV2sKllF6Iixh87Z7PHTyobogyoWe1gfvfaVOPZN18MtVePH0
+	V7sXPccklj9pIodiAhMvSjfJ8vGtHa8=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-128-3zS0Jkd4PNWxSdwxhQPfMQ-1; Tue, 01 Apr 2025 05:34:02 -0400
+X-MC-Unique: 3zS0Jkd4PNWxSdwxhQPfMQ-1
+X-Mimecast-MFC-AGG-ID: 3zS0Jkd4PNWxSdwxhQPfMQ_1743500041
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-391492acb59so3469563f8f.3
+        for <linux-cxl@vger.kernel.org>; Tue, 01 Apr 2025 02:34:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743500041; x=1744104841;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=yLW4M7GQepknRN85JoLE8ZSwVeAqp3fUrjLO1RbXEVY=;
+        b=NZzs48gGJ+PxDRYucYbzgKHofkpJHzfYBudMDOvvQFc+mfUIvLkhMKsXV8jgR03jN3
+         V7aEOFNjAOffazFsVTpAJaNdeHiwxYUYe2Jb2aEZy4txrIir5rN1qB984SLE4YX26RjL
+         CPYCY7Bixoh3pNC8D3GOcOjXY0CsD+C4nyZoPw633eDBJsDsIaFmHg2uflhXgmAZVfsq
+         u7D2fhnoCX/QcYoyXZHPDJ3TQP6ECo97SAkCHy6Hb3OK84Va50zWB4bBlnl5SmBVB35B
+         WGfEx0Eyniwxw0skFJB5BvCutGRB3uTM8I60S3HD1FlRxWWcKbh+3mQTDzwzk0Z68eq1
+         ieDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUUnz0cUG9KlJ8zbAujq/qzxhWPQ1/cfEPiymL9r2uUC5HqZGVap+GP1mFGhb8dfGAQ3cLeD5X9LFQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+JjmF9pEUrjjfinRgpe0xDbqfcWgcaFM2EsNJpIQW86hxXnt8
+	lFNAn2XP8cSnwiDJanNKssFw9mUzEMdUbqGScuUirEOT48rS4Tjp6RvLNok67a3mNxxcTGQJ6gD
+	q2Sf74eN6l1l7bDQ9TjqlcL7pPcbyIEwIQZcnuucWtVSw5m7TyXjMv1LI5g==
+X-Gm-Gg: ASbGncs6ZOPEmsXaZj8ZB45qQCVPmhcCUJ7x4vox//AMJuPy8dH9nskf54Zat6TFpMC
+	nKBIgg7BP2t8C/269t5YLPsS/0UHRzeFJ3phz+FLHO0xBTjiU+TeHpgTLzm+1bPBGckluCuJ00f
+	8HralXVyro7Mbvt9NOW0Z6owe3cnugeBHs8l7amKbDQsvtNO4JY2nYmtiGNlhfNzqXUJyO7y5wZ
+	WZUWbP78fwz6qlxAA5R87Cm9CcLk+8BJt39Uo2noJyG1K58ioTdAF677innQaQYZTrm5q3gKcpu
+	aYIMJEGqQv/NDLa3URBzqzRvTkmA8l/GUOEGUhH4CCD/K974gFjud2YX37eJMKFb6bC6TXHzfac
+	BA+0L6E7hFMOou8SlWJb3AsKBBnVjvl7f+nLy2bA9
+X-Received: by 2002:a05:6000:1447:b0:391:466f:314e with SMTP id ffacd0b85a97d-39c120dba55mr9972729f8f.16.1743500041379;
+        Tue, 01 Apr 2025 02:34:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHuhOY4h3uniqh8t2ORHDry92nujdtgLRHvSyISYtelPiE+fYAhj7bnHs3IyJZqGbkWb7WXIA==
+X-Received: by 2002:a05:6000:1447:b0:391:466f:314e with SMTP id ffacd0b85a97d-39c120dba55mr9972710f8f.16.1743500041060;
+        Tue, 01 Apr 2025 02:34:01 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c707:4d00:6ac5:30d:1611:918f? (p200300cbc7074d006ac5030d1611918f.dip0.t-ipconnect.de. [2003:cb:c707:4d00:6ac5:30d:1611:918f])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b79e136sm13665091f8f.67.2025.04.01.02.34.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Apr 2025 02:34:00 -0700 (PDT)
+Message-ID: <3e3115c0-c3a2-4ec2-8aea-ee1b40057dd6@redhat.com>
+Date: Tue, 1 Apr 2025 11:33:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrILMWRmVeSWpSXmKPExsXC9ZZnkW7v2tfpBv9uK1jMWb+GzWL61AuM
-	Fl/X/2K2+Hn3OLvFqoXX2CyOb53HbnF+1ikWi8u75rBZ3Fvzn9Vi9ZoMBy6PnbPusnt0t11m
-	92g58pbVY/Gel0wemz5NYvc4MeM3i8fOh5Ye7/ddZfP4vEkugDOKyyYlNSezLLVI3y6BK6Np
-	03mmgq3GFc9O32RtYNyu1cXIySEhYCLx5MluRhh7xtyT7F2MHBxsAkoSx/bGgIRFBEQl5h2d
-	zdLFyMXBLHCNSeLA55ssIAlhgWCJJwu3gvWyCKhKfOtbxgpi8wLNefX2IhvETE2Jhkv3mEBs
-	TgFTif1Pj4HVCwHVPLp9hgWiXlDi5MwnYDazgLxE89bZzCDLJASes0n09KyHOk5S4uCKGywT
-	GPlnIemZhaRnASPTKkahzLyy3MTMHBO9jMq8zAq95PzcTYzAgF9W+yd6B+OnC8GHGAU4GJV4
-	eDeUvkoXYk0sK67MPcQowcGsJMIb8fVluhBvSmJlVWpRfnxRaU5q8SFGaQ4WJXFeo2/lKUIC
-	6YklqdmpqQWpRTBZJg5OqQZG84cM3EJ/GnxX/q1RqbZa9vhy+RveJMZvspfEruueOXl1894q
-	p8fBHz+LXU2LWSWqkaHmouCR3vvWxeob47IVtXKFxgx8HJb7jeeVXtoxd3eFaLN054u1x1Mt
-	BdPjP9ZIzbvGL1j59CAjw4KUTKEoCyUX7o37Tn/NuSlqdHu/1NInO8rUru5QYinOSDTUYi4q
-	TgQAbczTbXQCAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrNLMWRmVeSWpSXmKPExsXCNUNNS7d37et0g/WXJC3mrF/DZjF96gVG
-	i6/rfzFb/Lx7nN3i87PXzBarFl5jszi+dR67xeG5J1ktzs86xWJxedccNot7a/6zWhy69pzV
-	YvWaDIvf21awOfB57Jx1l92ju+0yu0fLkbesHov3vGTy2PRpErvHiRm/WTx2PrT0eL/vKpvH
-	t9seHotffGDy+LxJLoA7issmJTUnsyy1SN8ugSujadN5poKtxhXPTt9kbWDcrtXFyMkhIWAi
-	MWPuSfYuRg4ONgEliWN7Y0DCIgKiEvOOzmbpYuTiYBa4xiRx4PNNFpCEsECwxJOFWxlBbBYB
-	VYlvfctYQWxeoDmv3l5kg5ipKdFw6R4TiM0pYCqx/+kxsHohoJpHt8+wQNQLSpyc+QTMZhaQ
-	l2jeOpt5AiPPLCSpWUhSCxiZVjGKZOaV5SZm5pjqFWdnVOZlVugl5+duYgQG+bLaPxN3MH65
-	7H6IUYCDUYmHd0Ppq3Qh1sSy4srcQ4wSHMxKIrwRX1+mC/GmJFZWpRblxxeV5qQWH2KU5mBR
-	Euf1Ck9NEBJITyxJzU5NLUgtgskycXBKNTCu3yq6YY6s8RX3CM7POaY5/VV256dapTfw3Lb6
-	qt955rhr04Nim3KVtJ+xj4JMXxwMY5vzpK9csOhnosjfxii+xMwDimFOm0xmNHKaztwiERTf
-	HOleciG9+HaC7Y6anwkfih65zQhU1gziixM2n1s2b9eeiNgHVnrnHxZduMEpyZWtwzW5WYml
-	OCPRUIu5qDgRAKOluJBuAgAA
-X-CFilter-Loop: Reflected
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] DAX: warn when kmem regions are truncated for memory
+ block alignment.
+To: Gregory Price <gourry@gourry.net>, dan.j.williams@intel.com
+Cc: nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org,
+ kernel-team@meta.com, vishal.l.verma@intel.com, dave.jiang@intel.com,
+ linux-cxl@vger.kernel.org
+References: <20250321180731.568460-1-gourry@gourry.net>
+ <Z-remBNWEej6KX3-@gourry-fedora-PF4VCD3F>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <Z-remBNWEej6KX3-@gourry-fedora-PF4VCD3F>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: VJPrydvbq1PN3LTsi_4FMBYyjrW974wiUwdFzzvd2QU_1743500041
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The weighted interleave policy distributes page allocations across multiple
-NUMA nodes based on their performance weight, thereby improving memory
-bandwidth utilization. The weight values for each node are configured
-through sysfs.
+On 31.03.25 20:27, Gregory Price wrote:
+> On Fri, Mar 21, 2025 at 02:07:31PM -0400, Gregory Price wrote:
+>> Device capacity intended for use as system ram should be aligned to the
+>> architecture-defined memory block size or that capacity will be silently
+>> truncated and capacity stranded.
+>>
+>> As hotplug dax memory becomes more prevelant, the memory block size
+>> alignment becomes more important for platform and device vendors to
+>> pay attention to - so this truncation should not be silent.
+>>
+>> This issue is particularly relevant for CXL Dynamic Capacity devices,
+>> whose capacity may arrive in spec-aligned but block-misaligned chunks.
+>>
+>> Example:
+>>   [...] kmem dax0.0: dax region truncated 2684354560 bytes - alignment
+>>   [...] kmem dax1.0: dax region truncated 1610612736 bytes - alignment
+>>
+>> Signed-off-by: Gregory Price <gourry@gourry.net>
+> 
+> Gentle pokes.  There were a couple questions last week whether we should
+> warn here or actually fix something in memory-hotplug.
+> 
+> Notes from CXL Boot to Bash session discussions:
+> 
+> 
+> We discussed [1] how this auto-sizing can cause 1GB huge page
+> allocation failures (assuming you online as ZONE_NORMAL). That means
+> ACPI-informed sizing by default would potentially be harmful to existing
+> systems and adding yet-another-boot-option just seems nasty.
+> 
+> I've since dropped acpi-informed block size patch[2].  If there are opinions
+> otherwise, I can continue pushing it.
 
-Previously, sysfs entries for configuring weighted interleave were created
-for all possible nodes (N_POSSIBLE) at initialization, including nodes that
-might not have memory. However, not all nodes in N_POSSIBLE are usable at
-runtime, as some may remain memoryless or offline.
-This led to sysfs entries being created for unusable nodes, causing
-potential misconfiguration issues.
+Oh, I thought we would be going forward with that. What's the reason we 
+would not want to do that?
 
-To address this issue, this patch modifies the sysfs creation logic to:
-1) Limit sysfs entries to nodes that are online and have memory, avoiding
-   the creation of sysfs entries for nodes that cannot be used.
-2) Support memory hotplug by dynamically adding and removing sysfs entries
-   based on whether a node transitions into or out of the N_MEMORY state.
+> 
+> 
+> We also discussed[3] variable-sized blocks having some nasty corner cases.
+> Not unsolvable, but doesn't help users in the short term.
+> 
+> 
+> There was some brief discussion about whether a hotplug memblock with a
+> portion as offline pages would be possible.  This seems hacky?  There
+> was another patch set discussing this, but I can't seem to find it.
 
-Additionally, the patch ensures that sysfs attributes are properly managed
-when nodes go offline, preventing stale or redundant entries from persisting
-in the system.
+Yeah, I proposed something like that as well when I started working on 
+virtio-mem and did not really understand the whole hot(un)plug model in 
+Linux properly. Someone else proposed it again a couple of years ago, 
+but it's just wrong and should not be done that way.
 
-By making these changes, the weighted interleave policy now manages its
-sysfs entries more efficiently, ensuring that only relevant nodes are
-considered for interleaving, and dynamically adapting to memory hotplug
-events.
+One could implement something like virtio-mem, whereby parts of a Linux 
+memory block can be added/removed independently ("fake offlined"). But 
+the whole idea of virtio-mem is that all memory in the Linux memory 
+block range belongs to it. So it doesn't quite apply to DAX where parts 
+of a Linux memory block might be from something completely different 
+(e.g., boot memory etc).
 
-Signed-off-by: Rakie Kim <rakie.kim@sk.com>
-Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
-Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
----
- mm/mempolicy.c | 113 +++++++++++++++++++++++++++++++++++++++----------
- 1 file changed, 90 insertions(+), 23 deletions(-)
-
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 3092a792bd28..fa755d20780c 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -113,6 +113,7 @@
- #include <asm/tlbflush.h>
- #include <asm/tlb.h>
- #include <linux/uaccess.h>
-+#include <linux/memory.h>
- 
- #include "internal.h"
- 
-@@ -3390,6 +3391,7 @@ struct iw_node_attr {
- 
- struct sysfs_wi_group {
- 	struct kobject wi_kobj;
-+	struct mutex kobj_lock;
- 	struct iw_node_attr *nattrs[];
- };
- 
-@@ -3439,13 +3441,24 @@ static ssize_t node_store(struct kobject *kobj, struct kobj_attribute *attr,
- 
- static void sysfs_wi_node_release(int nid)
- {
--	if (!wi_group->nattrs[nid])
-+	struct iw_node_attr *attr;
-+
-+	if (nid < 0 || nid >= nr_node_ids)
-+		return;
-+
-+	mutex_lock(&wi_group->kobj_lock);
-+	attr = wi_group->nattrs[nid];
-+	if (!attr) {
-+		mutex_unlock(&wi_group->kobj_lock);
- 		return;
-+	}
- 
--	sysfs_remove_file(&wi_group->wi_kobj,
--			  &wi_group->nattrs[nid]->kobj_attr.attr);
--	kfree(wi_group->nattrs[nid]->kobj_attr.attr.name);
--	kfree(wi_group->nattrs[nid]);
-+	wi_group->nattrs[nid] = NULL;
-+	mutex_unlock(&wi_group->kobj_lock);
-+
-+	sysfs_remove_file(&wi_group->wi_kobj, &attr->kobj_attr.attr);
-+	kfree(attr->kobj_attr.attr.name);
-+	kfree(attr);
- }
- 
- static void sysfs_wi_release(struct kobject *wi_kobj)
-@@ -3464,35 +3477,84 @@ static const struct kobj_type wi_ktype = {
- 
- static int sysfs_wi_node_add(int nid)
- {
--	struct iw_node_attr *node_attr;
-+	int ret = 0;
- 	char *name;
-+	struct iw_node_attr *new_attr = NULL;
- 
--	node_attr = kzalloc(sizeof(*node_attr), GFP_KERNEL);
--	if (!node_attr)
-+	if (nid < 0 || nid >= nr_node_ids) {
-+		pr_err("Invalid node id: %d\n", nid);
-+		return -EINVAL;
-+	}
-+
-+	new_attr = kzalloc(sizeof(struct iw_node_attr), GFP_KERNEL);
-+	if (!new_attr)
- 		return -ENOMEM;
- 
- 	name = kasprintf(GFP_KERNEL, "node%d", nid);
- 	if (!name) {
--		kfree(node_attr);
-+		kfree(new_attr);
- 		return -ENOMEM;
- 	}
- 
--	sysfs_attr_init(&node_attr->kobj_attr.attr);
--	node_attr->kobj_attr.attr.name = name;
--	node_attr->kobj_attr.attr.mode = 0644;
--	node_attr->kobj_attr.show = node_show;
--	node_attr->kobj_attr.store = node_store;
--	node_attr->nid = nid;
-+	mutex_lock(&wi_group->kobj_lock);
-+	if (wi_group->nattrs[nid]) {
-+		mutex_unlock(&wi_group->kobj_lock);
-+		pr_info("Node [%d] already exists\n", nid);
-+		kfree(new_attr);
-+		kfree(name);
-+		return 0;
-+	}
- 
--	if (sysfs_create_file(&wi_group->wi_kobj, &node_attr->kobj_attr.attr)) {
--		kfree(node_attr->kobj_attr.attr.name);
--		kfree(node_attr);
--		pr_err("failed to add attribute to weighted_interleave\n");
--		return -ENOMEM;
-+	wi_group->nattrs[nid] = new_attr;
-+	mutex_unlock(&wi_group->kobj_lock);
-+
-+	sysfs_attr_init(&wi_group->nattrs[nid]->kobj_attr.attr);
-+	wi_group->nattrs[nid]->kobj_attr.attr.name = name;
-+	wi_group->nattrs[nid]->kobj_attr.attr.mode = 0644;
-+	wi_group->nattrs[nid]->kobj_attr.show = node_show;
-+	wi_group->nattrs[nid]->kobj_attr.store = node_store;
-+	wi_group->nattrs[nid]->nid = nid;
-+
-+	ret = sysfs_create_file(&wi_group->wi_kobj,
-+				&wi_group->nattrs[nid]->kobj_attr.attr);
-+	if (ret) {
-+		kfree(wi_group->nattrs[nid]->kobj_attr.attr.name);
-+		kfree(wi_group->nattrs[nid]);
-+		wi_group->nattrs[nid] = NULL;
-+		pr_err("Failed to add attribute to weighted_interleave: %d\n", ret);
- 	}
- 
--	wi_group->nattrs[nid] = node_attr;
--	return 0;
-+	return ret;
-+}
-+
-+static int wi_node_notifier(struct notifier_block *nb,
-+			       unsigned long action, void *data)
-+{
-+	int err;
-+	struct memory_notify *arg = data;
-+	int nid = arg->status_change_nid;
-+
-+	if (nid < 0)
-+		goto notifier_end;
-+
-+	switch(action) {
-+	case MEM_ONLINE:
-+		if (node_state(nid, N_MEMORY)) {
-+			err = sysfs_wi_node_add(nid);
-+			if (err) {
-+				pr_err("failed to add sysfs [node%d]\n", nid);
-+				return NOTIFY_BAD;
-+			}
-+		}
-+		break;
-+	case MEM_OFFLINE:
-+		if (!node_state(nid, N_MEMORY))
-+			sysfs_wi_node_release(nid);
-+		break;
-+	}
-+
-+notifier_end:
-+	return NOTIFY_OK;
- }
- 
- static int add_weighted_interleave_group(struct kobject *mempolicy_kobj)
-@@ -3504,13 +3566,17 @@ static int add_weighted_interleave_group(struct kobject *mempolicy_kobj)
- 		       GFP_KERNEL);
- 	if (!wi_group)
- 		return -ENOMEM;
-+	mutex_init(&wi_group->kobj_lock);
- 
- 	err = kobject_init_and_add(&wi_group->wi_kobj, &wi_ktype, mempolicy_kobj,
- 				   "weighted_interleave");
- 	if (err)
- 		goto err_out;
- 
--	for_each_node_state(nid, N_POSSIBLE) {
-+	for_each_online_node(nid) {
-+		if (!node_state(nid, N_MEMORY))
-+			continue;
-+
- 		err = sysfs_wi_node_add(nid);
- 		if (err) {
- 			pr_err("failed to add sysfs [node%d]\n", nid);
-@@ -3518,6 +3584,7 @@ static int add_weighted_interleave_group(struct kobject *mempolicy_kobj)
- 		}
- 	}
- 
-+	hotplug_memory_notifier(wi_node_notifier, DEFAULT_CALLBACK_PRI);
- 	return 0;
- 
- err_out:
 -- 
-2.34.1
+Cheers,
+
+David / dhildenb
 
