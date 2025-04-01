@@ -1,242 +1,208 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D4F61E47A8;
-	Tue,  1 Apr 2025 07:01:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82AA61EBFE4;
+	Tue,  1 Apr 2025 09:10:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743490911; cv=none; b=lgFFsMICB7+9dF0A2kK8+jObuEOZEKNCebjZAUHVETzM9GKPqD3xLhmE4O+A4DDIQZm370m3CffOSIixoTzgWi35uoYNLDKkL1Cnz48pB/HFkoW6aeaQgKec0wf82xLSqv/Kokg2KdWJSwq2vPG9Ima/wNY/mHhucnjz/8ViSlU=
+	t=1743498642; cv=none; b=a7bCjM8wEZLNS2L0NsVkgNcbulpNNIlZtpvxnqciMP71KafX0eKdOIL7lFQslhmWdImIygcuIfPQn7TWnX0D7tA0DoiFvLD9UdDIBVVakozJsg3Y1QFXyTof6iHcnU5mzLSbFSamtisu4LdzH11jNcTy9rop2l4b8Fw1+JHYzRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743490911; c=relaxed/simple;
-	bh=Xyj9fy0t+j9yqXvpzxTBsevb37aXQjn4WdDr6SgaL1E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TTJmJaSneL8kUmeSWFSpYT3OrguR7gkpB2DDd6+0qZl4e6OT9Tr6NHEmWQ5QjD8fGfM8o6U3MlSJhejti7wpQQ5+uEz+Agm+KMYEhVfHweq3b+ZAuC+15jBSc703CtMLcLQLN2/VTwu5B0XwtGXRQs5REHsg2oalMiQo3dYlEWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=qFxX2zRw; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="qFxX2zRw"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5310Ytdb007912;
-	Tue, 1 Apr 2025 07:01:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=DZwEJ2
-	EdSPqEmxgJ44h6Rc6DHX40NZXvgEZD3qSDd0g=; b=qFxX2zRwSgWQrAgXNbjs4m
-	NZL3kqLo1HTyX50l7iNT/v1i+dPvPmTziJ7kGX+ov9xEqI+XBWNXpcqNwXl76xpN
-	YkhtJ0QNdpUdY3OQLA7/d4G4trJ6qVeqXHD569YjnsgsXMfpc7LduioRCc/cgtbU
-	wLMkRyhoROidqPHcXPgq3eq+/XIavbRp+ui2vsyyF/10O82zhdfec0Y8IPgP+nyb
-	RC5W8ENGJaL4xBfpm73zuNOQRn6XXhxQIISABMmHUxTgwD4C9lm56dGu+1sHc1XG
-	1oyhLsfrGzXMxa+qF30fSGrUqSGWYDC4kweGmIypSJJDyoU6GcbyDyG4/EPnPCPQ
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45qvfpuwd7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 01 Apr 2025 07:01:28 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5314HdhL009999;
-	Tue, 1 Apr 2025 07:01:27 GMT
-Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45pv6nsakj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 01 Apr 2025 07:01:27 +0000
-Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
-	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53171Q2Y53149962
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 1 Apr 2025 07:01:26 GMT
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 71D965805D;
-	Tue,  1 Apr 2025 07:01:26 +0000 (GMT)
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 12BD758067;
-	Tue,  1 Apr 2025 07:01:22 +0000 (GMT)
-Received: from [9.204.204.161] (unknown [9.204.204.161])
-	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  1 Apr 2025 07:01:21 +0000 (GMT)
-Message-ID: <4641ce2f-74eb-45ea-a2f8-c7d0db905b7a@linux.ibm.com>
-Date: Tue, 1 Apr 2025 12:31:20 +0530
+	s=arc-20240116; t=1743498642; c=relaxed/simple;
+	bh=ev88QDfI70wGQFqzTDVwN6Lpb4hXA5Cj9+UKl3RwI9M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=iwiYQnW9p9VkhxOb86afCU1mkhfOuVVz2cKixfOEKujMBNayZd83+n56wlLb0LJ6Pj6IMzYaAgK82t9Qsfuavc4Utz5iZ5i4OINyrdl1dROJEdaaErrcQiUiN6nUUKDAnj9l6vCqwe2s2CGBY/xgoVsNFqFMytfi33GNGrUJS1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-33-67ebad88ce4b
+From: Rakie Kim <rakie.kim@sk.com>
+To: gourry@gourry.net
+Cc: akpm@linux-foundation.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	joshua.hahnjy@gmail.com,
+	dan.j.williams@intel.com,
+	ying.huang@linux.alibaba.com,
+	david@redhat.com,
+	Jonathan.Cameron@huawei.com,
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com,
+	rakie.kim@sk.com
+Subject: [PATCH v4 1/3] mm/mempolicy: Fix memory leaks in weighted interleave sysfs
+Date: Tue,  1 Apr 2025 18:08:57 +0900
+Message-ID: <20250401090901.1050-2-rakie.kim@sk.com>
+X-Mailer: git-send-email 2.48.1.windows.1
+In-Reply-To: <20250401090901.1050-1-rakie.kim@sk.com>
+References: <20250401090901.1050-1-rakie.kim@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [BUG -next] ./usr/include/cxl/features.h:11:10: fatal error:
- uuid/uuid.h: No such file or directory
-Content-Language: en-GB
-To: Dan Williams <dan.j.williams@intel.com>, Jason Gunthorpe <jgg@nvidia.com>
-Cc: Dave Jiang <dave.jiang@intel.com>,
-        "Paul E. McKenney"
- <paulmck@kernel.org>, linux-cxl@vger.kernel.org,
-        dave@stgolabs.net, jonathan.cameron@huawei.com,
-        alison.schofield@intel.com, vishal.l.verma@intel.com,
-        ira.weiny@intel.com, gourry@gourry.net, linux-kernel@vger.kernel.org,
-        linux-next@vger.kernel.org, sfr@canb.auug.org.au,
-        Madhavan Srinivasan <maddy@linux.ibm.com>
-References: <f6489337-67c7-48c8-b48a-58603ec15328@paulmck-laptop>
- <14bfcfa0-5999-49e4-854e-ff8810d6df3c@intel.com>
- <52a34c97-88d2-415e-a899-6583ae3ba620@paulmck-laptop>
- <30a7f782-4388-45b6-bb3c-a0faf85b7445@intel.com>
- <51e9823c-784c-4b91-99d4-0500aaf5cec0@paulmck-laptop>
- <67e7301dc8ad7_201f0294a5@dwillia2-xfh.jf.intel.com.notmuch>
- <1f48ba3b-9ba8-44e5-98c7-4c9abf95a935@intel.com>
- <20250331132439.GD10839@nvidia.com>
- <67eac8df3e217_201f02948d@dwillia2-xfh.jf.intel.com.notmuch>
- <20250331171755.GC289482@nvidia.com>
- <67eaf14b7c611_201f0294ba@dwillia2-xfh.jf.intel.com.notmuch>
-From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-In-Reply-To: <67eaf14b7c611_201f0294ba@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 6XmQSx-ez0iC_pP1npL9XVksmZMGgIvy
-X-Proofpoint-GUID: 6XmQSx-ez0iC_pP1npL9XVksmZMGgIvy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-01_02,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
- priorityscore=1501 clxscore=1011 adultscore=0 bulkscore=0
- lowpriorityscore=0 spamscore=0 mlxlogscore=999 mlxscore=0 impostorscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504010046
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrILMWRmVeSWpSXmKPExsXC9ZZnkW7n2tfpBquPMlnMWb+GzWL61AuM
+	Fl/X/2K2+Hn3OLvFqoXX2CyOb53HbnF+1ikWi8u75rBZ3Fvzn9Vi9ZoMBy6PnbPusnt0t11m
+	92g58pbVY/Gel0wemz5NYvc4MeM3i8fOh5Ye7/ddZfP4vEkugDOKyyYlNSezLLVI3y6BK2Pe
+	kkdMBWdkKk5NOMbYwDhDvIuRk0NCwERi1fZjbDD2+0vXWLsYOTjYBJQkju2NAQmLCIhKzDs6
+	m6WLkYuDWeAak8SBzzdZQBLCAsESx261sYLYLAKqEp9+TGEGsXmB5vS87WKBmKkp0XDpHhOI
+	zSlgKrH/6TFGEFsIqObR7TMsEPWCEidnPgGzmQXkJZq3zmYGWSYh8JpN4si008wQgyQlDq64
+	wTKBkX8Wkp5ZSHoWMDKtYhTKzCvLTczMMdHLqMzLrNBLzs/dxAgM+GW1f6J3MH66EHyIUYCD
+	UYmHd0Ppq3Qh1sSy4srcQ4wSHMxKIrwRX1+mC/GmJFZWpRblxxeV5qQWH2KU5mBREuc1+lae
+	IiSQnliSmp2aWpBaBJNl4uCUamCc1HZh+u7uP0pmJTPajrWerHDdl/2veMYHcSaH3Oo3dgcO
+	n7xVwpqerH9VViXOROG257k500uyV7jUCWk3ru4PuhBherhqX+TTn6Zpj6380u1dFafwx9bN
+	cu430zjn5bujb6Lan49PLhXmz/wRyB1yW07JVOVOlRaPwrRfVezMov1nHh/84q7EUpyRaKjF
+	XFScCADnxJsRdAIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrNLMWRmVeSWpSXmKPExsXCNUNNS7dj7et0g7Z3phZz1q9hs5g+9QKj
+	xdf1v5gtft49zm7x+dlrZotVC6+xWRzfOo/d4vDck6wW52edYrG4vGsOm8W9Nf9ZLQ5de85q
+	sXpNhsXvbSvYHPg8ds66y+7R3XaZ3aPlyFtWj8V7XjJ5bPo0id3jxIzfLB47H1p6vN93lc3j
+	220Pj8UvPjB5fN4kF8AdxWWTkpqTWZZapG+XwJUxb8kjpoIzMhWnJhxjbGCcId7FyMkhIWAi
+	8f7SNdYuRg4ONgEliWN7Y0DCIgKiEvOOzmbpYuTiYBa4xiRx4PNNFpCEsECwxLFbbawgNouA
+	qsSnH1OYQWxeoDk9b7tYIGZqSjRcuscEYnMKmErsf3qMEcQWAqp5dPsMC0S9oMTJmU/AbGYB
+	eYnmrbOZJzDyzEKSmoUktYCRaRWjSGZeWW5iZo6pXnF2RmVeZoVecn7uJkZgkC+r/TNxB+OX
+	y+6HGAU4GJV4eDeUvkoXYk0sK67MPcQowcGsJMIb8fVluhBvSmJlVWpRfnxRaU5q8SFGaQ4W
+	JXFer/DUBCGB9MSS1OzU1ILUIpgsEwenVAOjvWp0k1ftq6J3C5mdG98Kl/1knBXCEBBQumRP
+	Vr3rtQezTlyQ4HI1TnDP32V2Y219ucThj88TExz//jW/EGJZfFdzk/BCNqblEum/whS/pX99
+	9zl++/1F1679ymVzifzZtfSt/Qljz9UzT4XuDFjbvDMtI1X3+98DnqdZ/28RCLlokHr5hX21
+	EktxRqKhFnNRcSIAxk+6MW4CAAA=
+X-CFilter-Loop: Reflected
 
+Memory leaks occurred when removing sysfs attributes for weighted
+interleave. Improper kobject deallocation led to unreleased memory
+when initialization failed or when nodes were removed.
 
-On 01/04/25 1:17 am, Dan Williams wrote:
-> Jason Gunthorpe wrote:
->> On Mon, Mar 31, 2025 at 09:54:55AM -0700, Dan Williams wrote:
->>> Jason Gunthorpe wrote:
->>>> On Fri, Mar 28, 2025 at 05:26:42PM -0700, Dave Jiang wrote:
->>>>>> For now the following builds for me, but it is a quite a mess to undo
->>>>>> the assumption that that the hardware object definitions can not use
->>>>>> uuid_t:
->>>>> +Jason.
->>>> Seems invasive?
->>> Yeah, it left a bad taste for me as well.
->>>
->>>> Maybe just like below?
->>> I like that this avoids converting to the kernel's uuid API, however,
->>> not quite happy that it forces userspace to contend with the
->>> type-conflict with uuid/uuid.h.
->> Oh I see
->>   
->>> So how about one more riff on your idea?
->> Sure, works for me, please post it..
-> b4 am supports scissors lines, so:
->
-> b4 am -P _  67eac8df3e217_201f02948d@dwillia2-xfh.jf.intel.com.notmuch
->
-> ...works for me. Do you still need a separate posting?
->
+This patch resolves the issue by replacing unnecessary `kfree()`
+calls with `kobject_put()`, ensuring proper cleanup and preventing
+memory leaks.
 
-This issue got introduced in next-20250307 and got fixed in 
-next-20250311(not sure what fixed).
+By correctly using `kobject_put()`, the release function now
+properly deallocates memory without causing resource leaks,
+thereby improving system stability.
 
-But again got re-introduced in  next-20250318. I tried bisection, below 
-are the logs.
+Fixes: dce41f5ae253 ("mm/mempolicy: implement the sysfs-based weighted_interleave interface")
+Signed-off-by: Rakie Kim <rakie.kim@sk.com>
+Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
+Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
+Reviewed-by: Gregory Price <gourry@gourry.net>
+---
+ mm/mempolicy.c | 61 +++++++++++++++++++++++++-------------------------
+ 1 file changed, 31 insertions(+), 30 deletions(-)
 
-One of the things I tried is to install the UUID packages on my set up 
-and after installing those packages, issue is not seen.
-
-rpm -qa | grep uuid
-
-libuuid-2.37.4-20.el9.ppc64le
-uuid-1.6.2-55.el9.ppc64le
-uuid-c++-1.6.2-55.el9.ppc64le
-uuid-dce-1.6.2-55.el9.ppc64le
-uuid-devel-1.6.2-55.el9.ppc64le
-uuidd-2.37.4-20.el9.ppc64le
-libuuid-devel-2.37.4-20.el9.ppc64le
-
-So wondering is this not a setup issue?  Please advice.
-
-
-Bisect Log:
-
-git bisect log
-git bisect start
-# status: waiting for both good and bad commits
-# bad: [c4d4884b67802c41fd67399747165d65c770621a] Add linux-next 
-specific files for 20250318
-git bisect bad c4d4884b67802c41fd67399747165d65c770621a
-# status: waiting for good commit(s), bad commit known
-# good: [4701f33a10702d5fc577c32434eb62adde0a1ae1] Linux 6.14-rc7
-git bisect good 4701f33a10702d5fc577c32434eb62adde0a1ae1
-# good: [cda4d1b29991d4500e9f65c6936b5d3ccd99ecbb] Merge branch 
-'spi-nor/next' of 
-git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git
-git bisect good cda4d1b29991d4500e9f65c6936b5d3ccd99ecbb
-# good: [9b22611592aa21d10f7d1b89352a618436dea7ac] Merge branch 'next' 
-of git://git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git
-git bisect good 9b22611592aa21d10f7d1b89352a618436dea7ac
-# good: [264791f7669a8246d129cbb935c861debba2f116] Merge branch 
-'driver-core-next' of 
-git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git
-git bisect good 264791f7669a8246d129cbb935c861debba2f116
-# good: [3c51cb2d6ec7cecf724cd5d78a0633f61f31e726] Merge branch 
-'for-next' of 
-git://git.kernel.org/pub/scm/linux/kernel/git/remoteproc/linux.git
-git bisect good 3c51cb2d6ec7cecf724cd5d78a0633f61f31e726
-# good: [612481dbc16505cf5e940809ebf36d8460d174cf] Merge branch 'main' 
-of git://git.infradead.org/users/willy/xarray.git
-git bisect good 612481dbc16505cf5e940809ebf36d8460d174cf
-# bad: [892715be4379deb333376e573113fd75672eca6c] Merge branch 
-'rust-next' of https://github.com/Rust-for-Linux/linux.git
-git bisect bad 892715be4379deb333376e573113fd75672eca6c
-# bad: [b33f4167a8a2b9b9cc6b3e06f79b030db82cf530] Merge branch 'next' of 
-git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git
-git bisect bad b33f4167a8a2b9b9cc6b3e06f79b030db82cf530
-# good: [3b5d43245f0a56390baaa670e1b6d898772266b3] Merge branch 
-'for-6.15/features' into cxl-for-next
-git bisect good 3b5d43245f0a56390baaa670e1b6d898772266b3
-# good: [d11af4ae2169672b690a4d07a9dfdfd76c082683] Merge branch 
-'for-next' of 
-git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-auxdisplay.git
-git bisect good d11af4ae2169672b690a4d07a9dfdfd76c082683
-# bad: [5908f3ed6dc209e5c824e63afda7545805f75a7e] cxl: Add support to 
-handle user feature commands for get feature
-git bisect bad 5908f3ed6dc209e5c824e63afda7545805f75a7e
-# good: [18285acc2c047cda2449f426c09fc8969b04b8b1] fwctl: Add documentation
-git bisect good 18285acc2c047cda2449f426c09fc8969b04b8b1
-# good: [15a26c223fff58d9fa4ada12a8c35697f8ecdf6c] Merge branch 
-'for-6.15/features' into fwctl
-git bisect good 15a26c223fff58d9fa4ada12a8c35697f8ecdf6c
-# bad: [9b8e73cdb1418f7c251c43b2082218ed9c0d0fee] cxl: Move cxl feature 
-command structs to user header
-git bisect bad 9b8e73cdb1418f7c251c43b2082218ed9c0d0fee
-# good: [858ce2f56b5253063f61f6b1c58a6dbf5d71da0b] cxl: Add FWCTL 
-support to CXL
-git bisect good 858ce2f56b5253063f61f6b1c58a6dbf5d71da0b
-# first bad commit: [9b8e73cdb1418f7c251c43b2082218ed9c0d0fee] cxl: Move 
-cxl feature command structs to user header
-
-9b8e73cdb1418f7c251c43b2082218ed9c0d0fee is the first bad commit
-commit 9b8e73cdb1418f7c251c43b2082218ed9c0d0fee
-Author: Dave Jiang <dave.jiang@intel.com>
-Date:  Fri Mar 7 13:55:32 2025 -0700
-
-   cxl: Move cxl feature command structs to user header
-
-   In preparation for cxl fwctl enabling, move data structures related to
-   cxl feature commands to a user header file.
-
-   Reviewed-by; Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-   Link: 
-https://patch.msgid.link/r/20250307205648.1021626-3-dave.jiang@intel.com
-   Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-   Reviewed-by: Li Ming <ming.li@zohomail.com>
-   Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-   Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-
-  include/cxl/features.h   | 112 +----------------------------
-  include/uapi/cxl/features.h | 169 
-++++++++++++++++++++++++++++++++++++++++++++
-  2 files changed, 170 insertions(+), 111 deletions(-)
-  create mode 100644 include/uapi/cxl/features.h
-
-
-Regards,
-
-Venkat.
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index bbaadbeeb291..5950d5d5b85e 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -3448,7 +3448,9 @@ static void sysfs_wi_release(struct kobject *wi_kobj)
+ 
+ 	for (i = 0; i < nr_node_ids; i++)
+ 		sysfs_wi_node_release(node_attrs[i], wi_kobj);
+-	kobject_put(wi_kobj);
++
++	kfree(node_attrs);
++	kfree(wi_kobj);
+ }
+ 
+ static const struct kobj_type wi_ktype = {
+@@ -3494,15 +3496,22 @@ static int add_weighted_interleave_group(struct kobject *root_kobj)
+ 	struct kobject *wi_kobj;
+ 	int nid, err;
+ 
+-	wi_kobj = kzalloc(sizeof(struct kobject), GFP_KERNEL);
+-	if (!wi_kobj)
++	node_attrs = kcalloc(nr_node_ids, sizeof(struct iw_node_attr *),
++			     GFP_KERNEL);
++	if (!node_attrs)
+ 		return -ENOMEM;
+ 
++	wi_kobj = kzalloc(sizeof(struct kobject), GFP_KERNEL);
++	if (!wi_kobj) {
++		err = -ENOMEM;
++		goto node_out;
++	}
++
+ 	err = kobject_init_and_add(wi_kobj, &wi_ktype, root_kobj,
+ 				   "weighted_interleave");
+ 	if (err) {
+-		kfree(wi_kobj);
+-		return err;
++		kobject_put(wi_kobj);
++		goto err_out;
+ 	}
+ 
+ 	for_each_node_state(nid, N_POSSIBLE) {
+@@ -3512,9 +3521,17 @@ static int add_weighted_interleave_group(struct kobject *root_kobj)
+ 			break;
+ 		}
+ 	}
+-	if (err)
++	if (err) {
+ 		kobject_put(wi_kobj);
++		goto err_out;
++	}
++
+ 	return 0;
++
++node_out:
++	kfree(node_attrs);
++err_out:
++	return err;
+ }
+ 
+ static void mempolicy_kobj_release(struct kobject *kobj)
+@@ -3528,7 +3545,6 @@ static void mempolicy_kobj_release(struct kobject *kobj)
+ 	mutex_unlock(&iw_table_lock);
+ 	synchronize_rcu();
+ 	kfree(old);
+-	kfree(node_attrs);
+ 	kfree(kobj);
+ }
+ 
+@@ -3542,37 +3558,22 @@ static int __init mempolicy_sysfs_init(void)
+ 	static struct kobject *mempolicy_kobj;
+ 
+ 	mempolicy_kobj = kzalloc(sizeof(*mempolicy_kobj), GFP_KERNEL);
+-	if (!mempolicy_kobj) {
+-		err = -ENOMEM;
+-		goto err_out;
+-	}
+-
+-	node_attrs = kcalloc(nr_node_ids, sizeof(struct iw_node_attr *),
+-			     GFP_KERNEL);
+-	if (!node_attrs) {
+-		err = -ENOMEM;
+-		goto mempol_out;
+-	}
++	if (!mempolicy_kobj)
++		return -ENOMEM;
+ 
+ 	err = kobject_init_and_add(mempolicy_kobj, &mempolicy_ktype, mm_kobj,
+ 				   "mempolicy");
+ 	if (err)
+-		goto node_out;
++		goto err_out;
+ 
+ 	err = add_weighted_interleave_group(mempolicy_kobj);
+-	if (err) {
+-		pr_err("mempolicy sysfs structure failed to initialize\n");
+-		kobject_put(mempolicy_kobj);
+-		return err;
+-	}
++	if (err)
++		goto err_out;
++
++	return 0;
+ 
+-	return err;
+-node_out:
+-	kfree(node_attrs);
+-mempol_out:
+-	kfree(mempolicy_kobj);
+ err_out:
+-	pr_err("failed to add mempolicy kobject to the system\n");
++	kobject_put(mempolicy_kobj);
+ 	return err;
+ }
+ 
+-- 
+2.34.1
 
