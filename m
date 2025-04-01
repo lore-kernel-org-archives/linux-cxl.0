@@ -1,275 +1,207 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C55B1EBA08
-	for <linux-cxl@vger.kernel.org>; Tue,  1 Apr 2025 09:47:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3CB41C8639;
+	Tue,  1 Apr 2025 14:08:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743500859; cv=none; b=pTl8OUgNelJq8aiaN2nlS0WGmSCF/7LPQzDkBXCUwEf3p76AOuHlsppsi3Yj2x8cY/0PiDhM5PrWtv9R15A9vtL6HYfgYzgUmhXGoo/kFqcBYjeiCnd6CFD7HMidGWw/SvBLHdjTqds5JGJVskIPsEZ4bfLPLcfYrTyP3U/J8ik=
+	t=1743516483; cv=none; b=k25l1KYwe/BlVFtQfq5WJMzHLISlSJn7RXSacdKG/SoX3GYkBHYW9PyPCw8Xx366iMaqOeJ1El4WYAeIzFmVI1QsYmM686dPI+mSKLiTRD0KJ9JCDSv5PNrAN/6f9tPXbk72S4xq+uNSRGIPk92gs/rJjIAf7wa/XFpWZMmZOKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743500859; c=relaxed/simple;
-	bh=/kEDlxs4pWmB9oX/fku3N5QHYUv8wV66SG9+ndFhA8I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L+fHS26Kj0ifFrSAR+tYQQUKSFVteF3Ss/kiuz8EMVQLcpiBUbzebcnsdNEhAaN6HfFhDgHl9OA6rkA1f3sx9F1XhRoVz0rQsMy7XGXPac2rHWzDW1N1R2NocsmiaNxRer9IYJq8Rf6ehS5Vd8uIcl9Q7cXf6tII9Ud+KRYDjIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HAqJDUG0; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743516483; c=relaxed/simple;
+	bh=KcH6QnN1ToeMjkWFnDuRgbTIuq/tA5Z4rE1hvUZnWd0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JeyleykIUdwruk6FpUJTFTtPlaHfLZw6ezMrLuZUGXmWffpSSFHKEScfLhGy5E6n4AEdrWnQvnA5VIJKzr/OpAtMe/vOlsMELNNeVBQZJ9tOgNB8qAGjnZsgXvFDw9cmJvNzfn5+tWuRUetlzUX3KDWQQPanemwwyyvMf8CXSg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lVyAyhCc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HAqJDUG0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743500856;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ADDlubXMad228XKT7ftPgPCt5gtgtinY6YissM6OgU4=;
-	b=HAqJDUG0BFxX6CRj0VNTUCWR5Fj9G4t2ARuqtdKa98TbHnGmAu6qZ+tAH77SlXNb8862Og
-	EGHUWMXSNgXE05D9zJRX+yCx3LVRRloYwNvhqv3S7hqAHX5Qfu7E4zjl/rdBYaxy4k5nce
-	qGopIGwAggLUxI0LqW0TkWpn+lFtm6w=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-518-jJ9FN-MaOYKKgb9SMDmJYw-1; Tue, 01 Apr 2025 05:47:36 -0400
-X-MC-Unique: jJ9FN-MaOYKKgb9SMDmJYw-1
-X-Mimecast-MFC-AGG-ID: jJ9FN-MaOYKKgb9SMDmJYw_1743500855
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43e9a3d2977so16613305e9.1
-        for <linux-cxl@vger.kernel.org>; Tue, 01 Apr 2025 02:47:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743500854; x=1744105654;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ADDlubXMad228XKT7ftPgPCt5gtgtinY6YissM6OgU4=;
-        b=YAxwxc30AqpuROhkH/UXO+sxKKl3FTDpB+ukZisFC9cRJITQ7TpHDyKpr2wF69nJC0
-         Cz25q+eD1ZYG4/FoZgd/R47VYdcJ0Lk9u8cwfWobpSKEA1nsugPFrEfUWHHgDx1lFElS
-         i2jkrbYrsgqMwBx+3wA4gK0xZER6C71MfivBGYWwMY2sehlKAGHqUmNyU8QOC0IJ35L+
-         xdBMJnJTrmWol9cLD5Wjy36XLhO4H+qdzt/awOTQ0kNhxcmWsJ0hz03qPrReg/8MelWG
-         RJuaaLHx/WjPkztMSS781hW0qdZLfsI0a5ka0vGxPZW5ol7sNx8TvEGJ+mgpce0YqfMN
-         KMtA==
-X-Forwarded-Encrypted: i=1; AJvYcCX0ucnoColQccoUdO9o/aSoWww6Swxa5DIT6ahK79WigvbUs7LxASzkc9KH2D+d7DVe8q/X7QSJn3c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YylYFQimTWCiHlweqMauNyTnvTvGxBLzMlmhZDUsQP4ZlxNLKmD
-	kw8Ede1uzKknFR1wnkdCEfIG8OUSKcz3D+4EULb90KeLn99WVXzTUlVZQ7qEBrLWshgaWo3EY+X
-	1eoVgT8oKFXdd4NJWWI+b9xt4mPLVK6/yNmCQ1WXf5+A6B4MskxYNkbRbc9mAXTi0HQ==
-X-Gm-Gg: ASbGncuUJY/U7PpGnAnPaAnkDjTTiIIXzhw0Q5sfw+Tc+UBS3O2QnZkDeTNyA594rhE
-	tejt18FmrL/flnAKWzZts6IAcFLanpQB3JPdxGQNlBBjbMSmdHWn27Za8re763mTYZahF6f/Hsn
-	LagDuKSLm66nNtgi18OdYl4+FANB5T9gtSu9U8a3cGWnWBQbx3/qpbmyRM9p1D7KqE+B0rUaoVK
-	kbMAmNyqZHifhMzNfKY+e7cICDCTG7cUyK6LUMhcLN4sjcwa+aZOTpnGuuSu5+Muh9Zzq6A0da4
-	+1xhllBapYEKPtHVfUw5Ra8NJq9U0XQppljnmaKH2ssxFmxjr2lXO8NCFqNipsukgNsvxNx6NP1
-	lT/ieqMhZCIrENDRl3iY7XN5MB/qvD20jcwJDGGQA
-X-Received: by 2002:a05:600c:4715:b0:43c:ee3f:2c3 with SMTP id 5b1f17b1804b1-43db62274f4mr92304835e9.7.1743500854589;
-        Tue, 01 Apr 2025 02:47:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHi3pJoCFP8+t9OEcAzrHTZEALh9nlhSaUL6YfefKUj+wsSgRQG8T/V7vs1PIYA4jslo+Pxqw==
-X-Received: by 2002:a05:600c:4715:b0:43c:ee3f:2c3 with SMTP id 5b1f17b1804b1-43db62274f4mr92304635e9.7.1743500854131;
-        Tue, 01 Apr 2025 02:47:34 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c707:4d00:6ac5:30d:1611:918f? (p200300cbc7074d006ac5030d1611918f.dip0.t-ipconnect.de. [2003:cb:c707:4d00:6ac5:30d:1611:918f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d8ff02e84sm150121975e9.32.2025.04.01.02.47.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Apr 2025 02:47:33 -0700 (PDT)
-Message-ID: <88bce46e-a703-4935-b10e-638e33ea91b3@redhat.com>
-Date: Tue, 1 Apr 2025 11:47:32 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lVyAyhCc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D22CC4CEE4;
+	Tue,  1 Apr 2025 14:08:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743516483;
+	bh=KcH6QnN1ToeMjkWFnDuRgbTIuq/tA5Z4rE1hvUZnWd0=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=lVyAyhCcYdlKQ2ijuTWLdsz9IzSq+PHZM7ImRDdMcAz23DwNFbEXwiamYfDFind4R
+	 8PDjkDozdl7JSvIvY/72pidY0DIQNCcBqZHC7I98RITHLJyEdxd5E5c6Ct0cCrS17V
+	 T7Uyk/0G7Jr/VvhF+zqCDMGSoTKi2ymNDWhESDqCS42QSEJ0uFufoXBdJheJwSYxgg
+	 YAfXtrwAyh+WxMDtRIQ9ejpNuka3VS6oW9VpZ7JFrLdG+OBz38LD49prQOp/fE/DTX
+	 kGzxjOr/Hw71Xi5Hzspbq1wRX47SPWplG4ISzBGtHfeeo5hA0yv7L66Ir9Vxxc9ejU
+	 UocAso/tdiU4Q==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id E42DACE0869; Tue,  1 Apr 2025 07:08:02 -0700 (PDT)
+Date: Tue, 1 Apr 2025 07:08:02 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Jason Gunthorpe <jgg@nvidia.com>, Dave Jiang <dave.jiang@intel.com>,
+	linux-cxl@vger.kernel.org, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com, gourry@gourry.net,
+	linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+	sfr@canb.auug.org.au, Madhavan Srinivasan <maddy@linux.ibm.com>
+Subject: Re: [BUG -next] ./usr/include/cxl/features.h:11:10: fatal error:
+ uuid/uuid.h: No such file or directory
+Message-ID: <2b0d7649-8998-40ef-b9ba-e1c91acf4c9d@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <52a34c97-88d2-415e-a899-6583ae3ba620@paulmck-laptop>
+ <30a7f782-4388-45b6-bb3c-a0faf85b7445@intel.com>
+ <51e9823c-784c-4b91-99d4-0500aaf5cec0@paulmck-laptop>
+ <67e7301dc8ad7_201f0294a5@dwillia2-xfh.jf.intel.com.notmuch>
+ <1f48ba3b-9ba8-44e5-98c7-4c9abf95a935@intel.com>
+ <20250331132439.GD10839@nvidia.com>
+ <67eac8df3e217_201f02948d@dwillia2-xfh.jf.intel.com.notmuch>
+ <20250331171755.GC289482@nvidia.com>
+ <67eaf14b7c611_201f0294ba@dwillia2-xfh.jf.intel.com.notmuch>
+ <4641ce2f-74eb-45ea-a2f8-c7d0db905b7a@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] DAX: warn when kmem regions are truncated for memory
- block alignment.
-To: Gregory Price <gourry@gourry.net>, linux-cxl@vger.kernel.org
-Cc: nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org,
- kernel-team@meta.com, dan.j.williams@intel.com, vishal.l.verma@intel.com,
- dave.jiang@intel.com
-References: <20250321180731.568460-1-gourry@gourry.net>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250321180731.568460-1-gourry@gourry.net>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: bQazFVdNxf2PmGVtdNSotot2bDMRYEf7-wcdLffPvvE_1743500855
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4641ce2f-74eb-45ea-a2f8-c7d0db905b7a@linux.ibm.com>
 
-On 21.03.25 19:07, Gregory Price wrote:
-> Device capacity intended for use as system ram should be aligned to the
-> architecture-defined memory block size or that capacity will be silently
-> truncated and capacity stranded.
+On Tue, Apr 01, 2025 at 12:31:20PM +0530, Venkat Rao Bagalkote wrote:
 > 
-> As hotplug dax memory becomes more prevelant, the memory block size
-> alignment becomes more important for platform and device vendors to
-> pay attention to - so this truncation should not be silent.
+> On 01/04/25 1:17 am, Dan Williams wrote:
+> > Jason Gunthorpe wrote:
+> > > On Mon, Mar 31, 2025 at 09:54:55AM -0700, Dan Williams wrote:
+> > > > Jason Gunthorpe wrote:
+> > > > > On Fri, Mar 28, 2025 at 05:26:42PM -0700, Dave Jiang wrote:
+> > > > > > > For now the following builds for me, but it is a quite a mess to undo
+> > > > > > > the assumption that that the hardware object definitions can not use
+> > > > > > > uuid_t:
+> > > > > > +Jason.
+> > > > > Seems invasive?
+> > > > Yeah, it left a bad taste for me as well.
+> > > > 
+> > > > > Maybe just like below?
+> > > > I like that this avoids converting to the kernel's uuid API, however,
+> > > > not quite happy that it forces userspace to contend with the
+> > > > type-conflict with uuid/uuid.h.
+> > > Oh I see
+> > > > So how about one more riff on your idea?
+> > > Sure, works for me, please post it..
+> > b4 am supports scissors lines, so:
+> > 
+> > b4 am -P _  67eac8df3e217_201f02948d@dwillia2-xfh.jf.intel.com.notmuch
+> > 
+> > ...works for me. Do you still need a separate posting?
+> > 
 > 
-> This issue is particularly relevant for CXL Dynamic Capacity devices,
-> whose capacity may arrive in spec-aligned but block-misaligned chunks.
+> This issue got introduced in next-20250307 and got fixed in
+> next-20250311(not sure what fixed).
 > 
-> Example:
->   [...] kmem dax0.0: dax region truncated 2684354560 bytes - alignment
->   [...] kmem dax1.0: dax region truncated 1610612736 bytes - alignment
+> But again got re-introduced in  next-20250318. I tried bisection, below are
+> the logs.
 > 
-> Signed-off-by: Gregory Price <gourry@gourry.net>
-> ---
->   drivers/dax/kmem.c | 18 ++++++++++++++----
->   1 file changed, 14 insertions(+), 4 deletions(-)
+> One of the things I tried is to install the UUID packages on my set up and
+> after installing those packages, issue is not seen.
 > 
-> diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
-> index e97d47f42ee2..15b6807b703d 100644
-> --- a/drivers/dax/kmem.c
-> +++ b/drivers/dax/kmem.c
-> @@ -28,7 +28,8 @@ static const char *kmem_name;
->   /* Set if any memory will remain added when the driver will be unloaded. */
->   static bool any_hotremove_failed;
->   
-> -static int dax_kmem_range(struct dev_dax *dev_dax, int i, struct range *r)
-> +static int dax_kmem_range(struct dev_dax *dev_dax, int i, struct range *r,
-> +			  unsigned long *truncated)
->   {
->   	struct dev_dax_range *dax_range = &dev_dax->ranges[i];
->   	struct range *range = &dax_range->range;
-> @@ -41,6 +42,9 @@ static int dax_kmem_range(struct dev_dax *dev_dax, int i, struct range *r)
->   		r->end = range->end;
->   		return -ENOSPC;
->   	}
-> +
-> +	if (truncated && (r->start != range->start || r->end != range->end))
-> +		*truncated = (r->start - range->start) + (range->end - r->end);
->   	return 0;
->   }
->   
-> @@ -75,6 +79,7 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
->   	mhp_t mhp_flags;
->   	int numa_node;
->   	int adist = MEMTIER_DEFAULT_DAX_ADISTANCE;
-> +	unsigned long ttl_trunc = 0;
->   
->   	/*
->   	 * Ensure good NUMA information for the persistent memory.
-> @@ -97,7 +102,7 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
->   	for (i = 0; i < dev_dax->nr_range; i++) {
->   		struct range range;
->   
-> -		rc = dax_kmem_range(dev_dax, i, &range);
-> +		rc = dax_kmem_range(dev_dax, i, &range, NULL);
->   		if (rc) {
->   			dev_info(dev, "mapping%d: %#llx-%#llx too small after alignment\n",
->   					i, range.start, range.end);
-> @@ -130,8 +135,9 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
->   	for (i = 0; i < dev_dax->nr_range; i++) {
->   		struct resource *res;
->   		struct range range;
-> +		unsigned long truncated = 0;
->   
-> -		rc = dax_kmem_range(dev_dax, i, &range);
-> +		rc = dax_kmem_range(dev_dax, i, &range, &truncated);
->   		if (rc)
->   			continue;
->   
-> @@ -180,8 +186,12 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
->   				continue;
->   			goto err_request_mem;
->   		}
-> +
-> +		ttl_trunc += truncated;
->   		mapped++;
->   	}
-> +	if (ttl_trunc)
-> +		dev_warn(dev, "dax region truncated %ld bytes - alignment\n", ttl_trunc);
->   
->   	dev_set_drvdata(dev, data);
->   
-> @@ -216,7 +226,7 @@ static void dev_dax_kmem_remove(struct dev_dax *dev_dax)
->   		struct range range;
->   		int rc;
->   
-> -		rc = dax_kmem_range(dev_dax, i, &range);
-> +		rc = dax_kmem_range(dev_dax, i, &range, NULL);
->   		if (rc)
->   			continue;
->   
+> rpm -qa | grep uuid
+> 
+> libuuid-2.37.4-20.el9.ppc64le
+> uuid-1.6.2-55.el9.ppc64le
+> uuid-c++-1.6.2-55.el9.ppc64le
+> uuid-dce-1.6.2-55.el9.ppc64le
+> uuid-devel-1.6.2-55.el9.ppc64le
+> uuidd-2.37.4-20.el9.ppc64le
+> libuuid-devel-2.37.4-20.el9.ppc64le
+> 
+> So wondering is this not a setup issue?  Please advice.
 
-Can't that be done a bit simpler?
+Me, I would hope that it would not be necessary to install seven UUID
+packages just to do an allmodconfig build of the kernel.  Perhaps naive
+of me, I know.  ;-)
 
-diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
-index e97d47f42ee2e..23a68ff809cdf 100644
---- a/drivers/dax/kmem.c
-+++ b/drivers/dax/kmem.c
-@@ -67,8 +67,8 @@ static void kmem_put_memory_types(void)
-  
-  static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
-  {
-+       unsigned long total_len = 0, orig_len = 0;
-         struct device *dev = &dev_dax->dev;
--       unsigned long total_len = 0;
-         struct dax_kmem_data *data;
-         struct memory_dev_type *mtype;
-         int i, rc, mapped = 0;
-@@ -97,6 +97,7 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
-         for (i = 0; i < dev_dax->nr_range; i++) {
-                 struct range range;
-  
-+               orig_len += range_len(&dev_dax->ranges[i].range);
-                 rc = dax_kmem_range(dev_dax, i, &range);
-                 if (rc) {
-                         dev_info(dev, "mapping%d: %#llx-%#llx too small after alignment\n",
-@@ -109,6 +110,9 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
-         if (!total_len) {
-                 dev_warn(dev, "rejecting DAX region without any memory after alignment\n");
-                 return -EINVAL;
-+       } else if (total_len != orig_len) {
-+               dev_warn(dev, "DAX region truncated by %lu bytes due to alignment\n",
-+                        orig_len - total_len);
-         }
-  
-         init_node_memory_type(numa_node, mtype);
+							Thanx, Paul
 
-
--- 
-Cheers,
-
-David / dhildenb
-
+> Bisect Log:
+> 
+> git bisect log
+> git bisect start
+> # status: waiting for both good and bad commits
+> # bad: [c4d4884b67802c41fd67399747165d65c770621a] Add linux-next specific
+> files for 20250318
+> git bisect bad c4d4884b67802c41fd67399747165d65c770621a
+> # status: waiting for good commit(s), bad commit known
+> # good: [4701f33a10702d5fc577c32434eb62adde0a1ae1] Linux 6.14-rc7
+> git bisect good 4701f33a10702d5fc577c32434eb62adde0a1ae1
+> # good: [cda4d1b29991d4500e9f65c6936b5d3ccd99ecbb] Merge branch
+> 'spi-nor/next' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git
+> git bisect good cda4d1b29991d4500e9f65c6936b5d3ccd99ecbb
+> # good: [9b22611592aa21d10f7d1b89352a618436dea7ac] Merge branch 'next' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git
+> git bisect good 9b22611592aa21d10f7d1b89352a618436dea7ac
+> # good: [264791f7669a8246d129cbb935c861debba2f116] Merge branch
+> 'driver-core-next' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git
+> git bisect good 264791f7669a8246d129cbb935c861debba2f116
+> # good: [3c51cb2d6ec7cecf724cd5d78a0633f61f31e726] Merge branch 'for-next'
+> of git://git.kernel.org/pub/scm/linux/kernel/git/remoteproc/linux.git
+> git bisect good 3c51cb2d6ec7cecf724cd5d78a0633f61f31e726
+> # good: [612481dbc16505cf5e940809ebf36d8460d174cf] Merge branch 'main' of
+> git://git.infradead.org/users/willy/xarray.git
+> git bisect good 612481dbc16505cf5e940809ebf36d8460d174cf
+> # bad: [892715be4379deb333376e573113fd75672eca6c] Merge branch 'rust-next'
+> of https://github.com/Rust-for-Linux/linux.git
+> git bisect bad 892715be4379deb333376e573113fd75672eca6c
+> # bad: [b33f4167a8a2b9b9cc6b3e06f79b030db82cf530] Merge branch 'next' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git
+> git bisect bad b33f4167a8a2b9b9cc6b3e06f79b030db82cf530
+> # good: [3b5d43245f0a56390baaa670e1b6d898772266b3] Merge branch
+> 'for-6.15/features' into cxl-for-next
+> git bisect good 3b5d43245f0a56390baaa670e1b6d898772266b3
+> # good: [d11af4ae2169672b690a4d07a9dfdfd76c082683] Merge branch 'for-next'
+> of git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-auxdisplay.git
+> git bisect good d11af4ae2169672b690a4d07a9dfdfd76c082683
+> # bad: [5908f3ed6dc209e5c824e63afda7545805f75a7e] cxl: Add support to handle
+> user feature commands for get feature
+> git bisect bad 5908f3ed6dc209e5c824e63afda7545805f75a7e
+> # good: [18285acc2c047cda2449f426c09fc8969b04b8b1] fwctl: Add documentation
+> git bisect good 18285acc2c047cda2449f426c09fc8969b04b8b1
+> # good: [15a26c223fff58d9fa4ada12a8c35697f8ecdf6c] Merge branch
+> 'for-6.15/features' into fwctl
+> git bisect good 15a26c223fff58d9fa4ada12a8c35697f8ecdf6c
+> # bad: [9b8e73cdb1418f7c251c43b2082218ed9c0d0fee] cxl: Move cxl feature
+> command structs to user header
+> git bisect bad 9b8e73cdb1418f7c251c43b2082218ed9c0d0fee
+> # good: [858ce2f56b5253063f61f6b1c58a6dbf5d71da0b] cxl: Add FWCTL support to
+> CXL
+> git bisect good 858ce2f56b5253063f61f6b1c58a6dbf5d71da0b
+> # first bad commit: [9b8e73cdb1418f7c251c43b2082218ed9c0d0fee] cxl: Move cxl
+> feature command structs to user header
+> 
+> 9b8e73cdb1418f7c251c43b2082218ed9c0d0fee is the first bad commit
+> commit 9b8e73cdb1418f7c251c43b2082218ed9c0d0fee
+> Author: Dave Jiang <dave.jiang@intel.com>
+> Date:  Fri Mar 7 13:55:32 2025 -0700
+> 
+>   cxl: Move cxl feature command structs to user header
+> 
+>   In preparation for cxl fwctl enabling, move data structures related to
+>   cxl feature commands to a user header file.
+> 
+>   Reviewed-by; Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+>   Link:
+> https://patch.msgid.link/r/20250307205648.1021626-3-dave.jiang@intel.com
+>   Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+>   Reviewed-by: Li Ming <ming.li@zohomail.com>
+>   Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>   Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> 
+>  include/cxl/features.h   | 112 +----------------------------
+>  include/uapi/cxl/features.h | 169
+> ++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 170 insertions(+), 111 deletions(-)
+>  create mode 100644 include/uapi/cxl/features.h
+> 
+> 
+> Regards,
+> 
+> Venkat.
+> 
