@@ -1,122 +1,243 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F42FEEDE
-	for <linux-cxl@vger.kernel.org>; Tue,  1 Apr 2025 01:48:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34C4613D8A3
+	for <linux-cxl@vger.kernel.org>; Tue,  1 Apr 2025 01:59:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743472091; cv=none; b=OKoYUPSfr60z/4BfkvQmYaCSt4/gsVxUNjF1XaYmOKnyD1R+DMZRgJd8Yb5l84wHHF2wxugLuvnoB5QqPURrZWy48KGLv3AWHFZkUst5QVzlISK/cNcz+qd3V6YUzMDckEZ6XhRoXcpamA26eqnBw7tRKy2lLCSuLn+CDetG48Y=
+	t=1743472792; cv=none; b=Y8Is6Wfj+aN+EYEmh8iCgJDImbiF2n4ajgMdrKO9V1gZz5tGJrKnmYBCnKi0T3ijUQ1ijYpnN+MgFEHr2GR8fICZiv4inIHw3rGaj7ZMi72ZTW0P/+D/C9xoP+AEcYLbPM51Uiqpi7lD7FvfXPl0i/3vF1YCzBi1q+ku/skgW6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743472091; c=relaxed/simple;
-	bh=ZE0TLzMHZSX0EcpVfEOzg+w2gwf5mz1cfK8sc4JCTf8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KqVqXcx1JfuIaUx9TkABhNEzBK6Gboa4kbi0r6KPsgdmI33590I9lu0Xh1blCFvLH6UaqlVWxCXV1v6XKhCoF+UeHZh/NYntjxptsVZWEIhIqCptnRx7fQhKcN/k3atQYnH9EMPGEycqjWjE7jndgShzvVs67yFvtCVpaf6AHeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TzWs9kPY; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1743472792; c=relaxed/simple;
+	bh=6IeqLEYXsygKzE9uSQtADsFIQuoYRh/d2F/YOt3jAdw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PffEis3kEvnf4eXG7HZ8EkIg92yaqXKwYqwnDl1m889XFx9Pg9rndPgN97YOIYKE0uoTVOXxUhEsNLvYyCHEEKu3kmwqPNjqj9CK1fsT4C+jaLw2P8nDYjc0ok9RHFHE/coOHp5ndNjooT0dcqO++yRLTd6d17N0eeZXDoOomVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=WZh9MUXa; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TzWs9kPY"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e5c9662131so7798911a12.3
-        for <linux-cxl@vger.kernel.org>; Mon, 31 Mar 2025 18:48:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="WZh9MUXa"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7c5e39d1e0eso487242285a.1
+        for <linux-cxl@vger.kernel.org>; Mon, 31 Mar 2025 18:59:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743472088; x=1744076888; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k+TAj1iyOp+p+CcqC5d0+RxCmt4F8A3u8yV+2RU6uu0=;
-        b=TzWs9kPYlMpqnFfd56yw8K6BZo5bRY31wdhYrYKfBC4isGiJH6nLMRdL2NOrzsqHnC
-         pmiRFw608+HynUsPJeOmBm2wUOgsG26Xqk6YaP2lbyEuQ4GRrdvwD2fIGSvMwgtvoBCh
-         PUn+nlwaFIhPxe4ZDggzT/aUvKOIGEDLI0xaLs0x9KI2cKjkoDwXABsgiYAkdByxe8J0
-         a4Uy0HCgLkYEtcXUuWSRsMgGT49RYjfyFNX093radoGC8DHDkANl8FWGKLkEGRmc8ITY
-         gAcuaBAhqylo3Fr//dEwF1qXp9NT2gQWkQ/DTGvjKjEbjqAgFUI/Zl27dXb/FmEwRAtH
-         F0gg==
+        d=gourry.net; s=google; t=1743472789; x=1744077589; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=F/APxeJj8qxlV5y7tBQGvY/cfkpveH0FBqtxz5Y6trE=;
+        b=WZh9MUXajeCfp7xp8mLEWmzeKNiUw1Xk9HfLbQcpKCpeZZEpUIKeH6KXIDnMtlJ7WO
+         H3cXSzQMLYqMfuPkV51zMCaqnAJUBtGcmkJEAk2BH0/DDPo9A/gWn/2VzrxTJj4c9Hzv
+         GK3Prv4N4rhWlq9t11ROacEJnn0Gpj6fFnN8Z1qYepFISUaAWH0MbF0CoV5GsQWoARlA
+         npQb9k4q80dC4ruoMaCiAXr84ScZFSb7cDLKnNOXLacTKousXJ9/VA4jY3NS5tYa04r7
+         bpQ5Vm4aNuLQylfAcZqwXB56nd7Z9UuJ62SM0xyL3/khzHJQymMkdfCNuAAhj0O+TqPk
+         cqQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743472088; x=1744076888;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=k+TAj1iyOp+p+CcqC5d0+RxCmt4F8A3u8yV+2RU6uu0=;
-        b=F4brPf99TU7r6Hqd/n8c5rTUTy1a8xIi+teZokRM4TmZl95HA3iY3/dQW4w/nSQXKI
-         H4QZJj+7njWxAgYArG2glmweJ0y3QqzQTpXiSOOskeXLbRiSRHJRcHVKkxsir/LgGyu9
-         KAVpZ4E+IB2YFYTzzKTPkVUxsMJnSLx5n0wQU0r8JQYWmZ2S8w8OvRySxkAyuln1GTwr
-         US9eC6uUx7XQM6mDkP85xEI89+sGLjOR2dvA5sZHSJZLva6poWT3kPQM/wYxwSzo7kpw
-         5wc5zF+twFtIo9bpkgm0pz2tfS5OTX0lMJC+2sA4HXaCOxDpiNYDFC8QEWKJr3qge3Kz
-         3b0w==
-X-Forwarded-Encrypted: i=1; AJvYcCVMdCbb4/7ne0VOkH8dD4pOKaQrvFYaHOyR3fHWP2ZNZEu8U9EBNn4eGZBdVNQ1gwv3qGZ56e4LETU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxx0laEmStGi5DLGMKYE8dgIox6fpyc1UQ8mDU9T90+lDZQuKLf
-	sP8g1NLiip4Ulb4vGa4WSadBvQyTKlKl8rZZiDOXCg5qLwNLl+8aLBz7XXFg52kXEnbySedBc0Z
-	JamQ5aoI+114rIgqGsMMrLbEfmDfn+TARf5P2
-X-Gm-Gg: ASbGncsCsIlBxcQp4VN68MaHj9LcvOBIIU89RMt0LzrS24OGxZanLePYgZ63VBOSGdg
-	cWULMtWLlZ9wQRgyyl5wgzL3VIJNpAOntulg+A2p1ZBdyyLNjmPJ4ztUYktQG2c2KYiyANbuVNQ
-	B0CRS3Fg3EgeYNuF2Qp3p1o5e51YsR2eOYq/1KzRB/hpRKbB+Crdze+192
-X-Google-Smtp-Source: AGHT+IETo1denFEedN7D3QEKuncrCuPvMuwDPxe/hUsUn0x2mryF+a39piabr5hR8q1+/nlLvG0nTxN94/k8Rl9ocOs=
-X-Received: by 2002:a05:6402:5cb:b0:5e4:cbed:cb3e with SMTP id
- 4fb4d7f45d1cf-5edfcec61ecmr7826050a12.12.1743472087619; Mon, 31 Mar 2025
- 18:48:07 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743472789; x=1744077589;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=F/APxeJj8qxlV5y7tBQGvY/cfkpveH0FBqtxz5Y6trE=;
+        b=QH4xouY0IwU/HoikxYkvVFPdKHzokPECH1olZCxoy4y1prZu+48QOjoI44k8sr+Ivj
+         2anpYM3RFyLfZTdRbd/mPpOKn/F1P5gyqpkb/PIVbKz0D1JuhVszFKD1JgNtXGBI+LZd
+         55dcsj1ZuvwT87rjo8lDIfxrP0+GEMgheLjTVthGwiEEsgoVQ9rndQl2iE3Ysw9F+zNo
+         luszJ4+lc7/LarmZ8XTMgoYZW18EA2f8FH1KyyyKFzFOnwtHPDcyye2Owje3tOkCB9S2
+         HoLIE15fIL5wYa+XLaTPURaC5xWvDi6mibir9emu89k55aggdj75XzcBkzsjiQES2kXQ
+         +FIA==
+X-Forwarded-Encrypted: i=1; AJvYcCWOWK7DZt5UbHYwC8/9tfCp+Hpx4eN+CLkKYU3LyhVNhzHOMoWZIPbgoQS4Z36WhIeh1sOFY8adB7I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8IW4ytsZgZS30F75xuXkM5f9lKOgWVR2tNOby6IcvBJt1U2za
+	NSnufB8Ygufy/SsCDCxBfy7FOfT61hgAT5t1NvNsssobBuHC962TDogfDUi4uK0=
+X-Gm-Gg: ASbGncvRKAYLbo5iVu3D1VNV+Ui7P+ELPho7iSZcmj2PB6b5+jEpd3bNtFOddfnhNvb
+	m0G4TUKnwHEiEIrudLQsHnUycklEnxAkSCQcvwu4I6d8ifV8Bk/yOLJuKdEcqwmOQzf3ScEv77Y
+	h/0pSLXSWZBSZWazOEi4Vhd0bJmNZnm1llfL4nAysL+V0h9upPr0gutnNmQuB7lXTC1T8bztEdc
+	hkA2CcWrM1sHDdzZNbZLlDawoIjFn6PS3PMnviXXBuawyVTs9gle9JHFyXmEktWI19SCw3a3/GX
+	3fNXv52a62+kY89oU9YU3hqRyCkHypUAEF1HcOGNt76TsZbsH43MPb29bJ0bmezaUg4p9hJZTLl
+	Ix0LY3F6t2ssoepLxHJftZbvw7wY=
+X-Google-Smtp-Source: AGHT+IFxpCVikQ5yyrly+Wo3d8QpcAl9oj+coxqlTxTKqkD0EyECfgmCz8ov1GSVswfXNW92g5zMVQ==
+X-Received: by 2002:a05:620a:2494:b0:7c5:99a6:a1ae with SMTP id af79cd13be357-7c67d22c22bmr1437821485a.0.1743472788949;
+        Mon, 31 Mar 2025 18:59:48 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5f76a9d75sm578686985a.53.2025.03.31.18.59.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 18:59:48 -0700 (PDT)
+Date: Mon, 31 Mar 2025 21:59:45 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v2 10/15] cxl/region: Use root decoders interleaving
+ parameters to create a region
+Message-ID: <Z-tIkR_bEkDPUyp4@gourry-fedora-PF4VCD3F>
+References: <20250218132356.1809075-1-rrichter@amd.com>
+ <20250218132356.1809075-11-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <81c040d54209627de2d8b150822636b415834c7f.1742900213.git.karolina.stolarek@oracle.com>
-In-Reply-To: <81c040d54209627de2d8b150822636b415834c7f.1742900213.git.karolina.stolarek@oracle.com>
-From: Jon Pan-Doh <pandoh@google.com>
-Date: Mon, 31 Mar 2025 18:47:55 -0700
-X-Gm-Features: AQ5f1Jomk7lsPt2dF6-TylkfAyS1tokmiYnIpRJlkKyBYOSIZKt-gI4sMXPgaz4
-Message-ID: <CAMC_AXXPKsat846r==J_OYQA2j8kT-kZriuSqoH3F_nYEN8ATg@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI/AER: Consolidate CXL, ACPI GHES and native AER
- reporting paths
-To: Karolina Stolarek <karolina.stolarek@oracle.com>
-Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
-	Terry Bowman <terry.bowman@amd.com>, Len Brown <lenb@kernel.org>, 
-	James Morse <james.morse@arm.com>, Tony Luck <tony.luck@intel.com>, 
-	Borislav Petkov <bp@alien8.de>, Ben Cheatham <Benjamin.Cheatham@amd.com>, 
-	Ira Weiny <ira.weiny@intel.com>, Shuai Xue <xueshuai@linux.alibaba.com>, 
-	Liu Xinpeng <liuxp11@chinatelecom.cn>, Darren Hart <darren@os.amperecomputing.com>, 
-	Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250218132356.1809075-11-rrichter@amd.com>
 
-On Tue, Mar 25, 2025 at 8:08=E2=80=AFAM Karolina Stolarek
-<karolina.stolarek@oracle.com> wrote:
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index a1cf8c7ef628..ec34bc9b2332 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -760,47 +760,42 @@ int cper_severity_to_aer(int cper_severity)
->  EXPORT_SYMBOL_GPL(cper_severity_to_aer);
->  #endif
->
-> -void pci_print_aer(struct pci_dev *dev, int aer_severity,
-> -                  struct aer_capability_regs *aer)
-> +static void populate_aer_err_info(struct aer_err_info *info, int severit=
-y,
-> +                                 struct aer_capability_regs *aer_regs)
->  {
-> [...]
-> +       if (severity =3D=3D AER_CORRECTABLE) {
-> +               info->id =3D aer_regs->cor_err_source;
-> +               info->status =3D aer_regs->cor_status;
-> +               info->mask =3D aer_regs->cor_mask;
-> +       } else {
-> +               info->id =3D aer_regs->uncor_err_source;
+On Tue, Feb 18, 2025 at 02:23:51PM +0100, Robert Richter wrote:
+> @@ -1955,12 +1971,23 @@ static int cxl_port_calc_interleave(struct cxl_port *port,
+>  	if (is_cxl_root(port))
+>  		return 0;
+>  
+> -	rc = find_pos_and_ways(port, ctx->hpa_range, &parent_pos, &parent_ways);
+> +	rc = find_pos_and_ways(port, ctx->hpa_range, &parent_pos, &parent_ways,
+> +			&parent_granularity);
+>  	if (rc)
+>  		return rc;
+>  
+>  	ctx->pos = ctx->pos * parent_ways + parent_pos;
+>  
+> +	if (ctx->interleave_ways)
+> +		ctx->interleave_ways *= parent_ways;
+> +	else
+> +		ctx->interleave_ways = parent_ways;
+> +
+> +	if (ctx->interleave_granularity)
+> +		ctx->interleave_granularity *= ctx->interleave_ways;
+> +	else
+> +		ctx->interleave_granularity = parent_granularity;
+> +
+>  	return ctx->pos;
+>  }
+>  
 
-info->id isn't filled in pci_print_aer(). Is the addition due to
-aer_print_error() having a conditional/log for info->id =3D=3D id? From a
-brief look at the code, FW-first (e.g. errors from GHES), I think it
-will always be true. However, that doesn't always seem to be the case
-for CXL (e.g. when cxl_dev_state.rcd =3D=3D true).
+I have discovered on my Zen5 that either this code is incorrect, or my
+decoders are programmed incorrectly.
 
-Disclaimer: not a CXL/GHES expert though.
+decoderN.M  |  ig  iw
+----------------------
+decoder0.0  |  2   256
+decoder1.0  |  1   256
+decoder3.0  |  1   256
+decoder5.0  |  1   256
+decoder6.0  |  1   256
+region0     |  2   512 <--- Wrong
 
-> +void aer_print_platform_error(struct pci_dev *pdev, int severity,
-> +                             struct aer_capability_regs *aer_regs)
+*Arch quirk aside*, everything except region is as expected.
 
-I like the encapsulation.
 
-Reviewed-by: Jon Pan-Doh <pandoh@google.com>
+I finally dropped a bunch of hacks from my branch, and my Zen5 stopped
+bringing devices up correctly, with the error:
 
-Thanks,
-Jon
+[]cxl region0: pci0000:d2:port1 cxl_port_setup_targets expected
+               iw: 1 ig: 1024   [... snip ...]
+[]cxl region0: pci0000:d2:port1 cxl_port_setup_targets got
+               iw: 1 ig: 256    [... snip ...]
+
+Sitting here scratching my head how I could possibly end up with an ig
+of 1024 with the above set of decoders when I realized the region
+inherited interleave_ways/granularity from the ENDPOINT decoder, which
+is not exposed to sysfs.
+
+Had to come back around to realize this patch set adds new
+ways/granularity fields to the endpoint decoder.
+
+struct cxl_endpoint_decoder {
+        struct cxl_decoder cxld;
+	...
+        int interleave_ways;
+        int interleave_granularity;
+}
+
+struct cxl_decoder {
+	...
+        int interleave_ways;
+        int interleave_granularity;
+}
+
+
+1) the cxl_endpoint_decoder descriptor needs to be updated to explain
+   why these ways/granularity differ from the cxl_decoder inside of the
+   cxl_endpoint_decoder.  This is very, very confusing.
+
+   The reason appears to be that the endpoint decoder ways/granularity
+   is the region ways/granularity.  So the endpoint decoder is passing
+   this information along.
+
+   Makes me think the region creation code should call this directly,
+   rather than all this indirection.
+
+
+2) This calculation appears to just be plain wrong.
+
+
+static int cxl_endpoint_decoder_initialize(struct cxl_endpoint_decoder *cxled)
+{
+	ctx = (struct cxl_interleave_context) {
+                .hpa_range = &hpa,
+        };
+	...
+        while (iter && parent) {
+	        endpoint        host bridge      root
+		decoder6.0  ->  decoder3.0   ->  decoder0.0
+
+                /* Convert interleave settings to next port upstream. */
+                rc = cxl_port_calc_interleave(iter, &ctx);
+		...
+	}
+	...
+	cxled->interleave_ways = ctx.interleave_ways;
+        cxled->interleave_granularity = ctx.interleave_granularity;
+}
+
+On my setup, I would expect to iterate decoder3.0 and decoder0.0
+	decoderN.M  |  ig  iw
+	----------------------
+	decoder0.0  |  2   256
+	decoder3.0  |  1   256
+
+	on entry [iw,ig] = [0,0]
+	[parent_ways, parent_gran] -> [1,256]
+	[iw * piw, ig * piw]       -> [2,512]
+
+
+Looking at a normal system, we'd expect this configuration:
+
+decoderN.M  |  ig  iw
+----------------------
+decoder0.0  |  2   256
+decoder1.0  |  1   512
+decoder3.0  |  1   512
+decoder5.0  |  2   256
+decoder6.0  |  2   256
+
+The above code produces the following:
+	[1,512]
+	[2,1024] <--- still wrong
+
+
+in cxl_port_setup_targets we have this comment:
+
+        if (is_cxl_root(parent_port)) {
+                /*
+                 * Root decoder IG is always set to value in CFMWS which
+                 * may be different than this region's IG.  We can use the
+                 * region's IG here since interleave_granularity_store()
+                 * does not allow interleaved host-bridges with
+                 * root IG != region IG.
+                 */
+                parent_ig = p->interleave_granularity;
+                parent_iw = cxlrd->cxlsd.cxld.interleave_ways;
+	}
+
+
+Can we not just always report the parent ways/granularity, and skip all
+the math?  We'll always iterate to the root, and that's what we want the
+region to match, right?
+
+Better yet, can we not just do this in the region creation code, rather
+than having the endpoint carry it through to the region for some reason?
+Avoid adding the duplicate ways/granularity field all together.
+
+~Gregory
