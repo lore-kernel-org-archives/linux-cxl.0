@@ -1,257 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4493214229;
-	Tue,  1 Apr 2025 21:21:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743542483; cv=fail; b=GtD6iHj9ynHk3Tv8QVq95Mh1p5hJiPoLZW6HAnzpYzk0+sKb3JQdJMEhWJQQkVF6jBPb3XKZojl5mjkfDnhM2uq5iYqQUz5la7xSRvgPIyIlkZXVkJSGULX0X9kPhO3uAtCzKSbVEvK29K7K3VZ3F9kzGfH/Gi4hP5wlkPOjwm4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743542483; c=relaxed/simple;
-	bh=6l3b6qIYWNrXBso3CxGEHoonY7hb4/QWlT6R9KH8WhI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=VqPGOG7SDwQRckPSBnhA1EL5YiukfF7cgvI0d70vigCWqS7MeWCQYFCYM4aNI4stkg6APN5TXx3lsQizwgP8rtS7pNuK/b17GmM7fZjCkc0hIAknH8wIGWlyw7kJKw8SFwoAzKlE4WJ6FhqJZS0UYPRR+RgaBN4TyZOhSlIytSE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OqfCeln2; arc=fail smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CC64F4ED
+	for <linux-cxl@vger.kernel.org>; Tue,  1 Apr 2025 21:40:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743543655; cv=none; b=FzNm44j0XaYGfTto08s1YKa9W3JtjPbAl+Ijhxd1d8MOLSIdq+oAJvt0inADTv7bhlvIaHaoq0RgFsgj+n4ZV5uij/48M7qMwHnDtdMwctzsZJz9X4MYbAllHHbTAGmhhLEgh7fZ6Cl9FDopmbMNvyNiPalK25cA0DFrFNCU+ns=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743543655; c=relaxed/simple;
+	bh=xYzMwhcYtnhtvN8SaaCyiSa6IxxohqMDLB2iDnJ6fMg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HRkZgsGzwRDfOMZhjy86gojJS0ZM0ZyXLCsLFvZp2R5fPQ3HJIB93U3ToET++iHdYqCWw4nLQ5EeMAZiUbiPD87xFKy/OJCumsSH5bM2vsIUfLfFB8zbNvs5yj8ipNZXLFBm1/WnbmikWj5VNr1r7onO7U9QtAXXGVTvjwd69Nw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=SFyvnZsC; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OqfCeln2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743542482; x=1775078482;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=6l3b6qIYWNrXBso3CxGEHoonY7hb4/QWlT6R9KH8WhI=;
-  b=OqfCeln24ADLrlJLEO3xjUh5LXfrU8tRhpZNtTJHzbOjLZrvER+ABuOd
-   g6zMyobZl7Q8HGF96+4aNCh+vWstt8c2VQQ26QHtt2mAyXmZO4y2oVPzL
-   r9/N+iUiWLk4jqy2dUrMXoJBuBp6Ol1QgBvKZ208+5zCYcxHfNRfYHv5a
-   5qhx+K13OKETgyIpahhWuEB3RUinQ/lM9xCLE10vTgRvd0jwDjO283p+H
-   WbL5pZELfFv7jYNRhXUUSu6UvsesehqyDGwb7HdKbzWcEP7X81dNpKINo
-   FJFOMQMs67MoopQmLIX2cmFT+6zQ9DKjn+tUyorvVBl1/WqYWNpecn0//
-   A==;
-X-CSE-ConnectionGUID: E3zuq3YvRnW9XbTro56yCg==
-X-CSE-MsgGUID: lOUfWS0uSOua0Cs0mNQz3Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11391"; a="55545762"
-X-IronPort-AV: E=Sophos;i="6.14,294,1736841600"; 
-   d="scan'208";a="55545762"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 14:21:21 -0700
-X-CSE-ConnectionGUID: AcDCWRAdTk6tLd+UELAWTw==
-X-CSE-MsgGUID: YTxhJvviSgqC25yeE+1mPQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,294,1736841600"; 
-   d="scan'208";a="130613454"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 14:21:21 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Tue, 1 Apr 2025 14:21:20 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Tue, 1 Apr 2025 14:21:20 -0700
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.173)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Tue, 1 Apr 2025 14:21:19 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BadCcAJeApC+mmZ+zcp9/NRfJGoa3zvHq+naaJG0qV95rzhrX93fcUB9Sn/FR84Qfhh113cHedftaW2PJgCN0y9lYwdJaxPcFOHP1lWcGeKVBfBQJSTt+TFAu4NodDJSC041lz3BG4DMn9MSnAClXbAY5Dt1XZW2OopncmkzBviLQyGSy7KqYarLYv3raXsISrFKBl6Vw7w+TMPN92wQbqigg0fIecftgA0IzD92hKKtXoRGkDAPrMK/9UrZoy4NIt59f/jZfbXSu9lMM55AEBvgvhR1X4F929iYYUbo1WF6srGe7QMHSULNlFrgtQHJErLdo7rNhrDK862ELUohHQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VN0NLvYKTCYouF5P+dif0lE1ScNeZQFy2YZozjaZwEs=;
- b=lIxZqUQ4ZhwgkXseTvHdsezTPLZ/4eY/mdR6p/sW+4AIHkBfMGrUy3TJyEodBy1zmD9+aQUnW2dKJt3MNMKfZh2LW5iTJW8wVf1l4yG0ZY7vaj0FYRKNuT5psZDwAIg4Bt+4WxyvEcW1Kwd4fzZTbm2rJBwy1/fGNTdEfqGxVQ85Y1JO4746+avriknts3ZOcJ3xkjYgisH3JFULyN0eF06Tu0ZzWNyBfhwR//iDt0ZaxNdeV1DHoxgUCMiNz5vz8pyWFeF+LSANT4gNSOFPDy0g7GrJ1pNfh7MTk+dw4cdWyK+JewX3UHl80UQQWZGJ/GGUfQY9scXmR6KZAUMJ8g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by MN6PR11MB8217.namprd11.prod.outlook.com (2603:10b6:208:47d::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Tue, 1 Apr
- 2025 21:21:15 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8534.043; Tue, 1 Apr 2025
- 21:21:15 +0000
-Date: Tue, 1 Apr 2025 14:21:12 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Rakie Kim <rakie.kim@sk.com>, <gourry@gourry.net>
-CC: <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
-	<linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-	<joshua.hahnjy@gmail.com>, <dan.j.williams@intel.com>,
-	<ying.huang@linux.alibaba.com>, <david@redhat.com>,
-	<Jonathan.Cameron@huawei.com>, <kernel_team@skhynix.com>,
-	<honggyu.kim@sk.com>, <yunjeong.mun@sk.com>, <rakie.kim@sk.com>
-Subject: Re: [PATCH v4 1/3] mm/mempolicy: Fix memory leaks in weighted
- interleave sysfs
-Message-ID: <67ec58c8c637_1d472949b@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20250401090901.1050-1-rakie.kim@sk.com>
- <20250401090901.1050-2-rakie.kim@sk.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250401090901.1050-2-rakie.kim@sk.com>
-X-ClientProxiedBy: MW4PR04CA0271.namprd04.prod.outlook.com
- (2603:10b6:303:89::6) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="SFyvnZsC"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-476f4e9cf92so45628591cf.3
+        for <linux-cxl@vger.kernel.org>; Tue, 01 Apr 2025 14:40:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1743543652; x=1744148452; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PuxPlzCWg1XtqjtZcXuLr8jO4Fm1vsCDnGFdTpMNAlQ=;
+        b=SFyvnZsCcc02bMdH7z3FGET23PKj8H1Wykb+AjmcMf99sjBp2fmyDfhkd1MlL+xHnW
+         QB5KcJlDS5X+ty9R3vLiNop7uyemod4xxl5suy6pDv3PcWp6qnt+QZXa2/5k4QlD+BHF
+         vHh5S4G99/SipsIBB8W57tBbbMWa0wQ3SgxGaKYsEurBUJTJtxy3fGIs4R75xI+ofWmN
+         IaeCPwimC0yFOGsz5xypvqDihVLFcoNInU7owIHwZfjf0KU7xRlE/Dky8nwyAJQpuqKK
+         nmRXO6QkxqV8AyM/1kDmhmyc1659xJoy4+lHVwXEOiCsm2Co5hkSof1/ZQ3+UfvSqk4G
+         73rQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743543652; x=1744148452;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PuxPlzCWg1XtqjtZcXuLr8jO4Fm1vsCDnGFdTpMNAlQ=;
+        b=qEnFlXDkINvSLTctkDYWeFgG6f6xWK5t1mTi+RkecaFWmdWfrSehabeyb/aaFCK0ea
+         RSbw1bsOd+17ZjsheHIy28jjJ+JWSAIzd5IxdgeTrC1IV+mz6PR66bx0Gylb2ieGh3bM
+         KPAA7Rw4tnoWS6xikUapv7W74oAUAib6QqVrrvMr9JJ2HKW/gI8rvM+o1S4rp/8GZ3qF
+         92hMhcIZ5x2MH70yN9du70l9L7E1C2W0kX521226lzUMsxkmwn2ECXzJZ0CwDZqAIS7P
+         YEymZzoUXusCDxloIfHvucrAkUMQLgz88Kf2soxTMF8Yyze0OPFb+mKJlBINR8oR3ddD
+         2wOg==
+X-Forwarded-Encrypted: i=1; AJvYcCWDckqTRpkm4Zps8QdE07I0KnlXMq27oQfJkejDqmPLYNbdVmlJl7KntAiG6j1i9MPtRtQzRtS4ybs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/6S7mRDB6B5Cywioums+fOXqw7mfrMyCMCd7lswfbf7EZfIHB
+	t2/njfHGB47wvx2LdiU+68o/ePXVdt6p6bVMjoEo1rBi6ZYsrJ/PWf5p8lYYxh8=
+X-Gm-Gg: ASbGncsbuIB1plrt7/hkJLVWF/EGYs4M2mrYJQnT2x45U+6NvcHbIy6oHXKKGtNP2yE
+	rHEeA3hreknmPV1i+hIv3EgslZBX18Hupg/1Mc/9ZJu95Hwz8doJsETiWmtgvwTLfXbxcvXchsU
+	GWQp6WW0AbdW9JbDsLnqI3RU3OtJS2BDxpf9XF1QKAW0FaTY0VPcFT1xce1uBkEKglqUJ0WBFOk
+	wesCdkIpxNn6GPbPaMzwdPQC2itYhvD4KgsCGqGpFXxwUSUD1enPRZpxJpvCSa4a45yQmFgVGTU
+	yvGc6/s3iJK2dqmGlfN32hwlHgaLAph6evOjwFua2l+dCj7zUDhD+7K27h6RyCkl1uk3RQHTmxG
+	iXBT9gZRppOPSINn87bTdbN3KlPg=
+X-Google-Smtp-Source: AGHT+IFpzLyTO0moMy+JQ9RKfNFuL6DHIrGkQnqp1sZ6FtwI4zZggYUxfCbJ8I0wE71OxVWymUzeLA==
+X-Received: by 2002:a05:6214:2022:b0:6e8:9e9c:d212 with SMTP id 6a1803df08f44-6eed5e02670mr224490066d6.0.1743543652417;
+        Tue, 01 Apr 2025 14:40:52 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eec97bde6asm66492896d6.125.2025.04.01.14.40.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 14:40:52 -0700 (PDT)
+Date: Tue, 1 Apr 2025 17:40:50 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>, Robert Richter <rrichter@amd.com>,
+	ming.li@zohomail.com, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org
+Subject: Re: [PATCH 2/4 v2] cxl/core: Add helpers to detect Low memory Holes
+ on x86
+Message-ID: <Z-xdYvxD6yz3fMiE@gourry-fedora-PF4VCD3F>
+References: <20250114203432.31861-1-fabio.m.de.francesco@linux.intel.com>
+ <20250114203432.31861-3-fabio.m.de.francesco@linux.intel.com>
+ <Z4ccKD9Fc-Egc6EL@gourry-fedora-PF4VCD3F>
+ <67ec4d61c3fd6_288d2947b@dwillia2-xfh.jf.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|MN6PR11MB8217:EE_
-X-MS-Office365-Filtering-Correlation-Id: 43fa0f87-33c7-4dd9-b573-08dd7163225f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|7416014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?vlc1AHTo1XvAf9bXVah1Lq4iTK9rEvnR4kDuzRB4d8YGFRrMOEuINUg7eiPt?=
- =?us-ascii?Q?7XniRTlKEV/7JueuFWKxY2ubC7Wa/LAEnupnef6x81z2Bwif/btFxL567cZ+?=
- =?us-ascii?Q?Jvfc+wUKUikYYHaSJLo2rUzEji3HVZr6yjE4xlOSUE1i7mlc/sG9KqP5EeK5?=
- =?us-ascii?Q?azDGFyKYDr+PO5TiDV+f8bSjNwJCkSe7D/1vnfKt4Vo+mXFr5MyvT0y8edq4?=
- =?us-ascii?Q?/Yxs2s+ZomFKYHa+5gBO7kqEiZpnpx1C4Q/+eKjPOhD5Y3blHTyhFtbUbrX9?=
- =?us-ascii?Q?XdNZgmzLT7v6k3vaVaLDyJoQeTB1B00WUEK2FPpTigO+uNYBr+BH6A1YKqGf?=
- =?us-ascii?Q?ADElX7e/IN7E8thxEOiB5udxYeLgYcQrHF6EUPnrMDpljOQDJ+DnUyGpFGtZ?=
- =?us-ascii?Q?mF3NvWEI+Z+nVmAUnHjd8gIHv8ByHpRnl90mvnVpOgMpy2uh6ByhM+F+P31S?=
- =?us-ascii?Q?BP9R/UrawUhk/MvYMaZTe4WLyOW/t4TTROjMgVo1+Ia9evkBwXnMTDdbhmQZ?=
- =?us-ascii?Q?tqWcjjV5NoIf6IQQUFZ0DXFEst0+kjQ9KYfcDIF+IFDHdn07uJ92f3K1j4IQ?=
- =?us-ascii?Q?JsUD6+TOjPDSEgfRCxeUF0ozbsskgWVwjYf7Ij/QXQH/beJjLWeR48icSBMh?=
- =?us-ascii?Q?EfpV898iF5Poxcl2kYtBKkkc8WJRjX8kjsHTUTv99KxWEDNGI9urq4GcVl8c?=
- =?us-ascii?Q?ffXNvHhqj6vKcWlXRMGB+XCIPx8P+SJ4Wco5GUq2uFgsdk8I2YVnCUPI6dJo?=
- =?us-ascii?Q?TzmliRymgJ2OwYUPe+CXDR11mC0k8xCOt7sROeQtYyqE7v/7x9Q6cfws7eXc?=
- =?us-ascii?Q?8CrJ4v1bXXHZHQ27FM/SWO6bh20BGp+McLOVpiFmogc/skQ42BvZGHWJCjYI?=
- =?us-ascii?Q?85baCcoNDRrhPJNbKsO+u8mZsnCG0SJSb84wX+9cYdUkHNMHYzGR4m3jYTc1?=
- =?us-ascii?Q?+R7S7eH0lqhp3P8x1qr1VyY8EBlv24Ztv8SdKA1FkXMMzHxQPDAvQMeWH+Dv?=
- =?us-ascii?Q?k3H+pzEQF5b6MCMyhy3VLqA/W8Kq8/uE0qL55KiAXtYqHTQDZ64/vIRh1Xnd?=
- =?us-ascii?Q?5AExyvYlJ0AvTUhEZTiIcs+4DGxzZvNwcMAqZ6YYt1sUR9DBOYabIUL9gAPk?=
- =?us-ascii?Q?uqgzNPzr0OXxLku/jqQhZc01up6KknbLtmfRUkw1ru65VgU4iPzmVI4Hh1KA?=
- =?us-ascii?Q?Rs/Ew5PHvlgmFsCRXOGR1a+cy0dVozf5fHCsAzU/QMnVXdsUyhT9CAmTP0Jv?=
- =?us-ascii?Q?68WQo9LnHnt3NAfMBM6+vS5Kt5EcQ6iy98B0PNWrgQKNEZrUpk9rg1iPimPA?=
- =?us-ascii?Q?Y0Z0Pk/rxW6bDOXJUSlDeIyCG8eapnEoVHdyPUErgjdKuZI1fhoj2Rxfs0y/?=
- =?us-ascii?Q?Nqqd02l8m6sB9bwmQ2+l6mCMZg6/?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(7416014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?DGm/15CEuOoAMtleiechi7qE0J6nWjdNxKQIsBnAr7/uXzdLfMLmihVPPxwJ?=
- =?us-ascii?Q?xuRPFJK31LrBhwEHy87zUKiUJooO/D4nBkMlwzeMXhWa61BMseJh7T9zSpNc?=
- =?us-ascii?Q?v216J+V+eLDtOajuPp8cTyVi2LLWGpy3xqm06/VVnHgKlFCbQ21zyJeLVrmW?=
- =?us-ascii?Q?BL+GmExgBN4Kn/p2d8B3gBOTY3EDoX5AMhsh7rvp+WYa84bGOjiU3Lv32uEJ?=
- =?us-ascii?Q?zLjrvdu6lJ4XJ0WM6iLGVU3+UzgZWsctEnFqhJXQVNNPaMdqyQVR/n13ClOf?=
- =?us-ascii?Q?ThcXkhMi9o1J2In72UezeniN53T1l3o+BxamAtwQwwBZd6M0t0JD+lVPsWVM?=
- =?us-ascii?Q?CTJbyowwPJbZaCg/BnuJkHxGy6IjPGcyvRGuDr57/LElDni1aieOmZNp7ja9?=
- =?us-ascii?Q?VCpm1u4VAQcHapKXpWpcyqA1XrX5Alo7uTCXnVruY3tB95gf9gYqKh0x6VY3?=
- =?us-ascii?Q?yArYMEfGJW3o+Mj5NfVoww+5yVw9s98QGTPBy47ShLZWoCPcZ6pZAr6RdLRf?=
- =?us-ascii?Q?XXYCJRN8mio5euvRXktbrfDZlML4f88/MTZp5eQzQVts2bnmAOf517QGsyg2?=
- =?us-ascii?Q?76GmeDOLRAuC7zApFj03AG7YlSDhER+RkAuRM3iA0D6jTZM4Y2w/ubZu6GkZ?=
- =?us-ascii?Q?zagKnO5MEyD7jJ6+AWN7nbbZnGM5Zz2NrO7Ai9nwoueg3q9211IDXhh51s3s?=
- =?us-ascii?Q?x8poh2Co/dFCPRxmEIZPaVKTlYuyv4T+FuZHE6z/z4oJSC3n41jBdAQvBgGV?=
- =?us-ascii?Q?V1v0dRa/TxT+GkluR08PJMMsgkJBIrqmOy+1k2lbzMXkrEq4/ys0UHLzoVVX?=
- =?us-ascii?Q?8s0QwSG44FLDrRtzyec0vp1kGlqLff+Asdx7uZZiy5sqG/5NH7Hu19mJ17GD?=
- =?us-ascii?Q?DisT1v+V2FYV0GL9N3ZQjpVBRGPn9CdHEcZSY3lKSEr2ESHna4Bo3zSPnInA?=
- =?us-ascii?Q?g/uMPsYqJkxm1MMAYyBOk7SOQ/OADC+ZNu+qoYhJr1at11uRDTGlrLX9m4Zk?=
- =?us-ascii?Q?9P2mGlIccfN+JBGqWEvAJdJ98XvfrpgsOWa4qeb16BMkWhFAgiIxV47uCFiB?=
- =?us-ascii?Q?MlUBPGPzkBBxEQ5Bvx56pCYPdNih3QOZq9zl/9dglfAe0oOln2YBhbHbT1IJ?=
- =?us-ascii?Q?zZ9TkjrqlZxJZGbFsFs4kvRL7pwD/rRHFDEhwvDMtE+fKd62cwb2EJc+QYne?=
- =?us-ascii?Q?m5auOiloqSTkLy+dI1FUhrPg+Rrp6RfryhrhKZ3GrhpsRh4u9DV5oJi1GefH?=
- =?us-ascii?Q?mCCbiWlViAJpnUAjjOcP8e+EvkxFldd+KOthIbjHjcyOoctAe/WLaj51nSaP?=
- =?us-ascii?Q?13rVC5KBsJmVWgoc7lwuaqZyWSUkJGXicDTow+8Rb7ZgX4O0JsaisyxU+v78?=
- =?us-ascii?Q?RdpgdtocVOQrC6VQemnkXBYm3S1mfPpslXBtbyIctQMQQ1/uaSAh1Tgit2lS?=
- =?us-ascii?Q?dGI3QfJ74J/zMmXN1XwIqlfk5GHxE5n7dldC6FVXYkU4H0Xtt29MFDn2eDIb?=
- =?us-ascii?Q?pRwGMm5MM0VCcAfnnnWs5XioDcDDYs/rT/GkXDENppg5TKH6fjyd86A624/V?=
- =?us-ascii?Q?6dUQ2ewo5bdviV4JcSekwblHm8FAFE1xCAEi7hg7bZ3GU+ONI3Jo8bAd82uj?=
- =?us-ascii?Q?cg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 43fa0f87-33c7-4dd9-b573-08dd7163225f
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2025 21:21:15.0113
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HaE6PojPF+y/L9QOY/6CFDgsLbwN0IHok+W/D8+inLslBZRMBQtC8LN8+vs6LvDK8AOP8NC9fFL5IMEZWqVwOiS25hbnqLv6l9qzxPXIzQo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR11MB8217
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <67ec4d61c3fd6_288d2947b@dwillia2-xfh.jf.intel.com.notmuch>
 
-Rakie Kim wrote:
-> Memory leaks occurred when removing sysfs attributes for weighted
-> interleave. Improper kobject deallocation led to unreleased memory
-> when initialization failed or when nodes were removed.
+On Tue, Apr 01, 2025 at 01:32:33PM -0700, Dan Williams wrote:
+> Gregory Price wrote:
+> > Is there a reason not to handle more than just LMH's in this set?
 > 
-> This patch resolves the issue by replacing unnecessary `kfree()`
-> calls with `kobject_put()`, ensuring proper cleanup and preventing
-> memory leaks.
+> This discussion was referenced recently on an IM and I wanted to share
+> my response to it:
 > 
-> By correctly using `kobject_put()`, the release function now
-> properly deallocates memory without causing resource leaks,
-> thereby improving system stability.
-> 
-> Fixes: dce41f5ae253 ("mm/mempolicy: implement the sysfs-based weighted_interleave interface")
-> Signed-off-by: Rakie Kim <rakie.kim@sk.com>
-> Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
-> Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
-> Reviewed-by: Gregory Price <gourry@gourry.net>
-> ---
->  mm/mempolicy.c | 61 +++++++++++++++++++++++++-------------------------
->  1 file changed, 31 insertions(+), 30 deletions(-)
-> 
-> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> index bbaadbeeb291..5950d5d5b85e 100644
-> --- a/mm/mempolicy.c
-> +++ b/mm/mempolicy.c
-> @@ -3448,7 +3448,9 @@ static void sysfs_wi_release(struct kobject *wi_kobj)
->  
->  	for (i = 0; i < nr_node_ids; i++)
->  		sysfs_wi_node_release(node_attrs[i], wi_kobj);
-> -	kobject_put(wi_kobj);
-> +
-> +	kfree(node_attrs);
-> +	kfree(wi_kobj);
->  }
->  
->  static const struct kobj_type wi_ktype = {
-> @@ -3494,15 +3496,22 @@ static int add_weighted_interleave_group(struct kobject *root_kobj)
->  	struct kobject *wi_kobj;
->  	int nid, err;
->  
-> -	wi_kobj = kzalloc(sizeof(struct kobject), GFP_KERNEL);
-> -	if (!wi_kobj)
-> +	node_attrs = kcalloc(nr_node_ids, sizeof(struct iw_node_attr *),
-> +			     GFP_KERNEL);
-> +	if (!node_attrs)
->  		return -ENOMEM;
->  
-> +	wi_kobj = kzalloc(sizeof(struct kobject), GFP_KERNEL);
-> +	if (!wi_kobj) {
-> +		err = -ENOMEM;
-> +		goto node_out;
-> +	}
-> +
->  	err = kobject_init_and_add(wi_kobj, &wi_ktype, root_kobj,
->  				   "weighted_interleave");
+> The rules for when to apply this memory hole quirk are explicit and
+> suitable to add to the CXL specification. I want the same standard for
+> any other quirk and ideally some proof-of-work to get that quirk
+> recognized by the specification. Otherwise, I worry that generalizing
+> for all the possible ways that platform BIOS tries to be clever means we
+> end up with something that has no rules.
+>
+> The spec is there to allow software to delineate valid configurations vs
+> mistakes, and this slow drip of "Linux does not understand this platform
+> configuration" is a spec gap.
 
-It would be nice if this could take advantage of scope-based cleanup to
-avoid the new gotos. It would need a new:
+Note: I've since come around to understand the whole ecosystem a bit
+      better since i wrote this response. I don't know that it's needed.
 
-DEFINE_FREE(kobject_put, struct kobject *, if (!IS_ERR_OR_NULL(_T)) kobject_put(_T))
 
-...and a wrapper around kobject_init_and_add() to support auto cleanup:
+Some of the explanation of this patch series is a bit confusing. It
+justifies itself by saying CFMWS don't intersect memory holes and that
+endpoint decoders have to be 256MB aligned.
 
-struct kobject *kobject_init_and_add_or_errptr(struct kobject *kobj)
-{
-	int err = kobject_init_and_add(kobj...);
+/*
+ * Match CXL Root and Endpoint Decoders by comparing SPA and HPA ranges.
+ *
+ * On x86, CFMWS ranges never intersect memory holes while endpoint decoders
+ * HPA range sizes are always guaranteed aligned to NIW * 256MB; therefore,
+ * the given endpoint decoder HPA range size is always expected aligned and
+ * also larger than that of the matching root decoder. If there are LMH's,
+ * the root decoder range end is always less than SZ_4G.
+ */
 
-	if (err)
-		return ERR_PTR(err);
-	return kobj;
-}
+But per the spec, CFMWS is also aligned to be aligned to 256MB.
 
-With those then you could do:
+Shouldn't the platform work around memory holes to generate multiple
+CFMWS for the entire capacity, and then use multiple endpoint decoders
+(1 per CFMWS) to map the capacity accordingly?
 
-struct kobject *wi_kobj __free(kfree) = kzalloc(sizeof(struct kobject), GFP_KERNEL);
-struct kobject *kobj __free(kobject_put) = kobject_init_and_add_or_errptr(no_free_ptr(wi_kobj), ...)
+(Also, I still don't understand the oracle value of <4GB address range.
+ It seems like if this is some quirk of SPA vs HPA alignment, then it
+ can hold for *all* ocurrances, not just stuff below 4GB)
 
-Otherwise, the patch does look good to me as is, but it seems like an
-opportunity for further cleanups that might also help other
-kobject_init_and_add() code paths.
+~Gregory
