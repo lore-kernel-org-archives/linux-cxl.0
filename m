@@ -1,38 +1,38 @@
 Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E3C43C17;
-	Wed,  2 Apr 2025 01:28:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 722AB1401C;
+	Wed,  2 Apr 2025 01:29:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743557339; cv=none; b=CJ9qGXLqmmomFzgCGDxDww/HM5VtqimmXgWT2QFgmdM9ApT7PQqx/5oOYDaHCVRAYXJLaUflU9OTfSfstdVBlsHo3YtILD2A7pjmVUBpqBTCr0wnfUPWm2wfa/sUVcXoycAS7wvF6nIvJpka6iXgB4rQXBt0LyByed/74LwM2jU=
+	t=1743557364; cv=none; b=BtWHneuPyRvgrlAVRGOzLWDIKM1LbhAdANN4k10ARDUwOCRjlOMABWIAwVsP/MtKOR3fR42S4xWnaZ3r0pChSUpmSnFL50OgodmkgdW7I8Dfxz2B1no/HyeujQy7O0h3E8vxp21V5eEhntCIy9s0RKrwboMF9IZ4yxVv3FM0DiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743557339; c=relaxed/simple;
-	bh=9fHDJ3Dz5NCO+7CJBRwb6ccS/OVogCHRXOkO6esEZBk=;
+	s=arc-20240116; t=1743557364; c=relaxed/simple;
+	bh=8kLxX5lyLtaYcCZIqPT6UMbaiBiyemfBMMRAHy/qvXI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pfBasEnUAr8PckoOCd/b/KN6gao9fFkNhhi8ixtS2ISV3INpeWWOii/gXtLJ7aKtmOpt6nLt1X+Zg57cI3vk3x2sK7mZMBLJcOlkwDrXu8X7oW07fgFchUh4/78iHwjf7AP+qqqz0ctQyjH9VPQa+cvcTiyxp3K0lMQtuEsAgX4=
+	 MIME-Version; b=WqogKch5iyHDB+A11hlgJZb2vABHlssnuyhrUjRuQ6UHvsx73OynD6eBtJcBDIA0INQRdk+Oz/o/LDHEN7VON0s9uKtnnYaXo99DyQzGTexeewtk8U06Q5rFqB316Mj2ZXn9CijFcjBQnLD+dKS3V3Q8fem7v07Ysp8k3XS8tbE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-681ff7000002311f-18-67ec92d1caba
+X-AuditID: a67dfc5b-681ff7000002311f-4c-67ec92ede4e8
 From: Rakie Kim <rakie.kim@sk.com>
-To: Gregory Price <gourry@gourry.net>
+To: Dan Williams <dan.j.williams@intel.com>
 Cc: akpm@linux-foundation.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
 	linux-cxl@vger.kernel.org,
 	joshua.hahnjy@gmail.com,
-	dan.j.williams@intel.com,
 	ying.huang@linux.alibaba.com,
 	david@redhat.com,
 	Jonathan.Cameron@huawei.com,
 	kernel_team@skhynix.com,
 	honggyu.kim@sk.com,
 	yunjeong.mun@sk.com,
-	Rakie Kim <rakie.kim@sk.com>
-Subject: Re: [PATCH v4 3/3] mm/mempolicy: Support memory hotplug in weighted interleave
-Date: Wed,  2 Apr 2025 10:28:37 +0900
-Message-ID: <20250402012845.1064-1-rakie.kim@sk.com>
+	rakie.kim@sk.com,
+	gourry@gourry.net
+Subject: Re: [PATCH v4 1/3] mm/mempolicy: Fix memory leaks in weighted interleave sysfs
+Date: Wed,  2 Apr 2025 10:29:03 +0900
+Message-ID: <20250402012912.1075-1-rakie.kim@sk.com>
 X-Mailer: git-send-email 2.48.1.windows.1
-In-Reply-To: <Z-xNajhtWgdhT2Jo@gourry-fedora-PF4VCD3F>
+In-Reply-To: <67ec58c8c637_1d472949b@dwillia2-xfh.jf.intel.com.notmuch>
 References: 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -41,138 +41,130 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHLMWRmVeSWpSXmKPExsXC9ZZnoe6lSW/SDe4d5bSYs34Nm8X0qRcY
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrILMWRmVeSWpSXmKPExsXC9ZZnoe7bSW/SDS7stLCYs34Nm8X0qRcY
 	Lb6u/8Vs8fPucXaLVQuvsVkc3zqP3eL8rFMsFpd3zWGzuLfmP6vF6jUZDlweO2fdZffobrvM
-	7tFy5C2rx+I9L5k8Nn2axO5xYsZvFo+dDy093u+7yubxeZNcAGcUl01Kak5mWWqRvl0CV8ak
-	K7+ZCv7IVJx5eo2lgbFHvIuRk0NCwESip72PtYuRA8zetKIYxGQTUJI4tjcGxBQRUJVou+Le
-	xcjFwSzwiEnidPtSVpBOYYFwiX+fPoHZLEA10z42gNm8QFMmXt/ACjFdU6Lh0j0mEJtTwExi
-	9/UPYHEhAR6JVxv2M0LUC0qcnPmEBcRmFpCXaN46mxmi9zmbxIluCwhbUuLgihssExj5ZyFp
-	mYWkZQEj0ypGocy8stzEzBwTvYzKvMwKveT83E2MwFBfVvsnegfjpwvBhxgFOBiVeHgbeN+k
-	C7EmlhVX5h5ilOBgVhLhjfj6Ml2INyWxsiq1KD++qDQntfgQozQHi5I4r9G38hQhgfTEktTs
-	1NSC1CKYLBMHp1QDo83EPxsWPs9RCta5mqBrs/SNUurdu6efLta49nzPcp672nEi1+patrX7
-	reL6Ibnv5DwZr2I27gxb5ZU2fm1bOcT/xCeUT2HNOq5q8Wsuk7CrVbpI8YfAh/e28f5RUWuU
-	ymoImaogYmAnvW+zwLWvq4yOHTx65IDqeVOpm8eEe+/5VbhYCuaZKbEUZyQaajEXFScCAGMO
-	dz5xAgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrJLMWRmVeSWpSXmKPExsXCNUNNS/fipDfpBtN3mVjMWb+GzWL61AuM
+	7tFy5C2rx+I9L5k8Nn2axO5xYsZvFo+dDy093u+7yubxeZNcAGcUl01Kak5mWWqRvl0CV8aG
+	tcsZC/bIVczoe8XSwHhWoouRk0NCwETi/os7LDD2rW0nmLsYOTjYBJQkju2NAQmLCGhLTJxz
+	ECjMxcEscJ5J4kX3HHaQhLBAuMSD9rNgNouAqsSczQcZQWxeoDlHbt9lg5ipKdFw6R4TiM0p
+	4C5xZMsbsF1CAjwSrzbsh6oXlDg58wlYnFlAXqJ562ywZRICr9kkZl09AzVIUuLgihssExj5
+	ZyHpmYWkZwEj0ypGocy8stzEzBwTvYzKvMwKveT83E2MwIBfVvsnegfjpwvBhxgFOBiVeHgb
+	eN+kC7EmlhVX5h5ilOBgVhLhjfj6Ml2INyWxsiq1KD++qDQntfgQozQHi5I4r9G38hQhgfTE
+	ktTs1NSC1CKYLBMHp1QDI2/B8mn28+qnmedNTv+gfVS3qppLarHImxvCrXuvONSHz7JPzTa8
+	2S93l+Pvt5svJz48uafnc2GkjF7KceOvE66E7CphP8MhktTSdnHqo4MPzpmHMGcuFfk7T0l9
+	hXhuk5O7yYatBs9S188w6p1UE735x8zTYkI/7/a/4yi22OE18/3Zb2y7fiuxFGckGmoxFxUn
+	AgCx7ATxdAIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrNLMWRmVeSWpSXmKPExsXCNUNNS/ftpDfpBlv26VrMWb+GzWL61AuM
 	Fl/X/2K2+Hn3OLvF52evmS1WLbzGZnF86zx2i8NzT7JanJ91isXi8q45bBb31vxntTh07Tmr
 	xeo1GRa/t61gc+Dz2DnrLrtHd9tldo+WI29ZPRbvecnksenTJHaPEzN+s3jsfGjp8X7fVTaP
-	b7c9PBa/+MDk8XmTXAB3FJdNSmpOZllqkb5dAlfGpCu/mQr+yFSceXqNpYGxR7yLkYNDQsBE
-	YtOKYhCTTUBJ4tjeGBBTREBVou2KexcjFwezwCMmidPtS1m7GDk5hAXCJf59+gRmswDVTPvY
-	AGbzAk2ZeH0DmC0hoCnRcOkeE4jNKWAmsfv6B7C4kACPxKsN+xkh6gUlTs58wgJiMwvISzRv
-	nc08gZFnFpLULCSpBYxMqxhFMvPKchMzc0z1irMzKvMyK/SS83M3MQIDfFntn4k7GL9cdj/E
-	KMDBqMTDK9DzJl2INbGsuDL3EKMEB7OSCG/E15fpQrwpiZVVqUX58UWlOanFhxilOViUxHm9
-	wlMThATSE0tSs1NTC1KLYLJMHJxSDYy6+xdef2gTH/x4hdOxz6c0/k9ZO/FT1iVzhQ1b8hjW
-	aqXWzm73b+4+ePui++blrTffqt5MbfjAlbHLTM3wXQDXkw2rDcLKKtcYRaSGnrlx+95exjta
-	ypsLJVb4avRZ2ojwxGpvTX28+kP/4qjJb81/tYW9qfl8z35rylolfstVk8uUdQ4pffRSYinO
-	SDTUYi4qTgQArKrENWwCAAA=
+	b7c9PBa/+MDk8XmTXAB3FJdNSmpOZllqkb5dAlfGhrXLGQv2yFXM6HvF0sB4VqKLkZNDQsBE
+	4ta2E8xdjBwcbAJKEsf2xoCERQS0JSbOOQgU5uJgFjjPJPGiew47SEJYIFziQftZMJtFQFVi
+	zuaDjCA2L9CcI7fvskHM1JRouHSPCcTmFHCXOLLlDQuILSTAI/Fqw36oekGJkzOfgMWZBeQl
+	mrfOZp7AyDMLSWoWktQCRqZVjCKZeWW5iZk5pnrF2RmVeZkVesn5uZsYgUG+rPbPxB2MXy67
+	H2IU4GBU4uEV6HmTLsSaWFZcmXuIUYKDWUmEN+Lry3Qh3pTEyqrUovz4otKc1OJDjNIcLEri
+	vF7hqQlCAumJJanZqakFqUUwWSYOTqkGRsM2NYZWT5ZF1tzL4x/9lupz5zw2eeKrFOEX5/Of
+	+pUcWfujR2CB/VdV/yfeYUVH3dyYKt7O2/V5ktTfPW8Xrro7RUti9/O7mr9Tt2/dMXOlkeCV
+	Lyult6n8r9C47fDR/cGECL/TB05piklyb5necs/K9ojhF0+OmU9iLIv/XUiYt6LLxE16Bq8S
+	S3FGoqEWc1FxIgBuu/7EbgIAAA==
 X-CFilter-Loop: Reflected
 
-On Tue, 1 Apr 2025 16:32:42 -0400 Gregory Price <gourry@gourry.net> wrote:
-> On Tue, Apr 01, 2025 at 06:08:59PM +0900, Rakie Kim wrote:
-> >  static void sysfs_wi_release(struct kobject *wi_kobj)
-> > @@ -3464,35 +3477,84 @@ static const struct kobj_type wi_ktype = {
+On Tue, 1 Apr 2025 14:21:12 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
+> Rakie Kim wrote:
+> > Memory leaks occurred when removing sysfs attributes for weighted
+> > interleave. Improper kobject deallocation led to unreleased memory
+> > when initialization failed or when nodes were removed.
+> > 
+> > This patch resolves the issue by replacing unnecessary `kfree()`
+> > calls with `kobject_put()`, ensuring proper cleanup and preventing
+> > memory leaks.
+> > 
+> > By correctly using `kobject_put()`, the release function now
+> > properly deallocates memory without causing resource leaks,
+> > thereby improving system stability.
+> > 
+> > Fixes: dce41f5ae253 ("mm/mempolicy: implement the sysfs-based weighted_interleave interface")
+> > Signed-off-by: Rakie Kim <rakie.kim@sk.com>
+> > Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
+> > Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
+> > Reviewed-by: Gregory Price <gourry@gourry.net>
+> > ---
+> >  mm/mempolicy.c | 61 +++++++++++++++++++++++++-------------------------
+> >  1 file changed, 31 insertions(+), 30 deletions(-)
+> > 
+> > diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> > index bbaadbeeb291..5950d5d5b85e 100644
+> > --- a/mm/mempolicy.c
+> > +++ b/mm/mempolicy.c
+> > @@ -3448,7 +3448,9 @@ static void sysfs_wi_release(struct kobject *wi_kobj)
 > >  
-> >  static int sysfs_wi_node_add(int nid)
-> >  {
-> ... snip ..
-> > +	mutex_lock(&wi_group->kobj_lock);
-> > +	if (wi_group->nattrs[nid]) {
-> > +		mutex_unlock(&wi_group->kobj_lock);
-> > +		pr_info("Node [%d] already exists\n", nid);
-> > +		kfree(new_attr);
-> > +		kfree(name);
-> > +		return 0;
-> > +	}
-> >  
-> > -	if (sysfs_create_file(&wi_group->wi_kobj, &node_attr->kobj_attr.attr)) {
-> > -		kfree(node_attr->kobj_attr.attr.name);
-> > -		kfree(node_attr);
-> > -		pr_err("failed to add attribute to weighted_interleave\n");
-> > -		return -ENOMEM;
-> > +	wi_group->nattrs[nid] = new_attr;
-> > +	mutex_unlock(&wi_group->kobj_lock);
+> >  	for (i = 0; i < nr_node_ids; i++)
+> >  		sysfs_wi_node_release(node_attrs[i], wi_kobj);
+> > -	kobject_put(wi_kobj);
 > > +
-> 
-> Shouldn't all of this
-> vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-> > +	sysfs_attr_init(&wi_group->nattrs[nid]->kobj_attr.attr);
-> > +	wi_group->nattrs[nid]->kobj_attr.attr.name = name;
-> > +	wi_group->nattrs[nid]->kobj_attr.attr.mode = 0644;
-> > +	wi_group->nattrs[nid]->kobj_attr.show = node_show;
-> > +	wi_group->nattrs[nid]->kobj_attr.store = node_store;
-> > +	wi_group->nattrs[nid]->nid = nid;
-> > +
-> > +	ret = sysfs_create_file(&wi_group->wi_kobj,
-> > +				&wi_group->nattrs[nid]->kobj_attr.attr);
-> > +	if (ret) {
-> > +		kfree(wi_group->nattrs[nid]->kobj_attr.attr.name);
-> > +		kfree(wi_group->nattrs[nid]);
-> > +		wi_group->nattrs[nid] = NULL;
-> > +		pr_err("Failed to add attribute to weighted_interleave: %d\n", ret);
-> >  	}
-> ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> 
-> Be happening inside the lock as well?
-
-I agree that applying your suggestion would make the code more robust.
-I will update the patch to follow your recommendation.
-
-> 
-> > +
-> > +	switch(action) {
-> > +	case MEM_ONLINE:
-> > +		if (node_state(nid, N_MEMORY)) {
-> 
-> Hm, I see the issue here, ok, this node_state check isn't needed, as it
-> will always be true.  So this function needs to handle duplicates still.
-
-Yes, you're right. The `node_state(nid, N_MEMORY)` check I added here is
-redundant because it will always be true in this context. I will remove it
-to avoid unnecessary duplication.
-
->                           vvv 
-> > +			err = sysfs_wi_node_add(nid);
-> > +			if (err) {
-> > +				pr_err("failed to add sysfs [node%d]\n", nid);
-> > +				return NOTIFY_BAD;
-> > +			}
-> > +		}
-> > +		break;
-> > +	case MEM_OFFLINE:
-> > +		if (!node_state(nid, N_MEMORY))
-> 
-> This check is good for the time being.
-
-This check looks appropriate for now and I'll keep it as-is.
-
-> 
-> > +			sysfs_wi_node_release(nid);
-> > +		break;
-> > +	}
-> > +
-> > +notifier_end:
-> > +	return NOTIFY_OK;
+> > +	kfree(node_attrs);
+> > +	kfree(wi_kobj);
 > >  }
 > >  
-> > 
+> >  static const struct kobj_type wi_ktype = {
+> > @@ -3494,15 +3496,22 @@ static int add_weighted_interleave_group(struct kobject *root_kobj)
+> >  	struct kobject *wi_kobj;
+> >  	int nid, err;
+> >  
+> > -	wi_kobj = kzalloc(sizeof(struct kobject), GFP_KERNEL);
+> > -	if (!wi_kobj)
+> > +	node_attrs = kcalloc(nr_node_ids, sizeof(struct iw_node_attr *),
+> > +			     GFP_KERNEL);
+> > +	if (!node_attrs)
+> >  		return -ENOMEM;
+> >  
+> > +	wi_kobj = kzalloc(sizeof(struct kobject), GFP_KERNEL);
+> > +	if (!wi_kobj) {
+> > +		err = -ENOMEM;
+> > +		goto node_out;
+> > +	}
+> > +
+> >  	err = kobject_init_and_add(wi_kobj, &wi_ktype, root_kobj,
+> >  				   "weighted_interleave");
 > 
-> But really I think we probably just want to change to build on top of this:
-> https://lore.kernel.org/all/20250401092716.537512-2-osalvador@suse.de/
+> It would be nice if this could take advantage of scope-based cleanup to
+> avoid the new gotos. It would need a new:
 > 
-> And use register_node_notifier with NODE_BECAME_MEMORYLESS and NODE_BECAME_MEM_AWARE
+> DEFINE_FREE(kobject_put, struct kobject *, if (!IS_ERR_OR_NULL(_T)) kobject_put(_T))
 > 
-> ~Gregory
+> ...and a wrapper around kobject_init_and_add() to support auto cleanup:
+> 
+> struct kobject *kobject_init_and_add_or_errptr(struct kobject *kobj)
+> {
+> 	int err = kobject_init_and_add(kobj...);
+> 
+> 	if (err)
+> 		return ERR_PTR(err);
+> 	return kobj;
+> }
+> 
+> With those then you could do:
+> 
+> struct kobject *wi_kobj __free(kfree) = kzalloc(sizeof(struct kobject), GFP_KERNEL);
+> struct kobject *kobj __free(kobject_put) = kobject_init_and_add_or_errptr(no_free_ptr(wi_kobj), ...)
+> 
+> Otherwise, the patch does look good to me as is, but it seems like an
+> opportunity for further cleanups that might also help other
+> kobject_init_and_add() code paths.
 
-Thank you for sharing the link regarding `node_notify`. I agree that the
-mechanism you pointed out would be a better fit for this patch.
+Thank you for your response regarding this patch.
 
-By using `register_node_notifier` with `NODE_BECAME_MEMORYLESS` and
-`NODE_BECAME_MEM_AWARE`, we can avoid unnecessary callbacks and implement
-this functionality more efficiently.
+I believe that the method you suggested using `DEFINE_FREE` is an optimal
+solution for addressing the memory release issue related to `kobject`.
 
-However, I think it would be better to apply the current patch first and
-then update it to use `node_notify` once that support is finalized and
-available upstream.
+I also think that similar problems may arise in many other kernel modules
+that use `kobject`, and therefore, it would be beneficial to address this
+issue more generally in those modules as well.
+
+However, I believe that including such functionality as part of this patch
+series may not be ideal. Instead, I think it's better to introduce this
+approach as a separate patch for broader application and review.
+
+I will work on creating a follow-up patch based on your suggestion.
+Once again, thank you for proposing a clean and helpful solution.
 
 Rakie
 
