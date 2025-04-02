@@ -1,20 +1,60 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C38AC10E9;
-	Wed,  2 Apr 2025 05:32:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC11723312D;
+	Wed,  2 Apr 2025 06:27:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743571933; cv=none; b=q1tqoWIrpANVCT75EIMiHHxH64/NToyzrO+rCxUUQ2R0zWPmGlKQbPd40ON4ogw6Z2lgOhUGGdIwHVcR1o5DW3AnJu9A7sC5n+KqPBn6KIE9uMLJ/v0nzIAwt82Lwnp9LeyoA3LiSbB02fTRwFkmBheqWmGzsNFSOH5P4rq1NH8=
+	t=1743575250; cv=none; b=gISbtSVsE5G2/GCeS7HJCbePuOyuFw2kRAaRYFTAyF4BmqkQingwJ23KQpOVLYmxux+4ap+2Di8PiYr4EBe64I+fyn1flEr4eIj5Nkm7t/jXPk9LiayiIwpEPPWrH711VZkexlerq745yMz4GfYVRI23MQQPxalO2AOoE8tz9qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743571933; c=relaxed/simple;
-	bh=MQT3+UmWpcqnB98CQgT2riHqMD8EpeHRAZeoOZrRWFo=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=l4AG+LORNP/DttcyYfNcQgDXcWL1nUk8DFMgpq1sK9EApGRvcdflhcb/c1smmRYZaSI7NEATadclWmWOPAB8ITaaLyDR2FKp9GogQMyxrksm9bc+5hst17M91d41S1bJsMF6gl1YpJ0/Em/5AlmXHrnKGf43nobnjWuglkgC7AQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-59-67eccbd394c9
-Message-ID: <62664200-c087-48ed-960f-264f340cf7af@sk.com>
-Date: Wed, 2 Apr 2025 14:32:03 +0900
+	s=arc-20240116; t=1743575250; c=relaxed/simple;
+	bh=SJKs5MsANUlt7S2DYNjnDdjbH+PRcr/dBPptfQWldP0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SnWAUa+5Ywykgw9KO4QJahe3ZUhDqs2mXyAgQki3IVIyJNqiI3ZfsazXksM6cDpkUZNeV6Dtl8rh0iq7bT2Rk0fnVmBXHMzYlhtbEgntOxYRoT7gqdpuvs9ETOUs4r+eVzstHLrIEVsOPm9T7QjGKrwWXF143wZymYIEiXSM9O4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gMwE1mUY; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gMwE1mUY"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 531NDHY6006680;
+	Wed, 2 Apr 2025 06:27:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=YL+AUF
+	vrhgU1wEerfy8+1pvRm/SgbGvNwrHfplw2NHQ=; b=gMwE1mUYV0BVtthR0FuZ8W
+	yjVMnILKGt2WXYcqiDbDA9mVI3X5/31Uwt8Jo0vYJCIhaVE544HRPdipjvI+GgAO
+	pifDw2kCudOndnVWkQ1xPmda/2Un51H0T1DBdtwBjszbb9xlJMzAtflPWlIHGjdT
+	0P5CNSbQuovHB9LRwH87/0iXGpKFIWDObv+zZBR9cgPRbCRlWaR7i9ch7EAXqXEO
+	s0bxEtu4LE1B/836gZMr5umZVRUn4qHgWED4/p2nTyVuzBpWvcnL4jrpZbNp8Ke8
+	KB+R27Lt61cyMhR6RpmTv10flzN5MOGMSzM92W4bcEt0aeEHhMsC2GrAJZOZIyCQ
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45rg67msad-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Apr 2025 06:27:13 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53264Z3w005420;
+	Wed, 2 Apr 2025 06:27:12 GMT
+Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 45pww2e634-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 02 Apr 2025 06:27:12 +0000
+Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
+	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5326RCTp24314554
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 2 Apr 2025 06:27:12 GMT
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 037BC583F8;
+	Wed,  2 Apr 2025 06:27:12 +0000 (GMT)
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6B8A1583EE;
+	Wed,  2 Apr 2025 06:27:06 +0000 (GMT)
+Received: from [9.61.254.101] (unknown [9.61.254.101])
+	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  2 Apr 2025 06:27:06 +0000 (GMT)
+Message-ID: <ce38cbe3-429d-466b-bc8c-7dbb7c596ab9@linux.ibm.com>
+Date: Wed, 2 Apr 2025 11:57:04 +0530
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -22,87 +62,70 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Cc: kernel_team@skhynix.com, Rakie Kim <rakie.kim@sk.com>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
- joshua.hahnjy@gmail.com, dan.j.williams@intel.com,
- ying.huang@linux.alibaba.com, david@redhat.com, Jonathan.Cameron@huawei.com,
- yunjeong.mun@sk.com
-Subject: Re: [PATCH v5 3/3] mm/mempolicy: Support memory hotplug in weighted
- interleave
-Content-Language: ko
-To: Gregory Price <gourry@gourry.net>,
- Andrew Morton <akpm@linux-foundation.org>
-References: <20250402014906.1086-1-rakie.kim@sk.com>
- <20250402014906.1086-4-rakie.kim@sk.com>
- <5462e706-5b29-495d-9af9-1945e8a5445e@sk.com>
- <20250401213439.4e7a124d94aa42603d31d45e@linux-foundation.org>
- <Z-zIBM4zQ0LbGPYZ@gourry-fedora-PF4VCD3F>
-From: Honggyu Kim <honggyu.kim@sk.com>
-In-Reply-To: <Z-zIBM4zQ0LbGPYZ@gourry-fedora-PF4VCD3F>
+Subject: Re: [BUG -next] ./usr/include/cxl/features.h:11:10: fatal error:
+ uuid/uuid.h: No such file or directory
+To: paulmck@kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Dave Jiang <dave.jiang@intel.com>,
+        Dan Williams
+ <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>, linux-cxl@vger.kernel.org,
+        dave@stgolabs.net, jonathan.cameron@huawei.com,
+        alison.schofield@intel.com, vishal.l.verma@intel.com,
+        ira.weiny@intel.com, gourry@gourry.net, linux-kernel@vger.kernel.org,
+        linux-next@vger.kernel.org, Madhavan Srinivasan <maddy@linux.ibm.com>
+References: <1f48ba3b-9ba8-44e5-98c7-4c9abf95a935@intel.com>
+ <20250331132439.GD10839@nvidia.com>
+ <67eac8df3e217_201f02948d@dwillia2-xfh.jf.intel.com.notmuch>
+ <20250331171755.GC289482@nvidia.com>
+ <67eaf14b7c611_201f0294ba@dwillia2-xfh.jf.intel.com.notmuch>
+ <4641ce2f-74eb-45ea-a2f8-c7d0db905b7a@linux.ibm.com>
+ <79a032b5-b13d-43fd-b56e-01098122e104@intel.com>
+ <66ae49a8-d7f9-4fd9-b94e-9be26fd9aea4@paulmck-laptop>
+ <e9c57344-43f3-4f90-9894-eb4f5a1b22f2@intel.com>
+ <20250402114722.35cbd9d5@canb.auug.org.au>
+ <478264e8-af94-462b-929f-f7afdf8466bd@paulmck-laptop>
+Content-Language: en-GB
+From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+In-Reply-To: <478264e8-af94-462b-929f-f7afdf8466bd@paulmck-laptop>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMIsWRmVeSWpSXmKPExsXC9ZZnke6V02/SDW42sVjMWb+GzWL61AuM
-	Fl/X/2K2+Hn3OLvFqoXX2CyOb53HbnF+1ikWi8u75rBZ3Fvzn9Vi9ZoMBy6PnbPusnt0t11m
-	92g58pbVY/Gel0wemz5NYvc4MeM3i8fOh5Ye7/ddZfP4vEkugDOKyyYlNSezLLVI3y6BK+P+
-	5fUsBZ85K9ZNe87WwHiXvYuRk0NCwETi1uY2Rhi7+9tfsDivgKXEnEurmUFsFgEViZkbr7BB
-	xAUlTs58wgJiiwrIS9y/NQOonouDWWAxk8SztefAmoUFIiU2TLrOBGIzC4hIzO5sAxskIhAk
-	8fnpWiaQBiGBP4wSE/ovgm1mE1CTuPJyElgDp4CZRHPzf2aIZjOJrq1djBC2vMT2t3OYQZol
-	BJrZJWa8vw51tqTEwRU3WCYwCs5CcuEsJMtnIZk1C8msBYwsqxiFMvPKchMzc0z0MirzMiv0
-	kvNzNzECo2pZ7Z/oHYyfLgQfYhTgYFTi4W3gfZMuxJpYVlyZe4hRgoNZSYQ34uvLdCHelMTK
-	qtSi/Pii0pzU4kOM0hwsSuK8Rt/KU4QE0hNLUrNTUwtSi2CyTBycUg2MvFpvnsjt6m+wYDr/
-	Kjn9zU6VW/wLN78MOf18+yIzsX2Cz46ke/+w5amekvxw4s7YP7NtUgJS/i689XLWhdNOgit3
-	fbXdz3OAheGq7UGlm/ujRQK+Mrgc5BVU+qS46XLnj9shJzKWXfN7t7h0/TI93uu10YLGj7aJ
-	qrrJvV3wp+b72tSu/Z+uH1NiKc5INNRiLipOBADUiO7npgIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgkeLIzCtJLcpLzFFi42LhmqGlp3v59Jt0g4/LLCzmrF/DZjF96gVG
-	i6/rfzFb/Lx7nN1i1cJrbBbHt85jtzg89ySrxflZp1gsLu+aw2Zxb81/VotD156zWqxek2Hx
-	e9sKNgdej52z7rJ7dLddZvdoOfKW1WPxnpdMHps+TWL3ODHjN4vHzoeWHu/3XWXz+Hbbw2Px
-	iw9MHp83yQVwR3HZpKTmZJalFunbJXBl3L+8nqXgM2fFumnP2RoY77J3MXJySAiYSHR/+wtm
-	8wpYSsy5tJoZxGYRUJGYufEKG0RcUOLkzCcsILaogLzE/VszgOq5OJgFFjNJPFt7DqxZWCBS
-	YsOk60wgNrOAiMTszjawQSICQRKfn65lAmkQEvjDKDGh/yIjSIJNQE3iystJYA2cAmYSzc3/
-	mSGazSS6tnYxQtjyEtvfzmGewMg3C8khs5DsmIWkZRaSlgWMLKsYRTLzynITM3NM9YqzMyrz
-	Miv0kvNzNzEC42dZ7Z+JOxi/XHY/xCjAwajEwyvQ8yZdiDWxrLgy9xCjBAezkghvxNeX6UK8
-	KYmVValF+fFFpTmpxYcYpTlYlMR5vcJTE4QE0hNLUrNTUwtSi2CyTBycUg2MU7ZKeHEUntyU
-	qP49+derTmVVYR/36v0XPZ9ujH/y8UjA9d+3k++4Sm4903TlxddwoT0lv/3uqZaJMX8Ka7jW
-	nXRWKV9a9Poslm3OBTPP/9n57SXz80+8DffLJgQ/Ld73ZcI35s0zihpVDvwuqF8ja3HUd+9E
-	12Ube+v+RJjvL1v9TMfYpeDJbCWW4oxEQy3mouJEALRH1nWbAgAA
-X-CFilter-Loop: Reflected
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 17idWzlD9R56I_OxTOzV8SN1XkNGo2wS
+X-Proofpoint-GUID: 17idWzlD9R56I_OxTOzV8SN1XkNGo2wS
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-02_02,2025-04-01_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxlogscore=994
+ suspectscore=0 lowpriorityscore=0 impostorscore=0 spamscore=0
+ malwarescore=0 phishscore=0 adultscore=0 mlxscore=0 priorityscore=1501
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504020040
 
-Hi Gregory,
 
-On 4/2/2025 2:15 PM, Gregory Price wrote:
-> On Tue, Apr 01, 2025 at 09:34:39PM -0700, Andrew Morton wrote:
->>> I'm not sure if this is going to the final version but could you please add this
->>> patch to stable with Cc: <stable@vger.kernel.org>?
->>> We might need to bring the whole series to avoid conflicts to stable tree.
+On 02/04/25 9:51 am, Paul E. McKenney wrote:
+> On Wed, Apr 02, 2025 at 11:47:22AM +1100, Stephen Rothwell wrote:
+>> Hi all,
 >>
->> This is all rather confused.
->>
->> Do we need to backport all three patches into -stable?  If so, all three
->> should have Fixes:.  Preferably they all have the same Fixes: so we
->> aren't backporting untested patch combinations.
->>
-> 
-> I'd just as soon leave the entire thing out of stable backports.
-> 
-> Only the first patch actually fixes a bug (very small memory leak
-> during system tear down, so it's not even a critical bug). This could
-> be added to stable.
-> 
-> Patches 2 and 3 aren't fixes, they're desired behavioral changes
-> to the feature. An interface being confusing doesn't mean it's broken.
-
-I think those are fixes but I also agree that this is behavioral changes as
-well.  So I'm fine leaving these out of stable backports.
+>> On Tue, 1 Apr 2025 17:18:23 -0700 Dave Jiang <dave.jiang@intel.com> wrote:
+>>>> I of course do have some concerns about the number of userspace packages
+>>>> that might be required if CXL is adding seven of them...  ;-)
+>>> Technically it's only 1 package. libuuid-devel. Do the other 6 come
+>>> with the installation of libuuid-devel
+>>> ?
+I had to install only libuuid-devel on my system for this to work.
+>> On my debian build machine, I only need uuid-dev and libuuid1 installed ...
+> And libuuid-devel works on my Fedora systems.
+>
+> So the various kernel-build howtos will be updated?  Or is a patch
+> forthcoming?
+>
+> 							Thanx, Paul
 
 
-Hi Andrew,
+FYI, now the issue is on the main line kernel also.
 
-I won't ask changes so please keep the current status as is.  Sorry for making
-confusion.
 
-Thanks,
-Honggyu
+Regards,
 
-> 
-> ~Gregory
+Venkat.
 
