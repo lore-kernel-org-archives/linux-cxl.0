@@ -1,84 +1,78 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 532311BD01F
-	for <linux-cxl@vger.kernel.org>; Wed,  2 Apr 2025 05:05:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4CEE1FDA
+	for <linux-cxl@vger.kernel.org>; Wed,  2 Apr 2025 05:15:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743570354; cv=none; b=jajBFsLnXlp84taIaae+VL0vayokr8FSpp29VU0IJt9iny/fgWkY8qJ8AnXNT64IbFsYGSMtwzTEjRJXycWKLLV3zn8hbnm4FuCBjI4FKSUct+jw8HgpQNyLdKW1KKzwHCbj1vgTsmVdv1FKDnfCrgCtvmhYoJ8xppq9sUvfNJw=
+	t=1743570953; cv=none; b=LRVT9gK9W1mjQYSLRXpThPF0OY+P5eBmQCofdiZapumhtcuvbbPPkIxmS1pc7FWUpuKMe7IPED8dP4syxyGIVhsruxAYHEwdCDTb24Q/GgxaXjLm9/FdUhHPU0hGedpv5ro1TNIQYyiX26NdURXtSmx4PgpLuFVOzdbQ92B41y4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743570354; c=relaxed/simple;
-	bh=ToBtS/Fq7DMHoT1e2iY+L0xTZeqkApz5pB3d7f0G3bI=;
+	s=arc-20240116; t=1743570953; c=relaxed/simple;
+	bh=bWPpUkos2jEtKhkovyKjA7nDv4oSfAEjB/EGeL+mVxk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CwDcGQ6jPx0f7djo6zwCz0t58aO4BwQmJdO+zIYIDUkagfRwRMtA4JWqy/Y6JCnzc/uJS9HbnWclJThIf0k5Bu3Q+rtFRRFykBe43laZCZpSA9NCVGKW3UsCOyFqNgSj++JFbH1mUT0FYGLn0zYSquG43dhRsXNs+lKN7+uGte4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Qww3K6ZN; arc=none smtp.client-ip=209.85.160.172
+	 Content-Type:Content-Disposition:In-Reply-To; b=rdignwblNg8riqoEw9dWq4sG0KlXAt7Sk8XcxqH4n9yaKEek+ZtiOg0PMSoBaFKPnOx1rNAOS8oJtYGAOhYFR8YqoGbMj4e527Nqf/sA7Uwkz2CY5XBgJUV4iVuXDhpUpMEfpERsrhCChg6HHBcXrRaQqeD9iVwklx+zLNcIsBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=ttR4NMtK; arc=none smtp.client-ip=209.85.160.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Qww3K6ZN"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-476b89782c3so69495601cf.1
-        for <linux-cxl@vger.kernel.org>; Tue, 01 Apr 2025 22:05:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="ttR4NMtK"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4772f48f516so5097391cf.1
+        for <linux-cxl@vger.kernel.org>; Tue, 01 Apr 2025 22:15:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1743570351; x=1744175151; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1743570951; x=1744175751; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=46m3GPuzo/ijq2+XYsa68t/WcXGozC1h1ijATq7sgg4=;
-        b=Qww3K6ZNKTrMfzyFEZdddf7/sAC2VlxiuI612xh2s4rrwgUJcrI+ID6Tw7Z+5Aoagc
-         GKOVdoClgKV+WpvsgPYeB6/+/IDL6TixBRf6MEdcNA1tgUgr4ZQueUXe/KL4JL10PyJJ
-         0U0gXp0AEf+lHg1sigeS1xLofhqJZTAhIeZIAVcrmc5GJCx7JdGBntZhN8HhToNNOLvt
-         /Mzs6uFTfQiK5bCwfIjB5RxjR/vpGs0MWMA+sJ4FHDikTYlK/WKXTVWu8c7pUaxHP8/N
-         RaHd9rqpEBgGReZng1KVGVy0sBY++7TAMJ/FuzEiKzWMULHxd1SA1l5lkyVavufN8B/L
-         gf5A==
+        bh=UBhayhNwyrGVLnHnARpnBOXHL1gt/zqo/tr6FDds1oQ=;
+        b=ttR4NMtK/H38eDS2tIfHaLqhIIo3Oti6v8VEKq5Io1WU2NZlPSQfkFRUH0qvHyD1ac
+         PiTyO44Gb12u/k4tqBeOrwqjmcqOmJU9jVhjv/BdYS325APoRrpaoDKcJGTSm0AAL+P5
+         5ZADdMGFInd9iIXtQ4Dw2nM9FfP7/c+5TDIJ+G+jbB/lFFGUEh46UavhKN3jETpUc9U1
+         CL/bJaO594zN6McEiTaiYYyCFOpOJHrF8D8pHHK/NVoX1TAzxQmIdFtFNTEgLr70WixV
+         Y0+IKSCp8Z1kMFrfDX7pG47hyVA2810jGfi6BKm7xpXHvHh7Cl0t9qivUVfwFUmqH2B7
+         gtjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743570351; x=1744175151;
+        d=1e100.net; s=20230601; t=1743570951; x=1744175751;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=46m3GPuzo/ijq2+XYsa68t/WcXGozC1h1ijATq7sgg4=;
-        b=KssofaAZnyLb6+NmgED4q2JEEq6GEzGpujHh9Q/q897G47ysIlXlpfIurF8xiHBMwF
-         ilySHvUfXU8ofi+YHHkiQ0K9j11rxBZMvusoSfUOqoMxne3PPIGTl0N2Ov59vgW5R/a1
-         fnbl7w4ePW3yjnsSBBrtyObC5IuqQ5Y5K3yGkSY8dX0gtAtflDwOC1coqBX8DnMl7x9q
-         GFcDlsU6MYV7SfIeC4S3vo0ufJgLE4af08BDRxf8m9ygYLB9KHQyxGo4RVPw8mXgObLs
-         aZa1UHWh8U2kX+Rr6xHDz1zSKwH2cD1KULmBUiZSDJc+619q7e9ZbW3sjmlWay7j2AXf
-         RQrw==
-X-Forwarded-Encrypted: i=1; AJvYcCXUlRjCxbrRg8glIqVukyjiMAR9awBKALLrkcCmNLYWar3blZHxSw1ywlaunjtb7AJ9uO5P6PdNqqM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTDkQ7krfpjjbwJUPWBgUdfY3+pakNiyRXYPhGp/mQV8aupxx2
-	VD6zt4uXTtZMmGUXLyhNYb5y3kCdB9lutrRse9SRhv+SP/cE7x6oesZzTroEwrhkwwfKIpJGvok
-	m
-X-Gm-Gg: ASbGncvLzM/5dbb0heUBzh4yjPKszZy5NC90AVx0P85lYSHJNAadR/3AJZ2bPMVnE1j
-	zWmky1UCbMD2M/sP3T+1Og97LzW/o3KyRy4wLr50ARMvNvWrA/nurJqYFLcXbX8MxOVn/CFoQQV
-	HEz17Nj3kejqIVzswhQWdQx7PZYQd7MWf7UH0/6dzS70iruUufQdH7q1pJisNjZbWwfghZHmAbq
-	alyM6VTSBcx7BLLwVQcEUJEJndI4YyHuCAu1fIOGVU04qJvmYrjYSgn0cyh7g2ihSJeb0JF2akg
-	ey1mC6pUbFO1sPQZqPM7rMsdR/Q9ss1+pQ6xfXmwx2vYRV+6FzRMFADx+7SUxgnLzOguJP60VVe
-	6Ja0dd8tf2at8iRQpJPgpun7JOHM=
-X-Google-Smtp-Source: AGHT+IHTe1SVUeuYXh0ubFlwsbzJ9Pp8B2+0OWLUKDSPQ4T5nDWaqnAyykP7ESnbJY9Hs/1MKNXpWw==
-X-Received: by 2002:a05:622a:592:b0:471:cdae:ac44 with SMTP id d75a77b69052e-478f6d6b005mr69196541cf.47.1743570351163;
-        Tue, 01 Apr 2025 22:05:51 -0700 (PDT)
+        bh=UBhayhNwyrGVLnHnARpnBOXHL1gt/zqo/tr6FDds1oQ=;
+        b=EB/C5PUmlGSzBPbc2LZwgma08aictShUptqGlJI77GWckbStfruSKAToCm18q/H0SF
+         rrKZ9UgDpfo8l4KU7rCJe6RjdQLfz5h7/6gnATgab9SnbY2CTkG8lh0VIwoeCjJ96Ssg
+         Xb4tYRpcdsPqBJKfBStP6dSaqgAYuFY+Gk7WpbUhfvmItUlpI+s3M23YzUQ5gEqGkloD
+         YmtGy5nNH9uv6OwC4uz2hI/J4HOvCcny5e8usR6X6u7SiRM5YccJsxaa0YlmC4rIS4qo
+         MqMuBZGRj1LU/0iSeq3Eb+ghLT1KFlu0PzRJTUZOUjDrCGDUpPOgqE26UJSjyyK0ZXaH
+         teEg==
+X-Forwarded-Encrypted: i=1; AJvYcCVn1cnkZZpPqWPHs7T/hyS/vFKDjSwvLEyAHbJ8d4nB/jV9d0YLfxAUc/YHRUhyJM2CIDQkIaV9dcY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxxb/B3DxjpHRVn2ik6rVwZrTLU0bl18rRwyKu6Rr8HptS68Uhw
+	DKYjA8usu6pyH4IINiYzEttVuxewdZUP897QB5BWvIti1JxfOxBv5w+NnnYfhpc=
+X-Gm-Gg: ASbGncsgB8lIgvO6LVfBwnCHHT2K3NPqqnWJAzqdAWMZAdlKuWMAVn92hI0gtFr/4dg
+	AZc3GpYFeZrb9Hc90H5TSHCtBpvzyX0Gv8RjXtzuvmFSR0+ef6BgmWR6L4UPMopwoDg02qKfqTR
+	q+yMYBdGLNjoQ4qnCCyoZstrEkDZsOaIArjdF10eg1agBSoZ/wSINeHU2kzp+VgPKYS7RXa7duq
+	YhCtXbrVaGX0+hT44XzE3Jxrk81sK4u2EHOKOdLmKiItImsSWKVElYCzYWwv1BVtIGynv0ub9nV
+	2ak24Gs7xX2+sUlTGIauouiOMeyW9J75n0x7hOdi2Ve3aqUEM4CAxyQcgXy+kyeqw7I3Og2AzfO
+	q4972H+pNm3dyrvxZqxPaFVSjv3o=
+X-Google-Smtp-Source: AGHT+IG6cFDdBCUhJIJPUwLByZqnNAE8mx3kaNaRVSOgKBueJYVr4mwPJf5fLYFzpV4zids7Bu+0/A==
+X-Received: by 2002:a05:622a:24a:b0:477:1dd7:af94 with SMTP id d75a77b69052e-4790ba8bf68mr8502081cf.2.1743570950681;
+        Tue, 01 Apr 2025 22:15:50 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-477831a65a3sm74670621cf.79.2025.04.01.22.05.50
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4778317ba85sm75550481cf.55.2025.04.01.22.15.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 22:05:50 -0700 (PDT)
-Date: Wed, 2 Apr 2025 01:05:48 -0400
+        Tue, 01 Apr 2025 22:15:49 -0700 (PDT)
+Date: Wed, 2 Apr 2025 01:15:48 -0400
 From: Gregory Price <gourry@gourry.net>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>, Robert Richter <rrichter@amd.com>,
-	ming.li@zohomail.com, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 2/4 v2] cxl/core: Add helpers to detect Low memory Holes
- on x86
-Message-ID: <Z-zFrBqZHc4UWvMb@gourry-fedora-PF4VCD3F>
-References: <20250114203432.31861-1-fabio.m.de.francesco@linux.intel.com>
- <20250114203432.31861-3-fabio.m.de.francesco@linux.intel.com>
- <Z4ccKD9Fc-Egc6EL@gourry-fedora-PF4VCD3F>
- <67ec4d61c3fd6_288d2947b@dwillia2-xfh.jf.intel.com.notmuch>
- <Z-xdYvxD6yz3fMiE@gourry-fedora-PF4VCD3F>
- <67ec7814ea055_73d8294e0@dwillia2-xfh.jf.intel.com.notmuch>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Honggyu Kim <honggyu.kim@sk.com>, Rakie Kim <rakie.kim@sk.com>,
+	kernel_team@skhynix.com, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+	joshua.hahnjy@gmail.com, dan.j.williams@intel.com,
+	ying.huang@linux.alibaba.com, david@redhat.com,
+	Jonathan.Cameron@huawei.com, yunjeong.mun@sk.com
+Subject: Re: [PATCH v5 3/3] mm/mempolicy: Support memory hotplug in weighted
+ interleave
+Message-ID: <Z-zIBM4zQ0LbGPYZ@gourry-fedora-PF4VCD3F>
+References: <20250402014906.1086-1-rakie.kim@sk.com>
+ <20250402014906.1086-4-rakie.kim@sk.com>
+ <5462e706-5b29-495d-9af9-1945e8a5445e@sk.com>
+ <20250401213439.4e7a124d94aa42603d31d45e@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -87,43 +81,27 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <67ec7814ea055_73d8294e0@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <20250401213439.4e7a124d94aa42603d31d45e@linux-foundation.org>
 
-On Tue, Apr 01, 2025 at 04:34:44PM -0700, Dan Williams wrote:
-> The platforms with this condition want to support CXL mapped starting at
-> zero *and* the typical/historical PCI MMIO space in low memory (for
-> those PCI devices that do not support 64-bit addressing). If the CFMWS
-> blindly followed the 256MB*NIW constraint the CXL window would overlap
-> the MMIO space. So the choices are:
+On Tue, Apr 01, 2025 at 09:34:39PM -0700, Andrew Morton wrote:
+> > I'm not sure if this is going to the final version but could you please add this
+> > patch to stable with Cc: <stable@vger.kernel.org>?
+> > We might need to bring the whole series to avoid conflicts to stable tree.
 > 
-
-If I'm understanding everything correctly, then I think this is intended
-to work only when EFI_MEMORY_SP is *not* set for these particular CXL
-devices - so it comes up as memory in early boot and we're just trying
-to wire up all the bits to let the driver manage it accordingly?
-
-If that's the case, then ignore me, i'm just bikeshedding at this point.
-
-I can't imagine a system where the memory at 0x0-4GB is intended to come
-up as EFI_MEMORY_SP, so I hope no one ever tries this :D
-
-> > (Also, I still don't understand the oracle value of <4GB address range.
-> >  It seems like if this is some quirk of SPA vs HPA alignment, then it
-> >  can hold for *all* ocurrances, not just stuff below 4GB)
+> This is all rather confused.
 > 
-> The goal is to get platform vendors to define the rules so that an OS
-> has a reasonable expectation to know what is a valid vs invalid
-> configuration. A hole above 4GB has no reason to exist, there is no
-> resource conflict like PCI MMIO that explains why typical spec
-> expectation can not be met.
-> 
-> So I want the subsystem to have an explicit set of platform quirks
-> ideally backed up by updated spec language. That allows us to validate
-> that the Linux implementation is correct by some objective source of
-> truth, encourage platform vendors to update that source of truth when
-> they create new corner cases, or even better, be more mindful to not
-> create new corner cases.
+> Do we need to backport all three patches into -stable?  If so, all three
+> should have Fixes:.  Preferably they all have the same Fixes: so we
+> aren't backporting untested patch combinations.
+>
 
-I follow, seems reasonable.  
+I'd just as soon leave the entire thing out of stable backports.
+
+Only the first patch actually fixes a bug (very small memory leak
+during system tear down, so it's not even a critical bug). This could
+be added to stable.
+
+Patches 2 and 3 aren't fixes, they're desired behavioral changes
+to the feature. An interface being confusing doesn't mean it's broken.
 
 ~Gregory
