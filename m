@@ -1,79 +1,59 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2BF38DE1
-	for <linux-cxl@vger.kernel.org>; Wed,  2 Apr 2025 16:36:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A3FE33993;
+	Wed,  2 Apr 2025 17:20:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743611789; cv=none; b=jmvUQo7TtomgLs+/wfrwjOu5HFg0k3wEqbZVncaXOAqgigAOb4EE1eViMzr2qQRgEqQ3nKH7QuGmCCBW34OAY0oQNZvW7mlbV4Jbm1CY/dNRZT1h2St5V1jj+eCAsvSTZVf4A0klzRnS+/uULKUatSwqaQIVjMbWhHE+sMMskwA=
+	t=1743614425; cv=none; b=uAwAwTfSAqcWE5Un2izkX/6/SbBnRJv3idDAxIJI2Yt6Guq2yMUTCm5on0EEhNsuVgITwA5T7fnXVQEoy6usTNgZwQkIgf1m5vN/aOl+I2Qj+rTVQsjU2jvwsk55ZmP1PhbYwlyLNfPitK4ucp2rEJK8bAOqEoggwEeYo00cf8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743611789; c=relaxed/simple;
-	bh=34RWo3OZXG4EW/mq5LWgaaOz8jn5vGg8raium3usjig=;
+	s=arc-20240116; t=1743614425; c=relaxed/simple;
+	bh=ARkWPTneha6aLmXSvrGnF6uhfv/6LtE9EzJDxX/VM6g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Te7EXVTx/1ZEpgF4MEXOyXiqvY91WsSIfaakAf5aXUtGIhv+rH+Dozh0+wpELVQzV/DvbQs0WELZAF/ccgmieJHniZ3DGOhHB4ZxSR4mc/wX6Xr/3o2LPqWrI8HsDL2GHDtmedM972mHybLFA3lFjoWI9upqavAX/zZ89Dp2p+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=ZDrUnxqg; arc=none smtp.client-ip=209.85.222.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=U6civGeYWMAJNXWQnnEBO7dQfELqYPcNoXBHMiJO2EVoI0Gty3vHbP0GfI+3g+HDjvEKJ2hY/tkQ+IIGphVJCwAJYJbkSIYlo/QMk9LyP0VDNy7kC6IDnNxQs630mGcojvp8AXmB5dK4zYVDfcXb+ynq9s6CVgZyL/RpE4AIYdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F+qjFAMs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="ZDrUnxqg"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7c59e7039eeso989697885a.2
-        for <linux-cxl@vger.kernel.org>; Wed, 02 Apr 2025 09:36:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1743611787; x=1744216587; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KgpSBc4bwmCggwElKm6ARy8yOozY36WU1+SeYhhxYVo=;
-        b=ZDrUnxqgILxoq6eUAI6AdPgzCAy5l8+pIK2ACEArbQq2MBW0oQR1/GVKG8qAb63OoE
-         dJSQBQIqpuMGtaTmRqjaVnt5vVcMO6oGqpWrR8D55C7EIkgwEeNFnzAJ4R/T3wbtRsLm
-         /dOm09FegCnJhXnte2fGtCtoH2GzlORPZw+/YwQiXFr5IMQuYZG8MA/geTwEa53zbzVD
-         TnyKeWO6JsG9MYBu7LIWA+XWtJ8m8mxn3A3qe3E7gH6Iwtpp/ugyk5VeZSl4SzOE+fbR
-         +6zzulgcxIOEjhKLPSSlQ642oCuYiTDIyAiKxYe8QTAX9CQwUcvkGFY/b1kdeNAkV5c5
-         lIHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743611787; x=1744216587;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KgpSBc4bwmCggwElKm6ARy8yOozY36WU1+SeYhhxYVo=;
-        b=fBf+DVsnHrWP3yIjYi+eWuIPxCk4gu67iNp8oiLJUxe68d9xOwfyEDtX624+MLT1Rh
-         /751GHGfyiGw+hlgkh+UQ6PO40bWHxHuwVEc7Pc+zfI2uRIfsqtQOlrXiBNwZ3fxCSlN
-         ODz1Kf5h4Gddi2xGQ8pmv9QQmHHv7uKNuckJV1e2dB/8bp4tnOP3QoDjgUhb2QMkcPNc
-         OeO4bSpYPYTVcqbywjIzBDZTmQlc8h8m6TIPXN4oJlQHmS9mxF2StKHBetEP9iYlKvDt
-         DJUdqQ9bOleYO400Rc0NPZJuDEKWM/lxcKbC5lwW5zwDXXkmWhTwTmiRcA5ORfnoF8+4
-         Vv7g==
-X-Forwarded-Encrypted: i=1; AJvYcCX5gcdw3X9NtkbfUl41aIU51tEipIYLDDqMXszJN/QaoxS4EtUs0nzhFKR0o5CWdO64tdoLdncCgAM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4gi1FfcnVYe8t+uwTYfYGGnGi2+Ne+f6lRyPpuhO53bvpcjbO
-	eXiENOA3DMiAtmO6uIICPUVvMFu6ddw2rNcIkCHVltx1zg6LMOR+/TFQSS46F3o=
-X-Gm-Gg: ASbGncs/U3QqSa6K2ta+EwVNL4rp+2Dos3d2QVTkSdqSGSOjDOF0xyRfx3Wgbb7QMBX
-	OMNuEPqtRDdqKbpjd4f/gYJB3glK3eT6KBso9q2XuXzY8TjS/xz/BdVgga3gRLOU2ZgTPSQNwO8
-	Bi6lVhrSF6CdcZcuKwy7VyJsmyZNEK47rw1rgjQsmhYDHTN5JBAaBd3PpsLh1nTMlLTJf9so0Kr
-	FQ4kzIIlUjfSqJierI0/etL6pAyUWls3rOlv5WPskZvBRuGbyuzudfzs/WqOARmoL7jcxMbpABO
-	yZ+2XTMYCvBQAnX0AEtZU9HZMyxUlglJJL7y26Ghc4rq+5PZ87G2WtDoYKYo4REEggAYAD3+ntX
-	Z3HOf2DAWriAwULdt/kmebrkMtTs=
-X-Google-Smtp-Source: AGHT+IEI/0jyf6fklqg75GbTJdfuNj+99i5HXBUCPbxpHS67L4ueSNZOE2R7l2jQabFzIRLJMuhBOg==
-X-Received: by 2002:a05:620a:3950:b0:7c5:4949:23f2 with SMTP id af79cd13be357-7c6908756d3mr2557731085a.44.1743611786890;
-        Wed, 02 Apr 2025 09:36:26 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5f779a924sm800564685a.114.2025.04.02.09.36.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 09:36:26 -0700 (PDT)
-Date: Wed, 2 Apr 2025 12:36:24 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Oscar Salvador <osalvador@suse.de>
-Cc: Rakie Kim <rakie.kim@sk.com>, akpm@linux-foundation.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, joshua.hahnjy@gmail.com,
-	dan.j.williams@intel.com, ying.huang@linux.alibaba.com,
-	david@redhat.com, Jonathan.Cameron@huawei.com,
-	kernel_team@skhynix.com, honggyu.kim@sk.com, yunjeong.mun@sk.com
-Subject: Re: [PATCH v5 3/3] mm/mempolicy: Support memory hotplug in weighted
- interleave
-Message-ID: <Z-1niNVSTcb9ogzl@gourry-fedora-PF4VCD3F>
-References: <20250402014906.1086-1-rakie.kim@sk.com>
- <20250402014906.1086-4-rakie.kim@sk.com>
- <Z-0IlZgYLjogZSZO@localhost.localdomain>
- <Z-1GUrdcOeYQgkE3@gourry-fedora-PF4VCD3F>
- <Z-1axdrOVBYESrXo@localhost.localdomain>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F+qjFAMs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0E30C4CEDD;
+	Wed,  2 Apr 2025 17:20:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743614422;
+	bh=ARkWPTneha6aLmXSvrGnF6uhfv/6LtE9EzJDxX/VM6g=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=F+qjFAMs1+K82IxmFxXr3WbwC9FRq8eVFeSS4wQtW/CNa2PRakUd8ifTDuPaBFVBb
+	 rbZePb+V4ZYS4gdPizbVx8N0HYxRbxO2DvLhlmcLPYnpRb5jq4K+YFUKAGBPZMnPZA
+	 8cQ9TpGAwZ3pUbapHmugGnJIb+BaKbK/Lpd7R/816GkCRvb1Nh2HEzzcWHZHfCY7+G
+	 JjYPTHLIGKzY+6o8ceD5Y9LUi+LIw0OAngWHENaztDm5JqJAm9w8g0sHKvamEIucaa
+	 yqZREe9YEttIknmkTZS7BjXMMpqntnLJblrPd1AG9Z9wtQdZkPRCe6GsimzXFP2fwt
+	 XBpWNwBqYtKnw==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 6371ECE079A; Wed,  2 Apr 2025 10:20:22 -0700 (PDT)
+Date: Wed, 2 Apr 2025 10:20:22 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
+	dave@stgolabs.net, jonathan.cameron@huawei.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, gourry@gourry.net,
+	linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+	Madhavan Srinivasan <maddy@linux.ibm.com>
+Subject: Re: [BUG -next] ./usr/include/cxl/features.h:11:10: fatal error:
+ uuid/uuid.h: No such file or directory
+Message-ID: <b26c96af-8856-4bdf-9b43-dd225cdaab6c@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250331171755.GC289482@nvidia.com>
+ <67eaf14b7c611_201f0294ba@dwillia2-xfh.jf.intel.com.notmuch>
+ <4641ce2f-74eb-45ea-a2f8-c7d0db905b7a@linux.ibm.com>
+ <79a032b5-b13d-43fd-b56e-01098122e104@intel.com>
+ <66ae49a8-d7f9-4fd9-b94e-9be26fd9aea4@paulmck-laptop>
+ <e9c57344-43f3-4f90-9894-eb4f5a1b22f2@intel.com>
+ <20250402114722.35cbd9d5@canb.auug.org.au>
+ <478264e8-af94-462b-929f-f7afdf8466bd@paulmck-laptop>
+ <ce38cbe3-429d-466b-bc8c-7dbb7c596ab9@linux.ibm.com>
+ <20250402114412.GA342109@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -82,25 +62,23 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z-1axdrOVBYESrXo@localhost.localdomain>
+In-Reply-To: <20250402114412.GA342109@nvidia.com>
 
-On Wed, Apr 02, 2025 at 05:41:57PM +0200, Oscar Salvador wrote:
+On Wed, Apr 02, 2025 at 08:44:12AM -0300, Jason Gunthorpe wrote:
+> On Wed, Apr 02, 2025 at 11:57:04AM +0530, Venkat Rao Bagalkote wrote:
+> > > So the various kernel-build howtos will be updated?  Or is a patch
+> > > forthcoming?
 > 
-> Yes, this callback will be called whenever {online,offline}_pages succeeds, but
-> status_change_nid will be != NUMA_NO_NODE IFF the node state changes.
-> And you already have the check
-> 
->  if (nid < 0)
->     goto out
-> 
-> at the beginning, which means that all {offline,online}_pages operation that
-> do not carry a numa node state change will be filtered out there.
-> 
-> Makes sense, or am I missing something?
->
+> I was going to pick up Dan's patch after the merge window closes
 
-Ah, you're quite right.  That was difficult to see on the surface, so
-the check in fact superfluous.  No need for an extra version, can just
-add a patch to squash and drop it.
+Very good, thank you!
 
-~Gregory
+> > FYI, now the issue is on the main line kernel also.
+> 
+> I thought the header test stuff was disabled now?? How are people
+> hitting this?
+
+For me, an allmodconfig build hits it every time unless I have the
+libuuid-devel package installed.
+
+							Thanx, Paul
