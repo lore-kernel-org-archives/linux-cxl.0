@@ -1,38 +1,39 @@
 Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF1E019AA56;
-	Thu,  3 Apr 2025 04:26:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24B2D2E3387;
+	Thu,  3 Apr 2025 04:26:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743654372; cv=none; b=nk6pSPfk0Ej8K8HEcjf0mLDSkivkgOb4+IqPHNcZ9oefq9XLWsttHtKcC1pPMF4n9vE7PaollqZ2B9ISbK/KuLK/uKHxFhRW4RdIS5TcHiREnNmodVpwjtvdV6vho3ssy5gPp4pClI2e5/98uEjnVpy1g8xUHSNsS5Mb9/GEoMo=
+	t=1743654409; cv=none; b=bMHwmf8P4dmPhWHKRq7zHJVcvXl5Se/QvMNvydmXzIEpFaMJWUprX3Zm3D4sFdmf0UQ0kE4mkFfxpQ24IlQbLnDYdCrJGT+saKsib/jXjmvzOt9x0NnvDMiuCFx61Iu+oHYtHXs7KarS9Itjx9K3c53d+HQLzGL/pb625uEBhis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743654372; c=relaxed/simple;
-	bh=aPizDx7w9H/yYrcDA9OrBEWDz87opw/7Tq92eqSr2Ro=;
+	s=arc-20240116; t=1743654409; c=relaxed/simple;
+	bh=vlgcvDW4ZxSQUnObRrxIEjPutEKGjnjWmV9viZdwL68=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ew54uIpWA4ykPECjrVXQmYVBun8hNmWXdDMa/J6aIe3iYE4BBzGm31eYyodrTPV+Pl7/fFzv//jOgbvIwjPIyHXYoVxRKCoKryAvUIzRXJko3hPt/zbzlGv2aWu8QWH24vjRuebkx6Vqj6AB03KJlqz7SBGJK67Dt7B6KcxOWlc=
+	 MIME-Version; b=jMbxgKYii9YowcbEUP8pArkiKFrqGmMZjvI+fag19npfp87wjSE/35bQpbKzjhXz5dJXMrASznGX5Hw2RX4i+zr+RqNTIgKjxhlJcOIm3NyeEFj3m5Zc9lfDjBi56C9ff/zf3ICvby9bWKqgz81BmZZfyhmnPWe8lNY4esY9CPQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-c2-67ee0dd482b0
+X-AuditID: a67dfc5b-669ff7000002311f-7d-67ee0e028556
 From: Rakie Kim <rakie.kim@sk.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: akpm@linux-foundation.org,
+To: Gregory Price <gourry@gourry.net>
+Cc: Rakie Kim <rakie.kim@sk.com>,
+	akpm@linux-foundation.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
 	linux-cxl@vger.kernel.org,
 	joshua.hahnjy@gmail.com,
+	dan.j.williams@intel.com,
 	ying.huang@linux.alibaba.com,
 	david@redhat.com,
 	Jonathan.Cameron@huawei.com,
 	kernel_team@skhynix.com,
 	honggyu.kim@sk.com,
 	yunjeong.mun@sk.com,
-	rakie.kim@sk.com,
-	gourry@gourry.net
-Subject: Re: [PATCH v3 2/3] mm/mempolicy: Support dynamic sysfs updates for weighted interleave
-Date: Thu,  3 Apr 2025 13:25:42 +0900
-Message-ID: <20250403042552.1116-1-rakie.kim@sk.com>
+	Oscar Salvador <osalvador@suse.de>
+Subject: Re: [PATCH v5 3/3] mm/mempolicy: Support memory hotplug in weighted interleave
+Date: Thu,  3 Apr 2025 13:26:14 +0900
+Message-ID: <20250403042638.1127-1-rakie.kim@sk.com>
 X-Mailer: git-send-email 2.48.1.windows.1
-In-Reply-To: <67ed66ef7c070_9dac294e0@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <Z-1niNVSTcb9ogzl@gourry-fedora-PF4VCD3F>
 References: 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -41,75 +42,63 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrILMWRmVeSWpSXmKPExsXC9ZZnoe5V3nfpBvtaGC3mrF/DZjF96gVG
-	i6/rfzFb/Lx7nN1i1cJrbBbHt85jtzg/6xSLxeVdc9gs7q35z2qxek2GA5fHzll32T262y6z
-	e7QcecvqsXjPSyaPTZ8msXucmPGbxWPnQ0uP9/uusnl83iQXwBnFZZOSmpNZllqkb5fAlXGl
-	czVbQT9/Ref/P0wNjGt4uhg5OSQETCT6ftxihbG7761n7mLk4GATUJI4tjcGJCwioC0xcc5B
-	oDAXB7PAeSaJF91z2EESwgLxEm+uXGcEsVkEVCV+z+kDi/MCzdl2ooMZYqamRMOle0wgNqeA
-	h8SlB89YQGwhAR6JVxv2M0LUC0qcnPkELM4sIC/RvHU22DIJgddsEktuL2GCGCQpcXDFDZYJ
-	jPyzkPTMQtKzgJFpFaNQZl5ZbmJmjoleRmVeZoVecn7uJkZgwC+r/RO9g/HTheBDjAIcjEo8
-	vB3X3qYLsSaWFVfmHmKU4GBWEuEt1AIK8aYkVlalFuXHF5XmpBYfYpTmYFES5zX6Vp4iJJCe
-	WJKanZpakFoEk2Xi4JRqYPSsMu2PkV7SPJNptbBNR+ETpcq07QdDNlU6vX0yvSlP6P7UxbOS
-	+SZ579jJLvhz4Z15XccWvXutInH35E790p3aX3ym+PLUsUwon6BUGT3NS223pMF7VhnNVU92
-	JVQ8/ZTzbXnt6xM+i5xnnH6S11X3zPay5+u2io5Ct06p+px5l6/wR+p/01ZiKc5INNRiLipO
-	BAB4KEFKdAIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrNLMWRmVeSWpSXmKPExsXCNUNNS/cK77t0gwcTzSzmrF/DZjF96gVG
-	i6/rfzFb/Lx7nN3i87PXzBarFl5jszi+dR67xeG5J1ktzs86xWJxedccNot7a/6zWhy69pzV
-	YvWaDIvf21awOfB57Jx1l92ju+0yu0fLkbesHov3vGTy2PRpErvHiRm/WTx2PrT0eL/vKpvH
-	t9seHotffGDy+LxJLoA7issmJTUnsyy1SN8ugSvjSudqtoJ+/orO/3+YGhjX8HQxcnJICJhI
-	dN9bz9zFyMHBJqAkcWxvDEhYREBbYuKcg0BhLg5mgfNMEi+657CDJIQF4iXeXLnOCGKzCKhK
-	/J7TBxbnBZqz7UQHM8RMTYmGS/eYQGxOAQ+JSw+esYDYQgI8Eq827GeEqBeUODnzCVicWUBe
-	onnrbOYJjDyzkKRmIUktYGRaxSiSmVeWm5iZY6pXnJ1RmZdZoZecn7uJERjky2r/TNzB+OWy
-	+yFGAQ5GJR7eCyZv04VYE8uKK3MPMUpwMCuJ8BZqAYV4UxIrq1KL8uOLSnNSiw8xSnOwKInz
-	eoWnJggJpCeWpGanphakFsFkmTg4pRoYtf7P3yHsbG+2eaL5uyfFBvdeHZ4RFMst1Xn2w9LO
-	HpO9Avs5Vx48sqEg9LX2KrmTE3f5bfkv+O1FmGVQBpNt4SaHbTv+fak3O74u+vtn+Q9iKb8/
-	vn9e8myF1++TB40llm5tSV579wB7Xr9ui+rPbV5m92ZKmcrISlx9mdm0VneRTO7bo8cdfiux
-	FGckGmoxFxUnAgCVq797bgIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBLMWRmVeSWpSXmKPExsXC9ZZnkS4T37t0g3MXxS3mrF/DZjF96gVG
+	i6/rfzFb/Lx7nN1i1cJrbBbHt85jtzg/6xSLxeVdc9gs7q35z2pxZlqRxeo1GQ7cHjtn3WX3
+	6G67zO7RcuQtq8fiPS+ZPDZ9msTucWLGbxaPnQ8tPd7vu8rmsfl0tcfnTXIBXFFcNimpOZll
+	qUX6dglcGYta2xkLLnJWvLvxir2B8RJ7FyMnh4SAicSpGY9ZYOy16/+xdTFycLAJKEkc2xsD
+	YooIqEq0XXHvYuTiYBboYJb4eWgxE0i5sEC4xIX+rcwgNgtQzd8NV8DG8AKN+fm7mQlipKZE
+	w6V7YDangJnE4infwNYKCfBIvNqwnxGiXlDi5MwnYL3MAvISzVtnM4MskxB4zyaxY90XqDsl
+	JQ6uuMEygZF/FpKeWUh6FjAyrWIUyswry03MzDHRy6jMy6zQS87P3cQIDP9ltX+idzB+uhB8
+	iFGAg1GJh7fj2tt0IdbEsuLK3EOMEhzMSiK8hVpAId6UxMqq1KL8+KLSnNTiQ4zSHCxK4rxG
+	38pThATSE0tSs1NTC1KLYLJMHJxSDYyMDy5Y/ntvyXaV94fqWs6HTr1al47a1aWnHjY6E8Fi
+	+rHEM06nL2/C8ii3J3Zep4X2GvoITt7vJ3JKQbRo3cK3BgpKaerSQX8tbPYLNve0hRiulww2
+	CVPYey50g+y1K99YJhWePGpYdDwtPtKPIfsQ64PeOUbTm2WzpzPM+PDwmtv02RlnhZVYijMS
+	DbWYi4oTAV9zNXh7AgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrELMWRmVeSWpSXmKPExsXCNUNNS5eJ7126Qd8BNos569ewWUyfeoHR
+	4uv6X8wWP+8eZ7f4/Ow1s8WqhdfYLI5vncducXjuSVaL87NOsVhc3jWHzeLemv+sFmemFVkc
+	uvac1WL1mgyL39tWsDnwe+ycdZfdo7vtMrtHy5G3rB6L97xk8tj0aRK7x4kZv1k8dj609Hi/
+	7yqbx7fbHh6LX3xg8th8utrj8ya5AJ4oLpuU1JzMstQifbsEroxFre2MBRc5K97deMXewHiJ
+	vYuRk0NCwERi7fp/bF2MHBxsAkoSx/bGgJgiAqoSbVfcuxi5OJgFOpglfh5azARSLiwQLnGh
+	fysziM0CVPN3wxUWEJsXaMzP381MECM1JRou3QOzOQXMJBZP+Qa2SkiAR+LVhv2MEPWCEidn
+	PgHrZRaQl2jeOpt5AiPPLCSpWUhSCxiZVjGKZOaV5SZm5pjqFWdnVOZlVugl5+duYgSG/LLa
+	PxN3MH657H6IUYCDUYmH94LJ23Qh1sSy4srcQ4wSHMxKIryFWkAh3pTEyqrUovz4otKc1OJD
+	jNIcLErivF7hqQlCAumJJanZqakFqUUwWSYOTqkGRtf1ptxHWX/+281+mUtxtuhnz85LXC8M
+	m3pnvpj55zuXm9Kmy388GsT2y3yPsJzJe6P6rtkdg5WLuc0t55j9jhE0L7CUOFD0qDHw30XJ
+	zsemImdqzBeX6DKIryq+zmrWO/9V04486zTte2rzPbdst9j9TPvF9uplGve3uUmyVp42frVG
+	KU/fWomlOCPRUIu5qDgRAJ5mFhZ1AgAA
 X-CFilter-Loop: Reflected
 
-On Wed, 2 Apr 2025 09:33:51 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
-> Rakie Kim wrote:
-> > Previously, the weighted interleave sysfs structure was statically
-> > managed, preventing dynamic updates when nodes were added or removed.
+On Wed, 2 Apr 2025 12:36:24 -0400 Gregory Price <gourry@gourry.net> wrote:
+> On Wed, Apr 02, 2025 at 05:41:57PM +0200, Oscar Salvador wrote:
 > > 
-> > This patch restructures the weighted interleave sysfs to support
-> > dynamic insertion and deletion. The sysfs that was part of
-> > the 'weighted_interleave_group' is now globally accessible,
-> > allowing external access to that sysfs.
+> > Yes, this callback will be called whenever {online,offline}_pages succeeds, but
+> > status_change_nid will be != NUMA_NO_NODE IFF the node state changes.
+> > And you already have the check
 > > 
-> > With this change, sysfs management for weighted interleave is
-> > more flexible, supporting hotplug events and runtime updates
-> > more effectively.
+> >  if (nid < 0)
+> >     goto out
+> > 
+> > at the beginning, which means that all {offline,online}_pages operation that
+> > do not carry a numa node state change will be filtered out there.
+> > 
+> > Makes sense, or am I missing something?
+> >
 > 
-> I understand the urge to try to make a general case for a patch, but it
-> is better to state the explicit reason especially when someone is later
-> reading the history and may not realize that this is part of a series.
+> Ah, you're quite right.  That was difficult to see on the surface, so
+> the check in fact superfluous.  No need for an extra version, can just
+> add a patch to squash and drop it.
 > 
-> So instead of making claims like "this is more flexible / more effective
-> for runtime updates", state that motivation explicitly.  Something like:
-> 
-> "In preparation for enabling weighted-interleave sysfs attributes to
-> react to node-online/offline events, introduce sysfs_wi_node_add() and
-> sysfs_wi_node_delete() helpers to dynamically manage the
-> weighted-interleave attributes.
-> 
-> A follow-on patch registers a memory-hotplug notifier to use these
-> helpers, for now just refactor the current "publish all possible node"
-> approach to use sysfs_wi_node_{add,delete}()."
-> 
+> ~Gregory
 
-Hi Dan Williams,
+To Gregory and Oscar
 
-Thank you for your response regarding this patch.
+As Oscar correctly pointed out, the check for
+'if (!node_state(nid, N_MEMORY))' is unnecessary and should be removed.
 
-First, I would like to mention that this version is v3, and the latest
-version is v5:
-https://lore.kernel.org/lkml/20250402014906.1086-1-rakie.kim@sk.com/
+Additionally, there are other suggestions from Dan Williams that should
+be applied as well:
+Link: https://lore.kernel.org/lkml/67ed66ef7c070_9dac294e0@dwillia2-xfh.jf.intel.com.notmuch/
 
-However, I believe that all of your suggestions should also apply to v5,
-and I completely agree with your feedback.
-
-I will incorporate the improvements you proposed and prepare v6
-accordingly.
+I will incorporate all of these improvements and submit a new version (v6).
 
 Rakie
