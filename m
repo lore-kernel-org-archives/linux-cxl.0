@@ -1,132 +1,215 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FFFF35942;
-	Thu,  3 Apr 2025 12:44:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46A6288A2;
+	Thu,  3 Apr 2025 15:06:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743684259; cv=none; b=DpxutWhnxtqeJx4UN7lOffPXjZ2T9GhJ0Ib187vMAFOz1KgCbOLV5P8Qt6hokXIZbJ4m2S1M6aBxTWfxfsLpZqmEMYgTWAJkyfu6xzyE/YbHFvaUdWg8s70/el+rWKMXZaY6EsLi8UQHk7g8/2KTWa37+xGwi6VirGAufm6K1D8=
+	t=1743692772; cv=none; b=UzkxiA3iRqt2cz0pgi603HcOiYTxmq4TMrA2SzyHSz26TOFkhJiRXtp4dnAC5AawkBZ8AhnE4JwRY2R4J6PxyLrxf8+82MyvQe1umMDnwLA88fSwoLSIVXwWIdLSssiUUg+hxUqte1Mi+Z7xPxNHTW7EAQVqtMNjiQqAdisSM5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743684259; c=relaxed/simple;
-	bh=dr+SFjooIEDN+L1BBO81AAg0EZwIrLQpIuSx3JNdTQI=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TQ9YvfozUzBYBlWGNdFkoQO8tzyJIvULGb8LNADqHM53UigJphlI/LoSp7Q1Z3gkcTDP1q3A6L3Plfi22Dy+sVyD6zfLC8C1ig9Mb9LAG/Zmd7LqgCw+L2lGI5ZErCi0zwRS1GhNAl7yP5LLRiYG0Yt4ogvI93iLp7Yk/I5FwBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZT1YD30wTz6L75h;
-	Thu,  3 Apr 2025 20:40:32 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id B4266140557;
-	Thu,  3 Apr 2025 20:44:12 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 3 Apr
- 2025 14:44:12 +0200
-Date: Thu, 3 Apr 2025 13:44:10 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Oscar Salvador <osalvador@suse.de>
-CC: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand
-	<david@redhat.com>, <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>, Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	<mkoutny@suse.com>, Dan Williams <dan.j.williams@intel.com>,
-	<linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 1/2] mm,memory_hotplug: Implement numa node notifier
-Message-ID: <20250403134410.000006c7@huawei.com>
-In-Reply-To: <20250401092716.537512-2-osalvador@suse.de>
-References: <20250401092716.537512-1-osalvador@suse.de>
-	<20250401092716.537512-2-osalvador@suse.de>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1743692772; c=relaxed/simple;
+	bh=+VMMw5rPIUEIFlei8KuJopBbaXcA5NCCzI0NEv4JagU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=geYf7hallnmpOOQDIBVapQo4nQzvsmA4lLXobFEIlm/ThmPRvktmmPByyE2vNQrjj2uf4IfExbUJJEb2qN/wNbPph5gO8E4aNbDGJ08xYhFA9VX+LDdhQX0OiQ+CbjVfW7C9UJQtnLTMRoAcNmXP/tP7xPJhvg8q2nj82ZwVXuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aoViPt2j; arc=none smtp.client-ip=209.85.219.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aoViPt2j"
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6ecfc7fb2aaso9242356d6.0;
+        Thu, 03 Apr 2025 08:06:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743692770; x=1744297570; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iK8KEJBVYPl6HLxUuQQ2klCL+ZgkeKSI3+E7obEM/WI=;
+        b=aoViPt2j5d3aXeAmKRlTT/JqmjSyu3+G8Fr4hRo4HY7g7jV9e4nb1YYUij1MLj4c9q
+         V4zOpKr00jwXxDllEI6sszzvWSjAfzPnWG/pyBIOsjouJ4sqXDr/pubRoE+cMGyawVRI
+         lfTFWeKS+EfhJzg4aIRd6b1uX/Mc1nlpEDQo8oVYmNvyHJrk3mm1BuKM+ejnjXqW3E0c
+         3DIFaOYLlAZ+HS8ORDWdrE9sfpXSvYOjT0hVJ+rYundeHCL72MMdZcEMWgbsFDBTFngS
+         WvhLtkfQWL3eqyefWpagdpBHR7uDr4c0u4WOwNjxOLhe83uOGN1IjOymwjfqW/iXJVpO
+         8ZWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743692770; x=1744297570;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iK8KEJBVYPl6HLxUuQQ2klCL+ZgkeKSI3+E7obEM/WI=;
+        b=jP0NlHEAkURo8/zHOwVFqJnGTz12Y/4cM6HhhDKLjNYiieHhRtEOUANOPRp4oZFT3s
+         KCC7N+mD4wtqeCNMWCt4czni+HWN9rYuuzGRlizEyKZQGwkbUSesTohmupjtc/XmXoue
+         MoyMtBNOik+jIoBa+4iVGge0kK0ioNDY3tbgF+ZI8fWj5XEV1MLZVD58c3P0JTCR2Do/
+         EyWsckVNw02aRKycENLcWdMwYXQRNlWe2z/QXtOyxYHp6gfJQgKVDGNE9vWqCX5cLs9W
+         DPntSmstw0g2ZnlrawmUdBHaZFXjtdpD+HW8+wb39eF/TnzrOboKaZZdZwr+TIOWp7tP
+         +TDw==
+X-Forwarded-Encrypted: i=1; AJvYcCU5yZqhJVbPudPx0ZqERfvRdtrn7WU8+a3ngO57zxTulb05M4pXgzgZNG4a5Fn6dhyyle46WCK/d0o=@vger.kernel.org, AJvYcCWMtA8hhbrA6w248vfpQwGWskbOVInyAseZ9isqtJ+wxcMLNgz3jMthkQuMMjemBvOZchJ7Q1jcKlNdqhnp@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQ6wA2PA2l5ZI0qsSSuyuosjslfGff3cokKSpyC9HqSfdFsQvm
+	AhkWpWd35+pg2fuLfU2oWoIcRFON0rGvyDt9h+qJhvCi3W/LNySoGrp+sNUW7HlwDVBTWhm8nvY
+	4dbNktJeRKGOfmFTpTB7wphgBImA=
+X-Gm-Gg: ASbGncsNWbuk2yz0m8G0XlRD6uaFuJQ45xNU/3r26/edrgun+ntuyy3zJJ8CG3iiT4v
+	EXmkecleNDOmd7F4XlGtcFgftZYYYwivpd5Z6ydOm2K9KLrttScXDY6wDErVbKQFkf/Xb02SNDp
+	hVcx2igKqU9se9AobdKu0AToIRDo/a3hvfLFj2bKF/XytGT4C+FCHjoo9jAA==
+X-Google-Smtp-Source: AGHT+IHhT/kv3ErEBGGfcWsnYD74kOhA0A8+Rch51ZBJnkmq+tPsrAIdzQtaOiWaOiHnDiOdafpEDaK/ECwlaCjb0Pg=
+X-Received: by 2002:ad4:5f07:0:b0:6e8:eabf:fd55 with SMTP id
+ 6a1803df08f44-6eed625b85dmr310628256d6.39.1743692768242; Thu, 03 Apr 2025
+ 08:06:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
- frapeml500008.china.huawei.com (7.182.85.71)
+References: <20250402204416.3435994-1-nphamcs@gmail.com> <mnvexa7kseswglcqbhlot4zg3b3la2ypv2rimdl5mh5glbmhvz@wi6bgqn47hge>
+In-Reply-To: <mnvexa7kseswglcqbhlot4zg3b3la2ypv2rimdl5mh5glbmhvz@wi6bgqn47hge>
+From: Nhat Pham <nphamcs@gmail.com>
+Date: Thu, 3 Apr 2025 08:05:57 -0700
+X-Gm-Features: ATxdqUFYf4wIA9R_L2Co5iER6d9yuAcNU5JyorPqrHSFoabj94WPG9kBtVsSVkU
+Message-ID: <CAKEwX=NJi63CPEe2bXD4_+Uur2KUmCV-L1kVtQr_+mgKbMb3eg@mail.gmail.com>
+Subject: Re: [PATCH v2] zsmalloc: prefer the the original page's node for
+ compressed data
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, yosry.ahmed@linux.dev, 
+	chengming.zhou@linux.dev, sj@kernel.org, linux-mm@kvack.org, 
+	kernel-team@meta.com, linux-kernel@vger.kernel.org, gourry@gourry.net, 
+	ying.huang@linux.alibaba.com, jonathan.cameron@huawei.com, 
+	dan.j.williams@intel.com, linux-cxl@vger.kernel.org, minchan@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue,  1 Apr 2025 11:27:15 +0200
-Oscar Salvador <osalvador@suse.de> wrote:
+On Wed, Apr 2, 2025 at 8:55=E2=80=AFPM Sergey Senozhatsky
+<senozhatsky@chromium.org> wrote:
+>
+> On (25/04/02 13:44), Nhat Pham wrote:
+> [..]
+> > @@ -1981,10 +1981,15 @@ static int recompress_slot(struct zram *zram, u=
+32 index, struct page *page,
+> >        * We are holding per-CPU stream mutex and entry lock so better
+> >        * avoid direct reclaim.  Allocation error is not fatal since
+> >        * we still have the old object in the mem_pool.
+> > +      *
+> > +      * XXX: technically, the node we really want here is the node tha=
+t holds
+> > +      * the original compressed data. But that would require us to mod=
+ify
+> > +      * zsmalloc API to return this information. For now, we will make=
+ do with
+> > +      * the node of the page allocated for recompression.
+> >        */
+> >       handle_new =3D zs_malloc(zram->mem_pool, comp_len_new,
+> >                              GFP_NOIO | __GFP_NOWARN |
+> > -                            __GFP_HIGHMEM | __GFP_MOVABLE);
+> > +                            __GFP_HIGHMEM | __GFP_MOVABLE, page_to_nid=
+(page));
+>
+> This works for me.  I saw in other threads (and sorry, I'm on a sick
+> leave now, can't reply fast) that "zram people need to fix it"/etc.
+> I guess I'm one of those zram people and I don't think I run any
+> multi-node NUMA systems, so that problem probably has never occurred
+> to me.  We can add a simple API extension to lookup node-id by
+> zsmalloc handle, if anyone really needs it, but I'm okay with the
+> status quo (and XXX) for the time being.
 
-> There are at least four consumers of hotplug_memory_notifier that what they
-> really are interested in is whether any numa node changed its state, e.g: going
-> from being memory aware to becoming memoryless.
+Yeah tbh this path is not that much different from the status quo
+(page is also allocated via the task's policy here), and all the other
+paths are fixed, so this seems to be an overall improvement still :)
 
-Cover letter says 5.  Whilst that's at least 4, maybe update this if you do
-a v2 to say at least 5 :)
+If someone uses recompress + multi node, we can fix it then. It's not
+impossible, just more code :)
 
-> 
-> Implement a specific notifier for numa nodes when their state gets changed,
-> and have those consumers that only care about numa node state changes use it.
-> 
-> Signed-off-by: Oscar Salvador <osalvador@suse.de>
+>
+> [..]
+> > -unsigned long zs_malloc(struct zs_pool *pool, size_t size, gfp_t gfp)
+> > +unsigned long zs_malloc(struct zs_pool *pool, size_t size, gfp_t gfp,
+> > +                             const int nid)
+> >  {
+>
+> I'm not the zspool maintainer, but if I may ask, for new zsmalloc code my
+> preference is to follow the kernel styles (yes, the old code doesn't foll=
+ow
+> any at all, whenever I touch the old code I fix it).
+>
+> Do you mind if we do something like below? (at least for zsmalloc)
 
-A couple of trivial things below.  To me this looks fine otherwise.
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+I don't mind at all! Thanks for fixing it, Sergey.
 
-> +#define hotplug_node_notifier(fn, pri) ({		\
-> +	static __meminitdata struct notifier_block fn##_node_nb =\
-> +		{ .notifier_call = fn, .priority = pri };\
-> +	register_node_notifier(&fn##_node_nb);			\
-> +})
+I saw that Andrew already added this as a fixlet. Thanks, Andrew!
 
-Trivial but spacing before \ seems rather random. Maybe I'm missing
-how it is consistent.
-
-> +
->  #ifdef CONFIG_NUMA
->  void memory_block_add_nid(struct memory_block *mem, int nid,
->  			  enum meminit_context context);
-
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 75401866fb76..4bb9ff282ec9 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-
-
-> @@ -2106,27 +2143,32 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
->  	 * Make sure to mark the node as memory-less before rebuilding the zone
->  	 * list. Otherwise this node would still appear in the fallback lists.
->  	 */
-> -	node_states_clear_node(node, &arg);
-> +	node_states_clear_node(node, &node_arg);
->  	if (!populated_zone(zone)) {
->  		zone_pcp_reset(zone);
->  		build_all_zonelists(NULL);
->  	}
->  
-> -	if (arg.status_change_nid >= 0) {
-> +	if (node_arg.status_change_nid >= 0) {
->  		kcompactd_stop(node);
->  		kswapd_stop(node);
-> +		/*Node went memoryless. Notifiy interested consumers */
-
-Trivial: missing space after *
-
-> +		node_notify(NODE_BECAME_MEMORYLESS, &node_arg);
->  	}
->  
->  	writeback_set_ratelimit();
->  
-> -	memory_notify(MEM_OFFLINE, &arg);
-> +	memory_notify(MEM_OFFLINE, &mem_arg);
->  	remove_pfn_range_from_zone(zone, start_pfn, nr_pages);
->  	return 0;
->  
->  failed_removal_isolated:
->  	/* pushback to free area */
->  	undo_isolate_page_range(start_pfn, end_pfn, MIGRATE_MOVABLE);
-> -	memory_notify(MEM_CANCEL_OFFLINE, &arg);
-> +	if (cancel_node_notifier_on_err)
-> +		node_notify(NODE_CANCEL_MEMORYLESS, &node_arg);
-> +	if (cancel_mem_notifier_on_err)
-> +		memory_notify(MEM_CANCEL_OFFLINE, &mem_arg);
->  failed_removal_pcplists_disabled:
->  	lru_cache_enable();
->  	zone_pcp_enable(zone);
-
-
+>
+> With this
+> Acked-by: Sergey Senozhatsky <senozhatsky@chromium.org> #zram and zsmallo=
+c
+>
+>
+> ---
+>
+> diff --git a/include/linux/zpool.h b/include/linux/zpool.h
+> index 697525cb00bd..369ef068fad8 100644
+> --- a/include/linux/zpool.h
+> +++ b/include/linux/zpool.h
+> @@ -22,7 +22,7 @@ const char *zpool_get_type(struct zpool *pool);
+>  void zpool_destroy_pool(struct zpool *pool);
+>
+>  int zpool_malloc(struct zpool *pool, size_t size, gfp_t gfp,
+> -                       unsigned long *handle, const int nid);
+> +                unsigned long *handle, const int nid);
+>
+>  void zpool_free(struct zpool *pool, unsigned long handle);
+>
+> @@ -64,7 +64,7 @@ struct zpool_driver {
+>         void (*destroy)(void *pool);
+>
+>         int (*malloc)(void *pool, size_t size, gfp_t gfp,
+> -                               unsigned long *handle, const int nid);
+> +                     unsigned long *handle, const int nid);
+>         void (*free)(void *pool, unsigned long handle);
+>
+>         void *(*obj_read_begin)(void *pool, unsigned long handle,
+> diff --git a/mm/zpool.c b/mm/zpool.c
+> index b99a7c03e735..0a71d03369f1 100644
+> --- a/mm/zpool.c
+> +++ b/mm/zpool.c
+> @@ -239,7 +239,7 @@ const char *zpool_get_type(struct zpool *zpool)
+>   * Returns: 0 on success, negative value on error.
+>   */
+>  int zpool_malloc(struct zpool *zpool, size_t size, gfp_t gfp,
+> -                       unsigned long *handle, const int nid)
+> +                unsigned long *handle, const int nid)
+>  {
+>         return zpool->driver->malloc(zpool->pool, size, gfp, handle, nid)=
+;
+>  }
+> diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
+> index daa16ce4cf07..70406ac94bbd 100644
+> --- a/mm/zsmalloc.c
+> +++ b/mm/zsmalloc.c
+> @@ -452,7 +452,7 @@ static void zs_zpool_destroy(void *pool)
+>  }
+>
+>  static int zs_zpool_malloc(void *pool, size_t size, gfp_t gfp,
+> -                       unsigned long *handle, const int nid)
+> +                          unsigned long *handle, const int nid)
+>  {
+>         *handle =3D zs_malloc(pool, size, gfp, nid);
+>
+> @@ -1033,8 +1033,8 @@ static void create_page_chain(struct size_class *cl=
+ass, struct zspage *zspage,
+>   * Allocate a zspage for the given size class
+>   */
+>  static struct zspage *alloc_zspage(struct zs_pool *pool,
+> -                                       struct size_class *class,
+> -                                       gfp_t gfp, const int nid)
+> +                                  struct size_class *class,
+> +                                  gfp_t gfp, const int nid)
+>  {
+>         int i;
+>         struct zpdesc *zpdescs[ZS_MAX_PAGES_PER_ZSPAGE];
+> @@ -1333,7 +1333,7 @@ static unsigned long obj_malloc(struct zs_pool *poo=
+l,
+>   * Allocation requests with size > ZS_MAX_ALLOC_SIZE will fail.
+>   */
+>  unsigned long zs_malloc(struct zs_pool *pool, size_t size, gfp_t gfp,
+> -                               const int nid)
+> +                       const int nid)
+>  {
+>         unsigned long handle;
+>         struct size_class *class;
