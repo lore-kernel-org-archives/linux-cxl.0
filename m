@@ -1,58 +1,86 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C9E273FD;
-	Thu,  3 Apr 2025 15:55:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 120582512F4
+	for <linux-cxl@vger.kernel.org>; Thu,  3 Apr 2025 16:38:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743695762; cv=none; b=hyx+pFfcupP86Ut4OVzAS7DQMpJkbg3T2RgHHwQBOXmQmU6Qsed71zb6uXKszE31cuZDJoTDTfpCyCUEVZb7URkHjwxZRx7SJineOhlvfngqCMqQNvhNiKFPU1AWxRVvN2a/Hi0n+1tSX1+BVgR4hHEG3Yay9qNv8gx1dfcBO4M=
+	t=1743698305; cv=none; b=KmMfUcd+NgQWeoI2f4LDaCrIknaF/4UF5KVWL+eXVYNDmMHMa06fA6D+2wAnU1z3NJjBu5ZsM1Hk4kbA5tG4ItIFdSD0ItB2wi109UvASYbx07HcDbxRJP8PyRyAUXWmMl1u5YnFTIcljCLz5ligwO/exyFtjhVtvPx88/vhdO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743695762; c=relaxed/simple;
-	bh=Z5J3YKVjNZ8m8baV3U4uqMzpF25PP4oUDCTEATpZ9lw=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ebfv7ew6GTkwd1YDavdu99d+6gJhkfeTIUbAlhz/MmUsNvptr8OMABUdJGhlG0H5fl4dFKJYPU5xPHnYFcgoA4jvDkNaA4Z+nQQQ2MIQf0/5XheyXgNBNyEIuveRPje6NUFoSFCFjTAU1dnOklD37+waL8lkl15PltsVzniE70o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZT5sx1cpKz6L52T;
-	Thu,  3 Apr 2025 23:55:17 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id CD7511400D4;
-	Thu,  3 Apr 2025 23:55:56 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 3 Apr
- 2025 17:55:56 +0200
-Date: Thu, 3 Apr 2025 16:55:54 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+	s=arc-20240116; t=1743698305; c=relaxed/simple;
+	bh=5SabYIMEMRNPM3VOvrmN0vXXi9GCRbx+x5GirPmB6wY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=omfO70P6atFhLE3PLj/OIMxSw8wXoIWKOhfjHYlsAB/MiOP14zwmopWb4Yq7d/qU0MXAKfDv44JByX0HTqR1NXwz2q8mFoG1hAvyAXFT9U1BnrEV570ygryg2mb96Ufz1m726OZDCs1Zv/G08Pf9IZrzG20S0JEErucoNjz+N0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=iBIRRhN7; arc=none smtp.client-ip=209.85.222.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="iBIRRhN7"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7c59e7039eeso151593285a.2
+        for <linux-cxl@vger.kernel.org>; Thu, 03 Apr 2025 09:38:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1743698302; x=1744303102; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8kHE37hxmRaBTotqSR2RNNVMRoKL4Qo16Blmg/ywGtk=;
+        b=iBIRRhN7jeiUupb4562vIHcLU1nSp6n0E9U/inRMF23a+BRqfQ1H6WRIr6/wLEICrf
+         hTC/kasHzv66wrl9W0KcjJ13Tx0GmlywkQalHy/fgUQIRzIauea1DrVLrxMoOp7bhLvM
+         0yfjHpRmAGTpLDaHZcz7inWWX/IgtJ+R/ARCudeE6fdBlBUGnR/dmiRXN/fYlat756NQ
+         Rq483Qxq5LYuEF7oT65wuIYKNG75xcdX5L8it5DPNU86GneqhBgdoisobL0rwmwN4zqS
+         zm0BHrC4zYkqDEl+sRRgNjCAwjZPgnmlv9VpRmM6952vFNLURk5OwqsnqIzdDn1FB/vc
+         wwtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743698302; x=1744303102;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8kHE37hxmRaBTotqSR2RNNVMRoKL4Qo16Blmg/ywGtk=;
+        b=VJo76ldr+f/1Kis8ZH7h6Gt1Mv79QckVGhzJiUGi5RHK2xA5PK32OMQ91UwqK8rcOw
+         zk8v9aod5xC+uAQq/s8kyAyRK0Meu7m39Ab1BdsJvEgbWCCw7iYhrXSW/J4MaJPlT67V
+         vHHklmM4p/nQC9zGBJvESntp7Pb7PvvawKAgQwjXSusVI/nufxJGLSY7bGumC+GaGdkD
+         oqx2f8n5EeOJdzVITSUZJEKZ5zmFOLw83QoT8OA2zQ+yikYpA07Cf3YRv6XPO4aqhPMC
+         m51T4Qh27PEWeNe7sFETBfSUye4VSCljuc5rM1yCAcZCGc+rRMlaRko3BOhZvbv2wTAY
+         Wi6w==
+X-Forwarded-Encrypted: i=1; AJvYcCVdHVqvQh2iGCUfHtjyCQ1cgxhJZV1MAyTbtI2AB3pZ28Y58006BfHKnz96nIQM5fv7lNSgVPNsf10=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3eJJrN4xf+JSWver2d59UuOCVkzSikco7Yxw8iKfd4MOZ+E5l
+	nrME6fXbNul6RQngVIphlDatI0SaYc8114O0bqJLG+kipJpzX54vOyo4Sxxb1Yg=
+X-Gm-Gg: ASbGncvsvPBckmXL3KZl2Cl2Tk+318j5QZME5FjlXsu1DvyhggBfQ8LUl68VRubDZzc
+	rGpKcR9PYjAUpkicIboB2/8jFUHSInNwq/W/7KysvxLDwJdZruKPfNkZhPepqHGPPC4GoPwqPD+
+	78YFP931ipdg7C+cloe63VQZjHKCCUawrPhWLhXOpmv6OP0xsNKMripl5E+q9oMS75B9vzWnQQ/
+	3oPnPMmmgat1WFZVBR6Bq+m/7hBo8L6CGxTbigNuXyt/cLsFwcZflbN4M4wcaDQCP7GirfqW233
+	QuQ5dK4eGJAxTVC+S0EI0Dd3rQN3oO109PoXQgy0htA=
+X-Google-Smtp-Source: AGHT+IEEsdFf1LaMB2GezCtiKDLY6ywrkzjcE11zVM3JMzDGnvIDIL//sh7UXZqYvqqen1XIm32Nsw==
+X-Received: by 2002:a05:620a:2617:b0:7c3:c3bb:2538 with SMTP id af79cd13be357-7c76df6874bmr420292985a.14.1743698301747;
+        Thu, 03 Apr 2025 09:38:21 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c76ea9691asm95683085a.111.2025.04.03.09.38.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 09:38:21 -0700 (PDT)
+Date: Thu, 3 Apr 2025 12:38:19 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
 To: Nhat Pham <nphamcs@gmail.com>
-CC: <akpm@linux-foundation.org>, <hannes@cmpxchg.org>,
-	<yosry.ahmed@linux.dev>, <chengming.zhou@linux.dev>, <sj@kernel.org>,
-	<linux-mm@kvack.org>, <kernel-team@meta.com>, <linux-kernel@vger.kernel.org>,
-	<gourry@gourry.net>, <ying.huang@linux.alibaba.com>,
-	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
-	<minchan@kernel.org>, <senozhatsky@chromium.org>
+Cc: akpm@linux-foundation.org, yosry.ahmed@linux.dev,
+	chengming.zhou@linux.dev, sj@kernel.org, linux-mm@kvack.org,
+	kernel-team@meta.com, linux-kernel@vger.kernel.org,
+	gourry@gourry.net, ying.huang@linux.alibaba.com,
+	jonathan.cameron@huawei.com, dan.j.williams@intel.com,
+	linux-cxl@vger.kernel.org, minchan@kernel.org,
+	senozhatsky@chromium.org
 Subject: Re: [PATCH v2] zsmalloc: prefer the the original page's node for
  compressed data
-Message-ID: <20250403165554.00004dd3@huawei.com>
-In-Reply-To: <20250402204416.3435994-1-nphamcs@gmail.com>
+Message-ID: <20250403163819.GA368504@cmpxchg.org>
 References: <20250402204416.3435994-1-nphamcs@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250402204416.3435994-1-nphamcs@gmail.com>
 
-On Wed,  2 Apr 2025 13:44:16 -0700
-Nhat Pham <nphamcs@gmail.com> wrote:
-
+On Wed, Apr 02, 2025 at 01:44:16PM -0700, Nhat Pham wrote:
 > Currently, zsmalloc, zswap's and zram's backend memory allocator, does
 > not enforce any policy for the allocation of memory for the compressed
 > data, instead just adopting the memory policy of the task entering
@@ -120,6 +148,5 @@ Nhat Pham <nphamcs@gmail.com> wrote:
 > 
 > Suggested-by: Gregory Price <gourry@gourry.net>
 > Signed-off-by: Nhat Pham <nphamcs@gmail.com>
-Makes sense. Formatting suggestions in other review nice to have though.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
