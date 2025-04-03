@@ -1,205 +1,327 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D93D61419A9;
-	Thu,  3 Apr 2025 02:41:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743648068; cv=fail; b=LLRLyfbD6chRnQV4MTt8pu6uMbW5FJc44fDCQArRkCz2zIr3SPFQpGXikZh/D7Ivpf78/Si2eOV0FzZvb1YNaBhLdRODvF1FzwwmBeO5g7ylbwbqtxnh7y0YORcvYDg+SMqrSbQJwrLebhKDROR/HbnWtK2BDlByVOvBc5mGfxI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743648068; c=relaxed/simple;
-	bh=dtnxtHe9EtKNxRLHGOV2ebtQQfjzb+PvUFckLtdsCCs=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=VS8l2hF/uSI2pvzslr1KadJuAsbsD1OuerGTEoANJijF/i5wB6SvzkYsTzxKsdy3j+/KdhTRk18k9JAicblUOpXRt0ZKwUqvWjeXGwIFGtpFSZbBz2SEl8m6Gw6F0scfSsotquUo1RYIwkL8HSE1etT2Ma3S44PODgWEWcSQBMM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YpJO/kLF; arc=fail smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED4CA2E339D
+	for <linux-cxl@vger.kernel.org>; Thu,  3 Apr 2025 03:18:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743650333; cv=none; b=eqe+wofrkEt2TZRg1zDbdUJB/fN96ALkDUw93w/kWkfgyH+HY21NhtiqYRSjZ/+FqhDwKkYKh7avQWljZCBP0ColHAfQ+VRWOnwnv2w/HwRUDso/huQGz8Rdx7okisO2U0dsvj7PcZs1BqdzVcLK+U+/sHVAhCuX3os0RcHhX+Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743650333; c=relaxed/simple;
+	bh=v7Ooc7wvSw3zbZEldCqOf1Lpt/P+vmbyrLPaofyPe+s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=H8TKK3yfIWIjUYILUcqg+LeDaKwGwObybfLqAK4Irr6+/gr8yFlFtRu8sYM+ftcYcpH4BQIL1Zdhs8uDfDp/A94iIFfnbWKdXkh1qsKdFZigeUpCUnInwXd/o14cwSkwDuLzXvKcT5xDaFIQSs4oytmZvmpg9XXgYuAmnydxTCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cUJvdkfK; arc=none smtp.client-ip=91.218.175.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YpJO/kLF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743648066; x=1775184066;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=dtnxtHe9EtKNxRLHGOV2ebtQQfjzb+PvUFckLtdsCCs=;
-  b=YpJO/kLF8xS3UQ487jFbz6d/TSoFFlRa2n3yzXVNSU/XCHMzPgQN+DZ7
-   fmrKlx381ndgSPusjnhH2dEUs25Vcn5cAmWieBsFXSTuKnnrIjIHl3a5Q
-   X7vlWlCxiyY4ebOCrch+W0+4aKA7/QUf4qk3gKS/2vG0e6SNealKyUu2L
-   WlCa/04yfbhZugA9nPRIxZunkPfJb9rClwZTmMnDLA5jfG1Fx34P+UlaX
-   Gs4vns50mM9sLEBGJhYAja8KC9NIhIRKD46lE9ecuoZjIs1ZSwKiE0j2S
-   2EAM6CAIWsa0dVH95sp1xzZZlY5KSZ3ni0WnRb71SM6q+KJLX23lrm5m2
-   A==;
-X-CSE-ConnectionGUID: crz7O4xvShKrcLpWspvVPw==
-X-CSE-MsgGUID: ikgw/3iuS+CXjA0pQT+D5Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="55234561"
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="55234561"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 19:40:53 -0700
-X-CSE-ConnectionGUID: Gd1n/IqRTaSFu6XAApqhIw==
-X-CSE-MsgGUID: KewVaKdXQdi2cHzGjqdT2w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="157822008"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orviesa002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 02 Apr 2025 19:40:43 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Wed, 2 Apr 2025 19:40:42 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Wed, 2 Apr 2025 19:40:42 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.170)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 2 Apr 2025 19:40:25 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lmG8b2OfXxPXfir8o4BrhDA7vYnMRwGBHW1dCyzYERNUHMY+XpGk/pvMsgTZksRdU+WaavixZ2wSDMQLP+RpgdtqKHGbL+LDVZcSE05rjiO5Ac4HGcQQbaPfwLtTxcQLQNsYMAQZsUFSGNFTAAOSZ5LyhEzRTPorOjiCO0sxFY3zjkDH0JjP1OChTjkcBlopY3O5Y9BTcm7sZE4Tu/385vaQj6BZkJgmXZ3D2rEu92IbGa9gq8Uo9fEM/R0FsaY3Whb2fTkuGB1EohEl39ZOuEZgO8izwqx6YhaB2p4sVwQO+DnIQvwMFQGUoXWvzeDA094TkQ4Q5xjAbEozO8+CLg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YFfc9Fzlm/WNaX6RivVghc5veah7LiB8LUyC1mJHi2Y=;
- b=W5OulovlkouIG9X5jYUCRtkuC6b1R+3vRScojbWC9KocYIytIdqizy9yV75xNIAQjyXlN7mb1EMpM+OLO6xt5iX+DLRIn3oglbRzFqiBhHfUwM+E/i8PItjgvTduVbP1oYlno/S1RCRrWN/n6bm2qR9ETBFFx2+DIQ4X2YXL57BgPW98RGS6aQDkAn5CRo7wG12mctr4FHt61dz6loYVz49CqCv7wxwa6lQ3hrBwC61IjBx3iqvKeQXOpghDUiBhv4dXmOxwsXGzVlGt6nvWvli+Pa0a0Ti6YF3cV8bHO4zuEQvSo0QaT/g9ut/22ePKoShhfaYI8tIpwzcpfKp/CQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by CH3PR11MB7940.namprd11.prod.outlook.com (2603:10b6:610:130::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.50; Thu, 3 Apr
- 2025 00:00:10 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%3]) with mapi id 15.20.8583.041; Thu, 3 Apr 2025
- 00:00:10 +0000
-Date: Wed, 2 Apr 2025 17:00:07 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Gregory Price <gourry@gourry.net>, <linux-cxl@vger.kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <kernel-team@meta.com>,
-	<dan.j.williams@intel.com>, <vishal.l.verma@intel.com>,
-	<dave.jiang@intel.com>, <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
-	<alison.schofield@intel.com>, <ira.weiny@intel.com>
-Subject: Re: [PATCH v2] cxl: core/region - ignore interleave granularity when
- ways=1
-Message-ID: <67edcf872e1a3_1c2c629460@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20250402232552.999634-1-gourry@gourry.net>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250402232552.999634-1-gourry@gourry.net>
-X-ClientProxiedBy: MW2PR16CA0038.namprd16.prod.outlook.com
- (2603:10b6:907:1::15) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cUJvdkfK"
+Message-ID: <a881c1f8-aaa4-4c34-9883-a1d07e117968@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743650325;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=e7qAGq15qEL42KHQ3S9Pf/fZyUx4FjkcbUW8i8mYu0o=;
+	b=cUJvdkfK6z5cXBBa5OYMd7WWFZeIwQmJ6GXCxzltrfjpCjF9svFUESAKKBUQNFwyuUlGNo
+	SWnxd3ePMiFVvUS/66bP0eFPIEXkk4qpK5unoM5KBXNUsW4zbmnuXmSjJDASAFY85GJXlz
+	YYCgdmxHtHLd5vY2qrND/x0uzEp03eo=
+Date: Thu, 3 Apr 2025 11:18:35 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CH3PR11MB7940:EE_
-X-MS-Office365-Filtering-Correlation-Id: f34767d9-4aeb-42aa-638d-08dd72428009
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?kgBF8CeRf3C1aif+dMl7H8X9PTLVnodO48PceNehcNHlhEPEGr45xA4vADPI?=
- =?us-ascii?Q?23+WJplyHiJfHMT35IsHHolQdZJbWYiyBs+OblY+YkB/DcA+GtFTiLelDsFi?=
- =?us-ascii?Q?UTQ4azjbw18XNXEjK8KeChKGyAMLWhUsypav38u21jtAt6vRmjF7YvWXu4Wk?=
- =?us-ascii?Q?oqhJ0jqF3aMf8PpChyqXIidSQdWFSRg7zqp6StyG7YK478E9Gqw7eL9ftv4C?=
- =?us-ascii?Q?/uFCpLCH4soUbyIRivaSEygx2azFlTtx3mZDWvxiYvUJs1NfzTdL8R49KEEY?=
- =?us-ascii?Q?gyBIdOj0ysETPFduNrUk8f5dnYoOjvTQWbx782XL4SEszsdgJ2qKEdFOP3aa?=
- =?us-ascii?Q?7+v4FO6oatZP1Q/2/yJcEzjNmJIU7NoZdt4ORdyo1hKaQjboselSFXeF4BdT?=
- =?us-ascii?Q?Wt8K7OuqF+dfnVT1uOyMDmfhJTZGWEJrhWpqSiKchiCcbOXfnKJ4GjBvt3KW?=
- =?us-ascii?Q?afjPgxVnDlq/Urr6ZQC5d4R1dHdPhW4QTsRFbwS+yo+tu35FMHVLmXpOiGlf?=
- =?us-ascii?Q?G56Ec6pO/H5YjH/mgXNFzRcw809H/ywcc7DpW5DLH3VeOJDvHN4paR6ofR8/?=
- =?us-ascii?Q?iP978KxjtOzr0cBiHfaHQb6ISVdpJR6MSAbmqUVCxgSvvS7Y6Y6AlglCUQds?=
- =?us-ascii?Q?kKmDlS+mI90Bf0fHUMaH1quopIaQhL4Xqd7lS70YAgABEbfmnEnlJlxsXlfc?=
- =?us-ascii?Q?uBSg+yUrXx2rtK8UEnotNvThiViw4zw8NZvh3595DBTQgf+zhfB0QCey5+me?=
- =?us-ascii?Q?d1/ouf+SW9fdaZPQ2O3SfK2/iJtba4t+nt3PI1Vcbd++PXeshKNTqL8QkoIW?=
- =?us-ascii?Q?2RAxeNQbi/9XOOTWgnU2aVWNVaVXVNvrg1YbSqoc+g6+rkjvR6euv1my8bQW?=
- =?us-ascii?Q?vbBn5bpZkLx5pu5NI6Hi5XYR9DNckqwLzhtBsg2rM8BJOoFleM8fcWrYBQWM?=
- =?us-ascii?Q?jMTZyGXO7XYtZ0l7uFc/dGgiIL6uDxZfTx/vGB4UrZMzeAEi5YYfO7XrZrHW?=
- =?us-ascii?Q?qAkdNbmZB40uARtAE6BnjKuMzRvfOGhfe7jfvDergTq2nslBxzLALY+Pwilp?=
- =?us-ascii?Q?OGZT998UTU/J9JvdC8dW6sU7gCDarJAMLQJaZOxWtTMZI9c04zcHpfAXOScV?=
- =?us-ascii?Q?ERKxj8aFn2ik9J5a/XLFooToZYKFAqSTfv8m6ucGr0gO8l52EYD6x0P+Labh?=
- =?us-ascii?Q?e8eMQRjOUQd62efh7+ViRUdzb2pLwymF5VU6WaNUMaS/BF6QdYJg+p/iMt4L?=
- =?us-ascii?Q?oMgs/JnjbHiNNOaQqbNrjLlhVuZJLNxsVcSZHTR5iiJROoZx1voNRJ9WqUap?=
- =?us-ascii?Q?/+5mJs/DIS94KVlDn38sqOjm+DXqIygz7ClRjKYgujG6B4M7NBLTJP3l7ciF?=
- =?us-ascii?Q?vk31dBrYPTdXyYnE/ay5DvcTlZsB?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?TOj/Fw6BkScmNoc4CCRpSW1Z6xDXaN6buewAl7xRog2wRWewgkwC47o3e/P3?=
- =?us-ascii?Q?AGAwjRSJTaAfVGvdEAaWATf0kSz3uQgUNxyGHOuQ1bek/lhBgnVvhQx/g2uV?=
- =?us-ascii?Q?cngbRbRYfK5JkcMiveGhB/wpOIzHJAqm8R/sgxjXl8Qq6loKni+FLgYeajwe?=
- =?us-ascii?Q?oYh/0FCqLHYJmTMclCX/bew5E77qX9tbQMJ3eBC4nCF+9pcFezi2yHY3ntWB?=
- =?us-ascii?Q?s+UHwRoLNIRdDFk8EHboDZ+FkZjbXpeRyDkO+nGiBAfj/IQZZBvgq9xsBB9l?=
- =?us-ascii?Q?Vx+RnVJ0x9bTFzL4WaR2YEi4ZAEb827wdV7OvVTs/yaSLWKu4zc5veDqj+Vr?=
- =?us-ascii?Q?G8veQ718egYxIjaEcYOqIKSZJ2Qx32T0Lf4sEHf+YMB3lXNSM2BwR5sLSU9+?=
- =?us-ascii?Q?6s7XTVLHRBnae35bJJEKrjCAV8iuN9z2Eu8vTZx+f6cm/xC3oVdPp+XiXZu5?=
- =?us-ascii?Q?GfekdQLVqjZ25WvrzdNHsv1JzYumbHxV3GU/nxJ4QlSr6xs7dHLxr+r6PrUY?=
- =?us-ascii?Q?qSAyGJ0Y6UxmgUkEszIKXoCf8PYAj/obwj0psusxJ+uXjH7SD87no2r5o4Wx?=
- =?us-ascii?Q?EXPUGoFwPwf/6i4A41ltbNCmDPQlPqSXME2ZtD2Drv9TkgZMdpskbLZ/rEab?=
- =?us-ascii?Q?RaGETsyVNDFieVIxVzvmPa1/hT9GgpltJQF5uipW1JHTQQyyqqpnnVsSRapE?=
- =?us-ascii?Q?rtePUXgD+6KIr/OIcDi3FdtjriE+6BQBF3HrHJX3dvTa2nx+Hd/f78tFAW8a?=
- =?us-ascii?Q?/ofOH1snJcaIgGyNbZdVxEzCTdPYyocEy0uRDgVkB0yyuzC65htGRMXtYqL4?=
- =?us-ascii?Q?sOFOQcOhcDE9qhd843ql8/mrngj92IuxJS3Ie8nVmkjFdCYYlyLJ0Z2CxEcQ?=
- =?us-ascii?Q?USg1N/7ylrscDkwIgPYvrJXlE3atzVJQjSUeSWNn2R9XT64Lu/QxB0GQODOf?=
- =?us-ascii?Q?dcRsEyeHP+YP0Ma1kd/Sg/bxIEMzsbgmmyyJ8Mg28QhfsEqegidmLgmtcGv6?=
- =?us-ascii?Q?8oV71ENCDMjt3msrrudCfA6A81pgZPlZQjgfNAPKP8XV55DpWPyj6It0mymy?=
- =?us-ascii?Q?YEN5KbZPhu7U6DBHPEILLLp+iRJwcOm8pxehKEOqOf3d3TZnc37xAyl3nJlk?=
- =?us-ascii?Q?jv8pZ9w01bZzElKYO4Fyz2jF2LwrKfe2JoGaq5OpjD27b0rmhSuEjErOLH0U?=
- =?us-ascii?Q?djOzjj7i/PerS52YZK8nE3/UmP8CrFHEWDohE4d79ZUumqV02UBvx/JF8jdB?=
- =?us-ascii?Q?lHUtb50V4dTJ1MsIGbHqB18PO62LjkXnvpjYmihqwdG8myup36U4Of69mTb9?=
- =?us-ascii?Q?77yHG1Fl8OSXDDOPcl57o4MfX6qGUZfsL47AQEEs2HrLxgsHIeqAmw3EG/R0?=
- =?us-ascii?Q?QAsvErh86nmu/MIoTcfGgiMHXoxuwqbyP0FpdTlR12XKxhfGTEzncowqnR+L?=
- =?us-ascii?Q?52SFH/Z9lraVJgyQq7DzkjwnVxje35gH299pwlUVb8TVRB1Klmym+dzYOZ9u?=
- =?us-ascii?Q?BSut94C9YrNLPVWM48z0UjBkcj1QTB7xtqZEiQgS9LYlFtzG0K6RGCP11wJv?=
- =?us-ascii?Q?55wjeJenlBRlX1dAjwQf2k3PKnCNElEkAAa1GZsVA6MtUtjIjP+CZE1vNZHf?=
- =?us-ascii?Q?Ow=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: f34767d9-4aeb-42aa-638d-08dd72428009
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2025 00:00:09.9723
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HG04sOb73zdybSH8A+kE0aidEuOX7QcRt9BHCVWVpHg53k0B12ffdK/0VIBpLzgL/b/LafY7cjA5hcynQrLOJcv9lY2GQmdJD7qDNc/aZCM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB7940
-X-OriginatorOrg: intel.com
+Subject: Re: [PATCH v2] zsmalloc: prefer the the original page's node for
+ compressed data
+To: Nhat Pham <nphamcs@gmail.com>, akpm@linux-foundation.org
+Cc: hannes@cmpxchg.org, yosry.ahmed@linux.dev, sj@kernel.org,
+ linux-mm@kvack.org, kernel-team@meta.com, linux-kernel@vger.kernel.org,
+ gourry@gourry.net, ying.huang@linux.alibaba.com,
+ jonathan.cameron@huawei.com, dan.j.williams@intel.com,
+ linux-cxl@vger.kernel.org, minchan@kernel.org, senozhatsky@chromium.org
+References: <20250402204416.3435994-1-nphamcs@gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Chengming Zhou <chengming.zhou@linux.dev>
+In-Reply-To: <20250402204416.3435994-1-nphamcs@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Gregory Price wrote:
-> When validating decoder IW/IG when setting up regions, the granularity
-> is irrelevant when iw=1 - all accesses will always route to the only
-> target anyway - so all ig values are "correct". Loosen the requirement
-> that `ig = (parent_iw * parent_ig)` when iw=1.
+On 2025/4/3 04:44, Nhat Pham wrote:
+> Currently, zsmalloc, zswap's and zram's backend memory allocator, does
+> not enforce any policy for the allocation of memory for the compressed
+> data, instead just adopting the memory policy of the task entering
+> reclaim, or the default policy (prefer local node) if no such policy is
+> specified. This can lead to several pathological behaviors in
+> multi-node NUMA systems:
 > 
-> On some Zen5 platforms, the platform BIOS specifies a 256-byte
-> interleave granularity window for host bridges when there is only
-> one target downstream.  This leads to Linux rejecting the configuration
-> of a region with a x2 root with two x1 hostbridges.
+> 1. Systems with CXL-based memory tiering can encounter the following
+>     inversion with zswap/zram: the coldest pages demoted to the CXL tier
+>     can return to the high tier when they are reclaimed to compressed
+>     swap, creating memory pressure on the high tier.
 > 
-> Decoder Programming:
->    root - iw:2 ig:256
->    hb1  - iw:1 ig:256  (Linux expects 512)
->    hb2  - iw:1 ig:256  (Linux expects 512)
->    ep1  - iw:2 ig:256
->    ep2  - iw:2 ig:256
+> 2. Consider a direct reclaimer scanning nodes in order of allocation
+>     preference. If it ventures into remote nodes, the memory it
+>     compresses there should stay there. Trying to shift those contents
+>     over to the reclaiming thread's preferred node further *increases*
+>     its local pressure, and provoking more spills. The remote node is
+>     also the most likely to refault this data again. This undesirable
+>     behavior was pointed out by Johannes Weiner in [1].
 > 
-> This change allows all decoders downstream of a passthrough decoder to
-> also be configured as passthrough (iw:1 ig:X), but still disallows
-> downstream decoders from applying subsequent interleaves.
+> 3. For zswap writeback, the zswap entries are organized in
+>     node-specific LRUs, based on the node placement of the original
+>     pages, allowing for targeted zswap writeback for specific nodes.
 > 
-> e.g. in the above example if there was another decoder south of hb1
-> attempting to interleave 2 endpoints - Linux would enforce hb1.ig=512
-> because the southern decoder would have iw:2 and require ig=pig*piw.
+>     However, the compressed data of a zswap entry can be placed on a
+>     different node from the LRU it is placed on. This means that reclaim
+>     targeted at one node might not free up memory used for zswap entries
+>     in that node, but instead reclaiming memory in a different node.
 > 
-> Signed-off-by: Gregory Price <gourry@gourry.net>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> All of these issues will be resolved if the compressed data go to the
+> same node as the original page. This patch encourages this behavior by
+> having zswap and zram pass the node of the original page to zsmalloc,
+> and have zsmalloc prefer the specified node if we need to allocate new
+> (zs)pages for the compressed data.
+> 
+> Note that we are not strictly binding the allocation to the preferred
+> node. We still allow the allocation to fall back to other nodes when
+> the preferred node is full, or if we have zspages with slots available
+> on a different node. This is OK, and still a strict improvement over
+> the status quo:
+> 
+> 1. On a system with demotion enabled, we will generally prefer
+>     demotions over compressed swapping, and only swap when pages have
+>     already gone to the lowest tier. This patch should achieve the
+>     desired effect for the most part.
+> 
+> 2. If the preferred node is out of memory, letting the compressed data
+>     going to other nodes can be better than the alternative (OOMs,
+>     keeping cold memory unreclaimed, disk swapping, etc.).
+> 
+> 3. If the allocation go to a separate node because we have a zspage
+>     with slots available, at least we're not creating extra immediate
+>     memory pressure (since the space is already allocated).
+> 
+> 3. While there can be mixings, we generally reclaim pages in
+>     same-node batches, which encourage zspage grouping that is more
+>     likely to go to the right node.
+> 
+> 4. A strict binding would require partitioning zsmalloc by node, which
+>     is more complicated, and more prone to regression, since it reduces
+>     the storage density of zsmalloc. We need to evaluate the tradeoff
+>     and benchmark carefully before adopting such an involved solution.
+> 
+> [1]: https://lore.kernel.org/linux-mm/20250331165306.GC2110528@cmpxchg.org/
+> 
+> Suggested-by: Gregory Price <gourry@gourry.net>
+> Signed-off-by: Nhat Pham <nphamcs@gmail.com>
 
-Thanks for the respin!
+Looks good to me:
 
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: Chengming Zhou <chengming.zhou@linux.dev>
+
+Thanks!
+
+> ---
+>   drivers/block/zram/zram_drv.c | 11 ++++++++---
+>   include/linux/zpool.h         |  4 ++--
+>   include/linux/zsmalloc.h      |  3 ++-
+>   mm/zpool.c                    |  8 +++++---
+>   mm/zsmalloc.c                 | 18 ++++++++++--------
+>   mm/zswap.c                    |  2 +-
+>   6 files changed, 28 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+> index fda7d8624889..0ba18277ed7b 100644
+> --- a/drivers/block/zram/zram_drv.c
+> +++ b/drivers/block/zram/zram_drv.c
+> @@ -1694,7 +1694,7 @@ static int write_incompressible_page(struct zram *zram, struct page *page,
+>   	 */
+>   	handle = zs_malloc(zram->mem_pool, PAGE_SIZE,
+>   			   GFP_NOIO | __GFP_NOWARN |
+> -			   __GFP_HIGHMEM | __GFP_MOVABLE);
+> +			   __GFP_HIGHMEM | __GFP_MOVABLE, page_to_nid(page));
+>   	if (IS_ERR_VALUE(handle))
+>   		return PTR_ERR((void *)handle);
+>   
+> @@ -1761,7 +1761,7 @@ static int zram_write_page(struct zram *zram, struct page *page, u32 index)
+>   
+>   	handle = zs_malloc(zram->mem_pool, comp_len,
+>   			   GFP_NOIO | __GFP_NOWARN |
+> -			   __GFP_HIGHMEM | __GFP_MOVABLE);
+> +			   __GFP_HIGHMEM | __GFP_MOVABLE, page_to_nid(page));
+>   	if (IS_ERR_VALUE(handle)) {
+>   		zcomp_stream_put(zstrm);
+>   		return PTR_ERR((void *)handle);
+> @@ -1981,10 +1981,15 @@ static int recompress_slot(struct zram *zram, u32 index, struct page *page,
+>   	 * We are holding per-CPU stream mutex and entry lock so better
+>   	 * avoid direct reclaim.  Allocation error is not fatal since
+>   	 * we still have the old object in the mem_pool.
+> +	 *
+> +	 * XXX: technically, the node we really want here is the node that holds
+> +	 * the original compressed data. But that would require us to modify
+> +	 * zsmalloc API to return this information. For now, we will make do with
+> +	 * the node of the page allocated for recompression.
+>   	 */
+>   	handle_new = zs_malloc(zram->mem_pool, comp_len_new,
+>   			       GFP_NOIO | __GFP_NOWARN |
+> -			       __GFP_HIGHMEM | __GFP_MOVABLE);
+> +			       __GFP_HIGHMEM | __GFP_MOVABLE, page_to_nid(page));
+>   	if (IS_ERR_VALUE(handle_new)) {
+>   		zcomp_stream_put(zstrm);
+>   		return PTR_ERR((void *)handle_new);
+> diff --git a/include/linux/zpool.h b/include/linux/zpool.h
+> index 52f30e526607..697525cb00bd 100644
+> --- a/include/linux/zpool.h
+> +++ b/include/linux/zpool.h
+> @@ -22,7 +22,7 @@ const char *zpool_get_type(struct zpool *pool);
+>   void zpool_destroy_pool(struct zpool *pool);
+>   
+>   int zpool_malloc(struct zpool *pool, size_t size, gfp_t gfp,
+> -			unsigned long *handle);
+> +			unsigned long *handle, const int nid);
+>   
+>   void zpool_free(struct zpool *pool, unsigned long handle);
+>   
+> @@ -64,7 +64,7 @@ struct zpool_driver {
+>   	void (*destroy)(void *pool);
+>   
+>   	int (*malloc)(void *pool, size_t size, gfp_t gfp,
+> -				unsigned long *handle);
+> +				unsigned long *handle, const int nid);
+>   	void (*free)(void *pool, unsigned long handle);
+>   
+>   	void *(*obj_read_begin)(void *pool, unsigned long handle,
+> diff --git a/include/linux/zsmalloc.h b/include/linux/zsmalloc.h
+> index c26baf9fb331..13e9cc5490f7 100644
+> --- a/include/linux/zsmalloc.h
+> +++ b/include/linux/zsmalloc.h
+> @@ -26,7 +26,8 @@ struct zs_pool;
+>   struct zs_pool *zs_create_pool(const char *name);
+>   void zs_destroy_pool(struct zs_pool *pool);
+>   
+> -unsigned long zs_malloc(struct zs_pool *pool, size_t size, gfp_t flags);
+> +unsigned long zs_malloc(struct zs_pool *pool, size_t size, gfp_t flags,
+> +			const int nid);
+>   void zs_free(struct zs_pool *pool, unsigned long obj);
+>   
+>   size_t zs_huge_class_size(struct zs_pool *pool);
+> diff --git a/mm/zpool.c b/mm/zpool.c
+> index 6d6d88930932..b99a7c03e735 100644
+> --- a/mm/zpool.c
+> +++ b/mm/zpool.c
+> @@ -226,20 +226,22 @@ const char *zpool_get_type(struct zpool *zpool)
+>    * @size:	The amount of memory to allocate.
+>    * @gfp:	The GFP flags to use when allocating memory.
+>    * @handle:	Pointer to the handle to set
+> + * @nid:	The preferred node id.
+>    *
+>    * This allocates the requested amount of memory from the pool.
+>    * The gfp flags will be used when allocating memory, if the
+>    * implementation supports it.  The provided @handle will be
+> - * set to the allocated object handle.
+> + * set to the allocated object handle. The allocation will
+> + * prefer the NUMA node specified by @nid.
+>    *
+>    * Implementations must guarantee this to be thread-safe.
+>    *
+>    * Returns: 0 on success, negative value on error.
+>    */
+>   int zpool_malloc(struct zpool *zpool, size_t size, gfp_t gfp,
+> -			unsigned long *handle)
+> +			unsigned long *handle, const int nid)
+>   {
+> -	return zpool->driver->malloc(zpool->pool, size, gfp, handle);
+> +	return zpool->driver->malloc(zpool->pool, size, gfp, handle, nid);
+>   }
+>   
+>   /**
+> diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
+> index 961b270f023c..8ba6cdf222ac 100644
+> --- a/mm/zsmalloc.c
+> +++ b/mm/zsmalloc.c
+> @@ -243,9 +243,9 @@ static inline void zpdesc_dec_zone_page_state(struct zpdesc *zpdesc)
+>   	dec_zone_page_state(zpdesc_page(zpdesc), NR_ZSPAGES);
+>   }
+>   
+> -static inline struct zpdesc *alloc_zpdesc(gfp_t gfp)
+> +static inline struct zpdesc *alloc_zpdesc(gfp_t gfp, const int nid)
+>   {
+> -	struct page *page = alloc_page(gfp);
+> +	struct page *page = alloc_pages_node(nid, gfp, 0);
+>   
+>   	return page_zpdesc(page);
+>   }
+> @@ -462,9 +462,9 @@ static void zs_zpool_destroy(void *pool)
+>   }
+>   
+>   static int zs_zpool_malloc(void *pool, size_t size, gfp_t gfp,
+> -			unsigned long *handle)
+> +			unsigned long *handle, const int nid)
+>   {
+> -	*handle = zs_malloc(pool, size, gfp);
+> +	*handle = zs_malloc(pool, size, gfp, nid);
+>   
+>   	if (IS_ERR_VALUE(*handle))
+>   		return PTR_ERR((void *)*handle);
+> @@ -1044,7 +1044,7 @@ static void create_page_chain(struct size_class *class, struct zspage *zspage,
+>    */
+>   static struct zspage *alloc_zspage(struct zs_pool *pool,
+>   					struct size_class *class,
+> -					gfp_t gfp)
+> +					gfp_t gfp, const int nid)
+>   {
+>   	int i;
+>   	struct zpdesc *zpdescs[ZS_MAX_PAGES_PER_ZSPAGE];
+> @@ -1061,7 +1061,7 @@ static struct zspage *alloc_zspage(struct zs_pool *pool,
+>   	for (i = 0; i < class->pages_per_zspage; i++) {
+>   		struct zpdesc *zpdesc;
+>   
+> -		zpdesc = alloc_zpdesc(gfp);
+> +		zpdesc = alloc_zpdesc(gfp, nid);
+>   		if (!zpdesc) {
+>   			while (--i >= 0) {
+>   				zpdesc_dec_zone_page_state(zpdescs[i]);
+> @@ -1336,12 +1336,14 @@ static unsigned long obj_malloc(struct zs_pool *pool,
+>    * @pool: pool to allocate from
+>    * @size: size of block to allocate
+>    * @gfp: gfp flags when allocating object
+> + * @nid: The preferred node id to allocate new zspage (if needed)
+>    *
+>    * On success, handle to the allocated object is returned,
+>    * otherwise an ERR_PTR().
+>    * Allocation requests with size > ZS_MAX_ALLOC_SIZE will fail.
+>    */
+> -unsigned long zs_malloc(struct zs_pool *pool, size_t size, gfp_t gfp)
+> +unsigned long zs_malloc(struct zs_pool *pool, size_t size, gfp_t gfp,
+> +				const int nid)
+>   {
+>   	unsigned long handle;
+>   	struct size_class *class;
+> @@ -1376,7 +1378,7 @@ unsigned long zs_malloc(struct zs_pool *pool, size_t size, gfp_t gfp)
+>   
+>   	spin_unlock(&class->lock);
+>   
+> -	zspage = alloc_zspage(pool, class, gfp);
+> +	zspage = alloc_zspage(pool, class, gfp, nid);
+>   	if (!zspage) {
+>   		cache_free_handle(pool, handle);
+>   		return (unsigned long)ERR_PTR(-ENOMEM);
+> diff --git a/mm/zswap.c b/mm/zswap.c
+> index 204fb59da33c..455e9425c5f5 100644
+> --- a/mm/zswap.c
+> +++ b/mm/zswap.c
+> @@ -981,7 +981,7 @@ static bool zswap_compress(struct page *page, struct zswap_entry *entry,
+>   
+>   	zpool = pool->zpool;
+>   	gfp = GFP_NOWAIT | __GFP_NORETRY | __GFP_HIGHMEM | __GFP_MOVABLE;
+> -	alloc_ret = zpool_malloc(zpool, dlen, gfp, &handle);
+> +	alloc_ret = zpool_malloc(zpool, dlen, gfp, &handle, page_to_nid(page));
+>   	if (alloc_ret)
+>   		goto unlock;
+>   
+> 
+> base-commit: 8c65b3b82efb3b2f0d1b6e3b3e73c6f0fd367fb5
