@@ -1,41 +1,42 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF6CF4414;
-	Fri,  4 Apr 2025 15:47:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A87C18F40;
+	Fri,  4 Apr 2025 16:03:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743781673; cv=none; b=io580B5hYHpUCY+AAGNyYxRS+u4LKnDDscFbkWh/DX57+dkJIYm1CIy+BjRbL1d2rrCQ7p96T8Cw4KoW+aknOsryvwadDBXvamsSqifoHZCiT6WAoQAjri6TZZmFWoBU7xDxaSrevUxoogJbj/a6DzTsAnSGQ/4ZNdS2zfJ5EPU=
+	t=1743782617; cv=none; b=EEDl8yOeLRZSEUg+hsPWl/XdlO92UJ8EA4nHtEliextpnq2OZtPFPHyu8LpIxw6q115gkDNpCBKR4Lp+dlJouvTZEnnouaERey08YSkSVPDMzFhfVjkZ7fX9BvGdFSuZFlNWoSB1oSPOZlzyXUAcOfZMcrDmJDdSh7tf64mjsEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743781673; c=relaxed/simple;
-	bh=RTxWiTlEusDHhssNywRrO+/P3doXCY5eg0kOiXUWjeQ=;
+	s=arc-20240116; t=1743782617; c=relaxed/simple;
+	bh=LB0+aQivlJstFj1AeTFb88pnHKFXp1QfCPKZ3HMMlOE=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Y9BU0hOwCGUnR6iI04GHREL46hHYjEjSgmwd0diaLxo6NECLvi1M7ZGQALMEhHq7v2FCI/fp3Et+QrvyNJWIPFqMIEsgOulM07ZW2OuZIKsCZGLM5XjtJGtmC/rVtyadCPKNRgl9/qFrnGzb4bbYMaAyRc6F0AIs/K+Ygmkuqys=
+	 MIME-Version:Content-Type; b=DKiACEL9Gfp7ScLgDSS6rSGm8jmMQtPbXylMm+SVM+KsUvuP20tzpx3k7jQFfAqv4HxRlHrGi31eLygfxv31kiGAsjh0SOUf8eyHmNuL/vfnXgJUtkXkAj4mAUH1HYhVaNZ1w+L0sYNNfof5nOQyNY1sf6OhXgtKK+bQXcn4lTc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZTjf02wyhz6L4yN;
-	Fri,  4 Apr 2025 23:47:04 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZTjwk6JXwz6K5qq;
+	Fri,  4 Apr 2025 23:59:50 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 259E2140595;
-	Fri,  4 Apr 2025 23:47:47 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id CD0E514050C;
+	Sat,  5 Apr 2025 00:03:31 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 4 Apr
- 2025 17:47:46 +0200
-Date: Fri, 4 Apr 2025 16:47:44 +0100
+ 2025 18:03:31 +0200
+Date: Fri, 4 Apr 2025 17:03:29 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To: <alejandro.lucero-palau@amd.com>
 CC: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
 	<dan.j.williams@intel.com>, <edward.cree@amd.com>, <davem@davemloft.net>,
 	<kuba@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>,
-	<dave.jiang@intel.com>, Alejandro Lucero <alucerop@amd.com>
-Subject: Re: [PATCH v12 04/23] cxl: move register/capability check to driver
-Message-ID: <20250404164744.00004b34@huawei.com>
-In-Reply-To: <20250331144555.1947819-5-alejandro.lucero-palau@amd.com>
+	<dave.jiang@intel.com>, Alejandro Lucero <alucerop@amd.com>, Ben Cheatham
+	<benjamin.cheatham@amd.com>
+Subject: Re: [PATCH v12 05/23] cxl: add function for type2 cxl regs setup
+Message-ID: <20250404170329.00000401@huawei.com>
+In-Reply-To: <20250331144555.1947819-6-alejandro.lucero-palau@amd.com>
 References: <20250331144555.1947819-1-alejandro.lucero-palau@amd.com>
-	<20250331144555.1947819-5-alejandro.lucero-palau@amd.com>
+	<20250331144555.1947819-6-alejandro.lucero-palau@amd.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -45,141 +46,117 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Mon, 31 Mar 2025 15:45:36 +0100
-<alejandro.lucero-palau@amd.com> wrote:
+On Mon, 31 Mar 2025 15:45:37 +0100
+alejandro.lucero-palau@amd.com wrote:
 
 > From: Alejandro Lucero <alucerop@amd.com>
 > 
-> Type3 has some mandatory capabilities which are optional for Type2.
+> Create a new function for a type2 device initialising
+> cxl_dev_state struct regarding cxl regs setup and mapping.
 > 
-> In order to support same register/capability discovery code for both
-> types, avoid any assumption about what capabilities should be there, and
-> export the capabilities found for the caller doing the capabilities
-> check based on the expected ones.
+> Export the capabilities found for checking them against the
+> expected ones by the driver.
 > 
 > Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-A few minor things inline.
-
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index 0fd6646c1a2e..7adf2cff43b6 100644
-
-> @@ -37,7 +39,8 @@
->   * Probe for component register information and return it in map object.
->   */
->  void cxl_probe_component_regs(struct device *dev, void __iomem *base,
-> -			      struct cxl_component_reg_map *map)
-> +			      struct cxl_component_reg_map *map,
-> +			      unsigned long *caps)
->  {
->  	int cap, cap_count;
->  	u32 cap_array;
-> @@ -85,6 +88,8 @@ void cxl_probe_component_regs(struct device *dev, void __iomem *base,
->  			decoder_cnt = cxl_hdm_decoder_count(hdr);
->  			length = 0x20 * decoder_cnt + 0x10;
->  			rmap = &map->hdm_decoder;
-> +			if (caps)
-> +				set_bit(CXL_DEV_CAP_HDM, caps);
-
-Maybe it's worth a local helper?
-			cxl_set_cap_bit() that checks for NULL cap
-
-#define cxl_set_cap_bit(bit, caps) if (caps) { set_bit((bit), (caps)); }
-
-Or just always provide caps.  Do we have use cases where we really don't
-care about what is found?  
-
->  			break;
->  		}
->  		case CXL_CM_CAP_CAP_ID_RAS:
-> @@ -92,6 +97,8 @@ void cxl_probe_component_regs(struct device *dev, void __iomem *base,
->  				offset);
->  			length = CXL_RAS_CAPABILITY_LENGTH;
->  			rmap = &map->ras;
-> +			if (caps)
-> +				set_bit(CXL_DEV_CAP_RAS, caps);
->  			break;
->  		default:
->  			dev_dbg(dev, "Unknown CM cap ID: %d (0x%x)\n", cap_id,
-
->  #endif /* __CXL_PCI_H__ */
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index e8c0efb3a12f..2a52556bd568 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -836,6 +836,8 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-
->  	else if (!cxlds->reg_map.component_map.ras.valid)
-> @@ -895,6 +909,17 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	if (rc)
->  		dev_dbg(&pdev->dev, "Failed to map RAS capability.\n");
+> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
+> ---
+>  drivers/cxl/core/pci.c | 52 ++++++++++++++++++++++++++++++++++++++++++
+>  include/cxl/cxl.h      |  5 ++++
+>  2 files changed, 57 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 05399292209a..e48320e16a4f 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -1095,6 +1095,58 @@ int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_pci_setup_regs, "CXL");
 >  
+> +static int cxl_pci_setup_memdev_regs(struct pci_dev *pdev,
+> +				     struct cxl_dev_state *cxlds,
+> +				     unsigned long *caps)
+> +{
+> +	struct cxl_register_map map;
+> +	int rc;
+> +
+> +	rc = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_MEMDEV, &map, caps);
 > +	/*
-> +	 * Checking mandatory caps are there as, at least, a subset of those
-> +	 * found.
+> +	 * This call can return -ENODEV if regs not found. This is not an error
+> +	 * for Type2 since these regs are not mandatory. If they do exist then
+> +	 * mapping them should not fail. If they should exist, it is with driver
+> +	 * calling cxl_pci_check_caps where the problem should be found.
+
+Good to put () on end of functions when mentioned in comments.
+
 > +	 */
-> +	if (!bitmap_subset(expected, found, CXL_MAX_CAPS)) {
+> +	if (rc == -ENODEV)
+> +		return 0;
 
-> +		dev_err(&pdev->dev,
-> +			"Found capabilities (%pb) not containing mandatory expected: (%pb)\n",
+Hmm. I don't mind hugely but I'd expect the -ENODEV handler in the
+clearly accelerator specific code that follows not here.
 
-The only obvious reason I can see for an expected bitmap is this print and this isn't
-that helpful as requires anyone seeing it to dig into what the bitmap means.  Maybe
+That would require cxl_map_device_regs() to definitely not return
+-ENODEV though which is a bit ugly so I guess this is ok.
 
-	if (!test_bit(CXL_DEV_CAP_HDM, found))
-		return dev_err_probe(&pdev->dev, -ENXIO "HDM decoder capability not found\n");
-	etc.
+I'm not entirely convinced this helper makes sense though given
+the 2 parts of the component regs are just done inline in 
+cxl_pci_accel_setup_regs() and if you did that then this
+accelerator specific 'carry on anyway' would be in the function
+with accel in the name.
 
-That will only print the first once not found though and avoiding that adds complexity we
-probably don't want here. 
+	You'd need a
+	rc = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_MEMDEV, &map, caps);
+	if (rc) {
+		if (rc != -ENODEV)
+			return rc;
+	} else {
+		rc = cxl_map_device_regs();
+		if (rc)
+			return rc;	
+	}	
+though which is a little messy.
 
-> +			found, expected);
-> +		return -ENXIO;
+> +
+> +	if (rc)
+> +		return rc;
+> +
+> +	return cxl_map_device_regs(&map, &cxlds->regs.device_regs);
+> +}
+> +
+> +int cxl_pci_accel_setup_regs(struct pci_dev *pdev, struct cxl_dev_state *cxlds,
+> +			      unsigned long *caps)
+> +{
+> +	int rc;
+> +
+> +	rc = cxl_pci_setup_memdev_regs(pdev, cxlds, caps);
+> +	if (rc)
+> +		return rc;
+> +
+> +	rc = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_COMPONENT,
+> +				&cxlds->reg_map, caps);
+> +	if (rc) {
+> +		dev_warn(&pdev->dev, "No component registers (%d)\n", rc);
+> +		return rc;
 > +	}
 > +
->  	rc = cxl_pci_type3_init_mailbox(cxlds);
->  	if (rc)
->  		return rc;
-> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-> index 1383fd724cf6..b9cd98950a38 100644
-> --- a/include/cxl/cxl.h
-> +++ b/include/cxl/cxl.h
-> @@ -25,6 +25,26 @@ enum cxl_devtype {
->  
->  struct device;
->  
-> +
-> +/* Capabilities as defined for:
-CXL code so 
-/*
- * Capabilities...
+> +	if (!caps || !test_bit(CXL_CM_CAP_CAP_ID_RAS, caps))
 
-> + *
-> + *	Component Registers (Table 8-22 CXL 3.2 specification)
-> + *	Device Registers (8.2.8.2.1 CXL 3.2 specification)
-> + *
-> + * and currently being used for kernel CXL support.
-> + */
-> +
-> +enum cxl_dev_cap {
-> +	/* capabilities from Component Registers */
-> +	CXL_DEV_CAP_RAS,
-> +	CXL_DEV_CAP_HDM,
-> +	/* capabilities from Device Registers */
-> +	CXL_DEV_CAP_DEV_STATUS,
-> +	CXL_DEV_CAP_MAILBOX_PRIMARY,
-> +	CXL_DEV_CAP_MEMDEV,
-> +	CXL_MAX_CAPS,
+As before. Why not just mandate caps?  If someone really doesn't
+care they can provide a bitmap and ignore it.  Seems like a simpler
+interface to me.
 
-No comma as this is at terminating entry. Seems unlikely to make
-sense to ever have anything after it so let us make that harder /
-more obvious in future patches, but not having the comma.
-
-> +};
+> +		return 0;
 > +
->  /*
->   * Using struct_group() allows for per register-block-type helper routines,
->   * without requiring block-type agnostic code to include the prefix.
+> +	rc = cxl_map_component_regs(&cxlds->reg_map,
+> +				    &cxlds->regs.component,
+> +				    BIT(CXL_CM_CAP_CAP_ID_RAS));
+> +	if (rc)
+> +		dev_dbg(&pdev->dev, "Failed to map RAS capability.\n");
+> +
+> +	return rc;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_pci_accel_setup_regs, "CXL");
 
