@@ -1,41 +1,47 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25783EEA8;
-	Fri,  4 Apr 2025 16:45:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF96420E70F;
+	Fri,  4 Apr 2025 16:53:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743785138; cv=none; b=rALqRczeYEX6QX6/j+IGGhnKuGHeuO8CxlM/W1sjPb7lWcrWCVgXW3N9JHkXE2xWGLS5ux3PzQRSgRlJUhMnidwp4qlVkVot+TRUWzwEEWkP7aSe9ZTB+vYbbzctPEcTH+qCFWG6HPU/sEfu0AWBN1+/eYg1FTf1VboPfMlfldM=
+	t=1743785610; cv=none; b=AU5etWwR0nlz4HSJGUTGIr5bX0YYE1kzRvk7uR0XYzFdEQYluFau4sed/7yrtsh3kmC6T7mf1EIpwYFmfvJLVO064fgN4e/2JCdfG5spxfOvhlDXgEWYfQQAo9DyHR4o4qMuvRCDepXWIFFwDdDYHZ5ecWipxcfMzAcFIHE6iIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743785138; c=relaxed/simple;
-	bh=j8cT6Urd5IfAeSfWXCd4qWEW5BHCXAxrYDCE6Lwk+aU=;
+	s=arc-20240116; t=1743785610; c=relaxed/simple;
+	bh=/gd62LdWr3eQNU/mFa/wVKpGsh/ofEe5A5xGtiTXk4o=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uvefi5X1dsX6x5KkMuM55Mx2sk4W8znE952ZfwdkEQlUxbhAzv3Xto3eUvPO3ypKcvl7ml/hWJpUqDCLNn1hUTxt8yarLKxZfur5QH4vEDC/uGoQ4baSshqgmwO8jly1+vUfX0DStKkDBq9jNB+lE+sOsTcJLA9Bd5BHpLQDTIs=
+	 MIME-Version:Content-Type; b=nHwCQo6vb/9IRX0mghq7G9nMjylfZGqAkvh1sZG2WUklMwTP0qpelj7/iyuKy4/v5UvaauFzE/NKSQT2zZwPD3ZtKrPlg8E0XMVwSrvuNwZde+iFfiDuXlTcpXB4A/gMkdZnO8yyPtFbciCnd8k0Ve0t8GYW+57Lor8BqsvMgTY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZTkwg2lv7z6L4vL;
-	Sat,  5 Apr 2025 00:44:51 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZTl2J1vflz6K9Gs;
+	Sat,  5 Apr 2025 00:49:44 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4124C14050C;
-	Sat,  5 Apr 2025 00:45:34 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 4C6551402C7;
+	Sat,  5 Apr 2025 00:53:25 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 4 Apr
- 2025 18:45:33 +0200
-Date: Fri, 4 Apr 2025 17:45:32 +0100
+ 2025 18:53:24 +0200
+Date: Fri, 4 Apr 2025 17:53:22 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <alejandro.lucero-palau@amd.com>
-CC: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<dan.j.williams@intel.com>, <edward.cree@amd.com>, <davem@davemloft.net>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>,
-	<dave.jiang@intel.com>, Alejandro Lucero <alucerop@amd.com>
-Subject: Re: [PATCH v12 18/23] cxl: allow region creation by type2 drivers
-Message-ID: <20250404174532.000071b2@huawei.com>
-In-Reply-To: <20250331144555.1947819-19-alejandro.lucero-palau@amd.com>
-References: <20250331144555.1947819-1-alejandro.lucero-palau@amd.com>
-	<20250331144555.1947819-19-alejandro.lucero-palau@amd.com>
+To: Terry Bowman <terry.bowman@amd.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, <nifan.cxl@gmail.com>, <dave@stgolabs.net>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
+	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <ira.weiny@intel.com>,
+	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
+	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
+	<lukas@wunner.de>, <ming.li@zohomail.com>,
+	<PradeepVineshReddy.Kodamati@amd.com>
+Subject: Re: [PATCH v8 03/16] CXL/AER: Introduce Kfifo for forwarding CXL
+ errors
+Message-ID: <20250404175322.0000450f@huawei.com>
+In-Reply-To: <20250327014717.2988633-4-terry.bowman@amd.com>
+References: <20250327014717.2988633-1-terry.bowman@amd.com>
+	<20250327014717.2988633-4-terry.bowman@amd.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -45,52 +51,33 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Mon, 31 Mar 2025 15:45:50 +0100
-<alejandro.lucero-palau@amd.com> wrote:
 
-> From: Alejandro Lucero <alucerop@amd.com>
-> 
-> Creating a CXL region requires userspace intervention through the cxl
-> sysfs files. Type2 support should allow accelerator drivers to create
-> such cxl region from kernel code.
-> 
-> Adding that functionality and integrating it with current support for
-> memory expanders.
-> 
-> Based on https://lore.kernel.org/linux-cxl/168592159835.1948938.1647215579839222774.stgit@dwillia2-xfh.jf.intel.com/
-> 
-> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> ---
->  drivers/cxl/core/region.c | 135 +++++++++++++++++++++++++++++++++++---
->  drivers/cxl/port.c        |   5 +-
->  include/cxl/cxl.h         |   4 ++
->  3 files changed, 135 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 892fb799bf46..f2e1d5719a70 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -2310,6 +2310,17 @@ static int cxl_region_detach(struct cxl_endpoint_decoder *cxled)
->  	return rc;
->  }
->  
-> +int cxl_accel_region_detach(struct cxl_endpoint_decoder *cxled)
-> +{
+>  int cxl_ras_init(void)
+>  {
+> -	return cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work);
 > +	int rc;
 > +
-> +	guard(rwsem_write)(&cxl_region_rwsem);
-> +	cxled->part = -1;
-> +	rc = cxl_region_detach(cxled);
+> +	rc = cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work);
+> +	if (rc) {
+> +		pr_err("Failed to register CPER kfifo with AER driver");
+> +		return rc;
+> +	}
+> +
+> +	rc = cxl_register_prot_err_work(&cxl_prot_err_work, cxl_create_prot_err_info);
+> +	if (rc) {
+> +		pr_err("Failed to register kfifo with AER driver");
+> +		return rc;
+> +	}
+> +
 > +	return rc;
-`	return cxl_region_detach()
+	return 0;
 
-Check for any other cases of this.  If we don't clean them up now we'll
-just get patches form those who run scripts to find these and that's
-just noise upstream that I'd rather avoid.
+Good to explicit if we know we can only get to a return with a particular
+value.
 
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_accel_region_detach, "CXL");
-
+>  }
+>  
+>
