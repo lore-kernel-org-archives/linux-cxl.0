@@ -1,251 +1,233 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B031A23AD;
-	Fri,  4 Apr 2025 09:34:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743759243; cv=fail; b=ko52JJNYWjpGdvCueEle4TYXdQbaE+hMTjpI4i8b2CPyFpnjp+80y1I8DC0qd4XUi7INNuYW4ywilBoftogAP/mMILdvCEG8qnzjkeYrembGO3KFqJfkl61BfhzFOb3mKDo51vcll9nmzYbFw/ho+hwZqTMvhO6zGfOkQRuQ2aE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743759243; c=relaxed/simple;
-	bh=U9iKNyp3qj5vAuAYGI1JdCoJoHcqBO27v+uYj1xM60w=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=RZyIkBD6nZ8kCGZ0e99kXkhqle7V7Fb7fevk3h9+Jy0nXZmRG876zopFhwN9mAxTSazIpl274exXOqYxRoRguFRWRVMezWlvZdL+oVn3T5Gz0Lzb82yKai49krcgKlpYqOvdYhvyCLDAaxb04nESIq7I0SJretQAL5zB2+Wn4gg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=doEFaeON; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=wEeuB3AA; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39B211E5B7C;
+	Fri,  4 Apr 2025 12:57:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743771452; cv=none; b=YGcaR9x5wCMugANHUyei/PpmYdfDgxv147cuEqCxPXey0asrnp+KeeljxjZrSOKhi3JF5nib5ra1L0UaBT40kZA6z4DBvKQ8wk2mVLop5ec9wkNp/X6V12hnxFUWETjXZ4kZcf1w5Ivtyj5n0sIEXTe8wvpZA0nV3s3i7Q40UWw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743771452; c=relaxed/simple;
+	bh=xyYjW+AtxZxWbV1o0CQ1AfEjiVHQH5yQ+vFkf737e4A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GaJU9++3Lpt8aLyabzjUvjL8qIXqP1JtISg92z6iNDAfQT+0CKEPd3IiRy6/Hjzd6y52KTVOC8aFBJFamlQNzZ9/MFF55s1sh84ZuXqfWgMoCGlweu++Bq4LU6v6+9SUYCDWPd5uVfeOseSqc4tc4kYcWZZTVfXG+4ys5S37Zzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rvu9lNEs; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="doEFaeON";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="wEeuB3AA"
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5348NAS2024398;
-	Fri, 4 Apr 2025 09:33:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=OT7WaLHn8vSgPk/eAjKsOdufxPczstsikkennKu4GAg=; b=
-	doEFaeONmqQhjEy/5ap551jTPc5Y8jOOA0gHZ9QF/ohFmF7RgJds6MaMaLq7JPIq
-	g/un6P0CWxtU7wtD9NwmSopb4PwEAh0qdfg2T83deLmUeKrbU0zK9fO5FiNc72Wb
-	izdMu1pg8SIbtj/CgD2IxXr1Qon5KVAkH00b1uMSAwLzZSMU4aY21eC97gpgy0XZ
-	KeqBIyoQDtzBjHJXiZPKHzIkTpnbpxkVQx0TY/o7S/kl5YGxVcLXumLJTHI6FHQV
-	wj85nycRJpQe3HJxG75V5dh1UKmpoEtxMEIuEAjIOKwANtAtwaGYuwHWIWwctuVA
-	Jnr/VeWaf4GEOgO+LkCP9g==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45p7saxp7k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 04 Apr 2025 09:33:36 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5348huGx022433;
-	Fri, 4 Apr 2025 09:33:35 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2044.outbound.protection.outlook.com [104.47.55.44])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 45t2ykjat0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 04 Apr 2025 09:33:34 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MPkWGo4FHsBet6oP2RgYM3HfKOP8KZt0RYJ43zwkRAZHmz3Qw1NyvfUuYkVaLKNjLxwS5qqzq21eUmMsDZ1OzvAS7u6/akD4C8Elfi8GNiXP8JipwnZXEFGJtbs9QSNswJapfPqbfjkDRrBp+jB/HVZsj53GFFl/zQLrZtpWCUuQ9WFmCOXBn/LhBBkzemsz8L6g5YRgVP+uU8a5NFIhsjRHT6V56AnJfCbPIvVOvauxGaBF8gngkgeaGJfbEl08PGnggmRoOJP98TU2O+1HFypXEUEO+lzsRjRGePfXpwfQU+DrnfbEX9goRrYQSHfasExZnWkO5NYvIEsD42B0dw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OT7WaLHn8vSgPk/eAjKsOdufxPczstsikkennKu4GAg=;
- b=YJO/yDkCQSseaCfAtmGaTIkM+X0b6qG6SC7th2FNFNvbdo4SGfuHcdgTtt5yNFN3yIJGIJYW1p1IYJmUMPiHegeU+g9OGsiZbc99nBAoCLSsodN2u37WNaZj9uWDZBXkMy0HneUuoIylaZN7E8sq6xgn9BCDDGb8rMByWusrXiyevjScLLV79dRkEY7KBTcxZdOH6gsCOvB5FQ2Zxg2uBp/IefEU5/fF9BQ4BY42aCjGxDnAA1tDvhwQVKZ3Tomv78EhnsFLBoasuKa/CC+eszv+tim0q2dlqC6PfuSsyjZU2kc9Gxqazqb9G0SE5ew7N29j3Z1irzdTaQBZmPMFSQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OT7WaLHn8vSgPk/eAjKsOdufxPczstsikkennKu4GAg=;
- b=wEeuB3AAg2jc8tw2gvXYTyfBR1KhdCPCJEo/GklCeGexLMXpul3xMmn4rq6r3mE06U7nBZGEHGSLtj5aVH9OMZFbtRm9xb63ytk6Un6mYV0bShks0aWGydr2Afth9qR9dzl5HSir24Jdrd3XOeX09JL9INTgvl2ld7LdpfR+7Ts=
-Received: from CO6PR10MB5396.namprd10.prod.outlook.com (2603:10b6:303:13c::9)
- by DS0PR10MB7065.namprd10.prod.outlook.com (2603:10b6:8:143::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.41; Fri, 4 Apr
- 2025 09:33:27 +0000
-Received: from CO6PR10MB5396.namprd10.prod.outlook.com
- ([fe80::4487:ae4:5f2d:d555]) by CO6PR10MB5396.namprd10.prod.outlook.com
- ([fe80::4487:ae4:5f2d:d555%4]) with mapi id 15.20.8583.038; Fri, 4 Apr 2025
- 09:33:27 +0000
-Message-ID: <fed73e8a-5d4f-4478-bf8c-c93a7e5fd1f1@oracle.com>
-Date: Fri, 4 Apr 2025 11:33:19 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] PCI/AER: Consolidate CXL, ACPI GHES and native AER
- reporting paths
-To: Jon Pan-Doh <pandoh@google.com>
-Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Terry Bowman <terry.bowman@amd.com>, Len Brown <lenb@kernel.org>,
-        James Morse <james.morse@arm.com>, Tony Luck <tony.luck@intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Ben Cheatham <Benjamin.Cheatham@amd.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>,
-        Liu Xinpeng <liuxp11@chinatelecom.cn>,
-        Darren Hart <darren@os.amperecomputing.com>,
-        Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <81c040d54209627de2d8b150822636b415834c7f.1742900213.git.karolina.stolarek@oracle.com>
- <CAMC_AXXPKsat846r==J_OYQA2j8kT-kZriuSqoH3F_nYEN8ATg@mail.gmail.com>
-Content-Language: en-US
-From: Karolina Stolarek <karolina.stolarek@oracle.com>
-Organization: Oracle Corporation
-In-Reply-To: <CAMC_AXXPKsat846r==J_OYQA2j8kT-kZriuSqoH3F_nYEN8ATg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LO0P265CA0010.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:355::7) To CO6PR10MB5396.namprd10.prod.outlook.com
- (2603:10b6:303:13c::9)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rvu9lNEs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743771450; x=1775307450;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xyYjW+AtxZxWbV1o0CQ1AfEjiVHQH5yQ+vFkf737e4A=;
+  b=Rvu9lNEsuKb6Mi9E2RRgu5HYMRyCURp8wKHsILdvqGgRcJ/aXaXmVpUK
+   NiuQx+8HzDy8q1dR2at/oYh80PG2OJOLPv+c4GKq1MmG51FxbNz4x2cSw
+   27Esuqwrm2ARqlVV/SQpH33o/XXeubcNekXlz87U1HQgztckVdSt+fKvf
+   VWWTAlaJ7PnjYM7Vi2sr8McqCLTkoD7YN1nUu5FumdUY2FrCs4/KfWTKa
+   Gx+zde9wQywYXFF2lAE/aK4yc1I+iQYjXVGdWlfTW/EzwO/Ln+YoXNPPk
+   ocWoY8Gw/PD3Qgum8vyAfwScDtPlQ1RSYrST743e4YB8pmxFXzKalLzfF
+   w==;
+X-CSE-ConnectionGUID: iV+hXrcjRRylF2DyTMfDIg==
+X-CSE-MsgGUID: mVxdKb1cTMe9Np7amYXYXQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="56576696"
+X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
+   d="scan'208";a="56576696"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 05:57:29 -0700
+X-CSE-ConnectionGUID: 1mEEHg4vSMmejJnBhYjM6Q==
+X-CSE-MsgGUID: 8NydhknOTYy7mydb1oLAjw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
+   d="scan'208";a="158292383"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa001.fm.intel.com with ESMTP; 04 Apr 2025 05:57:22 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u0gbo-0001FP-1P;
+	Fri, 04 Apr 2025 12:57:20 +0000
+Date: Fri, 4 Apr 2025 20:57:15 +0800
+From: kernel test robot <lkp@intel.com>
+To: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com, willy@infradead.org,
+	jack@suse.cz, rafael@kernel.org, len.brown@intel.com, pavel@ucw.cz,
+	ming.li@zohomail.com, nathan.fontenot@amd.com,
+	Smita.KoralahalliChannabasappa@amd.com,
+	huang.ying.caritas@gmail.com, yaoxt.fnst@fujitsu.com,
+	peterz@infradead.org, gregkh@linuxfoundation.org,
+	quic_jjohnson@quicinc.com, ilpo.jarvinen@linux.intel.com,
+	bhelgaas@google.com, andriy.shevchenko@linux.intel.com,
+	mika.westerberg@linux.intel.com, akpm@linux-foundation.org,
+	gourry@gourry.net, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev
+Subject: Re: [PATCH v3 1/4] kernel/resource: Provide mem region release for
+ SOFT RESERVES
+Message-ID: <202504042030.Rs5G4dWd-lkp@intel.com>
+References: <20250403183315.286710-2-terry.bowman@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO6PR10MB5396:EE_|DS0PR10MB7065:EE_
-X-MS-Office365-Filtering-Correlation-Id: ec0ad4ba-94a1-46bd-076a-08dd735bc0b1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bE1kc1JVMSthUnNtRXdVL3dHajBndWNZaWFWd0J6MGpXb1E2OVhPdTlWbGtL?=
- =?utf-8?B?eHFOWWRKQkR2YlBrRFBHUEZxYVVBVDVCUDZvUGx3Z1cyMDhXSFFibW8yZjA2?=
- =?utf-8?B?RjJwazlBWmxPYUZQL0RnQnVqTVBnQzROOC9XTC84M3podzlLWERpREJLSnR2?=
- =?utf-8?B?azJRVmxseE9jRm9Uc0pXOUphcGc5Q3hyNzYvd0lORzJmeFlPbnBZaTRpZzRv?=
- =?utf-8?B?c1lTb0JnVEVqdWdac2NmQTNyb1Jta0J0QlEwZm42NmNxMEUxL0Q2L3UzdDhV?=
- =?utf-8?B?MDF0SitnSnZLbWx1SjI0aHlWS3pueXB4RllnLzBWNS96c3BQOFdianZjTnNY?=
- =?utf-8?B?RFZSMC9NdEJ5VzFqVTdxMndoOEtGam9mY3IwZkVSamsyWjNuSHJjKzJ5aE55?=
- =?utf-8?B?YWlvSHNLRjRvK2t0MG9iNEFnSE45TE43N05acVl4aDdNakYya0VKTFFveHEv?=
- =?utf-8?B?elRVMUhuVmZqYm1sUzM0UHV1T05OQVdWS1EreU1PL0FYaVlqR0ZqQjd0N3hy?=
- =?utf-8?B?dURaY3lGMWRCZWlYWGhkcHBYYitBQ0g5SFEyZTJxMlZPdmRUTU55ZEd2MUNa?=
- =?utf-8?B?U29ubjN1RzVyL0pLSldOM1NsZytDaGUvYS9uanZvSDRKQnEyVnNoTE90ZXIw?=
- =?utf-8?B?RDE5M2VXNVhSVjBVTFhYVG9WMHptYWxpYk9wYVdEUjhhNk9mVkcxR2FQb2Zl?=
- =?utf-8?B?R3FSR2pTZnFreGJaSEhNdzAvTS9FcGd1R1NHYm1ZRGQwQTBtQ0NKemRnREh5?=
- =?utf-8?B?ZHBIMU1MRHNXVkdDWDdYRHMxMC8xSjE0TzF6MnA0Mm8rUUl2Y2huWkhodEhO?=
- =?utf-8?B?S0traHRTVW1Gc3IweWZLWFBJQzJuUVI4WFBNQmFnSHZKY25aOEltbGZURFBt?=
- =?utf-8?B?RHB6TUs5ZEJZRmJnQ2x6akRaeEg1QzRCR0N1VU9md1VOQ0RHMmtNUmg1QUpC?=
- =?utf-8?B?VTZrWUZDcHlySVZhT0tIYk1Memg3blE5SHNhT2NOVE5pY05Kdnh1WHNXRVhm?=
- =?utf-8?B?c29xL2g2STAyOWxxaG5SYkNJeWtibXZKSkdTU1lmTU1lM0hXUm9ZaE9hS1Ny?=
- =?utf-8?B?RERUUjNIUlVBY2Jmb0xubkpmT0YzcDVrWVdCTUJrQlpCRnFZUFlhZlM5dWJa?=
- =?utf-8?B?R3YzbXNqN09lNlU0TkRzT3pvSU1nUEViaE5DbkhaMVZtdDlkWlVhZDMwQUtG?=
- =?utf-8?B?aWNDNEFHVkREUndHcHU0a3k1QVVJUHAyY1B1VXN4bU52WW5sa0s2a0o5NzAy?=
- =?utf-8?B?aVhpNHUrNllwbklrQ2FERTBxeERweGo2WXVCQldTS3FkUENsaTNuSlZJK040?=
- =?utf-8?B?QmtrbDdqQTV6TTVBTVBUU1NiNDljTDFGYzVncm9LWXdnTWlYYlQ5a1E5R1Rp?=
- =?utf-8?B?TGdBTk9IT2hWektILy81cDVMY1ZxSEE2T1o0TE5mZ0oyVy8vR1R4bEY3dzFD?=
- =?utf-8?B?MXcrQXdwd2lPc0xSOE9QeVN3NEYrcjVZbGRzalNxVklmekRQb2ttM0ZMcnRK?=
- =?utf-8?B?REcwNXUvV3hIaXlCdXdvTXZsODZYdEhIalJQMjQ3RXRHTGI4S3VDVmJmNFhL?=
- =?utf-8?B?M3gxa1B0eVFtZ2ZWekhuYjhaOTJLMloxSjloeU1hMVBQZVFTa1BVeHlzTkhQ?=
- =?utf-8?B?Nk5WQVIxWFIvbHYrSkFmM284TFNhZDd2Q0pkdFJySjJxYXI4alFnU0IrZjZI?=
- =?utf-8?B?UlRxNTBYSXZSTTJpR3RYOFNMSWpPOCs4OU54a25HdFNITSt1R1VrT1FjK1hJ?=
- =?utf-8?B?NWZwWVoxMzNUejFQNmxaS0h5RzBLdGZXaFowSjBWdm9ERzJtc1FNVjVhVDVl?=
- =?utf-8?B?OGFqeWNTOCthUzhBdXdPVFZFbmg4Y1JwNFc4b0ppSEJva0RJb2ZVSGtWTktE?=
- =?utf-8?Q?f2rLc7pk+tFYU?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR10MB5396.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TFJXdUgrUStiYjVLV1FRaFZXQ2owRklrTy9FaSs4MlZoYXJXV0gybWhqZ3Bj?=
- =?utf-8?B?cFNrcnVkSERnUGMxRzd2ajN3djlZOFpySi9UMTd3Vjg4UjFOKzZ4cVFkUWJl?=
- =?utf-8?B?R0JQZzRzT3JuSWJ2RXlCcmxMbjNTSDgzWlBrbmVYV1RlN0dBSitndWsvSmFP?=
- =?utf-8?B?Nmo1Nk5PY3RqOEFSYm9vSVVDOGwwbW1JRitTMjBXVlE4Q01nWHJDM3ZyMExO?=
- =?utf-8?B?OVdYMUhmOXVDR3BIdEwwa0NFQlhPeDRvUm1CSUxUcHUvMm0rMVJ2OEMwd0M4?=
- =?utf-8?B?NXN3dEpsUm5UeThIaGozYVRySm5zYVQyM2pTam8vMmE3Nlk4dERBMDBQWHl4?=
- =?utf-8?B?OWp2d1lZbU9EMEZHbndHeWlJeUJFeW9hMGdIRWo3eTFnQ3pEcVR2MzZvMTVS?=
- =?utf-8?B?cDFyOU80cHMvVmI3MCtvSXRYWUdoaWFGcUw3NC9TcTUzcDhYaEJ0L1F3Z1NQ?=
- =?utf-8?B?QXhKaS9sUGYyMTM4VzZjNFhtQmhIYXNTVXRLYU5udWthd3E1ZUxPcHdsZTZm?=
- =?utf-8?B?MDhnSXdpQWVETkVKMm1nL3JzaHZrenIyM1Jla1E3ejE1MjBZZEdZa1hFNEVQ?=
- =?utf-8?B?MzVCT2NaVm9EQzhlRzFmRXpKTmZnM2E3UUpuMWgrTk0zR3FNVXZDZXdVaGla?=
- =?utf-8?B?WkE3UjhKYmtJaTY5S3VXYVoxVWNFL2pvRmNJVlJRUzAyK05DcWszbDdFTjcw?=
- =?utf-8?B?dGdEc2ZUZVFWY2FGTHp3Ujl4Y09zK1JwamVJYnNwWUI3bmFJMTBJVlc4Ymto?=
- =?utf-8?B?SVQ0UEd4TklPTGY2UWFGanB2YU5BbWFzdkZVYW9rUDhlYS9Xa0lkbnY4eWZl?=
- =?utf-8?B?Q1NHTFJIWjhoc2Faa0I1RVg3NDNFdm4wbzdmUFlkNXhFMmdUN29oajlHVVRX?=
- =?utf-8?B?ODk2bnU3L3BIQ1RyOE84N3djVFVycnBDSG5MZW1Cd3NvODVpUmRldnZjTXhi?=
- =?utf-8?B?aFBVZnpCVUtNYnh2bGZ1elNoeUE5TEFuc2R4b0JjamRRT2xrbjZlRFhvYTVP?=
- =?utf-8?B?MWhhZ1FneU9HVWJQVEJvZEp4WDdNbXJIaENhSEp6Z0VkR0FwL3YxOWhIcXA2?=
- =?utf-8?B?WGpBcFdNOEo0TFZHeGxPSFQ1TEZ4b0Frc20yaUpsWUlvRk1SSmtmd3o3em4w?=
- =?utf-8?B?TSt1SHBJSDJzcVBpSWlpMC9HNEduMlhUdXBkMTNVK2RKWHRqMm1qS3JrYktR?=
- =?utf-8?B?b1F1Smo2WHVTNUlEQnM0ak9ZWGJnelcyZWQ1OFBIcDIxMGVWdXB1NGdnTDRP?=
- =?utf-8?B?MTdXSjJlL1ZDNXJES0F2ZzgyYWpYSHVseUMyMklmbkp6UEJZM21QWE1BQWlI?=
- =?utf-8?B?elNJSERURGlBbHlzK2hxVzQyR0dGcHQ5NGd2RzJoc3kyUm5FV0p4YXNWbjFl?=
- =?utf-8?B?ZGxYTytjSGtxL1BuMDBsVjkzWGltT2g1TjM3Q2dkVlFNQWdZS0JsdG9Nelcv?=
- =?utf-8?B?Z2RSVjJjckdBMi8rV1k1a2djNXhVbHhZa2pyRmE0MTVDcWtXUDJDU0xMZ1Er?=
- =?utf-8?B?S3A3aDY0ei9KSUJ5dWdmdVQ2Mk5yVEVFNjgzamFEbzdTVXpMbHJJYWxWUEx0?=
- =?utf-8?B?Q3piT3BkdDJUSEtnNVpuOVJoVUVqRXdxc29OT1RsWURGQW43eEpZU205b2hz?=
- =?utf-8?B?TnJkUW0wWHhQYWw5RjV3aDgrb0J3OUhuQzd5UllQLzh6UmJMM1BmRjhBdi9H?=
- =?utf-8?B?Z2tobTRHbWloQktJV1R3TWxKaWhhSHdaRXBuaXZrRndSYlgrbUdnNnFmUkt4?=
- =?utf-8?B?L1h0ODh4NkhBSklPeEN2ejRkUWx1V29DYm5VQ2ZmamQ1Z25xek4vSUJJaGpl?=
- =?utf-8?B?bVl5dHlNemFVbG9YUWdZK0c0REpMbW9NN2dWUlpCUHB6NTI0VzRtcjFZanE5?=
- =?utf-8?B?TkdUVEh2UmQwWkx3SHAzTUN2THFmT01nREdnNlZLQjBDcnhxWmMrQVJ6cE10?=
- =?utf-8?B?aExQcEtIUHRTdnpTNzIza0xvV29SdGJJdVA0TjlRMk9QWmM5UEorZk54TlZ1?=
- =?utf-8?B?NVI3ejYzK2lkc3VZYmlVWUI1N1VpNUpjT2k5dXhRS0tEbWo5a1B4UVkzYTdZ?=
- =?utf-8?B?aCtUaFgxMzdQWUozVmFvMTgzVjdWUzVDR3h1VU83dDVIREc4RlFUTjN2U25n?=
- =?utf-8?B?Y2d2eVI0ZHdTaTdxM2pYbHVMWkdUaVRqaWQvSlRLWm04a20weHovbGNSNXhU?=
- =?utf-8?B?TkE9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	G4djEtoPg0YguZxrWn0PnSOgTeGzn2DVfDc25tt6pL0hAM8m1qtVW0p8nGA6WdT92cjplPScQWnfDrfmB3vsye89Kpbn4azuhAVFzw19OXft2iTlBDk6h/76VJxdtDOYy7+mZQj359NZtN04Gt2ZASk9QPO+MEFga3n9YkHY4GBODDjU+iYiHaDxyG8+3hJnxn9dv8Uefb/pj+gvA2yvX7zJWsvvwoqQAtIrA8ZaMsxUH9zX5rEmk89kSGOwLI59yw7oxlhZTk7gzpW5LAVXpbjhiBGrDmQag06DpY8moZuXpEvBwWTdNZxReqhRM+qxYZr2uLLHH1EO5+WPI8YB63q52xKyKhxtNXMoyADFGEtqh1rKlDaLt7MO2qHBM0dVtKkb6YjQofe2BoTHoGT7h4wmkWhSJUwBBHdNdT570p8dFhyny43ci3aAU048Ps6ql4vxOoBYGyaVTPBXBybwLgHyYIzd4sEEyl4ls48ha9c1UvYecAyOiIzF5wLcwUvcuzE1CSkr97AkdSJYp/Sq40Pbux7oBkGQl0OYpONU0lcMj6e8SumrOeDjMq8afPYDermBo2CdwUjdVoh+6j7DaovK4d2Q4Yj2xdLhqJBc9Qg=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ec0ad4ba-94a1-46bd-076a-08dd735bc0b1
-X-MS-Exchange-CrossTenant-AuthSource: CO6PR10MB5396.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2025 09:33:27.1455
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Ze8jV/UsirATAsDWW9Lje5iEMB/h75y03dyxHLQ0LXZIzaUU19+7IIGU7ADgVl3ERasyBgKrA5QMB5AeGkR47f5wvs6CbUc+97Fl36JY8XA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB7065
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-04_03,2025-04-03_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 bulkscore=0
- suspectscore=0 mlxlogscore=999 adultscore=0 malwarescore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
- definitions=main-2504040064
-X-Proofpoint-GUID: jf73c2NpL_ouPjtrDsvCYsv-cWSryWyq
-X-Proofpoint-ORIG-GUID: jf73c2NpL_ouPjtrDsvCYsv-cWSryWyq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250403183315.286710-2-terry.bowman@amd.com>
 
-On 01/04/2025 03:47, Jon Pan-Doh wrote:
-> On Tue, Mar 25, 2025 at 8:08 AM Karolina Stolarek
-> <karolina.stolarek@oracle.com> wrote:
->>
->> +static void populate_aer_err_info(struct aer_err_info *info, int severity,
->> +                                 struct aer_capability_regs *aer_regs)
->>   {
->> [...]
->> +       if (severity == AER_CORRECTABLE) {
->> +               info->id = aer_regs->cor_err_source;
->> +               info->status = aer_regs->cor_status;
->> +               info->mask = aer_regs->cor_mask;
->> +       } else {
->> +               info->id = aer_regs->uncor_err_source;
-> 
-> info->id isn't filled in pci_print_aer(). Is the addition due to
-> aer_print_error() having a conditional/log for info->id == id? From a
-> brief look at the code, FW-first (e.g. errors from GHES), I think it
-> will always be true. However, that doesn't always seem to be the case
-> for CXL (e.g. when cxl_dev_state.rcd == true).
+Hi Terry,
 
-I just went with what aer_print_error() expected to get from the 
-aer_err_info struct. It's possible that this id check is not be needed 
-for GHES, but I thought that as the values are already in the regs, it 
-wouldn't hurt to extract them.
+kernel test robot noticed the following build warnings:
 
-> 
-> Disclaimer: not a CXL/GHES expert though.
-> 
->> +void aer_print_platform_error(struct pci_dev *pdev, int severity,
->> +                             struct aer_capability_regs *aer_regs)
-> 
-> I like the encapsulation.
-> 
-> Reviewed-by: Jon Pan-Doh <pandoh@google.com>
+[auto build test WARNING on aae0594a7053c60b82621136257c8b648c67b512]
 
-Thanks a lot!
+url:    https://github.com/intel-lab-lkp/linux/commits/Terry-Bowman/kernel-resource-Provide-mem-region-release-for-SOFT-RESERVES/20250404-023601
+base:   aae0594a7053c60b82621136257c8b648c67b512
+patch link:    https://lore.kernel.org/r/20250403183315.286710-2-terry.bowman%40amd.com
+patch subject: [PATCH v3 1/4] kernel/resource: Provide mem region release for SOFT RESERVES
+config: i386-buildonly-randconfig-003-20250404 (https://download.01.org/0day-ci/archive/20250404/202504042030.Rs5G4dWd-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250404/202504042030.Rs5G4dWd-lkp@intel.com/reproduce)
 
-All the best,
-Karolina
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504042030.Rs5G4dWd-lkp@intel.com/
 
-> 
-> Thanks,
-> Jon
+All warnings (new ones prefixed by >>):
 
+>> kernel/resource.c:1414: warning: Function parameter or struct member 'busy_check' not described in '__release_mem_region_adjustable'
+>> kernel/resource.c:1414: warning: Function parameter or struct member 'res_desc' not described in '__release_mem_region_adjustable'
+>> kernel/resource.c:1414: warning: expecting prototype for release_mem_region_adjustable(). Prototype was for __release_mem_region_adjustable() instead
+
+
+vim +1414 kernel/resource.c
+
+^1da177e4c3f41 Linus Torvalds    2005-04-16  1389  
+e4ebc182a59bbb Nathan Fontenot   2025-04-03  1390  #if defined(CONFIG_MEMORY_HOTREMOVE) || defined(CONFIG_CXL_REGION)
+825f787bb49676 Toshi Kani        2013-04-29  1391  /**
+825f787bb49676 Toshi Kani        2013-04-29  1392   * release_mem_region_adjustable - release a previously reserved memory region
+825f787bb49676 Toshi Kani        2013-04-29  1393   * @start: resource start address
+825f787bb49676 Toshi Kani        2013-04-29  1394   * @size: resource region size
+825f787bb49676 Toshi Kani        2013-04-29  1395   *
+825f787bb49676 Toshi Kani        2013-04-29  1396   * This interface is intended for memory hot-delete.  The requested region
+825f787bb49676 Toshi Kani        2013-04-29  1397   * is released from a currently busy memory resource.  The requested region
+825f787bb49676 Toshi Kani        2013-04-29  1398   * must either match exactly or fit into a single busy resource entry.  In
+825f787bb49676 Toshi Kani        2013-04-29  1399   * the latter case, the remaining resource is adjusted accordingly.
+825f787bb49676 Toshi Kani        2013-04-29  1400   * Existing children of the busy memory resource must be immutable in the
+825f787bb49676 Toshi Kani        2013-04-29  1401   * request.
+825f787bb49676 Toshi Kani        2013-04-29  1402   *
+825f787bb49676 Toshi Kani        2013-04-29  1403   * Note:
+825f787bb49676 Toshi Kani        2013-04-29  1404   * - Additional release conditions, such as overlapping region, can be
+825f787bb49676 Toshi Kani        2013-04-29  1405   *   supported after they are confirmed as valid cases.
+825f787bb49676 Toshi Kani        2013-04-29  1406   * - When a busy memory resource gets split into two entries, the code
+825f787bb49676 Toshi Kani        2013-04-29  1407   *   assumes that all children remain in the lower address entry for
+825f787bb49676 Toshi Kani        2013-04-29  1408   *   simplicity.  Enhance this logic when necessary.
+825f787bb49676 Toshi Kani        2013-04-29  1409   */
+e4ebc182a59bbb Nathan Fontenot   2025-04-03  1410  static void __release_mem_region_adjustable(resource_size_t start,
+e4ebc182a59bbb Nathan Fontenot   2025-04-03  1411  					    resource_size_t size,
+e4ebc182a59bbb Nathan Fontenot   2025-04-03  1412  					    bool busy_check,
+e4ebc182a59bbb Nathan Fontenot   2025-04-03  1413  					    int res_desc)
+825f787bb49676 Toshi Kani        2013-04-29 @1414  {
+cb8e3c8b4f45e4 David Hildenbrand 2020-10-15  1415  	struct resource *parent = &iomem_resource;
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1416  	struct resource *new_res = NULL;
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1417  	bool alloc_nofail = false;
+825f787bb49676 Toshi Kani        2013-04-29  1418  	struct resource **p;
+825f787bb49676 Toshi Kani        2013-04-29  1419  	struct resource *res;
+825f787bb49676 Toshi Kani        2013-04-29  1420  	resource_size_t end;
+825f787bb49676 Toshi Kani        2013-04-29  1421  
+825f787bb49676 Toshi Kani        2013-04-29  1422  	end = start + size - 1;
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1423  	if (WARN_ON_ONCE((start < parent->start) || (end > parent->end)))
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1424  		return;
+825f787bb49676 Toshi Kani        2013-04-29  1425  
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1426  	/*
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1427  	 * We free up quite a lot of memory on memory hotunplug (esp., memap),
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1428  	 * just before releasing the region. This is highly unlikely to
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1429  	 * fail - let's play save and make it never fail as the caller cannot
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1430  	 * perform any error handling (e.g., trying to re-add memory will fail
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1431  	 * similarly).
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1432  	 */
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1433  retry:
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1434  	new_res = alloc_resource(GFP_KERNEL | (alloc_nofail ? __GFP_NOFAIL : 0));
+825f787bb49676 Toshi Kani        2013-04-29  1435  
+825f787bb49676 Toshi Kani        2013-04-29  1436  	p = &parent->child;
+825f787bb49676 Toshi Kani        2013-04-29  1437  	write_lock(&resource_lock);
+825f787bb49676 Toshi Kani        2013-04-29  1438  
+825f787bb49676 Toshi Kani        2013-04-29  1439  	while ((res = *p)) {
+825f787bb49676 Toshi Kani        2013-04-29  1440  		if (res->start >= end)
+825f787bb49676 Toshi Kani        2013-04-29  1441  			break;
+825f787bb49676 Toshi Kani        2013-04-29  1442  
+825f787bb49676 Toshi Kani        2013-04-29  1443  		/* look for the next resource if it does not fit into */
+825f787bb49676 Toshi Kani        2013-04-29  1444  		if (res->start > start || res->end < end) {
+825f787bb49676 Toshi Kani        2013-04-29  1445  			p = &res->sibling;
+825f787bb49676 Toshi Kani        2013-04-29  1446  			continue;
+825f787bb49676 Toshi Kani        2013-04-29  1447  		}
+825f787bb49676 Toshi Kani        2013-04-29  1448  
+825f787bb49676 Toshi Kani        2013-04-29  1449  		if (!(res->flags & IORESOURCE_MEM))
+825f787bb49676 Toshi Kani        2013-04-29  1450  			break;
+825f787bb49676 Toshi Kani        2013-04-29  1451  
+e4ebc182a59bbb Nathan Fontenot   2025-04-03  1452  		if (busy_check && !(res->flags & IORESOURCE_BUSY)) {
+e4ebc182a59bbb Nathan Fontenot   2025-04-03  1453  			p = &res->child;
+e4ebc182a59bbb Nathan Fontenot   2025-04-03  1454  			continue;
+e4ebc182a59bbb Nathan Fontenot   2025-04-03  1455  		}
+e4ebc182a59bbb Nathan Fontenot   2025-04-03  1456  
+e4ebc182a59bbb Nathan Fontenot   2025-04-03  1457  		if (res_desc != IORES_DESC_NONE && res->desc != res_desc) {
+825f787bb49676 Toshi Kani        2013-04-29  1458  			p = &res->child;
+825f787bb49676 Toshi Kani        2013-04-29  1459  			continue;
+825f787bb49676 Toshi Kani        2013-04-29  1460  		}
+825f787bb49676 Toshi Kani        2013-04-29  1461  
+825f787bb49676 Toshi Kani        2013-04-29  1462  		/* found the target resource; let's adjust accordingly */
+825f787bb49676 Toshi Kani        2013-04-29  1463  		if (res->start == start && res->end == end) {
+825f787bb49676 Toshi Kani        2013-04-29  1464  			/* free the whole entry */
+825f787bb49676 Toshi Kani        2013-04-29  1465  			*p = res->sibling;
+ebff7d8f270d04 Yasuaki Ishimatsu 2013-04-29  1466  			free_resource(res);
+825f787bb49676 Toshi Kani        2013-04-29  1467  		} else if (res->start == start && res->end != end) {
+825f787bb49676 Toshi Kani        2013-04-29  1468  			/* adjust the start */
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1469  			WARN_ON_ONCE(__adjust_resource(res, end + 1,
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1470  						       res->end - end));
+825f787bb49676 Toshi Kani        2013-04-29  1471  		} else if (res->start != start && res->end == end) {
+825f787bb49676 Toshi Kani        2013-04-29  1472  			/* adjust the end */
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1473  			WARN_ON_ONCE(__adjust_resource(res, res->start,
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1474  						       start - res->start));
+825f787bb49676 Toshi Kani        2013-04-29  1475  		} else {
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1476  			/* split into two entries - we need a new resource */
+825f787bb49676 Toshi Kani        2013-04-29  1477  			if (!new_res) {
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1478  				new_res = alloc_resource(GFP_ATOMIC);
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1479  				if (!new_res) {
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1480  					alloc_nofail = true;
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1481  					write_unlock(&resource_lock);
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1482  					goto retry;
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1483  				}
+825f787bb49676 Toshi Kani        2013-04-29  1484  			}
+825f787bb49676 Toshi Kani        2013-04-29  1485  			new_res->name = res->name;
+825f787bb49676 Toshi Kani        2013-04-29  1486  			new_res->start = end + 1;
+825f787bb49676 Toshi Kani        2013-04-29  1487  			new_res->end = res->end;
+825f787bb49676 Toshi Kani        2013-04-29  1488  			new_res->flags = res->flags;
+43ee493bde78da Toshi Kani        2016-01-26  1489  			new_res->desc = res->desc;
+825f787bb49676 Toshi Kani        2013-04-29  1490  			new_res->parent = res->parent;
+825f787bb49676 Toshi Kani        2013-04-29  1491  			new_res->sibling = res->sibling;
+825f787bb49676 Toshi Kani        2013-04-29  1492  			new_res->child = NULL;
+825f787bb49676 Toshi Kani        2013-04-29  1493  
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1494  			if (WARN_ON_ONCE(__adjust_resource(res, res->start,
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1495  							   start - res->start)))
+825f787bb49676 Toshi Kani        2013-04-29  1496  				break;
+825f787bb49676 Toshi Kani        2013-04-29  1497  			res->sibling = new_res;
+825f787bb49676 Toshi Kani        2013-04-29  1498  			new_res = NULL;
+825f787bb49676 Toshi Kani        2013-04-29  1499  		}
+825f787bb49676 Toshi Kani        2013-04-29  1500  
+825f787bb49676 Toshi Kani        2013-04-29  1501  		break;
+825f787bb49676 Toshi Kani        2013-04-29  1502  	}
+825f787bb49676 Toshi Kani        2013-04-29  1503  
+825f787bb49676 Toshi Kani        2013-04-29  1504  	write_unlock(&resource_lock);
+ebff7d8f270d04 Yasuaki Ishimatsu 2013-04-29  1505  	free_resource(new_res);
+825f787bb49676 Toshi Kani        2013-04-29  1506  }
+e4ebc182a59bbb Nathan Fontenot   2025-04-03  1507  #endif
+e4ebc182a59bbb Nathan Fontenot   2025-04-03  1508  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
