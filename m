@@ -1,30 +1,30 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7B618D656;
-	Fri,  4 Apr 2025 12:59:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE47A1DF988;
+	Fri,  4 Apr 2025 13:06:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743771560; cv=none; b=r5tToBldexRqxfIZBQqfqfYq23cFSUTVJaeUqq0oGWhfsXqRIf2b41xAnMGU8DWqhygx9eDlS38U7eUZbESV6GLD0O3i3mtaBBc/PjEVFq16NDCmEfHJc11onsjFlzXHdWAj+xKX6LgdZd5bA7VO8aM7i4SIgpeboGbvHZsGyEs=
+	t=1743771966; cv=none; b=Zdt35TmJsCZUHI43pO/cxxNqbc4uXiB6Xlsz/mH7+CcFliAtaJYKggCfVWP8U2OYLApRIILjI+js/5ofnXhigEGGCsRLPL9EQHwgeXu2BWvb/2zYztRGE7aBEM9hj6tydEye9SHLdddlkoBFGOiOPc+oofgrQVkCVx1FCZWcx1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743771560; c=relaxed/simple;
-	bh=A1YQV7DTUafA+9BT5+KgvszR0Cn++a78Zm/k3sbagI0=;
+	s=arc-20240116; t=1743771966; c=relaxed/simple;
+	bh=ad8maAL2fBcxLsP8JIBZ6Wfk7ULRuauQ/2j0MN5bL0E=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hFuFeYufadKFX+1K1pGya/+y/4jfMb8xShRBYEiQOiigoo4ef+/ARv7D2RClMa2ljQpweg75D/MasRj3ijA2I/l4+vgPdgmGpD/HQTkBnqzF8QjYQdmBHUgm/qsJeNWeaUKw9MVZg9P5X3OmEJnrhi3N1ievOKV6FqFz5dCHB3U=
+	 MIME-Version:Content-Type; b=aL2GqmzhdWmEJff8XBR/IY1yS5TihwCqDzXvfLipowtA5qgxWuguFy5jdGky7+iLqzne1oRSIiTX721ZTZArApejuhw0XNZLfjf0GpKss3VNtO7l6GCV1grPIBVdcLZ6xN6hl8js09fcO6p/+JeVvziPE2qnXjrruWEOW5mj0Y4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZTdr02jL4z6K9DN;
-	Fri,  4 Apr 2025 20:55:28 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZTf3M0KKCz6L4wH;
+	Fri,  4 Apr 2025 21:05:19 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id EC187140557;
-	Fri,  4 Apr 2025 20:59:08 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 71AF8140732;
+	Fri,  4 Apr 2025 21:06:01 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 4 Apr
- 2025 14:59:08 +0200
-Date: Fri, 4 Apr 2025 13:59:06 +0100
+ 2025 15:06:00 +0200
+Date: Fri, 4 Apr 2025 14:05:59 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To: Rakie Kim <rakie.kim@sk.com>
 CC: <akpm@linux-foundation.org>, <gourry@gourry.net>, <linux-mm@kvack.org>,
@@ -32,12 +32,12 @@ CC: <akpm@linux-foundation.org>, <gourry@gourry.net>, <linux-mm@kvack.org>,
 	<joshua.hahnjy@gmail.com>, <dan.j.williams@intel.com>,
 	<ying.huang@linux.alibaba.com>, <david@redhat.com>, <osalvador@suse.de>,
 	<kernel_team@skhynix.com>, <honggyu.kim@sk.com>, <yunjeong.mun@sk.com>
-Subject: Re: [PATCH v6 1/3] mm/mempolicy: Fix memory leaks in weighted
- interleave sysfs
-Message-ID: <20250404135906.0000308e@huawei.com>
-In-Reply-To: <20250404074623.1179-2-rakie.kim@sk.com>
+Subject: Re: [PATCH v6 2/3] mm/mempolicy: Prepare weighted interleave sysfs
+ for memory hotplug
+Message-ID: <20250404140559.00001112@huawei.com>
+In-Reply-To: <20250404074623.1179-3-rakie.kim@sk.com>
 References: <20250404074623.1179-1-rakie.kim@sk.com>
-	<20250404074623.1179-2-rakie.kim@sk.com>
+	<20250404074623.1179-3-rakie.kim@sk.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -50,177 +50,168 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Fri, 4 Apr 2025 16:46:19 +0900
+On Fri, 4 Apr 2025 16:46:20 +0900
 Rakie Kim <rakie.kim@sk.com> wrote:
 
-> Memory leaks occurred when removing sysfs attributes for weighted
-> interleave. Improper kobject deallocation led to unreleased memory
-> when initialization failed or when nodes were removed.
+> Previously, the weighted interleave sysfs structure was statically
+> managed during initialization. This prevented new nodes from being
+> recognized when memory hotplug events occurred, limiting the ability
+> to update or extend sysfs entries dynamically at runtime.
 > 
-> This patch resolves the issue by replacing unnecessary `kfree()`
-> calls with proper `kobject_del()` and `kobject_put()` sequences,
-> ensuring correct teardown and preventing memory leaks.
+> To address this, this patch refactors the sysfs infrastructure and
+> encapsulates it within a new structure, `sysfs_wi_group`, which holds
+> both the kobject and an array of node attribute pointers.
 > 
-> By explicitly calling `kobject_del()` before `kobject_put()`,
-> the release function is now invoked safely, and internal sysfs
-> state is correctly cleaned up. This guarantees that the memory
-> associated with the kobject is fully released and avoids
-> resource leaks, thereby improving system stability.
+> By allocating this group structure globally, the per-node sysfs
+> attributes can be managed beyond initialization time, enabling
+> external modules to insert or remove node entries in response to
+> events such as memory hotplug or node online/offline transitions.
 > 
-> Fixes: dce41f5ae253 ("mm/mempolicy: implement the sysfs-based weighted_interleave interface")
+> Instead of allocating all per-node sysfs attributes at once, the
+> initialization path now uses the existing sysfs_wi_node_add() and
+> sysfs_wi_node_delete() helpers. This refactoring makes it possible
+> to modularly manage per-node sysfs entries and ensures the
+> infrastructure is ready for runtime extension.
+> 
 > Signed-off-by: Rakie Kim <rakie.kim@sk.com>
 > Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
 > Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
 > Reviewed-by: Gregory Price <gourry@gourry.net>
-I've pretty much forgotten earlier discussions so apologies if I revisit
-old ground! 
+Hi Rakie,
 
-The fix is fine I think. But the resulting code structure
-could be improved, without (I think) complicating what is here by much.
+Some things I was requesting in patch 1 are done here.
+Mostly I think what is wanted is moving some of that
+refactoring back to that patch rather than here.
+
+Some of the label and function naming needs another look.
+
+Jonathan
 
 > ---
->  mm/mempolicy.c | 64 +++++++++++++++++++++++++++-----------------------
->  1 file changed, 34 insertions(+), 30 deletions(-)
+>  mm/mempolicy.c | 73 ++++++++++++++++++++++----------------------------
+>  1 file changed, 32 insertions(+), 41 deletions(-)
 > 
 > diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> index bbaadbeeb291..af3753925573 100644
+> index af3753925573..73a9405ff352 100644
 > --- a/mm/mempolicy.c
 > +++ b/mm/mempolicy.c
-> @@ -3448,7 +3448,9 @@ static void sysfs_wi_release(struct kobject *wi_kobj)
+> @@ -3388,6 +3388,13 @@ struct iw_node_attr {
+>  	int nid;
+>  };
 >  
->  	for (i = 0; i < nr_node_ids; i++)
->  		sysfs_wi_node_release(node_attrs[i], wi_kobj);
-> -	kobject_put(wi_kobj);
+> +struct sysfs_wi_group {
+> +	struct kobject wi_kobj;
+> +	struct iw_node_attr *nattrs[];
+> +};
 > +
-> +	kfree(node_attrs);
-> +	kfree(wi_kobj);
+> +static struct sysfs_wi_group *wi_group;
+> +
+>  static ssize_t node_show(struct kobject *kobj, struct kobj_attribute *attr,
+>  			 char *buf)
+>  {
+> @@ -3430,27 +3437,24 @@ static ssize_t node_store(struct kobject *kobj, struct kobj_attribute *attr,
+>  	return count;
 >  }
 >  
->  static const struct kobj_type wi_ktype = {
-> @@ -3494,15 +3496,22 @@ static int add_weighted_interleave_group(struct kobject *root_kobj)
->  	struct kobject *wi_kobj;
+> -static struct iw_node_attr **node_attrs;
+> -
+> -static void sysfs_wi_node_release(struct iw_node_attr *node_attr,
+> -				  struct kobject *parent)
+> +static void sysfs_wi_node_delete(int nid)
+
+Maybe stick to release naming to match the sysfs_wi_release()
+below? I don't really care about this.
+
+>  {
+> -	if (!node_attr)
+> +	if (!wi_group->nattrs[nid])
+>  		return;
+> -	sysfs_remove_file(parent, &node_attr->kobj_attr.attr);
+> -	kfree(node_attr->kobj_attr.attr.name);
+> -	kfree(node_attr);
+> +
+> +	sysfs_remove_file(&wi_group->wi_kobj,
+> +			  &wi_group->nattrs[nid]->kobj_attr.attr);
+> +	kfree(wi_group->nattrs[nid]->kobj_attr.attr.name);
+> +	kfree(wi_group->nattrs[nid]);
+>  }
+>  
+>  static void sysfs_wi_release(struct kobject *wi_kobj)
+>  {
+> -	int i;
+> -
+> -	for (i = 0; i < nr_node_ids; i++)
+> -		sysfs_wi_node_release(node_attrs[i], wi_kobj);
+> +	int nid;
+>  
+> -	kfree(node_attrs);
+> -	kfree(wi_kobj);
+> +	for (nid = 0; nid < nr_node_ids; nid++)
+> +		sysfs_wi_node_delete(nid);
+> +	kfree(wi_group);
+>  }
+
+> -static int add_weighted_interleave_group(struct kobject *root_kobj)
+> +static int add_weighted_interleave_group(struct kobject *mempolicy_kobj)
+>  {
+> -	struct kobject *wi_kobj;
 >  	int nid, err;
 >  
-> -	wi_kobj = kzalloc(sizeof(struct kobject), GFP_KERNEL);
-> -	if (!wi_kobj)
-> +	node_attrs = kcalloc(nr_node_ids, sizeof(struct iw_node_attr *),
-> +			     GFP_KERNEL);
-> +	if (!node_attrs)
->  		return -ENOMEM;
->  
-> +	wi_kobj = kzalloc(sizeof(struct kobject), GFP_KERNEL);
-> +	if (!wi_kobj) {
-> +		err = -ENOMEM;
-> +		goto node_out;
-As this is only place where we do kfree(node_attrs)
-why not just do that here and return directly.
-
-		
-> +	}
-> +
->  	err = kobject_init_and_add(wi_kobj, &wi_ktype, root_kobj,
->  				   "weighted_interleave");
->  	if (err) {
-> -		kfree(wi_kobj);
-> -		return err;
-> +		kobject_put(wi_kobj);
-> +		goto err_out;
->  	}
->  
->  	for_each_node_state(nid, N_POSSIBLE) {
-> @@ -3512,9 +3521,18 @@ static int add_weighted_interleave_group(struct kobject *root_kobj)
->  			break;
->  		}
->  	}
-> -	if (err)
-> +	if (err) {
-> +		kobject_del(wi_kobj);
->  		kobject_put(wi_kobj);
-
-For this and the one above, a unified exit kind of makes sense as
-can do two labels and have the put only once.
-
-If not, why not move this up into the loop and return directly?
-If you move to an error handling block
-
-err_del_obj:
-	kobject_del(wi_kobj);
-err_put_obj:
-	kobject_put(wi_kobj);
-
-then you could also do the goto from within that loop.
-
-
-> +		goto err_out;
-> +	}
-> +
->  	return 0;
-> +
-> +node_out:
-> +	kfree(node_attrs);
-> +err_out:
-> +	return err;
->  }
->  
->  static void mempolicy_kobj_release(struct kobject *kobj)
-> @@ -3528,7 +3546,6 @@ static void mempolicy_kobj_release(struct kobject *kobj)
->  	mutex_unlock(&iw_table_lock);
->  	synchronize_rcu();
->  	kfree(old);
-> -	kfree(node_attrs);
->  	kfree(kobj);
->  }
->  
-> @@ -3542,37 +3559,24 @@ static int __init mempolicy_sysfs_init(void)
->  	static struct kobject *mempolicy_kobj;
->  
->  	mempolicy_kobj = kzalloc(sizeof(*mempolicy_kobj), GFP_KERNEL);
-> -	if (!mempolicy_kobj) {
-> -		err = -ENOMEM;
-> -		goto err_out;
-> -	}
-> -
 > -	node_attrs = kcalloc(nr_node_ids, sizeof(struct iw_node_attr *),
 > -			     GFP_KERNEL);
-> -	if (!node_attrs) {
-> -		err = -ENOMEM;
-> -		goto mempol_out;
-> -	}
-> +	if (!mempolicy_kobj)
-> +		return -ENOMEM;
->  
->  	err = kobject_init_and_add(mempolicy_kobj, &mempolicy_ktype, mm_kobj,
->  				   "mempolicy");
->  	if (err)
-> -		goto node_out;
-> +		goto err_out;
-		goto err_put_kobj;
- or something like that.
+> -	if (!node_attrs)
+> +	wi_group = kzalloc(struct_size(wi_group, nattrs, nr_node_ids),
+> +			GFP_KERNEL);
 
+Align to after the ( 
+I think it's a couple of spaces short of that.
+
+
+> +	if (!wi_group)
+>  		return -ENOMEM;
 >  
->  	err = add_weighted_interleave_group(mempolicy_kobj);
-> -	if (err) {
-> -		pr_err("mempolicy sysfs structure failed to initialize\n");
-> -		kobject_put(mempolicy_kobj);
-> -		return err;
+> -	wi_kobj = kzalloc(sizeof(struct kobject), GFP_KERNEL);
+> -	if (!wi_kobj) {
+> -		err = -ENOMEM;
+> -		goto node_out;
 > -	}
+> -
+> -	err = kobject_init_and_add(wi_kobj, &wi_ktype, root_kobj,
+> +	err = kobject_init_and_add(&wi_group->wi_kobj, &wi_ktype, mempolicy_kobj,
+>  				   "weighted_interleave");
+> -	if (err) {
+> -		kobject_put(wi_kobj);
 > +	if (err)
-> +		goto err_del;
+>  		goto err_out;
+> -	}
 >  
-> -	return err;
+>  	for_each_node_state(nid, N_POSSIBLE) {
+> -		err = add_weight_node(nid, wi_kobj);
+> +		err = sysfs_wi_node_add(nid);
+>  		if (err) {
+>  			pr_err("failed to add sysfs [node%d]\n", nid);
+> -			break;
+> +			goto err_del;
+Ah!  This is what I was looking for in patch 1, but it's down here.
+Move it back to there.
+>  		}
+>  	}
+> -	if (err) {
+> -		kobject_del(wi_kobj);
+> -		kobject_put(wi_kobj);
+> -		goto err_out;
+> -	}
+>  
+>  	return 0;
+>  
 > -node_out:
 > -	kfree(node_attrs);
-> -mempol_out:
-> -	kfree(mempolicy_kobj);
-> +	return 0;
-> +
 > +err_del:
-> +	kobject_del(mempolicy_kobj);
+> +	kobject_del(&wi_group->wi_kobj);
 >  err_out:
-> -	pr_err("failed to add mempolicy kobject to the system\n");
-> +	kobject_put(mempolicy_kobj);
-If we keep an err_out, usual expectation is all it does is return
-+ maybe print a message. We'd not expect a put.
+> +	kobject_put(&wi_group->wi_kobj);
+Same issue as previous patch on naming of the label.
+Moving to this single error block is fine but belongs in patch 1.
 
 >  	return err;
 >  }
