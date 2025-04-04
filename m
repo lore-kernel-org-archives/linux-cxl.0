@@ -1,233 +1,228 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39B211E5B7C;
-	Fri,  4 Apr 2025 12:57:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7B618D656;
+	Fri,  4 Apr 2025 12:59:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743771452; cv=none; b=YGcaR9x5wCMugANHUyei/PpmYdfDgxv147cuEqCxPXey0asrnp+KeeljxjZrSOKhi3JF5nib5ra1L0UaBT40kZA6z4DBvKQ8wk2mVLop5ec9wkNp/X6V12hnxFUWETjXZ4kZcf1w5Ivtyj5n0sIEXTe8wvpZA0nV3s3i7Q40UWw=
+	t=1743771560; cv=none; b=r5tToBldexRqxfIZBQqfqfYq23cFSUTVJaeUqq0oGWhfsXqRIf2b41xAnMGU8DWqhygx9eDlS38U7eUZbESV6GLD0O3i3mtaBBc/PjEVFq16NDCmEfHJc11onsjFlzXHdWAj+xKX6LgdZd5bA7VO8aM7i4SIgpeboGbvHZsGyEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743771452; c=relaxed/simple;
-	bh=xyYjW+AtxZxWbV1o0CQ1AfEjiVHQH5yQ+vFkf737e4A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GaJU9++3Lpt8aLyabzjUvjL8qIXqP1JtISg92z6iNDAfQT+0CKEPd3IiRy6/Hjzd6y52KTVOC8aFBJFamlQNzZ9/MFF55s1sh84ZuXqfWgMoCGlweu++Bq4LU6v6+9SUYCDWPd5uVfeOseSqc4tc4kYcWZZTVfXG+4ys5S37Zzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rvu9lNEs; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rvu9lNEs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743771450; x=1775307450;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=xyYjW+AtxZxWbV1o0CQ1AfEjiVHQH5yQ+vFkf737e4A=;
-  b=Rvu9lNEsuKb6Mi9E2RRgu5HYMRyCURp8wKHsILdvqGgRcJ/aXaXmVpUK
-   NiuQx+8HzDy8q1dR2at/oYh80PG2OJOLPv+c4GKq1MmG51FxbNz4x2cSw
-   27Esuqwrm2ARqlVV/SQpH33o/XXeubcNekXlz87U1HQgztckVdSt+fKvf
-   VWWTAlaJ7PnjYM7Vi2sr8McqCLTkoD7YN1nUu5FumdUY2FrCs4/KfWTKa
-   Gx+zde9wQywYXFF2lAE/aK4yc1I+iQYjXVGdWlfTW/EzwO/Ln+YoXNPPk
-   ocWoY8Gw/PD3Qgum8vyAfwScDtPlQ1RSYrST743e4YB8pmxFXzKalLzfF
-   w==;
-X-CSE-ConnectionGUID: iV+hXrcjRRylF2DyTMfDIg==
-X-CSE-MsgGUID: mVxdKb1cTMe9Np7amYXYXQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="56576696"
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="56576696"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 05:57:29 -0700
-X-CSE-ConnectionGUID: 1mEEHg4vSMmejJnBhYjM6Q==
-X-CSE-MsgGUID: 8NydhknOTYy7mydb1oLAjw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="158292383"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 04 Apr 2025 05:57:22 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u0gbo-0001FP-1P;
-	Fri, 04 Apr 2025 12:57:20 +0000
-Date: Fri, 4 Apr 2025 20:57:15 +0800
-From: kernel test robot <lkp@intel.com>
-To: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, dan.j.williams@intel.com, willy@infradead.org,
-	jack@suse.cz, rafael@kernel.org, len.brown@intel.com, pavel@ucw.cz,
-	ming.li@zohomail.com, nathan.fontenot@amd.com,
-	Smita.KoralahalliChannabasappa@amd.com,
-	huang.ying.caritas@gmail.com, yaoxt.fnst@fujitsu.com,
-	peterz@infradead.org, gregkh@linuxfoundation.org,
-	quic_jjohnson@quicinc.com, ilpo.jarvinen@linux.intel.com,
-	bhelgaas@google.com, andriy.shevchenko@linux.intel.com,
-	mika.westerberg@linux.intel.com, akpm@linux-foundation.org,
-	gourry@gourry.net, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v3 1/4] kernel/resource: Provide mem region release for
- SOFT RESERVES
-Message-ID: <202504042030.Rs5G4dWd-lkp@intel.com>
-References: <20250403183315.286710-2-terry.bowman@amd.com>
+	s=arc-20240116; t=1743771560; c=relaxed/simple;
+	bh=A1YQV7DTUafA+9BT5+KgvszR0Cn++a78Zm/k3sbagI0=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hFuFeYufadKFX+1K1pGya/+y/4jfMb8xShRBYEiQOiigoo4ef+/ARv7D2RClMa2ljQpweg75D/MasRj3ijA2I/l4+vgPdgmGpD/HQTkBnqzF8QjYQdmBHUgm/qsJeNWeaUKw9MVZg9P5X3OmEJnrhi3N1ievOKV6FqFz5dCHB3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZTdr02jL4z6K9DN;
+	Fri,  4 Apr 2025 20:55:28 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id EC187140557;
+	Fri,  4 Apr 2025 20:59:08 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 4 Apr
+ 2025 14:59:08 +0200
+Date: Fri, 4 Apr 2025 13:59:06 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Rakie Kim <rakie.kim@sk.com>
+CC: <akpm@linux-foundation.org>, <gourry@gourry.net>, <linux-mm@kvack.org>,
+	<linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<joshua.hahnjy@gmail.com>, <dan.j.williams@intel.com>,
+	<ying.huang@linux.alibaba.com>, <david@redhat.com>, <osalvador@suse.de>,
+	<kernel_team@skhynix.com>, <honggyu.kim@sk.com>, <yunjeong.mun@sk.com>
+Subject: Re: [PATCH v6 1/3] mm/mempolicy: Fix memory leaks in weighted
+ interleave sysfs
+Message-ID: <20250404135906.0000308e@huawei.com>
+In-Reply-To: <20250404074623.1179-2-rakie.kim@sk.com>
+References: <20250404074623.1179-1-rakie.kim@sk.com>
+	<20250404074623.1179-2-rakie.kim@sk.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250403183315.286710-2-terry.bowman@amd.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-Hi Terry,
+On Fri, 4 Apr 2025 16:46:19 +0900
+Rakie Kim <rakie.kim@sk.com> wrote:
 
-kernel test robot noticed the following build warnings:
+> Memory leaks occurred when removing sysfs attributes for weighted
+> interleave. Improper kobject deallocation led to unreleased memory
+> when initialization failed or when nodes were removed.
+> 
+> This patch resolves the issue by replacing unnecessary `kfree()`
+> calls with proper `kobject_del()` and `kobject_put()` sequences,
+> ensuring correct teardown and preventing memory leaks.
+> 
+> By explicitly calling `kobject_del()` before `kobject_put()`,
+> the release function is now invoked safely, and internal sysfs
+> state is correctly cleaned up. This guarantees that the memory
+> associated with the kobject is fully released and avoids
+> resource leaks, thereby improving system stability.
+> 
+> Fixes: dce41f5ae253 ("mm/mempolicy: implement the sysfs-based weighted_interleave interface")
+> Signed-off-by: Rakie Kim <rakie.kim@sk.com>
+> Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
+> Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
+> Reviewed-by: Gregory Price <gourry@gourry.net>
+I've pretty much forgotten earlier discussions so apologies if I revisit
+old ground! 
 
-[auto build test WARNING on aae0594a7053c60b82621136257c8b648c67b512]
+The fix is fine I think. But the resulting code structure
+could be improved, without (I think) complicating what is here by much.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Terry-Bowman/kernel-resource-Provide-mem-region-release-for-SOFT-RESERVES/20250404-023601
-base:   aae0594a7053c60b82621136257c8b648c67b512
-patch link:    https://lore.kernel.org/r/20250403183315.286710-2-terry.bowman%40amd.com
-patch subject: [PATCH v3 1/4] kernel/resource: Provide mem region release for SOFT RESERVES
-config: i386-buildonly-randconfig-003-20250404 (https://download.01.org/0day-ci/archive/20250404/202504042030.Rs5G4dWd-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250404/202504042030.Rs5G4dWd-lkp@intel.com/reproduce)
+> ---
+>  mm/mempolicy.c | 64 +++++++++++++++++++++++++++-----------------------
+>  1 file changed, 34 insertions(+), 30 deletions(-)
+> 
+> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> index bbaadbeeb291..af3753925573 100644
+> --- a/mm/mempolicy.c
+> +++ b/mm/mempolicy.c
+> @@ -3448,7 +3448,9 @@ static void sysfs_wi_release(struct kobject *wi_kobj)
+>  
+>  	for (i = 0; i < nr_node_ids; i++)
+>  		sysfs_wi_node_release(node_attrs[i], wi_kobj);
+> -	kobject_put(wi_kobj);
+> +
+> +	kfree(node_attrs);
+> +	kfree(wi_kobj);
+>  }
+>  
+>  static const struct kobj_type wi_ktype = {
+> @@ -3494,15 +3496,22 @@ static int add_weighted_interleave_group(struct kobject *root_kobj)
+>  	struct kobject *wi_kobj;
+>  	int nid, err;
+>  
+> -	wi_kobj = kzalloc(sizeof(struct kobject), GFP_KERNEL);
+> -	if (!wi_kobj)
+> +	node_attrs = kcalloc(nr_node_ids, sizeof(struct iw_node_attr *),
+> +			     GFP_KERNEL);
+> +	if (!node_attrs)
+>  		return -ENOMEM;
+>  
+> +	wi_kobj = kzalloc(sizeof(struct kobject), GFP_KERNEL);
+> +	if (!wi_kobj) {
+> +		err = -ENOMEM;
+> +		goto node_out;
+As this is only place where we do kfree(node_attrs)
+why not just do that here and return directly.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504042030.Rs5G4dWd-lkp@intel.com/
+		
+> +	}
+> +
+>  	err = kobject_init_and_add(wi_kobj, &wi_ktype, root_kobj,
+>  				   "weighted_interleave");
+>  	if (err) {
+> -		kfree(wi_kobj);
+> -		return err;
+> +		kobject_put(wi_kobj);
+> +		goto err_out;
+>  	}
+>  
+>  	for_each_node_state(nid, N_POSSIBLE) {
+> @@ -3512,9 +3521,18 @@ static int add_weighted_interleave_group(struct kobject *root_kobj)
+>  			break;
+>  		}
+>  	}
+> -	if (err)
+> +	if (err) {
+> +		kobject_del(wi_kobj);
+>  		kobject_put(wi_kobj);
 
-All warnings (new ones prefixed by >>):
+For this and the one above, a unified exit kind of makes sense as
+can do two labels and have the put only once.
 
->> kernel/resource.c:1414: warning: Function parameter or struct member 'busy_check' not described in '__release_mem_region_adjustable'
->> kernel/resource.c:1414: warning: Function parameter or struct member 'res_desc' not described in '__release_mem_region_adjustable'
->> kernel/resource.c:1414: warning: expecting prototype for release_mem_region_adjustable(). Prototype was for __release_mem_region_adjustable() instead
+If not, why not move this up into the loop and return directly?
+If you move to an error handling block
+
+err_del_obj:
+	kobject_del(wi_kobj);
+err_put_obj:
+	kobject_put(wi_kobj);
+
+then you could also do the goto from within that loop.
 
 
-vim +1414 kernel/resource.c
+> +		goto err_out;
+> +	}
+> +
+>  	return 0;
+> +
+> +node_out:
+> +	kfree(node_attrs);
+> +err_out:
+> +	return err;
+>  }
+>  
+>  static void mempolicy_kobj_release(struct kobject *kobj)
+> @@ -3528,7 +3546,6 @@ static void mempolicy_kobj_release(struct kobject *kobj)
+>  	mutex_unlock(&iw_table_lock);
+>  	synchronize_rcu();
+>  	kfree(old);
+> -	kfree(node_attrs);
+>  	kfree(kobj);
+>  }
+>  
+> @@ -3542,37 +3559,24 @@ static int __init mempolicy_sysfs_init(void)
+>  	static struct kobject *mempolicy_kobj;
+>  
+>  	mempolicy_kobj = kzalloc(sizeof(*mempolicy_kobj), GFP_KERNEL);
+> -	if (!mempolicy_kobj) {
+> -		err = -ENOMEM;
+> -		goto err_out;
+> -	}
+> -
+> -	node_attrs = kcalloc(nr_node_ids, sizeof(struct iw_node_attr *),
+> -			     GFP_KERNEL);
+> -	if (!node_attrs) {
+> -		err = -ENOMEM;
+> -		goto mempol_out;
+> -	}
+> +	if (!mempolicy_kobj)
+> +		return -ENOMEM;
+>  
+>  	err = kobject_init_and_add(mempolicy_kobj, &mempolicy_ktype, mm_kobj,
+>  				   "mempolicy");
+>  	if (err)
+> -		goto node_out;
+> +		goto err_out;
+		goto err_put_kobj;
+ or something like that.
 
-^1da177e4c3f41 Linus Torvalds    2005-04-16  1389  
-e4ebc182a59bbb Nathan Fontenot   2025-04-03  1390  #if defined(CONFIG_MEMORY_HOTREMOVE) || defined(CONFIG_CXL_REGION)
-825f787bb49676 Toshi Kani        2013-04-29  1391  /**
-825f787bb49676 Toshi Kani        2013-04-29  1392   * release_mem_region_adjustable - release a previously reserved memory region
-825f787bb49676 Toshi Kani        2013-04-29  1393   * @start: resource start address
-825f787bb49676 Toshi Kani        2013-04-29  1394   * @size: resource region size
-825f787bb49676 Toshi Kani        2013-04-29  1395   *
-825f787bb49676 Toshi Kani        2013-04-29  1396   * This interface is intended for memory hot-delete.  The requested region
-825f787bb49676 Toshi Kani        2013-04-29  1397   * is released from a currently busy memory resource.  The requested region
-825f787bb49676 Toshi Kani        2013-04-29  1398   * must either match exactly or fit into a single busy resource entry.  In
-825f787bb49676 Toshi Kani        2013-04-29  1399   * the latter case, the remaining resource is adjusted accordingly.
-825f787bb49676 Toshi Kani        2013-04-29  1400   * Existing children of the busy memory resource must be immutable in the
-825f787bb49676 Toshi Kani        2013-04-29  1401   * request.
-825f787bb49676 Toshi Kani        2013-04-29  1402   *
-825f787bb49676 Toshi Kani        2013-04-29  1403   * Note:
-825f787bb49676 Toshi Kani        2013-04-29  1404   * - Additional release conditions, such as overlapping region, can be
-825f787bb49676 Toshi Kani        2013-04-29  1405   *   supported after they are confirmed as valid cases.
-825f787bb49676 Toshi Kani        2013-04-29  1406   * - When a busy memory resource gets split into two entries, the code
-825f787bb49676 Toshi Kani        2013-04-29  1407   *   assumes that all children remain in the lower address entry for
-825f787bb49676 Toshi Kani        2013-04-29  1408   *   simplicity.  Enhance this logic when necessary.
-825f787bb49676 Toshi Kani        2013-04-29  1409   */
-e4ebc182a59bbb Nathan Fontenot   2025-04-03  1410  static void __release_mem_region_adjustable(resource_size_t start,
-e4ebc182a59bbb Nathan Fontenot   2025-04-03  1411  					    resource_size_t size,
-e4ebc182a59bbb Nathan Fontenot   2025-04-03  1412  					    bool busy_check,
-e4ebc182a59bbb Nathan Fontenot   2025-04-03  1413  					    int res_desc)
-825f787bb49676 Toshi Kani        2013-04-29 @1414  {
-cb8e3c8b4f45e4 David Hildenbrand 2020-10-15  1415  	struct resource *parent = &iomem_resource;
-ec62d04e3fdc4b David Hildenbrand 2020-10-15  1416  	struct resource *new_res = NULL;
-ec62d04e3fdc4b David Hildenbrand 2020-10-15  1417  	bool alloc_nofail = false;
-825f787bb49676 Toshi Kani        2013-04-29  1418  	struct resource **p;
-825f787bb49676 Toshi Kani        2013-04-29  1419  	struct resource *res;
-825f787bb49676 Toshi Kani        2013-04-29  1420  	resource_size_t end;
-825f787bb49676 Toshi Kani        2013-04-29  1421  
-825f787bb49676 Toshi Kani        2013-04-29  1422  	end = start + size - 1;
-ec62d04e3fdc4b David Hildenbrand 2020-10-15  1423  	if (WARN_ON_ONCE((start < parent->start) || (end > parent->end)))
-ec62d04e3fdc4b David Hildenbrand 2020-10-15  1424  		return;
-825f787bb49676 Toshi Kani        2013-04-29  1425  
-ec62d04e3fdc4b David Hildenbrand 2020-10-15  1426  	/*
-ec62d04e3fdc4b David Hildenbrand 2020-10-15  1427  	 * We free up quite a lot of memory on memory hotunplug (esp., memap),
-ec62d04e3fdc4b David Hildenbrand 2020-10-15  1428  	 * just before releasing the region. This is highly unlikely to
-ec62d04e3fdc4b David Hildenbrand 2020-10-15  1429  	 * fail - let's play save and make it never fail as the caller cannot
-ec62d04e3fdc4b David Hildenbrand 2020-10-15  1430  	 * perform any error handling (e.g., trying to re-add memory will fail
-ec62d04e3fdc4b David Hildenbrand 2020-10-15  1431  	 * similarly).
-ec62d04e3fdc4b David Hildenbrand 2020-10-15  1432  	 */
-ec62d04e3fdc4b David Hildenbrand 2020-10-15  1433  retry:
-ec62d04e3fdc4b David Hildenbrand 2020-10-15  1434  	new_res = alloc_resource(GFP_KERNEL | (alloc_nofail ? __GFP_NOFAIL : 0));
-825f787bb49676 Toshi Kani        2013-04-29  1435  
-825f787bb49676 Toshi Kani        2013-04-29  1436  	p = &parent->child;
-825f787bb49676 Toshi Kani        2013-04-29  1437  	write_lock(&resource_lock);
-825f787bb49676 Toshi Kani        2013-04-29  1438  
-825f787bb49676 Toshi Kani        2013-04-29  1439  	while ((res = *p)) {
-825f787bb49676 Toshi Kani        2013-04-29  1440  		if (res->start >= end)
-825f787bb49676 Toshi Kani        2013-04-29  1441  			break;
-825f787bb49676 Toshi Kani        2013-04-29  1442  
-825f787bb49676 Toshi Kani        2013-04-29  1443  		/* look for the next resource if it does not fit into */
-825f787bb49676 Toshi Kani        2013-04-29  1444  		if (res->start > start || res->end < end) {
-825f787bb49676 Toshi Kani        2013-04-29  1445  			p = &res->sibling;
-825f787bb49676 Toshi Kani        2013-04-29  1446  			continue;
-825f787bb49676 Toshi Kani        2013-04-29  1447  		}
-825f787bb49676 Toshi Kani        2013-04-29  1448  
-825f787bb49676 Toshi Kani        2013-04-29  1449  		if (!(res->flags & IORESOURCE_MEM))
-825f787bb49676 Toshi Kani        2013-04-29  1450  			break;
-825f787bb49676 Toshi Kani        2013-04-29  1451  
-e4ebc182a59bbb Nathan Fontenot   2025-04-03  1452  		if (busy_check && !(res->flags & IORESOURCE_BUSY)) {
-e4ebc182a59bbb Nathan Fontenot   2025-04-03  1453  			p = &res->child;
-e4ebc182a59bbb Nathan Fontenot   2025-04-03  1454  			continue;
-e4ebc182a59bbb Nathan Fontenot   2025-04-03  1455  		}
-e4ebc182a59bbb Nathan Fontenot   2025-04-03  1456  
-e4ebc182a59bbb Nathan Fontenot   2025-04-03  1457  		if (res_desc != IORES_DESC_NONE && res->desc != res_desc) {
-825f787bb49676 Toshi Kani        2013-04-29  1458  			p = &res->child;
-825f787bb49676 Toshi Kani        2013-04-29  1459  			continue;
-825f787bb49676 Toshi Kani        2013-04-29  1460  		}
-825f787bb49676 Toshi Kani        2013-04-29  1461  
-825f787bb49676 Toshi Kani        2013-04-29  1462  		/* found the target resource; let's adjust accordingly */
-825f787bb49676 Toshi Kani        2013-04-29  1463  		if (res->start == start && res->end == end) {
-825f787bb49676 Toshi Kani        2013-04-29  1464  			/* free the whole entry */
-825f787bb49676 Toshi Kani        2013-04-29  1465  			*p = res->sibling;
-ebff7d8f270d04 Yasuaki Ishimatsu 2013-04-29  1466  			free_resource(res);
-825f787bb49676 Toshi Kani        2013-04-29  1467  		} else if (res->start == start && res->end != end) {
-825f787bb49676 Toshi Kani        2013-04-29  1468  			/* adjust the start */
-ec62d04e3fdc4b David Hildenbrand 2020-10-15  1469  			WARN_ON_ONCE(__adjust_resource(res, end + 1,
-ec62d04e3fdc4b David Hildenbrand 2020-10-15  1470  						       res->end - end));
-825f787bb49676 Toshi Kani        2013-04-29  1471  		} else if (res->start != start && res->end == end) {
-825f787bb49676 Toshi Kani        2013-04-29  1472  			/* adjust the end */
-ec62d04e3fdc4b David Hildenbrand 2020-10-15  1473  			WARN_ON_ONCE(__adjust_resource(res, res->start,
-ec62d04e3fdc4b David Hildenbrand 2020-10-15  1474  						       start - res->start));
-825f787bb49676 Toshi Kani        2013-04-29  1475  		} else {
-ec62d04e3fdc4b David Hildenbrand 2020-10-15  1476  			/* split into two entries - we need a new resource */
-825f787bb49676 Toshi Kani        2013-04-29  1477  			if (!new_res) {
-ec62d04e3fdc4b David Hildenbrand 2020-10-15  1478  				new_res = alloc_resource(GFP_ATOMIC);
-ec62d04e3fdc4b David Hildenbrand 2020-10-15  1479  				if (!new_res) {
-ec62d04e3fdc4b David Hildenbrand 2020-10-15  1480  					alloc_nofail = true;
-ec62d04e3fdc4b David Hildenbrand 2020-10-15  1481  					write_unlock(&resource_lock);
-ec62d04e3fdc4b David Hildenbrand 2020-10-15  1482  					goto retry;
-ec62d04e3fdc4b David Hildenbrand 2020-10-15  1483  				}
-825f787bb49676 Toshi Kani        2013-04-29  1484  			}
-825f787bb49676 Toshi Kani        2013-04-29  1485  			new_res->name = res->name;
-825f787bb49676 Toshi Kani        2013-04-29  1486  			new_res->start = end + 1;
-825f787bb49676 Toshi Kani        2013-04-29  1487  			new_res->end = res->end;
-825f787bb49676 Toshi Kani        2013-04-29  1488  			new_res->flags = res->flags;
-43ee493bde78da Toshi Kani        2016-01-26  1489  			new_res->desc = res->desc;
-825f787bb49676 Toshi Kani        2013-04-29  1490  			new_res->parent = res->parent;
-825f787bb49676 Toshi Kani        2013-04-29  1491  			new_res->sibling = res->sibling;
-825f787bb49676 Toshi Kani        2013-04-29  1492  			new_res->child = NULL;
-825f787bb49676 Toshi Kani        2013-04-29  1493  
-ec62d04e3fdc4b David Hildenbrand 2020-10-15  1494  			if (WARN_ON_ONCE(__adjust_resource(res, res->start,
-ec62d04e3fdc4b David Hildenbrand 2020-10-15  1495  							   start - res->start)))
-825f787bb49676 Toshi Kani        2013-04-29  1496  				break;
-825f787bb49676 Toshi Kani        2013-04-29  1497  			res->sibling = new_res;
-825f787bb49676 Toshi Kani        2013-04-29  1498  			new_res = NULL;
-825f787bb49676 Toshi Kani        2013-04-29  1499  		}
-825f787bb49676 Toshi Kani        2013-04-29  1500  
-825f787bb49676 Toshi Kani        2013-04-29  1501  		break;
-825f787bb49676 Toshi Kani        2013-04-29  1502  	}
-825f787bb49676 Toshi Kani        2013-04-29  1503  
-825f787bb49676 Toshi Kani        2013-04-29  1504  	write_unlock(&resource_lock);
-ebff7d8f270d04 Yasuaki Ishimatsu 2013-04-29  1505  	free_resource(new_res);
-825f787bb49676 Toshi Kani        2013-04-29  1506  }
-e4ebc182a59bbb Nathan Fontenot   2025-04-03  1507  #endif
-e4ebc182a59bbb Nathan Fontenot   2025-04-03  1508  
+>  
+>  	err = add_weighted_interleave_group(mempolicy_kobj);
+> -	if (err) {
+> -		pr_err("mempolicy sysfs structure failed to initialize\n");
+> -		kobject_put(mempolicy_kobj);
+> -		return err;
+> -	}
+> +	if (err)
+> +		goto err_del;
+>  
+> -	return err;
+> -node_out:
+> -	kfree(node_attrs);
+> -mempol_out:
+> -	kfree(mempolicy_kobj);
+> +	return 0;
+> +
+> +err_del:
+> +	kobject_del(mempolicy_kobj);
+>  err_out:
+> -	pr_err("failed to add mempolicy kobject to the system\n");
+> +	kobject_put(mempolicy_kobj);
+If we keep an err_out, usual expectation is all it does is return
++ maybe print a message. We'd not expect a put.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>  	return err;
+>  }
+>  
+
