@@ -1,129 +1,225 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3BC01CEAB2;
-	Fri,  4 Apr 2025 13:58:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9205F433CB
+	for <linux-cxl@vger.kernel.org>; Fri,  4 Apr 2025 15:03:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743775117; cv=none; b=rjLH4EaI8BiEn/L5nDRixOlZkpEuVtbAbB3DHGEkwDEhsYWNMxcLQtUy9Of4Gfzge2aI4wVe1IpKrTrDNmC0dilcKhkF4Wi1z6py+vxNp428Fb678Bq7iF1gTFq6KqFGW0EUA58p2Fosn1Ibn9s7hVQ6uhMKuARHM/oMHjVY6BU=
+	t=1743778987; cv=none; b=btgiXFEd4yxyl+zj8yvemGIcO7g9OgDbvKXumyaaCwx2B6lU9U9z71Ev7ttWlGVTOXRdXiDg2bs7GP5TxKSTnl9yKldg9cnOb4zyEK1sOXuUQnWJG0AX6XkIh+i2ssuxCGPoYAsjinHiDcLH0HlLO3E8LJIDR+FUQriBDDsaqnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743775117; c=relaxed/simple;
-	bh=NG7H7hLS4WQavrvWJPizCU0NvDUAAmaYN/JZ7/I5PN4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mnhSqfHIMd0F/n7ySAPqKCWkDmS0OARIe7KbfryzcS17nNR88md59D1/2qS9ZM50Ly5zimBMXC300CTmwk3rresABk6cVY7mdC3R/Ce6QVXW+jIg/p49SGvEf+MZCXlpdwKrelR8HCEhfxehIpxQiz09mEXpYu79CnU/FB9oHVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hTn0bPkJ; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hTn0bPkJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743775114; x=1775311114;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=NG7H7hLS4WQavrvWJPizCU0NvDUAAmaYN/JZ7/I5PN4=;
-  b=hTn0bPkJyAeMWAx4OFS+4Xd5yFNYpb/1tuXfCW4OTCgP/xeMOehSpu5L
-   0lfbFouU/6BFkOW0U/y8VhYoEha2UygdWF6ao/DIorbgyP4GrPYFa5yYJ
-   k56D646P6axwYRRIniRyDI599CIdsb9X6ZDsnDgaaqHdjLFFji4oExLHk
-   sS+uR+yFaIfJtIpfrdQcWD3+bgM/Jo0aw3hRZ3G6FbvUcBI262yA7h5iA
-   hT877O6AXKFr3k2y+EAA1jgAp/ZLx7WpjIYIN5fJ2SWaSjOqdMml67yEt
-   MJJDu3sFlHGFdfJUoTIivz+wJ7fS1xXnHRCDCfhwcH8tZGR+rtxn01sX9
-   Q==;
-X-CSE-ConnectionGUID: xusNnNDHTQCEyqFtcHXi6Q==
-X-CSE-MsgGUID: dclFPhzYTTmD1Bed3CjQYg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="45232313"
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="45232313"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 06:58:34 -0700
-X-CSE-ConnectionGUID: XOMIdkoDTHShP7SLQujMJA==
-X-CSE-MsgGUID: +7NvfFxGQFSbrm+JYdjdRA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="127256509"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 04 Apr 2025 06:58:27 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u0hYu-0001H5-2T;
-	Fri, 04 Apr 2025 13:58:24 +0000
-Date: Fri, 4 Apr 2025 21:58:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, dan.j.williams@intel.com, willy@infradead.org,
-	jack@suse.cz, rafael@kernel.org, len.brown@intel.com, pavel@ucw.cz,
-	ming.li@zohomail.com, nathan.fontenot@amd.com,
-	Smita.KoralahalliChannabasappa@amd.com,
-	huang.ying.caritas@gmail.com, yaoxt.fnst@fujitsu.com,
-	peterz@infradead.org, gregkh@linuxfoundation.org,
-	quic_jjohnson@quicinc.com, ilpo.jarvinen@linux.intel.com,
-	bhelgaas@google.com, andriy.shevchenko@linux.intel.com,
-	mika.westerberg@linux.intel.com, akpm@linux-foundation.org,
-	gourry@gourry.net, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v3 2/4] cxl: Update Soft Reserved resources upon region
- creation
-Message-ID: <202504042103.wFCRBR7K-lkp@intel.com>
-References: <20250403183315.286710-3-terry.bowman@amd.com>
+	s=arc-20240116; t=1743778987; c=relaxed/simple;
+	bh=rXD92+jWCkDuXTv9QUxmJmRa7h3Sio2avqryl/5gPEA=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OKKjgZsLiRf8pM0NVV4y6pJm38ulY4WYzGrXrzhnjqjhEbO6PvRIwPZIKHSrciEO7+WLyRdDHSdMA0SnqnNFQlLyv9AKV63D+K9z0apdKZBDdXqY4b1v6edtc/0n9H18ClCwHG+fCEp3+8WqJ5izrAIvikIgcyQzt0CgSJs4tFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZThZv6MWWz6M4XQ;
+	Fri,  4 Apr 2025 22:59:19 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id CC53A14062A;
+	Fri,  4 Apr 2025 23:03:01 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 4 Apr
+ 2025 17:03:01 +0200
+Date: Fri, 4 Apr 2025 16:02:59 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+CC: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH] docs/cxl: Add serial number for persistent-memdev
+Message-ID: <20250404160259.00004c75@huawei.com>
+In-Reply-To: <243092c2.4d3c.195cc474586.Coremail.wangyuquan1236@phytium.com.cn>
+References: <20250217112039.138650-1-wangyuquan1236@phytium.com.cn>
+	<20250220161213.000049a9@huawei.com>
+	<20250221065509-mutt-send-email-mst@kernel.org>
+	<17b91a9f.2847.1955fd23d78.Coremail.wangyuquan1236@phytium.com.cn>
+	<20250305141359.00001288@huawei.com>
+	<4752672.2b5f.19565e01b65.Coremail.wangyuquan1236@phytium.com.cn>
+	<20250312181035.00006e32@huawei.com>
+	<243092c2.4d3c.195cc474586.Coremail.wangyuquan1236@phytium.com.cn>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250403183315.286710-3-terry.bowman@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-Hi Terry,
+On Tue, 25 Mar 2025 15:49:37 +0800
+Yuquan Wang <wangyuquan1236@phytium.com.cn> wrote:
 
-kernel test robot noticed the following build errors:
+> > -----=E5=8E=9F=E5=A7=8B=E9=82=AE=E4=BB=B6-----
+> > =E5=8F=91=E4=BB=B6=E4=BA=BA: "Jonathan Cameron" <Jonathan.Cameron@huawe=
+i.com>
+> > =E5=8F=91=E9=80=81=E6=97=B6=E9=97=B4:2025-03-13 02:10:35 (=E6=98=9F=E6=
+=9C=9F=E5=9B=9B)
+> > =E6=94=B6=E4=BB=B6=E4=BA=BA: "Yuquan Wang" <wangyuquan1236@phytium.com.=
+cn>
+> > =E6=8A=84=E9=80=81: qemu-devel@nongnu.org, linux-cxl@vger.kernel.org
+> > =E4=B8=BB=E9=A2=98: Re: [PATCH] docs/cxl: Add serial number for persist=
+ent-memdev
+> >=20
+> > On Wed, 5 Mar 2025 18:35:40 +0800
+> > Yuquan Wang <wangyuquan1236@phytium.com.cn> wrote:
+> >  =20
+> > > >=20
+> > > > On Tue, 4 Mar 2025 14:22:48 +0800
+> > > > Yuquan Wang <wangyuquan1236@phytium.com.cn> wrote:
+> > > >    =20
+> > > > > >=20
+> > > > > > On Thu, Feb 20, 2025 at 04:12:13PM +0000, Jonathan Cameron wrot=
+e:     =20
+> > > > > > > On Mon, 17 Feb 2025 19:20:39 +0800
+> > > > > > > Yuquan Wang <wangyuquan1236@phytium.com.cn> wrote:
+> > > > > > >      =20
+> > > > > > > > Add serial number parameter in the cxl persistent examples.
+> > > > > > > >=20
+> > > > > > > > Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn> =
+    =20
+> > > > > > > Looks good.  I've queued it up on my gitlab staging tree, but
+> > > > > > > Michael if you want to pick this one directly that's fine as =
+well.     =20
+> > > > > >=20
+> > > > > > See no reason to, I was not even CC'd.     =20
+> > > > >=20
+> > > > > Hi, Michael
+> > > > >=20
+> > > > > I'm sorry, this is my fault. I used "get_maintainer.pl" to check =
+this
+> > > > > patch's maintainers but it shows "No maintainers found, printing =
+recent
+> > > > > contributors".=20
+> > > > >    =20
+> > > > I usually stage up multiple series together and send on to Michael.
+> > > > So it was be being lazy for a minor change rather than anything much
+> > > > that you did wrong.
+> > > >=20
+> > > > If I get time I'll post a series with this a few other patches
+> > > > later today. =20
+> > > >=20
+> > > > Jonathan
+> > > >    =20
+> > > Thank you!
+> > >=20
+> > > BTW, I found a corner case in CXL numa node creation.
+> > >=20
+> > > Condition:=20
+> > > 1) A UMA/NUMA system without SRAT, but with CEDT.CFMWS
+> > > 2=EF=BC=89Enable CONFIG_ACPI_NUMA
+> > >=20
+> > > Results:
+> > > 1) acpi_numa_init: the fake_pxm will be 0 and send to acpi_parse_cfmw=
+s()
+> > > 2=EF=BC=89If dynamically create cxl ram region, the cxl memory would =
+be assigned
+> > > to node0 rather than a new node
+> > >=20
+> > > Confusions:
+> > > 1) Is a numa system a requirement for CXL memory usage? =20
+> >=20
+> > Obviously discussion has gone on elsewhere, but I'd say in general it
+> > would be a bad idea to not have an SRAT because the moment we add CXL
+> > it is definitely a NUMA system and we want the Generic Port entry to
+> > allow us to get perf information.
+> >=20
+> > So I wouldn't mind if we fail CXL init in this case, but maybe
+> > it is worth papering over things.
+> >=20
+> > Jonathan
+> >  =20
+>=20
+> Hi, Jonathan
+>=20
+> Recentlty I managed to do some hot-plug tests on cxl type3 device on QEMU.
+> I tried use "device add" qemu command in monitor, but it failed. I also u=
+sed
+> unbind/bind cxl_pci driver in sysfs, I can see the software flow on devic=
+e but
+> no expected actions on cxl root ports linked(like pcie hot-plug interrupt=
+ and
+> so on).
+>=20
+> Could we simulate a hot-add flow of type3 device in qemu now? Maybe I use=
+d the
+> wrong method :(
 
-[auto build test ERROR on aae0594a7053c60b82621136257c8b648c67b512]
+Only tweaks needed should be to set hotplug=3Dtrue for the root port or swi=
+tch
+downstream ports and then via the qemu monitor something like:
+device_add cxl-type3,bus_cxl_rp_port1,volatile-memdev=3Dcxl-mem3,id=3Dcxl-m=
+emD,sn=3D5
+and you should see hotplug occur.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Terry-Bowman/kernel-resource-Provide-mem-region-release-for-SOFT-RESERVES/20250404-023601
-base:   aae0594a7053c60b82621136257c8b648c67b512
-patch link:    https://lore.kernel.org/r/20250403183315.286710-3-terry.bowman%40amd.com
-patch subject: [PATCH v3 2/4] cxl: Update Soft Reserved resources upon region creation
-config: hexagon-randconfig-001-20250404 (https://download.01.org/0day-ci/archive/20250404/202504042103.wFCRBR7K-lkp@intel.com/config)
-compiler: clang version 15.0.7 (https://github.com/llvm/llvm-project 8dfdcc7b7bf66834a761bd8de445840ef68e4d1a)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250404/202504042103.wFCRBR7K-lkp@intel.com/reproduce)
+I just tested this on an arm64 setup (using my staging tree) but shouldn't
+make any real difference as all native hotplug flows.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504042103.wFCRBR7K-lkp@intel.com/
+ pcieport 0000:0c:01.0: pciehp: Slot(3): Button press: will power on in 5 s=
+ec
+ pcieport 0000:0c:01.0: pciehp: Slot(3): Card present
+ pcieport 0000:0c:01.0: pciehp: Slot(3): Link Up
+ pci 0000:0e:00.0: [8086:0d93] type 00 class 0x050210 PCIe Endpoint
+ pci 0000:0e:00.0: BAR 0 [mem 0x00000000-0x0000ffff 64bit]
+ pci 0000:0e:00.0: BAR 2 [mem 0x00000000-0x0003ffff 64bit]
+ pci 0000:0e:00.0: BAR 4 [mem 0x00000000-0x00000fff]
+ pci 0000:0e:00.0: enabling Extended Tags
+ pcieport 0000:0c:01.0: bridge window [io  0x1000-0x0fff] to [bus 0e] add_s=
+ize 1000
+ pcieport 0000:0c:01.0: bridge window [mem 0x00100000-0x000fffff 64bit pref=
+] to [bus 0e] add_size 200000 add_align 100000
+ pcieport 0000:0c:01.0: bridge window [mem size 0x00200000 64bit pref]: can=
+'t assign; no space
+ pcieport 0000:0c:01.0: bridge window [mem size 0x00200000 64bit pref]: fai=
+led to assign
+ pcieport 0000:0c:01.0: bridge window [io  size 0x1000]: can't assign; no s=
+pace
+ pcieport 0000:0c:01.0: bridge window [io  size 0x1000]: failed to assign
+ pcieport 0000:0c:01.0: bridge window [mem size 0x00200000 64bit pref]: can=
+'t assign; no space
+ pcieport 0000:0c:01.0: bridge window [mem size 0x00200000 64bit pref]: fai=
+led to assign
+ pcieport 0000:0c:01.0: bridge window [io  size 0x1000]: can't assign; no s=
+pace
+ pcieport 0000:0c:01.0: bridge window [io  size 0x1000]: failed to assign
+ pci 0000:0e:00.0: BAR 2 [mem 0x20000000-0x2003ffff 64bit]: assigned
+ pci 0000:0e:00.0: BAR 0 [mem 0x20040000-0x2004ffff 64bit]: assigned
+ pci 0000:0e:00.0: BAR 4 [mem 0x20050000-0x20050fff]: assigned
+ pcieport 0000:0c:01.0: PCI bridge to [bus 0e]
+ pcieport 0000:0c:01.0:   bridge window [mem 0x20000000-0x27ffffff]
+ cxl_pci 0000:0e:00.0: enabling device (0000 -> 0002)
 
-All errors (new ones prefixed by >>):
+Whilst there are some corners where resource assignment actually fails
+(various fixes have merged recently so maybe that all works now).
+In this case it succeeds after a few tries (it reduces the requested
+padding in this case I think but I haven't chased this one through).
 
-   In file included from drivers/cxl/core/suspend.c:7:
->> drivers/cxl/cxlpci.h:126:2: error: call to undeclared function 'pcie_capability_read_word'; ISO C99 and later do not support implicit function declarations [-Werror,-Wimplicit-function-declaration]
-           pcie_capability_read_word(pdev, PCI_EXP_LNKSTA2, &lnksta2);
-           ^
-   1 error generated.
+If you are still having trouble I can fire up a test case on x86 but
+probably not today.
+
+Jonathan
 
 
-vim +/pcie_capability_read_word +126 drivers/cxl/cxlpci.h
 
-e0c818e00443ce Robert Richter 2024-02-16  116  
-4d07a05397c8c1 Dave Jiang     2023-12-21  117  /*
-4d07a05397c8c1 Dave Jiang     2023-12-21  118   * CXL v3.0 6.2.3 Table 6-4
-4d07a05397c8c1 Dave Jiang     2023-12-21  119   * The table indicates that if PCIe Flit Mode is set, then CXL is in 256B flits
-4d07a05397c8c1 Dave Jiang     2023-12-21  120   * mode, otherwise it's 68B flits mode.
-4d07a05397c8c1 Dave Jiang     2023-12-21  121   */
-4d07a05397c8c1 Dave Jiang     2023-12-21  122  static inline bool cxl_pci_flit_256(struct pci_dev *pdev)
-4d07a05397c8c1 Dave Jiang     2023-12-21  123  {
-4d07a05397c8c1 Dave Jiang     2023-12-21  124  	u16 lnksta2;
-4d07a05397c8c1 Dave Jiang     2023-12-21  125  
-4d07a05397c8c1 Dave Jiang     2023-12-21 @126  	pcie_capability_read_word(pdev, PCI_EXP_LNKSTA2, &lnksta2);
-4d07a05397c8c1 Dave Jiang     2023-12-21  127  	return lnksta2 & PCI_EXP_LNKSTA2_FLIT;
-4d07a05397c8c1 Dave Jiang     2023-12-21  128  }
-4d07a05397c8c1 Dave Jiang     2023-12-21  129  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>=20
+> Yuquan
+>=20
+>=20
+> =E4=BF=A1=E6=81=AF=E5=AE=89=E5=85=A8=E5=A3=B0=E6=98=8E=EF=BC=9A=E6=9C=AC=
+=E9=82=AE=E4=BB=B6=E5=8C=85=E5=90=AB=E4=BF=A1=E6=81=AF=E5=BD=92=E5=8F=91=E4=
+=BB=B6=E4=BA=BA=E6=89=80=E5=9C=A8=E7=BB=84=E7=BB=87=E6=89=80=E6=9C=89,=E5=
+=8F=91=E4=BB=B6=E4=BA=BA=E6=89=80=E5=9C=A8=E7=BB=84=E7=BB=87=E5=AF=B9=E8=AF=
+=A5=E9=82=AE=E4=BB=B6=E6=8B=A5=E6=9C=89=E6=89=80=E6=9C=89=E6=9D=83=E5=88=A9=
+=E3=80=82=E8=AF=B7=E6=8E=A5=E6=94=B6=E8=80=85=E6=B3=A8=E6=84=8F=E4=BF=9D=E5=
+=AF=86,=E6=9C=AA=E7=BB=8F=E5=8F=91=E4=BB=B6=E4=BA=BA=E4=B9=A6=E9=9D=A2=E8=
+=AE=B8=E5=8F=AF,=E4=B8=8D=E5=BE=97=E5=90=91=E4=BB=BB=E4=BD=95=E7=AC=AC=E4=
+=B8=89=E6=96=B9=E7=BB=84=E7=BB=87=E5=92=8C=E4=B8=AA=E4=BA=BA=E9=80=8F=E9=9C=
+=B2=E6=9C=AC=E9=82=AE=E4=BB=B6=E6=89=80=E5=90=AB=E4=BF=A1=E6=81=AF=E3=80=82
+> Information Security Notice: The information contained in this mail is so=
+lely property of the sender's organization.This mail communication is confi=
+dential.Recipients named above are obligated to maintain secrecy and are no=
+t permitted to disclose the contents of this communication to others.
