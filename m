@@ -1,186 +1,332 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CA35219A76
-	for <linux-cxl@vger.kernel.org>; Fri,  4 Apr 2025 19:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743793619; cv=fail; b=McvDsjLQ5XW3YrPtzzIB7ZNLzg1KmOuYKsowyLQtGJv3ksBi3cqN/7n3EK0IQ7/C14Vd5vO3RlFqjxmU4togP13WWHz6jQ4FBiVK6oykN6BDDTV67hq13CK/puHR5rseV6wNXSnphqzMF4I/S79IH50WSDIp5uGhEpQ4WxEUjH8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743793619; c=relaxed/simple;
-	bh=Tk5rJFZ1AXI6IjUFOjMu4qh2jvAKC43TuM+XlIGL9No=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Vlc0BXX0fmE94qw+lQQVXDLXTxvuEPXd5rM8s8/repW4PC4p+6+l++wP0bj4pYsf9F8vuk7pXlzSodd9PgkyyW3uB+CRwkn5QqIlci7xk7oNkbMpLyM8jCkVIn9jMesV+75WuOBVdxfQMqbNxhcb5JYNnuIPNkIg2UzqgRZhuZI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VcRZ8Pqo; arc=fail smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77675634
+	for <linux-cxl@vger.kernel.org>; Fri,  4 Apr 2025 20:45:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743799513; cv=none; b=XgLmeElnGw+wiyTLspKX4zUazP+Aq2DbNE7sBfbn6L2YfLID/jmeI+knokgDfbGuwAgsJXzjse0CUvE9xTdn/s4migK63+JtbrpL08UJKoUQlrfCR5vXOY5q1EZBdUOYsncpw9TVrE4fL2jrAkhzcAF8OO3nx8KIgVgDPYgyNyw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743799513; c=relaxed/simple;
+	bh=A/0jVxgGdOjNBCbM5Z5ihTLkQLzDOgDfPXKDmfO2yMM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YHJdjeKDb2MliBLqH5TkY3L6O52gNt3QOyeefN18Dd1gx11zl9rWktiqtLFGToo4NuGrQLyyePmRcD9qui7au5a2Ih65OPo873vhu58J4wvd+5/V4EuiAiVgU+lTOAjDefiPNFemM4xUmmNTjSUPfCKxyJNN2Gx6IMMsFgmKmjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YDwwjNrG; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VcRZ8Pqo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743793617; x=1775329617;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=Tk5rJFZ1AXI6IjUFOjMu4qh2jvAKC43TuM+XlIGL9No=;
-  b=VcRZ8PqokWfa/DXTIWuAzZNAXbBXUT5WptkAauIBb1RaoclmQ3jPEuc7
-   h4SBnqJvP2EiFHRY3ngJjhSdRzrWszZ3dBtmssNO2t2bW1Tq3FQ5isdYk
-   rW1yRPFsJ9uHhEUjY3gdF9o09FHOStTee5q1sLOdpc01B+XFo2QE5Dmx+
-   2wcAaUpqCp56UfQWASHkAqcnsgzGbt6NQ/rhaDBnzCYPPU4xbEhlUOVlV
-   xpHjr56xOL2CnAWUiXZf3hYTA4ufjqO8TmltZMwo7x76RDCeVPxKGQp/X
-   kMwJ78tZtLE4uEMqfhwIE9LpquMGHkrKSMc+kk1WTWgone+xa05PYX3Kz
-   A==;
-X-CSE-ConnectionGUID: dAPmNP1wSv+PCeeo7YnDkg==
-X-CSE-MsgGUID: ZYldOo/PS/acZjYWkzLgMw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="56613391"
-X-IronPort-AV: E=Sophos;i="6.15,189,1739865600"; 
-   d="scan'208";a="56613391"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 12:06:57 -0700
-X-CSE-ConnectionGUID: 3saYcwXaQD6XyqNZvOVgcQ==
-X-CSE-MsgGUID: 6KPsG3wKR7G5xpYzrfyHDw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,189,1739865600"; 
-   d="scan'208";a="127372904"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 12:06:57 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Fri, 4 Apr 2025 12:06:56 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Fri, 4 Apr 2025 12:06:56 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.41) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Fri, 4 Apr 2025 12:06:55 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mSMlUDwt8HNhRrSMRMIiJuj9DfGu1X2Tf1l/9EG8mJnVqTCFd2y73x61PFKKQZxnjcq2ZnRW24EsgNZl1Ile4QrBlMVNuKfQY2ZuFrOSrGj8KC+2MYFsd/PfA0Y43MUxbQySTdln7oxzTXIy4PJsUpngHvGXq/Qz/KRQi0kEQ9870yYVoSMndApo3VTCwZbwYJ/pLrrvahmrWzfzIQmLDM5/ZQPTg9sLKeD2037H5Df3JEpsh5fII0rbwHA3Lnc6jktE9Vz/4YIq8FeCipUvU+fZ1EwbAeLrcEEP16BloqkxPWRRaVbtb5Rq8lUwYgjSkBfTBx1Uf/Betd5xABLJJA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SMmIF3bsjwxBh2JuGL1HxybcNmlKtQx5hxmR65PFevw=;
- b=JOQAO6nmBa4GBY1z2bcrMpWoeM4ZindcQvt8zThk8R9IojisQW4T+gg9Jn+2v4LCiyfk5yzMJgYnb/VuGJ19gSlrteZ1eCerz0bDN35f27U625J87AOy3d7I4FmMaTQK6eTCy9TM2ysd8LVLBjPIhLkyqaPNrDcntF+xt2s6ILyvCP1Yic9mHa2Gzaebb1na31agGbEQYDHYTNkuMDLxSp4Qz/iMW7X3ExS3IYk4H3NsN3kQkJo3QrD1Wr9+lCX97T6BN9L+xcpz02R182BYsfiL9Fmbo7jGOuMVNYm5hJoy9tcbJDLeJNQn5Og3ErbCcFpXyFoPdjzTeEVVhOhhVQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by IA4PR11MB9129.namprd11.prod.outlook.com (2603:10b6:208:55e::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.27; Fri, 4 Apr
- 2025 19:06:54 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::cf7d:9363:38f4:8c57]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::cf7d:9363:38f4:8c57%5]) with mapi id 15.20.8534.052; Fri, 4 Apr 2025
- 19:06:53 +0000
-Date: Fri, 4 Apr 2025 14:07:18 -0500
-From: Ira Weiny <ira.weiny@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>
-CC: <jonathan.cameron@huawei.com>, <dave@stgolabs.net>,
-	<alison.schofield@intel.com>, <ira.weiny@intel.com>,
-	<danj.williams@intel.com>, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH] cxl: Remove always true condition for
- cxlctl_validate_hw_command()
-Message-ID: <67f02de69d89c_9fe8529481@iweiny-mobl.notmuch>
-References: <20250404165418.3032414-1-dave.jiang@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250404165418.3032414-1-dave.jiang@intel.com>
-X-ClientProxiedBy: MW4PR03CA0294.namprd03.prod.outlook.com
- (2603:10b6:303:b5::29) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YDwwjNrG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743799509;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=U911cPDWIO1xJUhHQ77TZZ5y+lwqBdTdthchIsy3sAI=;
+	b=YDwwjNrGgpLT8nho9ptxgIJG0Ni7EYhic0xZrSFbqDErfzMHslkWywHXlknnKu47rHP/S4
+	qKg0dmXqME/ZrMFsJI8lpEgHmzGB98YDVZ1ZINy3sBrTUvwSQZct/Xd+pLGvfGtr8/cWro
+	XoRzPI2X2lbCIBtFYm6AL8r6D9AhyUo=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-661-Gti6DzERNGeNBRN91DSPyA-1; Fri, 04 Apr 2025 16:45:06 -0400
+X-MC-Unique: Gti6DzERNGeNBRN91DSPyA-1
+X-Mimecast-MFC-AGG-ID: Gti6DzERNGeNBRN91DSPyA_1743799505
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43d3b211d0eso18304095e9.1
+        for <linux-cxl@vger.kernel.org>; Fri, 04 Apr 2025 13:45:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743799505; x=1744404305;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=U911cPDWIO1xJUhHQ77TZZ5y+lwqBdTdthchIsy3sAI=;
+        b=NlZDYWlcubKR4RFdbPYRitAQEu1eVmPNER1iQDUhC88ET5DLyAdBN4dHxPLnX50a1s
+         DulP4+HsDT0YOruYCq93ouqf5zuMGy6eLMH492O47WAexZX8ldgSQlhhxY9qr9YycANv
+         /Hl2frBFn9mHkRxeBVNOtAKzoY+/c6FbXUrJkMcPmyTBRF1LOe7su88bM5Tb2quglyc3
+         IWtHIyG8+INy1kVbX04Cxaig7+yHJTHaAAVpe50mYxPSd1Z5pyYktAkwQFLCgY0fxqZC
+         /ZviTFhdQyb+55/nMZ8p9shniwUAW+T5iNwxOkKZY8Z5bmRunxJjhZxKPkjmcPNl+bEm
+         lqIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU5o4xLl0nGVgEgyWBHSqsGXC0RRuuy1OSpxPqwXPH3D8iik8PPqw/0hko5jW7Cqnth9Bom/xiziuk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YysjhcHIUefZuF1XpdLHW0+wt+IpXJuZWpE9Fh46Al2PBEer3Qy
+	05n0E/mOK8jvOXE//cM3AFoydOmlHb7craIqjM1ivvidQjbF8uliPd2du34tcau7mPf289PPIZw
+	5hetITRPHTX8HNdy3+VbLlkOyiXOhOfCOjjzuDrE56C+weTWnsIOBuly17A==
+X-Gm-Gg: ASbGncuE1hkTcFb0z7yoAwH+epQgbotIhp9AxqZmoPyoPrmRlyz/7Vcsn1DmZjO3vnj
+	fnsl+2wqk9/BlW1puAwvDBqY4JAzeIUDF2oCb1GymwBGjw6K7vFXkywEsTYTC3jZ0CHrRNfhnKF
+	0UIxcw6kTC3dX7ILSmDVEA6gKuMQTIx+iANnPsoY45iozQprdveLL8dg0xp6K66cjSTYo9lCOyM
+	frMpRosp9paQ/q1D2erLAvabRcjF6wSnRnPAzXOQg8PDaZ7s9/PF50pN2GCqaHfzgHzFMe2mJIK
+	qCh9lBlmV3snnMIlMnt4RmN1UdUMWL3/RKIlQK5ncto9Sg==
+X-Received: by 2002:a05:600c:c0e:b0:439:8878:5029 with SMTP id 5b1f17b1804b1-43eced669f7mr41253995e9.2.1743799504748;
+        Fri, 04 Apr 2025 13:45:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEQdUlioKPZq69TbGGBY7RSLQ7tkW3z14eLyNXyqdvzkvKmN0qyRYhTKqjHqJuBvkjX3gnZ7Q==
+X-Received: by 2002:a05:600c:c0e:b0:439:8878:5029 with SMTP id 5b1f17b1804b1-43eced669f7mr41253765e9.2.1743799504278;
+        Fri, 04 Apr 2025 13:45:04 -0700 (PDT)
+Received: from [192.168.3.141] (p4ff23dc9.dip0.t-ipconnect.de. [79.242.61.201])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec34bbd9csm54659795e9.20.2025.04.04.13.45.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Apr 2025 13:45:03 -0700 (PDT)
+Message-ID: <198f2cbe-b1cb-4239-833e-9aac33d978fa@redhat.com>
+Date: Fri, 4 Apr 2025 22:45:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|IA4PR11MB9129:EE_
-X-MS-Office365-Filtering-Correlation-Id: d807ae1b-fcbd-4e87-d3a1-08dd73abdcc2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?idA/y3oOwpGuDCmWKYtPF62H1d6VzKzfvW0F7mvH9D0q18l8hkKar0Kp4vjr?=
- =?us-ascii?Q?hrnLHj/LdASWJs0AavsOyb7UAl3pMnBFg2ismbVmFmKtGiH2bNdSz9UK3VvV?=
- =?us-ascii?Q?AEgVDONSYWo/PPBsfewvAfTuFWsSNm0PiiwtMgn5M1X196nvd/UxM3iQjw8f?=
- =?us-ascii?Q?qc/CB8RrEOugoSfAqqh6qv18gT91ZrSAPdoLJNRS8jXau7RIHiDyMvDjqpu8?=
- =?us-ascii?Q?tB/8gv+POOxBFL/cCMbPf7s4oXMbV6kWPZzenphmw5CnI/tZLNFg2SGo8O/i?=
- =?us-ascii?Q?g8hAVwtKbWQLbC7iEouKVCE0V5/ADEGTOxEVEEAjEzQVDbVpEW1Zhx9nONgK?=
- =?us-ascii?Q?1NoT3YKuMKczLPRhUluWocCYyrp4+YszmtmKZyN1MnvUiM+eJmOGjZyx6/TZ?=
- =?us-ascii?Q?ot5K/sQcbJdntuuXooGUcnwbjj5VUfKJ9+ATHksgTS2P1f0BNG4WJZCkb89b?=
- =?us-ascii?Q?m3OIR3vxRSoeAp32tWulgQG7y12VzhXbp8JxSk+FAGikc0t3s66oG9i3DUfa?=
- =?us-ascii?Q?oZ3nJ8cp7HbenMSFgGbC3qGzJ/f/41YqiQxqYFOjacgDgg0SF5p5ymxet07U?=
- =?us-ascii?Q?5JjVXrdbdjW4RfnQ+Oo2Y7dcB6+VhsYeumbo6DZ+DakXy1L1MyOxw11xW7j0?=
- =?us-ascii?Q?JE/Urgu/cfvPRFDEVQcbZgy3clQPtBso2qoJsnoKVJVsGYGvzxKSMOsGVQQx?=
- =?us-ascii?Q?BfFRr6F58k7BoEvC5qCPJO36c0Wuh1S8ylGaksLd9z8JTu1LHO3UIPtNfYnz?=
- =?us-ascii?Q?86ObasbdWLM0K4fBFnCZM/w1vkJjYdwXXugzp1oLj09FnL4Qq4wsepHLbZx6?=
- =?us-ascii?Q?jCCyDa9AlL+yXAoYug0/SizVIijvrOjJvGuAuS7C6/49jagMhIlrv4QPzLGn?=
- =?us-ascii?Q?KKH9lgSTSE//jS9hZySLyHl2lDG2cc8XM9cUTVBIAsVkeS1FV+nfZEiF0NMF?=
- =?us-ascii?Q?pL3MMvJm6xCHxC/+4sSG4dMhqOAAVSB7b6LY84FBon8IGdhh3Q9ApRu3FoVg?=
- =?us-ascii?Q?mwjxpx4g2PkBxj93NVy8CepI0hwIz6D64Vzto4Rk63HAK+qj4HWHomNT7Cyk?=
- =?us-ascii?Q?J47c0GYGTlp3e/j3hrDU8BEo/Jj3+5wDxk3IB4x4FMU5vy+gjA/iVqX44mCQ?=
- =?us-ascii?Q?/z/Rma11GFHwBPXge+U2Z1qfo1jZrM6yoNzGDohW0WjUuHyVvdi1co5xzI1h?=
- =?us-ascii?Q?ksZo30ZwMJJLSViNdVwpC7ncHW084R5Q85VKn+5Mgqty+G/WAdPOfWnEO7ne?=
- =?us-ascii?Q?d0g36dvfHrcgg3DIh9Aec3Zx2GPWaPkD3o0DXLaTMR5/yp5VwgOapfJmPjGk?=
- =?us-ascii?Q?XRkpg1NM1vzkaFP6ByS/zy1Q2ugMKm3dAIZ4lfRyJv4+rQpf5/slimfOPLv6?=
- =?us-ascii?Q?+9YvfzEMkzEb7loKaIstT7eb6Z/s?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?eNupTdENi386qeURc+fG3+7kC18yAwCcKdzqfTUZmvarlEYhx0SGjky2EvC7?=
- =?us-ascii?Q?NDyXL62xGEyAZTUak+9Fe/YUJ3VriEiPFpFw4Fof+AtN8a8sHR4QA8SyA0BI?=
- =?us-ascii?Q?T7lF6JLiEeZvS+CeXOfcSgBYoU3YA8TKkQX74x5mvV/KPxQj2qfwzPnNirpj?=
- =?us-ascii?Q?iBOoRKJWRrYK205+x229bDmV/mnC/LfHu7xsfIv7oKFl2ZQKJSycmTmrbd0L?=
- =?us-ascii?Q?Sn81eq9xKdvoL4y8RoLlvHGqTTZicq873F9/FCeikObYSn/bPTwCQRojZ4DN?=
- =?us-ascii?Q?tl1Tr56TfjaptbYN/ttXht5VvgxQzj9Vm6AEFmBYBAPcct2vqy3EvffYW2TV?=
- =?us-ascii?Q?MUHsF5+OHfQToNR8WK9FxGrCr97i4PNdCDjI1jhusOluiGZsj6/PrDvXZQzT?=
- =?us-ascii?Q?qW1mR9Yw6ujTu5RSiq5aXgrTYEtc2Yfw9sZnH+fWUXYzgpQoARRrSR92P6wS?=
- =?us-ascii?Q?79UXQvlkaJ+u+VyR+AYg49dAyMvgqtq2/H4YSuiH5AF/CI5JkamY+VcBWpoT?=
- =?us-ascii?Q?hanZJkzte2II6rlkdrBrqoEBlbGh1vkQp+v8hLUiOqYjzaHBetuPDUr9/C4/?=
- =?us-ascii?Q?sFW81FdZODZm+Im0IDxeeFfVL7qg/Cpt83muBskNRp178Jg4cdsElgBA5Fi6?=
- =?us-ascii?Q?Al7g2N4DNByCG0+eOPATJzv5zkmpe/DGV04EkEDnuFoaeGBsoj/QeIrki3D0?=
- =?us-ascii?Q?d7EVPLE/6YbyjriwS7Jfe5rRVQ5oFP06mRisLjO8pbGd0vM9lMoGMxUZ7Ivh?=
- =?us-ascii?Q?PSNRZa2oeE/RFDAbNynmObkJL+QVxB/4KK/8JI+kSt6o4UnhJkeRdJiDLIca?=
- =?us-ascii?Q?BYJFUXPXcPTc+he8S/LHsR3ZvR7XUzWhCKikW6P8tqktbSb33C3ER+bOfDcs?=
- =?us-ascii?Q?QD4D51XPGPbKS4XIvJJV0L/tu/9ON83cVmAMR8YzRfpeWfRXP9gAbEK/1CTz?=
- =?us-ascii?Q?Q1yH2brSNmLCUWmG9XsAJ/QIvUraQuYZPCH94M4ZMzONaFePhfZ/jbp0F2+h?=
- =?us-ascii?Q?IulJJcfite5cdbtY2GjUzXqxGGEOHVsj63JfhZlliYzE4YIgRS38iiRRyKm/?=
- =?us-ascii?Q?96bYhf9Kir30PtOCAoT5KUqHrpZKjzymwwVpfcKNtVzG07c5BwJV63lyTji2?=
- =?us-ascii?Q?lwhzIs2KHv+gBPHxxLySfT9nnl9uM+wtMnmLB2PLQxx41WyADLFTph2lRQup?=
- =?us-ascii?Q?rVIGPjKYgI7VlH24zLK6Z2VyIttSDhd43co/Hyrt+0ihCwVpmImSOEBdFoH2?=
- =?us-ascii?Q?hmtd+tKMXU2+k7xeFiS8fNu8hVVvKmsst/S+v4bEHawGIghy8iN1c95uYrjC?=
- =?us-ascii?Q?y79TET+mzuzsgE8QMKDqVthuZ4UWNnOP6A5IuHq2fZq783ljoelTwqksNBde?=
- =?us-ascii?Q?eYM4PLuLaJZ/8/4LlM/4nbweysQOwbIIqIGyWb5M8FfRDd05x3yyFxo63xaI?=
- =?us-ascii?Q?kDNbQdNSpYax0c6GtaPRGs4KXfcDr8en329+4CAeH6TzKszGl1StP09CHgit?=
- =?us-ascii?Q?mPsnfsVW1ZdCi3NU42s9oloeBLnBh46aTJnCfIT8o5E7w9siGEoKGeB+KXKM?=
- =?us-ascii?Q?uNa3eSl49JQ6VAL8Sq9fIuXkOfzss+f0rR16m5xy?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: d807ae1b-fcbd-4e87-d3a1-08dd73abdcc2
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2025 19:06:53.8186
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4Ng371Jxt93689gNNAKt4suhXNTb/SdeJFxBc0SK74JD3fcGyceqX16l3aPnsiNEWEFPU7qdM6OD8s8FowChgA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA4PR11MB9129
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 3/3] mm/mempolicy: Support memory hotplug in weighted
+ interleave
+To: Rakie Kim <rakie.kim@sk.com>, akpm@linux-foundation.org
+Cc: gourry@gourry.net, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org, joshua.hahnjy@gmail.com,
+ dan.j.williams@intel.com, ying.huang@linux.alibaba.com,
+ Jonathan.Cameron@huawei.com, osalvador@suse.de, kernel_team@skhynix.com,
+ honggyu.kim@sk.com, yunjeong.mun@sk.com
+References: <20250404074623.1179-1-rakie.kim@sk.com>
+ <20250404074623.1179-4-rakie.kim@sk.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250404074623.1179-4-rakie.kim@sk.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: wJZ1h-CqCCfTRpoqsjtKG6AVaUwLlvrj2-Fgcd9om50_1743799505
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Dave Jiang wrote:
-> smatch warnings:
-> drivers/cxl/core/features.c:441 cxlctl_validate_hw_command() warn: always true condition '(scope >= 0) => (0-u32max >= 0)'
+On 04.04.25 09:46, Rakie Kim wrote:
+> The weighted interleave policy distributes page allocations across multiple
+> NUMA nodes based on their performance weight, thereby improving memory
+> bandwidth utilization. The weight values for each node are configured
+> through sysfs.
 > 
-> Remove the check entirely as it has no effect. Expectation is both of these
-> operations should be allowed for all check levels. They are read only and
-> have no change effects.
+> Previously, sysfs entries for configuring weighted interleave were created
+> for all possible nodes (N_POSSIBLE) at initialization, including nodes that
+> might not have memory. However, not all nodes in N_POSSIBLE are usable at
+> runtime, as some may remain memoryless or offline.
+> This led to sysfs entries being created for unusable nodes, causing
+> potential misconfiguration issues.
 > 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202504041033.2HBboAZR-lkp@intel.com/
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> To address this issue, this patch modifies the sysfs creation logic to:
+> 1) Limit sysfs entries to nodes that are online and have memory, avoiding
+>     the creation of sysfs entries for nodes that cannot be used.
+> 2) Support memory hotplug by dynamically adding and removing sysfs entries
+>     based on whether a node transitions into or out of the N_MEMORY state.
+> 
+> Additionally, the patch ensures that sysfs attributes are properly managed
+> when nodes go offline, preventing stale or redundant entries from persisting
+> in the system.
+> 
+> By making these changes, the weighted interleave policy now manages its
+> sysfs entries more efficiently, ensuring that only relevant nodes are
+> considered for interleaving, and dynamically adapting to memory hotplug
+> events.
+> 
+> Signed-off-by: Rakie Kim <rakie.kim@sk.com>
+> Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
+> Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
+> ---
+>   mm/mempolicy.c | 109 ++++++++++++++++++++++++++++++++++++++-----------
+>   1 file changed, 86 insertions(+), 23 deletions(-)
+> 
+> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> index 73a9405ff352..f25c2c7f8fcf 100644
+> --- a/mm/mempolicy.c
+> +++ b/mm/mempolicy.c
+> @@ -113,6 +113,7 @@
+>   #include <asm/tlbflush.h>
+>   #include <asm/tlb.h>
+>   #include <linux/uaccess.h>
+> +#include <linux/memory.h>
+>   
+>   #include "internal.h"
+>   
+> @@ -3390,6 +3391,7 @@ struct iw_node_attr {
+>   
+>   struct sysfs_wi_group {
+>   	struct kobject wi_kobj;
+> +	struct mutex kobj_lock;
+>   	struct iw_node_attr *nattrs[];
+>   };
+>   
+> @@ -3439,13 +3441,24 @@ static ssize_t node_store(struct kobject *kobj, struct kobj_attribute *attr,
+>   
+>   static void sysfs_wi_node_delete(int nid)
+>   {
+> -	if (!wi_group->nattrs[nid])
+> +	struct iw_node_attr *attr;
+> +
+> +	if (nid < 0 || nid >= nr_node_ids)
+> +		return;
+> +
+> +	mutex_lock(&wi_group->kobj_lock);
+> +	attr = wi_group->nattrs[nid];
+> +	if (!attr) {
+> +		mutex_unlock(&wi_group->kobj_lock);
+>   		return;
+> +	}
+> +
+> +	wi_group->nattrs[nid] = NULL;
+> +	mutex_unlock(&wi_group->kobj_lock);
+>   
+> -	sysfs_remove_file(&wi_group->wi_kobj,
+> -			  &wi_group->nattrs[nid]->kobj_attr.attr);
+> -	kfree(wi_group->nattrs[nid]->kobj_attr.attr.name);
+> -	kfree(wi_group->nattrs[nid]);
+> +	sysfs_remove_file(&wi_group->wi_kobj, &attr->kobj_attr.attr);
+> +	kfree(attr->kobj_attr.attr.name);
+> +	kfree(attr);
+>   }
+>   
+>   static void sysfs_wi_release(struct kobject *wi_kobj)
+> @@ -3464,35 +3477,80 @@ static const struct kobj_type wi_ktype = {
+>   
+>   static int sysfs_wi_node_add(int nid)
+>   {
+> -	struct iw_node_attr *node_attr;
+> +	int ret = 0;
+>   	char *name;
+> +	struct iw_node_attr *new_attr = NULL;
+>   
+> -	node_attr = kzalloc(sizeof(*node_attr), GFP_KERNEL);
+> -	if (!node_attr)
+> +	if (nid < 0 || nid >= nr_node_ids) {
+> +		pr_err("Invalid node id: %d\n", nid);
+> +		return -EINVAL;
+> +	}
+> +
+> +	new_attr = kzalloc(sizeof(struct iw_node_attr), GFP_KERNEL);
+> +	if (!new_attr)
+>   		return -ENOMEM;
+>   
+>   	name = kasprintf(GFP_KERNEL, "node%d", nid);
+>   	if (!name) {
+> -		kfree(node_attr);
+> +		kfree(new_attr);
+>   		return -ENOMEM;
+>   	}
+>   
+> -	sysfs_attr_init(&node_attr->kobj_attr.attr);
+> -	node_attr->kobj_attr.attr.name = name;
+> -	node_attr->kobj_attr.attr.mode = 0644;
+> -	node_attr->kobj_attr.show = node_show;
+> -	node_attr->kobj_attr.store = node_store;
+> -	node_attr->nid = nid;
+> +	mutex_lock(&wi_group->kobj_lock);
+> +	if (wi_group->nattrs[nid]) {
+> +		mutex_unlock(&wi_group->kobj_lock);
+> +		pr_info("Node [%d] already exists\n", nid);
+> +		kfree(new_attr);
+> +		kfree(name);
+> +		return 0;
+> +	}
+> +	wi_group->nattrs[nid] = new_attr;
+>   
+> -	if (sysfs_create_file(&wi_group->wi_kobj, &node_attr->kobj_attr.attr)) {
+> -		kfree(node_attr->kobj_attr.attr.name);
+> -		kfree(node_attr);
+> -		pr_err("failed to add attribute to weighted_interleave\n");
+> -		return -ENOMEM;
+> +	sysfs_attr_init(&wi_group->nattrs[nid]->kobj_attr.attr);
+> +	wi_group->nattrs[nid]->kobj_attr.attr.name = name;
+> +	wi_group->nattrs[nid]->kobj_attr.attr.mode = 0644;
+> +	wi_group->nattrs[nid]->kobj_attr.show = node_show;
+> +	wi_group->nattrs[nid]->kobj_attr.store = node_store;
+> +	wi_group->nattrs[nid]->nid = nid;
+> +
+> +	ret = sysfs_create_file(&wi_group->wi_kobj,
+> +				&wi_group->nattrs[nid]->kobj_attr.attr);
+> +	if (ret) {
+> +		kfree(wi_group->nattrs[nid]->kobj_attr.attr.name);
+> +		kfree(wi_group->nattrs[nid]);
+> +		wi_group->nattrs[nid] = NULL;
+> +		pr_err("Failed to add attribute to weighted_interleave: %d\n", ret);
+>   	}
+> +	mutex_unlock(&wi_group->kobj_lock);
+>   
+> -	wi_group->nattrs[nid] = node_attr;
+> -	return 0;
+> +	return ret;
+> +}
+> +
+> +static int wi_node_notifier(struct notifier_block *nb,
+> +			       unsigned long action, void *data)
+> +{
+> +	int err;
+> +	struct memory_notify *arg = data;
+> +	int nid = arg->status_change_nid;
+> +
+> +	if (nid < 0)
+> +		goto notifier_end;
+> +
+> +	switch(action) {
+> +	case MEM_ONLINE:
 
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+MEM_ONLINE is too late, we cannot fail hotplug at that point.
 
-[snip]
+Would MEM_GOING_ONLINE / MEM_CANCEL_ONLINE be better?
+
+
+> +		err = sysfs_wi_node_add(nid);
+> +		if (err) {
+> +			pr_err("failed to add sysfs [node%d]\n", nid);
+> +			return NOTIFY_BAD;
+
+Note that NOTIFY_BAD includes NOTIFY_STOP_MASK. So you wouldn't call 
+other notifiers, but the overall memory onlining would succeed, which is 
+bad.
+
+If we don't care about the error (not prevent hotplug) we could only 
+pr_warn() and continue. Maybe this (unlikely) case is not a good reason 
+to stop memory from getting onlined. OTOH, it will barely ever trigger 
+in practice ...
+
+-- 
+Cheers,
+
+David / dhildenb
+
