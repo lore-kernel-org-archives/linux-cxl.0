@@ -1,302 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 419D615990C
-	for <linux-cxl@vger.kernel.org>; Fri,  4 Apr 2025 23:00:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 009CD18C03D
+	for <linux-cxl@vger.kernel.org>; Sat,  5 Apr 2025 02:35:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743807659; cv=none; b=WRX3abkbfZC7LdhZZzc/M5CRtJIBlUzsf85zZav7vICvZSOJ3vuNdQR88pwfrzY8QSafx31uPbdpGmmYmaHsc1yM7Nwwsv2tFi+dm8aN+j9/FWbBK9+iYX4DEV7bvSxv1UNmVTZTdjZCBsKltcCZIWbqoQJacHDOFvoRZLIrF28=
+	t=1743820527; cv=none; b=ZuBFpuVqMpEnakKskZFi4kaCGirek0ROzFAQdv4EkTzebBVfN/yJ7L9mp1M11SyX7Del9lrngxroZHrjJaO+G4d9mB6N+dCz849vq0+aix8x9GW59Pls5JX3xJFiBp+6fvTa9QUy4T7RZbwCcDYVZbsEJF3el53rjkji/6Jyy3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743807659; c=relaxed/simple;
-	bh=8UukJ7od9194w+AZpeJi+LadeVF6Wy1JvRcUC4clVmQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=t8YI9F6+ISgD/RRssD513Su/REmLrqnoN+8htQau7wrUbjTt37I5HYeELfJNVZ41zOWZCEHVLCCbxu8g0zi4PBxvF0QkaKXni57V+iVqcu3he+R0+7gqaNrPEv12VSASCE1pwvRob2CJtNG5KTk2o+7inAplh5vJNL02mZl8hCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A3D8C4CEDD;
-	Fri,  4 Apr 2025 23:00:58 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: dan.j.williams@intel.com,
-	dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	alison.schofield@intel.com,
-	ira.weiny@intel.com,
-	rrichter@amd.com,
-	ming.li@zohomail.com
-Subject: [PATCH 4/4] cxl/test: Add workaround for cxl_test for cxl_core calling mocked functions
-Date: Fri,  4 Apr 2025 15:57:36 -0700
-Message-ID: <20250404230049.3578835-5-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250404230049.3578835-1-dave.jiang@intel.com>
-References: <20250404230049.3578835-1-dave.jiang@intel.com>
+	s=arc-20240116; t=1743820527; c=relaxed/simple;
+	bh=jHD5+DAZY+3plQkqy8z/PJIC+7WjoIdTe9Vwt7TmY3I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jXE0ZN1Xtc53+maK1tQ1UiVBcnzeDlFKLyEU3zvX14aQmX4f9Hw6T/dWBnA2zs0lz8CuJydpgxucEYzvTzInb8wgMNLat4yYWsmVo6BV/5PTWo7snjGRuIB6o7TvGDvbqWfn4pbssp3a2HPReRMok1eESwiU2uclM0iPb2sWIVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=sq1qKmN5; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="sq1qKmN5"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6e8fd49b85eso41272026d6.0
+        for <linux-cxl@vger.kernel.org>; Fri, 04 Apr 2025 19:35:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1743820524; x=1744425324; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7YeznBtZ8u4TGia1mzGvTnb61Iecrwihl8v/8aHcOYI=;
+        b=sq1qKmN5YOJPHqZ4jvNgl8BfKoQQSxZLhrKLu5WA3xx8RThvY+n14Gq8mAcJ8NcsY2
+         Cswj4edhlJDxRTftQHpi7MEDlQ8VrVl7688PDgAdKHmm+G9p5r6w7rQ975HslkYbtuxY
+         lVL+7i6Z3qxUS0v9/zhGrfP9hyQGHplLAKsG54phQrRjgyG1BWOskMuawTmZteNFe9Rz
+         9smHsdeUj3zw3QXKs1CqgNFEY67CUFjDwpj6v36dwFO30zROvGnnWb9yx0tmq+7bFEsz
+         Vjs/IQHfl494/Nl+LeD3zOoF8SlJ2KhbJAxu1h+XFVsHT0yWsvvoVAugoSPAYT4gEQ0i
+         eThg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743820524; x=1744425324;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7YeznBtZ8u4TGia1mzGvTnb61Iecrwihl8v/8aHcOYI=;
+        b=jSeFkNmIPoJM0n3SixdGzU7W9Fw8k5dEbzOrOrHZj33WWu8RlUG3UKEyjQugLVkcdD
+         FJUyH8UsOwI8HEokf10Bv/hnKJHO44nJD/5U6FNgGFh8B7VjVgWHiU/JRTiXMZM5KwWj
+         y5QhiZQYAyWMVjJXBZBcxIg4I8j8dtwB/GAyihcvDtGQb/69TVmhcS1QXwCvmfoIYOIv
+         yOpxXvY8DsK36NY+ZYZRRA7pZm+Hz3TTlDsLdqYs0CTCj+2RI9c76RiqApQX6H4PsKRB
+         xz7ptNiASaBjPQ/DWfm3f9XYn0F4e9GJxq9QwimfX8T75lLwjDv8fEzJB02MNK+isy0Q
+         LoKw==
+X-Forwarded-Encrypted: i=1; AJvYcCVWcErbs8eqAGM4I4StsI5p1O7ivTei9AJllso9JqJVMr3Kwdzn0b5YvgowQFbkY8Sya8D/WmHYUoI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPHp2ONJK41ZLy89FE2tTDAIDpNH8tHeBiHKBBXa/RssgrkbAn
+	nm/uClS0VQ24xW9TW+ZjsI1sBsyep0KOKX35+VUqSWzNAncCxbAk6PBsuJExpUU=
+X-Gm-Gg: ASbGnctiqfl4dUb0y86IpybZif9VguLp+aL5cwMJnUkco1HvKjufwbsB3sCpta1m/4G
+	eaafTw37La4XWNSQsMOIkwso9mNLq2Y3oIct4PfXj5cP/Z9XsgExfMGvkZxgdLByYVj+gIGAAix
+	3T5xZkz9Ay0JTwOqUFShiQBtCfMnV/hwFsfwqz3c7I70MzjjIONOOk4TJgPNzYkjHmY+RE9TovW
+	JBb5T7SEZcA5F57+ekmR/a8bcJavjbtWby/HueIIQRuC47DHp8S4oAlOtvdk6YA3H9SGyQQWYsX
+	wE7iVxL1Ido5MZmFUjqAK4/zjyLM6w67YQUocS7D
+X-Google-Smtp-Source: AGHT+IFGBVP3BvIBJ9Dexuubh9wtOH03Pga1EqEaf+7mTsjbwZCmarvITX5eoWkuNhU+NhV/tpF3DA==
+X-Received: by 2002:a05:6214:21a6:b0:6ea:d388:dc09 with SMTP id 6a1803df08f44-6f00de70533mr79533606d6.8.1743820523802;
+        Fri, 04 Apr 2025 19:35:23 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F ([2620:10d:c091:400::5:ba7b])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ef0efc05d3sm28642776d6.9.2025.04.04.19.35.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Apr 2025 19:35:22 -0700 (PDT)
+Date: Fri, 4 Apr 2025 22:35:20 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: [PATCH] cxl region: recalculate interleave pos during region probe
+Message-ID: <Z_CW6AIE1zoA80qB@gourry-fedora-PF4VCD3F>
+References: <20250218132356.1809075-1-rrichter@amd.com>
+ <20250218132356.1809075-5-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250218132356.1809075-5-rrichter@amd.com>
 
-When cxl_core calls a cxl_core exported function and that function is
-mocked by cxl_test, the call chain causes a circular dependency issue. Dan
-provided a workaround to avoid this issue. Apply the method to changes from
-the late host bridge uport mapping update changes in order to enable
-cxl-test.
+There are at least 3 bugs at this point in the patch series.
 
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+1. cxl_calc_interleave_pos should be using cxled->spa_range
+2. cxl_calc_interleave_pos should be returning ctx->pos
+3. cxl_region_sort_targets still needs to call cxl_calc_interleave_pos
+
+The auto decoder probe proess overwrites the endpoint position
+temporarily to record its temporary location in the region target list.
+This patch restores the pos recalculation during the sort target process
+so that decoder probe order doesn't affect region probe.
+
+Signed-off-by: Gregory Price <gourry@gourry.net>
 ---
- drivers/cxl/core/hdm.c        | 51 +++++++++++++++++++++++++++++------
- drivers/cxl/cxl.h             | 16 +++++++++++
- tools/testing/cxl/Kbuild      |  3 ---
- tools/testing/cxl/test/mock.c | 34 +++++++++++++++--------
- 4 files changed, 82 insertions(+), 22 deletions(-)
+ drivers/cxl/core/region.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index 70cae4ebf8a4..ed6bdbd6b452 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -39,14 +39,19 @@ static int add_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
- 	return 0;
- }
- 
--/*
-+/**
-+ * __devm_cxl_add_passthrough_decoder - Add passthrough decoder
-+ * @port: The cxl_port context
-+ *
-+ * Return 0 on success or errno on failure.
-+ *
-  * Per the CXL specification (8.2.5.12 CXL HDM Decoder Capability Structure)
-  * single ported host-bridges need not publish a decoder capability when a
-  * passthrough decode can be assumed, i.e. all transactions that the uport sees
-  * are claimed and passed to the single dport. Disable the range until the first
-  * CXL region is enumerated / activated.
-  */
--int devm_cxl_add_passthrough_decoder(struct cxl_port *port)
-+int __devm_cxl_add_passthrough_decoder(struct cxl_port *port)
- {
- 	struct cxl_switch_decoder *cxlsd;
- 	struct cxl_dport *dport = NULL;
-@@ -73,6 +78,16 @@ int devm_cxl_add_passthrough_decoder(struct cxl_port *port)
- 
- 	return add_hdm_decoder(port, &cxlsd->cxld, single_port_map);
- }
-+EXPORT_SYMBOL_NS_GPL(__devm_cxl_add_passthrough_decoder, "CXL");
-+
-+cxl_add_pt_decoder_fn _devm_cxl_add_passthrough_decoder =
-+	__devm_cxl_add_passthrough_decoder;
-+EXPORT_SYMBOL_NS_GPL(_devm_cxl_add_passthrough_decoder, "CXL");
-+
-+int devm_cxl_add_passthrough_decoder(struct cxl_port *port)
-+{
-+	return _devm_cxl_add_passthrough_decoder(port);
-+}
- EXPORT_SYMBOL_NS_GPL(devm_cxl_add_passthrough_decoder, "CXL");
- 
- static void parse_hdm_decoder_caps(struct cxl_hdm *cxlhdm)
-@@ -139,12 +154,12 @@ static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
- }
- 
- /**
-- * devm_cxl_setup_hdm - map HDM decoder component registers
-+ * __devm_cxl_setup_hdm - map HDM decoder component registers
-  * @port: cxl_port to map
-  * @info: cached DVSEC range register info
-  */
--struct cxl_hdm *devm_cxl_setup_hdm(struct cxl_port *port,
--				   struct cxl_endpoint_dvsec_info *info)
-+struct cxl_hdm *__devm_cxl_setup_hdm(struct cxl_port *port,
-+				     struct cxl_endpoint_dvsec_info *info)
- {
- 	struct cxl_register_map *reg_map = &port->reg_map;
- 	struct device *dev = &port->dev;
-@@ -199,6 +214,16 @@ struct cxl_hdm *devm_cxl_setup_hdm(struct cxl_port *port,
- 
- 	return cxlhdm;
- }
-+EXPORT_SYMBOL_NS_GPL(__devm_cxl_setup_hdm, "CXL");
-+
-+cxl_setup_hdm_fn _devm_cxl_setup_hdm = __devm_cxl_setup_hdm;
-+EXPORT_SYMBOL_NS_GPL(_devm_cxl_setup_hdm, "CXL");
-+
-+struct cxl_hdm *devm_cxl_setup_hdm(struct cxl_port *port,
-+				   struct cxl_endpoint_dvsec_info *info)
-+{
-+	return _devm_cxl_setup_hdm(port, info);
-+}
- EXPORT_SYMBOL_NS_GPL(devm_cxl_setup_hdm, "CXL");
- 
- static void __cxl_dpa_debug(struct seq_file *file, struct resource *r, int depth)
-@@ -1150,12 +1175,12 @@ static void cxl_settle_decoders(struct cxl_hdm *cxlhdm)
- }
- 
- /**
-- * devm_cxl_enumerate_decoders - add decoder objects per HDM register set
-+ * __devm_cxl_enumerate_decoders - add decoder objects per HDM register set
-  * @cxlhdm: Structure to populate with HDM capabilities
-  * @info: cached DVSEC range register info
-  */
--int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
--				struct cxl_endpoint_dvsec_info *info)
-+int __devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
-+				  struct cxl_endpoint_dvsec_info *info)
- {
- 	void __iomem *hdm = cxlhdm->regs.hdm_decoder;
- 	struct cxl_port *port = cxlhdm->port;
-@@ -1212,4 +1237,14 @@ int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
- 
- 	return 0;
- }
-+EXPORT_SYMBOL_NS_GPL(__devm_cxl_enumerate_decoders, "CXL");
-+
-+cxl_enum_decoders_fn _devm_cxl_enumerate_decoders = __devm_cxl_enumerate_decoders;
-+EXPORT_SYMBOL_NS_GPL(_devm_cxl_enumerate_decoders, "CXL");
-+
-+int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
-+				struct cxl_endpoint_dvsec_info *info)
-+{
-+	return _devm_cxl_enumerate_decoders(cxlhdm, info);
-+}
- EXPORT_SYMBOL_NS_GPL(devm_cxl_enumerate_decoders, "CXL");
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index b27e9d3306fe..ffcd6de18e20 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -911,6 +911,22 @@ bool dev_is_cxl_root_child(struct device *dev);
- int cxl_port_setup_regs(struct cxl_port *port,
- 			resource_size_t component_reg_phys);
- 
-+typedef struct cxl_hdm *(*cxl_setup_hdm_fn)(struct cxl_port *port,
-+					    struct cxl_endpoint_dvsec_info *info);
-+extern cxl_setup_hdm_fn _devm_cxl_setup_hdm;
-+struct cxl_hdm *__devm_cxl_setup_hdm(struct cxl_port *port,
-+				     struct cxl_endpoint_dvsec_info *info);
-+
-+typedef int (*cxl_enum_decoders_fn)(struct cxl_hdm *cxlhdm,
-+				    struct cxl_endpoint_dvsec_info *info);
-+extern cxl_enum_decoders_fn _devm_cxl_enumerate_decoders;
-+int __devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
-+				  struct cxl_endpoint_dvsec_info *info);
-+
-+typedef int (*cxl_add_pt_decoder_fn)(struct cxl_port *port);
-+extern cxl_add_pt_decoder_fn _devm_cxl_add_passthrough_decoder;
-+int __devm_cxl_add_passthrough_decoder(struct cxl_port *port);
-+
- /*
-  * Unit test builds overrides this to __weak, find the 'strong' version
-  * of these symbols in tools/testing/cxl/.
-diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-index 387f3df8b988..34ea6e6f773b 100644
---- a/tools/testing/cxl/Kbuild
-+++ b/tools/testing/cxl/Kbuild
-@@ -5,9 +5,6 @@ ldflags-y += --wrap=acpi_evaluate_integer
- ldflags-y += --wrap=acpi_pci_find_root
- ldflags-y += --wrap=nvdimm_bus_register
- ldflags-y += --wrap=devm_cxl_port_enumerate_dports
--ldflags-y += --wrap=devm_cxl_setup_hdm
--ldflags-y += --wrap=devm_cxl_add_passthrough_decoder
--ldflags-y += --wrap=devm_cxl_enumerate_decoders
- ldflags-y += --wrap=cxl_await_media_ready
- ldflags-y += --wrap=cxl_hdm_decode_init
- ldflags-y += --wrap=cxl_dvsec_rr_decode
-diff --git a/tools/testing/cxl/test/mock.c b/tools/testing/cxl/test/mock.c
-index af2594e4f35d..f3d97652b9ee 100644
---- a/tools/testing/cxl/test/mock.c
-+++ b/tools/testing/cxl/test/mock.c
-@@ -13,9 +13,21 @@
- 
- static LIST_HEAD(mock);
- 
-+static struct cxl_hdm *
-+redirect_devm_cxl_setup_hdm(struct cxl_port *port,
-+			    struct cxl_endpoint_dvsec_info *info);
-+static int
-+redirect_devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
-+				     struct cxl_endpoint_dvsec_info *info);
-+static int redirect_devm_cxl_add_passthrough_decoder(struct cxl_port *port);
-+
- void register_cxl_mock_ops(struct cxl_mock_ops *ops)
- {
- 	list_add_rcu(&ops->list, &mock);
-+	_devm_cxl_setup_hdm = redirect_devm_cxl_setup_hdm;
-+	_devm_cxl_enumerate_decoders = redirect_devm_cxl_enumerate_decoders;
-+	_devm_cxl_add_passthrough_decoder =
-+		redirect_devm_cxl_add_passthrough_decoder;
- }
- EXPORT_SYMBOL_GPL(register_cxl_mock_ops);
- 
-@@ -23,6 +35,9 @@ DEFINE_STATIC_SRCU(cxl_mock_srcu);
- 
- void unregister_cxl_mock_ops(struct cxl_mock_ops *ops)
- {
-+	_devm_cxl_setup_hdm = __devm_cxl_setup_hdm;
-+	_devm_cxl_enumerate_decoders = __devm_cxl_enumerate_decoders;
-+	_devm_cxl_add_passthrough_decoder = __devm_cxl_add_passthrough_decoder;
- 	list_del_rcu(&ops->list);
- 	synchronize_srcu(&cxl_mock_srcu);
- }
-@@ -131,8 +146,8 @@ __wrap_nvdimm_bus_register(struct device *dev,
- }
- EXPORT_SYMBOL_GPL(__wrap_nvdimm_bus_register);
- 
--struct cxl_hdm *__wrap_devm_cxl_setup_hdm(struct cxl_port *port,
--					  struct cxl_endpoint_dvsec_info *info)
-+struct cxl_hdm *redirect_devm_cxl_setup_hdm(struct cxl_port *port,
-+					    struct cxl_endpoint_dvsec_info *info)
- 
- {
- 	int index;
-@@ -142,14 +157,13 @@ struct cxl_hdm *__wrap_devm_cxl_setup_hdm(struct cxl_port *port,
- 	if (ops && ops->is_mock_port(port->uport_dev))
- 		cxlhdm = ops->devm_cxl_setup_hdm(port, info);
- 	else
--		cxlhdm = devm_cxl_setup_hdm(port, info);
-+		cxlhdm = __devm_cxl_setup_hdm(port, info);
- 	put_cxl_mock_ops(index);
- 
- 	return cxlhdm;
- }
--EXPORT_SYMBOL_NS_GPL(__wrap_devm_cxl_setup_hdm, "CXL");
- 
--int __wrap_devm_cxl_add_passthrough_decoder(struct cxl_port *port)
-+int redirect_devm_cxl_add_passthrough_decoder(struct cxl_port *port)
- {
- 	int rc, index;
- 	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
-@@ -157,15 +171,14 @@ int __wrap_devm_cxl_add_passthrough_decoder(struct cxl_port *port)
- 	if (ops && ops->is_mock_port(port->uport_dev))
- 		rc = ops->devm_cxl_add_passthrough_decoder(port);
- 	else
--		rc = devm_cxl_add_passthrough_decoder(port);
-+		rc = __devm_cxl_add_passthrough_decoder(port);
- 	put_cxl_mock_ops(index);
- 
- 	return rc;
- }
--EXPORT_SYMBOL_NS_GPL(__wrap_devm_cxl_add_passthrough_decoder, "CXL");
- 
--int __wrap_devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
--				       struct cxl_endpoint_dvsec_info *info)
-+int redirect_devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
-+					 struct cxl_endpoint_dvsec_info *info)
- {
- 	int rc, index;
- 	struct cxl_port *port = cxlhdm->port;
-@@ -174,12 +187,11 @@ int __wrap_devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
- 	if (ops && ops->is_mock_port(port->uport_dev))
- 		rc = ops->devm_cxl_enumerate_decoders(cxlhdm, info);
- 	else
--		rc = devm_cxl_enumerate_decoders(cxlhdm, info);
-+		rc = __devm_cxl_enumerate_decoders(cxlhdm, info);
- 	put_cxl_mock_ops(index);
- 
- 	return rc;
- }
--EXPORT_SYMBOL_NS_GPL(__wrap_devm_cxl_enumerate_decoders, "CXL");
- 
- int __wrap_devm_cxl_port_enumerate_dports(struct cxl_port *port)
- {
--- 
-2.49.0
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 934dcb2daa15..5c9e2b747731 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -1879,7 +1879,7 @@ static int cxl_calc_interleave_pos(struct cxl_endpoint_decoder *cxled)
+ 	int pos = 0;
 
+ 	ctx = (struct cxl_interleave_context) {
+-		.hpa_range = &cxled->cxld.hpa_range,
++		.hpa_range = &cxled->spa_range,
+ 	};
+
+ 	for (iter = cxled_to_port(cxled); pos >= 0 && iter;
+@@ -1892,7 +1892,7 @@ static int cxl_calc_interleave_pos(struct cxl_endpoint_decoder *cxled)
+ 		dev_name(&port->dev), ctx.hpa_range->start, ctx.hpa_range->end,
+ 		ctx.pos);
+
+-	return pos;
++	return ctx.pos;
+ }
+
+ static int cxl_region_sort_targets(struct cxl_region *cxlr)
+@@ -1903,6 +1903,7 @@ static int cxl_region_sort_targets(struct cxl_region *cxlr)
+ 	for (i = 0; i < p->nr_targets; i++) {
+ 		struct cxl_endpoint_decoder *cxled = p->targets[i];
+
++		cxled->pos = cxl_calc_interleave_pos(cxled);
+ 		/*
+ 		 * Record that sorting failed, but still continue to calc
+ 		 * cxled->pos so that follow-on code paths can reliably
+--
+2.47.1
