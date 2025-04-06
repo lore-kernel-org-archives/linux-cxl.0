@@ -1,192 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from toucan.tulip.relay.mailchannels.net (toucan.tulip.relay.mailchannels.net [23.83.218.254])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38CC21A5B9C
-	for <linux-cxl@vger.kernel.org>; Sun,  6 Apr 2025 11:27:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743938858; cv=none; b=On0RfH/NP9thIoQ78smYcyfD0pMTzBT8hMkZXQcanwNjI0MEPrc8OC/89+etjpSP04PH6cyP+adnpbjyPbyBKS/pYi3XvFr8wborfx83x/NVptzwDlpcU+SpmwIiahuq5rfklsasv6Y8qh2bEKJpP7wdtBzZheAoADZd8x3Eupg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743938858; c=relaxed/simple;
-	bh=NLz/R+Ri3KLobR0D0P8C7mYBFAl8obxLMWUqWAWzB7E=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jzFItHNkcDtVWh7ahsNH7aRza5izwby2jBY4ELo7ffBT6nuEm9CefKDHfudIF+0kPAK3lrQtazPwPF0HnBH7pPy6mGFqA+taPj3DhN6+7XVSzUhILXVnRygCu1gxfFDRias4S6im57I7ypE1u3nZJ8xryEnpIHUZUGlaYxR69Fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iPptt1zt; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E04C2190692;
+	Sun,  6 Apr 2025 19:14:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.254
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743966849; cv=pass; b=dAm4kMB9Pu6JfhALQ0VKpalVUC2T6hAUVEOmIZOMUsSOUOru6SS+1DFl0MNtEt6tZn2BuFccMPA5cp1oBHIcmFOaXsi/AyR1ZucJQkkTjPY2rG0CVh45cVIMFjVunDaWHLBu3MAkygnn5gI/HZmwdjEqo0pYMzwcvU08v2NM45o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743966849; c=relaxed/simple;
+	bh=Y2GbXLOwe5a/rqQp/6gOCQwxx+OAJlbXTpNlktEBJHo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QTh3phIg1A6hhxiBRkIKlU/eqk8XN1MNxQcI8M3YfqLhkCw//ZUJ8RKs9/+8kj0AtleJodZrRcdrQARBOj04DDmUs+2eyyG+zsZEZQQQOX9SVMyF0bcp6X4C13DBZmyGJrBlNHiWKdDZT1PSDs7zEbpp5zXrr/vjpVpM1bU7zfQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=SIgatG//; arc=pass smtp.client-ip=23.83.218.254
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iPptt1zt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743938857; x=1775474857;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=NLz/R+Ri3KLobR0D0P8C7mYBFAl8obxLMWUqWAWzB7E=;
-  b=iPptt1ztFFeac0eoVLrEzyrlArNzHmTVEOaaXODtD84UPeJnAHrtjZCJ
-   Wrf1x4xY+Xpyz3IJKEhG5MZBW5TUCXbLLiqsmDIvjk2hGXFtpEwO/eDBq
-   qpIDn4G9/N6dmls0Q5t01vvmOF05bdVUbyl7rU6tpIm1tBOWP9ApHIep4
-   imQkTRM4sjJ76vHTPvBGOZtfpdrq9TViv0j0c0Q8Daw+p9cKtGxIRQX7n
-   6hbTwuPRzeekzykQbyv6EPNlyyc9Ep/9bdcIxi0NFsoV1204Mu7USMwDP
-   D32sxi9ztksFC8xbqRSBRgqcV+S4ZbdQ9fLvmfK+qIv+gACJrA50kKo8j
-   A==;
-X-CSE-ConnectionGUID: hlJuQS3AQWavZFaT0D3pxA==
-X-CSE-MsgGUID: mXecmQygRb+McxbD+I2MAQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11395"; a="45465571"
-X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
-   d="scan'208";a="45465571"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2025 04:27:36 -0700
-X-CSE-ConnectionGUID: kCvWjB88SgCScE1bOIxrYA==
-X-CSE-MsgGUID: SOmoSIIdTyqriJWN01WhhQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
-   d="scan'208";a="128196061"
-Received: from unknown (HELO ixc04.bj.intel.com) ([10.238.153.130])
-  by fmviesa010.fm.intel.com with ESMTP; 06 Apr 2025 04:27:34 -0700
-From: Huaisheng Ye <huaisheng.ye@intel.com>
-To: Jonathan.Cameron@huawei.com,
-	dan.j.williams@intel.com,
-	dave.jiang@intel.com
-Cc: pei.p.jia@intel.com,
-	linux-cxl@vger.kernel.org,
-	Huaisheng Ye <huaisheng.ye@intel.com>
-Subject: [RFC PATCH] cxl/core: reenable Mem_Enable bit of DVSEC control when RR decodes outside platform ranges
-Date: Sun,  6 Apr 2025 19:27:52 +0800
-Message-Id: <20250406112752.1261855-1-huaisheng.ye@intel.com>
-X-Mailer: git-send-email 2.39.3
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="SIgatG//"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 0BCC74E4835;
+	Sun,  6 Apr 2025 18:38:09 +0000 (UTC)
+Received: from pdx1-sub0-mail-a217.dreamhost.com (trex-6.trex.outbound.svc.cluster.local [100.102.53.226])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 7AF6A4E2EF0;
+	Sun,  6 Apr 2025 18:38:08 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1743964688; a=rsa-sha256;
+	cv=none;
+	b=Jk1xitNFDhVgluAjw9ZFa7KfE/Q1jedhlCB/K2VXp6lBfqm3dBnMb1kUEkJi6Gdt13OWnm
+	ewMBg9Qd2lWvfu48noEwKacqbyFFaoadIbQhTQvuvmnu/xhcNHN4kHwydEi5luaZ1wem5Q
+	5wscbzxEKkFEao0QPf2XV+HFrL77nrT3msoCgnRb1a0/09b9aJR5LPvrB2VhFoodE5I8KA
+	YocCW77bYJaSL9ndoU+pGhLJPYPz4in/756OpJI1KB0OekimCtmyD8H2XbE2E6v9GmI36q
+	IeK3KrbwsQtWIQw7KAgkluquM245BJZLP17+A/XgBJ3+ZLkeRFqkWo7G5N06XA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1743964688;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=ORCy7vWxAqIbjJeErXKRRHh0IsWN6J/Vj6qq04Os5xo=;
+	b=7U7/2JRciV9iEu8iNHe3oKWAssCkYHKHyt+/mOGQojcZBUxY2KXy/GqYinQGkmh1WmgkKT
+	yL7cQMDAdxbnKixaalcrnW1/zVjeD99fZSPisHQlt25PLGMLwmysyQJS0In0gtwmsj2sVy
+	Vc0nGs+hUriGJoO6eQubby16Ua+L0Wi/JDTmSK2PCoKy2bGJsw3s7ZM8Uvuot/xUL3uXuT
+	DxrNXxh9OgZCQGbLcWbGZbAHv0OYZrsDQ3qBN14pnd8GNWcfb368L7YTmuSGMkglBFu18T
+	3giuQxnZssJYmykoX1J/UoejXLugqIQvFag8xCufZzaTCjn7tw6Yx1Rn9B6SlA==
+ARC-Authentication-Results: i=1;
+	rspamd-7dd6dcd7db-2wrq9;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Desert-Attack: 31d28f8211fe24be_1743964688791_3570648381
+X-MC-Loop-Signature: 1743964688791:2003078220
+X-MC-Ingress-Time: 1743964688791
+Received: from pdx1-sub0-mail-a217.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.102.53.226 (trex/7.0.3);
+	Sun, 06 Apr 2025 18:38:08 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a217.dreamhost.com (Postfix) with ESMTPSA id 4ZW1LR6F9nz8t;
+	Sun,  6 Apr 2025 11:38:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1743964688;
+	bh=ORCy7vWxAqIbjJeErXKRRHh0IsWN6J/Vj6qq04Os5xo=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=SIgatG//bcSoHEk4WuW+ZcZJlyK6jNd18V7y8uNPcmLMpR1qufWDWYHg17YfJHSS+
+	 oUGEDYwAQZK+hvdCcfJy92ewjl+rxaBUKZrY6bjKBYT7vujvhGdRayEOL5NI3sstRK
+	 3FBXORtlh9SqesyHIaZJ9e72jM36N2Qbe/UO66F4RRBe6VlcoAE+730X8IlekdUaKe
+	 v6Mj5LCf6+XWP5KYQKH46GdwLv9keil0aTTQSJZUhvjwkuaijhZiTkQDT0LQoEwc7P
+	 o9zvrT+X7n0T6MdJXS8YIch+twsmWyojOYojR8To4v7EsSAYbyDMe8hbTGbyXHV/yr
+	 qFAghiLHTqj5g==
+Date: Sun, 6 Apr 2025 11:38:04 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Gregory Price <gourry@gourry.net>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@meta.com, dan.j.williams@intel.com,
+	vishal.l.verma@intel.com, dave.jiang@intel.com,
+	jonathan.cameron@huawei.com, alison.schofield@intel.com,
+	ira.weiny@intel.com
+Subject: Re: [PATCH v2] cxl: core/region - ignore interleave granularity when
+ ways=1
+Message-ID: <20250406183804.wvrnuahoszefhgj5@offworld>
+References: <20250402232552.999634-1-gourry@gourry.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250402232552.999634-1-gourry@gourry.net>
+User-Agent: NeoMutt/20220429
 
-In some scenarios, the probe of endpoint ports would fail because of range
-register (RR) decodes outside platform defined CXL ranges.
+On Wed, 02 Apr 2025, Gregory Price wrote:
 
-  [kernel debug message]
-  cxl_hdm_decode_init:447: cxl_pci 0000:10:00.0: DVSEC Range0 denied by
-  platform
-  cxl_pci 0000:10:00.0: Range register decodes outside platform defined CXL
-  ranges.
-  cxl_bus_probe:2073: cxl_port endpoint3: probe: -6
-  call_driver_probe:590: cxl_port endpoint3: probe with driver cxl_port
-  rejects match -6
+>When validating decoder IW/IG when setting up regions, the granularity
+>is irrelevant when iw=1 - all accesses will always route to the only
+>target anyway - so all ig values are "correct". Loosen the requirement
+>that `ig = (parent_iw * parent_ig)` when iw=1.
+>
+>On some Zen5 platforms, the platform BIOS specifies a 256-byte
+>interleave granularity window for host bridges when there is only
+>one target downstream.  This leads to Linux rejecting the configuration
+>of a region with a x2 root with two x1 hostbridges.
+>
+>Decoder Programming:
+>   root - iw:2 ig:256
+>   hb1  - iw:1 ig:256  (Linux expects 512)
+>   hb2  - iw:1 ig:256  (Linux expects 512)
+>   ep1  - iw:2 ig:256
+>   ep2  - iw:2 ig:256
+>
+>This change allows all decoders downstream of a passthrough decoder to
+>also be configured as passthrough (iw:1 ig:X), but still disallows
+>downstream decoders from applying subsequent interleaves.
+>
+>e.g. in the above example if there was another decoder south of hb1
+>attempting to interleave 2 endpoints - Linux would enforce hb1.ig=512
+>because the southern decoder would have iw:2 and require ig=pig*piw.
+>
+>Signed-off-by: Gregory Price <gourry@gourry.net>
+>Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-This defect could be found with Qemu CXL branch for a long while with a
-specified probability, even with the latest branch cxl-2025-03-20.
-
-The root cause of this defect comes from that, bit CXL_DVSEC_MEM_ENABLE of
-DVSEC control has been set but in cxl_hdm_decode_init
-CXL_HDM_DECODER_ENABLE has NOT been set and also endpoint's dvsec_range is
-not covered by root decoder's hpa_range.
-
-When encountering similar problems of the firmware, the patch could be
-effective for solving.
-Instead of Return error when RR decodes outside platform cxl ranges,
-driver disable Mem_Enable bit of DVSEC control then take it as the way of
-no setting info->mem_enabled.
-
-Signed-off-by: Huaisheng Ye <huaisheng.ye@intel.com>
----
- drivers/cxl/core/hdm.c |  2 +-
- drivers/cxl/core/pci.c | 35 +++++++++++++++++++++++++----------
- drivers/cxl/cxlmem.h   |  2 ++
- 3 files changed, 28 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index 50e6a45b30ba..b776fb848f42 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -80,7 +80,7 @@ static void parse_hdm_decoder_caps(struct cxl_hdm *cxlhdm)
- 	u32 hdm_cap;
- 
- 	hdm_cap = readl(cxlhdm->regs.hdm_decoder + CXL_HDM_DECODER_CAP_OFFSET);
--	cxlhdm->decoder_count = cxl_hdm_decoder_count(hdm_cap);
-+	cxlhdm->decoder_count_cap = cxlhdm->decoder_count = cxl_hdm_decoder_count(hdm_cap);
- 	cxlhdm->target_count =
- 		FIELD_GET(CXL_HDM_DECODER_TARGET_COUNT_MASK, hdm_cap);
- 	if (FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_11_8, hdm_cap))
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index 013b869b66cb..5452bb285140 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -403,7 +403,7 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
- 	struct cxl_port *port = cxlhdm->port;
- 	struct device *dev = cxlds->dev;
- 	struct cxl_port *root;
--	int i, rc, allowed;
-+	int i, rc, allowed = 0;
- 	u32 global_ctrl = 0;
- 
- 	if (hdm)
-@@ -426,15 +426,7 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
- 		return -ENODEV;
- 	}
- 
--	if (!info->mem_enabled) {
--		rc = devm_cxl_enable_hdm(&port->dev, cxlhdm);
--		if (rc)
--			return rc;
--
--		return devm_cxl_enable_mem(&port->dev, cxlds);
--	}
--
--	for (i = 0, allowed = 0; i < info->ranges; i++) {
-+	for (i = 0; i < info->ranges; i++) {
- 		struct device *cxld_dev;
- 
- 		cxld_dev = device_find_child(&root->dev, &info->dvsec_range[i],
-@@ -448,6 +440,29 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
- 		allowed++;
- 	}
- 
-+	if (info->mem_enabled && !allowed) {
-+		dev_warn(dev, "RR decodes outside ranges, have a try by disabling Mem_Enable bit.\n");
-+
-+		/*
-+		 * Instead of Return error when RR decodes outside platform ranges, reenable
-+		 * Mem_Enable bit of DVSEC control for a try.
-+		 */
-+		rc = cxl_set_mem_enable(cxlds, 0);
-+		if (rc)
-+			return rc;
-+
-+		info->mem_enabled = 0;
-+		cxlhdm->decoder_count = cxlhdm->decoder_count_cap;
-+	}
-+
-+	if (!info->mem_enabled) {
-+		rc = devm_cxl_enable_hdm(&port->dev, cxlhdm);
-+		if (rc)
-+			return rc;
-+
-+		return devm_cxl_enable_mem(&port->dev, cxlds);
-+	}
-+
- 	if (!allowed) {
- 		dev_err(dev, "Range register decodes outside platform defined CXL ranges.\n");
- 		return -ENXIO;
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 2a25d1957ddb..60b538f8b677 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -855,6 +855,7 @@ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd);
-  * struct cxl_hdm - HDM Decoder registers and cached / decoded capabilities
-  * @regs: mapped registers, see devm_cxl_setup_hdm()
-  * @decoder_count: number of decoders for this port
-+ * @decoder_count_cap: number of decoders from HDM Decoder Capability
-  * @target_count: for switch decoders, max downstream port targets
-  * @interleave_mask: interleave granularity capability, see check_interleave_cap()
-  * @iw_cap_mask: bitmask of supported interleave ways, see check_interleave_cap()
-@@ -863,6 +864,7 @@ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd);
- struct cxl_hdm {
- 	struct cxl_component_regs regs;
- 	unsigned int decoder_count;
-+	unsigned int decoder_count_cap;
- 	unsigned int target_count;
- 	unsigned int interleave_mask;
- 	unsigned long iw_cap_mask;
--- 
-2.39.3
-
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
