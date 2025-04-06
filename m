@@ -1,297 +1,192 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C4571474CC
-	for <linux-cxl@vger.kernel.org>; Sat,  5 Apr 2025 17:34:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38CC21A5B9C
+	for <linux-cxl@vger.kernel.org>; Sun,  6 Apr 2025 11:27:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743874478; cv=none; b=tVBKaCnx58mEIfsutqw5Wk5XDfdCoaPU4Hx3gJrpoD0+aOs+p7vRPCDKWQGxBGJn5fhWCPCnI0myrOsJgzJUjZXN74+oAse/U8beWmT0lvfqzjAiWauDhAVT2mGKG+fDZyMyPMZ8CKl1hVAjmColrF6ODJCTTZWpSSXDMd4RA+c=
+	t=1743938858; cv=none; b=On0RfH/NP9thIoQ78smYcyfD0pMTzBT8hMkZXQcanwNjI0MEPrc8OC/89+etjpSP04PH6cyP+adnpbjyPbyBKS/pYi3XvFr8wborfx83x/NVptzwDlpcU+SpmwIiahuq5rfklsasv6Y8qh2bEKJpP7wdtBzZheAoADZd8x3Eupg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743874478; c=relaxed/simple;
-	bh=zNbMsd5ZMKQEgcUqH2G9jdZjS7mVpjxPElH2t8AaYBk=;
-	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID; b=RfM36lC5wlfG7Ekx5nrgWP260b0MQj+qscyi0T9FtrGZCnMdfNIE84E/0HbJYwlEm8kdbrfg4YnyBGXaEzmwLZC2hFW2W36WNNB3v0leUdzcMl/n22lsUwGtdDGw21j5BAWDQXzSVuF5ym6+qA6lvw2KbEFOtrDLoNoFlZSMTOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=lrsHelYW; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+	s=arc-20240116; t=1743938858; c=relaxed/simple;
+	bh=NLz/R+Ri3KLobR0D0P8C7mYBFAl8obxLMWUqWAWzB7E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jzFItHNkcDtVWh7ahsNH7aRza5izwby2jBY4ELo7ffBT6nuEm9CefKDHfudIF+0kPAK3lrQtazPwPF0HnBH7pPy6mGFqA+taPj3DhN6+7XVSzUhILXVnRygCu1gxfFDRias4S6im57I7ypE1u3nZJ8xryEnpIHUZUGlaYxR69Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iPptt1zt; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="lrsHelYW"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22401f4d35aso32341175ad.2
-        for <linux-cxl@vger.kernel.org>; Sat, 05 Apr 2025 10:34:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1743874475; x=1744479275; darn=vger.kernel.org;
-        h=message-id:to:from:cc:in-reply-to:subject:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=OCQtICYkn6uP4Xo9tW2ueXrTg+tiER3HquLdyfSwfUI=;
-        b=lrsHelYWL2bwtrA6DRb0QpmpWv1r5nOqAWF/3bPLr+92+DWMq0ZwhWGyzbD+yeIyQo
-         TRilBAWfTrVBOPBUP/eSsMm8UsJaS2+04xqvZsF4MU/tf9Ldb+pQ/NcdX6j19d2l11dU
-         jmmi6WEHR7mtbeE3bz3/0G6bYpQrNJNopoEjGqQ5x0Zkg1H3vxwbjkZ3NXD0iDt6ny+t
-         l7zamgX2qfMnvPSXHspDdKH2z0xtTJ+sa3Z89tquiHluZYxP4tICUd1RyspX3bq19MpL
-         PFNRShtRBzn9WJ4ms0fV9U6UbM+e0Sx7jaGK/PlSXp5DEyMJFJNOKUos/OSi+1tTJwP2
-         YN3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743874475; x=1744479275;
-        h=message-id:to:from:cc:in-reply-to:subject:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OCQtICYkn6uP4Xo9tW2ueXrTg+tiER3HquLdyfSwfUI=;
-        b=lM9XSGqE2OJsEF7habfqN8BFm6EXcmAtwCVW2dTJRMIzZd/Mm4VI96QvxMkCC9xjVE
-         B7ECA94sZo88heipQXL+49i+tTYa6jcRplelY9Efsx7yRuYjFJCOf5y6DA2vgyk+eeSx
-         48w8vVyezOWbd9pNzAV0xVjYXZb8xdiN6pGqtIoEHVsxKA5PI81YNUa6ie3rHSx0GV32
-         fqdlMgE65Dj8sAVgQaDJUUn30JgN3jNZKVRKOPSYPIZI4SuqI8ckk146gZ4NhreQQ0BM
-         jpKLWAJJvfqtOcsxmGotlH72lAXJ7ZcLYubPFrkbqZL1/kXDHlgGMSHi6MCbYML4QV7i
-         hb5A==
-X-Forwarded-Encrypted: i=1; AJvYcCUKNySkOACcqMl7/aiteFDmcrSEmrCvaCeuCM9kNxAdfXRoAnMW5/XSFn1HJNB61AAZQGRlUYPmcIs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMis75aGF+LrW9BFu5QkVR5vMujJ1xDRUabKBarpLU24S0p60K
-	9D2adya6z9UrNLl1baxrSSL88T4+QbC4p2hFdaLP+UQWIwkfjbcDgorencSNZRs=
-X-Gm-Gg: ASbGncu13XELDpqpCysFnML5c8ARqXHOj94lvQjv2i9uu/4FS8j6TGokhAkPFpH87tQ
-	1owiFGCp812t1GeUToGz1Rl2xV/Rz688PcdcIh99QAUx4LR8UVcjfwzH8MnHSagm8LQp4KajGYz
-	efiUnTpVjwrF5Bs/nYk2on+rQk9PQaPSMtpfOiVR7rQDETsNwLWsB0kXkPAbXMT7E9P08zLV94/
-	UVFbLBKTNt79WWCVSma3m2LasKO+UagFo7YzaYK77Y41HYzWJ5JXkSIsBvQMkDQrmJiTBVHCAAU
-	+VDgaPQ5vwQSTyJE0vU+sL1hV7Cp0Pvo2icIH2HuKA==
-X-Google-Smtp-Source: AGHT+IF80lvJLAgMXgSxNXCpMXC/gbO5XZ3y9Dd2bI9pYYdOBComYrwaxqbJakPqUqjZ8rd4ZAFXkg==
-X-Received: by 2002:a17:902:cf4b:b0:224:1220:7f40 with SMTP id d9443c01a7336-22a9551417fmr46708245ad.3.1743874475182;
-        Sat, 05 Apr 2025 10:34:35 -0700 (PDT)
-Received: from localhost ([192.184.165.199])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785bff96sm52456355ad.59.2025.04.05.10.34.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Apr 2025 10:34:34 -0700 (PDT)
-Date: Sat, 05 Apr 2025 10:34:34 -0700 (PDT)
-X-Google-Original-Date: Sat, 05 Apr 2025 10:34:32 PDT (-0700)
-Subject:     Re: [BUG -next] ./usr/include/cxl/features.h:11:10: fatal error: uuid/uuid.h: No such file or directory
-In-Reply-To: <67e7301dc8ad7_201f0294a5@dwillia2-xfh.jf.intel.com.notmuch>
-CC: paulmck@kernel.org, dave.jiang@intel.com, linux-cxl@vger.kernel.org,
-  dave@stgolabs.net, jonathan.cameron@huawei.com, alison.schofield@intel.com,
-  vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com, gourry@gourry.net,
-  linux-kernel@vger.kernel.org, linux-next@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: dan.j.williams@intel.com
-Message-ID: <mhng-2b1b4293-576d-4ba1-a4c6-1109a50ce058@palmer-ri-x1c9>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iPptt1zt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743938857; x=1775474857;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=NLz/R+Ri3KLobR0D0P8C7mYBFAl8obxLMWUqWAWzB7E=;
+  b=iPptt1ztFFeac0eoVLrEzyrlArNzHmTVEOaaXODtD84UPeJnAHrtjZCJ
+   Wrf1x4xY+Xpyz3IJKEhG5MZBW5TUCXbLLiqsmDIvjk2hGXFtpEwO/eDBq
+   qpIDn4G9/N6dmls0Q5t01vvmOF05bdVUbyl7rU6tpIm1tBOWP9ApHIep4
+   imQkTRM4sjJ76vHTPvBGOZtfpdrq9TViv0j0c0Q8Daw+p9cKtGxIRQX7n
+   6hbTwuPRzeekzykQbyv6EPNlyyc9Ep/9bdcIxi0NFsoV1204Mu7USMwDP
+   D32sxi9ztksFC8xbqRSBRgqcV+S4ZbdQ9fLvmfK+qIv+gACJrA50kKo8j
+   A==;
+X-CSE-ConnectionGUID: hlJuQS3AQWavZFaT0D3pxA==
+X-CSE-MsgGUID: mXecmQygRb+McxbD+I2MAQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11395"; a="45465571"
+X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
+   d="scan'208";a="45465571"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2025 04:27:36 -0700
+X-CSE-ConnectionGUID: kCvWjB88SgCScE1bOIxrYA==
+X-CSE-MsgGUID: SOmoSIIdTyqriJWN01WhhQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
+   d="scan'208";a="128196061"
+Received: from unknown (HELO ixc04.bj.intel.com) ([10.238.153.130])
+  by fmviesa010.fm.intel.com with ESMTP; 06 Apr 2025 04:27:34 -0700
+From: Huaisheng Ye <huaisheng.ye@intel.com>
+To: Jonathan.Cameron@huawei.com,
+	dan.j.williams@intel.com,
+	dave.jiang@intel.com
+Cc: pei.p.jia@intel.com,
+	linux-cxl@vger.kernel.org,
+	Huaisheng Ye <huaisheng.ye@intel.com>
+Subject: [RFC PATCH] cxl/core: reenable Mem_Enable bit of DVSEC control when RR decodes outside platform ranges
+Date: Sun,  6 Apr 2025 19:27:52 +0800
+Message-Id: <20250406112752.1261855-1-huaisheng.ye@intel.com>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Fri, 28 Mar 2025 16:26:21 PDT (-0700), dan.j.williams@intel.com wrote:
-> Paul E. McKenney wrote:
-> [..]
->> > > Making the above change got me this:
->> > >
->> > > usr/include/cxl/features.h:59:9: error: unknown type name ‘uuid_t’
->> > I wasn't able to hit that with allmodconfig on x86 with a Fedora 41 build setup. What is the specific command lines you are using?
->>
->> make clean
->> make allmodconfig
->> make -j$N
->>
->> Though encapsulated as follows:
->>
->> tools/testing/selftests/rcutorture/bin/torture.sh --do-none --do-allmodconfig
->
-> The problem is that uuid_t is not defined for uapi headers to reuse.
-> Perhaps checkpatch should be checking for uuid_t in uapi headers going
-> forward.
->
-> For now the following builds for me, but it is a quite a mess to undo
-> the assumption that that the hardware object definitions can not use
-> uuid_t:
->
-> -- 8< --
-> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-> index f4daefe3180e..d626dd7c5fbf 100644
-> --- a/drivers/cxl/core/features.c
-> +++ b/drivers/cxl/core/features.c
-> @@ -33,7 +33,11 @@ static bool is_cxl_feature_exclusive_by_uuid(const uuid_t *uuid)
->
->  static bool is_cxl_feature_exclusive(struct cxl_feat_entry *entry)
->  {
-> -	return is_cxl_feature_exclusive_by_uuid(&entry->uuid);
-> +	uuid_t uuid;
-> +
-> +	import_uuid(&uuid, entry->uuid);
-> +
-> +	return is_cxl_feature_exclusive_by_uuid(&uuid);
->  }
->
->  inline struct cxl_features_state *to_cxlfs(struct cxl_dev_state *cxlds)
-> @@ -228,7 +232,7 @@ size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
->  		return 0;
->
->  	size_out = min(feat_out_size, cxl_mbox->payload_size);
-> -	uuid_copy(&pi.uuid, feat_uuid);
-> +	export_uuid(pi.uuid, feat_uuid);
->  	pi.selection = selection;
->  	do {
->  		data_to_rd_size = min(feat_out_size - data_rcvd_size,
-> @@ -282,7 +286,7 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox,
->  	if (!pi)
->  		return -ENOMEM;
->
-> -	uuid_copy(&pi->uuid, feat_uuid);
-> +	export_uuid(pi->uuid, feat_uuid);
->  	pi->version = feat_version;
->  	feat_flag &= ~CXL_SET_FEAT_FLAG_DATA_TRANSFER_MASK;
->  	feat_flag |= CXL_SET_FEAT_FLAG_DATA_SAVED_ACROSS_RESET;
-> @@ -360,16 +364,19 @@ get_support_feature_info(struct cxl_features_state *cxlfs,
->  			 const struct fwctl_rpc_cxl *rpc_in)
->  {
->  	struct cxl_feat_entry *feat;
-> -	const uuid_t *uuid;
-> +	uuid_t in_uuid;
->
-> -	if (rpc_in->op_size < sizeof(uuid))
-> +	if (rpc_in->op_size < sizeof(in_uuid))
->  		return ERR_PTR(-EINVAL);
->
-> -	uuid = &rpc_in->set_feat_in.uuid;
-> +	import_uuid(&in_uuid, rpc_in->set_feat_in.uuid);
->
->  	for (int i = 0; i < cxlfs->entries->num_features; i++) {
-> +		uuid_t feat_uuid;
-> +
->  		feat = &cxlfs->entries->ent[i];
-> -		if (uuid_equal(uuid, &feat->uuid))
-> +		import_uuid(&feat_uuid, feat->uuid);
-> +		if (uuid_equal(&in_uuid, &feat_uuid))
->  			return feat;
->  	}
->
-> @@ -461,6 +468,7 @@ static void *cxlctl_get_feature(struct cxl_features_state *cxlfs,
->  	const struct cxl_mbox_get_feat_in *feat_in;
->  	u16 offset, count, return_code;
->  	size_t out_size = *out_len;
-> +	uuid_t uuid;
->
->  	if (rpc_in->op_size != sizeof(*feat_in))
->  		return ERR_PTR(-EINVAL);
-> @@ -477,9 +485,10 @@ static void *cxlctl_get_feature(struct cxl_features_state *cxlfs,
->  	if (!rpc_out)
->  		return ERR_PTR(-ENOMEM);
->
-> -	out_size = cxl_get_feature(cxl_mbox, &feat_in->uuid,
-> -				   feat_in->selection, rpc_out->payload,
-> -				   count, offset, &return_code);
-> +	import_uuid(&uuid, feat_in->uuid);
-> +	out_size = cxl_get_feature(cxl_mbox, &uuid, feat_in->selection,
-> +				   rpc_out->payload, count, offset,
-> +				   &return_code);
->  	*out_len = sizeof(struct fwctl_rpc_cxl_out);
->  	if (!out_size) {
->  		rpc_out->size = 0;
-> @@ -502,6 +511,7 @@ static void *cxlctl_set_feature(struct cxl_features_state *cxlfs,
->  	const struct cxl_mbox_set_feat_in *feat_in;
->  	size_t out_size, data_size;
->  	u16 offset, return_code;
-> +	uuid_t uuid;
->  	u32 flags;
->  	int rc;
->
-> @@ -510,7 +520,8 @@ static void *cxlctl_set_feature(struct cxl_features_state *cxlfs,
->
->  	feat_in = &rpc_in->set_feat_in;
->
-> -	if (is_cxl_feature_exclusive_by_uuid(&feat_in->uuid))
-> +	import_uuid(&uuid, feat_in->uuid);
-> +	if (is_cxl_feature_exclusive_by_uuid(&uuid))
->  		return ERR_PTR(-EPERM);
->
->  	offset = le16_to_cpu(feat_in->offset);
-> @@ -525,9 +536,9 @@ static void *cxlctl_set_feature(struct cxl_features_state *cxlfs,
->  	rpc_out->size = 0;
->
->  	data_size = rpc_in->op_size - sizeof(feat_in->hdr);
-> -	rc = cxl_set_feature(cxl_mbox, &feat_in->uuid,
-> -			     feat_in->version, feat_in->feat_data,
-> -			     data_size, flags, offset, &return_code);
-> +	rc = cxl_set_feature(cxl_mbox, &uuid, feat_in->version,
-> +			     feat_in->feat_data, data_size, flags, offset,
-> +			     &return_code);
->  	if (rc) {
->  		rpc_out->retval = return_code;
->  		return no_free_ptr(rpc_out);
-> diff --git a/include/uapi/cxl/features.h b/include/uapi/cxl/features.h
-> index d6db8984889f..1e3323854994 100644
-> --- a/include/uapi/cxl/features.h
-> +++ b/include/uapi/cxl/features.h
-> @@ -8,11 +8,6 @@
->  #define _UAPI_CXL_FEATURES_H_
->
->  #include <linux/types.h>
-> -#ifndef __KERNEL__
-> -#include <uuid/uuid.h>
-> -#else
-> -#include <linux/uuid.h>
-> -#endif
->
->  /*
->   * struct cxl_mbox_get_sup_feats_in - Get Supported Features input
-> @@ -60,7 +55,7 @@ struct cxl_mbox_get_sup_feats_in {
->   * Get Supported Features Supported Feature Entry
->   */
->  struct cxl_feat_entry {
-> -	uuid_t uuid;
-> +	__u8 uuid[16];
->  	__le16 id;
->  	__le16 get_feat_size;
->  	__le16 set_feat_size;
-> @@ -110,7 +105,7 @@ struct cxl_mbox_get_sup_feats_out {
->   * CXL spec r3.2 section 8.2.9.6.2 Table 8-99
->   */
->  struct cxl_mbox_get_feat_in {
-> -	uuid_t uuid;
-> +	__u8 uuid[16];
->  	__le16 offset;
->  	__le16 count;
->  	__u8 selection;
-> @@ -143,7 +138,7 @@ enum cxl_get_feat_selection {
->   */
->  struct cxl_mbox_set_feat_in {
->  	__struct_group(cxl_mbox_set_feat_hdr, hdr, /* no attrs */,
-> -		uuid_t uuid;
-> +		__u8 uuid[16];
->  		__le32 flags;
->  		__le16 offset;
->  		__u8 version;
-> diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-> index f2957a3e36fe..d0276ab3a92f 100644
-> --- a/tools/testing/cxl/test/mem.c
-> +++ b/tools/testing/cxl/test/mem.c
-> @@ -1397,7 +1397,7 @@ static int mock_activate_fw(struct cxl_mockmem_data *mdata,
->
->  static void fill_feature_vendor_test(struct cxl_feat_entry *feat)
->  {
-> -	feat->uuid = CXL_VENDOR_FEATURE_TEST;
-> +	export_uuid(feat->uuid, &CXL_VENDOR_FEATURE_TEST);
->  	feat->id = 0;
->  	feat->get_feat_size = cpu_to_le16(0x4);
->  	feat->set_feat_size = cpu_to_le16(0x4);
-> @@ -1441,8 +1441,10 @@ static int mock_get_feature(struct cxl_mockmem_data *mdata,
->  			    struct cxl_mbox_cmd *cmd)
->  {
->  	struct cxl_mbox_get_feat_in *input = cmd->payload_in;
-> +	uuid_t in_uuid;
->
-> -	if (uuid_equal(&input->uuid, &CXL_VENDOR_FEATURE_TEST))
-> +	import_uuid(&in_uuid, input->uuid);
-> +	if (uuid_equal(&in_uuid, &CXL_VENDOR_FEATURE_TEST))
->  		return mock_get_test_feature(mdata, cmd);
->
->  	cmd->return_code = CXL_MBOX_CMD_RC_UNSUPPORTED;
-> @@ -1485,8 +1487,10 @@ static int mock_set_feature(struct cxl_mockmem_data *mdata,
->  			    struct cxl_mbox_cmd *cmd)
->  {
->  	struct cxl_mbox_set_feat_in *input = cmd->payload_in;
-> +	uuid_t in_uuid;
->
-> -	if (uuid_equal(&input->hdr.uuid, &CXL_VENDOR_FEATURE_TEST))
-> +	import_uuid(&in_uuid, input->hdr.uuid);
-> +	if (uuid_equal(&in_uuid, &CXL_VENDOR_FEATURE_TEST))
->  		return mock_set_test_feature(mdata, cmd);
->
->  	cmd->return_code = CXL_MBOX_CMD_RC_UNSUPPORTED;
+In some scenarios, the probe of endpoint ports would fail because of range
+register (RR) decodes outside platform defined CXL ranges.
 
-I hit this too, also in allmodconfig (and in my case for a cross build, 
-so I have very few system headers).  This seems to fix it, so
+  [kernel debug message]
+  cxl_hdm_decode_init:447: cxl_pci 0000:10:00.0: DVSEC Range0 denied by
+  platform
+  cxl_pci 0000:10:00.0: Range register decodes outside platform defined CXL
+  ranges.
+  cxl_bus_probe:2073: cxl_port endpoint3: probe: -6
+  call_driver_probe:590: cxl_port endpoint3: probe with driver cxl_port
+  rejects match -6
 
-Tested-by: Palmer Dabbelt <palmer@rivosinc.com>
+This defect could be found with Qemu CXL branch for a long while with a
+specified probability, even with the latest branch cxl-2025-03-20.
 
-Thanks!
+The root cause of this defect comes from that, bit CXL_DVSEC_MEM_ENABLE of
+DVSEC control has been set but in cxl_hdm_decode_init
+CXL_HDM_DECODER_ENABLE has NOT been set and also endpoint's dvsec_range is
+not covered by root decoder's hpa_range.
+
+When encountering similar problems of the firmware, the patch could be
+effective for solving.
+Instead of Return error when RR decodes outside platform cxl ranges,
+driver disable Mem_Enable bit of DVSEC control then take it as the way of
+no setting info->mem_enabled.
+
+Signed-off-by: Huaisheng Ye <huaisheng.ye@intel.com>
+---
+ drivers/cxl/core/hdm.c |  2 +-
+ drivers/cxl/core/pci.c | 35 +++++++++++++++++++++++++----------
+ drivers/cxl/cxlmem.h   |  2 ++
+ 3 files changed, 28 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+index 50e6a45b30ba..b776fb848f42 100644
+--- a/drivers/cxl/core/hdm.c
++++ b/drivers/cxl/core/hdm.c
+@@ -80,7 +80,7 @@ static void parse_hdm_decoder_caps(struct cxl_hdm *cxlhdm)
+ 	u32 hdm_cap;
+ 
+ 	hdm_cap = readl(cxlhdm->regs.hdm_decoder + CXL_HDM_DECODER_CAP_OFFSET);
+-	cxlhdm->decoder_count = cxl_hdm_decoder_count(hdm_cap);
++	cxlhdm->decoder_count_cap = cxlhdm->decoder_count = cxl_hdm_decoder_count(hdm_cap);
+ 	cxlhdm->target_count =
+ 		FIELD_GET(CXL_HDM_DECODER_TARGET_COUNT_MASK, hdm_cap);
+ 	if (FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_11_8, hdm_cap))
+diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+index 013b869b66cb..5452bb285140 100644
+--- a/drivers/cxl/core/pci.c
++++ b/drivers/cxl/core/pci.c
+@@ -403,7 +403,7 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
+ 	struct cxl_port *port = cxlhdm->port;
+ 	struct device *dev = cxlds->dev;
+ 	struct cxl_port *root;
+-	int i, rc, allowed;
++	int i, rc, allowed = 0;
+ 	u32 global_ctrl = 0;
+ 
+ 	if (hdm)
+@@ -426,15 +426,7 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
+ 		return -ENODEV;
+ 	}
+ 
+-	if (!info->mem_enabled) {
+-		rc = devm_cxl_enable_hdm(&port->dev, cxlhdm);
+-		if (rc)
+-			return rc;
+-
+-		return devm_cxl_enable_mem(&port->dev, cxlds);
+-	}
+-
+-	for (i = 0, allowed = 0; i < info->ranges; i++) {
++	for (i = 0; i < info->ranges; i++) {
+ 		struct device *cxld_dev;
+ 
+ 		cxld_dev = device_find_child(&root->dev, &info->dvsec_range[i],
+@@ -448,6 +440,29 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
+ 		allowed++;
+ 	}
+ 
++	if (info->mem_enabled && !allowed) {
++		dev_warn(dev, "RR decodes outside ranges, have a try by disabling Mem_Enable bit.\n");
++
++		/*
++		 * Instead of Return error when RR decodes outside platform ranges, reenable
++		 * Mem_Enable bit of DVSEC control for a try.
++		 */
++		rc = cxl_set_mem_enable(cxlds, 0);
++		if (rc)
++			return rc;
++
++		info->mem_enabled = 0;
++		cxlhdm->decoder_count = cxlhdm->decoder_count_cap;
++	}
++
++	if (!info->mem_enabled) {
++		rc = devm_cxl_enable_hdm(&port->dev, cxlhdm);
++		if (rc)
++			return rc;
++
++		return devm_cxl_enable_mem(&port->dev, cxlds);
++	}
++
+ 	if (!allowed) {
+ 		dev_err(dev, "Range register decodes outside platform defined CXL ranges.\n");
+ 		return -ENXIO;
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index 2a25d1957ddb..60b538f8b677 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -855,6 +855,7 @@ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd);
+  * struct cxl_hdm - HDM Decoder registers and cached / decoded capabilities
+  * @regs: mapped registers, see devm_cxl_setup_hdm()
+  * @decoder_count: number of decoders for this port
++ * @decoder_count_cap: number of decoders from HDM Decoder Capability
+  * @target_count: for switch decoders, max downstream port targets
+  * @interleave_mask: interleave granularity capability, see check_interleave_cap()
+  * @iw_cap_mask: bitmask of supported interleave ways, see check_interleave_cap()
+@@ -863,6 +864,7 @@ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd);
+ struct cxl_hdm {
+ 	struct cxl_component_regs regs;
+ 	unsigned int decoder_count;
++	unsigned int decoder_count_cap;
+ 	unsigned int target_count;
+ 	unsigned int interleave_mask;
+ 	unsigned long iw_cap_mask;
+-- 
+2.39.3
+
