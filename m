@@ -1,98 +1,96 @@
-Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B21519C56C;
-	Mon,  7 Apr 2025 03:41:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743997288; cv=none; b=rfbh46VuwO4FVzzKZeofrpDmotOmw0bJqUisblPoH/b4Gpjsnv2Io2Vqb4jtiKAaB1i+cyiyV+JZ6Dc4mFjffAuxW7SSd1Nu5iMYZkWQuYlCc44we9DfN77GzdTkXJrJOTmttC4Elmg2fCU2dJytTZhM7qx5ypQwif+JHXUp/sc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743997288; c=relaxed/simple;
-	bh=NTcXbwL38vSSci5+YhVl3tBxzGp8Y0H+0Y7TGDB18uI=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=hF2h4yRhuT/v8+JJ/RivTlCOx1eiXBuz+12pWZ9Vdy5jvNN3/aKpT1aIeqzxSFqFEHqoiutEJqLmviaiWz3sWuax2w+KGEVCvKmxe9+VgTONLQwHJyJwZglKH108agz1BqDDNqQcKpvzo2I61sbB/vvewhyDQGV+wiyGdlTFo5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=B/4JOgPX; arc=none smtp.client-ip=162.62.58.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F552135A4;
+	Mon,  7 Apr 2025 06:11:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744006266; cv=pass; b=jfyib8dQNq1mYoTPBHE3LrqYWYqQu5BcRYyU8Ey/+ssbtgt4N/gaJhGGMqOiMyASc4dPzp4WYNUl5hEeEB5/Zig8uzjvG+zLFg2vnmmUePxlrU2ufGOx/JquEOPG2XisQsnEP2hjRrPaCQU2gVhc2wk+O7ixQEQ4556R4/z3ucI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744006266; c=relaxed/simple;
+	bh=HJnxSu2wXA5Q3mOn5vriohSJ54Ww2I1nuUo6mgUqmrQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BDviRav0aPoAk7tQnWVEtTeueyCOqSv3oifDu1rpWnjiVDl1zG2JlgZOEzrQUt7u+2DZf+PppW8ikCYUtY5rjFiFUCE+l+7UWTFa37cWmfrxq7w7ZdvvqeQz0aA1CD7ZvNuEtaolkATagtr0xbmXMGHwA1mfrm8fnEXVTKaz2Xo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=OAOhuUEO; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="B/4JOgPX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1743997275;
-	bh=IMyxFJaKvKwRxiYIQy+ytQiD9LwsVii5JDrZLSDOAwE=;
-	h=From:To:Cc:Subject:Date;
-	b=B/4JOgPXIdZXq29t868/HE+5KKRpyI2VRuuSFippMBKyqeMhXFRxOyPKMjYB4Lft9
-	 f3gqbK1TBjc7tn6KfAPIA3xsYlyDz8GlOPD+kh6hj0Ne00DB9oFw3wPv/72zs6jOyu
-	 XnQioUZjTAElVlc8tAPTEHWw6rZYGjsUuP7OrKQw=
-Received: from localhost.localdomain ([116.128.244.169])
-	by newxmesmtplogicsvrszgpua8-1.qq.com (NewEsmtp) with SMTP
-	id A4CB78D9; Mon, 07 Apr 2025 11:41:12 +0800
-X-QQ-mid: xmsmtpt1743997272tz6le7j9g
-Message-ID: <tencent_30DA5E4827F37333AE881122DCE054DC9008@qq.com>
-X-QQ-XMAILINFO: NC4p7XQIBeahjaYmoLWuFHbLOJ3LvuiNhOfLjN3PcP2V1vecPSyDU69tYRm4Cp
-	 jD8Yw/gj1i2kDhjVxQ2mwzYlZkdI8z1PNcEPYa0vyeHSwGdfBPgygvhLd9MRxif+WZVZp9WEWPMF
-	 4jYb0VSNqvDNCDy1OfN/aNdg1wqiQOzYZeDU2XTJy+z3P2sRPVb7QZMlSAc8Q/urzmDYXdAJTteH
-	 UXZp5uCfit/qJ+jThoytz8EosQO68X2d5mF21GbQqJSibKXkWEg6L/S72IVRPBHYDJYPVjlc2LrA
-	 lYnHY4Xi4D09AwjrlfqMsz6Dga8ZBoVFvgOQU/bFbd12l/TZDnLDdcyJ8b+gKYXrmVELQYxEb3cu
-	 /qPgJrI4kAcicwdk4zH70A692LI2AXxjIZFwzc70MyYjBOlUqhWveyVEsWqKL5vckd5OL5zw1upG
-	 sfFDQfrkARBVtaDF/Ibgtiv7OuOSTVYyJBTVv6NdsvtnQz9o0dOmqTJgVtwSp4av//3yN3d7qmD4
-	 zdGKU4fj1W8r0BlFMgCbakDWAv8pcucx9oJn/qppJ2+U+gR2LXhZt4jh4v5M2o+sYAtyllb+xSTc
-	 6IjDihGDMBN1ZcHJBX8q+4pZtA1V2w+riwUrPAFu5pr88B4AdL6h5/OCchImGIVjk0NwoZO+mEBj
-	 Dri1o0h6gOW5z8v8JBkGF6l3VDk2M0dOJLGDCSMSs6wbf2WXBGSSKJckWg02JFmhw8wQv+rJ5JEu
-	 /iJCTItnB9Qea5Gva4sLgDwnzbuiZRmjzSrPdlXdIakClcTZKKNowCFTXwZYOC3DkReZS1W0Y3iZ
-	 C704Ygw5t0PYcSZUY75sVbFTWPiKtKaqTOHgf8htfYVuwjIvli/GeeBK3AvGmhgVDV0gx0rqXqLR
-	 ZEcaSpiGehKiXcuJ6DA1w89cmNNF9QLRbegkjclSMAMMy1pYXu2RduKb/gDYs6UNDUaQNtTTSQMY
-	 yWdLHyZHoMN9JojaGMqLM4tuKBtt0/gCBivK+czp0VwWx+mZ+1GQ==
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-From: xiaopeitux@foxmail.com
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Pei Xiao <xiaopei01@kylinos.cn>
-Subject: [PATCH] cxl : fix cxlctl_validate_hw_command() warn: always true condition
-Date: Mon,  7 Apr 2025 11:41:09 +0800
-X-OQ-MSGID: <a9ba95dc9e845c538438d0a062707a819d1f3232.1743997152.git.xiaopei01@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="OAOhuUEO"
+ARC-Seal: i=1; a=rsa-sha256; t=1744006245; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=LOb1LOo6e6FrVjbcXFkZDOf5RiK5UB6Jrz87D+3e1zb4ZMsmH7CNKJwd5VOQjGNTdwPsBZOLdyWhwjWssCm7LAqX6TQ6EhcZrJG/y/EsGp29bI+xmmxKS/mE2YcwGZJW+gnxGE3tmJtqBwT5Zp0uLvyb1oW5bMnEsOMdh3qDnHE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1744006245; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=wyu8LmD8rRUC3H0Pg/fx0A4u+L35MGgNu7fRwBGIKp4=; 
+	b=ECymkep1DL6hSSXoJQQ+kMnroVf5TE2RqHhu0wscziYFUChQbpUiPUo+P9dSDcwy3fTzGa33y4Zz0WCL+pq0cdYWqLhjZ7sRkAo+rT1xirplfLotzRafUOYoa/MYbCRr/lXn6YqrHLUR0iF/7J3vEJLyP41jVxmv8zoL77SiKDI=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744006245;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=wyu8LmD8rRUC3H0Pg/fx0A4u+L35MGgNu7fRwBGIKp4=;
+	b=OAOhuUEOalrd40FBWJdb5hHRC3xV9D9li5BaIfAhfPLYrmwo9ay0d2AhBXglxW09
+	WsqAhzMxA6MWrOXQnS8EIs5cROkNUoCoFiZ3ga9asseCpmW2FPjOz+Dy0g2vLwebmZ3
+	UvLCFXSVtuhQIoGCenxG6O9dGDSfGE97Fx6mMisA=
+Received: by mx.zohomail.com with SMTPS id 1744006225872305.6751632388572;
+	Sun, 6 Apr 2025 23:10:25 -0700 (PDT)
+Message-ID: <deb343df-39be-4bf9-9288-179a73154ad0@zohomail.com>
+Date: Mon, 7 Apr 2025 14:10:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cxl : fix cxlctl_validate_hw_command() warn: always true
+ condition
+To: xiaopeitux@foxmail.com, Pei Xiao <xiaopei01@kylinos.cn>
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <tencent_30DA5E4827F37333AE881122DCE054DC9008@qq.com>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <tencent_30DA5E4827F37333AE881122DCE054DC9008@qq.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Feedback-ID: rr080112278ed2c46ca8c805236446b2150000005dc0fbd22db3673912ec2d41b9135561f10ce0509cd0d9ee:zu080112275498a79d7e5acc0f086d7c010000ae28deadba607b8c68279e1fdfd9c2f67face246f4817df21b:rf0801122dac3b15604d8ae45714d9bf6100004e3000f8d706d8d0385c8fc4328e3f2be30f05ac6b798f19480a0b50def7f0:ZohoMail
+X-ZohoMailClient: External
 
-From: Pei Xiao <xiaopei01@kylinos.cn>
+On 4/7/2025 11:41 AM, xiaopeitux@foxmail.com wrote:
+> From: Pei Xiao <xiaopei01@kylinos.cn>
+>
+> smatch warnings:
+>     drivers/cxl/core/features.c:441 cxlctl_validate_hw_command()
+>     warn: always true condition '(scope >= 0) => (0-u32max >= 0)'
+>
+> remove always true condition.
+>
+> Signed-off-by: Pei Xiao <xiaopei01@kylinos.cn>
+> ---
+>  drivers/cxl/core/features.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
+> index f4daefe3180e..fdca93c984ce 100644
+> --- a/drivers/cxl/core/features.c
+> +++ b/drivers/cxl/core/features.c
+> @@ -616,9 +616,8 @@ static bool cxlctl_validate_hw_command(struct cxl_features_state *cxlfs,
+>  	case CXL_MBOX_OP_GET_FEATURE:
+>  		if (cxl_mbox->feat_cap < CXL_FEATURES_RO)
+>  			return false;
+> -		if (scope >= FWCTL_RPC_CONFIGURATION)
+> +		else
+>  			return true;
+> -		return false;
+>  	case CXL_MBOX_OP_SET_FEATURE:
+>  		if (cxl_mbox->feat_cap < CXL_FEATURES_RW)
+>  			return false;
 
-smatch warnings:
-    drivers/cxl/core/features.c:441 cxlctl_validate_hw_command()
-    warn: always true condition '(scope >= 0) => (0-u32max >= 0)'
+Already have a patch posted for this issue.
 
-remove always true condition.
-
-Signed-off-by: Pei Xiao <xiaopei01@kylinos.cn>
----
- drivers/cxl/core/features.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-index f4daefe3180e..fdca93c984ce 100644
---- a/drivers/cxl/core/features.c
-+++ b/drivers/cxl/core/features.c
-@@ -616,9 +616,8 @@ static bool cxlctl_validate_hw_command(struct cxl_features_state *cxlfs,
- 	case CXL_MBOX_OP_GET_FEATURE:
- 		if (cxl_mbox->feat_cap < CXL_FEATURES_RO)
- 			return false;
--		if (scope >= FWCTL_RPC_CONFIGURATION)
-+		else
- 			return true;
--		return false;
- 	case CXL_MBOX_OP_SET_FEATURE:
- 		if (cxl_mbox->feat_cap < CXL_FEATURES_RW)
- 			return false;
--- 
-2.25.1
+https://lore.kernel.org/linux-cxl/67f02de69d89c_9fe8529481@iweiny-mobl.notmuch/T/#m84c3093032b5eb167bbb1d0a787019d0387f4ae8
 
