@@ -1,72 +1,77 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A3144A04
-	for <linux-cxl@vger.kernel.org>; Tue,  8 Apr 2025 03:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 257D61EEE6
+	for <linux-cxl@vger.kernel.org>; Tue,  8 Apr 2025 04:14:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744082578; cv=none; b=obXH5j+Df5TiIEFMR0GpX5C/M5M4z4LBtx98+ThxHhdZlCYjhwoNUc7f6Ppdkoo+ug9rwBdYXW3DMO0fckIQR8rDBpl4CQQ1Iui589zfxpZVt5KpX10SqBVgwOVKQ1QTONJ/1ijwIaZVaDJGH6pCZp66JJYBuGQ/xd/fsFHArOY=
+	t=1744085680; cv=none; b=F8KCsJOvqF5oHRfO+si8N5/bfsRjx88OR1KikW7S9BMJQiVe1BlcJpOvv9P0sR84yWs7zCN1GIJ1V0IVnQiL9vv/24X9XtKH/iwrs/sLPvAHzzk97KkGHoLQ8qXmd4vsWY84BMTcXzSaPcglCLZg0l0zZkHhv09rwJHCz87QGsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744082578; c=relaxed/simple;
-	bh=hx0b6Z7kGZKqvlphhHEF7U+blmiyyVOB9cQOd0ofZ20=;
+	s=arc-20240116; t=1744085680; c=relaxed/simple;
+	bh=rdvQO3CSDi3IpktTW4wLDn3YVJLvdBDVeCcG2prAs6A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eRdH2ZxAN/tuWCdQnSs7/c8uGsZii6rm/yUggS+Hs03XZ7a9nwGdTRGBnwNcpmIrKRB2VADDZ+xHLZiuJtNyvc33pblPeQgMZYjthIgXXfJ448DsfglBkrWCuSJqBmPUg2u4hM0/pZu7sdGoX3+BHSqxNwrohl5vUPekPT4iy/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Q3IPN7rl; arc=none smtp.client-ip=209.85.222.175
+	 Content-Type:Content-Disposition:In-Reply-To; b=WAEJomoGNcfgTZpMvkiNRlrPNMKc50HD9QTwVBmbaHrTtSinBpSt94JEMqeb6QwFkcXCF8kYWVPdD//Z04EEcklgyZ8b8hp+9O8i6jHjinAn3cGceEHuBLI1uanLrBkwlZ/O+eF4zgfhTRMFlF2x5YGQTA0rDaHHQQjJjY4505M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=q+wZzNye; arc=none smtp.client-ip=209.85.222.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Q3IPN7rl"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7c081915cf3so663615985a.1
-        for <linux-cxl@vger.kernel.org>; Mon, 07 Apr 2025 20:22:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="q+wZzNye"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7c554d7dc2aso849029085a.3
+        for <linux-cxl@vger.kernel.org>; Mon, 07 Apr 2025 21:14:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1744082575; x=1744687375; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1744085678; x=1744690478; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RpIkPb+oI8Nj81D/rHxz6wipY5qAq43JtioaQHbfmMM=;
-        b=Q3IPN7rlwStxwZnyTI7aUvZrS0o+CzJ/BpM3mYzZBuT0R05Hk+S5xvRbviS1UZbRX2
-         LyKwdW3OxwTYK/0poEU5jlR6Tqj1F4Y+n2cT+M3CCoWjOYv7xVzLQUTy98sqdplJxGAl
-         y12BlJZAOzGR3qWrtAQ5wwbgNuT2QII6qRrH9kF5krqhzkCmKKQi3Kx7C34Hr7KPwzy9
-         765GSIxCYVUey4WHE1MmXieXDGRjim0dgWEQuFyLhxxeIih06BAMBarLaonLQJwycSYA
-         Akt5/l+wzWiOxjaLRulEviIuU+Bpm8eBXxKZdPzNEmQoRGKraaw3ybGedn/majEFDh7F
-         QWfQ==
+        bh=YxylarJR1WfRQR4vudg24nlR2rF7SNaVZ/wz82/8qPI=;
+        b=q+wZzNyenXL1NFCfvVNSS4L7eamPbsFhBBtZLh4aY7Oh19UjM0humj6q4i6So2oW2g
+         Z4owt8FTDFeHwonmNYoSLjp85kPkP3GZefQIgEonqjTZOKhCaWyDq62cfzKIia9Jh28G
+         XKhuuQ6y8JYnDT0iDIQxgWROA5fhzKqDQWlr+dwcul3DEI1rcxiOIh26+qPIrUI+85TJ
+         7Shh1Nj61Z8NElLq/Gb5MC6jdm+BSFLwOoxQB+OfV0W+q+FEKh59av3xGPbusxsjDE3Y
+         p9MNPVLOYctZsmqqYkwVuyN0O1CD9ZdTeCcnOzlfg3ZVjV/dskd2onWEk6ULViw1rSek
+         aM7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744082575; x=1744687375;
+        d=1e100.net; s=20230601; t=1744085678; x=1744690478;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RpIkPb+oI8Nj81D/rHxz6wipY5qAq43JtioaQHbfmMM=;
-        b=UUhYIE7iI4prh92XNyRk3Dravq4lrahCmrNkQatu7TCkzfET6wDAPf+JNwBvVsvdXj
-         Dcvdw2rASXvYb353+7JlaDOobSurJyH+oy4INiH+5GjytsVD2a78BPi4lU2oVwmdVIu2
-         4xDJTSz9PgIMzZyFy156M+gAiB/wKXY99vGdp94gtJA8n/RGUlWnUoYCm5AwzBJGYyk8
-         V1lhajs3cB/6KVQH2AjOChdgAd1zE67k//9Lx2IIXURUXeYJ0ANudhGzFXgKvvnWbZYW
-         nq+cF8xlVnzIUU0QU10qMwOOdZiOvp+AR2B7ohyyMOYHEttVfIRoS9zbqUWG8NiAN6UL
-         /3cA==
-X-Forwarded-Encrypted: i=1; AJvYcCX5n9dsZZ3WDIU6t7lcWO9Oe9TObRRSEJp1pHmrbf6akEAVsd0jxIiGgHOVP7k8IxPIFdP6GPWDvw8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyu0TGaCowkLKAjigSHzTh9WOwbjHMwouOEUfN/qR8DTwhuV2XS
-	LgWP9KsThedeuMK3exZ5uMUKJwtmzQA5WrWndzAsAh2x4aH+HEwml+Os7gdjLbQ=
-X-Gm-Gg: ASbGncuHBg2o3N6NwAhccPASKenHKE+MCfrQrlh+Str+UvP+ogy1kXtFr/+ti9156cG
-	+5aFwAichnrGEqsl2MOJ5zNqbhhb2PCI42S/myVLbFLaxWtEG2HGHMSwgQwM4S3DDyUs2/2qY+8
-	gCKIhMM8/QNYt1ZVXoUbkRGMXZQyTnGI4dcsycHazRVCECvzkU6xMpPGbFaKTOecZUi3qbW6Iqb
-	wm7/YzvBFXAneL32XrI8ppPdsLqc0LzFaZY87GBkwCLAN4ioDvhfOCXY/l5zWo/NFqFEEEF6Aw4
-	bQKFZT0zwI1MbRAZgE23E8TCclxC6gxnRQKaO+dRBWruddIugwnfguUI06GSY5S6BdIljVnfDDz
-	K6BVONyPKgxdGkBh82K90cAW8cwkpLEqbDnzc6Q==
-X-Google-Smtp-Source: AGHT+IF6a1SP76wmH6Ygw0Tna4TAtQylWwl/soeK6IWS2NeTZsSEPQtntnv/Cy76q7M7CAEna+W4XQ==
-X-Received: by 2002:a05:620a:4908:b0:7c7:827b:46bf with SMTP id af79cd13be357-7c7827b475amr1030560185a.39.1744082575296;
-        Mon, 07 Apr 2025 20:22:55 -0700 (PDT)
+        bh=YxylarJR1WfRQR4vudg24nlR2rF7SNaVZ/wz82/8qPI=;
+        b=Y9Z5i3fnxDf1KDAayS5/+3Mwi3Ol/W1HVxt0GgAPh5ClEaQHsd2HPuZyyyAuzuXbU8
+         v9kgvVmPvNYQvrlbMzsgN1n2TixHrT5IXJOpIxICeVkqgnFijTX+NeGmJyAc85nBJA/4
+         8VVaJAHgZqBrUkmPhtdXc6T6rQJsjmBN6qW5axLt3eRBoDDtzUOVY5jmWKvaropkkuny
+         wHNbLKa52WpJWQOCnEHmI7UqtOc1LSAGclVKVcHpJKoIbEDlH9ldXEdTGTAeXFFD9bjg
+         OXiZpWOCGPdJBV7nSY8QPeE7Pv1XNFhkWrrjcyqBlMQcUIe8JDHdjvzDNsEED9laOv7a
+         wSPg==
+X-Forwarded-Encrypted: i=1; AJvYcCViaBejUSDn+K6aaVzYjZxPlfIVYGlTf6FPZecS8VfGWx6MJ15SB0+ViqOnRNTRUaVCNc8lFxmCZDI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZw3wvJj62n++e80omL4jtjEzouy6yQM98RIDVAKosqVgdpQ+A
+	1Q03Cy+SDQzPsD7ZqMnk7+nzzqvX9W8qYwzRkwoJfn2uFRnZcx6BS4WNRij3+3s=
+X-Gm-Gg: ASbGnctL7+LE6CPxGVZ0/0CfM/4vM7zqzbRjUVyX2iWbvBQXHB6wMxZn3lEb3I3HpNk
+	GD9odNnTfwQeo98Ztw9VQtneii1iCNPids2A4zS+RzJgQLIp6sJyAJN3gTZx1FPkI/M2cyxf/KA
+	pzYSBKSRU68t52849ED7Nm4NoygJsTV89w91EmstQZV14jmzUTpC827O+tkzqfZkHATZ/XTT1uO
+	SMBbD8nhS/Xj+cW+biOazZpYluFTxUi8EZkyweCCUB/IN67mIS7jDUYlXwOBXoULAr2cf276Wu+
+	I9xT1neR0Ht7OLw28Ur7L2YsSAy7/8ffIe66Mt8SiDRJcct9TMMG1vT/IApRcCwVV7ncmta0YoD
+	IECKopV3v/wOrv5dRs0/5eQxNAZGGiQ8vzmgL5Q==
+X-Google-Smtp-Source: AGHT+IG1fG6kfVEFdWk0CSWBtlYn13aGmNvut/72B2/Nbw/wJRvYa17H6rgmfkWBfGCZtZESEG8UjA==
+X-Received: by 2002:a05:620a:2942:b0:7c5:5f58:9158 with SMTP id af79cd13be357-7c774d14899mr2510471785a.9.1744085678001;
+        Mon, 07 Apr 2025 21:14:38 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ef0f00f2b6sm67933266d6.42.2025.04.07.20.22.54
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c76ea59cd8sm699226085a.69.2025.04.07.21.14.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 20:22:54 -0700 (PDT)
-Date: Mon, 7 Apr 2025 23:22:53 -0400
+        Mon, 07 Apr 2025 21:14:37 -0700 (PDT)
+Date: Tue, 8 Apr 2025 00:14:35 -0400
 From: Gregory Price <gourry@gourry.net>
-To: Huaisheng Ye <huaisheng.ye@intel.com>
-Cc: Jonathan.Cameron@huawei.com, dan.j.williams@intel.com,
-	dave.jiang@intel.com, pei.p.jia@intel.com,
-	linux-cxl@vger.kernel.org
-Subject: Re: [RFC PATCH] cxl/core: reenable Mem_Enable bit of DVSEC control
- when RR decodes outside platform ranges
-Message-ID: <Z_SWjQA4qb3OE6Dk@gourry-fedora-PF4VCD3F>
-References: <20250406112752.1261855-1-huaisheng.ye@intel.com>
+To: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
+Cc: "lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: CXL Boot to Bash - Section 2a (Drivers): CXL Decoder Programming
+Message-ID: <Z_Siq6JrfST1T7la@gourry-fedora-PF4VCD3F>
+References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
+ <Z6OMcLt3SrsZjgvw@gourry-fedora-PF4VCD3F>
+ <Z8o2HfVd0P_tMhV2@gourry-fedora-PF4VCD3F>
+ <cf7b97d8-4393-424c-89fc-aa810d907a67@fujitsu.com>
+ <Z-1HPqufU7MnQ6ii@gourry-fedora-PF4VCD3F>
+ <fb2e8912-9a64-4053-bb8c-dcaceb669731@fujitsu.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -75,93 +80,87 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250406112752.1261855-1-huaisheng.ye@intel.com>
+In-Reply-To: <fb2e8912-9a64-4053-bb8c-dcaceb669731@fujitsu.com>
 
-On Sun, Apr 06, 2025 at 07:27:52PM +0800, Huaisheng Ye wrote:
-> In some scenarios, the probe of endpoint ports would fail because of range
-> register (RR) decodes outside platform defined CXL ranges.
+On Tue, Apr 08, 2025 at 03:10:24AM +0000, Zhijian Li (Fujitsu) wrote:
+> >> On 07/03/2025 07:56, Gregory Price wrote:
+> >>> What if instead, we had two 256MB endpoints on the same host bridge?
+> >>>
+> >>> ```
+> >>> CEDT
+> >>>              Subtable Type : 01 [CXL Fixed Memory Window Structure]
+> >>>                   Reserved : 00
+> >>>                     Length : 002C
+> >>>                   Reserved : 00000000
+> >>>        Window base address : 0000000100000000   <- Memory Region
+> >>>                Window size : 0000000020000000   <- 512MB
+> >>> Interleave Members (2^n) : 00                 <- Not interleaved
+> >>>
+> >>> Memory Map:
+> >>>     [mem 0x0000000100000000-0x0000000120000000] usable  <- SPA
+> >>>
+> >>> Decoders
+> >>>                               decoder0.0
+> >>>                     range=[0x100000000, 0x120000000]
+> >>>                                   |
+> >>>                               decoder1.0
+> >>>                     range=[0x100000000, 0x120000000]
+> >>>                     /                              \
+> >>>               decoded2.0                        decoder3.0
+> >>>     range=[0x100000000, 0x110000000]   range=[0x110000000, 0x120000000]
+> >>> ```
+> >>
+> >> It reminds me that during construct_region(), it requires decoder range in the
+> >> switch/host-bridge is exact same with the endpoint decoder. see
+> >> match_switch_decoder_by_range()
 > 
->   [kernel debug message]
->   cxl_hdm_decode_init:447: cxl_pci 0000:10:00.0: DVSEC Range0 denied by
->   platform
->   cxl_pci 0000:10:00.0: Range register decodes outside platform defined CXL
->   ranges.
->   cxl_bus_probe:2073: cxl_port endpoint3: probe: -6
->   call_driver_probe:590: cxl_port endpoint3: probe with driver cxl_port
->   rejects match -6
 > 
-> This defect could be found with Qemu CXL branch for a long while with a
-> specified probability, even with the latest branch cxl-2025-03-20.
+>  From the code, we can infer this point. However, is this just a solution implemented in software,
+> or is it explicitly mandated by the CXL SPEC or elsewhere? If you are aware, please let me know.
 > 
-> The root cause of this defect comes from that, bit CXL_DVSEC_MEM_ENABLE of
-> DVSEC control has been set but in cxl_hdm_decode_init
-> CXL_HDM_DECODER_ENABLE has NOT been set and also endpoint's dvsec_range is
-> not covered by root decoder's hpa_range.
->
 
-The explanation here is a bit confusing.  Please clarify if my
-understanding of the issue is incorrect.
+The description you've quoted here is incorrect, as I didn't fully
+understand the correct interleave configuration.  I plan on re-writing
+this portion with correct configurations over the next month.
 
-Observed problem:
-   Some firmware/BIOS sets MEM_ENABLED, does not set HDM_DECODER_ENABLED,
-   and does not program the Range registers.  This is possibly the
-   result of defaulting MEM_ENABLED to 1 mistakenly, rather than a
-   programming error / failure.
+Linux does expect all decoders from root to endpoint to be programmed
+with the same range*[2].
 
-Suggested solution:
-  Linux should detect this and reset the MEM_ENABLED bit and simply
-  attempt to enable the hdm decoders accordingly.
+please keep an eye on [1] for updates, i won't be updating this thread
+with further edits.
 
+> I have been trying for days to find documentary evidence to persuade our firmware team that,
+> during device provisioning, the programming of the HDM decoder should adhere to this principle:
+> The range in the HDM decoder should be exactly the same between the device and its upstream switch.
+> 
 
-Question: Is this only observed with QEMU? If so, can we just fix QEMU?
+In general, everything included in this guide does not care about what
+the spec says is possible - it only concerns itself with what linux
+supports.  If there is a mechanism described in the spec that isn't
+supported, it is expected that an interested vendor will come along to
+help support it.
 
+However, the current Linux driver absolutely expects the range in the
+HDM decoders should be exactly the same from root to endpoint*.
 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 013b869b66cb..5452bb285140 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -448,6 +440,29 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
->  		allowed++;
->  	}
->  
-> +	if (info->mem_enabled && !allowed) {
-> +		dev_warn(dev, "RR decodes outside ranges, have a try by disabling Mem_Enable bit.\n");
-> +
-> +		/*
-> +		 * Instead of Return error when RR decodes outside platform ranges, reenable
-> +		 * Mem_Enable bit of DVSEC control for a try.
-> +		 */
+My reading of the 3.1 spec suggests this is also defined by implication
+of the "Implementation Notes" at the end of section
 
-Your comment says to "reenable mem_enable bit", but you clear it.
-I think you mean to say "reset mem_enable bit, and try to enable hdm".
+8.2.4.20 CXL HDM Decoder Capability Structure
 
-> +		rc = cxl_set_mem_enable(cxlds, 0);
-> +		if (rc)
-> +			return rc;
-> +
-> +		info->mem_enabled = 0;
-> +		cxlhdm->decoder_count = cxlhdm->decoder_count_cap;
-> +	}
-> +
+IMPLEMENTATION NOTE
+CXL Host Bridge and Upstream Switch Port Decode Flow
 
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 2a25d1957ddb..60b538f8b677 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -855,6 +855,7 @@ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd);
->   * struct cxl_hdm - HDM Decoder registers and cached / decoded capabilities
->   * @regs: mapped registers, see devm_cxl_setup_hdm()
->   * @decoder_count: number of decoders for this port
-> + * @decoder_count_cap: number of decoders from HDM Decoder Capability
->   * @target_count: for switch decoders, max downstream port targets
->   * @interleave_mask: interleave granularity capability, see check_interleave_cap()
->   * @iw_cap_mask: bitmask of supported interleave ways, see check_interleave_cap()
-> @@ -863,6 +864,7 @@ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd);
->  struct cxl_hdm {
->  	struct cxl_component_regs regs;
->  	unsigned int decoder_count;
-> +	unsigned int decoder_count_cap;
+IMPLEMENTATION NOTE
+Device Decode Logic
 
-Why is this needed, as opposed to simply re-reading the count?
+The host bridge/USP implementation note describes extracting bits for
+routing, while the device decode logic describes active translation from
+HPA to DPA.
 
 ~Gregory
+
+[1] https://gourryinverse.github.io/cxl-boot-to-bash/
+
+^ with the exception of Zen5 [2], which I don't recommend you replicate
+[2] https://lore.kernel.org/linux-cxl/20250218132356.1809075-1-rrichter@amd.com/T/#t
