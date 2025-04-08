@@ -1,158 +1,242 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B060E2686BC
-	for <linux-cxl@vger.kernel.org>; Tue,  8 Apr 2025 12:49:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17C3F6A33F;
+	Tue,  8 Apr 2025 13:45:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744116589; cv=none; b=cEofhkagKIUZAz3aYTmNQxqMWCJUjR9CvrWile9vhfJx4jYMG9K8VfbtIVqB5hsu3UfsH7nain5ZRUFrKR6sw/E5wezfA9RzzwM4EhYGEGfNxX5mEmOfcq0xEg/e1m302DIDlZYZ6uxpB2VdkHwpn6vdII+Pl3HsF1C3zgA97LA=
+	t=1744119922; cv=none; b=A2S47c4JU5JSD2T7Wcg59zDFwhwflxObk4+gq3g1uYFmQYPg+WH5fw1DfCe3S+W4GHyxT9SspFIHWT/CAGZBuduka2LtXh5a51+vHLPr8XGedUJJsclm1dRt81VCKsJbWg7aOyDLeZYg8uXRcB3twKyM83ffGu7M7Mz03imx7WQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744116589; c=relaxed/simple;
-	bh=rjBgU2iacb6hBJ8pQ9nQu+kSFlDifCgAo6hJywpVIEw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W2ht2L1zD8KMYX4U3tWGtbDzSC0KRevq/Mf3ue9+JxXVaHHQq8TyC2AuhLeFWSeL60eiXuj7zAMQlLKIqMEnv8sjCxJ6heVsVLjhBBcUzJe+RHQsSHMCx49k279ChHrP98Bpkjy0kdbPk9l372pW2W7+u1HuEF1rZxJrGc6+Wwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=WERNnnpT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0e6k+DqP; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=OQ8ybMv1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=OrAaAqSk; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1744119922; c=relaxed/simple;
+	bh=02tKonEyjE8il5xrivQt+HLW4nnHApchfcIkVH1/NZ0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nDea1Of15NfsAdOvUiDoahYRrBvDfN/qrHOoNRWD1YEpfDdX/hhpcIFSdXSoN2mG2RcXBRrTFtWS8xqvy0s0ssuZtr6aIwB2DWydutrLr3ZY7VVC2NvWhf67hQ+LHYjX+QCB6GR48MagDleZHcJdjZSfgsMSuKs/R9uykCWTXso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gZ7OoVcs; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="WERNnnpT";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0e6k+DqP";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="OQ8ybMv1";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="OrAaAqSk"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id EC38321186;
-	Tue,  8 Apr 2025 12:49:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744116586; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P5zMIUf/aj6q3SKRrmU7YoUI1fIw3u1hN5+0Mrx9/Jg=;
-	b=WERNnnpThQMaIFrxN5WARut0+BisWisdIAspRt7xsps/VCoLFwNv3i6H+dXTqyZGfQnVwX
-	jm9IB2kwRI4hSocsN2dCbi8IhNMTQBmxg8RZcdUYHXpL/UEakEQx4JImtaRqwwwMRd9fdU
-	PMoU2hy6lvRgRL4k7l0NR/aI5Zg2sVY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744116586;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P5zMIUf/aj6q3SKRrmU7YoUI1fIw3u1hN5+0Mrx9/Jg=;
-	b=0e6k+DqPZPlx9rBenoFr5tw2Qy2GTjrlYDUoVUEC6I+jshc08PoUZsYQ2mp/C2p3Isekcz
-	lEorM5E6/5E/p1Dg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744116585; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P5zMIUf/aj6q3SKRrmU7YoUI1fIw3u1hN5+0Mrx9/Jg=;
-	b=OQ8ybMv1L5Jic5/jjeZ228l3CnI+uzK6QsswZGEGhr7UFug9EtYXnAuxiBRpjncHw089lG
-	ikcgGGyx+gvYVvATJJoUuzUFRMYA99BLhdv48msHS2JWg9iDX4FSgQtNIsScH+8xok520N
-	rgyqswEpfCVB8ZXX3KPagsGFLfmb6W0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744116585;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P5zMIUf/aj6q3SKRrmU7YoUI1fIw3u1hN5+0Mrx9/Jg=;
-	b=OrAaAqSkJTMBqEN073m2gSqZrUoErcXMtiOBnFEZYE7OW09Zg6RvTQPur4hVK9fRCimB4a
-	ZBcKCODktAmsXoCg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 67F8813691;
-	Tue,  8 Apr 2025 12:49:45 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id zne0Fmkb9WeYJgAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Tue, 08 Apr 2025 12:49:45 +0000
-Date: Tue, 8 Apr 2025 14:49:43 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: David Hildenbrand <david@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] mm,slub: Do not special case N_NORMAL nodes for
- slab_nodes
-Message-ID: <Z_UbZ8yY7lbB15-P@localhost.localdomain>
-References: <20250408084153.255762-1-osalvador@suse.de>
- <20250408084153.255762-2-osalvador@suse.de>
- <92ff4f7f-90d2-48ab-8f7d-7fc3485276b5@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gZ7OoVcs"
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-7042ac0f4d6so13649347b3.1;
+        Tue, 08 Apr 2025 06:45:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744119920; x=1744724720; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Dw7kJPJQYjxaMDo7nd/b+XbBOuOHAwMDyUEb/lvDyhg=;
+        b=gZ7OoVcswxQPCUNnMyG38lQ7Z1JNJxnyvuSEnWXTCy9o9MsfBgydACThFEPX5MtAQz
+         k5l0eEJb6CeZq8OW6W/VyZvdsjCqqZ/kJRsKiNvkSG/+5G89kcZXZhrYjPXe6qMkpdyj
+         l5pmiDOhrruFFbvWzrveT1JFqBfOZqJ0mPEXwUStk3uIcNphB4+O+Q+wojAMRqCtMdtm
+         ZfSloLC9TldC2bwxQS1RWj3l/hZkE46E0xFa7iGrrY8lQ9IAJ52gyxP27eC+zzv3azWD
+         g2JT0gPHHEo3tsoDU8YFhjybVASQNGyb5gCo+fg0X+TV+It1ESBTcUkW9PcxcVsVYRT4
+         CMJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744119920; x=1744724720;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Dw7kJPJQYjxaMDo7nd/b+XbBOuOHAwMDyUEb/lvDyhg=;
+        b=gLA0vTsI4IkXMNvE8t3C+6wuA3VQW/sCMZXF/ScFrCBK0HjDx1Wy9/VQLf6TyD47Df
+         AZfyt6b93zBJkh5XUd9k/dB4u94z8B6dTFhXKGFOt/H0yCpnibyAyi27WKfn24N4pqkd
+         LCQA/beAFY5tXufWf6L973xHHEuPZXFWpmtGms1FrwueIXqMbOS8e3pvVQ44yI+n3HiT
+         MiRJFh6y4jCADx2NLZf5IEXW8Z8dIFiKirCAMJoPzUQ0TZi+PWR5RMqoJSct792OXi+E
+         6UcJfgdrR1aloCB0ARJKRcJ+6/RvZf2RaW8FyZ/qwTGhvIUhkehwcKi7U936WfH5+ZDn
+         NtbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUB1PCoLu+s3hOmNiBJFSefGdGBh6DDlSWHfZ7iTMKWIHHF0HEcj5x+Wjo5q+QjKEEVPp4nRuCROcY=@vger.kernel.org, AJvYcCXA+nh60Zfy5dNjiaHh6FaeKxngVfLNLPWWu255OjhWTb58qA/EwmqKybd2WMmCN5lQIPnsujdjLaPluUiJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxzRpWpolX0Ma6ZHWywo/dOZuGWw3DyecYMhBosz8Weisj1xH1
+	Wk3Z+xm9tFAqfMVU8skPTB2/AA7Be0UYEm6vwMGPw2YY7ckAnjxg
+X-Gm-Gg: ASbGnctefrlYZb55XTxCMSmyHCTO0lvwn8lEfIA0BXuvjYOTsx8oKctLj9FrQmDxNN8
+	a8fLxMKDtvsuYUfS4VZ7sfxlfAfTn82JjBg2W1BugzppJSSNuut/uK/wiZX8zPRUr0myB1RNO7U
+	HH1xK/NZ6teLolxs1uRwOtmq7bV1qx1WFJBImFpGlWWOeCLDXYgWXbxZ/edLhZkjmbdCydicVUA
+	eqMetP/UvzRhgjuneqAyjskYEgXutKTSrVICni4FV9TcLFzxoN9uGMsw1V4E1EP65JPtCbZu8gy
+	wpjSNR9vOnCIJ4j4MXyxC/bjmo59BhEdwrKQk4lL8OQ=
+X-Google-Smtp-Source: AGHT+IHDxXOXAIt3KXx6UHSUynoTCZwbV0/9Izo05tTRDzAD3JSCLU0CPGbeASO9hlZh4g0QmhvDhg==
+X-Received: by 2002:a05:690c:7006:b0:6f9:b12b:8953 with SMTP id 00721157ae682-703f4196e1fmr221965077b3.20.1744119919840;
+        Tue, 08 Apr 2025 06:45:19 -0700 (PDT)
+Received: from localhost ([2a03:2880:25ff:6::])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-703d1e4dedasm31013877b3.27.2025.04.08.06.45.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 06:45:19 -0700 (PDT)
+From: Joshua Hahn <joshua.hahnjy@gmail.com>
+To: Rakie Kim <rakie.kim@sk.com>
+Cc: akpm@linux-foundation.org,
+	gourry@gourry.net,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	joshua.hahnjy@gmail.com,
+	dan.j.williams@intel.com,
+	ying.huang@linux.alibaba.com,
+	david@redhat.com,
+	Jonathan.Cameron@huawei.com,
+	osalvador@suse.de,
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com
+Subject: Re: [PATCH v7 1/3] mm/mempolicy: Fix memory leaks in weighted interleave sysfs
+Date: Tue,  8 Apr 2025 06:45:16 -0700
+Message-ID: <20250408134517.2967112-1-joshua.hahnjy@gmail.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250408073243.488-2-rakie.kim@sk.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <92ff4f7f-90d2-48ab-8f7d-7fc3485276b5@redhat.com>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -4.30
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 08, 2025 at 12:17:52PM +0200, David Hildenbrand wrote:
-> Feel free to add a Suggested-by: if you think it applies.
+On Tue,  8 Apr 2025 16:32:40 +0900 Rakie Kim <rakie.kim@sk.com> wrote:
 
-Sorry David, my bad, totally missed it.
-I shall add it.
+Hi Rakie,
+Thank you for your work on this fix! Everything looks good to me : -)
 
-> Do we have to take care of the N_NORMAL_MEMORY check in kmem_cache_init() ? Likely it
-> would have to be a N_MEMORY check.
+Reviewed-by: Joshua Hahn <joshua.hahnjy@gmail.com>
 
-Yes, should be N_MEMORY.
+> Memory leaks occurred when removing sysfs attributes for weighted
+> interleave. Improper kobject deallocation led to unreleased memory
+> when initialization failed or when nodes were removed.
+> 
+> This patch resolves the issue by replacing unnecessary `kfree()`
+> calls with proper `kobject_del()` and `kobject_put()` sequences,
+> ensuring correct teardown and preventing memory leaks.
+> 
+> By explicitly calling `kobject_del()` before `kobject_put()`,
+> the release function is now invoked safely, and internal sysfs
+> state is correctly cleaned up. This guarantees that the memory
+> associated with the kobject is fully released and avoids
+> resource leaks, thereby improving system stability.
+> 
+> Fixes: dce41f5ae253 ("mm/mempolicy: implement the sysfs-based weighted_interleave interface")
+> Signed-off-by: Rakie Kim <rakie.kim@sk.com>
+> Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
+> Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
+> Reviewed-by: Gregory Price <gourry@gourry.net>
+> ---
+>  mm/mempolicy.c | 66 ++++++++++++++++++++++++--------------------------
+>  1 file changed, 32 insertions(+), 34 deletions(-)
+> 
+> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> index b28a1e6ae096..0da102aa1cfc 100644
+> --- a/mm/mempolicy.c
+> +++ b/mm/mempolicy.c
+> @@ -3479,7 +3479,9 @@ static void sysfs_wi_release(struct kobject *wi_kobj)
+>  
+>  	for (i = 0; i < nr_node_ids; i++)
+>  		sysfs_wi_node_release(node_attrs[i], wi_kobj);
+> -	kobject_put(wi_kobj);
+> +
+> +	kfree(node_attrs);
+> +	kfree(wi_kobj);
+>  }
+>  
+>  static const struct kobj_type wi_ktype = {
+> @@ -3525,27 +3527,37 @@ static int add_weighted_interleave_group(struct kobject *root_kobj)
+>  	struct kobject *wi_kobj;
+>  	int nid, err;
+>  
+> +	node_attrs = kcalloc(nr_node_ids, sizeof(struct iw_node_attr *),
+> +			     GFP_KERNEL);
+> +	if (!node_attrs)
+> +		return -ENOMEM;
+> +
+>  	wi_kobj = kzalloc(sizeof(struct kobject), GFP_KERNEL);
+> -	if (!wi_kobj)
+> +	if (!wi_kobj) {
+> +		kfree(node_attrs);
+>  		return -ENOMEM;
+> +	}
+>  
+>  	err = kobject_init_and_add(wi_kobj, &wi_ktype, root_kobj,
+>  				   "weighted_interleave");
+> -	if (err) {
+> -		kfree(wi_kobj);
+> -		return err;
+> -	}
+> +	if (err)
+> +		goto err_put_kobj;
+>  
+>  	for_each_node_state(nid, N_POSSIBLE) {
+>  		err = add_weight_node(nid, wi_kobj);
+>  		if (err) {
+>  			pr_err("failed to add sysfs [node%d]\n", nid);
+> -			break;
+> +			goto err_del_kobj;
+>  		}
+>  	}
+> -	if (err)
+> -		kobject_put(wi_kobj);
+> +
+>  	return 0;
+> +
+> +err_del_kobj:
+> +	kobject_del(wi_kobj);
+> +err_put_kobj:
+> +	kobject_put(wi_kobj);
+> +	return err;
+>  }
+>  
+>  static void mempolicy_kobj_release(struct kobject *kobj)
+> @@ -3559,7 +3571,6 @@ static void mempolicy_kobj_release(struct kobject *kobj)
+>  	mutex_unlock(&iw_table_lock);
+>  	synchronize_rcu();
+>  	kfree(old);
+> -	kfree(node_attrs);
+>  	kfree(kobj);
+>  }
+>  
+> @@ -3573,37 +3584,24 @@ static int __init mempolicy_sysfs_init(void)
+>  	static struct kobject *mempolicy_kobj;
+>  
+>  	mempolicy_kobj = kzalloc(sizeof(*mempolicy_kobj), GFP_KERNEL);
+> -	if (!mempolicy_kobj) {
+> -		err = -ENOMEM;
+> -		goto err_out;
+> -	}
+> -
+> -	node_attrs = kcalloc(nr_node_ids, sizeof(struct iw_node_attr *),
+> -			     GFP_KERNEL);
+> -	if (!node_attrs) {
+> -		err = -ENOMEM;
+> -		goto mempol_out;
+> -	}
+> +	if (!mempolicy_kobj)
+> +		return -ENOMEM;
+>  
+>  	err = kobject_init_and_add(mempolicy_kobj, &mempolicy_ktype, mm_kobj,
+>  				   "mempolicy");
+>  	if (err)
+> -		goto node_out;
+> +		goto err_put_kobj;
+>  
+>  	err = add_weighted_interleave_group(mempolicy_kobj);
+> -	if (err) {
+> -		pr_err("mempolicy sysfs structure failed to initialize\n");
+> -		kobject_put(mempolicy_kobj);
+> -		return err;
+> -	}
+> +	if (err)
+> +		goto err_del_kobj;
+>  
+> -	return err;
+> -node_out:
+> -	kfree(node_attrs);
+> -mempol_out:
+> -	kfree(mempolicy_kobj);
+> -err_out:
+> -	pr_err("failed to add mempolicy kobject to the system\n");
+> +	return 0;
+> +
+> +err_del_kobj:
+> +	kobject_del(mempolicy_kobj);
+> +err_put_kobj:
+> +	kobject_put(mempolicy_kobj);
+>  	return err;
+>  }
+>  
+> -- 
+> 2.34.1
 
-> But, I was wondering if we could get rid of the "slab_nodes" thingy as a first step?
+Sent using hkml (https://github.com/sjp38/hackermail)
 
-I glanced over it and I did not see anything wrong with it, just a
-question below.
-
-So, if Vlastimil and Harry think this is fine, we can indeed do this.
-If so, I would combine this and the #1 first of this series and add
-your Signed-off-by as co-autor. Is that fine by you?
-
-
-> @@ -3706,10 +3698,9 @@ static void *___slab_alloc(struct kmem_cache *s, gfp_t gfpflags, int node,
->  	if (!slab) {
->  		/*
->  		 * if the node is not online or has no normal memory, just
-> -		 * ignore the node constraint
-> +		 * ignore the node constraint.
->  		 */
-> -		if (unlikely(node != NUMA_NO_NODE &&
-> -			     !node_isset(node, slab_nodes)))
-> +		if (unlikely(node != NUMA_NO_NODE && !node_state(node, N_NORMAL_MEMORY)))
->  			node = NUMA_NO_NODE;
-
-After my first patch, slab_nodes will also contain N_MEMORY nodes, which
-makes me think whether that check should be N_MEMORY?
-
-
-
--- 
-Oscar Salvador
-SUSE Labs
