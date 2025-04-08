@@ -1,199 +1,114 @@
-Received: from esa6.fujitsucc.c3s2.iphmx.com (esa6.fujitsucc.c3s2.iphmx.com [68.232.159.83])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63202AE74;
-	Tue,  8 Apr 2025 05:38:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.159.83
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744090718; cv=fail; b=BME0swS0ziLhWFBs6bNYDHqpvAVZKMuDdtDvne97HKfLzSHF5Hh2Rf+/mJLqhnlboKcMZaK2C1hES7+ia9uaL48jcV/dgL8f0K+GsIsdFTitoeXmNnVspcyXIcegETsLMgnGp42PrBEAqzVx2g/RlizfZvNa89D+prExQx2Da4M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744090718; c=relaxed/simple;
-	bh=iQ9P2G4KO69VxplDyJPPZ2eUwe7CIFpz6V45a100YFE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=QOAUpLd+Xg/9PeZSbThoZ0JI2FIiSQ1oeLKbXmfYQzVXd95A5S4FCbDZNafwxpi+e1GARLcRLX22o0D9axJ88icLtkDQHe8nvWUw+ws+/gJBsGz/fDr6WUgcuLtta4Y6EP4RGurSO8ZwySTLwkIFPzT4gs8zyM54qqrfBAwD2G8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=Y4UWQlQI; arc=fail smtp.client-ip=68.232.159.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="Y4UWQlQI"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
-  t=1744090716; x=1775626716;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=iQ9P2G4KO69VxplDyJPPZ2eUwe7CIFpz6V45a100YFE=;
-  b=Y4UWQlQIYfe6DwRR6WwWFU9c/5bHcFW2yB3O/j3dSEkYK45KQ4oNq+Pw
-   OlspMkZqnrkRKnOHlS1/tVSMA7rbNoFIjUdulilQAI5jzGi6WiBzSn4sP
-   pqJ9R76qdgDII+pJj9+SGH7jHcw4cjfy+M4m8YEZg9sjwjwLRlVucbO+9
-   BhZOFFAWEL4LGVZ5/YsUeQPdyMJFp+trLs+5Iva/aapL4HYcS1ULUrXhl
-   KWcAFZrUT1jMp3HHD3b34Po0wwKB3RRcdH+/xyCOdC1YAP7g9Vn0YjSpo
-   v+Rxa9oFm8Ldhue9QDkBv4FjLdkDPszXZLFNX2AOWR8sBXOJmKU9fEw48
-   Q==;
-X-CSE-ConnectionGUID: V5W76cD8TU+PifF6IuHZUw==
-X-CSE-MsgGUID: lRqrpqJARcuLdQK74rMn6g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="152077252"
-X-IronPort-AV: E=Sophos;i="6.15,197,1739804400"; 
-   d="scan'208";a="152077252"
-Received: from mail-japaneastazlp17010002.outbound.protection.outlook.com (HELO TY3P286CU002.outbound.protection.outlook.com) ([40.93.73.2])
-  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 14:37:24 +0900
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BjWvzqxCN3P4BuiuR4zlhLSn8PF8/ImjvR0gXhFDKbCywFD17n00lBKqEZHFTewvwgjXu5tGEk3tfb43Z7V8EfNpZKBd0/HtnocGexYyRkxjVrpL+Wr12TiArIKOQATn9EyfsG80aiampMRTMH7xVCaECNmUgPGYqOT05pMCIL7CxyAnTaqe2HIFaDVRUmiHFDkDhdNAFi+xc7BcIKCCtFLjBU00u1C+MI+S+vQgeLnCWV4QJ8/is+bDNpN9/nkkyLFwjjPGb/ZBbvCKeZswKUlK8OVtIFwudtJkC2Z8H0xcuGk7BHz3tjbMwrjA4VVFTLGyX1Q+obCyOqdxre1uYw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iQ9P2G4KO69VxplDyJPPZ2eUwe7CIFpz6V45a100YFE=;
- b=fwpujL5TDvK3kSkJ213AfeHLfUSUS42v/t7HfVYVQsnNAkao0FF4Dtfd+6PXJx4hjX7EAU77fACNaSrdrWidWORQd5/12Lvwr3TJDSbsXqUD5JqHRAFk0Lp63X3c2Awx9anvBuOU7ZhH3bz10HOhoQYIwytoHh7x7wDdkrJNa1PxCMqXQAEMVXuBVXtDvoihD7xUMSyvMmpX1Zee4bH0eQoMMb7ja1ylVJgnyK4vtE3oiKE3d/qwc9ho5wac9XH0K5/WIIDUoiGMNBA/ZjfrnohJrv61Z/pQB2SS7baH68ak/4RAWydvb8K2HiMLN3cTLVZ0BPL3xzg9CCgg2pHy2A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
- dkim=pass header.d=fujitsu.com; arc=none
-Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com (2603:1096:403:6::12)
- by TY4PR01MB12733.jpnprd01.prod.outlook.com (2603:1096:405:1ea::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.33; Tue, 8 Apr
- 2025 05:37:17 +0000
-Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com
- ([fe80::d9ba:425a:7044:6377]) by TY1PR01MB1562.jpnprd01.prod.outlook.com
- ([fe80::d9ba:425a:7044:6377%4]) with mapi id 15.20.8606.029; Tue, 8 Apr 2025
- 05:37:16 +0000
-From: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
-To: Gregory Price <gourry@gourry.net>
-CC: "lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: Re: CXL Boot to Bash - Section 2a (Drivers): CXL Decoder Programming
-Thread-Topic: CXL Boot to Bash - Section 2a (Drivers): CXL Decoder Programming
-Thread-Index: AQHbjvNia1PhMmp5z06r6vu5ANRYCrOQF8EAgAB+mQCACLNIgIAAEfCAgAAXGIA=
-Date: Tue, 8 Apr 2025 05:37:16 +0000
-Message-ID: <ed9880a0-0dd5-4ae0-a9d0-d871fae200ac@fujitsu.com>
-References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
- <Z6OMcLt3SrsZjgvw@gourry-fedora-PF4VCD3F>
- <Z8o2HfVd0P_tMhV2@gourry-fedora-PF4VCD3F>
- <cf7b97d8-4393-424c-89fc-aa810d907a67@fujitsu.com>
- <Z-1HPqufU7MnQ6ii@gourry-fedora-PF4VCD3F>
- <fb2e8912-9a64-4053-bb8c-dcaceb669731@fujitsu.com>
- <Z_Siq6JrfST1T7la@gourry-fedora-PF4VCD3F>
-In-Reply-To: <Z_Siq6JrfST1T7la@gourry-fedora-PF4VCD3F>
-Accept-Language: en-US, zh-CN
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Mozilla Thunderbird
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=fujitsu.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TY1PR01MB1562:EE_|TY4PR01MB12733:EE_
-x-ms-office365-filtering-correlation-id: 47b38687-5627-4e46-ff1b-08dd765f6bf1
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|376014|366016|38070700018|1580799027;
-x-microsoft-antispam-message-info:
- =?utf-8?B?UEZDV2VBS1dYZmhPeWpNRUlhS05JYXh3MjUyZUVNVmVmaXV2NUo1SFRDRG1a?=
- =?utf-8?B?dTRueDlrdUZoZkhkWjlGUWtvOTltck1ZOHk2bVdYRSs2Wm1SMWt5V2hJY3hD?=
- =?utf-8?B?UVdLTGxNbUUyZ1RyQ01GMC83dlg4NUV5SVJ0N3NrclNaL2RsQTUyY0NMM3dn?=
- =?utf-8?B?M2N4cml3SUk4NXNXQ0xtdE53T3ViL3B6T01GemFSSlZsVWtZb2pxRjByUTBE?=
- =?utf-8?B?UG1COTl6MGF5UWErK005WGZoaWR2S2w5M1ExRnJPMWFIU3M0QmVCSHF6cUdC?=
- =?utf-8?B?RGxuM3hIV1VqSndoSmJmeVprcU5zOXZsTkkyRmp5bW9LU3NGdHR5aUNMWWZK?=
- =?utf-8?B?NDRER3l6dy9DSWxQUitrMFFucDg5VUx5a1J1dTh2a1ZjMXJrbVJMdS83N3BW?=
- =?utf-8?B?c3dxQWViTWU5R2FGSXNSRTBHSzJvRU9OT0tmYlVvZ0Q2WWtkTktqa0Y4ZEhi?=
- =?utf-8?B?ZmFuQ01ocTNwaHM2bFJ6eFJkWjlFZzlPalN1RXB1TXFEVHc3bWVrSWFmYkZQ?=
- =?utf-8?B?Z05BSEZ2RTRKODhFbDIzTEtOTkpITnUvcTcxRmxCMUpESjlBazZSQ05OSktX?=
- =?utf-8?B?dVVzOHJlcXdDTEZGcDljQnliSkRWL2UweUNBbEs1NVRoRS9vRHZRc21WQUpq?=
- =?utf-8?B?Y1IxRTJkeDJDY1VKb3lrQTlNK0VadC9PLy9tNzFwQmtraU9VZGJpbWk1cUgr?=
- =?utf-8?B?aERmNGM2MVB3VmEycUoyOWN6dFZtSHZzaWwyWTd0eG0wNFRUZ2plOTU2cDYz?=
- =?utf-8?B?VkYwZ3lMZVNPZHRleUZ3bVk3aXFhN1p6elg3dmNZNXc5R2xia1QvVjR4VHp3?=
- =?utf-8?B?Tmt6eUlQUFV2WVA2ampWdDJ3aC92ekRlMXByYlRBejdKeFpiWm1RZHBnb1ha?=
- =?utf-8?B?Y0N1dXcvRHNTU3R0TmlLVjRVc0JicGlYRDdINmZEWEhNM2VudUozSnNHM01Y?=
- =?utf-8?B?NGxYd2lWWmgzbmQ5RGhJSFpKbGY0Zk1nZW1DZ3hQUGZYSEs0eC9PTms4d2V1?=
- =?utf-8?B?UXJZanpmYmxpL05NZVE3a3VCVjdMZDJkNFhWQ2F6MDFTVE0weFFyNm1mQkR6?=
- =?utf-8?B?UkpOTjBsam4raG9FUUdZZWM0QUY2N1NxMFY4RzdlSVArQU5TM0R6NXE3VEo5?=
- =?utf-8?B?S2haZHVMOUJ0R1I4cDQrcUhiVzdTSXBOYmtjZVNOcnltdURrK3p3OVU4U1VF?=
- =?utf-8?B?UDkxYmw2aGtMQVJsemJYN3UzalJjZmRPQ1J4NjhJb21zdHhwSUVrSW5uV2RS?=
- =?utf-8?B?MzE2YkEwVEsyaTdqcGFJalFkSTFXSWJxOGUvczdpalJUd3B1K01FMFdHRkdk?=
- =?utf-8?B?ajZ5RWZBQnBEeStCWEo2Nk1yOFRMS1hGUDdVUDhGT0JUQnVQMk44ZysvRVFG?=
- =?utf-8?B?dUxhUW1zUTE1RHYwaW9TNXJXTUpCVWJmd3gwVHd3KzBBZzhNeE8wcFI2MWh6?=
- =?utf-8?B?NXk0dHpzV2FHOTNka2wrL2h5QXo4UmZWOW92MjhRTjJVaGlnU3VsMHNkdzBW?=
- =?utf-8?B?ZFRWdkpVQmlmdzFrMi9FcEVEYW1XdndCQStCRHlDR1VmTmJXVkpia2c2Z1ZS?=
- =?utf-8?B?VmhFZm43a0pMRG5QZXF0VWdNeUk1OG1SQXFmM25FUktYNFArRHRpWEg4cndU?=
- =?utf-8?B?bGd4byt1emVlTFZBR0FMblJtcU9xQUxtZTA1NVVhS0ptc3FkWXh0Um8ybUNz?=
- =?utf-8?B?YUlwTFFpYm1XdWoyRy84cy9WU2ZXMmVMWnBjdG1xcEhWenVMUzkvNkhoY1hT?=
- =?utf-8?B?NlROOFZselFKZmhjZE5LT0dBNENFTW9uaE5VNTBHWUdXamphY1A0ZkRwRm5k?=
- =?utf-8?B?Rk1GNklGYTNRaW56Y050VUZxeEJHRGNQMytveVN1eUhneDVpZHovVXBiaG02?=
- =?utf-8?B?eGZPdUVZMDRQKzBsTnIwbGhONStMRzBrVllmYmI4QUd4VGxkNFM1dUxRdUNh?=
- =?utf-8?B?d0tpWUR3NWxlTFEwbXRmT3YvQVoycTRGN2E0M2xlblZ3cXNsR3gvNEZzMy9l?=
- =?utf-8?B?b0o2S1Z0RG53PT0=?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY1PR01MB1562.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018)(1580799027);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?dmVSc01FU1Q3R2s4d2xhaWRPSG53cEQ5bDF5dHZBNTlTa2NTK2tua20zQXhy?=
- =?utf-8?B?bzlEK3YzM29xOTA4aERZVmJtd0l2dFQ3NjczdENSWnJxeGRJSEdqcHUzRHRw?=
- =?utf-8?B?MTNYVVRTMjZUTXMvcHBQbzBMTEhhVCtmMDA2NVlWMG1oam5lNlI5RllLbHNI?=
- =?utf-8?B?cXh6Q0VaanhuSWhJQXFIM0VmUTZocWVFaGJldmExSy9vSmEvUzJPRWVQM3dW?=
- =?utf-8?B?QkZKT0RWUUswK0NmckxNa1FIQ2FEQkdiRnhVWDA3MytrQStySldhM0pVelFr?=
- =?utf-8?B?ak8xbGVVVGYvWHBWNEJ1ektVa2Uvdmo0cDhmcExieC9Lcmh1QmVtLzJKZitu?=
- =?utf-8?B?azZwekFWTmxReEQ4T2xsdEVESUljMmUyN2ZNblludHVKWHFwMzZJQi9QR2h1?=
- =?utf-8?B?RGpZbDk3NnlCblo4cFBXNmNrT1lCem4rVFNucENMTmNpV3Vhd1gzWUFxS0M2?=
- =?utf-8?B?dmVzMFBqL3cwMVRQRkdqenhtYWxYMVovc1NsK3h0VjJodEdQc3JuM29MTFNH?=
- =?utf-8?B?eG1QY2NQSTgrYWo0cjNEcFBLRDQwTkVvU3VMVkh4WitvNGFSclh4MWl2TVZq?=
- =?utf-8?B?S2JXMENrK3VhdEdMbTlKQWptdWRTUjg5RnRKTkNBVjZoYUYrdC9abEZBQXZm?=
- =?utf-8?B?L2FNbHlHdTBuaTV3NGlIaEdzNGFHRC9kQmNINm5nbHFZS0hqbHU2SW8zY2h1?=
- =?utf-8?B?ZDBkQ2lFdFNvZ3BwaE9YSU9kUHZ2Zmh3NDVndmllbUE0YzNRcDFLU0NzcC9t?=
- =?utf-8?B?c1dic2xkNHQ0V1pKY0FGT2JaYjB3Y1R3OWxWcWNCYzMvQVIzbG5ubCtDb2li?=
- =?utf-8?B?QzVsL3RxMWdVZEhLSFo2R2lGaUx2WUVMWVdFdDNqdnlqaVZRdzZQYzNVSTVH?=
- =?utf-8?B?bkMyNS9WVWJLN2RUSVJVOTVENFo5M25taldvYjFxVnBBNlkzTVBWTkNmRnE5?=
- =?utf-8?B?UHRHNVFZSkxPS2FSajZUaU9PNGxteVBOOWtYaVU2dVdqYXZNcEw5VGdaUzM2?=
- =?utf-8?B?b1lpeWZTZk05a3U1UFhRZGpZUGZjK0htei9pVnZXS1FEa2xlL0NkRUYvdlVa?=
- =?utf-8?B?bkhVZ0pyRUY2aklVWkh0TmJ6R3BhT2xvVkFkQVJTTTNiNW82TFNlamxwK3NC?=
- =?utf-8?B?bmU5K0VrS216SW53YTFPZVFLeXR2Z2hKMHR4a0h2WGwxRW1BeDlMT3FSVHBB?=
- =?utf-8?B?QllFRStmMHZxZVRwQ2hiaHdjVDErWmRGYnhvenlXdjg2eEhhVWgxUG9aTDNo?=
- =?utf-8?B?bE8xTFJKc1daMkhIOXpWQm0wMjZQRlpxakpXS1BSazJ4eXQ3ZnAxYStqTnUw?=
- =?utf-8?B?ZTJBSUpyNStEUWJpR3E5VHRTcXRBak85NHUxSGZKT0dvckgzTHVuREJ3aEVn?=
- =?utf-8?B?eHI1N2l1ZElpMzlJUHpPYUQwSldLT2Z0WHhmdXFsWGNReVJtQ1VQOEUvbGx6?=
- =?utf-8?B?V0lMMkRjeldHOW5tS3FkNjF6Mmd4MXFjaHc1ZzBZbkIvNC9tWStHckRyUXk3?=
- =?utf-8?B?V2krOXMvZnJ0bjdJVWFIb2U5VE1UdkFaZXJ6NmF5USs4ejhYNUMyYVZKVGdJ?=
- =?utf-8?B?QS96SEcybjNGdDBXMEQ1QWlLeDdRRDVkUzhhTHg4a3FqL2Z4S2ZGNGQ4WktH?=
- =?utf-8?B?MTkvR3czRUVXWFFnY2xHVTBOMStNMmZEMkY3ZnhMbGtzaG5FQ1gwd3FoQ3NZ?=
- =?utf-8?B?SkhMSmV0WUxtRmkvQ2hmSTZodW5pR0JvT0oxMGJxOG9KNjNPU3hLWXJ5UENL?=
- =?utf-8?B?aGFpUzJKUStBSGNYdzluYVBpTlFTMmdqODZsQmRkdkJDeEg1TENOTnBqMVNp?=
- =?utf-8?B?SDd1R0ozaktvc1V4M2kwdDB0TDMrT0xBQmxyZEVna1JxdVRUdVFWd0gxR0ZZ?=
- =?utf-8?B?NWZxSjRGdWJVUVZsMVQwSk5CT2hoY3NlMmxINlB6Wlc2OFFmdU4vK1ludXY0?=
- =?utf-8?B?NHRiSWY5NkZUN0loelMzL2JSeHlYOVVQai9YQmNpWXpZZmhJd1ZNeTVIcWpY?=
- =?utf-8?B?ZzVMSVRTNUZScFFVUFoyYVNwQ2JrMk5UN282U3VwZGVmNVJSWmxlb2Nac0Iz?=
- =?utf-8?B?ckEyTDUvTEJaNVJzdk42dTRkR2dqNm5KS3BqVzdhOU9Na2VFbWREbUM2cmVX?=
- =?utf-8?B?RGp6V1ZuNi92NmdycEJSaUtCK1NNaEpqNEk4TzJYR3FYcFRvNmhlOU5RT3FZ?=
- =?utf-8?B?YkE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7D80A90760E4F54F940B6CF18C025748@jpnprd01.prod.outlook.com>
-Content-Transfer-Encoding: base64
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3278321767D;
+	Tue,  8 Apr 2025 07:33:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744097639; cv=none; b=X3kn3LOw1eD8tARVV3b6RVYMswYtUw1oFQwdzZNNdKpBQpE9H1SU9JBrLAE+swZdKN2qEsh9gOk+8fAQtrBSnHFD09kXweNLIEHpLSTkcmxERNcMWTLJJZIY35s/Q/TF4z8Ef43IK1NpA91QQ65zD4GB17VWpNAXRZL/yl5KUr4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744097639; c=relaxed/simple;
+	bh=gzZTqg8Iy4Z9Xg/wjZQwPqD67nnEhaC2eeaJMbw96v0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J8uQ+rLt/m4af2t7qAUNWFY1cXgwu7pGr6ONpmOwbkg6xn+miVIWZ84/Mhv+Bb7q6BQ+IgIp5m3xMqvZa9uMb+E1Hh5LBshk77YFeXWqSS7Bunchs4B17lpVldCjDFL+ijnYn0ib19tiuJY7lIH4Vf/VKDWMhMKX0YKf18TeNdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-f0-67f4d15cb46e
+From: Rakie Kim <rakie.kim@sk.com>
+To: akpm@linux-foundation.org
+Cc: gourry@gourry.net,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	joshua.hahnjy@gmail.com,
+	dan.j.williams@intel.com,
+	ying.huang@linux.alibaba.com,
+	david@redhat.com,
+	Jonathan.Cameron@huawei.com,
+	osalvador@suse.de,
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com,
+	rakie.kim@sk.com
+Subject: [PATCH v7 0/3] Enhance sysfs handling for memory hotplug in weighted interleave
+Date: Tue,  8 Apr 2025 16:32:39 +0900
+Message-ID: <20250408073243.488-1-rakie.kim@sk.com>
+X-Mailer: git-send-email 2.48.1.windows.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	NTxJ6MF2LUTiifi6NlXz9p4i3InrD+HRPPrRbaSYssUELgR8wpuPf5L+rdpAqoNpjhp43L+0AgH2JZELUfUbIM7PlJABUelc65KYJpR6P2jl35/BnzYlOMjYh2aW92NHh2VjX0EzBztZ+fJQPmpmZ9/AKcwlHvBO9LczMnfOuhDyRKaTH9jdB0gTzem0ff6i7jZ5r+4hOzmyLMEWb2dFCOQmt/ZtNVAO1YJgIzfInfzvj2NbQpIyt0tRhYdvoJBKf59W1OSFCuHCSUpqwTU+3vTtsO7DQcBqBuve6GaMcQ+lw3IihTUOD23iwpyyicWPXRME6WcB8AJ1KBz/R4q2dpltc6CoCLAY6s8QhHqGLNAz/uSqE1h9UtsOh4tyYpEoMpUcYzn+78XPiF9ZyHrq+Pq7q0U8LhweVZPoAOh6pF9A9QT2XAQKTeR0odc+bbi4OUNjfQIEAWJGjFWo4K91qz8XW/ItkbeR/cdkUkKkF1jF73/uoHPrW6n8pSTrUWqV6KkyHGsZyFGMuL3nsaiojN4n3mqMn/Ect+QNudIYHoK6OODUjg0Nv1ZlS2ilORL2yb4eH5t6hxBKC4f3gCg10kQR9X75OJR0OvwT558ERDxPiPL5jE9tP4u1ap9jJUe0
-X-OriginatorOrg: fujitsu.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY1PR01MB1562.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 47b38687-5627-4e46-ff1b-08dd765f6bf1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2025 05:37:16.1142
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: eePbA50bJTWkV5yJSfiWZ69l8SHyNxq1jUfuMNmtbe2bYMyJl45bJ/7iCafB4oN+ou+mvbPOH4Q9TN2PhX9Gng==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY4PR01MB12733
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrILMWRmVeSWpSXmKPExsXC9ZZnkW7MxS/pBt/nmlvMWb+GzWL61AuM
+	Fl/X/2K2+Hn3OLvFqoXX2CyOb53HbnF+1ikWi8u75rBZ3Fvzn9XizLQii9VrMhy4PXbOusvu
+	0d12md2j5chbVo/Fe14yeWz6NInd48SM3yweOx9aerzfd5XNY/Ppao/Pm+QCuKK4bFJSczLL
+	Uov07RK4Mk7/nMVasFaoYtmahSwNjEv4uxg5OSQETCT+bF7DCmPfOLWbpYuRg4NNQEni2N4Y
+	kLCIgKzE1L/ngcJcHMwCj5kkHj1/wQiSEBaIkFh+YQdYL4uAqkTHrPvsIDavgLHEq2t3GCFm
+	ako0XLrHBBEXlDg58wkLiM0sIC/RvHU2M8hQCYH7bBJPZ35kg2iQlDi44gbLBEbeWUh6ZiHp
+	WcDItIpRKDOvLDcxM8dEL6MyL7NCLzk/dxMjMKCX1f6J3sH46ULwIUYBDkYlHl6Po5/ThVgT
+	y4orcw8xSnAwK4nwvp34JV2INyWxsiq1KD++qDQntfgQozQHi5I4r9G38hQhgfTEktTs1NSC
+	1CKYLBMHp1QDo5JgS+CxrDeaJU1zUt5MOmtz+e2u+2EFG6REktST7r3XYDBU+Gy34WjtS9GO
+	msm8DW+Y+uvdzfgtOmdNSr/4Ji7SXCey7M7Eb3N7RUofMESpsHhYyU666FX98LxAoFUOm1tX
+	a/XmpPgZ32QFato4n7WsqYu9GjY32rnSbmeiK9/GhbtLWRYqsRRnJBpqMRcVJwIAdMaYwmQC
+	AAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNLMWRmVeSWpSXmKPExsXCNUNNSzfm4pd0g43PNS3mrF/DZjF96gVG
+	i6/rfzFb/Lx7nN3i87PXzBarFl5jszi+dR67xeG5J1ktzs86xWJxedccNot7a/6zWpyZVmRx
+	6NpzVovVazIsfm9bwebA77Fz1l12j+62y+weLUfesnos3vOSyWPTp0nsHidm/Gbx2PnQ0uP9
+	vqtsHt9ue3gsfvGByWPz6WqPz5vkAniiuGxSUnMyy1KL9O0SuDJO/5zFWrBWqGLZmoUsDYxL
+	+LsYOTkkBEwkbpzazdLFyMHBJqAkcWxvDEhYREBWYurf80BhLg5mgcdMEo+ev2AESQgLREgs
+	v7CDFcRmEVCV6Jh1nx3E5hUwlnh17Q4jxExNiYZL95gg4oISJ2c+YQGxmQXkJZq3zmaewMg1
+	C0lqFpLUAkamVYwimXlluYmZOaZ6xdkZlXmZFXrJ+bmbGIFBvKz2z8QdjF8uux9iFOBgVOLh
+	9Tj6OV2INbGsuDL3EKMEB7OSCO/biV/ShXhTEiurUovy44tKc1KLDzFKc7AoifN6hacmCAmk
+	J5akZqemFqQWwWSZODilGhjPL5y/5dKRbRLJ35pMkjQPb9Rd4Z1/cuZ/Fwcm06cPSwr8ZRd8
+	eCLMsuzFZrXcOV1THqwuOsKjObnzySa2E2yrsneu7s1evIrfTnpdzFXr/IrrjzUnvQ38+dN3
+	64qFNh4NXY37NkTI3O/sncsa6r7zjQbnvEOTWp/cS9oks2JmUItwe/iSnapLlFiKMxINtZiL
+	ihMB9C1t6V4CAAA=
+X-CFilter-Loop: Reflected
 
-R3JlZ29yeSwNCg0KDQpPbiAwOC8wNC8yMDI1IDEyOjE0LCBHcmVnb3J5IFByaWNlIHdyb3RlOg0K
-PiBNeSByZWFkaW5nIG9mIHRoZSAzLjEgc3BlYyBzdWdnZXN0cyB0aGlzIGlzIGFsc28gZGVmaW5l
-ZCBieSBpbXBsaWNhdGlvbg0KPiBvZiB0aGUgIkltcGxlbWVudGF0aW9uIE5vdGVzIiBhdCB0aGUg
-ZW5kIG9mIHNlY3Rpb24NCj4gDQo+IDguMi40LjIwIENYTCBIRE0gRGVjb2RlciBDYXBhYmlsaXR5
-IFN0cnVjdHVyZQ0KPiANCj4gSU1QTEVNRU5UQVRJT04gTk9URQ0KPiBDWEwgSG9zdCBCcmlkZ2Ug
-YW5kIFVwc3RyZWFtIFN3aXRjaCBQb3J0IERlY29kZSBGbG93DQo+IA0KPiBJTVBMRU1FTlRBVElP
-TiBOT1RFDQo+IERldmljZSBEZWNvZGUgTG9naWMNCg0KR3JlYXQsIEkgYW0gZ3JhdGVmdWwgZm9y
-IHlvdXIgZW5saWdodGVuaW5nIGd1aWRhbmNlLg0KDQpNYW55IG1hbnkgdGhhbmtzIGFnYWluLg==
+The following patch series enhances the weighted interleave policy in the
+memory management subsystem by improving sysfs handling, fixing memory leaks,
+and introducing dynamic sysfs updates for memory hotplug support.
+
+### Background
+The weighted interleave policy distributes memory allocations across multiple
+NUMA nodes based on their performance weight, thereby optimizing memory
+bandwidth utilization. The weight values are configured through sysfs.
+
+Previously, sysfs entries for weighted interleave were managed statically
+at initialization. This led to several issues:
+- Memory Leaks: Improper `kobject` teardown caused memory leaks
+  when initialization failed or when nodes were removed.
+- Lack of Dynamic Updates: Sysfs attributes were created only during
+  initialization, preventing nodes added at runtime from being recognized.
+- Handling of Unusable Nodes: Sysfs entries were generated for all
+  possible nodes (`N_POSSIBLE`), including memoryless or unavailable nodes,
+  leading to sysfs entries for unusable nodes and potential
+  misconfigurations.
+
+### Patch Overview
+1. [PATCH 1/3] mm/mempolicy: Fix memory leaks in weighted interleave sysfs
+   - Ensures proper cleanup of `kobject` allocations.
+   - Adds `kobject_del()` before `kobject_put()` to clean up sysfs state correctly.
+   - Prevents memory/resource leaks and improves teardown behavior.
+
+2. [PATCH 2/3] mm/mempolicy: Prepare weighted interleave sysfs for memory hotplug
+   - Refactors static sysfs layout into a new `sysfs_wi_group` structure.
+   - Makes per-node sysfs attributes accessible to external modules.
+   - Lays groundwork for future hotplug support by enabling runtime modification.
+
+3. [PATCH 3/3] mm/mempolicy: Support memory hotplug in weighted interleave
+   - Dynamically adds/removes sysfs entries when nodes are online/offline.
+   - Limits sysfs creation to nodes with memory, avoiding unusable node entries.
+   - Hooks into memory hotplug notifier for runtime updates.
+
+These patches have been tested under CXL-based memory configurations,
+including hotplug scenarios, to ensure proper behavior and stability.
+
+ mm/mempolicy.c | 193 +++++++++++++++++++++++++++++++------------------
+ 1 file changed, 124 insertions(+), 69 deletions(-)
+
+
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+-- 
+2.34.1
+
