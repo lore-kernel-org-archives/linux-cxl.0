@@ -1,40 +1,43 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B18B1D5166;
-	Wed,  9 Apr 2025 05:56:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from zg8tmtyylji0my4xnjqumte4.icoremail.net (zg8tmtyylji0my4xnjqumte4.icoremail.net [162.243.164.118])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D6F1189B84;
+	Wed,  9 Apr 2025 07:03:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.164.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744178201; cv=none; b=cYHQd65C934+DmxfSDw/6YVEGxOUAmf7ShM7s/g8Pf90OJFz4fkaqgPJcI/6fQIFyP9ngKnrR6pG51PTloRk2dGahNFLKIdBehuyCdn5PjUfS7hRxgoVeXTK+kmd4nTHNen4sxIBqmzNGQbcWiesxQTwj4vnEhvW5QVrhizpC+s=
+	t=1744182204; cv=none; b=utZVM3BZQSs8NSxMyIzV77FaJt3ku1Yr92LYqix4rkQ8Rv9MVW5uSiQjednfYVtqxmoJVTJIX/R4BbWKq9rWNVpEaQtrGa9fisBjcm334KljoUiZlT0E55AIYuom245UyHo5T8aQBGTznSgISulm86Vahq57UuqtlYZs7J9L0nI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744178201; c=relaxed/simple;
-	bh=tr8U1M8ttdcHQ5OAE80g0flpZmDz67hIT51+9wlGVRk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=B/+1jd4Nvq2sdi/lGEdsMuNRA4XzqQZDC5inpaC4Slf71vgsBYnV58fXg439lcCzeSlilMjzuQRDyyt++L71byjTV1h6iTuv5X3RiqJa9pkBI1KpCczUMkS1IHjqnpbDO2LP3g0MMBlTCA0J19ylgyzprK4wl13Dr49VTxUKfe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-681ff7000002311f-6f-67f60c092023
-From: Rakie Kim <rakie.kim@sk.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: gourry@gourry.net,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	joshua.hahnjy@gmail.com,
-	ying.huang@linux.alibaba.com,
+	s=arc-20240116; t=1744182204; c=relaxed/simple;
+	bh=q39kQhDN49GLm/lEOP32rR1ke0TxfqFy3ziGaeITL1I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TnPl1bjuoG1WizjEpEkr0Mz41O97PBgG27gUwkOlKDIu4/T4XhdoFIbaqfYkA7hToOLPO9Czm2JW6TMOieht/6oGazFACt+LKLmSoQberLZQo4KnC6uI33S/SZNgvW+5TOHnVPlGIw/JMPKHmtXc12548CZ8fCPv+ZLEObGMaC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=162.243.164.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
+Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
+	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwBnR7yyG_Zn9W65Ew--.14899S2;
+	Wed, 09 Apr 2025 15:03:14 +0800 (CST)
+Received: from phytium.com.cn (unknown [123.150.8.50])
+	by mail (Coremail) with SMTP id AQAAfwBnaoasG_ZnhURkAA--.7272S3;
+	Wed, 09 Apr 2025 15:03:09 +0800 (CST)
+From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	jiaxun.yang@flygoat.com,
+	rppt@kernel.org,
+	akpm@linux-foundation.org,
 	david@redhat.com,
 	Jonathan.Cameron@huawei.com,
-	osalvador@suse.de,
-	kernel_team@skhynix.com,
-	honggyu.kim@sk.com,
-	yunjeong.mun@sk.com,
-	rakie.kim@sk.com,
-	akpm@linux-foundation.org
-Subject: Re: [PATCH v7 2/3] mm/mempolicy: Prepare weighted interleave sysfs for memory hotplug
-Date: Wed,  9 Apr 2025 14:56:11 +0900
-Message-ID: <20250409055618.512-1-rakie.kim@sk.com>
-X-Mailer: git-send-email 2.48.1.windows.1
-In-Reply-To: <67f5ef882b674_72052946a@dwillia2-xfh.jf.intel.com.notmuch>
-References: 
+	dave.hansen@linux.intel.com,
+	dan.j.williams@intel.com,
+	alison.schofield@intel.com
+Cc: chenbaozi@phytium.com.cn,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	Yuquan Wang <wangyuquan1236@phytium.com.cn>
+Subject: [PATCH 1/1] LoongArch: Introduce the numa_memblks conversion
+Date: Wed,  9 Apr 2025 15:02:50 +0800
+Message-Id: <20250409070250.3225839-1-wangyuquan1236@phytium.com.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -42,134 +45,137 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrJLMWRmVeSWpSXmKPExsXC9ZZnkS4nz7d0g10TZSzmrF/DZjF96gVG
-	i6/rfzFb/Lx7nN1i1cJrbBbHt85jtzg/6xSLxeVdc9gs7q35z2pxZlqRxeo1GQ7cHjtn3WX3
-	6G67zO7RcuQtq8fiPS+ZPDZ9msTucWLGbxaPnQ8tPd7vu8rmsfl0tcfnTXIBXFFcNimpOZll
-	qUX6dglcGf//PGYpOK5UsfnGb7YGxn3SXYycHBICJhLnZi9jhbGXn1nB3sXIwcEmoCRxbG8M
-	SFhEQFti4pyDzF2MXBzMAk+YJOYeWcoGkhAWiJPY93sjmM0ioCpxc+8DdhCbV8BYom97BwvE
-	TE2Jhkv3mEBsTgEPif3XzjCC2EICPBKvNuxnhKgXlDg58wlYPbOAvETz1tlgyyQEvrNJLP+x
-	GWqQpMTBFTdYJjDyz0LSMwtJzwJGplWMQpl5ZbmJmTkmehmVeZkVesn5uZsYgRGwrPZP9A7G
-	TxeCDzEKcDAq8fDeUPmaLsSaWFZcmXuIUYKDWUmE9+3EL+lCvCmJlVWpRfnxRaU5qcWHGKU5
-	WJTEeY2+lacICaQnlqRmp6YWpBbBZJk4OKUaGBdtsNI6Ld8y1W675B31+4lHT5wre1JT6Mb3
-	/v6yLDGWT+X883YXmc9kdWzV3y+xZsK3sK6+WxucLDaf3WzNa6of+fH5PtUNR09NTzn9bFuI
-	XbLY9OMX4n8EKWmZbshYOCP5dMa51VsyZGZPtZGc0BnSITeHs1vccXvnDt+tCsVnDD7LfnG4
-	e0aJpTgj0VCLuag4EQC+hkVUfAIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrMLMWRmVeSWpSXmKPExsXCNUNNS5eT51u6wY0ZvBZz1q9hs5g+9QKj
-	xdf1v5gtft49zm7x+dlrZotVC6+xWRzfOo/d4vDck6wW52edYrG4vGsOm8W9Nf9ZLc5MK7I4
-	dO05q8XqNRkWv7etYHPg99g56y67R3fbZXaPliNvWT0W73nJ5LHp0yR2jxMzfrN47Hxo6fF+
-	31U2j2+3PTwWv/jA5LH5dLXH501yATxRXDYpqTmZZalF+nYJXBn//zxmKTiuVLH5xm+2BsZ9
-	0l2MnBwSAiYSy8+sYO9i5OBgE1CSOLY3BiQsIqAtMXHOQeYuRi4OZoEnTBJzjyxlA0kIC8RJ
-	7Pu9EcxmEVCVuLn3ATuIzStgLNG3vYMFYqamRMOle0wgNqeAh8T+a2cYQWwhAR6JVxv2M0LU
-	C0qcnPkErJ5ZQF6ieets5gmMPLOQpGYhSS1gZFrFKJKZV5abmJljqlecnVGZl1mhl5yfu4kR
-	GPTLav9M3MH45bL7IUYBDkYlHt4bKl/ThVgTy4orcw8xSnAwK4nwvp34JV2INyWxsiq1KD++
-	qDQntfgQozQHi5I4r1d4aoKQQHpiSWp2ampBahFMlomDU6qB8WiT8hsTqbrNUr9vVeiuLvbX
-	WbAnWLVJaMaGC5c3vvybZPU5d/GcI6GbZPl3FRYwp/Vt5j/i8/3+VAfO4C9S/92rrrxcY1dS
-	/dJxqt3RlUppd/mvTNulZvDwxePw9il++wyOLuV+3GgSy29XH3TUNPYQR+OXoyLqAlIFAUuv
-	XzBPLdoXKDo9VomlOCPRUIu5qDgRAG1lSRl2AgAA
-X-CFilter-Loop: Reflected
+X-CM-TRANSID:AQAAfwBnaoasG_ZnhURkAA--.7272S3
+X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAPAWf1gRgDIgADsm
+Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=wangyuquan
+	1236@phytium.com.cn;
+X-Coremail-Antispam: 1Uk129KBjvJXoWxXFWxtrW7Gr45Ar4UJrW5ZFb_yoWrGF4rpF
+	ZxCrs3Xr48Wr18Ja40kry29w15Kwn7KanxXa47GFyfZF12vryDZr40grn2vFyUt3y8ur40
+	9rn5C3WavF4rJ3JanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
+	UUUUU
 
-On Tue, 8 Apr 2025 20:54:48 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
-> Dan Williams wrote:
-> > Rakie Kim wrote:
-> > > Previously, the weighted interleave sysfs structure was statically
-> > > managed during initialization. This prevented new nodes from being
-> > > recognized when memory hotplug events occurred, limiting the ability
-> > > to update or extend sysfs entries dynamically at runtime.
-> > > 
-> > > To address this, this patch refactors the sysfs infrastructure and
-> > > encapsulates it within a new structure, `sysfs_wi_group`, which holds
-> > > both the kobject and an array of node attribute pointers.
-> > > 
-> > > By allocating this group structure globally, the per-node sysfs
-> > > attributes can be managed beyond initialization time, enabling
-> > > external modules to insert or remove node entries in response to
-> > > events such as memory hotplug or node online/offline transitions.
-> > > 
-> > > Instead of allocating all per-node sysfs attributes at once, the
-> > > initialization path now uses the existing sysfs_wi_node_add() and
-> > > sysfs_wi_node_delete() helpers. This refactoring makes it possible
-> > > to modularly manage per-node sysfs entries and ensures the
-> > > infrastructure is ready for runtime extension.
-> > > 
-> > > Signed-off-by: Rakie Kim <rakie.kim@sk.com>
-> > > Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
-> > > Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
-> > > Reviewed-by: Gregory Price <gourry@gourry.net>
-> > > ---
-> > >  mm/mempolicy.c | 61 ++++++++++++++++++++++++--------------------------
-> > >  1 file changed, 29 insertions(+), 32 deletions(-)
-> > > 
-> > > diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> > > index 0da102aa1cfc..988575f29c53 100644
-> > > --- a/mm/mempolicy.c
-> > > +++ b/mm/mempolicy.c
-> > > @@ -3419,6 +3419,13 @@ struct iw_node_attr {
-> > >  	int nid;
-> > >  };
-> > >  
-> > > +struct sysfs_wi_group {
-> > > +	struct kobject wi_kobj;
-> > > +	struct iw_node_attr *nattrs[];
-> > > +};
-> > > +
-> > > +static struct sysfs_wi_group *wi_group;
-> > > +
-> > >  static ssize_t node_show(struct kobject *kobj, struct kobj_attribute *attr,
-> > >  			 char *buf)
-> > >  {
-> > > @@ -3461,27 +3468,24 @@ static ssize_t node_store(struct kobject *kobj, struct kobj_attribute *attr,
-> > >  	return count;
-> > >  }
-> > >  
-> > > -static struct iw_node_attr **node_attrs;
-> > > -
-> > > -static void sysfs_wi_node_release(struct iw_node_attr *node_attr,
-> > > -				  struct kobject *parent)
-> > > +static void sysfs_wi_node_delete(int nid)
-> > >  {
-> > > -	if (!node_attr)
-> > > +	if (!wi_group->nattrs[nid])
-> > >  		return;
-> > > -	sysfs_remove_file(parent, &node_attr->kobj_attr.attr);
-> > > -	kfree(node_attr->kobj_attr.attr.name);
-> > > -	kfree(node_attr);
-> > > +
-> > > +	sysfs_remove_file(&wi_group->wi_kobj,
-> > > +			  &wi_group->nattrs[nid]->kobj_attr.attr);
-> > 
-> > This still looks broken to me, but I think this is more a problem that
-> > was present in the original code.
-> > 
-> > At this point @wi_group's reference count is zero because
-> > sysfs_wi_release() has been called. However, it can only be zero if it has
-> > properly transitioned through kobject_del() and final kobject_put(). It
-> > follows that kobject_del() arranges for kobj->sd to be NULL. That means
-> > that this *should* be hitting the WARN() in kernfs_remove_by_name_ns()
-> > for the !parent case.
-> > 
-> > So, either you are not triggering that path, or testing that path, but
-> > sys_remove_file() of the child attributes should be happening *before*
-> > sysfs_wi_release().
-> > 
-> > Did I miss something?
-> 
-> I think the missing change is that sysfs_wi_node_add() failures need to
-> be done with a sysfs_wi_node_delete() of the added attrs *before* the
-> kobject_del() of @wi_group.
+"mm: introduce numa_memblks"(87482708210f) has moved numa_memblks
+from x86 to the generic code, but loongarch was left out of this
+conversion.
 
-Hi Dan Williams
+This patch introduces the generic numa_memblks.
 
-Thank you very much for identifying this potential issue in the code.
+Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+---
 
-As you pointed out, this seems to be a problem that was already present in
-the original implementation, and I agree that it needs to be addressed.
+Background
+----------
+I am managed to land the patch[1] "mm: numa_memblks: introduce numa_add_reserved_memblk"
+but kernel test CI noticed build errors[2] from loongarch64-linux-gcc.
 
-However, since this issue existed prior to the changes in this patch
-series, I believe it would be more appropriate to fix it in a separate
-follow-up patch rather than include it here.
+Link:
+[1]: https://lore.kernel.org/all/20250409040121.3212489-1-wangyuquan1236@phytium.com.cn/
+[2]: https://lore.kernel.org/all/202503282026.QNaOAK79-lkp@intel.com/
 
-I will start preparing a new patch to address this problem, and I would
-greatly appreciate it if you could review it once it's ready.
+ arch/loongarch/Kconfig            |  1 +
+ arch/loongarch/include/asm/numa.h | 14 ----------
+ arch/loongarch/kernel/numa.c      | 43 +------------------------------
+ 3 files changed, 2 insertions(+), 56 deletions(-)
 
-Rakie
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 067c0b994648..5906ccd06705 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -186,6 +186,7 @@ config LOONGARCH
+ 	select MODULES_USE_ELF_RELA if MODULES
+ 	select NEED_PER_CPU_EMBED_FIRST_CHUNK
+ 	select NEED_PER_CPU_PAGE_FIRST_CHUNK
++	select NUMA_MEMBLKS
+ 	select OF
+ 	select OF_EARLY_FLATTREE
+ 	select PCI
+diff --git a/arch/loongarch/include/asm/numa.h b/arch/loongarch/include/asm/numa.h
+index b5f9de9f102e..bbf9f70bd25f 100644
+--- a/arch/loongarch/include/asm/numa.h
++++ b/arch/loongarch/include/asm/numa.h
+@@ -22,20 +22,6 @@ extern int numa_off;
+ extern s16 __cpuid_to_node[CONFIG_NR_CPUS];
+ extern nodemask_t numa_nodes_parsed __initdata;
+ 
+-struct numa_memblk {
+-	u64			start;
+-	u64			end;
+-	int			nid;
+-};
+-
+-#define NR_NODE_MEMBLKS		(MAX_NUMNODES*2)
+-struct numa_meminfo {
+-	int			nr_blks;
+-	struct numa_memblk	blk[NR_NODE_MEMBLKS];
+-};
+-
+-extern int __init numa_add_memblk(int nodeid, u64 start, u64 end);
+-
+ extern void __init early_numa_add_cpu(int cpuid, s16 node);
+ extern void numa_add_cpu(unsigned int cpu);
+ extern void numa_remove_cpu(unsigned int cpu);
+diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
+index 30a72fd528c0..0ed384635566 100644
+--- a/arch/loongarch/kernel/numa.c
++++ b/arch/loongarch/kernel/numa.c
+@@ -18,6 +18,7 @@
+ #include <linux/efi.h>
+ #include <linux/irq.h>
+ #include <linux/pci.h>
++#include <linux/numa_memblks.h>
+ #include <asm/bootinfo.h>
+ #include <asm/loongson.h>
+ #include <asm/numa.h>
+@@ -145,48 +146,6 @@ void numa_remove_cpu(unsigned int cpu)
+ 	cpumask_clear_cpu(cpu, &cpus_on_node[nid]);
+ }
+ 
+-static int __init numa_add_memblk_to(int nid, u64 start, u64 end,
+-				     struct numa_meminfo *mi)
+-{
+-	/* ignore zero length blks */
+-	if (start == end)
+-		return 0;
+-
+-	/* whine about and ignore invalid blks */
+-	if (start > end || nid < 0 || nid >= MAX_NUMNODES) {
+-		pr_warn("NUMA: Warning: invalid memblk node %d [mem %#010Lx-%#010Lx]\n",
+-			   nid, start, end - 1);
+-		return 0;
+-	}
+-
+-	if (mi->nr_blks >= NR_NODE_MEMBLKS) {
+-		pr_err("NUMA: too many memblk ranges\n");
+-		return -EINVAL;
+-	}
+-
+-	mi->blk[mi->nr_blks].start = PFN_ALIGN(start);
+-	mi->blk[mi->nr_blks].end = PFN_ALIGN(end - PAGE_SIZE + 1);
+-	mi->blk[mi->nr_blks].nid = nid;
+-	mi->nr_blks++;
+-	return 0;
+-}
+-
+-/**
+- * numa_add_memblk - Add one numa_memblk to numa_meminfo
+- * @nid: NUMA node ID of the new memblk
+- * @start: Start address of the new memblk
+- * @end: End address of the new memblk
+- *
+- * Add a new memblk to the default numa_meminfo.
+- *
+- * RETURNS:
+- * 0 on success, -errno on failure.
+- */
+-int __init numa_add_memblk(int nid, u64 start, u64 end)
+-{
+-	return numa_add_memblk_to(nid, start, end, &numa_meminfo);
+-}
+-
+ static void __init node_mem_init(unsigned int node)
+ {
+ 	unsigned long start_pfn, end_pfn;
+-- 
+2.34.1
 
