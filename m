@@ -1,91 +1,293 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3721B1E0DE2
-	for <linux-cxl@vger.kernel.org>; Wed,  9 Apr 2025 22:48:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF211B6CE4
+	for <linux-cxl@vger.kernel.org>; Wed,  9 Apr 2025 23:09:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744238944; cv=none; b=pW4mnYeiuYv/v+AqFJJkelvs2yX2IBwIKLnESFDXNjfdmpBUFmryCKeIwucCN+fODj5DaMpF6fxj7NICJRa7EUq+inTzvfNmTE6niYPmsmsRlt8aQQK50SftEMMYeiAoDGjnmVS+SicrTENZiZqP0jSIKcSPUbc27O2KsBSZZgA=
+	t=1744240183; cv=none; b=kz6O4kQ/AubHoS1YdO2/O3jLi0zxOnbOaItQSidHS396MYG46Ui8uJTfAfgmqXWMyTn8rsGLAZkdmqsbea2PWeCaBjy0oDY976jQTCtKFLojz/ARkFevVpyed/effH1sQi7eTXl2YfylK0CVDJn75WWJflv9QgbeOb2mdexJMuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744238944; c=relaxed/simple;
-	bh=9EcjlMK/aECC7Z0EsbqajEnUDd5WSMpfa5B3tFPhdFM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L93l8WHuuo1hzLWwjPqEBwRzRAYQqnb7XrfLy77pso32y59AiEmG4gmX96bADCN0Y8951mkYLrnn5D/XogBvb8CxiOGb40Omm4lMRH+m0d9qWccy38W+YXdUrcLuwVW9NcvaIQDSmHP4YCPizcMl4y3YsRyBVL0ygAFSMZadleU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=n/ZNJXzN; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1744240183; c=relaxed/simple;
+	bh=xvqUWWumaHkbqJOFdR+ZpLtfX4PPtj15w502jXGhOq0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KQevb9v2Nj3j08ygvHREIewOVKQDq/dWyfs81t2/kblFELk5od6cPPuuIUnILZK2nmXXxWlu2TfmJqeQEU+WeNQ+7pKKMRJj2gfqNsBs2b8xWw/JKSZdosDhIbvdQhrFxZ5md6YedfjB16d6PWa8uq3zJhHNqwKpZMgiM8zae9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=An5KJn3t; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="n/ZNJXzN"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7c5c815f8efso19592685a.2
-        for <linux-cxl@vger.kernel.org>; Wed, 09 Apr 2025 15:48:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1744238938; x=1744843738; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/htfkjUcjTtbQhaXMacTvcz8vKgEhUM6n8QlQjKIc+g=;
-        b=n/ZNJXzNImeMnsC7T2HkKc3crA7DrrwB0ADNlA2K2WBVm9jhe+3S7feWANjbM/lNeQ
-         lt7MiTNVhBGOtdjuQgNbYt5/5LzoTpymgCgYyvtiXjrqN+jLKN9BKR6WO1mmeX77AGfw
-         IqVpLxpoPWPIxqsYSP50i6tPGyibURq4D6ZCuJgJD4filzWp5+m69bwatxAK08180+zF
-         FBwcikKT2g286CDXLsOsuOc6TWn/Xv3BoLyH2FGOH7vGRi0RkrN3wkazTF1iDpv6Ld+N
-         y8OSkVnU4gNSquBYsqESbp943OdTVwE4O4fcJ16aqbm5Fwo3CZCDtZ/NnuLGgrsDepjF
-         fKIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744238938; x=1744843738;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/htfkjUcjTtbQhaXMacTvcz8vKgEhUM6n8QlQjKIc+g=;
-        b=UN+zQzq4L5Mgl/Sj6dPmnZWz/5sgaLgMvnMFokuWoJPIgEqRcto0UxIYcgwCLQ8PY9
-         2FQ0xHshKZUOylE5MOevg2VRWruio6vHlY213xFy8otraf9RoOJw88iVVwT/H9Je4pzo
-         DUIHwvWbfMK0yaKBtD0nCmt6QYQaTKzmJ2u81a2dBh4rLmdnBhd6dUjQNEJ61ueF0fJQ
-         rcCrY2tKVZVroqpDqdwLPJizL3u1RmsH1GQk3YdqRFCOT76PpnmTkpan1ay0Tq601jIV
-         DSB/4YE5CrarO9C06Sr766rEQRlmBRRjtrbaPrlBnRG/5hXeOGuydhQ/8BEHZIiRzGbY
-         iiGw==
-X-Gm-Message-State: AOJu0YyV8NOBrzhX8w/g+tqo34Ewk9kJ1cANWPjq9Gwvrw1/xZyQZvoq
-	sYXp/S++/GTY44rqHg+rOu7G/a4y9GSiR5s3n1q1wyCcl2gKEiBOFqNqESHqizg=
-X-Gm-Gg: ASbGnctGoDhcf2mSxVhup07vqjcUTVr0vgt3p1owGom1Ytc4ax5MYz+uXInEFr/eG1z
-	754QYin0qb/1DrcBMsuB/qVA60bX80WKWO/1aCQKT/q7dbEFG6Dk4M/bh6ONmMwIb+dLQZC7OBo
-	h+pwnLN34zjNtywmAcPgPhLM7End2RhVuJ+i494PGISWQp2S2Z1Es1cN6FTsg3Hvcc60WWV11XN
-	d3K5UKAa2FXgNc3VqkXRTObUV1KZ9RQQZXfFmIA7UlIz5cERtu5W7e/shzBdFpZ/P770fXZuxCJ
-	ilcPw54jTeuZ5wuXhAcoQ8KZUABaLqcJotp7Ox/p5W7XopVDFns4yw==
-X-Google-Smtp-Source: AGHT+IEKFpKNfsSWwOgoi6DRSObHn0c2ff/NBOM3pXCDlmuVPinzb7ITQcqd7tkPTc6RK5Po6EYdag==
-X-Received: by 2002:a05:620a:1712:b0:7c5:dfe6:222a with SMTP id af79cd13be357-7c7a81b14fbmr21927485a.42.1744238937941;
-        Wed, 09 Apr 2025 15:48:57 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F ([2607:fb91:e45:4a49:ba4d:3fcc:71ac:af2a])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a10d0ec7sm126492885a.59.2025.04.09.15.48.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 15:48:57 -0700 (PDT)
-Date: Wed, 9 Apr 2025 18:48:54 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	dan.j.williams@intel.com, vishal.l.verma@intel.com,
-	dave.jiang@intel.com, David Hildenbrand <david@redhat.com>
-Subject: Re: [PATCH v2] DAX: warn when kmem regions are truncated for memory
- block alignment.
-Message-ID: <Z_b5VsY0S5cihYga@gourry-fedora-PF4VCD3F>
-References: <20250402015920.819077-1-gourry@gourry.net>
- <Z_bzAapzjzFR3u_P@aschofie-mobl2.lan>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="An5KJn3t"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744240178; x=1775776178;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=xvqUWWumaHkbqJOFdR+ZpLtfX4PPtj15w502jXGhOq0=;
+  b=An5KJn3tQjv8cGvJ+gblozuMk6aZ42vErIHh0HEYmM4VoBDZ5mVBXN9Z
+   eAaLGmx29QczpVKvjsWdYvl2x/0FUszMuBHQI6kxrFIE47YZxbCHDhrSk
+   wQAxfklW23DSrj26+rHBrJjL6Ckzam14J6UcLKxNgQv8bpuipgPiCy24W
+   us3ko8M5LgrlX1p/krhaXkgoHOeKVH0uVkAZ7dkFugGmaxZa7xIc2drxM
+   XnADLDJguU7U0jvs+Imu3lE9QXP5RkGHaxDWC7tFK7z772WUrB2KSsR/x
+   L8K4wGbiLfrVEHPBQm/GLDxEt1GnruhgxEnoNA2+69xe/Ba3yEDW6rmTM
+   Q==;
+X-CSE-ConnectionGUID: TZoxdTJFRPuFIglgtCMkxw==
+X-CSE-MsgGUID: SN407B/RSv2pm7M8kcIWzA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="45751400"
+X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
+   d="scan'208";a="45751400"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 16:09:37 -0700
+X-CSE-ConnectionGUID: sy96JuqwSsa9AumEbK5AjA==
+X-CSE-MsgGUID: jZnTpP5UQ2OkMCq3UYNrPA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
+   d="scan'208";a="129556608"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.125.111.244])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 16:09:37 -0700
+From: alison.schofield@intel.com
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>
+Cc: linux-cxl@vger.kernel.org
+Subject: [PATCH] Documentation: Update the CXL Maturity Map
+Date: Wed,  9 Apr 2025 16:09:32 -0700
+Message-ID: <20250409230933.348045-1-alison.schofield@intel.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_bzAapzjzFR3u_P@aschofie-mobl2.lan>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 09, 2025 at 03:21:53PM -0700, Alison Schofield wrote:
-> Existing unit test 'daxctl-devices.sh' hits this case:
-> [   52.547521] kmem dax3.0: DAX region truncated by 62.0 MiB due to alignment
-> 
-> Tested-by: Alison Schofield <alison.schofield@intel.com>
->
+From: Alison Schofield <alison.schofield@intel.com>
 
-Thanks for testing, good to know there's an existing test for this
+How about an update to reflect all your recent goodness and updated
+intentions?
 
-will respin w/ Jonathan's recommendations and tags.
+I see DavidL updated along with his patches :)
 
-~Gregory
+I made a couple of changes and am including the entire file in
+the patch for your review convenience.
+
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+---
+ Documentation/driver-api/cxl/maturity-map.rst | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/driver-api/cxl/maturity-map.rst b/Documentation/driver-api/cxl/maturity-map.rst
+index a2288f9df658..94be52d623b8 100644
+--- a/Documentation/driver-api/cxl/maturity-map.rst
++++ b/Documentation/driver-api/cxl/maturity-map.rst
+@@ -1,202 +1,202 @@
+ .. SPDX-License-Identifier: GPL-2.0
+ .. include:: <isonum.txt>
+ 
+ ===========================================
+ Compute Express Link Subsystem Maturity Map
+ ===========================================
+ 
+ The Linux CXL subsystem tracks the dynamic `CXL specification
+ <https://computeexpresslink.org/cxl-specification-landing-page>`_ that
+ continues to respond to new use cases with new features, capability
+ updates and fixes. At any given point some aspects of the subsystem are
+ more mature than others. While the periodic pull requests summarize the
+ `work being incorporated each merge window
+ <https://lore.kernel.org/linux-cxl/?q=s%3APULL+s%3ACXL+tc%3Atorvalds+NOT+s%3ARe>`_,
+ those do not always convey progress relative to a starting point and a
+ future end goal.
+ 
+ What follows is a coarse breakdown of the subsystem's major
+ responsibilities along with a maturity score. The expectation is that
+ the change-history of this document provides an overview summary of the
+ subsystem maturation over time.
+ 
+ The maturity scores are:
+ 
+ - [3] Mature: Work in this area is complete and no changes on the horizon.
+   Note that this score can regress from one kernel release to the next
+   based on new test results or end user reports.
+ 
+ - [2] Stabilizing: Major functionality operational, common cases are
+   mature, but known corner cases are still a work in progress.
+ 
+ - [1] Initial: Capability that has exited the Proof of Concept phase, but
+   may still have significant gaps to close and fixes to apply as real
+   world testing occurs.
+ 
+ - [0] Known gap: Feature is on a medium to long term horizon to
+   implement.  If the specification has a feature that does not even have
+   a '0' score in this document, there is a good chance that no one in
+   the linux-cxl@vger.kernel.org community has started to look at it.
+ 
+ - X: Out of scope for kernel enabling, or kernel enabling not required
+ 
+ Feature and Capabilities
+ ========================
+ 
+ Enumeration / Provisioning
+ --------------------------
+ All of the fundamental enumeration an object model of the subsystem is
+ in place, but there are several corner cases that are pending closure.
+ 
+ 
+ * [2] CXL Window Enumeration
+ 
+-  * [0] :ref:`Extended-linear memory-side cache <extended-linear>`
++  * [3] :ref:`Extended-linear memory-side cache <extended-linear>`
+   * [0] Low Memory-hole
+-  * [0] Hetero-interleave
++  * [X] Hetero-interleave
+ 
+ * [2] Switch Enumeration
+ 
+   * [0] CXL register enumeration link-up dependency
+ 
+ * [2] HDM Decoder Configuration
+ 
+   * [0] Decoder target and granularity constraints
+ 
+ * [2] Performance enumeration
+ 
+   * [3] Endpoint CDAT
+   * [3] Switch CDAT
+   * [1] CDAT to Core-mm integration
+ 
+     * [1] x86
+     * [0] Arm64
+     * [0] All other arch.
+ 
+   * [0] Shared link
+ 
+ * [2] Hotplug
+   (see CXL Window Enumeration)
+ 
+   * [0] Handle Soft Reserved conflicts
+ 
+ * [0] :ref:`RCH link status <rch-link-status>`
+ * [0] Fabrics / G-FAM (chapter 7)
+ * [0] Global Access Endpoint
+ 
+ 
+ RAS
+ ---
+ In many ways CXL can be seen as a standardization of what would normally
+ be handled by custom EDAC drivers. The open development here is
+ mainly caused by the enumeration corner cases above.
+ 
+ * [3] Component events (OS)
+ * [2] Component events (FFM)
+ * [1] Endpoint protocol errors (OS)
+ * [1] Endpoint protocol errors (FFM)
+ * [0] Switch protocol errors (OS)
+ * [1] Switch protocol errors (FFM)
+ * [2] DPA->HPA Address translation
+ 
+     * [1] XOR Interleave translation
+       (see CXL Window Enumeration)
+ 
+ * [1] Memory Failure coordination
+ * [0] Scrub control
+ * [2] ACPI error injection EINJ
+ 
+   * [0] EINJ v2
+   * [X] Compliance DOE
+ 
+ * [2] Native error injection
+ * [3] RCH error handling
+ * [1] VH error handling
+ * [0] PPR
+ * [0] Sparing
+ * [0] Device built in test
+ 
+ 
+ Mailbox commands
+ ----------------
+ 
+ * [3] Firmware update
+ * [3] Health / Alerts
+ * [1] :ref:`Background commands <background-commands>`
+ * [3] Sanitization
+ * [3] Security commands
+ * [3] RAW Command Debug Passthrough
+ * [0] CEL-only-validation Passthrough
+ * [0] Switch CCI
+ * [3] Timestamp
+ * [1] PMEM labels
+ * [3] PMEM GPF / Dirty Shutdown
+ * [0] Scan Media
+ 
+ PMU
+ ---
+ * [1] Type 3 PMU
+ * [0] Switch USP/ DSP, Root Port
+ 
+ Security
+ --------
+ 
+ * [X] CXL Trusted Execution Environment Security Protocol (TSP)
+ * [X] CXL IDE (subsumed by TSP)
+ 
+ Memory-pooling
+ --------------
+ 
+ * [1] Hotplug of LDs (via PCI hotplug)
+ * [0] Dynamic Capacity Device (DCD) Support
+ 
+ Multi-host sharing
+ ------------------
+ 
+ * [0] Hardware coherent shared memory
+ * [0] Software managed coherency shared memory
+ 
+ Multi-host memory
+ -----------------
+ 
+ * [0] Dynamic Capacity Device Support
+ * [0] Sharing
+ 
+ Accelerator
+ -----------
+ 
+ * [0] Accelerator memory enumeration HDM-D (CXL 1.1/2.0 Type-2)
+ * [0] Accelerator memory enumeration HDM-DB (CXL 3.0 Type-2)
+ * [0] CXL.cache 68b (CXL 2.0)
+ * [0] CXL.cache 256b Cache IDs (CXL 3.0)
+ 
+ User Flow Support
+ -----------------
+ 
+-* [0] HPA->DPA Address translation (need xormaps export solution)
++* [0] Inject & clear poison by HPA
+ 
+ Details
+ =======
+ 
+ .. _extended-linear:
+ 
+ * **Extended-linear memory-side cache**: An HMAT proposal to enumerate the presence of a
+   memory-side cache where the cache capacity extends the SRAT address
+   range capacity. `See the ECN
+   <https://lore.kernel.org/linux-cxl/6650e4f835a0e_195e294a8@dwillia2-mobl3.amr.corp.intel.com.notmuch/>`_
+   for more details:
+ 
+ .. _rch-link-status:
+ 
+ * **RCH Link Status**: RCH (Restricted CXL Host) topologies, end up
+   hiding some standard registers like PCIe Link Status / Capabilities in
+   the CXL RCRB (Root Complex Register Block).
+ 
+ .. _background-commands:
+ 
+ * **Background commands**: The CXL background command mechanism is
+   awkward as the single slot is monopolized potentially indefinitely by
+   various commands. A `cancel on conflict
+   <http://lore.kernel.org/r/66035c2e8ba17_770232948b@dwillia2-xfh.jf.intel.com.notmuch>`_
+   facility is needed to make sure the kernel can ensure forward progress
+   of priority commands.
+-- 
+2.37.3
+
