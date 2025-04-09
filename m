@@ -1,224 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0B82561CE;
-	Wed,  9 Apr 2025 14:20:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72430259C
+	for <linux-cxl@vger.kernel.org>; Wed,  9 Apr 2025 15:13:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744208408; cv=none; b=HrS37vNeCabEs08KivMzJIH92z9aqduEHYEKyrWGl+AzRhKKtynxR3WP62mZmfiPatx5iN//nI/88DBjP0QXAVYjTAGXUNyrv2MwSGA3dKwtYhfGA1Ql0lz41LO2oyPFW1zQ1R0yp4JN2IyYtaXrxb5q8HJ6259ilO27uUMmL+E=
+	t=1744211634; cv=none; b=Mm+Ob7mO/vHxxuCGd0fxFuViqwIrJrsmmgb0pTEajoAgqA5Dcu1SWr7AJwRj+Gw2lamidtJ4HJIHZFsuVPVUecXC0Jgc8AreJf4+6Z5oPo9iI7N5tdY+KWEfT3b5UG86PgEengxhcQukEy46pJdRlJF7PbdzzdcSI0pS+8vAEDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744208408; c=relaxed/simple;
-	bh=BG/OzJES1M7Q6UgqXIWZo0kbqsw0xFTv9avIXvDfKl8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bF/9gaBXjh0KIPuqz1O92g9VO3SxtoIthdiGNLiDbdTw7t1NUufoNVAwm/yTIqOGFYEuZW3rwBuf8xoTlIcipVvugIqNeiTz4jUZoCdyF7rg+xRjzKS137YJlpwsfw/jr3WNPUm7XQL+bFgeFjzv/NXo1L+2CelDIcUQo9hdwDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A6b+5FET; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744211634; c=relaxed/simple;
+	bh=WQQReIVKm8quBulAWcYs8tuHMsWmEpdBmRao9Ol022M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bFWNgK286EdzoQwLUVg1y6aGyRS4KFFGS0+J8y8BGL1FRLWlp7KZgcWzC2wbpZlrZLTWc/Kan9TwcJ/5s8mUSkrzHipDERvjpKaS4uRDOJ8y5B5Io0NMNe4vjUWXFcX7OzvGoeygdB8zZV12B1pevfRX3rsSXcwJ02sr2NTcPgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kl5lMmVX; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A6b+5FET"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68EF9C4CEE7;
-	Wed,  9 Apr 2025 14:20:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744208408;
-	bh=BG/OzJES1M7Q6UgqXIWZo0kbqsw0xFTv9avIXvDfKl8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=A6b+5FET2spOgRa2vacU9wjGBMCpfe11c1PD8P8XThPDX4dJUL2NG8ORLineivW1s
-	 E8KhoXiacRx2toMKAt13wzybtd94ack8IqWGGzxRaQqJa1RuDhflgvhEutEiyNBjVj
-	 YdGcrOD8CnUmFEjd2y6kr0JHq530JlofuMx3whHajwo3jL2HyBERFMjS2NFd6nUW5b
-	 qBPe7eu0YmBc27zezOWBF2Svwvz60gJC98D1f3uc2diOLLxFGfZWWWguFa/VK0ctRL
-	 DPbnQ+u8bKlEZ537fh9ztwNMEISzOxiRJpCrO+a1i+vxe9N0Zy1AxSVXCUNAcHT512
-	 8/KZy+OrNJ7jA==
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac3fcf5ab0dso1181464666b.3;
-        Wed, 09 Apr 2025 07:20:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUSA+4BzIVsPgMWTmcoFq53J3ct23AcrcS5EXjxqCsOmqgPSn8Ipg7RrxTsRa2C9kPL6oLzY1flJozu@vger.kernel.org, AJvYcCV6ckfNUMr02JdM9vyEw3GzBCg6HJcwL9zXAEBvSSEwjYjZZqypF/Fkd/gYAhyEcN6br55IQyC7F/pT@vger.kernel.org, AJvYcCWV54g71DbphUGQOc6GOIgXOJ9mDxnEPIXmN/SV3FrukbtF0BRQsTGvGOS66CGzH+O3ZRA8CEuzWgETSvz2@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8hFmxfqRKDjnERpibyLcW7BEnDMgxJKxl/+AIhmKFkfoLRI3u
-	XZxmffTgzwrERHPgYfqNrTw5LmyqgQ9Ag1GQF5ix2dQ80H2gwb8U+A7nXKgQEwGYD7bK2JfhVSD
-	q6isKuFTVHxVxoLunWP8crCn5PBQ=
-X-Google-Smtp-Source: AGHT+IFnF6UDYloYX0LOUBH6jYkuCNYIOTsP2lHmKeGs/z9SZN3K4qP8DEu2FfQoknF3uccBjAD217TToS6ep+829MQ=
-X-Received: by 2002:a17:907:971a:b0:ac4:3cd:2cb2 with SMTP id
- a640c23a62f3a-aca9b607dcemr354551866b.1.1744208406974; Wed, 09 Apr 2025
- 07:20:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kl5lMmVX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744211633; x=1775747633;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=WQQReIVKm8quBulAWcYs8tuHMsWmEpdBmRao9Ol022M=;
+  b=Kl5lMmVX3nSo7XC06J3dD6MYz4PfofTm4NuKr6drmyceKaIGdEibyPUG
+   DsA6zVPvbuHj/OrVcVhMnl2/ObXDpHmpdeM6eQ+ZgMIXOFoj5OycK/Stk
+   Xh2qaPAq2VWJkxVbAUNyFmQRdJATScFPZrHYBfOr4gGzBGFxowCoGGEvf
+   QJeu3YafKxT4czg1IITqggsub84f32YS+NhvfbAcRkEohLETJrzJ63sVb
+   JmfFrdzLN6/g9fot6gs4PY/kVX5KKY+1l+PGYCR9GmAX4e0oT2m9qp2vV
+   tWN7ax7FpRh/3t3l6byjV9MQgV8QDOzAqxCXPqZD6ijL051mkWrbzTuKj
+   Q==;
+X-CSE-ConnectionGUID: +0F+UBCfRQ+eKS7h0dOrdg==
+X-CSE-MsgGUID: mijTwBhgRiuDe1Syb+Dz9w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="45585407"
+X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
+   d="scan'208";a="45585407"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 08:13:52 -0700
+X-CSE-ConnectionGUID: gOIQJTlqSMKtuzbaSzbUkw==
+X-CSE-MsgGUID: e1J9zS2jS+GueSRWknmv6A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
+   d="scan'208";a="128598837"
+Received: from ldmartin-desk2.corp.intel.com (HELO [10.125.111.236]) ([10.125.111.236])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 08:13:50 -0700
+Message-ID: <43967129-86ec-4dbc-a065-11269e311fed@intel.com>
+Date: Wed, 9 Apr 2025 08:13:48 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409070250.3225839-1-wangyuquan1236@phytium.com.cn>
-In-Reply-To: <20250409070250.3225839-1-wangyuquan1236@phytium.com.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 9 Apr 2025 22:20:03 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H59A797mfwxjEe8SO0JioxkF3H0Rr0E_TK1qn0PHdRMXA@mail.gmail.com>
-X-Gm-Features: ATxdqUHdB7qVVvs9U6XaymRSOHZ0sp8fImlHDnojMC_VV6MWDytUBwxnn0hxTYI
-Message-ID: <CAAhV-H59A797mfwxjEe8SO0JioxkF3H0Rr0E_TK1qn0PHdRMXA@mail.gmail.com>
-Subject: Re: [PATCH 1/1] LoongArch: Introduce the numa_memblks conversion
-To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-Cc: kernel@xen0n.name, jiaxun.yang@flygoat.com, rppt@kernel.org, 
-	akpm@linux-foundation.org, david@redhat.com, Jonathan.Cameron@huawei.com, 
-	dave.hansen@linux.intel.com, dan.j.williams@intel.com, 
-	alison.schofield@intel.com, chenbaozi@phytium.com.cn, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] cxl/core: reenable Mem_Enable bit of DVSEC control
+ when RR decodes outside platform ranges
+To: Gregory Price <gourry@gourry.net>,
+ "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
+Cc: Huaisheng Ye <huaisheng.ye@intel.com>,
+ "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
+ "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+ "pei.p.jia@intel.com" <pei.p.jia@intel.com>,
+ "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+References: <20250406112752.1261855-1-huaisheng.ye@intel.com>
+ <02fbb2a7-3973-4c7f-8b7d-cfabbb379467@fujitsu.com>
+ <Z_aAnzqR-UP9rmIY@gourry-fedora-PF4VCD3F>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <Z_aAnzqR-UP9rmIY@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi, Yuquan,
 
-On Wed, Apr 9, 2025 at 3:03=E2=80=AFPM Yuquan Wang
-<wangyuquan1236@phytium.com.cn> wrote:
->
-> "mm: introduce numa_memblks"(87482708210f) has moved numa_memblks
-> from x86 to the generic code, but loongarch was left out of this
-> conversion.
->
-> This patch introduces the generic numa_memblks.
-Thank you for your patch, but it cause many errors:
-loongarch64-linux-ld: mm/numa_memblks.o: in function
-`memory_add_physaddr_to_nid':
-numa_memblks.c:(.text+0x60): multiple definition of
-`memory_add_physaddr_to_nid';
-arch/loongarch/mm/init.o:init.c:(.text+0x0): first defined here
-loongarch64-linux-ld: mm/numa_memblks.o: in function `numa_set_distance':
-numa_memblks.c:(.init.text+0x248): multiple definition of
-`numa_set_distance';
-arch/loongarch/kernel/acpi.o:acpi.c:(.init.text+0x534): first defined
-here
-loongarch64-linux-ld: mm/numa_memblks.o: in function `.LANCHOR2':
-numa_memblks.c:(.init.data+0x0): multiple definition of
-`numa_nodes_parsed';
-arch/loongarch/kernel/numa.o:numa.c:(.init.data+0x0): first defined
-here
-make[2]: *** [scripts/Makefile.vmlinux_o:72=EF=BC=9Avmlinux.o] =E9=94=99=E8=
-=AF=AF 1
-make[1]: *** [/home/chenhuacai/linux-official.git/Makefile:1223=EF=BC=9Avml=
-inux_o] =E9=94=99=E8=AF=AF 2
-make: *** [Makefile:248=EF=BC=9A__sub-make] =E9=94=99=C3=A8=C2=AF=C2=AF 2
-  INSTALL /home/chenhuacai/dest/lib/modules/6.15.0-rc1+/vdso/vdso.so
 
-It cannot be fixed easily, but I will try my best to do that based on
-your patch.
+On 4/9/25 7:13 AM, Gregory Price wrote:
+> On Mon, Apr 07, 2025 at 08:31:13AM +0000, Zhijian Li (Fujitsu) wrote:
+>> [1] https://lore.kernel.org/linux-cxl/20240409075846.85370-1-lizhijian@fujitsu.com/
+> 
+> After looking at this, I see why this hasn't been fixed in QEMU.
+> Basically QEMU doesn't implement the right reset mechanism.
+> 
+> ct3_reset calls
+> 	cxl_component_register_init_common()
+> 		ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_GLOBAL_CONTROL,
+> 				 HDM_DECODER_ENABLE, 0)
+> 
+> But it never resets MEM_ENABLE in the dvsecs.
+> 
+> I'm not sure it's sane for Linux to be trying to handle hardware that
+> doesn't itself reset correctly - and doing this fix just for QEMU seems
+> a bit too far.
 
-Huacai
+I agree. No need to twist Linux in a bunch for something broken on QEMU. Until there's actual hardware that does this deployed in the field, we should just leave the Linux driver as is.
 
->
-> Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-> ---
->
-> Background
-> ----------
-> I am managed to land the patch[1] "mm: numa_memblks: introduce numa_add_r=
-eserved_memblk"
-> but kernel test CI noticed build errors[2] from loongarch64-linux-gcc.
->
-> Link:
-> [1]: https://lore.kernel.org/all/20250409040121.3212489-1-wangyuquan1236@=
-phytium.com.cn/
-> [2]: https://lore.kernel.org/all/202503282026.QNaOAK79-lkp@intel.com/
->
->  arch/loongarch/Kconfig            |  1 +
->  arch/loongarch/include/asm/numa.h | 14 ----------
->  arch/loongarch/kernel/numa.c      | 43 +------------------------------
->  3 files changed, 2 insertions(+), 56 deletions(-)
->
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 067c0b994648..5906ccd06705 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -186,6 +186,7 @@ config LOONGARCH
->         select MODULES_USE_ELF_RELA if MODULES
->         select NEED_PER_CPU_EMBED_FIRST_CHUNK
->         select NEED_PER_CPU_PAGE_FIRST_CHUNK
-> +       select NUMA_MEMBLKS
->         select OF
->         select OF_EARLY_FLATTREE
->         select PCI
-> diff --git a/arch/loongarch/include/asm/numa.h b/arch/loongarch/include/a=
-sm/numa.h
-> index b5f9de9f102e..bbf9f70bd25f 100644
-> --- a/arch/loongarch/include/asm/numa.h
-> +++ b/arch/loongarch/include/asm/numa.h
-> @@ -22,20 +22,6 @@ extern int numa_off;
->  extern s16 __cpuid_to_node[CONFIG_NR_CPUS];
->  extern nodemask_t numa_nodes_parsed __initdata;
->
-> -struct numa_memblk {
-> -       u64                     start;
-> -       u64                     end;
-> -       int                     nid;
-> -};
-> -
-> -#define NR_NODE_MEMBLKS                (MAX_NUMNODES*2)
-> -struct numa_meminfo {
-> -       int                     nr_blks;
-> -       struct numa_memblk      blk[NR_NODE_MEMBLKS];
-> -};
-> -
-> -extern int __init numa_add_memblk(int nodeid, u64 start, u64 end);
-> -
->  extern void __init early_numa_add_cpu(int cpuid, s16 node);
->  extern void numa_add_cpu(unsigned int cpu);
->  extern void numa_remove_cpu(unsigned int cpu);
-> diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
-> index 30a72fd528c0..0ed384635566 100644
-> --- a/arch/loongarch/kernel/numa.c
-> +++ b/arch/loongarch/kernel/numa.c
-> @@ -18,6 +18,7 @@
->  #include <linux/efi.h>
->  #include <linux/irq.h>
->  #include <linux/pci.h>
-> +#include <linux/numa_memblks.h>
->  #include <asm/bootinfo.h>
->  #include <asm/loongson.h>
->  #include <asm/numa.h>
-> @@ -145,48 +146,6 @@ void numa_remove_cpu(unsigned int cpu)
->         cpumask_clear_cpu(cpu, &cpus_on_node[nid]);
->  }
->
-> -static int __init numa_add_memblk_to(int nid, u64 start, u64 end,
-> -                                    struct numa_meminfo *mi)
-> -{
-> -       /* ignore zero length blks */
-> -       if (start =3D=3D end)
-> -               return 0;
-> -
-> -       /* whine about and ignore invalid blks */
-> -       if (start > end || nid < 0 || nid >=3D MAX_NUMNODES) {
-> -               pr_warn("NUMA: Warning: invalid memblk node %d [mem %#010=
-Lx-%#010Lx]\n",
-> -                          nid, start, end - 1);
-> -               return 0;
-> -       }
-> -
-> -       if (mi->nr_blks >=3D NR_NODE_MEMBLKS) {
-> -               pr_err("NUMA: too many memblk ranges\n");
-> -               return -EINVAL;
-> -       }
-> -
-> -       mi->blk[mi->nr_blks].start =3D PFN_ALIGN(start);
-> -       mi->blk[mi->nr_blks].end =3D PFN_ALIGN(end - PAGE_SIZE + 1);
-> -       mi->blk[mi->nr_blks].nid =3D nid;
-> -       mi->nr_blks++;
-> -       return 0;
-> -}
-> -
-> -/**
-> - * numa_add_memblk - Add one numa_memblk to numa_meminfo
-> - * @nid: NUMA node ID of the new memblk
-> - * @start: Start address of the new memblk
-> - * @end: End address of the new memblk
-> - *
-> - * Add a new memblk to the default numa_meminfo.
-> - *
-> - * RETURNS:
-> - * 0 on success, -errno on failure.
-> - */
-> -int __init numa_add_memblk(int nid, u64 start, u64 end)
-> -{
-> -       return numa_add_memblk_to(nid, start, end, &numa_meminfo);
-> -}
-> -
->  static void __init node_mem_init(unsigned int node)
->  {
->         unsigned long start_pfn, end_pfn;
-> --
-> 2.34.1
->
->
+> 
+> The correct fix here is building an accessor for the existing CXL dvsecs
+> and updating it during ct3_reset.
+> 
+> ~Gregory
+
