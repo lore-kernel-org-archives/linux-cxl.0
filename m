@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5572638A9;
-	Wed,  9 Apr 2025 15:35:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55705146A68;
+	Wed,  9 Apr 2025 15:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744212905; cv=none; b=V2SYLqY0/G4d1JXLB4D2zH45QJ1Xfw/DDdTRZsRoo8N3kRrwKGM7QCyblXmR1nKWMKUhVppBWW+nodymunuB0UJz//K5rCo0fR8jTrKs7Djb1jP2twj2WGVxUJVadnN7V8YOpM3/FdQMekYZ4tGEOBHWjhROPOHNe+yMQkttHlo=
+	t=1744213081; cv=none; b=APQegdzuCeNk4ERuBzLSNwUwLQjWQFhazXwSXQ+UcPP0+osdWrLNgj4ioQYFBYav8kOFPT8s8j3BG382QAWDU1sLpXaQUkbsw/LqDuPrY809yHxBveVJ0ynojvQX09WVdjqCG6lpUqiIRDLFVs3IfG1Brj0OUHX+ZIsQjNoQI8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744212905; c=relaxed/simple;
-	bh=yRWrmXt8NaZQ6MLBo1bv+eeG7YyvMrMCJtYcM0X4ni0=;
+	s=arc-20240116; t=1744213081; c=relaxed/simple;
+	bh=Np4BTx1MWkMz2bIXuqdoxHghOz7aK/DoTriXQNuO/CI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aAVqgYcgn9MmuBVr7J5pHZ+t2jzBPV7H1zSL0wzVgHCr00JcugfQzfd5CjXMDh1jddxdwz60iWocU5E3lbboG0uhzOh24wrSGfNyo8aay9N6Wq7iwQPMIH5kRCkoJKPVWYsHjIK6Gu08PpZlPDycX+B3N0ip7YR03sC+4A9FYTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YQMR2ujI; arc=none smtp.client-ip=192.198.163.10
+	 In-Reply-To:Content-Type; b=NtezyLOzczFuTiR++UbM83v55++hDzmX5KDRRfttvV0T/u4uSXzMZRYyzPpG4KDNzq5G7Y3XSSs9EgnduRCKlhDQS7Mc9DOeT2HSfoqfK/C+pVAdcnIvXO6RxElh5obGnticwQVHshsljG94DSzi0DOixuq8bUk8aaDUFQaf8V8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jCTbsY2V; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YQMR2ujI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jCTbsY2V"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744212903; x=1775748903;
+  t=1744213076; x=1775749076;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=yRWrmXt8NaZQ6MLBo1bv+eeG7YyvMrMCJtYcM0X4ni0=;
-  b=YQMR2ujIL3/clhotMSo5hYiNkkrljjcJogQyZT+njtuAx//e4l/brj7d
-   g1E7cpZ8yAPABZB9S+xkGoCdb4njy3cVq7R5B6DL9CeGWz95nC5Fj7+1v
-   mIUkFy//1hNUJzVhTDwGKSs/caJhZ8Hiiwr9mKps+DE7UVKsemh3hxgsd
-   1m2qGbFHGV+phDOjiSSzplc51GYky+s4fCYJFJnEPtRQc0wLlmoqy6K32
-   KIbJWpl1xcI/nzJw5AplX3xabI88D1KYWDJilSbk3tkAqniDe+6QNBYGb
-   vIHEyHg1mM1ZJtCsMKXfaWyBNkmAazmt5cUkMLOyjg/Zu8AxVMBjZ0ygK
-   w==;
-X-CSE-ConnectionGUID: D+ks7vNnRRathjRImbzSTg==
-X-CSE-MsgGUID: N2X980T3TOa0cOeMSemoqw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="57071010"
+  bh=Np4BTx1MWkMz2bIXuqdoxHghOz7aK/DoTriXQNuO/CI=;
+  b=jCTbsY2VW6GEnX23PbhrK5E4gP1WOhO5hKHNDxhZ4B6Fg5wR5RsL+V3N
+   SI469Ew2769mGUOLChxYR8nl9tNoHSmqJqc+4byGCQDx5YtbgnGf6a6iB
+   bAfZqAz71qOWLSLd8ASB9fkYP4PUcaVyqbUJdZZ4Z7w4TEVWf/PClE3Dn
+   Ks34K1vpTEex/24yvX/QrxRAiOd9LrEXEerBn3Cb7o+1Y/BGhu74tzfah
+   O3qQWw9pv7nd+rN3yze1VcWl6l+WDZFw4eouj4nxWd5LZYF/NyIyTUbhC
+   nNW3QdtmEeX7cnSuFOBJ+tyV0U0eCDbWOWhDoLxxNkT6zRUZkEwP0n+1k
+   Q==;
+X-CSE-ConnectionGUID: X0jivdV3Qwqqlxpu9Mcilg==
+X-CSE-MsgGUID: FKHVxARZS5S1zPqTMSmS5A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="49490694"
 X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
-   d="scan'208";a="57071010"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 08:35:02 -0700
-X-CSE-ConnectionGUID: uS7fge+TQ261Gwh+xpy8dQ==
-X-CSE-MsgGUID: EQMHv0zHRlWgzedwnWyuQw==
+   d="scan'208";a="49490694"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 08:37:56 -0700
+X-CSE-ConnectionGUID: ISocaCiRTZOLLHKbMJqlbg==
+X-CSE-MsgGUID: +RLLekkYQECZ/2bqbblf3A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
-   d="scan'208";a="128590609"
+   d="scan'208";a="129144844"
 Received: from ldmartin-desk2.corp.intel.com (HELO [10.125.111.236]) ([10.125.111.236])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 08:35:02 -0700
-Message-ID: <d8f5fbc5-5deb-4232-bd5e-440098650da8@intel.com>
-Date: Wed, 9 Apr 2025 08:35:00 -0700
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 08:37:54 -0700
+Message-ID: <1be19059-e879-4404-a68a-10093fef7522@intel.com>
+Date: Wed, 9 Apr 2025 08:37:53 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,113 +52,60 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/1] cxl/feature: Using Full Data Transfer only when
- offset is 0
+Subject: Re: [PATCH v2 1/1] cxl/feature: Update out_len in set feature failure
+ case
 To: Li Ming <ming.li@zohomail.com>, dave@stgolabs.net,
  jonathan.cameron@huawei.com, alison.schofield@intel.com,
  vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- shiju.jose@huawei.com
-References: <20250409024825.510632-1-ming.li@zohomail.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250409022521.510146-1-ming.li@zohomail.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250409024825.510632-1-ming.li@zohomail.com>
+In-Reply-To: <20250409022521.510146-1-ming.li@zohomail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 4/8/25 7:48 PM, Li Ming wrote:
-> Per CXL r3.2 section 8.2.10.6.3 Set Feature(Opcode 0502h)
-> 
-> "If the Feature data is transferred in its entirely, the caller makes
-> one call to Set Feature with Action = Full Data Transfer. The Offset
-> field is not used and shall be ignored."
-> 
-> It implies if using Full Data Transfer, the received data should be
-> updated from offset 0 on device side.
-> 
-> Current driver implementation is if feature data size is less than mbox
-> payload - set feature header, driver will use Full Data Transfer even if
-> user provides an offset. Per above description, feature data will be
-> written from offset 0 rather than the offset value user provided, the
-> result will not be what user expects.
-> 
-> The changes is checking if the offset caller provides is equal to 0, if
-> yes, using Full Data Transfer, if not, using Initiate Data Transfer -
-> Finish Data Transfer.
-> 
-> After the changes, all Set Feature transfer scenarios are below:
-> 
-> 1. data size + header is less than mbox payload and offset is 0
-> 	Full Data Transfer
-> 
-> 2. data size + header is less than mbox payload and offset is not 0
-> 	Initiate Data Transfer(with all feature data) - Finish Data Transfer(with no feature data)
-> 
-> 3. data size + header us greater than mbox payload with any value of offset
-> 	Initiate Data Transfer - Continue Data Transfer - Finish Data Transfer
-> 
-> Fixes: 14d502cc2718e ("cxl/mbox: Add SET_FEATURE mailbox command")
-> Signed-off-by: Li Ming <ming.li@zohomail.com>
+On 4/8/25 7:25 PM, Li Ming wrote:
+> CXL subsystem supports userspace to configure features via fwctl
+> interface, it will configure features by using Set Feature command.
+> Whatever Set Feature succeeds or fails, CXL driver always needs to
+> return a structure fwctl_rpc_cxl_out to caller, and returned size is
+> updated in a out_len parameter. The out_len should be updated not only
+> when the set feature succeeds, but also when the set feature fails.
 
+Good catch! Can you add a Fixes tag please? Otherwise 
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-Thanks for this. LGTM. You can drop the RFC. 
-
+> 
+> Signed-off-by: Li Ming <ming.li@zohomail.com>
 > ---
 > base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8 v6.15-rc1
+> 
+> v2:
+> - Adjust changelog
 > ---
->  drivers/cxl/core/features.c | 18 +++++++++++++++---
->  1 file changed, 15 insertions(+), 3 deletions(-)
+>  drivers/cxl/core/features.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 > diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-> index f4daefe3180e..fcc624cefe89 100644
+> index f4daefe3180e..066dfc29a3dd 100644
 > --- a/drivers/cxl/core/features.c
 > +++ b/drivers/cxl/core/features.c
-> @@ -259,6 +259,17 @@ size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
->  	return data_rcvd_size;
->  }
->  
-> +static bool is_last_feat_transfer(struct cxl_mbox_set_feat_in *pi)
-> +{
-> +	switch (le32_to_cpu(pi->flags) & CXL_SET_FEAT_FLAG_DATA_TRANSFER_MASK) {
-> +	case CXL_SET_FEAT_FLAG_FULL_DATA_TRANSFER:
-> +	case CXL_SET_FEAT_FLAG_FINISH_DATA_TRANSFER:
-> +		return true;
-> +	default:
-> +		return false;
-> +	}
-> +}
-> +
->  /*
->   * FEAT_DATA_MIN_PAYLOAD_SIZE - min extra number of bytes should be
->   * available in the mailbox for storing the actual feature data so that
-> @@ -294,14 +305,14 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox,
->  	if (hdr_size + FEAT_DATA_MIN_PAYLOAD_SIZE > cxl_mbox->payload_size)
->  		return -ENOMEM;
->  
-> -	if (hdr_size + feat_data_size <= cxl_mbox->payload_size) {
-> +	if (hdr_size + feat_data_size <= cxl_mbox->payload_size && !offset) {
->  		pi->flags = cpu_to_le32(feat_flag |
->  					CXL_SET_FEAT_FLAG_FULL_DATA_TRANSFER);
->  		data_in_size = feat_data_size;
->  	} else {
->  		pi->flags = cpu_to_le32(feat_flag |
->  					CXL_SET_FEAT_FLAG_INITIATE_DATA_TRANSFER);
-> -		data_in_size = cxl_mbox->payload_size - hdr_size;
-> +		data_in_size = min(feat_data_size, cxl_mbox->payload_size - hdr_size);
+> @@ -528,13 +528,13 @@ static void *cxlctl_set_feature(struct cxl_features_state *cxlfs,
+>  	rc = cxl_set_feature(cxl_mbox, &feat_in->uuid,
+>  			     feat_in->version, feat_in->feat_data,
+>  			     data_size, flags, offset, &return_code);
+> +	*out_len = sizeof(*rpc_out);
+>  	if (rc) {
+>  		rpc_out->retval = return_code;
+>  		return no_free_ptr(rpc_out);
 >  	}
 >  
->  	do {
-> @@ -322,7 +333,8 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox,
->  		}
+>  	rpc_out->retval = CXL_MBOX_CMD_RC_SUCCESS;
+> -	*out_len = sizeof(*rpc_out);
 >  
->  		data_sent_size += data_in_size;
-> -		if (data_sent_size >= feat_data_size) {
-> +		if (data_sent_size >= feat_data_size &&
-> +		    is_last_feat_transfer(pi)) {
->  			if (return_code)
->  				*return_code = CXL_MBOX_CMD_RC_SUCCESS;
->  			return 0;
+>  	return no_free_ptr(rpc_out);
+>  }
 
