@@ -1,269 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from esa4.hc1455-7.c3s2.iphmx.com (esa4.hc1455-7.c3s2.iphmx.com [68.232.139.117])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F2381DA4E
-	for <linux-cxl@vger.kernel.org>; Thu, 10 Apr 2025 01:05:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B193647;
+	Thu, 10 Apr 2025 01:07:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.117
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744247142; cv=none; b=ZGQrcWEQm3aLSVtEcLCF/dF97PM5Jv8San8zOVF7PSZpP7mHt5TuBle7fYdwsELD+rXZv+nNHhGdnoBNRwRLyANqqn6JTnup7So7jwsfYhc+hWR/4GcTzian2DXIXFL4gmktQ/wOYkC7fkMUWDVTgBvUAc+qDM1L9qc7nFito5Q=
+	t=1744247230; cv=none; b=m1F7DJi3ZKyZzAoVKcGXBes7gYhQzxGARrYJ/tPCOQnUD+VktYvDAplumE3/cLVbl82wRmZdPaO+XhM27KsxA8i4DvRcptuVTo7Berh+zgpiByduFox3at4xli8F+2NuCpDL+h7dQwFv8LyGmoEMxhYrY/TlJWbIjdAjavH7P5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744247142; c=relaxed/simple;
-	bh=NHyy+dT47wgoaxqkJxxAHtN6f0EvVruudiCU98rqoOk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pFF58KTGr+CUmgfb/MuvEOZe2qjE5qIW3Cb7hinU61t8mrVAuSkKoa34hL6wl4mJ2nm2azgdeE3WuzexoKJ6EwlbyWXjrZF7KbocnpOA7K9MRkgF44DxO2gIFaEZro6SBLTBD+cdTxp626vS1gM/c5ca8jc70uUU7a7INL1v+48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ih8lJ4bT; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744247230; c=relaxed/simple;
+	bh=wRuMIIt25a8E6s46DgwKPIQAs72RHwhTOGUxithp+Nk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dz0rBeyIvW9aG3zMFXZC04VX9sl2CCS0bOGkIqujpbW18WMRiISBG1PbprnvlJyGLZQTGri8By/N0fI4yJYBz3GoiHS008/R9trxNLvR+TJdl1AZ6uBPUWp4NN+fk6vE7r1X2mHkL31FgPdO76ftzwmIWzjl7Lo5zf8uT/eVoiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=OYZdooKj; arc=none smtp.client-ip=68.232.139.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ih8lJ4bT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744247140; x=1775783140;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=NHyy+dT47wgoaxqkJxxAHtN6f0EvVruudiCU98rqoOk=;
-  b=ih8lJ4bT18u8w3pRzGPnf8XMCP9AoZa38xTnNIxtR7jyODdvhChqDcNn
-   6cbhwWQ7pRfRvVL3jGMTFr2t4bJ2rIR+qykFwV0q3iKLQ/6QmxTbP6w0+
-   O92ZRhadkmRwFt89VlLJ5wnsBJbQ0JfpbLUYHIWzz6Qi7M/fxvEEeFwqR
-   cAB5073IYlWcvDxEM7r9rYpttj4RaJSQGFx/ARSh5wzgiLQOieuBPzaMN
-   iHgMKuG6JPd57trH472cwF5tPy52WAgos+WRYWuY3dFwHf3tFDvrQhg/A
-   raXzE5VmOoW737/C6tK7huihymk/kAuSfApYpbrU3osQyexQKqx1l0lmB
-   w==;
-X-CSE-ConnectionGUID: zG4+ZTwaTA+S9O7nZT2KSQ==
-X-CSE-MsgGUID: mF4axQbAS96JsSTuXkUOMQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="56385495"
-X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
-   d="scan'208";a="56385495"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 18:05:37 -0700
-X-CSE-ConnectionGUID: bGK3daUvTO6Ss9z+Jc0moQ==
-X-CSE-MsgGUID: dyJct4prRPCE+tXVaUAmkw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
-   d="scan'208";a="128603151"
-Received: from ldmartin-desk2.corp.intel.com (HELO [10.125.111.236]) ([10.125.111.236])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 18:05:36 -0700
-Message-ID: <3466b294-612f-4ca2-8df3-a20fdef4514b@intel.com>
-Date: Wed, 9 Apr 2025 18:05:35 -0700
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="OYZdooKj"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1744247228; x=1775783228;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=wRuMIIt25a8E6s46DgwKPIQAs72RHwhTOGUxithp+Nk=;
+  b=OYZdooKjz+2ZS6dKvbgXaO2dBBwScSyxwFV8l/4TFGvwkU+M/Sg1oRBr
+   CH8hoxu5ww9Lrg7pzaOkliGQcwhnZk5JuREwegLrSXc7SVAImMQhPj6ff
+   Vm1eVe4JuodjkYPXZQsx/v9SjfUmfBenh2/oRpqtMF9dq1ckzLYfVYh4L
+   jbP76fmbTBaWouiNSg8u5AYxXWiFki6KjgfP5si6RubM0lmPy98JD7tX4
+   vuNE7KANFcHCHPxlRxji4jnUgw6bQZu2iVxWU/b+HyTln1FfOJifTn5FB
+   i7xFSaUh4r3yVzY/ZefeUMsw+kVLH1mEPLyXLrV72K2GdMp3LSBdhBYr0
+   g==;
+X-CSE-ConnectionGUID: HcFNwuIVQgSOsOR0u80EBg==
+X-CSE-MsgGUID: zH4p1MYYQNq5LrFyv8KmZA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="196306701"
+X-IronPort-AV: E=Sophos;i="6.15,201,1739804400"; 
+   d="scan'208";a="196306701"
+Received: from unknown (HELO oym-r3.gw.nic.fujitsu.com) ([210.162.30.91])
+  by esa4.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 10:05:56 +0900
+Received: from oym-m2.gw.nic.fujitsu.com (oym-nat-oym-m2.gw.nic.fujitsu.com [192.168.87.59])
+	by oym-r3.gw.nic.fujitsu.com (Postfix) with ESMTP id 39019C2267;
+	Thu, 10 Apr 2025 10:05:54 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+	by oym-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id EC19BBF4B8;
+	Thu, 10 Apr 2025 10:05:53 +0900 (JST)
+Received: from iaas-rpma.. (unknown [10.167.135.44])
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id B6E7A1A0078;
+	Thu, 10 Apr 2025 09:05:52 +0800 (CST)
+From: Li Zhijian <lizhijian@fujitsu.com>
+To: linux-cxl@vger.kernel.org
+Cc: Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	linux-kernel@vger.kernel.org,
+	Li Zhijian <lizhijian@fujitsu.com>,
+	Gregory Price <gourry@gourry.net>
+Subject: [PATCH v3] cxl/acpi: Verify CHBS length for CXL2.0
+Date: Thu, 10 Apr 2025 09:05:45 +0800
+Message-Id: <20250410010545.99590-1-lizhijian@fujitsu.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [NDCTL PATCH v4 3/3] cxl/test: Add test for cxl features device
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
-References: <20250218230116.2689627-1-dave.jiang@intel.com>
- <20250218230116.2689627-4-dave.jiang@intel.com>
- <Z_bbK_XRsyYz4ezA@aschofie-mobl2.lan>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <Z_bbK_XRsyYz4ezA@aschofie-mobl2.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Per CXL Spec r3.1 Table 9-21, both CXL1.1 and CXL2.0 have defined their
+own length, verify it to avoid an invalid CHBS.
 
+Additionally, this patch also removes the redundant macro CXL_RCRB_SIZE,
+favoring the use of `ACPI_CEDT_CHBS_LENGTH_CXL11`, which offers clearer
+semantic meaning.
 
-On 4/9/25 1:40 PM, Alison Schofield wrote:
-> On Tue, Feb 18, 2025 at 03:59:56PM -0700, Dave Jiang wrote:
->> Add a unit test to verify the features ioctl commands. Test support added
->> for locating a features device, retrieve and verify the supported features
->> commands, retrieve specific feature command data, retrieve test feature
->> data, and write and verify test feature data.
->>
-> 
-> Let's revisit the naming -
-> 
-> If the script is cxl-feature.sh then would the C program make sense as
-> feature-control.c or ???
-> 
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->> v4:
->> - Adjust for kernel changes of input/out data structures
->> - Setup test script to error out if not -ENODEV
->> - Remove kernel 6.15 check
->> ---
->>  test/cxl-features.sh |  31 ++++
->>  test/fwctl.c         | 383 +++++++++++++++++++++++++++++++++++++++++++
->>  test/meson.build     |  45 +++++
->>  3 files changed, 459 insertions(+)
->>  create mode 100755 test/cxl-features.sh
->>  create mode 100644 test/fwctl.c
->>
->> diff --git a/test/cxl-features.sh b/test/cxl-features.sh
-> 
-> snip
-> 
->> diff --git a/test/fwctl.c b/test/fwctl.c
->> new file mode 100644
->> index 000000000000..ca39e30f6dca
->> --- /dev/null
->> +++ b/test/fwctl.c
->> @@ -0,0 +1,383 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +// Copyright (C) 2024-2025 Intel Corporation. All rights reserved.
->> +#include <errno.h>
->> +#include <fcntl.h>
->> +#include <stdio.h>
->> +#include <endian.h>
->> +#include <stdint.h>
->> +#include <stdlib.h>
->> +#include <syslog.h>
->> +#include <string.h>
->> +#include <unistd.h>
->> +#include <sys/ioctl.h>
->> +#include <cxl/libcxl.h>
->> +#include <cxl/features.h>
->> +#include <fwctl/fwctl.h>
->> +#include <fwctl/cxl.h>
->> +#include <linux/uuid.h>
->> +#include <uuid/uuid.h>
->> +#include <util/bitmap.h>
-> 
-> Not clear bitmap.h is needed?
+Reviewed-by: Gregory Price <gourry@gourry.net>
+Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
+---
+V3:
+ - say more words in removing CXL_RCRB_SIZE # Alison
+ - Collected Reviewed-by
+V2: don't factor out, just validate # Dan
+---
+ drivers/cxl/acpi.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Yes. Needed for using BIT() for EFFECTS_MASK. 
-
-DJ
-> 
->> +
->> +static const char provider[] = "cxl_test";
->> +
->> +UUID_DEFINE(test_uuid,
->> +	    0xff, 0xff, 0xff, 0xff,
->> +	    0xff, 0xff,
->> +	    0xff, 0xff,
->> +	    0xff, 0xff,
->> +	    0xff, 0xff, 0xff, 0xff, 0xff, 0xff
->> +);
->> +
->> +#define CXL_MBOX_OPCODE_GET_SUPPORTED_FEATURES	0x0500
->> +#define CXL_MBOX_OPCODE_GET_FEATURE		0x0501
->> +#define CXL_MBOX_OPCODE_SET_FEATURE		0x0502
->> +
->> +#define GET_FEAT_SIZE	4
->> +#define SET_FEAT_SIZE	4
->> +#define EFFECTS_MASK	(BIT(0) | BIT(9))
->> +
->> +#define MAX_TEST_FEATURES	1
->> +#define DEFAULT_TEST_DATA	0xdeadbeef
->> +#define DEFAULT_TEST_DATA2	0xabcdabcd
->> +
->> +struct test_feature {
->> +	uuid_t uuid;
->> +	size_t get_size;
->> +	size_t set_size;
->> +};
->> +
->> +static int send_command(int fd, struct fwctl_rpc *rpc, struct fwctl_rpc_cxl_out *out)
->> +{
->> +	if (ioctl(fd, FWCTL_RPC, rpc) == -1) {
->> +		fprintf(stderr, "RPC ioctl error: %s\n", strerror(errno));
->> +		return -errno;
->> +	}
->> +
->> +	if (out->retval) {
->> +		fprintf(stderr, "operation returned failure: %d\n", out->retval);
->> +		return -ENXIO;
->> +	}
->> +
->> +	return 0;
->> +}
-> 
-> Above the send_command() is factored out and reused. How about doing similar with
-> the ioctl setup - ie a setup_and_send_command() that setups up the ioctl and calls
-> send_command(). That removes redundancy in *get_feature, *set_feature, *get_supported.
-> 
-> 
->> +
->> +static int cxl_fwctl_rpc_get_test_feature(int fd, struct test_feature *feat_ctx,
->> +					  const uint32_t expected_data)
->> +{
->> +	struct cxl_mbox_get_feat_in *feat_in;
->> +	struct fwctl_rpc_cxl_out *out;
->> +	struct fwctl_rpc rpc = {0};
->> +	struct fwctl_rpc_cxl *in;
->> +	size_t out_size, in_size;
->> +	uint32_t val;
->> +	void *data;
->> +	int rc;
->> +
->> +	in_size = sizeof(*in) + sizeof(*feat_in);
->> +	rc = posix_memalign((void **)&in, 16, in_size);
->> +	if (rc)
->> +		return -ENOMEM;
->> +	memset(in, 0, in_size);
-> 
-> How about de-duplicating the repeated posix_memalign() + memset() pattern into
-> one helper func like alloc_aligned_memory() - including the memset on success.
-> 
-> 
->> +	feat_in = &in->get_feat_in;
->> +
->> +	uuid_copy(feat_in->uuid, feat_ctx->uuid);
->> +	feat_in->count = feat_ctx->get_size;
->> +
->> +	out_size = sizeof(*out) + feat_ctx->get_size;
->> +	rc = posix_memalign((void **)&out, 16, out_size);
->> +	if (rc)
->> +		goto free_in;
->> +	memset(out, 0, out_size);
->> +
->> +	in->opcode = CXL_MBOX_OPCODE_GET_FEATURE;
->> +	in->op_size = sizeof(*feat_in);
->> +
->> +	rpc.size = sizeof(rpc);
->> +	rpc.scope = FWCTL_RPC_CONFIGURATION;
->> +	rpc.in_len = in_size;
->> +	rpc.out_len = out_size;
->> +	rpc.in = (uint64_t)(uint64_t *)in;
->> +	rpc.out = (uint64_t)(uint64_t *)out;
->> +
->> +	rc = send_command(fd, &rpc, out);
->> +	if (rc)
->> +		goto free_all;
->> +
->> +	data = out->payload;
->> +	val = le32toh(*(__le32 *)data);
->> +	if (memcmp(&val, &expected_data, sizeof(val)) != 0) {
->> +		rc = -ENXIO;
->> +		goto free_all;
->> +	}
->> +
->> +free_all:
->> +	free(out);
->> +free_in:
->> +	free(in);
->> +	return rc;
->> +}
->> +
-> snip
-> 
->> +static int test_fwctl_features(struct cxl_memdev *memdev)
->> +{
->> +	struct test_feature feat_ctx;
->> +	unsigned int major, minor;
->> +	int fd, rc;
->> +	char path[256];
->> +
->> +	major = cxl_memdev_get_fwctl_major(memdev);
->> +	minor = cxl_memdev_get_fwctl_minor(memdev);
->> +
->> +	if (!major && !minor)
->> +		return -ENODEV;
->> +
->> +	sprintf(path, "/dev/char/%d:%d", major, minor);
->> +
->> +	fd = open(path, O_RDONLY, 0644);
->> +	if (!fd) {
->> +		fprintf(stderr, "Failed to open: %d\n", -errno);
->> +		return -errno;
->> +	}
-> 
-> Needs to be "if (fd < 0)"  as open() returns -1 on failure.
-> 
-> snip 
+diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+index cb14829bb9be..2e63e50b2c40 100644
+--- a/drivers/cxl/acpi.c
++++ b/drivers/cxl/acpi.c
+@@ -11,8 +11,6 @@
+ #include "cxlpci.h"
+ #include "cxl.h"
+ 
+-#define CXL_RCRB_SIZE	SZ_8K
+-
+ struct cxl_cxims_data {
+ 	int nr_maps;
+ 	u64 xormaps[] __counted_by(nr_maps);
+@@ -478,8 +476,10 @@ static int cxl_get_chbs_iter(union acpi_subtable_headers *header, void *arg,
+ 
+ 	chbs = (struct acpi_cedt_chbs *) header;
+ 
+-	if (chbs->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL11 &&
+-	    chbs->length != CXL_RCRB_SIZE)
++	if ((chbs->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL11 &&
++	    chbs->length != ACPI_CEDT_CHBS_LENGTH_CXL11) ||
++	   (chbs->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL20 &&
++	    chbs->length != ACPI_CEDT_CHBS_LENGTH_CXL20))
+ 		return 0;
+ 
+ 	if (!chbs->base)
+-- 
+2.47.0
 
