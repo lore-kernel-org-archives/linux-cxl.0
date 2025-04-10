@@ -1,229 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 098DA17588
-	for <linux-cxl@vger.kernel.org>; Thu, 10 Apr 2025 02:01:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1D81E9B12;
+	Thu, 10 Apr 2025 02:45:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744250501; cv=fail; b=Gxudodv5HRMLLJdeVX16SleLrjG9fOAi0oJfXYNFa+fdG0jB7jvU08U7aWJKO/uJZZV0fjbS4fTHt3+jphr56j75iq8NCGt7WPWkJl8cGjQ8qGGVK7U6/xKnh4X0NEBUCGPU1QLMpc7Xo5DE6xDEkRZ2HOSpyTGZxJBy0paKX3s=
+	t=1744253150; cv=pass; b=ikF9rTv2svop+MsO12ehk2HBLc6Dyu35C3lFSUZUZqNG7SbOwxp/qtT40Fm0194cCbUa0rdAfvpDGI9V86EX0IHORBC3y6uz3Yd+yLaqZRDD7QkUEjf1bV33/LrO8atB024Ue0bqTzP6/aYO2oBlB5KB6OELqPcFsdU8TvacqwE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744250501; c=relaxed/simple;
-	bh=jtWyF3euM/s5XS3BOHkGZBDtuoTFJ/F6HiP+JnrkuSA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=r9R4LK5RUER3gZ50JXu5FrETv2cx03jkR9rs6xshY9FsM/90juCxi3oDQ9Y6I4r9UZohx3wY8yWori65Ws7fXM50kuda3EjRvwV6bSY3M3aqUY+znpgfKi1NcHoY0mSaw8gjethE3f8KhAeWp/egc0KlsY5/xdqXDy8iN4Bu5PU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RmZBcVR2; arc=fail smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744253150; c=relaxed/simple;
+	bh=59zn4Z/QXSsn/dYi20BvJ7x27wAjnpmuU3q4TnCEGng=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=m5F34N/+lItwoFU2mWvTdO06l45S1iVmCUxWc+RDwEPdIa4GrlPDS3cKTI8vb20pJ4/uxYNgF/CWNQLOgwRVSCjBjH4xeYdsG8j4DcTzviG/UGVqu2QOnjZXfCwp3GP679TPVRBi+sWnkcIJbQxnxVC3GnlrsSeCV8FA1pkzmLs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=MwiHJKyH; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RmZBcVR2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744250498; x=1775786498;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=jtWyF3euM/s5XS3BOHkGZBDtuoTFJ/F6HiP+JnrkuSA=;
-  b=RmZBcVR2w9WPMQgTuXjmPquWZKcjDicBWdeZclP20r5A3kTP/qBQXCle
-   KuDJKybjM12R4D1+6B9brsoxHOUFnPW6BvpG2SvVy/gy7Eu9DTotLtpGW
-   XHiu83QixYzgA0Al7ZZ6KbtCDSUpzVVnFs3tPuR+lSB10+oZyshgCxk6T
-   WjIsXpeN840E705xk90ILgJ8PpCfNqU3aJG8oXWVXqLkr3FUsisUSYO2c
-   QFD9FL24grO6fNOL+3QnSY5YgeVXnxCJF+wRK6+cJMGQFQ/2MpzFR/fK8
-   tumllqSjEmr+1XH0h08wmLvUZEC47ym07Xf3IvV/D1/+b8iUv+YaFS1MY
-   Q==;
-X-CSE-ConnectionGUID: yUyFMgUsT121KMw+7snvVQ==
-X-CSE-MsgGUID: GKS0KgJqT2KuLPcjMELRLw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="56389584"
-X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
-   d="scan'208";a="56389584"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 19:01:37 -0700
-X-CSE-ConnectionGUID: P0nITzeFSuuH0ianhzj5xQ==
-X-CSE-MsgGUID: tIFj1d18RXyZNzYERBWnjw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
-   d="scan'208";a="128733691"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 19:01:37 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Wed, 9 Apr 2025 19:01:36 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Wed, 9 Apr 2025 19:01:36 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.174)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 9 Apr 2025 19:01:34 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OCrROT7WUaTqXznU5/K5SQ+CqxokdNR21oQpFbfKvmh1CxDMpZ7O2lMyER+gaw4tQtCrfyR+wh3ahxRubzrpbKmx9u4y0jhjsFw5hH8WfCiDwJ1ayzkwl/jIC43QJtEfg5b7BJikTCbSrjyz1XtY4PW4SlfPSizJCR+xdMxcMkYa6ICRHTXgjpDoyJ0UmE39e0Bmsjdk7x6yEvGusVT7ZQCdRyTHeZW/Rgy5TusY1lmbCsbCfgO2yuoxaMqhpbhnmx0koJxUCfrNvqSz3+uYDb3l6ULzRgdVAyMi2pbbEO00Q0LHfzcAEYPc4tbl+Js/Oa8dSF63y8ZVbORIjFYIIQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=19TeDS73iWmskQsesiKCOSYkxL+g1vKzWGSDgwFqZHU=;
- b=evuxoGJkfHfi4B3xWpYX/TNozH0wR2qHxbH/IMvPRut5fRB1sxAfjDlgHprpSLHYIdeVAL9OpEkuIrN9drm899snPRyPFWRJPIOrXj9Y4jdwsmEJ+p5uK2sJPkAC88yBr2DPG2MzNVyka8taB4RzP7zd9xW2C4nkjjGW+1NQqqjPwb7w8U+PFI6zUk2MztLo4TByI95yqHr+wAT/wU5jK02As/jU59IklorvWTy6WquV0Rl5+0ba5VDvTcktRcAC9Af0+HkPLoNJn9DVyOdEXUoAwBhb/P+2mpHzwnd2V6IfXXT1Zc8qKfHCcoYuM7j+s+Qq9rnI4N+6PRcJee3BEA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by CY8PR11MB7315.namprd11.prod.outlook.com (2603:10b6:930:9e::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.31; Thu, 10 Apr
- 2025 02:01:32 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%3]) with mapi id 15.20.8606.033; Thu, 10 Apr 2025
- 02:01:32 +0000
-Date: Wed, 9 Apr 2025 19:01:29 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: kernel test robot <lkp@intel.com>, Dan Williams <dan.j.williams@intel.com>
-CC: <oe-kbuild-all@lists.linux.dev>, Intel Wired LAN
-	<intel-wired-lan@lists.osuosl.org>, Tony Nguyen <anthony.l.nguyen@intel.com>,
-	<jgg@nvidia.com>, <linux-cxl@vger.kernel.org>
-Subject: Re: [tnguy-net-queue:dev-queue 2/12]
- include/linux/build_bug.h:78:41: error: static assertion failed:
- "sizeof(__uapi_uuid_t) == sizeof(uuid_t) && __alignof__(__uapi_uuid_t) ==
- __alignof__(uuid_t)"
-Message-ID: <67f72679bb038_2ce629469@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <202504050434.Eb4vugh5-lkp@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <202504050434.Eb4vugh5-lkp@intel.com>
-X-ClientProxiedBy: MW4PR04CA0125.namprd04.prod.outlook.com
- (2603:10b6:303:84::10) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="MwiHJKyH"
+ARC-Seal: i=1; a=rsa-sha256; t=1744253134; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=f7rDPeX4Wg2pvS+wb/OMD7ysgOaabppR1eMZq9QFROaoof25dL1uctZR6ZyKekuIdo/zlcvUQxtGsxdBEUFIG7gxmcsM52rrTqc0w9DUqWT1K6tcAi4MiZGy08/poDZ5SrlqsSuQdOMq/jBMnbdFjRl41quy2gJWtsf7Jm0mcXA=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1744253134; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=PvYx+06KT98XpC+VIeWlEcOZ4YTHAdkft+Uf6Lb4JAA=; 
+	b=g/VNhVLXoDXUcnq0Ia8rZGn6UvmhyX5NJU1u7V+vv36DIu6poiBp1IcGJWjozZZoqgAHA6MH/NYEWOWeZ2oUMhsI+seeXN6BamJtoVOvxPbA+iL+AzqLEvlvs+rExToWyQFzLpB+LsrIDKmeSxCjhZXye9yMHWPbgQsEIflgmlU=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744253134;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
+	bh=PvYx+06KT98XpC+VIeWlEcOZ4YTHAdkft+Uf6Lb4JAA=;
+	b=MwiHJKyHFiAbJk6ByaUI+GEUlnkcPqrQzT6CHsJDvjSEDW1ahL39pl3xuVtYJrP5
+	puImXh7BVj4Vf1SETHd+sHRvE9iKHJ5d1M+PGVuWkoc7zcWkBWJnKFmYeDpyIezHnwa
+	qVCfw2uESFgxnpyfSFCFEEHUWcDkMICHuq6D+aog=
+Received: by mx.zohomail.com with SMTPS id 1744253131792555.9205806172549;
+	Wed, 9 Apr 2025 19:45:31 -0700 (PDT)
+From: Li Ming <ming.li@zohomail.com>
+To: dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Li Ming <ming.li@zohomail.com>
+Subject: [PATCH v3 1/1] cxl/feature: Update out_len in set feature failure case
+Date: Thu, 10 Apr 2025 10:45:21 +0800
+Message-Id: <20250410024521.514095-1-ming.li@zohomail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CY8PR11MB7315:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8f58b906-fa4e-49c0-b5db-08dd77d39d81
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?V3OyLwkC5xfhpEswfskOD4dOLiGMc5iYXDt7Xx3OcU0d8DOF2xMfIcaLsSdN?=
- =?us-ascii?Q?b9Ivzfty7PO076y7fxrg9i46WAJz/S0YBUKuGEw2U5w1p/75yfMhkMYXWj0q?=
- =?us-ascii?Q?DubjOU501/hUOu2Q+/SF3nrHoVnAtArSj2qsnxE/aLLqARyc+ivz5lkdY9/e?=
- =?us-ascii?Q?pNrErlOSG61mY0l/2zSRVWZgPI+IAsZKK+Ddu52Z8IJ1Gq23fFa3qXzT8P+F?=
- =?us-ascii?Q?B63f2N1L9DYOIKqaYk/BoIj7O2KvX3ZOFBgJYez5Xaqorb9w8Q4wCujgdX14?=
- =?us-ascii?Q?Pt+cbH8HUy6ZBuP5eOkKZl7TqS9f1krHmg1yMjo3DnoRKtgAhWj/iApY0VR6?=
- =?us-ascii?Q?GrFnhxAT4YpmKof6D45AhyRSG6Myjy9Jp5NMEv+jQSRKi8FzMDxkLaJmsh/i?=
- =?us-ascii?Q?0xdAjifMD7n8Fx1wCbb5k+HAPIz906w3taN5oj7mDg0C54WAkuYa6NtfLkw6?=
- =?us-ascii?Q?cuBQkwxKEwJysxz+7/Nahw6H9tDmmfKSqqtWOefqg3qoWezn7bqPEhdHS5Sk?=
- =?us-ascii?Q?QEzJ7uC65qG7x56Tz4Rgpcrj/5wW2NB9L4eGEEHvGcjXR38l9NnRowIB1/+4?=
- =?us-ascii?Q?UYNCZ8283F0Zckz3DCmz5xl9B/iE8w+lGCrnGTNrQIS6nuWc0cH6o0bnL1fr?=
- =?us-ascii?Q?fBNMNXBfpOth8YN9DhGW15V7kWTEsdosPIJMhsGdOBEuIOIB7lXg7Fy5Qi6e?=
- =?us-ascii?Q?YUmtz8HAMSTvTRkaoscGdwjA1wcSW1J9jtCDiMb/NWtJJfH1cz6T/R2Sqwaj?=
- =?us-ascii?Q?jAS+oGMVf3LTV6aVK6rQoFhRxcKCgcnaX52Wh4lNj3ABVUg8i1b+Rd7oOvdr?=
- =?us-ascii?Q?9mgWiaZhjvHntd6H+6gQ6ApVwAp8NtudEXybV9HnGzPQuVpjEQPwt8U196oW?=
- =?us-ascii?Q?nfxmvPpXSXAPRV+pTpJ+3FzI8dAp5ujVgSjDwNcvt02jOB0AMgItaIjr4aRn?=
- =?us-ascii?Q?NwR+/9lYHlZe+dPEvPemIZja6drHWkmkItSU2rIKN5SUNf01rdcQghJ+GkAH?=
- =?us-ascii?Q?cOdpKiC7qljRf0pg4nNTOEURBKmDP3CNtPoOqGqjFr0BqZTp1bqh+akK9tTc?=
- =?us-ascii?Q?jCkiGt3vyhhm1k0lmhSbsTbI/Kfk4AMfVEY/v+u3ACvx+o74updUpyrRAOwj?=
- =?us-ascii?Q?imX0HwLbJPO1BlIYen7FnSjzWtMbuuWOQQrVbiTTOXyoa28HtY4Ve8Ci2ywx?=
- =?us-ascii?Q?PrtRYzE/iKJxXlZXi/hqGx7Ds160qzeAcW8cYcInxb1+D9Falqjxhie+/mGx?=
- =?us-ascii?Q?xop2YmcHOAMS1SV6Zrz2h6mL4wBa/bdW8mXbmNztojLR8dEdSCxXDJahP2kx?=
- =?us-ascii?Q?tQxTg2htKQ6JQUh0ZcCdKQcs9SkwbSdF4x8XWw92wwTie3AeQUmaU7jnbubE?=
- =?us-ascii?Q?uNzqhndc6eEfkRQezr3Zkrwfd0Xq?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?FqNHzCVB8/uxKVlVXROlxQ7FYn4Sb1zb9DEHBepOJt3g/EHsRPHApzOPfHy+?=
- =?us-ascii?Q?ibNBPk1ySqvl7VBB0E3Y1xkhLSABnXbHgGI6Qdmv9uQNGB1Ik3kY/QvvZidJ?=
- =?us-ascii?Q?3lABp/DnwqgCB3zBGX9Uncrs+FBxhU0bwYy/0+AOYQlCE01a/kMGkpECmNND?=
- =?us-ascii?Q?IKRWHHM4Axg1weCDX1UG4AQX5BfZvU2273Tp0CFWWTff+MPOex4J7I3n75m4?=
- =?us-ascii?Q?ch1zufTUPtM8Gj5HwZL2R9r86E31SE+xQ7lfODtAHbzZkE1BgeI5jf5uH8zG?=
- =?us-ascii?Q?zL2OTCNJsi8jVt80fWoDYSjPTEzH2QNaoMXene/hdvipT+O0Z98EnDtFOn0I?=
- =?us-ascii?Q?+9EeS/ChI/8CDbrQIdFDk9Wgj58klp1JSyrem1hmpWbnsoULYfSyaWjQoG1v?=
- =?us-ascii?Q?MQoYrAbxSDvaxKn88oMyqUUo+Dj7n7tMRqCCnr69uMP/th12pBsCyvI04UOI?=
- =?us-ascii?Q?9ayas1Zo2yhV3WgmembFfDv8WCosjCwdonIWoC8BPrjsp1iglItSKQFWhhJl?=
- =?us-ascii?Q?YgOcqXlUB6uFOxSCFdcd5S7C0FogGPvKOEV0lz9QuvN7sli0+RMAH2m3XNqT?=
- =?us-ascii?Q?rAoJGd4PRBQH5cERi9h0kkZ33upMkF48CJFNse+LiXPK9bhq62FCoya6J/eG?=
- =?us-ascii?Q?0LKYosFntRwK7TbgpOZHIXQxeKHIDj8gcASaUiRvyomqsim8NaY8jE1UiJcR?=
- =?us-ascii?Q?UMKogAU7+cv4zU/gJRXpjlgO8eKFy+Dd4+UaLbF2Ob3xbdtwsmFUCyTNBAcQ?=
- =?us-ascii?Q?En/FkyQRF6B0eBA4zQwREavx2T+UXe2nGiNh8UiYiFaGJjquLeIw5M1ypucT?=
- =?us-ascii?Q?oKPUWGuDOVVJ190vbCBtdX6Q8w0/ypIMkNpg/sBquhHYgN9W4OcDcrd6YURm?=
- =?us-ascii?Q?wmrVqiBwS9acJDcizL/AC6gkmGQkdRu6vDmIQyLcWiXUt8UGRPcxm8ksBkJT?=
- =?us-ascii?Q?Um/Roh2/uY0Z7D77U89JlY1frQiMhjCD0g6vGOwZ3+yNjISREJbyFPxXFwcp?=
- =?us-ascii?Q?Al7GUmgduC5AlkBj9VqC5lBFGHL0vxneKgTSOGuKImoZ9NpNTpt/D9xrIiiR?=
- =?us-ascii?Q?Z3XNjADhjHtud26X0L6pN8U1uWuXnuo2+M4DNNdH+72NKZRZbq5h/j6Csgbz?=
- =?us-ascii?Q?EJ+fLdZ7Akaz38u6A5xi86wS08K6zZr+SU3M1OJCuQLt/olF9ebeNIL8aSIk?=
- =?us-ascii?Q?QT2e8WmTvF06bursm3eMzD4DC7RnJFq1MsGkDTUzZZywWSGwEt1WYUq+jEgT?=
- =?us-ascii?Q?h8BDrV1qFY0XGkEoGkvNnTfmDMshXv6lqvnX/8Yz/HM7W8ExiOjVL1TExewD?=
- =?us-ascii?Q?ZE39eaxKtQOHgel2iUTp/77hDebk7AFMJmUri18VAIOldRW5UpMSZB4neLZm?=
- =?us-ascii?Q?RAegLnnk4UwGVVOVmj/ncd0PrGquMj4Qpy62abmYwffBhlKAZ47M53EG7l6b?=
- =?us-ascii?Q?WbFCxZLzGHFadMqmE677lRHPfdXuJJuG23507/JdZNNVNTA4MJhYJ3yCoTjn?=
- =?us-ascii?Q?C+iG0Z95X7ifeqTJyluoWi9xqkamZXm6EmYJWwSut0fhTQr04hzq/KBEvSl3?=
- =?us-ascii?Q?7fhPZq4JD+8JAstBL6NOo/h+rmCdIEk1zGryPe/iarIenPg5VGQ0F8Zxe4sb?=
- =?us-ascii?Q?6g=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8f58b906-fa4e-49c0-b5db-08dd77d39d81
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 02:01:32.2246
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ZwYyB6KPnEqIClfF8XB+spNwYa108zXO08esGivXvaKrqTDxznnnIGnRGWCTSITkbkxRkepuunUiycf2/ED7Qt1/qSsE5dhPP8CuSWrXomA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7315
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
+Feedback-ID: rr0801122785b0d5d72241a49bb2e2d90b0000283464bf916e889d80afd5b572eec254ed94be97dfd563d589:zu08011227a06a218e70415aed63e64db600007cd3f6c80826e03cfb7d1f700209bfb414b9abcd1837877724:rf0801122ddab797f8fb3e2743c6c270b700003ff0b1a4516e6d008df40bc07a72612bf283d2bdcc730a1a3a591fe714cdd9:ZohoMail
+X-ZohoMailClient: External
 
-[add Jason, linux-cxl]
+CXL subsystem supports userspace to configure features via fwctl
+interface, it will configure features by using Set Feature command.
+Whatever Set Feature succeeds or fails, CXL driver always needs to
+return a structure fwctl_rpc_cxl_out to caller, and returned size is
+updated in a out_len parameter. The out_len should be updated not only
+when the set feature succeeds, but also when the set feature fails.
 
-Heads up for a new __uapi_uuid_t patch.
+Fixes: eb5dfcb9e36d ("cxl: Add support to handle user feature commands for set feature")
+Signed-off-by: Li Ming <ming.li@zohomail.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8 v6.15-rc1
 
-kernel test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tnguy/net-queue.git dev-queue
-> head:   41ab790c342f99d9eb891807b2ff00caa56804b9
-> commit: a4bf8e3b34147889963e4c46d1e7916f7157b784 [2/12] fwctl/cxl: Fix uuid_t usage in uapi
-> config: arm-randconfig-003-20250405 (https://download.01.org/0day-ci/archive/20250405/202504050434.Eb4vugh5-lkp@intel.com/config)
-> compiler: arm-linux-gnueabi-gcc (GCC) 8.5.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250405/202504050434.Eb4vugh5-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202504050434.Eb4vugh5-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-> 
->    In file included from include/linux/bits.h:22,
->                     from include/linux/ratelimit_types.h:5,
->                     from include/linux/ratelimit.h:5,
->                     from include/linux/dev_printk.h:16,
->                     from include/linux/device.h:15,
->                     from drivers/cxl/port.c:3:
-> >> include/linux/build_bug.h:78:41: error: static assertion failed: "sizeof(__uapi_uuid_t) == sizeof(uuid_t) && __alignof__(__uapi_uuid_t) == __alignof__(uuid_t)"
->     #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
->                                             ^~~~~~~~~~~~~~
->    include/linux/build_bug.h:77:34: note: in expansion of macro '__static_assert'
->     #define static_assert(expr, ...) __static_assert(expr, ##__VA_ARGS__, #expr)
->                                      ^~~~~~~~~~~~~~~
->    include/uapi/cxl/features.h:16:1: note: in expansion of macro 'static_assert'
->     static_assert(sizeof(__uapi_uuid_t) == sizeof(uuid_t) &&
->     ^~~~~~~~~~~~~
+v3:
+- Add fixes tag
+v2:
+- Adjust changelog
+---
+ drivers/cxl/core/features.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-It turns out that on ARM the alignment of __uapi_uuid_t is 1 and the
-alignment of uuid_t is 4. However, this check is not actually concerned
-with the base alignment of the type, but whether it changes the size and
-alignment of a structure that contains the type. The following fixes the
-warning for me. I will send out a revised patch with that tomorrow if it
-looks good.
+diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
+index fcc624cefe89..63f24f032209 100644
+--- a/drivers/cxl/core/features.c
++++ b/drivers/cxl/core/features.c
+@@ -540,13 +540,13 @@ static void *cxlctl_set_feature(struct cxl_features_state *cxlfs,
+ 	rc = cxl_set_feature(cxl_mbox, &feat_in->uuid,
+ 			     feat_in->version, feat_in->feat_data,
+ 			     data_size, flags, offset, &return_code);
++	*out_len = sizeof(*rpc_out);
+ 	if (rc) {
+ 		rpc_out->retval = return_code;
+ 		return no_free_ptr(rpc_out);
+ 	}
+ 
+ 	rpc_out->retval = CXL_MBOX_CMD_RC_SUCCESS;
+-	*out_len = sizeof(*rpc_out);
+ 
+ 	return no_free_ptr(rpc_out);
+ }
+-- 
+2.34.1
 
-diff --git a/include/uapi/cxl/features.h b/include/uapi/cxl/features.h
-index dd8874860cec..06a1ae3f3fd0 100644
---- a/include/uapi/cxl/features.h
-+++ b/include/uapi/cxl/features.h
-@@ -14,7 +14,8 @@ typedef unsigned char __uapi_uuid_t[16];
- #ifdef __KERNEL__
- #include <linux/uuid.h>
- static_assert(sizeof(__uapi_uuid_t) == sizeof(uuid_t) &&
--	      __alignof__(__uapi_uuid_t) == __alignof__(uuid_t));
-+	      __alignof__(struct { __uapi_uuid_t uuid; }) ==
-+		      __alignof__(struct { uuid_t uuid; }));
- #define __uapi_uuid_t uuid_t
- #endif
