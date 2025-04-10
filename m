@@ -1,39 +1,39 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 992561E3DCD;
-	Thu, 10 Apr 2025 07:53:27 +0000 (UTC)
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4C9B146A68;
+	Thu, 10 Apr 2025 07:53:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744271615; cv=none; b=VMJB+HHjsQbtMHRW/7OH6DT8pqE73Nhem9qXGEGOViv9ygQr0n8UaThc+jnT2qwhd4Q/56xtATKCyE3r5vMtasDDFmnauUisZoDVF8TKnpPsNhUqMHwAheRMPlULhrceHkU9ng4WZDPZ8IZXxDMRyJVzOT+P5MSlX1Ze9zrLjmE=
+	t=1744271634; cv=none; b=oYLNKBoR/PzrzvrK1/rCobz0vXtQ3TKAuLa4lEbmRn9lSedm/gMkQr2ye1YuZJkdlf0IW+FrTp5z4hcuFtUzCx4yyauAYaWgzs0/G7P1ev61mnMlN7DyQWqU31sR0bESbfjGMkv4Ese1k4ylpwI7hKcn8/2ETrnfGNCtLIalIbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744271615; c=relaxed/simple;
-	bh=8xnLrcT6213lqqhInapJaZgknv/4Z4ygoKNwu+iRiDk=;
+	s=arc-20240116; t=1744271634; c=relaxed/simple;
+	bh=F6qD/pnXLcBrzNtBeLQR23U/XUyZK2uBB+lRPIcoqMI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kOt9ekSBz/GDKCQ6zgUsqtxNOczUx7XWdU+dRiNzLYi/ZdwkHpyszolyR1SmvJuNMQEQY9vxAgFfHwlJOReYkTSPoUEBiUtg0+uvTwgIrcsAk/rTFrMdpukTUsgBhh4gKO52MsuRgJ9IMkQAx/3Uk7Kjt+jHz2OfAPcBNacQVJM=
+	 MIME-Version; b=TuDvOzhB82Kk1bim6ly/3TLGHuvSoPHtreXOGGHIAHB1yvgzRDT0Xqa3IudBbmNadB66wKSSMsuXZhUf+SyfE9xPptnOKasMWNynv0bsiPMlKbaFLyVfPQhH3oxzCwtvHEbS38QYMGfN4TCqch9XIJ2gCyjcBiUOxR1Q7Ma/h40=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-681ff7000002311f-ca-67f778f0a0f1
+X-AuditID: a67dfc5b-681ff7000002311f-3b-67f7790abe83
 From: Rakie Kim <rakie.kim@sk.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: kernel_team@skhynix.com,
-	gourry@gourry.net,
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: gourry@gourry.net,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
 	linux-cxl@vger.kernel.org,
 	joshua.hahnjy@gmail.com,
-	dan.j.williams@intel.com,
 	ying.huang@linux.alibaba.com,
+	david@redhat.com,
 	Jonathan.Cameron@huawei.com,
 	osalvador@suse.de,
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com,
 	yunjeong.mun@sk.com,
-	Honggyu Kim <honggyu.kim@sk.com>,
-	Rakie Kim <rakie.kim@sk.com>,
+	rakie.kim@sk.com,
 	akpm@linux-foundation.org
-Subject: Re: [PATCH v7 3/3] mm/mempolicy: Support memory hotplug in weighted interleave
-Date: Thu, 10 Apr 2025 16:53:08 +0900
-Message-ID: <20250410075316.538-1-rakie.kim@sk.com>
+Subject: Re: [PATCH v7 2/3] mm/mempolicy: Prepare weighted interleave sysfs for memory hotplug
+Date: Thu, 10 Apr 2025 16:53:33 +0900
+Message-ID: <20250410075341.549-1-rakie.kim@sk.com>
 X-Mailer: git-send-email 2.48.1.windows.1
-In-Reply-To: <203ed4e9-4691-483c-bf42-3035b3ad3539@redhat.com>
+In-Reply-To: <67f6c1b89cd6a_71fe294bf@dwillia2-xfh.jf.intel.com.notmuch>
 References: 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -42,138 +42,161 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBLMWRmVeSWpSXmKPExsXC9ZZnoe7Hiu/pBq9vsVnMWb+GzWL61AuM
-	Fl/X/2K2+Hn3OLvFqoXX2CyOb53HbnF+1ikWi8u75rBZ3Fvzn9XizLQii9VrMhy4PXbOusvu
-	0d12md2j5chbVo/Fe14yeWz6NInd48SM3yweOx9aerzfd5XNY/Ppao/Pm+QCuKK4bFJSczLL
-	Uov07RK4Ms5OXsVSsF2lYvqdLewNjBNkuxg5OSQETCReP+hlgrEfb1rC3sXIwcEmoCRxbG8M
-	SFhEQENiU9sG5i5GLg5mgTZmiZvTljODJIQFwiX+/LjJCmKzCKhKHPz+lw3E5hUwlvj5r58V
-	YqamRMOle0wgMzkF7CS6fliBhIUEeCRebdjPCFEuKHFy5hMWEJtZQF6ieetssF0SAr/ZJN5d
-	eQd1m6TEwRU3WCYw8s9C0jMLSc8CRqZVjEKZeWW5iZk5JnoZlXmZFXrJ+bmbGIHhv6z2T/QO
-	xk8Xgg8xCnAwKvHwemR8SxdiTSwrrsw9xCjBwawkwutp+D1diDclsbIqtSg/vqg0J7X4EKM0
-	B4uSOK/Rt/IUIYH0xJLU7NTUgtQimCwTB6dUA2NLfd23x66v7npkxUuuSJx2tXnppgl6Fqpb
-	RAWT8j8cfJ198py2wqosV9OellPmSx11WwziuCOKKgVupXyO3Pz00IlPZ8pzXsUtnl5va+d7
-	3eTRp74X3vdL75w0Cdue4PolZd/Frm/dzo3Pz8a6bdr2x3J34b2l01Nvzqjfau0uGjt9TTxv
-	1yUlluKMREMt5qLiRADfQmYDewIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrELMWRmVeSWpSXmKPExsXCNUNNS/dDxfd0gxMHTCzmrF/DZjF96gVG
-	i6/rfzFb/Lx7nN3i87PXzBarFl5jszi+dR67xeG5J1ktzs86xWJxedccNot7a/6zWpyZVmRx
-	6NpzVovVazIsfm9bwebA77Fz1l12j+62y+weLUfesnos3vOSyWPTp0nsHidm/Gbx2PnQ0uP9
-	vqtsHt9ue3gsfvGByWPz6WqPz5vkAniiuGxSUnMyy1KL9O0SuDLOTl7FUrBdpWL6nS3sDYwT
-	ZLsYOTkkBEwkHm9awt7FyMHBJqAkcWxvDEhYREBDYlPbBuYuRi4OZoE2Zomb05YzgySEBcIl
-	/vy4yQpiswioShz8/pcNxOYVMJb4+a+fFWKmpkTDpXtMIDM5Bewkun5YgYSFBHgkXm3YzwhR
-	LihxcuYTFhCbWUBeonnrbOYJjDyzkKRmIUktYGRaxSiSmVeWm5iZY6pXnJ1RmZdZoZecn7uJ
-	ERjyy2r/TNzB+OWy+yFGAQ5GJR5ej4xv6UKsiWXFlbmHGCU4mJVEeD0Nv6cL8aYkVlalFuXH
-	F5XmpBYfYpTmYFES5/UKT00QEkhPLEnNTk0tSC2CyTJxcEo1MOYv01DhuSh1J1rq8qIJ6bvr
-	7B7WXNnUsmjxGf+t0yZ8leD/JCZd1HRiscCd61/VBC9cm58lYKOnv3V7rZFJ8+PcsKdb0nMW
-	8/ulrbq5fMcSuTTW65dcAot6zDcetikwXq885ejjCNlZGyc2Lp02PY6jzaVy66I5v1fMeb/w
-	WefjVZMjptwubNFRYinOSDTUYi4qTgQABkQtl3UCAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBLMWRmVeSWpSXmKPExsXC9ZZnkS5X5fd0g11vBSzmrF/DZjF96gVG
+	i6/rfzFb/Lx7nN1i1cJrbBbHt85jtzg/6xSLxeVdc9gs7q35z2pxZlqRxeo1GQ7cHjtn3WX3
+	6G67zO7RcuQtq8fiPS+ZPDZ9msTucWLGbxaPnQ8tPd7vu8rmsfl0tcfnTXIBXFFcNimpOZll
+	qUX6dglcGYc/PWct+GxQMefyBrYGxn+qXYwcHBICJhI7WtO7GDnBzJb9FxlBwmwCShLH9saA
+	hEUEtCUmzjnI3MXIxcEs8IRJYu6RpWwgCWGBOIl9vzeC2SwCqhIHu6cxg9i8AsYSF39MZoKY
+	qSnRcOkemM0p4CFxfuZlsBohAR6JVxv2M0LUC0qcnPmEBcRmFpCXaN46G2yZhMB3Non5Z96z
+	QwySlDi44gbLBEb+WUh6ZiHpWcDItIpRKDOvLDcxM8dEL6MyL7NCLzk/dxMjMPyX1f6J3sH4
+	6ULwIUYBDkYlHl6PjG/pQqyJZcWVuYcYJTiYlUR4PQ2/pwvxpiRWVqUW5ccXleakFh9ilOZg
+	URLnNfpWniIkkJ5YkpqdmlqQWgSTZeLglGpgrCj/yS5zR0fqFX9+0JYH8p/+rWq4crX36idG
+	Fas4gz23ZK6qOX4+JfOcYfmUzg/30s+eX6dowTB1w/mw6u7/D9+9ixUqm3O65nw/c51c+pqj
+	mgZbBNPfMsWVX5tf5LtitquMp5Og1MbMYwwMz/LmfNW+nDhxen6BWaB5gslF8XRt2xX9l+Nu
+	K7EUZyQaajEXFScCAPu4C+N7AgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrMLMWRmVeSWpSXmKPExsXCNUNNS5er8nu6wZLXjBZz1q9hs5g+9QKj
+	xdf1v5gtft49zm7x+dlrZotVC6+xWRzfOo/d4vDck6wW52edYrG4vGsOm8W9Nf9ZLc5MK7I4
+	dO05q8XqNRkWv7etYHPg99g56y67R3fbZXaPliNvWT0W73nJ5LHp0yR2jxMzfrN47Hxo6fF+
+	31U2j2+3PTwWv/jA5LH5dLXH501yATxRXDYpqTmZZalF+nYJXBmHPz1nLfhsUDHn8ga2BsZ/
+	ql2MnBwSAiYSLfsvMnYxcnCwCShJHNsbAxIWEdCWmDjnIHMXIxcHs8ATJom5R5aygSSEBeIk
+	9v3eCGazCKhKHOyexgxi8woYS1z8MZkJYqamRMOle2A2p4CHxPmZl8FqhAR4JF5t2M8IUS8o
+	cXLmExYQm1lAXqJ562zmCYw8s5CkZiFJLWBkWsUokplXlpuYmWOqV5ydUZmXWaGXnJ+7iREY
+	9Mtq/0zcwfjlsvshRgEORiUeXo+Mb+lCrIllxZW5hxglOJiVRHg9Db+nC/GmJFZWpRblxxeV
+	5qQWH2KU5mBREuf1Ck9NEBJITyxJzU5NLUgtgskycXBKNTBKBTh89U0o3RffcVW7VmIuj9wE
+	VdU37069nuZ5s02Zy/jlkjnLpp91lWW52HRmVcqnlGVzbLu3MTY6ns7Xi+c/dpJd8LPKtYtL
+	GTRddryKyN/38Mc35y96xozZc7epZTNqnBDT0WLPTN4t6v534ceLat4Zh32+3+p2qYk/9l9q
+	59Gn09+YnJBSYinOSDTUYi4qTgQAUj5HIHYCAAA=
 X-CFilter-Loop: Reflected
 
-On Wed, 9 Apr 2025 13:52:28 +0200 David Hildenbrand <david@redhat.com> wrote:
-> On 09.04.25 13:39, Honggyu Kim wrote:
-> > Hi David,
+On Wed, 9 Apr 2025 11:51:36 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
+> Rakie Kim wrote:
+> > On Tue, 8 Apr 2025 20:54:48 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
+> > > Dan Williams wrote:
+> > > > Rakie Kim wrote:
+> > > > > Previously, the weighted interleave sysfs structure was statically
+> > > > > managed during initialization. This prevented new nodes from being
+> > > > > recognized when memory hotplug events occurred, limiting the ability
+> > > > > to update or extend sysfs entries dynamically at runtime.
+> > > > > 
+> > > > > To address this, this patch refactors the sysfs infrastructure and
+> > > > > encapsulates it within a new structure, `sysfs_wi_group`, which holds
+> > > > > both the kobject and an array of node attribute pointers.
+> > > > > 
+> > > > > By allocating this group structure globally, the per-node sysfs
+> > > > > attributes can be managed beyond initialization time, enabling
+> > > > > external modules to insert or remove node entries in response to
+> > > > > events such as memory hotplug or node online/offline transitions.
+> > > > > 
+> > > > > Instead of allocating all per-node sysfs attributes at once, the
+> > > > > initialization path now uses the existing sysfs_wi_node_add() and
+> > > > > sysfs_wi_node_delete() helpers. This refactoring makes it possible
+> > > > > to modularly manage per-node sysfs entries and ensures the
+> > > > > infrastructure is ready for runtime extension.
+> > > > > 
+> > > > > Signed-off-by: Rakie Kim <rakie.kim@sk.com>
+> > > > > Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
+> > > > > Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
+> > > > > Reviewed-by: Gregory Price <gourry@gourry.net>
+> > > > > ---
+> > > > >  mm/mempolicy.c | 61 ++++++++++++++++++++++++--------------------------
+> > > > >  1 file changed, 29 insertions(+), 32 deletions(-)
+> > > > > 
+> > > > > diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> > > > > index 0da102aa1cfc..988575f29c53 100644
+> > > > > --- a/mm/mempolicy.c
+> > > > > +++ b/mm/mempolicy.c
+> > > > > @@ -3419,6 +3419,13 @@ struct iw_node_attr {
+> > > > >  	int nid;
+> > > > >  };
+> > > > >  
+> > > > > +struct sysfs_wi_group {
+> > > > > +	struct kobject wi_kobj;
+> > > > > +	struct iw_node_attr *nattrs[];
+> > > > > +};
+> > > > > +
+> > > > > +static struct sysfs_wi_group *wi_group;
+> > > > > +
+> > > > >  static ssize_t node_show(struct kobject *kobj, struct kobj_attribute *attr,
+> > > > >  			 char *buf)
+> > > > >  {
+> > > > > @@ -3461,27 +3468,24 @@ static ssize_t node_store(struct kobject *kobj, struct kobj_attribute *attr,
+> > > > >  	return count;
+> > > > >  }
+> > > > >  
+> > > > > -static struct iw_node_attr **node_attrs;
+> > > > > -
+> > > > > -static void sysfs_wi_node_release(struct iw_node_attr *node_attr,
+> > > > > -				  struct kobject *parent)
+> > > > > +static void sysfs_wi_node_delete(int nid)
+> > > > >  {
+> > > > > -	if (!node_attr)
+> > > > > +	if (!wi_group->nattrs[nid])
+> > > > >  		return;
+> > > > > -	sysfs_remove_file(parent, &node_attr->kobj_attr.attr);
+> > > > > -	kfree(node_attr->kobj_attr.attr.name);
+> > > > > -	kfree(node_attr);
+> > > > > +
+> > > > > +	sysfs_remove_file(&wi_group->wi_kobj,
+> > > > > +			  &wi_group->nattrs[nid]->kobj_attr.attr);
+> > > > 
+> > > > This still looks broken to me, but I think this is more a problem that
+> > > > was present in the original code.
+> > > > 
+> > > > At this point @wi_group's reference count is zero because
+> > > > sysfs_wi_release() has been called. However, it can only be zero if it has
+> > > > properly transitioned through kobject_del() and final kobject_put(). It
+> > > > follows that kobject_del() arranges for kobj->sd to be NULL. That means
+> > > > that this *should* be hitting the WARN() in kernfs_remove_by_name_ns()
+> > > > for the !parent case.
+> > > > 
+> > > > So, either you are not triggering that path, or testing that path, but
+> > > > sys_remove_file() of the child attributes should be happening *before*
+> > > > sysfs_wi_release().
+> > > > 
+> > > > Did I miss something?
+> > > 
+> > > I think the missing change is that sysfs_wi_node_add() failures need to
+> > > be done with a sysfs_wi_node_delete() of the added attrs *before* the
+> > > kobject_del() of @wi_group.
 > > 
-> > On 4/9/2025 6:05 PM, David Hildenbrand wrote:
-> >> On 08.04.25 09:32, Rakie Kim wrote:
-> >>> The weighted interleave policy distributes page allocations across multiple
-> >>> NUMA nodes based on their performance weight, thereby improving memory
-> >>> bandwidth utilization. The weight values for each node are configured
-> >>> through sysfs.
-> >>>
-> >>> Previously, sysfs entries for configuring weighted interleave were created
-> >>> for all possible nodes (N_POSSIBLE) at initialization, including nodes that
-> >>> might not have memory. However, not all nodes in N_POSSIBLE are usable at
-> >>> runtime, as some may remain memoryless or offline.
-> >>> This led to sysfs entries being created for unusable nodes, causing
-> >>> potential misconfiguration issues.
-> >>>
-> >>> To address this issue, this patch modifies the sysfs creation logic to:
-> >>> 1) Limit sysfs entries to nodes that are online and have memory, avoiding
-> >>>      the creation of sysfs entries for nodes that cannot be used.
-> >>> 2) Support memory hotplug by dynamically adding and removing sysfs entries
-> >>>      based on whether a node transitions into or out of the N_MEMORY state.
-> >>>
-> >>> Additionally, the patch ensures that sysfs attributes are properly managed
-> >>> when nodes go offline, preventing stale or redundant entries from persisting
-> >>> in the system.
-> >>>
-> >>> By making these changes, the weighted interleave policy now manages its
-> >>> sysfs entries more efficiently, ensuring that only relevant nodes are
-> >>> considered for interleaving, and dynamically adapting to memory hotplug
-> >>> events.
-> >>>
-> >>> Signed-off-by: Rakie Kim <rakie.kim@sk.com>
-> >>> Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
-> >>> Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
-> >>
-> >>
-> >> Why are the other SOF in there? Are there Co-developed-by missing?
+> > Hi Dan Williams
 > > 
-> > I initially found the problem and fixed it with my internal implementation but
-> > Rakie also had his idea so he started working on it.  His initial implementation
-> > has almost been similar to mine.
+> > Thank you very much for identifying this potential issue in the code.
 > > 
-> > I thought Signed-off-by is a way to express the patch series contains our
-> > contribution, but if you think it's unusual, then I can add this.
-> 
-> Please see Documentation/process/submitting-patches.rst, and note that these
-> are not "patch delivery" SOB.
-> 
-> "
-> The Signed-off-by: tag indicates that the signer was involved in the
-> development of the patch, or that he/she was in the patch's delivery path.
-> "
-> 
-> and
-> 
-> "
-> Co-developed-by: states that the patch was co-created by multiple developers;
-> it is used to give attribution to co-authors (in addition to the author
-> attributed by the From: tag) when several people work on a single patch.  Since
-> Co-developed-by: denotes authorship, every Co-developed-by: must be immediately
-> followed by a Signed-off-by: of the associated co-author.  Standard sign-off
-> procedure applies, i.e. the ordering of Signed-off-by: tags should reflect the
-> chronological history of the patch insofar as possible, regardless of whether
-> the author is attributed via From: or Co-developed-by:.  Notably, the last
-> Signed-off-by: must always be that of the developer submitting the patch.
-> "
-> 
-> The SOB order here is also not correct.
-> 
+> > As you pointed out, this seems to be a problem that was already present in
+> > the original implementation, and I agree that it needs to be addressed.
 > > 
-> >     Co-developed-by: Honggyu Kim <honggyu.kim@sk.com>
-> >     Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
-> > 
-> > For Yunjeong, the following can be added.
-> > 
-> >     Tested-by: Yunjeong Mun <yunjeong.mun@sk.com>
+> > However, since this issue existed prior to the changes in this patch
+> > series, I believe it would be more appropriate to fix it in a separate
+> > follow-up patch rather than include it here.
 > 
-> That is probably the right thing to do if contribution was focused on testing.
+> I tend to disagree. The whole motivation of this series is to get the
+> kobject lifetime handling correct in order to add the new dynamic
+> capability. The claimed correctness fixups are incomplete. There is time
+> to respin this (we are only at -rc1) and get it right before landing the
+> new dynamic capability.
 > 
-> > 
-> > However, this patch series is already in Andrew's mm-new so I don't want to
-> > bother him again unless we need to update this patches for other reasons.
+> One of the outcomes of the "MM Process" topic at LSF/MM was that Andrew
+> wanted more feedback on when patches are not quite ready for prime-time
+> and I think this is an example of a patch set that deserves another spin
+> to meet the stated goals.
 > 
-> mm-new is exactly for these kind of things. We can ask Andrew to fix it up.
+> > I will start preparing a new patch to address this problem, and I would
+> > greatly appreciate it if you could review it once it's ready.
 > 
-> -- 
-> Cheers,
-> 
-> David / dhildenb
-> 
+> Will definitely review it. I will leave to Andrew if he wants an
+> incremental fixup on top of this series, or rebase on top of a fully
+> fixed baseline. My preference is finish fixing all the old kobject()
+> issues and then rebase the new dynamic work on top. Either way, do not
+> be afraid to ask Andrew to replace a series in -mm, that's a sign of the
+> process working as expected.
 
-Hi David,
+Thank you very much for your advice, and I completely agree with your
+recommendation. I will immediately ask Andrew to remove this patch series
+from -mm. Then, I will prepare a new version, v8, which properly addresses
+the kobject-related issues you pointed out.
 
-Thank you for reviewing this patch series and providing your Acked-by tag.
-As you pointed out, I agree that the Signed-off-by tags in this patch
-series are not clearly aligned with the actual contributions.
-
-Coincidentally, Dan Williams has requested an additional fix for Patch 1
-in this series. Therefore, I am planning to prepare a new version, v8.
-
-In that version, I will reorganize the Signed-off-by tags as you suggested
-to accurately reflect the authorship and contributions.
-
-Thank you again for your guidance.
+Once again, I sincerely appreciate your thoughtful and detailed feedback.
 
 Rakie
 
