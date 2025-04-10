@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA17D1D90DF;
-	Thu, 10 Apr 2025 15:14:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E3AD1D6DAA;
+	Thu, 10 Apr 2025 15:43:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744298053; cv=none; b=hFPFhRr7vW6jqU2n+GpaBavNAWSmz7YzlISNd7fTN2Xs+Fm3uUjk0oXNlTvE80DrSkC2ScCpI6fM2TkE6tTVGto9B6qXOnXS8xp3+3RoBVQec9toB23AA9pRHmcLMMrkWhLKYd1hlQDu1GRfyy3ylg2dfTsZxQIGmsZ+jBjpK+Q=
+	t=1744299820; cv=none; b=DpRr1vEDHj/kAA40IsHa1lG6WuqZQ5IENwXW3cjZwDRvHQhAVmSIeuDfHIgvSfipjXyAjlMfrgBqlzQg8mbul32CS+/tDmjPtE/5hY8WriOzwzXHjuSDlJvPGmO1bMHX7DDa+uh466XZ6R2eSGH0cmW+WqZnWB0mSRMmBw8JYJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744298053; c=relaxed/simple;
-	bh=L96RyAc5ptYnMenleT5Ncs2DwCRN+ZYa3Gpf5zpz+2o=;
+	s=arc-20240116; t=1744299820; c=relaxed/simple;
+	bh=ervI1TJmsGtY0DgxChlWBEjJAWpFVRrPVvZnzvGcfmw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hLCMbe9WkeeTKnCHi5/Nc0BxZXA7wDtQ00W2BjbS99Mgtxn3QjSQwuwu/7hPPCFGYcuV34pnLESTu5COeqEwLo+isIcBH5R5CUa96ezgQO4wlngNQGIf4tO6EwYnA9BXT9zbiNM14Fc5HYx/8o7f8SRJuACa5+Z1G3Lt4c4Nk9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jx2f6WUL; arc=none smtp.client-ip=192.198.163.11
+	 In-Reply-To:Content-Type; b=pSFfSCWMT6dZ4G3URbqGQMU2QOdGRqBIKL1k+wn4HU+LFV5AqUH2Q0m8VZM4eFsX4FAK5PP6ZriFjNkVyKVtA0Meha11u+X+ilJg3smZE97s6JaAnJcypOqa4xCectUX+QTvPDjVRSPHFJA1Ua8qaF0AdOAJgvJ/BsxEQbD0kfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EttXrDsf; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jx2f6WUL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EttXrDsf"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744298052; x=1775834052;
+  t=1744299817; x=1775835817;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=L96RyAc5ptYnMenleT5Ncs2DwCRN+ZYa3Gpf5zpz+2o=;
-  b=Jx2f6WULg/KC0KJRy2tIoIfJY4nEt1CjMBClDeQPqKd1Ruht91U80h98
-   kFHEgLcRBTxOd6bbrxpPZJXGRCN8wbw1/GFstbOpsPCkV15YX/wf+dndy
-   hbz9a6WOLJ1dWZ/7u6cEY2Lg+/AtAsQHONhrlOqhBxLB3iBGo426ArnhW
-   X1klr6mmI3W0ZQYVcWyKPLNCplOpR2A3V8DKDuM/Y0nFEF8dAgy0rt/jU
-   SpZyjX7WWEq/es7b7N54vD3Zv5LW7t0b7jazZVqUAcGlH7s4/gswZeSdF
-   556I6DjM/Mm8uwv5MIK/0Ig/BM2SApg5/2R1G31KdarD6mP5LZbiijiAW
+  bh=ervI1TJmsGtY0DgxChlWBEjJAWpFVRrPVvZnzvGcfmw=;
+  b=EttXrDsf9f8sntQ9mu2Q8e15WC8hRwZuzEDeEq3olVrW+zMdHI5gmn7B
+   k5kw3Ay4h4eRFdYxj5MAGGD8GgxYE3QBtoIkw29davLRAjtbhGI0SHMjC
+   SOb4njFebtwzU1CfOajtza1MSA6mA2h3GTPQsp/3pioNW8g9Y/aMs254G
+   KLJjGJ4xNADzi72vis4G2qj/IyDCw4EpGXBv5bcd6diKnu7GkxnF42juj
+   OQBOE+KoeBsa/7bMW/Ez8mfiQnkD+/4qgMIUMp08y47hLG9mC4uGQI550
+   SnmQDtUVIFP1WC1n0F2+lUC6pliCtfL/JlR2Hkm+kcu6qmP8Alks93Tpp
    Q==;
-X-CSE-ConnectionGUID: nY7x6TeqRaCliiBwlgtk/A==
-X-CSE-MsgGUID: YkvyPsfzRX28Zr+ePdeh6A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11400"; a="56495361"
+X-CSE-ConnectionGUID: 418Cck4QQ7OqxpcYCmaU7w==
+X-CSE-MsgGUID: FnnNkd2eQ1yJfWfe8/JAPQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11400"; a="45959133"
 X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
-   d="scan'208";a="56495361"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 08:14:11 -0700
-X-CSE-ConnectionGUID: 5VDn00G0ThmJ7M5tlfEHZw==
-X-CSE-MsgGUID: mHl+XZl7RBy+tua6G6Zv9g==
+   d="scan'208";a="45959133"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 08:43:37 -0700
+X-CSE-ConnectionGUID: LgsXyOJOQj+EvO00hwZZYg==
+X-CSE-MsgGUID: kHmXvw1dSZuF4uHbS1ZHiA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
-   d="scan'208";a="128882006"
+   d="scan'208";a="133668153"
 Received: from iherna2-mobl4.amr.corp.intel.com (HELO [10.125.108.92]) ([10.125.108.92])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 08:14:10 -0700
-Message-ID: <37292d0a-ea6e-485e-89bc-5b660c98e84d@intel.com>
-Date: Thu, 10 Apr 2025 08:14:09 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 08:43:35 -0700
+Message-ID: <079fd012-eba6-4772-91b9-d58b20bfe425@intel.com>
+Date: Thu, 10 Apr 2025 08:43:34 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,82 +52,68 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl/core/regs.c: Skip Memory Space Enable check for RCD
- and RCH Ports
-To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
- linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
-Cc: Alison Schofield <alison.schofield@intel.com>,
+Subject: Re: [PATCH v3] cxl/acpi: Verify CHBS length for CXL2.0
+To: Li Zhijian <lizhijian@fujitsu.com>, linux-cxl@vger.kernel.org
+Cc: Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Alison Schofield <alison.schofield@intel.com>,
  Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Yazen Ghannam <yazen.ghannam@amd.com>, Terry Bowman <terry.bowman@amd.com>,
- Robert Richter <rrichter@amd.com>
-References: <20250407192734.70631-1-Smita.KoralahalliChannabasappa@amd.com>
+ Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org,
+ Gregory Price <gourry@gourry.net>
+References: <20250410010545.99590-1-lizhijian@fujitsu.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250407192734.70631-1-Smita.KoralahalliChannabasappa@amd.com>
+In-Reply-To: <20250410010545.99590-1-lizhijian@fujitsu.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 4/7/25 12:27 PM, Smita Koralahalli wrote:
-> According to CXL r3.2 section 8.2.1.2, the PCI_COMMAND register fields,
-> including Memory Space Enable bit, have no effect on the behavior of an
-> RCD Upstream Port. Retaining this check may incorrectly cause
-> cxl_pci_probe() to fail on a valid RCD upstream Port.
+On 4/9/25 6:05 PM, Li Zhijian wrote:
+> Per CXL Spec r3.1 Table 9-21, both CXL1.1 and CXL2.0 have defined their
+> own length, verify it to avoid an invalid CHBS.
 > 
-> While the specification is explicit only for RCD Upstream Ports, this
-> check is solely for accessing the RCRB, which is always mapped through
-> memory space. Therefore, its safe to remove the check entirely. In
-> practice, firmware reliably enables the Memory Space Enable bit for
-> RCH Downstream Ports and no failures have been observed.
+> Additionally, this patch also removes the redundant macro CXL_RCRB_SIZE,
+> favoring the use of `ACPI_CEDT_CHBS_LENGTH_CXL11`, which offers clearer
+> semantic meaning.
 > 
-> Removing the check simplifies the code and avoids unnecessary
-> special-casing, while relying on BIOS/firmware to configure devices
-> correctly. Moreover, any failures due to inaccessible RCRB regions
-> will still be caught either in __rcrb_to_component() or while
-> parsing the component register block.
-> 
-> The following failure was observed in dmesg when the check was present:
-> 	cxl_pci 0000:7f:00.0: No component registers (-6)
-> 
-> Fixes: d5b1a27143cb ("cxl/acpi: Extract component registers of restricted hosts from RCRB")
-> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+> Reviewed-by: Gregory Price <gourry@gourry.net>
+> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Applied to cxl/next with Dan's suggestion.
 
 > ---
->  drivers/cxl/core/regs.c | 4 ----
->  1 file changed, 4 deletions(-)
+> V3:
+>  - say more words in removing CXL_RCRB_SIZE # Alison
+>  - Collected Reviewed-by
+> V2: don't factor out, just validate # Dan
+> ---
+>  drivers/cxl/acpi.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-> index 117c2e94c761..5ca7b0eed568 100644
-> --- a/drivers/cxl/core/regs.c
-> +++ b/drivers/cxl/core/regs.c
-> @@ -581,7 +581,6 @@ resource_size_t __rcrb_to_component(struct device *dev, struct cxl_rcrb_info *ri
->  	resource_size_t rcrb = ri->base;
->  	void __iomem *addr;
->  	u32 bar0, bar1;
-> -	u16 cmd;
->  	u32 id;
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index cb14829bb9be..2e63e50b2c40 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -11,8 +11,6 @@
+>  #include "cxlpci.h"
+>  #include "cxl.h"
 >  
->  	if (which == CXL_RCRB_UPSTREAM)
-> @@ -603,7 +602,6 @@ resource_size_t __rcrb_to_component(struct device *dev, struct cxl_rcrb_info *ri
->  	}
+> -#define CXL_RCRB_SIZE	SZ_8K
+> -
+>  struct cxl_cxims_data {
+>  	int nr_maps;
+>  	u64 xormaps[] __counted_by(nr_maps);
+> @@ -478,8 +476,10 @@ static int cxl_get_chbs_iter(union acpi_subtable_headers *header, void *arg,
 >  
->  	id = readl(addr + PCI_VENDOR_ID);
-> -	cmd = readw(addr + PCI_COMMAND);
->  	bar0 = readl(addr + PCI_BASE_ADDRESS_0);
->  	bar1 = readl(addr + PCI_BASE_ADDRESS_1);
->  	iounmap(addr);
-> @@ -618,8 +616,6 @@ resource_size_t __rcrb_to_component(struct device *dev, struct cxl_rcrb_info *ri
->  			dev_err(dev, "Failed to access Downstream Port RCRB\n");
->  		return CXL_RESOURCE_NONE;
->  	}
-> -	if (!(cmd & PCI_COMMAND_MEMORY))
-> -		return CXL_RESOURCE_NONE;
->  	/* The RCRB is a Memory Window, and the MEM_TYPE_1M bit is obsolete */
->  	if (bar0 & (PCI_BASE_ADDRESS_MEM_TYPE_1M | PCI_BASE_ADDRESS_SPACE_IO))
->  		return CXL_RESOURCE_NONE;
+>  	chbs = (struct acpi_cedt_chbs *) header;
+>  
+> -	if (chbs->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL11 &&
+> -	    chbs->length != CXL_RCRB_SIZE)
+> +	if ((chbs->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL11 &&
+> +	    chbs->length != ACPI_CEDT_CHBS_LENGTH_CXL11) ||
+> +	   (chbs->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL20 &&
+> +	    chbs->length != ACPI_CEDT_CHBS_LENGTH_CXL20))
+>  		return 0;
+>  
+>  	if (!chbs->base)
 
