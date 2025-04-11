@@ -1,40 +1,61 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 358A71ADC69;
-	Fri, 11 Apr 2025 07:21:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from esa5.hc1455-7.c3s2.iphmx.com (esa5.hc1455-7.c3s2.iphmx.com [68.232.139.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AE7B15D5B6
+	for <linux-cxl@vger.kernel.org>; Fri, 11 Apr 2025 08:52:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744356109; cv=none; b=lopbtCeuWtk/8djIU83eXDwq/Stac21C6gXaFJao/o/Z5qKbkELI4nvd9tDUVegpFGGH1LFeg3p50wUfSZn9CIMJewV+FyDaUDYfsFmxh79eMG9JRyuqREiTYgDKtK9VUvvLQh+DDRfF3UK3yAMlQz9v2zJpYaryjVljLMlt3AY=
+	t=1744361559; cv=none; b=quDOV1BNUwZo8ZRYKpq3plzfDfW41FgYU5/L6nCxRTMOazZPKAVjwMjXPzdUXAYJjH4cT/rOwPTzorGDfE9+R+fVfq4Vw2nsNy3xSU2NYsQJWZ1QcTwatst1A+Ue7mP8oj+QRamlmdlfycfQc27g3+BkFv/xcqMaRctztWsxBfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744356109; c=relaxed/simple;
-	bh=PgJeEOXi4NpUwNgbPqmn8M+aEnjV8v35bi6nehb7B1k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Lism6UtDKZDAJv3Dx3vul1tmswP5OG8VrSq1R8ty8GMWjykpkeHn6xbAaGna6zuNjo63pAdULF6opnYn5OLpzTPlPHx0qeQ2y/uhO+04NMJhYA8UDMybmSnkkXElRV7jkjO0ULQtp8gpOU68Rz/GdMXKqCpJ9Ezm5ZEtcPC+eoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-57-67f8c302739f
-From: Rakie Kim <rakie.kim@sk.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: gourry@gourry.net,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	joshua.hahnjy@gmail.com,
-	ying.huang@linux.alibaba.com,
-	david@redhat.com,
-	Jonathan.Cameron@huawei.com,
-	osalvador@suse.de,
-	kernel_team@skhynix.com,
-	honggyu.kim@sk.com,
-	yunjeong.mun@sk.com,
-	rakie.kim@sk.com,
-	akpm@linux-foundation.org
-Subject: Re: [PATCH v7 2/3] mm/mempolicy: Prepare weighted interleave sysfs for memory hotplug
-Date: Fri, 11 Apr 2025 16:21:28 +0900
-Message-ID: <20250411072135.588-1-rakie.kim@sk.com>
-X-Mailer: git-send-email 2.48.1.windows.1
-In-Reply-To: <67f5ef882b674_72052946a@dwillia2-xfh.jf.intel.com.notmuch>
-References: 
+	s=arc-20240116; t=1744361559; c=relaxed/simple;
+	bh=c02MFPyU5EbdFQEsTTx2HPJujZUKNMUWSocYhlDpPxY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=U199tB3Bx9OFoPkCklmVDfegL7El7tfB4qpHqOk2WDKUP6DgdY85hb20FvcQQ08OCBZXFrdiHomYBlvTr0Z+muZfUudANcIanFwTqpihu+G/rsCqZ5RQ6pzAJqXXEh3RZ+68Ruyp9lJn0yBMK+xoWLhy/bJDpW06eYQ1M3RguFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=tCqU/8iF; arc=none smtp.client-ip=68.232.139.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="tCqU/8iF"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1744361557; x=1775897557;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=c02MFPyU5EbdFQEsTTx2HPJujZUKNMUWSocYhlDpPxY=;
+  b=tCqU/8iFX85WyRrToDq74oeDu5W6n4wuOs3hxv2IlPimuDySe7F5FS1k
+   W5F8+PFQVOidn953nF2lulz05GHIVoTuq/zEjszjaR0IKWasEX9eWPJw2
+   76RoWkCyjgXlbIuyB2uxI+MuYmP+fBoddKZf07eCxKYYYZ4kOjoDmZlnd
+   cBaZ2KN1CByB481+F9FE6AKqjnwZuY04qqfgZYkLyIc3jVH1QkEpYnS21
+   LcsHDbnuwXQxqsT68qUwl7TCPEre3UfuXx89KrYzt+k/hM3pH/4JJoZtq
+   Eiv04TlgfgMJMR1F4r0Ma0e9s2untzCP5dCbOdolqE5aqiYRSdLqSzXLR
+   g==;
+X-CSE-ConnectionGUID: dL7rk4E9Q6qBpL6g9tAmDw==
+X-CSE-MsgGUID: UOBHCwqdTamXcCR0fBzMxw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11400"; a="195328916"
+X-IronPort-AV: E=Sophos;i="6.15,203,1739804400"; 
+   d="scan'208";a="195328916"
+Received: from unknown (HELO yto-r4.gw.nic.fujitsu.com) ([218.44.52.220])
+  by esa5.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 17:52:28 +0900
+Received: from yto-m4.gw.nic.fujitsu.com (yto-nat-yto-m4.gw.nic.fujitsu.com [192.168.83.67])
+	by yto-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id D727AD4F6F
+	for <linux-cxl@vger.kernel.org>; Fri, 11 Apr 2025 17:52:25 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+	by yto-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id 97CED144CB
+	for <linux-cxl@vger.kernel.org>; Fri, 11 Apr 2025 17:52:25 +0900 (JST)
+Received: from iaas-rpma.. (unknown [10.167.135.44])
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id 85A1A1A0078;
+	Fri, 11 Apr 2025 16:52:24 +0800 (CST)
+From: Li Zhijian <lizhijian@fujitsu.com>
+To: linux-cxl@vger.kernel.org
+Cc: Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Li Zhijian <lizhijian@fujitsu.com>
+Subject: [ndctl PATCH] cxl/region: Prevent destroying region out of order
+Date: Fri, 11 Apr 2025 16:52:18 +0800
+Message-Id: <20250411085218.120312-1-lizhijian@fujitsu.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -42,194 +63,96 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBLMWRmVeSWpSXmKPExsXC9ZZnoS7T4R/pBm8PWVjMWb+GzWL61AuM
-	Fl/X/2K2+Hn3OLvFqoXX2CyOb53HbnF+1ikWi8u75rBZ3Fvzn9XizLQii9VrMhy4PXbOusvu
-	0d12md2j5chbVo/Fe14yeWz6NInd48SM3yweOx9aerzfd5XNY/Ppao/Pm+QCuKK4bFJSczLL
-	Uov07RK4Mia/amIvmKFV8WP9RbYGxpkKXYycHBICJhIt3zYww9ibJ/SzdDFycLAJKEkc2xsD
-	EhYR0JaYOOcgUAkXB7PAEyaJuUeWsoEkhAXiJPb93sgGUs8ioCrxcpIESJhXwFji4v4HTBAj
-	NSUaLt0DszkFPCT2XzvDCGILCfBIvNqwnxGiXlDi5MwnLCA2s4C8RPPW2WC7JAS+s0l8PLgZ
-	6jZJiYMrbrBMYOSfhaRnFpKeBYxMqxiFMvPKchMzc0z0MirzMiv0kvNzNzECw39Z7Z/oHYyf
-	LgQfYhTgYFTi4d2x+nu6EGtiWXFl7iFGCQ5mJRHe9uAf6UK8KYmVValF+fFFpTmpxYcYpTlY
-	lMR5jb6VpwgJpCeWpGanphakFsFkmTg4pRoYezZe+LI8c/P9xR2np7+/au/hKbT6TnnuK7VN
-	3pN1pip9frNru3vsqQ4BD7+F95w+HtjyxWuPhU1R+cqlm1vc13r31jddMz7xMqG+rWu56hPf
-	aQImxpNFWsy0ag9Edqq9PlkvsdfdtyFl4lPRLcb9C3NXz5x08KqMyL0Pd9JeZpcxhsX3lJ2p
-	UmIpzkg01GIuKk4EAExPmnd7AgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrELMWRmVeSWpSXmKPExsXCNUNNS5fp8I90g59ftC3mrF/DZjF96gVG
-	i6/rfzFb/Lx7nN3i87PXzBarFl5jszi+dR67xeG5J1ktzs86xWJxedccNot7a/6zWpyZVmRx
-	6NpzVovVazIsfm9bwebA77Fz1l12j+62y+weLUfesnos3vOSyWPTp0nsHidm/Gbx2PnQ0uP9
-	vqtsHt9ue3gsfvGByWPz6WqPz5vkAniiuGxSUnMyy1KL9O0SuDImv2piL5ihVfFj/UW2BsaZ
-	Cl2MnBwSAiYSmyf0s3QxcnCwCShJHNsbAxIWEdCWmDjnIHMXIxcHs8ATJom5R5aygSSEBeIk
-	9v3eyAZSzyKgKvFykgRImFfAWOLi/gdMECM1JRou3QOzOQU8JPZfO8MIYgsJ8Ei82rCfEaJe
-	UOLkzCcsIDazgLxE89bZzBMYeWYhSc1CklrAyLSKUSQzryw3MTPHVK84O6MyL7NCLzk/dxMj
-	MOSX1f6ZuIPxy2X3Q4wCHIxKPLw7Vn9PF2JNLCuuzD3EKMHBrCTC2x78I12INyWxsiq1KD++
-	qDQntfgQozQHi5I4r1d4aoKQQHpiSWp2ampBahFMlomDU6qB0cdejNMgoXzTufW17V1fWqQ/
-	7gi3sl/K33wsYZomz7Q7pWGNrWab5a45+ehe7ov3zFD9JnFG0fylzH3fFPbQ1lnilx4e0i3v
-	EJE7Kxzv37jq0CXNLMPa+pzcH3dj9Lvn5rI0m397XPVYQjMv2qzv9mwzBfNis2Cr7mr7K6ck
-	Vy2dpanNUKPEUpyRaKjFXFScCADh+s2ydQIAAA==
-X-CFilter-Loop: Reflected
 
-On Tue, 8 Apr 2025 20:54:48 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
-> Dan Williams wrote:
-> > >  
-> > > +struct sysfs_wi_group {
-> > > +	struct kobject wi_kobj;
-> > > +	struct iw_node_attr *nattrs[];
-> > > +};
-> > > +
-> > > +static struct sysfs_wi_group *wi_group;
-> > > +
-> > >  static ssize_t node_show(struct kobject *kobj, struct kobj_attribute *attr,
-> > >  			 char *buf)
-> > >  {
-> > > @@ -3461,27 +3468,24 @@ static ssize_t node_store(struct kobject *kobj, struct kobj_attribute *attr,
-> > >  	return count;
-> > >  }
-> > >  
-> > > -static struct iw_node_attr **node_attrs;
-> > > -
-> > > -static void sysfs_wi_node_release(struct iw_node_attr *node_attr,
-> > > -				  struct kobject *parent)
-> > > +static void sysfs_wi_node_delete(int nid)
-> > >  {
-> > > -	if (!node_attr)
-> > > +	if (!wi_group->nattrs[nid])
-> > >  		return;
-> > > -	sysfs_remove_file(parent, &node_attr->kobj_attr.attr);
-> > > -	kfree(node_attr->kobj_attr.attr.name);
-> > > -	kfree(node_attr);
-> > > +
-> > > +	sysfs_remove_file(&wi_group->wi_kobj,
-> > > +			  &wi_group->nattrs[nid]->kobj_attr.attr);
-> > 
-> > This still looks broken to me, but I think this is more a problem that
-> > was present in the original code.
-> > 
-> > At this point @wi_group's reference count is zero because
-> > sysfs_wi_release() has been called. However, it can only be zero if it has
-> > properly transitioned through kobject_del() and final kobject_put(). It
-> > follows that kobject_del() arranges for kobj->sd to be NULL. That means
-> > that this *should* be hitting the WARN() in kernfs_remove_by_name_ns()
-> > for the !parent case.
-> > 
-> > So, either you are not triggering that path, or testing that path, but
-> > sys_remove_file() of the child attributes should be happening *before*
-> > sysfs_wi_release().
-> > 
-> > Did I miss something?
-> 
-> I think the missing change is that sysfs_wi_node_add() failures need to
-> be done with a sysfs_wi_node_delete() of the added attrs *before* the
-> kobject_del() of @wi_group.
+The destruction operation lacks atomicity, which may result in partial
+completion of the destruction process when attempting to destroy an out
+of order region.
 
-Hi Dan,
+Previously, a out of order destroy will return:
+$ sudo cxl destroy-region region1 -f
+cxl region: destroy_region: decoder4.0: set_dpa_size failed: Device or resource busy
+cxl region: decoder_region_action: region1: failed: Device or resource busy
+cxl region: region_action: one or more failures, last failure: Device or resource busy
+cxl region: cmd_destroy_region: destroyed 0 region
 
-Thank you for pointing out this issue.
+Then, the components under this root decoder enter a stale state, the user
+cannot create region any more under this root decoder.
 
-As you suggested, I believe the most appropriate way to handle this is
-to incorporate your feedback into Patch 1 
-(mm/mempolicy: Fix memory leaks in weighted interleave sysfs).
+The kernel has already ensured that region/decoder committed in order,
+so just ensure to destroy the last region is enough.
 
-To ensure that sysfs_remove_file() is called before kobject_del(), I
-have restructured the code as follows:
+Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
+---
+ cxl/lib/libcxl.c   |  7 +++++++
+ cxl/lib/libcxl.sym |  1 +
+ cxl/libcxl.h       |  1 +
+ cxl/region.c       | 11 ++++++++++-
+ 4 files changed, 19 insertions(+), 1 deletion(-)
 
-<Previously>
-static void sysfs_wi_release(struct kobject *wi_kobj)
-{
-	int nid;
-
-	for (nid = 0; nid < nr_node_ids; nid++)
-		sysfs_wi_node_delete(node_attrs[nid], wi_kobj);
-		-> ERROR: sysfs_remove_file called here
-	kfree(node_attrs);
-	kfree(wi_kobj);
-}
-
-<Now>
-static void sysfs_wi_node_delete_all(struct kobject *wi_kobj)
-{
-	int nid;
-
-	for (nid = 0; nid < nr_node_ids; nid++)
-		sysfs_wi_node_delete(node_attrs[nid], wi_kobj);
-		-> sysfs_remove_file called here
-}
-
-static void sysfs_wi_release(struct kobject *wi_kobj)
-{
-	kfree(node_attrs);
-	kfree(wi_kobj);
-}
-
-In addition, I call sysfs_wi_node_delete_all() before kobject_del()
-during error handling:
-
-+err_cleanup_kobj:
-+	sysfs_wi_node_delete_all(wi_kobj);
-	kobject_del(wi_kobj);
-
-I believe this resolves the issue you raised.
-
-That said, I have a follow-up question. With this structure, when the
-system is shutting down, sysfs_remove_file() will not be called. Based
-on my review of other kernel subsystems, it seems that sysfs_remove_file()
-is only called during module_exit() in driver code, and not in other
-built-in subsystems.
-
-Is this an acceptable practice? If you happen to know the expected
-behavior in such cases, I would appreciate your insights.
-
-Below is the full content of the updated Patch 1.
-@@ -3463,8 +3463,8 @@ static ssize_t node_store(struct kobject *kobj, struct kobj_attribute *attr,
- 
- static struct iw_node_attr **node_attrs;
- 
--static void sysfs_wi_node_release(struct iw_node_attr *node_attr,
--                                 struct kobject *parent)
-+static void sysfs_wi_node_delete(struct iw_node_attr *node_attr,
-+                                struct kobject *parent)
- {
-        if (!node_attr)
-                return;
-@@ -3473,13 +3473,16 @@ static void sysfs_wi_node_release(struct iw_node_attr *node_attr,
-        kfree(node_attr);
+diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+index 63aa4ef3acdc..c13bb9377237 100644
+--- a/cxl/lib/libcxl.c
++++ b/cxl/lib/libcxl.c
+@@ -706,6 +706,13 @@ CXL_EXPORT struct cxl_region *cxl_region_get_first(struct cxl_decoder *decoder)
+ 	return list_top(&decoder->regions, struct cxl_region, list);
  }
  
--static void sysfs_wi_release(struct kobject *wi_kobj)
-+static void sysfs_wi_node_delete_all(struct kobject *wi_kobj)
- {
--       int i;
-+       int nid;
- 
--       for (i = 0; i < nr_node_ids; i++)
--               sysfs_wi_node_release(node_attrs[i], wi_kobj);
-+       for (nid = 0; nid < nr_node_ids; nid++)
-+               sysfs_wi_node_delete(node_attrs[nid], wi_kobj);
-+}
- 
-+static void sysfs_wi_release(struct kobject *wi_kobj)
++CXL_EXPORT struct cxl_region *cxl_region_get_last(struct cxl_decoder *decoder)
 +{
-        kfree(node_attrs);
-        kfree(wi_kobj);
- }
-@@ -3547,13 +3550,14 @@ static int add_weighted_interleave_group(struct kobject *root_kobj)
-                err = add_weight_node(nid, wi_kobj);
-                if (err) {
-                        pr_err("failed to add sysfs [node%d]\n", nid);
--                       goto err_del_kobj;
-+                       goto err_cleanup_kobj;
-                }
-        }
++	cxl_regions_init(decoder);
++
++	return list_tail(&decoder->regions, struct cxl_region, list);
++}
++
+ CXL_EXPORT struct cxl_region *cxl_region_get_next(struct cxl_region *region)
+ {
+ 	struct cxl_decoder *decoder = region->decoder;
+diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
+index 0c155a40ad47..3ce408b9cc55 100644
+--- a/cxl/lib/libcxl.sym
++++ b/cxl/lib/libcxl.sym
+@@ -180,6 +180,7 @@ global:
+ 	cxl_decoder_set_dpa_size;
+ 	cxl_decoder_set_mode;
+ 	cxl_region_get_first;
++	cxl_region_get_last;
+ 	cxl_region_get_next;
+ 	cxl_region_decode_is_committed;
+ 	cxl_region_is_enabled;
+diff --git a/cxl/libcxl.h b/cxl/libcxl.h
+index 0a5fd0e13cc2..9b5657203eec 100644
+--- a/cxl/libcxl.h
++++ b/cxl/libcxl.h
+@@ -305,6 +305,7 @@ int cxl_memdev_is_enabled(struct cxl_memdev *memdev);
  
-        return 0;
+ struct cxl_region;
+ struct cxl_region *cxl_region_get_first(struct cxl_decoder *decoder);
++struct cxl_region *cxl_region_get_last(struct cxl_decoder *decoder);
+ struct cxl_region *cxl_region_get_next(struct cxl_region *region);
+ int cxl_region_decode_is_committed(struct cxl_region *region);
+ int cxl_region_is_enabled(struct cxl_region *region);
+diff --git a/cxl/region.c b/cxl/region.c
+index 96aa5931d228..2eb6f5416433 100644
+--- a/cxl/region.c
++++ b/cxl/region.c
+@@ -835,7 +835,16 @@ static int destroy_region(struct cxl_region *region)
+ {
+ 	const char *devname = cxl_region_get_devname(region);
+ 	unsigned int ways, i;
+-	int rc;
++	int rc = 0, , did = cxl_region_get_id(region);
++	struct cxl_decoder *decoder = cxl_region_get_decoder(region);
++	struct cxl_region *last_region = cxl_region_get_last(decoder);
++	int last_id = cxl_region_get_id(last_region);
++
++	if (last_id > did) {
++		log_err(&rl, "Unable to destroy region out of order, "
++			"please destroy region%d first.\n", last_id);
++		return -EINVAL;
++	}
  
--err_del_kobj:
-+err_cleanup_kobj:
-+       sysfs_wi_node_delete_all(wi_kobj);
-        kobject_del(wi_kobj);
- err_put_kobj:
-        kobject_put(wi_kobj);
-
-Thank you again for your helpful feedback.
-
-Rakie
+ 	/* First, unbind/disable the region if needed */
+ 	if (cxl_region_is_enabled(region)) {
+-- 
+2.47.0
 
