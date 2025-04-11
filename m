@@ -1,158 +1,92 @@
-Received: from esa5.hc1455-7.c3s2.iphmx.com (esa5.hc1455-7.c3s2.iphmx.com [68.232.139.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AE7B15D5B6
-	for <linux-cxl@vger.kernel.org>; Fri, 11 Apr 2025 08:52:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5F1073176;
+	Fri, 11 Apr 2025 14:11:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744361559; cv=none; b=quDOV1BNUwZo8ZRYKpq3plzfDfW41FgYU5/L6nCxRTMOazZPKAVjwMjXPzdUXAYJjH4cT/rOwPTzorGDfE9+R+fVfq4Vw2nsNy3xSU2NYsQJWZ1QcTwatst1A+Ue7mP8oj+QRamlmdlfycfQc27g3+BkFv/xcqMaRctztWsxBfw=
+	t=1744380691; cv=none; b=u7FRqIMxkVXl5IZU08F5wE22yIind87dXvePBv1sXmSfJrxtROU0d5xzZ+vxqYey0dulUYJRbzaTHZMz5nrjUb0//wuEakvmqzzTgSf+31hb9027EPXdnl5lxWnkyJw1/NWrRSumH/zUx8vgf/9wQp7RenueePNLNQ8nQpckhYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744361559; c=relaxed/simple;
-	bh=c02MFPyU5EbdFQEsTTx2HPJujZUKNMUWSocYhlDpPxY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=U199tB3Bx9OFoPkCklmVDfegL7El7tfB4qpHqOk2WDKUP6DgdY85hb20FvcQQ08OCBZXFrdiHomYBlvTr0Z+muZfUudANcIanFwTqpihu+G/rsCqZ5RQ6pzAJqXXEh3RZ+68Ruyp9lJn0yBMK+xoWLhy/bJDpW06eYQ1M3RguFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=tCqU/8iF; arc=none smtp.client-ip=68.232.139.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	s=arc-20240116; t=1744380691; c=relaxed/simple;
+	bh=vaJtVVwYezJNolvJSHZ/Z1JOjsT4CKEdBHtvqBdwU30=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WmCfog8TAfMKkjJaQO0vYyvG+LN5098NGQDgXi6wUgspzHsWHl56CEddsGAREhA2o2ge4k9upBh/cT0YOdT0+ed/HeIciR3rndjvbjowJR3VCdBaL08lNM9VG9Vh5/4wozgnDkmfsgA56/rs2ma+4rzwb8lc6PjD3CNaFfLKqt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=izRko/IA; arc=none smtp.client-ip=209.85.210.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="tCqU/8iF"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1744361557; x=1775897557;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=c02MFPyU5EbdFQEsTTx2HPJujZUKNMUWSocYhlDpPxY=;
-  b=tCqU/8iFX85WyRrToDq74oeDu5W6n4wuOs3hxv2IlPimuDySe7F5FS1k
-   W5F8+PFQVOidn953nF2lulz05GHIVoTuq/zEjszjaR0IKWasEX9eWPJw2
-   76RoWkCyjgXlbIuyB2uxI+MuYmP+fBoddKZf07eCxKYYYZ4kOjoDmZlnd
-   cBaZ2KN1CByB481+F9FE6AKqjnwZuY04qqfgZYkLyIc3jVH1QkEpYnS21
-   LcsHDbnuwXQxqsT68qUwl7TCPEre3UfuXx89KrYzt+k/hM3pH/4JJoZtq
-   Eiv04TlgfgMJMR1F4r0Ma0e9s2untzCP5dCbOdolqE5aqiYRSdLqSzXLR
-   g==;
-X-CSE-ConnectionGUID: dL7rk4E9Q6qBpL6g9tAmDw==
-X-CSE-MsgGUID: UOBHCwqdTamXcCR0fBzMxw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11400"; a="195328916"
-X-IronPort-AV: E=Sophos;i="6.15,203,1739804400"; 
-   d="scan'208";a="195328916"
-Received: from unknown (HELO yto-r4.gw.nic.fujitsu.com) ([218.44.52.220])
-  by esa5.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 17:52:28 +0900
-Received: from yto-m4.gw.nic.fujitsu.com (yto-nat-yto-m4.gw.nic.fujitsu.com [192.168.83.67])
-	by yto-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id D727AD4F6F
-	for <linux-cxl@vger.kernel.org>; Fri, 11 Apr 2025 17:52:25 +0900 (JST)
-Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by yto-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id 97CED144CB
-	for <linux-cxl@vger.kernel.org>; Fri, 11 Apr 2025 17:52:25 +0900 (JST)
-Received: from iaas-rpma.. (unknown [10.167.135.44])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id 85A1A1A0078;
-	Fri, 11 Apr 2025 16:52:24 +0800 (CST)
-From: Li Zhijian <lizhijian@fujitsu.com>
-To: linux-cxl@vger.kernel.org
-Cc: Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Li Zhijian <lizhijian@fujitsu.com>
-Subject: [ndctl PATCH] cxl/region: Prevent destroying region out of order
-Date: Fri, 11 Apr 2025 16:52:18 +0800
-Message-Id: <20250411085218.120312-1-lizhijian@fujitsu.com>
-X-Mailer: git-send-email 2.31.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="izRko/IA"
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-72bb97260ceso702615a34.1;
+        Fri, 11 Apr 2025 07:11:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744380689; x=1744985489; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8EoyrupwTEtbZwQXlvvRXTwgUv8DtYsYUCtvWZBr1js=;
+        b=izRko/IAwfHU31TwR3Tx51ICKcqDAvO0vZ9uoieJt8zm0/3KZU+QeRhejG9FS5UUgd
+         D3O/byDBtVXeecOUdhEqJLhLEQ2quSRUcyLgdA4P+T4gPqEKR/SfjtkEVNB7db+BhCwI
+         rgAGQR5aENssOxcgHfuEDsED7kp+RRBsvbXqs1WHJeEvZy0yyqlmN1xogxVl5oOK5lnB
+         cYKZvwzfqxn9rSnOprT3ws6aIh23+vFcBLesVHW3z1nPX7CSB9FYQS4O6m2ipNrq13Gl
+         3/RQXJdcicoOgr01mLBtP8sv29I/v3Vkt3TgzNb9GYY+H/vOkG7heB4QkhV/iSbaMTnh
+         ESig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744380689; x=1744985489;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8EoyrupwTEtbZwQXlvvRXTwgUv8DtYsYUCtvWZBr1js=;
+        b=IoU8s8phNstybhcuBD6xN6bEo1IsBZ1gkw2cAX7ZDX1eZe1jIX3rCu0j+3dJ/kKGid
+         Q+RkZ7Bb8vReaC6Bx5XhShoEr1zFecZu1eIdH3iQj7jePasOlccTYt2e2SyHqGq9lAnB
+         yQ0+tAVhKJuzNNpCpHuukr3YNBzl6q/StwRm/uFgiMViHA91eX8fGCYBQ24XGxZw2VlP
+         BA7Awma475E2ghIL5/lt1KHrgAYgqLdEyTW3ugc+ZRVpMaOctFrrQq4WVCchQOtN/T+O
+         loqOrKMz7e/u1hIv60/f/KQVCzfh7G4AyDAqjjNfCuc4kwOLDXL25USlYTD+kycQz3OG
+         cC6w==
+X-Forwarded-Encrypted: i=1; AJvYcCUKaM7Knq/CrRy40di07cAVNuvXgauqwkRY4FWsW8yI35ACc839SYrH+v7Ar7l1IR0haQROn4178JeMCefiCA==@vger.kernel.org, AJvYcCVH5h+XY+ramhBvDkRs7dT8OYVdJl0bmJt8NqCWHQMeLL+ZA16IkklOXmB9zLlGvoM/bN1rUZKqJws=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOvsPjQs+3kjQaC/vavDRP/0gycUUAKmGhMBW0KQyxL/KxJRSB
+	K74FeusiZX4Sr02MP7l5L5x68m0o9VfOPlKj4I2mo4Jf+HHcJKpo
+X-Gm-Gg: ASbGncuWqTypeStTNin0ClGXw9kugSFtUck7sUQEOnHirt6xyZqrz7UwVIYFcIUpoLu
+	dTlnvAin33iJ3mR1XmQftBUufjwAUQUSyuwXyLE1sfE3ZA0idzajYtmb4Fh8p1Vtg5jkwb11vFY
+	KcK5r+f7aMetAN4eGs1/4O95wBjmk60TJsNect/k7s+ptcXBihikttdj+xycgE0wykGHPEBRDNv
+	h61Ht2mv/R36T8CSye+sNL4gH4NBIrnCmALuCIng+0Mh9etrorIG0P9YpOlitTvHT6Vze+Pv3XB
+	PsOrcr5TV/0vc+3gIlbtZ3+1MDkvt62THaE2hBLoMwT96w554bHHlFzrA9jS
+X-Google-Smtp-Source: AGHT+IFqFbmaASrYe/cW2MSIXxfRdZxjVbEapk+IVePLGdxBuY4A2iVMiWVW0k9HogsgNayf8P03/Q==
+X-Received: by 2002:a05:6830:6186:b0:72a:1dfc:c981 with SMTP id 46e09a7af769-72e8653a057mr1992876a34.25.1744380688825;
+        Fri, 11 Apr 2025 07:11:28 -0700 (PDT)
+Received: from Borg-550.local ([2603:8080:1500:3d89:ec04:946b:bd13:7e7e])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72e73e4db34sm946969a34.49.2025.04.11.07.11.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 07:11:28 -0700 (PDT)
+Sender: John Groves <grovesaustin@gmail.com>
+Date: Fri, 11 Apr 2025 09:11:26 -0500
+From: John Groves <John@groves.net>
+To: Miklos Szeredi <miklos@szeredi.hu>, 
+	Amir Goldstein <amir73il@gmail.com>, Bernd Schubert <bernd.schubert@fastmail.fm>, 
+	Stefan Hajnoczi <shajnocz@redhat.com>
+Cc: Josef Bacik <josef@toxicpanda.com>, 
+	Joanne Koong <joannelkoong@gmail.com>, John Groves <jgroves@micron.com>, linux-fsdevel@vger.kernel.org, 
+	linux-cxl@vger.kernel.org, Aravind Ramesh <arramesh@micron.com>, 
+	Ajay Joshi <ajayjoshi@micron.com>, Eishan Mirakhur <emirakhur@micron.com>
+Subject: Re: famfs port to fuse - questions
+Message-ID: <yt5zatqobd5wa27l6nownqheqvqxfz2wkojqlbj5jsu2uz52am@fh7uud2u4v4b>
+References: <20250224152535.42380-1-john@groves.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250224152535.42380-1-john@groves.net>
 
-The destruction operation lacks atomicity, which may result in partial
-completion of the destruction process when attempting to destroy an out
-of order region.
 
-Previously, a out of order destroy will return:
-$ sudo cxl destroy-region region1 -f
-cxl region: destroy_region: decoder4.0: set_dpa_size failed: Device or resource busy
-cxl region: decoder_region_action: region1: failed: Device or resource busy
-cxl region: region_action: one or more failures, last failure: Device or resource busy
-cxl region: cmd_destroy_region: destroyed 0 region
+OK, I'm on track to post the first famfs/fuse RFC patches next week. This 
+will be a kernel patch, a libfuse patch and a pointer to a compatible famfs 
+user space and instructions.
 
-Then, the components under this root decoder enter a stale state, the user
-cannot create region any more under this root decoder.
+Dumb question: where do I post the libfuse patchs?
 
-The kernel has already ensured that region/decoder committed in order,
-so just ensure to destroy the last region is enough.
-
-Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
----
- cxl/lib/libcxl.c   |  7 +++++++
- cxl/lib/libcxl.sym |  1 +
- cxl/libcxl.h       |  1 +
- cxl/region.c       | 11 ++++++++++-
- 4 files changed, 19 insertions(+), 1 deletion(-)
-
-diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-index 63aa4ef3acdc..c13bb9377237 100644
---- a/cxl/lib/libcxl.c
-+++ b/cxl/lib/libcxl.c
-@@ -706,6 +706,13 @@ CXL_EXPORT struct cxl_region *cxl_region_get_first(struct cxl_decoder *decoder)
- 	return list_top(&decoder->regions, struct cxl_region, list);
- }
- 
-+CXL_EXPORT struct cxl_region *cxl_region_get_last(struct cxl_decoder *decoder)
-+{
-+	cxl_regions_init(decoder);
-+
-+	return list_tail(&decoder->regions, struct cxl_region, list);
-+}
-+
- CXL_EXPORT struct cxl_region *cxl_region_get_next(struct cxl_region *region)
- {
- 	struct cxl_decoder *decoder = region->decoder;
-diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
-index 0c155a40ad47..3ce408b9cc55 100644
---- a/cxl/lib/libcxl.sym
-+++ b/cxl/lib/libcxl.sym
-@@ -180,6 +180,7 @@ global:
- 	cxl_decoder_set_dpa_size;
- 	cxl_decoder_set_mode;
- 	cxl_region_get_first;
-+	cxl_region_get_last;
- 	cxl_region_get_next;
- 	cxl_region_decode_is_committed;
- 	cxl_region_is_enabled;
-diff --git a/cxl/libcxl.h b/cxl/libcxl.h
-index 0a5fd0e13cc2..9b5657203eec 100644
---- a/cxl/libcxl.h
-+++ b/cxl/libcxl.h
-@@ -305,6 +305,7 @@ int cxl_memdev_is_enabled(struct cxl_memdev *memdev);
- 
- struct cxl_region;
- struct cxl_region *cxl_region_get_first(struct cxl_decoder *decoder);
-+struct cxl_region *cxl_region_get_last(struct cxl_decoder *decoder);
- struct cxl_region *cxl_region_get_next(struct cxl_region *region);
- int cxl_region_decode_is_committed(struct cxl_region *region);
- int cxl_region_is_enabled(struct cxl_region *region);
-diff --git a/cxl/region.c b/cxl/region.c
-index 96aa5931d228..2eb6f5416433 100644
---- a/cxl/region.c
-+++ b/cxl/region.c
-@@ -835,7 +835,16 @@ static int destroy_region(struct cxl_region *region)
- {
- 	const char *devname = cxl_region_get_devname(region);
- 	unsigned int ways, i;
--	int rc;
-+	int rc = 0, , did = cxl_region_get_id(region);
-+	struct cxl_decoder *decoder = cxl_region_get_decoder(region);
-+	struct cxl_region *last_region = cxl_region_get_last(decoder);
-+	int last_id = cxl_region_get_id(last_region);
-+
-+	if (last_id > did) {
-+		log_err(&rl, "Unable to destroy region out of order, "
-+			"please destroy region%d first.\n", last_id);
-+		return -EINVAL;
-+	}
- 
- 	/* First, unbind/disable the region if needed */
- 	if (cxl_region_is_enabled(region)) {
--- 
-2.47.0
+Thanks,
+John
 
