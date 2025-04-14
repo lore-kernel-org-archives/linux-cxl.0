@@ -1,43 +1,41 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56FE613D531;
-	Mon, 14 Apr 2025 16:48:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BA2823E25B;
+	Mon, 14 Apr 2025 17:18:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744649283; cv=none; b=Dw589PMblM+PUefkzNtLOJ5v/qvpuFFYlteg2Cw+rOaZsSarukFhtLdG1w3PTWwm7Sb8lMpykHLesPZEDmGOQihmoj9vRiZhUP6aoxVadgr5NjVqe9Lky4d8kj6rz4BwGEdFXQ3Kaur/mJtXnl92uUf2JJEieAMjqSNi67oiehA=
+	t=1744651121; cv=none; b=FzcjilyGHIQVgp9beMNRNVclpw1vAPZNQzB22/Z6OhFNPdI3FQJede/O0pGAgG1EdssZje6ZP4xwWFTvFT0r36pRt9XU7kODEmYMgMZGLLhDrbUWQxjilGgf3MWnoERNunFDqPG3rMF0W8bswoFxVPf0h5vVtN4NZXpWK9HlOvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744649283; c=relaxed/simple;
-	bh=f/WChhpYkdKS0Bfr+KpWWihP2h/l15jvh0stxorbCfY=;
+	s=arc-20240116; t=1744651121; c=relaxed/simple;
+	bh=Bi6MjyvNxAdltopf0J1FHXTPq7j6JHlwNPAo3aXWj/s=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tokgLG1fHpXo2tt5vyJiCdMp7a9oSWchK3rHe7PgS8ELYn6uGUzaetdoz0CP/x0EBy35CfSOwL8ZZtukayXft6nb9C5MXd6sxiXP5Jj+vAJ/w2SiFiCl7BouyOYKlO0TGwywYHagrvwtWD5ayN4RSGItPTkrXMVWSs8j5IYTWTc=
+	 MIME-Version:Content-Type; b=Spy8qAxXgLTAjKjAGeKsJjeqLflSfCd5ltmzPytApqpTtgcecf5nCj3GAH+O7V1gGbSq51W1ZdVs1xMYZQPdY/dU1QOkb90PjvE8ruz28T65pU4iy6mp8dKjbWZ8m69v2UB1WL/xrx/P3DKYkRGGPjIkxXZKToiXZTtJgdlaEYU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZbtQt1W85z6K9BZ;
-	Tue, 15 Apr 2025 00:43:50 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Zbv6R2LtMz6M4wd;
+	Tue, 15 Apr 2025 01:14:39 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3693D1402F4;
-	Tue, 15 Apr 2025 00:47:59 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 93F731402F4;
+	Tue, 15 Apr 2025 01:18:35 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 14 Apr
- 2025 18:47:58 +0200
-Date: Mon, 14 Apr 2025 17:47:57 +0100
+ 2025 19:18:35 +0200
+Date: Mon, 14 Apr 2025 18:18:33 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Ira Weiny <ira.weiny@intel.com>
-CC: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, "Dan
- Williams" <dan.j.williams@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
-	Alison Schofield <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, <linux-cxl@vger.kernel.org>,
-	<nvdimm@lists.linux.dev>, <linux-kernel@vger.kernel.org>, Li Ming
-	<ming.li@zohomail.com>
-Subject: Re: [PATCH v9 00/19] DCD: Add support for Dynamic Capacity Devices
- (DCD)
-Message-ID: <20250414174757.00000fea@huawei.com>
-In-Reply-To: <20250413-dcd-type2-upstream-v9-0-1d4911a0b365@intel.com>
-References: <20250413-dcd-type2-upstream-v9-0-1d4911a0b365@intel.com>
+To: <alejandro.lucero-palau@amd.com>
+CC: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<dan.j.williams@intel.com>, <edward.cree@amd.com>, <davem@davemloft.net>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>,
+	<dave.jiang@intel.com>, Alejandro Lucero <alucerop@amd.com>
+Subject: Re: [PATCH v13 04/22] cxl: move register/capability check to driver
+Message-ID: <20250414181833.00003eca@huawei.com>
+In-Reply-To: <20250414151336.3852990-5-alejandro.lucero-palau@amd.com>
+References: <20250414151336.3852990-1-alejandro.lucero-palau@amd.com>
+	<20250414151336.3852990-5-alejandro.lucero-palau@amd.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -47,94 +45,88 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Sun, 13 Apr 2025 17:52:08 -0500
-Ira Weiny <ira.weiny@intel.com> wrote:
+On Mon, 14 Apr 2025 16:13:18 +0100
+alejandro.lucero-palau@amd.com wrote:
 
-> A git tree of this series can be found here:
+> From: Alejandro Lucero <alucerop@amd.com>
 > 
-> 	https://github.com/weiny2/linux-kernel/tree/dcd-v6-2025-04-13
+> Type3 has some mandatory capabilities which are optional for Type2.
 > 
-> This is now based on 6.15-rc2.
-
-Hi Ira,
-
-Firstly thanks for the update and your hard work driving this forwards.
-
+> In order to support same register/capability discovery code for both
+> types, avoid any assumption about what capabilities should be there, and
+> export the capabilities found for the caller doing the capabilities
+> check based on the expected ones.
 > 
-> Due to the stagnation of solid requirements for users of DCD I do not
-> plan to rev this work in Q2 of 2025 and possibly beyond.
-
-Hopefully there will be limited need to make changes (it looks pretty 
-good to me - we'll run a bunch of tests though which I haven't done
-yet).  I do have reason to want this code upstream and it is
-now simple enough that I hope it is not controversial. Let's discuss
-path forwards on the sync call tomorrow as I'm sure I'm not the only one.
-
-If needed I'm fine picking up the baton to keep this moving forwards
-(I'm even more happy to let someone else step up though!)
-
-To me we don't need to answer the question of whether we fully understand
-requirements, or whether this support covers them, but rather to ask
-if anyone has requirements that are not sensible to satisfy with additional
-work building on this?
-
-I'm not aware of any such blocker.  For the things I care about the
-path forwards looks fine (particularly tagged capacity and sharing).
-
+> Add a function for facilitating the report of capabiities missing the
+> expected ones.
 > 
-> It is anticipated that this will support at least the initial
-> implementation of DCD devices, if and when they appear in the ecosystem.
-> The patch set should be reviewed with the limited set of functionality in
-> mind.  Additional functionality can be added as devices support them.
+> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+Hi Alejandro.
 
-Personally I think that's a chicken and egg problem but fully understand
-the desire to keep things simple in the short term.  Getting initial DCD
-support in will help reduce the response (that I frequently hear) of
-'the ecosystem isn't ready, let's leave that for a generation'.
+A request if we end up with a v14 - please add notes on what changed
+in each patch. It's really handy for reviewers to tell which patches
+they need to take another look at.   More info that we get from
+absence of our own tags!
 
+One minor thing inline. 
 
-> 
-> It is strongly encouraged for individuals or companies wishing to bring
-> DCD devices to market review this set with the customer use cases they
-> have in mind.
-> 
-
-Absolutely.  I can't share anything about devices at this time but you
-can read whatever you want into my willingness to help get this (and a
-bunch of things built on top of it) over the line.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 0996e228b26a..7d94e81b2e3b 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -836,6 +836,8 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  {
+>  	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
+>  	struct cxl_dpa_info range_info = { 0 };
+> +	DECLARE_BITMAP(expected, CXL_MAX_CAPS);
+Trivial but can do
+	DECLARE_BITMAP(expected, CXL_MAX_CAPS) = {};
+to avoid need for the zeroing below.
 
-> Remaining work:
-> 
-> 	1) Allow mapping to specific extents (perhaps based on
-> 	   label/tag)
-> 	   1a) devise region size reporting based on tags
-> 	2) Interleave support
+> +	DECLARE_BITMAP(found, CXL_MAX_CAPS);
+>  	struct cxl_memdev_state *mds;
+>  	struct cxl_dev_state *cxlds;
+>  	struct cxl_register_map map;
+> @@ -871,7 +873,19 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  
+>  	cxlds->rcd = is_cxl_restricted(pdev);
+>  
+> -	rc = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_MEMDEV, &map);
+> +	bitmap_zero(expected, CXL_MAX_CAPS);
+> +	bitmap_zero(found, CXL_MAX_CAPS);
+> +
+> +	/*
+> +	 * These are the mandatory capabilities for a Type3 device.
+> +	 * Only checking capabilities used by current Linux drivers.
+> +	 */
+> +	set_bit(CXL_DEV_CAP_HDM, expected);
+> +	set_bit(CXL_DEV_CAP_DEV_STATUS, expected);
+> +	set_bit(CXL_DEV_CAP_MAILBOX_PRIMARY, expected);
+> +	set_bit(CXL_DEV_CAP_MEMDEV, expected);
+> +
 
-I'd maybe label these as 'additional possible future features'.
-Personally I'm doubtful that hardware interleave of DCD is a short
-term feature and it definitely doesn't have to be there for this to be useful.
-
-Tags will matter but that is a 'next step' that this series does
-not seem to hinder.
 
 
-> 
-> Possible additional work depending on requirements:
-> 
-> 	1) Accept a new extent which extends (but overlaps) already
-> 	   accepted extent(s)
-> 	2) Rework DAX device interfaces, memfd has been explored a bit
-> 	3) Support more than 1 DC partition
-> 
-> [1] https://github.com/weiny2/ndctl/tree/dcd-region3-2025-04-13
 
-Thanks,
 
-Jonathan
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
