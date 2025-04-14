@@ -1,100 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4C1B25229C
-	for <linux-cxl@vger.kernel.org>; Mon, 14 Apr 2025 15:35:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E2A925229C;
+	Mon, 14 Apr 2025 15:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744644902; cv=none; b=HzhVQvYhz3S/lzDgx+JEC+l/Zg6OapDZlTEraMR5iDLgIyz/NhvF7AmuXJM7jqg48wtYeZHcxbcsdAdbtDM03yxTgAfY8ZQSrsikNDFj+p+AUxGy//sJ3/xuq46LsWbBfLFAxCTy2V1zQni3ZZAScMBtdfYsPEWiMBeeTu6vqNo=
+	t=1744644972; cv=none; b=a54ZM4WXjYWKDobTP6Gib5az/hUFbgH6bp8AjyDCzdep/w6/Y8YF1mS3p7Xho//AUez9Zk23UsTrIBFMPFJ7Ou6KCpqRMsQblH55VNZuK2okkpgtn33vq7Gdd2AysqNZZ8bGEhcFqloX/cKs67BiqiJ22Hn8DIhTeAtYJk5I2/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744644902; c=relaxed/simple;
-	bh=SoQl7Kw18vc5tGflCwbyGzAGRoWpOB9Zj0rp8zAz578=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hZdXihGguvGkONWGAl0maaeFYZsluJf/X3nXicbACTFgfr8QQ/J71zJ3BEAF/TbyofAwus11cbAGN4NmuNy9pJPn9ls8DyqU54P/KGBJK1nVZOZJbP5soG/u+NcBGXecFqI0Y1Ci6VAso/gIJdgx/leq6SsQflpoXOS0RMV8ltI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i4g9os3k; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i4g9os3k"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744644901; x=1776180901;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=SoQl7Kw18vc5tGflCwbyGzAGRoWpOB9Zj0rp8zAz578=;
-  b=i4g9os3k3EwV0CC6c7gg1SfNT2TE58ytxHLgCN/rGsLmb/8Xn7whRYwg
-   eLnNkyB99xB0h1tcWYoy1aCpBGC3UUaYAUqwE0m+i7zJt84bNmHh+y+yY
-   GPpOEId6yDoRjkWJn9tzS3qwfraeYASWpCWi4w2svPRnCLHceOS5Qvp8v
-   SCUefXEhuow0E5v0CMcaHC1WT0kt2oyz6SrXBtyL+u1/BQV8IMbXbYYoe
-   LDBriJyjK4vj06bvuzQLN24hwXgvlSRVILXBDqi/z9T7Q+AGXPkPQhnuF
-   5SHY8u+8pmmZCoW9DFna24ulkSJ2LPx52wfc7Y/4J4xi+9OHKu695TBI+
-   Q==;
-X-CSE-ConnectionGUID: sFW/8vS+SHSNetpx0PzzLg==
-X-CSE-MsgGUID: YGC9DgRJQHmDsM3g+WPu9Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="68610969"
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="68610969"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 08:35:00 -0700
-X-CSE-ConnectionGUID: Lwu+Ey23S7mTG07T0JsM/g==
-X-CSE-MsgGUID: r2wJd81pTmewNJLnUpXx2Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
-   d="scan'208";a="130386553"
-Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.109.28]) ([10.125.109.28])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 08:35:00 -0700
-Message-ID: <7f535cf7-6231-4a90-96cf-a5beaad38bb5@intel.com>
-Date: Mon, 14 Apr 2025 08:34:58 -0700
+	s=arc-20240116; t=1744644972; c=relaxed/simple;
+	bh=HZUyZl0U+ZEgkxFXywMHlDcIaFBX828g6Ua3936TNtE=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=E5gCpWdPG/rPoOFmNz91HE+WoLH8xSMKIH6phhg8NPLR4gzNvME5rr6xrYl4MgbNtPhbKmZsQop8SFeyGsOouK/9uAR9ExjE5ASxAZLgBEgcla6X6Uo0kdK+3nS2Ug99eF1ebENc19hNHhgC0IV4dsFTX7uqL+S/S7QrxC7IV+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZbrvK2Hr5z6FGcX;
+	Mon, 14 Apr 2025 23:34:53 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6D8001401DC;
+	Mon, 14 Apr 2025 23:36:08 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 14 Apr
+ 2025 17:36:07 +0200
+Date: Mon, 14 Apr 2025 16:36:06 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Ira Weiny <ira.weiny@intel.com>
+CC: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, "Dan
+ Williams" <dan.j.williams@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
+	Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, <linux-cxl@vger.kernel.org>,
+	<nvdimm@lists.linux.dev>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v9 06/19] cxl/port: Add 'dynamic_ram_a' to endpoint
+ decoder mode
+Message-ID: <20250414163606.00000311@huawei.com>
+In-Reply-To: <20250413-dcd-type2-upstream-v9-6-1d4911a0b365@intel.com>
+References: <20250413-dcd-type2-upstream-v9-0-1d4911a0b365@intel.com>
+	<20250413-dcd-type2-upstream-v9-6-1d4911a0b365@intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4] cxl: Delay HB port and switch dport probing until
- endpoint dev probe
-To: Li Ming <ming.li@zohomail.com>
-Cc: dan.j.williams@intel.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
- alison.schofield@intel.com, ira.weiny@intel.com, rrichter@amd.com,
- linux-cxl@vger.kernel.org
-References: <20250404230049.3578835-1-dave.jiang@intel.com>
- <ecc9fca5-5166-4516-9eda-2562a0350378@zohomail.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <ecc9fca5-5166-4516-9eda-2562a0350378@zohomail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
+On Sun, 13 Apr 2025 17:52:14 -0500
+Ira Weiny <ira.weiny@intel.com> wrote:
 
+> Endpoints can now support a single dynamic ram partition following the
+> persistent memory partition.
+> 
+> Expand the mode to allow a decoder to point to the first dynamic ram
+> partition.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-On 4/10/25 8:05 PM, Li Ming wrote:
-> On 4/5/2025 6:57 AM, Dave Jiang wrote:
->> This series attempts to delay the setup of dports and Host Bridge (HB) register
->> probing until when the endpoint device (memdev) is being probed. At this point,
->> the CXL link is established and all the devices along the CXL link path up to
->> the Root Port (RP) should be active.
->>
->> And hopefully this help a bit with Robert's issue raised in the "Inactive
->> downstream port handling" series [1]. Testing would be appreicated. Thank you!
->>
->> [1]: https://lore.kernel.org/linux-cxl/67c8a0cc23ec_24b64294f6@dwillia2-xfh.jf.intel.com.notmuch/
-> 
-> Hi Dave,
-> 
-> Thanks for that, you can also mention the patchset is also a long term solution for the issue[2]
-> 
-> [2]: https://lore.kernel.org/linux-cxl/6712b7bf2c1cd_10a03294b3@dwillia2-mobl3.amr.corp.intel.com.notmuch/
-> 
-> 
-> After going through the implementation, Setup component registers is triggered on root port and HB when the first endpoint under them attaching, then component registers information are cached. But the information will not be reset after the last endpoint under the root port and HB removed. So the information will be resued when an new endpoint is re-attached to the root port and HB.
-> 
-> I am not sure if component registers information on hardware side is possible to be changed in above case. Just want to know if we need to consider about it?
-
-I do not know either and I don't have the hotplug hardware to see. Unless someone can report the behavior, it may be one of those we cross that bridge when we get there situation.
-
-> 
-> 
-> Ming
-> 
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
