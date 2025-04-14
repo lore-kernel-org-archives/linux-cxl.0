@@ -1,420 +1,399 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2070.outbound.protection.outlook.com [40.107.100.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F0D4279903;
-	Mon, 14 Apr 2025 14:35:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744641329; cv=none; b=kXpAW20Q3zOZ818aR1OGCh2YYYj/JEG30zzMTXe95keVwFZePa5uN7UGXraG3rk01GE1X70KPx/b6QcELLmucTW0vOjJsGaPslN+vEODEnoKwj7jvvN/HWnntNaldUySvuTQ47e5N8zHjxXrDnv2P6TxFEeJWJi12Xqtnn7iQH0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744641329; c=relaxed/simple;
-	bh=0YDodx9g88LFQCfHOABq7ktoKeeDdQ7fb6ReKOTuX14=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gw8GnycEd8TUff++zF3cYePpXzQxA7CcNEl6BzC1TIfrCOQianvgtVYKuHbGJ0OGGntf14fKatG+lab07P+XZeLSTGP0sHi+ur/PfyyY74KthQEqos6f3xiP3KrHcIQYOtb2XjEvCDvAuiUWEc1jr3+gEivsfVU//TjhdB2Y9Y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZbqV523yGz6M4p0;
-	Mon, 14 Apr 2025 22:31:25 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 69C631401DC;
-	Mon, 14 Apr 2025 22:35:21 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 14 Apr
- 2025 16:35:20 +0200
-Date: Mon, 14 Apr 2025 15:35:19 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Ira Weiny <ira.weiny@intel.com>
-CC: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, "Dan
- Williams" <dan.j.williams@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
-	Alison Schofield <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, <linux-cxl@vger.kernel.org>,
-	<nvdimm@lists.linux.dev>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v9 02/19] cxl/mem: Read dynamic capacity configuration
- from the device
-Message-ID: <20250414153519.0000677a@huawei.com>
-In-Reply-To: <20250413-dcd-type2-upstream-v9-2-1d4911a0b365@intel.com>
-References: <20250413-dcd-type2-upstream-v9-0-1d4911a0b365@intel.com>
-	<20250413-dcd-type2-upstream-v9-2-1d4911a0b365@intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C0E0252294;
+	Mon, 14 Apr 2025 15:13:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.70
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744643635; cv=fail; b=mG1MkqYKRnrNfABJ5OxTcs8ETmrt6Yf7Kf0PglwxiUfrraY2C99cP6/FD8LbtEgVulmEw59M/1FNjfpFzU21ZkBlxQ+VUhWZtCGJ+h4Jnmv3iuhfnRevZiOf3+h4XI2YqjLRTGckPGIzmtO35jWA8hvB+QTIQD7MSyGwJVzOxzw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744643635; c=relaxed/simple;
+	bh=YnXw0tCqO1CcbuH0fwrQ8ZYPaRq44/SHRIY3zie2Qno=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jTEUgHgMPv1dEZoA7oTDATwMONVNutbHojUrG044l60z3lSbiHuHeXnqxF7futgI/f6mfjJqaeTW0Jt18HgO1HPmCMK/QYniRzefPq5+VXMrJgeYplCbV9taCnpbjV5E6+KGHA57yDgAqznbOcF04rnlhW7HRmD2Cv+vCS3abp4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=yjcfpU2R; arc=fail smtp.client-ip=40.107.100.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="yjcfpU2R"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=rMIXUAt0v69R26DLe/aNfiCLr5oaZ35xrJlQUvkeZM+C+Poy9jzTYp5g1U3Z/sifrsKlwtE/hSt4+pKcZiu+0ilYWOa6t67kwPEe95ctJjzB/B10wgXer7a1hh9YNFZ00XW4Z40iQwQSCF001noSt5qRQAm7sFeg+ocJWr5j17AWZm0kprLV+1fGJ0T6lkAXlJhI/ZdmxKrz6XV759wXUuKL430UtZxz0ROqrEOWBMxZHLqsup7aaNyRMqeWmx06PVXCeUS86yKVtBZtLCcaTZWsFoU5jBqcqlZRzdzlo3KjjSpeNtK7hZAKaOrQGWz8Kmwch0EEqlS4jAvwys3wmw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=C/7fHvogEzC5EFz8M1i6ep27tJmDeDHk1a0gRInUvj0=;
+ b=kCjN2TCmviZsJ8V/AtahT0lkildakW7MzMb4UUvFlLbhG0AgLUxYOhCmGauYfri6OnMqKaX+x9xVWSxNEvziJlNXGy/3/TNIgVoBI9qrEKj/YORHBWYXmgFh1gr9a1M0Di2k2L396GemhOR4HBLdUXi+QPwojHyn2J7E9O1gFVBaMt1Z7yrUd4++sY5URiP0r0ovwi0W4oDeqtUmcuqz4gGaUuztp3vupF7oVYXEWeX5yKNfJs6Qwi1Jjueclz4KvruMBeVtR9g/SXPF25HjFI8zryLPc3WUwkIk4Ci54fwMWMChqCi8E0oOYR5BOwdrt4CQ8u6GFx6Swu7p3PnLDA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=C/7fHvogEzC5EFz8M1i6ep27tJmDeDHk1a0gRInUvj0=;
+ b=yjcfpU2R6DQt1+uRbUppMvaPyCJtCK4z3Kh+lAW6GtXXlVqGawt89EyOGhkqgfHFQujLaaiMykfqyKI59QpXbHch4RFEjX3nx6dbg3C8b9kptc2wAQepm4MfPYRn8x7CMJjGh2XmHUPC4A0msKtSxmlpkl5qcM+FqKvqFrHYd5g=
+Received: from PH7PR10CA0023.namprd10.prod.outlook.com (2603:10b6:510:23d::21)
+ by MN2PR12MB4062.namprd12.prod.outlook.com (2603:10b6:208:1d0::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.27; Mon, 14 Apr
+ 2025 15:13:47 +0000
+Received: from CY4PEPF0000EDD5.namprd03.prod.outlook.com
+ (2603:10b6:510:23d:cafe::a6) by PH7PR10CA0023.outlook.office365.com
+ (2603:10b6:510:23d::21) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.34 via Frontend Transport; Mon,
+ 14 Apr 2025 15:13:46 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000EDD5.mail.protection.outlook.com (10.167.241.201) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8655.12 via Frontend Transport; Mon, 14 Apr 2025 15:13:46 +0000
+Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 14 Apr
+ 2025 10:13:45 -0500
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB06.amd.com
+ (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 14 Apr
+ 2025 10:13:45 -0500
+Received: from xcbalucerop40x.xilinx.com (10.180.168.240) by
+ SATLEXMB03.amd.com (10.181.40.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Mon, 14 Apr 2025 10:13:44 -0500
+From: <alejandro.lucero-palau@amd.com>
+To: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<dan.j.williams@intel.com>, <edward.cree@amd.com>, <davem@davemloft.net>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>,
+	<dave.jiang@intel.com>
+CC: Alejandro Lucero <alucerop@amd.com>
+Subject: [PATCH v13 00/22] Type2 device basic support
+Date: Mon, 14 Apr 2025 16:13:14 +0100
+Message-ID: <20250414151336.3852990-1-alejandro.lucero-palau@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EDD5:EE_|MN2PR12MB4062:EE_
+X-MS-Office365-Filtering-Correlation-Id: ae0d84be-ec6d-44db-0211-08dd7b66f3e9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|376014|82310400026|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?WUZ1SDNuSU5qTFhBT2lTdC93MW9xblhVTnBsbUlsZUY5bFNxK25NQURualM2?=
+ =?utf-8?B?MEQ2aFNtbkZ4eW4xdXZ3dWdYSXBPalFUOFpGaUJrMlVIbkFqVGtqa1pxcXh5?=
+ =?utf-8?B?THEwaE04Yi96VE5va2Y4NFlxM1I1dGp4VkE3VTVmRVJMeEZ4eWE0MGNqT3l5?=
+ =?utf-8?B?ajBqMWt3M1M1YkVOektHMmsySzhsVitoWkI0czNtanl2TkdMRkxkSHV6OHU2?=
+ =?utf-8?B?U1BqcGNGYzZoVG5UVlphcUxibkUxS0YwZjFYZ0k3L0kvOFc4aTRKaTBnYXk0?=
+ =?utf-8?B?ZThaRWdKRHRSbTlyZHk5c3FpRy9lMTREZU5yZmpKZmVZaDd6TjAyU0VEcGhF?=
+ =?utf-8?B?QWxlVlFMOTBPZUIrcGxTam1uUUxrVU85NGtmaDhXaEJ1enN0d3RobDU2dWdP?=
+ =?utf-8?B?Y1dvd0J5YWRaMkJVajJma056ZGJnempRcE8xcXk4UUNmUU5vSXhJTCtabGFX?=
+ =?utf-8?B?ZFNWcTNoTXArMDZqV1ZHcndBNmlhMWwxcytpRTBWcGpWSWpKUzluRTMzcEto?=
+ =?utf-8?B?MHk3bkh6OEx2ZlFrTGhXaVAxbjcyV0Y3VTFIVGdjSHkrR2orcTZ1NjVKdXZy?=
+ =?utf-8?B?YWRMNEJsWWpLc3lGdVY2UFRTbFZzZHlTTVFOQW5jbGthNVo2U0k3N0RncjU5?=
+ =?utf-8?B?S2pUT3JWaVlyd1U4WFRSV09WNHNadVJQaFVNOFBDbmpuN0FiWHBQbi9vMXFZ?=
+ =?utf-8?B?emVHak1OSmJ0eUVEcmxubTIvbEZGVHlSMDB2L0hHM1hTN2o2WUJMeTcyUmNN?=
+ =?utf-8?B?RlhvOHROc3lweVVPUzhCeEZ2VkVUNnc2cGhxRTYrOWlnQTlVVDJQNVRuWFB0?=
+ =?utf-8?B?dThXdmwzTUErdlJScElWY3VJVE8zSGpJb1E1NEJmdThGWHJQT2gwMTlKQ2Fw?=
+ =?utf-8?B?MXpJTWh2U3FrRlZwenBGemkxT3RPdlJCQWlJaS9xcVpQc3dvM0ZwbDBUbDRL?=
+ =?utf-8?B?M0hOZ1dhQjJIekE5K3ZweE1UNzBuc1FPUDhYK3FmcWI3ZURWUHpjL2crajRM?=
+ =?utf-8?B?UDVyV2Mwbk4vYkExTGpjQlIrY3hQcVpkKzRYTWNhTFZ1bWtTL0tkbG1mbXlW?=
+ =?utf-8?B?aHJxcGxYWW5HWmpYZ2RsZTRlNGhSNzJRRlk1c0R2ZkEvUERYMnIrU0JPcEFi?=
+ =?utf-8?B?cFo1Tzd5TUlWQ3paaUZHakRRZVdQcTg2T3cyc0NwWXNmUEFQbml6WEFnM3pS?=
+ =?utf-8?B?eGhNN3B2NDRhYXdPUzFlQWdET3FkZytOZXl3aUY0dXduZVdsV2R0ZGVFWVhv?=
+ =?utf-8?B?ME83bkY5TTVyQjlUMVJhM0NlRmhZRlAvRXRuckpXbmNpS0RLMEh4VStLNWdj?=
+ =?utf-8?B?NXdjRzRIMUxLQlFTano4WU5mYTNwZXpIY1QzZmU1eTFvU0F2THZpSXFFOFhh?=
+ =?utf-8?B?SHBJQWl5QVlsQVZzMU5zRWVNcitsSE1qVHd6YjFKaUJwV0dRY3FHVHh3V29q?=
+ =?utf-8?B?bVNvQkxKQlE1SG9LZU12Sk8rVktITGx0SUlaVGJJaHpudytMZGxLaTY4bkVF?=
+ =?utf-8?B?a1UyV2FhSUk0Rmd4dmVYMmtSakg0c2UvTFZ2Mk1xQnBWQU9nQmM0T2RPNGY2?=
+ =?utf-8?B?UlpXamRrVUd0ZXh4ZU1IUENlSzYvNFhjTW1IanlsM3lLZ0hFaG8xQjBkUW1C?=
+ =?utf-8?B?Y2RNQ1l6LzRlcHl5MTVwWEk4Q1BFQy9LTXdvOVQwSDhWYmJpSllEVFMzMXRW?=
+ =?utf-8?B?aytmckpmSUpXbGl1V1UxdmVwY0t2OHZ6VS95OElwamdHSHNpcGczT2hxU3Ri?=
+ =?utf-8?B?SDFHZHJkbkVVMGFkQ2FQbzJFbTNSbGxFL3cyMzRIOXRTbVkwOW03N2lmdnpJ?=
+ =?utf-8?B?SUw3dVNDZlZjYkZIUThBemlxdlJjTDk1NWllMnlqa1M2MnNaMm1wVE5Xd0dS?=
+ =?utf-8?B?OWlGMkFsMVByQ1dQY0JoWmhJRmV2bytGM0xBSmQ5U0NsWStPZ0hLMHZEamJW?=
+ =?utf-8?B?NzRBOWVBN210RkZFeE9Da1NuVzVaN1RONkk2SHM0QVRkZDZ1TlIrMktlUzhy?=
+ =?utf-8?B?SmgxV2ppa0lJRStQblZYYVNEcGpBVXJ3N2Z3QmhUd3VwK3pTZ0tDQnRRZDcy?=
+ =?utf-8?Q?NVPU+C?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(82310400026)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 15:13:46.3930
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ae0d84be-ec6d-44db-0211-08dd7b66f3e9
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000EDD5.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4062
 
-On Sun, 13 Apr 2025 17:52:10 -0500
-Ira Weiny <ira.weiny@intel.com> wrote:
+From: Alejandro Lucero <alucerop@amd.com>
 
-> Devices which optionally support Dynamic Capacity (DC) are configured
-> via mailbox commands.  CXL 3.2 section 9.13.3 requires the host to issue
-> the Get DC Configuration command in order to properly configure DCDs.
-> Without the Get DC Configuration command DCD can't be supported.
-> 
-> Implement the DC mailbox commands as specified in CXL 3.2 section
-> 8.2.10.9.9 (opcodes 48XXh) to read and store the DCD configuration
-> information.  Disable DCD if an invalid configuration is found.
-> 
-> Linux has no support for more than one dynamic capacity partition.  Read
-> and validate all the partitions but configure only the first partition
-> as 'dynamic ram A'. Additional partitions can be added in the future if
-> such a device ever materializes.  Additionally is it anticipated that no
-> skips will be present from the end of the pmem partition.  Check for an
-> disallow this configuration as well.
-> 
-> Linux has no use for the trailing fields of the Get Dynamic Capacity
-> Configuration Output Payload (Total number of supported extents, number
-> of available extents, total number of supported tags, and number of
-> available tags).  Avoid defining those fields to use the more useful
-> dynamic C array.
-> 
-> Based on an original patch by Navneet Singh.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-> ---
-> Changes:
-> [iweiny: rebase]
-> [iweiny: Update spec references to 3.2]
-> [djbw: Limit to 1 partition]
-> [djbw: Avoid inter-partition skipping]
-> [djbw: s/region/partition/]
-> [djbw: remove cxl_dc_region[partition]_info->name]
-> [iweiny: adjust to lack of dcd_cmds in mds]
-> [iweiny: remove extra 'region' from names]
-> [iweiny: remove unused CXL_DYNAMIC_CAPACITY_SANITIZE_ON_RELEASE_FLAG]
-> ---
+v13 changes:
+ - using names for headers checking more consistent (Jonathan Cameron)
+ - using helper for caps bit setting (Jonathan Cameron)
+ - provide generic function for reporting missing capabilities (Jonathan Cameron)
+ - rename cxl_pci_setup_memdev_regs to cxl_pci_accel_setup_memdev_regs (Jonathan Cameron)
+ - cxl_dpa_info size to be set by the Type2 driver (Jonathan Cameron)
+ - avoiding rc variable when possible (Jonathan Cameron)
+ - fix spelling (Simon Horman)
+ - use scoped_guard (Dave Jiang)
+ - use enum instead of bool (Dave Jiang)
+ 
+v12 changes:
+ - use new macro cxl_dev_state_create in pci driver (Ben Cheatham)
+ - add public/private sections in now exported cxl_dev_state struct (Ben
+   Cheatham)
+ - fix cxl/pci.h regarding file name for checking if defined
+ - Clarify capabilities found vs expected in error message. (Ben
+   Cheatham)
+ - Clarify new CXL_DECODER_F flag (Ben Cheatham)
+ - Fix changes about cxl memdev creation support moving code to the
+   proper patch. (Ben Cheatham)
+ - Avoid debug and function duplications (Ben Cheatham)
+ - Fix robot compilation error reported by Simon Horman as well.
+ - Add doc about new param in clx_create_region (Simon Horman).
 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 58d378400a4b..866a423d6125 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -1313,6 +1313,153 @@ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd)
->  	return -EBUSY;
->  }
->  
-> +static int cxl_dc_check(struct device *dev, struct cxl_dc_partition_info *part_array,
-> +			u8 index, struct cxl_dc_partition *dev_part)
-> +{
-> +	size_t blk_size, len;
-> +
-> +	part_array[index].start = le64_to_cpu(dev_part->base);
-> +	part_array[index].size = le64_to_cpu(dev_part->decode_length);
-> +	part_array[index].size *= CXL_CAPACITY_MULTIPLIER;
-> +	len = le64_to_cpu(dev_part->length);
-> +	blk_size = le64_to_cpu(dev_part->block_size);
-> +
-> +	/* Check partitions are in increasing DPA order */
-> +	if (index > 0) {
-> +		struct cxl_dc_partition_info *prev_part = &part_array[index - 1];
-> +
-> +		if ((prev_part->start + prev_part->size) >
-> +		     part_array[index].start) {
-> +			dev_err(dev,
-> +				"DPA ordering violation for DC partition %d and %d\n",
-> +				index - 1, index);
-> +			return -EINVAL;
-> +		}
-> +	}
-> +
-> +	if (!IS_ALIGNED(part_array[index].start, SZ_256M) ||
-> +	    !IS_ALIGNED(part_array[index].start, blk_size)) {
-> +		dev_err(dev, "DC partition %d invalid start %zu blk size %zu\n",
-> +			index, part_array[index].start, blk_size);
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (part_array[index].size == 0 || len == 0 ||
-> +	    part_array[index].size < len || !IS_ALIGNED(len, blk_size)) {
-> +		dev_err(dev, "DC partition %d invalid length; size %zu len %zu blk size %zu\n",
-> +			index, part_array[index].size, len, blk_size);
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (blk_size == 0 || blk_size % CXL_DCD_BLOCK_LINE_SIZE ||
-> +	    !is_power_of_2(blk_size)) {
-> +		dev_err(dev, "DC partition %d invalid block size; %zu\n",
-> +			index, blk_size);
-> +		return -EINVAL;
-> +	}
-> +
-> +	dev_dbg(dev, "DC partition %d start %zu start %zu size %zu\n",
-> +		index, part_array[index].start, part_array[index].size,
-> +		blk_size);
-> +
-> +	return 0;
-> +}
-> +
-> +/* Returns the number of partitions in dc_resp or -ERRNO */
-> +static int cxl_get_dc_config(struct cxl_mailbox *mbox, u8 start_partition,
-> +			     struct cxl_mbox_get_dc_config_out *dc_resp,
-> +			     size_t dc_resp_size)
-> +{
-> +	struct cxl_mbox_get_dc_config_in get_dc = (struct cxl_mbox_get_dc_config_in) {
-> +		.partition_count = CXL_MAX_DC_PARTITIONS,
-> +		.start_partition_index = start_partition,
-> +	};
-> +	struct cxl_mbox_cmd mbox_cmd = (struct cxl_mbox_cmd) {
-> +		.opcode = CXL_MBOX_OP_GET_DC_CONFIG,
-> +		.payload_in = &get_dc,
-> +		.size_in = sizeof(get_dc),
-> +		.size_out = dc_resp_size,
-> +		.payload_out = dc_resp,
-> +		.min_out = 1,
-> +	};
-> +	int rc;
-> +
-> +	rc = cxl_internal_send_cmd(mbox, &mbox_cmd);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	dev_dbg(mbox->host, "Read %d/%d DC partitions\n",
-> +		dc_resp->partitions_returned, dc_resp->avail_partition_count);
-> +	return dc_resp->partitions_returned;
-> +}
-> +
-> +/**
-> + * cxl_dev_dc_identify() - Reads the dynamic capacity information from the
-> + *                         device.
-> + * @mbox: Mailbox to query
-> + * @dc_info: The dynamic partition information to return
-> + *
-> + * Read Dynamic Capacity information from the device and return the partition
-> + * information.
-> + *
-> + * Return: 0 if identify was executed successfully, -ERRNO on error.
-> + *         on error only dynamic_bytes is left unchanged.
-> + */
-> +int cxl_dev_dc_identify(struct cxl_mailbox *mbox,
-> +			struct cxl_dc_partition_info *dc_info)
-> +{
-> +	struct cxl_dc_partition_info partitions[CXL_MAX_DC_PARTITIONS];
-> +	size_t dc_resp_size = mbox->payload_size;
-> +	struct device *dev = mbox->host;
-> +	u8 start_partition;
-> +	u8 num_partitions;
-> +
-> +	struct cxl_mbox_get_dc_config_out *dc_resp __free(kfree) =
-> +					kvmalloc(dc_resp_size, GFP_KERNEL);
-> +	if (!dc_resp)
-> +		return -ENOMEM;
-> +
-> +	/* Read and check all partition information for validity and potential
-> +	 * debugging; see debug output in cxl_dc_check() */
-> +	start_partition = 0;
-> +	do {
-> +		int rc, i, j;
-> +
-> +		rc = cxl_get_dc_config(mbox, start_partition, dc_resp, dc_resp_size);
-> +		if (rc < 0) {
-> +			dev_err(dev, "Failed to get DC config: %d\n", rc);
-> +			return rc;
-> +		}
-> +
-> +		num_partitions += rc;
-> +
-> +		if (num_partitions < 1 || num_partitions > CXL_MAX_DC_PARTITIONS) {
-> +			dev_err(dev, "Invalid num of dynamic capacity partitions %d\n",
-> +				num_partitions);
-> +			return -EINVAL;
-> +		}
-> +
-> +		for (i = start_partition, j = 0; i < num_partitions; i++, j++) {
-> +			rc = cxl_dc_check(dev, partitions, i,
-> +					  &dc_resp->partition[j]);
-> +			if (rc)
-> +				return rc;
-> +		}
-> +
-> +		start_partition = num_partitions;
-> +
-> +	} while (num_partitions < dc_resp->avail_partition_count);
-> +
-> +	/* Return 1st partition */
-> +	dc_info->start = partitions[0].start;
-> +	dc_info->size = partitions[0].size;
-> +	dev_dbg(dev, "Returning partition 0 %zu size %zu\n",
-> +		dc_info->start, dc_info->size);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_dev_dc_identify, "CXL");
-> +
->  static void add_part(struct cxl_dpa_info *info, u64 start, u64 size, enum cxl_partition_mode mode)
->  {
->  	int i = info->nr_partitions;
-> @@ -1383,6 +1530,38 @@ int cxl_get_dirty_count(struct cxl_memdev_state *mds, u32 *count)
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_get_dirty_count, "CXL");
->  
-> +void cxl_configure_dcd(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
-> +{
-> +	struct cxl_dc_partition_info dc_info = { 0 };
-Trivial bit of c stuff that surprised me in another thread the other day that doesn't
-apply here because of packed nature of structure but...
+v11 changes:
+ - Dropping the use of cxl_memdev_state and going back to using
+   cxl_dev_state.
+ - Using a helper for an accel driver to allocate its own cxl-related
+   struct embedding cxl_dev_state.
+ - Exporting the required structs in include/cxl/cxl.h for an accel
+   driver being able to know the cxl_dev_state size required in the
+   previously mentioned helper for allocation.
+ - Avoid using any struct for dpa initialization by the accel driver
+   adding a specific function for creating dpa partitions by accel
+   drivers without a mailbox.
 
- = {}; is defined in c23 (and probably before that in practice) as
-the "empty initializer"
-> +	struct device *dev = mds->cxlds.dev;
-> +	size_t skip;
-> +	int rc;
-> +
-> +	rc = cxl_dev_dc_identify(&mds->cxlds.cxl_mbox, &dc_info);
-> +	if (rc) {
-> +		dev_warn(dev,
-> +			 "Failed to read Dynamic Capacity config: %d\n", rc);
-> +		cxl_disable_dcd(mds);
-> +		return;
-> +	}
-> +
-> +	/* Skips between pmem and the dynamic partition are not supported */
-> +	skip = dc_info.start - info->size;
-> +	if (skip) {
-> +		dev_warn(dev,
-> +			 "Dynamic Capacity skip from pmem not supported: %zu\n",
-> +			 skip);
-> +		cxl_disable_dcd(mds);
-> +		return;
-> +	}
-> +
-> +	info->size += dc_info.size;
-> +	dev_dbg(dev, "Adding dynamic ram partition A; %zu size %zu\n",
-> +		dc_info.start, dc_info.size);
-> +	add_part(info, dc_info.start, dc_info.size, CXL_PARTMODE_DYNAMIC_RAM_A);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_configure_dcd, "CXL");
-> +
->  int cxl_arm_dirty_shutdown(struct cxl_memdev_state *mds)
->  {
->  	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index be8a7dc77719..a9d42210e8a3 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -485,6 +485,7 @@ struct cxl_region_params {
->  enum cxl_partition_mode {
->  	CXL_PARTMODE_RAM,
->  	CXL_PARTMODE_PMEM,
-> +	CXL_PARTMODE_DYNAMIC_RAM_A,
->  };
->  
->  /*
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 394a776954f4..057933128d2c 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -97,7 +97,7 @@ int devm_cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
->  			 resource_size_t base, resource_size_t len,
->  			 resource_size_t skipped);
->  
-> -#define CXL_NR_PARTITIONS_MAX 2
-> +#define CXL_NR_PARTITIONS_MAX 3
->  
->  struct cxl_dpa_info {
->  	u64 size;
-> @@ -380,6 +380,7 @@ enum cxl_devtype {
->  	CXL_DEVTYPE_CLASSMEM,
->  };
->  
-> +#define CXL_MAX_DC_PARTITIONS 8
->  /**
->   * struct cxl_dpa_perf - DPA performance property entry
->   * @dpa_range: range for DPA address
-> @@ -722,6 +723,31 @@ struct cxl_mbox_set_shutdown_state_in {
->  	u8 state;
->  } __packed;
->  
-> +/* See CXL 3.2 Table 8-178 get dynamic capacity config Input Payload */
-> +struct cxl_mbox_get_dc_config_in {
-> +	u8 partition_count;
-> +	u8 start_partition_index;
-> +} __packed;
-> +
-> +/* See CXL 3.2 Table 8-179 get dynamic capacity config Output Payload */
-> +struct cxl_mbox_get_dc_config_out {
-> +	u8 avail_partition_count;
-> +	u8 partitions_returned;
-> +	u8 rsvd[6];
-> +	/* See CXL 3.2 Table 8-180 */
-> +	struct cxl_dc_partition {
-> +		__le64 base;
-> +		__le64 decode_length;
-> +		__le64 length;
-> +		__le64 block_size;
-> +		__le32 dsmad_handle;
-> +		u8 flags;
-> +		u8 rsvd[3];
-> +	} __packed partition[] __counted_by(partitions_returned);
-> +	/* Trailing fields unused */
-> +} __packed;
-> +#define CXL_DCD_BLOCK_LINE_SIZE 0x40
-> +
->  /* Set Timestamp CXL 3.0 Spec 8.2.9.4.2 */
->  struct cxl_mbox_set_timestamp_in {
->  	__le64 timestamp;
-> @@ -845,9 +871,24 @@ enum {
->  int cxl_internal_send_cmd(struct cxl_mailbox *cxl_mbox,
->  			  struct cxl_mbox_cmd *cmd);
->  int cxl_dev_state_identify(struct cxl_memdev_state *mds);
-> +
-> +struct cxl_mem_dev_info {
-> +	u64 total_bytes;
-> +	u64 volatile_bytes;
-> +	u64 persistent_bytes;
-> +};
-> +
-> +struct cxl_dc_partition_info {
-> +	size_t start;
-> +	size_t size;
-> +};
-> +
-> +int cxl_dev_dc_identify(struct cxl_mailbox *mbox,
-> +			struct cxl_dc_partition_info *dc_info);
->  int cxl_await_media_ready(struct cxl_dev_state *cxlds);
->  int cxl_enumerate_cmds(struct cxl_memdev_state *mds);
->  int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info);
-> +void cxl_configure_dcd(struct cxl_memdev_state *mds, struct cxl_dpa_info *info);
->  struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev);
->  void set_exclusive_cxl_commands(struct cxl_memdev_state *mds,
->  				unsigned long *cmds);
-> @@ -860,6 +901,17 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
->  			    const uuid_t *uuid, union cxl_event *evt);
->  int cxl_get_dirty_count(struct cxl_memdev_state *mds, u32 *count);
->  int cxl_arm_dirty_shutdown(struct cxl_memdev_state *mds);
-> +
-> +static inline bool cxl_dcd_supported(struct cxl_memdev_state *mds)
-> +{
-> +	return mds->dcd_supported;
-> +}
-> +
-> +static inline void cxl_disable_dcd(struct cxl_memdev_state *mds)
-> +{
-> +	mds->dcd_supported = false;
-> +}
-> +
->  int cxl_set_timestamp(struct cxl_memdev_state *mds);
->  int cxl_poison_state_init(struct cxl_memdev_state *mds);
->  int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 7b14a154463c..bc40cf6e2fe9 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -998,6 +998,9 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	if (rc)
->  		return rc;
->  
-> +	if (cxl_dcd_supported(mds))
-> +		cxl_configure_dcd(mds, &range_info);
-> +
->  	rc = cxl_dpa_setup(cxlds, &range_info);
->  	if (rc)
->  		return rc;
-> 
+v10 changes:
+ - Using cxl_memdev_state instead of cxl_dev_state for type2 which has a
+   memory after all and facilitates the setup.
+ - Adapt core for using cxl_memdev_state allowing accel drivers to work
+   with them without further awareness of internal cxl structs.
+ - Using last DPA changes for creating DPA partitions with accel driver
+   hardcoding mds values when no mailbox.
+ - capabilities not a new field but built up when current register maps
+   is performed and returned to the caller for checking.
+ - HPA free space supporting interleaving.
+ - DPA free space droping max-min for a simple alloc size.
+
+v9 changes:
+ - adding forward definitions (Jonathan Cameron)
+ - using set_bit instead of bitmap_set (Jonathan Cameron)
+ - fix rebase problem (Jonathan Cameron)
+ - Improve error path (Jonathan Cameron)
+ - fix build problems with cxl region dependency (robot)
+ - fix error path (Simon Horman)
+
+v8 changes:
+ - Change error path labeling inside sfc cxl code (Edward Cree)
+ - Properly handling checks and error in sfc cxl code (Simon Horman)
+ - Fix bug when checking resource_size (Simon Horman)
+ - Avoid bisect problems reordering patches (Edward Cree)
+ - Fix buffer allocation size in sfc (Simon Horman)
+
+v7 changes:
+
+ - fixing kernel test robot complains
+ - fix type with Type3 mandatory capabilities (Zhi Wang)
+ - optimize code in cxl_request_resource (Kalesh Anakkur Purayil)
+ - add sanity check when dealing with resources arithmetics (Fan Ni)
+ - fix typos and blank lines (Fan Ni)
+ - keep previous log errors/warnings in sfc driver (Martin Habets)
+ - add WARN_ON_ONCE if region given is NULL
+
+v6 changes:
+
+ - update sfc mcdi_pcol.h with full hardware changes most not related to 
+   this patchset. This is an automatic file created from hardware design
+   changes and not touched by software. It is updated from time to time
+   and it required update for the sfc driver CXL support.
+ - remove CXL capabilities definitions not used by the patchset or
+   previous kernel code. (Dave Jiang, Jonathan Cameron)
+ - Use bitmap_subset instead of reinventing the wheel ... (Ben Cheatham)
+ - Use cxl_accel_memdev for new device_type created (Ben Cheatham)
+ - Fix construct_region use of rwsem (Zhi Wang)
+ - Obtain region range instead of region params (Allison Schofield, Dave
+   Jiang)
+
+v5 changes:
+
+ - Fix SFC configuration based on kernel CXL configuration
+ - Add subset check for capabilities.
+ - fix region creation when HDM decoders programmed by firmware/BIOS (Ben
+   Cheatham)
+ - Add option for creating dax region based on driver decission (Ben
+   Cheatham)
+ - Using sfc probe_data struct for keeping sfc cxl data
+
+v4 changes:
+  
+ - Use bitmap for capabilities new field (Jonathan Cameron)
+
+ - Use cxl_mem attributes for sysfs based on device type (Dave Jian)
+
+ - Add conditional cxl sfc compilation relying on kernel CXL config (kernel test robot)
+
+ - Add sfc changes in different patches for facilitating backport (Jonathan Cameron)
+
+ - Remove patch for dealing with cxl modules dependencies and using sfc kconfig plus
+   MODULE_SOFTDEP instead.
+
+v3 changes:
+
+ - cxl_dev_state not defined as opaque but only manipulated by accel drivers
+   through accessors.
+
+ - accessors names not identified as only for accel drivers.
+
+ - move pci code from pci driver (drivers/cxl/pci.c) to generic pci code
+   (drivers/cxl/core/pci.c).
+
+ - capabilities field from u8 to u32 and initialised by CXL regs discovering
+   code.
+
+ - add capabilities check and removing current check by CXL regs discovering
+   code.
+
+ - Not fail if CXL Device Registers not found. Not mandatory for Type2.
+
+ - add timeout in acquire_endpoint for solving a race with the endpoint port
+   creation.
+
+ - handle EPROBE_DEFER by sfc driver.
+
+ - Limiting interleave ways to 1 for accel driver HPA/DPA requests.
+
+ - factoring out interleave ways and granularity helpers from type2 region
+   creation patch.
+
+ - restricting region_creation for type2 to one endpoint decoder.
+
+ - add accessor for release_resource.
+
+ - handle errors and errors messages properly.
+
+
+v2 changes:
+
+I have removed the introduction about the concerns with BIOS/UEFI after the
+discussion leading to confirm the need of the functionality implemented, at
+least is some scenarios.
+
+There are two main changes from the RFC:
+
+1) Following concerns about drivers using CXL core without restrictions, the CXL
+struct to work with is opaque to those drivers, therefore functions are
+implemented for modifying or reading those structs indirectly.
+
+2) The driver for using the added functionality is not a test driver but a real
+one: the SFC ethernet network driver. It uses the CXL region mapped for PIO
+buffers instead of regions inside PCIe BARs.
+
+
+
+RFC:
+
+Current CXL kernel code is focused on supporting Type3 CXL devices, aka memory
+expanders. Type2 CXL devices, aka device accelerators, share some functionalities
+but require some special handling.
+
+First of all, Type2 are by definition specific to drivers doing something and not just
+a memory expander, so it is expected to work with the CXL specifics. This implies the CXL
+setup needs to be done by such a driver instead of by a generic CXL PCI driver
+as for memory expanders. Most of such setup needs to use current CXL core code
+and therefore needs to be accessible to those vendor drivers. This is accomplished
+exporting opaque CXL structs and adding and exporting functions for working with
+those structs indirectly.
+
+Some of the patches are based on a patchset sent by Dan Williams [1] which was just
+partially integrated, most related to making things ready for Type2 but none
+related to specific Type2 support. Those patches based on Dan´s work have Dan´s
+signing as co-developer, and a link to the original patch.
+
+A final note about CXL.cache is needed. This patchset does not cover it at all,
+although the emulated Type2 device advertises it. From the kernel point of view
+supporting CXL.cache will imply to be sure the CXL path supports what the Type2
+device needs. A device accelerator will likely be connected to a Root Switch,
+but other configurations can not be discarded. Therefore the kernel will need to
+check not just HPA, DPA, interleave and granularity, but also the available
+CXL.cache support and resources in each switch in the CXL path to the Type2
+device. I expect to contribute to this support in the following months, and
+it would be good to discuss about it when possible.
+
+[1] https://lore.kernel.org/linux-cxl/98b1f61a-e6c2-71d4-c368-50d958501b0c@intel.com/T/
+
+Alejandro Lucero (22):
+  cxl: add type2 device basic support
+  sfc: add cxl support
+  cxl: move pci generic code
+  cxl: move register/capability check to driver
+  cxl: add function for type2 cxl regs setup
+  sfc: make regs setup with checking and set media ready
+  cxl: support dpa initialization without a mailbox
+  sfc: initialize dpa
+  cxl: prepare memdev creation for type2
+  sfc: create type2 cxl memdev
+  cxl: define a driver interface for HPA free space enumeration
+  sfc: obtain root decoder with enough HPA free space
+  cxl: define a driver interface for DPA allocation
+  sfc: get endpoint decoder
+  cxl: make region type based on endpoint type
+  cxl/region: factor out interleave ways setup
+  cxl/region: factor out interleave granularity setup
+  cxl: allow region creation by type2 drivers
+  cxl: add region flag for precluding a device memory to be used for dax
+  sfc: create cxl region
+  cxl: add function for obtaining region range
+  sfc: support pio mapping based on cxl
+
+ drivers/cxl/core/core.h               |   2 +
+ drivers/cxl/core/hdm.c                |  77 +++++
+ drivers/cxl/core/mbox.c               |  30 +-
+ drivers/cxl/core/memdev.c             |  47 ++-
+ drivers/cxl/core/pci.c                | 146 +++++++++
+ drivers/cxl/core/port.c               |   8 +-
+ drivers/cxl/core/region.c             | 415 +++++++++++++++++++++++---
+ drivers/cxl/core/regs.c               |  37 +--
+ drivers/cxl/cxl.h                     | 111 +------
+ drivers/cxl/cxlmem.h                  | 103 +------
+ drivers/cxl/cxlpci.h                  |  23 +-
+ drivers/cxl/mem.c                     |  25 +-
+ drivers/cxl/pci.c                     | 114 +++----
+ drivers/cxl/port.c                    |   5 +-
+ drivers/net/ethernet/sfc/Kconfig      |  10 +
+ drivers/net/ethernet/sfc/Makefile     |   1 +
+ drivers/net/ethernet/sfc/ef10.c       |  50 +++-
+ drivers/net/ethernet/sfc/efx.c        |  15 +-
+ drivers/net/ethernet/sfc/efx_cxl.c    | 160 ++++++++++
+ drivers/net/ethernet/sfc/efx_cxl.h    |  40 +++
+ drivers/net/ethernet/sfc/net_driver.h |  12 +
+ drivers/net/ethernet/sfc/nic.h        |   3 +
+ include/cxl/cxl.h                     | 276 +++++++++++++++++
+ include/cxl/pci.h                     |  36 +++
+ tools/testing/cxl/Kbuild              |   1 -
+ tools/testing/cxl/test/mem.c          |   2 +-
+ tools/testing/cxl/test/mock.c         |  17 --
+ 27 files changed, 1350 insertions(+), 416 deletions(-)
+ create mode 100644 drivers/net/ethernet/sfc/efx_cxl.c
+ create mode 100644 drivers/net/ethernet/sfc/efx_cxl.h
+ create mode 100644 include/cxl/cxl.h
+ create mode 100644 include/cxl/pci.h
+
+
+base-commit: 73c117c17b562213242f432db2ddf1bcc22f39dd
+-- 
+2.34.1
 
