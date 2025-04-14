@@ -1,379 +1,189 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2079.outbound.protection.outlook.com [40.107.237.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3AD2199230
-	for <linux-cxl@vger.kernel.org>; Mon, 14 Apr 2025 01:46:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744595170; cv=none; b=usDlUPTQnegbtVb3KgOZvHPVe4CKXu0B0rS3LG6wp+UzLPCKKK4GDPI3B401nREOXJidPIRFysUN646RFQIcd/oEaB+FCHCevJKrmpQ1avoR2LdoE2eTiVstttRCMTduRraJGhhhjW00njxHnQ6pxnolrKYGyNyvqNkuiHqD0Kk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744595170; c=relaxed/simple;
-	bh=Ij+nQA+8RujoN7hiZEYeXEqqlyqHInUV/AL/W+TxWEE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MFYOLY8fBwNNo2LDjx5bjoki+B8baWYvJi6bukUQ/qp46ASjYw9IumEMNZlgYvCuC1LWFDtpJp9iXoUybJPwVcwC+Cvg055cDLJF3P8WdNhW0HsqA1VGIzjRUWvq3rStZg6TcgMaRF8YeNpsesEUmpZb6/Fef8hPQWvnjCPiVZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=CrSg4cpx; arc=none smtp.client-ip=95.215.58.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9DF2853EB;
+	Mon, 14 Apr 2025 13:15:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.79
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744636503; cv=fail; b=oasQ2uW0O4x2dDsfcVw7szdqaliApW1Km8LPMypXbrr9b3jHS5z76CJZx1c1fKPH+A2jdWBQbYghknoA9MM1aBOuHYf15Z746CcR/A0dY+5Gq6b3PON+n79LhSrWIgUXp+5IoRAGJPxJgubPdvl/aOWo8j1q/l5Gz4OmywJUBwo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744636503; c=relaxed/simple;
+	bh=czd2o24anLe/H/1rzvgep6DiO7vGclNO3EmnToNoxhQ=;
+	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=lG80Tg3sccDTuNxygCTjgpw+nkgzg1oBOeSug5r8zU7rbFb5q6Op7e/zseLGRubf/g6w/VyjMyaYm86zvjrdI23Lf+ln/Oxdhb6A5u746EjrdgM8WNMTRPSxjw1X0nmjBdksQPiEfyShfj0jq2lt8sdxUxnz/1h60fF2b5OJdfQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=cCimE9+k; arc=fail smtp.client-ip=40.107.237.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="CrSg4cpx"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744595166;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=C+lfN/jDmhx15H28wr+ZCKCFpi48AsJfaRSyB2d11d8=;
-	b=CrSg4cpxZSZYNp3SKC0g7z3kvxtNwWAKZ4IXaWkyVsxL5lAyyB/oOPPMb8QXm3LwC25IaO
-	8vGMpwW1mUD7/JTeBoo1hA43ON+W8hon9qzTaEDJiYpADcImlDoKPWIGBXRpFLaYJ4WWgB
-	7caFwl1Dpqv+7dP+fZH5P7DhMCIe9ts=
-From: Dongsheng Yang <dongsheng.yang@linux.dev>
-To: axboe@kernel.dk,
-	hch@lst.de,
-	dan.j.williams@intel.com,
-	gregory.price@memverge.com,
-	John@groves.net,
-	Jonathan.Cameron@Huawei.com,
-	bbhushan2@marvell.com,
-	chaitanyak@nvidia.com,
-	rdunlap@infradead.org
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	linux-bcache@vger.kernel.org,
-	nvdimm@lists.linux.dev,
-	Dongsheng Yang <dongsheng.yang@linux.dev>
-Subject: [RFC PATCH 11/11] block: introduce pcache (persistent memory to be cache for block device)
-Date: Mon, 14 Apr 2025 01:45:05 +0000
-Message-Id: <20250414014505.20477-12-dongsheng.yang@linux.dev>
-In-Reply-To: <20250414014505.20477-1-dongsheng.yang@linux.dev>
-References: <20250414014505.20477-1-dongsheng.yang@linux.dev>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="cCimE9+k"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=pfoTXW+8ZQpB7qkXLzX8PxcDgskumh4BxJ275H8qvq3lbpHd6aI4aseiH2jgGVD9Q39eIEBT5UfrloaLx7zYs3Q9+4Ba/H43pDFpyYxoVArHn7F2n3TUvEo0jGjFMrdPFwLAHudtNUc0MPZKTi2ry/iF+WQIvCMUwYZqU5IN9DBp3EgZZYT9scKOUQq2GjrEVGshp35KZT3Ex4HZ8CO9p9gNjIsbgA0UbvwbBj0c456n/F7MmZY/V6BW3laT4NULe5huDeTwX1FMOsUFYGsYT/oSE1m2nMNQqn6G5zlEYzVtM879K7+NkPWJY9jfaY+iBsPaktgnrJB8WOnHCxDetA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kbmAXxQaSjOLhpzEKi2ciOFv/tHgB8oXQ66FKt36Q5c=;
+ b=zOP/PYc+N0rDQK8JvHr5rO5oZcMrFrGNgLaG3Rxe21CMpUZSsdSvrONkGbjLrkNaZsO5CZt9tGn1p/ZUHS895nQHSiQdyJdUfTvvPcuumV5XnpuL6HJf7bTSw43CXmqwzD7A5WzHqNcT2NGQlFjRSdnY3CXWlSqyzj/12CNicWqN69zacDpyhkXZX6/6vuvLsWfCvINp2S5mDU9nYDDkgI3PZtzslSLWZni9ItzhEW/+yr9zUXodRRdNixH1dlfPS3R3RAkfRFJtdNxFrn145noAcW56LnqTfU6Bbjgfi96NY4aDx3swvwzDb+czvRmND/G797I0GSe6McErQ/2s7g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kbmAXxQaSjOLhpzEKi2ciOFv/tHgB8oXQ66FKt36Q5c=;
+ b=cCimE9+ke3RSN5i+YDjXuwR9udD7+zS0u8vj4TYzr8IxLOqGPuvp1VYLB76OdR3e1sMmymB+xU6sF+Dt5bfAJc/rHup+VrNK7gLH4K0Q+L0/FumJudj8gd8w3IBGjtlJ7IqlDh0uHeA/pH9kaQoMGGIYDzDzwG9jQUBvizTlKls=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
+ by IA1PR12MB9029.namprd12.prod.outlook.com (2603:10b6:208:3f0::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.35; Mon, 14 Apr
+ 2025 13:14:53 +0000
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79%6]) with mapi id 15.20.8632.025; Mon, 14 Apr 2025
+ 13:14:53 +0000
+Message-ID: <1989d6b4-905c-4784-ba68-5a0e97ecaeab@amd.com>
+Date: Mon, 14 Apr 2025 14:14:49 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 11/23] cxl: define a driver interface for HPA free
+ space enumeration
+Content-Language: en-US
+To: Dave Jiang <dave.jiang@intel.com>, alejandro.lucero-palau@amd.com,
+ linux-cxl@vger.kernel.org, netdev@vger.kernel.org, dan.j.williams@intel.com,
+ edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
+ pabeni@redhat.com, edumazet@google.com
+References: <20250331144555.1947819-1-alejandro.lucero-palau@amd.com>
+ <20250331144555.1947819-12-alejandro.lucero-palau@amd.com>
+ <8b954086-a896-4787-aa0b-cdf796e6d3bc@intel.com>
+From: Alejandro Lucero Palau <alucerop@amd.com>
+In-Reply-To: <8b954086-a896-4787-aa0b-cdf796e6d3bc@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P123CA0224.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:1a6::13) To DM6PR12MB4202.namprd12.prod.outlook.com
+ (2603:10b6:5:219::22)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|IA1PR12MB9029:EE_
+X-MS-Office365-Filtering-Correlation-Id: 43cac266-8fbd-42a0-f16a-08dd7b565804
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?aEZMSXF5eXdGQVhxWmM3Qk83Q25IZVFNVVdJNTR6N3dlWnRBWWJRZE84eStn?=
+ =?utf-8?B?WEd2djJrZm16VlFiTWhCVHlmeVhDd1pvREZQNitlV1dWUnpJdlA3Rm9hSVUr?=
+ =?utf-8?B?bW11OUxvNUIyb0dzQTZjdzdqQm41OFB1dzRmRjkvbTh2b3Y2RXlzYjRjM2lR?=
+ =?utf-8?B?WGZ3OFdpaUgxRXJwS1BFR1pMR3Y5MDBKMzFHK2d1S0J3MG5xUTc4bStKYWR2?=
+ =?utf-8?B?dG84N2JtMDFidUUwaUQ5cFhoTC84QWZuNUJxRGVjeEJkdUJ3S2N4V0UvZnhz?=
+ =?utf-8?B?QlZrVlB1cTVGMlRqb2JIZmQ2alN5YnpFbHl3R0NGbkpUd2JaT1FvRW16S3NG?=
+ =?utf-8?B?VlBiYXZGdmdYS0lmeFpyKzJ1c1J3NmNGN1R5a3c0ZHVaRFBqVVMyZWhkYzM2?=
+ =?utf-8?B?azYxL3NVbjM4Zk4rUmZTK0Y4TWE2SlRqeFg5Nm5qdmVWbzhJMTE3cWdBQWw4?=
+ =?utf-8?B?TDJrVFZFNjhIa0RnNG12UDN5THFIRVh6QzBFdzVaRC92SEVpbmRabWZyM0Vo?=
+ =?utf-8?B?SHZVUkJZRUw3Sm1yZDRscngxdW4vTUVzeTZEbkpBeDRGblo0OHZ3WHlMc2RN?=
+ =?utf-8?B?cjhYcmJic3JJVEdzOUxTRHRyU3pLak5KM1NwdHNUSkZRM0NQSTV5K3pOaFo2?=
+ =?utf-8?B?WFZTOHBpdE1iUjVSZTRzMStGbTVjbytIYWZqQklLVzNDUFpmS1Qvd09iV2Ux?=
+ =?utf-8?B?QllaeEh5bG1nTUlnVExsUld4VC9BeWtHT2VoTk0rb0QybWIwaDk3QzZaZm1v?=
+ =?utf-8?B?WjUrd3o0aG50M1Mycy9UeWIzdHdyTDZEOEFwS29Xc012MENtZjg1djl5SkhY?=
+ =?utf-8?B?OC95LzhpdE9VbmVoSWY5RUhCVW04cnhuemVqRDFMc2xiUUhNaW5MRk1RV3Q3?=
+ =?utf-8?B?d3I2Mmt1Ukt6TEFiSUhVVkZLcUNMVkxZRkROZGdGTWY1S0UyMDdMdEtzUVBI?=
+ =?utf-8?B?eWpBUnAvRnpiWjNtcWJRc1ptUGROdnRpd29HWUhQT1k5T3BHakJxbGZIU2ZN?=
+ =?utf-8?B?OXNrWlZYNjdNaWJWR0VVamUwMXo3QmNGN1lUelFXRkt2Q1NFRlZMTzRLSldM?=
+ =?utf-8?B?QXhId3VlSHBnbWI2aXFjSGtTNkF2d1oreWV5RnBHQWtabVpBeGNuM2hWOWFO?=
+ =?utf-8?B?Wmt3WkVUR0g3OTNrYS9nL1pnSE93R0ppU2djRlg0T3M2b3FaZ2drY0VGNFd3?=
+ =?utf-8?B?Ylp6V3cxTVR0U0VKYnJTc2FHRE1sSkd0RDd0MkJoODhXekkxVGpTRVU1R09v?=
+ =?utf-8?B?OHdLYmFnc1RQTFl0MitNMTN1K0dpQ3hubCtFVnA1RnF0MEtiOG4rOUU5M2ty?=
+ =?utf-8?B?a2hOZjJvLy9nOVJHc3JNOGNwTGVzYVI5TWgvYUF4bUpmU1l2YldSY0Y2bGg0?=
+ =?utf-8?B?NkxMelFYYlR3V1dYQmRPUENadG1jclhtSnVFMDVxS0NacFRnNmhYeW9QNmFz?=
+ =?utf-8?B?TDBtVWpDdk00QW04MVJSR1pTNGovaUZ6elorSzdCd24xdFMraFlqY1lGWG52?=
+ =?utf-8?B?WjNmTWp0TkZ0b3h2dWQrazVPU0UzckdOYkhQWDhscVlDZzJMdFVMRE5WVGVv?=
+ =?utf-8?B?ZXE1RGZMeGx4VHdMckgzeFJkQzBKSXFUMC82dElzckFVSHRYV0UzKytFdGhr?=
+ =?utf-8?B?dVpBYzJjK1ZEbWdkV3RzZmJNemlUNVRTK0Nldk40R2xrVlVYK2Zxb0tkZ0Z4?=
+ =?utf-8?B?L09pcW15YmR1eFF0bCtnM1RwQmszYTU2ZC9LQkhXTFlTdng5cWNMa3Y3NS9I?=
+ =?utf-8?B?cWxROE1NK0xFelExM0REcFVPdVRnc1dLNGZCZzBGUGVLRW10UkhZY3pFU21a?=
+ =?utf-8?B?Z0RkRCtyUStydHovUnNlOEcwbGZKbkVWQzYrR2c4bTg1YVk3cVAyM1VhdGxa?=
+ =?utf-8?B?ZzI1aFFnNGRlOS9RR3JOdzlrNFlROGZyeHk4Q3BMZEFNQzJnb0FkZy9nT2dD?=
+ =?utf-8?B?cC9rSHdRa3RaUkxYR0NWNENHc3VwMWY3ZU5jN29zblhzdkNWYWpmU1lUWk8r?=
+ =?utf-8?B?T2NhdllDRVJRPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MTJHVTVBYVh6b0UyWGc2VGdBNlNIR2toU1B0T0ptckxtVkRLNldlL2RETjZY?=
+ =?utf-8?B?bHVLWUxVcjZ6WncxMkc0SjRuQkRiU1hRVnIyTVNxWHVvWlZiM0tXalpnTjRW?=
+ =?utf-8?B?ZDVXR0lHcVVZT1RabUozNVVjb29rN3BMeFkwbVpINktZTkNmOGV6Z3JZdjhL?=
+ =?utf-8?B?RjNhc1UzT0E1VzRoM3ViREJQS0d4MERHTjZWM3pSb1JTTHJ1cFdZd1k5ZzU2?=
+ =?utf-8?B?Q1dLRDlVZnBWc3lDV0pIeVJOVS9ocTlEaWRFb3lkUmhwOExkcFNlcThKZjdZ?=
+ =?utf-8?B?TWUwdXBMTnVHTE1GTmczR0IrYnVoUzh3cTBwTDJwZHcrRnFLZFhkdWoySEJl?=
+ =?utf-8?B?cWVpdDJVUW9RSHFkb2YwT0I3ajVGSjFZUENZNGFOdDM1YmFpNGJkckZBcHdG?=
+ =?utf-8?B?SVVUZ3hvSFQwZjFsRjJTMXZ1dHhHdUVNcjJEMHI3M2s4NWk2ZG02OTdyL2E3?=
+ =?utf-8?B?QTJ5QVB2RmFqcS80c2Y2ZjllYjk4OHdnZDNXTUNuczl4dEkzQytVNVU2K29M?=
+ =?utf-8?B?SlRYK2pjejFoQlpESGFjdkYySUZaUzZhMjBjaVZwanQ0VHVMM0lVcWduTnB0?=
+ =?utf-8?B?aGJDWTNpc1V0bThNUllTVkhwTCtWLzRYbDlHeTVUUTRjM243NXhKSXcyOFVr?=
+ =?utf-8?B?c0hweStxSnhoUHNBOCtLdytQLzZmR3RHK1ZsVmdWQ3pjK01hSmRvUHZjQXJG?=
+ =?utf-8?B?WGFtL1pqSHAwS000L3ZPeC9hTFZyWnZyVlhlUVprVGFvdEY4SWwzRWtFUmR4?=
+ =?utf-8?B?dWpyRkozWXNjNUM5YzdCTC92WlQ4aTNDejN1ZWpVWFZXaVo3UXZ2V0NJZG5C?=
+ =?utf-8?B?SUViajRyNjFQTmRlWU4xalNwNy9uS2Vsa1MrN2x0MjI2UGNXd1lLSk8wRkJu?=
+ =?utf-8?B?ZjlEakJxM0wrTDlVZ0VYcDM3eW5DbGYvWDY3TjBCaVdvNXl5VmVNMytvb0oz?=
+ =?utf-8?B?dVpPcXB1WGdMY0FJZVorVmNnYklxQkhOdy9VS2tMMHdaYzFXbExleS9wb2NJ?=
+ =?utf-8?B?VmhGNDlRQjRIdWRQcVNzczNCR3RnVVFxb2lxTjNmRURqQnVXYmN3cHIrVGhO?=
+ =?utf-8?B?YjY4N3pMYzlnd1Z0VmhrbmRDaXRPdFVHdTQ3dUwxcXNsN2l1WEFyR3J4SnlC?=
+ =?utf-8?B?dDVLeXQyVGNhSXh0c25lblhLdUdsdXdWNUdqWi9sdUl6SzFYZ3crVkhhR0Y4?=
+ =?utf-8?B?VEtuSDdPNHFiRlpFb1drektieC8yVDBPVG1DWUZKZUxjb2lIT2VhSjhhd1dk?=
+ =?utf-8?B?T1laajNDV0tXMFRHcFRKVlN4a0pvQUcxYndnWmZNTDJzaHJaYmVIV1pLQWpC?=
+ =?utf-8?B?L0pWeHJrRkgyNDdtTTZQVEFockdjZGFhME9ZdmlvUTFKb3ZMeUd3K3IxSERk?=
+ =?utf-8?B?MS9CcVQ5QUdFbGkyRnFNQkxOSXZWTXpIUDN1Q1ZkYnprcEorcDdwdlhBdXhZ?=
+ =?utf-8?B?SXZacmNGK1k1MERSa2d1T1krcWNSNWg5VUx2NjF3dURsb21rRVZkUVFDcy9m?=
+ =?utf-8?B?amNiUDNTdXJPR1JQQ1crblp0czFnWWRKNEZJSng4ZG1sRnMwWGVzZ1hUNkx1?=
+ =?utf-8?B?Y1p5L1FvQTM4TmtMVCszTzZkM2V3bzV5c0grWEpZRjd6UjVYWFliSlZYRWtk?=
+ =?utf-8?B?MklydVpOandnZVl3bVFLUmdIbUJKeEZZMGRPb2haNFo3LzNTTFZpM3d0cjVR?=
+ =?utf-8?B?azd3L1AxYS9QWHFYc2t4Z0ZSS3RCN25ubzVvWldXS2VSSUpnWnBoY0YvMk1x?=
+ =?utf-8?B?Y1RhQ2FWclJ5akpFYStqamtpN2MwVHlwdkR4d0UxY25LQVM2OWFWQjdqTmdG?=
+ =?utf-8?B?UTFuUHlpRSs3QjVhL3h0cG9WTXA4OHdsM3Y2UGFndHV3UU5DalA4OWpQb2Y5?=
+ =?utf-8?B?T2FoQUY5ZHB2alBrMGliUytmazB6cktnMVl0T1kzK1hiV0txZ0Ixc3JHN3RS?=
+ =?utf-8?B?aW1TS1c3KzYzeXMwM1ljZDdMSjJFYzZkL2o5Zm5NR2tpMGgwa0E5ZGU0NzlY?=
+ =?utf-8?B?TUg3U09paUkvMEdjd1VmUVFmS25XK0hUNFQ3QlBzL3RpNUxTdUhUQVdXRXV0?=
+ =?utf-8?B?VU1FTTVQZVBLaXBiV2dwaFVpc25FWGFDNmxQN2JRM01IWTdENk9pcVNzbUdF?=
+ =?utf-8?Q?qzuxfGigDkMUAqDp1t19R3yNn?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 43cac266-8fbd-42a0-f16a-08dd7b565804
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 13:14:53.3151
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: o5oNSGqRxsRjXQWeNH73mcKDEyxW7LIsIpYRCHJKAnDo+518NaStXDkuNMJLT/xufwxiz2nka0slZ+s3ZGF2kw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB9029
 
-This patch introduces the initial integration of `pcache`, a Linux kernel
-block layer module that leverages persistent memory (PMem) as a high-performance
-caching layer for traditional block devices (e.g., SSDs, HDDs).
 
-- Persistent Memory as Cache:
-   - `pcache` uses DAX-enabled persistent memory (e.g., `/dev/pmemX`) to provide
-     fast, byte-addressable, non-volatile caching for block devices.
-   - Supports both direct-mapped and vmap-based access depending on DAX capabilities.
+On 4/11/25 22:30, Dave Jiang wrote:
+>
+> On 3/31/25 7:45 AM, alejandro.lucero-palau@amd.com wrote:
+>> From: Alejandro Lucero <alucerop@amd.com>
+>>
+>>
+>> +	if (!root) {
+>> +		dev_dbg(&endpoint->dev, "endpoint can not be related to a root port\n");
+>> +		return ERR_PTR(-ENXIO);
+>> +	}
+>> +
+>> +	root_port = &root->port;
+>> +	down_read(&cxl_region_rwsem);
+>> +	device_for_each_child(&root_port->dev, &ctx, find_max_hpa);> +	up_read(&cxl_region_rwsem);
+> Since we are moving new code to guard(),
+>
+> scoped_guard(rwsem_read, &cxl_region_rwsem)
+> 	device_for_each_child(&root_port->dev, &ctx, find_max_hpa);
+>
+> DJ
 
-- Modular Architecture:
-   - `cache_dev`: represents a persistent memory device used as a cache.
-   - `backing_dev`: represents an individual block device being cached.
-   - `logic_dev`: exposes a block device (`/dev/pcacheX`) to userspace, serving as
-     the frontend interface for I/O.
-   - `cache`: implements core caching logic (hit/miss, writeback, GC, etc.).
 
-Design Motivation:
+I'll do.
 
-`pcache` is designed to bridge the performance gap between slow-but-large storage
-(HDDs, SATA/NVMe SSDs) and emerging byte-addressable persistent memory.
-Compared to traditional block layer caching, `pcache` is persistent, low-latency, highly concurrent,
-and more amenable to modern storage-class memory devices than legacy caching designs.
-
-This patch finalizes the series by wiring up the initialization entry point
-(`pcache_init()`), sysfs bus registration, root device handling, and Kconfig glue.
-
-With this, the `pcache` subsystem is ready to load as a kernel module and serve
-as a cache engine for block I/O.
-
-Signed-off-by: Dongsheng Yang <dongsheng.yang@linux.dev>
----
- MAINTAINERS                   |   8 ++
- drivers/block/Kconfig         |   2 +
- drivers/block/Makefile        |   2 +
- drivers/block/pcache/Kconfig  |  16 +++
- drivers/block/pcache/Makefile |   4 +
- drivers/block/pcache/main.c   | 194 ++++++++++++++++++++++++++++++++++
- 6 files changed, 226 insertions(+)
- create mode 100644 drivers/block/pcache/Kconfig
- create mode 100644 drivers/block/pcache/Makefile
- create mode 100644 drivers/block/pcache/main.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 00e94bec401e..5ee5879072b9 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18026,6 +18026,14 @@ S:	Maintained
- F:	drivers/leds/leds-pca9532.c
- F:	include/linux/leds-pca9532.h
- 
-+PCACHE (Pmem as cache for block device)
-+M:	Dongsheng Yang <dongsheng.yang@linux.dev>
-+M:	Zheng Gu <cengku@gmail.com>
-+R:	Linggang Zeng <linggang.linux@gmail.com>
-+L:	linux-block@vger.kernel.org
-+S:	Maintained
-+F:	drivers/block/pcache/
-+
- PCI DRIVER FOR AARDVARK (Marvell Armada 3700)
- M:	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
- M:	Pali Rohár <pali@kernel.org>
-diff --git a/drivers/block/Kconfig b/drivers/block/Kconfig
-index a97f2c40c640..27731dbed7f6 100644
---- a/drivers/block/Kconfig
-+++ b/drivers/block/Kconfig
-@@ -192,6 +192,8 @@ config BLK_DEV_LOOP_MIN_COUNT
- 
- source "drivers/block/drbd/Kconfig"
- 
-+source "drivers/block/pcache/Kconfig"
-+
- config BLK_DEV_NBD
- 	tristate "Network block device support"
- 	depends on NET
-diff --git a/drivers/block/Makefile b/drivers/block/Makefile
-index 1105a2d4fdcb..40b96ccbd414 100644
---- a/drivers/block/Makefile
-+++ b/drivers/block/Makefile
-@@ -43,3 +43,5 @@ obj-$(CONFIG_BLK_DEV_NULL_BLK)	+= null_blk/
- obj-$(CONFIG_BLK_DEV_UBLK)			+= ublk_drv.o
- 
- swim_mod-y	:= swim.o swim_asm.o
-+
-+obj-$(CONFIG_BLK_DEV_PCACHE)	+= pcache/
-diff --git a/drivers/block/pcache/Kconfig b/drivers/block/pcache/Kconfig
-new file mode 100644
-index 000000000000..2dc77354a4b1
---- /dev/null
-+++ b/drivers/block/pcache/Kconfig
-@@ -0,0 +1,16 @@
-+config BLK_DEV_PCACHE
-+	tristate "Persistent memory for cache of Block Device (Experimental)"
-+	depends on DEV_DAX && FS_DAX
-+	help
-+	  PCACHE provides a mechanism to use persistent memory (e.g., CXL persistent memory,
-+	  DAX-enabled devices) as a high-performance cache layer in front of
-+	  traditional block devices such as SSDs or HDDs.
-+
-+	  PCACHE is implemented as a kernel module that integrates with the block
-+	  layer and supports direct access (DAX) to persistent memory for low-latency,
-+	  byte-addressable caching.
-+
-+	  Note: This feature is experimental and should be tested thoroughly
-+	  before use in production environments.
-+
-+	  If unsure, say 'N'.
-diff --git a/drivers/block/pcache/Makefile b/drivers/block/pcache/Makefile
-new file mode 100644
-index 000000000000..0e7316ae20e1
---- /dev/null
-+++ b/drivers/block/pcache/Makefile
-@@ -0,0 +1,4 @@
-+pcache-y := main.o cache_dev.o backing_dev.o segment.o meta_segment.o logic_dev.o cache.o cache_segment.o cache_key.o cache_req.o cache_writeback.o cache_gc.o
-+
-+obj-$(CONFIG_BLK_DEV_PCACHE) += pcache.o
-+
-diff --git a/drivers/block/pcache/main.c b/drivers/block/pcache/main.c
-new file mode 100644
-index 000000000000..d0430c64aff3
---- /dev/null
-+++ b/drivers/block/pcache/main.c
-@@ -0,0 +1,194 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Copyright(C) 2025, Dongsheng Yang <dongsheng.yang@linux.dev>
-+ */
-+
-+#include <linux/capability.h>
-+#include <linux/device.h>
-+#include <linux/kernel.h>
-+#include <linux/parser.h>
-+
-+#include "pcache_internal.h"
-+#include "cache_dev.h"
-+#include "logic_dev.h"
-+
-+enum {
-+	PCACHE_REG_OPT_ERR		= 0,
-+	PCACHE_REG_OPT_FORCE,
-+	PCACHE_REG_OPT_FORMAT,
-+	PCACHE_REG_OPT_PATH,
-+};
-+
-+static const match_table_t register_opt_tokens = {
-+	{ PCACHE_REG_OPT_FORCE,		"force=%u" },
-+	{ PCACHE_REG_OPT_FORMAT,	"format=%u" },
-+	{ PCACHE_REG_OPT_PATH,		"path=%s" },
-+	{ PCACHE_REG_OPT_ERR,		NULL	}
-+};
-+
-+static int parse_register_options(char *buf,
-+		struct pcache_cache_dev_register_options *opts)
-+{
-+	substring_t args[MAX_OPT_ARGS];
-+	char *o, *p;
-+	int token, ret = 0;
-+
-+	o = buf;
-+
-+	while ((p = strsep(&o, ",\n")) != NULL) {
-+		if (!*p)
-+			continue;
-+
-+		token = match_token(p, register_opt_tokens, args);
-+		switch (token) {
-+		case PCACHE_REG_OPT_PATH:
-+			if (match_strlcpy(opts->path, &args[0],
-+				PCACHE_PATH_LEN) == 0) {
-+				ret = -EINVAL;
-+				break;
-+			}
-+			break;
-+		case PCACHE_REG_OPT_FORCE:
-+			if (match_uint(args, &token)) {
-+				ret = -EINVAL;
-+				goto out;
-+			}
-+			opts->force = (token != 0);
-+			break;
-+		case PCACHE_REG_OPT_FORMAT:
-+			if (match_uint(args, &token)) {
-+				ret = -EINVAL;
-+				goto out;
-+			}
-+			opts->format = (token != 0);
-+			break;
-+		default:
-+			pr_err("unknown parameter or missing value '%s'\n", p);
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+	}
-+
-+out:
-+	return ret;
-+}
-+
-+static ssize_t cache_dev_unregister_store(const struct bus_type *bus, const char *ubuf,
-+				      size_t size)
-+{
-+	u32 cache_dev_id;
-+	int ret;
-+
-+	if (!capable(CAP_SYS_ADMIN))
-+		return -EPERM;
-+
-+	if (sscanf(ubuf, "cache_dev_id=%u", &cache_dev_id) != 1)
-+		return -EINVAL;
-+
-+	ret = cache_dev_unregister(cache_dev_id);
-+	if (ret < 0)
-+		return ret;
-+
-+	return size;
-+}
-+
-+static ssize_t cache_dev_register_store(const struct bus_type *bus, const char *ubuf,
-+				      size_t size)
-+{
-+	struct pcache_cache_dev_register_options opts = { 0 };
-+	char *buf;
-+	int ret;
-+
-+	if (!capable(CAP_SYS_ADMIN))
-+		return -EPERM;
-+
-+	buf = kmemdup(ubuf, size + 1, GFP_KERNEL);
-+	if (IS_ERR(buf)) {
-+		pr_err("failed to dup buf for adm option: %d", (int)PTR_ERR(buf));
-+		return PTR_ERR(buf);
-+	}
-+	buf[size] = '\0';
-+
-+	ret = parse_register_options(buf, &opts);
-+	if (ret < 0) {
-+		kfree(buf);
-+		return ret;
-+	}
-+	kfree(buf);
-+
-+	ret = cache_dev_register(&opts);
-+	if (ret < 0)
-+		return ret;
-+
-+	return size;
-+}
-+
-+static BUS_ATTR_WO(cache_dev_unregister);
-+static BUS_ATTR_WO(cache_dev_register);
-+
-+static struct attribute *pcache_bus_attrs[] = {
-+	&bus_attr_cache_dev_unregister.attr,
-+	&bus_attr_cache_dev_register.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group pcache_bus_group = {
-+	.attrs = pcache_bus_attrs,
-+};
-+__ATTRIBUTE_GROUPS(pcache_bus);
-+
-+const struct bus_type pcache_bus_type = {
-+	.name		= "pcache",
-+	.bus_groups	= pcache_bus_groups,
-+};
-+
-+static void pcache_root_dev_release(struct device *dev)
-+{
-+}
-+
-+struct device pcache_root_dev = {
-+	.init_name =    "pcache",
-+	.release =      pcache_root_dev_release,
-+};
-+
-+static int __init pcache_init(void)
-+{
-+	int ret;
-+
-+	ret = device_register(&pcache_root_dev);
-+	if (ret < 0) {
-+		put_device(&pcache_root_dev);
-+		goto err;
-+	}
-+
-+	ret = bus_register(&pcache_bus_type);
-+	if (ret < 0)
-+		goto device_unregister;
-+
-+	ret = pcache_blkdev_init();
-+	if (ret < 0)
-+		goto bus_unregister;
-+
-+	return 0;
-+
-+bus_unregister:
-+	bus_unregister(&pcache_bus_type);
-+device_unregister:
-+	device_unregister(&pcache_root_dev);
-+err:
-+
-+	return ret;
-+}
-+
-+static void pcache_exit(void)
-+{
-+	pcache_blkdev_exit();
-+	bus_unregister(&pcache_bus_type);
-+	device_unregister(&pcache_root_dev);
-+}
-+
-+MODULE_AUTHOR("Dongsheng Yang <dongsheng.yang@linux.dev>");
-+MODULE_DESCRIPTION("PMem for Cache of block device");
-+MODULE_LICENSE("GPL v2");
-+module_init(pcache_init);
-+module_exit(pcache_exit);
--- 
-2.34.1
+Thanks
 
