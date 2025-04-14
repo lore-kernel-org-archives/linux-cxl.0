@@ -1,102 +1,288 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83AB12798F1
-	for <linux-cxl@vger.kernel.org>; Mon, 14 Apr 2025 15:44:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6438228B505;
+	Mon, 14 Apr 2025 16:08:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744645455; cv=none; b=D93oU5gdQ+RfseiBNOSCfBy9cBUDVdBrvurMKanhauqlAOq8wuor21AgOfQ5Ur+fXfooAl3zUreW8XG7QprEZUvsHSDFr/CbJCE3BN4gByr01MviuZG1VF9nHJaDC13e2VdATK5ohtPvzFztfJCmCqXwJ3W5oUT1C9OTcKlnCEk=
+	t=1744646907; cv=none; b=LLcltbzZD3cu9FsrWX648yS/XAKDHdD6eykoduK3XEJok6cTb+PlbCWRjqQIh6mavVqmyyofDQeKJp8K1RdTAsNLhsF0OWKR69rQw5pzDZh4NsJSmouNXL7KbaOLmGMMl4N9hzlrKtitFRikzjJoN228ypvPcVYAqkbJlPjY3BQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744645455; c=relaxed/simple;
-	bh=d+yoQOiN5wPxaVA80igHIFjXFqll7cRQhIlK/hqu4WU=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JbtgKmL/Iovyd3YxSkfun5HfRlkoiciAxg4oBhtBALP07WZb/BKlHmpzUgln2PtQkEL7q5C9vrMJmj92v1QmeRaqDGsGBqdXMmPx53jMfNO7hRqNDPh5YYrsSgmW3HzWKpuu1+D9Bp4khbd+II3yOmYL6MGKHmfKNPTZZEe4M8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bVvFoZgJ; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bVvFoZgJ"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-736b0c68092so3840081b3a.0
-        for <linux-cxl@vger.kernel.org>; Mon, 14 Apr 2025 08:44:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744645454; x=1745250254; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=MetnSWs0nq1ZKwVMm1SZwshOSb7iM6OHgwlS7spNFUA=;
-        b=bVvFoZgJJPCb1dova9kDdPD7OpBtkeskwI7dCUJ5Drofv3Q0saSg4kRIfAbv8aIzpp
-         3CG/TYGAf9KgDUcF3/GqInOqtEqkOiGjtukD62yed678kOdU/NSZHqOkQA+YeB0ZEgR/
-         gB2ipypN717Zni29pWqGf2NDbGBCROOv+94QlqpAj9uACuOFmmtb6wx+edlhcLB1t6bb
-         zQYFniMSu+3GN050nstA0f/R+2qa3rebYBwkE6gP7wAEtYgNmZFUdfC/QG0CclY7eD2J
-         zD39+0r9Ki/Ck2hKnkrXKALVS5AAckcmvXsMbB5xDtqD8LiRpn7nT/RpzpvNrnKFLpvK
-         yiHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744645454; x=1745250254;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MetnSWs0nq1ZKwVMm1SZwshOSb7iM6OHgwlS7spNFUA=;
-        b=aduGDqWqvNrd2Y9OUlh8nQB5w2mTfuD/PwVmeK+Z05FMEvUxeltWuVSsVP8LrqnBaN
-         8u9wvplKtsUB5Z3wNIv9CXoHFZbwwVgzbG5ZHYGJY4wep2QxrjsXsz1fIiSVyEQXgrsh
-         f+OR6q+pZTtB7XdIZFsPXjDFB7mZN9XcQ8vCGI5IJVKWgnolLL8sbp8lcPM7Vo3MA9BK
-         BlarkVlHIMoveHgw9cHNy61tom6JTOsgvIf864AyjWXbt75HmCzY3wtVR+VG74cDTwQg
-         Y0Zrb2gAYPy3yMz4kUwttTqMvz3yRbMXHBJ0kF36PaXlCHN8dOV/jtyETmaFhi8R28AB
-         5KxA==
-X-Forwarded-Encrypted: i=1; AJvYcCWA3UiEWOqacf26xsAcz3nl+t5dPMJ42ICwmgM2M6ac6DFKS7YOilbU3h4ES3PV8Wcb/HHVN4CH/4E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnucVnfmNsFOBINmKAV+7NpFqtIPTktsKr3hST2dIHVn/oNLp3
-	obN5mPTi/A5fOekDKDJeGhbKG1XKvvPW4u0giFx+WaaNodxvQtJu57MzGA==
-X-Gm-Gg: ASbGncuUCCPLMmHWF61Wx8ZT5uP6imjYC3oZvOyf85osmACeYBPbSYJftVN3zj/5YhX
-	rJsd8c6fOEE0UVnBjv/sEoGJPRCCLPDoiTZbdPkOKvDgIq5P5Px7hdjL5uEx9kADSu4PbhwBxtq
-	TRDv4HzcfOdw5dAAfXGahHW3jJMg0G0yKGWZEai1lR1DIg7HytOoUQOEjg4y5r3W4hCM7x+4Dl3
-	7Zn7B/FrTA0uDq+kc3I19PbzGm22J5qAInnIh+VYzKgQ5pr/1hpMeCDVNaChUswQUXovrY6ooM6
-	UAvFxCkdwo6GxcEpnKFN50kgp8L2y8TLvYl0
-X-Google-Smtp-Source: AGHT+IEqcjxulOQzOxdwWrWqATGggSA8ehreXXU0YQ0R98Atb2/pn7p2pg1A4rxYW0oNMDj59tlPTg==
-X-Received: by 2002:a17:90b:5242:b0:2fe:e9c6:689e with SMTP id 98e67ed59e1d1-30823670094mr18264782a91.8.1744645453550;
-        Mon, 14 Apr 2025 08:44:13 -0700 (PDT)
-Received: from debian ([2607:fb90:8e61:8954:1427:df6e:93c8:2b14])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306df08f71dsm11219783a91.23.2025.04.14.08.44.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 08:44:12 -0700 (PDT)
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Mon, 14 Apr 2025 08:44:07 -0700
-To: Gregory Price <gourry@gourry.net>
-Cc: nifan.cxl@gmail.com, jonathan.cameron@huawei.com, qemu-devel@nongnu.org,
-	linux-cxl@vger.kernel.org, a.manzanares@samsung.com,
-	dave@stgolabs.net, nmtadam.samsung@gmail.com, anisa.su887@gmail.com
-Subject: Re: [RFC 0/3] Qemu FM emulation
-Message-ID: <Z_0tRwHNXD8idZl-@debian>
-References: <20250408043051.430340-1-nifan.cxl@gmail.com>
- <Z_U69HlC_aKLghwL@gourry-fedora-PF4VCD3F>
+	s=arc-20240116; t=1744646907; c=relaxed/simple;
+	bh=4tzjbsPIalsIkZI1FaTcEcaA14AfUu0LM+YlbM/mrZA=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SxoPM2z+khZu3vLNyNO4PadmylIKY6w7e/YfzCV8hclhRo/CwovH2pUVbXQWbpHPMcLNpKb5t/L8IvWQ03WcbwiuVZ6bHJVoYZVmhvnt9ednnadCfqY1j5B8LhzMAEQSxdVQTGgpGNfa0RHhFKTM7ZIta0FcGtPltFCPu1ZJoo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZbsXt0t7tz6M4wC;
+	Tue, 15 Apr 2025 00:03:58 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 518631402FC;
+	Tue, 15 Apr 2025 00:07:54 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 14 Apr
+ 2025 18:07:53 +0200
+Date: Mon, 14 Apr 2025 17:07:52 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Ira Weiny <ira.weiny@intel.com>
+CC: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, "Dan
+ Williams" <dan.j.williams@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
+	Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, <linux-cxl@vger.kernel.org>,
+	<nvdimm@lists.linux.dev>, <linux-kernel@vger.kernel.org>, Li Ming
+	<ming.li@zohomail.com>
+Subject: Re: [PATCH v9 12/19] cxl/extent: Process dynamic partition events
+ and realize region extents
+Message-ID: <20250414170752.00002356@huawei.com>
+In-Reply-To: <20250413-dcd-type2-upstream-v9-12-1d4911a0b365@intel.com>
+References: <20250413-dcd-type2-upstream-v9-0-1d4911a0b365@intel.com>
+	<20250413-dcd-type2-upstream-v9-12-1d4911a0b365@intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_U69HlC_aKLghwL@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, Apr 08, 2025 at 11:04:20AM -0400, Gregory Price wrote:
-> On Mon, Apr 07, 2025 at 09:20:27PM -0700, nifan.cxl@gmail.com wrote:
-> > From: Fan Ni <fan.ni@samsung.com>
-> > 
-> > The RFC provides a way for FM emulation in Qemu. The goal is to provide
-> > a context where we can have more FM emulation discussions and share solutions
-> > for a reasonable FM implementation in Qemu.
-> >
-> ... snip ...
+On Sun, 13 Apr 2025 17:52:20 -0500
+Ira Weiny <ira.weiny@intel.com> wrote:
+
+> A dynamic capacity device (DCD) sends events to signal the host for
+> changes in the availability of Dynamic Capacity (DC) memory.  These
+> events contain extents describing a DPA range and meta data for memory
+> to be added or removed.  Events may be sent from the device at any time.
 > 
-> Took a browse of the series, and I like this method.  It seems simple
-> and straight-forward, avoids any complex networking between the vms and
-> gives us what we want.
+> Three types of events can be signaled, Add, Release, and Force Release.
 > 
-> I'll wait for Jonathan's commentary, but solid prototype (bn_n)b
+> On add, the host may accept or reject the memory being offered.  If no
+> region exists, or the extent is invalid, the extent should be rejected.
+> Add extent events may be grouped by a 'more' bit which indicates those
+> extents should be processed as a group.
 > 
-> ~Gregory
+> On remove, the host can delay the response until the host is safely not
+> using the memory.  If no region exists the release can be sent
+> immediately.  The host may also release extents (or partial extents) at
+> any time.  Thus the 'more' bit grouping of release events is of less
+> value and can be ignored in favor of sending multiple release capacity
+> responses for groups of release events.
+> 
+> Force removal is intended as a mechanism between the FM and the device
+> and intended only when the host is unresponsive, out of sync, or
+> otherwise broken.  Purposely ignore force removal events.
+> 
+> Regions are made up of one or more devices which may be surfacing memory
+> to the host.  Once all devices in a region have surfaced an extent the
+> region can expose a corresponding extent for the user to consume.
+> Without interleaving a device extent forms a 1:1 relationship with the
+> region extent.  Immediately surface a region extent upon getting a
+> device extent.
+> 
+> Per the specification the device is allowed to offer or remove extents
+> at any time.  However, anticipated use cases can expect extents to be
+> offered, accepted, and removed in well defined chunks.
+> 
+> Simplify extent tracking with the following restrictions.
+> 
+> 	1) Flag for removal any extent which overlaps a requested
+> 	   release range.
+> 	2) Refuse the offer of extents which overlap already accepted
+> 	   memory ranges.
+> 	3) Accept again a range which has already been accepted by the
+> 	   host.  Eating duplicates serves three purposes.
+> 	   3a) This simplifies the code if the device should get out of
+> 	       sync with the host.  And it should be safe to acknowledge
+> 	       the extent again.
+> 	   3b) This simplifies the code to process existing extents if
+> 	       the extent list should change while the extent list is
+> 	       being read.
+> 	   3c) Duplicates for a given partition which are seen during a
+> 	       race between the hardware surfacing an extent and the cxl
+> 	       dax driver scanning for existing extents will be ignored.
+> 
+> 	   NOTE: Processing existing extents is done in a later patch.
+> 
+> Management of the region extent devices must be synchronized with
+> potential uses of the memory within the DAX layer.  Create region extent
+> devices as children of the cxl_dax_region device such that the DAX
+> region driver can co-drive them and synchronize with the DAX layer.
+> Synchronization and management is handled in a subsequent patch.
+> 
+> Tag support within the DAX layer is not yet supported.  To maintain
+> compatibility with legacy DAX/region processing only tags with a value
+> of 0 are allowed.  This defines existing DAX devices as having a 0 tag
+> which makes the most logical sense as a default.
+> 
+> Process DCD events and create region devices.
+> 
+> Based on an original patch by Navneet Singh.
+> 
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Li Ming <ming.li@zohomail.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+I've forgotten what our policy on spec references in new
+code. Maybe update them to 3.2?
 
-Hi Jonathan,
+A few tiny little things inline from a fresh look.
 
-Any feedback for this RFC?
+Thanks,
 
-Fan
+Jonathan
+
+> diff --git a/drivers/cxl/core/extent.c b/drivers/cxl/core/extent.c
+> new file mode 100644
+> index 000000000000..6df277caf974
+> --- /dev/null
+> +++ b/drivers/cxl/core/extent.c
+
+> +static int cxlr_rm_extent(struct device *dev, void *data)
+> +{
+> +	struct region_extent *region_extent = to_region_extent(dev);
+> +	struct range *region_hpa_range = data;
+> +
+> +	if (!region_extent)
+> +		return 0;
+> +
+> +	/*
+> +	 * Any extent which 'touches' the released range is removed.
+> +	 */
+
+Single line comment syntax.
+
+> +	if (range_overlaps(region_hpa_range, &region_extent->hpa_range)) {
+> +		dev_dbg(dev, "Remove region extent HPA %pra\n",
+> +			&region_extent->hpa_range);
+> +		region_rm_extent(region_extent);
+> +	}
+> +	return 0;
+> +}
+
+
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index b3dd119d166a..de01c6684530 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -930,6 +930,60 @@ int cxl_enumerate_cmds(struct cxl_memdev_state *mds)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_enumerate_cmds, "CXL");
+>  
+> +static int cxl_validate_extent(struct cxl_memdev_state *mds,
+> +			       struct cxl_extent *extent)
+> +{
+> +	struct cxl_dev_state *cxlds = &mds->cxlds;
+> +	struct device *dev = mds->cxlds.dev;
+> +	u64 start, length;
+> +
+> +	start = le64_to_cpu(extent->start_dpa);
+> +	length = le64_to_cpu(extent->length);
+Set these at declaration..
+
+> +
+> +	struct range ext_range = (struct range){
+> +		.start = start,
+> +		.end = start + length - 1,
+> +	};
+
+With the above set at declaration this is then not declaration
+mid code which are still generally looked at in a funny way in kernel!
+
+> +
+> +	if (le16_to_cpu(extent->shared_extn_seq) != 0) {
+> +		dev_err_ratelimited(dev,
+> +				    "DC extent DPA %pra (%pU) can not be shared\n",
+> +				    &ext_range, extent->uuid);
+> +		return -ENXIO;
+> +	}
+> +
+> +	if (!uuid_is_null((const uuid_t *)extent->uuid)) {
+> +		dev_err_ratelimited(dev,
+> +				    "DC extent DPA %pra (%pU); tags not supported\n",
+> +				    &ext_range, extent->uuid);
+> +		return -ENXIO;
+> +	}
+> +
+> +	/* Extents must be within the DC partition boundary */
+> +	for (int i = 0; i < cxlds->nr_partitions; i++) {
+> +		struct cxl_dpa_partition *part = &cxlds->part[i];
+> +
+> +		if (part->mode != CXL_PARTMODE_DYNAMIC_RAM_A)
+> +			continue;
+> +
+> +		struct range partition_range = (struct range) {
+
+Maybe move the declaration up and just assign it here.
+
+> +			.start = part->res.start,
+> +			.end = part->res.end,
+> +		};
+> +
+> +		if (range_contains(&partition_range, &ext_range)) {
+> +			dev_dbg(dev, "DC extent DPA %pra (DCR:%pra)(%pU)\n",
+> +				&ext_range, &partition_range, extent->uuid);
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	dev_err_ratelimited(dev,
+> +			    "DC extent DPA %pra (%pU) is not in a valid DC partition\n",
+> +			    &ext_range, extent->uuid);
+> +	return -ENXIO;
+> +}
+
+> +/**
+> + * struct cxled_extent - Extent within an endpoint decoder
+> + * @cxled: Reference to the endpoint decoder
+> + * @dpa_range: DPA range this extent covers within the decoder
+> + * @uuid: uuid from device for this extent
+> + */
+> +struct cxled_extent {
+> +	struct cxl_endpoint_decoder *cxled;
+> +	struct range dpa_range;
+> +	uuid_t uuid;
+> +};
+
+> +/* See CXL 3.1 8.2.9.2.1.6 */
+> +enum dc_event {
+> +	DCD_ADD_CAPACITY,
+> +	DCD_RELEASE_CAPACITY,
+> +	DCD_FORCED_CAPACITY_RELEASE,
+> +	DCD_REGION_CONFIGURATION_UPDATED,
+
+Perhaps a comment here that the other values don't apply to the
+normal mailbox interface (they are FM only).
+Might avoid confusion.
+
+> +};
+
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index 34a606c5ead0..63a38e449454 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+
+> +/*
+> + * Add Dynamic Capacity Response
+> + * CXL rev 3.1 section 8.2.9.9.9.3; Table 8-168 & Table 8-169
+> + */
+> +struct cxl_mbox_dc_response {
+> +	__le32 extent_list_size;
+> +	u8 flags;
+> +	u8 reserved[3];
+> +	struct updated_extent_list {
+> +		__le64 dpa_start;
+> +		__le64 length;
+> +		u8 reserved[8];
+> +	} __packed extent_list[];
+
+counted_by marking always nice to have and here it's the extent_list_size I think
+(which has an odd name giving it is a count, not a size... *dramatic sigh*)
+
+
+> +} __packed;
+
