@@ -1,44 +1,43 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C78129A3CE;
-	Tue, 15 Apr 2025 13:25:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C04A7297A55;
+	Tue, 15 Apr 2025 13:27:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744723520; cv=none; b=N3XwYZgdYJC/Qcqo/zsRCe7QBK8oQbi+SBOjujoL47dM7+cMhciciEyMWx8pxILn/jIEIdGSx8EMOOTvVthwKDpuzHOIvFJVAYyuMffyDz8FmLxqVmqXB0inJ1ec60/3GeFBz5EKQ+a9HPHZ4XrgIfogyKrYQTrRlbkjtQVKABc=
+	t=1744723675; cv=none; b=O+hkm/uoupPpBChHs/pzOpNRyPv+iZZ7CGjcYGI/kJdiutCqazA5BTrBb33dU8I6cUvwNd8z4j4/1rx5x0+8tRZq+Tx3a+OHcE5cQ/dkXA6rQKfupY1VifBlFcSxcqv1p0xrrDb+mgnusP+Ssrbt/cm2WgWyjecEn9TiaKXQBhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744723520; c=relaxed/simple;
-	bh=If28B3JjdxCFnpnc5LxmELzQzUJD8LU8DUALcTdrFz8=;
+	s=arc-20240116; t=1744723675; c=relaxed/simple;
+	bh=5vIWnpx34IrIwlMaWnfTMqgc0h9UiEmWCwYdJOSdYx4=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=O0CVYP34ntqddPsqLKI7Wx7lWmiAqK8VOSo0rOvvj+XHrHXLt7W7uVd1eHp3uRlTIIiPbgurq7eDydr/RWBaaYeMTmHSnUYT3Ad95/f9TG2C6TcWNuRDbURZJ+mVVq3/BNXRMTwfdO3VJ8hA9H7J4ccxbDhm0O4Vsr8dOumGqwQ=
+	 MIME-Version:Content-Type; b=U2m7Valhl+pu+qqX2xsy0tGIQ9dtvDMrxS1VeQV+b0rlIKepK465AWx3Z2yKFH41G/gIS5YNaWHHk8E0IibwdJ+rnC1gy/TewrZHdL565SbpdlxAMW6r6hJVmiE1doIApXAnHuaLmHxNycz8B+KLTyKuKgZdh7UrHsnDrHOa9z0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZcPtR3KzHz6K99P;
-	Tue, 15 Apr 2025 21:21:03 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZcPxR72hcz6K9YH;
+	Tue, 15 Apr 2025 21:23:39 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id E069F140133;
-	Tue, 15 Apr 2025 21:25:14 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 6D3EB1402C3;
+	Tue, 15 Apr 2025 21:27:51 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 15 Apr
- 2025 15:25:14 +0200
-Date: Tue, 15 Apr 2025 14:25:12 +0100
+ 2025 15:27:50 +0200
+Date: Tue, 15 Apr 2025 14:27:49 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To: <alejandro.lucero-palau@amd.com>
 CC: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
 	<dan.j.williams@intel.com>, <edward.cree@amd.com>, <davem@davemloft.net>,
 	<kuba@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>,
-	<dave.jiang@intel.com>, Alejandro Lucero <alucerop@amd.com>, Martin Habets
-	<habetsm.xilinx@gmail.com>, Zhi Wang <zhi@nvidia.com>, Edward Cree
-	<ecree.xilinx@gmail.com>
-Subject: Re: [PATCH v13 06/22] sfc: make regs setup with checking and set
- media ready
-Message-ID: <20250415142512.00004edd@huawei.com>
-In-Reply-To: <20250414151336.3852990-7-alejandro.lucero-palau@amd.com>
+	<dave.jiang@intel.com>, Alejandro Lucero <alucerop@amd.com>, Ben Cheatham
+	<benjamin.cheatham@amd.com>
+Subject: Re: [PATCH v13 07/22] cxl: support dpa initialization without a
+ mailbox
+Message-ID: <20250415142749.00002b4e@huawei.com>
+In-Reply-To: <20250414151336.3852990-8-alejandro.lucero-palau@amd.com>
 References: <20250414151336.3852990-1-alejandro.lucero-palau@amd.com>
-	<20250414151336.3852990-7-alejandro.lucero-palau@amd.com>
+	<20250414151336.3852990-8-alejandro.lucero-palau@amd.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -51,83 +50,22 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Mon, 14 Apr 2025 16:13:20 +0100
-<alejandro.lucero-palau@amd.com> wrote:
+On Mon, 14 Apr 2025 16:13:21 +0100
+alejandro.lucero-palau@amd.com wrote:
 
 > From: Alejandro Lucero <alucerop@amd.com>
 > 
-> Use cxl code for registers discovery and mapping.
+> Type3 relies on mailbox CXL_MBOX_OP_IDENTIFY command for initializing
+> memdev state params which end up being used for DMA initialization.
 > 
-> Validate capabilities found based on those registers against expected
-> capabilities.
+> Allow a Type2 driver to initialize DPA simply by giving the size of its
+> volatile and/or non-volatile hardware partitions.
 > 
-> Set media ready explicitly as there is no means for doing so without
-> a mailbox and without the related cxl register, not mandatory for type2.
+> Export cxl_dpa_setup as well for initializing those added DPA partitions
+> with the proper resources.
 > 
 > Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> Reviewed-by: Martin Habets <habetsm.xilinx@gmail.com>
-> Reviewed-by: Zhi Wang <zhi@nvidia.com>
-> Acked-by: Edward Cree <ecree.xilinx@gmail.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
->  drivers/net/ethernet/sfc/efx_cxl.c | 28 ++++++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
-> index 753d5b7d49b6..885b46c6bd5a 100644
-> --- a/drivers/net/ethernet/sfc/efx_cxl.c
-> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
-> @@ -21,8 +21,11 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
->  {
->  	struct efx_nic *efx = &probe_data->efx;
->  	struct pci_dev *pci_dev = efx->pci_dev;
-> +	DECLARE_BITMAP(expected, CXL_MAX_CAPS);
+> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
 
-Can do the = {} trick to avoid explicit clear below.
-
-> +	DECLARE_BITMAP(found, CXL_MAX_CAPS);
-
-I'm not immediately able to find where found is initialized.
-
->  	struct efx_cxl *cxl;
->  	u16 dvsec;
-> +	int rc;
->  
->  	probe_data->cxl_pio_initialised = false;
->  
-> @@ -43,6 +46,31 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
->  	if (!cxl)
->  		return -ENOMEM;
->  
-> +	bitmap_clear(expected, 0, CXL_MAX_CAPS);
-> +	set_bit(CXL_DEV_CAP_HDM, expected);
-> +	set_bit(CXL_DEV_CAP_HDM, expected);
-> +	set_bit(CXL_DEV_CAP_RAS, expected);
-> +
-> +	rc = cxl_pci_accel_setup_regs(pci_dev, &cxl->cxlds, found);
-> +	if (rc) {
-> +		pci_err(pci_dev, "CXL accel setup regs failed");
-> +		return rc;
-> +	}
-> +
-> +	/*
-> +	 * Checking mandatory caps are there as, at least, a subset of those
-> +	 * found.
-> +	 */
-> +	if (cxl_check_caps(pci_dev, expected, found))
-> +		return -ENXIO;
-> +
-> +	/*
-> +	 * Set media ready explicitly as there are neither mailbox for checking
-> +	 * this state nor the CXL register involved, both no mandatory for
-
-not mandatory
-
-> +	 * type2.
-> +	 */
-> +	cxl->cxlds.media_ready = true;
-> +
->  	probe_data->cxl = cxl;
->  
->  	return 0;
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
