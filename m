@@ -1,42 +1,41 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05C631B4F15;
-	Tue, 15 Apr 2025 13:57:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CCC7136349;
+	Tue, 15 Apr 2025 14:01:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744725424; cv=none; b=cO584i/5FUEVJN3oUoL7JAy/Rf567BIpIhTxplWFR9jB7k5Ra3yU4K/HZdCAR8tTFFBuCthbKAT2aTKuwV3gaVXt0DvfH/JoOq48cl1qnLUC+dt5o6s0rWTEC/RbnysCO9Nk3yXwCfa9Y7zndA1Q8eOaC+RX9LGOp2AHVZrverg=
+	t=1744725716; cv=none; b=jfUpSrvkMhYZXq4tAOe4ZBdUhCHPMj5bslVZ5eURwQqOVbBL3ObkaBrWRIZSTWjEPzB7ITYC/BicWJWKEvKXwviL4Xr41XaZi96/bbxekdcsPKwLTwGmRt+DoVCFIEaCIh2NGvRBxOmFtWSZR+LbfQOj451fZCIjpGnxt/CfDSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744725424; c=relaxed/simple;
-	bh=qMwkOfmMaZt43vQm1o/IEEFHG/9JZ/C7vbQmqSwKzxA=;
+	s=arc-20240116; t=1744725716; c=relaxed/simple;
+	bh=ZDZ3kTOH3WzYKYGM1zYcLDGYv1+7JCX43o7jH6uQRt0=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LEhkKspFwp4Ck8x5QfMUV03rQhYGmXQYRSrxfisCKAAAmkrQkcv6jHLxRK0ST5RpDQGPRq46Ev/H3lrNtWr9ss43SHL6xFEBounXyd2tLzhnSaDJYTxVxPsZ9wi/MP0HG+XP89ZOO2XoyvCC9X6tktrPwVj4YrO7wx/i23Cpv/I=
+	 MIME-Version:Content-Type; b=uoscjNMjSWZSMGVPzxWcP+WkSbHeOMxr/naFVIV5eqB3Ht7Cgn34tDgbz/82BCD757gUM6W3cBb3z38M14uUHbfpxk7oe6PHUDcBqn0F9eRLqRJdM9H0SN12/PIwXlmukQYPFoC7jRct70hGM3u2W1TFhBmim7oucV+0skl8jm0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZcQb40HqYz6K9Z2;
-	Tue, 15 Apr 2025 21:52:48 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZcQhx62xNz6LD6T;
+	Tue, 15 Apr 2025 21:57:53 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 84911140144;
-	Tue, 15 Apr 2025 21:56:59 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 6CCDB140144;
+	Tue, 15 Apr 2025 22:01:51 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 15 Apr
- 2025 15:56:58 +0200
-Date: Tue, 15 Apr 2025 14:56:57 +0100
+ 2025 16:01:50 +0200
+Date: Tue, 15 Apr 2025 15:01:49 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <alejandro.lucero-palau@amd.com>
-CC: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<dan.j.williams@intel.com>, <edward.cree@amd.com>, <davem@davemloft.net>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>,
-	<dave.jiang@intel.com>, Alejandro Lucero <alucerop@amd.com>, Edward Cree
-	<ecree.xilinx@gmail.com>
-Subject: Re: [PATCH v13 22/22] sfc: support pio mapping based on cxl
-Message-ID: <20250415145657.00003895@huawei.com>
-In-Reply-To: <20250414151336.3852990-23-alejandro.lucero-palau@amd.com>
-References: <20250414151336.3852990-1-alejandro.lucero-palau@amd.com>
-	<20250414151336.3852990-23-alejandro.lucero-palau@amd.com>
+To: Li Ming <ming.li@zohomail.com>
+CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/1] cxl/feature: Update out_len in set feature
+ failure case
+Message-ID: <20250415150149.00006116@huawei.com>
+In-Reply-To: <20250410024521.514095-1-ming.li@zohomail.com>
+References: <20250410024521.514095-1-ming.li@zohomail.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -49,17 +48,19 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Mon, 14 Apr 2025 16:13:36 +0100
-alejandro.lucero-palau@amd.com wrote:
+On Thu, 10 Apr 2025 10:45:21 +0800
+Li Ming <ming.li@zohomail.com> wrote:
 
-> From: Alejandro Lucero <alucerop@amd.com>
+> CXL subsystem supports userspace to configure features via fwctl
+> interface, it will configure features by using Set Feature command.
+> Whatever Set Feature succeeds or fails, CXL driver always needs to
+> return a structure fwctl_rpc_cxl_out to caller, and returned size is
+> updated in a out_len parameter. The out_len should be updated not only
+> when the set feature succeeds, but also when the set feature fails.
 > 
-> With a device supporting CXL and successfully initialised, use the cxl
-> region to map the memory range and use this mapping for PIO buffers.
-> 
-> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> Acked-by: Edward Cree <ecree.xilinx@gmail.com>
-The CXL specific bits seem fine.
-
+> Fixes: eb5dfcb9e36d ("cxl: Add support to handle user feature commands for set feature")
+> Signed-off-by: Li Ming <ming.li@zohomail.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Seems reasonable and well explained.
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
