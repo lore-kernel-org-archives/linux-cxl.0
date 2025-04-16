@@ -1,65 +1,43 @@
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E091C3039
-	for <linux-cxl@vger.kernel.org>; Wed, 16 Apr 2025 01:04:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744765453; cv=none; b=PrF3qjVAoZT+E5UP/0n6lHU5O/7IvDzN1IiiZu+PxRUFZhU5by/8iF3zcDGWAdbh7qgORKJjs3YvNxRzY2uul24yeWZqi53Rj07KB3AYAccyHjjFTH7r6AVW6Ty2WIsr69FiRSxeR+7BdHVYCgbA50qepwVHsbJnTwlpyauVGA0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744765453; c=relaxed/simple;
-	bh=tPIIDWCtvCMUi0dba5wS/vnKRpQYieJRvDzGuUpS2cE=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1C4D1FF5EA;
+	Wed, 16 Apr 2025 01:14:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744766097; cv=pass; b=qchiYSORTG3WZDz38GINK7zBFf3YG+3fqNt/bb8v8pGPDoNGKyelLU6KwooIfzicHY3JKmmHT5bP1gq2hDjZPIowUB8yuqjla0bLp6wGk9ncrt1qY7LZjjlE/tHQxkPl1jWvL87jjCdr3l4pBgXN9aGtdI3SvtvjNXxnN52zspI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744766097; c=relaxed/simple;
+	bh=hI3gAKOmD6sFkGDsNGgFSX/Jv8+TujdNdV9u35KB8to=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a1yuAea4QevdJVNPnLjw3mTQiIWcljCf8VA8Am8JSFMQ/at/dr2PZm8O5Wu0A3+OZaD789jSY4b8xTzzfyFWYSMQryuqvY+ip9sHmWsE7MfndfTBPiEypfGyG6JLRWS20nKs62afdFbINd1P5x0OYJCfoyydxYnadKSNIxzZLrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=eAgaZS00; arc=none smtp.client-ip=209.85.166.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	 In-Reply-To:Content-Type; b=jw+hQUFBJ67EDw7d/9k77esM0Wctgutm5esIriJwmnd0e/3ZCOKEdbQK2OvMEvl1VUys2kP6su+c4FCZv6n0Hlv0JiPaCSJyrXqcf20V3NOqvfXVjWMDxySItuajq3XbUI0dUyZoFcKPwjbAg90yN4jANqf2HR43qKfcb5Qgvag=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=B63ae9QE; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="eAgaZS00"
-Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-86117e5adb3so207121539f.2
-        for <linux-cxl@vger.kernel.org>; Tue, 15 Apr 2025 18:04:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1744765451; x=1745370251; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YOzygePW3310tVx7kEfO3x/NC5w6EQLjdhpFeXqXF04=;
-        b=eAgaZS00Pv3pt+zm9nWLIo3Md/3MzJGcu7IEemdvbWpI7g/8GnXXX/9prjIrmZFNpp
-         Yx4Htw3VJhzm7BtnAouIJxzAXGlZuFJIGChlAoN46/bEoFz0G1ccPFudxVd8oje4laAH
-         z3B4qOUSqaxLNk0XssFvCcgGCvLwX2n0Or2XiASfBdJgF0WyJrYeXWMqL5qSw3OkgE0G
-         ukMafe5GVGmEPlKGGQorH4xV7r0kR3cFxk6Mm6u7swaqflBIfofITIba8V6KsqrxDgAA
-         6GOwl147a/5l+fIQF1AuyL13ayaZsPTxa0ZYQ9oi7yL6U4nkxoQGUaRJ7e2g1ZRM+iOH
-         pU0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744765451; x=1745370251;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YOzygePW3310tVx7kEfO3x/NC5w6EQLjdhpFeXqXF04=;
-        b=MFphUAruvhlbqx34JCnp7wO1gIfFCrf3qz9EJWHuGgEsE67PjYdV3rJkHm0hoo7W86
-         mNJ9ULQ6Zi6jdJcht9n4ikQY4uOz74OrJo1P9kshvuLgufimR0k+RnuQfzvgLsJOJeEm
-         5vBtBJLIIE88R+aJQl3QuB+e0LG6/3CH3+5QSFr0yQ/wXMxmTMHmWJWtXoEQ7o0Kl88z
-         HWlTHG2Tx9yF178RWyIFrV+Vjkfa1JVoCyev+PjHehQ/Ui8aLUL1tZ/8RdCpY2Pd0IXY
-         ADPPP+irEEAyW/sg/iKc32x+V9C9Ur9dFR5Yh+ALrpLixto0wWt8PBsepLSSqnuIw9wy
-         pWXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVuWQw0BMYgLXi4qkZU2K/9Zv+3jJxEF6+3v2QzJ/Yay1AXku8OdZFAa2/Sa6PouwEzWBx+63fr6hg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIOl4FFgcvdGBkAAvRGGcab8cU9XEgrH6zJ8vIIRTdZuRVc1WY
-	kQWrR5QSq6Hu2+SM+OLhRYM3nA+8tHg6wdEYFo3QJptqwWcPeJuotbsKf+ebJvYy3UEMUl926ru
-	J
-X-Gm-Gg: ASbGnctS52gbvb/MzcSrPejGpS/5GnCLkDNZwt8YGcH6oxX1HEBhJPDLv6Y2R00Qc/V
-	1iGwU8TeZk48k1vXWVSeAIPlRWSWhNpmlXOLxfr3sIKBbE6xBHFFRXfiD/4w3iN+v+eXksIkjz0
-	zylp4SOVWhE9uvqGHwl0D09UXhkO3zDHHqm3D28l2Sf8PZDRailfk+JN9e5dJVbL+P/KBu6jbQN
-	mdUT7tWE0truPXEzIXrywaUrogkYaJqy1qNlkCeqklHrhCPaR+fMSfFi501CajIbGjww8k8ZIoT
-	/7HlbjsL2Wx6IYJnFFUwHn1p2NdHqvSIqWS+oQ==
-X-Google-Smtp-Source: AGHT+IEHI5YXtsH3GtE+xAxjPnoEaxwITdOpITzfsT2ZontVDQfoJEe0M8gxlFjwjY706Hy1dO+lEg==
-X-Received: by 2002:a05:6602:360f:b0:85e:8583:adc8 with SMTP id ca18e2360f4ac-861bfbbd3d6mr192307839f.3.1744765451183;
-        Tue, 15 Apr 2025 18:04:11 -0700 (PDT)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-8616522cf6bsm275091139f.7.2025.04.15.18.04.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Apr 2025 18:04:10 -0700 (PDT)
-Message-ID: <15e2151a-d788-48eb-8588-1d9a930c64dd@kernel.dk>
-Date: Tue, 15 Apr 2025 19:04:09 -0600
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="B63ae9QE"
+ARC-Seal: i=1; a=rsa-sha256; t=1744766070; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=dn7A2sue4xZpfH+zinKpmIDGSWH3WCwMowKYkEY5vJ6QwOY3KXQMAPzcnxre+UTB8BpI72xDvdgXgjGnHXVgFBdKf5fKe4B1k5pTfDDkQJR4t16tM5HdOAi02ET4b12v7v9QaOLPblowr12QVw32aM9av9ThbmUdWmq4cAclw2U=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1744766070; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=+LI5T3J5MAN1KKsgdLSHsP89HjE3OBgeTAgz3g5seVM=; 
+	b=mKQbF/HB4tR4kjuBP9WGHF4ikdRpmr+9g672U2HnDzdit0kGVKJkPax+tMWC8j6M8pfSe4XO0DKXF/mhznQWKL7V4TeAgRNOoHosPdQ7DgWHn0ZkRllDv+HYfGPWjjjv7rNGQigvCaQRfIi1GmIZZAyv5OK0iegPIOol0DAI5uU=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744766070;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=+LI5T3J5MAN1KKsgdLSHsP89HjE3OBgeTAgz3g5seVM=;
+	b=B63ae9QE/z6GM5hCyDn8oqNmVjhLXbeKY4IgP5WyYrkc3xgWLF8ttyaUSTLhQmCD
+	zWpAN9gGCjwvrKj9s0M1ZODV5PJO3soCrH2Jmk+fcQ2ErRs/AjzfyJJK1y1ml4U3I6f
+	Iitel2FO4GO8uaSzf84GNh2GCwNGJalJxbMthaSU=
+Received: by mx.zohomail.com with SMTPS id 1744766066825261.9631799083443;
+	Tue, 15 Apr 2025 18:14:26 -0700 (PDT)
+Message-ID: <9c835759-8a67-4479-854f-4a96edee2933@zohomail.com>
+Date: Wed, 16 Apr 2025 09:14:23 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -67,31 +45,86 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 00/11] pcache: Persistent Memory Cache for Block
- Devices
-To: Dan Williams <dan.j.williams@intel.com>,
- Dongsheng Yang <dongsheng.yang@linux.dev>, hch@lst.de,
- gregory.price@memverge.com, John@groves.net, Jonathan.Cameron@huawei.com,
- bbhushan2@marvell.com, chaitanyak@nvidia.com, rdunlap@infradead.org
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org, linux-bcache@vger.kernel.org,
- nvdimm@lists.linux.dev
-References: <20250414014505.20477-1-dongsheng.yang@linux.dev>
- <67fe9ea2850bc_71fe294d8@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <67fe9ea2850bc_71fe294d8@dwillia2-xfh.jf.intel.com.notmuch>
+Subject: Re: [PATCH v2 1/1] cxl/feature: Using Full Data Transfer only when
+ offset is 0
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: dave@stgolabs.net, dave.jiang@intel.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ shiju.jose@huawei.com, John Groves <John@groves.net>
+References: <20250410024726.514170-1-ming.li@zohomail.com>
+ <20250415153601.00001824@huawei.com>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <20250415153601.00001824@huawei.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+Feedback-ID: rr08011227bb9f4feaa7b1eb4dc487c32e00008e94edfb1f3c6f4e41a77c51a9416b2c1679098cc75600d776:zu08011227cd79a628e40c8290afab14b8000090e0a949404b929e09e128f6589dfb4cd7e39d6806a6905e5a:rf0801122d57fb5ee473ad5723fb6e36600000d853edbb2a7d299a1cc24ab5485c70e0e630c36eb7f030e261c9b0d10754b5:ZohoMail
+X-ZohoMailClient: External
 
-On 4/15/25 12:00 PM, Dan Williams wrote:
-> Thanks for making the comparison chart. The immediate question this
-> raises is why not add "multi-tree per backend", "log structured
-> writeback", "readcache", and "CRC" support to dm-writecache?
-> device-mapper is everywhere, has a long track record, and enhancing it
-> immediately engages a community of folks in this space.
+On 4/15/2025 10:36 PM, Jonathan Cameron wrote:
+> On Thu, 10 Apr 2025 10:47:26 +0800
+> Li Ming <ming.li@zohomail.com> wrote:
+>
+>> Per CXL r3.2 section 8.2.10.6.3 Set Feature(Opcode 0502h)
+>>
+>> "If the Feature data is transferred in its entirely, the caller makes
+> entirety 
+>
+>> one call to Set Feature with Action = Full Data Transfer. The Offset
+>> field is not used and shall be ignored."
+>>
+>> It implies if using Full Data Transfer, the received data will be
+>> updated from offset 0 on device side.
+>>
+>> Current driver implementation is if feature data size is less than mbox
+>> payload - set feature header, driver will use Full Data Transfer even if
+>> user provides an offset. Per above description, feature data will be
+>> written from offset 0 rather than the offset value user provided, the
+>> result will not be what user expects.
+>>
+>> The changes is checking if the offset caller provides is equal to 0, if
+>> yes, using Full Data Transfer, if not, using Initiate Data Transfer -
+>> Finish Data Transfer.
+>>
+>> After the changes, all Set Feature transfer scenarios are below:
+>>
+>> 1. data size + header is less than mbox payload and offset is 0
+>> 	Full Data Transfer
+>>
+>> 2. data size + header is less than mbox payload and offset is not 0
+> Is it valid to call this function with a none zero offset? I'm not sure.
+> In my possibly entirely incorrect mental model the offset should be
+> an internal detail of how we get the features that we should not expose to
+> userspace (oops).  The specification is confusing on this point so I think
+> we should ask for a clarification.
+>
+> There is text that for example says
+> "Once the _entire_ Feature data is fully transferred to the device (i.e.
+>  Action = Full Data Transfer or Action = Finish Data Transfer"), the
+>  device shall update the attribute(s) of the Feature."
+>
+> What does 'entire Feature data mean here?'  The whole thing or just
+> the bit from offset used in Initiate Data Transfer onwards?
+>
+> I'd read entire as meaning all of it so effectively the offset passed
+> to this function should always be zero.
+>
+> I'll send a query and let you know the answer. Maybe I'm reading too
+> much into that 'entire'.
+>
+> J
 
-Strongly agree.
+Thanks for that.
 
--- 
-Jens Axboe
+I have the same doubt too. 'entire' can be whole feature data or just mean a part of feature data needed to be updated.
+
+If 'entire' means whole feature data, it will require Initiate Data Transfer to be with an zero offset. But I can't find any description of SPEC including this hint.
+
+And current set feature implementation does not have such limitation either, so I made current solution. I agree with you that we should have an accurate answer.
+
+
+Ming
+
+[snip]
+
+
