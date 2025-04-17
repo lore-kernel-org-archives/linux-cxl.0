@@ -1,18 +1,18 @@
 Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E14C1172A;
-	Thu, 17 Apr 2025 01:50:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F1031172A;
+	Thu, 17 Apr 2025 01:56:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744854622; cv=none; b=sEnT3BBleJbhGes0Or3M44XG73EDhTHnT3mxrv05Pu/pv8UNLYS+ignuJ+ZNwzu+DURGvTpRgh71CyerLQzWjTjJvaOQwrETUm90e0E0rnoB579NhFqlkZCvaC5r+OT3GwpxlTQn4f/c+0x8lohF+PEAGwEslIfXpWQGo7RXk+Y=
+	t=1744854972; cv=none; b=NNAnWK++xJJdDiDbemJ7ng372ntV8g/iBlH4rMSs5zzMbEUTmuy3KuRzfwfnujJ7zp0nIOedAcy0m7PYqBJxiaTYayrOCMLK+bnDAHgTQkRKRtzOUryFv5hUWogUWXrJLGLT1gZwzlAbF9quuZaJc2rWfs7niDS84B9/Doky73Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744854622; c=relaxed/simple;
-	bh=X71LVokWEWz+T20vPZCEQZFivCkXXJKdbRQ5XPf+lBQ=;
+	s=arc-20240116; t=1744854972; c=relaxed/simple;
+	bh=nV0XAzhuvzxqrFlXRHsn3+SUZGp/iNsb52WBlKr1hVc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uNOPltuGDQzZmIqsggHkbsB8B6XdxjqvVZIeYlGK8RTnGiMdJ+V0IXuokT1/+oYc0x9+a3KIKxrnFshHq6JgWrNfvujktHccmPleeF9BJRhYDIonoTIySGNpIrPnWZDCyHamK1fbjSHDOlKDX6yyCkMUAAWyoN8dBYjqxKlhzk0=
+	 MIME-Version; b=YnhNFAKCvH2f7SbwD20L3MyS+4PJwE3UHJuePUaAJym+0bemxEZoj+1zmyJfpOI8NtsL66bsCHq/BWIIMac/coRqqpqVCZKJhH+Muxa5RGGYctx2FAAKU8yVQH2W78A9xcEqPoB3EYQi5StNN/iR08R2ngwNncWNB+59cUqfji0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-681ff7000002311f-18-68005e54eb85
+X-AuditID: a67dfc5b-669ff7000002311f-3d-68005fb3903e
 From: Rakie Kim <rakie.kim@sk.com>
 To: Dan Williams <dan.j.williams@intel.com>
 Cc: gourry@gourry.net,
@@ -29,11 +29,11 @@ Cc: gourry@gourry.net,
 	yunjeong.mun@sk.com,
 	rakie.kim@sk.com,
 	akpm@linux-foundation.org
-Subject: Re: [PATCH v8 1/3] mm/mempolicy: Fix memory leaks in weighted interleave sysfs
-Date: Thu, 17 Apr 2025 10:49:38 +0900
-Message-ID: <20250417015009.650-1-rakie.kim@sk.com>
+Subject: Re: [PATCH v8 2/3] mm/mempolicy: Prepare weighted interleave sysfs for memory hotplug
+Date: Thu, 17 Apr 2025 10:55:52 +0900
+Message-ID: <20250417015600.661-1-rakie.kim@sk.com>
 X-Mailer: git-send-email 2.48.1.windows.1
-In-Reply-To: <6800270845306_1302d294a4@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <68003826cb17d_1302d294e@dwillia2-xfh.jf.intel.com.notmuch>
 References: 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -42,338 +42,131 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBLMWRmVeSWpSXmKPExsXC9ZZnkW5IHEOGwa4vNhZz1q9hs5g+9QKj
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBLMWRmVeSWpSXmKPExsXC9ZZnoe7meIYMg6/NthZz1q9hs5g+9QKj
 	xdf1v5gtft49zm6xauE1NovjW+exW5yfdYrF4vKuOWwW99b8Z7U4M63IYvWaDAduj52z7rJ7
 	dLddZvdoOfKW1WPxnpdMHps+TWL3ODHjN4vHzoeWHu/3XWXz2Hy62uPzJrkArigum5TUnMyy
-	1CJ9uwSujBer+Qv2ulY0rP/B1sD4w6SLkZNDQsBEYueGaeww9pW3E1i7GDk42ASUJI7tjQEJ
-	iwhoS0ycc5C5i5GLg1ngCZPE3CNL2UASwgLhErte/wazWQRUJZ41NDKC2LwCxhL3Nl+Fmqkp
-	0XDpHhOIzSngKXFi8WFWEFtIgEfi1Yb9UPWCEidnPmEBsZkF5CWat84GWyYh8J1NovvcLUaI
-	QZISB1fcYJnAyD8LSc8sJD0LGJlWMQpl5pXlJmbmmOhlVOZlVugl5+duYgSG/7LaP9E7GD9d
-	CD7EKMDBqMTDe2LR/3Qh1sSy4srcQ4wSHMxKIrznzP+lC/GmJFZWpRblxxeV5qQWH2KU5mBR
-	Euc1+laeIiSQnliSmp2aWpBaBJNl4uCUamBkeMz/MG61tu2twj9ic+fe3mEof8LonKJfWs6L
-	G56FyjeaYl/PyvVtdy9Yu9tre7Txy0OlqtuclW5VW5QdD9BZ9Pmy4tSZJX0tKu997aJfSNfx
-	zbMzu+hX8fHv98sXI5iydPL45LbfmXNF4ubCxLZytfPJlXO6KlMERJz19r0rqfulG5PMZ6fE
-	UpyRaKjFXFScCAAg+EhBewIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrELMWRmVeSWpSXmKPExsXCNUNNSzckjiHD4Mc9A4s569ewWUyfeoHR
+	1CJ9uwSujOMNnAW7ZCt2v33G3MB4X7yLkZNDQsBEYvGzF6ww9qQ585i6GDk42ASUJI7tjQEJ
+	iwhoS0ycc5C5i5GLg1ngCZPE3CNL2UASwgJxEie2P2QCsVkEVCVWXz0PZvMKGEvs6DnHBjFT
+	U6Lh0j2wOKeAh8SuvcvYQWwhAR6JVxv2M0LUC0qcnPmEBcRmFpCXaN46G2yZhMB3Nolpj39B
+	HScpcXDFDZYJjPyzkPTMQtKzgJFpFaNQZl5ZbmJmjoleRmVeZoVecn7uJkZg+C+r/RO9g/HT
+	heBDjAIcjEo8vCcW/U8XYk0sK67MPcQowcGsJMJ7zvxfuhBvSmJlVWpRfnxRaU5q8SFGaQ4W
+	JXFeo2/lKUIC6YklqdmpqQWpRTBZJg5OqQbG4F8TueVTjrmmPPpcm8G3JX3+joAg9tee6mmd
+	CXfPW7GkCbgINF/d2TZFLlZgekLHRNteg/6KG9zJwv1Lzy5/opre+tp66f50M+ujpevzBEvO
+	SE+YW/U5W5bv60FJ9ZvpL2dHRi+aymy989d5Ke0+x3Jv3hVPhO6m7JHeLtZmZ/bCMiKQrUKJ
+	pTgj0VCLuag4EQCIQsjyewIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrELMWRmVeSWpSXmKPExsXCNUNNS3dzPEOGwYJGfYs569ewWUyfeoHR
 	4uv6X8wWP+8eZ7f4/Ow1s8WqhdfYLI5vncducXjuSVaL87NOsVhc3jWHzeLemv+sFmemFVkc
 	uvac1WL1mgyL39tWsDnwe+ycdZfdo7vtMrtHy5G3rB6L97xk8tj0aRK7x4kZv1k8dj609Hi/
-	7yqbx7fbHh6LX3xg8th8utrj8ya5AJ4oLpuU1JzMstQifbsErowXq/kL9rpWNKz/wdbA+MOk
-	i5GTQ0LAROLK2wmsXYwcHGwCShLH9saAhEUEtCUmzjnI3MXIxcEs8IRJYu6RpWwgCWGBcIld
-	r3+D2SwCqhLPGhoZQWxeAWOJe5uvskPM1JRouHSPCcTmFPCUOLH4MCuILSTAI/Fqw36oekGJ
-	kzOfsIDYzALyEs1bZzNPYOSZhSQ1C0lqASPTKkaRzLyy3MTMHFO94uyMyrzMCr3k/NxNjMCQ
-	X1b7Z+IOxi+X3Q8xCnAwKvHwnlj0P12INbGsuDL3EKMEB7OSCO8583/pQrwpiZVVqUX58UWl
-	OanFhxilOViUxHm9wlMThATSE0tSs1NTC1KLYLJMHJxSDYwPzlQGuve/r9z4yd1zVeOcg08X
-	rgzbpZ099+gkwbLneifarKRYrhtPeGGq9kDFP7Rqw+Uz3dLZNg++lB/gXGC7aFfw0cNlXy3E
-	d17gZWL43J3au9H4lZqrt/0iDY6Tvxj8byxv58z57fWmQ9MqXOK5ZNHnL0vzGP5dKvrVWX7z
-	b8XkCGu1/7lKLMUZiYZazEXFiQD6h9JQdQIAAA==
+	7yqbx7fbHh6LX3xg8th8utrj8ya5AJ4oLpuU1JzMstQifbsErozjDZwFu2Qrdr99xtzAeF+8
+	i5GTQ0LARGLSnHlMXYwcHGwCShLH9saAhEUEtCUmzjnI3MXIxcEs8IRJYu6RpWwgCWGBOIkT
+	2x8ygdgsAqoSq6+eB7N5BYwldvScY4OYqSnRcOkeWJxTwENi195l7CC2kACPxKsN+xkh6gUl
+	Ts58wgJiMwvISzRvnc08gZFnFpLULCSpBYxMqxhFMvPKchMzc0z1irMzKvMyK/SS83M3MQJD
+	flntn4k7GL9cdj/EKMDBqMTDe2LR/3Qh1sSy4srcQ4wSHMxKIrznzP+lC/GmJFZWpRblxxeV
+	5qQWH2KU5mBREuf1Ck9NEBJITyxJzU5NLUgtgskycXBKNTCGsVyYsTyHxe3jqkeSNxLuzA4M
+	jyj21du3vGTtvxMZl/jm3m2ddGfz6eLLjm/vCq3fLaRXtYaThWX1VSGGtfHtnAt3L3B9na2e
+	W8UkdzWv9fSSI8d0TRp6Dmx4pR/6Nmhy14WQxbNY1pxQWyx5ecPCpCnXe/xX8Ty8UcuxeKJB
+	VbfFdZPjgl9alViKMxINtZiLihMBRKJt6XUCAAA=
 X-CFilter-Loop: Reflected
 
-On Wed, 16 Apr 2025 14:54:16 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
+On Wed, 16 Apr 2025 16:07:18 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
 > Rakie Kim wrote:
-> > +
-> > +static void iw_table_free(void)
-> > +{
-> > +	u8 *old;
-> > +
-> > +	mutex_lock(&iw_table_lock);
-> > +	old = rcu_dereference_protected(iw_table,
-> > +					lockdep_is_held(&iw_table_lock));
-> > +	if (old) {
-> > +		rcu_assign_pointer(iw_table, NULL);
-> > +		mutex_unlock(&iw_table_lock);
-> > +
-> > +		synchronize_rcu();
-> > +		kfree(old);
-> > +	} else
-> > +		mutex_unlock(&iw_table_lock);
-> 
-> This looks correct. I personally would not have spent the effort to
-> avoid the synchronize_rcu() because this is an error path that rarely
-> gets triggered, and kfree(NULL) is already a nop, so no pressing need to be
-> careful there either:
-> 
-> 	mutex_lock(&iw_table_lock);
-> 	old = rcu_dereference_protected(iw_table,
-> 					lockdep_is_held(&iw_table_lock));
-> 	rcu_assign_pointer(iw_table, NULL);
-> 	mutex_unlock(&iw_table_lock);
-> 	synchronize_rcu();
-> 	kfree(old);
-
-I will modify the structure as you suggested.
-
-> 
-> > +}
-> > +
-> > +static void wi_kobj_release(struct kobject *wi_kobj)
-> > +{
-> > +	iw_table_free();
-> 
-> This memory can be freed as soon as node_attrs have been deleted. By
-> waiting until final wi_kobj release it confuses the lifetime rules.
-> 
-> > +	kfree(node_attrs);
-> 
-> This memory too can be freed as soon as the attributes are deleted.
-> 
-> ...the rationale for considering these additional cleanups below:
-> 
-
-I created a new function named wi_cleanup(), as you proposed.
-static void wi_cleanup(struct kobject *wi_kobj) {
-	sysfs_wi_node_delete_all(wi_kobj);
-	iw_table_free();
-	kfree(node_attrs);
-}
-And I changed the error handling code to call this function.
-static int add_weighted_interleave_group(struct kobject *root_kobj)
-{
-...
-err_cleanup_kobj:
-	wi_cleanup(wi_kobj);
-	kobject_del(wi_kobj);
-err_put_kobj:
-	kobject_put(wi_kobj);
-	return err;
-}
-
-However, I have one question.
-With this change, iw_table and node_attrs will not be freed at system
-shutdown. Is it acceptable to leave this memory unfreed on shutdown?
-(As you previously noted, the sysfs files in this patch are also
-not removed during system shutdown.)
-
-> > +	kfree(wi_kobj);
-> >  }
-> >  
-> >  static const struct kobj_type wi_ktype = {
-> >  	.sysfs_ops = &kobj_sysfs_ops,
-> > -	.release = sysfs_wi_release,
-> > +	.release = wi_kobj_release,
+> > Previously, the weighted interleave sysfs structure was statically
+> > managed during initialization. This prevented new nodes from being
+> > recognized when memory hotplug events occurred, limiting the ability
+> > to update or extend sysfs entries dynamically at runtime.
+> > 
+> > To address this, this patch refactors the sysfs infrastructure and
+> > encapsulates it within a new structure, `sysfs_wi_group`, which holds
+> > both the kobject and an array of node attribute pointers.
+> > 
+> > By allocating this group structure globally, the per-node sysfs
+> > attributes can be managed beyond initialization time, enabling
+> > external modules to insert or remove node entries in response to
+> > events such as memory hotplug or node online/offline transitions.
+> > 
+> > Instead of allocating all per-node sysfs attributes at once, the
+> > initialization path now uses the existing sysfs_wi_node_add() and
+> > sysfs_wi_node_delete() helpers. This refactoring makes it possible
+> > to modularly manage per-node sysfs entries and ensures the
+> > infrastructure is ready for runtime extension.
+> > 
+> > Signed-off-by: Rakie Kim <rakie.kim@sk.com>
+> > Reviewed-by: Gregory Price <gourry@gourry.net>
+> > Reviewed-by: Joshua Hahn <joshua.hahnjy@gmail.com>
+> > ---
+> >  mm/mempolicy.c | 60 ++++++++++++++++++++++++--------------------------
+> >  1 file changed, 29 insertions(+), 31 deletions(-)
+> > 
+> > diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> > index dcf03c389b51..998635127e9d 100644
+> > --- a/mm/mempolicy.c
+> > +++ b/mm/mempolicy.c
+> > @@ -3419,6 +3419,13 @@ struct iw_node_attr {
+> >  	int nid;
 > >  };
 > >  
-> >  static int add_weight_node(int nid, struct kobject *wi_kobj)
-> > @@ -3525,41 +3548,42 @@ static int add_weighted_interleave_group(struct kobject *root_kobj)
-> >  	struct kobject *wi_kobj;
-> >  	int nid, err;
-> >  
-> > +	node_attrs = kcalloc(nr_node_ids, sizeof(struct iw_node_attr *),
-> > +			     GFP_KERNEL);
-> > +	if (!node_attrs)
-> > +		return -ENOMEM;
+> > +struct sysfs_wi_group {
+> > +	struct kobject wi_kobj;
+> > +	struct iw_node_attr *nattrs[];
+> > +};
 > > +
-> >  	wi_kobj = kzalloc(sizeof(struct kobject), GFP_KERNEL);
-> > -	if (!wi_kobj)
-> > +	if (!wi_kobj) {
-> > +		kfree(node_attrs);
-> >  		return -ENOMEM;
-> > +	}
-> >  
-> >  	err = kobject_init_and_add(wi_kobj, &wi_ktype, root_kobj,
-> >  				   "weighted_interleave");
-> 
-> If you fix wi_kobj_release() to stop being responsible to free memory
-> that should have been handled in the delete path (@node_attrs,
-> iw_table_free()), then you can also drop the wi_ktype and
-> wi_kobj_release() callback altogether.
-
-I understand your suggestion about simplifying the kobject
-handling.
-If we only consider Patch1, then replacing kobject_init_and_add
-with kobject_create_and_add would be the right choice.
-
-However, in Patch2, the code changes as follows:
-struct sysfs_wi_group {
-	struct kobject wi_kobj;
-	struct iw_node_attr *nattrs[];
-};
-static struct sysfs_wi_group *wi_group;
-...
-static void wi_kobj_release(struct kobject *wi_kobj)
-{
-	kfree(wi_group);
-}
-...
-static int __init add_weighted_interleave_group(struct kobject *mempolicy_kobj)
-{
-	int nid, err;
-
-	wi_group = kzalloc(struct_size(wi_group, nattrs, nr_node_ids),
-			   GFP_KERNEL);
-
-In this case, wi_kobj_release() is responsible for freeing the
-container struct wi_group that includes the kobject.
-Therefore, it seems more appropriate to use kobject_init_and_add
-in this context.
-I would appreciate your thoughts on this.
-
-> 
-> I.e. once releasing @wi_kobj is just "kfree(wi_kobj)", then this
-> sequence:
-> 
-> 	wi_kobj = kzalloc(...)
-> 	kobject_init_and_add(wi_kob, &wi_ktype, ...)
-> 
-> Can simply become:
-> 
-> 	wi_kobj = kobject_create_and_add("weighted_interleave", root_kobj);
-> 
-> > -	if (err) {
-> > -		kfree(wi_kobj);
-> > -		return err;
-> > -	}
-> > +	if (err)
-> > +		goto err_put_kobj;
-> >  
-> >  	for_each_node_state(nid, N_POSSIBLE) {
-> >  		err = add_weight_node(nid, wi_kobj);
-> >  		if (err) {
-> >  			pr_err("failed to add sysfs [node%d]\n", nid);
-> > -			break;
-> > +			goto err_cleanup_kobj;
-> >  		}
-> >  	}
-> > -	if (err)
-> > -		kobject_put(wi_kobj);
+> > +static struct sysfs_wi_group *wi_group;
 > > +
-> >  	return 0;
-> > +
-> > +err_cleanup_kobj:
-> > +	sysfs_wi_node_delete_all(wi_kobj);
-> > +	kobject_del(wi_kobj);
-> > +err_put_kobj:
-> > +	kobject_put(wi_kobj);
-> > +	return err;
-> >  }
-> >  
-> >  static void mempolicy_kobj_release(struct kobject *kobj)
+> >  static ssize_t node_show(struct kobject *kobj, struct kobj_attribute *attr,
+> >  			 char *buf)
 > >  {
-> > -	u8 *old;
-> > -
-> > -	mutex_lock(&iw_table_lock);
-> > -	old = rcu_dereference_protected(iw_table,
-> > -					lockdep_is_held(&iw_table_lock));
-> > -	rcu_assign_pointer(iw_table, NULL);
-> > -	mutex_unlock(&iw_table_lock);
-> > -	synchronize_rcu();
-> > -	kfree(old);
-> > -	kfree(node_attrs);
-> >  	kfree(kobj);
+> > @@ -3461,24 +3468,23 @@ static ssize_t node_store(struct kobject *kobj, struct kobj_attribute *attr,
+> >  	return count;
 > >  }
 > >  
-> > @@ -3573,37 +3597,24 @@ static int __init mempolicy_sysfs_init(void)
-> >  	static struct kobject *mempolicy_kobj;
-> >  
-> >  	mempolicy_kobj = kzalloc(sizeof(*mempolicy_kobj), GFP_KERNEL);
-> > -	if (!mempolicy_kobj) {
-> > -		err = -ENOMEM;
-> > -		goto err_out;
-> > -	}
+> > -static struct iw_node_attr **node_attrs;
 > > -
-> > -	node_attrs = kcalloc(nr_node_ids, sizeof(struct iw_node_attr *),
-> > -			     GFP_KERNEL);
-> > -	if (!node_attrs) {
-> > -		err = -ENOMEM;
-> > -		goto mempol_out;
-> > -	}
-> > +	if (!mempolicy_kobj)
-> > +		return -ENOMEM;
+> > -static void sysfs_wi_node_delete(struct iw_node_attr *node_attr,
+> > -				 struct kobject *parent)
+> > +static void sysfs_wi_node_delete(int nid)
+> >  {
+> > -	if (!node_attr)
+> > +	if (!wi_group->nattrs[nid])
+> >  		return;
+> > -	sysfs_remove_file(parent, &node_attr->kobj_attr.attr);
+> > -	kfree(node_attr->kobj_attr.attr.name);
+> > -	kfree(node_attr);
+> > +
+> > +	sysfs_remove_file(&wi_group->wi_kobj,
+> > +			  &wi_group->nattrs[nid]->kobj_attr.attr);
+> > +	kfree(wi_group->nattrs[nid]->kobj_attr.attr.name);
+> > +	kfree(wi_group->nattrs[nid]);
+> >  }
 > >  
-> >  	err = kobject_init_and_add(mempolicy_kobj, &mempolicy_ktype, mm_kobj,
-> >  				   "mempolicy");
+> > -static void sysfs_wi_node_delete_all(struct kobject *wi_kobj)
+> > +static void sysfs_wi_node_delete_all(void)
+> >  {
+> >  	int nid;
+> >  
+> >  	for (nid = 0; nid < nr_node_ids; nid++)
+> > -		sysfs_wi_node_delete(node_attrs[nid], wi_kobj);
+> > +		sysfs_wi_node_delete(nid);
+> >  }
+> >  
+> >  static void iw_table_free(void)
+> > @@ -3501,8 +3507,7 @@ static void iw_table_free(void)
+> >  static void wi_kobj_release(struct kobject *wi_kobj)
+> >  {
+> >  	iw_table_free();
+> > -	kfree(node_attrs);
+> > -	kfree(wi_kobj);
+> > +	kfree(wi_group);
 > 
-> Similar comment as above, now that mempolicy_kobj_release() is simply
-> kfree(@kobj), you can use kobject_create_and_add() and make this all
-> that much simpler.
+> Ah, look just one more iw_table_free() deletion to be able to switch to
+> kobject_create_and_add() flow.
+> 
+> For what this patch is though you can add:
+> 
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 
-For the mempolicy_kobj, I will update the code as you suggested
-and use kobject_create_and_add().
-
-With all your recommendations applied, Patch1 would now look like this:
-@@ -3488,20 +3488,21 @@ static void iw_table_free(void)
-        mutex_lock(&iw_table_lock);
-        old = rcu_dereference_protected(iw_table,
-                                        lockdep_is_held(&iw_table_lock));
--       if (old) {
--               rcu_assign_pointer(iw_table, NULL);
--               mutex_unlock(&iw_table_lock);
-+       rcu_assign_pointer(iw_table, NULL);
-+       mutex_unlock(&iw_table_lock);
-
--               synchronize_rcu();
--               kfree(old);
--       } else
--               mutex_unlock(&iw_table_lock);
-+       synchronize_rcu();
-+       kfree(old);
- }
-
--static void wi_kobj_release(struct kobject *wi_kobj)
--{
-+static void wi_cleanup(struct kobject *wi_kobj) {
-+       sysfs_wi_node_delete_all(wi_kobj);
-        iw_table_free();
-        kfree(node_attrs);
-+}
-+
-+static void wi_kobj_release(struct kobject *wi_kobj)
-+{
-        kfree(wi_kobj);
- }
-
-@@ -3575,45 +3576,30 @@ static int add_weighted_interleave_group(struct kobject *root_kobj)
-        return 0;
-
- err_cleanup_kobj:
--       sysfs_wi_node_delete_all(wi_kobj);
-+       wi_cleanup(wi_kobj);
-        kobject_del(wi_kobj);
- err_put_kobj:
-        kobject_put(wi_kobj);
-        return err;
- }
-
--static void mempolicy_kobj_release(struct kobject *kobj)
--{
--       kfree(kobj);
--}
--
--static const struct kobj_type mempolicy_ktype = {
--       .release = mempolicy_kobj_release
--};
--
- static int __init mempolicy_sysfs_init(void)
- {
-        int err;
-        static struct kobject *mempolicy_kobj;
-
--       mempolicy_kobj = kzalloc(sizeof(*mempolicy_kobj), GFP_KERNEL);
-+       mempolicy_kobj = kobject_create_and_add("mempolicy", mm_kobj);
-        if (!mempolicy_kobj)
-                return -ENOMEM;
-
--       err = kobject_init_and_add(mempolicy_kobj, &mempolicy_ktype, mm_kobj,
--                                  "mempolicy");
--       if (err)
--               goto err_put_kobj;
--
-        err = add_weighted_interleave_group(mempolicy_kobj);
-        if (err)
--               goto err_del_kobj;
-+               goto err_kobj;
-
-        return 0;
-
--err_del_kobj:
-+err_kobj:
-        kobject_del(mempolicy_kobj);
--err_put_kobj:
-        kobject_put(mempolicy_kobj);
-        return err;
- }
+Thank you for the suggestion.
+I have already removed the iw_table_free() and kfree(node_attrs) from
+the release path in Patch1 as part of wi_cleanup().
 
 Rakie
 
-> 
-> So the patch looks technically correct as is, but if you make those
-> final cleanups I will add my review tag.
