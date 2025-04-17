@@ -1,96 +1,126 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 316202139DC
-	for <linux-cxl@vger.kernel.org>; Thu, 17 Apr 2025 13:49:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8390D7081E;
+	Thu, 17 Apr 2025 16:36:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744897745; cv=none; b=D2nhwysv/H5bZanC1YyqIsYjrTivQQg2XiGZuXyO7YPtFUiho5BejBY6EaRGAlSABIh1ByrZNItN0A/Vne+Yamosx89wV5DdbBcdMfSDFkr5uN4X4ZRUDqKrC9Y4VwO0ku9WUdPUuqH/nIWuNbeU7++0JvhV9leYZ6+nQtJXlkw=
+	t=1744907819; cv=none; b=RzYIhRN+DZ+nQIALYZ19FtLyZyW0ZJAs2zmKrTD+ZSGMuG/ZVtCyO2vsrIkI+/qtwdrHcb+0X98GU5nF9Vzc9VEtJCs4uIct6kjUxEOS081weEatJe/7Fwl8DkveriWP7EKPAucQbz9sz5MTuyDooyRggw7JI6rWMDu/lisM+HQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744897745; c=relaxed/simple;
-	bh=/G8aJT+2T51yuf1WMDS23rZs0mn1rjY5FgNlcDdfeVw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ln1Vb7rCtwBYmzg8LJU8BkRFEaAz8bUdPhQLa8t83HqE29kzN7rHOBgyn3D/lp+gpCEkG4aRMgyQYCeGOpgvg+sfgfnj1f9tiCOdrgLNhDHfKxxPUzNgv2bfP4bUEaSXs5LZkU2nXPtuUBggRG4S4KAiieuEox06GW8gBaK7gRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=HQuLgu7y; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="HQuLgu7y"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7c59e7039eeso104671585a.2
-        for <linux-cxl@vger.kernel.org>; Thu, 17 Apr 2025 06:49:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1744897742; x=1745502542; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TCJlmAze3Kym1WnCOQVGanklH0i7woN3rI47oROiF2o=;
-        b=HQuLgu7yWdAWzRZwzRVfrFpyE8udjgf4nbyz8nte29Hu4PtLkW7Xki86R55JZZtY82
-         BL6OQy6iBrPkQyv1d/nw+jaKCdarKuo6AipAcALwI+54w1DvqnW8XtQf9oGQ2dg/h8bt
-         TLy/DSgaPnoaKoTjOohfMSjm4SiRIaKFmP5oP7d8CHC5++X+XXxkktQe5pY8jLbGbSCp
-         bkIe1ysVMmTrhGTmJl29aC1gj+ZapMsXq+V+q25JdFHh7GAgC9vEXnJ0bRf7fHymvG3W
-         yR3MjeH11r0LKAXwrYPqvNDvuZvTcGii+GPN5ImqTkQTez6zpa0KsT3ouh8djALm1luX
-         WS1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744897742; x=1745502542;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TCJlmAze3Kym1WnCOQVGanklH0i7woN3rI47oROiF2o=;
-        b=WqhvB8agU8V2GA3j6SPtPYXzVMhYR5Mbol03vFBy1CL9tH7iXr6kI70fanzvDBLEfR
-         NPKtOFuxt4aWjxDhuOWrODwwpw9z3QLmsvIZ5nQ3s4aRkAoJGzUvl3G3eSvKn2gZHEFL
-         Y/HoQ8XKnDu3K19OgOuT1fRqtJA7ba6Uu8JJKacb9BILWMV2xUiWfzzIvTjqF1UT02Pt
-         u2qO2dKM5mdCpCok1Cjowohol5fvPmXAllgyw3LwtCc6ktKKQOOUzGpkKM4mZlnl+ToK
-         aMxZmabw1dfNHVwLCxXOKEVjlKcgyhLYuc+HiUO4qaNknbIGLAh8EY4pT7cWY1BBAzax
-         vjWg==
-X-Forwarded-Encrypted: i=1; AJvYcCUN/mta1xweT6m1+91olZ+ELI3rsh/muZ/yDoTwMD9ERKtqeHYiC1kuTe0oGzFn+1G8jkASXV7iIuM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyP1PCevUW2kJbagvBxWxDdyXmOPOMO4FK6aLNZjDddACz/0Grv
-	8Ylay+YKUvYFOCtHXt+c4/DGCZaPUMqOZnOrhNNvGI7i8Wn0CHFUgOsXZEcVxOo=
-X-Gm-Gg: ASbGnctbClQMgnGwSliFhYRZQjZROpeb5dNJ4fZ5xt/LSSucJswctADFogIZK5N2Mvo
-	12bPKEBQvIaG0NxhUecW07Mmdf7eFJGVYeXjdt8V6lpetYbNslUq01ZLPU+SBSvcl+oF8JN3SwA
-	qnnWlQ0RMSHBtkCEwWcn4xAHHfvXH2kJN3fS5VwighI7HQnJbzPJiOJ6bYWRu5Ddh+98C0elB7u
-	QW4KTpl2G9PiLhYlF5k2KAb0T50voJn442qTc+PV0f3lvLqMoupGsc6sz0ty59xB9duf6YqyH0+
-	sMqhYZgmonFyHy3vTarzK60+kqjXY5uywpxsqPJ2eRiXtBhOiN8/Da9IAUzByGEVBhL4OeTvzCr
-	oachk54hUO/jPJWQ92XFxXkI=
-X-Google-Smtp-Source: AGHT+IG+vwdBOW78hJS2ARBoaeXcloe4PsBtjCQ3PHFHML6iqoEhTKREvxrGmJBv6hdomksBTVCVDw==
-X-Received: by 2002:a05:6214:5093:b0:6e8:fa38:46aa with SMTP id 6a1803df08f44-6f2b303673amr89566246d6.33.1744897741965;
-        Thu, 17 Apr 2025 06:49:01 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f0dea101c2sm127614776d6.94.2025.04.17.06.49.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 06:49:01 -0700 (PDT)
-Date: Thu, 17 Apr 2025 09:48:59 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Robert Richter <rrichter@amd.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v4 03/14] cxl/pci: Add comments to cxl_hdm_decode_init()
-Message-ID: <aAEGy6Lyt1WH5QgQ@gourry-fedora-PF4VCD3F>
-References: <20250306164448.3354845-1-rrichter@amd.com>
- <20250306164448.3354845-4-rrichter@amd.com>
+	s=arc-20240116; t=1744907819; c=relaxed/simple;
+	bh=H5r7SeuvDiLGsgZFktJlVy5PGtaaiCjlxewcnoMUxtQ=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lEvdhYcYxuPKaJJJvDE2L4M7s88dR+RvKFoPd3OaBBIcOdwGohhZBfuvL2SyzUhSxXWghT1wmnJdSJqf+susVBtrVK42j0KLhxmrEFJGZkhfnDr5T2F6Vz2Lx5KG/CBeN8wuRh3zxk/8Wx2ibfHm9TTIIr0Yo5luSlxUg0XV8Uk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Zdk2q3Sm7z6M4W2;
+	Fri, 18 Apr 2025 00:32:51 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 334841400CA;
+	Fri, 18 Apr 2025 00:36:52 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 17 Apr
+ 2025 18:36:51 +0200
+Date: Thu, 17 Apr 2025 17:36:50 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Alejandro Lucero Palau <alucerop@amd.com>
+CC: <alejandro.lucero-palau@amd.com>, <linux-cxl@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <dan.j.williams@intel.com>, <edward.cree@amd.com>,
+	<davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
+	<edumazet@google.com>, <dave.jiang@intel.com>
+Subject: Re: [PATCH v13 11/22] cxl: define a driver interface for HPA free
+ space enumeration
+Message-ID: <20250417173650.00003ee0@huawei.com>
+In-Reply-To: <eb5f16f8-607a-4c71-8f81-5cdb4ff73a75@amd.com>
+References: <20250414151336.3852990-1-alejandro.lucero-palau@amd.com>
+	<20250414151336.3852990-12-alejandro.lucero-palau@amd.com>
+	<20250415145016.00003725@huawei.com>
+	<eb5f16f8-607a-4c71-8f81-5cdb4ff73a75@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250306164448.3354845-4-rrichter@amd.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, Mar 06, 2025 at 05:44:37PM +0100, Robert Richter wrote:
-> There are various configuration cases of HDM decoder registers causing
-> different code paths. Add comments to cxl_hdm_decode_init() to better
-> explain them.
+On Thu, 17 Apr 2025 13:11:00 +0100
+Alejandro Lucero Palau <alucerop@amd.com> wrote:
+
+> On 4/15/25 14:50, Jonathan Cameron wrote:
+> > On Mon, 14 Apr 2025 16:13:25 +0100
+> > alejandro.lucero-palau@amd.com wrote:
+> >  
+> >> From: Alejandro Lucero <alucerop@amd.com>
+> >>
+> >> CXL region creation involves allocating capacity from device DPA
+> >> (device-physical-address space) and assigning it to decode a given HPA
+> >> (host-physical-address space). Before determining how much DPA to
+> >> allocate the amount of available HPA must be determined. Also, not all
+> >> HPA is created equal, some specifically targets RAM, some target PMEM,
+> >> some is prepared for device-memory flows like HDM-D and HDM-DB, and some
+> >> is host-only (HDM-H).
+> >>
+> >> Wrap all of those concerns into an API that retrieves a root decoder
+> >> (platform CXL window) that fits the specified constraints and the
+> >> capacity available for a new region.
+> >>
+> >> Add a complementary function for releasing the reference to such root
+> >> decoder.
+> >>
+> >> Based on https://lore.kernel.org/linux-cxl/168592159290.1948938.13522227102445462976.stgit@dwillia2-xfh.jf.intel.com/
+> >>
+> >> Signed-off-by: Alejandro Lucero <alucerop@amd.com>  
+> > One trivial comment inline.
+> >
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> >  
+> >> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> >> index 80caaf14d08a..0a9eab4f8e2e 100644
+> >> --- a/drivers/cxl/core/region.c
+> >> +++ b/drivers/cxl/core/region.c
+> >> +static int find_max_hpa(struct device *dev, void *data)
+> >> +{
+> >> +	struct cxlrd_max_context *ctx = data;
+> >> +	struct cxl_switch_decoder *cxlsd;
+> >> +	struct cxl_root_decoder *cxlrd;
+> >> +	struct resource *res, *prev;
+> >> +	struct cxl_decoder *cxld;
+> >> +	resource_size_t max;
+> >> +	int found = 0;
+> >> +
+> >> +	if (!is_root_decoder(dev))
+> >> +		return 0;
+> >> +
+> >> +	cxlrd = to_cxl_root_decoder(dev);
+> >> +	cxlsd = &cxlrd->cxlsd;
+> >> +	cxld = &cxlsd->cxld;
+> >> +
+> >> +	/*
+> >> +	 * None flags are declared as bitmaps but for the sake of better code  
+> > None?  
 > 
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-> Tested-by: Gregory Price <gourry@gourry.net>
+> 
+> Not sure you refer to syntax or semantics here. Assuming is the former:
+Just the wording of the comment. I'm not sure what it means.
 
-Reviewed-by: Gregory Price <gourry@gourry.net>
+> 
+> 
+> No flags fields?
+
+Not following that either.
+> 
+> 
+> >  
+> >> +	 * used here as such, restricting the bitmap size to those bits used by
+> >> +	 * any Type2 device driver requester.
+> >> +	 */  
+> >  
 
