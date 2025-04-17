@@ -1,18 +1,18 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4B0F21C9F3;
-	Thu, 17 Apr 2025 07:29:14 +0000 (UTC)
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5C961F8937;
+	Thu, 17 Apr 2025 08:11:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744874958; cv=none; b=UusKZT+og/RIaq/VculeSTJv3yaMU5Kgz4xPkZ6BRmNrNqpPIwciIOEsS7qrzZhNgsq5A0+iuSCpIkyb1sYa9ZhHD6pP8mwSNXqhHuPlE9gIQKHvL6i0bWlMe5BDbpHCqtBtzMogYXcGRQP5i9EepbgaArYftQmBct/IbuIqA84=
+	t=1744877478; cv=none; b=akVmlUHtvQv6q0cRcb5g2NjGG32RJjTU1alpjEJawQATMc3ceLsRr6uwyaBQoYkPv1nA174FIWukr1Np2IzAQO9GOncKsbF8M0bbZw1pT3rMr1qs7u+Y7qZ06QoQX6cUvvvgovQnVFrPiajq41/KDbxWsmOOaoOOq6mU1bRl1l0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744874958; c=relaxed/simple;
-	bh=yWyxpKG8iERiYLY2v9BSypCPX5mMGZK9dCnWQUP5Q/Q=;
+	s=arc-20240116; t=1744877478; c=relaxed/simple;
+	bh=Eme8szcr1CADWxFkxXJzZqKX2tXuRHI7rR0yLme1TmE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tJmxTIm9sFAOm/PSn1iX7tkKzY7vZxxDGc+o/3KsgUoZcR2Qsx3BlXi6wwAyHZwe6jzA/UbH3MiRFphhKosA3cnsaf9+INZ0V5iQEOUff621K+XmWc2KnhD5F0kuMd37fMZDcrY9Z+A7q45CrxOwqzxCyFkK43kmlB0QI008nGI=
+	 MIME-Version; b=poS+TWiLkHTSlw7M+gSVEq3EjkbZz3Rqn2Mb+q3yU8otBGqzZ+s3vPuiLkuaFZlD6t/Eo653v98DCTkrts6q56xkXxF1KXsBK5ucnMqv92ByaZHEojYktrxT4mX7LfLHVQ1A9JSr/xq5NN+2IaML/0m7g77pboexSVhLMp200Bc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-12-6800adc65bd6
+X-AuditID: a67dfc5b-669ff7000002311f-57-6800b79e565a
 From: Rakie Kim <rakie.kim@sk.com>
 To: akpm@linux-foundation.org
 Cc: gourry@gourry.net,
@@ -29,12 +29,12 @@ Cc: gourry@gourry.net,
 	honggyu.kim@sk.com,
 	yunjeong.mun@sk.com,
 	rakie.kim@sk.com
-Subject: [PATCH v9 3/3] mm/mempolicy: Support memory hotplug in weighted interleave
-Date: Thu, 17 Apr 2025 16:28:37 +0900
-Message-ID: <20250417072839.711-4-rakie.kim@sk.com>
+Subject: Re: [PATCH v9 0/3] Enhance sysfs handling for memory hotplug in weighted interleave
+Date: Thu, 17 Apr 2025 17:10:08 +0900
+Message-ID: <20250417081106.732-1-rakie.kim@sk.com>
 X-Mailer: git-send-email 2.48.1.windows.1
 In-Reply-To: <20250417072839.711-1-rakie.kim@sk.com>
-References: <20250417072839.711-1-rakie.kim@sk.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -42,246 +42,73 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrJLMWRmVeSWpSXmKPExsXC9ZZnoe6xtQwZBp8X81jMWb+GzWL61AuM
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrCLMWRmVeSWpSXmKPExsXC9ZZnoe687QwZBg8mcFrMWb+GzWL61AuM
 	Fl/X/2K2+Hn3OLvFqoXX2CyOb53HbnF+1ikWi8u75rBZ3Fvzn9XizLQii9VrMhy4PXbOusvu
 	0d12md2j5chbVo/Fe14yeWz6NInd48SM3yweOx9aerzfd5XNY/Ppao/Pm+QCuKK4bFJSczLL
-	Uov07RK4Mtrab7AWfDCuuDZ5PnsD40utLkZODgkBE4nnq6YzwtgnDjQxdTFycLAJKEkc2xsD
-	EhYRkJWY+vc8SxcjFwezwGMmiUfPX4DVCwsESxxbvYgNxGYRUJU4cG8GO4jNK2AscfpWFxPE
-	TE2Jhkv3wGxOoPnTdrcwg9hCQDUzX01ng6gXlDg58wkLiM0sIC/RvHU2M8gyCYHvbBIfZmyF
-	Ok5S4uCKGywTGPlnIemZhaRnASPTKkahzLyy3MTMHBO9jMq8zAq95PzcTYzACFhW+yd6B+On
-	C8GHGAU4GJV4eE8s+p8uxJpYVlyZe4hRgoNZSYT3nPm/dCHelMTKqtSi/Pii0pzU4kOM0hws
-	SuK8Rt/KU4QE0hNLUrNTUwtSi2CyTBycUg2MzPfuKj+bZR32bIltfPAaZwfl29765x6s5Wqb
-	9fTuksmt/wM6lz3+ulr/lmf/uzJm0Q79m4ymnifFGVQO8qx2Sl3xdPGNkOYtpm8k1PXjn9Rs
-	3prwrcHD/lL2181RH6dmRuyokZ26ZGnFBE+2VyZ/rEry5kZPKvjNMOdcyKUnIecXLzDNerzk
-	gRJLcUaioRZzUXEiAAybUft8AgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrMLMWRmVeSWpSXmKPExsXCNUNNS/fYWoYMgyPrWC3mrF/DZjF96gVG
+	Uov07RK4MlZ9PctScIKnomVdUgPjXq4uRk4OCQETiTm/dzJ1MXKA2fuWm4KYbAJKEsf2xoBU
+	iAjISkz9e56li5GLg1ngMZPEo+cvGLsY2TmEBWIkJsuCVLMIqErMOx4PUs0rYCzxaesmdojZ
+	mhINl+4xgdicQLOn7W5hBrGFBHgkXm3YzwhRLyhxcuYTFhCbWUBeonnrbGaQTRIC39kkHty7
+	ywYxSFLi4IobLBMY+Wch6ZmFpGcBI9MqRqHMvLLcxMwcE72MyrzMCr3k/NxNjMCwX1b7J3oH
+	46cLwYcYBTgYlXh4Tyz6ny7EmlhWXJl7iFGCg1lJhPec+b90Id6UxMqq1KL8+KLSnNTiQ4zS
+	HCxK4rxG38pThATSE0tSs1NTC1KLYLJMHJxSDYz1G45pHrVn6NhiLjTv7oyenQZ39s1Y8Nra
+	8kvmkXnl3pPOv1bg23b77qkjlk45nPpmRv0c8Z1JYbXCafrNS3n2/sxeZuNQzs9oPOv+zRma
+	qfMS1tY2BEn5XViyxuxmveh23sX3lkqmma0I2viGVWrbxOTSuT2zNUUidineefmv9eGryOoz
+	PfuVWIozEg21mIuKEwEjeGR2dwIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHLMWRmVeSWpSXmKPExsXCNUNNS3fudoYMg+9fzCzmrF/DZjF96gVG
 	i6/rfzFb/Lx7nN3i87PXzBarFl5jszi+dR67xeG5J1ktzs86xWJxedccNot7a/6zWpyZVmRx
 	6NpzVovVazIsfm9bwebA77Fz1l12j+62y+weLUfesnos3vOSyWPTp0nsHidm/Gbx2PnQ0uP9
-	vqtsHt9ue3gsfvGByWPz6WqPz5vkAniiuGxSUnMyy1KL9O0SuDLa2m+wFnwwrrg2eT57A+NL
-	rS5GTg4JAROJEweamLoYOTjYBJQkju2NAQmLCMhKTP17nqWLkYuDWeAxk8Sj5y8YQRLCAsES
-	x1YvYgOxWQRUJQ7cm8EOYvMKGEucvtXFBDFTU6Lh0j0wmxNo/rTdLcwgthBQzcxX09kg6gUl
-	Ts58wgJiMwvISzRvnc08gZFnFpLULCSpBYxMqxhFMvPKchMzc0z1irMzKvMyK/SS83M3MQKD
-	flntn4k7GL9cdj/EKMDBqMTDe2LR/3Qh1sSy4srcQ4wSHMxKIrznzP+lC/GmJFZWpRblxxeV
-	5qQWH2KU5mBREuf1Ck9NEBJITyxJzU5NLUgtgskycXBKNTCahEkfvhp+farp7Cu7N6xOYLkX
-	57B6Q5OwYV9jeMD36P0HYhYe4w68YXqoo/F2mer29nn3g7+EZR70TNwitWvNd8Nt/hOFa+xe
-	MXzVWKA75351G9/EKxODhRTlp85kO5eg4lIlHbDg5jvX2+G+D++oRMtyfbuzwkFhWeOUCgm5
-	ixNX1W1INXihxFKckWioxVxUnAgA8/fEZXYCAAA=
+	vqtsHt9ue3gsfvGByWPz6WqPz5vkAniiuGxSUnMyy1KL9O0SuDJWfT3LUnCCp6JlXVID416u
+	LkYODgkBE4l9y01BTDYBJYlje2O6GDk5RARkJab+Pc/SxcjFwSzwmEni0fMXjF2M7BzCAjES
+	k2VBqlkEVCXmHY8HqeYVMJb4tHUTO4gtIaAp0XDpHhOIzQk0e9ruFmYQW0iAR+LVhv2MEPWC
+	EidnPmEBsZkF5CWat85mnsDIMwtJahaS1AJGplWMIpl5ZbmJmTmmesXZGZV5mRV6yfm5mxiB
+	ob6s9s/EHYxfLrsfYhTgYFTi4T2x6H+6EGtiWXFl7iFGCQ5mJRHec+b/0oV4UxIrq1KL8uOL
+	SnNSiw8xSnOwKInzeoWnJggJpCeWpGanphakFsFkmTg4pRoY+TaF7+fv3/lb8nPzxl1ceY7p
+	523CS+QSio4Lik0/mbv0b8u8bfFvLk4qfcfkvyP0eZ3oaZlT/5c3mF1O7rFbWb60epb033/n
+	Njw7E5zqkLFSY5lvYVr5xOO/5JavLExaZtuXzmcd/0/mj2nb04fdjfma4XeWTj9pozkpZGLV
+	DrPksn4Tt5lzlViKMxINtZiLihMBvdXI8nECAAA=
 X-CFilter-Loop: Reflected
 
-The weighted interleave policy distributes page allocations across multiple
-NUMA nodes based on their performance weight, thereby improving memory
-bandwidth utilization. The weight values for each node are configured
-through sysfs.
+On Thu, 17 Apr 2025 16:28:34 +0900 Rakie Kim <rakie.kim@sk.com> wrote:
+> These patches have been tested under CXL-based memory configurations,
+> including hotplug scenarios, to ensure proper behavior and stability.
+> 
+>  mm/mempolicy.c | 240 ++++++++++++++++++++++++++++++-------------------
+>  1 file changed, 148 insertions(+), 92 deletions(-)
+> 
+> base-commit: 8ffd015db85fea3e15a77027fda6c02ced4d2444
+> -- 
 
-Previously, sysfs entries for configuring weighted interleave were created
-for all possible nodes (N_POSSIBLE) at initialization, including nodes that
-might not have memory. However, not all nodes in N_POSSIBLE are usable at
-runtime, as some may remain memoryless or offline.
-This led to sysfs entries being created for unusable nodes, causing
-potential misconfiguration issues.
+To Andrew
 
-To address this issue, this patch modifies the sysfs creation logic to:
-1) Limit sysfs entries to nodes that are online and have memory, avoiding
-   the creation of sysfs entries for nodes that cannot be used.
-2) Support memory hotplug by dynamically adding and removing sysfs entries
-   based on whether a node transitions into or out of the N_MEMORY state.
+I sincerely apologize for causing repeated inconvenience. The series of
+patches version v8 that was merged into -mm, mm-new today needs
+additional corrections.
+Link: https://lore.kernel.org/all/6800742de6315_130fd2949c@dwillia2-mobl3.amr.corp.intel.com.notmuch/
+Therefore, I have updated a new version v9, in which the problems have
+been addressed.
 
-Additionally, the patch ensures that sysfs attributes are properly managed
-when nodes go offline, preventing stale or redundant entries from persisting
-in the system.
+I would greatly appreciate it if you could drop the existing v8 and
+replace it with the new version v9. Below is the information regarding
+the v8 patch series that needs to be dropped.
+Once again, I truly apologize for the inconvenience.
 
-By making these changes, the weighted interleave policy now manages its
-sysfs entries more efficiently, ensuring that only relevant nodes are
-considered for interleaving, and dynamically adapting to memory hotplug
-events.
+<1>
+The patch titled:
+     Subject: mm/mempolicy: fix memory leaks in weighted interleave sysfs
+Filename:
+     mm-mempolicy-fix-memory-leaks-in-weighted-interleave-sysfs.patch
 
-Co-developed-by: Honggyu Kim <honggyu.kim@sk.com>
-Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
-Co-developed-by: Yunjeong Mun <yunjeong.mun@sk.com>
-Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
-Signed-off-by: Rakie Kim <rakie.kim@sk.com>
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-Reviewed-by: Joshua Hahn <joshua.hahnjy@gmail.com>
-Reviewed-by: Gregory Price <gourry@gourry.net>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Acked-by: David Hildenbrand <david@redhat.com>
----
- mm/mempolicy.c | 107 ++++++++++++++++++++++++++++++++++++++-----------
- 1 file changed, 84 insertions(+), 23 deletions(-)
+<2>
+The patch titled:
+     Subject: mm/mempolicy: prepare weighted interleave sysfs for memory hotplug
+Filename:
+     mm-mempolicy-prepare-weighted-interleave-sysfs-for-memory-hotplug.patch
 
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 97b52d65b3ba..74b4e2a6c786 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -113,6 +113,7 @@
- #include <asm/tlbflush.h>
- #include <asm/tlb.h>
- #include <linux/uaccess.h>
-+#include <linux/memory.h>
- 
- #include "internal.h"
- 
-@@ -3421,6 +3422,7 @@ struct iw_node_attr {
- 
- struct sysfs_wi_group {
- 	struct kobject wi_kobj;
-+	struct mutex kobj_lock;
- 	struct iw_node_attr *nattrs[];
- };
- 
-@@ -3470,13 +3472,24 @@ static ssize_t node_store(struct kobject *kobj, struct kobj_attribute *attr,
- 
- static void sysfs_wi_node_delete(int nid)
- {
--	if (!wi_group->nattrs[nid])
-+	struct iw_node_attr *attr;
-+
-+	if (nid < 0 || nid >= nr_node_ids)
-+		return;
-+
-+	mutex_lock(&wi_group->kobj_lock);
-+	attr = wi_group->nattrs[nid];
-+	if (!attr) {
-+		mutex_unlock(&wi_group->kobj_lock);
- 		return;
-+	}
-+
-+	wi_group->nattrs[nid] = NULL;
-+	mutex_unlock(&wi_group->kobj_lock);
- 
--	sysfs_remove_file(&wi_group->wi_kobj,
--			  &wi_group->nattrs[nid]->kobj_attr.attr);
--	kfree(wi_group->nattrs[nid]->kobj_attr.attr.name);
--	kfree(wi_group->nattrs[nid]);
-+	sysfs_remove_file(&wi_group->wi_kobj, &attr->kobj_attr.attr);
-+	kfree(attr->kobj_attr.attr.name);
-+	kfree(attr);
- }
- 
- static void sysfs_wi_node_delete_all(void)
-@@ -3518,35 +3531,77 @@ static const struct kobj_type wi_ktype = {
- 
- static int sysfs_wi_node_add(int nid)
- {
--	struct iw_node_attr *node_attr;
-+	int ret = 0;
- 	char *name;
-+	struct iw_node_attr *new_attr;
- 
--	node_attr = kzalloc(sizeof(*node_attr), GFP_KERNEL);
--	if (!node_attr)
-+	if (nid < 0 || nid >= nr_node_ids) {
-+		pr_err("invalid node id: %d\n", nid);
-+		return -EINVAL;
-+	}
-+
-+	new_attr = kzalloc(sizeof(*new_attr), GFP_KERNEL);
-+	if (!new_attr)
- 		return -ENOMEM;
- 
- 	name = kasprintf(GFP_KERNEL, "node%d", nid);
- 	if (!name) {
--		kfree(node_attr);
-+		kfree(new_attr);
- 		return -ENOMEM;
- 	}
- 
--	sysfs_attr_init(&node_attr->kobj_attr.attr);
--	node_attr->kobj_attr.attr.name = name;
--	node_attr->kobj_attr.attr.mode = 0644;
--	node_attr->kobj_attr.show = node_show;
--	node_attr->kobj_attr.store = node_store;
--	node_attr->nid = nid;
-+	sysfs_attr_init(&new_attr->kobj_attr.attr);
-+	new_attr->kobj_attr.attr.name = name;
-+	new_attr->kobj_attr.attr.mode = 0644;
-+	new_attr->kobj_attr.show = node_show;
-+	new_attr->kobj_attr.store = node_store;
-+	new_attr->nid = nid;
- 
--	if (sysfs_create_file(&wi_group->wi_kobj, &node_attr->kobj_attr.attr)) {
--		kfree(node_attr->kobj_attr.attr.name);
--		kfree(node_attr);
--		pr_err("failed to add attribute to weighted_interleave\n");
--		return -ENOMEM;
-+	mutex_lock(&wi_group->kobj_lock);
-+	if (wi_group->nattrs[nid]) {
-+		mutex_unlock(&wi_group->kobj_lock);
-+		pr_info("node%d already exists\n", nid);
-+		goto out;
- 	}
- 
--	wi_group->nattrs[nid] = node_attr;
-+	ret = sysfs_create_file(&wi_group->wi_kobj, &new_attr->kobj_attr.attr);
-+	if (ret) {
-+		mutex_unlock(&wi_group->kobj_lock);
-+		goto out;
-+	}
-+	wi_group->nattrs[nid] = new_attr;
-+	mutex_unlock(&wi_group->kobj_lock);
- 	return 0;
-+
-+out:
-+	kfree(new_attr->kobj_attr.attr.name);
-+	kfree(new_attr);
-+	return ret;
-+}
-+
-+static int wi_node_notifier(struct notifier_block *nb,
-+			       unsigned long action, void *data)
-+{
-+	int err;
-+	struct memory_notify *arg = data;
-+	int nid = arg->status_change_nid;
-+
-+	if (nid < 0)
-+		return NOTIFY_OK;
-+
-+	switch (action) {
-+	case MEM_ONLINE:
-+		err = sysfs_wi_node_add(nid);
-+		if (err)
-+			pr_err("failed to add sysfs for node%d during hotplug: %d\n",
-+			       nid, err);
-+		break;
-+	case MEM_OFFLINE:
-+		sysfs_wi_node_delete(nid);
-+		break;
-+	}
-+
-+	return NOTIFY_OK;
- }
- 
- static int __init add_weighted_interleave_group(struct kobject *mempolicy_kobj)
-@@ -3557,20 +3612,26 @@ static int __init add_weighted_interleave_group(struct kobject *mempolicy_kobj)
- 			   GFP_KERNEL);
- 	if (!wi_group)
- 		return -ENOMEM;
-+	mutex_init(&wi_group->kobj_lock);
- 
- 	err = kobject_init_and_add(&wi_group->wi_kobj, &wi_ktype, mempolicy_kobj,
- 				   "weighted_interleave");
- 	if (err)
- 		goto err_put_kobj;
- 
--	for_each_node_state(nid, N_POSSIBLE) {
-+	for_each_online_node(nid) {
-+		if (!node_state(nid, N_MEMORY))
-+			continue;
-+
- 		err = sysfs_wi_node_add(nid);
- 		if (err) {
--			pr_err("failed to add sysfs [node%d]\n", nid);
-+			pr_err("failed to add sysfs for node%d during init: %d\n",
-+			       nid, err);
- 			goto err_cleanup_kobj;
- 		}
- 	}
- 
-+	hotplug_memory_notifier(wi_node_notifier, DEFAULT_CALLBACK_PRI);
- 	return 0;
- 
- err_cleanup_kobj:
--- 
-2.34.1
+<3>
+The patch titled:
+     Subject: mm/mempolicy: support memory hotplug in weighted interleave
+Filename:
+     mm-mempolicy-support-memory-hotplug-in-weighted-interleave.patch
+
+Rakie
 
