@@ -1,82 +1,124 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F82222564;
-	Thu, 17 Apr 2025 23:31:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99745442C
+	for <linux-cxl@vger.kernel.org>; Fri, 18 Apr 2025 00:29:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744932711; cv=none; b=o21Ho89Hgj2Sz6qY9NNq7sK1uj0sX4XxZLNW1T+WfsN5dR8S8ZAkSgbcblI/U4JFQR9PPaAX6PdIutz8qtmEuiFBsy0XZ9FGKAZRmU2Ot2oMvYNTn7oapNjUyLUawK9GZRbi7Qh0HFq0Cy1hiHZbwOFfzruU/MILa1SyvOGMS/0=
+	t=1744936175; cv=none; b=MiLSEqg8Y4NEJVovI62lLuUcJ/15QSzQHUQPKiNenx7u+wLQpPzyLn0I5l+5tF8zkcng6o5IIcgljBM8od+VUovdmb9QCVC086H504Vr/Fe9x0Tl+4aeqnOVl9aj0dlfS524YN/VHIas0E+Uk6+M2CvgKebyzMcIGUpGR8WHmHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744932711; c=relaxed/simple;
-	bh=voDmLeRkXhnBh06zKO+SDWJ4p+ieK+pSNyDhd0/wngs=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=EDwSoBFFsD+qmL8O8SJPcMkfu4+ZSFcogIenNo4P/RVTHxBQjFTibGP5YwxyVYswGxO4HSvX7FyTXWcUnsQvccYyOw5qhjPnfig7SY4lpFumqvthhDLCzne5Y/KrTw+NBO7oWeUwPs7Rm/QWY1sHWcS1ZSOdHp2nM8nKgXijFvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=yk3Nt81H; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="yk3Nt81H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CB59C4CEE4;
-	Thu, 17 Apr 2025 23:31:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1744932710;
-	bh=voDmLeRkXhnBh06zKO+SDWJ4p+ieK+pSNyDhd0/wngs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=yk3Nt81HyWt8AB2Z4Zy0KzCNdCaAaL+E4nyoP35V0A8XO5tprE9Aj0S6sKaTHdo6U
-	 RFNu9nPpT9lIEJFybkOlWDTRVvoRjfNZgieypSBpLEkmXWTLm76bTbPxbaRGOmtNjM
-	 YtHmij0mEPrRJ7/ELuHB222LXFbe6X+NZTwGhLno=
-Date: Thu, 17 Apr 2025 16:31:49 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Rakie Kim <rakie.kim@sk.com>, <gourry@gourry.net>, <linux-mm@kvack.org>,
- <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
- <joshua.hahnjy@gmail.com>, <ying.huang@linux.alibaba.com>,
- <david@redhat.com>, <Jonathan.Cameron@huawei.com>, <osalvador@suse.de>,
- <kernel_team@skhynix.com>, <honggyu.kim@sk.com>, <yunjeong.mun@sk.com>
-Subject: Re: [PATCH v9 0/3] Enhance sysfs handling for memory hotplug in
- weighted interleave
-Message-Id: <20250417163149.c918137ef2f9742daf79083f@linux-foundation.org>
-In-Reply-To: <6801839a2481_71fe29462@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20250417072839.711-1-rakie.kim@sk.com>
-	<20250417081106.732-1-rakie.kim@sk.com>
-	<20250417153505.c921f75a035089906bb38fe6@linux-foundation.org>
-	<6801839a2481_71fe29462@dwillia2-xfh.jf.intel.com.notmuch>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1744936175; c=relaxed/simple;
+	bh=xDnA2Cgm31sM5Uotuv+AV1EwZKmGrgoZByHUB9KMJME=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h3yG6nAIFfyzJEUWtDSQRLgPRXp9G/7ClpTIX0QVWJKOdc6uMZS1OKNTTodd7JzZLiM/SMHT/fls8gOMolbF3rfRc/tSv5Bn9Al2UsTLEjs29tG2QNKmTdik+AGaxZqA+I06POPqAWfv06p+vjlR7mcXLmurnaLmcgjuwPIjt74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E699AC4CEE4;
+	Fri, 18 Apr 2025 00:29:34 +0000 (UTC)
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org
+Cc: dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	alison.schofield@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com
+Subject: [PATCH] cxl: Fix devm device for cxl_fwctl initialization
+Date: Thu, 17 Apr 2025 17:29:33 -0700
+Message-ID: <20250418002933.406439-1-dave.jiang@intel.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, 17 Apr 2025 15:41:30 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
+Testing revealed error message of for a CXL memdev that has Feature support:
+[   56.690430] cxl mem0: Resources present before probing
 
-> Andrew Morton wrote:
-> > On Thu, 17 Apr 2025 17:10:08 +0900 Rakie Kim <rakie.kim@sk.com> wrote:
-> > 
-> > > I sincerely apologize for causing repeated inconvenience. The series of
-> > > patches version v8 that was merged into -mm, mm-new today needs
-> > > additional corrections.
-> > > Link: https://lore.kernel.org/all/6800742de6315_130fd2949c@dwillia2-mobl3.amr.corp.intel.com.notmuch/
-> > > Therefore, I have updated a new version v9, in which the problems have
-> > > been addressed.
-> > 
-> > No probs, this is why mm.git workflow (mm-new -> mm-unstable ->
-> > mm-stable -> mainline) operates as it does - to easily permit revisions
-> > and replacements as patches move towards their final state.
-> > 
-> > Please note that I added a cc:stable to your [1/N] patch - sysfs leaks
-> > should be fixed in earlier kernels.  I considered this to be low
-> > priority - if it's higher priority than this patch should best have
-> > been separated from the series, so it can take a different merge path
-> > from the other patches.  
-> 
-> The risk of leak is low because it only appears to trigger if setup
-> fails. Setup only fails due to -ENOMEM which is unlikely to happen from
-> a late_initcall() when memory pressure is low.
+Attach the allocation of cxl_fwctl to the parent device of cxl_memdev.
+devm_add_* calls for cxl_memdev should not happen before the memdev
+probe function or outside the scope of the memdev driver.
 
-Oh, OK, thanks.  I added the above paragraph to the changelog and
-removed the cc:stable.
+Fixes: 858ce2f56b52 ("cxl: Add FWCTL support to CXL")
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
+ drivers/cxl/core/features.c  | 4 ++--
+ drivers/cxl/pci.c            | 2 +-
+ include/cxl/features.h       | 5 +++--
+ tools/testing/cxl/test/mem.c | 2 +-
+ 4 files changed, 7 insertions(+), 6 deletions(-)
 
-Generally, we assume that -ENOMEM doesn't happen in __init code.  If it
-does, the kernel is totally messed up anyway)
+diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
+index f4daefe3180e..150a1776480a 100644
+--- a/drivers/cxl/core/features.c
++++ b/drivers/cxl/core/features.c
+@@ -677,7 +677,7 @@ static void free_memdev_fwctl(void *_fwctl_dev)
+ 	fwctl_put(fwctl_dev);
+ }
+ 
+-int devm_cxl_setup_fwctl(struct cxl_memdev *cxlmd)
++int devm_cxl_setup_fwctl(struct device *host, struct cxl_memdev *cxlmd)
+ {
+ 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+ 	struct cxl_features_state *cxlfs;
+@@ -700,7 +700,7 @@ int devm_cxl_setup_fwctl(struct cxl_memdev *cxlmd)
+ 	if (rc)
+ 		return rc;
+ 
+-	return devm_add_action_or_reset(&cxlmd->dev, free_memdev_fwctl,
++	return devm_add_action_or_reset(host, free_memdev_fwctl,
+ 					no_free_ptr(fwctl_dev));
+ }
+ EXPORT_SYMBOL_NS_GPL(devm_cxl_setup_fwctl, "CXL");
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 7b14a154463c..785aa2af5eaa 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -1018,7 +1018,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	if (rc)
+ 		return rc;
+ 
+-	rc = devm_cxl_setup_fwctl(cxlmd);
++	rc = devm_cxl_setup_fwctl(&pdev->dev, cxlmd);
+ 	if (rc)
+ 		dev_dbg(&pdev->dev, "No CXL FWCTL setup\n");
+ 
+diff --git a/include/cxl/features.h b/include/cxl/features.h
+index a3bb34694c06..5f7f842765a5 100644
+--- a/include/cxl/features.h
++++ b/include/cxl/features.h
+@@ -66,7 +66,7 @@ struct cxl_memdev;
+ #ifdef CONFIG_CXL_FEATURES
+ inline struct cxl_features_state *to_cxlfs(struct cxl_dev_state *cxlds);
+ int devm_cxl_setup_features(struct cxl_dev_state *cxlds);
+-int devm_cxl_setup_fwctl(struct cxl_memdev *cxlmd);
++int devm_cxl_setup_fwctl(struct device *host, struct cxl_memdev *cxlmd);
+ #else
+ static inline struct cxl_features_state *to_cxlfs(struct cxl_dev_state *cxlds)
+ {
+@@ -78,7 +78,8 @@ static inline int devm_cxl_setup_features(struct cxl_dev_state *cxlds)
+ 	return -EOPNOTSUPP;
+ }
+ 
+-static inline int devm_cxl_setup_fwctl(struct cxl_memdev *cxlmd)
++static inline int devm_cxl_setup_fwctl(struct device *host,
++				       struct cxl_memdev *cxlmd)
+ {
+ 	return -EOPNOTSUPP;
+ }
+diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+index f2957a3e36fe..bf9caa908f89 100644
+--- a/tools/testing/cxl/test/mem.c
++++ b/tools/testing/cxl/test/mem.c
+@@ -1780,7 +1780,7 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
+ 	if (rc)
+ 		return rc;
+ 
+-	rc = devm_cxl_setup_fwctl(cxlmd);
++	rc = devm_cxl_setup_fwctl(&pdev->dev, cxlmd);
+ 	if (rc)
+ 		dev_dbg(dev, "No CXL FWCTL setup\n");
+ 
+-- 
+2.49.0
+
