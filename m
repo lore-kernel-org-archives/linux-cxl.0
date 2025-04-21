@@ -1,104 +1,95 @@
-Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C05F51F03EF;
-	Mon, 21 Apr 2025 21:00:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA9519F127;
+	Mon, 21 Apr 2025 21:21:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745269226; cv=none; b=VjW4EUR3WpvK3xEnrtaIcepD618R1ZSktfLQOTHmDFnMKCYlgrRWYEpr4jwy4XRTRcDwnWYb3IDwkybPulhj6jNrAgDaqUzcXzlXHaBZcIFHL1mjqX3IAijNGHkyC2cMum2aqmSqTEqfiewr7BaDdF17BJ16YaZOFjmnmOvRFOM=
+	t=1745270512; cv=none; b=H+YRLJHhou9nMJyxOXFKvptkty1h4vGFW8SiD2uFDbXVzn4xKfrSWm3HiQAC+orxwOb1rVWZokal8yc9SpnokrqbGGy2NDM6QooHdpeRJrA4If+8OkaWkaNXM87ZvAbEoYR8xolqx+P4dwn6J/ZefYorGWlJ6VQgdqUU+inxCkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745269226; c=relaxed/simple;
-	bh=lGsrYSNcKG8qfiaikDbbRwogHHQDp6DKS6+nvftTpcI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fhh7c6x+FvuK7PJJ0f4FO7LAAZteTjCSxEwnJkBjXre7H/mnBDN20fwFxlYoLHkQ5kzZxOgowCrvtkc1fOl6dksR5z+N4FJVuQwtbSoJK6plpskP8Y9Dw6EQjn2hmD7DRwF2bdFhLp1XXkVUPcX4bOhfMU8twDEMzqq7FoYN28g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KNF/ul5a; arc=none smtp.client-ip=209.85.161.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745270512; c=relaxed/simple;
+	bh=xO4hJqtW3nhfpJm4/YvtzVvkxDSKomYlRulbwgEvP3k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nMWZ2ZT5tlBbaQSQ/f/lMJ35iZ50z7N7mDus5p7OwEIodgSDy6EX++YA6TynvmzTbMcnQK4PJHz9RhMWG1b1SyBe9LTdt+PU/AY9od6JRbx63QzJbnJpBbUsk0Or3jc27BDrgIJlulbJZNB9IF49a8UD0LzPI3MGfNwJIiG94V8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YZLXA/ZN; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KNF/ul5a"
-Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-60402c94319so2197690eaf.1;
-        Mon, 21 Apr 2025 14:00:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745269224; x=1745874024; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=POBPLlOljVBDgxUS6PxzvxfjfLb9G+KKgkGlb9c3n64=;
-        b=KNF/ul5ay5nFFlP3uPYnkWkBxLD+q2ue0+v1Goi5mvYOVQr1esADDRnVuRQl0QcUdI
-         s6/QEvml3NGusqkX6o8ITVBygPvBlyPROPZjQOAgz1h5ka6wS34UhZXhckv5wWUemjLx
-         9/LrUlLExzlxn06XNsfE2Hv9ADxdTeuzh1m9UctP97fska/PUqVmV/iH/HrnqrnVk2/L
-         vay7UN6u+L+1P0zrzVI0ook080KgkSuQNoWyOCWxuz6nNsdrpYPY77EbOgFoPCtB2xkL
-         pQGQjfS5Mmudrnku7o0Dxuga6DMy6OIP/FOg8Z4IbOK+ZZkC1ztdtBwyz86L+3e7MMPC
-         WgPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745269224; x=1745874024;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=POBPLlOljVBDgxUS6PxzvxfjfLb9G+KKgkGlb9c3n64=;
-        b=lYe1PnUaPXKVmHncoA8Vxadr0TYdbId3YGOqmDGMQAVptkngBkJcIQ3VC/wm2OFzMM
-         DEW5UNnT9ApJmygt5ULzapKInAZptKtKiA9upuHjvuqvNcuHvAJfkLaZXiKW2hQYjdkY
-         44n7erWA8rxgo1s3cGnzGIrmFp9Psria/1uwJ60trp07F75PqXPFF0TqMYrVfbrSD3C2
-         nzvUpd32Ssh3tbNwRhq9UtsOmJMN+eQZjt/FM9Igk32nrf67rzD6o3UbxtiybEYl19CH
-         U8iNfUin088b921H4SZA5wysRuzZDSl1JFXf1ZXKakRSDQHesT8TRKAwLWrrroVe3+VA
-         cu2g==
-X-Forwarded-Encrypted: i=1; AJvYcCUKV9WBQGDEOIerqzxMrHzslx8/UOjAOTaiAjgElkPZlg7quAlNeOCtkVQOiQf7AqirQE5wgVwYxdgOvSXCQw==@vger.kernel.org, AJvYcCUw4fx54k3HF7hKGgXn6SdM95TNxoNJ9+JybJUs3ekyUxAozrxMwkkDgedpGShU6hYlXSoxGNV1fZAIAY8N@vger.kernel.org, AJvYcCVRex6v6LJ+uHomeg6IsbDlIQfsSSmkwvEp6E0SOhaO3/JSVosW/ES2s77oHUxU5btgzA8A3thvN5Q=@vger.kernel.org, AJvYcCVsvZ+eJeHzOFwMeZnokDtq81LyvUg9+cfSdvR/QZ2C08/Vz1d4rUXLC9kjvkV9lF9n9m71Cn8fUeoY@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzGQZIUe/KzbsOnPMT8xHcof/xXpTgbJlNODbgtQp6HqkX9XHK
-	JMKxlC3TizaULZI1QIDBdGcwvx5B2WxftRwk1fEn2VkUXPVcfj3L
-X-Gm-Gg: ASbGnctEXtwQXRAyUZaQJ6sMektpIifSDYCQIOxzsW+EcAclbsIS760Aqz461uUZUoZ
-	Dj6FzCYlQBv2CMx77VKCmtaJS+9JbAy5koPSUJFL6sLrSwN6B7m+McEkHKCAz0n5ONTGQfv1gDX
-	EQGiW4lJxru+y49uyPe6HCFW+0ZoDrbp1o3cr/xboPHTKuJ6zfOsLMDqiMKPpd6YAXrOzQpopzh
-	iDi6XOgzkagYc11N+32B22gDB5KcwFgRq6m8Tg6+vRU40iixwhoPyDWiVa5J8nTt4ZjYW5bJVzP
-	Xzg5yHWd8A9YzTnxCD2i9okofrHLyQFZR2PScv85lnacxhyGB4Zf1nxiumSS
-X-Google-Smtp-Source: AGHT+IFhWik0dvo5nbC73OtnpAgOzCCxlIuY5TcJavE3QjUL4HXTbUVWDwb/kdN4looh8mC60vBqqQ==
-X-Received: by 2002:a05:6871:c70a:b0:2cc:3586:294f with SMTP id 586e51a60fabf-2d526a28b26mr7572447fac.9.1745269223691;
-        Mon, 21 Apr 2025 14:00:23 -0700 (PDT)
-Received: from Borg-550.local ([2603:8080:1500:3d89:c191:629b:fde5:2f06])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2d52135b8b4sm2121868fac.17.2025.04.21.14.00.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 14:00:23 -0700 (PDT)
-Sender: John Groves <grovesaustin@gmail.com>
-Date: Mon, 21 Apr 2025 16:00:21 -0500
-From: John Groves <John@groves.net>
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Dan Williams <dan.j.williams@intel.com>, 
-	Miklos Szeredi <miklos@szeredb.hu>, Bernd Schubert <bschubert@ddn.com>, 
-	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	"Darrick J . Wong" <djwong@kernel.org>, Luis Henriques <luis@igalia.com>, 
-	Jeff Layton <jlayton@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>, 
-	Petr Vorel <pvorel@suse.cz>, Brian Foster <bfoster@redhat.com>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
-	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>
-Subject: Re: [RFC PATCH 17/19] famfs_fuse: Add famfs metadata documentation
-Message-ID: <f27nf7ac2lopba4tnakkxx2zvnlmntfvk2olrxyz7yv4ywrufb@cwobadow6gxs>
-References: <20250421013346.32530-1-john@groves.net>
- <20250421013346.32530-18-john@groves.net>
- <f0b218f4-7379-4fa5-93e4-a1c9dd4c411c@infradead.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YZLXA/ZN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745270511; x=1776806511;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=xO4hJqtW3nhfpJm4/YvtzVvkxDSKomYlRulbwgEvP3k=;
+  b=YZLXA/ZNJKkbk0lETqJ+mO+87YhqbTtVKWsXpq4YiIFDI+wc/ZXfAFy1
+   0wZ6b4BXBwOTba2Ulf40WJxpeMZveANyJ7exqDOb7n7O+UgtWi1G+l1sg
+   ufLzS3jhyi7qPz9t1BINyGJrQ417MInHeWz9o35nrOvUf23LbfkAkugIs
+   jtIRxBaT2fexjgaBt6wAhhlNedQNgE433yrujTk/V4q8yzG6Us2a5CtI9
+   OSQ3F4b28dOIzCvpuPqwwJJjYKoaXs6bQXBXo0XB7EnAw87KaTz29nViY
+   XqyXYAyDWZIXwu2neL8QzHQ/0yCcf6T/0hRmFhvELLWJ0w/spSHMEu5/9
+   Q==;
+X-CSE-ConnectionGUID: 5cjGkEZwQ7y8h4FePbJkzw==
+X-CSE-MsgGUID: rtADCSKNQfaG73HX7lRyUQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11410"; a="50611611"
+X-IronPort-AV: E=Sophos;i="6.15,229,1739865600"; 
+   d="scan'208";a="50611611"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 14:21:50 -0700
+X-CSE-ConnectionGUID: p7jXhTI1RmGsHe/jZMvrcA==
+X-CSE-MsgGUID: AzhsdTJxQYqu6qLJL7ncyg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,229,1739865600"; 
+   d="scan'208";a="132780280"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.70])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 14:21:47 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
+ Robert Richter <rrichter@amd.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Gregory Price <gourry@gourry.net>, Terry Bowman <terry.bowman@amd.com>,
+ Robert Richter <rrichter@amd.com>
+Subject:
+ Re: [PATCH v4 07/14] cxl/region: Move find_cxl_root() to cxl_add_to_region()
+Date: Mon, 21 Apr 2025 23:21:44 +0200
+Message-ID: <4624465.M3a2QDmDih@fdefranc-mobl3>
+In-Reply-To: <20250306164448.3354845-8-rrichter@amd.com>
+References:
+ <20250306164448.3354845-1-rrichter@amd.com>
+ <20250306164448.3354845-8-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f0b218f4-7379-4fa5-93e4-a1c9dd4c411c@infradead.org>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On 25/04/20 08:51PM, Randy Dunlap wrote:
-> 
-> 
+On Thursday, March 6, 2025 5:44:41=E2=80=AFPM Central European Summer Time =
+Robert Richter wrote:
+> When adding an endpoint to a region, the root port is determined
+> first. Move this directly into cxl_add_to_region(). This is in
+> preparation of the initialization of endpoints that iterates the port
+> hierarchy from the endpoint up to the root port.
+>=20
+> As a side-effect the root argument is removed from the argument lists
+> of cxl_add_to_region() and related functions. Now, the endpoint is the
+> only parameter to add a region. This simplifies the function
+> interface.
+>=20
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> Reviewed-by: Gregory Price <gourry@gourry.net>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Tested-by: Gregory Price <gourry@gourry.net>
+> ---
 
-good edits... 
+Reviewed-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
 
-Caching them into a branch for the next versions
 
-Thank you!
-
-John
 
