@@ -1,154 +1,142 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B746C28540A
-	for <linux-cxl@vger.kernel.org>; Tue, 22 Apr 2025 13:24:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A72DF290083;
+	Tue, 22 Apr 2025 15:52:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745328256; cv=none; b=lxgdL5YpvFEb7ypm/6AOGaf2LeNrfZuCfsT4Nwi1hBDs3P0ZuJIAT3WjyD2STalh8rpje16WE1bZ0wxRCvctN8CzzxFls9sByAC4UBWuCCwVK83QoECBndL/jguWHcL9VAxL+WqMe2gN0AAGeteSco7471UIXixwp7KYEdZqGEU=
+	t=1745337124; cv=none; b=kVQkEvi7vOxCXWzImqKdDWGUacpQE2q5W9SpgakQc7tQXfrj35u4toQafTrOUyxkIZ5Y1xYe5TnaXn3w+/E/TNjkCZGWFkH+rwrPDrTrvoRnugUYAc1KtuAxThs4OZqwqwxuPoi/kq2CCqHtlffVJSr6dyMFOIkP/80hSq8mrNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745328256; c=relaxed/simple;
-	bh=ch74M5gwke3IpuxZFue4DFh7OqtxFpGswgMoOAIW8dQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a+Kb1/0lFU1O0CRvtnCI0jjVnY0ujn/mSozk1bA0UZr/3wE4o6txhnk8sXsEdeXiTnMGY6d9Ix6siXhX9PBDilsIStgCujp8nKlsCYD9xDhqSLU3f+UcSsgIodOFr9mJEF92GXzXoGCMl9aCMG8fp+KBxgNaFHhAtlGr8B46bLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=CwDZ4v20; arc=none smtp.client-ip=91.218.175.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="CwDZ4v20"
-Message-ID: <3b9a2b25-9476-4806-be91-254dda385f38@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745328241;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yxPypqLDgGtdwJxcEcCayVfWENXwv6JuKnCdt8mdTtg=;
-	b=CwDZ4v203UYOq3NuBK0L4KWMa91rgo0fmLTpPArwhlNpGpfqnpv8yO5QB2X/6VxqeIzhOM
-	64ys++yDmVKOm4Xng7anf3Lmpl9IdDq3ILC/pSpd1EhChnIgIRrR00GzblmiUnJdBYqO2f
-	p0YwvnCFOnHwLHGta0eMi0EAxNYir7I=
-Date: Tue, 22 Apr 2025 21:23:52 +0800
+	s=arc-20240116; t=1745337124; c=relaxed/simple;
+	bh=AH+Q8UtE92o5RJ5wRhCdSovwJClD9/7ON4gllAZdkcc=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tdjgwkRGxKaDi7T+R3JHDain/AwcmsHem0huq5tTl8K9J5+L0ij4Ye4oqVEtRKxYa2tl0AjTwm3XChzdEZ1DY4GxcfRzc5TzKDHOZs3hBNOu34dyqibpmAm3N4V3ooQC9h9WVMdFCw1QkJvDihOY5lyjnHcHcTf8v+nhK/4q3fE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZhmsQ2dpLz6L5Gs;
+	Tue, 22 Apr 2025 23:50:18 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id ECFA01401F4;
+	Tue, 22 Apr 2025 23:51:58 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 22 Apr
+ 2025 17:51:58 +0200
+Date: Tue, 22 Apr 2025 16:51:57 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Alejandro Lucero Palau <alucerop@amd.com>
+CC: <alejandro.lucero-palau@amd.com>, <linux-cxl@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <dan.j.williams@intel.com>, <edward.cree@amd.com>,
+	<davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
+	<edumazet@google.com>, <dave.jiang@intel.com>
+Subject: Re: [PATCH v13 11/22] cxl: define a driver interface for HPA free
+ space enumeration
+Message-ID: <20250422165157.00006953@huawei.com>
+In-Reply-To: <eb1e5fca-7a8b-4ff1-8222-ce2eb16777dd@amd.com>
+References: <20250414151336.3852990-1-alejandro.lucero-palau@amd.com>
+	<20250414151336.3852990-12-alejandro.lucero-palau@amd.com>
+	<20250415145016.00003725@huawei.com>
+	<eb5f16f8-607a-4c71-8f81-5cdb4ff73a75@amd.com>
+	<20250417173650.00003ee0@huawei.com>
+	<eb1e5fca-7a8b-4ff1-8222-ce2eb16777dd@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [RFC PATCH 00/11] pcache: Persistent Memory Cache for Block
- Devices
-To: Mikulas Patocka <mpatocka@redhat.com>
-Cc: Jens Axboe <axboe@kernel.dk>, Dan Williams <dan.j.williams@intel.com>,
- hch@lst.de, gregory.price@memverge.com, John@groves.net,
- Jonathan.Cameron@huawei.com, bbhushan2@marvell.com, chaitanyak@nvidia.com,
- rdunlap@infradead.org, agk@redhat.com, snitzer@kernel.org,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org, linux-bcache@vger.kernel.org,
- nvdimm@lists.linux.dev, dm-devel@lists.linux.dev
-References: <20250414014505.20477-1-dongsheng.yang@linux.dev>
- <67fe9ea2850bc_71fe294d8@dwillia2-xfh.jf.intel.com.notmuch>
- <15e2151a-d788-48eb-8588-1d9a930c64dd@kernel.dk>
- <07f93a57-6459-46e2-8ee3-e0328dd67967@linux.dev>
- <d3231630-9445-4c17-9151-69fe5ae94a0d@kernel.dk>
- <235030ca-93a4-4666-93f8-93f8d81ff650@linux.dev>
- <3bdad772-9710-2763-c9a3-fefb3723fdf6@redhat.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Dongsheng Yang <dongsheng.yang@linux.dev>
-In-Reply-To: <3bdad772-9710-2763-c9a3-fefb3723fdf6@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
+On Thu, 17 Apr 2025 22:22:19 +0100
+Alejandro Lucero Palau <alucerop@amd.com> wrote:
 
-On 2025/4/22 18:29, Mikulas Patocka wrote:
-> Hi
->
->
-> On Thu, 17 Apr 2025, Dongsheng Yang wrote:
->
->> +ccing md-devel
->>
->> On 2025/4/16 23:10, Jens Axboe wrote:
->>> On 4/16/25 12:08 AM, Dongsheng Yang wrote:
->>>> On 2025/4/16 9:04, Jens Axboe wrote:
->>>>> On 4/15/25 12:00 PM, Dan Williams wrote:
->>>>>> Thanks for making the comparison chart. The immediate question this
->>>>>> raises is why not add "multi-tree per backend", "log structured
->>>>>> writeback", "readcache", and "CRC" support to dm-writecache?
->>>>>> device-mapper is everywhere, has a long track record, and enhancing it
->>>>>> immediately engages a community of folks in this space.
->>>>> Strongly agree.
->>>> Hi Dan and Jens,
->>>> Thanks for your reply, that's a good question.
->>>>
->>>>       1. Why not optimize within dm-writecache?
->>>>   From my perspective, the design goal of dm-writecache is to be a
->>>> minimal write cache. It achieves caching by dividing the cache device
->>>> into n blocks, each managed by a wc_entry, using a very simple
->>>> management mechanism. On top of this design, it's quite difficult to
->>>> implement features like multi-tree structures, CRC, or log-structured
->>>> writeback. Moreover, adding such optimizations?especially a read
->>>> cache?would deviate from the original semantics of dm-writecache. So,
->>>> we didn't consider optimizing dm-writecache to meet our goals.
->>>>
->>>>       2. Why not optimize within bcache or dm-cache?
->>>> As mentioned above, dm-writecache is essentially a minimal write
->>>> cache. So, why not build on bcache or dm-cache, which are more
->>>> complete caching systems? The truth is, it's also quite difficult.
->>>> These systems were designed with traditional SSDs/NVMe in mind, and
->>>> many of their design assumptions no longer hold true in the context of
->>>> PMEM. Every design targets a specific scenario, which is why, even
->>>> with dm-cache available, dm-writecache emerged to support DAX-capable
->>>> PMEM devices.
->>>>
->>>>       3. Then why not implement a full PMEM cache within the dm framework?
->>>> In high-performance IO scenarios?especially with PMEM hardware?adding
->>>> an extra DM layer in the IO stack is often unnecessary. For example,
->>>> DM performs a bio clone before calling __map_bio(clone) to invoke the
->>>> target operation, which introduces overhead.
-> Device mapper performs (in the common fast case) one allocation per
-> incoming bio - the allocation contains the outgoing bio and a structure
-> that may be used for any purpose by the target driver. For interlocking,
-> it uses RCU, so there is no synchronizing instruction. So, DM overhead is
-> not big.
->
->>>> Thank you again for the suggestion. I absolutely agree that leveraging
->>>> existing frameworks would be helpful in terms of code review, and
->>>> merging. I, more than anyone, hope more people can help review the
->>>> code or join in this work. However, I believe that in the long run,
->>>> building a standalone pcache module is a better choice.
->>> I think we'd need much stronger reasons for NOT adopting some kind of dm
->>> approach for this, this is really the place to do it. If dm-writecache
->>> etc aren't a good fit, add a dm-whatevercache for it? If dm is
->>> unnecessarily cloning bios when it doesn't need to, then that seems like
->>> something that would be worthwhile fixing in the first place, or at
->>> least eliminate for cases that don't need it. That'd benefit everyone,
->>> and we would not be stuck with a new stack to manage.
->>>
->>> Would certainly be worth exploring with the dm folks.
->> well, introducing dm-pcache (assuming we use this name) could, on one hand,
->> attract more users and developers from the device-mapper community to pay
->> attention to this project, and on the other hand, serve as a way to validate
->> or improve the dm framework’s performance in high-performance I/O scenarios.
->> If necessary, we can enhance the dm framework instead of bypassing it
->> entirely. This indeed sounds like something that would “benefit everyone.”
->>
->> Hmm, I will seriously consider this approach.
->>
->> Hi Alasdair, Mike, Mikulas,  Do you have any suggestions?
->>
->> Thanx
-> If you create a new self-contained target that doesn't need changes in the
-> generic dm or block code, it's OK and I would accept that.
+> On 4/17/25 17:36, Jonathan Cameron wrote:
+> > On Thu, 17 Apr 2025 13:11:00 +0100
+> > Alejandro Lucero Palau <alucerop@amd.com> wrote:
+> >  
+> >> On 4/15/25 14:50, Jonathan Cameron wrote:  
+> >>> On Mon, 14 Apr 2025 16:13:25 +0100
+> >>> alejandro.lucero-palau@amd.com wrote:
+> >>>     
+> >>>> From: Alejandro Lucero <alucerop@amd.com>
+> >>>>
+> >>>> CXL region creation involves allocating capacity from device DPA
+> >>>> (device-physical-address space) and assigning it to decode a given HPA
+> >>>> (host-physical-address space). Before determining how much DPA to
+> >>>> allocate the amount of available HPA must be determined. Also, not all
+> >>>> HPA is created equal, some specifically targets RAM, some target PMEM,
+> >>>> some is prepared for device-memory flows like HDM-D and HDM-DB, and some
+> >>>> is host-only (HDM-H).
+> >>>>
+> >>>> Wrap all of those concerns into an API that retrieves a root decoder
+> >>>> (platform CXL window) that fits the specified constraints and the
+> >>>> capacity available for a new region.
+> >>>>
+> >>>> Add a complementary function for releasing the reference to such root
+> >>>> decoder.
+> >>>>
+> >>>> Based on https://lore.kernel.org/linux-cxl/168592159290.1948938.13522227102445462976.stgit@dwillia2-xfh.jf.intel.com/
+> >>>>
+> >>>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>  
+> >>> One trivial comment inline.
+> >>>
+> >>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> >>>     
+> >>>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> >>>> index 80caaf14d08a..0a9eab4f8e2e 100644
+> >>>> --- a/drivers/cxl/core/region.c
+> >>>> +++ b/drivers/cxl/core/region.c
+> >>>> +static int find_max_hpa(struct device *dev, void *data)
+> >>>> +{
+> >>>> +	struct cxlrd_max_context *ctx = data;
+> >>>> +	struct cxl_switch_decoder *cxlsd;
+> >>>> +	struct cxl_root_decoder *cxlrd;
+> >>>> +	struct resource *res, *prev;
+> >>>> +	struct cxl_decoder *cxld;
+> >>>> +	resource_size_t max;
+> >>>> +	int found = 0;
+> >>>> +
+> >>>> +	if (!is_root_decoder(dev))
+> >>>> +		return 0;
+> >>>> +
+> >>>> +	cxlrd = to_cxl_root_decoder(dev);
+> >>>> +	cxlsd = &cxlrd->cxlsd;
+> >>>> +	cxld = &cxlsd->cxld;
+> >>>> +
+> >>>> +	/*
+> >>>> +	 * None flags are declared as bitmaps but for the sake of better code  
+> >>> None?  
+> >>
+> >> Not sure you refer to syntax or semantics here. Assuming is the former:  
+> > Just the wording of the comment. I'm not sure what it means.  
+> 
+> 
+> Ok. I just want to make clear those flags fields used in the 
+> bitmap_subset are not declared as bitmaps, just in case someone points 
+> this out.
+> 
+> I do not think this is problematic, and a good idea you gave me, but 
+> better to comment on it before someone complains about it.
+> 
+Ah.. Ok. So something like:
 
+Fields are not declared as bitmaps, but bitmap_subset may still be used.
 
-I will try to port pcache into dm to be a new self-contained target.
+> 
+> >  
+> >>
+> >> No flags fields?  
+> > Not following that either.  
+> >>  
+> >>>     
+> >>>> +	 * used here as such, restricting the bitmap size to those bits used by
+> >>>> +	 * any Type2 device driver requester.
+> >>>> +	 */  
+> >>>     
 
-
-Thanx
-
-Dongsheng
-
->
-> Improving dm-writecache is also possible.
->
-> Mikulas
