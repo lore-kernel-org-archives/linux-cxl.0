@@ -1,164 +1,123 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A0382135DE
-	for <linux-cxl@vger.kernel.org>; Tue, 22 Apr 2025 10:29:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3CD627BF69
+	for <linux-cxl@vger.kernel.org>; Tue, 22 Apr 2025 11:48:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745317791; cv=none; b=RKrFp1C5md1jUBQ+pyu5MyC+c/t5ViHZbAGpVGq8iLAdyLVA1RG7CYjFYniGNygJgJ2IQhg9QT3/RQOOsiJuSrHseHACw/HKZ6qav0fsq0K/yVC1XBkNl6RR/v4XzGyO3ey6z+Zq4S0S3W32fWzp2yp4fCK2EiRo9YLvtOIVgHQ=
+	t=1745322499; cv=none; b=MME0+iVvnCR+37bERQnU+AJ2fcGn3N2tsQiWxSfOOr/k9xbIL567MCHYaBvT5sA4PC2uR0rq7f/JjYotUYJNHaMejAk87zLn4DR6jZLTPo22HsE+2WVONauaOylX6U/oJQHh97/Gr/ZYYW3GVx0+JvrB77gpMl6/PNqNPoTn1KE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745317791; c=relaxed/simple;
-	bh=ySDR+naf00yDu9P1Ud7R7ThyQJxoS7alGqqWjN3bylU=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ZDEywScpfLXMU3SvmPfVlilTCl+HB2Ak8PtEdUDV9vCj++Tdz7fEHDr5l27ClwbcRkzaVc2+7i6E/c+3sGz60CDhR83GR6UYNsnyTCgDE7oW9i3Hmyo+FsbdJB+jOlool2YD5vjZwunuwOmyfCBb548lResRm7CeEH+KftMlqbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Qi5PahEO; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745322499; c=relaxed/simple;
+	bh=vvbSXOpv2PWldlCkgMw68EbwtInhF3Q/a+9cSwsTqWU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gyu/t4Ioji868jO783ojhwFn64Nl4WX4ZnwZiDDi0QsEtvvrqlO+sY3ixnUWbTf2znsemk1CrkATwE7hm0RD+wuCe4VUidKC3834DBForAkY0jkbbJ+mTR9HOq55AXJ1nArERSlt6b5OWC3PQjw3Cn19raGe9T5QkCtCsi1jSJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=F95sxA5l; arc=none smtp.client-ip=95.215.58.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qi5PahEO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745317788;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="F95sxA5l"
+Date: Tue, 22 Apr 2025 04:47:19 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745322485;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=unMzrw2kDN7wNfld1j7GnlAT292MaQ581CLATXFODK0=;
-	b=Qi5PahEOsTm0L6uPRjAV8uRObyRHObzb4C2W2ChMnxLXcdquiThYYEbcXyNkBkD8UM7dhA
-	RveXcgMcssHJ6i4ELy3hJYLTggUzhtL2oi+81DELNSvU/Vyae8eu3sN4faOUOqRUeaJpp3
-	chPF84Wtc4ZMFWaU9sxtjmtgVX60AX0=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-679-2itJwe45P8u0rOjBPWqfaA-1; Tue,
- 22 Apr 2025 06:29:43 -0400
-X-MC-Unique: 2itJwe45P8u0rOjBPWqfaA-1
-X-Mimecast-MFC-AGG-ID: 2itJwe45P8u0rOjBPWqfaA_1745317781
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6D6AC180036D;
-	Tue, 22 Apr 2025 10:29:40 +0000 (UTC)
-Received: from [10.22.80.44] (unknown [10.22.80.44])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 358A7180094C;
-	Tue, 22 Apr 2025 10:29:33 +0000 (UTC)
-Date: Tue, 22 Apr 2025 12:29:27 +0200 (CEST)
-From: Mikulas Patocka <mpatocka@redhat.com>
-To: Dongsheng Yang <dongsheng.yang@linux.dev>
-cc: Jens Axboe <axboe@kernel.dk>, Dan Williams <dan.j.williams@intel.com>, 
-    hch@lst.de, gregory.price@memverge.com, John@groves.net, 
-    Jonathan.Cameron@huawei.com, bbhushan2@marvell.com, chaitanyak@nvidia.com, 
-    rdunlap@infradead.org, agk@redhat.com, snitzer@kernel.org, 
-    linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-    linux-cxl@vger.kernel.org, linux-bcache@vger.kernel.org, 
-    nvdimm@lists.linux.dev, dm-devel@lists.linux.dev
-Subject: Re: [RFC PATCH 00/11] pcache: Persistent Memory Cache for Block
- Devices
-In-Reply-To: <235030ca-93a4-4666-93f8-93f8d81ff650@linux.dev>
-Message-ID: <3bdad772-9710-2763-c9a3-fefb3723fdf6@redhat.com>
-References: <20250414014505.20477-1-dongsheng.yang@linux.dev> <67fe9ea2850bc_71fe294d8@dwillia2-xfh.jf.intel.com.notmuch> <15e2151a-d788-48eb-8588-1d9a930c64dd@kernel.dk> <07f93a57-6459-46e2-8ee3-e0328dd67967@linux.dev> <d3231630-9445-4c17-9151-69fe5ae94a0d@kernel.dk>
- <235030ca-93a4-4666-93f8-93f8d81ff650@linux.dev>
+	bh=DlOy5pgOMDLNOF17VOxP0jw2ph04ic2bIH7kzzlbOHI=;
+	b=F95sxA5lw7P8QmrrzD85lNvmnPmm9bJbaQFbZRyO8zsokGbePISBD4Zp2xa9m5HmyD4pZi
+	9InQKq9XKutv7roD05XGKcJvwpyyuBneY5YHZEVxT6DRVOviq6Q3intImd7OuS9jgn5B4l
+	YARCPhgTzAhhOduK1xEbRW0uCv5FvYk=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yosry Ahmed <yosry.ahmed@linux.dev>
+To: Nhat Pham <nphamcs@gmail.com>
+Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, chengming.zhou@linux.dev,
+	sj@kernel.org, linux-mm@kvack.org, kernel-team@meta.com,
+	linux-kernel@vger.kernel.org, gourry@gourry.net,
+	ying.huang@linux.alibaba.com, jonathan.cameron@huawei.com,
+	dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
+	minchan@kernel.org, senozhatsky@chromium.org
+Subject: Re: [PATCH v2] zsmalloc: prefer the the original page's node for
+ compressed data
+Message-ID: <aAeBx9fJliZldLQO@Asmaa.>
+References: <20250402204416.3435994-1-nphamcs@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="-1463811712-2131032953-1745317780=:1888132"
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250402204416.3435994-1-nphamcs@gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
----1463811712-2131032953-1745317780=:1888132
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-
-Hi
-
-
-On Thu, 17 Apr 2025, Dongsheng Yang wrote:
-
-> +ccing md-devel
+On Wed, Apr 02, 2025 at 01:44:16PM -0700, Nhat Pham wrote:
+> Currently, zsmalloc, zswap's and zram's backend memory allocator, does
+> not enforce any policy for the allocation of memory for the compressed
+> data, instead just adopting the memory policy of the task entering
+> reclaim, or the default policy (prefer local node) if no such policy is
+> specified. This can lead to several pathological behaviors in
+> multi-node NUMA systems:
 > 
-> On 2025/4/16 23:10, Jens Axboe wrote:
-> > On 4/16/25 12:08 AM, Dongsheng Yang wrote:
-> > > On 2025/4/16 9:04, Jens Axboe wrote:
-> > > > On 4/15/25 12:00 PM, Dan Williams wrote:
-> > > > > Thanks for making the comparison chart. The immediate question this
-> > > > > raises is why not add "multi-tree per backend", "log structured
-> > > > > writeback", "readcache", and "CRC" support to dm-writecache?
-> > > > > device-mapper is everywhere, has a long track record, and enhancing it
-> > > > > immediately engages a community of folks in this space.
-> > > > Strongly agree.
-> > > 
-> > > Hi Dan and Jens,
-> > > Thanks for your reply, that's a good question.
-> > > 
-> > >      1. Why not optimize within dm-writecache?
-> > >  From my perspective, the design goal of dm-writecache is to be a
-> > > minimal write cache. It achieves caching by dividing the cache device
-> > > into n blocks, each managed by a wc_entry, using a very simple
-> > > management mechanism. On top of this design, it's quite difficult to
-> > > implement features like multi-tree structures, CRC, or log-structured
-> > > writeback. Moreover, adding such optimizations?especially a read
-> > > cache?would deviate from the original semantics of dm-writecache. So,
-> > > we didn't consider optimizing dm-writecache to meet our goals.
-> > > 
-> > >      2. Why not optimize within bcache or dm-cache?
-> > > As mentioned above, dm-writecache is essentially a minimal write
-> > > cache. So, why not build on bcache or dm-cache, which are more
-> > > complete caching systems? The truth is, it's also quite difficult.
-> > > These systems were designed with traditional SSDs/NVMe in mind, and
-> > > many of their design assumptions no longer hold true in the context of
-> > > PMEM. Every design targets a specific scenario, which is why, even
-> > > with dm-cache available, dm-writecache emerged to support DAX-capable
-> > > PMEM devices.
-> > > 
-> > >      3. Then why not implement a full PMEM cache within the dm framework?
-> > > In high-performance IO scenarios?especially with PMEM hardware?adding
-> > > an extra DM layer in the IO stack is often unnecessary. For example,
-> > > DM performs a bio clone before calling __map_bio(clone) to invoke the
-> > > target operation, which introduces overhead.
-
-Device mapper performs (in the common fast case) one allocation per 
-incoming bio - the allocation contains the outgoing bio and a structure 
-that may be used for any purpose by the target driver. For interlocking, 
-it uses RCU, so there is no synchronizing instruction. So, DM overhead is 
-not big.
-
-> > > Thank you again for the suggestion. I absolutely agree that leveraging
-> > > existing frameworks would be helpful in terms of code review, and
-> > > merging. I, more than anyone, hope more people can help review the
-> > > code or join in this work. However, I believe that in the long run,
-> > > building a standalone pcache module is a better choice.
-> > I think we'd need much stronger reasons for NOT adopting some kind of dm
-> > approach for this, this is really the place to do it. If dm-writecache
-> > etc aren't a good fit, add a dm-whatevercache for it? If dm is
-> > unnecessarily cloning bios when it doesn't need to, then that seems like
-> > something that would be worthwhile fixing in the first place, or at
-> > least eliminate for cases that don't need it. That'd benefit everyone,
-> > and we would not be stuck with a new stack to manage.
-> > 
-> > Would certainly be worth exploring with the dm folks.
+> 1. Systems with CXL-based memory tiering can encounter the following
+>    inversion with zswap/zram: the coldest pages demoted to the CXL tier
+>    can return to the high tier when they are reclaimed to compressed
+>    swap, creating memory pressure on the high tier.
 > 
-> well, introducing dm-pcache (assuming we use this name) could, on one hand,
-> attract more users and developers from the device-mapper community to pay
-> attention to this project, and on the other hand, serve as a way to validate
-> or improve the dm framework’s performance in high-performance I/O scenarios.
-> If necessary, we can enhance the dm framework instead of bypassing it
-> entirely. This indeed sounds like something that would “benefit everyone.”
+> 2. Consider a direct reclaimer scanning nodes in order of allocation
+>    preference. If it ventures into remote nodes, the memory it
+>    compresses there should stay there. Trying to shift those contents
+>    over to the reclaiming thread's preferred node further *increases*
+>    its local pressure, and provoking more spills. The remote node is
+>    also the most likely to refault this data again. This undesirable
+>    behavior was pointed out by Johannes Weiner in [1].
 > 
-> Hmm, I will seriously consider this approach.
+> 3. For zswap writeback, the zswap entries are organized in
+>    node-specific LRUs, based on the node placement of the original
+>    pages, allowing for targeted zswap writeback for specific nodes.
 > 
-> Hi Alasdair, Mike, Mikulas,  Do you have any suggestions?
+>    However, the compressed data of a zswap entry can be placed on a
+>    different node from the LRU it is placed on. This means that reclaim
+>    targeted at one node might not free up memory used for zswap entries
+>    in that node, but instead reclaiming memory in a different node.
 > 
-> Thanx
+> All of these issues will be resolved if the compressed data go to the
+> same node as the original page. This patch encourages this behavior by
+> having zswap and zram pass the node of the original page to zsmalloc,
+> and have zsmalloc prefer the specified node if we need to allocate new
+> (zs)pages for the compressed data.
+> 
+> Note that we are not strictly binding the allocation to the preferred
+> node. We still allow the allocation to fall back to other nodes when
+> the preferred node is full, or if we have zspages with slots available
+> on a different node. This is OK, and still a strict improvement over
+> the status quo:
+> 
+> 1. On a system with demotion enabled, we will generally prefer
+>    demotions over compressed swapping, and only swap when pages have
+>    already gone to the lowest tier. This patch should achieve the
+>    desired effect for the most part.
+> 
+> 2. If the preferred node is out of memory, letting the compressed data
+>    going to other nodes can be better than the alternative (OOMs,
+>    keeping cold memory unreclaimed, disk swapping, etc.).
+> 
+> 3. If the allocation go to a separate node because we have a zspage
+>    with slots available, at least we're not creating extra immediate
+>    memory pressure (since the space is already allocated).
+> 
+> 3. While there can be mixings, we generally reclaim pages in
+>    same-node batches, which encourage zspage grouping that is more
+>    likely to go to the right node.
+> 
+> 4. A strict binding would require partitioning zsmalloc by node, which
+>    is more complicated, and more prone to regression, since it reduces
+>    the storage density of zsmalloc. We need to evaluate the tradeoff
+>    and benchmark carefully before adopting such an involved solution.
+> 
+> [1]: https://lore.kernel.org/linux-mm/20250331165306.GC2110528@cmpxchg.org/
+> 
+> Suggested-by: Gregory Price <gourry@gourry.net>
+> Signed-off-by: Nhat Pham <nphamcs@gmail.com>
 
-If you create a new self-contained target that doesn't need changes in the 
-generic dm or block code, it's OK and I would accept that.
-
-Improving dm-writecache is also possible.
-
-Mikulas
----1463811712-2131032953-1745317780=:1888132--
-
+For the zswap/zsamlloc bits:
+Acked-by: Yosry Ahmed <yosry.ahmed@linux.dev>
