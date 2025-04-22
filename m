@@ -1,42 +1,41 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C458B28F527;
-	Tue, 22 Apr 2025 16:22:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E7C19F471
+	for <linux-cxl@vger.kernel.org>; Tue, 22 Apr 2025 16:31:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745338941; cv=none; b=C+tKkRfEMrnhcv+SSRsIETli8TvVYqNMegYeg1e5F4AWCBdwAP7o4wUygRqqe1CVGsqKFxq/HH+caUzXv8SDdhy1KH6aQJ0tRmthDyytQbyms8gE+SJ7uPFCQQrnX3s9Zc5DWVOp2Q3d3nJdUVoJx+vWavRsLlo0nreT2YhkU+c=
+	t=1745339499; cv=none; b=EnvhOt2NJSxiPeWMrh9Yryn8gEI1V7j36/PmnPngTo8wD8DytEEooYZkbZ+78x9NklznSw4ql3vz74jzj3Ods3SMHFDBoqEMg1ARWPyjNGpPGv4ec5MbGFTRCPCNjR0foXn71whttk+Oe5ttBWaJYCRRXwSt9q1QdUnvbMaGVe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745338941; c=relaxed/simple;
-	bh=6sSFpjU1Fyw2Y31zbfsq+JMfKLoYSLZv/cDvBMBaAEU=;
+	s=arc-20240116; t=1745339499; c=relaxed/simple;
+	bh=ydgnFdd28HnIExjXtLFKJzrXGHeAMFTu81kRytyoUdw=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S2eEZ7KabilVZbFTPwBw1rCRNznsZVGZlK4jKv+6j6VWwwiDHnOCWe6YTzV98aNqsk7ASq4AE/wVOP/TOHtH4maBapY5GBYUgNpIUo0BjBpQw1ZoaOIQ069NMWyNZ1Hoooxk1UCKr3yM51YHqoOouPanyW+KlpX0FAuqIV0gHT4=
+	 MIME-Version:Content-Type; b=P/aLeaTHiYlVBRhEUg/fBAJqjFSorDAy4PlMpiwF8w4x3Eju1k0AyAHWHQznIil9NK1eqQoIlZWU9U6WesCWM5hb00eoROp52PKtODJAreFKX/16rbYUhxntfX6Zh/r7KvzzhmR1G26BygVxxx1fS4O52hot64mNTaUL+f9w5OI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZhnT14KHFz6K9X0;
-	Wed, 23 Apr 2025 00:17:41 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Zhngn5n2xz6K9Dy;
+	Wed, 23 Apr 2025 00:27:01 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 496321401F3;
-	Wed, 23 Apr 2025 00:22:13 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id A77131404F5;
+	Wed, 23 Apr 2025 00:31:33 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 22 Apr
- 2025 18:22:12 +0200
-Date: Tue, 22 Apr 2025 17:22:11 +0100
+ 2025 18:31:33 +0200
+Date: Tue, 22 Apr 2025 17:31:31 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <alejandro.lucero-palau@amd.com>
-CC: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<dan.j.williams@intel.com>, <edward.cree@amd.com>, <davem@davemloft.net>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>,
-	<dave.jiang@intel.com>, Alejandro Lucero <alucerop@amd.com>
-Subject: Re: [PATCH v14 11/22] cxl: define a driver interface for HPA free
- space enumeration
-Message-ID: <20250422172211.00004d10@huawei.com>
-In-Reply-To: <20250417212926.1343268-12-alejandro.lucero-palau@amd.com>
-References: <20250417212926.1343268-1-alejandro.lucero-palau@amd.com>
-	<20250417212926.1343268-12-alejandro.lucero-palau@amd.com>
+To: Dave Jiang <dave.jiang@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
+	<dave@stgolabs.net>, <alison.schofield@intel.com>, <ira.weiny@intel.com>,
+	<rrichter@amd.com>, <ming.li@zohomail.com>
+Subject: Re: [PATCH 4/4] cxl/test: Add workaround for cxl_test for cxl_core
+ calling mocked functions
+Message-ID: <20250422173131.000047e5@huawei.com>
+In-Reply-To: <20250404230049.3578835-5-dave.jiang@intel.com>
+References: <20250404230049.3578835-1-dave.jiang@intel.com>
+	<20250404230049.3578835-5-dave.jiang@intel.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -49,48 +48,98 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, 17 Apr 2025 22:29:14 +0100
-<alejandro.lucero-palau@amd.com> wrote:
+On Fri, 4 Apr 2025 15:57:36 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-> From: Alejandro Lucero <alucerop@amd.com>
+> When cxl_core calls a cxl_core exported function and that function is
+> mocked by cxl_test, the call chain causes a circular dependency issue. Dan
+> provided a workaround to avoid this issue. Apply the method to changes from
+> the late host bridge uport mapping update changes in order to enable
+> cxl-test.
 > 
-> CXL region creation involves allocating capacity from device DPA
-> (device-physical-address space) and assigning it to decode a given HPA
-> (host-physical-address space). Before determining how much DPA to
-> allocate the amount of available HPA must be determined. Also, not all
-> HPA is created equal, some specifically targets RAM, some target PMEM,
-> some is prepared for device-memory flows like HDM-D and HDM-DB, and some
-> is host-only (HDM-H).
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+
+Perhaps some more breadcrumbs (e.g. comments in the code) so we remember why this
+dance is used?
+
+Otherwise I think this is fine though I'm not entirely sure what happens
+wrt to races and the  register_cxl_mock_ops() / unregister paths.
+
+> ---
+>  drivers/cxl/core/hdm.c        | 51 +++++++++++++++++++++++++++++------
+>  drivers/cxl/cxl.h             | 16 +++++++++++
+>  tools/testing/cxl/Kbuild      |  3 ---
+>  tools/testing/cxl/test/mock.c | 34 +++++++++++++++--------
+>  4 files changed, 82 insertions(+), 22 deletions(-)
 > 
-> Wrap all of those concerns into an API that retrieves a root decoder
-> (platform CXL window) that fits the specified constraints and the
-> capacity available for a new region.
-> 
-> Add a complementary function for releasing the reference to such root
-> decoder.
-> 
-> Based on https://lore.kernel.org/linux-cxl/168592159290.1948938.13522227102445462976.stgit@dwillia2-xfh.jf.intel.com/
-> 
-> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index 70cae4ebf8a4..ed6bdbd6b452 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -39,14 +39,19 @@ static int add_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+>  	return 0;
+>  }
+>  
+> -/*
+> +/**
+> + * __devm_cxl_add_passthrough_decoder - Add passthrough decoder
+> + * @port: The cxl_port context
+> + *
+> + * Return 0 on success or errno on failure.
+> + *
+>   * Per the CXL specification (8.2.5.12 CXL HDM Decoder Capability Structure)
+>   * single ported host-bridges need not publish a decoder capability when a
+>   * passthrough decode can be assumed, i.e. all transactions that the uport sees
+>   * are claimed and passed to the single dport. Disable the range until the first
+>   * CXL region is enumerated / activated.
+>   */
+> -int devm_cxl_add_passthrough_decoder(struct cxl_port *port)
+> +int __devm_cxl_add_passthrough_decoder(struct cxl_port *port)
+>  {
+>  	struct cxl_switch_decoder *cxlsd;
+>  	struct cxl_dport *dport = NULL;
+> @@ -73,6 +78,16 @@ int devm_cxl_add_passthrough_decoder(struct cxl_port *port)
+>  
+>  	return add_hdm_decoder(port, &cxlsd->cxld, single_port_map);
+>  }
+> +EXPORT_SYMBOL_NS_GPL(__devm_cxl_add_passthrough_decoder, "CXL");
+> +
+> +cxl_add_pt_decoder_fn _devm_cxl_add_passthrough_decoder =
+> +	__devm_cxl_add_passthrough_decoder;
+> +EXPORT_SYMBOL_NS_GPL(_devm_cxl_add_passthrough_decoder, "CXL");
+> +
+> +int devm_cxl_add_passthrough_decoder(struct cxl_port *port)
+> +{
+> +	return _devm_cxl_add_passthrough_decoder(port);
+> +}
+>  EXPORT_SYMBOL_NS_GPL(devm_cxl_add_passthrough_decoder, "CXL");
 
-> +	/*
-> +	 * None flags are declared as bitmaps but for the sake of better code
-> +	 * used here as such, restricting the bitmap size to those bits used by
-> +	 * any Type2 device driver requester.
+>  void register_cxl_mock_ops(struct cxl_mock_ops *ops)
+>  {
+>  	list_add_rcu(&ops->list, &mock);
+> +	_devm_cxl_setup_hdm = redirect_devm_cxl_setup_hdm;
+> +	_devm_cxl_enumerate_decoders = redirect_devm_cxl_enumerate_decoders;
+> +	_devm_cxl_add_passthrough_decoder =
+> +		redirect_devm_cxl_add_passthrough_decoder;
+>  }
+>  EXPORT_SYMBOL_GPL(register_cxl_mock_ops);
+>  
+> @@ -23,6 +35,9 @@ DEFINE_STATIC_SRCU(cxl_mock_srcu);
+>  
+>  void unregister_cxl_mock_ops(struct cxl_mock_ops *ops)
+>  {
+> +	_devm_cxl_setup_hdm = __devm_cxl_setup_hdm;
+> +	_devm_cxl_enumerate_decoders = __devm_cxl_enumerate_decoders;
+> +	_devm_cxl_add_passthrough_decoder = __devm_cxl_add_passthrough_decoder;
 
-I'd just drop the comment as it's more confusing than helpful.
+I doubt we actually care but should we ever need to reason about this sequence
+for some reason, it would be better if it reversed that in register_cxl_mock_ops.
 
-If you really want something then perhaps.
-
-	* Flags are single unsigned longs. As CXL_DECODER_F_MAX is less than
-	* 32 bits the bitmap functions may be used.
-
-> +	 */
-> +	if (!bitmap_subset(&ctx->flags, &cxld->flags, CXL_DECODER_F_MAX)) {
-> +		dev_dbg(dev, "flags not matching: %08lx vs %08lx\n",
-> +			cxld->flags, ctx->flags);
-> +		return 0;
-> +	}
-
+>  	list_del_rcu(&ops->list);
+>  	synchronize_srcu(&cxl_mock_srcu);
+>  }
+> @@ -131,8 +146,8 @@ __wrap_nvdimm_bus_register(struct device *dev,
+>  }
+>  EXPORT_SYMBOL_GPL(__wrap_nvdimm_bus_register);
 
