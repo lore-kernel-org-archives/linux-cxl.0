@@ -1,142 +1,222 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A72DF290083;
-	Tue, 22 Apr 2025 15:52:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F9819ABB6
+	for <linux-cxl@vger.kernel.org>; Tue, 22 Apr 2025 15:57:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745337124; cv=none; b=kVQkEvi7vOxCXWzImqKdDWGUacpQE2q5W9SpgakQc7tQXfrj35u4toQafTrOUyxkIZ5Y1xYe5TnaXn3w+/E/TNjkCZGWFkH+rwrPDrTrvoRnugUYAc1KtuAxThs4OZqwqwxuPoi/kq2CCqHtlffVJSr6dyMFOIkP/80hSq8mrNc=
+	t=1745337466; cv=none; b=QszirnBzTWcou/tiH997mYwReLoN7VVicCmQP6qnA/z7gS2zMnNKK28i2r8GpJv/6Ai8XfeRT50SxImeaFZcNImJW1gagp04/6QQCJheI65lm4hJJen7UoJb17yVgja9h9XUelcLvNNy1cAu209BDEMi3SJS3OdM5wOE1UELOQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745337124; c=relaxed/simple;
-	bh=AH+Q8UtE92o5RJ5wRhCdSovwJClD9/7ON4gllAZdkcc=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tdjgwkRGxKaDi7T+R3JHDain/AwcmsHem0huq5tTl8K9J5+L0ij4Ye4oqVEtRKxYa2tl0AjTwm3XChzdEZ1DY4GxcfRzc5TzKDHOZs3hBNOu34dyqibpmAm3N4V3ooQC9h9WVMdFCw1QkJvDihOY5lyjnHcHcTf8v+nhK/4q3fE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZhmsQ2dpLz6L5Gs;
-	Tue, 22 Apr 2025 23:50:18 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id ECFA01401F4;
-	Tue, 22 Apr 2025 23:51:58 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 22 Apr
- 2025 17:51:58 +0200
-Date: Tue, 22 Apr 2025 16:51:57 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Alejandro Lucero Palau <alucerop@amd.com>
-CC: <alejandro.lucero-palau@amd.com>, <linux-cxl@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <dan.j.williams@intel.com>, <edward.cree@amd.com>,
-	<davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<edumazet@google.com>, <dave.jiang@intel.com>
-Subject: Re: [PATCH v13 11/22] cxl: define a driver interface for HPA free
- space enumeration
-Message-ID: <20250422165157.00006953@huawei.com>
-In-Reply-To: <eb1e5fca-7a8b-4ff1-8222-ce2eb16777dd@amd.com>
-References: <20250414151336.3852990-1-alejandro.lucero-palau@amd.com>
-	<20250414151336.3852990-12-alejandro.lucero-palau@amd.com>
-	<20250415145016.00003725@huawei.com>
-	<eb5f16f8-607a-4c71-8f81-5cdb4ff73a75@amd.com>
-	<20250417173650.00003ee0@huawei.com>
-	<eb1e5fca-7a8b-4ff1-8222-ce2eb16777dd@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1745337466; c=relaxed/simple;
+	bh=KjHUQHvlZlPdz0x/kbKzl7BHCYQnvq5wGEda+HQW0KU=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=H9WAPj+AhtrbijZ8bJdEeBoOsn5FMMTIHbtGCkpT5sdMil5X2D1zKLP/aHtlrepwYRRp/Q9+jF1rrojN9v6Mj28OzovhPEk7AhSWnG0If8sRIWeJo74wrtkqm8u0edYjbz1i3fo7V+f+drQbx2ohVmN0WIQyOUqFpPcT6KXWx50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kVLw4ihP; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kVLw4ihP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745337465; x=1776873465;
+  h=date:from:to:cc:subject:message-id;
+  bh=KjHUQHvlZlPdz0x/kbKzl7BHCYQnvq5wGEda+HQW0KU=;
+  b=kVLw4ihPWb5tTz6Y0UhKTZZlPN6Qph9YKrGZKaXb3Nn9/xJNusVtHPJO
+   p/hsvauHDDJn/CAPvJ6Zr7xmFNO1VoqbP8ykhcFp97trS8RzL432E1DzO
+   S42AyYavLztY9EkemgqA4hj8r5Yq7ymdMZqt5AKiOhyApwELIkEcoVTDN
+   tXmPOYaZaMl6aZLLY0E5WDVQO7e0IFyjzFDsjF58i/yXbKfsawTMVijUT
+   9oE7ea80t04sg8md8Du+DRPdclFKiHpm6w8lsIDUQkvTjuTB/MjIOTJ+2
+   WIzV0iX2J3rKx+KWIh2gNUCXsUcYlQwWgtEMBYKzRMk6UXu+d+/O+0W1m
+   g==;
+X-CSE-ConnectionGUID: wKZgLk6vTQu4Fo8STjCgLQ==
+X-CSE-MsgGUID: 2FX9fe5DSNOnxhQrHdw6xA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="69394678"
+X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
+   d="scan'208";a="69394678"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 08:57:44 -0700
+X-CSE-ConnectionGUID: l2zmDtYeQsqN4yusQQSPJg==
+X-CSE-MsgGUID: Cy/HSoncS+qFhBsRcycC7w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
+   d="scan'208";a="132373096"
+Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 22 Apr 2025 08:57:42 -0700
+Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u7G0B-00018H-2o;
+	Tue, 22 Apr 2025 15:57:39 +0000
+Date: Tue, 22 Apr 2025 23:56:54 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Subject: [cxl:fixes] BUILD SUCCESS
+ 078d3ee7c162cd66d76171579c02d7890bd77daf
+Message-ID: <202504222343.BOKXygaB-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
- frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, 17 Apr 2025 22:22:19 +0100
-Alejandro Lucero Palau <alucerop@amd.com> wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git fixes
+branch HEAD: 078d3ee7c162cd66d76171579c02d7890bd77daf  cxl/core/regs.c: Skip Memory Space Enable check for RCD and RCH Ports
 
-> On 4/17/25 17:36, Jonathan Cameron wrote:
-> > On Thu, 17 Apr 2025 13:11:00 +0100
-> > Alejandro Lucero Palau <alucerop@amd.com> wrote:
-> >  
-> >> On 4/15/25 14:50, Jonathan Cameron wrote:  
-> >>> On Mon, 14 Apr 2025 16:13:25 +0100
-> >>> alejandro.lucero-palau@amd.com wrote:
-> >>>     
-> >>>> From: Alejandro Lucero <alucerop@amd.com>
-> >>>>
-> >>>> CXL region creation involves allocating capacity from device DPA
-> >>>> (device-physical-address space) and assigning it to decode a given HPA
-> >>>> (host-physical-address space). Before determining how much DPA to
-> >>>> allocate the amount of available HPA must be determined. Also, not all
-> >>>> HPA is created equal, some specifically targets RAM, some target PMEM,
-> >>>> some is prepared for device-memory flows like HDM-D and HDM-DB, and some
-> >>>> is host-only (HDM-H).
-> >>>>
-> >>>> Wrap all of those concerns into an API that retrieves a root decoder
-> >>>> (platform CXL window) that fits the specified constraints and the
-> >>>> capacity available for a new region.
-> >>>>
-> >>>> Add a complementary function for releasing the reference to such root
-> >>>> decoder.
-> >>>>
-> >>>> Based on https://lore.kernel.org/linux-cxl/168592159290.1948938.13522227102445462976.stgit@dwillia2-xfh.jf.intel.com/
-> >>>>
-> >>>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>  
-> >>> One trivial comment inline.
-> >>>
-> >>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> >>>     
-> >>>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> >>>> index 80caaf14d08a..0a9eab4f8e2e 100644
-> >>>> --- a/drivers/cxl/core/region.c
-> >>>> +++ b/drivers/cxl/core/region.c
-> >>>> +static int find_max_hpa(struct device *dev, void *data)
-> >>>> +{
-> >>>> +	struct cxlrd_max_context *ctx = data;
-> >>>> +	struct cxl_switch_decoder *cxlsd;
-> >>>> +	struct cxl_root_decoder *cxlrd;
-> >>>> +	struct resource *res, *prev;
-> >>>> +	struct cxl_decoder *cxld;
-> >>>> +	resource_size_t max;
-> >>>> +	int found = 0;
-> >>>> +
-> >>>> +	if (!is_root_decoder(dev))
-> >>>> +		return 0;
-> >>>> +
-> >>>> +	cxlrd = to_cxl_root_decoder(dev);
-> >>>> +	cxlsd = &cxlrd->cxlsd;
-> >>>> +	cxld = &cxlsd->cxld;
-> >>>> +
-> >>>> +	/*
-> >>>> +	 * None flags are declared as bitmaps but for the sake of better code  
-> >>> None?  
-> >>
-> >> Not sure you refer to syntax or semantics here. Assuming is the former:  
-> > Just the wording of the comment. I'm not sure what it means.  
-> 
-> 
-> Ok. I just want to make clear those flags fields used in the 
-> bitmap_subset are not declared as bitmaps, just in case someone points 
-> this out.
-> 
-> I do not think this is problematic, and a good idea you gave me, but 
-> better to comment on it before someone complains about it.
-> 
-Ah.. Ok. So something like:
+elapsed time: 1454m
 
-Fields are not declared as bitmaps, but bitmap_subset may still be used.
+configs tested: 142
+configs skipped: 3
 
-> 
-> >  
-> >>
-> >> No flags fields?  
-> > Not following that either.  
-> >>  
-> >>>     
-> >>>> +	 * used here as such, restricting the bitmap size to those bits used by
-> >>>> +	 * any Type2 device driver requester.
-> >>>> +	 */  
-> >>>     
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+alpha                               defconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    gcc-14.2.0
+arc                                 defconfig    gcc-14.2.0
+arc                     haps_hs_smp_defconfig    gcc-14.2.0
+arc                   randconfig-001-20250422    gcc-8.5.0
+arc                   randconfig-002-20250422    gcc-14.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-14.2.0
+arm                                 defconfig    clang-21
+arm                           imxrt_defconfig    clang-21
+arm                        keystone_defconfig    gcc-14.2.0
+arm                        multi_v5_defconfig    gcc-14.2.0
+arm                             pxa_defconfig    gcc-14.2.0
+arm                   randconfig-001-20250422    gcc-8.5.0
+arm                   randconfig-002-20250422    gcc-8.5.0
+arm                   randconfig-003-20250422    gcc-7.5.0
+arm                   randconfig-004-20250422    gcc-7.5.0
+arm64                            alldefconfig    gcc-14.2.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-14.2.0
+arm64                               defconfig    gcc-14.2.0
+arm64                 randconfig-001-20250422    gcc-6.5.0
+arm64                 randconfig-002-20250422    clang-21
+arm64                 randconfig-003-20250422    clang-18
+arm64                 randconfig-004-20250422    gcc-8.5.0
+csky                              allnoconfig    gcc-14.2.0
+csky                                defconfig    gcc-14.2.0
+csky                  randconfig-001-20250422    gcc-10.5.0
+csky                  randconfig-002-20250422    gcc-14.2.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon                             defconfig    clang-21
+hexagon               randconfig-001-20250422    clang-21
+hexagon               randconfig-002-20250422    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250422    clang-20
+i386        buildonly-randconfig-002-20250422    clang-20
+i386        buildonly-randconfig-003-20250422    gcc-12
+i386        buildonly-randconfig-004-20250422    gcc-12
+i386        buildonly-randconfig-005-20250422    clang-20
+i386        buildonly-randconfig-006-20250422    clang-20
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch                           defconfig    gcc-14.2.0
+loongarch             randconfig-001-20250422    gcc-14.2.0
+loongarch             randconfig-002-20250422    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                                defconfig    gcc-14.2.0
+m68k                       m5275evb_defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+microblaze                          defconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                       bmips_be_defconfig    gcc-14.2.0
+mips                           ip27_defconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                               defconfig    gcc-14.2.0
+nios2                 randconfig-001-20250422    gcc-10.5.0
+nios2                 randconfig-002-20250422    gcc-14.2.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250422    gcc-7.5.0
+parisc                randconfig-002-20250422    gcc-11.5.0
+parisc64                            defconfig    gcc-14.1.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-21
+powerpc                        fsp2_defconfig    gcc-14.2.0
+powerpc                       holly_defconfig    clang-21
+powerpc                 mpc8313_rdb_defconfig    gcc-14.2.0
+powerpc               randconfig-001-20250422    clang-21
+powerpc               randconfig-002-20250422    gcc-6.5.0
+powerpc               randconfig-003-20250422    clang-16
+powerpc                 xes_mpc85xx_defconfig    gcc-14.2.0
+powerpc64             randconfig-001-20250422    clang-21
+powerpc64             randconfig-002-20250422    gcc-6.5.0
+powerpc64             randconfig-003-20250422    gcc-6.5.0
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    clang-21
+riscv                 randconfig-001-20250422    clang-21
+riscv                 randconfig-002-20250422    gcc-14.2.0
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    clang-21
+s390                  randconfig-001-20250422    gcc-7.5.0
+s390                  randconfig-002-20250422    clang-21
+s390                       zfcpdump_defconfig    clang-21
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-14.2.0
+sh                        edosk7705_defconfig    gcc-14.2.0
+sh                    randconfig-001-20250422    gcc-14.2.0
+sh                    randconfig-002-20250422    gcc-6.5.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250422    gcc-10.3.0
+sparc                 randconfig-002-20250422    gcc-6.5.0
+sparc64                             defconfig    gcc-14.2.0
+sparc64               randconfig-001-20250422    gcc-7.5.0
+sparc64               randconfig-002-20250422    gcc-13.3.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250422    gcc-12
+um                    randconfig-002-20250422    gcc-12
+um                           x86_64_defconfig    clang-21
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250422    gcc-12
+x86_64      buildonly-randconfig-002-20250422    clang-20
+x86_64      buildonly-randconfig-003-20250422    gcc-12
+x86_64      buildonly-randconfig-004-20250422    gcc-12
+x86_64      buildonly-randconfig-005-20250422    clang-20
+x86_64      buildonly-randconfig-006-20250422    clang-20
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                       common_defconfig    gcc-14.2.0
+xtensa                randconfig-001-20250422    gcc-14.2.0
+xtensa                randconfig-002-20250422    gcc-9.3.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
