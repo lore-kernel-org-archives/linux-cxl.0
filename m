@@ -1,147 +1,237 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48B6C28B517
-	for <linux-cxl@vger.kernel.org>; Wed, 23 Apr 2025 15:49:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A27149E17;
+	Wed, 23 Apr 2025 16:28:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745423350; cv=none; b=cg/iNbJoFIvXdROtjnTNJDVyIbmJj5liNi/SahGKWQWJbX7Fu0zlOsyVVRO34VHR+izE9CwWsJjD2sCPdp8bWX3QZGBB6UXI8YqD3WO99RjlK2MZXhtkkXTr9Q6VTUeGtccds6y+R9kwjN5WMEbD+zemiCREQJ84XgTF5DP4nc0=
+	t=1745425731; cv=none; b=RVa83ae37NzJYGBu1Pb+ZVZTCVhhuNRjg4oItk2Osl1f5fuoaYOZQ5HwAvhDItZtKPKMUlJZJk6e/U+N+s/BDVs2zfFWrC6vfnWVollBqicgUZORrHSkhVjXj3VILpohc6ynLN8JMVOmOmmNgbaWVr4bxTzqSTg3J3zJe3pxH7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745423350; c=relaxed/simple;
-	bh=kxAkEWyecuw4VJmD6htVQLXhvJUrGnzW+IRVpMpyDcA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GV1x8rd27MgTEelOokef45nyqrwBAAq81Fc89gQbrTUi6QNkEzf9xnljSCA9V4jPVrbcYgwbC+LzbQglgMK2o2OJeYgGTF9OXuALl0Rk5p0xfDF77GIVEQd64sNo/19auc+iIqoWyiqxRZduIQrl1lB0McAGXrMSUFqeDSXVljA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NIru+WOg; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NIru+WOg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745423348; x=1776959348;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=kxAkEWyecuw4VJmD6htVQLXhvJUrGnzW+IRVpMpyDcA=;
-  b=NIru+WOgMhoEMLXPxR3MoMpTiGL11Jmo2/xfgN299Wzq0Eir6VghnHwI
-   agB2V4BFTQr80ovs30uBHCeMvnRxQnm7SGab8h008UBVNAP2GeFXDmg67
-   G72bgfxG1Et3UNKrjrctiSyRJ5Up/K3dIHPh049YUYADl+RjOo7f64/2l
-   x2NL2NvbgIKgSA+DtYE/KTqnsrA0tUwYM8poNnyMHTG39svYCYNOAL5y8
-   q6AlorqDMbfLSBeUurYIfRFnEAruyNAJ0EmZgfIGgyRN0Va6NvC3Orua6
-   yTknXqPQXNs20bqSpEIGNEfCt1Zzpgpar6g+Kh2qgv4cXOt5N6wsVHNpb
-   Q==;
-X-CSE-ConnectionGUID: da2Dd3meQea8SGQFNKPkyg==
-X-CSE-MsgGUID: PVz7kl9aQvWNBZw+WXD/pQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="57678333"
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="57678333"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 08:49:03 -0700
-X-CSE-ConnectionGUID: 6sgVutgPRq6nqbwcbe6XDQ==
-X-CSE-MsgGUID: 93yfG6ZKSFuyn9dqRL5nsQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="136424243"
-Received: from inaky-mobl1.amr.corp.intel.com (HELO [10.125.108.20]) ([10.125.108.20])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 08:49:01 -0700
-Message-ID: <d3be2435-3967-44d1-bf02-8c796c564b12@intel.com>
-Date: Wed, 23 Apr 2025 08:49:00 -0700
+	s=arc-20240116; t=1745425731; c=relaxed/simple;
+	bh=Z0fDQOuwRcguhZ1Or6eiI96vfRR7I8y0ZUeQ9q8xSMU=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TmU7tqViQVjOw8nSfmWXatuFso3/ia5HWSJ4YgjlO8QeufotkKWWfQ2bWa+Q4ieyjhCkwt5QdzCB21Q68tMCrdAa++vwYgIloVG4a76CFoepzMIQg8dScQscIH5BYWTKkAITJJxsPgoGrrswXHIfXs7D8DTjupflNwTA+ZdD9s0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZjPdK0sRpz6L570;
+	Thu, 24 Apr 2025 00:27:01 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id D35CB1400DB;
+	Thu, 24 Apr 2025 00:28:44 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 23 Apr
+ 2025 18:28:44 +0200
+Date: Wed, 23 Apr 2025 17:28:42 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Terry Bowman <terry.bowman@amd.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, <nifan.cxl@gmail.com>, <dave@stgolabs.net>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
+	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <ira.weiny@intel.com>,
+	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
+	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
+	<lukas@wunner.de>, <ming.li@zohomail.com>,
+	<PradeepVineshReddy.Kodamati@amd.com>
+Subject: Re: [PATCH v8 05/16] PCI/AER: CXL driver dequeues CXL error
+ forwarded from AER service driver
+Message-ID: <20250423172842.00002c40@huawei.com>
+In-Reply-To: <20250327014717.2988633-6-terry.bowman@amd.com>
+References: <20250327014717.2988633-1-terry.bowman@amd.com>
+	<20250327014717.2988633-6-terry.bowman@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] cxl: Add late host bridge uport mapping update
-To: Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com,
- alison.schofield@intel.com, ira.weiny@intel.com, rrichter@amd.com,
- ming.li@zohomail.com
-References: <20250404230049.3578835-1-dave.jiang@intel.com>
- <20250404230049.3578835-4-dave.jiang@intel.com>
- <6808843fe48e2_71fe294c4@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <6808843fe48e2_71fe294c4@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
+On Wed, 26 Mar 2025 20:47:06 -0500
+Terry Bowman <terry.bowman@amd.com> wrote:
 
+> The AER driver is now designed to forward CXL protocol errors to the CXL
+> driver. Update the CXL driver with functionality to dequeue the forwarded
+> CXL error from the kfifo. Also, update the CXL driver to process the CXL
+> protocol errors using CXL protocol error handlers.
+> 
+> First, move cxl_rch_handle_error_iter() from aer.c to cxl/core/ras.c.
+> Remove and drop the cxl_rch_handle_error() in aer.c as it is not needed.
+> 
+> Introduce function cxl_prot_err_work_fn() to dequeue work forwarded by the
+> AER service driver. This will begin the CXL protocol error processing
+> with the call to cxl_handle_prot_error().
+> 
+> Introduce cxl_handle_prot_error() to differntiate between Restricted CXL
+> Host (RCH) protocol errors and CXL virtual host (VH) protocol errors.
+> RCH errors will be processed with a call to walk the associated Root
+> Complex Event Collector's (RCEC) secondary bus looking for the Root Complex
+> Integrated Endpoint (RCiEP) to handle the RCH error. Export pcie_walk_rcec()
+> so the CXL driver can walk the RCEC's downstream bus, searching for
+> the RCiEP.
+> 
+> VH correctable error (CE) processing will call the CXL CE handler if
+> present. VH uncorrectable errors (UCE) will call cxl_do_recovery(),
+> implemented as a stub for now and to be updated in future patch. Export
+> pci_aer_clean_fatal_status() and pci_clean_device_status() used to clean up
+> AER status after handling.
+> 
+> Create cxl_driver::error_handler structure similar to
+> pci_driver::error_handlers. Add handlers for CE and UCE CXL.io errors. Add
+> 'struct cxl_prot_error_info' as a parameter to the CXL CE and UCE error
+> handlers.
+> 
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> ---
+>  drivers/cxl/core/ras.c  | 102 +++++++++++++++++++++++++++++++++++++++-
+>  drivers/cxl/cxl.h       |  17 +++++++
+>  drivers/pci/pci.c       |   1 +
+>  drivers/pci/pci.h       |   6 ---
+>  drivers/pci/pcie/aer.c  |  42 +----------------
+>  drivers/pci/pcie/rcec.c |   1 +
+>  include/linux/aer.h     |   2 +
+>  include/linux/pci.h     |  10 ++++
+>  8 files changed, 133 insertions(+), 48 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
+> index ecb60a5962de..eca8f11a05d9 100644
+> --- a/drivers/cxl/core/ras.c
+> +++ b/drivers/cxl/core/ras.c
+> @@ -139,8 +139,108 @@ int cxl_create_prot_err_info(struct pci_dev *_pdev, int severity,
+>  
+>  	return 0;
+>  }
+> +EXPORT_SYMBOL_NS_GPL(cxl_create_prot_err_info, "CXL");
+>  
+> -struct work_struct cxl_prot_err_work;
+> +static void cxl_do_recovery(struct pci_dev *pdev) { }
+> +
+> +static int cxl_rch_handle_error_iter(struct pci_dev *pdev, void *data)
+> +{
+> +	struct cxl_prot_error_info *err_info = data;
+> +	const struct cxl_error_handlers *err_handler;
+> +	struct device *dev = err_info->dev;
+> +	struct cxl_driver *pdrv;
+> +
+> +	/*
+> +	 * The capability, status, and control fields in Device 0,
+> +	 * Function 0 DVSEC control the CXL functionality of the
+> +	 * entire device (CXL 3.0, 8.1.3).
+> +	 */
+> +	if (pdev->devfn != PCI_DEVFN(0, 0))
+> +		return 0;
+> +
+> +	/*
+> +	 * CXL Memory Devices must have the 502h class code set (CXL
+> +	 * 3.0, 8.1.12.1).
+> +	 */
+> +	if ((pdev->class >> 8) != PCI_CLASS_MEMORY_CXL)
+> +		return 0;
+> +
+> +	if (!is_cxl_memdev(dev) || !dev->driver)
+> +		return 0;
+> +
+> +	pdrv = to_cxl_drv(dev->driver);
+> +	if (!pdrv || !pdrv->err_handler)
+> +		return 0;
+> +
+> +	err_handler = pdrv->err_handler;
+> +	if (err_info->severity == AER_CORRECTABLE) {
+> +		if (err_handler->cor_error_detected)
+> +			err_handler->cor_error_detected(dev, err_info);
+> +	} else if (err_handler->error_detected) {
+> +		cxl_do_recovery(pdev);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void cxl_handle_prot_error(struct pci_dev *pdev, struct cxl_prot_error_info *err_info)
+> +{
+> +	if (!pdev || !err_info)
 
-On 4/22/25 11:10 PM, Dan Williams wrote:
-> Dave Jiang wrote:
->> Error message "cxl portN: Couldn't locate the CXL.cache and CXL.mem
->> capability array header" is reported through testing when a platform is
->> enabled with PCIe hotplug. The cxl_acpi module is responsible for
->> enumerating the host bridges through ACPI objects. During the enumeration
->> of the host bridge upstream ports (uports), the root port (RP) registers
->> are mapped. The enumeration can happen as soon as the cxl_acpi module
->> probe() function is called. However if the CXL link between the endpoint
->> device and the RP is not established before the enumeration happens,
->> the platform may not expose DVSEC ID 3 and/or DVSEC ID 7 blocks which
->> triggers the error message.
->>
->> Add an attempt to map the register block under the memdev probe() port
->> enumeration. When the PCI probe of the device endpoint is called, the
->> driver is now communicating with the CXL device and the CXL link is
->> considered established. Doing the register block mapping at that point
->> guarantees that the mandatory DVSEC blocks are present.
->>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->>  drivers/cxl/acpi.c      | 17 +++++++++-
->>  drivers/cxl/core/port.c | 72 +++++++++++++++++++++++++++++++++++++++--
->>  drivers/cxl/cxl.h       |  4 +++
->>  drivers/cxl/port.c      | 19 ++---------
->>  4 files changed, 93 insertions(+), 19 deletions(-)
->>
->> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
->> index cb14829bb9be..3c8f04bee9a3 100644
->> --- a/drivers/cxl/acpi.c
->> +++ b/drivers/cxl/acpi.c
->> @@ -662,9 +662,24 @@ static int add_host_bridge_uport(struct device *match, void *arg)
->>  	if (rc)
->>  		return rc;
->>  
->> -	port = devm_cxl_add_port(host, bridge, component_reg_phys, dport);
->> +	/*
->> +	 * While there is a chance the uport gets mapped when the probe
->> +	 * function gets called, it is not a guarantee due to acpi driver
->> +	 * can be probed before the root port has established the CXL
->> +	 * connection to the endpoint device. Bypass mapping during
->> +	 * port creation by pass in CXL_RESOURCE_NONE for the
->> +	 * component_reg_phys parameter. After, set the 'resource'
->> +	 * parameter of port->map to allow a setup via the endpoint
->> +	 * memdev probe.
->> +	 */
->> +	port = devm_cxl_add_port(host, bridge, CXL_RESOURCE_NONE, dport);
->>  	if (IS_ERR(port))
->>  		return PTR_ERR(port);
->> +	port->reg_map = (struct cxl_register_map) {
->> +		.host = host,
->> +		.reg_type = CXL_REGLOC_RBI_EMPTY,
->> +		.resource = component_reg_phys,
->> +	};
-> 
-> This looks racy. How do you know the cxl_mem_probe() path is not messing
-> with the reg_map here?
-> 
-> I feel like the rules about when component_reg_phys is valid to pass to
-> devm_cxl_add_port() are getting complicated pass the point of
-> maintainability.
-> 
-> I would be happier if the rule is always "component registers are only
-> probed and cxl_ports are only created when a memdev is present".
-> 
-> What is currently missing for that is that devm_cxl_enumerate_ports()
-> does not know how to create the cxl_port instances beneath the cxl_root.
-> I think the time has come for that. So cxl_acpi only creates the
-> cxl_root and the host-bridges dports, and devm_cxl_enumerate_ports()
-> does the rest.
-> 
-> I do not see anything fundamentally difficult about doing one more level
-> of iteration in devm_cxl_enumerate_ports() to check that a host-bridge
-> is registered as a dport of the cxl_root and then register a cxl_port
-> (if not already created).
+Are these real potential conditions?  If so can we have a comment on why.
+If this is defensive only, do we need it? 
+Looks like the caller below checked pdev already.
 
-Essentially move add_host_bridge_uport() to cxl_core? It looks like we'll have to move some ACPI bits to core then in order to retrieve the CHBS. 
+> +		return;
+> +
+> +	/*
+> +	 * Internal errors of an RCEC indicate an AER error in an
+> +	 * RCH's downstream port. Check and handle them in the CXL.mem
+> +	 * device driver.
+> +	 */
+> +	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_EC)
+> +		return pcie_walk_rcec(pdev, cxl_rch_handle_error_iter, err_info);
+> +
+> +	if (err_info->severity == AER_CORRECTABLE) {
+> +		struct device *dev __free(put_device) = get_device(err_info->dev);
+
+Similar question around lifetimes. The caller already got this. Why again?
+
+> +		struct cxl_driver *pdrv;
+
+calling a cxl driver pdrv seems odd.  cdrv maybe?
+
+> +		int aer = pdev->aer_cap;
+> +
+> +		if (!dev || !dev->driver)
+> +			return;
+> +
+> +		if (aer) {
+> +			int ras_status;
+> +
+> +			pci_read_config_dword(pdev, aer + PCI_ERR_COR_STATUS, &ras_status);
+
+If we get multiple bits set in this register, can this wipe out ones we haven't noticed
+anywhere else in the handling?  Bad tlp etc.  Maybe we need to ensure this only clears
+the internal error bit?
+
+> +			pci_write_config_dword(pdev, aer + PCI_ERR_COR_STATUS,
+> +					       ras_status);
+> +		}
+> +
+> +		pdrv = to_cxl_drv(dev->driver);
+> +		if (!pdrv || !pdrv->err_handler ||
+> +		    !pdrv->err_handler->cor_error_detected)
+> +			return;
+> +
+> +		pdrv->err_handler->cor_error_detected(dev, err_info);
+> +		pcie_clear_device_status(pdev);
+> +	} else {
+> +		cxl_do_recovery(pdev);
+> +	}
+> +}
+> +
+> +static void cxl_prot_err_work_fn(struct work_struct *work)
+> +{
+> +	struct cxl_prot_err_work_data wd;
+> +
+> +	while (cxl_prot_err_kfifo_get(&wd)) {
+> +		struct cxl_prot_error_info *err_info = &wd.err_info;
+> +		struct device *dev __free(put_device) = get_device(err_info->dev);
+> +		struct pci_dev *pdev __free(pci_dev_put) = pci_dev_get(err_info->pdev);
+> +
+> +		if (!dev || !pdev)
+> +			continue;
+> +
+> +		cxl_handle_prot_error(pdev, err_info);
+> +	}
+> +}
+> +
+> +static DECLARE_WORK(cxl_prot_err_work, cxl_prot_err_work_fn);
+
+Ah! Here it is... I think this can be in patch 3. With a stub of the function
+(which is what the patch 3 description claims is there).
+
+>  
+
+Jonathan
+
