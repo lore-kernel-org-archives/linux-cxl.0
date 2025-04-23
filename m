@@ -1,30 +1,30 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A27149E17;
-	Wed, 23 Apr 2025 16:28:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1FE321C170;
+	Wed, 23 Apr 2025 16:35:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745425731; cv=none; b=RVa83ae37NzJYGBu1Pb+ZVZTCVhhuNRjg4oItk2Osl1f5fuoaYOZQ5HwAvhDItZtKPKMUlJZJk6e/U+N+s/BDVs2zfFWrC6vfnWVollBqicgUZORrHSkhVjXj3VILpohc6ynLN8JMVOmOmmNgbaWVr4bxTzqSTg3J3zJe3pxH7M=
+	t=1745426149; cv=none; b=tf33KE0hYg6qKrKGcpLQhhRBm9q/c512oWwP+X6DTCuPEBABvoPRXiraib2YBUBkm8k3LFOIUpzOqmfzOxDGNQFvyqAFLqhBKBKlSJeEJIQa11Hz4r+/puBaVSwATe5wIpboLBNBls0JboKR0+Gss+at7oL9SQ1mJ4SafV24Nf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745425731; c=relaxed/simple;
-	bh=Z0fDQOuwRcguhZ1Or6eiI96vfRR7I8y0ZUeQ9q8xSMU=;
+	s=arc-20240116; t=1745426149; c=relaxed/simple;
+	bh=boUVDAU3r+tzDXVrXhJSWVcA6Sw1bXSjkjrO7enIONE=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TmU7tqViQVjOw8nSfmWXatuFso3/ia5HWSJ4YgjlO8QeufotkKWWfQ2bWa+Q4ieyjhCkwt5QdzCB21Q68tMCrdAa++vwYgIloVG4a76CFoepzMIQg8dScQscIH5BYWTKkAITJJxsPgoGrrswXHIfXs7D8DTjupflNwTA+ZdD9s0=
+	 MIME-Version:Content-Type; b=E7WO5sDJEcIWdlUfKa3cBuVwnkSe6Q8WQS/6wB7NCXBlh0PI1AgottteXGkVq3OnzcPX1MXa1dEd1qqVZhGuQfxbvtncZbgG6y3ZfQ+dJUtGiSHEi/umdmi1gT8CNlYAnsSg9itUbhgnA0bIa2UcJsDZTTQP5ArLIhyDzAIVi/0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZjPdK0sRpz6L570;
-	Thu, 24 Apr 2025 00:27:01 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZjPkY3YsKz6M4kJ;
+	Thu, 24 Apr 2025 00:31:33 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id D35CB1400DB;
-	Thu, 24 Apr 2025 00:28:44 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 0A6F91402EB;
+	Thu, 24 Apr 2025 00:35:43 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 23 Apr
- 2025 18:28:44 +0200
-Date: Wed, 23 Apr 2025 17:28:42 +0100
+ 2025 18:35:41 +0200
+Date: Wed, 23 Apr 2025 17:35:40 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To: Terry Bowman <terry.bowman@amd.com>
 CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
@@ -36,12 +36,12 @@ CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
 	<lukas@wunner.de>, <ming.li@zohomail.com>,
 	<PradeepVineshReddy.Kodamati@amd.com>
-Subject: Re: [PATCH v8 05/16] PCI/AER: CXL driver dequeues CXL error
- forwarded from AER service driver
-Message-ID: <20250423172842.00002c40@huawei.com>
-In-Reply-To: <20250327014717.2988633-6-terry.bowman@amd.com>
+Subject: Re: [PATCH v8 06/16] CXL/PCI: Introduce CXL uncorrectable protocol
+ error 'recovery'
+Message-ID: <20250423173540.000034b3@huawei.com>
+In-Reply-To: <20250327014717.2988633-7-terry.bowman@amd.com>
 References: <20250327014717.2988633-1-terry.bowman@amd.com>
-	<20250327014717.2988633-6-terry.bowman@amd.com>
+	<20250327014717.2988633-7-terry.bowman@amd.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -54,184 +54,145 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Wed, 26 Mar 2025 20:47:06 -0500
+On Wed, 26 Mar 2025 20:47:07 -0500
 Terry Bowman <terry.bowman@amd.com> wrote:
 
-> The AER driver is now designed to forward CXL protocol errors to the CXL
-> driver. Update the CXL driver with functionality to dequeue the forwarded
-> CXL error from the kfifo. Also, update the CXL driver to process the CXL
-> protocol errors using CXL protocol error handlers.
+> Create cxl_do_recovery() to provide uncorrectable protocol error (UCE)
+> handling. Follow similar design as found in PCIe error driver,
+> pcie_do_recovery(). One difference is that cxl_do_recovery() will treat all
+> UCEs as fatal with a kernel panic. This is to prevent corruption on CXL
+> memory.
 > 
-> First, move cxl_rch_handle_error_iter() from aer.c to cxl/core/ras.c.
-> Remove and drop the cxl_rch_handle_error() in aer.c as it is not needed.
+> Copy the PCIe error handlers merge_result(). Introduce PCI_ERS_RESULT_PANIC
+> and add support in the merge_result() routine.
 > 
-> Introduce function cxl_prot_err_work_fn() to dequeue work forwarded by the
-> AER service driver. This will begin the CXL protocol error processing
-> with the call to cxl_handle_prot_error().
+> Copy pci_walk_bridge() to cxl_walk_bridge(). Make a change to walk the
+> first device in all cases.
 > 
-> Introduce cxl_handle_prot_error() to differntiate between Restricted CXL
-> Host (RCH) protocol errors and CXL virtual host (VH) protocol errors.
-> RCH errors will be processed with a call to walk the associated Root
-> Complex Event Collector's (RCEC) secondary bus looking for the Root Complex
-> Integrated Endpoint (RCiEP) to handle the RCH error. Export pcie_walk_rcec()
-> so the CXL driver can walk the RCEC's downstream bus, searching for
-> the RCiEP.
+> Copy report_error_detected() to cxl_report_error_detected(). Update this
+> function to populate the CXL error information structure, 'struct
+> cxl_prot_error_info', before calling the device error handler.
 > 
-> VH correctable error (CE) processing will call the CXL CE handler if
-> present. VH uncorrectable errors (UCE) will call cxl_do_recovery(),
-> implemented as a stub for now and to be updated in future patch. Export
-> pci_aer_clean_fatal_status() and pci_clean_device_status() used to clean up
-> AER status after handling.
-> 
-> Create cxl_driver::error_handler structure similar to
-> pci_driver::error_handlers. Add handlers for CE and UCE CXL.io errors. Add
-> 'struct cxl_prot_error_info' as a parameter to the CXL CE and UCE error
-> handlers.
+> Call panic() to halt the system in the case of uncorrectable errors (UCE)
+> in cxl_do_recovery(). Export pci_aer_clear_fatal_status() for CXL to use
+> if a UCE is not found. In this case the AER status must be cleared and
+> uses pci_aer_clear_fatal_status().
 > 
 > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
 > ---
->  drivers/cxl/core/ras.c  | 102 +++++++++++++++++++++++++++++++++++++++-
->  drivers/cxl/cxl.h       |  17 +++++++
->  drivers/pci/pci.c       |   1 +
->  drivers/pci/pci.h       |   6 ---
->  drivers/pci/pcie/aer.c  |  42 +----------------
->  drivers/pci/pcie/rcec.c |   1 +
->  include/linux/aer.h     |   2 +
->  include/linux/pci.h     |  10 ++++
->  8 files changed, 133 insertions(+), 48 deletions(-)
+>  drivers/cxl/core/ras.c | 92 +++++++++++++++++++++++++++++++++++++++++-
+>  drivers/pci/pci.h      |  2 -
+>  include/linux/pci.h    |  5 +++
+>  3 files changed, 96 insertions(+), 3 deletions(-)
 > 
 > diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
-> index ecb60a5962de..eca8f11a05d9 100644
+> index eca8f11a05d9..1f94fc08e72b 100644
 > --- a/drivers/cxl/core/ras.c
 > +++ b/drivers/cxl/core/ras.c
-> @@ -139,8 +139,108 @@ int cxl_create_prot_err_info(struct pci_dev *_pdev, int severity,
->  
->  	return 0;
+> @@ -141,7 +141,97 @@ int cxl_create_prot_err_info(struct pci_dev *_pdev, int severity,
 >  }
-> +EXPORT_SYMBOL_NS_GPL(cxl_create_prot_err_info, "CXL");
+>  EXPORT_SYMBOL_NS_GPL(cxl_create_prot_err_info, "CXL");
 >  
-> -struct work_struct cxl_prot_err_work;
-> +static void cxl_do_recovery(struct pci_dev *pdev) { }
+> -static void cxl_do_recovery(struct pci_dev *pdev) { }
 > +
-> +static int cxl_rch_handle_error_iter(struct pci_dev *pdev, void *data)
+> +static pci_ers_result_t merge_result(enum pci_ers_result orig,
+
+Rename perhaps to avoid confusion / grep clashed...
+
+> +				     enum pci_ers_result new)
 > +{
-> +	struct cxl_prot_error_info *err_info = data;
-> +	const struct cxl_error_handlers *err_handler;
-> +	struct device *dev = err_info->dev;
+> +	if (new == PCI_ERS_RESULT_PANIC)
+> +		return PCI_ERS_RESULT_PANIC;
+> +
+> +	if (new == PCI_ERS_RESULT_NO_AER_DRIVER)
+> +		return PCI_ERS_RESULT_NO_AER_DRIVER;
+> +
+> +	if (new == PCI_ERS_RESULT_NONE)
+> +		return orig;
+> +
+> +	switch (orig) {
+> +	case PCI_ERS_RESULT_CAN_RECOVER:
+> +	case PCI_ERS_RESULT_RECOVERED:
+> +		orig = new;
+> +		break;
+> +	case PCI_ERS_RESULT_DISCONNECT:
+> +		if (new == PCI_ERS_RESULT_NEED_RESET)
+> +			orig = PCI_ERS_RESULT_NEED_RESET;
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return orig;
+> +}
+> +
+> +static void cxl_walk_bridge(struct pci_dev *bridge,
+> +			    int (*cb)(struct pci_dev *, void *),
+> +			    void *userdata)
+> +{
+> +	if (cb(bridge, userdata))
+> +		return;
+> +
+> +	if (bridge->subordinate)
+> +		pci_walk_bus(bridge->subordinate, cb, userdata);
+> +}
+> +
+
+Trivial but seems there are two blank lines where one will do.
+
+> +
+> +static int cxl_report_error_detected(struct pci_dev *pdev, void *data)
+> +{
 > +	struct cxl_driver *pdrv;
+> +	pci_ers_result_t vote, *result = data;
+> +	struct cxl_prot_error_info err_info = { 0 };
+> +	const struct cxl_error_handlers *cxl_err_handler;
 > +
-> +	/*
-> +	 * The capability, status, and control fields in Device 0,
-> +	 * Function 0 DVSEC control the CXL functionality of the
-> +	 * entire device (CXL 3.0, 8.1.3).
-> +	 */
-> +	if (pdev->devfn != PCI_DEVFN(0, 0))
+> +	if (cxl_create_prot_err_info(pdev, AER_FATAL, &err_info))
 > +		return 0;
 > +
-> +	/*
-> +	 * CXL Memory Devices must have the 502h class code set (CXL
-> +	 * 3.0, 8.1.12.1).
-> +	 */
-> +	if ((pdev->class >> 8) != PCI_CLASS_MEMORY_CXL)
-> +		return 0;
-> +
-> +	if (!is_cxl_memdev(dev) || !dev->driver)
+> +	struct device *dev __free(put_device) = get_device(err_info.dev);
+> +	if (!dev)
 > +		return 0;
 > +
 > +	pdrv = to_cxl_drv(dev->driver);
-> +	if (!pdrv || !pdrv->err_handler)
+> +	if (!pdrv || !pdrv->err_handler ||
+> +	    !pdrv->err_handler->error_detected)
 > +		return 0;
 > +
-> +	err_handler = pdrv->err_handler;
-> +	if (err_info->severity == AER_CORRECTABLE) {
-> +		if (err_handler->cor_error_detected)
-> +			err_handler->cor_error_detected(dev, err_info);
-> +	} else if (err_handler->error_detected) {
-> +		cxl_do_recovery(pdev);
-> +	}
+> +	cxl_err_handler = pdrv->err_handler;
+> +	vote = cxl_err_handler->error_detected(dev, &err_info);
+> +
+> +	*result = merge_result(*result, vote);
 > +
 > +	return 0;
 > +}
 > +
-> +static void cxl_handle_prot_error(struct pci_dev *pdev, struct cxl_prot_error_info *err_info)
+> +static void cxl_do_recovery(struct pci_dev *pdev)
 > +{
-> +	if (!pdev || !err_info)
-
-Are these real potential conditions?  If so can we have a comment on why.
-If this is defensive only, do we need it? 
-Looks like the caller below checked pdev already.
-
-> +		return;
+> +	struct pci_host_bridge *host = pci_find_host_bridge(pdev->bus);
+> +	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+> +
+> +	cxl_walk_bridge(pdev, cxl_report_error_detected, &status);
+> +	if (status == PCI_ERS_RESULT_PANIC)
+> +		panic("CXL cachemem error.");
 > +
 > +	/*
-> +	 * Internal errors of an RCEC indicate an AER error in an
-> +	 * RCH's downstream port. Check and handle them in the CXL.mem
-> +	 * device driver.
+> +	 * If we have native control of AER, clear error status in the device
+> +	 * that detected the error.  If the platform retained control of AER,
+> +	 * it is responsible for clearing this status.  In that case, the
+> +	 * signaling device may not even be visible to the OS.
 > +	 */
-> +	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_EC)
-> +		return pcie_walk_rcec(pdev, cxl_rch_handle_error_iter, err_info);
-> +
-> +	if (err_info->severity == AER_CORRECTABLE) {
-> +		struct device *dev __free(put_device) = get_device(err_info->dev);
-
-Similar question around lifetimes. The caller already got this. Why again?
-
-> +		struct cxl_driver *pdrv;
-
-calling a cxl driver pdrv seems odd.  cdrv maybe?
-
-> +		int aer = pdev->aer_cap;
-> +
-> +		if (!dev || !dev->driver)
-> +			return;
-> +
-> +		if (aer) {
-> +			int ras_status;
-> +
-> +			pci_read_config_dword(pdev, aer + PCI_ERR_COR_STATUS, &ras_status);
-
-If we get multiple bits set in this register, can this wipe out ones we haven't noticed
-anywhere else in the handling?  Bad tlp etc.  Maybe we need to ensure this only clears
-the internal error bit?
-
-> +			pci_write_config_dword(pdev, aer + PCI_ERR_COR_STATUS,
-> +					       ras_status);
-> +		}
-> +
-> +		pdrv = to_cxl_drv(dev->driver);
-> +		if (!pdrv || !pdrv->err_handler ||
-> +		    !pdrv->err_handler->cor_error_detected)
-> +			return;
-> +
-> +		pdrv->err_handler->cor_error_detected(dev, err_info);
+> +	if (host->native_aer) {
 > +		pcie_clear_device_status(pdev);
-> +	} else {
-> +		cxl_do_recovery(pdev);
+> +		pci_aer_clear_nonfatal_status(pdev);
+> +		pci_aer_clear_fatal_status(pdev);
 > +	}
+> +
+> +	pci_info(pdev, "CXL uncorrectable error.\n");
 > +}
-> +
-> +static void cxl_prot_err_work_fn(struct work_struct *work)
-> +{
-> +	struct cxl_prot_err_work_data wd;
-> +
-> +	while (cxl_prot_err_kfifo_get(&wd)) {
-> +		struct cxl_prot_error_info *err_info = &wd.err_info;
-> +		struct device *dev __free(put_device) = get_device(err_info->dev);
-> +		struct pci_dev *pdev __free(pci_dev_put) = pci_dev_get(err_info->pdev);
-> +
-> +		if (!dev || !pdev)
-> +			continue;
-> +
-> +		cxl_handle_prot_error(pdev, err_info);
-> +	}
-> +}
-> +
-> +static DECLARE_WORK(cxl_prot_err_work, cxl_prot_err_work_fn);
-
-Ah! Here it is... I think this can be in patch 3. With a stub of the function
-(which is what the patch 3 description claims is there).
-
 >  
+>  static int cxl_rch_handle_error_iter(struct pci_dev *pdev, void *data)
+>  {
 
-Jonathan
 
