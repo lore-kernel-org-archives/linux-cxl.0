@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B5029115B
-	for <linux-cxl@vger.kernel.org>; Fri, 25 Apr 2025 22:26:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 018FC29115D
+	for <linux-cxl@vger.kernel.org>; Fri, 25 Apr 2025 22:27:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745619997; cv=none; b=d4I/u50/8tApCJqyZecjRIrEbrbZFurIjK/IPRUdGJyguavALDuoyO+ho4aafwsbxW+LmW29HJAj8utgQWgu630T+KUgeXpqENJ+8LPjt5QcEeoS2+ca520Vhbn2RhZ0YQjgn2KhY/qyI3pn1Vkkj6wr0KtdURKSnjmEFhKX/GU=
+	t=1745620068; cv=none; b=d2DeaIK7TfMklSXFRwPVfbGGiIrQvNeReKpYf58f0qdI6tktVJTOeL1fOf0nEDAK1QObYKgZg04V0H1vPXdB/Fqu9tIUOUiOU/rHYjUE0ZXXy5CFM6R699Z6ikYSsj+ButZ6nz/GajEjxp83GuTVOwRovS6fZuHxebMnFWDwFLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745619997; c=relaxed/simple;
-	bh=iTcAV4YFC4FzkSU2vNvs2rW76NXD9yQ7QX9bnzvv7jk=;
+	s=arc-20240116; t=1745620068; c=relaxed/simple;
+	bh=+pQfCk45S1hm4Fsdbw/fx2xCs7AWIdsFtCEOJFbZf2Y=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TXW6oCfgaxfud2QO2SrkTvrccMfL77wCE6V4luobw+3Qa7QlhcABk+QYEx72WREuj5Yd1Ga+SVwsEd4kd4TV2hQ4gCCTQxyL2IExb5jXAXOxyhCy/6FJ1LtvIaCVKas8GhNhWowb9M+zUuK1zR4PS3c0ecvlx9kmMyfMJUCFYRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZwEluSh0; arc=none smtp.client-ip=192.198.163.9
+	 In-Reply-To:Content-Type; b=hcF5B9qDOkEVfTidsmkAioBaJxP7r+C79/HCeK2t+I5lmq+y1EM6g6CZ4c+JRPBqDTWns0LBsSThkH/fSzOK3dxZUU+ivVtU7XQ/wbauQM95r1lPlXiArpkr93GBU+9qr/Tt8VJE4iG84Z3+wYRBHkovtrJ6c5X1XiqU4FfWEA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iNM8M9d9; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZwEluSh0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iNM8M9d9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745619995; x=1777155995;
+  t=1745620067; x=1777156067;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=iTcAV4YFC4FzkSU2vNvs2rW76NXD9yQ7QX9bnzvv7jk=;
-  b=ZwEluSh0YTgJCCmEV/Rgk47T9sUXfEuqnblk4UqRY3MaRXA7UTK72ZQF
-   riT580vLz+m1UwH8ECo/WOUEh3gsX9B6Nxq6dntogeYIc0g/JiKg4d+7Y
-   ZMCwiRxDaASX/fS8unc67Kh+9dSm3aZVUBjP03aXyaocK6t4rOFR7eZyN
-   6RzjUx+VUv4+jm833rVBsOxztJuNYHbda+aKYOc21qmPiOFU5fQiAx8fe
-   46nnmvDopaTeZW3SE7e3z65Y18AfLlY7dAvDyaxYuO9/gPeh+hoZOhRKw
-   KFOh6zAp5I0W9aNKUdeZN3a7E31H1xu/jFx1Iw3p7n/U5B1NhuRFpfTpZ
-   w==;
-X-CSE-ConnectionGUID: qMmgFJukQgeFWOeB8kj5gw==
-X-CSE-MsgGUID: GKYlHSYiTFuk3p0lJK4tMg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11414"; a="57934256"
+  bh=+pQfCk45S1hm4Fsdbw/fx2xCs7AWIdsFtCEOJFbZf2Y=;
+  b=iNM8M9d96ajJTEUqy4aoJMvcQtnTlBXYK2sPo9Z+DA8QXHaJzJA6b3m6
+   Ni7Henms+NCTzTZNAW8cVozAjfAfUxKb7QcIZ0HyA1lvJkmJ/m2c1cdwh
+   Jn51gByUTumwqXMZWY+/1AikeoZ43vBDGeH4TD4W9NLjRcS1eL9qJg2so
+   rUKXBF0UzT1QLzhKqObrU2YXamlA0rppGhIy+wLEGx87iz03VzREYZKU4
+   Qr0NhVfPz00kLFc4/gmJEaVHrovS8iB5gyPQb72f3Sg1Cp1/mb/4hvDMG
+   iyWXRlncBevL1xMEFQ+37rdlqja7adsa0hPteDyZD+SKPKYN5x45w3hOV
+   g==;
+X-CSE-ConnectionGUID: hz1Y6nNTSHyIP6PTKfzZGQ==
+X-CSE-MsgGUID: jD/brvN0TUWKztrvFlTRSw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11414"; a="57934324"
 X-IronPort-AV: E=Sophos;i="6.15,240,1739865600"; 
-   d="scan'208";a="57934256"
+   d="scan'208";a="57934324"
 Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 15:26:34 -0700
-X-CSE-ConnectionGUID: rxP2zrbNTtqfk6rdD7sS2A==
-X-CSE-MsgGUID: 6HJnTt4/SHa2p6UQDh4jFw==
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 15:27:46 -0700
+X-CSE-ConnectionGUID: 0+wtdErXSViJHMg8ncIYRg==
+X-CSE-MsgGUID: fiRBUVwWTme1FS729D2kfw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,240,1739865600"; 
-   d="scan'208";a="132927547"
+   d="scan'208";a="132927717"
 Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.108.211]) ([10.125.108.211])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 15:26:33 -0700
-Message-ID: <372c9444-859e-462c-b5e0-90fc1a2a6121@intel.com>
-Date: Fri, 25 Apr 2025 15:26:30 -0700
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 15:27:33 -0700
+Message-ID: <af5c4654-7523-4dd3-97fd-4802de409286@intel.com>
+Date: Fri, 25 Apr 2025 15:27:30 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -54,38 +54,41 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 1/4] cxl: Saperate out CXL dport->id vs actual dport
  hardware id
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com, dave@stgolabs.net,
+To: Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com,
  alison.schofield@intel.com, ira.weiny@intel.com, rrichter@amd.com,
  ming.li@zohomail.com
 References: <20250404230049.3578835-1-dave.jiang@intel.com>
  <20250404230049.3578835-2-dave.jiang@intel.com>
- <20250422175446.00002ac5@huawei.com>
+ <6807f007c6e3f_71fe29431@dwillia2-xfh.jf.intel.com.notmuch>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250422175446.00002ac5@huawei.com>
+In-Reply-To: <6807f007c6e3f_71fe29431@dwillia2-xfh.jf.intel.com.notmuch>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 4/22/25 9:54 AM, Jonathan Cameron wrote:
-> On Fri, 4 Apr 2025 15:57:33 -0700
-> Dave Jiang <dave.jiang@intel.com> wrote:
-> 
-> Typo in patch title. Separate
-> 
-> 
+On 4/22/25 12:37 PM, Dan Williams wrote:
+> Dave Jiang wrote:
 >> In preparation to allow dport to be allocated without being active, make
 >> dport->id to be Linux id that enumerates the dport objects per port.
 >> Keep the hardware id under dport->port_id to maintain compatibility and
 >> introduce a dport->id as the enumeration id.
+> 
+> I think ->port_id is now a poor choice for a name given the potential
+> confusion of "which one of these ->id ->port_id is the one read from the
+> hardware?". So I like ->id is the name for the logical id, but lets do a
+> lead-in patch renaming ->port_id to ->port_num since that is the
+> hardware name for this i.e.:
+> 
+> #define  PCI_EXP_LNKCAP_PN      0xff000000 /* Port Number */
+
+Will do
+
+> 
 >>
 >> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> 
-> I'm getting my head around this still but just based on refactor in here
-> we have a bit where lifetimes weren't quite what I expected to see.
-> 
 >> ---
 >>  drivers/cxl/core/port.c | 40 +++++++++++++++++++++++++++++-----------
 >>  drivers/cxl/cxl.h       |  4 ++++
@@ -118,6 +121,16 @@ On 4/22/25 9:54 AM, Jonathan Cameron wrote:
 >>  
 >> -static struct cxl_dport *find_dport(struct cxl_port *port, int id)
 >> +static struct cxl_dport *find_dport(struct cxl_port *port, int port_id)
+> 
+> This also feels like it needs a rename (find_dport_{by_num,by_id}) to
+> avoid future confusion where someone gets confused about whether a dport
+> is looked up logically or physically. Even looking at this now in
+> isolation I do not have the context to say whether logical or physical
+> lookup is required.
+> 
+
+Yes will introduce a prep patch to change that. I agree about the confusion.
+
 >>  {
 >>  	struct cxl_dport *dport;
 >>  	unsigned long index;
@@ -134,22 +147,6 @@ On 4/22/25 9:54 AM, Jonathan Cameron wrote:
 >>  
 >>  	xa_erase(&port->dports, (unsigned long) dport->dport_dev);
 >> +	ida_free(&port->dport_ida, dport->id);
-> 
-> Hmm. This ordering is effectively different to that in __devm_cxl_add_dport(reversed).
-> If we were to match that we'd free the ida after the
-> put_device(dport->dport_dev) which I think is unwinding the reference from
-> get_device(dport_dev)
-> 
-> This makes me suspicious of the ownership of dport->id.
-> 
-> Maybe just spin another devm_add_action_or_reset() to free the id?
-
-Yes I'll do that. Same thing Dan suggested as well.
-
-> 
-> If we need this ordering add a comment here on why.
-> 
-> 
 >>  	put_device(dport->dport_dev);
 >>  }
 >>  
@@ -184,16 +181,6 @@ Yes I'll do that. Same thing Dan suggested as well.
 >> +	if (snprintf(link_name, CXL_TARGET_STRLEN, "dport%d", id) >=
 >> +	    CXL_TARGET_STRLEN) {
 >> +		ida_free(&port->dport_ida, id);
-> 
-> I'm not that keen on the number of places we have to call ida_free() manually
-> in error paths.  I think that's because we should have another devm
-> handler...
-
-With the new change this should go away.
-
-DJ
-
-> 
 >>  		return ERR_PTR(-EINVAL);
 >> +	}
 >>  
@@ -201,56 +188,35 @@ DJ
 >> -	if (!dport)
 >> +	if (!dport) {
 >> +		ida_free(&port->dport_ida, id);
->>  		return ERR_PTR(-ENOMEM);
->> +	}
->>  
->>  	dport->dport_dev = dport_dev;
->>  	dport->port_id = port_id;
->>  	dport->port = port;
->> +	dport->id = id;
->>  
->>  	if (rcrb == CXL_RESOURCE_NONE) {
->>  		rc = cxl_dport_setup_regs(&port->dev, dport,
->>  					  component_reg_phys);
->> -		if (rc)
->> +		if (rc) {
->> +			ida_free(&port->dport_ida, id);
->>  			return ERR_PTR(rc);
->> +		}
->>  	} else {
->>  		dport->rcrb.base = rcrb;
->>  		component_reg_phys = __rcrb_to_component(dport_dev, &dport->rcrb,
->>  							 CXL_RCRB_DOWNSTREAM);
->>  		if (component_reg_phys == CXL_RESOURCE_NONE) {
->>  			dev_warn(dport_dev, "Invalid Component Registers in RCRB");
->> +			ida_free(&port->dport_ida, id);
->>  			return ERR_PTR(-ENXIO);
->>  		}
->>  
->> @@ -1170,8 +1184,10 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
->>  		 * memdev
->>  		 */
->>  		rc = cxl_dport_setup_regs(NULL, dport, component_reg_phys);
->> -		if (rc)
->> +		if (rc) {
->> +			ida_free(&port->dport_ida, id);
->>  			return ERR_PTR(rc);
->> +		}
->>  
->>  		dport->rch = true;
->>  	}
->> @@ -1183,8 +1199,10 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
->>  	cond_cxl_root_lock(port);
->>  	rc = add_dport(port, dport);
->>  	cond_cxl_root_unlock(port);
->> -	if (rc)
->> +	if (rc) {
->> +		ida_free(&port->dport_ida, id);
->>  		return ERR_PTR(rc);
->> +	}
->>  
->>  	get_device(dport_dev);
->>  	rc = devm_add_action_or_reset(host, cxl_dport_remove, dport);
 > 
+> Rather than sprinkle ida_free() throughout this function, just make
+> allocation do all the allocations in one go, something like:
 > 
+> static struct cxl_dport *cxl_alloc_dport(struct cxl_port *port, ...)
+> {
+> 	struct cxl_dport *dport __free(kfree) = kzalloc(&port->dev, sizeof(*dport), GFP_KERNEL);
+> 
+> 	if (!dport)
+> 		return NULL;
+> 	id = ida_alloc(&port->dport_ida, GFP_KERNEL);
+> 	if (id < 0)
+> 		return NULL;
+> 	
+> 	dport->dport_dev = dport_dev;
+> 	dport->port_id = port_id;
+> 	dport->port = port;
+> 	dport->id = id;
+> 
+> 	return no_free_ptr(dport);
+> }
+> 
+> dport = cxl_alloc_dport(...)
+> if (!dport)
+> 	return -ENOMEM;
+> rc = devm_add_action_or_reset(&port->dev, free_dport, dport);
+> if (rc)
+> 	return rc;
+
+
+Thanks. Will do that.
 
