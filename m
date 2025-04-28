@@ -1,73 +1,73 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4670D26ACD
-	for <linux-cxl@vger.kernel.org>; Mon, 28 Apr 2025 20:41:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7700186284
+	for <linux-cxl@vger.kernel.org>; Mon, 28 Apr 2025 20:44:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745872893; cv=none; b=dl1rMSFcccYHWkVTq10Rd8PKkK7vGeZBSn7HOI5bD6aM/Wf2c/DFjHCIRq9eFjNu9q/L3lBH1p9vSNBUCpHUn3LDsCg5xN/G0H9z4FSDrwmPhh20wlvQ2BKEuE/rPpgRiRCoAzla7oFvMrThqkCxtCqnstcYYTdTpyCVppCVJCc=
+	t=1745873048; cv=none; b=YVtYr2EPlEiRaG4+mIHQ9kDRv5/wRM0fTgtR0JejasoAlgEzw75OvX622sH29eP7xmtb/VvVz30aHz5MNlcMenxVCWZ1KaEuib/2HXmy+PmMvsVguMhfnylRloEN4pCCyF05lrlcdiQDNSjpoKCKtcdxJPj28hWlhfyZ8hTJq3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745872893; c=relaxed/simple;
-	bh=OTA53xxSJ5vitQKTzLJnnqK/JEZJx/nBcf8w1EcU44k=;
+	s=arc-20240116; t=1745873048; c=relaxed/simple;
+	bh=4eqXzYeiGXP8JpaWUw5neCWgOUJ2COhV9mY7iDoztjw=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EHRkL1q6Jo3BjqyVfijdzpKMAE/c2gy69r1/8xO9FXp2tvSzOmvlpQ+o+65uydQ8V4UsVweyJCZbaSlpFZZpbTaj5leDTxwBCkMvIMg0LMBIPkhvjlHr6Jm7BuWbEJ2jTENmidfv2uLtCuMXgybuxpqneLpz8ndAmzT2llVLcDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lxlJ9l7b; arc=none smtp.client-ip=209.85.222.175
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z3SxRJFwqdYmdCPErb9ZklWIs6arOgTaa6yoc7sljBXbGjAY/Y3nsFva1uwXwUGTR0dzb62Rz9J+2uNbGXVNORSsi04aIkybRsucc9iEA7hHxzV6wPRJEHEEw6F1vdtw6GnVlSB0pyqvEVoU4i9gNiBywA6lvjSmXU+vWfdU0f8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l99R9VjU; arc=none smtp.client-ip=209.85.160.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lxlJ9l7b"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7c58974ed57so578330985a.2
-        for <linux-cxl@vger.kernel.org>; Mon, 28 Apr 2025 13:41:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l99R9VjU"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-47ae894e9b7so115316161cf.3
+        for <linux-cxl@vger.kernel.org>; Mon, 28 Apr 2025 13:44:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745872890; x=1746477690; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745873045; x=1746477845; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=i3y1FOUgVsX87EjiOelwWpjlR6C+c3ULMgqt0TDK/U4=;
-        b=lxlJ9l7bO+ALqE5bsPsyptTzYb6SbKvx5lWH4DQ51wu2LTLdt0bG+UU22KGEgidd7N
-         CJgJZqjk07neP9IjhdjadVdNFrOOtOMjGP0shbNSfI+ZkDIX9ecQYre6aohRhZNanCt5
-         0ECPW+iJClo/64ikfZ0B45Gv+/E5dBE3PHmfF+b4MTLtrNq83vHSVVKjYh6xxX0GggY4
-         74+2hRUm06blTaOBFfJGWp4Yz/7aOkgHD5xV/12GTss9Ybo9fMu1WTWclVj870xHD54t
-         yU0LxsM4UOvHBffR25zelTxUUDmcnUEpqYT56+zh2YNc+10zwZCljKvYhxu1n2eu6c+J
-         +YtA==
+        bh=4zd0GN4l+W7tGH06TegEGwIQ2pHoD4ic50dAUxlBrg8=;
+        b=l99R9VjU4uBbaxdR2/6N6j3JhKyWGLKQUcwZl+EtKxKUSbLo/UgmyKn3Gli+kLcWUc
+         toqXvj1o3aJ3igolVdU7sL8W/ZiyU7chUvqBCGkLDl10n+IYlO7MfCEdtdjvoDwlaFCu
+         4MX6D7W7JJqoyWdBmKYHc7S9Ig25Rzhte63/A+V2HUDotkE/uWP7YacA/9xr2V8PGQmw
+         eX8snMikGfaxwYttwHSD+CcqhiTtJoGCaUt/bKYW6v2NVkpK0FvKV55x/B8020KM1y1+
+         TbX6Dh5KdsrUmIxieoDvxdhszjXy5OyQ96BQztA5NHdRxYvTgGyGx9fhp08fe7tuBSfo
+         Qqcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745872890; x=1746477690;
+        d=1e100.net; s=20230601; t=1745873045; x=1746477845;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=i3y1FOUgVsX87EjiOelwWpjlR6C+c3ULMgqt0TDK/U4=;
-        b=uilPyCqRnzAfy9w5m/4ohNjRo2BAR5HHZW/xBD4Hhx5vdobzJwgQAwgrU5q34GsM5B
-         OaYc+wQDPMTrPTDWZ9m+iyzkZPfFPDJew5lCQaUlfUmc6NekAL2tNNSoRyRvN5leetL/
-         W9Rx4GTkAub4yGVslYUK2ZI5fkw3U2/zjo5OSEa24sbJL9rHsPedVOY8eJLcp1hQsHjE
-         DgxggIfVNMjPrL0no6188U9TNNHnoAE05Vhg+b/HeQN/8Z7TMI3294IHp497uhccdWCd
-         xdvaCWwMggehInfr2ZNtJ7ju9SHZJWE9yYpLBXHl9k805SFt4dmYAmo1NEY1slZTk3Nk
-         Wg7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWwWPE36ea60Tzww7Ad6JLZNm25WmFmF7FW+DU7MhsxeNALNGfNVWF3o6jt+Xco+pISfFj3MBOxWVU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyajmtO5o+jMV4da+C5HMKPC2R/rcXlxdljPwRUhw+VWcFKAU5C
-	Q0amqeDrrvez/NlvIOJTDuzy/UndGXP7drdfPuozTm7yzybmduk7VeK3xw==
-X-Gm-Gg: ASbGncuzaUAZieyCN69qg/nXk+U/UYHFhCOyHx6utBTb9vL7ZAuVgsvDObCsvjJown4
-	eQInkaLeEd/8p9aiWU9wF/Xiy3cWqnWDY/MQKA60PsmbfcvB9jBjVEZW9sclK6xIfTA/nS0vwsB
-	unUFH5yRx+QTAIIM9m8xShkOssqEQa0MKwlPAGJfaqPrdKh7DP4f8IM58lWHibK20Jrsww4YtuU
-	AMh4vwPYbcOcJkE7G5jU8arBtj1UWDmKvizrtnRnKAR9cR3x/Nk8kT3mB1tad+tHzXLNQoklYtd
-	CYpNHkNqL36DBPRYe+48Q00qYcODBCSjX5ithoX1pyymy7o=
-X-Google-Smtp-Source: AGHT+IHNqNM0/K7R18Z+/wdJ5hnZgIUYtFZ42eZb2MV9sb2ddzPiGZ7AhaalPTbFX8922hmIw3OrhA==
-X-Received: by 2002:a05:620a:17a3:b0:7c9:5ec2:a82c with SMTP id af79cd13be357-7cabe664730mr90461185a.53.1745872889935;
-        Mon, 28 Apr 2025 13:41:29 -0700 (PDT)
+        bh=4zd0GN4l+W7tGH06TegEGwIQ2pHoD4ic50dAUxlBrg8=;
+        b=KXEsCK4vqKqw8Axf7Ca0XizcCMBIApJ5cpSC/vIwUAiYV/osU6FRakzY7bNpaIEqhK
+         9z2mMOy9zxuVzVXNcnqr25dWH0LhyPMiL1CUgQiQn9Y2Bkgn14JPHRwtYMs9vyy9T9IO
+         bSLYFi5qSo5P4/Kuj4lHlpXah6WG5NRD7rihOk5/7qqhu1ZQTrNpesE+zH0gDwFCDrnc
+         MQNqPklj9k+liyD1Owr0dbpZLVJ9IkQUGn2FP3zrSDA8ASFt+hAYf86RN0nZxA0sglHH
+         4DYccoLWQavJq3lVDyCe3QNDe+sg1eVkEPAG548ovyQ4CadrivsDllTcwlAIWdkQ2Ixy
+         Jmbw==
+X-Forwarded-Encrypted: i=1; AJvYcCVP5M1c/ctaiTHfr+WjtcjIktq8R9nIJQJ0xCayv1tV6maV25QFRMTRQaZdD84a3kr9lf+kMBmh00A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw37xeQodihaqkfomNSqzWLe663cWC4m9zxroIYIczEzWBeQw8m
+	x/1srRtzt8E+7zNoX95kNLmjCPnxCL73DMijhs++Fdz+j/il/IeH
+X-Gm-Gg: ASbGncvVLLc4E6jdceahgMiX5mo+Vx0+q49ZjHGpPTpOFKhkoB0Uy5dvVE7rWJOwLjr
+	Fg7Kpy8C/QYZfLWz86/0xBlu7wC07jZ7qh+njsZ41ItvYrSC2lpEVUBU9/B8QpzZ+93XebsKRpy
+	PSkupn1pmWXqB8SUZL6plS8f8RE5Ohg+zAT1o/QEnUETx9uQz/MW7AuDySeZ/IK9KhWFG0lpOWm
+	YpDdNtOt2qQnwiivnnJniAjZs3J0Yivhdmcz7ttuTZOHW4C2uUEn7Dpq9jUkitDm2kHqyQN4L74
+	l7l9jbr60t4pvpZH8a+BUw4Y5x3QaBttRVZeZspigicbjHk=
+X-Google-Smtp-Source: AGHT+IHdl3eLAzRBxdQFzr8/xHozPYez1pJyqoesPlbyf32cu4ZoDrFIaIRHBsD5NzMXUbsC5nXu2A==
+X-Received: by 2002:a05:622a:1a9e:b0:476:7e72:3538 with SMTP id d75a77b69052e-48133752379mr169687231cf.50.1745873045428;
+        Mon, 28 Apr 2025 13:44:05 -0700 (PDT)
 Received: from debian ([2607:fb90:37e2:c851:8e4d:2d6e:a358:8db0])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c958e9fbcasm662133685a.99.2025.04.28.13.41.27
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47ea1692d85sm72220261cf.61.2025.04.28.13.44.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 13:41:29 -0700 (PDT)
+        Mon, 28 Apr 2025 13:44:04 -0700 (PDT)
 From: Fan Ni <nifan.cxl@gmail.com>
 X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Mon, 28 Apr 2025 13:41:24 -0700
+Date: Mon, 28 Apr 2025 13:44:01 -0700
 To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Cc: anisa.su887@gmail.com, qemu-devel@nongnu.org, nifan.cxl@gmail.com,
 	dave@stgolabs.net, linux-cxl@vger.kernel.org,
 	Anisa Su <anisa.su@samsung.com>
-Subject: Re: [PATCH 8/9] cxl-mailbox-utils: 0x5604 -  FMAPI Initiate DC Add
-Message-ID: <aA_n9NMY8CxLNtr-@debian>
+Subject: Re: [PATCH 9/9] cxl-mailbox-utils: 0x5605 - FMAPI Initiate DC Release
+Message-ID: <aA_okWIcD3msM7y1@debian>
 References: <20250317164204.2299371-1-anisa.su887@gmail.com>
- <20250317164204.2299371-9-anisa.su887@gmail.com>
- <20250424121959.0000042d@huawei.com>
+ <20250317164204.2299371-10-anisa.su887@gmail.com>
+ <20250424122308.00004e8e@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -76,32 +76,108 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250424121959.0000042d@huawei.com>
+In-Reply-To: <20250424122308.00004e8e@huawei.com>
 
-On Thu, Apr 24, 2025 at 12:19:59PM +0100, Jonathan Cameron wrote:
-> On Mon, 17 Mar 2025 16:31:35 +0000
+On Thu, Apr 24, 2025 at 12:23:08PM +0100, Jonathan Cameron wrote:
+> On Mon, 17 Mar 2025 16:31:36 +0000
 > anisa.su887@gmail.com wrote:
 > 
 > > From: Anisa Su <anisa.su@samsung.com>
 > > 
-> > FM DCD Management command 0x5604 implemented per CXL r3.2 Spec Section 7.6.7.6.5
+> > FM DCD Managment command 0x5605 implemented per CXL r3.2 Spec Section 7.6.7.6.6
 > > 
 > > Signed-off-by: Anisa Su <anisa.su@samsung.com>
+> Similar comments to patch 8 around the double loop.
+> 
+> I'd also like Fan to take a look through these (v2 probably)
+> as he's messed with DCD a lot more than me!
+
+It is true we can avoid the double loop here. 
+Since the input payload is already CXLDCExtentRaw. 
+Previous in QMP implementation, we need it as the input is different, we did
+not have start_dpa directly, but an offset to the start of a region.
+
+Fan
+> 
+> Thanks,
+> 
+> Jonathan
+> 
 > > ---
-...
-> > +            CXL_NUM_EXTENTS_SUPPORTED) {
-> > +            return CXL_MBOX_RESOURCES_EXHAUSTED;
-> > +        }
+> >  hw/cxl/cxl-mailbox-utils.c | 94 ++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 94 insertions(+)
+> > 
+> > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> > index 5bcbd434b7..37810d892f 100644
+> > --- a/hw/cxl/cxl-mailbox-utils.c
+> > +++ b/hw/cxl/cxl-mailbox-utils.c
+> > @@ -128,6 +128,7 @@ enum {
+> >          #define SET_DC_REGION_CONFIG 0x2
+> >          #define GET_DC_REGION_EXTENT_LIST 0x3
+> >          #define INITIATE_DC_ADD           0x4
+> > +        #define INITIATE_DC_RELEASE       0x5
+> >  
+> >  };
+> >  
+> > @@ -3722,6 +3723,10 @@ static CXLRetCode cxl_mbox_dc_prescriptive_sanity_check(CXLType3Dev *dcd,
+> >                                                 ext.start_dpa, ext.len)) {
+> >                  return CXL_MBOX_INVALID_EXTENT_LIST;
+> >              }
+> > +        } else if (type == DC_EVENT_RELEASE_CAPACITY) {
+> > +            if (!ct3_test_region_block_backed(dcd, ext.start_dpa, ext.len)) {
+> > +                return CXL_MBOX_INVALID_PA;
+> > +            }
+> >          }
+> >      }
+> >  
+> > @@ -3835,6 +3840,88 @@ static CXLRetCode cmd_fm_initiate_dc_add(const struct cxl_cmd *cmd,
+> >      return CXL_MBOX_SUCCESS;
+> >  }
+> >  
+> > +/*
+> > + * CXL r3.2 Section 7.6.7.6.6 Initiate Dynamic Capacity Release (Opcode 5605h)
+> > + */
+> > +static CXLRetCode cmd_fm_initiate_dc_release(const struct cxl_cmd *cmd,
+> > +                                             uint8_t *payload_in,
+> > +                                             size_t len_in,
+> > +                                             uint8_t *payload_out,
+> > +                                             size_t *len_out,
+> > +                                             CXLCCI *cci)
+> > +{
+> > +    struct {
+> > +        uint16_t host_id;
+> > +        uint8_t flags;
+> > +        uint8_t reg_num;
+> > +        uint64_t length;
+> > +        uint8_t tag[0x10];
+> > +        uint32_t ext_count;
+> > +        CXLDCExtentRaw extents[];
+> > +    } QEMU_PACKED *in = (void *)payload_in;
+> > +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
+> > +    g_autofree CXLDCExtentRaw *event_rec_exts = NULL;
+> > +    CXLEventDynamicCapacity event_rec = {};
+> > +    CXLDCExtentRaw ext;
+> > +    int i, rc = 0;
+> 
+> Prefer not to combine cases where you init and ones where you don't.
+> Just use 2 lines instead.
+> 
+> > +
+> > +    switch (in->flags & 0x7) {
+> 
+> That 7 needs a define.
+> 
+> > +    case CXL_EXTENT_REMOVAL_POLICY_PRESCRIPTIVE:
 > > +        rc = cxl_mbox_dc_prescriptive_sanity_check(ct3d,
 > > +                                                   in->host_id,
 > > +                                                   in->ext_count,
 > > +                                                   in->extents,
-> > +                                                   DC_EVENT_ADD_CAPACITY);
+> > +                                                   DC_EVENT_RELEASE_CAPACITY);
 > > +        if (rc) {
 > > +            return rc;
 > > +        }
 > > +
-> > +        /* Prepare extents for Event Record */
+> > +        /* Create extents for Event Record */
 > > +        event_rec_exts = g_new0(CXLDCExtentRaw, in->ext_count);
 > > +        for (i = 0; i < in->ext_count; i++) {
 > > +            ext = in->extents[i];
@@ -109,59 +185,22 @@ On Thu, Apr 24, 2025 at 12:19:59PM +0100, Jonathan Cameron wrote:
 > > +            event_rec_exts[i].len = ext.len;
 > > +            memset(event_rec_exts[i].tag, 0, 0x10);
 > > +            event_rec_exts[i].shared_seq = 0;
-> > +
-> > +            /* Check requested extents do not overlap with pending extents. */
-> > +            if (cxl_extent_groups_overlaps_dpa_range(&ct3d->dc.extents_pending,
-> > +                                                     ext.start_dpa, ext.len)) {
-> > +                return CXL_MBOX_INVALID_EXTENT_LIST;
-> > +            }
-
-The logic here seems not right. We need to have a separate pass to ensure all
-the extents are valid, meaning aligned and no overlap themselves, AND no overlap
-with accepted as well as pending extents. There should be no early error exit
-like above when inserting into pending extent group.
-
-> > +
-> > +            /* Create extent group to add to pending list. */
-> > +            group = cxl_insert_extent_to_extent_group(group,
-> > +                                                      event_rec_exts[i].start_dpa,
-> > +                                                      event_rec_exts[i].len,
-> > +                                                      event_rec_exts[i].tag,
-> > +                                                      event_rec_exts[i].shared_seq);
 > > +        }
-> > +
-> > +        /* Add requested extents to pending list. */
-> > +        if (group) {
-> > +            cxl_extent_group_list_insert_tail(&ct3d->dc.extents_pending, group);
-> > +        }
+> 
+> Similar to before. I'm not currently following the reason for the local
+> storage.
+> 
 > > +
 > > +        /* Create event record and insert to event log */
 > > +        cxl_mbox_dc_event_create_record_hdr(ct3d, &event_rec.hdr);
-> > +        event_rec.type = DC_EVENT_ADD_CAPACITY;
+> > +        event_rec.type = DC_EVENT_RELEASE_CAPACITY;
 > > +        /* FIXME: for now, validity flag is cleared */
-> 
-> This stuff is probably all valid.  If we can return remaining extents though we might
-> as well.
-> 
 > > +        event_rec.validity_flags = 0;
 > > +        /* FIXME: Currently only support 1 host */
 > > +        event_rec.host_id = 0;
 > > +        /* updated_region_id only valid for DC_EVENT_REGION_CONFIG_UPDATED */
 > > +        event_rec.updated_region_id = 0;
-> 
-> The event_rec is zeroed anyway so probably just don't set this at all
-> and no need for the comment.
-> 
 > > +        for (i = 0; i < in->ext_count; i++) {
-> 
-> Why can't we combine this with the earlier loop and avoid the
-> need for separate storage of extents in event_rec_exts?
-
-As long as we make sure all the extents are valid, we should be able to do it
-in one pass.
-
-Fan
-> 
 > > +            memcpy(&event_rec.dynamic_capacity_extent,
 > > +                   &event_rec_exts[i],
 > > +                   sizeof(CXLDCExtentRaw));
@@ -178,11 +217,10 @@ Fan
 > > +                cxl_event_irq_assert(ct3d);
 > > +            }
 > > +        }
-> > +
 > > +        return CXL_MBOX_SUCCESS;
 > > +    default:
 > > +        qemu_log_mask(LOG_UNIMP,
-> > +                      "CXL extent selection policy not supported.\n");
+> > +            "CXL extent selection policy not supported.\n");
 > > +        return CXL_MBOX_INVALID_INPUT;
 > > +    }
 > > +
@@ -192,57 +230,18 @@ Fan
 > >  static const struct cxl_cmd cxl_cmd_set[256][256] = {
 > >      [INFOSTAT][BACKGROUND_OPERATION_ABORT] = { "BACKGROUND_OPERATION_ABORT",
 > >          cmd_infostat_bg_op_abort, 0, 0 },
-> > @@ -3804,6 +3970,13 @@ static const struct cxl_cmd cxl_cmd_set_fm_dcd[256][256] = {
-> >           CXL_MBOX_IMMEDIATE_DATA_CHANGE)},
-> >      [FMAPI_DCD_MGMT][GET_DC_REGION_EXTENT_LIST] = { "GET_DC_REGION_EXTENT_LIST",
-> >          cmd_fm_get_dc_region_extent_list, 12, 0},
-> > +    [FMAPI_DCD_MGMT][INITIATE_DC_ADD] = { "INIT_DC_ADD",
-> > +        cmd_fm_initiate_dc_add, ~0,
+> > @@ -3977,6 +4064,13 @@ static const struct cxl_cmd cxl_cmd_set_fm_dcd[256][256] = {
+> >          CXL_MBOX_CONFIG_CHANGE_CXL_RESET |
+> >          CXL_MBOX_IMMEDIATE_CONFIG_CHANGE |
+> >          CXL_MBOX_IMMEDIATE_DATA_CHANGE)},
+> > +    [FMAPI_DCD_MGMT][INITIATE_DC_RELEASE] = { "INIT_DC_RELEASE",
+> > +        cmd_fm_initiate_dc_release, ~0,
 > > +        (CXL_MBOX_CONFIG_CHANGE_COLD_RESET |
-> > +        CXL_MBOX_CONFIG_CHANGE_CONV_RESET |
-> > +        CXL_MBOX_CONFIG_CHANGE_CXL_RESET |
-> > +        CXL_MBOX_IMMEDIATE_CONFIG_CHANGE |
-> > +        CXL_MBOX_IMMEDIATE_DATA_CHANGE)},
+> > +         CXL_MBOX_CONFIG_CHANGE_CONV_RESET |
+> > +         CXL_MBOX_CONFIG_CHANGE_CXL_RESET |
+> > +         CXL_MBOX_IMMEDIATE_CONFIG_CHANGE |
+> > +         CXL_MBOX_IMMEDIATE_DATA_CHANGE)},
 > >  };
 > >  
 > >  /*
-> > diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> > index b742b2bb8d..ccc619fe10 100644
-> > --- a/hw/mem/cxl_type3.c
-> > +++ b/hw/mem/cxl_type3.c
-> > @@ -1982,8 +1982,8 @@ void qmp_cxl_inject_memory_module_event(const char *path, CxlEventLog log,
-> >   * the list.
-> >   * Return value: return true if has overlaps; otherwise, return false
-> >   */
-> > -static bool cxl_extents_overlaps_dpa_range(CXLDCExtentList *list,
-> > -                                           uint64_t dpa, uint64_t len)
-> > +bool cxl_extents_overlaps_dpa_range(CXLDCExtentList *list,
-> > +                                    uint64_t dpa, uint64_t len)
-> >  {
-> >      CXLDCExtent *ent;
-> >      Range range1, range2;
-> > @@ -2028,8 +2028,8 @@ bool cxl_extents_contains_dpa_range(CXLDCExtentList *list,
-> >      return false;
-> >  }
-> >  
-> > -static bool cxl_extent_groups_overlaps_dpa_range(CXLDCExtentGroupList *list,
-> > -                                                 uint64_t dpa, uint64_t len)
-> > +bool cxl_extent_groups_overlaps_dpa_range(CXLDCExtentGroupList *list,
-> > +                                          uint64_t dpa, uint64_t len)
-> >  {
-> >      CXLDCExtentGroup *group;
-> >  
-> > diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> > index 217003a29d..1d5831a0b6 100644
-> > --- a/include/hw/cxl/cxl_device.h
-> > +++ b/include/hw/cxl/cxl_device.h
-> > @@ -809,4 +809,8 @@ bool ct3_test_region_block_backed(CXLType3Dev *ct3d, uint64_t dpa,
-> >  void cxl_assign_event_header(CXLEventRecordHdr *hdr,
-> >                               const QemuUUID *uuid, uint32_t flags,
-> >                               uint8_t length, uint64_t timestamp);
-> > +bool cxl_extents_overlaps_dpa_range(CXLDCExtentList *list,
-> > +                                    uint64_t dpa, uint64_t len);
-> > +bool cxl_extent_groups_overlaps_dpa_range(CXLDCExtentGroupList *list,
-> > +                                          uint64_t dpa, uint64_t len);
-> >  #endif
 > 
