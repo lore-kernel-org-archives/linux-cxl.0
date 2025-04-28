@@ -1,378 +1,182 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864364A11
-	for <linux-cxl@vger.kernel.org>; Sun, 27 Apr 2025 17:00:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25E125684;
+	Mon, 28 Apr 2025 01:48:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745773254; cv=none; b=D3ZnDT+/AnAJesTe/JZV70j61cHIdHVqHc6Pkdzu377rvSR29pGC4XdUu3Yz70IQ+/vQyMHakaHFJjHDdjD+wXHdeEZk/w96u4ouOa4lUmHwJMsjOn+yd7MS3knQ9LQWSIhxsFbOkckn7M5cVJ6GP9BnTWtF+o4XZI/1g6dlag8=
+	t=1745804916; cv=none; b=CpCKgG1XT+xJIvN0lrT32qMKru1T0a7srXNN8bSXoW+O1h0RtYmHvf7gLIIBe6kVyXycsCA7Tj39tRmidVSELLQptpcfNSVfbWZxqlcFJn00M5X9j5BJbpr99w58VivPBMkVTBKqG30sajnC3Fx5d1k4tj0UaX4ZURm46I5gC54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745773254; c=relaxed/simple;
-	bh=LE3E+PigIdNkJE8pDQtLEJUGIO+v+JoZuEyMITTz9aY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EZly39S38zRKZMidBobZaFG5N79RbEU5YhJew++YZPbLt5wC2SJ2Nu/9PptbqpCnYe1PzLJ/txG27FlEevdXqj2Ot+UoSe9k1kggbTynWTeTf9XwnLVEt5DXrAP6z9CYhMmrKIzKoDFeVAK04pjOG99918FV0jjWuIy4nkQFTx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=MXvOo2WL; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1745804916; c=relaxed/simple;
+	bh=voGcHcuUJxZIvWYp/gqePl+JGxhXrFqBulPecpJwMZ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YotPXg+UuV5EK9UgRFJqNbp9sFiNWezEV2ndRfBEgUJ3P+QAcMEvJ3DQlf2ks2+C2nnbfpRzrK351scMLT3Vvo62+NIoctti0rtn/O8sad6ufg7LEfSYYJTjFCM8OwxYHPI5CL276X3r6g46NKb7t0RqBePCh63MEkLZs/r0xzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CdZyyHMQ; arc=none smtp.client-ip=209.85.167.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="MXvOo2WL"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-477282401b3so51709331cf.1
-        for <linux-cxl@vger.kernel.org>; Sun, 27 Apr 2025 10:00:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CdZyyHMQ"
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3feb3f54339so4517240b6e.1;
+        Sun, 27 Apr 2025 18:48:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1745773250; x=1746378050; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=cuON8zfaER6wTaz7RziY85dJjgB6j/Qsf21H+YF7rDo=;
-        b=MXvOo2WLlhEN2ks2RTVOh7NUBsvJEjZxHA9zNWGICt2Nesp9lZK1ecDAyzmGNtMD5w
-         Xi1sv89UoF9ZujEuZ5WxpJcWh582Drf/fqwP0FLujqRl4dy576Coy64i3My2aW+q81bI
-         hd+7gQivd/cXBf4QjYO27FFl7nXHowbXl7LMkCKBYDCweY0/aE1dZoXPqdryXgohOCfj
-         ZF4CulkVpJgKzLPw8xKKavO7Y6p+dtBedGzIU2nvN++teovye68mYbDwIbyQCMOqnMIw
-         7aaqqchTTCC52IR59PpPkxwyclKc3+5Sh6hlPlqn1kv9l9+88Gd4soCK0WF9t9CwDu1a
-         jsNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745773250; x=1746378050;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20230601; t=1745804913; x=1746409713; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=cuON8zfaER6wTaz7RziY85dJjgB6j/Qsf21H+YF7rDo=;
-        b=QYCmuePr3t+S3+qqLS/a1/TkEFMcsxG/Y13mYEnmBcmYFi9mCwv+utLdidzBssDemP
-         5yXDxBc2w2wM+lQqDXHBHaHBGF9O1fOWPoiqJ3Ta1QFlmVaJG4D6M8pLvsozl+60sK5J
-         aNoxW0Fu/ge+rGS04YN2/qVSBXro1XgP5hmSt2tGi+ZTt9l5wCSAZeMvbah7cs6uyLtJ
-         BbR87BjrBVicSlvAZxuEfdB86s36+8VvpxtweRp+QI8b74SB8si2+JShmBCmsHo4p4jF
-         9/qQLF3goa/FwWgP3fBwahgOSr3vaQtd4Q0dUn8e7t1rvhIb28kQMF0XmW9Uu9uOW+f5
-         R9dg==
-X-Gm-Message-State: AOJu0YzGdttnhIU4lmtfm9HurdKNZaIt0IWnhXDbXfo1nojyykIGlS+5
-	aRNZPAtDTvnfVXxw/RmOp4gRiZbatfvib+HcjlW7jgY+i4tZ/xQ+NVmGn8tDQI0X9hRyLsCeVbN
-	7
-X-Gm-Gg: ASbGncvki7lJ63SzfZlrgSPHie3j+XwEeGINktTIxN1fJoScBDJc/bNlt77zJl2iu1G
-	BUInJx6csK6/ywI2dLHg2eUv8OzcPL6UxVghSsYeZ/WOnzcbw6dKSdBZUe2jpRyVMU7BcRijgd1
-	OB2K/XETqhM3/5JjLKOmDBNSysf+2XZ73H0xtRT/MtvNLO1iv+ILE8H1ckPoqspiUChUy55q0YL
-	86C7LxGHdJH1m59PK9/vZEPVVkjhYY9FUFiZbZW2Wl1yJwF9/zCCYofCkTB3eujRSrTU0hMqK9N
-	/MGmG3rP5PtcodNvL9b4EFIGb93HhHqvGfRySPPNno38Gx/IFR2l9gkvDLz3B8Vf5tLMQcJX/5p
-	ZIZXRKmql7xPwE0ryYVtN8xtjeQPV
-X-Google-Smtp-Source: AGHT+IGtbO+A4M832skMJDkkMY0yMDhwdPPrsGUKQVPk6ftJoG8lp2+uGqyzv2XxhHC85Xiy5FgTcg==
-X-Received: by 2002:ac8:5753:0:b0:47a:e0d0:4f69 with SMTP id d75a77b69052e-4801cf520b9mr166629761cf.27.1745773249841;
-        Sun, 27 Apr 2025 10:00:49 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47e9f7a820esm53027081cf.41.2025.04.27.10.00.48
+        bh=fOTD9+qJ3DB2cRPCVMYpnlZF0OQvWGQ+PHSchN+vCsg=;
+        b=CdZyyHMQWHFKUcuII18LRu7UxDR2AuitkUlBykYFjwmW0UkMPoolk+yzizBUA8PMMB
+         6GZ7AxqdFT8VKCFouQ3GpyvT3dupK2/qoWv2b1SJI4GiBmC5c0k8Uy4QAMoMkEhBjFV7
+         1AZM8lzqxtKLXXhzYvzYoabUG37vH3OhVHseyUhrmgFfevb20ALxSM3tWKz1Ga6lCfau
+         3+IibdHQsjAQZWAmKOUp7Ka9x5pr5VxxjyyU35ESZFVNKxaS6CMyhzjGcXzvzIwV/v9u
+         tBAKcnVf8R0ccYMtzkIeIVY1mvYTMRLZY3MGnbbSwjtiPXbMF/aQx6hbWiNIa+7u7JCt
+         phdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745804913; x=1746409713;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fOTD9+qJ3DB2cRPCVMYpnlZF0OQvWGQ+PHSchN+vCsg=;
+        b=CsdiJkY1hVf3lPFgObvjJpLYF3kUSiguXZMTeOIS8cxLfdaFd/9Me2rpucD9Mvmb9N
+         QiBuWTrOtxpjLq3cncQ1zVWkTd/R6RdeM8bs6pKMlHb1hoIGNkBKeloDyh8ou53JAs5Y
+         x3zhIRnlYi7HRqwU30BHsA5jQ0UyvPc0PI4gwFEDhl0087gMReKwQ7cchWCoxjDas89F
+         wpI/82V/K2zL9ca9k9eMv7rgtjkmOOiGhUe2KRmvz4vgLgPH0uumstsCEeDRr4LmvWpS
+         paqTWdwRfwKqASk46NUE0NdJLi1XKioDuBRNehtqJNwzumsQt6yMg34ZCn3TlgxD9nWe
+         ofIg==
+X-Forwarded-Encrypted: i=1; AJvYcCUIbd1WvgC287pThNNCXdR1UZyx7w6KtaehsN/kWcYnQrWTDG7FugLjKfgHb07Z0i1ZSBLNNRW9hYpq@vger.kernel.org, AJvYcCUhnUscXKrN4rfP03huYaY+xwy3iwGh+ARjCzLxmuDTfS5UWCOQa64Nshbqiwyl/dJ72J0FjkebLQupr4oL@vger.kernel.org, AJvYcCWFudt6tOpO20NBLyxTu7ASKMuz1MHtVXkRFa+POOcYxPO3j2rxkX73B2xLAzBtVNt0EEz1ZdbaOxM=@vger.kernel.org, AJvYcCWyuv5xWOorCFYK1HIKXXI+/asmfmyHM+1SzJmWVf03cpVAtcLXNutYZnDQ0LkoCnHrp1ktOKXuOlwXf1Eo8Q==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbUY+K9RqVGw7iurijZR1HBEcfMjhbGaEpSk6zKTrU3XOvP+mz
+	QwAqfSsT+XIc37/PYlWbTg6UBoLEMzauKJ3xByk6arqSNlC2sd8X
+X-Gm-Gg: ASbGncs4IVVuH00u110bzUHKksR2YZpQubyP9DJNg1+tn8SgO8u7V8+kpiUB8BN4qYU
+	4PAB0g7hXzNuujjS3Qr3sBLGWoXGgYVOTB+k7yKC4DDbdrE5ssLeu6LZ95I4EtpTTCG6EQ3n0BX
+	Eli6BwDi00kQjl2HbxOWPnErskGbBzgzwuKnqAT68TYdPYt7dXuxVw5qkw5xTac+TqQ8LKao7sb
+	w6XGKKiGpZrdgXo8CiWe/TQobLZKPB44ptdokiu7pyGFdB4vFWQZy3DQP5PV16uG9fPX7/xo4s5
+	MmdSGGcZ7ImKHIk4RRrC82BHMJl2vdbAsRjy4hK2KPEn0ggSARJhTVM=
+X-Google-Smtp-Source: AGHT+IGqN3xTf5U+964YoRhK3pXmFW3/L8+DHv6gDtXxO/8dRDPl0vk0yvhPN+naZgspiiBdb3mvUA==
+X-Received: by 2002:a05:6808:3319:b0:3fc:7e1:a455 with SMTP id 5614622812f47-401f2877e01mr6528091b6e.2.1745804913012;
+        Sun, 27 Apr 2025 18:48:33 -0700 (PDT)
+Received: from groves.net ([2603:8080:1500:3d89:14de:ab78:90c3:bb9a])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-401f36b6099sm1325232b6e.44.2025.04.27.18.48.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Apr 2025 10:00:49 -0700 (PDT)
-From: Gregory Price <gourry@gourry.net>
-To: linux-cxl@vger.kernel.org
-Cc: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	kernel-team@meta.com
-Subject: [RFC DOC] cxl driver draft doc
-Date: Sun, 27 Apr 2025 13:00:42 -0400
-Message-ID: <20250427170042.545675-1-gourry@gourry.net>
-X-Mailer: git-send-email 2.49.0
+        Sun, 27 Apr 2025 18:48:32 -0700 (PDT)
+Sender: John Groves <grovesaustin@gmail.com>
+Date: Sun, 27 Apr 2025 20:48:30 -0500
+From: John Groves <John@groves.net>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Dan Williams <dan.j.williams@intel.com>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Bernd Schubert <bschubert@ddn.com>, 
+	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	Luis Henriques <luis@igalia.com>, Randy Dunlap <rdunlap@infradead.org>, 
+	Jeff Layton <jlayton@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>, 
+	Petr Vorel <pvorel@suse.cz>, Brian Foster <bfoster@redhat.com>, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
+	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
+	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 0@groves.net
+Subject: Re: [RFC PATCH 13/19] famfs_fuse: Create files with famfs fmaps
+Message-ID: <5rwwzsya6f7dkf4de2uje2b3f6fxewrcl4nv5ba6jh6chk36f3@ushxiwxojisf>
+References: <20250421013346.32530-1-john@groves.net>
+ <20250421013346.32530-14-john@groves.net>
+ <nedxmpb7fnovsgbp2nu6y3cpvduop775jw6leywmmervdrenbn@kp6xy2sm4gxr>
+ <20250424143848.GN25700@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250424143848.GN25700@frogsfrogsfrogs>
 
-This is one piece of cxl boot-to-bash series being documented here:
-https://github.com/gourryinverse/cxl-boot-to-bash
+On 25/04/24 07:38AM, Darrick J. Wong wrote:
+> On Thu, Apr 24, 2025 at 08:43:33AM -0500, John Groves wrote:
+> > On 25/04/20 08:33PM, John Groves wrote:
+> > > On completion of GET_FMAP message/response, setup the full famfs
+> > > metadata such that it's possible to handle read/write/mmap directly to
+> > > dax. Note that the devdax_iomap plumbing is not in yet...
+> > > 
+> > > Update MAINTAINERS for the new files.
+> > > 
+> > > Signed-off-by: John Groves <john@groves.net>
+> > > ---
+> > >  MAINTAINERS               |   9 +
+> > >  fs/fuse/Makefile          |   2 +-
+> > >  fs/fuse/dir.c             |   3 +
+> > >  fs/fuse/famfs.c           | 344 ++++++++++++++++++++++++++++++++++++++
+> > >  fs/fuse/famfs_kfmap.h     |  63 +++++++
+> > >  fs/fuse/fuse_i.h          |  16 +-
+> > >  fs/fuse/inode.c           |   2 +-
+> > >  include/uapi/linux/fuse.h |  42 +++++
+> > >  8 files changed, 477 insertions(+), 4 deletions(-)
+> > >  create mode 100644 fs/fuse/famfs.c
+> > >  create mode 100644 fs/fuse/famfs_kfmap.h
+> > > 
+> 
+> <snip>
+> 
+> > > diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
+> > > index d85fb692cf3b..0f6ff1ffb23d 100644
+> > > --- a/include/uapi/linux/fuse.h
+> > > +++ b/include/uapi/linux/fuse.h
+> > > @@ -1286,4 +1286,46 @@ struct fuse_uring_cmd_req {
+> > >  	uint8_t padding[6];
+> > >  };
+> > >  
+> > > +/* Famfs fmap message components */
+> > > +
+> > > +#define FAMFS_FMAP_VERSION 1
+> > > +
+> > > +#define FUSE_FAMFS_MAX_EXTENTS 2
+> > > +#define FUSE_FAMFS_MAX_STRIPS 16
+> > 
+> > FYI, after thinking through the conversation with Darrick,  I'm planning 
+> > to drop FUSE_FAMFS_MAX_(EXTENTS|STRIPS) in the next version.  In the 
+> > response to GET_FMAP, it's the structures below serialized into a message 
+> > buffer. If it fits, it's good - and if not it's invalid. When the
+> > in-memory metadata (defined in famfs_kfmap.h) gets assembled, if there is
+> > a reason to apply limits it can be done - but I don't currently see a reason
+> > do to that (so if I'm currently enforcing limits there, I'll probably drop
+> > that.
+> 
+> You could also define GET_FMAP to have an offset in the request buffer,
+> and have the famfs daemon send back the next offset at the end of its
+> reply (or -1ULL to stop).  Then the kernel can call GET_FMAP again with
+> that new offset to get more mappings.
+> 
+> Though at this point maybe it should go the /other/ way, where the fuse
+> server can sends a "notification" to the kernel to populate its mapping
+> data?  fuse already defines a handful of notifications for invalidating
+> pagecache and directory links.
+> 
+> (Ugly wart: notifications aren't yet implemented for the iouring channel)
 
-This page specifically:
-https://gourryinverse.github.io/cxl-boot-to-bash/linux/cxl-driver/
+I don't have fully-formed thoughts about notifications yet; thinking...
 
-Asking for comments to fill in some of todo's here.  We'll start
-converting the out-of-tree docs into in-tree docs in the next
-couple weeks.  Dan pointed out I'll probably get better engagement
-if I sent out to interested parties via email :].
+If the fmap stuff may be shared by more than one use case (as has always
+seemed possible), it's a good idea to think through a couple of things: 
+1) is there anything important missing from this general approach, and 
+2) do you need to *partially* cache fmaps? (or is the "offset" idea above 
+just to deal with an fmap that might otherwise overflow a response size?)
 
-Note: used format-patch here to just automate the sending, this isn't
-formatted to build correct in-tree doc structure.
+The current approach lets the kernel retrieve and cache simple and 
+interleaved fmaps (and BTW interleaved can be multi-dev or single-dev - 
+there are current weird cases where that's useful). Also too, FWIW everything
+that can be done with simple ext list fmaps can be done with a collection
+of interleaved extents, each with strip count = 1. But I think there is a
+worthwhile clarity to having both.
 
-I'll pull in-line comments into the github, or you can submit
-pull-requests to the github - whichever you prefer.
+But the current implementation does not contemplate partially cached fmaps.
 
----
- Documentation/driver-api/cxl/cxl-driver.rst | 267 ++++++++++++++++++++
- 1 file changed, 267 insertions(+)
- create mode 100644 Documentation/driver-api/cxl/cxl-driver.rst
+Adding notification could address revoking them post-haste (is that why
+you're thinking about notifications? And if not can you elaborate on what
+you're after there?).
 
-diff --git a/Documentation/driver-api/cxl/cxl-driver.rst b/Documentation/driver-api/cxl/cxl-driver.rst
-new file mode 100644
-index 000000000000..639fc50bfa2f
---- /dev/null
-+++ b/Documentation/driver-api/cxl/cxl-driver.rst
-@@ -0,0 +1,267 @@
-+.. cxl driver documentation
-+
-+CXL Driver Operation
-+####################
-+
-+The devices described in this section are present in ::
-+
-+  /sys/bus/cxl/devices/
-+  /dev/cxl/
-+
-+The :code:`cxl-cli` library, maintained as part of the NDTCL project, may
-+be used to script interactions with these devices.
-+
-+.. toctree::
-+   :maxdepth: 1
-+
-+   cxl-cli.rst
-+
-+Drivers
-+*******
-+todo: list of drivers and probe responsibilities
-+
-+* cxl_core
-+* cxl_port
-+* cxl_acpi
-+* cxl_pmem
-+* cxl_mem
-+* cxl_pci
-+
-+Driver Devices
-+**************
-+Here is an example from a single-socket system with 4 host bridges. Two host
-+bridges have a single memory device attached, and the devices are interleaved
-+into a single memory region. The memory region has been converted to dax. ::
-+
-+  # ls /sys/bus/cxl/devices/
-+    dax_region0  decoder3.0  decoder6.0  mem0   port3
-+    decoder0.0   decoder4.0  decoder6.1  mem1   port4
-+    decoder1.0   decoder5.0  endpoint5   port1  region0
-+    decoder2.0   decoder5.1  endpoint6   port2  root0
-+
-+For this section we'll explore the devices present in this configuration, but
-+we'll explore more configurations in-depth in example configurations below.
-+
-+Base Devices
-+============
-+Most devices in a CXL fabric are a `port` of some kind (because each
-+device mostly routes request from one device to the next, rather than
-+provide a manageable service).
-+
-+Root
-+----
-+todo: high level explanation, also port vs dport? can we have 2 roots?
-+
-+::
-+
-+  # ls /sys/bus/cxl/devoces/root0
-+    decoder0.0          dport0  dport5    port2  subsystem
-+    decoders_committed  dport1  modalias  port3  uevent
-+    devtype             dport4  port1     port4  uport
-+
-+  # cat devtype
-+    cxl_port
-+
-+The root contains references to all host bridges (ports) and CXL Fixed
-+Memory Windows (`root decoders`) described in the ACPI CEDT. ::
-+
-+  # cat port1/devtype
-+    cxl_port
-+
-+  # cat decoder0.0/devtype
-+    cxl_decoder_root
-+
-+Port
-+----
-+A `port` is better described as a `switch port`.  It may represent a host
-+bridge connection to the root, or an actual switch port on a switch. ::
-+
-+  # ls /sys/bus/cxl/devices/port1
-+    decoder1.0          dport0    driver     parent_dport  uport
-+    decoders_committed  dport113  endpoint5  subsystem
-+    devtype             dport2    modalias   uevent
-+
-+  # cat devtype
-+    cxl_port
-+
-+A port contains decoders for routing to downstream ports, and may contain
-+endpoints if the next port is terminal. ::
-+
-+  # cat decoder1.0/devtype
-+    cxl_decoder_switch
-+
-+  # cat endpoint5/devtype
-+    cxl_port
-+
-+Endpoint
-+--------
-+An `endpoint` is a terminal port in the fabric.  This is a `logical device`,
-+and may be one of many `logical devices` presented by a memory device. It
-+is still considered a type of `port` in the fabric. ::
-+
-+  # ls /sys/bus/cxl/devices/endpoint5
-+
-+  # cat devtype
-+    cxl_port
-+
-+An `endpoint` contains any `endpoint decoders` for this device. ::
-+
-+  # cat decoder5.0/devtype
-+    cxl_decoder_endpoint
-+
-+
-+Memory Device (memdev)
-+----------------------
-+todo: high level explanation, why no reference to endpoint?
-+
-+::
-+
-+  # ls /sys/bus/cxl/devices/mem0
-+    dev       firmware_version    payload_max  security   uevent
-+    driver    label_storage_size  pmem         serial
-+    firmware  numa_node           ram          subsystem
-+
-+
-+Decoders
-+========
-+todo: explain the difference between decoders and how they're discovered
-+
-+Root Decoder
-+------------
-+todo:
-+
-+* created by CEDT CFMWS
-+* target list filled by CFMWS target fields
-+* targets validated against CHBS and DSDT.
-+* how are memory ranges validated?
-+
-+::
-+
-+  # ls /sys/bus/cxl/devices/decoder0.0/
-+    cap_pmem           devtype                 region0
-+    cap_ram            interleave_granularity  size
-+    cap_type2          interleave_ways         start
-+    cap_type3          locked                  subsystem
-+    create_ram_region  modalias                target_list
-+    delete_region      qos_class               uevent
-+
-+Switch Decoder
-+--------------
-+todo:
-+
-+* what distinguishes it from a root decoder?
-+* how is it created?
-+* how does it get targets?
-+* how are targets validated?
-+* how are memory ranges validated?
-+
-+::
-+
-+  # ls /sys/bus/cxl/devices/decoder0.0/
-+    devtype                 locked    size       target_list
-+    interleave_granularity  modalias  start      target_type
-+    interleave_ways         region    subsystem  uevent
-+
-+
-+Endpoint Decoder
-+----------------
-+todo:
-+
-+* how is it created?
-+* how are memory ranges validated?
-+
-+::
-+
-+  # ls /sys/bus/cxl/devices]# ls decoder5.0
-+    devtype                 locked    start
-+    dpa_resource            modalias  subsystem
-+    dpa_size                mode      target_type
-+    interleave_granularity  region    uevent
-+    interleave_ways         size
-+
-+
-+Regions
-+=======
-+
-+Memory Region
-+-------------
-+todo
-+::
-+
-+  # ls /sys/bus/cxl/devices/region0/
-+    access0      devtype                 modalias  subsystem  uuid
-+    access1      driver                  mode      target0
-+    commit       interleave_granularity  resource  target1
-+    dax_region0  interleave_ways         size      uevent
-+
-+DAX Region
-+----------
-+todo
-+
-+::
-+
-+  # ls /sys/bus/cxl/devices/dax_region0/
-+    dax0.0      devtype  modalias   uevent
-+    dax_region  driver   subsystem
-+
-+
-+Mailbox Interfaces
-+==================
-+A mailbox command interface for each device is exposed in ::
-+
-+  /dev/cxl/mem0
-+  /dev/cxl/mem1
-+
-+These mailboxes may receive any specification-defined command. Raw commands
-+(custom commands) can only be sent to these interfaces if the build config
-+:code:`CXL_MEM_RAW_COMMANDS` is set.  This is considered a debug and/or
-+development interface, not an officially supported mechanism for creation
-+of vendor-specific commands (see the `fwctl` subsystem for that).
-+
-+Decoder Programming
-+*******************
-+
-+Runtime Programming
-+===================
-+todo: basic example of decoder programming steps.
-+
-+Auto Decoders
-+=============
-+Auto Decoders are decoders programmed by BIOS/EFI at boot time, and are
-+almost always locked (cannot be changed).  This is done by a platform
-+which may have a static configuration - or certain quirks which may prevent
-+dynamic runtime changes to the decoders (such as requiring additional
-+controller programming within the CPU complex outside the scope of CXL).
-+
-+Auto Decoders are probed automatically as long as the devices and memory
-+regions they are associated with probe without issue.  When probing Auto
-+Decoders, the driver's primary responsibility is to ensure the fabric is
-+sane - as-if validating runtime programmed regions and decoders.
-+
-+If Linux cannot validate auto-decoder configuration, the memory will not
-+be surfaced as a DAX device - and therefore not be exposed to the page
-+allocator - effectively stranding it.
-+
-+Interleave
-+==========
-+todo
-+
-+* CFMWS, CHBS, and Root Decoders
-+
-+* Decoder-type behavior (root/switch route, endpoints translate)
-+
-+* Unbalanced configurations are not supported by Linux.
-+
-+Surfacing Memory as DAX
-+***********************
-+todo: explain any additional steps taken to hand off control to dax
-+
-+Example Configurations
-+**********************
-+.. toctree::
-+   :maxdepth: 1
-+
-+   example-configurations/single-device.rst
-+   example-configurations/hb-interleave.rst
-+   example-configurations/intra-hb-interleave.rst
-+   example-configurations/multi-interleave.rst
--- 
-2.49.0
+> 
+> --D
+
+Cheers,
+John
 
