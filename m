@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC4921FDE33;
-	Mon, 28 Apr 2025 22:07:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF061F4199;
+	Mon, 28 Apr 2025 22:08:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745878035; cv=none; b=MHh6ZealWEnOUUs2rnlQj5v/Dh4LIHFgdX5SeZqJH+Lma6Te4zCnGOEvJNTk5BPk2yHCBXh/6mfMHMT3mGgWdGa33WnUMZ4xuFp1Gbfa4vHOXG/VRaDwu/Vut5YPrha48sQlmzr8l48OLqXQlSt4Ir4Pxh+ox/a9kJx6Gp87HBo=
+	t=1745878092; cv=none; b=eb80CbDcsbNIidORYjy+CVIFQpS+lAz5ETOkTYlQSWxo0puJg7U8gCuHcp1FNu01UnQf51XjkPy4vQkgNqhDRRf3SCbQPB3duJFnr+Jkg4xjNSqxV1XwQ16CTvSSPv/W+0nQ+H9l7epTZJADKg1hNDDOgg4LizR25+4Xzsrk9RY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745878035; c=relaxed/simple;
-	bh=eyRMGZGGuI1jCqPa85trFLtZ2GppPcOVR+k5ZTfKxTI=;
+	s=arc-20240116; t=1745878092; c=relaxed/simple;
+	bh=eUlXJLbLI0evP2NCBgC9iVd7P+RAYKc4rK0nLJsUf+E=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ceTcgGSd3Sj8SZN02tiVGLq5ZftbV1XqzRm5BuIyVbyltsIn4DRC8T/cOYsqmBEyDAU1wutI3w7WxUCdspxjR1s6fOD4NY175ApVeoPlyLxkptRSjnrj1a619+kfiLFxA5uYzd/eFzrlY1qEFOjBJpKyuOrZ/2twbKpz/ithpMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JDo4azqC; arc=none smtp.client-ip=198.175.65.11
+	 In-Reply-To:Content-Type; b=nKUpux8pSnb5441fRiz9zIKK0F57c2OISDe85ABFYNHCbxpbmAtHzt3K3IJPObmkpwqys0CgmqzTtXRY0WPdDAscOmjKQ5pFRnAHEJwkWFcVghC+TQ/4iFCBhR/evgccfuI3I2cwcQjbD4nuNOmTrt6FcJcwrOhbOrQg8SUfGRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B1aQQ1R5; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JDo4azqC"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B1aQQ1R5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745878034; x=1777414034;
+  t=1745878091; x=1777414091;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=eyRMGZGGuI1jCqPa85trFLtZ2GppPcOVR+k5ZTfKxTI=;
-  b=JDo4azqCY4Lw0hHAysevcdvsOX6DQefMbbLdT5/385S7ljEvHJ1SImAS
-   p0EZ04VVJ0eS6Ts0TWhY7BD4u28GkOYCyqZRTuaghkbAGCjzTMJTDB5zq
-   q/XKHYs2OAPhF7LuJNUJEBKULnreF1qKkPWhhrF5Bw2+xPQcWQ0L/nZcB
-   8La68Fyzyg21C0V7VmxB1EIGgVFhAT38z6+moUQJDZbvz98zJtb4VTUHl
-   8PR2UIDdsno2j4adfrxkaNK5sXGtCiULZjExiV51AWuLffXSdxFlLTdXA
-   Ju4JT05C4b3jXQBKJyBO1vnj1HRp0Hs3R99anfvSfX5kFpoarzKAbecj1
+  bh=eUlXJLbLI0evP2NCBgC9iVd7P+RAYKc4rK0nLJsUf+E=;
+  b=B1aQQ1R5YpdsCyEEhHhjRQ4I4eWtTYcxDVFGfg2gxuAAB9NQUFL6F1ps
+   SpL3bjEJNOqJZ1GRbLBEdGqOkAreSVVNrFFeq3xwoBrHtDS3GZiF99wqQ
+   FIayz/css5zlLM5yY6XPnOb3cZXuA9uI2MhyVE5T7fPyUbG1UpnGePBUp
+   pByUEMMCn4nOw/zmAs7GyZ0RHK+Yc8G4Dr+XrLAxdBs595rRgbt3dTxCg
+   M3g+d3QbuKbP+CpRpJSIr8mVpX5wv0jJw5zKZuUEPAf8iU5jTZHL8dtxS
+   x6XnhjtxfLVPup8WkQn7fMUFsjwsWp5tA7/yUMnTisTT+ThvHPVWup/dV
    g==;
-X-CSE-ConnectionGUID: CwTGi05xRx+9mjYFqQ7ryg==
-X-CSE-MsgGUID: I/rbInzxRTieCqv/IH2iMw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="57687143"
+X-CSE-ConnectionGUID: 1vI2k0PKSaWAbGGOZTDATg==
+X-CSE-MsgGUID: mDqd9izLTh+vL6y936O6rw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="57687208"
 X-IronPort-AV: E=Sophos;i="6.15,247,1739865600"; 
-   d="scan'208";a="57687143"
+   d="scan'208";a="57687208"
 Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 15:07:13 -0700
-X-CSE-ConnectionGUID: eCViiM1oTfK4l4Kx4zpcwA==
-X-CSE-MsgGUID: DFxwPUvRR0CB0BfwbE+t9g==
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 15:08:09 -0700
+X-CSE-ConnectionGUID: GtcKC3woR025oH6oV/WB+A==
+X-CSE-MsgGUID: A9Ap8yQ0RgGXaqXcugnE8g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,247,1739865600"; 
-   d="scan'208";a="133955355"
+   d="scan'208";a="133955512"
 Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.109.95]) ([10.125.109.95])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 15:07:07 -0700
-Message-ID: <41e17e85-1093-4848-a4cb-92c65663610d@intel.com>
-Date: Mon, 28 Apr 2025 15:07:05 -0700
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 15:08:08 -0700
+Message-ID: <fe3e2a84-babb-470f-b7ac-03c1fbcdbc29@intel.com>
+Date: Mon, 28 Apr 2025 15:08:05 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,7 +52,7 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 02/14] cxl/pci: Moving code in cxl_hdm_decode_init()
+Subject: Re: [PATCH v5 03/14] cxl/pci: Add comments to cxl_hdm_decode_init()
 To: Robert Richter <rrichter@amd.com>,
  Alison Schofield <alison.schofield@intel.com>,
  Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
@@ -64,67 +64,89 @@ Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
  "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
  Terry Bowman <terry.bowman@amd.com>
 References: <20250428214318.1682212-1-rrichter@amd.com>
- <20250428214318.1682212-3-rrichter@amd.com>
+ <20250428214318.1682212-4-rrichter@amd.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250428214318.1682212-3-rrichter@amd.com>
+In-Reply-To: <20250428214318.1682212-4-rrichter@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
 On 4/28/25 2:43 PM, Robert Richter wrote:
-> Commit 3f9e07531778 ("cxl/pci: simplify the check of mem_enabled in
-> cxl_hdm_decode_init()") changed the code flow in this function. The
-> root port is determined before a check to leave the function. Since
-> the root port is not used by the check it can be moved to run the
-> check first. This improves code readability and avoids unnesessary
-> code execution.
+> There are various configuration cases of HDM decoder registers causing
+> different code paths. Add comments to cxl_hdm_decode_init() to better
+> explain them.
 > 
 > Signed-off-by: Robert Richter <rrichter@amd.com>
 > Reviewed-by: Gregory Price <gourry@gourry.net>
-> Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 > Reviewed-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
 > Tested-by: Gregory Price <gourry@gourry.net>
 
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 > ---
->  drivers/cxl/core/pci.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
+>  drivers/cxl/core/pci.c | 31 ++++++++++++++++++++++---------
+>  1 file changed, 22 insertions(+), 9 deletions(-)
 > 
 > diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 33c3bdd35b24..6386e84e51a4 100644
+> index 6386e84e51a4..80bfd8ca4f8d 100644
 > --- a/drivers/cxl/core/pci.c
 > +++ b/drivers/cxl/core/pci.c
-> @@ -419,14 +419,6 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
+> @@ -416,9 +416,19 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
+>  	if (global_ctrl & CXL_HDM_DECODER_ENABLE || (!hdm && info->mem_enabled))
+>  		return devm_cxl_enable_mem(&port->dev, cxlds);
+>  
+> +	/*
+> +	 * If the HDM Decoder Capability does not exist and DVSEC was
+> +	 * not setup, the DVSEC based emulation cannot be used.
+> +	 */
 >  	if (!hdm)
 >  		return -ENODEV;
 >  
-> -	root = to_cxl_port(port->dev.parent);
-> -	while (!is_cxl_root(root) && is_cxl_port(root->dev.parent))
-> -		root = to_cxl_port(root->dev.parent);
-> -	if (!is_cxl_root(root)) {
-> -		dev_err(dev, "Failed to acquire root port for HDM enable\n");
-> -		return -ENODEV;
-> -	}
-> -
+> +	/* The HDM Decoder Capability exists but is globally disabled. */
+> +
+> +	/*
+> +	 * If the DVSEC CXL Range registers are not enabled, just
+> +	 * enable and use the HDM Decoder Capability registers.
+> +	 */
 >  	if (!info->mem_enabled) {
 >  		rc = devm_cxl_enable_hdm(&port->dev, cxlhdm);
 >  		if (rc)
-> @@ -435,6 +427,14 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
+> @@ -427,6 +437,18 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
 >  		return devm_cxl_enable_mem(&port->dev, cxlds);
 >  	}
 >  
-> +	root = to_cxl_port(port->dev.parent);
-> +	while (!is_cxl_root(root) && is_cxl_port(root->dev.parent))
-> +		root = to_cxl_port(root->dev.parent);
-> +	if (!is_cxl_root(root)) {
-> +		dev_err(dev, "Failed to acquire root port for HDM enable\n");
-> +		return -ENODEV;
-> +	}
+> +	/*
+> +	 * Per CXL 2.0 Section 8.1.3.8.3 and 8.1.3.8.4 DVSEC CXL Range 1 Base
+> +	 * [High,Low] when HDM operation is enabled the range register values
+> +	 * are ignored by the device, but the spec also recommends matching the
+> +	 * DVSEC Range 1,2 to HDM Decoder Range 0,1. So, non-zero info->ranges
+> +	 * are expected even though Linux does not require or maintain that
+> +	 * match. Check if at least one DVSEC range is enabled and allowed by
+> +	 * the platform. That is, the DVSEC range must be covered by a locked
+> +	 * platform window (CFMWS). Fail otherwise as the endpoint's decoders
+> +	 * cannot be used.
+> +	 */
 > +
->  	for (i = 0, allowed = 0; i < info->ranges; i++) {
->  		struct device *cxld_dev;
+>  	root = to_cxl_port(port->dev.parent);
+>  	while (!is_cxl_root(root) && is_cxl_port(root->dev.parent))
+>  		root = to_cxl_port(root->dev.parent);
+> @@ -454,15 +476,6 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
+>  		return -ENXIO;
+>  	}
 >  
+> -	/*
+> -	 * Per CXL 2.0 Section 8.1.3.8.3 and 8.1.3.8.4 DVSEC CXL Range 1 Base
+> -	 * [High,Low] when HDM operation is enabled the range register values
+> -	 * are ignored by the device, but the spec also recommends matching the
+> -	 * DVSEC Range 1,2 to HDM Decoder Range 0,1. So, non-zero info->ranges
+> -	 * are expected even though Linux does not require or maintain that
+> -	 * match. If at least one DVSEC range is enabled and allowed, skip HDM
+> -	 * Decoder Capability Enable.
+> -	 */
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_hdm_decode_init, "CXL");
 
