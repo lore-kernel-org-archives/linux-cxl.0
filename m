@@ -1,95 +1,182 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8707815ECD7
-	for <linux-cxl@vger.kernel.org>; Mon, 28 Apr 2025 22:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE60C15ECD7;
+	Mon, 28 Apr 2025 22:28:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745879239; cv=none; b=Mfe0kQF+miVSlGK/x7OFSmIJN96t4mmJibGhkJYAMqCgdEUSaCeIDDG7QOYemqgUQfKX2rb+ZTmexasG9lV0bkdLGaI1oPWQn2jm83tWk/zU2bQ5X+VqNmzcv+np2ZPLjywFi4VM1VXsi/RkAc5xp5ZLEoju/aPad5UvcwFLZow=
+	t=1745879331; cv=none; b=JCP0YkEdrE7T5x6sEPEfCPpuAewBwAubXgJi5vgUiZqi1PhcK5hzFL+tXTpuMMNMJW3+SnlCuhT+VYLZQlXvw5g8ZP12EwKgO6Timx6W4fe62uILFdxzyMby74ALw3GZufDwe3CanlWeIZPED6J+QvnZ6KKXAmoVla5wp2RpiPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745879239; c=relaxed/simple;
-	bh=7fnMKjBox+OEBVjxHcU5z6wFRkR5xtmGko53KNWRG7A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DM3UWMOqynKsdAdOzbdWrjlfG3IwOIPYSvm6ScZf9XjBI94Dwy0TDMHvZdF29Sed0QIDJyu0qIaXd5OHnej+OOo55SAiaoLZgfjoZ5qwHBdkiiISZx+cBg0kSrxZPRlgRpht/Zquc6ZQB7BXdJyZ5i3lgnwJVkxPdDvmNsBc8wU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=KBcOCYm/; arc=none smtp.client-ip=209.85.219.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1745879331; c=relaxed/simple;
+	bh=44rzAJ7gbrN51ywSzm9xKpbUf8gwxuK3HDN71uR0VUQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kE0JU36jxi0nX6pHE2jLtPegpl3CRtQLvVyEoMLWZNO/omCfl9CIihIn1S7Kx1rkKbPgKj/BU32chEXzO4kQnLNCCPeqMF1k5gdbXoRmsAoYOYaZHd6wGso2ZBRk0VYudj90cvF3UzoS4qLz4JGAjNeW62lRjSzyrfogfyYuE0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mqZ2xKyy; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="KBcOCYm/"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6ecf0e07947so57057176d6.0
-        for <linux-cxl@vger.kernel.org>; Mon, 28 Apr 2025 15:27:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1745879236; x=1746484036; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3fuP7VLRjygpUBUrW1Nki1gvJTEsUdPya9I3sGV21Rg=;
-        b=KBcOCYm//3TNaWxM4bMwM9e+uOn9GiICvdmseeggJLJ2HXFuFtufikagoqOOZ2/yJq
-         cfZH0goP7dvDo8YPLTktsSwskGXG62jAJkg0LL+clXR45xrN+k3O91XnjebyEHybxK6a
-         GKWs/vdRu8zl/GOTsuvduuLPEwm9SRBHA/Xlfng1rpMg9fPzUTXAXxrL3M3Eezkagyrb
-         IdfxKibT8Z7IepdHkKDo3zY4XoqNio+SW3hILdgTMgX/+htCTlqUi3BUMQoTtPPB/9xZ
-         kQeXN2N8fHQhA/nr6RFu7u88t9Ke7UyihNc7o/JIdHKSxTpu4A3L3Eg4IbDlez9WyB5u
-         Cw9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745879236; x=1746484036;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3fuP7VLRjygpUBUrW1Nki1gvJTEsUdPya9I3sGV21Rg=;
-        b=RdSax7vedJUorQcndVjFTziS4ISxCmOGcrMWGY0m5VWX9ufeZd+UA/8Kni9BmPSPbc
-         /xqxndnRzP/ZOcs7rXrPktN08eWt+h+RWUNMWY4lhY5N3Knh5LbopbcwMo2NebEy4nKS
-         oip5PX2i+ozg1mNq9a3LayJDRs/DJW26iuK6FMul704BjKI6JKicAJrKX92Ws+IUiXKH
-         euhhdYWLky7thsQeTqxqOz/6aPjj6/0ulMpldENt2m9rm1/M4ND1gcNFwo63zyYiqtuk
-         Vqr8pEycgyXk7xQL07igDtvJRSKpDMpcS4EEZdQAVBGFfq04W+APL7IyEx7fECYZmn7O
-         lQhA==
-X-Forwarded-Encrypted: i=1; AJvYcCW9wPhClEgzn9za6DvNW4YaLfPcGX2Ec+pALLk1U9HoxzpSECnD13d+eDc1rPIQhhmj7CHXERedA44=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzI8CtGl1atTOQeX9o/VcSMQ3tpwQMPNTPnCOewTRfs+WQhbsGh
-	JPdl1cIntsjZZ6R807yE+i6M4cQFf407n3xn3WUSngH2h3W2rufC2SNXN3Da/Lg=
-X-Gm-Gg: ASbGncuz6XEdBXL88QcMFQeyTHCr5ns4+oiId9eZiF1iJ4vZCl3iuQjHPNPs2mdXvZ5
-	dLNZXBCa8dkRIujOqscGzOa8UkCHyJIOO4b6npOTmMJTbScyw+1FjhDMMvbN/785kcdPIZBzlJb
-	GJpJg6UYBIIFTDHipiS61xOiFrfCkeUEjhaWQhM2hGYUu2oYF/zJLoVp+wP+j/ogFE09XWVqvvF
-	nHrhT1UN8O9BkRIy07JjcNL8cOAA9ugtS93ydFk/sFHxIbqHsFqPx6jsPEOU5FGzK0KHOvH1GL6
-	BDdTa5iHO/LURfuZ+SUg8U5gE7G1favy6mxQy2pYtJpU+wpXYE5W5hiwThnMi2834jF1fZN2D8O
-	kgWZTALPFl9/dEIcKsw1StwU=
-X-Google-Smtp-Source: AGHT+IFzppIoEenYmm9CPu0E6btppZX+5Vg+VhrXb8lAiNGRQH1YSHf89Ar9XNk4Jy4VQsxooriCpg==
-X-Received: by 2002:ad4:5967:0:b0:6eb:1c23:63c3 with SMTP id 6a1803df08f44-6f4f1aa66a5mr17281846d6.0.1745879236406;
-        Mon, 28 Apr 2025 15:27:16 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4c0aaf904sm65706686d6.101.2025.04.28.15.27.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 15:27:16 -0700 (PDT)
-Date: Mon, 28 Apr 2025 18:27:14 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Robert Richter <rrichter@amd.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v5 08/14] cxl/port: Replace put_cxl_root() by a cleanup
- helper
-Message-ID: <aBAAwnQ8x8235rDj@gourry-fedora-PF4VCD3F>
-References: <20250428214318.1682212-1-rrichter@amd.com>
- <20250428214318.1682212-9-rrichter@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mqZ2xKyy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745879330; x=1777415330;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=44rzAJ7gbrN51ywSzm9xKpbUf8gwxuK3HDN71uR0VUQ=;
+  b=mqZ2xKyyVe7S+MAlEmTLe56wPdjKmKfOzLopIdXy4ji3JDpepE/qxYAe
+   4+BWdJL/bwjzEUFZNo0ZSz6sK2p2pk6E5Nai+N5DFAhLipVFzPx+VydHR
+   JeUO4GIVJdEASt6UUsah7TaVZH3Bt8HdeQRkkF7wUn0rawKfNXnyjP9Oj
+   uxOQjCJu3uimNF0eKW83hoTfMF7eAbANnJECRxW8UaWaWLsSfGMcqDksu
+   GrCyv56Q+dsVXBMJdw+hq5ZrTWgvAxwD0wxnkE6bgd0wnhRzPOVjPpD6b
+   m4AE/DjDle7LAWCPfvxzkogp2n5OezWlMukp62kxoYJi7XTjyzF/RW3+y
+   w==;
+X-CSE-ConnectionGUID: gtYA8vVdSCy0XHfeLYK1QA==
+X-CSE-MsgGUID: 3fWIxEiaQnevYryPzFyX6g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="58476995"
+X-IronPort-AV: E=Sophos;i="6.15,247,1739865600"; 
+   d="scan'208";a="58476995"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 15:28:49 -0700
+X-CSE-ConnectionGUID: IWzjDtMDT6qbZy0NcDM+lw==
+X-CSE-MsgGUID: Cg9KdP4cQaWtJywnCte7aA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,247,1739865600"; 
+   d="scan'208";a="138454573"
+Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.109.95]) ([10.125.109.95])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 15:28:47 -0700
+Message-ID: <86b998af-a496-41fd-a4c7-2d7b622f1d15@intel.com>
+Date: Mon, 28 Apr 2025 15:28:44 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250428214318.1682212-9-rrichter@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 06/14] cxl/region: Avoid duplicate call of
+ cxl_port_pick_region_decoder()
+To: Robert Richter <rrichter@amd.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Davidlohr Bueso <dave@stgolabs.net>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Gregory Price <gourry@gourry.net>,
+ "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+ Terry Bowman <terry.bowman@amd.com>
+References: <20250428214318.1682212-1-rrichter@amd.com>
+ <20250428214318.1682212-7-rrichter@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250428214318.1682212-7-rrichter@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 28, 2025 at 11:43:11PM +0200, Robert Richter wrote:
-> Function put_cxl_root() is only used by its cleanup helper. Remove the
-> function entirely and only use the helper.
+
+
+On 4/28/25 2:43 PM, Robert Richter wrote:
+> Function cxl_port_pick_region_decoder() is called twice, in
+> alloc_region_ref() and cxl_rr_alloc_decoder(). Both functions are
+> subsequently called from cxl_port_attach_region(). Make the decoder a
+> function argument to both which avoids a duplicate call of
+> cxl_port_pick_region_decoder().
+> 
+> Now, cxl_rr_alloc_decoder() no longer allocates the decoder. Instead,
+> the previously picked decoder is assigned to the region reference.
+> Hence, rename the function to cxl_rr_assign_decoder().
+> 
+> Moving the call out of alloc_region_ref() also moves it out of the
+> xa_for_each() loop in there. Now, cxld is determined no longer only
+> for each auto-generated region, but now once for all regions
+> regardless of auto-generated or not. This is fine as the cxld argument
+> is needed for all regions in cxl_rr_assign_decoder() and an error would
+> be returned otherwise anyway. So it is better to determine the decoder
+> in front of all this and fail early if missing instead of running
+> through all that code with multiple calls of
+> cxl_port_pick_region_decoder().
 > 
 > Signed-off-by: Robert Richter <rrichter@amd.com>
+> Reviewed-by: Gregory Price <gourry@gourry.net>
+> Tested-by: Gregory Price <gourry@gourry.net>
 
-Reviewed-by: Gregory Price <gourry@gourry.net>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  drivers/cxl/core/region.c | 35 +++++++++++++++++------------------
+>  1 file changed, 17 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index e104035e0855..fa3d50982d04 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -931,7 +931,8 @@ static bool auto_order_ok(struct cxl_port *port, struct cxl_region *cxlr_iter,
+>  
+>  static struct cxl_region_ref *
+>  alloc_region_ref(struct cxl_port *port, struct cxl_region *cxlr,
+> -		 struct cxl_endpoint_decoder *cxled)
+> +		 struct cxl_endpoint_decoder *cxled,
+> +		 struct cxl_decoder *cxld)
+>  {
+>  	struct cxl_region_params *p = &cxlr->params;
+>  	struct cxl_region_ref *cxl_rr, *iter;
+> @@ -945,9 +946,6 @@ alloc_region_ref(struct cxl_port *port, struct cxl_region *cxlr,
+>  			continue;
+>  
+>  		if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
+> -			struct cxl_decoder *cxld;
+> -
+> -			cxld = cxl_port_pick_region_decoder(port, cxled, cxlr);
+>  			if (auto_order_ok(port, iter->region, cxld))
+>  				continue;
+>  		}
+> @@ -1029,19 +1027,11 @@ static int cxl_rr_ep_add(struct cxl_region_ref *cxl_rr,
+>  	return 0;
+>  }
+>  
+> -static int cxl_rr_alloc_decoder(struct cxl_port *port, struct cxl_region *cxlr,
+> -				struct cxl_endpoint_decoder *cxled,
+> -				struct cxl_region_ref *cxl_rr)
+> +static int cxl_rr_assign_decoder(struct cxl_port *port, struct cxl_region *cxlr,
+> +				 struct cxl_endpoint_decoder *cxled,
+> +				 struct cxl_region_ref *cxl_rr,
+> +				 struct cxl_decoder *cxld)
+>  {
+> -	struct cxl_decoder *cxld;
+> -
+> -	cxld = cxl_port_pick_region_decoder(port, cxled, cxlr);
+> -	if (!cxld) {
+> -		dev_dbg(&cxlr->dev, "%s: no decoder available\n",
+> -			dev_name(&port->dev));
+> -		return -EBUSY;
+> -	}
+> -
+>  	if (cxld->region) {
+>  		dev_dbg(&cxlr->dev, "%s: %s already attached to %s\n",
+>  			dev_name(&port->dev), dev_name(&cxld->dev),
+> @@ -1132,7 +1122,16 @@ static int cxl_port_attach_region(struct cxl_port *port,
+>  			nr_targets_inc = true;
+>  		}
+>  	} else {
+> -		cxl_rr = alloc_region_ref(port, cxlr, cxled);
+> +		struct cxl_decoder *cxld;
+> +
+> +		cxld = cxl_port_pick_region_decoder(port, cxled, cxlr);
+> +		if (!cxld) {
+> +			dev_dbg(&cxlr->dev, "%s: no decoder available\n",
+> +				dev_name(&port->dev));
+> +			return -EBUSY;
+> +		}
+> +
+> +		cxl_rr = alloc_region_ref(port, cxlr, cxled, cxld);
+>  		if (IS_ERR(cxl_rr)) {
+>  			dev_dbg(&cxlr->dev,
+>  				"%s: failed to allocate region reference\n",
+> @@ -1141,7 +1140,7 @@ static int cxl_port_attach_region(struct cxl_port *port,
+>  		}
+>  		nr_targets_inc = true;
+>  
+> -		rc = cxl_rr_alloc_decoder(port, cxlr, cxled, cxl_rr);
+> +		rc = cxl_rr_assign_decoder(port, cxlr, cxled, cxl_rr, cxld);
+>  		if (rc)
+>  			goto out_erase;
+>  	}
 
