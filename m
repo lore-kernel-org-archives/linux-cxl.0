@@ -1,222 +1,218 @@
-Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2088.outbound.protection.outlook.com [40.107.96.88])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B450A5684;
-	Mon, 28 Apr 2025 01:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745805007; cv=none; b=XQ+1zat4Ab0PypqHpzgykhM8IFhPjrpvLuELei5XAcN5q6V16Aw64B4NNFZdIlQwrM/ibE4856WvOUMX/U3eZJVEcxwygSOI7GdqVXFD2SokAMtF3fQ5Dss6sXn8jfyoeh4fBSwLjIyeTAveKrvUj3aaj6gUS7SEUXwR0tf3WpM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745805007; c=relaxed/simple;
-	bh=doj6zOgc5VWWmm/qoFnhXtoIVGZlxDYg5PUinPuwuBc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ElibRTLueDsIigd66oluvtP8IE0kgJJTdRU2mZplj3CG7dwmCw66kNtvnxT5GROcYS9TYg5vAB2x7Gg4xoYJG6R7jFAtpLKHfKeb4wgAeWWEhutEMsAi2wMSsjhPCYOGV9CD03rFy9WkIzRwkxBiun/ZBR2BqiNNA+Mndp0JBoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lDe8Jm81; arc=none smtp.client-ip=209.85.160.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 942B623C8B3;
+	Mon, 28 Apr 2025 08:01:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.88
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745827265; cv=fail; b=qehvgapuuypzSDBIvVN3Bs6zren9UnRqCG9ZpY+c+xknBQsrCLU2TgMadpr+8ejuN2R1xBu13IoqHv/m/4dj7+iniWJivxJuklEwxYJLBW74bH0v6+iTsIZYIn8K6ro3pzYGZdCm2ocepu3DlpbcL1fsXFZszRdKEK7wtjRuVbI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745827265; c=relaxed/simple;
+	bh=uu5wRU8y4fcgrAlOSo1EGsRyOBoNTidcRIlSDL9xfkM=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=OmYh1IyBaXRDBE9Qyi10Tt0GPVzq3CJAN6vfqRMUkWk1s1iW8UNaMOcdKKss7O7lTCHJjxxfhrb9uVtEMN5Xm3NMqgOvY8FpsrowVEJlMqoFbfjhoNNjrkiBKTRiw7IXMIv5Bxqfmb7cfPe9fbIFtqUMzPBVqZgE4yS+AHgiokM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=n2/tiYds; arc=fail smtp.client-ip=40.107.96.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lDe8Jm81"
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-2c2c754af3cso2373429fac.3;
-        Sun, 27 Apr 2025 18:50:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745805005; x=1746409805; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=q/ubERfRjdkzW5emP2ZZP5xPtJL9kCLbv4s5tOyr1d0=;
-        b=lDe8Jm8130K+k48alpc04zifXk+zPW1ptL3XKSHukfF9MwO9lqiA+bcsQ1bpbyMcpT
-         EHp/p2dCAfN/KuuRhV+zuImI0tauPNBZ1tPnqvwHSTCDlSjBIJt1/X6hCTnhLiw3p+z9
-         NESHzxQDOx7EJL+5lZluj+Gx3npdDjy9XsS/cwHLeeHCo2NrSTi5n/GXfMNeXVb1g9Wv
-         HRCan7A7JGZ91/ZnZc42YKRDdGiEXW9dX6Z3o00DXKsOpPW/fAoBzTNKvyee+R6lN+NM
-         4ik29xg/RFacllvxI62djdBjAL6nMx+qPjITsNB1VpYQ2jnJkScZUqQZK3BKQgmRuUK9
-         pcqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745805005; x=1746409805;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=q/ubERfRjdkzW5emP2ZZP5xPtJL9kCLbv4s5tOyr1d0=;
-        b=VXJMogY2WFoXeTZSlFK9QIs1+pSGOSQwLQZ/QkONd4+X05UO3g6mzwzbkPnU1rIsHd
-         Syt0ARSRXpNDl4xI9mdy4uYSxKyAakMCg+oZrXukofP10zHu6HYnhTTunUzqsOz5rJES
-         GqLvnfxWiI5j7wx9qMG6SXBEYWaOdf13yB1+zVUoJUWZH8po5nEw5c/eeMaJOPcxTrw/
-         s1NmxmVMzZoVo25KMluVP9NE9bdMJ/7gXr1PLZNhExFOvrIErf4vD3PdTpInI6UwGewO
-         gXIApeNP02fQx/RCnJg7gqpc0bCdHdmOo/DVXfcR6z+mFxYlPDPUdXxfemQh6RPUIIOW
-         592w==
-X-Forwarded-Encrypted: i=1; AJvYcCUaP4qTeM5y4aGHlYjkwSTCqqLiAI4xRvhteofwFyoFDOai1v7J9dqURey4+5HYc8RfxxGP0gnBUcgIca7w@vger.kernel.org, AJvYcCWPO3OFm+PAjkn8EgBZYFH5JNFc4U3TqReeAOu/RTkTaGaBXZCZGD3DaE/Qsarj7L5U9DeJi+920w5YIe0AUg==@vger.kernel.org, AJvYcCXRB6JVyQUxkjzfv+TlUX7o8yv8h821JImy5yfA2DBCRiZkgNmB0xIAbvLJRsPV3aSQraovncsUp0I=@vger.kernel.org, AJvYcCXcS1WWj9GV4n6KkpDFRPm+P21VwTlltX0ka4BAUodzLA2CrQa9n9gYmZMKPlAtqNRN/KOOj2ssL/di@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4wLz5neh8vB7XAhnXUeX6qYRWr7H7kI8Y5gzIDSrbJ/snngjd
-	5eT47wo3eeim2FvyWtrM6iXwjBXftD50zmvEl49pj0xNv7CueB+f
-X-Gm-Gg: ASbGncstpT0b6PNk6qmEQW1yYSdY2lULUxdW/NkRjKGk7vUW3hIVrpUK4WUj0zO7Uyp
-	HEWeQJ8Dcqo3bQdK7torityLd4MRoaLaH1XSl0RSd4bRNRmQq9D53CysawYKeefTPyZgc1RN0Rn
-	sUju/9RSg1PQCkd/0lRMBr6ydsFdN5WAC7fOQB9rlRQi+BkEGSz/vRxAtDQfAHLsPsQmbyB86mq
-	/wye2br6x9g6WYnXRVIOQWuQ13R/sX0iHqX/yD9BvkViYIFW9sHy/MwOrUJl4copsOMg/wQZVT8
-	kRc1xOyVNOuhr3aqF9/ozSL9l3X1ZY/FmKORTR8qVHzqEgJVsdXke2s1zL2ncSiXnA==
-X-Google-Smtp-Source: AGHT+IFAMuKE1EJyX06l+5odcVHGZDhKhFY+nBb5zJuOWKhWorN6ZVXS6F1/faYUmlVc/WvBl7O1dg==
-X-Received: by 2002:a05:6870:a794:b0:2c1:6948:d57c with SMTP id 586e51a60fabf-2d99db0acc8mr6417200fac.28.1745805003074;
-        Sun, 27 Apr 2025 18:50:03 -0700 (PDT)
-Received: from groves.net ([2603:8080:1500:3d89:14de:ab78:90c3:bb9a])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2d9737e73b7sm2071903fac.26.2025.04.27.18.50.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Apr 2025 18:50:02 -0700 (PDT)
-Sender: John Groves <grovesaustin@gmail.com>
-Date: Sun, 27 Apr 2025 20:50:00 -0500
-From: John Groves <John@groves.net>
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Dan Williams <dan.j.williams@intel.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Bernd Schubert <bschubert@ddn.com>, 
-	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	"Darrick J . Wong" <djwong@kernel.org>, Luis Henriques <luis@igalia.com>, 
-	Jeff Layton <jlayton@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>, 
-	Petr Vorel <pvorel@suse.cz>, Brian Foster <bfoster@redhat.com>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
-	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>
-Subject: Re: [RFC PATCH 18/19] famfs_fuse: Add documentation
-Message-ID: <bwazd4vbwj2c7flrrkizycvl22oflufawxdiaan674vqqkgumw@lt4zppeg4l7e>
-References: <20250421013346.32530-1-john@groves.net>
- <20250421013346.32530-19-john@groves.net>
- <db2415e3-0ee7-4b72-ac6b-4c7cda875dd3@infradead.org>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="n2/tiYds"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cWmNLuXR/BhotG4MErTgAlqOm7O9+dw4rcLYzZYPz7Xl72LEemOfMRnutfsebUUD32cG192/H272RHjzhVItXOGcLb+d1lm8tVgGwShUJBaqV68T8AhUsBa6QZDwESQYLZhP1TqKXOTU+/Yykvkb7bm4FItfU3gDDyFIB2lwS391qnf5MjSIHth49xwataQGmRdhKL5VEvmbfYKBp8E4beEjA/ccnkJ7x3N0aTP0Jn1ccTV0owmH5Q0joocAl59f4sjLbOE3RM+0wXqwGfyt3e6BlxoWAMU120WIW0UsqwX/zIDIRFFEN/lrhFJsxgBI4Lk8qkYuVaypDso4Q1sqPA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xskkG/aZ2xA5RyU9HCMjbQ8ox5RQipZRZuHkhnxavjk=;
+ b=gATQ2LUw9VeVNksGl43dcDqulGjKLaIePvLvekzf4jYYkJ7nEC2FooLI8W/M8dvbcBEYIf0NM2Y2pnfVL5FIpHXluxr6uVOr6fCOg3WQViPEvoCc+44DNcz1QFZxajHSHFQ6C/2jcOfzK2U9rHn4OprNchOTmiFm2QAZi4rPgo/rqLlVuUpIpnLn47sKhBIIWxnFgPqEN1Nl4yM3zv+UX6pw568dh4fePK9AwHtsENNK3PCVr8IeoupyLlIcRirK3T8ioPOe7LPuBxqjj5ctrH6QPWKpVcfXr1QFiq/iszMgEALpDB5QaldriAFS53NzC0NMldmFdoz8+GqUW0SBKw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xskkG/aZ2xA5RyU9HCMjbQ8ox5RQipZRZuHkhnxavjk=;
+ b=n2/tiYdsr9KtiFigX0wdq5Q9zwd4J+QQ9NRkS4Rsmh+/qwmSBgyb5EdJ8NsavpzWewDgbwNuuELwIlKXJyByae4MM26ZFw/YOj28A3ai8tFgO1WP/ol2s8vvm8+CN2JmDaAn9JmomKvKV8xzAL8dWm85DrqfCJ2ro/VEkBblXqg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
+ by IA1PR12MB6434.namprd12.prod.outlook.com (2603:10b6:208:3ae::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.29; Mon, 28 Apr
+ 2025 08:00:57 +0000
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79%6]) with mapi id 15.20.8678.028; Mon, 28 Apr 2025
+ 08:00:57 +0000
+Message-ID: <683ab376-62f8-449b-8db3-5179854d7cd7@amd.com>
+Date: Mon, 28 Apr 2025 09:00:51 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v14 11/22] cxl: define a driver interface for HPA free
+ space enumeration
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ alejandro.lucero-palau@amd.com
+Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
+ dan.j.williams@intel.com, edward.cree@amd.com, davem@davemloft.net,
+ kuba@kernel.org, pabeni@redhat.com, edumazet@google.com, dave.jiang@intel.com
+References: <20250417212926.1343268-1-alejandro.lucero-palau@amd.com>
+ <20250417212926.1343268-12-alejandro.lucero-palau@amd.com>
+ <20250422172211.00004d10@huawei.com>
+Content-Language: en-US
+From: Alejandro Lucero Palau <alucerop@amd.com>
+In-Reply-To: <20250422172211.00004d10@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DU7P195CA0028.EURP195.PROD.OUTLOOK.COM
+ (2603:10a6:10:54d::28) To DM6PR12MB4202.namprd12.prod.outlook.com
+ (2603:10b6:5:219::22)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <db2415e3-0ee7-4b72-ac6b-4c7cda875dd3@infradead.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|IA1PR12MB6434:EE_
+X-MS-Office365-Filtering-Correlation-Id: cca72c53-5a64-499c-95f9-08dd862acee3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?QmowYS8yY2hoVVNZU2xLSnl2a2U4NGMyQUVLUXVpSFI3aW5kZmdCb0phc25B?=
+ =?utf-8?B?cVJFQ2dYRkFPNDFGdUhFMGFzS2FYNGNVQlhHZTBicHJEcnRaSGdKV3RjVnZO?=
+ =?utf-8?B?R2FDUzlmTUJVMHJjSXRraTZaSUdTRndrY2pNWHNQOUFCSlQxb2FyZWRWSjJj?=
+ =?utf-8?B?ZDNmS3NHbW15MGNmMmxOTmJ3cnlpb00yYllsWFRTTm1KRXAvc2NlVjR3WDdD?=
+ =?utf-8?B?MnZLZHJnazFCSkFFeFlYemdQL2ZqV3FUVDdXU2VVcFdxWnJVd0RiQXFlZG04?=
+ =?utf-8?B?Y0ZjcE10bEV6bC91RUpOY3ZwTG9BckJtbko3a0R6a1pGd09tNWg5bythdTNt?=
+ =?utf-8?B?TmZHY09nUHBjWXBTT0RCTzRZQVlHWTNmdGpacmM4aXYrTTcxVktBdDJtSzdt?=
+ =?utf-8?B?ZzRidlpDb3haVWpVcVBsUjhnOGk0NVNYelhQQzByaEg1L0xMTXJwTGFvMU94?=
+ =?utf-8?B?S2tLVlRhSFE0K3RENGpmdGZIQ3dhQWpWZXhWazZlUGJaZWRoRzR2MnBpMlc5?=
+ =?utf-8?B?eGFJTGpQN3A1MkdGc2NLWG1kS200anJ3Y0tDdXYzejFDcjY5TXJWY0NOUGgr?=
+ =?utf-8?B?d25rN3RheHo1V0k2MGhOSDByWXVld1JmMG9KNWdzTVJ0T0pYd2JKbUdzZ1BC?=
+ =?utf-8?B?MGJwTDV6SlVUbStIRWpzeXlrR0FHSDlMTkgyaWh4dGhzWGNybkZ4RHhTYzJu?=
+ =?utf-8?B?OUlvTHZ2djFsV3VIb01tRzI3ZTZ5ME1LSDlVUEQ4UzVmcnJHWnNCbHUwMzNJ?=
+ =?utf-8?B?SCtHa0hBVTdQUEthVkZoM3orRFRIT1hPUWFFMjNLM2hCVS9acVYvSzBKV1Zr?=
+ =?utf-8?B?bHlod09XaDRkU3puTFhNc2pqeU15cTVuNkoycGU2VWtyWGI4UW5nNkFkbUxx?=
+ =?utf-8?B?bGVMTUFJTkQvbkJVZTdnV0FYMzFFTVoyZFd6alB3ejJZYng1b3JiV3ZkUUFM?=
+ =?utf-8?B?aWZtL2czM1M1NlFKTmw0S1RRdWFpVEEyajRzMjhqSHdEWDlJZ2c3WFBtZWt6?=
+ =?utf-8?B?ZDdTRTR6NWRoSVR3SVFNeXlxK3FKbTgyL05sb1ptaFNQbHU2WTY0QS90S1hr?=
+ =?utf-8?B?ek81aC94Si9Cc1gxdmI1cmdRVzNPenBDZzNDZTlaOHJtYkN6Ykw4aE5CTy9n?=
+ =?utf-8?B?elVzKzQ3bnVLMGE1UUxBWXdvSTQwb1B3cVNFbDBlNHdwbktsVG1VZTduL2dN?=
+ =?utf-8?B?d09TN2d4SFhJWWQyMkIrci9PbWFwSnNaL2JVVGR0ek1rTFBmZUIvclNhaUFM?=
+ =?utf-8?B?N1NDbE00L0drK0hRUDJIWHpTdW0vVnFsVEVVRTAwZmVmRnNHL2pUQWxEVGs0?=
+ =?utf-8?B?Y1JwUmN4OWk1cTlPbjVyOUtSWldUaWsyRFdlUklpbGd1VCt5VlJoUHZSa1NU?=
+ =?utf-8?B?a1VRdkhFeWI1aXN3cmppdTUxTytkWDh5SkRyTldLTVNSVmdhYVJvVnpmWERY?=
+ =?utf-8?B?d0RwRVFHc1A1YndLT0YrVWt6Z0xYeUUxVlozTFA5NGswZUw0RXg3MFRYQXQ5?=
+ =?utf-8?B?U0RkMitEWDUyZ3RmMFUvMzBnNGhjN2dLdzlpSlZtSkR2QTFYMVc5RWNGMitE?=
+ =?utf-8?B?MzQ3dHBhbkdSamtEQ0NHVjBLam1PTWxGc2VDelY2RFdxU1VrRWpTS0Zka2pZ?=
+ =?utf-8?B?dW05eHhrZHdTOUlyM0c5dHlFU3hrajB4aG5CRDNsVUlWWWVQZ1lvWUZSZjlq?=
+ =?utf-8?B?c3lqcmJnaC9GNCs1dVZFc1ErWm5HQlc1eklRR09sS2tKNkhxN2ZlbW1wTTRv?=
+ =?utf-8?B?YVlud2h2T0VGL0lVRk9HdnFEQ0NoUC8xNWE5THNhMzNHZ1dZMmxFUHZWZ3Ro?=
+ =?utf-8?B?OXJVcE9tMERyeUdMTlM0TGRRM0txUE5zMEZkUGVCdjNnZ0RveFU3RU5QZnVB?=
+ =?utf-8?B?UTBpeEsxc0Z6VVZRSDdVQkEyWTEyYUpWdlM5M01yMzIrYjFPYy9VQ3dMV2Iw?=
+ =?utf-8?Q?bWx4n7r9CVc=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?a3drZTRDUERaUkpRNDlMeVY4czNjVk9LcUh1ZFdXUG1jdE9KcVRnNWg2cE8y?=
+ =?utf-8?B?MHByYko4c0s4YzBPM2hMdVNlWmZVZmZncjhFTVJOaHdhTjlHVktwSlhGUy9o?=
+ =?utf-8?B?ZE44Vis1aW5Xbnd4QjNkMnFyQ3NqVm5yeE44WWFNeVVhVmdmTDJ0QngvNzVw?=
+ =?utf-8?B?UEFtRll4NDVTNVVLSmxzeTV0TlIxNnBGa0lrSnV5bTIvbmtDWExFdVlwZGM2?=
+ =?utf-8?B?eno1UEN4Zm9Hb1lPbUVnaWpTUGJQZ3BTaFh5eUJib25tQWROUXhlamhTVXpM?=
+ =?utf-8?B?WHVpRUV4OGNWRzVQT2hiWFE4SW85OElyQ3psa1ArQ256NDNSb1JTYnVLMGdN?=
+ =?utf-8?B?YklaSFFqcFVtQnBVeTRxMEY1NkZlQmkvK1cvaE1UYTVJYXdFUVJteTU0QUp1?=
+ =?utf-8?B?bXBQRjg1ZnRsSHI5emVkN1VyQlNpeUQ3TUtybjU1ZVRaS3JaeDRidzNac2Jm?=
+ =?utf-8?B?NFcyQXIvZk42S005eXVsR2NsSER2RTZ1Y01rVjloR3J6Tkc1REhTMngrTW5m?=
+ =?utf-8?B?aFVoRithKzZjUWV3cjkvMnVJblA1TjlNcXVZam96alNkRU1WeFNwQmo3dE5r?=
+ =?utf-8?B?emR4TElJQjFTbTVxbUJTMmFyT3B0TTlvZ0NtZ1hJM3FPYjYrR3RTa1dVejVW?=
+ =?utf-8?B?TCtXVU1yZFBPc1pxM09wTjJuUW8vNFdWd0xQaFlyQkZHbm5Sb3U4MXNKSW4z?=
+ =?utf-8?B?ZkRmZ3NVajZMaUNkb2JrR1ozWnk5anZUTE41bjVlRFNGYWhPRlFRd1VYd2Fh?=
+ =?utf-8?B?ZHZ6V0VHbGxJYTExTlk2c0t5UkdQQXduR0pJb0paSzZLQXVPOWZqRzl1M2V5?=
+ =?utf-8?B?M0N0Nk9BaFBTeGpXMjMxSHM0SUkyQVFGbEdjbFV5STA4SExkUXpzSXBTSWk3?=
+ =?utf-8?B?TjcwVWlvb0dPSFFnUHJHZGZMdFJtR2llT2owNUNjT1lsRFMwdE5pSlBLNitn?=
+ =?utf-8?B?UVhYdUZWMjIzbjlmcXcraDQ1MDNvRmxPSVFCWUpET0xBWVN4dWg1Ui8zcDgr?=
+ =?utf-8?B?enZFUTNKOGprdEhWS0xjTDdDeXZ5R0JTUzJCUU1lLzFRdUEyRm5CU09qMTRF?=
+ =?utf-8?B?OGlJR1ZBeEU4dUxocXpTOSs1VVV6OUxPeGpUUWdKdUE4WERHMnNDMzVGbjlv?=
+ =?utf-8?B?cVhPZFpBL2dHeU52c1o2NTU1c2VTLzJUTUNxZGt6WjEzZXEwTUxCc294aXNn?=
+ =?utf-8?B?dmU5TjF1ZzBwT0xKeXZHUlJpcUZ1cDFtNXV6K1hBanc1NEMvQWhvZGFDSFFa?=
+ =?utf-8?B?bEIvN2NsWVZoaFZxUm54YmQwLytKSFJlWnljUnp3SjdRNHNNeTlWU3FCWkxR?=
+ =?utf-8?B?aEM3K21VZ1ZjcEJocVVzYjdDSGNVbnpCckZkUDNkOWZGMmw2eUM2RGRkSVJm?=
+ =?utf-8?B?T0xnL2xUQkF4bTRGODErY3NHOHdVSXU1dmk5UVRTb1FpOHdkeWZMbHp4S0s4?=
+ =?utf-8?B?dVY1WUZCWGxHaWphRXVHbGtzaEQzQU90VEF6cnpINGs0Y2pEdVI5UEdCNnhR?=
+ =?utf-8?B?ampiME1SS2luQUJRR2N0eGd4N0dldXVnTm9HSi9VOG1Ua3BUVXhOUXFobDBz?=
+ =?utf-8?B?ZnVIZXdISktUWExJbFVaNjh2cUVSdnJyRVoyUHJBSitEWTQ5MUI3Z3lKdndO?=
+ =?utf-8?B?RlIvSC9ITUNBeVViSVV3cmtLTHNJNHBJRUo4Qmo1VGlvcGlRSzY5QWNBMTZv?=
+ =?utf-8?B?eERIWjVvWHlZcmNhRmhGUytGdE11YkJNOWdBVldNd0tzRUYvZ2VUbmtCck0v?=
+ =?utf-8?B?ZGRmWHAxZVg4VnY1QXNTQjZDbGdtQXNFRFdRSWxXa0YrOU5pYXh0cTZxUTVE?=
+ =?utf-8?B?eXRHa0NqdE1uN1FVanUrWGpGWmZHall1azdGQktFTTBCV3daK1JmcXBITnNN?=
+ =?utf-8?B?RnBuNWhQbkdRLy9uVUJxR3h5dWQyZXVvV004ejNrWmhoVEc0cXIyK0Mzak5a?=
+ =?utf-8?B?ZUhGdzlDQ0Z1TUFFSGpRRjlWYVBrR2R4OWhIV3p5RDNFUDkzZGQ2d0NVWG4w?=
+ =?utf-8?B?NGRHWVdyOU5kM01Hd2FRN09QK1FVcjNmc3ZsZWdxZTV4NlVRWTNCSWhWbmQx?=
+ =?utf-8?B?SDh3cVFNcUkvNHJNTDByRklMWnpHK3E1b1VtaHd1cXNBdFYrUy83WlY5dkZF?=
+ =?utf-8?Q?vSR8Plis/QL4L0DM6qLLFk6ZD?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cca72c53-5a64-499c-95f9-08dd862acee3
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2025 08:00:57.6719
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: oV3C7aURpsuHgTyTmFKWWqsRhxVIGivjKzO1bp2eNGTLZe4LN4NiYKvx5XLfwT8ORBl9fUOEkpXGs8DPIJoYAg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6434
 
-On 25/04/21 07:10PM, Randy Dunlap wrote:
-> 
-> 
-> On 4/20/25 6:33 PM, John Groves wrote:
-> > Add Documentation/filesystems/famfs.rst and update MAINTAINERS
-> > 
-> > Signed-off-by: John Groves <john@groves.net>
-> > ---
-> >  Documentation/filesystems/famfs.rst | 142 ++++++++++++++++++++++++++++
-> >  Documentation/filesystems/index.rst |   1 +
-> >  MAINTAINERS                         |   1 +
-> >  3 files changed, 144 insertions(+)
-> >  create mode 100644 Documentation/filesystems/famfs.rst
-> > 
-> > diff --git a/Documentation/filesystems/famfs.rst b/Documentation/filesystems/famfs.rst
-> > new file mode 100644
-> > index 000000000000..b6b3500b6905
-> > --- /dev/null
-> > +++ b/Documentation/filesystems/famfs.rst
-> > @@ -0,0 +1,142 @@
-> > +.. SPDX-License-Identifier: GPL-2.0
-> > +
-> > +.. _famfs_index:
-> > +
-> > +==================================================================
-> > +famfs: The fabric-attached memory file system
-> > +==================================================================
-> > +
-> > +- Copyright (C) 2024-2025 Micron Technology, Inc.
-> > +
-> > +Introduction
-> > +============
-> > +Compute Express Link (CXL) provides a mechanism for disaggregated or
-> > +fabric-attached memory (FAM). This creates opportunities for data sharing;
-> > +clustered apps that would otherwise have to shard or replicate data can
-> > +share one copy in disaggregated memory.
-> > +
-> > +Famfs, which is not CXL-specific in any way, provides a mechanism for
-> > +multiple hosts to concurrently access data in shared memory, by giving it
-> > +a file system interface. With famfs, any app that understands files can
-> > +access data sets in shared memory. Although famfs supports read and write,
-> > +the real point is to support mmap, which provides direct (dax) access to
-> > +the memory - either writable or read-only.
-> > +
-> > +Shared memory can pose complex coherency and synchronization issues, but
-> > +there are also simple cases. Two simple and eminently useful patterns that
-> > +occur frequently in data analytics and AI are:
-> > +
-> > +* Serial Sharing - Only one host or process at a time has access to a file
-> > +* Read-only Sharing - Multiple hosts or processes share read-only access
-> > +  to a file
-> > +
-> > +The famfs fuse file system is part of the famfs framework; User space
-> 
->                                                               user
-> 
-> > +components [1] handle metadata allocation and distribution, and provide a
-> > +low-level fuse server to expose files that map directly to [presumably
-> > +shared] memory.
-> > +
-> > +The famfs framework manages coherency of its own metadata and structures,
-> > +but does not attempt to manage coherency for applications.
-> > +
-> > +Famfs also provides data isolation between files. That is, even though
-> > +the host has access to an entire memory "device" (as a devdax device), apps
-> > +cannot write to memory for which the file is read-only, and mapping one
-> > +file provides isolation from the memory of all other files. This is pretty
-> > +basic, but some experimental shared memory usage patterns provide no such
-> > +isolation.
-> > +
-> > +Principles of Operation
-> > +=======================
-> > +
-> > +Famfs is a file system with one or more devdax devices as a first-class
-> > +backing device(s). Metadata maintenance and query operations happen
-> > +entirely in user space.
-> > +
-> > +The famfs low-level fuse server daemon provides file maps (fmaps) and
-> > +devdax device info to the fuse/famfs kernel component so that
-> > +read/write/mapping faults can be handled without up-calls for all active
-> > +files.
-> > +
-> > +The famfs user space is responsible for maintaining and distributing
-> > +consistent metadata. This is currently handled via an append-only
-> > +metadata log within the memory, but this is orthogonal to the fuse/famfs
-> > +kernel code.
-> > +
-> > +Once instantiated, "the same file" on each host points to the same shared
-> > +memory, but in-memory metadata (inodes, etc.) is ephemeral on each host
-> > +that has a famfs instance mounted. Use cases are free to allow or not
-> > +allow mutations to data on a file-by-file basis.
-> > +
-> > +When an app accesses a data object in a famfs file, there is no page cache
-> > +involvement. The CPU cache is loaded directly from the shared memory. In
-> > +some use cases, this is an enormous reduction read amplification compared
-> > +to loading an entire page into the page cache.
-> > +
-> > +
-> > +Famfs is Not a Conventional File System
-> > +---------------------------------------
-> > +
-> > +Famfs files can be accessed by conventional means, but there are
-> > +limitations. The kernel component of fuse/famfs is not involved in the
-> > +allocation of backing memory for files at all; the famfs user space
-> > +creates files and responds as a low-level fuse server with fmaps and
-> > +devdax device info upon request.
-> > +
-> > +Famfs differs in some important ways from conventional file systems:
-> > +
-> > +* Files must be pre-allocated by the famfs framework; Allocation is never
-> 
->                                                          allocation
-> 
-> > +  performed on (or after) write.
-> > +* Any operation that changes a file's size is considered to put the file
-> > +  in an invalid state, disabling access to the data. It may be possible to
-> > +  revisit this in the future. (Typically the famfs user space can restore
-> > +  files to a valid state by replaying the famfs metadata log.)
-> > +
-> > +Famfs exists to apply the existing file system abstractions to shared
-> > +memory so applications and workflows can more easily adapt to an
-> > +environment with disaggregated shared memory.
-> 
-> 
-> -- 
-> ~Randy
-> 
 
-Both edits applied to the -next branch for the patch set. Thanks!
+On 4/22/25 17:22, Jonathan Cameron wrote:
+> On Thu, 17 Apr 2025 22:29:14 +0100
+> <alejandro.lucero-palau@amd.com> wrote:
+>
+>> From: Alejandro Lucero <alucerop@amd.com>
+>>
+>> CXL region creation involves allocating capacity from device DPA
+>> (device-physical-address space) and assigning it to decode a given HPA
+>> (host-physical-address space). Before determining how much DPA to
+>> allocate the amount of available HPA must be determined. Also, not all
+>> HPA is created equal, some specifically targets RAM, some target PMEM,
+>> some is prepared for device-memory flows like HDM-D and HDM-DB, and some
+>> is host-only (HDM-H).
+>>
+>> Wrap all of those concerns into an API that retrieves a root decoder
+>> (platform CXL window) that fits the specified constraints and the
+>> capacity available for a new region.
+>>
+>> Add a complementary function for releasing the reference to such root
+>> decoder.
+>>
+>> Based on https://lore.kernel.org/linux-cxl/168592159290.1948938.13522227102445462976.stgit@dwillia2-xfh.jf.intel.com/
+>>
+>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> +	/*
+>> +	 * None flags are declared as bitmaps but for the sake of better code
+>> +	 * used here as such, restricting the bitmap size to those bits used by
+>> +	 * any Type2 device driver requester.
+> I'd just drop the comment as it's more confusing than helpful.
+>
+> If you really want something then perhaps.
+>
+> 	* Flags are single unsigned longs. As CXL_DECODER_F_MAX is less than
+> 	* 32 bits the bitmap functions may be used.
 
+
+As I said in v13, I just want to make sure none reading this code, and 
+realizing those flags are not defined as bitmaps, being confused.
+
+
+I can use your suggestion. I'll wait for more reviews for a potential 
+v15 ... I guess/hope I have not been the only one off this last week ...
+
+
+Thanks
+
+
+>> +	 */
+>> +	if (!bitmap_subset(&ctx->flags, &cxld->flags, CXL_DECODER_F_MAX)) {
+>> +		dev_dbg(dev, "flags not matching: %08lx vs %08lx\n",
+>> +			cxld->flags, ctx->flags);
+>> +		return 0;
+>> +	}
+>
