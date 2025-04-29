@@ -1,259 +1,415 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2070.outbound.protection.outlook.com [40.107.220.70])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20D14215F7C;
-	Tue, 29 Apr 2025 18:21:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745950868; cv=fail; b=GThdlGiKruIrokTcjlG2thHXqLEXKHi8F9ZP132QazehtULQyhJSVW32XtI3pbAZAKdO/knH+JY/eKM9f1VylUpR9sjvVWzGyr+hwvf7GO1yZos7pwBPWpwdKUL4AT4kJSAbS8VJ2PWiLGsJh/SMpdS2mRCMLSvDBjhYMIY/ysI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745950868; c=relaxed/simple;
-	bh=2v1sVJviT7edIUayrpZlB4AQTyZRVm9Ptn3CJ2OV8G8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=dEOkgOh6qKqRH05P4ANNKQSd870LDCtq51LUTWSyFWAgSmJIsos6SOxJ8vzpGsDV87fWzgL5NzVtN6LMQZFY/eA2KfK3JH65I6GQXwLVdXstdMd5MZQkVzLWBDGbE2ijH+AwHR+K1l9stGgGUvzkCeGaLUpvaVcQU4qIvgyNkyA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4UFjTb2q; arc=fail smtp.client-ip=40.107.220.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A0E213E67
+	for <linux-cxl@vger.kernel.org>; Tue, 29 Apr 2025 18:41:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745952085; cv=none; b=ObEFLlq9iYGYTgmQjmQSanjfSb8eSZeja/KMVc/FlBvuspW0c6rNEzNJ7zAnHRkSzG6SzgV3fG4eF3qlGB8NQwKowMWUEEN+NDWbWUJGvmVk5DRlhyrdSJ/TQtVPp8Xn6kv+j85b/bulNMIuMrbNqyii+cpFJa2Y3544zErlYEo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745952085; c=relaxed/simple;
+	bh=qvU4d4uKOrwGJ450PBexvYJ9wKf6bNzZlwB+XMCzKzo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gZCt/KwQHmA+a9/V2kgbsTATlW8Y8S2BvEumc0S6SnnGqHhpg244ka/6ZCsPgZd/y3bRM5L2YUekSe6fuAlVxsth0/QT3Ayz8Dam79qA1INF5JhaWlYlYgVo6inHlyP4C7/Z0ytJTf6u8d7TsZDlfXXxtCsqrBplecosjbqoLuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W+VRR7Wc; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4UFjTb2q"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ejcd/9F23dPVwCayaWWhV14k9/ub6nDTqNPZ/ZqRoTZ36FJI7nNCjE6/WkA+X2y1AUrapzO25yBD3IBKAFEM7VWUrz1BcXYDE21v4cD51oz+DiGm8n+mmUCxPNGARc3apUXE32po0r51EGCe6rRbBnUzkeHanN8vkoX8IFrKgdwWvQa9xf01Vcg/ke97quC7FOJtGyrGrDaWBURDlJzBqoUMzSg38/nBXsA4jlxt05GWzTVVpR/TsJOAXMx/gNiQMUqkqMA6VAkxTxIioqVZ3o4mfqY4lUe6eztqmU+jkjlh3f3tcpxySu/r1M5YQnUbDgTyHgkfmlwUTUanMvv7oA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ek6W4PErRfhVGTa/r7p36hxCDJV5whLv8VxpM2zV3eQ=;
- b=cNJSOYZMqyr7yzLYFwSMeOYf2Wa4ZvJG6yXjqF9YVzwapWB0jeJ5SxoKgoIpK65A1UlGLXoarKdOl+l9sugWh9Yfl1KBrW/6/vKMIbC/Hj8w79sq2NTVPpfXaM/MzxHN6z7iGyZ410e2mNZYfWqqnz2LNuEQ1Lkcb4bsAnMM3r8Q2CW5wMQwvTe5g8xJhlB5ExVTm+YYMLZ+C7WNeyglkti+9kGQwNAX9HE3Z3cQEC3wy1mMWaodzZ4+w3F8j4ZmbjNTaJAW5Va8InGFdME1yVpxNBiB8iBTgqmKHxl/6a1OzkrApgsj3fZ74UEwwA8hvmH88ad/j4uNX47v/+GKTA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ek6W4PErRfhVGTa/r7p36hxCDJV5whLv8VxpM2zV3eQ=;
- b=4UFjTb2qh5hhfZQEf3YndtQ5rDYlfHqL8Xn9WQx0wWuxdAZVA+q1CfHHixRObxz+vYKMV/bmW9aAoip2Lq4BkatBhVCS6jChc3fyksUonR3mpLExUMOo0090AzftUeoCaVsY8HJvTY1ThpZJ2to1p58jQEdv5l7+nNvHQ1OAfe4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB6373.namprd12.prod.outlook.com (2603:10b6:8:a4::7) by
- SA1PR12MB6972.namprd12.prod.outlook.com (2603:10b6:806:24f::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.33; Tue, 29 Apr
- 2025 18:21:04 +0000
-Received: from DM4PR12MB6373.namprd12.prod.outlook.com
- ([fe80::12f7:eff:380b:589f]) by DM4PR12MB6373.namprd12.prod.outlook.com
- ([fe80::12f7:eff:380b:589f%7]) with mapi id 15.20.8678.028; Tue, 29 Apr 2025
- 18:21:04 +0000
-Date: Tue, 29 Apr 2025 14:20:55 -0400
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-cxl@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-pci@vger.kernel.org, linux-edac@vger.kernel.org
-Subject: Re: [PATCH 4/4 v2] ACPI: extlog: Trace CPER CXL Protocol Errors
-Message-ID: <20250429182055.GB76257@yaz-khff2.amd.com>
-References: <20250429172109.3199192-1-fabio.m.de.francesco@linux.intel.com>
- <20250429172109.3199192-5-fabio.m.de.francesco@linux.intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250429172109.3199192-5-fabio.m.de.francesco@linux.intel.com>
-X-ClientProxiedBy: BN9P221CA0010.NAMP221.PROD.OUTLOOK.COM
- (2603:10b6:408:10a::13) To DM4PR12MB6373.namprd12.prod.outlook.com
- (2603:10b6:8:a4::7)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W+VRR7Wc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745952083; x=1777488083;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=qvU4d4uKOrwGJ450PBexvYJ9wKf6bNzZlwB+XMCzKzo=;
+  b=W+VRR7WcnbgSBe1oIAU56ClaSHpe40WraOAXOaXsFSkdEYM+JVVVmUxa
+   WNkBJ2KCvfafSR9SaZ1f37+gOshHAGhnbQBN2j2Nk3Llcffczj+C0s3vR
+   2JUtc692FzsuD/uFxBa8kRhaN8mBfGZnuwjJsr916vjSKjEswRvALNJ8I
+   43ikCLoyQxFdDsIctNw63mMZ+v2FIggmfDffle/Gpj/AQwoZAis/2Wx4A
+   ZfAmtUullKyDDM2pZefAEYTy6QaxfL28BuDtsaF1t8xVvD2xYyLqyZSQ/
+   lQAcvvt1+0EB7HXITzfRwFRbxnTNPAkZDghwhEe8+AjAaxnyEoyJgRk/l
+   w==;
+X-CSE-ConnectionGUID: r8T1bK/5QwGVng31jHL9Ag==
+X-CSE-MsgGUID: eewbtLmcT5qoj5sjWqRzJw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="47745315"
+X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
+   d="scan'208";a="47745315"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 11:41:22 -0700
+X-CSE-ConnectionGUID: 15QP8DKvQJeFyoc+nXDWKw==
+X-CSE-MsgGUID: QzsqyyUBRf6Heqs6m2WKAw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
+   d="scan'208";a="171139201"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO [10.125.109.191]) ([10.125.109.191])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 11:41:21 -0700
+Message-ID: <640c0395-a5c6-44b2-9474-7a23ce3abca0@intel.com>
+Date: Tue, 29 Apr 2025 11:41:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6373:EE_|SA1PR12MB6972:EE_
-X-MS-Office365-Filtering-Correlation-Id: f3d9f047-d61d-4999-6250-08dd874a9a2d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|7416014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?wue69Ng4sHVypIHb6V63ms8JQNDUKcG39w5qehmULk7UPFgjC7cD4DPaFdCj?=
- =?us-ascii?Q?FbNR22bGLA2967iVghU53y2p+Esk+dNpxUbA5Cfi2iY1rM1lCJJd2sGKXo1i?=
- =?us-ascii?Q?gDfjloAnixVHtvKsH2yvqKCCkm/44nHkvuphCR8IcLyxs/PVnFLeYcfM0mr/?=
- =?us-ascii?Q?hqJB98mPTtrS9vdh2EYTw8jCvqedfBfLX19eUM/4Z461TS628HCM+3kWIWCn?=
- =?us-ascii?Q?gps1fQXZmP2YEu4FJhhzz6Cd3ovirIX05/7n/Qszrwg+CYzzadDw5q+PJFvm?=
- =?us-ascii?Q?BfwuEUBYHuTWqssC97X5secLiijHqyEWp+tY2vtb7uJOGPMA6gDCvaLI9JvQ?=
- =?us-ascii?Q?y4o1sT/a0yFBtl0qsuXqZwMF4U05G5i8N99DejO8TLc2I7P6z+fcCQ/186U9?=
- =?us-ascii?Q?q6Pxq9CyBhI9sgJYhj2TVoghrNEQxlAxRz5xjshvVaQ+aYLZw9XllgOPxIEg?=
- =?us-ascii?Q?Zp1YWINgOu2b+lM9y5lX/AHu2q4zvk+HhFOzzcc0fh2OjyFSADdKD3MFTXj4?=
- =?us-ascii?Q?30VwPhEmKgy7cDnspVisDN5R3ie8vRak5ex9Jx04DAqFg2eRWbDHG8B0J3zs?=
- =?us-ascii?Q?aTGe48s+eL+ggseMoInqWbLpClxQV9WFINeDQ+vA8EMT1nypMzgiSIy5uMMe?=
- =?us-ascii?Q?gispA+sJ/Uk9mWOalLgNYAAhrvdaA4ZTUScw5hmttYmWjdWuGEkA7v+j2OYn?=
- =?us-ascii?Q?M6jRq4YVfZ1UOOZjT+uBvAB4MNTIPA89M2HIzyuA85E6ZSduZfNC9gTtCej8?=
- =?us-ascii?Q?baG+XQoWFgw1yAv3u7RPx5ank/iMz+3Gy8YpJ4NPZRtfnqTVxQBwioN98pBw?=
- =?us-ascii?Q?4GFFli1Rz5wbTgO3Qgl3FWyKbg85PXkmmFnsG/ITwxl0RwVF3gPON0WCCzod?=
- =?us-ascii?Q?4qW4AThlTn/ddvmU7UnjeqZ/5vEOtOKP9Cm4SWp97off7x/kuGv6JsdHqKyj?=
- =?us-ascii?Q?FTuqQvYnmt5Eg86Zakc2Jhe6YALhmLSXtW8ga027fqhVDV3bJmXu4DCY+DIS?=
- =?us-ascii?Q?UWPenNiBmn87+nyUkjo8XgeObwfoH/i35QfC9HkZftIVtpZCx2dUev39BwhZ?=
- =?us-ascii?Q?T0VQNw7PE5i4xSqdqe8miqipiNmA/mMR8FfTQlwhVPnPo4+6igFstDecTRcu?=
- =?us-ascii?Q?B47jdlrEYIh7B+rKLwPGGSsyX1yGqwOUKKujk2KxWdO2UcEuUyVh2e1j0/4b?=
- =?us-ascii?Q?OeSJTkRzDoGlnvrkmUFSd2PA1fs9bmyGF6j6/3K9VblJ28F6Ry63oa6X0ayG?=
- =?us-ascii?Q?0qNxj7W05wg5DI9LGFIAfNG0/eI6cnZ7Q4wCfL6ocvNRcXCpsRN34UDVxqYM?=
- =?us-ascii?Q?gmMlvgWZvc1s6fvAKU5+ZNxciXrfwypmXi4c+4HjXazvh7KzvsJ/7kkzd/SM?=
- =?us-ascii?Q?pBk4w8ojiyBJteM6hLLs6vHQGOpw5uyOVLmwnKcWwk2HWYrqSF+Bqilmxdsn?=
- =?us-ascii?Q?Se4Fwhn2vxM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6373.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?GkfKwJHu6ha0zJlZFgSlx3vEFhaI7bG/nJRDNnL7aS5usDWxR7YJaWV5ZDi3?=
- =?us-ascii?Q?GWICRwTxwZddBTzTSiu83ktNSisOUlRaZPHadwzmGNHdJn3TA+jWwHRHHaRc?=
- =?us-ascii?Q?LIVseRYjogb98gAkVqIypZ1debsPJUMIa+6qPi44mpKhECi62Ii85OPVy0Mf?=
- =?us-ascii?Q?CJHvpDwB93dOKNc0CtYGLO0SMOX2jJ17frxK5D5OoWOVs79D/HXIZNfaozJw?=
- =?us-ascii?Q?VQCZN9el22EkT8PaKvJhS8bzQDvFbfODuzk0QMfzjvoK+WbjkmijGtTF8+Pb?=
- =?us-ascii?Q?kLT99BNIZUY0Vf0MoIdKyUec9A7+8iv8JD8XYE14z5x5O10jOW6lwkCs8Y1B?=
- =?us-ascii?Q?m4SP5RFcR4JFvTyids8t09h+VcVrskuHJHPk4LhRSvhwhn4HVm4GwxrtLDcr?=
- =?us-ascii?Q?wnGFkThYN4MOadSY4ASjqhxarP/p92Ex0OqtUq2TL2QSiuRl9nC43cTiMPip?=
- =?us-ascii?Q?/2JW0H7FgstWSAPK0uVgxYsNpjqidbCRaEoZAPY6YtElsEYxi+g4ZeBIMv8y?=
- =?us-ascii?Q?fsuFTHGntWJyIkmtUZFAaMLwPD2Jwvm9cqrPgIR08dsskLVAQJBecQk2/ZKG?=
- =?us-ascii?Q?3x3RI26F3stgjkL3gDofGyqRKYDTrazrJHUZtgiafpCC+oDZm6iGjQiA/+51?=
- =?us-ascii?Q?GlJXczmmSjykWWDrCmKI5ODeGxFke2wkEBC41netsU8r1d9gmEV2QBGGThyj?=
- =?us-ascii?Q?jUXWdPBPIpCK0XeB+R903/L8N8cvn06BX6+xbDUU+nq+KxFaf5Qgy5iGZNpy?=
- =?us-ascii?Q?03PoqGoHav923bqCKL9iW/cXLXAaqYDkhLk88+I0FboUVJgnDj9utjuVSgyt?=
- =?us-ascii?Q?8tAar10bM3j5nSW7aF9lChxZyirpIbYyD/IwP78K2xz0xasTg8G2AfimeVmy?=
- =?us-ascii?Q?zRaz8+ow5Fi2qevLxsL2cHsy1pDd68EjwdcK6PqbMphZI28Gq0WcNnTmotI3?=
- =?us-ascii?Q?bCRr7tYC8DXq4jxTYXJ8I2q+Li4Q7v7Yf3mUCmmEFlIVtlFUQPDCYjJEN/Mq?=
- =?us-ascii?Q?i/FuFLANlpsAFgn3yxuHot26E8K7rmu4fMYq5F7ixChjhCCSWFf8tFi5pg8o?=
- =?us-ascii?Q?EXhPzv1D8r0GqIR6/+9vkVgHv3OE5CVl3dgUYajsFy0hI1Q5VWDzmG6rItUi?=
- =?us-ascii?Q?uQ802K+QAFQ3AkA/UfqcALu5d6tKv+ZHZrvH+Hu9JGhvCiTTOxshSDqMYI1E?=
- =?us-ascii?Q?rpPOTqPc3uxW9tcxHg2O9HoI48DEp4rKl3yhux12f+glo7x8rDvtP2AtGzsM?=
- =?us-ascii?Q?0IbuGmnhyQ4Lr5FRwIIZmznvC7Wceeb1QK1bxumI00kWqSiOh5YHDQG3MaDk?=
- =?us-ascii?Q?xO+lr7DSCCx698JOIH1CYBaZXafawG8B5RjYh4DlLlcsQWqqFZSMzV7Z3kSy?=
- =?us-ascii?Q?6oFjdn1u6ANVFHJF6lMpia+J2mi3qLI/ftQ8fnQIckR4Tu2lMg1jtCTaUG7S?=
- =?us-ascii?Q?Xacdaho9FnDxTVNOXg1PvEclFC2reCaEb8kWw8Y6WYl8F0BTTajY2u9+/VU+?=
- =?us-ascii?Q?EoLRZXskicULVv093fjGre9y64/H6+WBFuFowvk6pKtXyLLMyh/BioNjqpjG?=
- =?us-ascii?Q?lssZEmSgbsPOuN8Tt4ybPZePo9WKhe4AU7Q5/uOZ?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f3d9f047-d61d-4999-6250-08dd874a9a2d
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6373.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2025 18:21:04.2429
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: laaN3aYzvucdoM38teJrU3r3XVnjiqYTca95P9QHhKXue4oL8to20oCw5KyJPpo85gyrSA1C1oG9z3Dqq5hx0A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6972
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/4] cxl: Defer hardware dport->port_id assignment and
+ registers probing
+To: Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com,
+ alison.schofield@intel.com, ira.weiny@intel.com, rrichter@amd.com,
+ ming.li@zohomail.com
+References: <20250404230049.3578835-1-dave.jiang@intel.com>
+ <20250404230049.3578835-3-dave.jiang@intel.com>
+ <6807f82b60c6_71fe294e@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <6807f82b60c6_71fe294e@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 29, 2025 at 07:21:09PM +0200, Fabio M. De Francesco wrote:
-> When Firmware First is enabled, BIOS handles errors first and then it
-> makes them available to the kernel via the Common Platform Error Record
-> (CPER) sections (UEFI 2.10 Appendix N). Linux parses the CPER sections
-> via one of two similar paths, either ELOG or GHES.
+
+
+On 4/22/25 1:12 PM, Dan Williams wrote:
+> Dave Jiang wrote:
+>> Current implementation only enuemrates the dports dupring the port probe.
+>> Without an endpoint connected, the dport may not be active during port
+>> probe. This scheme may prevent a valid hardware dport id to be retrieved
+>> and MMIO registers to be read when an endpoint is hot-plugged. Move the hw
+>> dport id assignment and the register probing to behind memdev probe so the
+>> endpoint is guaranteed to be connected.
+>>
+>> The detection of duplicate dport for add_dport() is removed. The port_id
+>> is not read from the hw at this point any longer. The port->id will always
+>> be unique since it's retrieved from an ida. The dup detection thus become
+>> irrelevant.
+>>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>>  drivers/cxl/core/core.h |  4 ++
+>>  drivers/cxl/core/pci.c  | 74 ++++++++++++++++++++++++++++------
+>>  drivers/cxl/core/port.c | 88 ++++++++++++++++++++++-------------------
+>>  drivers/cxl/cxl.h       |  1 +
+>>  drivers/cxl/port.c      |  2 -
+>>  5 files changed, 114 insertions(+), 55 deletions(-)
+>>
+>> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+>> index 15699299dc11..e2822ead6a67 100644
+>> --- a/drivers/cxl/core/core.h
+>> +++ b/drivers/cxl/core/core.h
+>> @@ -134,4 +134,8 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
+>>  		    u16 *return_code);
+>>  #endif
+>>  
+>> +int cxl_dport_probe(struct cxl_dport *dport, resource_size_t component_reg_phys,
+>> +		    resource_size_t rcrb);
+>> +void cxl_port_probe_dports(struct cxl_port *port);
+>> +
+>>  #endif /* __CXL_CORE_H__ */
+>> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+>> index 96fecb799cbc..a47dd032abd7 100644
+>> --- a/drivers/cxl/core/pci.c
+>> +++ b/drivers/cxl/core/pci.c
+>> @@ -24,6 +24,66 @@ static unsigned short media_ready_timeout = 60;
+>>  module_param(media_ready_timeout, ushort, 0644);
+>>  MODULE_PARM_DESC(media_ready_timeout, "seconds to wait for media ready");
+>>  
+>> +static int probe_dports(struct cxl_dport *dport)
+>> +{
+>> +	struct device *dport_dev = dport->dport_dev;
+>> +	struct cxl_port *port = dport->port;
+>> +	struct cxl_register_map map;
+>> +	struct pci_dev *pdev;
+>> +	u32 lnkcap, port_num;
+>> +	int rc;
+>> +
+>> +	if (!dev_is_pci(dport_dev))
+>> +		return 0;
+>> +
+>> +	/*
+>> +	 * dport->port_id is valid means that dport has been probed and is
+>> +	 * setup.
+>> +	 */
+>> +	if (dport->port_id != CXL_PORT_ID_INVALID)
+>> +		return 0;
+>> +
+>> +	pdev = to_pci_dev(dport_dev);
+>> +	if (pci_read_config_dword(pdev, pci_pcie_cap(pdev) + PCI_EXP_LNKCAP,
+>> +				  &lnkcap))
+>> +		return 0;
+>> +
+>> +	rc = cxl_find_regblock(pdev, CXL_REGLOC_RBI_COMPONENT, &map);
+>> +	if (rc) {
+>> +		dev_dbg(&port->dev, "failed to find component registers\n");
+>> +		return 0;
+>> +	}
+>> +
+>> +	port_num = FIELD_GET(PCI_EXP_LNKCAP_PN, lnkcap);
+>> +	rc = cxl_dport_probe(dport, map.resource, CXL_RESOURCE_NONE);
+>> +	if (rc)
+>> +		return rc;
+>> +
+>> +	/*
+>> +	 * port_id is only set if the register block is also probed
+>> +	 * successfully.
+>> +	 */
+>> +	dport->port_id = port_num;
+>> +	cxl_switch_parse_cdat(port);
 > 
-> Currently, ELOG and GHES show some inconsistencies in how they report to
-> userspace via trace events.
+> Some commentary on why it is safe to re-run this over and over again for
+> each found port might help future readers. For example might this
+> disturb already published data for this port?
+
+Rerun this multiple times is harmless as it only updates the switch perf numbers for all the dports. The dport perf numbers from CDAT are static and does not change. I will create a follow on patch to only update the specific dport we are probing to make the code more efficient. 
+
 > 
-> Therfore make the two mentioned paths act similarly by tracing the CPER
-> CXL Protocol Error Section (UEFI v2.10, Appendix N.2.13) signaled by the
-> I/O Machine Check Architecture and reported by BIOS in FW-First.
+> That comment likely belongs as cxl_switch_parse_cdat() kdoc to clarify
+> how it is used and re-entered for a given port multiple times.
 > 
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
-> ---
->  drivers/acpi/acpi_extlog.c | 60 ++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/core/ras.c     |  6 ++++
->  include/cxl/event.h        |  2 ++
->  3 files changed, 68 insertions(+)
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +/**
+>> + * cxl_port_probe_dports - probe downstream ports of the upstream port
+>> + * @port: cxl_port whose ->uport_dev is the upstream of dports to be probed
+>> + *
+>> + */
+>> +void cxl_port_probe_dports(struct cxl_port *port)
+>> +{
+>> +	struct cxl_dport *dport;
+>> +	unsigned long index;
+>> +
+>> +	device_lock_assert(&port->dev);
 > 
-> diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
-> index 7d7a813169f1..8f2ff3505d47 100644
-> --- a/drivers/acpi/acpi_extlog.c
-> +++ b/drivers/acpi/acpi_extlog.c
-> @@ -12,6 +12,7 @@
->  #include <linux/ratelimit.h>
->  #include <linux/edac.h>
->  #include <linux/ras.h>
-> +#include <cxl/event.h>
->  #include <acpi/ghes.h>
->  #include <asm/cpu.h>
->  #include <asm/mce.h>
-> @@ -157,6 +158,60 @@ static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
->  	}
->  }
->  
-> +static void
-> +extlog_cxl_cper_handle_prot_err(struct cxl_cper_sec_prot_err *prot_err,
-> +				int severity)
-> +{
-> +#ifdef CONFIG_ACPI_APEI_PCIEAER
+> This also needs to check if port->dev.driver is non-null otherwise it
+> could be mapping resources onto an idle port.
 
-Why not apply this check on the function prototype?
+ok
 
-Reference: Documentation/process/coding-style.rst
-	   Section 21) Conditional Compilation
+> 
+>> +	xa_for_each(&port->dports, index, dport)
+>> +		probe_dports(dport);
+>> +}
+>> +
+>>  struct cxl_walk_context {
+>>  	struct pci_bus *bus;
+>>  	struct cxl_port *port;
+>> @@ -37,10 +97,7 @@ static int match_add_dports(struct pci_dev *pdev, void *data)
+>>  	struct cxl_walk_context *ctx = data;
+>>  	struct cxl_port *port = ctx->port;
+>>  	int type = pci_pcie_type(pdev);
+>> -	struct cxl_register_map map;
+>>  	struct cxl_dport *dport;
+>> -	u32 lnkcap, port_num;
+>> -	int rc;
+>>  
+>>  	if (pdev->bus != ctx->bus)
+>>  		return 0;
+>> @@ -48,16 +105,9 @@ static int match_add_dports(struct pci_dev *pdev, void *data)
+>>  		return 0;
+>>  	if (type != ctx->type)
+>>  		return 0;
+>> -	if (pci_read_config_dword(pdev, pci_pcie_cap(pdev) + PCI_EXP_LNKCAP,
+>> -				  &lnkcap))
+>> -		return 0;
+>>  
+>> -	rc = cxl_find_regblock(pdev, CXL_REGLOC_RBI_COMPONENT, &map);
+>> -	if (rc)
+>> -		dev_dbg(&port->dev, "failed to find component registers\n");
+>> -
+>> -	port_num = FIELD_GET(PCI_EXP_LNKCAP_PN, lnkcap);
+>> -	dport = devm_cxl_add_dport(port, &pdev->dev, port_num, map.resource);
+>> +	dport = devm_cxl_add_dport(port, &pdev->dev, CXL_PORT_ID_INVALID,
+>> +				   CXL_RESOURCE_NONE);
+> 
+> Hm, why pass in an invalid id for the common case vs make the static
+> case just manually "probe" after add_dport?
 
-> +	struct cxl_cper_prot_err_work_data wd;
-> +	u8 *dvsec_start, *cap_start;
-> +
-> +	if (!(prot_err->valid_bits & PROT_ERR_VALID_AGENT_ADDRESS)) {
-> +		pr_err_ratelimited("CXL CPER invalid agent type\n");
-> +		return;
-> +	}
-> +
-> +	if (!(prot_err->valid_bits & PROT_ERR_VALID_ERROR_LOG)) {
-> +		pr_err_ratelimited("CXL CPER invalid protocol error log\n");
-> +		return;
-> +	}
-> +
-> +	if (prot_err->err_len != sizeof(struct cxl_ras_capability_regs)) {
-> +		pr_err_ratelimited("CXL CPER invalid RAS Cap size (%u)\n",
-> +				   prot_err->err_len);
-> +		return;
-> +	}
-> +
-> +	if (!(prot_err->valid_bits & PROT_ERR_VALID_SERIAL_NUMBER))
-> +		pr_warn(FW_WARN "CXL CPER no device serial number\n");
+ok
 
-Is this a requirement (in the spec) that we should warn users about?
+> 
+>>  	if (IS_ERR(dport)) {
+>>  		ctx->error = PTR_ERR(dport);
+>>  		return PTR_ERR(dport);
+>> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+>> index e90e55bc11ac..1c772c516dbe 100644
+>> --- a/drivers/cxl/core/port.c
+>> +++ b/drivers/cxl/core/port.c
+>> @@ -1059,18 +1059,9 @@ static struct cxl_dport *find_dport(struct cxl_port *port, int port_id)
+>>  
+>>  static int add_dport(struct cxl_port *port, struct cxl_dport *dport)
+>>  {
+>> -	struct cxl_dport *dup;
+>>  	int rc;
+>>  
+>>  	device_lock_assert(&port->dev);
+>> -	dup = find_dport(port, dport->port_id);
+>> -	if (dup) {
+>> -		dev_err(&port->dev,
+>> -			"unable to add dport%d-%s non-unique port id (%s)\n",
+>> -			dport->port_id, dev_name(dport->dport_dev),
+>> -			dev_name(dup->dport_dev));
+>> -		return -EBUSY;
+>> -	}
+>>  
+>>  	rc = xa_insert(&port->dports, (unsigned long)dport->dport_dev, dport,
+>>  		       GFP_KERNEL);
+>> @@ -1120,6 +1111,45 @@ static void cxl_dport_unlink(void *data)
+>>  	sysfs_remove_link(&port->dev.kobj, link_name);
+>>  }
+>>  
+>> +int cxl_dport_probe(struct cxl_dport *dport, resource_size_t component_reg_phys,
+>> +		    resource_size_t rcrb)
+>> +{
+>> +	struct device *dport_dev = dport->dport_dev;
+>> +	struct cxl_port *port = dport->port;
+>> +	int rc;
+>> +
+>> +	if (rcrb == CXL_RESOURCE_NONE) {
+>> +		rc = cxl_dport_setup_regs(&port->dev, dport,
+>> +					  component_reg_phys);
+>> +		if (rc)
+>> +			return rc;
+>> +	} else {
+>> +		dport->rcrb.base = rcrb;
+>> +		component_reg_phys = __rcrb_to_component(dport_dev, &dport->rcrb,
+>> +							 CXL_RCRB_DOWNSTREAM);
+>> +		if (component_reg_phys == CXL_RESOURCE_NONE) {
+>> +			dev_warn(dport_dev, "Invalid Component Registers in RCRB");
+>> +			return -ENXIO;
+>> +		}
+>> +
+>> +		/*
+>> +		 * RCH @dport is not ready to map until associated with its
+>> +		 * memdev
+>> +		 */
+>> +		rc = cxl_dport_setup_regs(NULL, dport, component_reg_phys);
+>> +		if (rc)
+>> +			return rc;
+>> +
+>> +		dport->rch = true;
+>> +	}
+> 
+> It seems a little bit awkward to maintain the RCRB code in this path.
+> The whole dport mapping problem is a CXL 2.0 complexity. The CXL 1.1 path
+> should probably be separated from all this deferral logic to keep it
+> cleaner.
+> 
+> Keep in mind that devm_cxl_enumerate_ports() early exits in the RCD
+> case, so I do not expect this code ever runs if cxl_port_probe_dports()
+> late in devm_cxl_enumerate_ports() is the only caller.
 
-The UEFI spec says that serial number is only used if "CXL agent" is a
-"CXL device".
+ok
 
-"CXL ports" won't have serial numbers. So this will be a false warning
-for port errors.
+> 
+>> +
+>> +	if (component_reg_phys != CXL_RESOURCE_NONE)
+>> +		dev_dbg(dport_dev, "Component Registers found for dport: %pa\n",
+>> +			&component_reg_phys);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  static struct cxl_dport *
+>>  __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
+>>  		     int port_id, resource_size_t component_reg_phys,
+>> @@ -1162,40 +1192,12 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
+>>  	dport->port = port;
+>>  	dport->id = id;
+>>  
+>> -	if (rcrb == CXL_RESOURCE_NONE) {
+>> -		rc = cxl_dport_setup_regs(&port->dev, dport,
+>> -					  component_reg_phys);
+>> -		if (rc) {
+>> -			ida_free(&port->dport_ida, id);
+>> -			return ERR_PTR(rc);
+>> -		}
+>> -	} else {
+>> -		dport->rcrb.base = rcrb;
+>> -		component_reg_phys = __rcrb_to_component(dport_dev, &dport->rcrb,
+>> -							 CXL_RCRB_DOWNSTREAM);
+>> -		if (component_reg_phys == CXL_RESOURCE_NONE) {
+>> -			dev_warn(dport_dev, "Invalid Component Registers in RCRB");
+>> -			ida_free(&port->dport_ida, id);
+>> -			return ERR_PTR(-ENXIO);
+>> -		}
+>> -
+>> -		/*
+>> -		 * RCH @dport is not ready to map until associated with its
+>> -		 * memdev
+>> -		 */
+>> -		rc = cxl_dport_setup_regs(NULL, dport, component_reg_phys);
+>> -		if (rc) {
+>> -			ida_free(&port->dport_ida, id);
+>> -			return ERR_PTR(rc);
+>> -		}
+>> -
+>> -		dport->rch = true;
+>> +	rc = cxl_dport_probe(dport, component_reg_phys, rcrb);
+>> +	if (rc) {
+>> +		ida_free(&port->dport_ida, id);
+>> +		return ERR_PTR(rc);
+>>  	}
+>>  
+>> -	if (component_reg_phys != CXL_RESOURCE_NONE)
+>> -		dev_dbg(dport_dev, "Component Registers found for dport: %pa\n",
+>> -			&component_reg_phys);
+>> -
+>>  	cond_cxl_root_lock(port);
+>>  	rc = add_dport(port, dport);
+>>  	cond_cxl_root_unlock(port);
+>> @@ -1684,6 +1686,10 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
+>>  				"found already registered port %s:%s\n",
+>>  				dev_name(&port->dev),
+>>  				dev_name(port->uport_dev));
+>> +
+>> +			scoped_guard(device, &port->dev)
+>> +				cxl_port_probe_dports(port);
+> 
+> A comment here would be nice to indicate why this port did not probe
+> dports before.
+> 
+> The comment would likely also answer why this is only called in the
+> "already registered" case, and not the initial port creation case in
+> add_port_attach_ep().
 
-> +
-> +	switch (prot_err->agent_type) {
-> +	case RCD:
-> +	case DEVICE:
-> +	case LD:
-> +	case FMLD:
-> +	case RP:
-> +	case DSP:
-> +	case USP:
-> +		memcpy(&wd.prot_err, prot_err, sizeof(wd.prot_err));
-> +
-> +		dvsec_start = (u8 *)(prot_err + 1);
-> +		cap_start = dvsec_start + prot_err->dvsec_len;
-> +
-> +		memcpy(&wd.ras_cap, cap_start, sizeof(wd.ras_cap));
-> +		wd.severity = cper_severity_to_aer(severity);
-> +		break;
-> +	default:
-> +		pr_err_ratelimited("CXL CPER invalid agent type: %d\n",
+I think that if we do it at port creation, we also would need to do it here anyways for a port that's already created for the other dports. I think we can just do all of the dports here in a single location. Did I miss something?
 
-"invalid" is too harsh given that the specs may be updated. Maybe say
-"reserved" or "unknown" or "unrecognized" instead.
+DJ
 
-Hopefully things will settle down to where a user will be able to have a
-system with newer CXL "agents" without *requiring* a kernel update. :)
+> 
+>> +
+>>  			rc = cxl_add_ep(dport, &cxlmd->dev);
+>>  
+>>  			/*
+>> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+>> index c942fa40c869..0e61b76f5c13 100644
+>> --- a/drivers/cxl/cxl.h
+>> +++ b/drivers/cxl/cxl.h
+>> @@ -345,6 +345,7 @@ enum cxl_decoder_type {
+>>  #define CXL_DECODER_MAX_INTERLEAVE 16
+>>  
+>>  #define CXL_QOS_CLASS_INVALID -1
+>> +#define CXL_PORT_ID_INVALID -1
+>>  
+>>  /**
+>>   * struct cxl_decoder - Common CXL HDM Decoder Attributes
+>> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+>> index a35fc5552845..30c0335089b9 100644
+>> --- a/drivers/cxl/port.c
+>> +++ b/drivers/cxl/port.c
+>> @@ -69,8 +69,6 @@ static int cxl_switch_port_probe(struct cxl_port *port)
+>>  	if (rc < 0)
+>>  		return rc;
+>>  
+>> -	cxl_switch_parse_cdat(port);
+>> -
+>>  	cxlhdm = devm_cxl_setup_hdm(port, NULL);
+>>  	if (!IS_ERR(cxlhdm))
+>>  		return devm_cxl_enumerate_decoders(cxlhdm, NULL);
+>> -- 
+>> 2.49.0
+>>
+> 
+> 
 
-Thanks,
-Yazen
