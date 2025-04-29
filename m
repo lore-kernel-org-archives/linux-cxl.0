@@ -1,157 +1,112 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from beige.elm.relay.mailchannels.net (beige.elm.relay.mailchannels.net [23.83.212.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81EE123D2A3;
-	Tue, 29 Apr 2025 15:54:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745942062; cv=none; b=NA6CHbhKWMknB2yAhk8nh7BEwWl9OTNtGSHgScu3xshvOdtl2CewM3QHNO+BhRV8D/b+Z75/MRdEgQ7opSE+iKuxUFzq5wWLv9sQXcZQBEkIqD+7W2nYlhtQ2lq/b7GA1XVawvUKrggwiQPxV6NIpehqI2dOaQnhZLVJkTr2GUM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745942062; c=relaxed/simple;
-	bh=Lc2G68tUn0cGEuguJJYAiIGQorEEDN3u9nkUVpr518U=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ma4jSbJdeSzU6f5Cjn4/TGdVfnsV0bw2/TDDoW8oLuIlWfEDLJY37Vp22V4DCRQKnfiznkhRbfZBSGzyCdfGQWKWYSw0ZpIe/URMgsnfwTFC5xCfkg+GDGn6mA6acyIYJ0KziTI5yQG7LZhyn9QFpUl7SGe+tK9aR2wCUymrFt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Zn4W61gSRz6K9M6;
-	Tue, 29 Apr 2025 23:49:22 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6CA3E1402F0;
-	Tue, 29 Apr 2025 23:54:13 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 29 Apr
- 2025 17:54:12 +0200
-Date: Tue, 29 Apr 2025 16:54:10 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Karolina Stolarek <karolina.stolarek@oracle.com>
-CC: Bjorn Helgaas <helgaas@kernel.org>, "Shen, Yijun" <Yijun.Shen@dell.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, <linux-pci@vger.kernel.org>, Jon Pan-Doh
-	<pandoh@google.com>, Terry Bowman <terry.bowman@amd.com>, Len Brown
-	<lenb@kernel.org>, James Morse <james.morse@arm.com>, Tony Luck
-	<tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, Ben Cheatham
-	<Benjamin.Cheatham@amd.com>, Ira Weiny <ira.weiny@intel.com>, Shuai Xue
-	<xueshuai@linux.alibaba.com>, Liu Xinpeng <liuxp11@chinatelecom.cn>, "Darren
- Hart" <darren@os.amperecomputing.com>, Dan Williams
-	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] PCI/AER: Consolidate CXL, ACPI GHES and native AER
- reporting paths
-Message-ID: <20250429165410.00002c86@huawei.com>
-In-Reply-To: <0f4944a4-fd05-4365-9416-378a7385547b@oracle.com>
-References: <20250424172809.GA492728@bhelgaas>
-	<61d3f860-9411-4c86-b9c4-a4524ec8ea6d@oracle.com>
-	<20250425141401.0000067b@huawei.com>
-	<0f4944a4-fd05-4365-9416-378a7385547b@oracle.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F83218845
+	for <linux-cxl@vger.kernel.org>; Tue, 29 Apr 2025 15:59:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.212.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745942380; cv=pass; b=piyyiS+eNiH+t+G2R8ncP+rZMcPkmb4OG6Nv3fr7RvUtpxp7rDWlI3PX0hAhmtgsGoZ6ri2snsfVXNTs5lDp1KDFBsKhAfvCKYE03xKt63TYm5jSot3ZaIwNGz63Sm3muJsruVKzaLlhq5cumalIGsyAWLl2qZXsx2+slBs65Xw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745942380; c=relaxed/simple;
+	bh=kW0OYPbiNctwNt73GWVVY+Hh6jd9+dC2pliWlTMjkKM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IttmwezSRjq5EWzVdc3WoBS8yzsJe0ik6wL5xTZ47PbP4tJUWjSmaH1/aqWSmf0/VJJyXVx+k3Y7DbfnK0y4ekNBIV/5IVRQKllbVQs4sKRz0QKJ56DxGVs+vMwDlcpeBSCX/6lqOnEVkw/dianbX6/BptILMRb2f97kMBQ0h4c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=iFL0hUdV; arc=pass smtp.client-ip=23.83.212.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="iFL0hUdV"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 5078583B24;
+	Tue, 29 Apr 2025 15:59:31 +0000 (UTC)
+Received: from pdx1-sub0-mail-a259.dreamhost.com (trex-3.trex.outbound.svc.cluster.local [100.108.243.240])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id B955E84565;
+	Tue, 29 Apr 2025 15:59:30 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1745942370; a=rsa-sha256;
+	cv=none;
+	b=3YL7hYgXkSZD/HXsg4Nu00P8ero882GLen7OvJ7dt1QjWbM4Dm4RGJxtogur0YIDMx0wWb
+	SjJhXBB8PqPyiWEoC1pfquf1D/LaM+5Q+Go7yo6wFDc6TxzgKASPn7dA3KFzKI43VIXMir
+	nbFiotIoH14a+ZSrlijo5JGu88rWRjQWCutSVzKp2wCrFm1oWYl61zfvPTaqmwHZ8Edkkk
+	nw/M7YOtDGK9tIyG8Tyh+NdGKKTUtBUrZj3FbnzgVp3fwI3k1kAGLfuz2h73052juUJGX5
+	bTiRm7pbKEvoKN/KpAIYJ0igWQiBErdmNKa3ju5Q+MHsYcGm2N5LL9lOu61uCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1745942370;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=kW0OYPbiNctwNt73GWVVY+Hh6jd9+dC2pliWlTMjkKM=;
+	b=SZqJIz5MSstm52b40KW53aXI7sFiQQWNm/TOR5SEImn0xn3ikzFFLUn9XwMWUYWJsYuY8+
+	liMwya4j8wdzPcyvY73di1J3moxtT+AANGYvrFKmdNFpuZ86bjYjEV6V5EC5irtpP4K1ue
+	0aVxNCEYebERWUVhrXI3VhRvFMYNwP3GVJwQyTMM6rcx8U1T5xpxM3sx0hG57ZKZ6CCgKJ
+	cN0EPxAvXaZhrL5UnkmYqBQKllKKhenDh2DS/xSn/qBcWTLjw9SoQbmG4O5deoZUjXTcfv
+	tHHmFGdbdo4qUvGb9iKYcChfmOE7sJa5OpQiakC8JkSx1LZO0tHutTJAxjCyiw==
+ARC-Authentication-Results: i=1;
+	rspamd-6d6c74965d-sx8ct;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Interest-Army: 5ec216f32cde97e3_1745942371065_1380139958
+X-MC-Loop-Signature: 1745942371065:4212428162
+X-MC-Ingress-Time: 1745942371065
+Received: from pdx1-sub0-mail-a259.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.108.243.240 (trex/7.0.3);
+	Tue, 29 Apr 2025 15:59:31 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a259.dreamhost.com (Postfix) with ESMTPSA id 4Zn4kp13jwzQq;
+	Tue, 29 Apr 2025 08:59:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1745942370;
+	bh=kW0OYPbiNctwNt73GWVVY+Hh6jd9+dC2pliWlTMjkKM=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=iFL0hUdVF+Zl0cjdouPo3wZ4GcdtvUAvq77QtpR70J+clHRat/SklRI3cLOyCrjXO
+	 /Sb1aYTL5o7Tv/v/1Lm6b74Cc5T9HL2+eGL8wSiWVeoZvYVBcJoTVrJMtXQcgwg1SN
+	 bQMwrZ/gHSJ10ZhxAjl7sxXdYYOx9zoC5zeE/eU/Qim5vJOXaaUQuqJDM/n9hqfVwN
+	 wPGZPSTLhr8pub2TYkbFMVPTPvC+w6bkizfs86wOV7eFTTo+abPFfrcfOpPsB7QEze
+	 QCUWGJwS8shD/eWWfUaXuzPd6pY+iAu9R/84VFF5W3/a929AinSm63gqg0kX3q3lqT
+	 Z7vJFuiIySbgg==
+Date: Tue, 29 Apr 2025 08:59:27 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Gregory Price <gourry@gourry.net>
+Cc: linux-cxl@vger.kernel.org, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, kernel-team@meta.com
+Subject: Re: [RFC DOC] cxl driver draft doc
+Message-ID: <20250429155927.2t4rdawgpf4veaq7@offworld>
+References: <20250427170042.545675-1-gourry@gourry.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250427170042.545675-1-gourry@gourry.net>
+User-Agent: NeoMutt/20220429
 
-On Fri, 25 Apr 2025 16:12:26 +0200
-Karolina Stolarek <karolina.stolarek@oracle.com> wrote:
+On Sun, 27 Apr 2025, Gregory Price wrote:
 
-> On 25/04/2025 15:14, Jonathan Cameron wrote:
-> > On Fri, 25 Apr 2025 12:32:10 +0200
-> > Karolina Stolarek <karolina.stolarek@oracle.com> wrote:  
-> >> 
-> >> It's possible that some of the nuances of this escaped me. I decided to
-> >> pick up the series, as I saw "PCI Express bus error injection via GHES"
-> >> script and thought it might be useful.  
-> > 
-> > With Mauro's series you can inject (on ARM64 virt) any CPER record you
-> > like.  That doesn't synchronize the wider state of the system though
-> > so may not exercise everything (PCI registers etc not updated as it
-> > is only injecting the record).  Mostly it just works, as remarkably
-> > few error handlers actually take the state of the components on which
-> > the error is reported into account.  
-> 
-> OK, that means even if we manage to inject a PCIe error, AER wouldn't be 
-> able to look up the Source ID and other values it needs to report an 
-> error, which is not quite the solution I was looking for.
+>This is one piece of cxl boot-to-bash series being documented here:
+>https://github.com/gourryinverse/cxl-boot-to-bash
+>
+>This page specifically:
+>https://gourryinverse.github.io/cxl-boot-to-bash/linux/cxl-driver/
 
-Isn't the source ID in the CPER record? (Device ID field) or do
-you mean something else?
+May I suggest using cxl.docs.kernel.org? I set that up years ago
+exactly for something like your writings, but never got around
+to it.
 
-> 
-> > The aim is specifically to allow exercising FW first error handling
-> > paths because it's a pain to get real systems that have firmware to inject
-> > the full range of what the kernel etc need to handle.  
-> 
-> Does this include PCIe errors? If so, that probably doesn't make sense 
-> to try to test my patch on an actual system?
-
-Ideally test it on a real system as well, but indeed the intent is to
-allow testing of PCI errors on emulation.
-
-> 
-> > x86 support for emulated injection is a work in progress (more of a mess wrt
-> > to the different ways the event signaling is handled than it is on arm64).
-> > 
-> > I did have an earlier version of that work wired up to the same
-> > hooks as the native CXL error injection but I dropped it from my QEMU
-> > CXL staging tree for now as it was a pain to rebase whilst Mauro was rapidly
-> > revising the infrastructure.  I'll bring it back when I get time.  
-> 
-> I understand, I saw some of your series while looking for ways to test 
-> my patch. Thank you very much for your work. As you can see, there are 
-> people actually looking forward to it :)
-
-Great!  I'll try and get back to wiring it all up again sometime soon.
-
-Jonathan
-
-> 
-> 
-> All the best,
-> Karolina
-> 
-> > 
-> > Jonathan
-> >   
-> >>  
-> >>> Unfortunately there are some typos in the spec (FIRMWARE_FIRST,
-> >>> FIRMWAREFIRST in 18.4), so it's a little hard to find all the
-> >>> references.  
-> >>
-> >> Thanks for the pointers, I'll take a look.
-> >>  
-> >>> It's a long shot, but I added Yijun as a Dell contact that who might
-> >>> have a pointer to someone who could possibly test GHES logging on a
-> >>> Dell box with and without your patch so we could have a concrete
-> >>> comparison of the dmesg log differences.  
-> >>
-> >> Thank you very much. Let's see, maybe we'll get lucky :)
-> >>
-> >> All the best,
-> >> Karolina
-> >>  
-> >>>      
-> >>>>> If you can't produce actual logs for comparison, I think we can take
-> >>>>> info from a sample log somebody has posted and synthesize what the
-> >>>>> changes would be after this patch.  
-> >>>>
-> >>>> I also found some logs at some point, mostly from 2021 and 2023, but I felt
-> >>>> bad about mocking up the messages and tried to produce actual logs. If I
-> >>>> can't find a way to get this working in two weeks, I'll revisit this idea.
-> >>>>
-> >>>> All the best,
-> >>>> Karolina
-> >>>>
-> >>>> -------------------------------------------------------------
-> >>>> [1] - https://lore.kernel.org/lkml/76824dfc6bb5dd23a9f04607a907ac4ccf7cb147.1740653898.git.mchehab+huawei@kernel.org/  
-> >>
-> >>  
-> >   
-> 
-> 
-
+Thanks,
+Davidlohr
