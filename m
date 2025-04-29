@@ -1,105 +1,136 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3CB624290C
-	for <linux-cxl@vger.kernel.org>; Tue, 29 Apr 2025 16:13:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1ADA82C60;
+	Tue, 29 Apr 2025 17:21:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745943241; cv=none; b=WIivLxOrmrwanivf6wOBT/dut1pRxPhJqR5YrK7Pub7C5rPNnZZn6teTwFZj4Zb3GLQA19dMzf3bqLBgsSEdcfc4Gl8zynZH4egq8veI367z2+k8EI6MPa2ja8QkabuofcJ2zbrLzyVc6Nt63XuF2zo6sL4blxNsqcVSUqKKOIE=
+	t=1745947282; cv=none; b=TYxYxnOWlKZRZa2YzDA4yji6M3bjWGPqO6TREMaH3LMgZd6efNS121pywGgIQb8fUV1hxrwvWcpH8haGs92eVW7WQoqc6OLG07tb1a/wBFPPc6/gm3oVW/jqnPU09Iizs+Mjhk9b/ihHemvZqnWt0YSrYX9AKfLCVa1MKENzD2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745943241; c=relaxed/simple;
-	bh=uYyKCMw/uCGBssy/618cuvAybTKRye9ePkiOPdyJNlc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cLsNzUwrGosLNaIKbE8pUuHgCI9Irhu4xzK2RoIhJ3oH6vYnBmYLgE5czEwx+uPZA6dobGHUvlnQD6TKJF9EkyjeCFPfEQraxwNNl2cSBE/sQCfdOyqq1k0aSHdmjzp871qYphsp6zePOdfuGom+fjpcDPCO8rgfILT854t2lBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=LDQjjnDm; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1745947282; c=relaxed/simple;
+	bh=vYY2zbE6OK0wScySObCKJRjYLAvY/gAV9CwgCR4nPcw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Gt95Lsazm8X5izGnujeGFjYUAg94uttxt+M6JSMRIlTOYiOpfoVrsncFNgXCuVsGjvUUZT0Wx4IB5i1xtXSvSOm1LjSLySfoYL75ctHHK7fz0Nh3BdT+hKCSeNPyHZRkviOIOnuzTxSId3+hJtP92DwkCSC3Y7XCm4D6bVBhUEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lJuLm9EW; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="LDQjjnDm"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-476f4e9cf92so46421181cf.3
-        for <linux-cxl@vger.kernel.org>; Tue, 29 Apr 2025 09:13:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1745943238; x=1746548038; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QYW5ylN4/OUlBLAJXc3Y67XvBUn2IFnL+yXKkyihqHE=;
-        b=LDQjjnDma1uFB6uZg9oWRcs261YaKztoBcYtcX2+AkYpL7OqLyFxZnPlFv/BnhplfB
-         4dt3pfmyG9f1fg5DttzKvSJ2FfY0fkeNFcu3EDFU9ZFF9ZFo6knSG1rT1Irv4LLArU+3
-         dBxRm7JL5Jqpk6OGzmyQl+zwuRlkmEh7oO2oJBOAzm2IryUJiX9B7P3RzIHKNof3p1Jh
-         I0i59Q7OEYsT9gZGjpyuhmeJyJzR14k7n7QltviVPAqkQrov/0xSmD6dATul51ZoiQ4K
-         /DQ9pGWR3ZZt3hw39ghnYCq7r/RE+JDexBCQkiA/fkbTp2XS6erfHuRLNIz1u2jAVy2X
-         sz0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745943238; x=1746548038;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QYW5ylN4/OUlBLAJXc3Y67XvBUn2IFnL+yXKkyihqHE=;
-        b=X3uQhdQX7f014s5FIeB9AW/oeNJCSo0LbgKh/BGODafnDAS4ZjGedGKA7nDM/M6jZS
-         nq/zLBagiKpmGpuJfsLmRDcC8pFVV/NVJ5ZECXKADiqtR0ypQEdIGDOX+7sKwzuKW+q4
-         56gHzTvVxC2giNyaATLUYFQr5jBCNTirjdPSZC9XNuhbLbRZWFKN6g8CR53yVuB1WvNy
-         ODz7YCD5pMSuBOx2PKdDhFf/zoyoOAX5LD3kUn+rBqtA1x/TDLBqVGEvujtD9HSeSVZY
-         /B+2HBFZpO90gPYbXbiPfrBpFzSUvdbf80P5eNUqX0ZhQ6Wc0NBZnwgsRlbu8NduZtiG
-         6aEw==
-X-Gm-Message-State: AOJu0Yw9/xiGrZ5vco/6MkCGyGHWSNgTxGtvc/Mw8VxUZem9H1fQKxeH
-	3Aed9TUD6DYG3T5QtINQBoHd0nvfC3nin3+rBGBPswdAY93CSf3UG1hKEdLnKyA=
-X-Gm-Gg: ASbGncswClh4ArBJCqaVbIDcBtoqDdemKlU9qbjzfPZbPqRoXy5vu1Aa/gcIBMBm2gA
-	kQyzikzv3HR5zdzZg2R3GDLWoN+B0ewduF5x1H+r3VWRB2Ug73Xqz8sHPXhBSx/bOO3eoZStdKq
-	76NKrdCWxyFtRwh52BUPWMKuB8abDrQhxln8YnW2buNRsH6i99sRuONqrA3Bvcj37Y6kg0wT/Sz
-	CJ+gVvO+H7t0HiWsZcwROAOia7atYFowyEJ7gBCfwKJ6WKUxm11p6/CDaC8AZdkytsyQtiVwY3m
-	+iCnnLZQ/5sqzVtpkVHMdvUL06TeSgy7QnoxUfcYFn5UDbGoSlY+EnPBs+t1WLQolsiy70N7yzk
-	5EN3gxPC5Ar4boDjCQRfnzCVWpqvOO3iIKQ==
-X-Google-Smtp-Source: AGHT+IG3yEJDLPFxkXQY3px7o4oFmEnbRp7LRDKSw6my64BupCqKtOmMc4j9xvx9O69J+XOQiwgi+Q==
-X-Received: by 2002:ac8:6908:0:b0:477:6e6a:7cfe with SMTP id d75a77b69052e-4880cefae73mr65484891cf.0.1745943238640;
-        Tue, 29 Apr 2025 09:13:58 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47e9efdaa41sm81823441cf.19.2025.04.29.09.13.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 09:13:58 -0700 (PDT)
-Date: Tue, 29 Apr 2025 12:13:56 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Davidlohr Bueso <dave@stgolabs.net>
-Cc: linux-cxl@vger.kernel.org, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, kernel-team@meta.com
-Subject: Re: [RFC DOC] cxl driver draft doc
-Message-ID: <aBD6xEmzgTbT58kH@gourry-fedora-PF4VCD3F>
-References: <20250427170042.545675-1-gourry@gourry.net>
- <20250429155927.2t4rdawgpf4veaq7@offworld>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lJuLm9EW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745947281; x=1777483281;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=vYY2zbE6OK0wScySObCKJRjYLAvY/gAV9CwgCR4nPcw=;
+  b=lJuLm9EW5I1rvGoJhBGB0iikbdDB/5tMuGr0oQTnF5myfe5xKt/zCfvR
+   NKsmPk5l0UMuNFZz+H6RIxpJVowuwS7vittyOUxDdky5tjm6Caw07QJbM
+   hrWmwZjpxI1Dq0YA+F5Az133/H1o5BeW+Li4LDIwO7Ma9LvQE4wOca/yR
+   IN6Ya922YKxSqoWxGeF8RG5yawv9C7nwjrGeUzuSmbv/flcXkBx6B+9ai
+   oTLaN8ET/JLgqFIeParChHjz9DwfoQJKUf9RB/abBzlGMNyrUhBTYicvC
+   Gi/9K/sGPck+WvGTcf/oeMCOmp0tSw/GkgoNHoHVRQ/UQI0IHc7kisEud
+   A==;
+X-CSE-ConnectionGUID: P4OYuo27QOuArCUuORCVJw==
+X-CSE-MsgGUID: hm8/o+pzTkKit0jNTNjjMg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="64996929"
+X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
+   d="scan'208";a="64996929"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 10:21:20 -0700
+X-CSE-ConnectionGUID: 8vZD04tyRg2Aa5RoJMWkAg==
+X-CSE-MsgGUID: mHsBn+CMR4uPyr9hrkfPSA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
+   d="scan'208";a="139073305"
+Received: from sschumil-mobl2.ger.corp.intel.com (HELO fdefranc-mobl3.intel.com) ([10.245.246.45])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 10:21:14 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Borislav Petkov <bp@alien8.de>,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-pci@vger.kernel.org,
+	linux-edac@vger.kernel.org
+Cc: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Subject: [PATCH 0/4 v2] Make ELOG log and trace consistently with GHES
+Date: Tue, 29 Apr 2025 19:21:05 +0200
+Message-ID: <20250429172109.3199192-1-fabio.m.de.francesco@linux.intel.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250429155927.2t4rdawgpf4veaq7@offworld>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 29, 2025 at 08:59:27AM -0700, Davidlohr Bueso wrote:
-> On Sun, 27 Apr 2025, Gregory Price wrote:
-> 
-> > This is one piece of cxl boot-to-bash series being documented here:
-> > https://github.com/gourryinverse/cxl-boot-to-bash
-> > 
-> > This page specifically:
-> > https://gourryinverse.github.io/cxl-boot-to-bash/linux/cxl-driver/
-> 
-> May I suggest using cxl.docs.kernel.org? I set that up years ago
-> exactly for something like your writings, but never got around
-> to it.
-> 
-> Thanks,
-> Davidlohr
+When Firmware First is enabled, BIOS handles errors first and then it
+makes them available to the kernel via the Common Platform Error Record
+(CPER) sections (UEFI 2.10 Appendix N). Linux parses the CPER sections
+via one of two similar paths, either ELOG or GHES.
 
-That's one option, but we discussed just yeeting this into
-linux/Documentation as "theory of operation". Dan seemed to favor this.
+Currently, ELOG and GHES show some inconsistencies in how they print to
+the kernel log as well as in how they report to userspace via trace
+events.
 
-I'm just about done my full first draft, and it's turning out to around
-60-ish pages when compiled down to a single HTML page (~12000 words).
+Make the two mentioned paths act similarly for what relates to logging
+and tracing.
 
-I was planning to submit a patch series that updates with each single
-page to make it more easily reviewable for the group.
+--- Changes for v2 ---
 
-~Gregory
+	- Add a patch to pass log levels to pci_print_aer() (Dan)
+	- Add a patch to trace CPER CXL Protocol Errors
+	- Rework commit messages (Dan)
+	- Use log_non_standard_event() (Bjorn)
+
+--- Changes for v1 ---
+
+	- Drop the RFC prefix and restart from PATCH v1
+	- Drop patch 3/3 because a discussion on it has not yet been
+	  settled
+	- Drop namespacing in export of pci_print_aer while() (Dan)
+	- Don't use '#ifdef' in *.c files (Dan)
+	- Drop a reference on pdev after operation is complete (Dan)
+	- Don't log an error message if pdev is NULL (Dan)
+
+--- Changes for RFC v2 ---
+	
+	- 0/3: rework the subject line and the letter.
+        - 1/3: no changes.
+        - 2/3: trace CPER PCIe Section only if CONFIG_ACPI_APEI_PCIEAER
+          is defined; the kernel test robot reported the use of two
+          undefined symbols because the test for the config option was
+          missing; rewrite the subject line and part of commit message.
+        - 3/3: no changes.
+
+
+Fabio M. De Francesco (4):
+  ACPI: extlog: Trace CPER Non-standard Section Body
+  PCI/AER: Modify pci_print_aer() to take log level
+  ACPI: extlog: Trace CPER PCI Express Error Section
+  ACPI: extlog: Trace CPER CXL Protocol Errors
+
+ drivers/acpi/acpi_extlog.c | 96 ++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/core/pci.c     |  2 +-
+ drivers/cxl/core/ras.c     |  6 +++
+ drivers/pci/pcie/aer.c     | 18 +++----
+ drivers/ras/ras.c          |  1 +
+ include/cxl/event.h        |  2 +
+ include/linux/aer.h        | 13 +++++-
+ 7 files changed, 126 insertions(+), 12 deletions(-)
+
+-- 
+2.48.1
+
