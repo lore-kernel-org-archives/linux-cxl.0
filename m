@@ -1,43 +1,50 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5AD423F413
-	for <linux-cxl@vger.kernel.org>; Tue, 29 Apr 2025 15:51:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81EE123D2A3;
+	Tue, 29 Apr 2025 15:54:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745941866; cv=none; b=iR0IfHpmRH4dNWJC+h/h0Gr5Na54cjShsudfw+COUziHFz+RF271n/g9H8R+WYvsPn8eX6L/y7DL6wLj+sunxfTbZOfcwvZ/0pdqcI/tITYfcG3kJcZw0jkla5BJ3rq50MO44liBFSqcjkUwkP9zINffj1xw85JxpSX5FSMGhLU=
+	t=1745942062; cv=none; b=NA6CHbhKWMknB2yAhk8nh7BEwWl9OTNtGSHgScu3xshvOdtl2CewM3QHNO+BhRV8D/b+Z75/MRdEgQ7opSE+iKuxUFzq5wWLv9sQXcZQBEkIqD+7W2nYlhtQ2lq/b7GA1XVawvUKrggwiQPxV6NIpehqI2dOaQnhZLVJkTr2GUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745941866; c=relaxed/simple;
-	bh=gnmLWyqR8zwDLVndmFxKWPmGHrVOTaG9SxHlrXo1p98=;
+	s=arc-20240116; t=1745942062; c=relaxed/simple;
+	bh=Lc2G68tUn0cGEuguJJYAiIGQorEEDN3u9nkUVpr518U=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KB3alrycU52HNPZ9l8SHn4jjvFg+u5c+hlZ5uxIZbAjFxHvD9Amurt8nVeorduomKN5QUMznzA5rC5/sVvGYuRZJBJzaatAL/skAIYJz+16qS5hlrwwESt9cO7l1ODlbAijhYON2CHIbRr19DRrHb84p8NoZeA589yf2FoEgyOM=
+	 MIME-Version:Content-Type; b=Ma4jSbJdeSzU6f5Cjn4/TGdVfnsV0bw2/TDDoW8oLuIlWfEDLJY37Vp22V4DCRQKnfiznkhRbfZBSGzyCdfGQWKWYSw0ZpIe/URMgsnfwTFC5xCfkg+GDGn6mA6acyIYJ0KziTI5yQG7LZhyn9QFpUl7SGe+tK9aR2wCUymrFt4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Zn4S12Y0nz6M4GB;
-	Tue, 29 Apr 2025 23:46:41 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Zn4W61gSRz6K9M6;
+	Tue, 29 Apr 2025 23:49:22 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 149701404F4;
-	Tue, 29 Apr 2025 23:51:00 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 6CA3E1402F0;
+	Tue, 29 Apr 2025 23:54:13 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 29 Apr
- 2025 17:50:59 +0200
-Date: Tue, 29 Apr 2025 16:50:58 +0100
+ 2025 17:54:12 +0200
+Date: Tue, 29 Apr 2025 16:54:10 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
-CC: "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>, Fan Ni
-	<fan.ni@samsung.com>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>, Marcel Apfelbaum <marcel.apfelbaum@gmail.com>
-Subject: Re: [PATCH] hw/pci-bridge/pci_expander_bridge: Fix HDM passthrough
- condition
-Message-ID: <20250429165058.00003804@huawei.com>
-In-Reply-To: <06c02571-8abc-4304-81e3-9413c47a0bf4@fujitsu.com>
-References: <20250323080420.935930-1-lizhijian@fujitsu.com>
-	<e2933a3b-7600-4f84-bfa9-d7b59dafb939@fujitsu.com>
-	<20250415174717.00001509@huawei.com>
-	<06c02571-8abc-4304-81e3-9413c47a0bf4@fujitsu.com>
+To: Karolina Stolarek <karolina.stolarek@oracle.com>
+CC: Bjorn Helgaas <helgaas@kernel.org>, "Shen, Yijun" <Yijun.Shen@dell.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, <linux-pci@vger.kernel.org>, Jon Pan-Doh
+	<pandoh@google.com>, Terry Bowman <terry.bowman@amd.com>, Len Brown
+	<lenb@kernel.org>, James Morse <james.morse@arm.com>, Tony Luck
+	<tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, Ben Cheatham
+	<Benjamin.Cheatham@amd.com>, Ira Weiny <ira.weiny@intel.com>, Shuai Xue
+	<xueshuai@linux.alibaba.com>, Liu Xinpeng <liuxp11@chinatelecom.cn>, "Darren
+ Hart" <darren@os.amperecomputing.com>, Dan Williams
+	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] PCI/AER: Consolidate CXL, ACPI GHES and native AER
+ reporting paths
+Message-ID: <20250429165410.00002c86@huawei.com>
+In-Reply-To: <0f4944a4-fd05-4365-9416-378a7385547b@oracle.com>
+References: <20250424172809.GA492728@bhelgaas>
+	<61d3f860-9411-4c86-b9c4-a4524ec8ea6d@oracle.com>
+	<20250425141401.0000067b@huawei.com>
+	<0f4944a4-fd05-4365-9416-378a7385547b@oracle.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -50,103 +57,101 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, 29 Apr 2025 01:11:01 +0000
-"Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com> wrote:
+On Fri, 25 Apr 2025 16:12:26 +0200
+Karolina Stolarek <karolina.stolarek@oracle.com> wrote:
 
-> Hi Jonathan,
-> 
-> 
-> I apologize for the delayed response; I have just returned from vacation.
-> 
-> 
-> On 16/04/2025 00:47, Jonathan Cameron wrote:
-> > On Mon, 7 Apr 2025 02:59:20 +0000
-> > "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com> wrote:
-> >   
-> >> Ping  
+> On 25/04/2025 15:14, Jonathan Cameron wrote:
+> > On Fri, 25 Apr 2025 12:32:10 +0200
+> > Karolina Stolarek <karolina.stolarek@oracle.com> wrote:  
+> >> 
+> >> It's possible that some of the nuances of this escaped me. I decided to
+> >> pick up the series, as I saw "PCI Express bus error injection via GHES"
+> >> script and thought it might be useful.  
 > > 
-> > Sorry, I wrote half a reply but then lost it before sending
-> > - was still in my drafts :(
-> >   
-> >>
-> >> Only if (dsp_count==1 && hdm_for_passthrough==true), the QEMU shouldn't implement
-> >> the HDM decodder for the Host-bridge.  
+> > With Mauro's series you can inject (on ARM64 virt) any CPER record you
+> > like.  That doesn't synchronize the wider state of the system though
+> > so may not exercise everything (PCI registers etc not updated as it
+> > is only injecting the record).  Mostly it just works, as remarkably
+> > few error handlers actually take the state of the components on which
+> > the error is reported into account.  
+> 
+> OK, that means even if we manage to inject a PCIe error, AER wouldn't be 
+> able to look up the Source ID and other values it needs to report an 
+> error, which is not quite the solution I was looking for.
+
+Isn't the source ID in the CPER record? (Device ID field) or do
+you mean something else?
+
+> 
+> > The aim is specifically to allow exercising FW first error handling
+> > paths because it's a pain to get real systems that have firmware to inject
+> > the full range of what the kernel etc need to handle.  
+> 
+> Does this include PCIe errors? If so, that probably doesn't make sense 
+> to try to test my patch on an actual system?
+
+Ideally test it on a real system as well, but indeed the intent is to
+allow testing of PCI errors on emulation.
+
+> 
+> > x86 support for emulated injection is a work in progress (more of a mess wrt
+> > to the different ways the event signaling is handled than it is on arm64).
 > > 
-> > HDM for pass through means that we do have decoders even for pass through
-> > not that we do not.  The name could be better and the code flow
-> > perhaps simpler.  
+> > I did have an earlier version of that work wired up to the same
+> > hooks as the native CXL error injection but I dropped it from my QEMU
+> > CXL staging tree for now as it was a pain to rebase whilst Mauro was rapidly
+> > revising the infrastructure.  I'll bring it back when I get time.  
 > 
-> I got you, I did admit that I misunderstood it before.
-> the word *hdm* in hdm_for_passthrough means "Host-managed Device Memory" which was missing *Decoders*
-> So it though of it was an option to enable the pass through feature
+> I understand, I saw some of your series while looking for ways to test 
+> my patch. Thank you very much for your work. As you can see, there are 
+> people actually looking forward to it :)
 
-Good point. That parameter name is less than ideal but we are stuck with it :(
-
-> 
-> Per CXL SPEC "8.2.4.20 CXL HDM Decoder Capability Structure",
-> I read it as "zero capability structure instance is optional, so it should disable by default",
-> while the QEMU implemented it as enabled by default.
-
-It is optional whether to have the structure in this case, but not whether to program it if
-it is there.  The spec talks about when you must have it (multiple downstream targets).
-
-There is no case of disabled by default.  A host may or may not implement it in the laid
-out cases.
-
-> 
-> This annoyed me when I tried to implement provisioning HDM decoders(the guest will construct
-> CXL region by them) in QEMU.
-
-Faking a firmware configured setup?
+Great!  I'll try and get back to wiring it all up again sometime soon.
 
 Jonathan
 
 > 
-> Thanks
-> Zhijian
+> 
+> All the best,
+> Karolina
+> 
+> > 
+> > Jonathan
+> >   
+> >>  
+> >>> Unfortunately there are some typos in the spec (FIRMWARE_FIRST,
+> >>> FIRMWAREFIRST in 18.4), so it's a little hard to find all the
+> >>> references.  
+> >>
+> >> Thanks for the pointers, I'll take a look.
+> >>  
+> >>> It's a long shot, but I added Yijun as a Dell contact that who might
+> >>> have a pointer to someone who could possibly test GHES logging on a
+> >>> Dell box with and without your patch so we could have a concrete
+> >>> comparison of the dmesg log differences.  
+> >>
+> >> Thank you very much. Let's see, maybe we'll get lucky :)
+> >>
+> >> All the best,
+> >> Karolina
+> >>  
+> >>>      
+> >>>>> If you can't produce actual logs for comparison, I think we can take
+> >>>>> info from a sample log somebody has posted and synthesize what the
+> >>>>> changes would be after this patch.  
+> >>>>
+> >>>> I also found some logs at some point, mostly from 2021 and 2023, but I felt
+> >>>> bad about mocking up the messages and tried to produce actual logs. If I
+> >>>> can't find a way to get this working in two weeks, I'll revisit this idea.
+> >>>>
+> >>>> All the best,
+> >>>> Karolina
+> >>>>
+> >>>> -------------------------------------------------------------
+> >>>> [1] - https://lore.kernel.org/lkml/76824dfc6bb5dd23a9f04607a907ac4ccf7cb147.1740653898.git.mchehab+huawei@kernel.org/  
+> >>
+> >>  
+> >   
 > 
 > 
-> >   
-> >>
-> >> But previous code didn't follow this.  
-> >   
-> >> Thanks
-> >> Zhijian
-> >>
-> >> On 23/03/2025 16:04, Li Zhijian wrote:  
-> >>> Reverse the logical condition for HDM passthrough support in
-> >>> pci_expander_bridge. This patch ensures the HDM passthrough condition
-> >>> is evaluated only when hdm_for_passthrough is set to true, aligning
-> >>> behavior with intended semantics and comments.
-> >>>
-> >>> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
-> >>> ---
-> >>>
-> >>> This change corrects what appears to be a previous mistake in logic
-> >>> regarding HDM passthrough conditions.
-> >>> ---
-> >>>    hw/pci-bridge/pci_expander_bridge.c | 2 +-
-> >>>    1 file changed, 1 insertion(+), 1 deletion(-)
-> >>>
-> >>> diff --git a/hw/pci-bridge/pci_expander_bridge.c b/hw/pci-bridge/pci_expander_bridge.c
-> >>> index 3396ab4bdd..25f8922d76 100644
-> >>> --- a/hw/pci-bridge/pci_expander_bridge.c
-> >>> +++ b/hw/pci-bridge/pci_expander_bridge.c
-> >>> @@ -307,7 +307,7 @@ static void pxb_cxl_dev_reset(DeviceState *dev)
-> >>>         * The CXL specification allows for host bridges with no HDM decoders
-> >>>         * if they only have a single root port.
-> >>>         */
-> >>> -    if (!PXB_CXL_DEV(dev)->hdm_for_passthrough) {  
-> > 
-> > This makes us only check the number of ports if we are not
-> > providing hdm decoders for passthrough ports.
-> > 
-> > If we are providing HDM Decoders anyway we don't care how many
-> > ports there are so the 0 value is fine.
-> >   
-> >>> +    if (PXB_CXL_DEV(dev)->hdm_for_passthrough) {
-> >>>            dsp_count = pcie_count_ds_ports(hb->bus);
-> >>>        }
-> >>>        /* Initial reset will have 0 dsp so wait until > 0 *  
-> >  
 
