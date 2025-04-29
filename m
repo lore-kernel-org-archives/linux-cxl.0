@@ -1,141 +1,298 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2055.outbound.protection.outlook.com [40.107.220.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17178233735
-	for <linux-cxl@vger.kernel.org>; Tue, 29 Apr 2025 17:56:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745949386; cv=none; b=s1SGZkwbj3TymgFF3DNNYcu6tMyFLNZPCun8k5UB4wUROtCE0E2f4ofI1WBHl31xiz6t77gUq9WLqMTWWQ9POAAbq6/lRUM8ezMnOMP7HrxaP0MUwwWAnOtHlHfG1+hMJpy4p69KRrMPPjeOFZB4dbN+5Ap5Y25CAXdSq/+aCEw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745949386; c=relaxed/simple;
-	bh=nZX7mKl64clXIVLF2nwjidyt78Yy6zZgWhqAzg/FK5M=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N/iQ2fiUsdhNIw/26DI4P2yG0RHXmhR8M3k8pmTIBsYtk2iFOD8flS8ms1gO2FwjiX3IA3upKXf3HjTvPr/deSHcf4+MtHMRRC96zKxCjGQO9GI1ixH3mRxOfwMmzGPNxpCUJL6+gMEWNdifOGyOIJoPuGWnVN8N9cRMiorjgbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MVPwnBtW; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3884523E32B;
+	Tue, 29 Apr 2025 18:02:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745949776; cv=fail; b=ZvdacM7PmhL0s8q9SecDuWqOhTiPJYtWiEGtb3lYpD3YF8/5UTlSy8JwkTpL80XaxUP7BPOp3ltS9lZY/vRGtuAJ+L9ILkFGg9HwCcXOf3tEOcuHGCTnC7lXL5HwPp8C60Xs5he3h9e+ywz4Tya+roHijtB52uYROhnRtuJo0Hk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745949776; c=relaxed/simple;
+	bh=yDVuExQq9T5eI5VaLBQPeSMcpHIAhE3QchdWc7k2DF0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=u5L9y8eN8XQFB6O7Ka9LXoYKw2msik2GlkMNLpaUW27u2J4LeSRa+M5NlYlToqzzeDLI4KQQJHhZHaNdF7YhyvlBvlOMtnh5Bxqa0lVUHIk3XrCKzwSl77n2Kx7b7YYE+vjKt+JOnFWfMg9HOWkwkgWhSnqYiwDi+IBLJo5HdNQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=OfV/IS2g; arc=fail smtp.client-ip=40.107.220.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MVPwnBtW"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2243803b776so106450375ad.0
-        for <linux-cxl@vger.kernel.org>; Tue, 29 Apr 2025 10:56:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745949384; x=1746554184; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yJuFu2T2uACt7lYPR7DK5aCYKnlqtxYEUsDvqs5aJGA=;
-        b=MVPwnBtWKGJXsvlqhkRjM/41wrCkow9RvQolVDFcfw6q7JXua8ZITxwbzIMXXV7oxx
-         XokbvJHY2phPkAU1uWmUo26Ul2RNLZgZeNhn9oiAT29iJYWaKPNlzfCPMR6GxW7G4/u6
-         D5bz1NBY6lHVXejfryjsWCz4GZ9sC5sYv8ZY0i6UASZmM3rAwTssZUV04SENsYTbOKxj
-         Y7AG7oprecaOmAPe+OSN/oJqNoxDdV9nnYp1/DdDoLwv4ssl5VWv5xxZTQIJctq2DupN
-         SyGSCl9txTMQMBcTPvoOhrMxJrx1o5bPyk+mXb8D0HlkymDTbWiywzVvROvknObUWiAo
-         WGxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745949384; x=1746554184;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yJuFu2T2uACt7lYPR7DK5aCYKnlqtxYEUsDvqs5aJGA=;
-        b=ez6FwijVAoVOBAg/Kov2IeZUtU9VdHArX/jF5gbVwHAmbVEqU5e9EkV9zv0D4jmAtA
-         zbNYgjjn0iQhoRNU7hnTAw64b6Iye+5fdhGuq/f09oNeZ/6GZpOYrZf6RG6obCnWbN2B
-         K7VvBoGEnuDH8tiL2XkHtEESXZ0tqe2nNX4gqz9TcMQxUF3X4FI4uibVxBRb2aiAoFmM
-         F0nbDU37Q4pubbpn6D832kbLGWQE1mvMxqJGyf3UBjC9r+kY/RH/cdtPpDSsX2TQdjhi
-         qWGqf0CC5JPhkMIH+S8bNAmZQ/WydgjvBA8uYNgntQTCYYwktnJjqRWWnZ/uQxpaExNt
-         9MMg==
-X-Forwarded-Encrypted: i=1; AJvYcCVx7sHfdh55jgRxYLmNQYGPwp5cZcw7UK62hUnVpGdEIKxjI/iwOiwHvWLilvjOERvsmnij+9TL2p4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCMiCwWS0LBdiGG9JtpYGYM4MKv1U220UIZgQb3F1XPH+NISNS
-	jTIlpsFnXhwT2+ApA8NjXHAVOGdNkfMh4y5RKzvpLd4IRlXbd/OM
-X-Gm-Gg: ASbGncvIufvr9lnl75cOpSvUSPshGWJzhmCry0wYtwahA8hiTsxrKbtGegpi7IJjQaz
-	szKnL3dE5sjMIsLoAPEDFp4Jxjgo5bDqxlvUmsxluBN33XsMzvNdJEzJ/sItdXSRvugivMovoUh
-	D1uBO4FL9VwYpyngi2xQPDxtmWx/44PcxFHkKNJ6jVMrB3dIMW+GO9xFMagY7lBbC0Y2MckJoLR
-	wSvI7KKLQ/Y0qlZ+ekK4j8nNL8OLOh8UiEsyi9ebrZtlIwnra2mV527QJyQEs3qYInS/jyj66eI
-	pOIArODp8GYTSxcnm4yWz8oDo6wPN1ziH9JxsiUg7dWL+bgzfioSf3kUEh2eAPMbHq4=
-X-Google-Smtp-Source: AGHT+IHh05EfYulLqBSbJTNmqSNuuxyR3fQUErngIO1EFAitJiPAP6+8QHeuDFL7PSyVG7VRZRbZ/A==
-X-Received: by 2002:a17:903:1aa5:b0:223:635d:3e38 with SMTP id d9443c01a7336-22df34e7f64mr4824645ad.15.1745949384214;
-        Tue, 29 Apr 2025 10:56:24 -0700 (PDT)
-Received: from deb-101020-bm01.eng.stellus.in ([149.97.161.244])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db5100aa7sm105284405ad.161.2025.04.29.10.56.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 10:56:23 -0700 (PDT)
-From: Anisa Su <anisa.su887@gmail.com>
-X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
-Date: Tue, 29 Apr 2025 17:56:21 +0000
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: anisa.su887@gmail.com, qemu-devel@nongnu.org, nifan.cxl@gmail.com,
-	dave@stgolabs.net, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 1/9] cxl/type3: Add supported block sizes bitmask to
- CXLDCRegion struct
-Message-ID: <aBESxXNTecIbPJPP@deb-101020-bm01.eng.stellus.in>
-References: <20250317164204.2299371-1-anisa.su887@gmail.com>
- <20250317164204.2299371-2-anisa.su887@gmail.com>
- <20250424111131.00005ff2@huawei.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="OfV/IS2g"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=BMSyZMIL3FSYie4lvor5/P6GX2xOUi1DxqnHvAwlJXt9tEQorMAem7Ni2z/4iEQVhVad8i6O1ZX7lrWXLfRzwCyj90RSm19aYcGuOXBTryK85NjW+yOrFsb80T34johE1gOah9zRrfDQnoSkEZewCIUfpCOk9kUiCSAJKeusuvCqV5aMhyFinvY4BZy8zkEkoDzJ2V5YGHvZmLZC8mvC0JYWDqDmr1gzxLQBvyofzzsV6VUZhnfSFw8TIpGYYhCGlVjLJRRbHdXLZt6ceuYTa0xx6lIBlEIlJrhHIDf8N2xJB7OKftHid7LxuK7iNyP+s5L3qarOMjiroEnSZotGjQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NDjOHl+lLPTkou1738NRqNS1NzILUzL9V05ODi4qG7E=;
+ b=ngpsKKGEe30wDbIOSWne7onVGQUIPXKDsXTY30eO1/SDIhOT0AwVJfUO5eghywnmvle8u+9z0z7yHtJn3DNDq57MZw0q3QhGlU1USi03B1ZaTJdhagG1Ea4k5CjkIpratP+/m1bc23MJQADGaBcd6gMwziSKeEHVZIQfqS/X3kPdTFB2iaIlHSNgvfgvxj1V7Mst5KoQL2D/HpaIi0FU9HkASbrzIBo7akPbIkC9gizlGaAbHwAedx+D+uqQocZw4VpN0C3IwmjfA5KjGQRMWQrUgJ7/2BtNlm3MuMO+HdMIoAB0pipDtCkGWelDvDVKdkWFKlOAmIVm83OSYiHm7Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NDjOHl+lLPTkou1738NRqNS1NzILUzL9V05ODi4qG7E=;
+ b=OfV/IS2gHJwf2JeVsSl0MdAEEwuLKhjtQGMVeOYVuPFjFYgHNhJGB5kxPGxftRrjclbDhy38TrP5yGGIhL/8IZIOKyYsvRmJHNYRIfbYH1oklr9exPxwpUEzigZhEVuKhPoVgzSUk6gagjPI975CZgXH05cqQCkDmT84mESYZZU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB6373.namprd12.prod.outlook.com (2603:10b6:8:a4::7) by
+ CH2PR12MB4215.namprd12.prod.outlook.com (2603:10b6:610:ab::24) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8678.33; Tue, 29 Apr 2025 18:02:52 +0000
+Received: from DM4PR12MB6373.namprd12.prod.outlook.com
+ ([fe80::12f7:eff:380b:589f]) by DM4PR12MB6373.namprd12.prod.outlook.com
+ ([fe80::12f7:eff:380b:589f%7]) with mapi id 15.20.8678.028; Tue, 29 Apr 2025
+ 18:02:51 +0000
+Date: Tue, 29 Apr 2025 14:02:42 -0400
+From: Yazen Ghannam <yazen.ghannam@amd.com>
+To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-cxl@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-pci@vger.kernel.org, linux-edac@vger.kernel.org
+Subject: Re: [PATCH 3/4 v2] ACPI: extlog: Trace CPER PCI Express Error Section
+Message-ID: <20250429180242.GA76257@yaz-khff2.amd.com>
+References: <20250429172109.3199192-1-fabio.m.de.francesco@linux.intel.com>
+ <20250429172109.3199192-4-fabio.m.de.francesco@linux.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250429172109.3199192-4-fabio.m.de.francesco@linux.intel.com>
+X-ClientProxiedBy: BN0PR04CA0175.namprd04.prod.outlook.com
+ (2603:10b6:408:eb::30) To DM4PR12MB6373.namprd12.prod.outlook.com
+ (2603:10b6:8:a4::7)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424111131.00005ff2@huawei.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB6373:EE_|CH2PR12MB4215:EE_
+X-MS-Office365-Filtering-Correlation-Id: 849fda7e-3d4e-4f26-e9d2-08dd87480ef5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?FdpFgpS9ljHIJnDWbschJbFKfRhuz5x8knPpSh/2BAZE2bzOJsyJh2M4vG/m?=
+ =?us-ascii?Q?TZ2nx38jHz/wLjEnFb5K3svdbTvj8sLnVnLnSpu26zVFe6il6npmpxXAmXx9?=
+ =?us-ascii?Q?BomsI6DWiqMEGpWR5KZVuwjfzxcV0zvMYTCm6b4yTs5KD+uInwp63D+cV2pS?=
+ =?us-ascii?Q?KX/PS+A95dH291W6+PbGjD5f7UFIymRKq+EXTNcVVMkYrQgrO+Wl1e7rAXrn?=
+ =?us-ascii?Q?fZOtLNtp5cdrbb7o+gk5w7RxzDWpNj4f57rOOdVuwOoQzJC2blB5eesRhEBN?=
+ =?us-ascii?Q?P5y9774BtkUb6uwlT2Vwk7HL4tDW8UOixzs2a2gOmd/dh1EdnQOtl1mWgLy1?=
+ =?us-ascii?Q?83UZY2LMYq2shuZGo0sJXUKyNfttgvvWsMZiNKE8uDkNwbcU86L5ujyCvX/D?=
+ =?us-ascii?Q?gxid7rYTm0nJ8IzCp7x0bpDfGHJCnPuxVB8jXXCzyphX/8eETo3TQYPeOcWs?=
+ =?us-ascii?Q?r08WFu8tDs+imvKZjZKZMysX54ncNXf3GE/3qJcl+LW0+GvqFcUK62R7xBOI?=
+ =?us-ascii?Q?SBaoI3FvB7BAjKqYIfRVvP1+KhCKjKEAE+UXZYsjF87Ej4IY+8wmIeFoxD2f?=
+ =?us-ascii?Q?QUHwFdKPHJHxbcUDD7Z9kZyFSfJPlkxzwCYnAukmEU11gzJHkC/h/OohXOIS?=
+ =?us-ascii?Q?QTp9dzV4R5wXJfpLji42e49DQsqSN4F+0rk8AiLndF5JjkGqDmSuCXVUJaob?=
+ =?us-ascii?Q?QBVvqqtOaaVVdRqNVGDLQ3tFnB3yvYrJkW3nVGmLSaDBI+kCGEfnRXfL2GWi?=
+ =?us-ascii?Q?8gVA/FAp9p+euJ5CmquCKG5O8U6+L6+F3TvRdWqV+1Omwhj8xv/8H5+ri9b+?=
+ =?us-ascii?Q?XO9x0KzuRM6GTKCxWKa5UM8QXqF+bgSOoTBxCqLNDggT2UMUFtziLRPwiWfP?=
+ =?us-ascii?Q?JqBLhlogNr4ctSHiwZ6r/NZQI5448kDGooJqwpwANho/Zjgar5gM3ovdepGT?=
+ =?us-ascii?Q?IpcvLUZM7qhB4pMuYezd+o4K2e6wDk4etTD4Th/2jCfysoBmKxU3reYga8sj?=
+ =?us-ascii?Q?W/V9yTRzxQEJClakBmDpY3Rjxy2E2DIE91VSyxcH7q7wGtJzn5S1kQUuoF2R?=
+ =?us-ascii?Q?ZalwO1payieg6qvOcZymcJosuXkGVTLFpYzQVuWvg8neXnn0WV0BHgLJuoQs?=
+ =?us-ascii?Q?OTO2MXqdJWsjgVh93X0qgnIyZqM0idw1IPgMprYqSpXeUASKkxqBJvvmZqwj?=
+ =?us-ascii?Q?KZRwbt9Y5D3s/qvxR4gkicG/1emD/N8L15006nLYcsJI4Z/fiGNcCNszBpkl?=
+ =?us-ascii?Q?UZ1qhrBEB153ZDYgDtTKsrOTZswOlRom136yNhbrKU+9TlnBhn7cRjl1JqBo?=
+ =?us-ascii?Q?JI8fHW14sOBxxYLYT8s2P8pEDcOMVVKtCVA832XineByF09OY6yO90UC56pF?=
+ =?us-ascii?Q?Ohg9/kggYzpJGFT/OoYjY1QSno3pmmmkA1dgzxSHu1PyeKNly4xCmZ+5mUF9?=
+ =?us-ascii?Q?IGT6GeX83io=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6373.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?mDcFa4XVRLDSloU+xkj8j45930wiCQerIXLeVB5/qCSAmuiOnWSlPc90zNNH?=
+ =?us-ascii?Q?Iwd81yeH34lIbRp4HsMzwiuiFddMO1jMVcXXRD9TJx+/er5CoDCXP2gX0rst?=
+ =?us-ascii?Q?T3hzTSeJjYRDqie2WCYDUi3mmK9JYpior2RUGyRUEIFI2m7P8NVt8ADZdIjO?=
+ =?us-ascii?Q?/O8ZtE5FesUnh9EZvyGOhgiEUZSQhK6BiEWWVmWc0KCgpJgIgLR9FX73uYc9?=
+ =?us-ascii?Q?xNJpuuWlC0zt19gZLqnJFmxBKFX/7hBh4E3oW7NBe7KfPcBv1o362hb/yGvz?=
+ =?us-ascii?Q?0xdy/83Ibq2sEpcZitW3ev6LKah9sTF/Qe2mdXi4hTjMSrwF2w4nDNvLgZck?=
+ =?us-ascii?Q?6xY7/FrWk7djm2Zjzv6w6CKJneaXUjb9OQv5kOlZdjun6aiYFZfwvxweepHq?=
+ =?us-ascii?Q?PRDtMFc6PTwBIhwnTGjuANCgNZekZUjihYSwQkKUFuEWc7kA3xgeVmG3TTlD?=
+ =?us-ascii?Q?gDTw6nKbXUupu2Dm0jCmVm2KP5b4GI8gZzIhHsrDc3G1SA2mVbJAIP7XxLj5?=
+ =?us-ascii?Q?dKisLW+d6IxgcJcmd77YJDkA79eja7KZvDPsL2q26JXiI/za11QPdnc3Bn+Z?=
+ =?us-ascii?Q?qmNCpAk78zUEAHwquy2q65Zj8JOaYnNfw3O2AIRcdIQqoG+lpQIssyGuxWoz?=
+ =?us-ascii?Q?kZBw56wnzS8epzzIl7NQgYpNdL6tsLWeGrvnlP3iMNGO4Qospi6vwcZdqOi9?=
+ =?us-ascii?Q?FJjyHpqL8foUb/NBt+oSHkU3oQOrc8poneTcXiWTXVZpwd5W/0OoMjkppKab?=
+ =?us-ascii?Q?qid24qNYUNnO/p7sSw4yYdNYQhva1kRYMay0znH9+ogoNapIrtzpsesKLrxk?=
+ =?us-ascii?Q?IyDTh06vD93KK1O7YduEgDSTndq0K1csWBfCBmjPdceiiOl9lzaZiZFe3Ypt?=
+ =?us-ascii?Q?CZYcRQGcI58yDnsSbhsmgrQdfXJygkOzefFyi3gR6v2cR4jglZD+xEXMXctf?=
+ =?us-ascii?Q?gwAduIEQegIEleflPmduqyUmOhUuSgYiiomeIPC5DJO5j69NnJNlM2FNgv1l?=
+ =?us-ascii?Q?AtBKo2lXG+ukNREJ5GO9i3cjVZlgoA9EvA9Le5msges17FMVl2Xxz7T6NYts?=
+ =?us-ascii?Q?GD3Zegk+owhdbhILol3J8c//3nRRNN6iC4BJV0IjLuZQSG/dXWLvTDNkTh9b?=
+ =?us-ascii?Q?nu8akzW77kzSnHim0BLCK9HT0a382IBj+CA5/5Hx58g0IgbJooO0XdCVXQ97?=
+ =?us-ascii?Q?jwfPkMuNngYtumFGOd20cFc8ZRdfKq44boWk2y8u24vZ8NUgqB4I8N8PDUtM?=
+ =?us-ascii?Q?6ngbVKMIsMobrTQqtCgtVU9XGn+X7ZB8Ja4E0v1X/Xa+7Ey1m4WVz7+NoS3L?=
+ =?us-ascii?Q?Eim+Wf4mgyC/FSMDQpxm4qCLTghujuv2ppczpHSw1YRB6ws50jmUepU6pdu9?=
+ =?us-ascii?Q?q+vOMwGl+sUf0iIHUaqoP1gdcMtTOhiuSLCEjacRvL5UioPiy5FNHCNZHeKm?=
+ =?us-ascii?Q?CWHbjsQtGRJSmQ59lMN7nZP/VXP1kcBoheHmzE7pA4FyB9GVhnv4SkV8I39+?=
+ =?us-ascii?Q?XjSs3KydZKBmDS6dWTaetsaj8/uaFVovyNV/+o1ZP+yk7Q8ne1tzHV3bNdFF?=
+ =?us-ascii?Q?jHXbZxzbNJ/3gEz3NeEkvyp9XTq9T4atB6twWUF7?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 849fda7e-3d4e-4f26-e9d2-08dd87480ef5
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6373.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2025 18:02:51.8538
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: R7gRDckWOOwKAtB148y2IFojc8xaTlg1M7F7VqHpo8MV8/80ZblOGOdy+OPzVUdH6y7MpYJ0/U5l0uEgAimOnA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4215
 
-On Thu, Apr 24, 2025 at 11:11:31AM +0100, Jonathan Cameron wrote:
-> On Mon, 17 Mar 2025 16:31:28 +0000
-> anisa.su887@gmail.com wrote:
+On Tue, Apr 29, 2025 at 07:21:08PM +0200, Fabio M. De Francesco wrote:
+> I/O Machine Check Arcitecture events may signal failing PCIe components
+> or links. The AER event contains details on what was happening on the wire
+> when the error was signaled.
 > 
-> > From: Anisa Su <anisa.su@samsung.com>
-> > 
-> > Add supported_blk_size field to CXLDCRegion struct in preparation for
-> > next patch. It is needed by command 0x5600 Get DC Region Config.
-...
-> > @@ -8,6 +8,7 @@
-> >   *
-> >   * SPDX-License-Identifier: GPL-v2-only
-> >   */
-> > +#include <math.h>
-> >  
-> >  #include "qemu/osdep.h"
-> >  #include "qemu/units.h"
-> > @@ -766,6 +767,7 @@ static bool cxl_create_dc_regions(CXLType3Dev *ct3d, Error **errp)
-> >      uint64_t region_len;
-> >      uint64_t decode_len;
-> >      uint64_t blk_size = 2 * MiB;
-> > +    uint64_t supported_blk_size_bitmask = BIT((int) log2(blk_size));
+> Trace the CPER PCIe Error section (UEFI v2.10, Appendix N.2.7) reported
+> by the I/O MCA.
 > 
-> Isn't this going in circles?  I guess it sort of acts as documentation that it
-> is a bitmap but then the name is already doing that. 
-> Maybe set it to blk_size and add a comment that for now only a fixed block size
-> is supported?
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
+> ---
+>  drivers/acpi/acpi_extlog.c | 30 ++++++++++++++++++++++++++++++
+>  drivers/pci/pcie/aer.c     |  2 +-
+>  include/linux/aer.h        | 13 +++++++++++--
+>  3 files changed, 42 insertions(+), 3 deletions(-)
 > 
-> I'm a little confused on what this is for given you don't check it in patch 6
-> which is changing the block size?
-Good catch! It doesn't seem to specify this check in Section 7.6.7.6.3
-Set DC Region Configuration (Opcode 5602h) in the 3.2 spec, but it would
-make sense to me to fail with the same rc as when the region has not
-been cleared, which is CXL_MBOX_UNSUPPORTED.
+> diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
+> index caca6ccd6e99..7d7a813169f1 100644
+> --- a/drivers/acpi/acpi_extlog.c
+> +++ b/drivers/acpi/acpi_extlog.c
+> @@ -131,6 +131,32 @@ static int print_extlog_rcd(const char *pfx,
+>  	return 1;
+>  }
+>  
+> +static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
+> +			      int severity)
+> +{
+> +	struct aer_capability_regs *aer;
+> +	struct pci_dev *pdev;
+> +	unsigned int devfn;
+> +	unsigned int bus;
+> +	int aer_severity;
+> +	int domain;
+> +
+> +	if (pcie_err->validation_bits & CPER_PCIE_VALID_DEVICE_ID &&
+> +	    pcie_err->validation_bits & CPER_PCIE_VALID_AER_INFO) {
 
-Will have the fix in v2.
+You can save an indentation level by inverting this check and returning
+early.
 
-> >      CXLDCRegion *region;
-> >      MemoryRegion *mr;
-> >      uint64_t dc_size;
-> > @@ -811,6 +813,7 @@ static bool cxl_create_dc_regions(CXLType3Dev *ct3d, Error **errp)
-> >              .block_size = blk_size,
-> >              /* dsmad_handle set when creating CDAT table entries */
-> >              .flags = 0,
-> > +            .supported_blk_size_bitmask = supported_blk_size_bitmask,
-> >          };
-> >          ct3d->dc.total_capacity += region->len;
-> >          region->blk_bitmap = bitmap_new(region->len / region->block_size);
-> > diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> > index ca515cab13..bebed04085 100644
-> > --- a/include/hw/cxl/cxl_device.h
-> > +++ b/include/hw/cxl/cxl_device.h
-> > @@ -608,6 +608,7 @@ typedef struct CXLDCRegion {
-> >      uint32_t dsmadhandle;
-> >      uint8_t flags;
-> >      unsigned long *blk_bitmap;
-> > +    uint64_t supported_blk_size_bitmask;
-> >  } CXLDCRegion;
-> >  
-> >  typedef struct CXLSetFeatureInfo {
-> 
+> +		aer_severity = cper_severity_to_aer(severity);
+
+I think it would help with clarity if all these lines were aligned on
+the "=".
+
+> +		aer = (struct aer_capability_regs *)pcie_err->aer_info;
+> +		domain = pcie_err->device_id.segment;
+> +		bus = pcie_err->device_id.bus;
+
+Many of these variables are passed unchanged to a single function below.
+
+Why not pass them directly to the function?
+
+Even if you split the function parameters across multiple lines, you
+will still have fewer lines. Plus you will not need to allocate the
+variables.
+
+> +		devfn = PCI_DEVFN(pcie_err->device_id.device,
+> +				  pcie_err->device_id.function);
+> +		pdev = pci_get_domain_bus_and_slot(domain, bus, devfn);
+> +		if (!pdev)
+> +			return;
+
+Newline here, please.
+
+> +		pci_print_aer(KERN_DEBUG, pdev, aer_severity, aer);
+
+Why use a debug log level?
+
+> +		pci_dev_put(pdev);
+> +	}
+> +}
+> +
+>  static int extlog_print(struct notifier_block *nb, unsigned long val,
+>  			void *data)
+>  {
+> @@ -182,6 +208,10 @@ static int extlog_print(struct notifier_block *nb, unsigned long val,
+>  			if (gdata->error_data_length >= sizeof(*mem))
+>  				trace_extlog_mem_event(mem, err_seq, fru_id, fru_text,
+>  						       (u8)gdata->error_severity);
+> +		} else if (guid_equal(sec_type, &CPER_SEC_PCIE)) {
+> +			struct cper_sec_pcie *pcie_err = acpi_hest_get_payload(gdata);
+> +
+> +			extlog_print_pcie(pcie_err, gdata->error_severity);
+>  		} else {
+>  			void *err = acpi_hest_get_payload(gdata);
+>  
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index d0ebf7c15afa..627fcf434698 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -801,7 +801,7 @@ void pci_print_aer(char *level, struct pci_dev *dev, int aer_severity,
+>  	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
+>  			aer_severity, tlp_header_valid, &aer->header_log);
+>  }
+> -EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
+> +EXPORT_SYMBOL_GPL(pci_print_aer);
+>  
+>  /**
+>   * add_error_device - list device to be handled
+> diff --git a/include/linux/aer.h b/include/linux/aer.h
+> index 45d0fb2e2e75..737db92e6570 100644
+> --- a/include/linux/aer.h
+> +++ b/include/linux/aer.h
+> @@ -56,17 +56,26 @@ struct aer_capability_regs {
+>  #if defined(CONFIG_PCIEAER)
+>  int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
+>  int pcie_aer_is_native(struct pci_dev *dev);
+> +void pci_print_aer(char *level, struct pci_dev *dev, int aer_severity,
+> +		   struct aer_capability_regs *aer);
+>  #else
+>  static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
+>  {
+>  	return -EINVAL;
+>  }
+>  static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
+> +static inline void pci_print_aer(char *level, struct pci_dev *dev,
+> +				 int aer_severity,
+> +				 struct aer_capability_regs *aer)
+> +{ }
+
+I think the "{ }" can just go at the end of the parameters.
+
+>  #endif
+>  
+> -void pci_print_aer(char *level, struct pci_dev *dev, int aer_severity,
+> -		   struct aer_capability_regs *aer);
+> +#if defined(CONFIG_ACPI_APEI_PCIEAER)
+>  int cper_severity_to_aer(int cper_severity);
+> +#else
+> +static inline int cper_severity_to_aer(int cper_severity) { return 0; }
+
+This may have an unintentional side effect.
+
+'0' means AER_NONFATAL.
+
+So the function will return that the error is an uncorrectable AER error
+that is potentially recoverable. At a minimum, this will incorrectly
+classify the error for data collection, and it could cause incorrect
+handling.
+
+I guess the risk is minimal, since CONFIG_ACPI_APEI_PCIEAER will likely
+be enabled on systems that would use this.
+
+Thanks,
+Yazen
