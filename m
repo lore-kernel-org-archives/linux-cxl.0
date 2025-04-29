@@ -1,415 +1,251 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A0E213E67
-	for <linux-cxl@vger.kernel.org>; Tue, 29 Apr 2025 18:41:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745952085; cv=none; b=ObEFLlq9iYGYTgmQjmQSanjfSb8eSZeja/KMVc/FlBvuspW0c6rNEzNJ7zAnHRkSzG6SzgV3fG4eF3qlGB8NQwKowMWUEEN+NDWbWUJGvmVk5DRlhyrdSJ/TQtVPp8Xn6kv+j85b/bulNMIuMrbNqyii+cpFJa2Y3544zErlYEo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745952085; c=relaxed/simple;
-	bh=qvU4d4uKOrwGJ450PBexvYJ9wKf6bNzZlwB+XMCzKzo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gZCt/KwQHmA+a9/V2kgbsTATlW8Y8S2BvEumc0S6SnnGqHhpg244ka/6ZCsPgZd/y3bRM5L2YUekSe6fuAlVxsth0/QT3Ayz8Dam79qA1INF5JhaWlYlYgVo6inHlyP4C7/Z0ytJTf6u8d7TsZDlfXXxtCsqrBplecosjbqoLuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W+VRR7Wc; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A30E21B18A
+	for <linux-cxl@vger.kernel.org>; Tue, 29 Apr 2025 19:53:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745956386; cv=fail; b=TL0DVaU2t5EuwdoJvxaIZGolS5BAIaS+n+XxahFtcJWVOlZLN5k0YpDvwOIv20CSglLfRUt/XDEohuQSbb4s39Bsdl+YyTQNkey0hKQGY5gAfJq7kVWCAVNhZ8o61G2Eix8T6D3nZh6y07ytsi+zeljwRTD69YGrOPbYSedj7Fk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745956386; c=relaxed/simple;
+	bh=YdG9IDqoswR6S5ehEPuBtKLvkvA+hLSLdYfrs8C5UX0=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=gNgDjHHyc5nGO9vfkgZ+8l90q5kXlxPYMv/50Kh7oQZ9s9a4BWqIucKKsk3Ma1lD2uzc2tLq55jsuDgt0+rXO4KxRYncf3YWQRKXjjQVxqVzpbW4uFbgR6jUFYRtgZMMDybMZxO1Y65Ex+CD5fG1osa1a6Mvx1OUWQvkIeplu/4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hqsu5hFm; arc=fail smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W+VRR7Wc"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hqsu5hFm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745952083; x=1777488083;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=qvU4d4uKOrwGJ450PBexvYJ9wKf6bNzZlwB+XMCzKzo=;
-  b=W+VRR7WcnbgSBe1oIAU56ClaSHpe40WraOAXOaXsFSkdEYM+JVVVmUxa
-   WNkBJ2KCvfafSR9SaZ1f37+gOshHAGhnbQBN2j2Nk3Llcffczj+C0s3vR
-   2JUtc692FzsuD/uFxBa8kRhaN8mBfGZnuwjJsr916vjSKjEswRvALNJ8I
-   43ikCLoyQxFdDsIctNw63mMZ+v2FIggmfDffle/Gpj/AQwoZAis/2Wx4A
-   ZfAmtUullKyDDM2pZefAEYTy6QaxfL28BuDtsaF1t8xVvD2xYyLqyZSQ/
-   lQAcvvt1+0EB7HXITzfRwFRbxnTNPAkZDghwhEe8+AjAaxnyEoyJgRk/l
-   w==;
-X-CSE-ConnectionGUID: r8T1bK/5QwGVng31jHL9Ag==
-X-CSE-MsgGUID: eewbtLmcT5qoj5sjWqRzJw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="47745315"
-X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
-   d="scan'208";a="47745315"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 11:41:22 -0700
-X-CSE-ConnectionGUID: 15QP8DKvQJeFyoc+nXDWKw==
-X-CSE-MsgGUID: QzsqyyUBRf6Heqs6m2WKAw==
+  t=1745956386; x=1777492386;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=YdG9IDqoswR6S5ehEPuBtKLvkvA+hLSLdYfrs8C5UX0=;
+  b=hqsu5hFmx2KCEwc4y3yfaXexUICEblmovhJL7hvoTo0h/9Tx5PcDQKDC
+   P1W0c4EqG1jpq26o4IwOwD1XzRB5WSYByuSEtF9rAJjRKXr3GvKNbUHmx
+   266AwoW9Sv4KFaG8es7acBi7cSKefry9ce5Azu3SVnHqa4MtkM6sKvBW8
+   7z6cSND1jNVTjyKFlVHa/CNiEtCebE24fC+xD49eg4+umGD48bAWY7lF9
+   IjY5CAcRCOm/ATjStYlVQkaMfY5OVNK31VPA6V/6Xeq8y1/ThGP3SqnBk
+   GB0aJyDY1PhW2A0mPeho6dEnMqrixxJKHdAz356B/6bSyf9wcM3oBvs0f
+   A==;
+X-CSE-ConnectionGUID: mKXFClZfSd+t6r8mtkR+wg==
+X-CSE-MsgGUID: POeTK2F8SFaJ3YVtfbfF1g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="58972603"
+X-IronPort-AV: E=Sophos;i="6.15,250,1739865600"; 
+   d="scan'208";a="58972603"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 12:53:05 -0700
+X-CSE-ConnectionGUID: LGLsGEiKS0m3zqKjQyFFuQ==
+X-CSE-MsgGUID: JX0moFRYT6aM/W49w9QdrA==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,249,1739865600"; 
-   d="scan'208";a="171139201"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO [10.125.109.191]) ([10.125.109.191])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 11:41:21 -0700
-Message-ID: <640c0395-a5c6-44b2-9474-7a23ce3abca0@intel.com>
-Date: Tue, 29 Apr 2025 11:41:20 -0700
+X-IronPort-AV: E=Sophos;i="6.15,250,1739865600"; 
+   d="scan'208";a="134871210"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 12:53:03 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Tue, 29 Apr 2025 12:53:00 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Tue, 29 Apr 2025 12:53:00 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.174)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Tue, 29 Apr 2025 12:52:59 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mAXK2pKP3XDcwds1aRM9EHoPpaonJz1uCusdIGuXRYRmtzN+tVtgPYLfJkwtKUkPgzRCjd0VZoen0DpO4KKkwf2yZBrYAoMr194WZhlc98fQgJJwgvC1MdqKaEc7WJRMfRzt9fY8I6zKB1gtwsny+oKOX3ABQQbmcu0H3rLZS4IXtj8JJROKY+PI4lqhntd50wdfxowVya5pXnG4XoqrLn4esPzOKwmsZ1ERZb10+gKFnCurQ6p2y/g8XXXQA1nLc+Aqk69ykt8FK22GYX4k3yUf8t9uNY6XRpM+45TAJDSoudQQ7Bdr6PywtYkKPNt5eQTTTUlNltbT0+d+jvfMxw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=GmGFyJR1Lrd7/JNUlPV8bighnQoKDXMQhBCqktKOCNQ=;
+ b=YzkUGxbZiDr5cbzESCVbS5r6Gw0ZUdOaeg9jzBG2iCJqIzb6v/2Muty2MXqw3FZnh667TzgtDKioNN6U+M9liekmZB6lOAGAzlZ4XSGEkD9jLV6mWbBZQWru1+PxvVJbWTgjYSxnBI9yL4Mu1WMFPUZ5mNrNZkgj+8tYJpyMZtITEstGT8nMLzblZ0Dcg7IwABmuzP7YGIFeVUXP4NsiG/ZqbSMkDIzGMXtHnqdVyRkL7DpZvE6jXTMZ4vnSq4FVM40x7ytq6aNvvj/ckjqb6Da4nkGYRCejX04BfL39GrpwMIRBK+5R/tbuMdvNQstP0qaZBH+WLhjsYFNYXuhwbg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by MN2PR11MB4661.namprd11.prod.outlook.com (2603:10b6:208:26b::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Tue, 29 Apr
+ 2025 19:52:29 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8699.012; Tue, 29 Apr 2025
+ 19:52:29 +0000
+Date: Tue, 29 Apr 2025 12:52:25 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>
+CC: <dan.j.williams@intel.com>, <dave@stgolabs.net>,
+	<jonathan.cameron@huawei.com>, <alison.schofield@intel.com>,
+	<ira.weiny@intel.com>, <rrichter@amd.com>, <ming.li@zohomail.com>
+Subject: Re: [PATCH 4/4] cxl/test: Add workaround for cxl_test for cxl_core
+ calling mocked functions
+Message-ID: <68112df972ef6_1d6a294d5@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20250404230049.3578835-1-dave.jiang@intel.com>
+ <20250404230049.3578835-5-dave.jiang@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250404230049.3578835-5-dave.jiang@intel.com>
+X-ClientProxiedBy: MW4PR04CA0195.namprd04.prod.outlook.com
+ (2603:10b6:303:86::20) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] cxl: Defer hardware dport->port_id assignment and
- registers probing
-To: Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com,
- alison.schofield@intel.com, ira.weiny@intel.com, rrichter@amd.com,
- ming.li@zohomail.com
-References: <20250404230049.3578835-1-dave.jiang@intel.com>
- <20250404230049.3578835-3-dave.jiang@intel.com>
- <6807f82b60c6_71fe294e@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <6807f82b60c6_71fe294e@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|MN2PR11MB4661:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8e9e7d72-a702-43d5-041a-08dd87575f7f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?xn3tM0XrvOdFiqrhjwMA8qMyxcS0jVCpyW3DqgF3+cIqLpL68epq5Yd0Uil7?=
+ =?us-ascii?Q?fw9joXGoV8VQybUj4bQ+CYNgaoJF6P0ZaTvLk3o/xcr7AVBgVMDvmXQwsga5?=
+ =?us-ascii?Q?fQ3rDv61Bjz8nd3qFrwqyT2uYKrq2/obLZp6a0v5aHZ/M5W4MXl0ch8Mu875?=
+ =?us-ascii?Q?jwACKLIYswoZpIR9GntFhQGFTxtgauYTrCu04E4PjpUvXjzBDSKjsCnDMDyu?=
+ =?us-ascii?Q?ix+vLrNV3+3twJUSs7oH2KBwGj5jDQASixWqX6g0yQB0JNUlXNlHjUNrr6Un?=
+ =?us-ascii?Q?GAGD0s59aLcVjwhyD1INoad7zusMEI9M750ulMNGH+jYZLux4G2k+QkQTwIa?=
+ =?us-ascii?Q?29PiUwJAQdVE5Ae5Sl7VbJ9OURQeMxZ7EZ6gGDe9idsHZtv873OmzULqeTCc?=
+ =?us-ascii?Q?46ZR8vIt+6R8OGlxljaQUEu613/bxY8J5ts4wN8OhpRwzRMVgZ96iKI9D5a1?=
+ =?us-ascii?Q?bDsBY6kpxrRBTVlejYbs14nCYauasNSBnZyBVncLVNHXwk5JnlqZqWpWJGwm?=
+ =?us-ascii?Q?5oOt7wRW7WURjWp1UHyXl7oroODttnLrfb3V9IamerL7w0min+HfOwH5GG4L?=
+ =?us-ascii?Q?+dUpqNdw+BV3ZQwbNd1oEphzI1Ks23Ee4CncyEGw0E8rg+ezFOGSzrxcY2sK?=
+ =?us-ascii?Q?aH4w+7n0zsSltJ6cZAqT7uYHmW5KU5TsMyipJFmA6bjKAw7QFQ3p4fY5qgNM?=
+ =?us-ascii?Q?FOk+vppX6jqjas3Up0aD111oyUV2S9u2XDNkM9LR4t+PxvrUanRV67m0DRpo?=
+ =?us-ascii?Q?i/jGEzsg8LktBxqsP48lLUk1gb4J0kW9eMCHQfcHPNF/zNWW0mDI7hdo831Z?=
+ =?us-ascii?Q?MzWR8G3Acgz6b6pVynYVQDCtjDIPtEkzeyYalb2EVdRpeXtcX5WT7gU0Rm0r?=
+ =?us-ascii?Q?LY7jD+Fv7ZV6e0BvxrfXAN6qRKwbmFmgdCklWzGkhLMtRU0dh80q4+P/hDEo?=
+ =?us-ascii?Q?AgkOtMERoadns215vG/vrNq9dfsA98IzmwYgiDBh/A6/7b2skhiikHb7pGjp?=
+ =?us-ascii?Q?byVAwiLxL6Rgx9TkPq+VuwGyhfk71sMV1qriIz/cD0KjuxbArGUl5hqEnT9b?=
+ =?us-ascii?Q?AcXU9SnMku2Jhnd1BzLLGv6S9cXgkeu1zpi8c+JwKnN/lcVIajDvyjzQo7wi?=
+ =?us-ascii?Q?0MJGuAOe0qBFTp+i3QDupXPvcFyden26En1LsmpXEE4CrR80H3wftEnEBoDm?=
+ =?us-ascii?Q?oV9pmyMDuS4oDrqPgqflLEWRyefjaAX73Rh6HvAg5X6wF5xg2yfZ3nbY8CEB?=
+ =?us-ascii?Q?seFD0WrjRljlf3/6vGOfys12YbXw/URo3r0195S5ubybvT+pec++Lg8q5NeL?=
+ =?us-ascii?Q?C3bOEONHqF+j2eSs+E6mCwecKpdZ7GFgLQAQZM+E6/WJOHlpXzLX1PUxbS1f?=
+ =?us-ascii?Q?nFxxRlMLq4d8QvZ1Mp17R/J9yNo8xSoOV8pttkVYHKWVuynYxQ=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Hv2HRyLGOVUzWZjlG5fdJibmKtR5M3CpTpDsQq3o/VH70RnAVBAKrYE/O4gl?=
+ =?us-ascii?Q?ceamYWFqJfzknXh1RIpYSBR4rlvMig7kKYhOQTaYZaMxaUtCdurs6w8sPyK8?=
+ =?us-ascii?Q?sbUuBrdyNVSAH1lgmVa7xoGSGWBgTs8vC5cLMxK/g9JG9FCBarh/sHQK3dXk?=
+ =?us-ascii?Q?k5cRaiLi/4ROpWf9RyV3vKYyZWNGxJ+hx8l6pBMaAEY+ZrmZHw1pgF71KGTS?=
+ =?us-ascii?Q?XE3T58B0ZXynt2v5abKpZ677QRFuvKFkzsvM96BAw+VNNvbaCOC32P0XH/1k?=
+ =?us-ascii?Q?AczxHcAxz4i1ml6gBT9DjjlnyoN1yN3vWLxomcd1Uhk+Ht5aTNah/p3WxwdH?=
+ =?us-ascii?Q?lxzT0yNI5UjKU0O39r/vSVhml8/Ns8MWTHXTMl9FqBigU+LQtm8lvdgP09vB?=
+ =?us-ascii?Q?oVsd2gqNCzIgIwnXUPTGl/es2LkXUDWhqTNGK7N5xH+Ftgxvh8ksuRYAd7Wj?=
+ =?us-ascii?Q?sXYv6EvAgAKtL/QWtnzZ/osBHq7scg09S+bhNfpNCi298CawczC8Us47UXRl?=
+ =?us-ascii?Q?rHqAObLdCReWC5T+UnbGnFH3jXZ7GbF48Z3+0/1MUSGkeD/6rv+DwcpiIevz?=
+ =?us-ascii?Q?ZyUpK3bo11CFgH/ZrX8yIPFv7B2MOOwKmR+VEKpRMaPub4gf9dFktxBVR94I?=
+ =?us-ascii?Q?hCRSqEWq1x603TkooNHYlTeFAH96kAZq/4uO4CKtEzCgB9NH08Ax5AwlgZii?=
+ =?us-ascii?Q?mDtnnGJUkoxrqYczDn6TOUUkV1YzmOOvqSzNKhreGzM6LcyuuUiWDc3FMGpd?=
+ =?us-ascii?Q?kg6WSppCVASZhUIql90lt4htQczPfjtTKbIAwkHDD9qZu7CGlkDJV72GMjMm?=
+ =?us-ascii?Q?0EkZZLBfzo1S+N0q6mjt/xFALygq+9bfW48XQUZWdWK7w5C5mRTD1/tItTUT?=
+ =?us-ascii?Q?t1zKcBAQ4jS6wZ8oOkw0kKpuzea6KQnKRmDMIIsGNB0pFmb3Wi7CBX+c5gxF?=
+ =?us-ascii?Q?ZyzDGxjaI6pQEDIOsYvNS8631OmxI0YOSmSlxXaDekvdhmziJB2Cpz2olDQb?=
+ =?us-ascii?Q?mmfwu/jRKITiex3TwafMHPrW00J9BgCEiiX14dv9H+V8iWqRB3h4X2tO/aYs?=
+ =?us-ascii?Q?X4Pc+mZ3A+Y9dC2hvkvfF5NIeNA5s/DtKDIk5onP45WFualBTT6sfiiE6Awp?=
+ =?us-ascii?Q?IwPZHlIbmUfNQZA34mgDmfVjQEWI+QB4TImTmDN7PFezhWQ1H2I4QdJgLy51?=
+ =?us-ascii?Q?N8qkBi9x03GPeOaDAYIK3JWWjoiNYNYB0VS3FotzUe5FShneJud+eZ//bcWG?=
+ =?us-ascii?Q?AcGRnUdnPbSL1eZSGZ4yLxeBYC74KyYtGk2iTOu93nFAqR4f/bnYPLN4GHs1?=
+ =?us-ascii?Q?8s3Ap0TuBFNqJHIir5QcwYNHV1JUaZtoSkL91+I03XKoEJemKKeHdplbVqBM?=
+ =?us-ascii?Q?njImFyYSOJEfJvriJ9+IGjCp4j71vi1QseI0wgN5dylymlPsypy39Ee+cZ6T?=
+ =?us-ascii?Q?8H+Nm46xlwMYNx9hrZcWMTWwTWz8L6BnUUGwEVjrRRzHGSJcuROVBZvkXbFu?=
+ =?us-ascii?Q?NP1o93o5atqlmSQCX2wg0ZyA4oCaL8stSlGXYqWPdl+UFx7fe39AwRf7kqW2?=
+ =?us-ascii?Q?myE2OJ5IagddcUPZp3bnLYcINLBd7GHsGCnUz8gj+53ifd6a8NfNqo06wDds?=
+ =?us-ascii?Q?4w=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8e9e7d72-a702-43d5-041a-08dd87575f7f
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2025 19:52:29.3264
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bnu5EoZHZiLKRztLdfdc+n6Kt6Ja4aXeX3MTqSwpGNsjXM6E8RAJFH/DIEq3uIYeRq8UnuBbe8i0nhdxxMITZDbb6NFYPxVYrfZkiVA23qA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4661
+X-OriginatorOrg: intel.com
 
+Dave Jiang wrote:
+> When cxl_core calls a cxl_core exported function and that function is
+> mocked by cxl_test, the call chain causes a circular dependency issue. Dan
+> provided a workaround to avoid this issue. Apply the method to changes from
+> the late host bridge uport mapping update changes in order to enable
+> cxl-test.
+> 
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  drivers/cxl/core/hdm.c        | 51 +++++++++++++++++++++++++++++------
+>  drivers/cxl/cxl.h             | 16 +++++++++++
+>  tools/testing/cxl/Kbuild      |  3 ---
+>  tools/testing/cxl/test/mock.c | 34 +++++++++++++++--------
+>  4 files changed, 82 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index 70cae4ebf8a4..ed6bdbd6b452 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -39,14 +39,19 @@ static int add_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+>  	return 0;
+>  }
+>  
+> -/*
+> +/**
+> + * __devm_cxl_add_passthrough_decoder - Add passthrough decoder
+> + * @port: The cxl_port context
+> + *
+> + * Return 0 on success or errno on failure.
+> + *
+>   * Per the CXL specification (8.2.5.12 CXL HDM Decoder Capability Structure)
+>   * single ported host-bridges need not publish a decoder capability when a
+>   * passthrough decode can be assumed, i.e. all transactions that the uport sees
+>   * are claimed and passed to the single dport. Disable the range until the first
+>   * CXL region is enumerated / activated.
+>   */
+> -int devm_cxl_add_passthrough_decoder(struct cxl_port *port)
+> +int __devm_cxl_add_passthrough_decoder(struct cxl_port *port)
+>  {
+>  	struct cxl_switch_decoder *cxlsd;
+>  	struct cxl_dport *dport = NULL;
+> @@ -73,6 +78,16 @@ int devm_cxl_add_passthrough_decoder(struct cxl_port *port)
+>  
+>  	return add_hdm_decoder(port, &cxlsd->cxld, single_port_map);
+>  }
+> +EXPORT_SYMBOL_NS_GPL(__devm_cxl_add_passthrough_decoder, "CXL");
+> +
+> +cxl_add_pt_decoder_fn _devm_cxl_add_passthrough_decoder =
+> +	__devm_cxl_add_passthrough_decoder;
+> +EXPORT_SYMBOL_NS_GPL(_devm_cxl_add_passthrough_decoder, "CXL");
+> +
+> +int devm_cxl_add_passthrough_decoder(struct cxl_port *port)
+> +{
+> +	return _devm_cxl_add_passthrough_decoder(port);
+> +}
+>  EXPORT_SYMBOL_NS_GPL(devm_cxl_add_passthrough_decoder, "CXL");
 
+I was hoping that this could be more polite and hide most of the the
+mess in the common case. Something like this:
 
-On 4/22/25 1:12 PM, Dan Williams wrote:
-> Dave Jiang wrote:
->> Current implementation only enuemrates the dports dupring the port probe.
->> Without an endpoint connected, the dport may not be active during port
->> probe. This scheme may prevent a valid hardware dport id to be retrieved
->> and MMIO registers to be read when an endpoint is hot-plugged. Move the hw
->> dport id assignment and the register probing to behind memdev probe so the
->> endpoint is guaranteed to be connected.
->>
->> The detection of duplicate dport for add_dport() is removed. The port_id
->> is not read from the hw at this point any longer. The port->id will always
->> be unique since it's retrieved from an ida. The dup detection thus become
->> irrelevant.
->>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->>  drivers/cxl/core/core.h |  4 ++
->>  drivers/cxl/core/pci.c  | 74 ++++++++++++++++++++++++++++------
->>  drivers/cxl/core/port.c | 88 ++++++++++++++++++++++-------------------
->>  drivers/cxl/cxl.h       |  1 +
->>  drivers/cxl/port.c      |  2 -
->>  5 files changed, 114 insertions(+), 55 deletions(-)
->>
->> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
->> index 15699299dc11..e2822ead6a67 100644
->> --- a/drivers/cxl/core/core.h
->> +++ b/drivers/cxl/core/core.h
->> @@ -134,4 +134,8 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
->>  		    u16 *return_code);
->>  #endif
->>  
->> +int cxl_dport_probe(struct cxl_dport *dport, resource_size_t component_reg_phys,
->> +		    resource_size_t rcrb);
->> +void cxl_port_probe_dports(struct cxl_port *port);
->> +
->>  #endif /* __CXL_CORE_H__ */
->> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
->> index 96fecb799cbc..a47dd032abd7 100644
->> --- a/drivers/cxl/core/pci.c
->> +++ b/drivers/cxl/core/pci.c
->> @@ -24,6 +24,66 @@ static unsigned short media_ready_timeout = 60;
->>  module_param(media_ready_timeout, ushort, 0644);
->>  MODULE_PARM_DESC(media_ready_timeout, "seconds to wait for media ready");
->>  
->> +static int probe_dports(struct cxl_dport *dport)
->> +{
->> +	struct device *dport_dev = dport->dport_dev;
->> +	struct cxl_port *port = dport->port;
->> +	struct cxl_register_map map;
->> +	struct pci_dev *pdev;
->> +	u32 lnkcap, port_num;
->> +	int rc;
->> +
->> +	if (!dev_is_pci(dport_dev))
->> +		return 0;
->> +
->> +	/*
->> +	 * dport->port_id is valid means that dport has been probed and is
->> +	 * setup.
->> +	 */
->> +	if (dport->port_id != CXL_PORT_ID_INVALID)
->> +		return 0;
->> +
->> +	pdev = to_pci_dev(dport_dev);
->> +	if (pci_read_config_dword(pdev, pci_pcie_cap(pdev) + PCI_EXP_LNKCAP,
->> +				  &lnkcap))
->> +		return 0;
->> +
->> +	rc = cxl_find_regblock(pdev, CXL_REGLOC_RBI_COMPONENT, &map);
->> +	if (rc) {
->> +		dev_dbg(&port->dev, "failed to find component registers\n");
->> +		return 0;
->> +	}
->> +
->> +	port_num = FIELD_GET(PCI_EXP_LNKCAP_PN, lnkcap);
->> +	rc = cxl_dport_probe(dport, map.resource, CXL_RESOURCE_NONE);
->> +	if (rc)
->> +		return rc;
->> +
->> +	/*
->> +	 * port_id is only set if the register block is also probed
->> +	 * successfully.
->> +	 */
->> +	dport->port_id = port_num;
->> +	cxl_switch_parse_cdat(port);
-> 
-> Some commentary on why it is safe to re-run this over and over again for
-> each found port might help future readers. For example might this
-> disturb already published data for this port?
+#ifdef CXL_TEST_ENABLE
+#define DECLARE_TESTABLE(x)
+#define x __##x
+#else
+#define x x
+#endif
 
-Rerun this multiple times is harmless as it only updates the switch perf numbers for all the dports. The dport perf numbers from CDAT are static and does not change. I will create a follow on patch to only update the specific dport we are probing to make the code more efficient. 
+...i.e. append "__" to all testable functions in the core.
 
-> 
-> That comment likely belongs as cxl_switch_parse_cdat() kdoc to clarify
-> how it is used and re-entered for a given port multiple times.
-> 
->> +
->> +	return 0;
->> +}
->> +
->> +/**
->> + * cxl_port_probe_dports - probe downstream ports of the upstream port
->> + * @port: cxl_port whose ->uport_dev is the upstream of dports to be probed
->> + *
->> + */
->> +void cxl_port_probe_dports(struct cxl_port *port)
->> +{
->> +	struct cxl_dport *dport;
->> +	unsigned long index;
->> +
->> +	device_lock_assert(&port->dev);
-> 
-> This also needs to check if port->dev.driver is non-null otherwise it
-> could be mapping resources onto an idle port.
+Then move the function pointer declarations, functions that call through
+the function pointer, and extra symbol exports to a .c file that only
+gets build into the cxl_core by tools/testing/cxl/Kbuild. I.e. like
+tools/testing/cxl/cxl_core_exports.c.
 
-ok
-
-> 
->> +	xa_for_each(&port->dports, index, dport)
->> +		probe_dports(dport);
->> +}
->> +
->>  struct cxl_walk_context {
->>  	struct pci_bus *bus;
->>  	struct cxl_port *port;
->> @@ -37,10 +97,7 @@ static int match_add_dports(struct pci_dev *pdev, void *data)
->>  	struct cxl_walk_context *ctx = data;
->>  	struct cxl_port *port = ctx->port;
->>  	int type = pci_pcie_type(pdev);
->> -	struct cxl_register_map map;
->>  	struct cxl_dport *dport;
->> -	u32 lnkcap, port_num;
->> -	int rc;
->>  
->>  	if (pdev->bus != ctx->bus)
->>  		return 0;
->> @@ -48,16 +105,9 @@ static int match_add_dports(struct pci_dev *pdev, void *data)
->>  		return 0;
->>  	if (type != ctx->type)
->>  		return 0;
->> -	if (pci_read_config_dword(pdev, pci_pcie_cap(pdev) + PCI_EXP_LNKCAP,
->> -				  &lnkcap))
->> -		return 0;
->>  
->> -	rc = cxl_find_regblock(pdev, CXL_REGLOC_RBI_COMPONENT, &map);
->> -	if (rc)
->> -		dev_dbg(&port->dev, "failed to find component registers\n");
->> -
->> -	port_num = FIELD_GET(PCI_EXP_LNKCAP_PN, lnkcap);
->> -	dport = devm_cxl_add_dport(port, &pdev->dev, port_num, map.resource);
->> +	dport = devm_cxl_add_dport(port, &pdev->dev, CXL_PORT_ID_INVALID,
->> +				   CXL_RESOURCE_NONE);
-> 
-> Hm, why pass in an invalid id for the common case vs make the static
-> case just manually "probe" after add_dport?
-
-ok
-
-> 
->>  	if (IS_ERR(dport)) {
->>  		ctx->error = PTR_ERR(dport);
->>  		return PTR_ERR(dport);
->> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
->> index e90e55bc11ac..1c772c516dbe 100644
->> --- a/drivers/cxl/core/port.c
->> +++ b/drivers/cxl/core/port.c
->> @@ -1059,18 +1059,9 @@ static struct cxl_dport *find_dport(struct cxl_port *port, int port_id)
->>  
->>  static int add_dport(struct cxl_port *port, struct cxl_dport *dport)
->>  {
->> -	struct cxl_dport *dup;
->>  	int rc;
->>  
->>  	device_lock_assert(&port->dev);
->> -	dup = find_dport(port, dport->port_id);
->> -	if (dup) {
->> -		dev_err(&port->dev,
->> -			"unable to add dport%d-%s non-unique port id (%s)\n",
->> -			dport->port_id, dev_name(dport->dport_dev),
->> -			dev_name(dup->dport_dev));
->> -		return -EBUSY;
->> -	}
->>  
->>  	rc = xa_insert(&port->dports, (unsigned long)dport->dport_dev, dport,
->>  		       GFP_KERNEL);
->> @@ -1120,6 +1111,45 @@ static void cxl_dport_unlink(void *data)
->>  	sysfs_remove_link(&port->dev.kobj, link_name);
->>  }
->>  
->> +int cxl_dport_probe(struct cxl_dport *dport, resource_size_t component_reg_phys,
->> +		    resource_size_t rcrb)
->> +{
->> +	struct device *dport_dev = dport->dport_dev;
->> +	struct cxl_port *port = dport->port;
->> +	int rc;
->> +
->> +	if (rcrb == CXL_RESOURCE_NONE) {
->> +		rc = cxl_dport_setup_regs(&port->dev, dport,
->> +					  component_reg_phys);
->> +		if (rc)
->> +			return rc;
->> +	} else {
->> +		dport->rcrb.base = rcrb;
->> +		component_reg_phys = __rcrb_to_component(dport_dev, &dport->rcrb,
->> +							 CXL_RCRB_DOWNSTREAM);
->> +		if (component_reg_phys == CXL_RESOURCE_NONE) {
->> +			dev_warn(dport_dev, "Invalid Component Registers in RCRB");
->> +			return -ENXIO;
->> +		}
->> +
->> +		/*
->> +		 * RCH @dport is not ready to map until associated with its
->> +		 * memdev
->> +		 */
->> +		rc = cxl_dport_setup_regs(NULL, dport, component_reg_phys);
->> +		if (rc)
->> +			return rc;
->> +
->> +		dport->rch = true;
->> +	}
-> 
-> It seems a little bit awkward to maintain the RCRB code in this path.
-> The whole dport mapping problem is a CXL 2.0 complexity. The CXL 1.1 path
-> should probably be separated from all this deferral logic to keep it
-> cleaner.
-> 
-> Keep in mind that devm_cxl_enumerate_ports() early exits in the RCD
-> case, so I do not expect this code ever runs if cxl_port_probe_dports()
-> late in devm_cxl_enumerate_ports() is the only caller.
-
-ok
-
-> 
->> +
->> +	if (component_reg_phys != CXL_RESOURCE_NONE)
->> +		dev_dbg(dport_dev, "Component Registers found for dport: %pa\n",
->> +			&component_reg_phys);
->> +
->> +	return 0;
->> +}
->> +
->>  static struct cxl_dport *
->>  __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
->>  		     int port_id, resource_size_t component_reg_phys,
->> @@ -1162,40 +1192,12 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
->>  	dport->port = port;
->>  	dport->id = id;
->>  
->> -	if (rcrb == CXL_RESOURCE_NONE) {
->> -		rc = cxl_dport_setup_regs(&port->dev, dport,
->> -					  component_reg_phys);
->> -		if (rc) {
->> -			ida_free(&port->dport_ida, id);
->> -			return ERR_PTR(rc);
->> -		}
->> -	} else {
->> -		dport->rcrb.base = rcrb;
->> -		component_reg_phys = __rcrb_to_component(dport_dev, &dport->rcrb,
->> -							 CXL_RCRB_DOWNSTREAM);
->> -		if (component_reg_phys == CXL_RESOURCE_NONE) {
->> -			dev_warn(dport_dev, "Invalid Component Registers in RCRB");
->> -			ida_free(&port->dport_ida, id);
->> -			return ERR_PTR(-ENXIO);
->> -		}
->> -
->> -		/*
->> -		 * RCH @dport is not ready to map until associated with its
->> -		 * memdev
->> -		 */
->> -		rc = cxl_dport_setup_regs(NULL, dport, component_reg_phys);
->> -		if (rc) {
->> -			ida_free(&port->dport_ida, id);
->> -			return ERR_PTR(rc);
->> -		}
->> -
->> -		dport->rch = true;
->> +	rc = cxl_dport_probe(dport, component_reg_phys, rcrb);
->> +	if (rc) {
->> +		ida_free(&port->dport_ida, id);
->> +		return ERR_PTR(rc);
->>  	}
->>  
->> -	if (component_reg_phys != CXL_RESOURCE_NONE)
->> -		dev_dbg(dport_dev, "Component Registers found for dport: %pa\n",
->> -			&component_reg_phys);
->> -
->>  	cond_cxl_root_lock(port);
->>  	rc = add_dport(port, dport);
->>  	cond_cxl_root_unlock(port);
->> @@ -1684,6 +1686,10 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
->>  				"found already registered port %s:%s\n",
->>  				dev_name(&port->dev),
->>  				dev_name(port->uport_dev));
->> +
->> +			scoped_guard(device, &port->dev)
->> +				cxl_port_probe_dports(port);
-> 
-> A comment here would be nice to indicate why this port did not probe
-> dports before.
-> 
-> The comment would likely also answer why this is only called in the
-> "already registered" case, and not the initial port creation case in
-> add_port_attach_ep().
-
-I think that if we do it at port creation, we also would need to do it here anyways for a port that's already created for the other dports. I think we can just do all of the dports here in a single location. Did I miss something?
-
-DJ
-
-> 
->> +
->>  			rc = cxl_add_ep(dport, &cxlmd->dev);
->>  
->>  			/*
->> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
->> index c942fa40c869..0e61b76f5c13 100644
->> --- a/drivers/cxl/cxl.h
->> +++ b/drivers/cxl/cxl.h
->> @@ -345,6 +345,7 @@ enum cxl_decoder_type {
->>  #define CXL_DECODER_MAX_INTERLEAVE 16
->>  
->>  #define CXL_QOS_CLASS_INVALID -1
->> +#define CXL_PORT_ID_INVALID -1
->>  
->>  /**
->>   * struct cxl_decoder - Common CXL HDM Decoder Attributes
->> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
->> index a35fc5552845..30c0335089b9 100644
->> --- a/drivers/cxl/port.c
->> +++ b/drivers/cxl/port.c
->> @@ -69,8 +69,6 @@ static int cxl_switch_port_probe(struct cxl_port *port)
->>  	if (rc < 0)
->>  		return rc;
->>  
->> -	cxl_switch_parse_cdat(port);
->> -
->>  	cxlhdm = devm_cxl_setup_hdm(port, NULL);
->>  	if (!IS_ERR(cxlhdm))
->>  		return devm_cxl_enumerate_decoders(cxlhdm, NULL);
->> -- 
->> 2.49.0
->>
-> 
-> 
-
+That way the core only sees a few extra DECLARE_TESTABLE() lines, and
+all the rest of the "magic" (burden) is hidden away in
+tools/testing/cxl/.
