@@ -1,190 +1,109 @@
-Received: from esa12.hc1455-7.c3s2.iphmx.com (esa12.hc1455-7.c3s2.iphmx.com [139.138.37.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0204A2DC775;
-	Wed, 30 Apr 2025 01:30:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.37.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 084B22110
+	for <linux-cxl@vger.kernel.org>; Wed, 30 Apr 2025 02:17:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745976634; cv=none; b=NElzRwO+Ng/sM8sd/yXWxpYAyqOl4edU7R63MF8F00oU4WsHVIDCXsO7tndbcWRQKRigwEcOwzz+DYX8+RlG1xjmrkxDYi9Ql5Dh+qahtXuEvP7iK2hFInd1Qrnut6SaDmhgB+Bv1hHk3VnznqogMtG6/js4BW0boCxSCbhUW/Q=
+	t=1745979448; cv=none; b=gVZf7PxaQdLKfntY1OSUjeQRGh0oojRKQF17hUB8TNaBPd30TW+wMynahUtICt4JD+PHErA/iLKR/fhSfowhaOCHsaib0v2fPCSI97bvvMXmpXQIWyt3AaN6ZeICIpJzrailg8zvvBXLbfB7ookI1GUtu+6i7A7KYBk7KXiJ6kU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745976634; c=relaxed/simple;
-	bh=u5ZyN8SzOBT5hAHJ1lMX9Syyf7NZL+fhlUK/ToIs5QY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=BzrcB69TDV/1rVQV3VjOUvUFRs96AxPkYdU1XOJrB0ILT1YLlun9QiKRwR4KTNfNNM8rp+0PmCr8Z6/l0kFTzrB6DXFD77IeRFYDxyCfRu0sIjFAHZdUEjMWJ98E69+uz31xYTbKxFF9ddVyTTk8yxN08OFQxapB9IixZxlenEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=VGjVbim1; arc=none smtp.client-ip=139.138.37.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	s=arc-20240116; t=1745979448; c=relaxed/simple;
+	bh=NyjvJLCsBhlNw2Ibrf52ASwz7KJTi9jxZNZI9YNILhs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fI7VBZFyBsJ8132cjtl2QSkvtENOSc9PYeMoBF2oilT84eOOqFL7z2+Yph/MxMxlNsd3/DrnLsvBW9M3/nQmnx+WFESpqgNSgUnFgyvjbXY67n82aIoFbXUmIxh9kujboh+gCKwJ7Zk+cPXOUd97g5xhp2cg0pzWchtBqOEml8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=VfNFRkKn; arc=none smtp.client-ip=209.85.222.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="VGjVbim1"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1745976632; x=1777512632;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=u5ZyN8SzOBT5hAHJ1lMX9Syyf7NZL+fhlUK/ToIs5QY=;
-  b=VGjVbim1kfEkmM6qRL6f5u1MJMBMdsSprJsCASPnrNdgd1qXflZZOUk2
-   Jzn+cO1tUHD6hhK+JxvvpkIpc/4Na8gyiGvppDu4MFRrnTc7vh96GG2HS
-   CCaYm5AFu2k2ZiIS7J208ZPxhyKnylsw8ghaoHCMNfh4ySk1bUclMxre5
-   VoOxzwwMYMb/yLZPqm9RrScSBlIhviAzkSWxtcnUQdtjuW0yPOhXitDfy
-   UhA6afK0EFLknnQH6RVjaUyaKBWX82LTv/ogfMRqyQJ7zHmw/gUtdSI2N
-   EmBwRsMuyzZGaeupbEqJCRRJ1jS6Mfa5o4z9ZxVik4G/wiScHQQU+jxpm
-   g==;
-X-CSE-ConnectionGUID: gX7J6P1IQ06FkkXfXCiq6w==
-X-CSE-MsgGUID: AoZqcz9kTaC68y2XCd4xHw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="176955983"
-X-IronPort-AV: E=Sophos;i="6.15,250,1739804400"; 
-   d="scan'208";a="176955983"
-Received: from unknown (HELO yto-r2.gw.nic.fujitsu.com) ([218.44.52.218])
-  by esa12.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 10:29:20 +0900
-Received: from yto-m1.gw.nic.fujitsu.com (yto-nat-yto-m1.gw.nic.fujitsu.com [192.168.83.64])
-	by yto-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id 9BE3D96743;
-	Wed, 30 Apr 2025 10:29:18 +0900 (JST)
-Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by yto-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id 5A43ECFA5A;
-	Wed, 30 Apr 2025 10:29:18 +0900 (JST)
-Received: from iaas-rpma.. (unknown [10.167.135.44])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id 4EB271A0071;
-	Wed, 30 Apr 2025 09:29:17 +0800 (CST)
-From: Li Zhijian <lizhijian@fujitsu.com>
-To: linux-cxl@vger.kernel.org
-Cc: Jonathan Cameron <jonathan.cameron@huawei.com>,
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="VfNFRkKn"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7c5b8d13f73so873217085a.0
+        for <linux-cxl@vger.kernel.org>; Tue, 29 Apr 2025 19:17:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1745979445; x=1746584245; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rzc4zJvvvT+R0NRZat82797TVJNRgtoEukK0z7pxQnI=;
+        b=VfNFRkKnTsXPY92rUR0oQsDWlpq0BLXr1swyI6/PNKAOcFtM7c5fRs3u/T2b97oEp3
+         hpKgKtuU0/IHYUYq8LrJgEBxWtdBcDiN0TG6keowLwK4pXJa8JVNwfXoSqc+F1Lreae2
+         Lphm5gl87pn0r4LLUPaHFc1+e9P3H20iu5a22ncDqBn6i8PFMU8v4/ii3DiwSg7e6o7m
+         XXzsnf6DUCgo1zCUPIliMomSfto1kUXaEQdAOWfiGSBRFnZZ3M18sS/cs205x89xmOgE
+         ZSkMl5ol+c7nbQipfiJpqDDB9U94RqhsgngEi/Vw3vvoX4r6uCR2SYBFPfJeXpgl6Vuf
+         U15A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745979445; x=1746584245;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rzc4zJvvvT+R0NRZat82797TVJNRgtoEukK0z7pxQnI=;
+        b=q2li3aaJvhavZnDhDyVfFgQ8eoxANQw3qdbC5bLAqWWXy3xx03Rj6qmKWKf1u9vnvU
+         /u7orYGaYdvygpohz9AdeO4Ykm3eqtWvN6LwF7rQwqTxiyB9vyImQvkJKYB8x/BfOZSQ
+         9sT3hYOi5KTuw0mMhW7mf0aGATh0lRAySB3j0O5SBlDO7pCD0pO0vUwVPOo5U7lJp/m5
+         Ux3qoYzNwaTSEM+IP2EbQv6DbqeIFgKfb/cadsNbY/SetWB3KYT/2vnonN7XA7I9lv4H
+         sBSmov+0xMTc3TLKlw26sc50uXyv5zpsi8xhwTeHFaoEw0SldkCduoMN4sBVpqIFlOhC
+         vFng==
+X-Gm-Message-State: AOJu0YzhqsnfMtRMvQU7YcqJTScppUQjxPnNWdgRUYhvsGLTcXs7FhSQ
+	WMc5BaqlQoYElqgXq69cNJkMfH6ka7/iFEns7D6eH3LwD4+/LgnKr2P5/CAJBpk=
+X-Gm-Gg: ASbGnctYm7FecGtvTr3hNbqBgi6S56n6UYmN6Ut24mmf4yyvRKcgm6wbb3+dJEdV6Sz
+	4k+HtASmwlFgH/+sEJ4GoKh92CBeP9w5yU6KA5tpSkfxYoZIB+R96ZZy7AdcH6A1S/EjPRJPh3T
+	Nje2zYnUNtFzjV0cBrppLTsSgDiz4dTaSVtcayYBd09rXxNx614ldwe2Up+a0PD0ozjaEiWZegP
+	KKTuEjx6rRZ1AqU5tLr9zDvzGZXFWb606R15MOTKsfaMEivXqjt/7AEruaUUqEydTOu0nN8g2/9
+	8xJ8b0DlypvAen+NfSEHp55f6fHhxOJ6vS/9JqBpX9MJgGYe/i5N55se0+7+owGdYdycxhFBHk4
+	gI4OyndytYZyrFtR7kiaZuOY=
+X-Google-Smtp-Source: AGHT+IGeM9v+TJsH9D//e4xqgx1SgQZRFhPsRlriTHS9B28keLWtIOl820J8G6QPyqu2hnxlzoIMiQ==
+X-Received: by 2002:a05:620a:2722:b0:7c7:a555:8788 with SMTP id af79cd13be357-7cac7405559mr213547985a.2.1745979444919;
+        Tue, 29 Apr 2025 19:17:24 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c958d86bc3sm799917785a.67.2025.04.29.19.17.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 19:17:24 -0700 (PDT)
+Date: Tue, 29 Apr 2025 22:17:22 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Li Zhijian <lizhijian@fujitsu.com>
+Cc: linux-cxl@vger.kernel.org,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
 	Dave Jiang <dave.jiang@intel.com>,
 	Alison Schofield <alison.schofield@intel.com>,
 	Vishal Verma <vishal.l.verma@intel.com>,
 	Ira Weiny <ira.weiny@intel.com>,
 	Dan Williams <dan.j.williams@intel.com>,
-	linux-kernel@vger.kernel.org,
-	Li Zhijian <lizhijian@fujitsu.com>
-Subject: [RFC PATCH] cxl: Allow reprogramming misconfigured hdm decoders
-Date: Wed, 30 Apr 2025 09:29:15 +0800
-Message-Id: <20250430012915.295136-1-lizhijian@fujitsu.com>
-X-Mailer: git-send-email 2.31.1
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] cxl: Allow reprogramming misconfigured hdm decoders
+Message-ID: <aBGIMglj8r5MNAmN@gourry-fedora-PF4VCD3F>
+References: <20250430012915.295136-1-lizhijian@fujitsu.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250430012915.295136-1-lizhijian@fujitsu.com>
 
-During kernel booting, CXL drivers will attempt to construct the CXL region
-according to the pre-programed(firmware provisioning) HDM decoders.
+On Wed, Apr 30, 2025 at 09:29:15AM +0800, Li Zhijian wrote:
+> During kernel booting, CXL drivers will attempt to construct the CXL region
+> according to the pre-programed(firmware provisioning) HDM decoders.
+> 
+> This construction process will fail for some reasons, in this case, the
+> userspace cli like ndctl/cxl cannot destroy nor create regions upon the
+> existing decoders.
+> 
+> Introuce a new flag CXL_DECODER_F_NEED_RESET tell the driver to reset
+> the decoder during `cxl destroy-region regionN`, so that region can be
+> create again after that.
+> 
 
-This construction process will fail for some reasons, in this case, the
-userspace cli like ndctl/cxl cannot destroy nor create regions upon the
-existing decoders.
+My best understanding of why this is disallowed is that firmware/bios
+programmed decoders need to be locked because there is an assumption
+that the platform programmed it that way *for a reason* - and that
+changing the programming would break it (cause MCEs for other reasons,
+etc).
 
-Introuce a new flag CXL_DECODER_F_NEED_RESET tell the driver to reset
-the decoder during `cxl destroy-region regionN`, so that region can be
-create again after that.
+So the appropriate solution here is for the platform vendor to fix their
+firmware.
 
-Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
----
-Cover letter is here.
+But I am not a platform people - so I will defer to them on whether my
+understanding is correct.
 
-Hi all,
-
-Previously, we encountered a CXL device with differing IG between the device
-and its USP, which resulted in the driver’s failure to automatically
-complete the creation of the region, and user cannot create/destroy region
-after this failure.
-
-Although this IG issue has been ignored in the new kernel [1], I realized
-that if there was an error in firmware provisioning the HDM decoders, the
-user might not be able to destroy the unfinished region and recreate it.
-This is because certain components related to this region are in an
-inconsistent state, preventing the CXL tool from operating on it.
-
-This implies that the OS administrator cannot reconfigure the CXL device,
-which is largely contrary to user expectations. I am keen to hear your
-thoughts on this matter.
-
-A modified QEMU [2] is able to limitly program the HDM decoders to inject some
-wrong decoder configurations.
-
-[1] https://lore.kernel.org/lkml/20250402232552.999634-1-gourry@gourry.net/
-[2] https://github.com/zhijianli88/qemu/tree/program-decoder
-
----
----
- drivers/cxl/core/hdm.c       | 4 +++-
- drivers/cxl/core/region.c    | 6 ++++--
- drivers/cxl/cxl.h            | 3 ++-
- tools/testing/cxl/test/cxl.c | 1 +
- 4 files changed, 10 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index 70cae4ebf8a4..afbbda780d4d 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -559,7 +559,8 @@ int cxl_dpa_free(struct cxl_endpoint_decoder *cxled)
- 			dev_name(&cxled->cxld.region->dev));
- 		return -EBUSY;
- 	}
--	if (cxled->cxld.flags & CXL_DECODER_F_ENABLE) {
-+	if (cxled->cxld.flags & CXL_DECODER_F_ENABLE &&
-+	    !(cxled->cxld.flags & CXL_DECODER_F_NEED_RESET)) {
- 		dev_dbg(dev, "decoder enabled\n");
- 		return -EBUSY;
- 	}
-@@ -918,6 +919,7 @@ static void cxl_decoder_reset(struct cxl_decoder *cxld)
- 	up_read(&cxl_dpa_rwsem);
- 
- 	cxld->flags &= ~CXL_DECODER_F_ENABLE;
-+	cxld->flags &= ~CXL_DECODER_F_NEED_RESET;
- 
- 	/* Userspace is now responsible for reconfiguring this decoder */
- 	if (is_endpoint_decoder(&cxld->dev)) {
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index c3f4dc244df7..d025e892d07d 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -2096,7 +2096,8 @@ static int cxl_region_detach(struct cxl_endpoint_decoder *cxled)
- 	p = &cxlr->params;
- 	get_device(&cxlr->dev);
- 
--	if (p->state > CXL_CONFIG_ACTIVE) {
-+	if (p->state > CXL_CONFIG_ACTIVE ||
-+	    cxled->cxld.flags & CXL_DECODER_F_NEED_RESET) {
- 		cxl_region_decode_reset(cxlr, p->interleave_ways);
- 		p->state = CXL_CONFIG_ACTIVE;
- 	}
-@@ -3434,7 +3435,8 @@ int cxl_add_to_region(struct cxl_port *root, struct cxl_endpoint_decoder *cxled)
- 		if (device_attach(&cxlr->dev) < 0)
- 			dev_err(&cxlr->dev, "failed to enable, range: %pr\n",
- 				p->res);
--	}
-+	} else
-+		cxled->cxld.flags |= CXL_DECODER_F_NEED_RESET;
- 
- 	put_device(region_dev);
- out:
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index be8a7dc77719..60fae072bbcf 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -331,7 +331,8 @@ int cxl_dport_map_rcd_linkcap(struct pci_dev *pdev, struct cxl_dport *dport);
- #define CXL_DECODER_F_TYPE3 BIT(3)
- #define CXL_DECODER_F_LOCK  BIT(4)
- #define CXL_DECODER_F_ENABLE    BIT(5)
--#define CXL_DECODER_F_MASK  GENMASK(5, 0)
-+#define CXL_DECODER_F_NEED_RESET    BIT(6)
-+#define CXL_DECODER_F_MASK  GENMASK(6, 0)
- 
- enum cxl_decoder_type {
- 	CXL_DECODER_DEVMEM = 2,
-diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index 1c3336095923..5dac454ca0e2 100644
---- a/tools/testing/cxl/test/cxl.c
-+++ b/tools/testing/cxl/test/cxl.c
-@@ -709,6 +709,7 @@ static void mock_decoder_reset(struct cxl_decoder *cxld)
- 			"%s: out of order reset, expected decoder%d.%d\n",
- 			dev_name(&cxld->dev), port->id, port->commit_end);
- 	cxld->flags &= ~CXL_DECODER_F_ENABLE;
-+	cxld->flags &= ~CXL_DECODER_F_NEED_RESET;
- }
- 
- static void default_mock_decoder(struct cxl_decoder *cxld)
--- 
-2.27.0
+~Gregory
 
