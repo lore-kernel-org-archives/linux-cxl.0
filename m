@@ -1,135 +1,96 @@
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 945222DC782;
-	Thu,  1 May 2025 02:13:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746065631; cv=none; b=cK51N9/j4Yn3QaItucfvrAauHQz4GkN9xvM5BCmm0x3gj4XHBayYEYjdEsqVo21t1+TsRvOXV68oN0V8Vq0AW2xJewjTVj8niBiRLmbCyyg3Mlw43kXZK7H5ErLXQCRgfbDyFJ665rqNH/BQ5P6PrCdWYWjH0BaUKbYy8QRfDSY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746065631; c=relaxed/simple;
-	bh=IXL7L7GEzmRTgpRI7W6C+cM7nwoU1zodTrcRAWVG/RY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iFtNF2o+pZTPBXJqpZHlBCENkBl9WAwH1+61QtVVbMMN/L8CMghj4VMoMbQ1aFwMtHxCw5FungNtEEvnZ/uJrKZqLSteaXniDtbgFDL42glD1/oZ+2IdNDXQ3ZHFI97KfRlKQa9qHWmClNukn9+kbfN+VrAw/qY+/QWhxPODW5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XyIVoeUU; arc=none smtp.client-ip=209.85.210.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 650551EEA5A
+	for <linux-cxl@vger.kernel.org>; Thu,  1 May 2025 02:51:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746067909; cv=pass; b=Cr1Eombh91fEGpSjAO66JNXU5LRO5rZqLhArARN6aRs/5f14c9KWSPArTJFO268m/7iv8al9Qxy3IrS/YiNhA4W+SseCAxZ/nqcdQO0caIq/51mKsXs4YCnpvTbBdftgw4frvJeFNNCFQSSrJjzhUGNM25I5M+oHB3O26x+EN7w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746067909; c=relaxed/simple;
+	bh=z/VYmZsREnfSJLDIlokbAIMTsU9dghOxEtuTz8VNhkw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Xr2KCpj65jkuolBgCqBPcWjGWALkxBRdpqDdM7S/vpx0/GdqBF/UcjqX2/Ln7Khii6kOjRucLrhWbKPaqSLbdQDtD8bWrX41t9y/Q9r1AIVhvOn98LBZrNvgvdvbFSV2R2Gc3QGZaH25yro3TSi9EK2FgxT6jpE9S7dC50MP990=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=GdhfOvPy; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XyIVoeUU"
-Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-72ecc30903cso300997a34.0;
-        Wed, 30 Apr 2025 19:13:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746065628; x=1746670428; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IXdPE0dAK6WPnTA+7Y1kfcDmuDvdGOZCfAYjmJvCT6s=;
-        b=XyIVoeUUZCaRM8EhzzdIasPytauhPQEUby8+kPXUQaP6+7ikB7qohQoTiCYpFCZzz4
-         dsMpscwh6qrSAlzdKNLxhKyuq7THG8tTz41bXCw5JAgT1PJj7EpdeRiNRjTUTWvazKuc
-         h6t9FqjSo+Xtit5RBj9rPnf3rpkYn4OvMRtpmviod1E1UjJglPalNkWz5O1nt/ZAQEMr
-         6YFsid1fnYpXGH1uDXrUAEkTi77YYqCMyAqbnw+6m/JgOKA5b0I3VP2yj/IH3emQqw6s
-         ouZEcPJ0fJSCWTPgKXsF95X+RU3i5LzgbHuSw/0aI/y37CZSYxNsmAFmafq01Y7KUEYQ
-         +MSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746065628; x=1746670428;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IXdPE0dAK6WPnTA+7Y1kfcDmuDvdGOZCfAYjmJvCT6s=;
-        b=gAJI0/ynwecudn8s/osQNYjn3w2qsnSjrZ+U7nPTaFsvqt52Dma41MZwoNuG5A8OIx
-         xVZ3QXzo9GrmP73uXDXkH7qqGVIf1MCXQQb2+zrSA83zUdC1ODTY2dZ6+XhNpaOJpPJo
-         EZfVCridJRygyEO1+6upgFzwvxpxYGy7Ckk8Ua61PMw+9XjVeI2hy5J3s6Zq/HS/zQh4
-         M533hwSeFh0HL//4ZiL+b1FBhRZMJc4rJ31/SZ6R54ifpm+loODxrg7iWPiR40bpFSEv
-         0X5YL9FfHjYL/gfZ5v4hBAkTh3er2rt/mn5ZyEKevzAOZQvNskfSjhJbTCjQpjTHrLeF
-         pzoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUIOUaEsn8YrZLjCt2GF8lO5NOzdJT8pLgVt0Jz0TYIdQhdR6vrjfUdpuuQT0WnMG3xuuvTh30F2qgo@vger.kernel.org, AJvYcCUQbQvz7tnhtyA1YrEX8tcUV/pxn5AujwTR7VNo2A3dov8M0MXhj4erIrQIEuAi5J45Nsba6xyKCBA=@vger.kernel.org, AJvYcCUaxTFCPZFULmWDNC1Lzo3CrZuKIrB/6nxFnXkkbgslOnm7lqgnYKX9AUP7ckwH2vo5YSBBJK7DMA9thWeLng==@vger.kernel.org, AJvYcCWvi20q77XzS0ZI4GezQCTyRvUHCuXcjP4ciSOdoeX16PiBQH6XT3wpEMZa2SuHQeoIIALyTqFmT/Wep/Zi@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxof/Ph0MI5RBZzqaUWbpVRcO3PCHcfbT5MXBzbLT68/0fPkSn9
-	K/LFANn1Qk9J6SLgHSd5tDV3n7IQVRufQfLl7PnBHkkWaCElcIi+
-X-Gm-Gg: ASbGncvc0j45TxX+pbm/nOf9yAMYMRJFLRFgOBeGkhyTIZmG26BsJHS7jGZAAUTzILE
-	liVGkCXPhPj9Ak3fHwTjQk6kJODtR87cfL5t8kdoKqtp625lV5eriH839ZUuTjjGmQrN5Wg/Chy
-	9AluiqTsPaBj0YhqO4lALOZk0DwVJpuWMkCp6FblZf8YBXbIEtuY41x6UidInoif5/GxvnXGxaf
-	YS5qz6qJnOJC3xtKgCm+wG+7TXhpHZFfVvtmn5hHFGMKK3m5Fq+6+BXLuEg6rhlmXh2jII0+2Vx
-	hpPKVMgaQ8HK837CvSuviRPCxoGO987HJ/fKmoJXafG76f056Ga5y2+gIqfBDueifc0WMi5SwPJ
-	ggTsjUFFp
-X-Google-Smtp-Source: AGHT+IEmR48bt7XEiYsncU5O4Q5GIS0VjcmLqFK0GdoL7joQ9ta5UZGYwgpLnkZ5GqCYSdv4P6TBYA==
-X-Received: by 2002:a05:6830:3982:b0:72b:9cc7:25c4 with SMTP id 46e09a7af769-731ce3f9330mr690833a34.22.1746065628499;
-        Wed, 30 Apr 2025 19:13:48 -0700 (PDT)
-Received: from groves.net (syn-070-114-204-161.res.spectrum.com. [70.114.204.161])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7308b117371sm1140234a34.16.2025.04.30.19.13.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 19:13:47 -0700 (PDT)
-Sender: John Groves <grovesaustin@gmail.com>
-Date: Wed, 30 Apr 2025 19:13:37 -0700
-From: John Groves <John@groves.net>
-To: Alireza Sanaee <alireza.sanaee@huawei.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, 
-	Miklos Szeredi <miklos@szeredb.hu>, Bernd Schubert <bschubert@ddn.com>, 
-	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	"Darrick J . Wong" <djwong@kernel.org>, Luis Henriques <luis@igalia.com>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, Petr Vorel <pvorel@suse.cz>, Brian Foster <bfoster@redhat.com>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, 
-	Josef Bacik <josef@toxicpanda.com>, Aravind Ramesh <arramesh@micron.com>, 
-	Ajay Joshi <ajayjoshi@micron.com>
-Subject: Re: [RFC PATCH 00/19] famfs: port into fuse
-Message-ID: <n4idslcksqlegd5e2nyggyzahwhgfh7qqsh3qni7fgpj342ohr@do2fu5pz7fsv>
-References: <20250421013346.32530-1-john@groves.net>
- <20250430154232.000045dd.alireza.sanaee@huawei.com>
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="GdhfOvPy"
+ARC-Seal: i=1; a=rsa-sha256; t=1746067895; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=IZnSPVMXBCCx5dJJhtUEuXGPEgYYob8dCW2cOTAu5ZqpTs0mLLy6GefzSn5Sdq1hhJe53SLv/4zLW9CnJAJXOeBF0pJuwwXksyJLkrI8XjbIQwDwksu28u10uvVCMarEAkAEWRaAaLvMSb+DDQBjvYUuJYR63F01fOy0sNcw2Ns=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1746067895; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=z/VYmZsREnfSJLDIlokbAIMTsU9dghOxEtuTz8VNhkw=; 
+	b=AbgBEITa9dq2s8PxAtsZOAJWQTIqa9qMOOJ3fz4b6ZwvOK9hHwtgenMzZrQrDo8+ALBZe+S2BeWvcRKRgmjk/o/LXyb4AfbIpAEHovyy2pssAbCbVqfCF9DVyO6MnuzD84oUyYJHRYdV+22z96nFB7d7VzZwZfjqhQKeoSq2NBo=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746067895;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=z/VYmZsREnfSJLDIlokbAIMTsU9dghOxEtuTz8VNhkw=;
+	b=GdhfOvPyCQQE9b1YbINSRwti2PC7/7kMXPd5oOh8oBHbavhp9CJl9amDv69kL1MF
+	ih/Lnhw2QArtex61wNWY2QlHtmZABCgBEEC00VeYq89YlURZrvmj9EMmZY3Cm7RKTY/
+	s+mebmGAbYhsgyQK+IZD6mvudbaKoEFwMTDlGjIs=
+Received: by mx.zohomail.com with SMTPS id 17460678914521008.0847544666666;
+	Wed, 30 Apr 2025 19:51:31 -0700 (PDT)
+Message-ID: <9516517f-9d04-423b-bcd0-123a76598c06@zohomail.com>
+Date: Thu, 1 May 2025 10:51:29 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250430154232.000045dd.alireza.sanaee@huawei.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cxl/region: Add decoder check to check_commit_order()
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com, linux-cxl@vger.kernel.org
+References: <20250430213653.1904302-1-dave.jiang@intel.com>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <20250430213653.1904302-1-dave.jiang@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Feedback-ID: rr08011227c6ab090eaa157e6b4f66a93a00002d87ea1a7fbfde69ae72204a221574ccb964cc407a9a4f65a3:zu08011227955cf6472a96239053673e790000574bf2b5737546bf71f0d6d3dd94225472bc838d2eac177844:rf0801122d215d8b867f79386c6152a1d10000680d67c8a7a501f1dd02f87b1afa7b28d61414d2ba224f8341f4d8b900faa5:ZohoMail
+X-ZohoMailClient: External
 
-On 25/04/30 03:42PM, Alireza Sanaee wrote:
-> On Sun, 20 Apr 2025 20:33:27 -0500
-> John Groves <John@Groves.net> wrote:
-> 
->> <snip>
-> 
-> Hi John,
-> 
-> Apologies if the question is far off or irrelevant.
-> 
-> I am trying to understand FAMFS, and I am thinking where does FAMFS
-> stand when compared to OpenSHMEM PGAS. Can't we have a OpenSHMEM-based
-> shared memory implementation over CXL that serves as FAMFS?
-> 
-> Maybe FAMFS does more than that!?!
-> 
-> Thanks,
-> Alireza
+On 5/1/2025 5:36 AM, Dave Jiang wrote:
+> check_commit_order() attempts to convert a device to a decoder without
+> making sure the device is a decoder. So far this has been working due
+> to pure luck. Issue discovered while doing deferred dport probing when
+> child ports are now in the midst of decoders due to ordering change
+> of child port additions. Add a check before attempting to do decoder
+> conversion.
 >
+> Fixes: 105b6235ad0f ("cxl/port: Prevent out-of-order decoder allocation")
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
-Continuation of this conversation likely belongs in the discusison section
-at [1], but a couple of thoughts.
+I also have a patch for this issue during I worked on deferred dport probing.
 
-Famfs provides a scale-out filesystem mounts where the files that map to the
-same disaggregated shared memory. If you mmap a famfs file, you are accessing
-the memory directly. Since shmem is file-backed (usually tmpfs or
-its ilk), shmem is a higher-level and more specialized abstraction, and
-OpenSHMEM may be able to run atop famfs. It looks like OpenSHMEM and PGAS
-cover the possibility that "shared memory" might require grabbing a copy via
-[r]dma - which famfs will probably never do. Famfs only handles cases where
-the memory is actually shared. (hey, I work for a memory company.)
+https://lore.kernel.org/linux-cxl/20250107035708.1134954-4-ming.li@zohomail.com/
 
-Since famfs provides memory-mappable files, almost all apps can access them
-(no requirement to write to the shmem, or other related but more estoteric
-interfaces). Apps are responsible for not doing "nonsense" access WRT cache
-coherency, but famfs manages cache coherency for its metadata.
+I am not sure if we should define it as a bug, my understanding is that it will never happen with current implementation, it only happens when we are trying to delay the switch decoders initialization.
 
-The video at [2] may be useful to get up to speed.
+Because current CXL subsystem always initialize switch decoders during switch port probing and child ports are always added after the switch decoders initialization done, so the sequence of children device list of switch port device always like that:
 
-[1] http://github.com/cxl-micron-reskit/famfs
-[2] https://www.youtube.com/watch?v=L1QNpb-8VgM&t=1680
+child dev list head - decoder 0 - decoder 1 - decoder 2 ..... - child port dev 0 - child port dev 1.....
+
+Using device_for_each_child_reverse_from(switch_port_dev, current_decoder, NULL, check_commit_order) is not problem for this sequence.
+
+
+But when have deferred dport probing implementation, the first child port attaching is responsible for triggering switch decoders initialization, the sequence will be changed like that:
+
+child dev list head - child port dev 0 - decoder 0 - decoder 1 - decoder 2 ..... - child port dev 1.....
+
+Always have a child port device ahead of all decoders, it causes the problem.
+
+
+Anyhow, it is also OK to me if it should be considered as a bug.
+
+Reviewed-by: Li Ming <ming.li@zohomail.com>
+
 
