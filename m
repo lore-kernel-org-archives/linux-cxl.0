@@ -1,151 +1,148 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D43822A810
-	for <linux-cxl@vger.kernel.org>; Thu,  1 May 2025 20:22:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F5891DD0EF
+	for <linux-cxl@vger.kernel.org>; Thu,  1 May 2025 21:49:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746130921; cv=none; b=ZGjZty2lX369+byRUE+TIhMPvzuR1RlbxfSRVpZaQR0PbZ4vKntasbG4uvKAFMrl1St70LuXQcuYSXi7dH/IwrpEwXlSYQXOsZ/L4X945327Wi9e8gLarWK36h9HDdzZn84dqW6O4aNfcbFTjmlE07Go2TVwvb+Czvgi9oAQpXY=
+	t=1746136193; cv=none; b=ogzSXOANomkEGfu9aW68CkNyM7BB/yV3nTT6AK4sOrdW74Bk2D9Pdi5ak3loxNEa77mrA0n7ug5/3M4hh4hURFyNiySx9DKnJgbetc3I/auToQgkeOmgBKMWbRs7JqsKqyUyBKX9RaHBIFf/xoRSIMYmCaK7jGckn7BjG3FJ9ck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746130921; c=relaxed/simple;
-	bh=hp9/+l3s8F3423eboOLb5F/0ihkrqwCaHwWTbP0xV/k=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lUjoa+QgRhHM59pmY++RAuo7rnenb0AvWCedUrsfLJYSOqCC19sCEW2wE1O4+mrLmUTegXkbiWCw0qQ6WhHO0pPKbpG5RkIi/Gw2pvNR7rGthbrA2naemBFMNkl5wgSbYxcJUmxjl4rjd/F1wj/hj4FlS5DFrgCr0Jwb5Mvs/9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SOMmhBC5; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746136193; c=relaxed/simple;
+	bh=s9DzIHm+ijqQAUEYYWNAW/UKs9ZkDQfTRI5itG8dt1A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=D13B0ooNzvD2n8bgBwQOy0K27KC7nVdBYN7Jw2kykSl6D4P0KGaqJ5LavSJ+ckvzoJZIOvQ75OBuxV+4JUf2rUdwsv5m/tKKe3hANsxNFDXI/jzQ3YAWzBCJMgZDnEwaxshC3ZAaPjamQQR3mNrdjy4KX9/IcdY7yqx1eVo9H/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=U2Uwv+gH; arc=none smtp.client-ip=209.85.166.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SOMmhBC5"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-224171d6826so20813275ad.3
-        for <linux-cxl@vger.kernel.org>; Thu, 01 May 2025 13:22:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U2Uwv+gH"
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3d8fc9dbce4so9527655ab.0
+        for <linux-cxl@vger.kernel.org>; Thu, 01 May 2025 14:49:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746130919; x=1746735719; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=F7bWiW4bRsnks3rl9OHy6axsrNrN4JteSqAxTGYEvLA=;
-        b=SOMmhBC5THpftPxAutLqRyakQfZBTxL55WYb+miT3+zlyKJ1Z2FVPzKiuZ9XE3YapJ
-         J/uF2Y8EwihC3rvKNcnlbDZB7sd3aQEB9lve4xhC3nJzXHZJv/amrVpxFl9qhTvNvO6g
-         5yMZ5mpJNtY/Vs8ZovpEUZi/nm/tl1AvMtLGLs703wRLEDVyB647Lmg1ecozB3s63p7n
-         uNWrZxC2ox11rYtfWNqtoEUF6nr4fbUJXUzTL+4ULwntBSsSuxeN6LNBRF1JzRWouVE7
-         mTjaavFy9pUitYjg2v0FacqPfIYEqEm0WGQcxYzSr04YnxuxjE0+vpDMJDijcUZ32GSW
-         5Omw==
+        d=linaro.org; s=google; t=1746136190; x=1746740990; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rr6BFBQrpoBkaUZeh7DoqYwcB8XwJFEp9+Dw7V6RYH4=;
+        b=U2Uwv+gH9CFnnH5wmeIHcW9dw4RL9TaQXd1rDpccPsiEpL/UIlAAe/wgmUJcuL8I+I
+         1TZe2udZvuwJDwRWhxMokSzQqhmbWAL4ew2NQef4YmF5yfiHKAJXCYHHIhwj7O2BNg25
+         P9pmfWNIG4XAREslArzp1J2khBS31OIAZ8JQQ9YAeaj0c9EhiCUCGh5ZuQr4DQ3G35sw
+         SR6LTrIUL/gVU8XDjpLquYHxb/pVtzjjw08ftL3OhRSQ676OMtO9PPhRhLa5nkpOQdAN
+         +EFbd5iMZIfqxLrI2K78g7TdIJFKH0wf1IR16zYYgapdqPh8tQ9Jjy0BbfsrgMQTSLvN
+         yzjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746130919; x=1746735719;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=F7bWiW4bRsnks3rl9OHy6axsrNrN4JteSqAxTGYEvLA=;
-        b=WTQqCb9kGAm1mBdX9RhYaOWZXzzf3zI3Y5B8hPNGFh7+f754Uo77eDjN9coAZ2vhQ4
-         +qgs3d6G7IwaJbGAIjqZaDnEtzJHDxs5CDyd/PRUGb2vjEyL+AaNwfnqPkJ49thzqcCc
-         HX67RF4/JCdED26uYTFUBzSdk1AS8sG8fHFqqKq7SOsFyWOIYVyPV13P0xwUcU8pFqWY
-         qe5nQC5OKk07QPSUd41reipH5L6a4ir/n9fMQnT4+BJiSPpuzoUQ+TcpgR20bEBMx2Y8
-         WltIgivcX8MzrPH3GGB4TRwPlVV6LQdKVUXKitiTipLCNTL8JCBh/C2fNRT6nAIvwSN+
-         0lSA==
-X-Forwarded-Encrypted: i=1; AJvYcCXqNGAjSx5gRjAlTLHzpFExwIU6o/AJcGtZ8CXXyYV7hGE9OXsLeoAATR8EMSaZ3mUFb/fZUW6NJcc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZl2txRY50ou12zQTB8eoPiPHf56K0KuQ7t4jKYAmirq4ojIb4
-	gFRRgdAsYZeriiP2HEUlyzMtTHrZZOynowaJ15XSq/Ee5sGeNB1Y
-X-Gm-Gg: ASbGncsR1dGORBK0ZdctnnR0UP1xnpB0adUYhY/oUz1jO8E8t9ZYEEON3DieW6HGVMU
-	dNo58uY8S6FRQpnVAzeSxfQ7m51IDMytXBDYSp1E77DvBJrE2tk68bxDPDgefx+VAHaz0fQyjyr
-	eKexn7rLU+QTi4iGZBR7cwGLMtLke60sNEqkV/mMSDbD3dbGkKml8AZwJfsY3EusXVmhwy2Hesl
-	Qu+99VYhDasMilkIXZy2xPk1axzjQ1NqTDHo46XwvdeK7rau8kuZqXzwTQURWZfclkYS/+4UhYS
-	jRn+RbD2TDR5GbuyX0N7a5cpjGG3ROtvox7GLQJO1EnP
-X-Google-Smtp-Source: AGHT+IHlnqOZGR10lQx5RUe7HeSnm/NAMouxKfBunI57Mx1V7PBcF+jSOHJZiAV3AzeNMLkfJf//hw==
-X-Received: by 2002:a17:903:2303:b0:223:6180:1bf7 with SMTP id d9443c01a7336-22e1033eecamr5319415ad.42.1746130919440;
-        Thu, 01 May 2025 13:21:59 -0700 (PDT)
-Received: from smc-140338-bm01 ([149.97.161.244])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e1094180esm356985ad.235.2025.05.01.13.21.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 May 2025 13:21:58 -0700 (PDT)
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Thu, 1 May 2025 20:21:56 +0000
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: anisa.su887@gmail.com, qemu-devel@nongnu.org, nifan.cxl@gmail.com,
-	dave@stgolabs.net, linux-cxl@vger.kernel.org,
-	Anisa Su <anisa.su@samsung.com>
-Subject: Re: [PATCH 3/9] cxl/type3: Add dsmas_flags to CXLDCRegion struct
-Message-ID: <aBPV80J9TULzRslk@fanair.local>
-References: <20250317164204.2299371-1-anisa.su887@gmail.com>
- <20250317164204.2299371-4-anisa.su887@gmail.com>
- <20250424114259.000000a0@huawei.com>
+        d=1e100.net; s=20230601; t=1746136190; x=1746740990;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rr6BFBQrpoBkaUZeh7DoqYwcB8XwJFEp9+Dw7V6RYH4=;
+        b=qghDHtRDXZWmnJkcXPL71wjM8VD05bRLaRhmayRHiD9moGKoaR9Poc3XICJT0jQEO5
+         XckZ9MnUtScr9cylYKEvdq5XhKfSmd4ZHKt3azfHFqbTqlfNfsS3Q26AQjoC0bdwLZ/T
+         sjw5ZKUAnTeyT9wYrFmOu8kVb+RM3tIZOK/LsPFSUYlLIm5eneLY7WP6FY6PhoDnlGZL
+         mFVrSQ8xBAjOCUNFc4tEzPNly7ZmxSeLpsLiqPTuWukONQ09lBuqS0fbkAKHqVsRs3ZN
+         scG8po3wL3718G2w5FR7Y98g0YiuT+I9KOoe1hEDWES56Ed1FwnjTYJL6Ck3dvaHfowF
+         SuCA==
+X-Forwarded-Encrypted: i=1; AJvYcCW/fyZt7tQYMxz2itEAI5tJjLd6rVyAgSXB+D9SpHJLHAJjBLiATtntiMZCNRQgcMe30Si/X0B0vnc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxh9ShM5UUXjutFGDZZDq1BnLhA8VeTLPxHlIZjqNJRiXjRxYQL
+	6rujC8wXpbYz+PMJBeXAy40qowNRMvyAvLBuFIue07l+t8pU9yaqkx/SNW/WJRE=
+X-Gm-Gg: ASbGnctChZstDoZlluRNxIeXV/NJ5V1frPBbWVTq8m86ShtVUwposvP9ofhcQxi+2yT
+	h3kIWGTF6guMyCA2ssVl9bcwAz4q7o+PHgfJjfPTcIltTXt5McHvlBJrO0UgmuuyAeDDqF0P9op
+	wT4NzdVVzbGHiaasb2m+6L+qZeHdM6Y84ziH+Wl0hrV/MNVua4Pe4pYDuc4c1Qu8tzsipomRWA4
+	MPDH1kW2g1y+3sP+OjyLyc2fqBlkL7C+UBH93hDQ/XDPE9q1sqe7bm+DEiJLB5DCb1+TQFyyCDy
+	n6ar6UmV4hndj9UxDRROgmvkHrQhw5YjkCaLEFulCjCSOb3senXBKT35zN8xMBu+4Ke34nAqxG+
+	X2csz6c1a0IWVaQ==
+X-Google-Smtp-Source: AGHT+IF+PiU0/Kg2yfNoRftmPiOM41YJkxyELYES2SKx5WZSsMyO+vdbOTfpnPmc4Qdx55zGcq4S/Q==
+X-Received: by 2002:a92:c512:0:b0:3d8:17b4:1792 with SMTP id e9e14a558f8ab-3d970aa462dmr53305105ab.3.1746136190245;
+        Thu, 01 May 2025 14:49:50 -0700 (PDT)
+Received: from [192.168.69.244] (88-187-86-199.subs.proxad.net. [88.187.86.199])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f88aa58d6fsm60724173.89.2025.05.01.14.49.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 May 2025 14:49:49 -0700 (PDT)
+Message-ID: <1528a021-d3ec-495e-a42b-6614d60b0666@linaro.org>
+Date: Thu, 1 May 2025 23:49:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424114259.000000a0@huawei.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC qemu 1/6] hw/pci-bridge/cxl_root_port: Provide x-speed and
+ x-width properties.
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, mst@redhat.com,
+ Markus Armbruster <armbru@redhat.com>, qemu-devel@nongnu.org
+Cc: linuxarm@huawei.com, linux-cxl@vger.kernel.org,
+ marcel.apfelbaum@gmail.com, Dave Jiang <dave.jiang@intel.com>,
+ Huang Ying <ying.huang@intel.com>, Michael Roth <michael.roth@amd.com>,
+ fan.ni@samsung.com, Alex Williamson <alex.williamson@redhat.com>,
+ =?UTF-8?Q?Daniel_P=2E_Berrang=C3=A9?= <berrange@redhat.com>
+References: <20240712122414.1448284-1-Jonathan.Cameron@huawei.com>
+ <20240712122414.1448284-2-Jonathan.Cameron@huawei.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@linaro.org>
+In-Reply-To: <20240712122414.1448284-2-Jonathan.Cameron@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 24, 2025 at 11:42:59AM +0100, Jonathan Cameron wrote:
-> On Mon, 17 Mar 2025 16:31:30 +0000
-> anisa.su887@gmail.com wrote:
-> 
-> > From: Anisa Su <anisa.su@samsung.com>
-> > 
-> > Add dsmas_flags field to DC Region struct in preparation for next
-> > command, which returns the dsmas flags in the response.
-> > 
-> > Signed-off-by: Anisa Su <anisa.su@samsung.com>
-> > ---
-> >  hw/mem/cxl_type3.c          | 2 ++
-> >  include/hw/cxl/cxl_device.h | 1 +
-> >  2 files changed, 3 insertions(+)
-> > 
-> > diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> > index 731497ebda..452a0c101a 100644
-> > --- a/hw/mem/cxl_type3.c
-> > +++ b/hw/mem/cxl_type3.c
-> > @@ -237,6 +237,8 @@ static int ct3_build_cdat_table(CDATSubHeader ***cdat_table, void *priv)
-> >                                            ct3d->dc.regions[i].len,
-> >                                            false, true, region_base);
-> >              ct3d->dc.regions[i].dsmadhandle = dsmad_handle - 1;
-> > +            CDATDsmas *dsmas = (CDATDsmas *) table[cur_ent + CT3_CDAT_DSMAS];
-> > +            ct3d->dc.regions[i].dsmas_flags = dsmas->flags;
-> 
-Hi Jonathan,
-Thanks for the feedback.
-> This is relying to much on the ordering of creating fields in
-> ct3_build_cdat_entries_for_mr().
-I am not sure whether I understand this clearly.
-In current qemu implemtation, each mr (ram,pmem or dc region) will have the
-whole set of cdat table entries (dsmas, dslbis0-3, etc), so as long as we point
-to the right table entry, we can get the table correctly.
-What do you mean "the ordering of creating fields"?
-> 
-> I'd rather you just stored the information flags is built from in CXLDCRegion
-> and then built the field that is wonderfully called 'Note' in the DC region
-This sentence is kind of broken for me, not totally clear what you are
-suggesting :-(. Can you explain more?
-Are you suggesting not directly take dsmas->flags as dsmas_flags, but
-use bit op to generate the value used in Table 7-66 in cxl spec 3.2?
-> configuration in 6.2 spec.   I've sent a mail to see if we can clean that
-6.2 spec???
-> 'what is the field called' question for future spec releases.
-> 
-> Whilst the flag definitions cross refer the CDAT spec, the actual locations
-> of those flags matches, but doesn't cross refer so maybe in the future
-> we will have other flags in here and locations might not match.
-For the flags stored in dsmas table, do we expect there can be more than those
-defined in Table 7-66 in spec 3.2?
+Hi Jonathan and Alex.
 
-Fan
+(This patch is now merged as commit 1478b560902).
 
+On 12/7/24 14:24, Jonathan Cameron via wrote:
+> Approach copied from gen_pcie_root_port.c
+> Previously the link defaulted to a maximum of 2.5GT/s and 1x.  Enable setting
+> it's maximum values.  The actual value after 'training' will depend on the
+> downstream device configuration.
 > 
-> >  
-> >              cur_ent += CT3_CDAT_NUM_ENTRIES;
-> >              region_base += ct3d->dc.regions[i].len;
-> > diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> > index bebed04085..81b826f570 100644
-> > --- a/include/hw/cxl/cxl_device.h
-> > +++ b/include/hw/cxl/cxl_device.h
-> > @@ -609,6 +609,7 @@ typedef struct CXLDCRegion {
-> >      uint8_t flags;
-> >      unsigned long *blk_bitmap;
-> >      uint64_t supported_blk_size_bitmask;
-> > +    uint8_t dsmas_flags;
-> >  } CXLDCRegion;
-> >  
-> >  typedef struct CXLSetFeatureInfo {
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>   hw/pci-bridge/cxl_root_port.c | 5 +++++
+>   1 file changed, 5 insertions(+)
 > 
+> diff --git a/hw/pci-bridge/cxl_root_port.c b/hw/pci-bridge/cxl_root_port.c
+> index 2dd10239bd..5e2156d7ba 100644
+> --- a/hw/pci-bridge/cxl_root_port.c
+> +++ b/hw/pci-bridge/cxl_root_port.c
+> @@ -24,6 +24,7 @@
+>   #include "hw/pci/pcie_port.h"
+>   #include "hw/pci/msi.h"
+>   #include "hw/qdev-properties.h"
+> +#include "hw/qdev-properties-system.h"
+>   #include "hw/sysbus.h"
+>   #include "qapi/error.h"
+>   #include "hw/cxl/cxl.h"
+> @@ -206,6 +207,10 @@ static Property gen_rp_props[] = {
+>                        -1),
+>       DEFINE_PROP_SIZE("pref64-reserve", CXLRootPort, res_reserve.mem_pref_64,
+>                        -1),
+> +    DEFINE_PROP_PCIE_LINK_SPEED("x-speed", PCIESlot,
+> +                                speed, PCIE_LINK_SPEED_64),
+> +    DEFINE_PROP_PCIE_LINK_WIDTH("x-width", PCIESlot,
+> +                                width, PCIE_LINK_WIDTH_32),
+
+Per the documentation:
+
+   We commonly use a ``x-`` command name prefix to make lack of
+   stability obvious to human users.
+
+Are these properties meant to be stable? You mentioned "Approach
+copied from gen_pcie_root_port.c". There they were added because
+of:
+
+commit c2a490e344b4e231cf9488c67df7ee46977b1ebe
+Author: Alex Williamson <alex.williamson@redhat.com>
+Date:   Wed Dec 12 12:39:43 2018 -0700
+
+     pcie: Allow generic PCIe root port to specify link speed and width
+
+     Allow users to experimentally specify speed and width values for the
+     generic PCIe root port.  Defaults remain at 2.5GT/s & x1 for
+     compatiblity with the intent to only support changing defaults via
+     machine types for now.
+
+This was 6 years ago, are we still experimenting?
+
+>       DEFINE_PROP_END_OF_LIST()
+>   };
+>   
+
