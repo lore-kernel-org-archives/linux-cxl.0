@@ -1,343 +1,155 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46646347C7;
-	Fri,  2 May 2025 23:48:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746229736; cv=fail; b=gbbfkqg5GEGgz/lBuV+v6A/IyjOjSpjcgLLUsE04CQo0hocV4hQoNoYYXoPaN9EYwtzDV6BrV4Wk4jfx1DK0t3QyAzyAwBdqVoz3oPdBCrM7ptFMvFwiNKE4W0WPVWwBl0wbjFo8Wo3/5kyyEtxWhSU1/d4/n5ZHAvP1HR8kc9s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746229736; c=relaxed/simple;
-	bh=ODohnfDd/9nPKqMwL4ZHUn8FUVYQk7QtoAAsQ8y9Y14=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=S95YItb8J2zy5xHiw54G64loT4JaweuNEJ7M0p7dSHOJaVf0hD+pXq0HYoju1Rwh34LvBK6yqWYKxdakUy2/V7w4WAKx+tV0sSDqN+BiPFktjq6/z6MfkQl9eckmOe8tBkPtiDk5DqHpSRFSEuiu9LTxFKLlI3KYrpqj74TczJI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MSTlF/Ap; arc=fail smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F1AFCA52
+	for <linux-cxl@vger.kernel.org>; Sat,  3 May 2025 00:28:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746232083; cv=none; b=KRFg56mzUU9br5FnrWEwW3n6SBoPK0W7Ujt+gguI45V0iH6HnUzrnuZvT7Ep8cHNbletYbM748zWTvrEjKhGBxw+zbTw6Mvw6CS4gx0IxpWPjXqGMouxx446NyemELpZQgS17yASNz7oiIxhSSnW2cIvdIW/k2pxRo/WmP2/FFA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746232083; c=relaxed/simple;
+	bh=gQqpjFEGTESzcQc3cHLIM8wYkUkAS2w/iH2qcHSYAB8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fAteG54BtE20GPayacreWKQAIJJwfKl4/H2ide6oQn+JgybjKpDCGRY9/ty2GDaJjCJjz8Zjm7eB1QktPPWwdbedwJkmlkiwF1Z14FLyARxQ3aml1nXYtQJ7r49+AcRKDrYudK/2Ti4FVIwDvdAxmuXh45dYNAjehL0IdfTOqmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=eMu15kIh; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MSTlF/Ap"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746229735; x=1777765735;
-  h=from:to:cc:subject:date:message-id:
-   content-transfer-encoding:mime-version;
-  bh=ODohnfDd/9nPKqMwL4ZHUn8FUVYQk7QtoAAsQ8y9Y14=;
-  b=MSTlF/ApEMxhTI4vZAFwWxI3R7n8r+rLeSP36KbtpsvyeJ8alpFGos+I
-   BSjxX6kAfs1nl9UdVwHQLlVo0MPFXehCqtMkEucuV1NJPI5y28sdGaKZ8
-   YirjE0qhpqLU0+N+zV4YosMH0jGLOAnY85kHAAXGw6/dJ+V/8TzH0Q+6K
-   Zz/2W0huWGoCU2YKjW8VVog9YMksr2hI7u10e748AnqPGt1OJ1bN4zsDn
-   HjD1PP2vykRsst70Wspe1Mf+M3dHMgfFeWGjt2Z0Rdy2hFoGOQKtKUYNV
-   IYy89O1YyB+QJDVcR1z/ytdwRfitq9+rY0b2ATwiQjBokr9znqizNgilr
-   w==;
-X-CSE-ConnectionGUID: kZ0xvxrATVGYLXojklfWzQ==
-X-CSE-MsgGUID: wcdPf6SZQMqJRE2YfdFwpA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="47929176"
-X-IronPort-AV: E=Sophos;i="6.15,257,1739865600"; 
-   d="scan'208";a="47929176"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 16:48:54 -0700
-X-CSE-ConnectionGUID: zNKDcg/dSuGQ6zojPaNfag==
-X-CSE-MsgGUID: bNgE5W/9RH25wUuqOom20A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,257,1739865600"; 
-   d="scan'208";a="138775083"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 16:48:52 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Fri, 2 May 2025 16:48:52 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Fri, 2 May 2025 16:48:52 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.173)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Fri, 2 May 2025 16:48:50 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=G1BAOhjO/yOnNFlhpnvTHbbOLSAxeDcNQjDxJ4tGlo+QeDCgUFAOol5nWPwT71yfShwYhjjt2dEdLdajHPIQSIH+QPkeV7TgHSRtdIHLfK5CYgP/DfzTkpxhJYAXzBYCo9KV6uDNwmpLqUNqqufx6QsBadVKYj95Uq+MXxaXkHHSO6VJzbh0fUqMiTtMDTUjyxikZ8b36sghbN/1kytuy0BNJPxXH6IANWN2M5+TpeCe3y3ujr1ve+Eqno/trtoJzq+l6MbTM3NZYLK8Abo7SNZWsJwg+fQGqwkaK3ZfagSoU8VjLXkf4qLlS8+s4qFOX3OHoFuYPYUmcvvWtrgaHw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vCySu9dPMJmVEKF4ddgogF3tryScuPtKLXzXAk2zNmw=;
- b=xdLqHWXiBN0xYANlQ6gd/LVbwnpOaxZw13inCJqBHYoMcxGqmt6Jx6i5djTcLh0068aq9dXHl+U8562i1VjhsRz/GOTYt7d0S9MKpNwelHc0DdSHsL18F6A2JymDTCMpFrraL3HFeEzOLCSZqUgfjRk5bKbiC2AvNW751IGfClX6vv3xxyGDbAGi7aejWRwKYm0/vBHuKzgZakTXGHMXpM+NDsu0CTw8O/U47qyeQ0hS00pVQwzDRx9irmhwsw5CfTTWdFjLH2S7wqRMU9jWrzy48QTjIWZllGaLeS54fc0wFA8gW/XdSp3UaVyfRIGklyVQk0ivjd4Eqmq5sv8rgQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by DS0PR11MB7901.namprd11.prod.outlook.com (2603:10b6:8:f4::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Fri, 2 May
- 2025 23:48:21 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8699.022; Fri, 2 May 2025
- 23:48:21 +0000
-From: Dan Williams <dan.j.williams@intel.com>
-To: <torvalds@linux-foundation.org>, <peterz@infradead.org>
-CC: Dan Williams <dan.j.williams@intel.com>, David Lechner
-	<dlechner@baylibre.com>, "Fabio M. De Francesco"
-	<fabio.maria.de.francesco@linux.intel.com>, Ingo Molnar <mingo@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: [RFC PATCH] cleanup: Introduce "acquire"/"drop" cleanup helpers for interruptible locks
-Date: Fri, 2 May 2025 16:48:18 -0700
-Message-ID: <20250502234818.1744432-1-dan.j.williams@intel.com>
-X-Mailer: git-send-email 2.49.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MW4PR03CA0133.namprd03.prod.outlook.com
- (2603:10b6:303:8c::18) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="eMu15kIh"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-acec5b99052so444170466b.1
+        for <linux-cxl@vger.kernel.org>; Fri, 02 May 2025 17:28:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1746232079; x=1746836879; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=SaX79mBWYN1pFOTN8Dl1qaA/CePLGz8VEzgUO+DZmtI=;
+        b=eMu15kIh/d9ksgeEJFqSeI/Ga+mum8SDbf9WSgi+IBqjKrZEirDf9PrvmGtgwpG0fK
+         MlQvVGXGLjOxn1WJ1/mm/RYPmRS8NRwMp/oH7KI7c8lFICpDYjGmSZwjL7TeZCUvuwVl
+         nhFm/hGSsZCXDQ/eIYeilx4dlRSL0tO8MY9Fg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746232079; x=1746836879;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SaX79mBWYN1pFOTN8Dl1qaA/CePLGz8VEzgUO+DZmtI=;
+        b=OJN3TQ+1exBLgGmaZ50MEFMwLhxZZcJ1l6p+RQx3QmW6dkI8kAHxoOP3XctNCvFBHD
+         kxH/DTdb0wenmc7NPAlgM5QumAr3PHbQHWhd4r/nqyoY/eO7TXwm0X3xDE5TlAs4GUOY
+         XNVHFLDNaPSO8mTESzFXXruQnWdsUY6n09ViDtM9ax80hG98Y21gY85KKzKBszxGFiDa
+         ov0DXC0CtwmUfp+ulipQ0ESrDFbGnPcfXWFEKlOwsSz/1BWmDrC7ReakGwGa7DcudqN9
+         LI8G5NVMxy7Y5RpH5bwPqxigSEuSES8m8uemrtvO5Ayqs/og2bfLaDb8SS85ld1JxJN6
+         5fHA==
+X-Forwarded-Encrypted: i=1; AJvYcCUIVirguhwTJVuyZiFIPjmlxhZaWZuixaEpnrDWKDf3tX/3bAm4Fbm671LB+8MwBixpcGCIM+k4F+g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcVji5TFm1FhxZDuDwY04fFcCD/PWIUYnXqb8roGuY1V7SL1m+
+	1bXxEuCI+CASRBH/Ay5YmAHsNIP/yHE9iLuHGa1gcuv6PJb9pm985DDjfmd567qYZCgAN+TIe9L
+	PYCQpwg==
+X-Gm-Gg: ASbGncvF7rYIaEDM4zeAao7FxO0MSnMhCwMP+JNRV6N88jFab181PCiQMEbiw2zG+Rh
+	O1UVHZaGbxpZS3HAwnjcIWU6/ag+P1KU/dNDvriDUUN7htXajNbfXcRB/Jwz7Xqj5wRROAtw0du
+	euYJvtHVzf1qdNPULQE00bYo2smLgOWskltqE7UuRdbPlQie5jWcZQtWLGsYuuYrlXML1gjdV9k
+	jTS9pBoSR1LmeXHn9h5KEm0axU61YfiZs4GiwcL/cyZXyxj7i5JNh7pyxjpJaPGwQpDXbfc/vPr
+	VFIpxQmF0ZlV42W4ZhPZR47PtzB+GdoPn/3hzYSQAzk8u2gx1NHbsN5bKnSDVfbJZ9n1vo1Z/Cw
+	T//e7rJz/qlEHhr8=
+X-Google-Smtp-Source: AGHT+IG8jXQwG0S47wIRhVP8xwzWNFsZYeY0+Mp8pX50LViL4dd4hhfqiVTHSENXyvyZ0KUrUj5fsg==
+X-Received: by 2002:a17:906:c148:b0:ace:6bfb:4a11 with SMTP id a640c23a62f3a-ad17adad435mr424278066b.24.1746232078628;
+        Fri, 02 May 2025 17:27:58 -0700 (PDT)
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com. [209.85.208.46])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fa77bf3ec0sm1867674a12.79.2025.05.02.17.27.56
+        for <linux-cxl@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 May 2025 17:27:57 -0700 (PDT)
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e5bc066283so3865913a12.0
+        for <linux-cxl@vger.kernel.org>; Fri, 02 May 2025 17:27:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU8R0mbPqTykopCd3l5Gh96cuLUwRvWt8/c0hA240fhbYZAb46Xo8xVUpnPOmPoVmQezrJVt49toPo=@vger.kernel.org
+X-Received: by 2002:a05:6402:5193:b0:5f6:2758:149c with SMTP id
+ 4fb4d7f45d1cf-5fa78012829mr4374591a12.10.1746232076465; Fri, 02 May 2025
+ 17:27:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DS0PR11MB7901:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7d70efb6-c48e-44b5-b9bf-08dd89d3d205
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?JI8cKAVVsf/Facne4M3X2ePFtbTMSPK0aB+t8WUgMe1S1Bk6xSFn4ZodbUjB?=
- =?us-ascii?Q?DpNyxuzD3CSDFAt8UF/JiPiF+9iLAIxZzbRayu1DxYYJAKGkpPiRLNNliojh?=
- =?us-ascii?Q?iBulvDFivuxeoTnHeLmeR6nBBxtL/Jhbnb2LXMmq+O3N0RR9YbJuDG4HgUrh?=
- =?us-ascii?Q?8zCN+M8wdNJInUYZBnxObF8feIFWGnR5itpIa61L0xkaRPUk1aJ4ESXoTCEo?=
- =?us-ascii?Q?b52VYmRrnsyVi51ihKuGmJsTKdytpgjC+RkNhd6KwEJ35ii9GtYIjdlNSdco?=
- =?us-ascii?Q?xB8U48++3thKB5sH4TXqeTO9N8jUQcpl6CmGZEeI0owQB2WeTa7odoBhgyqj?=
- =?us-ascii?Q?eRRdDfIZ7PLXGs+JJjv/kBXMMSJAs4svuozKLBkIpSVuUt9VI/W18w/GxbCQ?=
- =?us-ascii?Q?opkxrHlxZqmg0SxcuKGktJG2i/ciTVj/3FdceH9DdIwcopBui0aj9uH1Zsm2?=
- =?us-ascii?Q?G3YPqf8GX0WyYZuTTKOSv/bT5TFua/+cUiRXtWfqM+KAqUnWStbCqSn6J0wH?=
- =?us-ascii?Q?qkkJY0AEetXQx1Sz+kHB07dMIHBpHDWAQg18cn8Vt6k0toQv+av6h9Pv2Jnz?=
- =?us-ascii?Q?Hyr4UpIbm6tD7j0EHpqEqxiK4/FNEaxGw0sDyaxTygBvQRrXRmFSvSW0jMNL?=
- =?us-ascii?Q?QzUXBHLn/wMfchzt4X9szCESEp2myzTk5SVrJi5cCDQB4I5jUfLyfzY8sqZK?=
- =?us-ascii?Q?QTks9QIxUf1WAnkWLT+2qNwGe38DYIqpFLzeHhKeDz4/jBnaRlSkb+a6aCxQ?=
- =?us-ascii?Q?ZlV4fR4Mf39qRRkgvwysEGeb16o27FfT1PPh8F8TxtSTtqHr7XcYVldSc5a2?=
- =?us-ascii?Q?En84eH38srVsMoswL4tR/+Mg4vwo4Njkyffq/yggsx4CQlMHXSorRtXcBrcd?=
- =?us-ascii?Q?cOgmYbmrK07tOJ947mGZcVj7ShaiLGJS4vHuNWrEvlBePP4Yw69JRdze0P9p?=
- =?us-ascii?Q?smrgyWh4IUbdptXaiI41DSIqmbtziqfU1wTLoBCeYr0PKnsik6sCBIBBUIOJ?=
- =?us-ascii?Q?wd5IqMMFmkmJddmTNx0UVqXvNQv0+37E38O/QCDDANN5z1SuYeD5DQNhdaUl?=
- =?us-ascii?Q?UPxDnJbIPOenvGlH5S4Iu/jgLhzoJ5nRvzG1CiyKei+oppPUCYCqi6XaLF7l?=
- =?us-ascii?Q?1aEjCGbKhRXExMSIJ53JN/CuVp7vcxUHOq3iwMzUcUtY07eeEIY3GLFLvB4A?=
- =?us-ascii?Q?DdWfYX6dwNoQv0Xs5BD4tosQeDDpt1B3DqmV8QvqkpS7WljAUEyTpRVMybYU?=
- =?us-ascii?Q?AEAk8CVG6BJDvivl5WZKGkeAY+DMByrx4qsHsumGP0JUreGJyug4yh+OjQr1?=
- =?us-ascii?Q?fohfv217TBvrJ2OanR9k3ip9FuJNRnAC8pO6R4CuTVrFkBgwaPvC+LziNyWF?=
- =?us-ascii?Q?CY6RoqiR6OED81CGcJRfk8BYmIgvvlholYQ8ABAvWizeGemG06zhTd8z4Xhc?=
- =?us-ascii?Q?i+f6HCOAdcI=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ppokiP3sGASQ0WxjwVr4u9Elev7mmGtl29oSLKwstKHyFDQvPGg5dged+6FX?=
- =?us-ascii?Q?n0QV5QrNkP8OR3/K5QaA0l+Y9uNqajCdYwA3SU098TpNx7/YloUVhAx00qXS?=
- =?us-ascii?Q?bpNIrUOC7gBhiwSegfuJ2M+rQhzoGXs6/upi6Su9uEV3oZT0UpkDd9mKKiAL?=
- =?us-ascii?Q?9gGe053f766uOm8UYbYb8o52/cTvmYMrbPsObIH14aWSM1oYXcQSDQHD7iwJ?=
- =?us-ascii?Q?IVD/vitSk+mbZvAbFiTHpYAoietdtDjJQFAcj3KUrFNWU6nGGqpRJH/3Rli4?=
- =?us-ascii?Q?DmNvVDg+5K6WdYk21fiLVpEhJNyS1/io3ckJasg4F2yXEf9nJTVW+E152+tl?=
- =?us-ascii?Q?e9Ng7xcYYQ9eqhMRfFq1tBo9H0AjYcTi1YxWe1PpBlvVmGb2P7D5qoXx8Y4E?=
- =?us-ascii?Q?xZumcw1p3q9f0fVwqcZ7ROisN4zhRcgm8bkvxfQmHNmzJ+BLAPAqTIyK1tJV?=
- =?us-ascii?Q?ZKvZoBDAVM5RZktaKh8xNimZzmkpwSSwJ7GEZiFej3MG3ltBQmiud4ORbnfq?=
- =?us-ascii?Q?wokx5oqoAewOLIWS4YGUQWkdyfCzw198k8UvUfjfm6NSRomycRaoMsLr+9FA?=
- =?us-ascii?Q?iF/qBK+Q8U5flN/3htYsafipgrrA/wnG8Lw/AOrh1+kc59Xecuxsl1OoKgSu?=
- =?us-ascii?Q?GFR7lJbjoOLke6mEkFN9Zro3PXGJUpRDg/BZAgHuxYZM3c9Gl902H1SnIL+F?=
- =?us-ascii?Q?WqtXvv7HYTXi1IQZe56os7UP54ZTLP/IrjnIx7bssGckIVTlS612cnapZUKu?=
- =?us-ascii?Q?CoeM4VHho5XrjnW6jwWLPVegC2Z8lUXClugvyGJdBUOPyTD/ywVnU+dc3lke?=
- =?us-ascii?Q?HrlZzErOims5/cVtmYviWq6Gdu7uA9asDmz6NrhjXgpBek78a2CQrqQo1El1?=
- =?us-ascii?Q?4mpGjE+RlyLN7+u+BcR60hvW/ohlFU6jcSXaZQ5dBMKC8CiLh9bPbmABrPqa?=
- =?us-ascii?Q?LuRZNQqBzMhrooPFFrelfx3TpWy75s1F5wBE9qSBdw1KF359uGSDKxFpmAEP?=
- =?us-ascii?Q?mTczg49gh7arvtshJ0d15nzAPEUzg22Ab/8GPNoI9REO4ESIQ8uOLMFChLBT?=
- =?us-ascii?Q?nAgM+vwTTNzrRXOfyIwviPK/dsB+bvM7FTzW6km0ukf1lbKy3+uonhZCm04z?=
- =?us-ascii?Q?vTcqhmcUcnoGhvkUL61JItpI443ZpzAdCqreZ17oajDNDQ4mhA1jL1zl5K5S?=
- =?us-ascii?Q?S0ydH0Dko2IdgDNEwwH+ndJ7YRpJJ1teyuQV2WUQ5WYz7Tj+/2sBZiqNegtx?=
- =?us-ascii?Q?CHAZxCRwkXGgW3SMGyT1LBUIXUpu5i3kqn//Fco3LdRsPSGgfgsgBDse4ntJ?=
- =?us-ascii?Q?7YO0VV1DZpQKL0CV569FGUW/2v/LRTJIHs3o00VnAwx5nAahDo234uTx9XDP?=
- =?us-ascii?Q?G7siLoO86HTX/lfAt8Xuhs+W1jXLGJs8AVVeYh7QSvtUBWFbU0H0rzOK5bzJ?=
- =?us-ascii?Q?TY8iGiUeodzx4wmQnyAf1TXaUCXEtlsQeU+kOvYMu5NS3L9jzob1j2n47r+b?=
- =?us-ascii?Q?3wFkvfIpBO922EZ+AXJAERJAzCmoD05q/tMcD7qB36swVWe9dWdZj3Xi1fHj?=
- =?us-ascii?Q?HZ3bxcUsNjBD6rM7f1sLcbyuI6TG3UDAlnKCGI860K/frMNsUbaMf7jXFt1S?=
- =?us-ascii?Q?Fg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7d70efb6-c48e-44b5-b9bf-08dd89d3d205
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2025 23:48:21.3668
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XptucY5FW4XSAcaufYnaGvmkeuqeMpzlCVS9ymxjmdEgs4cPGEsF5Ogl79+8JiVHxyuuC+EkfwQKRF5FNlnt81ijy9brtIENUL1bQxoLw1A=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7901
-X-OriginatorOrg: intel.com
+References: <20250502234818.1744432-1-dan.j.williams@intel.com>
+In-Reply-To: <20250502234818.1744432-1-dan.j.williams@intel.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 2 May 2025 17:27:40 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgRPDGvofj1PU=NemF6iFu308pFZ=w5P+sQyOMGd978fA@mail.gmail.com>
+X-Gm-Features: ATxdqUH-LQIXIc6u6p011Nom2TN3yeXoWHvmWULI7dubRZjGAyvNHQxUJyyztQA
+Message-ID: <CAHk-=wgRPDGvofj1PU=NemF6iFu308pFZ=w5P+sQyOMGd978fA@mail.gmail.com>
+Subject: Re: [RFC PATCH] cleanup: Introduce "acquire"/"drop" cleanup helpers
+ for interruptible locks
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: peterz@infradead.org, David Lechner <dlechner@baylibre.com>, 
+	"Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>, Ingo Molnar <mingo@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-The scoped_cond_guard() helper has two problems. First, with "convert to
-cleanup" style patches, it results in messy diffs that re-indent large
-swaths of code. Second, it swallows return values from interruptible /
-killable locks, i.e. the return value of those is not always -EINTR.
+"
 
-The last attempt at improving this situation, if_not_guard() [1], was
-reverted with a suggestion:
+On Fri, 2 May 2025 at 16:48, Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> +       struct mutex *lock __drop(mutex_unlock) =
+> +               mutex_intr_acquire(&mds->poison.lock);
+> +       if (IS_ERR(lock))
+> +               return PTR_ERR(lock);
 
-    "I really think the basic issue is that 'cond_guard' itself is a pretty
-     broken concept. It simply doesn't work very well in the C syntax.
+I do think you'd want to have some macro to make this less full of
+random boiler plate.
 
-     I wish people just gave up on it entirely rather than try to work
-     around that fundamental fact."
-
-Take that to heart and abandon a "guard-like" statement. Instead, formalize
-an off-the-cuff Linus proposal that was suggested along the way towards
-scoped_cond_guard() [2].
+I'd like to point out that when I said that thing you quote:
 
     "You should aim for a nice
 
      struct rw_semaphore *struct rw_semaphore *exec_update_lock
          __cleanup(release_exec_update_lock) = get_exec_update_lock(task);"
 
-Introduce DEFINE_DROP(), to create a cleanup function for releasing locks,
-and __drop() to pair with "acquire" helpers. Note, while this could use
-DEFINE_FREE()/__free() directly, that leads to confusing a "resource
-leak" semantic with "missing unlock". Also, note the name "drop" is a
-second option. The first option of calling this semantic "release" collides
-with the "__release()" macro already being taken by sparse.
+that comment was fairly early in the whole cleanup.h process, and
+"cond_guard()" - which then turned out to not work very well - was
+actually a "let's try to clean that up" thing.
 
-Lastly, just manually define mutex_intr_acquire() and
-rwsem_read_intr_acquire() helpers as it was not readily apparent how to
-create a new DEFINE_ACQUIRE() macro to automate these definitions. Use the
-helpers in at least one location to test out the proposal.
+And the real issues have been that people who wanted this actually had
+truly ugly code that they wanted to mindlessly try to rewrite to use
+cleanup. And in the process it actually just got worse.
 
-Link: https://lore.kernel.org/all/CAHk-=whn07tnDosPfn+UcAtWHBcLg=KqA16SHVv0GV4t8P1fHw@mail.gmail.com [1]
-Link: https://lore.kernel.org/all/CAHk-=whvOGL3aNhtps0YksGtzvaob_bvZpbaTcVEqGwNMxB6xg@mail.gmail.com [2]
-Cc: David Lechner <dlechner@baylibre.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: "Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/cxl/core/mbox.c   |  7 ++++---
- drivers/cxl/core/memdev.c | 18 ++++++++----------
- include/linux/cleanup.h   |  7 +++++++
- include/linux/mutex.h     | 10 ++++++++++
- include/linux/rwsem.h     | 11 +++++++++++
- 5 files changed, 40 insertions(+), 13 deletions(-)
+So I don't think you should take that early off-the-cuff remark of
+mine as some kind of solid advice.
 
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index d72764056ce6..e3e851813c2a 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -1394,9 +1394,10 @@ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
- 	int nr_records = 0;
- 	int rc;
- 
--	rc = mutex_lock_interruptible(&mds->poison.lock);
--	if (rc)
--		return rc;
-+	struct mutex *lock __drop(mutex_unlock) =
-+		mutex_intr_acquire(&mds->poison.lock);
-+	if (IS_ERR(lock))
-+		return PTR_ERR(lock);
- 
- 	po = mds->poison.list_out;
- 	pi.offset = cpu_to_le64(offset);
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index a16a5886d40a..9fbe83f868c6 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -231,15 +231,15 @@ int cxl_trigger_poison_list(struct cxl_memdev *cxlmd)
- 	if (!port || !is_cxl_endpoint(port))
- 		return -EINVAL;
- 
--	rc = down_read_interruptible(&cxl_region_rwsem);
--	if (rc)
--		return rc;
-+	struct rw_semaphore *region_rwsem __drop(up_read) =
-+		rwsem_read_intr_acquire(&cxl_region_rwsem);
-+	if (IS_ERR(region_rwsem))
-+		return PTR_ERR(region_rwsem);
- 
--	rc = down_read_interruptible(&cxl_dpa_rwsem);
--	if (rc) {
--		up_read(&cxl_region_rwsem);
--		return rc;
--	}
-+	struct rw_semaphore *dpa_rwsem __drop(up_read) =
-+		rwsem_read_intr_acquire(&cxl_dpa_rwsem);
-+	if (IS_ERR(dpa_rwsem))
-+		return PTR_ERR(dpa_rwsem);
- 
- 	if (cxl_num_decoders_committed(port) == 0) {
- 		/* No regions mapped to this memdev */
-@@ -248,8 +248,6 @@ int cxl_trigger_poison_list(struct cxl_memdev *cxlmd)
- 		/* Regions mapped, collect poison by endpoint */
- 		rc =  cxl_get_poison_by_endpoint(port);
- 	}
--	up_read(&cxl_dpa_rwsem);
--	up_read(&cxl_region_rwsem);
- 
- 	return rc;
- }
-diff --git a/include/linux/cleanup.h b/include/linux/cleanup.h
-index 7e57047e1564..3e96edb1b373 100644
---- a/include/linux/cleanup.h
-+++ b/include/linux/cleanup.h
-@@ -199,6 +199,13 @@
- 
- #define __free(_name)	__cleanup(__free_##_name)
- 
-+/*
-+ * For lock "acquire"/"drop" helpers the lock is not "freed", but the
-+ * cleanup mechanics are identical
-+ */
-+#define DEFINE_DROP(_name, _type, _drop) DEFINE_FREE(_name, _type, _drop)
-+#define __drop(_name) __free(_name)
-+
- #define __get_and_null(p, nullvalue)   \
- 	({                                  \
- 		__auto_type __ptr = &(p);   \
-diff --git a/include/linux/mutex.h b/include/linux/mutex.h
-index 2143d05116be..9fef4077604c 100644
---- a/include/linux/mutex.h
-+++ b/include/linux/mutex.h
-@@ -202,6 +202,16 @@ DEFINE_GUARD(mutex, struct mutex *, mutex_lock(_T), mutex_unlock(_T))
- DEFINE_GUARD_COND(mutex, _try, mutex_trylock(_T))
- DEFINE_GUARD_COND(mutex, _intr, mutex_lock_interruptible(_T) == 0)
- 
-+DEFINE_DROP(mutex_unlock, struct mutex *, if (!IS_ERR_OR_NULL(_T)) mutex_unlock(_T))
-+static inline __must_check struct mutex *mutex_intr_acquire(struct mutex *lock)
-+{
-+	int ret = mutex_lock_interruptible(lock);
-+
-+	if (ret)
-+		return ERR_PTR(ret);
-+	return lock;
-+}
-+
- extern unsigned long mutex_get_owner(struct mutex *lock);
- 
- #endif /* __LINUX_MUTEX_H */
-diff --git a/include/linux/rwsem.h b/include/linux/rwsem.h
-index c8b543d428b0..d1c992b45625 100644
---- a/include/linux/rwsem.h
-+++ b/include/linux/rwsem.h
-@@ -242,6 +242,17 @@ DEFINE_GUARD(rwsem_read, struct rw_semaphore *, down_read(_T), up_read(_T))
- DEFINE_GUARD_COND(rwsem_read, _try, down_read_trylock(_T))
- DEFINE_GUARD_COND(rwsem_read, _intr, down_read_interruptible(_T) == 0)
- 
-+DEFINE_DROP(up_read, struct rw_semaphore *, if (!IS_ERR_OR_NULL(_T)) up_read(_T))
-+static inline __must_check struct rw_semaphore *
-+rwsem_read_intr_acquire(struct rw_semaphore *sem)
-+{
-+	int ret = down_read_interruptible(sem);
-+
-+	if (ret)
-+		return ERR_PTR(ret);
-+	return sem;
-+}
-+
- DEFINE_GUARD(rwsem_write, struct rw_semaphore *, down_write(_T), up_write(_T))
- DEFINE_GUARD_COND(rwsem_write, _try, down_write_trylock(_T))
- 
+I don't know what the best solution is, but it's almost certainly not
+this "write out a lot of boiler plate".
 
-base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
--- 
-2.49.0
+Now, the two things that made me suggest that was not that the code
+was pretty, but
 
+ (a) having an explicit cleanup syntax that matches the initial assignment
+
+     ie that "__drop(mutex_unlock)" pairs with mutex_intr_acquire()"
+
+and
+
+ (b) having those two things *together* in the same place
+
+where that (a) was to avoid having arbitrary crazy naming that made no
+sense ("__free()" of a lock that you didn't allocate, but that you
+took? No thank you), and (b) was to avoid having that situation where
+you first assign NULL just because you're going to do the locking
+elsewhere, and the lock release function is described in a totally
+different place from where we acquire it.
+
+So the goal of "cond_guard()" was to have those things together, but
+obviously it just then ended up being very messy.
+
+Your patch may end up fixing some of that failure of cond_guard(), but
+at the same time I note that your patch is horribly broken. Look at
+your change to drivers/cxl/core/mbox.c: you made it use
+
++       struct mutex *lock __drop(mutex_unlock) =
++               mutex_intr_acquire(&mds->poison.lock);
+
+but then you didn't remove the existing unlocking, so that function still has
+
+        mutex_unlock(&mds->poison.lock);
+
+at the end. So I think the patch shows that it's really easy to just
+mess up the conversion, and that this is certainly not a way to "fix"
+things.
+
+               Linus
