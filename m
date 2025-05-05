@@ -1,193 +1,209 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D339025D549
-	for <linux-cxl@vger.kernel.org>; Mon,  5 May 2025 15:18:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC98E17C220
+	for <linux-cxl@vger.kernel.org>; Mon,  5 May 2025 16:40:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746458322; cv=none; b=XSMnRMNTJgOpbJFK+M7TKOYyn/sbu0nXNReqZ1y0RnT/KuR1VY5z2lBLv84RFt3zpzlTLh7GggOV+3M/Kt1oFK6eF5njeXL/hiT0RtdNPG9bZzR0LoVNWrr/U11ITL8YKfJhm6N/vp1Zvngo3jUq6nKi095qdGt4gEl1JZHdnO0=
+	t=1746463223; cv=none; b=NdM5K6o24WGifKH8UeN0XQMqIM08cw+IMBEXATV4oVPbah0hGetZPm4xiEimHVpua1T4V+1/fLofckT2QC1XdRVYeOSQ7aFnIfjoc7otucyjHBYmsBrHkn81kxk9/dO+t0FA3Hgn+iFSsVqnISHcTmKTs3k3fGyQBMMZblogQI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746458322; c=relaxed/simple;
-	bh=KJAM/F/GAWHknM7yF+EGxGOASDGY/+3DqH6t/EcCpGU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=HpeBgFNeK3Rda1Xs1c6W4mY2ef1ECQHG97ca3q7HZ1w4LABHWFOc1gqJPVN+BsokGVA3bHEPPQcgPExKWw2ADfqNt5ol1NgT7Zjen8Gg+zuH0p1qP4ldFLHjhwXIkZ1wvRA2A63v5pWPrCnp24sI27Ati0ApfRhkL6Wat+PChEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KxK7PTmd; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746463223; c=relaxed/simple;
+	bh=iFqE5aUDInTLI3gQHsSvSB+e5wpM5IH/Ocbfj/Umq7A=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XFL0/v0r6Cgt2l5SNnZj+W2MP2zG7A5zUuiKBWFiWbzC483gjohUpp19QO5rOuREh9tf/OdYBj05gkvorF2xB4TBKllyEFybh/IxwVqzzXMg54s190Ajt2GyLyB2VKzD3cn0cWVFRIdz/Wo86ubg0K1w0D/FXpD9JoQxSORfAzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kWh6I8sk; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KxK7PTmd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746458319; x=1777994319;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=KJAM/F/GAWHknM7yF+EGxGOASDGY/+3DqH6t/EcCpGU=;
-  b=KxK7PTmd9aoVlf4ThmBZxjDHbQ6AYJguiL3eBJmPCtFOs0wvHdIqrfvz
-   ClUcRWZI0jdtE+s6V6uLXcyTEahgDwL7g8RyDBPBehR7UykWecHbytwEM
-   xgXtEDbxEMid1eXQ/+oWZzusZU75m7HPAct2ta++u5O1EdlxY/dfQl82q
-   5t05AmI0xoFN6/74sz3WsrYAz0k+QPyzlgL38ZAPVdTcQp8bqNbX9MP8a
-   VLdabFakWKCru3wrNaUOv96YinUbH2enR0mp13UbzlaZaf6+6w4x5uqkR
-   D7mCWR1ijvWgY3+ogwWmvOQa3CntbpCoPWYx53UrQxrro864SMg4tWAJ4
-   A==;
-X-CSE-ConnectionGUID: 7/J0mZfnSzC02HCb6JPMAg==
-X-CSE-MsgGUID: E3mpexA6S8ipuBxWXf9ulA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11424"; a="51724465"
-X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
-   d="scan'208";a="51724465"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 08:18:39 -0700
-X-CSE-ConnectionGUID: IJWNGtt5TPqhOp7ouTZZFQ==
-X-CSE-MsgGUID: RgDVhi9FTvCblifVtJShYQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
-   d="scan'208";a="140074584"
-Received: from spandruv-mobl4.amr.corp.intel.com (HELO [10.125.111.34]) ([10.125.111.34])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 08:18:38 -0700
-Message-ID: <a31b071b-e683-4da1-9c5a-2578978bd768@intel.com>
-Date: Mon, 5 May 2025 08:18:37 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kWh6I8sk"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2295d78b45cso60776655ad.0
+        for <linux-cxl@vger.kernel.org>; Mon, 05 May 2025 09:40:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746463221; x=1747068021; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NjbPqPRRREtgZGw2PEbR9P44++hXXtzZ6VSCMtAfXpk=;
+        b=kWh6I8skLxqZjEbyVI0/ai7w2ARYh0e31/82PZFTxsX3PoStNkTzFGqXYQBFAyu9xT
+         LyKqkNzgwiY7t/DAbb38Uxs4qVF87fBwxKkabDVvjjXeMJ29Eh9OUuhpbfFkKtlBmoYV
+         zVxoKGOHQxuDPtLD2soMffS4pStm4Z65ymhXlsO9w7opjRNNBKCNadRN1YxMRJHNQmFs
+         Pffli2HpYTIgZaOWO8Ja2Jw+bJp1SpRgTLGmsG0TxXZy6j8BESycyk1jnz0PhAcX9m/X
+         IRs42E820byZApWB6q+Rj3OOOw30u3jyJ982N5LMbMHFxEj/0hjyowS4dYFTBreh0kVn
+         WuCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746463221; x=1747068021;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NjbPqPRRREtgZGw2PEbR9P44++hXXtzZ6VSCMtAfXpk=;
+        b=dxhZCL9mhsYDMIJ9I15RPsb7W9xJPLbpF914BY54PNCVwGjGIF4/QVHm/QiZ8D5Bf9
+         M5LTFFabZnlYVtXX0YrMn2hh2KLpmI3p5o99yv0ruEzknfS80EWeMpwJZYy05asprtRa
+         28IZGRo5SbOcAaYDg5SGrsPfCKPag4hpjv1vjc9Jgu9N41L6Yxqb0Bk6I7pYL2Uh80pK
+         K+jAGSJ9uFwtnqhweBnDbFSwyyzyNmTi1jokNOV6G/3xT/qbYXoD3dL3PpaQ2wT/Jk0n
+         Jty2NN/vkHCyccBz2A9PYbmsaOatLzVRVbjXnWg1pVrrs9xB3HDUxDMjM16rHocqjJQA
+         +dXw==
+X-Forwarded-Encrypted: i=1; AJvYcCVqQ8PAkuT12LCMe9XHB4v1BbqfF77nBcBOHqOHrurHnxIGBeEBvmhDEAXuOqbSKXDoyqLQiMD0iVU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOS/4wrpTgJjR8+LKcrcfq/gh2Xk/92IVOWGgayczrRgnNoiSN
+	fSDcPGlh0kKJIoYi4FaS+saSrWwjMHG+0mKWmy9QuriUo2P/ePQz
+X-Gm-Gg: ASbGnctME/XCqvrYm4VDOtSL6lzM7A1uATGisj5gC+x8Yi/Wr0cT526c51xF1lpLCza
+	ZQRe+2xm1SP44/11yoYcGe6+54P0X7NaWSnWVhnQrWC0f7u5E7dvi0n8IjIQaRlGke15T5nsv/r
+	6UD2p7uAuSvlpmhRHlO26k/DBKGvbtuZ3F4gV3VlsXw2jtTQObrnAckyeofRIcuRgSx/IO2rNWL
+	c0OO86xJ1MwbLWYw2AXm2TcmaKxAdG+HkEBMf15wSy8n57DoZekThPyVlqf6T4YM4p63Lp1TkwD
+	+Fu7fhbS8Zm6nuW9hCchFf/v/SVR1QJv5oVjLBDMyFve+5ILlORETrZDcOtxyaKDv4o=
+X-Google-Smtp-Source: AGHT+IFX+GkhdGN3ALtOcUgWKi2+CFDkTtzRi2oLKu2RTRWqF+s/bhhQYZZTj2P6nbS4nOc2cUhhVw==
+X-Received: by 2002:a17:903:244e:b0:227:e6fe:2908 with SMTP id d9443c01a7336-22e3311e625mr683035ad.48.1746463220803;
+        Mon, 05 May 2025 09:40:20 -0700 (PDT)
+Received: from deb-101020-bm01.eng.stellus.in ([149.97.161.244])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e1522948csm56957295ad.159.2025.05.05.09.40.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 09:40:20 -0700 (PDT)
+From: Anisa Su <anisa.su887@gmail.com>
+X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
+Date: Mon, 5 May 2025 16:40:18 +0000
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: anisa.su887@gmail.com, qemu-devel@nongnu.org, nifan.cxl@gmail.com,
+	dave@stgolabs.net, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH 8/9] cxl-mailbox-utils: 0x5604 -  FMAPI Initiate DC Add
+Message-ID: <aBjp8kvUDfwF-ksg@deb-101020-bm01.eng.stellus.in>
+References: <20250317164204.2299371-1-anisa.su887@gmail.com>
+ <20250317164204.2299371-9-anisa.su887@gmail.com>
+ <20250424121959.0000042d@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Request for help on CXL kernel panic with recent QEMU/Linux
-To: "Parthasarathy, Mohan (Compute)" <mohan_parthasarathy@hpe.com>,
- "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- Shiju Jose <shiju.jose@huawei.com>
-References: <PH7PR84MB1582216A28E1632187113016888F2@PH7PR84MB1582.NAMPRD84.PROD.OUTLOOK.COM>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <PH7PR84MB1582216A28E1632187113016888F2@PH7PR84MB1582.NAMPRD84.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250424121959.0000042d@huawei.com>
 
-
-
-On 5/4/25 1:22 AM, Parthasarathy, Mohan (Compute) wrote:
-> Hi all,
+On Thu, Apr 24, 2025 at 12:19:59PM +0100, Jonathan Cameron wrote:
+> On Mon, 17 Mar 2025 16:31:35 +0000
+> anisa.su887@gmail.com wrote:
 > 
-> Can anyone take a look and see if this a known issue ? Also, any tips on whether the issue is likely with my Linux version or QEMU ? I can share more details if required but just wanted to know if this looks obvious to expert eyes.
-
-kernel version?
-
-Also running ./scripts/faddr2line on cxl_internal_send_cmd+0x3c/0xf0 and devm_cxl_setup_features.cold+0x43/0x43 would be helpful.
-
-I've not seen that on my qemu setup with 6.15-rc4. I'm also using upstream qemu. So your kernel version and qemu version and passed in parameters would be helpful. 
-
-Shiju,
-Have you encountered anything like this with your Features testing with RAS on qemu?
-
+> > From: Anisa Su <anisa.su@samsung.com>
+> > 
+> > FM DCD Management command 0x5604 implemented per CXL r3.2 Spec Section 7.6.7.6.5
+> > 
+> > Signed-off-by: Anisa Su <anisa.su@samsung.com>
+> > ---
+...
+> > +        /* Create event record and insert to event log */
+> > +        cxl_mbox_dc_event_create_record_hdr(ct3d, &event_rec.hdr);
+> > +        event_rec.type = DC_EVENT_ADD_CAPACITY;
+> > +        /* FIXME: for now, validity flag is cleared */
 > 
-> Regards,
-> Mohan
+> This stuff is probably all valid.  If we can return remaining extents though we might
+> as well.
 > 
+> > +        event_rec.validity_flags = 0;
+> > +        /* FIXME: Currently only support 1 host */
+> > +        event_rec.host_id = 0;
+> > +        /* updated_region_id only valid for DC_EVENT_REGION_CONFIG_UPDATED */
+> > +        event_rec.updated_region_id = 0;
 > 
+> The event_rec is zeroed anyway so probably just don't set this at all
+> and no need for the comment.
 > 
-> [   57.988032] ------------[ cut here ]------------
-> [   57.990637] memcpy: detected buffer overflow: 96 byte write of buffer size 0
-> [   57.994123] WARNING: CPU: 0 PID: 46 at lib/string_helpers.c:1032 __fortify_report+0x55/0xa0
-> [   58.001055] Modules linked in: cxl_pci i2c_i801(+) irqbypass vfat pcspkr fat i2c_smbus mctp_i2c(+) parport_pc(+) cxl_acpi i2c_mux parport cxl_port cxl_core e1000e einj lpc_ich bochs loop nfnetlink vsock_loopback vmw_vsock_virtio_transport_common vmw_vsock_vmci_transport vsock zram vmw_vmci qemu_fw_cfg serio_raw scsi_dh_rdac scsi_dh_emc scsi_dh_alua i2c_dev fuse
-> [   58.016135] CPU: 0 UID: 0 PID: 46 Comm: kworker/u16:2 Not tainted 6.15.0-rc4-mohan+ #4 PREEMPT(voluntary)
-> [   58.021711] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
-> [   58.025755] Workqueue: async async_run_entry_fn
-> [   58.029028] RIP: 0010:__fortify_report+0x55/0xa0
-> [   58.032915] Code: 01 48 8b 34 c5 20 1f 73 b9 48 c7 c1 06 58 f2 b9 48 c7 c0 fc 57 f2 b9 48 0f 44 c8 4c 89 ca 48 c7 c7 d8 ef e3 b9 e8 bb 2e 80 ff <0f> 0b 48 83 c4 20 c3 cc cc cc cc 48 89 74 24 10 48 89 c6 89 7c 24
-> [   58.039451] RSP: 0018:ffffd248801a3a38 EFLAGS: 00010246
-> [   58.047157] RAX: 0000000000000000 RBX: 0000000000000002 RCX: 0000000000000027
-> [   58.053599] RDX: ffff88abbbc1ca88 RSI: 0000000000000001 RDI: ffff88abbbc1ca80
-> [   58.059967] RBP: 0000000000000000 R08: 0000000000000000 R09: ffffd248801a38d8
-> [   58.064773] R10: ffffffffba939ac8 R11: 00000000ffffdfff R12: 0000000000000000
-> [   58.075635] R13: 0000000000000000 R14: ffff88ab4007c800 R15: 0000000000000002
-> [   58.084667] FS:  0000000000000000(0000) GS:ffff88ac0052b000(0000) knlGS:0000000000000000
-> [   58.096028] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   58.106050] CR2: 00007fbd45b4b058 CR3: 0000000115109000 CR4: 00000000000006f0
-> [   58.117482] Call Trace:
-> [   58.121907]  <TASK>
-> [   58.129551]  ? cxl_internal_send_cmd+0x3c/0xf0 [cxl_core]
-> [   58.139570]  __fortify_panic+0xd/0xf
-> [   58.146273]  devm_cxl_setup_features.cold+0x43/0x43 [cxl_core]
-> [   58.153161]  cxl_pci_probe+0x431/0xa90 [cxl_pci]
-> [   58.158287]  ? kernfs_xattr_get+0x3b/0x70
-> [   58.161167]  ? selinux_kernfs_init_security+0x74/0x250
-> [   58.167922]  ? try_to_wake_up+0x7f/0x760
-> [   58.170137]  local_pci_probe+0x42/0x90
-> [   58.172399]  pci_device_probe+0xda/0x2b0
-> [   58.177444]  ? sysfs_do_create_link_sd+0x6d/0xd0
-> [   58.182205]  really_probe+0xde/0x340
-> [   58.190234]  ? pm_runtime_barrier+0x55/0x90
-> [   58.192903]  __driver_probe_device+0x78/0x140
-> [   58.197956]  driver_probe_device+0x1f/0xa0
-> [   58.203673]  __driver_attach_async_helper+0x5e/0xe0
-> [   58.208474]  async_run_entry_fn+0x34/0x130
-> [   58.217941]  process_one_work+0x18e/0x350
-> [   58.221932]  worker_thread+0x25a/0x3a0
-> [   58.223804]  ? __pfx_worker_thread+0x10/0x10
-> [   58.229040]  kthread+0xfc/0x240
-> [   58.237142]  ? __pfx_kthread+0x10/0x10
-> [   58.246321]  ret_from_fork+0x34/0x50
-> [   58.253927]  ? __pfx_kthread+0x10/0x10
-> [   58.261905]  ret_from_fork_asm+0x1a/0x30
-> [   58.267821]  </TASK>
-> [   58.269775] ---[ end trace 0000000000000000 ]---
-> [   58.274065] ------------[ cut here ]------------
-> [   58.282586] kernel BUG at lib/string_helpers.c:1040!
-> [   58.293976] Oops: invalid opcode: 0000 [#1] SMP NOPTI
-> [   58.299430] audit: type=1130 audit(1746252020.305:32): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 msg='unit=systemd-random-seed comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
-> [   58.299474] CPU: 0 UID: 0 PID: 46 Comm: kworker/u16:2 Tainted: G        W           6.15.0-rc4-mohan+ #4 PREEMPT(voluntary)
-> [   58.313086] Tainted: [W]=WARN
-> [   58.317049] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
-> [   58.322714] Workqueue: async async_run_entry_fn
-> [   58.329051] RIP: 0010:__fortify_panic+0xd/0xf
-> [   58.332500] Code: e9 dc d9 95 00 e9 02 da 95 00 0f 1f 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 40 0f b6 ff e8 d3 f2 95 00 <0f> 0b 48 8b 54 24 10 48 8b 74 24 08 4c 89 e1 48 c7 c7 90 2e ef b9
-> [   58.339956] RSP: 0018:ffffd248801a3a60 EFLAGS: 00010282
-> [   58.348114] RAX: 0000000000000000 RBX: 0000000000000002 RCX: 0000000000000027
-> [   58.356607] RDX: ffff88abbbc1ca88 RSI: 0000000000000001 RDI: ffff88abbbc1ca80
-> [   58.360981] RBP: 0000000000000000 R08: 0000000000000000 R09: ffffd248801a38d8
-> [   58.366267] R10: ffffffffba939ac8 R11: 00000000ffffdfff R12: 0000000000000000
-> [   58.369804] R13: 0000000000000000 R14: ffff88ab4007c800 R15: 0000000000000002
-> [   58.376177] FS:  0000000000000000(0000) GS:ffff88ac0052b000(0000) knlGS:0000000000000000
-> [   58.380150] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   58.384364] CR2: 00007fbd45b4b058 CR3: 0000000115109000 CR4: 00000000000006f0
-> [   58.387660] Call Trace:
-> [   58.390086]  <TASK>
-> [   58.392804]  devm_cxl_setup_features.cold+0x43/0x43 [cxl_core]
-> [   58.395791]  cxl_pci_probe+0x431/0xa90 [cxl_pci]
-> [   58.409127]  ? kernfs_xattr_get+0x3b/0x70
-> [   58.415392]  ? selinux_kernfs_init_security+0x74/0x250
-> [   58.420775]  ? try_to_wake_up+0x7f/0x760
-> [   58.423879]  local_pci_probe+0x42/0x90
-> [   58.429026]  pci_device_probe+0xda/0x2b0
-> [   58.433175]  ? sysfs_do_create_link_sd+0x6d/0xd0
-> [   58.438630]  really_probe+0xde/0x340
-> [   58.440769]  ? pm_runtime_barrier+0x55/0x90
-> [   58.442846]  __driver_probe_device+0x78/0x140
-> [   58.445598]  driver_probe_device+0x1f/0xa0
-> [   58.448532]  __driver_attach_async_helper+0x5e/0xe0
-> [   58.451848]  async_run_entry_fn+0x34/0x130
-> [   58.456739]  process_one_work+0x18e/0x350
-> [   58.462118]  worker_thread+0x25a/0x3a0
-> [   58.467050]  ? __pfx_worker_thread+0x10/0x10
-> [   58.470596]  kthread+0xfc/0x240
-> [   58.474475]  ? __pfx_kthread+0x10/0x10
-> [   58.477836]  ret_from_fork+0x34/0x50
-> [   58.480791]  ? __pfx_kthread+0x10/0x10
-> [   58.484168]  ret_from_fork_asm+0x1a/0x30
-> [   58.487363]  </TASK>
-> [   58.490697] Modules linked in: cxl_pci i2c_i801 irqbypass vfat pcspkr fat i2c_smbus mctp_i2c parport_pc(+) cxl_acpi i2c_mux parport cxl_port cxl_core e1000e einj lpc_ich bochs loop nfnetlink vsock_loopback vmw_vsock_virtio_transport_common vmw_vsock_vmci_transport vsock zram vmw_vmci qemu_fw_cfg serio_raw scsi_dh_rdac scsi_dh_emc scsi_dh_alua i2c_dev fuse
-> [   58.505259] ---[ end trace 0000000000000000 ]---
-> [   58.509396] RIP: 0010:__fortify_panic+0xd/0xf
-> [   58.512731] Code: e9 dc d9 95 00 e9 02 da 95 00 0f 1f 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 40 0f b6 ff e8 d3 f2 95 00 <0f> 0b 48 8b 54 24 10 48 8b 74 24 08 4c 89 e1 48 c7 c7 90 2e ef b9
-> [   58.520925] RSP: 0018:ffffd248801a3a60 EFLAGS: 00010282
-> [   58.524495] RAX: 0000000000000000 RBX: 0000000000000002 RCX: 0000000000000027
-> [   58.528365] RDX: ffff88abbbc1ca88 RSI: 0000000000000001 RDI: ffff88abbbc1ca80
-> [   58.532956] RBP: 0000000000000000 R08: 0000000000000000 R09: ffffd248801a38d8
-> [   58.536365] R10: ffffffffba939ac8 R11: 00000000ffffdfff R12: 0000000000000000
-> [   58.540179] R13: 0000000000000000 R14: ffff88ab4007c800 R15: 0000000000000002
-> [   58.546765] FS:  0000000000000000(0000) GS:ffff88ac0052b000(0000) knlGS:0000000000000000
-> [   58.550843] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   58.554470] CR2: 00007fbd45b4b058 CR3: 0000000115109000 CR4: 00000000000006f0
-> [   59.773090] iTCO_vendor_support: vendor-support=0
+> > +        for (i = 0; i < in->ext_count; i++) {
 > 
+> Why can't we combine this with the earlier loop and avoid the
+> need for separate storage of extents in event_rec_exts?
+> 
+I discussed with Fan and for add specifically, we will need 2 loops
+because the pending list is of type CXLDCExtentGroupList. We must use the
+first loop to create a CXLDCExtentGroup from all of the extents and
+append the entire thing to the pending list before triggering any interrupts for
+event records.
+This is necessary to preserve the ordering/grouping in order for the
+memdev_add_rsp command to know what to remove from the pending list if
+no extents were accepted.
+But the storage of extents in event_rec_exts is unnecessary and for
+release, we only need 1 loop.
 
+Thanks,
+Anisa
+> > +            memcpy(&event_rec.dynamic_capacity_extent,
+> > +                   &event_rec_exts[i],
+> > +                   sizeof(CXLDCExtentRaw));
+> > +
+> > +            event_rec.flags = 0;
+> > +            if (i < in->ext_count - 1) {
+> > +                /* Set "More" flag */
+> > +                event_rec.flags |= BIT(0);
+> > +            }
+> > +
+> > +            if (cxl_event_insert(&ct3d->cxl_dstate,
+> > +                                 CXL_EVENT_TYPE_DYNAMIC_CAP,
+> > +                                 (CXLEventRecordRaw *)&event_rec)) {
+> > +                cxl_event_irq_assert(ct3d);
+> > +            }
+> > +        }
+> > +
+> > +        return CXL_MBOX_SUCCESS;
+> > +    default:
+> > +        qemu_log_mask(LOG_UNIMP,
+> > +                      "CXL extent selection policy not supported.\n");
+> > +        return CXL_MBOX_INVALID_INPUT;
+> > +    }
+> > +
+> > +    return CXL_MBOX_SUCCESS;
+> > +}
+> > +
+> >  static const struct cxl_cmd cxl_cmd_set[256][256] = {
+> >      [INFOSTAT][BACKGROUND_OPERATION_ABORT] = { "BACKGROUND_OPERATION_ABORT",
+> >          cmd_infostat_bg_op_abort, 0, 0 },
+> > @@ -3804,6 +3970,13 @@ static const struct cxl_cmd cxl_cmd_set_fm_dcd[256][256] = {
+> >           CXL_MBOX_IMMEDIATE_DATA_CHANGE)},
+> >      [FMAPI_DCD_MGMT][GET_DC_REGION_EXTENT_LIST] = { "GET_DC_REGION_EXTENT_LIST",
+> >          cmd_fm_get_dc_region_extent_list, 12, 0},
+> > +    [FMAPI_DCD_MGMT][INITIATE_DC_ADD] = { "INIT_DC_ADD",
+> > +        cmd_fm_initiate_dc_add, ~0,
+> > +        (CXL_MBOX_CONFIG_CHANGE_COLD_RESET |
+> > +        CXL_MBOX_CONFIG_CHANGE_CONV_RESET |
+> > +        CXL_MBOX_CONFIG_CHANGE_CXL_RESET |
+> > +        CXL_MBOX_IMMEDIATE_CONFIG_CHANGE |
+> > +        CXL_MBOX_IMMEDIATE_DATA_CHANGE)},
+> >  };
+> >  
+> >  /*
+> > diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> > index b742b2bb8d..ccc619fe10 100644
+> > --- a/hw/mem/cxl_type3.c
+> > +++ b/hw/mem/cxl_type3.c
+> > @@ -1982,8 +1982,8 @@ void qmp_cxl_inject_memory_module_event(const char *path, CxlEventLog log,
+> >   * the list.
+> >   * Return value: return true if has overlaps; otherwise, return false
+> >   */
+> > -static bool cxl_extents_overlaps_dpa_range(CXLDCExtentList *list,
+> > -                                           uint64_t dpa, uint64_t len)
+> > +bool cxl_extents_overlaps_dpa_range(CXLDCExtentList *list,
+> > +                                    uint64_t dpa, uint64_t len)
+> >  {
+> >      CXLDCExtent *ent;
+> >      Range range1, range2;
+> > @@ -2028,8 +2028,8 @@ bool cxl_extents_contains_dpa_range(CXLDCExtentList *list,
+> >      return false;
+> >  }
+> >  
+> > -static bool cxl_extent_groups_overlaps_dpa_range(CXLDCExtentGroupList *list,
+> > -                                                 uint64_t dpa, uint64_t len)
+> > +bool cxl_extent_groups_overlaps_dpa_range(CXLDCExtentGroupList *list,
+> > +                                          uint64_t dpa, uint64_t len)
+> >  {
+> >      CXLDCExtentGroup *group;
+> >  
+> > diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> > index 217003a29d..1d5831a0b6 100644
+> > --- a/include/hw/cxl/cxl_device.h
+> > +++ b/include/hw/cxl/cxl_device.h
+> > @@ -809,4 +809,8 @@ bool ct3_test_region_block_backed(CXLType3Dev *ct3d, uint64_t dpa,
+> >  void cxl_assign_event_header(CXLEventRecordHdr *hdr,
+> >                               const QemuUUID *uuid, uint32_t flags,
+> >                               uint8_t length, uint64_t timestamp);
+> > +bool cxl_extents_overlaps_dpa_range(CXLDCExtentList *list,
+> > +                                    uint64_t dpa, uint64_t len);
+> > +bool cxl_extent_groups_overlaps_dpa_range(CXLDCExtentGroupList *list,
+> > +                                          uint64_t dpa, uint64_t len);
+> >  #endif
+> 
