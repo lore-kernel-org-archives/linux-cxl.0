@@ -1,201 +1,274 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E24C42A97
-	for <linux-cxl@vger.kernel.org>; Mon,  5 May 2025 04:33:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746419613; cv=none; b=Tn/a3JhSxyYA2rh/4n4yvudFWM0Q77JIoQ3kG3ZmVFghePPpnE3mW9lddUE+JVPmSI3wlcuVekGDoqzdVO9M3+bKe0c8K04y7Y0d6QxjD+/M4zz2ns4yodtH1M+6bu/8alLqdRvZW7tijnXMC+GJ8fnCaQJwOmCmCz6/EdMLELo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746419613; c=relaxed/simple;
-	bh=wYrsr5eykOoHdCR4aGbuNES0RHhOWBOTHAvr6xT/ORk=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qFuxQrDjrlhEYXpzHDi+6iI8gNCCXeB1e1DwIn3gyPvxtL3yeTTz+Y7OH2OAYnrVGoBVOOv9WteViMtMTJW1zslXVXI6rqBx8JRdzt5ZrDmBXUXiMlr/qdkvjGoCCxAcNgYm15JpgKoNbCsv0nqRGzrQEMuSor5G/alKc+Djd1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YPR7npmO; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1288A17A31F;
+	Mon,  5 May 2025 09:59:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746439154; cv=fail; b=lNdeMNTBhoJ6rDYLxzAszr66xYwCak536sEkP/baaD5WOjg+mJ7C27+quw6xb0CSskMi3DoyX9n+yd+b0M0AqjQuqBoGNKkax8qUbOEZ0ZS7cVcVqRvVn/VXBk4YhYZ4zPT7RddcCSycmDjcQN625S2TZjlINJI/mVqC1SekEjA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746439154; c=relaxed/simple;
+	bh=/34UqBoUsmgqSOK2verF/rZGk0yv8lumPkAiU1inLbs=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=m7aq/9mkryLKjYuMkM8m0p4J9j9ioLne+y/sEUM+G7T5nA7RRePv7TzfPYw4a80I/jOl4nMuiAf9beBLOkE4UgHRv5/kUpLUA9z4SE5wb9iddTPiECgmQE2yq9EWtRKxDFJvtq6smEe3bKdbRVuX5oJ3pi52ZGpC5Kh2F2pbFhc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=LQv1BocS; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=BmebxpIL; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YPR7npmO"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22c33677183so45461155ad.2
-        for <linux-cxl@vger.kernel.org>; Sun, 04 May 2025 21:33:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LQv1BocS";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="BmebxpIL"
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5459bfUM006124;
+	Mon, 5 May 2025 09:58:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=qlYWGbPloTD6cWkt5xzFeXLXVkFH5IGYgmudhC7wbNI=; b=
+	LQv1BocS8/aYt1iMGhKqF1F0qH+MMc4WzLyRSq+lFHM4g7EkJBR6QDncbCe8dN0f
+	0qE9jPky2MkaHeGoOHSCtn34NQnYuj2tnh/zRAwu91eGtH3AfJivro674IditJ6V
+	0np07o8NFDiWjjKyKYFcT/VVM6Mk345aXbKmD0L4cssvIcSeo4+k+DPjItNIZh6g
+	WDUjrSxZdPDecQHKrtM0YmMpQv0i0tAZfTQongfox+/6WmlEmVVwC+wAX1h+3IGI
+	p3RHF8bmyEXQd8u8V+/otMIkH0Rae87XelpX5vSHf/zD1jNuOKUHBDf05idULOt4
+	7YqGSIDvrh/Y+AIFIKpqjw==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46etuwg10y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 05 May 2025 09:58:35 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5459DMNx036063;
+	Mon, 5 May 2025 09:58:34 GMT
+Received: from cy7pr03cu001.outbound.protection.outlook.com (mail-westcentralusazlp17012039.outbound.protection.outlook.com [40.93.6.39])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 46d9k88ar2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 05 May 2025 09:58:34 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=A2360xSs7tXE+M/OKzBS2A9YnM1szO+VAPlfvasftavAXJ92dK/K2+fSuofH8TmiCJ5d1M/BoRvZI12q1mN0+RVb6JuOdf2QiuZwnETcQTm8Te4jlFO6zlWfDEE4g/L+17JAcTDe0Yf4Yy1Q/ZEZPpr0pRMSFIF3Pe/TDx1af6Om41hQLyCgLyqVHd/KcPW/uv80mYuQmyi2Ykdhv4q0DCQpxKiURK9YLVtcM9fqsUSBl5D7DsQv4ZMZnvb+ysoix9coMEQLEBk6X10Kab72FIaihUZSjgSHMq48OvgP8qB/ZpfIZyAbJsQk7LkVYyc0aYeg7mdY0wSYnETE9hHWpw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qlYWGbPloTD6cWkt5xzFeXLXVkFH5IGYgmudhC7wbNI=;
+ b=UAksfuUuh6p7wBrnCoA8OWShR1/yUMU3WScOhxJviF60ljtSvoww2CXiF067KNwHlALbUA3w8NXD+BQ0QVMVBnkrRwJpPdJd3485qaP0JUvHcRFviBcSXe1t+4wyLibTZgL5yPbhxQGT+leo6rp0nq/NNhqCA+3TkBQ+gUCzQc/GZfzhvyky2xMUkg/nXEcGjBSkmArbmvxTgtCmRlwzPArAUlhTnn4VPa/FfTSO6NfZTlW0FaRl3tFBfUCuskd8A26+3ykdR/X4d66U3rlABBWM4/GBSiO5VyRS3JmtJqwDsOQzLzmiYNb3nxKiBjEhcSPH8b1WnS99E8HcKQ9PSA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746419611; x=1747024411; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wnogAiqQ98cz/XFI4NNcH9qZp6bLzlYWVH7sHZUujhc=;
-        b=YPR7npmOJP0hKwP07kHvgzdfoIPQPcVeZ1uRlvzVS9uXi7g5HP3BlfO0OZe9K9WCd1
-         sU0As69K/GG2mPco/ij5HG6V0dWitc1q0PWDFfBh5VwDr9bQam+F3ZUp1xT8z7sORyUO
-         /9NIcHwGHjZwGKzXrti8nUOU7Diu4Lt3OFTTWY+CZQVVPTJfD3HocWaBO5/mj94qHsJT
-         1d9FUVsa84HMRtNTdfWUNfwZUMjCtkMhpumaj+s+fsIbUwAfCcOK/eIabzLHo+YnHVIu
-         qFfSt/EfO8SPvzBvYFGfRmCDQ5u/pzYwt4sucvxnUjiliCP8q4bvCLlnRR7zMgxMh8BQ
-         XDug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746419611; x=1747024411;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wnogAiqQ98cz/XFI4NNcH9qZp6bLzlYWVH7sHZUujhc=;
-        b=xVHHjiSawtEstakv0lEPgZsT0xaBeJ63odCwrKWJjPdr4fgdYhJet225TgicBMhWpb
-         3EHUfpKQ2GpGPyysRJjmQJhF7+fLNBQe4uinbfwPibt7LQXG0krkkbv0yrhT2p1T0O7o
-         TstpuUPc/856oo4W3fJwFBslspDd7gDpIxtQmSFOZTFFP7hjZ8RUKhbHQOq/Anyvyyx3
-         pf++2oU33KtezgXX46lHc793fe/4DUu0YTGoRWjt3OMeQ6jJUploqe8MvkeggblHLPoI
-         Xej6sJgY7f0M51Xf3sXF9SNUah4MX7kQpd59+mgJOGDSiZEyKJPUKlsp8H3rSKW/7Ps3
-         LtLw==
-X-Gm-Message-State: AOJu0YxxQq4rUQAwITq3AONMrYwzLii+R+WtEau8TBJqXC/s7eel/vaq
-	5AFq01Pze5wa/dbXsV4vl0a57pa9zWG9qqRIH+oxBjs9O/kv2xt4efIwQw==
-X-Gm-Gg: ASbGnctKJOkB+Lmal2xQ6yNcFDmG02V3LBQ9Lk0UHhursXQDSola8dmlwMhNyPvH+Rf
-	trAH8RYtSxlPCryFrKxNSclbZXjPdWjZKDyuiQRusWDZDZ1uAybtEYK3MGoURMza/WmXvUovx7E
-	kj67enIPoJALoAvoo2pmigvA7vGP0GBQ1RcfKypc/V7yc3MGPhIOxLmNAcaoPhTkH13BUMHyBk+
-	jA72YgQARK/MnmqwN3q90krxlL+0bFCji/BY6no5BO++vLEbvtHKGlhIvFdpRIWQCr5bxweTm1P
-	XcB4LbdKemmwFF/8D8JHO+7MLWdywg==
-X-Google-Smtp-Source: AGHT+IH6zKWTyPWfAep8oxOCAadhLTLFX7Hr+vgO2ULd7d70CIP8rFoJpDqFF3lRNBqaPCot9FsYsw==
-X-Received: by 2002:a17:903:250:b0:220:e924:99dd with SMTP id d9443c01a7336-22e1eae4211mr96513905ad.34.1746419611263;
-        Sun, 04 May 2025 21:33:31 -0700 (PDT)
-Received: from lg ([2601:646:8f03:9fee:278b:f4fe:66d9:a6d0])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fb3b7bbd0sm3760269a12.37.2025.05.04.21.33.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 May 2025 21:33:30 -0700 (PDT)
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Sun, 4 May 2025 21:33:28 -0700
-To: "Parthasarathy, Mohan (Compute)" <mohan_parthasarathy@hpe.com>
-Cc: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Subject: Re: Request for help on CXL kernel panic with recent QEMU/Linux
-Message-ID: <aBg_mPgbdcXDaypR@lg>
-References: <PH7PR84MB1582216A28E1632187113016888F2@PH7PR84MB1582.NAMPRD84.PROD.OUTLOOK.COM>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qlYWGbPloTD6cWkt5xzFeXLXVkFH5IGYgmudhC7wbNI=;
+ b=BmebxpILldIAjcTUnS/2ka1o9shuY20zUDxG27J78lScgnqkZTbXhM96ar4+5KntvP/EOt3zOVo+I2Txuu2FPuUVnVCMW8cmUA9jGBtmgAV6CBq6+EchmwieQzK9wJgNwypZe5Y09XmiuUkkHsSF32gtnXl+QCshvT3kpdiE8p0=
+Received: from CO6PR10MB5396.namprd10.prod.outlook.com (2603:10b6:303:13c::9)
+ by SA1PR10MB5821.namprd10.prod.outlook.com (2603:10b6:806:232::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.25; Mon, 5 May
+ 2025 09:58:31 +0000
+Received: from CO6PR10MB5396.namprd10.prod.outlook.com
+ ([fe80::4487:ae4:5f2d:d555]) by CO6PR10MB5396.namprd10.prod.outlook.com
+ ([fe80::4487:ae4:5f2d:d555%6]) with mapi id 15.20.8699.022; Mon, 5 May 2025
+ 09:58:31 +0000
+Message-ID: <1fb6b57b-4317-404d-8361-19e1c3bd499c@oracle.com>
+Date: Mon, 5 May 2025 11:58:25 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] PCI/AER: Consolidate CXL, ACPI GHES and native AER
+ reporting paths
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc: "Shen, Yijun" <Yijun.Shen@dell.com>, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>,
+        Terry Bowman <terry.bowman@amd.com>, Len Brown <lenb@kernel.org>,
+        James Morse <james.morse@arm.com>, Tony Luck <tony.luck@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Ben Cheatham <Benjamin.Cheatham@amd.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Liu Xinpeng <liuxp11@chinatelecom.cn>,
+        Darren Hart <darren@os.amperecomputing.com>,
+        Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250424172809.GA492728@bhelgaas>
+ <61d3f860-9411-4c86-b9c4-a4524ec8ea6d@oracle.com>
+ <20250425141401.0000067b@huawei.com>
+ <0f4944a4-fd05-4365-9416-378a7385547b@oracle.com>
+ <20250429165410.00002c86@huawei.com>
+Content-Language: en-US
+From: Karolina Stolarek <karolina.stolarek@oracle.com>
+Organization: Oracle Corporation
+In-Reply-To: <20250429165410.00002c86@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LNXP123CA0012.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:d2::24) To CO6PR10MB5396.namprd10.prod.outlook.com
+ (2603:10b6:303:13c::9)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PH7PR84MB1582216A28E1632187113016888F2@PH7PR84MB1582.NAMPRD84.PROD.OUTLOOK.COM>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO6PR10MB5396:EE_|SA1PR10MB5821:EE_
+X-MS-Office365-Filtering-Correlation-Id: bdf4e75f-b71c-47e3-9751-08dd8bbb6457
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?R05YNlFNd1EzSFdQVkhyMGJ1U0ZISXNmVU5YZ2cyOGJzVmExVW94MXBOTzdt?=
+ =?utf-8?B?bURlcnZZTDhFc2dpVmJvQ3dHaG5CV1lnazlhT2ZpOG9tcFExOThpUWVUNVpt?=
+ =?utf-8?B?K3I3TGNZMzNxd0V0REJZYTAxV2RRTTNZdWp0ZnNJUE51ZHB5MjgrWUR1UVVY?=
+ =?utf-8?B?ZGRzL3pYV1h6T2VNYkVKVnFEY0ZESE5CZUU1M1Fybyt2cFBOenFEWWwrMWF5?=
+ =?utf-8?B?M3FiWEI5em9HaUdpZjZuTUNmWjBNNW1WMWFnQURENzZKY0hpZFlsbnpsai9m?=
+ =?utf-8?B?aGZYQmxjRlVHQkQ4TzFBdzcrZy9ucUg4Z3ZOSlN4bFFpcExuUWhEVFoxcExk?=
+ =?utf-8?B?aHNoKzhGNDk4VVZja0pNalNjcW5NNkNyK3RHdlVUN0xVZ1RxM1B6M1pKZlJ2?=
+ =?utf-8?B?VkdXNDNXNTRyL0FxcmJhbXFaR0ZiV0dLMmZjZ2RUazk4dERvajRuL3B2aVEw?=
+ =?utf-8?B?NzVsVVJOL29xWjlJYjQxZGtlZ0RMaXdJdy9nNWFFSEIwZXU4amRKdEFMaE1X?=
+ =?utf-8?B?UGd6aEI2SDJnRWkzNFEreEdzRG5mSG9zc2x5ZmFZL29lTkJjOXFxb3Y2OWRs?=
+ =?utf-8?B?ckVMSmx2cFBRNXdVeEk3cFlFVVBLTG5kSFNUbDJCaVhxTHAyeHN5a2pLVXRs?=
+ =?utf-8?B?eEw1WlhXT0dRaVV6RTlVMDF6d0h0YzBUUDlBNm4rYVhCbkZyRkhBaFhwRlJp?=
+ =?utf-8?B?WlJPWGZpRTRUUU9RQytjVE5nelh3b3U1KzRraGhnS0xIVjR3QVBJMXJoRitQ?=
+ =?utf-8?B?R1NYSHJtZ1BtQ0I5Z3dHaGZRTkJaM0FRTG4wd01vdTlmTDdhTmdUbDdvNTh6?=
+ =?utf-8?B?a1Jpd0dxZW9TYlpaeGovWlo3akl4VXVtRG9lNERlK1hpYWFEVFhGSW02YS9N?=
+ =?utf-8?B?b2dWS0tBem4vMDM2WTFmZ1gvZHd3OEdiR0d0OVhkdXZ1WHZLajJUMzZKN3Mw?=
+ =?utf-8?B?RDYxNVNMM1dPZjMwVXZUbmVieHE1WDZWaHl2Z055dEIycFk4K29ORVludmNk?=
+ =?utf-8?B?T1YwT2M3YjRPb1pJeXFObmZSVGh3ZWtkYThrYmZyZWpZZlpMdEU2ZEN0U20w?=
+ =?utf-8?B?TWtiUmgvYlZPVU03WkpqNEhKcTF2SiswYmIvbDh0aUlIWnBWanZTS2FNbCtr?=
+ =?utf-8?B?NXN0czhjZWs4U3dhUlNDcUllcThuQjFRK3VtN3gvelhERnVEL1VHZFd5a1Ns?=
+ =?utf-8?B?VCtXUVhXWnllUFNwcVBEeEFDTUloUUdBK1VCWEYwVDB1NGdCbTU0ejF6VFNO?=
+ =?utf-8?B?TWM0Mko0UW9tRXdYMmpqeTBWUEtJc29zUUZQM3RTa3E3MmFqRHdXdUhZTzh3?=
+ =?utf-8?B?QkJYUVFTbGJRd0dvSEFub0lJOGc2TlVmRjFzVWxBR1VQRjZpZ2JQaytHcTJ4?=
+ =?utf-8?B?eDZnQS9UQlNtWFV2VWw5S1l1QjdjK2pQS0pnQ3ltNUY0NHBtOTNOSWdyRmJn?=
+ =?utf-8?B?YlNwOW9SZTYrMUJRYmhucWdIZVlZOFF6ZFNXMzZRR1Nnd1BObG13RkdBUFpK?=
+ =?utf-8?B?YzM5S3M1Q0VnMUlZazI0ZlJnK2pDOGFWeCtyVk1HdDJYT0FzNGZjVmdhazk4?=
+ =?utf-8?B?MFY0ZkRaNjJOdnRkN2F2aGJjWGpFN0I5UGRnK0t3Zk1oZTl6WThBc2hVVU9j?=
+ =?utf-8?B?cmNHRURnbVVpT0VDbGZHZGxXTzJZdFhKQzBsbExkckY2ZHF5R0VqUno2YzV6?=
+ =?utf-8?B?UWRzL0FhMGFpVXhoRDJBakNCNkJoQ3BvbnBkR3RmdklTYmdvMnVBOGx2alN0?=
+ =?utf-8?B?ZFAveHpBZUZ5RnpXWFVQMnorajhUOWQwcmFNMlVvK2QrYmYyRWYyRE52akNM?=
+ =?utf-8?B?b053aFZWTW1idXRJaGtBdk4xVnhJeW5sT2EyRTVENUpSOHM5Q2hrZ1ZTRXhs?=
+ =?utf-8?B?aUdNRktDS2g5RHVoT2lVdyt3NEFlNC9FSjJKeHgwMllta1g2RWpRSDBBQWRL?=
+ =?utf-8?Q?KGbupEvXjRE=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR10MB5396.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?QzlqcjBLdUFUa0ladUUzNUJPdTk1b3RNYkt0M2pBSC9rNi9jSUF3eURYeWEy?=
+ =?utf-8?B?SU1TWU11N3RwUHJmc2RTbTFjMjNTWk5iWFd5cUl4TUFRTWFCNy9UMEswVmJI?=
+ =?utf-8?B?WG9aVjJycmQxdmw1ekJ6NzJiR3BSdUhmc1dPdmZtRk1QcElRY3o4MGwrNzVR?=
+ =?utf-8?B?U1ZrNWhrTGg4d3k2REVRajJhRmhtcDhFY281YStkOHZDeUl0WlJIdG1ZVjQz?=
+ =?utf-8?B?empZTDQ2WmRRbURnMXF2LzNLWkY3elNucXVvV3dnQnNCTEEvTUpFZnVNeCs0?=
+ =?utf-8?B?ZzJCTXdnL1V4OTRXb1JTMlhBaHVNeDZseVZwVnQwYmZlaHhRa3VsUHMzV1BI?=
+ =?utf-8?B?aEFFKzhwNzJKdWgzSUR2S2V1dEp4bzJQTTNOOEJpNlJwKzhDZEJOd0EvOHow?=
+ =?utf-8?B?Vm9RSnZLMjF4TUd4aGtDR3dGcVFRb0xuVTh1REErYlZmbVh4dFZyN0RGRkNF?=
+ =?utf-8?B?MDc5dXFuL3BmWHFKcjZFUCsyc3krUXlmWWQremhGbFdjb095a2NJYW0rNVJq?=
+ =?utf-8?B?OExXZ0Fad2RpVmk2Um5oUk9Cbm8vVGFPTjNnQ2RvN0thcGM0K2JFVW1qckRR?=
+ =?utf-8?B?a25mQTVrWXYxemt5QmxqaEVIZE9iYTVjZ0U4NEFMNEtuYzBDRGtObCtFa0d2?=
+ =?utf-8?B?a2xjVkNRR3dRRWNDVk9telNVTiszYVdlWmRJNnI4UVF5dEF0RTJVUWlYL2Q2?=
+ =?utf-8?B?Mm4yUS8yeVFhZVR5ZG5ucFV5b1Z4Q0cwSXhMdDhPaEhEaFo5Zzd6dEtmaXZ5?=
+ =?utf-8?B?ZFZCT1g0dTFSSStXZmUwYnAzeS9mZEFYQWdkQ1M2dmdjeWM3MmF6eU9WTGFV?=
+ =?utf-8?B?TnVEK1RPOXM1ZzJnd0puVHNCaFczZ29VNjZ5akhId2piU25iWDI4Qnp0anhG?=
+ =?utf-8?B?MzU1Y3Y2VTZ6SW1TOTE4V1NNVlFHVkpaWkhyNlE1Vk9zNkdoeUlDdVZlTzFT?=
+ =?utf-8?B?UUhZbUtUZHZ5YjdVeEhieVIzcndINVd0eXdOdEdLYnJLdHVJNWtleDNOTHJk?=
+ =?utf-8?B?RStKeVFLTW5VWCtPL1FIWVRsVTMxNUJTRGlRMzVvK1NMbkRpcS9uZklTRUdI?=
+ =?utf-8?B?T2c4NlN0VjhmK1BneFhaa2tVeEZoaWl3alJWM1hidTV2MjNzb2xZK3QxT2g4?=
+ =?utf-8?B?eHBVSmFERFo3a2FnM1ZzU2tQT2k1OGlkQWZ2WjY2Y2VSMGFQSzJEbEF6VzJT?=
+ =?utf-8?B?Vmh0OVo5dytHSUJUVFVkUlh0RWdYTldRcnYxOFFBeEc0MnVnNUJ0R2tmREc5?=
+ =?utf-8?B?TTZCYUZtdXNqeVlFS0RaZ3Fqa0J3dlFINVJZQnVpTUhvYi9PYlNFVGNRc3Fl?=
+ =?utf-8?B?NnNtWjBXeFNmOFR1TGd6cWZYNTZKcVN4d1ZxYXJFUE9XRmFnS3ZCRUIwZllW?=
+ =?utf-8?B?cFBWMzdaOW1PT245STM2SmRSU0FQUTI3dGRmdFlmMU54aGdvZmEyNHZoRFdl?=
+ =?utf-8?B?TWIyQVlkcm1GQmF6T05tcTY5cHpQeDBGMHk4aG5BV1JGUjZuT29zc24yRXhs?=
+ =?utf-8?B?cTRnU3UwOHlrcE1UUUtRWnJKQ2ozcVRySHJRSTFGczN4U3FReG16RXdBNGNs?=
+ =?utf-8?B?djlOT0VIeWRtU2NGVnZlNTJoeU44UTNhTUxmOCs4YU4vemNLV1ZvT2VyQXlw?=
+ =?utf-8?B?NFBxZHBjeXVNVEdwWEhkSmpkMDdCOGNrUjkzaHdVd2F4aloyNDZ0d09aQmNm?=
+ =?utf-8?B?WDRzY01aT2UvbUFBaVRkTnJHS28zYVRqRFpNODBaOUlWSVhmRDkrTko4bnNI?=
+ =?utf-8?B?VXh3aHNWK1E4NkloSnJDRUxNVU5jcW9Qc0ZwakZQQzZRc1dqc2dvUlNzZXFk?=
+ =?utf-8?B?UE5lZnFLV1QvK1R2dkoxYU8yM1hJbWtMRHprZk5qNytSNkhEemFONzgydTh2?=
+ =?utf-8?B?N3RUQzU5VExoQW1MUytrYmRlMVNTR1VpQlRzK2VnZGk2LzNyZE16N21WTHht?=
+ =?utf-8?B?aDNRYVFGbksvbCsxb1hhbjNZaDRRcEtRYUZDL1RWeGxwZGZKSk9rSC8rMDNK?=
+ =?utf-8?B?MlpsQTV6UW5ZV0p1SW9XTUp5NWxEc21sVDd4d0MvaWM4ZTlMUjR4L2h0Q1cw?=
+ =?utf-8?B?bm5DY1I4d2RHR2RtRWlDMjRWNVVibTBkZmRleE0rQzZZZ3paU1NQY25zUVN5?=
+ =?utf-8?B?VWlXSzhNbk0ycUpUdFVLOVFpa3JzdmY1NFNFeExxbFg1alJkeVFtcVVYbmVk?=
+ =?utf-8?B?RWc9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	Frsao0H2SvdY9hjMOYQCdWBTReRphWQI8/0rlphAjRjZbazyiUH9ogkNynw0uMlLPPud1smpsetlBd5lUJt/bBgUWzYSog1vZ+O4YPjkwq3YuKVhZyARAGl65K+rtz65bKUotNws//WHAvMQA5EoUKb+iXrBo02Y1fr+db0MvCZ1ZuDnG7rOv5m3O4BXHg3dDXgMp0ItVTjexrWkWmkUMuMKxt/FXYwI20niKjJVKlVp8kSG6T1GOJ3mbk/lZQzTpHuutiSi4WDhLXqtUl4yUPG3K0h3r7Sz7ZtfuofS5PHa1sBwbDCJsy0A9vbvX/kwFRs6tpSItCOEtxAdmE83jP/izAF9tET25EYEZ6WUGT4D6wduxQ0yVIja2gPY4S68+fTK6nKmkPBDiThDVxAX7y9EPaY9BVF50LL4r0H4yTiDibuMwmL3E3QvhB/d6P2dvdiW2/okW1nSxIiMWpzsnY4s0F8RjW/W1+nsPgRrtc4QN06N23PotvcemTzXkbpStoIOb7LRjhthSyC0NtQUROZeV9J+zS9dL6QDSowAoTzqZo8Mik+c1Z+2lDmsNFiqTxNfx0fzfPlXGq4Hr/hv7/KT6B1XBgsylHxBiqIHrPg=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bdf4e75f-b71c-47e3-9751-08dd8bbb6457
+X-MS-Exchange-CrossTenant-AuthSource: CO6PR10MB5396.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2025 09:58:31.7540
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: L9YIqVt11TqPJF//yQGYzFxpqRCaOvHs/8mInfs4VydQ/eov1sSmd4wom2POF6cZZq4mHvR9k5SAtAr6UIk+5c7FF+IRFlYhXXWnNkBRLxk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB5821
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-05_04,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 mlxlogscore=999
+ suspectscore=0 adultscore=0 phishscore=0 mlxscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2504070000
+ definitions=main-2505050094
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA1MDA5NCBTYWx0ZWRfX3jZrJbDPdvsq Bji5VcyZ7AxfBLRapIdyfdRrRB6BYk5aKRxPAIVVdaULZ61zuDlGxaRoVFy9+yDnRAOYxA6aV2g ra3un+G+XA2h/mxC7nD3GE7hNexhWG9iO7IggEccN9imJyFWIND6+1U19KGgLx26R4a89jH3gkW
+ euan8lsCeckiYii8kQH/BwZoRP7k0TRTWP62pRg9VOlP4Ouri1TaQYQJFcVi/eC4IhV7j8eUa+y QzplBzX9BH8QTfvcRQJ23KoW36dXplQPpMlAGtVtLzrgreacD7i+rd2LZWAveOxXhcS+pt9PNeE Sm2UAmm9PYloZQI51gLg17Z+yp2odt3mvzvL2+sOZ1n4KFqlmyfjBk+mw4WqkxX4Kbkd4xUvk3p
+ sm3txRHJVXULlSyOgagiuA/cLiWMKgnyci6gz1iMr1A1ytkjKFTjE+HBZw4JaSWm0FhI6s4g
+X-Proofpoint-GUID: s9564EZuWF_tvkq8dbIRvGlYgRMYLT2j
+X-Proofpoint-ORIG-GUID: s9564EZuWF_tvkq8dbIRvGlYgRMYLT2j
+X-Authority-Analysis: v=2.4 cv=eNgTjGp1 c=1 sm=1 tr=0 ts=68188bcb cx=c_pps a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=GoEa3M9JfhUA:10 a=yPCof4ZbAAAA:8 a=5pG2b1FMK3LYbF3W20UA:9 a=QEXdDO2ut3YA:10
 
-On Sun, May 04, 2025 at 08:22:04AM +0000, Parthasarathy, Mohan (Compute) wrote:
-> Hi all,
+On 29/04/2025 17:54, Jonathan Cameron wrote:
+> On Fri, 25 Apr 2025 16:12:26 +0200
+> Karolina Stolarek <karolina.stolarek@oracle.com> wrote:
+>>
+>> OK, that means even if we manage to inject a PCIe error, AER wouldn't be
+>> able to look up the Source ID and other values it needs to report an
+>> error, which is not quite the solution I was looking for.
 > 
-> Can anyone take a look and see if this a known issue ? Also, any tips on whether the issue is likely with my Linux version or QEMU ? I can share more details if required but just wanted to know if this looks obvious to expert eyes.
+> Isn't the source ID in the CPER record? (Device ID field) or do
+> you mean something else?
+
+Ah, sorry, I got confused on the way. I meant that even if we have the 
+Device ID in CPER set, the specific device has no data in aer_regs if we 
+inject an error using the GHES error injection script. We probably would 
+end up with !info->status in aer_print_error(), thus printing only a 
+line about "Inaccessible" agent and return early.
+
+>>> The aim is specifically to allow exercising FW first error handling
+>>> paths because it's a pain to get real systems that have firmware to inject
+>>> the full range of what the kernel etc need to handle.
+>>
+>> Does this include PCIe errors? If so, that probably doesn't make sense
+>> to try to test my patch on an actual system?
 > 
-Hi Mohan,
+> Ideally test it on a real system as well, but indeed the intent is to
+> allow testing of PCI errors on emulation.
 
-It would be better if you can share your qemu and kernel setup details so
-people who can help look into to it can reproduce your issue and
-analyze. 
+I understand. Do you have pointers on how to inject it on a real system? 
+All info I could find about FW error injection pointed to the qemu 
+scripts I mentioned.
 
-Fan
-
-
-> Regards,
-> Mohan
+>>> x86 support for emulated injection is a work in progress (more of a mess wrt
+>>> to the different ways the event signaling is handled than it is on arm64).
+>>>
+>>> I did have an earlier version of that work wired up to the same
+>>> hooks as the native CXL error injection but I dropped it from my QEMU
+>>> CXL staging tree for now as it was a pain to rebase whilst Mauro was rapidly
+>>> revising the infrastructure.  I'll bring it back when I get time.
+>>
+>> I understand, I saw some of your series while looking for ways to test
+>> my patch. Thank you very much for your work. As you can see, there are
+>> people actually looking forward to it :)
 > 
-> 
-> 
-> [   57.988032] ------------[ cut here ]------------
-> [   57.990637] memcpy: detected buffer overflow: 96 byte write of buffer size 0
-> [   57.994123] WARNING: CPU: 0 PID: 46 at lib/string_helpers.c:1032 __fortify_report+0x55/0xa0
-> [   58.001055] Modules linked in: cxl_pci i2c_i801(+) irqbypass vfat pcspkr fat i2c_smbus mctp_i2c(+) parport_pc(+) cxl_acpi i2c_mux parport cxl_port cxl_core e1000e einj lpc_ich bochs loop nfnetlink vsock_loopback vmw_vsock_virtio_transport_common vmw_vsock_vmci_transport vsock zram vmw_vmci qemu_fw_cfg serio_raw scsi_dh_rdac scsi_dh_emc scsi_dh_alua i2c_dev fuse
-> [   58.016135] CPU: 0 UID: 0 PID: 46 Comm: kworker/u16:2 Not tainted 6.15.0-rc4-mohan+ #4 PREEMPT(voluntary)
-> [   58.021711] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
-> [   58.025755] Workqueue: async async_run_entry_fn
-> [   58.029028] RIP: 0010:__fortify_report+0x55/0xa0
-> [   58.032915] Code: 01 48 8b 34 c5 20 1f 73 b9 48 c7 c1 06 58 f2 b9 48 c7 c0 fc 57 f2 b9 48 0f 44 c8 4c 89 ca 48 c7 c7 d8 ef e3 b9 e8 bb 2e 80 ff <0f> 0b 48 83 c4 20 c3 cc cc cc cc 48 89 74 24 10 48 89 c6 89 7c 24
-> [   58.039451] RSP: 0018:ffffd248801a3a38 EFLAGS: 00010246
-> [   58.047157] RAX: 0000000000000000 RBX: 0000000000000002 RCX: 0000000000000027
-> [   58.053599] RDX: ffff88abbbc1ca88 RSI: 0000000000000001 RDI: ffff88abbbc1ca80
-> [   58.059967] RBP: 0000000000000000 R08: 0000000000000000 R09: ffffd248801a38d8
-> [   58.064773] R10: ffffffffba939ac8 R11: 00000000ffffdfff R12: 0000000000000000
-> [   58.075635] R13: 0000000000000000 R14: ffff88ab4007c800 R15: 0000000000000002
-> [   58.084667] FS:  0000000000000000(0000) GS:ffff88ac0052b000(0000) knlGS:0000000000000000
-> [   58.096028] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   58.106050] CR2: 00007fbd45b4b058 CR3: 0000000115109000 CR4: 00000000000006f0
-> [   58.117482] Call Trace:
-> [   58.121907]  <TASK>
-> [   58.129551]  ? cxl_internal_send_cmd+0x3c/0xf0 [cxl_core]
-> [   58.139570]  __fortify_panic+0xd/0xf
-> [   58.146273]  devm_cxl_setup_features.cold+0x43/0x43 [cxl_core]
-> [   58.153161]  cxl_pci_probe+0x431/0xa90 [cxl_pci]
-> [   58.158287]  ? kernfs_xattr_get+0x3b/0x70
-> [   58.161167]  ? selinux_kernfs_init_security+0x74/0x250
-> [   58.167922]  ? try_to_wake_up+0x7f/0x760
-> [   58.170137]  local_pci_probe+0x42/0x90
-> [   58.172399]  pci_device_probe+0xda/0x2b0
-> [   58.177444]  ? sysfs_do_create_link_sd+0x6d/0xd0
-> [   58.182205]  really_probe+0xde/0x340
-> [   58.190234]  ? pm_runtime_barrier+0x55/0x90
-> [   58.192903]  __driver_probe_device+0x78/0x140
-> [   58.197956]  driver_probe_device+0x1f/0xa0
-> [   58.203673]  __driver_attach_async_helper+0x5e/0xe0
-> [   58.208474]  async_run_entry_fn+0x34/0x130
-> [   58.217941]  process_one_work+0x18e/0x350
-> [   58.221932]  worker_thread+0x25a/0x3a0
-> [   58.223804]  ? __pfx_worker_thread+0x10/0x10
-> [   58.229040]  kthread+0xfc/0x240
-> [   58.237142]  ? __pfx_kthread+0x10/0x10
-> [   58.246321]  ret_from_fork+0x34/0x50
-> [   58.253927]  ? __pfx_kthread+0x10/0x10
-> [   58.261905]  ret_from_fork_asm+0x1a/0x30
-> [   58.267821]  </TASK>
-> [   58.269775] ---[ end trace 0000000000000000 ]---
-> [   58.274065] ------------[ cut here ]------------
-> [   58.282586] kernel BUG at lib/string_helpers.c:1040!
-> [   58.293976] Oops: invalid opcode: 0000 [#1] SMP NOPTI
-> [   58.299430] audit: type=1130 audit(1746252020.305:32): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 msg='unit=systemd-random-seed comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
-> [   58.299474] CPU: 0 UID: 0 PID: 46 Comm: kworker/u16:2 Tainted: G        W           6.15.0-rc4-mohan+ #4 PREEMPT(voluntary)
-> [   58.313086] Tainted: [W]=WARN
-> [   58.317049] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
-> [   58.322714] Workqueue: async async_run_entry_fn
-> [   58.329051] RIP: 0010:__fortify_panic+0xd/0xf
-> [   58.332500] Code: e9 dc d9 95 00 e9 02 da 95 00 0f 1f 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 40 0f b6 ff e8 d3 f2 95 00 <0f> 0b 48 8b 54 24 10 48 8b 74 24 08 4c 89 e1 48 c7 c7 90 2e ef b9
-> [   58.339956] RSP: 0018:ffffd248801a3a60 EFLAGS: 00010282
-> [   58.348114] RAX: 0000000000000000 RBX: 0000000000000002 RCX: 0000000000000027
-> [   58.356607] RDX: ffff88abbbc1ca88 RSI: 0000000000000001 RDI: ffff88abbbc1ca80
-> [   58.360981] RBP: 0000000000000000 R08: 0000000000000000 R09: ffffd248801a38d8
-> [   58.366267] R10: ffffffffba939ac8 R11: 00000000ffffdfff R12: 0000000000000000
-> [   58.369804] R13: 0000000000000000 R14: ffff88ab4007c800 R15: 0000000000000002
-> [   58.376177] FS:  0000000000000000(0000) GS:ffff88ac0052b000(0000) knlGS:0000000000000000
-> [   58.380150] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   58.384364] CR2: 00007fbd45b4b058 CR3: 0000000115109000 CR4: 00000000000006f0
-> [   58.387660] Call Trace:
-> [   58.390086]  <TASK>
-> [   58.392804]  devm_cxl_setup_features.cold+0x43/0x43 [cxl_core]
-> [   58.395791]  cxl_pci_probe+0x431/0xa90 [cxl_pci]
-> [   58.409127]  ? kernfs_xattr_get+0x3b/0x70
-> [   58.415392]  ? selinux_kernfs_init_security+0x74/0x250
-> [   58.420775]  ? try_to_wake_up+0x7f/0x760
-> [   58.423879]  local_pci_probe+0x42/0x90
-> [   58.429026]  pci_device_probe+0xda/0x2b0
-> [   58.433175]  ? sysfs_do_create_link_sd+0x6d/0xd0
-> [   58.438630]  really_probe+0xde/0x340
-> [   58.440769]  ? pm_runtime_barrier+0x55/0x90
-> [   58.442846]  __driver_probe_device+0x78/0x140
-> [   58.445598]  driver_probe_device+0x1f/0xa0
-> [   58.448532]  __driver_attach_async_helper+0x5e/0xe0
-> [   58.451848]  async_run_entry_fn+0x34/0x130
-> [   58.456739]  process_one_work+0x18e/0x350
-> [   58.462118]  worker_thread+0x25a/0x3a0
-> [   58.467050]  ? __pfx_worker_thread+0x10/0x10
-> [   58.470596]  kthread+0xfc/0x240
-> [   58.474475]  ? __pfx_kthread+0x10/0x10
-> [   58.477836]  ret_from_fork+0x34/0x50
-> [   58.480791]  ? __pfx_kthread+0x10/0x10
-> [   58.484168]  ret_from_fork_asm+0x1a/0x30
-> [   58.487363]  </TASK>
-> [   58.490697] Modules linked in: cxl_pci i2c_i801 irqbypass vfat pcspkr fat i2c_smbus mctp_i2c parport_pc(+) cxl_acpi i2c_mux parport cxl_port cxl_core e1000e einj lpc_ich bochs loop nfnetlink vsock_loopback vmw_vsock_virtio_transport_common vmw_vsock_vmci_transport vsock zram vmw_vmci qemu_fw_cfg serio_raw scsi_dh_rdac scsi_dh_emc scsi_dh_alua i2c_dev fuse
-> [   58.505259] ---[ end trace 0000000000000000 ]---
-> [   58.509396] RIP: 0010:__fortify_panic+0xd/0xf
-> [   58.512731] Code: e9 dc d9 95 00 e9 02 da 95 00 0f 1f 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 40 0f b6 ff e8 d3 f2 95 00 <0f> 0b 48 8b 54 24 10 48 8b 74 24 08 4c 89 e1 48 c7 c7 90 2e ef b9
-> [   58.520925] RSP: 0018:ffffd248801a3a60 EFLAGS: 00010282
-> [   58.524495] RAX: 0000000000000000 RBX: 0000000000000002 RCX: 0000000000000027
-> [   58.528365] RDX: ffff88abbbc1ca88 RSI: 0000000000000001 RDI: ffff88abbbc1ca80
-> [   58.532956] RBP: 0000000000000000 R08: 0000000000000000 R09: ffffd248801a38d8
-> [   58.536365] R10: ffffffffba939ac8 R11: 00000000ffffdfff R12: 0000000000000000
-> [   58.540179] R13: 0000000000000000 R14: ffff88ab4007c800 R15: 0000000000000002
-> [   58.546765] FS:  0000000000000000(0000) GS:ffff88ac0052b000(0000) knlGS:0000000000000000
-> [   58.550843] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   58.554470] CR2: 00007fbd45b4b058 CR3: 0000000115109000 CR4: 00000000000006f0
-> [   59.773090] iTCO_vendor_support: vendor-support=0
+> Great!  I'll try and get back to wiring it all up again sometime soon.
 
--- 
-Fan Ni
+Awesome, thanks.
+
+Bjorn, is this patch blocking the ratelimiting series? Would it be 
+acceptable to use public logs in the commit message? I'm asking because 
+it looks like there's no easy way to trigger the GHES path, or it would 
+take some time, further delaying the ratelimiting work.
+
+All the best,
+Karolina
+
+> 
+> Jonathan
+> 
