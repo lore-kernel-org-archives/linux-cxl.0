@@ -1,48 +1,48 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57237EEC3;
-	Mon,  5 May 2025 17:55:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89D025680;
+	Mon,  5 May 2025 18:18:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746467724; cv=none; b=lLy7b2eRvVYWXe/SOATkbthbFh3Rm0IO8TG/vmem4t7gzbyNtPLNtVQ/cSe6Xp5W8AIU7hl3rOK6BT5Rh+EFbexznT1HugBUJVsW4nQKFm3K+zgIDmflyngL/pMEmYuw2m5Zypqa+hGlZoT1jxYJxnWVRsHSXkum3dmGWytnH8s=
+	t=1746469094; cv=none; b=ksGI7tMYleAu63IpbMEDlCoUSkUNbe3HjmWcFebr1iRUQW7zErHbA3Af3b1ZcW4CH0ep5t7wlj5BUZ7iercqW+L6zrITm2uH5S53MSGnSN1muqqWYjG/e/TDqV6+TqiRebmxLVLIUBGYDzNxd2tI9uy65aHGN/HqUp6nQ5g83Tk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746467724; c=relaxed/simple;
-	bh=AJV9SWBkkofgsLLmLFvkjd7VkJ+uBk28zKmrUgYUJ7I=;
+	s=arc-20240116; t=1746469094; c=relaxed/simple;
+	bh=d1oCyEAhdl5k3byt/GQARFiUPsdGUPEYZ9qeb+fuMV0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G9kppZWzoSpbd42gdqK4ZCD/yAWZUKQcYxYKUwJ0hCwmFKbS1BaciQHm1vu+wQV9n4CC1HPSODfGgKWoVO49A3mOzAjiPwpXbGFwcHRxpvsuXDYHQ4ksndwwkAl4BbvphjEOeUQGzWFUR276uUMbH/OWucqFgrXv+eQHcUbvXFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gwcIlonh; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version:Content-Type; b=BdEVvjUTg0pxXKiuoK/THHvx8Is8sASE6Z/hh4X90KEC8kWO0vQFdZE11Xg6vIkcr7X1E0J7UIWhrDjFD9Vn3B1z3dpllRYUcbBaA2NBhESvaNlxv2yjluIfh7mx2UuSIrwgAueS8V49pnVrwnRvh/gfLhITQH//q0eBm4CK0pk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=clDP0RsW; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gwcIlonh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="clDP0RsW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746467722; x=1778003722;
+  t=1746469093; x=1778005093;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=AJV9SWBkkofgsLLmLFvkjd7VkJ+uBk28zKmrUgYUJ7I=;
-  b=gwcIlonhkM/OSkRHlow0am03buz/hVte+HlEF/nFJ+oA5APE0FbI03FZ
-   BKbT7UvAvPxNloUdJwFO+/XtbtML99C6s5jZOwmpV3bBtiYxjBpB6+g/J
-   WdK4N0iLhqkLl9skUpDC+zCocjReEubxPw07Rkcg7DaWDzXVPFG1GlsLo
-   zWs7piyU+wTxrsYBSkQ8yMfmQw0mLz2OwsH3vG8bFnZ1EX/xBSIPb/bMU
-   5Id318+iqpoXOuDezXMSQLrps3ldd706y3NPUjt9ieNcv3kvrSzLe+1+g
-   EFeEi1Y3waP9gfhvH/Oh5MvvPF/B0uXffN0xCUAfGuUrXsgoE/tPZcetC
-   g==;
-X-CSE-ConnectionGUID: WVsivdpSSOOz88YAqAth0Q==
-X-CSE-MsgGUID: rqq37WSnRxqhD2kXdqdqdA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11424"; a="65501809"
+  bh=d1oCyEAhdl5k3byt/GQARFiUPsdGUPEYZ9qeb+fuMV0=;
+  b=clDP0RsWogglFjscS+zYKgo3NSGWJwsAdWPO6KXI2XADlUDRZysmE70a
+   huYosKa/a4l8rAnI/K3WMdOMzmASI8P4KH/KvZQSKD6WZzdcLS9NoHPPC
+   j6REkP6ER5XEM8FUHk3R37Na5m7Kr1gJ8gwp42XPHA4OdpgcFVBpp5HyX
+   kAXyRkNdD7NFIApzMd3Yrz/w30k/eo1OME9WA4qrhwUh3hTBFWxO4wFoy
+   zB+6SinmNDsndiWyiyofzOkcnLCQxXOrgJgh5o2UIOnRSZqzpxIaevhTW
+   NHGc8eZ/M88X71C87kd24PAdPbYmc2TMkZjD7cq+Gpcr5r3/lmJYraytT
+   A==;
+X-CSE-ConnectionGUID: 09qI2G0eTRalK1Pv6s9czw==
+X-CSE-MsgGUID: JoN/s9UbREmSd3N7+B/PQA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11424"; a="58755467"
 X-IronPort-AV: E=Sophos;i="6.15,264,1739865600"; 
-   d="scan'208";a="65501809"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 10:55:21 -0700
-X-CSE-ConnectionGUID: IsSejwSVQm63kp4GldYRSQ==
-X-CSE-MsgGUID: Cvmm7A5bQOeZAfj37N1eFg==
+   d="scan'208";a="58755467"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 11:18:12 -0700
+X-CSE-ConnectionGUID: aLrVDZERTuaBC/6yoI32Gg==
+X-CSE-MsgGUID: K/q7KrlITEShfCLGEV+p/A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,264,1739865600"; 
-   d="scan'208";a="166247736"
+   d="scan'208";a="166389318"
 Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.37])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 10:55:16 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 11:18:08 -0700
 From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
 To: Alison Schofield <alison.schofield@intel.com>,
  Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
@@ -54,13 +54,14 @@ Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
  Gregory Price <gourry@gourry.net>, Terry Bowman <terry.bowman@amd.com>,
  Robert Richter <rrichter@amd.com>
 Subject:
- Re: [PATCH v5 08/14] cxl/port: Replace put_cxl_root() by a cleanup helper
-Date: Mon, 05 May 2025 19:55:12 +0200
-Message-ID: <2303863.vFx2qVVIhK@fdefranc-mobl3>
-In-Reply-To: <20250428214318.1682212-9-rrichter@amd.com>
+ Re: [PATCH v5 11/14] cxl/region: Add function to find a port's switch decoder
+ by range
+Date: Mon, 05 May 2025 20:18:05 +0200
+Message-ID: <3624777.dWV9SEqChM@fdefranc-mobl3>
+In-Reply-To: <20250428214318.1682212-12-rrichter@amd.com>
 References:
  <20250428214318.1682212-1-rrichter@amd.com>
- <20250428214318.1682212-9-rrichter@amd.com>
+ <20250428214318.1682212-12-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -70,61 +71,91 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="utf-8"
 
-On Monday, April 28, 2025 11:43:11=E2=80=AFPM Central European Summer Time =
+On Monday, April 28, 2025 11:43:14=E2=80=AFPM Central European Summer Time =
 Robert Richter wrote:
-> Function put_cxl_root() is only used by its cleanup helper. Remove the
-> function entirely and only use the helper.
+> Factor out code to find the switch decoder of a port for a specific
+> address range. Reuse the code to search a root decoder, create the
+> function cxl_port_find_switch_decoder() and rework
+> match_root_decoder_by_range() to be usable for switch decoders too.
 >=20
 > Signed-off-by: Robert Richter <rrichter@amd.com>
+> Reviewed-by: Gregory Price <gourry@gourry.net>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Tested-by: Gregory Price <gourry@gourry.net>
 
 Reviewed-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
 
 > ---
->  drivers/cxl/core/port.c | 9 ---------
->  drivers/cxl/cxl.h       | 4 ++--
->  2 files changed, 2 insertions(+), 11 deletions(-)
+>  drivers/cxl/core/region.c | 30 ++++++++++++++++++------------
+>  1 file changed, 18 insertions(+), 12 deletions(-)
 >=20
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index c9087515d743..e325f08aaf32 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -1037,15 +1037,6 @@ struct cxl_root *find_cxl_root(struct cxl_port *po=
-rt)
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index a292d5c4c4a9..ef5408301714 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -3205,33 +3205,39 @@ static int devm_cxl_add_dax_region(struct cxl_reg=
+ion *cxlr)
+>  	return rc;
 >  }
->  EXPORT_SYMBOL_NS_GPL(find_cxl_root, "CXL");
 > =20
-> -void put_cxl_root(struct cxl_root *cxl_root)
-> -{
-> -	if (!cxl_root)
-> -		return;
-> -
-> -	put_device(&cxl_root->port.dev);
-> -}
-> -EXPORT_SYMBOL_NS_GPL(put_cxl_root, "CXL");
-> -
->  static struct cxl_dport *find_dport(struct cxl_port *port, int id)
+> -static int match_root_decoder_by_range(struct device *dev,
+> -				       const void *data)
+> +static int match_decoder_by_range(struct device *dev, const void *data)
 >  {
->  	struct cxl_dport *dport;
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 960efcc60476..ea06850ecaea 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -737,10 +737,10 @@ struct cxl_port *devm_cxl_add_port(struct device *h=
-ost,
->  struct cxl_root *devm_cxl_add_root(struct device *host,
->  				   const struct cxl_root_ops *ops);
->  struct cxl_root *find_cxl_root(struct cxl_port *port);
-> -void put_cxl_root(struct cxl_root *cxl_root);
-> -DEFINE_FREE(put_cxl_root, struct cxl_root *, if (_T) put_cxl_root(_T))
+>  	const struct range *r1, *r2 =3D data;
+> -	struct cxl_root_decoder *cxlrd;
+> +	struct cxl_decoder *cxld;
 > =20
-> +DEFINE_FREE(put_cxl_root, struct cxl_root *, if (_T) put_device(&_T->por=
-t.dev))
->  DEFINE_FREE(put_cxl_port, struct cxl_port *, if (!IS_ERR_OR_NULL(_T)) pu=
-t_device(&_T->dev))
+> -	if (!is_root_decoder(dev))
+> +	if (!is_switch_decoder(dev))
+>  		return 0;
+> =20
+> -	cxlrd =3D to_cxl_root_decoder(dev);
+> -	r1 =3D &cxlrd->cxlsd.cxld.hpa_range;
+> +	cxld =3D to_cxl_decoder(dev);
+> +	r1 =3D &cxld->hpa_range;
+>  	return range_contains(r1, r2);
+>  }
+> =20
+> +static struct cxl_decoder *
+> +cxl_port_find_switch_decoder(struct cxl_port *port, struct range *hpa)
+> +{
+> +	struct device *cxld_dev =3D device_find_child(&port->dev, hpa,
+> +						    match_decoder_by_range);
 > +
->  int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd);
->  void cxl_bus_rescan(void);
->  void cxl_bus_drain(void);
+> +	return cxld_dev ? to_cxl_decoder(cxld_dev) : NULL;
+> +}
+> +
+>  static struct cxl_root_decoder *
+>  cxl_find_root_decoder(struct cxl_endpoint_decoder *cxled)
+>  {
+>  	struct cxl_memdev *cxlmd =3D cxled_to_memdev(cxled);
+>  	struct cxl_port *port =3D cxled_to_port(cxled);
+>  	struct cxl_root *cxl_root __free(put_cxl_root) =3D find_cxl_root(port);
+> -	struct cxl_decoder *cxld =3D &cxled->cxld;
+> +	struct cxl_decoder *root, *cxld =3D &cxled->cxld;
+>  	struct range *hpa =3D &cxld->hpa_range;
+> -	struct device *cxlrd_dev;
+> =20
+> -	cxlrd_dev =3D device_find_child(&cxl_root->port.dev, hpa,
+> -				      match_root_decoder_by_range);
+> -	if (!cxlrd_dev) {
+> +	root =3D cxl_port_find_switch_decoder(&cxl_root->port, hpa);
+> +	if (!root) {
+>  		dev_err(cxlmd->dev.parent,
+>  			"%s:%s no CXL window for range %#llx:%#llx\n",
+>  			dev_name(&cxlmd->dev), dev_name(&cxld->dev),
+> @@ -3239,7 +3245,7 @@ cxl_find_root_decoder(struct cxl_endpoint_decoder *=
+cxled)
+>  		return NULL;
+>  	}
+> =20
+> -	return to_cxl_root_decoder(cxlrd_dev);
+> +	return to_cxl_root_decoder(&root->dev);
+>  }
+> =20
+>  static int match_region_by_range(struct device *dev, const void *data)
 >=20
 
 
