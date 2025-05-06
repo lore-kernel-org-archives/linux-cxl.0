@@ -1,188 +1,125 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A30D284B46
-	for <linux-cxl@vger.kernel.org>; Tue,  6 May 2025 16:55:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B6F2857EA
+	for <linux-cxl@vger.kernel.org>; Tue,  6 May 2025 16:56:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746550509; cv=none; b=cimU5d/mbjVKpiksuVk5Jrtr0E6K1PICQQ4uSP3myxR6fDp2XLvV7qS9ICR6TdTMU/3gBtHVP4qorC9ho096vdKH+GVtqFxGBU+kSCLBSXVI3vpeSBPwCJhA+pc0+kSXTO4s9ZiH1n0dtGqoNULAIj6BC+LbCqT5rQJ2AA9o8SE=
+	t=1746550615; cv=none; b=Hdrj8Hr8TcjXB/2GJVzFV0bAez5rUrGgYlJmVJcziNbQY6amKlV1KAhHgjRbHICSCgUiveCNebZ0ESVJtEi3QBIFA1JgZwHhe9SzF1LkfWxtt1rX046ww0DfwLxNN5DJNHIfPCaKPBgMwKwfnrSO2vFBs4OyqtYi5ypFMuQLQCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746550509; c=relaxed/simple;
-	bh=sUimS78+SbWJLSQMb51fTED8921Te6EuWozwguv6GMA=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BZ4VezD0Jifhbz8IMhTRyUC9SLc+8M9KgQCK6Gutow7qbY/L/Xa69BYGI8cZAcgIGeT7zU/TSUmUOZXnAas3QIYAcc3zSekYT+YT8+NVBuaMjZ/aa1i2JOteE2lvP9081vAbEql2zAYdP+u5mTbIoG2NKGp0LpmMTdXUVNeKzQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZsPXT2tDHz6M4f4;
-	Wed,  7 May 2025 00:50:33 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 382FF1400D3;
-	Wed,  7 May 2025 00:55:03 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 6 May
- 2025 18:55:02 +0200
-Date: Tue, 6 May 2025 17:55:01 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Anisa Su <anisa.su887@gmail.com>
-CC: <qemu-devel@nongnu.org>, <nifan.cxl@gmail.com>, <dave@stgolabs.net>,
-	<linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 8/9] cxl-mailbox-utils: 0x5604 -  FMAPI Initiate DC Add
-Message-ID: <20250506175501.00001281@huawei.com>
-In-Reply-To: <aBjp8kvUDfwF-ksg@deb-101020-bm01.eng.stellus.in>
-References: <20250317164204.2299371-1-anisa.su887@gmail.com>
-	<20250317164204.2299371-9-anisa.su887@gmail.com>
-	<20250424121959.0000042d@huawei.com>
-	<aBjp8kvUDfwF-ksg@deb-101020-bm01.eng.stellus.in>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1746550615; c=relaxed/simple;
+	bh=UPskQvYkrxUpUKSU6eggRkM0kZhs49ZXn1vsmfjc6oI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gB182gToaAVomh2HXBOiWsxX+eLdNrNSkNY2BI+GL0T7coRwk6hQ5hh8wDQ0X3Cq2/pwZ705hzqy1dP8PeQcTQfOgr8R08rc9e6N3aH9CEMo/QgHdMwoClAVi91Cnj/tcQY87oJkpbPKfPrPVlcLr+bxnhYZ3KgvCj5HpoeybNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=W8FvXYTp; arc=none smtp.client-ip=209.85.161.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="W8FvXYTp"
+Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-606440d92eeso2875869eaf.2
+        for <linux-cxl@vger.kernel.org>; Tue, 06 May 2025 09:56:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google; t=1746550612; x=1747155412; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=5Q5nunoDVPugDexOGX8IwjfNJm1uYPE1x3M/IebA2LI=;
+        b=W8FvXYTpaOdggLlNg6ugRATIcg3HPhSBk0x8h03zrrgVrkY5l0IlWovhzqzVyW5QwQ
+         3biJroK3DYBTiXYFHujl7H8iIf6LpKAiOKzj3i1TfQ+xtn2BpKar0ia+E1CAtN9dZYU6
+         foSzLfvLy9+cQMz/VTbOQhg/WX1iL3PDiUG30=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746550612; x=1747155412;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5Q5nunoDVPugDexOGX8IwjfNJm1uYPE1x3M/IebA2LI=;
+        b=AcNzWaw4QCljeXK5neQ6b6ZqdaCOyjEMm5RtNCSksVxwIaowhR9wG+J7kw80pGMs0X
+         aut3ye7mEcHp+rBMvN/PuIlME2IHOKUJj5hT+8q/UfiOG9ZK0i/ilrYl75x1rsCI8Hvd
+         lfinhiL24oqY4LY9lfT9nz5ObB7Hm01buBXiEUPjzjBMdXuk0yU2m95E2Mx1dJ38ALkE
+         a4/8dhRE/Is3n6DawsydkngHfWmEUnfzqevyq99JSWWYDGahURseaTnSQwOK6D9H3ked
+         90tt+29PXd9kCBJg9LsHbzvmDfs4r6axa+bgDR1Sf2atHOyiOZICIBjxBNw3xkU2HIpj
+         Orlg==
+X-Forwarded-Encrypted: i=1; AJvYcCUujKB9sNeEMsUsroHtLcs/1ld+G8+BZ50j4uCHW1r3tF4ViclbX11O5PW7OJorecM8U86vMVGmopU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCZwgI7rDTEsmBbnKemUFaGBSP5BJwDBFYQd5IIIaLIYKUuoGO
+	fvbkWlSmnsJJqqEi7yOw3z3ByeHSPCZriyjOlFTxZV/850fLHD9/x2jcJ9rVqrsAb2vcqGQ+NPU
+	snqCfoeBaExUdXDiItmMYhsjyMdR8iZ6luVBcpaaZkBqlisZJ
+X-Gm-Gg: ASbGncunopMMEu5Ai8faOPUyPGJco1CLMXTVKnotbyngiowiRewQmx7TrPgewUliy9X
+	ujkSeqnNyDfgCujXKBftdsIWo8QmyLcCzFDlcbPf+kemrrzQVMbScwPXnwJIMH60+7D6pgYy3nT
+	wokQ/Ui/eoeO63suBxdks=
+X-Google-Smtp-Source: AGHT+IGJjJepn0gOwuwpfhMDAKJN4TqWIaIZ7UsEzwpTg1tX++SC/L4yjFUv3kDEAUslSG6hvBlXPYOAhZxrMKo+VF4=
+X-Received: by 2002:ac8:7e96:0:b0:476:77ba:f7 with SMTP id d75a77b69052e-48e012633afmr162547871cf.34.1746550601068;
+ Tue, 06 May 2025 09:56:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
- frapeml500008.china.huawei.com (7.182.85.71)
+References: <20250421013346.32530-1-john@groves.net> <20250421013346.32530-14-john@groves.net>
+ <nedxmpb7fnovsgbp2nu6y3cpvduop775jw6leywmmervdrenbn@kp6xy2sm4gxr>
+ <20250424143848.GN25700@frogsfrogsfrogs> <5rwwzsya6f7dkf4de2uje2b3f6fxewrcl4nv5ba6jh6chk36f3@ushxiwxojisf>
+ <20250428190010.GB1035866@frogsfrogsfrogs>
+In-Reply-To: <20250428190010.GB1035866@frogsfrogsfrogs>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Tue, 6 May 2025 18:56:29 +0200
+X-Gm-Features: ATxdqUFT-fIsXKRHea9-EZCmnVWun07IHA8kCr4QDmzIP2kON1JGlU4dzmYDGDc
+Message-ID: <CAJfpegtR28rH1VA-442kS_ZCjbHf-WDD+w_FgrAkWDBxvzmN_g@mail.gmail.com>
+Subject: Re: [RFC PATCH 13/19] famfs_fuse: Create files with famfs fmaps
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: John Groves <John@groves.net>, Dan Williams <dan.j.williams@intel.com>, 
+	Bernd Schubert <bschubert@ddn.com>, John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	Luis Henriques <luis@igalia.com>, Randy Dunlap <rdunlap@infradead.org>, 
+	Jeff Layton <jlayton@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>, 
+	Petr Vorel <pvorel@suse.cz>, Brian Foster <bfoster@redhat.com>, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
+	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, 
+	Josef Bacik <josef@toxicpanda.com>, Aravind Ramesh <arramesh@micron.com>, 
+	Ajay Joshi <ajayjoshi@micron.com>, 0@groves.net
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 5 May 2025 16:40:18 +0000
-Anisa Su <anisa.su887@gmail.com> wrote:
+On Mon, 28 Apr 2025 at 21:00, Darrick J. Wong <djwong@kernel.org> wrote:
 
-> On Thu, Apr 24, 2025 at 12:19:59PM +0100, Jonathan Cameron wrote:
-> > On Mon, 17 Mar 2025 16:31:35 +0000
-> > anisa.su887@gmail.com wrote:
-> >   
-> > > From: Anisa Su <anisa.su@samsung.com>
-> > > 
-> > > FM DCD Management command 0x5604 implemented per CXL r3.2 Spec Section 7.6.7.6.5
-> > > 
-> > > Signed-off-by: Anisa Su <anisa.su@samsung.com>
-> > > ---  
-> ...
-> > > +        /* Create event record and insert to event log */
-> > > +        cxl_mbox_dc_event_create_record_hdr(ct3d, &event_rec.hdr);
-> > > +        event_rec.type = DC_EVENT_ADD_CAPACITY;
-> > > +        /* FIXME: for now, validity flag is cleared */  
-> > 
-> > This stuff is probably all valid.  If we can return remaining extents though we might
-> > as well.
-> >   
-> > > +        event_rec.validity_flags = 0;
-> > > +        /* FIXME: Currently only support 1 host */
-> > > +        event_rec.host_id = 0;
-> > > +        /* updated_region_id only valid for DC_EVENT_REGION_CONFIG_UPDATED */
-> > > +        event_rec.updated_region_id = 0;  
-> > 
-> > The event_rec is zeroed anyway so probably just don't set this at all
-> > and no need for the comment.
-> >   
-> > > +        for (i = 0; i < in->ext_count; i++) {  
-> > 
-> > Why can't we combine this with the earlier loop and avoid the
-> > need for separate storage of extents in event_rec_exts?
-> >   
-> I discussed with Fan and for add specifically, we will need 2 loops
-> because the pending list is of type CXLDCExtentGroupList. We must use the
-> first loop to create a CXLDCExtentGroup from all of the extents and
-> append the entire thing to the pending list before triggering any interrupts for
-> event records.
-> This is necessary to preserve the ordering/grouping in order for the
-> memdev_add_rsp command to know what to remove from the pending list if
-> no extents were accepted.
+> <nod> I don't know what Miklos' opinion is about having multiple
+> fusecmds that do similar things -- on the one hand keeping yours and my
+> efforts separate explodes the amount of userspace abi that everyone must
+> maintain, but on the other hand it then doesn't couple our projects
+> together, which might be a good thing if it turns out that our domain
+> models are /really/ actually quite different.
 
-Ah. That makes sense. Thanks!
+Sharing the interface at least would definitely be worthwhile, as
+there does not seem to be a great deal of difference between the
+generic one and the famfs specific one.  Only implementing part of the
+functionality that the generic one provides would be fine.
 
-> But the storage of extents in event_rec_exts is unnecessary and for
-> release, we only need 1 loop.
-> 
-> Thanks,
-> Anisa
-> > > +            memcpy(&event_rec.dynamic_capacity_extent,
-> > > +                   &event_rec_exts[i],
-> > > +                   sizeof(CXLDCExtentRaw));
-> > > +
-> > > +            event_rec.flags = 0;
-> > > +            if (i < in->ext_count - 1) {
-> > > +                /* Set "More" flag */
-> > > +                event_rec.flags |= BIT(0);
-> > > +            }
-> > > +
-> > > +            if (cxl_event_insert(&ct3d->cxl_dstate,
-> > > +                                 CXL_EVENT_TYPE_DYNAMIC_CAP,
-> > > +                                 (CXLEventRecordRaw *)&event_rec)) {
-> > > +                cxl_event_irq_assert(ct3d);
-> > > +            }
-> > > +        }
-> > > +
-> > > +        return CXL_MBOX_SUCCESS;
-> > > +    default:
-> > > +        qemu_log_mask(LOG_UNIMP,
-> > > +                      "CXL extent selection policy not supported.\n");
-> > > +        return CXL_MBOX_INVALID_INPUT;
-> > > +    }
-> > > +
-> > > +    return CXL_MBOX_SUCCESS;
-> > > +}
-> > > +
-> > >  static const struct cxl_cmd cxl_cmd_set[256][256] = {
-> > >      [INFOSTAT][BACKGROUND_OPERATION_ABORT] = { "BACKGROUND_OPERATION_ABORT",
-> > >          cmd_infostat_bg_op_abort, 0, 0 },
-> > > @@ -3804,6 +3970,13 @@ static const struct cxl_cmd cxl_cmd_set_fm_dcd[256][256] = {
-> > >           CXL_MBOX_IMMEDIATE_DATA_CHANGE)},
-> > >      [FMAPI_DCD_MGMT][GET_DC_REGION_EXTENT_LIST] = { "GET_DC_REGION_EXTENT_LIST",
-> > >          cmd_fm_get_dc_region_extent_list, 12, 0},
-> > > +    [FMAPI_DCD_MGMT][INITIATE_DC_ADD] = { "INIT_DC_ADD",
-> > > +        cmd_fm_initiate_dc_add, ~0,
-> > > +        (CXL_MBOX_CONFIG_CHANGE_COLD_RESET |
-> > > +        CXL_MBOX_CONFIG_CHANGE_CONV_RESET |
-> > > +        CXL_MBOX_CONFIG_CHANGE_CXL_RESET |
-> > > +        CXL_MBOX_IMMEDIATE_CONFIG_CHANGE |
-> > > +        CXL_MBOX_IMMEDIATE_DATA_CHANGE)},
-> > >  };
-> > >  
-> > >  /*
-> > > diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> > > index b742b2bb8d..ccc619fe10 100644
-> > > --- a/hw/mem/cxl_type3.c
-> > > +++ b/hw/mem/cxl_type3.c
-> > > @@ -1982,8 +1982,8 @@ void qmp_cxl_inject_memory_module_event(const char *path, CxlEventLog log,
-> > >   * the list.
-> > >   * Return value: return true if has overlaps; otherwise, return false
-> > >   */
-> > > -static bool cxl_extents_overlaps_dpa_range(CXLDCExtentList *list,
-> > > -                                           uint64_t dpa, uint64_t len)
-> > > +bool cxl_extents_overlaps_dpa_range(CXLDCExtentList *list,
-> > > +                                    uint64_t dpa, uint64_t len)
-> > >  {
-> > >      CXLDCExtent *ent;
-> > >      Range range1, range2;
-> > > @@ -2028,8 +2028,8 @@ bool cxl_extents_contains_dpa_range(CXLDCExtentList *list,
-> > >      return false;
-> > >  }
-> > >  
-> > > -static bool cxl_extent_groups_overlaps_dpa_range(CXLDCExtentGroupList *list,
-> > > -                                                 uint64_t dpa, uint64_t len)
-> > > +bool cxl_extent_groups_overlaps_dpa_range(CXLDCExtentGroupList *list,
-> > > +                                          uint64_t dpa, uint64_t len)
-> > >  {
-> > >      CXLDCExtentGroup *group;
-> > >  
-> > > diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> > > index 217003a29d..1d5831a0b6 100644
-> > > --- a/include/hw/cxl/cxl_device.h
-> > > +++ b/include/hw/cxl/cxl_device.h
-> > > @@ -809,4 +809,8 @@ bool ct3_test_region_block_backed(CXLType3Dev *ct3d, uint64_t dpa,
-> > >  void cxl_assign_event_header(CXLEventRecordHdr *hdr,
-> > >                               const QemuUUID *uuid, uint32_t flags,
-> > >                               uint8_t length, uint64_t timestamp);
-> > > +bool cxl_extents_overlaps_dpa_range(CXLDCExtentList *list,
-> > > +                                    uint64_t dpa, uint64_t len);
-> > > +bool cxl_extent_groups_overlaps_dpa_range(CXLDCExtentGroupList *list,
-> > > +                                          uint64_t dpa, uint64_t len);
-> > >  #endif  
-> >   
-> 
+> (Especially because I suspect that interleaving is the norm for memory,
+> whereas we try to avoid that for disk filesystems.)
 
+So interleaved extents are just like normal ones except they repeat,
+right?  What about adding a special "repeat last N extent
+descriptions" type of extent?
+
+> > But the current implementation does not contemplate partially cached fmaps.
+> >
+> > Adding notification could address revoking them post-haste (is that why
+> > you're thinking about notifications? And if not can you elaborate on what
+> > you're after there?).
+>
+> Yeah, invalidating the mapping cache at random places.  If, say, you
+> implement a clustered filesystem with iomap, the metadata server could
+> inform the fuse server on the local node that a certain range of inode X
+> has been written to, at which point you need to revoke any local leases,
+> invalidate the pagecache, and invalidate the iomapping cache to force
+> the client to requery the server.
+>
+> Or if your fuse server wants to implement its own weird operations (e.g.
+> XFS EXCHANGE-RANGE) this would make that possible without needing to
+> add a bunch of code to fs/fuse/ for the benefit of a single fuse driver.
+
+Wouldn't existing invalidation framework be sufficient?
+
+Thanks,
+Miklos
