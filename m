@@ -1,147 +1,148 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F30280003;
-	Tue,  6 May 2025 17:03:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92ED0286896;
+	Tue,  6 May 2025 18:54:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746550987; cv=none; b=agoIJe70KINe4oKv3zpL17H5s0Mmu41TeQedRyutdaSVC6el9U0Az1tpUqqzR4TOndZgnLjfI/e8y1334qSu5a9c1UEuWhdoqL5W8iCNaNFNxgeRskf0IEWIa1QrdG3lDHgvtRhXFlX3EN64W/2gJtqyBR84DEjP9q6aUuQYZ8k=
+	t=1746557657; cv=none; b=SwTQ4RImUYvPSiee5Shjw3T+eqgnDAe+BRrtlFAFgIYykmRP4m/uFf/AhD+pcclPkQW6wG64sIxT0ZCaL61tGpAk3Nu+rOPqMEeZbaNTgET780eqCAsLJRAAMVPLI/CNWyAbBRgrFQ+VP8hpiNecP36YWiTIgUw6Kszobf92Klk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746550987; c=relaxed/simple;
-	bh=0WOaw5RZ043+rJnJTVHll4zM5aaNrrkCl4+hWKBWnZA=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fJFEPP/u5m8aie1rdn4dqnsHOCIlk3lDMCrMxFRvms9/5quFgCX8e4BMCpyZM5b4EORFYxFN108m3e9M2l/XxjTSsuvvnuMfo+JSQkMkVlJZtKqLv5c1SkpbbUVNJLUga6sTH/p6d0Ft745rfdAIFoyqpeg0CAyDHPrOQZso4J4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZsPm619ypz6L52x;
-	Wed,  7 May 2025 01:00:38 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9D90C1402ED;
-	Wed,  7 May 2025 01:03:02 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 6 May
- 2025 19:03:01 +0200
-Date: Tue, 6 May 2025 18:03:00 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Karolina Stolarek <karolina.stolarek@oracle.com>
-CC: Bjorn Helgaas <helgaas@kernel.org>, "Shen, Yijun" <Yijun.Shen@dell.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, <linux-pci@vger.kernel.org>, Jon Pan-Doh
-	<pandoh@google.com>, Terry Bowman <terry.bowman@amd.com>, Len Brown
-	<lenb@kernel.org>, James Morse <james.morse@arm.com>, Tony Luck
-	<tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, Ben Cheatham
-	<Benjamin.Cheatham@amd.com>, Ira Weiny <ira.weiny@intel.com>, Shuai Xue
-	<xueshuai@linux.alibaba.com>, Liu Xinpeng <liuxp11@chinatelecom.cn>, "Darren
- Hart" <darren@os.amperecomputing.com>, Dan Williams
-	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] PCI/AER: Consolidate CXL, ACPI GHES and native AER
- reporting paths
-Message-ID: <20250506180300.00006527@huawei.com>
-In-Reply-To: <1fb6b57b-4317-404d-8361-19e1c3bd499c@oracle.com>
-References: <20250424172809.GA492728@bhelgaas>
-	<61d3f860-9411-4c86-b9c4-a4524ec8ea6d@oracle.com>
-	<20250425141401.0000067b@huawei.com>
-	<0f4944a4-fd05-4365-9416-378a7385547b@oracle.com>
-	<20250429165410.00002c86@huawei.com>
-	<1fb6b57b-4317-404d-8361-19e1c3bd499c@oracle.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1746557657; c=relaxed/simple;
+	bh=krSZxOEBsKnQoZD6P2CO+gfuZcVazW5JuHpb8tO5oMM=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=guIGl3m08CJOd/+ishrICGiRJ4Q1hc5LN1A+mmjy/SKcdE0FPtd/SbYtvfB74qk3fi5Zj3V4Krgnsgk6e2WjovKwtf8Dsmiu0xTRfHQ1wSiQGfhme+oebvHrFs+4PQ59JRo+UIB9JpH5QtIAsVjyVbEA6dlN9ehczCtRCX7mchs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fz50dAaF; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fz50dAaF"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-22401f4d35aso72913915ad.2;
+        Tue, 06 May 2025 11:54:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746557655; x=1747162455; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JVDFVo10DieBySNMFa20wV7jaXb2Ld88NcW0kNaRhiE=;
+        b=fz50dAaFnKzln3sbhuunXYCfIeloQsZLUyEcWbJsFpi9ux+e8+P1K9fbSxmYnvOdN3
+         ru9V//jY1Q1aq4Jsa22gFA97vVese3Zo5TvKgF0KfsWnwOSCnfh9Cs+wLWlLi3N+E2nw
+         +WpKLw5VxK0cLZ5Cp8qbW0fvqTp7ThdIt9ZuUoBujYWkS03Cizzks7wSHl4vkX7PaCSs
+         nLrDJcouiu7Iulv4/0iNTZx2WnfPEmfflHin13Vy+GVaqucWwilRtyS5j1bqgFoEsWBr
+         cgAro7V6SqwfZaCAoLL0NjUKFRKjrpRfx9CR3k47hrOmd/KtMiZ3EUr24H8cB8bR2TdN
+         uZDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746557655; x=1747162455;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JVDFVo10DieBySNMFa20wV7jaXb2Ld88NcW0kNaRhiE=;
+        b=tTAvNZbfOeEeSOFpTwOLGh73VjimBHweqIQ5PTPIgQuGvh55lGc5vz43t6KBZMkRLo
+         L7AfS6IKIlgepgQpHiruplubwWo4UQbWo3j9/+noNcsW1WVQy2TNAj8JDlx1GuLMaPCt
+         ZnmWbs6//U6C6FjlMJQMFjD5Xcy5I4yNGJta+vfQjobLdvDoEWrTh4j9JrT6zUOZT7cy
+         Wt8HJPolzUEhd1mlpvgV1tnEbqTylad2BMBTUd1c0vu7SjhCqvTV+RgUJeHExvjjYnsc
+         HQkourgUIC2Q/o3+Dl09pdt04a6fpYGBBsmNXuf2z6GLMt2N4TT1FK5Z1ks4BoMyWMqF
+         27+A==
+X-Forwarded-Encrypted: i=1; AJvYcCU5Skb6KcFGRgY5UiOp1EcgR4VY7NniY0gEK1T/PqtsJFm5Qv9FD7F1H8US0LorbrnTBPTLSm84ZA0y8oTp@vger.kernel.org, AJvYcCVMglWquqQMG1Q2p04KkvUwuziruuMlQEWxmNQw6JR+q+tqrD1hLFnMi7+WxVVWFoRhNSrKKE5B1VA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDDqamDKutljd3nOSrpCNVgsBc48xRQzSV1oWgzrRaEQlWRXTh
+	mn4L9cGklWVZnmx/8pwTqNMEqDCS/RLCM0J6ayM8pL8OKx5wGu5k
+X-Gm-Gg: ASbGncsJuLTz/YhlXJBDypqLt91i9AqS2DcuFLQ/btcsdQhgPq0YJC9wCwMSbxv6nNd
+	+d1hZoCXbV+R2kcoKasokUpGFH8q0UggLtb0DDPzzoJG+1tro7xle+cpxD/7eJxVy+hJ+qD6Zvb
+	CvSqO/OuZ0vyDMZvpI2kxJ1gMNBBKw43fjUlW6zWA1ETDbuuFg9+k72uOe2I8Oqhy0oR6RD/aXF
+	/wSJIZJmsqy9ZcR9cgckMSbw5W4tVXQ3bvNftTCIVqzBtuPCfPkVZiV6Hsy1BYGSs78jUGhoFTw
+	UYwu3zBFwrcw9HmLzCC5TTiHN15GqtJb1Xpq5YNKYw==
+X-Google-Smtp-Source: AGHT+IGWjABk1DDFWWAd1ymYZVKdl75uEg9L8d6T3EYsxsTx9WQhwvX0ioT5EgFyzos2Mk6ae2PfMw==
+X-Received: by 2002:a17:902:ce8f:b0:22d:e57a:279b with SMTP id d9443c01a7336-22e5ea6e606mr5700095ad.24.1746557654712;
+        Tue, 06 May 2025 11:54:14 -0700 (PDT)
+Received: from lg ([2601:646:8f03:9fee:3afe:d39d:8565:ed44])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e150eb368sm77710245ad.36.2025.05.06.11.54.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 11:54:14 -0700 (PDT)
+From: Fan Ni <nifan.cxl@gmail.com>
+X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
+Date: Tue, 6 May 2025 11:54:11 -0700
+To: Ira Weiny <ira.weiny@intel.com>
+Cc: Fan Ni <nifan.cxl@gmail.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 01/19] cxl/mbox: Flag support for Dynamic Capacity
+ Devices (DCD)
+Message-ID: <aBpa02RH0CnRv6Jl@lg>
+References: <20250413-dcd-type2-upstream-v9-0-1d4911a0b365@intel.com>
+ <20250413-dcd-type2-upstream-v9-1-1d4911a0b365@intel.com>
+ <20250414151950.00001823@huawei.com>
+ <aBkn813skYvTv7QC@lg>
+ <681a34255194d_2b95d1294af@iweiny-mobl.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <681a34255194d_2b95d1294af@iweiny-mobl.notmuch>
 
-On Mon, 5 May 2025 11:58:25 +0200
-Karolina Stolarek <karolina.stolarek@oracle.com> wrote:
-
-> On 29/04/2025 17:54, Jonathan Cameron wrote:
-> > On Fri, 25 Apr 2025 16:12:26 +0200
-> > Karolina Stolarek <karolina.stolarek@oracle.com> wrote:  
-> >>
-> >> OK, that means even if we manage to inject a PCIe error, AER wouldn't be
-> >> able to look up the Source ID and other values it needs to report an
-> >> error, which is not quite the solution I was looking for.  
+On Tue, May 06, 2025 at 11:09:09AM -0500, Ira Weiny wrote:
+> Fan Ni wrote:
+> > On Mon, Apr 14, 2025 at 03:19:50PM +0100, Jonathan Cameron wrote:
+> > > On Sun, 13 Apr 2025 17:52:09 -0500
+> > > Ira Weiny <ira.weiny@intel.com> wrote:
+> 
+> [snip]
+> 
+> > > 
+> > > > +
+> > > > +static bool cxl_verify_dcd_cmds(struct cxl_memdev_state *mds, unsigned long *cmds_seen)
+> > > 
+> > > It's not immediately obvious to me what the right behavior
+> > > from something called cxl_verify_dcd_cmds() is.  A comment might help with that.
+> > > 
+> > > I think all it does right now is check if any bits are set. In my head
+> > > it was going to check that all bits needed for a useful implementation were
+> > > set. I did have to go check what a 'logical and' of a bitmap was defined as
+> > > because that bit of the bitmap_and() return value wasn't obvious to me either!
 > > 
-> > Isn't the source ID in the CPER record? (Device ID field) or do
-> > you mean something else?  
-> 
-> Ah, sorry, I got confused on the way. I meant that even if we have the 
-> Device ID in CPER set, the specific device has no data in aer_regs if we 
-> inject an error using the GHES error injection script. We probably would 
-> end up with !info->status in aer_print_error(), thus printing only a 
-> line about "Inaccessible" agent and return early.
-
-If you were feeling creative with scripts you might be able to make this
-work today...  Qemu does allow native aer injection via pcie_aer_inject_error
-which will fill in the stuff in the device and 'try' to trigger an interrupt.
-That last bit will fail (I think) if we are doing fw first handling.
-(you might need to just prevent the interrupt generation in a similar fashion
-to this code did here:
-
-https://gitlab.com/jic23/qemu/-/commit/ce801e4d5b5cc5417cc7c7e5ecdaaa2ca5d6efe3#8eeec1fb38fa7149cc37b7a56dc193d69281ee96_704_708
-
-At that point if you were to inject GHES error using Mauro's stuff it will work
-and find that pre injected hardware info.
-
-If not we need a refresh of that patch to hook up record generation with
-Mauro's new handling. That's what I plan to get to but will be a while yet.
-
-J
-
-
-
-> 
-> >>> The aim is specifically to allow exercising FW first error handling
-> >>> paths because it's a pain to get real systems that have firmware to inject
-> >>> the full range of what the kernel etc need to handle.  
-> >>
-> >> Does this include PCIe errors? If so, that probably doesn't make sense
-> >> to try to test my patch on an actual system?  
+> > The code only checks if any DCD command (48xx) is supported, if any is
+> > set, it will set "dcd_supported".
+> > As you mentioned, it seems we should check all the related commands are
+> > supported, otherwise it is not valid implementation.
 > > 
-> > Ideally test it on a real system as well, but indeed the intent is to
-> > allow testing of PCI errors on emulation.  
+> > Fan
+> > > 
+> > > 
+> > > > +{
+> > > > +	DECLARE_BITMAP(all_cmds, CXL_DCD_ENABLED_MAX);
+> > > > +	DECLARE_BITMAP(dst, CXL_DCD_ENABLED_MAX);
+> > > > +
+> > > > +	bitmap_fill(all_cmds, CXL_DCD_ENABLED_MAX);
+> > > > +	return bitmap_and(dst, cmds_seen, all_cmds, CXL_DCD_ENABLED_MAX);
 > 
-> I understand. Do you have pointers on how to inject it on a real system? 
-> All info I could find about FW error injection pointed to the qemu 
-> scripts I mentioned.
+> Yea... so this should read:
+> 
+> ...
+> 	bitmap_and(dst, cmds_seen, all_cmds, CXL_DCD_ENABLED_MAX);
+> 	return bitmap_equal(dst, all_cmds, CXL_DCD_ENABLED_MAX);
+Maybe only 
+    return bitmap_equal(cmds_seen, all_cmds, CXL_DCD_ENABLED_MAX)?
 
-Sorry no.  It maybe system specific and disabled on production bios.
+Fan
+> ...
+> 
+> Of course if a device has set any of these commands true it better have
+> set them all.  Otherwise the device is broken and it will fail in bad
+> ways.
+> 
+> But I agree with both of you that this is much better and explicit that
+> something went wrong.  A dev_dbg() might be in order to debug such an
+> issue.
+> 
+> Ira
+> 
+> [snip]
 
-> 
-> >>> x86 support for emulated injection is a work in progress (more of a mess wrt
-> >>> to the different ways the event signaling is handled than it is on arm64).
-> >>>
-> >>> I did have an earlier version of that work wired up to the same
-> >>> hooks as the native CXL error injection but I dropped it from my QEMU
-> >>> CXL staging tree for now as it was a pain to rebase whilst Mauro was rapidly
-> >>> revising the infrastructure.  I'll bring it back when I get time.  
-> >>
-> >> I understand, I saw some of your series while looking for ways to test
-> >> my patch. Thank you very much for your work. As you can see, there are
-> >> people actually looking forward to it :)  
-> > 
-> > Great!  I'll try and get back to wiring it all up again sometime soon.  
-> 
-> Awesome, thanks.
-> 
-> Bjorn, is this patch blocking the ratelimiting series? Would it be 
-> acceptable to use public logs in the commit message? I'm asking because 
-> it looks like there's no easy way to trigger the GHES path, or it would 
-> take some time, further delaying the ratelimiting work.
-> 
-> All the best,
-> Karolina
-> 
-> > 
-> > Jonathan
-> >   
-> 
-
+-- 
+Fan Ni
