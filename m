@@ -1,107 +1,81 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B5B139E
-	for <linux-cxl@vger.kernel.org>; Tue,  6 May 2025 23:06:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13D7015E8B
+	for <linux-cxl@vger.kernel.org>; Wed,  7 May 2025 00:43:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746572795; cv=none; b=mRPjMlH3EEUeOLBVHZ63wPP/SCEt+vILTwk1P0gLCi9WbTcdxjm/nNQh1dSgBVUdSxyG6PfN4GmTISOzgVKh+t7Ul/ONJXCs82fdPAG3c/wAGO/+JppgcgflOyjSx58S2R9m1YbYGbqKnpj41rcNX4r8X0K3aVB8z2xGVNyexrU=
+	t=1746578592; cv=none; b=nbtw29au/fpyKfytyfZ8hNs4tccWsWk21d9490QGsp8KPxZTrES180GnLVJ0q/X7Yoq9gVk8ZkgTrJe3vLZHUZ2TaXb9qyu7xB9K3XF5+Sjm+SFWakdRU80zsGFIDX31TAOuGiaVaYC64F7ZylFrFFoa5NRgWJLo4GwqreSesCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746572795; c=relaxed/simple;
-	bh=AkWTf635RjG0EvzFpzLnPFZugQ89hkoZEH4JSEwN0ns=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PdXuB7FtIecyjWrvy8NfT1uf5EBtwVBYx3I+c5qcH8kMiOkjcbbD/C854KrUfP7gAnD+6WczlavEdoCBvkx7LqEYfMPw6ajhYteb3eaYM1OC3Uz+iDO8ZnF/9byUklkuKBBniv/UeGupzs7EHZD+R+7bFGtDXtZP30SQbPeioiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=ltMMkir9; arc=none smtp.client-ip=209.85.222.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="ltMMkir9"
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7c5e2fe5f17so687985285a.3
-        for <linux-cxl@vger.kernel.org>; Tue, 06 May 2025 16:06:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1746572792; x=1747177592; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jMzOedZBUFQh6ZOzmCW4ghlDT1S6oF17/0z00FndM84=;
-        b=ltMMkir91qDPV3NyGesMnX9DIlK4Nynun0G4iANXsHtee4tkC/GqUKj7ii1kFcqBf4
-         IlpHUUvbnljkBM6RtO5JSIJXix8BaAS0gzHqpUsznN/YIZiLV4Jl5+hsnR3c4AUzflN+
-         U/cuF9omvO1GJAWmN6jQ9/0bd8MbiMobNkb8r+zKG2HHn77vtzq7zjMgIDKkxERE5NK8
-         fmkCi83BEolUSpV89YO4DLTUGt5+VxGxhUaUP2XCrQq+XVyfqBFN6+9ZlG3hw2c0WjEG
-         62FBVZ2hxPXlw6w9SU0dEk5sq3CeoSw9s3m/QGprf856/RiOm6q6B4ezIztJvbivwvWt
-         0/ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746572792; x=1747177592;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jMzOedZBUFQh6ZOzmCW4ghlDT1S6oF17/0z00FndM84=;
-        b=i6PX+adXWetUKJPXJunq2wFKHjbAo5PGLQk2l6KGgegwwRjzxEkwaZ3MMrECjcPT32
-         5ynLjaCrxiMEYNeC51NkW+SstqSYrF5boBXw6a04VgF3xRBDUCW/DzWm1KyDbuy3sUCH
-         gt0J1RIZBt3sMk2eX/yOSfcj+VJHY4JavEaA9MfcMXRUCXlcJ2BPsc/g0vBe7IgsGzGn
-         RLa6u5xALYAM0wckv6qCKI/JwgUo1DSTvOY4TFyDrC5CdUJ4v0xVJHK33wPQ7ZHoNLby
-         eOtUg+/4iFlzwmxU+alpyu3FtHQYXpmm0NjQYMCPjWNkqf6VOTypVqGsiVBTuXAYp3b4
-         wl9A==
-X-Gm-Message-State: AOJu0YyWhkG+Ge791ru9qXxvL1sUAtaTN2WA/HQwlf3lcru9AN4IQSs1
-	s0JMnf2Sp1jAyaOc1os8raonH0Z9BwO+T75HkH5s+dTIjOsD5fcij99tdFVBhk8=
-X-Gm-Gg: ASbGncta4AFFdIg0bCOi+a6+RxrImRCyhqQMOfmIq6tsduJCDZ4gvH3x11dJh05nTXx
-	bit+OL1k9/EOFjBIlDSwxQehQtfhcdMGc5fnVecRsSXVQBHBG5gQ8ROXsMAjaEi4efIEFbGescl
-	vR2T+jM9GyelTPwP6BpynzLvBXD82at2FxClhA1g/1XuIgkr8fTz7eHx/is7cPQ9BJadoG5EyT4
-	mHHKuVIWLfZ9SQaMDE/35jmTDS4cw1npQ06SFqxCL7JlXpzuk3/f8JJaD1aHrnnE5MGFUFzGwbC
-	DKiWAOjOXTKiiUpldvo9Xo26xzIhoZs/Ch/x4IfF5P+0kCdXNMwn64JEKL65itKRkgW+R4X978T
-	qUmpP4+lXZrQgzt5Dl/WA
-X-Google-Smtp-Source: AGHT+IFHH0FvrhCCJDSr9P751dSZJYI7LDjUr7c/DSSKJlfVzJvDae2X802XdK+1BLRbg8tORhZb0Q==
-X-Received: by 2002:a05:6214:dcd:b0:6f4:c824:9d3d with SMTP id 6a1803df08f44-6f542aad789mr18656576d6.37.1746572792237;
-        Tue, 06 May 2025 16:06:32 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f5427d40b9sm3559536d6.118.2025.05.06.16.06.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 16:06:31 -0700 (PDT)
-Date: Tue, 6 May 2025 19:06:29 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Terry Bowman <terry.bowman@amd.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
-	ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
-	rrichter@amd.com, nathan.fontenot@amd.com,
-	Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
-	ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com
-Subject: Re: [PATCH v8 00/16] Enable CXL PCIe port protocol error handling
- and logging
-Message-ID: <aBqV9UCF6dQFtcyP@gourry-fedora-PF4VCD3F>
-References: <20250327014717.2988633-1-terry.bowman@amd.com>
+	s=arc-20240116; t=1746578592; c=relaxed/simple;
+	bh=HBe8TrwN6j22HYRHwiEHkwVfmkXEXVEAvWYj4y0aw20=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CHPMCh+X8TPf7BX5j4LIV+/qCUYBgMcDA/VSe/+If15rKg3zXFMVxzm2kaH+0gEAgo3ZLKCKOtUWjeJpTpOuForKIafKcLr8g40p15nshSxGxNUXt8XQ4dinZBxhC/acm7/HgByhYfQsGKZ+PVgKIc0foyuop5xaSNqvg53oiMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DEB7C4CEE4;
+	Wed,  7 May 2025 00:43:11 +0000 (UTC)
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	alison.schofield@intel.com,
+	ira.weiny@intel.com,
+	rrichter@amd.com,
+	ming.li@zohomail.com
+Subject: [PATCH v2 00/10] cxl: Delay HB port and switch dport probing until endpoint dev probe
+Date: Tue,  6 May 2025 17:43:00 -0700
+Message-ID: <20250507004310.3536991-1-dave.jiang@intel.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250327014717.2988633-1-terry.bowman@amd.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 26, 2025 at 08:47:01PM -0500, Terry Bowman wrote:
-> This patchset updates CXL Protocol Error handling for CXL Ports and CXL
-> Endpoints (EP). The reach of this patchset grew from CXL Ports to include
-> EPs as well because updating the handling for all devices is preferable
-> over supporting multiple handling paths.
-> 
-> This patchset is a continuation of v7 and can be found here:
-> https://lore.kernel.org/linux-cxl/20250211192444.2292833-1-terry.bowman@amd.com/
-> 
+This series attempts to delay the setup of dports and Host Bridge (HB) register
+until when the endpoint device (memdev) is being probed. At this point,
+the CXL link is established and all the devices along the CXL link path up to
+the Root Port (RP) should be active.
 
-I've been testing this for stability on a fair number of boxes for some
-time - backported to v6.13. Haven't seen any major issues related to
-this set in that time. Outside my normal wheelhouse, but for the sake
-of runtime stability:
+And hopefully this help a bit with Robert's issue raised in the "Inactive
+downstream port handling" series [1]. Testing would be appreicated. Thank you!
 
-Tested-by: Gregory Price <gourry@gourry.net>
+[1]: https://lore.kernel.org/linux-cxl/67c8a0cc23ec_24b64294f6@dwillia2-xfh.jf.intel.com.notmuch/
 
-Trying to get more explicit testing feedback from RAS folks.
+Dave Jiang (10):
+  cxl/region: Add decoder check to check_commit_order()
+  cxl: Saperate out CXL dport->id vs actual dport hardware id
+  cxl: Rename find_dport() to provide better function intent
+  cxl: Remove adding of port_num via devm_cxl_add_dport()
+  cxl: Defer hardware dport->port_id assignment and registers probing
+  cxl/test: Add workaround for cxl_test for cxl_core calling mocked functions
+  cxl: Change sslbis handler to only handle single dport
+  cxl: Add helper to detect top of CXL device topology
+  cxl: Create an xarray to tie a host bridge to the cxl_root
+  cxl: Move enumeration of hostbridge ports to the memdev probe path
 
-(note: there appears to be some conflicting changes in v6.15-rc4+ that
-a bit outside my current timeline to forward port and test.)
+ drivers/cxl/acpi.c                   | 143 ++++++-----
+ drivers/cxl/core/cdat.c              |  23 +-
+ drivers/cxl/core/core.h              |   4 +
+ drivers/cxl/core/hdm.c               |  45 ++--
+ drivers/cxl/core/pci.c               |  60 ++++-
+ drivers/cxl/core/port.c              | 353 +++++++++++++++++++++++----
+ drivers/cxl/core/region.c            |   7 +-
+ drivers/cxl/cxl.h                    |  50 +++-
+ drivers/cxl/port.c                   |  20 +-
+ tools/testing/cxl/Kbuild             |   4 +-
+ tools/testing/cxl/cxl_core_exports.c |  31 +++
+ tools/testing/cxl/exports.h          |  17 ++
+ tools/testing/cxl/test/cxl.c         |   5 +-
+ tools/testing/cxl/test/mock.c        |  40 +--
+ 14 files changed, 611 insertions(+), 191 deletions(-)
+ create mode 100644 tools/testing/cxl/exports.h
 
-~Gregory
+
+base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
+-- 
+2.49.0
+
