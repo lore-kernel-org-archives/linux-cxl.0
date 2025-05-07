@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7392AE84
-	for <linux-cxl@vger.kernel.org>; Wed,  7 May 2025 00:43:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8BDD15E8B
+	for <linux-cxl@vger.kernel.org>; Wed,  7 May 2025 00:43:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746578602; cv=none; b=EYiBexm8he2wYinEMCPI4HihdsonkByQ1e/T01rHmh6cDQA1elsZoAEfP2S6Od3XMbJc4tm9cBE2romi9pdtxLzxI6VQD0DbUx76JyyrYzDdeKYor2KqZsg0jZidpb1PCpnEna5Ad4rU76Ce8tLuj3kClVduzvlsfVacQbHZgT4=
+	t=1746578603; cv=none; b=ud4tE8ADaayijxpKug0ZRtFP9srBlOv/qHYFByDN0nYIdgAvtvmM18hKvqgttnvB1gJo0LsyQr0iIemfw/rkqI6DpLPaCuRREyaJQXu/JDGNf4dFtNfRpUB4SH12yR57GEYkabJa/CLqacmbQ09F2HGUf9XFjUsvBQBkBVJLVFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746578602; c=relaxed/simple;
-	bh=htSuu9hzcaOuX+OcnLsug00pgV3j0icgj2GXlndDyZo=;
+	s=arc-20240116; t=1746578603; c=relaxed/simple;
+	bh=cCCdWf2UVr7vzg9k3pEvaPvj7qJKpzB6A44ro8e8gBg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Obts9WBHjOqFbwcc0pSiqVf4k99QUd297tZUVNAjUj2g/c+EyQJ+I8TRakAI/0esgEQzF0iXpWv7N0IXMfsXJsDec9eR987jDQFsZwNtQWhEqxhnvrXXvomGecFxwJ/vGJqWRwz/8tWPLbKHLZe5ncu+aNNyFc5HJ8ZVOVyfKgk=
+	 MIME-Version; b=cqsZp5M+9f/ka97ywJwIK7MIAv+WvMs7utEri11oIhybWPkoO7bdRpYnSNMY/UgqvRHlviLOC7dPMs5mzGF5/d62HgA+mgikbdcOLWAmS51kexL4Z5BkOosiUWsAoMQV5GT11aUA/i/Ssj+p4GHiEgx/RLZrp7Bb34tvVP7V0N4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 429E6C4CEF0;
-	Wed,  7 May 2025 00:43:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 947CAC4CEE4;
+	Wed,  7 May 2025 00:43:23 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: Dan Williams <dan.j.williams@intel.com>,
@@ -24,9 +24,9 @@ Cc: Dan Williams <dan.j.williams@intel.com>,
 	ira.weiny@intel.com,
 	rrichter@amd.com,
 	ming.li@zohomail.com
-Subject: [PATCH v2 07/10] cxl: Change sslbis handler to only handle single dport
-Date: Tue,  6 May 2025 17:43:07 -0700
-Message-ID: <20250507004310.3536991-8-dave.jiang@intel.com>
+Subject: [PATCH v2 08/10] cxl: Add helper to detect top of CXL device topology
+Date: Tue,  6 May 2025 17:43:08 -0700
+Message-ID: <20250507004310.3536991-9-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250507004310.3536991-1-dave.jiang@intel.com>
 References: <20250507004310.3536991-1-dave.jiang@intel.com>
@@ -38,106 +38,48 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-While cxl_switch_parse_cdat() is harmless to be run multiple times, it is
-not efficient in the current scheme where one dport is being updated at
-a time by the memdev probe path. Change the input parameter to the
-specific dport being updated to pick up the SSLBIS information for just
-that dport.
+Add a helper to replace the open code detection of CXL device hierarchy
+root. The helper will be used for delayed hostbridge port creation later
+on.
 
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/cxl/core/cdat.c | 23 ++++++++++-------------
- drivers/cxl/core/port.c |  2 +-
- drivers/cxl/cxl.h       |  2 +-
- 3 files changed, 12 insertions(+), 15 deletions(-)
+ drivers/cxl/core/port.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-index f637e3631d88..f750a3afa8f3 100644
---- a/drivers/cxl/core/cdat.c
-+++ b/drivers/cxl/core/cdat.c
-@@ -440,8 +440,8 @@ static int cdat_sslbis_handler(union acpi_subtable_headers *header, void *arg,
- 	} *tbl = (struct acpi_cdat_sslbis_table *)header;
- 	int size = sizeof(header->cdat) + sizeof(tbl->sslbis_header);
- 	struct acpi_cdat_sslbis *sslbis;
--	struct cxl_port *port = arg;
--	struct device *dev = &port->dev;
-+	struct cxl_dport *dport = arg;
-+	struct device *dev = &dport->port->dev;
- 	int remain, entries, i;
- 	u16 len;
- 
-@@ -467,8 +467,6 @@ static int cdat_sslbis_handler(union acpi_subtable_headers *header, void *arg,
- 		u16 y = le16_to_cpu((__force __le16)tbl->entries[i].porty_id);
- 		__le64 le_base;
- 		__le16 le_val;
--		struct cxl_dport *dport;
--		unsigned long index;
- 		u16 dsp_id;
- 		u64 val;
- 
-@@ -499,28 +497,27 @@ static int cdat_sslbis_handler(union acpi_subtable_headers *header, void *arg,
- 		val = cdat_normalize(le16_to_cpu(le_val), le64_to_cpu(le_base),
- 				     sslbis->data_type);
- 
--		xa_for_each(&port->dports, index, dport) {
--			if (dsp_id == ACPI_CDAT_SSLBIS_ANY_PORT ||
--			    dsp_id == dport->port_num) {
--				cxl_access_coordinate_set(dport->coord,
--							  sslbis->data_type,
--							  val);
--			}
-+		if (dsp_id == ACPI_CDAT_SSLBIS_ANY_PORT ||
-+		    dsp_id == dport->port_num) {
-+			cxl_access_coordinate_set(dport->coord,
-+						  sslbis->data_type, val);
-+			return 0;
- 		}
- 	}
- 
- 	return 0;
- }
- 
--void cxl_switch_parse_cdat(struct cxl_port *port)
-+void cxl_switch_parse_cdat(struct cxl_dport *dport)
- {
-+	struct cxl_port *port = dport->port;
- 	int rc;
- 
- 	if (!port->cdat.table)
- 		return;
- 
- 	rc = cdat_table_parse(ACPI_CDAT_TYPE_SSLBIS, cdat_sslbis_handler,
--			      port, port->cdat.table, port->cdat.length);
-+			      dport, port->cdat.table, port->cdat.length);
- 	rc = cdat_table_parse_output(rc);
- 	if (rc)
- 		dev_dbg(&port->dev, "Failed to parse SSLBIS: %d\n", rc);
 diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 04e18a102d26..e212bc2faada 100644
+index e212bc2faada..259b217e812f 100644
 --- a/drivers/cxl/core/port.c
 +++ b/drivers/cxl/core/port.c
-@@ -1733,7 +1733,7 @@ static int cxl_switch_port_dport_setup(struct cxl_port *port,
- 	if (rc)
- 		return rc;
+@@ -39,6 +39,15 @@ DECLARE_RWSEM(cxl_region_rwsem);
+ static DEFINE_IDA(cxl_port_ida);
+ static DEFINE_XARRAY(cxl_root_buses);
  
--	cxl_switch_parse_cdat(port);
-+	cxl_switch_parse_cdat(dport);
++/*
++ * The terminal device in PCI is NULL and @platform_bus
++ * for platform devices (for cxl_test)
++ */
++static bool is_cxl_hierarchy_head(struct device *dev)
++{
++	return (!dev || dev == &platform_bus);
++}
++
+ int cxl_num_decoders_committed(struct cxl_port *port)
+ {
+ 	lockdep_assert_held(&cxl_region_rwsem);
+@@ -1774,11 +1783,7 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
+ 		struct device *uport_dev;
+ 		struct cxl_dport *dport;
  
- 	/* Make sure that no decoders have been allocated before proceeding. */
- 	if (ida_is_empty(&port->decoder_ida))
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 4d0ddb506ec5..22f1a9542077 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -901,7 +901,7 @@ static inline u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint,
- #endif
+-		/*
+-		 * The terminal "grandparent" in PCI is NULL and @platform_bus
+-		 * for platform devices
+-		 */
+-		if (!dport_dev || dport_dev == &platform_bus)
++		if (is_cxl_hierarchy_head(dport_dev))
+ 			return 0;
  
- void cxl_endpoint_parse_cdat(struct cxl_port *port);
--void cxl_switch_parse_cdat(struct cxl_port *port);
-+void cxl_switch_parse_cdat(struct cxl_dport *dport);
- 
- int cxl_endpoint_get_perf_coordinates(struct cxl_port *port,
- 				      struct access_coordinate *coord);
+ 		uport_dev = dport_dev->parent;
 -- 
 2.49.0
 
