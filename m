@@ -1,153 +1,144 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4656728A411;
-	Wed,  7 May 2025 15:15:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B5718EB0;
+	Wed,  7 May 2025 15:20:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746630916; cv=none; b=dDTPExKThYRWikAtrqPwdojGNpuONeZA5e1q5IQvWvKAJ4abvzwjjH0/ISxOtePsnEk/x6Mz7kAufmUh+2IhXKesPYiPUnuVdMCsuTj9ZtNtBBd+8Pk5+rttRKzuF08ZJ4w31jEySDHS78vF0SjhNHpH0VXaaAkjcT3WNxfoTNo=
+	t=1746631257; cv=none; b=nRSrAUU2jwNzmCAcpMRRbjE+LbrkSpRzQw9ZROb3QS/bWxueWY/lJD51/i6S0law5Y62+PtJC8+q2Bmx1nI7ckm4uqbgyxBk52Rglrd+y3yfgFBWVa/CrxOXCfaOTl79hvmcEz4pYf8XDYaQN2i/TRbjO67DEvybR+MRGCOG/1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746630916; c=relaxed/simple;
-	bh=6aJyKwDJyYv14UMvQvqVQkM2F5iS184Hqu9roe/nEC8=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lD8WBW1MGgc4hDxgurE1Wd0YKvfMh8/PJ7tZcSj4HA9lsmkfGBYWxnhXhucQP13mLJ14EYeetH72twV3zrBse0jgLVQbp1rUHYJuuIuv0fDf4rh38FyTWn2Xf5Un54WNKs2CkMBToa+IbOo0ksnlji1xCeryGMTo0YCexR0S0PY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZszGm6nRfz6M53M;
-	Wed,  7 May 2025 23:10:40 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 279381402F5;
-	Wed,  7 May 2025 23:15:12 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 7 May
- 2025 17:15:11 +0200
-Date: Wed, 7 May 2025 16:15:10 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Robert Richter <rrichter@amd.com>
-CC: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Davidlohr
- Bueso" <dave@stgolabs.net>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Gregory Price <gourry@gourry.net>, "Fabio M.
- De Francesco" <fabio.m.de.francesco@linux.intel.com>, Terry Bowman
-	<terry.bowman@amd.com>
-Subject: Re: [PATCH v5 05/14] cxl/region: Rename function to
- cxl_port_pick_region_decoder()
-Message-ID: <20250507161510.00001ee8@huawei.com>
-In-Reply-To: <20250429163119.00001eba@huawei.com>
-References: <20250428214318.1682212-1-rrichter@amd.com>
-	<20250428214318.1682212-6-rrichter@amd.com>
-	<20250429163119.00001eba@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1746631257; c=relaxed/simple;
+	bh=DMuRy3vH/9HB8MP/eHAh3lYTSsXJDYIcI3IY1DjMl9w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FLSgOflBKUjI0rPo2ZBuB+OE0knfD8CbS7Cuo8NWQfKnP1vMZ6AHhCRmsTagNEdWW7dt00LfyL3bfo1Yfgu7qcU6jJO40lW4aDU+2V9cgBpaDMMAIZamK5cO/2F1SSLB01bWnlomYCftBNlhpQpo9FQleEsM59lxP860eIMEFWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XtWCiZBB; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XtWCiZBB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B24D4C4CEE2;
+	Wed,  7 May 2025 15:20:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746631256;
+	bh=DMuRy3vH/9HB8MP/eHAh3lYTSsXJDYIcI3IY1DjMl9w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XtWCiZBBDcigCs9rAvAR90ZGDu/yeCGV3FKIg+lWgQE5tggI55fQ1EThnEsOeZK6q
+	 DMgxmlLMOatvtvVSXCn/BryaK7YoFbb2M/POZrcgkS6EZYv7YUBvmZil/SK50Hh4lr
+	 5WjXKMjsXaXd4xa42SXkRvSxdbQSR/XvJWhUymwiON2nv7AERNtl3vpyW0LoQK7YAy
+	 cxJpPfw1+r6CRqcco+5MVQkED2iX9uAWZ9Qy4qG4xvssMDOKQ/FfnL7O6xphMDJEUB
+	 irILuNpPN/+Wv1FrkUGgMyxd+d/QABeUU6LhMKNH4yRpDpoYG7R4C5hZcdsme1/nqV
+	 Qyvq/zT/vj8NA==
+Date: Wed, 7 May 2025 18:20:47 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+Cc: Jonathan.Cameron@huawei.com, dan.j.williams@intel.com,
+	rafael@kernel.org, lenb@kernel.org, akpm@linux-foundation.org,
+	alison.schofield@intel.com, rrichter@amd.com, bfaccini@nvidia.com,
+	haibo1.xu@intel.com, david@redhat.com, chenhuacai@kernel.org,
+	linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	chenbaozi@phytium.com.cn, loongarch@lists.linux.dev
+Subject: Re: [PATCH v2] mm: numa_memblks: introduce numa_add_reserved_memblk
+Message-ID: <aBt6T2hbiFBeFofE@kernel.org>
+References: <20250506062245.3816791-1-wangyuquan1236@phytium.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250506062245.3816791-1-wangyuquan1236@phytium.com.cn>
 
-On Tue, 29 Apr 2025 16:31:19 +0100
-Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+On Tue, May 06, 2025 at 02:22:45PM +0800, Yuquan Wang wrote:
+> acpi_parse_cfmws() currently adds empty CFMWS ranges to numa_meminfo
+> with the expectation that numa_cleanup_meminfo moves them to
+> numa_reserved_meminfo. There is no need for that indirection when it is
+> known in advance that these unpopulated ranges are meant for
+> numa_reserved_meminfo in support of future hotplug / CXL provisioning.
+> 
+> Introduce and use numa_add_reserved_memblk() to add the empty CFMWS
+> ranges directly.
+> 
+> Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
 
-> On Mon, 28 Apr 2025 23:43:08 +0200
-> Robert Richter <rrichter@amd.com> wrote:
-> 
-> > Current function cxl_region_find_decoder() is used to find a port's
-> > decoder during region setup. In the region creation path the function
-> > is an allocator to find a free port. In the region assembly path, it
-> > is recalling the decoder that platform firmware picked for validation
-> > purposes.
-> > 
-> > Rename function to cxl_port_pick_region_decoder() that better
-> > describes its use and update the function's description.
-> > 
-> > The result of cxl_port_pick_region_decoder() is recorded in a 'struct
-> > cxl_region_ref' in @port for later recall when other endpoints might
-> > also be targets of the picked decoder.  
-> 
-> I'm not convinced pick is really any clearer than find as it doesn't to me
-> imply 'get the one that was already allocated'.  I'm also not seeing
-> a lot of precedence in kernel for this use of pick.
-> 
-> I don't feel that strongly either way though and I guess I'll
-> get used to the term if we go with pick.
-> 
-> Alternative might just be to make it an or...
-> 
-> cxl_region_find_or_alloc_decoder()
-> 
-Just taking a look at where this series stands and feel a clarification
-is needed.
+Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-Note I don't care enough on this to block the series going forwards!
-
+> ---
 > 
-> > 
-> > Signed-off-by: Robert Richter <rrichter@amd.com>
-> > Reviewed-by: Gregory Price <gourry@gourry.net>
-> > Tested-by: Gregory Price <gourry@gourry.net>
-> > ---
-> >  drivers/cxl/core/region.c | 25 ++++++++++++++++++++-----
-> >  1 file changed, 20 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > index e35209168c9c..e104035e0855 100644
-> > --- a/drivers/cxl/core/region.c
-> > +++ b/drivers/cxl/core/region.c
-> > @@ -865,10 +865,25 @@ static int match_auto_decoder(struct device *dev, const void *data)
-> >  	return 0;
-> >  }
-> >  
-> > +/**
-> > + * cxl_port_pick_region_decoder() - assign or lookup a decoder for a region
-> > + * @port: a port in the ancestry of the endpoint implied by @cxled
-> > + * @cxled: endpoint decoder to be, or currently, mapped by @port
-> > + * @cxlr: region to establish, or validate, decode @port
-> > + *
-> > + * In the region creation path cxl_port_pick_region_decoder() is an
-> > + * allocator to find a free port. In the region assembly path, it is
-> > + * recalling the decoder that platform firmware picked for validation
-> > + * purposes.
-> > + *
-> > + * The result is recorded in a 'struct cxl_region_ref' in @port for
-> > + * later recall when other endpoints might also be targets of the picked
-> > + * decoder.
-> > + */
-> >  static struct cxl_decoder *
-> > -cxl_region_find_decoder(struct cxl_port *port,
-> > -			struct cxl_endpoint_decoder *cxled,
-> > -			struct cxl_region *cxlr)
-> > +cxl_port_pick_region_decoder(struct cxl_port *port,
-> > +			     struct cxl_endpoint_decoder *cxled,
-> > +			     struct cxl_region *cxlr)
-> >  {
-> >  	struct device *dev;
-> >  
-> > @@ -932,7 +947,7 @@ alloc_region_ref(struct cxl_port *port, struct cxl_region *cxlr,
-> >  		if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
-> >  			struct cxl_decoder *cxld;
-> >  
-> > -			cxld = cxl_region_find_decoder(port, cxled, cxlr);
-> > +			cxld = cxl_port_pick_region_decoder(port, cxled, cxlr);
-> >  			if (auto_order_ok(port, iter->region, cxld))
-> >  				continue;
-> >  		}
-> > @@ -1020,7 +1035,7 @@ static int cxl_rr_alloc_decoder(struct cxl_port *port, struct cxl_region *cxlr,
-> >  {
-> >  	struct cxl_decoder *cxld;
-> >  
-> > -	cxld = cxl_region_find_decoder(port, cxled, cxlr);
-> > +	cxld = cxl_port_pick_region_decoder(port, cxled, cxlr);
-> >  	if (!cxld) {
-> >  		dev_dbg(&cxlr->dev, "%s: no decoder available\n",
-> >  			dev_name(&port->dev));  
+> Changes in v2 (Thanks to Dan & Alison):
+> - Use numa_add_reserved_memblk() to replace numa_add_memblk() in acpi_parse_cfmws()
+> - Add comments to describe the usage of numa_add_reserved_memblk()
+> - Updating the commit message to clarify the purpose of the patch
 > 
+> By the way, "LoongArch: Introduce the numa_memblks conversion" is in linux-next.
+> 
+>  drivers/acpi/numa/srat.c     |  2 +-
+>  include/linux/numa_memblks.h |  1 +
+>  mm/numa_memblks.c            | 22 ++++++++++++++++++++++
+>  3 files changed, 24 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
+> index 0a725e46d017..751774f0b4e5 100644
+> --- a/drivers/acpi/numa/srat.c
+> +++ b/drivers/acpi/numa/srat.c
+> @@ -453,7 +453,7 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
+>  		return -EINVAL;
+>  	}
+>  
+> -	if (numa_add_memblk(node, start, end) < 0) {
+> +	if (numa_add_reserved_memblk(node, start, end) < 0) {
+>  		/* CXL driver must handle the NUMA_NO_NODE case */
+>  		pr_warn("ACPI NUMA: Failed to add memblk for CFMWS node %d [mem %#llx-%#llx]\n",
+>  			node, start, end);
+> diff --git a/include/linux/numa_memblks.h b/include/linux/numa_memblks.h
+> index dd85613cdd86..991076cba7c5 100644
+> --- a/include/linux/numa_memblks.h
+> +++ b/include/linux/numa_memblks.h
+> @@ -22,6 +22,7 @@ struct numa_meminfo {
+>  };
+>  
+>  int __init numa_add_memblk(int nodeid, u64 start, u64 end);
+> +int __init numa_add_reserved_memblk(int nid, u64 start, u64 end);
+>  void __init numa_remove_memblk_from(int idx, struct numa_meminfo *mi);
+>  
+>  int __init numa_cleanup_meminfo(struct numa_meminfo *mi);
+> diff --git a/mm/numa_memblks.c b/mm/numa_memblks.c
+> index ff4054f4334d..541a99c4071a 100644
+> --- a/mm/numa_memblks.c
+> +++ b/mm/numa_memblks.c
+> @@ -200,6 +200,28 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
+>  	return numa_add_memblk_to(nid, start, end, &numa_meminfo);
+>  }
+>  
+> +/**
+> + * numa_add_reserved_memblk - Add one numa_memblk to numa_reserved_meminfo
+> + * @nid: NUMA node ID of the new memblk
+> + * @start: Start address of the new memblk
+> + * @end: End address of the new memblk
+> + *
+> + * Add a new memblk to the numa_reserved_meminfo.
+> + *
+> + * Usage Case: numa_cleanup_meminfo() reconciles all numa_memblk instances
+> + * against memblock_type information and moves any that intersect reserved
+> + * ranges to numa_reserved_meminfo. However, when that information is known
+> + * ahead of time, we use numa_add_reserved_memblk() to add the numa_memblk
+> + * to numa_reserved_meminfo directly.
+> + *
+> + * RETURNS:
+> + * 0 on success, -errno on failure.
+> + */
+> +int __init numa_add_reserved_memblk(int nid, u64 start, u64 end)
+> +{
+> +	return numa_add_memblk_to(nid, start, end, &numa_reserved_meminfo);
+> +}
+> +
+>  /**
+>   * numa_cleanup_meminfo - Cleanup a numa_meminfo
+>   * @mi: numa_meminfo to clean up
+> -- 
+> 2.34.1
 > 
 
+-- 
+Sincerely yours,
+Mike.
