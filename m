@@ -1,242 +1,221 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 315B8149C64;
-	Wed,  7 May 2025 09:35:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746610536; cv=none; b=SFpsPEIVpjyA1+n6qP5Ysfqu69RwJdtkKzogMb0T56576y9eZnHCCoLsVBkA2YhQfaniQdbWM8XGhwkIOf5jVJTmtMgRUnHF3fm97cPlUa14RvrJrasaOj1WDlw98YK0CaVh0vovyXv6cVkCOBOiVYlJyu/1GO26QHTmBM4A1rA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746610536; c=relaxed/simple;
-	bh=kF6e6uMGMhaHt+9/3fdbFljNlGQnIYNDGjEJ8e4vQOM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SAvMXak8gBFityayJvO4gPs0xbVTgA4KgeiIGMFkdRVxeP5j09R3H8EaNnFSkLRk7gelTbyuKs6PyzSNeGmWPPBzuZhAfOit8QGLmpPBTgaTPpuQqyMbpuhWTPVm6y8+3/Or4wAya6acIHsrauEXdpDjebkJ/1/g0UFj0QsEypY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-b6-681b29594506
-From: rakie.kim@sk.com
-To: gourry@gourry.net,
-	joshua.hahnjy@gmail.com
-Cc: akpm@linux-foundation.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	dan.j.williams@intel.com,
-	ying.huang@linux.alibaba.com,
-	kernel_team@skhynix.com,
-	honggyu.kim@sk.com,
-	yunjeong.mun@sk.com,
-	rakie.kim@sk.com
-Subject: [RFC] Add per-socket weight support for multi-socket systems in weighted interleave
-Date: Wed,  7 May 2025 18:35:16 +0900
-Message-ID: <20250507093517.184-1-rakie.kim@sk.com>
-X-Mailer: git-send-email 2.48.1.windows.1
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2047.outbound.protection.outlook.com [40.107.92.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 999F972628;
+	Wed,  7 May 2025 11:10:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746616223; cv=fail; b=Eyd9QN2MAeQbHrOROTiDhI5B9x8J6l90TP5sVvyA0jXMhJAD/aijEbIDQwvyYeXDOnyYKMhZB7pr9Z6tjqIM6j/O9DJF4ew4UVhgse6m+F3qLEdA8TVo/d8NJVww8nH183N3KL/ppknJIb83GZEHS7b3SivSlPC8xjlITSeL+HU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746616223; c=relaxed/simple;
+	bh=AGaDVN2eS9dCQ34ECNdzaehbAu9zgHegjGMJnN0ZrOU=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=e/b21JFVFLJhh0yQopmQLUqP3VH4fAQMat/WT0dT9kTOooUbaa+zXb2X6/IQWN5DC7vKSfO/4Rd0a6Sbew3krsnb/QVSrrrOoEYAfyAUnlzDAaF2mndDVO8AYO9D2ePPtExl4cfcZaiN0kr/E9/4Ep5ykpybvw1HQBYqhLkZ+C4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=vDn/LfVB; arc=fail smtp.client-ip=40.107.92.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="vDn/LfVB"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=X6vTRW4XLg1cYarTPj0mDESEm2Rc8ncQt0PxGdqZ+9UkMDNA/+ZdPyZnPnfL1G0yrAUjR3AkM2/vHsXa+FWjrt4s/K/qc5oIwGfe4fs5PZDtGPEvonCkhx3vkTfyHolIbFPUEhUcM2eEXAjthkKOToSl8yBVa14aBAQcxtIiY1e+UHNre5kI7Lkc6JYIDI89h4Lwx17u0scxLpxbzt8lS+tIYbNNQsxi/9aEqr/wSn/8ubraQhVRYqnr1fqzgaHg6vzc3szhT/RpuZINaMWrZV0EGpZ/eUouRAXICodW8p9NT/vh3Zipd7A+CZoXtrrgKDaGPfp52GzAoXNRZ5DB3w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jRzDi+cQPw1BH2O3iJjJLmFG7nw8XuYPfiIWtP6BKvQ=;
+ b=ER+NjPNHLhbtwr4Jd5KrJ32UGVnfbe7lPkjzPyCrqJf1Ihh52T2k151/pUN4oy+DFx2U/MKHx/JARoLRZ4ZYZCAP4tNQ8IVgfDiPrUpiFUJ+iDabXFdaT2tMJXx6CI+UwVZGR6oO2bqkyk5ZD+mDWf0t1E6H6ziFLfFlLOEWCFT9KW3MNZarb+DZzYI3klYyi2pTc8r6bvMbfGpZEnXXtlWcSV5zgvmtX3LI6CDbQjoJpULhpfY5Ce+wN6JefeYBtzPifQkJbCLZ95hS4gcVggYjpnxvypwbd1SNccrkYzxbQqDJE9f/YUqZwdRM1W+qCP3S8Jx7B6syZirORqJyCg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jRzDi+cQPw1BH2O3iJjJLmFG7nw8XuYPfiIWtP6BKvQ=;
+ b=vDn/LfVBLmIc9w/nSiVdC5rRLo2sbxCOTXs+ybcnesCxGIB3CKjiRn8mSK3BgsFxX3GU40mQ8MbMGRooMllKy4xArWE+bkzVrSqMOhQFs0ezvoXll+ZiHWVPTomDO4r0ZT00FPR2idyuZ4cyk9Tj/1dcW7TGRdPAcgw/BttCHEY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
+ by IA1PR12MB7495.namprd12.prod.outlook.com (2603:10b6:208:419::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.35; Wed, 7 May
+ 2025 11:10:15 +0000
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79%4]) with mapi id 15.20.8699.026; Wed, 7 May 2025
+ 11:10:14 +0000
+Message-ID: <f12240f3-636a-4bda-89e1-42f4cf866248@amd.com>
+Date: Wed, 7 May 2025 12:10:10 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] cxl: Allow reprogramming misconfigured hdm decoders
+Content-Language: en-US
+To: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>,
+ Gregory Price <gourry@gourry.net>
+Cc: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250430012915.295136-1-lizhijian@fujitsu.com>
+ <aBGIMglj8r5MNAmN@gourry-fedora-PF4VCD3F>
+ <082de146-d5ed-4b49-ba0f-d6f018436e5b@fujitsu.com>
+ <200f8614-34ba-42b4-aa8c-560d3052e496@amd.com>
+ <8f7019ed-a7a2-4cc8-9a8b-e7f96cf5c8d7@fujitsu.com>
+From: Alejandro Lucero Palau <alucerop@amd.com>
+In-Reply-To: <8f7019ed-a7a2-4cc8-9a8b-e7f96cf5c8d7@fujitsu.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: DU7P189CA0024.EURP189.PROD.OUTLOOK.COM
+ (2603:10a6:10:552::11) To DM6PR12MB4202.namprd12.prod.outlook.com
+ (2603:10b6:5:219::22)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrKLMWRmVeSWpSXmKPExsXC9ZZnoW6UpnSGwbNnrBZz1q9hs5g+9QKj
-	xc+7x9ktjm+dx25xftYpFovLu+awWdxb85/VYvWaDAcOj52z7rJ7dLddZvdYvOclk8emT5PY
-	PU7M+M3isfOhpcfnTXIB7FFcNimpOZllqUX6dglcGdvX9jIXfNap+LVtI2MD4xGFLkZODgkB
-	E4l9M/cxwtgftq5mB7HZBMQkdk1/BGaLCBhIbG78DGRzcTALdDBJNC1bwwySEBaIkWhevIYV
-	xGYRUJW4u2snWJxXwFjibftSVoihmhINl+4xQcQFJU7OfMICYjMLyEs0b53NDFGzhk3i37Jk
-	CFtS4uCKGywTGHlnIWmZhaRlASPTKkahzLyy3MTMHBO9jMq8zAq95PzcTYzAwFxW+yd6B+On
-	C8GHGAU4GJV4eA/8lMwQYk0sK67MPcQowcGsJMJ7/z5QiDclsbIqtSg/vqg0J7X4EKM0B4uS
-	OK/Rt/IUIYH0xJLU7NTUgtQimCwTB6dUA6P+NJ7NNQJ/+0pM5lQ3TTH5ul8kJ+XKhhfP7008
-	WLaNafGOX1PZs/4ZL4pbXcvBrLq6ehfPZ5mqG0orPqUx1M8xufHyY1DPp3W1nRt/zL5j0TD3
-	p9WyRI+ZlRvv/zW5YByfvNz6a9TuhE+/Sk4xJjL07rQ2ao/T+TDNO6RswqsZ3jlTt9hXnk5X
-	YinOSDTUYi4qTgQACDdNbUgCAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrALMWRmVeSWpSXmKPExsXCNUNNSzdSUzrDoLnLwmLO+jVsFtOnXmC0
-	+Hn3OLvF52evmS2Ob53HbnF47klWi/OzTrFYXN41h83i3pr/rBaHrj1ntVi9JsPi97YVbA48
-	Hjtn3WX36G67zO6xeM9LJo9Nnyaxe5yY8ZvFY+dDS49vtz08Fr/4wOTxeZNcAGcUl01Kak5m
-	WWqRvl0CV8b2tb3MBZ91Kn5t28jYwHhEoYuRk0NCwETiw9bV7CA2m4CYxK7pj8BsEQEDic2N
-	n4FsLg5mgQ4miaZla5hBEsICMRLNi9ewgtgsAqoSd3ftBIvzChhLvG1fygoxVFOi4dI9Joi4
-	oMTJmU9YQGxmAXmJ5q2zmScwcs1CkpqFJLWAkWkVo0hmXlluYmaOqV5xdkZlXmaFXnJ+7iZG
-	YDguq/0zcQfjl8vuhxgFOBiVeHgP/JTMEGJNLCuuzD3EKMHBrCTCe/8+UIg3JbGyKrUoP76o
-	NCe1+BCjNAeLkjivV3hqgpBAemJJanZqakFqEUyWiYNTqoGROfDsvcq3CRbrg3/vKV4j8fHK
-	JQO1+i187aeCPW3keFkF1vz7tD347SmDJPMZM5PNV52MbJglNOd8/cNXvyWecxqsTrqtVn3n
-	/YHfImG6Ta26HPfjjNVEo45WTtW8+5F32oPe5f+snjF/dJap1IvWZhJMPb6f28Ci13L7759n
-	YmNEckwe7ryvxFKckWioxVxUnAgAwXL1R0MCAAA=
-X-CFilter-Loop: Reflected
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|IA1PR12MB7495:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8a75a380-9f3b-4352-1fed-08dd8d57be0b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MHpwN3Btd0VYaHduc21NdkFpdVBFYWxSb2s1TStnMGJqeE5tWnJHYlBDdFk2?=
+ =?utf-8?B?VjhINGtWa2NhUXJWelEwaTJJalVQOHcza2o1eHN3d21OeWkyelpSN2dzZFVO?=
+ =?utf-8?B?b1IrcGV6SVlkaGxVTmJvckU2TFNVZlBPdHFIaDJQSlVBbFhjN2RwYnppc1Fu?=
+ =?utf-8?B?clZmYXJ5VFpCUGhpVCt4Qm1xVVdueHYvUjRmN3RKcDIxWExvVklMelpIcGZv?=
+ =?utf-8?B?NW5yd2kzM0E2MXBwU290Nit3aFM1RjY3SmoyM1B1NnlYWkFnMjczSTFMSjFI?=
+ =?utf-8?B?OTZhbWtzRGV5MzV2N1ZTdktLZjlTR3M1VmlMbmpON2hXekJBYmtsN1dIYXZR?=
+ =?utf-8?B?TUhPdmg1SVRKc2lYa2ZyR3NnNFhidGNWalZSSXpHNTN3VU5HcnBhWjVnNm9N?=
+ =?utf-8?B?d3FjVThnU2RhSXFZa2tYemxFSVNnSEJKUGloa0JvYWxaOWY1Ym85VVNlalZx?=
+ =?utf-8?B?aXBrTk1kRm51bmgxb1lyQjZHRXhKVW0zRWE5ampWYm1IUE5raXU1OGw0dTFz?=
+ =?utf-8?B?WGtzcHdzcDg1aElnMXBOdjFENHNHemJBUDdoN3k2WUo1UEI4Y0U3TlYyRjZi?=
+ =?utf-8?B?TkpCZ3kwWmRBSGRpQjhqaXR0cjhWRjhlNlIyZ1RlR3NNNG5VRkQ1cmEwNjEx?=
+ =?utf-8?B?dkhnMTl3dmJnb2RhYnFSQnBCWiswOTF4eDVvdmozMjhXUklNTnFNYlFVbFh2?=
+ =?utf-8?B?bmVGUjhOWkRwbDY0NXFhbWd3Tnp6R1A5OGZuS1diRjR6b0NBRC9vSEhXRG1J?=
+ =?utf-8?B?aGtyR1ZWNlRscGRWamhQQ1BGUVNvZXZRWXhMY1dmMWh0ZHh3YVE4UnhNZ3hv?=
+ =?utf-8?B?aXYrWVJBNlhrUGNHbGFFUmRweTZneDQxcVd5c2ROSjRia2VCNHNQaFF6YTZC?=
+ =?utf-8?B?ellwMWVNYnVFNVJ4Qzl2b2NEM1RtRlVvN3NQbGdBRjA0eDh5MEtUQlJiRlBx?=
+ =?utf-8?B?WWh2Mm0wdGMvS0ZuSEdOVm1tT2hYMkQvekRNelRWZTVkUmh5UUYyTlIxeVpQ?=
+ =?utf-8?B?ODI5SFIyemhPRENwRFVucUhpenh6OEdibHNLMVpFcWJZbmZGUzNUSU5MZlFV?=
+ =?utf-8?B?MVcwVFhaYXN0eDBDZ0hvck9XWmNPWUVMRzNjSENVYXhEQjh4dGdsTmtxMTBl?=
+ =?utf-8?B?a3U0OUJZaWFhMUFYSlRjeXV5YXZ5L0xubXpzcVFFTlliaVppU1JoWlpHeXE3?=
+ =?utf-8?B?aHdEWGpWa2xXbXZsTDhOQWZjMXl1bWJEbWg4UXMzSHFTc3JGRksrMlRZVW1W?=
+ =?utf-8?B?SXdZU0t4U2I1aFhrOHl1bVVRY3R3eU1raUdFRVlwS1BIU3ZXb2x1K0V0Tm1O?=
+ =?utf-8?B?bkJwNThTNk5qZDl2Sk9PdmorZTIzNDQwWWZocHVJdXV6ZjhYakZhK3QwKzFY?=
+ =?utf-8?B?TVRNWVpmQkpUSjJ5cER1UUZyajJUT0VtcHlOKzBUNENyZ05XWDFrclBmdGh1?=
+ =?utf-8?B?NG9ZU1cxdGErb1VodFNKN0gwak1Ha0tDeE4vV1gvbDFLcHpnYVNsV080WmM5?=
+ =?utf-8?B?RGQvZ2ZiRVpIZEc1blFBcldiQjlEMFdLc3hXRFhLQkJkdUNBUzd6YW5VK2hu?=
+ =?utf-8?B?UWZlN0xUanhteFAwR2pRR3E0T2g0cUhlTS9XS1l5SkN3dTROZGRCQ2JBbW41?=
+ =?utf-8?B?UlMyNjJaN2pEU0VMNFZyd1RBNEdLdjVhS3dTbmNYVUxobVFUb3JOWVZCN21Q?=
+ =?utf-8?B?ay84QlNPbnVkMXdyTFJ3ZW8zMDJ2T2RQOS9OczdmYVJhWmthd3hXVjl5VVdz?=
+ =?utf-8?B?aGVYSk1Ya3Uvd1B5WjBON29zMG1wRzhxNXdaUHhKZ2lwMjdxdSs0S29CSmUw?=
+ =?utf-8?B?QjRHZDNubGx1dWdOZWpyWGRscnd0OURNbjNRaWpPRzBVSXRjOEtLMWpUM2lW?=
+ =?utf-8?B?VEEzL2UrUHJqb3R1T0lWV0g3V3ZudTdubzNKckpLbnpXakFFNTEraytaaDB6?=
+ =?utf-8?Q?uj0WGDsk8b0=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MTlvamFCV1F5OWJha1FqdzMzNStFVTVyZ3lxYnBJblFUYWpoaEpReFJWMCtK?=
+ =?utf-8?B?QVQ5YjI4MlRoZkxLQ054RmNUa0dXeGRHbUg0QS9tNW0yY2N2Y3ZPYm5JcklP?=
+ =?utf-8?B?eVkrZTZYUVJzNXNWTENHVFVpQmhDOEYrNnZzYjRyWFpRZ0N4ekI1L2Rhd1ZY?=
+ =?utf-8?B?TmJnWjlrY0ZyUDNqQzhhVG82dkVhWTI0UHZsYUVDWXN5VDI3S2oybnlEL3M1?=
+ =?utf-8?B?M0FQNlRMU0VUWndQVG9pQ0NveVpzWFlCOEFrZWRMR3NVV2J0YUFmQ05Jb3Ix?=
+ =?utf-8?B?TC9nVzZmRkcxQW1xMlMrSElBcHN0V1NzTk9RdXhTMElSOVZoZEdlU0s2ZEJU?=
+ =?utf-8?B?aGtkNUNuejVUQlNyWU5PeEVTOWg4REZNazZyTVE4dHNTZ3lsWkphbXhhR3da?=
+ =?utf-8?B?RFhVQ3JCb3ZmY2oxYnJMaUE4OVRDL0dxRnBRdkMzTnhzTmFyeUNYMmdXVFRF?=
+ =?utf-8?B?blo3NFN1U0kzUnRoeFlNTGtBL2pCNHZuVDVzSjRJc2U3NTU3blRPcEh5N3pi?=
+ =?utf-8?B?ckZTdVM5c0ttRHVRU0t1cTNVUS9rOVBjeU0yYng5WlExK0FVeG9jMFg2dXVt?=
+ =?utf-8?B?S1pObjN1UUhqYnNabFZmTWhMSGJLbnYrdjQ3aElpVUlJMW5MRUJobWd6TXdz?=
+ =?utf-8?B?YWdjWk9yWml0VlZuMllEZVlXcUt4VSt5ak01V1RPb3RsQkFkR0J4ZGpDd2VW?=
+ =?utf-8?B?dkVtclVBMmZENGpEdlVjK3JsR2pzcXpIb1dES3B2YWE4TXRtSTJ4Y3JiREJy?=
+ =?utf-8?B?ZlNZSGR5RE9TYWxTdVlKSVdVOGNUY05TWC9TRVN1cmtUbFVMdEtuWm9kb2M0?=
+ =?utf-8?B?YUFHVUR0UjRsQTBTRkR1ZGlJaXZTZUUxeXFtOHV2SU40SFpEK2pxT3AyZkpC?=
+ =?utf-8?B?d2lXYWFnTk9HNXdKR3ZUeUkwUWNWNXhJbjIzeVFzNWJTWEk4SEdDakRyTkVO?=
+ =?utf-8?B?RmFHdGl3aTFkVFJYUW5vdi9tZERPdy9IUXF1YXRLYlRqWFZRMXUxdXpmb04z?=
+ =?utf-8?B?ZU5BbW1GcXh1RlA2WGJUTVJVcExWNFR4ZjVDb2twUlcwVkRhbnFzNld4Qm9Y?=
+ =?utf-8?B?N0p6dnM4bWFkSFhHZFBJdytFblpiYnhqM2FxQUYxeUI2ckovamd5ZFYvSUNl?=
+ =?utf-8?B?aGRnaWUweDlBRmNzaFV4ZlpOUkNYSVdWRW5SRkVzOXBVcnlJS0wrVzgydFc5?=
+ =?utf-8?B?WFE0NU5qQlBLVk90THVrc1NNT0p5emh6UTV0TFA0ZjZyK1N2QkpGMk96Q3VD?=
+ =?utf-8?B?VDVQYTlIaFRoNmRoRjY3cFovbXJFTVJWVkcyZ0E3NDN1a0JnUGRGRlFta0Zo?=
+ =?utf-8?B?WGxGUUU0TVZwR3p0OUpycUZEcndPeFZadDdlRHpBY1RvTUVWZXAzaVdJSU1P?=
+ =?utf-8?B?Rm0vak9Xbkh0UHI3RjBHOTZ5bWZoWStScG5LVmV0TENCeEFkeWM3S2tFVW1T?=
+ =?utf-8?B?V2hjMUtUUUU3ek9sazd4WlgzenVNYmYrUWxsMkNpWVhKY2tOcWNKdStsajhT?=
+ =?utf-8?B?YVBCYTlnNVRKa1FXbHB4Ri9RRDBCRE1HK2FCTVlYVjlRNzUxTS9SZE1ESklD?=
+ =?utf-8?B?OGdEcFRGTFQ1QUpKSnNiK3NRSlR1RFA2bGZ0VmpnSzkwb0haQkMyMldCdWx3?=
+ =?utf-8?B?QzE4VzZoSExUa3pNaUVzYTlRT2YyY090MlJwVWIyL21SL2lBeUxkSWh1SHRp?=
+ =?utf-8?B?SHptZ3pmcTAyeHRISC9oUDI5NUNSUjd6cldSZTJYT1BORHk0SDhCS0dPZFl6?=
+ =?utf-8?B?cjAyZmMyRW40VzI3NVBpSVVsWlBIZ2QvLy92Q0luOGR2S2FsMUhFZG9ybyt1?=
+ =?utf-8?B?L21ZYmJpSnpzZGp6UlNORHI5a2tQV2FuT0tlQ2VhVXRkZERNMHM5SmZpbkJB?=
+ =?utf-8?B?YW1aSngxUW5mVk43RENOM3BjUUhqVjdyVzRKOUpuSkl0ZTBnV0NEWU9CMXlZ?=
+ =?utf-8?B?S1U3aUptWE00d3lxMW85Y3lXMnZRdWt5MHZUYWcwUzJZSTZua01rYkV3QTRu?=
+ =?utf-8?B?RXB5S0pjWXlNU2lIUkcwM0hTZVdFR2hoaFcrZ2dHYWwzTWdHT3ZpK3liUXlO?=
+ =?utf-8?B?UDU0TDA2VUxxeG0vQUZabDJQQ1RxSEdBWURrQ1FEeTBBUlRZeFZNUUlOdlp2?=
+ =?utf-8?Q?eKp62bt3LOOxA9JB+jgdZqO9u?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8a75a380-9f3b-4352-1fed-08dd8d57be0b
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2025 11:10:14.9045
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /vX5VZtDUewMxIK6L87cSgZmQ+JBEZoysbL4AcsGogNVN9pNMM6pqharh377tAq5Irc3wmVwsEx2402BWH6H5A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7495
 
-Hi Gregory, Joshua,
 
-I hope this message finds you well. I'm writing to discuss a feature I
-believe would enhance the flexibility of the weighted interleave policy:
-support for per-socket weighting in multi-socket systems.
+On 5/7/25 07:42, Zhijian Li (Fujitsu) wrote:
+>
+> On 30/04/2025 16:42, Alejandro Lucero Palau wrote:
+>>> Hi Gregory,
+>>>
+>>> Thank you for the feedback. Based on current CXL driver behavior, user-space tools
+>>> can indeed reprogram firmware-provisioned HDM decoders in practice.
+>>>
+>>> For example, after a successful boot, one may destroy the auto-constructed region
+>>> via cxl destroy-region and create a new different region.
+>>> This indicates that the kernel does not inherently lock down these decoders.
+>>>
+>>> As for the locking rationale you mentioned, platform vendors might enforce their policies
+>>> through mechanisms like the *Lock-On-Commit* in CXL HDM Decoder n Control Register
+>>>
+>>> While platform vendors may have valid considerations (as you noted), from a driver and
+>>> end-user perspective, depending solely on firmware updates to fix transient failures
+>>> is not smooth sometimes 🙂.
+>>>
+>> Hi Zhijan,
+>>
+>>
+>>   From my current effort trying to get a Type2 device properly initialized by the kernel after the BIOS/platform firmware doing whatever it needs to do, I really think we should have a wider discussion regarding this sync, and maybe to have first something from the kernel expectation of what the BIOS should and should not do.
+>>
+>>
+>> If this makes sense, I could work on a initial draft about the outline or points to discuss about this.
+>>
+> Hi Alejandro,
+>
+> Thanks for sharing this concrete pain point. Your experience highlights a critical gap in
+> "defining clear handoff protocols between firmware and the kernel" for CXL device initialization.
+> I agree that we need a community-driven effort to establish these expectations.
+>
+>
+> I’m happy to see your draft or thread for deeper discussion.
 
----
 
-<Background and prior design context>
+Hi Zhijan,
 
-While reviewing the early versions of the weighted interleave patches,
-I noticed that a source-aware weighting structure was included in v1:
 
-  https://lore.kernel.org/all/20231207002759.51418-1-gregory.price@memverge.com/
+Great. I'll work on this and hopefully something to share in a couple of 
+weeks.
 
-However, this structure was removed in a later version:
 
-  https://lore.kernel.org/all/20231209065931.3458-1-gregory.price@memverge.com/
+Thanks
 
-Unfortunately, I was unable to participate in the discussion at that
-time, and I sincerely apologize for missing it.
 
-From what I understand, there may have been valid reasons for removing
-the source-relative design, including:
-
-1. Increased complexity in mempolicy internals. Adding source awareness
-   introduces challenges around dynamic nodemask changes, task policy
-   sharing during fork(), mbind(), rebind(), etc.
-
-2. A lack of concrete, motivating use cases. At that stage, it might
-   have been more pragmatic to focus on a 1D flat weight array.
-
-If there were additional reasons, I would be grateful to learn them.
-
-That said, I would like to revisit this idea now, as I believe some
-real-world NUMA configurations would benefit significantly from
-reintroducing this capability.
-
----
-
-<Motivation: realistic multi-socket memory topologies>
-
-The system I am testing includes multiple CPU sockets, each with local
-DRAM and directly attached CXL memory. Here's a simplified diagram:
-
-          node0             node1
-        +-------+   UPI   +-------+
-        | CPU 0 |-+-----+-| CPU 1 |
-        +-------+         +-------+
-        | DRAM0 |         | DRAM1 |
-        +---+---+         +---+---+
-            |                 |
-        +---+---+         +---+---+
-        | CXL 0 |         | CXL 1 |
-        +-------+         +-------+
-          node2             node3
-
-This type of system is becoming more common, and in my tests, I
-encountered two scenarios where per-socket weighting would be highly
-beneficial.
-
-Let's assume the following NUMA bandwidth matrix (GB/s):
-
-         0     1     2     3
-     0  300   150   100    50
-     1  150   300    50   100
-
-And flat weights:
-
-     node0 = 3
-     node1 = 3
-     node2 = 1
-     node3 = 1
-
----
-
-Scenario 1: Adapt weighting based on the task's execution node
-
-Many applications can achieve reasonable performance just by using the
-CXL memory on their local socket. However, most workloads do not pin
-tasks to a specific CPU node, and the current implementation does not
-adjust weights based on where the task is running.
-
-If per-source-node weighting were available, the following matrix could
-be used:
-
-         0     1     2     3
-     0   3     0     1     0
-     1   0     3     0     1
-
-Which means:
-
-1. A task running on CPU0 (node0) would prefer DRAM0 (w=3) and CXL0 (w=1)
-2. A task running on CPU1 (node1) would prefer DRAM1 (w=3) and CXL1 (w=1)
-3. A large, multithreaded task using both sockets should get both sets
-
-This flexibility is currently not possible with a single flat weight
-array.
-
----
-
-Scenario 2: Reflect relative memory access performance
-
-Remote memory access (e.g., from node0 to node3) incurs a real bandwidth
-penalty. Ideally, weights should reflect this. For example:
-
-Bandwidth-based matrix:
-
-         0     1     2     3
-     0   6     3     2     1
-     1   3     6     1     2
-
-Or DRAM + local CXL only:
-
-         0     1     2     3
-     0   6     0     2     1
-     1   0     6     1     2
-
-While scenario 1 is probably more common in practice, both can be
-expressed within the same design if per-socket weights are supported.
-
----
-
-<Proposed approach>
-
-Instead of removing the current sysfs interface or flat weight logic, I
-propose introducing an optional "multi" mode for per-socket weights.
-This would allow users to opt into source-aware behavior.
-(The name 'multi' is just an example and should be changed to a more
-appropriate name in the future.)
-
-Draft sysfs layout:
-
-  /sys/kernel/mm/mempolicy/weighted_interleave/
-    +-- multi         (bool: enable per-socket mode)
-    +-- node0         (flat weight for legacy/default mode)
-    +-- node_groups/
-        +-- node0_group/
-        |   +-- node0  (weight of node0 when running on node0)
-        |   +-- node1
-        +-- node1_group/
-            +-- node0
-            +-- node1
-
-- When `multi` is false (default), existing behavior applies
-- When `multi` is true, the system will use per-task `task_numa_node()`
-  to select a row in a 2D weight table
-
----
-
-<Additional implementation considerations>
-
-1. Compatibility: The proposal avoids breaking the current interface or
-   behavior and remains backward-compatible.
-
-2. Auto-tuning: Scenario 1 (local CXL + DRAM) likely works with minimal
-   change. Scenario 2 (bandwidth-aware tuning) would require more
-   development, and I would welcome Joshua's input on this.
-
-3. Zero weights: Currently the minimum weight is 1. We may want to allow
-   zero to fully support asymmetric exclusion.
-
----
-
-<Next steps>
-
-Before beginning an implementation, I would like to validate this
-direction with both of you:
-
-- Does this approach fit with your current design intentions?
-- Do you foresee problems with complexity, policy sharing, or interface?
-- Is there a better alternative to express this idea?
-
-If there's interest, I would be happy to send an RFC patch or prototype.
-
-Thank you for your time and consideration.
-
-Sincerely,
-Rakie
-
+>
+> Best,
+> Zhijian
+>
+>
+>> Thank you
