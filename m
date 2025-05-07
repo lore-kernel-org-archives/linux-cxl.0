@@ -1,202 +1,194 @@
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2049.outbound.protection.outlook.com [40.107.93.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA45628C2A9;
-	Wed,  7 May 2025 17:40:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746639653; cv=none; b=fuy/vppn/5YetEEoU2B5tdyW1rmHshantfE8f2xT3Eum0fKN4KOWR+h0OSC1BddqahzxG/QetEQTEHE5NKKf+03+kMA4ujsgwrn6hHb719PjXLw8O8M/ad63fYRCSp25vhpU3r6pnXf9HuRmMWwH3z5jN+aqjfhIHrH+F8fkRAk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746639653; c=relaxed/simple;
-	bh=Geqh+D5uJmrUbt0m4p6Vua5oZHF+A+a0M3ZiP1mG2Us=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tv3jU1KgCc13B9eSdoyQS9lnZ5JKOcSndVkWjxTKBZzZlMG9TsqOWe7N3jOltjs+Y53MBsK+Skjg1Y+RSY2ekNI6NsbH6zCA58XeDYsa6J2XgC4mWwfgOi3dc99nkJgmNPcwK5FZQlZd6AgMitesDiKI0Zc1noY8ZR6KAWNRWHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A5O6F4Va; arc=none smtp.client-ip=209.85.128.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D185728DF1B;
+	Wed,  7 May 2025 18:28:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746642525; cv=fail; b=hg10sAYo5xa8+5g7H4ExZkSmnkiLgZ3MO+a56053/JOV4c78HM1KWUjyaCXGrAhu0W7XtCsdOD/OIyu7/d7D+raOYDpOKPDuua+QE6GPCXAfrx3/79d8cFpgetjF1w41lNBxUm36u7Q7Q5dFOlh6S2TaKiUrI9FEDfOBIScE44o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746642525; c=relaxed/simple;
+	bh=GrYKKKi7sXldNz6XT99oBEVQNiPHaIuFqByLDt1c9a4=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=E4ZEBdzJd+Zcf4MwfpCu7sgjKVAdLn8CORFshhCoAu/dtLx2uu4NTIedmd0PbFVQn3KsELmaHljt0qVJ5XhCt8BOL8IV9yqs9xjc7E357PXwK86mXjYEWYW58DjmMDljhR1MFefpwBZkI4ShPwwb4QdqWhexZDMdnINHSbTkXEI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=BpK94+vx; arc=fail smtp.client-ip=40.107.93.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A5O6F4Va"
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-708b31650ffso1417687b3.0;
-        Wed, 07 May 2025 10:40:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746639650; x=1747244450; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PrNi7Flwgq4EBMVYXIrmQJ3ObEoQDpAla3Oaux526gs=;
-        b=A5O6F4VaRm44RfkPbHxOApSh+gLD+ZF9kJGJoWZGeJUf1+mLHjVMgRAXmCaz/an+eR
-         yquMKc4xUYDlGMQpr/cZQtEj610gCvkA0kiyx5Hwlz1ILAmujrZDL4hvuuY8pyNUrn4V
-         UYD+iRxtJkBSJkJnr8xk+6d292Jonl5vQt3tOPJQhF81+wCcaT0Ft6uibecb4FeRPaEK
-         qArec4zZjUB51oLFlMzl8xqUGzQQYRdIHGhZE3w9jYitfDRgo4aH/NY0U6wVCMpu8Z2T
-         W4d1XAqVTKYzH6QiYgefkQ3PxyCb9Q440FzNHxBdpO7pntCpKjUwiw/SwdYPF2MsNCZd
-         O/Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746639650; x=1747244450;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PrNi7Flwgq4EBMVYXIrmQJ3ObEoQDpAla3Oaux526gs=;
-        b=UVKaI7/n9Vpt61a8hAlbcaH03U24z6ez/JImeQ6RgBq/B++NoyqX+Wn1i1EfGpNEpL
-         cAh7AoDIW5GvExStJCgafYLO8W/HST6hBXjYNaxOY6Dbb5YznXsaIt60U73fPRw9ikJn
-         Bt7psCmdR6m0SqCIphzfZKS05XZgN9ggzBQKrU+Fvl9aMHL8Xw37WDnms/5HaCkMvAvD
-         K6lRAuCwfPF/CNFK60fUlxxAEQlCs07xy79bE8H4jXQkrqjiOOndzjjsLYExJdPD4cD4
-         2NM43kMxs8UwbLhOGo93sYSkoaXQqG0t/5YKHrh7na64GkJEZUxtnKkUjvfbm+IKzExa
-         oG+g==
-X-Forwarded-Encrypted: i=1; AJvYcCW1NqQquj8mjViZ/TjL1VRf91O3LykIZ7ue8dETa++bmfvmh9GVWVwTHKcPMeuPEswzwunK/cjzepOO1IxU@vger.kernel.org, AJvYcCXeF9tJ9kiK747GQakCERlvtkL8DsQPWbJF9tI8OM59EG9SzRONWN5SL5Penj/gQ8HksQZFjl0CQkc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx99/ljHdt+Ik0z6ZAXipPZLhT+bbT1MypnTmho1Q8qF04JHKhM
-	deEGlwMdzWQSd7TPclRKfL/8rdZ+g5QqfbWsFM67X2pZc3h6tCb9
-X-Gm-Gg: ASbGnctx+oOUteAbW+jkYkZVwSG5K3GUwdrZo0uGBfFxMjUwTBdfycqcjY1EsLf0vJA
-	TM3YcVoayHVZl8uu2ouQstrn+ChnNFMegoBTBKaPu90ZeQ1B6MX+wCZsozdjfuOaUE+3huBJhIa
-	Lapytubvnfy7vOpQQKLH+Wx804X6uBUQF+gW/bgHhycdyriWn5tprgYutuPXb/1d704NYTWY6wu
-	rBcVo5vBwm3Rnhd2C/+nhFJ6YjAL+cRleF1nPcIRLMi6/m1vUjgkqb5sOP2bzYBFTIRGJM3HTNY
-	8nI8n/sSaM8UsdxwAAS88lOK
-X-Google-Smtp-Source: AGHT+IHwA2DWyR9RT5bJAp/f5MqkoySq95Z1ilqvT6eJXShFtI+LYdAuNTXzjUiKjw5FKah3AzLgLA==
-X-Received: by 2002:a05:690c:46c8:b0:709:17e4:4d27 with SMTP id 00721157ae682-70a2d0b77d9mr5083347b3.23.1746639650373;
-        Wed, 07 May 2025 10:40:50 -0700 (PDT)
-Received: from lg ([50.205.20.42])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-708c3f0825csm34282207b3.21.2025.05.07.10.40.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 10:40:49 -0700 (PDT)
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Wed, 7 May 2025 10:40:47 -0700
-To: Ira Weiny <ira.weiny@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
-	nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 02/19] cxl/mem: Read dynamic capacity configuration
- from the device
-Message-ID: <aBubH5ZDVPEE8N98@lg>
-References: <20250413-dcd-type2-upstream-v9-0-1d4911a0b365@intel.com>
- <20250413-dcd-type2-upstream-v9-2-1d4911a0b365@intel.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="BpK94+vx"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=soUiFUSWv+F1oYxXwNjhIRTwH08B4cc4zRi5qNoiiOAjYQpJZK3aoGVtG6Jpc2miRrUc007iuhc71B7fhz8CW4E+GWE+f6dQPMdX6LOPF+em+gLaeAd4SmwXydjzsvDzGuGK+LlFzlUbnrIKL2yPF1B6S8OLmV3jwoZPrN8chPO4dPqjM96rAtb+8eQV6WRmJdPKzWtCGIjBiLGZoYQwhXFLyggoc7SynCrpFCD6RbtYcIsnpmBB5GyVegtXVKjWLsOGwRsjPRiro6rYHxIc08IZtYyUPpIvkD4QkDZ6H0ZJ5d3K3EV79CQEH+7qcIZyrSnxJnddO3GB9K5907rP6g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=GrYKKKi7sXldNz6XT99oBEVQNiPHaIuFqByLDt1c9a4=;
+ b=o5XFuc5USem33kziT/OQdvtq4xoB1BhY6bZN2gY+blz9yA0OMaBVRMXBY7VAk7oFiQ+SnrRnIINLLbVyP+a/QGlcIEllI2mMTdiTpbGJP8CVgB/H7qxhXWjXSJXZtnyY/DGVR9nKVyJR/BUS6iK7Kx2Db5qT8Uk/QGsTyBf7GM1Ay8nFtZROvG2VSEmUm7H4d3HusOgK/22YC04Q+El/E+mDSU9u/ZWFuMYZYDisrg1f3ORf7TsqYhnTVgRASZ02NX6ZRbK7aLx0JyitBjaYxzRSmM5T6rzxlEQRqDVX9GPE0xl7FdFwumHt75uuFbs9bNWUV4cy+N+TYd3YokfNqA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GrYKKKi7sXldNz6XT99oBEVQNiPHaIuFqByLDt1c9a4=;
+ b=BpK94+vxbbxYqII+bm+H6jCdZXZayR8lgeqoKSShLFRHhTYNGViVXzjDWfIYs5CwiN9bfYiVvISOeiyHhSLCAMXCTfbtbNptsioyeO+nQUmJyjb14Dq3y7cqvRNqRuewQVm0CKXunWeDoSf6p7cKHORvuMDK7FAKNfgM2agsMKs=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
+ CY5PR12MB6106.namprd12.prod.outlook.com (2603:10b6:930:29::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8699.26; Wed, 7 May 2025 18:28:37 +0000
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f%5]) with mapi id 15.20.8699.019; Wed, 7 May 2025
+ 18:28:36 +0000
+Message-ID: <003143c8-6dd2-4484-a641-7418f686c388@amd.com>
+Date: Wed, 7 May 2025 13:28:32 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 00/16] Enable CXL PCIe port protocol error handling and
+ logging
+To: Gregory Price <gourry@gourry.net>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
+ ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
+ rrichter@amd.com, nathan.fontenot@amd.com,
+ Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
+ ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com
+References: <20250327014717.2988633-1-terry.bowman@amd.com>
+ <aBqV9UCF6dQFtcyP@gourry-fedora-PF4VCD3F>
+Content-Language: en-US
+From: "Bowman, Terry" <terry.bowman@amd.com>
+In-Reply-To: <aBqV9UCF6dQFtcyP@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN7PR04CA0230.namprd04.prod.outlook.com
+ (2603:10b6:806:127::25) To DS0PR12MB6390.namprd12.prod.outlook.com
+ (2603:10b6:8:ce::7)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250413-dcd-type2-upstream-v9-2-1d4911a0b365@intel.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|CY5PR12MB6106:EE_
+X-MS-Office365-Filtering-Correlation-Id: 759821dc-c870-4c76-ab8f-08dd8d94fb34
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|7416014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?c1A0c2FFcnJVMi9tYjdVNVNSMDNpQWpuMklEU1ZwcEZBMEVnVFVid1hyYlFK?=
+ =?utf-8?B?bEJYWnBJN0VUMWg3L01TT3lMSnJaTjNVWjhxWk9RTkk5ZFphd1VQNFpqWTJt?=
+ =?utf-8?B?ZUVCbkJwZFppUWQvVnZkSGJYT3cyWHBEUzJHbTVKNVlNYXVVTFcvQkJONTZK?=
+ =?utf-8?B?RTRqWDZnV2RWR3Q3OVpMNUZZaU1HL0Y1UkdPNnFQaVVVL1FXYTlVWVlSV20w?=
+ =?utf-8?B?L01OcW0vU2llK0hycEl3NVZUUlJpa0RHTTlFc1dNQ1FSL2FRczhPVEdXb0tp?=
+ =?utf-8?B?TStxRmZQWTlYNEZDcjYrRlFOUnNEZXdQWWtRYjhsY0FoZm5wM3BJVmhpRjR1?=
+ =?utf-8?B?UUR4UFBsTTRQZ1paQTNtY3NtZUtaUlBMak9WSVFVejROZ0xpMnByMXBCcTF2?=
+ =?utf-8?B?OXY0M0txYzdHc2srb3dXekJjejRYZjdqb3Q5TWtSM2Z5RnBHRnRlSy90N200?=
+ =?utf-8?B?bU1IaWg2L21rSGRiaG51SkhpTSs2eEp4aVc3OFNnR0ZwWmZsSWtuVXdac3h0?=
+ =?utf-8?B?Q3cyOUhSOEYzV09HVHFDdlpvK3lTRnEwbVlpcHVORVNxYzJYYVlVZHJsNkxU?=
+ =?utf-8?B?bVVoOXVNbnpnUU41OFIvblJVdDNQWG1YaHdGazdFZUtDQkdUSC9zUmZrdzRn?=
+ =?utf-8?B?QXJOaFkvTitSR2Z1SkoyQVN2QmxwbUVkM0RWV1FxMUR3ODgyTlgrWWhJWmNK?=
+ =?utf-8?B?citINkJpSnczTHowaG81RUdHa0pCVHFoM3RUQ0kzdGVnT3NBc1hjK2pPMFZs?=
+ =?utf-8?B?WEdveGhTajVkYnc3UHRNKzNPK3N4UjZFRTFLMTlJZzlqSmljVjZPS3QwOHRU?=
+ =?utf-8?B?dzZaY2k3YXRjRzN4azNzQ1h2TXdHZkthSFFzdE1OKytJWmNFUkFjeG9TaXVh?=
+ =?utf-8?B?QjVDTk96T0JoeXIveS9McEJueW5Ua3h4b0dZaFpqamNuTzR3T0Q1WG5kWUtV?=
+ =?utf-8?B?STdoei8wdDV1K2RPdWNBaWtDZ0hIMVUxcWE4eTVGR053cWVIQnBDeTNqK09a?=
+ =?utf-8?B?VHBQc01IdFpZamFha3ZCaCtnVzRubkFLZnIvM255ajFtY2oxSnNlN2N3SVB5?=
+ =?utf-8?B?WmQrRVVJUnNmNGVmTVZZLzBZV0NvNFl5RksyVmhsTnVoeTJkejBuMDdWMGhD?=
+ =?utf-8?B?MGIrT3NXK0ovb3AzUUtGeFV0WlJwMUpZM3NNREFoMEs4Mm9LOXRyQkt4U212?=
+ =?utf-8?B?b2lBck5OMVdNZGYyRllqcmE2cDFGVXlxSUd6eVJLMnhZR0lyTmFncElLUFZa?=
+ =?utf-8?B?YnM4Uzg1andSMUdlN0wzNGtrblZVVE5WZzNhd2JtU09qVEFHRUIrSlhmZlRj?=
+ =?utf-8?B?YndkRXZIaGU2MldjYm9SWlk0OGdVc0pZNDRWRUxwamdiYkJZWHdSKytJR21s?=
+ =?utf-8?B?d1VZeHptVnBrU0xrVGt3RWdWbC9kdEo1dnZSZ1k1UklHZy9ZVjI5cDFiTExE?=
+ =?utf-8?B?M0VJK29TcElsbTFhdCtWQTZuRktheFo5QWN1K3hVVnRQMithbHlkdWhQS2Fx?=
+ =?utf-8?B?bVpERmNDTlZnZjZ4WEVzUWR0TnFwZGpiMjJkOVhJQUpqYkJ4czc3QVVmc3d1?=
+ =?utf-8?B?WDFCY1I5V0xyYXl4SmxIenBGQm1XeEVFMC9mcVhGWVJ1YzZxYUhiS1FSMDhU?=
+ =?utf-8?B?QU16akFjSzNlRlhRSEdkM2RJRUFhc1RUcUdDYkRSWmFPKzk0OTd3ZWFFSGFQ?=
+ =?utf-8?B?T2tmNjUraEFweCtrQ3JkTWhyTnZZZWFZcXpDWS81enNlWS9OaGsrMFZmRXVz?=
+ =?utf-8?B?bEFWYncwbWZ0TTFLZzR2QnRtV2ZTUDlNbEpkUHl2NWphVmhQZ054bXZINWdL?=
+ =?utf-8?B?RFZyVG9CQnpXODFNTzV0QnI2MFcrUm5PeXhzU3FuRHZpYkFjK3RZMEF1Z3FB?=
+ =?utf-8?B?MFhxdCtrRmpVZFRoRmdWbk9tUjdvNFJrdEJwUHMvSUE4UjZGUmtBUVkvWFIv?=
+ =?utf-8?Q?gwnkAft6Bmo=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?YXIwRnFEQzl6a3drblpmTjVwSU5wb1RkNWZyMWM5NHd6ZGxkUUFCQTBQeUpZ?=
+ =?utf-8?B?ZlJpbUt6YXdiWXpmUDVKUG01SktzVThYTzJQV1NuYlFnWGRzNnR5eGxrYUhz?=
+ =?utf-8?B?azRqdkdWQUxyU3lFZGJGblN1UkpZK0dFQVIyY042ZWhGdXVubDJ4dVZvait6?=
+ =?utf-8?B?akorRzRuT2gxYk16S2doTDhuTnJyUE5YdDVQUlUwV1JicjY1czZOUkVMdm9l?=
+ =?utf-8?B?OFhqL0Q5bzFsNFZPM3BEVlA3NlRNazFldFloYkVsVU5ZSk1HS3cvd0IwOXd3?=
+ =?utf-8?B?U1pPNG0ycjZqVHBIUEFsQnBhZmdBRzhzWnNYWXowbWcvV2crMEdVNkIrSUtG?=
+ =?utf-8?B?djYxRkxmL2paY2wwNTlHSE1HYzVEMTB2WitvZXhSYm5SRzlscDlYQkVaS094?=
+ =?utf-8?B?cGlRYkZyNlg0U25CMnBHUzBOUE1ZT2JVSDM3TUJTV0hhNHpLeWlLcDd2Z2xL?=
+ =?utf-8?B?YVRsVTVYek9TTXlqQkw5SG1rUHdNVHVyYmFsV1k1cFBaTUhuSFh3VWRTUjRE?=
+ =?utf-8?B?YTBER1dNelppb2NyN2xHTENxQVdYVVk4bC8vRWhVTEJIdXpIMHE1VVZlVVVi?=
+ =?utf-8?B?VnRxRGxsZHBzcnBKWjJYa2hzT3JkRG01VWVzdGFmREErdXNwd0lkWlpiZHJZ?=
+ =?utf-8?B?ckQ2eS81QStpWmhqVE54WC9zWXhmOHpCQ2ZHc1doWlpwRzFrN1ErcEl3OUhk?=
+ =?utf-8?B?RGo0eGxxbUxlOHJwZCtOZHJWNTNpdTh1cU54QWZDZXhldWYyS0x0WFJHcUR3?=
+ =?utf-8?B?TlY1blRmUlVDTXdod3JHU210Z0ZzSncrQ2FJdjR1bHdqSXJDdTVoWDhSVS9R?=
+ =?utf-8?B?WVV6ckRyZkNlYVExRzI1dHdmT05rblozdGtsc09ycm5YWFJQU0ZBNURmVldo?=
+ =?utf-8?B?SUdwQWRyL3lsaDdrUFFJNjBabWRRTHlUcFhCZGVMYkR1TkxrV21vNGEyRFBN?=
+ =?utf-8?B?RENJQUlGL2tRWGZWY1RyVmFSbDFwYi8wZnBLMk1ERGh2anNLeVNGTFFHVDdm?=
+ =?utf-8?B?eGFzcTg0dnpMajBpNlJNaWM5SFBMUWJtRXIzN0ZBNmhyVWoyakloUTh1Q25F?=
+ =?utf-8?B?aHhsWjJESTVZL0dBa1VOTDBXYVlDbmQzd2UyczFocy9JV2ozNU1vK1R0ckFL?=
+ =?utf-8?B?ZnU2MUFNYkc4WTBqTG9ISU4zaUNPcnlIUHZGVXhaUDhvZVhaSWJxRVBna1RJ?=
+ =?utf-8?B?ZTdhV1cyb1hLTEFrTlRrVGZueDlRenRVU0cwMXllcHFKaGp3NDMybnl3QSs3?=
+ =?utf-8?B?eFJITThSVkJ1d3VVUGpodTVLeVJrVFk0NEc1NGlRZ1o0NUM5V28rZkFQN1pS?=
+ =?utf-8?B?V1NyTEhrSUtmV3dDallpMW5TRElFbmFRUHByV3hIdDBwNGNxZUdxMnhqbVl1?=
+ =?utf-8?B?U21OQmxnQWQ4U1YzT2dRb0FWWlRBSndsSGpzSUhYTEh0WWhzaU5jOUNCcFRV?=
+ =?utf-8?B?QU5aanhjZGZXYnB2QTR5YkowRCtKaWUwK29HUGxuU080TyttcTQ4U0ZmRDkr?=
+ =?utf-8?B?RXpDNFk5TjVJMnpLRHpSa3dqK2NUS0hOWmhqdlgxK2x5N01QdTJXVE1kQjRV?=
+ =?utf-8?B?NXA4b29nQWhQdXdwd1FvN2hrZ1RkUkJlKzd2eDlINU1zNythai9keHpCTTRu?=
+ =?utf-8?B?YWxPNVl4R2dFeWZMSHJPdEhPNUdLSnhabkF6TTZDMU5sUmh2TjFYN0tVRGFR?=
+ =?utf-8?B?L3JQK2lHMkwxTThObXJNMHVsN2hOeW9XSjM4MzhueGpIR2NsRk9TQThnNGgv?=
+ =?utf-8?B?RkFEb1UzUDVjTTdyb1BiQ3NFMEJIRmI3QUY1Q3JwcVZCM3ROSGt5RDRZMUdP?=
+ =?utf-8?B?Ny91c1p0aUROTEVyeW0ydXhzSkRzbnJaQko1WHJjbkxtVHhmUTBlVmVrSWxh?=
+ =?utf-8?B?MzJwRHVVbU83R3JTTWY5LzMwZml5ZmxGTjJrTmNuNktPSWNaUFEwZHZBU1ly?=
+ =?utf-8?B?cDYwOHhTVCtSdWFFNU03dEtGUzlGMnJBSmx3SDFBbDNZQzBxaHRzTHhIckpF?=
+ =?utf-8?B?V2g2dStXeHhYNStldlhUWDRLZTJSL0VhcnJkK1hWYVBYTjBZOWVSVGI1ZWhm?=
+ =?utf-8?B?UlZ1NjI3N0g1VDBEc2ZNZUFWVnhzMnFZQ0kwTzhKUzA3dWEwNEFmaW1FVWc1?=
+ =?utf-8?Q?/VfNeveQ4MXRSJy8E0kRIXAKb?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 759821dc-c870-4c76-ab8f-08dd8d94fb34
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2025 18:28:36.7821
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: O6eYrPQbjtP8296TSJgjAT6VN06sZDKe5qvXdPXqZlf+sLbHIK5cBZmhKykNg0ps9zjUor/AZyDzi2RlBfphlg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6106
 
-On Sun, Apr 13, 2025 at 05:52:10PM -0500, Ira Weiny wrote:
-> Devices which optionally support Dynamic Capacity (DC) are configured
-> via mailbox commands.  CXL 3.2 section 9.13.3 requires the host to issue
-> the Get DC Configuration command in order to properly configure DCDs.
-> Without the Get DC Configuration command DCD can't be supported.
-> 
-> Implement the DC mailbox commands as specified in CXL 3.2 section
-> 8.2.10.9.9 (opcodes 48XXh) to read and store the DCD configuration
-> information.  Disable DCD if an invalid configuration is found.
-> 
-> Linux has no support for more than one dynamic capacity partition.  Read
-> and validate all the partitions but configure only the first partition
-> as 'dynamic ram A'.  Additional partitions can be added in the future if
-> such a device ever materializes.  Additionally is it anticipated that no
-> skips will be present from the end of the pmem partition.  Check for an
-> disallow this configuration as well.
-> 
-> Linux has no use for the trailing fields of the Get Dynamic Capacity
-> Configuration Output Payload (Total number of supported extents, number
-> of available extents, total number of supported tags, and number of
-> available tags).  Avoid defining those fields to use the more useful
-> dynamic C array.
-> 
-> Based on an original patch by Navneet Singh.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-> ---
-> Changes:
-> [iweiny: rebase]
-> [iweiny: Update spec references to 3.2]
-> [djbw: Limit to 1 partition]
-> [djbw: Avoid inter-partition skipping]
-> [djbw: s/region/partition/]
-> [djbw: remove cxl_dc_region[partition]_info->name]
-> [iweiny: adjust to lack of dcd_cmds in mds]
-> [iweiny: remove extra 'region' from names]
-> [iweiny: remove unused CXL_DYNAMIC_CAPACITY_SANITIZE_ON_RELEASE_FLAG]
-> ---
->  drivers/cxl/core/hdm.c  |   2 +
->  drivers/cxl/core/mbox.c | 179 ++++++++++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/cxl.h       |   1 +
->  drivers/cxl/cxlmem.h    |  54 ++++++++++++++-
->  drivers/cxl/pci.c       |   3 +
->  5 files changed, 238 insertions(+), 1 deletion(-)
-...
->  /* Set Timestamp CXL 3.0 Spec 8.2.9.4.2 */
->  struct cxl_mbox_set_timestamp_in {
->  	__le64 timestamp;
-> @@ -845,9 +871,24 @@ enum {
->  int cxl_internal_send_cmd(struct cxl_mailbox *cxl_mbox,
->  			  struct cxl_mbox_cmd *cmd);
->  int cxl_dev_state_identify(struct cxl_memdev_state *mds);
-> +
-> +struct cxl_mem_dev_info {
-> +	u64 total_bytes;
-> +	u64 volatile_bytes;
-> +	u64 persistent_bytes;
-> +};
 
-Defined, but never used.
 
-Fan
+On 5/6/2025 6:06 PM, Gregory Price wrote:
+> On Wed, Mar 26, 2025 at 08:47:01PM -0500, Terry Bowman wrote:
+>> This patchset updates CXL Protocol Error handling for CXL Ports and CXL
+>> Endpoints (EP). The reach of this patchset grew from CXL Ports to include
+>> EPs as well because updating the handling for all devices is preferable
+>> over supporting multiple handling paths.
+>>
+>> This patchset is a continuation of v7 and can be found here:
+>> https://lore.kernel.org/linux-cxl/20250211192444.2292833-1-terry.bowman@amd.com/
+>>
+> I've been testing this for stability on a fair number of boxes for some
+> time - backported to v6.13. Haven't seen any major issues related to
+> this set in that time. Outside my normal wheelhouse, but for the sake
+> of runtime stability:
+>
+> Tested-by: Gregory Price <gourry@gourry.net>
+>
+> Trying to get more explicit testing feedback from RAS folks.
+>
+> (note: there appears to be some conflicting changes in v6.15-rc4+ that
+> a bit outside my current timeline to forward port and test.)
+>
+> ~Gregory
+Thanks Greg.
 
-> +
-> +struct cxl_dc_partition_info {
-> +	size_t start;
-> +	size_t size;
-> +};
-> +
-> +int cxl_dev_dc_identify(struct cxl_mailbox *mbox,
-> +			struct cxl_dc_partition_info *dc_info);
->  int cxl_await_media_ready(struct cxl_dev_state *cxlds);
->  int cxl_enumerate_cmds(struct cxl_memdev_state *mds);
->  int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info);
-> +void cxl_configure_dcd(struct cxl_memdev_state *mds, struct cxl_dpa_info *info);
->  struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev);
->  void set_exclusive_cxl_commands(struct cxl_memdev_state *mds,
->  				unsigned long *cmds);
-> @@ -860,6 +901,17 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
->  			    const uuid_t *uuid, union cxl_event *evt);
->  int cxl_get_dirty_count(struct cxl_memdev_state *mds, u32 *count);
->  int cxl_arm_dirty_shutdown(struct cxl_memdev_state *mds);
-> +
-> +static inline bool cxl_dcd_supported(struct cxl_memdev_state *mds)
-> +{
-> +	return mds->dcd_supported;
-> +}
-> +
-> +static inline void cxl_disable_dcd(struct cxl_memdev_state *mds)
-> +{
-> +	mds->dcd_supported = false;
-> +}
-> +
->  int cxl_set_timestamp(struct cxl_memdev_state *mds);
->  int cxl_poison_state_init(struct cxl_memdev_state *mds);
->  int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 7b14a154463c..bc40cf6e2fe9 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -998,6 +998,9 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	if (rc)
->  		return rc;
->  
-> +	if (cxl_dcd_supported(mds))
-> +		cxl_configure_dcd(mds, &range_info);
-> +
->  	rc = cxl_dpa_setup(cxlds, &range_info);
->  	if (rc)
->  		return rc;
-> 
-> -- 
-> 2.49.0
-> 
-
--- 
-Fan Ni
+-Terry
