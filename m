@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D046C15E8B
-	for <linux-cxl@vger.kernel.org>; Wed,  7 May 2025 00:43:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD0A715E8B
+	for <linux-cxl@vger.kernel.org>; Wed,  7 May 2025 00:43:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746578597; cv=none; b=hzyPLL3e9Tlp86GeP9GHAlOs1rL6KpAy2Io11JcpGJgYczP/6/g9PiAZQIhpoXlQsrGJk9s7v8dkmUZc4yMVwcvun65XwV0+pfMGnr5Ei8ciWX8vv//q9wJTE+qo1Zl1aSpR3f/4gjTuCDN1dJ5NoQogEAU1UVsyTTuqoOaZSpw=
+	t=1746578599; cv=none; b=qs80LXzEQLHr2dyYT76l8FUnUOqIPSvBdaZxCLe/ILRP9TmDPv0tvmgE7ZFuSXdOiEHr2g3TaO0VxNX1aB/hS58Qwfft7u7lSJTbah4AJm4gijm4UQxekpdusOSmjcN7K0GlAa/oqSNL03+6r1rkFKVXLVVv8+JhMEdqgurjOvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746578597; c=relaxed/simple;
-	bh=i9UomS2lkP8vK+onfnvNu/ixXk/PB7KtAdW4N5VvtiI=;
+	s=arc-20240116; t=1746578599; c=relaxed/simple;
+	bh=G5u2Dqu0eNJzdYL5N3VtRZkJvZJRaEbMlZfrLPVxja4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=k5kDho/CdquXt/7+jMVtyA+ayEufdEkGrpMWYlclJl1yl41iDzZJLLNxAxpunAHl29wnT7w9LeGcvER6fj+4CcFBCMj7BE8VtRuY9Xg55Pw9ZSe+dL+/esDQ7fAxUnbny91zwI3zIxtJbkJ5+FpzTfudUPqnahZT8dYkYEOMxy4=
+	 MIME-Version; b=Wfqx6VsQQbs17DzmTZhFRWxZU3kKtgfXkcKGaHygB5eLz8Ozh047AhhVll45cchXGNXt2zw1yq0Zq071ScGNZQfzAHpwFwvAK4QBrZ6aYrvadVo0pY47P8JhIPrBH7zGYvGorLR4asc6Ys8DJw0I99lRlFWqgGjrsgudqzcbiW8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82BF2C4CEE4;
-	Wed,  7 May 2025 00:43:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3953AC4CEEF;
+	Wed,  7 May 2025 00:43:19 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: Dan Williams <dan.j.williams@intel.com>,
@@ -24,9 +24,9 @@ Cc: Dan Williams <dan.j.williams@intel.com>,
 	ira.weiny@intel.com,
 	rrichter@amd.com,
 	ming.li@zohomail.com
-Subject: [PATCH v2 04/10] cxl: Remove adding of port_num via devm_cxl_add_dport()
-Date: Tue,  6 May 2025 17:43:04 -0700
-Message-ID: <20250507004310.3536991-5-dave.jiang@intel.com>
+Subject: [PATCH v2 05/10] cxl: Defer hardware dport->port_id assignment and registers probing
+Date: Tue,  6 May 2025 17:43:05 -0700
+Message-ID: <20250507004310.3536991-6-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250507004310.3536991-1-dave.jiang@intel.com>
 References: <20250507004310.3536991-1-dave.jiang@intel.com>
@@ -38,216 +38,421 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In preparation for delayed dport probing, remove setting of port_num
-through devm_cxl_add_dport(). Will temporarily set the port_num after
-dport is added for now.
+Current implementation only enumerates the dports during the port probe.
+Without an endpoint connected, the dport may not be active during port
+probe. This scheme may prevent a valid hardware dport id to be retrieved
+and MMIO registers to be read when an endpoint is hot-plugged. Move the hw
+dport id assignment and the register probing to behind memdev probe so the
+endpoint is guaranteed to be connected.
 
+The detection of duplicate dport for add_dport() is removed. The port_id
+is not read from the hw at this point any longer. The port->id will always
+be unique since it's retrieved from an ida. The dup detection thus become
+irrelevant.
+
+The decoders must also be updated since previously it's all done when all
+the dports are setup and now every time a dport is setup per endpoint, the
+switch target listing need to be updated with new dport.
+
+Link: https://lore.kernel.org/linux-cxl/20250305100123.3077031-1-rrichter@amd.com/
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/cxl/acpi.c            |  7 ++++---
- drivers/cxl/core/pci.c        |  4 +++-
- drivers/cxl/core/port.c       | 18 +++++++-----------
- drivers/cxl/cxl.h             |  5 +++--
- tools/testing/cxl/test/cxl.c  |  5 +++--
- tools/testing/cxl/test/mock.c |  5 ++---
- 6 files changed, 22 insertions(+), 22 deletions(-)
+v2:
+- Fix spelling error in commit message. (Ming)
+- Move probing to the specific dport. (Ming)
+- Add decoder update.
+- Return errors when setup dports. (Jonathan)
+- Add driver check before setup dport. (Dan)
+- Add comment on why location to do dport update. (Dan)
+---
+ drivers/cxl/core/core.h |   4 ++
+ drivers/cxl/core/pci.c  |  60 ++++++++++++----
+ drivers/cxl/core/port.c | 152 +++++++++++++++++++++++++++++++++++-----
+ drivers/cxl/cxl.h       |   4 ++
+ drivers/cxl/port.c      |  20 +-----
+ 5 files changed, 192 insertions(+), 48 deletions(-)
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index cb14829bb9be..6f8630e50800 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -593,16 +593,17 @@ static int add_host_bridge_dport(struct device *match, void *arg)
- 	if (ctx.cxl_version == ACPI_CEDT_CHBS_VERSION_CXL11) {
- 		dev_dbg(match, "RCRB found for UID %lld: %pa\n", ctx.uid,
- 			&ctx.base);
--		dport = devm_cxl_add_rch_dport(root_port, bridge, ctx.uid,
--					       ctx.base);
-+		dport = devm_cxl_add_rch_dport(root_port, bridge, ctx.base);
- 	} else {
--		dport = devm_cxl_add_dport(root_port, bridge, ctx.uid,
-+		dport = devm_cxl_add_dport(root_port, bridge,
- 					   CXL_RESOURCE_NONE);
- 	}
+diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+index 17b692eb3257..8b1d9a8ab852 100644
+--- a/drivers/cxl/core/core.h
++++ b/drivers/cxl/core/core.h
+@@ -134,4 +134,8 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
+ 		    u16 *return_code);
+ #endif
  
- 	if (IS_ERR(dport))
- 		return PTR_ERR(dport);
- 
-+	dport->port_num = ctx.uid;
++int cxl_dport_setup(struct cxl_dport *dport);
++int cxl_dport_setup_regs(struct device *host, struct cxl_dport *dport,
++			 resource_size_t component_reg_phys);
 +
- 	ret = get_genport_coordinates(match, dport);
- 	if (ret)
- 		dev_dbg(match, "Failed to get generic port perf coordinates.\n");
+ #endif /* __CXL_CORE_H__ */
 diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index 3b80e9a76ba8..3b84b43ab194 100644
+index 3b84b43ab194..16bd842904e5 100644
 --- a/drivers/cxl/core/pci.c
 +++ b/drivers/cxl/core/pci.c
-@@ -57,11 +57,13 @@ static int match_add_dports(struct pci_dev *pdev, void *data)
- 		dev_dbg(&port->dev, "failed to find component registers\n");
+@@ -24,6 +24,52 @@ static unsigned short media_ready_timeout = 60;
+ module_param(media_ready_timeout, ushort, 0644);
+ MODULE_PARM_DESC(media_ready_timeout, "seconds to wait for media ready");
  
- 	port_num = FIELD_GET(PCI_EXP_LNKCAP_PN, lnkcap);
--	dport = devm_cxl_add_dport(port, &pdev->dev, port_num, map.resource);
-+	dport = devm_cxl_add_dport(port, &pdev->dev, map.resource);
++int cxl_dport_setup(struct cxl_dport *dport)
++{
++	struct device *dport_dev = dport->dport_dev;
++	struct cxl_port *port = dport->port;
++	struct cxl_register_map map;
++	struct pci_dev *pdev;
++	u32 lnkcap, port_num;
++	int rc;
++
++	if (!dev_is_pci(dport_dev))
++		return 0;
++
++	/*
++	 * dport->port_id is valid means that dport has been probed and is
++	 * setup.
++	 */
++	if (dport->port_num != CXL_DPORT_NUM_INVALID)
++		return 0;
++
++	pdev = to_pci_dev(dport_dev);
++	if (pci_read_config_dword(pdev, pci_pcie_cap(pdev) + PCI_EXP_LNKCAP,
++				  &lnkcap))
++		return -ENODEV;
++
++	rc = cxl_find_regblock(pdev, CXL_REGLOC_RBI_COMPONENT, &map);
++	if (rc) {
++		dev_dbg(&port->dev, "failed to find component registers\n");
++		return -ENODEV;
++	}
++
++	port_num = FIELD_GET(PCI_EXP_LNKCAP_PN, lnkcap);
++	rc = cxl_dport_setup_regs(&port->dev, dport, map.resource);
++	if (rc)
++		return rc;
++
++	if (map.resource != CXL_RESOURCE_NONE) {
++		dev_dbg(dport->dport_dev,
++			"Component Register found for dport: %pa\n",
++			&map.resource);
++	}
++
++	dport->port_num = port_num;
++
++	return 0;
++}
++
+ struct cxl_walk_context {
+ 	struct pci_bus *bus;
+ 	struct cxl_port *port;
+@@ -37,10 +83,7 @@ static int match_add_dports(struct pci_dev *pdev, void *data)
+ 	struct cxl_walk_context *ctx = data;
+ 	struct cxl_port *port = ctx->port;
+ 	int type = pci_pcie_type(pdev);
+-	struct cxl_register_map map;
+ 	struct cxl_dport *dport;
+-	u32 lnkcap, port_num;
+-	int rc;
+ 
+ 	if (pdev->bus != ctx->bus)
+ 		return 0;
+@@ -48,22 +91,13 @@ static int match_add_dports(struct pci_dev *pdev, void *data)
+ 		return 0;
+ 	if (type != ctx->type)
+ 		return 0;
+-	if (pci_read_config_dword(pdev, pci_pcie_cap(pdev) + PCI_EXP_LNKCAP,
+-				  &lnkcap))
+-		return 0;
+ 
+-	rc = cxl_find_regblock(pdev, CXL_REGLOC_RBI_COMPONENT, &map);
+-	if (rc)
+-		dev_dbg(&port->dev, "failed to find component registers\n");
+-
+-	port_num = FIELD_GET(PCI_EXP_LNKCAP_PN, lnkcap);
+-	dport = devm_cxl_add_dport(port, &pdev->dev, map.resource);
++	dport = devm_cxl_add_dport(port, &pdev->dev, CXL_RESOURCE_NONE);
  	if (IS_ERR(dport)) {
  		ctx->error = PTR_ERR(dport);
  		return PTR_ERR(dport);
  	}
-+
-+	dport->port_num = port_num;
+ 
+-	dport->port_num = port_num;
  	ctx->count++;
  
  	return 0;
 diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 1d7a4a2ef6ad..70173d23139c 100644
+index 70173d23139c..04e18a102d26 100644
 --- a/drivers/cxl/core/port.c
 +++ b/drivers/cxl/core/port.c
-@@ -1145,14 +1145,14 @@ static struct cxl_dport *cxl_alloc_dport(struct cxl_port *port,
- 	dport->dport_dev = dport_dev;
- 	dport->port = port;
- 	dport->id = id;
-+	dport->port_num = CXL_DPORT_NUM_INVALID;
- 
- 	return no_free_ptr(dport);
+@@ -782,8 +782,8 @@ static int cxl_port_setup_regs(struct cxl_port *port,
+ 				   component_reg_phys);
  }
  
- static struct cxl_dport *
- __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
--		     int port_num, resource_size_t component_reg_phys,
--		     resource_size_t rcrb)
-+		     resource_size_t component_reg_phys, resource_size_t rcrb)
+-static int cxl_dport_setup_regs(struct device *host, struct cxl_dport *dport,
+-				resource_size_t component_reg_phys)
++int cxl_dport_setup_regs(struct device *host, struct cxl_dport *dport,
++			 resource_size_t component_reg_phys)
  {
- 	char link_name[CXL_TARGET_STRLEN];
- 	struct cxl_dport *dport;
-@@ -1182,8 +1182,6 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
- 	    CXL_TARGET_STRLEN)
- 		return ERR_PTR(-EINVAL);
+ 	int rc;
  
--	dport->port_num = port_num;
+@@ -1004,7 +1004,7 @@ int devm_cxl_register_pci_bus(struct device *host, struct device *uport_dev,
+ }
+ EXPORT_SYMBOL_NS_GPL(devm_cxl_register_pci_bus, "CXL");
+ 
+-static bool dev_is_cxl_root_child(struct device *dev)
++bool dev_is_cxl_root_child(struct device *dev)
+ {
+ 	struct cxl_port *port, *parent;
+ 
+@@ -1021,6 +1021,7 @@ static bool dev_is_cxl_root_child(struct device *dev)
+ 
+ 	return false;
+ }
++EXPORT_SYMBOL_NS_GPL(dev_is_cxl_root_child, "CXL");
+ 
+ struct cxl_root *find_cxl_root(struct cxl_port *port)
+ {
+@@ -1059,19 +1060,9 @@ static struct cxl_dport *find_dport_by_num(struct cxl_port *port, int port_num)
+ 
+ static int add_dport(struct cxl_port *port, struct cxl_dport *dport)
+ {
+-	struct cxl_dport *dup;
+ 	int rc;
+ 
+ 	device_lock_assert(&port->dev);
+-	dup = find_dport_by_num(port, dport->port_num);
+-	if (dup) {
+-		dev_err(&port->dev,
+-			"unable to add dport%d-%s non-unique port num (%s)\n",
+-			dport->port_num, dev_name(dport->dport_dev),
+-			dev_name(dup->dport_dev));
+-		return -EBUSY;
+-	}
 -
- 	if (rcrb == CXL_RESOURCE_NONE) {
- 		rc = cxl_dport_setup_regs(&port->dev, dport,
- 					  component_reg_phys);
-@@ -1244,7 +1242,6 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
-  * devm_cxl_add_dport - append VH downstream port data to a cxl_port
-  * @port: the cxl_port that references this dport
-  * @dport_dev: firmware or PCI device representing the dport
-- * @port_num: identifier for this dport in a decoder's target list
-  * @component_reg_phys: optional location of CXL component registers
-  *
-  * Note that dports are appended to the devm release action's of the
-@@ -1252,13 +1249,13 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
-  * switch ports)
-  */
- struct cxl_dport *devm_cxl_add_dport(struct cxl_port *port,
--				     struct device *dport_dev, int port_num,
-+				     struct device *dport_dev,
- 				     resource_size_t component_reg_phys)
- {
- 	struct cxl_dport *dport;
+ 	rc = xa_insert(&port->dports, (unsigned long)dport->dport_dev, dport,
+ 		       GFP_KERNEL);
+ 	if (rc)
+@@ -1643,6 +1634,118 @@ static int add_port_attach_ep(struct cxl_memdev *cxlmd,
+ 	return rc;
+ }
  
--	dport = __devm_cxl_add_dport(port, dport_dev, port_num,
--				     component_reg_phys, CXL_RESOURCE_NONE);
-+	dport = __devm_cxl_add_dport(port, dport_dev, component_reg_phys,
-+				     CXL_RESOURCE_NONE);
- 	if (IS_ERR(dport)) {
- 		dev_dbg(dport_dev, "failed to add dport to %s: %ld\n",
- 			dev_name(&port->dev), PTR_ERR(dport));
-@@ -1275,13 +1272,12 @@ EXPORT_SYMBOL_NS_GPL(devm_cxl_add_dport, "CXL");
-  * devm_cxl_add_rch_dport - append RCH downstream port data to a cxl_port
-  * @port: the cxl_port that references this dport
-  * @dport_dev: firmware or PCI device representing the dport
-- * @port_num: identifier for this dport in a decoder's target list
-  * @rcrb: mandatory location of a Root Complex Register Block
-  *
-  * See CXL 3.0 9.11.8 CXL Devices Attached to an RCH
-  */
- struct cxl_dport *devm_cxl_add_rch_dport(struct cxl_port *port,
--					 struct device *dport_dev, int port_num,
-+					 struct device *dport_dev,
- 					 resource_size_t rcrb)
++static int port_probe_dport(struct cxl_port *port, struct device *dport_dev,
++			    struct cxl_dport **probed_dport)
++{
++	struct cxl_dport *dport;
++	unsigned long index;
++	int rc;
++
++	device_lock_assert(&port->dev);
++	xa_for_each(&port->dports, index, dport) {
++		if (dport->dport_dev == dport_dev) {
++			rc = cxl_dport_setup(dport);
++			if (rc)
++				return rc;
++			*probed_dport = dport;
++			return 0;
++		}
++	}
++
++	*probed_dport = NULL;
++
++	return -ENODEV;
++}
++
++static int update_switch_decoder(struct device *dev, void *data)
++{
++	struct cxl_dport *dport = data;
++	struct cxl_switch_decoder *cxlsd;
++	struct cxl_decoder *cxld;
++	int i;
++
++	if (!is_switch_decoder(dev))
++		return 0;
++
++	cxlsd = to_cxl_switch_decoder(dev);
++	cxld = &cxlsd->cxld;
++	guard(rwsem_write)(&cxl_region_rwsem);
++	for (i = 0; i < cxld->interleave_ways; i++) {
++		if (cxlsd->target_map[i] == dport->port_num) {
++			cxlsd->target[i] = dport;
++			return 0;
++		}
++	}
++
++	dev_dbg(dev, "Updating decoder target_map with %s and none found\n",
++		dev_name(dport->dport_dev));
++
++	return 0;
++}
++
++static int update_decoders_with_dport(struct cxl_port *port, struct cxl_dport *dport)
++{
++	device_lock_assert(&port->dev);
++	return device_for_each_child(&port->dev, dport, update_switch_decoder);
++}
++
++int devm_cxl_port_setup_decoders(struct cxl_port *port)
++{
++	struct cxl_dport *dport;
++	struct cxl_hdm *cxlhdm;
++	unsigned long index;
++	int dports = 0;
++
++	cxlhdm = devm_cxl_setup_hdm(port, NULL);
++	if (!IS_ERR(cxlhdm))
++		return devm_cxl_enumerate_decoders(cxlhdm, NULL);
++
++	if (PTR_ERR(cxlhdm) != -ENODEV) {
++		dev_err(&port->dev, "Failed to map HDM decoder capability\n");
++		return PTR_ERR(cxlhdm);
++	}
++
++	xa_for_each(&port->dports, index, dport)
++		dports++;
++
++	if (dports == 1) {
++		dev_dbg(&port->dev, "Fallback to passthrough decoder\n");
++		return devm_cxl_add_passthrough_decoder(port);
++	}
++
++	dev_err(&port->dev, "HDM decoder capability not found\n");
++	return -ENXIO;
++}
++EXPORT_SYMBOL_NS_GPL(devm_cxl_port_setup_decoders, "CXL");
++
++static int cxl_switch_port_dport_setup(struct cxl_port *port,
++				       struct device *dport_dev)
++{
++	struct cxl_dport *dport;
++	int rc;
++
++	device_lock_assert(&port->dev);
++
++	if (!port->dev.driver)
++		return -ENODEV;
++
++	rc = port_probe_dport(port, dport_dev, &dport);
++	if (rc)
++		return rc;
++
++	cxl_switch_parse_cdat(port);
++
++	/* Make sure that no decoders have been allocated before proceeding. */
++	if (ida_is_empty(&port->decoder_ida))
++		rc = devm_cxl_port_setup_decoders(port);
++	else
++		rc = update_decoders_with_dport(port, dport);
++	if (rc)
++		return rc;
++
++	return 0;
++}
++
+ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
  {
- 	struct cxl_dport *dport;
-@@ -1291,7 +1287,7 @@ struct cxl_dport *devm_cxl_add_rch_dport(struct cxl_port *port,
- 		return ERR_PTR(-EINVAL);
+ 	struct device *dev = &cxlmd->dev;
+@@ -1695,6 +1798,19 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
+ 				"found already registered port %s:%s\n",
+ 				dev_name(&port->dev),
+ 				dev_name(port->uport_dev));
++
++			/*
++			 * Attempt to do single pass dport setup by checking here
++			 * instead of doing it during port creation. Otherwise
++			 * it still needs to check here for dports that are
++			 * being probed with a port already created.
++			 */
++			scoped_guard(device, &port->dev) {
++				rc = cxl_switch_port_dport_setup(port, dport_dev);
++				if (rc)
++					return rc;
++			}
++
+ 			rc = cxl_add_ep(dport, &cxlmd->dev);
+ 
+ 			/*
+@@ -1760,10 +1876,14 @@ static int decoder_populate_targets(struct cxl_switch_decoder *cxlsd,
+ 
+ 	guard(rwsem_write)(&cxl_region_rwsem);
+ 	for (i = 0; i < cxlsd->cxld.interleave_ways; i++) {
+-		struct cxl_dport *dport = find_dport_by_num(port, target_map[i]);
++		struct cxl_dport *dport;
+ 
+-		if (!dport)
+-			return -ENXIO;
++		cxlsd->target_map[i] = target_map[i];
++		dport = find_dport_by_num(port, target_map[i]);
++		if (!dport) {
++			/* dport may be activated later */
++			continue;
++		}
+ 		cxlsd->target[i] = dport;
  	}
  
--	dport = __devm_cxl_add_dport(port, dport_dev, port_num,
-+	dport = __devm_cxl_add_dport(port, dport_dev,
- 				     CXL_RESOURCE_NONE, rcrb);
- 	if (IS_ERR(dport)) {
- 		dev_dbg(dport_dev, "failed to add RCH dport to %s: %ld\n",
 diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index f4fe523aaf12..4ba3bbe9600b 100644
+index 4ba3bbe9600b..6b85d5f23be0 100644
 --- a/drivers/cxl/cxl.h
 +++ b/drivers/cxl/cxl.h
-@@ -345,6 +345,7 @@ enum cxl_decoder_type {
- #define CXL_DECODER_MAX_INTERLEAVE 16
+@@ -404,6 +404,7 @@ struct cxl_endpoint_decoder {
+  * struct cxl_switch_decoder - Switch specific CXL HDM Decoder
+  * @cxld: base cxl_decoder object
+  * @nr_targets: number of elements in @target
++ * @target_map: array of expected dport port_id mirror the target
+  * @target: active ordered target list in current decoder configuration
+  *
+  * The 'switch' decoder type represents the decoder instances of cxl_port's that
+@@ -415,6 +416,7 @@ struct cxl_endpoint_decoder {
+ struct cxl_switch_decoder {
+ 	struct cxl_decoder cxld;
+ 	int nr_targets;
++	int target_map[CXL_DECODER_MAX_INTERLEAVE];
+ 	struct cxl_dport *target[];
+ };
  
- #define CXL_QOS_CLASS_INVALID -1
-+#define CXL_DPORT_NUM_INVALID -1
+@@ -906,6 +908,8 @@ void cxl_coordinates_combine(struct access_coordinate *out,
+ 			     struct access_coordinate *c2);
  
- /**
-  * struct cxl_decoder - Common CXL HDM Decoder Attributes
-@@ -754,10 +755,10 @@ struct cxl_port *cxl_mem_find_port(struct cxl_memdev *cxlmd,
- bool schedule_cxl_memdev_detach(struct cxl_memdev *cxlmd);
+ bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port);
++int devm_cxl_port_setup_decoders(struct cxl_port *port);
++bool dev_is_cxl_root_child(struct device *dev);
  
- struct cxl_dport *devm_cxl_add_dport(struct cxl_port *port,
--				     struct device *dport, int port_num,
-+				     struct device *dport,
- 				     resource_size_t component_reg_phys);
- struct cxl_dport *devm_cxl_add_rch_dport(struct cxl_port *port,
--					 struct device *dport_dev, int port_num,
-+					 struct device *dport_dev,
- 					 resource_size_t rcrb);
+ /*
+  * Unit test builds overrides this to __weak, find the 'strong' version
+diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+index a35fc5552845..4d840a6ef802 100644
+--- a/drivers/cxl/port.c
++++ b/drivers/cxl/port.c
+@@ -59,7 +59,6 @@ static int discover_region(struct device *dev, void *root)
  
- #ifdef CONFIG_PCIEAER_CXL
-diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index eb36408d287a..4846082127c4 100644
---- a/tools/testing/cxl/test/cxl.c
-+++ b/tools/testing/cxl/test/cxl.c
-@@ -968,11 +968,12 @@ static int mock_cxl_port_enumerate_dports(struct cxl_port *port)
- 			continue;
- 		}
- 
--		dport = devm_cxl_add_dport(port, &pdev->dev, pdev->id,
--					   CXL_RESOURCE_NONE);
-+		dport = devm_cxl_add_dport(port, &pdev->dev, CXL_RESOURCE_NONE);
- 
- 		if (IS_ERR(dport))
- 			return PTR_ERR(dport);
-+
-+		dport->port_num = pdev->id;
- 	}
- 
- 	return 0;
-diff --git a/tools/testing/cxl/test/mock.c b/tools/testing/cxl/test/mock.c
-index 6147f0966ffd..d9e8940d9328 100644
---- a/tools/testing/cxl/test/mock.c
-+++ b/tools/testing/cxl/test/mock.c
-@@ -246,7 +246,6 @@ EXPORT_SYMBOL_NS_GPL(__wrap_cxl_dvsec_rr_decode, "CXL");
- 
- struct cxl_dport *__wrap_devm_cxl_add_rch_dport(struct cxl_port *port,
- 						struct device *dport_dev,
--						int port_id,
- 						resource_size_t rcrb)
+ static int cxl_switch_port_probe(struct cxl_port *port)
  {
- 	int index;
-@@ -254,14 +253,14 @@ struct cxl_dport *__wrap_devm_cxl_add_rch_dport(struct cxl_port *port,
- 	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
+-	struct cxl_hdm *cxlhdm;
+ 	int rc;
  
- 	if (ops && ops->is_mock_port(dport_dev)) {
--		dport = devm_cxl_add_dport(port, dport_dev, port_id,
-+		dport = devm_cxl_add_dport(port, dport_dev,
- 					   CXL_RESOURCE_NONE);
- 		if (!IS_ERR(dport)) {
- 			dport->rcrb.base = rcrb;
- 			dport->rch = true;
- 		}
- 	} else
--		dport = devm_cxl_add_rch_dport(port, dport_dev, port_id, rcrb);
-+		dport = devm_cxl_add_rch_dport(port, dport_dev, rcrb);
- 	put_cxl_mock_ops(index);
+ 	/* Cache the data early to ensure is_visible() works */
+@@ -69,24 +68,7 @@ static int cxl_switch_port_probe(struct cxl_port *port)
+ 	if (rc < 0)
+ 		return rc;
  
- 	return dport;
+-	cxl_switch_parse_cdat(port);
+-
+-	cxlhdm = devm_cxl_setup_hdm(port, NULL);
+-	if (!IS_ERR(cxlhdm))
+-		return devm_cxl_enumerate_decoders(cxlhdm, NULL);
+-
+-	if (PTR_ERR(cxlhdm) != -ENODEV) {
+-		dev_err(&port->dev, "Failed to map HDM decoder capability\n");
+-		return PTR_ERR(cxlhdm);
+-	}
+-
+-	if (rc == 1) {
+-		dev_dbg(&port->dev, "Fallback to passthrough decoder\n");
+-		return devm_cxl_add_passthrough_decoder(port);
+-	}
+-
+-	dev_err(&port->dev, "HDM decoder capability not found\n");
+-	return -ENXIO;
++	return 0;
+ }
+ 
+ static int cxl_endpoint_port_probe(struct cxl_port *port)
 -- 
 2.49.0
 
