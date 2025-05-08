@@ -1,94 +1,120 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DCA328751F;
-	Thu,  8 May 2025 15:07:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60AB527A929
+	for <linux-cxl@vger.kernel.org>; Thu,  8 May 2025 15:12:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746716829; cv=none; b=nuG/Cr4uyKxLUPFlz4AzHt3FZZt0AKfH8e9ITnrGQ/ZjMAZMRrLuh2c6nIs8nMXjgUbCKQWfws+dBUI/xjY1jfAGKuCRxvz7lc5LBWrvmfo8uY0fCs8jUBAv7v6dxxK+v+/3uXSfLyZxGiOVrnakSLdEE5ov38HL8wVHobNo3dU=
+	t=1746717172; cv=none; b=pdS4OXlsl1dF0eLCdr4uoX0Z4dW3lJTd+r4rU6E5vGxZA3n2Y0n2R91De97F6ly44wQcYYOWgUoMCkCMic2f4K/kQ0WtBQuWJ6LiJv3e6OIQaDr1lXObm1Xg4zvssuyLP2eFZL8yV/jPJhu+G/iOxeF3um2XaxClSvpH05V4SL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746716829; c=relaxed/simple;
-	bh=gkIDMz5TEBKXM/Y+ME2NrXi07S8weRmBSmKKYT2U8wY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IMs2TVwXMtBxUveJMZ4D5BET8Ufu9/v4jzRySlDaGZkxFz+TjISVbd3DAoUCWac2epWvNxDlLORFZKZu6SHwWxGjVUH6Dt5Z/e24FZH/bn2op4srGet8t8rXxYJV0htup7xScn1g3qGPrr6hLv6DlH+AOj/aX82UOLzs0yoBp14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LG78GHTG; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746717172; c=relaxed/simple;
+	bh=uatJ3LjI7n/uabCAjuIYn6Er8jrNtyMyLiYlf1tPvgg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ajoHUKDfWNKAmGzhWORpN8ovebEha0B0EZvHNHZpb04JAwfPgvtA8CVy6+G2reoGXzYPDQXjOXmllr2h6d0Oo5NoA4NT6kXRsZy7c3np5VU56mz+Bgzer6VOOe1aAziJiOnICnd5vGfp36HtcMBei6Fdcw83JEEn3kiL39jCPZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=ALR3RiSO; arc=none smtp.client-ip=209.85.210.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LG78GHTG"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ad212f4030aso37738466b.2;
-        Thu, 08 May 2025 08:07:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="ALR3RiSO"
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-72ec926e828so347462a34.0
+        for <linux-cxl@vger.kernel.org>; Thu, 08 May 2025 08:12:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746716825; x=1747321625; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HiVkKNZFxbP0htxLifSGKzwIRCP5A7bJf/YYu6PDh0A=;
-        b=LG78GHTGsi+iztqi9znG7zK3umUag0rBgEjgXwj2Nl2QMd/TYPjSXK/xRe9ZY2vtM2
-         KEybVLOhbFM9AOo/5EwnxdFzn0rOJ5rZL1n6EI8mjCVfrn14BQ5Q1wYnVI1+Jy69Nr2t
-         AAKO7SX2LtdYZ+e9N1eUC++aAwDU1yelSPz4w3i7ebzfxcZ5nJaOMlBg2aES6IgeFMtc
-         OcpNPXKp2SWyjebiE2wEQrmPM/RivD8GsoPodQ+oWvYLR1LDeCu9XVyFopqAeGV+2qRA
-         yqZhx7ZC3ZIfS5+craxsJP+f+9y/djabA98Kc2UhTxP6eUa5Uy+nvzJ1ugXwHSWF4HxF
-         Nelg==
+        d=gourry.net; s=google; t=1746717169; x=1747321969; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=0GcWz7M9jCTD3vQ092kn0pMggWzRsyQcje+pdvcvTyU=;
+        b=ALR3RiSOvovQUHBaxwz8WsqF7SzezW8W/FZBo/kj2mq31/wWkptzH0WBqK+FChs0za
+         bvL6pFukOeUfKFySaqaX8NadHsBIIuWVko8XLZC+KQQieV1o74vlXpZ09B6EXvovdR7M
+         xcdj9dtrEKZ2jCZeFakQCXeN+2AXVwrnVXg2gCLopY9V3IjuFqdlp7kAW/RwyaqQ+RvG
+         6343ZXRI1D46mjcxF+jcJB6G1BmDEocYVUFkp869JO3aCnbDDE8jmeNlTJLdC52QJQM6
+         hcdEDlRolzllAzdqRTM1e+1FN6+HsIvU5SZjgFalvguztRpj2KzjoiMd4qGAuPWYvING
+         XhiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746716825; x=1747321625;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HiVkKNZFxbP0htxLifSGKzwIRCP5A7bJf/YYu6PDh0A=;
-        b=WxAWEnEIX3PxNu2S5ukKPkA24lCsNHYalzR1fptuVMg+8OrMLvr7qrZkO568zSTfIm
-         6uI44XxQjw045rUkK1Z96u2QHsgE/i2M9sIMANJajsiQy/cHTVOJJ0tgQk0UsMIwsT3m
-         M0OSs5lPYubgJsHJDoAHzjdxxrpUXCWzR2GMWEv312tpO3qI8Id3LyHorZhGJm30V/Ds
-         gzIfQ+ITQ7cuFmeZcwbHZTUmSORlhgadvSmwxArS12NkwuqxcPCpYusrCRUINVx7UPHx
-         jSwqZl+FzC2hu8qsp7EPTAA1ppYe8aCvFxcPKfX/EzPWc19fNKEpYV7ZIjfULnkyP8Iz
-         2KTA==
-X-Forwarded-Encrypted: i=1; AJvYcCUnwQPv4yru29EJnYDof2KOeWHkw+A3FlTrwpflxlRFE4jT+PWpu2opHH8Io8kV9HZxA4sxkOPs7wE=@vger.kernel.org, AJvYcCXWkcFsQunbeJDzvcYQMos/B/cnPXrDxixfMBjFWKp2TvJ3/QOCSyDyS3xVKQgRZ8sUtl+CIVg9@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx343UR4iVG+t4wLA6BiSTLF6OZju/ttvNR2KHtHHgBh38j8xEP
-	8uSnnT/uLukpuKZzPKGDAdOrHs3e5xgWb3rHaIADsyYAZymflrkZLIdRnA==
-X-Gm-Gg: ASbGncsM6DJxr+hPrSwRteX1Ex/wc/ll2J5sgIUSV1d6Q+LeDMSe5Zt+stUfQY6072W
-	dKFCWRcaikv59ApepQMfbjCZ5fokkCzpj/ULxJOD3xFS89ob/URyy86Ud2xzlsZpvs4aLqCyi6a
-	rB9rAsAao5cF6Eip7p4GD7ilSeQ4hYO2+BJPxoi71SePGB3247zTaAoekcRxis3wIYh6XxmPhGY
-	4Bj6dBmgpQmeQ44Eyifc6Lpgwcnoww2e1rGBDlcZ8F1KxueHXaM1LceUcXIu5L/Bjg/S/7tBege
-	uc3pOipmj+5WL7P83GhST6Qqjy6YeHtHXbcYy2t8ulngnNEYLsHHzXqabF+A4JJshReVmLcdAl/
-	J6O4lB5XknRq61VetHlADCPWBAT8/
-X-Google-Smtp-Source: AGHT+IHdkDjzLYixOJEgs5zQT1V8olt+pRAWuT7ub3y030yXBTkyLYaB47yPJfQGeZ71e21BfUEE2g==
-X-Received: by 2002:a05:6402:2809:b0:5fc:348a:e21 with SMTP id 4fb4d7f45d1cf-5fc348a34a1mr2971318a12.31.1746716814421;
-        Thu, 08 May 2025 08:06:54 -0700 (PDT)
-Received: from [192.168.1.122] (cpc159313-cmbg20-2-0-cust161.5-4.cable.virginm.net. [82.0.78.162])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd2b3be5sm41005585e9.0.2025.05.08.08.06.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 May 2025 08:06:54 -0700 (PDT)
-Message-ID: <ab7323df-380c-497b-806b-66bfbd7c4af0@gmail.com>
-Date: Thu, 8 May 2025 16:06:53 +0100
+        d=1e100.net; s=20230601; t=1746717169; x=1747321969;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0GcWz7M9jCTD3vQ092kn0pMggWzRsyQcje+pdvcvTyU=;
+        b=FhY2EEjuOM+W4A4Uo/ak4L35FTyoJ666ZjGCNB08qDm1vUAOJpt1tE5W4bJnfKPbtn
+         F8O5X8y7gbr3bj8zWvxFCafcyzR7Pw23otsK0rZ0fA4p+Re8FCCWvjdlUl3KDc2EokED
+         UODtaSEjFHhlrWvzxWcNqjs+lKaXOWliQck6/6RMzZEGqDmmLhyl0t0wvtMPfqgY6Wbh
+         tp4v3K1MhYn7Bqd9S0/I2nwNJIOpvaufnwTBl6TttCegSQxqtOqHkKkbfzTpF1lt4f7Q
+         m1W4IwkjwsfhIMy7Og4whwYn2a8gA2F64QIXPn4D+FbvjNIXAn2YijAvaOzZ2e153ja4
+         ZR8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVeh+DGBIo/KtrCDUxW3DXBYAuHeLwcx7XQTjRYCT428ys089DmaL0wxR3qMp+ufn6/Y7Ngi9K4fDs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXYiq9TQA8Fe0kL8S/hLwbV/GChoPzGa2hjc2Z6CBYplsDds53
+	UntvnuGWFVV6wz73lhIqvOYha1hJmE3Qr3JT6ipq6mLFHx9CHcDA6tunfnQafKOgZYUjQV2Ukul
+	O
+X-Gm-Gg: ASbGncvclGO18CTM1cqbaCeV1yFRqs2NQ0aNiRHjGkkcTVdH1twyOoLCkKZY/pll/jf
+	DKcodhCt9EzfDkX9Y1P+5HVKU3IKdBoPc3n1p8/mWK1D+360nmcE+yYPtuOtsKqRJWuf7cYOl2Z
+	ghp11ovwuQP4FUQGxHg9pzTggDDUgWSEo88LDaMfBj7KnnbbOPlMJCRb1RqYDOBVy0gz2R3auUZ
+	Uu7dLb1L/nKNirv0jpgFaCgWeF0fySPR6pFGERzz7oKMNo+mXVOpbFKlBGGwG4ga0oqZbzkfHMD
+	SbsW4SPJobEsfF4doWStBWIt0OfJ45UuHF+Gx1mVSP5JQdngxs3LVzIQzXt7LeCpMQ83HjcqW7A
+	5Sj4IRbZDrmcCUEQ6BjJG
+X-Google-Smtp-Source: AGHT+IFrmotMhA/nMZAIEBB7GeHwIixjZIq4w08j6/K6MLvI6ZRzQvIIQBKip5mAFrzBQzYq229QKA==
+X-Received: by 2002:a05:6214:e8c:b0:6f5:e0c:b203 with SMTP id 6a1803df08f44-6f5429e89afmr115651736d6.11.1746717158264;
+        Thu, 08 May 2025 08:12:38 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f6e3a60eaesm705496d6.122.2025.05.08.08.12.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 May 2025 08:12:37 -0700 (PDT)
+Date: Thu, 8 May 2025 11:12:35 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Rakie Kim <rakie.kim@sk.com>
+Cc: joshua.hahnjy@gmail.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+	dan.j.williams@intel.com, ying.huang@linux.alibaba.com,
+	kernel_team@skhynix.com, honggyu.kim@sk.com, yunjeong.mun@sk.com
+Subject: Re: [RFC] Add per-socket weight support for multi-socket systems in
+ weighted interleave
+Message-ID: <aBzJ42b8zIThYo1X@gourry-fedora-PF4VCD3F>
+References: <aBuMet_S1ONS1pOT@gourry-fedora-PF4VCD3F>
+ <20250508063042.210-1-rakie.kim@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 08/22] sfc: initialize dpa
-To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
- netdev@vger.kernel.org, dan.j.williams@intel.com, edward.cree@amd.com,
- davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
- edumazet@google.com, dave.jiang@intel.com
-Cc: Alejandro Lucero <alucerop@amd.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>
-References: <20250417212926.1343268-1-alejandro.lucero-palau@amd.com>
- <20250417212926.1343268-9-alejandro.lucero-palau@amd.com>
-Content-Language: en-GB
-From: Edward Cree <ecree.xilinx@gmail.com>
-In-Reply-To: <20250417212926.1343268-9-alejandro.lucero-palau@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250508063042.210-1-rakie.kim@sk.com>
 
-On 17/04/2025 22:29, alejandro.lucero-palau@amd.com wrote:
-> From: Alejandro Lucero <alucerop@amd.com>
+On Thu, May 08, 2025 at 03:30:36PM +0900, Rakie Kim wrote:
+> On Wed, 7 May 2025 12:38:18 -0400 Gregory Price <gourry@gourry.net> wrote:
 > 
-> Use hardcoded values for defining and initializing dpa as there is no
-> mbox available.
+> The proposed design is completely optional and isolated: it retains the
+> existing flat weight model as-is and activates the source-aware behavior only
+> when 'multi' mode is enabled. The complexity is scoped entirely to users who
+> opt into this mode.
 > 
-> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Acked-by: Edward Cree <ecree.xilinx@gmail.com>
+I get what you're going for, just expressing my experience around this
+issue specifically.
+
+The lack of enthusiasm for solving the cross-socket case, and thus
+reduction from a 2D array to a 1D array, was because reasoning about
+interleave w/ cross-socket interconnects is not really feasible with
+the NUMA abstraction.  Cross-socket interconnects are "Invisible" but
+have real performance implications.  Unless we have a way to:
+
+1) Represent the topology, AND
+2) A way to get performance about that topology
+
+It's not useful. So NUMA is an incomplete (if not wrong) tool for this.
+
+Additionally - reacting to task migration is not a real issue.  If
+you're deploying an allocation strategy, you probably don't want your
+task migrating away from the place where you just spent a bunch of time
+allocating based on some existing strategy.  So the solution is: don't
+migrate, and if you do - don't use cross-socket interleave.
+
+Maybe if we solve the first half of this we can take a look at the task
+migration piece again, but I wouldn't try to solve for migration.
+
+At the same time we were discussing this, we were also discussing how to
+do external task-mempolicy modifications - which seemed significantly
+more useful, but ultimately more complex and without sufficient
+interested parties / users.
+
+~Gregory
