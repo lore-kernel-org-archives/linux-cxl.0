@@ -1,316 +1,277 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7231079CF;
-	Thu,  8 May 2025 06:30:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746685857; cv=none; b=WqwmCUvbGOxAoP7W1Zq8rJnTdB7cp01/KVVCQsRaoDNFBM4xvlKqTMm2NTzad+FWrP0JNYNgicYOxavi/pHYSD3FnUWQ9X4Huhfxqu0KR62ZLy34sB6Ax55Y+E5G0HKpp/MdT5BC0YybnfR3ARnk/xN5WB9DM3maREiqFxPtVTY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746685857; c=relaxed/simple;
-	bh=5IZCu6O0HHtnUdydLq5+oA+8YbknHDZjzkPzJFgT66I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Qck24vc+WFoG6JEb+atP7C7+ha35dVBG8kU88v7VKrAu86jO9B3ZAhkoOugKYpyv3CmCT6ESJcM3fig6QrGsqrjM5pLLh+p8zPb2WQYfAvoyULwJFDwTFt3LFVlyeVgjg4VetO3OfB9/k9U+kGYml4mE4CuvrUVA8DDLLOLbUKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-681ff7000002311f-2b-681c4f979076
-From: Rakie Kim <rakie.kim@sk.com>
-To: Gregory Price <gourry@gourry.net>
-Cc: joshua.hahnjy@gmail.com,
-	akpm@linux-foundation.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	dan.j.williams@intel.com,
-	ying.huang@linux.alibaba.com,
-	kernel_team@skhynix.com,
-	honggyu.kim@sk.com,
-	yunjeong.mun@sk.com,
-	rakie.kim@sk.com
-Subject: Re: [RFC] Add per-socket weight support for multi-socket systems in weighted interleave
-Date: Thu,  8 May 2025 15:30:36 +0900
-Message-ID: <20250508063042.210-1-rakie.kim@sk.com>
-X-Mailer: git-send-email 2.48.1.windows.1
-In-Reply-To: <aBuMet_S1ONS1pOT@gourry-fedora-PF4VCD3F>
-References: 
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D55BC21931E
+	for <linux-cxl@vger.kernel.org>; Thu,  8 May 2025 06:48:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746686933; cv=fail; b=u9g2/Z16QAD2pJN4p7puYWUUXDjcz48EuWU/JHwzuqg6+0exwkfS2FbepQWT8ZHMbYEtwTvZb0g5+1SKF+HfGQzzae3aZHEWU5uJz6O6BvVKfHBcTLbAdB1bdrN6K3MQ7DtH986DEsKKrL5dGlcqb0lXfaLC6VYAo4bKWuil1yU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746686933; c=relaxed/simple;
+	bh=oPC+OKKruQ3oXUzn+G3hXHxJ72taDKScome5BF1dUxU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=MjtnAf1sEZUo6/fGhu9+sBxtaK1ut0QJnMM7jGjlfGwPzYRrvEvl7cbCPJHUqxe3L4oWRyWs8ohgAlr9M8fClZJpBvJjx3Vvze5Fu8OuQlGrmr3PrtAXPaPXDXpQcv0DPbYW6SQrP1oqH+yRpZuJUUSBGD1Oc0UgMcE690vEaWQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cLI74stQ; arc=fail smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cLI74stQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746686932; x=1778222932;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=oPC+OKKruQ3oXUzn+G3hXHxJ72taDKScome5BF1dUxU=;
+  b=cLI74stQadI9GPrBe4z3tkWA5+6Pw7X/S72KQxwsMianNDsC3vV4b+eU
+   euQM+klSam0SmStxbAtyQ4qyVkpQ0xgrj3sH2/SzORITZ3/4/hKR+tMmW
+   iQM8zDHVkbOY/Q060U7Wic4DtFgBOQF5Dkf2BwQzMXvVeoMUw/tqUqPss
+   6DUo75KpeWBr25XVMDIXF6lq0Qd8i5cdtjKwHR7KezNinoiy/eP1FTh7F
+   Nqhvl2plCDi92JtmeeqFnoVNrsa6w+D+BONlDgsakNVRzAUOnPXendRdc
+   jhbuhH/gyX98wnQtJca7lFBlhiRj6kjQn7nlDk+aUAxIVL6mIlilaBMMX
+   Q==;
+X-CSE-ConnectionGUID: 1CkcMXBnRC+SN+GKFzKTZQ==
+X-CSE-MsgGUID: eyApTHm0QieeiPrL717Pcg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="59848551"
+X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
+   d="scan'208";a="59848551"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 23:48:52 -0700
+X-CSE-ConnectionGUID: yT+ImqUjS/eAunBCcH9iQg==
+X-CSE-MsgGUID: 8ll3YahYQSuR6MCWAembIQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
+   d="scan'208";a="136132687"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 23:48:52 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Wed, 7 May 2025 23:48:51 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Wed, 7 May 2025 23:48:51 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.42) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Wed, 7 May 2025 23:48:50 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=oMiW1Cgzi2ebYn8eWCiCMno5nTLl12Fc3m/YzB0Bre2gZqijhsKL++f8rnZDkSrMqxT8JPLobNpJWLqTYRPoMn2Vbo9mj2/u+rZaYrt+7ffeojTZPcwddIUh7JN61VE2y+ENZiZ6Tdz7J4Z+vNYoC+h+GlTTjEspaDY+QgGxdopqUOoiRnTQuHkEhE5um6niI50saflNLBcmeuVkepHmwHNYHRik5LJlern+WSnawViojp2m81Skax3FsjwASooYD3eYdJ8jdIdnrZ17CzzYpYkPOx7Tp/SNB0dVPyWlv/IpLtkR6l3jiTviqShzQH67LUysP/9kNS00G31U08/ZqA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oPC+OKKruQ3oXUzn+G3hXHxJ72taDKScome5BF1dUxU=;
+ b=l7OWRpuAs3QxTHRE0xAOSXDpL6bhy8oYhaicFByIDYAlZNaXhLamXM/pnu6Vs9XSlvmBSwsZ9hunzRzbR5rVmeca7MQ3O/wnt/HxAXHiYPmr58+WTdzuUvE9pSBn1fK0yToOkss1J/GWR8tk3Z51hLzTEQV/834ikoPTmC4BzB+bS0JwX5/5yaarmK9gej10dIe+cIT4L6yEOc3Xt9p/qBuhcJ3K1VX2GBC7xoziYRYoM6GC22+s5BbdpLqrnzaBwqqlCK0BmQfqbYtgUgi49BixfqEqVA07KlNwzxqU5gq+yozNAwlkDmuZJxEJimu0NpgwG6XL559VWyPmXAP8pg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from MW4PR11MB7125.namprd11.prod.outlook.com (2603:10b6:303:219::12)
+ by IA1PR11MB7246.namprd11.prod.outlook.com (2603:10b6:208:42e::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.32; Thu, 8 May
+ 2025 06:48:17 +0000
+Received: from MW4PR11MB7125.namprd11.prod.outlook.com
+ ([fe80::eff6:f7ef:65cd:8684]) by MW4PR11MB7125.namprd11.prod.outlook.com
+ ([fe80::eff6:f7ef:65cd:8684%4]) with mapi id 15.20.8722.021; Thu, 8 May 2025
+ 06:48:16 +0000
+From: "Verma, Vishal L" <vishal.l.verma@intel.com>
+To: "Jiang, Dave" <dave.jiang@intel.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "nvdimm@lists.linux.dev"
+	<nvdimm@lists.linux.dev>
+CC: "Schofield, Alison" <alison.schofield@intel.com>
+Subject: Re: [NDCTL PATCH] cxl: Change cxl-topology.sh assumption on host
+ bridge validation
+Thread-Topic: [NDCTL PATCH] cxl: Change cxl-topology.sh assumption on host
+ bridge validation
+Thread-Index: AQHbv2+c03W7lypek0GI1iBTBkDS57PIS3mA
+Date: Thu, 8 May 2025 06:48:16 +0000
+Message-ID: <ffac09c7154f4c4bc9dff6524a02d8a707ad8b0c.camel@intel.com>
+References: <20250507164618.635320-1-dave.jiang@intel.com>
+In-Reply-To: <20250507164618.635320-1-dave.jiang@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MW4PR11MB7125:EE_|IA1PR11MB7246:EE_
+x-ms-office365-filtering-correlation-id: b3cceb5c-8226-4661-8b6f-08dd8dfc4ff5
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|1800799024|366016|38070700018;
+x-microsoft-antispam-message-info: =?utf-8?B?Qk8vUyt1RkxnUnZyUUlPRlptNGlsWmIyVjh5L0Q3ZTlTWGRIbmo3dG1rV1ha?=
+ =?utf-8?B?dmRXTmswYVdIZmx1RzBoSzRCNzF0aU1EaUQzUGY0VE1rWko4MDV2YWJNOFlM?=
+ =?utf-8?B?dEdCejlLNm16YUpMRTBsOWY3bkNhTVlSeHpwVzhiNTBsNFZRRzBURDJDVnU4?=
+ =?utf-8?B?RkluTnY2QzhkUktEaEpkTjRHWmhIRDlZMjlHbEdjUUg0Nm9TdEo0c1VLeDJx?=
+ =?utf-8?B?anBmc2JYcVcvY2d1ZWtldUJXZUFSTjVLMGtLcmU2VzFrSWloRkFiRVBoQWF5?=
+ =?utf-8?B?dk10U0laMkxpWEx3VUZuU1VYcFY1U2t2Y1Q5SkR5QU1OaFVNTis2eXZmY0NL?=
+ =?utf-8?B?RUVJUXdkbmFXTFpjUXVUdG8xUW4reUJKWmY4dm5YRXJ2RnF6MEVlUU5PYm5j?=
+ =?utf-8?B?SW9kbyt3UjdCREQ2U085VUNFV1F2ZEsxbTJsdlFGMlZTTjQyYkVlUERKYnVm?=
+ =?utf-8?B?N0FNUXF2YVlLYXU4M1AvS0hDRzRUNFRDTmUwME94VldHS2NTL1ROUU8rYWt6?=
+ =?utf-8?B?ejBTVDVHR1hNNFdONWZSVmtTSzZlZU16VDVFN25tM0ljNWwwaXA3NW1lUUlq?=
+ =?utf-8?B?WldMdFVjQmgyQW9OY1FiVklSWlI2VzExRExrY2tlWDVGd0Y2RE80U3FWODFr?=
+ =?utf-8?B?eUR2K3lqUXVlZEZjNm9SVk5YUHl0UUxYblpuOTdhN01EZzZzY2FQeXoxOWpz?=
+ =?utf-8?B?em9ibXdCYkdHc2FIS1FBVHFYVlFQTEdZS3MrSXZGQ3ZHS05BbldzbXBJVk9y?=
+ =?utf-8?B?bW5CWWdYZ3ZFOTRHZ1JZZVBEMWIyTUVvNjM3anRvY1NONUIwbm1yb0hHY2NG?=
+ =?utf-8?B?UTVJVG5QOWR0M1RWVEpMSWtGZ0NVQWlNcTM2V0xaQnBMMjc1N3VPc001NWRk?=
+ =?utf-8?B?bndSS1lPdDR6WXRqenRkbUdpUTVGNnhIVmdsOWRwdXFSTk1ibnVhNEp0cmxh?=
+ =?utf-8?B?b0tiZHNLWEJHV3k5WFQ3c0dXRWNIYWJqdVlJZW9nQk5pYk1GM044UFRrZ0RL?=
+ =?utf-8?B?cWFqRmc3RzlxaVFFVmNXQ0VNU2dUTnVTR3lCclpkKzV2eGdSb0lwRlBYNmEy?=
+ =?utf-8?B?WTl1dXJQOEdCdWp1eVpJVkUzUFhHNkQ5RERRaWErVVRIZkU5RU9TTThQSits?=
+ =?utf-8?B?RC8xcDRYOEt2WmlRVUR5bEY3ZmNRZC9MUmE1ZmFFS0VWRndwdkFlbEt0enlL?=
+ =?utf-8?B?MWtuMkNUcUZ4ODBiMVFBVzgrdUJITDBYMlU1S0NRRWJOYWdYWWpENy9EZTMx?=
+ =?utf-8?B?cUF0R0g4Qm9aeG9paXNhWllZNkxydUpyUTN1dHZVZmdDM2tISUFpbzNuM1ha?=
+ =?utf-8?B?ZEJKaUdGY1R3dXNPSUJiM3JvYm5yanBGdThiaDIrWTMzQi9aOHpjcEZ6VE9s?=
+ =?utf-8?B?eDJ6VExxZ0FsOExQM0YrZkpPSWlvSDltWVdock5uTVdHd2YyM3BiMXYxaHBR?=
+ =?utf-8?B?bHFRT3lxanRMZzl0STJWWE5uUXFQQThPT3JvUnVMY0dRdWtOK3VTL1BzSDgx?=
+ =?utf-8?B?eldVaXhVbmRmQlE5NG1PT25HM3hpdmRQc0VNZ0s2ak9jUXdqVkg2Q01UUnlm?=
+ =?utf-8?B?eVlIckJSS3pxNytpMk45dktwSXp3QWdjUExDMzNhZU9za1pPTkUzUXIzNjlV?=
+ =?utf-8?B?aTRjKzBlZ0R5SUZQUXBhNzBGNVdEZlY5TXV3UmpyL1RtSmpjSzRYMW5WWFRS?=
+ =?utf-8?B?bS8xWWhaL0xuQjVrb1lGeW9LbFVmUVQzYnhCV2RmeTdybW1DRWxiWXlUMkJJ?=
+ =?utf-8?B?NnZWek1CdU5pd1lIZHZ6ZEphdFVQSjI4TzBGRTkyeXpaZGhRNXdqOWNtc0NV?=
+ =?utf-8?B?T0JvTHlEekoyVzJTNUYrQWsya1d5RkYwYVhLZkZoWmdSRFZqMDl5N1VHaWdq?=
+ =?utf-8?B?Y0dQUVFWMFNtNFJuVk4zWnMwOUN6Zk9odVdLMUhNZGprVU55NFBDVlJDdUwz?=
+ =?utf-8?B?WTlpSVFPSThLR2JHdnY4MS9ZeEhMTE1yUXRwT3EvNmc5bmFnYmMxZjBNUVJh?=
+ =?utf-8?Q?nJAPeBHWuNFJUochKZmkAvqjN67yTQ=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR11MB7125.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?bnFSeVo5S2tMTUUyOEJzWkgvTEZwcVZPRTRXL3dJcDgzeS9FbTA1MVFFYWhW?=
+ =?utf-8?B?Y0wxelhOcG5oRGFUaDhUamJDemV1TFlROU5IMnBvc3BsdEFDdVFwcXFoOHE4?=
+ =?utf-8?B?c2xSdnhmQUw1Q2VYMnFuelVxVFBoZVZ3bEtTK3orTXN0UnJ4Zm94YUVzSWp5?=
+ =?utf-8?B?c1ExMVR3ejVCQVhwZkpIVXFYVzh1OFRyQlhqQkJtU3h3TU9jbDZudFdMandB?=
+ =?utf-8?B?bWtQc2xoamhnRVhzUzZsWUN0dUNBdWZxOGpLWFFacTNzZWo5YVgzWWRLdGZC?=
+ =?utf-8?B?UEErL0h6NmpnMEZweVBiUUxoaDZjQVhrM2RTOUUyb2I1VDFPaDZyU1ZveUlo?=
+ =?utf-8?B?OXF6NGV4azhxbHNabFJ5L3FBQlcrbnFKMTdwR243MWlzRmdmN2ZwM1paMzhl?=
+ =?utf-8?B?RHIzaS9tMkFCWVhSL3pqdHN4OVc4UUdaMlpmQnpPREFtZHlJYTJnQjVFWVJO?=
+ =?utf-8?B?SndiUlhvUkdGMUg3d2NUQXF3dlYxLzdBVmtFVkg0NXFXTnBHcDRFaVJrYndL?=
+ =?utf-8?B?V25ZbDBJWm9sbFBlZ0tVcEhuOVB6Q2hJNzVzSk1qUWVldU9KN01NdU5USjc1?=
+ =?utf-8?B?eG5rMHNtRGViSElkZFJETFB3YnU4UzBqSFhWU05jTk9RbGMwZTUrekF2RVJk?=
+ =?utf-8?B?ZVY4dUdVMkFqV0d6S3dNcEMxbjRETFVPNUJ2enFRVlYvemRsbDJ4bWZGdGJZ?=
+ =?utf-8?B?WW95RCtFbElydGRmYy8zeHlWTGQ2SEh3akx1VlQ0aWErY1dQYmtlYVZiajlV?=
+ =?utf-8?B?WG9KN1c2ZXBTQmV1bERuSituLzdaVXY0S3FWVzhaNFRRLzZxV1dBanl3Z3Y3?=
+ =?utf-8?B?MVZVOUxLcFdXdzQrQ2NMK3RZMWdZdjBWWDh4SW5qcmhBelREQnoxTzBBOHBl?=
+ =?utf-8?B?SVlFSk9BMFdRdW8vUk8zUElSRDNNd24vZjY3bWtFcG5aNzNzNGp3VllZVlNQ?=
+ =?utf-8?B?VUd1b1UwNzNOanNSeFZRcXNkdzlVekdNUGNvUllmQ0hyNVVBd0RGYms4T21L?=
+ =?utf-8?B?SysvRU9OcDFNd3B5UVNVZE9SRDR3aG53Y0M4aDMxY1BPZEFFMG5aS2NwQlgy?=
+ =?utf-8?B?R3NDV0FQN2RhT3g2cUNjQjN6Y21LY0R6R3JpZ3hVUkVsb3RCcEVaV242THNt?=
+ =?utf-8?B?QW44RGdqQjhlVTIzVGtnR1BjOWhGekFDc2d4cjEzQTAwYVhGU04vQUI3bXMv?=
+ =?utf-8?B?S2x0SFkyZS9LNXZoMWs3ZUxtaTAybXFOb0c5OU1pUXFtWTNkSnNnN3FTOS9D?=
+ =?utf-8?B?cnRvZUE3dnJuc3FGU0hRZ1c0SFAyY0wyL0NzdVJvR25xNWd0eEptQmU0UjRC?=
+ =?utf-8?B?bDM4UTM1a25ka3FrZmVWT0FnenJlQ1VJNGZkL0VTTERsUFFadm5sSE9Vd2JK?=
+ =?utf-8?B?VklBRHZsc1pBcjZybEZycklQaHdhTEcyTXErSTZidDBJTXE4TU55TnFnWW9m?=
+ =?utf-8?B?VkRUaGxRd01UUklBcU5VZmZDd0NiZFlITENQS1RtbytXWUhJbjJXSUh5NHVh?=
+ =?utf-8?B?SWlFZXRPRkgrejM3QU5Yck9rYXRQa25jN1kzRG9wRVE1cmVwc1JFYXg3YkJk?=
+ =?utf-8?B?eHNvZDFuSUhZYW5hYUg4VjJucHZYcEFwQWtnZWE0d1p3MVJwUVN6VjhmWUto?=
+ =?utf-8?B?N3RGSVM1c3FqV2FiUGRQUUFCY0FFN3JDMDA2REtQdTYwUmxTODNtR2tQVkhR?=
+ =?utf-8?B?TUZIUFpDOW5pZkZzckc5S2pQWi83UlVQOFE3K2RUck04cFBneDZ5UXpHaHFq?=
+ =?utf-8?B?QUlZT3JDOFZDd2lKYmRvK1FTaiszMDNDZEp1NU1tNExLb3dtTHoxU3Q2eVBK?=
+ =?utf-8?B?UGV2UW4veWQ0VlVyRDc1dkNHeHpkWUYwVG50VTVlTzR2YUVXRmVDN1BGS1gw?=
+ =?utf-8?B?OWUrMmJiRm93ZWVZdFBnWmxHRVo1K0JOYlF0Q3pMYkNMTGVTN0p5aXpZNTJM?=
+ =?utf-8?B?ZHJ0TFhJRFNnd2paMUI3N0RoaTM5cHpoSW1KeEVGbzdJWDVxSWVWeTJvWDVR?=
+ =?utf-8?B?dURCaTl1UjdQbXFoeEJWV0pybk13NDlNa1kzN2tIM0x2ek8xbEIwV1o1WVFE?=
+ =?utf-8?B?Y2JJbHpWRXJyekxzRjU1UU10SW11azFRZkJvZE90T3ZleFI3NFRZYm40eWlh?=
+ =?utf-8?B?bG5ydzNKOFdOTDZhV25YdGErbWZKZmIwVGM1aDNVSUNUWFc4R0tnYmlwWm9Z?=
+ =?utf-8?B?UVE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5AB6D91F35564943BB9D120B90A87C13@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDLMWRmVeSWpSXmKPExsXC9ZZnke50f5kMgyvH9CzmrF/DZjF96gVG
-	i593j7NbHN86j93i/KxTLBaXd81hs7i35j+rxeo1GQ4cHjtn3WX36G67zO6xeM9LJo9Nnyax
-	e5yY8ZvFY+dDS4/Pm+QC2KO4bFJSczLLUov07RK4Mm7sn81S8D+oYsOcTsYGxnMOXYycHBIC
-	JhLHmk4wwtidz54xdzFycLAJKEkc2xsDYooIqEq0XXHvYuTiYBZYzCRxcP9fJpByYYEEiVPz
-	LjGD2CxANQ1rfrKD2LwCxhIXny9ghhipKdFw6R5YPaeAmcSh1pNsILaQAI/Eqw37GSHqBSVO
-	znzCAmIzC8hLNG+dzQyyTELgBJvE+xnvWSEGSUocXHGDZQIj/ywkPbOQ9CxgZFrFKJSZV5ab
-	mJljopdRmZdZoZecn7uJERjGy2r/RO9g/HQh+BCjAAejEg+vg7d0hhBrYllxZe4hRgkOZiUR
-	3qJGoBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXFeo2/lKUIC6YklqdmpqQWpRTBZJg5OqQbGhC9G
-	7NYOnB41L1de0tpf83Ttyu4tOdEd83evj3813Vv4nxeD44pnp65POdzYFVurpDDjqud2fbGJ
-	+irGDM+Tl3f2BvGe5Kl8Jz8t79TXJRkzVgkyLTol9Znz9vpLNwRb/7st3RPVvITh0OP5O4XO
-	Llu8NnVJ4Jy1nHPmHlac733XbEOO+guLE0osxRmJhlrMRcWJABf+swpfAgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGLMWRmVeSWpSXmKPExsXCNUNNS3e6v0yGwYE9yhZz1q9hs5g+9QKj
-	xc+7x9ktPj97zWxxfOs8dovDc0+yWpyfdYrF4vKuOWwW99b8Z7U4dO05q8XqNRkWv7etYHPg
-	8dg56y67R3fbZXaPxXteMnls+jSJ3ePEjN8sHjsfWnp8u+3hsfjFByaPz5vkAjijuGxSUnMy
-	y1KL9O0SuDJu7J/NUvA/qGLDnE7GBsZzDl2MnBwSAiYSnc+eMXcxcnCwCShJHNsbA2KKCKhK
-	tF1x72Lk4mAWWMwkcXD/XyaQcmGBBIlT8y4xg9gsQDUNa36yg9i8AsYSF58vYIYYqSnRcOke
-	WD2ngJnEodaTbCC2kACPxKsN+xkh6gUlTs58wgJiMwvISzRvnc08gZFnFpLULCSpBYxMqxhF
-	MvPKchMzc0z1irMzKvMyK/SS83M3MQJDd1ntn4k7GL9cdj/EKMDBqMTD6+AtnSHEmlhWXJl7
-	iFGCg1lJhLeoESjEm5JYWZValB9fVJqTWnyIUZqDRUmc1ys8NUFIID2xJDU7NbUgtQgmy8TB
-	KdXAaDBxmTFHO3vw8aKeFjFWLzaLxsjGWVfnB/2uvbxMiVvjYcONBTkvhFaZruFRv772dB/f
-	Jc+COzw+rlKKO3eJ8ll5xn61fzajYcNSZ3mzog9/LeXV/zhWsfElzPqffVQ0LD6pQlM2v8j3
-	EufUe8d/X2JZrdB1cz/T0zItBdbH64SF7hYv3/tDiaU4I9FQi7moOBEAt26VGlkCAAA=
-X-CFilter-Loop: Reflected
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR11MB7125.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b3cceb5c-8226-4661-8b6f-08dd8dfc4ff5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 May 2025 06:48:16.9017
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +8mtCSvYPOmhApR4eGLI1z/PYYwiju0BzmigJDrAE3z1BkJh2E5YmqPZ2VM7nSjBu2EMBE4cDMRxqDld8v8K9YdIemiO810UGRK+Ebu+O1w=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB7246
+X-OriginatorOrg: intel.com
 
-On Wed, 7 May 2025 12:38:18 -0400 Gregory Price <gourry@gourry.net> wrote:
-
-Thank you very much for your detailed response. I fully agree with your points
-regarding the limitations of the NUMA abstraction and the potential direction
-with memory-tiers. These are indeed important and forward-looking suggestions.
-
-That said, I would still like to emphasize the importance of supporting a
-source-aware weight mechanism within the current weighted interleave policy,
-even as an optional extension.
-
-The proposed design is completely optional and isolated: it retains the
-existing flat weight model as-is and activates the source-aware behavior only
-when 'multi' mode is enabled. The complexity is scoped entirely to users who
-opt into this mode.
-
-> On Wed, May 07, 2025 at 06:35:16PM +0900, rakie.kim@sk.com wrote:
-> > Hi Gregory, Joshua,
-> > 
-> > I hope this message finds you well. I'm writing to discuss a feature I
-> > believe would enhance the flexibility of the weighted interleave policy:
-> > support for per-socket weighting in multi-socket systems.
-> > 
-> > ---
-> > 
-> > <Background and prior design context>
-> > 
-> > While reviewing the early versions of the weighted interleave patches,
-> > I noticed that a source-aware weighting structure was included in v1:
-> > 
-> >   https://lore.kernel.org/all/20231207002759.51418-1-gregory.price@memverge.com/
-> > 
-> > However, this structure was removed in a later version:
-> > 
-> >   https://lore.kernel.org/all/20231209065931.3458-1-gregory.price@memverge.com/
-> > 
-> > Unfortunately, I was unable to participate in the discussion at that
-> > time, and I sincerely apologize for missing it.
-> > 
-> > From what I understand, there may have been valid reasons for removing
-> > the source-relative design, including:
-> > 
-> > 1. Increased complexity in mempolicy internals. Adding source awareness
-> >    introduces challenges around dynamic nodemask changes, task policy
-> >    sharing during fork(), mbind(), rebind(), etc.
-> > 
-> > 2. A lack of concrete, motivating use cases. At that stage, it might
-> >    have been more pragmatic to focus on a 1D flat weight array.
-> > 
-> > If there were additional reasons, I would be grateful to learn them.
-> >
-> 
-> x. task local weights would have required additional syscalls, and there
->    was insufficient active users to warrant the extra complexity.
-
-I also think that additional syscalls are not necessary.
-Moreover, this proposal does not require any additional syscalls.
-
-> 
-> y. numa interfaces don't capture cross-socket interconnect information,
->    and as a result actually hides "True" bandwidth values from the
->    perspective of a given socket.
-> 
-> As a result, mempolicy just isn't well positioned to deal with this
-> as-designed, and introducing the per-task weights w/ the additional
-> extensions just was a bridge too far.  Global weights are sufficient
-> if you combine cpusets/core-pinning and a nodemask that excludes
-> cross-socket nodes (i.e.: Don't use cross-socket memory).
-> 
-> For workloads that do scale up to use both sockets and both devices,
-> you either want to spread it out according to global weights or use
-> region-specific (mbind) weighted interleave anyway.
-> 
-
-Cpuset and cgroups can control task placement, but they cannot dynamically
-alter memory node preferences based on the current execution node. For
-multi-threaded tasks running across multiple sockets, cpusets alone cannot
-represent per-socket locality preferences.
-
-Source-aware weights, on the other hand, enable automatic memory node
-selection based on where a task is running, which greatly improves flexibility
-in hybrid bandwidth environments.
-
-> > ---
-> > 
-> > Scenario 1: Adapt weighting based on the task's execution node
-> > 
-> > Many applications can achieve reasonable performance just by using the
-> > CXL memory on their local socket. However, most workloads do not pin
-> > tasks to a specific CPU node, and the current implementation does not
-> > adjust weights based on where the task is running.
-> > 
-> 
-> "Most workloads don't..." - but they can, and fairly cleanly via
-> cgroups/cpusets.
-> 
-> > If per-source-node weighting were available, the following matrix could
-> > be used:
-> > 
-> >          0     1     2     3
-> >      0   3     0     1     0
-> >      1   0     3     0     1
-> >
-> > This flexibility is currently not possible with a single flat weight
-> > array.
-> 
-> This can be done with a mempolicy that omits undesired nodes from the
-> nodemask - without requiring any changes.
-
-Nodemask can restrict accessible memory nodes, but cannot implement conditional
-preferences based on task execution locality. For example, if a task runs on
-node0, it may want to prefer {0,2}; if on node1, prefer {1,3}.
-
-In the current model, implementing this would require runtime updates to the
-nodemask per task, which is neither scalable nor practical. Source-aware
-weights aim to encode this logic directly into policy behavior.
-
-> 
-> > 
-> > Scenario 2: Reflect relative memory access performance
-> > 
-> > Remote memory access (e.g., from node0 to node3) incurs a real bandwidth
-> > penalty. Ideally, weights should reflect this. For example:
-> > 
-> > Bandwidth-based matrix:
-> > 
-> >          0     1     2     3
-> >      0   6     3     2     1
-> >      1   3     6     1     2
-> > 
-> > Or DRAM + local CXL only:
-> > 
-> >          0     1     2     3
-> >      0   6     0     2     1
-> >      1   0     6     1     2
-> > 
-> > While scenario 1 is probably more common in practice, both can be
-> > expressed within the same design if per-socket weights are supported.
-> > 
-> 
-> The core issue here is actually that NUMA doesn't have a good way to
-> represent the cross-socket interconnect bandwidth - and the fact that it
-> abstracts all devices behind it (both DRAM and CXL).
-> 
-> So reasoning about this problem in terms of NUMA is trying to fit a
-> square peg in a round hole.  I think it's the wrong tool - maybe we need
-> a new one.  I don't know what this looks like.
-
-I agree. NUMA does abstract away cross-socket topology and bandwidth details,
-especially for DRAM vs CXL. But I believe weighted interleave was itself an
-attempt to make NUMA more topology-aware via per-node weights.
-
-The source-aware extension is a logical next step in that direction
-introducing per-socket decision logic without replacing the NUMA model.
-
-While it's clear that the NUMA abstraction has reached its limits in some
-areas, the memory policy, sysfs interface, and page allocator are still built
-on NUMA. Rather than discarding NUMA outright, I believe we should iterate on
-it by introducing well-scoped enhancements, such as this one, to better
-understand our future needs.
-
-> 
-> > ---
-> > 
-> > <Proposed approach>
-> > 
-> > Instead of removing the current sysfs interface or flat weight logic, I
-> > propose introducing an optional "multi" mode for per-socket weights.
-> > This would allow users to opt into source-aware behavior.
-> > (The name 'multi' is just an example and should be changed to a more
-> > appropriate name in the future.)
-> > 
-> > Draft sysfs layout:
-> > 
-> >   /sys/kernel/mm/mempolicy/weighted_interleave/
-> >     +-- multi         (bool: enable per-socket mode)
-> >     +-- node0         (flat weight for legacy/default mode)
-> >     +-- node_groups/
-> >         +-- node0_group/
-> >         |   +-- node0  (weight of node0 when running on node0)
-> >         |   +-- node1
-> >         +-- node1_group/
-> >             +-- node0
-> >             +-- node1
-> > 
-> 
-> This is starting to look like memory-tiers.c, which is largely useless
-> at the moment.  Maybe we implement such logic in memory-tiers, and then 
-> extend mempolicy to have a MPOL_MEMORY_TIER or MPOL_F_MEMORY_TIER?
-> 
-> That would give us better flexibility to design the mempolicy interface
-> without having to be bound by the NUMA infrastructure it presently
-> depends on.  We can figure out how to collect cross-socket interconnect
-> information in memory-tiers, and see what issues we'll have with
-> engaging that information from the mempolicy/page allocator path.
-> 
-> You'll see in very very early versions of weighted interleave I
-> originally implemented it via memory-tiers.  You might look there for
-> inspiration.
-
-This is an excellent idea. I fully agree that memory-tiers has strong potential
-as a future foundation for flexible memory classification and topology-aware
-policy enforcement.
-
-However, in its current form, memory-tiers lacks integration with mempolicy and
-does not yet expose weight-based policy control over allocation decisions.
-
-Weighted interleave, by contrast, already connects to allocator logic and
-enables immediate policy experimentation. I view this proposal as a practical
-starting point for validating ideas that could later inform a memory-tiers
-based design.
-
-As you mentioned, early versions of weighted interleave used memory-tiers.
-I will revisit that implementation and analyze how the concepts could align or
-transition toward the model you're proposing.
-
-> 
-> > <Additional implementation considerations>
-> > 
-> > 1. Compatibility: The proposal avoids breaking the current interface or
-> >    behavior and remains backward-compatible.
-> > 
-> > 2. Auto-tuning: Scenario 1 (local CXL + DRAM) likely works with minimal
-> >    change. Scenario 2 (bandwidth-aware tuning) would require more
-> >    development, and I would welcome Joshua's input on this.
-> > 
-> > 3. Zero weights: Currently the minimum weight is 1. We may want to allow
-> >    zero to fully support asymmetric exclusion.
-> >
-> 
-> I think we need to explore different changes here - it's become fairly
-> clear when discussing tiering at LSFMM that NUMA is a dated abstraction
-> that is showing its limits here.  Lets ask what information we want and
-> how to structure/interact with it first, before designing the sysfs
-> interface for it.
-> 
-> ~Gregory
-
-In conclusion, while I acknowledge the NUMA model's aging limitations,
-I believe source-aware weights offer a focused and minimal expansion of the
-existing framework. This enables:
-
-- policy control based on execution locality,
-- compatibility with current NUMA-based infrastructure, and
-- a conceptual bridge toward future tier-aware models.
-
-Thank you again for your valuable feedback and thoughtful suggestions.
-I will review your memory-tiers guidance in more detail and follow up with
-further analysis.
-
-Rakie
-
+T24gV2VkLCAyMDI1LTA1LTA3IGF0IDA5OjQ2IC0wNzAwLCBEYXZlIEppYW5nIHdyb3RlOg0KPiBD
+dXJyZW50IGhvc3QgYnJpZGdlIHZhbGlkYXRpb24gaW4gY3hsLXRvcG9sb2d5LnNoIGFzc3VtZXMg
+dGhhdCB0aGUNCj4gZGVjb2RlciBlbnVtZXJhdGlvbiBpcyBpbiBvcmRlciBhbmQgdGhlcmVmb3Jl
+IHRoZSBwb3J0IG51bWJlcnMgY2FuDQo+IGJlIHVzZWQgYXMgYSBzb3J0aW5nIGtleS4gV2l0aCBk
+ZWxheWVkIHBvcnQgZW51bWVyYXRpb24sIHRoaXMNCj4gYXNzdW1wdGlvbiBpcyBubyBsb25nZXIg
+dHJ1ZS4gQ2hhbmdlIHRoZSBzb3J0aW5nIHRvIGJ5IG51bWJlcg0KPiBvZiBjaGlsZHJlbiBwb3J0
+cyBmb3IgZWFjaCBob3N0IGJyaWRnZSBhcyB0aGUgdGVzdCBjb2RlIGV4cGVjdHMNCj4gdGhlIGZp
+cnN0IDIgaG9zdCBicmlkZ2VzIHRvIGhhdmUgMiBjaGlsZHJlbiBhbmQgdGhlIHRoaXJkIHRvIG9u
+bHkNCj4gaGF2ZSAxLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogRGF2ZSBKaWFuZyA8ZGF2ZS5qaWFu
+Z0BpbnRlbC5jb20+DQo+IC0tLQ0KPiDCoHRlc3QvY3hsLXRvcG9sb2d5LnNoIHwgMTAgKysrKysr
+LS0tLQ0KPiDCoDEgZmlsZSBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0p
+DQo+IA0KPiBkaWZmIC0tZ2l0IGEvdGVzdC9jeGwtdG9wb2xvZ3kuc2ggYi90ZXN0L2N4bC10b3Bv
+bG9neS5zaA0KPiBpbmRleCA5MGI5Yzk4MjczZGIuLjQxZDZmMDUyMzk0ZCAxMDA2NDQNCj4gLS0t
+IGEvdGVzdC9jeGwtdG9wb2xvZ3kuc2gNCj4gKysrIGIvdGVzdC9jeGwtdG9wb2xvZ3kuc2gNCj4g
+QEAgLTM3LDE1ICszNywxNiBAQCByb290PSQoanEgLXIgIi5bXSB8IC5idXMiIDw8PCAkanNvbikN
+Cj4gwqANCj4gwqANCj4gwqAjIHZhbGlkYXRlIDIgb3IgMyBob3N0IGJyaWRnZXMgdW5kZXIgYSBy
+b290IHBvcnQNCj4gLXBvcnRfc29ydD0ic29ydF9ieSgucG9ydCB8IC5bNDpdIHwgdG9udW1iZXIp
+Ig0KPiDCoGpzb249JCgkQ1hMIGxpc3QgLWIgY3hsX3Rlc3QgLUJQKQ0KPiDCoGNvdW50PSQoanEg
+Ii5bXSB8IC5bXCJwb3J0czokcm9vdFwiXSB8IGxlbmd0aCIgPDw8ICRqc29uKQ0KPiDCoCgoY291
+bnQgPT0gMikpIHx8ICgoY291bnQgPT0gMykpIHx8IGVyciAiJExJTkVOTyINCj4gwqBicmlkZ2Vz
+PSRjb3VudA0KPiDCoA0KPiAtYnJpZGdlWzBdPSQoanEgLXIgIi5bXSB8IC5bXCJwb3J0czokcm9v
+dFwiXSB8ICRwb3J0X3NvcnQgfCAuWzBdLnBvcnQiIDw8PCAkanNvbikNCj4gLWJyaWRnZVsxXT0k
+KGpxIC1yICIuW10gfCAuW1wicG9ydHM6JHJvb3RcIl0gfCAkcG9ydF9zb3J0IHwgLlsxXS5wb3J0
+IiA8PDwgJGpzb24pDQo+IC0oKGJyaWRnZXMgPiAyKSkgJiYgYnJpZGdlWzJdPSQoanEgLXIgIi5b
+XSB8IC5bXCJwb3J0czokcm9vdFwiXSB8ICRwb3J0X3NvcnQgfCAuWzJdLnBvcnQiIDw8PCAkanNv
+bikNCj4gK2JyaWRnZVswXT0kKGpxIC1yIC0tYXJnIGtleSAiJHJvb3QiICcuW10gfCBzZWxlY3Qo
+aGFzKCJwb3J0czoiICsgJGtleSkpIHwgLlsicG9ydHM6IiArICRrZXldIHwgbWFwKHtmdWxsOiAu
+LCBsZW5ndGg6ICguWyJwb3J0czoiICsgLnBvcnRdIHwgbGVuZ3RoKX0pIHwgc29ydF9ieSgtLmxl
+bmd0aCkgfCBtYXAoLmZ1bGwpIHwgLlswXS5wb3J0JyA8PDwgIiRqc29uIikNCj4gKw0KPiArYnJp
+ZGdlWzFdPSQoanEgLXIgLS1hcmcga2V5ICIkcm9vdCIgJy5bXSB8IHNlbGVjdChoYXMoInBvcnRz
+OiIgKyAka2V5KSkgfCAuWyJwb3J0czoiICsgJGtleV0gfCBtYXAoe2Z1bGw6IC4sIGxlbmd0aDog
+KC5bInBvcnRzOiIgKyAucG9ydF0gfCBsZW5ndGgpfSkgfCBzb3J0X2J5KC0ubGVuZ3RoKSB8IG1h
+cCguZnVsbCkgfCAuWzFdLnBvcnQnIDw8PCAiJGpzb24iKQ0KPiArDQo+ICsoKGJyaWRnZXMgPiAy
+KSkgJiYgYnJpZGdlWzJdPSQoanEgLXIgLS1hcmcga2V5ICIkcm9vdCIgJy5bXSB8IHNlbGVjdCho
+YXMoInBvcnRzOiIgKyAka2V5KSkgfCAuWyJwb3J0czoiICsgJGtleV0gfCBtYXAoe2Z1bGw6IC4s
+IGxlbmd0aDogKC5bInBvcnRzOiIgKyAucG9ydF0gfCBsZW5ndGgpfSkgfCBzb3J0X2J5KC0ubGVu
+Z3RoKSB8IG1hcCguZnVsbCkgfCAuWzJdLnBvcnQnIDw8PCAiJGpzb24iKQ0KPiDCoA0KDQpUaGUg
+anEgZmlsdGVyaW5nIGxvb2tzIHJlYXNvbmFibGUsIGJ1dCB0aGUgbG9uZyBsaW5lcyBhcmUgZGVm
+aW5pdGVseSBhDQpiaXQgdW5zaWdodGx5LCBub3QgdG8gbWVudGlvbiBoYXJkIHRvIGZvbGxvdy9l
+ZGl0IGluIHRoZSBmdXR1cmUuDQoNCkhvdyBhYm91dCB0aGlzIGluY3JlbWVudGFsIHBhdGNoIChJ
+dCBwYXNzZXMgdGhlIHRlc3QgZm9yIG1lIHdpdGggdGhlDQpkZWxheWVkIHBvcnQgZW51bWVyYXRp
+b24gc2VyaWVzKToNCg0KLS0+OC0tDQoNCkZyb20gOTk2NjEwZmFjMGE3NTFhY2M1ZDY4YTU2ZmY3
+ZDY3NDYzNDhhODBjNCBNb24gU2VwIDE3IDAwOjAwOjAwIDIwMDENCkZyb206IFZpc2hhbCBWZXJt
+YSA8dmlzaGFsLmwudmVybWFAaW50ZWwuY29tPg0KRGF0ZTogVGh1LCA4IE1heSAyMDI1IDAwOjQ2
+OjI3IC0wNjAwDQpTdWJqZWN0OiBbbmRjdGwgUEFUQ0hdIHRlc3Q6IENsZWFudXAgbG9uZyBsaW5l
+cyBpbiBjeGwtdG9wb2xvZ3kuc2gNCg0KU2lnbmVkLW9mZi1ieTogVmlzaGFsIFZlcm1hIDx2aXNo
+YWwubC52ZXJtYUBpbnRlbC5jb20+DQotLS0NCiB0ZXN0L2N4bC10b3BvbG9neS5zaCB8IDI3ICsr
+KysrKysrKysrKysrKysrKysrKysrKy0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCAyNCBpbnNlcnRpb25z
+KCspLCAzIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvdGVzdC9jeGwtdG9wb2xvZ3kuc2gg
+Yi90ZXN0L2N4bC10b3BvbG9neS5zaA0KaW5kZXggZjRiYTczNzQuLmI2OGNiOGIyIDEwMDY0NA0K
+LS0tIGEvdGVzdC9jeGwtdG9wb2xvZ3kuc2gNCisrKyBiL3Rlc3QvY3hsLXRvcG9sb2d5LnNoDQpA
+QCAtNDIsMTEgKzQyLDMyIEBAIGNvdW50PSQoanEgIi5bXSB8IC5bXCJwb3J0czokcm9vdFwiXSB8
+IGxlbmd0aCIgPDw8ICRqc29uKQ0KICgoY291bnQgPT0gMikpIHx8ICgoY291bnQgPT0gMykpIHx8
+IGVyciAiJExJTkVOTyINCiBicmlkZ2VzPSRjb3VudA0KIA0KLWJyaWRnZVswXT0kKGpxIC1yIC0t
+YXJnIGtleSAiJHJvb3QiICcuW10gfCBzZWxlY3QoaGFzKCJwb3J0czoiICsgJGtleSkpIHwgLlsi
+cG9ydHM6IiArICRrZXldIHwgbWFwKHtmdWxsOiAuLCBsZW5ndGg6ICguWyJwb3J0czoiICsgLnBv
+cnRdIHwgbGVuZ3RoKX0pIHwgc29ydF9ieSgtLmxlbmd0aCkgfCBtYXAoLmZ1bGwpIHwgLlswXS5w
+b3J0JyA8PDwgIiRqc29uIikNCiticmlkZ2VfZmlsdGVyKCkNCit7DQorCWxvY2FsIGJyX251bT0i
+JDEiDQogDQotYnJpZGdlWzFdPSQoanEgLXIgLS1hcmcga2V5ICIkcm9vdCIgJy5bXSB8IHNlbGVj
+dChoYXMoInBvcnRzOiIgKyAka2V5KSkgfCAuWyJwb3J0czoiICsgJGtleV0gfCBtYXAoe2Z1bGw6
+IC4sIGxlbmd0aDogKC5bInBvcnRzOiIgKyAucG9ydF0gfCBsZW5ndGgpfSkgfCBzb3J0X2J5KC0u
+bGVuZ3RoKSB8IG1hcCguZnVsbCkgfCAuWzFdLnBvcnQnIDw8PCAiJGpzb24iKQ0KKwlqcSAtciBc
+DQorCQktLWFyZyBrZXkgIiRyb290IiBcDQorCQktLWFyZ2pzb24gYnJfbnVtICIkYnJfbnVtIiBc
+DQorCQknLltdIHwNCisJCSAgc2VsZWN0KGhhcygicG9ydHM6IiArICRrZXkpKSB8DQorCQkgIC5b
+InBvcnRzOiIgKyAka2V5XSB8DQorCQkgIG1hcCgNCisJCSAgICB7DQorCQkgICAgICBmdWxsOiAu
+LA0KKwkJICAgICAgbGVuZ3RoOiAoLlsicG9ydHM6IiArIC5wb3J0XSB8IGxlbmd0aCkNCisJCSAg
+ICB9DQorCQkgICkgfA0KKwkJICBzb3J0X2J5KC0ubGVuZ3RoKSB8DQorCQkgIG1hcCguZnVsbCkg
+fA0KKwkJICAuWyRicl9udW1dLnBvcnQnDQorfQ0KIA0KLSgoYnJpZGdlcyA+IDIpKSAmJiBicmlk
+Z2VbMl09JChqcSAtciAtLWFyZyBrZXkgIiRyb290IiAnLltdIHwgc2VsZWN0KGhhcygicG9ydHM6
+IiArICRrZXkpKSB8IC5bInBvcnRzOiIgKyAka2V5XSB8IG1hcCh7ZnVsbDogLiwgbGVuZ3RoOiAo
+LlsicG9ydHM6IiArIC5wb3J0XSB8IGxlbmd0aCl9KSB8IHNvcnRfYnkoLS5sZW5ndGgpIHwgbWFw
+KC5mdWxsKSB8IC5bMl0ucG9ydCcgPDw8ICIkanNvbiIpDQorIyAkY291bnQgaGFzIGFscmVhZHkg
+YmVlbiBzYW5pdGl6ZWQgZm9yIGFjY2VwdGFibGUgdmFsdWVzLCBzbw0KKyMganVzdCBjb2xsZWN0
+ICRjb3VudCBicmlkZ2VzIGhlcmUuDQorZm9yIGkgaW4gJChzZXEgMCAkKChjb3VudCAtIDEpKSk7
+IGRvDQorCWJyaWRnZVskaV09IiQoYnJpZGdlX2ZpbHRlciAiJGkiIDw8PCAiJGpzb24iKSINCitk
+b25lDQogDQogIyB2YWxpZGF0ZSByb290IHBvcnRzIHBlciBob3N0IGJyaWRnZQ0KIGNoZWNrX2hv
+c3RfYnJpZGdlKCkNCg0KYmFzZS1jb21taXQ6IDkyZDUyMDMwNzc1NTNiZmM5ZjdiZjFjMjE5NTYz
+ZGIwZmMyOGU2NjANCnByZXJlcXVpc2l0ZS1wYXRjaC1pZDogZjE3MjYxNjkzZTNhYzM4ODgwYjc3
+MDFhOTRhNDY5YmI1MTNiNDA3OA0KLS0gDQoyLjQ5LjANCg==
