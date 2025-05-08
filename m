@@ -1,217 +1,187 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB2C288C9F
-	for <linux-cxl@vger.kernel.org>; Thu,  8 May 2025 19:05:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746731140; cv=none; b=EIn8RFP/WQMzuL4UGIcjS2i7erdP2sgYSLlKjK4UQl+dpco3rzJqaopg0/slByryCTeAm9eybhuOpS3kxVqDIrhXBjRtZ7eBUk8w1or8HcI96MWSo4CDgUudw60sp6qT10RBVB08rHTyuM4qN6taTtqVj9C1XiW3oSR3MoUcPW0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746731140; c=relaxed/simple;
-	bh=biMNSP/bdxNNFW5bzbcf+buTVHtCwvrQCqB1icyNYio=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=KXkfpJQhkZuss8NBzj0uaddIPJLkPzOSwG2j5PaswWgXTwAvxqEbNiPuxnxLRn8mocNMxajr5RZvz+5sYBTyR5TZ2/ckWtaGBdKbGsiSfN1EFRAfTciYwY1iswnBmgl9LQ6M1Uyms2TDNx8pCCRmyQ5BaHr5yLAT49B0tGEs20w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KJbcvajU; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B219C28A737
+	for <linux-cxl@vger.kernel.org>; Thu,  8 May 2025 19:55:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746734107; cv=fail; b=bBIgrb/hDFll/yr+6wEotDEsiSG0rMPftaih/lCmEXD5DJD83xOUwbYrYQLKwJCRvoEnS18w7qSdOx6Cm1dFcTW4FIPoYbBr/BNKb3Pag57gNaTmbHNfCTvL8XcysYzTnBa5/+/CaLt2W2CFo55HntdmOGcqT+Qzw6QhBOn3/ZU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746734107; c=relaxed/simple;
+	bh=K2pMsF647mb9DOFFG68+bPx+fi0luUn/DGJwdyK1YyQ=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Uv339pF0UbxRNDqSzp64v/C7pVzot5nWmMsWJTFbqMpQdkL8Q2eVjkhQxC0Xo2gpne6hoA58EqtrGDWmGKK9741/i0ObugtxqeyB8RF+/UxtJlBNBzOfLi/JOYL5iEPFrXHvs8FbV+v0H14c4GZBil2SlCWIOb13pzyOM4NudU8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JcjBaVgr; arc=fail smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KJbcvajU"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JcjBaVgr"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746731139; x=1778267139;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=biMNSP/bdxNNFW5bzbcf+buTVHtCwvrQCqB1icyNYio=;
-  b=KJbcvajU3IrXQrArD5yRDoFzE976opMyMUSI06NwTlpKMOd97FZkCXfi
-   V/TMDf0cyRSsy2diBCtWRDWSckVyFS0JOWbDUa4DJwzF/AW1wSzoZ/EoB
-   97o6k8NwCPtyQUOw8B6ZW3bapm72hUeeaWwn0geObYR18zb49qhnYiifB
-   go3fX6vuDnJGvbO3hGEmHF2nbDwrLg6yno6GgsE3QqCkuhIW+TmBogJ+g
-   NI2k9Plb7yhLpCJug7Y6ESrIvk4fdBt4u0IgIpHlkWF8uPDEXwDBX+Vsh
-   d3hVGrob3r3sqBohf9PfOVLBa0pwwbrDVILaMf9YfR1NOb7H807/Sgu2p
+  t=1746734105; x=1778270105;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=K2pMsF647mb9DOFFG68+bPx+fi0luUn/DGJwdyK1YyQ=;
+  b=JcjBaVgrb2hPDTIUrR+gmvJk+E0NKNctcSt6lMbZqemGR6Zs2nYeDFy9
+   6427ALM73v6KVQCkdIXmqJpxE6h7KTkqPOWVz52MoPS2q7NZfw0+MCYGQ
+   6JKs22Mi1XqQRqfJGwyLvI3aYvP0VBIguZLrqGSty24QQh/yrd1TlnZK3
+   HCSIzm2RZhOTTsImo6Nm1axVuPM/Ewe9DqDQ93rSu9NtLiL6W5CGNvq6W
+   2EV2MKS4LzYKeZ+flYPnNb2gcWca27LWeFSLx6oWjiouQwxTT/nyFYYHk
+   dqEK1XCESg41r3+ozRDG0Wib8jgfpidQCcCuHNKqiVw/AunSQ1hhZ5t7x
    A==;
-X-CSE-ConnectionGUID: CrKq7VggS6+bTXuoVRPjkQ==
-X-CSE-MsgGUID: unv2P4utSmG7/0Nh3Rufsw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="52350322"
+X-CSE-ConnectionGUID: CXrwJ/+NS6O/n2L93xB+rw==
+X-CSE-MsgGUID: A7ehIUzFRJ2UpecdCMzy3w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="48249267"
 X-IronPort-AV: E=Sophos;i="6.15,273,1739865600"; 
-   d="scan'208";a="52350322"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 12:05:38 -0700
-X-CSE-ConnectionGUID: OycW6NkTS7miIQDrbD5AAg==
-X-CSE-MsgGUID: WSMagU/uSmODY73ebWCd8A==
+   d="scan'208";a="48249267"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 12:55:03 -0700
+X-CSE-ConnectionGUID: lPUlFR6RTrGUcVSWYMWkCw==
+X-CSE-MsgGUID: CFE+eRfWTqiaOYWVqgaS5g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,273,1739865600"; 
-   d="scan'208";a="136781932"
-Received: from vverma7-desk1.amr.corp.intel.com (HELO [10.125.108.128]) ([10.125.108.128])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 12:05:35 -0700
-Message-ID: <eb1afba3-0f8f-4c15-98e2-b189566060ca@intel.com>
-Date: Thu, 8 May 2025 12:05:32 -0700
+   d="scan'208";a="173579282"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 12:55:02 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Thu, 8 May 2025 12:55:01 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Thu, 8 May 2025 12:55:01 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.46) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Thu, 8 May 2025 12:55:00 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=w/dBFVD0XAjetSCW32YkEG9NgWAuij2gUUdaQD/MhdccZX5bR7li9UOdPYh3nXZDntZi/Q6uF8wy7dTnR+shw/iyWaey70nFOfaljrmEZ6YUZCOsf+EIdg/loYWHd5WFBW2NPOtZ+id7cllB3e2/yphyuQ/L1dWswzWPzHdvnOWIvDJhZjcuj25GeZjG09exB0jijatDC/0C0Wc2mx1416zeQgemrq26LGWu2s64Yx07RcuboT0JIRPYDeuOi2NhlVfemu9gYHQ/XlRTYlvBB0vKBmGiGwbn6CBZvOZLSf3YxGhPV3x/9QJ3CCg7jI+KSU/wkxqpRH6OmF9FyKPwZw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rXkLNWy/YUFXtZ3R660F0WQYxgHVMnKvoJE5a4xBA58=;
+ b=dmGXVIDqt1+ZDDO3pEue4/FHZYTYXf7kasrO373WD3W3anssxL6G0lrqAjarJNlsu3V/oHNI6LT8k5IRMxt9X5tH+ljlAbveHaR8Ly7snAZWf6go38R+zCPVqYCYT3Uts38q0VuvLHo3C07QhIJSFlHtqF/YEyeWzOMMZsxUcgMfONMwsKMuZo1Yh1uCpuCiXQWNcvv56e8ezsBxFtmDaNipflbOVG1YBSt2fD8axf6RuuJ7CjPZLxituVMuV7dsyjAb8wzlb3IicmBzxOiDfl3yypNBKlBN4HZtTiikR1MUd/rcUYwwf6y3jVUyVFALA1kO/tgLjQMqgMJYK9Hrsw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB8794.namprd11.prod.outlook.com (2603:10b6:806:46a::5)
+ by SA1PR11MB8447.namprd11.prod.outlook.com (2603:10b6:806:3ac::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Thu, 8 May
+ 2025 19:54:13 +0000
+Received: from SA1PR11MB8794.namprd11.prod.outlook.com
+ ([fe80::a3d4:9d67:2f5d:6720]) by SA1PR11MB8794.namprd11.prod.outlook.com
+ ([fe80::a3d4:9d67:2f5d:6720%5]) with mapi id 15.20.8722.020; Thu, 8 May 2025
+ 19:54:13 +0000
+Date: Thu, 8 May 2025 12:54:10 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+CC: <linux-cxl@vger.kernel.org>, Dan Williams <dan.j.williams@intel.com>,
+	<dave@stgolabs.net>, <jonathan.cameron@huawei.com>, <ira.weiny@intel.com>,
+	<rrichter@amd.com>, <ming.li@zohomail.com>
+Subject: Re: [PATCH v2 01/10] cxl/region: Add decoder check to
+ check_commit_order()
+Message-ID: <aB0L4lAlb4MdHwll@aschofie-mobl2.lan>
+References: <20250507004310.3536991-1-dave.jiang@intel.com>
+ <20250507004310.3536991-2-dave.jiang@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250507004310.3536991-2-dave.jiang@intel.com>
+X-ClientProxiedBy: MW3PR05CA0028.namprd05.prod.outlook.com
+ (2603:10b6:303:2b::33) To SA1PR11MB8794.namprd11.prod.outlook.com
+ (2603:10b6:806:46a::5)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Request for help on CXL kernel panic with recent QEMU/Linux
-To: "Parthasarathy, Mohan (Compute)" <mohan_parthasarathy@hpe.com>,
- "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- Shiju Jose <shiju.jose@huawei.com>
-References: <PH7PR84MB1582216A28E1632187113016888F2@PH7PR84MB1582.NAMPRD84.PROD.OUTLOOK.COM>
- <a31b071b-e683-4da1-9c5a-2578978bd768@intel.com>
- <PH7PR84MB1582994FDF33F104B050F68E888BA@PH7PR84MB1582.NAMPRD84.PROD.OUTLOOK.COM>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <PH7PR84MB1582994FDF33F104B050F68E888BA@PH7PR84MB1582.NAMPRD84.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB8794:EE_|SA1PR11MB8447:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0bda6b56-19c7-4d28-aee2-08dd8e6a1b72
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?P7C3wVS5Qy+GbjvNFvBhOZKGC6E+IEdoAqgm+9hnm1nHHAqnCD+b8CpEHzc+?=
+ =?us-ascii?Q?aZ788tvTjzN0MGGb9xxKfaSJDjDkAJEzntP+J2Cb3vqkmKoOhCuGiC72duul?=
+ =?us-ascii?Q?teWoEaopEOTxlVTQbnENJDdl99wu/JDCrZXb9mfTyZ1BQE+aeWEVSr9nHZJL?=
+ =?us-ascii?Q?2dnrdwjBNyywO3pitcKcz8ceQbGeLPqERfjepuRmG10IAk6L3GJvJHbIYrEm?=
+ =?us-ascii?Q?eHWruMEp9tZ+gP4mAfeSNLrDRMDQ/kqgHLDHNTj1nL+tDTU7Wj8LQShGbkk6?=
+ =?us-ascii?Q?EGePP61/FdsowEyv6Z1ZYU+QfHYBi83V++Kmlylq+Egfj7BT5gbYmzTmF3Xu?=
+ =?us-ascii?Q?QzpLhspRSokxL+wriTGMUhV5dX+YrLjm/7xCb5tAxX1AyySkw1Rx9nm0POku?=
+ =?us-ascii?Q?kDiD2PCtJKvEoPl6rn9ZQxevi1gExrHnecCm6799sAz14zVP9YJbkxeqSai6?=
+ =?us-ascii?Q?wAMoq0jaYYTuHKMhaR5TFKJ4tQ9ADB91kfFHChdjxBkRNve0LlPI90jS2Orc?=
+ =?us-ascii?Q?7JAQKPmanuk5jcODzF+Gk+lMW9N7Nksy4562RvC+Fb6URgafMKq1FTWowPvu?=
+ =?us-ascii?Q?ESQ/E7lQYdN8wwGPxeceDnyjuBTyEpF/J2ByoLUzwZmkCdXZ1uR58gJJN/bd?=
+ =?us-ascii?Q?M8/zro9Cg6Yl1hg06jV5RBfChhWiJjL+TZb9HPQEhrI8frBpTTPWWiwt3Q7B?=
+ =?us-ascii?Q?qE975yuKTQUg4JYPxsnLaim3NajbvmDgs/iACen/tbQrHtmxFYSX5gS7Ju/n?=
+ =?us-ascii?Q?dNunZHvo+ox22kkSIypC1oOmbvMUMCqB0USsmpVIsY3ItYwOvZ4kZzph5LrG?=
+ =?us-ascii?Q?pOegUC3Kd7w7YswRL/04A2hPJkRNwxR9KPbI2Br1kIjMaBh1niztf/l9gDnb?=
+ =?us-ascii?Q?zMpaP4Z+uOLG+bPd3z+mTCX49tumIEdDG8aOFIFjvG4u8ls7/IzXd5KBrsMH?=
+ =?us-ascii?Q?x/Wy3pOo2kLBQkqktyYWUOQ4/eXkBq+j6nZXd/jNH2AfZUCkN+4A3m6nWl7s?=
+ =?us-ascii?Q?tFuzCPhzkNU1NOOepTF1nJz/XuilSzZyY7wsHUtJyHUzjMCxR3I/yZHuk4ya?=
+ =?us-ascii?Q?GAjcsljyVoPszQdAZCWim2R//2P0reWn17vzwlRDeeZmUzZXbgWE877W6JR7?=
+ =?us-ascii?Q?MgEfrasDCgFTIUTxr8TYB7t0PsJu7qmcW5b0yY+yfZMuMecYY69/JsLaOl8L?=
+ =?us-ascii?Q?pDq4l0TcyDgZBVYXj4sJfW8vJw7p5nlp0SG1z6WZoRePM6a5ZtC5b/iBNrTE?=
+ =?us-ascii?Q?VyWSRj64/w8pxrC8auyPdbuQcnsWSY9rhL4Y6JLjTkBKeUOmKcLty7luYDPd?=
+ =?us-ascii?Q?9IFeKGh/sGc8lJ3Xg0eqzR4eMph8Ye23neX+0Qf2hCZ2Qpm/iAK/T7cEfhqj?=
+ =?us-ascii?Q?W6THsU0Ilq8/ty/1fL12IVx77chjMFARsWy2QfmmYAmT+L9w/afMv/eMXiM1?=
+ =?us-ascii?Q?yn/9bzWidEw=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB8794.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?SStxrdsvXK3Mp5xxQfetdymQ3JxXSVp0zNxSHyDTwkHXgTbVxzzOW62txvQP?=
+ =?us-ascii?Q?I5Ttzg3Bes5GKqpYqxWzIR9AGynPtNQsq+Kf1WUpHh3zJAt74BNJS+Do8Y4i?=
+ =?us-ascii?Q?4zYTleAwz3MlNg+e7p4T+h6P1fMd/0iqe9meOEC+KWvVBhhi6qw5jf1lByyG?=
+ =?us-ascii?Q?VPo8aB3cPqehUx1cXL/kZZf2xXXP39jevydTISc6jVIJ/ybhRyxt4GISEb8e?=
+ =?us-ascii?Q?3qCn8IsdbqyTyFl9b6s08dhbJbfI5eP5Vvhl3Rp70fa1rQP68DRAl+jadG+i?=
+ =?us-ascii?Q?Y8ntkRJLeCzbey738xwzKhj9B5NP1Z3aLxLvUHj2iywn4/aM4azIcQC2sJvz?=
+ =?us-ascii?Q?M4vs05dl82W0yFvkOz8V5P6/rljSrIbU7WJEwlMjq+CgBt4km63JYKdnCNKk?=
+ =?us-ascii?Q?oJl2vDPuTLXjqhs0nH0EFJNbvLH6tJV4wv3JrvzW/LQbX/5i8mCxT6yRSJRO?=
+ =?us-ascii?Q?SyDQyZ+ru7cX6sYTsJZfi7c3qWAx+UqqLYmbEaKFaauv0bgjVMjQo0Gh5klE?=
+ =?us-ascii?Q?zm00wKBMd0m8B8lQa1P7/Z7uuV8R3RDTTloV7twsinTBO5LLrpmapDRlNuzM?=
+ =?us-ascii?Q?7wwdxv8zUEyiwyHVK1FYPbyr45Y1gjzcH2bp9vLSUtKUaJ5296VHHQ2bGDLF?=
+ =?us-ascii?Q?E/Fs3vDMKsFWlSWpMWOyL6OW4IuTJdaPbg8kE8yArspoAOf1L0onHesNl0DM?=
+ =?us-ascii?Q?YUHyFGaI/B7uoqfSOFW8I3WNNgeTL6SeYyO4xRofxnJ9Iee049wEurKsTsv9?=
+ =?us-ascii?Q?o0kKzgsPaiPQGNi6EyHfVkmxRIbPa5RTH37cR97uUvOH5c2Nrcl3ta/m4j1x?=
+ =?us-ascii?Q?ioIHWjWh/2EBzF8qXTk55ZgZlGdhc7sTfBxXzM9C8wP0XETNmPi9riGWtcVH?=
+ =?us-ascii?Q?oMGaMLL3cIcOQg4iCglrfR+R2IX6dFJ9EFQvaWUlYVQ3CEwxwqFa5WfwdGjy?=
+ =?us-ascii?Q?WCwZab7rBYRksZAKoVy+Edcb5YjSFXfLd7sVbifWSV4t9resmUOkgea2ngEX?=
+ =?us-ascii?Q?ckeZVXZ0qU8GhLck6LzjjrZ7CMKC46BaWloOQFTqItEaXBhuyVv0C3GMW6Eq?=
+ =?us-ascii?Q?+LQd6B2WwRxm0OMMycvX+HBI4dYrakAwpLkmqtb91ihYHSijSANSzkop2PWw?=
+ =?us-ascii?Q?X8dQRz1h0yVGqpMSj3TZL9klEVWvdwGRd61kwy+FRj3/xJeqy1WWAvr/iLHR?=
+ =?us-ascii?Q?t7VfLGwz1Z0RD5IC6EhhA67e/K/CMYMdgo0uAyGJduiYSiQuTyLc5YrSypCd?=
+ =?us-ascii?Q?P15Uc9WYzWbxFckTjlAx9ecIQEaAo3IyWN4WHzvYnig5EARFeeA8IR/L0Nuy?=
+ =?us-ascii?Q?BxO2RSpPuPTOR6vN6019WlVw/rJwZNrLzbcoKT6OG5HqpM+PTyDOcXsNcnQ3?=
+ =?us-ascii?Q?7V6VEpzY47o8vnF/69OprF/rT1p9FU6ZurYOiEnesi4V5oGUEkJoiKMutQ5J?=
+ =?us-ascii?Q?ryG2G7bku868Ax+BhJSw5SdOznQ+aJ6KXXAFVTOpnO8gplgjE7EnjdpZy5sv?=
+ =?us-ascii?Q?Q9oHpfH2QzPKM9jdVUbox8SuvEqoUKQdqTQxrjb68YmouL1HCXY0eZwDJFH1?=
+ =?us-ascii?Q?PKG3xrzm0q/ZAaLlD4o/VRd0ERW6UgY160+VRY3WJ48ozZz/VNLSoHhlWpT0?=
+ =?us-ascii?Q?/w=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0bda6b56-19c7-4d28-aee2-08dd8e6a1b72
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB8794.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2025 19:54:13.7204
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0yPyHrH7vAiYxOtUkGhnOfUlIXoTR8BkWkD8G5R6n7eqXgihbn/KRTKSbZ5TFfc43bralWGIRKst+uCkgEIvFfpvAOvyTG7Wdnqe8ilimnw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB8447
+X-OriginatorOrg: intel.com
 
+On Tue, May 06, 2025 at 05:43:01PM -0700, Dave Jiang wrote:
+> check_commit_order() attempts to convert a device to a decoder without
+> making sure the device is a decoder. So far this has been working due
+> to pure luck. Issue discovered while doing deferred dport probing when
+> child ports are now in the midst of decoders due to ordering change
+> of child port additions. Add a check before attempting to do decoder
+> conversion.
+> 
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
-
-On 5/8/25 7:27 AM, Parthasarathy, Mohan (Compute) wrote:
-> Dave, all, I could make this work by disabling CONFIG_FORTIFY_SOURCE. There is a memcpy in the CXL setup features code that may need to be revisited to
-> see if it is a bug with the CXL code or the fortify verifications.
-
-Thanks for the new info. I'm still not able to reproduce after turning on CONFIG_FORTIFY_SOURCE. I may need the qemu that supports features. Which qemu version are you using?
-
-DJ
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 
 > 
-> Regards,
-> Mohan
-> 
-> 
-> -----Original Message-----
-> From: Dave Jiang <dave.jiang@intel.com>
-> Sent: Monday, May 5, 2025 8:49 PM
-> To: Parthasarathy, Mohan (Compute) <mohan_parthasarathy@hpe.com>; linux-cxl@vger.kernel.org; Shiju Jose <shiju.jose@huawei.com>
-> Subject: Re: Request for help on CXL kernel panic with recent QEMU/Linux
-> 
-> 
-> 
-> On 5/4/25 1:22 AM, Parthasarathy, Mohan (Compute) wrote:
->> Hi all,
->>
->> Can anyone take a look and see if this a known issue ? Also, any tips on whether the issue is likely with my Linux version or QEMU ? I can share more details if required but just wanted to know if this looks obvious to expert eyes.
-> 
-> kernel version?
-> 
-> Also running ./scripts/faddr2line on cxl_internal_send_cmd+0x3c/0xf0 and devm_cxl_setup_features.cold+0x43/0x43 would be helpful.
-> 
-> I've not seen that on my qemu setup with 6.15-rc4. I'm also using upstream qemu. So your kernel version and qemu version and passed in parameters would be helpful.
-> 
-> Shiju,
-> Have you encountered anything like this with your Features testing with RAS on qemu?
-> 
->>
->> Regards,
->> Mohan
->>
->>
->>
->> [   57.988032] ------------[ cut here ]------------
->> [   57.990637] memcpy: detected buffer overflow: 96 byte write of buffer size 0
->> [   57.994123] WARNING: CPU: 0 PID: 46 at lib/string_helpers.c:1032 __fortify_report+0x55/0xa0
->> [   58.001055] Modules linked in: cxl_pci i2c_i801(+) irqbypass vfat pcspkr fat i2c_smbus mctp_i2c(+) parport_pc(+) cxl_acpi i2c_mux parport cxl_port cxl_core e1000e einj lpc_ich bochs loop nfnetlink vsock_loopback vmw_vsock_virtio_transport_common vmw_vsock_vmci_transport vsock zram vmw_vmci qemu_fw_cfg serio_raw scsi_dh_rdac scsi_dh_emc scsi_dh_alua i2c_dev fuse
->> [   58.016135] CPU: 0 UID: 0 PID: 46 Comm: kworker/u16:2 Not tainted 6.15.0-rc4-mohan+ #4 PREEMPT(voluntary)
->> [   58.021711] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
->> [   58.025755] Workqueue: async async_run_entry_fn
->> [   58.029028] RIP: 0010:__fortify_report+0x55/0xa0
->> [   58.032915] Code: 01 48 8b 34 c5 20 1f 73 b9 48 c7 c1 06 58 f2 b9 48 c7 c0 fc 57 f2 b9 48 0f 44 c8 4c 89 ca 48 c7 c7 d8 ef e3 b9 e8 bb 2e 80 ff <0f> 0b 48 83 c4 20 c3 cc cc cc cc 48 89 74 24 10 48 89 c6 89 7c 24
->> [   58.039451] RSP: 0018:ffffd248801a3a38 EFLAGS: 00010246
->> [   58.047157] RAX: 0000000000000000 RBX: 0000000000000002 RCX: 0000000000000027
->> [   58.053599] RDX: ffff88abbbc1ca88 RSI: 0000000000000001 RDI: ffff88abbbc1ca80
->> [   58.059967] RBP: 0000000000000000 R08: 0000000000000000 R09: ffffd248801a38d8
->> [   58.064773] R10: ffffffffba939ac8 R11: 00000000ffffdfff R12: 0000000000000000
->> [   58.075635] R13: 0000000000000000 R14: ffff88ab4007c800 R15: 0000000000000002
->> [   58.084667] FS:  0000000000000000(0000) GS:ffff88ac0052b000(0000) knlGS:0000000000000000
->> [   58.096028] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> [   58.106050] CR2: 00007fbd45b4b058 CR3: 0000000115109000 CR4: 00000000000006f0
->> [   58.117482] Call Trace:
->> [   58.121907]  <TASK>
->> [   58.129551]  ? cxl_internal_send_cmd+0x3c/0xf0 [cxl_core]
->> [   58.139570]  __fortify_panic+0xd/0xf
->> [   58.146273]  devm_cxl_setup_features.cold+0x43/0x43 [cxl_core]
->> [   58.153161]  cxl_pci_probe+0x431/0xa90 [cxl_pci]
->> [   58.158287]  ? kernfs_xattr_get+0x3b/0x70
->> [   58.161167]  ? selinux_kernfs_init_security+0x74/0x250
->> [   58.167922]  ? try_to_wake_up+0x7f/0x760
->> [   58.170137]  local_pci_probe+0x42/0x90
->> [   58.172399]  pci_device_probe+0xda/0x2b0
->> [   58.177444]  ? sysfs_do_create_link_sd+0x6d/0xd0
->> [   58.182205]  really_probe+0xde/0x340
->> [   58.190234]  ? pm_runtime_barrier+0x55/0x90
->> [   58.192903]  __driver_probe_device+0x78/0x140
->> [   58.197956]  driver_probe_device+0x1f/0xa0
->> [   58.203673]  __driver_attach_async_helper+0x5e/0xe0
->> [   58.208474]  async_run_entry_fn+0x34/0x130
->> [   58.217941]  process_one_work+0x18e/0x350
->> [   58.221932]  worker_thread+0x25a/0x3a0
->> [   58.223804]  ? __pfx_worker_thread+0x10/0x10
->> [   58.229040]  kthread+0xfc/0x240
->> [   58.237142]  ? __pfx_kthread+0x10/0x10
->> [   58.246321]  ret_from_fork+0x34/0x50
->> [   58.253927]  ? __pfx_kthread+0x10/0x10
->> [   58.261905]  ret_from_fork_asm+0x1a/0x30
->> [   58.267821]  </TASK>
->> [   58.269775] ---[ end trace 0000000000000000 ]---
->> [   58.274065] ------------[ cut here ]------------
->> [   58.282586] kernel BUG at lib/string_helpers.c:1040!
->> [   58.293976] Oops: invalid opcode: 0000 [#1] SMP NOPTI
->> [   58.299430] audit: type=1130 audit(1746252020.305:32): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 msg='unit=systemd-random-seed comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
->> [   58.299474] CPU: 0 UID: 0 PID: 46 Comm: kworker/u16:2 Tainted: G        W           6.15.0-rc4-mohan+ #4 PREEMPT(voluntary)
->> [   58.313086] Tainted: [W]=WARN
->> [   58.317049] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
->> [   58.322714] Workqueue: async async_run_entry_fn
->> [   58.329051] RIP: 0010:__fortify_panic+0xd/0xf
->> [   58.332500] Code: e9 dc d9 95 00 e9 02 da 95 00 0f 1f 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 40 0f b6 ff e8 d3 f2 95 00 <0f> 0b 48 8b 54 24 10 48 8b 74 24 08 4c 89 e1 48 c7 c7 90 2e ef b9
->> [   58.339956] RSP: 0018:ffffd248801a3a60 EFLAGS: 00010282
->> [   58.348114] RAX: 0000000000000000 RBX: 0000000000000002 RCX: 0000000000000027
->> [   58.356607] RDX: ffff88abbbc1ca88 RSI: 0000000000000001 RDI: ffff88abbbc1ca80
->> [   58.360981] RBP: 0000000000000000 R08: 0000000000000000 R09: ffffd248801a38d8
->> [   58.366267] R10: ffffffffba939ac8 R11: 00000000ffffdfff R12: 0000000000000000
->> [   58.369804] R13: 0000000000000000 R14: ffff88ab4007c800 R15: 0000000000000002
->> [   58.376177] FS:  0000000000000000(0000) GS:ffff88ac0052b000(0000) knlGS:0000000000000000
->> [   58.380150] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> [   58.384364] CR2: 00007fbd45b4b058 CR3: 0000000115109000 CR4: 00000000000006f0
->> [   58.387660] Call Trace:
->> [   58.390086]  <TASK>
->> [   58.392804]  devm_cxl_setup_features.cold+0x43/0x43 [cxl_core]
->> [   58.395791]  cxl_pci_probe+0x431/0xa90 [cxl_pci]
->> [   58.409127]  ? kernfs_xattr_get+0x3b/0x70
->> [   58.415392]  ? selinux_kernfs_init_security+0x74/0x250
->> [   58.420775]  ? try_to_wake_up+0x7f/0x760
->> [   58.423879]  local_pci_probe+0x42/0x90
->> [   58.429026]  pci_device_probe+0xda/0x2b0
->> [   58.433175]  ? sysfs_do_create_link_sd+0x6d/0xd0
->> [   58.438630]  really_probe+0xde/0x340
->> [   58.440769]  ? pm_runtime_barrier+0x55/0x90
->> [   58.442846]  __driver_probe_device+0x78/0x140
->> [   58.445598]  driver_probe_device+0x1f/0xa0
->> [   58.448532]  __driver_attach_async_helper+0x5e/0xe0
->> [   58.451848]  async_run_entry_fn+0x34/0x130
->> [   58.456739]  process_one_work+0x18e/0x350
->> [   58.462118]  worker_thread+0x25a/0x3a0
->> [   58.467050]  ? __pfx_worker_thread+0x10/0x10
->> [   58.470596]  kthread+0xfc/0x240
->> [   58.474475]  ? __pfx_kthread+0x10/0x10
->> [   58.477836]  ret_from_fork+0x34/0x50
->> [   58.480791]  ? __pfx_kthread+0x10/0x10
->> [   58.484168]  ret_from_fork_asm+0x1a/0x30
->> [   58.487363]  </TASK>
->> [   58.490697] Modules linked in: cxl_pci i2c_i801 irqbypass vfat pcspkr fat i2c_smbus mctp_i2c parport_pc(+) cxl_acpi i2c_mux parport cxl_port cxl_core e1000e einj lpc_ich bochs loop nfnetlink vsock_loopback vmw_vsock_virtio_transport_common vmw_vsock_vmci_transport vsock zram vmw_vmci qemu_fw_cfg serio_raw scsi_dh_rdac scsi_dh_emc scsi_dh_alua i2c_dev fuse
->> [   58.505259] ---[ end trace 0000000000000000 ]---
->> [   58.509396] RIP: 0010:__fortify_panic+0xd/0xf
->> [   58.512731] Code: e9 dc d9 95 00 e9 02 da 95 00 0f 1f 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 40 0f b6 ff e8 d3 f2 95 00 <0f> 0b 48 8b 54 24 10 48 8b 74 24 08 4c 89 e1 48 c7 c7 90 2e ef b9
->> [   58.520925] RSP: 0018:ffffd248801a3a60 EFLAGS: 00010282
->> [   58.524495] RAX: 0000000000000000 RBX: 0000000000000002 RCX: 0000000000000027
->> [   58.528365] RDX: ffff88abbbc1ca88 RSI: 0000000000000001 RDI: ffff88abbbc1ca80
->> [   58.532956] RBP: 0000000000000000 R08: 0000000000000000 R09: ffffd248801a38d8
->> [   58.536365] R10: ffffffffba939ac8 R11: 00000000ffffdfff R12: 0000000000000000
->> [   58.540179] R13: 0000000000000000 R14: ffff88ab4007c800 R15: 0000000000000002
->> [   58.546765] FS:  0000000000000000(0000) GS:ffff88ac0052b000(0000) knlGS:0000000000000000
->> [   58.550843] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> [   58.554470] CR2: 00007fbd45b4b058 CR3: 0000000115109000 CR4: 00000000000006f0
->> [   59.773090] iTCO_vendor_support: vendor-support=0
->>
-> 
-
