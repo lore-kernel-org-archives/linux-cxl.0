@@ -1,256 +1,238 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0280253345;
-	Thu,  8 May 2025 15:56:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746719807; cv=none; b=s54+96zooJrrWfnExpibkJdY/aC62RI9zf1TtAmycIFARFrjGW0e6syMThJlaMjpfNYGDfKNkwUPmq4j4pxo64SkEMlXy9tWlsHtXeHsj1UL5keSefhgo2Q1TqJVA35ykqL5zuUdZkyFgWvBr3HckDM/4cizv7zZJ2/ZLudHF88=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746719807; c=relaxed/simple;
-	bh=M28pVjPHrEv/rACw6iZSY40oD1Z45F5bY/GhP8fIzGA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nev9pOLLPAexidYRzI9LuBDVup4plpv/zgnY2PAOOm3BeNsGPiphE5tqu93inWlA9pFAc3lXh6iuXNY4jUEk3QY0e/o1Ufh1iNARfStOYXF/ByYUpFSFD9Z2TlEQuIHjZVKrwom7WMLnARonOizm/HCcNBSF9PBObkAfBGa2HY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SB8DOljx; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D11521C5F39;
+	Thu,  8 May 2025 17:13:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746724420; cv=fail; b=S34kgqpwNd5tbygBqQXzLCo9eBBsRsy1tC221hGHd+0Rw3XhNv4j5Ivu9ZG5DqVKIj9NqCeMuG76mjQc4/fjl1XnrDSWQC9FuBH3mFaIyFG9h4+VPdccRsrsuAR3b1t0M/UwlQz5/DLo2WlcJ0jaTjq5hGf0jmtggQ2Pb7mT3Y4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746724420; c=relaxed/simple;
+	bh=w6WQ3JuA/KymoMlQy9FjJ8QiCrqrHUE9meO3WqtaPHI=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=r2Ci5DbSebaM+KgGCu8iiVE/2f1kVpU1FTHxhpXol+E3REIFAyefLiR5cTl12xJjMWnxcvxj84tWUcNrdto0V4f0wB62m66wltazQ2FNLCks9wugDTSzRTrJjaHgtYVUegAxXwb+GY7pYaXaBUmkXAm0iMNHOMpiICxu1UuszUc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QMsS/U/S; arc=fail smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SB8DOljx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32C06C4CEE7;
-	Thu,  8 May 2025 15:56:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746719805;
-	bh=M28pVjPHrEv/rACw6iZSY40oD1Z45F5bY/GhP8fIzGA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SB8DOljx5L/gbsKgsDIJkdMGoXwtfwCdhXeS8geafJlSCe6ESXxMa+26O+Z4srap1
-	 NBToJBpic/fvQ2NdOX44kEsjJ8aZS9kiDpG4FXlqEpG/5kJUoS/bqD95Y31K3G0zyw
-	 O73HsnUCnug3uxjdygP95BZDeVw/9CI72sW/qlwfk2r/4cs2ntMcajnW0EmhHbUjO9
-	 wac3FnjEexTGTm/TYtHQ/FJE6RA8xZuWVq7frHC5Xj5KprzH3aahbsNTbDCEL57ASv
-	 zVbUlWCgJnyIEHfBpcL0Mh47/UdA78PDUWhErOvH0/aL3xAFSPgDhHlRCjVLGWVF6e
-	 2APLxub7qfgyA==
-Date: Thu, 8 May 2025 08:56:44 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: John Groves <John@groves.net>, Dan Williams <dan.j.williams@intel.com>,
-	Bernd Schubert <bschubert@ddn.com>,
-	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Luis Henriques <luis@igalia.com>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Petr Vorel <pvorel@suse.cz>, Brian Foster <bfoster@redhat.com>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Stefan Hajnoczi <shajnocz@redhat.com>,
-	Joanne Koong <joannelkoong@gmail.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Aravind Ramesh <arramesh@micron.com>,
-	Ajay Joshi <ajayjoshi@micron.com>, 0@groves.net
-Subject: Re: [RFC PATCH 13/19] famfs_fuse: Create files with famfs fmaps
-Message-ID: <20250508155644.GM1035866@frogsfrogsfrogs>
-References: <20250421013346.32530-1-john@groves.net>
- <20250421013346.32530-14-john@groves.net>
- <nedxmpb7fnovsgbp2nu6y3cpvduop775jw6leywmmervdrenbn@kp6xy2sm4gxr>
- <20250424143848.GN25700@frogsfrogsfrogs>
- <5rwwzsya6f7dkf4de2uje2b3f6fxewrcl4nv5ba6jh6chk36f3@ushxiwxojisf>
- <20250428190010.GB1035866@frogsfrogsfrogs>
- <CAJfpegtR28rH1VA-442kS_ZCjbHf-WDD+w_FgrAkWDBxvzmN_g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QMsS/U/S"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746724419; x=1778260419;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=w6WQ3JuA/KymoMlQy9FjJ8QiCrqrHUE9meO3WqtaPHI=;
+  b=QMsS/U/SisZMwcJfwv7Y7skQXh9VdOLm4EcOyvAQJPPRHiKfmVSi+1AB
+   ThecMwYoSSDPgM9GlGNK+Mwss3vaC1uJWt7gEC9MAoM311Y9EfZEBG8tP
+   H+Ahb7NhfMB6xVThKSBYemizGiDxN2/Jew9znfUGusvEc1HY8lbcaMTW+
+   4ur8mxgSXFDZ37QmMIbDJmL/XFcRID8gur55Io/17k7YWv2Kgq+/rENM0
+   pybC9NQi6AvF7rVYdCA4GDzxXCLtF7rfvu79Sh0/dhZg6Sz/YgMqYYorA
+   faKP8zmdxFBV/zrro8j0RU5P//mr2sG7FTrSgjMmHw4iko6SY+v5szrVa
+   Q==;
+X-CSE-ConnectionGUID: rwegpD7+SuWF8PPKuMs8rw==
+X-CSE-MsgGUID: R0GMEMcZSZKtyIz+A1+ImA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="59154602"
+X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
+   d="scan'208";a="59154602"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 10:13:38 -0700
+X-CSE-ConnectionGUID: kxCkAHjwQr+UID/LoqmInQ==
+X-CSE-MsgGUID: IJxHbmUtQoCbkshB/CCk7g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
+   d="scan'208";a="136847057"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 10:13:38 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Thu, 8 May 2025 10:13:37 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Thu, 8 May 2025 10:13:37 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.177)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Thu, 8 May 2025 10:13:36 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=r/3z3KAKJ6d/qKnATjWOhBwfy6LW4iCkjht4Xz11gfUToogEwicCXbZ35vlhg96cfj97v2Kww4xRB9jVh2p3GMsMHFylC1dDl+i4tM8lTgT4giolK5VjZY+xum55k1pV9iUvjJ9hkLp1+ThpgW7YuJylpGxxVWYpnKwk9vNOctk2OzB0ILM9kBj5+n5CBznZmdZU9kUi8stQZ3pL9ypgBXppDkZODGww6P79xZ0x2ap3ubqnkvbxa9L0N8uZ/oDwHZOBf0gWXjOZ1xXhSh6P81F94DLUS+JATbsRPqL36DA8ZNfnYyKmfKZ+I189hPY5LfITcZPVgH49/p3rpT5rvg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oeeBrb+VtVddwTUWk5IpnSzo6i0338677TfU68vK9UE=;
+ b=P2QxKqnmXRC7VvNVQNEkB3g4mnhJmBsZoc+N1xDvYmGa2fAWsiBCdZkegsMnHOWSxO/ev5DgAD9+RiVNF+wIfGnDgZBraHg/B35F0WAN8g36gff4nD1znX42pL/UGxmNmvs0hTF5spJajfcGQC5d5TqA4mnVxeYH5GlZuX9hMa2Ky2wjewifz8i0vKVDGpR6SBAYEiduHWvfpD02yaTBsFclL0lj/O4qpTW12nu9zAIzeOGa0L3NgXSsObdQzVlzWMf2TmsNbcnx/buQ5m5yohm5hbt7KXriZBay27LFEhRWDAtsLiCaf2C3gZHGAClU/qpHbAHaP0YwG04tyHI/Jg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB8794.namprd11.prod.outlook.com (2603:10b6:806:46a::5)
+ by BL4PR11MB8845.namprd11.prod.outlook.com (2603:10b6:208:5aa::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Thu, 8 May
+ 2025 17:12:52 +0000
+Received: from SA1PR11MB8794.namprd11.prod.outlook.com
+ ([fe80::a3d4:9d67:2f5d:6720]) by SA1PR11MB8794.namprd11.prod.outlook.com
+ ([fe80::a3d4:9d67:2f5d:6720%5]) with mapi id 15.20.8722.020; Thu, 8 May 2025
+ 17:12:51 +0000
+Date: Thu, 8 May 2025 10:12:42 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Alejandro Lucero Palau <alucerop@amd.com>
+CC: <alejandro.lucero-palau@amd.com>, <linux-cxl@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <dan.j.williams@intel.com>, <edward.cree@amd.com>,
+	<davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
+	<edumazet@google.com>, <dave.jiang@intel.com>, Jonathan Cameron
+	<Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v14 02/22] sfc: add cxl support
+Message-ID: <aBzmCjCStxiQRJkK@aschofie-mobl2.lan>
+References: <20250417212926.1343268-1-alejandro.lucero-palau@amd.com>
+ <20250417212926.1343268-3-alejandro.lucero-palau@amd.com>
+ <aBv7woc3z3KSMK8Q@aschofie-mobl2.lan>
+ <0de6789e-9d19-4e90-a0cb-cf77f12428c4@amd.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <0de6789e-9d19-4e90-a0cb-cf77f12428c4@amd.com>
+X-ClientProxiedBy: MW4P222CA0023.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:303:114::28) To SA1PR11MB8794.namprd11.prod.outlook.com
+ (2603:10b6:806:46a::5)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJfpegtR28rH1VA-442kS_ZCjbHf-WDD+w_FgrAkWDBxvzmN_g@mail.gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB8794:EE_|BL4PR11MB8845:EE_
+X-MS-Office365-Filtering-Correlation-Id: 47ed97cc-744b-4995-78ed-08dd8e5390a1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014|7053199007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?F8NrfUkHGyGBv49xAgeCAQw6aA1hvex8UxdNwMBYTwLUXeTBYDkRjY3voafb?=
+ =?us-ascii?Q?HhK096ebJ1rRREkePYlKH3ESs0dM+U90jbj9X3hvLDT53NESZq6AilSW4Kwg?=
+ =?us-ascii?Q?9pBLGfYk4eZcv7yOj19HqxSDfHXQdsdpuWZorZB2srgoG8Hmz0OF6e1A0Gwy?=
+ =?us-ascii?Q?oYhR1xvKS8lbFJEd0TQlj/+GPDlj9xa8Cj0Ted/BFTY9iW0DAPzGSSGoUFuy?=
+ =?us-ascii?Q?Hib/0xty3pYORkMbnrcyRNbx+m8vsgSagbauZdlgV+bSsMYRudkhI7EiFjs+?=
+ =?us-ascii?Q?IEDSDyfBZHNg7LeQQfow6+rFiWp9htUMui+ws1BRfSnod6uGC/zGyv3Ssl0R?=
+ =?us-ascii?Q?LWuhqFW9sosFyNARCuXJfPG6oUkGAzHiF3V1Ln/ytoLTZiR2HD8rEaRybe6H?=
+ =?us-ascii?Q?AxSeyJII3n3GPW7/rXoVbWpsKLQnrCMiGLk9eIbfXP0nbV/ZuhikNIg/Ek9B?=
+ =?us-ascii?Q?QIdR4piJ3oizJLzvliCG/ri1G70HUi1k1JfamS07Af0oPYQTFfWvLKpEvbbj?=
+ =?us-ascii?Q?Uvh/jTu4GVxu470XjjmpVlK/WLxd+mZ8QJyDhqagcP/FbCombwMel+uHgm4P?=
+ =?us-ascii?Q?B0e1cG6F4pg1uiKuwuJ1ATxU0I9w6is4kkDpK92/DtfftJs1CZPG7qsVZb1v?=
+ =?us-ascii?Q?9Jo+FLq/9aikbW6tRxU/Rq+KnPc+pcUFUOW+xf9DpDqJp8euzn27RW4cBsvv?=
+ =?us-ascii?Q?6dSkv2F9BRYe5fKwpEwlB/0AEZYpRedfZ6Vc0yOZYtHUl1S9bqmZVHHkx+B7?=
+ =?us-ascii?Q?0LX3ljQQM4FxuQv4RRQlKMvy8NIPniyznrVA38a4QUgVkqQVP3RToWRpai2Z?=
+ =?us-ascii?Q?7MPbuzvdl/yqIpBvGNM/7pPuLCqZFVjcZMO0QxL2ZX79kBX5anP9kn4XWxNt?=
+ =?us-ascii?Q?7gARBqxo83OM/VasoZ3qqZSEAveLEH/KAgWPZ9VGuYoG46GI1Fxm9D0iLMba?=
+ =?us-ascii?Q?hrehH5N/sKH37UWaHHAFaxD6jGsXhlwx/ljKLGkIVSUKwff526ufXXB9Wquw?=
+ =?us-ascii?Q?k6nPssniE8XHaHWdh4N63xdz09p8VERG7cQH2RNVxPunr5RjZIv+cWElDi7O?=
+ =?us-ascii?Q?28yErtO7QMToCVor/my74erICMJjMPJBoAhlHmQxZntEmcPuXAxOTHdxcSz/?=
+ =?us-ascii?Q?8B+T6fm7NmmIkrkgEpTFj6c2nslX9PrYBEWB9IEFWSiFpZwMh4OSOw1IyMAx?=
+ =?us-ascii?Q?px4Jc8DJ39CJEbSyTOUL+CXRGsPpcOxsPSLqh53xmq+qdppLHa/7ss6rDEp+?=
+ =?us-ascii?Q?MYINi0LkHW1J+WjBrUStcGbzgqnG8HVuEtz4OhO1hXh2X43/CIFD07GrjoJE?=
+ =?us-ascii?Q?4+gD3HbNht+ss212+InhuA2r1ZQO0UGa2pvHwlZW5O6uaM8i8/MJk+G6ZCjV?=
+ =?us-ascii?Q?RZOsQ1P6MneXfAuneCPjWucUucJPXJXqMKpW2rCeRp5OHR6rlJqP56soArzv?=
+ =?us-ascii?Q?ruuk46Thx9A=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB8794.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?LYRfo2I7FOifr6mvCVyEWIOVkdTexE29STWOsuhGBzYviNxAh08GLQh/avEY?=
+ =?us-ascii?Q?60K3oWpn2NjAHuzlfzRAIhGmh542phH406n1gbgqG9xhEoywE9moLRZ+l3y/?=
+ =?us-ascii?Q?wJMkdh8QY6GqIlV5oK1W4RSbwpL/EJrL5MNLbqhv+L3oVgmGoM+SGYpNhDyn?=
+ =?us-ascii?Q?3pJcvIFA3g4p1+V4mmgMpi6L2PKymIu25wk6e/Fy8ofyvwA2BznDgzk060qJ?=
+ =?us-ascii?Q?pZEk9JSYj5Pmep6D6qRo9hBDyK1upz9Y+2FJevKy6KaBk78J2ziBECiaJ7pO?=
+ =?us-ascii?Q?heZkOY1Pdi8ptW3jf6oFx/ZOuFAqTbWU45n3IKPh7E+CpDDzDYLkt6hTUPVI?=
+ =?us-ascii?Q?p6061MLcDya//Mf3zYxfo/HYDUfNrSXOrfoR5sT4Rq9MCss/HvlcpU0NUJZi?=
+ =?us-ascii?Q?aaGU6kx+lz7+I46uKmfOP5BASP5lgluU6+Esq+5K5n/3w49Jn9nU7E6zJwbG?=
+ =?us-ascii?Q?gmm7+dwk54ahVPg/oDK2QzjhHpbGHTWZq74PwBn6mNoxtIajD0/4jdOATPk/?=
+ =?us-ascii?Q?jQDHI81cqcAZPF/k40rE8isE063guy1T6uSyxbMGr+Cr/J8Y13HXL+PrEVsy?=
+ =?us-ascii?Q?+/sfeOr4OfngnpzRA8llXaFYH6GfQL1eTbgB2UggSVG4Z+GPT/KtKK4WMjLA?=
+ =?us-ascii?Q?c7L4xNc1X4J9eSzvaS0xf+KGXVRH6pC25EZxW8H351jtsDBoEmBvYFkxbhy5?=
+ =?us-ascii?Q?znudShd1Oq3q0mXfGky+53A9WfXDqpK+aDrtviYDDG9qWHDPbELugkZQmigZ?=
+ =?us-ascii?Q?K/wU52nmUTSV45qyUQ7ta58/nuJ8BhkTk7wfxEIXksskjR/CFuoI38PW4sGl?=
+ =?us-ascii?Q?79crOuwexWj1z71PYAabFP0w34Ofk2lYvDBvi+XUBnoGzRDpbgTtLNDpKD3Z?=
+ =?us-ascii?Q?QMZykiH6yxGN8HQ0bfv1zVpplPrF1sPU4VXYh9OUdbOUdULNhHERc8DlQfv2?=
+ =?us-ascii?Q?L7XoNXJE5GpXwovWpFZWvVuBVow5WmrbI+k3WwOfN0yi8P/gpdt49GchNscv?=
+ =?us-ascii?Q?HY2sRDLCpOCyMIfUdh5gjXh4et6f+vPMph4ICujoD2GpOOQ9XuG3I/ugTLwW?=
+ =?us-ascii?Q?3UQ46aAFHRlkF9jT+4w6jNV78PoA1fAiGZDCp6riw0NWzg+xW5PmaxLeaOtN?=
+ =?us-ascii?Q?MrvQDfYqTCk0AzXSsGSTDBU63cOWF2tGo67j2MndydX0xHktwcWNYgWkk/oq?=
+ =?us-ascii?Q?JvBqdgAY8sCyjWA8YDvT7WUB6qsLMFcAWEllPJx5XYD4mYBIPO/0jmmqaQ6y?=
+ =?us-ascii?Q?Izo9S+J88yjr3vSmyFmTpuA5jvUdPROLBI2idAvi/7bPnx+I/PV8JnkYMSpD?=
+ =?us-ascii?Q?N6OEUy+gGEUTHloycxPIkyZy9BwYJxcFI2t1DfPN2u5ObyKswh5WXy21vjgR?=
+ =?us-ascii?Q?3tqEm2LKLmhaFaqY/5zYhC+vmG7r3L0U5iT5a4AgnuqCukNt9p6KafDF9ajX?=
+ =?us-ascii?Q?xB5WvOAKoQmarcWP12pHdxHE4v0owRWQFM6zhyQ3s6WvmUOWZ/ATNXpaYdtV?=
+ =?us-ascii?Q?UKnC8ZtP+DmmVAetPD7d4BMhk7nSyOpp+l2LMybw6o5p+/wEUTPfQroFFkwk?=
+ =?us-ascii?Q?AinaGQrOkdGN78xfNNqm/NO3mzc1ddxqr2ICwJu26T33CmQNlrpgCuLtXPuv?=
+ =?us-ascii?Q?Jg=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 47ed97cc-744b-4995-78ed-08dd8e5390a1
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB8794.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2025 17:12:51.8549
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UB7/lieYF+4BBldG123ClBiVyPBuL81YuT9lpuBVIIFA9Lwx/G3VbH8KJd9duJbwNvlMPC7NMVwmL4LGIuQ1O5K8hCx1kqnToaFjVFGTTGM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL4PR11MB8845
+X-OriginatorOrg: intel.com
 
-On Tue, May 06, 2025 at 06:56:29PM +0200, Miklos Szeredi wrote:
-> On Mon, 28 Apr 2025 at 21:00, Darrick J. Wong <djwong@kernel.org> wrote:
+On Thu, May 08, 2025 at 01:41:15PM +0100, Alejandro Lucero Palau wrote:
 > 
-> > <nod> I don't know what Miklos' opinion is about having multiple
-> > fusecmds that do similar things -- on the one hand keeping yours and my
-> > efforts separate explodes the amount of userspace abi that everyone must
-> > maintain, but on the other hand it then doesn't couple our projects
-> > together, which might be a good thing if it turns out that our domain
-> > models are /really/ actually quite different.
+> On 5/8/25 01:33, Alison Schofield wrote:
+> > On Thu, Apr 17, 2025 at 10:29:05PM +0100, alejandro.lucero-palau@amd.com wrote:
+> > > From: Alejandro Lucero <alucerop@amd.com>
+> > > 
+> > > Add CXL initialization based on new CXL API for accel drivers and make
+> > > it dependent on kernel CXL configuration.
+> > > 
+> > > Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> > > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > > ---
+> > >   drivers/net/ethernet/sfc/Kconfig      |  9 +++++
+> > >   drivers/net/ethernet/sfc/Makefile     |  1 +
+> > >   drivers/net/ethernet/sfc/efx.c        | 15 +++++++-
+> > >   drivers/net/ethernet/sfc/efx_cxl.c    | 55 +++++++++++++++++++++++++++
+> > >   drivers/net/ethernet/sfc/efx_cxl.h    | 40 +++++++++++++++++++
+> > >   drivers/net/ethernet/sfc/net_driver.h | 10 +++++
+> > >   6 files changed, 129 insertions(+), 1 deletion(-)
+> > >   create mode 100644 drivers/net/ethernet/sfc/efx_cxl.c
+> > >   create mode 100644 drivers/net/ethernet/sfc/efx_cxl.h
+> > > 
+> > > diff --git a/drivers/net/ethernet/sfc/Kconfig b/drivers/net/ethernet/sfc/Kconfig
+> > > index c4c43434f314..979f2801e2a8 100644
+> > > --- a/drivers/net/ethernet/sfc/Kconfig
+> > > +++ b/drivers/net/ethernet/sfc/Kconfig
+> > > @@ -66,6 +66,15 @@ config SFC_MCDI_LOGGING
+> > >   	  Driver-Interface) commands and responses, allowing debugging of
+> > >   	  driver/firmware interaction.  The tracing is actually enabled by
+> > >   	  a sysfs file 'mcdi_logging' under the PCI device.
+> > > +config SFC_CXL
+> > > +	bool "Solarflare SFC9100-family CXL support"
+> > > +	depends on SFC && CXL_BUS >= SFC
+> > > +	default SFC
+> > > +	help
+> > > +	  This enables SFC CXL support if the kernel is configuring CXL for
+> > > +	  using CTPIO with CXL.mem. The SFC device with CXL support and
+> > > +	  with a CXL-aware firmware can be used for minimizing latencies
+> > > +	  when sending through CTPIO.
+> > SFC is a tristate, and this new bool SFC_CXL defaults to it.
+> > default y seems more obvious and follows convention in this Kconfig
+> > file.
+> > 
+> > CXL_BUS >= SFC tripped me up in my testing where I had CXL_BUS M
+> > and SFC Y. Why is that not allowable?
+> > 
+> > 
 > 
-> Sharing the interface at least would definitely be worthwhile, as
-> there does not seem to be a great deal of difference between the
-> generic one and the famfs specific one.  Only implementing part of the
-> functionality that the generic one provides would be fine.
-
-Well right now my barely functional prototype exposes this interface
-for communicating mappings to the kernel.  I've only gotten as far as
-exposing the ->iomap_{begin,end} and ->iomap_ioend calls to the fuse
-server with no caching, because the only functions I've implemented so
-far are FIEMAP, SEEK_{DATA,HOLE}, and directio.
-
-So basically the kernel sends a FUSE_IOMAP_BEGIN command with the
-desired (pos, count) file range to the fuse server, which responds with
-a struct fuse_iomap_begin_out object that is translated into a struct
-iomap.
-
-The fuse server then responds with a read mapping and a write mapping,
-which tell the kernel from where to read data, and where to write data.
-As a shortcut, the write mapping can be of type
-FUSE_IOMAP_TYPE_PURE_OVERWRITE to avoid having to fill out fields twice.
-
-iomap_end is only called if there were errors while processing the
-mapping, or if the fuse server sets FUSE_IOMAP_F_WANT_IOMAP_END.
-
-iomap_ioend is called after read or write IOs complete, so that the
-filesystem can update mapping metadata (e.g. unwritten extent
-conversion, remapping after an out of place write, ondisk isize update).
-
-Some of the flags here might not be needed or workable; I was merely
-cutting and pasting the #defines from iomap.h.
-
-#define FUSE_IOMAP_TYPE_PURE_OVERWRITE	(0xFFFF) /* use read mapping data */
-#define FUSE_IOMAP_TYPE_HOLE		0	/* no blocks allocated, need allocation */
-#define FUSE_IOMAP_TYPE_DELALLOC	1	/* delayed allocation blocks */
-#define FUSE_IOMAP_TYPE_MAPPED		2	/* blocks allocated at @addr */
-#define FUSE_IOMAP_TYPE_UNWRITTEN	3	/* blocks allocated at @addr in unwritten state */
-#define FUSE_IOMAP_TYPE_INLINE		4	/* data inline in the inode */
-
-#define FUSE_IOMAP_DEV_SBDEV		(0)	/* use superblock bdev */
-
-#define FUSE_IOMAP_F_NEW		(1U << 0)
-#define FUSE_IOMAP_F_DIRTY		(1U << 1)
-#define FUSE_IOMAP_F_SHARED		(1U << 2)
-#define FUSE_IOMAP_F_MERGED		(1U << 3)
-#define FUSE_IOMAP_F_XATTR		(1U << 5)
-#define FUSE_IOMAP_F_BOUNDARY		(1U << 6)
-#define FUSE_IOMAP_F_ANON_WRITE		(1U << 7)
-
-#define FUSE_IOMAP_F_WANT_IOMAP_END	(1U << 15) /* want ->iomap_end call */
-
-#define FUSE_IOMAP_OP_WRITE		(1 << 0) /* writing, must allocate blocks */
-#define FUSE_IOMAP_OP_ZERO		(1 << 1) /* zeroing operation, may skip holes */
-#define FUSE_IOMAP_OP_REPORT		(1 << 2) /* report extent status, e.g. FIEMAP */
-#define FUSE_IOMAP_OP_FAULT		(1 << 3) /* mapping for page fault */
-#define FUSE_IOMAP_OP_DIRECT		(1 << 4) /* direct I/O */
-#define FUSE_IOMAP_OP_NOWAIT		(1 << 5) /* do not block */
-#define FUSE_IOMAP_OP_OVERWRITE_ONLY	(1 << 6) /* only pure overwrites allowed */
-#define FUSE_IOMAP_OP_UNSHARE		(1 << 7) /* unshare_file_range */
-#define FUSE_IOMAP_OP_ATOMIC		(1 << 9) /* torn-write protection */
-#define FUSE_IOMAP_OP_DONTCACHE		(1 << 10) /* dont retain pagecache */
-
-#define FUSE_IOMAP_NULL_ADDR		-1ULL	/* addr is not valid */
-
-struct fuse_iomap_begin_in {
-	uint32_t opflags;	/* FUSE_IOMAP_OP_* */
-	uint32_t reserved;
-	uint64_t ino;		/* matches st_ino provided by getattr/open */
-	uint64_t pos;		/* file position, in bytes */
-	uint64_t count;		/* operation length, in bytes */
-};
-
-struct fuse_iomap_begin_out {
-	uint64_t offset;	/* file offset of mapping, bytes */
-	uint64_t length;	/* length of both mappings, bytes */
-
-	uint64_t read_addr;	/* disk offset of mapping, bytes */
-	uint16_t read_type;	/* FUSE_IOMAP_TYPE_* */
-	uint16_t read_flags;	/* FUSE_IOMAP_F_* */
-	uint32_t read_dev;	/* FUSE_IOMAP_DEV_* */
-
-	uint64_t write_addr;	/* disk offset of mapping, bytes */
-	uint16_t write_type;	/* FUSE_IOMAP_TYPE_* */
-	uint16_t write_flags;	/* FUSE_IOMAP_F_* */
-	uint32_t write_dev;	/* FUSE_IOMAP_DEV_* */
-};
-
-struct fuse_iomap_end_in {
-	uint32_t opflags;	/* FUSE_IOMAP_OP_* */
-	uint32_t reserved;
-	uint64_t ino;		/* matches st_ino provided iomap_begin */
-	uint64_t pos;		/* file position, in bytes */
-	uint64_t count;		/* operation length, in bytes */
-	int64_t written;	/* bytes processed */
-
-	uint64_t map_length;	/* length of mapping, bytes */
-	uint64_t map_addr;	/* disk offset of mapping, bytes */
-	uint16_t map_type;	/* FUSE_IOMAP_TYPE_* */
-	uint16_t map_flags;	/* FUSE_IOMAP_F_* */
-	uint32_t map_dev;	/* FUSE_IOMAP_DEV_* */
-};
-
-/* out of place write extent */
-#define FUSE_IOMAP_IOEND_SHARED		(1U << 0)
-/* unwritten extent */
-#define FUSE_IOMAP_IOEND_UNWRITTEN	(1U << 1)
-/* don't merge into previous ioend */
-#define FUSE_IOMAP_IOEND_BOUNDARY	(1U << 2)
-/* is direct I/O */
-#define FUSE_IOMAP_IOEND_DIRECT		(1U << 3)
-
-/* is append ioend */
-#define FUSE_IOMAP_IOEND_APPEND		(1U << 15)
-
-struct fuse_iomap_ioend_in {
-	uint16_t ioendflags;	/* FUSE_IOMAP_IOEND_* */
-	uint16_t reserved;
-	int32_t error;		/* negative errno or 0 */
-	uint64_t ino;		/* matches st_ino provided iomap_begin */
-	uint64_t pos;		/* file position, in bytes */
-	uint64_t addr;		/* disk offset of new mapping, in bytes */
-	uint32_t written;	/* bytes processed */
-	uint32_t reserved1;
-};
-
-> > (Especially because I suspect that interleaving is the norm for memory,
-> > whereas we try to avoid that for disk filesystems.)
+> Not sure what you mean here. This means that if SFC can only be a module if
+> CXL_BUS is a module and you want CXL with SFC.
 > 
-> So interleaved extents are just like normal ones except they repeat,
-> right?  What about adding a special "repeat last N extent
-> descriptions" type of extent?
+> You can have SFC as built-in in that case but without CXL support.
 
-Yeah, I suppose a mapping cache could do that.  From talking to John
-last week, it sounds like the mappings are supposed to be static for the
-life of the file, as opposed to ext* where truncates and fallocate can
-appear at any time.
+OK - get the desired constraint.
 
-One thing I forgot to ask John -- can there be multiple sets of
-interleaved mappings per file?  e.g. the first 32g of a file are split
-between 4 memory controllers, whereas the next 64g are split between 4
-different domains?
+Why use >= with the tristates and why default to the tristate instead of
+'y' - like this:
 
-> > > But the current implementation does not contemplate partially cached fmaps.
-> > >
-> > > Adding notification could address revoking them post-haste (is that why
-> > > you're thinking about notifications? And if not can you elaborate on what
-> > > you're after there?).
-> >
-> > Yeah, invalidating the mapping cache at random places.  If, say, you
-> > implement a clustered filesystem with iomap, the metadata server could
-> > inform the fuse server on the local node that a certain range of inode X
-> > has been written to, at which point you need to revoke any local leases,
-> > invalidate the pagecache, and invalidate the iomapping cache to force
-> > the client to requery the server.
-> >
-> > Or if your fuse server wants to implement its own weird operations (e.g.
-> > XFS EXCHANGE-RANGE) this would make that possible without needing to
-> > add a bunch of code to fs/fuse/ for the benefit of a single fuse driver.
-> 
-> Wouldn't existing invalidation framework be sufficient?
-
-I'm a little confused, are you talking about FUSE_NOTIFY_INVAL_INODE?
-If so, then I think that's the wrong layer -- INVAL_INODE invalidates
-the page cache, whereas I'm talking about caching the file space
-mappings that iomap uses to construct bios for disk IO, and possibly
-wanting to invalidate parts of that cache to force the kernel to upcall
-the fuse server for a new mapping.
-
-(Obviously this only applies to fuse servers for ondisk filesystems.)
-
---D
-
-> Thanks,
-> Miklos
-> 
+	depends on CXL_BUS
+	depends on (SFC = m) || (SFC = y && CXL_BUS = y)
+	default y
