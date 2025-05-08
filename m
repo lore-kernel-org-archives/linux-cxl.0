@@ -1,95 +1,176 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A0E4B1E7D
-	for <linux-cxl@vger.kernel.org>; Thu,  8 May 2025 18:32:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF9F31E1E1D
+	for <linux-cxl@vger.kernel.org>; Thu,  8 May 2025 19:03:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746729142; cv=none; b=FQnJAKHyanhQ4h5JHDZZTp/gOnOZoLmwsdV8ALRt650p1lAOC/SIi78c+bKStw6sWUsnGXdxga/RLQ0K/ouBCrA219APxVXhQjqhmDi+xhzQsJm1aDb31VKfasHn07rg2lDJ+Chsk9wvIZTMJ27Yx6zysl1A6/GlcZ4w9j52B38=
+	t=1746730985; cv=none; b=EEz7SZerDa1/r1BBFkSs04BOBT8qXBfuzOGGOy5m4eJm3lGNAtecZF9f/eNEOaHTS+/sDMj8gI0KVKRDoY/qvxItAqMofhce+qwOd2MH3PcKdTntbTntaC6OfCt4YuB/8SRUPDzGuIlK4hQGZRFNTxPk9ixHDR30SWvylMAuCMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746729142; c=relaxed/simple;
-	bh=lAq8zuHaARzowCmPNTfqyE10F/pKIKw6rFPQyBkzGoA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=i586oS3W5ROUIkq/AONBBEu7Pa1a3cwPaJ4U6sR8m/zggVksEeR5/ea8M2Lh3rUFUv+M/mZ4i9SktHjZ3sxExgoZJxQmErwMmapZ+tlEnE1zJakC0Oye6YZjQgV3pyJoXKSG22BmA9D6KmG1M38a3QFh2vSf5fU9xpMsfr2WAUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hDH3AyR3; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746730985; c=relaxed/simple;
+	bh=cj3skfgFXtE4YTBJ0L4NU+yRL33UbzMipP2aJaAC19A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Vc2Tce7o+npbsjCdr2lRZMwyjgkI26Bd4gnvsYoFxFfhypOTVAES9D2SgBNGrgxUfEQTHikE5NBPjeLPdPyRQh8moFqtkoUqM65532tKswO79hnyuEraEGH+7HM2OClQzBWesxRku9vbViqSDZmGySfihI6gTMMNcIlcVH9UQSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gOFw138x; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hDH3AyR3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gOFw138x"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746729140; x=1778265140;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=lAq8zuHaARzowCmPNTfqyE10F/pKIKw6rFPQyBkzGoA=;
-  b=hDH3AyR3xeQeTdMVsok/ar5UXyIOCo7lkEmqcJnrcALEP3Emz1wsS5ug
-   NspazF4Mi5vbeb2LBrLsOIte/w7rT5SV2mazJCEGVttvjADSkYDOT4d62
-   svi8S5PwULAgbasH57v1PREn8EB9FJsHtN6kRsKvhBi3depIiEjvhSaFG
-   WfkB2KGBuQTzUQpY3bJDBMHxfXuxxC4Z86QgZs0XQqBDshSa8bCe8M74g
-   C8M01bjB/3RYG//gDBNq3zlt0V5ThiULLsUjfTeYYW1/UutTsVK8uDZOB
-   iMwbxu2dIShyKBJqsYALsuRtLt1yPRImH7aEYvtzSXovwC0uNLoZQSz3w
+  t=1746730984; x=1778266984;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=cj3skfgFXtE4YTBJ0L4NU+yRL33UbzMipP2aJaAC19A=;
+  b=gOFw138xMC0N2yNkbTEAjbss14SKbFA9UWU5X9DfZZe6Y1vWVOq5Fho4
+   nX8w2B6G8rgbDvdlN/KQzqmPL1ZIo3Yhe8mumEE+ySM2vb2fxzouk/Vvd
+   r8mE+s8DJOzghmIIZuRJdwbksi5JAJ6Y80Hsl38uNs7p3Gn89G88O+tTa
+   KL9tP6REyin10vQ4384jiK0ZCUepsZ07inXi+IEPF4b+/PAP4Dil/nXKq
+   x63oQrPhkX3mY/QUGyUKfy0gOLjG15uvKnQeD8tA8y9xGg52JQO4RR1r4
+   rcpQBGfBuzkclgjqIWgyuCNpmj0DxsvzpE1X/nYunht3IWspVqjr8ANm0
    g==;
-X-CSE-ConnectionGUID: MZrBUVmKTsKcJUrCTU5y5w==
-X-CSE-MsgGUID: Ew4ucIU8RkSfAm5NXm0Pkw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="48614072"
-X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="48614072"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 11:32:20 -0700
-X-CSE-ConnectionGUID: wQcuwihbTG+HV/abX4ReVQ==
-X-CSE-MsgGUID: hJhNj//MT3qUZuFdWzG4Pw==
+X-CSE-ConnectionGUID: HbkRjE+hS7KD4jDbF0ZMlw==
+X-CSE-MsgGUID: QX1SQuvHR2KEZJwQ9IILpw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="48405885"
+X-IronPort-AV: E=Sophos;i="6.15,273,1739865600"; 
+   d="scan'208";a="48405885"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 12:03:03 -0700
+X-CSE-ConnectionGUID: MGopYwafRWeEDHxp5w6uvg==
+X-CSE-MsgGUID: rWRS7kZeQg6g46RsoO8XLA==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="141281420"
-Received: from unknown (HELO hyperion.jf.intel.com) ([10.243.61.29])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 11:32:20 -0700
-From: marc.herbert@linux.intel.com
-To: linux-cxl@vger.kernel.org,
-	nvdimm@lists.linux.dev
-Cc: Marc Herbert <marc.herbert@linux.intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>
-Subject: [ndctl PATCH v2] test: set the $CXL environment variable in meson.build
-Date: Thu,  8 May 2025 18:31:42 +0000
-Message-ID: <20250508183142.743047-1-marc.herbert@linux.intel.com>
-X-Mailer: git-send-email 2.49.0
+X-IronPort-AV: E=Sophos;i="6.15,273,1739865600"; 
+   d="scan'208";a="140425841"
+Received: from vverma7-desk1.amr.corp.intel.com (HELO [10.125.108.128]) ([10.125.108.128])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 12:03:02 -0700
+Message-ID: <86ddbf3f-4528-41c7-80f5-44ac68097ae0@intel.com>
+Date: Thu, 8 May 2025 12:03:01 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [NDCTL PATCH] cxl: Change cxl-topology.sh assumption on host
+ bridge validation
+To: "Verma, Vishal L" <vishal.l.verma@intel.com>,
+ "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+ "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>
+Cc: "Schofield, Alison" <alison.schofield@intel.com>
+References: <20250507164618.635320-1-dave.jiang@intel.com>
+ <ffac09c7154f4c4bc9dff6524a02d8a707ad8b0c.camel@intel.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <ffac09c7154f4c4bc9dff6524a02d8a707ad8b0c.camel@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Marc Herbert <marc.herbert@linux.intel.com>
 
-This fixes the ability to copy and paste the helpful meson output when a
-test fails, in order to re-run a failing test directly outside meson and
-from any current directory.
 
-meson never had that problem because it always switches to a constant
-directory before running the tests.
+On 5/7/25 11:48 PM, Verma, Vishal L wrote:
+> On Wed, 2025-05-07 at 09:46 -0700, Dave Jiang wrote:
+>> Current host bridge validation in cxl-topology.sh assumes that the
+>> decoder enumeration is in order and therefore the port numbers can
+>> be used as a sorting key. With delayed port enumeration, this
+>> assumption is no longer true. Change the sorting to by number
+>> of children ports for each host bridge as the test code expects
+>> the first 2 host bridges to have 2 children and the third to only
+>> have 1.
+>>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>>  test/cxl-topology.sh | 10 ++++++----
+>>  1 file changed, 6 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/test/cxl-topology.sh b/test/cxl-topology.sh
+>> index 90b9c98273db..41d6f052394d 100644
+>> --- a/test/cxl-topology.sh
+>> +++ b/test/cxl-topology.sh
+>> @@ -37,15 +37,16 @@ root=$(jq -r ".[] | .bus" <<< $json)
+>>  
+>>  
+>>  # validate 2 or 3 host bridges under a root port
+>> -port_sort="sort_by(.port | .[4:] | tonumber)"
+>>  json=$($CXL list -b cxl_test -BP)
+>>  count=$(jq ".[] | .[\"ports:$root\"] | length" <<< $json)
+>>  ((count == 2)) || ((count == 3)) || err "$LINENO"
+>>  bridges=$count
+>>  
+>> -bridge[0]=$(jq -r ".[] | .[\"ports:$root\"] | $port_sort | .[0].port" <<< $json)
+>> -bridge[1]=$(jq -r ".[] | .[\"ports:$root\"] | $port_sort | .[1].port" <<< $json)
+>> -((bridges > 2)) && bridge[2]=$(jq -r ".[] | .[\"ports:$root\"] | $port_sort | .[2].port" <<< $json)
+>> +bridge[0]=$(jq -r --arg key "$root" '.[] | select(has("ports:" + $key)) | .["ports:" + $key] | map({full: ., length: (.["ports:" + .port] | length)}) | sort_by(-.length) | map(.full) | .[0].port' <<< "$json")
+>> +
+>> +bridge[1]=$(jq -r --arg key "$root" '.[] | select(has("ports:" + $key)) | .["ports:" + $key] | map({full: ., length: (.["ports:" + .port] | length)}) | sort_by(-.length) | map(.full) | .[1].port' <<< "$json")
+>> +
+>> +((bridges > 2)) && bridge[2]=$(jq -r --arg key "$root" '.[] | select(has("ports:" + $key)) | .["ports:" + $key] | map({full: ., length: (.["ports:" + .port] | length)}) | sort_by(-.length) | map(.full) | .[2].port' <<< "$json")
+>>  
+> 
+> The jq filtering looks reasonable, but the long lines are definitely a
+> bit unsightly, not to mention hard to follow/edit in the future.
+> 
+> How about this incremental patch (It passes the test for me with the
+> delayed port enumeration series):
 
-Fixes: ef85ab79e7a4 ("cxl/test: Add topology enumeration and hotplug test")
+LGTM
 
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Signed-off-by: Marc Herbert <marc.herbert@linux.intel.com>
----
- test/meson.build | 1 +
- 1 file changed, 1 insertion(+)
+DJ
 
-diff --git a/test/meson.build b/test/meson.build
-index d871e28e17ce..2fd7df5211dd 100644
---- a/test/meson.build
-+++ b/test/meson.build
-@@ -255,6 +255,7 @@ foreach t : tests
-     env : [
-       'NDCTL=@0@'.format(ndctl_tool.full_path()),
-       'DAXCTL=@0@'.format(daxctl_tool.full_path()),
-+      'CXL=@0@'.format(cxl_tool.full_path()),
-       'TEST_PATH=@0@'.format(meson.current_build_dir()),
-       'DATA_PATH=@0@'.format(meson.current_source_dir()),
-     ],
--- 
-2.49.0
+> 
+> -->8--
+> 
+> From 996610fac0a751acc5d68a56ff7d6746348a80c4 Mon Sep 17 00:00:00 2001
+> From: Vishal Verma <vishal.l.verma@intel.com>
+> Date: Thu, 8 May 2025 00:46:27 -0600
+> Subject: [ndctl PATCH] test: Cleanup long lines in cxl-topology.sh
+> 
+> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+> ---
+>  test/cxl-topology.sh | 27 ++++++++++++++++++++++++---
+>  1 file changed, 24 insertions(+), 3 deletions(-)
+> 
+> diff --git a/test/cxl-topology.sh b/test/cxl-topology.sh
+> index f4ba7374..b68cb8b2 100644
+> --- a/test/cxl-topology.sh
+> +++ b/test/cxl-topology.sh
+> @@ -42,11 +42,32 @@ count=$(jq ".[] | .[\"ports:$root\"] | length" <<< $json)
+>  ((count == 2)) || ((count == 3)) || err "$LINENO"
+>  bridges=$count
+>  
+> -bridge[0]=$(jq -r --arg key "$root" '.[] | select(has("ports:" + $key)) | .["ports:" + $key] | map({full: ., length: (.["ports:" + .port] | length)}) | sort_by(-.length) | map(.full) | .[0].port' <<< "$json")
+> +bridge_filter()
+> +{
+> +	local br_num="$1"
+>  
+> -bridge[1]=$(jq -r --arg key "$root" '.[] | select(has("ports:" + $key)) | .["ports:" + $key] | map({full: ., length: (.["ports:" + .port] | length)}) | sort_by(-.length) | map(.full) | .[1].port' <<< "$json")
+> +	jq -r \
+> +		--arg key "$root" \
+> +		--argjson br_num "$br_num" \
+> +		'.[] |
+> +		  select(has("ports:" + $key)) |
+> +		  .["ports:" + $key] |
+> +		  map(
+> +		    {
+> +		      full: .,
+> +		      length: (.["ports:" + .port] | length)
+> +		    }
+> +		  ) |
+> +		  sort_by(-.length) |
+> +		  map(.full) |
+> +		  .[$br_num].port'
+> +}
+>  
+> -((bridges > 2)) && bridge[2]=$(jq -r --arg key "$root" '.[] | select(has("ports:" + $key)) | .["ports:" + $key] | map({full: ., length: (.["ports:" + .port] | length)}) | sort_by(-.length) | map(.full) | .[2].port' <<< "$json")
+> +# $count has already been sanitized for acceptable values, so
+> +# just collect $count bridges here.
+> +for i in $(seq 0 $((count - 1))); do
+> +	bridge[$i]="$(bridge_filter "$i" <<< "$json")"
+> +done
+>  
+>  # validate root ports per host bridge
+>  check_host_bridge()
+> 
+> base-commit: 92d5203077553bfc9f7bf1c219563db0fc28e660
+> prerequisite-patch-id: f17261693e3ac38880b7701a94a469bb513b4078
 
