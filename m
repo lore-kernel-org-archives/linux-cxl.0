@@ -1,62 +1,62 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5EE6F2F2
-	for <linux-cxl@vger.kernel.org>; Thu,  8 May 2025 00:18:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610F128691
+	for <linux-cxl@vger.kernel.org>; Thu,  8 May 2025 00:18:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746663529; cv=none; b=PAMP41Bm6ul7idqrYLGR0aMUVvX2cD6ZaHlj3TCl2xRpggTvj1F4XSCNEgahWhHxdr2eHFH4yAxGx9ThH1RQTczS48xwEqC7S43KJvcbdgDi8Ka+TU+XGSzCAKWMw5FzobCCml1FVR398jB7HiHG1Iaxv3M3AQybk9CF+EBEIa8=
+	t=1746663536; cv=none; b=sgmGkOH+VHKXrxH9OV/dHXJder3Cxllst7c90fIzesTP3wq/FOWbL33hFG6g++a6dhWSr5NcXhXNmz6ke0mYyQ07MyI+MKPeHJjI5YmUN8wq3u/3IlibVfJ2VdPWu/BJNzh3h1RxrTimXixJOBBNgvKHvOgAlNVlvYQ22cV5DFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746663529; c=relaxed/simple;
-	bh=x+ndyTagtAai+1IoUWFFOHzaqjA94A8NPH361YUDtL0=;
+	s=arc-20240116; t=1746663536; c=relaxed/simple;
+	bh=wdjrhXA8g5bo6cAZj5UvTAfiN25PICszA49jnbq2KIQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=paRpax14ZWzGRXdfJ4GdcjXi2R7dH8FoLb0RU7lWTlySoNxvu9IeVPC7vyOofeDD6X4VK4xGG8MXas/ViJp3SDWUDAQIiJ8ewaC6hRxT3VmR1hts0UJO4Oih6yqaw2It+rSa3aZM6bZlPHx3vth2rEco7ptFMs08pyCFMYY1610=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nhtr41Ir; arc=none smtp.client-ip=209.85.210.178
+	 MIME-Version:Content-Type; b=AcnxTGu1FQ6wvP9TGDB7SzgPZYZ+mwM2vAISglmUsOIwQ4zybNfa41zzRCGdWJuDxnuPgC2lSOJS4XUNSY4EDGuUTuiFOQKqkirCw4T67TVEcsAG4gqinvxNQpCj2TJhkFV6CDt3DAfZOZBHgYi6uBuRuTF5t9UuQgLFxm5xwDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LbX8jGDR; arc=none smtp.client-ip=209.85.210.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nhtr41Ir"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7396f13b750so535689b3a.1
-        for <linux-cxl@vger.kernel.org>; Wed, 07 May 2025 17:18:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LbX8jGDR"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-736bfa487c3so434468b3a.1
+        for <linux-cxl@vger.kernel.org>; Wed, 07 May 2025 17:18:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746663527; x=1747268327; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1746663533; x=1747268333; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hhgvxGbjckjA2uvUuUKgLB6cM0wWCDZ0qCaH290UVI8=;
-        b=nhtr41IrRjvg/FxC/R7dPmZAVrZBxCJru+VHwXOhr6Tmkog6Px4uyyMISuaAmq8ZjD
-         lmVKgw4BRLk7XzaqNqNOoScTcwfZ3HnfXtpc0MxmVtMRR/KBM7ms1Bsa1uVrCMaRWiGX
-         FLP5oE+R+7MDMY3svc6kEIQqI/u5RwZFL7KUIivQkGD0ZN7wCsobmEuOXgqWy1PPFWED
-         4xgXWp0VQQZXuTV3je8RMvenoM5UU5z3P6aohqSYH1wgQ8sJkhObYE0KP8yRk7S+LyM3
-         zdFkoQcsISfjhtYpI5OdfaItC9RkADTqXXJVyYPrYXfY9gdR0z+4w0Ajn/+fa4/cfXHa
-         mDiA==
+        bh=Z6cBqkRIN/p93Mp6T+47qwI49pgayI1pu+8Iku9SCaA=;
+        b=LbX8jGDRSO+rfBBXQb+bLx32sRD2k0PsqvbJ7NgZzku1cBpBdMP9zgz/hsxkVghgFz
+         jbqSXcgFDboEK1TzZ8tpes9sD1lNRrjS1obXQZ/SL1mMaeD7sqgpiUC8GOLla0+CeZOh
+         IY06fVmHz6oVFneBr1MNfCasEgdvVKy7bSkszdmNSHfSOw2a6yDeylPT1QFFgrnERxBb
+         w72rwnbrRGoYWlSvVI6VuubV0kGZW8WQ2Rm+Zt/lFLOlNYDfK+fcNz8Xy735jVZRYyGD
+         o1RBKiL7Zu/OgfBtQTOrKI0oM4P0ZLa/F6289jECStpaH5/rQ88R1oYCG+OAds5S24SR
+         eX6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746663527; x=1747268327;
+        d=1e100.net; s=20230601; t=1746663533; x=1747268333;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hhgvxGbjckjA2uvUuUKgLB6cM0wWCDZ0qCaH290UVI8=;
-        b=tnnq0y2nEvSL5Qix+bZ56lS7K9EhjJRNRDycA9NyUHIPTCnMbjoPr5ZUNllHh5e7da
-         cb07fx80n9Xn7FHF+e69YmURbA6dBhvMU09ZsIzLzwZ3mNZ87SqRblv2pDpzQ8sGswLM
-         qFFYsoRhyYBBgGEUQDjQyo/sKQ/jP8QOBfyhgBt8oNK9qt1p3OXXrfu+4o1DDOQ/rGRH
-         Is88Crieze6ZuGQhhDDwCfZuXy1p6cA0b3OmymjeTpNeyq3itZi+1/cV4ZJecuSSS/cX
-         hNVgHkOAxtdo0EB+o/Ie4J2yJqr+WGxFIY6e1bnmnIVBhV8fn9n98UgGB1KKPLXeTOm4
-         gWUw==
-X-Forwarded-Encrypted: i=1; AJvYcCVD/h0bEScUONAXmCRnLjJZseaLjDg9bCdQw8ro13+wUe5MmA+wME8qT9IXh51YiNIWE/Sa0nZWsyM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpkKiEGzx5YOXRe/fPTHf5Zt346ncYuxM++a4F0Nw+XDI+qbOd
-	LG6P12ZMCLZqZz/3ilCcX4JOtyIcxo11YTIkTkRlbkqtWu/RXJvV
-X-Gm-Gg: ASbGncs1XRC/wCwA7gfOryFicLspZhoJImLHTOF6JlHNPMbWYM5l+8ps4h/fq0eb2yp
-	wngJeeev2/QpqzCAFsqdpGAKR0lrAuj3Oxn7ilCTZmjRpIrhADrSMVUbqokwIdAPCv5DJRt0Xr2
-	TmvE6gdBlFPREubKf3vKwH6eJHnd868E8Z+DpSSy28qk+AD19NyfY+5gyDLWqchLKj/UG0lZfzW
-	SsEg3VqfhnAMe88XP6M9e9ODcckTosVJBcX+B95LD6BPs4Q4//IuBMq4ZReDv/RMxezWrqI/6cH
-	mvclMidM29FYvaf2+uHWZQNf2E0t6LrG30/d8LmA5F7ZtlP3pBiX9ITcq7IVsQ==
-X-Google-Smtp-Source: AGHT+IEvKsYyiIeKhSCEqxAOZsTuLrWmoiPq+q7QjDiIKJsyTc7wpK5BxhX2/hHParmAJT0q9QxjIw==
-X-Received: by 2002:a05:6a00:35c9:b0:73c:c11:b42e with SMTP id d2e1a72fcca58-7409cfd5addmr7438760b3a.20.1746663526867;
-        Wed, 07 May 2025 17:18:46 -0700 (PDT)
+        bh=Z6cBqkRIN/p93Mp6T+47qwI49pgayI1pu+8Iku9SCaA=;
+        b=TBBnlh7rRFHzb8oLJ00cYhu43P2nwOl8UpycXejoV31gNr92vxDcV9aOpynO24l/w+
+         pjAQTFO9Y3vYzlHHS55i6/9yCL5zfJa2gosmf3ljBMPgi7W0sjF0pNtLy132UB6Z/KxD
+         0VMB7TTXcFf5EVK+AT9YVIl9xoyVgUxwpXJe3SE09QIbPA4wkso38GEdEincf4RO8xo5
+         RcNr/Vj/6R06DOcb137FuuIBpaLflRF2h7PbFt7/mMNoEYwOnm3yHug4Q5Zu3ab7/I6R
+         g2BMGzdB/Wr6n/er2zjg1+YAxi52Sy1glpvxYH1pC45R9IsRIYX7rzsl3zVSmLaXlpvo
+         1owA==
+X-Forwarded-Encrypted: i=1; AJvYcCXovu44koynkX9a87arG2jQWMhJac2ehkuh+tDU7GjGvzEJwWQ50dn9aROFRyO1QzOtsfFIE8L9tWo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzoBm6AjiZQJJdP9slaZtEQ3x5OfeY4og817VKCyDfpFy25E26n
+	UwplDR3QIm8Tg0UsMbflYlmzBAwJPzOmS7Wn3paIhBtMepDcb6kB
+X-Gm-Gg: ASbGncvVhA9YnBh9J68/PUsqa0xUtLmO8f/V3U+w/16esfQtufrhDWKLbDPX6zlD5ar
+	nuXHzFvWEGuDcAy9ptl/6ANElUOcD2WLJzg3cDk4GBbrkYCwpXhgVCNgKhOs9JcJfgtcTva3P1G
+	FkmvFPoHjPK6L2Es2el82uI9A1QQ2MrqOQk0D/+QY+Eq1SKN1CeYkWyQkc8hsOq/8MGrcUGl+eP
+	e+/6KZaBKZr6O8Ho+tLRuFAudajDIAgaV0bPnnNQ5S5qg+kSPnid3glF5WxwOtEnjlmr+btDoh9
+	YJyG0zbk3F+T1iJUPYgt2HcdRmrzpLWr8APpFTZ5rEqgMbCNL+Rfrpt/9lEINg==
+X-Google-Smtp-Source: AGHT+IFtkrcVBX6ObZonU424FPrWqjFZpGx77nj+3pAk9SRgQxByIsqorta/xrxBeb2ObdUJyUJqsA==
+X-Received: by 2002:a05:6a00:2e0e:b0:740:9d6f:a73b with SMTP id d2e1a72fcca58-7409d6fa83bmr6306683b3a.17.1746663533512;
+        Wed, 07 May 2025 17:18:53 -0700 (PDT)
 Received: from deb-101020-bm01.dtc.local ([149.97.161.244])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7405902167csm12378724b3a.98.2025.05.07.17.18.46
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7405902167csm12378724b3a.98.2025.05.07.17.18.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 17:18:46 -0700 (PDT)
+        Wed, 07 May 2025 17:18:53 -0700 (PDT)
 From: anisa.su887@gmail.com
 To: qemu-devel@nongnu.org
 Cc: Jonathan.Cameron@huawei.com,
@@ -64,9 +64,9 @@ Cc: Jonathan.Cameron@huawei.com,
 	dave@stgolabs.net,
 	linux-cxl@vger.kernel.org,
 	Anisa Su <anisa.su@samsung.com>
-Subject: [PATCH v2 06/10] hw/cxl_type3: Add DC Region bitmap lock
-Date: Thu,  8 May 2025 00:01:02 +0000
-Message-ID: <20250508001754.122180-7-anisa.su887@gmail.com>
+Subject: [PATCH v2 07/10] cxl-mailbox-utils: 0x5602 - FMAPI Set DC Region Config
+Date: Thu,  8 May 2025 00:01:03 +0000
+Message-ID: <20250508001754.122180-8-anisa.su887@gmail.com>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250508001754.122180-1-anisa.su887@gmail.com>
 References: <20250508001754.122180-1-anisa.su887@gmail.com>
@@ -76,73 +76,197 @@ List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Anisa Su <anisa.su@samsung.com>
 
-Add a lock on the bitmap of each CXLDCRegion in preparation for the next
-patch which implements FMAPI Set DC Region Configuration. This command
-can modify the block size, which means the region's bitmap must be updated
-accordingly.
-
-The lock becomes necessary when commands that add/release extents
-(meaning they update the bitmap too) are enabled on a different CCI than
-the CCI on which the FMAPI commands are enabled. 
+FM DCD Management command 0x5602 implemented per CXL r3.2 Spec Section 7.6.7.6.3
 
 Signed-off-by: Anisa Su <anisa.su@samsung.com>
 ---
- hw/mem/cxl_type3.c          | 4 ++++
- include/hw/cxl/cxl_device.h | 1 +
- 2 files changed, 5 insertions(+)
+ hw/cxl/cxl-mailbox-utils.c   | 97 ++++++++++++++++++++++++++++++++++++
+ hw/mem/cxl_type3.c           |  2 +-
+ include/hw/cxl/cxl_device.h  |  3 ++
+ include/hw/cxl/cxl_mailbox.h |  6 +++
+ include/hw/cxl/cxl_opcodes.h |  1 +
+ 5 files changed, 108 insertions(+), 1 deletion(-)
 
+diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+index 6afc45833d..fe38a13f71 100644
+--- a/hw/cxl/cxl-mailbox-utils.c
++++ b/hw/cxl/cxl-mailbox-utils.c
+@@ -3426,6 +3426,96 @@ static CXLRetCode cmd_fm_get_host_dc_region_config(const struct cxl_cmd *cmd,
+     return CXL_MBOX_SUCCESS;
+ }
+ 
++static void cxl_mbox_dc_event_create_record_hdr(CXLType3Dev *ct3d,
++                                                CXLEventRecordHdr *hdr)
++{
++    /*
++     * CXL r3.1 section 8.2.9.2.1.6: Dynamic Capacity Event Record
++     *
++     * All Dynamic Capacity event records shall set the Event Record Severity
++     * field in the Common Event Record Format to Informational Event. All
++     * Dynamic Capacity related events shall be logged in the Dynamic Capacity
++     * Event Log.
++     */
++    uint8_t flags = 1 << CXL_EVENT_TYPE_INFO;
++
++    st24_le_p(&hdr->flags, flags);
++    hdr->length = sizeof(struct CXLEventDynamicCapacity);
++    memcpy(&hdr->id, &dynamic_capacity_uuid, sizeof(hdr->id));
++    stq_le_p(&hdr->timestamp, cxl_device_get_timestamp(&ct3d->cxl_dstate));
++}
++
++/* CXL r3.2 section 7.6.7.6.3: Set Host DC Region Configuration (Opcode 5602) */
++static CXLRetCode cmd_fm_set_dc_region_config(const struct cxl_cmd *cmd,
++                                              uint8_t *payload_in,
++                                              size_t len_in,
++                                              uint8_t *payload_out,
++                                              size_t *len_out,
++                                              CXLCCI *cci)
++{
++    struct {
++        uint8_t reg_id;
++        uint8_t rsvd[3];
++        uint64_t block_sz;
++        uint8_t flags;
++        uint8_t rsvd2[3];
++    } QEMU_PACKED *in = (void *)payload_in;
++    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
++    CXLEventDynamicCapacity dcEvent = {};
++    CXLDCRegion *region;
++
++    region = &ct3d->dc.regions[in->reg_id];
++
++    /*
++     * CXL r3.2 7.6.7.6.3: Set DC Region Configuration
++     * This command shall fail with Unsupported when the Sanitize on Release
++     * field does not match the region’s configuration... and the device
++     * does not support reconfiguration of the Sanitize on Release setting.
++     *
++     * Currently not reconfigurable, so always fail if sanitize bit
++     * doesn't match.
++     */
++    if ((in->flags & 0x1) != (region->flags & 0x1)) {
++        return CXL_MBOX_UNSUPPORTED;
++    }
++
++    if (in->reg_id >= DCD_MAX_NUM_REGION) {
++        return CXL_MBOX_UNSUPPORTED;
++    }
++
++    /* Check that no extents are in the region being reconfigured */
++    if (!bitmap_empty(region->blk_bitmap, region->len / region->block_size)) {
++        return CXL_MBOX_UNSUPPORTED;
++    }
++
++    /* Check that new block size is supported */
++    if (!test_bit(BIT((int) log2(in->block_sz)),
++                  &region->supported_blk_size_bitmask)) {
++        return CXL_MBOX_INVALID_INPUT;
++    }
++
++    /* Free bitmap and create new one for new block size. */
++    qemu_mutex_lock(&region->bitmap_lock);
++    g_free(region->blk_bitmap);
++    region->blk_bitmap = bitmap_new(region->len / in->block_sz);
++    qemu_mutex_unlock(&region->bitmap_lock);
++    region->block_size = in->block_sz;
++
++    /* Create event record and insert into event log */
++    cxl_mbox_dc_event_create_record_hdr(ct3d, &dcEvent.hdr);
++    dcEvent.type = DC_EVENT_REGION_CONFIG_UPDATED;
++    dcEvent.validity_flags = 1;
++    dcEvent.host_id = 0;
++    dcEvent.updated_region_id = in->reg_id;
++
++    if (cxl_event_insert(&ct3d->cxl_dstate,
++                         CXL_EVENT_TYPE_DYNAMIC_CAP,
++                         (CXLEventRecordRaw *)&dcEvent)) {
++        cxl_event_irq_assert(ct3d);
++    }
++    return CXL_MBOX_SUCCESS;
++}
++
+ static const struct cxl_cmd cxl_cmd_set[256][256] = {
+     [INFOSTAT][BACKGROUND_OPERATION_ABORT] = { "BACKGROUND_OPERATION_ABORT",
+         cmd_infostat_bg_op_abort, 0, 0 },
+@@ -3552,6 +3642,13 @@ static const struct cxl_cmd cxl_cmd_set_fm_dcd[256][256] = {
+         cmd_fm_get_dcd_info, 0, 0 },
+     [FMAPI_DCD_MGMT][GET_HOST_DC_REGION_CONFIG] = { "GET_HOST_DC_REGION_CONFIG",
+         cmd_fm_get_host_dc_region_config, 4, 0 },
++    [FMAPI_DCD_MGMT][SET_DC_REGION_CONFIG] = { "SET_DC_REGION_CONFIG",
++        cmd_fm_set_dc_region_config, 16,
++        (CXL_MBOX_CONFIG_CHANGE_COLD_RESET |
++         CXL_MBOX_CONFIG_CHANGE_CONV_RESET |
++         CXL_MBOX_CONFIG_CHANGE_CXL_RESET |
++         CXL_MBOX_IMMEDIATE_CONFIG_CHANGE |
++         CXL_MBOX_IMMEDIATE_DATA_CHANGE) },
+ };
+ 
+ /*
 diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index 6ad48f55ce..b5b3df5edf 100644
+index b5b3df5edf..edc29f1ccb 100644
 --- a/hw/mem/cxl_type3.c
 +++ b/hw/mem/cxl_type3.c
-@@ -824,6 +824,7 @@ static bool cxl_create_dc_regions(CXLType3Dev *ct3d, Error **errp)
-         };
-         ct3d->dc.total_capacity += region->len;
-         region->blk_bitmap = bitmap_new(region->len / region->block_size);
-+        qemu_mutex_init(&region->bitmap_lock);
-     }
-     QTAILQ_INIT(&ct3d->dc.extents);
-     QTAILQ_INIT(&ct3d->dc.extents_pending);
-@@ -1176,6 +1177,7 @@ void ct3_set_region_block_backed(CXLType3Dev *ct3d, uint64_t dpa,
-         return;
-     }
- 
-+    QEMU_LOCK_GUARD(&region->bitmap_lock);
-     bitmap_set(region->blk_bitmap, (dpa - region->base) / region->block_size,
-                len / region->block_size);
- }
-@@ -1202,6 +1204,7 @@ bool ct3_test_region_block_backed(CXLType3Dev *ct3d, uint64_t dpa,
-      * if bits between [dpa, dpa + len) are all 1s, meaning the DPA range is
-      * backed with DC extents, return true; else return false.
-      */
-+    QEMU_LOCK_GUARD(&region->bitmap_lock);
-     return find_next_zero_bit(region->blk_bitmap, nr + nbits, nr) == nr + nbits;
+@@ -1695,7 +1695,7 @@ void qmp_cxl_inject_correctable_error(const char *path, CxlCorErrorType type,
+     pcie_aer_inject_error(PCI_DEVICE(obj), &err);
  }
  
-@@ -1223,6 +1226,7 @@ void ct3_clear_region_block_backed(CXLType3Dev *ct3d, uint64_t dpa,
- 
-     nr = (dpa - region->base) / region->block_size;
-     nbits = len / region->block_size;
-+    QEMU_LOCK_GUARD(&region->bitmap_lock);
-     bitmap_clear(region->blk_bitmap, nr, nbits);
- }
- 
+-static void cxl_assign_event_header(CXLEventRecordHdr *hdr,
++void cxl_assign_event_header(CXLEventRecordHdr *hdr,
+                                     const QemuUUID *uuid, uint32_t flags,
+                                     uint8_t length, uint64_t timestamp)
+ {
 diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-index cbcc1bc9f5..9cfd9c5a9f 100644
+index 9cfd9c5a9f..22823e2054 100644
 --- a/include/hw/cxl/cxl_device.h
 +++ b/include/hw/cxl/cxl_device.h
-@@ -618,6 +618,7 @@ typedef struct CXLDCRegion {
-     uint8_t flags;
-     unsigned long *blk_bitmap;
-     uint64_t supported_blk_size_bitmask;
-+    QemuMutex bitmap_lock;
-     /* Following bools make up dsmas flags, as defined in the CDAT */
-     bool nonvolatile;
-     bool sharable;
+@@ -821,4 +821,7 @@ void ct3_clear_region_block_backed(CXLType3Dev *ct3d, uint64_t dpa,
+                                    uint64_t len);
+ bool ct3_test_region_block_backed(CXLType3Dev *ct3d, uint64_t dpa,
+                                   uint64_t len);
++void cxl_assign_event_header(CXLEventRecordHdr *hdr,
++                             const QemuUUID *uuid, uint32_t flags,
++                             uint8_t length, uint64_t timestamp);
+ #endif
+diff --git a/include/hw/cxl/cxl_mailbox.h b/include/hw/cxl/cxl_mailbox.h
+index 8e1c7c5f15..820c411cbb 100644
+--- a/include/hw/cxl/cxl_mailbox.h
++++ b/include/hw/cxl/cxl_mailbox.h
+@@ -8,6 +8,7 @@
+ #ifndef CXL_MAILBOX_H
+ #define CXL_MAILBOX_H
+ 
++#define CXL_MBOX_CONFIG_CHANGE_COLD_RESET (1)
+ #define CXL_MBOX_IMMEDIATE_CONFIG_CHANGE (1 << 1)
+ #define CXL_MBOX_IMMEDIATE_DATA_CHANGE (1 << 2)
+ #define CXL_MBOX_IMMEDIATE_POLICY_CHANGE (1 << 3)
+@@ -15,6 +16,11 @@
+ #define CXL_MBOX_SECURITY_STATE_CHANGE (1 << 5)
+ #define CXL_MBOX_BACKGROUND_OPERATION (1 << 6)
+ #define CXL_MBOX_BACKGROUND_OPERATION_ABORT (1 << 7)
++#define CXL_MBOX_SECONDARY_MBOX_SUPPORTED (1 << 8)
++#define CXL_MBOX_REQUEST_ABORT_BACKGROUND_OP_SUPPORTED (1 << 9)
++#define CXL_MBOX_CEL_10_TO_11_VALID (1 << 10)
++#define CXL_MBOX_CONFIG_CHANGE_CONV_RESET (1 << 11)
++#define CXL_MBOX_CONFIG_CHANGE_CXL_RESET (1 << 12)
+ 
+ #define CXL_LOG_CAP_CLEAR_SUPPORTED (1 << 0)
+ #define CXL_LOG_CAP_POPULATE_SUPPORTED (1 << 1)
+diff --git a/include/hw/cxl/cxl_opcodes.h b/include/hw/cxl/cxl_opcodes.h
+index 68ad68291c..ed4be23b75 100644
+--- a/include/hw/cxl/cxl_opcodes.h
++++ b/include/hw/cxl/cxl_opcodes.h
+@@ -64,5 +64,6 @@ enum {
+     FMAPI_DCD_MGMT = 0x56,
+         #define GET_DCD_INFO 0x0
+         #define GET_HOST_DC_REGION_CONFIG 0x1
++        #define SET_DC_REGION_CONFIG 0x2
+     GLOBAL_MEMORY_ACCESS_EP_MGMT = 0X59
+ };
 -- 
 2.47.2
 
