@@ -1,285 +1,246 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010D822A80C
-	for <linux-cxl@vger.kernel.org>; Thu,  8 May 2025 13:29:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746710970; cv=none; b=g1xVM3zszh8/3TcOhZXC1CWOgL19jUWdlV2VGpw6NyhL8hTnOCv8o8A4sorI29cegugHjtwm6ta4rGmUo3LvnCmlj5ryfb/3SXG7QK+W1WU6g0K4/fgWkmcywMTUiO7e1DmvjReUxswiEr1S7OykRUGEWGAU7XPO54LGGZYWgJ4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746710970; c=relaxed/simple;
-	bh=rX796bG2TzxLADgdKqJGBLB/cjU2nQCU0GKpvjtpYOI=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=srvicsvhzIN9MGDojE82dqyXvr/M++YY5xZNqmg5n2+768xCOdMrueFIqJRrCkKP+nhmAlMHDU+8Mikb6Tn5bOpdL777JIvHAcOOFBIbZ1qRxlW+wexU81uB9/tEYnbTOS6CXqh7tuq/mRZDj1QIjhvp8Y8cays2FmdyeKbDtlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZtXtC4hQSz6M4Ys;
-	Thu,  8 May 2025 21:24:51 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3BCE51402A5;
-	Thu,  8 May 2025 21:29:24 +0800 (CST)
-Received: from localhost (10.122.19.247) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 8 May
- 2025 15:29:23 +0200
-Date: Thu, 8 May 2025 14:29:18 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Richard Henderson <richard.henderson@linaro.org>
-CC: Alistair Francis <alistair23@gmail.com>, <qemu-devel@nongnu.org>,
-	<linuxarm@huawei.com>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 066/147] include/exec: Move TLB_MMIO, TLB_DISCARD_WRITE
- to slow flags
-Message-ID: <20250508142918.0000248d@huawei.com>
-In-Reply-To: <04875ca2-781b-4000-b74c-fc338bc6ec4d@linaro.org>
-References: <20250422192819.302784-1-richard.henderson@linaro.org>
-	<20250422192819.302784-67-richard.henderson@linaro.org>
-	<20250425183524.00000b28@huawei.com>
-	<CAKmqyKMN5bo12Oh8hrwdiimqJSzHMZwB7JjAquBrEK3PTbtGyA@mail.gmail.com>
-	<04875ca2-781b-4000-b74c-fc338bc6ec4d@linaro.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B3A2215F46;
+	Thu,  8 May 2025 13:34:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.8
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746711289; cv=fail; b=V0KiTOyZ9l7DMXQcEtYVZeKlM1PQd2rxgeLF5pEOgFslxgXyDSGg/sdTAVA1TGugS6lzKVOcNyslX1Ezj+pz/Kt4p0iDHpRvhT/HOz7WsDtQfI0zg14qKytZEWVq1vEyg/UmOaQ9dEYwzv6+sEd9TWWQKFEamTDnDH5MukmVMWA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746711289; c=relaxed/simple;
+	bh=/x2IIfVjaIzmFNvG728C5I63pwnPKbtQAQxwejWUSiU=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=bUtuQDVYMTOVryS7UC8IUeb35CU1PTknpw7a1LELEe/YIIyMc2DnteSM1WaJOnAGxC554lCrxnYfi0GqSfrHrxYsrINAll93n88n3mGStePK7oNzBY6mnQV1FxAAN9eFm4UH13TeNae0kf5h2UzOptvJ2EYLnPXC29sP6bJYFVI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YfbTnJED; arc=fail smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YfbTnJED"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746711287; x=1778247287;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=/x2IIfVjaIzmFNvG728C5I63pwnPKbtQAQxwejWUSiU=;
+  b=YfbTnJEDF4CQc+4MndIqpvxkkv4icHhQ4jLFPwAZswAgTjA4zL3+MKAo
+   25h2kdfuM0VFieGhGjOMM/vrmQ13CGOjc8RJr0HcJf+70fO0JkoR8ayuq
+   RJOMxnEBa0ZtSnAegPM8pN7TlyJ4dlM4CZEREBqtrEoCVlEP4lMch7Vwd
+   kU1opQic+NyE77YZep7G8yhtiLJgs2Me2vQbG4z4FAlu5cOEUOF4NpacX
+   RLgwawg28rx65xCGwL4SX7Dw9/QQ3RvCbio0ZJatGRFr+MMle761WGi8a
+   yW4QlvwWHiQFrY2C/biJBSLA7jv1D6libMN8cjDCjT8B3ScxV2d4ZgcqW
+   Q==;
+X-CSE-ConnectionGUID: nO/tTCLyS8OI66Ep3pgpWA==
+X-CSE-MsgGUID: K2ogwhIDTcS3s1DymQbr+Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="66029765"
+X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
+   d="scan'208";a="66029765"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 06:34:47 -0700
+X-CSE-ConnectionGUID: itlNUD4XRnO3IAKGb0cv6g==
+X-CSE-MsgGUID: 5BUscXdoTO2rzhNh09qJsw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
+   d="scan'208";a="141192903"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 06:34:46 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Thu, 8 May 2025 06:34:46 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Thu, 8 May 2025 06:34:46 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.46) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Thu, 8 May 2025 06:34:45 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=b+m7lrCi+ZUDDzTK+G0IhdncDJlOKUgPfEaqmFbNHQA9kek/lJkdwsXblQdI6FUam6egB0CKvJ6Hv0tBAfqawii6RNVrkU0GVB9LK8OAV+N1h6JRK0H7nWQQuz6DlDM0ra74/BvQMCjqJoo1QZ06jtVijb4GFZF5CbEonNOelGHlOoJsxDHGvKdHSDcI+ebJT2iC50f2OTUGjthuwcKlNYwi/MzQCLeUhnoJMnVI5N/HW7GzPKjXjCvs/4c5VDTT4bbyX5xGJpzO2L2MMicANvEjARNBz3rGuGIEKIFwozE2Og8hjg6r2N+dZBwAw+Tuyvfi7wqRulf6d3ak9DUN2Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SHhvGi7yy449fkQcH5c/KWcAJ2XQZQPD9H8jVVrsOFU=;
+ b=CIhYZfnCVMkCaBF2/mPPtgSgmr67oswAoxFPVeUi0WhsZhjR2EtLYuKA7Jc6ml32XGy+2FsoLmCKHYUg/A6/SqsAMdxMQQo4dgRJ+5/IXO98h3hFEvJaIHp8ZYOA4CFp5+R1F7bIfyLYdoWuLhU31a0+EXknzr69gLC4xfXRPKLetrJn4i8MvuiAoNZCMzTkiYt96AkM+UrILFA2rcmADLHdJ87mR4T60L0a/hSa3497QnJAhPXCVxtRAXvHm/4iUKKmv+Hk9cbGCEIepKKNHBm4wrQzo87T5XlEAC/fn0U8h/RcH00W7E6D176pXAm41RCJbGFBrQTVrpXTow6CXQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by SJ0PR11MB4911.namprd11.prod.outlook.com (2603:10b6:a03:2ad::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.23; Thu, 8 May
+ 2025 13:34:20 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57%5]) with mapi id 15.20.8699.026; Thu, 8 May 2025
+ 13:34:20 +0000
+Date: Thu, 8 May 2025 08:35:05 -0500
+From: Ira Weiny <ira.weiny@intel.com>
+To: Fan Ni <nifan.cxl@gmail.com>, Ira Weiny <ira.weiny@intel.com>
+CC: Dave Jiang <dave.jiang@intel.com>, Jonathan Cameron
+	<Jonathan.Cameron@huawei.com>, Dan Williams <dan.j.williams@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, Alison Schofield
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
+	<linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v9 02/19] cxl/mem: Read dynamic capacity configuration
+ from the device
+Message-ID: <681cb309a86e5_2d40892946f@iweiny-mobl.notmuch>
+References: <20250413-dcd-type2-upstream-v9-0-1d4911a0b365@intel.com>
+ <20250413-dcd-type2-upstream-v9-2-1d4911a0b365@intel.com>
+ <aBubH5ZDVPEE8N98@lg>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <aBubH5ZDVPEE8N98@lg>
+X-ClientProxiedBy: MW4PR04CA0127.namprd04.prod.outlook.com
+ (2603:10b6:303:84::12) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- frapeml500008.china.huawei.com (7.182.85.71)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|SJ0PR11MB4911:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2e64030e-a806-47ca-e005-08dd8e3509b5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?C16/RHa5fOhZSmtH2YVUwPVxr85K3jLSryk6/Pnxens92yu6Xa/f4PUVmTyX?=
+ =?us-ascii?Q?dR61VpiZT8E+ZLyui0NqcFXBYkmtmCMH/O0mDpXRnmTdKyX53VpTT3tvmv52?=
+ =?us-ascii?Q?k+fanQdwh8zESCOp5VnJw157WgJt+4A8w6YJPH+040c7WKDbRbfDX9fwrCnc?=
+ =?us-ascii?Q?amGN4nWVy2+uWDVxWCWtOsmRV/ug0hoLH8NXLxY1t/208N7/NQQxlbgFbPQf?=
+ =?us-ascii?Q?tuR2iNBg/On0/qUr5IK5onYIfbP4j98r3iuThoIXLZ8aIZzZ5u5m8W4AmCqK?=
+ =?us-ascii?Q?zwpFT0bSsnnXMx+CsRQcCkMw+WXXLm+yf3WLOxhlj0YhGhdqKSdnebJ5IyVu?=
+ =?us-ascii?Q?2Tf6McYkn8GiNwSfWj4fr1h0xO42s/gX8kg/Ddju1AYYiN1jg1jjXGusOM10?=
+ =?us-ascii?Q?ux4O3DhNrodRYbRT/Xn++71aNlnNhHSYcKdO5zWV7kcAITyy3+wj+VKHMPZ5?=
+ =?us-ascii?Q?W1gHLnma/5RsiYn/hbaOHQVCgk8Sip4J6W8XNG5GYNcqXwYBO2bGFew48MH1?=
+ =?us-ascii?Q?bYjNNHrAu8Ny6Hlyt1obKCwZvs7F3330lhmKBzD6KxDC0xEv5wL1ajV5wMir?=
+ =?us-ascii?Q?/kfkZPlUz9g8GW2wvfOABGWNPh6OS1KrTlEzJXObgV/bEzil689zOg5YdZFq?=
+ =?us-ascii?Q?/i+viUBIUTNzwthIWCzHuMmCXjAbtwUn2woJOFX36BcgFxIB4B/9AxSh2vYN?=
+ =?us-ascii?Q?jeIcQaGtzhWlsZaBAvLI+4xvyZYRIzubpgsTVI/XeE3W0eY8/mfYusALiapR?=
+ =?us-ascii?Q?Pma5GUjdFJikK0oAf4e0g7ZsKxQhYUASJZp3sCDBFzSJxmJWPuZR/p6QKwwP?=
+ =?us-ascii?Q?Ak+Bqem70z5oWHA3DwPSDgh4GnfUrvmsIO7XwFspN/Zd/Xr33AJrw11glYmv?=
+ =?us-ascii?Q?W2w1VFVgTsbu2dH+ygoKLPLt7gQZg5cAKNJvbLuKmtT1LsSHp7S1IYo0SC9k?=
+ =?us-ascii?Q?ocTMhT9hLROTb4fNh41ujzR0eZCws6g95BokYfqaitbIGzFaalxHJ8OMcQRC?=
+ =?us-ascii?Q?NNKlg4ah6SCBoIsJh0IfyIINS0+P7t6Q61Qyf0zL9AgWCSrqr/CeLuFAApQD?=
+ =?us-ascii?Q?gjBoM20vuDVVp4HBcVW03wz2ShOPb9kNxpzGllcet3nbv70Etze0qoKpBRD8?=
+ =?us-ascii?Q?knnKBUymANVe2FOlc/ciu0V4BZxZmacot5iUfZLOw3KFluNcv3S87b3BT5mY?=
+ =?us-ascii?Q?Unei8fD9EvOdOB/GDmG0rvkh+Eivbk019T7o6QxYpV/4TsZaSr7FXRQn6xf1?=
+ =?us-ascii?Q?kkvTsL0Zs7dl/8fFGwqB3/0LQzNgzC0s/P0g7Fpcv42GHVY1swuR9I0Gi4RY?=
+ =?us-ascii?Q?WHPcV+WXRtN3wal1xRsMgLgP/tMatxTmNxQk0lnOzPTWGGOni4DyP37HAkyg?=
+ =?us-ascii?Q?moWz9nOx+dGg6IiUD6D6nhdaKhIk8t7DxCFGr+7QrwNy0YBho/9OpqnBEHgq?=
+ =?us-ascii?Q?AeXAFwVQD1A=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?xdrSLF4iHDJXk5SO2lfUxuuMghVVAQCKzkJ45gomAupdATuydX7hym9Vq5fv?=
+ =?us-ascii?Q?clwCR8Xl5otmAcmwKivNVbCOq1KdbkGZeJjpI7IytILh2HdViFduzbD0tUF8?=
+ =?us-ascii?Q?hkXlJZtZnlqngMabi5UZ6QVONB4lHfK4TF/8/mKCq9itjtHxRLNS1O418Nl/?=
+ =?us-ascii?Q?KMuzkBvfRiu04PsVQqSc/xqlYjBB46HZ8P1xGZmRSptJLGvgxSAGpoIWCngP?=
+ =?us-ascii?Q?SGhTa3/Wct08z+mgyFAHZaLeT9LHzM0P+QoPXPMuhRSRo1Vkmh266YBEZqGi?=
+ =?us-ascii?Q?yiHl/uj4FV4cIiYVk+giM+Z7eXCQA9Yu1DqKQmFvE1rFUDEVaMbiGXH0Wy3K?=
+ =?us-ascii?Q?J/FXHaAFmdWPpBs4Q4rnSLgCUrWWq6jW2l0eqLkDcmrCGcl0dgbNGPPChy8W?=
+ =?us-ascii?Q?b5INZ5auCvNcngHL64tkgNNIjJV02QUyIv4PHXU1zSVn3OoCii7pNBVQ6afS?=
+ =?us-ascii?Q?xL4RYxVrxxLqTMLBZJy9C3GqKkGql+YYhpCz+UbhJka3K203Nrk9MZgo1wr2?=
+ =?us-ascii?Q?0QvGOyKj8dDPx+VvuZksgr1DpXqj+NsuoMUTnSWlLWJEeLG332FUvanCutjd?=
+ =?us-ascii?Q?/99Wn4EXpfpCP91EeOBLglK4HJ+ssyzaGa31TGtLZdlBY7j+O4ac5gd7O7h0?=
+ =?us-ascii?Q?vIs1z3aweUvyEo4AFS4Da2r2Ybm/kjt+LeVAJKwgFRV8lrLgsA0bjlt1sSIi?=
+ =?us-ascii?Q?syWGbVeUOzL4sTVvebxwdWV92BkeEKzSt73mMDwl4IsaTqloDxi5wZkGUNCK?=
+ =?us-ascii?Q?Rjkk5XpapAPZuMYb0YBDSOlDAJM7E9Kd5iK2fCd7CnSQ31WqtxivCdFwTChO?=
+ =?us-ascii?Q?/dBJ9jmvrcN+1zSm/1h/+12mqfjq4H0UDZPu8ZgO9j+fQqHxMXcBjPjArxGa?=
+ =?us-ascii?Q?Ggq9k24ewxTgjMwAHcWMVozhrNvJPZDmrUEKMuPe0vHXBt4FH9XgS6Q2mC7A?=
+ =?us-ascii?Q?Q4aM+aFM9Hd5S6dapxz8AubF2fUsRtFm2zgG+P83YYU3jxjRlsSriw1K+UJC?=
+ =?us-ascii?Q?ICEKQnmV9aCnPVwlgc1Mcfndptz1zPhAFKyCFuLTsfL3B8GI8bIYQgcYTBDt?=
+ =?us-ascii?Q?zwzITthZF0E2VXrMKNWdQbTBkLHQYZSYYLVXf4imnsNNMDCcq3N+U5nVsMHX?=
+ =?us-ascii?Q?dwp6oGcnaAFxQvi24hygsFFEx9rlZnSvg9299ncAW5BAmUFM7rUzo6hQtgYI?=
+ =?us-ascii?Q?0inB5EAtvUOjhwpd741NQHtzwkDdObVHQfSL9gStqj6Vldm2lb6kzRpBf7WL?=
+ =?us-ascii?Q?Y4Lo5XDR5JAyD0B1E493nYauEN3uqZVGE6L8Reb6xS7DSKPkcXZmZ9OAHOeR?=
+ =?us-ascii?Q?KxIdvGGSQBxbt7bfyT793Cr+AsPLxynqMiurlyED1ZEtQ+EcMWgaePhQLeLz?=
+ =?us-ascii?Q?1ORXDym9M5dXSfQDFZNL/y7JBMRNj8nXfvE6m/i9B79iaRQy3mlMbejhbuah?=
+ =?us-ascii?Q?osYXkxHYgfkDwT6kePQXobkZZbiuKOUasVwW+HPmrHZi1SOoftOnfw46SvWX?=
+ =?us-ascii?Q?s7tQe05w/wRFa6y57H4ckgQO83G6m3UE2euA3SSPgWYzjfEo6V9wMWpaR/LM?=
+ =?us-ascii?Q?JjuiZrmW08VhhFvItwczxi/oRazoon/B3o5fIXIV?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2e64030e-a806-47ca-e005-08dd8e3509b5
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2025 13:34:20.6359
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: wmdQP1lf96q62VFl1KdCtcGZwRyrcQqqWTVXGi0v1xvjduHPw9lyXDFNeS/th4FOX8TkKkbVkLmIpT+uArIHcQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB4911
+X-OriginatorOrg: intel.com
 
-On Tue, 29 Apr 2025 19:43:05 -0700
-Richard Henderson <richard.henderson@linaro.org> wrote:
+Fan Ni wrote:
+> On Sun, Apr 13, 2025 at 05:52:10PM -0500, Ira Weiny wrote:
+> > Devices which optionally support Dynamic Capacity (DC) are configured
+> > via mailbox commands.  CXL 3.2 section 9.13.3 requires the host to issue
+> > the Get DC Configuration command in order to properly configure DCDs.
+> > Without the Get DC Configuration command DCD can't be supported.
+> > 
+> > Implement the DC mailbox commands as specified in CXL 3.2 section
+> > 8.2.10.9.9 (opcodes 48XXh) to read and store the DCD configuration
+> > information.  Disable DCD if an invalid configuration is found.
+> > 
+> > Linux has no support for more than one dynamic capacity partition.  Read
+> > and validate all the partitions but configure only the first partition
+> > as 'dynamic ram A'.  Additional partitions can be added in the future if
+> > such a device ever materializes.  Additionally is it anticipated that no
+> > skips will be present from the end of the pmem partition.  Check for an
+> > disallow this configuration as well.
+> > 
+> > Linux has no use for the trailing fields of the Get Dynamic Capacity
+> > Configuration Output Payload (Total number of supported extents, number
+> > of available extents, total number of supported tags, and number of
+> > available tags).  Avoid defining those fields to use the more useful
+> > dynamic C array.
+> > 
+> > Based on an original patch by Navneet Singh.
+> > 
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > ---
+> > Changes:
+> > [iweiny: rebase]
+> > [iweiny: Update spec references to 3.2]
+> > [djbw: Limit to 1 partition]
+> > [djbw: Avoid inter-partition skipping]
+> > [djbw: s/region/partition/]
+> > [djbw: remove cxl_dc_region[partition]_info->name]
+> > [iweiny: adjust to lack of dcd_cmds in mds]
+> > [iweiny: remove extra 'region' from names]
+> > [iweiny: remove unused CXL_DYNAMIC_CAPACITY_SANITIZE_ON_RELEASE_FLAG]
+> > ---
+> >  drivers/cxl/core/hdm.c  |   2 +
+> >  drivers/cxl/core/mbox.c | 179 ++++++++++++++++++++++++++++++++++++++++++++++++
+> >  drivers/cxl/cxl.h       |   1 +
+> >  drivers/cxl/cxlmem.h    |  54 ++++++++++++++-
+> >  drivers/cxl/pci.c       |   3 +
+> >  5 files changed, 238 insertions(+), 1 deletion(-)
+> ...
+> >  /* Set Timestamp CXL 3.0 Spec 8.2.9.4.2 */
+> >  struct cxl_mbox_set_timestamp_in {
+> >  	__le64 timestamp;
+> > @@ -845,9 +871,24 @@ enum {
+> >  int cxl_internal_send_cmd(struct cxl_mailbox *cxl_mbox,
+> >  			  struct cxl_mbox_cmd *cmd);
+> >  int cxl_dev_state_identify(struct cxl_memdev_state *mds);
+> > +
+> > +struct cxl_mem_dev_info {
+> > +	u64 total_bytes;
+> > +	u64 volatile_bytes;
+> > +	u64 persistent_bytes;
+> > +};
+> 
+> Defined, but never used.
 
-> On 4/29/25 14:35, Alistair Francis wrote:
-> > On Sat, Apr 26, 2025 at 3:36=E2=80=AFAM Jonathan Cameron via
-> > <qemu-devel@nongnu.org> wrote: =20
-> >>
-> >> On Tue, 22 Apr 2025 12:26:55 -0700
-> >> Richard Henderson <richard.henderson@linaro.org> wrote:
-> >> =20
-> >>> Recover two bits from the inline flags. =20
-> >>
-> >>
-> >> Hi Richard,
-> >>
-> >> Early days but something (I'm fairly sure in this patch) is tripping u=
-p my favourite
-> >> TCG corner case of running code out of MMIO memory (interleaved CXL me=
-mory).
-> >>
-> >> Only seeing it on arm64 tests so far which isn't upstream yet..
-> >> (guess what I was getting ready to post today)
-> >>
-> >> Back trace is:
-> >>
-> >> #0  0x0000555555fd4296 in cpu_atomic_fetch_andq_le_mmu (env=3D0x555557=
-ee19b0, addr=3D18442241572520067072, val=3D18446744073701163007, oi=3D8244,=
- retaddr=3D<optimized out>) at ../../accel/tcg/atomic_template.h:140
-> >> #1  0x00007fffb6894125 in code_gen_buffer ()
-> >> #2  0x0000555555fc4c46 in cpu_tb_exec (cpu=3Dcpu@entry=3D0x555557ededf=
-0, itb=3Ditb@entry=3D0x7fffb6894000 <code_gen_buffer+200511443>, tb_exit=3D=
-tb_exit@entry=3D0x7ffff4bfb744) at ../../accel/tcg/cpu-exec.c:455
-> >> #3  0x0000555555fc51c2 in cpu_loop_exec_tb (tb_exit=3D0x7ffff4bfb744, =
-last_tb=3D<synthetic pointer>, pc=3D<optimized out>, tb=3D0x7fffb6894000 <c=
-ode_gen_buffer+200511443>, cpu=3D0x555557ededf0) at ../../accel/tcg/cpu-exe=
-c.c:904
-> >> #4  cpu_exec_loop (cpu=3Dcpu@entry=3D0x555557ededf0, sc=3Dsc@entry=3D0=
-x7ffff4bfb7f0) at ../../accel/tcg/cpu-exec.c:1018
-> >> #5  0x0000555555fc58f1 in cpu_exec_setjmp (cpu=3Dcpu@entry=3D0x555557e=
-dedf0, sc=3Dsc@entry=3D0x7ffff4bfb7f0) at ../../accel/tcg/cpu-exec.c:1035
-> >> #6  0x0000555555fc5f6c in cpu_exec (cpu=3Dcpu@entry=3D0x555557ededf0) =
-at ../../accel/tcg/cpu-exec.c:1061
-> >> #7  0x0000555556146ac3 in tcg_cpu_exec (cpu=3Dcpu@entry=3D0x555557eded=
-f0) at ../../accel/tcg/tcg-accel-ops.c:81
-> >> #8  0x0000555556146ee3 in mttcg_cpu_thread_fn (arg=3Darg@entry=3D0x555=
-557ededf0) at ../../accel/tcg/tcg-accel-ops-mttcg.c:94
-> >> #9  0x00005555561f6450 in qemu_thread_start (args=3D0x555557f8f430) at=
- ../../util/qemu-thread-posix.c:541
-> >> #10 0x00007ffff7750aa4 in start_thread (arg=3D<optimized out>) at ./np=
-tl/pthread_create.c:447
-> >> #11 0x00007ffff77ddc3c in clone3 () at ../sysdeps/unix/sysv/linux/x86_=
-64/clone3.S:78
-> >>
-> >> I haven't pushed out the rebased tree yet making this a truly awful bu=
-g report.
-> >>
-> >> The pull request you sent with this in wasn't bisectable so this was a=
- bit of a guessing
-> >> game. I see the seg fault only after this patch. =20
-> >=20
-> > I see the same thing with some RISC-V tests. I can provide the test
-> > images if you want as well =20
->=20
->=20
-> Yes please.
->=20
->=20
-> r~
+Shoot...  That was from a previous version of work on type2...
 
-I'm guessing Alastair is busy.
+Thanks for the catch!
+Ira
 
-I got around to testing this on x86 and indeed blow up is the same.
-
-0x0000555555e3dd77 in cpu_atomic_add_fetchl_le_mmu (env=3D0x55555736bef0, a=
-ddr=3D140271756837240, val=3D1, oi=3D34, retaddr=3D<optimized out>) at ../.=
-./accel/tcg/atomic_template.h:143
-143     GEN_ATOMIC_HELPER(add_fetch)
-(gdb) bt
-#0  0x0000555555e3dd77 in cpu_atomic_add_fetchl_le_mmu (env=3D0x55555736bef=
-0, addr=3D140271756837240, val=3D1, oi=3D34, retaddr=3D<optimized out>) at =
-../../accel/tcg/atomic_template.h:143
-#1  0x00007fffbc31c6f0 in code_gen_buffer ()
-#2  0x0000555555e23aa6 in cpu_tb_exec (cpu=3Dcpu@entry=3D0x555557369330, it=
-b=3Ditb@entry=3D0x7fffbc31c600 <code_gen_buffer+295441875>, tb_exit=3Dtb_ex=
-it@entry=3D0x7ffff4bfd6ec) at ../../accel/tcg/cpu-exec.c:438
-#3  0x0000555555e24025 in cpu_loop_exec_tb (tb_exit=3D0x7ffff4bfd6ec, last_=
-tb=3D<synthetic pointer>, pc=3D<optimized out>, tb=3D0x7fffbc31c600 <code_g=
-en_buffer+295441875>, cpu=3D0x555557369330) at ../../accel/tcg/cpu-exec.c:8=
-72
-#4  cpu_exec_loop (cpu=3Dcpu@entry=3D0x555557369330, sc=3Dsc@entry=3D0x7fff=
-f4bfd7b0) at ../../accel/tcg/cpu-exec.c:982
-#5  0x0000555555e247a1 in cpu_exec_setjmp (cpu=3Dcpu@entry=3D0x555557369330=
-, sc=3Dsc@entry=3D0x7ffff4bfd7b0) at ../../accel/tcg/cpu-exec.c:999
-#6  0x0000555555e24e2c in cpu_exec (cpu=3Dcpu@entry=3D0x555557369330) at ..=
-/../accel/tcg/cpu-exec.c:1025
-#7  0x0000555555e42c73 in tcg_cpu_exec (cpu=3Dcpu@entry=3D0x555557369330) a=
-t ../../accel/tcg/tcg-accel-ops.c:81
-#8  0x0000555555e43093 in mttcg_cpu_thread_fn (arg=3Darg@entry=3D0x55555736=
-9330) at ../../accel/tcg/tcg-accel-ops-mttcg.c:94
-#9  0x0000555555ef2250 in qemu_thread_start (args=3D0x5555573e6e20) at ../.=
-./util/qemu-thread-posix.c:541
-#10 0x00007ffff7750aa4 in start_thread (arg=3D<optimized out>) at ./nptl/pt=
-hread_create.c:447
-#11 0x00007ffff77ddc3c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/cl=
-one3.S:78
-
-Need one patch for my particular setup to work around some DMA buffer issue=
-s in virtio (similar to
-a patch for pci space last year).  I've been meaning to post an RFC to get =
-feedback on how
-to handle this but not gotten to it yet!
-
-=46rom 801e47897c5959a22ed050d7e7feebbbd3a12588 Mon Sep 17 00:00:00 2001
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Date: Mon, 22 Apr 2024 13:54:37 +0100
-Subject: [PATCH] physmem: Increase bounce buffers for "memory" address spac=
-e.
-
-Doesn't need to be this big and should be configurable.
-
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- system/physmem.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/system/physmem.c b/system/physmem.c
-index 3f4fd69d9a..651b875827 100644
---- a/system/physmem.c
-+++ b/system/physmem.c
-@@ -2798,6 +2798,7 @@ static void memory_map_init(void)
-     memory_region_init(system_memory, NULL, "system", UINT64_MAX);
-     address_space_init(&address_space_memory, system_memory, "memory");
-=20
-+    address_space_memory.max_bounce_buffer_size =3D 1024 * 1024 * 1024;
-     system_io =3D g_malloc(sizeof(*system_io));
-     memory_region_init_io(system_io, NULL, &unassigned_io_ops, NULL, "io",
-                           65536);
---=20
-2.43.0
-
-
-Anyhow, other than that you need any random distro image (I tend to use deb=
-ian nocloud images)
-and a recent kernel build (mainline is fine).
-
-Then a config along the lines of (obviously this isn't minimal)
-
-qemu-system-x86_64 -M q35,cxl=3Don,sata=3Doff,smbus=3Doff -m 4g,maxmem=3D8G=
-,slots=3D4 -cpu max -smp 4 \
-                                      -kernel bzImage \
-                                      -bios bios \
- -drive if=3Dnone,file=3D/mnt/d/images/x86-full-big.qcow2,format=3Dqcow2,id=
-=3Dhd \
- -device ioh3420,id=3Droot_port1 -device virtio-blk-pci,drive=3Dhd,bus=3Dro=
-ot_port1 \
- -netdev user,id=3Dmynet,hostfwd=3Dtcp::5553-:22 -device virtio-net-pci,net=
-dev=3Dmynet,id=3Dbob \
- -nographic -no-reboot -append 'earlycon console=3DttyS0 root=3D/dev/vda3 f=
-sck.mode=3Dskip tp_printk maxcpus=3D4' \
- -monitor telnet:127.0.0.1:1235,server,nowait \
- -object memory-backend-ram,size=3D4G,id=3Dmem0 \
- -numa node,nodeid=3D0,cpus=3D0-3,memdev=3Dmem0 \
- -numa node,nodeid=3D1 \
- -serial mon:stdio \
-  -object memory-backend-file,id=3Dcxl-mem1,share=3Don,mem-path=3D/tmp/cxlt=
-est.raw,size=3D256M,align=3D256M \
- -object memory-backend-file,id=3Dcxl-mem2,share=3Don,mem-path=3D/tmp/cxlte=
-st2.raw,size=3D256M,align=3D256M \
- -object memory-backend-file,id=3Dcxl-lsa1,share=3Don,mem-path=3D/tmp/lsa.r=
-aw,size=3D1M,align=3D1M \
- -object memory-backend-file,id=3Dcxl-mem3,share=3Don,mem-path=3D/tmp/cxlte=
-st3.raw,size=3D256M,align=3D256M \
- -object memory-backend-file,id=3Dcxl-mem4,share=3Don,mem-path=3D/tmp/cxlte=
-st4.raw,size=3D256M,align=3D256M \
- -object memory-backend-file,id=3Dcxl-lsa2,share=3Don,mem-path=3D/tmp/lsa2.=
-raw,size=3D1M,align=3D1M \
- -device pxb-cxl,bus_nr=3D12,bus=3Dpcie.0,id=3Dcxl.1 \
- -device cxl-rp,port=3D0,bus=3Dcxl.1,id=3Droot_port0,chassis=3D0,slot=3D2 \
- -device cxl-rp,port=3D1,bus=3Dcxl.1,id=3Droot_port2,chassis=3D0,slot=3D3 \
- -device cxl-type3,bus=3Droot_port0,volatile-memdev=3Dcxl-mem1,id=3Dcxl-pme=
-m0,lsa=3Dcxl-lsa1,sn=3D3 \
- -device cxl-type3,bus=3Droot_port2,volatile-memdev=3Dcxl-mem3,id=3Dcxl-pme=
-m1,lsa=3Dcxl-lsa2,sn=3D4 \
- -machine cxl-fmw.0.targets.0=3Dcxl.1,cxl-fmw.0.size=3D4G,cxl-fmw.0.interle=
-ave-granularity=3D1k
-
-Then after booting into linux, bring up a cxl region with:
-
-    cd /sys/bus/cxl/devices/decoder0.0/
-    cat create_ram_region
-    echo region0 > create_ram_region
-
-    echo ram > /sys/bus/cxl/devices/decoder2.0/mode
-    echo $((256 << 20)) > /sys/bus/cxl/devices/decoder2.0/dpa_size
-
-    cd /sys/bus/cxl/devices/region0/
-    echo 256 > interleave_granularity
-    echo 1 > interleave_ways
-    echo $((256 << 20)) > size=20
-    echo decoder2.0 > target0
-    echo 1 > commit
-    echo region0 > /sys/bus/cxl/drivers/cxl_region/bind
-
-That should bring up a small amount of memory in node 2. Interleaving isn't=
- actually
-in use here but we haven't upstreamed the bypass optimizations so this is s=
-till
-mmio space to QEMU.
-
-Then numactl -m 2 ls=20
-boom.
-
-A few relevant bits of kernel config (also not minimal)
-
-//dax stuff to ensure we get memory as normal ram.
-CONFIG_DAX=3Dy
-CONFIG_DEV_DAX=3Dm
-CONFIG_DEV_DAX_PMEM=3Dm
-CONFIG_DEV_DAX_HMEM=3Dy
-CONFIG_DEV_DAX_CXL=3Dm
-CONFIG_DEV_DAX_HMEM_DEVICES=3Dy
-CONFIG_DEV_DAX_KMEM=3Dm
-//memory hotplug
-CONFIG_ARCH_ENABLE_MEMORY_HOTPLUG=3Dy
-CONFIG_ARCH_ENABLE_MEMORY_HOTREMOVE=3Dy
-CONFIG_MEMORY_HOTPLUG=3Dy
-CONFIG_MHP_DEFAULT_ONLINE_TYPE_ONLINE_MOVABLE=3Dy
-
-Any hints welcome!  Also happy to provide any additional info as necessary.
-
-Jonathan
-
-
+[snip]
