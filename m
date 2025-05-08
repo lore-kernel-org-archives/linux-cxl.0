@@ -1,277 +1,227 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D55BC21931E
-	for <linux-cxl@vger.kernel.org>; Thu,  8 May 2025 06:48:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746686933; cv=fail; b=u9g2/Z16QAD2pJN4p7puYWUUXDjcz48EuWU/JHwzuqg6+0exwkfS2FbepQWT8ZHMbYEtwTvZb0g5+1SKF+HfGQzzae3aZHEWU5uJz6O6BvVKfHBcTLbAdB1bdrN6K3MQ7DtH986DEsKKrL5dGlcqb0lXfaLC6VYAo4bKWuil1yU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746686933; c=relaxed/simple;
-	bh=oPC+OKKruQ3oXUzn+G3hXHxJ72taDKScome5BF1dUxU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=MjtnAf1sEZUo6/fGhu9+sBxtaK1ut0QJnMM7jGjlfGwPzYRrvEvl7cbCPJHUqxe3L4oWRyWs8ohgAlr9M8fClZJpBvJjx3Vvze5Fu8OuQlGrmr3PrtAXPaPXDXpQcv0DPbYW6SQrP1oqH+yRpZuJUUSBGD1Oc0UgMcE690vEaWQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cLI74stQ; arc=fail smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98043221703;
+	Thu,  8 May 2025 07:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746690278; cv=none; b=KMSWEuPTiUszMkpC0DGjCg0VNvDMoJFg1+3OUckbSJesEjsTjROV28FVSxGiGg+Paxk1n8XPrBjCZ/G19dFfjbRU9Qx+1FCBzGotZ1wgBpUWJK4rbagTY7XyW/A7Ghd4UIC6e/OZv6NP4jwGZWdI70oUyxckBX1foc8VR3W5kJU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746690278; c=relaxed/simple;
+	bh=biB3S/OHcTSuSenX2kZE0QSCZGXojUgcvvFDQiSjYOY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EXi3MLV3j2keCyTJIaprsWFCVO7XldhN09F19G8tRDcLXVxdI5cOqQ/TvZ6BA1rrFHxz2K6wXse27CUs5UGdP4zz6x3/Ztj3rmqeZPVUtqHMhOQ2CewdjaVfep6/sO4PL/vWZB3iZU006P7AXZfkESytKfhUI8Hdjlz5nmuAgng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i3nPKT+H; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cLI74stQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i3nPKT+H"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746686932; x=1778222932;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=oPC+OKKruQ3oXUzn+G3hXHxJ72taDKScome5BF1dUxU=;
-  b=cLI74stQadI9GPrBe4z3tkWA5+6Pw7X/S72KQxwsMianNDsC3vV4b+eU
-   euQM+klSam0SmStxbAtyQ4qyVkpQ0xgrj3sH2/SzORITZ3/4/hKR+tMmW
-   iQM8zDHVkbOY/Q060U7Wic4DtFgBOQF5Dkf2BwQzMXvVeoMUw/tqUqPss
-   6DUo75KpeWBr25XVMDIXF6lq0Qd8i5cdtjKwHR7KezNinoiy/eP1FTh7F
-   Nqhvl2plCDi92JtmeeqFnoVNrsa6w+D+BONlDgsakNVRzAUOnPXendRdc
-   jhbuhH/gyX98wnQtJca7lFBlhiRj6kjQn7nlDk+aUAxIVL6mIlilaBMMX
-   Q==;
-X-CSE-ConnectionGUID: 1CkcMXBnRC+SN+GKFzKTZQ==
-X-CSE-MsgGUID: eyApTHm0QieeiPrL717Pcg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="59848551"
+  t=1746690276; x=1778226276;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=biB3S/OHcTSuSenX2kZE0QSCZGXojUgcvvFDQiSjYOY=;
+  b=i3nPKT+HVcQlgDulbrjF4DAB0jCm6vMg1TXWbJyOW4IlSVcLHj2m5nmR
+   qfzYsbA86AN/3Bcpr2XJOfWfA0Gwu6WiaEdK0P+k+gfdccaLb1EY7JHMV
+   +fejOlo7G02+VI37iK+hOqVaP48zQ30wKI7D7+qiqrkwPjYS4SymHKVqo
+   PV55joK9Q37nUtAGuj8xNOfMo57YYaNYOZBKEiLfq/dclXi/b6ap6DmkS
+   rm602i0bVUb920PWdDSd9NaeQ7gdjN4R4enGqIn8PAQE2rEhQKdS6sPNf
+   qt7fTOWzfBchUfLFxABds8drGrBmwy9kMkpsvp701bIV+abnH/MBdbEwg
+   w==;
+X-CSE-ConnectionGUID: 8+CL0cPvTYq5Secz/JXidw==
+X-CSE-MsgGUID: debpBoCzSHmS41mSf+9ZXA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="59120953"
 X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
-   d="scan'208";a="59848551"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 23:48:52 -0700
-X-CSE-ConnectionGUID: yT+ImqUjS/eAunBCcH9iQg==
-X-CSE-MsgGUID: 8ll3YahYQSuR6MCWAembIQ==
+   d="scan'208";a="59120953"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 00:44:35 -0700
+X-CSE-ConnectionGUID: ZDMYDDvmSJuzHLF7tcvRvg==
+X-CSE-MsgGUID: chBRilHeSpOM8G0Bx873Ew==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,271,1739865600"; 
-   d="scan'208";a="136132687"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 23:48:52 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Wed, 7 May 2025 23:48:51 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Wed, 7 May 2025 23:48:51 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.42) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 7 May 2025 23:48:50 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=oMiW1Cgzi2ebYn8eWCiCMno5nTLl12Fc3m/YzB0Bre2gZqijhsKL++f8rnZDkSrMqxT8JPLobNpJWLqTYRPoMn2Vbo9mj2/u+rZaYrt+7ffeojTZPcwddIUh7JN61VE2y+ENZiZ6Tdz7J4Z+vNYoC+h+GlTTjEspaDY+QgGxdopqUOoiRnTQuHkEhE5um6niI50saflNLBcmeuVkepHmwHNYHRik5LJlern+WSnawViojp2m81Skax3FsjwASooYD3eYdJ8jdIdnrZ17CzzYpYkPOx7Tp/SNB0dVPyWlv/IpLtkR6l3jiTviqShzQH67LUysP/9kNS00G31U08/ZqA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oPC+OKKruQ3oXUzn+G3hXHxJ72taDKScome5BF1dUxU=;
- b=l7OWRpuAs3QxTHRE0xAOSXDpL6bhy8oYhaicFByIDYAlZNaXhLamXM/pnu6Vs9XSlvmBSwsZ9hunzRzbR5rVmeca7MQ3O/wnt/HxAXHiYPmr58+WTdzuUvE9pSBn1fK0yToOkss1J/GWR8tk3Z51hLzTEQV/834ikoPTmC4BzB+bS0JwX5/5yaarmK9gej10dIe+cIT4L6yEOc3Xt9p/qBuhcJ3K1VX2GBC7xoziYRYoM6GC22+s5BbdpLqrnzaBwqqlCK0BmQfqbYtgUgi49BixfqEqVA07KlNwzxqU5gq+yozNAwlkDmuZJxEJimu0NpgwG6XL559VWyPmXAP8pg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from MW4PR11MB7125.namprd11.prod.outlook.com (2603:10b6:303:219::12)
- by IA1PR11MB7246.namprd11.prod.outlook.com (2603:10b6:208:42e::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.32; Thu, 8 May
- 2025 06:48:17 +0000
-Received: from MW4PR11MB7125.namprd11.prod.outlook.com
- ([fe80::eff6:f7ef:65cd:8684]) by MW4PR11MB7125.namprd11.prod.outlook.com
- ([fe80::eff6:f7ef:65cd:8684%4]) with mapi id 15.20.8722.021; Thu, 8 May 2025
- 06:48:16 +0000
-From: "Verma, Vishal L" <vishal.l.verma@intel.com>
-To: "Jiang, Dave" <dave.jiang@intel.com>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>, "nvdimm@lists.linux.dev"
-	<nvdimm@lists.linux.dev>
-CC: "Schofield, Alison" <alison.schofield@intel.com>
-Subject: Re: [NDCTL PATCH] cxl: Change cxl-topology.sh assumption on host
- bridge validation
-Thread-Topic: [NDCTL PATCH] cxl: Change cxl-topology.sh assumption on host
- bridge validation
-Thread-Index: AQHbv2+c03W7lypek0GI1iBTBkDS57PIS3mA
-Date: Thu, 8 May 2025 06:48:16 +0000
-Message-ID: <ffac09c7154f4c4bc9dff6524a02d8a707ad8b0c.camel@intel.com>
-References: <20250507164618.635320-1-dave.jiang@intel.com>
-In-Reply-To: <20250507164618.635320-1-dave.jiang@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.54.3 (3.54.3-1.fc41) 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MW4PR11MB7125:EE_|IA1PR11MB7246:EE_
-x-ms-office365-filtering-correlation-id: b3cceb5c-8226-4661-8b6f-08dd8dfc4ff5
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|1800799024|366016|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?Qk8vUyt1RkxnUnZyUUlPRlptNGlsWmIyVjh5L0Q3ZTlTWGRIbmo3dG1rV1ha?=
- =?utf-8?B?dmRXTmswYVdIZmx1RzBoSzRCNzF0aU1EaUQzUGY0VE1rWko4MDV2YWJNOFlM?=
- =?utf-8?B?dEdCejlLNm16YUpMRTBsOWY3bkNhTVlSeHpwVzhiNTBsNFZRRzBURDJDVnU4?=
- =?utf-8?B?RkluTnY2QzhkUktEaEpkTjRHWmhIRDlZMjlHbEdjUUg0Nm9TdEo0c1VLeDJx?=
- =?utf-8?B?anBmc2JYcVcvY2d1ZWtldUJXZUFSTjVLMGtLcmU2VzFrSWloRkFiRVBoQWF5?=
- =?utf-8?B?dk10U0laMkxpWEx3VUZuU1VYcFY1U2t2Y1Q5SkR5QU1OaFVNTis2eXZmY0NL?=
- =?utf-8?B?RUVJUXdkbmFXTFpjUXVUdG8xUW4reUJKWmY4dm5YRXJ2RnF6MEVlUU5PYm5j?=
- =?utf-8?B?SW9kbyt3UjdCREQ2U085VUNFV1F2ZEsxbTJsdlFGMlZTTjQyYkVlUERKYnVm?=
- =?utf-8?B?N0FNUXF2YVlLYXU4M1AvS0hDRzRUNFRDTmUwME94VldHS2NTL1ROUU8rYWt6?=
- =?utf-8?B?ejBTVDVHR1hNNFdONWZSVmtTSzZlZU16VDVFN25tM0ljNWwwaXA3NW1lUUlq?=
- =?utf-8?B?WldMdFVjQmgyQW9OY1FiVklSWlI2VzExRExrY2tlWDVGd0Y2RE80U3FWODFr?=
- =?utf-8?B?eUR2K3lqUXVlZEZjNm9SVk5YUHl0UUxYblpuOTdhN01EZzZzY2FQeXoxOWpz?=
- =?utf-8?B?em9ibXdCYkdHc2FIS1FBVHFYVlFQTEdZS3MrSXZGQ3ZHS05BbldzbXBJVk9y?=
- =?utf-8?B?bW5CWWdYZ3ZFOTRHZ1JZZVBEMWIyTUVvNjM3anRvY1NONUIwbm1yb0hHY2NG?=
- =?utf-8?B?UTVJVG5QOWR0M1RWVEpMSWtGZ0NVQWlNcTM2V0xaQnBMMjc1N3VPc001NWRk?=
- =?utf-8?B?bndSS1lPdDR6WXRqenRkbUdpUTVGNnhIVmdsOWRwdXFSTk1ibnVhNEp0cmxh?=
- =?utf-8?B?b0tiZHNLWEJHV3k5WFQ3c0dXRWNIYWJqdVlJZW9nQk5pYk1GM044UFRrZ0RL?=
- =?utf-8?B?cWFqRmc3RzlxaVFFVmNXQ0VNU2dUTnVTR3lCclpkKzV2eGdSb0lwRlBYNmEy?=
- =?utf-8?B?WTl1dXJQOEdCdWp1eVpJVkUzUFhHNkQ5RERRaWErVVRIZkU5RU9TTThQSits?=
- =?utf-8?B?RC8xcDRYOEt2WmlRVUR5bEY3ZmNRZC9MUmE1ZmFFS0VWRndwdkFlbEt0enlL?=
- =?utf-8?B?MWtuMkNUcUZ4ODBiMVFBVzgrdUJITDBYMlU1S0NRRWJOYWdYWWpENy9EZTMx?=
- =?utf-8?B?cUF0R0g4Qm9aeG9paXNhWllZNkxydUpyUTN1dHZVZmdDM2tISUFpbzNuM1ha?=
- =?utf-8?B?ZEJKaUdGY1R3dXNPSUJiM3JvYm5yanBGdThiaDIrWTMzQi9aOHpjcEZ6VE9s?=
- =?utf-8?B?eDJ6VExxZ0FsOExQM0YrZkpPSWlvSDltWVdock5uTVdHd2YyM3BiMXYxaHBR?=
- =?utf-8?B?bHFRT3lxanRMZzl0STJWWE5uUXFQQThPT3JvUnVMY0dRdWtOK3VTL1BzSDgx?=
- =?utf-8?B?eldVaXhVbmRmQlE5NG1PT25HM3hpdmRQc0VNZ0s2ak9jUXdqVkg2Q01UUnlm?=
- =?utf-8?B?eVlIckJSS3pxNytpMk45dktwSXp3QWdjUExDMzNhZU9za1pPTkUzUXIzNjlV?=
- =?utf-8?B?aTRjKzBlZ0R5SUZQUXBhNzBGNVdEZlY5TXV3UmpyL1RtSmpjSzRYMW5WWFRS?=
- =?utf-8?B?bS8xWWhaL0xuQjVrb1lGeW9LbFVmUVQzYnhCV2RmeTdybW1DRWxiWXlUMkJJ?=
- =?utf-8?B?NnZWek1CdU5pd1lIZHZ6ZEphdFVQSjI4TzBGRTkyeXpaZGhRNXdqOWNtc0NV?=
- =?utf-8?B?T0JvTHlEekoyVzJTNUYrQWsya1d5RkYwYVhLZkZoWmdSRFZqMDl5N1VHaWdq?=
- =?utf-8?B?Y0dQUVFWMFNtNFJuVk4zWnMwOUN6Zk9odVdLMUhNZGprVU55NFBDVlJDdUwz?=
- =?utf-8?B?WTlpSVFPSThLR2JHdnY4MS9ZeEhMTE1yUXRwT3EvNmc5bmFnYmMxZjBNUVJh?=
- =?utf-8?Q?nJAPeBHWuNFJUochKZmkAvqjN67yTQ=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR11MB7125.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?bnFSeVo5S2tMTUUyOEJzWkgvTEZwcVZPRTRXL3dJcDgzeS9FbTA1MVFFYWhW?=
- =?utf-8?B?Y0wxelhOcG5oRGFUaDhUamJDemV1TFlROU5IMnBvc3BsdEFDdVFwcXFoOHE4?=
- =?utf-8?B?c2xSdnhmQUw1Q2VYMnFuelVxVFBoZVZ3bEtTK3orTXN0UnJ4Zm94YUVzSWp5?=
- =?utf-8?B?c1ExMVR3ejVCQVhwZkpIVXFYVzh1OFRyQlhqQkJtU3h3TU9jbDZudFdMandB?=
- =?utf-8?B?bWtQc2xoamhnRVhzUzZsWUN0dUNBdWZxOGpLWFFacTNzZWo5YVgzWWRLdGZC?=
- =?utf-8?B?UEErL0h6NmpnMEZweVBiUUxoaDZjQVhrM2RTOUUyb2I1VDFPaDZyU1ZveUlo?=
- =?utf-8?B?OXF6NGV4azhxbHNabFJ5L3FBQlcrbnFKMTdwR243MWlzRmdmN2ZwM1paMzhl?=
- =?utf-8?B?RHIzaS9tMkFCWVhSL3pqdHN4OVc4UUdaMlpmQnpPREFtZHlJYTJnQjVFWVJO?=
- =?utf-8?B?SndiUlhvUkdGMUg3d2NUQXF3dlYxLzdBVmtFVkg0NXFXTnBHcDRFaVJrYndL?=
- =?utf-8?B?V25ZbDBJWm9sbFBlZ0tVcEhuOVB6Q2hJNzVzSk1qUWVldU9KN01NdU5USjc1?=
- =?utf-8?B?eG5rMHNtRGViSElkZFJETFB3YnU4UzBqSFhWU05jTk9RbGMwZTUrekF2RVJk?=
- =?utf-8?B?ZVY4dUdVMkFqV0d6S3dNcEMxbjRETFVPNUJ2enFRVlYvemRsbDJ4bWZGdGJZ?=
- =?utf-8?B?WW95RCtFbElydGRmYy8zeHlWTGQ2SEh3akx1VlQ0aWErY1dQYmtlYVZiajlV?=
- =?utf-8?B?WG9KN1c2ZXBTQmV1bERuSituLzdaVXY0S3FWVzhaNFRRLzZxV1dBanl3Z3Y3?=
- =?utf-8?B?MVZVOUxLcFdXdzQrQ2NMK3RZMWdZdjBWWDh4SW5qcmhBelREQnoxTzBBOHBl?=
- =?utf-8?B?SVlFSk9BMFdRdW8vUk8zUElSRDNNd24vZjY3bWtFcG5aNzNzNGp3VllZVlNQ?=
- =?utf-8?B?VUd1b1UwNzNOanNSeFZRcXNkdzlVekdNUGNvUllmQ0hyNVVBd0RGYms4T21L?=
- =?utf-8?B?SysvRU9OcDFNd3B5UVNVZE9SRDR3aG53Y0M4aDMxY1BPZEFFMG5aS2NwQlgy?=
- =?utf-8?B?R3NDV0FQN2RhT3g2cUNjQjN6Y21LY0R6R3JpZ3hVUkVsb3RCcEVaV242THNt?=
- =?utf-8?B?QW44RGdqQjhlVTIzVGtnR1BjOWhGekFDc2d4cjEzQTAwYVhGU04vQUI3bXMv?=
- =?utf-8?B?S2x0SFkyZS9LNXZoMWs3ZUxtaTAybXFOb0c5OU1pUXFtWTNkSnNnN3FTOS9D?=
- =?utf-8?B?cnRvZUE3dnJuc3FGU0hRZ1c0SFAyY0wyL0NzdVJvR25xNWd0eEptQmU0UjRC?=
- =?utf-8?B?bDM4UTM1a25ka3FrZmVWT0FnenJlQ1VJNGZkL0VTTERsUFFadm5sSE9Vd2JK?=
- =?utf-8?B?VklBRHZsc1pBcjZybEZycklQaHdhTEcyTXErSTZidDBJTXE4TU55TnFnWW9m?=
- =?utf-8?B?VkRUaGxRd01UUklBcU5VZmZDd0NiZFlITENQS1RtbytXWUhJbjJXSUh5NHVh?=
- =?utf-8?B?SWlFZXRPRkgrejM3QU5Yck9rYXRQa25jN1kzRG9wRVE1cmVwc1JFYXg3YkJk?=
- =?utf-8?B?eHNvZDFuSUhZYW5hYUg4VjJucHZYcEFwQWtnZWE0d1p3MVJwUVN6VjhmWUto?=
- =?utf-8?B?N3RGSVM1c3FqV2FiUGRQUUFCY0FFN3JDMDA2REtQdTYwUmxTODNtR2tQVkhR?=
- =?utf-8?B?TUZIUFpDOW5pZkZzckc5S2pQWi83UlVQOFE3K2RUck04cFBneDZ5UXpHaHFq?=
- =?utf-8?B?QUlZT3JDOFZDd2lKYmRvK1FTaiszMDNDZEp1NU1tNExLb3dtTHoxU3Q2eVBK?=
- =?utf-8?B?UGV2UW4veWQ0VlVyRDc1dkNHeHpkWUYwVG50VTVlTzR2YUVXRmVDN1BGS1gw?=
- =?utf-8?B?OWUrMmJiRm93ZWVZdFBnWmxHRVo1K0JOYlF0Q3pMYkNMTGVTN0p5aXpZNTJM?=
- =?utf-8?B?ZHJ0TFhJRFNnd2paMUI3N0RoaTM5cHpoSW1KeEVGbzdJWDVxSWVWeTJvWDVR?=
- =?utf-8?B?dURCaTl1UjdQbXFoeEJWV0pybk13NDlNa1kzN2tIM0x2ek8xbEIwV1o1WVFE?=
- =?utf-8?B?Y2JJbHpWRXJyekxzRjU1UU10SW11azFRZkJvZE90T3ZleFI3NFRZYm40eWlh?=
- =?utf-8?B?bG5ydzNKOFdOTDZhV25YdGErbWZKZmIwVGM1aDNVSUNUWFc4R0tnYmlwWm9Z?=
- =?utf-8?B?UVE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5AB6D91F35564943BB9D120B90A87C13@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+   d="scan'208";a="141109304"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 08 May 2025 00:44:32 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uCvvi-000AlB-0n;
+	Thu, 08 May 2025 07:44:30 +0000
+Date: Thu, 8 May 2025 15:44:10 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>
+Subject: Re: [PATCH 6/7] cxl/region: Introduce CLASS(cxl_decoder_detach...)
+ consolidate multiple paths
+Message-ID: <202505081548.9HldF62Y-lkp@intel.com>
+References: <20250507072145.3614298-7-dan.j.williams@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW4PR11MB7125.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b3cceb5c-8226-4661-8b6f-08dd8dfc4ff5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 May 2025 06:48:16.9017
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +8mtCSvYPOmhApR4eGLI1z/PYYwiju0BzmigJDrAE3z1BkJh2E5YmqPZ2VM7nSjBu2EMBE4cDMRxqDld8v8K9YdIemiO810UGRK+Ebu+O1w=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB7246
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250507072145.3614298-7-dan.j.williams@intel.com>
 
-T24gV2VkLCAyMDI1LTA1LTA3IGF0IDA5OjQ2IC0wNzAwLCBEYXZlIEppYW5nIHdyb3RlOg0KPiBD
-dXJyZW50IGhvc3QgYnJpZGdlIHZhbGlkYXRpb24gaW4gY3hsLXRvcG9sb2d5LnNoIGFzc3VtZXMg
-dGhhdCB0aGUNCj4gZGVjb2RlciBlbnVtZXJhdGlvbiBpcyBpbiBvcmRlciBhbmQgdGhlcmVmb3Jl
-IHRoZSBwb3J0IG51bWJlcnMgY2FuDQo+IGJlIHVzZWQgYXMgYSBzb3J0aW5nIGtleS4gV2l0aCBk
-ZWxheWVkIHBvcnQgZW51bWVyYXRpb24sIHRoaXMNCj4gYXNzdW1wdGlvbiBpcyBubyBsb25nZXIg
-dHJ1ZS4gQ2hhbmdlIHRoZSBzb3J0aW5nIHRvIGJ5IG51bWJlcg0KPiBvZiBjaGlsZHJlbiBwb3J0
-cyBmb3IgZWFjaCBob3N0IGJyaWRnZSBhcyB0aGUgdGVzdCBjb2RlIGV4cGVjdHMNCj4gdGhlIGZp
-cnN0IDIgaG9zdCBicmlkZ2VzIHRvIGhhdmUgMiBjaGlsZHJlbiBhbmQgdGhlIHRoaXJkIHRvIG9u
-bHkNCj4gaGF2ZSAxLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogRGF2ZSBKaWFuZyA8ZGF2ZS5qaWFu
-Z0BpbnRlbC5jb20+DQo+IC0tLQ0KPiDCoHRlc3QvY3hsLXRvcG9sb2d5LnNoIHwgMTAgKysrKysr
-LS0tLQ0KPiDCoDEgZmlsZSBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0p
-DQo+IA0KPiBkaWZmIC0tZ2l0IGEvdGVzdC9jeGwtdG9wb2xvZ3kuc2ggYi90ZXN0L2N4bC10b3Bv
-bG9neS5zaA0KPiBpbmRleCA5MGI5Yzk4MjczZGIuLjQxZDZmMDUyMzk0ZCAxMDA2NDQNCj4gLS0t
-IGEvdGVzdC9jeGwtdG9wb2xvZ3kuc2gNCj4gKysrIGIvdGVzdC9jeGwtdG9wb2xvZ3kuc2gNCj4g
-QEAgLTM3LDE1ICszNywxNiBAQCByb290PSQoanEgLXIgIi5bXSB8IC5idXMiIDw8PCAkanNvbikN
-Cj4gwqANCj4gwqANCj4gwqAjIHZhbGlkYXRlIDIgb3IgMyBob3N0IGJyaWRnZXMgdW5kZXIgYSBy
-b290IHBvcnQNCj4gLXBvcnRfc29ydD0ic29ydF9ieSgucG9ydCB8IC5bNDpdIHwgdG9udW1iZXIp
-Ig0KPiDCoGpzb249JCgkQ1hMIGxpc3QgLWIgY3hsX3Rlc3QgLUJQKQ0KPiDCoGNvdW50PSQoanEg
-Ii5bXSB8IC5bXCJwb3J0czokcm9vdFwiXSB8IGxlbmd0aCIgPDw8ICRqc29uKQ0KPiDCoCgoY291
-bnQgPT0gMikpIHx8ICgoY291bnQgPT0gMykpIHx8IGVyciAiJExJTkVOTyINCj4gwqBicmlkZ2Vz
-PSRjb3VudA0KPiDCoA0KPiAtYnJpZGdlWzBdPSQoanEgLXIgIi5bXSB8IC5bXCJwb3J0czokcm9v
-dFwiXSB8ICRwb3J0X3NvcnQgfCAuWzBdLnBvcnQiIDw8PCAkanNvbikNCj4gLWJyaWRnZVsxXT0k
-KGpxIC1yICIuW10gfCAuW1wicG9ydHM6JHJvb3RcIl0gfCAkcG9ydF9zb3J0IHwgLlsxXS5wb3J0
-IiA8PDwgJGpzb24pDQo+IC0oKGJyaWRnZXMgPiAyKSkgJiYgYnJpZGdlWzJdPSQoanEgLXIgIi5b
-XSB8IC5bXCJwb3J0czokcm9vdFwiXSB8ICRwb3J0X3NvcnQgfCAuWzJdLnBvcnQiIDw8PCAkanNv
-bikNCj4gK2JyaWRnZVswXT0kKGpxIC1yIC0tYXJnIGtleSAiJHJvb3QiICcuW10gfCBzZWxlY3Qo
-aGFzKCJwb3J0czoiICsgJGtleSkpIHwgLlsicG9ydHM6IiArICRrZXldIHwgbWFwKHtmdWxsOiAu
-LCBsZW5ndGg6ICguWyJwb3J0czoiICsgLnBvcnRdIHwgbGVuZ3RoKX0pIHwgc29ydF9ieSgtLmxl
-bmd0aCkgfCBtYXAoLmZ1bGwpIHwgLlswXS5wb3J0JyA8PDwgIiRqc29uIikNCj4gKw0KPiArYnJp
-ZGdlWzFdPSQoanEgLXIgLS1hcmcga2V5ICIkcm9vdCIgJy5bXSB8IHNlbGVjdChoYXMoInBvcnRz
-OiIgKyAka2V5KSkgfCAuWyJwb3J0czoiICsgJGtleV0gfCBtYXAoe2Z1bGw6IC4sIGxlbmd0aDog
-KC5bInBvcnRzOiIgKyAucG9ydF0gfCBsZW5ndGgpfSkgfCBzb3J0X2J5KC0ubGVuZ3RoKSB8IG1h
-cCguZnVsbCkgfCAuWzFdLnBvcnQnIDw8PCAiJGpzb24iKQ0KPiArDQo+ICsoKGJyaWRnZXMgPiAy
-KSkgJiYgYnJpZGdlWzJdPSQoanEgLXIgLS1hcmcga2V5ICIkcm9vdCIgJy5bXSB8IHNlbGVjdCho
-YXMoInBvcnRzOiIgKyAka2V5KSkgfCAuWyJwb3J0czoiICsgJGtleV0gfCBtYXAoe2Z1bGw6IC4s
-IGxlbmd0aDogKC5bInBvcnRzOiIgKyAucG9ydF0gfCBsZW5ndGgpfSkgfCBzb3J0X2J5KC0ubGVu
-Z3RoKSB8IG1hcCguZnVsbCkgfCAuWzJdLnBvcnQnIDw8PCAiJGpzb24iKQ0KPiDCoA0KDQpUaGUg
-anEgZmlsdGVyaW5nIGxvb2tzIHJlYXNvbmFibGUsIGJ1dCB0aGUgbG9uZyBsaW5lcyBhcmUgZGVm
-aW5pdGVseSBhDQpiaXQgdW5zaWdodGx5LCBub3QgdG8gbWVudGlvbiBoYXJkIHRvIGZvbGxvdy9l
-ZGl0IGluIHRoZSBmdXR1cmUuDQoNCkhvdyBhYm91dCB0aGlzIGluY3JlbWVudGFsIHBhdGNoIChJ
-dCBwYXNzZXMgdGhlIHRlc3QgZm9yIG1lIHdpdGggdGhlDQpkZWxheWVkIHBvcnQgZW51bWVyYXRp
-b24gc2VyaWVzKToNCg0KLS0+OC0tDQoNCkZyb20gOTk2NjEwZmFjMGE3NTFhY2M1ZDY4YTU2ZmY3
-ZDY3NDYzNDhhODBjNCBNb24gU2VwIDE3IDAwOjAwOjAwIDIwMDENCkZyb206IFZpc2hhbCBWZXJt
-YSA8dmlzaGFsLmwudmVybWFAaW50ZWwuY29tPg0KRGF0ZTogVGh1LCA4IE1heSAyMDI1IDAwOjQ2
-OjI3IC0wNjAwDQpTdWJqZWN0OiBbbmRjdGwgUEFUQ0hdIHRlc3Q6IENsZWFudXAgbG9uZyBsaW5l
-cyBpbiBjeGwtdG9wb2xvZ3kuc2gNCg0KU2lnbmVkLW9mZi1ieTogVmlzaGFsIFZlcm1hIDx2aXNo
-YWwubC52ZXJtYUBpbnRlbC5jb20+DQotLS0NCiB0ZXN0L2N4bC10b3BvbG9neS5zaCB8IDI3ICsr
-KysrKysrKysrKysrKysrKysrKysrKy0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCAyNCBpbnNlcnRpb25z
-KCspLCAzIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvdGVzdC9jeGwtdG9wb2xvZ3kuc2gg
-Yi90ZXN0L2N4bC10b3BvbG9neS5zaA0KaW5kZXggZjRiYTczNzQuLmI2OGNiOGIyIDEwMDY0NA0K
-LS0tIGEvdGVzdC9jeGwtdG9wb2xvZ3kuc2gNCisrKyBiL3Rlc3QvY3hsLXRvcG9sb2d5LnNoDQpA
-QCAtNDIsMTEgKzQyLDMyIEBAIGNvdW50PSQoanEgIi5bXSB8IC5bXCJwb3J0czokcm9vdFwiXSB8
-IGxlbmd0aCIgPDw8ICRqc29uKQ0KICgoY291bnQgPT0gMikpIHx8ICgoY291bnQgPT0gMykpIHx8
-IGVyciAiJExJTkVOTyINCiBicmlkZ2VzPSRjb3VudA0KIA0KLWJyaWRnZVswXT0kKGpxIC1yIC0t
-YXJnIGtleSAiJHJvb3QiICcuW10gfCBzZWxlY3QoaGFzKCJwb3J0czoiICsgJGtleSkpIHwgLlsi
-cG9ydHM6IiArICRrZXldIHwgbWFwKHtmdWxsOiAuLCBsZW5ndGg6ICguWyJwb3J0czoiICsgLnBv
-cnRdIHwgbGVuZ3RoKX0pIHwgc29ydF9ieSgtLmxlbmd0aCkgfCBtYXAoLmZ1bGwpIHwgLlswXS5w
-b3J0JyA8PDwgIiRqc29uIikNCiticmlkZ2VfZmlsdGVyKCkNCit7DQorCWxvY2FsIGJyX251bT0i
-JDEiDQogDQotYnJpZGdlWzFdPSQoanEgLXIgLS1hcmcga2V5ICIkcm9vdCIgJy5bXSB8IHNlbGVj
-dChoYXMoInBvcnRzOiIgKyAka2V5KSkgfCAuWyJwb3J0czoiICsgJGtleV0gfCBtYXAoe2Z1bGw6
-IC4sIGxlbmd0aDogKC5bInBvcnRzOiIgKyAucG9ydF0gfCBsZW5ndGgpfSkgfCBzb3J0X2J5KC0u
-bGVuZ3RoKSB8IG1hcCguZnVsbCkgfCAuWzFdLnBvcnQnIDw8PCAiJGpzb24iKQ0KKwlqcSAtciBc
-DQorCQktLWFyZyBrZXkgIiRyb290IiBcDQorCQktLWFyZ2pzb24gYnJfbnVtICIkYnJfbnVtIiBc
-DQorCQknLltdIHwNCisJCSAgc2VsZWN0KGhhcygicG9ydHM6IiArICRrZXkpKSB8DQorCQkgIC5b
-InBvcnRzOiIgKyAka2V5XSB8DQorCQkgIG1hcCgNCisJCSAgICB7DQorCQkgICAgICBmdWxsOiAu
-LA0KKwkJICAgICAgbGVuZ3RoOiAoLlsicG9ydHM6IiArIC5wb3J0XSB8IGxlbmd0aCkNCisJCSAg
-ICB9DQorCQkgICkgfA0KKwkJICBzb3J0X2J5KC0ubGVuZ3RoKSB8DQorCQkgIG1hcCguZnVsbCkg
-fA0KKwkJICAuWyRicl9udW1dLnBvcnQnDQorfQ0KIA0KLSgoYnJpZGdlcyA+IDIpKSAmJiBicmlk
-Z2VbMl09JChqcSAtciAtLWFyZyBrZXkgIiRyb290IiAnLltdIHwgc2VsZWN0KGhhcygicG9ydHM6
-IiArICRrZXkpKSB8IC5bInBvcnRzOiIgKyAka2V5XSB8IG1hcCh7ZnVsbDogLiwgbGVuZ3RoOiAo
-LlsicG9ydHM6IiArIC5wb3J0XSB8IGxlbmd0aCl9KSB8IHNvcnRfYnkoLS5sZW5ndGgpIHwgbWFw
-KC5mdWxsKSB8IC5bMl0ucG9ydCcgPDw8ICIkanNvbiIpDQorIyAkY291bnQgaGFzIGFscmVhZHkg
-YmVlbiBzYW5pdGl6ZWQgZm9yIGFjY2VwdGFibGUgdmFsdWVzLCBzbw0KKyMganVzdCBjb2xsZWN0
-ICRjb3VudCBicmlkZ2VzIGhlcmUuDQorZm9yIGkgaW4gJChzZXEgMCAkKChjb3VudCAtIDEpKSk7
-IGRvDQorCWJyaWRnZVskaV09IiQoYnJpZGdlX2ZpbHRlciAiJGkiIDw8PCAiJGpzb24iKSINCitk
-b25lDQogDQogIyB2YWxpZGF0ZSByb290IHBvcnRzIHBlciBob3N0IGJyaWRnZQ0KIGNoZWNrX2hv
-c3RfYnJpZGdlKCkNCg0KYmFzZS1jb21taXQ6IDkyZDUyMDMwNzc1NTNiZmM5ZjdiZjFjMjE5NTYz
-ZGIwZmMyOGU2NjANCnByZXJlcXVpc2l0ZS1wYXRjaC1pZDogZjE3MjYxNjkzZTNhYzM4ODgwYjc3
-MDFhOTRhNDY5YmI1MTNiNDA3OA0KLS0gDQoyLjQ5LjANCg==
+Hi Dan,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on b4432656b36e5cc1d50a1f2dc15357543add530e]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Dan-Williams/cleanup-Introduce-DEFINE_ACQUIRE-a-CLASS-for-conditional-locking/20250507-152728
+base:   b4432656b36e5cc1d50a1f2dc15357543add530e
+patch link:    https://lore.kernel.org/r/20250507072145.3614298-7-dan.j.williams%40intel.com
+patch subject: [PATCH 6/7] cxl/region: Introduce CLASS(cxl_decoder_detach...) consolidate multiple paths
+config: um-allmodconfig (https://download.01.org/0day-ci/archive/20250508/202505081548.9HldF62Y-lkp@intel.com/config)
+compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250508/202505081548.9HldF62Y-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505081548.9HldF62Y-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from drivers/cxl/core/port.c:9:
+   In file included from include/linux/pci.h:38:
+   In file included from include/linux/interrupt.h:11:
+   In file included from include/linux/hardirq.h:11:
+   In file included from arch/um/include/asm/hardirq.h:5:
+   In file included from include/asm-generic/hardirq.h:17:
+   In file included from include/linux/irq.h:20:
+   In file included from include/linux/io.h:12:
+   In file included from arch/um/include/asm/io.h:24:
+   include/asm-generic/io.h:549:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     549 |         val = __raw_readb(PCI_IOBASE + addr);
+         |                           ~~~~~~~~~~ ^
+   include/asm-generic/io.h:567:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     567 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
+         |                                                         ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
+      37 | #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
+         |                                                   ^
+   In file included from drivers/cxl/core/port.c:9:
+   In file included from include/linux/pci.h:38:
+   In file included from include/linux/interrupt.h:11:
+   In file included from include/linux/hardirq.h:11:
+   In file included from arch/um/include/asm/hardirq.h:5:
+   In file included from include/asm-generic/hardirq.h:17:
+   In file included from include/linux/irq.h:20:
+   In file included from include/linux/io.h:12:
+   In file included from arch/um/include/asm/io.h:24:
+   include/asm-generic/io.h:585:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     585 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
+         |                                                         ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
+      35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
+         |                                                   ^
+   In file included from drivers/cxl/core/port.c:9:
+   In file included from include/linux/pci.h:38:
+   In file included from include/linux/interrupt.h:11:
+   In file included from include/linux/hardirq.h:11:
+   In file included from arch/um/include/asm/hardirq.h:5:
+   In file included from include/asm-generic/hardirq.h:17:
+   In file included from include/linux/irq.h:20:
+   In file included from include/linux/io.h:12:
+   In file included from arch/um/include/asm/io.h:24:
+   include/asm-generic/io.h:601:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     601 |         __raw_writeb(value, PCI_IOBASE + addr);
+         |                             ~~~~~~~~~~ ^
+   include/asm-generic/io.h:616:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     616 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
+         |                                                       ~~~~~~~~~~ ^
+   include/asm-generic/io.h:631:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     631 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
+         |                                                       ~~~~~~~~~~ ^
+   include/asm-generic/io.h:724:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     724 |         readsb(PCI_IOBASE + addr, buffer, count);
+         |                ~~~~~~~~~~ ^
+   include/asm-generic/io.h:737:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     737 |         readsw(PCI_IOBASE + addr, buffer, count);
+         |                ~~~~~~~~~~ ^
+   include/asm-generic/io.h:750:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     750 |         readsl(PCI_IOBASE + addr, buffer, count);
+         |                ~~~~~~~~~~ ^
+   include/asm-generic/io.h:764:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     764 |         writesb(PCI_IOBASE + addr, buffer, count);
+         |                 ~~~~~~~~~~ ^
+   include/asm-generic/io.h:778:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     778 |         writesw(PCI_IOBASE + addr, buffer, count);
+         |                 ~~~~~~~~~~ ^
+   include/asm-generic/io.h:792:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     792 |         writesl(PCI_IOBASE + addr, buffer, count);
+         |                 ~~~~~~~~~~ ^
+   In file included from drivers/cxl/core/port.c:17:
+>> drivers/cxl/core/core.h:64:1: warning: non-void function does not return a value [-Wreturn-type]
+      64 | }
+         | ^
+   13 warnings generated.
+
+
+vim +64 drivers/cxl/core/core.h
+
+79ed8367834ee8 Dan Williams     2025-05-07  28  
+79ed8367834ee8 Dan Williams     2025-05-07  29  struct cxl_region *cxl_decoder_detach(struct cxl_region *cxlr,
+79ed8367834ee8 Dan Williams     2025-05-07  30  				      struct cxl_endpoint_decoder *cxled,
+79ed8367834ee8 Dan Williams     2025-05-07  31  				      int pos, enum cxl_detach_mode mode);
+79ed8367834ee8 Dan Williams     2025-05-07  32  
+779dd20cfb56c5 Ben Widawsky     2021-06-08  33  #define CXL_REGION_ATTR(x) (&dev_attr_##x.attr)
+8d48817df6ac20 Dan Williams     2021-06-15  34  #define CXL_REGION_TYPE(x) (&cxl_region_type)
+779dd20cfb56c5 Ben Widawsky     2021-06-08  35  #define SET_CXL_REGION_ATTR(x) (&dev_attr_##x.attr),
+04ad63f086d1a9 Dan Williams     2022-01-11  36  #define CXL_PMEM_REGION_TYPE(x) (&cxl_pmem_region_type)
+09d09e04d2fcf8 Dan Williams     2023-02-10  37  #define CXL_DAX_REGION_TYPE(x) (&cxl_dax_region_type)
+8d48817df6ac20 Dan Williams     2021-06-15  38  int cxl_region_init(void);
+8d48817df6ac20 Dan Williams     2021-06-15  39  void cxl_region_exit(void);
+f0832a58639691 Alison Schofield 2023-04-18  40  int cxl_get_poison_by_endpoint(struct cxl_port *port);
+b98d042698a325 Alison Schofield 2024-04-30  41  struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa);
+9aa5f6235e16ac Alison Schofield 2024-07-02  42  u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+86954ff5032d9d Alison Schofield 2024-04-30  43  		   u64 dpa);
+b98d042698a325 Alison Schofield 2024-04-30  44  
+779dd20cfb56c5 Ben Widawsky     2021-06-08  45  #else
+9aa5f6235e16ac Alison Schofield 2024-07-02  46  static inline u64 cxl_dpa_to_hpa(struct cxl_region *cxlr,
+9aa5f6235e16ac Alison Schofield 2024-07-02  47  				 const struct cxl_memdev *cxlmd, u64 dpa)
+86954ff5032d9d Alison Schofield 2024-04-30  48  {
+86954ff5032d9d Alison Schofield 2024-04-30  49  	return ULLONG_MAX;
+86954ff5032d9d Alison Schofield 2024-04-30  50  }
+b98d042698a325 Alison Schofield 2024-04-30  51  static inline
+b98d042698a325 Alison Schofield 2024-04-30  52  struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa)
+b98d042698a325 Alison Schofield 2024-04-30  53  {
+b98d042698a325 Alison Schofield 2024-04-30  54  	return NULL;
+b98d042698a325 Alison Schofield 2024-04-30  55  }
+f0832a58639691 Alison Schofield 2023-04-18  56  static inline int cxl_get_poison_by_endpoint(struct cxl_port *port)
+f0832a58639691 Alison Schofield 2023-04-18  57  {
+f0832a58639691 Alison Schofield 2023-04-18  58  	return 0;
+f0832a58639691 Alison Schofield 2023-04-18  59  }
+79ed8367834ee8 Dan Williams     2025-05-07  60  static inline struct cxl_region *
+79ed8367834ee8 Dan Williams     2025-05-07  61  cxl_decoder_detach(struct cxl_region *cxlr, struct cxl_endpoint_decoder *cxled,
+79ed8367834ee8 Dan Williams     2025-05-07  62  		   int pos, enum cxl_detach_mode mode)
+b9686e8c8e39d4 Dan Williams     2022-06-04  63  {
+b9686e8c8e39d4 Dan Williams     2022-06-04 @64  }
+8d48817df6ac20 Dan Williams     2021-06-15  65  static inline int cxl_region_init(void)
+8d48817df6ac20 Dan Williams     2021-06-15  66  {
+8d48817df6ac20 Dan Williams     2021-06-15  67  	return 0;
+8d48817df6ac20 Dan Williams     2021-06-15  68  }
+8d48817df6ac20 Dan Williams     2021-06-15  69  static inline void cxl_region_exit(void)
+8d48817df6ac20 Dan Williams     2021-06-15  70  {
+8d48817df6ac20 Dan Williams     2021-06-15  71  }
+779dd20cfb56c5 Ben Widawsky     2021-06-08  72  #define CXL_REGION_ATTR(x) NULL
+8d48817df6ac20 Dan Williams     2021-06-15  73  #define CXL_REGION_TYPE(x) NULL
+779dd20cfb56c5 Ben Widawsky     2021-06-08  74  #define SET_CXL_REGION_ATTR(x)
+04ad63f086d1a9 Dan Williams     2022-01-11  75  #define CXL_PMEM_REGION_TYPE(x) NULL
+09d09e04d2fcf8 Dan Williams     2023-02-10  76  #define CXL_DAX_REGION_TYPE(x) NULL
+779dd20cfb56c5 Ben Widawsky     2021-06-08  77  #endif
+779dd20cfb56c5 Ben Widawsky     2021-06-08  78  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
