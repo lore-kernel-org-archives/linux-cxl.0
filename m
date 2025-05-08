@@ -1,307 +1,285 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2047.outbound.protection.outlook.com [40.107.236.47])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D1222154A;
-	Thu,  8 May 2025 13:13:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746710002; cv=fail; b=lHeeSqNuRJCp+OLv3XTGMA9JDHNSAVSRTG+9SIa50cNZ0mndCuMkDqer837d151KtKuXOphLOGHlW8TOUP3SSrqDcR7+LdfCar9nLmzC+JiZj+PKybZgllY2Xp7aLhqoBHL7t9SvzlrSBdEbOSAmamIKsmZKJztaEl8jmzUBxtU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746710002; c=relaxed/simple;
-	bh=TG+MpcDO6jwx8iGDQUjLSiWC7bkw1/jT8gIlf7BbBTU=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=bHy2BQ2ZSkaEQVfwA0k98Iuo0Mh9mpATw3+1EVnmxroQhaubbZ0ZInWqghMUEN6C1v3QLvaLd6Qc9OjRLFzS7X8levHFwiB3OUny8eOhO04XyYtzkggQTh4jLtVKxTnL8xdF6gy0SXJ17Tu+NHbw1CgjMA3eM2NRalQLV/gs67g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=b/TgEOsp; arc=fail smtp.client-ip=40.107.236.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="b/TgEOsp"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=g3S/zBlKXLVU0vR/bLIoYu3ihXwHk+RAB6Cmmx8kY8mbDUEIqdsWqkOgi9JpyDhmirSb6AJS8g+aPwhZ5XL8mlfjnR4MXgMR+KEwsMhGmuaqnH6f4HqogHulk2AZSWhuPTm6UPXzClogVHUi6BBgEud4tSAdaJySNc2vFOWQ/DLGaeyXCbgahds6jj5Xv+5uSyaoVHh7BDK1S2J+lI5qETy4Cy5Q1wiM6p3E91CO0I6cqkLlnmgCMPu7ZsLblhhB9LV7S4pTwiQsDJjrdaiGVtk99rBaiR9v/nhmIWK9ZZCqTHMbvyQhNTcBvQPrtMAvtGHQUSySDIPPcRmboyMbLw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lcfzDqc7thFU2oG0eGPDNf7oq5SGhRFkofbfvu6hfBc=;
- b=mIBFrMvkb0PW3Yk8h7IUaCgzeSRogk25xGbE+uBPVpgg4C6EJB9O+KCC9Gb4PdkqdN1qMoq8Bv4QLbZsK7le5bbN+WgmcZxGyWa24ch5r8Y5UTquMJgyaKNJ3Pi7BDAy4tk+tWuyNk9rsiRyRjq3bblHVwqnH5dp16j9gV3w9EXaLADwVAiMF6zkjRhuNgj6Rjxog6BT0LGrxbhH2THfvNHhM8eajNAx8Dyfrxk0ipJg0UkhNlRtAGy5AXFZ+IKXkQqo99SSa4MxQ01i7+sXBLyjYuTmS50TzIE94nXHZFjTfkOZKsmmJcRMve1FIIUqy96XDfNLeUTfgZNEih88Zg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lcfzDqc7thFU2oG0eGPDNf7oq5SGhRFkofbfvu6hfBc=;
- b=b/TgEOspxLfS0g+PhWwUd6NQZnZmWvA8TaL2EkKpR4/zdgr5Inrp1Lsgu5bD14kM3VcWI22YTqzOup34L51ZMV+cUj+wv3y1i2iHRBtClu79Jex6a8theBAlvjCnl5EzdTlcz1Ajdu2dhW0RkgAHS6p4l2peaGc+7TFsQPgYeDY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
- by IA1PR12MB7541.namprd12.prod.outlook.com (2603:10b6:208:42f::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Thu, 8 May
- 2025 13:13:12 +0000
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79%4]) with mapi id 15.20.8722.021; Thu, 8 May 2025
- 13:13:12 +0000
-Message-ID: <3471f4dc-66f9-40b6-8934-b7d6e791e728@amd.com>
-Date: Thu, 8 May 2025 14:13:07 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 04/22] cxl: move register/capability check to driver
-Content-Language: en-US
-To: Alison Schofield <alison.schofield@intel.com>,
- alejandro.lucero-palau@amd.com
-Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
- dan.j.williams@intel.com, edward.cree@amd.com, davem@davemloft.net,
- kuba@kernel.org, pabeni@redhat.com, edumazet@google.com,
- dave.jiang@intel.com, Jonathan Cameron <Jonathan.Cameron@huawei.com>
-References: <20250417212926.1343268-1-alejandro.lucero-palau@amd.com>
- <20250417212926.1343268-5-alejandro.lucero-palau@amd.com>
- <aBwA_CI5-eNll6Iz@aschofie-mobl2.lan>
-From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <aBwA_CI5-eNll6Iz@aschofie-mobl2.lan>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P123CA0511.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:272::12) To DM6PR12MB4202.namprd12.prod.outlook.com
- (2603:10b6:5:219::22)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010D822A80C
+	for <linux-cxl@vger.kernel.org>; Thu,  8 May 2025 13:29:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746710970; cv=none; b=g1xVM3zszh8/3TcOhZXC1CWOgL19jUWdlV2VGpw6NyhL8hTnOCv8o8A4sorI29cegugHjtwm6ta4rGmUo3LvnCmlj5ryfb/3SXG7QK+W1WU6g0K4/fgWkmcywMTUiO7e1DmvjReUxswiEr1S7OykRUGEWGAU7XPO54LGGZYWgJ4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746710970; c=relaxed/simple;
+	bh=rX796bG2TzxLADgdKqJGBLB/cjU2nQCU0GKpvjtpYOI=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=srvicsvhzIN9MGDojE82dqyXvr/M++YY5xZNqmg5n2+768xCOdMrueFIqJRrCkKP+nhmAlMHDU+8Mikb6Tn5bOpdL777JIvHAcOOFBIbZ1qRxlW+wexU81uB9/tEYnbTOS6CXqh7tuq/mRZDj1QIjhvp8Y8cays2FmdyeKbDtlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZtXtC4hQSz6M4Ys;
+	Thu,  8 May 2025 21:24:51 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3BCE51402A5;
+	Thu,  8 May 2025 21:29:24 +0800 (CST)
+Received: from localhost (10.122.19.247) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 8 May
+ 2025 15:29:23 +0200
+Date: Thu, 8 May 2025 14:29:18 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Richard Henderson <richard.henderson@linaro.org>
+CC: Alistair Francis <alistair23@gmail.com>, <qemu-devel@nongnu.org>,
+	<linuxarm@huawei.com>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH 066/147] include/exec: Move TLB_MMIO, TLB_DISCARD_WRITE
+ to slow flags
+Message-ID: <20250508142918.0000248d@huawei.com>
+In-Reply-To: <04875ca2-781b-4000-b74c-fc338bc6ec4d@linaro.org>
+References: <20250422192819.302784-1-richard.henderson@linaro.org>
+	<20250422192819.302784-67-richard.henderson@linaro.org>
+	<20250425183524.00000b28@huawei.com>
+	<CAKmqyKMN5bo12Oh8hrwdiimqJSzHMZwB7JjAquBrEK3PTbtGyA@mail.gmail.com>
+	<04875ca2-781b-4000-b74c-fc338bc6ec4d@linaro.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|IA1PR12MB7541:EE_
-X-MS-Office365-Filtering-Correlation-Id: d2519c10-e907-4fac-f8f5-08dd8e3215ab
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VkUxL2g0RGxaZHFPRVVlOEM4SWpodzUyamI2U1Y1U1JnVDczU0xNQllJQTN1?=
- =?utf-8?B?OS9WL1hJVVg2L2JQVjBsQllsVjRPRWp5amxRNTdVUy8xM3hyTEtkYkdWekJq?=
- =?utf-8?B?MnBpbmQzTmlNbUptNjlaTlJsa2hxVE1FeklOc3BLUjR4Q0dUWnoyVjBLNjVG?=
- =?utf-8?B?UU91clhHNWh6bXpYbzdNcnZqYXFaVG1qejRMVitpNitKdHJibGduYml1T2l5?=
- =?utf-8?B?ei81YythczVQUlN0Zmt4RnpBb2M3NmdYNGNOTUlRM0dsTzd1a0xnWTBNbHVH?=
- =?utf-8?B?bzB3OWMzM3hVb1RSLytXeGtsS0FxeXRsN2Z1WTNMVVhUOWlUblkyNnRML3Nm?=
- =?utf-8?B?WTZsUUhkS2VQYzg2N0taMWpmcFpRNHJxZzlDTlBCVzNnZWtuczh1M0ROVUNa?=
- =?utf-8?B?blZGMVJxVVRSM0kzQkxYR1lMNHhic2szVWNGQzhVU0Q0QW9DVHZwTTZvSHFG?=
- =?utf-8?B?TEYrRHBScXBCQU5KTDlVNmU2Z1hCMWQySzVNdkhIRnlVb05pdmhhSExBRVlI?=
- =?utf-8?B?Ry9IRSticGZsQlFjWTBNdXkzTm90RUQzSDRnRVJJa3hzSDB4K1RQbzFWRXpV?=
- =?utf-8?B?RXo4Vm5yUEhNTThxN2Q2OGdXMk94VEIxTDZZdG1ueEZEYVFOUHFzaXF1Mk94?=
- =?utf-8?B?dnN4aG9pYjFLTlkzdVZuM3BOY2p6TVpzQnJyRGMxcmx3bW0rTU5PUmVGcU1T?=
- =?utf-8?B?eHVER0ZmZ3pJMGQ0Q3JIdFRFVUV5WVppSDdNR0JQRnlva04rMnMzamVPWVg4?=
- =?utf-8?B?MDhibEd0U2dqVllSWnBtVDc4VnZuOG9tQWVCTXp1SkUwSXQwMXYvbmxFc0Ju?=
- =?utf-8?B?TW8rSExWZTJjVlo1SFpQVjc5ZTNVR0djb1BVY0hlS3RXbXd2cFg1UndDTHhL?=
- =?utf-8?B?MFlMZDFCZ0JwTFVxOWRuVFpabWVBaGJieG1ORE8xMm96ZEtVVEFOb2RwcTc1?=
- =?utf-8?B?a2ltdVJWaVh2SWdEbm1IY01FbTMwckRYd2ZFMU10SURidStvK2hwdVdPZkhH?=
- =?utf-8?B?dGE0TU92RHU0REtBbVdac0Q4SnpZMmZuQmgvU2pnR044RW5selFLZGZMclcy?=
- =?utf-8?B?ZFhLMTg3UmJmTEZsdUtRNWduMy92cGVXaVRmZWUrbWluUnN4ZjJGRlBsUk12?=
- =?utf-8?B?Qi92bFBkaTI2Znl5c2dodHdUME5YNHFyZmtLZUlOenVQcWJ3NTA5dExQd056?=
- =?utf-8?B?TVRNZ2ZjSDhiU2lGOTg1eEgwbzdwemtWRENudjNSVFhJUm56bHFuaUxIN29E?=
- =?utf-8?B?eGRDbFlkSjRseDNaamM0Mm9JQjlOeXc3UG4yc2kxQ1pJZEx1T1dNdzcyekZT?=
- =?utf-8?B?Ym5kb0RROEVrSjhrckN5UnlnL0FZMWVXbVphdk5Jbm8rbk9BTUg3bFI4dDRT?=
- =?utf-8?B?K0VKY3FiaUp3VVM4eUlGSnRFOE1QSHhQVnhCZlV6RkNiSGZjeGYwU3JCZ21T?=
- =?utf-8?B?VGZDLzNnVFozaXB4NjE0MzhsRDQzMEFGbXpPV2drbGJ4SW5FRUZKdU5lcWcr?=
- =?utf-8?B?RTdQVUR4b0dzOTRocmZ4MTNmb3JwUnlCNDlnK0M1bFFrcDdUL3VLemZDcE93?=
- =?utf-8?B?Q3BmOEsrK3NUaC9iUm5TOVNjYUR2MFBIMjFyUCtPSUI0WUhZQ1RLTzRsNFJh?=
- =?utf-8?B?ZUhvOVRNb0p0V0VNMGFBMEg4V1FqaXdpd3BBTnB0bkJYbTlNQ0Z6WXRCWkt2?=
- =?utf-8?B?bGpxdG03OG1uM3pocnJSNW9HSWhBdm1NcFhGL21ta3BuSWhmVGJBRXJVMVdG?=
- =?utf-8?B?WHQvNHJ2RVhkT3o2SjllMGsweDlLUlJQYTF3T1dDNjhLODFWLzVDL3ZFeStL?=
- =?utf-8?B?d283TS8xdFk5N1NMaWkyc3ZWaUJnNm5BcWtWckdYQUFJVE9McmUrd21Pci9M?=
- =?utf-8?B?NFQvYVRSejhoT2lpOEc5TjBWLzB3SWtqU0JoZE51eVZNOUNXcWZMNHZhTUFB?=
- =?utf-8?Q?s0fKbMVzD60=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?emhrNTFRZENnTlRZYmpick9XR3BLeUs5bDluNlh4b0FabkszSGRWYUhXWmtM?=
- =?utf-8?B?ZVFSbWF2Nmp5Z1ZDeXEzSjhaNVBSTlpjU3hNWGk5SFd0M2FaVnlLdzB3aWN2?=
- =?utf-8?B?S3VLMjFNOU10NVU3WXY5VEVEd2FxRCttZk85c0xKb1cxaGZ1ME55QzNPTit6?=
- =?utf-8?B?NmhxakhKQ0w0MjdOZWc4WDBGaXM2Umo1Sm1lVWtCOWdkbE9YVHljK2QySncy?=
- =?utf-8?B?V3dHL3l3WFNXWUVHZEpxSE5CZUxVZTM1cWFDY25FeEJWTW5na0t6S3lYWU55?=
- =?utf-8?B?b2U3MXNueTdMV0NiNGcwOHB4WW9ZNGYvUW9RRHdiQ2hCZFdJcVA2c1hUamtR?=
- =?utf-8?B?K2xCcFZvZzRDYVZndG1CZ3d3Z0k4TTZIbVRMMk5oOHBBZGRaWGNIYVFUbGZF?=
- =?utf-8?B?SUt6bFlOWUtKb2QvNWlTbU9OTTNuMktWUTFCUVR1RWRPdm5hdisybnY3VHZ0?=
- =?utf-8?B?KzJNM3BaSmNiTVBWNm9pM2owN0dSWUdSZWdid3VVeFAxVXQveXFseVpOc0do?=
- =?utf-8?B?OGNKNmJ2elpuMkM2UmpqdUZ1M1piVC8rNjVxYUN2Y2ZzcCt1UTN6MGxqcmU3?=
- =?utf-8?B?WE9JU3F4SnVlNGVvcktFSVpxdHUvNW0vNEVndlM4eGQ2bmhDelJ4b2UySGdu?=
- =?utf-8?B?eThxWWJtcVJTUnd0ZlNSL2JJOC9pdlMyRkcvVlZUMkVONkg2SkMrN21seEll?=
- =?utf-8?B?RDBtZGNudUNwTTZwcmswSEZQNlpMM3hYZmcxTTFteUZsQTNQYXk1NVJnbklQ?=
- =?utf-8?B?U0pYMURJMk5uS0FMV0tMMTlvU0tFdGdMS3lVU1N2eTJJa3ZSdGFYV0wxUUk4?=
- =?utf-8?B?SUNHOWwra0w5WUFVNU12Y082Y3R6RlZNR1AxL2x2R1hIV2ltWHJvNnljU3Rr?=
- =?utf-8?B?MEtuV2ZhSWRKOHdURmhBa3JpcnV0UzNhY245MXJId0pabmowdzNsa3VOc0JV?=
- =?utf-8?B?VEVlWmJsR2pOWGlFQjd5WTZia3RCaXMxSGNLcmJLZmdWNmRldkVacW1SL2M2?=
- =?utf-8?B?WUpzdTBUdjNPaFFaa2RUQVlndHhGU1puRHdwK0EyOVc5MXVWMExvMUQrTG9H?=
- =?utf-8?B?MUhSZEdJdGVHYk01MFRwdSs4VzVMYUJUcXE5VXVseGRycTUwOUNBbmhtQXpu?=
- =?utf-8?B?dVhYM0JXdC81cnNBd0R2NWJRT0FJQUdzYnhJVUJLaXNIY0ZLTTFGeldrYTFI?=
- =?utf-8?B?cEtZUE9vTjhKUVR0RzBLVm5hV3BldTNQNzVhRFBkNFlEYVJZemxlQVFTVlNN?=
- =?utf-8?B?bjJGVmRSMXR3dWJkMkZqVThESW40T0JsellIVWtLU01VTnlEQlM4WnZvNVpy?=
- =?utf-8?B?aWZ2T0FpNDFVbWZDWmZ1WEFSVzNUNitLblMrVEc4eU1ZRFpmLzVpTEQyRmtF?=
- =?utf-8?B?SHRuTVFPSG4rc1VheFlTbFgwYmlXNFluVThUc3RqYkVFaDBPUU1KQVJRdjhw?=
- =?utf-8?B?cnJZSGoydFNVcnc4TWNFTmJ0K2xpNWVEQjhaYlJOQzFGcHh5U2pGQXArck1K?=
- =?utf-8?B?Z21Iejg1MG1KUmYvemF6SUFNVW5YUE94U3E1NnFTSXdvSmdQT0IweUUvdVBP?=
- =?utf-8?B?K09FYXJQWXBYUVZEbG1qN2VBak1mMFVpb3BTaTFvZDg2MU5XbXpzdnZqb0Fu?=
- =?utf-8?B?SjFxTnNyeTU2UkJicmMyVE8raVJLTmowaUhGdXVEQjVDWXY0TmRvL0QzSE9a?=
- =?utf-8?B?eHhLc1N4U1V1cW9vNnc0dzY0cWp6aUhSdk9jdmxiZ3l3TkgxY0twdXZJamF0?=
- =?utf-8?B?OEthSkZVRnc2NUtET2tnMWYyaE1QTmgwWXI3ajV1cUlpYXNpYXhCaE9UZkdj?=
- =?utf-8?B?eGdIVGovUWhxY2ZwUVN4a010RUgzVmlHL1piTi93ZU1vak5vSDBiZ1RXVDRt?=
- =?utf-8?B?bGZKRktJTWx2dVVIL09mSHNsanVDYXFVQVkrV3pYYm9wSEQrUGFLdjBMbFhR?=
- =?utf-8?B?YWUwdENhSkdqVWtzU2ZlKzVLTlJaNWtUSWxWeVI2TVY3UWZOTFFOeVNwemJY?=
- =?utf-8?B?Mzd3V3FXQy9YL3VlQjVJQTdXNXdLOTVWN0dFUGZDUWpVS1NnRHBmbGhPYmFn?=
- =?utf-8?B?dUZ4ZUY4ZnRWNnlFdDFSRVpId3lZeGpFTzdtUlVHRGJCNzFmWlRLZmFLUlJn?=
- =?utf-8?Q?LnU6ZXRb/46gYvO0tDqqyZnKS?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d2519c10-e907-4fac-f8f5-08dd8e3215ab
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2025 13:13:12.4584
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MSTNoeigdTvbDlKFl+qtgEW63P8Yr+dUOX8gGtfbcHdx9xMT9juzPWad4I9351gxYEksJquRaGv5UdMh3rmOhA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7541
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ frapeml500008.china.huawei.com (7.182.85.71)
+
+On Tue, 29 Apr 2025 19:43:05 -0700
+Richard Henderson <richard.henderson@linaro.org> wrote:
+
+> On 4/29/25 14:35, Alistair Francis wrote:
+> > On Sat, Apr 26, 2025 at 3:36=E2=80=AFAM Jonathan Cameron via
+> > <qemu-devel@nongnu.org> wrote: =20
+> >>
+> >> On Tue, 22 Apr 2025 12:26:55 -0700
+> >> Richard Henderson <richard.henderson@linaro.org> wrote:
+> >> =20
+> >>> Recover two bits from the inline flags. =20
+> >>
+> >>
+> >> Hi Richard,
+> >>
+> >> Early days but something (I'm fairly sure in this patch) is tripping u=
+p my favourite
+> >> TCG corner case of running code out of MMIO memory (interleaved CXL me=
+mory).
+> >>
+> >> Only seeing it on arm64 tests so far which isn't upstream yet..
+> >> (guess what I was getting ready to post today)
+> >>
+> >> Back trace is:
+> >>
+> >> #0  0x0000555555fd4296 in cpu_atomic_fetch_andq_le_mmu (env=3D0x555557=
+ee19b0, addr=3D18442241572520067072, val=3D18446744073701163007, oi=3D8244,=
+ retaddr=3D<optimized out>) at ../../accel/tcg/atomic_template.h:140
+> >> #1  0x00007fffb6894125 in code_gen_buffer ()
+> >> #2  0x0000555555fc4c46 in cpu_tb_exec (cpu=3Dcpu@entry=3D0x555557ededf=
+0, itb=3Ditb@entry=3D0x7fffb6894000 <code_gen_buffer+200511443>, tb_exit=3D=
+tb_exit@entry=3D0x7ffff4bfb744) at ../../accel/tcg/cpu-exec.c:455
+> >> #3  0x0000555555fc51c2 in cpu_loop_exec_tb (tb_exit=3D0x7ffff4bfb744, =
+last_tb=3D<synthetic pointer>, pc=3D<optimized out>, tb=3D0x7fffb6894000 <c=
+ode_gen_buffer+200511443>, cpu=3D0x555557ededf0) at ../../accel/tcg/cpu-exe=
+c.c:904
+> >> #4  cpu_exec_loop (cpu=3Dcpu@entry=3D0x555557ededf0, sc=3Dsc@entry=3D0=
+x7ffff4bfb7f0) at ../../accel/tcg/cpu-exec.c:1018
+> >> #5  0x0000555555fc58f1 in cpu_exec_setjmp (cpu=3Dcpu@entry=3D0x555557e=
+dedf0, sc=3Dsc@entry=3D0x7ffff4bfb7f0) at ../../accel/tcg/cpu-exec.c:1035
+> >> #6  0x0000555555fc5f6c in cpu_exec (cpu=3Dcpu@entry=3D0x555557ededf0) =
+at ../../accel/tcg/cpu-exec.c:1061
+> >> #7  0x0000555556146ac3 in tcg_cpu_exec (cpu=3Dcpu@entry=3D0x555557eded=
+f0) at ../../accel/tcg/tcg-accel-ops.c:81
+> >> #8  0x0000555556146ee3 in mttcg_cpu_thread_fn (arg=3Darg@entry=3D0x555=
+557ededf0) at ../../accel/tcg/tcg-accel-ops-mttcg.c:94
+> >> #9  0x00005555561f6450 in qemu_thread_start (args=3D0x555557f8f430) at=
+ ../../util/qemu-thread-posix.c:541
+> >> #10 0x00007ffff7750aa4 in start_thread (arg=3D<optimized out>) at ./np=
+tl/pthread_create.c:447
+> >> #11 0x00007ffff77ddc3c in clone3 () at ../sysdeps/unix/sysv/linux/x86_=
+64/clone3.S:78
+> >>
+> >> I haven't pushed out the rebased tree yet making this a truly awful bu=
+g report.
+> >>
+> >> The pull request you sent with this in wasn't bisectable so this was a=
+ bit of a guessing
+> >> game. I see the seg fault only after this patch. =20
+> >=20
+> > I see the same thing with some RISC-V tests. I can provide the test
+> > images if you want as well =20
+>=20
+>=20
+> Yes please.
+>=20
+>=20
+> r~
+
+I'm guessing Alastair is busy.
+
+I got around to testing this on x86 and indeed blow up is the same.
+
+0x0000555555e3dd77 in cpu_atomic_add_fetchl_le_mmu (env=3D0x55555736bef0, a=
+ddr=3D140271756837240, val=3D1, oi=3D34, retaddr=3D<optimized out>) at ../.=
+./accel/tcg/atomic_template.h:143
+143     GEN_ATOMIC_HELPER(add_fetch)
+(gdb) bt
+#0  0x0000555555e3dd77 in cpu_atomic_add_fetchl_le_mmu (env=3D0x55555736bef=
+0, addr=3D140271756837240, val=3D1, oi=3D34, retaddr=3D<optimized out>) at =
+../../accel/tcg/atomic_template.h:143
+#1  0x00007fffbc31c6f0 in code_gen_buffer ()
+#2  0x0000555555e23aa6 in cpu_tb_exec (cpu=3Dcpu@entry=3D0x555557369330, it=
+b=3Ditb@entry=3D0x7fffbc31c600 <code_gen_buffer+295441875>, tb_exit=3Dtb_ex=
+it@entry=3D0x7ffff4bfd6ec) at ../../accel/tcg/cpu-exec.c:438
+#3  0x0000555555e24025 in cpu_loop_exec_tb (tb_exit=3D0x7ffff4bfd6ec, last_=
+tb=3D<synthetic pointer>, pc=3D<optimized out>, tb=3D0x7fffbc31c600 <code_g=
+en_buffer+295441875>, cpu=3D0x555557369330) at ../../accel/tcg/cpu-exec.c:8=
+72
+#4  cpu_exec_loop (cpu=3Dcpu@entry=3D0x555557369330, sc=3Dsc@entry=3D0x7fff=
+f4bfd7b0) at ../../accel/tcg/cpu-exec.c:982
+#5  0x0000555555e247a1 in cpu_exec_setjmp (cpu=3Dcpu@entry=3D0x555557369330=
+, sc=3Dsc@entry=3D0x7ffff4bfd7b0) at ../../accel/tcg/cpu-exec.c:999
+#6  0x0000555555e24e2c in cpu_exec (cpu=3Dcpu@entry=3D0x555557369330) at ..=
+/../accel/tcg/cpu-exec.c:1025
+#7  0x0000555555e42c73 in tcg_cpu_exec (cpu=3Dcpu@entry=3D0x555557369330) a=
+t ../../accel/tcg/tcg-accel-ops.c:81
+#8  0x0000555555e43093 in mttcg_cpu_thread_fn (arg=3Darg@entry=3D0x55555736=
+9330) at ../../accel/tcg/tcg-accel-ops-mttcg.c:94
+#9  0x0000555555ef2250 in qemu_thread_start (args=3D0x5555573e6e20) at ../.=
+./util/qemu-thread-posix.c:541
+#10 0x00007ffff7750aa4 in start_thread (arg=3D<optimized out>) at ./nptl/pt=
+hread_create.c:447
+#11 0x00007ffff77ddc3c in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/cl=
+one3.S:78
+
+Need one patch for my particular setup to work around some DMA buffer issue=
+s in virtio (similar to
+a patch for pci space last year).  I've been meaning to post an RFC to get =
+feedback on how
+to handle this but not gotten to it yet!
+
+=46rom 801e47897c5959a22ed050d7e7feebbbd3a12588 Mon Sep 17 00:00:00 2001
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Date: Mon, 22 Apr 2024 13:54:37 +0100
+Subject: [PATCH] physmem: Increase bounce buffers for "memory" address spac=
+e.
+
+Doesn't need to be this big and should be configurable.
+
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ system/physmem.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/system/physmem.c b/system/physmem.c
+index 3f4fd69d9a..651b875827 100644
+--- a/system/physmem.c
++++ b/system/physmem.c
+@@ -2798,6 +2798,7 @@ static void memory_map_init(void)
+     memory_region_init(system_memory, NULL, "system", UINT64_MAX);
+     address_space_init(&address_space_memory, system_memory, "memory");
+=20
++    address_space_memory.max_bounce_buffer_size =3D 1024 * 1024 * 1024;
+     system_io =3D g_malloc(sizeof(*system_io));
+     memory_region_init_io(system_io, NULL, &unassigned_io_ops, NULL, "io",
+                           65536);
+--=20
+2.43.0
 
 
-On 5/8/25 01:55, Alison Schofield wrote:
-> On Thu, Apr 17, 2025 at 10:29:07PM +0100, alejandro.lucero-palau@amd.com wrote:
->> From: Alejandro Lucero <alucerop@amd.com>
->>
->> Type3 has some mandatory capabilities which are optional for Type2.
->>
->> In order to support same register/capability discovery code for both
->> types, avoid any assumption about what capabilities should be there, and
->> export the capabilities found for the caller doing the capabilities
->> check based on the expected ones.
->>
->> Add a function for facilitating the report of capabiities missing the
-> sp. capabilities
->
+Anyhow, other than that you need any random distro image (I tend to use deb=
+ian nocloud images)
+and a recent kernel build (mainline is fine).
 
-I'll fix it.
+Then a config along the lines of (obviously this isn't minimal)
 
+qemu-system-x86_64 -M q35,cxl=3Don,sata=3Doff,smbus=3Doff -m 4g,maxmem=3D8G=
+,slots=3D4 -cpu max -smp 4 \
+                                      -kernel bzImage \
+                                      -bios bios \
+ -drive if=3Dnone,file=3D/mnt/d/images/x86-full-big.qcow2,format=3Dqcow2,id=
+=3Dhd \
+ -device ioh3420,id=3Droot_port1 -device virtio-blk-pci,drive=3Dhd,bus=3Dro=
+ot_port1 \
+ -netdev user,id=3Dmynet,hostfwd=3Dtcp::5553-:22 -device virtio-net-pci,net=
+dev=3Dmynet,id=3Dbob \
+ -nographic -no-reboot -append 'earlycon console=3DttyS0 root=3D/dev/vda3 f=
+sck.mode=3Dskip tp_printk maxcpus=3D4' \
+ -monitor telnet:127.0.0.1:1235,server,nowait \
+ -object memory-backend-ram,size=3D4G,id=3Dmem0 \
+ -numa node,nodeid=3D0,cpus=3D0-3,memdev=3Dmem0 \
+ -numa node,nodeid=3D1 \
+ -serial mon:stdio \
+  -object memory-backend-file,id=3Dcxl-mem1,share=3Don,mem-path=3D/tmp/cxlt=
+est.raw,size=3D256M,align=3D256M \
+ -object memory-backend-file,id=3Dcxl-mem2,share=3Don,mem-path=3D/tmp/cxlte=
+st2.raw,size=3D256M,align=3D256M \
+ -object memory-backend-file,id=3Dcxl-lsa1,share=3Don,mem-path=3D/tmp/lsa.r=
+aw,size=3D1M,align=3D1M \
+ -object memory-backend-file,id=3Dcxl-mem3,share=3Don,mem-path=3D/tmp/cxlte=
+st3.raw,size=3D256M,align=3D256M \
+ -object memory-backend-file,id=3Dcxl-mem4,share=3Don,mem-path=3D/tmp/cxlte=
+st4.raw,size=3D256M,align=3D256M \
+ -object memory-backend-file,id=3Dcxl-lsa2,share=3Don,mem-path=3D/tmp/lsa2.=
+raw,size=3D1M,align=3D1M \
+ -device pxb-cxl,bus_nr=3D12,bus=3Dpcie.0,id=3Dcxl.1 \
+ -device cxl-rp,port=3D0,bus=3Dcxl.1,id=3Droot_port0,chassis=3D0,slot=3D2 \
+ -device cxl-rp,port=3D1,bus=3Dcxl.1,id=3Droot_port2,chassis=3D0,slot=3D3 \
+ -device cxl-type3,bus=3Droot_port0,volatile-memdev=3Dcxl-mem1,id=3Dcxl-pme=
+m0,lsa=3Dcxl-lsa1,sn=3D3 \
+ -device cxl-type3,bus=3Droot_port2,volatile-memdev=3Dcxl-mem3,id=3Dcxl-pme=
+m1,lsa=3Dcxl-lsa2,sn=3D4 \
+ -machine cxl-fmw.0.targets.0=3Dcxl.1,cxl-fmw.0.size=3D4G,cxl-fmw.0.interle=
+ave-granularity=3D1k
 
->> expected ones.
->>
->> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
->> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> ---
->>   drivers/cxl/core/pci.c  | 35 +++++++++++++++++++++++++++++++++--
->>   drivers/cxl/core/port.c |  8 ++++----
->>   drivers/cxl/core/regs.c | 35 +++++++++++++++++++----------------
->>   drivers/cxl/cxl.h       |  6 +++---
->>   drivers/cxl/cxlpci.h    |  2 +-
->>   drivers/cxl/pci.c       | 24 +++++++++++++++++++++---
->>   include/cxl/cxl.h       | 24 ++++++++++++++++++++++++
->>   7 files changed, 105 insertions(+), 29 deletions(-)
->>
->> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
->> index 0b8dc34b8300..ed18260ff1c9 100644
->> --- a/drivers/cxl/core/pci.c
->> +++ b/drivers/cxl/core/pci.c
->> @@ -1061,7 +1061,7 @@ static int cxl_rcrb_get_comp_regs(struct pci_dev *pdev,
->>   }
->>   
->>   int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
->> -		       struct cxl_register_map *map)
->> +		       struct cxl_register_map *map, unsigned long *caps)
->>   {
->>   	int rc;
->>   
->> @@ -1091,7 +1091,7 @@ int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
->>   		return rc;
->>   	}
->>   
->> -	return cxl_setup_regs(map);
->> +	return cxl_setup_regs(map, caps);
->>   }
->>   EXPORT_SYMBOL_NS_GPL(cxl_pci_setup_regs, "CXL");
->>   
->> @@ -1214,3 +1214,34 @@ int cxl_gpf_port_setup(struct device *dport_dev, struct cxl_port *port)
->>   
->>   	return 0;
->>   }
->> +
->> +int cxl_check_caps(struct pci_dev *pdev, unsigned long *expected,
->> +		   unsigned long *found)
->> +{
->> +	DECLARE_BITMAP(missing, CXL_MAX_CAPS);
->> +
->> +	if (bitmap_subset(expected, found, CXL_MAX_CAPS))
->> +		/* all good */
->> +		return 0;
->> +
->> +	bitmap_andnot(missing, expected, found, CXL_MAX_CAPS);
->> +
->> +	if (test_bit(CXL_DEV_CAP_RAS, missing))
->> +		dev_err(&pdev->dev, "RAS capability not found\n");
->> +
->> +	if (test_bit(CXL_DEV_CAP_HDM, missing))
->> +		dev_err(&pdev->dev, "HDM decoder capability not found\n");
->> +
->> +	if (test_bit(CXL_DEV_CAP_DEV_STATUS, missing))
->> +		dev_err(&pdev->dev, "Device Status capability not found\n");
->> +
->> +	if (test_bit(CXL_DEV_CAP_MAILBOX_PRIMARY, missing))
->> +		dev_err(&pdev->dev, "Primary Mailbox capability not found\n");
->> +
->> +	if (test_bit(CXL_DEV_CAP_MEMDEV, missing))
->> +		dev_err(&pdev->dev,
->> +			"Memory Device Status capability not found\n");
->> +
->> +	return -1;
->> +}
-> Prefer using an array to map the enums to strings, like -
->
-> 	static const char * const cap_names[CXL_MAX_CAPS] = {
-> 		[CXL_DEV_CAP_RAS]	= "CXL_DEV_CAP_RAS",
-> 		.
-> 		.
-> 		.
-> 	};
->
-> and then loop thru that, like:
->
-> 	for (int i = 0; i < CXL_MAX_CAPS; i++) {
-> 		if (!test-bit(i, missing))
-> 	 		dev_err(&pdev->dev,"%s capability not found\n",
-> 	 	 		cap_names[i];
-> 	}
->
+Then after booting into linux, bring up a cxl region with:
 
-Looks good to me and it saves some code lines. I'll do the change.
+    cd /sys/bus/cxl/devices/decoder0.0/
+    cat create_ram_region
+    echo region0 > create_ram_region
 
+    echo ram > /sys/bus/cxl/devices/decoder2.0/mode
+    echo $((256 << 20)) > /sys/bus/cxl/devices/decoder2.0/dpa_size
 
->
-> snip
->>   }
->> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
->> index be0ae9aca84a..e409ea06af0b 100644
->> --- a/drivers/cxl/core/regs.c
->> +++ b/drivers/cxl/core/regs.c
->> @@ -4,6 +4,7 @@
->>   #include <linux/device.h>
->>   #include <linux/slab.h>
->>   #include <linux/pci.h>
->> +#include <cxl/cxl.h>
->>   #include <cxl/pci.h>
->>   #include <cxlmem.h>
->>   #include <cxlpci.h>
->> @@ -11,6 +12,9 @@
->>   
->>   #include "core.h"
->>   
->> +#define cxl_cap_set_bit(bit, caps) \
->> +	do { if ((caps)) set_bit((bit), (caps)); } while (0)
->> +
-> Prefer a readable and type safe simple fcn:
->
-> static void cxl_cap_set_bit(int bit, unsigned long *caps)
-> {
-> 	if (caps)
-> 		set_bit(bit, caps);
-> }
->
+    cd /sys/bus/cxl/devices/region0/
+    echo 256 > interleave_granularity
+    echo 1 > interleave_ways
+    echo $((256 << 20)) > size=20
+    echo decoder2.0 > target0
+    echo 1 > commit
+    echo region0 > /sys/bus/cxl/drivers/cxl_region/bind
 
-I have no preference but I can do this change as well.
+That should bring up a small amount of memory in node 2. Interleaving isn't=
+ actually
+in use here but we haven't upstreamed the bypass optimizations so this is s=
+till
+mmio space to QEMU.
 
-Thank you!
+Then numactl -m 2 ls=20
+boom.
+
+A few relevant bits of kernel config (also not minimal)
+
+//dax stuff to ensure we get memory as normal ram.
+CONFIG_DAX=3Dy
+CONFIG_DEV_DAX=3Dm
+CONFIG_DEV_DAX_PMEM=3Dm
+CONFIG_DEV_DAX_HMEM=3Dy
+CONFIG_DEV_DAX_CXL=3Dm
+CONFIG_DEV_DAX_HMEM_DEVICES=3Dy
+CONFIG_DEV_DAX_KMEM=3Dm
+//memory hotplug
+CONFIG_ARCH_ENABLE_MEMORY_HOTPLUG=3Dy
+CONFIG_ARCH_ENABLE_MEMORY_HOTREMOVE=3Dy
+CONFIG_MEMORY_HOTPLUG=3Dy
+CONFIG_MHP_DEFAULT_ONLINE_TYPE_ONLINE_MOVABLE=3Dy
+
+Any hints welcome!  Also happy to provide any additional info as necessary.
+
+Jonathan
+
 
