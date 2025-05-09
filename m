@@ -1,239 +1,275 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2057.outbound.protection.outlook.com [40.107.101.57])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330ED274660
-	for <linux-cxl@vger.kernel.org>; Fri,  9 May 2025 09:20:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.57
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746782444; cv=fail; b=r9uUg6yXdR0ZIcRxtW99WnauELeVZoJDKmT47s0D3Y0p0+DdXdYbOaf5KF7rIpgR02tCr7/WeN3BYcmVa7+DVbxCGtvI6aIWvrmFAhYcTmtmLTp/CHGd7XQfIzO9pb3JrMSIbEt7IyQ7KUy4oUKdQSuQ4u/vnfOSOVQ1X5pVdu0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746782444; c=relaxed/simple;
-	bh=u556adxOz1oee02wLXiqUGJN6f5/VqRjb2+VoeO5z4Q=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=aTOsPtBmGBjNf25/YEjEhQcUM18Qx0j1hStXwzTeRclnZ4a0I8g0OJlzmtX1PfI3wK0POOBJVQ3AVLHW8SfT+jYkWtW27CA5oKlSSyEvi6Xw6d6PY0QIkq/yNqF19tlwSMeJHqS4CcU8KUJlKFufrv3D7X0+Y4bNZpyhxbPblFo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=pDOYxMsZ; arc=fail smtp.client-ip=40.107.101.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F7E17BCE;
+	Fri,  9 May 2025 10:40:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746787244; cv=none; b=kwPs2JBsEOI+ATrBTy98lFcJoQc5q/8Gy+/Xp+bCHjQag8ya5tGU+7L53oR5XXLHvb+qvppJd0M7cA2UQsPSVBHcePDcZIpG/mzoroUV10//KzPxb0tRNefmBDy4nTkZqPxVZ3rd61NWRzsvwyMklHesTXGzk+yaBB3tSG22+AI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746787244; c=relaxed/simple;
+	bh=ADDyJAfTgFQ8JBdm1vgOn3ThK0IQ5MCWNQqVDkR/P7Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NjhkGyb59W2WjhtkgmqngknlWyDqTvlnPdBsWaYNQsh6c5CnBDYfw26qAdEW7ijTH6gzmzHFqxZCty1KOsrPirhxqP3CXkD4nGRsIhqINCZ3YDP/lRoZfkLb0W2DVKnDep2BvSjmfUl0lKn/+9XgBbQGmAulWsbEykY7lQLlMpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gMGdWk99; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="pDOYxMsZ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Kc1eA7wCGAIMbMu7Nnjs+Omy446si6Rp1bJAJyj1almav6hBMi+zfFxB1bmmWThGJNIuo00PjWpDIL4bSafBibdNG7YhXn2FqZ/g/o3m20yLaQlZoUquD3NOwlnbx59UGwV9njto74PNIwu6w0JIOxEWYPf4BAbnhtyK6XW4ApB2CpBkt4tQ5Nk3pQuUxJoGWBTrFz4sinkLZ5b539qOaGs/ijoGB4jsHZXNaw1dm/69Q6Ba8xy0NHX/vypR1OkBGIk9BktVSrP0OSKTUQnRzcAh6EeftjALBpHDDqCTZoWkH+HuDy0Qk3RdWK/3L8ddjxEuV2OmaNBooPY+nMJ0nw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MyU1QbDCTNJD0VdivNlKIFAM/iXdPHGmH5beXnmuXlc=;
- b=sYssHxfP2AwglePUcw70HdV8+7NE9QmipzXWlEzpKX4TnUJVP57rJe4lu2PtyopT1TYR45PJXexn3E35ZmEWZC2RKi7fJx94OKrMyLcelifQcAw9YPOEZ00oq9i+SiO2fL9Ix1GglqfL1oCF9+sgljZiXzSzf909FcFEijH7nLLcWLZVeKnMbP+Fd4Zn1i2W3JiXKcdkqJ9tyq8/te/99LcLiEolw5C2hqnB1qmCCPnvXZOODue8WJjB+diPcLOQFlrmTrsDmC0hNFtEJ4+bm1FDnGahefubMOPWK533vRk+gcxwMtvfHumpZlgpT6SO+LNrLBYntfZ5kFf3Ol+BYQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MyU1QbDCTNJD0VdivNlKIFAM/iXdPHGmH5beXnmuXlc=;
- b=pDOYxMsZyomTZG/8Ojw3aCBCnSp+Eq44/I/VFpNMRTcqwO3WXZyxJM6WhIaH4Y0n+Y9dthbkH50xY7av4WfkVbYYRWwx+FphpDgCXtpxmND3hBAXaqYzWC45f9OvgFotkkzdzk69BVIqOk9J8r4UIJ2OUe6ynwXv8GA3gh4HFXc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
- by SJ2PR12MB7896.namprd12.prod.outlook.com (2603:10b6:a03:4c6::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.25; Fri, 9 May
- 2025 09:20:40 +0000
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79%4]) with mapi id 15.20.8722.021; Fri, 9 May 2025
- 09:20:40 +0000
-Message-ID: <36ee7c17-4a06-4288-89d0-547c23afb8e6@amd.com>
-Date: Fri, 9 May 2025 10:20:37 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 03/10] cxl: Rename find_dport() to provide better
- function intent
-Content-Language: en-US
-To: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org
-Cc: Dan Williams <dan.j.williams@intel.com>, dave@stgolabs.net,
- jonathan.cameron@huawei.com, alison.schofield@intel.com,
- ira.weiny@intel.com, rrichter@amd.com, ming.li@zohomail.com
-References: <20250507004310.3536991-1-dave.jiang@intel.com>
- <20250507004310.3536991-4-dave.jiang@intel.com>
-From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <20250507004310.3536991-4-dave.jiang@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P123CA0039.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:152::8) To DM6PR12MB4202.namprd12.prod.outlook.com
- (2603:10b6:5:219::22)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gMGdWk99"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=gEhSIc1pXgT8q5ymNeP5CG34TnvHdUkZKckbTnD4v1M=; b=gMGdWk99iVA2oebREYRtzEJAeS
+	i0kVA1aUJFqFZt/vbuh0WAo86aVcbI8R+tfxRA6/16eUvpqDSgaE9r80ckESCL76S+I12VHNVlNXI
+	We3YgxZKaH2xwrMLtV/83IHM34dTxd8yVp8Ol9yLwgCyhhGsD3zytksp1VpegGHD8fTxdp19gNYOc
+	TdvKWmxHWUfwG7y6yGTnRRgiuadNWGsGbeOq6C4X5KhFITfM9PzzKWCxZmzgE9BLWAwBazVmTG+Pk
+	lPxFM3Dh4/FJBNmKeURB+ShLhHApCyp6QSvARrKmFAKPQf0wYQW5d4Iv0HlLgtYEUlMnWIiIN+Iby
+	j8lufGhA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1uDL9Z-0000000GFuH-2xoG;
+	Fri, 09 May 2025 10:40:30 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id C84C6300781; Fri,  9 May 2025 12:40:28 +0200 (CEST)
+Date: Fri, 9 May 2025 12:40:28 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	David Lechner <dlechner@baylibre.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	"Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>
+Subject: Re: [PATCH 1/7] cleanup: Introduce DEFINE_ACQUIRE() a CLASS() for
+ conditional locking
+Message-ID: <20250509104028.GL4439@noisy.programming.kicks-ass.net>
+References: <20250507072145.3614298-1-dan.j.williams@intel.com>
+ <20250507072145.3614298-2-dan.j.williams@intel.com>
+ <20250507093224.GD4439@noisy.programming.kicks-ass.net>
+ <681bce2193f38_1229d6294c7@dwillia2-xfh.jf.intel.com.notmuch>
+ <20250508110043.GG4439@noisy.programming.kicks-ass.net>
+ <681d8ce06c869_1229d6294e@dwillia2-xfh.jf.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|SJ2PR12MB7896:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0450f389-4424-41ca-c4a4-08dd8edac470
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VVVkWHRLM0ZOVWNpaU9LZGhFbHF2UmRhaE56ZFU5a3ZmdHZqelpIVWkvV1FP?=
- =?utf-8?B?Z0VKWjNaV1RnVXRqTkxQM0ZEZHozVmkwRUhBazdIM2l4dnk5Y2ZEenNzS0tW?=
- =?utf-8?B?RmdvVmo0MjdiUDJybytFUjR5UjdjUXpMVTM2TVhiZFUwMkFNdjhRZEwwYkFw?=
- =?utf-8?B?VU0xNXhDZ1N3c21RR2NqYmVBTE9hZ0k1UjN6QjR3M1ZmMUkrVThrQTJOWGhv?=
- =?utf-8?B?YlU0QVA5TWNZN1VhWmZ5TDg5QlQ0RzJTaS9xK1ZadFdCQkVsdWhYbVNMaXFm?=
- =?utf-8?B?WDZRbjhxd2ErVGxQcitMMlIwVldHbkgySjNkQk9XNlEvL2N0bzJvbkttZHBv?=
- =?utf-8?B?b3FvVUJsWWRNNFFoeGVQRnE1QVFOVWRYZmFTbmZsdVV0UGxpcHk5YW4zSzFY?=
- =?utf-8?B?bURMZ3JqQTk0UDJoUHhHRU9yemE2VDV3N3FndUtuNHJiZ2R3KzU4VVFjWjRQ?=
- =?utf-8?B?QUx5em1PQTU2VmoyUm01QnQ1UEtqN2RPbkVEa0dWWUgrbGc2U1ZzVURMVWZM?=
- =?utf-8?B?UDZPaGVLWkNTRGN6SXlieUR1bGRRQVhTRkk3Z1dYd013bDNUWElDREFnWEx2?=
- =?utf-8?B?UFdYYkxxVWg2MFFvKzJ6NXNPQy9GcGhHY1BlQkZyZENCUFJKLzNDOWJCR1cy?=
- =?utf-8?B?a1Z3VkFIdFAxbUdZUXF2NG43SC85V0s4OHp4VUVjVkJlZEl0MUV0TktrK3Vo?=
- =?utf-8?B?TUhqQVpGemFUaVFHdFdjK2RDcVVJYS9iK2FZMk1yWlAwTWpRWWNSKzN4c2FN?=
- =?utf-8?B?c0xhaXBXWVh5Z0RQQVZZakRSN3dwbGRncWg1UmNoV1kyaXpqaHRNUnEweXgy?=
- =?utf-8?B?M1Q4TStZTTgrb3lOMzE2Z2Z4N3p3bDZGUXZ6VWVNcU1Hb2JTZlRuMEwvT3Rn?=
- =?utf-8?B?cncwdU94QXNPRFNLVDIxbCtlYkFWd2NnMER0cE1ITDlkUnU4UEVlLzJPS3Ru?=
- =?utf-8?B?dllER1BiRGc0V0wxZFZlV2M3OFhzb1JZUjFOVVBVZW1oSTdjVTQ3T2Vob0Vn?=
- =?utf-8?B?dW9UWnJJUjdvdGZUdVNTOUN4QWdlZ0g3NSt0aVExZSt5aUpTMFdBQmZpZVNy?=
- =?utf-8?B?MHpCVHpEVnN1RTlFZEFZOHdCTlBHRUFQVllFNlYrcm1GTnZhbmNUYUNHa0Zy?=
- =?utf-8?B?amJUNmRkaFVMSXhna1lzbmwwWnB0ZU1qVFB1aXYyc3c1STAvNlBqWHF4eG15?=
- =?utf-8?B?SmdmV2QwZ3hHWXo5MEwvL0hVOWFSbHllYnBzSEZoZXJ4VDNYZWx3b3lUUTVv?=
- =?utf-8?B?N0pjVWZaOWcwZFp5MHpoNjN0azA4aEVWM3grSkFpNlhUR2JGZGNpaXZTZkpU?=
- =?utf-8?B?dkt6WUR6N0dkUktiN1RIdFZXUldXVEVjdFJvSGY1ZzY1TUxkKzFhRVNPbnJs?=
- =?utf-8?B?VmRNc2R2d0oxcXROWTd2bWVYZkNDanlnVWQwbFdUWGdxNXhsendNdHYrdnF6?=
- =?utf-8?B?L0RhLzFwWURYTVVmQm5McGI2V0wrRTN2WXphOUoxTlpkVzdacXpFY0hLT0wy?=
- =?utf-8?B?UHJudEdJR2gyQ1JrQ0Y0NDh6NC9maVEzVUVYNGpZS1liWnQ5V3JPa1JwOEYr?=
- =?utf-8?B?S05UTXVPemp5RWZlbVVkVUJuK2lGeGZWRlNPOUV4Vkp2dGt1VSs3VlNQNVdr?=
- =?utf-8?B?Yml4K3ltcEUwdEJiVmFFU2E4TjBBSEFONGFTUG1nMnkxbE85cjRNekZ6Ukt1?=
- =?utf-8?B?bFV2UENjcUQ3MTVlaXIzSkNRK1lBQ3ArYXpvVllzWXVDcDhjUXRRb0ZIT0JV?=
- =?utf-8?B?QUpmS3RKOFBzWVVBYkhscjdWS2JYTUJWR1FvQmJwM1NNeUYrQklaT05uMVpm?=
- =?utf-8?B?TERzeW9NSHROMWFHT0NJZGl2UFBTVGVUVllLOHlSb3UwSExIcEVHKzkrZ1N3?=
- =?utf-8?B?NVhFdVVzRi9mKzJMUGJQaXNLckh1RG13ZmRDaENrUW93dGEwbXkyRjlGRERh?=
- =?utf-8?Q?1nR2L+v/4bs=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NXlaL2lhYVBwTEtHenZlSDgwVm1IWW83cGE0YzhNQTNLbnBzL1E3K3FtMit5?=
- =?utf-8?B?bWRPQ1pQcHp2QWd5bmlOM3NtQVNFeEx5ZkNXNE5KVm96eG9TSitiY2hBNitp?=
- =?utf-8?B?Zkw5Rk5aTmRPRDJEZVFwbDM0YkhTNEVjM2pkLzFMMGpoYkhvUHU3TWpkYXky?=
- =?utf-8?B?bFo2clI5TDBqb3lnY2JxOGZQc09vZWNqRVhZM2dHV0NtbERiUkxVZTErVklM?=
- =?utf-8?B?UVA1SWVqV2hZQzF4S3ZCa1orelVMRkhrTzVHL2RJSzgwbTdQeEk1Wm4wb0g5?=
- =?utf-8?B?R2I1U3pUc25kOUd3aEhTMDk3Y0J6SEsxbWdIRjhSZGZXdTdQaHpnaEZDWVBj?=
- =?utf-8?B?Rk52dEw4SVJNQjBBVTJYOG5zQitXQWtxeUVUWUhEUEZzOEV3RHJpM2dYandQ?=
- =?utf-8?B?RFJTYjRlYVFlTlNHVGE4b09JaWgybWxhUUtQUDNWblg3QzVGQTg5RFNPeWN3?=
- =?utf-8?B?UHJyK0dJbk1ORUQ5SXpZc3RNdVZPLzUzbkh4VzEvbTFCcGhLUU9TYjErdkpJ?=
- =?utf-8?B?YmVWRGlKYmxmMXAyU1FZT3ZVNFF6UWltSEhDNEhXVUh5QXNSdjJzUGdaeEp0?=
- =?utf-8?B?amdLVk12TVg1ZG5zd3ZXYU1acSsrY0lIZ1c5OEs5Z0VmUkFIRE1vei9lZjZh?=
- =?utf-8?B?bkVjRVBBaGsrM0lpOUljMU5hbkR3a2c3cWlXZHh4NVptbTdmdFhsZlUySXZi?=
- =?utf-8?B?akNsSUZNMmRHR0NwODJjdlVPVWh2MkQxWUsrcXJJNGZzMy95cVBTdTh2dGdD?=
- =?utf-8?B?eG5HL2xXU3dCRlhQVjVUV2JOSXJvekE0Z3hvTUtDQ1BZRzE4R2dWSWtKNlZy?=
- =?utf-8?B?TjNTOHJtVVZPQVBGZklURG50NG5SK1BrSmVGb01RcnByM3BkK1k5dDRXVkJR?=
- =?utf-8?B?VjNTU3NPenlUQmc3UDMrV0tMSW1YTld3T3RGOUZHa1Uydlk1elgyUE1TYlBN?=
- =?utf-8?B?QkpHQUttcXJ2bGxiclhoZ2R5NndRL3N0UHVpaXRGMHFPNVRhUXJreTJ6N3Q1?=
- =?utf-8?B?WDlEWVpaZWNkV2dCbVFuNVhSdUlJWVJiTW9HOGp5YTFSNTVXeXRwN2ZJdWVh?=
- =?utf-8?B?MjQrb1lMVlE1RTV1RnEwVUFYb3ExelJpS1pYSVhONngzNGpxMzFXSStSMGFm?=
- =?utf-8?B?Ly9MeTFoTVlvT1VkWkNBcWNZUi94enpvM2o5eW1UOHVTdlNNbS9FNkczVyt1?=
- =?utf-8?B?RVdNL2xsekFnWU9aWnFodjNnQUpqK1ZWenpKa09lMzNpNzVWaXVvQVBpZUh0?=
- =?utf-8?B?cFRBR2xOdmdSNXVIMFpqK2xGdCs3UjdCaHlOVWEreW9NUGc1MFd4Tk45blpQ?=
- =?utf-8?B?TzhZZlNBY2R2OUROTDMybUVXTm40SlJwUmxoU3BxL3pDeHZhb3dPL2p3a0Vh?=
- =?utf-8?B?Z3dIaThHN3JEMlRKUnp2R3ppUm5ObjY1b1VjRk1HTG8raExJTTdpNStnZnV2?=
- =?utf-8?B?TDRmN3RDc0tLRUF1MFZzREJoQklUVnE4MlpUUHRyQ3ViZmd1KzhWUWJhL2dX?=
- =?utf-8?B?SWZkODlTbytkeG1IRGZmU3hFamw1U3hTc2xld3g0ME52TzlXV0Z6RFpJZVl3?=
- =?utf-8?B?UTRmcVhsalI1L0JLYVRtRmZISE9kSlVhUWZyKzBTc2FLaS9HeFBVWFloSUxD?=
- =?utf-8?B?OVFxQUk4NEd4SFREcHE5MnhXNDZyNHVMZUVaSmN4WnJGOFY4VzZ2OHRtSmJI?=
- =?utf-8?B?a3UreFM4eWw3S3R6MzlOU2RJYUtubUE3RC9vazJVbERpeHpWd1RqUmwzSlJJ?=
- =?utf-8?B?M3JEdHpDd3phNUNON0JWUnJuallCdk1WMXhsYXhNQlFXQVY3c1FGRjNIVlQv?=
- =?utf-8?B?T1Z6eWw4Z0pNbnRld2lXUk5ORloyMTZuSXVzeWhMWmpUQnhCUko3aStZVEZ1?=
- =?utf-8?B?Tm1qUSs2a3FjeU81MVVHK253YzdSWGhvanFjcnJVU2k3VzVaTE1qbjE0ZS9h?=
- =?utf-8?B?MTFZck9uWnF2UVkvQkZycTVNeG1nNy9wY0lBdTl6SUFJVHZLNDlSYkRZRmRT?=
- =?utf-8?B?OExaUkJMdHJ4aFpzczE0cWFtMU1OZW9CSGlmN0VkdXRrRGtlSEcvanIyYUdr?=
- =?utf-8?B?RnpFL3U1cFBQLzFGVlpORFpxQWNLMnI5QzZsRlhDa0o4VXZEVkFEQVZmcDNK?=
- =?utf-8?Q?ikd8Teht5/UdoO/Dpb08RmvxU?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0450f389-4424-41ca-c4a4-08dd8edac470
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2025 09:20:40.8377
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EjI94BpjkDblXP6kfO/4cLxY0FmDRluxvzP8Xnqd+LWbJ7+yE14AbAxO8xn4Xpp1mtxhUQmFev8NYpeN6Cem8Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB7896
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <681d8ce06c869_1229d6294e@dwillia2-xfh.jf.intel.com.notmuch>
 
+On Thu, May 08, 2025 at 10:04:32PM -0700, Dan Williams wrote:
+> Peter Zijlstra wrote:
+> [..]
+> > > So the proposal is, if you know what you are doing, or have a need to
+> > > switch back and forth between scope-based and explicit unlock for a give
+> > > lock, use the base primitives. If instead you want to fully convert to
+> > > scope-based lock management (excise all explicit unlock() calls) *and*
+> > > you want the compiler to validate the conversion, switch to the _acquire
+> > > parallel universe.
+> > 
+> > As with all refactoring ever, the rename trick always works. But I don't
+> > think that warrants building a parallel infrastructure just for that.
+> > 
+> > Specifically, it very much does not disallow calling mutex_unlock() on
+> > your new member. So all you get is some compiler help during refactor,
+> > and again, just rename the lock member already.
+> > 
+> > Also, if we ever actually get LLVM's Thread Safety Analysis working,
+> > that will help us with all these problems:
+> > 
+> >   https://lore.kernel.org/all/20250304092417.2873893-1-elver@google.com/
+> 
+> That looks lovely.
+> 
+> > But the compiler needs a little more work go grok C :-)
+> 
+> Ok, here is a last shot that incorporates all the feedback:
+> 
+> 1/ Conceptually no need for a new CLASS() save for the fact that
+>    __guard_ptr() returns NULL on failure, not an ERR_PTR().
+> 
+> 2/ The rename trick is not true type safety, especially if it leads to
+>    parallel universe of primitives, but it is a useful trick.
+> 
+> 3/ "IS_ERR(__guard_ptr(mutex_intr)(lock))" is a mouthful, would be nice
+>    to have something more succint while maintaining some safety.
+> 
+> That leads me to a scheme like the following:
+> 
+>     DEFINE_GUARD_ERR(mutex, _intr, mutex_lock_interruptible(_T))
+>     ...
+>     ACQUIRE(mutex_intr, lock)(&obj->lock);
+>     if (IS_ERR(lock))
+>        return PTR_ERR(lock);
 
-On 5/7/25 01:43, Dave Jiang wrote:
-> Rename find_dport() to find_dport_by_num() to indicate that the function
-> is trying to match a dport by its hardware number index.
->
-> Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->   drivers/cxl/core/port.c | 12 ++++++------
->   1 file changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index e9c02e4d0d4c..1d7a4a2ef6ad 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -1045,7 +1045,7 @@ void put_cxl_root(struct cxl_root *cxl_root)
->   }
->   EXPORT_SYMBOL_NS_GPL(put_cxl_root, "CXL");
->   
-> -static struct cxl_dport *find_dport(struct cxl_port *port, int port_num)
-> +static struct cxl_dport *find_dport_by_num(struct cxl_port *port, int port_num)
->   {
->   	struct cxl_dport *dport;
->   	unsigned long index;
-> @@ -1063,7 +1063,7 @@ static int add_dport(struct cxl_port *port, struct cxl_dport *dport)
->   	int rc;
->   
->   	device_lock_assert(&port->dev);
-> -	dup = find_dport(port, dport->port_num);
-> +	dup = find_dport_by_num(port, dport->port_num);
->   	if (dup) {
->   		dev_err(&port->dev,
->   			"unable to add dport%d-%s non-unique port num (%s)\n",
-> @@ -1275,13 +1275,13 @@ EXPORT_SYMBOL_NS_GPL(devm_cxl_add_dport, "CXL");
->    * devm_cxl_add_rch_dport - append RCH downstream port data to a cxl_port
->    * @port: the cxl_port that references this dport
->    * @dport_dev: firmware or PCI device representing the dport
-> - * @port_id: identifier for this dport in a decoder's target list
-> + * @port_num: identifier for this dport in a decoder's target list
+Urgh.. can you live with something like this?
 
-
-Not sure this change should be in this patch. It makes more sense to me 
-in the previous one.
-
-
-Also, maybe adding some reference for easily seeing where the identifier 
-comes from:
-
-+ * @port_num: hardware identifier for this dport in a decoder's target list
-
-
->    * @rcrb: mandatory location of a Root Complex Register Block
->    *
->    * See CXL 3.0 9.11.8 CXL Devices Attached to an RCH
->    */
->   struct cxl_dport *devm_cxl_add_rch_dport(struct cxl_port *port,
-> -					 struct device *dport_dev, int port_id,
-> +					 struct device *dport_dev, int port_num,
->   					 resource_size_t rcrb)
->   {
->   	struct cxl_dport *dport;
-> @@ -1291,7 +1291,7 @@ struct cxl_dport *devm_cxl_add_rch_dport(struct cxl_port *port,
->   		return ERR_PTR(-EINVAL);
->   	}
->   
-> -	dport = __devm_cxl_add_dport(port, dport_dev, port_id,
-> +	dport = __devm_cxl_add_dport(port, dport_dev, port_num,
->   				     CXL_RESOURCE_NONE, rcrb);
->   	if (IS_ERR(dport)) {
->   		dev_dbg(dport_dev, "failed to add RCH dport to %s: %ld\n",
-> @@ -1764,7 +1764,7 @@ static int decoder_populate_targets(struct cxl_switch_decoder *cxlsd,
->   
->   	guard(rwsem_write)(&cxl_region_rwsem);
->   	for (i = 0; i < cxlsd->cxld.interleave_ways; i++) {
-> -		struct cxl_dport *dport = find_dport(port, target_map[i]);
-> +		struct cxl_dport *dport = find_dport_by_num(port, target_map[i]);
->   
->   		if (!dport)
->   			return -ENXIO;
+---
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index d72764056ce6..6b0ca400b393 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -1394,8 +1394,8 @@ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+ 	int nr_records = 0;
+ 	int rc;
+ 
+-	rc = mutex_lock_interruptible(&mds->poison.lock);
+-	if (rc)
++	ACQUIRE(mutex_intr, lock)(&mds->poison.poison_lock);
++	if ((rc = ACQUIRE_ERR(mutex_intr, &lock)))
+ 		return rc;
+ 
+ 	po = mds->poison.list_out;
+@@ -1430,7 +1430,6 @@ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+ 		}
+ 	} while (po->flags & CXL_POISON_FLAG_MORE);
+ 
+-	mutex_unlock(&mds->poison.lock);
+ 	return rc;
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_mem_get_poison, "CXL");
+@@ -1466,7 +1465,7 @@ int cxl_poison_state_init(struct cxl_memdev_state *mds)
+ 		return rc;
+ 	}
+ 
+-	mutex_init(&mds->poison.lock);
++	mutex_init(&mds->poison.poison_lock);
+ 	return 0;
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_poison_state_init, "CXL");
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index 3ec6b906371b..85a160c778ae 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -257,7 +257,7 @@ struct cxl_poison_state {
+ 	u32 max_errors;
+ 	DECLARE_BITMAP(enabled_cmds, CXL_POISON_ENABLED_MAX);
+ 	struct cxl_mbox_poison_out *list_out;
+-	struct mutex lock;  /* Protect reads of poison list */
++	struct mutex poison_lock;  /* Protect reads of poison list */
+ };
+ 
+ /*
+diff --git a/include/linux/cleanup.h b/include/linux/cleanup.h
+index 7093e1d08af0..c0439fd63915 100644
+--- a/include/linux/cleanup.h
++++ b/include/linux/cleanup.h
+@@ -3,6 +3,8 @@
+ #define _LINUX_CLEANUP_H
+ 
+ #include <linux/compiler.h>
++#include <linux/err.h>
++#include <linux/args.h>
+ 
+ /**
+  * DOC: scope-based cleanup helpers
+@@ -323,23 +325,40 @@ static __maybe_unused const bool class_##_name##_is_conditional = _is_cond
+ 	__DEFINE_GUARD_LOCK_PTR(_name, _T)
+ 
+ #define DEFINE_GUARD(_name, _type, _lock, _unlock) \
+-	DEFINE_CLASS(_name, _type, if (_T) { _unlock; }, ({ _lock; _T; }), _type _T); \
++	DEFINE_CLASS(_name, _type, if (!IS_ERR_OR_NULL(_T)) { _unlock; }, ({ _lock; _T; }), _type _T); \
+ 	DEFINE_CLASS_IS_GUARD(_name)
+ 
+-#define DEFINE_GUARD_COND(_name, _ext, _condlock) \
++#define DEFINE_GUARD_COND_4(_name, _ext, _lock, _cond) \
+ 	__DEFINE_CLASS_IS_CONDITIONAL(_name##_ext, true); \
+ 	EXTEND_CLASS(_name, _ext, \
+-		     ({ void *_t = _T; if (_T && !(_condlock)) _t = NULL; _t; }), \
++		     ({ void *_t = _T; int _RET = (_lock); if (_T && !(_cond)) _t = ERR_PTR(_RET); _t; }), \
+ 		     class_##_name##_t _T) \
+ 	static inline void * class_##_name##_ext##_lock_ptr(class_##_name##_t *_T) \
+ 	{ return class_##_name##_lock_ptr(_T); }
+ 
++/*
++ * Default binary condition; success on 'true'.
++ */
++#define DEFINE_GUARD_COND_3(_name, _ext, _lock) \
++	DEFINE_GUARD_COND_4(_name, _ext, _lock, _RET)
++
++#define DEFINE_GUARD_COND(X...) CONCATENATE(DEFINE_GUARD_COND_, COUNT_ARGS(X))(X)
++
+ #define guard(_name) \
+ 	CLASS(_name, __UNIQUE_ID(guard))
+ 
+ #define __guard_ptr(_name) class_##_name##_lock_ptr
+ #define __is_cond_ptr(_name) class_##_name##_is_conditional
+ 
++#define ACQUIRE(_name, _var) \
++	CLASS(_name, _var)
++
++#define ACQUIRE_ERR(_name, _var) \
++	({ long _rc = PTR_ERR(__guard_ptr(_name)(_var)); \
++	   if (!_rc) _rc = -EBUSY; \
++	   if (!IS_ERR_VALUE(_rc)) _rc = 0; \
++	   _rc; })
++
+ /*
+  * Helper macro for scoped_guard().
+  *
+@@ -401,7 +420,7 @@ typedef struct {							\
+ 									\
+ static inline void class_##_name##_destructor(class_##_name##_t *_T)	\
+ {									\
+-	if (_T->lock) { _unlock; }					\
++	if (!IS_ERR_OR_NULL(_T->lock)) { _unlock; }			\
+ }									\
+ 									\
+ __DEFINE_GUARD_LOCK_PTR(_name, &_T->lock)
+@@ -433,15 +452,20 @@ __DEFINE_CLASS_IS_CONDITIONAL(_name, false);				\
+ __DEFINE_UNLOCK_GUARD(_name, void, _unlock, __VA_ARGS__)		\
+ __DEFINE_LOCK_GUARD_0(_name, _lock)
+ 
+-#define DEFINE_LOCK_GUARD_1_COND(_name, _ext, _condlock)		\
++#define DEFINE_LOCK_GUARD_1_COND_4(_name, _ext, _lock, _cond)		\
+ 	__DEFINE_CLASS_IS_CONDITIONAL(_name##_ext, true);		\
+ 	EXTEND_CLASS(_name, _ext,					\
+ 		     ({ class_##_name##_t _t = { .lock = l }, *_T = &_t;\
+-		        if (_T->lock && !(_condlock)) _T->lock = NULL;	\
++		        int _RET = (_lock);                             \
++		        if (_T->lock && !(_cond)) _T->lock = ERR_PTR(_RET);\
+ 			_t; }),						\
+ 		     typeof_member(class_##_name##_t, lock) l)		\
+ 	static inline void * class_##_name##_ext##_lock_ptr(class_##_name##_t *_T) \
+ 	{ return class_##_name##_lock_ptr(_T); }
+ 
++#define DEFINE_LOCK_GUARD_1_COND_3(_name, _ext, _lock) \
++	DEFINE_LOCK_GUARD_1_COND_4(_name, _ext, _lock, _RET);
++
++#define DEFINE_LOCK_GUARD_1_COND(X...) CONCATENATE(DEFINE_LOCK_GUARD_1_COND_, COUNT_ARGS(X))(X)
+ 
+ #endif /* _LINUX_CLEANUP_H */
+diff --git a/include/linux/mutex.h b/include/linux/mutex.h
+index 2143d05116be..232fdde82bbb 100644
+--- a/include/linux/mutex.h
++++ b/include/linux/mutex.h
+@@ -200,7 +200,7 @@ extern int atomic_dec_and_mutex_lock(atomic_t *cnt, struct mutex *lock);
+ 
+ DEFINE_GUARD(mutex, struct mutex *, mutex_lock(_T), mutex_unlock(_T))
+ DEFINE_GUARD_COND(mutex, _try, mutex_trylock(_T))
+-DEFINE_GUARD_COND(mutex, _intr, mutex_lock_interruptible(_T) == 0)
++DEFINE_GUARD_COND(mutex, _intr, mutex_lock_interruptible(_T), _RET == 0)
+ 
+ extern unsigned long mutex_get_owner(struct mutex *lock);
+ 
+diff --git a/include/linux/rwsem.h b/include/linux/rwsem.h
+index c8b543d428b0..c810deb88d13 100644
+--- a/include/linux/rwsem.h
++++ b/include/linux/rwsem.h
+@@ -240,7 +240,7 @@ extern void up_write(struct rw_semaphore *sem);
+ 
+ DEFINE_GUARD(rwsem_read, struct rw_semaphore *, down_read(_T), up_read(_T))
+ DEFINE_GUARD_COND(rwsem_read, _try, down_read_trylock(_T))
+-DEFINE_GUARD_COND(rwsem_read, _intr, down_read_interruptible(_T) == 0)
++DEFINE_GUARD_COND(rwsem_read, _intr, down_read_interruptible(_T), _RET == 0)
+ 
+ DEFINE_GUARD(rwsem_write, struct rw_semaphore *, down_write(_T), up_write(_T))
+ DEFINE_GUARD_COND(rwsem_write, _try, down_write_trylock(_T))
