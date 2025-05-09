@@ -1,108 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C7A6139B;
-	Thu,  8 May 2025 20:44:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DB4E1802B;
+	Fri,  9 May 2025 00:42:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746737065; cv=none; b=HE3+SdG0X+LQ7z5w9cSkSRSt8GBUOl7s/wljIXzF7Kdt+76rMoDSRS9jcu95ErLQwxgAidoBxGpIbOAcpMG4kR4zC3B2hfhHDYjQbMflSEeyFQ7bz1iqjbE4G0omAOpeU/QohCgGh/dxplAYt0V+Is52TFiTwOPnX3iE86rD9dc=
+	t=1746751351; cv=none; b=p+l9MzZySmWH6Vun/nkR6H2sB32CE2b1tBB3hEXSkjCVmJpAX9LQb1PunSGXXlCg9ZvFsuaFccKwboe1rUULfWFFfw/UEmz5isnUPf/3Pf46ywOukBZ0mID2JAVrp5LNFQiuRSm8IbENF6L09K/dVpuPWqdyEosmZqI8kQH19F0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746737065; c=relaxed/simple;
-	bh=M5Q/pM22WtIGtn3tXeEWQ0CmNExaO39LhRuhknpTPPc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jd21ff1bLARC+mBSYdX7c8wMBxTTK63Q5VzWBPJQnmiGvM1o7FEkY8TJau6n6zAfgkANRZdAnWtzd6RBYv2Jz8syoECrGHe4vyr22d4/BH4rc+LdscW0ZBgj8P4j+1yJHFvM4wR5Cat1PLrXU6cvs57vJSQ1xqpLkRIoMJ4QAuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8A17C4CEE7;
-	Thu,  8 May 2025 20:44:24 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org,
-	nvdimm@lists.linux.dev
-Cc: alison.schofield@intel.com,
-	Vishal Verma <vishal.l.verma@intel.com>
-Subject: [NDCTL PATCH v2] cxl: Change cxl-topology.sh assumption on host bridge validation
-Date: Thu,  8 May 2025 13:44:19 -0700
-Message-ID: <20250508204419.3227297-1-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1746751351; c=relaxed/simple;
+	bh=PRRpLihiyKbV/Sfm7nAyauKWja5MC4KYGOEp5dMFOPU=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=BGx/fRVMknVc7i2WIPZzMK7XjWm20VwL9k38SSbDi14qIOXHbohDJIVHXRO5raiK0PRUj+n2P/BNMM8Y2mlxiHsb/w3e0UQ22gOqeNLMLfWGHfqHI+NY7a1+d3/HmkUCGmyradMCF1gAlfNsNIMEPqwYZMkoCLQEsEVd6UVC8CI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=GeHURCqy; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="GeHURCqy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 715CEC4CEED;
+	Fri,  9 May 2025 00:42:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1746751351;
+	bh=PRRpLihiyKbV/Sfm7nAyauKWja5MC4KYGOEp5dMFOPU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=GeHURCqy78rgaPH336N7O9DR2zC7Dw3upYbA5PXTkE3c9yrNHxYhi+rlndDY1nj01
+	 Cs/isfb6y6BJask44SKtR4DoFzv1HGXitOByXCwXPBESsszgnZ2pSxTUoqw5WdJIJx
+	 yDmSt6Fy7MdG77SX11Re/PiIMGvbjh/GlTUS2YtY=
+Date: Thu, 8 May 2025 17:42:29 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+Cc: Jonathan.Cameron@huawei.com, dan.j.williams@intel.com, rppt@kernel.org,
+ rafael@kernel.org, lenb@kernel.org, alison.schofield@intel.com,
+ rrichter@amd.com, bfaccini@nvidia.com, haibo1.xu@intel.com,
+ david@redhat.com, chenhuacai@kernel.org, linux-cxl@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, chenbaozi@phytium.com.cn, loongarch@lists.linux.dev
+Subject: Re: [PATCH v3 1/1] mm: numa_memblks: introduce
+ numa_add_reserved_memblk
+Message-Id: <20250508174229.c310803222405c1b7d60e104@linux-foundation.org>
+In-Reply-To: <20250508022719.3941335-1-wangyuquan1236@phytium.com.cn>
+References: <20250508022719.3941335-1-wangyuquan1236@phytium.com.cn>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Current host bridge validation in cxl-topology.sh assumes that the
-decoder enumeration is in order and therefore the port numbers can
-be used as a sorting key. With delayed port enumeration, this
-assumption is no longer true. Change the sorting to by number
-of children ports for each host bridge as the test code expects
-the first 2 host bridges to have 2 children and the third to only
-have 1.
+On Thu,  8 May 2025 10:27:19 +0800 Yuquan Wang <wangyuquan1236@phytium.com.cn> wrote:
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
----
-v2:
-- Merged Vishal's suggestion
+> acpi_parse_cfmws() currently adds empty CFMWS ranges to numa_meminfo
+> with the expectation that numa_cleanup_meminfo moves them to
+> numa_reserved_meminfo. There is no need for that indirection when it is
+> known in advance that these unpopulated ranges are meant for
+> numa_reserved_meminfo in support of future hotplug / CXL provisioning.
+> 
+> Introduce and use numa_add_reserved_memblk() to add the empty CFMWS
+> ranges directly.
+> 
+> ...
+>
+>  drivers/acpi/numa/srat.c     |  2 +-
+>  include/linux/numa_memblks.h |  1 +
+>  mm/numa_memblks.c            | 22 ++++++++++++++++++++++
 
- test/cxl-topology.sh | 31 +++++++++++++++++++++++++++----
- 1 file changed, 27 insertions(+), 4 deletions(-)
-
-diff --git a/test/cxl-topology.sh b/test/cxl-topology.sh
-index 90b9c98273db..49e919a187af 100644
---- a/test/cxl-topology.sh
-+++ b/test/cxl-topology.sh
-@@ -37,15 +37,37 @@ root=$(jq -r ".[] | .bus" <<< $json)
- 
- 
- # validate 2 or 3 host bridges under a root port
--port_sort="sort_by(.port | .[4:] | tonumber)"
- json=$($CXL list -b cxl_test -BP)
- count=$(jq ".[] | .[\"ports:$root\"] | length" <<< $json)
- ((count == 2)) || ((count == 3)) || err "$LINENO"
- bridges=$count
- 
--bridge[0]=$(jq -r ".[] | .[\"ports:$root\"] | $port_sort | .[0].port" <<< $json)
--bridge[1]=$(jq -r ".[] | .[\"ports:$root\"] | $port_sort | .[1].port" <<< $json)
--((bridges > 2)) && bridge[2]=$(jq -r ".[] | .[\"ports:$root\"] | $port_sort | .[2].port" <<< $json)
-+bridge_filter()
-+{
-+	local br_num="$1"
-+
-+	jq -r \
-+		--arg key "$root" \
-+		--argjson br_num "$br_num" \
-+		'.[] |
-+		  select(has("ports:" + $key)) |
-+		  .["ports:" + $key] |
-+		  map(
-+		    {
-+		      full: .,
-+		      length: (.["ports:" + .port] | length)
-+		    }
-+		  ) |
-+		  sort_by(-.length) |
-+		  map(.full) |
-+		  .[$br_num].port'
-+}
-+
-+# $count has already been sanitized for acceptable values, so
-+# just collect $count bridges here.
-+for i in $(seq 0 $((count - 1))); do
-+	bridge[$i]="$(bridge_filter "$i" <<< "$json")"
-+done
- 
- # validate root ports per host bridge
- check_host_bridge()
-@@ -64,6 +86,7 @@ json=$($CXL list -b cxl_test -P -p ${bridge[0]})
- count=$(jq ".[] | .[\"ports:${bridge[0]}\"] | length" <<< $json)
- ((count == 2)) || err "$LINENO"
- 
-+port_sort="sort_by(.port | .[4:] | tonumber)"
- switch[0]=$(jq -r ".[] | .[\"ports:${bridge[0]}\"] | $port_sort | .[0].host" <<< $json)
- switch[1]=$(jq -r ".[] | .[\"ports:${bridge[0]}\"] | $port_sort | .[1].host" <<< $json)
- 
-
-base-commit: 01eeaf2954b2c3ff52622d62fdae1c18cd15ab66
--- 
-2.49.0
-
+I'm not sure which tree this best belongs to so I'll add it to mm-git. 
+If it later pops up in another tree, I'll drop it again.
