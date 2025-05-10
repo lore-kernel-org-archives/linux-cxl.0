@@ -1,261 +1,220 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0D12620E5
-	for <linux-cxl@vger.kernel.org>; Sat, 10 May 2025 01:21:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F4A2222A2
+	for <linux-cxl@vger.kernel.org>; Sat, 10 May 2025 10:11:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746840066; cv=none; b=MYvUIrA+G53FzxhSqNGKGmS7K7S2X2SAg5mvcVgt60UsuCbggBxzZ3bxpaWCMa3XtYmERroiIQ/EmzCVfd4hWx4QO+td6DPqZEgqo272BbV1dnE0bDoBtclbKTHk07D0J6cIzk+833osM0Ck1djk6xgDSm/u/CN2E0wk7nVUJBs=
+	t=1746871868; cv=none; b=PCm0LuEYWGFna7on4PwHEM7qg9BQIEWJzmTs5l0oXfeeZBhAt4mEejgQvjbhRtIG1MhpZQIhqU/IyrY8likq3iqRIHATj+hhOfNuXHjuqzpr4i2vBfpgtMX7m5wN09yegP0LnXFE6QRsnEbL8Ru7N4Q/TWVyngJBKjRpG+WYkFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746840066; c=relaxed/simple;
-	bh=00l892IqZoSUv5fd235eXrNHgxD0pt0+a8rndCMWpmg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a6MVACHBTmkEVLXY6ifyS4uAiJJxD8Lsgt34zTrLcVxWrFaY1F4RtzrY3JzQdSlqaU8LrX0MWJpzLTIb/SSvzj4xjzIn/e9ZjKdj7RKG/MIO3t5Gf08DCJYnrnqJe0JFxs52S01GNQYuIPFofu5bBNvZvR7lpdOj//mum/q+T5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fl/fSdct; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746871868; c=relaxed/simple;
+	bh=k3jNXvanhxg4swtaPtrS6KWOjGplIhxzImcXerAkbVM=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=roCECx49rkUaHOnw4u5vD9pnoj/EJsOxDbt93grruTkwL7ksvWYbLASkaUzIjMmhX2bOK+3aFHj6dQuL2tlzOMcUMcNUV7Ssed7gy7zrVmt3EJpHEUr2W9l/hd8QJ4YdF6NZguLPhcTIuuX7PlHB/cHkZ00w2VIxoOo/bBSCl3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jx5+XeJh; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fl/fSdct"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jx5+XeJh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746840061; x=1778376061;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=00l892IqZoSUv5fd235eXrNHgxD0pt0+a8rndCMWpmg=;
-  b=Fl/fSdctwlZVl8dqVYpbHUIf2IvUAQFoM9A778hwaVhJLjAYUMicHee+
-   +cpzPKPdre5jm9Y2u4edpN879nsV9ewRe2hqUWtVWmqozPxVrviZpvUv4
-   g+47JwDaQ9A6fCQeZrgrjyA3mDzneA4CC5PNh8cEFAf4+wqm1BomD1LRp
-   iOpYajc9qm/yAblYLUOHObT8GN8OpT2Thg2KybuHTE3D/QmFmrXhw0p0G
-   NwjLBrFA+GsInuABR0AM0Zs9NsesoqbzNAwduTJGys5fDKmvfp9a/k77R
-   DRptcIiR8OPw8efCgHsbFpoEJyjSN6s4vJJ0Qa6/TaR9ju8uoD6qUzfq4
-   A==;
-X-CSE-ConnectionGUID: P87qRuSaSmu6Cf6zSC6mzQ==
-X-CSE-MsgGUID: 6ZYgaAIgTWSGLGR1k+VflA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="48589268"
+  t=1746871866; x=1778407866;
+  h=date:from:to:cc:subject:message-id;
+  bh=k3jNXvanhxg4swtaPtrS6KWOjGplIhxzImcXerAkbVM=;
+  b=Jx5+XeJhpaCKSIcGXivbOsrC0qdPfCLqkJJz4GV6PyLglYmksGYebkQd
+   +HhFm5sHwYT7FCjSrB4BV+vTnwyTJcUm1wKlUPO75Y7yjxtgaADtD5Akd
+   2yjab2d2uncCcCqQiXL7YZveGy+MgHuMVjym3MEO/caIXQUMiQKB+5LAP
+   4LwNvYhMpK6bsj0IMIYbj2FIS6i25tZbvHAschb5iLm05HbUj+uHEiCYE
+   Mxwsyy08d9wdW3chopIpA75axRAnFK7mObric0jR04HxEm9av9hKUcGpu
+   8ls02SklhuMoeZo/knzeBCB9oAzEPMWgwOqgLT6mj2Qsra0nKNRXKX47m
+   w==;
+X-CSE-ConnectionGUID: 4d12gJ75RRCHUiJMOlvkcA==
+X-CSE-MsgGUID: dViggGQ8TCmNKfmJle96pg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="59700400"
 X-IronPort-AV: E=Sophos;i="6.15,276,1739865600"; 
-   d="scan'208";a="48589268"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 18:21:00 -0700
-X-CSE-ConnectionGUID: cwRCH3P/TnesW43hGkzhGg==
-X-CSE-MsgGUID: 9IPZU7kiT+2G9a/L/2HoyA==
+   d="scan'208";a="59700400"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2025 03:11:04 -0700
+X-CSE-ConnectionGUID: AQ9EHFulQ2ipG6lhevSxPw==
+X-CSE-MsgGUID: MnPXlqHaTDe8/EtuNjQldQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,276,1739865600"; 
-   d="scan'208";a="137720416"
-Received: from unknown (HELO hyperion.jf.intel.com) ([10.243.61.29])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 18:21:01 -0700
-From: marc.herbert@linux.intel.com
-To: linux-cxl@vger.kernel.org,
-	nvdimm@lists.linux.dev
-Cc: Marc Herbert <marc.herbert@linux.intel.com>
-Subject: [ndctl PATCH] test: fail on unexpected kernel error & warning, not just "Call Trace"
-Date: Sat, 10 May 2025 01:20:46 +0000
-Message-ID: <20250510012046.1067514-1-marc.herbert@linux.intel.com>
-X-Mailer: git-send-email 2.49.0
+   d="scan'208";a="141771323"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 10 May 2025 03:11:02 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uDhAa-000CzL-0x;
+	Sat, 10 May 2025 10:11:00 +0000
+Date: Sat, 10 May 2025 18:10:12 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Subject: [cxl:next] BUILD SUCCESS
+ a223ce195741ca4f1a0e1a44f3e75ce5662b6c06
+Message-ID: <202505101856.rZN4uqNW-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Marc Herbert <marc.herbert@linux.intel.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
+branch HEAD: a223ce195741ca4f1a0e1a44f3e75ce5662b6c06  cxl/hdm: Clean up a debug printk
 
-While a "Call Trace" is usually a bad omen, the show_trace_log_lvl()
-function supports any log level. So a "Call Trace" is not a reliable
-indication of a failure. More importantly: any other WARNING or ERROR
-during a test should make a test FAIL. Before this commit, it does not.
+elapsed time: 774m
 
-So, leverage log levels for the PASS/FAIL decision.  This catches all
-issues and not just the ones printing Call Traces.
+configs tested: 140
+configs skipped: 5
 
-Add a simple way to exclude expected warnings and errors, either on a
-per-test basis or globally.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Add a way for negative tests to fail when if some expected errors are
-missing.
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+alpha                               defconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    gcc-14.2.0
+arc                                 defconfig    gcc-14.2.0
+arc                   randconfig-001-20250510    gcc-14.2.0
+arc                   randconfig-002-20250510    gcc-13.3.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-14.2.0
+arm                         bcm2835_defconfig    clang-21
+arm                                 defconfig    clang-21
+arm                        keystone_defconfig    gcc-14.2.0
+arm                             mxs_defconfig    clang-21
+arm                   randconfig-001-20250510    gcc-10.5.0
+arm                   randconfig-002-20250510    clang-21
+arm                   randconfig-003-20250510    gcc-10.5.0
+arm                   randconfig-004-20250510    gcc-7.5.0
+arm                           sunxi_defconfig    gcc-14.2.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-14.2.0
+arm64                               defconfig    gcc-14.2.0
+arm64                 randconfig-001-20250510    gcc-7.5.0
+arm64                 randconfig-002-20250510    gcc-5.5.0
+arm64                 randconfig-003-20250510    clang-21
+arm64                 randconfig-004-20250510    gcc-7.5.0
+csky                              allnoconfig    gcc-14.2.0
+csky                                defconfig    gcc-14.2.0
+csky                  randconfig-001-20250510    gcc-14.2.0
+csky                  randconfig-002-20250510    gcc-13.3.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon                             defconfig    clang-21
+hexagon               randconfig-001-20250510    clang-21
+hexagon               randconfig-002-20250510    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250510    gcc-12
+i386        buildonly-randconfig-002-20250510    gcc-12
+i386        buildonly-randconfig-003-20250510    gcc-12
+i386        buildonly-randconfig-004-20250510    gcc-12
+i386        buildonly-randconfig-005-20250510    gcc-12
+i386        buildonly-randconfig-006-20250510    gcc-12
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch                           defconfig    gcc-14.2.0
+loongarch             randconfig-001-20250510    gcc-13.3.0
+loongarch             randconfig-002-20250510    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                                defconfig    gcc-14.2.0
+m68k                        m5272c3_defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+microblaze                          defconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                           ip22_defconfig    gcc-14.2.0
+mips                           mtx1_defconfig    clang-21
+mips                        omega2p_defconfig    clang-21
+nios2                         10m50_defconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                               defconfig    gcc-14.2.0
+nios2                 randconfig-001-20250510    gcc-11.5.0
+nios2                 randconfig-002-20250510    gcc-7.5.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250510    gcc-6.5.0
+parisc                randconfig-002-20250510    gcc-12.4.0
+parisc64                            defconfig    gcc-14.1.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-21
+powerpc                       eiger_defconfig    clang-21
+powerpc                      ep88xc_defconfig    gcc-14.2.0
+powerpc               randconfig-001-20250510    gcc-7.5.0
+powerpc               randconfig-002-20250510    clang-17
+powerpc               randconfig-003-20250510    clang-21
+powerpc64             randconfig-001-20250510    clang-18
+powerpc64             randconfig-002-20250510    gcc-10.5.0
+powerpc64             randconfig-003-20250510    clang-21
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    clang-21
+riscv             nommu_k210_sdcard_defconfig    gcc-14.2.0
+riscv                 randconfig-001-20250510    gcc-14.2.0
+riscv                 randconfig-002-20250510    gcc-7.5.0
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    clang-21
+s390                  randconfig-001-20250510    gcc-7.5.0
+s390                  randconfig-002-20250510    clang-21
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-14.2.0
+sh                            hp6xx_defconfig    gcc-14.2.0
+sh                    randconfig-001-20250510    gcc-9.3.0
+sh                    randconfig-002-20250510    gcc-11.5.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250510    gcc-12.4.0
+sparc                 randconfig-002-20250510    gcc-14.2.0
+sparc64                          alldefconfig    gcc-14.2.0
+sparc64                             defconfig    gcc-14.2.0
+sparc64               randconfig-001-20250510    gcc-10.5.0
+sparc64               randconfig-002-20250510    gcc-14.2.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250510    gcc-12
+um                    randconfig-002-20250510    gcc-12
+um                           x86_64_defconfig    clang-21
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250510    clang-20
+x86_64      buildonly-randconfig-002-20250510    clang-20
+x86_64      buildonly-randconfig-003-20250510    gcc-12
+x86_64      buildonly-randconfig-004-20250510    gcc-11
+x86_64      buildonly-randconfig-005-20250510    gcc-12
+x86_64      buildonly-randconfig-006-20250510    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-18
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250510    gcc-8.5.0
+xtensa                randconfig-002-20250510    gcc-14.2.0
 
-Add COOLDOWN_MS to address the inaccuracy of the magic $SECONDS
-variable.
-
-As a good example (which initiated this), the test feedback when hitting
-bug https://github.com/pmem/ndctl/issues/278, where the cxl_test module
-errors at load, is completely changed by this. Instead of only half the
-tests failing with a fairly cryptic and late "Numerical result out of
-range" error from user space, now all tests are failing early and
-consistently, all displaying the same, earlier and more relevant error.
-
-This simple log-level based approach has been successfully used for
-years in the CI of https://github.com/thesofproject and caught
-countless firmware and kernel bugs.
-
-Note: the popular message "possible circular locking ..." recently fixed
-by revert v6.15-rc1-4-gdc1771f71854 is at the WARNING level, including
-its Call Trace.
-
-Signed-off-by: Marc Herbert <marc.herbert@linux.intel.com>
----
- test/common            | 74 +++++++++++++++++++++++++++++++++++++++---
- test/cxl-events.sh     |  2 ++
- test/cxl-poison.sh     |  5 +++
- test/cxl-xor-region.sh |  2 ++
- test/dax.sh            |  6 ++++
- 5 files changed, 84 insertions(+), 5 deletions(-)
-
-diff --git a/test/common b/test/common
-index 75ff1a6e12be..2a95437186e7 100644
---- a/test/common
-+++ b/test/common
-@@ -3,6 +3,15 @@
- 
- # Global variables
- 
-+# Small gap in journalctl to avoid cross-test pollution.  Unfortunately,
-+# this needs be at least 1 second because we don't know how bash rounds
-+# up or down its magic $SECONDS variable that we use below.
-+COOLDOWN_MS=1200
-+sleep "${COOLDOWN_MS}E-3"
-+
-+# Log anchor, especially useful when running tests back to back
-+printf "<5>%s: sourcing test/common\n" "$0" > /dev/kmsg
-+
- # NDCTL
- if [ -z $NDCTL ]; then
- 	if [ -f "../ndctl/ndctl" ] && [ -x "../ndctl/ndctl" ]; then
-@@ -140,15 +149,70 @@ json2var()
- 	sed -e "s/[{}\",]//g; s/\[//g; s/\]//g; s/:/=/g"
- }
- 
--# check_dmesg
-+# - "declare -a" gives the main script the freedom to source this file
-+#   before OR after adding some excludes.
-+declare -a kmsg_no_fail_on
-+# kmsg_no_fail_on+=('this array must never be empty to keep the code simple')
-+
-+kmsg_no_fail_on+=('cxl_core: loading out-of-tree module taints kernel')
-+kmsg_no_fail_on+=('cxl_mock_mem.*: CXL MCE unsupported')
-+kmsg_no_fail_on+=('cxl_mock_mem cxl_mem.*: Extended linear cache calculation failed rc:-2')
-+
-+# 'modprobe nfit_test' prints these every time it's not already loaded
-+kmsg_no_fail_on+=(
-+    'nd_pmem namespace.*: unable to guarantee persistence of writes'
-+    'nfit_test nfit_test.*: failed to evaluate _FIT'
-+    'nfit_test nfit_test.*: Error found in NVDIMM nmem. flags: save_fail restore_fail flush_fail not_armed'
-+    'nfit_test nfit_test.1: Error found in NVDIMM nmem. flags: map_fail'
-+)
-+
-+declare -a kmsg_fail_if_missing
-+
-+print_all_warnings()
-+{
-+	( set +x;
-+	  printf '%s\n' '------------ ALL warnings and errors -----------')
-+	journalctl -p warning -b --since "-$((SECONDS*1000)) ms"
-+}
-+
- # $1: line number where this is called
- check_dmesg()
- {
--	# validate no WARN or lockdep report during the run
-+	local _e_kmsg_no_fail_on=()
-+	for re in "${kmsg_no_fail_on[@]}" "${kmsg_fail_if_missing[@]}"; do
-+		_e_kmsg_no_fail_on+=('-e' "$re")
-+	done
-+
-+	# Give some time for a complete kmsg->journalctl flush + any delayed test effect.
- 	sleep 1
--	log=$(journalctl -r -k --since "-$((SECONDS+1))s")
--	grep -q "Call Trace" <<< $log && err $1
--	true
-+
-+	# Optional code to manually verify the SECONDS / COOLDOWN_MS logic.
-+	# journalctl -q -b -o short-precise --since "-$((SECONDS*1000 - COOLDOWN_MS/2)) ms" > journal-"$(basename "$0")".log
-+	# After enabling, check the timings in:
-+	#    head -n 7 $(ls -1t build/journal-*.log | tac)
-+	#    journalctl --since='- 5 min' -o short-precise -g 'test/common'
-+
-+	{ # Redirect to stderr so this is all at the _bottom_ in the log file
-+	# Fail on kernel WARNING or ERROR. $SECONDS is bash magic.
-+	if journalctl -q -p warning -k --since "-$((SECONDS*1000 - COOLDOWN_MS/2)) ms" |
-+		grep -E -v "${_e_kmsg_no_fail_on[@]}"; then
-+			print_all_warnings
-+			err "$1"
-+	fi
-+
-+	local expected_re
-+	for expected_re in "${kmsg_fail_if_missing[@]}"; do
-+		journalctl -q -p warning -k --since "-$((SECONDS*1000 - COOLDOWN_MS/2)) ms" |
-+			grep -q "${expected_re}" || {
-+				printf 'FAIL: expected error not found: %s\n' "$expected_re"
-+				print_all_warnings
-+				err "$1"
-+		}
-+	done
-+	} >&2
-+
-+	# Log anchor, especially useful when running tests back to back
-+	printf "<5>%s: test/common check_dmesg() OK\n" "$0" > /dev/kmsg
- }
- 
- # CXL COMMON
-diff --git a/test/cxl-events.sh b/test/cxl-events.sh
-index c216d6aa9148..1461b487e208 100644
---- a/test/cxl-events.sh
-+++ b/test/cxl-events.sh
-@@ -25,6 +25,8 @@ rc=1
- dev_path="/sys/bus/platform/devices"
- trace_path="/sys/kernel/tracing"
- 
-+kmsg_no_fail_on+=('cxl_mock_mem cxl_mem.* no CXL window for range')
-+
- test_region_info()
- {
- 	# Trigger a memdev in the cxl_test autodiscovered region
-diff --git a/test/cxl-poison.sh b/test/cxl-poison.sh
-index 2caf092db460..4df7d7ffbe8a 100644
---- a/test/cxl-poison.sh
-+++ b/test/cxl-poison.sh
-@@ -8,6 +8,11 @@ rc=77
- 
- set -ex
- 
-+kmsg_no_fail_on+=(
-+    'cxl_mock_mem cxl_mem.*: poison inject dpa:0x'
-+    'cxl_mock_mem cxl_mem.*: poison clear dpa:0x'
-+)
-+
- trap 'err $LINENO' ERR
- 
- check_prereq "jq"
-diff --git a/test/cxl-xor-region.sh b/test/cxl-xor-region.sh
-index b9e1d79212d3..f5e0db98b67f 100644
---- a/test/cxl-xor-region.sh
-+++ b/test/cxl-xor-region.sh
-@@ -17,6 +17,8 @@ modprobe cxl_test interleave_arithmetic=1
- udevadm settle
- rc=1
- 
-+kmsg_fail_if_missing+=('cxl_mock_mem cxl_mem.* no CXL window for range')
-+
- # THEORY OF OPERATION: Create x1,2,3,4 regions to exercise the XOR math
- # option of the CXL driver. As with other cxl_test tests, changes to the
- # CXL topology in tools/testing/cxl/test/cxl.c may require an update here.
-diff --git a/test/dax.sh b/test/dax.sh
-index 3ffbc8079eba..c325e144753d 100755
---- a/test/dax.sh
-+++ b/test/dax.sh
-@@ -118,6 +118,12 @@ else
- 	run_xfs
- fi
- 
-+kmsg_fail_if_missing=(
-+    'nd_pmem pfn.*: unable to guarantee persistence of writes'
-+    'Memory failure: .*: Sending SIGBUS to dax-pmd:.* due to hardware memory corruption'
-+    'Memory failure: .*: recovery action for dax page: Recovered'
-+)
-+
- check_dmesg "$LINENO"
- 
- exit 0
--- 
-2.49.0
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
