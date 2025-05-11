@@ -1,220 +1,263 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F4A2222A2
-	for <linux-cxl@vger.kernel.org>; Sat, 10 May 2025 10:11:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B384DDAD;
+	Sun, 11 May 2025 01:57:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746871868; cv=none; b=PCm0LuEYWGFna7on4PwHEM7qg9BQIEWJzmTs5l0oXfeeZBhAt4mEejgQvjbhRtIG1MhpZQIhqU/IyrY8likq3iqRIHATj+hhOfNuXHjuqzpr4i2vBfpgtMX7m5wN09yegP0LnXFE6QRsnEbL8Ru7N4Q/TWVyngJBKjRpG+WYkFc=
+	t=1746928651; cv=none; b=Co1XGDBx2Hk49jkG+yvzWbTEKkmwwvFsEh4lII9p1mzqI5LuBTGBTOJfScEmAeczp2bBKRpBRP3W7XoooGQn6TvAQW01UCvDrohxoee+RpsZYhuWFbgl8/xhVuCMF85a+ISzA0K3Cf3TmzSLSyDxtGyejtEGhQq7MUgMh6PZezg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746871868; c=relaxed/simple;
-	bh=k3jNXvanhxg4swtaPtrS6KWOjGplIhxzImcXerAkbVM=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=roCECx49rkUaHOnw4u5vD9pnoj/EJsOxDbt93grruTkwL7ksvWYbLASkaUzIjMmhX2bOK+3aFHj6dQuL2tlzOMcUMcNUV7Ssed7gy7zrVmt3EJpHEUr2W9l/hd8QJ4YdF6NZguLPhcTIuuX7PlHB/cHkZ00w2VIxoOo/bBSCl3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jx5+XeJh; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746928651; c=relaxed/simple;
+	bh=KdbX0jPiRd4tlxIfeYuW+jtn/LCXn3kN3RReU+jqVsY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XiYqgb7TTW17Dqk2XmbGvCyYGEp9N0OldwXkQ3UPBzbcO76ao6WmSQdGvNnjIZEYf76qd3JkRTJ8uak6S4cwPjVdiYH5quzEKN54rb92JOBQu+HOe5PtSsPuNX19dwoukycEWOrCfM6bFXHCf1yyYpv6hYyzk9xIwPSmdm8DEdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=pQ8KXZD5; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jx5+XeJh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746871866; x=1778407866;
-  h=date:from:to:cc:subject:message-id;
-  bh=k3jNXvanhxg4swtaPtrS6KWOjGplIhxzImcXerAkbVM=;
-  b=Jx5+XeJhpaCKSIcGXivbOsrC0qdPfCLqkJJz4GV6PyLglYmksGYebkQd
-   +HhFm5sHwYT7FCjSrB4BV+vTnwyTJcUm1wKlUPO75Y7yjxtgaADtD5Akd
-   2yjab2d2uncCcCqQiXL7YZveGy+MgHuMVjym3MEO/caIXQUMiQKB+5LAP
-   4LwNvYhMpK6bsj0IMIYbj2FIS6i25tZbvHAschb5iLm05HbUj+uHEiCYE
-   Mxwsyy08d9wdW3chopIpA75axRAnFK7mObric0jR04HxEm9av9hKUcGpu
-   8ls02SklhuMoeZo/knzeBCB9oAzEPMWgwOqgLT6mj2Qsra0nKNRXKX47m
-   w==;
-X-CSE-ConnectionGUID: 4d12gJ75RRCHUiJMOlvkcA==
-X-CSE-MsgGUID: dViggGQ8TCmNKfmJle96pg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="59700400"
-X-IronPort-AV: E=Sophos;i="6.15,276,1739865600"; 
-   d="scan'208";a="59700400"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2025 03:11:04 -0700
-X-CSE-ConnectionGUID: AQ9EHFulQ2ipG6lhevSxPw==
-X-CSE-MsgGUID: MnPXlqHaTDe8/EtuNjQldQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,276,1739865600"; 
-   d="scan'208";a="141771323"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 10 May 2025 03:11:02 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uDhAa-000CzL-0x;
-	Sat, 10 May 2025 10:11:00 +0000
-Date: Sat, 10 May 2025 18:10:12 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Subject: [cxl:next] BUILD SUCCESS
- a223ce195741ca4f1a0e1a44f3e75ce5662b6c06
-Message-ID: <202505101856.rZN4uqNW-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pQ8KXZD5"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=Rh2oUnvKD7/7pfEaaCaR8pSVJXctOtXLnyFrbhpv8Io=; b=pQ8KXZD53+ZUytlfH/st7V4ixo
+	TZB8A0Q9zVngPf+vM6J8fva0Qx5sQDmKweGS0mSe6niePwFZFl0mDJHz2VT6sjWLNKuZE0FLpcPkV
+	2AuMddOKE+7YblPM2jzpzBsZTQBU4O1EtcaUavLuXr01dvGhANjc+ggcX/b9/NDb/XsphfTr0b5qa
+	wy14tNB4ChZO3TniTqZ7Ww4OxTzsEppJID3MPG1S6hR3aMTNgeKWeVF2/tgemnp4xEtFN+zm9BBat
+	I9DzVL1Ys9G80sbAM9vIXgCqAJm+O/RY6QIhBIHY3teBj8wSROXVVJJ2gEB8YUSwwA9Awg19vO3vk
+	hn5GOTBw==;
+Received: from [50.39.124.201] (helo=[192.168.254.17])
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1uDvwI-0000000GXIf-3r8z;
+	Sun, 11 May 2025 01:57:19 +0000
+Message-ID: <d8eadf5e-1b9f-4020-95de-cde60e4bee48@infradead.org>
+Date: Sat, 10 May 2025 18:57:05 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 02/18] cxl: docs/devices - device reference and
+ uefi placeholder
+To: Gregory Price <gourry@gourry.net>, linux-cxl@vger.kernel.org
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel-team@meta.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
+ dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
+ ira.weiny@intel.com, dan.j.williams@intel.com, corbet@lwn.net
+References: <20250430181048.1197475-1-gourry@gourry.net>
+ <20250430181048.1197475-3-gourry@gourry.net>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250430181048.1197475-3-gourry@gourry.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-branch HEAD: a223ce195741ca4f1a0e1a44f3e75ce5662b6c06  cxl/hdm: Clean up a debug printk
 
-elapsed time: 774m
 
-configs tested: 140
-configs skipped: 5
+On 4/30/25 11:10 AM, Gregory Price wrote:
+> Add a simple device primer sufficient to understand the theory
+> of operation documentation.
+> 
+> Add carve-out for CDAT with a TODO.
+> 
+> Signed-off-by: Gregory Price <gourry@gourry.net>
+> ---
+>  .../driver-api/cxl/devices/device-types.rst   | 170 ++++++++++++++++++
+>  Documentation/driver-api/cxl/devices/uefi.rst |  10 ++
+>  Documentation/driver-api/cxl/index.rst        |   7 +
+>  3 files changed, 187 insertions(+)
+>  create mode 100644 Documentation/driver-api/cxl/devices/device-types.rst
+>  create mode 100644 Documentation/driver-api/cxl/devices/uefi.rst
+> 
+> diff --git a/Documentation/driver-api/cxl/devices/device-types.rst b/Documentation/driver-api/cxl/devices/device-types.rst
+> new file mode 100644
+> index 000000000000..dfe8d4711987
+> --- /dev/null
+> +++ b/Documentation/driver-api/cxl/devices/device-types.rst
+> @@ -0,0 +1,170 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +=====================
+> +Devices and Protocols
+> +=====================
+> +
+> +The type of CXL device (Memory, Accelerator, etc) dictates many configuration steps. This section
+> +covers some basic background on device types and on-device resources used by the platform and OS
+> +which impact configuration.
+> +
+> +Protocols
+> +=========
+> +
+> +There are three core protocols to CXL.  For the purpose of this documentation,
+> +we will only discuss very high level definitions as the specific hardware
+> +details are largely abstracted away from Linux.  See the CXL specification
+> +for more details.
+> +
+> +CXL.io
+> +------
+> +The basic interaction protocol, similar to PCIe configuration mechanisms.
+> +Typically used for initialization, configuration, and I/O access for anything
+> +other than memory (CXL.mem) or cache (CXL.cache) operations.
+> +
+> +The Linux CXL driver exposes access to .io functionalty via the various sysfs
+> +interfaces and /dev/cxl/ devices (which exposes direct access to device
+> +mailboxes).
+> +
+> +CXL.cache
+> +---------
+> +The mechanism by which a device may coherently access and cache host memory.
+> +
+> +Largely transparent to Linux once configured.
+> +
+> +CXL.mem
+> +---------
+> +The mechanism by which the CPU may coherently access and cache device memory.
+> +
+> +Largely transparent to Linux once configured.
+> +
+> +
+> +Device Types
+> +============
+> +
+> +Type-1
+> +------
+> +
+> +A Type-1 CXL device:
+> +
+> +* Supports cxl.io and cxl.cache protocols
+> +* Implements a fully coherent cache
+> +* Allow Device-to-Host coherence and Host-to-Device snoops.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+     Allows
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-alpha                               defconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-14.2.0
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    gcc-14.2.0
-arc                                 defconfig    gcc-14.2.0
-arc                   randconfig-001-20250510    gcc-14.2.0
-arc                   randconfig-002-20250510    gcc-13.3.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-14.2.0
-arm                         bcm2835_defconfig    clang-21
-arm                                 defconfig    clang-21
-arm                        keystone_defconfig    gcc-14.2.0
-arm                             mxs_defconfig    clang-21
-arm                   randconfig-001-20250510    gcc-10.5.0
-arm                   randconfig-002-20250510    clang-21
-arm                   randconfig-003-20250510    gcc-10.5.0
-arm                   randconfig-004-20250510    gcc-7.5.0
-arm                           sunxi_defconfig    gcc-14.2.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-14.2.0
-arm64                               defconfig    gcc-14.2.0
-arm64                 randconfig-001-20250510    gcc-7.5.0
-arm64                 randconfig-002-20250510    gcc-5.5.0
-arm64                 randconfig-003-20250510    clang-21
-arm64                 randconfig-004-20250510    gcc-7.5.0
-csky                              allnoconfig    gcc-14.2.0
-csky                                defconfig    gcc-14.2.0
-csky                  randconfig-001-20250510    gcc-14.2.0
-csky                  randconfig-002-20250510    gcc-13.3.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon                             defconfig    clang-21
-hexagon               randconfig-001-20250510    clang-21
-hexagon               randconfig-002-20250510    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250510    gcc-12
-i386        buildonly-randconfig-002-20250510    gcc-12
-i386        buildonly-randconfig-003-20250510    gcc-12
-i386        buildonly-randconfig-004-20250510    gcc-12
-i386        buildonly-randconfig-005-20250510    gcc-12
-i386        buildonly-randconfig-006-20250510    gcc-12
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch                           defconfig    gcc-14.2.0
-loongarch             randconfig-001-20250510    gcc-13.3.0
-loongarch             randconfig-002-20250510    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                                defconfig    gcc-14.2.0
-m68k                        m5272c3_defconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-microblaze                          defconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                           ip22_defconfig    gcc-14.2.0
-mips                           mtx1_defconfig    clang-21
-mips                        omega2p_defconfig    clang-21
-nios2                         10m50_defconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                               defconfig    gcc-14.2.0
-nios2                 randconfig-001-20250510    gcc-11.5.0
-nios2                 randconfig-002-20250510    gcc-7.5.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-14.2.0
-parisc                randconfig-001-20250510    gcc-6.5.0
-parisc                randconfig-002-20250510    gcc-12.4.0
-parisc64                            defconfig    gcc-14.1.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-21
-powerpc                       eiger_defconfig    clang-21
-powerpc                      ep88xc_defconfig    gcc-14.2.0
-powerpc               randconfig-001-20250510    gcc-7.5.0
-powerpc               randconfig-002-20250510    clang-17
-powerpc               randconfig-003-20250510    clang-21
-powerpc64             randconfig-001-20250510    clang-18
-powerpc64             randconfig-002-20250510    gcc-10.5.0
-powerpc64             randconfig-003-20250510    clang-21
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-21
-riscv             nommu_k210_sdcard_defconfig    gcc-14.2.0
-riscv                 randconfig-001-20250510    gcc-14.2.0
-riscv                 randconfig-002-20250510    gcc-7.5.0
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                                defconfig    clang-21
-s390                  randconfig-001-20250510    gcc-7.5.0
-s390                  randconfig-002-20250510    clang-21
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                                  defconfig    gcc-14.2.0
-sh                            hp6xx_defconfig    gcc-14.2.0
-sh                    randconfig-001-20250510    gcc-9.3.0
-sh                    randconfig-002-20250510    gcc-11.5.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250510    gcc-12.4.0
-sparc                 randconfig-002-20250510    gcc-14.2.0
-sparc64                          alldefconfig    gcc-14.2.0
-sparc64                             defconfig    gcc-14.2.0
-sparc64               randconfig-001-20250510    gcc-10.5.0
-sparc64               randconfig-002-20250510    gcc-14.2.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-21
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250510    gcc-12
-um                    randconfig-002-20250510    gcc-12
-um                           x86_64_defconfig    clang-21
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250510    clang-20
-x86_64      buildonly-randconfig-002-20250510    clang-20
-x86_64      buildonly-randconfig-003-20250510    gcc-12
-x86_64      buildonly-randconfig-004-20250510    gcc-11
-x86_64      buildonly-randconfig-005-20250510    gcc-12
-x86_64      buildonly-randconfig-006-20250510    clang-20
-x86_64                              defconfig    gcc-11
-x86_64                          rhel-9.4-rust    clang-18
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250510    gcc-8.5.0
-xtensa                randconfig-002-20250510    gcc-14.2.0
+> +* Does NOT have host-managed device memory (HDM)
+> +
+> +Typical examples of type-1 devices is a Smart NIC - which may want to
+> +directly operate on host-memory (DMA) to store incoming packets. These
+> +devices largely rely on CPU-attached memory.
+> +
+> +Type-2
+> +------
+> +
+> +A Type-2 CXL Device:
+> +
+> +* Supports cxl.io, cxl.cache, and cxl.mem protocols
+> +* Optionally implements coherent cache and Host-Managed Device Memory
+> +* Is typically an accelerator device w/ high bandwidth memory.
+> +
+> +The primary difference between a type-1 and type-2 device is the presence
+> +of host-managed device memory, which allows the device to operate on a
+> +local memory bank - while the CPU sill has coherent DMA to the same memory.
+> +
+> +The allows things like GPUs to expose their memory via DAX devices or file
+> +descriptors, allows drivers and programs direct access to device memory
+> +rather than use block-transfer semantics.
+> +
+> +Type-3
+> +------
+> +
+> +A Type-3 CXL Device
+> +
+> +* Supports cxl.io and cxl.mem
+> +* Implements Host-Managed Device Memory
+> +* May provide either Volatile or Persistent memory capacity (or both).
+> +
+> +A basic example of a type-3 device is a simple memory expanded, whose
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+                                                         expander  ?
+
+> +local memory capacity is exposed to the CPU for access directly via
+> +basic coherent DMA.
+> +
+> +Switch
+> +------
+> +
+> +A CXL switch is a device capacity of routing any CXL (and by extension, PCIe)
+> +protocol between an upstream, downstream, or peer devices.  Many devices, such
+> +as Multi-Logical Devices, imply the presence of switching in some manner.
+> +
+> +Logical Devices and Heads
+> +-------------------------
+> +
+> +A CXL device may present one or more "Logical Devices" to one or more hosts
+> +(via physical "Heads").
+> +
+> +A Single-Logical Device (SLD) is a device which presents a single device to
+> +one or more heads.
+> +
+> +A Multi-Logical Device (MLD) is a device which may present multiple devices
+> +to one or more devices.
+> +
+> +A Single-Headed Device exposes only a single physical connection.
+> +
+> +A Multi-Headed Device exposes multiple physical connections.
+> +
+> +MHSLD
+> +~~~~~
+> +A Multi-Headed Single-Logical Device (MHSLD) exposes a single logical
+> +device to multiple heads which may be connected to one or more discrete
+> +hosts.  An example of this would be a simple memory-pool which may be
+> +statically configured (prior to boot) to expose portions of its memory
+> +to Linux via the CEDT ACPI table.
+> +
+> +MHMLD
+> +~~~~~
+> +A Multi-Headed Multi-Logical Device (MHMLD) exposes multiple logical
+> +devices to multiple heads which may be connected to one or more discrete
+> +hosts.  An example of this would be a Dynamic Capacity Device or which
+> +may be configured at runtime to expose portions of its memory to Linux.
+> +
+> +Example Devices
+> +===============
+> +
+> +Memory Expander
+> +---------------
+> +The simplest form of Type-3 device is a memory expander.  A memory expander
+> +exposes Host-Managed Device Memory (HDM) to Linux.  This memory may be
+> +Volatile or Non-Volatile (Persistent).
+> +
+> +Memory Expanders will typically be considered a form of Single-Headed,
+> +Single-Logical Device - as its form factor will typically be an add-in-card
+> +(AIC) or some other similar form-factor.
+> +
+> +The Linux CXL driver provides support for static or dynamic configuration of
+> +basic memory expanders.  The platform may program decoders prior to OS init
+> +(e.g. auto-decoders), or the user may program the fabric if the platform
+> +defers these operations to the OS.
+> +
+> +Multiple Memory Expanders may be added to an external chassis and exposed to
+> +a host via a head attached to a CXL switch.  This is a "memory pool", and
+> +would be considered an MHSLD or MHMLD depending on the management capabilities
+> +provided by the switch platform.
+> +
+> +As of v6.14, Linux does not provide a formalized interface to manage non-DCD
+> +MHSLD or MHMLD devices.
+> +
+> +Dynamic Capacity Device (DCD)
+> +-----------------------------
+> +
+> +A Dynamic Capacity Device is a Type-3 device which provides dynamic management
+> +of memory capacity. The basic premise of a DCD to provide an allocator-like
+> +interface for physical memory capacity to a "Fabric Manager" (an external,
+> +privileged host with privileges to change configurations for other hosts).
+> +
+> +A DCD manages "Memory Extents", which may be volatile or persistent. Extents
+> +may also be exclusive to a single host or shared across multiple.
+
+                                                           multiple hosts.
+
+> +
+> +As of v6.14, Linux does not provide a formalized interface to manage DCD
+> +devices, however there is active work on LKML targeting future release.
+> +
+> +Type-2 Device
+> +-------------
+> +
+> +Todo
+
+
+-- 
+~Randy
+
