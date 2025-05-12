@@ -1,182 +1,96 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B53DA1C84CE
-	for <linux-cxl@vger.kernel.org>; Mon, 12 May 2025 23:12:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87EE8267F65
+	for <linux-cxl@vger.kernel.org>; Mon, 12 May 2025 23:22:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747091567; cv=none; b=s2HtDuoiiqb2qWPPsqmBNbI1FQNnPHKYoxMkdBKnThXPTRrVLsjwE4WbwVHO0ecckQG6Bj054lTjSo1pnryamh4NTcG0EihpR5VUfRyBe80g3xTfeYLMLZ2KVHKH4vIgmzVlVtQuBSp+bz6gmghIadUsPnWIvPudjI7h96GFTUs=
+	t=1747092169; cv=none; b=hmrzQqC8fDQzosVEInDPMI1DfFEwrzQn9HnmW8Vf4KlgAaI9ye84BNCQCqckJWGh5HIitgmtadmV76ZNwNk3hDCTL8JRpvuQXXKikmp3iAN73opvhczYbG3KQqjzgrqJ9MXIfEV3BN1sgjfUdoOkIkZCZay7BoCbK8zkJxsbxM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747091567; c=relaxed/simple;
-	bh=mT0j3WCK/jvX+5GoG0x17TyuaepSVBrwlhgtq6VnQMI=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=WkUcx8Wz9KDwGbUNYHoasE3hiSgUBluO4OH5DTzXxRNR9iy6kKBIdCC3MTibYhxcEJ4rN3YSoLgdRqq6FykXiyTZNVpBJzqpyiDCtgRIyJY9jG7UsVRyIBUlJtl9JGFxiVuGd5sBygRNNojju6ioE1jMGkAFhFaQdcJzQqOp/oA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EQrDPCPj; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747092169; c=relaxed/simple;
+	bh=8QV63ZeK82zaeUMGjGSCyyi7ZPB6N83H+neOuJEIHNA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H1tBYAxix7fVnZg9UJjjBymBAulV2C1H7NWo8THpSRQ9uF916TARUCK2WvslvYmFJCMKjewi0xzUlXNUCuRJwA9p3QOcgDFdPl+0uoJKURWEvxz7pHFRntnhB6yjNsxSPa6cgKS9yeYLdMKDq+ZaYhzYunAqXqzScYGcSCjEe7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=e8x/qITM; arc=none smtp.client-ip=209.85.219.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EQrDPCPj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747091566; x=1778627566;
-  h=message-id:date:mime-version:from:subject:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=mT0j3WCK/jvX+5GoG0x17TyuaepSVBrwlhgtq6VnQMI=;
-  b=EQrDPCPj89knInvKEu/cHlqE+rPrj/O037RLd/nLbP0B5Ms7hrgs+5tU
-   rCWyWEy49TogxjfB2XArnsNXnqVBmDGXSR+k+gI8KR/s8gC/vGhi8SkoC
-   e5/gtwVOx+MWWJviUl9Uo71zYXmEBlr+ntk/GuDl2yYuZHBnHHJ/rUxLX
-   ZwHbavB9JE+yJaqBy02r/j8fdq1G079nrRfAFH+nR5sG7OsKuiVgTCZlo
-   YTN2oOGDmI9K981JjHmVDqp3lfrmupFqxJgg28xVh9I0Q7nUf12BvxCgD
-   BwXHpZQXKQ7z3/6F4NSuRvbZHwdLpooVSzpy4Y0Va3Yj9vggllsBIk0cT
-   Q==;
-X-CSE-ConnectionGUID: Q4DutWCCRwG/gpa9xRwqLg==
-X-CSE-MsgGUID: Dv6ExpeEReG2Hyb+IRrlIA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="52567781"
-X-IronPort-AV: E=Sophos;i="6.15,283,1739865600"; 
-   d="scan'208";a="52567781"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 16:12:46 -0700
-X-CSE-ConnectionGUID: sZ+0+7y7Q164RMg7bWqgew==
-X-CSE-MsgGUID: 9Tbf+Tw4R/WVKtpviLdzzw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,283,1739865600"; 
-   d="scan'208";a="137537333"
-Received: from unknown (HELO [10.24.8.159]) ([10.24.8.159])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 16:12:44 -0700
-Message-ID: <4c923c9d-7e41-42f5-802d-0199c91ec188@linux.intel.com>
-Date: Mon, 12 May 2025 16:12:35 -0700
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="e8x/qITM"
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6f53d271b7cso44673066d6.2
+        for <linux-cxl@vger.kernel.org>; Mon, 12 May 2025 16:22:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1747092165; x=1747696965; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5jkt0ZTtnxVT0Fjxc3OfhXNx+LgFr799Cqodw+ag0XE=;
+        b=e8x/qITMzwPV1wzZMPV8Qmx9mUcwWFLDZ1hIkQ1dfCx+LHOkvxCdtNSCXG0yB9U2Tt
+         4agILe4LTSI4jyH+k8GroLvtGh3hU7mkRyPsGih4aw8CfRSSpJKR+xIhASl0ybawnBA9
+         EcNxdIQdrUK5ffQDm6kTHh/WeL7JUCN4AWtz8YsETW3vEt+LlSRl7JJr8rgtT8r1mpuS
+         hY0ZSqZdvY2f/yWyUaCtLQlGoQ/kmAJMpuzIv1gWzwGVpqJN1Yjlgq5OMUYuzoe23KSz
+         +cbv8XR/hUTuRGj6QwYS7kXZQ38n2/lqnTMBiPUT9exbHCMwXJRkYGtDnUofe95VydK+
+         /nhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747092165; x=1747696965;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5jkt0ZTtnxVT0Fjxc3OfhXNx+LgFr799Cqodw+ag0XE=;
+        b=KZs6h+ZgqnoPvISaHJV+cs6UysmZUYkKn4I3N4lgWfVPwu/5tny3BOgzJiFYW6yOU7
+         T5P/wAbRjr99A4h3RMmx9hBSatD5v0zx72oPlmEufl+sJ4oMm1oynEvEWA5inLYQmjUu
+         VKVInO4b4di8X5181gv4Ewe+5HgKd/4R6ky1Bvnjyu7wyK/gZ2AP1WD26ODx57mVfiaz
+         kW2/7z3RlORPsEgl/Uo12NySy6tIqU/9TPt1CSXAJsABh9LWL/COYoiqHEcr+Fdw6Cuu
+         sFBVY/uctQ62vQHyBWIY1GooW0KZQySj9nSfaNIHCxwoCEiXxqn7M0Mtq5NrQyKtHFTV
+         pfDQ==
+X-Gm-Message-State: AOJu0Yz47/3FGMVJP5pi0QelWKHBtVb9he3kORpVk/Xz0j1ab5U5Dkqv
+	9Tzs0oxKLF2797T6CqqXxQVZy6arzRp2pGRUsOc6+OPTxQWpaj8pWgcw6BVlyjc=
+X-Gm-Gg: ASbGnctZShCTvMR3XThKOZrreUo5TiP14NiW4wyY2qVEeyCnIbSdTvnokIliJ1bv7tf
+	tlqjfp5XN/ldRIORyQ7kTKxXRsb1j/NeYpPJlobfuPVMDuTR0zN80pZjgVvZbe0W6sj2SoF/CqY
+	EfvP3wpYWvrHMCT5fBIeeqlv3alet/8Swo5C6sd1PTKltEC8UoZGcju7YzfX/lma+h+W6BhOGlx
+	xyR3q5NyymsAhn1zEgjfJ00FgWEQ/tgdDXx26q9eWkrRM2xlIpFpYNk8bpwQhBQ8MNZZJgjLnyB
+	vgTa4pwF5zz+8Ud8fe5HGGqMpk6L7toLz60c7pa13l1Go/eGbiBvFHXL1E8/50hKpPM+2Dl2xl4
+	o0//4/XditresK+Rn0Kn7hoiBvu9Bu2M=
+X-Google-Smtp-Source: AGHT+IEpJbFQRhO+lDwtLTNlPn4mXIlKeDMD51VI/PuTcgz1q8t124IwQ59ij5lyVuEVA/gq3wvZ8g==
+X-Received: by 2002:a05:6214:2405:b0:6f4:c824:9d4a with SMTP id 6a1803df08f44-6f6e47c339cmr228299066d6.13.1747092165369;
+        Mon, 12 May 2025 16:22:45 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f6e3a52490sm58716856d6.96.2025.05.12.16.22.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 May 2025 16:22:44 -0700 (PDT)
+Date: Mon, 12 May 2025 19:22:43 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	dave@stgolabs.net, jonathan.cameron@huawei.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com, corbet@lwn.net
+Subject: Re: [PATCH v3 03/17] cxl: docs/devices - add cxl device and protocol
+ reference
+Message-ID: <aCKCw7wvvfiad0Q2@gourry-fedora-PF4VCD3F>
+References: <20250512162134.3596150-1-gourry@gourry.net>
+ <20250512162134.3596150-4-gourry@gourry.net>
+ <e5211a03-617b-43f8-8ba4-b75557e283da@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Marc Herbert <marc.herbert@linux.intel.com>
-Subject: Re: [ndctl PATCH] test: fail on unexpected kernel error & warning,
- not just "Call Trace"
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
-References: <20250510012046.1067514-1-marc.herbert@linux.intel.com>
- <aCI_ZxeC7r3UpkvZ@aschofie-mobl2.lan>
-Content-Language: en-US
-In-Reply-To: <aCI_ZxeC7r3UpkvZ@aschofie-mobl2.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e5211a03-617b-43f8-8ba4-b75557e283da@intel.com>
 
-Thanks for the prompt feedback!
-
-On 2025-05-12 11:35, Alison Schofield wrote:
-
-> Since this patch is doing 2 things, the the journalctl timing, and
-> the parse of additional messages, I would typically ask for 2 patches,
-> but - I want to do even more. I want to revive an old, unmerged set
-> tackling similar work and get it all tidy'd up at once.
+On Mon, May 12, 2025 at 04:08:24PM -0700, Dave Jiang wrote:
+> > +As of v6.14, Linux does not provide a formalized interface to manage DCD
+> > +devices, however there is active work on LKML targeting future release.
 > 
-> https://lore.kernel.org/all/cover.1701143039.git.alison.schofield@intel.com/
->   cxl/test: add and use cxl_common_[start|stop] helpers
->   cxl/test: add a cxl_ derivative of check_dmesg()
->   cxl/test: use an explicit --since time in journalctl
+> I wonder instead of referring to a kernel version, maybe refer to the CXL maturity map on support status.
 > 
-> Please take a look at how the prev patch did journalctl start time.
+> DJ
+> 
 
-We've been using a "start time" in
-https://github.com/thesofproject/sof-test for many years and it's been
-only "OK", not great. I did not know about the $SECONDS magic variable
-at the time, otherwise I would have tried it in sof-test! The main
-advantage of $SECONDS: there is nothing to do, meaning there is no
-"cxl_common_start()" to forget or do wrong. Speaking of which: I tested
-this patch on the _entire_ ndctl/test, not just with --suite=cxl whereas
-https://lore.kernel.org/all/d76c005105b7612dc47ccd19e102d462c0f4fc1b.1701143039.git.alison.schofield@intel.com/
-seems to have a CXL-specific "cxl_common_start()" only?
+This is a good idea for cxl-specific stuff.  There was another patch or
+two with working like this.  Might be worth collecting these all and
+just updating the wording in a follow up patch.
 
-Also, in my experience some sort of short COOLDOWN is always necessary
-anyway for various reasons:
-- Some tests can sometimes have "after shocks" and a cooldown helps
-  with most of these.
-- A short gap in the logs really help with their _readability_.
-- Clocks can shift, especially inside QEMU (I naively tried to increase
-  the number of cores in run_qemu.sh but had to give up due so "clock skew")
-- Others I probably forgot.
-
-On my system, the average, per-test duration is about 10s and I find that
-10% is an acceptable price to pay for the peace of mind. But a starttime
-should hopefully work too, at least for the majority of the time.
-
-
-> I believe the kmesg_fail... can be used to catch any of the failed
-> sorts that the old series wanted to do.
-
-Yes it does, I tried to explain that but afraid my English wasn't good
-enough?
-
-> Maybe add a brief write up of how to use the kmesg choices per
-> test and in the common code.
-
-Q.E.D ;-)
-
-> Is the new kmesg approach going to fail on any ERROR or WARNING that
-> we don't kmesg_no_fail_on ?
-
-Yes, this is the main purpose. The other feature is failing when
-any of the _expected_ ERROR or WARNING is not found.
-
-> And then can we simply add dev_dbg() messages to fail if missing.
-
-I'm afraid you just lost me at this point... my patch already does that
-without any dev_dbg()...?
-
-> I'll take a further look for example at the poison test. We want
-> it to warn that the poison is in a region. That is a good and
-> expected warning.  However, if that warn is missing, then the test
-> is broken! It might not 'FAIL', but it's no longer doing what we
-> want.
-
-I agree: the expected "poison inject" and "poison clear" messages should
-be in the kmsg_fail_if_missing array[], not in the kmsg_no_fail_on[]
-array. BUT in my experience this makes cxl-poison.sh fail when run
-multiple times.  So yes: there seems to be a problem with this test.  (I
-should probably file a bug somewhere?) So I put them in
-kmsg_fail_if_missing[] for now because I don't have time to look into it
-now and I don't think a problem in a single test should hold back the
-improvement for the entire suite that exposes it. Even with just
-kmsg_no_fail_on[], this test is still better than now.
-
-BTW this is a typical game of whack-a-mole every time you try to tighten
-a test screw. In SOF it took 4-5 years to finally catch all firmware
-errors: https://github.com/thesofproject/sof-test/issues/297
-
-
-
-> So, let's work on a rev 2 that does all the things of both our
-> patches. I'm happy to work it with you, or not.
-
-I agree the COOLDOWN / starttime is a separate feature. But... I needed it
-for the tests to pass! I find it important to keep the tests all passing
-in every commit for bisectability etc., hope you agree. Also, really hard
-to submit anything that does not pass the tests :-)
-
-As of now, the tests tolerate cross-test pollution. Being more
-demanding when inspecting the logs obviously makes them fail, at least
-sometimes. I agree the "timing" solution should go first, so here's
-a suggested plan:
-
-1. a) Either I resubmit my COOLDOWN alone,
-   b) or you generalize your cxl_common_start()/starttime to non-CXL tests.
-
-No check_dmesg() change yet. "cxl_check_dmesg()" is abandoned forever.
-
-Then:
-
-2. I rebase and resubmit my kmsg_no_fail_on=...
-
-This will give more time for people to try and report any issue in the
-timing fix 1. - whichever is it.
-
-In the 1.a) case, I think your [cxl_]common_start() de-duplication is
-99% independent and can be submitted at any point.
-
-
-Thoughts?
-
-PS: keep in mind I may be pulled in other priorities at any time :-(
+~Gregory
