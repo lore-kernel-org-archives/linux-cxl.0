@@ -1,194 +1,142 @@
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 009512571A8;
-	Mon, 12 May 2025 19:51:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61A982185BC
+	for <linux-cxl@vger.kernel.org>; Mon, 12 May 2025 20:39:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747079511; cv=none; b=M8hAZK1rlKNMqcmLfDeV2stla9HoShaBOlgehgq1CVP5CMB3lPxsIqZ/PTBXr48oKx04MF220iBdUTOnz/qAmH70sn+OfpgSyRYinTeACSu5lMRek7hulOInXblcNBdKB7afvGKHdPGd3UQGoS7KUboUViDZaugKBLtSaQG8ZU8=
+	t=1747082383; cv=none; b=NNMdp27JUUEVeO4NvIvXz92cKo+cZiBjw39C5QZXxhHagNC+WUASEa8OEwZZN2GO28540sFzeYFMD+pI5DVT7zKu3XtIXZxGQTbbTH3Hd1B0P/Pl21A/vxIUZOu68sCIU41MLPi5zsP7OB6uAyTUJVz1SOBRwSGmjSNuuquiYZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747079511; c=relaxed/simple;
-	bh=gzPsO0UrZDgI9iXYum4r5I7+OTPZxIA5JzksCAF1yrc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WIa7fys6JxRupAZfcp6svVknJdWP1p3ulaQrdXKGh+xQSBC43tVkAQNawqdGaQxZ/5u3ZVdqTIE7SgDBk8KDlZd527QxjognAO05xMhn2peVuoNbhFMhYlSxQnyAPfYLH6I2ltPcv7HtHYUE+7MHUUizikn75z6pDs074mWSKTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=amOLDhpl; arc=none smtp.client-ip=209.85.210.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747082383; c=relaxed/simple;
+	bh=OWkH0J1ZOWK9WBmRgjhK1xQLkFYeWQ0bVo0U5xAyXFY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EONsKqOvyAUkZA53+q4wspTBSayub+mdYnya9r6SB1ZygPsRg8iYt69xfjj51N5kp9NkgnvNIPzMJ4jmckJ7psdg+r/x5SXu2kOaWOek1rbX2ghSkZuN96cOZpohGuojS7IBtDmJuTcVnL9OhVf1F8vhR8Pokzmb3vl8MX6syRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Zxl0yn63; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="amOLDhpl"
-Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-72c172f1de1so2780919a34.3;
-        Mon, 12 May 2025 12:51:49 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Zxl0yn63"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-acae7e7587dso770723166b.2
+        for <linux-cxl@vger.kernel.org>; Mon, 12 May 2025 13:39:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747079509; x=1747684309; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nUkjMRzK3wxS4oootv0crIxPWYrPZ4z6gtzYbFkCOlI=;
-        b=amOLDhplrgLRBlCYuNTIS6m7TXhd5P2T+wvOfFelgDMsa+xkzabostPJx1RiA43zoJ
-         uufUye2S58VCrhibeTgO2JfCoY/JH8pey/+P85VxbQQARWj/3uuX1XLZerp2t8g6Ibbu
-         wlR5i663ieaET3jQc0vPwO1e1+e6vQIa4Op5kRSjsjYzAfCrR+nay7wRNbFXzRpBHP/Y
-         sj/B594L2XngqsNdpKFdCkIz2tIEdju7JWoiFMQnEMWGsNi8w9dWzP+9t20R9OmGfXk/
-         2+rGxQBqfgNRpUa7ferwv9n6x1AAbz03YTApT8sCDc8pIFPmH4VWaLneZgf0GZWTYIUW
-         MIvg==
+        d=linux-foundation.org; s=google; t=1747082378; x=1747687178; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=VB82LSl3X7/sYwlaQo+70F0TQOP7V64K466YMaAygoY=;
+        b=Zxl0yn63pCeRAh3nvgXJ5RAejG/O3I4ePFTBnD9Psehl60gzcCwbfjzvI+6Qoih6XD
+         xVja+Ww3ZD1Up7YI5OoQ3vIdPJ+tGECWOemJDovEVChszKdIVfgqARxYhcfLMAJiNW4N
+         SsGsF13WWkaVGI+VsBoMqoLe5jdE5jLPvK52I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747079509; x=1747684309;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nUkjMRzK3wxS4oootv0crIxPWYrPZ4z6gtzYbFkCOlI=;
-        b=rb4PtpUWhuU2OEjNsMTXtMWJAYvsdxEAkHIABunTB58r943Jm9VFTiS/Okrk0oECQd
-         Y5DIjzblRgGDjRYK5rjamxTURXcSNH3xelXtBbtFzG/f7wi4RD+pqK93d6geFI7WoCQ1
-         tmslE7v59+yG3qKWPiK55eGFJClhYoDC5kpdlUApS3MhNaW1SgU17D1fFnChE565yNAx
-         eM7eJV661gbpifumDb/0HDnX9d+tQNOqb/UkJ0PKlOsmnx45j4p/EFx0VoBfjhCOICPj
-         QROWnBAW7PMANwfeBqml5cXP4HbCbCW5q4y5vi/bywKOXH6L9hFqwcAU43j6qXAo37cB
-         ONOA==
-X-Forwarded-Encrypted: i=1; AJvYcCUhvkrZBilfPahgyKvme5UAJFo3g7Vtd4uEkT5GzpXg57gJNT+aonAAWxDCsV6QFR4PpigveEd9RlM=@vger.kernel.org, AJvYcCUnuYTVDiZsfBCfwrSmWq6OhuLtUlhOAXLVM1oYcs30DmAUr5qEr2NSDcKh/8AEQYVqxVwiG9rew6KqHuQ2@vger.kernel.org, AJvYcCUu73+lWWak8el+qFwPvMXe1/Ra/BYBruFuN6vhuBD70T8cz3ed/rkX+f9XnSADXeOqi8fbwRDuzG5AsLoz9g==@vger.kernel.org, AJvYcCXUlM4ZH2opS8ypJLrpsb2H5rNshiFw3GQfboMcnHhaWxVl9Q0eFjrdE2+R3rBLzjbltc9LceuzbNGQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzdR5MWLOnIDaLf0C9GeFnFCYIrBsZ+Lp7R+8R4lnEoFAPk6Ct
-	FV5IbhQy1YssejEil4RvTN+Piwno4H+Ztib+/TYeTmwIU5QCih4R
-X-Gm-Gg: ASbGncujUVru/Fz0rkVAeOdqyrM8bCAaKS2kj65giqesSx5zE7hR8S5mJkY6RUNCdal
-	EjdlTa2aEL8z1unv016/jz25DgYvwlws90U45TOun9VZuoBvGQCBBDdVgvUHQTU2tL2FpR4Km1m
-	NVmVPblzn2UVFVX0/AYdBvujjKAQSs2F0ah5jg+MrXFmQSCHNczI5QvgOCCeh7XStuLBdP4lw7i
-	YvoLwQBnHIhXFCGVm57akhRMuNqWAFB65zSUbBwSDrCU406YLqCy47CO0UDI77lTe9BKKvDDhas
-	GsgG1mqkTgEeLRVN3x0l73nQAcLVmRYcXZNSVu3QDseRYfLGm5s9ZsJZDqoMPEixrg==
-X-Google-Smtp-Source: AGHT+IEAeXjZiozlRYEM0gARp0zQzeR/jbozJkUKlmzreQdwjSlhfL93jt9YN6NYGu8g494ESdu3sw==
-X-Received: by 2002:a05:6830:4903:b0:72a:1d2a:4acf with SMTP id 46e09a7af769-73226aaed7fmr9385724a34.17.1747079508876;
-        Mon, 12 May 2025 12:51:48 -0700 (PDT)
-Received: from groves.net ([2603:8080:1500:3d89:f16b:b065:d67a:e0f7])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73356c72943sm1353348a34.3.2025.05.12.12.51.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 12:51:47 -0700 (PDT)
-Sender: John Groves <grovesaustin@gmail.com>
-Date: Mon, 12 May 2025 14:51:45 -0500
-From: John Groves <John@groves.net>
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: "Darrick J. Wong" <djwong@kernel.org>, 
-	Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
-	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	Luis Henriques <luis@igalia.com>, Randy Dunlap <rdunlap@infradead.org>, 
-	Jeff Layton <jlayton@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>, 
-	Petr Vorel <pvorel@suse.cz>, Brian Foster <bfoster@redhat.com>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
-	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, john@groves.net
-Subject: Re: [RFC PATCH 13/19] famfs_fuse: Create files with famfs fmaps
-Message-ID: <aytnzv4tmp7fdvpgxdfoe2ncu7qaxlp2svsxiskfnrvdnknhmp@uu4ifgc6aj34>
-References: <20250421013346.32530-1-john@groves.net>
- <20250421013346.32530-14-john@groves.net>
- <nedxmpb7fnovsgbp2nu6y3cpvduop775jw6leywmmervdrenbn@kp6xy2sm4gxr>
- <20250424143848.GN25700@frogsfrogsfrogs>
- <5rwwzsya6f7dkf4de2uje2b3f6fxewrcl4nv5ba6jh6chk36f3@ushxiwxojisf>
- <20250428190010.GB1035866@frogsfrogsfrogs>
- <CAJfpegtR28rH1VA-442kS_ZCjbHf-WDD+w_FgrAkWDBxvzmN_g@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1747082378; x=1747687178;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VB82LSl3X7/sYwlaQo+70F0TQOP7V64K466YMaAygoY=;
+        b=Odm/mPicx8i9fxBS2xGmytmOgCvwtebezXqBJ5ouBcmF8WKM+XRg8LFHwkCzBg0HPG
+         JKzrVajqcFjlpaqlS+KtIgJmAJqImEaaTQwdBNwA5yPseoiwRqe2GdkRlKzQmA8ciRt5
+         OlogRFnn6+jmE4UFJwdl/TvxxNq+QnNFcuHn7Cr6jeMifMEdlCIQ+1JVn5praWsYgetX
+         /Lo7de370DEyOf54QHYElIRdSvR/EYrdAk/ysgV66N7/0EfOBKIWQRr7TKaiXJuwJ/1M
+         Swk+UNX9vIIWxe1GDqV4j4oziRW17h73YaSfNg8Dv/tRx3x1A9adm/CgcIhPXZBPrY7o
+         vQKA==
+X-Forwarded-Encrypted: i=1; AJvYcCUqHk8p7q+5NN/lWebNHkJ6mBUpAUQpSwu4H26QkzkozRYIxKzK7qEPokFzlWYX4VJ9c2N1Vq4R84w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yys9HxTt0nxKcOJx0rZX5ttxar9W/47meG76lRsnuKwfQqC2Jc6
+	V4v/5cCVWIN3tDY3iH3+trVMUaihDVbc6GEVLoGRVK45n8/Rc9kqX1nt61QYlhPMl2nCKrnBof2
+	y9mM=
+X-Gm-Gg: ASbGncukZPMWKngMrSE3uP/VD5XMmEVz+KmL2Si7KK8Q0dVe1IwWFfu7O7nse2emhq0
+	gGDBp99hS2lk+JMLH++Sm/KDGUr2TBuouj+/xqft9Eorqe8p/TBSP4DnE9lBLsbPnd3XZMutkJt
+	bC3fNf/Xs5gJuDEviZouNZOyQw8jv05OXztykJ0UEis1jgOAiJAWymQ+JYHhF7naA6pFEky6xtt
+	X1YRPqFPVSByzdkpos/xLvodT7KiMviinAWWuqaV/MN6XEwmDqm9Q03Q1gwM57hWNhpsApQszrF
+	7xsJHGZDtuFGvkaikKfhhQ+7gTLZgetEwREkXEEHLHBPjn5PkKohK1Ubn4s5baiR9GB7y8ZdXYO
+	ZrI31eQ4aUcxtrRpHut9LdHhQ4g==
+X-Google-Smtp-Source: AGHT+IHAYYf/M2W+IzSU3a8Pgdq5Xxs+yMxUJA6uOJipLHoZLU9Ite0mUN4L6OxNyAekSN7p3ZRrcg==
+X-Received: by 2002:a17:907:1c15:b0:ad4:deae:dd13 with SMTP id a640c23a62f3a-ad4deaeeceamr15872666b.45.1747082378335;
+        Mon, 12 May 2025 13:39:38 -0700 (PDT)
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com. [209.85.208.53])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad23338b4f2sm497402366b.117.2025.05.12.13.39.36
+        for <linux-cxl@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 May 2025 13:39:36 -0700 (PDT)
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5fd0d383b32so3662187a12.3
+        for <linux-cxl@vger.kernel.org>; Mon, 12 May 2025 13:39:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWqEFM3IJX15RlOVCApT+2Nx30oh09XiUPduQyDzx7LN02nNcZDy/AuUtNWsywEcKp/oqSV3MdnxLA=@vger.kernel.org
+X-Received: by 2002:a05:6402:2114:b0:5fd:178d:f867 with SMTP id
+ 4fb4d7f45d1cf-5fd178dfc01mr7955993a12.25.1747082375924; Mon, 12 May 2025
+ 13:39:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJfpegtR28rH1VA-442kS_ZCjbHf-WDD+w_FgrAkWDBxvzmN_g@mail.gmail.com>
+References: <20250507072145.3614298-1-dan.j.williams@intel.com>
+ <20250507072145.3614298-2-dan.j.williams@intel.com> <20250507093224.GD4439@noisy.programming.kicks-ass.net>
+ <681bce2193f38_1229d6294c7@dwillia2-xfh.jf.intel.com.notmuch>
+ <20250508110043.GG4439@noisy.programming.kicks-ass.net> <681d8ce06c869_1229d6294e@dwillia2-xfh.jf.intel.com.notmuch>
+ <20250509104028.GL4439@noisy.programming.kicks-ass.net> <681ea7d5ea04b_2a2bb100cf@dwillia2-mobl4.notmuch>
+ <20250512105026.GP4439@noisy.programming.kicks-ass.net> <20250512182559.GB25891@noisy.programming.kicks-ass.net>
+ <20250512185817.GA1808@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250512185817.GA1808@noisy.programming.kicks-ass.net>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 12 May 2025 13:39:19 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whxPoFnZ4cLKh4X3m4qVcaak__G8+0iG-aOGO7YkS3LdA@mail.gmail.com>
+X-Gm-Features: AX0GCFucCgAEV3-emriKKBbjXcTa9Ydw5XnavTKwpk2LJuNulre0nPwWMN_luBk
+Message-ID: <CAHk-=whxPoFnZ4cLKh4X3m4qVcaak__G8+0iG-aOGO7YkS3LdA@mail.gmail.com>
+Subject: Re: [PATCH 1/7] cleanup: Introduce DEFINE_ACQUIRE() a CLASS() for
+ conditional locking
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: dan.j.williams@intel.com, linux-cxl@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, David Lechner <dlechner@baylibre.com>, 
+	Ingo Molnar <mingo@kernel.org>, 
+	"Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>, 
+	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 25/05/06 06:56PM, Miklos Szeredi wrote:
-> On Mon, 28 Apr 2025 at 21:00, Darrick J. Wong <djwong@kernel.org> wrote:
-> 
-> > <nod> I don't know what Miklos' opinion is about having multiple
-> > fusecmds that do similar things -- on the one hand keeping yours and my
-> > efforts separate explodes the amount of userspace abi that everyone must
-> > maintain, but on the other hand it then doesn't couple our projects
-> > together, which might be a good thing if it turns out that our domain
-> > models are /really/ actually quite different.
-> 
-> Sharing the interface at least would definitely be worthwhile, as
-> there does not seem to be a great deal of difference between the
-> generic one and the famfs specific one.  Only implementing part of the
-> functionality that the generic one provides would be fine.
+On Mon, 12 May 2025 at 11:58, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> > GCC is 'stupid' and this generates atrocious code. I'll play with it.
+>
+> PRE:
+>     bf9e:       48 85 db                test   %rbx,%rbx
+>     bfa1:       74 1a                   je     bfbd <foo+0x5d>
+>     bfa3:       48 81 fb 00 f0 ff ff    cmp    $0xfffffffffffff000,%rbx
+>     bfaa:       77 11                   ja     bfbd <foo+0x5d>
+>
+> POST:
+>     bf9e:       48 8d 43 ff             lea    -0x1(%rbx),%rax
+>     bfa2:       48 3d ff ef ff ff       cmp    $0xffffffffffffefff,%rax
+>     bfa8:       77 11                   ja     bfbb <foo+0x5b>
 
-Agreed. I'm coming around to thinking the most practical approach would be
-to share the GET_FMAP message/response, but to add a separate response
-format for Darrick's use case - when the time comes. In this patch set, 
-that starts with 'struct fuse_famfs_fmap_header' and is followed by the 
-approriate extent structures, serialized in the message. Collectively 
-that's an fmap in message format.
+I'm not convinced that's actually an improvement.
 
-Side note: the current patch set sends back the logically-variable-sized 
-fmap in a fixed-size message, but V2 of the series will address that; 
-I got some help from Bernd there, but haven't finished it yet.
+Yes, it's one less instruction, and three bytes shorter. But it uses
+an extra register, so now it might make surrounding code much worse by
+making register allocation have a harder time.
 
-So the next version of the patch set would, say, add a more generic first
-'struct fmap_header' that would indicate whether the next item would be
-'struct fuse_famfs_fmap_header' (i.e. my/famfs metadata) or some other
-to be codified metadata format. I'm going here because I'm dubious that
-we even *can* do grand-unified-fmap-metadata (or that we should try).
+If you *really* care about this, I think you should realize that the
+non-error case is a valid kernel pointer.
 
-This will require versioning the affected structures, unless we think
-the fmap-in-message structure can be opaque to the rest of fuse. @miklos,
-is there an example to follow regarding struct versioning in 
-already-existing fuse structures?
+And we could add some architecture-specific function to check for "is
+this a valid non-NULL and non-error pointer" with a fallback to the
+generic case.
 
-> 
-> > (Especially because I suspect that interleaving is the norm for memory,
-> > whereas we try to avoid that for disk filesystems.)
-> 
-> So interleaved extents are just like normal ones except they repeat,
-> right?  What about adding a special "repeat last N extent
-> descriptions" type of extent?
+Because then on a platform like x86, where kernel pointers are always
+negative, but not *as* negative as the error pointers, you can check
+for that with a single compare.
 
-It's a bit more than that. The comment at [1] makes it possible to understand
-the scheme, but I'd be happy to talk through it with you on a call if that
-seems helpful.
+The logic is "add MAX_ERRNO, and if it's still negative, it wasn't
+NULL and it wasn't ERR_PTR".
 
-An interleaved extent stripes data spread across N memory devices in raid 0
-format; the space from each device is described by a single simple extent 
-(so it's contigous), but it's not consumed contiguously - it's consumed in 
-fixed-sized chunks that precess across the devices. Notwithstanding that I 
-couldn't explain it very well when we talked about it at LPC, I think I 
-could make it pretty clear in a pretty brief call now.
+And while 'add' needs a destination register, 'sub' with the negated
+value does not, and is called 'cmp'.
 
-In any case, you have my word that it's actually quite elegant :D
-(seriously, but also with a smile...)
+So I think you can do that with
 
-> 
-> > > But the current implementation does not contemplate partially cached fmaps.
-> > >
-> > > Adding notification could address revoking them post-haste (is that why
-> > > you're thinking about notifications? And if not can you elaborate on what
-> > > you're after there?).
-> >
-> > Yeah, invalidating the mapping cache at random places.  If, say, you
-> > implement a clustered filesystem with iomap, the metadata server could
-> > inform the fuse server on the local node that a certain range of inode X
-> > has been written to, at which point you need to revoke any local leases,
-> > invalidate the pagecache, and invalidate the iomapping cache to force
-> > the client to requery the server.
-> >
-> > Or if your fuse server wants to implement its own weird operations (e.g.
-> > XFS EXCHANGE-RANGE) this would make that possible without needing to
-> > add a bunch of code to fs/fuse/ for the benefit of a single fuse driver.
-> 
-> Wouldn't existing invalidation framework be sufficient?
-> 
-> Thanks,
-> Miklos
+        cmp $-MAX_ERRNO,...
+        js ...
 
-My current thinking is that Darrick's use case doesn't need GET_DAXDEV, but
-famfs does. I think Darrick's use case has one backing device, and that should
-be passed in at mount time. Correct me if you think that might be wrong.
+Sadly, I can't seem to get gcc to generate that code. But I didn't try
+very hard.
 
-Famfs doesn't necessarily have just one backing dev, which means that famfs
-could pass in the *primary* backing dev at mount time, but it would still
-need GET_DAXDEV to get the rest. But if I just use GET_FMAP every time, I
-only need one way to do this.
-
-I'll add a few more responses to Darrick's reply...
-
-Thanks,
-John
-
-[1] https://github.com/cxl-micron-reskit/famfs-linux/blob/c57553c4ca91f0634f137285840ab25be8a87c30/fs/fuse/famfs_kfmap.h#L13
-
+              Linus
