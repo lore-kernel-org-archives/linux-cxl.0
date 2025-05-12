@@ -1,101 +1,291 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B65742512DD
-	for <linux-cxl@vger.kernel.org>; Mon, 12 May 2025 16:38:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8479625332B
+	for <linux-cxl@vger.kernel.org>; Mon, 12 May 2025 16:40:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747067932; cv=none; b=Ky7VjFChyqcuwJfw5dVgMFXw31/nrtEHo8gFgx0SR+yeLzcGutrdT6QB//Egwrmn4r76eom7GKH+Ymq/K9vZ2b4p5dnRjaLUgBNX5Ydaz/cMCyPtw/aZnoEAEgAkF4R9coGoAxzgXfB4Uys5p7+LxrEyoUuZPVRy+jm9mvgHKws=
+	t=1747068046; cv=none; b=V9bHTvVokAtq7oCP7WUs47322FV77JDHSWInZDLnuABlQXGRL8V17LGz/d9K4T75wbJZaHMlR2Lpa88PoliKK4mkwEY6zpeCEo7ORlF2D/8VeMv9UcoqO6QuqhG/DbHTlouDMVCGjpOpfMMLRVMkiBgNckgzQ47dKX43ORCeqb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747067932; c=relaxed/simple;
-	bh=Yehlnc4ZkWKIJwXXxMMs5cwKVop6FmBrsGoE123p7sE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hETZQKGjcnlLucBCojryv3Fd/kVnnbcry++q5ogLYkisD865AvTEjGc6MogkXKi1K68wzviT6ASk+XTcVfIDlzbYW4ktHpuO7G6cSR6Pg27CPRCKZslJWW63cBOswl2bvqeizZozIYXmNT8TPZ6bAx09m6oVopHVXp/lxdBR1Kk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Xm8vpCNp; arc=none smtp.client-ip=209.85.222.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Xm8vpCNp"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7caea4bc9e9so895775285a.1
-        for <linux-cxl@vger.kernel.org>; Mon, 12 May 2025 09:38:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1747067929; x=1747672729; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1julnBD5+GcSaXU+eTIdcuLbn0p5bHzSEbl/z4yoEN0=;
-        b=Xm8vpCNpFOh21VbbJXb5ohXssAScKGNIOsMZmLyI3oxETyYNV37N+q66z/aS2xHC+o
-         /oyEKGkg8svFA9a8bvw5+7smp9Wyg+ch3Vb61GkXs6UoTX6y70/D+x8CZwGoQ7FxqJlb
-         AYDqJa5RvRQ+yzYCnifCTclasQIQqhVftHeBW6gf5+6tzvqMXUymcPdZ33KNxXLlUHvQ
-         gaPD/THBnQVMEHdbI8nLjsmLTdKtG0xrN72msZI5cHU0rotfnM7MlMJON8sBbf6fVbFR
-         j/1xNs33VRfeMW5R6x7/QymSzZgOMQ3u1YtQg31akTqS4pNkGFfUMY0V9sEq74kL0H5x
-         SfJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747067929; x=1747672729;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1julnBD5+GcSaXU+eTIdcuLbn0p5bHzSEbl/z4yoEN0=;
-        b=c2jzQ+5/UEuttRh3bfRzh2Wg5hbmfqOOo+7OEXso9d2klLR8EWV9xzfI421BQW1smB
-         AVzXIn/isnhxXSSCvHzK0yttIeEP4Y4i0OQ0W+U5UuhJVYa9eVMxnkimuBEMEM+uqytA
-         2KsGxbMW1ib5RDWgrLDCbGea668GepweblUZLHs348YAZZJRZ3EBL4ckmyJRjfewJ8RA
-         4VLJWUFniyoNN5JG7jgladK2v7Q25lRzCoGAej/Sh9gufnUJvoA/f/qrvJioeY3QOBHz
-         BMTJYTi1ucU5A57g9SM3heX/zRGFLz/OFNrnrjFqwUZ/e6bmsW467s0fmSsj5eTX+VMB
-         HUEA==
-X-Gm-Message-State: AOJu0YxFe8/rEhOfrRzEXpbHCbB1Qtg47Ax5OQ2OFKEYjnbjytRpUaHR
-	nfiaGTI7ED6RSFOyMehy1BdHR123foXx4nrQ5/yXsWK7pXPtpqG8Hf5aLs9lDck=
-X-Gm-Gg: ASbGnct6tNjTxePC6SVepmqnscadlNy/WzrF+k/uVg63RL0fGjtUAK1suc3dUuT/zZv
-	xs+B7/kTNVGB+PNyHgQk12YcRbRGbIcSOKSrO7O2PBZkIt+OJ3HesIfJ0LL21UtgkL7/ntMS39p
-	2k+e//w+inJ9HZjSJd8sJ2ZdTZu0/HhQyv0tC/SfoHw/GtMCuXETkVeo1pg5tJU059qF54DAdpn
-	S/1Z2/kRz+GEU3crBMJOesXGfbVWQz03heGdzsI7Oms8EkUe0nee7pu/bPpg5MqhEZT/gyTMi1Z
-	60Li/TPfQRJJW7ZG2VsE2IoT8tL+ucKw2SbjFlEl+3xP3Nbinpq4GCXVL7FbpmbcdcfHvpFBLvM
-	mZ28u1D8PU97bRJr1+0z8cFPJt3nD6YrNRjOC5WXYHQ==
-X-Google-Smtp-Source: AGHT+IHHMUdqgvopOB3bvhxDrzkGlwPiAUOBbIhdmlc5mYj64PucOzKQfQk92T4hzK7H4RQ84n8s7g==
-X-Received: by 2002:a05:620a:2a09:b0:7ca:d53d:af75 with SMTP id af79cd13be357-7cd01155c4bmr2207761385a.56.1747067929639;
-        Mon, 12 May 2025 09:38:49 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd00f4e093sm568092885a.8.2025.05.12.09.38.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 09:38:49 -0700 (PDT)
-Date: Mon, 12 May 2025 12:38:47 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, corbet@lwn.net
-Subject: Re: [PATCH v3 14/17] cxl: docs/allocation/page-allocator
-Message-ID: <aCIkF6RZJtU0m3Ia@gourry-fedora-PF4VCD3F>
-References: <20250512162134.3596150-1-gourry@gourry.net>
- <20250512162134.3596150-15-gourry@gourry.net>
- <aCIjMNooAzKaONod@casper.infradead.org>
+	s=arc-20240116; t=1747068046; c=relaxed/simple;
+	bh=s+cUfXes6wG/TwtIeWIJRx7bOlUCDXH6jnr7j77XSFY=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LwPrOVrUp9hBLxDULSOEEJTZmcf09OjkzjlLRZO2T5LNWFfXJ3BH4nkpPE8WxRnbGBbVEnrR6uLHmmml37+JuHkYcCwo5+k8/pASVPoSwT7p6ERSpwEOJvd/GizxXBtFNmVCVImvQi3ePS6aeKLbFtIqwq+YGTa5FiXkzmDmqTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Zx51n0PQdz6K93n;
+	Tue, 13 May 2025 00:40:13 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 2A9BA140114;
+	Tue, 13 May 2025 00:40:41 +0800 (CST)
+Received: from localhost (10.195.35.20) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 12 May
+ 2025 18:40:40 +0200
+Date: Mon, 12 May 2025 17:40:38 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: "Michael S. Tsirkin" <mst@redhat.com>
+CC: <linux-cxl@vger.kernel.org>, <qemu-devel@nongnu.org>,
+	<linuxarm@huawei.com>, <fan.ni@samsung.com>, Yuquan Wang
+	<wangyuquan1236@phytium.com.cn>, "Arpit Kumar" <arpit1.kumar@samsung.com>,
+	Sweta Kumari <s5.kumari@samsung.com>, Vinayak Holikatti
+	<vinayak.kh@samsung.com>, Davidlohr Bueso <dave@stgolabs.net>, Ajay Joshi
+	<ajay.opensrc@micron.com>
+Subject: Re: [PATCH qemu 7/8] hw/cxl/cxl-mailbox-utils: Added support for
+ Get Log Capabilities (Opcode 0402h)
+Message-ID: <20250512174038.00000beb@huawei.com>
+In-Reply-To: <20250512093638-mutt-send-email-mst@kernel.org>
+References: <20250305092501.191929-1-Jonathan.Cameron@huawei.com>
+	<20250305092501.191929-8-Jonathan.Cameron@huawei.com>
+	<20250512043011-mutt-send-email-mst@kernel.org>
+	<20250512093638-mutt-send-email-mst@kernel.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCIjMNooAzKaONod@casper.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Mon, May 12, 2025 at 05:34:56PM +0100, Matthew Wilcox wrote:
-> On Mon, May 12, 2025 at 12:21:31PM -0400, Gregory Price wrote:
-> > Document some interesting interactions that occur when exposing CXL
-> > memory capacity to page allocator.
-> 
-> We should not do this.  Asking the page allocator for memory (eg for
-> slab) should never return memory on CXL.  There need to be special
-> interfaces for clients that know they can tolerate the added latency.
-> 
-> NAK this concept, and NAK this specific document.  I have no comment on
-> the previous documents.
+On Mon, 12 May 2025 09:37:07 -0400
+"Michael S. Tsirkin" <mst@redhat.com> wrote:
 
-This describes what presently exists, so i'm not sure of what value a
-NAK here is.
+> On Mon, May 12, 2025 at 04:42:41AM -0400, Michael S. Tsirkin wrote:
+> > On Wed, Mar 05, 2025 at 09:24:58AM +0000, Jonathan Cameron wrote: =20
+> > > From: Arpit Kumar <arpit1.kumar@samsung.com>
+> > >=20
+> > > CXL spec 3.2 section 8.2.10.5.3 describes Get Log Capabilities.
+> > > It provides log capabilities supported by specified log.
+> > >=20
+> > > Signed-off-by: Arpit Kumar <arpit1.kumar@samsung.com>
+> > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > > ---
+> > >  include/hw/cxl/cxl_device.h  | 20 ++++++++++++++++
+> > >  include/hw/cxl/cxl_mailbox.h |  5 ++++
+> > >  hw/cxl/cxl-mailbox-utils.c   | 45 ++++++++++++++++++++++++++++++++++=
+++
+> > >  3 files changed, 70 insertions(+)
+> > >=20
+> > > diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> > > index ed6cd50c67..87a376c982 100644
+> > > --- a/include/hw/cxl/cxl_device.h
+> > > +++ b/include/hw/cxl/cxl_device.h
+> > > @@ -133,6 +133,18 @@ typedef enum {
+> > >      CXL_MBOX_MAX =3D 0x20
+> > >  } CXLRetCode;
+> > > =20
+> > > +/* types of logs */
+> > > +typedef enum {
+> > > +    CXL_LOG_COMMAND_EFFECT,
+> > > +    CXL_LOG_VENDOR_DEBUG,
+> > > +    CXL_LOG_COMPONENT_STATE_DUMP,
+> > > +    CXL_LOG_ERROR_CHECK_SCRUB,
+> > > +    CXL_LOG_MEDIA_TEST_CAPABILITY,
+> > > +    CXL_LOG_MEDIA_TEST_RESULTS_SHORT,
+> > > +    CXL_LOG_MEDIA_TEST_RESULTS_LONG,
+> > > +    MAX_LOG_TYPE
+> > > +} CXLLogType;
+> > > +
+> > >  typedef struct CXLCCI CXLCCI;
+> > >  typedef struct cxl_device_state CXLDeviceState;
+> > >  struct cxl_cmd;
+> > > @@ -163,6 +175,11 @@ typedef struct CXLEventLog {
+> > >      QSIMPLEQ_HEAD(, CXLEvent) events;
+> > >  } CXLEventLog;
+> > > =20
+> > > +typedef struct CXLLogCapabilities {
+> > > +    uint32_t param_flags;
+> > > +    QemuUUID uuid;
+> > > +} CXLLogCapabilities;
+> > > +
+> > >  typedef struct CXLCCI {
+> > >      struct cxl_cmd cxl_cmd_set[256][256];
+> > >      struct cel_log {
+> > > @@ -171,6 +188,9 @@ typedef struct CXLCCI {
+> > >      } cel_log[1 << 16];
+> > >      size_t cel_size;
+> > > =20
+> > > +    /* get log capabilities */
+> > > +    const CXLLogCapabilities *supported_log_cap;
+> > > +
+> > >      /* background command handling (times in ms) */
+> > >      struct {
+> > >          uint16_t opcode;
+> > > diff --git a/include/hw/cxl/cxl_mailbox.h b/include/hw/cxl/cxl_mailbo=
+x.h
+> > > index 9008402d1c..8e1c7c5f15 100644
+> > > --- a/include/hw/cxl/cxl_mailbox.h
+> > > +++ b/include/hw/cxl/cxl_mailbox.h
+> > > @@ -16,4 +16,9 @@
+> > >  #define CXL_MBOX_BACKGROUND_OPERATION (1 << 6)
+> > >  #define CXL_MBOX_BACKGROUND_OPERATION_ABORT (1 << 7)
+> > > =20
+> > > +#define CXL_LOG_CAP_CLEAR_SUPPORTED (1 << 0)
+> > > +#define CXL_LOG_CAP_POPULATE_SUPPORTED (1 << 1)
+> > > +#define CXL_LOG_CAP_AUTO_POPULATE_SUPPORTED (1 << 2)
+> > > +#define CXL_LOG_CAP_PERSISTENT_COLD_RESET_SUPPORTED (1 << 3)
+> > > +
+> > >  #endif
+> > > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> > > index 299f232f26..f35fc4f112 100644
+> > > --- a/hw/cxl/cxl-mailbox-utils.c
+> > > +++ b/hw/cxl/cxl-mailbox-utils.c
+> > > @@ -81,6 +81,7 @@ enum {
+> > >      LOGS        =3D 0x04,
+> > >          #define GET_SUPPORTED 0x0
+> > >          #define GET_LOG       0x1
+> > > +        #define GET_LOG_CAPABILITIES   0x2
+> > >      FEATURES    =3D 0x05,
+> > >          #define GET_SUPPORTED 0x0
+> > >          #define GET_FEATURE   0x1
+> > > @@ -1068,6 +1069,43 @@ static CXLRetCode cmd_logs_get_log(const struc=
+t cxl_cmd *cmd,
+> > >      return CXL_MBOX_SUCCESS;
+> > >  }
+> > > =20
+> > > +static const struct CXLLogCapabilities *find_log_index(QemuUUID *uui=
+d, CXLCCI *cci)
+> > > +{
+> > > +    for (int i =3D CXL_LOG_COMMAND_EFFECT; i < MAX_LOG_TYPE; i++) {
+> > > +        if (qemu_uuid_is_equal(uuid,
+> > > +            &cci->supported_log_cap[i].uuid)) {
+> > > +                return &cci->supported_log_cap[i];
+> > > +        }
+> > > +    }
+> > > +    return NULL;
+> > > +}
+> > > +
+> > > +/* CXL r3.2 Section 8.2.10.5.3: Get Log Capabilities (Opcode 0402h) =
+*/
+> > > +static CXLRetCode cmd_logs_get_log_capabilities(const struct cxl_cmd=
+ *cmd,
+> > > +                                                uint8_t *payload_in,
+> > > +                                                size_t len_in,
+> > > +                                                uint8_t *payload_out,
+> > > +                                                size_t *len_out,
+> > > +                                                CXLCCI *cci)
+> > > +{
+> > > +    const CXLLogCapabilities *cap;
+> > > +    struct {
+> > > +        QemuUUID uuid;
+> > > +    } QEMU_PACKED QEMU_ALIGNED(8) *get_log_capabilities_in =3D (void=
+ *)payload_in;
+> > > +
+> > > +    uint32_t *get_log_capabilities_out =3D (uint32_t *)payload_out;
+> > > +
+> > > +    cap =3D find_log_index(&get_log_capabilities_in->uuid, cci);
+> > > +    if (!cap) {
+> > > +        return CXL_MBOX_INVALID_LOG;
+> > > +    }
+> > > +
+> > > +    memcpy(get_log_capabilities_out, &cap->param_flags,
+> > > +           sizeof(cap->param_flags));
+> > > +    *len_out =3D sizeof(*get_log_capabilities_out);
+> > > +    return CXL_MBOX_SUCCESS;
+> > > +}
+> > > +
+> > >  /* CXL r3.1 section 8.2.9.6: Features */
+> > >  /*
+> > >   * Get Supported Features output payload
+> > > @@ -3253,6 +3291,8 @@ static const struct cxl_cmd cxl_cmd_set[256][25=
+6] =3D {
+> > >      [LOGS][GET_SUPPORTED] =3D { "LOGS_GET_SUPPORTED", cmd_logs_get_s=
+upported,
+> > >                                0, 0 },
+> > >      [LOGS][GET_LOG] =3D { "LOGS_GET_LOG", cmd_logs_get_log, 0x18, 0 =
+},
+> > > +    [LOGS][GET_LOG_CAPABILITIES] =3D { "LOGS_GET_LOG_CAPABILITIES",
+> > > +                                     cmd_logs_get_log_capabilities, =
+0x10, 0 },
+> > >      [FEATURES][GET_SUPPORTED] =3D { "FEATURES_GET_SUPPORTED",
+> > >                                    cmd_features_get_supported, 0x8, 0=
+ },
+> > >      [FEATURES][GET_FEATURE] =3D { "FEATURES_GET_FEATURE",
+> > > @@ -3512,10 +3552,15 @@ static void cxl_rebuild_cel(CXLCCI *cci)
+> > >      }
+> > >  }
+> > > =20
+> > > +static const struct CXLLogCapabilities cxl_get_log_cap[MAX_LOG_TYPE]=
+ =3D {
+> > > +    [CXL_LOG_COMMAND_EFFECT] =3D { .param_flags =3D 0, .uuid =3D cel=
+_uuid },
+> > > +};
+> > > + =20
+> >=20
+> >=20
+> > causes ci build failures:
+> >=20
+> > https://gitlab.com/mstredhat/qemu/-/jobs/9999980051
+> >=20
+> > ../hw/cxl/cxl-mailbox-utils.c:3556:60: error: initializer element is no=
+t constant
+> >      [CXL_LOG_COMMAND_EFFECT] =3D { .param_flags =3D 0, .uuid =3D cel_u=
+uid },
+> >                                                             ^~~~~~~~
+> > ../hw/cxl/cxl-mailbox-utils.c:3556:60: note: (near initialization for =
+=E2=80=98cxl_get_log_cap[0].uuid=E2=80=99)
+> >=20
+> >=20
+> > Fixed it up like this:
+> >=20
+> > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> > index f35fc4f112..13d26e391b 100644
+> > --- a/hw/cxl/cxl-mailbox-utils.c
+> > +++ b/hw/cxl/cxl-mailbox-utils.c
+> > @@ -992,9 +992,10 @@ static CXLRetCode cmd_timestamp_set(const struct c=
+xl_cmd *cmd,
+> >  }
+> > =20
+> >  /* CXL r3.1 Section 8.2.9.5.2.1: Command Effects Log (CEL) */
+> > -static const QemuUUID cel_uuid =3D {
+> > -    .data =3D UUID(0x0da9c0b5, 0xbf41, 0x4b78, 0x8f, 0x79,
+> > +#define CEL_UUID UUID(0x0da9c0b5, 0xbf41, 0x4b78, 0x8f, 0x79, \
+> >                   0x96, 0xb1, 0x62, 0x3b, 0x3f, 0x17)
+> > +static const QemuUUID cel_uuid =3D {
+> > +    .data =3D CEL_UUID
+> >  };
+> > =20
+> >  /* CXL r3.1 Section 8.2.9.5.1: Get Supported Logs (Opcode 0400h) */
+> > @@ -3553,7 +3554,7 @@ static void cxl_rebuild_cel(CXLCCI *cci)
+> >  }
+> > =20
+> >  static const struct CXLLogCapabilities cxl_get_log_cap[MAX_LOG_TYPE] =
+=3D {
+> > -    [CXL_LOG_COMMAND_EFFECT] =3D { .param_flags =3D 0, .uuid =3D cel_u=
+uid },
+> > +    [CXL_LOG_COMMAND_EFFECT] =3D { .param_flags =3D 0, .uuid =3D CEL_U=
+UID },
+> >  };
+> > =20
+> >  void cxl_init_cci(CXLCCI *cci, size_t payload_max)
+> >  =20
+>=20
+>=20
+> Actually no, does not help either. Dropped for now.
+> Next patch does not depend on this one, right?
 
-Feel free to submit patches that deletes the existing code if you want
-it removed from the documentation.
+Indeed. Unrelated.
 
-~Gregory
+Thanks,
+
+J
+>=20
+> > >  void cxl_init_cci(CXLCCI *cci, size_t payload_max)
+> > >  {
+> > >      cci->payload_max =3D payload_max;
+> > >      cxl_rebuild_cel(cci);
+> > > +    cci->supported_log_cap =3D cxl_get_log_cap;
+> > > =20
+> > >      cci->bg.complete_pct =3D 0;
+> > >      cci->bg.starttime =3D 0;
+> > > --=20
+> > > 2.43.0 =20
+>=20
+>=20
+
