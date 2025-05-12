@@ -1,63 +1,63 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCCD4275878
-	for <linux-cxl@vger.kernel.org>; Mon, 12 May 2025 16:22:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB61928E5E1
+	for <linux-cxl@vger.kernel.org>; Mon, 12 May 2025 16:22:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747066928; cv=none; b=E12ZaID3Ybu5WwhB5DXcUOv5vf5Kv4BI0h9txl7vbPytOk8FH31VOIm2bbQQBsKD7G9PvPVy4+sccDrThdt3iKye8dUsBYU11ZszdergcKd0htQOsoTld1DbxNhu7Or23li07g8ueTanHH6PxzijjWAkyA8aig6ZwJdFiEH9U2Y=
+	t=1747066928; cv=none; b=SGIesHyvo0CXR0wO6fpRNE66KKdBvUWJdL7jUqSm42X1Z/xrtHSEjwTIFynzG29XN3Gr4LfFqeQh3gEkRQDiktFlAJisN+OnTwrcJhFCr9B6RuNxWE/SwDWhY0+FfN8A5FpNHzrKGxMvAZldQUFmXymB/H/UgfFm4wxtZiPwgtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747066928; c=relaxed/simple;
-	bh=AhTLdqyE2De1b9HJN76/C5lAERWGT4jHTFZhEoUDbtk=;
+	bh=alRL+BnN7pA7RLLcp2eJAsPEVuznl19NxFJaEka+9wo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ozEsvVhHIAcfURiJOiIVF7jnqBMKgaCmHriNHr0JvU+5k3WQywqt62en+xapEu2r+8hOfXBNMfj2wGxTKCp0AcgOAyjBwY87ANojkFg+etCKsXySR6xrz6MPawgGymga9ZrlRpbjBGX8FGqA6sLFpRHI9Fza8NFbr8YRFxin1/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=h9UJ15Nm; arc=none smtp.client-ip=209.85.160.179
+	 MIME-Version; b=IAF+ZVDuY2ZsRBL1Jjfi724GGa4pqXapK1G3JQd3f7LPc3DxcBPQaQJgInxBaX3kuYpMITG48J/ZdwR0d8TGic6RAG17b3jK3kqFGAroXoEX1Ml4dz5M2BGyrANLt+1oEuWBtL+R+CXhxBjnnW+MXkf9GFEondx6bGvCxCahnbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=ByeXreV3; arc=none smtp.client-ip=209.85.160.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="h9UJ15Nm"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4766631a6a4so54282931cf.2
-        for <linux-cxl@vger.kernel.org>; Mon, 12 May 2025 09:22:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="ByeXreV3"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4774d68c670so78564341cf.0
+        for <linux-cxl@vger.kernel.org>; Mon, 12 May 2025 09:22:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1747066923; x=1747671723; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1747066924; x=1747671724; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xF2+54Is9Y/RM3HTLl2GmOBtMHoFbKc3iQ93j5V9CWg=;
-        b=h9UJ15Nm/4Bs2usI/bN+Va0cECSwvyDXqb4Oe8R3bfkIrJS/xG3b+42xZQzAvZJt5j
-         Zrs66fNNmn8MZX+xCZNqTEj1bIuprlvqu6a4VY4HosanMXjdVvB7MH7uv2HKkEyV7bc3
-         bCoMdZFFeItsGCQsUR4a6Puh2E7ko9BwGudalpSKLMrD25JsPK/5l+H5INhs+U+wOnzH
-         mRJssmWNF1X6UvnMwvNoliMs54b8FHJBDR6xz4BHOskGhvCwpRac9Jq0EWEzK4d8CzYd
-         j6awFV0sEiC9VUmdCHpm//lfMuE6jVSHvyh3lQistMYK/eokB8xCv5isOW02kwRV+t8f
-         E6Wg==
+        bh=8mmNdRpdNT2e5CioCKqjI7jQZuOdPNFPwu/aBvzKK6c=;
+        b=ByeXreV3D7rxuAuI62OkxgSg/zHGh1SWk/Ir8lSJG+Y7G9h6NvZNeKGf3UAQSLg+E3
+         DjUxOPsbH+hhFqly6ZLnfiDXxdB6EjnbpakrYSTJrjStmR9RandwYPh6pZsfX7qg8Esi
+         Ccg5cYlr6pmTu0J3w9B51h3Niv4QfbXhogsL52xM6sBwdNJ7e3e7MjQiLsTlH1wzleUc
+         /dIV2n3HQfIrDr1AooXQrP8S1/JDaLrExWpN5b3fwOuAX8aefDNIUuaAdpbHKdoELc2f
+         WTajCCuzAflMCFfv6YRMLF68EnGGiz006DzHS0D2IgOBj8qCh+9IJkkahOUrhFGipbti
+         9MHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747066923; x=1747671723;
+        d=1e100.net; s=20230601; t=1747066924; x=1747671724;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xF2+54Is9Y/RM3HTLl2GmOBtMHoFbKc3iQ93j5V9CWg=;
-        b=dIO6DY0AZs9huzWO9FlT3DpYANFo7IUSmovLzCQ9y+t8nYdxXpBlp4HrjcBeXx1LJy
-         rhi8qy37RrwwAbAipBlEPhAPHqz7E1QbeAW/0GxTrTPHgyZFAQDOeV6VNpF3uHlO/8V6
-         T2HHdFPbzZZO1r08obj3JvkY0SqeP0Ca5UjpcO708cAb6QvfusCOZWNBLL/z/IdiO/Ck
-         lZWP+FIVher3+pHRseke+zlKrrG/ySQRsasDjaiIx88GjdrOkfyLb4gE7JGqqq12sVbq
-         krR9PmKCTmbMKqh3OnCmTlgpzTAJiJD2CAtUJ4geexRSzYHKY/xJOl23izaSPk4omtb/
-         sqeA==
-X-Gm-Message-State: AOJu0YxQYjlgLRUtum43tK1Xq/YyC/XgUqcR6KEFXFrEZX/odoCYM5dJ
-	Ow2+BcHhkaRGqnvPBvpvuLwCzIegjYODitoQLDqJogBFlC0kRNspoNfrOe39zuvE3Pc4t02HTk9
-	x
-X-Gm-Gg: ASbGncvTNCHUftgXFBpUEfypxrPfjyTEel5BXb1Bk3J4oVs9848EYCOyEviKkmsXXY5
-	0t8GVcSDGY2hDfBmfkmAHQwCOCff7os28rdMp265svppps48Zq6q8JFB4rTve58syN4r6fEF14i
-	D1oZJYbr1RmfjyzB7+kyG09JljNevU9LIG6kRBEnm2YNZcOdQnuN1cE13KRba0UI64S4P080ZJB
-	SvqQ8S+fDOqmwtXqduSoCQEkLUCs+yzbefbP3itQPmUfpAOXVpq+cR1kRkKKI+lhHVngRRwyVwd
-	GJLSVsrfWVLpDTMkLX6/xuhS4QfoYyDEhRrzTtK5fKnajp17AyfJuy6HJgVD9nqmiHHVxQYExcs
-	rS1Ee+81K9CZgOgTdkCTdPJq5k+zHquNrxm6y
-X-Google-Smtp-Source: AGHT+IEUvJWC96dITPrF63xDkehCwcU0FPTtDoj7fUuKu2PGS+4UNxLAuwofc+V4RoH9DNoujCSNzA==
-X-Received: by 2002:a05:622a:1aa0:b0:476:838c:b0ce with SMTP id d75a77b69052e-4945273c308mr238859421cf.13.1747066920650;
-        Mon, 12 May 2025 09:22:00 -0700 (PDT)
+        bh=8mmNdRpdNT2e5CioCKqjI7jQZuOdPNFPwu/aBvzKK6c=;
+        b=Q6lkm5uZuKunai8dsvDU8H1SPzYKDhO22M/3zE2bzKncDzKyq94lPj4LWYooqMXHE7
+         u8qZrRiU9PUk8zupaEMw6ZJb3mPY2X0WFvNH7kr3gMWbyJbpu2CnBulvuuwYxziZ8Tkm
+         ZcxdHsNO+3qyqgRENIVm0XeDxySmHVhHlUu91XB6a3P5WU0rF9WkmOXF8jU+T13jGiOP
+         NUDidR46nJ80gZrluilfWDGS9YoIciPKnOD/6S1R/c+K8wIlM1aCm+zcBR2q5dlkA0uU
+         TBe55ewh6355pOllPpBTTWOgxAtmJNoLgLg7egFuxoSwODjjksOyydW7cW0dx2Sq0kEw
+         Dzog==
+X-Gm-Message-State: AOJu0YxZeAqgu6paph+S9ZyDf5GCPQp+xKiT5yqxfZL9h4OZ6LlCGzU/
+	S3RT0zQ28eudrQLVd5J8xEwIAxwRM3vDchWXno6mIrQrWXldGVCnIYY33g7ytCZNDKN5Gggi8g8
+	C
+X-Gm-Gg: ASbGnctbhBOftigoQDVO4aYlF6vmb5Fw5/uiu7jDyCA6d51WvbOadDJgUIWrC3/GWjo
+	SysDEUB9XZzqW9yU192JfkwBG2OkZ9Y5pdu/AdLTaxB1KAYRT2nxm1ezK0kubbXUA2nFjOUqbkc
+	cG5JXantEz3gP6BXD4MEqhZrqduVmO6dgwRrE0YEZG6d3/uQX0jo5VMcmOdfq7f8de3kyitiSdQ
+	71hZ2G0s94kymTYE9sCyVZ1/KRUKrCEYbqhYJMZQV+QrUqL3nqiN7oHWg3l9uxjmgpzLhdf6h00
+	njJmqWfxrleCXtiNwlIxSbQdOiGRCNq3aI8PDS5Nmy90Hxt8rEZQqWIzntViHXMhHcOF1nu8mK6
+	Hwpd/c/9rZvXOepO1OfomgsotoPMi88CuoBWa
+X-Google-Smtp-Source: AGHT+IGWTZBftJjnQ8DcvuqUwpD3a6TCMt8kbFUpNWIl3gGiOiMusJaygR3wQdoazycEU1zccxqVUA==
+X-Received: by 2002:ac8:57d3:0:b0:476:87f6:3ce4 with SMTP id d75a77b69052e-494527b8112mr197827301cf.39.1747066923532;
+        Mon, 12 May 2025 09:22:03 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-49452583961sm52461791cf.58.2025.05.12.09.21.59
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-49452583961sm52461791cf.58.2025.05.12.09.22.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 09:22:00 -0700 (PDT)
+        Mon, 12 May 2025 09:22:03 -0700 (PDT)
 From: Gregory Price <gourry@gourry.net>
 To: linux-cxl@vger.kernel.org
 Cc: linux-doc@vger.kernel.org,
@@ -71,9 +71,9 @@ Cc: linux-doc@vger.kernel.org,
 	ira.weiny@intel.com,
 	dan.j.williams@intel.com,
 	corbet@lwn.net
-Subject: [PATCH v3 12/17] cxl: docs/linux/memory-hotplug
-Date: Mon, 12 May 2025 12:21:29 -0400
-Message-ID: <20250512162134.3596150-13-gourry@gourry.net>
+Subject: [PATCH v3 14/17] cxl: docs/allocation/page-allocator
+Date: Mon, 12 May 2025 12:21:31 -0400
+Message-ID: <20250512162134.3596150-15-gourry@gourry.net>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250512162134.3596150-1-gourry@gourry.net>
 References: <20250512162134.3596150-1-gourry@gourry.net>
@@ -85,112 +85,118 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add documentation on how the CXL driver surfaces memory through the
-DAX driver and memory-hotplug.
+Document some interesting interactions that occur when exposing CXL
+memory capacity to page allocator.
 
 Signed-off-by: Gregory Price <gourry@gourry.net>
 ---
+ .../cxl/allocation/page-allocator.rst         | 85 +++++++++++++++++++
  Documentation/driver-api/cxl/index.rst        |  1 +
- .../driver-api/cxl/linux/memory-hotplug.rst   | 78 +++++++++++++++++++
- 2 files changed, 79 insertions(+)
- create mode 100644 Documentation/driver-api/cxl/linux/memory-hotplug.rst
+ 2 files changed, 86 insertions(+)
+ create mode 100644 Documentation/driver-api/cxl/allocation/page-allocator.rst
 
-diff --git a/Documentation/driver-api/cxl/index.rst b/Documentation/driver-api/cxl/index.rst
-index f2127968ea78..35c5b0c6f95e 100644
---- a/Documentation/driver-api/cxl/index.rst
-+++ b/Documentation/driver-api/cxl/index.rst
-@@ -37,6 +37,7 @@ that have impacts on each other.  The docs here break up configurations steps.
-    linux/early-boot
-    linux/cxl-driver
-    linux/dax-driver
-+   linux/memory-hotplug
-    linux/access-coordinates
- 
- 
-diff --git a/Documentation/driver-api/cxl/linux/memory-hotplug.rst b/Documentation/driver-api/cxl/linux/memory-hotplug.rst
+diff --git a/Documentation/driver-api/cxl/allocation/page-allocator.rst b/Documentation/driver-api/cxl/allocation/page-allocator.rst
 new file mode 100644
-index 000000000000..af368c2bc9cf
+index 000000000000..7b8fe1b8d5bb
 --- /dev/null
-+++ b/Documentation/driver-api/cxl/linux/memory-hotplug.rst
-@@ -0,0 +1,78 @@
++++ b/Documentation/driver-api/cxl/allocation/page-allocator.rst
+@@ -0,0 +1,85 @@
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+==============
-+Memory Hotplug
-+==============
-+The final phase of surfacing CXL memory to the kernel page allocator is for
-+the `DAX` driver to surface a `Driver Managed` memory region via the
-+memory-hotplug component.
++==================
++The Page Allocator
++==================
 +
-+There are four major configurations to consider:
++The kernel page allocator services all general page allocation requests, such
++as :code:`kmalloc`.  CXL configuration steps affect the behavior of the page
++allocator based on the selected `Memory Zone` and `NUMA node` the capacity is
++placed in.
 +
-+1) Default Online Behavior (on/off and zone)
-+2) Hotplug Memory Block size
-+3) Memory Map Resource location
-+4) Driver-Managed Memory Designation
++This section mostly focuses on how these configurations affect the page
++allocator (as of Linux v6.15) rather than the overall page allocator behavior.
 +
-+Default Online Behavior
-+=======================
-+The default-online behavior of hotplug memory is dictated by the following,
-+in order of precedence:
++NUMA nodes and mempolicy
++========================
++Unless a task explicitly registers a mempolicy, the default memory policy
++of the linux kernel is to allocate memory from the `local NUMA node` first,
++and fall back to other nodes only if the local node is pressured.
 +
-+- :code:`CONFIG_MHP_DEFAULT_ONLINE_TYPE` Build Configuration
-+- :code:`memhp_default_state` Boot parameter
-+- :code:`/sys/devices/system/memory/auto_online_blocks` value
++Generally, we expect to see local DRAM and CXL memory on separate NUMA nodes,
++with the CXL memory being non-local.  Technically, however, it is possible
++for a compute node to have no local DRAM, and for CXL memory to be the
++`local` capacity for that compute node.
 +
-+These dictate whether hotplugged memory blocks arrive in one of three states:
 +
-+1) Offline
-+2) Online in :code:`ZONE_NORMAL`
-+3) Online in :code:`ZONE_MOVABLE`
++Memory Zones
++============
++CXL capacity may be onlined in :code:`ZONE_NORMAL` or :code:`ZONE_MOVABLE`.
 +
-+:code:`ZONE_NORMAL` implies this capacity may be used for almost any allocation,
-+while :code:`ZONE_MOVABLE` implies this capacity should only be used for
-+migratable allocations.
++As of v6.15, the page allocator attempts to allocate from the highest
++available and compatible ZONE for an allocation from the local node first.
 +
-+:code:`ZONE_MOVABLE` attempts to retain the hotplug-ability of a memory block
-+so that it the entire region may be hot-unplugged at a later time.  Any capacity
-+onlined into :code:`ZONE_NORMAL` should be considered permanently attached to
-+the page allocator.
++An example of a `zone incompatibility` is attempting to service an allocation
++marked :code:`GFP_KERNEL` from :code:`ZONE_MOVABLE`.  Kernel allocations are
++typically not migratable, and as a result can only be serviced from
++:code:`ZONE_NORMAL` or lower.
 +
-+Hotplug Memory Block Size
-+=========================
-+By default, on most architectures, the Hotplug Memory Block Size is either
-+128MB or 256MB.  On x86, the block size increases up to 2GB as total memory
-+capacity exceeds 64GB.  As of v6.15, Linux does not take into account the
-+size and alignment of the ACPI CEDT CFMWS regions (see Early Boot docs) when
-+deciding the Hotplug Memory Block Size.
++To simplify this, the page allocator will prefer :code:`ZONE_MOVABLE` over
++:code:`ZONE_NORMAL` by default, but if :code:`ZONE_MOVABLE` is depleted, it
++will fallback to allocate from :code:`ZONE_NORMAL`.
 +
-+Memory Map
-+==========
-+The location of :code:`struct folio` allocations to represent the hotplugged
-+memory capacity are dictated by the following system settings:
 +
-+- :code:`/sys_module/memory_hotplug/parameters/memmap_on_memory`
-+- :code:`/sys/bus/dax/devices/daxN.Y/memmap_on_memory`
++Zone and Node Quirks
++====================
++Let's consider a configuration where the local DRAM capacity is largely onlined
++into :code:`ZONE_NORMAL`, with no :code:`ZONE_MOVABLE` capacity present. The
++CXL capacity has the opposite configuration - all onlined in
++:code:`ZONE_MOVABLE`.
 +
-+If both of these parameters are set to true, :code:`struct folio` for this
-+capacity will be carved out of the memory block being onlined.  This has
-+performance implications if the memory is particularly high-latency and
-+its :code:`struct folio` becomes hotly contended.
++Under the default allocation policy, the page allocator will completely skip
++:code:`ZONE_MOVABLE` as a valid allocation target.  This is because, as of
++Linux v6.15, the page allocator does (approximately) the following: ::
 +
-+If either parameter is set to false, :code:`struct folio` for this capacity
-+will be allocated from the local node of the processor running the hotplug
-+procedure.  This capacity will be allocated from :code:`ZONE_NORMAL` on
-+that node, as it is a :code:`GFP_KERNEL` allocation.
++  for (each zone in local_node):
 +
-+Systems with extremely large amounts of :code:`ZONE_MOVABLE` memory (e.g.
-+CXL memory pools) must ensure that there is sufficient local
-+:code:`ZONE_NORMAL` capacity to host the memory map for the hotplugged capacity.
++    for (each node in fallback_order):
 +
-+Driver Managed Memory
-+=====================
-+The DAX driver surfaces this memory to memory-hotplug as "Driver Managed". This
-+is not a configurable setting, but it's important to note that driver managed
-+memory is explicitly excluded from use during kexec.  This is required to ensure
-+any reset or out-of-band operations that the CXL device may be subject to during
-+a functional system-reboot (such as a reset-on-probe) will not cause portions of
-+the kexec kernel to be overwritten.
++      attempt_allocation(gfp_flags);
++
++Because the local node does not have :code:`ZONE_MOVABLE`, the CXL node is
++functionally unreachable for direct allocation.  As a result, the only way
++for CXL capacity to be used is via `demotion` in the reclaim path.
++
++This configuration also means that if the DRAM ndoe has :code:`ZONE_MOVABLE`
++capacity - when that capacity is depleted, the page allocator will actually
++prefer CXL :code:`ZONE_MOVABLE` pages over DRAM :code:`ZONE_NORMAL` pages.
++
++We may wish to invert this priority in future Linux versions.
++
++If `demotion` and `swap` are disabled, Linux will begin to cause OOM crashes
++when the DRAM nodes are depleted. See the reclaim section for more details.
++
++
++CGroups and CPUSets
++===================
++Finally, assuming CXL memory is reachable via the page allocation (i.e. onlined
++in :code:`ZONE_NORMAL`), the :code:`cpusets.mems_allowed` may be used by
++containers to limit the accessibility of certain NUMA nodes for tasks in that
++container.  Users may wish to utilize this in multi-tenant systems where some
++tasks prefer not to use slower memory.
++
++In the reclaim section we'll discuss some limitations of this interface to
++prevent demotions of shared data to CXL memory (if demotions are enabled).
++
+diff --git a/Documentation/driver-api/cxl/index.rst b/Documentation/driver-api/cxl/index.rst
+index 6e7497f4811a..7acab7e7df96 100644
+--- a/Documentation/driver-api/cxl/index.rst
++++ b/Documentation/driver-api/cxl/index.rst
+@@ -45,5 +45,6 @@ that have impacts on each other.  The docs here break up configurations steps.
+    :caption: Memory Allocation
+ 
+    allocation/dax
++   allocation/page-allocator
+ 
+ .. only::  subproject and html
 -- 
 2.49.0
 
