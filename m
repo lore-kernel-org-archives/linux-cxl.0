@@ -1,162 +1,398 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2042.outbound.protection.outlook.com [40.107.94.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1532222332B;
-	Mon, 12 May 2025 16:27:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747067232; cv=fail; b=kRroB3BtuRl4EXepwBrf4HFmhvQPJD6CxGaKC1kQlcoqCoItgSib5vep3r3vJYvlFb84ChehUtaZKva9Zb5dv+DDZE5GURQOdRi/MtMs2ddxoBcrMsRYPvoXndeoaKxOfRn7JG8SMd9bXMgk8Kq8IbQlBeJimcsbG5wDYXhFhDM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747067232; c=relaxed/simple;
-	bh=dXzl2lHfU/fZVBUxEau3kLLLVRDklCmoB3bUyhJgAYQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Yhn7/aAniKkpcVcoJB29zAmAKqKnIvjm3PpyQBdfL+F23zuFkf63wQ7SBX+Fb0SBQX7wkT1Y71jrkaFHKvI4cDdIb74ELjfUoOW1mDmMxrdZpGZVthlfHO5PcgPT6JcVjJlfKqGqbhOamnIzdIdI3FTOnLnha6IXIidCjhJNTWo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=fjm1ydz3; arc=fail smtp.client-ip=40.107.94.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1EEF1D5178;
+	Mon, 12 May 2025 16:28:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747067296; cv=none; b=QnT3ADbkD8CyWdEgfTCDzBNMb0i6YZ/dISaUzfzNr8sBy6Rh6YaiQQm/DnQeO3aue78HwUIjCdcbLGlhg4lv4SUDXEXtvYdZLiD+aNe+Z20GO4NNBWDE5AfzrEv1s9QuJADiNAYqfVIMe7HA3Ze+dUfe7iNSPZ8xXDGKYpuKr74=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747067296; c=relaxed/simple;
+	bh=Jt9oZT6MxQ1c9CUyPBdh6LScXwRFEfayip1vATEJODY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H3OJwU3ENuTMf3nfhY6fuy5AY8RnF5RFoXHBdDytgSW1KZNrno0hW1Tnp63bxA2QcXuoLxJer4HdO6Z1AA6uSHzjFqeD07MKNHOn5nZGVDJ/jXETLNZT19f7BbdOAYhL621B7fJGjW+Fd6545gNYyY1ieTI+xKdKxkdz5xcrbFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DYjlZx8P; arc=none smtp.client-ip=209.85.161.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="fjm1ydz3"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=V6MlVXyDAQwYV+IHtiegKyFubmfKE5LCUp20OQp27dk5Wi9d5dr1XQRS5gBhryiHM0XsK4mSDot3nSC1pmwIhheVUkifuDt41EnVgPJtZZt46LQayNFprDeCM68uTIgyCloRdZGkPkqFu+naimgfpiBwV5XzQjcJNABc7eqb0UzZ4IzYShprPI1AlE5Rw1If/flCSW4mndF+YlqcIyslRvi3VPjo+jiecVd7IdjEPflMWB29Z4ajdpU/Q+Tl/OMflEiu4x+Djz+gD9f3HF+tWv7D9QSsergJqsQj+tQfYtzbzPslU9uCtbAnlykcYkE/jGODpAB/hdNyzqiReP78/g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7q3Vcq6jfHL2ih0DtqV9MT6m1S4HM79li4Yo5GKMKEw=;
- b=H2sL9+GeT9yirRVbd/g0tGerSlj4GZ6KsWWkuYG8FCqhDx7xNY2scNP8A3U7GTYpzhisXH7VmB3YGGyFgQ2M+bfKviXVGGck+Eq+jeM2IMPWEksEkIkmwlckMlcOhPzy7OIfIX9FM4OCNFtdD9jpTixRguNVvsVvNxv/L73J4sTXsNLVwfBhtMGn1TL9TmzvA1ekUXq9JAPqTcTKkzEnDY+qQyIRg2+TQbVsSRxe9VZ4Y3bPEhIw/LreQnKEft3Ebw9wpN+pix9HhJ0iq6shcVumoZ1ltqkeCQhMmtlmKeNymHj+c2Zzh/iBISM1ugOdRgCNJBA7wKXxGPZ0x7Cdqw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7q3Vcq6jfHL2ih0DtqV9MT6m1S4HM79li4Yo5GKMKEw=;
- b=fjm1ydz31PQB+3rGZz1IPFtsidSPvk/geKIalbmtfkOmtoedebe8kN1U3VTtewT2YvwYnxvk5OjPKpXxzW1vwymFpFEpz3vJass0cY2AWzzUNSKo/mtqSDbvo5cPwkGobGrXNeX7ex4ITAUgkpxbQAhl7TJla0WSfB6Pfo9UujY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com (2603:10b6:930:be::18)
- by DS7PR12MB5720.namprd12.prod.outlook.com (2603:10b6:8:73::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Mon, 12 May
- 2025 16:27:08 +0000
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::b965:1501:b970:e60a]) by CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::b965:1501:b970:e60a%5]) with mapi id 15.20.8722.027; Mon, 12 May 2025
- 16:27:08 +0000
-Date: Mon, 12 May 2025 18:27:02 +0200
-From: Robert Richter <rrichter@amd.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Gregory Price <gourry@gourry.net>,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v6 00/14] cxl: Address translation support, part 1:
- Cleanups and refactoring
-Message-ID: <aCIhVj4c2CH_1Oqg@rric.localdomain>
-References: <20250509150700.2817697-1-rrichter@amd.com>
- <14b64c8d-a5fc-42eb-8160-590c17bbbd99@intel.com>
- <3df32c03-8e83-462d-ae3c-ac0a76912786@intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3df32c03-8e83-462d-ae3c-ac0a76912786@intel.com>
-X-ClientProxiedBy: FR4P281CA0106.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:bb::10) To CYYPR12MB8750.namprd12.prod.outlook.com
- (2603:10b6:930:be::18)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DYjlZx8P"
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-6063462098eso2917454eaf.0;
+        Mon, 12 May 2025 09:28:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747067293; x=1747672093; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yfXYK2WWJp0fMh8eXP5pHHTLg42XHMgL/jeicNVe0gE=;
+        b=DYjlZx8Pi7xfJYsGFDVn/ad9Q6akpk6gU0XOoz5IHxCOl69mvSvSSn87fBv0aB3sEb
+         8RceTjeWGcSBSUL6SHoHRJQOgQRT7uwgZhdZarANd03dyhL3lYda4EKWYpgtVjpFXlNv
+         N1kPsM3SC+14mDicaVee7DRMJA2JBAnQNSHWIfHuLZuAW2wtO//anWY7BRVsqD8Q2mLN
+         XFFTlmCkE2t179bTvMt+KSkh5zFKf05HMQ5pr2iEUppML/1UmE7Iwwifb1L5VLrpDO44
+         o3lKJ2RGZZ+rChEWrwqU4pvzXP3bVRstxTdN6ajAxMsKa/qXEaHQA1EcVRNKQC3FCGuo
+         /new==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747067293; x=1747672093;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yfXYK2WWJp0fMh8eXP5pHHTLg42XHMgL/jeicNVe0gE=;
+        b=T//JSRKFKkUajWO6F6Kpl4nPYF1EQqgkC0WXwwzvRveARW9FZuWOwIcFD+GkEw3VUa
+         aMV3eXvoDTxIwlJHSSdiGK0VTIawrwBikP1iJOi6U5HP2tmbHJ9rKAWd7fJ4/hNY6Vfh
+         JcU7GPXV9eoTQHC7rSyG7A1ZLD5pJuWoEpnyQcnAcwDAW9MtpTKucFVrIcnTn35/0/Yt
+         3qeOVmQTY6cHRdInR84IOBOS924hFFQbUoy6v5wlE3W4/vESAzLgZ9/S4HQLMf4tYDjw
+         RNRE2TMZO7GHXWOngx7KtyX7dKzJc5tRNTs0oEFYQyvWM9qDrTyChQqydsLh32TetHBJ
+         XIPg==
+X-Forwarded-Encrypted: i=1; AJvYcCUiK9EDmwHx7hpVsJ9Ks69kmVgVrSXPPsaJX4IL2i2klSZ/E6IQmoNiqmC4NBPD5zOvNR19vnjLXgkGnYAAnA==@vger.kernel.org, AJvYcCUuxyYPemU2BlZTA/ZEK4pByjnWMrTvRkrQW9oNszEa3ENfolKuxmjR3Q2am7taEhmf01VYpbPpux+yoTvR@vger.kernel.org, AJvYcCVWNb3zkX3hGC4CghSz82dF9e86Toy10WCmVBZO3D63k1SYh2LUJ2Pqk0iwEZ9gX9q1y2dYVtoDy16y@vger.kernel.org, AJvYcCWc8+qQfCpcz1X5VwmRY9NxwOiSERKhRAt/CQiH2kjSaMGH7U/IJTJWcXLDl+ioQFhbMmtL3K0swPk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxskq+A+eCRk3PdcL6/R5jeMopzBrGwatZydWuSpmKCp4N/IibB
+	YnGtXiA4EPS+M11hifQ6lFhm10r2Jr0rFTe/WZjM8Dq9A/Yrv0U1
+X-Gm-Gg: ASbGncu22hWNDpQlzG+2iPSRBxXyClp4OWOZ8+Bc+OMp46PRiXvf96Aolo/zuBENTSX
+	3nGPf4Gbtf7D1jSi49WXEncxVD9IxcrfGy05/UMhWS/aJ+54Gb1A+lnsgo0eVr5zMkH5r0CHvP6
+	Prcuxm+1Xehbiwc4bSmEFEtkIQ9QkRGCKdD0A/5EtQKet8r+Wn/ZnAGhxhFxp1xxofBfYfW34Dd
+	DSBKIn6fXmXZF6FcpKohsuCIyIlx1MnYCX6Dsqv6h2ZQUfZi7/fXRSUFViImLbJTCZClMzmS2c6
+	6UNEXo+KEg38+iSZJxQENsn4MA4nCs5btm3HoRmYmGyUFCyrcbUl6kamcz8s+JWNNw==
+X-Google-Smtp-Source: AGHT+IEegXMkAWHU26748SkFBCyunApM/AHaeESZwvCaWTrrzbQhiaf7NFfNXS/WZE1r9TkuTiA14A==
+X-Received: by 2002:a05:6808:1706:b0:403:3503:6a16 with SMTP id 5614622812f47-4037fde77f3mr9050099b6e.1.1747067292387;
+        Mon, 12 May 2025 09:28:12 -0700 (PDT)
+Received: from groves.net ([2603:8080:1500:3d89:f16b:b065:d67a:e0f7])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-609a8cd7a4fsm985525eaf.10.2025.05.12.09.28.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 May 2025 09:28:11 -0700 (PDT)
+Sender: John Groves <grovesaustin@gmail.com>
+Date: Mon, 12 May 2025 11:28:09 -0500
+From: John Groves <John@groves.net>
+To: Joanne Koong <joannelkoong@gmail.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Bernd Schubert <bschubert@ddn.com>, 
+	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	"Darrick J . Wong" <djwong@kernel.org>, Luis Henriques <luis@igalia.com>, 
+	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
+	Kent Overstreet <kent.overstreet@linux.dev>, Petr Vorel <pvorel@suse.cz>, Brian Foster <bfoster@redhat.com>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
+	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	Stefan Hajnoczi <shajnocz@redhat.com>, Josef Bacik <josef@toxicpanda.com>, 
+	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>
+Subject: Re: [RFC PATCH 12/19] famfs_fuse: Plumb the GET_FMAP message/response
+Message-ID: <xhekfz652u3dla26aj4ge45zr4tk76b2jgkcb22jfo46gvf6ry@zze73cprkx6g>
+References: <20250421013346.32530-1-john@groves.net>
+ <20250421013346.32530-13-john@groves.net>
+ <CAJnrk1ZRSoMN+jan5D9d3UYWnTVxc_5KVaBtP7JV2b+0skrBfg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CYYPR12MB8750:EE_|DS7PR12MB5720:EE_
-X-MS-Office365-Filtering-Correlation-Id: 13e8fa08-b9af-49cd-ca36-08dd9171d6e9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?EZXczo6Qwvgjey34w4y7kfp7K2FnqyDZ5/h0SyQ4dwaCK819szl+fStuB3t7?=
- =?us-ascii?Q?DGEN9+Uv65YGn8n0Y5tKN+jF34ElSWT4JzOHylYi30ozDWxXT7ADducaktp8?=
- =?us-ascii?Q?WipVJrMDW6YnPFsdMQlGMNXlffDWT+sPI6BhtqfzlsNKrS+qMGlFkRFhlYZj?=
- =?us-ascii?Q?3USJAKs20CqpTUhORO/Y5Rwf+e20SoZ/+rasetWOr9aCiXqMF5puS+GgwUc2?=
- =?us-ascii?Q?8+QdXzbJ2JAv3T/9YAFf5OZWQi/y+dqv2OgA53UxKt1H7/iNkp8CjivDGk5i?=
- =?us-ascii?Q?d0oTJj43bCbLgb4Sip9CT7m3cFzqMkinwxOMBCWEKZbDGGvAjJSsSOyG++SE?=
- =?us-ascii?Q?6DPXBywJigNyF1Gt4t3zgehLG+tOEH2IUAlct8knpBCRqv5CwLuxTh7yCU6i?=
- =?us-ascii?Q?hXAI1M5gNXfkvaNA2eSB3yhVIagRe8mJlK8Il1oFL85cFGfUU19n69RmOTN0?=
- =?us-ascii?Q?e9iqr09nRYhHPVx70pVkDDXkuQE9kDYgZhyx9V5DJ704VrFfSB64v3+NpohH?=
- =?us-ascii?Q?MID7Q/x4B5PfCUzngPgP0Ew0WY2jeZs8OB/7SUdsrJvHg0itzDTrBtGZm0A0?=
- =?us-ascii?Q?1M6n8sN4pv2VEyh6JG26bPtf+rfZS4gYCL6kMhZNg6w7IjHrHm5XX0qTqaK9?=
- =?us-ascii?Q?x5cfkhchu1vLrAmB/YBJd6aGPie86H0PSQqZoGKCaZCKfvX/rVUHcGsegEIK?=
- =?us-ascii?Q?tXimo7VmxTy0MMAEnJNdiY49VXMn7cB5PKICdSh7uHbYpw19Vb7PhC3MJQbG?=
- =?us-ascii?Q?2lM2Y6LxsVYsA4KLUCk1+RLBEWA9eVDt5fC01Vh0qadHRxn5NMex7lVvWW7l?=
- =?us-ascii?Q?k9fQGMl8qfLcWEJBD5xo3popnhonSaX0GBrMi7+nEHo4GlUcWSDE+zCLEGJx?=
- =?us-ascii?Q?7hj7hHw+vrFnmEoGOv89ROssSeQ/99Kyb8tqfOLzdIfjZS36hOMt4pExl+KG?=
- =?us-ascii?Q?sCdRdM/ewhkBTf10FxBjYpuhsGnPMvqcySwto/GnlWcjdKQygZwdtV6RiWao?=
- =?us-ascii?Q?tWjAJWv3JYd5KkHLlFtz6BM+dJJ1OkiOIdZFYEO1VCsTaVUGiG14MycivHwt?=
- =?us-ascii?Q?TJHu0v456/x2n0PRYdR28Grtor50KGYiVMFHRnMxZme8UNjBG+2OPY6yMU5x?=
- =?us-ascii?Q?ROfgxwAPDrUGpfVo1zqMoxfDj7zhkkUUbTRddCwu9tUzAWSnyMKkRe4UDx6v?=
- =?us-ascii?Q?xrGprOYWkGBxDD7Tc8rnzxUtMR3MWaFSq+67wMp63uMCjz8aDL22rOcDD5Uz?=
- =?us-ascii?Q?gSbmY5NOSm1N/cayMJtGwD9aqiKz2QrUEZWpHIbvEa4Az8PU7QGPVdYgRswz?=
- =?us-ascii?Q?tTeu8muAGCTRUuyvS9Z32si4MZ9CXiZvEfgswA27QGkOXSeb6VqGA4MCncAh?=
- =?us-ascii?Q?f8/i0TrOT1Am5k3wtNHaNN7W0Sad5CE7ABcjrAp73NQRLdqL7RVOg2t+7r9T?=
- =?us-ascii?Q?q73yqd56T1k=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?4aM2agc5PIBbmERwD93tROMtiVmsmiUn2e4lBGEQcA6Wmx0mstsWVRB0J6x/?=
- =?us-ascii?Q?9Gu/j3FDAxd6KLLpAyWIxNOUIERTwr/9lr+gp5UeKv3/2l16FcEy0TCPn8Zd?=
- =?us-ascii?Q?aDPQGiaxVvXKoHempim8Mz5Ku/EGPwG6zj4KyuBLdf0QiYNvAUELMbPBuZwI?=
- =?us-ascii?Q?WRQz0BBDFXGv9m3oeVKEa/WV1peXOtQ1kexkfpY/vBAQMPfyGOW9ET86iZkm?=
- =?us-ascii?Q?ciKkD57rhLNYlQgsCPxqaSSVYwyTSNz9HII1XcsBSUcN3/UmXV5tSx7fbRJh?=
- =?us-ascii?Q?i0x+Li4JJDSNFfLLwj3nmG0pa0RzJZ/1H7ShoROMR6h6kTwNoFKfcobWhhXA?=
- =?us-ascii?Q?w33CoaJs5TRTLSzsQBh2MwrazZHbAbfzoMW5IcSkZ3Ug80GY0wursHiANnt7?=
- =?us-ascii?Q?1+P68lVSV0jLAljWFskGFbFCcjw2EiT2ghJfmWrTdMVI3RGugY+mZLmw//x+?=
- =?us-ascii?Q?iXdR7KnvVtb5cqBCl9v4W5u58EtuOjM5sVh00eLG0YG5g7HKJlQxRiI3rvsb?=
- =?us-ascii?Q?Kur9efoNqaxYKPXTDGI6rWtK2jzv6CBXT+MrIQ7PvAd4RaIu8kOxsuh2+fGp?=
- =?us-ascii?Q?/owjvbE0U/ebgUf4WQBRIzOgyjzrmTDs6KiqwKAG3wUf6aGNDSOL0XW1oObH?=
- =?us-ascii?Q?hsLpG7Tpr7d47QAX543nTPfkNXr2i02fHKGTP0aae249tkAk5H7P8Qtm1Z8o?=
- =?us-ascii?Q?x/KyMtt0aowBY8induojyvrcZuLYJpBMTMLkfnhoALtcOXJ3OnL3quVqssd4?=
- =?us-ascii?Q?8+EjmrnAd4CUqg2DyRmrVzBd1dboyEa4Gc5Ni1XeRM/MzAc971jCWJssBZXe?=
- =?us-ascii?Q?x578QL+VWAMKDMJNIkbJOT+q+4t/Mz8cN1IS54Oru8mymPg1VEjFBqjW/MvF?=
- =?us-ascii?Q?HgDXWkQEQDE0HBW6u9n6uNCdxrkxhQ7a9XJNYeRZTUA9hSfsf/kVNWuM5Jbk?=
- =?us-ascii?Q?2EqjCCBzsmeVebZqUPUwWMab4cESUELRBuqDHV5NDCRY3+UZWNf7wyLX1SF6?=
- =?us-ascii?Q?9olT5JGFsn5hIzIOAcxyyY4mD+Uh1u3hdpXHs0yXWz3oByFSDFnDm5EjylRK?=
- =?us-ascii?Q?PH7vOfCm6lElmyVJ1jt6vz99+oKqj6HNgJ75fb7mboJLssxCUzJWzBXucWaP?=
- =?us-ascii?Q?VHXTwMm9eNq4pKT5E8MKURjpspG4CHC+F0XuO+1gDFXbuD4G7wDsuxdAb7uA?=
- =?us-ascii?Q?y1pMolDesm8XzZxYhVMvuWdHu2LTpU1v0BNdcKM0AAe2+FbnI2JnIPVQJgpA?=
- =?us-ascii?Q?QHLmbJa/BYZmgarVJSpIiYkO3wXtbq9ftUIAQ86esZsV/pBXNdZEpCsT0zJ/?=
- =?us-ascii?Q?4wx0lZiZjGCDkSGDc+aKRGfSaAiZEPnXUdPoTpJqr50oZ3blBufhyl18U5WZ?=
- =?us-ascii?Q?gWdFzBTnFtjJnA9DbyJ5avBFnlpRAWw5RJJ4K3tyb+hSKhk6oIkcd12Ag4Ix?=
- =?us-ascii?Q?N3l2ZxC0UXfMxVNvpI7uq+eyLnUylkP8xkSSQ8iIrwf1kxobcoS+D7vmo4br?=
- =?us-ascii?Q?u0vQ8B8KTWnZizRXk1THayKmupfNvH48mlbx8F0RGhezc62aYTNf8QmM9wHH?=
- =?us-ascii?Q?qGnI0EwukO1iUEe6MumiRZ0OTMMxPI0fSmdkVP4q?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 13e8fa08-b9af-49cd-ca36-08dd9171d6e9
-X-MS-Exchange-CrossTenant-AuthSource: CYYPR12MB8750.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 16:27:08.2157
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /MpMtBvr+EzRYe2BvZf2dt8T02xi/iG54OM2KKAM8Ikshu4SpxQtV4oxI9feslpzhOfv/lXWVjE3G+UyTRYoEA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5720
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJnrk1ZRSoMN+jan5D9d3UYWnTVxc_5KVaBtP7JV2b+0skrBfg@mail.gmail.com>
 
-On 09.05.25 10:11:43, Dave Jiang wrote:
-> On 5/9/25 9:03 AM, Dave Jiang wrote:
+On 25/05/01 10:48PM, Joanne Koong wrote:
+> On Sun, Apr 20, 2025 at 6:34 PM John Groves <John@groves.net> wrote:
+> >
+> > Upon completion of a LOOKUP, if we're in famfs-mode we do a GET_FMAP to
+> > retrieve and cache up the file-to-dax map in the kernel. If this
+> > succeeds, read/write/mmap are resolved direct-to-dax with no upcalls.
+> >
+> > Signed-off-by: John Groves <john@groves.net>
+> > ---
+> >  fs/fuse/dir.c             | 69 +++++++++++++++++++++++++++++++++++++++
+> >  fs/fuse/fuse_i.h          | 36 +++++++++++++++++++-
+> >  fs/fuse/inode.c           | 15 +++++++++
+> >  include/uapi/linux/fuse.h |  4 +++
+> >  4 files changed, 123 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
+> > index bc29db0117f4..ae135c55b9f6 100644
+> > --- a/fs/fuse/dir.c
+> > +++ b/fs/fuse/dir.c
+> > @@ -359,6 +359,56 @@ bool fuse_invalid_attr(struct fuse_attr *attr)
+> >         return !fuse_valid_type(attr->mode) || !fuse_valid_size(attr->size);
+> >  }
+> >
+> > +#define FMAP_BUFSIZE 4096
+> > +
+> > +#if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
+> > +static void
+> > +fuse_get_fmap_init(
+> > +       struct fuse_conn *fc,
+> > +       struct fuse_args *args,
+> > +       u64 nodeid,
+> > +       void *outbuf,
+> > +       size_t outbuf_size)
+> > +{
+> > +       memset(outbuf, 0, outbuf_size);
+> 
+> I think we can skip the memset here since kcalloc will zero out the
+> memory automatically when the fmap_buf gets allocated
 
-> > Applied to cxl/next. Thanks Robert!
-> > 
-> > 
-> Robert,
-> I applied Dan's requested changes and also picked up his
-> ACK's. Please check cxl/next to make sure everything looks good to
-> you. Thanks!
+Good catch, thanks. Queued to -next.
 
-Thank you all for your reviews.
+> 
+> > +       args->opcode = FUSE_GET_FMAP;
+> > +       args->nodeid = nodeid;
+> > +
+> > +       args->in_numargs = 0;
+> > +
+> > +       args->out_numargs = 1;
+> > +       args->out_args[0].size = FMAP_BUFSIZE;
+> > +       args->out_args[0].value = outbuf;
+> > +}
+> > +
+> > +static int
+> > +fuse_get_fmap(struct fuse_mount *fm, struct inode *inode, u64 nodeid)
+> > +{
+> > +       size_t fmap_size;
+> > +       void *fmap_buf;
+> > +       int err;
+> > +
+> > +       pr_notice("%s: nodeid=%lld, inode=%llx\n", __func__,
+> > +                 nodeid, (u64)inode);
+> > +       fmap_buf = kcalloc(1, FMAP_BUFSIZE, GFP_KERNEL);
+> > +       FUSE_ARGS(args);
+> > +       fuse_get_fmap_init(fm->fc, &args, nodeid, fmap_buf, FMAP_BUFSIZE);
+> > +
+> > +       /* Send GET_FMAP command */
+> > +       err = fuse_simple_request(fm, &args);
+> 
+> I'm assuming the fmap_buf gets freed in a later patch, but for this
+> one we'll probably need a kfree(fmap_buf) here in the meantime?
 
--Robert
+Nice of you to give me the benefit of the doubt there ;)
+
+At this commit, nothing is done with fmap_buf, and a subsequent
+commit adds a call to famfs_file_init_dax(...fmap_buf...). But
+the fmap_buf was leaked.
+
+I'm adding a kfree(fmap_buf) to this commit, which will come after the
+call to famfs_file_init_dax() when that's added in a subsequent
+commit.
+
+Thanks!
+
+> 
+> > +       if (err) {
+> > +               pr_err("%s: err=%d from fuse_simple_request()\n",
+> > +                      __func__, err);
+> > +               return err;
+> > +       }
+> > +
+> > +       fmap_size = args.out_args[0].size;
+> > +       pr_notice("%s: nodei=%lld fmap_size=%ld\n", __func__, nodeid, fmap_size);
+> > +
+> > +       return 0;
+> > +}
+> > +#endif
+> > +
+> >  int fuse_lookup_name(struct super_block *sb, u64 nodeid, const struct qstr *name,
+> >                      struct fuse_entry_out *outarg, struct inode **inode)
+> >  {
+> > @@ -404,6 +454,25 @@ int fuse_lookup_name(struct super_block *sb, u64 nodeid, const struct qstr *name
+> >                 fuse_queue_forget(fm->fc, forget, outarg->nodeid, 1);
+> >                 goto out;
+> >         }
+> > +
+> > +#if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
+> > +       if (fm->fc->famfs_iomap) {
+> > +               if (S_ISREG((*inode)->i_mode)) {
+> > +                       /* Note Lookup returns the looked-up inode in the attr
+> > +                        * struct, but not in outarg->nodeid !
+> > +                        */
+> > +                       pr_notice("%s: outarg: size=%d nodeid=%lld attr.ino=%lld\n",
+> > +                                __func__, args.out_args[0].size, outarg->nodeid,
+> > +                                outarg->attr.ino);
+> > +                       /* Get the famfs fmap */
+> > +                       fuse_get_fmap(fm, *inode, outarg->attr.ino);
+> 
+> I agree with Darrick's comment about fetching the mappings only if the
+> file gets opened. I wonder though if we could bundle the open with the
+> get_fmap so that we don't have to do an additional request / incur 2
+> extra context switches. This seems feasible to me. When we send the
+> open request, we could check if fc->famfs_iomap is set and if so, set
+> inarg.open_flags to include FUSE_OPEN_GET_FMAP and set outarg.value to
+> an allocated buffer that holds both struct fuse_open_out and the
+> fmap_buf and adjust outarg.size accordingly. Then the server could
+> send both the open and corresponding fmap data in the reply.
+
+I agree about moving GET_FMAP to open, but I want to be cautious about 
+moving it *into* open. Right now fitting an entire fmap into a single
+message response looks like a totally acceptable requirement for famfs -
+but it might not survive as a permanent requirement, and it seems likely 
+not to work out for Darrick's use cases - which I think would lead us back 
+to needing GET_FMAP.
+
+Elswhere in this thread, and also 1:1, Darrick and I have discussed the
+possibility of partial retrieval of fmaps (in part due to the possibility
+that they might not always fit in a single message). If these responses 
+can get arbitrarily large, this would become a requirement. GET_FMAP could 
+specify an offset, and the reply could also specify its starting  offset; 
+I think it has to be in both places because  the current "elegantly simple" 
+fmap format doesn't always split easily at arbitrary offsets.
+
+Also, with famfs I think fmaps can be retained in-kernel past close,
+making the retrieval-on-open only needed if the fmap isn't already
+present. Famfs doesn't currently allow fmaps to change, although there
+are reasons we might relax that later.
+
+This can be revisited down the road.
+
+Unless I run into a blocker, the next rev of the series will call
+GET_FMAP on open...
+
+BTW I think moving GET_FMAP to open will remove the reasons why famfs
+currently needs to avoid READDIRPLUS.
+
+> 
+> > +               } else
+> > +                       pr_notice("%s: no get_fmap for non-regular file\n",
+> > +                                __func__);
+> > +       } else
+> > +               pr_notice("%s: fc->dax_iomap is not set\n", __func__);
+> > +#endif
+> > +
+> >         err = 0;
+> >
+> >   out_put_forget:
+> > diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
+> > index 931613102d32..437177c2f092 100644
+> > --- a/fs/fuse/fuse_i.h
+> > +++ b/fs/fuse/fuse_i.h
+> > @@ -193,6 +193,10 @@ struct fuse_inode {
+> >         /** Reference to backing file in passthrough mode */
+> >         struct fuse_backing *fb;
+> >  #endif
+> > +
+> > +#if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
+> > +       void *famfs_meta;
+> > +#endif
+> >  };
+> >
+> >  /** FUSE inode state bits */
+> > @@ -942,6 +946,8 @@ struct fuse_conn {
+> >  #endif
+> >
+> >  #if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
+> > +       struct rw_semaphore famfs_devlist_sem;
+> > +       struct famfs_dax_devlist *dax_devlist;
+> >         char *shadow;
+> >  #endif
+> >  };
+> > @@ -1432,11 +1438,14 @@ void fuse_free_conn(struct fuse_conn *fc);
+> >
+> >  /* dax.c */
+> >
+> > +static inline int fuse_file_famfs(struct fuse_inode *fi); /* forward */
+> > +
+> >  /* This macro is used by virtio_fs, but now it also needs to filter for
+> >   * "not famfs"
+> >   */
+> >  #define FUSE_IS_VIRTIO_DAX(fuse_inode) (IS_ENABLED(CONFIG_FUSE_DAX)    \
+> > -                                       && IS_DAX(&fuse_inode->inode))
+> > +                                       && IS_DAX(&fuse_inode->inode)   \
+> > +                                       && !fuse_file_famfs(fuse_inode))
+> >
+> >  ssize_t fuse_dax_read_iter(struct kiocb *iocb, struct iov_iter *to);
+> >  ssize_t fuse_dax_write_iter(struct kiocb *iocb, struct iov_iter *from);
+> > @@ -1547,4 +1556,29 @@ extern void fuse_sysctl_unregister(void);
+> >  #define fuse_sysctl_unregister()       do { } while (0)
+> >  #endif /* CONFIG_SYSCTL */
+> >
+> > +/* famfs.c */
+> > +static inline struct fuse_backing *famfs_meta_set(struct fuse_inode *fi,
+> > +                                                      void *meta)
+> > +{
+> > +#if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
+> > +       return xchg(&fi->famfs_meta, meta);
+> > +#else
+> > +       return NULL;
+> > +#endif
+> > +}
+> > +
+> > +static inline void famfs_meta_free(struct fuse_inode *fi)
+> > +{
+> > +       /* Stub wil be connected in a subsequent commit */
+> > +}
+> > +
+> > +static inline int fuse_file_famfs(struct fuse_inode *fi)
+> > +{
+> > +#if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
+> > +       return (fi->famfs_meta != NULL);
+> 
+> Does this need to be "return READ_ONCE(fi->famfs_meta) != NULL"?
+
+I'm not sure, but it can't hurt. Queued...
+
+> 
+> > +#else
+> > +       return 0;
+> > +#endif
+> > +}
+> > +
+> >  #endif /* _FS_FUSE_I_H */
+> > diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+> > index 7f4b73e739cb..848c8818e6f7 100644
+> > --- a/fs/fuse/inode.c
+> > +++ b/fs/fuse/inode.c
+> > @@ -117,6 +117,9 @@ static struct inode *fuse_alloc_inode(struct super_block *sb)
+> >         if (IS_ENABLED(CONFIG_FUSE_PASSTHROUGH))
+> >                 fuse_inode_backing_set(fi, NULL);
+> >
+> > +       if (IS_ENABLED(CONFIG_FUSE_FAMFS_DAX))
+> > +               famfs_meta_set(fi, NULL);
+> 
+> "fi->famfs_meta = NULL;" looks simpler here
+
+I toootally agree here, but I was following the passthrough pattern 
+just above.  @miklos or @Amir, got a preference here?
+
+Furthermore, initially I didn't init fi->famfs_meta at all because I 
+*assumed* fi (the fuse_inode) would be zeroed upon allocation - but it's 
+currently not. @miklos, would you object to zeroing fuse_inodes on 
+allocation?  Clearly it's working without that, but it seems like a 
+"normal" thing to do, that might someday pre-empt a problem.
+
+> 
+> > +
+> >         return &fi->inode;
+> >
+> >  out_free_forget:
+> > @@ -138,6 +141,13 @@ static void fuse_free_inode(struct inode *inode)
+> >         if (IS_ENABLED(CONFIG_FUSE_PASSTHROUGH))
+> >                 fuse_backing_put(fuse_inode_backing(fi));
+> >
+> > +#if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
+> > +       if (S_ISREG(inode->i_mode) && fi->famfs_meta) {
+> > +               famfs_meta_free(fi);
+> > +               famfs_meta_set(fi, NULL);
+> > +       }
+> > +#endif
+> > +
+> >         kmem_cache_free(fuse_inode_cachep, fi);
+> >  }
+> >
+> > @@ -1002,6 +1012,11 @@ void fuse_conn_init(struct fuse_conn *fc, struct fuse_mount *fm,
+> >         if (IS_ENABLED(CONFIG_FUSE_PASSTHROUGH))
+> >                 fuse_backing_files_init(fc);
+> >
+> > +       if (IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)) {
+> > +               pr_notice("%s: Kernel is FUSE_FAMFS_DAX capable\n", __func__);
+> > +               init_rwsem(&fc->famfs_devlist_sem);
+> > +       }
+> 
+> Should we only init this if the server chooses to opt into famfs (eg
+> if their init reply sets the FUSE_DAX_FMAP flag)? This imo seems to
+> belong more in process_init_reply().
+
+Another good catch. Queued - thanks!
+
+> 
+> 
+> Thanks,
+> Joanne
+
+Thank you!
+
