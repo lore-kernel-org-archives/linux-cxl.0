@@ -1,21 +1,22 @@
 Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89835257AFF;
-	Mon, 12 May 2025 08:23:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3467258CCA;
+	Mon, 12 May 2025 08:23:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747038191; cv=none; b=NzAnf5eqaMxl8xgErGRBNSt0j/IdprBLgEBnrSsKghWl1l8WPFEIhMrvZcSN6YCA4A93NqEuFTROQWOVqvChK6evYLiOOAqEyPVGF5WRalB1Fcc7keaRb1btL65rHCU3jNmKaahU4Vq0Y2EnVlWawa7nlcpP+Q3gUarPhdvIoDA=
+	t=1747038211; cv=none; b=HATEQyXLfaRKFAXx49kUQZ+hf89pAogn1iqy7Uy8KGHRewwy91wwg/3JycGjEtIEkqgAGaGQwE8CbLGdC9+aELmUvd2qoj+4fHxV/baKIUmYOX0H89nojtMartWpUudrZxjah7yQgBDq6hPqPOHPajxnVLpd30I4lp2HEYGk2KM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747038191; c=relaxed/simple;
-	bh=pY7jvXYq3d5U5CAMqYYen1ekEQUQSgJvswNHpgHog2M=;
+	s=arc-20240116; t=1747038211; c=relaxed/simple;
+	bh=1Z8x8vzMJPRdGcVco8GbYGcxczYtEYM3hxvfcdV4gTA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=p06Dz/vQNdbsg/CFman/c8uN2yZATreMy1IIaDIc0uZM8byQ+B9x4ZgbQov0fGmP81RB4owrFdIjuERdL91uQhXUmK7laGIh9D53ZNeG3PJFHNSRpx46NDT5mpYX4Vcsif/Bxlksr0qo+TmVzmsZ5eruyweQFrnEhSm5/pn+lmQ=
+	 MIME-Version; b=S3Q/1MBHUYzNyzJ/FcbLzivGgDSo+i2KlUCeciAtccu309YT5Lt5h5xPMyeUs4KQw7NvUMLsmuDzY4oV+dBStBs4nrZ5cJIWq87Wo27truwdPpZWHmso/mI/L/fqpuwJsMvYMOWwIEXGHGOYc93Vc5+5nEOjoRiaD1JTWIy4pYg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-1e-6821afe537ee
+X-AuditID: a67dfc5b-669ff7000002311f-9f-6821affd1420
 From: Rakie Kim <rakie.kim@sk.com>
-To: Gregory Price <gourry@gourry.net>
-Cc: joshua.hahnjy@gmail.com,
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Rakie Kim <rakie.kim@sk.com>,
+	joshua.hahnjy@gmail.com,
 	akpm@linux-foundation.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
@@ -25,12 +26,14 @@ Cc: joshua.hahnjy@gmail.com,
 	kernel_team@skhynix.com,
 	honggyu.kim@sk.com,
 	yunjeong.mun@sk.com,
-	Rakie Kim <rakie.kim@sk.com>
+	"Keith Busch" <kbusch@kernel.org>,
+	Jerome Glisse <jglisse@google.com>,
+	Gregory Price <gourry@gourry.net>
 Subject: Re: [RFC] Add per-socket weight support for multi-socket systems in weighted interleave
-Date: Mon, 12 May 2025 17:22:50 +0900
-Message-ID: <20250512082257.263-1-rakie.kim@sk.com>
+Date: Mon, 12 May 2025 17:23:14 +0900
+Message-ID: <20250512082320.274-1-rakie.kim@sk.com>
 X-Mailer: git-send-email 2.48.1.windows.1
-In-Reply-To: <aB2Xh4jEqpSTuvsi@gourry-fedora-PF4VCD3F>
+In-Reply-To: <20250509123131.0000051b@huawei.com>
 References: 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -39,137 +42,164 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNLMWRmVeSWpSXmKPExsXC9ZZnoe7T9YoZBk9vGVrMWb+GzWL61AuM
-	Fj/vHme3OL51HrvF+VmnWCwu75rDZnFvzX9Wi9VrMhw4PHbOusvu0d12md1j8Z6XTB6bPk1i
-	9zgx4zeLx86Hlh6fN8kFsEdx2aSk5mSWpRbp2yVwZRxevYKl4IlKxaytk9gaGFvluhg5OSQE
-	TCROTn3NBGNf3/iRtYuRg4NNQEni2N4YEFNEQFWi7Yp7FyMXB7PAeiaJAxe3soOUCwskSJya
-	d4kZxGYBqvne0QgW5xUwltja8AJqpKZEw6V7TCBzOAXMJP6/jgMJCwnwSLzasJ8RolxQ4uTM
-	JywgNrOAvETz1tnMILskBM6wSdw/9JwZYo6kxMEVN1gmMPLPQtIzC0nPAkamVYxCmXlluYmZ
-	OSZ6GZV5mRV6yfm5mxiBQbys9k/0DsZPF4IPMQpwMCrx8CasVcgQYk0sK67MPcQowcGsJMI7
-	lUE+Q4g3JbGyKrUoP76oNCe1+BCjNAeLkjiv0bfyFCGB9MSS1OzU1ILUIpgsEwenVAPjEq1k
-	35ftAtdWulXdWyE95UHP3nVWe017+/sOxEnXdPQkN+b9nnjhCX/SgWA+vZn5LGz7W275JgdO
-	fTH5oc73Tz8Sw19cXzN5S3hNiMRBoxahzvk9jR8/HTYuCL0TMV1krmbPo7zkU//Ss23O/lWQ
-	bfpze9rvhOA/CexF6l5cWvv+Cvd8vDhTiaU4I9FQi7moOBEATM4NQF4CAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrKLMWRmVeSWpSXmKPExsXCNUNNS/fpesUMg3OP1SzmrF/DZjF96gVG
-	i593j7NbfH72mtni+NZ57BaH555ktTg/6xSLxeVdc9gs7q35z2px6NpzVovVazIsfm9bwebA
-	47Fz1l12j+62y+wei/e8ZPLY9GkSu8eJGb9ZPHY+tPT4dtvDY/GLD0wenzfJBXBGcdmkpOZk
-	lqUW6dslcGUcXr2CpeCJSsWsrZPYGhhb5boYOTkkBEwkrm/8yNrFyMHBJqAkcWxvDIgpIqAq
-	0XbFvYuRi4NZYD2TxIGLW9lByoUFEiROzbvEDGKzANV872gEi/MKGEtsbXjBBDFSU6Lh0j0m
-	kDmcAmYS/1/HgYSFBHgkXm3YzwhRLihxcuYTFhCbWUBeonnrbOYJjDyzkKRmIUktYGRaxSiS
-	mVeWm5iZY6pXnJ1RmZdZoZecn7uJERi4y2r/TNzB+OWy+yFGAQ5GJR5eCX/FDCHWxLLiytxD
-	jBIczEoivFMZ5DOEeFMSK6tSi/Lji0pzUosPMUpzsCiJ83qFpyYICaQnlqRmp6YWpBbBZJk4
-	OKUaGK9n9bWpXct9O1f2mn1X+iFp+zVHrb1DJnCdeLidf4lpLWvLn56NHHd83+7aHvbUbvO/
-	gCD3X13v+RIVv0eksN2eJayv/dZV4JX5ZFmB23dfBZWcvnvc78OucuZ3ynV/m1zXhUy68d3n
-	7K7fB/7UBh7NVXsdbrqoS7Fk9h/xogDrhLMqLNeWrFZiKc5INNRiLipOBABf+eqeWAIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBLMWRmVeSWpSXmKPExsXC9ZZnoe7f9YoZBqs2SljMWb+GzWL61AuM
+	Fj/vHme3+Hl4B4vFqoXX2CyOb53HbjHp0DVGi/OzTrFYXN41h83i3pr/rBar12Q4cHvsnHWX
+	3WPBplKP7rbL7B4tR96yeize85LJY9OqTjaPTZ8msXucmPGbxWPnQ0uPz5vkAriiuGxSUnMy
+	y1KL9O0SuDLuN7AX3NSr+NbylrWBsUepi5GTQ0LARGLO6VVsMPaDmx3sXYwcHGwCShLH9saA
+	hEUEjCTe3ZjE2MXIxcEsMJ9Z4tqMZawgCWGBBIlT8y4xg9gsAqoS63tXsID08goYSyyb7gMx
+	UlOi4dI9JhCbU8BQ4lbjUkYQW0iAR+LVhv1gNq+AoMTJmU9YQGxmAXmJ5q2zmUF2SQh8Z5N4
+	vH47O8QgSYmDK26wTGDkn4WkZxaSngWMTKsYhTLzynITM3NM9DIq8zIr9JLzczcxAsN/We2f
+	6B2Mny4EH2IU4GBU4uFNWKuQIcSaWFZcmXuIUYKDWUmEdyqDfIYQb0piZVVqUX58UWlOavEh
+	RmkOFiVxXqNv5SlCAumJJanZqakFqUUwWSYOTqkGxiV6YXsuKLd+ZPSeb/acofBpgtUd2ZV+
+	0ZFN5tMcNsR+DTkQeyD1bHCmeWmNKHOJSnS+QrvHvgPch2ddiJXZrCK2p3zP3kf6m62Wrgma
+	3hl4eJ51Q4tKeLf10T3TI3e+WtvlI81od6iiMTP0W1OW4QI78eQl//in9ti7P2EwLf93f9q0
+	d7/DlViKMxINtZiLihMBWRm1/HsCAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrELMWRmVeSWpSXmKPExsXCNUNNS/fvesUMg86TPBZz1q9hs5g+9QKj
+	xc+7x9ktPj97zWzx8/AOFotVC6+xWRzfOo/dYtKha4wWh+eeZLU4P+sUi8XlXXPYLO6t+c9q
+	cejac1aL1WsyLH5vW8HmwO+xc9Zddo8Fm0o9utsus3u0HHnL6rF4z0smj02rOtk8Nn2axO5x
+	YsZvFo+dDy09vt328Fj84gOTx+dNcgE8UVw2Kak5mWWpRfp2CVwZ9xvYC27qVXxrecvawNij
+	1MXIySEhYCLx4GYHexcjBwebgJLEsb0xIGERASOJdzcmMXYxcnEwC8xnlrg2YxkrSEJYIEHi
+	1LxLzCA2i4CqxPreFSwgvbwCxhLLpvtAjNSUaLh0jwnE5hQwlLjVuJQRxBYS4JF4tWE/mM0r
+	IChxcuYTFhCbWUBeonnrbOYJjDyzkKRmIUktYGRaxSiSmVeWm5iZY6pXnJ1RmZdZoZecn7uJ
+	ERjyy2r/TNzB+OWy+yFGAQ5GJR5eCX/FDCHWxLLiytxDjBIczEoivFMZ5DOEeFMSK6tSi/Lj
+	i0pzUosPMUpzsCiJ83qFpyYICaQnlqRmp6YWpBbBZJk4OKUaGM1e8S8xT/iq8tU3IOfkd4v8
+	zHQ7jxa9Nkflv0+tpl1ONapJLPZe1bElYUtwoWRNIb/Eww3ZZefWJYqVn8pk2tn39/SuY6HO
+	cpMjWfZdZo/YbrV7zbSWHYGXwgXvsesePZrzn/HEnYum3CeC2UwzP0qW199sTSrM/HQ5/1y5
+	15bq9PllPK8DlViKMxINtZiLihMB6DnNq3UCAAA=
 X-CFilter-Loop: Reflected
 
-On Fri, 9 May 2025 01:49:59 -0400 Gregory Price <gourry@gourry.net> wrote:
-> On Fri, May 09, 2025 at 11:30:26AM +0900, Rakie Kim wrote:
+On Fri, 9 May 2025 12:31:31 +0100 Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+> On Thu, 8 May 2025 11:12:35 -0400
+> Gregory Price <gourry@gourry.net> wrote:
+> 
+> > On Thu, May 08, 2025 at 03:30:36PM +0900, Rakie Kim wrote:
+> > > On Wed, 7 May 2025 12:38:18 -0400 Gregory Price <gourry@gourry.net> wrote:
+> > > 
+> > > The proposed design is completely optional and isolated: it retains the
+> > > existing flat weight model as-is and activates the source-aware behavior only
+> > > when 'multi' mode is enabled. The complexity is scoped entirely to users who
+> > > opt into this mode.
+> > >   
 > > 
-> > Scenario 1: Adapt weighting based on the task's execution node
-> > A task prefers only the DRAM and locally attached CXL memory of the
-> > socket on which it is running, in order to avoid cross-socket access and
-> > optimize bandwidth.
-> > - A task running on CPU0 (node0) would prefer DRAM0 (w=3) and CXL0 (w=1)
-> > - A task running on CPU1 (node1) would prefer DRAM1 (w=3) and CXL1 (w=1)
-> ... snip ...
+> > I get what you're going for, just expressing my experience around this
+> > issue specifically.
 > > 
-> > However, Scenario 1 does not depend on such information. Rather, it is
-> > a locality-preserving optimization where we isolate memory access to
-> > each socket's DRAM and CXL nodes. I believe this use case is implementable
-> > today and worth considering independently from interconnect performance
-> > awareness.
+> > The lack of enthusiasm for solving the cross-socket case, and thus
+> > reduction from a 2D array to a 1D array, was because reasoning about
+> > interleave w/ cross-socket interconnects is not really feasible with
+> > the NUMA abstraction.  Cross-socket interconnects are "Invisible" but
+> > have real performance implications.  Unless we have a way to:
+> 
+> Sort of invisible...  What their topology is, but we have some info...
+> 
 > > 
+> > 1) Represent the topology, AND
+> > 2) A way to get performance about that topology
 > 
-> There's nothing to implement - all the controls exist:
+> There was some discussion on this at LSF-MM.
 > 
-> 1) --cpunodebind=0
-> 2) --weighted-interleave=0,2
-> 3) cpuset.mems
-> 4) cpuset.cpus
-
-Thank you again for your thoughtful response and the detailed suggestions.
-
-As you pointed out, it is indeed possible to construct node-local memory
-allocation behaviors using the existing interfaces such as --cpunodebind,
---weighted-interleave, cpuset.mems, and cpuset.cpus. I appreciate you
-highlighting that path.
-
-However, what I am proposing in Scenario 1 (Adapt weighting based on the
-task's execution node) is slightly different in intent.
-
-The idea is to allow tasks to dynamically prefer the DRAM and CXL nodes
-attached to the socket on which they are executing without requiring a
-fixed execution node or manual nodemask configuration. For instance, if
-a task is running on node0, it would prefer node0 and node2; if running
-on node1, it would prefer node1 and node3.
-
-This differs from the current model, which relies on statically binding
-both the CPU and memory nodes. My proposal aims to express this behavior
-as a policy-level abstraction that dynamically adapts based on execution
-locality.
-
-So rather than being a combination of manual configuration and execution
-constraints, the intent is to incorporate locality-awareness into the
-memory policy itself.
-
+> +CC Keith and Jerome who were once interested in this topic
 > 
-> You might consider maybe something like "--local-tier" (akin to
-> --localalloc) that sets an explicitly fallback set based on the local
-> node.  You'd end up doing something like
+> It's not perfect but ACPI HMAT does have what is probably sufficient info
+> for a simple case like this (2 socket server + Generic Ports and CXL
+> description of the rest of the path), it's just that today we aren't exposing that
+> to userspace (instead only the BW / Latency from a single selected nearest initiator
+> /CPU node to any memory containing node).
 > 
-> current_nid = memtier_next_local_node(socket_nid, current_nid)
+> That decision was much discussed back when Keith was adding HMAT support.
+> At that time the question was what workload needed the dense info (2D matrix)
+> and we didn't have one.  With weighted interleave I think we do.
 > 
-> Where this interface returns the preferred fallback ordering but doesn't
-> allow cross-socket fallback.
+> As to the problems...
 > 
-> That might be useful, i suppose, in letting a user do:
+> We come unstuck badly in much more complex situations as that information
+> is load free so if we have heavy contention due to one shared link between
+> islands of nodes it can give a very misleading idea.
 > 
-> --cpunodebind=0 --weighted-interleave --local-tier
+>   [CXL Node 0]                         [CXL Node 2]
+>        |                                    |
+>    [NODE A]---\                    /----[NODE C]
+>                \___Shared link____/ 
+>                /                  \
+>    [NODE B]---/                    \----[NODE D]
+>        |                                   |
+>   [CXL Node 1]                         [CXL Node 3]
 > 
-> without having to know anything about the local memory tier structure.
+> In this from ACPI this looks much like this (fully connected
+> 4 socket system).
+> 
+>   [CXL Node 0]                         [CXL Node 2]
+>        |                                    |
+>    [NODE A]-----------------------------[NODE C]
+>        |   \___________________________   / | 
+>        |    ____________________________\/  |  
+>        |   /                             \  | 
+>    [NODE B]-----------------------------[NODE D]
+>        |                                   |
+>   [CXL Node 1]                         [CXL Node 3]
+> 
+> In the first case we should probably halve the BW of shared link or something
+> like that. In the second case use the full version. In general we have no way
+> to know which one we have and it gets way more fun with 8 + sockets :)
+> 
+> SLIT is indeed useless for anything other than what's nearest decisions
+> 
+> Anyhow, short term I'd like us to revisit what info we present from HMAT
+> (and what we get from CXL topology descriptions which have pretty much everything we
+> might want).
+> 
+> That should put the info in userspace to tune weighted interleave better anyway
+> and perhaps provide the info you need here. 
+> 
+> So just all the other problems to solve ;)
+> 
+> J
 
-That said, I believe your suggestion for a "--local-tier" option is a
-very good one. It could provide a concise, user-friendly way to activate
-such locality-aware fallback behavior, even if the underlying mechanism
-requires some policy extension.
+Jonathan, thank you very much for your thoughtful response.
 
-In this regard, I fully agree that such an interface could greatly help
-users express their intent without requiring them to understand the
-details of the memory tier topology.
+As you pointed out, ACPI HMAT and CXL topology descriptions do contain
+meaningful information for simple systems such as two-socket platforms.
+If that information were made more accessible to userspace, I believe
+existing memory policies could be tuned with much greater precision.
 
-> 
-> > > At the same time we were discussing this, we were also discussing how to
-> > > do external task-mempolicy modifications - which seemed significantly
-> > > more useful, but ultimately more complex and without sufficient
-> > > interested parties / users.
-> > 
-> > I'd like to learn more about that thread. If you happen to have a pointer
-> > to that discussion, it would be really helpful.
-> > 
-> 
-> https://lore.kernel.org/all/20231122211200.31620-1-gregory.price@memverge.com/
-> https://lore.kernel.org/all/ZV5zGROLefrsEcHJ@r13-u19.micron.com/
-> https://lore.kernel.org/linux-mm/ZWYsth2CtC4Ilvoz@memverge.com/
-> https://lore.kernel.org/linux-mm/20221010094842.4123037-1-hezhongkun.hzk@bytedance.com/
-> There are locking issues with these that aren't easy to fix.
-> 
-> I think the bytedance method uses a task_work queueing to defer a
-> mempolicy update to the task itself the next time it makes a kernel/user
-> transition.  That's probably the best overall approach i've seen.
-> 
-> https://lore.kernel.org/linux-mm/ZWezcQk+BYEq%2FWiI@memverge.com/
-> More notes gathered prior to implementing weighted interleave.
+I fully understand that such detailed topology data was not widely
+exposed in the past, largely because there was little demand for it.
+However, with the growing complexity of memory hierarchies in modern
+systems, I believe its relevance and utility are increasing rapidly.
 
-Thank you for sharing the earlier links to related discussions and
-patches. They were very helpful, and I will review them carefully to
-gather more ideas and refine my thoughts further.
+I also appreciate your point about the risks of misrepresentation in
+more complex systems, especially where shared interconnect links can
+cause bandwidth bottlenecks. That nuance is critical to consider when
+designing or interpreting any policy relying on topology data.
 
-I look forward to any further feedback you may have on this topic.
+In the short term, I fully agree that revisiting what information is
+presented from HMAT and CXL topology and how we surface it to
+userspace is a realistic and meaningful direction.
 
-Best regards,
+Thank you again for your insights, and I look forward to continuing the
+discussion.
+
 Rakie
 
 > 
-> ~Gregory
+> > 
+> > It's not useful. So NUMA is an incomplete (if not wrong) tool for this.
+> > 
+> > Additionally - reacting to task migration is not a real issue.  If
+> > you're deploying an allocation strategy, you probably don't want your
+> > task migrating away from the place where you just spent a bunch of time
+> > allocating based on some existing strategy.  So the solution is: don't
+> > migrate, and if you do - don't use cross-socket interleave.
+> > 
+> > Maybe if we solve the first half of this we can take a look at the task
+> > migration piece again, but I wouldn't try to solve for migration.
+> > 
+> > At the same time we were discussing this, we were also discussing how to
+> > do external task-mempolicy modifications - which seemed significantly
+> > more useful, but ultimately more complex and without sufficient
+> > interested parties / users.
+> > 
+> > ~Gregory
+> > 
+> 
 > 
