@@ -1,63 +1,63 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DA6D292901
-	for <linux-cxl@vger.kernel.org>; Mon, 12 May 2025 16:22:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4724293740
+	for <linux-cxl@vger.kernel.org>; Mon, 12 May 2025 16:22:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747066928; cv=none; b=tEl1Zbge/VBmX2+Z/iGCuiREtU4A3fZE6a7wrMxXR+4FceS/FMnC4kgM8d0xQyFQk1AovHf/3BFHlGAAahlTcMU6fGpDej28gV0NmUsrImhSa5JN7D1vCd3KisXE5VpppkXY9VwRKCtTn/mWCoAcAgCvX6/QZYNybPhK34GyGDY=
+	t=1747066930; cv=none; b=NUku3YhNh6wvGEHuc/pFxeTszZGH6hoBQxFgG+x2alC04IFuVDMpKvetaQkBo4InNGZnTC+7FOOOuQHGaktl4W1wASDMldV5mgrSId8IKNyCqteO+fbQyxhb1lMxcylpd830Hjt1PKG3TRiTRw8jKFzHDx/o4SQvqWl9eT5W03U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747066928; c=relaxed/simple;
-	bh=C+4bukmEyuUogjFKJzPVkC+0PLpktTTguS9gLaYvHGU=;
+	s=arc-20240116; t=1747066930; c=relaxed/simple;
+	bh=02rFqC3gSUB4Fy4+GT/QyZr7jHPjwxLz9IoPedteAik=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S33rnCU8zCFMUgy9TXSJULCobYgc9NooZKvXqQAdcG94YRzRgC2iUIxLemgBF3rS9iUUT3YFo279f3y50/Pr18jLs6gV691MDW+Kqby0BLpZ+yqD7WCrmKwXyn3ZGD+aIeF1/x/Ei6kKjSOkIP9uIqSkTGOLAfws/EgG8ZWaEvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=j1uN6XYM; arc=none smtp.client-ip=209.85.222.179
+	 MIME-Version; b=qfJ9B0nkdewSO6LHO5a9PnveyWZqUad5dGnmNNor4PRjrvClvpUcBkJB4aHEBx+CiDNrIy9htf/2Fo1ySUNhIdEs1umQItCwrwfbXERjHXzsOqFzwtogDqqR7xl8csZ8uto3IxxgAjf9P3Jz9M8AYC2ACmDHIj0bdTs2e1boooQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=SbIsS6Yw; arc=none smtp.client-ip=209.85.160.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="j1uN6XYM"
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c55500cf80so469420385a.1
-        for <linux-cxl@vger.kernel.org>; Mon, 12 May 2025 09:22:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="SbIsS6Yw"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4775ce8a4b0so83326851cf.1
+        for <linux-cxl@vger.kernel.org>; Mon, 12 May 2025 09:22:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1747066925; x=1747671725; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1747066926; x=1747671726; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RTTxOKtOTvxz/X6EnOnjuA5x3BeIonRn1m9gLvf8T78=;
-        b=j1uN6XYMkXQr1Ef4pnhT81/B2aFvhR9IYRwrf7OnT/XdMNgSgJGFRJkgqB6Ny4p3v0
-         qEVcEuzodEC/5ZhaSueNRmjlDlLK35QiycRkZ25q9AkOFaLaG5IdeyYRNe8AWE9OmxHt
-         Yiqgj6iJ9cbYk5NvlOC8yDj/X98NXJt/REQKaxmtLT/c0BDSp4yhpwoBAqeiKwqZh6Hi
-         4F4IZVKyP50dNN59WnNpKu/PWcnng0rujfZCzBG2kfF21S5B3wpg1QaFiqDB20cKDmFF
-         lcF55ErNc2mUL+07j0T4ptplrOTQK1pek68V5kpxRtkSqor+eG9hyBEOiWWm1tuOo50u
-         Wvgw==
+        bh=gsjZ8+vqh9tLCwEMgliXk7JRqYeLc6j1GH7rHKcC4Fk=;
+        b=SbIsS6YwW57XJuyeYgmxF9B4fxxJ2WETuQcFS/bsiU0dBMwUDvc7stG5P1Y9szPM6Y
+         Ocu1QSlVumnQVcUHIAP3Jc4wJHopKP5uRZexOBBPxxEnoYLeyz90d2GEeiCHJPZtOb65
+         CRbwYauS8+xL9Gorb/zkDEg2fjRnkFTnR+Spc6tMjDEIyA7Hxibj6ov+7pYtplXM2Xs4
+         a+3nDfA0G6W5+YI5R5pP9Hcn2xZVO3jWp/Anfvz+ViJUW8ajiPqPRblh7Y04XvDw1shA
+         gzjgSSAPvLWnhJkDjaNkr28M+rr7jp5hyceGpYOUsPuG9+WKbgBRIV7ypJo8KW+kkqrB
+         rZuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747066925; x=1747671725;
+        d=1e100.net; s=20230601; t=1747066926; x=1747671726;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RTTxOKtOTvxz/X6EnOnjuA5x3BeIonRn1m9gLvf8T78=;
-        b=veczBvNg7HCiUIESoFLQjI8MWT4CNXdcPiuYqmWMXcxr+h2KqQ9RTXTZQAVNvCdcG0
-         0YMy1Rgp6EvnOI2YfqCWi8ENEPOVMBpZTkV6vLnieY44LQmOP7snLti91aNgGmFKiY39
-         xxVVNCxJ1p1fSYtt2ijcwHR/MXc5UYqaj8WLSvSKEgsYSUnMeTjPNpfvy8ZlMTFxa9pm
-         lsILLxgtYt2BX+v/CmO9QQy5rPbtyab6ixlW8wgvoF5s49bFWw5s6ieGLkxhNj5KwA6a
-         +5XjsrEQuT1fsZSBI+F1FEl514JK/LibcVrj/KdaX2IQjPCOS+WT3mRzA9KY+2GQjuv5
-         Px4Q==
-X-Gm-Message-State: AOJu0YxdleEwWkpY6SQKfXR9kojumKkxhGRw8R9MOls9uF9bq2+B5fdy
-	WqhF/YFeu/hJI7oFW9MpuihqvE+OoWJHc5aKCP1zO/rzsBvtRWnm4TlxM55iEjiezAnzU8vlSi3
-	4
-X-Gm-Gg: ASbGnctyWvh88+751aBtfiW/PZo40kFR/6gYkOZVZolcyOJSZgT3847aOxyZtlD9pTT
-	7O6QuQhRhBO/HSoXrZSkx5cQdr/qbM4MypAyDZiCdCRCPhpb6iEZBuwp7W4BH2iRgJOCRre6l/Y
-	gSHxfYPSHhhTz9iFY7vusDH7RoFqPUVgLpTnvs17wd+VAa4jnN/3Nq//AZyYeziuo7b+G+tuTMw
-	3K303uQakmQz4EmMnmZfCt4HiCdrWP1N63aUpSxb19SThHr1MN4cCCXIZMAX40BhKHuYi69kHlM
-	QM48T4Vaky2Ghp7l0J0EbEDnRTG7XHGW8nvfTPX113wQY17jyDBpYxzLywrrPZUGBRiJx9o4Se/
-	ibGOB3aEA+MhJd9LXqAjLjL7i+rnWZVElou/1
-X-Google-Smtp-Source: AGHT+IHV0UN/KhozVIrARpAytA6jarV108Aoyqsz27PknFZSu3HGQ8itoHJAY+cqjXAR3dS9EUlrqQ==
-X-Received: by 2002:a05:620a:4403:b0:7c5:9a6c:b7d3 with SMTP id af79cd13be357-7cd01157590mr2261077885a.37.1747066924959;
-        Mon, 12 May 2025 09:22:04 -0700 (PDT)
+        bh=gsjZ8+vqh9tLCwEMgliXk7JRqYeLc6j1GH7rHKcC4Fk=;
+        b=efEL0Nihu8U1qt7yfshWETtY6FXBM4sxdArPG9dsWlighRLXAnCXm+B6IspvrGaUnt
+         3+6XH4BUA60KTJyQn8WIbL8NS1i4hJHjyxKR9PB3gsLTs6jIb/A9uwbRqWsdWX4lefWy
+         nMZNlXItS0/pN6pTnIIG73jDkxyuISxp123kKmG/3oD22XUurI4A32x+aRi7//I8zTC0
+         iAU39douE2oC1Oj05RkKbmNZJmPDaz5DAXyanGTYaexzHBs3rbphCylTCEmLOL3cMudW
+         k/BqSG1ke5fxfMjdWlhI8ZAbsDcWVNqERvdJoYl4AbfMx7UW7mlTwpzwYBqx+8hKDR0d
+         MQZw==
+X-Gm-Message-State: AOJu0Yz8YzlByxIEVnIa+AYF1eX+SNhhh1XyiuyibSGHcdwGy+O9oyc7
+	EQhiq67153jsrY+QisDqTu8C2AjhVoH9EYLkdHJHAg+U4Yez1bIVQ7A/Y+Cig+AbgJS0RPX6Bd8
+	S
+X-Gm-Gg: ASbGncvMy7+Kh4e5j0aREXAO0I/GtkqsAq4b4hF28MsVCr0jgAnhhs0xYbQuzThNTGG
+	qQvBAuRx4gl/X7Nn3lQXvph7yR45+N3tfpq1V69r0oLH0cCyTprJ6Mvy0S1If574KJRNE327I5p
+	9C+b0xTEafGTx8SmrCMw3Aqh85acLl2ZtvGr67n/30Yv6RYBoiHTgZ5ZcAZrlUaJWwo/kZW503l
+	1iZUU+Uvu8xhs/VvqYcE9nfDLSyKh37UQaP4v1rg4qTnoQAVt5i6PkIzGVajB4GwdHJDlS90Qo5
+	f2iPjh2SK43QHMekg9wlUrczpiF/UBaMXkDotYAlH1jQ6l05hp36M1QVryk3Dre+3rZZAi1oYOQ
+	rcYqMcoH8t7fbdj65bgBfsy+ANsHnTZRXQveO
+X-Google-Smtp-Source: AGHT+IESCJ4wxgoeogGabJwCYGcV8hNihMeEX8lTGFo0c9q1TtRsQ3SAwLcPjqupzQu+Z/KuxiouEA==
+X-Received: by 2002:a05:622a:110c:b0:476:9377:17aa with SMTP id d75a77b69052e-494527fd87amr209927431cf.52.1747066926366;
+        Mon, 12 May 2025 09:22:06 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-49452583961sm52461791cf.58.2025.05.12.09.22.04
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-49452583961sm52461791cf.58.2025.05.12.09.22.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 09:22:04 -0700 (PDT)
+        Mon, 12 May 2025 09:22:06 -0700 (PDT)
 From: Gregory Price <gourry@gourry.net>
 To: linux-cxl@vger.kernel.org
 Cc: linux-doc@vger.kernel.org,
@@ -71,9 +71,9 @@ Cc: linux-doc@vger.kernel.org,
 	ira.weiny@intel.com,
 	dan.j.williams@intel.com,
 	corbet@lwn.net
-Subject: [PATCH v3 15/17] cxl: docs/allocation/reclaim
-Date: Mon, 12 May 2025 12:21:32 -0400
-Message-ID: <20250512162134.3596150-16-gourry@gourry.net>
+Subject: [PATCH v3 16/17] cxl: docs/allocation/hugepages
+Date: Mon, 12 May 2025 12:21:33 -0400
+Message-ID: <20250512162134.3596150-17-gourry@gourry.net>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250512162134.3596150-1-gourry@gourry.net>
 References: <20250512162134.3596150-1-gourry@gourry.net>
@@ -85,82 +85,63 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Document a bit about how reclaim interacts with various CXL
-configurations.
+Add docs on how CXL capacity interacts with CMA and HugeTLB allocation
+interfaces.
 
 Signed-off-by: Gregory Price <gourry@gourry.net>
 ---
- .../driver-api/cxl/allocation/reclaim.rst     | 51 +++++++++++++++++++
+ .../driver-api/cxl/allocation/hugepages.rst   | 32 +++++++++++++++++++
  Documentation/driver-api/cxl/index.rst        |  1 +
- 2 files changed, 52 insertions(+)
- create mode 100644 Documentation/driver-api/cxl/allocation/reclaim.rst
+ 2 files changed, 33 insertions(+)
+ create mode 100644 Documentation/driver-api/cxl/allocation/hugepages.rst
 
-diff --git a/Documentation/driver-api/cxl/allocation/reclaim.rst b/Documentation/driver-api/cxl/allocation/reclaim.rst
+diff --git a/Documentation/driver-api/cxl/allocation/hugepages.rst b/Documentation/driver-api/cxl/allocation/hugepages.rst
 new file mode 100644
-index 000000000000..f40f1cae391a
+index 000000000000..1023c6922829
 --- /dev/null
-+++ b/Documentation/driver-api/cxl/allocation/reclaim.rst
-@@ -0,0 +1,51 @@
++++ b/Documentation/driver-api/cxl/allocation/hugepages.rst
+@@ -0,0 +1,32 @@
 +.. SPDX-License-Identifier: GPL-2.0
 +
++==========
++Huge Pages
++==========
++
++Contiguous Memory Allocator
++===========================
++CXL Memory onlined as SystemRAM during early boot is eligible for use by CMA,
++as the NUMA node hosting that capacity will be `Online` at the time CMA
++carves out contiguous capacity.
++
++CXL Memory deferred to the CXL Driver for configuration cannot have its
++capacity allocated by CMA - as the NUMA node hosting the capacity is `Offline`
++at :code:`__init` time - when CMA carves out contiguous capacity.
++
++HugeTLB
 +=======
-+Reclaim
-+=======
-+Another way CXL memory can be utilized *indirectly* is via the reclaim system
-+in :code:`mm/vmscan.c`.  Reclaim is engaged when memory capacity on the system
-+becomes pressured based on global and cgroup-local `watermark` settings.
++Different huge page sizes allow different memory configurations.
 +
-+In this section we won't discuss the `watermark` configurations, just how CXL
-+memory can be consumed by various pieces of reclaim system.
++2MB Huge Pages
++--------------
++All CXL capacity regardless of configuration time or memory zone is eligible
++for use as 2MB huge pages.
 +
-+Demotion
-+========
-+By default, the reclaim system will prefer swap (or zswap) when reclaiming
-+memory.  Enabling :code:`kernel/mm/numa/demotion_enabled` will cause vmscan
-+to opportunistically prefer distant NUMA nodes to swap or zswap, if capacity
-+is available.
++1GB Huge Pages
++--------------
++CXL capacity onlined in :code:`ZONE_NORMAL` is eligible for 1GB Gigantic Page
++allocation.
 +
-+Demotion engages the :code:`mm/memory_tier.c` component to determine the
-+next demotion node.  The next demotion node is based on the :code:`HMAT`
-+or :code:`CDAT` performance data.
-+
-+cpusets.mems_allowed quirk
-+--------------------------
-+In Linux v6.15 and below, demotion does not respect :code:`cpusets.mems_allowed`
-+when migrating pages.  As a result, if demotion is enabled, vmscan cannot
-+guarantee isolation of a container's memory from nodes not set in mems_allowed.
-+
-+In Linux v6.XX and up, demotion does attempt to respect
-+:code:`cpusets.mems_allowed`; however, certain classes of shared memory
-+originally instantiated by another cgroup (such as common libraries - e.g.
-+libc) may still be demoted.  As a result, the mems_allowed interface still
-+cannot provide perfect isolation from the remote nodes.
-+
-+ZSwap and Node Preference
-+=========================
-+In Linux v6.15 and below, ZSwap allocates memory from the local node of the
-+processor for the new pages being compressed.  Since pages being compressed
-+are typically cold, the result is a cold page becomes promoted - only to
-+be later demoted as it ages off the LRU.
-+
-+In Linux v6.XX, ZSwap tries to prefer the node of the page being compressed
-+as the allocation target for the compression page.  This helps prevent
-+thrashing.
-+
-+Demotion with ZSwap
-+===================
-+When enabling both Demotion and ZSwap, you create a situation where ZSwap
-+will prefer the slowest form of CXL memory by default until that tier of
-+memory is exhausted.
++CXL capacity onlined in :code:`ZONE_MOVABLE` is not eligible for 1GB Gigantic
++Page allocation.
 diff --git a/Documentation/driver-api/cxl/index.rst b/Documentation/driver-api/cxl/index.rst
-index 7acab7e7df96..d3ab928d4d7c 100644
+index d3ab928d4d7c..366faf851fc7 100644
 --- a/Documentation/driver-api/cxl/index.rst
 +++ b/Documentation/driver-api/cxl/index.rst
-@@ -46,5 +46,6 @@ that have impacts on each other.  The docs here break up configurations steps.
- 
+@@ -47,5 +47,6 @@ that have impacts on each other.  The docs here break up configurations steps.
     allocation/dax
     allocation/page-allocator
-+   allocation/reclaim
+    allocation/reclaim
++   allocation/hugepages.rst
  
  .. only::  subproject and html
 -- 
