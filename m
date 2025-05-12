@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993C11FC3;
-	Mon, 12 May 2025 23:08:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B53DA1C84CE
+	for <linux-cxl@vger.kernel.org>; Mon, 12 May 2025 23:12:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747091311; cv=none; b=aMQNLFFCPp6VdAaUzpddNsXi2pFGQ7NjlA0nFOfk2WpDCSIIqhwIVCDVtySxJN1dwib8FxAZjHIUVF/LVkkEuVPrJab8VsrAhF8sXwiH/Y9J1Jw25Yvqc8yKQdjwdiHTcM+Uw6p8Cs5Is/P3CQQoLBEEIL5mKHMKpZ57wW0w6Rs=
+	t=1747091567; cv=none; b=s2HtDuoiiqb2qWPPsqmBNbI1FQNnPHKYoxMkdBKnThXPTRrVLsjwE4WbwVHO0ecckQG6Bj054lTjSo1pnryamh4NTcG0EihpR5VUfRyBe80g3xTfeYLMLZ2KVHKH4vIgmzVlVtQuBSp+bz6gmghIadUsPnWIvPudjI7h96GFTUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747091311; c=relaxed/simple;
-	bh=VhcpFylbricmY0wjnSpGV795ap6LQHXK2Iw8clUyNM0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m42FdbpI9baDVIMoxIEg7E+9GVTnfcsh0DHmJMku/nDZ/NCLvrL9JCZeBWvIlDK7gK5eU8m00VQFpsrvfXye8fxt1H3DizQWYxfPEIbcD0/GbJCbw9XCvQaXJOBYT5PQtEj1PaMtxDfqYZ5QPA6RdpYNb/HixM63ORwbQaFzouY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bN/0Lzpi; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747091567; c=relaxed/simple;
+	bh=mT0j3WCK/jvX+5GoG0x17TyuaepSVBrwlhgtq6VnQMI=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=WkUcx8Wz9KDwGbUNYHoasE3hiSgUBluO4OH5DTzXxRNR9iy6kKBIdCC3MTibYhxcEJ4rN3YSoLgdRqq6FykXiyTZNVpBJzqpyiDCtgRIyJY9jG7UsVRyIBUlJtl9JGFxiVuGd5sBygRNNojju6ioE1jMGkAFhFaQdcJzQqOp/oA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EQrDPCPj; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bN/0Lzpi"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EQrDPCPj"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747091309; x=1778627309;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=VhcpFylbricmY0wjnSpGV795ap6LQHXK2Iw8clUyNM0=;
-  b=bN/0Lzpilzq/68ElxUoIW3AdTOQHRV4RK+FfdwjE9MMCDi+c2iU/bel6
-   tZlkca/tLxFp8C6S49E0SeQ9NFilBPmVsoZ5kGiDzKKcVM/nyn//5ujny
-   gnCBaGiJBnOJen24Xf83cl96dXhqphCY156+Wit9WbvnL9hRNj0cpt6iH
-   19HCjtiMva2JKBsf9ep/3IFWEfVWHiCrb7iARLg6sH/789QzrjspKf29C
-   eA1DGHUXoYSKEJ8eP6sdG0g2iqB9wltZZ0p8RDIw7fKpuhO9DVL3jcmhk
-   UBVSLvYH784XESjrBPAsz7ZnyRi8x36qujUmlb+LnawbkiPsxzNMTk1iv
-   w==;
-X-CSE-ConnectionGUID: q+NjWyFbQUCZrrUYlz0XEA==
-X-CSE-MsgGUID: p+HRP/IYQtWoDds1dmUeEA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="59550588"
+  t=1747091566; x=1778627566;
+  h=message-id:date:mime-version:from:subject:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=mT0j3WCK/jvX+5GoG0x17TyuaepSVBrwlhgtq6VnQMI=;
+  b=EQrDPCPj89knInvKEu/cHlqE+rPrj/O037RLd/nLbP0B5Ms7hrgs+5tU
+   rCWyWEy49TogxjfB2XArnsNXnqVBmDGXSR+k+gI8KR/s8gC/vGhi8SkoC
+   e5/gtwVOx+MWWJviUl9Uo71zYXmEBlr+ntk/GuDl2yYuZHBnHHJ/rUxLX
+   ZwHbavB9JE+yJaqBy02r/j8fdq1G079nrRfAFH+nR5sG7OsKuiVgTCZlo
+   YTN2oOGDmI9K981JjHmVDqp3lfrmupFqxJgg28xVh9I0Q7nUf12BvxCgD
+   BwXHpZQXKQ7z3/6F4NSuRvbZHwdLpooVSzpy4Y0Va3Yj9vggllsBIk0cT
+   Q==;
+X-CSE-ConnectionGUID: Q4DutWCCRwG/gpa9xRwqLg==
+X-CSE-MsgGUID: Dv6ExpeEReG2Hyb+IRrlIA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11431"; a="52567781"
 X-IronPort-AV: E=Sophos;i="6.15,283,1739865600"; 
-   d="scan'208";a="59550588"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 16:08:28 -0700
-X-CSE-ConnectionGUID: WX34r/o+QQSrwSwoJNBteQ==
-X-CSE-MsgGUID: GUXJ6QjcRR6xf4GAoWpSUQ==
+   d="scan'208";a="52567781"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 16:12:46 -0700
+X-CSE-ConnectionGUID: sZ+0+7y7Q164RMg7bWqgew==
+X-CSE-MsgGUID: 9Tbf+Tw4R/WVKtpviLdzzw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,283,1739865600"; 
-   d="scan'208";a="142287079"
-Received: from bjrankin-mobl3.amr.corp.intel.com (HELO [10.124.220.233]) ([10.124.220.233])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 16:08:26 -0700
-Message-ID: <e5211a03-617b-43f8-8ba4-b75557e283da@intel.com>
-Date: Mon, 12 May 2025 16:08:24 -0700
+   d="scan'208";a="137537333"
+Received: from unknown (HELO [10.24.8.159]) ([10.24.8.159])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 16:12:44 -0700
+Message-ID: <4c923c9d-7e41-42f5-802d-0199c91ec188@linux.intel.com>
+Date: Mon, 12 May 2025 16:12:35 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,226 +52,131 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 03/17] cxl: docs/devices - add cxl device and protocol
- reference
-To: Gregory Price <gourry@gourry.net>, linux-cxl@vger.kernel.org
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-team@meta.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
- dan.j.williams@intel.com, corbet@lwn.net
-References: <20250512162134.3596150-1-gourry@gourry.net>
- <20250512162134.3596150-4-gourry@gourry.net>
+From: Marc Herbert <marc.herbert@linux.intel.com>
+Subject: Re: [ndctl PATCH] test: fail on unexpected kernel error & warning,
+ not just "Call Trace"
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
+References: <20250510012046.1067514-1-marc.herbert@linux.intel.com>
+ <aCI_ZxeC7r3UpkvZ@aschofie-mobl2.lan>
 Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250512162134.3596150-4-gourry@gourry.net>
+In-Reply-To: <aCI_ZxeC7r3UpkvZ@aschofie-mobl2.lan>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
+Thanks for the prompt feedback!
 
+On 2025-05-12 11:35, Alison Schofield wrote:
 
-On 5/12/25 9:21 AM, Gregory Price wrote:
-> Add a simple device primer sufficient to understand the theory
-> of operation documentation.
+> Since this patch is doing 2 things, the the journalctl timing, and
+> the parse of additional messages, I would typically ask for 2 patches,
+> but - I want to do even more. I want to revive an old, unmerged set
+> tackling similar work and get it all tidy'd up at once.
 > 
-> Signed-off-by: Gregory Price <gourry@gourry.net>
-> ---
->  .../driver-api/cxl/devices/device-types.rst   | 165 ++++++++++++++++++
->  Documentation/driver-api/cxl/index.rst        |   6 +
->  2 files changed, 171 insertions(+)
->  create mode 100644 Documentation/driver-api/cxl/devices/device-types.rst
+> https://lore.kernel.org/all/cover.1701143039.git.alison.schofield@intel.com/
+>   cxl/test: add and use cxl_common_[start|stop] helpers
+>   cxl/test: add a cxl_ derivative of check_dmesg()
+>   cxl/test: use an explicit --since time in journalctl
 > 
-> diff --git a/Documentation/driver-api/cxl/devices/device-types.rst b/Documentation/driver-api/cxl/devices/device-types.rst
-> new file mode 100644
-> index 000000000000..c70564cf0be3
-> --- /dev/null
-> +++ b/Documentation/driver-api/cxl/devices/device-types.rst
-> @@ -0,0 +1,165 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +=====================
-> +Devices and Protocols
-> +=====================
-> +
-> +The type of CXL device (Memory, Accelerator, etc) dictates many configuration steps. This section
-> +covers some basic background on device types and on-device resources used by the platform and OS
-> +which impact configuration.
-> +
-> +Protocols
-> +=========
-> +
-> +There are three core protocols to CXL.  For the purpose of this documentation,
-> +we will only discuss very high level definitions as the specific hardware
-> +details are largely abstracted away from Linux.  See the CXL specification
-> +for more details.
-> +
-> +CXL.io
-> +------
-> +The basic interaction protocol, similar to PCIe configuration mechanisms.
-> +Typically used for initialization, configuration, and I/O access for anything
-> +other than memory (CXL.mem) or cache (CXL.cache) operations.
-> +
-> +The Linux CXL driver exposes access to .io functionalty via the various sysfs
-> +interfaces and /dev/cxl/ devices (which exposes direct access to device
-> +mailboxes).
-> +
-> +CXL.cache
-> +---------
-> +The mechanism by which a device may coherently access and cache host memory.
-> +
-> +Largely transparent to Linux once configured.
-> +
-> +CXL.mem
-> +---------
-> +The mechanism by which the CPU may coherently access and cache device memory.
-> +
-> +Largely transparent to Linux once configured.
-> +
-> +
-> +Device Types
-> +============
-> +
-> +Type-1
-> +------
-> +
-> +A Type-1 CXL device:
-> +
-> +* Supports cxl.io and cxl.cache protocols
-> +* Implements a fully coherent cache
-> +* Allows Device-to-Host coherence and Host-to-Device snoops.
-> +* Does NOT have host-managed device memory (HDM)
-> +
-> +Typical examples of type-1 devices is a Smart NIC - which may want to
-> +directly operate on host-memory (DMA) to store incoming packets. These
-> +devices largely rely on CPU-attached memory.
-> +
-> +Type-2
-> +------
-> +
-> +A Type-2 CXL Device:
-> +
-> +* Supports cxl.io, cxl.cache, and cxl.mem protocols
-> +* Optionally implements coherent cache and Host-Managed Device Memory
-> +* Is typically an accelerator device w/ high bandwidth memory.
-> +
-> +The primary difference between a type-1 and type-2 device is the presence
-> +of host-managed device memory, which allows the device to operate on a
-> +local memory bank - while the CPU sill has coherent DMA to the same memory.
-> +
-> +The allows things like GPUs to expose their memory via DAX devices or file
-> +descriptors, allows drivers and programs direct access to device memory
-> +rather than use block-transfer semantics.
-> +
-> +Type-3
-> +------
-> +
-> +A Type-3 CXL Device
-> +
-> +* Supports cxl.io and cxl.mem
-> +* Implements Host-Managed Device Memory
-> +* May provide either Volatile or Persistent memory capacity (or both).
-> +
-> +A basic example of a type-3 device is a simple memory expander, whose
-> +local memory capacity is exposed to the CPU for access directly via
-> +basic coherent DMA.
-> +
-> +Switch
-> +------
-> +
-> +A CXL switch is a device capacity of routing any CXL (and by extension, PCIe)
-> +protocol between an upstream, downstream, or peer devices.  Many devices, such
-> +as Multi-Logical Devices, imply the presence of switching in some manner.
-> +
-> +Logical Devices and Heads
-> +-------------------------
-> +
-> +A CXL device may present one or more "Logical Devices" to one or more hosts
-> +(via physical "Heads").
-> +
-> +A Single-Logical Device (SLD) is a device which presents a single device to
-> +one or more heads.
-> +
-> +A Multi-Logical Device (MLD) is a device which may present multiple devices
-> +to one or more devices.
-> +
-> +A Single-Headed Device exposes only a single physical connection.
-> +
-> +A Multi-Headed Device exposes multiple physical connections.
-> +
-> +MHSLD
-> +~~~~~
-> +A Multi-Headed Single-Logical Device (MHSLD) exposes a single logical
-> +device to multiple heads which may be connected to one or more discrete
-> +hosts.  An example of this would be a simple memory-pool which may be
-> +statically configured (prior to boot) to expose portions of its memory
-> +to Linux via the CEDT ACPI table.
-> +
-> +MHMLD
-> +~~~~~
-> +A Multi-Headed Multi-Logical Device (MHMLD) exposes multiple logical
-> +devices to multiple heads which may be connected to one or more discrete
-> +hosts.  An example of this would be a Dynamic Capacity Device or which
-> +may be configured at runtime to expose portions of its memory to Linux.
-> +
-> +Example Devices
-> +===============
-> +
-> +Memory Expander
-> +---------------
-> +The simplest form of Type-3 device is a memory expander.  A memory expander
-> +exposes Host-Managed Device Memory (HDM) to Linux.  This memory may be
-> +Volatile or Non-Volatile (Persistent).
-> +
-> +Memory Expanders will typically be considered a form of Single-Headed,
-> +Single-Logical Device - as its form factor will typically be an add-in-card
-> +(AIC) or some other similar form-factor.
-> +
-> +The Linux CXL driver provides support for static or dynamic configuration of
-> +basic memory expanders.  The platform may program decoders prior to OS init
-> +(e.g. auto-decoders), or the user may program the fabric if the platform
-> +defers these operations to the OS.
-> +
-> +Multiple Memory Expanders may be added to an external chassis and exposed to
-> +a host via a head attached to a CXL switch.  This is a "memory pool", and
-> +would be considered an MHSLD or MHMLD depending on the management capabilities
-> +provided by the switch platform.
-> +
-> +As of v6.14, Linux does not provide a formalized interface to manage non-DCD
-> +MHSLD or MHMLD devices.
-> +
-> +Dynamic Capacity Device (DCD)
-> +-----------------------------
-> +
-> +A Dynamic Capacity Device is a Type-3 device which provides dynamic management
-> +of memory capacity. The basic premise of a DCD to provide an allocator-like
-> +interface for physical memory capacity to a "Fabric Manager" (an external,
-> +privileged host with privileges to change configurations for other hosts).
-> +
-> +A DCD manages "Memory Extents", which may be volatile or persistent. Extents
-> +may also be exclusive to a single host or shared across multiple hosts.
-> +
-> +As of v6.14, Linux does not provide a formalized interface to manage DCD
-> +devices, however there is active work on LKML targeting future release.
+> Please take a look at how the prev patch did journalctl start time.
 
-I wonder instead of referring to a kernel version, maybe refer to the CXL maturity map on support status.
+We've been using a "start time" in
+https://github.com/thesofproject/sof-test for many years and it's been
+only "OK", not great. I did not know about the $SECONDS magic variable
+at the time, otherwise I would have tried it in sof-test! The main
+advantage of $SECONDS: there is nothing to do, meaning there is no
+"cxl_common_start()" to forget or do wrong. Speaking of which: I tested
+this patch on the _entire_ ndctl/test, not just with --suite=cxl whereas
+https://lore.kernel.org/all/d76c005105b7612dc47ccd19e102d462c0f4fc1b.1701143039.git.alison.schofield@intel.com/
+seems to have a CXL-specific "cxl_common_start()" only?
 
-DJ
+Also, in my experience some sort of short COOLDOWN is always necessary
+anyway for various reasons:
+- Some tests can sometimes have "after shocks" and a cooldown helps
+  with most of these.
+- A short gap in the logs really help with their _readability_.
+- Clocks can shift, especially inside QEMU (I naively tried to increase
+  the number of cores in run_qemu.sh but had to give up due so "clock skew")
+- Others I probably forgot.
+
+On my system, the average, per-test duration is about 10s and I find that
+10% is an acceptable price to pay for the peace of mind. But a starttime
+should hopefully work too, at least for the majority of the time.
 
 
-> diff --git a/Documentation/driver-api/cxl/index.rst b/Documentation/driver-api/cxl/index.rst
-> index fe1594dc6778..a2d1c5b18a8a 100644
-> --- a/Documentation/driver-api/cxl/index.rst
-> +++ b/Documentation/driver-api/cxl/index.rst
-> @@ -15,6 +15,12 @@ that have impacts on each other.  The docs here break up configurations steps.
->     theory-of-operation
->     maturity-map
->  
-> +.. toctree::
-> +   :maxdepth: 2
-> +   :caption: Device Reference
-> +
-> +   devices/device-types
-> +
->  .. toctree::
->     :maxdepth: 1
->     :caption: Linux Kernel Configuration
+> I believe the kmesg_fail... can be used to catch any of the failed
+> sorts that the old series wanted to do.
 
+Yes it does, I tried to explain that but afraid my English wasn't good
+enough?
+
+> Maybe add a brief write up of how to use the kmesg choices per
+> test and in the common code.
+
+Q.E.D ;-)
+
+> Is the new kmesg approach going to fail on any ERROR or WARNING that
+> we don't kmesg_no_fail_on ?
+
+Yes, this is the main purpose. The other feature is failing when
+any of the _expected_ ERROR or WARNING is not found.
+
+> And then can we simply add dev_dbg() messages to fail if missing.
+
+I'm afraid you just lost me at this point... my patch already does that
+without any dev_dbg()...?
+
+> I'll take a further look for example at the poison test. We want
+> it to warn that the poison is in a region. That is a good and
+> expected warning.  However, if that warn is missing, then the test
+> is broken! It might not 'FAIL', but it's no longer doing what we
+> want.
+
+I agree: the expected "poison inject" and "poison clear" messages should
+be in the kmsg_fail_if_missing array[], not in the kmsg_no_fail_on[]
+array. BUT in my experience this makes cxl-poison.sh fail when run
+multiple times.  So yes: there seems to be a problem with this test.  (I
+should probably file a bug somewhere?) So I put them in
+kmsg_fail_if_missing[] for now because I don't have time to look into it
+now and I don't think a problem in a single test should hold back the
+improvement for the entire suite that exposes it. Even with just
+kmsg_no_fail_on[], this test is still better than now.
+
+BTW this is a typical game of whack-a-mole every time you try to tighten
+a test screw. In SOF it took 4-5 years to finally catch all firmware
+errors: https://github.com/thesofproject/sof-test/issues/297
+
+
+
+> So, let's work on a rev 2 that does all the things of both our
+> patches. I'm happy to work it with you, or not.
+
+I agree the COOLDOWN / starttime is a separate feature. But... I needed it
+for the tests to pass! I find it important to keep the tests all passing
+in every commit for bisectability etc., hope you agree. Also, really hard
+to submit anything that does not pass the tests :-)
+
+As of now, the tests tolerate cross-test pollution. Being more
+demanding when inspecting the logs obviously makes them fail, at least
+sometimes. I agree the "timing" solution should go first, so here's
+a suggested plan:
+
+1. a) Either I resubmit my COOLDOWN alone,
+   b) or you generalize your cxl_common_start()/starttime to non-CXL tests.
+
+No check_dmesg() change yet. "cxl_check_dmesg()" is abandoned forever.
+
+Then:
+
+2. I rebase and resubmit my kmsg_no_fail_on=...
+
+This will give more time for people to try and report any issue in the
+timing fix 1. - whichever is it.
+
+In the 1.a) case, I think your [cxl_]common_start() de-duplication is
+99% independent and can be submitted at any point.
+
+
+Thoughts?
+
+PS: keep in mind I may be pulled in other priorities at any time :-(
