@@ -1,276 +1,222 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2088.outbound.protection.outlook.com [40.107.93.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D5B825F97A
-	for <linux-cxl@vger.kernel.org>; Mon, 12 May 2025 10:14:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747044892; cv=none; b=igU7PSNiVx9mQzx6qz4cyo6Qt+hheom4WXUKzZrTXJm5MCE8DQdxUoIiC9SV5/1+XTu4RjfPzd+JfcCYMwDtt0q2xVRYeCIiNGkogakJlh40ryo7lx6kYb72MHudjAblHoHV8dm33MAx5zV+1+S4mfKVp1lIgO4vwTtKhBxPd0c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747044892; c=relaxed/simple;
-	bh=JZ+BtwTtF5IWEaeN2PzbbRjFfyRmRxd5NGwsf46KUb8=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BZODeBPxVyjuHRQW1N0JGaiWjx7uFZOvidziwjW4kC+eC5DIVMICm1m7/Pw7dDv08hx1M0rcYj9MiGbwuQFTBPxGw/dfL90YY8KY76Kq4dotp3JMbB0w8KF4K18HZRDQvyW1GRysodqESIZPclVKaTCwkQqB/f0xnzWv/alaQxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZwwMg5ncBz6M4mX;
-	Mon, 12 May 2025 18:10:07 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 86ADD1402EA;
-	Mon, 12 May 2025 18:14:46 +0800 (CST)
-Received: from localhost (10.122.19.247) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 12 May
- 2025 12:14:45 +0200
-Date: Mon, 12 May 2025 11:14:44 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: "Michael S. Tsirkin" <mst@redhat.com>
-CC: <linux-cxl@vger.kernel.org>, <qemu-devel@nongnu.org>,
-	<linuxarm@huawei.com>, <fan.ni@samsung.com>, Yuquan Wang
-	<wangyuquan1236@phytium.com.cn>, "Arpit Kumar" <arpit1.kumar@samsung.com>,
-	Sweta Kumari <s5.kumari@samsung.com>, Vinayak Holikatti
-	<vinayak.kh@samsung.com>, Davidlohr Bueso <dave@stgolabs.net>, Ajay Joshi
-	<ajay.opensrc@micron.com>
-Subject: Re: [PATCH qemu 7/8] hw/cxl/cxl-mailbox-utils: Added support for
- Get Log Capabilities (Opcode 0402h)
-Message-ID: <20250512111444.00007be0@huawei.com>
-In-Reply-To: <20250512043011-mutt-send-email-mst@kernel.org>
-References: <20250305092501.191929-1-Jonathan.Cameron@huawei.com>
-	<20250305092501.191929-8-Jonathan.Cameron@huawei.com>
-	<20250512043011-mutt-send-email-mst@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B479254AF3;
+	Mon, 12 May 2025 10:38:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.88
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747046291; cv=fail; b=B0/aNNXCfa2j3sBt4aYwcxmH7aE15BbmWGm8liAPqF9G58NS+xU8EHcF6EUG0Vr9nHIbspGSOsFf3Ue493Tbm4PRCeAe9kxwB6HtwzAbfmozaljn5Cb3108QCvFHnnopl/i3FEP6dZZ1PE2Hw6Se66mgPGOyC0AnluyOZQJKnJs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747046291; c=relaxed/simple;
+	bh=tT0GfeLmG+/GwUiQ+mEA49+Gad2vLfVhZpDvQeIG2rI=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Zt7d3PGsJpG7LSeUd/QglRooMTd7gvBe3lJ4m0+rb9SC96Erw3/Z5IM08WNT1KZkb2qGrxou5F8QqgPwIn+gz43QeGNk5w4UKatb2+pshKq9KUF3A7KYRJGmB8XH68xCw8gQuyGlF8av4dyMOnQCtQXa6UbEsv5+NtQ2XLNrXhA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LqQPDMiV; arc=fail smtp.client-ip=40.107.93.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LqQPDMiV"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=r32Og9ygvPDH0+neAIlkWl3YftknF7fihm6ZFJ9HCvEANDIPpPJGS+XewWQkDCcg76oZz60z/w6clgI3BVmD5DfVuLK9y7uBu/DFpdQTsdipXctADSCliSPfFAZx/znb7zUaMTT+wY57UrRa89IIme8YFiIlWHy5sz4kJGTjIZvBvSrqaRvC94qcEF/8I4GrKm06diUaMv/Sq7Yi67mnh6hbpWrGMdE9MLrFW43QH0Fij5aGQFqW/REvO6JweOURmeGu65klsTz5SLREWxW44ZoLY3pGSX6gXsjAm8v9x9pHL3Nv+e04oIv3Drg41P/v4EPsXj6348ddWYAcYML+PQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lxML0DhBor0zS7lBwV8ofxhWmvpjbwODcYZqz+nUhxc=;
+ b=S5T+XBBOZzmO4EZE/kXvo/jRdMipQbGD3MP3NMO39ruQsN7rwAB9hKUnZov32H3QdTHJORJ1TqUI80diVyIq/0L6DQa5gtWjZ4r0bTfq8VCuMRooNWxNcs2WikoKKs3uItkqdeWfvJmOdq1N7x5OeTX5KOFZGJbk1exrcOh4bv9tVMkm7oagWTichClBMmpHIhcSWOiyjdCi5Iw+ntdLZeSeNUE6wTEXxdQoYlWLLW0wJ0X41N+VKw3Xd6Z/1Aw00MOmsCDxRejhWTVoMEiu4153h6oZIwu4/AceOVx7vKSjFKIuppCHrwCHkFuwoH14mITuiPGnww+zE1X33LygpQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lxML0DhBor0zS7lBwV8ofxhWmvpjbwODcYZqz+nUhxc=;
+ b=LqQPDMiVTYmDilEClO8g6BVJZ7te3RmCrJhMm5rBlZXRoVTjMHbAjIrgWKRK9BaZU2We1KViJmlULhrNG3+cCrkfcw6VmdSHoN6OrKVHp7Jnrxxgn+N3wDaaEExf+jPWUOC9rADnuDNec5kFIey2VG3lqabH9cQVM8Sy6hXontE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
+ by BL4PR12MB9723.namprd12.prod.outlook.com (2603:10b6:208:4ed::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.25; Mon, 12 May
+ 2025 10:38:05 +0000
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79%4]) with mapi id 15.20.8722.027; Mon, 12 May 2025
+ 10:38:05 +0000
+Message-ID: <9a37931d-0e40-4b46-bf2d-93b6c98aa2fd@amd.com>
+Date: Mon, 12 May 2025 11:38:00 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v14 09/22] cxl: prepare memdev creation for type2
+Content-Language: en-US
+To: Alison Schofield <alison.schofield@intel.com>,
+ alejandro.lucero-palau@amd.com
+Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
+ dan.j.williams@intel.com, edward.cree@amd.com, davem@davemloft.net,
+ kuba@kernel.org, pabeni@redhat.com, edumazet@google.com,
+ dave.jiang@intel.com, Ben Cheatham <benjamin.cheatham@amd.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>
+References: <20250417212926.1343268-1-alejandro.lucero-palau@amd.com>
+ <20250417212926.1343268-10-alejandro.lucero-palau@amd.com>
+ <aBwDkBCw5k-6NksY@aschofie-mobl2.lan>
+From: Alejandro Lucero Palau <alucerop@amd.com>
+In-Reply-To: <aBwDkBCw5k-6NksY@aschofie-mobl2.lan>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO6P265CA0024.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:2ff::19) To DM6PR12MB4202.namprd12.prod.outlook.com
+ (2603:10b6:5:219::22)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
- frapeml500008.china.huawei.com (7.182.85.71)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|BL4PR12MB9723:EE_
+X-MS-Office365-Filtering-Correlation-Id: cfa4309e-7cda-4ee2-98b6-08dd914113f4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?blFxTEpJSnRHVUp2OXpxR3N4K0U4Uk9ndVovekFxME94NWFkd1lXbk9xWHdP?=
+ =?utf-8?B?R0dIMVlnYUVxR04xclJDRzhMWE9XWVB3Njl1SEhyY01CcDlBVEJQZG4wNzFP?=
+ =?utf-8?B?VlJnT1JaT2VOUzlwVnh1VmhuOE1iekFVM2ViZy84UGJQMnhERUc1THZMblpo?=
+ =?utf-8?B?eHprcWd6OUVrbFRpclZtRkxBalBqK3N6bElXaTZGZkgyU2pmdHlNN2hLOWFw?=
+ =?utf-8?B?Q1QxZHBadEd4eVIwdDdHaW52TTU4dW50REltQnArUS93clZDaFlTK244dmVt?=
+ =?utf-8?B?bE4rWVM5SEZ6cWdzZ2JOcXc4emRGVXBucmNRZ2E3dkhuUFlWbTM0TjJtTXd0?=
+ =?utf-8?B?YVZ3RnFFdXVWLzRyb3pSUnFPaHlOaXFsQkVjZ3gwdVBtUXlQUm53NEttQXZE?=
+ =?utf-8?B?Ulh3ZUxpY0NKVmdNeUdGMjQ3OFg5ZmJwc0IxOVpFbjZVZjFBTFJlcG9meGor?=
+ =?utf-8?B?azhpUUt2TjhlelhNdU16NVc2YWtOMEJGeG1Obmh3TEJUQnR5K1NUUXJnd0lD?=
+ =?utf-8?B?VHZGYnk0MU5ML25ONExzdTgwQVYyekw2WVowaFNyVmttc0RRbVJiR3BjVXo4?=
+ =?utf-8?B?aG1SYThMOFJ4a0FZZzZKcHk5dFpqQmFqNWgyMGZvdEtlZWN3aG1BSXlIcmEr?=
+ =?utf-8?B?cWVOVHloV2RCRllDU1phVFZTMFRTNGVyQWZUTjhiUHhNN2t1dEpQcGMrVmtU?=
+ =?utf-8?B?bDFiby83MEJsZEtHOFFvUE9UTHZDUnY0Yk0yd1NoZGFTQW5TOWNpUTZnTUp4?=
+ =?utf-8?B?UUMrWkhXOGRTd2I5ZlBTRER6S1pNV2ZSR3Y2MkM4cEZidnJwYUdobURrSGJC?=
+ =?utf-8?B?bDJZMXNnQVlvV1dlY3I1SEF0Q3lhT0dVMkVJdzdwalRLTVh1T0ZVaFg3c3o0?=
+ =?utf-8?B?RHkrc3h5ck1qU3Nhcnl5eHlCazFUd3V4aUh4QkQ5MzRPN21vK3JVY283Ujdo?=
+ =?utf-8?B?MU00WnpJZDgvVG4vcGl0SEZYVmNHTk1GdC9XeUl3ZkxKVmdWTGprMzdwbkRV?=
+ =?utf-8?B?MEZEWmpVc3N0YXJaZFljaFdRVC8wbFdGTmIrL21HWEZ5dEp3ekg3R1AzNzg0?=
+ =?utf-8?B?ZGxjdUl2K3BLNUNMUS8rbVVMWG5QQWFuUjBDTUN2VXROZmJJQVVIaGt4U1I5?=
+ =?utf-8?B?ckNVWWROWTZKd2J4YWwxY1p2QnE1dDhVRGRIbzJCRkVBWHhUTlNtcnhYVVpS?=
+ =?utf-8?B?cUNoNHpTelZ1VS9jQm5ORExBajNQQU15d0pGbklPNWhaUk8zb0E3ZHpTd3Np?=
+ =?utf-8?B?YlBFeFRqcjVsRE4vMUdWRVpSbjJQSEVPMWFQU2tCTmd6K3o0NHFzYk04Zndy?=
+ =?utf-8?B?Y0J4aHVhY3hDTWw1Ymp4T3dtSEx5bUJXY25GdzNIRWp1VUN6dnE5VmVWOVh3?=
+ =?utf-8?B?T2UrTzJPanNjOWQwRWs3YVViTkxwS1FRK1RzNzFrc1BKZDhKaERrWkRaNkh6?=
+ =?utf-8?B?Nmx6YWJZcjd1Ym1kYVNPRjJYQ1NCMm82cUVrTVc4RThIdUJXa0tWaytiSVhO?=
+ =?utf-8?B?QWZnY2xSUDhkYXlKcG10VDFoOUNWa1N6bVFQUFBsNTE4Y3hrRC9zdnB0NkVQ?=
+ =?utf-8?B?MjBDZlMyOGVYSG4rNnBBU0hIRXZpZTIrTG1DNmc1VFE5T2xrb2lwZTdoRm9s?=
+ =?utf-8?B?ekdMRXY1WWgzaEZYYTlkNEJKbS9VdWl6OTVYSTVXYlpMcGh2VHF1ZURGeHBa?=
+ =?utf-8?B?cjBBMHlsVlJ6UFRJaTB1TnJNejZJTlZZSTFhSlo2ZEd0TFNRdURQZzBZbGF0?=
+ =?utf-8?B?WFN4c0lxQ2NDaWZRMzk2VUZSYU5UUEtoOVNsQzZXcWhTdkRQMDRTd0FtWmRI?=
+ =?utf-8?B?VWJjc3hYYnlaT25nQmlCMG94WnM0R2JTQit0Kyt1cVprOXNXQWpjcUY4KzFK?=
+ =?utf-8?B?ZWRqS0E4RG1qS2hYOHA1T3lEVlRtSCtZK2t3NUk3WXdnRlpEeDd4NnZIeGF6?=
+ =?utf-8?Q?QMOIt02oKt4=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UTZMZ01IanBtaUgwazRSOW9BRlVvZ3lwS253RUlMcDd6SVFIQU9sOXlqcHNi?=
+ =?utf-8?B?ejlFb3laQWpqenBpdm9hOTRqTkpTL0twTjlHSWE3T1NnRXc5bkdPaU0ydnFw?=
+ =?utf-8?B?RSt6NExiTUdkNWhXTlo4emxjMmw5elhpald6d0JKQVBvdUR5cDVjY0NEWGIw?=
+ =?utf-8?B?SEhWQ1hjUGlsNmZJdnUxMVROUEppSHNqRmNRWU0yOVlhODhDZndGN09SQVVP?=
+ =?utf-8?B?OHEwcDhYY0prcnE5RUxSSTNOUXZ1eWFEbElYTGpzUEplVmtsYWd0d1JDOHNz?=
+ =?utf-8?B?alZ0bStnMVYvTzVTdEdzQkI3QzVLZ01JNE5pWW12VmQ2eElKd1EvTFJXWTI5?=
+ =?utf-8?B?R3RiUmZXRG9MQm52Z2I5RXhJVUgxRDlmcmlGaWlUZ3ZnbldCK3lYREMrVkk5?=
+ =?utf-8?B?WXV6ekp6ZnAxR2xCdHluQVBqcVNaRmphSnlVa2xjcHYzU0N0NXRuL0VmM1Z1?=
+ =?utf-8?B?Q0FIbFo5bTAxSnlkL2JYMmFCVzV5TjZqWmppM1lQL0N0QlhhU3gzd01LYkl6?=
+ =?utf-8?B?c1JLWE9aOUhWMFJOZ3VZZFpxU1ovRDFDa1ZHTFhIMTlFWmVCLzlTU3IxQVh6?=
+ =?utf-8?B?ZTVDNXZ0bnQ3U2FaNlIvU2loZFZFdk1YWEV0dFZab1NXWXJqbDhOQzZWODJj?=
+ =?utf-8?B?UURsRDRHN3NUdUZhbVpxaDVSL3FOekJkUE9tUHZrbkN1NVlsOGhZaWZBdWNW?=
+ =?utf-8?B?emxnT1JDbnR1ZDJIZTFRV29UR0NTSlVyNjhuWHg4V1NyMmIveG9pcjBCanRo?=
+ =?utf-8?B?S3lIdDhsdkY0WmloWktRU3BuRE1ZSExHNkNwQ01CNUMvTFh3YXBsbG9BMmNL?=
+ =?utf-8?B?L01XbEpNbmI1Y0dDSDFnTjRadm82NGpJblptaTE0c3RBNjUrS0xHMmU4R04z?=
+ =?utf-8?B?TTN2bmRBMndIaGNKRkdLelFhNWVadllhUjBadlNqaDFvd0JVajdiNHNZSWJG?=
+ =?utf-8?B?OHNETWRZZCsvYk11bnFnd2FJZWJSbUlUbEFCYTRvcnRwVmRFMVdHYk1Cc0hY?=
+ =?utf-8?B?SVFqOHh2dXFmZ2t5a3lFcnJpRi94ak1Ua0NBVkxSVWxXZkNvQ0N0L3VvYW5u?=
+ =?utf-8?B?WHNvZ3REc1cxb2RNZmdhNW1lQThSZC9ma3NYWlN1WllTcFVRYytXNWp5YmlU?=
+ =?utf-8?B?cFdBOS95R2YraTFOTDV4UUkyak5lc1gwQUtJQ1ZqVHc3cHUrNzdhdGJhVXpl?=
+ =?utf-8?B?N1BrWk14dklvSU8rQnRsbC9UK0l0d1g5U2h4ZnUxeVlDTGdzVlZYZHUzaEVN?=
+ =?utf-8?B?NkdNRE1pQXlyWEhyeWxhRk1rUzIzTUZOSUJ6Mm5Jclp4V1grcHAyUDRtMW5U?=
+ =?utf-8?B?U2pKSEVBSVA3ZE9OY2w3R2k1NTZLUlZsNDJqVTV3dmVESHdzQnlpdnR4UllM?=
+ =?utf-8?B?RGZkNTFPeG1obytzSS82WElQVEc5SkZzWTBSYVYzSEtPS2RNcWYwMWtObTBM?=
+ =?utf-8?B?dGdReWx3V2JSTCs5QkZXU2JuUTByODN5d2RnNmRPa2hBMWpkd1BidVU3MHA2?=
+ =?utf-8?B?Rlp3MkpaL0NBM3VIWllnb0NMMFc4VHlna0RYdndpNEdHVm1SWDBpZmtJWVZy?=
+ =?utf-8?B?QXFLRXBuSVRGbDdER3VTMEhOVDdya1poWEtZVXRycUxyQmxRRFc5VmJMdUxk?=
+ =?utf-8?B?L2ZEeENpYXdMUU1UYzM1SHRkVTE3TFhwWW5aYm5FNHAvZlVCam42UERhZnJu?=
+ =?utf-8?B?ZHd4b0J6WXFhU1FPbHJOVHNKT01DMCs1SUc5TDBnc2VpQS96NWllT3pzVmky?=
+ =?utf-8?B?WWVTWWMyUitKNW1mZzFhaldHNnMvdTMweFlWbmhkTUJSVDgzSkpLVmxHV083?=
+ =?utf-8?B?ZTdSZTBSM3RDWDBOS3dTNzhFOGwvZ250cVl0Mmp4c05oTmp2Z0ZDQ2RjQjFQ?=
+ =?utf-8?B?a1g4OG1pQXpDT2NQRlUyMjNRZHhqMVplZEp6ejIzMVVic3hndzJWNm1LcEZT?=
+ =?utf-8?B?amcvLzRMU0FQamFlT1lPc0tXdlRxWEVNcTJvU21veEFQQUdkbjBpZ0pUOGty?=
+ =?utf-8?B?S0VyUS9uNVV1TExZYWZkaEFqK0NWekppVW1MZnA1emM1WUJ5eUlPVm9FVnFJ?=
+ =?utf-8?B?VlZ4VzR5N1g2RHpLeHlkRlBxekE0RUlnd25MWXhCemIzTExrWFFtcFVrNU1Q?=
+ =?utf-8?Q?34/DrgivSDYWk+Y6JF9cAyUl1?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cfa4309e-7cda-4ee2-98b6-08dd914113f4
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 10:38:05.3024
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 21ZHHdoqpa6jcwcVuT4QLVddBh/V8HdR0mDUfPB4aF5jiXAcwTY2mgIM/FBsrWMfoMnzO8r9NBP80tZGgmlGUw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL4PR12MB9723
 
-On Mon, 12 May 2025 04:42:37 -0400
-"Michael S. Tsirkin" <mst@redhat.com> wrote:
 
-> On Wed, Mar 05, 2025 at 09:24:58AM +0000, Jonathan Cameron wrote:
-> > From: Arpit Kumar <arpit1.kumar@samsung.com>
-> >=20
-> > CXL spec 3.2 section 8.2.10.5.3 describes Get Log Capabilities.
-> > It provides log capabilities supported by specified log.
-> >=20
-> > Signed-off-by: Arpit Kumar <arpit1.kumar@samsung.com>
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > ---
-> >  include/hw/cxl/cxl_device.h  | 20 ++++++++++++++++
-> >  include/hw/cxl/cxl_mailbox.h |  5 ++++
-> >  hw/cxl/cxl-mailbox-utils.c   | 45 ++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 70 insertions(+)
-> >=20
-> > diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> > index ed6cd50c67..87a376c982 100644
-> > --- a/include/hw/cxl/cxl_device.h
-> > +++ b/include/hw/cxl/cxl_device.h
-> > @@ -133,6 +133,18 @@ typedef enum {
-> >      CXL_MBOX_MAX =3D 0x20
-> >  } CXLRetCode;
-> > =20
-> > +/* types of logs */
-> > +typedef enum {
-> > +    CXL_LOG_COMMAND_EFFECT,
-> > +    CXL_LOG_VENDOR_DEBUG,
-> > +    CXL_LOG_COMPONENT_STATE_DUMP,
-> > +    CXL_LOG_ERROR_CHECK_SCRUB,
-> > +    CXL_LOG_MEDIA_TEST_CAPABILITY,
-> > +    CXL_LOG_MEDIA_TEST_RESULTS_SHORT,
-> > +    CXL_LOG_MEDIA_TEST_RESULTS_LONG,
-> > +    MAX_LOG_TYPE
-> > +} CXLLogType;
-> > +
-> >  typedef struct CXLCCI CXLCCI;
-> >  typedef struct cxl_device_state CXLDeviceState;
-> >  struct cxl_cmd;
-> > @@ -163,6 +175,11 @@ typedef struct CXLEventLog {
-> >      QSIMPLEQ_HEAD(, CXLEvent) events;
-> >  } CXLEventLog;
-> > =20
-> > +typedef struct CXLLogCapabilities {
-> > +    uint32_t param_flags;
-> > +    QemuUUID uuid;
-> > +} CXLLogCapabilities;
-> > +
-> >  typedef struct CXLCCI {
-> >      struct cxl_cmd cxl_cmd_set[256][256];
-> >      struct cel_log {
-> > @@ -171,6 +188,9 @@ typedef struct CXLCCI {
-> >      } cel_log[1 << 16];
-> >      size_t cel_size;
-> > =20
-> > +    /* get log capabilities */
-> > +    const CXLLogCapabilities *supported_log_cap;
-> > +
-> >      /* background command handling (times in ms) */
-> >      struct {
-> >          uint16_t opcode;
-> > diff --git a/include/hw/cxl/cxl_mailbox.h b/include/hw/cxl/cxl_mailbox.h
-> > index 9008402d1c..8e1c7c5f15 100644
-> > --- a/include/hw/cxl/cxl_mailbox.h
-> > +++ b/include/hw/cxl/cxl_mailbox.h
-> > @@ -16,4 +16,9 @@
-> >  #define CXL_MBOX_BACKGROUND_OPERATION (1 << 6)
-> >  #define CXL_MBOX_BACKGROUND_OPERATION_ABORT (1 << 7)
-> > =20
-> > +#define CXL_LOG_CAP_CLEAR_SUPPORTED (1 << 0)
-> > +#define CXL_LOG_CAP_POPULATE_SUPPORTED (1 << 1)
-> > +#define CXL_LOG_CAP_AUTO_POPULATE_SUPPORTED (1 << 2)
-> > +#define CXL_LOG_CAP_PERSISTENT_COLD_RESET_SUPPORTED (1 << 3)
-> > +
-> >  #endif
-> > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> > index 299f232f26..f35fc4f112 100644
-> > --- a/hw/cxl/cxl-mailbox-utils.c
-> > +++ b/hw/cxl/cxl-mailbox-utils.c
-> > @@ -81,6 +81,7 @@ enum {
-> >      LOGS        =3D 0x04,
-> >          #define GET_SUPPORTED 0x0
-> >          #define GET_LOG       0x1
-> > +        #define GET_LOG_CAPABILITIES   0x2
-> >      FEATURES    =3D 0x05,
-> >          #define GET_SUPPORTED 0x0
-> >          #define GET_FEATURE   0x1
-> > @@ -1068,6 +1069,43 @@ static CXLRetCode cmd_logs_get_log(const struct =
-cxl_cmd *cmd,
-> >      return CXL_MBOX_SUCCESS;
-> >  }
-> > =20
-> > +static const struct CXLLogCapabilities *find_log_index(QemuUUID *uuid,=
- CXLCCI *cci)
-> > +{
-> > +    for (int i =3D CXL_LOG_COMMAND_EFFECT; i < MAX_LOG_TYPE; i++) {
-> > +        if (qemu_uuid_is_equal(uuid,
-> > +            &cci->supported_log_cap[i].uuid)) {
-> > +                return &cci->supported_log_cap[i];
-> > +        }
-> > +    }
-> > +    return NULL;
-> > +}
-> > +
-> > +/* CXL r3.2 Section 8.2.10.5.3: Get Log Capabilities (Opcode 0402h) */
-> > +static CXLRetCode cmd_logs_get_log_capabilities(const struct cxl_cmd *=
-cmd,
-> > +                                                uint8_t *payload_in,
-> > +                                                size_t len_in,
-> > +                                                uint8_t *payload_out,
-> > +                                                size_t *len_out,
-> > +                                                CXLCCI *cci)
-> > +{
-> > +    const CXLLogCapabilities *cap;
-> > +    struct {
-> > +        QemuUUID uuid;
-> > +    } QEMU_PACKED QEMU_ALIGNED(8) *get_log_capabilities_in =3D (void *=
-)payload_in;
-> > +
-> > +    uint32_t *get_log_capabilities_out =3D (uint32_t *)payload_out;
-> > +
-> > +    cap =3D find_log_index(&get_log_capabilities_in->uuid, cci);
-> > +    if (!cap) {
-> > +        return CXL_MBOX_INVALID_LOG;
-> > +    }
-> > +
-> > +    memcpy(get_log_capabilities_out, &cap->param_flags,
-> > +           sizeof(cap->param_flags));
-> > +    *len_out =3D sizeof(*get_log_capabilities_out);
-> > +    return CXL_MBOX_SUCCESS;
-> > +}
-> > +
-> >  /* CXL r3.1 section 8.2.9.6: Features */
-> >  /*
-> >   * Get Supported Features output payload
-> > @@ -3253,6 +3291,8 @@ static const struct cxl_cmd cxl_cmd_set[256][256]=
- =3D {
-> >      [LOGS][GET_SUPPORTED] =3D { "LOGS_GET_SUPPORTED", cmd_logs_get_sup=
-ported,
-> >                                0, 0 },
-> >      [LOGS][GET_LOG] =3D { "LOGS_GET_LOG", cmd_logs_get_log, 0x18, 0 },
-> > +    [LOGS][GET_LOG_CAPABILITIES] =3D { "LOGS_GET_LOG_CAPABILITIES",
-> > +                                     cmd_logs_get_log_capabilities, 0x=
-10, 0 },
-> >      [FEATURES][GET_SUPPORTED] =3D { "FEATURES_GET_SUPPORTED",
-> >                                    cmd_features_get_supported, 0x8, 0 },
-> >      [FEATURES][GET_FEATURE] =3D { "FEATURES_GET_FEATURE",
-> > @@ -3512,10 +3552,15 @@ static void cxl_rebuild_cel(CXLCCI *cci)
-> >      }
-> >  }
-> > =20
-> > +static const struct CXLLogCapabilities cxl_get_log_cap[MAX_LOG_TYPE] =
-=3D {
-> > +    [CXL_LOG_COMMAND_EFFECT] =3D { .param_flags =3D 0, .uuid =3D cel_u=
-uid },
-> > +};
-> > + =20
->=20
->=20
-> causes ci build failures:
->=20
-> https://gitlab.com/mstredhat/qemu/-/jobs/9999980051
->=20
-> ../hw/cxl/cxl-mailbox-utils.c:3556:60: error: initializer element is not =
-constant
->      [CXL_LOG_COMMAND_EFFECT] =3D { .param_flags =3D 0, .uuid =3D cel_uui=
-d },
->                                                             ^~~~~~~~
-> ../hw/cxl/cxl-mailbox-utils.c:3556:60: note: (near initialization for =E2=
-=80=98cxl_get_log_cap[0].uuid=E2=80=99)
->=20
->=20
+On 5/8/25 02:06, Alison Schofield wrote:
+> On Thu, Apr 17, 2025 at 10:29:12PM +0100, alejandro.lucero-palau@amd.com wrote:
+>> From: Alejandro Lucero <alucerop@amd.com>
+>>
+>> Current cxl core is relying on a CXL_DEVTYPE_CLASSMEM type device when
+>> creating a memdev leading to problems when obtaining cxl_memdev_state
+>> references from a CXL_DEVTYPE_DEVMEM type.
+>>
+>> Modify check for obtaining cxl_memdev_state adding CXL_DEVTYPE_DEVMEM
+>> support.
+>>
+>> Make devm_cxl_add_memdev accessible from a accel driver.
+>>
+>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+>> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
+>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-Looks good. Thanks for fixing it up!
-> Fixed it up like this:
->=20
-> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> index f35fc4f112..13d26e391b 100644
-> --- a/hw/cxl/cxl-mailbox-utils.c
-> +++ b/hw/cxl/cxl-mailbox-utils.c
-> @@ -992,9 +992,10 @@ static CXLRetCode cmd_timestamp_set(const struct cxl=
-_cmd *cmd,
->  }
-> =20
->  /* CXL r3.1 Section 8.2.9.5.2.1: Command Effects Log (CEL) */
-> -static const QemuUUID cel_uuid =3D {
-> -    .data =3D UUID(0x0da9c0b5, 0xbf41, 0x4b78, 0x8f, 0x79,
-> +#define CEL_UUID UUID(0x0da9c0b5, 0xbf41, 0x4b78, 0x8f, 0x79, \
->                   0x96, 0xb1, 0x62, 0x3b, 0x3f, 0x17)
-> +static const QemuUUID cel_uuid =3D {
-> +    .data =3D CEL_UUID
->  };
-> =20
->  /* CXL r3.1 Section 8.2.9.5.1: Get Supported Logs (Opcode 0400h) */
-> @@ -3553,7 +3554,7 @@ static void cxl_rebuild_cel(CXLCCI *cci)
->  }
-> =20
->  static const struct CXLLogCapabilities cxl_get_log_cap[MAX_LOG_TYPE] =3D=
- {
-> -    [CXL_LOG_COMMAND_EFFECT] =3D { .param_flags =3D 0, .uuid =3D cel_uui=
-d },
-> +    [CXL_LOG_COMMAND_EFFECT] =3D { .param_flags =3D 0, .uuid =3D CEL_UUI=
-D },
->  };
-> =20
->  void cxl_init_cci(CXLCCI *cci, size_t payload_max)
->=20
->=20
-> >  void cxl_init_cci(CXLCCI *cci, size_t payload_max)
-> >  {
-> >      cci->payload_max =3D payload_max;
-> >      cxl_rebuild_cel(cci);
-> > +    cci->supported_log_cap =3D cxl_get_log_cap;
-> > =20
-> >      cci->bg.complete_pct =3D 0;
-> >      cci->bg.starttime =3D 0;
-> > --=20
-> > 2.43.0 =20
->=20
->=20
 
+snip
+
+
+>>   
+>>   	rc = devm_add_action_or_reset(dev, remove_debugfs, dentry);
+>>   	if (rc)
+>> @@ -219,6 +225,13 @@ static umode_t cxl_mem_visible(struct kobject *kobj, struct attribute *a, int n)
+>>   	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+>>   	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
+>>   
+>> +	/*
+>> +	 * Avoid poison sysfs files for Type2 devices as they rely on
+>> +	 * cxl_memdev_state.
+>> +	 */
+>> +	if (!mds)
+>> +		return 0;
+>> +
+> The above 2 'if (!mds)' seem like indirect methods to avoid Type 2
+> devices. How about:
+>
+> 	/* Type 2, CXL_DEVTYPE_DEVMEM, excluded from poison setup */
+> 	if (cxlds->type == CXL_DEVTYPE_CLASSMEM) {
+>
+
+Hi Allison,
+
+
+I forgot this one.
+
+
+I think it is better to leave the current check because it makes 
+explicit the problem of cxl_memdev_state being null for Type2.
+
+
+Thanks
+
+>
+> snip
+>
