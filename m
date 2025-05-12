@@ -1,63 +1,63 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4335D2571D0
-	for <linux-cxl@vger.kernel.org>; Mon, 12 May 2025 16:22:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09942262FE7
+	for <linux-cxl@vger.kernel.org>; Mon, 12 May 2025 16:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747066924; cv=none; b=dA8fLA7Ox64NytLQPPPlLD7Fo2Z79fXVT2w6Bk+t2uRB2IcI+W7iFBl687kgdH5FwdMh1fBn5Zv+1dWgtZEEOOncwccPQyZwQJmxkTkX8PgMvtD85di+4daj+luWP0fnxbSPpx4HdnhLe5Z/zEOw2Hm1m09mSvLHs8zncz0lTbU=
+	t=1747066926; cv=none; b=e/tvAGX8DsUTCcvx4VcqsXOYzk46EbDbsSlEeKU8Js5S1ZmRBQwO6K+c7XiExtf9wap84EZZ/BvoOHGjN52QuudbwhD/17P8k3ZYMoOvUEnKx8gYSeD94z8ACeqsvAE8QUp6H4YpnsqNp368g9/hP8JSlAgrVhp4q0xcJpRNncM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747066924; c=relaxed/simple;
-	bh=5OMS59Fls7yssVe/eBHwNamMLgl3UdidmTKUG9C1bZ8=;
+	s=arc-20240116; t=1747066926; c=relaxed/simple;
+	bh=6kFRAXLyb71mD2Zs2gNFWfCB+AfEcQArhWsCvZFm48U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OmxtJnyz9bxnnQP2SNC5LKLErvHrCq3Ml5PoR7Rn9d4dypQv/Un+TVtKSVml5L5EghHsRhdTUq/sme8Q6dmgmT1p+nQuoJJiY/VJl/g1MO51184d01YOPa94IuiWGcEfxQh4cOpnVME18JAZkRMnXrZUzH5OPVzXKIa6oyzwSAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=idlrGWSh; arc=none smtp.client-ip=209.85.222.175
+	 MIME-Version; b=QkowfOfijejeeWFBHCwIA2AtxUS9tDo+3f+KZhn4ybYniA1DllQbqV5bOp+ycCjOSiij2K41OI0FMx2G4QzNCJ7FUMtXyVYVrGdQSSeilyd7lzmZteltGycwWqIbEQhjov47jcAQFbx5fDlxU1+SJC8yXmIRT2VZMPDma4HnPrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=JnQElByY; arc=none smtp.client-ip=209.85.160.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="idlrGWSh"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7c59e7039eeso724551685a.2
-        for <linux-cxl@vger.kernel.org>; Mon, 12 May 2025 09:22:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="JnQElByY"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-476af5479feso55103391cf.2
+        for <linux-cxl@vger.kernel.org>; Mon, 12 May 2025 09:22:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1747066921; x=1747671721; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1747066922; x=1747671722; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Jt/521w64tsazt1m4c92762k12ji8Xm+LaBsIndvwlE=;
-        b=idlrGWShYcmS0kBdN03qsDplFZD51eVgFIUDAh04x6UNfmnz8JbmVD4rRHDXMstURM
-         UuQBfy5SZQj0G9OkyV/zcxTCljHNknoeS5rbipkh1YKJI0hSw3TjP7PaQWd3zulgUpc5
-         fvrlNh3ibagZthQc3Cgy9Gj+1bg1OC84HNsYArRqmVCAYlYp3FZaFKI6PyUc79yDK38Q
-         O7yGZ27QZwb3s1lW4n/hy+EbOTifKJ17ugoVxytjSizHoPvLdZJmGoFRH9sfcgthXf90
-         9hbn8oqHE+FIS0lm2KSKwJlvAojVlsP3RAJ4o4Mw6JeNS6zLEDqiIIT5LwJv+4PSj3y7
-         UwDg==
+        bh=tpBvWJMvNrl2dBGkl5driDL3hYTI6jOnBaaDfES2w1M=;
+        b=JnQElByYJxg6o/n5loj0kZT19DtAktksz+qN61RdF2oaWDqIHKV8aFcNcCvsxW0FHC
+         pYSnQZsUnbxVcWxgAV8kGggKL6eUEishsR5dWy/Rs045fVb90jouUNaOlI/5FjLY5BZy
+         ctnLUGndKKZbn2S0nN15JlLOq9CbGQft3XmZOyYIHQ5aqB8js673f8l304Ro+UwxGQ17
+         MpTvbphYM1tsFD0QcKsdGxS2c9jhdkEmuDJqAGnyXBFyWjT2xmr7/CZS71MQTZ3UEw9j
+         syopRlDwDO57k9vskFG/k/vdjD1qy34YGj5YaWo3iW0ncj8MPa2sbDLIJTnbEHy1odQn
+         NlBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747066921; x=1747671721;
+        d=1e100.net; s=20230601; t=1747066922; x=1747671722;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Jt/521w64tsazt1m4c92762k12ji8Xm+LaBsIndvwlE=;
-        b=iD2ODGBpGLjn4q/DGN7GStA1NcztpFQGbm1K+moojIjXjCSFQ/GHRP8d6cSJglf1Da
-         H5cxUXICqaC3Wl5IML6LhRVtGJdeJINdiFHrH/ILcw+SIh/TMZ23sd/qcHy+aHJx3nQb
-         +f0yPy9bkoH6vq6ZgbpSobyTrc5TawALBi+6R+5J2A5lIRrADmBmE6TNLQCvzf3exG9O
-         EfTr4BC3kjDVAVVNndJh1q5QNTkQGN1SEM3JYIPbWNlLnLfF5AyGVkl6dwcW4h4H1Lua
-         WRlOndWqyHE1OL2JnFZs8pKcBmPCLr0YYGVXkf7Uu7zRfUMGt76X5ymahfnf5bxD1fWa
-         mpow==
-X-Gm-Message-State: AOJu0YxkKaj4rkNZ7d6V2dmAHYz0lNMWtxi31E2D6kU4SPcIRByfIPfz
-	b+IxvKScgdYBm8xKAffRkq8mC+vGDx/j9JB5un3ee8GfFjJ7U2xiyKdrkrjiMqWfkrEBhSH0+oR
-	U
-X-Gm-Gg: ASbGnctH9x8D21Z2vzNCnSMp3Djpo0hlYdvKxh4NxwO65FJ/jR2+IRc8L0LZSjSZjeh
-	NdXc4jn/Qw+VtCTpIIMkahoz2uUsUphzVbjCHUKd30/Gi/uSGwdnjjIt/mvMENbm9Ad+kW2RvED
-	qs8BvhwASxXR0M5ZvS+XemPjbZzLaxAq4MqFJDg3iLQH9LCuvSYFIY/dM+OMRf+ztTLCQGlhp1H
-	4ardZ4EiXktNPscFI212RYhgf9TK7vmJS9qkMwvv6POL9hbLQDcUP4slJi5tgUl3uJmrxPR7CvT
-	bPzFzyRZpGndpLF8VaV449C5/cd4mvxJhZ6L0FnFhCJoyLnU37vAi79uizFkdgKCyR82T/82ClH
-	SbNHyvYvnwAgxsp4Q+QHVFYd5My3DIFQNrilh
-X-Google-Smtp-Source: AGHT+IGgq4dX8u+VS136dy5RsF6lNNfBNEBuuVYsuUsKinYkKNcF5+J+dn7L3DuanbNeTbM5peQhrw==
-X-Received: by 2002:a05:6214:400b:b0:6e4:2dcb:33c8 with SMTP id 6a1803df08f44-6f6e4802e14mr217368156d6.29.1747066906925;
-        Mon, 12 May 2025 09:21:46 -0700 (PDT)
+        bh=tpBvWJMvNrl2dBGkl5driDL3hYTI6jOnBaaDfES2w1M=;
+        b=bYPMrzweW9VLAPGExlkGyCFlWQCeOmRHbF1MnZdEcg36OceK781GFGYiOVJ6E2iBFk
+         gLbw2LbkyNJ0FMRQvfNcY7LlCoTLgERm6MtVEsgXwvbiAUWzRH3soorJKAjR3rU5f0kG
+         PW6Sz2YvN34oILzLBm1iu85TEwMn+ZqqWmU48efUuOqotko+TBToAwLlt8qdS5WjWAlG
+         J2pS9+vcw5N+ufJ7QRBjLJuOX8d6cgB0MsRIPzEU77otbBWXXu2gv66Tqk+4vbYEN2S5
+         BTvyNMWqnNzDVgulUgho4kP0hXyb0tuYxLJHrCgZZMTKw3hVhNBoKnuSMIIyv+rEiQmW
+         FUdg==
+X-Gm-Message-State: AOJu0YyWXUqTprbkymdU6T8SdGCNGbA2drZVS//iSDmlrdlDtTh9Ki6+
+	e2wawGqMFiJXwT0UgvMrgqF6Z7q9NHGFxrTW5Yr4DP87VKkQT19QPYNPNMB0E3DjSmaluIpGRWl
+	1
+X-Gm-Gg: ASbGncuSptM+/Gq/wAkm/IKR38f7wrOtuVLUTIo8niXiMAYmjz7cydzx1JSaOTuyG4g
+	fW89YiCE4ukIZRlLmpN0ShejI0ZI3kgpNiylr6tM11v/AsQcFM49XTkdlpGxVWOmHZqs65XwCix
+	bFxr/0HBRU97vzWqlGzXaiCquzcPUkPvSV3NaTThwypgGNcviACSmQLzHpq7xLG4srR0/szIGfZ
+	a35BTsN9FvPpE7ONFl5AWLS3F+k4/Psbrxfu7tl+FpkLH02/zbkSMqnOBfJxPVusHcntORXj/Wo
+	n4c8vX8dmZX0CAFdzQweK3vS02+4+vAQd9wUPmsNJYXk6v8gXTM4SECKwgsGwUsTptis912zuD5
+	F4y9hiZPxVg4hFJ+m8kilny9+xz0rrkwduZKx
+X-Google-Smtp-Source: AGHT+IEgOwqbTVyM2cCqwhYH6oeFz+yp7dgByEYQB2haUlrU8NGA2h0ID7S4kwTF7yVmhY0k+Ia7IQ==
+X-Received: by 2002:a05:622a:5408:b0:477:c04:b512 with SMTP id d75a77b69052e-4945273c1dbmr225206941cf.16.1747066922158;
+        Mon, 12 May 2025 09:22:02 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-49452583961sm52461791cf.58.2025.05.12.09.21.46
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-49452583961sm52461791cf.58.2025.05.12.09.22.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 09:21:46 -0700 (PDT)
+        Mon, 12 May 2025 09:22:01 -0700 (PDT)
 From: Gregory Price <gourry@gourry.net>
 To: linux-cxl@vger.kernel.org
 Cc: linux-doc@vger.kernel.org,
@@ -71,9 +71,9 @@ Cc: linux-doc@vger.kernel.org,
 	ira.weiny@intel.com,
 	dan.j.williams@intel.com,
 	corbet@lwn.net
-Subject: [PATCH v3 03/17] cxl: docs/devices - add cxl device and protocol reference
-Date: Mon, 12 May 2025 12:21:20 -0400
-Message-ID: <20250512162134.3596150-4-gourry@gourry.net>
+Subject: [PATCH v3 13/17] cxl: docs/allocation/dax
+Date: Mon, 12 May 2025 12:21:30 -0400
+Message-ID: <20250512162134.3596150-14-gourry@gourry.net>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250512162134.3596150-1-gourry@gourry.net>
 References: <20250512162134.3596150-1-gourry@gourry.net>
@@ -85,204 +85,96 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a simple device primer sufficient to understand the theory
-of operation documentation.
+Small example of accessing CXL memory capacity via DAX device
 
 Signed-off-by: Gregory Price <gourry@gourry.net>
 ---
- .../driver-api/cxl/devices/device-types.rst   | 165 ++++++++++++++++++
- Documentation/driver-api/cxl/index.rst        |   6 +
- 2 files changed, 171 insertions(+)
- create mode 100644 Documentation/driver-api/cxl/devices/device-types.rst
+ .../driver-api/cxl/allocation/dax.rst         | 60 +++++++++++++++++++
+ Documentation/driver-api/cxl/index.rst        |  5 ++
+ 2 files changed, 65 insertions(+)
+ create mode 100644 Documentation/driver-api/cxl/allocation/dax.rst
 
-diff --git a/Documentation/driver-api/cxl/devices/device-types.rst b/Documentation/driver-api/cxl/devices/device-types.rst
+diff --git a/Documentation/driver-api/cxl/allocation/dax.rst b/Documentation/driver-api/cxl/allocation/dax.rst
 new file mode 100644
-index 000000000000..c70564cf0be3
+index 000000000000..c6f7a5da832f
 --- /dev/null
-+++ b/Documentation/driver-api/cxl/devices/device-types.rst
-@@ -0,0 +1,165 @@
++++ b/Documentation/driver-api/cxl/allocation/dax.rst
+@@ -0,0 +1,60 @@
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+=====================
-+Devices and Protocols
-+=====================
++===========
++DAX Devices
++===========
++CXL capacity exposed as a DAX device can be accessed directly via mmap.
++Users may wish to use this interface mechanism to write their own userland
++CXL allocator, or to managed shared or persistent memory regions across multiple
++hosts.
 +
-+The type of CXL device (Memory, Accelerator, etc) dictates many configuration steps. This section
-+covers some basic background on device types and on-device resources used by the platform and OS
-+which impact configuration.
++If the capacity is shared across hosts or persistent, appropriate flushing
++mechanisms must be employed unless the region supports Snoop Back-Invalidate.
 +
-+Protocols
-+=========
++Note that mappings must be aligned (size and base) to the dax device's base
++alignment, which is typically 2MB - but maybe be configured larger.
 +
-+There are three core protocols to CXL.  For the purpose of this documentation,
-+we will only discuss very high level definitions as the specific hardware
-+details are largely abstracted away from Linux.  See the CXL specification
-+for more details.
++::
 +
-+CXL.io
-+------
-+The basic interaction protocol, similar to PCIe configuration mechanisms.
-+Typically used for initialization, configuration, and I/O access for anything
-+other than memory (CXL.mem) or cache (CXL.cache) operations.
++  #include <stdio.h>
++  #include <stdlib.h>
++  #include <stdint.h>
++  #include <sys/mman.h>
++  #include <fcntl.h>
++  #include <unistd.h>
 +
-+The Linux CXL driver exposes access to .io functionalty via the various sysfs
-+interfaces and /dev/cxl/ devices (which exposes direct access to device
-+mailboxes).
++  #define DEVICE_PATH "/dev/dax0.0" // Replace DAX device path
++  #define DEVICE_SIZE (4ULL * 1024 * 1024 * 1024) // 4GB
 +
-+CXL.cache
-+---------
-+The mechanism by which a device may coherently access and cache host memory.
++  int main() {
++      int fd;
++      void* mapped_addr;
 +
-+Largely transparent to Linux once configured.
++      /* Open the DAX device */
++      fd = open(DEVICE_PATH, O_RDWR);
++      if (fd < 0) {
++          perror("open");
++          return -1;
++      }
 +
-+CXL.mem
-+---------
-+The mechanism by which the CPU may coherently access and cache device memory.
++      /* Map the device into memory */
++      mapped_addr = mmap(NULL, DEVICE_SIZE, PROT_READ | PROT_WRITE,
++                         MAP_SHARED, fd, 0);
++      if (mapped_addr == MAP_FAILED) {
++          perror("mmap");
++          close(fd);
++          return -1;
++      }
 +
-+Largely transparent to Linux once configured.
++      printf("Mapped address: %p\n", mapped_addr);
 +
++      /* You can now access the device through the mapped address */
++      uint64_t* ptr = (uint64_t*)mapped_addr;
++      *ptr = 0x1234567890abcdef; // Write a value to the device
++      printf("Value at address %p: 0x%016llx\n", ptr, *ptr);
 +
-+Device Types
-+============
-+
-+Type-1
-+------
-+
-+A Type-1 CXL device:
-+
-+* Supports cxl.io and cxl.cache protocols
-+* Implements a fully coherent cache
-+* Allows Device-to-Host coherence and Host-to-Device snoops.
-+* Does NOT have host-managed device memory (HDM)
-+
-+Typical examples of type-1 devices is a Smart NIC - which may want to
-+directly operate on host-memory (DMA) to store incoming packets. These
-+devices largely rely on CPU-attached memory.
-+
-+Type-2
-+------
-+
-+A Type-2 CXL Device:
-+
-+* Supports cxl.io, cxl.cache, and cxl.mem protocols
-+* Optionally implements coherent cache and Host-Managed Device Memory
-+* Is typically an accelerator device w/ high bandwidth memory.
-+
-+The primary difference between a type-1 and type-2 device is the presence
-+of host-managed device memory, which allows the device to operate on a
-+local memory bank - while the CPU sill has coherent DMA to the same memory.
-+
-+The allows things like GPUs to expose their memory via DAX devices or file
-+descriptors, allows drivers and programs direct access to device memory
-+rather than use block-transfer semantics.
-+
-+Type-3
-+------
-+
-+A Type-3 CXL Device
-+
-+* Supports cxl.io and cxl.mem
-+* Implements Host-Managed Device Memory
-+* May provide either Volatile or Persistent memory capacity (or both).
-+
-+A basic example of a type-3 device is a simple memory expander, whose
-+local memory capacity is exposed to the CPU for access directly via
-+basic coherent DMA.
-+
-+Switch
-+------
-+
-+A CXL switch is a device capacity of routing any CXL (and by extension, PCIe)
-+protocol between an upstream, downstream, or peer devices.  Many devices, such
-+as Multi-Logical Devices, imply the presence of switching in some manner.
-+
-+Logical Devices and Heads
-+-------------------------
-+
-+A CXL device may present one or more "Logical Devices" to one or more hosts
-+(via physical "Heads").
-+
-+A Single-Logical Device (SLD) is a device which presents a single device to
-+one or more heads.
-+
-+A Multi-Logical Device (MLD) is a device which may present multiple devices
-+to one or more devices.
-+
-+A Single-Headed Device exposes only a single physical connection.
-+
-+A Multi-Headed Device exposes multiple physical connections.
-+
-+MHSLD
-+~~~~~
-+A Multi-Headed Single-Logical Device (MHSLD) exposes a single logical
-+device to multiple heads which may be connected to one or more discrete
-+hosts.  An example of this would be a simple memory-pool which may be
-+statically configured (prior to boot) to expose portions of its memory
-+to Linux via the CEDT ACPI table.
-+
-+MHMLD
-+~~~~~
-+A Multi-Headed Multi-Logical Device (MHMLD) exposes multiple logical
-+devices to multiple heads which may be connected to one or more discrete
-+hosts.  An example of this would be a Dynamic Capacity Device or which
-+may be configured at runtime to expose portions of its memory to Linux.
-+
-+Example Devices
-+===============
-+
-+Memory Expander
-+---------------
-+The simplest form of Type-3 device is a memory expander.  A memory expander
-+exposes Host-Managed Device Memory (HDM) to Linux.  This memory may be
-+Volatile or Non-Volatile (Persistent).
-+
-+Memory Expanders will typically be considered a form of Single-Headed,
-+Single-Logical Device - as its form factor will typically be an add-in-card
-+(AIC) or some other similar form-factor.
-+
-+The Linux CXL driver provides support for static or dynamic configuration of
-+basic memory expanders.  The platform may program decoders prior to OS init
-+(e.g. auto-decoders), or the user may program the fabric if the platform
-+defers these operations to the OS.
-+
-+Multiple Memory Expanders may be added to an external chassis and exposed to
-+a host via a head attached to a CXL switch.  This is a "memory pool", and
-+would be considered an MHSLD or MHMLD depending on the management capabilities
-+provided by the switch platform.
-+
-+As of v6.14, Linux does not provide a formalized interface to manage non-DCD
-+MHSLD or MHMLD devices.
-+
-+Dynamic Capacity Device (DCD)
-+-----------------------------
-+
-+A Dynamic Capacity Device is a Type-3 device which provides dynamic management
-+of memory capacity. The basic premise of a DCD to provide an allocator-like
-+interface for physical memory capacity to a "Fabric Manager" (an external,
-+privileged host with privileges to change configurations for other hosts).
-+
-+A DCD manages "Memory Extents", which may be volatile or persistent. Extents
-+may also be exclusive to a single host or shared across multiple hosts.
-+
-+As of v6.14, Linux does not provide a formalized interface to manage DCD
-+devices, however there is active work on LKML targeting future release.
++      /* Clean up */
++      munmap(mapped_addr, DEVICE_SIZE);
++      close(fd);
++      return 0;
++  }
 diff --git a/Documentation/driver-api/cxl/index.rst b/Documentation/driver-api/cxl/index.rst
-index fe1594dc6778..a2d1c5b18a8a 100644
+index 35c5b0c6f95e..6e7497f4811a 100644
 --- a/Documentation/driver-api/cxl/index.rst
 +++ b/Documentation/driver-api/cxl/index.rst
-@@ -15,6 +15,12 @@ that have impacts on each other.  The docs here break up configurations steps.
-    theory-of-operation
-    maturity-map
+@@ -40,5 +40,10 @@ that have impacts on each other.  The docs here break up configurations steps.
+    linux/memory-hotplug
+    linux/access-coordinates
  
 +.. toctree::
 +   :maxdepth: 2
-+   :caption: Device Reference
++   :caption: Memory Allocation
 +
-+   devices/device-types
-+
- .. toctree::
-    :maxdepth: 1
-    :caption: Linux Kernel Configuration
++   allocation/dax
+ 
+ .. only::  subproject and html
 -- 
 2.49.0
 
