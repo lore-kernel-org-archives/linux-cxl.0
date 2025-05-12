@@ -1,77 +1,63 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 058E2299AA3
-	for <linux-cxl@vger.kernel.org>; Mon, 12 May 2025 18:09:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB7E245022;
+	Mon, 12 May 2025 18:26:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747073400; cv=none; b=o2h572N58j11hHEHjdh2oBcE6eX5puF0hCQCpymXGeLud7giTYNLrOq4smdejSuLRR9uk1hP61YYsauHZEIc/ROAObQA8CpcRJZCzo3J8DDN+A8/CWGPgUvCew6+cXHGfd0qvOsqJKpuxjAnVO5wKRjYHYDoqSUs7UNMfl5Txw8=
+	t=1747074372; cv=none; b=nqbqYBbLdNXqy2oMt/AGuKjn1SKDxIRbJpwxHHB88GPbjfuYQvPXNS8vgH6j+Q05pCTkTGlU9ukcdNTPuyPhvwRu79jJJHNOV5a2E9q3Oi3W8A7J2Nt9/hkIwXnI0VZLq9WZGiI6s3yS0+qoGs6nj7bEIHYpm3dZQex2+ofIpi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747073400; c=relaxed/simple;
-	bh=cWcnF6hGE/Ye6ZO375UdjwJyHtfdTGvvw2msT1AGNEM=;
+	s=arc-20240116; t=1747074372; c=relaxed/simple;
+	bh=6Q2jz1G+bUKQsb4zfDpMbTExI9ep4BLneYtxWvwjmGY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MtXU63u2Bzn2mW3kLIOGoCbxkED5mmQLCaERaYXdKQXSly3YRyqHg30ieiYyyBQtp8sGfuU/WTvleu5vOlYIBvcRUI8erWqBwd8p8ZZDkKoKfuBS59qZ1PjetfYnXLHq6c/hHsxQtykq3AlTJppKGiW15zbhDk+Ywa+942Cd/4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=DXcBYu4u; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=dWIgoj+LtgXlys+78bwovQQmLhiZ7k9uq1mEv5Z7kD3UwGrsOxnNkKGeVf0fkeIwIYGBpUFrmypi+MaL5bpGlcYjUZZ462ywgkXnJZfO9uPaiRVFMzNy5U1ZQhtcJD4FWUYmfDTywVqU99zi9jEqfF6AdD/ux1dJ61f/rHrN5Ec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ia5WLQRL; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="DXcBYu4u"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6f0c30a1cb6so36835686d6.2
-        for <linux-cxl@vger.kernel.org>; Mon, 12 May 2025 11:09:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1747073398; x=1747678198; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=e/iDvEsSNRwi1aH8iKQVOJMR248bXxybzmXa6GTNy2M=;
-        b=DXcBYu4ur+MLYeTARtLxuSjGH0G8R3OlmLybrW/19tyVtnmpPM4AUr2/oKZ+Z4cP2c
-         War7lY9LK4tXjpahUK9j01otA7YguUdEWLtB0eV0OLigUsvEM6lMp62CxJ3VRD+7iq61
-         g1st8fzKYVLAI3nktlTffEf4KG56/IvJl22/LO5W+ChSNZxpm4HvEj9D2vFMWNORG/fg
-         FWYHso+brd7AtIuDYnDROPK8vTB0eRAiTqh7eS3lbs77dPyFjJo+M0Ec/B2J91imbvqY
-         PfEp/B5u6ynu0YDN90VbBHatQa+Ducqm2FEoJ4YJvTeE1ZJ8Khz10TNR6p9mTEzkGsKA
-         2Jmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747073398; x=1747678198;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e/iDvEsSNRwi1aH8iKQVOJMR248bXxybzmXa6GTNy2M=;
-        b=wUArNFLIDtNKGw864TdqBw1ZGF1CKEqcvEgr6MffWc7oSboycbJFC3/EFDZK+DO5qo
-         48PZO0B2xUyO0+SnKJEH3sKVkM649QD/CREnliNCuhDszfp9dpJxPR7DAxCyX8AuD+NM
-         CJ37o5dpY93aS7BAh7S+WVMtpr7AZG7k1RFtoCrVHkogFpqfmZriNydCBBkRFYXg90mc
-         8RlwdNGLe/HeLzuU4+0jicvmCjpqlVFuYptn8Fok1D5EG2wZ1j5yhPAuF7iSalU/2mQK
-         Ui0R4/BuyXgknsHglBGHXby4fH5Sl7FHcEAQHayfihf6hepXk+7bMpqNBV/oBdndZTSl
-         uOoQ==
-X-Gm-Message-State: AOJu0YzD4s+Uqjle4BkG6v1nq93vTQVF+FbiYi0OGG4xOZEXnvDMizMf
-	F3YUS0B5zjfCHEm40oZFnlzv8Hn0nECrispd9bgI3eJgqfepg+NZ9t6uqGCLa6o=
-X-Gm-Gg: ASbGncsdZPYSowMNxqWiO8HOheVRuEvkB1BL33Kw1JRU/uzL0sVopu+Iqo97FQvNFVV
-	wLx6PAADfd8S9x8fLzPx9HVeWP9nOEtX2N/YFgRGJYQnZDVHEzFqrK2kJgasakVwePafN2JdxSM
-	ugxnfF8L6Enuk4lDAy9QUBZ+c3x+4Ihx34GA60IHHXDnOcCkNN0d/bRA60Dv/pSKOALzdcN/Rrj
-	frCkSfMIR6x1XJIUzP0Qb+qdxWuk9wFrI1ZLfFht37HoP4ox5/9tmqMh0WqbGae58a8vQQXXJUY
-	Wq/8GAgYUiE3hRTTPQwFn6M7FFXwfRSIb41P9LHsC5nzimkpJVVI/CZU0hjTpCDVkChbXbdoSUF
-	VplJaz31ZjlvGppj+HKnV5bYVy1ZThGU=
-X-Google-Smtp-Source: AGHT+IHfNuX0QzD4BdSUhiyIBeelzyTiA39KqOo6r6tn5oIPKGjpRdvxCGpkFc3YRqf63eD/EfUW2g==
-X-Received: by 2002:a05:6214:234e:b0:6e6:5bd5:f3c3 with SMTP id 6a1803df08f44-6f6e4821690mr177034106d6.44.1747073397756;
-        Mon, 12 May 2025 11:09:57 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f6e3a4729bsm54875686d6.70.2025.05.12.11.09.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 May 2025 11:09:57 -0700 (PDT)
-Date: Mon, 12 May 2025 14:09:55 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, corbet@lwn.net
-Subject: Re: [PATCH v3 14/17] cxl: docs/allocation/page-allocator
-Message-ID: <aCI5c_hIS8bWgAaC@gourry-fedora-PF4VCD3F>
-References: <20250512162134.3596150-1-gourry@gourry.net>
- <20250512162134.3596150-15-gourry@gourry.net>
- <aCIjMNooAzKaONod@casper.infradead.org>
- <aCIkF6RZJtU0m3Ia@gourry-fedora-PF4VCD3F>
- <aCI1X3NZwuagNOqS@casper.infradead.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ia5WLQRL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=EXLzzby17OeuImZpl0bn8vKeJixwwGVwH6DpLX/u2w8=; b=ia5WLQRLlkGcUXx76Ce9kHz5C7
+	QBr15oHXn5J/+Z8KXVnNCHhaLafwmPZWLxE/n0KJ2c0LRePodPA7S/Sb/uYU+sAlOlqcmC3JyYJqJ
+	tKft6FbTuqZjJLtfu+k/f3h9li1b8JfvlUdne8dg94G7sZlQ3Ad1kf/QnJ5Dot5fitPAv34lln4Ah
+	Rkx8T/z9JyCzFewvg3zHC3LbKcMnRbRorRvgAMeRsuT1PbO3jYWJibaM5+e9a03VwLcIi8iVc16xP
+	XrUqduRgYDDRVcsNJMkdu3wXk0x5a5HgyVfHB2pJMcJ5eIfN1OshIFvrDeOP6WUGN6ITSNWJiBrGW
+	gOdrQMtQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uEXqh-0000000A8Kq-3urV;
+	Mon, 12 May 2025 18:26:00 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 82F05300717; Mon, 12 May 2025 20:25:59 +0200 (CEST)
+Date: Mon, 12 May 2025 20:25:59 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: dan.j.williams@intel.com
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	David Lechner <dlechner@baylibre.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	"Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>
+Subject: Re: [PATCH 1/7] cleanup: Introduce DEFINE_ACQUIRE() a CLASS() for
+ conditional locking
+Message-ID: <20250512182559.GB25891@noisy.programming.kicks-ass.net>
+References: <20250507072145.3614298-1-dan.j.williams@intel.com>
+ <20250507072145.3614298-2-dan.j.williams@intel.com>
+ <20250507093224.GD4439@noisy.programming.kicks-ass.net>
+ <681bce2193f38_1229d6294c7@dwillia2-xfh.jf.intel.com.notmuch>
+ <20250508110043.GG4439@noisy.programming.kicks-ass.net>
+ <681d8ce06c869_1229d6294e@dwillia2-xfh.jf.intel.com.notmuch>
+ <20250509104028.GL4439@noisy.programming.kicks-ass.net>
+ <681ea7d5ea04b_2a2bb100cf@dwillia2-mobl4.notmuch>
+ <20250512105026.GP4439@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -80,31 +66,19 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aCI1X3NZwuagNOqS@casper.infradead.org>
+In-Reply-To: <20250512105026.GP4439@noisy.programming.kicks-ass.net>
 
-On Mon, May 12, 2025 at 06:52:31PM +0100, Matthew Wilcox wrote:
-> > 
-> > Feel free to submit patches that deletes the existing code if you want
-> > it removed from the documentation.
-> 
-> Who sneaked that in when?
+On Mon, May 12, 2025 at 12:50:26PM +0200, Peter Zijlstra wrote:
 
-The ACPI and EFI folks when they allowed for CXL memory to be marked 
-EFI_CONVENTIONAL_MEMORY - which means Linux can't actually differentiate
-between DRAM and CXL during __init and brings it online in the page
-allocator as SystemRAM in ZONE_NORMAL (attached to the NUMA node that
-maps to the Proximity Domain in the SRAT).
+> +#define __GUARD_ERR(_ptr) \
+> +	({ long _rc = (__force unsigned long)(_ptr); \
+> +	   if (!_rc) { _rc = -EBUSY; } if (!IS_ERR_VALUE(_rc)) { _rc = 0; } \
+> +	   _rc; })
+> +
 
-Not sure there's anything you can do about that.
+>  #define DEFINE_GUARD(_name, _type, _lock, _unlock) \
+> -	DEFINE_CLASS(_name, _type, if (_T) { _unlock; }, ({ _lock; _T; }), _type _T); \
+> +	DEFINE_CLASS(_name, _type, if (!__GUARD_ERR(_T)) { _unlock; }, ({ _lock; _T; }), _type _T); \
+>  	DEFINE_CLASS_IS_GUARD(_name)
 
-And for DAX:
-
-09d09e04d2 (cxl/dax: Create dax devices for CXL RAM regions)
-
-Which allows for EFI_MEMORY_SP / Soft Reserved CXL regions to be brought
-up as a DAX devices (which can be bound to SystemRAM via DAX kmem).
-
-Wasn't much sneaking going on here - DAX kmem has been around and hacked
-on since 2019, and probably some years before that.
-
-~Gregory
+GCC is 'stupid' and this generates atrocious code. I'll play with it.
