@@ -1,216 +1,285 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74ED32036F3
-	for <linux-cxl@vger.kernel.org>; Tue, 13 May 2025 16:31:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C50A92BF991;
+	Tue, 13 May 2025 16:38:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747153900; cv=none; b=gGBvoeNrdY5GUFZncTWWPPehK0SIvPjP2JzHwRPwWqBQDKz4qqTgh523WeQxxalhPRhQyO6pXVnJo3xR8AuWFzdd0BJcBH34C5lxdmoUHN8D9X7ZbVkpfdsF9clM2ibL5lhxh/I54F2x4JUBDf46NXnPtIAiPqhc6tAzGRDnBl8=
+	t=1747154339; cv=none; b=dMt0PqXnpYEPapy7e0KLzu/jaRfPRL3YcKbk6xUrmjjcpJUmoxHOpO2D9wdSBuafNycJIQ82WG4d53QSkc7AVRhw0kMuu9yFJSN8AblR1uMUBwbBeNeHIqZrFN6PhJTLfA29UNVXWENQgLla55JvXgg6ACAFAL7O1Cqoa1BADaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747153900; c=relaxed/simple;
-	bh=pnmrpC374ZaaYt4RVXs/+BScVapc4t6lH6sw9BCvRYY=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=a8wViooGNlos9sFloy3ep8LtYjmSog49dr0kRgA3+bXO8Vv3RuW8L+C4yQTT4tmz6ayC9KSZbclYmaQnEVH9cDI04yCK0v8Yn9YkNvAEwujl0IQvHFBSgtZ8ebc3MmlNdFBW4cparl80Ra0U5ID59cZLA9UFInpftmPGWrndnaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e5bQ4zOj; arc=none smtp.client-ip=198.175.65.10
+	s=arc-20240116; t=1747154339; c=relaxed/simple;
+	bh=HyI/Pk6SgKx7zVoAkM2m3oz81Ap3+TkZi8OD506y7QI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=H86IoMy6on6B08JNZ9wJYmVgbIUnMgRNMOMm70OX7pQ1VcFDAetCjveGDwTAu9f2fG0okey4yPShXNtWw7eRLd1DSi2yMJqdRukR9so4chFbIFNL6NuuewgGj+U2JL1jTsjb+4nKKwxNpKH1E7DncIVGDeoF3dg6G055Klp4gFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FR5L4OlY; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e5bQ4zOj"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FR5L4OlY"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747153899; x=1778689899;
-  h=date:from:to:cc:subject:message-id;
-  bh=pnmrpC374ZaaYt4RVXs/+BScVapc4t6lH6sw9BCvRYY=;
-  b=e5bQ4zOj1cVJ2UIB9G9udr8DNj9Zj+KvkWtzzDYG751uqzSr3S3siM6r
-   a//oYfGW4jwxC0rrY/LzUowsBUNnI1w+R6pZH8u/6eh3zAes/hWZoiae6
-   gZSeUtbmdxjxI/WCtFNQTlhIN+6cJ6Y3JwHnJhSG3CjC3J2rZkt37i7y7
-   NOjeJmjjaD8Oke8BiE89UE46vaAX9/DaXhDwDaCJmj1he854yukmIUfeE
-   /JqcFGhVbivys5YkSIHhnJqQe3aiqOt06+0hFJghG6nrKPcGXJn69SiRv
-   CzyWbNjBFTlXbG0X2XuS0C7Ya0orHvjjsHCZ3MDXs9dY3ugbivLKdglE2
-   Q==;
-X-CSE-ConnectionGUID: ywBjBPr7R5itOsOVVyH9+Q==
-X-CSE-MsgGUID: Y/mWL6GURHCb5HYboRaYkg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11432"; a="66421439"
+  t=1747154337; x=1778690337;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=HyI/Pk6SgKx7zVoAkM2m3oz81Ap3+TkZi8OD506y7QI=;
+  b=FR5L4OlYTVQzxsBZ0B94A1607bstAs9nmJAHZtCfl+iytr48cuk+tlNj
+   YM28QdWeyenbLFG0hD8Q8a55pfJBEGiX4xbEoyyv/TEbkOc/2ycep6NAY
+   LkMcQM23ANEfrjnLbS1ASDZFww9K8eAhTVVehEfIjusUfoY2X8CojXJTU
+   aUfWAdo0dW2o/aKyONNbLNnN4ued4+wl36WMPCRhUuaEEj6ELawQqbvZo
+   bySUvrXbqiW5ZfRNa1xI0+6KEByfwqVskAhEPSkcQFWlnZwbO10viXd5x
+   gxylndtTLAkHreQUDKonmOJaSb8uAOyDS28v2c0VjZ1iDXVZne2Fxt4es
+   A==;
+X-CSE-ConnectionGUID: i7E1+h2BTwKvOef0EQMulA==
+X-CSE-MsgGUID: l0jGCPwDQjeNSO+qXtLEOg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11432"; a="48265396"
 X-IronPort-AV: E=Sophos;i="6.15,285,1739865600"; 
-   d="scan'208";a="66421439"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 09:31:38 -0700
-X-CSE-ConnectionGUID: PANhjeCHQUGORpEMP5KEAg==
-X-CSE-MsgGUID: /KXsS3sxSomVBjBjDvQweA==
+   d="scan'208";a="48265396"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 09:38:56 -0700
+X-CSE-ConnectionGUID: LQL7VyssSQef5+ms3ZIZqQ==
+X-CSE-MsgGUID: +bXkOZZ4SWy734HcDgEJ0g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,285,1739865600"; 
-   d="scan'208";a="138175917"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 13 May 2025 09:31:36 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uEsXV-000GEB-35;
-	Tue, 13 May 2025 16:31:33 +0000
-Date: Wed, 14 May 2025 00:31:18 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org
-Subject: [cxl:cxl-acquire] BUILD SUCCESS
- 8b6078f03a61a162ea390c80585942f6cd9e60f4
-Message-ID: <202505140008.tWRUW7NK-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+   d="scan'208";a="142938811"
+Received: from agladkov-desk.ger.corp.intel.com (HELO [10.125.109.12]) ([10.125.109.12])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 09:38:55 -0700
+Message-ID: <d83a83d1-37e7-4192-913f-243098f679e3@intel.com>
+Date: Tue, 13 May 2025 09:38:54 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v15 00/22] Type2 device basic support
+To: Alejandro Lucero Palau <alucerop@amd.com>,
+ alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
+ netdev@vger.kernel.org, dan.j.williams@intel.com, edward.cree@amd.com,
+ davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, edumazet@google.com
+References: <20250512161055.4100442-1-alejandro.lucero-palau@amd.com>
+ <59fa7e55-f563-40f9-86aa-1873806e76cc@intel.com>
+ <8342ea50-ea07-4ae8-8607-be48936bcd11@amd.com>
+ <ef2782e6-74d1-48e8-8159-069317bf6737@intel.com>
+ <fd9888f1-ee5d-4943-89fa-32d6e0fb61a5@amd.com>
+ <7447008e-3579-47d4-9f90-28d18429d532@intel.com>
+ <0891ceea-64fa-4ae7-9a7b-d91c967efaaa@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <0891ceea-64fa-4ae7-9a7b-d91c967efaaa@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git cxl-acquire
-branch HEAD: 8b6078f03a61a162ea390c80585942f6cd9e60f4  cxl: Convert to ACQUIRE() for conditional rwsem locking
 
-elapsed time: 722m
 
-configs tested: 137
-configs skipped: 5
+On 5/13/25 9:21 AM, Alejandro Lucero Palau wrote:
+> 
+> On 5/13/25 17:04, Dave Jiang wrote:
+>> CAUTION: This message has originated from an External Source. Please use proper judgment and caution when opening attachments, clicking links, or responding to this email.
+>>
+>>
+>> On 5/13/25 8:24 AM, Alejandro Lucero Palau wrote:
+>>> On 5/13/25 16:13, Dave Jiang wrote:
+>>>> On 5/13/25 1:12 AM, Alejandro Lucero Palau wrote:
+>>>>> On 5/12/25 23:36, Dave Jiang wrote:
+>>>>>> On 5/12/25 9:10 AM, alejandro.lucero-palau@amd.com wrote:
+>>>>>>> From: Alejandro Lucero <alucerop@amd.com>
+>>>>>>>
+>>>>>>> v15 changes:
+>>>>>>>     - remove reference to unused header file (Jonathan Cameron)
+>>>>>>>     - add proper kernel docs to exported functions (Alison Schofield)
+>>>>>>>     - using an array to map the enums to strings (Alison Schofield)
+>>>>>>>     - clarify comment when using bitmap_subset (Jonathan Cameron)
+>>>>>>>     - specify link to type2 support in all patches (Alison Schofield)
+>>>>>>>
+>>>>>>>      Patches changed (minor): 4, 11
+>>>>>>>
+>>>>>> Hi Alejandro,
+>>>>>> Tried to pull this series using b4. Noticed couple things.
+>>>>>> 1. Can you run checkpatch on the entire series and fix any issues?
+>>>>>> 2. Can you rebase against v6.15-rc4? I think there are some conflicts against the fixes went in rc4.
+>>>>>>
+>>>>>> Thanks!
+>>>>>>
+>>>>> Hi Dave, I'm afraid I do not know what you mean with b4. Tempted to say it was a typo, but in any case, better if you can clarify.
+>>>> I use the tool b4 to pull patches off the mailing list. As you can see, your series fail on rc4 apply for patch 18.
+>>>
+>>> But your head is not what the base for the patchset states. I did work on v15 for working with the last patches in cxl-next so the HEAD should be:
+>>>
+>>>
+>>> commit a223ce195741ca4f1a0e1a44f3e75ce5662b6c06 (origin/next)
+>>> Author: Dan Carpenter <dan.carpenter@linaro.org>
+>>> Date:   Thu Feb 22 09:14:02 2024 +0300
+>>>
+>>>      cxl/hdm: Clean up a debug printk
+>>>
+>> Ah yeah it's better to rebase against Linus's RC series rather than what cxl/next is for me to pull things. Otherwise it gets messy if something has to change in the cxl/next series and your code is based on that. So if you don't mind please rebase against upstream rc4 and I'll attempt to resolve the conflicts your code has against Robert's cleanups. Thank you. Sorry about the confusion. That is the lesson I learned last merge window with all the fun with the 'Features' code.
+>>
+>> DJ
+>>
+> 
+> OK. I'll do so now, so should I keep v15 with another base or a new v16?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Just post v16 and say rebase against rc4. Thanks!
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-alpha                               defconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-14.2.0
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    gcc-14.2.0
-arc                                 defconfig    gcc-14.2.0
-arc                        nsim_700_defconfig    gcc-14.2.0
-arc                   randconfig-001-20250513    gcc-14.2.0
-arc                   randconfig-002-20250513    gcc-14.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-14.2.0
-arm                                 defconfig    clang-21
-arm                   randconfig-001-20250513    gcc-7.5.0
-arm                   randconfig-002-20250513    gcc-8.5.0
-arm                   randconfig-003-20250513    gcc-8.5.0
-arm                   randconfig-004-20250513    clang-16
-arm                       versatile_defconfig    gcc-14.2.0
-arm64                            alldefconfig    gcc-14.2.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-14.2.0
-arm64                               defconfig    gcc-14.2.0
-arm64                 randconfig-001-20250513    clang-21
-arm64                 randconfig-002-20250513    clang-21
-arm64                 randconfig-003-20250513    gcc-6.5.0
-arm64                 randconfig-004-20250513    clang-21
-csky                              allnoconfig    gcc-14.2.0
-csky                                defconfig    gcc-14.2.0
-csky                  randconfig-001-20250513    gcc-14.2.0
-csky                  randconfig-002-20250513    gcc-12.4.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon                             defconfig    clang-21
-hexagon               randconfig-001-20250513    clang-21
-hexagon               randconfig-002-20250513    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250513    clang-20
-i386        buildonly-randconfig-002-20250513    clang-20
-i386        buildonly-randconfig-003-20250513    clang-20
-i386        buildonly-randconfig-004-20250513    clang-20
-i386        buildonly-randconfig-005-20250513    gcc-12
-i386        buildonly-randconfig-006-20250513    gcc-12
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch                 loongson3_defconfig    gcc-14.2.0
-loongarch             randconfig-001-20250513    gcc-14.2.0
-loongarch             randconfig-002-20250513    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                                defconfig    gcc-14.2.0
-m68k                            q40_defconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-microblaze                          defconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                           ip22_defconfig    gcc-14.2.0
-mips                           ip27_defconfig    gcc-14.2.0
-mips                     loongson1b_defconfig    clang-21
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250513    gcc-10.5.0
-nios2                 randconfig-002-20250513    gcc-12.4.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-14.2.0
-parisc                randconfig-001-20250513    gcc-11.5.0
-parisc                randconfig-002-20250513    gcc-11.5.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-21
-powerpc                        fsp2_defconfig    gcc-14.2.0
-powerpc               randconfig-001-20250513    clang-21
-powerpc               randconfig-002-20250513    gcc-8.5.0
-powerpc               randconfig-003-20250513    clang-21
-powerpc                     skiroot_defconfig    clang-21
-powerpc64             randconfig-001-20250513    clang-21
-powerpc64             randconfig-003-20250513    clang-21
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-21
-riscv                 randconfig-001-20250513    gcc-14.2.0
-riscv                 randconfig-002-20250513    gcc-14.2.0
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                                defconfig    clang-21
-s390                  randconfig-001-20250513    clang-21
-s390                  randconfig-002-20250513    gcc-9.3.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                                  defconfig    gcc-14.2.0
-sh                    randconfig-001-20250513    gcc-12.4.0
-sh                    randconfig-002-20250513    gcc-14.2.0
-sh                          rsk7203_defconfig    gcc-14.2.0
-sh                           se7712_defconfig    gcc-14.2.0
-sh                           se7724_defconfig    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250513    gcc-11.5.0
-sparc                 randconfig-002-20250513    gcc-13.3.0
-sparc64                             defconfig    gcc-14.2.0
-sparc64               randconfig-001-20250513    gcc-11.5.0
-sparc64               randconfig-002-20250513    gcc-13.3.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-21
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250513    clang-19
-um                    randconfig-002-20250513    gcc-12
-um                           x86_64_defconfig    clang-21
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250513    gcc-12
-x86_64      buildonly-randconfig-002-20250513    gcc-12
-x86_64      buildonly-randconfig-003-20250513    clang-20
-x86_64      buildonly-randconfig-004-20250513    gcc-12
-x86_64      buildonly-randconfig-005-20250513    clang-20
-x86_64      buildonly-randconfig-006-20250513    gcc-12
-x86_64                              defconfig    gcc-11
-x86_64                          rhel-9.4-rust    clang-18
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250513    gcc-7.5.0
-xtensa                randconfig-002-20250513    gcc-14.2.0
-xtensa                         virt_defconfig    gcc-14.2.0
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> 
+> 
+> Thanks
+> 
+>>>> ✔ ~/git/cxl-for-next [for-6.16/cxl-type2 L|…138]
+>>>> 08:08 $ git reset --hard v6.15-rc4
+>>>> HEAD is now at b4432656b36e Linux 6.15-rc4
+>>>> ✔ ~/git/cxl-for-next [for-6.16/cxl-type2 L|…138]
+>>>> 08:08 $ b4 shazam -sltSk https://lore.kernel.org/linux-cxl/20250512161055.4100442-1-alejandro.lucero-palau@amd.com/T/#m25a578eb83108678737bf14fdba0d2e5da7f76bd
+>>>> Grabbing thread from lore.kernel.org/all/20250512161055.4100442-1-alejandro.lucero-palau@amd.com/t.mbox.gz
+>>>> Checking for newer revisions
+>>>> Grabbing search results from lore.kernel.org
+>>>> Analyzing 25 messages in the thread
+>>>> Looking for additional code-review trailers on lore.kernel.org
+>>>> Analyzing 955 code-review messages
+>>>> Checking attestation on all messages, may take a moment...
+>>>> ---
+>>>>     [PATCH v15 1/22] cxl: Add type2 device basic support
+>>>>       + Link: https://patch.msgid.link/20250512161055.4100442-2-alejandro.lucero-palau@amd.com
+>>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>>>       ● checkpatch.pl: 563: WARNING: added, moved or deleted file(s), does MAINTAINERS need updating?
+>>>>       ● checkpatch.pl: 773: ERROR: trailing whitespace
+>>>>     [PATCH v15 2/22] sfc: add cxl support
+>>>>       + Link: https://patch.msgid.link/20250512161055.4100442-3-alejandro.lucero-palau@amd.com
+>>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>>>       ● checkpatch.pl: 213: WARNING: added, moved or deleted file(s), does MAINTAINERS need updating?
+>>>>     [PATCH v15 3/22] cxl: Move pci generic code
+>>>>       + Acked-by: Edward Cree <ecree.xilinx@gmail.com>
+>>>>       + Link: https://patch.msgid.link/20250512161055.4100442-4-alejandro.lucero-palau@amd.com
+>>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>>>       ● checkpatch.pl: passed all checks
+>>>>     [PATCH v15 4/22] cxl: Move register/capability check to driver
+>>>>       + Link: https://patch.msgid.link/20250512161055.4100442-5-alejandro.lucero-palau@amd.com
+>>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>>>       ● checkpatch.pl: passed all checks
+>>>>     [PATCH v15 5/22] cxl: Add function for type2 cxl regs setup
+>>>>       + Link: https://patch.msgid.link/20250512161055.4100442-6-alejandro.lucero-palau@amd.com
+>>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>>>       ● checkpatch.pl: passed all checks
+>>>>     [PATCH v15 6/22] sfc: make regs setup with checking and set media ready
+>>>>       + Link: https://patch.msgid.link/20250512161055.4100442-7-alejandro.lucero-palau@amd.com
+>>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>>>       ● checkpatch.pl: passed all checks
+>>>>     [PATCH v15 7/22] cxl: Support dpa initialization without a mailbox
+>>>>       + Link: https://patch.msgid.link/20250512161055.4100442-8-alejandro.lucero-palau@amd.com
+>>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>>>       ● checkpatch.pl: passed all checks
+>>>>     [PATCH v15 8/22] sfc: initialize dpa
+>>>>       + Link: https://patch.msgid.link/20250512161055.4100442-9-alejandro.lucero-palau@amd.com
+>>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>>>       ● checkpatch.pl: passed all checks
+>>>>     [PATCH v15 9/22] cxl: Prepare memdev creation for type2
+>>>>       + Acked-by: Edward Cree <ecree.xilinx@gmail.com>
+>>>>       + Link: https://patch.msgid.link/20250512161055.4100442-10-alejandro.lucero-palau@amd.com
+>>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>>>       ● checkpatch.pl: passed all checks
+>>>>     [PATCH v15 10/22] sfc: create type2 cxl memdev
+>>>>       + Link: https://patch.msgid.link/20250512161055.4100442-11-alejandro.lucero-palau@amd.com
+>>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>>>       ● checkpatch.pl: passed all checks
+>>>>     [PATCH v15 11/22] cxl: Define a driver interface for HPA free space enumeration
+>>>>       + Link: https://patch.msgid.link/20250512161055.4100442-12-alejandro.lucero-palau@amd.com
+>>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>>>       ● checkpatch.pl: 133: WARNING: Prefer a maximum 75 chars per line (possible unwrapped commit description?)
+>>>>     [PATCH v15 12/22] sfc: obtain root decoder with enough HPA free space
+>>>>       + Link: https://patch.msgid.link/20250512161055.4100442-13-alejandro.lucero-palau@amd.com
+>>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>>>       ● checkpatch.pl: passed all checks
+>>>>     [PATCH v15 13/22] cxl: Define a driver interface for DPA allocation
+>>>>       + Link: https://patch.msgid.link/20250512161055.4100442-14-alejandro.lucero-palau@amd.com
+>>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>>>       ● checkpatch.pl: 127: WARNING: Prefer a maximum 75 chars per line (possible unwrapped commit description?)
+>>>>     [PATCH v15 14/22] sfc: get endpoint decoder
+>>>>       + Link: https://patch.msgid.link/20250512161055.4100442-15-alejandro.lucero-palau@amd.com
+>>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>>>       ● checkpatch.pl: passed all checks
+>>>>     [PATCH v15 15/22] cxl: Make region type based on endpoint type
+>>>>       + Acked-by: Edward Cree <ecree.xilinx@gmail.com>
+>>>>       + Link: https://patch.msgid.link/20250512161055.4100442-16-alejandro.lucero-palau@amd.com
+>>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>>>       ● checkpatch.pl: passed all checks
+>>>>     [PATCH v15 16/22] cxl/region: Factor out interleave ways setup
+>>>>       + Acked-by: Edward Cree <ecree.xilinx@gmail.com>
+>>>>       + Link: https://patch.msgid.link/20250512161055.4100442-17-alejandro.lucero-palau@amd.com
+>>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>>>       ● checkpatch.pl: passed all checks
+>>>>     [PATCH v15 17/22] cxl/region: Factor out interleave granularity setup
+>>>>       + Acked-by: Edward Cree <ecree.xilinx@gmail.com>
+>>>>       + Link: https://patch.msgid.link/20250512161055.4100442-18-alejandro.lucero-palau@amd.com
+>>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>>>       ● checkpatch.pl: passed all checks
+>>>>     [PATCH v15 18/22] cxl: Allow region creation by type2 drivers
+>>>>       + Link: https://patch.msgid.link/20250512161055.4100442-19-alejandro.lucero-palau@amd.com
+>>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>>>       ● checkpatch.pl: 126: WARNING: Prefer a maximum 75 chars per line (possible unwrapped commit description?)
+>>>>     [PATCH v15 19/22] cxl: Add region flag for precluding a device memory to be used for dax
+>>>>       + Acked-by: Edward Cree <ecree.xilinx@gmail.com>
+>>>>       + Link: https://patch.msgid.link/20250512161055.4100442-20-alejandro.lucero-palau@amd.com
+>>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>>>       ● checkpatch.pl: passed all checks
+>>>>     [PATCH v15 20/22] sfc: create cxl region
+>>>>       + Link: https://patch.msgid.link/20250512161055.4100442-21-alejandro.lucero-palau@amd.com
+>>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>>>       ● checkpatch.pl: passed all checks
+>>>>     [PATCH v15 21/22] cxl: Add function for obtaining region range
+>>>>       + Link: https://patch.msgid.link/20250512161055.4100442-22-alejandro.lucero-palau@amd.com
+>>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>>>       ● checkpatch.pl: passed all checks
+>>>>     [PATCH v15 22/22] sfc: support pio mapping based on cxl
+>>>>       + Link: https://patch.msgid.link/20250512161055.4100442-23-alejandro.lucero-palau@amd.com
+>>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>>>       ● checkpatch.pl: 219: CHECK: Unbalanced braces around else statement
+>>>>     ---
+>>>>     NOTE: install dkimpy for DKIM signature verification
+>>>> ---
+>>>> Total patches: 22
+>>>> ---
+>>>>    Base: using specified base-commit a223ce195741ca4f1a0e1a44f3e75ce5662b6c06
+>>>> Applying: cxl: Add type2 device basic support
+>>>> Applying: sfc: add cxl support
+>>>> Applying: cxl: Move pci generic code
+>>>> Applying: cxl: Move register/capability check to driver
+>>>> Applying: cxl: Add function for type2 cxl regs setup
+>>>> Applying: sfc: make regs setup with checking and set media ready
+>>>> Applying: cxl: Support dpa initialization without a mailbox
+>>>> Applying: sfc: initialize dpa
+>>>> Applying: cxl: Prepare memdev creation for type2
+>>>> Applying: sfc: create type2 cxl memdev
+>>>> Applying: cxl: Define a driver interface for HPA free space enumeration
+>>>> Applying: sfc: obtain root decoder with enough HPA free space
+>>>> Applying: cxl: Define a driver interface for DPA allocation
+>>>> Applying: sfc: get endpoint decoder
+>>>> Applying: cxl: Make region type based on endpoint type
+>>>> Applying: cxl/region: Factor out interleave ways setup
+>>>> Applying: cxl/region: Factor out interleave granularity setup
+>>>> Applying: cxl: Allow region creation by type2 drivers
+>>>> Patch failed at 0018 cxl: Allow region creation by type2 drivers
+>>>> /home/djiang5/git/linux-kernel/.git/worktrees/cxl-for-next/rebase-apply/patch:644: trailing whitespace.
+>>>>    * @type: CXL device type
+>>>> warning: 1 line adds whitespace errors.
+>>>> error: patch failed: drivers/cxl/core/region.c:3607
+>>>> error: drivers/cxl/core/region.c: patch does not apply
+>>>> error: patch failed: drivers/cxl/port.c:33
+>>>> error: drivers/cxl/port.c: patch does not apply
+>>>> hint: Use 'git am --show-current-patch=diff' to see the failed patch
+>>>> hint: When you have resolved this problem, run "git am --continue".
+>>>> hint: If you prefer to skip this patch, run "git am --skip" instead.
+>>>> hint: To restore the original branch and stop patching, run "git am --abort".
+>>>> hint: Disable this message with "git config set advice.mergeConflict false"
+>>>>
+>>>>
+>>>>> The patchset is against the last cxl-next commit as it it stated at the end, and that is based on v6.15.0-rc4. I had to solve some issues from v14 as last changes in core/region.c from Robert Richter required so.
+>>>>>
+>>>>>
+>>>>> About checkpatch, I did so but I have just done it again for being sure before this email, and I do not seen any issue except a trailing space in patch 1. That same patch has also warnings I do not think are a problem. Some are related to moved code and other on the new macro. FWIW, I'm running those with "checkpatch --strict".
+>>>>>
+>>>>>
+>>>>>>> base-commit: a223ce195741ca4f1a0e1a44f3e75ce5662b6c06
+>>
+
