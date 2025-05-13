@@ -1,133 +1,87 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 912532BE114;
-	Tue, 13 May 2025 16:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E831A9B40
+	for <linux-cxl@vger.kernel.org>; Tue, 13 May 2025 16:12:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747152421; cv=none; b=JsWYu593VdG3vpGQ/drhiKtUMqnNnfF10dOgBpt9BDfzwouP5nWElaZS6yCCc2f76iXBpxoORxriLwhVTHhrzukxJkRHy6xQ2IMKX9ULZKQVEPciie30VzJNoddbFpKEwa9HeZVyxtk2v+HhbNjlUHXL0jILIe/Zui6xl/IVTYY=
+	t=1747152724; cv=none; b=FNJFyXJ8Ff6K0PIHjmO36XQ2I+kwvpI7LIySiSPyxCiPvo8TbYvyl8laX3rwvUjPAY8gfsSSGppXeacjHtt6T+jmQzxhySGEDHFECzkRaWIAJkC/XvB1yMq5zR4Y8gXWQB5QyXgd1tC9Zvh3yPzUro5UQQuf+E6eyUPc/bbpoQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747152421; c=relaxed/simple;
-	bh=AtjmzhmTK2XEOwq1jRggREoKhGneutApb7VFOMLM7JU=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oqDomdkXM1jrsQXP+7bctKAdJhzDkzTIk7SYJBQw23d6d5uiQJYdBkMltWl88OSRWEav2drQ9RCrpt4VV9efuxw0T+XHdUhjue5K2tUU5jcck+ZNMFLynw5ppB1jTpovHm3snKVWYWQrWXYFLtF9cyOde0Wu6UepqBdcFaEjEUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Zxh7T4f9Wz6K8xB;
-	Wed, 14 May 2025 00:02:13 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 355F11402EA;
-	Wed, 14 May 2025 00:06:54 +0800 (CST)
-Received: from localhost (10.220.132.170) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 13 May
- 2025 18:06:51 +0200
-Date: Tue, 13 May 2025 17:06:48 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <shiju.jose@huawei.com>
-CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
-	<dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-	<linux-edac@vger.kernel.org>, <linux-doc@vger.kernel.org>, <bp@alien8.de>,
-	<tony.luck@intel.com>, <lenb@kernel.org>, <Yazen.Ghannam@amd.com>,
-	<mchehab@kernel.org>, <nifan.cxl@gmail.com>, <linuxarm@huawei.com>,
-	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
-	<roberto.sassu@huawei.com>, <kangkang.shen@futurewei.com>,
-	<wanghuiqiang@huawei.com>
-Subject: Re: [PATCH v4 2/8] cxl: Update prototype of function
- get_support_feature_info()
-Message-ID: <20250513170648.0000517e@huawei.com>
-In-Reply-To: <20250502084517.680-3-shiju.jose@huawei.com>
-References: <20250502084517.680-1-shiju.jose@huawei.com>
-	<20250502084517.680-3-shiju.jose@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1747152724; c=relaxed/simple;
+	bh=bUfmXo++zlfyXQxyZfBw+MNuexuviTIiBlQDKEuQrZg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LbvlRMeVFVbm5smoFEuhSMRxWvjTLwuUvLbOyfjJa7SxqMiame/czq1sRWOegJlfdrlqiu1leUFvPTmRk/BINDUCVrdV9VcVj9o4oUcZLR5vaFmbO4ZUZQx2VdABUk3wtri8dEfL1zHxthTgITA69xq8UEzGSAD0U21x+tSJgoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HtEHOa4T; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HtEHOa4T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747152723; x=1778688723;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=bUfmXo++zlfyXQxyZfBw+MNuexuviTIiBlQDKEuQrZg=;
+  b=HtEHOa4TEFhXWBJ+uHrjml96/XJByjCt5FVWH6EnCClAoMYBslIU14Xq
+   ChPmLNtJ6Zo2graFLewJCCqveofLLwWcGfJ2bItIGfG8VQsLsfmPH9Gzi
+   4uhNgCV/ZlezVeytOop6SiJwh6NHnM5HXgT1JQBiP2N8Xaka4QKFIVE1M
+   OIJQmDRqMxa9iiQ5ObZziqU2J5HnK6gATCrmHJd0cdry2gF0CprcN5Eoq
+   hhs8XzztNJwmYpzrCZiOZmQHcDwlg6B8XcbCtDIv+QGAV3kgLGFLXyYNf
+   I3JG9Mk9GAQc+q0DnRuyCFG/eXM6bu6FDeIz4QhEdeDi9iue3ar20mczp
+   g==;
+X-CSE-ConnectionGUID: b+r9cX0kRbOfPK3xHjaQ3w==
+X-CSE-MsgGUID: N43MmChUSeqcX09yl0YDvQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11432"; a="49173720"
+X-IronPort-AV: E=Sophos;i="6.15,285,1739865600"; 
+   d="scan'208";a="49173720"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 09:12:02 -0700
+X-CSE-ConnectionGUID: NZIUMQsNQXiGXJIWOHEkVw==
+X-CSE-MsgGUID: rmmPWP5TQyS+F3H8f2/pYg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,285,1739865600"; 
+   d="scan'208";a="138168972"
+Received: from agladkov-desk.ger.corp.intel.com (HELO [10.125.109.12]) ([10.125.109.12])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 09:12:01 -0700
+Message-ID: <96957e88-778e-41d6-a503-1819fac51855@intel.com>
+Date: Tue, 13 May 2025 09:12:00 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 08/10] cxl: Add helper to detect top of CXL device
+ topology
+To: Gregory Price <gourry@gourry.net>
+Cc: linux-cxl@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+ dave@stgolabs.net, jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ ira.weiny@intel.com, rrichter@amd.com, ming.li@zohomail.com
+References: <20250507004310.3536991-1-dave.jiang@intel.com>
+ <20250507004310.3536991-9-dave.jiang@intel.com>
+ <aCNqJ5JI2_U7zh-Z@gourry-fedora-PF4VCD3F>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <aCNqJ5JI2_U7zh-Z@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
- frapeml500008.china.huawei.com (7.182.85.71)
 
-On Fri, 2 May 2025 09:45:10 +0100
-<shiju.jose@huawei.com> wrote:
 
-> From: Shiju Jose <shiju.jose@huawei.com>
+
+On 5/13/25 8:49 AM, Gregory Price wrote:
+> On Tue, May 06, 2025 at 05:43:08PM -0700, Dave Jiang wrote:
+>> Add a helper to replace the open code detection of CXL device hierarchy
+>> root. The helper will be used for delayed hostbridge port creation later
+>> on.
+>>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 > 
-> Add following changes to function get_support_feature_info()
-> 1. Make generic to share between cxl-fwctl and cxl-edac paths.
-> 2. Rename get_support_feature_info() to cxl_feature_info()
-> 3. Change parameter const struct fwctl_rpc_cxl *rpc_in to
->    const uuid_t *uuid.
+> ignorant terminology question: what's the different between the
+> "cxl hierarchy head" and "cxl root"?
+
+I struggle to find the correct terminology between the head of the PCI (or platform device for cxl_test) hierarchy vs the CXL one we constructed for the 'cxl_port' hierarchy. I'm open to suggestions to use better words to distinguish that. 
 > 
-> Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-Oops. I missed giving a tag on this one.
-
-Seems fine to me.
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-Thanks for the poke. 
-
-> ---
->  drivers/cxl/core/core.h     |  2 ++
->  drivers/cxl/core/features.c | 17 +++++++----------
->  2 files changed, 9 insertions(+), 10 deletions(-)
+> ~Gregory
 > 
-> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> index 17b692eb3257..613cce5c4f7b 100644
-> --- a/drivers/cxl/core/core.h
-> +++ b/drivers/cxl/core/core.h
-> @@ -124,6 +124,8 @@ int cxl_acpi_get_extended_linear_cache_size(struct resource *backing_res,
->  					    int nid, resource_size_t *size);
->  
->  #ifdef CONFIG_CXL_FEATURES
-> +struct cxl_feat_entry *
-> +cxl_feature_info(struct cxl_features_state *cxlfs, const uuid_t *uuid);
->  size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
->  		       enum cxl_get_feat_selection selection,
->  		       void *feat_out, size_t feat_out_size, u16 offset,
-> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-> index 1498e2369c37..a83a2214a136 100644
-> --- a/drivers/cxl/core/features.c
-> +++ b/drivers/cxl/core/features.c
-> @@ -355,17 +355,11 @@ static void cxlctl_close_uctx(struct fwctl_uctx *uctx)
->  {
->  }
->  
-> -static struct cxl_feat_entry *
-> -get_support_feature_info(struct cxl_features_state *cxlfs,
-> -			 const struct fwctl_rpc_cxl *rpc_in)
-> +struct cxl_feat_entry *
-> +cxl_feature_info(struct cxl_features_state *cxlfs,
-> +		 const uuid_t *uuid)
->  {
->  	struct cxl_feat_entry *feat;
-> -	const uuid_t *uuid;
-> -
-> -	if (rpc_in->op_size < sizeof(uuid))
-> -		return ERR_PTR(-EINVAL);
-> -
-> -	uuid = &rpc_in->set_feat_in.uuid;
->  
->  	for (int i = 0; i < cxlfs->entries->num_features; i++) {
->  		feat = &cxlfs->entries->ent[i];
-> @@ -547,7 +541,10 @@ static bool cxlctl_validate_set_features(struct cxl_features_state *cxlfs,
->  	struct cxl_feat_entry *feat;
->  	u32 flags;
->  
-> -	feat = get_support_feature_info(cxlfs, rpc_in);
-> +	if (rpc_in->op_size < sizeof(uuid_t))
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	feat = cxl_feature_info(cxlfs, &rpc_in->set_feat_in.uuid);
->  	if (IS_ERR(feat))
->  		return false;
->  
 
