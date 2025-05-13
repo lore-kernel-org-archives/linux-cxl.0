@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C50A92BF991;
-	Tue, 13 May 2025 16:38:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62FAF1A23AD;
+	Tue, 13 May 2025 17:56:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747154339; cv=none; b=dMt0PqXnpYEPapy7e0KLzu/jaRfPRL3YcKbk6xUrmjjcpJUmoxHOpO2D9wdSBuafNycJIQ82WG4d53QSkc7AVRhw0kMuu9yFJSN8AblR1uMUBwbBeNeHIqZrFN6PhJTLfA29UNVXWENQgLla55JvXgg6ACAFAL7O1Cqoa1BADaI=
+	t=1747159010; cv=none; b=SuUBZIq1m4/WmhMXNzlbGIZaJf7qL7QDXuQUiRkjA4a9GVHBfv5YZKdQAAsDHHux6nx96E2oTYg5FKXwa4gy1JS9ETk4kifW0dLANlHxwbGcCqdj9l+e+mZ6aBtP/J39Wv3WrltBXxMddnnHO7XUFalYXlJfzJbClzA3KKEv3IU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747154339; c=relaxed/simple;
-	bh=HyI/Pk6SgKx7zVoAkM2m3oz81Ap3+TkZi8OD506y7QI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=H86IoMy6on6B08JNZ9wJYmVgbIUnMgRNMOMm70OX7pQ1VcFDAetCjveGDwTAu9f2fG0okey4yPShXNtWw7eRLd1DSi2yMJqdRukR9so4chFbIFNL6NuuewgGj+U2JL1jTsjb+4nKKwxNpKH1E7DncIVGDeoF3dg6G055Klp4gFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FR5L4OlY; arc=none smtp.client-ip=192.198.163.18
+	s=arc-20240116; t=1747159010; c=relaxed/simple;
+	bh=W6+yokoThvaOBBG/FB21beFAxqHZyI9YwRPBjPpV2mQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CTQjMSTCcr0kO9P2J/2StPiVJn7+xTCXu9iAwsLT/oQODHmB/CNNWYqNWc+a0nR12vhFiSRwXrvLzL9prjmh0GbzQYnHNvi5fUSgVrx2k2M/v1Mx5jx7XQPTPxRVzYxCGsdDxg+wBsHcCp09Qrwp/Q2h4O1MWgLMHGmr5m8Y69o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OfSPPNJ5; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FR5L4OlY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OfSPPNJ5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747154337; x=1778690337;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=HyI/Pk6SgKx7zVoAkM2m3oz81Ap3+TkZi8OD506y7QI=;
-  b=FR5L4OlYTVQzxsBZ0B94A1607bstAs9nmJAHZtCfl+iytr48cuk+tlNj
-   YM28QdWeyenbLFG0hD8Q8a55pfJBEGiX4xbEoyyv/TEbkOc/2ycep6NAY
-   LkMcQM23ANEfrjnLbS1ASDZFww9K8eAhTVVehEfIjusUfoY2X8CojXJTU
-   aUfWAdo0dW2o/aKyONNbLNnN4ued4+wl36WMPCRhUuaEEj6ELawQqbvZo
-   bySUvrXbqiW5ZfRNa1xI0+6KEByfwqVskAhEPSkcQFWlnZwbO10viXd5x
-   gxylndtTLAkHreQUDKonmOJaSb8uAOyDS28v2c0VjZ1iDXVZne2Fxt4es
-   A==;
-X-CSE-ConnectionGUID: i7E1+h2BTwKvOef0EQMulA==
-X-CSE-MsgGUID: l0jGCPwDQjeNSO+qXtLEOg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11432"; a="48265396"
+  t=1747159008; x=1778695008;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=W6+yokoThvaOBBG/FB21beFAxqHZyI9YwRPBjPpV2mQ=;
+  b=OfSPPNJ5rQY3xUtmCXdz71fY30FoXpM6c5tgD/PlJ2PMFN7QzXGlz/of
+   5rpc8BHCEMaALYIZ2qzxtTYGRg9hPAXPSChKo8wkFbKJHxjaMT9FEaD1X
+   ekHUgj7J8JgPoinHZOfNl8l60Zu6uExC0BQEMSsPTgyaJv9YS8xBUa4MM
+   puB+q81rXAOxsz3nyt2HYCHOdQPIZhhVns7vESe4gajO6/hIzHrTgh0Tq
+   hUYJ2fixpRvzWui3Z1ydmUFd168fFjmtKFU7Vy9pcwYEw2OvmqDjjuCjx
+   MMR9iUQk1R3L4MKiQd1XG10ogkEK4vAdfN0mrMl3m4LOc1rEOd2Q7tCuG
+   Q==;
+X-CSE-ConnectionGUID: PVYQYT1iREKgDHWyGOIXgA==
+X-CSE-MsgGUID: W6Lt1jp4TVWz7n+jNJdmIg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11432"; a="48713146"
 X-IronPort-AV: E=Sophos;i="6.15,285,1739865600"; 
-   d="scan'208";a="48265396"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 09:38:56 -0700
-X-CSE-ConnectionGUID: LQL7VyssSQef5+ms3ZIZqQ==
-X-CSE-MsgGUID: +bXkOZZ4SWy734HcDgEJ0g==
+   d="scan'208";a="48713146"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 10:56:47 -0700
+X-CSE-ConnectionGUID: ie/sR7Q9QIuQkNkZA4lbqw==
+X-CSE-MsgGUID: K66ercwtRwWcEe8NNUXZnA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,285,1739865600"; 
-   d="scan'208";a="142938811"
-Received: from agladkov-desk.ger.corp.intel.com (HELO [10.125.109.12]) ([10.125.109.12])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 09:38:55 -0700
-Message-ID: <d83a83d1-37e7-4192-913f-243098f679e3@intel.com>
-Date: Tue, 13 May 2025 09:38:54 -0700
+   d="scan'208";a="142885630"
+Received: from ldmartin-desk2.corp.intel.com (HELO [10.125.109.16]) ([10.125.109.16])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 10:56:47 -0700
+Message-ID: <c940d96a-d021-44e1-85e9-362ae4dd8d74@intel.com>
+Date: Tue, 13 May 2025 10:56:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,234 +52,182 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v15 00/22] Type2 device basic support
-To: Alejandro Lucero Palau <alucerop@amd.com>,
- alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
- netdev@vger.kernel.org, dan.j.williams@intel.com, edward.cree@amd.com,
- davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, edumazet@google.com
-References: <20250512161055.4100442-1-alejandro.lucero-palau@amd.com>
- <59fa7e55-f563-40f9-86aa-1873806e76cc@intel.com>
- <8342ea50-ea07-4ae8-8607-be48936bcd11@amd.com>
- <ef2782e6-74d1-48e8-8159-069317bf6737@intel.com>
- <fd9888f1-ee5d-4943-89fa-32d6e0fb61a5@amd.com>
- <7447008e-3579-47d4-9f90-28d18429d532@intel.com>
- <0891ceea-64fa-4ae7-9a7b-d91c967efaaa@amd.com>
+Subject: Re: [PATCH v3 08/17] cxl: docs/linux - early boot configuration
+To: Gregory Price <gourry@gourry.net>, linux-cxl@vger.kernel.org
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel-team@meta.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com, corbet@lwn.net
+References: <20250512162134.3596150-1-gourry@gourry.net>
+ <20250512162134.3596150-9-gourry@gourry.net>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <0891ceea-64fa-4ae7-9a7b-d91c967efaaa@amd.com>
+In-Reply-To: <20250512162134.3596150-9-gourry@gourry.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
 
-On 5/13/25 9:21 AM, Alejandro Lucero Palau wrote:
+On 5/12/25 9:21 AM, Gregory Price wrote:
+> Document __init time configurations that affect CXL driver probe
+> process and memory region configuration.
 > 
-> On 5/13/25 17:04, Dave Jiang wrote:
->> CAUTION: This message has originated from an External Source. Please use proper judgment and caution when opening attachments, clicking links, or responding to this email.
->>
->>
->> On 5/13/25 8:24 AM, Alejandro Lucero Palau wrote:
->>> On 5/13/25 16:13, Dave Jiang wrote:
->>>> On 5/13/25 1:12 AM, Alejandro Lucero Palau wrote:
->>>>> On 5/12/25 23:36, Dave Jiang wrote:
->>>>>> On 5/12/25 9:10 AM, alejandro.lucero-palau@amd.com wrote:
->>>>>>> From: Alejandro Lucero <alucerop@amd.com>
->>>>>>>
->>>>>>> v15 changes:
->>>>>>>     - remove reference to unused header file (Jonathan Cameron)
->>>>>>>     - add proper kernel docs to exported functions (Alison Schofield)
->>>>>>>     - using an array to map the enums to strings (Alison Schofield)
->>>>>>>     - clarify comment when using bitmap_subset (Jonathan Cameron)
->>>>>>>     - specify link to type2 support in all patches (Alison Schofield)
->>>>>>>
->>>>>>>      Patches changed (minor): 4, 11
->>>>>>>
->>>>>> Hi Alejandro,
->>>>>> Tried to pull this series using b4. Noticed couple things.
->>>>>> 1. Can you run checkpatch on the entire series and fix any issues?
->>>>>> 2. Can you rebase against v6.15-rc4? I think there are some conflicts against the fixes went in rc4.
->>>>>>
->>>>>> Thanks!
->>>>>>
->>>>> Hi Dave, I'm afraid I do not know what you mean with b4. Tempted to say it was a typo, but in any case, better if you can clarify.
->>>> I use the tool b4 to pull patches off the mailing list. As you can see, your series fail on rc4 apply for patch 18.
->>>
->>> But your head is not what the base for the patchset states. I did work on v15 for working with the last patches in cxl-next so the HEAD should be:
->>>
->>>
->>> commit a223ce195741ca4f1a0e1a44f3e75ce5662b6c06 (origin/next)
->>> Author: Dan Carpenter <dan.carpenter@linaro.org>
->>> Date:   Thu Feb 22 09:14:02 2024 +0300
->>>
->>>      cxl/hdm: Clean up a debug printk
->>>
->> Ah yeah it's better to rebase against Linus's RC series rather than what cxl/next is for me to pull things. Otherwise it gets messy if something has to change in the cxl/next series and your code is based on that. So if you don't mind please rebase against upstream rc4 and I'll attempt to resolve the conflicts your code has against Robert's cleanups. Thank you. Sorry about the confusion. That is the lesson I learned last merge window with all the fun with the 'Features' code.
->>
->> DJ
->>
-> 
-> OK. I'll do so now, so should I keep v15 with another base or a new v16?
+> Signed-off-by: Gregory Price <gourry@gourry.net>
 
-Just post v16 and say rebase against rc4. Thanks!
-
-
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  Documentation/driver-api/cxl/index.rst        |   1 +
+>  .../driver-api/cxl/linux/early-boot.rst       | 131 ++++++++++++++++++
+>  2 files changed, 132 insertions(+)
+>  create mode 100644 Documentation/driver-api/cxl/linux/early-boot.rst
 > 
-> 
-> Thanks
-> 
->>>> ✔ ~/git/cxl-for-next [for-6.16/cxl-type2 L|…138]
->>>> 08:08 $ git reset --hard v6.15-rc4
->>>> HEAD is now at b4432656b36e Linux 6.15-rc4
->>>> ✔ ~/git/cxl-for-next [for-6.16/cxl-type2 L|…138]
->>>> 08:08 $ b4 shazam -sltSk https://lore.kernel.org/linux-cxl/20250512161055.4100442-1-alejandro.lucero-palau@amd.com/T/#m25a578eb83108678737bf14fdba0d2e5da7f76bd
->>>> Grabbing thread from lore.kernel.org/all/20250512161055.4100442-1-alejandro.lucero-palau@amd.com/t.mbox.gz
->>>> Checking for newer revisions
->>>> Grabbing search results from lore.kernel.org
->>>> Analyzing 25 messages in the thread
->>>> Looking for additional code-review trailers on lore.kernel.org
->>>> Analyzing 955 code-review messages
->>>> Checking attestation on all messages, may take a moment...
->>>> ---
->>>>     [PATCH v15 1/22] cxl: Add type2 device basic support
->>>>       + Link: https://patch.msgid.link/20250512161055.4100442-2-alejandro.lucero-palau@amd.com
->>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>>>       ● checkpatch.pl: 563: WARNING: added, moved or deleted file(s), does MAINTAINERS need updating?
->>>>       ● checkpatch.pl: 773: ERROR: trailing whitespace
->>>>     [PATCH v15 2/22] sfc: add cxl support
->>>>       + Link: https://patch.msgid.link/20250512161055.4100442-3-alejandro.lucero-palau@amd.com
->>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>>>       ● checkpatch.pl: 213: WARNING: added, moved or deleted file(s), does MAINTAINERS need updating?
->>>>     [PATCH v15 3/22] cxl: Move pci generic code
->>>>       + Acked-by: Edward Cree <ecree.xilinx@gmail.com>
->>>>       + Link: https://patch.msgid.link/20250512161055.4100442-4-alejandro.lucero-palau@amd.com
->>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>>>       ● checkpatch.pl: passed all checks
->>>>     [PATCH v15 4/22] cxl: Move register/capability check to driver
->>>>       + Link: https://patch.msgid.link/20250512161055.4100442-5-alejandro.lucero-palau@amd.com
->>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>>>       ● checkpatch.pl: passed all checks
->>>>     [PATCH v15 5/22] cxl: Add function for type2 cxl regs setup
->>>>       + Link: https://patch.msgid.link/20250512161055.4100442-6-alejandro.lucero-palau@amd.com
->>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>>>       ● checkpatch.pl: passed all checks
->>>>     [PATCH v15 6/22] sfc: make regs setup with checking and set media ready
->>>>       + Link: https://patch.msgid.link/20250512161055.4100442-7-alejandro.lucero-palau@amd.com
->>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>>>       ● checkpatch.pl: passed all checks
->>>>     [PATCH v15 7/22] cxl: Support dpa initialization without a mailbox
->>>>       + Link: https://patch.msgid.link/20250512161055.4100442-8-alejandro.lucero-palau@amd.com
->>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>>>       ● checkpatch.pl: passed all checks
->>>>     [PATCH v15 8/22] sfc: initialize dpa
->>>>       + Link: https://patch.msgid.link/20250512161055.4100442-9-alejandro.lucero-palau@amd.com
->>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>>>       ● checkpatch.pl: passed all checks
->>>>     [PATCH v15 9/22] cxl: Prepare memdev creation for type2
->>>>       + Acked-by: Edward Cree <ecree.xilinx@gmail.com>
->>>>       + Link: https://patch.msgid.link/20250512161055.4100442-10-alejandro.lucero-palau@amd.com
->>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>>>       ● checkpatch.pl: passed all checks
->>>>     [PATCH v15 10/22] sfc: create type2 cxl memdev
->>>>       + Link: https://patch.msgid.link/20250512161055.4100442-11-alejandro.lucero-palau@amd.com
->>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>>>       ● checkpatch.pl: passed all checks
->>>>     [PATCH v15 11/22] cxl: Define a driver interface for HPA free space enumeration
->>>>       + Link: https://patch.msgid.link/20250512161055.4100442-12-alejandro.lucero-palau@amd.com
->>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>>>       ● checkpatch.pl: 133: WARNING: Prefer a maximum 75 chars per line (possible unwrapped commit description?)
->>>>     [PATCH v15 12/22] sfc: obtain root decoder with enough HPA free space
->>>>       + Link: https://patch.msgid.link/20250512161055.4100442-13-alejandro.lucero-palau@amd.com
->>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>>>       ● checkpatch.pl: passed all checks
->>>>     [PATCH v15 13/22] cxl: Define a driver interface for DPA allocation
->>>>       + Link: https://patch.msgid.link/20250512161055.4100442-14-alejandro.lucero-palau@amd.com
->>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>>>       ● checkpatch.pl: 127: WARNING: Prefer a maximum 75 chars per line (possible unwrapped commit description?)
->>>>     [PATCH v15 14/22] sfc: get endpoint decoder
->>>>       + Link: https://patch.msgid.link/20250512161055.4100442-15-alejandro.lucero-palau@amd.com
->>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>>>       ● checkpatch.pl: passed all checks
->>>>     [PATCH v15 15/22] cxl: Make region type based on endpoint type
->>>>       + Acked-by: Edward Cree <ecree.xilinx@gmail.com>
->>>>       + Link: https://patch.msgid.link/20250512161055.4100442-16-alejandro.lucero-palau@amd.com
->>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>>>       ● checkpatch.pl: passed all checks
->>>>     [PATCH v15 16/22] cxl/region: Factor out interleave ways setup
->>>>       + Acked-by: Edward Cree <ecree.xilinx@gmail.com>
->>>>       + Link: https://patch.msgid.link/20250512161055.4100442-17-alejandro.lucero-palau@amd.com
->>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>>>       ● checkpatch.pl: passed all checks
->>>>     [PATCH v15 17/22] cxl/region: Factor out interleave granularity setup
->>>>       + Acked-by: Edward Cree <ecree.xilinx@gmail.com>
->>>>       + Link: https://patch.msgid.link/20250512161055.4100442-18-alejandro.lucero-palau@amd.com
->>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>>>       ● checkpatch.pl: passed all checks
->>>>     [PATCH v15 18/22] cxl: Allow region creation by type2 drivers
->>>>       + Link: https://patch.msgid.link/20250512161055.4100442-19-alejandro.lucero-palau@amd.com
->>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>>>       ● checkpatch.pl: 126: WARNING: Prefer a maximum 75 chars per line (possible unwrapped commit description?)
->>>>     [PATCH v15 19/22] cxl: Add region flag for precluding a device memory to be used for dax
->>>>       + Acked-by: Edward Cree <ecree.xilinx@gmail.com>
->>>>       + Link: https://patch.msgid.link/20250512161055.4100442-20-alejandro.lucero-palau@amd.com
->>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>>>       ● checkpatch.pl: passed all checks
->>>>     [PATCH v15 20/22] sfc: create cxl region
->>>>       + Link: https://patch.msgid.link/20250512161055.4100442-21-alejandro.lucero-palau@amd.com
->>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>>>       ● checkpatch.pl: passed all checks
->>>>     [PATCH v15 21/22] cxl: Add function for obtaining region range
->>>>       + Link: https://patch.msgid.link/20250512161055.4100442-22-alejandro.lucero-palau@amd.com
->>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>>>       ● checkpatch.pl: passed all checks
->>>>     [PATCH v15 22/22] sfc: support pio mapping based on cxl
->>>>       + Link: https://patch.msgid.link/20250512161055.4100442-23-alejandro.lucero-palau@amd.com
->>>>       + Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>>>       ● checkpatch.pl: 219: CHECK: Unbalanced braces around else statement
->>>>     ---
->>>>     NOTE: install dkimpy for DKIM signature verification
->>>> ---
->>>> Total patches: 22
->>>> ---
->>>>    Base: using specified base-commit a223ce195741ca4f1a0e1a44f3e75ce5662b6c06
->>>> Applying: cxl: Add type2 device basic support
->>>> Applying: sfc: add cxl support
->>>> Applying: cxl: Move pci generic code
->>>> Applying: cxl: Move register/capability check to driver
->>>> Applying: cxl: Add function for type2 cxl regs setup
->>>> Applying: sfc: make regs setup with checking and set media ready
->>>> Applying: cxl: Support dpa initialization without a mailbox
->>>> Applying: sfc: initialize dpa
->>>> Applying: cxl: Prepare memdev creation for type2
->>>> Applying: sfc: create type2 cxl memdev
->>>> Applying: cxl: Define a driver interface for HPA free space enumeration
->>>> Applying: sfc: obtain root decoder with enough HPA free space
->>>> Applying: cxl: Define a driver interface for DPA allocation
->>>> Applying: sfc: get endpoint decoder
->>>> Applying: cxl: Make region type based on endpoint type
->>>> Applying: cxl/region: Factor out interleave ways setup
->>>> Applying: cxl/region: Factor out interleave granularity setup
->>>> Applying: cxl: Allow region creation by type2 drivers
->>>> Patch failed at 0018 cxl: Allow region creation by type2 drivers
->>>> /home/djiang5/git/linux-kernel/.git/worktrees/cxl-for-next/rebase-apply/patch:644: trailing whitespace.
->>>>    * @type: CXL device type
->>>> warning: 1 line adds whitespace errors.
->>>> error: patch failed: drivers/cxl/core/region.c:3607
->>>> error: drivers/cxl/core/region.c: patch does not apply
->>>> error: patch failed: drivers/cxl/port.c:33
->>>> error: drivers/cxl/port.c: patch does not apply
->>>> hint: Use 'git am --show-current-patch=diff' to see the failed patch
->>>> hint: When you have resolved this problem, run "git am --continue".
->>>> hint: If you prefer to skip this patch, run "git am --skip" instead.
->>>> hint: To restore the original branch and stop patching, run "git am --abort".
->>>> hint: Disable this message with "git config set advice.mergeConflict false"
->>>>
->>>>
->>>>> The patchset is against the last cxl-next commit as it it stated at the end, and that is based on v6.15.0-rc4. I had to solve some issues from v14 as last changes in core/region.c from Robert Richter required so.
->>>>>
->>>>>
->>>>> About checkpatch, I did so but I have just done it again for being sure before this email, and I do not seen any issue except a trailing space in patch 1. That same patch has also warnings I do not think are a problem. Some are related to moved code and other on the new macro. FWIW, I'm running those with "checkpatch --strict".
->>>>>
->>>>>
->>>>>>> base-commit: a223ce195741ca4f1a0e1a44f3e75ce5662b6c06
->>
+> diff --git a/Documentation/driver-api/cxl/index.rst b/Documentation/driver-api/cxl/index.rst
+> index bc2228c77c32..d2eefe575604 100644
+> --- a/Documentation/driver-api/cxl/index.rst
+> +++ b/Documentation/driver-api/cxl/index.rst
+> @@ -34,6 +34,7 @@ that have impacts on each other.  The docs here break up configurations steps.
+>     :caption: Linux Kernel Configuration
+>  
+>     linux/overview
+> +   linux/early-boot
+>     linux/access-coordinates
+>  
+>  
+> diff --git a/Documentation/driver-api/cxl/linux/early-boot.rst b/Documentation/driver-api/cxl/linux/early-boot.rst
+> new file mode 100644
+> index 000000000000..8c1c497bc772
+> --- /dev/null
+> +++ b/Documentation/driver-api/cxl/linux/early-boot.rst
+> @@ -0,0 +1,131 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +=======================
+> +Linux Init (Early Boot)
+> +=======================
+> +
+> +Linux configuration is split into two major steps: Early-Boot and everything else.
+> +
+> +During early boot, Linux sets up immutable resources (such as numa nodes), while
+> +later operations include things like driver probe and memory hotplug.  Linux may
+> +read EFI and ACPI information throughout this process to configure logical
+> +representations of the devices.
+> +
+> +During Linux Early Boot stage (functions in the kernel that have the __init
+> +decorator), the system takes the resources created by EFI/BIOS (ACPI tables)
+> +and turns them into resources that the kernel can consume.
+> +
+> +
+> +BIOS, Build and Boot Options
+> +============================
+> +
+> +There are 4 pre-boot options that need to be considered during kernel build
+> +which dictate how memory will be managed by Linux during early boot.
+> +
+> +* EFI_MEMORY_SP
+> +
+> +  * BIOS/EFI Option that dictates whether memory is SystemRAM or
+> +    Specific Purpose.  Specific Purpose memory will be deferred to
+> +    drivers to manage - and not immediately exposed as system RAM.
+> +
+> +* CONFIG_EFI_SOFT_RESERVE
+> +
+> +  * Linux Build config option that dictates whether the kernel supports
+> +    Specific Purpose memory.
+> +
+> +* CONFIG_MHP_DEFAULT_ONLINE_TYPE
+> +
+> +  * Linux Build config that dictates whether and how Specific Purpose memory
+> +    converted to a dax device should be managed (left as DAX or onlined as
+> +    SystemRAM in ZONE_NORMAL or ZONE_MOVABLE).
+> +
+> +* nosoftreserve
+> +
+> +  * Linux kernel boot option that dictates whether Soft Reserve should be
+> +    supported.  Similar to CONFIG_EFI_SOFT_RESERVE.
+> +
+> +Memory Map Creation
+> +===================
+> +
+> +While the kernel parses the EFI memory map, if :code:`Specific Purpose` memory
+> +is supported and detected, it will set this region aside as
+> +:code:`SOFT_RESERVED`.
+> +
+> +If :code:`EFI_MEMORY_SP=0`, :code:`CONFIG_EFI_SOFT_RESERVE=n`, or
+> +:code:`nosoftreserve=y` - Linux will default a CXL device memory region to
+> +SystemRAM.  This will expose the memory to the kernel page allocator in
+> +:code:`ZONE_NORMAL`, making it available for use for most allocations (including
+> +:code:`struct page` and page tables).
+> +
+> +If `Specific Purpose` is set and supported, :code:`CONFIG_MHP_DEFAULT_ONLINE_TYPE_*`
+> +dictates whether the memory is onlined by default (:code:`_OFFLINE` or
+> +:code:`_ONLINE_*`), and if online which zone to online this memory to by default
+> +(:code:`_NORMAL` or :code:`_MOVABLE`).
+> +
+> +If placed in :code:`ZONE_MOVABLE`, the memory will not be available for most
+> +kernel allocations (such as :code:`struct page` or page tables).  This may
+> +significant impact performance depending on the memory capacity of the system.
+> +
+> +
+> +NUMA Node Reservation
+> +=====================
+> +
+> +Linux refers to the proximity domains (:code:`PXM`) defined in the SRAT to
+> +create NUMA nodes in :code:`acpi_numa_init`. Typically, there is a 1:1 relation
+> +between :code:`PXM` and NUMA node IDs.
+> +
+> +SRAT is the only ACPI defined way of defining Proximity Domains. Linux chooses
+> +to, at most, map those 1:1 with NUMA nodes. CEDT adds a description of SPA
+> +ranges which Linux may wish to map to one or more NUMA nodes.
+> +
+> +If there are CXL ranges in the CFMWS but not in SRAT, then a fake :code:`PXM`
+> +is created (as of v6.15). In the future, Linux may reject CFMWS not described
+> +by SRAT due to the ambiguity of proximity domain association.
+> +
+> +It is important to note that NUMA node creation cannot be done at runtime. All
+> +possible NUMA nodes are identified at :code:`__init` time, more specifically
+> +during :code:`mm_init`. The CEDT and SRAT must contain sufficient :code:`PXM`
+> +data for Linux to identify NUMA nodes their associated memory regions.
+> +
+> +The relevant code exists in: :code:`linux/drivers/acpi/numa/srat.c`.
+> +
+> +See the Example Platform Configurations section for more information.
+> +
+> +Memory Tiers Creation
+> +=====================
+> +Memory tiers are a collection of NUMA nodes grouped by performance characteristics.
+> +During :code:`__init`, Linux initializes the system with a default memory tier that
+> +contains all nodes marked :code:`N_MEMORY`.
+> +
+> +:code:`memory_tier_init` is called at boot for all nodes with memory online by
+> +default. :code:`memory_tier_late_init` is called during late-init for nodes setup
+> +during driver configuration.
+> +
+> +Nodes are only marked :code:`N_MEMORY` if they have *online* memory.
+> +
+> +Tier membership can be inspected in ::
+> +
+> +  /sys/devices/virtual/memory_tiering/memory_tierN/nodelist
+> +  0-1
+> +
+> +If nodes are grouped which have clear difference in performance, check the HMAT
+> +and CDAT information for the CXL nodes.  All nodes default to the DRAM tier,
+> +unless HMAT/CDAT information is reported to the memory_tier component via
+> +`access_coordinates`.
+> +
+> +Contiguous Memory Allocation
+> +============================
+> +The contiguous memory allocator (CMA) enables reservation of contiguous memory
+> +regions on NUMA nodes during early boot.  However, CMA cannot reserve memory
+> +on NUMA nodes that are not online during early boot. ::
+> +
+> +  void __init hugetlb_cma_reserve(int order) {
+> +    if (!node_online(nid))
+> +      /* do not allow reservations */
+> +  }
+> +
+> +This means if users intend to defer management of CXL memory to the driver, CMA
+> +cannot be used to guarantee huge page allocations.  If enabling CXL memory as
+> +SystemRAM in `ZONE_NORMAL` during early boot, CMA reservations per-node can be
+> +made with the :code:`cma_pernuma` or :code:`numa_cma` kernel command line
+> +parameters.
 
