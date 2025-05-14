@@ -1,207 +1,316 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E8927A112
-	for <linux-cxl@vger.kernel.org>; Wed, 14 May 2025 16:30:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2D4528CF56
+	for <linux-cxl@vger.kernel.org>; Wed, 14 May 2025 19:02:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747240211; cv=none; b=S8zxEaHjKOCmJ0t7fZQHcA0JwEEWAojMIGdH9WHSZsCIoQ71D22DVjwdpzr7NMXEftEUvjncvFyllqv8Q2Bw26ssWnlJLXyHO0tUZYDXd0L3cEp+k/eQ+1LH9W6tb5TwyuU0ncb4/QKHoktfPyEFsyveN7Nf6HVT+PXcf1AE4VY=
+	t=1747249326; cv=none; b=ickqRXHMJ7FSk6CuUnhDo5pMwGdsJ4mhEse2GDQkjcYqLAZ5USLPV+v28GxjqFe0rnOOkyOzuClSDz8yOdUQnv2b2haxC1Zw3WUDZEeiVMreWcEBlFPmvaizuMEPfNGymxoui+cvdIumRDmsKlkBqZ1bI/V67/LDOzHWrjnGkBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747240211; c=relaxed/simple;
-	bh=2Eq8/z0CfIGoA83SP9KPH8M1gkzzw035FghWA+Cwjp8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P2pQ9cVmkX6YuhafwmUHtOHTN+dBfZ2T8U7N7l8j7nHKPaNgpcmsC0+G32hcSaY4CpSUOXo1fOhxXdVexohI+B/aaC/DcwsYVJ6OkMOWWb7eURKJ/XpBSZdPVVqHS5KgF8Yom5NOVx3Ri3VKc50pT5LgMNRJdu0tMfkUcQfqfZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=jFA43ki0; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1747249326; c=relaxed/simple;
+	bh=b/qEH07FkNUQXBrC29O6hpjyYrBOWU4NnwUr6fml8e8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N/lrWVdm3D9aaSmKqikECwhfEN9q5v/7fmoEF35wkGsxgwEW+MlAGvobYlJCv2S8G8ZnLn2ZTPvlsVgwDlCkmJ/oxGNEU4wCH1MSIfYsS8Kqzjirkd+l3q/Pi0mNaqkZoCFiz7/gkReyqDX3m9mHUPZqA0DiAI1W9CKKSCN9T5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ib4SQPNi; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="jFA43ki0"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-476977848c4so265591cf.1
-        for <linux-cxl@vger.kernel.org>; Wed, 14 May 2025 09:30:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1747240208; x=1747845008; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NG10cvai2OX7LZJN8zVe6/Jr/Err05M9CRh06hrOVvU=;
-        b=jFA43ki0xygEKWc+jIgDUEOa1DW7PFR5NnD4bUmm7IbWhlQq0cNxYwP4KTl5XFrjEi
-         Q2iAJ0wZiTW8YAVhoYCs1kseNTgrLE408qjANuym7WTVElCxKzHPRwgID4g4/QaPiU1Z
-         3I6x7vAUrgPp0j0lkcIrXm+7asnV+OcRvkjvSPZvPQhcc86CwZnt9g+bcId/JOiZGn81
-         kE3AxgyIXsb8ZkFQVVchCPXedVQsXwIlDv0tgv/SjmaF8WMwxXw5v7ex92I51hSSwx7C
-         K9PZIFEtCJLy0lvCeLYJg+Nyzi9xkIXRQAv+Jf6o+P0Q/9/5V24Lm88nlzeVP/3s30HC
-         qbWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747240208; x=1747845008;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NG10cvai2OX7LZJN8zVe6/Jr/Err05M9CRh06hrOVvU=;
-        b=CwVEjoq0CdHz2U92NX//TdWi5BkQGWz89AN4MpxDv52dlj06ORUZmeAgLsA3I+s1nW
-         aFYNax0iFGliHIya5rz4QBT6dV/zTeY0X22AZZPNf+n9SskOqArwJNbNAZ+VETkumtkr
-         +M2aR026U+wpsxyMe9SmU0gS/+lRUfBE9+135rxM1AOlLOH0cTLsYrU+nxydwPJ/4uET
-         HnVcKHen50pnvv9kgp0DZXuX69VOBFBaiy8nTYDxLZTLzkjTmgbENcRkFPo5RG4c7krM
-         sLXZczlxc7JDXrO+hTD5vSYq5YcF+GZtTIk4b6r6aAWH753CmB3AEgGOK+BNqVN7s4mu
-         M90A==
-X-Gm-Message-State: AOJu0Yy6A6BuD0hyg8oI5BU6Sy0Tw1V8BGrt53GS0c8YnGhzBmnE2r07
-	jukIPufpxEoOIMeAdT3PR0JrDCYufgPKN55l4SblstkMjQcjrVVAf8Rfye91HhY=
-X-Gm-Gg: ASbGncsnPI5hJmUtvsGGW86wAr7fwX8KjW751N7ZKkkAUiS+b7QCbBvQFk1gB0a1aNF
-	RbplqlA+SDfgLNg5w04KO213YE8TOLcHXq4Ih0Um2ixzDM3m6z4Z/QysR0wbp41shypNMSfRbRQ
-	NMEEnFfMo7ACCXBNpA8gZmaAra7XD5XBnoJt+e6UdCa8b5M+OLc95+ouqGjhPYVcQs2Pcar5MDS
-	lVP48z/MRC0eQ9QdizT+CnAQmfSL6AIR0XSsG9w25HLpmNH3MKDMQACN3Z3oUouUnKlnW6CD0NJ
-	5JyZjDn0yURTNTt02MatuzsLhQfnbAepjX8xidK/6jUwN05zvd1gov6u8UeRgdbIUW0O/fQqD27
-	vLtS6Gdp6YKPJTeUHDlbwOLm+32eye00=
-X-Google-Smtp-Source: AGHT+IFCnQm4vgbH4cuZJ0FQS9KrqTgQGGLgQjxV5pK1LDKpt3y6G4lhgE+kQGemzvPe4Ah8BgPtRg==
-X-Received: by 2002:a05:622a:2b49:b0:477:e4e:9186 with SMTP id d75a77b69052e-49495c658c2mr74420481cf.11.1747240207780;
-        Wed, 14 May 2025 09:30:07 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4945248d051sm82021231cf.29.2025.05.14.09.30.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 09:30:07 -0700 (PDT)
-Date: Wed, 14 May 2025 12:30:05 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Subject: Re: [PATCH 4/4] cxl: doc/linux/access-coordinates Update access
- coordinates calculation methods
-Message-ID: <aCTFDcFNSq38Zn0k@gourry-fedora-PF4VCD3F>
-References: <20250514003133.584401-1-dave.jiang@intel.com>
- <20250514003133.584401-5-dave.jiang@intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ib4SQPNi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747249324; x=1778785324;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=b/qEH07FkNUQXBrC29O6hpjyYrBOWU4NnwUr6fml8e8=;
+  b=ib4SQPNilq+uHrMZVHy0P32WYSFHe6iWsHFyj/TIbe8BSm3/xR+QxLW8
+   w462N/YpdeLvcPMMiy0OUyle5X7bOurKr7ac1jK9ENLozS7d9bPy2raB6
+   E23LX7J00vIch1M83Va8L1Zl6O9Dw/KSl0MjTW65SArOVUS6QEhwGWh6O
+   XhpkmfCwLy/CWFsYPr/iPkdXgwr6WtltUWh1pgARZ2EsOavaZ01sKGlRY
+   gJejIFIrIIpwTcBsbFZj5wswfZMKxcLuXnQINAPDR0eWB81k+xm9/cegz
+   Jfuv3k/b8pGfZBkPFA7zP7Sw/YT2cVhaMS3WWddnleN7dZlH93G52Cjyz
+   w==;
+X-CSE-ConnectionGUID: 067sEcoTQZmF93Qi8oFA3w==
+X-CSE-MsgGUID: wom+sNWlRlG7V/i/A8fuog==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="59390165"
+X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
+   d="scan'208";a="59390165"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 12:02:03 -0700
+X-CSE-ConnectionGUID: 3CQ81jGgR5y/H+hZKmNlXg==
+X-CSE-MsgGUID: Yu7JuodbQOaZ5jn0vd8QVg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
+   d="scan'208";a="139129442"
+Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.109.31]) ([10.125.109.31])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 12:02:02 -0700
+Message-ID: <9ca53bc9-2eeb-4490-ac3c-fcb8cec0da78@intel.com>
+Date: Wed, 14 May 2025 12:02:01 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250514003133.584401-5-dave.jiang@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] cxl: docs/platform/cdat reference documentation
+To: Gregory Price <gourry@gourry.net>
+Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com
+References: <20250514003133.584401-1-dave.jiang@intel.com>
+ <20250514003133.584401-2-dave.jiang@intel.com>
+ <aCTA-C9StbfHjCMn@gourry-fedora-PF4VCD3F>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <aCTA-C9StbfHjCMn@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 13, 2025 at 05:31:33PM -0700, Dave Jiang wrote:
-> Add documentation on how to calculate the access coordinates for a given
-> CXL region in detail.
+
+
+On 5/14/25 9:12 AM, Gregory Price wrote:
+> On Tue, May 13, 2025 at 05:31:30PM -0700, Dave Jiang wrote:
+>> Add documentation for CDAT sub-tables for CXL usages.
+>>
 > 
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> Mostly wording nits, but i recommend putting allt he subtables in
+> cdat.rst directly and adding a terms list at the top so you can
+> reference them cleanly on the same page without redefining them
+> everywhere.  See below.
 
-This is awesome, thanks Dave!  Minor nits inline
+Thanks for reviewing. I'll do that.
 
-Reviewed-by: Gregory Price <gourry@gourry.net>
 
-> ---
->  .../cxl/linux/access-coordinates.rst          | 87 +++++++++++++++++++
->  1 file changed, 87 insertions(+)
 > 
-> diff --git a/Documentation/driver-api/cxl/linux/access-coordinates.rst b/Documentation/driver-api/cxl/linux/access-coordinates.rst
-> index 71024fa0f561..cf86920f083a 100644
-> --- a/Documentation/driver-api/cxl/linux/access-coordinates.rst
-> +++ b/Documentation/driver-api/cxl/linux/access-coordinates.rst
-> @@ -5,6 +5,84 @@
->  CXL Access Coordinates Computation
->  ==================================
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>>  Documentation/driver-api/cxl/index.rst        |  1 +
+>>  .../driver-api/cxl/platform/cdat.rst          | 24 ++++++++++
+>>  .../driver-api/cxl/platform/cdat/dslbis.rst   | 33 ++++++++++++++
+>>  .../driver-api/cxl/platform/cdat/dsmas.rst    | 23 ++++++++++
+>>  .../driver-api/cxl/platform/cdat/sslbis.rst   | 45 +++++++++++++++++++
+>>  5 files changed, 126 insertions(+)
+>>  create mode 100644 Documentation/driver-api/cxl/platform/cdat.rst
+>>  create mode 100644 Documentation/driver-api/cxl/platform/cdat/dslbis.rst
+>>  create mode 100644 Documentation/driver-api/cxl/platform/cdat/dsmas.rst
+>>  create mode 100644 Documentation/driver-api/cxl/platform/cdat/sslbis.rst
+>>
+>> diff --git a/Documentation/driver-api/cxl/index.rst b/Documentation/driver-api/cxl/index.rst
+>> index 366faf851fc7..9e1414ad3357 100644
+>> --- a/Documentation/driver-api/cxl/index.rst
+>> +++ b/Documentation/driver-api/cxl/index.rst
+>> @@ -27,6 +27,7 @@ that have impacts on each other.  The docs here break up configurations steps.
+>>  
+>>     platform/bios-and-efi
+>>     platform/acpi
+>> +   platform/cdat
+>>     platform/example-configs
+>>  
+>>  .. toctree::
+>> diff --git a/Documentation/driver-api/cxl/platform/cdat.rst b/Documentation/driver-api/cxl/platform/cdat.rst
+>> new file mode 100644
+>> index 000000000000..3e0ce7099db3
+>> --- /dev/null
+>> +++ b/Documentation/driver-api/cxl/platform/cdat.rst
+>> @@ -0,0 +1,24 @@
+>> +.. SPDX-License-Identifier: GPL-2.0
+>> +
+>> +===========
+>> +CDAT Tables
+>> +===========
+> 
+> "Coherent Device Attribute Table Tables" :]
+> 
+> I would name this 
+> 
+> ======================================
+> Coherent Device Attribute Table (CDAT)
+> ======================================
+> 
+>> +
+>> +The Coherent Device Attribute Table (CDAT) is created to provide a standard way to
+>> +expose the properties of a device such as an CXL accelerator or switch. The table
+>> +formatting is similar to ACPI tables. The tables are created to provide performance
+>> +calculation of a hot-plugged device where ACPI HMAT+SRAT tables are not able to
+>> +enumerate the performance by the BIOS ahead of time.
+> 
+> I may suggest something like...
+> 
+> The CDAT provides functional and performance attributes of devices such
+> as CXL accelerators, switches, or endpoints.  The table formatting is
+> similar to ACPI tables. CDAT data may be parsed by BIOS at boot or may
+> be enumerated at runtime (after device hotplug, for example).
+> 
+>> +
+>> +The following CDAT tables contain *static* configuration and performance data about CXL devices.
+>> +
+>> +.. toctree::
+>> +   :maxdepth: 1
+>> +
+>> +   cdat/dsmas.rst
+>> +   cdat/dslbis.rst
+>> +   cdat/sslbis.rst
+>> +
+>> +The Linux CXL driver uses these tables in addition to attributes of the CXL links and
+>                                                       ^^^^^^^^^^^^^
+> 						      provided by what?
+>> +Generic Target performance data provided by HMAT+SRAT to create the whole path performance
+>    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>    The is provided by SRAT right?
+
+SRAT only provide the association of a device handle and proximity domain for a generic target. The HMAT provides the performance numbers based on the PXM.
+
+DJ
+
+>> +for a CXL device.
+> 
+> Maybe simplified to:
+> 
+> The CXL driver uses a combination of CDAT, HMAT, SRAT and other data to
+> generate "whole path performance" data for a CXL device.
+> 
+>> diff --git a/Documentation/driver-api/cxl/platform/cdat/dslbis.rst b/Documentation/driver-api/cxl/platform/cdat/dslbis.rst
+>> new file mode 100644
+>> index 000000000000..91ae426b2e8b
+>> --- /dev/null
+>> +++ b/Documentation/driver-api/cxl/platform/cdat/dslbis.rst
+>> @@ -0,0 +1,33 @@
+>> +.. SPDX-License-Identifier: GPL-2.0
+>> +
+>> +==================================================================
+>> +DSLBIS - Device Scoped Latency and Bandwidth Information Structure
+>> +==================================================================
+>> +
+>> +The Device Scoped Latency and Bandwidth Information Structure contains latency
+>> +and bandwidth information based on DSMADHandle matching.
+>                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 			     What does a DSMADHandle represent?
+>> +
+>> +This table is used by Linux in conjunction with Device scoped Memory Affinity
+>> +Structure to determine the performance attributes of a CXL device.
+> 
+> swap the order of the last two paragraphs.  Add (DSMAS) after "Device
+> Scoped Memory Affinity Structure", introduce what a DSMADHandle is and
+> what it represents before you reference it.
+> 
+>> +
+>> +Example ::
+>> +
+>> +   Structure Type : 01 [DSLBIS]
+>> +         Reserved : 00
+>> +           Length : 18                     <- 24d, size of structure
+>> +           Handle : 0001                   <- DSMAS handle
+>> +            Flags : 00                     <- Matches flag field for HMAT SLLBIS
+>> +        Data Type : 00                     <- Latency
+>> + Entry Basee Unit : 0000000000001000       <- Entry Base Unit field in HMAT SSLBIS
+>> +            Entry : 010000000000           <- First byte used here, CXL LTC
+>> +         Reserved : 0000
+>> +
+>> +   Structure Type : 01 [DSLBIS]
+>> +         Reserved : 00
+>> +           Length : 18                     <- 24d, size of structure
+>> +           Handle : 0001                   <- DSMAS handle
+>> +            Flags : 00                     <- Matches flag field for HMAT SLLBIS
+>> +        Data Type : 03                     <- Bandwidth
+>> + Entry Basee Unit : 0000000000001000       <- Entry Base Unit field in HMAT SSLBIS
+>> +            Entry : 020000000000           <- First byte used here, CXL BW
+>> +         Reserved : 0000
+>> diff --git a/Documentation/driver-api/cxl/platform/cdat/dsmas.rst b/Documentation/driver-api/cxl/platform/cdat/dsmas.rst
+>> new file mode 100644
+>> index 000000000000..8c32ddb3381c
+>> --- /dev/null
+>> +++ b/Documentation/driver-api/cxl/platform/cdat/dsmas.rst
+>> @@ -0,0 +1,23 @@
+>> +.. SPDX-License-Identifier: GPL-2.0
+>> +
+>> +===============================================
+>> +DSMAS - Device Scoped Memory Affinity Structure
+>> +===============================================
+> 
+> Device Scoped Memory Affinity Structure (DSMAS)
+> 
+>> +
+>> +The Device Scoped Memory Affinity Structure contains information such as
+>        ^^^^^^        DSMAS               ^^^^^
+>        Since you define it in the header, you can use the abbreviation
 >  
-> +Latency and Bandwidth Calculation
-> +=================================
-> +A memory region performance coordinates (latency and bandwidth) are typically
-> +provided via ACPI tables :doc:`SRAT <../platform/acpi/srat>` and
-> +:doc:`HMAT <../platform/acpi/hmat>`. However, the platform firmware (BIOS) is
-> +not able to annotate those for CXL devices that are hot-plugged since they do
-> +not exist during platform firmware initialization. The CXL driver can compute
-> +the performance coordinates by retrieving data from several components.
-> +
-> +The :doc:`SRAT <../platform/acpi/srat>` provides a Generic Port Affinity
-> +subtable that ties a proximity domain to a device handle, which in this case
-> +would be the CXL hostbridge. Using this association, the performance
-> +coordinates for the Generic Port can be retrieved from the
-> +:doc:`HMAT <../platform/acpi/hmat>` subtable. This piece represents the
-> +performance coordinates between a CPU to the Generic Port (CXL hostbridge).
-                           "from a CPU to the Generic Port", or
-			   "between a CPU and a Generic Port"
-
-			   either works
-
-> +
-> +The :doc:`CDAT <../platform/cdat>` provides the performance coordinates for
-> +the CXL device itself. That is the bandwidth and latency to access that device's
-> +memory region. The :doc:`DSMAS <../platform/cdat/dsmas>` subtable provides a
-> +DSMAD handle that is tied to a Device Physical Address (DPA) range. The
-
-Similar to other doc - need to define DSMAD.
-
-> +:doc:`DSLBIS <../platform/cdat/dslbis>` subtable provides the performance
-> +coordinates that's tied to a DSMAD handle and this ties the two table
-> +entries together to provide the performance coordinates for each DPA
-> +region. For example, if a device exports a DRAM region and a PMEM region,
-> +then there would be different performance characteristsics for each of those
-> +regions.
-> +
-> +If there's a CXL switch in the topology, then the performance coordinates for the
-> +switch is provided by :doc:`SSLBIS <../platform/cdat/sslbis>` subtable. This
-> +provides the bandwidth and latency for traversing the switch between the switch
-> +upstream port and the switch downstream port that points to the endpoint device.
-> +
-> +Simple topology example::
-> +
-> + GP0/HB0/ACPI0016-0
-> +        RP0
-> +         |
-> +         | L0
-> +         |
-> +     SW 0 / USP0
-> +     SW 0 / DSP0
-> +         |
-> +         | L1
-> +         |
-> +        EP0
-> +
-> +In this example, there is a CXL switch between an endpoint and a root port.
-> +Latency in this example is calculated as such:
-> +L(EP0) - Latency from EP0 CDAT DSMAS+DSLBIS
-> +L(L1) - Link latency between EP0 and SW0DSP0
-> +L(SW0) - Latency for the switch from SW0 CDAT SSLBIS.
-> +L(L0) - Link latency between SW0 and RP0
-> +L(RP0) - Latency from root port to CPU via SRAT and HMAT (Generic Port).
-> +Total read and write latencies are the sum of all these parts.
-> +
-> +Bandwidth in this example is calculated as such:
-> +B(EP0) - Bandwidth from EP0 CDAT DSMAS+DSLBIS
-> +B(L1) - Link bandwidth between EP0 and SW0DSP0
-> +B(SW0) - Bandwidth for the switch from SW0 CDAT SSLBIS.
-> +B(L0) - Link bandwidth between SW0 and RP0
-> +B(RP0) - Bandwidth from root port to CPU via SRAT and HMAT (Generic Port).
-> +The total read and write bandwidth is the min() of all these parts.
-> +
-> +To calculate the link bandwidth:
-> +LinkOperatingFrequency (GT/s) is the current negotiated link speed.
-> +DataRatePerLink (MB/s) = LinkOperatingFrequency / 8
-> +Bandwidth (MB/s) = PCIeCurrentLinkWidth * DataRatePerLink
-> +Where PCIeCurrentLinkWidth is the number of lanes in the link.
-> +
-> +To calculate the link latency:
-> +LinkLatency (picoseconds) = FlitSize / LinkBandwidth (MB/s)
-> +
-> +See `CXL Memory Device SW Guide r1.0 <https://www.intel.com/content/www/us/en/content-details/643805/cxl-memory-device-software-guide.html>`_,
-> +section 2.11.3 and 2.11.4 for details.
-> +
-> +In the end, the access coordinates for a constructed memory region is calculated from one
-> +or more memory partitions from each of the CXL device(s).
-> +
->  Shared Upstream Link Calculation
->  ================================
->  For certain CXL region construction with endpoints behind CXL switches (SW) or
-> @@ -90,3 +168,12 @@ under the same ACPI0017 device to form a new xarray.
->  Finally, the cxl_region_update_bandwidth() is called and the aggregated
->  bandwidth from all the members of the last xarray is updated for the
->  access coordinates residing in the cxl region (cxlr) context.
-> +
-> +QTG ID
-> +======
-> +Each :doc:`CEDT <../platform/acpi/cedt>` has a QTG ID field. This field provides
-> +the ID that associates with a QoS Throttling Group (QTG) for the CFMWS window.
-> +Once the access coordinates are calculated, an ACPI Device Specific Method can
-> +be issued to the ACPI0016 device to retrieve the QTG ID depends on the access
-> +coordinates provided. The QTG ID for the device can be used as guidance to match
-> +to the CFMWS to setup the best Linux root decoder for the device performance.
-> -- 
-> 2.49.0
+>> +DSMADHandle, the DPA Base, and DPA Length.
+>> +
 > 
+> It's probably better to put all these subtables in a single document
+> (cdat.rst) and add a terms list at the top (such as DSMADHandle)
+> 
+>> +This table is used by Linux in conjunction with the Device Scoped Latency and
+>> +Bandwidth Information Structure (DSLBIS) to determine the performance
+>> +attributes of the CXL device itself.
+>> +
+>> +Example ::
+>> +
+>> + Structure Type : 00 [DSMAS]
+>> +       Reserved : 00
+>> +         Length : 0018              <- 24d, size of structure
+>> +    DSMADHandle : 01
+>> +          Flags : 00
+>> +       Reserved : 0000
+>> +       DPA Base : 0000000040000000  <- 1GiB base
+>> +     DPA Length : 0000000080000000  <- 2GiB size
+>> diff --git a/Documentation/driver-api/cxl/platform/cdat/sslbis.rst b/Documentation/driver-api/cxl/platform/cdat/sslbis.rst
+>> new file mode 100644
+>> index 000000000000..e299575493fa
+>> --- /dev/null
+>> +++ b/Documentation/driver-api/cxl/platform/cdat/sslbis.rst
+>> @@ -0,0 +1,45 @@
+>> +.. SPDX-License-Identifier: GPL-2.0
+>> +
+>> +==================================================================
+>> +SSLBIS - Switch Scoped Latency and Bandwidth Information Structure
+>> +==================================================================
+> 
+> Switch Scoped Latency and Bandwidth Information Structure (SSLBIS)
+> 
+>> +
+>> +The Switch Scoped Latency Bandwidth Information Structure contains information
+>        ^^^^^^^^^^^^^^^^ SSLBIS ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>> +about the latency and bandwidth of a switch.
+>> +
+>> +The table is used by Linux to compute the performance coordinates of a CXL path
+>> +from the device to the root port where a switch is part of the path.
+>> +
+>> +Example ::
+>> +
+>> +  Structure Type : 05 [SSLBIS]
+>> +        Reserved : 00
+>> +          Length : 20                           <- 32d, length of record, including SSLB entries
+>> +       Data Type : 00                           <- Latency
+>> +        Reserved : 000000
+>> + Entry Base Unit : 00000000000000001000         <- Matches Entry Base Unit in HMAT SSLBIS
+>> +
+>> +                                                <- SSLB Entry 0
+>> +       Port X ID : 0100                         <- First port, 0100h represents an upstream port
+>> +       Port Y ID : 0000                         <- Second port, downstream port 0
+>> +         Latency : 0100                         <- Port latency
+>> +        Reserved : 0000
+>> +                                                <- SSLB Entry 1
+>> +       Port X ID : 0100
+>> +       Port Y ID : 0001
+>> +         Latency : 0100
+>> +        Reserved : 0000
+>> +
+>> +
+>> +  Structure Type : 05 [SSLBIS]
+>> +        Reserved : 00
+>> +          Length : 18                           <- 24d, length of record, including SSLB entry
+>> +       Data Type : 03                           <- Bandwidth
+>> +        Reserved : 000000
+>> + Entry Base Unit : 00000000000000001000         <- Matches Entry Base Unit in HMAT SSLBIS
+>> +
+>> +                                                <- SSLB Entry 0
+>> +       Port X ID : 0100                         <- First port, 0100h represents an upstream port
+>> +       Port Y ID : FFFF                         <- Second port, FFFFh indicates any port
+>> +       Bandwidth : 1200                         <- Port bandwidth
+>> +        Reserved : 0000
+>> -- 
+>> 2.49.0
+>>
+> 
+
