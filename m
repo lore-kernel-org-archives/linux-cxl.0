@@ -1,108 +1,222 @@
-Received: from esa8.hc1455-7.c3s2.iphmx.com (esa8.hc1455-7.c3s2.iphmx.com [139.138.61.253])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB971270ECB
-	for <linux-cxl@vger.kernel.org>; Wed, 14 May 2025 11:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.61.253
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC23EC8F0
+	for <linux-cxl@vger.kernel.org>; Wed, 14 May 2025 12:31:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747221616; cv=none; b=B/Mo4qn3AirPPfg2VfELPOG8lI5tc/mByjE/0Aj09dDIas9TBE+Gnvz8QjpCkR3MDidRqjvN4h6Y5quTU86AkuitBVzhnQcg3PvF7Jtmxn0ZnSBIz44MfDs1AlipBK8qh6820qAFh1ek3xersyVUai0/u/byiYPBiq+bFoOAxog=
+	t=1747225870; cv=none; b=SXQG95XjDBihu5fO+h9M4s7zjS8o9XIxJpsK0BAZT/Y29Nj+dOIBDyr46SKKptCqaTB4O/8UlpdRO9txm1lSJ/WKeYeuKQT/DJ1NoW89e98KfpwKWVyvvjz651mgR/2nm+WUHa0wV2M+3/tobYQ/9Oa7be70iLor2Jnc3RhJASE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747221616; c=relaxed/simple;
-	bh=u1gyMu2RwQGgA8FqGP3eyYVpifNrScbjzpm3kWhWy8w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qZdIxKjhkk0oWnpDN7cry+rSiyG/hg52IiJvZpb2SOpw0jxaYiGFyf3azO8tGejZz5bVw5Lxj4kZucT+mSY29JjWp6lGvrW9QIPTu78cGW2F0SWqccHzYzWlmiIj9o2OXln9x5puCyZqbXvgB8Ezn+DlTgq+usyMGF6No3awCBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=NS+6PaMF; arc=none smtp.client-ip=139.138.61.253
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	s=arc-20240116; t=1747225870; c=relaxed/simple;
+	bh=snh9A+a73yr9qaEGAmEarFHA4LpYfkrKx05bJt2+osQ=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=rgg/9sBqYPQkuLbLrW68uwTsReoWUuHOTqk+2GfAghdcDeBiHfgtR8VKHqmTOcDc7/7mH2Xd3AYhhkU4UaUXRmVdZDOx4KBjN98/3wT+qZI1g+j1bFRvpN4WicJaSH6zJQJrKtP9SmMIbsS3BJ0qjkaLAAMQ+LPZKB6Pey8Fvsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cTf1fle1; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="NS+6PaMF"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1747221614; x=1778757614;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=u1gyMu2RwQGgA8FqGP3eyYVpifNrScbjzpm3kWhWy8w=;
-  b=NS+6PaMFxuZMoj9k/sdn1b2M2GhTMr5dtglhHgnJu/K7VAwv6crkVMEJ
-   DKDKmWPeO/FwnvPEFKQGVFLKS2ZHzgaR5V+G2+4596T+jF2wqvWQ+W8Il
-   e9kEQrmJksXeq023+4mDLkcn1/gAjkYyT8NscVEiwYtt2vQQK8sBh/GaR
-   Wsyu+XdRNLhZnQeA6s15CJGJOi4xAOnxlEumMPHx/5+8hEjoywx3HhTE0
-   TX9s/41XnxKB9KNRP3PbuIYhw4LAc2ibnxA9ZuU817Rl1KSLVvGnd8Eel
-   byLQSfGiwQovP+AYoHBe6xpVEkaedL3SYLK8Bhh7LP6AYCG8FnC+D+KEc
-   w==;
-X-CSE-ConnectionGUID: NztIYZOERa2vJS16OhP4hQ==
-X-CSE-MsgGUID: 1uk8gwEjS0673rtfszolBA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11432"; a="187393647"
-X-IronPort-AV: E=Sophos;i="6.15,288,1739804400"; 
-   d="scan'208";a="187393647"
-Received: from unknown (HELO yto-r4.gw.nic.fujitsu.com) ([218.44.52.220])
-  by esa8.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 20:20:06 +0900
-Received: from yto-m2.gw.nic.fujitsu.com (yto-nat-yto-m2.gw.nic.fujitsu.com [192.168.83.65])
-	by yto-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id 8F01BD5004
-	for <linux-cxl@vger.kernel.org>; Wed, 14 May 2025 20:20:04 +0900 (JST)
-Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by yto-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id 507DED506F
-	for <linux-cxl@vger.kernel.org>; Wed, 14 May 2025 20:20:04 +0900 (JST)
-Received: from localhost.localdomain (unknown [10.167.135.81])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id 8DC831A0078;
-	Wed, 14 May 2025 19:20:03 +0800 (CST)
-From: "ruansy.fnst" <ruansy.fnst@fujitsu.com>
-To: linux-cxl@vger.kernel.org
-Cc: dan.j.williams@intel.com,
-	vishal.l.verma@intel.com,
-	sunfishho12@gmail.com,
-	Ruan Shiyang <ruansy.fnst@fujitsu.com>
-Subject: [PATCH] test/cxl-xor-region.sh: remove redundant waitting
-Date: Wed, 14 May 2025 19:20:03 +0800
-Message-ID: <20250514112003.2150272-1-ruansy.fnst@fujitsu.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cTf1fle1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747225869; x=1778761869;
+  h=date:from:to:cc:subject:message-id;
+  bh=snh9A+a73yr9qaEGAmEarFHA4LpYfkrKx05bJt2+osQ=;
+  b=cTf1fle1wOQOmVyIUAWXAYnHxIcN6nrIsaReDXOIkow354oDzzps5abZ
+   n1MDSOsTOKIg4az7aX0yD1NbOWPfm6SIfULQ4O7Sh/oPcR09HhK78Gmw9
+   Y64iciNhFC6QlStxCut8W4iKMG7iAhQpAmVRiysuW5wj1Eg5l6YFhPshS
+   b+86kVEmnCqvlG+H2tA16Awg4P1erh6n8JdsFumSqIWV9apiaP5m5GP4E
+   i6hmj0vP9DLWkUYj+0KlecoMxN6wg7xUirv22jBNaB6lwcj8M6Gj+AMCB
+   c8gP4VaSSKG5WNu5WzOrvxrI+JZrucOJLYuRlsOCAEjHLmePXObJIXr3E
+   A==;
+X-CSE-ConnectionGUID: 74stIc2yQYON82p/ZzZdGw==
+X-CSE-MsgGUID: pCN9U+cBRHWik/VSNaLPpg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="48230673"
+X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
+   d="scan'208";a="48230673"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 05:30:23 -0700
+X-CSE-ConnectionGUID: dmlpEmx0RhW+ZtWdcMm+5Q==
+X-CSE-MsgGUID: lNIBVD2BR2q828VS41P8cg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
+   d="scan'208";a="138445834"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 14 May 2025 05:30:22 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uFBFb-000H6h-1i;
+	Wed, 14 May 2025 12:30:19 +0000
+Date: Wed, 14 May 2025 20:29:55 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Subject: [cxl:next] BUILD SUCCESS
+ 128ad8fa385b151041e1f94ef737b080c2aea6f4
+Message-ID: <202505142044.LN2bTASL-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Ruan Shiyang <ruansy.fnst@fujitsu.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
+branch HEAD: 128ad8fa385b151041e1f94ef737b080c2aea6f4  Documentation: Update the CXL Maturity Map
 
-Now that cxl_wait_probe() has been added[1] to wait for udev queue
-empty, the `udevadm settle` here is no longer necessary.
+elapsed time: 803m
 
-[1] b231603 cxl/lib: Add cxl_wait_probe()
+configs tested: 142
+configs skipped: 3
 
-Signed-off-by: Ruan Shiyang <ruansy.fnst@fujitsu.com>
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-===
-Question to Dan:
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+alpha                               defconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    gcc-14.2.0
+arc                                 defconfig    gcc-14.2.0
+arc                     haps_hs_smp_defconfig    gcc-14.2.0
+arc                   randconfig-001-20250514    gcc-13.3.0
+arc                   randconfig-002-20250514    gcc-14.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-14.2.0
+arm                                 defconfig    clang-21
+arm                         lpc32xx_defconfig    clang-17
+arm                   randconfig-001-20250514    clang-21
+arm                   randconfig-002-20250514    clang-21
+arm                   randconfig-003-20250514    gcc-7.5.0
+arm                   randconfig-004-20250514    gcc-7.5.0
+arm                         vf610m4_defconfig    gcc-14.2.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-14.2.0
+arm64                               defconfig    gcc-14.2.0
+arm64                 randconfig-001-20250514    clang-17
+arm64                 randconfig-002-20250514    gcc-5.5.0
+arm64                 randconfig-003-20250514    gcc-5.5.0
+arm64                 randconfig-004-20250514    clang-21
+csky                             alldefconfig    gcc-14.2.0
+csky                              allnoconfig    gcc-14.2.0
+csky                                defconfig    gcc-14.2.0
+csky                  randconfig-001-20250514    gcc-13.3.0
+csky                  randconfig-002-20250514    gcc-14.2.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon                             defconfig    clang-21
+hexagon               randconfig-001-20250514    clang-21
+hexagon               randconfig-002-20250514    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250514    clang-20
+i386        buildonly-randconfig-002-20250514    gcc-12
+i386        buildonly-randconfig-003-20250514    clang-20
+i386        buildonly-randconfig-004-20250514    clang-20
+i386        buildonly-randconfig-005-20250514    gcc-12
+i386        buildonly-randconfig-006-20250514    gcc-12
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch                           defconfig    gcc-14.2.0
+loongarch             randconfig-001-20250514    gcc-14.2.0
+loongarch             randconfig-002-20250514    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                       bvme6000_defconfig    gcc-14.2.0
+m68k                                defconfig    gcc-14.2.0
+m68k                        m5272c3_defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+microblaze                          defconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                           ci20_defconfig    clang-21
+mips                           ip27_defconfig    gcc-14.2.0
+mips                           jazz_defconfig    clang-17
+nios2                             allnoconfig    gcc-14.2.0
+nios2                               defconfig    gcc-14.2.0
+nios2                 randconfig-001-20250514    gcc-7.5.0
+nios2                 randconfig-002-20250514    gcc-11.5.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250514    gcc-12.4.0
+parisc                randconfig-002-20250514    gcc-10.5.0
+parisc64                            defconfig    gcc-14.1.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-21
+powerpc                      ppc64e_defconfig    gcc-14.2.0
+powerpc               randconfig-001-20250514    clang-17
+powerpc               randconfig-002-20250514    gcc-5.5.0
+powerpc               randconfig-003-20250514    gcc-7.5.0
+powerpc                    sam440ep_defconfig    gcc-14.2.0
+powerpc64             randconfig-001-20250514    gcc-10.5.0
+powerpc64             randconfig-002-20250514    clang-19
+powerpc64             randconfig-003-20250514    gcc-5.5.0
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    clang-21
+riscv                 randconfig-001-20250514    gcc-7.5.0
+riscv                 randconfig-002-20250514    gcc-14.2.0
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    clang-21
+s390                  randconfig-001-20250514    clang-21
+s390                  randconfig-002-20250514    clang-21
+s390                       zfcpdump_defconfig    clang-21
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-14.2.0
+sh                          kfr2r09_defconfig    gcc-14.2.0
+sh                          lboxre2_defconfig    gcc-14.2.0
+sh                    randconfig-001-20250514    gcc-11.5.0
+sh                    randconfig-002-20250514    gcc-9.3.0
+sh                          rsk7264_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250514    gcc-8.5.0
+sparc                 randconfig-002-20250514    gcc-14.2.0
+sparc64                             defconfig    gcc-14.2.0
+sparc64               randconfig-001-20250514    gcc-14.2.0
+sparc64               randconfig-002-20250514    gcc-14.2.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250514    gcc-12
+um                    randconfig-002-20250514    gcc-12
+um                           x86_64_defconfig    clang-21
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250514    clang-20
+x86_64      buildonly-randconfig-002-20250514    gcc-12
+x86_64      buildonly-randconfig-003-20250514    gcc-12
+x86_64      buildonly-randconfig-004-20250514    gcc-12
+x86_64      buildonly-randconfig-005-20250514    clang-20
+x86_64      buildonly-randconfig-006-20250514    gcc-12
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-18
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250514    gcc-10.5.0
+xtensa                randconfig-002-20250514    gcc-12.4.0
 
-I understand how cxl_wait_probe() work, but I have some questions about
-the motivation of adding this function:  Firstly, is it function added
-for simply waiting for new added CXL device been ready before cxl
-command does the actual work?  Just for replacing `udevadm settle`'s
-work?
-
-Now I am facing a problem that cxl command takes a long time to complete
-when I run it in a udev rule(do some configuration when CXL memdev is
-added).  I found it is caused by this function: waitting for udev
-queue's endding but itself is in the queue.  The cxl_wait_probe()
-function does not seem to allow me to do that.  So, the 2nd question is:
-is it against the spec to run cxl command in a udev rule?
-====
----
- test/cxl-xor-region.sh | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/test/cxl-xor-region.sh b/test/cxl-xor-region.sh
-index b9e1d79..fb4f9a0 100644
---- a/test/cxl-xor-region.sh
-+++ b/test/cxl-xor-region.sh
-@@ -14,7 +14,6 @@ check_prereq "jq"
- 
- modprobe -r cxl_test
- modprobe cxl_test interleave_arithmetic=1
--udevadm settle
- rc=1
- 
- # THEORY OF OPERATION: Create x1,2,3,4 regions to exercise the XOR math
--- 
-2.43.0
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
