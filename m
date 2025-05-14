@@ -1,139 +1,107 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BE47280336
-	for <linux-cxl@vger.kernel.org>; Wed, 14 May 2025 15:19:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 514B8F4ED
+	for <linux-cxl@vger.kernel.org>; Wed, 14 May 2025 15:22:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747235969; cv=none; b=NmMaS3jqsFjju2WCOSSuI475+Ulj6cCO9oI1jJCW6B5B+i+vz8MpKTwvBh0CeuUoqrC+jRMAiYR+vthhL0eqpJHClVbVCHzTyATc17BxuCWYFt3+N+YS5ZC/TRbN4GKASGNMZh1IaiGMgQ8gbQrYkYIkmOQkYqgyQjazkCUq0dM=
+	t=1747236169; cv=none; b=R47e+hEtE5kAGjAoMyTzODO2o0AWu6S7JR/nLz3YbSTru98QQ65FYyZQAB0eunjd/Gsdrhowuf67SSOhfYuYfX68V+aealESeMSVF4VhkjcoH4HFmy0sTMva15EgRPoElNRpqg+4P1V6Cb3TAnW3BCF0H01eHqH1lT7Bsu7P4dk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747235969; c=relaxed/simple;
-	bh=BXaMOYCCOUkzwpn36hgZo+nx8uWDp0q5VzqB5V1Ucms=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=afqbF91lLkTa67LR/1NjK2P4nienpqXKZnjEvBiEXbldxX6Uyb0dKymC3UKnF68oeoEnmqZc/CxkyJYpiHhi50t/k6LrQxT0cpI3nNzINaW2RCuAzDa4VJDOeYzkkjtfyuv/EUqqfb+8SNqI+xTOSDV54lG0Mxey5oxy66Y6L2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZyH6x2rp5z6GDJQ;
-	Wed, 14 May 2025 23:18:49 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
-	by mail.maildlp.com (Postfix) with ESMTPS id 13028140275;
-	Wed, 14 May 2025 23:19:23 +0800 (CST)
-Received: from P_UKIT01-A7bmah.china.huawei.com (10.48.144.227) by
- frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 14 May 2025 17:19:22 +0200
-From: <shiju.jose@huawei.com>
-To: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
-	<dave@stgolabs.net>, <jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>
-CC: <nifan.cxl@gmail.com>, <linuxarm@huawei.com>, <tanxiaofei@huawei.com>,
-	<prime.zeng@hisilicon.com>, <shiju.jose@huawei.com>
-Subject: [PATCH 1/1] cxl/events: Update Common Event Record to CXL spec rev 3.2
-Date: Wed, 14 May 2025 16:19:13 +0100
-Message-ID: <20250514151913.752-1-shiju.jose@huawei.com>
-X-Mailer: git-send-email 2.43.0.windows.1
+	s=arc-20240116; t=1747236169; c=relaxed/simple;
+	bh=IdXTiW+D2B/rG1YZVMcTrW9ArM0YeTWx6mEJheoRiPw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OEhfV6UVTb5+HwcgyEdBvjd/k0UnG0v7NYzvoypMSuFMkDrLzi1ci47bkDllk2xOoh3whLcFZOL0G6xAXF+pYtyqeCoaDgEk0hMn2+I+W5tI5SSuGEVzQ3J+wRSBAAXEacRvygglTJThN4+3xCEhV9XN+SsGvJB6Bu3kr8jj+1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PE9aJ2s/; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PE9aJ2s/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747236169; x=1778772169;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=IdXTiW+D2B/rG1YZVMcTrW9ArM0YeTWx6mEJheoRiPw=;
+  b=PE9aJ2s/hd/Oycf43NqsEjfuwwI4VTgqhyeceXy3PLfVZGrK/pb1z8L4
+   +tRvxiJESyJAYccbXTzyF7zDbdMJ8FZUVpkllB/WcCIBAHJw7KKTEsWKz
+   Q9cwhS8zcrnwyZJfsHpUBMbEpYMErGQR2VM/tioUvBsY6HuNgfvy8ApgU
+   LYI9/Werr+rmMu/V3X8aCkry6f1ebFGVqPa5Ha0C8j3t8tRmcBMuE0Rrs
+   oww9zV+Niov8kqzj5ZijjNQSSx42Fbhf6vf1QJWINOW1q25TLDI658Aqe
+   bLQPPZRyh+P1ktYRBbTbztMLDVyUPaSYkZ5hvrOeWURO+fa8q2XF+8oOK
+   g==;
+X-CSE-ConnectionGUID: yHHqLn1pTXaDtzUd9gIWig==
+X-CSE-MsgGUID: U2jOxmbFSX2FuRVClFEOGQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="49011305"
+X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
+   d="scan'208";a="49011305"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 08:22:48 -0700
+X-CSE-ConnectionGUID: VzOGaLi7RsSGtID4mfaGUw==
+X-CSE-MsgGUID: uXEtH4P3Q8+X3yWMVYqhBg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
+   d="scan'208";a="138989633"
+Received: from puneetse-mobl.amr.corp.intel.com (HELO [10.125.109.25]) ([10.125.109.25])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 08:22:48 -0700
+Message-ID: <4a71537f-9c98-49fa-ae34-227353bea25f@intel.com>
+Date: Wed, 14 May 2025 08:22:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
- frapeml500007.china.huawei.com (7.182.85.172)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/4] cxl: docs/platform/acpi/srat fix memory table
+ misalignment
+To: Gregory Price <gourry@gourry.net>
+Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com
+References: <20250514003133.584401-1-dave.jiang@intel.com>
+ <20250514003133.584401-3-dave.jiang@intel.com>
+ <aCP0oeBo--WC6qV-@gourry-fedora-PF4VCD3F>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <aCP0oeBo--WC6qV-@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Shiju Jose <shiju.jose@huawei.com>
 
-CXL spec 3.2 section 8.2.10.2.1 Table 8-55, Common Event Record format
-has updated with LD-ID and ID of the device head fields.
 
-Add updates for the above spec changes in the CXL events record and CXL
-common trace event implementation.
+On 5/13/25 6:40 PM, Gregory Price wrote:
+> On Tue, May 13, 2025 at 05:31:31PM -0700, Dave Jiang wrote:
+>> Fix the misalignment in the SRAT table example.
+>>
+> 
+> This misalignment was intentional, but i don't have a strong feeling
+> either way. 
+> 
+> (This is how it comes out of iasl -d)
 
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
----
- drivers/cxl/core/trace.h | 22 ++++++++++++++++------
- include/cxl/event.h      |  4 +++-
- 2 files changed, 19 insertions(+), 7 deletions(-)
+I can drop it. It just looks weird in documentation. :)
 
-diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
-index 25ebfbc1616c..ce482e57a477 100644
---- a/drivers/cxl/core/trace.h
-+++ b/drivers/cxl/core/trace.h
-@@ -214,12 +214,16 @@ TRACE_EVENT(cxl_overflow,
- #define CXL_EVENT_RECORD_FLAG_PERF_DEGRADED	BIT(4)
- #define CXL_EVENT_RECORD_FLAG_HW_REPLACE	BIT(5)
- #define CXL_EVENT_RECORD_FLAG_MAINT_OP_SUB_CLASS_VALID	BIT(6)
-+#define CXL_EVENT_RECORD_FLAG_LD_ID_VALID	BIT(7)
-+#define CXL_EVENT_RECORD_FLAG_HEAD_ID_VALID	BIT(8)
- #define show_hdr_flags(flags)	__print_flags(flags, " | ",			   \
- 	{ CXL_EVENT_RECORD_FLAG_PERMANENT,	"PERMANENT_CONDITION"		}, \
- 	{ CXL_EVENT_RECORD_FLAG_MAINT_NEEDED,	"MAINTENANCE_NEEDED"		}, \
- 	{ CXL_EVENT_RECORD_FLAG_PERF_DEGRADED,	"PERFORMANCE_DEGRADED"		}, \
--	{ CXL_EVENT_RECORD_FLAG_HW_REPLACE,	"HARDWARE_REPLACEMENT_NEEDED"	},  \
--	{ CXL_EVENT_RECORD_FLAG_MAINT_OP_SUB_CLASS_VALID,	"MAINT_OP_SUB_CLASS_VALID" }	\
-+	{ CXL_EVENT_RECORD_FLAG_HW_REPLACE,	"HARDWARE_REPLACEMENT_NEEDED"	}, \
-+	{ CXL_EVENT_RECORD_FLAG_MAINT_OP_SUB_CLASS_VALID,	"MAINT_OP_SUB_CLASS_VALID" }, \
-+	{ CXL_EVENT_RECORD_FLAG_LD_ID_VALID,	"LD_ID_VALID" }, \
-+	{ CXL_EVENT_RECORD_FLAG_HEAD_ID_VALID,	"HEAD_ID_VALID" } \
- )
- 
- /*
-@@ -247,7 +251,9 @@ TRACE_EVENT(cxl_overflow,
- 	__field(u64, hdr_timestamp)				\
- 	__field(u8, hdr_length)					\
- 	__field(u8, hdr_maint_op_class)				\
--	__field(u8, hdr_maint_op_sub_class)
-+	__field(u8, hdr_maint_op_sub_class)			\
-+	__field(u16, hdr_ld_id)					\
-+	__field(u8, hdr_head_id)
- 
- #define CXL_EVT_TP_fast_assign(cxlmd, l, hdr)					\
- 	__assign_str(memdev);				\
-@@ -260,18 +266,22 @@ TRACE_EVENT(cxl_overflow,
- 	__entry->hdr_related_handle = le16_to_cpu((hdr).related_handle);	\
- 	__entry->hdr_timestamp = le64_to_cpu((hdr).timestamp);			\
- 	__entry->hdr_maint_op_class = (hdr).maint_op_class;			\
--	__entry->hdr_maint_op_sub_class = (hdr).maint_op_sub_class
-+	__entry->hdr_maint_op_sub_class = (hdr).maint_op_sub_class;		\
-+	__entry->hdr_ld_id = le16_to_cpu((hdr).ld_id);				\
-+	__entry->hdr_head_id = (hdr).head_id
- 
- #define CXL_EVT_TP_printk(fmt, ...) \
- 	TP_printk("memdev=%s host=%s serial=%lld log=%s : time=%llu uuid=%pUb "	\
- 		"len=%d flags='%s' handle=%x related_handle=%x "		\
--		"maint_op_class=%u maint_op_sub_class=%u : " fmt,		\
-+		"maint_op_class=%u maint_op_sub_class=%u ld_id=%x "		\
-+		"head_id=%x : " fmt,						\
- 		__get_str(memdev), __get_str(host), __entry->serial,		\
- 		cxl_event_log_type_str(__entry->log),				\
- 		__entry->hdr_timestamp, &__entry->hdr_uuid, __entry->hdr_length,\
- 		show_hdr_flags(__entry->hdr_flags), __entry->hdr_handle,	\
- 		__entry->hdr_related_handle, __entry->hdr_maint_op_class,	\
--		__entry->hdr_maint_op_sub_class,	\
-+		__entry->hdr_maint_op_sub_class, __entry->hdr_ld_id,		\
-+		__entry->hdr_head_id,						\
- 		##__VA_ARGS__)
- 
- TRACE_EVENT(cxl_generic_event,
-diff --git a/include/cxl/event.h b/include/cxl/event.h
-index f9ae1796da85..f4cb8568566b 100644
---- a/include/cxl/event.h
-+++ b/include/cxl/event.h
-@@ -19,7 +19,9 @@ struct cxl_event_record_hdr {
- 	__le64 timestamp;
- 	u8 maint_op_class;
- 	u8 maint_op_sub_class;
--	u8 reserved[14];
-+	__le16 ld_id;
-+	u8 head_id;
-+	u8 reserved[11];
- } __packed;
- 
- struct cxl_event_media_hdr {
--- 
-2.43.0
+> 
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>>  Documentation/driver-api/cxl/platform/acpi/srat.rst | 6 +++---
+>>  1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/Documentation/driver-api/cxl/platform/acpi/srat.rst b/Documentation/driver-api/cxl/platform/acpi/srat.rst
+>> index 56d7bbb18c3b..cc7687645de7 100644
+>> --- a/Documentation/driver-api/cxl/platform/acpi/srat.rst
+>> +++ b/Documentation/driver-api/cxl/platform/acpi/srat.rst
+>> @@ -39,6 +39,6 @@ Example ::
+>>          Address Length : 0000003CA0000000
+>>               Reserved2 : 00000000
+>>   Flags (decoded below) : 0000000B
+>> -              Enabled : 1
+>> -        Hot Pluggable : 1
+>> -         Non-Volatile : 0
+>> +               Enabled : 1
+>> +         Hot Pluggable : 1
+>> +          Non-Volatile : 0
+>> -- 
+>> 2.49.0
+>>
 
