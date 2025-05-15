@@ -1,210 +1,235 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F54F288513
-	for <linux-cxl@vger.kernel.org>; Thu, 15 May 2025 09:04:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E8C296736
+	for <linux-cxl@vger.kernel.org>; Thu, 15 May 2025 09:27:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747299882; cv=none; b=ikrGGt2bubxYbYUg2pryBG1TqjvL1HCFN4tX09T629Qd/6mBNOv/4n8At8SQGlkhI+t+cIANfbNoBm+TFA2w0McLcqK95gfCQ47U7cDSD8DcIY1vg+vWS5LHqxC+PhHb+jS+MO0aicvwrWkRz4/5StYL40mrpke7s3FdUWukjzA=
+	t=1747301224; cv=none; b=GkCoCTcg0wzNllj4Qo7azu7d++KkL4i8gtn1iRs2IiPqQGZqmliUxj/eAP3sS28Jqmpw57tYJVNVLQovZ56q5SZqwN7AfUcb2eqjar8yGybeBk1gzPvK7hEhytifyEDfgWBuXvJlXhqJh18CNxeZxsJTGgbatLIYJ3IkfdQWKy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747299882; c=relaxed/simple;
-	bh=2JOTMuZpSEiy5pqsQqZBne5qBhOgXRvcRJlASmvGmgg=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=Q+yhBWecu3jaDSOfrRE9cyVryS+cjUzoi9cOCuzghgT/HfVAj/bZmFdZbwzuM7mbBxfXvFjEOT9lxCeAN9gIceJZtjO8JHLfRawrcGFTvnHqvLHOpnM9paSt63AHJ1oVTarCc9+jQD6OEXW3lni5UYSaWpZlctjI87T64nCBqR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=gSnRvNUy; arc=none smtp.client-ip=91.218.175.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="gSnRvNUy"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747299878;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Q0FpDkDu196gW3mLiVY46fZckSWYEfx7gzTD8ZMla68=;
-	b=gSnRvNUyE5j8LXaMFvVWtpEWokvfP7HtORyp2xG5w/wZXO6cV6DPoL9rxkSaSdpgf5P5zy
-	is5aAXRZY6BvJxWANtsmPsSGuu1Iwr1Xyciy3pGsS+hsUuFeV0KZ051z2RyPR8RoVAY0Eg
-	5153FDDgd1X7lHzP+jxZD4SC/oC/gqk=
+	s=arc-20240116; t=1747301224; c=relaxed/simple;
+	bh=cjYHBfa1+bS7d3rr8isXPTstLl8bjW6aKTyjEG46U8U=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=r/Qtxf88PKnJbAK1NX5D9t2EyKpiUHAjGDfjTKdXzJ8gCxFOlIKWSPSuOwu+P+4nbbH1PoH67yY9zb7NHopPwsbBIf2EuhYcIefOwHcCMGflRC5deyyB1SqqXsvKu483uqgboQrkZWNsYID/MprUIQNXvYPRVaKAFVshi+dk16o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZylCB1Dj5z6K6Sr;
+	Thu, 15 May 2025 17:24:06 +0800 (CST)
+Received: from frapeml100005.china.huawei.com (unknown [7.182.85.132])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4AA6C140144;
+	Thu, 15 May 2025 17:26:58 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (7.182.85.172) by
+ frapeml100005.china.huawei.com (7.182.85.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 15 May 2025 11:26:58 +0200
+Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
+ frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
+ Thu, 15 May 2025 11:26:58 +0200
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Alison Schofield <alison.schofield@intel.com>
+CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"dan.j.williams@intel.com" <dan.j.williams@intel.com>, "dave@stgolabs.net"
+	<dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>,
+	"dave.jiang@intel.com" <dave.jiang@intel.com>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, Linuxarm <linuxarm@huawei.com>,
+	tanxiaofei <tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>
+Subject: RE: [PATCH 1/1] cxl/events: Update Common Event Record to CXL spec
+ rev 3.2
+Thread-Topic: [PATCH 1/1] cxl/events: Update Common Event Record to CXL spec
+ rev 3.2
+Thread-Index: AQHbxOOSBVRcfkYHSEuRh8BhYU4fKLPSXLwAgAEO8QA=
+Date: Thu, 15 May 2025 09:26:57 +0000
+Message-ID: <eabd1bd3c92d46a7886fad4cd95fde1a@huawei.com>
+References: <20250514151913.752-1-shiju.jose@huawei.com>
+ <aCTq7IX49iLBiwJL@aschofie-mobl2.lan>
+In-Reply-To: <aCTq7IX49iLBiwJL@aschofie-mobl2.lan>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
-Subject: Re: [PATCH v13 5/5] qtest/cxl: Add aarch64 virt test for CXL
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Itaru Kitayama <itaru.kitayama@linux.dev>
-In-Reply-To: <20250513111455.128266-6-Jonathan.Cameron@huawei.com>
-Date: Thu, 15 May 2025 18:04:18 +0900
-Cc: qemu-devel@nongnu.org,
- Fan Ni <fan.ni@samsung.com>,
- Peter Maydell <peter.maydell@linaro.org>,
- mst@redhat.com,
- linux-cxl@vger.kernel.org,
- linuxarm@huawei.com,
- qemu-arm@nongnu.org,
- Yuquan Wang <wangyuquan1236@phytium.com.cn>,
- =?utf-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@linaro.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D9E503CC-1271-4008-9975-9BAEC7A33376@linux.dev>
-References: <20250513111455.128266-1-Jonathan.Cameron@huawei.com>
- <20250513111455.128266-6-Jonathan.Cameron@huawei.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
 
+>-----Original Message-----
+>From: Alison Schofield <alison.schofield@intel.com>
+>Sent: 14 May 2025 20:12
+>To: Shiju Jose <shiju.jose@huawei.com>
+>Cc: linux-cxl@vger.kernel.org; dan.j.williams@intel.com; dave@stgolabs.net=
+;
+>Jonathan Cameron <jonathan.cameron@huawei.com>; dave.jiang@intel.com;
+>vishal.l.verma@intel.com; ira.weiny@intel.com; nifan.cxl@gmail.com; Linuxa=
+rm
+><linuxarm@huawei.com>; tanxiaofei <tanxiaofei@huawei.com>; Zengtao (B)
+><prime.zeng@hisilicon.com>
+>Subject: Re: [PATCH 1/1] cxl/events: Update Common Event Record to CXL spe=
+c
+>rev 3.2
+>
+>On Wed, May 14, 2025 at 04:19:13PM +0100, shiju.jose@huawei.com wrote:
+>> From: Shiju Jose <shiju.jose@huawei.com>
+>>
+>> CXL spec 3.2 section 8.2.10.2.1 Table 8-55, Common Event Record format
+>> has updated with LD-ID and ID of the device head fields.
+>
+>This comment is less important now that I've opened the spec and looked th=
+em
+>up. In addition to a spec reference, please take a moment in this commit
+>message to describe the new fields and what they offer.
 
+Hi Alison,
 
-> On May 13, 2025, at 20:14, Jonathan Cameron =
-<Jonathan.Cameron@huawei.com> wrote:
->=20
-> Add a single complex case for aarch64 virt machine.
-> Given existing much more comprehensive tests for x86 cover the
-> common functionality, a single test should be enough to verify
-> that the aarch64 part continue to work.
->=20
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
-> tests/qtest/cxl-test.c  | 59 ++++++++++++++++++++++++++++++++---------
-> tests/qtest/meson.build |  1 +
-> 2 files changed, 47 insertions(+), 13 deletions(-)
->=20
-> diff --git a/tests/qtest/cxl-test.c b/tests/qtest/cxl-test.c
-> index a600331843..c7189d6222 100644
-> --- a/tests/qtest/cxl-test.c
-> +++ b/tests/qtest/cxl-test.c
-> @@ -19,6 +19,12 @@
->     "-device pxb-cxl,id=3Dcxl.1,bus=3Dpcie.0,bus_nr=3D53 " \
->     "-M =
-cxl-fmw.0.targets.0=3Dcxl.0,cxl-fmw.0.targets.1=3Dcxl.1,cxl-fmw.0.size=3D4=
-G "
->=20
-> +#define QEMU_VIRT_2PXB_CMD \
-> +    "-machine virt,cxl=3Don -cpu max " \
-> +    "-device pxb-cxl,id=3Dcxl.0,bus=3Dpcie.0,bus_nr=3D52 " \
-> +    "-device pxb-cxl,id=3Dcxl.1,bus=3Dpcie.0,bus_nr=3D53 " \
-> +    "-M =
-cxl-fmw.0.targets.0=3Dcxl.0,cxl-fmw.0.targets.1=3Dcxl.1,cxl-fmw.0.size=3D4=
-G "
-> +
-> #define QEMU_RP \
->     "-device cxl-rp,id=3Drp0,bus=3Dcxl.0,chassis=3D0,slot=3D0 "
->=20
-> @@ -197,25 +203,52 @@ static void cxl_2pxb_4rp_4t3d(void)
->     qtest_end();
->     rmdir(tmpfs);
-> }
-> +
-> +static void cxl_virt_2pxb_4rp_4t3d(void)
-> +{
-> +    g_autoptr(GString) cmdline =3D g_string_new(NULL);
-> +    char template[] =3D "/tmp/cxl-test-XXXXXX";
-> +    const char *tmpfs;
-> +
-> +    tmpfs =3D mkdtemp(template);
-> +
-> +    g_string_printf(cmdline, QEMU_VIRT_2PXB_CMD QEMU_4RP QEMU_4T3D,
-> +                    tmpfs, tmpfs, tmpfs, tmpfs, tmpfs, tmpfs,
-> +                    tmpfs, tmpfs);
-> +
-> +    qtest_start(cmdline->str);
-> +    qtest_end();
-> +    rmdir(tmpfs);
-> +}
-> #endif /* CONFIG_POSIX */
->=20
-> int main(int argc, char **argv)
-> {
-> -    g_test_init(&argc, &argv, NULL);
-> +    const char *arch =3D qtest_get_arch();
->=20
-> -    qtest_add_func("/pci/cxl/basic_hostbridge", cxl_basic_hb);
-> -    qtest_add_func("/pci/cxl/basic_pxb", cxl_basic_pxb);
-> -    qtest_add_func("/pci/cxl/pxb_with_window", cxl_pxb_with_window);
-> -    qtest_add_func("/pci/cxl/pxb_x2_with_window", =
-cxl_2pxb_with_window);
-> -    qtest_add_func("/pci/cxl/rp", cxl_root_port);
-> -    qtest_add_func("/pci/cxl/rp_x2", cxl_2root_port);
-> +    g_test_init(&argc, &argv, NULL);
-> +    if (strcmp(arch, "i386") =3D=3D 0 || strcmp(arch, "x86_64") =3D=3D =
-0) {
-> +        qtest_add_func("/pci/cxl/basic_hostbridge", cxl_basic_hb);
-> +        qtest_add_func("/pci/cxl/basic_pxb", cxl_basic_pxb);
-> +        qtest_add_func("/pci/cxl/pxb_with_window", =
-cxl_pxb_with_window);
-> +        qtest_add_func("/pci/cxl/pxb_x2_with_window", =
-cxl_2pxb_with_window);
-> +        qtest_add_func("/pci/cxl/rp", cxl_root_port);
-> +        qtest_add_func("/pci/cxl/rp_x2", cxl_2root_port);
-> #ifdef CONFIG_POSIX
-> -    qtest_add_func("/pci/cxl/type3_device", cxl_t3d_deprecated);
-> -    qtest_add_func("/pci/cxl/type3_device_pmem", cxl_t3d_persistent);
-> -    qtest_add_func("/pci/cxl/type3_device_vmem", cxl_t3d_volatile);
-> -    qtest_add_func("/pci/cxl/type3_device_vmem_lsa", =
-cxl_t3d_volatile_lsa);
-> -    qtest_add_func("/pci/cxl/rp_x2_type3_x2", cxl_1pxb_2rp_2t3d);
-> -    qtest_add_func("/pci/cxl/pxb_x2_root_port_x4_type3_x4", =
-cxl_2pxb_4rp_4t3d);
-> +        qtest_add_func("/pci/cxl/type3_device", cxl_t3d_deprecated);
-> +        qtest_add_func("/pci/cxl/type3_device_pmem", =
-cxl_t3d_persistent);
-> +        qtest_add_func("/pci/cxl/type3_device_vmem", =
-cxl_t3d_volatile);
-> +        qtest_add_func("/pci/cxl/type3_device_vmem_lsa", =
-cxl_t3d_volatile_lsa);
-> +        qtest_add_func("/pci/cxl/rp_x2_type3_x2", cxl_1pxb_2rp_2t3d);
-> +        qtest_add_func("/pci/cxl/pxb_x2_root_port_x4_type3_x4",
-> +                       cxl_2pxb_4rp_4t3d);
-> #endif
-> +    } else if (strcmp(arch, "aarch64") =3D=3D 0) {
-> +#ifdef CONFIG_POSIX
-> +        qtest_add_func("/pci/cxl/virt/pxb_x2_root_port_x4_type3_x4",
-> +                       cxl_virt_2pxb_4rp_4t3d);
-> +#endif
-> +    }
-> +
->     return g_test_run();
-> }
-> diff --git a/tests/qtest/meson.build b/tests/qtest/meson.build
-> index 7daf619845..361000267a 100644
-> --- a/tests/qtest/meson.build
-> +++ b/tests/qtest/meson.build
-> @@ -258,6 +258,7 @@ qtests_aarch64 =3D \
->   (config_all_accel.has_key('CONFIG_TCG') and                          =
-                  \
->    config_all_devices.has_key('CONFIG_TPM_TIS_I2C') ? =
-['tpm-tis-i2c-test'] : []) + \
->   (config_all_devices.has_key('CONFIG_ASPEED_SOC') ? qtests_aspeed64 : =
-[]) + \
-> +  qtests_cxl +                                                        =
-                          \
->   ['arm-cpu-features',
->    'numa-test',
->    'boot-serial-test',
-> --=20
-> 2.43.0
->=20
+Thanks for the feedback. I will add description for the new fields. =20
 
-~/projects/qemu/build$ meson test qtest-aarch64/cxl-test
-ninja: Entering directory `/home/realm/projects/qemu/build'
-[1/8] Generating qemu-version.h with a custom command (wrapped by meson =
-to capture output)
-1/1 qemu:qtest+qtest-aarch64 / qtest-aarch64/cxl-test        OK          =
-    0.17s   1 subtests passed
+>
+>nit below -
+>
+>
+>
+>>
+>> Add updates for the above spec changes in the CXL events record and
+>> CXL common trace event implementation.
+>>
+>> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+>> ---
+>>  drivers/cxl/core/trace.h | 22 ++++++++++++++++------
+>>  include/cxl/event.h      |  4 +++-
+>>  2 files changed, 19 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h index
+>> 25ebfbc1616c..ce482e57a477 100644
+>> --- a/drivers/cxl/core/trace.h
+>> +++ b/drivers/cxl/core/trace.h
+>> @@ -214,12 +214,16 @@ TRACE_EVENT(cxl_overflow,
+>>  #define CXL_EVENT_RECORD_FLAG_PERF_DEGRADED	BIT(4)
+>>  #define CXL_EVENT_RECORD_FLAG_HW_REPLACE	BIT(5)
+>>  #define CXL_EVENT_RECORD_FLAG_MAINT_OP_SUB_CLASS_VALID	BIT(6)
+>> +#define CXL_EVENT_RECORD_FLAG_LD_ID_VALID	BIT(7)
+>> +#define CXL_EVENT_RECORD_FLAG_HEAD_ID_VALID	BIT(8)
+>>  #define show_hdr_flags(flags)	__print_flags(flags, " | ",
+>		   \
+>>  	{ CXL_EVENT_RECORD_FLAG_PERMANENT,
+>	"PERMANENT_CONDITION"		}, \
+>>  	{ CXL_EVENT_RECORD_FLAG_MAINT_NEEDED,
+>	"MAINTENANCE_NEEDED"		}, \
+>>  	{ CXL_EVENT_RECORD_FLAG_PERF_DEGRADED,
+>	"PERFORMANCE_DEGRADED"		}, \
+>> -	{ CXL_EVENT_RECORD_FLAG_HW_REPLACE,
+>	"HARDWARE_REPLACEMENT_NEEDED"	},  \
+>> -	{ CXL_EVENT_RECORD_FLAG_MAINT_OP_SUB_CLASS_VALID,
+>	"MAINT_OP_SUB_CLASS_VALID" }	\
+>> +	{ CXL_EVENT_RECORD_FLAG_HW_REPLACE,
+>	"HARDWARE_REPLACEMENT_NEEDED"	}, \
+>> +	{ CXL_EVENT_RECORD_FLAG_MAINT_OP_SUB_CLASS_VALID,
+>	"MAINT_OP_SUB_CLASS_VALID" }, \
+>> +	{ CXL_EVENT_RECORD_FLAG_LD_ID_VALID,	"LD_ID_VALID" }, \
+>> +	{ CXL_EVENT_RECORD_FLAG_HEAD_ID_VALID,	"HEAD_ID_VALID" } \
+>>  )
+>
+>Is there some spurious changes above? I don't see why HW_REPLACE line
+>needed an edit.
 
-Ok:                 1
-Expected Fail:      0
-Fail:               0
-Unexpected Pass:    0
-Skipped:            0
-Timeout:            0
+Just removed an extra space that was present in the line with HARDWARE_REPL=
+ACEMENT_NEEDED
+to make it identical to the rest.
 
-Tested-by: Itaru Kitayama <itaru.kitayama@fujitsu.com =
-<mailto:itaru.kitayama@fujitsu.com>>
+>
+>>
+>>  /*
+>> @@ -247,7 +251,9 @@ TRACE_EVENT(cxl_overflow,
+>>  	__field(u64, hdr_timestamp)				\
+>>  	__field(u8, hdr_length)					\
+>>  	__field(u8, hdr_maint_op_class)				\
+>> -	__field(u8, hdr_maint_op_sub_class)
+>> +	__field(u8, hdr_maint_op_sub_class)			\
+>> +	__field(u16, hdr_ld_id)					\
+>> +	__field(u8, hdr_head_id)
+>>
+>>  #define CXL_EVT_TP_fast_assign(cxlmd, l, hdr)
+>		\
+>>  	__assign_str(memdev);				\
+>> @@ -260,18 +266,22 @@ TRACE_EVENT(cxl_overflow,
+>>  	__entry->hdr_related_handle =3D le16_to_cpu((hdr).related_handle);
+>	\
+>>  	__entry->hdr_timestamp =3D le64_to_cpu((hdr).timestamp);
+>		\
+>>  	__entry->hdr_maint_op_class =3D (hdr).maint_op_class;
+>	\
+>> -	__entry->hdr_maint_op_sub_class =3D (hdr).maint_op_sub_class
+>> +	__entry->hdr_maint_op_sub_class =3D (hdr).maint_op_sub_class;
+>	\
+>> +	__entry->hdr_ld_id =3D le16_to_cpu((hdr).ld_id);
+>	\
+>> +	__entry->hdr_head_id =3D (hdr).head_id
+>
+>clean
+>
+>>
+>>  #define CXL_EVT_TP_printk(fmt, ...) \
+>>  	TP_printk("memdev=3D%s host=3D%s serial=3D%lld log=3D%s : time=3D%llu
+>uuid=3D%pUb "	\
+>>  		"len=3D%d flags=3D'%s' handle=3D%x related_handle=3D%x "
+>	\
+>> -		"maint_op_class=3D%u maint_op_sub_class=3D%u : " fmt,
+>	\
+>> +		"maint_op_class=3D%u maint_op_sub_class=3D%u ld_id=3D%x "
+>	\
+>> +		"head_id=3D%x : " fmt,
+>	\
+>
+>clean
+>
+>>  		__get_str(memdev), __get_str(host), __entry->serial,
+>	\
+>>  		cxl_event_log_type_str(__entry->log),
+>	\
+>>  		__entry->hdr_timestamp, &__entry->hdr_uuid, __entry-
+>>hdr_length,\
+>>  		show_hdr_flags(__entry->hdr_flags), __entry->hdr_handle,
+>	\
+>>  		__entry->hdr_related_handle, __entry->hdr_maint_op_class,
+>	\
+>> -		__entry->hdr_maint_op_sub_class,	\
+>> +		__entry->hdr_maint_op_sub_class, __entry->hdr_ld_id,
+>	\
+>> +		__entry->hdr_head_id,
+>	\
+>>  		##__VA_ARGS__)
+>
+>OK (only OK because I may have just started a new line to avoid the (-))
+Will do.
+>
+>>
+>>  TRACE_EVENT(cxl_generic_event,
+>> diff --git a/include/cxl/event.h b/include/cxl/event.h index
+>> f9ae1796da85..f4cb8568566b 100644
+>> --- a/include/cxl/event.h
+>> +++ b/include/cxl/event.h
+>> @@ -19,7 +19,9 @@ struct cxl_event_record_hdr {
+>>  	__le64 timestamp;
+>>  	u8 maint_op_class;
+>>  	u8 maint_op_sub_class;
+>> -	u8 reserved[14];
+>> +	__le16 ld_id;
+>> +	u8 head_id;
+>> +	u8 reserved[11];
+>>  } __packed;
+>
+>clean
+>
+>>
+>>  struct cxl_event_media_hdr {
+>> --
+>> 2.43.0
+>>
 
-Jonathan, would you push your branch this series applied? I manually =
-applied your series no issues though.=20
-
-
+Thanks,
+Shiju
