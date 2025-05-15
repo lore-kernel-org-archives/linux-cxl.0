@@ -1,29 +1,29 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C722989BF;
-	Thu, 15 May 2025 11:59:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A57D298C03;
+	Thu, 15 May 2025 11:59:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747310400; cv=none; b=K3O8lzxeLcOpul4P/ZgMt99pBS0lxqFITOtz00Jcva1A2lQrf7CEURJy+AS+VP3tSHczG4yN12H90D2wXuaXmketBEnUIqLuSExzABEtzdYnuE4m1mNHKAcnFioG2ey5XFYnv+nWaE5jv/D1KWM+bAhN4vkfnHPAZhDWUafy0HE=
+	t=1747310400; cv=none; b=UcWQiASnFCDm5Ota11RNHrHk+ablka9zI5xvcidRGtEMoTa2OYW2jV34oVkKwmml9wFdWSn+MnfWHdliMpB7kXi3ozpd6NWviHHpTCSLU4aIZL5NrIqKFe9USEHdHiroawAj8yBpNHNKDk6P/p3DciPrGPr2cho1oyBSa+RiJIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747310400; c=relaxed/simple;
-	bh=Ustxa+VjbXSAsZLAp7xfCopVUdlwJMCHNVBV5+dOgDk=;
+	bh=qtOP9AgUXmSTXdo50XiuZihlAkspnNvk4R36bN4wIrg=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LofR6xs5SSnSilnRgKfq/VSxOdAiD4NEM9kq6vY6fN45YYJsXndsCc3AIuCpljcOGL3UWdHkLzUL2s8nHJ4ovC9qIsteJTvZ1ztv9uDDG6EcQNSVjKykBS6HVFxpDFzHRJmezbFAJGNJLNbF2rQwxjg9h5+21PSXtkUgzyCUvIk=
+	 MIME-Version:Content-Type; b=aXm6K9HPvD/bVGTsSrjmj6oN73/8J+Jf8skay851JR2EpxJGLFydx5rRmIv3oUdFnQKUf8tOJqC9RJf1gpinTQysATRbEDpBqa/vtPxOq5iNI9ERobdOoSHVss2FaA95xBWVfh5xIrWNazZWyi9ONXUFsKdA7yAsQeL8BeIVQ2c=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZypfH3VKmz6K9pp;
-	Thu, 15 May 2025 19:59:19 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZypbZ3d0xz6L57H;
+	Thu, 15 May 2025 19:56:58 +0800 (CST)
 Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
-	by mail.maildlp.com (Postfix) with ESMTPS id 92D5C140136;
-	Thu, 15 May 2025 19:59:55 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id F292014010C;
+	Thu, 15 May 2025 19:59:50 +0800 (CST)
 Received: from P_UKIT01-A7bmah.china.huawei.com (10.48.152.208) by
  frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 15 May 2025 13:59:54 +0200
+ 15.1.2507.39; Thu, 15 May 2025 13:59:49 +0200
 From: <shiju.jose@huawei.com>
 To: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
 	<jonathan.cameron@huawei.com>, <dave.jiang@intel.com>, <dave@stgolabs.net>,
@@ -35,9 +35,9 @@ CC: <linux-edac@vger.kernel.org>, <linux-doc@vger.kernel.org>, <bp@alien8.de>,
 	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
 	<roberto.sassu@huawei.com>, <kangkang.shen@futurewei.com>,
 	<wanghuiqiang@huawei.com>, <shiju.jose@huawei.com>
-Subject: [PATCH v5 5/8] cxl/edac: Add support for PERFORM_MAINTENANCE command
-Date: Thu, 15 May 2025 12:59:21 +0100
-Message-ID: <20250515115927.772-6-shiju.jose@huawei.com>
+Subject: [PATCH v5 2/8] cxl: Update prototype of function get_support_feature_info()
+Date: Thu, 15 May 2025 12:59:18 +0100
+Message-ID: <20250515115927.772-3-shiju.jose@huawei.com>
 X-Mailer: git-send-email 2.43.0.windows.1
 In-Reply-To: <20250515115927.772-1-shiju.jose@huawei.com>
 References: <20250515115927.772-1-shiju.jose@huawei.com>
@@ -54,124 +54,71 @@ X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
 
 From: Shiju Jose <shiju.jose@huawei.com>
 
-Add support for PERFORM_MAINTENANCE command.
+Add following changes to function get_support_feature_info()
+1. Make generic to share between cxl-fwctl and cxl-edac paths.
+2. Rename get_support_feature_info() to cxl_feature_info()
+3. Change parameter const struct fwctl_rpc_cxl *rpc_in to
+   const uuid_t *uuid.
 
-CXL spec 3.2 section 8.2.10.7.1 describes the Perform Maintenance command.
-This command requests the device to execute the maintenance operation
-specified by the maintenance operation class and the maintenance operation
-subclass.
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Suggested-by: Dan Williams <dan.j.williams@intel.com>
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 ---
- drivers/cxl/Kconfig     | 17 ++++++++++++++
- drivers/cxl/core/edac.c | 51 +++++++++++++++++++++++++++++++++++++++++
- drivers/cxl/cxlmem.h    |  1 +
- 3 files changed, 69 insertions(+)
+ drivers/cxl/core/core.h     |  2 ++
+ drivers/cxl/core/features.c | 17 +++++++----------
+ 2 files changed, 9 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-index 51987f2a2548..2333f7c0b6db 100644
---- a/drivers/cxl/Kconfig
-+++ b/drivers/cxl/Kconfig
-@@ -164,6 +164,23 @@ config CXL_EDAC_ECS
- 	  of a memory ECS feature established by the platform/device.
- 	  Otherwise say 'n'.
+diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+index 17b692eb3257..613cce5c4f7b 100644
+--- a/drivers/cxl/core/core.h
++++ b/drivers/cxl/core/core.h
+@@ -124,6 +124,8 @@ int cxl_acpi_get_extended_linear_cache_size(struct resource *backing_res,
+ 					    int nid, resource_size_t *size);
  
-+config CXL_EDAC_MEM_REPAIR
-+	bool "Enable CXL Memory Repair"
-+	depends on CXL_EDAC_MEM_FEATURES
-+	depends on EDAC_MEM_REPAIR
-+	help
-+	  The CXL EDAC memory repair control is optional and allows host
-+	  to control the memory repair features (e.g. sparing, PPR)
-+	  configurations of CXL memory expander devices.
-+
-+	  When enabled 'cxl_mem' EDAC devices are published with memory
-+	  repair control attributes as described by
-+	  Documentation/ABI/testing/sysfs-edac-memory-repair.
-+
-+	  Say 'y' if you have an expert need to change default settings
-+	  of a memory repair feature established by the platform/device.
-+	  Otherwise say 'n'.
-+
- config CXL_PORT
- 	default CXL_BUS
- 	tristate
-diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
-index a6898876ce7f..5a4b67b43dc5 100644
---- a/drivers/cxl/core/edac.c
-+++ b/drivers/cxl/core/edac.c
-@@ -791,6 +791,57 @@ static int cxl_memdev_ecs_init(struct cxl_memdev *cxlmd,
- }
- #endif /* CONFIG_CXL_EDAC_ECS */
- 
-+#ifdef CONFIG_CXL_EDAC_MEM_REPAIR
-+/*
-+ * Perform Maintenance CXL 3.2 Spec 8.2.10.7.1
-+ */
-+
-+/*
-+ * Perform Maintenance input payload
-+ * CXL rev 3.2 section 8.2.10.7.1 Table 8-117
-+ */
-+struct cxl_mbox_maintenance_hdr {
-+	u8 op_class;
-+	u8 op_subclass;
-+} __packed;
-+
-+static int cxl_perform_maintenance(struct cxl_mailbox *cxl_mbox, u8 class,
-+				   u8 subclass, void *data_in,
-+				   size_t data_in_size)
-+{
-+	struct cxl_memdev_maintenance_pi {
-+		struct cxl_mbox_maintenance_hdr hdr;
-+		u8 data[];
-+	} __packed;
-+	struct cxl_mbox_cmd mbox_cmd;
-+	size_t hdr_size;
-+
-+	struct cxl_memdev_maintenance_pi *pi __free(kvfree) =
-+		kvzalloc(cxl_mbox->payload_size, GFP_KERNEL);
-+	if (!pi)
-+		return -ENOMEM;
-+
-+	pi->hdr.op_class = class;
-+	pi->hdr.op_subclass = subclass;
-+	hdr_size = sizeof(pi->hdr);
-+	/*
-+	 * Check minimum mbox payload size is available for
-+	 * the maintenance data transfer.
-+	 */
-+	if (hdr_size + data_in_size > cxl_mbox->payload_size)
-+		return -ENOMEM;
-+
-+	memcpy(pi->data, data_in, data_in_size);
-+	mbox_cmd = (struct cxl_mbox_cmd){
-+		.opcode = CXL_MBOX_OP_DO_MAINTENANCE,
-+		.size_in = hdr_size + data_in_size,
-+		.payload_in = pi,
-+	};
-+
-+	return cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
-+}
-+#endif /* CONFIG_CXL_EDAC_MEM_REPAIR */
-+
- int devm_cxl_memdev_edac_register(struct cxl_memdev *cxlmd)
+ #ifdef CONFIG_CXL_FEATURES
++struct cxl_feat_entry *
++cxl_feature_info(struct cxl_features_state *cxlfs, const uuid_t *uuid);
+ size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
+ 		       enum cxl_get_feat_selection selection,
+ 		       void *feat_out, size_t feat_out_size, u16 offset,
+diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
+index 1498e2369c37..a83a2214a136 100644
+--- a/drivers/cxl/core/features.c
++++ b/drivers/cxl/core/features.c
+@@ -355,17 +355,11 @@ static void cxlctl_close_uctx(struct fwctl_uctx *uctx)
  {
- 	struct edac_dev_feature ras_features[CXL_NR_EDAC_DEV_FEATURES];
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 685957b312ea..1b9bf6b42521 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -533,6 +533,7 @@ enum cxl_opcode {
- 	CXL_MBOX_OP_GET_SUPPORTED_FEATURES	= 0x0500,
- 	CXL_MBOX_OP_GET_FEATURE		= 0x0501,
- 	CXL_MBOX_OP_SET_FEATURE		= 0x0502,
-+	CXL_MBOX_OP_DO_MAINTENANCE	= 0x0600,
- 	CXL_MBOX_OP_IDENTIFY		= 0x4000,
- 	CXL_MBOX_OP_GET_PARTITION_INFO	= 0x4100,
- 	CXL_MBOX_OP_SET_PARTITION_INFO	= 0x4101,
+ }
+ 
+-static struct cxl_feat_entry *
+-get_support_feature_info(struct cxl_features_state *cxlfs,
+-			 const struct fwctl_rpc_cxl *rpc_in)
++struct cxl_feat_entry *
++cxl_feature_info(struct cxl_features_state *cxlfs,
++		 const uuid_t *uuid)
+ {
+ 	struct cxl_feat_entry *feat;
+-	const uuid_t *uuid;
+-
+-	if (rpc_in->op_size < sizeof(uuid))
+-		return ERR_PTR(-EINVAL);
+-
+-	uuid = &rpc_in->set_feat_in.uuid;
+ 
+ 	for (int i = 0; i < cxlfs->entries->num_features; i++) {
+ 		feat = &cxlfs->entries->ent[i];
+@@ -547,7 +541,10 @@ static bool cxlctl_validate_set_features(struct cxl_features_state *cxlfs,
+ 	struct cxl_feat_entry *feat;
+ 	u32 flags;
+ 
+-	feat = get_support_feature_info(cxlfs, rpc_in);
++	if (rpc_in->op_size < sizeof(uuid_t))
++		return ERR_PTR(-EINVAL);
++
++	feat = cxl_feature_info(cxlfs, &rpc_in->set_feat_in.uuid);
+ 	if (IS_ERR(feat))
+ 		return false;
+ 
 -- 
 2.43.0
 
