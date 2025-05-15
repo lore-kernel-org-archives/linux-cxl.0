@@ -1,335 +1,237 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1F81CFBC
-	for <linux-cxl@vger.kernel.org>; Thu, 15 May 2025 02:18:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B3C514A4DF
+	for <linux-cxl@vger.kernel.org>; Thu, 15 May 2025 03:41:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747275532; cv=none; b=t9I/ftUU8R17fpq64SuF9UUH6/st3WL7sO7Exh+V63G/P3hoQFEsDGaNe2t+8guyhFGHnNcEqd2atXYsc7b3Ysx08rrw0+oT9uf8IS4ezqBePRI1y5C24x7UU1+vJSzbrLps8nXKGJ/OAXLfMifAZerAeWUvT6F2jXCIdB5HpLQ=
+	t=1747280517; cv=none; b=PQKOTRDBWDFocfP7jLYfd6wAAINonf/frrhJiZi9FmU/TP5YhTrUFXnSZrdV3qdfMMLjvXkfRTywUttVcBVoY/b5U7TxAl/s6NmxQsAyPKUoMda0cbEiVid8PdxROrCoRH4TI7afdZwd3pXQCKKUBGFTSHfkAgrkSOWM8YmBX1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747275532; c=relaxed/simple;
-	bh=WlKAAdslIKgEOfgEPuSCLePGW7C4BpbU8GeU6gXX3oo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GqYwm7jW2diIoLkWEuawgrmUmeRP6hNGeXfL+pVLQyK+pK0Gs/xLAppbqQBytENv2O7SWRM1TQ3xxB57ZAle3gCyZ9bb6m25PXwaqIoY01YQcZiNZ8vDBZerXYKtziXsSi6glBE4sB0YrNkTvJS1b5nd6EtBXVwrXzrIPjgBnXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K2j3sAOn; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747280517; c=relaxed/simple;
+	bh=xMMskxrVMpq24hBPN7oQhjCkaUbu0tdWf6JzXATBmtU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uIE2ZrZjw2KtLWyu7xQlpIYUL74ZRtfOkW4uaKAip0ibU3r9pkJxTblfYoBmaf+kmFTFqzfn2dMD6euEi+Z+9GyeYpopP5K6vB3YwZV+QsD7dL5AVpQlEnVyw4ENf8roYa3NwfQgSBObedKixe2N9ZFq53Ge9d1aGZJXuqBccfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=jf3cXSnM; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K2j3sAOn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747275531; x=1778811531;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=WlKAAdslIKgEOfgEPuSCLePGW7C4BpbU8GeU6gXX3oo=;
-  b=K2j3sAOnELJ47P0Qad+kBcOEMCO5h54eeu4NukrbeWQDnTHfmcK6W/hz
-   Hb9hukwWQ7C7reAUGRYyC7Duz0uY2JMKZ9QkG/gagekBp07vNCXUbgLeO
-   UWERGNI1rPdVpvqB9U6taynHZHEVTYUv0ApNi6rZiULPhEZ2nUU+vbaBs
-   +GFkhIOakw3LjLQBBZL8BTsMc4XFNd14F5bvBG8t1HJYMNJQX06s+f9T/
-   QA6i6LZwiepBOwuTXpWtmXDcuXf1DMOevqODDyk89uv6WDsLKiwKkeVrz
-   KpWytVXEunv+xAtTfnVzX/tW1vci6LjcvpzBuoRBKuWhmPWR6mQaiQaHV
-   Q==;
-X-CSE-ConnectionGUID: a71rX0KwTZe1HKdR6u/RbA==
-X-CSE-MsgGUID: XcBRipHJTcyslbFE9wt6ow==
-X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="60600550"
-X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
-   d="scan'208";a="60600550"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 19:18:50 -0700
-X-CSE-ConnectionGUID: Hd49OEIyQBaoEqHeDYyV0g==
-X-CSE-MsgGUID: 0DCxjUcYRum1CYwxVugkkQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
-   d="scan'208";a="138724847"
-Received: from unknown (HELO hyperion.jf.intel.com) ([10.243.61.29])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 19:18:50 -0700
-From: marc.herbert@linux.intel.com
-To: linux-cxl@vger.kernel.org,
-	nvdimm@lists.linux.dev,
-	alison.schofield@intel.com
-Cc: Marc Herbert <marc.herbert@linux.intel.com>
-Subject: [ndctl PATCH v2 2/2] test: fail on unexpected kernel error & warning, not just "Call Trace"
-Date: Thu, 15 May 2025 02:14:46 +0000
-Message-ID: <20250515021730.1201996-3-marc.herbert@linux.intel.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250515021730.1201996-1-marc.herbert@linux.intel.com>
-References: <aCKWR4DdzdUh1VN6@aschofie-mobl2.lan>
- <20250515021730.1201996-1-marc.herbert@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="jf3cXSnM"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7cadd46ea9aso70589785a.1
+        for <linux-cxl@vger.kernel.org>; Wed, 14 May 2025 20:41:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1747280513; x=1747885313; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8sUwwawumtr+nRSApvKIolrhRUfjcNfHvqlKiL0pBGs=;
+        b=jf3cXSnMBaUQhtr9c+ukyHwUl+OUBlHcgXslHZbrFLG3fHGEms4QC6psUoURcd1nul
+         HjIItM8ZTyxrIHv9tgUY7e+0x0cjtSp51CfBsChj6LqNx4VsWAfDMTkEtQvnc+P7L/2O
+         xd1MIu5yOQk5JLz8nsylzc8S3eI9oVBqvyc56cp/YqE1rfyCk/wA39ZSQle3BAmjRbM0
+         Xgocw9jIG74h8X3eexs9ONADfODpnaFt54sdvA/5vm5GxoqZ0qXphYuRWlA6/Ap1BNOa
+         Rh6dEwftl0jwVsTGqV1sSBsGgMAdyZMkG2c2/JmLk59nVEP608I/akfk+/VSvyX1RNmm
+         g3rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747280513; x=1747885313;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8sUwwawumtr+nRSApvKIolrhRUfjcNfHvqlKiL0pBGs=;
+        b=AOiGgp7n/I2eLKPdOVIMfpCBZHWtKXv/mEP1SaR+8VSqQENMtyVTzgEtjWLZHmWihu
+         ZyTpfQwUw9yYljay02HJXQbq5kC8AY2G4PW4k605Phg4BZTfEWG0CPIOwapYbbIEBdsa
+         bPg2xOuinuJOgiUKF5jxsyUWnRTDiw433E3JWzjoAjBERql/Md42VjcVfuUb4jQclcCX
+         5XdQjcUZwQe+vaocUZz6QXsB8jcytLbqP6/7FsmObAd/UK1IC7WtdfSwgYoC6fZtUOWR
+         5CXOLntgjMmJ5ZZNkby6PSXQZSygN0/bwRu+c5KWmyozml9mgQ9XI0ccAMygj3RBK5aB
+         9CUQ==
+X-Gm-Message-State: AOJu0Yw1jTCOvxYu8aMG0wwgg2y6gTc4FaXV1PF6GUi8QHC5+t4M2GpH
+	zQLGgtHB3xzbcyuDX3WorszYm/ghGJ4tovjbR/S+Z6V23HuGL9szKyFUuj2uZrI=
+X-Gm-Gg: ASbGncuuKpOEe6YHknaCuT487P6FVBOsJpKJStApXKXRG3HwChOAS48dtTF+edd5W92
+	r/lBeS6wHCb5uvSIz2guiGSa6TmKiZACTdy5T3iH5amJm2WpiU6ZMQHlBjbtB9rV4llwXJJ61hr
+	z7eie+QDBgi822jihX2EQGDet/H2+1cRx3uwjOymx9Hh2HDrfECbNOdTs1S0PHWWo+akydVDgnp
+	jV3/cHP2XIc1jkKrHL9TcoCvbZg/Xt9OxzPRwCpgSP/LDNmfLyTFUuXMPX9zkrCl51qeJmLMNaF
+	aI/W/QVNUgvj2lN4XjpbSCx6ana8uC6/ISjaWurhknnR8PS51Ek9qN+TdW6zN1TcR+Qhh72Wbdc
+	lxLVMfjDoIM9fxym8zlN4OMonpnHrzwY=
+X-Google-Smtp-Source: AGHT+IE7ytAus0tpaGpDRpkqtOxJiJQ2Z5PZxmZT/wxt4btbH6n1O7R8/dBrSabJpnZsugDwlPhBaw==
+X-Received: by 2002:a05:620a:25c9:b0:7c5:3c0a:ab77 with SMTP id af79cd13be357-7cd3c64354fmr110939985a.4.1747280513244;
+        Wed, 14 May 2025 20:41:53 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f6e3a472b3sm89422486d6.77.2025.05.14.20.41.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 20:41:52 -0700 (PDT)
+Date: Wed, 14 May 2025 23:41:51 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com
+Subject: Re: [PATCH v2 1/3] cxl: docs/platform/cdat reference documentation
+Message-ID: <aCVifxz7t62uOfmn@gourry-fedora-PF4VCD3F>
+References: <20250515000923.2590820-1-dave.jiang@intel.com>
+ <20250515000923.2590820-2-dave.jiang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250515000923.2590820-2-dave.jiang@intel.com>
 
-From: Marc Herbert <marc.herbert@linux.intel.com>
+On Wed, May 14, 2025 at 05:09:21PM -0700, Dave Jiang wrote:
+> Add documentation for CDAT structures for CXL usages.
+> 
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>
 
-While a "Call Trace" is usually a bad omen, the show_trace_log_lvl()
-function supports any log level. So a "Call Trace" is not a reliable
-indication of a failure. More importantly: any other WARNING or ERROR
-during a test should make a test FAIL. Before this commit, it does not.
+Reviewed-by: Gregory Price <gourry@gourry.net>
 
-So, leverage log levels for the PASS/FAIL decision.  This catches all
-issues and not just the ones printing Call Traces.
-
-Add a simple way to exclude expected warnings and errors, either on a
-per-test basis or globally.
-
-Add a way for negative tests to fail when if some expected errors are
-missing.
-
-Stop relying on the magic and convenient but inaccurate $SECONDS bash
-variable because its precision is (surprise!) about 1 second. In the
-first version of this patch, $SECONDS was kept and working but it
-required a 1++ second long "cooldown" between tests to isolate their
-logs from each other. After dropping $SECONDS from journalctl, no
-cooldown delay is required.
-
-As a good example (which initiated this), the test feedback when hitting
-bug https://github.com/pmem/ndctl/issues/278, where the cxl_test module
-errors at load, is completely changed by this. Instead of only half the
-tests failing with a fairly cryptic and late "Numerical result out of
-range" error from user space, now all tests are failing early and more
-consistently; displaying the same, earlier and more relevant error.
-
-This simple log-level based approach has been successfully used for
-years in the CI of https://github.com/thesofproject and caught
-countless firmware and kernel bugs.
-
-Note: the popular message "possible circular locking ..." recently fixed
-by revert v6.15-rc1-4-gdc1771f71854 is at the WARNING level, including
-its Call Trace.
-
-Signed-off-by: Marc Herbert <marc.herbert@linux.intel.com>
----
- test/common            | 137 +++++++++++++++++++++++++++++++++++++++--
- test/cxl-events.sh     |   2 +
- test/cxl-poison.sh     |   7 +++
- test/cxl-xor-region.sh |   2 +
- test/dax.sh            |   6 ++
- 5 files changed, 149 insertions(+), 5 deletions(-)
-
-diff --git a/test/common b/test/common
-index 74e74dd4fff9..67dfd03f9693 100644
---- a/test/common
-+++ b/test/common
-@@ -15,6 +15,28 @@ err()
- 	exit "$rc"
- }
- 
-+time_init()
-+{
-+	test "$SECONDS" -le 1 || err 'test/common must be included first!'
-+	# ... otherwise NDTEST_START is inaccurate
-+
-+	NDTEST_START=$(LC_TIME=C date '+%F %T.%3N')
-+
-+	# Log anchor, especially useful when running tests back to back
-+	printf "<5>%s@%ds: sourcing test/common: NDTEST_START=%s\n" \
-+		"$test_basename" "$SECONDS" "$NDTEST_START" > /dev/kmsg
-+
-+	# Default value, can be overriden by the environment
-+	: "${NDTEST_LOG_DBG:=false}"
-+
-+	if "$NDTEST_LOG_DBG"; then
-+		local _cd_dbg_msg="NDTEST_LOG_DBG: $test_basename early msg must be found by check_dmesg()"
-+		printf '<3>%s: %s\n' "$test_basename" "$_cd_dbg_msg" > /dev/kmsg
-+		kmsg_fail_if_missing+=("$_cd_dbg_msg")
-+	fi
-+}
-+time_init
-+
- # Global variables
- 
- # NDCTL
-@@ -143,15 +165,120 @@ json2var()
- 	sed -e "s/[{}\",]//g; s/\[//g; s/\]//g; s/:/=/g"
- }
- 
--# check_dmesg
-+# check_dmesg() performs two actions controlled by two bash arrays:
-+# "kmsg_no_fail_on" and "kmsg_fail_if_missing". These list of extended
-+# regular expressions (grep '-E') have default values here that can
-+# be customized by each test.
-+#
-+# 1. check_dmesg() first checks the output of `journalctl -k -p warning`
-+# and makes the invoking test FAIL if any unexpected kernel error or
-+# warning occurred during the test. Messages in either the
-+# "kmsg_no_fail_on" or the "kmsg_fail_if_missing" arrays are expected
-+# and do NOT cause a test failure. All other errors and warnings cause a
-+# test failure.
-+#
-+# 2.1 Then, check_dmesg() makes sure at least one line in the logs
-+# matches each regular expression in the "kmsg_fail_if_missing" array. If
-+# any of these expected messages was never issued during the test, then
-+# the test fails. This is especially useful for "negative" tests
-+# triggering expected errors; but not just. Unlike 1., all log levels
-+# are searched. Avoid relying on "optional" messages (e.g.: dyndbg) in
-+# "kmsg_fail_if_missing".
-+#
-+# 2.2 to make sure "something" happened during the test, check_dmesg()
-+# provides a default, non-empty kmsg_fail_if_missing value that searches
-+# for either "nfit_test" or pmem" or "cxl_". These are not searched if
-+# the test already provides some value(s) in "kmsg_fail_if_missing".
-+# While not recommended, a test could use check_dmesg() and opt out of
-+# "kmsg_fail_if_missing" with a pointless regular expression like '.'
-+
-+# Always append with '+=' to give any test the freedom to source this
-+# file before or after adding exclusions.
-+# kmsg_no_fail_on+=('this array cannot be empty otherwise grep -v fails')
-+
-+kmsg_no_fail_on+=('cxl_core: loading out-of-tree module taints kernel')
-+kmsg_no_fail_on+=('cxl_mock_mem.*: CXL MCE unsupported')
-+kmsg_no_fail_on+=('cxl_mock_mem cxl_mem.*: Extended linear cache calculation failed rc:-2')
-+
-+# 'modprobe nfit_test' prints these every time it's not already loaded
-+kmsg_no_fail_on+=(
-+    'nd_pmem namespace.*: unable to guarantee persistence of writes'
-+    'nfit_test nfit_test.*: failed to evaluate _FIT'
-+    'nfit_test nfit_test.*: Error found in NVDIMM nmem.* flags: save_fail restore_fail flush_fail not_armed'
-+    'nfit_test nfit_test.1: Error found in NVDIMM nmem.* flags: map_fail'
-+)
-+
-+# notice level to give some information without flooding the (single!)
-+# testlog.txt file
-+journalctl_notice()
-+{
-+	( set +x;
-+	  printf ' ------------ More verbose logs at t=%ds ----------\n' "$SECONDS" )
-+	journalctl -b --no-pager -o short-precise -p notice --since "-$((SECONDS*1000 + 1000)) ms"
-+}
-+
- # $1: line number where this is called
- check_dmesg()
- {
--	# validate no WARN or lockdep report during the run
-+	local _e_kmsg_no_fail_on=()
-+	for re in "${kmsg_no_fail_on[@]}" "${kmsg_fail_if_missing[@]}"; do
-+		_e_kmsg_no_fail_on+=('-e' "$re")
-+	done
-+
-+	# Give some time for a complete kmsg->journalctl flush + any delayed test effect.
- 	sleep 1
--	log=$(journalctl -r -k --since "-$((SECONDS+1))s")
--	grep -q "Call Trace" <<< $log && err $1
--	true
-+
-+	if "$NDTEST_LOG_DBG"; then
-+		journalctl -q -b --since "$NDTEST_START" \
-+			-o short-precise > journal-"$(basename "$0")".log
-+	fi
-+	# After enabling, check the timings in:
-+	#    head -n 7 $(ls -1t build/journal-*.log | tac)
-+	#    journalctl --since='- 5 min' -o short-precise -g 'test/common'
-+
-+	{ # Redirect to stderr so this is all at the _bottom_ in the log file
-+
-+	# Fail on kernel WARNING or ERROR.
-+	if journalctl -q -o short-precise -p warning -k --since "$NDTEST_START" |
-+		grep -E -v "${_e_kmsg_no_fail_on[@]}"; then
-+			journalctl_notice
-+			err "$1"
-+	fi
-+
-+	# Sanity check: make sure "something" has run
-+	if [ "${#kmsg_fail_if_missing[@]}" = 0 ]; then
-+		kmsg_fail_if_missing+=( '(nfit_test)|(pmem)|(cxl_)' )
-+	fi
-+
-+	local expected_re
-+	for expected_re in "${kmsg_fail_if_missing[@]}"; do
-+		journalctl -q -k -p 7 --since "$NDTEST_START" |
-+			grep -q -E -e "${expected_re}" || {
-+				printf 'FAIL: expected error not found: %s\n' "$expected_re"
-+				journalctl_notice
-+				err "$1"
-+		}
-+	done
-+	} >&2
-+
-+	# Log anchor, especially useful when running tests back to back
-+	printf "<5>%s@%ds: test/common: check_dmesg() OK\n" "$test_basename" "$SECONDS" > /dev/kmsg
-+
-+	if "$NDTEST_LOG_DBG"; then
-+	    log_stress from_check_dmesg
-+	fi
-+}
-+# Many tests don't use check_dmesg() (yet?) so double down here. Also, this
-+# runs later which is better. But before using this make sure there is
-+# still no test defining its own EXIT trap.
-+if "$NDTEST_LOG_DBG"; then
-+    trap 'log_stress from_trap' EXIT
-+fi
-+
-+log_stress()
-+{
-+	printf '<3>%s@%ds: NDTEST_LOG_DBG; trying to break the next check_dmesg() %s\n' \
-+		"$test_basename" "$SECONDS" "$1" > /dev/kmsg
- }
- 
- # CXL COMMON
-diff --git a/test/cxl-events.sh b/test/cxl-events.sh
-index c216d6aa9148..1461b487e208 100644
---- a/test/cxl-events.sh
-+++ b/test/cxl-events.sh
-@@ -25,6 +25,8 @@ rc=1
- dev_path="/sys/bus/platform/devices"
- trace_path="/sys/kernel/tracing"
- 
-+kmsg_no_fail_on+=('cxl_mock_mem cxl_mem.* no CXL window for range')
-+
- test_region_info()
- {
- 	# Trigger a memdev in the cxl_test autodiscovered region
-diff --git a/test/cxl-poison.sh b/test/cxl-poison.sh
-index 2caf092db460..3985c817914b 100644
---- a/test/cxl-poison.sh
-+++ b/test/cxl-poison.sh
-@@ -8,6 +8,13 @@ rc=77
- 
- set -ex
- 
-+# FIXME: this should be in "kmsg_fail_if_missing" but this test seems to
-+# work only once. Cleanup/reset issue?
-+kmsg_no_fail_on+=(
-+    'cxl_mock_mem cxl_mem.*: poison inject dpa:0x'
-+    'cxl_mock_mem cxl_mem.*: poison clear dpa:0x'
-+)
-+
- trap 'err $LINENO' ERR
- 
- check_prereq "jq"
-diff --git a/test/cxl-xor-region.sh b/test/cxl-xor-region.sh
-index b9e1d79212d3..f5e0db98b67f 100644
---- a/test/cxl-xor-region.sh
-+++ b/test/cxl-xor-region.sh
-@@ -17,6 +17,8 @@ modprobe cxl_test interleave_arithmetic=1
- udevadm settle
- rc=1
- 
-+kmsg_fail_if_missing+=('cxl_mock_mem cxl_mem.* no CXL window for range')
-+
- # THEORY OF OPERATION: Create x1,2,3,4 regions to exercise the XOR math
- # option of the CXL driver. As with other cxl_test tests, changes to the
- # CXL topology in tools/testing/cxl/test/cxl.c may require an update here.
-diff --git a/test/dax.sh b/test/dax.sh
-index 3ffbc8079eba..0589f0d053ec 100755
---- a/test/dax.sh
-+++ b/test/dax.sh
-@@ -118,6 +118,12 @@ else
- 	run_xfs
- fi
- 
-+kmsg_fail_if_missing+=(
-+    'nd_pmem pfn.*: unable to guarantee persistence of writes'
-+    'Memory failure: .*: Sending SIGBUS to dax-pmd:.* due to hardware memory corruption'
-+    'Memory failure: .*: recovery action for dax page: Recovered'
-+)
-+
- check_dmesg "$LINENO"
- 
- exit 0
--- 
-2.49.0
-
+> ---
+> v2:
+> - Move everything into cdat.rst (Gregory)
+> - Update various languages in the doc for clarification (Gregory)
+> - Add a term definition section (Gregory)
+> ---
+>  Documentation/driver-api/cxl/index.rst        |   1 +
+>  .../driver-api/cxl/platform/cdat.rst          | 118 ++++++++++++++++++
+>  2 files changed, 119 insertions(+)
+>  create mode 100644 Documentation/driver-api/cxl/platform/cdat.rst
+> 
+> diff --git a/Documentation/driver-api/cxl/index.rst b/Documentation/driver-api/cxl/index.rst
+> index 366faf851fc7..9e1414ad3357 100644
+> --- a/Documentation/driver-api/cxl/index.rst
+> +++ b/Documentation/driver-api/cxl/index.rst
+> @@ -27,6 +27,7 @@ that have impacts on each other.  The docs here break up configurations steps.
+>  
+>     platform/bios-and-efi
+>     platform/acpi
+> +   platform/cdat
+>     platform/example-configs
+>  
+>  .. toctree::
+> diff --git a/Documentation/driver-api/cxl/platform/cdat.rst b/Documentation/driver-api/cxl/platform/cdat.rst
+> new file mode 100644
+> index 000000000000..34bbe7264d71
+> --- /dev/null
+> +++ b/Documentation/driver-api/cxl/platform/cdat.rst
+> @@ -0,0 +1,118 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +======================================
+> +Coherent Device Attribute Table (CDAT)
+> +======================================
+> +
+> +The CDAT provides functional and performance attributes of devices such
+> +as CXL accelerators, switches, or endpoints.  The table formatting is
+> +similar to ACPI tables. CDAT data may be parsed by BIOS at boot or may
+> +be enumerated at runtime (after device hotplug, for example).
+> +
+> +Terminology:
+> +DPA - Device Physical Address, used by the CXL device to denote the address
+> +it supports for that device.
+> +
+> +DSMADHandle - A device unique handle that is associated with a DPA range
+> +defined by the DSMAS table.
+> +
+> +
+> +===============================================
+> +Device Scoped Memory Affinity Structure (DSMAS)
+> +===============================================
+> +
+> +The DSMAS contains information such as DSMADHandle, the DPA Base, and DPA
+> +Length.
+> +
+> +This table is used by Linux in conjunction with the Device Scoped Latency and
+> +Bandwidth Information Structure (DSLBIS) to determine the performance
+> +attributes of the CXL device itself.
+> +
+> +Example ::
+> +
+> + Structure Type : 00 [DSMAS]
+> +       Reserved : 00
+> +         Length : 0018              <- 24d, size of structure
+> +    DSMADHandle : 01
+> +          Flags : 00
+> +       Reserved : 0000
+> +       DPA Base : 0000000040000000  <- 1GiB base
+> +     DPA Length : 0000000080000000  <- 2GiB size
+> +
+> +
+> +==================================================================
+> +Device Scoped Latency and Bandwidth Information Structure (DSLBIS)
+> +==================================================================
+> +
+> +This table is used by Linux in conjunction with DSMAS to determine the
+> +performance attributes of a CXL device.  The DSLBIS contains latency
+> +and bandwidth information based on DSMADHandle matching.
+> +
+> +Example ::
+> +
+> +   Structure Type : 01 [DSLBIS]
+> +         Reserved : 00
+> +           Length : 18                     <- 24d, size of structure
+> +           Handle : 0001                   <- DSMAS handle
+> +            Flags : 00                     <- Matches flag field for HMAT SLLBIS
+> +        Data Type : 00                     <- Latency
+> + Entry Basee Unit : 0000000000001000       <- Entry Base Unit field in HMAT SSLBIS
+> +            Entry : 010000000000           <- First byte used here, CXL LTC
+> +         Reserved : 0000
+> +
+> +   Structure Type : 01 [DSLBIS]
+> +         Reserved : 00
+> +           Length : 18                     <- 24d, size of structure
+> +           Handle : 0001                   <- DSMAS handle
+> +            Flags : 00                     <- Matches flag field for HMAT SLLBIS
+> +        Data Type : 03                     <- Bandwidth
+> + Entry Basee Unit : 0000000000001000       <- Entry Base Unit field in HMAT SSLBIS
+> +            Entry : 020000000000           <- First byte used here, CXL BW
+> +         Reserved : 0000
+> +
+> +
+> +==================================================================
+> +Switch Scoped Latency and Bandwidth Information Structure (SSLBIS)
+> +==================================================================
+> +
+> +The SSLBIS contains information about the latency and bandwidth of a switch.
+> +
+> +The table is used by Linux to compute the performance coordinates of a CXL path
+> +from the device to the root port where a switch is part of the path.
+> +
+> +Example ::
+> +
+> +  Structure Type : 05 [SSLBIS]
+> +        Reserved : 00
+> +          Length : 20                           <- 32d, length of record, including SSLB entries
+> +       Data Type : 00                           <- Latency
+> +        Reserved : 000000
+> + Entry Base Unit : 00000000000000001000         <- Matches Entry Base Unit in HMAT SSLBIS
+> +
+> +                                                <- SSLB Entry 0
+> +       Port X ID : 0100                         <- First port, 0100h represents an upstream port
+> +       Port Y ID : 0000                         <- Second port, downstream port 0
+> +         Latency : 0100                         <- Port latency
+> +        Reserved : 0000
+> +                                                <- SSLB Entry 1
+> +       Port X ID : 0100
+> +       Port Y ID : 0001
+> +         Latency : 0100
+> +        Reserved : 0000
+> +
+> +
+> +  Structure Type : 05 [SSLBIS]
+> +        Reserved : 00
+> +          Length : 18                           <- 24d, length of record, including SSLB entry
+> +       Data Type : 03                           <- Bandwidth
+> +        Reserved : 000000
+> + Entry Base Unit : 00000000000000001000         <- Matches Entry Base Unit in HMAT SSLBIS
+> +
+> +                                                <- SSLB Entry 0
+> +       Port X ID : 0100                         <- First port, 0100h represents an upstream port
+> +       Port Y ID : FFFF                         <- Second port, FFFFh indicates any port
+> +       Bandwidth : 1200                         <- Port bandwidth
+> +        Reserved : 0000
+> +
+> +The CXL driver uses a combination of CDAT, HMAT, SRAT, and other data to
+> +generate "whole path performance" data for a CXL device.
+> -- 
+> 2.49.0
+> 
