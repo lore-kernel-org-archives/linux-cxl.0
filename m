@@ -1,29 +1,29 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64D522989BF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F66D298C03;
 	Thu, 15 May 2025 12:00:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747310402; cv=none; b=l51hznVAZ/+S6hUkVG9Km06aJ4uw5W76rOXNtR2S0ytVvQcgkUekKmHenUJDFcTT+nwANRTzrPdpI6gLZmhAwbszXzC6kXCdFDrqvSVBUGEzOEcfMwz3y0dzcwL77h1eVlD7Wz6kPAgdxWXpB9Aj4Jrhb9/4tLRyuskpKjO3zd0=
+	t=1747310403; cv=none; b=ZodNSXmRa9KFgMzE5qLX0c/22APp7EewCV3Pk75j64WqWGReSxQwxZL2Ut1bnr3K6gYuMaaYHFAGk0HiRpZUE7FgMcbQbbJxwlt43qjK58bil9QRDiFRqLSO6J18/9bKQFD+7BQdaGC128dL53xk38QvN7N4njcmOvGttXHBrWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747310402; c=relaxed/simple;
-	bh=VLvTvjatS8r7QnJtOLqhR76cIteUXe4+6+6vVjW/Il4=;
+	s=arc-20240116; t=1747310403; c=relaxed/simple;
+	bh=J+KU5qW3nQXAiRb0om9ZMwubEktcesKPgEFQ9qx2WuE=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MTqaGtF3BKVuABzbNSf5FKYf1uqOVyhCqkhLIwi7Vg9LS9z3r2xH2LqmOP8dD94f1+cD0zZuKWSnICA2tD1aS1XN/lyJ0LpXguEtex0b3sVTrXSyGlz1jRG5glaM843Rd5aAtYEyWpw6gu5bitXTJyvgWxfADS7feVwHOQZZ2T8=
+	 MIME-Version:Content-Type; b=QveWhe6Em0E2Ksjzs26Vpf/tOMH6EjMTevhYd60RPXtG/jxfkrbhqjcueQ8Pr6X6b6Xvp8+kwYoVu34DbZWuhnEP+6OsVMWd4idZ9eXmfUf9UA+f21pS2rR9AlW8WyOTIZ/rX4YLYFHWfjLTugFonpgS5qWVEYfYrH7nB6ah6y4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZypYT1hk0z6M570;
-	Thu, 15 May 2025 19:55:09 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZypfL5CKPz6K9pM;
+	Thu, 15 May 2025 19:59:22 +0800 (CST)
 Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8473E14010C;
-	Thu, 15 May 2025 19:59:52 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id CD0DD140144;
+	Thu, 15 May 2025 19:59:58 +0800 (CST)
 Received: from P_UKIT01-A7bmah.china.huawei.com (10.48.152.208) by
  frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 15 May 2025 13:59:51 +0200
+ 15.1.2507.39; Thu, 15 May 2025 13:59:57 +0200
 From: <shiju.jose@huawei.com>
 To: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
 	<jonathan.cameron@huawei.com>, <dave.jiang@intel.com>, <dave@stgolabs.net>,
@@ -35,9 +35,9 @@ CC: <linux-edac@vger.kernel.org>, <linux-doc@vger.kernel.org>, <bp@alien8.de>,
 	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
 	<roberto.sassu@huawei.com>, <kangkang.shen@futurewei.com>,
 	<wanghuiqiang@huawei.com>, <shiju.jose@huawei.com>
-Subject: [PATCH v5 3/8] cxl/edac: Add CXL memory device patrol scrub control feature
-Date: Thu, 15 May 2025 12:59:19 +0100
-Message-ID: <20250515115927.772-4-shiju.jose@huawei.com>
+Subject: [PATCH v5 7/8] cxl/edac: Add CXL memory device memory sparing control feature
+Date: Thu, 15 May 2025 12:59:23 +0100
+Message-ID: <20250515115927.772-8-shiju.jose@huawei.com>
 X-Mailer: git-send-email 2.43.0.windows.1
 In-Reply-To: <20250515115927.772-1-shiju.jose@huawei.com>
 References: <20250515115927.772-1-shiju.jose@huawei.com>
@@ -54,693 +54,756 @@ X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
 
 From: Shiju Jose <shiju.jose@huawei.com>
 
-CXL spec 3.2 section 8.2.10.9.11.1 describes the device patrol scrub
-control feature. The device patrol scrub proactively locates and makes
-corrections to errors in regular cycle.
+Memory sparing is defined as a repair function that replaces a portion of
+memory with a portion of functional memory at that same DPA. The subclasses
+for this operation vary in terms of the scope of the sparing being
+performed. The cacheline sparing subclass refers to a sparing action that
+can replace a full cacheline. Row sparing is provided as an alternative to
+PPR sparing functions and its scope is that of a single DDR row.
+As per CXL r3.2 Table 8-125 foot note 1. Memory sparing is preferred over
+PPR when possible.
+Bank sparing allows an entire bank to be replaced. Rank sparing is defined
+as an operation in which an entire DDR rank is replaced.
 
-Allow specifying the number of hours within which the patrol scrub must be
-completed, subject to minimum and maximum limits reported by the device.
-Also allow disabling scrub allowing trade-off error rates against
-performance.
+Memory sparing maintenance operations may be supported by CXL devices
+that implement CXL.mem protocol. A sparing maintenance operation requests
+the CXL device to perform a repair operation on its media.
+For example, a CXL device with DRAM components that support memory sparing
+features may implement sparing maintenance operations.
 
-Add support for patrol scrub control on CXL memory devices.
-Register with the EDAC device driver, which retrieves the scrub attribute
-descriptors from EDAC scrub and exposes the sysfs scrub control attributes
-to userspace. For example, scrub control for the CXL memory device
-"cxl_mem0" is exposed in /sys/bus/edac/devices/cxl_mem0/scrubX/.
+The host may issue a query command by setting query resources flag in the
+input payload (CXL spec 3.2 Table 8-120) to determine availability of
+sparing resources for a given address. In response to a query request,
+the device shall report the resource availability by producing the memory
+sparing event record (CXL spec 3.2 Table 8-60) in which the Channel, Rank,
+Nibble Mask, Bank Group, Bank, Row, Column, Sub-Channel fields are a copy
+of the values specified in the request.
 
-Additionally, add support for region-based CXL memory patrol scrub control.
-CXL memory regions may be interleaved across one or more CXL memory
-devices. For example, region-based scrub control for "cxl_region1" is
-exposed in /sys/bus/edac/devices/cxl_region1/scrubX/.
+During the execution of a sparing maintenance operation, a CXL memory
+device:
+- may not retain data
+- may not be able to process CXL.mem requests correctly.
+These CXL memory device capabilities are specified by restriction flags
+in the memory sparing feature readable attributes.
 
+When a CXL device identifies error on a memory component, the device
+may inform the host about the need for a memory sparing maintenance
+operation by using DRAM event record, where the 'maintenance needed' flag
+may set. The event record contains some of the DPA, Channel, Rank,
+Nibble Mask, Bank Group, Bank, Row, Column, Sub-Channel fields that
+should be repaired. The userspace tool requests for maintenance operation
+if the 'maintenance needed' flag set in the CXL DRAM error record.
+
+CXL spec 3.2 section 8.2.10.7.1.4 describes the device's memory sparing
+maintenance operation feature.
+
+CXL spec 3.2 section 8.2.10.7.2.3 describes the memory sparing feature
+discovery and configuration.
+
+Add support for controlling CXL memory device memory sparing feature.
+Register with EDAC driver, which gets the memory repair attr descriptors
+from the EDAC memory repair driver and exposes sysfs repair control
+attributes for memory sparing to the userspace. For example CXL memory
+sparing control for the CXL mem0 device is exposed in
+/sys/bus/edac/devices/cxl_mem0/mem_repairX/
+
+Use case
+========
+1. CXL device identifies a failure in a memory component, report to
+   userspace in a CXL DRAM trace event with DPA and other attributes of
+   memory to repair such as channel, rank, nibble mask, bank Group,
+   bank, row, column, sub-channel.
+
+2. Rasdaemon process the trace event and may issue query request in sysfs
+check resources available for memory sparing if either of the following
+conditions met.
+ - 'maintenance needed' flag set in the event record.
+ - 'threshold event' flag set for CVME threshold feature.
+ - When the number of corrected error reported on a CXL.mem media to the
+   userspace exceeds the threshold value for corrected error count defined
+   by the userspace policy.
+
+3. Rasdaemon process the memory sparing trace event and issue repair
+   request for memory sparing.
+
+Kernel CXL driver shall report memory sparing event record to the userspace
+with the resource availability in order rasdaemon to process the event
+record and issue a repair request in sysfs for the memory sparing operation
+in the CXL device.
+
+Note: Based on the feedbacks from the community 'query' sysfs attribute is
+removed and reporting memory sparing error record to the userspace are not
+supported. Instead userspace issues sparing operation and kernel does the
+same to the CXL memory device, when 'maintenance needed' flag set in the
+DRAM event record.
+
+Add checks to ensure the memory to be repaired is offline and if online,
+then originates from a CXL DRAM error record reported in the current boot
+before requesting a memory sparing operation on the device.
+
+Note: Tested memory sparing feature control with QEMU patch
+      "hw/cxl: Add emulation for memory sparing control feature"
+      https://lore.kernel.org/linux-cxl/20250509172229.726-1-shiju.jose@huawei.com/T/#m5f38512a95670d75739f9dad3ee91b95c7f5c8d6
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 ---
- drivers/cxl/Kconfig       |  33 +++
- drivers/cxl/core/Makefile |   1 +
- drivers/cxl/core/edac.c   | 495 ++++++++++++++++++++++++++++++++++++++
- drivers/cxl/core/region.c |  10 +
- drivers/cxl/cxl.h         |  10 +
- drivers/cxl/cxlmem.h      |  16 ++
- drivers/cxl/mem.c         |   4 +
- 7 files changed, 569 insertions(+)
- create mode 100644 drivers/cxl/core/edac.c
+ Documentation/edac/memory_repair.rst |  21 +
+ drivers/cxl/core/edac.c              | 548 ++++++++++++++++++++++++++-
+ drivers/edac/mem_repair.c            |   9 +
+ include/linux/edac.h                 |   7 +
+ 4 files changed, 583 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-index cf1ba673b8c2..af72416edcd4 100644
---- a/drivers/cxl/Kconfig
-+++ b/drivers/cxl/Kconfig
-@@ -114,6 +114,39 @@ config CXL_FEATURES
+diff --git a/Documentation/edac/memory_repair.rst b/Documentation/edac/memory_repair.rst
+index 52162a422864..5b1cd8297442 100644
+--- a/Documentation/edac/memory_repair.rst
++++ b/Documentation/edac/memory_repair.rst
+@@ -119,3 +119,24 @@ sysfs
  
- 	  If unsure say 'n'
- 
-+config CXL_EDAC_MEM_FEATURES
-+	bool "CXL: EDAC Memory Features"
-+	depends on EXPERT
-+	depends on CXL_MEM
-+	depends on CXL_FEATURES
-+	depends on EDAC >= CXL_BUS
-+	help
-+	  The CXL EDAC memory feature is optional and allows host to
-+	  control the EDAC memory features configurations of CXL memory
-+	  expander devices.
+ Sysfs files are documented in
+ `Documentation/ABI/testing/sysfs-edac-memory-repair`.
 +
-+	  Say 'y' if you have an expert need to change default settings
-+	  of a memory RAS feature established by the platform/device.
-+	  Otherwise say 'n'.
++Examples
++--------
 +
-+config CXL_EDAC_SCRUB
-+	bool "Enable CXL Patrol Scrub Control (Patrol Read)"
-+	depends on CXL_EDAC_MEM_FEATURES
-+	depends on EDAC_SCRUB
-+	help
-+	  The CXL EDAC scrub control is optional and allows host to
-+	  control the scrub feature configurations of CXL memory expander
-+	  devices.
++The memory repair usage takes the form shown in this example:
 +
-+	  When enabled 'cxl_mem' and 'cxl_region' EDAC devices are
-+	  published with memory scrub control attributes as described by
-+	  Documentation/ABI/testing/sysfs-edac-scrub.
++1. CXL memory sparing
 +
-+	  Say 'y' if you have an expert need to change default settings
-+	  of a memory scrub feature established by the platform/device
-+	  (e.g. scrub rates for the patrol scrub feature).
-+	  Otherwise say 'n'.
++Memory sparing is defined as a repair function that replaces a portion of
++memory with a portion of functional memory at that same DPA. The subclass
++for this operation, cacheline/row/bank/rank sparing, vary in terms of the
++scope of the sparing being performed.
 +
- config CXL_PORT
- 	default CXL_BUS
- 	tristate
-diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-index 086df97a0fcf..79e2ef81fde8 100644
---- a/drivers/cxl/core/Makefile
-+++ b/drivers/cxl/core/Makefile
-@@ -20,3 +20,4 @@ cxl_core-$(CONFIG_TRACING) += trace.o
- cxl_core-$(CONFIG_CXL_REGION) += region.o
- cxl_core-$(CONFIG_CXL_MCE) += mce.o
- cxl_core-$(CONFIG_CXL_FEATURES) += features.o
-+cxl_core-$(CONFIG_CXL_EDAC_MEM_FEATURES) += edac.o
++Memory sparing maintenance operations may be supported by CXL devices that
++implement CXL.mem protocol. A sparing maintenance operation requests the
++CXL device to perform a repair operation on its media. For example, a CXL
++device with DRAM components that support memory sparing features may
++implement sparing maintenance operations.
++
++Sysfs files for memory repair are documented in
++`Documentation/ABI/testing/sysfs-edac-memory-repair`
 diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
-new file mode 100644
-index 000000000000..7d7eb1e8a47a
---- /dev/null
+index 489c9996bfbc..395d56457931 100644
+--- a/drivers/cxl/core/edac.c
 +++ b/drivers/cxl/core/edac.c
-@@ -0,0 +1,495 @@
-+// SPDX-License-Identifier: GPL-2.0-only
+@@ -21,7 +21,17 @@
+ #include "core.h"
+ #include "trace.h"
+ 
+-#define CXL_NR_EDAC_DEV_FEATURES 2
++#define CXL_NR_EDAC_DEV_FEATURES 6
++
++static bool cxl_is_memdev_memory_online(const struct cxl_memdev *cxlmd)
++{
++	struct cxl_port *port = cxlmd->endpoint;
++
++	if (port && cxl_num_decoders_committed(port))
++		return true;
++
++	return false;
++}
+ 
+ #ifdef CONFIG_CXL_EDAC_SCRUB
+ struct cxl_patrol_scrub_context {
+@@ -1116,13 +1126,534 @@ int cxl_store_rec_dram(struct cxl_memdev *cxlmd, union cxl_event *evt)
+ 	return 0;
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_store_rec_dram, "CXL");
++
 +/*
-+ * CXL EDAC memory feature driver.
-+ *
-+ * Copyright (c) 2024-2025 HiSilicon Limited.
-+ *
-+ *  - Supports functions to configure EDAC features of the
-+ *    CXL memory devices.
-+ *  - Registers with the EDAC device subsystem driver to expose
-+ *    the features sysfs attributes to the user for configuring
-+ *    CXL memory RAS feature.
++ * CXL memory sparing control
 + */
-+
-+#include <linux/cleanup.h>
-+#include <linux/edac.h>
-+#include <linux/limits.h>
-+#include <cxl/features.h>
-+#include <cxl.h>
-+#include <cxlmem.h>
-+#include "core.h"
-+
-+#define CXL_NR_EDAC_DEV_FEATURES 1
-+
-+#ifdef CONFIG_CXL_EDAC_SCRUB
-+struct cxl_patrol_scrub_context {
-+	u8 instance;
-+	u16 get_feat_size;
-+	u16 set_feat_size;
-+	u8 get_version;
-+	u8 set_version;
-+	u16 effects;
-+	struct cxl_memdev *cxlmd;
-+	struct cxl_region *cxlr;
++enum cxl_mem_sparing_granularity {
++	CXL_MEM_SPARING_CACHELINE,
++	CXL_MEM_SPARING_ROW,
++	CXL_MEM_SPARING_BANK,
++	CXL_MEM_SPARING_RANK,
++	CXL_MEM_SPARING_MAX
 +};
 +
++struct cxl_mem_sparing_context {
++	struct cxl_memdev *cxlmd;
++	uuid_t repair_uuid;
++	u16 get_feat_size;
++	u16 set_feat_size;
++	u16 effects;
++	u8 instance;
++	u8 get_version;
++	u8 set_version;
++	u8 op_class;
++	u8 op_subclass;
++	bool cap_safe_when_in_use;
++	bool cap_hard_sparing;
++	bool cap_soft_sparing;
++	u8 channel;
++	u8 rank;
++	u8 bank_group;
++	u32 nibble_mask;
++	u64 dpa;
++	u32 row;
++	u16 column;
++	u8 bank;
++	u8 sub_channel;
++	enum edac_mem_repair_type repair_type;
++	bool persist_mode;
++};
++
++#define CXL_SPARING_RD_CAP_SAFE_IN_USE_MASK BIT(0)
++#define CXL_SPARING_RD_CAP_HARD_SPARING_MASK BIT(1)
++#define CXL_SPARING_RD_CAP_SOFT_SPARING_MASK BIT(2)
++
++#define CXL_SPARING_WR_DEVICE_INITIATED_MASK BIT(0)
++
++#define CXL_SPARING_QUERY_RESOURCE_FLAG BIT(0)
++#define CXL_SET_HARD_SPARING_FLAG BIT(1)
++#define CXL_SPARING_SUB_CHNL_VALID_FLAG BIT(2)
++#define CXL_SPARING_NIB_MASK_VALID_FLAG BIT(3)
++
++#define CXL_GET_SPARING_SAFE_IN_USE(flags) \
++	(FIELD_GET(CXL_SPARING_RD_CAP_SAFE_IN_USE_MASK, \
++		  flags) ^ 1)
++#define CXL_GET_CAP_HARD_SPARING(flags) \
++	FIELD_GET(CXL_SPARING_RD_CAP_HARD_SPARING_MASK, \
++		  flags)
++#define CXL_GET_CAP_SOFT_SPARING(flags) \
++	FIELD_GET(CXL_SPARING_RD_CAP_SOFT_SPARING_MASK, \
++		  flags)
++
++#define CXL_SET_SPARING_QUERY_RESOURCE(val) \
++	FIELD_PREP(CXL_SPARING_QUERY_RESOURCE_FLAG, val)
++#define CXL_SET_HARD_SPARING(val) \
++	FIELD_PREP(CXL_SET_HARD_SPARING_FLAG, val)
++#define CXL_SET_SPARING_SUB_CHNL_VALID(val) \
++	FIELD_PREP(CXL_SPARING_SUB_CHNL_VALID_FLAG, val)
++#define CXL_SET_SPARING_NIB_MASK_VALID(val) \
++	FIELD_PREP(CXL_SPARING_NIB_MASK_VALID_FLAG, val)
++
 +/*
-+ * See CXL spec rev 3.2 @8.2.10.9.11.1 Table 8-222 Device Patrol Scrub Control
-+ * Feature Readable Attributes.
++ * See CXL spec rev 3.2 @8.2.10.7.2.3 Table 8-134 Memory Sparing Feature
++ * Readable Attributes.
 + */
-+struct cxl_scrub_rd_attrbs {
-+	u8 scrub_cycle_cap;
-+	__le16 scrub_cycle_hours;
-+	u8 scrub_flags;
++struct cxl_memdev_repair_rd_attrbs_hdr {
++	u8 max_op_latency;
++	__le16 op_cap;
++	__le16 op_mode;
++	u8 op_class;
++	u8 op_subclass;
++	u8 rsvd[9];
++} __packed;
++
++struct cxl_memdev_sparing_rd_attrbs {
++	struct cxl_memdev_repair_rd_attrbs_hdr hdr;
++	u8 rsvd;
++	__le16 restriction_flags;
 +} __packed;
 +
 +/*
-+ * See CXL spec rev 3.2 @8.2.10.9.11.1 Table 8-223 Device Patrol Scrub Control
-+ * Feature Writable Attributes.
++ * See CXL spec rev 3.2 @8.2.10.7.1.4 Table 8-120 Memory Sparing Input Payload.
 + */
-+struct cxl_scrub_wr_attrbs {
-+	u8 scrub_cycle_hours;
-+	u8 scrub_flags;
++struct cxl_memdev_sparing_in_payload {
++	u8 flags;
++	u8 channel;
++	u8 rank;
++	u8 nibble_mask[3];
++	u8 bank_group;
++	u8 bank;
++	u8 row[3];
++	__le16 column;
++	u8 sub_channel;
 +} __packed;
 +
-+#define CXL_SCRUB_CONTROL_CHANGEABLE BIT(0)
-+#define CXL_SCRUB_CONTROL_REALTIME BIT(1)
-+#define CXL_SCRUB_CONTROL_CYCLE_MASK GENMASK(7, 0)
-+#define CXL_SCRUB_CONTROL_MIN_CYCLE_MASK GENMASK(15, 8)
-+#define CXL_SCRUB_CONTROL_ENABLE BIT(0)
-+
-+#define CXL_GET_SCRUB_CYCLE_CHANGEABLE(cap) \
-+	FIELD_GET(CXL_SCRUB_CONTROL_CHANGEABLE, cap)
-+#define CXL_GET_SCRUB_CYCLE(cycle) \
-+	FIELD_GET(CXL_SCRUB_CONTROL_CYCLE_MASK, cycle)
-+#define CXL_GET_SCRUB_MIN_CYCLE(cycle) \
-+	FIELD_GET(CXL_SCRUB_CONTROL_MIN_CYCLE_MASK, cycle)
-+#define CXL_GET_SCRUB_EN_STS(flags) FIELD_GET(CXL_SCRUB_CONTROL_ENABLE, flags)
-+
-+#define CXL_SET_SCRUB_CYCLE(cycle) \
-+	FIELD_PREP(CXL_SCRUB_CONTROL_CYCLE_MASK, cycle)
-+#define CXL_SET_SCRUB_EN(en) FIELD_PREP(CXL_SCRUB_CONTROL_ENABLE, en)
-+
-+static int cxl_mem_scrub_get_attrbs(struct cxl_mailbox *cxl_mbox, u8 *cap,
-+				    u16 *cycle, u8 *flags, u8 *min_cycle)
++static int
++cxl_mem_sparing_get_attrbs(struct cxl_mem_sparing_context *cxl_sparing_ctx)
 +{
-+	size_t rd_data_size = sizeof(struct cxl_scrub_rd_attrbs);
++	size_t rd_data_size = sizeof(struct cxl_memdev_sparing_rd_attrbs);
++	struct cxl_memdev *cxlmd = cxl_sparing_ctx->cxlmd;
++	struct cxl_mailbox *cxl_mbox = &cxlmd->cxlds->cxl_mbox;
++	u16 restriction_flags;
 +	size_t data_size;
-+	struct cxl_scrub_rd_attrbs *rd_attrbs __free(kfree) =
++	u16 return_code;
++	struct cxl_memdev_sparing_rd_attrbs *rd_attrbs __free(kfree) =
 +		kzalloc(rd_data_size, GFP_KERNEL);
 +	if (!rd_attrbs)
 +		return -ENOMEM;
 +
-+	data_size = cxl_get_feature(cxl_mbox, &CXL_FEAT_PATROL_SCRUB_UUID,
++	data_size = cxl_get_feature(cxl_mbox, &cxl_sparing_ctx->repair_uuid,
 +				    CXL_GET_FEAT_SEL_CURRENT_VALUE, rd_attrbs,
-+				    rd_data_size, 0, NULL);
++				    rd_data_size, 0, &return_code);
 +	if (!data_size)
 +		return -EIO;
 +
-+	*cap = rd_attrbs->scrub_cycle_cap;
-+	*cycle = le16_to_cpu(rd_attrbs->scrub_cycle_hours);
-+	*flags = rd_attrbs->scrub_flags;
-+	if (min_cycle)
-+		*min_cycle = CXL_GET_SCRUB_MIN_CYCLE(*cycle);
++	cxl_sparing_ctx->op_class = rd_attrbs->hdr.op_class;
++	cxl_sparing_ctx->op_subclass = rd_attrbs->hdr.op_subclass;
++	restriction_flags = le16_to_cpu(rd_attrbs->restriction_flags);
++	cxl_sparing_ctx->cap_safe_when_in_use =
++		CXL_GET_SPARING_SAFE_IN_USE(restriction_flags);
++	cxl_sparing_ctx->cap_hard_sparing =
++		CXL_GET_CAP_HARD_SPARING(restriction_flags);
++	cxl_sparing_ctx->cap_soft_sparing =
++		CXL_GET_CAP_SOFT_SPARING(restriction_flags);
 +
 +	return 0;
 +}
 +
-+static int cxl_scrub_get_attrbs(struct cxl_patrol_scrub_context *cxl_ps_ctx,
-+				u8 *cap, u16 *cycle, u8 *flags, u8 *min_cycle)
++static struct cxl_event_dram *
++cxl_mem_get_rec_dram(struct cxl_memdev *cxlmd,
++		     struct cxl_mem_sparing_context *ctx)
 +{
-+	struct cxl_mailbox *cxl_mbox;
-+	u8 min_scrub_cycle = U8_MAX;
-+	struct cxl_memdev *cxlmd;
-+	int i, ret;
++	struct cxl_mem_repair_attrbs attrbs = { 0 };
 +
-+	if (cxl_ps_ctx->cxlr) {
-+		struct cxl_region *cxlr = cxl_ps_ctx->cxlr;
-+		struct cxl_region_params *p = &cxlr->params;
++	attrbs.dpa = ctx->dpa;
++	attrbs.channel = ctx->channel;
++	attrbs.rank = ctx->rank;
++	attrbs.nibble_mask = ctx->nibble_mask;
++	switch (ctx->repair_type) {
++	case EDAC_REPAIR_CACHELINE_SPARING:
++		attrbs.repair_type = CXL_CACHELINE_SPARING;
++		attrbs.bank_group = ctx->bank_group;
++		attrbs.bank = ctx->bank;
++		attrbs.row = ctx->row;
++		attrbs.column = ctx->column;
++		attrbs.sub_channel = ctx->sub_channel;
++		break;
++	case EDAC_REPAIR_ROW_SPARING:
++		attrbs.repair_type = CXL_ROW_SPARING;
++		attrbs.bank_group = ctx->bank_group;
++		attrbs.bank = ctx->bank;
++		attrbs.row = ctx->row;
++		break;
++	case EDAC_REPAIR_BANK_SPARING:
++		attrbs.repair_type = CXL_BANK_SPARING;
++		attrbs.bank_group = ctx->bank_group;
++		attrbs.bank = ctx->bank;
++	break;
++	case EDAC_REPAIR_RANK_SPARING:
++		attrbs.repair_type = CXL_BANK_SPARING;
++		break;
++	default:
++		return NULL;
++	}
 +
-+		struct rw_semaphore *region_lock __free(rwsem_read_release) =
-+			rwsem_read_intr_acquire(&cxl_region_rwsem);
-+		if (!region_lock)
-+			return -EINTR;
++	return cxl_find_rec_dram(cxlmd, &attrbs);
++}
 +
-+		for (i = 0; i < p->nr_targets; i++) {
-+			struct cxl_endpoint_decoder *cxled = p->targets[i];
++static int
++cxl_mem_perform_sparing(struct device *dev,
++			struct cxl_mem_sparing_context *cxl_sparing_ctx)
++{
++	struct cxl_memdev *cxlmd = cxl_sparing_ctx->cxlmd;
++	struct cxl_memdev_sparing_in_payload sparing_pi;
++	struct cxl_event_dram *rec = NULL;
++	u16 validity_flags = 0;
 +
-+			cxlmd = cxled_to_memdev(cxled);
-+			cxl_mbox = &cxlmd->cxlds->cxl_mbox;
-+			ret = cxl_mem_scrub_get_attrbs(cxl_mbox, cap, cycle,
-+						       flags, min_cycle);
-+			if (ret)
-+				return ret;
++	struct rw_semaphore *region_lock __free(rwsem_read_release) =
++		rwsem_read_intr_acquire(&cxl_region_rwsem);
++	if (!region_lock)
++		return -EINTR;
 +
-+			if (min_cycle)
-+				min_scrub_cycle =
-+					min(*min_cycle, min_scrub_cycle);
++	struct rw_semaphore *dpa_lock __free(rwsem_read_release) =
++		rwsem_read_intr_acquire(&cxl_dpa_rwsem);
++	if (!dpa_lock)
++		return -EINTR;
++
++	if (!cxl_sparing_ctx->cap_safe_when_in_use) {
++		/* Memory to repair must be offline */
++		if (cxl_is_memdev_memory_online(cxlmd))
++			return -EBUSY;
++	} else {
++		if (cxl_is_memdev_memory_online(cxlmd)) {
++			rec = cxl_mem_get_rec_dram(cxlmd, cxl_sparing_ctx);
++			if (!rec)
++				return -EINVAL;
++
++			if (!get_unaligned_le16(rec->media_hdr.validity_flags))
++				return -EINVAL;
 +		}
-+
-+		if (min_cycle)
-+			*min_cycle = min_scrub_cycle;
-+
-+		return 0;
 +	}
-+	cxl_mbox = &cxl_ps_ctx->cxlmd->cxlds->cxl_mbox;
 +
-+	return cxl_mem_scrub_get_attrbs(cxl_mbox, cap, cycle, flags, min_cycle);
-+}
++	memset(&sparing_pi, 0, sizeof(sparing_pi));
++	sparing_pi.flags = CXL_SET_SPARING_QUERY_RESOURCE(0);
++	if (cxl_sparing_ctx->persist_mode)
++		sparing_pi.flags |= CXL_SET_HARD_SPARING(1);
 +
-+static int cxl_scrub_set_attrbs(struct device *dev,
-+				struct cxl_patrol_scrub_context *cxl_ps_ctx,
-+				u8 cycle, u8 flags)
-+{
-+	struct cxl_scrub_wr_attrbs wr_attrbs;
-+	struct cxl_mailbox *cxl_mbox;
-+	struct cxl_memdev *cxlmd;
-+	int ret, i;
++	if (rec)
++		validity_flags = get_unaligned_le16(rec->media_hdr.validity_flags);
 +
-+	wr_attrbs.scrub_cycle_hours = cycle;
-+	wr_attrbs.scrub_flags = flags;
-+
-+	if (cxl_ps_ctx->cxlr) {
-+		struct cxl_region *cxlr = cxl_ps_ctx->cxlr;
-+		struct cxl_region_params *p = &cxlr->params;
-+
-+		struct rw_semaphore *region_lock __free(rwsem_read_release) =
-+			rwsem_read_intr_acquire(&cxl_region_rwsem);
-+		if (!region_lock)
-+			return -EINTR;
-+
-+		for (i = 0; i < p->nr_targets; i++) {
-+			struct cxl_endpoint_decoder *cxled = p->targets[i];
-+
-+			cxlmd = cxled_to_memdev(cxled);
-+			cxl_mbox = &cxlmd->cxlds->cxl_mbox;
-+			ret = cxl_set_feature(cxl_mbox, &CXL_FEAT_PATROL_SCRUB_UUID,
-+					      cxl_ps_ctx->set_version, &wr_attrbs,
-+					      sizeof(wr_attrbs),
-+					      CXL_SET_FEAT_FLAG_DATA_SAVED_ACROSS_RESET,
-+					      0, NULL);
-+			if (ret)
-+				return ret;
-+
-+			if (cycle != cxlmd->cur_scrub_cycle) {
-+				if (cxlmd->cur_region_id != -1)
-+					dev_info(dev,
-+						 "Device scrub rate(%d hours) set by region%d rate overwritten by region%d scrub rate(%d hours)\n",
-+						 cxlmd->cur_scrub_cycle,
-+						 cxlmd->cur_region_id, cxlr->id,
-+						 cycle);
-+
-+				cxlmd->cur_scrub_cycle = cycle;
-+				cxlmd->cur_region_id = cxlr->id;
-+			}
++	switch (cxl_sparing_ctx->repair_type) {
++	case EDAC_REPAIR_CACHELINE_SPARING:
++		sparing_pi.column = cpu_to_le16(cxl_sparing_ctx->column);
++		if (!rec || (validity_flags & CXL_DER_VALID_SUB_CHANNEL)) {
++			sparing_pi.flags |= CXL_SET_SPARING_SUB_CHNL_VALID(1);
++			sparing_pi.sub_channel = cxl_sparing_ctx->sub_channel;
 +		}
-+
-+		return 0;
++		fallthrough;
++	case EDAC_REPAIR_ROW_SPARING:
++		put_unaligned_le24(cxl_sparing_ctx->row, sparing_pi.row);
++		fallthrough;
++	case EDAC_REPAIR_BANK_SPARING:
++		sparing_pi.bank_group = cxl_sparing_ctx->bank_group;
++		sparing_pi.bank = cxl_sparing_ctx->bank;
++		fallthrough;
++	case EDAC_REPAIR_RANK_SPARING:
++		sparing_pi.rank = cxl_sparing_ctx->rank;
++		fallthrough;
++	default:
++		sparing_pi.channel = cxl_sparing_ctx->channel;
++		if ((rec && (validity_flags & CXL_DER_VALID_NIBBLE)) ||
++		    (!rec && (!cxl_sparing_ctx->nibble_mask ||
++			     (cxl_sparing_ctx->nibble_mask & 0xFFFFFF)))) {
++			sparing_pi.flags |= CXL_SET_SPARING_NIB_MASK_VALID(1);
++			put_unaligned_le24(cxl_sparing_ctx->nibble_mask,
++					   sparing_pi.nibble_mask);
++		}
++		break;
 +	}
 +
-+	cxlmd = cxl_ps_ctx->cxlmd;
-+	cxl_mbox = &cxlmd->cxlds->cxl_mbox;
-+	ret = cxl_set_feature(cxl_mbox, &CXL_FEAT_PATROL_SCRUB_UUID,
-+			      cxl_ps_ctx->set_version, &wr_attrbs,
-+			      sizeof(wr_attrbs),
-+			      CXL_SET_FEAT_FLAG_DATA_SAVED_ACROSS_RESET, 0,
-+			      NULL);
-+	if (ret)
-+		return ret;
-+
-+	if (cycle != cxlmd->cur_scrub_cycle) {
-+		if (cxlmd->cur_region_id != -1)
-+			dev_info(dev,
-+				 "Device scrub rate(%d hours) set by region%d rate overwritten with device local scrub rate(%d hours)\n",
-+				 cxlmd->cur_scrub_cycle, cxlmd->cur_region_id,
-+				 cycle);
-+
-+		cxlmd->cur_scrub_cycle = cycle;
-+		cxlmd->cur_region_id = -1;
-+	}
-+
-+	return 0;
++	return cxl_perform_maintenance(&cxlmd->cxlds->cxl_mbox,
++				       cxl_sparing_ctx->op_class,
++				       cxl_sparing_ctx->op_subclass,
++				       &sparing_pi, sizeof(sparing_pi));
 +}
 +
-+static int cxl_patrol_scrub_get_enabled_bg(struct device *dev, void *drv_data,
-+					   bool *enabled)
++static int cxl_mem_sparing_get_repair_type(struct device *dev, void *drv_data,
++					   const char **repair_type)
 +{
-+	struct cxl_patrol_scrub_context *ctx = drv_data;
-+	u8 cap, flags;
-+	u16 cycle;
-+	int ret;
++	struct cxl_mem_sparing_context *ctx = drv_data;
 +
-+	ret = cxl_scrub_get_attrbs(ctx, &cap, &cycle, &flags, NULL);
-+	if (ret)
-+		return ret;
-+
-+	*enabled = CXL_GET_SCRUB_EN_STS(flags);
-+
-+	return 0;
-+}
-+
-+static int cxl_patrol_scrub_set_enabled_bg(struct device *dev, void *drv_data,
-+					   bool enable)
-+{
-+	struct cxl_patrol_scrub_context *ctx = drv_data;
-+	u8 cap, flags, wr_cycle;
-+	u16 rd_cycle;
-+	int ret;
-+
-+	if (!capable(CAP_SYS_RAWIO))
-+		return -EPERM;
-+
-+	ret = cxl_scrub_get_attrbs(ctx, &cap, &rd_cycle, &flags, NULL);
-+	if (ret)
-+		return ret;
-+
-+	wr_cycle = CXL_GET_SCRUB_CYCLE(rd_cycle);
-+	flags = CXL_SET_SCRUB_EN(enable);
-+
-+	return cxl_scrub_set_attrbs(dev, ctx, wr_cycle, flags);
-+}
-+
-+static int cxl_patrol_scrub_get_min_scrub_cycle(struct device *dev,
-+						void *drv_data, u32 *min)
-+{
-+	struct cxl_patrol_scrub_context *ctx = drv_data;
-+	u8 cap, flags, min_cycle;
-+	u16 cycle;
-+	int ret;
-+
-+	ret = cxl_scrub_get_attrbs(ctx, &cap, &cycle, &flags, &min_cycle);
-+	if (ret)
-+		return ret;
-+
-+	*min = min_cycle * 3600;
-+
-+	return 0;
-+}
-+
-+static int cxl_patrol_scrub_get_max_scrub_cycle(struct device *dev,
-+						void *drv_data, u32 *max)
-+{
-+	*max = U8_MAX * 3600; /* Max set by register size */
-+
-+	return 0;
-+}
-+
-+static int cxl_patrol_scrub_get_scrub_cycle(struct device *dev, void *drv_data,
-+					    u32 *scrub_cycle_secs)
-+{
-+	struct cxl_patrol_scrub_context *ctx = drv_data;
-+	u8 cap, flags;
-+	u16 cycle;
-+	int ret;
-+
-+	ret = cxl_scrub_get_attrbs(ctx, &cap, &cycle, &flags, NULL);
-+	if (ret)
-+		return ret;
-+
-+	*scrub_cycle_secs = CXL_GET_SCRUB_CYCLE(cycle) * 3600;
-+
-+	return 0;
-+}
-+
-+static int cxl_patrol_scrub_set_scrub_cycle(struct device *dev, void *drv_data,
-+					    u32 scrub_cycle_secs)
-+{
-+	struct cxl_patrol_scrub_context *ctx = drv_data;
-+	u8 scrub_cycle_hours = scrub_cycle_secs / 3600;
-+	u8 cap, wr_cycle, flags, min_cycle;
-+	u16 rd_cycle;
-+	int ret;
-+
-+	if (!capable(CAP_SYS_RAWIO))
-+		return -EPERM;
-+
-+	ret = cxl_scrub_get_attrbs(ctx, &cap, &rd_cycle, &flags, &min_cycle);
-+	if (ret)
-+		return ret;
-+
-+	if (!CXL_GET_SCRUB_CYCLE_CHANGEABLE(cap))
-+		return -EOPNOTSUPP;
-+
-+	if (scrub_cycle_hours < min_cycle) {
-+		dev_dbg(dev, "Invalid CXL patrol scrub cycle(%d) to set\n",
-+			scrub_cycle_hours);
-+		dev_dbg(dev,
-+			"Minimum supported CXL patrol scrub cycle in hour %d\n",
-+			min_cycle);
++	switch (ctx->repair_type) {
++	case EDAC_REPAIR_CACHELINE_SPARING:
++	case EDAC_REPAIR_ROW_SPARING:
++	case EDAC_REPAIR_BANK_SPARING:
++	case EDAC_REPAIR_RANK_SPARING:
++		*repair_type = edac_repair_type[ctx->repair_type];
++		break;
++	default:
 +		return -EINVAL;
 +	}
-+	wr_cycle = CXL_SET_SCRUB_CYCLE(scrub_cycle_hours);
 +
-+	return cxl_scrub_set_attrbs(dev, ctx, wr_cycle, flags);
++	return 0;
 +}
 +
-+static const struct edac_scrub_ops cxl_ps_scrub_ops = {
-+	.get_enabled_bg = cxl_patrol_scrub_get_enabled_bg,
-+	.set_enabled_bg = cxl_patrol_scrub_set_enabled_bg,
-+	.get_min_cycle = cxl_patrol_scrub_get_min_scrub_cycle,
-+	.get_max_cycle = cxl_patrol_scrub_get_max_scrub_cycle,
-+	.get_cycle_duration = cxl_patrol_scrub_get_scrub_cycle,
-+	.set_cycle_duration = cxl_patrol_scrub_set_scrub_cycle,
++#define CXL_SPARING_GET_ATTR(attrb, data_type)			    \
++	static int cxl_mem_sparing_get_##attrb(			    \
++		struct device *dev, void *drv_data, data_type *val) \
++	{							    \
++		struct cxl_mem_sparing_context *ctx = drv_data;	    \
++								    \
++		*val = ctx->attrb;				    \
++								    \
++		return 0;					    \
++	}
++CXL_SPARING_GET_ATTR(persist_mode, bool)
++CXL_SPARING_GET_ATTR(dpa, u64)
++CXL_SPARING_GET_ATTR(nibble_mask, u32)
++CXL_SPARING_GET_ATTR(bank_group, u32)
++CXL_SPARING_GET_ATTR(bank, u32)
++CXL_SPARING_GET_ATTR(rank, u32)
++CXL_SPARING_GET_ATTR(row, u32)
++CXL_SPARING_GET_ATTR(column, u32)
++CXL_SPARING_GET_ATTR(channel, u32)
++CXL_SPARING_GET_ATTR(sub_channel, u32)
++
++#define CXL_SPARING_SET_ATTR(attrb, data_type)					\
++	static int cxl_mem_sparing_set_##attrb(struct device *dev,		\
++						void *drv_data, data_type val)	\
++	{									\
++		struct cxl_mem_sparing_context *ctx = drv_data;			\
++										\
++		ctx->attrb = val;						\
++										\
++		return 0;							\
++	}
++CXL_SPARING_SET_ATTR(nibble_mask, u32)
++CXL_SPARING_SET_ATTR(bank_group, u32)
++CXL_SPARING_SET_ATTR(bank, u32)
++CXL_SPARING_SET_ATTR(rank, u32)
++CXL_SPARING_SET_ATTR(row, u32)
++CXL_SPARING_SET_ATTR(column, u32)
++CXL_SPARING_SET_ATTR(channel, u32)
++CXL_SPARING_SET_ATTR(sub_channel, u32)
++
++static int cxl_mem_sparing_set_persist_mode(struct device *dev, void *drv_data,
++					    bool persist_mode)
++{
++	struct cxl_mem_sparing_context *ctx = drv_data;
++
++	if ((persist_mode && ctx->cap_hard_sparing) ||
++	    (!persist_mode && ctx->cap_soft_sparing))
++		ctx->persist_mode = persist_mode;
++	else
++		return -EOPNOTSUPP;
++
++	return 0;
++}
++
++static int cxl_get_mem_sparing_safe_when_in_use(struct device *dev,
++						void *drv_data, bool *safe)
++{
++	struct cxl_mem_sparing_context *ctx = drv_data;
++
++	*safe = ctx->cap_safe_when_in_use;
++
++	return 0;
++}
++
++static int cxl_mem_sparing_get_min_dpa(struct device *dev, void *drv_data,
++				       u64 *min_dpa)
++{
++	struct cxl_mem_sparing_context *ctx = drv_data;
++	struct cxl_memdev *cxlmd = ctx->cxlmd;
++	struct cxl_dev_state *cxlds = cxlmd->cxlds;
++
++	*min_dpa = cxlds->dpa_res.start;
++
++	return 0;
++}
++
++static int cxl_mem_sparing_get_max_dpa(struct device *dev, void *drv_data,
++				       u64 *max_dpa)
++{
++	struct cxl_mem_sparing_context *ctx = drv_data;
++	struct cxl_memdev *cxlmd = ctx->cxlmd;
++	struct cxl_dev_state *cxlds = cxlmd->cxlds;
++
++	*max_dpa = cxlds->dpa_res.end;
++
++	return 0;
++}
++
++static int cxl_mem_sparing_set_dpa(struct device *dev, void *drv_data, u64 dpa)
++{
++	struct cxl_mem_sparing_context *ctx = drv_data;
++	struct cxl_memdev *cxlmd = ctx->cxlmd;
++	struct cxl_dev_state *cxlds = cxlmd->cxlds;
++
++	if (dpa < cxlds->dpa_res.start || dpa > cxlds->dpa_res.end)
++		return -EINVAL;
++
++	ctx->dpa = dpa;
++
++	return 0;
++}
++
++static int cxl_do_mem_sparing(struct device *dev, void *drv_data, u32 val)
++{
++	struct cxl_mem_sparing_context *ctx = drv_data;
++
++	if (val != EDAC_DO_MEM_REPAIR)
++		return -EINVAL;
++
++	return cxl_mem_perform_sparing(dev, ctx);
++}
++
++#define RANK_OPS                                                             \
++	.get_repair_type = cxl_mem_sparing_get_repair_type,                  \
++	.get_persist_mode = cxl_mem_sparing_get_persist_mode,                \
++	.set_persist_mode = cxl_mem_sparing_set_persist_mode,                \
++	.get_repair_safe_when_in_use = cxl_get_mem_sparing_safe_when_in_use, \
++	.get_min_dpa = cxl_mem_sparing_get_min_dpa,                          \
++	.get_max_dpa = cxl_mem_sparing_get_max_dpa,                          \
++	.get_dpa = cxl_mem_sparing_get_dpa,                                  \
++	.set_dpa = cxl_mem_sparing_set_dpa,                                  \
++	.get_nibble_mask = cxl_mem_sparing_get_nibble_mask,                  \
++	.set_nibble_mask = cxl_mem_sparing_set_nibble_mask,                  \
++	.get_rank = cxl_mem_sparing_get_rank,                                \
++	.set_rank = cxl_mem_sparing_set_rank,                                \
++	.get_channel = cxl_mem_sparing_get_channel,                          \
++	.set_channel = cxl_mem_sparing_set_channel,                          \
++	.do_repair = cxl_do_mem_sparing
++
++#define BANK_OPS                                                    \
++	RANK_OPS, .get_bank_group = cxl_mem_sparing_get_bank_group, \
++		.set_bank_group = cxl_mem_sparing_set_bank_group,   \
++		.get_bank = cxl_mem_sparing_get_bank,               \
++		.set_bank = cxl_mem_sparing_set_bank
++
++#define ROW_OPS                                       \
++	BANK_OPS, .get_row = cxl_mem_sparing_get_row, \
++		.set_row = cxl_mem_sparing_set_row
++
++#define CACHELINE_OPS                                               \
++	ROW_OPS, .get_column = cxl_mem_sparing_get_column,          \
++		.set_column = cxl_mem_sparing_set_column,           \
++		.get_sub_channel = cxl_mem_sparing_get_sub_channel, \
++		.set_sub_channel = cxl_mem_sparing_set_sub_channel
++
++static const struct edac_mem_repair_ops cxl_rank_sparing_ops = {
++	RANK_OPS,
 +};
 +
-+static int cxl_memdev_scrub_init(struct cxl_memdev *cxlmd,
-+				 struct edac_dev_feature *ras_feature,
-+				 u8 scrub_inst)
++static const struct edac_mem_repair_ops cxl_bank_sparing_ops = {
++	BANK_OPS,
++};
++
++static const struct edac_mem_repair_ops cxl_row_sparing_ops = {
++	ROW_OPS,
++};
++
++static const struct edac_mem_repair_ops cxl_cacheline_sparing_ops = {
++	CACHELINE_OPS,
++};
++
++struct cxl_mem_sparing_desc {
++	const uuid_t repair_uuid;
++	enum edac_mem_repair_type repair_type;
++	const struct edac_mem_repair_ops *repair_ops;
++};
++
++static const struct cxl_mem_sparing_desc mem_sparing_desc[] = {
++	{
++		.repair_uuid = CXL_FEAT_CACHELINE_SPARING_UUID,
++		.repair_type = EDAC_REPAIR_CACHELINE_SPARING,
++		.repair_ops = &cxl_cacheline_sparing_ops,
++	},
++	{
++		.repair_uuid = CXL_FEAT_ROW_SPARING_UUID,
++		.repair_type = EDAC_REPAIR_ROW_SPARING,
++		.repair_ops = &cxl_row_sparing_ops,
++	},
++	{
++		.repair_uuid = CXL_FEAT_BANK_SPARING_UUID,
++		.repair_type = EDAC_REPAIR_BANK_SPARING,
++		.repair_ops = &cxl_bank_sparing_ops,
++	},
++	{
++		.repair_uuid = CXL_FEAT_RANK_SPARING_UUID,
++		.repair_type = EDAC_REPAIR_RANK_SPARING,
++		.repair_ops = &cxl_rank_sparing_ops,
++	},
++};
++
++static int cxl_memdev_sparing_init(struct cxl_memdev *cxlmd,
++				   struct edac_dev_feature *ras_feature,
++				   const struct cxl_mem_sparing_desc *desc,
++				   u8 repair_inst)
 +{
-+	struct cxl_patrol_scrub_context *cxl_ps_ctx;
++	struct cxl_mem_sparing_context *cxl_sparing_ctx;
 +	struct cxl_feat_entry *feat_entry;
-+	u8 cap, flags;
-+	u16 cycle;
-+	int rc;
++	int ret;
 +
 +	feat_entry = cxl_feature_info(to_cxlfs(cxlmd->cxlds),
-+				      &CXL_FEAT_PATROL_SCRUB_UUID);
++				      &desc->repair_uuid);
 +	if (!feat_entry)
 +		return -EOPNOTSUPP;
 +
 +	if (!(le32_to_cpu(feat_entry->flags) & CXL_FEATURE_F_CHANGEABLE))
 +		return -EOPNOTSUPP;
 +
-+	cxl_ps_ctx = devm_kzalloc(&cxlmd->dev, sizeof(*cxl_ps_ctx), GFP_KERNEL);
-+	if (!cxl_ps_ctx)
++	cxl_sparing_ctx = devm_kzalloc(&cxlmd->dev, sizeof(*cxl_sparing_ctx),
++				       GFP_KERNEL);
++	if (!cxl_sparing_ctx)
 +		return -ENOMEM;
 +
-+	*cxl_ps_ctx = (struct cxl_patrol_scrub_context){
++	*cxl_sparing_ctx = (struct cxl_mem_sparing_context){
 +		.get_feat_size = le16_to_cpu(feat_entry->get_feat_size),
 +		.set_feat_size = le16_to_cpu(feat_entry->set_feat_size),
 +		.get_version = feat_entry->get_feat_ver,
 +		.set_version = feat_entry->set_feat_ver,
 +		.effects = le16_to_cpu(feat_entry->effects),
-+		.instance = scrub_inst,
 +		.cxlmd = cxlmd,
++		.repair_type = desc->repair_type,
++		.instance = repair_inst++,
 +	};
++	uuid_copy(&cxl_sparing_ctx->repair_uuid, &desc->repair_uuid);
 +
-+	rc = cxl_mem_scrub_get_attrbs(&cxlmd->cxlds->cxl_mbox, &cap, &cycle,
-+				      &flags, NULL);
-+	if (rc)
-+		return rc;
++	ret = cxl_mem_sparing_get_attrbs(cxl_sparing_ctx);
++	if (ret)
++		return ret;
 +
-+	cxlmd->cur_scrub_cycle = CXL_GET_SCRUB_CYCLE(cycle);
-+	cxlmd->cur_region_id = -1;
++	if ((cxl_sparing_ctx->cap_soft_sparing &&
++	     cxl_sparing_ctx->cap_hard_sparing) ||
++	    cxl_sparing_ctx->cap_soft_sparing)
++		cxl_sparing_ctx->persist_mode = 0;
++	else if (cxl_sparing_ctx->cap_hard_sparing)
++		cxl_sparing_ctx->persist_mode = 1;
++	else
++		return -EOPNOTSUPP;
 +
-+	ras_feature->ft_type = RAS_FEAT_SCRUB;
-+	ras_feature->instance = cxl_ps_ctx->instance;
-+	ras_feature->scrub_ops = &cxl_ps_scrub_ops;
-+	ras_feature->ctx = cxl_ps_ctx;
++	ras_feature->ft_type = RAS_FEAT_MEM_REPAIR;
++	ras_feature->instance = cxl_sparing_ctx->instance;
++	ras_feature->mem_repair_ops = desc->repair_ops;
++	ras_feature->ctx = cxl_sparing_ctx;
 +
 +	return 0;
 +}
+ #endif /* CONFIG_CXL_EDAC_MEM_REPAIR */
+ 
+ int devm_cxl_memdev_edac_register(struct cxl_memdev *cxlmd)
+ {
+ 	struct edac_dev_feature ras_features[CXL_NR_EDAC_DEV_FEATURES];
+ 	int num_ras_features = 0;
+-#if defined(CONFIG_CXL_EDAC_SCRUB) || defined(CONFIG_CXL_EDAC_ECS)
++#ifdef CONFIG_CXL_EDAC_MEM_REPAIR
++	u8 repair_inst = 0;
++#endif
++#if defined(CONFIG_CXL_EDAC_SCRUB) || defined(CONFIG_CXL_EDAC_ECS) || \
++	defined(CXL_EDAC_MEM_REPAIR)
+ 	int rc;
+ #endif
+ 
+@@ -1153,6 +1684,19 @@ int devm_cxl_memdev_edac_register(struct cxl_memdev *cxlmd)
+ 	cxlmd->array_err_rec = array_rec;
+ 	xa_init(&array_rec->rec_gen_media);
+ 	xa_init(&array_rec->rec_dram);
 +
-+static int cxl_region_scrub_init(struct cxl_region *cxlr,
-+				 struct edac_dev_feature *ras_feature,
-+				 u8 scrub_inst)
-+{
-+	struct cxl_patrol_scrub_context *cxl_ps_ctx;
-+	struct cxl_region_params *p = &cxlr->params;
-+	struct cxl_feat_entry *feat_entry = NULL;
-+	struct cxl_memdev *cxlmd;
-+	u8 cap, flags;
-+	u16 cycle;
-+	int i, rc;
-+
-+	/*
-+	 * The cxl_region_rwsem must be held if the code below is used in a context
-+	 * other than when the region is in the probe state, as shown here.
-+	 */
-+	for (i = 0; i < p->nr_targets; i++) {
-+		struct cxl_endpoint_decoder *cxled = p->targets[i];
-+
-+		cxlmd = cxled_to_memdev(cxled);
-+		feat_entry = cxl_feature_info(to_cxlfs(cxlmd->cxlds),
-+					      &CXL_FEAT_PATROL_SCRUB_UUID);
-+		if (!feat_entry)
-+			return -EOPNOTSUPP;
-+
-+		if (!(le32_to_cpu(feat_entry->flags) &
-+		      CXL_FEATURE_F_CHANGEABLE))
-+			return -EOPNOTSUPP;
-+
-+		rc = cxl_mem_scrub_get_attrbs(&cxlmd->cxlds->cxl_mbox, &cap,
-+					      &cycle, &flags, NULL);
-+		if (rc)
++	for (int i = 0; i < CXL_MEM_SPARING_MAX; i++) {
++		rc = cxl_memdev_sparing_init(cxlmd,
++					     &ras_features[num_ras_features],
++					     &mem_sparing_desc[i], repair_inst);
++		if (rc == -EOPNOTSUPP)
++			continue;
++		if (rc < 0)
 +			return rc;
 +
-+		cxlmd->cur_scrub_cycle = CXL_GET_SCRUB_CYCLE(cycle);
-+		cxlmd->cur_region_id = -1;
-+	}
-+
-+	cxl_ps_ctx = devm_kzalloc(&cxlr->dev, sizeof(*cxl_ps_ctx), GFP_KERNEL);
-+	if (!cxl_ps_ctx)
-+		return -ENOMEM;
-+
-+	*cxl_ps_ctx = (struct cxl_patrol_scrub_context){
-+		.get_feat_size = le16_to_cpu(feat_entry->get_feat_size),
-+		.set_feat_size = le16_to_cpu(feat_entry->set_feat_size),
-+		.get_version = feat_entry->get_feat_ver,
-+		.set_version = feat_entry->set_feat_ver,
-+		.effects = le16_to_cpu(feat_entry->effects),
-+		.instance = scrub_inst,
-+		.cxlr = cxlr,
-+	};
-+
-+	ras_feature->ft_type = RAS_FEAT_SCRUB;
-+	ras_feature->instance = cxl_ps_ctx->instance;
-+	ras_feature->scrub_ops = &cxl_ps_scrub_ops;
-+	ras_feature->ctx = cxl_ps_ctx;
-+
-+	return 0;
-+}
-+#endif /* CONFIG_CXL_EDAC_SCRUB */
-+
-+int devm_cxl_memdev_edac_register(struct cxl_memdev *cxlmd)
-+{
-+	struct edac_dev_feature ras_features[CXL_NR_EDAC_DEV_FEATURES];
-+	int num_ras_features = 0;
-+#if defined(CONFIG_CXL_EDAC_SCRUB)
-+	int rc;
-+#endif
-+
-+#ifdef CONFIG_CXL_EDAC_SCRUB
-+	rc = cxl_memdev_scrub_init(cxlmd, &ras_features[num_ras_features], 0);
-+	if (rc < 0 && rc != -EOPNOTSUPP)
-+		return rc;
-+
-+	if (rc != -EOPNOTSUPP)
++		repair_inst++;
 +		num_ras_features++;
-+#endif
-+
-+	char *cxl_dev_name __free(kfree) =
-+		kasprintf(GFP_KERNEL, "cxl_%s", dev_name(&cxlmd->dev));
-+	if (!cxl_dev_name)
-+		return -ENOMEM;
-+
-+	return edac_dev_register(&cxlmd->dev, cxl_dev_name, NULL,
-+				 num_ras_features, ras_features);
-+}
-+EXPORT_SYMBOL_NS_GPL(devm_cxl_memdev_edac_register, "CXL");
-+
-+int devm_cxl_region_edac_register(struct cxl_region *cxlr)
-+{
-+#ifdef CONFIG_CXL_EDAC_SCRUB
-+	struct edac_dev_feature ras_features[CXL_NR_EDAC_DEV_FEATURES];
-+	int num_ras_features = 0;
-+	int rc;
-+
-+	rc = cxl_region_scrub_init(cxlr, &ras_features[num_ras_features], 0);
-+	if (rc < 0)
-+		return rc;
-+
-+	num_ras_features++;
-+
-+	char *cxl_dev_name __free(kfree) =
-+		kasprintf(GFP_KERNEL, "cxl_%s", dev_name(&cxlr->dev));
-+	if (!cxl_dev_name)
-+		return -ENOMEM;
-+
-+	return edac_dev_register(&cxlr->dev, cxl_dev_name, NULL,
-+				 num_ras_features, ras_features);
-+#else
-+	return 0;
-+#endif
-+}
-+EXPORT_SYMBOL_NS_GPL(devm_cxl_region_edac_register, "CXL");
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index c3f4dc244df7..d5b8108c4a6d 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -3537,8 +3537,18 @@ static int cxl_region_probe(struct device *dev)
- 
- 	switch (cxlr->mode) {
- 	case CXL_PARTMODE_PMEM:
-+		rc = devm_cxl_region_edac_register(cxlr);
-+		if (rc)
-+			dev_dbg(&cxlr->dev, "CXL EDAC registration for region_id=%d failed\n",
-+				cxlr->id);
-+
- 		return devm_cxl_add_pmem_region(cxlr);
- 	case CXL_PARTMODE_RAM:
-+		rc = devm_cxl_region_edac_register(cxlr);
-+		if (rc)
-+			dev_dbg(&cxlr->dev, "CXL EDAC registration for region_id=%d failed\n",
-+				cxlr->id);
-+
- 		/*
- 		 * The region can not be manged by CXL if any portion of
- 		 * it is already online as 'System RAM'
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index a9ab46eb0610..8a252f8483f7 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -912,4 +912,14 @@ bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port);
- 
- u16 cxl_gpf_get_dvsec(struct device *dev);
- 
-+static inline struct rw_semaphore *rwsem_read_intr_acquire(struct rw_semaphore *rwsem)
-+{
-+	if (down_read_interruptible(rwsem))
-+		return NULL;
-+
-+	return rwsem;
-+}
-+
-+DEFINE_FREE(rwsem_read_release, struct rw_semaphore *, if (_T) up_read(_T))
-+
- #endif /* __CXL_H__ */
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 3ec6b906371b..685957b312ea 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -45,6 +45,8 @@
-  * @endpoint: connection to the CXL port topology for this memory device
-  * @id: id number of this memdev instance.
-  * @depth: endpoint port depth
-+ * @cur_scrub_cycle: current scrub cycle set for this device
-+ * @cur_region_id: id number of a backed region (if any) for which current scrub cycle set
-  */
- struct cxl_memdev {
- 	struct device dev;
-@@ -56,6 +58,10 @@ struct cxl_memdev {
- 	struct cxl_port *endpoint;
- 	int id;
- 	int depth;
-+#ifdef CONFIG_CXL_EDAC_SCRUB
-+	u8 cur_scrub_cycle;
-+	int cur_region_id;
-+#endif
++	}
+ #endif
+ 	char *cxl_dev_name __free(kfree) =
+ 		kasprintf(GFP_KERNEL, "cxl_%s", dev_name(&cxlmd->dev));
+diff --git a/drivers/edac/mem_repair.c b/drivers/edac/mem_repair.c
+index 3b1a845457b0..d1a8caa85369 100755
+--- a/drivers/edac/mem_repair.c
++++ b/drivers/edac/mem_repair.c
+@@ -45,6 +45,15 @@ struct edac_mem_repair_context {
+ 	struct attribute_group group;
  };
  
- static inline struct cxl_memdev *to_cxl_memdev(struct device *dev)
-@@ -853,6 +859,16 @@ int cxl_trigger_poison_list(struct cxl_memdev *cxlmd);
- int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa);
- int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa);
- 
-+#if IS_ENABLED(CONFIG_CXL_EDAC_MEM_FEATURES)
-+int devm_cxl_memdev_edac_register(struct cxl_memdev *cxlmd);
-+int devm_cxl_region_edac_register(struct cxl_region *cxlr);
-+#else
-+static inline int devm_cxl_memdev_edac_register(struct cxl_memdev *cxlmd)
-+{ return 0; }
-+static inline int devm_cxl_region_edac_register(struct cxl_region *cxlr)
-+{ return 0; }
-+#endif
++const char * const edac_repair_type[] = {
++	[EDAC_REPAIR_PPR] = "ppr",
++	[EDAC_REPAIR_CACHELINE_SPARING] = "cacheline-sparing",
++	[EDAC_REPAIR_ROW_SPARING] = "row-sparing",
++	[EDAC_REPAIR_BANK_SPARING] = "bank-sparing",
++	[EDAC_REPAIR_RANK_SPARING] = "rank-sparing",
++};
++EXPORT_SYMBOL_GPL(edac_repair_type);
 +
- #ifdef CONFIG_CXL_SUSPEND
- void cxl_mem_active_inc(void);
- void cxl_mem_active_dec(void);
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index 9675243bd05b..6e6777b7bafb 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -180,6 +180,10 @@ static int cxl_mem_probe(struct device *dev)
- 			return rc;
- 	}
+ #define TO_MR_DEV_ATTR(_dev_attr)      \
+ 	container_of(_dev_attr, struct edac_mem_repair_dev_attr, dev_attr)
  
-+	rc = devm_cxl_memdev_edac_register(cxlmd);
-+	if (rc)
-+		dev_dbg(dev, "CXL memdev EDAC registration failed rc=%d\n", rc);
+diff --git a/include/linux/edac.h b/include/linux/edac.h
+index 451f9c152c99..fa32f2aca22f 100644
+--- a/include/linux/edac.h
++++ b/include/linux/edac.h
+@@ -745,9 +745,16 @@ static inline int edac_ecs_get_desc(struct device *ecs_dev,
+ #endif /* CONFIG_EDAC_ECS */
+ 
+ enum edac_mem_repair_type {
++	EDAC_REPAIR_PPR,
++	EDAC_REPAIR_CACHELINE_SPARING,
++	EDAC_REPAIR_ROW_SPARING,
++	EDAC_REPAIR_BANK_SPARING,
++	EDAC_REPAIR_RANK_SPARING,
+ 	EDAC_REPAIR_MAX
+ };
+ 
++extern const char * const edac_repair_type[];
 +
- 	/*
- 	 * The kernel may be operating out of CXL memory on this device,
- 	 * there is no spec defined way to determine whether this device
+ enum edac_mem_repair_cmd {
+ 	EDAC_DO_MEM_REPAIR = 1,
+ };
 -- 
 2.43.0
 
