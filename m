@@ -1,37 +1,50 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E107B1DDD1;
-	Thu, 15 May 2025 17:23:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 750CB1487ED
+	for <linux-cxl@vger.kernel.org>; Thu, 15 May 2025 17:25:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747329822; cv=none; b=iwKg/12tG+jucp3qrWJavN1ctVD145udbieUBlZBdvC5dX+YM9IKIkSYqKccfj9teKrZTsAjOgkRv1Gkbe4+MbD+WAZ6lZxNLlr2KTka2oxc3os+bDGy0Xapgwj5xLv7Gb8hHD1YSNbpjcvkSWfOslDLSjtl4LJ6HsWKNRtYRWE=
+	t=1747329961; cv=none; b=WsTx1wkr7AbsL5TfhPRAhp7sH2PRfc+W7jTSnmtKa/nKxQvTmQ1SUrrelqngLauHgu994rGTmNUinVbEmbqUiYiMvVxopB2Cz/DToQRxaBNWBTITpHcq4QufI/gF+pVVFrBjwOP45lo2tnmcgRrJjkVUwwu7vq+9vYv21r4APQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747329822; c=relaxed/simple;
-	bh=cN0o+cjEAmcsbf3emVfh0/+2GXrsKo2GngcXznfkrF0=;
+	s=arc-20240116; t=1747329961; c=relaxed/simple;
+	bh=nZFFmPKduRDcZeeSjBBqR5O4eN/yEn9j5m7lWz+axeI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CqvzMvNKC9PrsP3g1/3gQgrZ2yvaovoI9NnVU1ZemNHoz12p5HmOBt4o1Lcz2/SfMS0aA2/YF23yXWfS+/sj4lyRlpAv4UslM8UEqskZPGjVEeZp8Gp02Y/z1NUbLkgC9AflhRe2NgKaxk3fbmQz61Z5ez8xgFb61lzs7Ukw4BI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=NJf6lDcc; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 In-Reply-To:Content-Type; b=fu1xeULTnH6l6rs6OK99AvmSAYsxOC0FcjfbFZYuf/7xduntoBYxaz/IstkVoAypgdjyaKPk1jbOaT0qE8jHjA4qO5B/D/wB266f3YljlL7MwqpKHGkt8uTp4EVXmUKrPmB+GNKsEkouo6tMF14m21VHo/QODnlR4Ffse4IC3x8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AaAZzH5D; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NJf6lDcc"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=GTCT7BSmAZqTWnu91btoJaKscnIU2IMk9i6RJnUQ9pA=; b=NJf6lDccfxPbXwIG7n6eC04DiW
-	RyLMA0kreSdpdLkcH1h85edPITzAkQFciyzItPFtP9VUj06nYCn/p9f+d/NMib8uhUZEI3pGF7LSh
-	DFNt4PdMWTNruOqjvbCvDkBiGlovAWXyoKG3ctism7pETo82x0ZQ9g1s5b5x9q3R0CPg6z/+OUY1N
-	SQpttZFyildt5AvqjgV9ecypb9qULP7kFPMHawM92uYZqbSqTSdeEpVW+X6qQFA5M+1j5cgEBzB9M
-	sf93EsvXMTRCrX2/aX3HbJMf+vkdXwzTXGSZJF96oHfzF/dCcSP47//5no0edPvKccFQFahL34/8R
-	NOWHxT9w==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uFcIy-0000000HVi1-2R7x;
-	Thu, 15 May 2025 17:23:36 +0000
-Message-ID: <86282fa2-3248-44bc-835e-4121214d6992@infradead.org>
-Date: Thu, 15 May 2025 10:23:31 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AaAZzH5D"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747329959; x=1778865959;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=nZFFmPKduRDcZeeSjBBqR5O4eN/yEn9j5m7lWz+axeI=;
+  b=AaAZzH5DT4bc9IxTnCQLVTOjrZpFkB3/r8zSv5HIEV63zTZsai4HcH6U
+   4UjCTZKVA9w0CGZBvAhdgB8rrTFByxxdrZi8CbKUzHGp3DcmmG8QIQ2F0
+   23stJ3alxnRpwMuQUA2IMal63wSxzC2F+TT8rTrcwZy+swc8KLYA0cxIW
+   2lXc8ho18jR2Bj3Qv8afoB6NBLF9gzPR/cPYxFfwqXkQ9jvzu+T0eQFnJ
+   zLjbwoq5/uEgyC0s/wJaUFiQT8HTo8IYguVg2H9BTZj8TIhCSC2RLEz6q
+   eD8kB07MLnS+yaG3eOLGmF2aepWY5tVT/JXigxDn4Ut+OsA7uRXpl7Pqp
+   g==;
+X-CSE-ConnectionGUID: FPEraUo6Q1+H2MF8Uy6SDA==
+X-CSE-MsgGUID: yq2fugqLRymJAZFT9ep3jg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="66832816"
+X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
+   d="scan'208";a="66832816"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 10:25:58 -0700
+X-CSE-ConnectionGUID: KpATJFDwSw6HiKtQHFURqA==
+X-CSE-MsgGUID: zM9EbxabQL2aGfN+29AB2g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
+   d="scan'208";a="138171786"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO [10.125.109.47]) ([10.125.109.47])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 10:25:58 -0700
+Message-ID: <97aa4fee-1f3c-4817-95cb-5393a800432c@intel.com>
+Date: Thu, 15 May 2025 10:25:57 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -39,52 +52,75 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 8/8] cxl/edac: Add CXL memory device soft PPR control
- feature
-To: shiju.jose@huawei.com, linux-cxl@vger.kernel.org,
- dan.j.williams@intel.com, jonathan.cameron@huawei.com, dave.jiang@intel.com,
- dave@stgolabs.net, alison.schofield@intel.com, vishal.l.verma@intel.com,
- ira.weiny@intel.com
-Cc: linux-edac@vger.kernel.org, linux-doc@vger.kernel.org, bp@alien8.de,
- tony.luck@intel.com, lenb@kernel.org, Yazen.Ghannam@amd.com,
- mchehab@kernel.org, nifan.cxl@gmail.com, linuxarm@huawei.com,
- tanxiaofei@huawei.com, prime.zeng@hisilicon.com, roberto.sassu@huawei.com,
- kangkang.shen@futurewei.com, wanghuiqiang@huawei.com
-References: <20250515115927.772-1-shiju.jose@huawei.com>
- <20250515115927.772-9-shiju.jose@huawei.com>
+Subject: Re: [PATCH v2 0/3] cxl: Update CXL documentation for access
+ coordinates calculation
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com, gourry@gourry.net
+References: <20250515000923.2590820-1-dave.jiang@intel.com>
+ <aCYhFjRzZNNlFfvJ@aschofie-mobl2.lan>
 Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250515115927.772-9-shiju.jose@huawei.com>
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <aCYhFjRzZNNlFfvJ@aschofie-mobl2.lan>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 5/15/25 4:59 AM, shiju.jose@huawei.com wrote:
-> diff --git a/Documentation/edac/memory_repair.rst b/Documentation/edac/memory_repair.rst
-> index 5b1cd8297442..3a3fc11b8fea 100644
-> --- a/Documentation/edac/memory_repair.rst
-> +++ b/Documentation/edac/memory_repair.rst
-> @@ -138,5 +138,15 @@ CXL device to perform a repair operation on its media. For example, a CXL
->  device with DRAM components that support memory sparing features may
->  implement sparing maintenance operations.
->  
-> +2. CXL memory Soft Post Package Repair (sPPR)
-> +
-> +Post Package Repair (PPR) maintenance operations may be supported by CXL
-> +devices that implement CXL.mem protocol. A PPR maintenance operation
-> +requests the CXL device to perform a repair operation on its media.
-> +For example, a CXL device with DRAM components that support PPR features
-> +may implement PPR Maintenance operations. Soft PPR (sPPR), is a temporary
+On 5/15/25 10:15 AM, Alison Schofield wrote:
+> On Wed, May 14, 2025 at 05:09:20PM -0700, Dave Jiang wrote:
+>> v2:
+>> - Language clarifications (Gregory)
+>> - Move all CDAT bits into single document. (Gregory)
+>> - Define CDAT terms. (Gregory)
+>>
+>> Add CXL access coordinates calculation documentation including CDAT details.
+> 
+> I appreciate this documentation and it makes me half-smart on this
+> stuff which leads to my possibly annoying questions:
+> 
+> Say I have a BIOS defined region. Can I look at the result of these
+> calcs and see, or judge, whether BIOS set up the most efficient
+> region?
 
-  no comma:                                                 ^
+Yes I think you can, since we do the calculation for all devices, not just the hot-plugged ones.
 
-> +row repair. Soft PPR may be faster, but the repair is lost with a power
-> +cycle.
-> +
->  Sysfs files for memory repair are documented in
->  `Documentation/ABI/testing/sysfs-edac-memory-repair
+> 
+> For a user created region where the topology offers some flexibility,
+> can a user predict these numbers before creating a region? Can the
+> user create a region, evaluate its 'perf characteristics', then destroy
+> it and try another flavor?
 
--- 
-~Randy
+I think so. If the QOS class mismatches, I believe you'll get a warning from CXL CLI, but you can override.
+
+> 
+> I realize this is internal docs on driver behavior and not user
+> space documentation. I'm looking for info to improve my understanding
+> not suggesting this info belongs in these docs.
+> 
+> Thanks - and, for the series:
+> 
+> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+> 
+>>
+>>
+>> Dave Jiang (3):
+>>   cxl: docs/platform/cdat reference documentation
+>>   cxl: docs/platform/acpi/srat Add generic target documentation
+>>   cxl: doc/linux/access-coordinates Update access coordinates
+>>     calculation methods
+>>
+>>  Documentation/driver-api/cxl/index.rst        |   1 +
+>>  .../cxl/linux/access-coordinates.rst          |  86 +++++++++++++
+>>  .../driver-api/cxl/platform/acpi/srat.rst     |  27 ++++
+>>  .../driver-api/cxl/platform/cdat.rst          | 118 ++++++++++++++++++
+>>  4 files changed, 232 insertions(+)
+>>  create mode 100644 Documentation/driver-api/cxl/platform/cdat.rst
+>>
+>>
+>> base-commit: 7855bc1362518673103bd9357827572207e6f6d9
+>> -- 
+>> 2.49.0
+>>
 
