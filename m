@@ -1,142 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6644F7262B
-	for <linux-cxl@vger.kernel.org>; Thu, 15 May 2025 16:38:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECC4E256C6C
+	for <linux-cxl@vger.kernel.org>; Thu, 15 May 2025 17:03:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747327140; cv=none; b=kz8DH2s+4ssCaSGIeYhjJG5zggM7e0XzPqmZGySC4gafy+bh8zWpXq7zkS5FlS7CsNMMmoKyl4Aa/+vZwQI5LMilDl0tyb75ZChfw7eXzVQy2YEpSGHFxBmrJAqSI8k+RYnAABk0+mDPfNx92PORUZ1MQ/FdAQVZQvlPBbkIn9A=
+	t=1747328639; cv=none; b=RiBOi8uaIZZXtB+Yb8HoZz3aNPt8A4WCGTgS7NpYLJMonhVbhty2y8pz52Mq2Xtz6N65LClR0x3Pob2nFYkiV3yFzcQS1iWH3kAqbFzK7myBfT3STWNd9e0HCp80M3QMke4GnH9U31JU3Q4H2Xk0eR9YBrC3z1xjZYn9T9KovF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747327140; c=relaxed/simple;
-	bh=ksYNVX1Vg/uBg8OSsBWGU+XEFNjSiCjgpKOHmtt84fk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gj8J2HAsQXgWvTKYRZHi917wQi3OKwcdCkPcXzSGTIb+gW1rDI3wwoyHmczBXo/gU5doybxSmrNO8kThUKVTolt2BM7vFs+56G3UErgcSnF9w00BootwuduHiZ/x0wzZEnDDkePiM4gx8SfoLC5+o/rbNqBpNCcbdZjhxANzgug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gT+j1BRD; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747328639; c=relaxed/simple;
+	bh=E4GJZBcXsg0vLPkkRU7NhPXqhPVc6tD/e0ROMscpbSY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AENcGn0VHA6jKMCj4eoC8lscxKjAQYVWetB7Kj23elmZdbn5zYCgXNzQisAIXSsGBEFaXTOroDbq7o0Ktk6LpwyzAs3/RY4T9O+WgQtp/c7kMv4YUJZ2PH90M39AN5blWwqCiXA638wVYub2y4fOkrwuap5L9d6Qrh63o/bIL9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=vJax4cxY; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gT+j1BRD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747327139; x=1778863139;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ksYNVX1Vg/uBg8OSsBWGU+XEFNjSiCjgpKOHmtt84fk=;
-  b=gT+j1BRDJCzyhg+CCM+3GghL+yftlMyPPyzFirelcqbIZ4jOZ4AyfbWN
-   cUHiRbXQU8sKHaDwaDuiTPenhNO35XL5pm2BHKU2an/eGjiAj2Coq9S2k
-   AiKC0UZNvCO7zxEm9+5T0xVb1Y9Kd2lWp3ifQOX/Qy33mHH1/rxvG2scZ
-   uVaK805wiSX9UeqSSaa46ntDEV3zMdDqRI/8ruoXigSt4gX1wKRiIceEw
-   E9mW9FpzNh4C0XoOECV9bbJGhjYIwhilloisv5JCEi4TyWd1GuQ5H+qnH
-   qiKYTEbN6poy665139xVKz3gdcC/eoRRlie8/JhdBb1Q1GDwgmVwg7Loi
-   Q==;
-X-CSE-ConnectionGUID: +9/eMCzlRdWq9jIP/dGk0w==
-X-CSE-MsgGUID: G+i44HYRT8OPJn0ggR3YTg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="71788129"
-X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
-   d="scan'208";a="71788129"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 09:38:51 -0700
-X-CSE-ConnectionGUID: iQ3wv4oJS6K5TXnXU2M5Ww==
-X-CSE-MsgGUID: L5ZjTtx3S8q1ijXD9M1HMg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
-   d="scan'208";a="138307577"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO [10.125.109.47]) ([10.125.109.47])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 09:38:49 -0700
-Message-ID: <cf0a7968-07fd-4a26-bb40-3d410f73408a@intel.com>
-Date: Thu, 15 May 2025 09:38:46 -0700
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="vJax4cxY"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c5e39d1db2so68735285a.3
+        for <linux-cxl@vger.kernel.org>; Thu, 15 May 2025 10:03:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1747328636; x=1747933436; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=wPQRvzzItfeLTE3Yoia8oxTSYi1+CLoQmqrepaqyvc4=;
+        b=vJax4cxYH5qNv+mNAE2mE+gEB3IrKfoIUdlzByL2qcre2ZDGIuMosDLPAEwobHMTIv
+         hXt3UC2m6rYcktvuG2UzTzsjx4hRrNWVyobFK32FgKyqyF5hJiRTiqumfIqrfUZA7Bhk
+         cT8lXLARuVLBbnV+T3WZFOAi1dx6cImouER4Vees3aQ7tLftM2Nd2aSEfoIkJNAKDwpE
+         ONM+oSO6kFFKlTczIimWgg5s1VGAuGgLYMsL9VhJtQQDcZRLsNPlfa9gC2QH8gkxxU5n
+         TD/PO1RZ61f8WtcoTObXpLWoehJoCyz8PZP3D347NoKfir0Botq4E847NMh0wTZZZ2yv
+         WEmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747328636; x=1747933436;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wPQRvzzItfeLTE3Yoia8oxTSYi1+CLoQmqrepaqyvc4=;
+        b=Vd2S1JHFsDifghu09kxP+o06tim62Iv5HT0XaLk2UF1mP8boamQi7rSIUv0Ee7L+ao
+         jVBPZkUfweD2beBfZ4y7FWkOtq7v/qU7am/lIOCkV8u8oNqfrHxq+64CMGsfOW3uXWEL
+         /1mqT8Cbsd39FbbQJg9avGLeid/kc/XVGoFnSpWL69aAUcnPFVTfDb9uXdD0BMJMQ8s4
+         6hdJAovKJ42JBa7TTpI2humaQQwrZJQs9I8cjNb82bhMxzLhHzS2ecyt/JfVLTV5t8n3
+         pYKEskR2BIsMuS48LGxjxIq8mM4wdnAiykuBszY9RkqXwYKU1h6BYhRvV6gr+liFj1QA
+         MszQ==
+X-Gm-Message-State: AOJu0YyDr5PBCOFEPW30fgper8opG5LKch9AIhUJJ8W5166TLffIHH2T
+	yDEUzynWCUy3bu7PDcL8qZc6fMy5MXhzxC3e0vkyKas135LfVYoDawOJHKTr2JPC4C4=
+X-Gm-Gg: ASbGnctrKDqVHhfwTRh9mY+xMpfOrPgoo+SVVpdZizSCmiZnmKAGWz2N/GqgAF+xn5n
+	IpFTOiGR6pdaZttWJAfKFPNlIUmIC9vHzrWBIpS/BvoiwP5HMAuyaEFG7Cg9humfwU5B7z2+xh8
+	MKpOpklwLM+UNp7sPDKO3JZ0FncZ92EdhxSaSQs6fD+1MYR1ngiEYdHahqgzsRTtoh52yY3i5uF
+	q4+VN+rpdwhReSwI9EKjjtTnCjCi9keMmTFCGDAVy13aN/5FusZ7Gxjy6rjdBzDNPqZ/fW7Q1Kh
+	2pKRQw4Cs07zgWS0DdlTjXRTCQXhjdIaCvZPK8oJ4fBKePM2uzxa2mE/hquTtQgcmGq1a/ExfAW
+	634aw3kKJEIR84W2GC3eYN9P4PWDu3lc=
+X-Google-Smtp-Source: AGHT+IGeIFbTWrAS8Vl9zwkgOAqIpet6inwYmXZBgu6TcS74vsKSa4GHXGqwk3JGOJ5gn9q3fTbiOw==
+X-Received: by 2002:a05:620a:4114:b0:7c5:e2a0:4e64 with SMTP id af79cd13be357-7cd467adb1amr30983285a.51.1747328635410;
+        Thu, 15 May 2025 10:03:55 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd467d7efesm8601885a.30.2025.05.15.10.03.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 10:03:54 -0700 (PDT)
+Date: Thu, 15 May 2025 13:03:52 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+	dave@stgolabs.net, jonathan.cameron@huawei.com,
+	alison.schofield@intel.com, ira.weiny@intel.com, rrichter@amd.com,
+	ming.li@zohomail.com
+Subject: Re: [PATCH v2 08/10] cxl: Add helper to detect top of CXL device
+ topology
+Message-ID: <aCYeeLskYgLD-ExC@gourry-fedora-PF4VCD3F>
+References: <20250507004310.3536991-1-dave.jiang@intel.com>
+ <20250507004310.3536991-9-dave.jiang@intel.com>
+ <aCNqJ5JI2_U7zh-Z@gourry-fedora-PF4VCD3F>
+ <96957e88-778e-41d6-a503-1819fac51855@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 02/10] cxl: Saperate out CXL dport->id vs actual dport
- hardware id
-To: Gregory Price <gourry@gourry.net>
-Cc: linux-cxl@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
- dave@stgolabs.net, jonathan.cameron@huawei.com, alison.schofield@intel.com,
- ira.weiny@intel.com, rrichter@amd.com, ming.li@zohomail.com
-References: <20250507004310.3536991-1-dave.jiang@intel.com>
- <20250507004310.3536991-3-dave.jiang@intel.com>
- <aCLS3rQxkjxiDLDx@gourry-fedora-PF4VCD3F>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <aCLS3rQxkjxiDLDx@gourry-fedora-PF4VCD3F>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <96957e88-778e-41d6-a503-1819fac51855@intel.com>
 
+On Tue, May 13, 2025 at 09:12:00AM -0700, Dave Jiang wrote:
+> 
+> 
+> On 5/13/25 8:49 AM, Gregory Price wrote:
+> > On Tue, May 06, 2025 at 05:43:08PM -0700, Dave Jiang wrote:
+> >> Add a helper to replace the open code detection of CXL device hierarchy
+> >> root. The helper will be used for delayed hostbridge port creation later
+> >> on.
+> >>
+> >> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> > 
+> > ignorant terminology question: what's the different between the
+> > "cxl hierarchy head" and "cxl root"?
+> 
+> I struggle to find the correct terminology between the head of the PCI (or platform device for cxl_test) hierarchy vs the CXL one we constructed for the 'cxl_port' hierarchy. I'm open to suggestions to use better words to distinguish that. 
 
+Is there an actual difference or they actually the same "device" - just
+abstracted differently?
 
-On 5/12/25 10:04 PM, Gregory Price wrote:
-> On Tue, May 06, 2025 at 05:43:02PM -0700, Dave Jiang wrote:
->> In preparation to allow dport to be allocated without being active, make
->> dport->id to be Linux id that enumerates the dport objects per port.
->> Keep the hardware id under dport->port_num to maintain compatibility and
->> introduce a dport->id as the enumeration id.
->>
-> 
-> This is more for the sake of clarity/documentation than anything else.
-> 
-> dport->port_num is the `hardware id` - i.e. what we'd find in an ACPI
-> table or something.  This number may not necessarily be unique
-> 
-> dport->port_id is now a Linux ID that is unique to the device.
-
-Yes. dport->id is guaranteed to be unique. While dport->port_num theoretically should be, but if a port is not active, it may have some bogus number in the register that clash with existing active port_num. I think Robert may have ran into this issue.
-
-DJ
-
-
-> 
-> For example, on my existing test system, i have this
-> 
-> [/sys/bus/cxl/devices]# ls port1/dport*
-> dport0  dport113  dport2 
-> [/sys/bus/cxl/devices]# ls port2/dport*
-> dport113  dport2
-> [/sys/bus/cxl/devices]# ls port3/dport*
-> dport0
-> 
-> I should now expect the following:
-> 
-> [/sys/bus/cxl/devices]# ls port1/dport*
-> dport0  dport1  dport2 
-> [/sys/bus/cxl/devices]# ls port2/dport*
-> dport0  dport1
-> [/sys/bus/cxl/devices]# ls port3/dport*
-> dport0
-> 
-> 
-> This should also apply to the root, whose dports were previously
-> dictated by the host bridge numbers defined in the CHBS/DSDT.
-> 
-> [/sys/bus/cxl/devices/root0]# ls
-> dport0  dport1  dport4  dport5
-> 
-> turns into
-> 
-> [/sys/bus/cxl/devices/root0]# ls
-> dport0  dport1  dport2  dport3
-> 
-> 
-> and my decoder0.0 target list ends up similarly changed
-> 
-> from
-> [/sys/bus/cxl/devices/root0/decoder0.0]# cat target_list
-> 5,4
-> 
-> to
-> 
-> [/sys/bus/cxl/devices/root0/decoder0.0]# cat target_list
-> 3,2
-> 
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> 
-> If this is all correct, I like this.
-> 
-> Reviewed-by: Gregory Price <gourry@gourry.net>
-> 
-> ~Gregory
-
+~Gregory
