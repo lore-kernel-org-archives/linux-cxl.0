@@ -1,118 +1,104 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F00223371F
-	for <linux-cxl@vger.kernel.org>; Fri, 16 May 2025 10:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD69B1FFC77;
+	Fri, 16 May 2025 10:39:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747390019; cv=none; b=UEr9OpEmzzY5wMXvLmzPjzOOImKM/7coaLpjMUOuvUffNLPrL0h/x3YvcBjV5bM3TQVrhD+xilzeirbjaDmXQOljgva3xOuLiL/fdh8fdmqFurnX4ZMjxWoQXnFWN4Y+1rk/fM/3loIkKfmQ+dBkylUxlYB9nEuh5TY+vbrO6u8=
+	t=1747391950; cv=none; b=N3HXHCV5W5kTik8l634ZSkvli94PEa4z1SGDpGiAf/vabXY8iZ2hjWLTjW1qYT6w+RFbw+UTpaqxSZV1N/zi3I17RTflG1udc0nmGMCVQbTZdenxDKGDQaKIQuioS9Vd73J8QfbxUPSRQHR5jsB+uJwZg5dpOURhTtAsX/e0bdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747390019; c=relaxed/simple;
-	bh=PZ1hzhVLhPa3dLDbMLplQU4Z4StkFXuYbw7/HI9oWu0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jkoxq+HasRX32V/G1m8kPL5xo5sigfhaFeX3qWLHyHQ4lOWAs8C9jpzK2Jtm+ohDfi9N910mNdz0fJ1c30ycXklGvkD8JKisHwtiAdryPKw9UnTJjFMDLS/tQmAo0t2w0L8obruckI3hzeoQ5OxKX4nP3pAvNhMtQOGBvkXS81s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=Q2yObfd3; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+	s=arc-20240116; t=1747391950; c=relaxed/simple;
+	bh=UKhNO8rcORbp76nd1K1WixYGB0bwzyQwNFB/e+ulAwM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fKNtyr3+bdGeAP7Ady0g4Ris3NI826DYk/fBd2RE0d1FIL3IbZVtPS81FmQ43dK5pXl6k6GA4dDo8OhOvyaBTDeS4KAExingSvLPiIBKCc/MXBeuNr8FlUcN4v9i7Od+os6RtJ1hENdvISBy56dG8OJoKc+vLrRlyz344Ae91OI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=VlPQfKAm; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="Q2yObfd3"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-476b4c9faa2so27974501cf.3
-        for <linux-cxl@vger.kernel.org>; Fri, 16 May 2025 03:06:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1747390016; x=1747994816; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=sYr4H36z0vOGSYanC1w0/PBFKEWt1tWAZvghYgV0VXg=;
-        b=Q2yObfd32ppE92QCNh3FmQzpGJVQIMNxEUm6x5bXLgiqgoo46K5nyHKNOjGcAqbemp
-         XCzovOtqA5NEaBLxS0I6sqJRDmdqHGQJ34ko+evlxLbg9MjtbqSGRDdCtThEDw2qLt3/
-         bnigLsB8NS4D6wnRo4FM3E1HTAe1FzaZ5BZC8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747390016; x=1747994816;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sYr4H36z0vOGSYanC1w0/PBFKEWt1tWAZvghYgV0VXg=;
-        b=UrwvMoH4DxmF5XR+R3ZiltuVXd/4RR3U46ckSix/e502FIWnI+EK6ceaUHEl2S4H4C
-         Hw92Bgp6+lMLuUGhZhiZ+VA/LWq2/R8ucl7HSSGYwhzpfgtZ4uSpSbtzgtiTQgrnoiot
-         aN8DZAVZh7yqvfTlOKft//snbwGLZYZmqnkc+5h4BH4hrYtTj7lou46ttOTd3TGf+v5+
-         ATbzW21o9apyHPRuTaOmYsTyIppqWPpPKgAyyroJMg9M8YdovkK1fwQNB5659F/H/YaU
-         SVhQEgUJpk+gmO0oaHCyfGFnhKW3VTG2KsbOHYIfml5f3RNm8X73WNgIIam0dqSp9kxO
-         C0Bg==
-X-Forwarded-Encrypted: i=1; AJvYcCVmcYyJQ4bvKFhEAwwx6IYT7oJ9jfkraNKBE6Nq6EIa8LvTz0mnl9B04bhfkYiwdzEOs1TBPJNHKgA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5c4++FbFA9HTGvlZ7mfqBa6iMbNaz0+0EQqPOGGWyPLM5TawR
-	17fodpEy52kYF98NoCbsgCnt7VugN2ieHoxdoVf+B56Dulfz6EH909wGINmQEzDzXKT10MzcPGx
-	ljuM7MB56BBY4xGa6aJwRLoRRzMmuronChdMmiuJ3qg==
-X-Gm-Gg: ASbGncsxHerxbdgnbODc6Dw26wOCqcg0QN/CxLPXUHR4NnA9noemG4c2Dx02Vhn2j1A
-	pmsuXHqqKi4Xe+517K8X7chodnpgbq9Z6iDBIWxOchPRZUUAeJfgUAUqHNrLdU5yYnpUA2aKXdY
-	4UlKRE4LSCMG2Oj07u6WuoFI/gGPNgsCc=
-X-Google-Smtp-Source: AGHT+IFq1iLsujGv3MRAp/42wUNDp8Fjtx0tUWAIAmM1RivLIsnYNC1bAGTr6piq4vefDLhpVhUdj5QcvATegQP1E2k=
-X-Received: by 2002:a05:622a:1f9b:b0:477:13b7:8336 with SMTP id
- d75a77b69052e-494ae391ca0mr49345951cf.17.1747390016120; Fri, 16 May 2025
- 03:06:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VlPQfKAm"
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54G6u3jp015169;
+	Fri, 16 May 2025 10:39:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=HYfYUEvVUJzf+TWW6cuOCPyPM1Hy8
+	0Y9bGKKeLc+OtA=; b=VlPQfKAm7/eFdTtvvYms4jRhds6byJZFdQtlTxqvfJMZp
+	L/aaANKfRuw8UjD+/+gnhiYPocpIHmEgS0kNjozMKRd8SYwtBBHE1g94bMGwY86K
+	I3kkx/VwAYbK2BKCf0sb8xSm5t6bSkKjhyNFH2aaTeREoDMAwJ/Z6T1ra4Ih52PH
+	gjAjKCify17L7wP27kXhydGDFpfiHNP3Rbr13MgHTDwUd2vUtvo99kTM6I5vQS2O
+	5kQEYnbP8wkdelpN47xZFiXwJKKOXlNvrZP5El/1VgDGEjCTlucx/oBz3dCCwq4C
+	zpmkkMWI5Wv0JOcjtEHcyzr05dbq8EA7KMwSaOGSA==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46nrbf13rm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 16 May 2025 10:39:00 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54G8ZE0W016194;
+	Fri, 16 May 2025 10:38:59 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 46mc35xjdv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 16 May 2025 10:38:59 +0000
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 54GAcxDE009423;
+	Fri, 16 May 2025 10:38:59 GMT
+Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 46mc35xjcp-1;
+	Fri, 16 May 2025 10:38:59 +0000
+From: Alok Tiwari <alok.a.tiwari@oracle.com>
+To: dave.jiang@intel.com, ira.weiny@intel.com, dave@stgolabs.net,
+        Jonathan.Cameron@huawei.com, ming.li@zohomail.com
+Cc: alok.a.tiwari@oracle.com, linux-kernel@vger.kernel.org,
+        linux-cxl@vger.kernel.org, darren.kenny@oracle.com
+Subject: [PATCH] cxl/Documentation: Fix typo in sysfs write_bandwidth attribute path
+Date: Fri, 16 May 2025 03:38:49 -0700
+Message-ID: <20250516103855.3820882-1-alok.a.tiwari@oracle.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250421013346.32530-1-john@groves.net> <20250421013346.32530-14-john@groves.net>
- <nedxmpb7fnovsgbp2nu6y3cpvduop775jw6leywmmervdrenbn@kp6xy2sm4gxr>
- <20250424143848.GN25700@frogsfrogsfrogs> <5rwwzsya6f7dkf4de2uje2b3f6fxewrcl4nv5ba6jh6chk36f3@ushxiwxojisf>
- <20250428190010.GB1035866@frogsfrogsfrogs> <CAJfpegtR28rH1VA-442kS_ZCjbHf-WDD+w_FgrAkWDBxvzmN_g@mail.gmail.com>
- <20250508155644.GM1035866@frogsfrogsfrogs> <CAJfpegt4drCVNomOLqcU8JHM+qLrO1JwaQbp69xnGdjLn5O6wA@mail.gmail.com>
- <20250515020624.GP1035866@frogsfrogsfrogs>
-In-Reply-To: <20250515020624.GP1035866@frogsfrogsfrogs>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Fri, 16 May 2025 12:06:44 +0200
-X-Gm-Features: AX0GCFvDzLpmkF12kGaynggeZWP00Cr6BBFBchrM1Bqzro0NRWRGfjqCVUyzE8E
-Message-ID: <CAJfpegsKf8Zog3Q6Vd1kBmD6anLSdyYyxy4BjD-dvcyWOyr4QQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 13/19] famfs_fuse: Create files with famfs fmaps
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: John Groves <John@groves.net>, Dan Williams <dan.j.williams@intel.com>, 
-	Bernd Schubert <bschubert@ddn.com>, John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	Luis Henriques <luis@igalia.com>, Randy Dunlap <rdunlap@infradead.org>, 
-	Jeff Layton <jlayton@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>, 
-	Petr Vorel <pvorel@suse.cz>, Brian Foster <bfoster@redhat.com>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, 
-	Josef Bacik <josef@toxicpanda.com>, Aravind Ramesh <arramesh@micron.com>, 
-	Ajay Joshi <ajayjoshi@micron.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-16_04,2025-05-16_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0 spamscore=0
+ malwarescore=0 phishscore=0 suspectscore=0 mlxscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505070000
+ definitions=main-2505160101
+X-Authority-Analysis: v=2.4 cv=Xc2JzJ55 c=1 sm=1 tr=0 ts=682715c4 b=1 cx=c_pps a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=yPCof4ZbAAAA:8 a=wu3nt7_zq3WtXC21B0kA:9 cc=ntf awl=host:13186
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE2MDEwMCBTYWx0ZWRfXw/Lxg/jN2SRf XsjjbIP510leRdSt+g/PIujBv5BfnVaS74xeX2QlE/110ssdHaJ5KvKB3Xxw+OBPpl0u1/+sUae NKI7/iYUeRA/2NlWsSQIfHiG9JweTFFub5lP7ZMKEbVpFH6dQUkQ+GIB+Uzxk6N5gyFM9WYZiPz
+ GNOWOCR1wO8OAsBlJrdWWI8soOZan1h0MN7WeVRBCwBx5PDk1h5keLYlEouroVi8iocXzSYqfFH IQpTjWMh2FA2E4KbAtOi2ePIOd6PAyw5ZauLVWZnQeirFS5MPx8z8URIXpYPvcakkVeDc42UpKR vNOmCQCMxek970jgH99fzW9b3UwZFYrBAL63tN81UyOAK/NynA5TqFQwZuOuzaR7RFk+ziioETy
+ i0i888Zi/gvMXAIw0v/nVJIHMAqYwJQvmZdISfdW2OLQ9NuvMHJQvr7LnrgGlVHdAzriYyh1
+X-Proofpoint-GUID: 7UhqW4SPKfMbX9gRIVvVTidn_rDIW-zr
+X-Proofpoint-ORIG-GUID: 7UhqW4SPKfMbX9gRIVvVTidn_rDIW-zr
 
-On Thu, 15 May 2025 at 04:06, Darrick J. Wong <djwong@kernel.org> wrote:
+Fix a typo in the sysfs documentation for the CXL "write_bandwidth"
+attribute path. The attribute was incorrectly documented as write_banwidth.
+Update it to the correct write_bandwidth to align with the actual
+implementation.
 
-> Yeah, it's confusing.  The design doc tries to clarify this, but this is
-> roughly what we need for fuse:
->
-> FUSE_IOMAP_OP_WRITE being set means we're writing to the file.
-> FUSE_IOMAP_OP_ZERO being set means we're zeroing the file.
-> Neither of those being set means we're reading the file.
->
-> (3 different operations)
+Fixes: c20eaf44113e ("cxl/region: Add sysfs attribute for locality attributes of CXL regions")
+Cc: stable@vger.kernel.org
+Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+---
+ Documentation/ABI/testing/sysfs-bus-cxl | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Okay, I get why these need to be distinct cases.
+diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+index 99bb3faf7a0e..eca1054ca168 100644
+--- a/Documentation/ABI/testing/sysfs-bus-cxl
++++ b/Documentation/ABI/testing/sysfs-bus-cxl
+@@ -572,7 +572,7 @@ Description:
+ 
+ 
+ What:		/sys/bus/cxl/devices/regionZ/accessY/read_bandwidth
+-		/sys/bus/cxl/devices/regionZ/accessY/write_banwidth
++		/sys/bus/cxl/devices/regionZ/accessY/write_bandwidth
+ Date:		Jan, 2024
+ KernelVersion:	v6.9
+ Contact:	linux-cxl@vger.kernel.org
+-- 
+2.47.1
 
-Am I right that the only read is sanely cacheable?
-
-> FUSE_IOMAP_OP_DIRECT being set means directio, and it not being set
-> means pagecache.
->
-> (and one flag, for 6 different types of IO)
-
-Why does this make a difference?
-
-Okay, maybe I can imagine difference allocation strategies.  Which
-means that it only matters for the write case?
-
-> FUSE_IOMAP_OP_REPORT is set all by itself for things like FIEMAP and
-> SEEK_DATA/HOLE.
-
-Which should again always be the same as the read case, no?
-
-Thanks,
-Miklos
