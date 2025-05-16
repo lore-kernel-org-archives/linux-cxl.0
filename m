@@ -1,218 +1,441 @@
-Received: from esa12.fujitsucc.c3s2.iphmx.com (esa12.fujitsucc.c3s2.iphmx.com [216.71.156.125])
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B633288DA
-	for <linux-cxl@vger.kernel.org>; Fri, 16 May 2025 05:51:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=216.71.156.125
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747374674; cv=fail; b=qT2XeS+F9nYXJYWM5dTMNVxmN65o4UjrhFMXnBfC5bHaPWDIiy4uRvXmtqU4Ns6lzGPVWeikECk89RUtyQ6HaW4a8Ja6nHU8LAxcSZEbd76iaO6OaxNaI4jQf68pX+Z4UC2KQzbH2iEi+iZlBiVP1/ZfLK0BHrsdL7ECVwtCdBE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747374674; c=relaxed/simple;
-	bh=aVWd/qpdyz3Fbv0/WcVeqR+s21+W1VFPuEq9MyxENeg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=LYAuftaeK6dlgWG1nILoRoNAt8zOZmjwDc0HXNVwfuS4KNXKgDxNkEcabQDMPOT6g8wLWdiS9yrPxPTIFyxXavB0ZyEJiG671aiP8rq9PFRkPKcrAKgn9p5/1D9Rfk5/IiiK8KoB3tL+zGrHo6nad8Zj+Qu0nUCdWqTfYrEWycA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=ydjt4RTe; arc=fail smtp.client-ip=216.71.156.125
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="ydjt4RTe"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
-  t=1747374672; x=1778910672;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=aVWd/qpdyz3Fbv0/WcVeqR+s21+W1VFPuEq9MyxENeg=;
-  b=ydjt4RTescWVPnzScxE4I+OkmpPtKSfeuF+a+tM7fzivg20JwUH/axTK
-   EBjbtHj9XnRRc44wokkvUxZ6mFrfee8ipZQioS0edwHrob0q1h6Vzmoct
-   dYo1SWTC4L/FaQBZaGirSHQg3l9Z1N5VgHTaIBjDponqNZnvo//Z5vZLA
-   fcniReIv7zPL6y85XwqekawmlzAT/q8cnbBjKlg9R5dQOZF668OM9jPiO
-   Xyt52cLeryOWgCn87l5S7AroE3x5fvifzJGLf2UWx2qfF6PGuKgy+mIvG
-   DrFcrDirO9B2Pxtfsm5dKmE4fpQ2cShCkLjTFVMscoxT7W0vOur4XlIFq
-   A==;
-X-CSE-ConnectionGUID: InLWjSE2SLW6yxXG+aj4DQ==
-X-CSE-MsgGUID: DS3zvrjcQAaTecYmnp4e4w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="155767140"
-X-IronPort-AV: E=Sophos;i="6.15,293,1739804400"; 
-   d="scan'208";a="155767140"
-Received: from mail-japaneastazlp17011024.outbound.protection.outlook.com (HELO TYVP286CU001.outbound.protection.outlook.com) ([40.93.73.24])
-  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 14:51:02 +0900
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OG8HjrIQdhsjUpSujMmwIuo/IUqBwi1zGhI5mOcsSWcKEt9XD5v9iWMWUY96o5TNFqCG99UeCPTTiT3UZVkeWafFQiTEzUFtpRG+gBBrpKnzC83dounXRQm7kit3CruY0XVHG4B2b7NtmJKAXhxOGkDmxmWeAaxRgNK+NXhg6uz6AvkS8n9tpYjHTuEQYycCru10iXUHrC4h1gpq+jLsbQO4fy7KEqa0sIZz38e6GnyzBev6PbHzrRBXGFg88C0p4uIn6W1GWapSQTfKhv3JwIOeoA3qRHdv6/1jns4y1ebVNqw2s1Zipy2pRzC+VUefyy0Gv+IxDDj6uQE/GRx6wA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aVWd/qpdyz3Fbv0/WcVeqR+s21+W1VFPuEq9MyxENeg=;
- b=CqtHhHLP1hk1E0Enj1PkR+VSzpPPUrKjxkZrFs/thrS1J/Gdy8rjOEbQ+4YB216Tp8yH3x4iiRPcqxZoFyCDyrZjXFWRwLqoUCXRjO6/nDXLODzaBSV/ZNXcuW62fQaFnikK2eZRCvjY8sfa9lMcea3Pu5U1uMw2y0fZ+hP+ixnzgv8nQQ8TtBS/j9SO/TWZCfEfYuIJIDCc/z/dZb+mka0QzziV7uXJxrX8zjHdlz4ra071rrenL4xKieo28TCoYFyQt8ZPQ+0Y5faVuoX8B3WLpgMoQtvSwSuFhZL7HxL8y5Cm6H+osQKMHQeXipjMqfMjiztmsl8pmhkrKrUlCg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
- dkim=pass header.d=fujitsu.com; arc=none
-Received: from OSBPR01MB1557.jpnprd01.prod.outlook.com (2603:1096:603:8::10)
- by OSCPR01MB12912.jpnprd01.prod.outlook.com (2603:1096:604:33c::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.33; Fri, 16 May
- 2025 05:50:59 +0000
-Received: from OSBPR01MB1557.jpnprd01.prod.outlook.com
- ([fe80::5178:3e63:18c:65e4]) by OSBPR01MB1557.jpnprd01.prod.outlook.com
- ([fe80::5178:3e63:18c:65e4%5]) with mapi id 15.20.8722.027; Fri, 16 May 2025
- 05:50:59 +0000
-From: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, "qemu-devel@nongnu.org"
-	<qemu-devel@nongnu.org>, Fan Ni <fan.ni@samsung.com>, Peter Maydell
-	<peter.maydell@linaro.org>, "mst@redhat.com" <mst@redhat.com>
-CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linuxarm@huawei.com" <linuxarm@huawei.com>, "qemu-arm@nongnu.org"
-	<qemu-arm@nongnu.org>, Yuquan Wang <wangyuquan1236@phytium.com.cn>, Itaru
- Kitayama <itaru.kitayama@linux.dev>,
-	=?utf-8?B?UGhpbGlwcGUgTWF0aGlldS1EYXVkw6k=?= <philmd@linaro.org>
-Subject: Re: [PATCH v13 3/5] hw/cxl-host: Allow split of establishing memory
- address and mmio setup.
-Thread-Topic: [PATCH v13 3/5] hw/cxl-host: Allow split of establishing memory
- address and mmio setup.
-Thread-Index: AQHbw/iRDKLeglXmT0KpTBjmUaHMCLPUxQwA
-Date: Fri, 16 May 2025 05:50:59 +0000
-Message-ID: <c9afd4d7-d755-4e6b-b541-ce29da885a13@fujitsu.com>
-References: <20250513111455.128266-1-Jonathan.Cameron@huawei.com>
- <20250513111455.128266-4-Jonathan.Cameron@huawei.com>
-In-Reply-To: <20250513111455.128266-4-Jonathan.Cameron@huawei.com>
-Accept-Language: en-US, zh-CN
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Mozilla Thunderbird
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=fujitsu.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: OSBPR01MB1557:EE_|OSCPR01MB12912:EE_
-x-ms-office365-filtering-correlation-id: 46d07f80-5c31-4ac9-b493-08dd943da266
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|376014|7416014|1800799024|38070700018|1580799027;
-x-microsoft-antispam-message-info:
- =?utf-8?B?aHJSZ3F1QU9NazlMeCs5VFRZWlE4Qjl6UXZydXdpQ2EyQUpuRzZzOEdDM2Q3?=
- =?utf-8?B?MTRWenBZbDFwbFFCNTJCNTZ6cnFCK3NJV3dHaE9MUisxN201TDBGSWtENkNK?=
- =?utf-8?B?eHNJSURZRFdabFBHTnpVdkEvSDRPZmtDS21BbkhuQ0FldkNiVUVFS3UzSHlV?=
- =?utf-8?B?Z09xZE5xU0gxOVh0bE1LNVJGZ3h3ei9oMVFRUEJHQTFGdUsvWE1iNDY5MEhU?=
- =?utf-8?B?ZU1lL1Z4TkpoRTNYUzNRaXVtUDJKUldzU2tlazBsVmk2UEtNYW9ETHFLWXNR?=
- =?utf-8?B?ZFVORGFyd0dYdDRFZDMxdGVIS0todVFPendHZWpLbjRJVkE2VTgyVk5hRWI2?=
- =?utf-8?B?THdoUXZSUGR5cnVjVFViN3Bpa21FNHJSUTdOdlYraEhWUXJkdG5sVlJuRkdG?=
- =?utf-8?B?b2xIVVd2UkRoTzN2UlFGOE1WT0l3Wk83UFAzdGppRTE5aDFGR1FtKytzOXZV?=
- =?utf-8?B?WGk2SXpzejJNcW5jSmM4aWRpQ0ZYdGk2S3dEOStFUEYra1RXL08xUEUyOEdH?=
- =?utf-8?B?TVRrWUhWbnJiUXBxOVMwL0Evbjhpemkva3g5S0JvY3UyeDVvRnJ1cjZWZHBa?=
- =?utf-8?B?KzAwUTRuWFJPNzVFK2xOaUhuQ2xPbk9tMkIxYzlSWUEzbGhvdU0zSVdIdlNa?=
- =?utf-8?B?djNSYnE3Z3ZlcnNOeE44cnNGSUhVeHFBUkRHeFZPNHpPWGFVeThuWlVlZUZV?=
- =?utf-8?B?Wm8yM2d2VGRFeFJKQ2RnK3lRZTNlN0hnU3hucFV1K2p6WGxEbmpIcTc0MzhP?=
- =?utf-8?B?ajdRd2RZOFVlMGdMRkg0aU90MWFxMjllbXlodjV6MWMyWXVtU1NNTFk0R0xl?=
- =?utf-8?B?L0RyUFhCcDZLZ3pJaGhPbTh0KzI5Uk9VeE9MQWxTbWgrLzIrajIrU0ZDNkx6?=
- =?utf-8?B?Y28zMVkxazZzeURyM0MrVHI3YnZLazZyN0c5S2I1QnprREJmUUNCSVMrNG55?=
- =?utf-8?B?dUdDOUZkaFpjTnJzZFUxblBrSnhYWVVHaW9BK3NQUENzd01VNlY2ck9rRVpr?=
- =?utf-8?B?a0MyWUhkL2JSSXlZdnZpWkRQOTY4M3BRSmhwLzdvOGJlZTVUQURHbVp4WlNo?=
- =?utf-8?B?QlR1OHdFbW4raVE0aW9ucjhBck5kbHg2NjVYODJRRHJ3TE43dHovZHMvYTVh?=
- =?utf-8?B?U3BSUjV1UkxXMnU3bitqQTdVd3pvOHUvbFBSanZQL3hScmFIV0JvQ2pTNi9X?=
- =?utf-8?B?QXQ2LzIyN0ljU0pyTDFNQnhOaFFLaElzTlBqQmxReDNMeENxY3NrQkplTGZK?=
- =?utf-8?B?Z2xtbUN5cFZYMHhaVnNvbzg5OE94VGNJV1NJNkRUa0p4UlIxbEVTMWNHcVFJ?=
- =?utf-8?B?aDArSnB5czB5Zk91R2JoV0xnY0k0enFHRldnWGpJM1VCbGNiMzBVTHVLM2RN?=
- =?utf-8?B?Y09pM2QyUnduc2lrb3hTK3BoVzhRM2RyMkExZ28vU2hvYmExNTNhOFk5UkVS?=
- =?utf-8?B?Qm9jNmFHTFNqRjZDdWtwQ00rakFEVmhncjVPWW9kWHJ1djJwaHJPQklXOU5p?=
- =?utf-8?B?Yk5JY3lQN09RQWlxZk12NFkwZmQwQkF5NC9XMWJOWGl0VG1Dd3pOdWlaOWQ2?=
- =?utf-8?B?Mm55REI5YmlwS1A3djB5WTdJRFQ1SmlZNGx0dFdGSTZDQnhXbnlkaWl6VnpO?=
- =?utf-8?B?R0htbm5adW9ub2hnSU40Z0xhSXRaMVpEUURFMEpKVXFHYXQ5THQzMEd0N2Jl?=
- =?utf-8?B?ZjE5UHYvYVVUb1I5MXBORFVoYThWMHRBdmFXY1hEcnRxbVFrWEZ5N0Z0NHpE?=
- =?utf-8?B?NkhGWnFWdDVvVkRtQjZSSmY5bmJBeXE3MnBYRGRGZ2xialJZNU90Z210Titr?=
- =?utf-8?B?L0tiM2k0VTNRT0VCaFRITVdPREZkYnMxNjF6UDcxblh1bFk4R3lYTGNtR1kx?=
- =?utf-8?B?Y1UwWkNpeFpIeWQxVmQzWWhKMGJaQzNORm1PU21wdmliQmNFSzltcVREMUlD?=
- =?utf-8?B?NG5ueDBETzl1cGkwb0pQQWU5NlNyV1czcDBnZThGUWNsck52Vnd2VTdMUFpD?=
- =?utf-8?B?YXFTZGVOQWMrc0pacDBoM2xmcnB3WVBzNnNwZ0hiV1FXWmxpaE9SRVpiR0I0?=
- =?utf-8?Q?6CBSNb?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSBPR01MB1557.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(38070700018)(1580799027);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?TExJdVI1eXFKT0N5MHFwNlBZOHdyWXNFbUgzUkk2N21pT3U2a3cySk9STVZ4?=
- =?utf-8?B?NUJvbEtNVkY5OHlKU1FYOTV4MlRPcWxZSUtZZ1JrTm1zZGxNREZmZUk3Vm9l?=
- =?utf-8?B?U05LV1E0VzZ6SER1eVdkUnpaY25HVFFzMGxwdDZ6VW1QbUgzMzI4YkFSalFQ?=
- =?utf-8?B?RFlHMTV5QjduaGZ3OVlaWWlVTGhGb1l2ZHpkbkZ3UnRXS21UZDBWbVZZMENn?=
- =?utf-8?B?amF6SjdVcWd6MU85THpXbVhXRUU2cWlxRklQajVJWjUwK2lSbU9TajJUNG9x?=
- =?utf-8?B?N2JVbHNQMzF5Y2RoRFdhREIwNDRVbjhmUjFzYmdtbEtvZDJWa1EyaXNhU2VP?=
- =?utf-8?B?M0crZmNJeUYrdzgxdFc4Zm00RTBwMnh6Y1JyN3ZPZ3lsbXpHZmNVZkVXUkdD?=
- =?utf-8?B?MlM5UXluWk9TeDVIQ29BRzFpMlRSd3IyU1Y0M0xBRnc1UGRUcmE5eE83T2ZC?=
- =?utf-8?B?VkZyWFBiWDFFSEhhS2F2MFhKY2ZuMmRtVjJ1aXZCeEhkRkNVL3QvV1pmWWYz?=
- =?utf-8?B?NmxaYWtOUnIxSDNTamxoWC9vL2dIK0R1QU9MSmlsSWp0U3RTVzFIclJkTHJM?=
- =?utf-8?B?S0UxemkwK1k5U1lBbkNCQzdaT1B0cXJEdGp0eVhrdzVVYjY3aHJqcElBNG5B?=
- =?utf-8?B?aUFBRzM4UjRPSWhtdzhWWkYvcEQ4VVU0dEpaTUgyUTdSdi9OSk14Q3NaeW1B?=
- =?utf-8?B?OXMwdTJHMTJkUGZOZFI5bWM2eTJmWHk5T1JIWUptL0VJcXkxeGhVakhEbzAx?=
- =?utf-8?B?RjI0dkpmdU84eWZ1aWUyejlINHlObHFoUWE5b2Rpcy9NVjZQbGJXTmFpL3pB?=
- =?utf-8?B?ckE2NGZmTVo1U1R3R09KbUpaUlh1V2JNOE5hSC8yaTdqcDN5WEt3dEtSYjZE?=
- =?utf-8?B?MVVpc2N2ZTNja2tRdVltQ3V1QUFqZmZCbnpOMGx3a3BqWW5odGpiekRkTUMw?=
- =?utf-8?B?M3NQRitGWjRMbUduQkV3MUNvTzhpUU13Q254aTVFaFUzbmZyMVRTclpxKzRR?=
- =?utf-8?B?TitBOFdvSlc4TkRqbTE4QzNSWEpDWjFZUGp2RzByeUpnUDBYUGRtNzMwWlJL?=
- =?utf-8?B?Q1oxOE5EOVptU2FFeG9mK2wwWDZKYUtPNkY3Zm9XYTNvTkxlTlZoV1lxdGJ1?=
- =?utf-8?B?YW1wR1YwRzgvMWY1aTQrUUp2THAvZVF3ZDhtRUdvYlRQeXJoZUdhOHIyejVR?=
- =?utf-8?B?L0lUUy84dHJEN0U4ZzVobHA1VnliZXFLSzByR2pZdThNUTMxTVZlOFhiTVNL?=
- =?utf-8?B?UzBDSjkreGxjL2lvb01wYjZVMW5YMjBkajRFMFI2RGxoQ1poY1pMRjJoWTJz?=
- =?utf-8?B?VEJkMkZ1ZjN0M1JocjdjeEIwVkRmdFcxbjc5NlFENStzUDJPbHNiKzh6Unlz?=
- =?utf-8?B?ZnBPU2hNZm5CcHp1ZkNZdWhHa3BEWlAzUWxyUUpTV1l1VUkyaGg5MFI1K0xx?=
- =?utf-8?B?S1owdUNuNUs3eVhQdm1nN3I5R3lkOUpnd3M2cVhUNm4vRy9KY0htMTVVRFlP?=
- =?utf-8?B?SXdrZDdYcmlaYk8vLzIxOFRveWFiOFJNcGhrY3l0Wk9laWxLSGpsWExXNnpi?=
- =?utf-8?B?YVNnamJzb29VajVXbWJQd3VGNkJtTzhrZEZ6TSthRGtrMXBhaTBka25hY200?=
- =?utf-8?B?Z3ZNN1RNdE9nTjlQbTN6d21oVVJsaVN4Yzl0WmVWUmVMRTZoTDIxMlAyZHpT?=
- =?utf-8?B?STduNDRiTzQ0WUZWQ1ZiSGRuM0tNcnh2V0RMcVNqVDJEZy92QWl1MnY3bXli?=
- =?utf-8?B?UVBRWS9nbndwRWRta0xHaVJtb2RSNjRZUjBvekJ3RnRzbGhCeXo5QU1qRXFD?=
- =?utf-8?B?eTBYQlc2V2l1VDJmbjZGQ1N1eTN5T0VvMjhoblc5dkczYlJuYzBWYk1BaFBN?=
- =?utf-8?B?TGNFUjU5V0RINzhGQkNqMTZEcHpacmF3M1l0dDc2bnVqWVVkb0VvNEVBYnZ3?=
- =?utf-8?B?RzFxUEZqemJydGYxNkY4bFRSMWxHc3Z6bm1JdHlMSFJ1VEQvOGlHUUZOQ2hU?=
- =?utf-8?B?RDBzNmtwblJSRUJGUno2aTVlWXRKWitFWHgyUk95Mmt1Y0diM3BsSzJyK1U0?=
- =?utf-8?B?eHdCSTR2MW00Qjk5WnRXUGdIV3B0ZVpEV2Z5NXM2a3RwVmJMTFZPR21DNzJK?=
- =?utf-8?B?SG53K1pzL1ZLVEZWN1RjclUrVkp0eGdzLzVIQnNKRjFCdkkwUldkWmk3clBw?=
- =?utf-8?B?MVE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <14B4937A9F5CE442ABF4178370D07DE9@jpnprd01.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C990C21CC4D
+	for <linux-cxl@vger.kernel.org>; Fri, 16 May 2025 06:35:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747377315; cv=none; b=aZZ3gw7765bmTeAFwLXgjkkt/eNmN4KyWXChyjzTDGKAxLq7K82K4JJNksLoNtXHrlPvzv1z8twx60hw7+zil6Vb1dHUgdpGzYj59X/Y17AWSnfPpJa2KOVDf9mqZkbMzYh8HLh0x8T+ijG1c1DIVJZGqYLJZAln+e/KhWmJ58c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747377315; c=relaxed/simple;
+	bh=ywW4vCV7rJS1MKjK7VXhoU4OHmuxG6+TTVW1OIclF6s=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=ecuejWEwSIsfA7njhIsptBswEV8JowRaoVfGrKANBJFoctM7j+xYpeGBalfeVSZB67tWCApHACGNxG1cczl2UaBZIztIQ8y7XGuBjYH5MqgCnZTZs3yKA+Bp0JzJv7gIanrKmAE4l3KpMKDfbkVvM1WiGurpcXgYQN86oCNznoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; arc=none smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	su0iWd26XayX3TaGz9xH0CybEYTinv5VQNfZIRbbWr3NFO8uUtACkUlqEdsoH4nDdV5p/nRvPocgBmxMn3fGQbF6E3z8b0QPX5gpQN6MQ+id8kuwA2mXeBdMSxYAydTYBwZacVDZ6HDpNXktGohmwd98M+GII7PkWi1zFlpkUrpxfTg7e0oZhdpk1dXMn+La7Incg7l1QWOWc7Zlz7VUrvJYo9DjJBAWGoFABHz8PBvbgFk4tJsAXxY3Sol5yn9EkKj9kngEtza0afB6KiqeoFuNk4UC3xESvilMcLDL/cvsVSWiRXimKRuocfimhAAo5CK8Kb6WF9GpoN6M/oSGZAjyE8qLFIeX0o2DAPhEfWMuvNETXpOSW1/yvSInJUzfxi2wE1WkOxRkgRHY2Zmw8HnPIlVzzgPEzL4GL9iKsdDntVgEbbXqaZM77nhLMkJ3JHc9qp2J/eGTTKwE5xpFkkJbLn3XxdmmPjImS4Tc8J5gV/bkaCnSmaJ1Bv6duSxDcY1gCAkGINjXYNIjN1OYTFovekV3nMiOotq3BZYnvMipqvSjSmyhm7ADvSFgf+c0/SEqyiIPvdErwmHJBKLhp0J4fQqFp6sqka+2wsvlapS74+D1Ik+7jkyur3QxfCl5
-X-OriginatorOrg: fujitsu.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: OSBPR01MB1557.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 46d07f80-5c31-4ac9-b493-08dd943da266
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2025 05:50:59.4968
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: INEcvw9RbVyO7FjI89zmceAGVI/rmeKty5oguI1eXRIJIt05j/NzxSmf9MREPypBuWxWHHpA8GWBNMCuICQLAA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSCPR01MB12912
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
+Subject: Re: [PATCH v13 0/5] arm/virt: CXL support via pxb_cxl
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Itaru Kitayama <itaru.kitayama@linux.dev>
+In-Reply-To: <1DF02466-C91E-461E-B35F-D42CEE9F040D@linux.dev>
+Date: Fri, 16 May 2025 15:34:44 +0900
+Cc: qemu-devel@nongnu.org,
+ Fan Ni <fan.ni@samsung.com>,
+ Peter Maydell <peter.maydell@linaro.org>,
+ mst@redhat.com,
+ linux-cxl@vger.kernel.org,
+ linuxarm@huawei.com,
+ qemu-arm@nongnu.org,
+ Yuquan Wang <wangyuquan1236@phytium.com.cn>,
+ =?utf-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@linaro.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <3A14D5CE-8FFD-437D-82EE-BFFE514893E8@linux.dev>
+References: <20250513111455.128266-1-Jonathan.Cameron@huawei.com>
+ <1DF02466-C91E-461E-B35F-D42CEE9F040D@linux.dev>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+X-Migadu-Flow: FLOW_OUT
 
-DQoNCk9uIDEzLzA1LzIwMjUgMTk6MTQsIEpvbmF0aGFuIENhbWVyb24gdmlhIHdyb3RlOg0KPiAg
-IA0KPiAraHdhZGRyIGN4bF9mbXdzX3NldF9tZW1tYXAoaHdhZGRyIGJhc2UsIGh3YWRkciBtYXhf
-YWRkcikNCj4gK3sNCj4gKyAgICBHU0xpc3QgKmNmbXdzX2xpc3QsICppdGVyOw0KPiArDQo+ICsg
-ICAgc3RydWN0IGNmbXdfdXBkYXRlX3N0YXRlIGNmbXdzcyA9IHsNCj4gKyAgICAgICAgLmJhc2Ug
-PSBiYXNlLA0KPiArICAgICAgICAubWF4YWRkciA9IG1heF9hZGRyLA0KPiArICAgICAgICAudXBk
-YXRlX21taW8gPSBmYWxzZSwNCj4gKyAgICB9Ow0KPiArICAgIGNmbXdzX2xpc3QgPSBjeGxfZm13
-c19nZXRfYWxsX3NvcnRlZCgpOw0KPiArICAgIGZvciAoaXRlciA9IGNmbXdzX2xpc3Q7IGl0ZXI7
-IGl0ZXIgPSBpdGVyLT5uZXh0KSB7DQo+ICsgICAgICAgIGN4bF9mbXdzX3VwZGF0ZShpdGVyLT5k
-YXRhLCAmY2Ztd3NzKTsNCj4gKyAgICB9DQo+ICsgICAgZ19zbGlzdF9mcmVlKGNmbXdzX2xpc3Qp
-Ow0KPiArDQo+ICsgICAgcmV0dXJuIGNmbXdzcy5iYXNlOw0KPiArfQ0KPiArDQo+ICAgaHdhZGRy
-IGN4bF9mbXdzX3NldF9tZW1tYXBfYW5kX3VwZGF0ZV9tbWlvKGh3YWRkciBiYXNlLCBod2FkZHIg
-bWF4X2FkZHIpDQo+ICAgew0KPiAgICAgICBHU0xpc3QgKmNmbXdzX2xpc3QsICppdGVyOw0KPiBA
-QCAtNDQ1LDYgKzQ2Niw3IEBAIGh3YWRkciBjeGxfZm13c19zZXRfbWVtbWFwX2FuZF91cGRhdGVf
-bW1pbyhod2FkZHIgYmFzZSwgaHdhZGRyIG1heF9hZGRyKQ0KPiAgICAgICBzdHJ1Y3QgY2Ztd191
-cGRhdGVfc3RhdGUgY2Ztd3NzID0gew0KPiAgICAgICAgICAgLmJhc2UgPSBiYXNlLA0KPiAgICAg
-ICAgICAgLm1heGFkZHIgPSBtYXhfYWRkciwNCj4gKyAgICAgICAgLnVwZGF0ZV9tbWlvID0gdHJ1
-ZSwNCj4gICAgICAgfTsNCj4gICAgICAgY2Ztd3NfbGlzdCA9IGN4bF9mbXdzX2dldF9hbGxfc29y
-dGVkKCk7DQo+ICAgICAgIGZvciAoaXRlciA9IGNmbXdzX2xpc3Q7IGl0ZXI7IGl0ZXIgPSBpdGVy
-LT5uZXh0KSB7DQo+IEBAIC00NTUsNiArNDc3LDI2IEBAIGh3YWRkciBjeGxfZm13c19zZXRfbWVt
-bWFwX2FuZF91cGRhdGVfbW1pbyhod2FkZHIgYmFzZSwgaHdhZGRyIG1heF9hZGRyKQ0KPiAgICAg
-ICByZXR1cm4gY2Ztd3NzLmJhc2U7DQo+ICAgfQ0KPiAgIA0KDQpJdCBzZWVtIHdlIGNhbiBzaGFy
-ZSBtb3N0IG9mIHRoZSBjb2RlIGluIGN4bF9mbXdzX3NldF9tZW1tYXBfYW5kX3VwZGF0ZV9tbWlv
-KCkgYW5kIGN4bF9mbXdzX3NldF9tZW1tYXAoKQ0KSW4gYWRkaXRpb24sIHdlIGNhbiBkcm9wIHRo
-ZSBjZm13X3VwZGF0ZV9zdGF0ZTo6dXBkYXRlX21taW8gaWYgdGhlcmUgaXMgbm8gb3RoZXIgdXNl
-cnMuIEp1c3QgcGFzcyBpdA0KdG8gY3hsX2Ztd3NfdXBkYXRlKCkgZGlyZWN0bHkuDQoNCg0KVGhh
-bmtzDQpaaGlqaWFu
+
+
+> On May 16, 2025, at 11:30, Itaru Kitayama <itaru.kitayama@linux.dev> =
+wrote:
+>=20
+> Hi Jonathan,
+>=20
+>> On May 13, 2025, at 20:14, Jonathan Cameron =
+<Jonathan.Cameron@huawei.com> wrote:
+>>=20
+>> V13:
+>> - Make CXL fixed memory windows sysbus devices.
+>> IIRC this was requested by Peter in one of the reviews a long time =
+back
+>> but at the time the motivation was less strong than it becomes with =
+some
+>> WiP patches for hotness monitoring and high performance direct =
+connect
+>> where we need a machine type independent way to iterate all the CXL
+>> fixed memory windows. This is a convenient place to do it so drag =
+that
+>> work forward into this series.
+>>=20
+>> This allows us to drop separate list and necessary machine specific
+>> access code in favour of
+>> object_child_foreach_recursive(object_get_root(),...)
+>> One snag is that the ordering of multiple fixed memory windows in =
+that
+>> walk depends on the underlying g_hash_table iterations rather than =
+the
+>> order of creation. In the memory map layout and ACPI table creation =
+we
+>> need both stable and predictable ordering. Resolve this in a similar
+>> fashion to object_class_get_list_sorted() be throwing them in a =
+GSList
+>> and sorting that. Only use this when a sorted list is needed.
+>>=20
+>> Dropped RFC as now I'm happy with this code and would like to get it
+>> upstream!  Particularly as it broken even today due to enscripten
+>> related changes that stop us using g_slist_sort(). Easy fix though.
+>>=20
+>> Note that we have an issue for CXL emulation in general and TCG which
+>> is being discussed in:
+>> https://lore.kernel.org/all/20250425183524.00000b28@huawei.com/
+>> (also affects some other platforms)
+>>=20
+>> Until that is resolved, either rebase this back on 10.0 or just
+>> don't let code run out of it (don't use KMEM to expose it as normal
+>> memory, use DAX instead).
+>>=20
+>> Previous cover letter.
+>>=20
+>> Back in 2022, this series stalled on the absence of a solution to =
+device
+>> tree support for PCI Expander Bridges (PXB) and we ended up only =
+having
+>> x86 support upstream. I've been carrying the arm64 support out of =
+tree
+>> since then, with occasional nasty surprises (e.g. UNIMP + DT issue =
+seen
+>> a few weeks ago) and a fair number of fiddly rebases.
+>> gitlab.com/jic23/qemu cxl-<latest date>
+>>=20
+>> A recent discussion with Peter Maydell indicated that there are =
+various
+>> other ACPI only features now, so in general he might be more relaxed
+>> about DT support being necessary. The upcoming vSMMUv3 support would
+>> run into this problem as well.
+>>=20
+>> I presented the background to the PXB issue at Linaro connect 2022. =
+In
+>> short the issue is that PXBs steal MMIO space from the main PCI root
+>> bridge. The challenge is knowing how much to steal.
+>>=20
+>> On ACPI platforms, we can rely on EDK2 to perform an enumeration and
+>> configuration of the PCI topology and QEMU can update the ACPI tables
+>> after EDK2 has done this when it can simply read the space used by =
+the
+>> root ports. On device tree, there is no entity to figure out that
+>> enumeration so we don't know how to size the stolen region.
+>>=20
+>> Three approaches were discussed:
+>> 1) Enumerating in QEMU. Horribly complex and the last thing we want =
+is a
+>>  3rd enumeration implementation that ends up out of sync with EDK2 =
+and
+>>  the kernel (there are frequent issues because of how those existing
+>>  implementations differ.
+>> 2) Figure out how to enumerate in kernel. I never put a huge amount =
+of work
+>>  into this, but it seemed likely to involve a nasty dance with =
+similar
+>>  very specific code to that EDK2 is carrying and would very =
+challenging
+>>  to upstream (given the lack of clarity on real use cases for PXBs =
+and
+>>  DT).
+>> 3) Hack it based on the control we have which is bus numbers.
+>>  No one liked this but it worked :)
+>>=20
+>> The other little wrinkle would be the need to define full bindings =
+for CXL
+>> on DT + implement a fairly complex kernel stack as equivalent in ACPI
+>> involves a static table, CEDT, new runtime queries via _DSM and a =
+description
+>> of various components. Doable, but so far there is no interest on =
+physical
+>> platforms. Worth noting that for now, the QEMU CXL emulation is all =
+about
+>> testing and developing the OS stack, not about virtualization =
+(performance
+>> is terrible except in some very contrived situations!)
+>>=20
+>> Back to posting as an RFC because there was some discussion of =
+approach to
+>> modelling the devices that may need a bit of redesign.
+>> The discussion kind of died out on the back of DT issue and I doubt =
+anyone
+>> can remember the details.
+>>=20
+>> =
+https://lore.kernel.org/qemu-devel/20220616141950.23374-1-Jonathan.Cameron=
+@huawei.com/
+>>=20
+>> There is only a very simple test in here, because my intent is not to
+>> duplicate what we have on x86, but just to do a smoke test that =
+everything
+>> is hooked up.  In general we need much more comprehensive end to end =
+CXL
+>> tests but that requires a reaonsably stable guest software stack. A =
+few
+>> people have expressed interest in working on that, but we aren't =
+there yet.
+>>=20
+>> Note that this series has a very different use case to that in the =
+proposed
+>> SBSA-ref support:
+>> =
+https://lore.kernel.org/qemu-devel/20250117034343.26356-1-wangyuquan1236@p=
+hytium.com.cn/
+>>=20
+>> SBSA-ref is a good choice if you want a relatively simple mostly =
+fixed
+>> configuration.  That works well with the limited host system
+>> discoverability etc as EDK2 can be build against a known =
+configuration.
+>>=20
+>> My interest with this support in arm/virt is support host software =
+stack
+>> development (we have a wide range of contributors, most of whom are =
+working
+>> on emulation + the kernel support). I care about the weird corners. =
+As such
+>> I need to be able to bring up variable numbers of host bridges, =
+multiple CXL
+>> Fixed Memory Windows with varying characteristics (interleave etc), =
+complex
+>> NUMA topologies with wierd performance characteristics etc. We can do =
+that
+>> on x86 upstream today, or my gitlab tree. Note that we need arm =
+support
+>> for some arch specific features in the near future (cache flushing).
+>> Doing kernel development with this need for flexibility on SBSA-ref =
+is not
+>> currently practical. SBSA-ref CXL support is an excellent thing, just
+>> not much use to me for this work.
+>>=20
+>> Jonathan Cameron (5):
+>> hw/cxl-host: Add an index field to CXLFixedMemoryWindow
+>> hw/cxl: Make the CXL fixed memory windows devices.
+>> hw/cxl-host: Allow split of establishing memory address and mmio
+>>   setup.
+>> hw/arm/virt: Basic CXL enablement on pci_expander_bridge instances
+>>   pxb-cxl
+>> qtest/cxl: Add aarch64 virt test for CXL
+>>=20
+>> include/hw/arm/virt.h     |   4 +
+>> include/hw/cxl/cxl.h      |   4 +
+>> include/hw/cxl/cxl_host.h |   6 +-
+>> hw/acpi/cxl.c             |  83 +++++++++------
+>> hw/arm/virt-acpi-build.c  |  34 ++++++
+>> hw/arm/virt.c             |  29 +++++
+>> hw/cxl/cxl-host-stubs.c   |   8 +-
+>> hw/cxl/cxl-host.c         | 218 =
+++++++++++++++++++++++++++++++++------
+>> hw/i386/pc.c              |  51 ++++-----
+>> tests/qtest/cxl-test.c    |  59 ++++++++---
+>> tests/qtest/meson.build   |   1 +
+>> 11 files changed, 389 insertions(+), 108 deletions(-)
+>>=20
+>> --=20
+>> 2.43.0
+>>=20
+>=20
+> With your series applied on top of upstream QEMU, the -drive option =
+does not work well with the sane CXL
+> setup (I use run_qemu.sh maintained by Marc et al. at Intel) see =
+below:
+>=20
+> /home/realm/projects/qemu/build/qemu-system-aarch64 -machine =
+virt,accel=3Dtcg,cxl=3Don,highmem=3Don,compact-highmem=3Don,highmem-ecam=3D=
+on,highmem-mmio=3Don -m 2048M,slots=3D0,maxmem=3D6144M -smp =
+2,sockets=3D1,cores=3D2,threads=3D1 -display none -nographic -drive =
+if=3Dpflash,format=3Draw,unit=3D0,file=3DAAVMF_CODE.fd,readonly=3Don =
+-drive if=3Dpflash,format=3Draw,unit=3D1,file=3DAAVMF_VARS.fd -drive =
+file=3Droot.img,format=3Draw,media=3Ddisk -kernel =
+mkosi.extra/boot/vmlinuz-6.15.0-rc4-00040-g128ad8fa385b -initrd =
+mkosi.extra/boot/initramfs-6.15.0-rc4-00040-g128ad8fa385b.img -append =
+selinux=3D0 audit=3D0 console=3Dtty0 console=3DttyS0 =
+root=3DPARTUUID=3D14d6bae9-c917-435d-89ea-99af1fa4439a ignore_loglevel =
+rw initcall_debug log_buf_len=3D20M =
+memory_hotplug.memmap_on_memory=3Dforce cxl_acpi.dyndbg=3D+fplm =
+cxl_pci.dyndbg=3D+fplm cxl_core.dyndbg=3D+fplm cxl_mem.dyndbg=3D+fplm =
+cxl_pmem.dyndbg=3D+fplm cxl_port.dyndbg=3D+fplm cxl_region.dyndbg=3D+fplm =
+cxl_test.dyndbg=3D+fplm cxl_mock.dyndbg=3D+fplm =
+cxl_mock_mem.dyndbg=3D+fplm systemd.set_credential=3Dagetty.autologin:root=
+ systemd.set_credential=3Dlogin.noauth:yes -device =
+e1000,netdev=3Dnet0,mac=3D52:54:00:12:34:56 -netdev =
+user,id=3Dnet0,hostfwd=3Dtcp::10022-:22 -cpu max -object =
+memory-backend-file,id=3Dcxl-mem0,share=3Don,mem-path=3Dcxltest0.raw,size=3D=
+256M -object =
+memory-backend-file,id=3Dcxl-mem1,share=3Don,mem-path=3Dcxltest1.raw,size=3D=
+256M -object =
+memory-backend-file,id=3Dcxl-mem2,share=3Don,mem-path=3Dcxltest2.raw,size=3D=
+256M -object =
+memory-backend-file,id=3Dcxl-mem3,share=3Don,mem-path=3Dcxltest3.raw,size=3D=
+256M -object =
+memory-backend-file,id=3Dcxl-lsa0,share=3Don,mem-path=3Dlsa0.raw,size=3D12=
+8K -object =
+memory-backend-file,id=3Dcxl-lsa1,share=3Don,mem-path=3Dlsa1.raw,size=3D12=
+8K -object =
+memory-backend-file,id=3Dcxl-lsa2,share=3Don,mem-path=3Dlsa2.raw,size=3D12=
+8K -object =
+memory-backend-file,id=3Dcxl-lsa3,share=3Don,mem-path=3Dlsa3.raw,size=3D12=
+8K -device pxb-cxl,id=3Dcxl.0,bus=3Dpcie.0,bus_nr=3D53 -device =
+pxb-cxl,id=3Dcxl.1,bus=3Dpcie.0,bus_nr=3D191 -device =
+cxl-rp,id=3Dhb0rp0,bus=3Dcxl.0,chassis=3D0,slot=3D0,port=3D0 -device =
+cxl-rp,id=3Dhb0rp1,bus=3Dcxl.0,chassis=3D0,slot=3D1,port=3D1 -device =
+cxl-rp,id=3Dhb1rp0,bus=3Dcxl.1,chassis=3D0,slot=3D2,port=3D0 -device =
+cxl-rp,id=3Dhb1rp1,bus=3Dcxl.1,chassis=3D0,slot=3D3,port=3D1 -device =
+cxl-upstream,port=3D4,bus=3Dhb0rp0,id=3Dcxl-up0,multifunction=3Don,addr=3D=
+0.0,sn=3D12345678 -device =
+cxl-switch-mailbox-cci,bus=3Dhb0rp0,addr=3D0.1,target=3Dcxl-up0 -device =
+cxl-upstream,port=3D4,bus=3Dhb1rp0,id=3Dcxl-up1,multifunction=3Don,addr=3D=
+0.0,sn=3D12341234 -device =
+cxl-switch-mailbox-cci,bus=3Dhb1rp0,addr=3D0.1,target=3Dcxl-up1 -device =
+cxl-downstream,port=3D0,bus=3Dcxl-up0,id=3Dswport0,chassis=3D0,slot=3D4 =
+-device cxl-downstream,port=3D1,bus=3Dcxl-up0,id=3Dswport1,chassis=3D0,slo=
+t=3D5 -device =
+cxl-downstream,port=3D2,bus=3Dcxl-up0,id=3Dswport2,chassis=3D0,slot=3D6 =
+-device cxl-downstream,port=3D3,bus=3Dcxl-up0,id=3Dswport3,chassis=3D0,slo=
+t=3D7 -device =
+cxl-downstream,port=3D0,bus=3Dcxl-up1,id=3Dswport4,chassis=3D0,slot=3D8 =
+-device cxl-downstream,port=3D1,bus=3Dcxl-up1,id=3Dswport5,chassis=3D0,slo=
+t=3D9 -device =
+cxl-downstream,port=3D2,bus=3Dcxl-up1,id=3Dswport6,chassis=3D0,slot=3D10 =
+-device cxl-downstream,port=3D3,bus=3Dcxl-up1,id=3Dswport7,chassis=3D0,slo=
+t=3D11 -device =
+cxl-type3,bus=3Dswport0,persistent-memdev=3Dcxl-mem0,id=3Dcxl-pmem0,lsa=3D=
+cxl-lsa0 -device =
+cxl-type3,bus=3Dswport2,persistent-memdev=3Dcxl-mem1,id=3Dcxl-pmem1,lsa=3D=
+cxl-lsa1 -device =
+cxl-type3,bus=3Dswport4,volatile-memdev=3Dcxl-mem2,id=3Dcxl-vmem2,lsa=3Dcx=
+l-lsa2 -device =
+cxl-type3,bus=3Dswport6,volatile-memdev=3Dcxl-mem3,id=3Dcxl-vmem3,lsa=3Dcx=
+l-lsa3 -M =
+cxl-fmw.0.targets.0=3Dcxl.0,cxl-fmw.0.size=3D4G,cxl-fmw.0.interleave-granu=
+larity=3D8k,cxl-fmw.1.targets.0=3Dcxl.0,cxl-fmw.1.targets.1=3Dcxl.1,cxl-fm=
+w.1.size=3D4G,cxl-fmw.1.interleave-granularity=3D8k -snapshot -object =
+memory-backend-ram,id=3Dmem0,size=3D2048M -numa =
+node,nodeid=3D0,memdev=3Dmem0, -numa cpu,node-id=3D0,socket-id=3D0 -numa =
+dist,src=3D0,dst=3D0,val=3D10
+> qemu-system-aarch64: -drive file=3Droot.img,format=3Draw,media=3Ddisk: =
+PCI: Only PCI/PCIe bridges can be plugged into pxb-cxl
+>=20
+> Plain upstream QEMU aarch64 target vert machine can handle the -drive =
+option without an issue _without_ those cxl setup options added. I think =
+the error was seen with your previous cxl-2025-03-20 branch.=20
+>=20
+> Thanks,
+> Itaru.
+
+While the above is not a show stopper for testing CXL, on the aarch64 =
+target virt machine I get still errors:
+
+[=E2=80=A6]
+ 22/48 ndctl:cxl / cxl-topology.sh                  FAIL             =
+1.06s   exit status 1
+>>> NDCTL=3D/root/ndctl/build/ndctl/ndctl =
+ASAN_OPTIONS=3Dhalt_on_error=3D1:abort_on_error=3D1:print_summary=3D1 =
+MALLOC_PERTURB_=3D66 MESON_TEST_ITERATION=3D1 =
+MSAN_OPTIONS=3Dhalt_on_error=3D1:abort_on_error=3D1:print_summary=3D1:prin=
+t_stacktrace=3D1 =
+LD_LIBRARY_PATH=3D/root/ndctl/build/ndctl/lib:/root/ndctl/build/cxl/lib:/r=
+oot/ndctl/build/daxctl/lib DATA_PATH=3D/root/ndctl/test =
+TEST_PATH=3D/root/ndctl/build/test =
+DAXCTL=3D/root/ndctl/build/daxctl/daxctl =
+UBSAN_OPTIONS=3Dhalt_on_error=3D1:abort_on_error=3D1:print_summary=3D1:pri=
+nt_stacktrace=3D1 /bin/bash /root/ndctl/test/cxl-topology.sh
+
+23/48 ndctl:cxl / cxl-region-sysfs.sh              FAIL             =
+1.33s   exit status 1
+>>> NDCTL=3D/root/ndctl/build/ndctl/ndctl =
+ASAN_OPTIONS=3Dhalt_on_error=3D1:abort_on_error=3D1:print_summary=3D1 =
+MESON_TEST_ITERATION=3D1 =
+MSAN_OPTIONS=3Dhalt_on_error=3D1:abort_on_error=3D1:print_summary=3D1:prin=
+t_stacktrace=3D1 =
+LD_LIBRARY_PATH=3D/root/ndctl/build/ndctl/lib:/root/ndctl/build/cxl/lib:/r=
+oot/ndctl/build/daxctl/lib DATA_PATH=3D/root/ndctl/test =
+MALLOC_PERTURB_=3D252 TEST_PATH=3D/root/ndctl/build/test =
+DAXCTL=3D/root/ndctl/build/daxctl/daxctl =
+UBSAN_OPTIONS=3Dhalt_on_error=3D1:abort_on_error=3D1:print_summary=3D1:pri=
+nt_stacktrace=3D1 /bin/bash /root/ndctl/test/cxl-region-sysfs.sh
+
+24/48 ndctl:cxl / cxl-labels.sh                    OK               =
+2.44s
+25/48 ndctl:cxl / cxl-create-region.sh             FAIL             =
+1.09s   exit status 1
+>>> NDCTL=3D/root/ndctl/build/ndctl/ndctl =
+ASAN_OPTIONS=3Dhalt_on_error=3D1:abort_on_error=3D1:print_summary=3D1 =
+MESON_TEST_ITERATION=3D1 MALLOC_PERTURB_=3D216 =
+MSAN_OPTIONS=3Dhalt_on_error=3D1:abort_on_error=3D1:print_summary=3D1:prin=
+t_stacktrace=3D1 =
+LD_LIBRARY_PATH=3D/root/ndctl/build/ndctl/lib:/root/ndctl/build/cxl/lib:/r=
+oot/ndctl/build/daxctl/lib DATA_PATH=3D/root/ndctl/test =
+TEST_PATH=3D/root/ndctl/build/test =
+DAXCTL=3D/root/ndctl/build/daxctl/daxctl =
+UBSAN_OPTIONS=3Dhalt_on_error=3D1:abort_on_error=3D1:print_summary=3D1:pri=
+nt_stacktrace=3D1 /bin/bash /root/ndctl/test/cxl-create-region.sh
+
+26/48 ndctl:cxl / cxl-xor-region.sh                SKIP             =
+0.72s   exit status 77
+27/48 ndctl:cxl / cxl-events.sh                    FAIL             =
+1.11s   exit status 1
+>>> NDCTL=3D/root/ndctl/build/ndctl/ndctl =
+ASAN_OPTIONS=3Dhalt_on_error=3D1:abort_on_error=3D1:print_summary=3D1 =
+MESON_TEST_ITERATION=3D1 =
+MSAN_OPTIONS=3Dhalt_on_error=3D1:abort_on_error=3D1:print_summary=3D1:prin=
+t_stacktrace=3D1 =
+LD_LIBRARY_PATH=3D/root/ndctl/build/ndctl/lib:/root/ndctl/build/cxl/lib:/r=
+oot/ndctl/build/daxctl/lib DATA_PATH=3D/root/ndctl/test =
+MALLOC_PERTURB_=3D4 TEST_PATH=3D/root/ndctl/build/test =
+DAXCTL=3D/root/ndctl/build/daxctl/daxctl =
+UBSAN_OPTIONS=3Dhalt_on_error=3D1:abort_on_error=3D1:print_summary=3D1:pri=
+nt_stacktrace=3D1 /bin/bash /root/ndctl/test/cxl-events.sh
+
+28/48 ndctl:cxl / cxl-sanitize.sh                  FAIL             =
+1.19s   exit status 1
+>>> NDCTL=3D/root/ndctl/build/ndctl/ndctl =
+ASAN_OPTIONS=3Dhalt_on_error=3D1:abort_on_error=3D1:print_summary=3D1 =
+MESON_TEST_ITERATION=3D1 =
+MSAN_OPTIONS=3Dhalt_on_error=3D1:abort_on_error=3D1:print_summary=3D1:prin=
+t_stacktrace=3D1 =
+LD_LIBRARY_PATH=3D/root/ndctl/build/ndctl/lib:/root/ndctl/build/cxl/lib:/r=
+oot/ndctl/build/daxctl/lib DATA_PATH=3D/root/ndctl/test =
+MALLOC_PERTURB_=3D103 TEST_PATH=3D/root/ndctl/build/test =
+DAXCTL=3D/root/ndctl/build/daxctl/daxctl =
+UBSAN_OPTIONS=3Dhalt_on_error=3D1:abort_on_error=3D1:print_summary=3D1:pri=
+nt_stacktrace=3D1 /bin/bash /root/ndctl/test/cxl-sanitize.sh
+
+29/48 ndctl:cxl / cxl-destroy-region.sh            OK               =
+2.38s
+30/48 ndctl:cxl / cxl-qos-class.sh                 FAIL             =
+1.69s   exit status 1
+>>> NDCTL=3D/root/ndctl/build/ndctl/ndctl =
+ASAN_OPTIONS=3Dhalt_on_error=3D1:abort_on_error=3D1:print_summary=3D1 =
+MESON_TEST_ITERATION=3D1 =
+MSAN_OPTIONS=3Dhalt_on_error=3D1:abort_on_error=3D1:print_summary=3D1:prin=
+t_stacktrace=3D1 =
+LD_LIBRARY_PATH=3D/root/ndctl/build/ndctl/lib:/root/ndctl/build/cxl/lib:/r=
+oot/ndctl/build/daxctl/lib DATA_PATH=3D/root/ndctl/test =
+MALLOC_PERTURB_=3D118 TEST_PATH=3D/root/ndctl/build/test =
+DAXCTL=3D/root/ndctl/build/daxctl/daxctl =
+UBSAN_OPTIONS=3Dhalt_on_error=3D1:abort_on_error=3D1:print_summary=3D1:pri=
+nt_stacktrace=3D1 /root/ndctl/test/cxl-qos-class.sh
+
+31/48 ndctl:cxl / cxl-poison.sh                    FAIL             =
+0.71s   exit status 1
+>>> NDCTL=3D/root/ndctl/build/ndctl/ndctl =
+ASAN_OPTIONS=3Dhalt_on_error=3D1:abort_on_error=3D1:print_summary=3D1 =
+MESON_TEST_ITERATION=3D1 =
+MSAN_OPTIONS=3Dhalt_on_error=3D1:abort_on_error=3D1:print_summary=3D1:prin=
+t_stacktrace=3D1 =
+LD_LIBRARY_PATH=3D/root/ndctl/build/ndctl/lib:/root/ndctl/build/cxl/lib:/r=
+oot/ndctl/build/daxctl/lib DATA_PATH=3D/root/ndctl/test =
+MALLOC_PERTURB_=3D174 TEST_PATH=3D/root/ndctl/build/test =
+DAXCTL=3D/root/ndctl/build/daxctl/daxctl =
+UBSAN_OPTIONS=3Dhalt_on_error=3D1:abort_on_error=3D1:print_summary=3D1:pri=
+nt_stacktrace=3D1 /bin/bash /root/ndctl/test/cxl-poison.sh
+[=E2=80=A6]
+
+I=E2=80=99ll check there are due to allocation failure from the Host =
+Physical Address space.=20
+
+Itaru.
+
