@@ -1,326 +1,224 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D790282EE
-	for <linux-cxl@vger.kernel.org>; Fri, 16 May 2025 02:31:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747362675; cv=none; b=rj/OZWiFFIWjNW6f0ZjXgdJd/p4JjD0d9I/uLTkxl0Rsotrv9/KgPkxY0eLjiHbpaZP9Yy0V9WLvNgZ0Eb5j4pt3LpFh4XNkkhDOs/cM++7RckJMqSaaBRy2JReoGehIqQMCGM/2b07taHQcAUXYsLiaQyxVKuMuPymfwMnV3HE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747362675; c=relaxed/simple;
-	bh=EiTabiftUPTtYwCjjEbYfL+ViLU2pqiVapaRnVKpjg8=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=SpqC3GHVszORA/Qcm2vrkXgBshXgCUALrHQ5d2gzwH1AzWT1prwYf4l8epAOkaVQMa0/+/0xb+ArZK3SybEX97HdJFnDg+A9UqKeXGgU9TL1OTOfux3YzbH/mzZlisv3FgUIX6wbi2I5/xecKCAXsanP82Nb0rBK5+r0DoFaZXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=X3WKR2uX; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC3846BF
+	for <linux-cxl@vger.kernel.org>; Fri, 16 May 2025 04:17:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747369048; cv=fail; b=a+ulo7/LeIcpSymcI2pf2w3fSflM4K9bvG3Hmiw/TQbYyZZprLVINkMM6A6JCJFHoztRcNSl8kZv8mE+IRrdQU0Hg4GXQfxP3+hn0wUSu//oUhcVWQKOCWZxanyLiU6k5ZjHiovC2uZrLFkoAe5HCOKwWjuO6uWJ0oxBBe9t71U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747369048; c=relaxed/simple;
+	bh=9rdJmh+v/dO23ZrAn1R9EtEnw9EbKrKV1/xRyaxH8Pg=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=tGbpnP6JXchna1MxAoIfZVTvsOpwWhwBPgV6GwXE8vuCtzRB12eQn0sQTJbprD+I5Xo4qkfp8Tm8i4MDn4CGPxjgdobemDkZ8x/a1sizFJPyfA9Lw5bvDptz9doUJ5oPTMxhSbksvGgfR9G1a31DgLKIcnbTsaJLvAqUL+EoHQs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rh/sEIVT; arc=fail smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="X3WKR2uX"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747362669;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=llObsdvYuuWAtpYKes7BnUdKKbN3nveceK2uGee/4CA=;
-	b=X3WKR2uXLU047RHFNSA24keiKcIlF/0JpQ0QMnLRq69lFNATZA9Pqggtn1Nj1oPdFtHDIB
-	vTYysgCG0+HWTcTKnHI54Vwh0h9LsUOGVglyDOcg+kPeh9wStIeVf7c8e2A6ju2CcTGyhA
-	JlepzyUF/fa/L7uoOk6fwO3Jwy+0izk=
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rh/sEIVT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747369046; x=1778905046;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=9rdJmh+v/dO23ZrAn1R9EtEnw9EbKrKV1/xRyaxH8Pg=;
+  b=Rh/sEIVTV21Ksjb5oKKfqlqsyJZ5BF2NDxe74zwr4DYZluJ0CQ053syi
+   XLje1XHBE6GkAzFz1l+0YFMhE5PDeLdOjZIIplx4N+YlvoXKvbbwMHHme
+   OQiTEk7h0sDLOpBZi01/8h4/2LUsYqT9+Y6ALy6Auvf4xTaiodZNvkqi+
+   MhocpsLPydxvW+TWKQIiIOQzlKhwPYqxyiWWvtKin6kI6rd7DrxxnbVap
+   25Dk2MQX+WMwWNcKatK1hFir9LEIpjXYoQSFEauHXZiUCQt1XOGQaT5e6
+   3Ah/DBCOlspBpsStl9TsfLxLSM48p77FXLFRAnDRTEa2sjUdUCNIqjGYw
+   A==;
+X-CSE-ConnectionGUID: KBuwFbqsTlirmxz22t1vdQ==
+X-CSE-MsgGUID: okhzHLbeTtC7G9rkJ9c8sg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="49439720"
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="49439720"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 21:17:25 -0700
+X-CSE-ConnectionGUID: enHhb0mpQOKY684wx/LHuw==
+X-CSE-MsgGUID: FPCDDbRUTDGoBX9Te32swA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="138474715"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 21:17:25 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Thu, 15 May 2025 21:17:24 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Thu, 15 May 2025 21:17:24 -0700
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (104.47.74.49) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Thu, 15 May 2025 21:17:24 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=N+Kjl+7uja8eab9ozrzDxYgZVFHGgLrbLjgC25P3nkDi6ldWKpbBLhFOTxzuBaPXsvh8eKEXpVGy6ZYZoMOkOkdtof2VS7cKUokrp8aQR1fvdwv42Wfunr/SL/y4TLl1nzZFU4m+7FHA6p5obRwrwOYiq6glcildND4hRYJhxEKaCXpQmLmLAx0esAGQStQbS9FmdzoYpZ9kyf+jQ3f0xWb/zaCvbPBqg78NE7f4aoquXE2f+oa323u3nyJhjehk593LwAsPh8M685fytEyk/Y2AuS5VDoJieQZRkVcXFQlwat8b9CPxIpqlLEuCBQOn0kkFu7x+2UdHhpn/h/uR3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WSZvSfceABj2tr3ON18N7/h0XQWKus5xN92r87eT5Qg=;
+ b=ahnwXPhvjRO3pm117o1mvulOG+PXrXHWPZoFHt4C5NXB338owYig4aPYEho+2Qtov/31SejpwMzoKz/WfR1m5L00uEnnXmdhHra/6HbO6M+rYLtSJBRhE8lEThesxAWrYtXdz7LKFquVcycxRpurK8E4fc3Smg6LK74D4MWjlUkShdPzCJ1zH436UyxvOMoKjYgvdnCSKaEixZz4S7bFEVNLMg12HA6IacHSjIuT5KNzzqb7/o9lkVGiqP3HwstoTkZajloZtaRJdCEpV6bAORRq4hr9lP1TVL2SIk++lgGnb77HXCfUG5l+6Fy+oboKN93+mSPJk/VcNxVpISmURg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by IA0PR11MB7956.namprd11.prod.outlook.com (2603:10b6:208:40b::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.30; Fri, 16 May
+ 2025 04:17:08 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8722.031; Fri, 16 May 2025
+ 04:17:07 +0000
+Date: Thu, 15 May 2025 21:17:04 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: Marc Herbert <Marc.Herbert@linux.intel.com>, <nvdimm@lists.linux.dev>,
+	<linux-cxl@vger.kernel.org>
+CC: Alison Schofield <alison.schofield@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Itaru Kitayama <itaru.kitayama@linux.dev>,
+	"Verma, Vishal L" <vishal.l.verma@intel.com>
+Subject: Re: List of CONFIG_s currently missing in ndctl.git/README.md
+Message-ID: <6826bc4094a68_28f6294a9@dwillia2-xfh.jf.intel.com.notmuch>
+References: <aed71134-1029-4b88-ab20-8dfa527a7438@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <aed71134-1029-4b88-ab20-8dfa527a7438@linux.intel.com>
+X-ClientProxiedBy: SJ0PR13CA0019.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c0::24) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
-Subject: Re: [PATCH v13 0/5] arm/virt: CXL support via pxb_cxl
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Itaru Kitayama <itaru.kitayama@linux.dev>
-In-Reply-To: <20250513111455.128266-1-Jonathan.Cameron@huawei.com>
-Date: Fri, 16 May 2025 11:30:49 +0900
-Cc: qemu-devel@nongnu.org,
- Fan Ni <fan.ni@samsung.com>,
- Peter Maydell <peter.maydell@linaro.org>,
- mst@redhat.com,
- linux-cxl@vger.kernel.org,
- linuxarm@huawei.com,
- qemu-arm@nongnu.org,
- Yuquan Wang <wangyuquan1236@phytium.com.cn>,
- =?utf-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@linaro.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <1DF02466-C91E-461E-B35F-D42CEE9F040D@linux.dev>
-References: <20250513111455.128266-1-Jonathan.Cameron@huawei.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|IA0PR11MB7956:EE_
+X-MS-Office365-Filtering-Correlation-Id: e3822167-0647-4df8-f325-08dd94308578
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|13003099007|7053199007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?EidRqll/bW7JbqDAYUdLA0LbKnhUJkBzl1P69pIif0+ahU/DWlRLcL7yDciE?=
+ =?us-ascii?Q?kcdJvbRzyIsbztk4x3QwIUkoRZNbyd32OFXcUgccliXR9onf/EB1wKym0EH2?=
+ =?us-ascii?Q?FUjqkZYUlZrlYgRcA9CBaeWHRX6PIAzgEXUuFNkFOtR/BK0c8Y50wPCnBl/v?=
+ =?us-ascii?Q?NbkHOzIXVoqZS6TwDov4RonGaZANOsX+t46X0EsccqbB0245wytPPvLiJXcm?=
+ =?us-ascii?Q?1HnD5/Azd/CJ+Yjuk9sdvbW36g5OEqxuZy6uNmcmxgM+8NI0qC+IQaulLjyI?=
+ =?us-ascii?Q?CkEW9DKJSEH0pIo/gCeBp8RA5yDY/Sq9EYYpd4lRblsxGVEMWU8zPlZkLV9C?=
+ =?us-ascii?Q?oxHXXkTB6Fif7aUBClbQiiDX7yoz8/jm++OQYZWdJVzD3zrRTCu9R9f++PV2?=
+ =?us-ascii?Q?RZozWk3oGl3Fj7fVmCbBryPSiMMCsXIQMOYmxn3UQ66uSBuXHpYKokmoCrQd?=
+ =?us-ascii?Q?NwmNkx9d1z/BVlNVTE3wprc6Pbo3RGGalha3sen1sGHTpw811Kv3Lr6ylpVC?=
+ =?us-ascii?Q?IZ5krdfVttuJ/BpnuiJr63QVfmZej2BjMLSd34vmQrjT/DTSvBpMr9VNVeii?=
+ =?us-ascii?Q?1ETue5YEqLYOHorJdRjhjAuJLFf3YRl06tNM+McqEYAXdzFPxmMDMCyC9AaD?=
+ =?us-ascii?Q?wIN8Gq+x6j5WTJMzpklYa9gaPw6WqFoYsduTqy7XpFjLMzRXPNEV8nYFLH8e?=
+ =?us-ascii?Q?lx8yLmcAn2FoO3CfFqH7TpmyjlreNP5W/Py1NZn6jCBJgTXsKVPbpRIX8L48?=
+ =?us-ascii?Q?ZRWqOfCR5vBpGm9ntMeMmYqAsO2Ag6s0bLNGJ38/FSh9Brq3sBQIO8twbxV6?=
+ =?us-ascii?Q?63GvpNrdzSSzY8bdScCJfRgl41usaYF6zfh07nK4Sux/ilT3h9RjkphtLulU?=
+ =?us-ascii?Q?P9kgZtggYYqhPkjXSc8V+D9iySnRqnJSK58w4bjd+W61IMlVwU3fwdBoTUnG?=
+ =?us-ascii?Q?7CM+f4/1rGGJSp/pmla3wOeyv71DabryB9LRwkTaULtAjIh4osYjh1HBgk5z?=
+ =?us-ascii?Q?aUaaiWQlM7PxatsKW8zRhNcqARWDZUP+6jvNcvwnSl/4Tr08SgYsnkj/UwCI?=
+ =?us-ascii?Q?KX3KgQXJFvaU86M4YO7XGUQ3g9a64jTlCIseGeHUn29vx2xtJUF7oVc7d9Ta?=
+ =?us-ascii?Q?7J0KX6tvIzejqGYrKGMkSLlhHRFTrkKAmTXDf7IcGnCYJ93NNXMLk9jLwtjw?=
+ =?us-ascii?Q?B5LiDIX6WjU+M/5b8MRsMaIy5X2P4F1AafY+f2GrgFIydTHerpMukjtghXYp?=
+ =?us-ascii?Q?JwulC8XQimZTcvRpvSKXSXi+U7B55aZIdRTfaEdt8qFZCFco3IFf1CeeXION?=
+ =?us-ascii?Q?p0rUziJxntYbAHlDDTBhtalRyfOkIZvl0WbAwdVQoaUiKyxr2qvBpk2OJweZ?=
+ =?us-ascii?Q?8GF7AUOlV7//wE1PrfxQXNdrCPEL?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(13003099007)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?8SDl5fOHwpuohZwSeVWeW+KzGLJM9dPHD5f69sSiK/ceTSzqFaGXT1POf2r0?=
+ =?us-ascii?Q?V92l8Q5QetpamRqmEQVJ46eOqNf+SAU+NTDyY80AzI/9mT8+rQFrHk+b8wYn?=
+ =?us-ascii?Q?WxkTwagbtGvmHeL2ob11l6xja37cVsrnMNhIZWr4Xdi8nhQ/2os09YNvVBN5?=
+ =?us-ascii?Q?ptf1+gLmLV15mEhpikoVdbz9NgvgwZea9slO62W8VX8klqA/YwufW9sy+vEB?=
+ =?us-ascii?Q?QtAbhTzDvYReWQiyijQ7YIFIESQsot5Sglp2Nx3ckkk0wTVTwdFePugsrW+3?=
+ =?us-ascii?Q?DQY8JDzFArrSfhHvk4gcsgdPzotUhROFMnMwCNyIxVhQsDjoTD9+gArmMGiI?=
+ =?us-ascii?Q?/f0FJokLlVuDObF/ZsQXkcsJpfYHk66qa81wJAjw/aP6UC66HxKWmQhKbE/j?=
+ =?us-ascii?Q?ibQ4vNqtdtYKS/XuClk9sAyAoOOLMcXEM2mNtwvXb7tomb3PGK6Wqcb8uBg6?=
+ =?us-ascii?Q?yKVhPJqq9PKltqQ33GO7upcnJ92SkY7/IDSv6G3Va2YR4z4qDuTb6IHh+MA9?=
+ =?us-ascii?Q?Nu+IAyWUAIXMvOOhZ8Bw5U3RHSELZ2btfP7tXur1jfZ8SLx2EyOb1Xr0Gec9?=
+ =?us-ascii?Q?KAdb7xYZssSZAK5dLxNc0dfG4JD5jSI31G4NixtTAgRsVQza1Y8bJUYJxLvR?=
+ =?us-ascii?Q?izcNAzTYYJI6BLN18CaRuOvxNgadU3hKtKe6RAR+54TdP3P6ajNnEL2OD/9N?=
+ =?us-ascii?Q?LJBgVKHc58rEeqgrf5KYN6nMoYpr05PvP8ipIn6/nfm6D+7c7YIp4mGWs7Pl?=
+ =?us-ascii?Q?uIWqdbBlJvpVa03QfxcsJsNWY9F5zFc9V+q5UpA/zgisaruWrlpm2vabU8Lu?=
+ =?us-ascii?Q?e/LWuSTuN5b3EO+2AzoM5aBR/os0m5xvX14No0MxfF0CLd5G5hGsdFO7y5gZ?=
+ =?us-ascii?Q?kuvCf2QoWnbMuWkr565UjBIrwHiAKW/tyfilBxJR3fzLXH7uu2GigH9s31+Z?=
+ =?us-ascii?Q?P2RWyB0GG5z3YpBtljIguqGmgIxBicOU7gd4nFGnzzS54o1QZ2EghJ5ciZu4?=
+ =?us-ascii?Q?rMu7nv+YOiWNijv5EIPPzXuiVQw0nrbUmkSAId1DvMSmLvu0WhfxqLsYiCdT?=
+ =?us-ascii?Q?t+AdKp+LOwC6PKd/ZjojailmttXMt6uZzl3lHITR/yTWjTsiSWS1KrxH8elC?=
+ =?us-ascii?Q?0BT03FsbDoAh9BImxUOfZIV7H3GRxJAuZisKQ6KUP8ihHcjsBord+f6zNsvA?=
+ =?us-ascii?Q?FF+tOF+CkM9oF3v96rdrJ9FKMR4EjwTV0oJd7/4JcrxFlN3L7uxb1ke9Ml8D?=
+ =?us-ascii?Q?lGpg5Qsi8PesowiymFcxEqvKAEM4kBpQcID2olaM95oRGjS3LEHhCXQpFePW?=
+ =?us-ascii?Q?euy37630UmZq6Z3hLAjEdlZ/r+J8oFmEeWg8uYq5/1ae4lI/EHRLbf9eqN84?=
+ =?us-ascii?Q?ux07jZPc0XNqlEeRMKG12OdtyeWANUka61a54rIrU2EyjrABAfB87s0BYiZc?=
+ =?us-ascii?Q?2MAv1oTbL7/vkv+uBAZSLiecY1L9SDnZ8Wu9IGGFhSeiHQQEhbt0YAs8mOth?=
+ =?us-ascii?Q?xocVmyUAmON3IXYBHx8Q+ustWCOoO+2UZsdWGTUBEOmW2BY3xFL2i0OWH0Et?=
+ =?us-ascii?Q?VGPFRZsH1FM8NdtKyAHlkBjzM5ttgHeQxvM+qn2HtHB5HUR8IEmRxVl/A+tA?=
+ =?us-ascii?Q?JA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: e3822167-0647-4df8-f325-08dd94308578
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2025 04:17:07.7359
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: dld71aQjaKz5cJEIO2UZHL1VZRqwvwS0Pl/Iq/O8Erj86fWLEjW1yytWiyDBhSacokW7msGaOQJg4o82/EjVmQqXp4EBhj1iw1Vinh2g7i8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB7956
+X-OriginatorOrg: intel.com
 
-Hi Jonathan,
+Marc Herbert wrote:
+> 
+> Thanks to the patience and help from the Intel people on these lists, I
+> think I finally found all the CONFIG_* missing in ndctl.git/README.md
+> 
+> I tested, fixed and published two CONFIG_ fragments here:
+> 
+> https://github.com/pmem/run_qemu/tree/main/.github/workflows/
+> 
+> - cxl-test.cfg:  CONFIG_ fragment enough for: meson test --suite=cxl
+> - nfit-test.cfg: CONFIG_ fragment enough for:
+>     meson test --suite=ndctl:ndctl and --suite=ndctl:dax
+> 
+> In my ideal world, these fragments would live in ndctl.git/ directly
+> (instead of run_qemu.git/) and ndctl.git/README.md would point at
+> them. This would make them _testable_ by any automation. Like this
+> automation: https://github.com/pmem/run_qemu/actions
+> 
+> As a second best and much quicker fix, "someone" could simply add to
+> ndctl.git/README.md the missing CONFIG_ found in these new .cfg files
+> of mine.
 
-> On May 13, 2025, at 20:14, Jonathan Cameron =
-<Jonathan.Cameron@huawei.com> wrote:
->=20
-> V13:
-> - Make CXL fixed memory windows sysbus devices.
->  IIRC this was requested by Peter in one of the reviews a long time =
-back
->  but at the time the motivation was less strong than it becomes with =
-some
->  WiP patches for hotness monitoring and high performance direct =
-connect
->  where we need a machine type independent way to iterate all the CXL
->  fixed memory windows. This is a convenient place to do it so drag =
-that
->  work forward into this series.
->=20
->  This allows us to drop separate list and necessary machine specific
->  access code in favour of
->  object_child_foreach_recursive(object_get_root(),...)
->  One snag is that the ordering of multiple fixed memory windows in =
-that
->  walk depends on the underlying g_hash_table iterations rather than =
-the
->  order of creation. In the memory map layout and ACPI table creation =
-we
->  need both stable and predictable ordering. Resolve this in a similar
->  fashion to object_class_get_list_sorted() be throwing them in a =
-GSList
->  and sorting that. Only use this when a sorted list is needed.
->=20
->  Dropped RFC as now I'm happy with this code and would like to get it
->  upstream!  Particularly as it broken even today due to enscripten
->  related changes that stop us using g_slist_sort(). Easy fix though.
->=20
-> Note that we have an issue for CXL emulation in general and TCG which
-> is being discussed in:
-> https://lore.kernel.org/all/20250425183524.00000b28@huawei.com/
-> (also affects some other platforms)
->=20
-> Until that is resolved, either rebase this back on 10.0 or just
-> don't let code run out of it (don't use KMEM to expose it as normal
-> memory, use DAX instead).
->=20
-> Previous cover letter.
->=20
-> Back in 2022, this series stalled on the absence of a solution to =
-device
-> tree support for PCI Expander Bridges (PXB) and we ended up only =
-having
-> x86 support upstream. I've been carrying the arm64 support out of tree
-> since then, with occasional nasty surprises (e.g. UNIMP + DT issue =
-seen
-> a few weeks ago) and a fair number of fiddly rebases.
-> gitlab.com/jic23/qemu cxl-<latest date>
->=20
-> A recent discussion with Peter Maydell indicated that there are =
-various
-> other ACPI only features now, so in general he might be more relaxed
-> about DT support being necessary. The upcoming vSMMUv3 support would
-> run into this problem as well.
->=20
-> I presented the background to the PXB issue at Linaro connect 2022. In
-> short the issue is that PXBs steal MMIO space from the main PCI root
-> bridge. The challenge is knowing how much to steal.
->=20
-> On ACPI platforms, we can rely on EDK2 to perform an enumeration and
-> configuration of the PCI topology and QEMU can update the ACPI tables
-> after EDK2 has done this when it can simply read the space used by the
-> root ports. On device tree, there is no entity to figure out that
-> enumeration so we don't know how to size the stolen region.
->=20
-> Three approaches were discussed:
-> 1) Enumerating in QEMU. Horribly complex and the last thing we want is =
-a
->   3rd enumeration implementation that ends up out of sync with EDK2 =
-and
->   the kernel (there are frequent issues because of how those existing
->   implementations differ.
-> 2) Figure out how to enumerate in kernel. I never put a huge amount of =
-work
->   into this, but it seemed likely to involve a nasty dance with =
-similar
->   very specific code to that EDK2 is carrying and would very =
-challenging
->   to upstream (given the lack of clarity on real use cases for PXBs =
-and
->   DT).
-> 3) Hack it based on the control we have which is bus numbers.
->   No one liked this but it worked :)
->=20
-> The other little wrinkle would be the need to define full bindings for =
-CXL
-> on DT + implement a fairly complex kernel stack as equivalent in ACPI
-> involves a static table, CEDT, new runtime queries via _DSM and a =
-description
-> of various components. Doable, but so far there is no interest on =
-physical
-> platforms. Worth noting that for now, the QEMU CXL emulation is all =
-about
-> testing and developing the OS stack, not about virtualization =
-(performance
-> is terrible except in some very contrived situations!)
->=20
-> Back to posting as an RFC because there was some discussion of =
-approach to
-> modelling the devices that may need a bit of redesign.
-> The discussion kind of died out on the back of DT issue and I doubt =
-anyone
-> can remember the details.
->=20
-> =
-https://lore.kernel.org/qemu-devel/20220616141950.23374-1-Jonathan.Cameron=
-@huawei.com/
->=20
-> There is only a very simple test in here, because my intent is not to
-> duplicate what we have on x86, but just to do a smoke test that =
-everything
-> is hooked up.  In general we need much more comprehensive end to end =
-CXL
-> tests but that requires a reaonsably stable guest software stack. A =
-few
-> people have expressed interest in working on that, but we aren't there =
-yet.
->=20
-> Note that this series has a very different use case to that in the =
-proposed
-> SBSA-ref support:
-> =
-https://lore.kernel.org/qemu-devel/20250117034343.26356-1-wangyuquan1236@p=
-hytium.com.cn/
->=20
-> SBSA-ref is a good choice if you want a relatively simple mostly fixed
-> configuration.  That works well with the limited host system
-> discoverability etc as EDK2 can be build against a known =
-configuration.
->=20
-> My interest with this support in arm/virt is support host software =
-stack
-> development (we have a wide range of contributors, most of whom are =
-working
-> on emulation + the kernel support). I care about the weird corners. As =
-such
-> I need to be able to bring up variable numbers of host bridges, =
-multiple CXL
-> Fixed Memory Windows with varying characteristics (interleave etc), =
-complex
-> NUMA topologies with wierd performance characteristics etc. We can do =
-that
-> on x86 upstream today, or my gitlab tree. Note that we need arm =
-support
-> for some arch specific features in the near future (cache flushing).
-> Doing kernel development with this need for flexibility on SBSA-ref is =
-not
-> currently practical. SBSA-ref CXL support is an excellent thing, just
-> not much use to me for this work.
->=20
-> Jonathan Cameron (5):
->  hw/cxl-host: Add an index field to CXLFixedMemoryWindow
->  hw/cxl: Make the CXL fixed memory windows devices.
->  hw/cxl-host: Allow split of establishing memory address and mmio
->    setup.
->  hw/arm/virt: Basic CXL enablement on pci_expander_bridge instances
->    pxb-cxl
->  qtest/cxl: Add aarch64 virt test for CXL
->=20
-> include/hw/arm/virt.h     |   4 +
-> include/hw/cxl/cxl.h      |   4 +
-> include/hw/cxl/cxl_host.h |   6 +-
-> hw/acpi/cxl.c             |  83 +++++++++------
-> hw/arm/virt-acpi-build.c  |  34 ++++++
-> hw/arm/virt.c             |  29 +++++
-> hw/cxl/cxl-host-stubs.c   |   8 +-
-> hw/cxl/cxl-host.c         | 218 ++++++++++++++++++++++++++++++++------
-> hw/i386/pc.c              |  51 ++++-----
-> tests/qtest/cxl-test.c    |  59 ++++++++---
-> tests/qtest/meson.build   |   1 +
-> 11 files changed, 389 insertions(+), 108 deletions(-)
->=20
-> --=20
-> 2.43.0
->=20
+Send that patch and I will ack it. The linked configs look good to me.
 
-With your series applied on top of upstream QEMU, the -drive option does =
-not work well with the sane CXL
-setup (I use run_qemu.sh maintained by Marc et al. at Intel) see below:
+> Unfortunately, that "someone" cannot be me because I don't know or don't
+> understand precisely what many of these CONFIG_s mean: the files in
+> https://github.com/pmem/run_qemu/tree/5723a592/.github/workflows/ come
+> from "educated" guesses and a lot of trial and error. But these fragments
+> pass the tests, so they're already much better than what is in the
+> current README.md!
+> 
+> I can already tell that some of these are tricky. For instance,
+> CONFIG_MEMORY_FAILURE=y is required for dax-ext4.sh and dax-xfs.sh to
+> trigger the error message "Sending SIGBUS due to hardware memory
+> corruption" (more context in
+> https://lore.kernel.org/nvdimm/20250515021730.1201996-3-marc.herbert@linux.intel.com/T/#u)
+> 
+> BUT, these tests can also pass without CONFIG_MEMORY_FAILURE=y and
+> without triggering that error message! So... CONFIG_MEMORY_FAILURE=y is
+> not required? Or, it is required but there a bug in that test? Or,
+> either choice is fine but CONFIG_MEMORY_FAILURE=y is better because
+> it provides more coverage? I don't have that sort of validation expertise
+> and it would take me a long time to learn it for every missing CONFIG_
 
-/home/realm/projects/qemu/build/qemu-system-aarch64 -machine =
-virt,accel=3Dtcg,cxl=3Don,highmem=3Don,compact-highmem=3Don,highmem-ecam=3D=
-on,highmem-mmio=3Don -m 2048M,slots=3D0,maxmem=3D6144M -smp =
-2,sockets=3D1,cores=3D2,threads=3D1 -display none -nographic -drive =
-if=3Dpflash,format=3Draw,unit=3D0,file=3DAAVMF_CODE.fd,readonly=3Don =
--drive if=3Dpflash,format=3Draw,unit=3D1,file=3DAAVMF_VARS.fd -drive =
-file=3Droot.img,format=3Draw,media=3Ddisk -kernel =
-mkosi.extra/boot/vmlinuz-6.15.0-rc4-00040-g128ad8fa385b -initrd =
-mkosi.extra/boot/initramfs-6.15.0-rc4-00040-g128ad8fa385b.img -append =
-selinux=3D0 audit=3D0 console=3Dtty0 console=3DttyS0 =
-root=3DPARTUUID=3D14d6bae9-c917-435d-89ea-99af1fa4439a ignore_loglevel =
-rw initcall_debug log_buf_len=3D20M =
-memory_hotplug.memmap_on_memory=3Dforce cxl_acpi.dyndbg=3D+fplm =
-cxl_pci.dyndbg=3D+fplm cxl_core.dyndbg=3D+fplm cxl_mem.dyndbg=3D+fplm =
-cxl_pmem.dyndbg=3D+fplm cxl_port.dyndbg=3D+fplm cxl_region.dyndbg=3D+fplm =
-cxl_test.dyndbg=3D+fplm cxl_mock.dyndbg=3D+fplm =
-cxl_mock_mem.dyndbg=3D+fplm systemd.set_credential=3Dagetty.autologin:root=
- systemd.set_credential=3Dlogin.noauth:yes -device =
-e1000,netdev=3Dnet0,mac=3D52:54:00:12:34:56 -netdev =
-user,id=3Dnet0,hostfwd=3Dtcp::10022-:22 -cpu max -object =
-memory-backend-file,id=3Dcxl-mem0,share=3Don,mem-path=3Dcxltest0.raw,size=3D=
-256M -object =
-memory-backend-file,id=3Dcxl-mem1,share=3Don,mem-path=3Dcxltest1.raw,size=3D=
-256M -object =
-memory-backend-file,id=3Dcxl-mem2,share=3Don,mem-path=3Dcxltest2.raw,size=3D=
-256M -object =
-memory-backend-file,id=3Dcxl-mem3,share=3Don,mem-path=3Dcxltest3.raw,size=3D=
-256M -object =
-memory-backend-file,id=3Dcxl-lsa0,share=3Don,mem-path=3Dlsa0.raw,size=3D12=
-8K -object =
-memory-backend-file,id=3Dcxl-lsa1,share=3Don,mem-path=3Dlsa1.raw,size=3D12=
-8K -object =
-memory-backend-file,id=3Dcxl-lsa2,share=3Don,mem-path=3Dlsa2.raw,size=3D12=
-8K -object =
-memory-backend-file,id=3Dcxl-lsa3,share=3Don,mem-path=3Dlsa3.raw,size=3D12=
-8K -device pxb-cxl,id=3Dcxl.0,bus=3Dpcie.0,bus_nr=3D53 -device =
-pxb-cxl,id=3Dcxl.1,bus=3Dpcie.0,bus_nr=3D191 -device =
-cxl-rp,id=3Dhb0rp0,bus=3Dcxl.0,chassis=3D0,slot=3D0,port=3D0 -device =
-cxl-rp,id=3Dhb0rp1,bus=3Dcxl.0,chassis=3D0,slot=3D1,port=3D1 -device =
-cxl-rp,id=3Dhb1rp0,bus=3Dcxl.1,chassis=3D0,slot=3D2,port=3D0 -device =
-cxl-rp,id=3Dhb1rp1,bus=3Dcxl.1,chassis=3D0,slot=3D3,port=3D1 -device =
-cxl-upstream,port=3D4,bus=3Dhb0rp0,id=3Dcxl-up0,multifunction=3Don,addr=3D=
-0.0,sn=3D12345678 -device =
-cxl-switch-mailbox-cci,bus=3Dhb0rp0,addr=3D0.1,target=3Dcxl-up0 -device =
-cxl-upstream,port=3D4,bus=3Dhb1rp0,id=3Dcxl-up1,multifunction=3Don,addr=3D=
-0.0,sn=3D12341234 -device =
-cxl-switch-mailbox-cci,bus=3Dhb1rp0,addr=3D0.1,target=3Dcxl-up1 -device =
-cxl-downstream,port=3D0,bus=3Dcxl-up0,id=3Dswport0,chassis=3D0,slot=3D4 =
--device cxl-downstream,port=3D1,bus=3Dcxl-up0,id=3Dswport1,chassis=3D0,slo=
-t=3D5 -device =
-cxl-downstream,port=3D2,bus=3Dcxl-up0,id=3Dswport2,chassis=3D0,slot=3D6 =
--device cxl-downstream,port=3D3,bus=3Dcxl-up0,id=3Dswport3,chassis=3D0,slo=
-t=3D7 -device =
-cxl-downstream,port=3D0,bus=3Dcxl-up1,id=3Dswport4,chassis=3D0,slot=3D8 =
--device cxl-downstream,port=3D1,bus=3Dcxl-up1,id=3Dswport5,chassis=3D0,slo=
-t=3D9 -device =
-cxl-downstream,port=3D2,bus=3Dcxl-up1,id=3Dswport6,chassis=3D0,slot=3D10 =
--device cxl-downstream,port=3D3,bus=3Dcxl-up1,id=3Dswport7,chassis=3D0,slo=
-t=3D11 -device =
-cxl-type3,bus=3Dswport0,persistent-memdev=3Dcxl-mem0,id=3Dcxl-pmem0,lsa=3D=
-cxl-lsa0 -device =
-cxl-type3,bus=3Dswport2,persistent-memdev=3Dcxl-mem1,id=3Dcxl-pmem1,lsa=3D=
-cxl-lsa1 -device =
-cxl-type3,bus=3Dswport4,volatile-memdev=3Dcxl-mem2,id=3Dcxl-vmem2,lsa=3Dcx=
-l-lsa2 -device =
-cxl-type3,bus=3Dswport6,volatile-memdev=3Dcxl-mem3,id=3Dcxl-vmem3,lsa=3Dcx=
-l-lsa3 -M =
-cxl-fmw.0.targets.0=3Dcxl.0,cxl-fmw.0.size=3D4G,cxl-fmw.0.interleave-granu=
-larity=3D8k,cxl-fmw.1.targets.0=3Dcxl.0,cxl-fmw.1.targets.1=3Dcxl.1,cxl-fm=
-w.1.size=3D4G,cxl-fmw.1.interleave-granularity=3D8k -snapshot -object =
-memory-backend-ram,id=3Dmem0,size=3D2048M -numa =
-node,nodeid=3D0,memdev=3Dmem0, -numa cpu,node-id=3D0,socket-id=3D0 -numa =
-dist,src=3D0,dst=3D0,val=3D10
-qemu-system-aarch64: -drive file=3Droot.img,format=3Draw,media=3Ddisk: =
-PCI: Only PCI/PCIe bridges can be plugged into pxb-cxl
+The goal is to excercise memory_failure(). The fact that the test passes
+with memory_failure() disabled is not that interesting. Could the test
+be improved to fail when memory_failure() is disabled? Probably. Is that
+useful? Probably not.
 
-Plain upstream QEMU aarch64 target vert machine can handle the -drive =
-option without an issue _without_ those cxl setup options added. I think =
-the error was seen with your previous cxl-2025-03-20 branch.=20
-
-Thanks,
-Itaru.=20=
+Those build time checks are just a more forceful way of ensuring the
+expected test environment. I think config fragments in the README are
+sufficient.
