@@ -1,135 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 770ED15665C;
-	Fri, 16 May 2025 23:17:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91424231856
+	for <linux-cxl@vger.kernel.org>; Fri, 16 May 2025 23:51:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747437468; cv=none; b=fXUaqUiz5TNyYkWKgjYHYmNGypjgx5nwX4X1jPr8UWILFWujWia0hYPBt4AvUEmw6gwfizl4NZ/UmzgNP5ImXVaiKgBOd+5ZbMSOsOBJo/UQaAreTr6Q8QXRZGKUP2kHlHZTxIcrUaQ4fi3oYuX58mfrWsqNNrRMXIWpPUDyYE0=
+	t=1747439465; cv=none; b=I7DzXOI5ALjUAoeUI5uCc310Lvlaz0wcPXEkaPTZgQD7aJ8e+vQFK0UIeKmzkxyEy/g4xAHjaS6C4e08cqPlE0ZlmVFRIxuxuPdtraMnz6G8ZCbNHybtorTO6WNbQan6yKWVhd15R79uB7W8b2Tmsu+ZXOv6yi8FwmT6KfuLzIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747437468; c=relaxed/simple;
-	bh=9QGCU7pQ1CQOC/QLX0rCKLUdZNG8/Rw7HmMWOTN97fo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gjol4Ly32mugiaSFgCL7ylVxN6I47wmCBKRR5axzWHN5VZGiIm4xI11aWaNqI9pT5Tb8N6RaqyVc6mw9EuBgWET95qajsa5jIw28UFernJKCaCR+QtLECi9Nc2+o+8ol7vVVDtsUr/07o7coFfiLnzSZhQrH551zKxCN2KfBWoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b8OkA7p3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747439465; c=relaxed/simple;
+	bh=/hROaLaAFCTzODZWEiUp8c4an3gyu6qLiLxpvaA3JJ8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bim00ACDAYAkH+6zYF49oWslhfBFDaGNWQMhShY2e9nSWMtPJcrrqTlURn0VRDEpEf3n/EzAuB/Or+Y6S4tpRAzl7GRQiMgB8jgAIxl2VOhvSnwcmU0Z9aAKxxxvxqUxg81TFKFIUvL4dfuYaZ2VUSQv2oV2SYg8LBKU7qsFYmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cImS+Ek5; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b8OkA7p3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9775C4CEE4;
-	Fri, 16 May 2025 23:17:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747437467;
-	bh=9QGCU7pQ1CQOC/QLX0rCKLUdZNG8/Rw7HmMWOTN97fo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=b8OkA7p3XHFQnWkhDZHSvdhBzeJvX2JWajy6uk7rAqdnI8TISnS1C0kUOVHwzAwf6
-	 /t0JOfPD3nXLY06c8Eiq44LxQiwiS8nLRIBmDmEn2XNeMpw2Tfd1U9lQit+Wy1EL9r
-	 6UzybNl8RZcQXn4fh/B8NO6U/Q0AunkgLh2q7wvF+/Z4GtY2gbJRFEaoNYVmNgPdc+
-	 IWMHOkhcvx3en+Vtwn1/8l0JT6qDMsTRjnpbXnE14b2oyY/PDf/lHxf/J+OuygeWYd
-	 xqIy8fwO+ID5o2/YuJt+HJBDdvWn5867w4MzKnuTskhWhVd2+wMXDALPxHKgZq8V7D
-	 5PdG1wNlZxa4g==
-Date: Fri, 16 May 2025 16:17:47 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: John Groves <John@groves.net>, Dan Williams <dan.j.williams@intel.com>,
-	Bernd Schubert <bschubert@ddn.com>,
-	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Luis Henriques <luis@igalia.com>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Petr Vorel <pvorel@suse.cz>, Brian Foster <bfoster@redhat.com>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Stefan Hajnoczi <shajnocz@redhat.com>,
-	Joanne Koong <joannelkoong@gmail.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Aravind Ramesh <arramesh@micron.com>,
-	Ajay Joshi <ajayjoshi@micron.com>
-Subject: Re: [RFC PATCH 13/19] famfs_fuse: Create files with famfs fmaps
-Message-ID: <20250516231747.GB9730@frogsfrogsfrogs>
-References: <20250421013346.32530-14-john@groves.net>
- <nedxmpb7fnovsgbp2nu6y3cpvduop775jw6leywmmervdrenbn@kp6xy2sm4gxr>
- <20250424143848.GN25700@frogsfrogsfrogs>
- <5rwwzsya6f7dkf4de2uje2b3f6fxewrcl4nv5ba6jh6chk36f3@ushxiwxojisf>
- <20250428190010.GB1035866@frogsfrogsfrogs>
- <CAJfpegtR28rH1VA-442kS_ZCjbHf-WDD+w_FgrAkWDBxvzmN_g@mail.gmail.com>
- <20250508155644.GM1035866@frogsfrogsfrogs>
- <CAJfpegt4drCVNomOLqcU8JHM+qLrO1JwaQbp69xnGdjLn5O6wA@mail.gmail.com>
- <20250515020624.GP1035866@frogsfrogsfrogs>
- <CAJfpegsKf8Zog3Q6Vd1kBmD6anLSdyYyxy4BjD-dvcyWOyr4QQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cImS+Ek5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747439463; x=1778975463;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=/hROaLaAFCTzODZWEiUp8c4an3gyu6qLiLxpvaA3JJ8=;
+  b=cImS+Ek5ylq85kZhrIDH9tyvDR83rK+tVTjMRdT1kHJ1Cwijwnl+C00g
+   +R2RA1lMwinamnjvqP+1QU+SVr0vEdpMNQwCbXW5BZKgkzZv56xgPoDuC
+   lXxiCIwnF+uDZYXRXbma7+KFT8b2Dvpow/LGB4vnLL2qPvIyrrFob3Kko
+   1P8WOA7JSl37AnUUprrOHG+M0qM/Yi3/JrGYx/OCkqpkjJMjh2kZF3Wq8
+   RWJEgjRL7lXjpMEp6EexdKIjJaH8Lwmd/5c60sW7aU/dn7F0gPuNaxI8c
+   pXfdFPtQ6lM5+9V5bKq2+AhfbjtizTFjveNQqycDk8oM0cc/pLUiG1lUk
+   w==;
+X-CSE-ConnectionGUID: JyyfvyFGQUO8b2qvqxnIfQ==
+X-CSE-MsgGUID: X0+8YngkSaih8N/0Hr420w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="49121758"
+X-IronPort-AV: E=Sophos;i="6.15,295,1739865600"; 
+   d="scan'208";a="49121758"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 16:51:03 -0700
+X-CSE-ConnectionGUID: hGzq5+3PSS2zBH1W5s2Lxg==
+X-CSE-MsgGUID: 5wvJ3gDxR+GcsMJWOQVnng==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,295,1739865600"; 
+   d="scan'208";a="138676200"
+Received: from mtowner-mobl1.amr.corp.intel.com (HELO [10.125.186.118]) ([10.125.186.118])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 16:51:03 -0700
+Message-ID: <ef46edd7-b492-4124-9cf9-0db104175eac@linux.intel.com>
+Date: Fri, 16 May 2025 16:50:57 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJfpegsKf8Zog3Q6Vd1kBmD6anLSdyYyxy4BjD-dvcyWOyr4QQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: cxl <-> udev deadlock?
+To: "ruansy.fnst" <ruansy.fnst@fujitsu.com>, linux-cxl@vger.kernel.org
+Cc: dan.j.williams@intel.com, vishal.l.verma@intel.com, sunfishho12@gmail.com
+References: <20250514112003.2150272-1-ruansy.fnst@fujitsu.com>
+Content-Language: en-GB
+From: Marc Herbert <Marc.Herbert@linux.intel.com>
+In-Reply-To: <20250514112003.2150272-1-ruansy.fnst@fujitsu.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 16, 2025 at 12:06:44PM +0200, Miklos Szeredi wrote:
-> On Thu, 15 May 2025 at 04:06, Darrick J. Wong <djwong@kernel.org> wrote:
+On 2025-05-14 04:20, ruansy.fnst wrote:
 > 
-> > Yeah, it's confusing.  The design doc tries to clarify this, but this is
-> > roughly what we need for fuse:
-> >
-> > FUSE_IOMAP_OP_WRITE being set means we're writing to the file.
-> > FUSE_IOMAP_OP_ZERO being set means we're zeroing the file.
-> > Neither of those being set means we're reading the file.
-> >
-> > (3 different operations)
+> Now that cxl_wait_probe() has been added[1] to wait for udev queue
+> empty, the `udevadm settle` here is no longer necessary.
 > 
-> Okay, I get why these need to be distinct cases.
+> [1] b231603 cxl/lib: Add cxl_wait_probe()
 > 
-> Am I right that the only read is sanely cacheable?
-
-That depends on the filesystem.  Old filesystems (e.g. the ones that
-don't support out of place writes or unwritten extents) most likely can
-cache mappings for writes and zeroing.  Filesystems with static mappings
-(like zonefs which are convenient wrappers around hardware) can cache
-most everything too.
-
-My next step for this prototype is to go build a real cache and make
-fuse2fs manage the cache, which puts the filesystem in charge of
-maintaining the cache however is appropriate for the design.
-
-> > FUSE_IOMAP_OP_DIRECT being set means directio, and it not being set
-> > means pagecache.
-> >
-> > (and one flag, for 6 different types of IO)
+> Signed-off-by: Ruan Shiyang <ruansy.fnst@fujitsu.com>
 > 
-> Why does this make a difference?
-
-Different allocation strategies -- we can use delayed allocation for
-pagecache writes, whereas with direct writes we must have real disk
-space.
-
-> Okay, maybe I can imagine difference allocation strategies.  Which
-> means that it only matters for the write case?
-
-Probably.  I don't see why a directio read would be any different from a
-pageacache read(ahead) but the distinction exists for the in-kernel
-iomap callers.
-
-> > FUSE_IOMAP_OP_REPORT is set all by itself for things like FIEMAP and
-> > SEEK_DATA/HOLE.
+> ===
+> Question to Dan:
 > 
-> Which should again always be the same as the read case, no?
+> I understand how cxl_wait_probe() work, but I have some questions about
+> the motivation of adding this function:  Firstly, is it function added
+> for simply waiting for new added CXL device been ready before cxl
+> command does the actual work?  Just for replacing `udevadm settle`'s
+> work?
+> 
+> Now I am facing a problem that cxl command takes a long time to complete
+> when I run it in a udev rule(do some configuration when CXL memdev is
+> added).  I found it is caused by this function: waitting for udev
+> queue's endding but itself is in the queue.  The cxl_wait_probe()
+> function does not seem to allow me to do that.  So, the 2nd question is:
+> is it against the spec to run cxl command in a udev rule?
 
-Not entirely -- if the fuse driver is doing weird caching things with
-file data blocks, a read requires it to invalidate its own cache,
-whereas it needn't do anything for a mapping report.  fuse2fs is guilty
-of this, because it does ... crazy things.
+cxl waits for udev which waits for cxl... this looks like an interesting
+deadlock!?
 
-Also for now I don't support read/write to inline data files, though I
-think it would be possible to use the FUSE_READ/FUSE_WRITE for that...
-as soon as I find a filesystem where inline data for regular files isn't
-a giant trash fire and can be QAd properly.
+When you write "a long time to complete", do you mean "aborted after the
+default, 180s udev timeout?"
 
---D
+https://www.freedesktop.org/software/systemd/man/latest/systemd-udevd.service.html
+
+udev is not designed to start long-running processes BUT udev is designed
+to communicate with systemd which is the correct manager for all
+long-running processes:
+
+https://www.freedesktop.org/software/systemd/man/latest/systemd.device.html
+
+You can find examples on your system like this:
+
+  grep -r SYSTEMD_.*WANT /usr/lib/udev/
+
+Now, I think you are not interested in running anything for _long_. But,
+the same technique and indirection should also break the deadlock (if any)
+because udev messages to systemd are "fire and forget".
+
+Also, systemd is designed to collect and report logs, exit status
+etc. which is very useful when something goes wrong. udev does not
+do that.
