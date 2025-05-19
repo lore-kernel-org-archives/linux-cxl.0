@@ -1,118 +1,108 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1621377104;
-	Mon, 19 May 2025 21:34:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5FF021A444
+	for <linux-cxl@vger.kernel.org>; Mon, 19 May 2025 21:47:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747690461; cv=none; b=hKu6Ghxr3uJZhiUxFMiFZEbHe8wPVRQKmOvvY6L+82IeOzUTZdR+89yLuiuit3VfYpeSpmj1E+ReAku0ZZCkuMy2d6zzsUWInkSqNkzHnpJSTccwWiJ4k5TdIa0eLdCrd61vQN+7t2yqtVYHsM1wk1770eqos7zYaBFT2NjzYek=
+	t=1747691266; cv=none; b=YqCK8Xtvgqfs7E/uQQsCT4p6JFwafEdn1WUbGAu0o3pD1m+I+98Czqfo/a9CK36CI8U01SI9d4ankBJxNM573nulF0Jvbj77HXU72QM1P0epb91L/rom7TGKO9Ec2mvPKSwHYCBL7IfPPF8n2T+2S8S8d5WXjdHLFam4TTSw64E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747690461; c=relaxed/simple;
-	bh=yOn5n3bqLp4P2nGPgfuCcY+cXv8UrFJk24JwgT6CwoQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Wc3VuZMO+4xWLCbnRSLPK1DXpfCLJM/g4Smy3HAYTK/CqGV+xMjMTX3daEITnZvmb789hWpbF9G2Lh1RJtwzsMzClBoUBmUdEi7/5WrU+jCAAxHLqnyvS2/TAEqFq4fHxMk6lGf1pOYLQ3Wli4yOEmmurEISVBJMQKcnAmxGLQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b1WBs2bCyz6K9qy;
-	Tue, 20 May 2025 05:33:25 +0800 (CST)
-Received: from frapeml100008.china.huawei.com (unknown [7.182.85.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id C572214010C;
-	Tue, 20 May 2025 05:34:13 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (7.182.85.172) by
- frapeml100008.china.huawei.com (7.182.85.131) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 19 May 2025 23:34:13 +0200
-Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
- frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
- Mon, 19 May 2025 23:34:13 +0200
-From: Shiju Jose <shiju.jose@huawei.com>
-To: Dave Jiang <dave.jiang@intel.com>, Alison Schofield
-	<alison.schofield@intel.com>
-CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"dan.j.williams@intel.com" <dan.j.williams@intel.com>, Jonathan Cameron
-	<jonathan.cameron@huawei.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
-	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>, "ira.weiny@intel.com"
-	<ira.weiny@intel.com>, "linux-edac@vger.kernel.org"
-	<linux-edac@vger.kernel.org>, "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-	"tony.luck@intel.com" <tony.luck@intel.com>, "lenb@kernel.org"
-	<lenb@kernel.org>, "Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>,
-	"mchehab@kernel.org" <mchehab@kernel.org>, "nifan.cxl@gmail.com"
-	<nifan.cxl@gmail.com>, Linuxarm <linuxarm@huawei.com>, tanxiaofei
-	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, "Roberto
- Sassu" <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
-	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>
-Subject: RE: [PATCH v5 7/8] cxl/edac: Add CXL memory device memory sparing
- control feature
-Thread-Topic: [PATCH v5 7/8] cxl/edac: Add CXL memory device memory sparing
- control feature
-Thread-Index: AQHbxZDhUCMGzgandE+3fZ/ERQvSs7PaVbGAgAAD9ACAACKbkA==
-Date: Mon, 19 May 2025 21:34:13 +0000
-Message-ID: <a4d67defc88a4c03b88a1a5e9c7f9954@huawei.com>
-References: <20250515115927.772-1-shiju.jose@huawei.com>
- <20250515115927.772-8-shiju.jose@huawei.com>
- <aCucI3TPynSycGug@aschofie-mobl2.lan>
- <43de25e8-cbce-43f5-931d-3b9edc3f45eb@intel.com>
-In-Reply-To: <43de25e8-cbce-43f5-931d-3b9edc3f45eb@intel.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1747691266; c=relaxed/simple;
+	bh=w1xJGVhpynvQpLAnXndbNlTsbg9LROoen7zvwy0nBuI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VZC0Rn2x5yeuCrZh3lxLwacd4yUp1oODmxL857/E3GJyN/930HWlzFaFkSnCkmHUBubrclHUYvlLpmdz3FH6zTduVHD12WdeP6Yq2t9F5kHeJ8H7U6LFF3fdAyWRD4bV9oxIPQMQFoBdaoMuNeH9v7LtnCu2d2dh9nf7fc5lH9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L/jOH0Bu; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L/jOH0Bu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747691265; x=1779227265;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=w1xJGVhpynvQpLAnXndbNlTsbg9LROoen7zvwy0nBuI=;
+  b=L/jOH0Bu3PQhCVh7tswoLBjkd7vYfmx/YG1nDSah37Gy2bGwyU43k0Jz
+   x5DXms0gIj5Xi5T0BQhKXYTiDsgK0Kzanh/atfTPzuwTobk5DFg9Hn+8p
+   Zc0DYZYG68JJbykMFEJwI5S786YTLMok6nmOXNw07q/xildAI3UQUxwRc
+   bOzOKKl+db6uEHRWeoENp7wzoFwvJvR2d1k2SsA60LZ68POkkxu0dJGaY
+   CY4EqnH0gBO0D9FGBqxvf8QTL1/+s3irzJ9yPI9KjHZqy75f4/6Hxye9x
+   r+gFAIxwVfFy4N/Pec1f37zIX9ZvoxeGlN2ElKpWJbtMCtKv2JLw1+Jtb
+   w==;
+X-CSE-ConnectionGUID: VJHFF97JSkiNFVAekppP4w==
+X-CSE-MsgGUID: G35x3D9lR466ojfZt1Fsfw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="67018183"
+X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
+   d="scan'208";a="67018183"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 14:47:45 -0700
+X-CSE-ConnectionGUID: XJT7PDY3QruTzeBBwIBNCQ==
+X-CSE-MsgGUID: 0xmIyxVjTKKJ4L1ZfYKROw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
+   d="scan'208";a="139381174"
+Received: from agrisant-mobl2.amr.corp.intel.com (HELO [10.125.1.252]) ([10.125.1.252])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 14:47:44 -0700
+Message-ID: <3f7bd5b0-4c1b-4a55-bc9b-2b6e75ab9a39@linux.intel.com>
+Date: Mon, 19 May 2025 14:47:36 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] test/cxl-xor-region.sh: remove redundant waitting
+To: dan.j.williams@intel.com, "ruansy.fnst" <ruansy.fnst@fujitsu.com>,
+ linux-cxl@vger.kernel.org
+Cc: vishal.l.verma@intel.com, sunfishho12@gmail.com
+References: <20250514112003.2150272-1-ruansy.fnst@fujitsu.com>
+ <6827d6e591443_4ba8f100f1@dwillia2-mobl4.notmuch>
+Content-Language: en-GB
+From: Marc Herbert <Marc.Herbert@linux.intel.com>
+In-Reply-To: <6827d6e591443_4ba8f100f1@dwillia2-mobl4.notmuch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogRGF2ZSBKaWFuZyA8ZGF2ZS5qaWFu
-Z0BpbnRlbC5jb20+DQo+U2VudDogMTkgTWF5IDIwMjUgMjI6MTYNCj5UbzogQWxpc29uIFNjaG9m
-aWVsZCA8YWxpc29uLnNjaG9maWVsZEBpbnRlbC5jb20+OyBTaGlqdSBKb3NlDQo+PHNoaWp1Lmpv
-c2VAaHVhd2VpLmNvbT4NCj5DYzogbGludXgtY3hsQHZnZXIua2VybmVsLm9yZzsgZGFuLmoud2ls
-bGlhbXNAaW50ZWwuY29tOyBKb25hdGhhbiBDYW1lcm9uDQo+PGpvbmF0aGFuLmNhbWVyb25AaHVh
-d2VpLmNvbT47IGRhdmVAc3Rnb2xhYnMubmV0Ow0KPnZpc2hhbC5sLnZlcm1hQGludGVsLmNvbTsg
-aXJhLndlaW55QGludGVsLmNvbTsgbGludXgtZWRhY0B2Z2VyLmtlcm5lbC5vcmc7DQo+bGludXgt
-ZG9jQHZnZXIua2VybmVsLm9yZzsgYnBAYWxpZW44LmRlOyB0b255Lmx1Y2tAaW50ZWwuY29tOw0K
-PmxlbmJAa2VybmVsLm9yZzsgWWF6ZW4uR2hhbm5hbUBhbWQuY29tOyBtY2hlaGFiQGtlcm5lbC5v
-cmc7DQo+bmlmYW4uY3hsQGdtYWlsLmNvbTsgTGludXhhcm0gPGxpbnV4YXJtQGh1YXdlaS5jb20+
-OyB0YW54aWFvZmVpDQo+PHRhbnhpYW9mZWlAaHVhd2VpLmNvbT47IFplbmd0YW8gKEIpIDxwcmlt
-ZS56ZW5nQGhpc2lsaWNvbi5jb20+OyBSb2JlcnRvDQo+U2Fzc3UgPHJvYmVydG8uc2Fzc3VAaHVh
-d2VpLmNvbT47IGthbmdrYW5nLnNoZW5AZnV0dXJld2VpLmNvbTsNCj53YW5naHVpcWlhbmcgPHdh
-bmdodWlxaWFuZ0BodWF3ZWkuY29tPg0KPlN1YmplY3Q6IFJlOiBbUEFUQ0ggdjUgNy84XSBjeGwv
-ZWRhYzogQWRkIENYTCBtZW1vcnkgZGV2aWNlIG1lbW9yeSBzcGFyaW5nDQo+Y29udHJvbCBmZWF0
-dXJlDQo+DQo+DQo+DQo+T24gNS8xOS8yNSAyOjAxIFBNLCBBbGlzb24gU2Nob2ZpZWxkIHdyb3Rl
-Og0KPj4gT24gVGh1LCBNYXkgMTUsIDIwMjUgYXQgMTI6NTk6MjNQTSArMDEwMCwgc2hpanUuam9z
-ZUBodWF3ZWkuY29tIHdyb3RlOg0KPj4+IEZyb206IFNoaWp1IEpvc2UgPHNoaWp1Lmpvc2VAaHVh
-d2VpLmNvbT4NCj4+Pg0KPj4NCj4+IHNuaXANCj4+DQo+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-Y3hsL2NvcmUvZWRhYy5jIGIvZHJpdmVycy9jeGwvY29yZS9lZGFjLmMgaW5kZXgNCj4+PiA0ODlj
-OTk5NmJmYmMuLjM5NWQ1NjQ1NzkzMSAxMDA2NDQNCj4+PiAtLS0gYS9kcml2ZXJzL2N4bC9jb3Jl
-L2VkYWMuYw0KPj4+ICsrKyBiL2RyaXZlcnMvY3hsL2NvcmUvZWRhYy5jDQo+Pj4gQEAgLTIxLDcg
-KzIxLDE3IEBADQo+Pj4gICNpbmNsdWRlICJjb3JlLmgiDQo+Pj4gICNpbmNsdWRlICJ0cmFjZS5o
-Ig0KPj4+DQo+Pj4gLSNkZWZpbmUgQ1hMX05SX0VEQUNfREVWX0ZFQVRVUkVTIDINCj4+PiArI2Rl
-ZmluZSBDWExfTlJfRURBQ19ERVZfRkVBVFVSRVMgNg0KPj4+ICsNCj4+PiArc3RhdGljIGJvb2wg
-Y3hsX2lzX21lbWRldl9tZW1vcnlfb25saW5lKGNvbnN0IHN0cnVjdCBjeGxfbWVtZGV2DQo+Pj4g
-KypjeGxtZCkgew0KPj4+ICsJc3RydWN0IGN4bF9wb3J0ICpwb3J0ID0gY3hsbWQtPmVuZHBvaW50
-Ow0KPj4+ICsNCj4+PiArCWlmIChwb3J0ICYmIGN4bF9udW1fZGVjb2RlcnNfY29tbWl0dGVkKHBv
-cnQpKQ0KPj4+ICsJCXJldHVybiB0cnVlOw0KPj4+ICsNCj4+PiArCXJldHVybiBmYWxzZTsNCj4+
-PiArfQ0KPj4+DQo+Pg0KPj4gTG9va3MgbGlrZSBhYm92ZSBmY24gbmVlZHMgdG8gYmUgaW5zaWRl
-IHRoZSBiZWxvdyAjaWZkZWYuDQo+PiBTbWF0Y2ggaXMgd2FybmluZyB0aGlzIHdoZW4gRURBQ19T
-Q1JVQiBpcyBvZmYNClRoaXMgd2FybmluZyBpcyB3aXRoICdFREFDX01FTV9SRVBBSVInIGlzIG9m
-Zi4NCiAgDQo+Pg0KPj4gZHJpdmVycy9jeGwvY29yZS9lZGFjLmM6Mjc6MTM6IHdhcm5pbmc6IOKA
-mGN4bF9pc19tZW1kZXZfbWVtb3J5X29ubGluZeKAmQ0KPmRlZmluZWQgYnV0IG5vdCB1c2VkIFst
-V3VudXNlZC1mdW5jdGlvbl0NCj4+ICAgIDI3IHwgc3RhdGljIGJvb2wgY3hsX2lzX21lbWRldl9t
-ZW1vcnlfb25saW5lKGNvbnN0IHN0cnVjdA0KPj4gY3hsX21lbWRldiAqY3hsbWQpDQo+Pg0KPj4N
-Cj4+PiAgI2lmZGVmIENPTkZJR19DWExfRURBQ19TQ1JVQg0KPg0KPkkgdGhpbmsgdGhlIGZ1bmN0
-aW9uIGNhbiBiZSBtb3ZlZCB0byBhYm92ZSBjeGxfbWVtX3BlcmZvcm1fc3BhcmluZygpIGFzIHRo
-YXQNCj5pcyB0aGUgb25seSBmdW5jdGlvbiB0aGF0IGNhbGxzIGl0LiBJJ2xsIGRvIHRoYXQgd2hl
-biBJIGFwcGx5IGlmIHRoZXJlJ3Mgbm90aGluZyBlbHNlDQo+bWFqb3IgbmVlZCB0byBiZSBjaGFu
-Z2VkLg0KDQpZZXMuIE1vdmluZyB1bmRlciAgIiNpZmRlZiBDT05GSUdfQ1hMX0VEQUNfTUVNX1JF
-UEFJUiIgd2hpY2ggaXMgcHJlc2VudA0KYXQgdGhlIHN0YXJ0IG9mIG1lbW9yeSByZXBhaXIgZmVh
-dHVyZXMsIHNvbHZlZCAgdGhpcyB3YXJuaW5nLiANClByZXNlbnRseSAnY3hsX2lzX21lbWRldl9t
-ZW1vcnlfb25saW5lJyBpcyB1c2VkIGluICBjeGxfbWVtX3BlcmZvcm1fc3BhcmluZygpIGFuZCAN
-CmN4bF9tZW1fcGVyZm9ybV9wcHIoKSBvbmx5IHRob3VnaCBJIHRob3VnaHQgaXQgd2lsbCBiZSB1
-c2VkIGluIG90aGVyIHBhcnRzIG9mIHRoZSBDWEwgY29kZS4NCg0KPg0KPkRKDQo+DQo+DQo+Pg0K
-Pj4gc25pcCB0byBlbmQuDQo+Pg0KPg0KDQpUaGFua3MsDQpTaGlqdQ0K
+On 2025-05-16 17:23, dan.j.williams@intel.com wrote:
+
+> 
+> So the assumption is that interfactive invocation of cxl commands should
+> arrange for a stablized snaphshot of the topology state.
+> 
+>> Now I am facing a problem that cxl command takes a long time to complete
+>> when I run it in a udev rule(do some configuration when CXL memdev is
+>> added).  I found it is caused by this function: waitting for udev
+>> queue's endding but itself is in the queue.  The cxl_wait_probe()
+>> function does not seem to allow me to do that.
+> 
+> Yes, that is a problem.
+> 
+>> So, the 2nd question is: is it against the spec to run cxl command in
+>> a udev rule?
+> 
+> No we need to find a way to make that work, so I consider this a bug
+> report. My initial reaction is that when called from a udev rule cxl-cli
+> should honor a new environment variable, perhaps "UDEV_CXL", that
+> disables this waiting that is only meant for human interactive mode.
+> 
+
+If the distinction between two such "modes" is indeed desired, I don't
+think the name should point at the first known use case (UDEV) for
+it. For instance, you could also imagine that while some parts of test
+code want the current, blocking and "stabilized" behavior, other parts
+of some (other) test code want the currently missing), "fast" and
+unstable information without waiting. There could be other use cases, so
+in general the user interface (if any) should describe what it does, not
+who it is for.
+
+Also, why not just a new command line option like cxl --no-wait?
+Environment variables are convenient to cut through layers but they are
+also invisible which tends to cause debugging nightmares.  Bonus point
+when racing against something like else - which is exactly the case
+here! I can already feel for the poor soul copying commands from the
+logs of some test failure and missing the magic environment
+variable(s)... been there, done that.
+
+PS: while... waiting for such a fast/no-wait/unstable option, I see no
+reason why systemd would not work.
