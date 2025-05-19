@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56301288521;
-	Mon, 19 May 2025 16:12:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF28D28A407;
+	Mon, 19 May 2025 16:13:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747671151; cv=none; b=PK8SYWXGfteJQghtr1Pg6Q0Yf035PUSPyXy7Ekc0UbWbSQd88dpMgzpJMVzI/nmr5iOSm2nugPVBUmHkC0Vy8/8ns3r4b7uL9U/ASCXSrCbtRtHemESCRuRc14997E6aGEc7QVqJOZpbMhguYA6B0b2WF8az4uTaVR3exo16ueg=
+	t=1747671191; cv=none; b=FgNvi/TM1vXmfmIaDVaVFlHXMDV+annzQbwsqZoFbKnOHsjUmzAtuEVIjW2d3OflaURT+heGXG56Cz9KMPmL7ia5HdNOJc8r9lG27FLduaYsbB3iuOcZoZ3b9P5nzFCgN4+J7HUErhWeJcWDyuopBKsv86jxM0xxzHoDBtR5O4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747671151; c=relaxed/simple;
-	bh=PY2I9yTwT6C5ruxhzvlkSuqMbl6xpAox2SDDWbmYmh4=;
+	s=arc-20240116; t=1747671191; c=relaxed/simple;
+	bh=zyAOQzMJMFgeGz+lNh/1K4UspxtyA4S0tXwY70o42jA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U/pywljuKOieOWyhdgpiek63sLcqytaGuKmE7eQOl40/ME2p4GA0HCrN0XIRwYxNT5+wsUo/2TTlIry6/r+Z89b3u5ZhxZHNoaXHJqyNYYbuzKsfPoTfFre7RavKl0/cLhh7uNlZ9cTIL2xMCEY40/f6OhveqsWwUHg4oRYySBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A9+zDp7k; arc=none smtp.client-ip=198.175.65.16
+	 In-Reply-To:Content-Type; b=dyrW++c9OXinE2RCs7+czIpR5NuglnQdO9fFCyWWRQv9ImgN/wTASBpcXoAAvlhtiTjaa97KX1S/cjsexk8/QaWmKuOouMNFknmIIPQEQYcDz41Lo7zZNLEbF+iLYyV/9AOtT5oX4OMnHl65VK6oep62Zjzlg33Y50iN/G5mxWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C7minFsw; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A9+zDp7k"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C7minFsw"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747671150; x=1779207150;
+  t=1747671191; x=1779207191;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=PY2I9yTwT6C5ruxhzvlkSuqMbl6xpAox2SDDWbmYmh4=;
-  b=A9+zDp7k0hAbgiUE5NkyM7Nv8pkp20Sxnm2znp0eCwYW7xjRsu7YEEx/
-   o637lSlPe4KYmS6iPLdi+/3lvgJdqyuRMPfnM07CcEb4tNmbx11NuWCw3
-   Waz4Er1uJs37RHJI9sMV7XPHfJDGwDIsZHx4tdmVm5RTMWP/Jy2qAQyET
-   +b5+w4R5Nkfy3x2M1OuBoM2YSq82YdJ69E4ToOHxs3TjyNtenhUfmwe//
-   oEgonMCvirQ2caYgS9Jj68jG1/mRcIL+R6fjIP1dY3B+kFmiCcOGFVVYT
-   bpp6uBre6U2DrJ/RjkudEWVyAQ05E1e7LIjH2w/GQbECDNhQ1h2680e0K
-   A==;
-X-CSE-ConnectionGUID: kmcVCu32S/eIAlGgwXGeyg==
-X-CSE-MsgGUID: bV8RcWBmRYSnI8fFaEWEKg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="49642002"
+  bh=zyAOQzMJMFgeGz+lNh/1K4UspxtyA4S0tXwY70o42jA=;
+  b=C7minFswC+IAH1vHL9ERFaDAUnN9ptO6JtJ2OA13Fu/AcAtgtACjny6c
+   S0NT1Nxk0PRHijk2mG7sYKYK7yGwbJA1qj4GkO9ocN15QeaL+XBAJkR0Q
+   LcKdmAR6QrTI9K/AE+KWw2IneJYuD2np9DdJ4bqKNXlq2F0n0pH6ec2WN
+   kCftLT2JHEvyd2Haaq2y/OoGC4Jnc0CHfY6Q4wB4jIjXkPMlEW9NxHzsR
+   jPt6y8RybBd9963zziqpT+5Tax2vaSglyso9NOMtsDq3eNOTdZhtbaldq
+   cljXJ0aJiYcrcKOmMHLHjMVPajKCsC8MODxhQL8lTdPVuzQVpqmMMgK+9
+   Q==;
+X-CSE-ConnectionGUID: dkrD6QWQR0uocvQrI46bRA==
+X-CSE-MsgGUID: EMF2aXT6RUegsfIc6q1Q3g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="49642073"
 X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
-   d="scan'208";a="49642002"
+   d="scan'208";a="49642073"
 Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 09:12:29 -0700
-X-CSE-ConnectionGUID: ZqRJybsFT+umOBJrXQogXg==
-X-CSE-MsgGUID: 0yOQx4DcTBuFFuLfPqKPJg==
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 09:13:10 -0700
+X-CSE-ConnectionGUID: L13enZ45Tgm8M7LnrBNVYQ==
+X-CSE-MsgGUID: XMT03/vcQ12CNqz8cPu6sw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
-   d="scan'208";a="139300892"
+   d="scan'208";a="139301096"
 Received: from tjmaciei-mobl5.ger.corp.intel.com (HELO [10.125.109.80]) ([10.125.109.80])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 09:12:27 -0700
-Message-ID: <6ed977c8-a5f2-4437-80a5-977c0a6cb8bb@intel.com>
-Date: Mon, 19 May 2025 09:12:26 -0700
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 09:13:08 -0700
+Message-ID: <63c3fc2b-2c04-4f44-9e69-4569d3e91017@intel.com>
+Date: Mon, 19 May 2025 09:13:05 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,54 +52,52 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] cxl/feature: Remove redundant code of get supported
- features
-To: Li Ming <ming.li@zohomail.com>, dave@stgolabs.net,
- jonathan.cameron@huawei.com, alison.schofield@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250516143220.35302-1-ming.li@zohomail.com>
+Subject: Re: [PATCH] docs: ABI: Fix "firwmare" to "firmware"
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Sumanth Gavini <sumanth.gavini@yahoo.com>
+Cc: skhan@linuxfoundation.org, ira.weiny@intel.com, dave@stgolabs.net,
+ ming.li@zohomail.com, linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
+References: <20250517110332.1289718-1-sumanth.gavini.ref@yahoo.com>
+ <20250517110332.1289718-1-sumanth.gavini@yahoo.com>
+ <20250519105550.000051ab@huawei.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250516143220.35302-1-ming.li@zohomail.com>
+In-Reply-To: <20250519105550.000051ab@huawei.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 5/16/25 7:32 AM, Li Ming wrote:
-> In cxlctl_get_supported_features(), there is a code block that handles
-> the case where the requested is equal to 0. But the code following the
-> code block can also handle this situation. So the code block is not
-> needed.
+On 5/19/25 2:55 AM, Jonathan Cameron wrote:
+> On Sat, 17 May 2025 04:03:16 -0700
+> Sumanth Gavini <sumanth.gavini@yahoo.com> wrote:
 > 
-> Signed-off-by: Li Ming <ming.li@zohomail.com>
+>> Fix misspelling reported by codespell
+>>
+>> Signed-off-by: Sumanth Gavini <sumanth.gavini@yahoo.com>
+> +CC linux-cxl
+> 
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 Applied to cxl/next
 
-> ---
-> base-commit: 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3 v6.15-rc6
-> ---
->  drivers/cxl/core/features.c | 8 --------
->  1 file changed, 8 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-> index 1498e2369c37..2d3a6d36a761 100644
-> --- a/drivers/cxl/core/features.c
-> +++ b/drivers/cxl/core/features.c
-> @@ -416,14 +416,6 @@ static void *cxlctl_get_supported_features(struct cxl_features_state *cxlfs,
->  
->  	rpc_out->size = struct_size(feat_out, ents, requested);
->  	feat_out = &rpc_out->get_sup_feats_out;
-> -	if (requested == 0) {
-> -		feat_out->num_entries = cpu_to_le16(requested);
-> -		feat_out->supported_feats =
-> -			cpu_to_le16(cxlfs->entries->num_features);
-> -		rpc_out->retval = CXL_MBOX_CMD_RC_SUCCESS;
-> -		*out_len = out_size;
-> -		return no_free_ptr(rpc_out);
-> -	}
->  
->  	for (i = start, pos = &feat_out->ents[0];
->  	     i < cxlfs->entries->num_features; i++, pos++) {
+>> ---
+>>  Documentation/ABI/testing/sysfs-bus-cxl | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+>> index 99bb3faf7a0e..d0d58b74f382 100644
+>> --- a/Documentation/ABI/testing/sysfs-bus-cxl
+>> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+>> @@ -242,7 +242,7 @@ Description:
+>>  		decoding a Host Physical Address range. Note that this number
+>>  		may be elevated without any regionX objects active or even
+>>  		enumerated, as this may be due to decoders established by
+>> -		platform firwmare or a previous kernel (kexec).
+>> +		platform firmware or a previous kernel (kexec).
+>>  
+>>  
+>>  What:		/sys/bus/cxl/devices/decoderX.Y
+> 
 
