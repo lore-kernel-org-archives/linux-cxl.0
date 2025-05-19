@@ -1,150 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A25628641D
-	for <linux-cxl@vger.kernel.org>; Mon, 19 May 2025 16:33:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F8AC4B1E73;
+	Mon, 19 May 2025 20:01:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747672411; cv=none; b=iOJymrJNsc2IxCY9nvoD3dNgJBLmanzIW//9YEEn1p0zROBu4O7x2dLFngh7y588wjVeWEor8K1glAMI6xIxuyOkeh3jSDHGgrUI48/mHn34CIi/2oxU/c1RcQFSNaD5Db9UpBb0/dvY8bkb3HzxPvCBCwXTI7GAghHMop/HL8c=
+	t=1747684867; cv=none; b=o5e9e3Cy1sDdKVSY/5nHvN3nNoqRVcM5ZVpi1+NmjQCPGsnGmrKLnUtqkKJzccYjaPPG82YwRv9VAeg62MEubWuMK+dxHFSMs2NSEzKUWFtuHbfRdTUQ9Fgnyr8KliUSbez34MKGo7zb65E0qK1NPDF4FJJ4d/lVFjiUckDtG3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747672411; c=relaxed/simple;
-	bh=slCYxMypjGm0x7EzMEm0ZKlhu5U3VXDejvR0ckRSyPI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=apsb14NFGXBKY5oeeC/oHtTIyYxawVsNudaJ8o9oKr6GuHDdHgXaf5GYWxG5u3A59Hryp1r3R7rnE/W4N5ecG35HNAXjm6YVHqmR9OYPlb/FeZZ5Q0UOBR2P7OSkX+vMOKs+fpFmx5PQou1SREFEpWROfcsbg9DwGv88sy7wrhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ml35V+IH; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ml35V+IH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747672409; x=1779208409;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=slCYxMypjGm0x7EzMEm0ZKlhu5U3VXDejvR0ckRSyPI=;
-  b=ml35V+IHQGvEkrR0rvtboJnt/1TThXN2BUoL6tmRqYu1o8Esjo8+JEN+
-   7s0Fv6GHbhDDWn9rJcCuCdYRFEbxTAnBqUITyZOx97YQDFA3YqU/yaFcl
-   BsB4YHEamQ2zG4IIyzDm7vdHeY9GlEgv4PBAmEBtzbcTX7LuTtbcAU1M0
-   sKrrUIs9/zflTuVT1AqpLwEXsF+T7ruglMcIO4MnmJW1+YCM5j0MPLvPy
-   c7g7RK0uSlzKeY0RhHAnyCpPQJEs/Xe/Bq3IO4QTtahiKzaSb4ZK/ZrN4
-   jh91DAstgh0V7E3erFn1K1X9K0AFw1ueuqLO1z0pwvcCB0CJYFZaHx6ga
-   g==;
-X-CSE-ConnectionGUID: OtCaQhT3QFqqxx2dQargHA==
-X-CSE-MsgGUID: Z4FFygH1THyENvwZrdNdpQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="49718803"
-X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
-   d="scan'208";a="49718803"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 09:33:28 -0700
-X-CSE-ConnectionGUID: 34qo85DnS8eTAytOiG+tKw==
-X-CSE-MsgGUID: gxpP0o1JTDKJrGWwvUIDgw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
-   d="scan'208";a="144297659"
-Received: from tjmaciei-mobl5.ger.corp.intel.com (HELO [10.125.109.80]) ([10.125.109.80])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 09:33:27 -0700
-Message-ID: <431bc155-de69-4e07-82f1-33c654b6d907@intel.com>
-Date: Mon, 19 May 2025 09:33:26 -0700
+	s=arc-20240116; t=1747684867; c=relaxed/simple;
+	bh=dJ1Sv1Br8WMzR7ssC9Z3i6cZcfcxQmHzZGpf82b+Dxk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hdokouGukyR8AHN+AlMzqL2Gph3xt5Bp4UFOZDsAs09z3eOp3h+2+PE21y3FHiJSm8lmy5cP96DB0uK5dUoh5x0w5dheNGWb5SH2K/MYB5h9qXHJbZgigUKp+IioxShRN5HBJRg5xsjZV+6+xC3ryHmY7wfdYnJMXVWyr/0G/oY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA398C4CEE4;
+	Mon, 19 May 2025 20:01:06 +0000 (UTC)
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev
+Cc: alison.schofield@intel.com,
+	Dan Williams <dan.j.williams@intel.com>
+Subject: [NDCTL PATCH v7 0/4] ndctl: Add support and test for CXL Features support
+Date: Mon, 19 May 2025 13:00:50 -0700
+Message-ID: <20250519200056.3901498-1-dave.jiang@intel.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 03/10] cxl: Rename find_dport() to provide better
- function intent
-To: Alejandro Lucero Palau <alucerop@amd.com>, linux-cxl@vger.kernel.org
-Cc: Dan Williams <dan.j.williams@intel.com>, dave@stgolabs.net,
- jonathan.cameron@huawei.com, alison.schofield@intel.com,
- ira.weiny@intel.com, rrichter@amd.com, ming.li@zohomail.com
-References: <20250507004310.3536991-1-dave.jiang@intel.com>
- <20250507004310.3536991-4-dave.jiang@intel.com>
- <36ee7c17-4a06-4288-89d0-547c23afb8e6@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <36ee7c17-4a06-4288-89d0-547c23afb8e6@amd.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+v7:
+- Move enumeration of fwctl behind meson option 'fwctl'. (Dan)
+
+v6:
+- Rename cxl-features.control.c back to fwctl.c. (Dan)
+- Move features behind a meson option. (Dan)
+- See individual commits for specific changes from v5.
+
+v5:
+- Add documentation for exported symbols. (Alison)
+- Create 'struct cxl_fwctl' as object under cxl_memdev. (Dan)
+- Make command prep common code. (Alison)
+- Rename fwctl.c to cxl-features-control.c. (Alison)
+- See individual commits for specific changes from v4.
+
+v4:
+- Adjust to kernel changes of input/output structs
+- Fixup skip/pass/fail logic
+- Added new kernel headers detection and dependency in meson.build
+
+v3:
+- Update test to use opcode instead of command id.
+
+v2:
+- Drop features device enumeration
+- Add discovery of char device under memdev
+
+The series provides support of libcxl enumerating FWCTL character device
+under the cxl_memdev device. It discovers the char device major
+and minor numbers for the CXL features device in order to allow issuing
+of ioctls to the device.
+
+A unit test is added to locate cxl_memdev exported by the cxl_test
+kernel module and issue all the supported ioctls to the associated
+FWCTL char device to verify that all the ioctl paths are working as expected.
+
+Kernel series: https://lore.kernel.org/linux-cxl/20250207233914.2375110-1-dave.jiang@intel.com/T/#t
+
+Dave Jiang (4):
+  cxl: Add cxl_bus_get_by_provider()
+  cxl: Enumerate major/minor of FWCTL char device
+  ndctl: Add features.h from kernel UAPI
+  cxl/test: Add test for cxl features device
+
+ Documentation/cxl/lib/libcxl.txt |  26 ++
+ config.h.meson                   |   3 +
+ cxl/fwctl/cxl.h                  |  56 ++++
+ cxl/fwctl/features.h             | 179 +++++++++++++
+ cxl/fwctl/fwctl.h                | 141 ++++++++++
+ cxl/lib/libcxl.c                 |  92 +++++++
+ cxl/lib/libcxl.sym               |   8 +
+ cxl/lib/private.h                |   6 +
+ cxl/libcxl.h                     |   7 +
+ meson.build                      |   1 +
+ meson_options.txt                |   2 +
+ test/cxl-features.sh             |  31 +++
+ test/fwctl.c                     | 439 +++++++++++++++++++++++++++++++
+ test/meson.build                 |  19 ++
+ 14 files changed, 1010 insertions(+)
+ create mode 100644 cxl/fwctl/cxl.h
+ create mode 100644 cxl/fwctl/features.h
+ create mode 100644 cxl/fwctl/fwctl.h
+ create mode 100755 test/cxl-features.sh
+ create mode 100644 test/fwctl.c
 
 
-On 5/9/25 2:20 AM, Alejandro Lucero Palau wrote:
-> 
-> On 5/7/25 01:43, Dave Jiang wrote:
->> Rename find_dport() to find_dport_by_num() to indicate that the function
->> is trying to match a dport by its hardware number index.
->>
->> Suggested-by: Dan Williams <dan.j.williams@intel.com>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->>   drivers/cxl/core/port.c | 12 ++++++------
->>   1 file changed, 6 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
->> index e9c02e4d0d4c..1d7a4a2ef6ad 100644
->> --- a/drivers/cxl/core/port.c
->> +++ b/drivers/cxl/core/port.c
->> @@ -1045,7 +1045,7 @@ void put_cxl_root(struct cxl_root *cxl_root)
->>   }
->>   EXPORT_SYMBOL_NS_GPL(put_cxl_root, "CXL");
->>   -static struct cxl_dport *find_dport(struct cxl_port *port, int port_num)
->> +static struct cxl_dport *find_dport_by_num(struct cxl_port *port, int port_num)
->>   {
->>       struct cxl_dport *dport;
->>       unsigned long index;
->> @@ -1063,7 +1063,7 @@ static int add_dport(struct cxl_port *port, struct cxl_dport *dport)
->>       int rc;
->>         device_lock_assert(&port->dev);
->> -    dup = find_dport(port, dport->port_num);
->> +    dup = find_dport_by_num(port, dport->port_num);
->>       if (dup) {
->>           dev_err(&port->dev,
->>               "unable to add dport%d-%s non-unique port num (%s)\n",
->> @@ -1275,13 +1275,13 @@ EXPORT_SYMBOL_NS_GPL(devm_cxl_add_dport, "CXL");
->>    * devm_cxl_add_rch_dport - append RCH downstream port data to a cxl_port
->>    * @port: the cxl_port that references this dport
->>    * @dport_dev: firmware or PCI device representing the dport
->> - * @port_id: identifier for this dport in a decoder's target list
->> + * @port_num: identifier for this dport in a decoder's target list
-> 
-> 
-> Not sure this change should be in this patch. It makes more sense to me in the previous one.
-> 
-> 
-> Also, maybe adding some reference for easily seeing where the identifier comes from:
-> 
-> + * @port_num: hardware identifier for this dport in a decoder's target list
-
-In the process of doing that, I realized that this entire comment line gets dropped in a later patch because we remove the port_num parameter. So probably no need to change since it goes away entirely.
-
-DJ
-
-> 
-> 
->>    * @rcrb: mandatory location of a Root Complex Register Block
->>    *
->>    * See CXL 3.0 9.11.8 CXL Devices Attached to an RCH
->>    */
->>   struct cxl_dport *devm_cxl_add_rch_dport(struct cxl_port *port,
->> -                     struct device *dport_dev, int port_id,
->> +                     struct device *dport_dev, int port_num,
->>                        resource_size_t rcrb)
->>   {
->>       struct cxl_dport *dport;
->> @@ -1291,7 +1291,7 @@ struct cxl_dport *devm_cxl_add_rch_dport(struct cxl_port *port,
->>           return ERR_PTR(-EINVAL);
->>       }
->>   -    dport = __devm_cxl_add_dport(port, dport_dev, port_id,
->> +    dport = __devm_cxl_add_dport(port, dport_dev, port_num,
->>                        CXL_RESOURCE_NONE, rcrb);
->>       if (IS_ERR(dport)) {
->>           dev_dbg(dport_dev, "failed to add RCH dport to %s: %ld\n",
->> @@ -1764,7 +1764,7 @@ static int decoder_populate_targets(struct cxl_switch_decoder *cxlsd,
->>         guard(rwsem_write)(&cxl_region_rwsem);
->>       for (i = 0; i < cxlsd->cxld.interleave_ways; i++) {
->> -        struct cxl_dport *dport = find_dport(port, target_map[i]);
->> +        struct cxl_dport *dport = find_dport_by_num(port, target_map[i]);
->>             if (!dport)
->>               return -ENXIO;
+base-commit: 1850ddcbcbf9eebd343c6e87a2c55f3f5e3930c4
+-- 
+2.49.0
 
