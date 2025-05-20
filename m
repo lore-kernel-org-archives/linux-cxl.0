@@ -1,73 +1,72 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52DA424A043
-	for <linux-cxl@vger.kernel.org>; Tue, 20 May 2025 15:37:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A8C826139C
+	for <linux-cxl@vger.kernel.org>; Tue, 20 May 2025 15:59:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747755463; cv=none; b=TAlqY/K+fMW5Nxdm2pDGLN3MER7GpLXME1TbFEgXPCq8TGQ8dbqYb8n59ceoNncrWUpx2BIToBehsn2+fWmjAfzYbvfxnfI23Z+RPfGs6WCI6lNq2aZThJzxoLV8hXWOmhQPNN6bx8+ua8QW6rgQE6ubq+ayTnWJveVvjPkbb4Y=
+	t=1747756797; cv=none; b=nszy651P8iLP4bzHqmNRG3zVxfJYF8MZZYigQSX8Ono9ANyzhmoS5nYRgfKPqnzCmFb9tebbB3OgryHzf9JhcXOCWrVEgti44YHT/8Jk2ZVtUPrqwaaXQBsR58JTO6e0ioOqhrChXYJfa59bDobk81SZBAtUTRQ+gUGMB1Eds2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747755463; c=relaxed/simple;
-	bh=H20tgsBOg7onlrbyqWnpIgIrA57NWEL4YK23Qs4+wow=;
+	s=arc-20240116; t=1747756797; c=relaxed/simple;
+	bh=uMKare1JMoMpVyLIhb7RK/+0Lqx1ozH5McAETGhxcBo=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ss43bzGGwiV/wOK8OHc0jk+Tai/EJjSZUjH4UBL3VxQl/uFeDqzNCk90PUBeBsWmfwIeFaAdKouOkwP2XzjxWbcULYegd/yOPOVKPEDArAQt6P8aEG25ajWl4w1FTE2d7aiy5WJBou8m7ogeV/VYi3//e3WJaxp7dq/yrkjFcfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ka+2DHw3; arc=none smtp.client-ip=209.85.210.177
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hpg+2fqMpcaiDEQE0Gt79PMtAxlGwmnOMojGAOINLhMUKTOdbQ6gI+MgmT3BqoevCceh2TU1pGqYTsU0Fnso9//AyAiFzt2gy3IU7OyEqMGO11gWCbkWxz4e/0Cf/DI4uMXNtvepXv3DADMby4hszUjOivM5DLTntOvweMdCD9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UnWrkjli; arc=none smtp.client-ip=209.85.210.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ka+2DHw3"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso7307391b3a.2
-        for <linux-cxl@vger.kernel.org>; Tue, 20 May 2025 08:37:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UnWrkjli"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7399838db7fso5492985b3a.0
+        for <linux-cxl@vger.kernel.org>; Tue, 20 May 2025 08:59:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747755461; x=1748360261; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747756795; x=1748361595; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QfUgbG7wlz+ybzD3R782KbS9QXsdGRcz+HFsWFmMcKY=;
-        b=ka+2DHw3ukws/uhV/HcjChqXuRngBRZigUnQ8RPx58rWC+R93IYTZa8BRJZ+p2Dr8b
-         IrxjePAjRALu3t1kdVawAjWiHclU3ZuTPG2YxC6vrm4pAGzEsSd0gcfmk80RmVqLvjtg
-         b6IBz/idb0PusIjB1ESfM3aLR66os2Uw3SF0AI998TsiEFHOaXZQtuBU6VDogudSW0bY
-         7xav85URcRInr+5UOnAeDiHCm+2ajy0M9QZAGso4yFhSL6adLoD/Jt+y7AwgNWNeJZRl
-         pgBY8JU5v0RAMafDlk9bxZmrETL23A2ip1R8VS8jUW5oZG9WsZQxh6Faw/S8vreRlzM3
-         8MBg==
+        bh=dxkUkSoTkriwhtrET04LcZhmJfr7nP1NVw2CFVXLcZU=;
+        b=UnWrkjli5qblAz7IZjtzdsD3NrQE0v5JVK1DvCIqpEndvg2Ab6yLzTIO/YS3WZ5ETp
+         EE3ytk4YP0lwZd8Rq7CiABC4cIrhVC7owkw9QiQ9k0Md7je2DXPlPweZgzx5fEGhWFYa
+         PKpEz3hbEBD5zriRjE0u8ojqoEI+k/HZnlZuwdATyv0v+1TZfx455Y0SXAtCS/F9qO0i
+         xY29fgvAyO5yT7VvhPN3Y5oMLGonaDuBrIKgkuaw+rX8Yj5twZZMkqWoybZDEk+KMIgr
+         5LyM8P7ZBHELVY4p/VOzmDLQABPZ1Q633R7nDd1gbyGkR0QiAkgeOq04AcM0VrLe6DXC
+         Px9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747755461; x=1748360261;
+        d=1e100.net; s=20230601; t=1747756795; x=1748361595;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QfUgbG7wlz+ybzD3R782KbS9QXsdGRcz+HFsWFmMcKY=;
-        b=bPEHxBwxijMKcHJtqtXE2F4yLHuS9vdl6f0QA/Xbw4LYqKxORzJMqxWP2+dvyQKXrQ
-         n6QBtezP+pqWjh2/7y/BgR6HCuuHDml9O/XMMjJnxVN7Oy1zR7GbfMZraod1K2lHFbbh
-         YW0loaB8o2DssQBuzG0LjNFM2GXCkj/DlLuxmosOEJJkA6poclNixh+cgK58Mi2Zu2uj
-         fRZ2YiM92iWkmEWrdZGpc8id3s1i+vTd0SfvbW9hCMspMhhUpSXqCOUsw4Q+/63CkBqO
-         r+s1UCqM6Io8j2ZS81AA7OtWCcBfcUGYlGMeCDqWSFwfURSoKueaqjgXmozGEg3M2I7l
-         Nqag==
-X-Forwarded-Encrypted: i=1; AJvYcCVN7Da/c2baFhnv3oXx7EpFSV78e4MhJp87dfJsPA5s6oAnRADurAZPTqAWjNMH7LCcWOueRQtwYwc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzdxRpqI7j7KwTkgA82mbYpBTYyvpDe8dml8MhSKMYvG5j8N9y
-	9Oku93LFa8hTNNeHP61OqWnMbj0XaFq8sh2NAyT89VT7n9ZcKyGPEhNHTzf+bg==
-X-Gm-Gg: ASbGncvahAmDylvYlE+B4cjD19lLEjpBbbSvF+r3YrkG6qRUpzmYntaBOFFzx3HhNT1
-	9HX+vVqO8ciU68hdCimlKyAl+WCRI75LF7HfNUJpQaLFaPqfVXHr/7gdOGoRlxl7R8YIuzcoYVi
-	GbD8qKTCk+yOICTqNXknfrmCANQPMniy+Anzkx6e9sBn1VQdcuUFjEz0vo9/m7VghkAoF5wQxtI
-	eo/KHVPbCLcp+Y4MHRTVbaTpUsajFpMR5JH7/FWSNitq3u7ZWJBwA5nSuUR5hcCy3ZnnbQt6UxU
-	SXQ/QDKFJuRYU23qscmX7KtyWEUpdlpgTtxTgRth1d/fSsJJ7F70
-X-Google-Smtp-Source: AGHT+IEwSkvU591UJhbKnDRmu73swl+LkaJvyIbpoNTzQIdAkiru/cpM8OObscQjElXrRH2kNDBEOQ==
-X-Received: by 2002:a05:6a00:3492:b0:742:9bd3:cd1f with SMTP id d2e1a72fcca58-742acd728eamr21638969b3a.23.1747755461288;
-        Tue, 20 May 2025 08:37:41 -0700 (PDT)
+        bh=dxkUkSoTkriwhtrET04LcZhmJfr7nP1NVw2CFVXLcZU=;
+        b=fO+Lhfwu3w3tynGbKGoAMEhE1QXgOi3rgdvBXIHLmlarc+up4xDC1QJzLZ4Nza4JzV
+         E7iUOLVfX78lsHSEd90ollfw6Xc7eZxdzGCF+iyZKmCRo3ZuTP4DpMoHuLAIHVsf7/nK
+         ofkaoOJurv0j7U6cL3wLEb0XZeDOrCi3gwrOD2ni/mCiqUgOzNg6w65YVVTCdO8GfEzw
+         x8hEI+hSxpLhuajqk1r9dfmCeZkiFc9FTDhVlDLmCXw+vWgB5gNdmrt8Q2Ynpzclp3kS
+         nsVCGYC6j4w2oRcn5gIUFt0JovtrLxpuLXkQzJkz6/JQ9tbiShUW7S0+BP+T8xGFi2w9
+         GXzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVZ4/LZPxOuGFlDs2EOQBtDkEjyzHq2/Jg6XAfpSKMecfFl8LDZAlu172f6Z3rl2hVbx+TjCzMjaJY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFboFOmO7+67ftp+PD3gj9YuSCoAVCib1FxldAFLL7a0Qrxwm4
+	W3EoLOGV+ofzLn4sj5hrOgmS+JZKaYzjKK/CqxNjKtNHRRNQsuNdmWpV
+X-Gm-Gg: ASbGncvr29ZT8u5YLsxFJa/2gUL1KgaUttGPSRcVZbm2pufZVYdwB17tRdpO+J0TVlL
+	Mse3L66ErOV0qMfGIOrW52h0yIIwxtnwRsXoBApTmZh/kqpnY7D7uPxw+7Xvg8k/v/EH1pRRrHS
+	KwNKcgmNvexQcNdECoPpHQfVKDVM7jLuQH6PQbArgtA77bw99OM/QtsLORjZlVZvr7UM0N6U4Dt
+	cYIm6LlBXlH5/6rMxVZazDkdJcKZOtH8aJ36Rp0yu8ZACxci1EPxkuXVQNRF7SBDNmkJmUOqp6h
+	viv/wYWCa7uR3c/fH/PIRGvRJMzdtHalYNTilBmObw==
+X-Google-Smtp-Source: AGHT+IFhSKd7iF3ejVcnHITQ1SCG2P/RVTDXloMljVgV3hS2wwhTU8w7O1Ffa5vCZGp97tnR+U7Bmg==
+X-Received: by 2002:a05:6a00:3d01:b0:740:58d3:71a8 with SMTP id d2e1a72fcca58-742a99fabb8mr21403693b3a.1.1747756795302;
+        Tue, 20 May 2025 08:59:55 -0700 (PDT)
 Received: from lg ([2601:646:8f03:9fee:2c89:c0cf:1cbd:96d3])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a9739906sm8071440b3a.80.2025.05.20.08.37.39
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a982b7ffsm8373038b3a.104.2025.05.20.08.59.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 08:37:40 -0700 (PDT)
+        Tue, 20 May 2025 08:59:54 -0700 (PDT)
 From: Fan Ni <nifan.cxl@gmail.com>
 X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Tue, 20 May 2025 08:37:35 -0700
+Date: Tue, 20 May 2025 08:59:49 -0700
 To: anisa.su887@gmail.com
 Cc: qemu-devel@nongnu.org, Jonathan.Cameron@huawei.com, nifan.cxl@gmail.com,
 	dave@stgolabs.net, linux-cxl@vger.kernel.org,
 	Anisa Su <anisa.su@samsung.com>
-Subject: Re: [PATCH v2 01/10] cxl-mailbox-utils: Move opcodes enum to new
- header file
-Message-ID: <aCyhv8Qz1LUpJKd3@lg>
+Subject: Re: [PATCH v2 02/10] cxl-mailbox-utils: 0x5600 - FMAPI Get DCD Info
+Message-ID: <aCym9X9jfqlVi1V4@lg>
 References: <20250508001754.122180-1-anisa.su887@gmail.com>
- <20250508001754.122180-2-anisa.su887@gmail.com>
+ <20250508001754.122180-3-anisa.su887@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -76,193 +75,194 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250508001754.122180-2-anisa.su887@gmail.com>
+In-Reply-To: <20250508001754.122180-3-anisa.su887@gmail.com>
 
-On Thu, May 08, 2025 at 12:00:57AM +0000, anisa.su887@gmail.com wrote:
+On Thu, May 08, 2025 at 12:00:58AM +0000, anisa.su887@gmail.com wrote:
 > From: Anisa Su <anisa.su@samsung.com>
 > 
-> In preparation for the next patch, move opcodes enum to new cxl_opcodes.h file
-> for visibility from mailbox-utils.c and i2c_mctp_cxl.c, which checks that
-> certain command sets are bound with the correct MCTP binding.
+> FM DCD Management command 0x5600 implemented per CXL 3.2 Spec Section 7.6.7.6.1.
 > 
 > Signed-off-by: Anisa Su <anisa.su@samsung.com>
+
+LGTM. minor comments inline.
+
+Reviewed-by: Fan Ni <fan.ni@samsung.com>
+
 > ---
->  hw/cxl/cxl-mailbox-utils.c   | 68 ++----------------------------------
->  include/hw/cxl/cxl_opcodes.h | 64 +++++++++++++++++++++++++++++++++
-
-Should we put the opcodes into include/hw/cxl/cxl_mailbox.h instead of
-creating a new file. cxl_mailbox.h only has some macros.
-
-Fan
-
-
-
->  2 files changed, 66 insertions(+), 66 deletions(-)
->  create mode 100644 include/hw/cxl/cxl_opcodes.h
+>  hw/cxl/cxl-mailbox-utils.c   | 56 ++++++++++++++++++++++++++++++++++++
+>  hw/cxl/i2c_mctp_cxl.c        |  6 ++--
+>  hw/mem/cxl_type3.c           |  4 +++
+>  include/hw/cxl/cxl_device.h  |  1 +
+>  include/hw/cxl/cxl_opcodes.h |  3 ++
+>  5 files changed, 68 insertions(+), 2 deletions(-)
 > 
 > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> index a02d130926..ed3294530f 100644
+> index ed3294530f..d3c69233b8 100644
 > --- a/hw/cxl/cxl-mailbox-utils.c
 > +++ b/hw/cxl/cxl-mailbox-utils.c
-> @@ -23,6 +23,7 @@
->  #include "qemu/uuid.h"
->  #include "system/hostmem.h"
->  #include "qemu/range.h"
+> @@ -3280,6 +3280,52 @@ static CXLRetCode cmd_dcd_release_dyn_cap(const struct cxl_cmd *cmd,
+>      return CXL_MBOX_SUCCESS;
+>  }
+>  
+> +/* CXL r3.2 section 7.6.7.6.1: Get DCD Info (Opcode 5600h) */
+> +static CXLRetCode cmd_fm_get_dcd_info(const struct cxl_cmd *cmd,
+> +                                      uint8_t *payload_in,
+> +                                      size_t len_in,
+> +                                      uint8_t *payload_out,
+> +                                      size_t *len_out,
+> +                                      CXLCCI *cci)
+> +{
+> +    struct {
+> +        uint8_t num_hosts;
+> +        uint8_t num_regions_supported;
+> +        uint8_t rsvd1[2];
+> +        uint16_t add_select_policy_bitmask;
+
+           uint16_t supported_add_sel_policy_bitmask;
+
+> +        uint8_t rsvd2[2];
+> +        uint16_t release_select_policy_bitmask;
+
+           uint16_t supported_removal_policy_bitmask;
+
+Fan
+> +        uint8_t sanitize_on_release_bitmask;
+> +        uint8_t rsvd3;
+> +        uint64_t total_dynamic_capacity;
+> +        uint64_t region_blk_size_bitmasks[8];
+> +    } QEMU_PACKED *out = (void *)payload_out;
+> +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
+> +    CXLDCRegion *region;
+> +    int i;
+> +
+> +    out->num_hosts = 1;
+> +    out->num_regions_supported = ct3d->dc.num_regions;
+> +    stw_le_p(&out->add_select_policy_bitmask,
+> +             BIT(CXL_EXTENT_SELECTION_POLICY_PRESCRIPTIVE));
+> +    stw_le_p(&out->release_select_policy_bitmask,
+> +             BIT(CXL_EXTENT_REMOVAL_POLICY_PRESCRIPTIVE));
+> +    out->sanitize_on_release_bitmask = 0;
+> +
+> +    stq_le_p(&out->total_dynamic_capacity,
+> +             ct3d->dc.total_capacity / CXL_CAPACITY_MULTIPLIER);
+> +
+> +    for (i = 0; i < ct3d->dc.num_regions; i++) {
+> +        region = &ct3d->dc.regions[i];
+> +        memcpy(&out->region_blk_size_bitmasks[i],
+> +               &region->supported_blk_size_bitmask,
+> +               sizeof(out->region_blk_size_bitmasks[i]));
+> +    }
+> +
+> +    *len_out = sizeof(*out);
+> +    return CXL_MBOX_SUCCESS;
+> +}
+> +
+>  static const struct cxl_cmd cxl_cmd_set[256][256] = {
+>      [INFOSTAT][BACKGROUND_OPERATION_ABORT] = { "BACKGROUND_OPERATION_ABORT",
+>          cmd_infostat_bg_op_abort, 0, 0 },
+> @@ -3401,6 +3447,11 @@ static const struct cxl_cmd cxl_cmd_set_sw[256][256] = {
+>                                       cmd_tunnel_management_cmd, ~0, 0 },
+>  };
+>  
+> +static const struct cxl_cmd cxl_cmd_set_fm_dcd[256][256] = {
+> +    [FMAPI_DCD_MGMT][GET_DCD_INFO] = { "GET_DCD_INFO",
+> +        cmd_fm_get_dcd_info, 0, 0 },
+> +};
+> +
+>  /*
+>   * While the command is executing in the background, the device should
+>   * update the percentage complete in the Background Command Status Register
+> @@ -3703,7 +3754,12 @@ void cxl_initialize_t3_fm_owned_ld_mctpcci(CXLCCI *cci, DeviceState *d,
+>                                             DeviceState *intf,
+>                                             size_t payload_max)
+>  {
+> +    CXLType3Dev *ct3d = CXL_TYPE3(d);
+> +
+>      cxl_copy_cci_commands(cci, cxl_cmd_set_t3_fm_owned_ld_mctp);
+> +    if (ct3d->dc.num_regions) {
+> +        cxl_copy_cci_commands(cci, cxl_cmd_set_fm_dcd);
+> +    }
+>      cci->d = d;
+>      cci->intf = intf;
+>      cxl_init_cci(cci, payload_max);
+> diff --git a/hw/cxl/i2c_mctp_cxl.c b/hw/cxl/i2c_mctp_cxl.c
+> index 7d2cbc3b75..dd5fc4f393 100644
+> --- a/hw/cxl/i2c_mctp_cxl.c
+> +++ b/hw/cxl/i2c_mctp_cxl.c
+> @@ -29,6 +29,7 @@
+>  #include "hw/pci/pcie_port.h"
+>  #include "hw/qdev-properties.h"
+>  #include "hw/registerfields.h"
 > +#include "hw/cxl/cxl_opcodes.h"
 >  
->  #define CXL_CAPACITY_MULTIPLIER   (256 * MiB)
->  #define CXL_DC_EVENT_LOG_SIZE 8
-> @@ -36,7 +37,7 @@
+>  #define TYPE_I2C_MCTP_CXL "i2c_mctp_cxl"
 >  
->  /*
->   * How to add a new command, example. The command set FOO, with cmd BAR.
-> - *  1. Add the command set and cmd to the enum.
-> + *  1. Add the command set and cmd to the enum in cxl_opcodes.h.
->   *     FOO    = 0x7f,
->   *          #define BAR 0
->   *  2. Implement the handler
-> @@ -59,71 +60,6 @@
->   *  a register interface that already deals with it.
+> @@ -198,9 +199,10 @@ static void i2c_mctp_cxl_handle_message(MCTPI2CEndpoint *mctp)
+>           */
+>  
+>          if (!(msg->message_type == MCTP_MT_CXL_TYPE3 &&
+> -              msg->command_set < 0x51) &&
+> +              msg->command_set < PHYSICAL_SWITCH) &&
+>              !(msg->message_type == MCTP_MT_CXL_FMAPI &&
+> -              msg->command_set >= 0x51 && msg->command_set < 0x56)) {
+> +              msg->command_set >= PHYSICAL_SWITCH &&
+> +              msg->command_set < GLOBAL_MEMORY_ACCESS_EP_MGMT)) {
+>              buf->rc = CXL_MBOX_UNSUPPORTED;
+>              st24_le_p(buf->pl_length, len_out);
+>              s->len = s->pos;
+> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> index 11c38a9292..7129da0940 100644
+> --- a/hw/mem/cxl_type3.c
+> +++ b/hw/mem/cxl_type3.c
+> @@ -8,6 +8,7 @@
+>   *
+>   * SPDX-License-Identifier: GPL-v2-only
 >   */
+> +#include <math.h>
 >  
-> -enum {
-> -    INFOSTAT    = 0x00,
-> -        #define IS_IDENTIFY   0x1
-> -        #define BACKGROUND_OPERATION_STATUS    0x2
-> -        #define GET_RESPONSE_MSG_LIMIT         0x3
-> -        #define SET_RESPONSE_MSG_LIMIT         0x4
-> -        #define BACKGROUND_OPERATION_ABORT     0x5
-> -    EVENTS      = 0x01,
-> -        #define GET_RECORDS   0x0
-> -        #define CLEAR_RECORDS   0x1
-> -        #define GET_INTERRUPT_POLICY   0x2
-> -        #define SET_INTERRUPT_POLICY   0x3
-> -    FIRMWARE_UPDATE = 0x02,
-> -        #define GET_INFO      0x0
-> -        #define TRANSFER      0x1
-> -        #define ACTIVATE      0x2
-> -    TIMESTAMP   = 0x03,
-> -        #define GET           0x0
-> -        #define SET           0x1
-> -    LOGS        = 0x04,
-> -        #define GET_SUPPORTED 0x0
-> -        #define GET_LOG       0x1
-> -        #define GET_LOG_CAPABILITIES   0x2
-> -        #define CLEAR_LOG     0x3
-> -        #define POPULATE_LOG  0x4
-> -    FEATURES    = 0x05,
-> -        #define GET_SUPPORTED 0x0
-> -        #define GET_FEATURE   0x1
-> -        #define SET_FEATURE   0x2
-> -    IDENTIFY    = 0x40,
-> -        #define MEMORY_DEVICE 0x0
-> -    CCLS        = 0x41,
-> -        #define GET_PARTITION_INFO     0x0
-> -        #define GET_LSA       0x2
-> -        #define SET_LSA       0x3
-> -    HEALTH_INFO_ALERTS = 0x42,
-> -        #define GET_ALERT_CONFIG 0x1
-> -        #define SET_ALERT_CONFIG 0x2
-> -    SANITIZE    = 0x44,
-> -        #define OVERWRITE     0x0
-> -        #define SECURE_ERASE  0x1
-> -        #define MEDIA_OPERATIONS 0x2
-> -    PERSISTENT_MEM = 0x45,
-> -        #define GET_SECURITY_STATE     0x0
-> -    MEDIA_AND_POISON = 0x43,
-> -        #define GET_POISON_LIST        0x0
-> -        #define INJECT_POISON          0x1
-> -        #define CLEAR_POISON           0x2
-> -        #define GET_SCAN_MEDIA_CAPABILITIES 0x3
-> -        #define SCAN_MEDIA             0x4
-> -        #define GET_SCAN_MEDIA_RESULTS 0x5
-> -    DCD_CONFIG  = 0x48,
-> -        #define GET_DC_CONFIG          0x0
-> -        #define GET_DYN_CAP_EXT_LIST   0x1
-> -        #define ADD_DYN_CAP_RSP        0x2
-> -        #define RELEASE_DYN_CAP        0x3
-> -    PHYSICAL_SWITCH = 0x51,
-> -        #define IDENTIFY_SWITCH_DEVICE      0x0
-> -        #define GET_PHYSICAL_PORT_STATE     0x1
-> -    TUNNEL = 0x53,
-> -        #define MANAGEMENT_COMMAND     0x0
-> -    MHD = 0x55,
-> -        #define GET_MHD_INFO 0x0
-> -};
-> -
->  /* CCI Message Format CXL r3.1 Figure 7-19 */
->  typedef struct CXLCCIMessage {
->      uint8_t category;
+>  #include "qemu/osdep.h"
+>  #include "qemu/units.h"
+> @@ -766,6 +767,8 @@ static bool cxl_create_dc_regions(CXLType3Dev *ct3d, Error **errp)
+>      uint64_t region_len;
+>      uint64_t decode_len;
+>      uint64_t blk_size = 2 * MiB;
+> +    /* Only 1 block size is supported for now. */
+> +    uint64_t supported_blk_size_bitmask = BIT((int) log2(blk_size));
+>      CXLDCRegion *region;
+>      MemoryRegion *mr;
+>      uint64_t dc_size;
+> @@ -811,6 +814,7 @@ static bool cxl_create_dc_regions(CXLType3Dev *ct3d, Error **errp)
+>              .block_size = blk_size,
+>              /* dsmad_handle set when creating CDAT table entries */
+>              .flags = 0,
+> +            .supported_blk_size_bitmask = supported_blk_size_bitmask,
+>          };
+>          ct3d->dc.total_capacity += region->len;
+>          region->blk_bitmap = bitmap_new(region->len / region->block_size);
+> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> index ca515cab13..bebed04085 100644
+> --- a/include/hw/cxl/cxl_device.h
+> +++ b/include/hw/cxl/cxl_device.h
+> @@ -608,6 +608,7 @@ typedef struct CXLDCRegion {
+>      uint32_t dsmadhandle;
+>      uint8_t flags;
+>      unsigned long *blk_bitmap;
+> +    uint64_t supported_blk_size_bitmask;
+>  } CXLDCRegion;
+>  
+>  typedef struct CXLSetFeatureInfo {
 > diff --git a/include/hw/cxl/cxl_opcodes.h b/include/hw/cxl/cxl_opcodes.h
-> new file mode 100644
-> index 0000000000..26d3a99e8a
-> --- /dev/null
+> index 26d3a99e8a..c4c233665e 100644
+> --- a/include/hw/cxl/cxl_opcodes.h
 > +++ b/include/hw/cxl/cxl_opcodes.h
-> @@ -0,0 +1,64 @@
-> +enum {
-> +    INFOSTAT    = 0x00,
-> +        #define IS_IDENTIFY   0x1
-> +        #define BACKGROUND_OPERATION_STATUS    0x2
-> +        #define GET_RESPONSE_MSG_LIMIT         0x3
-> +        #define SET_RESPONSE_MSG_LIMIT         0x4
-> +        #define BACKGROUND_OPERATION_ABORT     0x5
-> +    EVENTS      = 0x01,
-> +        #define GET_RECORDS   0x0
-> +        #define CLEAR_RECORDS   0x1
-> +        #define GET_INTERRUPT_POLICY   0x2
-> +        #define SET_INTERRUPT_POLICY   0x3
-> +    FIRMWARE_UPDATE = 0x02,
-> +        #define GET_INFO      0x0
-> +        #define TRANSFER      0x1
-> +        #define ACTIVATE      0x2
-> +    TIMESTAMP   = 0x03,
-> +        #define GET           0x0
-> +        #define SET           0x1
-> +    LOGS        = 0x04,
-> +        #define GET_SUPPORTED 0x0
-> +        #define GET_LOG       0x1
-> +        #define GET_LOG_CAPABILITIES   0x2
-> +        #define CLEAR_LOG     0x3
-> +        #define POPULATE_LOG  0x4
-> +    FEATURES    = 0x05,
-> +        #define GET_SUPPORTED 0x0
-> +        #define GET_FEATURE   0x1
-> +        #define SET_FEATURE   0x2
-> +    IDENTIFY    = 0x40,
-> +        #define MEMORY_DEVICE 0x0
-> +    CCLS        = 0x41,
-> +        #define GET_PARTITION_INFO     0x0
-> +        #define GET_LSA       0x2
-> +        #define SET_LSA       0x3
-> +    HEALTH_INFO_ALERTS = 0x42,
-> +        #define GET_ALERT_CONFIG 0x1
-> +        #define SET_ALERT_CONFIG 0x2
-> +    SANITIZE    = 0x44,
-> +        #define OVERWRITE     0x0
-> +        #define SECURE_ERASE  0x1
-> +        #define MEDIA_OPERATIONS 0x2
-> +    PERSISTENT_MEM = 0x45,
-> +        #define GET_SECURITY_STATE     0x0
-> +    MEDIA_AND_POISON = 0x43,
-> +        #define GET_POISON_LIST        0x0
-> +        #define INJECT_POISON          0x1
-> +        #define CLEAR_POISON           0x2
-> +        #define GET_SCAN_MEDIA_CAPABILITIES 0x3
-> +        #define SCAN_MEDIA             0x4
-> +        #define GET_SCAN_MEDIA_RESULTS 0x5
-> +    DCD_CONFIG  = 0x48,
-> +        #define GET_DC_CONFIG          0x0
-> +        #define GET_DYN_CAP_EXT_LIST   0x1
-> +        #define ADD_DYN_CAP_RSP        0x2
-> +        #define RELEASE_DYN_CAP        0x3
-> +    PHYSICAL_SWITCH = 0x51,
-> +        #define IDENTIFY_SWITCH_DEVICE      0x0
-> +        #define GET_PHYSICAL_PORT_STATE     0x1
-> +    TUNNEL = 0x53,
-> +        #define MANAGEMENT_COMMAND     0x0
-> +    MHD = 0x55,
-> +        #define GET_MHD_INFO 0x0
-> +};
+> @@ -61,4 +61,7 @@ enum {
+>          #define MANAGEMENT_COMMAND     0x0
+>      MHD = 0x55,
+>          #define GET_MHD_INFO 0x0
+> +    FMAPI_DCD_MGMT = 0x56,
+> +        #define GET_DCD_INFO 0x0
+> +    GLOBAL_MEMORY_ACCESS_EP_MGMT = 0X59
+>  };
 > -- 
 > 2.47.2
 > 
