@@ -1,114 +1,150 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD0F1C8633
-	for <linux-cxl@vger.kernel.org>; Tue, 20 May 2025 16:33:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FB50248166
+	for <linux-cxl@vger.kernel.org>; Tue, 20 May 2025 16:45:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747758831; cv=none; b=l10XtyaRS9W6k+TssgxzhCamTs2nuQJbd7J9jSl/877d2TAgterYpr2cMiXH1OlIy90JApEP8TqiWGdLGHPhtUwBcfSpAyX6keWo/6UWWCVjzAXQlAdRlZwtdYBe5qqyzGPQba439JqCX7sbZUgF9JXmLED+wzOcbhi/FgJwTKE=
+	t=1747759512; cv=none; b=gFIppgsQNR0Do0YqgVLfeoVJCl6I4luofOqhTxkDXVZR15awTglhuJHcvftdeYWe+HvQ1gqvxdRsg2PqXoWR1F7g2y4w6k4W0sqTu/b8h4lEXwfajc6F3vR8rJTbC1ahjleJuFMK4mNlnfJ7+m/ruYfu28BZyupFlySNcfF3lww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747758831; c=relaxed/simple;
-	bh=dBv/zJNRr8Kf7p2U4dw8seR16eF0lRw6h+1qIAse+AM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Wrfm5SIlvpW5UUxx3WPpCaHtO2PcQ3IhNrKrKGREYZ6ixmtXYgwUvWqnr/J1zFFagEi7ZGzMW+nC1mIStBS9Lk1OyJKogXYtvkrmCTCKgXeXYZ0W3JI/EiuSGVCEmTQ0Y54Q4051acmoSbddRp3Kd03d9+L+dO+jwIhE0m7FLok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=detmaO/l; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747759512; c=relaxed/simple;
+	bh=+3mR5/jLtJzd5rTP+MCwMngTHGkDEzNUtEBNMD+IrNY=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eHgmKfDwIB07fL4KW3GaH3WA5tu5EKJA7stoZkxZWJ8yZRn5s/LuF6twL8rCYfMuSdRtQ/u+z0S2dg/4kvqygspaoAqJ/bb+Tpu8Jg6iwcxTiKc3144NuiGXB6/6Ltt8Fufhvi7ekP8sEemKrD412r79Ql3GHhKpTOuLksBo9mk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bdFkX5n3; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="detmaO/l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747758830; x=1779294830;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=dBv/zJNRr8Kf7p2U4dw8seR16eF0lRw6h+1qIAse+AM=;
-  b=detmaO/lK9v93DqZR7Aj5dazgNqheHUnk/wFTXzf0Ktv0DBvsQ8Bxo4M
-   XX+nAahgAkVKEJzmtvucRZi7d793mzZfrxQe+Z2vcB2SOfasHB7FqM7qT
-   hx03mlvinUPpGzVpcFsySbfyjgUtcV0TyJOQi8XOfkQono2migoZE+4yH
-   Gu9YAjIEePp3vSVwA1y4pvI2glevfIJdLkX4RqDvwumMMrNYVVccpVnGe
-   rgEdmjBIyhQKentW+fY6ahpZFIfHJZ5cVWfHcy0t1evnJrddLC0HCsmC/
-   q3q/hTs6f4qtPvpiSuMVHwbYF9qX/RP5MAta3cy4MppmHo+ekc/pLfN7z
-   w==;
-X-CSE-ConnectionGUID: 8ei/44YvQcervk98HKoqBQ==
-X-CSE-MsgGUID: G64CcAk9Q3y+6qZ8Hi4DXQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="48959526"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="48959526"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 09:33:49 -0700
-X-CSE-ConnectionGUID: s0CrL3oTRa+l7NVgycm9dA==
-X-CSE-MsgGUID: DszHmmyNTje4UtO6ukxqHg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="176882714"
-Received: from inaky-mobl1.amr.corp.intel.com (HELO [10.125.109.92]) ([10.125.109.92])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 09:33:48 -0700
-Message-ID: <212a5734-ed23-49d6-b5f0-4fac3b0040d6@intel.com>
-Date: Tue, 20 May 2025 09:33:47 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bdFkX5n3"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-30e5430ed0bso5763485a91.3
+        for <linux-cxl@vger.kernel.org>; Tue, 20 May 2025 09:45:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747759509; x=1748364309; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=m+7SV2xh38BX70rkK3rxPOunQ+UQDLRyf1uVTWn74ko=;
+        b=bdFkX5n3WKppDzqQ9smXhPSTDGjWHIKe9uz5UKj7sPEtI4SrL9UPBA9QjqOlHR/ohy
+         xP+FTzfepl6/rJQh7Bmq3XoIp+6eCvQnkJBIbue2SfT1ReGafPE37DGBg0olUVqK+y9u
+         K7cCMl95q2cZSbgTlJQp8cCCTc/ex1DiNyAaDvI6K9qC+Cmw8OYK1d7ujZq9GphiV0DW
+         IA9qDjZ9IJ63/eRptY2FnxmZYg5725Tw6qINIojQCcIrOvRdcHiiKgzBiRHYpD9AjAmh
+         ULeUBZKjvRDv62XHsLLhcQoFnC4BWcCH5kMU6tk/gutzkRAcw+/jbGjKiSI5SMJIOcuN
+         NldQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747759509; x=1748364309;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=m+7SV2xh38BX70rkK3rxPOunQ+UQDLRyf1uVTWn74ko=;
+        b=gm995VxUZ3zsQM5KVcEvmerwd3xRUbxDevQSfLjBNRrCTQ9ExIuPaXHwj7siZdYi6C
+         OY+QnriYI3LQ63dV+u7rKiUUTZdxenafZEKzNqtEHv6MHSLFHOrP1FOQCNShYhUCSyQa
+         pz1QuQWyV5vQSKpJoOixnuDCrcwudMJZ340gbXAsr2Ch33Yx7YPW1BYOHr8itN/1B1LE
+         q+FKJ+Xe0pFdHiUQUo47hrZ6SqVJri5hOBNJT5ZM+qwM+3s/Z4Ybc/KwKw7KdKGwgNw6
+         v2NiSRj3tnEHy15KHXI/uLinro6lxWL3x9/mrQx1G7k0g/dCRHqSWfzDAiq/q06t7iA2
+         yRnA==
+X-Forwarded-Encrypted: i=1; AJvYcCXQYwZ0A0vhDgv9Ar5IfN9oDu5C8oFe/gV5ymRa+vyD3rjT2p/cnBdDf+XjKNTkpXSM9fQacFGZe/k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzaVsK9/A4VQ/7oLn6/79BJrasqTpm+AyBxmN07XHfoY8J9pah0
+	wLoVpc80NBRK6D9AdxW6mr5jawWMUxN0o67MBrN8Inj7c3xku7Fhro1/rUshGA==
+X-Gm-Gg: ASbGncufX64uYAoAxx64CJ62iYuJkp9XjT96PbVkNBdANc0vB8yFp/D29BQ2Pgfneqg
+	gG0Nh9+aw+NinVQZfkT//MWoXaTfttlVJR+Uv09t9wiMRgCAPx+XIBb8LjYd2U0Eiw1jR7S1cEH
+	Hz07Ob62yHn+BytZ62EHUJ7P3xKQAkzCxXZ0J9HkOetS6Olsihs8u4aL/KF4xjQuwQPGdsXNUW1
+	Bbxm/NtAGzrVDN12PP3cMoKsmLBwxWW5i5Pkvzi/6UOuTs11+ZIejtpB8iFrMDARbHH0GQqsH8+
+	IVtO260fYoA7Lvce9oCqtr3JfuLZ981VILCFeIwmRA==
+X-Google-Smtp-Source: AGHT+IFYCgM3TXmWDKu3+6RnTMM49ylrOwg9WGXbHuSOn26XlFcn63AoApwUU7jmZQgDlbaxxsvmTw==
+X-Received: by 2002:a05:6a00:a81:b0:742:9f58:ccce with SMTP id d2e1a72fcca58-742acce364cmr22946284b3a.12.1747759498132;
+        Tue, 20 May 2025 09:44:58 -0700 (PDT)
+Received: from lg ([2601:646:8f03:9fee:2c89:c0cf:1cbd:96d3])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a96deaf4sm8144837b3a.23.2025.05.20.09.44.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 09:44:57 -0700 (PDT)
+From: Fan Ni <nifan.cxl@gmail.com>
+X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
+Date: Tue, 20 May 2025 09:44:55 -0700
+To: anisa.su887@gmail.com
+Cc: qemu-devel@nongnu.org, Jonathan.Cameron@huawei.com, nifan.cxl@gmail.com,
+	dave@stgolabs.net, linux-cxl@vger.kernel.org,
+	Anisa Su <anisa.su@samsung.com>
+Subject: Re: [PATCH v2 05/10] cxl_events.h: Move definition for
+ dynamic_capacity_uuid and enum for DC event types
+Message-ID: <aCyxh8oN-NtI7eXo@lg>
+References: <20250508001754.122180-1-anisa.su887@gmail.com>
+ <20250508001754.122180-6-anisa.su887@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 05/10] cxl: Defer hardware dport->port_id assignment
- and registers probing
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Gregory Price <gourry@gourry.net>, linux-cxl@vger.kernel.org,
- Dan Williams <dan.j.williams@intel.com>, dave@stgolabs.net,
- alison.schofield@intel.com, ira.weiny@intel.com, rrichter@amd.com,
- ming.li@zohomail.com
-References: <20250507004310.3536991-1-dave.jiang@intel.com>
- <20250507004310.3536991-6-dave.jiang@intel.com>
- <aCNopruv5rUV2PBr@gourry-fedora-PF4VCD3F>
- <4ab4a497-e1e2-4e64-90dd-08c489cc52a7@intel.com>
- <20250520122653.00007e7d@huawei.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250520122653.00007e7d@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250508001754.122180-6-anisa.su887@gmail.com>
 
-
-
-On 5/20/25 4:26 AM, Jonathan Cameron wrote:
->   
->>>> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
->>>> index a35fc5552845..4d840a6ef802 100644
->>>> --- a/drivers/cxl/port.c
->>>> +++ b/drivers/cxl/port.c  
->>> ... snip ...  
->>>>  	/* Cache the data early to ensure is_visible() works */
->>>> @@ -69,24 +68,7 @@ static int cxl_switch_port_probe(struct cxl_port *port)
->>>>  	if (rc < 0)
->>>>  		return rc;
->>>>    
->>> ... snip ...  
->>>> -	return -ENXIO;
->>>> +	return 0;
->>>>  }  
->>>
->>> 	return devm_cxl_port_enumerate_dports(port);  
->>
->> This was actually done on purpose. devm_cxl_port_enumerate_dports() returns the number of dports enumerated. So usually the return value is greater than 0. in drivers/base/dd.c, call_driver_probe() throws the return value into a switch() where any value not 0 are errors. So the probe() call would fail. Here we are intercepting the return value and return a 0 if it's positive. I got bitten here during this series's debug. I should add a comment and explain why.  
+On Thu, May 08, 2025 at 12:01:01AM +0000, anisa.su887@gmail.com wrote:
+> From: Anisa Su <anisa.su@samsung.com>
 > 
-> I'll ask a 'silly' follow up.  Why does devm_cxl_port_enumerate_dports()
-> return the number.  From a quick look does anyone use it?  If not
-> just change that as a precursor patch and allow this
-> tiny bit of code improvement.
-
-I think originally the return value was used to determine of the decoder is passthrough or not. I guess with the new behavior, I don't have access to that and use the dports_ida to do the same thing. We can have it return 0 going forward.
-
-DJ
-
+> Move definition/enum to cxl_events.h for shared use in next patch
 > 
->>
->>
->>>
->>>
->>> ~Gregory  
->>
->>
+> Signed-off-by: Anisa Su <anisa.su@samsung.com>
+> ---
+
+Reviewed-by: Fan Ni <fan.ni@samsung.com>
+
+>  hw/mem/cxl_type3.c          | 15 ---------------
+>  include/hw/cxl/cxl_events.h | 15 +++++++++++++++
+>  2 files changed, 15 insertions(+), 15 deletions(-)
+> 
+> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> index 05d4c861f1..6ad48f55ce 100644
+> --- a/hw/mem/cxl_type3.c
+> +++ b/hw/mem/cxl_type3.c
+> @@ -1982,21 +1982,6 @@ void qmp_cxl_inject_memory_module_event(const char *path, CxlEventLog log,
+>      }
+>  }
+>  
+> -/* CXL r3.1 Table 8-50: Dynamic Capacity Event Record */
+> -static const QemuUUID dynamic_capacity_uuid = {
+> -    .data = UUID(0xca95afa7, 0xf183, 0x4018, 0x8c, 0x2f,
+> -                 0x95, 0x26, 0x8e, 0x10, 0x1a, 0x2a),
+> -};
+> -
+> -typedef enum CXLDCEventType {
+> -    DC_EVENT_ADD_CAPACITY = 0x0,
+> -    DC_EVENT_RELEASE_CAPACITY = 0x1,
+> -    DC_EVENT_FORCED_RELEASE_CAPACITY = 0x2,
+> -    DC_EVENT_REGION_CONFIG_UPDATED = 0x3,
+> -    DC_EVENT_ADD_CAPACITY_RSP = 0x4,
+> -    DC_EVENT_CAPACITY_RELEASED = 0x5,
+> -} CXLDCEventType;
+> -
+>  /*
+>   * Check whether the range [dpa, dpa + len - 1] has overlaps with extents in
+>   * the list.
+> diff --git a/include/hw/cxl/cxl_events.h b/include/hw/cxl/cxl_events.h
+> index 38cadaa0f3..758b075a64 100644
+> --- a/include/hw/cxl/cxl_events.h
+> +++ b/include/hw/cxl/cxl_events.h
+> @@ -184,4 +184,19 @@ typedef struct CXLEventDynamicCapacity {
+>      uint32_t tags_avail;
+>  } QEMU_PACKED CXLEventDynamicCapacity;
+>  
+> +/* CXL r3.1 Table 8-50: Dynamic Capacity Event Record */
+> +static const QemuUUID dynamic_capacity_uuid = {
+> +    .data = UUID(0xca95afa7, 0xf183, 0x4018, 0x8c, 0x2f,
+> +                 0x95, 0x26, 0x8e, 0x10, 0x1a, 0x2a),
+> +};
+> +
+> +typedef enum CXLDCEventType {
+> +    DC_EVENT_ADD_CAPACITY = 0x0,
+> +    DC_EVENT_RELEASE_CAPACITY = 0x1,
+> +    DC_EVENT_FORCED_RELEASE_CAPACITY = 0x2,
+> +    DC_EVENT_REGION_CONFIG_UPDATED = 0x3,
+> +    DC_EVENT_ADD_CAPACITY_RSP = 0x4,
+> +    DC_EVENT_CAPACITY_RELEASED = 0x5,
+> +} CXLDCEventType;
+> +
+>  #endif /* CXL_EVENTS_H */
+> -- 
+> 2.47.2
 > 
 
+-- 
+Fan Ni
