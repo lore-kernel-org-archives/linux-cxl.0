@@ -1,281 +1,271 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F2E727AC48
-	for <linux-cxl@vger.kernel.org>; Tue, 20 May 2025 14:16:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52DA424A043
+	for <linux-cxl@vger.kernel.org>; Tue, 20 May 2025 15:37:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747750617; cv=none; b=szgWT2IqwfGJkYszVZ3YoH8w/lQIb3II+QDrAMDqbCTRSWWMbfi4dsQ/TEScmVVPlFS4pUn8gWRIuNIJKt/ZtorjJGMrYJyfpZHOjG24suCw3g0Pvwo2TVPH0IreK9XKwoHLOVfNPzxuZJrmds/3xcOD33HpSSmFsyiEAb7sM/E=
+	t=1747755463; cv=none; b=TAlqY/K+fMW5Nxdm2pDGLN3MER7GpLXME1TbFEgXPCq8TGQ8dbqYb8n59ceoNncrWUpx2BIToBehsn2+fWmjAfzYbvfxnfI23Z+RPfGs6WCI6lNq2aZThJzxoLV8hXWOmhQPNN6bx8+ua8QW6rgQE6ubq+ayTnWJveVvjPkbb4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747750617; c=relaxed/simple;
-	bh=fcMtT0bHx3wnRKhUmM/Xz9zSpIbq14NKHES2iCRxrlM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=o9Ra2Lh0/F9lhX/IWX2cYl91rHQHb8FEb+w3UBeQpz0DgL6l5EPxBtXx2Mfdc9kcSRuz+2BQXGqiiwmPo3qK1Xjjl+IAg9HFsbcAmBrHbLwIgLHDvPCXB8kXyYMwiScW/IyJ/h6UaCYh7NpfGsVX6p3tBmF6JvbgOBq08Rza/Q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XeBkwNWX; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747755463; c=relaxed/simple;
+	bh=H20tgsBOg7onlrbyqWnpIgIrA57NWEL4YK23Qs4+wow=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ss43bzGGwiV/wOK8OHc0jk+Tai/EJjSZUjH4UBL3VxQl/uFeDqzNCk90PUBeBsWmfwIeFaAdKouOkwP2XzjxWbcULYegd/yOPOVKPEDArAQt6P8aEG25ajWl4w1FTE2d7aiy5WJBou8m7ogeV/VYi3//e3WJaxp7dq/yrkjFcfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ka+2DHw3; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XeBkwNWX"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-441ab63a415so62829725e9.3
-        for <linux-cxl@vger.kernel.org>; Tue, 20 May 2025 07:16:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ka+2DHw3"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso7307391b3a.2
+        for <linux-cxl@vger.kernel.org>; Tue, 20 May 2025 08:37:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747750613; x=1748355413; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:user-agent
-         :references:in-reply-to:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CInEGsOLz25mjMs6YRA78p9qw90h7ZdMHZE0ctttrwU=;
-        b=XeBkwNWXTgoZY7g01ax+b5q/etCBE86iIHXlm9HCWhshEa/Xicm3ZsRR0YxkaTncLD
-         EMWt3vtGP9BMiCKCr8mw/qy7R0uWjuiZAB9VqLM60laa2L0oSlmZh3iCze6fN/+u4ZwS
-         Clmpn+eRShZYy1Hqsy7Qg0kuM6V6ZJrK3Gdss16toQ7s58huWDDj4AfIlSgMHYiI84/0
-         JN0AYdJqUE2bbsbjjeVvJBi8zqseVGs1HojDh+tr3FATqHi5Kp51aZrnRIO/7fO9XYTC
-         qW5w7xTofAIRAGjPxB5oCeedyyHQKLYzl46rMvCgMsu//DKCZIrT1d7S2Z0PxKgckJsz
-         y6Wg==
+        d=gmail.com; s=20230601; t=1747755461; x=1748360261; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QfUgbG7wlz+ybzD3R782KbS9QXsdGRcz+HFsWFmMcKY=;
+        b=ka+2DHw3ukws/uhV/HcjChqXuRngBRZigUnQ8RPx58rWC+R93IYTZa8BRJZ+p2Dr8b
+         IrxjePAjRALu3t1kdVawAjWiHclU3ZuTPG2YxC6vrm4pAGzEsSd0gcfmk80RmVqLvjtg
+         b6IBz/idb0PusIjB1ESfM3aLR66os2Uw3SF0AI998TsiEFHOaXZQtuBU6VDogudSW0bY
+         7xav85URcRInr+5UOnAeDiHCm+2ajy0M9QZAGso4yFhSL6adLoD/Jt+y7AwgNWNeJZRl
+         pgBY8JU5v0RAMafDlk9bxZmrETL23A2ip1R8VS8jUW5oZG9WsZQxh6Faw/S8vreRlzM3
+         8MBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747750613; x=1748355413;
-        h=content-transfer-encoding:mime-version:message-id:date:user-agent
-         :references:in-reply-to:subject:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=CInEGsOLz25mjMs6YRA78p9qw90h7ZdMHZE0ctttrwU=;
-        b=mEwm5odB+9TRsA9rFFApAQZbC/JVp7e8utm4DXHOte2T1tWPKNkztAuPx1x1k48CI0
-         sRZlWOXAFOh6Du3+c1XlC403VuKrxRdRXVKItqaEyWuM50o+nzn2xJ8SiWdEyAmcTXS/
-         MEAHDwUS3M3F9tRqVPiEf31DWMjj/OJ+DnWbc9vYysy79g/Qhqe/544QSe7B64ZpqtSR
-         wZ+x/UH90g7r71YVORmdedMil53rRDTtMDcnH/JHHtTIFDQl0qtIaaj32uy9nhYDn+3y
-         TfUmM/E+i07fPn2HVR6V5kUWahJMkTRBz0gw6xUyEWJ/0NObXb+1f10+dDWdv/O1QlBd
-         4rew==
-X-Forwarded-Encrypted: i=1; AJvYcCWmsXVkqaD8vKf0fDpwDqIHwOlIjvuBbtwWjpLd4XoTfjZIIk04zHE2GrfuR6WmM3bKWq61z3ZfuNs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+2b0EflkC7LOaZjh5TISA12wJXkdZzDmaoIKNJRUJ1U/qU1zs
-	mC8lpWXAaYddzwppSTIWyIwH3J8rDlM3W/AoOfr66m1W6lX1O/wmEj2y15Ah7wT3Ym0=
-X-Gm-Gg: ASbGncvQP+pZfl1wroTREb1EWo3vkkwLyrbK9Mm+0Il8sQY+b6H1eDoy9QB2RW8u1Gt
-	evAGwoIrssFzFRc8V8nD4K99n0MS8ZTqbxBIs6/t7PjCcPwLksTTbFIO5j77xagKtKWCGYiAXo3
-	ENUd59+t5pY0zEiwxI48XblKjAQkKwnepN8kBBeCf6voYnV+h6fTyGnn9bGp0TFwFbjL9LcK1aa
-	Df2Ut8IgZE8oUn+JrWvGmaqZvEHH60kxxZojfMuodSI9Jci0fWGxHHLeSsi9Rj8/UKMhqwFCrnS
-	vJhMLAC+8ZP3Oqog7j8o91AE0kkCOHOBbA+5B6mTrQ/TuDOnYT8h
-X-Google-Smtp-Source: AGHT+IHyqae4al0WhGqWVoe23MBDbSjMoqgbacwPgIiLS45edaSa3sgI2O1OQM1X/goV9Fj18sto1A==
-X-Received: by 2002:a05:6000:3111:b0:3a3:7d7f:47bf with SMTP id ffacd0b85a97d-3a37d7f4827mr492589f8f.4.1747750613368;
-        Tue, 20 May 2025 07:16:53 -0700 (PDT)
-Received: from draig.lan ([185.126.160.19])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca5abaesm16638636f8f.39.2025.05.20.07.16.52
+        d=1e100.net; s=20230601; t=1747755461; x=1748360261;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QfUgbG7wlz+ybzD3R782KbS9QXsdGRcz+HFsWFmMcKY=;
+        b=bPEHxBwxijMKcHJtqtXE2F4yLHuS9vdl6f0QA/Xbw4LYqKxORzJMqxWP2+dvyQKXrQ
+         n6QBtezP+pqWjh2/7y/BgR6HCuuHDml9O/XMMjJnxVN7Oy1zR7GbfMZraod1K2lHFbbh
+         YW0loaB8o2DssQBuzG0LjNFM2GXCkj/DlLuxmosOEJJkA6poclNixh+cgK58Mi2Zu2uj
+         fRZ2YiM92iWkmEWrdZGpc8id3s1i+vTd0SfvbW9hCMspMhhUpSXqCOUsw4Q+/63CkBqO
+         r+s1UCqM6Io8j2ZS81AA7OtWCcBfcUGYlGMeCDqWSFwfURSoKueaqjgXmozGEg3M2I7l
+         Nqag==
+X-Forwarded-Encrypted: i=1; AJvYcCVN7Da/c2baFhnv3oXx7EpFSV78e4MhJp87dfJsPA5s6oAnRADurAZPTqAWjNMH7LCcWOueRQtwYwc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzdxRpqI7j7KwTkgA82mbYpBTYyvpDe8dml8MhSKMYvG5j8N9y
+	9Oku93LFa8hTNNeHP61OqWnMbj0XaFq8sh2NAyT89VT7n9ZcKyGPEhNHTzf+bg==
+X-Gm-Gg: ASbGncvahAmDylvYlE+B4cjD19lLEjpBbbSvF+r3YrkG6qRUpzmYntaBOFFzx3HhNT1
+	9HX+vVqO8ciU68hdCimlKyAl+WCRI75LF7HfNUJpQaLFaPqfVXHr/7gdOGoRlxl7R8YIuzcoYVi
+	GbD8qKTCk+yOICTqNXknfrmCANQPMniy+Anzkx6e9sBn1VQdcuUFjEz0vo9/m7VghkAoF5wQxtI
+	eo/KHVPbCLcp+Y4MHRTVbaTpUsajFpMR5JH7/FWSNitq3u7ZWJBwA5nSuUR5hcCy3ZnnbQt6UxU
+	SXQ/QDKFJuRYU23qscmX7KtyWEUpdlpgTtxTgRth1d/fSsJJ7F70
+X-Google-Smtp-Source: AGHT+IEwSkvU591UJhbKnDRmu73swl+LkaJvyIbpoNTzQIdAkiru/cpM8OObscQjElXrRH2kNDBEOQ==
+X-Received: by 2002:a05:6a00:3492:b0:742:9bd3:cd1f with SMTP id d2e1a72fcca58-742acd728eamr21638969b3a.23.1747755461288;
+        Tue, 20 May 2025 08:37:41 -0700 (PDT)
+Received: from lg ([2601:646:8f03:9fee:2c89:c0cf:1cbd:96d3])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a9739906sm8071440b3a.80.2025.05.20.08.37.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 07:16:52 -0700 (PDT)
-Received: from draig (localhost [IPv6:::1])
-	by draig.lan (Postfix) with ESMTP id AC9E35F7A5;
-	Tue, 20 May 2025 15:16:51 +0100 (BST)
-From: =?utf-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: <fan.ni@samsung.com>,  <linux-cxl@vger.kernel.org>,
-  <qemu-devel@nongnu.org>,  Alexandre Iooss <erdnaxe@crans.org>,  Mahmoud
- Mandour <ma.mandourr@gmail.com>,  Pierrick Bouvier
- <pierrick.bouvier@linaro.org>,  <linuxarm@huawei.com>,  Niyas Sait
- <niyas.sait@huawei.com>
-Subject: Re: [RFC PATCH QEMU 2/3] plugins: Add cache miss reporting over a
- socket.
-In-Reply-To: <20250124172905.84099-3-Jonathan.Cameron@huawei.com> (Jonathan
-	Cameron's message of "Fri, 24 Jan 2025 17:29:04 +0000")
-References: <20250124172905.84099-1-Jonathan.Cameron@huawei.com>
-	<20250124172905.84099-3-Jonathan.Cameron@huawei.com>
-User-Agent: mu4e 1.12.11; emacs 30.1
-Date: Tue, 20 May 2025 15:16:51 +0100
-Message-ID: <87zff79xkc.fsf@draig.linaro.org>
+        Tue, 20 May 2025 08:37:40 -0700 (PDT)
+From: Fan Ni <nifan.cxl@gmail.com>
+X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
+Date: Tue, 20 May 2025 08:37:35 -0700
+To: anisa.su887@gmail.com
+Cc: qemu-devel@nongnu.org, Jonathan.Cameron@huawei.com, nifan.cxl@gmail.com,
+	dave@stgolabs.net, linux-cxl@vger.kernel.org,
+	Anisa Su <anisa.su@samsung.com>
+Subject: Re: [PATCH v2 01/10] cxl-mailbox-utils: Move opcodes enum to new
+ header file
+Message-ID: <aCyhv8Qz1LUpJKd3@lg>
+References: <20250508001754.122180-1-anisa.su887@gmail.com>
+ <20250508001754.122180-2-anisa.su887@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250508001754.122180-2-anisa.su887@gmail.com>
 
-Jonathan Cameron <Jonathan.Cameron@huawei.com> writes:
-
-> This allows an external program to act as a hotness tracker.
->
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+On Thu, May 08, 2025 at 12:00:57AM +0000, anisa.su887@gmail.com wrote:
+> From: Anisa Su <anisa.su@samsung.com>
+> 
+> In preparation for the next patch, move opcodes enum to new cxl_opcodes.h file
+> for visibility from mailbox-utils.c and i2c_mctp_cxl.c, which checks that
+> certain command sets are bound with the correct MCTP binding.
+> 
+> Signed-off-by: Anisa Su <anisa.su@samsung.com>
 > ---
->  contrib/plugins/cache.c | 75 +++++++++++++++++++++++++++++++++++++----
->  1 file changed, 68 insertions(+), 7 deletions(-)
->
-> diff --git a/contrib/plugins/cache.c b/contrib/plugins/cache.c
-> index 7baff86860..5af1e6559c 100644
-> --- a/contrib/plugins/cache.c
-> +++ b/contrib/plugins/cache.c
-> @@ -7,10 +7,17 @@
->=20=20
->  #include <inttypes.h>
->  #include <stdio.h>
-> +#include <unistd.h>
->  #include <glib.h>
-> +#include <sys/socket.h>
-> +#include <arpa/inet.h>
->=20=20
->  #include <qemu-plugin.h>
->=20=20
-> +static int client_socket =3D -1;
-> +static uint64_t missfilterbase;
-> +static uint64_t missfiltersize;
-> +
->  #define STRTOLL(x) g_ascii_strtoll(x, NULL, 10)
->=20=20
->  QEMU_PLUGIN_EXPORT int qemu_plugin_version =3D QEMU_PLUGIN_VERSION;
-> @@ -104,6 +111,7 @@ static Cache **l2_ucaches;
->  static GMutex *l1_dcache_locks;
->  static GMutex *l1_icache_locks;
->  static GMutex *l2_ucache_locks;
-> +static GMutex *socket_lock;
->=20=20
->  static uint64_t l1_dmem_accesses;
->  static uint64_t l1_imem_accesses;
-> @@ -385,6 +393,21 @@ static bool access_cache(Cache *cache, uint64_t addr)
->      return false;
->  }
->=20=20
-> +static void miss(uint64_t paddr)
-> +{
-> +    if (client_socket < 0) {
-> +        return;
-> +    }
-> +
-> +    if (paddr < missfilterbase || paddr >=3D missfilterbase + missfilter=
-size) {
-> +        return;
-> +    }
-> +
-> +    g_mutex_lock(socket_lock);
-> +    send(client_socket, &paddr, sizeof(paddr), 0);
-> +    g_mutex_unlock(socket_lock);
-> +}
-> +
->  static void vcpu_mem_access(unsigned int vcpu_index, qemu_plugin_meminfo=
-_t info,
->                              uint64_t vaddr, void *userdata)
->  {
-> @@ -395,9 +418,6 @@ static void vcpu_mem_access(unsigned int vcpu_index, =
-qemu_plugin_meminfo_t info,
->      bool hit_in_l1;
->=20=20
->      hwaddr =3D qemu_plugin_get_hwaddr(info, vaddr);
-> -    if (hwaddr && qemu_plugin_hwaddr_is_io(hwaddr)) {
-> -        return;
-> -    }
->=20=20
->      effective_addr =3D hwaddr ? qemu_plugin_hwaddr_phys_addr(hwaddr) : v=
-addr;
->      cache_idx =3D vcpu_index % cores;
-> @@ -412,7 +432,11 @@ static void vcpu_mem_access(unsigned int vcpu_index,=
- qemu_plugin_meminfo_t info,
->      l1_dcaches[cache_idx]->accesses++;
->      g_mutex_unlock(&l1_dcache_locks[cache_idx]);
->=20=20
-> -    if (hit_in_l1 || !use_l2) {
-> +    if (hit_in_l1) {
-> +        return;
-> +    }
-> +    if (!use_l2) {
-> +        miss(effective_addr);
->          /* No need to access L2 */
->          return;
->      }
-> @@ -422,6 +446,7 @@ static void vcpu_mem_access(unsigned int vcpu_index, =
-qemu_plugin_meminfo_t info,
->          insn =3D userdata;
->          __atomic_fetch_add(&insn->l2_misses, 1, __ATOMIC_SEQ_CST);
->          l2_ucaches[cache_idx]->misses++;
-> +        miss(effective_addr);
->      }
->      l2_ucaches[cache_idx]->accesses++;
->      g_mutex_unlock(&l2_ucache_locks[cache_idx]);
-> @@ -447,8 +472,12 @@ static void vcpu_insn_exec(unsigned int vcpu_index, =
-void *userdata)
->      l1_icaches[cache_idx]->accesses++;
->      g_mutex_unlock(&l1_icache_locks[cache_idx]);
->=20=20
-> -    if (hit_in_l1 || !use_l2) {
-> -        /* No need to access L2 */
-> +    if (hit_in_l1) {
-> +        return;
-> +    }
-> +
-> +    if (!use_l2) {
-> +        miss(insn_addr);
->          return;
->      }
->=20=20
-> @@ -739,14 +768,16 @@ QEMU_PLUGIN_EXPORT
->  int qemu_plugin_install(qemu_plugin_id_t id, const qemu_info_t *info,
->                          int argc, char **argv)
->  {
-> -    int i;
-> +    int i, port;
->      int l1_iassoc, l1_iblksize, l1_icachesize;
->      int l1_dassoc, l1_dblksize, l1_dcachesize;
->      int l2_assoc, l2_blksize, l2_cachesize;
-> +    struct sockaddr_in server_addr;
->=20=20
->      limit =3D 32;
->      sys =3D info->system_emulation;
->=20=20
-> +    port =3D -1;
->      l1_dassoc =3D 8;
->      l1_dblksize =3D 64;
->      l1_dcachesize =3D l1_dblksize * l1_dassoc * 32;
-> @@ -808,11 +839,39 @@ int qemu_plugin_install(qemu_plugin_id_t id, const =
-qemu_info_t *info,
->                  fprintf(stderr, "invalid eviction policy: %s\n", opt);
->                  return -1;
->              }
-> +        } else if (g_strcmp0(tokens[0], "port") =3D=3D 0) {
-> +            port =3D STRTOLL(tokens[1]);
-> +        } else if (g_strcmp0(tokens[0], "missfilterbase") =3D=3D 0) {
-> +            missfilterbase =3D STRTOLL(tokens[1]);
-> +        } else if (g_strcmp0(tokens[0], "missfiltersize") =3D=3D 0) {
-> +            missfiltersize =3D STRTOLL(tokens[1]);
->          } else {
->              fprintf(stderr, "option parsing failed: %s\n", opt);
->              return -1;
->          }
->      }
-> +    if (port >=3D -1) {
-> +        uint64_t paddr =3D 42; /* hello, I'm a provider */
-> +        client_socket =3D socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-> +        if (client_socket < 0) {
-> +            printf("failed to create a socket\n");
-> +            return -1;
-> +        }
-> +        printf("Cache miss reported on on %lx size %lx\n",
-> +               missfilterbase, missfiltersize);
-> +        memset((char *)&server_addr, 0, sizeof(server_addr));
-> +        server_addr.sin_family =3D AF_INET;
-> +        server_addr.sin_addr.s_addr =3D htonl(INADDR_LOOPBACK);
-> +        server_addr.sin_port =3D htons(port);
-> +
-> +        if (connect(client_socket, (struct sockaddr *)&server_addr,
-> +                    sizeof(server_addr)) < 0) {
-> +            close(client_socket);
-> +            return -1;
-> +        }
-> +        /* Let it know we are a data provider */
-> +        send(client_socket, &paddr, sizeof(paddr), 0);
-> +    }
+>  hw/cxl/cxl-mailbox-utils.c   | 68 ++----------------------------------
+>  include/hw/cxl/cxl_opcodes.h | 64 +++++++++++++++++++++++++++++++++
 
-No particular objections to the patch as is. I do wonder if it would be
-worth exposing a chardev pipe to plugins so we could take advantage of
-QEMU's flexible redirection handling.
+Should we put the opcodes into include/hw/cxl/cxl_mailbox.h instead of
+creating a new file. cxl_mailbox.h only has some macros.
 
-But not a blocker for this.
+Fan
 
->=20=20
->      policy_init();
->=20=20
-> @@ -840,6 +899,8 @@ int qemu_plugin_install(qemu_plugin_id_t id, const qe=
-mu_info_t *info,
->          return -1;
->      }
->=20=20
-> +    socket_lock =3D g_new0(GMutex, 1);
-> +
->      l1_dcache_locks =3D g_new0(GMutex, cores);
->      l1_icache_locks =3D g_new0(GMutex, cores);
->      l2_ucache_locks =3D use_l2 ? g_new0(GMutex, cores) : NULL;
 
---=20
-Alex Benn=C3=A9e
-Virtualisation Tech Lead @ Linaro
+
+>  2 files changed, 66 insertions(+), 66 deletions(-)
+>  create mode 100644 include/hw/cxl/cxl_opcodes.h
+> 
+> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> index a02d130926..ed3294530f 100644
+> --- a/hw/cxl/cxl-mailbox-utils.c
+> +++ b/hw/cxl/cxl-mailbox-utils.c
+> @@ -23,6 +23,7 @@
+>  #include "qemu/uuid.h"
+>  #include "system/hostmem.h"
+>  #include "qemu/range.h"
+> +#include "hw/cxl/cxl_opcodes.h"
+>  
+>  #define CXL_CAPACITY_MULTIPLIER   (256 * MiB)
+>  #define CXL_DC_EVENT_LOG_SIZE 8
+> @@ -36,7 +37,7 @@
+>  
+>  /*
+>   * How to add a new command, example. The command set FOO, with cmd BAR.
+> - *  1. Add the command set and cmd to the enum.
+> + *  1. Add the command set and cmd to the enum in cxl_opcodes.h.
+>   *     FOO    = 0x7f,
+>   *          #define BAR 0
+>   *  2. Implement the handler
+> @@ -59,71 +60,6 @@
+>   *  a register interface that already deals with it.
+>   */
+>  
+> -enum {
+> -    INFOSTAT    = 0x00,
+> -        #define IS_IDENTIFY   0x1
+> -        #define BACKGROUND_OPERATION_STATUS    0x2
+> -        #define GET_RESPONSE_MSG_LIMIT         0x3
+> -        #define SET_RESPONSE_MSG_LIMIT         0x4
+> -        #define BACKGROUND_OPERATION_ABORT     0x5
+> -    EVENTS      = 0x01,
+> -        #define GET_RECORDS   0x0
+> -        #define CLEAR_RECORDS   0x1
+> -        #define GET_INTERRUPT_POLICY   0x2
+> -        #define SET_INTERRUPT_POLICY   0x3
+> -    FIRMWARE_UPDATE = 0x02,
+> -        #define GET_INFO      0x0
+> -        #define TRANSFER      0x1
+> -        #define ACTIVATE      0x2
+> -    TIMESTAMP   = 0x03,
+> -        #define GET           0x0
+> -        #define SET           0x1
+> -    LOGS        = 0x04,
+> -        #define GET_SUPPORTED 0x0
+> -        #define GET_LOG       0x1
+> -        #define GET_LOG_CAPABILITIES   0x2
+> -        #define CLEAR_LOG     0x3
+> -        #define POPULATE_LOG  0x4
+> -    FEATURES    = 0x05,
+> -        #define GET_SUPPORTED 0x0
+> -        #define GET_FEATURE   0x1
+> -        #define SET_FEATURE   0x2
+> -    IDENTIFY    = 0x40,
+> -        #define MEMORY_DEVICE 0x0
+> -    CCLS        = 0x41,
+> -        #define GET_PARTITION_INFO     0x0
+> -        #define GET_LSA       0x2
+> -        #define SET_LSA       0x3
+> -    HEALTH_INFO_ALERTS = 0x42,
+> -        #define GET_ALERT_CONFIG 0x1
+> -        #define SET_ALERT_CONFIG 0x2
+> -    SANITIZE    = 0x44,
+> -        #define OVERWRITE     0x0
+> -        #define SECURE_ERASE  0x1
+> -        #define MEDIA_OPERATIONS 0x2
+> -    PERSISTENT_MEM = 0x45,
+> -        #define GET_SECURITY_STATE     0x0
+> -    MEDIA_AND_POISON = 0x43,
+> -        #define GET_POISON_LIST        0x0
+> -        #define INJECT_POISON          0x1
+> -        #define CLEAR_POISON           0x2
+> -        #define GET_SCAN_MEDIA_CAPABILITIES 0x3
+> -        #define SCAN_MEDIA             0x4
+> -        #define GET_SCAN_MEDIA_RESULTS 0x5
+> -    DCD_CONFIG  = 0x48,
+> -        #define GET_DC_CONFIG          0x0
+> -        #define GET_DYN_CAP_EXT_LIST   0x1
+> -        #define ADD_DYN_CAP_RSP        0x2
+> -        #define RELEASE_DYN_CAP        0x3
+> -    PHYSICAL_SWITCH = 0x51,
+> -        #define IDENTIFY_SWITCH_DEVICE      0x0
+> -        #define GET_PHYSICAL_PORT_STATE     0x1
+> -    TUNNEL = 0x53,
+> -        #define MANAGEMENT_COMMAND     0x0
+> -    MHD = 0x55,
+> -        #define GET_MHD_INFO 0x0
+> -};
+> -
+>  /* CCI Message Format CXL r3.1 Figure 7-19 */
+>  typedef struct CXLCCIMessage {
+>      uint8_t category;
+> diff --git a/include/hw/cxl/cxl_opcodes.h b/include/hw/cxl/cxl_opcodes.h
+> new file mode 100644
+> index 0000000000..26d3a99e8a
+> --- /dev/null
+> +++ b/include/hw/cxl/cxl_opcodes.h
+> @@ -0,0 +1,64 @@
+> +enum {
+> +    INFOSTAT    = 0x00,
+> +        #define IS_IDENTIFY   0x1
+> +        #define BACKGROUND_OPERATION_STATUS    0x2
+> +        #define GET_RESPONSE_MSG_LIMIT         0x3
+> +        #define SET_RESPONSE_MSG_LIMIT         0x4
+> +        #define BACKGROUND_OPERATION_ABORT     0x5
+> +    EVENTS      = 0x01,
+> +        #define GET_RECORDS   0x0
+> +        #define CLEAR_RECORDS   0x1
+> +        #define GET_INTERRUPT_POLICY   0x2
+> +        #define SET_INTERRUPT_POLICY   0x3
+> +    FIRMWARE_UPDATE = 0x02,
+> +        #define GET_INFO      0x0
+> +        #define TRANSFER      0x1
+> +        #define ACTIVATE      0x2
+> +    TIMESTAMP   = 0x03,
+> +        #define GET           0x0
+> +        #define SET           0x1
+> +    LOGS        = 0x04,
+> +        #define GET_SUPPORTED 0x0
+> +        #define GET_LOG       0x1
+> +        #define GET_LOG_CAPABILITIES   0x2
+> +        #define CLEAR_LOG     0x3
+> +        #define POPULATE_LOG  0x4
+> +    FEATURES    = 0x05,
+> +        #define GET_SUPPORTED 0x0
+> +        #define GET_FEATURE   0x1
+> +        #define SET_FEATURE   0x2
+> +    IDENTIFY    = 0x40,
+> +        #define MEMORY_DEVICE 0x0
+> +    CCLS        = 0x41,
+> +        #define GET_PARTITION_INFO     0x0
+> +        #define GET_LSA       0x2
+> +        #define SET_LSA       0x3
+> +    HEALTH_INFO_ALERTS = 0x42,
+> +        #define GET_ALERT_CONFIG 0x1
+> +        #define SET_ALERT_CONFIG 0x2
+> +    SANITIZE    = 0x44,
+> +        #define OVERWRITE     0x0
+> +        #define SECURE_ERASE  0x1
+> +        #define MEDIA_OPERATIONS 0x2
+> +    PERSISTENT_MEM = 0x45,
+> +        #define GET_SECURITY_STATE     0x0
+> +    MEDIA_AND_POISON = 0x43,
+> +        #define GET_POISON_LIST        0x0
+> +        #define INJECT_POISON          0x1
+> +        #define CLEAR_POISON           0x2
+> +        #define GET_SCAN_MEDIA_CAPABILITIES 0x3
+> +        #define SCAN_MEDIA             0x4
+> +        #define GET_SCAN_MEDIA_RESULTS 0x5
+> +    DCD_CONFIG  = 0x48,
+> +        #define GET_DC_CONFIG          0x0
+> +        #define GET_DYN_CAP_EXT_LIST   0x1
+> +        #define ADD_DYN_CAP_RSP        0x2
+> +        #define RELEASE_DYN_CAP        0x3
+> +    PHYSICAL_SWITCH = 0x51,
+> +        #define IDENTIFY_SWITCH_DEVICE      0x0
+> +        #define GET_PHYSICAL_PORT_STATE     0x1
+> +    TUNNEL = 0x53,
+> +        #define MANAGEMENT_COMMAND     0x0
+> +    MHD = 0x55,
+> +        #define GET_MHD_INFO 0x0
+> +};
+> -- 
+> 2.47.2
+> 
+
+-- 
+Fan Ni
