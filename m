@@ -1,159 +1,125 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD9EF26B97E
-	for <linux-cxl@vger.kernel.org>; Tue, 20 May 2025 16:05:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A57D22698AF
+	for <linux-cxl@vger.kernel.org>; Tue, 20 May 2025 16:13:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747757132; cv=none; b=i0MF6uHk0YCwUtnkuExsZuX6wlvl2onTAYfa39+jmYa6NmPGbWysOgac2YA89S8puLlruqiKQ2lICChOZLHg+i74js9Ma1vnwQQYDdR6hxfkO1Sw2Xx0ctcBLkkXDidALnH2leWkjZ2pSLfF5e3/YrjDkgq9+3RDolBUmdCXFsU=
+	t=1747757600; cv=none; b=pxUEe7PSCEdjRHiOgUNJsfoP7l/ejuu/FA2JA+TmMLWLlttT4xIjxm/zXS1H0owrmUdkmSO5B6ogiAWsS7yhFlBvVUXqr9+RRrxkMOKmsA2G6Ob8qh8cP3DKXbTFw2wRQ16snFfb/ApPApk56H9oFgUF6uUyV/CA0JDRxAu2IeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747757132; c=relaxed/simple;
-	bh=OKj5p6MoWUnTbstfV6rkNEWIC/Dn6NfWaVj4sY+JByo=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t/MObYzTqB29m/Gyap4XGTSR7dLdzDLrNz3oRGwe5bxZJ6efJhoj7cBLW9IMpwMzxEkzi3+rTdnEPcOg+vVrROdOAy36FqfCgsJyF5o4rNnbXxYfXgJGfOZC7URMxYfeYhLO4+/2ieEyUTFNjFWlmFrdx34yOMUVhAwl2RMkR4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KdF907wB; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747757600; c=relaxed/simple;
+	bh=98ITOsNZtG49hbpzspqniLLJXZMFmA39rVpkyKk0Jbk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QWSy+FoZ2bEsG9ghcawKw1AxQbs+9PcTRsuewVXgXWkFll0n8tKKZlOpnLOtSxSnACpV55tLnS/jXtYjQztWi4rK/pXTgBZg6Zm+Il9ygbAfCMlmHsMkEd3PHdaEWaKLIPUATEokACNloRmmKjDQafqzmuqSP+7K/KWJVkJliMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M29nrdIz; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KdF907wB"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22c336fcdaaso46093955ad.3
-        for <linux-cxl@vger.kernel.org>; Tue, 20 May 2025 09:05:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747757130; x=1748361930; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/6sMJeL+6+CmWHLAjXbC2hLM8VOcfQ7nl6fo+PeHtvQ=;
-        b=KdF907wBznujngeyHBtv3FrDGqURybbDOVVA8iTzrQNrvVJ8DvUOhP9tzcSJ4VpEDa
-         ulwrc3EytBlE7WQoONPkNUJq9ENWGYQhoWV+UIKLS0+saYt9rHRvxjItds8y7UJT+g6m
-         aXErUPD3MRGl97blYqQbrc03fWfjESd6yoR1BlGkec+CagOQmuadyv8k7pU9wixSLSyF
-         7b+kH+0E4lvecx0rudyPG10mC72sFbqMYR3lqwNnJhchQvwIbr6isrft102U0ylFJPy9
-         ba4e7Aw78DFaNaZ47lntTNTpPAw6Lpron0qJC1i0nz0e+oUiWXUSH6g+Zpm9vePm+iun
-         gXcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747757130; x=1748361930;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/6sMJeL+6+CmWHLAjXbC2hLM8VOcfQ7nl6fo+PeHtvQ=;
-        b=QBKYpuS9j9sehrHp8QDr8RKTxUglQT5ONTSUfTKue1hvuZ5kuPEhvzsEhGoZHFL3cx
-         rUIKbXMXBYlD+PejGV1lNgG5VykYD5Jgdhm17hY2IvziHA5si3MIiAt3hme6ugywjLMY
-         h0RFlNYQseWlyYt+da02+mKwMz8q5Ep6kxmHQyvWk7+/Qb7c8YAGYGCYk/mDObVIvnB2
-         GOwpcyHILqulNgyL4fN+r/o0N3DsH3eAHwf9WUEq1kHxk0qsqJjfI505g8+K+oYikl/y
-         639ELHxADDpBoLjY3Fsk8WX20sm4hCpDIpR0Z7E4WmOn0JIE8kloeuAykx5gX8Pi0dWb
-         qUjg==
-X-Forwarded-Encrypted: i=1; AJvYcCVvfT77cVA10cvUiLsYgFzjt31fAyZ3DE93IsIwBLBOu1xKOlatwTdpDaG/isM/1Cn/H51gChO3iNA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMiOUVhbxYRetHXvJE6UcwwgXhXJQkq7f1ZOC66Wk2izqc/OqQ
-	f3tTe36Jb4R7WbhyfrKSJ91kw8McAuUTEe/lobTyyz63ODZehxkF3Reu
-X-Gm-Gg: ASbGncu+jr0t9aHCVMYifbpZXavqgMBNqwwXS933UGGDj7pyP3R6dnqVorBulq+f1N8
-	Rr4/PiZMNZrj+fcKll6IWl8yq0rhSDI4sX5lgHlB4emeV/DOli91ug9MpMbelTiSGz/8MsBXOl5
-	e8NGE7V/BL6a5PKYpNSEzVcXdbCf4wRM8uZQnjGaXZ7BDxDV0JbSg1lxlntITxOeEgdVmIyf/B6
-	P6ZZIdQ8goMvY3ag1U1tWcVuK+wxphNadZTLWJlelfRG8F8ovfq2addUy4w0ceuWp7mZqRj62ML
-	VAQZsxYFKlkMxsPC+TkCrtUypmrJuyMorDm3UGZszQ==
-X-Google-Smtp-Source: AGHT+IHHmn5fYi+4RFwBN/1ksj4IBFBleWBF5S9SwFaREwh2uZNh4psYALQqkfpFPqcA3yxmklAAcQ==
-X-Received: by 2002:a17:903:11c3:b0:223:47b4:aaf8 with SMTP id d9443c01a7336-231d45eeeb0mr217773035ad.52.1747757125779;
-        Tue, 20 May 2025 09:05:25 -0700 (PDT)
-Received: from lg ([2601:646:8f03:9fee:2c89:c0cf:1cbd:96d3])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4e98018sm78925215ad.155.2025.05.20.09.05.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 09:05:25 -0700 (PDT)
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Tue, 20 May 2025 09:05:15 -0700
-To: anisa.su887@gmail.com
-Cc: qemu-devel@nongnu.org, Jonathan.Cameron@huawei.com, nifan.cxl@gmail.com,
-	dave@stgolabs.net, linux-cxl@vger.kernel.org,
-	Anisa Su <anisa.su@samsung.com>
-Subject: Re: [PATCH v2 03/10] cxl/type3: Add dsmas_flags to CXLDCRegion struct
-Message-ID: <aCyoO3FuMb-Hqe8i@lg>
-References: <20250508001754.122180-1-anisa.su887@gmail.com>
- <20250508001754.122180-4-anisa.su887@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M29nrdIz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747757596; x=1779293596;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=98ITOsNZtG49hbpzspqniLLJXZMFmA39rVpkyKk0Jbk=;
+  b=M29nrdIzVP5rN57Ad17H+15bjhBRrOpaQPPz668xrjNfl4zuf/kbk2tL
+   7TfyqZ2P8PrHNbeO4v02HsJPoSwwgNN/WqfKC5ppZBwGXwyRnlLl3Ou7d
+   ngEJ/Ys+S0InA6yhVC/f2BmoOYX9W3vsSG+SfXodq4UIsbmRwyCGzxxkq
+   +HUWtnMTwbLQId2f8PGX0AvzA3Ne3LLi6QmlvfwqISUw1LCKEoxCXlGki
+   me0AcbYVyd/luN41i28WXL9WS+iefYm3CIVADudbyJZhylNyoqgjnO+R7
+   rW8Op/rpXnjUDz0vTLi9YO7yXfSwOsjkXaFMuUckqbkVuPZXqVb4sp3UM
+   g==;
+X-CSE-ConnectionGUID: 022r2/XQQsmI4xikMecs8g==
+X-CSE-MsgGUID: LYPcHBgPQySjJ6/7YdK/Ng==
+X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="49575512"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="49575512"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 09:13:15 -0700
+X-CSE-ConnectionGUID: triiw9GWTtuxELaj+UmzlQ==
+X-CSE-MsgGUID: GYadJ5P8TFq0sxuAXwv7gQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="144871789"
+Received: from inaky-mobl1.amr.corp.intel.com (HELO [10.125.109.92]) ([10.125.109.92])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 09:13:14 -0700
+Message-ID: <ea910462-d217-4c69-973c-231d47eb4c10@intel.com>
+Date: Tue, 20 May 2025 09:13:13 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250508001754.122180-4-anisa.su887@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 01/10] cxl/region: Add decoder check to
+ check_commit_order()
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: linux-cxl@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+ dave@stgolabs.net, alison.schofield@intel.com, ira.weiny@intel.com,
+ rrichter@amd.com, ming.li@zohomail.com
+References: <20250507004310.3536991-1-dave.jiang@intel.com>
+ <20250507004310.3536991-2-dave.jiang@intel.com>
+ <20250520121415.000026db@huawei.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250520121415.000026db@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 08, 2025 at 12:00:59AM +0000, anisa.su887@gmail.com wrote:
-> From: Anisa Su <anisa.su@samsung.com>
+
+
+On 5/20/25 4:14 AM, Jonathan Cameron wrote:
+> On Tue, 6 May 2025 17:43:01 -0700
+> Dave Jiang <dave.jiang@intel.com> wrote:
 > 
-> Add booleans to DC Region struct to represent dsmas flags (defined in CDAT)
-> in preparation for the next command, which returns the flags in the
+>> check_commit_order() attempts to convert a device to a decoder without
+>> making sure the device is a decoder. So far this has been working due
+>> to pure luck. Issue discovered while doing deferred dport probing when
+>> child ports are now in the midst of decoders due to ordering change
+>> of child port additions. Add a check before attempting to do decoder
+>> conversion.
+>>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-s/next command/mailbox command 0x5601h/, otherwise
-Reviewed-by: Fan Ni <fan.ni@samsung.com>
-
-> response.
+Thanks Jonathan
 > 
-> Signed-off-by: Anisa Su <anisa.su@samsung.com>
-
-
-> ---
->  hw/mem/cxl_type3.c          |  8 +++++++-
->  include/hw/cxl/cxl_device.h | 15 +++++++++++++++
->  2 files changed, 22 insertions(+), 1 deletion(-)
+> Stands on it's own so maybe queue this up even if later patches
+> are still under discussion?
 > 
-> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> index 7129da0940..05d4c861f1 100644
-> --- a/hw/mem/cxl_type3.c
-> +++ b/hw/mem/cxl_type3.c
-> @@ -232,10 +232,16 @@ static int ct3_build_cdat_table(CDATSubHeader ***cdat_table, void *priv)
->           * future.
->           */
->          for (i = 0; i < ct3d->dc.num_regions; i++) {
-> +            ct3d->dc.regions[i].nonvolatile = false;
-> +            ct3d->dc.regions[i].sharable = false;
-> +            ct3d->dc.regions[i].hw_managed_coherency = false;
-> +            ct3d->dc.regions[i].ic_specific_dc_management = false;
-> +            ct3d->dc.regions[i].rdonly = false;
->              ct3_build_cdat_entries_for_mr(&(table[cur_ent]),
->                                            dsmad_handle++,
->                                            ct3d->dc.regions[i].len,
-> -                                          false, true, region_base);
-> +                                          ct3d->dc.regions[i].nonvolatile,
-> +                                          true, region_base);
->              ct3d->dc.regions[i].dsmadhandle = dsmad_handle - 1;
->  
->              cur_ent += CT3_CDAT_NUM_ENTRIES;
-> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> index bebed04085..cbcc1bc9f5 100644
-> --- a/include/hw/cxl/cxl_device.h
-> +++ b/include/hw/cxl/cxl_device.h
-> @@ -177,6 +177,15 @@ typedef enum {
->      MAX_LOG_TYPE
->  } CXLLogType;
->  
-> +/* DSMAS Flags Bits */
-> +typedef enum {
-> +    CXL_DSMAS_FLAGS_NONVOLATILE = 2,
-> +    CXL_DSMAS_FLAGS_SHARABLE = 3,
-> +    CXL_DSMAS_FLAGS_HW_MANAGED_COHERENCY = 4,
-> +    CXL_DSMAS_FLAGS_IC_SPECIFIC_DC_MANAGEMENT = 5,
-> +    CXL_DSMAS_FLAGS_RDONLY = 6,
-> +} CXLDSMASFlags;
-> +
->  typedef struct CXLCCI CXLCCI;
->  typedef struct cxl_device_state CXLDeviceState;
->  struct cxl_cmd;
-> @@ -609,6 +618,12 @@ typedef struct CXLDCRegion {
->      uint8_t flags;
->      unsigned long *blk_bitmap;
->      uint64_t supported_blk_size_bitmask;
-> +    /* Following bools make up dsmas flags, as defined in the CDAT */
-> +    bool nonvolatile;
-> +    bool sharable;
-> +    bool hw_managed_coherency;
-> +    bool ic_specific_dc_management;
-> +    bool rdonly;
->  } CXLDCRegion;
->  
->  typedef struct CXLSetFeatureInfo {
-> -- 
-> 2.47.2
+> I'm keen to reduce what is floating around in a good state!
+
+I originally submitted this stand alone and Dan said to include it with the series. The issue does not show up until we change the behavior of port enumeration.
+
+DJ
+
+> 
+> Jonathan
+> 
+>> ---
+>>  drivers/cxl/core/region.c | 7 ++++++-
+>>  1 file changed, 6 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>> index c3f4dc244df7..a91d4eb061e4 100644
+>> --- a/drivers/cxl/core/region.c
+>> +++ b/drivers/cxl/core/region.c
+>> @@ -788,7 +788,12 @@ static size_t show_targetN(struct cxl_region *cxlr, char *buf, int pos)
+>>  
+>>  static int check_commit_order(struct device *dev, void *data)
+>>  {
+>> -	struct cxl_decoder *cxld = to_cxl_decoder(dev);
+>> +	struct cxl_decoder *cxld;
+>> +
+>> +	if (!is_switch_decoder(dev))
+>> +		return 0;
+>> +
+>> +	cxld = to_cxl_decoder(dev);
+>>  
+>>  	/*
+>>  	 * if port->commit_end is not the only free decoder, then out of
+>>
+>> base-commit: 3c746d4821f507304b08789e3c7c151554fc2356
 > 
 
--- 
-Fan Ni
