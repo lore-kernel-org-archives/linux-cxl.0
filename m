@@ -1,172 +1,208 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 644B02BD037
-	for <linux-cxl@vger.kernel.org>; Wed, 21 May 2025 20:46:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747860387; cv=none; b=t9wXaNbxwX/crhv45C9JM00fKU6MIn/pZFldhBRW+TsuU3L9pT9WAZIKCSejoWl5MMdbZWhbl8JpG74EcYdo9us5uiwWkJbkOK5pW5FHoMeK8VLFn4YNaCJ/fCd+xT5vR9tbK6Zr7J2cCqmSHQVeAjcvS5PZpgTlkpUdTTlH6sA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747860387; c=relaxed/simple;
-	bh=R79nurTiLDz8uDcUSqmgM4MLmKYimgw4BmzygMGlkUw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ImXKAph1J92rG2gfb3penn9TYYVM/8ZV+3OFXhUNWOeezSEDrSZsUiHO/3MWfYUSMQhW6Sq1/7RBUtqD0klxBCs8OvIaRf9KzKnP9n1pbXMewCVD2/TEycjegcyqov6MzWZkyYiAGGNMNsMQu+oWNprEMKjvEACGwKq3nN2hLrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SHhJzRvS; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E3A32367A3;
+	Wed, 21 May 2025 20:50:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.8
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747860629; cv=fail; b=X3OO/UoxniFC233ZVo5lWxbjRmroLUmqj7r4Vlaxg4p/xQW9U20PDABmAGyuWcOAXxp9LeHNN9J35RS7PM9uq8h3/yjx++HyOQH+trmsPKol9+wwH1WXBwzqB+4CGv5XQFEuqYN7LY/0+VE9yHXjEPCp97hAqBB1lMz9NP/nzuA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747860629; c=relaxed/simple;
+	bh=icKLZIt3ZxIXCah/bTZnqfU/SJmFrUxFUC/pKUifjFY=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=cEFSPAyG4xwCjgsCLNrWkSF2uMOZLAPsNtpcjnnA86yPArjvyKA59oIYCb3kY0rVimRRiMalO2PSeHVavKgJYlUpQ8QjFSWtdMhyUMxgKcKbxeEV1uNIa7XJ/FXmPr4w78XorS0r4elk+rGzxB2r67VtZLgGe3XlgfQFHfVrIao=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OaWn3arq; arc=fail smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SHhJzRvS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OaWn3arq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747860385; x=1779396385;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=R79nurTiLDz8uDcUSqmgM4MLmKYimgw4BmzygMGlkUw=;
-  b=SHhJzRvSspY9ZyqaYA54ePiMWAfhVBryh7T+VvV92FgctZuTaLhMreCM
-   tfIE3X9Qd6UZzvzMLdGqQs4WP+7nzUJRoiWLByAfRSHC2k0LfhzRRhCdj
-   BHxfarkB6rFqwWTf4pCiT5fq5GdbI3+TDPOw/IHdLdalxbHG9KnvXaS7H
-   HdO+nYRFJBkqjaALmMbxScLX+wKzmyohBXud3ab8ZSgjyK7tq6YIBLAoN
-   rsTEdOkMvycwZIsEfgQKO1FC56ml/RZzDiXBaGA7PqVLXkpXPXNDUj2Ey
-   W9ViLhmqLmdo7mUR1KmolgQJzL1mUy3ezCPzWqydPi+Un1hJVK7maZLri
+  t=1747860627; x=1779396627;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=icKLZIt3ZxIXCah/bTZnqfU/SJmFrUxFUC/pKUifjFY=;
+  b=OaWn3arqacc48lfn97FbORiiPfA9BL50Fs1cwI6ejPlJqKsUvKkR2Wfu
+   7+sAp5ifa3uV6GslWmkBbSVqgLJj2r+j0emilZcHXGqGV9e+evLNcLbeu
+   BgQBnK33fhwY6H18ggQ2x4f8DQEY3GPuMcAw11FHMFd3cPQls+I7PqHbm
+   RzCRO0lVDc/OI7eQ1m4ooK567TlcurcAkiKDFhryQeiq3l/qvzO0ua3Yc
+   T4vZC6r2P7lItstb2/GgLJhCKxvPLdUjXbh77R4EunvvLWua9/NpMcwf5
+   /4OSyV7YUZn0/vKBUaSB9HiLpuAm45ICNQs9eiapLPaxDo0i3vzvdcwrh
    Q==;
-X-CSE-ConnectionGUID: OP+9foSUQA6O0B3tT8w4ug==
-X-CSE-MsgGUID: cjprEvIbQaOJbrKLCnZKKQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="60519727"
+X-CSE-ConnectionGUID: 6wiveCPJT5SgWIoRfUV/YQ==
+X-CSE-MsgGUID: zWopi06BQXSrZ1hDlBWPBA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="67416570"
 X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
-   d="scan'208";a="60519727"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 13:46:25 -0700
-X-CSE-ConnectionGUID: tjXAEDIgRYG7BfmIFNWf+Q==
-X-CSE-MsgGUID: bmd5HTEERqWadWxKdnH9Eg==
+   d="scan'208";a="67416570"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 13:50:26 -0700
+X-CSE-ConnectionGUID: dsnEEwgYRpGD9f+dHrF8Rw==
+X-CSE-MsgGUID: icaO+gvmTEmEw13hOwZKVA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
-   d="scan'208";a="141142236"
-Received: from ldmartin-desk2.corp.intel.com (HELO [10.125.109.106]) ([10.125.109.106])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 13:46:24 -0700
-Message-ID: <71238a94-361f-4264-a5e4-510d428f5f66@intel.com>
-Date: Wed, 21 May 2025 13:46:21 -0700
+   d="scan'208";a="177399805"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 13:50:26 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 21 May 2025 13:50:25 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Wed, 21 May 2025 13:50:25 -0700
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.47) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.55; Wed, 21 May 2025 13:50:25 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=NCUiuoLZb2l5zIouQqtWsIbtHcb5KYbU1UYc+XNVW41FC65AYQ9guqB1sPVdVh4uxjPLZvdvTPtg12i+VKgvPCt4UfzIWiewvcx4H21UPwkbxNdw49EO7in6W+BRgnejUfRPjv7rb0g1EMx0q9AIs0/YnIgD7EyqL9VhcCIUAWEqhtQLOmaT4I25uDM75fweOI2uB+L06+KZCBh4c7UIUOSsWDb4g76fZaCVHoVF5rwnLzWwnH91HPGO846RlzgUG2wLDHgft5iobjpGV2Q8M8Oq2Zc/8xzi+jo6wkcZWXU6RnKgA4nilVv2UjzSkkFH9h+kBcEECAftiH7z6NMrmQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hgynIz3o+avj5K4TVJNCXKyIb6ked/0vT3ISk4Dqkdg=;
+ b=YgBzJoetm0jE6Pek8KVasVfgWrdGL0nJciT4JQKNeynMGUKLEuxjPq7ThQ+amziAL7HQOzZgZbyO/HG1kpJezowcKax3kXGu24VeGC5Jg+Wh8NURWZCNMzKTQ4Eft85PlUamhVWYh/WPwD0+gSVwG7jtiErPwHmQXM9hEvtmAfFFUrNCFxTSs5TXOT19OnjEHRML+C9TXKOUJerRMK0R0TdzZtDemicKmVciBgLYoiu9F/KMxFLcmdnYLnWfPvqWyRs64tkT4XgZiDjU356NKpqLWTS/5SQ7rsryIq4thKMIwZKXcGmfTWxh1YjzusKc7TC3l98Esj9pHlxJ7A2E4w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by SJ0PR11MB5813.namprd11.prod.outlook.com (2603:10b6:a03:422::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Wed, 21 May
+ 2025 20:49:55 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8746.030; Wed, 21 May 2025
+ 20:49:55 +0000
+Date: Wed, 21 May 2025 13:49:53 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: <alejandro.lucero-palau@amd.com>, <linux-cxl@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <dan.j.williams@intel.com>, <edward.cree@amd.com>,
+	<davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
+	<edumazet@google.com>, <dave.jiang@intel.com>
+CC: Alejandro Lucero <alucerop@amd.com>, Zhi Wang <zhiw@nvidia.com>, "Jonathan
+ Cameron" <Jonathan.Cameron@huawei.com>, Ben Cheatham
+	<benjamin.cheatham@amd.com>
+Subject: Re: [PATCH v16 19/22] cxl: Add region flag for precluding a device
+ memory to be used for dax
+Message-ID: <682e3c7129fb0_1626e10062@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20250514132743.523469-1-alejandro.lucero-palau@amd.com>
+ <20250514132743.523469-20-alejandro.lucero-palau@amd.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250514132743.523469-20-alejandro.lucero-palau@amd.com>
+X-ClientProxiedBy: BYAPR05CA0051.namprd05.prod.outlook.com
+ (2603:10b6:a03:74::28) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Internal error: Oops: 0000000096000044 [#11] SMP
-To: Itaru Kitayama <itaru.kitayama@linux.dev>
-Cc: linux-cxl@vger.kernel.org
-References: <aC2RKceK4HqYEQo/@vm4>
- <96235d4d-2bb7-4743-b519-0c35a9a21749@intel.com>
- <98DE3B2C-1393-4ED8-BB6A-E72D6131F97A@linux.dev>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <98DE3B2C-1393-4ED8-BB6A-E72D6131F97A@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SJ0PR11MB5813:EE_
+X-MS-Office365-Filtering-Correlation-Id: e8bc7649-70bf-46c6-db16-08dd98a90a9a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014|921020;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?IQW3it3geu0nmqcEsBnhf4MVtUA62JMUeR3K4sSkh71GiupUiuXsv9stHJFY?=
+ =?us-ascii?Q?6yfP3YfW2nF1wgw9PdK++0qt0w0HH741b34+eHxxRr6sne5D1qEiwtB5aXRN?=
+ =?us-ascii?Q?54HrSAuh6NMVYA3SiwrK2PhjG37W4NK/pZCs0g9qgwJ7OzmO9FOetCSNJ5nE?=
+ =?us-ascii?Q?3tizwq/rP6RizPLHY/Fmg3zT3f+VW/ZsPNZgXBSvFkfSpDPEvc62+GIWnusC?=
+ =?us-ascii?Q?jqfJcsUd11D17JwE4B1jVxquVBm4s/qqB1W2c/jbabAbmrwVbgbnQA/2TYE+?=
+ =?us-ascii?Q?CtZPO9aUR8YQVSOu8f3PnoMjYLAsiLv4SW6GeOkFK2r6ZVXv8R+R7z3oY+Dw?=
+ =?us-ascii?Q?6GeKeJmtjy1Xr8uhfj8zTBqEkUl7sD8eMppqMt4oPujddhsfiweKOrMJfuU6?=
+ =?us-ascii?Q?dnM1tQkNvwnHmqlkonwglsvFJY+35LVP/JsfWSNYuAjoB8HqbxfgYibIMLum?=
+ =?us-ascii?Q?bCR8CGYSnutdtLP+r8+ICpoTgCBA1dNLbqvSfWcSWq6l692XUkFqpleXtEGf?=
+ =?us-ascii?Q?uVRNNglFnacvKRcFSuqA68iMkgrhxGD7suK04c882EXNBvoyApyOEGWR7Keh?=
+ =?us-ascii?Q?9nCzIvq7I2fa8rkZQR2V769bcrrv3bLM5QonNnr9dRUYSOZr1vfgN44ErqZu?=
+ =?us-ascii?Q?iP4Tiupg97OA6751/dCK9CiLPWiiqXH1cy4Tn8iQakn2yQi3uOGyabike/9z?=
+ =?us-ascii?Q?UzYQSXpuHKmfuQFBrCQMORQrV+1NjV4UV1iTsP2lkBZge4/WsP5Y5YK5V0m2?=
+ =?us-ascii?Q?l8LX+79y7wzR8kXWvxxVV7bKDh9P16G2TA72Z47TNxAFa35OwfZYZAx4l38T?=
+ =?us-ascii?Q?UIyIqUzJj8/vtj9fM4/+iTvOMlT7Jf713TXQ40tizlEXQqvM4HME2q/HUcPK?=
+ =?us-ascii?Q?Dn1Csm95sTmBITEyYPCnUrTUOeqDJPYhSpG+CEd90wZjHZZTItfS1iG8RKe3?=
+ =?us-ascii?Q?SUhd3XUfmswXSZoNnqKW7TugKEAmJAM2VLPlrkTD43zWydec6BnxprUaOfZp?=
+ =?us-ascii?Q?h6KaYjGVlGUvL7+FvbP4tezpD/t/E0Wd0M9NeOcZ+79qrBtnR1KDNZBaAidz?=
+ =?us-ascii?Q?IqOrzYgFTJU0WrNIzNbsfgb7kAPn3R6ECuHcFAvqtJNnyhby/eAFl8RNmdb9?=
+ =?us-ascii?Q?yuL7YK5oiBAvI5trW4qJXwNFgPcsGnbq52VlQ7CPTKgrQwMgYhQdvrhDSknd?=
+ =?us-ascii?Q?l3e1B4zQLE9k4ziRF92yyd7dGXLc9s0ZDoRYYZBJi2Q4VNdZHTJCdSDlX43v?=
+ =?us-ascii?Q?R/Hrs/k2sGWp/ish5r991k4N6o0dkLydqjButQPQ68ekY3nw73VfUtzytlmP?=
+ =?us-ascii?Q?v4TXlBkKD8KnbFn/Zd7FCo+xkSCF4uTLfAJuubH3toi2iugsrCKIvDKyXsO6?=
+ =?us-ascii?Q?Wdc7I8juxmoCqotreVSgp9ZftLjKIO9kOVY84MXWvlmHTOGVLeFw65kebMBs?=
+ =?us-ascii?Q?jhjgCt+y7xNBfOO0z9TcpQa+V4rkWeoGaaDlq3Fv+Qa0hmPBUs+Kaw=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?0OUSTjMYQfADe9QyVnYt9mzolkbllteiS2jMYKubYAunFfBWDq07gPYhRN5p?=
+ =?us-ascii?Q?RBi9MamZ8sxI+2dxQS42GPug3sZE/A2K10vcJgR3bxZCQyLkHCAZGTO4bpF+?=
+ =?us-ascii?Q?5HdGNnhMGnI/SQb4UhxVRWeNqNcnrqZr8OhYYfukPLflWH41UyVFz5eJkqPD?=
+ =?us-ascii?Q?iOMzdbwW2R7+GDEkJKdAdYWNQsXVAXQrsEzZbr2lz54rJm36c5bsNOnjw1bd?=
+ =?us-ascii?Q?SSNc1zELeEEN3x4fPASqLjHHLZfamm3I31n8RHpDn/m9jkwAlgX3ErvJASKh?=
+ =?us-ascii?Q?3YLsjYaRdZk01kfZDi5D0hY8b3VvT3O1oG4Js4ibaR5VNtWD8t7JMjFyHjTh?=
+ =?us-ascii?Q?m+pW12qnLiuPveUxAvlXbJjFpb58S7Gn0U3lDDd39093Gfne1uQdBEUPFfHP?=
+ =?us-ascii?Q?BXqWbjj9b9A4hoCS3qmRKqogfXUZ+sHIU7AE14Cc7xho0X1BGIZaBtN5ByaW?=
+ =?us-ascii?Q?uN6WNRm2eur9PGakXZVqOq9zERCwJXJxosxChxweizOFQZudaqt2AyPbHcuy?=
+ =?us-ascii?Q?TOTFwnsbM9xtjBQRRyLuJnK2lWbYOSO53weKXPevcKS6pe9M/ow/WOeIgBbb?=
+ =?us-ascii?Q?uIEIVGFLdBKYZU7+x3ZGhK+xNRnZbvV0jx1nTRWdgY24NFjdMsdj/bqL/Evs?=
+ =?us-ascii?Q?foAFlJT6vQ52my0NSPmEuX83u16h0/6ITVWciakvlPCr62as3LqHCKSGYr31?=
+ =?us-ascii?Q?jBqNGFzEyWCyO4dYVIAqpbfMt7CGWqM1NprWYUPaasqnyXGQ1k5L1Z7t5lbi?=
+ =?us-ascii?Q?EKq/Svo3ThgwobjWkIhbzckOo41xnT2O1+Zgg0pdlJmKpQ96YvMJF0hqdnf6?=
+ =?us-ascii?Q?HKlE6wd1q10UREMvYVGx+eu93kcPyCRd/wZ7RudIYdg+axUY+J4Z8qQx+7mw?=
+ =?us-ascii?Q?xOM9sxrGUSCSTXiJsRi3WjOM0E02yDNAQQaGR4mV0E7DqK5Ix1nCPFJ4MtjN?=
+ =?us-ascii?Q?OTFcuisxVgPerVkkIi9i7DI05cgr1ccGSPMMkEubrJ5wI1rPLcJozo39rxg6?=
+ =?us-ascii?Q?wQevwPoEldTvrbEptK4laMvUVXkicMkcAZpp+ESgPekAd4NIEoBx6lUZiKml?=
+ =?us-ascii?Q?5cCseHhES3zPyHPYYQ+zACMjefuoXBHCu4c9XCq+HaZ+4mg6o1atSRmYqFT6?=
+ =?us-ascii?Q?ku1olYfTaV4ivJ5rFOCca3XOxGERtwsUimpIcML+DVLd9V/WRYWkk211BOvI?=
+ =?us-ascii?Q?N7+PMqcyhVEvI4x6EF6t6oamWSLCsBPojUkX6k4m5wmbJ+Mybk+Y1q8iQHDS?=
+ =?us-ascii?Q?rKM+d3e/mQfmnL+7YayA+TPjqh4Qm66ygY39w3iFSd56oIPLLDU7KRcB8YNl?=
+ =?us-ascii?Q?KnHln6BXZWD469ZFsUQK4h5PndxoP9GKfRNQ22j3Rx6XddxVqIc6/rlW70e4?=
+ =?us-ascii?Q?QFNF6GDaKvM45+sbSlYeU6tMrUVIbVZ+4UGsWkIY3OG7cayshm6BBnQ3Yseu?=
+ =?us-ascii?Q?8leiTVJ+J21mVY7f5rqmwSPQ7/6JkFk1Rp2H7J26zmZtuiHuXI4iZlAzMyRY?=
+ =?us-ascii?Q?/NUGXpGGJYeDia0MhjxQaQSDPNVcujEsBUi+UY/21QvBiDU7Vs1LjP3g53mK?=
+ =?us-ascii?Q?fH18pL0wf8hUgm0hZsERUSOK4TGFLH8PSQYL6qBD2Nn+Gu8/RWdmJfgK7cby?=
+ =?us-ascii?Q?cA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: e8bc7649-70bf-46c6-db16-08dd98a90a9a
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2025 20:49:55.2576
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: RZuWX/ORxw/7TWxyaMA0MhCNocDdzIhCQxaGaJnxmU1B6fu0paaszIWbjuLOySm70FbGpj9IQSQHGneg1LTWgPHJcCsHiYgf2EHTqNc2oBA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB5813
+X-OriginatorOrg: intel.com
 
+alejandro.lucero-palau@ wrote:
+> From: Alejandro Lucero <alucerop@amd.com>
+> 
+> By definition a type2 cxl device will use the host managed memory for
+> specific functionality, therefore it should not be available to other
+> uses. However, a dax interface could be just good enough in some cases.
+> 
+> Add a flag to a cxl region for specifically state to not create a dax
+> device. Allow a Type2 driver to set that flag at region creation time.
+> 
+> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> Reviewed-by: Zhi Wang <zhiw@nvidia.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> ---
 
+What was wrong with the original proposal?
 
-On 5/21/25 1:38 PM, Itaru Kitayama wrote:
-> Dave
-> 
->> On May 22, 2025, at 0:31, Dave Jiang <dave.jiang@intel.com> wrote:
->>
->>
->>
->> On 5/21/25 1:39 AM, Itaru Kitayama wrote:
->>> Hi,
->>> On arm64/virt QEMU, the cxl/next (as of today) kernel prints out Internal errors:
->>>
->>> [   80.968299] [     T48] Internal error: Oops: 0000000096000044 [#11]
->>> SMP
->>> [   80.989250] [     T48] Modules linked in: cxl_mock_mem(O) cfg80211
->>> rfkill cxl_test(O) cxl_mem(O) cxl_pmem(O) cxl_acpi(O) cxl_port(O)
->>> cxl_mock(O) libnvdimm encrypted_keys trusted caam_jr caam asn1_encoder
->>> caamhash_desc caamalg_desc error crypto_engine authenc libdes fuse drm
->>> backlight ip_tables x_tables sm3_ce sm3 sha3_ce sha512_ce sha512_arm64
->>> cxl_core(O) fwctl btrfs blake2b_generic xor xor_neon raid6_pq
->>> zstd_compress ipv6
->>> [   80.992210] [     T48] CPU: 1 UID: 0 PID: 48 Comm: kworker/u8:2
->>> Tainted: G      D    O        6.15.0-rc4-00040-g128ad8fa385b #40 PREEMPT
->>> [   80.992791] [     T48] Tainted: [D]=DIE, [O]=OOT_MODULE
->>> [   80.993039] [     T48] Hardware name: QEMU QEMU Virtual Machine, BIOS
->>> 2025.02-3ubuntu2 04/04/2025
->>> [   80.993400] [     T48] Workqueue: async async_run_entry_fn
->>> [   80.994718] [     T48] pstate: 61402005 (nZCv daif +PAN -UAO -TCO
->>> +DIT -SSBS BTYPE=--)
->>> [   80.995329] [     T48] pc : cxl_mock_mbox_send+0xec/0x12c0
->>> [cxl_mock_mem]
->>
->> Can you do this in your kernel tree?
->> ./scripts/faddr2line tools/testing/cxl/test/cxl_mock_mem.ko cxl_mock_mbox_send+0xec/0x12c0
-> 
-> realm@machine-1:~/projects/cxl$ ./scripts/faddr2line tools/testing/cxl/test/cxl_mock_mem.ko cxl_mock_mbox_send+0xec/0x12c0
-> cxl_mock_mbox_send+0xec/0x12c0:
-> mock_get_event at /home/realm/projects/cxl/tools/testing/cxl/test/mem.c:277
-> (inlined by) cxl_mock_mbox_send at /home/realm/projects/cxl/tools/testing/cxl/test/mem.c:1571
-> 
->>
->> I've not see this issue on x86 running cxl/next. How consistently can you reproduce this? If it's every time, is it possible for you to do a git bisect on the kernel and see which commit causes this please? Thanks!
-> 
-> Fairly reliably (100% of the boot time, and cx/fixes did not change this BTW, which branch is seen as stable for you folks?), yes, I should try git bisect.
++
++		/*
++		 * HDM-D[B] (device-memory) regions have accelerator
++		 * specific usage, skip device-dax registration.
++		 */
++		if (cxlr->type == CXL_DECODER_DEVMEM)
++			return 0;
 
-The current cxl/next is based on 6.15-rc4, which should have everything that was in cxl/fixes. And you do not see this with 6.14-final? git bisect would be very helpful. Thank you!
-
-> 
-> Itaru.
-> 
->>
->> DJ
->>
->>> [   80.995691] [     T48] lr : cxl_internal_send_cmd+0x40/0x104
->>> [cxl_core]
->>> [   80.996189] [     T48] sp : ffff800080d0b9f0
->>> [   80.996380] [     T48] x29: ffff800080d0ba70 x28: fff0000008dd2410
->>> x27: fff00000088fb390
->>> [   80.996714] [     T48] x26: ffff800080d0bb07 x25: 0000000000000100
->>> x24: 0000000000000003
->>> [   80.997135] [     T48] x23: 0000000000000020 x22: fff0000008dd2410
->>> x21: 0000000000000002
->>> [   80.998119] [     T48] x20: fff00000088fb080 x19: ffff800080d0bb08
->>> x18: 00000000ffffffff
->>> [   80.998419] [     T48] x17: 0000000000000000 x16: ffffa8d169128748
->>> x15: ffff800080d0b5ad
->>> [   80.999243] [     T48] x14: ffff800080d0b400 x13: ffff800080d0b5b8
->>> x12: fff000006f7a0000
->>> [   81.000519] [     T48] x11: 0000000000000058 x10: 0000000000000018 x9
->>> : fff000006f7a0000
->>> [   81.001337] [     T48] x8 : ffff800080d0bb48 x7 : fff0000074fa0000 x6
->>> : fff0000074fa0000
->>> [   81.002497] [     T48] x5 : fff000007f937508 x4 : 0000000000000001 x3
->>> : 0000000000001000
->>> [   81.003993] [     T48] x2 : 0000000000001000 x1 : 0000000000000000 x0
->>> : 0000000000000088
->>> [   81.004223] [     T48] Call trace:
->>> [   81.004795] [     T48]  cxl_mock_mbox_send+0xec/0x12c0 [cxl_mock_mem]
->>> (P)
->>> [   81.005136] [     T48]  cxl_internal_send_cmd+0x40/0x104 [cxl_core]
->>> [   81.005520] [     T48]  cxl_mem_get_records_log+0xbc/0x198 [cxl_core]
->>> [   81.006042] [     T48]  cxl_mem_get_event_records+0xb0/0xc0
->>> [cxl_core]
->>> [   81.006246] [     T48]  cxl_mock_mem_probe+0x568/0x6f0 [cxl_mock_mem]
->>> [   81.006417] [     T48]  platform_probe+0x68/0xd8
->>> [   81.008340] [     T48]  really_probe+0xc0/0x39c
->>> [   81.008885] [     T48]  __driver_probe_device+0xd0/0x14c
->>> [   81.009539] [     T48]  driver_probe_device+0x3c/0x120
->>> [   81.010239] [     T48]  __driver_attach_async_helper+0x50/0xec
->>> [   81.011130] [     T48]  async_run_entry_fn+0x34/0x14c
->>> [   81.011276] [     T48]  process_one_work+0x148/0x284
->>> [   81.011420] [     T48]  worker_thread+0x2c4/0x3e0
->>> [   81.011552] [     T48]  kthread+0x12c/0x204
->>> [   81.011693] [     T48]  ret_from_fork+0x10/0x20
->>> [   81.011840] [     T48] Code: 54001b28 a90c6bf9 52801100 f9400a61
->>> (a9007c3f)
->>> [   81.013772] [     T48] ---[ end trace 0000000000000000 ]---
->>>
->>> How serious is this?
->>>
->>> Thanks,
->>> Itaru.
-> 
-> 
-
+I really do not want the ABI presentation policy layer leaking that deep into
+the region creation flow. Another way to determine this is if devices
+hosting the region are not driver by the generic CXL device memory class
+driver 'cxl_pci'.
