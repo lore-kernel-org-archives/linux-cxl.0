@@ -1,80 +1,75 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C39716DC28;
-	Wed, 21 May 2025 16:31:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33EEA238C12
+	for <linux-cxl@vger.kernel.org>; Wed, 21 May 2025 16:59:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747845088; cv=none; b=HhalzzZOQmREk0MTkmpQLsRorlDHuEXjMgUcKtquO6cLn2/DLzf5kol+3hArG778cBEz143tdCXk3Z1Knh9ZpvECVAVQ/gbatNR1VM78xrfb+9sjtVN44Uh041QcbPMaFdahzS9wB2/vEBdlIB+IUU06TKY24QJndNOS49FGVPY=
+	t=1747846777; cv=none; b=pG0fGyfOxJi/yuxI1FTF9s9PT3NSJYYZDEEEooRIrkDiHEuW+DcAQs7g6xZ1E0WwDAwpmuuvjZeRRu3qorG8XoyTQ4yWmi+pHS2nUCS5G/QVSSEuE8omdlEATTLfrCFNyz5hw7cBMqfkm17Bl3woeaAA2tXqf0i7qd1EfcRNZeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747845088; c=relaxed/simple;
-	bh=rVB01lYj9aSiT3vcqWaafdFMVB8ErPQivfkQKiIe7l0=;
+	s=arc-20240116; t=1747846777; c=relaxed/simple;
+	bh=QcNdH+Sz49XjZBR0uJqipxNzHS0KM+DQwKX0scg981A=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HO7B8HJVta8CwnzievMg1bJJ8GYcoM4xZinPpirODJ+pfgnG6xKU8TbfFEbtY52RQa5OJwdzSKmA3inqQkcIbVxqAeIOooFl+oSQV8YS2ZmjorW2h0UrGQAxIt1IugXWWr2H/KiiMHzn9l39pD+HcQs6EJUJYVNuD+4ZZhXOmtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BtDyU5nw; arc=none smtp.client-ip=209.85.210.171
+	 Content-Type:Content-Disposition:In-Reply-To; b=BMHi0Hj8rrlYjj3koJWEF3HPPBSm6risK2fdnFnT7HhcTB8yCqU4WSTqyqMCYaDoxgWHbF4rNjApPKhR2isCF3E2k+3b42/MK5sAfokeN/x923kAb5ISphtmaxeuVDExgFvIgZtXz/CB0Pv4r0Vn0e/ay6GQKcnzmDg9SLrY/6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nTfp/r2X; arc=none smtp.client-ip=209.85.210.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BtDyU5nw"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-742c9907967so3775288b3a.1;
-        Wed, 21 May 2025 09:31:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nTfp/r2X"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-742c9563fd9so3473813b3a.3
+        for <linux-cxl@vger.kernel.org>; Wed, 21 May 2025 09:59:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747845086; x=1748449886; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747846774; x=1748451574; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=pn+w0D/TRnBKc0XGfluQ6lHdM8uAAWfVWv0XUbJbjwQ=;
-        b=BtDyU5nwL9EiOLka25a7YpjM/MjOslV8jfFmdhPJUJgdafMdy+so3m29wNtO0wIU30
-         q2WvvL0ZMB2UOhqLO5LeV1T/k6Rg8/yFxlC72EJxGGK/f70IXNv8FcFw3qrT/mdTpZlE
-         t1At9NcrbLT9EYSn6VzCUY33lNbW3j6TgR/W5LE786JXrxYjVCt8rLYC+wCntM/4UM/2
-         xt6tEAN9xAsgomZBGh4yfS7DUO+Vy56+mbzhhRBwcGw5xILjdZ0xFHpJi00odn9kx/Ud
-         nI0lFW2DZksrfzyXmY+MPadps05cklbom5wL5L8qc2K1ur1or1DjM1MNXjmHtxCWZZf2
-         auVQ==
+        bh=Bd6ZIFTZZmBbT7NmrB6VUv3CJ3IJftMLK1vLzp+yZ8Q=;
+        b=nTfp/r2XY0l+GIrwO4a0QtVUJ0XR0KJW0n0HMxTCQ44m0F8g0KsJp3OHqzEjNxARWD
+         /xB+BPloB7d0hmnp/Tk5wv1WxHbxLP3VxoAV5+D7/RbiVaVzn6TZXHBXCAltg3aSe5rz
+         71VnpYz7quyOt12st/DsEyofiLhd+NKzhF61w+35UJoILFA3oPFnp2w9+hxFgjft5+j+
+         UCK4O+m1jvquIijjipJgF2ikRcitVZDHYrAVKA+MJGclGhDSYoKivrJF/+SHWtd4Cn41
+         m/0QOhjLDMWajcLrKuMC7t4WFg/6BOrcBDrSNzvU7etqSVNkALoNd12R94mVSCmcgTpM
+         2cQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747845086; x=1748449886;
+        d=1e100.net; s=20230601; t=1747846774; x=1748451574;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pn+w0D/TRnBKc0XGfluQ6lHdM8uAAWfVWv0XUbJbjwQ=;
-        b=oN1kUHuGTOsbFLrJGujPBPvzdflYjQiTlC8b+vlbQvKoWNVziLdsA3bvn3CxfATeZm
-         UQpOJsar28+Ch19rMetvjYKw63rxKrH+u6+l1Q0UyP9ivZJvw5PJ1P0htOljUE+x1ZN7
-         C29lSU1qK6I/CE66/rriQnLXuK0YDH1KEgPoqiRW18vIcL+rBkxgkCV0Fomfp24TvTAm
-         DQNm6MBebJvEMoMQDcbzAm6LhgXKdmXh/F4/KZA10yVGKTBWPF1RlfXPg/479xx6ifhB
-         +xOxf8HTSixp5a8fvLj7RFJjTyC8fkUvJNCzAcenUFYSPBniCxRgJzoSHkmZmSLvf/yj
-         wBig==
-X-Forwarded-Encrypted: i=1; AJvYcCVqORxl3t6dXeBUsFmP//okFvZcluOf1J4vknj7q9ktW6cP1PZV/rvSc1HNSQS5Cgys9NdDqMm2XPI=@vger.kernel.org, AJvYcCXjDfIPquu8Yhxw6qA0vc0kL/lG8lt7IXUSrFIQqQlulx6JfusMy/ARYMCV5Va7Ht+PDvenh33TNKXeOQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyj1D1L3xXS8K01+DG9F5mIghcnzAPVFVYSZcVBOn8mwClOMTxl
-	A4Air7o6NtC11sTvjJ3/6v9CW80DG8QKazqfIuJPZDna4hE96f8yEnAF
-X-Gm-Gg: ASbGnctH0lo9abV7B4xtCEIgyoecIzibyPSsVzrtPLB9eshIxw/m2T5emherbste613
-	FSmhr4JnEnkKeOk66RZFSpmp07qAa6vwkXEKNS1c5KVjbab4/o2kqoXGlnszfjsweKIx/JXBxHs
-	K7qDWue5q+TrdRQwBm+yNDSnAZc6n4WfmxiAMMw4Fb51HfSQJno7o+imi1wlalzE8Q/VzPW6f38
-	6j0RDCTG/D9QeJajFRk5to8YeBWi/gEIcU91vrfqmAKeKkRjntwchxqu2QAmw1aWh0lw+seNuFm
-	XyDfblGcEspZcC2PwW+pM/50GP/BAMmguBJ/ohw9cgUJMnl9PlRe0Fg=
-X-Google-Smtp-Source: AGHT+IFp3n+dKx2GtdCyvAzDa8TfjiGZUSlOh+tuuS6LDqMXZsXk+ZYSPh7mhl+zVFsgztmW2lbtQQ==
-X-Received: by 2002:a05:6a21:3511:b0:206:a9bd:a186 with SMTP id adf61e73a8af0-21621882718mr36715905637.3.1747845086441;
-        Wed, 21 May 2025 09:31:26 -0700 (PDT)
+        bh=Bd6ZIFTZZmBbT7NmrB6VUv3CJ3IJftMLK1vLzp+yZ8Q=;
+        b=Og6xSmcDteI+8iORjVvGmyi6i+mEvyeK+YaL1vrgsiCAylk5ysxTv1jPibFuLqranY
+         TjT5qD2QTiaMooi7AMrtZLewxcSa1EEN03qtOz3HmtTCMc1VeGgRsMMV77+3fQdYzOMe
+         QFQJg6ymNH6Cw98hsPtjJZ0zpgUj9AiXS66E8HOq2rrbp//mJ05JSPL2tHaT01VgoxAj
+         DQP85D5J2UcXBXOTdOZO8kcs5p1IQA3uSfVFPvGMsPKJTSueXleYJ5eR3aLPPlaBL2u7
+         +aHujD4vrbcQfkL9AcfjjLuwA0PdXMZObqIDAreQU3BzGNr7UKIYSFjt5YT5AcE6EI5K
+         lCyg==
+X-Forwarded-Encrypted: i=1; AJvYcCVjcPCHE0reJlglCF/HY6+SDL3bPawdQgqH84gJdlIgLjJAzWQQJja2NJ7GxImgmYcvjc/bffB+rys=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBH9KQM2leMVZ7TS0SOCe2zaCyF5OgtbrHVlbSxonwivocoYfo
+	FILLZFXzo616gk2YQvHUNyjDIaY4s1jOpFnRUYDn21+0s7eOQO/64AnY
+X-Gm-Gg: ASbGnct+QRDLwQIHmDJwd0vw6oB18Fpk22SiNL8ZTGYke+IGfOxFHg9lfF5K6jN8OVA
+	9jHxnDQEuxAzTBkBjjEFCKlWrHJ3Mm91VpVB1E6rKEk0pNp6Z6Ic02SQq4F2J960bSkt1CcWsYk
+	DT8vxrQ7pBKjIpIyFqvA8zj0jhbQHCoxHM5rxzFnf4o9d7EysCSk9XPmneQSxw+ycVoxy7P0vy7
+	REsBHB5z0g6omCOBMmrJeREaZ0GZOHSD2OU2qqEn4oqM37yxS0NZt3d+/sy+0KOl3qr0nmkUxuF
+	/ZgW4dbkBo+hk1iFoQHoogqFPUFjkhA4ALMx1N5jIAPjNY1EMvdaNIE=
+X-Google-Smtp-Source: AGHT+IEFXEYkEG/bbYXgCGKkIh+JxF1NvuNlk0oZ8z6sRx8WzVQWgtRD58yDof9ZQfHnQN7Xkh2kEA==
+X-Received: by 2002:a05:6a20:1591:b0:204:695f:47e1 with SMTP id adf61e73a8af0-2170ccc0efdmr31537492637.23.1747846774329;
+        Wed, 21 May 2025 09:59:34 -0700 (PDT)
 Received: from smc-140338-bm01 ([149.97.161.244])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a970b7bcsm10073651b3a.52.2025.05.21.09.31.24
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a9829bbesm9837482b3a.89.2025.05.21.09.59.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 09:31:25 -0700 (PDT)
+        Wed, 21 May 2025 09:59:33 -0700 (PDT)
 From: Fan Ni <nifan.cxl@gmail.com>
 X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Wed, 21 May 2025 16:31:23 +0000
-To: shiju.jose@huawei.com
-Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	dave@stgolabs.net, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	linux-edac@vger.kernel.org, linux-doc@vger.kernel.org, bp@alien8.de,
-	tony.luck@intel.com, lenb@kernel.org, Yazen.Ghannam@amd.com,
-	mchehab@kernel.org, nifan.cxl@gmail.com, linuxarm@huawei.com,
-	tanxiaofei@huawei.com, prime.zeng@hisilicon.com,
-	roberto.sassu@huawei.com, kangkang.shen@futurewei.com,
-	wanghuiqiang@huawei.com
-Subject: Re: [PATCH v6 2/8] cxl: Update prototype of function
- get_support_feature_info()
-Message-ID: <aC3_2xDB7kR2a-qA@smc-140338-bm01>
-References: <20250521124749.817-1-shiju.jose@huawei.com>
- <20250521124749.817-3-shiju.jose@huawei.com>
+Date: Wed, 21 May 2025 16:59:31 +0000
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: qemu-devel@nongnu.org, Peter Maydell <peter.maydell@linaro.org>,
+	mst@redhat.com, linux-cxl@vger.kernel.org, linuxarm@huawei.com,
+	qemu-arm@nongnu.org, Yuquan Wang <wangyuquan1236@phytium.com.cn>,
+	Itaru Kitayama <itaru.kitayama@linux.dev>,
+	Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>
+Subject: Re: [PATCH v13 1/5] hw/cxl-host: Add an index field to
+ CXLFixedMemoryWindow
+Message-ID: <aC4Gc7TMHHwuNGwl@smc-140338-bm01>
+References: <20250513111455.128266-1-Jonathan.Cameron@huawei.com>
+ <20250513111455.128266-2-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -83,79 +78,73 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250521124749.817-3-shiju.jose@huawei.com>
+In-Reply-To: <20250513111455.128266-2-Jonathan.Cameron@huawei.com>
 
-On Wed, May 21, 2025 at 01:47:40PM +0100, shiju.jose@huawei.com wrote:
-> From: Shiju Jose <shiju.jose@huawei.com>
+On Tue, May 13, 2025 at 12:14:51PM +0100, Jonathan Cameron wrote:
+> To enable these to be found in a fixed order, that order needs
+> to be known.  This will later be used to sort a list of these
+> structures that address map and ACPI table entries are predictable.
 > 
-> Add following changes to function get_support_feature_info()
-> 1. Make generic to share between cxl-fwctl and cxl-edac paths.
-> 2. Rename get_support_feature_info() to cxl_feature_info()
-> 3. Change parameter const struct fwctl_rpc_cxl *rpc_in to
->    const uuid_t *uuid.
-> 
-> Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
 
 Reviewed-by: Fan Ni <fan.ni@samsung.com>
 
-> ---
->  drivers/cxl/core/core.h     |  2 ++
->  drivers/cxl/core/features.c | 17 +++++++----------
->  2 files changed, 9 insertions(+), 10 deletions(-)
+>  include/hw/cxl/cxl.h | 1 +
+>  hw/cxl/cxl-host.c    | 9 ++++++---
+>  2 files changed, 7 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> index 17b692eb3257..613cce5c4f7b 100644
-> --- a/drivers/cxl/core/core.h
-> +++ b/drivers/cxl/core/core.h
-> @@ -124,6 +124,8 @@ int cxl_acpi_get_extended_linear_cache_size(struct resource *backing_res,
->  					    int nid, resource_size_t *size);
+> diff --git a/include/hw/cxl/cxl.h b/include/hw/cxl/cxl.h
+> index 75e47b6864..b2bcce7ed6 100644
+> --- a/include/hw/cxl/cxl.h
+> +++ b/include/hw/cxl/cxl.h
+> @@ -27,6 +27,7 @@
+>  typedef struct PXBCXLDev PXBCXLDev;
 >  
->  #ifdef CONFIG_CXL_FEATURES
-> +struct cxl_feat_entry *
-> +cxl_feature_info(struct cxl_features_state *cxlfs, const uuid_t *uuid);
->  size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
->  		       enum cxl_get_feat_selection selection,
->  		       void *feat_out, size_t feat_out_size, u16 offset,
-> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-> index 1498e2369c37..a83a2214a136 100644
-> --- a/drivers/cxl/core/features.c
-> +++ b/drivers/cxl/core/features.c
-> @@ -355,17 +355,11 @@ static void cxlctl_close_uctx(struct fwctl_uctx *uctx)
+>  typedef struct CXLFixedWindow {
+> +    int index;
+>      uint64_t size;
+>      char **targets;
+>      PXBCXLDev *target_hbs[16];
+> diff --git a/hw/cxl/cxl-host.c b/hw/cxl/cxl-host.c
+> index e010163174..b7aa429ddf 100644
+> --- a/hw/cxl/cxl-host.c
+> +++ b/hw/cxl/cxl-host.c
+> @@ -24,13 +24,15 @@
+>  
+>  static void cxl_fixed_memory_window_config(CXLState *cxl_state,
+>                                             CXLFixedMemoryWindowOptions *object,
+> -                                           Error **errp)
+> +                                           int index, Error **errp)
 >  {
->  }
+>      ERRP_GUARD();
+>      g_autofree CXLFixedWindow *fw = g_malloc0(sizeof(*fw));
+>      strList *target;
+>      int i;
 >  
-> -static struct cxl_feat_entry *
-> -get_support_feature_info(struct cxl_features_state *cxlfs,
-> -			 const struct fwctl_rpc_cxl *rpc_in)
-> +struct cxl_feat_entry *
-> +cxl_feature_info(struct cxl_features_state *cxlfs,
-> +		 const uuid_t *uuid)
->  {
->  	struct cxl_feat_entry *feat;
-> -	const uuid_t *uuid;
-> -
-> -	if (rpc_in->op_size < sizeof(uuid))
-> -		return ERR_PTR(-EINVAL);
-> -
-> -	uuid = &rpc_in->set_feat_in.uuid;
->  
->  	for (int i = 0; i < cxlfs->entries->num_features; i++) {
->  		feat = &cxlfs->entries->ent[i];
-> @@ -547,7 +541,10 @@ static bool cxlctl_validate_set_features(struct cxl_features_state *cxlfs,
->  	struct cxl_feat_entry *feat;
->  	u32 flags;
->  
-> -	feat = get_support_feature_info(cxlfs, rpc_in);
-> +	if (rpc_in->op_size < sizeof(uuid_t))
-> +		return ERR_PTR(-EINVAL);
+> +    fw->index = index;
 > +
-> +	feat = cxl_feature_info(cxlfs, &rpc_in->set_feat_in.uuid);
->  	if (IS_ERR(feat))
->  		return false;
+>      for (target = object->targets; target; target = target->next) {
+>          fw->num_targets++;
+>      }
+> @@ -325,14 +327,15 @@ static void machine_set_cfmw(Object *obj, Visitor *v, const char *name,
+>      CXLState *state = opaque;
+>      CXLFixedMemoryWindowOptionsList *cfmw_list = NULL;
+>      CXLFixedMemoryWindowOptionsList *it;
+> +    int index;
 >  
+>      visit_type_CXLFixedMemoryWindowOptionsList(v, name, &cfmw_list, errp);
+>      if (!cfmw_list) {
+>          return;
+>      }
+>  
+> -    for (it = cfmw_list; it; it = it->next) {
+> -        cxl_fixed_memory_window_config(state, it->value, errp);
+> +    for (it = cfmw_list, index = 0; it; it = it->next, index++) {
+> +        cxl_fixed_memory_window_config(state, it->value, index, errp);
+>      }
+>      state->cfmw_list = cfmw_list;
+>  }
 > -- 
 > 2.43.0
 > 
