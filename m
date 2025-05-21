@@ -1,639 +1,207 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63683239E62
-	for <linux-cxl@vger.kernel.org>; Wed, 21 May 2025 23:22:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 975AC1E98F8
+	for <linux-cxl@vger.kernel.org>; Wed, 21 May 2025 23:28:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747869743; cv=none; b=jXDmVV+caxMm69WVnwL9MsfJ7K9Cx01UU86lCluzxYzZ7CEGVyWGqLFhvLXktohHgkYdCgM8Rg0HIHpEsJTJUDvdV6bx8Ji8lOC4lDcF9BhQZfcIp2M3rSSmTgwYosImqh0EJMcx/Ko5kGzkMFzQW/KBTyYZE1+lO1jCboEQog4=
+	t=1747870102; cv=none; b=HUYiv5XxzA98UP7Jb1HvFUaXSRLto5btVykyxdrcKYEMLJgcTr3DfW5ePwz/ua7/PzoDBB0lDQRhRFMnjshgOHvOmuxX6+ebR/oBh9E3CXdqBx201gaQR09w4MM30//xQsV9JNp1gdU1NAG6j7OmGqQNE3PnrO7k5u66uNx0d/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747869743; c=relaxed/simple;
-	bh=q9DxzzKREOZmLx0XWkHn4xfIsgylInrqU7A8HVCwT+A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=siW2rJlTsbElA/fiVmEYuh12r33uZW0rmQo6tkkLpgaXG8+3ekU4UB8whWfuf9f7fR0cAj/jvMWznYuiIZ/uLkQhdZwCBCeJH/HUsxyW/hO6kGhFClY94ekXUAsNJxSL+AV7sytYKNJBXDAAbunC481AMaQtIBsqixBgFACC9Cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W9NArEo+; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747870102; c=relaxed/simple;
+	bh=+srTR5fFPdTBWpilPD8AukkrvGQKKYs448dTZv64ABQ=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=iVK/mJ04+k+vG4w5m5/wkZlIbW/z8FY0KQv54ZOkjFOnVLQGduDKiXWoyTjRz8Qb3Pa7e+bnJCYNvdNSh6rBftLPxLlqLkquIyo13+m6MWnG4O27OWvQxmlOjUvGc8RbWJ5azWfZY4lpJ5ZfiLMYOYykObYNW3ziZPkXlv/CorY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=C9ijr1S6; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W9NArEo+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747869742; x=1779405742;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=q9DxzzKREOZmLx0XWkHn4xfIsgylInrqU7A8HVCwT+A=;
-  b=W9NArEo+VIKBejYrk5CAUVhQqsX/3Ltfg/F7gMp+rVutS+JPRob5ak7Z
-   vXw+3EYsrrOkzm4z0fBP/HoNih9r450A0SAv+YqIGwtevixdrxdpCEDWg
-   AMTBhNAYDO1Zln6yvwKqcxnuJYDBkWbzLFtQOi7lqG4FFJ7glCK9VzMMt
-   w3gUiENwliSXGPOGUxZMwyYLKBVG1iGuxEwBfIfWR/3HQPLdYSrqAWD20
-   p8EcUnEeY7KwpxoblEuzbpfNhqohtB/vII797fALuRjvHniK0HtHAoLAi
-   2Gfapf107GFIwIoDJUZ9atvXJ/cC99s4+enqtn4pmvDuEB9+xYQJLuFtp
-   g==;
-X-CSE-ConnectionGUID: sdpFb3frRemzHGbuWHwU/A==
-X-CSE-MsgGUID: xDOo2UtJS+W1kPfiERlVQQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="49580101"
-X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
-   d="scan'208";a="49580101"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 16:22:21 -0700
-X-CSE-ConnectionGUID: zJofd1ODTb61ufsq+WhHuQ==
-X-CSE-MsgGUID: gGcIBJUsT6uU9HYLJ/uFQg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
-   d="scan'208";a="145448621"
-Received: from ldmartin-desk2.corp.intel.com (HELO [10.125.109.106]) ([10.125.109.106])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 16:22:20 -0700
-Message-ID: <592a6a36-8e3e-4808-94a4-2070335f701a@intel.com>
-Date: Wed, 21 May 2025 16:22:19 -0700
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="C9ijr1S6"
+Content-Type: text/plain;
+	charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747870097;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yr0CkbbpUFJhjkEm8Q6tZf2/vvbHco6sGQMflWxzynw=;
+	b=C9ijr1S6HDR4rdzTELlisR6lDSpP21OysfZs/OMDkP4PkorbzkBWN7op1siTuJez3EsQTS
+	fMSl+htO2wJocgGq9FIFSNYLWrEm99I92K7Kby3O6GDq7DiwwNf5M4N2MQhEVHa24PzoY0
+	6vWSkY6djv7mFDkLqE/1LJxQtDN0OSA=
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [NDCTL PATCH v7 4/4] cxl/test: Add test for cxl features device
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
- Dan Williams <dan.j.williams@intel.com>
-References: <20250519200056.3901498-1-dave.jiang@intel.com>
- <20250519200056.3901498-5-dave.jiang@intel.com>
- <aCzXG9IwG6Xr-ssY@aschofie-mobl2.lan>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <aCzXG9IwG6Xr-ssY@aschofie-mobl2.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: Internal error: Oops: 0000000096000044 [#11] SMP
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Itaru Kitayama <itaru.kitayama@linux.dev>
+In-Reply-To: <71238a94-361f-4264-a5e4-510d428f5f66@intel.com>
+Date: Thu, 22 May 2025 08:28:00 +0900
+Cc: linux-cxl@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <B0A9901C-E0FE-48C1-A584-B0090B43A5C4@linux.dev>
+References: <aC2RKceK4HqYEQo/@vm4>
+ <96235d4d-2bb7-4743-b519-0c35a9a21749@intel.com>
+ <98DE3B2C-1393-4ED8-BB6A-E72D6131F97A@linux.dev>
+ <71238a94-361f-4264-a5e4-510d428f5f66@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+X-Migadu-Flow: FLOW_OUT
 
+Dave et al.,
 
+> On May 22, 2025, at 5:46, Dave Jiang <dave.jiang@intel.com> wrote:
+>=20
+>=20
+>=20
+> On 5/21/25 1:38 PM, Itaru Kitayama wrote:
+>> Dave
+>>=20
+>>> On May 22, 2025, at 0:31, Dave Jiang <dave.jiang@intel.com> wrote:
+>>>=20
+>>>=20
+>>>=20
+>>> On 5/21/25 1:39 AM, Itaru Kitayama wrote:
+>>>> Hi,
+>>>> On arm64/virt QEMU, the cxl/next (as of today) kernel prints out =
+Internal errors:
+>>>>=20
+>>>> [   80.968299] [     T48] Internal error: Oops: 0000000096000044 =
+[#11]
+>>>> SMP
+>>>> [   80.989250] [     T48] Modules linked in: cxl_mock_mem(O) =
+cfg80211
+>>>> rfkill cxl_test(O) cxl_mem(O) cxl_pmem(O) cxl_acpi(O) cxl_port(O)
+>>>> cxl_mock(O) libnvdimm encrypted_keys trusted caam_jr caam =
+asn1_encoder
+>>>> caamhash_desc caamalg_desc error crypto_engine authenc libdes fuse =
+drm
+>>>> backlight ip_tables x_tables sm3_ce sm3 sha3_ce sha512_ce =
+sha512_arm64
+>>>> cxl_core(O) fwctl btrfs blake2b_generic xor xor_neon raid6_pq
+>>>> zstd_compress ipv6
+>>>> [   80.992210] [     T48] CPU: 1 UID: 0 PID: 48 Comm: kworker/u8:2
+>>>> Tainted: G      D    O        6.15.0-rc4-00040-g128ad8fa385b #40 =
+PREEMPT
+>>>> [   80.992791] [     T48] Tainted: [D]=3DDIE, [O]=3DOOT_MODULE
+>>>> [   80.993039] [     T48] Hardware name: QEMU QEMU Virtual Machine, =
+BIOS
+>>>> 2025.02-3ubuntu2 04/04/2025
+>>>> [   80.993400] [     T48] Workqueue: async async_run_entry_fn
+>>>> [   80.994718] [     T48] pstate: 61402005 (nZCv daif +PAN -UAO =
+-TCO
+>>>> +DIT -SSBS BTYPE=3D--)
+>>>> [   80.995329] [     T48] pc : cxl_mock_mbox_send+0xec/0x12c0
+>>>> [cxl_mock_mem]
+>>>=20
+>>> Can you do this in your kernel tree?
+>>> ./scripts/faddr2line tools/testing/cxl/test/cxl_mock_mem.ko =
+cxl_mock_mbox_send+0xec/0x12c0
+>>=20
+>> realm@machine-1:~/projects/cxl$ ./scripts/faddr2line =
+tools/testing/cxl/test/cxl_mock_mem.ko cxl_mock_mbox_send+0xec/0x12c0
+>> cxl_mock_mbox_send+0xec/0x12c0:
+>> mock_get_event at =
+/home/realm/projects/cxl/tools/testing/cxl/test/mem.c:277
+>> (inlined by) cxl_mock_mbox_send at =
+/home/realm/projects/cxl/tools/testing/cxl/test/mem.c:1571
+>>=20
+>>>=20
+>>> I've not see this issue on x86 running cxl/next. How consistently =
+can you reproduce this? If it's every time, is it possible for you to do =
+a git bisect on the kernel and see which commit causes this please? =
+Thanks!
+>>=20
+>> Fairly reliably (100% of the boot time, and cx/fixes did not change =
+this BTW, which branch is seen as stable for you folks?), yes, I should =
+try git bisect.
+>=20
+> The current cxl/next is based on 6.15-rc4, which should have =
+everything that was in cxl/fixes. And you do not see this with =
+6.14-final? git bisect would be very helpful. Thank you!
+>=20
+>>=20
+>> Itaru.
+>>=20
+>>>=20
+>>> DJ
+>>>=20
+>>>> [   80.995691] [     T48] lr : cxl_internal_send_cmd+0x40/0x104
+>>>> [cxl_core]
+>>>> [   80.996189] [     T48] sp : ffff800080d0b9f0
+>>>> [   80.996380] [     T48] x29: ffff800080d0ba70 x28: =
+fff0000008dd2410
+>>>> x27: fff00000088fb390
+>>>> [   80.996714] [     T48] x26: ffff800080d0bb07 x25: =
+0000000000000100
+>>>> x24: 0000000000000003
+>>>> [   80.997135] [     T48] x23: 0000000000000020 x22: =
+fff0000008dd2410
+>>>> x21: 0000000000000002
+>>>> [   80.998119] [     T48] x20: fff00000088fb080 x19: =
+ffff800080d0bb08
+>>>> x18: 00000000ffffffff
+>>>> [   80.998419] [     T48] x17: 0000000000000000 x16: =
+ffffa8d169128748
+>>>> x15: ffff800080d0b5ad
+>>>> [   80.999243] [     T48] x14: ffff800080d0b400 x13: =
+ffff800080d0b5b8
+>>>> x12: fff000006f7a0000
+>>>> [   81.000519] [     T48] x11: 0000000000000058 x10: =
+0000000000000018 x9
+>>>> : fff000006f7a0000
+>>>> [   81.001337] [     T48] x8 : ffff800080d0bb48 x7 : =
+fff0000074fa0000 x6
+>>>> : fff0000074fa0000
+>>>> [   81.002497] [     T48] x5 : fff000007f937508 x4 : =
+0000000000000001 x3
+>>>> : 0000000000001000
+>>>> [   81.003993] [     T48] x2 : 0000000000001000 x1 : =
+0000000000000000 x0
+>>>> : 0000000000000088
+>>>> [   81.004223] [     T48] Call trace:
+>>>> [   81.004795] [     T48]  cxl_mock_mbox_send+0xec/0x12c0 =
+[cxl_mock_mem]
+>>>> (P)
+>>>> [   81.005136] [     T48]  cxl_internal_send_cmd+0x40/0x104 =
+[cxl_core]
+>>>> [   81.005520] [     T48]  cxl_mem_get_records_log+0xbc/0x198 =
+[cxl_core]
+>>>> [   81.006042] [     T48]  cxl_mem_get_event_records+0xb0/0xc0
+>>>> [cxl_core]
+>>>> [   81.006246] [     T48]  cxl_mock_mem_probe+0x568/0x6f0 =
+[cxl_mock_mem]
+>>>> [   81.006417] [     T48]  platform_probe+0x68/0xd8
+>>>> [   81.008340] [     T48]  really_probe+0xc0/0x39c
+>>>> [   81.008885] [     T48]  __driver_probe_device+0xd0/0x14c
+>>>> [   81.009539] [     T48]  driver_probe_device+0x3c/0x120
+>>>> [   81.010239] [     T48]  __driver_attach_async_helper+0x50/0xec
+>>>> [   81.011130] [     T48]  async_run_entry_fn+0x34/0x14c
+>>>> [   81.011276] [     T48]  process_one_work+0x148/0x284
+>>>> [   81.011420] [     T48]  worker_thread+0x2c4/0x3e0
+>>>> [   81.011552] [     T48]  kthread+0x12c/0x204
+>>>> [   81.011693] [     T48]  ret_from_fork+0x10/0x20
+>>>> [   81.011840] [     T48] Code: 54001b28 a90c6bf9 52801100 f9400a61
+>>>> (a9007c3f)
+>>>> [   81.013772] [     T48] ---[ end trace 0000000000000000 ]---
+>>>>=20
+>>>> How serious is this?
+>>>>=20
+>>>> Thanks,
+>>>> Itaru.
 
-On 5/20/25 12:25 PM, Alison Schofield wrote:
-> On Mon, May 19, 2025 at 01:00:54PM -0700, Dave Jiang wrote:
->> Add a unit test to verify the features ioctl commands. Test support added
->> for locating a features device, retrieve and verify the supported features
->> commands, retrieve specific feature command data, retrieve test feature
->> data, and write and verify test feature data.
->>
->> Acked-by: Dan Williams <dan.j.williams@intel.com>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->>  cxl/fwctl/cxl.h      |   2 +-
->>  test/cxl-features.sh |  31 +++
->>  test/fwctl.c         | 439 +++++++++++++++++++++++++++++++++++++++++++
->>  test/meson.build     |  19 ++
->>  4 files changed, 490 insertions(+), 1 deletion(-)
->>  create mode 100755 test/cxl-features.sh
->>  create mode 100644 test/fwctl.c
->>
->> diff --git a/cxl/fwctl/cxl.h b/cxl/fwctl/cxl.h
->> index 43f522f0cdcd..c560b2a1181d 100644
->> --- a/cxl/fwctl/cxl.h
->> +++ b/cxl/fwctl/cxl.h
->> @@ -9,7 +9,7 @@
->>  
->>  #include <linux/types.h>
->>  #include <linux/stddef.h>
->> -#include <cxl/features.h>
->> +#include "features.h"
->>  
->>  /**
->>   * struct fwctl_rpc_cxl - ioctl(FWCTL_RPC) input for CXL
->> diff --git a/test/cxl-features.sh b/test/cxl-features.sh
->> new file mode 100755
->> index 000000000000..3498fa08be53
->> --- /dev/null
->> +++ b/test/cxl-features.sh
->> @@ -0,0 +1,31 @@
->> +#!/bin/bash -Ex
->> +# SPDX-License-Identifier: GPL-2.0
->> +# Copyright (C) 2025 Intel Corporation. All rights reserved.
->> +
->> +rc=77
->> +# 237 is -ENODEV
->> +ERR_NODEV=237
->> +
->> +. $(dirname $0)/common
->> +FEATURES="$TEST_PATH"/fwctl
->> +
->> +trap 'err $LINENO' ERR
->> +
->> +modprobe cxl_test
->> +
->> +test -x "$FEATURES" || do_skip "no CXL Features Contrl"
-> 
-> Seems like a comment to help understand skip - 
-> 
-> # fwctl test is omitted when ndctl is built with -Dfwctl=disabled
-> # or the kernel is built without CONFIG_CXL_FEATURES enabled.
-> 
-> Now the above is assuming the .sh got in the test list and is 
-> not left out completely with -Dfwctl=disabled. Going to look.
+Rebuilt the rootfs image and tried today=E2=80=99s cx/next =
+(6.15.0-rc4-00046-g6eed708a5693) again to boot now I don=E2=80=99t see =
+the splats, so something I was messing my dev environment sorry about =
+that.
 
-It's excluded. So comment probably not needed. We skip if there's no fwctl device later, which points to no kernel config enabled.
+CXL utility commands work reasonably now and I can execute meson test =
+=E2=80=94suite cxl, while most of them still fails due to the HPA =
+allocation error which makes me wonder as the resource requests are =
+quite modest.=20
 
-DJ
+Itaru.
+=20
 
-> 
-> 
->> +# disable trap
->> +trap - $(compgen -A signal)
->> +"$FEATURES"
->> +rc=$?
->> +
->> +echo "error: $rc"
->> +if [ "$rc" -eq "$ERR_NODEV" ]; then
->> +	do_skip "no CXL FWCTL char dev"
->> +elif [ "$rc" -ne 0 ]; then
->> +	echo "fail: $LINENO" && exit 1
->> +fi
->> +
->> +trap 'err $LINENO' ERR
->> +
->> +_cxl_cleanup
->> diff --git a/test/fwctl.c b/test/fwctl.c
->> new file mode 100644
->> index 000000000000..7a780e718872
->> --- /dev/null
->> +++ b/test/fwctl.c
->> @@ -0,0 +1,439 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +// Copyright (C) 2024-2025 Intel Corporation. All rights reserved.
->> +#include <errno.h>
->> +#include <fcntl.h>
->> +#include <stdio.h>
->> +#include <endian.h>
->> +#include <stdint.h>
->> +#include <stdlib.h>
->> +#include <syslog.h>
->> +#include <string.h>
->> +#include <unistd.h>
->> +#include <sys/ioctl.h>
->> +#include <cxl/libcxl.h>
->> +#include <linux/uuid.h>
->> +#include <uuid/uuid.h>
->> +#include <util/bitmap.h>
->> +#include <cxl/fwctl/features.h>
->> +#include <cxl/fwctl/fwctl.h>
->> +#include <cxl/fwctl/cxl.h>
->> +
->> +static const char provider[] = "cxl_test";
->> +
->> +UUID_DEFINE(test_uuid,
->> +	    0xff, 0xff, 0xff, 0xff,
->> +	    0xff, 0xff,
->> +	    0xff, 0xff,
->> +	    0xff, 0xff,
->> +	    0xff, 0xff, 0xff, 0xff, 0xff, 0xff
->> +);
->> +
->> +#define CXL_MBOX_OPCODE_GET_SUPPORTED_FEATURES	0x0500
->> +#define CXL_MBOX_OPCODE_GET_FEATURE		0x0501
->> +#define CXL_MBOX_OPCODE_SET_FEATURE		0x0502
->> +
->> +#define GET_FEAT_SIZE	4
->> +#define SET_FEAT_SIZE	4
->> +#define EFFECTS_MASK	(BIT(0) | BIT(9))
->> +
->> +#define MAX_TEST_FEATURES	1
->> +#define DEFAULT_TEST_DATA	0xdeadbeef
->> +#define DEFAULT_TEST_DATA2	0xabcdabcd
->> +
->> +struct test_feature {
->> +	uuid_t uuid;
->> +	size_t get_size;
->> +	size_t set_size;
->> +};
->> +
->> +static int send_command(int fd, struct fwctl_rpc *rpc, struct fwctl_rpc_cxl_out *out)
->> +{
->> +	if (ioctl(fd, FWCTL_RPC, rpc) == -1) {
->> +		fprintf(stderr, "RPC ioctl error: %s\n", strerror(errno));
->> +		return -errno;
->> +	}
->> +
->> +	if (out->retval) {
->> +		fprintf(stderr, "operation returned failure: %d\n", out->retval);
->> +		return -ENXIO;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int get_scope(u16 opcode)
->> +{
->> +	switch (opcode) {
->> +	case CXL_MBOX_OPCODE_GET_SUPPORTED_FEATURES:
->> +	case CXL_MBOX_OPCODE_GET_FEATURE:
->> +		return FWCTL_RPC_CONFIGURATION;
->> +	case CXL_MBOX_OPCODE_SET_FEATURE:
->> +		return FWCTL_RPC_DEBUG_WRITE_FULL;
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +}
->> +
->> +static size_t hw_op_size(u16 opcode)
->> +{
->> +	switch (opcode) {
->> +	case CXL_MBOX_OPCODE_GET_SUPPORTED_FEATURES:
->> +		return sizeof(struct cxl_mbox_get_sup_feats_in);
->> +	case CXL_MBOX_OPCODE_GET_FEATURE:
->> +		return sizeof(struct cxl_mbox_get_feat_in);
->> +	case CXL_MBOX_OPCODE_SET_FEATURE:
->> +		return sizeof(struct cxl_mbox_set_feat_in) + sizeof(u32);
->> +	default:
->> +		return SIZE_MAX;
->> +	}
->> +}
->> +
->> +static void free_rpc(struct fwctl_rpc *rpc)
->> +{
->> +	void *in, *out;
->> +
->> +	in = (void *)rpc->in;
->> +	out = (void *)rpc->out;
->> +	free(in);
->> +	free(out);
->> +	free(rpc);
->> +}
->> +
->> +static void *zmalloc_aligned(size_t align, size_t size)
->> +{
->> +	void *ptr;
->> +	int rc;
->> +
->> +	rc = posix_memalign((void **)&ptr, align, size);
->> +	if (rc)
->> +		return NULL;
->> +	memset(ptr, 0, size);
->> +
->> +	return ptr;
->> +}
->> +
->> +static struct fwctl_rpc *get_prepped_command(size_t in_size, size_t out_size,
->> +					     u16 opcode)
->> +{
->> +	struct fwctl_rpc_cxl_out *out;
->> +	struct fwctl_rpc_cxl *in;
->> +	struct fwctl_rpc *rpc;
->> +	size_t op_size;
->> +	int scope;
->> +
->> +	rpc = zmalloc_aligned(16, sizeof(*rpc));
->> +	if (!rpc)
->> +		return NULL;
->> +
->> +	in = zmalloc_aligned(16, in_size);
->> +	if (!in)
->> +		goto free_rpc;
->> +
->> +	out = zmalloc_aligned(16, out_size);
->> +	if (!out)
->> +		goto free_in;
->> +
->> +	in->opcode = opcode;
->> +
->> +	op_size = hw_op_size(opcode);
->> +	if (op_size == SIZE_MAX)
->> +		goto free_in;
->> +
->> +	in->op_size = op_size;
->> +
->> +	rpc->size = sizeof(*rpc);
->> +	scope = get_scope(opcode);
->> +	if (scope < 0)
->> +		goto free_all;
->> +
->> +	rpc->scope = scope;
->> +
->> +	rpc->in_len = in_size;
->> +	rpc->out_len = out_size;
->> +	rpc->in = (uint64_t)(uint64_t *)in;
->> +	rpc->out = (uint64_t)(uint64_t *)out;
->> +
->> +	return rpc;
->> +
->> +free_all:
->> +	free(out);
->> +free_in:
->> +	free(in);
->> +free_rpc:
->> +	free(rpc);
->> +	return NULL;
->> +}
->> +
->> +static int cxl_fwctl_rpc_get_test_feature(int fd, struct test_feature *feat_ctx,
->> +					  const uint32_t expected_data)
->> +{
->> +	struct cxl_mbox_get_feat_in *feat_in;
->> +	struct fwctl_rpc_cxl_out *out;
->> +	size_t out_size, in_size;
->> +	struct fwctl_rpc_cxl *in;
->> +	struct fwctl_rpc *rpc;
->> +	uint32_t val;
->> +	void *data;
->> +	int rc;
->> +
->> +	in_size = sizeof(*in) + sizeof(*feat_in);
->> +	out_size = sizeof(*out) + feat_ctx->get_size;
->> +
->> +	rpc = get_prepped_command(in_size, out_size,
->> +				  CXL_MBOX_OPCODE_GET_FEATURE);
->> +	if (!rpc)
->> +		return -ENXIO;
->> +
->> +	in = (struct fwctl_rpc_cxl *)rpc->in;
->> +	out = (struct fwctl_rpc_cxl_out *)rpc->out;
->> +
->> +	feat_in = &in->get_feat_in;
->> +	uuid_copy(feat_in->uuid, feat_ctx->uuid);
->> +	feat_in->count = feat_ctx->get_size;
->> +
->> +	rc = send_command(fd, rpc, out);
->> +	if (rc)
->> +		goto out;
->> +
->> +	data = out->payload;
->> +	val = le32toh(*(__le32 *)data);
->> +	if (memcmp(&val, &expected_data, sizeof(val)) != 0) {
->> +		rc = -ENXIO;
->> +		goto out;
->> +	}
->> +
->> +out:
->> +	free_rpc(rpc);
->> +	return rc;
->> +}
->> +
->> +static int cxl_fwctl_rpc_set_test_feature(int fd, struct test_feature *feat_ctx)
->> +{
->> +	struct cxl_mbox_set_feat_in *feat_in;
->> +	struct fwctl_rpc_cxl_out *out;
->> +	size_t in_size, out_size;
->> +	struct fwctl_rpc_cxl *in;
->> +	struct fwctl_rpc *rpc;
->> +	uint32_t val;
->> +	void *data;
->> +	int rc;
->> +
->> +	in_size = sizeof(*in) + sizeof(*feat_in) + sizeof(val);
->> +	out_size = sizeof(*out) + sizeof(val);
->> +	rpc = get_prepped_command(in_size, out_size,
->> +				  CXL_MBOX_OPCODE_SET_FEATURE);
->> +	if (!rpc)
->> +		return -ENXIO;
->> +
->> +	in = (struct fwctl_rpc_cxl *)rpc->in;
->> +	out = (struct fwctl_rpc_cxl_out *)rpc->out;
->> +	feat_in = &in->set_feat_in;
->> +	uuid_copy(feat_in->uuid, feat_ctx->uuid);
->> +	data = feat_in->feat_data;
->> +	val = DEFAULT_TEST_DATA2;
->> +	*(uint32_t *)data = htole32(val);
->> +	feat_in->flags = CXL_SET_FEAT_FLAG_FULL_DATA_TRANSFER;
->> +
->> +	rc = send_command(fd, rpc, out);
->> +	if (rc)
->> +		goto out;
->> +
->> +	rc = cxl_fwctl_rpc_get_test_feature(fd, feat_ctx, DEFAULT_TEST_DATA2);
->> +	if (rc) {
->> +		fprintf(stderr, "Failed ioctl to get feature verify: %d\n", rc);
->> +		goto out;
->> +	}
->> +
->> +out:
->> +	free_rpc(rpc);
->> +	return rc;
->> +}
->> +
->> +static int cxl_fwctl_rpc_get_supported_features(int fd, struct test_feature *feat_ctx)
->> +{
->> +	struct cxl_mbox_get_sup_feats_out *feat_out;
->> +	struct cxl_mbox_get_sup_feats_in *feat_in;
->> +	struct fwctl_rpc_cxl_out *out;
->> +	struct cxl_feat_entry *entry;
->> +	size_t out_size, in_size;
->> +	struct fwctl_rpc_cxl *in;
->> +	struct fwctl_rpc *rpc;
->> +	int feats, rc;
->> +
->> +	in_size = sizeof(*in) + sizeof(*feat_in);
->> +	out_size = sizeof(*out) + sizeof(*feat_out);
->> +	/* First query, to get number of features w/o per feature data */
->> +	rpc = get_prepped_command(in_size, out_size,
->> +				  CXL_MBOX_OPCODE_GET_SUPPORTED_FEATURES);
->> +	if (!rpc)
->> +		return -ENXIO;
->> +
->> +	/* No need to fill in feat_in first go as we are passing in all 0's */
->> +
->> +	out = (struct fwctl_rpc_cxl_out *)rpc->out;
->> +	rc = send_command(fd, rpc, out);
->> +	if (rc)
->> +		goto out;
->> +
->> +	feat_out = &out->get_sup_feats_out;
->> +	feats = le16toh(feat_out->supported_feats);
->> +	if (feats != MAX_TEST_FEATURES) {
->> +		fprintf(stderr, "Test device has greater than %d test features.\n",
->> +			MAX_TEST_FEATURES);
->> +		rc = -ENXIO;
->> +		goto out;
->> +	}
->> +
->> +	free_rpc(rpc);
->> +
->> +	/* Going second round to retrieve each feature details */
->> +	in_size = sizeof(*in) + sizeof(*feat_in);
->> +	out_size = sizeof(*out) + sizeof(*feat_out);
->> +	out_size += feats * sizeof(*entry);
->> +	rpc = get_prepped_command(in_size, out_size,
->> +				  CXL_MBOX_OPCODE_GET_SUPPORTED_FEATURES);
->> +	if (!rpc)
->> +		return -ENXIO;
->> +
->> +	in = (struct fwctl_rpc_cxl *)rpc->in;
->> +	out = (struct fwctl_rpc_cxl_out *)rpc->out;
->> +	feat_in = &in->get_sup_feats_in;
->> +	feat_in->count = htole32(feats * sizeof(*entry));
->> +
->> +	rc = send_command(fd, rpc, out);
->> +	if (rc)
->> +		goto out;
->> +
->> +	feat_out = &out->get_sup_feats_out;
->> +	feats = le16toh(feat_out->supported_feats);
->> +	if (feats != MAX_TEST_FEATURES) {
->> +		fprintf(stderr, "Test device has greater than %u test features.\n",
->> +			MAX_TEST_FEATURES);
->> +		rc = -ENXIO;
->> +		goto out;
->> +	}
->> +
->> +	if (le16toh(feat_out->num_entries) != MAX_TEST_FEATURES) {
->> +		fprintf(stderr, "Test device did not return expected entries. %u\n",
->> +			le16toh(feat_out->num_entries));
->> +		rc = -ENXIO;
->> +		goto out;
->> +	}
->> +
->> +	entry = &feat_out->ents[0];
->> +	if (uuid_compare(test_uuid, entry->uuid) != 0) {
->> +		fprintf(stderr, "Test device did not export expected test feature.\n");
->> +		rc = -ENXIO;
->> +		goto out;
->> +	}
->> +
->> +	if (le16toh(entry->get_feat_size) != GET_FEAT_SIZE ||
->> +	    le16toh(entry->set_feat_size) != SET_FEAT_SIZE) {
->> +		fprintf(stderr, "Test device feature in/out size incorrect.\n");
->> +		rc = -ENXIO;
->> +		goto out;
->> +	}
->> +
->> +	if (le16toh(entry->effects) != EFFECTS_MASK) {
->> +		fprintf(stderr, "Test device set effects incorrect\n");
->> +		rc = -ENXIO;
->> +		goto out;
->> +	}
->> +
->> +	uuid_copy(feat_ctx->uuid, entry->uuid);
->> +	feat_ctx->get_size = le16toh(entry->get_feat_size);
->> +	feat_ctx->set_size = le16toh(entry->set_feat_size);
->> +
->> +out:
->> +	free_rpc(rpc);
->> +	return rc;
->> +}
->> +
->> +static int test_fwctl_features(struct cxl_memdev *memdev)
->> +{
->> +	struct test_feature feat_ctx;
->> +	unsigned int major, minor;
->> +	struct cxl_fwctl *fwctl;
->> +	int fd, rc;
->> +	char path[256];
->> +
->> +	fwctl = cxl_memdev_get_fwctl(memdev);
->> +	if (!fwctl)
->> +		return -ENODEV;
->> +
->> +	major = cxl_fwctl_get_major(fwctl);
->> +	minor = cxl_fwctl_get_minor(fwctl);
->> +
->> +	if (!major && !minor)
->> +		return -ENODEV;
->> +
->> +	sprintf(path, "/dev/char/%d:%d", major, minor);
->> +
->> +	fd = open(path, O_RDONLY, 0644);
->> +	if (fd < 0) {
->> +		fprintf(stderr, "Failed to open: %d\n", -errno);
->> +		return -errno;
->> +	}
->> +
->> +	rc = cxl_fwctl_rpc_get_supported_features(fd, &feat_ctx);
->> +	if (rc) {
->> +		fprintf(stderr, "Failed ioctl to get supported features: %d\n", rc);
->> +		goto out;
->> +	}
->> +
->> +	rc = cxl_fwctl_rpc_get_test_feature(fd, &feat_ctx, DEFAULT_TEST_DATA);
->> +	if (rc) {
->> +		fprintf(stderr, "Failed ioctl to get feature: %d\n", rc);
->> +		goto out;
->> +	}
->> +
->> +	rc = cxl_fwctl_rpc_set_test_feature(fd, &feat_ctx);
->> +	if (rc) {
->> +		fprintf(stderr, "Failed ioctl to set feature: %d\n", rc);
->> +		goto out;
->> +	}
->> +
->> +out:
->> +	close(fd);
->> +	return rc;
->> +}
->> +
->> +static int test_fwctl(struct cxl_ctx *ctx, struct cxl_bus *bus)
->> +{
->> +	struct cxl_memdev *memdev;
->> +
->> +	cxl_memdev_foreach(ctx, memdev) {
->> +		if (cxl_memdev_get_bus(memdev) != bus)
->> +			continue;
->> +		return test_fwctl_features(memdev);
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +int main(int argc, char *argv[])
->> +{
->> +	struct cxl_ctx *ctx;
->> +	struct cxl_bus *bus;
->> +	int rc;
->> +
->> +	rc = cxl_new(&ctx);
->> +	if (rc < 0)
->> +		return rc;
->> +
->> +	cxl_set_log_priority(ctx, LOG_DEBUG);
->> +
->> +	bus = cxl_bus_get_by_provider(ctx, provider);
->> +	if (!bus) {
->> +		fprintf(stderr, "%s: unable to find bus (%s)\n",
->> +			argv[0], provider);
->> +		rc = -EINVAL;
->> +		goto out;
->> +	}
->> +
->> +	rc = test_fwctl(ctx, bus);
->> +
->> +out:
->> +	cxl_unref(ctx);
->> +	return rc;
->> +}
->> diff --git a/test/meson.build b/test/meson.build
->> index 2fd7df5211dd..93b1d78671ef 100644
->> --- a/test/meson.build
->> +++ b/test/meson.build
->> @@ -17,6 +17,13 @@ ndctl_deps = libndctl_deps + [
->>    versiondep,
->>  ]
->>  
->> +libcxl_deps = [
->> +  cxl_dep,
->> +  ndctl_dep,
->> +  uuid,
->> +  kmod,
->> +]
->> +
->>  libndctl = executable('libndctl', testcore + [ 'libndctl.c'],
->>    dependencies : libndctl_deps,
->>    include_directories : root_inc,
->> @@ -235,6 +242,18 @@ if get_option('keyutils').enabled()
->>    ]
->>  endif
->>  
->> +uuid_dep = dependency('uuid', required: false)
->> +if get_option('fwctl').enabled() and uuid_dep.found()
->> +  fwctl = executable('fwctl', 'fwctl.c',
->> +    dependencies : libcxl_deps,
->> +    include_directories : root_inc,
->> +  )
->> +  cxl_features = find_program('cxl-features.sh')
->> +  tests += [
->> +    [ 'cxl-features.sh',        cxl_features,       'cxl'   ],
->> +  ]
->> +endif
->> +
->>  foreach t : tests
->>    test(t[0], t[1],
->>      is_parallel : false,
->> -- 
->> 2.49.0
->>
->>
 
