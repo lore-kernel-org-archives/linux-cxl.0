@@ -1,459 +1,113 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F055C12E5B
-	for <linux-cxl@vger.kernel.org>; Wed, 21 May 2025 07:38:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C12238C0C
+	for <linux-cxl@vger.kernel.org>; Wed, 21 May 2025 08:39:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747813117; cv=none; b=OtKVtTgoYbyKo3vsvjlhazOehU+5us67J287/HnTL/pG1n/gKtdbU1YYyhUL8teIvzdAfsgKCtwFuY0aLdGEesk8yq99E9F88LQoroAHrZ8uM6z1LtF7fBYtnEfoWZXegBEY1s8AG4wfa4h12vUsrirPOwf3yd1qKjvxEReMsO0=
+	t=1747816764; cv=none; b=NGkjTOgGqGP9qndBwMF/FawWfwBoQDUOWVolDsD9jknxJnrqan5z8tNTyA3kpQMdWFbWmCTtMcHE64u9CvCDjiaXEeZrRJBdOI+/eyWDZ3aGCTQTC9OTOZ0bQymOPUNzdXroAPy52Ej5+lP5ljyvyjL+SHwLWwDCuyU6TBKj1wQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747813117; c=relaxed/simple;
-	bh=vs+b9emCq+K7qAYgyCuDT+AAqU+DVpRTRUFuuiorwZ0=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=Yj1eEtPsi/fewzRcRTVtYno3xK6/95lJM45QK/GCwehpCak/UGTbFUChWto4vVDcEAUEIaQ4M5Nb45xq0+3J0rTREDXTV8uhKd9IC4myw3y948LbTnWDU9U54DN67smXlQ/1crwEUiczVm30RXydkOQdvcCADeROjyjH6z/lVK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=uUaenXtG; arc=none smtp.client-ip=95.215.58.172
+	s=arc-20240116; t=1747816764; c=relaxed/simple;
+	bh=y1CQYPNjB83HkVxuZwoMWkeVuDJBg0aSC/xcBhX2+gI=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=hCyrg6o4gjdRiYpcz1XyyD5Fx+sMzy9GvMXFqK0ohjLfujitjN/9HGcQs1IGL8FGY4SS12pajS2v/+DpuZnscAV6QfQqYHINn0Y0Z7qLRq7znbgJSbQoOdLxp3c8ZawmOznrC9z22HoDayNXqHHbb+mcqlLmxyPV12qD/6phb3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=XfRTgoDr; arc=none smtp.client-ip=95.215.58.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="uUaenXtG"
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XfRTgoDr"
+Date: Wed, 21 May 2025 17:39:05 +0900
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747813111;
+	t=1747816757;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FDRyYQYKESVO0x4TjsUHTCbe7EBx3+Et9GJ+7K2SYhk=;
-	b=uUaenXtGkHCAoKlVVK7XYAGJtMDWIEq9Q5B/I8h9bZAtf67j6zsT2eVr9MYPvwRO7d+nA0
-	Am+eTeMciLwNpaNrA87ibfEv1DUXIgQJd9DOQW31B89vmaYlpuFzmf/kD9c6vmiy2UoRg0
-	XfwmnfCamcNrOuu1zFgeu+Hj4A/W79k=
+	 to:to:cc:mime-version:mime-version:content-type:content-type;
+	bh=ieJk/o5xDhw4NdIBgtgm+tx7dy70/CCzwmUDFQ+z9TU=;
+	b=XfRTgoDrjHCTJ7ovdKaOz6x2A6GvKySbltkthiAOZymvtxckZ38nZCS6z8SV6A3RUUP6Ni
+	wNwwQrZ1VUAqgI8aTJqkJwM1Hy0JLzJ9IruqGY2DkjfV8AbKcqwhoLnpmAK+Nme9dVBwCM
+	6J2PQnVF1Ceh8Ytli0V6lfeWSNQWhh0=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Itaru Kitayama <itaru.kitayama@linux.dev>
+To: linux-cxl@vger.kernel.org
+Subject: Internal error: Oops: 0000000096000044 [#11]  SMP
+Message-ID: <aC2RKceK4HqYEQo/@vm4>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [PATCH v13 5/5] qtest/cxl: Add aarch64 virt test for CXL
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Itaru Kitayama <itaru.kitayama@linux.dev>
-In-Reply-To: <20250519135413.000026b4@huawei.com>
-Date: Wed, 21 May 2025 16:38:10 +0900
-Cc: qemu-devel@nongnu.org,
- Fan Ni <fan.ni@samsung.com>,
- Peter Maydell <peter.maydell@linaro.org>,
- mst@redhat.com,
- linux-cxl@vger.kernel.org,
- linuxarm@huawei.com,
- qemu-arm@nongnu.org,
- Yuquan Wang <wangyuquan1236@phytium.com.cn>,
- =?utf-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@linaro.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <5CCC3C8C-7348-4409-9964-8367C8FC1C1E@linux.dev>
-References: <20250513111455.128266-1-Jonathan.Cameron@huawei.com>
- <20250513111455.128266-6-Jonathan.Cameron@huawei.com>
- <D9E503CC-1271-4008-9975-9BAEC7A33376@linux.dev>
- <20250519135413.000026b4@huawei.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 X-Migadu-Flow: FLOW_OUT
 
+Hi,
+On arm64/virt QEMU, the cxl/next (as of today) kernel prints out Internal errors:
 
+[   80.968299] [     T48] Internal error: Oops: 0000000096000044 [#11]
+SMP
+[   80.989250] [     T48] Modules linked in: cxl_mock_mem(O) cfg80211
+rfkill cxl_test(O) cxl_mem(O) cxl_pmem(O) cxl_acpi(O) cxl_port(O)
+cxl_mock(O) libnvdimm encrypted_keys trusted caam_jr caam asn1_encoder
+caamhash_desc caamalg_desc error crypto_engine authenc libdes fuse drm
+backlight ip_tables x_tables sm3_ce sm3 sha3_ce sha512_ce sha512_arm64
+cxl_core(O) fwctl btrfs blake2b_generic xor xor_neon raid6_pq
+zstd_compress ipv6
+[   80.992210] [     T48] CPU: 1 UID: 0 PID: 48 Comm: kworker/u8:2
+Tainted: G      D    O        6.15.0-rc4-00040-g128ad8fa385b #40 PREEMPT
+[   80.992791] [     T48] Tainted: [D]=DIE, [O]=OOT_MODULE
+[   80.993039] [     T48] Hardware name: QEMU QEMU Virtual Machine, BIOS
+2025.02-3ubuntu2 04/04/2025
+[   80.993400] [     T48] Workqueue: async async_run_entry_fn
+[   80.994718] [     T48] pstate: 61402005 (nZCv daif +PAN -UAO -TCO
++DIT -SSBS BTYPE=--)
+[   80.995329] [     T48] pc : cxl_mock_mbox_send+0xec/0x12c0
+[cxl_mock_mem]
+[   80.995691] [     T48] lr : cxl_internal_send_cmd+0x40/0x104
+[cxl_core]
+[   80.996189] [     T48] sp : ffff800080d0b9f0
+[   80.996380] [     T48] x29: ffff800080d0ba70 x28: fff0000008dd2410
+x27: fff00000088fb390
+[   80.996714] [     T48] x26: ffff800080d0bb07 x25: 0000000000000100
+x24: 0000000000000003
+[   80.997135] [     T48] x23: 0000000000000020 x22: fff0000008dd2410
+x21: 0000000000000002
+[   80.998119] [     T48] x20: fff00000088fb080 x19: ffff800080d0bb08
+x18: 00000000ffffffff
+[   80.998419] [     T48] x17: 0000000000000000 x16: ffffa8d169128748
+x15: ffff800080d0b5ad
+[   80.999243] [     T48] x14: ffff800080d0b400 x13: ffff800080d0b5b8
+x12: fff000006f7a0000
+[   81.000519] [     T48] x11: 0000000000000058 x10: 0000000000000018 x9
+: fff000006f7a0000
+[   81.001337] [     T48] x8 : ffff800080d0bb48 x7 : fff0000074fa0000 x6
+: fff0000074fa0000
+[   81.002497] [     T48] x5 : fff000007f937508 x4 : 0000000000000001 x3
+: 0000000000001000
+[   81.003993] [     T48] x2 : 0000000000001000 x1 : 0000000000000000 x0
+: 0000000000000088
+[   81.004223] [     T48] Call trace:
+[   81.004795] [     T48]  cxl_mock_mbox_send+0xec/0x12c0 [cxl_mock_mem]
+(P)
+[   81.005136] [     T48]  cxl_internal_send_cmd+0x40/0x104 [cxl_core]
+[   81.005520] [     T48]  cxl_mem_get_records_log+0xbc/0x198 [cxl_core]
+[   81.006042] [     T48]  cxl_mem_get_event_records+0xb0/0xc0
+[cxl_core]
+[   81.006246] [     T48]  cxl_mock_mem_probe+0x568/0x6f0 [cxl_mock_mem]
+[   81.006417] [     T48]  platform_probe+0x68/0xd8
+[   81.008340] [     T48]  really_probe+0xc0/0x39c
+[   81.008885] [     T48]  __driver_probe_device+0xd0/0x14c
+[   81.009539] [     T48]  driver_probe_device+0x3c/0x120
+[   81.010239] [     T48]  __driver_attach_async_helper+0x50/0xec
+[   81.011130] [     T48]  async_run_entry_fn+0x34/0x14c
+[   81.011276] [     T48]  process_one_work+0x148/0x284
+[   81.011420] [     T48]  worker_thread+0x2c4/0x3e0
+[   81.011552] [     T48]  kthread+0x12c/0x204
+[   81.011693] [     T48]  ret_from_fork+0x10/0x20
+[   81.011840] [     T48] Code: 54001b28 a90c6bf9 52801100 f9400a61
+(a9007c3f)
+[   81.013772] [     T48] ---[ end trace 0000000000000000 ]---
 
-> On May 19, 2025, at 21:54, Jonathan Cameron =
-<Jonathan.Cameron@huawei.com> wrote:
->=20
-> On Thu, 15 May 2025 18:04:18 +0900
-> Itaru Kitayama <itaru.kitayama@linux.dev> wrote:
->=20
->>> On May 13, 2025, at 20:14, Jonathan Cameron =
-<Jonathan.Cameron@huawei.com> wrote:
->>>=20
->>> Add a single complex case for aarch64 virt machine.
->>> Given existing much more comprehensive tests for x86 cover the
->>> common functionality, a single test should be enough to verify
->>> that the aarch64 part continue to work.
->>>=20
->>> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->>> ---
->>> tests/qtest/cxl-test.c  | 59 =
-++++++++++++++++++++++++++++++++---------
->>> tests/qtest/meson.build |  1 +
->>> 2 files changed, 47 insertions(+), 13 deletions(-)
->>>=20
->>> diff --git a/tests/qtest/cxl-test.c b/tests/qtest/cxl-test.c
->>> index a600331843..c7189d6222 100644
->>> --- a/tests/qtest/cxl-test.c
->>> +++ b/tests/qtest/cxl-test.c
->>> @@ -19,6 +19,12 @@
->>>    "-device pxb-cxl,id=3Dcxl.1,bus=3Dpcie.0,bus_nr=3D53 " \
->>>    "-M =
-cxl-fmw.0.targets.0=3Dcxl.0,cxl-fmw.0.targets.1=3Dcxl.1,cxl-fmw.0.size=3D4=
-G "
->>>=20
->>> +#define QEMU_VIRT_2PXB_CMD \
->>> +    "-machine virt,cxl=3Don -cpu max " \
->>> +    "-device pxb-cxl,id=3Dcxl.0,bus=3Dpcie.0,bus_nr=3D52 " \
->>> +    "-device pxb-cxl,id=3Dcxl.1,bus=3Dpcie.0,bus_nr=3D53 " \
->>> +    "-M =
-cxl-fmw.0.targets.0=3Dcxl.0,cxl-fmw.0.targets.1=3Dcxl.1,cxl-fmw.0.size=3D4=
-G "
->>> +
->>> #define QEMU_RP \
->>>    "-device cxl-rp,id=3Drp0,bus=3Dcxl.0,chassis=3D0,slot=3D0 "
->>>=20
->>> @@ -197,25 +203,52 @@ static void cxl_2pxb_4rp_4t3d(void)
->>>    qtest_end();
->>>    rmdir(tmpfs);
->>> }
->>> +
->>> +static void cxl_virt_2pxb_4rp_4t3d(void)
->>> +{
->>> +    g_autoptr(GString) cmdline =3D g_string_new(NULL);
->>> +    char template[] =3D "/tmp/cxl-test-XXXXXX";
->>> +    const char *tmpfs;
->>> +
->>> +    tmpfs =3D mkdtemp(template);
->>> +
->>> +    g_string_printf(cmdline, QEMU_VIRT_2PXB_CMD QEMU_4RP QEMU_4T3D,
->>> +                    tmpfs, tmpfs, tmpfs, tmpfs, tmpfs, tmpfs,
->>> +                    tmpfs, tmpfs);
->>> +
->>> +    qtest_start(cmdline->str);
->>> +    qtest_end();
->>> +    rmdir(tmpfs);
->>> +}
->>> #endif /* CONFIG_POSIX */
->>>=20
->>> int main(int argc, char **argv)
->>> {
->>> -    g_test_init(&argc, &argv, NULL);
->>> +    const char *arch =3D qtest_get_arch();
->>>=20
->>> -    qtest_add_func("/pci/cxl/basic_hostbridge", cxl_basic_hb);
->>> -    qtest_add_func("/pci/cxl/basic_pxb", cxl_basic_pxb);
->>> -    qtest_add_func("/pci/cxl/pxb_with_window", =
-cxl_pxb_with_window);
->>> -    qtest_add_func("/pci/cxl/pxb_x2_with_window", =
-cxl_2pxb_with_window);
->>> -    qtest_add_func("/pci/cxl/rp", cxl_root_port);
->>> -    qtest_add_func("/pci/cxl/rp_x2", cxl_2root_port);
->>> +    g_test_init(&argc, &argv, NULL);
->>> +    if (strcmp(arch, "i386") =3D=3D 0 || strcmp(arch, "x86_64") =3D=3D=
- 0) {
->>> +        qtest_add_func("/pci/cxl/basic_hostbridge", cxl_basic_hb);
->>> +        qtest_add_func("/pci/cxl/basic_pxb", cxl_basic_pxb);
->>> +        qtest_add_func("/pci/cxl/pxb_with_window", =
-cxl_pxb_with_window);
->>> +        qtest_add_func("/pci/cxl/pxb_x2_with_window", =
-cxl_2pxb_with_window);
->>> +        qtest_add_func("/pci/cxl/rp", cxl_root_port);
->>> +        qtest_add_func("/pci/cxl/rp_x2", cxl_2root_port);
->>> #ifdef CONFIG_POSIX
->>> -    qtest_add_func("/pci/cxl/type3_device", cxl_t3d_deprecated);
->>> -    qtest_add_func("/pci/cxl/type3_device_pmem", =
-cxl_t3d_persistent);
->>> -    qtest_add_func("/pci/cxl/type3_device_vmem", cxl_t3d_volatile);
->>> -    qtest_add_func("/pci/cxl/type3_device_vmem_lsa", =
-cxl_t3d_volatile_lsa);
->>> -    qtest_add_func("/pci/cxl/rp_x2_type3_x2", cxl_1pxb_2rp_2t3d);
->>> -    qtest_add_func("/pci/cxl/pxb_x2_root_port_x4_type3_x4", =
-cxl_2pxb_4rp_4t3d);
->>> +        qtest_add_func("/pci/cxl/type3_device", =
-cxl_t3d_deprecated);
->>> +        qtest_add_func("/pci/cxl/type3_device_pmem", =
-cxl_t3d_persistent);
->>> +        qtest_add_func("/pci/cxl/type3_device_vmem", =
-cxl_t3d_volatile);
->>> +        qtest_add_func("/pci/cxl/type3_device_vmem_lsa", =
-cxl_t3d_volatile_lsa);
->>> +        qtest_add_func("/pci/cxl/rp_x2_type3_x2", =
-cxl_1pxb_2rp_2t3d);
->>> +        qtest_add_func("/pci/cxl/pxb_x2_root_port_x4_type3_x4",
->>> +                       cxl_2pxb_4rp_4t3d);
->>> #endif
->>> +    } else if (strcmp(arch, "aarch64") =3D=3D 0) {
->>> +#ifdef CONFIG_POSIX
->>> +        =
-qtest_add_func("/pci/cxl/virt/pxb_x2_root_port_x4_type3_x4",
->>> +                       cxl_virt_2pxb_4rp_4t3d);
->>> +#endif
->>> +    }
->>> +
->>>    return g_test_run();
->>> }
->>> diff --git a/tests/qtest/meson.build b/tests/qtest/meson.build
->>> index 7daf619845..361000267a 100644
->>> --- a/tests/qtest/meson.build
->>> +++ b/tests/qtest/meson.build
->>> @@ -258,6 +258,7 @@ qtests_aarch64 =3D \
->>>  (config_all_accel.has_key('CONFIG_TCG') and                         =
-                   \
->>>   config_all_devices.has_key('CONFIG_TPM_TIS_I2C') ? =
-['tpm-tis-i2c-test'] : []) + \
->>>  (config_all_devices.has_key('CONFIG_ASPEED_SOC') ? qtests_aspeed64 =
-: []) + \
->>> +  qtests_cxl +                                                      =
-                            \
->>>  ['arm-cpu-features',
->>>   'numa-test',
->>>   'boot-serial-test',
->>> --=20
->>> 2.43.0
->>>=20
->>=20
->> ~/projects/qemu/build$ meson test qtest-aarch64/cxl-test
->> ninja: Entering directory `/home/realm/projects/qemu/build'
->> [1/8] Generating qemu-version.h with a custom command (wrapped by =
-meson to capture output)
->> 1/1 qemu:qtest+qtest-aarch64 / qtest-aarch64/cxl-test        OK       =
-       0.17s   1 subtests passed
->>=20
->> Ok:                 1
->> Expected Fail:      0
->> Fail:               0
->> Unexpected Pass:    0
->> Skipped:            0
->> Timeout:            0
->>=20
->> Tested-by: Itaru Kitayama <itaru.kitayama@fujitsu.com =
-<mailto:itaru.kitayama@fujitsu.com>>
->>=20
->> Jonathan, would you push your branch this series applied? I manually =
-applied your series no issues though.
->=20
-> I'm reluctant to push a 'normal' staging CXL tree whilst we have the =
-TCG
-> issue outstanding (which is in mainline).
-> I can probably push one with a name that makes it clear we know it =
-will
-> crash under some circumstances though. I'll aim to get that done later =
-this week.
->=20
-> After talking to Richard Henderson I'm going to spin some images etc =
-to
-> make it easier for him to replicate that TCG issue.
+How serious is this?
 
-While QEMU (the kernel is built off of cxl branch) boots fine and lspci =
-shows CXL devices as shown:
-
-root@localhost:~# lspci -mm
-00:00.0 "Host bridge" "Red Hat, Inc." "QEMU PCIe Host bridge" -p00 "Red =
-Hat, Inc." "Device 1100"
-00:01.0 "SCSI storage controller" "Red Hat, Inc." "Virtio block device" =
--p00 "Red Hat, Inc." "Device 0002"
-00:02.0 "Ethernet controller" "Intel Corporation" "82540EM Gigabit =
-Ethernet Controller" -r03 -p00 "Red Hat, Inc." "QEMU Virtual Machine"
-00:03.0 "Host bridge" "Red Hat, Inc." "QEMU PCIe Expander bridge" -p00 =
-"Red Hat, Inc." "Device 1100"
-00:04.0 "Host bridge" "Red Hat, Inc." "QEMU PCIe Expander bridge" -p00 =
-"Red Hat, Inc." "Device 1100"
-35:00.0 "PCI bridge" "Intel Corporation" "Device 7075" -p00 "Intel =
-Corporation" "Device 0000"
-35:01.0 "PCI bridge" "Intel Corporation" "Device 7075" -p00 "Intel =
-Corporation" "Device 0000"
-36:00.0 "PCI bridge" "Huawei Technologies Co., Ltd." "Device a128" -p00 =
-"" ""
-36:00.1 "Serial bus controller [0c0b]" "Huawei Technologies Co., Ltd." =
-"Device a123" -p00 "Red Hat, Inc." "Device 1100"
-37:00.0 "PCI bridge" "Huawei Technologies Co., Ltd." "Device a129" -p00 =
-"" ""
-37:01.0 "PCI bridge" "Huawei Technologies Co., Ltd." "Device a129" -p00 =
-"" ""
-37:02.0 "PCI bridge" "Huawei Technologies Co., Ltd." "Device a129" -p00 =
-"" ""
-37:03.0 "PCI bridge" "Huawei Technologies Co., Ltd." "Device a129" -p00 =
-"" ""
-38:00.0 "CXL" "Intel Corporation" "Device 0d93" -r01 -p10 "Red Hat, =
-Inc." "Device 1100"
-3a:00.0 "CXL" "Intel Corporation" "Device 0d93" -r01 -p10 "Red Hat, =
-Inc." "Device 1100"
-bf:00.0 "PCI bridge" "Intel Corporation" "Device 7075" -p00 "Intel =
-Corporation" "Device 0000"
-bf:01.0 "PCI bridge" "Intel Corporation" "Device 7075" -p00 "Intel =
-Corporation" "Device 0000"
-c0:00.0 "PCI bridge" "Huawei Technologies Co., Ltd." "Device a128" -p00 =
-"" ""
-c0:00.1 "Serial bus controller [0c0b]" "Huawei Technologies Co., Ltd." =
-"Device a123" -p00 "Red Hat, Inc." "Device 1100"
-c1:00.0 "PCI bridge" "Huawei Technologies Co., Ltd." "Device a129" -p00 =
-"" ""
-c1:01.0 "PCI bridge" "Huawei Technologies Co., Ltd." "Device a129" -p00 =
-"" ""
-c1:02.0 "PCI bridge" "Huawei Technologies Co., Ltd." "Device a129" -p00 =
-"" ""
-c1:03.0 "PCI bridge" "Huawei Technologies Co., Ltd." "Device a129" -p00 =
-"" ""
-c2:00.0 "CXL" "Intel Corporation" "Device 0d93" -r01 -p10 "Red Hat, =
-Inc." "Device 1100"
-c4:00.0 "CXL" "Intel Corporation" "Device 0d93" -r01 -p10 "Red Hat, =
-Inc." "Device 1100=E2=80=9D
-
-but the cxl-list command takes 5-10 minutes to return the information. =
-I=E2=80=99ll test with your qtest minimalist setup to see if the system =
-is loaded. Am I seeing the TCG issue you mentioned?
-
-root@localhost:~# cxl list -M
-[
-  {
-    "memdev":"mem10",
-    "ram_size":2147483648,
-    "ram_qos_class":42,
-    "serial":11,
-    "numa_node":0,
-    "host":"cxl_rcd.10",
-    "firmware_version":"mock fw v1 "
-  },
-  {
-    "memdev":"mem5",
-    "pmem_size":1073741824,
-    "pmem_qos_class":42,
-    "ram_size":1073741824,
-    "ram_qos_class":42,
-    "serial":6,
-    "numa_node":1,
-    "host":"cxl_mem.5",
-    "firmware_version":"mock fw v1 "
-  },
-  {
-    "memdev":"mem1",
-    "pmem_size":1073741824,
-    "pmem_qos_class":42,
-    "ram_size":1073741824,
-    "ram_qos_class":42,
-    "serial":2,
-    "numa_node":1,
-    "host":"cxl_mem.1",
-    "firmware_version":"mock fw v1 "
-  },
-  {
-    "memdev":"mem6",
-    "pmem_size":1073741824,
-    "pmem_qos_class":42,
-    "ram_size":1073741824,
-    "ram_qos_class":42,
-    "serial":8,
-    "numa_node":1,
-    "host":"cxl_mem.7",
-    "firmware_version":"mock fw v1 "
-  },
-  {
-    "memdev":"mem3",
-    "pmem_size":1073741824,
-    "pmem_qos_class":42,
-    "ram_size":1073741824,
-    "ram_qos_class":42,
-    "serial":4,
-    "numa_node":1,
-    "host":"cxl_mem.3",
-    "firmware_version":"mock fw v1 "
-  },
-  {
-    "memdev":"mem4",
-    "pmem_size":1073741824,
-    "pmem_qos_class":42,
-    "ram_size":1073741824,
-    "ram_qos_class":42,
-    "serial":5,
-    "numa_node":0,
-    "host":"cxl_mem.4",
-    "firmware_version":"mock fw v1 "
-  },
-  {
-    "memdev":"mem0",
-    "pmem_size":1073741824,
-    "pmem_qos_class":42,
-    "ram_size":1073741824,
-    "ram_qos_class":42,
-    "serial":1,
-    "numa_node":0,
-    "host":"cxl_mem.0",
-    "firmware_version":"mock fw v1 "
-  },
-  {
-    "memdev":"mem2",
-    "pmem_size":1073741824,
-    "pmem_qos_class":42,
-    "ram_size":1073741824,
-    "ram_qos_class":42,
-    "serial":3,
-    "numa_node":0,
-    "host":"cxl_mem.2",
-    "firmware_version":"mock fw v1 "
-  },
-  {
-    "memdev":"mem7",
-    "pmem_size":1073741824,
-    "pmem_qos_class":42,
-    "ram_size":1073741824,
-    "ram_qos_class":42,
-    "serial":7,
-    "numa_node":0,
-    "host":"cxl_mem.6",
-    "firmware_version":"mock fw v1 "
-  },
-  {
-    "memdev":"mem8",
-    "pmem_size":1073741824,
-    "pmem_qos_class":42,
-    "ram_size":1073741824,
-    "ram_qos_class":42,
-    "serial":9,
-    "numa_node":0,
-    "host":"cxl_mem.8",
-    "firmware_version":"mock fw v1 "
-  },
-  {
-    "memdev":"mem9",
-    "pmem_size":1073741824,
-    "pmem_qos_class":42,
-    "ram_size":1073741824,
-    "ram_qos_class":42,
-    "serial":10,
-    "numa_node":1,
-    "host":"cxl_mem.9",
-    "firmware_version":"mock fw v1 "
-  },
-  {
-    "memdev":"mem12",
-    "ram_size":268435456,
-    "serial":0,
-    "host":"0000:c4:00.0",
-    "firmware_version":"BWFW VERSION 00"
-  },
-  {
-    "memdev":"mem11",
-    "ram_size":268435456,
-    "serial":0,
-    "host":"0000:c2:00.0",
-    "firmware_version":"BWFW VERSION 00"
-  },
-  {
-    "memdev":"mem14",
-    "pmem_size":268435456,
-    "serial":0,
-    "host":"0000:3a:00.0",
-    "firmware_version":"BWFW VERSION 00"
-  },
-  {
-    "memdev":"mem13",
-    "pmem_size":268435456,
-    "serial":0,
-    "host":"0000:38:00.0",
-    "firmware_version":"BWFW VERSION 00"
-  }
-]
-
-Getting this shouldn=E2=80=99t take minutes, even with the emulator I =
-think.
-
+Thanks,
 Itaru.
-
->=20
-> Thanks for reviews.
->=20
-> Jonathan
->=20
->>=20
->>=20
->=20
-
