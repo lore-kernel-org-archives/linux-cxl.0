@@ -1,222 +1,198 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 560301A5B86;
-	Wed, 21 May 2025 18:28:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747852095; cv=fail; b=QqpK/4cPltUwn/k4LTfExBJCl0sX5Hp7FMHe1OVlj6ul51nDfAHIVjmtM8tQOyKvFwha75R6c2caK0c43r3FqSVXwfu9A+t+3MKzdpBXjgnU4QVe2ilgfF5z9kT+JV+H/dRPYhHfCi9iHSlr3xkCIX1rzlrolEmKkYzP9rFM2L0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747852095; c=relaxed/simple;
-	bh=ie05B1c0lO1QkWAU0WJqw+CXSAJlBsAInArFCvlDe8c=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=BmoRqk1ggOnFbJhMXU0uyrFeVUB0XnJdT0Zk8Sgfs7qYwe/5ELHsCfKCk9efjKmAE0OBgD15loVkUBbNG2iVd1/2MEOHNbAsd3JZJb7SZz/mnxzQfBEl3oCsEsVss9mvQn8UhcUPnAy5LNV55A9IpzbbUU6Fj5+VcbRzgZB0IZA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kJafdLGo; arc=fail smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kJafdLGo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747852094; x=1779388094;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=ie05B1c0lO1QkWAU0WJqw+CXSAJlBsAInArFCvlDe8c=;
-  b=kJafdLGo8U7ik997hdZybmnu4iK7qtNLMBPqUinWd8CGKQGuFKodNgy6
-   LdYdldl4GB2HKYb7CbqGKKoAsceHU1Xkce4xreTQ4LYsuZR32iUOelbH1
-   QK7i39iGx8Htkeekb+FIfkYC/lPag57g8TjzapAQj5G5++x6frwmKcH9r
-   XnVEseEJiXn2wyGt9CxuQCGxr5b60hr9+s4hBd2OqGfe3/pwa4BbdBL+m
-   hMQHPNBLw3iJK3Wkfe2jXJd3qAIftFXo4Brvye3P1p7nis6Uxny0Et+Xd
-   z7LbZ1ubfrU0J4FIRAHR0SCaIAo4Y9w+OIIJOsj30t+GMIDF/d2gA1OhM
-   w==;
-X-CSE-ConnectionGUID: sPK/YxxpTQaURGxfJxz11g==
-X-CSE-MsgGUID: VykGoUd0TK2F3FcG0G7b5w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="53516398"
-X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
-   d="scan'208";a="53516398"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 11:28:13 -0700
-X-CSE-ConnectionGUID: 6blLg5ojQq6YMUvkzM/EwQ==
-X-CSE-MsgGUID: pxIUc85pT3qDKTcPDzl3yA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
-   d="scan'208";a="171196685"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 11:28:12 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 21 May 2025 11:28:11 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Wed, 21 May 2025 11:28:11 -0700
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (104.47.74.48) by
- edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.55; Wed, 21 May 2025 11:28:11 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rl2oWBhO5XpmSEcWZStb774EfTpm5RnE9cjdfjmz1fzFtrg3nptnc/A2zGbtv9SmRByN081R6oL25u43awFnzAVClCZIwcucTZ5ei0RSDXr9bnYO2d+f5D60+6qSHEdjHRtssCETIMLfb58Kg/F1gvAjT6ovcGlJ23KVIgDQdxZqiYD6HCjAr+uCzhq4abpmtb5n7Vr0JdzUV1tT3h74I8NROua8ZMgzATSDO74nG17CoM+TQV+35iAEzg/1DwaLcbL5JUaC3kHUM+uQ3oTkCSA90m3HIwGTc5rUHye83cOE9VDwNCCpMgNNzDEypTOquJfxicP1bIyTUE9dfUii9w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=G99wGVR9yyxg3ak8Ly+2m2+vGcVOR/1i6702+rJMbaA=;
- b=aTRlHnMEX9i358ihbvbqqYnF6ZCCmNA+hb0rf4EZpYu777jQjPh2paYAYCJJmi11pD0DOivb7tKL6rPJn/qA8PAh4tuWHwHp/7ktqwufW368Zc7grocinIEK+aP2ebEZxoDeBy4gF7+JbqjYq1FOrdhFxRFmETudykWvQqUJBDZcYueoruN+HX3jerc+kd76YE3R8NGb9Z15iaa39f+NUgkJTaxYQYiG8K4L6nfcLonQr4ILgQlBeRfsO7Eze/m6X4KhCcPqbvIgQyo/VkUoAVevwO7JAzCjf4Bg5QT6XnH6bUK5UX5yOYbvMMzVAu5gIoI+AtF+nN4cotkLQpOCrg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by SA3PR11MB7553.namprd11.prod.outlook.com (2603:10b6:806:316::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.19; Wed, 21 May
- 2025 18:28:08 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8746.030; Wed, 21 May 2025
- 18:28:08 +0000
-Date: Wed, 21 May 2025 11:28:06 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: <alejandro.lucero-palau@amd.com>, <linux-cxl@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <dan.j.williams@intel.com>, <edward.cree@amd.com>,
-	<davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<edumazet@google.com>, <dave.jiang@intel.com>
-CC: Alejandro Lucero <alucerop@amd.com>, Ben Cheatham
-	<benjamin.cheatham@amd.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v16 05/22] cxl: Add function for type2 cxl regs setup
-Message-ID: <682e1b368fc8_1626e100c3@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20250514132743.523469-1-alejandro.lucero-palau@amd.com>
- <20250514132743.523469-6-alejandro.lucero-palau@amd.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250514132743.523469-6-alejandro.lucero-palau@amd.com>
-X-ClientProxiedBy: BY1P220CA0016.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:a03:5c3::13) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDBAD1A238F;
+	Wed, 21 May 2025 18:34:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747852461; cv=none; b=Rakw71qM/ujBol2WLXU4F6yxmeMSXHFoBYkZX00v1a5iaThrmcv2BcMHFick3NB4CWz/gNj991Br8DR3AGnbfIWuSfuvxF6LcvfSOrIdDKdFNAEEpv/HjDhZ8+nH/SgV4LlYuuIsu01vVi6Jp7azOGJVYKULK53HHfnJ/A7K3lM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747852461; c=relaxed/simple;
+	bh=cVcb+HY9Nrvbsv5Qtmi2xhRaCYXYDMYqPJnXyGAmF6c=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=T6hSx82NeLiqD3+EogGuVqw8kORasAwvECyQhvotkuZ45SqAJSXaPwguRKVhK0MBH1rjHWD22WRMhfamK3xSz0KP5j8ojxPL8egbo97o7mrCFbTlsVnl3r0f+bgkYhclH8cUzEbq6Owe92AbDVoDlGWpWy+CqgFV7I94DaTmaOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b2g1b60CPz6GC2Q;
+	Thu, 22 May 2025 02:29:23 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9D7EB1402F7;
+	Thu, 22 May 2025 02:34:15 +0800 (CST)
+Received: from localhost (10.195.34.206) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 21 May
+ 2025 20:34:14 +0200
+Date: Wed, 21 May 2025 19:34:12 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: "Bowman, Terry" <terry.bowman@amd.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, <nifan.cxl@gmail.com>, <dave@stgolabs.net>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
+	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <ira.weiny@intel.com>,
+	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
+	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
+	<lukas@wunner.de>, <ming.li@zohomail.com>,
+	<PradeepVineshReddy.Kodamati@amd.com>
+Subject: Re: [PATCH v8 04/16] cxl/aer: AER service driver forwards CXL error
+ to CXL driver
+Message-ID: <20250521193412.000067b3@huawei.com>
+In-Reply-To: <46c962de-a691-4e67-9af6-5765225633ae@amd.com>
+References: <20250327014717.2988633-1-terry.bowman@amd.com>
+	<20250327014717.2988633-5-terry.bowman@amd.com>
+	<20250423160443.00006ee0@huawei.com>
+	<e473fbc9-8b46-4e76-8653-98b84f6b93a6@amd.com>
+	<20250425141849.00003c92@huawei.com>
+	<8042c08a-42f0-49d5-b619-26bfc8e6f853@amd.com>
+	<20250520120446.000022b2@huawei.com>
+	<46c962de-a691-4e67-9af6-5765225633ae@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SA3PR11MB7553:EE_
-X-MS-Office365-Filtering-Correlation-Id: 96e8dae0-b60c-4dd4-a50c-08dd98953c0f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024|921020;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?luqjKza61NYlMxkQvuzI7nOC3EYeiu1vVGXi0IM260pz96e0vyHUH27+Lstr?=
- =?us-ascii?Q?tD20RebgrWGfxT8T0marZJwj1Cwm//daFv4wbFldqOmf9nxQq9kNh1tTe+Cp?=
- =?us-ascii?Q?OFFLgGsBNVUV5+xATLCCVYTII7Yy5k3YuLcC9UB6/CvN9HSJaHdzKfgcD1tj?=
- =?us-ascii?Q?1yyyi+AxeJEScE7OEeo/LgD/V8etBDHZnRL3l+VSumaQUh9SYY5GPvZ3NyPQ?=
- =?us-ascii?Q?a3oi1yKRgEXr+5JR8Ff8czMjLIbnhd0OQojLAE7eV5a5C9unQBYgXOY5DyHu?=
- =?us-ascii?Q?ma3mkcOYVObeoFKeZaMCZwwOO4Cnt4Jbrqv7m6wZaUmoCLbsRWm4YiAOC2Y6?=
- =?us-ascii?Q?oXVtLNpnkVMqsZxk+tPuqyF6zgbkH63/2mQV4Xp1jj6LcQ/OqVqArMJAflgH?=
- =?us-ascii?Q?pygyNtT1Tl0ArQHoWfFXCq5jrZwPWi9BR4XSDeYBr6Tba1AxOuMtMDV1vXxa?=
- =?us-ascii?Q?2EmhUc1AdKXPA1z5hFtLz7XjP3m9W1lxDkbbKaJeYCwoaF3LLJg68C7T+scQ?=
- =?us-ascii?Q?MtrmZHLHgJZwy8SOc01072FYtKlxqRqbYg6fqRAlsdItXAatKSlAXDfw7osn?=
- =?us-ascii?Q?Qk0fFUT/9ng2PB5GwmeMrhfRB83FcGUI5cKBUMQyY9I2DS/evK3sXVnSo48e?=
- =?us-ascii?Q?IQSyE3+g0Pr+DOnltIhvLbDjTrn8ibC09LSbTIWaTBuosOTjQpSmwUQJS5D9?=
- =?us-ascii?Q?xkjMqqTwMzoyV8nYJxd3KHqG1BnMsAYuTYtVPR7bOVgy0jzrmf/Qs+nDO40V?=
- =?us-ascii?Q?181QJilxPQsgYei+oldb+1ssZNryPrJQibRxKJRNpxypOJ9zDfhAnFw7K64L?=
- =?us-ascii?Q?QlBTGvWDraQ5ViIkuhT7nMecJUT8lQU+Qtq6kxtYpfPXLryBNIZRZZG/zLE3?=
- =?us-ascii?Q?rU96Unw4124aYUSNiH/9kEgjYoQcCHJVI/GzJnTeUSo3/fHLjHrisbrfzwlb?=
- =?us-ascii?Q?KSm2JFajQndnwaY/gGu4FtriiJUB2MRvL3n7dXtu6vorqzWt2x0R1jx+WBaB?=
- =?us-ascii?Q?fVh4iK0OxEgURVBbPmJQf5iGQnwgHSzw0JYH7UMcfVnXeUhC0VCvi9DqLHJJ?=
- =?us-ascii?Q?iOb10u0fgRiPj8wwnaOHpEbEawowcBXa8Avi4CvuMKjDoHkFXO3VOMpxWvUb?=
- =?us-ascii?Q?FWtlvKkL6M2GdcM7pv9phDJuCGkWR8I/QM2+HfeUR6KLFzO/0U7JlSNEOjYv?=
- =?us-ascii?Q?AYRvo+5ZfJDWqrJs4JDiNONzArjxr4E9/EYB9KjNXKSDd94dkf8cZQEHCh76?=
- =?us-ascii?Q?ob6hSbkczPoDLjSFqZo+H+rnO5SxPhCwmKJssqPfiFi+otUDBoYIMCd4y3g/?=
- =?us-ascii?Q?nlSAsXfeF5cUnzjZO68u3Yta9Va/10OYFxNAoNqwjjYhtuvG4LfLptngNxkS?=
- =?us-ascii?Q?7MQuDOmXIudcFeNgshrTFskg2AXBGSXzYDShWBhd6pd60QjIGk8yAWp3K80f?=
- =?us-ascii?Q?A8lpCoCLC53q6euvfKtkTdXPDhSVul5YcrkN0aog0TQOGWo6csibAQ=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ndbR5iVguaDzRTGifqLvjQasOZJr30I13eC+4+A0myu8CxKNayJ7p1guPr0O?=
- =?us-ascii?Q?g1UKZ4rOK4Uo8GnEQH9tdWtzPAdV5+9grSa0N82pgsVRe+XIWuvy9OOxCbuV?=
- =?us-ascii?Q?aCepp8Huu7inOcoY9P/UAdzGhCHDXmfsL3/pDR6jv3OK+VmzzEv28/izasV/?=
- =?us-ascii?Q?K12nAyT1Xq8jGllYPUTxKyBYA7OlbYFy1chIBb8qwKdqM8ThADTxS5m2E6RP?=
- =?us-ascii?Q?dfuUsQ9tiyR7GjR3DTUWlsZzLocSWdoFm3ebmZX2PgJh0mPovj7gLH34QaqY?=
- =?us-ascii?Q?wV2C2LHDXvHY4HO79VJLKEtrDB37QWlYvXbVNhpS8ulSK8qyXy4qzrYfVpo9?=
- =?us-ascii?Q?Yo77qtLzn5kPbE67dH+wU1PNkgtvnm3j4QKyxA7bSbBf5jVREj1oW6VGTorb?=
- =?us-ascii?Q?wurbC7wR67ALPOSeCaJhCRsfLJfzLdFfMGJjWnYyGvuImdTCgStW6XH+/46u?=
- =?us-ascii?Q?Q8klq01qOLUdRKBozDDaK/+xW2B4+zLrXPT33Tz42KycEQeC8uOMBNb++Vly?=
- =?us-ascii?Q?t6zx5yRJxIPTM0Gn8q0CrEJ1YDlBcTyrftaEuZm9ZVJ8VTNg/LmV+R5FMTSI?=
- =?us-ascii?Q?sRfV+TvCnI/Psj34s58/x+/Zois6YvghtFFdcBR/tyR/ii6vMFth3mk2Te1w?=
- =?us-ascii?Q?8V3vTrS3BOGCQrxMnMB3yI6ey5tPEm7EvDVVdDthw5GRZ5NWkLhWa8MW+VsI?=
- =?us-ascii?Q?T0Jk6a50V5zulvnYyl6CRCCsrzmX2/ky7Jn92y7ianR2jzdR3cA01E25g9NU?=
- =?us-ascii?Q?EJvM7WtuYFUXe/BG3NAuBiHTwFUMTCzyDSRlx1TtqoNOYKKr7s8CIR3yPTRI?=
- =?us-ascii?Q?9XGUy9q5AEUoTsU8AFfQIoshqviU9H+6gihesn1A2hKqJu5WkQpXSCwdcKa3?=
- =?us-ascii?Q?g0cWDxDHbe17T7hXECyPcyBnSa0A4obh6xvH3POEFBctYiryR2/GcqGoJC+c?=
- =?us-ascii?Q?KZjexQk5UKZ1scgwTBflYY9EP+k8HyTCpLhHYUJjRMpJY9f6m2ps3W0fY/gQ?=
- =?us-ascii?Q?AjLztZweATvI29qY4iSUrdl3OS7aUhL7IWfttOhk2d/jjGlpX6Grwqjkq5//?=
- =?us-ascii?Q?336Ip+sjFW7RClV8zn/c7bsBmGz4F+Vv/DgJNBTgbMLJsKL/pW7OionJp9W2?=
- =?us-ascii?Q?KVI8oz1vy18bSsTRfqumU50JP2ODa6Pq+/pN8GKZeh8Gen86jVyz65n8IlUb?=
- =?us-ascii?Q?4UfFh8wzdwESqRw/fLisWzZ/dqSrqammx5harJxC/OzOh8QcRtrj3pP3OFye?=
- =?us-ascii?Q?MSL7h5/vpd60VjV0CNmhdkbKVnCib/HcfB6OjWPopToAd9tkooWfBSt1fKog?=
- =?us-ascii?Q?ahU1ba35TAg0gQZ4S2flYDLl30wzpJgZWHfSVZDOEPravvODY1KJhmx1PVku?=
- =?us-ascii?Q?7/e+4XsCnXkcrzi4VMQ8xgsW/R02Hy4Wf8Aigj/NJtykxafyayasOkoIodxI?=
- =?us-ascii?Q?UQtQMWYY2SebC509dFlaZPJ1j3YRVwi+8ffR5qcLSPanpgSGqmZLmZxa/Gm6?=
- =?us-ascii?Q?xDmsSJt2cJ9jcBs8CREHBQTuF9Uw0pVxoMaXpbPdsT1qiAyreYukQVcRM4Bd?=
- =?us-ascii?Q?coYNRjSP253G8W1RAUEhTGZtIHDTShc/dfE9bqWTXzlxizhNAml85/2LstwR?=
- =?us-ascii?Q?1g=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 96e8dae0-b60c-4dd4-a50c-08dd98953c0f
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2025 18:28:08.4931
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: F9TXg9zU9G3lR76HQtOglWqer/zib6rTr2SrHWQTqWb1yQkI5ufB4GyL9S+vfjwkazchEND5rFqb6Dk7D727C+FAW3xNdSEFPn47scyG5Os=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR11MB7553
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-alejandro.lucero-palau@ wrote:
-> From: Alejandro Lucero <alucerop@amd.com>
-> 
-> Create a new function for a type2 device initialising
-> cxl_dev_state struct regarding cxl regs setup and mapping.
-> 
-> Export the capabilities found for checking them against the
-> expected ones by the driver.
-> 
-> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
->  drivers/cxl/core/pci.c | 62 ++++++++++++++++++++++++++++++++++++++++++
->  include/cxl/cxl.h      |  3 ++
->  2 files changed, 65 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index e2b6420592de..b05c6e64bfe2 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -1095,6 +1095,68 @@ int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_pci_setup_regs, "CXL");
->  
-> +static int cxl_pci_accel_setup_memdev_regs(struct pci_dev *pdev,
-> +					   struct cxl_dev_state *cxlds,
-> +					   unsigned long *caps)
-> +{
-> +	struct cxl_register_map map;
-> +	int rc;
-> +
-> +	rc = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_MEMDEV, &map, caps);
-> +	/*
-> +	 * This call can return -ENODEV if regs not found. This is not an error
-> +	 * for Type2 since these regs are not mandatory. If they do exist then
-> +	 * mapping them should not fail. If they should exist, it is with driver
-> +	 * calling cxl_pci_check_caps() where the problem should be found.
-> +	 */
+On Tue, 20 May 2025 08:21:18 -0500
+"Bowman, Terry" <terry.bowman@amd.com> wrote:
 
-The driver should know in advance if calling:
+> On 5/20/2025 6:04 AM, Jonathan Cameron wrote:
+> > On Thu, 15 May 2025 16:52:15 -0500
+> > "Bowman, Terry" <terry.bowman@amd.com> wrote:
+> >  
+> >> On 4/25/2025 8:18 AM, Jonathan Cameron wrote:  
+> >>> On Thu, 24 Apr 2025 09:17:45 -0500
+> >>> "Bowman, Terry" <terry.bowman@amd.com> wrote:
+> >>>    
+> >>>> On 4/23/2025 10:04 AM, Jonathan Cameron wrote:    
+> >>>>> On Wed, 26 Mar 2025 20:47:05 -0500
+> >>>>> Terry Bowman <terry.bowman@amd.com> wrote:
+> >>>>>      
+> >>>>>> The AER service driver includes a CXL-specific kfifo, intended to forward
+> >>>>>> CXL errors to the CXL driver. However, the forwarding functionality is
+> >>>>>> currently unimplemented. Update the AER driver to enable error forwarding
+> >>>>>> to the CXL driver.
+> >>>>>>
+> >>>>>> Modify the AER service driver's handle_error_source(), which is called from
+> >>>>>> process_aer_err_devices(), to distinguish between PCIe and CXL errors.
+> >>>>>>
+> >>>>>> Rename and update is_internal_error() to is_cxl_error(). Ensuring it
+> >>>>>> checks both the 'struct aer_info::is_cxl' flag and the AER internal error
+> >>>>>> masks.
+> >>>>>>
+> >>>>>> If the error is a standard PCIe error then continue calling pcie_aer_handle_error()
+> >>>>>> as done in the current AER driver.
+> >>>>>>
+> >>>>>> If the error is a CXL-related error then forward it to the CXL driver for
+> >>>>>> handling using the kfifo mechanism.
+> >>>>>>
+> >>>>>> Introduce a new function forward_cxl_error(), which constructs a CXL
+> >>>>>> protocol error context using cxl_create_prot_err_info(). This context is
+> >>>>>> then passed to the CXL driver via kfifo using a 'struct work_struct'.
+> >>>>>>
+> >>>>>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>      
+> >>>>> Hi Terry,
+> >>>>>
+> >>>>> Finally got back to this.  I'm not following how some of the reference
+> >>>>> counting in here is working.  It might be fine but there is a lot
+> >>>>> taking then dropping device references - some of which are taken again later.
+> >>>>>      
+> >>>>>> @@ -1082,10 +1094,44 @@ static void cxl_rch_enable_rcec(struct pci_dev *rcec)
+> >>>>>>  	pci_info(rcec, "CXL: Internal errors unmasked");
+> >>>>>>  }
+> >>>>>>  
+> >>>>>> +static void forward_cxl_error(struct pci_dev *_pdev, struct aer_err_info *info)
+> >>>>>> +{
+> >>>>>> +	int severity = info->severity;      
+> >>>>> So far this variable isn't really justified.  Maybe it makes sense later in the
+> >>>>> series?      
+> >>>> This is used below in call to cxl_create_prot_err_info().    
+> >>> Sure, but why not just do
+> >>>
+> >>> if (cxl_create_prot_error_info(pdev, info->severity, &wd.err_info)) {
+> >>>
+> >>> There isn't anything modifying info->severity in between so that local
+> >>> variable is just padding out the code to no real benefit.
+> >>>
+> >>>    
+> >>>>>> +		pci_err(pdev, "Failed to create CXL protocol error information");
+> >>>>>> +		return;
+> >>>>>> +	}
+> >>>>>> +
+> >>>>>> +	struct device *cxl_dev __free(put_device) = get_device(err_info->dev);      
+> >>>>> Also this one.  A reference was acquired and dropped in cxl_create_prot_err_info()
+> >>>>> followed by retaking it here.  How do we know it is still about by this call
+> >>>>> and once we pull it off the kfifo later?      
+> >>>> Yes, this is a problem I realized after sending the series.
+> >>>>
+> >>>> The device reference incr could be changed for all the devices to the non-cleanup
+> >>>> variety. Then would add the reference incr in the caller after calling cxl_create_prot_err_info().
+> >>>> I need to look at the other calls to to cxl_create_prot_err_info() as well.
+> >>>>
+> >>>> In addition, I think we should consider adding the CXL RAS status into the struct cxl_prot_err_info.
+> >>>> This would eliminate the need for further accesses to the CXL device after being dequeued from the
+> >>>> fifo. Thoughts?    
+> >>> That sounds like a reasonable solution to me.
+> >>>
+> >>> Jonathan    
+> >> Hi Jonathan,  
+> > Hi Terry,
+> >
+> > Sorry for delay - travel etc...
+> >  
+> >> Is it sufficient to rely on correctly implemented reference counting implementation instead
+> >> of caching the RAS status I mentioned earlier?
+> >>
+> >> I have the next revision coded to 'get' the CXL erring device's reference count in the AER
+> >> driver before enqueuing in the kfifo and then added a reference count 'put' in the CXL driver
+> >> after dequeuing and handling/logging. This is an alternative to what I mentioned earlier reading
+> >> the RAS status and caching it. One more question: is it OK to implement the get and put (of
+> >> the same object) in different drivers?  
+> > It's definitely unusual.  If there is anything similar to point at I'd be happier than
+> > this 'innovation' showing up here first. 
+> >  
+> >> If we need to read and cache the RAS status before the kfifo enqueue there will be some other
+> >> details to work through.  
+> > This still smells like the cleaner solution to me, but depends on those details..
+> >
+> > Jonathan  
+> 
+> In this case I believe we will need to move the CE handling (RAS status reading and clearing) before
+> the kfifo enqueue. I think this is necessary because CXL errors may continue to be received and we
+> don't want their status's combined when reading or clearing. I can refactor cxl_handle_ras()/
+> cxl_handle_cor_ras() to return the RAS status value and remove the trace logging (to instead be
+> called after kfifo dequeue).
+> 
+> This leaves the UCE case. It's worth mentioning the UCE flow is different than the the CE case
+> because it uses the top-bottom traversal starting at the erring device. Correct me if I'm wrong
+> this would be handled before the kfifo as well. The handling and logging in the UCE case are
+> baked together. The UCE flow would therefore need to include the trace logging during handling.
+> 
+> Another flow is the PCI EP errors. The PCIe EP CE and UCE handlers remain and can call the
+> the refactored cxl_handle_ras()/cxl_handle_cor_ras() and then trace log afterwards. This is no
+> issue.
+> 
+> This leaves only CE trace logging to be called after the kfifo dequeue. This is what doesn't
+> feel right and wanted to draw attention to.
+> 
+> All this to say: very little work will be done after the kfifo dequeue. Most of the work in
+> the kfifo implementation would be before the kfifo enqueuing in the CXL create_prot_error_info()
+> callback. I am concerned the balance of work done before and after the kfifo enqueue/dequeue
+> will be very asymmetric with little value provided from the kfifo.
+> 
+As per the discord chat - if you look up the device again from BDF or similar and get this
+info once you have right locks post kfifo all should be fine as any race will be easy
+to resolve by doing nothing if the driver has gone away.
 
-    cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_MEMDEV, &map);
+Jonathan
 
-...will fail. Put that logic where it belongs in the probe function of
-the type-2 driver directly. This helper is not helping, it is just
-obfuscating.
+> -Terry
+> 
+
