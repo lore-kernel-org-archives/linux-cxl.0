@@ -1,277 +1,107 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F151DE2BF;
-	Tue, 20 May 2025 23:45:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F43171D2
+	for <linux-cxl@vger.kernel.org>; Wed, 21 May 2025 00:27:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747784718; cv=none; b=ox95dgR6Xe/THhd7gYJokm5QakP4f/XHg4v/zkQd2CqhnvvjVvz4DCH75X3jfZRQal6kF+IJq6oe2v83uBGz7Zbni1hR3WHFlw/YBhxLrO6pnodVzXIEiAJYNwrISf/d35U2Dh76KaNkSEN/5fRoE7KP6fk0azzsdivnUei/3mI=
+	t=1747787224; cv=none; b=c1aX+mIbdXQioQvUg85DD6Vam5poVfJACt3y+Y/s6vTKESuOIG3oansBN/tGBzuUnkz3SJtn9cF9o5/wFqXIA0dFgRo2wqbwxhAwBH4jPcMOLzjbsu/ezWcTRzWqIu5ia2AikjGW+Y+E5i/rGATLxn8rtIZheY4YPxpDEzuMK4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747784718; c=relaxed/simple;
-	bh=jl3rQ8yvljv9R1GJ2Pf212zCz8OEOuFMxnWHrwdeimA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=mQUW7QvlVlqv7k27TgQ0HaMv86ZWiHefOdK4h8bz2FD6pbMgpy+tooVRo/ZE3RKiDutqvQcxWjuvMbi4T14iCEP2IBMd+9iv+Q3aWr8rAXxcwQmHHfPUmR1G2BYpLStqJI6wux02Fo0OC9tw7jVlHJSgiWk8Qzxl2bE5eMb3UlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b29yt2zvhz6M4xg;
-	Wed, 21 May 2025 07:40:22 +0800 (CST)
-Received: from frapeml500006.china.huawei.com (unknown [7.182.85.219])
-	by mail.maildlp.com (Postfix) with ESMTPS id F2A201402F7;
-	Wed, 21 May 2025 07:45:12 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (7.182.85.172) by
- frapeml500006.china.huawei.com (7.182.85.219) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 21 May 2025 01:45:12 +0200
-Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
- frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
- Wed, 21 May 2025 01:45:12 +0200
-From: Shiju Jose <shiju.jose@huawei.com>
-To: Alison Schofield <alison.schofield@intel.com>
-CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"dan.j.williams@intel.com" <dan.j.williams@intel.com>, Jonathan Cameron
-	<jonathan.cameron@huawei.com>, "dave.jiang@intel.com" <dave.jiang@intel.com>,
-	"dave@stgolabs.net" <dave@stgolabs.net>, "vishal.l.verma@intel.com"
-	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "bp@alien8.de"
-	<bp@alien8.de>, "tony.luck@intel.com" <tony.luck@intel.com>,
-	"lenb@kernel.org" <lenb@kernel.org>, "Yazen.Ghannam@amd.com"
-	<Yazen.Ghannam@amd.com>, "mchehab@kernel.org" <mchehab@kernel.org>,
-	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, Linuxarm <linuxarm@huawei.com>,
-	tanxiaofei <tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>,
-	Roberto Sassu <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
-	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>
-Subject: RE: [PATCH v5 6/8] cxl/edac: Support for finding memory operation
- attributes from the current boot
-Thread-Topic: [PATCH v5 6/8] cxl/edac: Support for finding memory operation
- attributes from the current boot
-Thread-Index: AQHbxZDgFo0Ql6ZU2E6LyYo7gzjDYrPa01AAgAFiT8A=
-Date: Tue, 20 May 2025 23:45:12 +0000
-Message-ID: <879667a6c73a475ab8ef06b0448258a3@huawei.com>
-References: <20250515115927.772-1-shiju.jose@huawei.com>
- <20250515115927.772-7-shiju.jose@huawei.com>
- <aCwFhNeeX0YC41A3@aschofie-mobl2.lan>
-In-Reply-To: <aCwFhNeeX0YC41A3@aschofie-mobl2.lan>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1747787224; c=relaxed/simple;
+	bh=JsasuI8EBSJUBttnTRl0qIa0Ar7cUOSsCYI4XvK1ekc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d4UVnMvPr4r1wk9I1s2lQJ/fVVQeTO3yzRDYvolQlsO03kBOujrpEB5zUv1HyYv6NYfTVhBOOSzeYS4dU78TjXi6KJM3qwC/mQW2FF/i/eIQx2aXeQyrI0OV43Q0uqX6C2NlTJmm/z+sbSwqe+yFls5nn++dNAIUp7hLGjDpcGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S4wdLkdH; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S4wdLkdH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747787222; x=1779323222;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=JsasuI8EBSJUBttnTRl0qIa0Ar7cUOSsCYI4XvK1ekc=;
+  b=S4wdLkdHofaSg1hSdLTjLqId4AIPZdb41GOAEKWyWU+6Zjl5gpl4ml0q
+   HDeIDVkMAcX7d0c07JjMh1P0P4MojLKgHbHuqQvGthGcB4ld0WUXz7YE8
+   40uBE+cUpunDEWrmaFFWpAboZvDy33aBiZJsW/lxqtYtY8k92n9SKg5nP
+   e4xuP316DmRM6zrMB7aHMJCHfm2aE5wDr8NZpblF7cQfCg5CLQG6JDiWs
+   4QkAB9571Meg9Gpwaa8SSF35g9OSIIR9WpB9fRKqO6FhDfnUpEq4sUXry
+   Bbi/yI+GkMB+SMEJC94KM3jfSGluOIlZW1Gebiqu7VLOyuS19jRX4BRC2
+   A==;
+X-CSE-ConnectionGUID: cqdbHEhMTfGgmwd4cvPsrg==
+X-CSE-MsgGUID: pGTH1zAaSkqguCIVvDWD8A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="49645888"
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="49645888"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 17:27:01 -0700
+X-CSE-ConnectionGUID: 0TP4sVPVSl6xpftLe7g22Q==
+X-CSE-MsgGUID: C49aQXHRQfa2YOiDcJbohQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="144735084"
+Received: from unknown (HELO hyperion.jf.intel.com) ([10.243.61.29])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 17:27:00 -0700
+From: marc.herbert@linux.intel.com
+To: linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev,
+	alison.schofield@intel.com,
+	dan.j.williams@intel.com
+Cc: Marc Herbert <marc.herbert@linux.intel.com>
+Subject: [ndctl PATCH 1/2] README.md: add CONFIG_s missing to pass NFIT tests
+Date: Wed, 21 May 2025 00:26:39 +0000
+Message-ID: <20250521002640.1700283-1-marc.herbert@linux.intel.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
->-----Original Message-----
->From: Alison Schofield <alison.schofield@intel.com>
->Sent: 20 May 2025 05:31
->To: Shiju Jose <shiju.jose@huawei.com>
->Cc: linux-cxl@vger.kernel.org; dan.j.williams@intel.com; Jonathan Cameron
-><jonathan.cameron@huawei.com>; dave.jiang@intel.com; dave@stgolabs.net;
->vishal.l.verma@intel.com; ira.weiny@intel.com; linux-edac@vger.kernel.org;
->linux-doc@vger.kernel.org; bp@alien8.de; tony.luck@intel.com;
->lenb@kernel.org; Yazen.Ghannam@amd.com; mchehab@kernel.org;
->nifan.cxl@gmail.com; Linuxarm <linuxarm@huawei.com>; tanxiaofei
-><tanxiaofei@huawei.com>; Zengtao (B) <prime.zeng@hisilicon.com>; Roberto
->Sassu <roberto.sassu@huawei.com>; kangkang.shen@futurewei.com;
->wanghuiqiang <wanghuiqiang@huawei.com>
->Subject: Re: [PATCH v5 6/8] cxl/edac: Support for finding memory operation
->attributes from the current boot
->
->On Thu, May 15, 2025 at 12:59:22PM +0100, shiju.jose@huawei.com wrote:
->> From: Shiju Jose <shiju.jose@huawei.com>
->>
->> Certain operations on memory, such as memory repair, are permitted
->> only when the address and other attributes for the operation are from
->> the current boot. This is determined by checking whether the memory
->> attributes for the operation match those in the CXL gen_media or CXL
->> DRAM memory event records reported during the current boot.
->>
->> The CXL event records must be backed up because they are cleared in
->> the hardware after being processed by the kernel.
->>
->> Support is added for storing CXL gen_media or CXL DRAM memory event
->> records in xarrays. Old records are deleted when they expire or when
->> there is an overflow and which depends on platform correctly report
->> Event Record Timestamp field of CXL spec Table 8-55 Common Event
->> Record Format.
->>
->> Additionally, helper functions are implemented to find a matching
->> record in the xarray storage based on the memory attributes and repair
->> type.
->>
->> Add validity check, when matching attributes for sparing, using the
->> validity flag in the DRAM event record, to ensure that all required
->> attributes for a requested repair operation are valid and set.
->
->Using cxl-test I'm getting the below stack trace when trying to modprobe -=
-r cxl-
->test.
->
->These cxl-test memdevs have num_ras_features =3D=3D 0 so upon adding the
->memdevs
->	edac_dev_register() returns -EINVAL,
->as does
->	devm_cxl_memdev_edac_register()
->
->Later on when I try to modprobe -r cxl-test, it seems odd that the
->devm_cxl_memdev_edac_release() is being called for this device, but it is,=
- and
->that where the kfree() oops happens.  Are those register and release funct=
-ions
->intended to be paired/reciprocal ?
->
->Here's the code segment (from this patch) where it is failing, and the sta=
-ck trace
->follows.
->
->> +
->> +void devm_cxl_memdev_edac_release(struct cxl_memdev *cxlmd) { #ifdef
->> +CONFIG_CXL_EDAC_MEM_REPAIR
->> +	struct cxl_mem_err_rec *array_rec =3D cxlmd->array_err_rec;
->> +	struct cxl_event_gen_media *rec_gen_media;
->> +	struct cxl_event_dram *rec_dram;
->> +	unsigned long index;
->> +
->> +	if (!array_rec)
->> +		return;
->> +
->> +	xa_for_each(&array_rec->rec_dram, index, rec_dram)
->> +		kfree(rec_dram);
->
->It fails above. That's as far as I've gotten. Hoping that you recognize so=
-mething
->with this case where num_ras_features =3D=3D 0 that can lead to this.
->
->Here's the stack trace, and I'll hop to the point in the diff below where =
-it's
->failing:
+From: Marc Herbert <marc.herbert@linux.intel.com>
 
-Thanks Alison for reporting and sharing the debug info.
+Found by trial and error. As of kernel v6.15, the CONFIG_s in this
+version are enough to give to ./scripts/kconfig/merge_config.sh and pass
+`meson test --suite=ndctl:ndctl` and `meson test --suite=ndctl:dax`
 
-I think following  changes should fix the issue. =20
-Dave verified fix in his test setup. Thanks Dave.
+This has been manually tested with only `make defconfig ARCH=x86_64` as
+a starting point. This is admittedly incomplete test coverage but still
+a massively better starting point for other ARCHs and a big time
+saver. There's a good chance it's enough for other ARCHs too.
 
-Thanks,
-Shiju
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
-diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c index 87b347=
-c232b2..0f001f969228 100644
---- a/drivers/cxl/core/edac.c
-+++ b/drivers/cxl/core/edac.c
-@@ -1992,15 +1992,6 @@ int devm_cxl_memdev_edac_register(struct cxl_memdev =
-*cxlmd)  #endif
-=20
- #ifdef CONFIG_CXL_EDAC_MEM_REPAIR
--       struct cxl_mem_err_rec *array_rec =3D
--               devm_kzalloc(&cxlmd->dev, sizeof(*array_rec), GFP_KERNEL);
--       if (!array_rec)
--               return -ENOMEM;
--
--       cxlmd->array_err_rec =3D array_rec;
--       xa_init(&array_rec->rec_gen_media);
--       xa_init(&array_rec->rec_dram);
--
-        for (int i =3D 0; i < CXL_MEM_SPARING_MAX; i++) {
-                rc =3D cxl_memdev_sparing_init(cxlmd,
-                                             &ras_features[num_ras_features=
-], @@ -2023,6 +2014,16 @@ int devm_cxl_memdev_edac_register(struct cxl_memd=
-ev *cxlmd)
-                repair_inst++;
-                num_ras_features++;
-        }
-+       if (repair_inst) {
-+               struct cxl_mem_err_rec *array_rec =3D
-+                       devm_kzalloc(&cxlmd->dev, sizeof(*array_rec), GFP_K=
-ERNEL);
-+               if (!array_rec)
-+                       return -ENOMEM;
-+
-+               cxlmd->array_err_rec =3D array_rec;
-+               xa_init(&array_rec->rec_gen_media);
-+               xa_init(&array_rec->rec_dram);
-+       }
- #endif
-        char *cxl_dev_name __free(kfree) =3D
-                kasprintf(GFP_KERNEL, "cxl_%s", dev_name(&cxlmd->dev));
+Link: https://lore.kernel.org/nvdimm/aed71134-1029-4b88-ab20-8dfa527a7438@linux.intel.com/
+Signed-off-by: Marc Herbert <marc.herbert@linux.intel.com>
+---
+ README.md | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D
->
->
->[  108.114491] cxl mem9: ALISON try_free_rec_dram [  108.115654] Oops:
->general protection fault, probably for non-canonical address
->0x1ad998badadad88: 0000 [#1] SMP NOPTI
->[  108.118125] CPU: 0 UID: 0 PID: 1187 Comm: modprobe Tainted: G          =
- O
->6.15.0-rc4+ #1 PREEMPT(voluntary)
->[  108.120507] Tainted: [O]=3DOOT_MODULE
->[  108.121202] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS
->0.0.0 02/06/2015 [  108.122466] RIP: 0010:kfree+0x6e/0x300 [  108.123099]
->Code: 80 48 01 d8 0f 82 98 02 00 00 48 c7 c2 00 00 00 80 48 2b 15 94 70 61=
- 01
->48 01 d0 48 c1 e8 0c 48 c1 e0 06 48 03 05 72 70 61 01 <48> 8b 50 08 49 89 =
-c5 f6
->c2 01 0f 85 4c 01 00 00 0f 1f 44 00 00 41 [  108.126050] RSP:
->0018:ffffc90002c03be0 EFLAGS: 00010203 [  108.126905] RAX:
->01ad998badadad80 RBX: 6b6b6b6b6b6b6b6b RCX: 0000000000000002 [
->108.128035] RDX: 0000777f80000000 RSI: ffffffff82a44991 RDI: ffffffff82a5a=
-c86
->[  108.129194] RBP: ffffc90002c03c30 R08: 0000000000000000 R09:
->0000000000000000 [  108.130346] R10: 0000000000000001 R11:
->ffff888276ffe000 R12: ffff8880075a5000 [  108.131414] R13: ffff88800680a57=
-8
->R14: 0000000000000000 R15: 000000000000000b [  108.132234] FS:
->00007fce1dd38740(0000) GS:ffff8880fa52b000(0000) knlGS:0000000000000000
->[  108.133256] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033 [
->108.133952] CR2: 00007ffce474e6e8 CR3: 0000000143296006 CR4:
->0000000000370ef0 [  108.134787] DR0: 0000000000000000 DR1:
->0000000000000000 DR2: 0000000000000000 [  108.135560] DR3:
->0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400 [
->108.136375] Call Trace:
->[  108.136694]  <TASK>
->[  108.136939]  devm_cxl_memdev_edac_release+0x6d/0x130 [cxl_core] [
->108.137611]  cxl_memdev_release+0x22/0x40 [cxl_core] [  108.138268]
->device_release+0x30/0x90 [  108.138720]  kobject_put+0x85/0x1c0 [
->108.139111]  put_device+0xe/0x20 [  108.139478]
->cxl_memdev_unregister+0x42/0x50 [cxl_core] [  108.140092]
->devm_action_release+0xd/0x20 [  108.140531]  devres_release_all+0xa5/0xe0 =
-[
->108.141059]  device_unbind_cleanup+0xd/0x70 [  108.141416]
->device_release_driver_internal+0x1d3/0x220
->[  108.141890]  device_release_driver+0xd/0x20 [  108.142236]
->bus_remove_device+0xd7/0x140 [  108.142578]  device_del+0x15a/0x3a0 [
->108.142932]  platform_device_del.part.0+0x13/0x80
->[  108.143330]  platform_device_unregister+0x1b/0x40
->[  108.143786]  cxl_test_exit+0x1a/0xd80 [cxl_test] [  108.144171]
->__x64_sys_delete_module+0x17d/0x260
->[  108.144579]  ? debug_smp_processor_id+0x17/0x20 [  108.145004]
->x64_sys_call+0x19bd/0x1f90 [  108.145321]  do_syscall_64+0x64/0x140 [
->108.145628]  entry_SYSCALL_64_after_hwframe+0x71/0x79
->[  108.146284] RIP: 0033:0x7fce1d5128cb
->[  108.146775] Code: 73 01 c3 48 8b 0d 55 55 0e 00 f7 d8 64 89 01 48 83 c8=
- ff c3
->66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa b8 b0 00 00 00 0f 05 <48> 3d =
-01 f0 ff
->ff 73 01 c3 48 8b 0d 25 55 0e 00 f7 d8 64 89 01 48 [  108.148672] RSP:
->002b:00007ffce4752768 EFLAGS: 00000206 ORIG_RAX: 00000000000000b0 [
->108.149490] RAX: ffffffffffffffda RBX: 0000556b12b5dd60 RCX:
->00007fce1d5128cb [  108.150284] RDX: 0000000000000000 RSI:
->0000000000000800 RDI: 0000556b12b5ddc8 [  108.151169] RBP:
->0000556b12b5ddc8 R08: 1999999999999999 R09: 0000000000000000 [
->108.151982] R10: 00007fce1d59dac0 R11: 0000000000000206 R12:
->0000000000000001 [  108.152756] R13: 0000000000000000 R14:
->00007ffce4754aa8 R15: 0000556b12b5def0 [  108.153523]  </TASK> [
->108.153925] Modules linked in: dax_pmem nd_pmem kmem nd_btt device_dax
->dax_cxl nd_e820 nfit cxl_mock_mem(O) cxl_test(O-) cxl_mem(O) cxl_pmem(O)
->cxl_acpi(O) cxl_port(O) cxl_mock(O) cxl_core(O) libnvdimm [  108.155784] -=
---[
->end trace 0000000000000000 ]---
->
+diff --git a/README.md b/README.md
+index db25a9114402..a37991ccefa2 100644
+--- a/README.md
++++ b/README.md
+@@ -69,10 +69,20 @@ loaded.  To build and install nfit_test.ko:
+    CONFIG_NVDIMM_PFN=y
+    CONFIG_NVDIMM_DAX=y
+    CONFIG_DEV_DAX_PMEM=m
++   CONFIG_FS_DAX=y
++   CONFIG_XFS_FS=y
++   CONFIG_DAX=m
++   CONFIG_DEV_DAX=m
+    CONFIG_ENCRYPTED_KEYS=y
+    CONFIG_NVDIMM_SECURITY_TEST=y
+    CONFIG_STRICT_DEVMEM=y
+    CONFIG_IO_STRICT_DEVMEM=y
++   CONFIG_ACPI_NFIT=m
++   CONFIG_NFIT_SECURITY_DEBUG=y
++   CONFIG_MEMORY_FAILURE=y
++   CONFIG_MEMORY_HOTPLUG=y
++   CONFIG_MEMORY_HOTREMOVE=y
++   CONFIG_TRANSPARENT_HUGEPAGE=y
+    ```
+ 
+ 1. Build and install the unit test enabled libnvdimm modules in the
+-- 
+2.49.0
 
