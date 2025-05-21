@@ -1,207 +1,308 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2042.outbound.protection.outlook.com [40.107.243.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 975AC1E98F8
-	for <linux-cxl@vger.kernel.org>; Wed, 21 May 2025 23:28:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747870102; cv=none; b=HUYiv5XxzA98UP7Jb1HvFUaXSRLto5btVykyxdrcKYEMLJgcTr3DfW5ePwz/ua7/PzoDBB0lDQRhRFMnjshgOHvOmuxX6+ebR/oBh9E3CXdqBx201gaQR09w4MM30//xQsV9JNp1gdU1NAG6j7OmGqQNE3PnrO7k5u66uNx0d/4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747870102; c=relaxed/simple;
-	bh=+srTR5fFPdTBWpilPD8AukkrvGQKKYs448dTZv64ABQ=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=iVK/mJ04+k+vG4w5m5/wkZlIbW/z8FY0KQv54ZOkjFOnVLQGduDKiXWoyTjRz8Qb3Pa7e+bnJCYNvdNSh6rBftLPxLlqLkquIyo13+m6MWnG4O27OWvQxmlOjUvGc8RbWJ5azWfZY4lpJ5ZfiLMYOYykObYNW3ziZPkXlv/CorY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=C9ijr1S6; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E5A6148827;
+	Wed, 21 May 2025 23:30:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747870225; cv=fail; b=i2IMTqSFPz+7DlnklbFPm/EKfZgO3k8ZTODJQY8RlBuyh8t7Rx0CterPD67LPPk1f8Tn0sa8tdvKJi9Id25pBwHnqLCV+sA0VYmXsMmq95KnjMwN8+ZCwo16xHfY3iD+8t2Xx7LQAphLrxiZAbOEIs3YmdkC4jQqxWQOpKTJnek=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747870225; c=relaxed/simple;
+	bh=ynrPdkIktm/Qz6zVrAl0F3z2ACwktIlI0MyDRkJA3tc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=tpeazpw5uChL0GSLEbIyOFEaZtrpldO35wG2yavYj5VcUepBOZI9RKCbO1UGZOqcZXZLnfIIu/dTZ+n1J7G/A9sY7U8bosFFWrO+4MTEPjrlhEXRhlP7na6QWp8h4hV0skbWKHCobDPCgd++PReCzzkwOPQBbBr/IXeKFv2yvd8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NrX21wHF; arc=fail smtp.client-ip=40.107.243.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="C9ijr1S6"
-Content-Type: text/plain;
-	charset=utf-8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747870097;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yr0CkbbpUFJhjkEm8Q6tZf2/vvbHco6sGQMflWxzynw=;
-	b=C9ijr1S6HDR4rdzTELlisR6lDSpP21OysfZs/OMDkP4PkorbzkBWN7op1siTuJez3EsQTS
-	fMSl+htO2wJocgGq9FIFSNYLWrEm99I92K7Kby3O6GDq7DiwwNf5M4N2MQhEVHa24PzoY0
-	6vWSkY6djv7mFDkLqE/1LJxQtDN0OSA=
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NrX21wHF"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=QXAa1eWkQRB9fN/aRvl/MyIpo2bGyBYTNDN0mqi6Wb/0nQreukfFzMzMVWYJQVUf1ddd86o90PRRw3CEpTW/Z/jl/4sEMGPaiLNq5dDvHLst+kuL5P3d7K33rYJXr7fkPCreLPdD2OIiHgG7vGeYqZoJwTQWuEXrL4ud1qAaii1T0IlTdzRM6UueC1aUKSR+pecP32+c+C+kKGEwJzP4Zx2ar6uuKL4QOjDOfViPEY7d6AoxyghfJm4f3X4Ox5pD5gHYTxM2FPSObkPxvgFhLFUXKg0ZjfJ8gFvjxLoEdOj9OpWH3DDFFkjHYBUba7caFTBOvu2pcuC0yl4CYZsM8Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qs+6vatvsUMOSkzffkAbfBGUriIHmMZt9LjOb2N/MU0=;
+ b=AGI4L9re24FInm+cDafRAhtOoLMmJKvRLJRpbWHnnpBMjeDAX2uMOvw19baqdFYQ7Bou+mmGi5Ph1QYsZJV3nNHdzRJtlJp+dbXGHbO8w+8r4zaxi4pl21mzAmGmx10fG4HOI+YaLdgLceYMbQ/E9nTqfN5wkVtNGN+y7jydS13y9BsoYTBP5ea+mY2TX/49AszOZteCXsMx6ElhK2Pjsj69ecMNDBVGyh61AAOGvjVkDZNohQ8tQ4PwwZXmYfO8+9a7D81WgZp5Y+v/KHNBQvB23/8G5Kvyd0pUN1KDLQIhpWQRYLoMP2kLOJi+8miYq4OGzFNKGkn45G4AFMxZcg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qs+6vatvsUMOSkzffkAbfBGUriIHmMZt9LjOb2N/MU0=;
+ b=NrX21wHFV27PWMpAnN797+2DrUEuOwIAjvqHsqKZlTn1YdBuGE33a1+fobUSaKDqvV6nBnX2YekjoKjRzFxlAntv7GeSb/pt1W9HLxk1dTVpNLA6v/gyZOFnkUr3sYrX8ptwoCjbNs1xwCny0GvpNqIpJuYBEgHRg8FSu+XeN68=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
+ SA1PR12MB9001.namprd12.prod.outlook.com (2603:10b6:806:387::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8746.31; Wed, 21 May 2025 23:30:14 +0000
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f%7]) with mapi id 15.20.8746.030; Wed, 21 May 2025
+ 23:30:14 +0000
+Message-ID: <1ee2446e-0b8a-4255-a648-30d2019b591f@amd.com>
+Date: Wed, 21 May 2025 18:30:11 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 04/16] cxl/aer: AER service driver forwards CXL error
+ to CXL driver
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
+ dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
+ ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
+ rrichter@amd.com, nathan.fontenot@amd.com,
+ Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
+ ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com
+References: <20250327014717.2988633-1-terry.bowman@amd.com>
+ <20250327014717.2988633-5-terry.bowman@amd.com>
+ <20250423160443.00006ee0@huawei.com>
+ <e473fbc9-8b46-4e76-8653-98b84f6b93a6@amd.com>
+ <20250425141849.00003c92@huawei.com>
+ <8042c08a-42f0-49d5-b619-26bfc8e6f853@amd.com>
+ <20250520120446.000022b2@huawei.com>
+ <46c962de-a691-4e67-9af6-5765225633ae@amd.com>
+ <20250521193412.000067b3@huawei.com>
+Content-Language: en-US
+From: "Bowman, Terry" <terry.bowman@amd.com>
+In-Reply-To: <20250521193412.000067b3@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA9PR03CA0025.namprd03.prod.outlook.com
+ (2603:10b6:806:20::30) To DS0PR12MB6390.namprd12.prod.outlook.com
+ (2603:10b6:8:ce::7)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: Internal error: Oops: 0000000096000044 [#11] SMP
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Itaru Kitayama <itaru.kitayama@linux.dev>
-In-Reply-To: <71238a94-361f-4264-a5e4-510d428f5f66@intel.com>
-Date: Thu, 22 May 2025 08:28:00 +0900
-Cc: linux-cxl@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <B0A9901C-E0FE-48C1-A584-B0090B43A5C4@linux.dev>
-References: <aC2RKceK4HqYEQo/@vm4>
- <96235d4d-2bb7-4743-b519-0c35a9a21749@intel.com>
- <98DE3B2C-1393-4ED8-BB6A-E72D6131F97A@linux.dev>
- <71238a94-361f-4264-a5e4-510d428f5f66@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|SA1PR12MB9001:EE_
+X-MS-Office365-Filtering-Correlation-Id: f03de56e-b3fb-4e4a-0658-08dd98bf701e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ekdRTGZsc0tGeWJ1L3VoV09hbGFCZTFnWUFmcncyOS9hUUIwNjgyTTNwZi9t?=
+ =?utf-8?B?TU9kTmIzaC9VaE9nTHgzZzNNd0xMTUlETVdaZ2hEQVN5anpNaDBmK2ZQa2l0?=
+ =?utf-8?B?Y3pzZWZGemFRVjVCT0d6UHZEMzlmbE9ZVm5kamlFREpxTG11Z3BvbnBoN3FS?=
+ =?utf-8?B?dDVxNVczdmJEaS9IdWdzSG1Wc3pFU2FCamg1bjZoYlp5SlpyYW8xQ0lhNmFS?=
+ =?utf-8?B?di9LTWNYUDlnUlFhRXBibnFZd1gyU3llaTQrRGY2Y3EvMEV3Z0t4RDhqcDYy?=
+ =?utf-8?B?UGcvOWIrUW1RcjF0RVZ3VHRJbEx0VEpHWjVqclNac3JkWldSM0xvcG1ybGhF?=
+ =?utf-8?B?VllFd1pkdHJCb2JXc2xCNy9qZElJOVloWWZURHB4SzB6MEI2Y0xMS0xMaU9u?=
+ =?utf-8?B?a0U2TUZjcFJpbGNLMmoxY09JZGJXVGFWUGRtQXRXZTJGcHk4TFNUMEtwc25X?=
+ =?utf-8?B?LzFIa2FoTk1Lanl6dHRzb1gyVDlTMGszZDRLWFltWkJqN2piWkkvZmUyWnNv?=
+ =?utf-8?B?aDh0dXNjYlVINEVDbjZIZ3V2SGhUVXBRWHYzRXk5S3VyZHNjeWt4ME5BRnBx?=
+ =?utf-8?B?endDWHhaNEpCNkgveGtqU0ZDdlA1R3hFS0pCU3pmWDJDMEtlNzFFWW42MnNj?=
+ =?utf-8?B?SkhEQXFZY212UC8yZUhBUjVDZzlBYlZCZno1eEdEajhVY0o4azUyMUo4ZXpw?=
+ =?utf-8?B?R2FYbjRNZ01EZmZ4OStNbjdWaEZ0MTlBUWx2NWZmU2N6R2JDWWZpSDN2WlVr?=
+ =?utf-8?B?MGRtM1N5TGNOeXBPNmI5OVE5SUJYVmVtRTlyZTJBazFSRGl1ZDcrbFZvRldk?=
+ =?utf-8?B?ei9URkRka21IK3ozQzkwaEN1NVBoVVZ6eFd1ZzVjYWZjb3lYVG55UEpIbE53?=
+ =?utf-8?B?UitjbWdMR0s1d3pKT3RNTTQ1aVRxSkV0WjIwUmx6TDY0eWZ6R2l1U3c0cXE0?=
+ =?utf-8?B?czJWMzNhMXhPQjVMVDVqZDV3NFdpakQ4V3lIa1V3Z1pCUXMwdjRORGhEcjVr?=
+ =?utf-8?B?cVNUYTB2MjBlUWpXOHkzL0NsQ3JQMUZrZ3FFVXM3dyt0SVhwcEJtWFRTRWhl?=
+ =?utf-8?B?L3FyK1hSa09GK1c2VFZ4S3p2RUpTWGxIUVhEd014bTNJUnEySFdYR2JOb0cv?=
+ =?utf-8?B?WkFCMjN2QWVwWEN1c2RXQjd5TGQyQzlhUzhJWDRuZjZ2cC9nb3djajJwbXU1?=
+ =?utf-8?B?RVBXYnVGaGFRdmowWEY3K3pQWnNUOGZQRVNFbVc5UDlxTkhTRVJUL1ArVVhn?=
+ =?utf-8?B?MGVHWXdOalR4ZmRXcUl2cGcycGhPR2JtVTB6Qno0WWY1SkorVEU4V0F1d0cy?=
+ =?utf-8?B?VGsrYjhyeGovMTQ2THpGc2ZObEpjaXN3MERmL0ZsaS94c2NFQmZBNzNIM0p0?=
+ =?utf-8?B?Nnl0R1U5dWlNN3A3UXNudEdnZ0JaRlR4c0lEMkYra1VOWWNybGZ6Y0h2NEtJ?=
+ =?utf-8?B?TTQ5UksrTFI1b0ZCelpQM3VBMDE5WHFiVjA4Y1hkV29yWGNTakR5ajBndVJP?=
+ =?utf-8?B?WWd6eEp6U3ZMRlZzdlgxaFBETzdkZWVTdFhYa1lUUGlhT3loYTRpZnNac214?=
+ =?utf-8?B?OFcrYklpRmh0VkRHY0g2YjV1WnVJc1J4bnMrdmRkeG50MHFMckJpWlFqL3c3?=
+ =?utf-8?B?K3daVmxHNXVxaEYvbkRqdnk1NmFsRFBXcFgxYy8xVUZSTytKb2syYWsveWU3?=
+ =?utf-8?B?bkdhWXhMcUUvYjNUanZid0IzeFFoVXVmWkdPVmJaemEzV3dsdEtMOHRRPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MTZpbnFkekd1aXdSbXpmT1g4LzRUcnM3MU44TVFnVCtEbEM0R2IwSVc5UHFa?=
+ =?utf-8?B?MFA1MVZVNXJCOWErU0JRaDBzT2kzbGl2K1VKNXZTREJrMzFjcjZRRzZ3T1NW?=
+ =?utf-8?B?RktFUk5IRHdsY0Vuclo4b3ZrWUtXZjlBcVBaOXNCTkl6bkhCNVVEbmk5N05H?=
+ =?utf-8?B?SWRGblhPV3F1VTR4RCs4aHViY2Y0QkRGM1BTODkzZkdFNDR2VVY3Tzd1cEth?=
+ =?utf-8?B?NzlJRzlJMUlQa2gzbm1qS2RZY25yZWIwNnh6WDlMbEQ5MUlEYVdUb0FWbUwx?=
+ =?utf-8?B?SGUvY3FMREhSM1RtVkVzTXhtb05kK2tsczgzSlEreWkzR2pjMGl3Ym94Z3ZB?=
+ =?utf-8?B?b0xoWHFPRUkzcTc0b3pnSjJWSXlmQmVJdzFsMVllYkVIZWZvcUR1NHBKQ3FN?=
+ =?utf-8?B?b1VzQnl0cXZ1Nm1TWlVFZVQ3Rk5uWGUxTmdsK2VNZzJQeDRFR3padDZqalh5?=
+ =?utf-8?B?YU1WTDUrUmk2dHNySUZIeUs3djZ5MUxzZDYvZWJ6enJDeXMyWHEyRklGdWNy?=
+ =?utf-8?B?T2YwMGNyOCtNcnZCYTJtWGxNTlIyRzJrMjA2MGY5MkRFTHlwLzkyeFd3bHVl?=
+ =?utf-8?B?TEJjdVl6ZkxKeUduQ3hSNExPUW5FM0pkUm1STXl0amxTRG1FNWZNRG4zOUta?=
+ =?utf-8?B?N0JOdldhK0Z1dytsMUpQNGhHVkhHbjRZTEtFNml0cVdCRUNIaGdZYTZpVFM3?=
+ =?utf-8?B?VTU1dmw1eU1EaVZ4Q2w5WTdReHF3YW1TWjNuN3huUTdPSGtxSk1mOTdFYUla?=
+ =?utf-8?B?SWRHWmZVTyttNmlkOEtld01YbzV6K09pMXlLbHR1ZVgrZ2tLUFZZMTRVTlhI?=
+ =?utf-8?B?WU5FcUg4b1pjQXB2UlBSa2xCbDlXaURSYmEvVVNEOEZaOGttNXhiTTA0WTVh?=
+ =?utf-8?B?MXJwek4zbG1LOFZHcVVCdVVPVTM2UWhIai9uOUFQRHUxMTJmOEZSWHV5MTFO?=
+ =?utf-8?B?R0VyRG1MODhwMU1XaWNmL2MrTGNxQkN6b3Z4bXlLOTlMeUVTYWUzbFhhbFEy?=
+ =?utf-8?B?Q0h0T1dZdTJ0NG01N3BEbTVGeFpsUGpMYmxnVWNjRGlBc2h3N2pHVk5iaGJ4?=
+ =?utf-8?B?NG5HZitwbFRrWkZNVHVaaGNYSU1qbEJmQjltK2svbEJpS1k2Y2JvSW8xTFhi?=
+ =?utf-8?B?TnRzQXcrU2VnZGRQNDdnNEtxWi9PVW1NSkp3K1NoZnRldWt0dHZhakJjd0Iz?=
+ =?utf-8?B?cWtNQVBrbU9sbmJSTlFSSStGMW4wUXJYajFzTUZoNU1EWkR2REsyM3hlWWhr?=
+ =?utf-8?B?K2FqWGFYYjA2aTQwZ0dvNkNnVlZCcDA3YnFYMWExeElnQmdpdGUraTFBVUM0?=
+ =?utf-8?B?N0NBNlRJd0d6NDcvemNKT2hlK2w0OHhZRTF2akVVcXdSZWIzM1gvMlJsbFd0?=
+ =?utf-8?B?YmhZdGVvM0tQaTUxUk9BWVlvemJSSVl2L20zaFQwYkt3U0VWaThkWE03Q1RP?=
+ =?utf-8?B?aHF0b1dKL3YrUGp2NWhjUlQ0V0Q5SjBqZ0I0eHJPeVQ2WlpxUFBSQ0NFV3pF?=
+ =?utf-8?B?cEd2ekR6TExJMlM0aldhOHVCZjE2RTJhaXFxMGNFU2lBVDRvSGc5cERHZVZa?=
+ =?utf-8?B?a3pIcmNsMmd5d1BNdTJ3bkJscXMzcmd2ZkJMV3pVNTNXU3pETW9JR0Qvc3Q3?=
+ =?utf-8?B?ZlJnS292Q2kzdm4yc2dGckdrV0o3TmpCWHZ3S2R1Z2ZIRkxiOU1VbkFXck9G?=
+ =?utf-8?B?R1lRK0FQV2tSYzFrajJ2bDdsN0ZUS1g1WEhUdkluV2liVFg0cHFrTWRtTW4v?=
+ =?utf-8?B?OEJ1T3ZBa1RvL3M0TmRWa3NuSVdVaTM2NjdZcWdtM1p3RmtXR2ZnSnMvYzhC?=
+ =?utf-8?B?anpUSHdTbjc4N3pDdG9leWhDYlNiYS9DZzVZLzhpSlhzZFIxOFJtZlQwZmgz?=
+ =?utf-8?B?TFRxTFJ2T2NBTDdiaVpvdXJDK1d6L25YZ1dMSWE2N2RpdDM5NmdvZVlOajdT?=
+ =?utf-8?B?dytFVXI4YjlldVNrT1ZUbnhIdVRwRmdnTk1xN3ZpQU42dVM2UUhCU0ROTjIy?=
+ =?utf-8?B?Sys5bTV5UU1hZlR3aWRacWJ3Vi9EbjFaSU1wMFk2UVdpTUUyb3RhRnVQbDFi?=
+ =?utf-8?B?bnU2TXNCT25pM0tEVGRGb0xPOFZsWlFEOCtVVG9BN0YrMEtUTURMaUJMcXZa?=
+ =?utf-8?Q?Bj6BVfsSfp80voQ5Hw4HZXz79?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f03de56e-b3fb-4e4a-0658-08dd98bf701e
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2025 23:30:14.5763
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8G7o1hqdgONiGJO9PBc0ye7ZBv0n14Wi8uoWl5kHcSRtFC11FLLmCf5ceSVOzgq7NL37ZEc5jEkYnlC1FowG2w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB9001
 
-Dave et al.,
+On 5/21/2025 1:34 PM, Jonathan Cameron wrote:
+> On Tue, 20 May 2025 08:21:18 -0500
+> "Bowman, Terry" <terry.bowman@amd.com> wrote:
+> 
+>> On 5/20/2025 6:04 AM, Jonathan Cameron wrote:
+>>> On Thu, 15 May 2025 16:52:15 -0500
+>>> "Bowman, Terry" <terry.bowman@amd.com> wrote:
+>>>  
+>>>> On 4/25/2025 8:18 AM, Jonathan Cameron wrote:  
+>>>>> On Thu, 24 Apr 2025 09:17:45 -0500
+>>>>> "Bowman, Terry" <terry.bowman@amd.com> wrote:
+>>>>>    
+>>>>>> On 4/23/2025 10:04 AM, Jonathan Cameron wrote:    
+>>>>>>> On Wed, 26 Mar 2025 20:47:05 -0500
+>>>>>>> Terry Bowman <terry.bowman@amd.com> wrote:
+>>>>>>>      
+>>>>>>>> The AER service driver includes a CXL-specific kfifo, intended to forward
+>>>>>>>> CXL errors to the CXL driver. However, the forwarding functionality is
+>>>>>>>> currently unimplemented. Update the AER driver to enable error forwarding
+>>>>>>>> to the CXL driver.
+>>>>>>>>
+>>>>>>>> Modify the AER service driver's handle_error_source(), which is called from
+>>>>>>>> process_aer_err_devices(), to distinguish between PCIe and CXL errors.
+>>>>>>>>
+>>>>>>>> Rename and update is_internal_error() to is_cxl_error(). Ensuring it
+>>>>>>>> checks both the 'struct aer_info::is_cxl' flag and the AER internal error
+>>>>>>>> masks.
+>>>>>>>>
+>>>>>>>> If the error is a standard PCIe error then continue calling pcie_aer_handle_error()
+>>>>>>>> as done in the current AER driver.
+>>>>>>>>
+>>>>>>>> If the error is a CXL-related error then forward it to the CXL driver for
+>>>>>>>> handling using the kfifo mechanism.
+>>>>>>>>
+>>>>>>>> Introduce a new function forward_cxl_error(), which constructs a CXL
+>>>>>>>> protocol error context using cxl_create_prot_err_info(). This context is
+>>>>>>>> then passed to the CXL driver via kfifo using a 'struct work_struct'.
+>>>>>>>>
+>>>>>>>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>      
+>>>>>>> Hi Terry,
+>>>>>>>
+>>>>>>> Finally got back to this.  I'm not following how some of the reference
+>>>>>>> counting in here is working.  It might be fine but there is a lot
+>>>>>>> taking then dropping device references - some of which are taken again later.
+>>>>>>>      
+>>>>>>>> @@ -1082,10 +1094,44 @@ static void cxl_rch_enable_rcec(struct pci_dev *rcec)
+>>>>>>>>  	pci_info(rcec, "CXL: Internal errors unmasked");
+>>>>>>>>  }
+>>>>>>>>  
+>>>>>>>> +static void forward_cxl_error(struct pci_dev *_pdev, struct aer_err_info *info)
+>>>>>>>> +{
+>>>>>>>> +	int severity = info->severity;      
+>>>>>>> So far this variable isn't really justified.  Maybe it makes sense later in the
+>>>>>>> series?      
+>>>>>> This is used below in call to cxl_create_prot_err_info().    
+>>>>> Sure, but why not just do
+>>>>>
+>>>>> if (cxl_create_prot_error_info(pdev, info->severity, &wd.err_info)) {
+>>>>>
+>>>>> There isn't anything modifying info->severity in between so that local
+>>>>> variable is just padding out the code to no real benefit.
+>>>>>
+>>>>>    
+>>>>>>>> +		pci_err(pdev, "Failed to create CXL protocol error information");
+>>>>>>>> +		return;
+>>>>>>>> +	}
+>>>>>>>> +
+>>>>>>>> +	struct device *cxl_dev __free(put_device) = get_device(err_info->dev);      
+>>>>>>> Also this one.  A reference was acquired and dropped in cxl_create_prot_err_info()
+>>>>>>> followed by retaking it here.  How do we know it is still about by this call
+>>>>>>> and once we pull it off the kfifo later?      
+>>>>>> Yes, this is a problem I realized after sending the series.
+>>>>>>
+>>>>>> The device reference incr could be changed for all the devices to the non-cleanup
+>>>>>> variety. Then would add the reference incr in the caller after calling cxl_create_prot_err_info().
+>>>>>> I need to look at the other calls to to cxl_create_prot_err_info() as well.
+>>>>>>
+>>>>>> In addition, I think we should consider adding the CXL RAS status into the struct cxl_prot_err_info.
+>>>>>> This would eliminate the need for further accesses to the CXL device after being dequeued from the
+>>>>>> fifo. Thoughts?    
+>>>>> That sounds like a reasonable solution to me.
+>>>>>
+>>>>> Jonathan    
+>>>> Hi Jonathan,  
+>>> Hi Terry,
+>>>
+>>> Sorry for delay - travel etc...
+>>>  
+>>>> Is it sufficient to rely on correctly implemented reference counting implementation instead
+>>>> of caching the RAS status I mentioned earlier?
+>>>>
+>>>> I have the next revision coded to 'get' the CXL erring device's reference count in the AER
+>>>> driver before enqueuing in the kfifo and then added a reference count 'put' in the CXL driver
+>>>> after dequeuing and handling/logging. This is an alternative to what I mentioned earlier reading
+>>>> the RAS status and caching it. One more question: is it OK to implement the get and put (of
+>>>> the same object) in different drivers?  
+>>> It's definitely unusual.  If there is anything similar to point at I'd be happier than
+>>> this 'innovation' showing up here first. 
+>>>  
+>>>> If we need to read and cache the RAS status before the kfifo enqueue there will be some other
+>>>> details to work through.  
+>>> This still smells like the cleaner solution to me, but depends on those details..
+>>>
+>>> Jonathan  
+>>
+>> In this case I believe we will need to move the CE handling (RAS status reading and clearing) before
+>> the kfifo enqueue. I think this is necessary because CXL errors may continue to be received and we
+>> don't want their status's combined when reading or clearing. I can refactor cxl_handle_ras()/
+>> cxl_handle_cor_ras() to return the RAS status value and remove the trace logging (to instead be
+>> called after kfifo dequeue).
+>>
+>> This leaves the UCE case. It's worth mentioning the UCE flow is different than the the CE case
+>> because it uses the top-bottom traversal starting at the erring device. Correct me if I'm wrong
+>> this would be handled before the kfifo as well. The handling and logging in the UCE case are
+>> baked together. The UCE flow would therefore need to include the trace logging during handling.
+>>
+>> Another flow is the PCI EP errors. The PCIe EP CE and UCE handlers remain and can call the
+>> the refactored cxl_handle_ras()/cxl_handle_cor_ras() and then trace log afterwards. This is no
+>> issue.
+>>
+>> This leaves only CE trace logging to be called after the kfifo dequeue. This is what doesn't
+>> feel right and wanted to draw attention to.
+>>
+>> All this to say: very little work will be done after the kfifo dequeue. Most of the work in
+>> the kfifo implementation would be before the kfifo enqueuing in the CXL create_prot_error_info()
+>> callback. I am concerned the balance of work done before and after the kfifo enqueue/dequeue
+>> will be very asymmetric with little value provided from the kfifo.
+>>
+> As per the discord chat - if you look up the device again from BDF or similar and get this
+> info once you have right locks post kfifo all should be fine as any race will be easy
+> to resolve by doing nothing if the driver has gone away.
+> 
+> Jonathan
+> 
+>> -Terry
+>>
+> 
 
-> On May 22, 2025, at 5:46, Dave Jiang <dave.jiang@intel.com> wrote:
->=20
->=20
->=20
-> On 5/21/25 1:38 PM, Itaru Kitayama wrote:
->> Dave
->>=20
->>> On May 22, 2025, at 0:31, Dave Jiang <dave.jiang@intel.com> wrote:
->>>=20
->>>=20
->>>=20
->>> On 5/21/25 1:39 AM, Itaru Kitayama wrote:
->>>> Hi,
->>>> On arm64/virt QEMU, the cxl/next (as of today) kernel prints out =
-Internal errors:
->>>>=20
->>>> [   80.968299] [     T48] Internal error: Oops: 0000000096000044 =
-[#11]
->>>> SMP
->>>> [   80.989250] [     T48] Modules linked in: cxl_mock_mem(O) =
-cfg80211
->>>> rfkill cxl_test(O) cxl_mem(O) cxl_pmem(O) cxl_acpi(O) cxl_port(O)
->>>> cxl_mock(O) libnvdimm encrypted_keys trusted caam_jr caam =
-asn1_encoder
->>>> caamhash_desc caamalg_desc error crypto_engine authenc libdes fuse =
-drm
->>>> backlight ip_tables x_tables sm3_ce sm3 sha3_ce sha512_ce =
-sha512_arm64
->>>> cxl_core(O) fwctl btrfs blake2b_generic xor xor_neon raid6_pq
->>>> zstd_compress ipv6
->>>> [   80.992210] [     T48] CPU: 1 UID: 0 PID: 48 Comm: kworker/u8:2
->>>> Tainted: G      D    O        6.15.0-rc4-00040-g128ad8fa385b #40 =
-PREEMPT
->>>> [   80.992791] [     T48] Tainted: [D]=3DDIE, [O]=3DOOT_MODULE
->>>> [   80.993039] [     T48] Hardware name: QEMU QEMU Virtual Machine, =
-BIOS
->>>> 2025.02-3ubuntu2 04/04/2025
->>>> [   80.993400] [     T48] Workqueue: async async_run_entry_fn
->>>> [   80.994718] [     T48] pstate: 61402005 (nZCv daif +PAN -UAO =
--TCO
->>>> +DIT -SSBS BTYPE=3D--)
->>>> [   80.995329] [     T48] pc : cxl_mock_mbox_send+0xec/0x12c0
->>>> [cxl_mock_mem]
->>>=20
->>> Can you do this in your kernel tree?
->>> ./scripts/faddr2line tools/testing/cxl/test/cxl_mock_mem.ko =
-cxl_mock_mbox_send+0xec/0x12c0
->>=20
->> realm@machine-1:~/projects/cxl$ ./scripts/faddr2line =
-tools/testing/cxl/test/cxl_mock_mem.ko cxl_mock_mbox_send+0xec/0x12c0
->> cxl_mock_mbox_send+0xec/0x12c0:
->> mock_get_event at =
-/home/realm/projects/cxl/tools/testing/cxl/test/mem.c:277
->> (inlined by) cxl_mock_mbox_send at =
-/home/realm/projects/cxl/tools/testing/cxl/test/mem.c:1571
->>=20
->>>=20
->>> I've not see this issue on x86 running cxl/next. How consistently =
-can you reproduce this? If it's every time, is it possible for you to do =
-a git bisect on the kernel and see which commit causes this please? =
-Thanks!
->>=20
->> Fairly reliably (100% of the boot time, and cx/fixes did not change =
-this BTW, which branch is seen as stable for you folks?), yes, I should =
-try git bisect.
->=20
-> The current cxl/next is based on 6.15-rc4, which should have =
-everything that was in cxl/fixes. And you do not see this with =
-6.14-final? git bisect would be very helpful. Thank you!
->=20
->>=20
->> Itaru.
->>=20
->>>=20
->>> DJ
->>>=20
->>>> [   80.995691] [     T48] lr : cxl_internal_send_cmd+0x40/0x104
->>>> [cxl_core]
->>>> [   80.996189] [     T48] sp : ffff800080d0b9f0
->>>> [   80.996380] [     T48] x29: ffff800080d0ba70 x28: =
-fff0000008dd2410
->>>> x27: fff00000088fb390
->>>> [   80.996714] [     T48] x26: ffff800080d0bb07 x25: =
-0000000000000100
->>>> x24: 0000000000000003
->>>> [   80.997135] [     T48] x23: 0000000000000020 x22: =
-fff0000008dd2410
->>>> x21: 0000000000000002
->>>> [   80.998119] [     T48] x20: fff00000088fb080 x19: =
-ffff800080d0bb08
->>>> x18: 00000000ffffffff
->>>> [   80.998419] [     T48] x17: 0000000000000000 x16: =
-ffffa8d169128748
->>>> x15: ffff800080d0b5ad
->>>> [   80.999243] [     T48] x14: ffff800080d0b400 x13: =
-ffff800080d0b5b8
->>>> x12: fff000006f7a0000
->>>> [   81.000519] [     T48] x11: 0000000000000058 x10: =
-0000000000000018 x9
->>>> : fff000006f7a0000
->>>> [   81.001337] [     T48] x8 : ffff800080d0bb48 x7 : =
-fff0000074fa0000 x6
->>>> : fff0000074fa0000
->>>> [   81.002497] [     T48] x5 : fff000007f937508 x4 : =
-0000000000000001 x3
->>>> : 0000000000001000
->>>> [   81.003993] [     T48] x2 : 0000000000001000 x1 : =
-0000000000000000 x0
->>>> : 0000000000000088
->>>> [   81.004223] [     T48] Call trace:
->>>> [   81.004795] [     T48]  cxl_mock_mbox_send+0xec/0x12c0 =
-[cxl_mock_mem]
->>>> (P)
->>>> [   81.005136] [     T48]  cxl_internal_send_cmd+0x40/0x104 =
-[cxl_core]
->>>> [   81.005520] [     T48]  cxl_mem_get_records_log+0xbc/0x198 =
-[cxl_core]
->>>> [   81.006042] [     T48]  cxl_mem_get_event_records+0xb0/0xc0
->>>> [cxl_core]
->>>> [   81.006246] [     T48]  cxl_mock_mem_probe+0x568/0x6f0 =
-[cxl_mock_mem]
->>>> [   81.006417] [     T48]  platform_probe+0x68/0xd8
->>>> [   81.008340] [     T48]  really_probe+0xc0/0x39c
->>>> [   81.008885] [     T48]  __driver_probe_device+0xd0/0x14c
->>>> [   81.009539] [     T48]  driver_probe_device+0x3c/0x120
->>>> [   81.010239] [     T48]  __driver_attach_async_helper+0x50/0xec
->>>> [   81.011130] [     T48]  async_run_entry_fn+0x34/0x14c
->>>> [   81.011276] [     T48]  process_one_work+0x148/0x284
->>>> [   81.011420] [     T48]  worker_thread+0x2c4/0x3e0
->>>> [   81.011552] [     T48]  kthread+0x12c/0x204
->>>> [   81.011693] [     T48]  ret_from_fork+0x10/0x20
->>>> [   81.011840] [     T48] Code: 54001b28 a90c6bf9 52801100 f9400a61
->>>> (a9007c3f)
->>>> [   81.013772] [     T48] ---[ end trace 0000000000000000 ]---
->>>>=20
->>>> How serious is this?
->>>>=20
->>>> Thanks,
->>>> Itaru.
+Ok. I understand. Thanks.
 
-Rebuilt the rootfs image and tried today=E2=80=99s cx/next =
-(6.15.0-rc4-00046-g6eed708a5693) again to boot now I don=E2=80=99t see =
-the splats, so something I was messing my dev environment sorry about =
-that.
-
-CXL utility commands work reasonably now and I can execute meson test =
-=E2=80=94suite cxl, while most of them still fails due to the HPA =
-allocation error which makes me wonder as the resource requests are =
-quite modest.=20
-
-Itaru.
-=20
-
-
+-Terry
