@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2896DF58
-	for <linux-cxl@vger.kernel.org>; Wed, 21 May 2025 23:38:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0F151D63CD;
+	Wed, 21 May 2025 23:55:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747870698; cv=none; b=Ga+Ox6joY4XdfFmsyVD7R8uv/UIfXKKMfSALFqVZRDow9YR95jmcuCNXaAPxlBxctRnVDlVmExNkoFJgYdRynTthTaKMsot8X4BVaFptKMt6CURgU+PVRr5WxFn8z/L5JYora6HTtUBomz06obuds3MA3Hb2Qu/eqLNrhSsymfE=
+	t=1747871737; cv=none; b=GrSVSzKYh1IeCMh5sny2Ay2iBFUPOu1V3DPuZ9rD/j79OoebNbm1gyDVx1TR+bbAb68Ac781GkmLDo4avieJf3qmIH7rS6TYOunDfq8w572vxtgCUWp1hc3xxKU8QnIykBjzGWGevLkEkPWuvr2l5VwyJwA2Tkhuu7I2P7c44/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747870698; c=relaxed/simple;
-	bh=jsSu27zzRgNmR++YJzyU/cnblZYiSfPLXTrkGgEGzwE=;
+	s=arc-20240116; t=1747871737; c=relaxed/simple;
+	bh=pJrvsKXRNyYWqRuGICKAgkDS4VPEKfwvebNviFOseJM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rXx/pOP+ByQVIVK/eWnZ2qwkdhz9o9maUKpLywRVgqmPH207t7aerAkXdd0XDNV6hc1fdCauKSP/rFFoixh6oZimoqeykcN8WxAXYIiD2sJBeZjnpwyhUScS25NIa5mmNVR/GS19/HkEimyGj79rl1Kup7qttTjMNvkdKqjoaCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f9lX7RHD; arc=none smtp.client-ip=198.175.65.13
+	 In-Reply-To:Content-Type; b=cztyKtYJfESG7fwTve9ys0c4NErHdIu6PWGQhJjtVJSdK2a7XhgAHhL/G4MjupaocL/oleZBHxSJHUtZXWCdzWzTp+RpxCgrDPjgGQcU54x/2G7W8s1aUW673SF/G76DbpGei6vsWgGD2rLzowdKWRatVS1qhTV1AR1VCdUpqyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O0a17WM3; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f9lX7RHD"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O0a17WM3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747870697; x=1779406697;
+  t=1747871735; x=1779407735;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=jsSu27zzRgNmR++YJzyU/cnblZYiSfPLXTrkGgEGzwE=;
-  b=f9lX7RHD4lMXl+GK5pYZLS9q9JbSeWNJ76b2nZeBUHhGi2AikWzOstIa
-   G7jolcJ2/PY/6K3lraUi/571Csti2bDO3yStRzfNXR23Mium0Mlkms7Hq
-   apX93P8Kq/ONchiC4fXpH0eZKb8Pfb8VpwaniphrpQl7bAShMIpfgpF/P
-   Vu7q5bC+jTOnLDs/dnLgQwPAljXIttrNGeujpDm6KbtkT6/tKwC4OJiA8
-   dPHtAuW3RaGTzcAzDTHSQJzPNpgtcqRWAXGZGxsBkXJ2CHpbHjkCgZPjt
-   x40rwtdLlbkhRyPbXnKk+YYVZhp85yGzx5zPzdPrT2fZsWGQIPLyeUCv+
+  bh=pJrvsKXRNyYWqRuGICKAgkDS4VPEKfwvebNviFOseJM=;
+  b=O0a17WM3nmCQYGGJkoBgD2HHbopgWhxo4jOShkN1PgLbFWTOZXk5/pIc
+   q50KHUVBO82wlba9VNo1xTtLzzeFV04YkggYm1kPduNc6lX7ZXigenXT4
+   rM9fUJ4VJPoB4UbGKPfB6634MD0XrKysup1mD21rmgoBXQV3YSV2ifSlT
+   yVYDD054KYVcJUDnb2U1zVyggrvgUJYnUTRxh5RpcEyohwq0WgepufJXA
+   E4aSD5npuRYIVvk+uj0YIo8ITbIZvWDrCvphTUD7MpkV/36RvvZDf7Q3j
+   mHDLAypJpfWHZM/YZVknUTDcFjAq6E8HZKXfCQ09GyCB9xOmqkXscLOE3
    A==;
-X-CSE-ConnectionGUID: 12KPDLvfRoC98k9mtaVsxQ==
-X-CSE-MsgGUID: qgN3H0e9TiycMUWLT67nbA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="60924532"
+X-CSE-ConnectionGUID: R24+F4yxSGKfT/JGRTcN3w==
+X-CSE-MsgGUID: PVLSzqhYRL26yOPB/s9bSA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="49798110"
 X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
-   d="scan'208";a="60924532"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 16:38:16 -0700
-X-CSE-ConnectionGUID: fQk0ad/fRVmhpcSNp3jkcw==
-X-CSE-MsgGUID: gNGiJLm+Tp6VUnhnDzK5mg==
+   d="scan'208";a="49798110"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 16:55:34 -0700
+X-CSE-ConnectionGUID: ml66DW2VTLmcB7ytKNvP9Q==
+X-CSE-MsgGUID: qCkwn21kTOixB0CerhIkKw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
-   d="scan'208";a="140824146"
+   d="scan'208";a="145284455"
 Received: from ldmartin-desk2.corp.intel.com (HELO [10.125.109.106]) ([10.125.109.106])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 16:38:16 -0700
-Message-ID: <0dd822cc-b3a9-4df5-bbca-b04dadc7cfe0@intel.com>
-Date: Wed, 21 May 2025 16:38:15 -0700
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 16:55:33 -0700
+Message-ID: <c27f5629-e8f9-4b28-bc1d-1fae315d8010@intel.com>
+Date: Wed, 21 May 2025 16:55:30 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,85 +52,138 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl/features: Remove the inline specifier from to_cxlfs()
-To: alison.schofield@intel.com, Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, Shiju Jose <shiju.jose@huawei.com>
-Cc: linux-cxl@vger.kernel.org
-References: <20250521233625.1745849-1-alison.schofield@intel.com>
+Subject: Re: [PATCH v6 3/8] cxl/edac: Add CXL memory device patrol scrub
+ control feature
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, shiju.jose@huawei.com
+Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com, dave@stgolabs.net,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ linux-edac@vger.kernel.org, linux-doc@vger.kernel.org, bp@alien8.de,
+ tony.luck@intel.com, lenb@kernel.org, Yazen.Ghannam@amd.com,
+ mchehab@kernel.org, nifan.cxl@gmail.com, linuxarm@huawei.com,
+ tanxiaofei@huawei.com, prime.zeng@hisilicon.com, roberto.sassu@huawei.com,
+ kangkang.shen@futurewei.com, wanghuiqiang@huawei.com
+References: <20250521124749.817-1-shiju.jose@huawei.com>
+ <20250521124749.817-4-shiju.jose@huawei.com>
+ <20250521154026.0000172f@huawei.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250521233625.1745849-1-alison.schofield@intel.com>
+In-Reply-To: <20250521154026.0000172f@huawei.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 5/21/25 4:36 PM, alison.schofield@intel.com wrote:
-> From: Alison Schofield <alison.schofield@intel.com>
+On 5/21/25 7:40 AM, Jonathan Cameron wrote:
+> On Wed, 21 May 2025 13:47:41 +0100
+> <shiju.jose@huawei.com> wrote:
 > 
-> to_cxlfs() was declared 'inline' in the header but only defined in
-> drivers/cxl/core/features.c. This has worked because features.c was
-> the only file using the function and the definition happened to be
-> available in the same compilation unit.
+>> From: Shiju Jose <shiju.jose@huawei.com>
+>>
+>> CXL spec 3.2 section 8.2.10.9.11.1 describes the device patrol scrub
+>> control feature. The device patrol scrub proactively locates and makes
+>> corrections to errors in regular cycle.
+>>
+>> Allow specifying the number of hours within which the patrol scrub must be
+>> completed, subject to minimum and maximum limits reported by the device.
+>> Also allow disabling scrub allowing trade-off error rates against
+>> performance.
+>>
+>> Add support for patrol scrub control on CXL memory devices.
+>> Register with the EDAC device driver, which retrieves the scrub attribute
+>> descriptors from EDAC scrub and exposes the sysfs scrub control attributes
+>> to userspace. For example, scrub control for the CXL memory device
+>> "cxl_mem0" is exposed in /sys/bus/edac/devices/cxl_mem0/scrubX/.
+>>
+>> Additionally, add support for region-based CXL memory patrol scrub control.
+>> CXL memory regions may be interleaved across one or more CXL memory
+>> devices. For example, region-based scrub control for "cxl_region1" is
+>> exposed in /sys/bus/edac/devices/cxl_region1/scrubX/.
+>>
+>> [dj: Add cxl_test inclusion of edac.o]
+>> [dj: Check return from cxl_feature_info() with IS_ERR]
 > 
-> However, in preparation for a second .c file using the header and
-> needing to call the function, the inline specifier became an issue.
-> Sparse flagged the declaration as invalid since 'inline' requires a
-> visible definition at the point of use.
-> 
-> Defining the function in the header was considered but rejected, as
-> it depends on internal symbols not visible at that level.
-> 
-> Remove the inline specifier to correct the linkage violation.
-> 
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> Trivial question on these.  What do they reflect?  Some changes
+> Dave made on a prior version? Or changes in response to feedback
+> (in which case they should be below the ---)
 
-Thanks!
+Ah those are the notations I inserted when I pulled the the branch for merge testing and Shiju picked up. Normally those would go to Linus. But in this case, it can be dropped since there is another reversion for the series and the changes and folded in by Shiju.
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
+DJ
+
 > 
-> I intentionally did not add a Fixes Tag at the point this was
-> introduced because there is no breakage until the second user
-> comes along. 
+>>
+>> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+>> Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 > 
-> The second user is this patchset being reviewed:
-> [PATCH v6 0/8] cxl: support CXL memory RAS features
-> https://lore.kernel.org/linux-cxl/20250521124749.817-1-shiju.jose@huawei.com/
+> A couple of formatting trivial things inline from the refactors
+> in this version. Maybe Dave can tweak them whilst applying if
+> nothing else comes up?
+> 
+> J
+> 
+>> diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
+>> new file mode 100644
+>> index 000000000000..eae99ed7c018
+>> --- /dev/null
+>> +++ b/drivers/cxl/core/edac.c
+>> @@ -0,0 +1,520 @@
+> 
+>> +static int cxl_scrub_get_attrbs(struct cxl_patrol_scrub_context *cxl_ps_ctx,
+>> +				u8 *cap, u16 *cycle, u8 *flags, u8 *min_cycle)
+>> +{
+>> +	struct cxl_mailbox *cxl_mbox;
+>> +	u8 min_scrub_cycle = U8_MAX;
+>> +	struct cxl_region_params *p;
+>> +	struct cxl_memdev *cxlmd;
+>> +	struct cxl_region *cxlr;
+>> +	int i, ret;
+>> +
+>> +	if (!cxl_ps_ctx->cxlr) {
+>> +		cxl_mbox = &cxl_ps_ctx->cxlmd->cxlds->cxl_mbox;
+>> +		return cxl_mem_scrub_get_attrbs(cxl_mbox, cap, cycle,
+>> +						flags, min_cycle);
+>> +	}
+>> +
+>> +	struct rw_semaphore *region_lock __free(rwsem_read_release) =
+>> +	rwsem_read_intr_acquire(&cxl_region_rwsem);
+> 
+> Trivial but that should be indented one tab more.
+> 
+>> +	if (!region_lock)
+>> +		return -EINTR;
+>> +
+>> +	cxlr = cxl_ps_ctx->cxlr;
+>> +	p = &cxlr->params;
+>> +
+>> +	for (i = 0; i < p->nr_targets; i++) {
+>> +		struct cxl_endpoint_decoder *cxled = p->targets[i];
+>> +
+>> +		cxlmd = cxled_to_memdev(cxled);
+>> +		cxl_mbox = &cxlmd->cxlds->cxl_mbox;
+>> +		ret = cxl_mem_scrub_get_attrbs(cxl_mbox, cap, cycle,
+>> +					       flags, min_cycle);
+> 
+> Maybe move flags to previous line.
+> 
+>> +		if (ret)
+>> +			return ret;
+>> +
+>> +		if (min_cycle)
+>> +			min_scrub_cycle =
+>> +				min(*min_cycle, min_scrub_cycle);
+> 
+> No need for the line wrap any more.
 > 
 > 
->  drivers/cxl/core/features.c | 2 +-
->  include/cxl/features.h      | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+>> +	}
+>> +
+>> +	if (min_cycle)
+>> +		*min_cycle = min_scrub_cycle;
+>> +
+>> +	return 0;
+>> +}
 > 
-> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-> index 1498e2369c37..efe88c043227 100644
-> --- a/drivers/cxl/core/features.c
-> +++ b/drivers/cxl/core/features.c
-> @@ -36,7 +36,7 @@ static bool is_cxl_feature_exclusive(struct cxl_feat_entry *entry)
->  	return is_cxl_feature_exclusive_by_uuid(&entry->uuid);
->  }
->  
-> -inline struct cxl_features_state *to_cxlfs(struct cxl_dev_state *cxlds)
-> +struct cxl_features_state *to_cxlfs(struct cxl_dev_state *cxlds)
->  {
->  	return cxlds->cxlfs;
->  }
-> diff --git a/include/cxl/features.h b/include/cxl/features.h
-> index 5f7f842765a5..b9297693dae7 100644
-> --- a/include/cxl/features.h
-> +++ b/include/cxl/features.h
-> @@ -64,7 +64,7 @@ struct cxl_features_state {
->  struct cxl_mailbox;
->  struct cxl_memdev;
->  #ifdef CONFIG_CXL_FEATURES
-> -inline struct cxl_features_state *to_cxlfs(struct cxl_dev_state *cxlds);
-> +struct cxl_features_state *to_cxlfs(struct cxl_dev_state *cxlds);
->  int devm_cxl_setup_features(struct cxl_dev_state *cxlds);
->  int devm_cxl_setup_fwctl(struct device *host, struct cxl_memdev *cxlmd);
->  #else
 > 
-> base-commit: 92a09c47464d040866cf2b4cd052bc60555185fb
 
