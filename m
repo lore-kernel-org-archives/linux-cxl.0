@@ -1,121 +1,106 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD7D0299AA8;
-	Thu, 22 May 2025 15:56:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F379B29A303;
+	Thu, 22 May 2025 15:56:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747929364; cv=none; b=LLotqExZ+8CCmo2yp4krjatxv4sBpShJyyJwqjSF8ED7FBfwkqi/2TtGzzZ4UESHgmtaYYcCkhjtKS7ST6KHeirVmpnmc8Gq3WVooHYWarJmcv+pdp3RpG7e3MGWLAGU0paxB0XiCv/OQOAo1b//1sa3FdmI8RsaCNfK0O17ozk=
+	t=1747929416; cv=none; b=FPjqqHIqh9/jYr38IGKpmQ5nsiYwaLm/PpOnF6Fu+bi+XSZ83wIuJSx9BtCsRHBJ13ttcoh63EkxQqe69ztvvBkf01zRICL0Bt9MzQcPitdA9hD5nxvpDhKrgh9rZVvT8Qi1xULIgg5a062T8uwyS96NUYMgZGrNZRNcV5TmKPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747929364; c=relaxed/simple;
-	bh=A4J+qQeo8FojNZDrm8K6UkrhE2Rb/ECmA/pvJXKHIeg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ayD5lBDUem++L/42dU//e/z74qc4CANKt1VMo9IjZms4Sc0xS6k0r1puuJzjcX4kJezrNMalW32X6NNYehX6UjwWqHxyHNb4TZFZF+46mbi1AzTQCZOaohAYwgG2GsL4ucsdooyWy8AVLQzkaGeiSc2HZykIbYK3qhGJS+rGSx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mcBRbc91; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mcBRbc91"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ad53a96baf9so1025280466b.3;
-        Thu, 22 May 2025 08:56:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747929361; x=1748534161; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A4J+qQeo8FojNZDrm8K6UkrhE2Rb/ECmA/pvJXKHIeg=;
-        b=mcBRbc91IPJbfIHD3/GQRq9UaxQF+0/Kp6yErbzv92rSFkKBEIgm+AD++hqoMQx6GF
-         FeZO3gnPWnkuqkp8lJWquaiNHbhEPC4oFiFwusBzFZErslOznoRgbNf6cRQsSO4Ew5OO
-         MHwP20nMO8rXy1l+6AbpTWaBnKLDykLgIzbY3x54XUePAkVp2Dw5OOeqUoVvXGYebC47
-         LDnBhug8KgrNMX1/Im4tamBuU733pS77MD2KrTWzq8ZXHsFW0cI2kvAvL8NvRT3fwcRf
-         ORLSKJnCE2w+TZ1T16sxvaaTE05hJTgccFXAOix1DMPJv2G0ylT+0fIWIpRUZy/5Ak9J
-         Owdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747929361; x=1748534161;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=A4J+qQeo8FojNZDrm8K6UkrhE2Rb/ECmA/pvJXKHIeg=;
-        b=uC0SiBqatr10fBQJ5+tNj3hzSX1Z/Ff2mBOHZFP+2ApyX9EIrCHtmeBTHHBn0t1zTx
-         QIvfczWYazU3s/LPIck8Yn7LaxepSBd5q+xCpUSQTDp9+IQX1B0YrlWam3/NFYRN6DJE
-         HRNulr3IxuWdNsTnIfTclem3brZmZZdPSNtEvaKn3SMaM2PJM5okMStq0Q9pn71KISCJ
-         gBlyz46Ve/UYFCGK8KsWL4jsDAo1e3WsrCfxWdW8HGS+JfcFOL6HqVV1Y32dGwI7TdpT
-         0JhdJkiSnvXgclGNGtdGxclYKaXX+/tnT0jUF7cPskM3ktegp14L+wOz/iHK1Bx7GKlp
-         I41g==
-X-Forwarded-Encrypted: i=1; AJvYcCUcYZynevWKQmGbD04ZCpG+iUms5X4EqBAo3XMjzArHwH1FUrtz6DWRdK/BD8U3JrvD5jG2TQ0IRt7l@vger.kernel.org, AJvYcCV2j9C/Oy7pahQud8Zjm9BVoS4UmzkLIQUCpponNhyCxRoMXcZWbjJYPvIpA+18Fws0bqm4BCqeK1Y=@vger.kernel.org, AJvYcCVm2osReLqydd+pzRubxDDDxU7rddrx+5cOrA8Bt3b4EQvA5rEwSmx2NcAp+MWwMRgaDrAJgqaRMPOLDZ/Bhw==@vger.kernel.org, AJvYcCX3RD7nwUTHg9oyPbRkGvILv69/1DZeM32LxL7b3JScRbAj5GeZLl1+vm3RvPKzxsZNAGN9JasYdnL4Mvq/@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIVJHYAQuLPP9x8Z34w4/eilhJWDns81ygOdBZNgHCDyDgYAya
-	LVqP25HnvR2c722EYZVKucuegiPdMzGjmpGqZcZxzBBzyMi237/Bekin7sSRPhhChYC6tuJQRMH
-	xXZrnANtb8roUJ5koKp7D5V5/1+rQdwI=
-X-Gm-Gg: ASbGnctcUhhF08o2zmB49Gv9hVadYD81jtZqQsfY/3ciWgGo16lmZrZmg+UCHwJHq8P
-	b3o+raUJEIKEcET1RR5+I1ZbpLzYs4AfKbWima2acOQxY5RMVRhLSNKObNoScI3wBW2+iXm+MrB
-	Lw+Qh8cx+0xIw+IVdjD3uhNAsLngb3wawI
-X-Google-Smtp-Source: AGHT+IH6QL3rTW5k/XBVsCAcYeUMdtDIv0Z5CTpmk9yXv5afLUYePNzV48MFbmXlyN3ijm1K7kXjZ0FhjF+aJ1p4y4w=
-X-Received: by 2002:a17:907:fdcb:b0:ad5:52a3:e358 with SMTP id
- a640c23a62f3a-ad552a3e5b3mr2046292766b.49.1747929360593; Thu, 22 May 2025
- 08:56:00 -0700 (PDT)
+	s=arc-20240116; t=1747929416; c=relaxed/simple;
+	bh=20VbD/zhnZnTqrUYCiN2yJTG9/fSVBut17xHhNUsGeE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BqdTosn/PMssKs8vSkp0SwCQwlTgD3fZkG0Kg5jhTcEsv/SHUgI1mrF2cug7HyvAZL6/FXXUKRJkPwW8qBNjG5qGIo4FWEieAnInsOpesG0zB7DMiOc21BNR39IbaHXdojo5EaOzu6kVMmaiAlldPn/oSIR3AXeZoCuYhUTZkqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41C0CC4CEED;
+	Thu, 22 May 2025 15:56:55 +0000 (UTC)
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev
+Cc: alison.schofield@intel.com,
+	Dan Williams <dan.j.williams@intel.com>
+Subject: [NDCTL PATCH v8 0/4] ndctl: Add support and test for CXL Features support
+Date: Thu, 22 May 2025 08:56:48 -0700
+Message-ID: <20250522155653.1346768-1-dave.jiang@intel.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250421013346.32530-1-john@groves.net> <hobxhwsn5ruaw42z4xuhc2prqnwmfnbouui44lru7lnwimmytj@fwga2crw2ych>
-In-Reply-To: <hobxhwsn5ruaw42z4xuhc2prqnwmfnbouui44lru7lnwimmytj@fwga2crw2ych>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Thu, 22 May 2025 17:55:48 +0200
-X-Gm-Features: AX0GCFsIIcsMi4HVgfhUZ-aKlbSmC6wfuBA3UyRPVDwUyb5pOFwqCosyJaGAPEw
-Message-ID: <CAOQ4uxiNPiT5=OLN_Pp695MPH=p7ffoLm8hEQ4S637RSYZz5gg@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/19] famfs: port into fuse
-To: John Groves <John@groves.net>
-Cc: Dan Williams <dan.j.williams@intel.com>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Bernd Schubert <bschubert@ddn.com>, John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	"Darrick J . Wong" <djwong@kernel.org>, Luis Henriques <luis@igalia.com>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, Petr Vorel <pvorel@suse.cz>, 
-	Brian Foster <bfoster@redhat.com>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
-	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
-	Alistair Popple <apopple@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 22, 2025 at 12:30=E2=80=AFAM John Groves <John@groves.net> wrot=
-e:
->
-> On 25/04/20 08:33PM, John Groves wrote:
-> > Subject: famfs: port into fuse
-> >
-> > <snip>
->
-> I'm planning to apply the review comments and send v2 of
-> this patch series soon - hopefully next week.
->
-> I asked a couple of specific questions for Miklos and
-> Amir at [1] that I hope they will answer in the next few
-> days.
+v8:
+- Stash fwctl discovery functions behind ifdef (Alison)
+- Deal with old compilers and __counted_by(). (Alison)
 
-I missed this question.
-Feel free to ping me next time if I am not answering.
+v7:
+- Move enumeration of fwctl behind meson option 'fwctl'. (Dan)
 
-> Do you object to zeroing fuse_inodes when they're
-> allocated, and do I really need an xchg() to set the
-> fi->famfs_meta pointer during fuse_alloc_inode()? cmpxchg
-> would be good for avoiding stepping on an "already set"
-> pointer, but not useful if fi->famfs_meta has random
-> contents (which it does when allocated).
->
+v6:
+- Rename cxl-features.control.c back to fwctl.c. (Dan)
+- Move features behind a meson option. (Dan)
+- See individual commits for specific changes from v5.
 
-I don't have anything against zeroing the fuse inode fields
-but be careful not to step over fuse_inode_init_once().
+v5:
+- Add documentation for exported symbols. (Alison)
+- Create 'struct cxl_fwctl' as object under cxl_memdev. (Dan)
+- Make command prep common code. (Alison)
+- Rename fwctl.c to cxl-features-control.c. (Alison)
+- See individual commits for specific changes from v4.
 
-The answer to the xchg() question is quite technically boring.
-At least in my case it was done to avoid an #ifdef in c file.
+v4:
+- Adjust to kernel changes of input/output structs
+- Fixup skip/pass/fail logic
+- Added new kernel headers detection and dependency in meson.build
 
-Thanks,
-Amir.
+v3:
+- Update test to use opcode instead of command id.
+
+v2:
+- Drop features device enumeration
+- Add discovery of char device under memdev
+
+The series provides support of libcxl enumerating FWCTL character device
+under the cxl_memdev device. It discovers the char device major
+and minor numbers for the CXL features device in order to allow issuing
+of ioctls to the device.
+
+A unit test is added to locate cxl_memdev exported by the cxl_test
+kernel module and issue all the supported ioctls to the associated
+FWCTL char device to verify that all the ioctl paths are working as expected.
+
+Kernel series: https://lore.kernel.org/linux-cxl/20250207233914.2375110-1-dave.jiang@intel.com/T/#t
+
+Dave Jiang (4):
+  cxl: Add cxl_bus_get_by_provider()
+  cxl: Enumerate major/minor of FWCTL char device
+  ndctl: Add features.h from kernel UAPI
+  cxl/test: Add test for cxl features device
+
+ Documentation/cxl/lib/libcxl.txt |  26 ++
+ config.h.meson                   |   3 +
+ cxl/fwctl/cxl.h                  |  56 ++++
+ cxl/fwctl/features.h             | 187 +++++++++++++
+ cxl/fwctl/fwctl.h                | 141 ++++++++++
+ cxl/lib/libcxl.c                 |  94 +++++++
+ cxl/lib/libcxl.sym               |   8 +
+ cxl/lib/private.h                |   6 +
+ cxl/libcxl.h                     |   7 +
+ meson.build                      |   1 +
+ meson_options.txt                |   2 +
+ test/cxl-features.sh             |  31 +++
+ test/fwctl.c                     | 439 +++++++++++++++++++++++++++++++
+ test/meson.build                 |  19 ++
+ 14 files changed, 1020 insertions(+)
+ create mode 100644 cxl/fwctl/cxl.h
+ create mode 100644 cxl/fwctl/features.h
+ create mode 100644 cxl/fwctl/fwctl.h
+ create mode 100755 test/cxl-features.sh
+ create mode 100644 test/fwctl.c
+
+
+base-commit: 1850ddcbcbf9eebd343c6e87a2c55f3f5e3930c4
+-- 
+2.49.0
+
