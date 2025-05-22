@@ -1,234 +1,361 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84DF870825
-	for <linux-cxl@vger.kernel.org>; Thu, 22 May 2025 04:47:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747889255; cv=fail; b=L1nTBNcw6pnYHwpgw+TXUxaD937Ckaky/bOau+B3CJDtcEvyrPSAK4buvj3P/++1qScn9nuLe+ptyowc9P6DBR2PQ7nNoKBOOYqfbgwuXwKdLGASYPr4LSQXctGaWNwsqoT6UxD0m8lIRKr4JyshT0rIlc8RVuh1kiHW9BLznnA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747889255; c=relaxed/simple;
-	bh=IEhWIyRm8cul/ZtzBvxoG21iiatM3KEvCu8EhCd1+4Q=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=TDnmUHHN9AcZq/LfGRAw21FL/V6o/R9yNnT3CcMYA5gfmZ7SFyT3p7bp+hOW7sHD+u1o0c0pTf12XZwrLBh3p+/I2TPsFlxVKr1BDs+0aipN3Xw5t/1vW9oF2P1rjVWuNj58LLF0HPf0bPagzkBJsC+ieuXpqnujs/0URNAVCgA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jo7Ou8pl; arc=fail smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F962261594
+	for <linux-cxl@vger.kernel.org>; Thu, 22 May 2025 08:08:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747901317; cv=none; b=Aj55Nh13PoXNu/LAYnBSd6BRIx2umfPLhh9CyEpbKcrmeqV3111tcOdgvDv06iZ82BzkAeVUShZ2Sk5ovchcB64RyAQdLqpu8Txx4F1tSfLjtErQ4yhNbTL6k/gbyJFshi2XssacYgYD0OmmYhP8JXkJsgW2ECACRZ4r7mvdjZA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747901317; c=relaxed/simple;
+	bh=KZdxoz7ZmLfnDz8BRgdgJp50BGj1mX9lzLk7GgFFjlU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=GaAhD7FPvVc74DqAjUqPTe+5h4DrkMitCzMAo8l3K2lefUzrLp2TDyj/dFFMi2oz1eT9GHt1+wvSnNE9xFJ/L7evh2Cme6nheYU8ooy1Dzir5s5TH3/cr3ldHWcaXwnGLbMMGepF7NTR5Ltu+Uh3ErbSqWCvmMbJLmX1ckzd1F4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=QOhekBoY; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jo7Ou8pl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747889253; x=1779425253;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=IEhWIyRm8cul/ZtzBvxoG21iiatM3KEvCu8EhCd1+4Q=;
-  b=Jo7Ou8plUJfOrYHpUD1wtMShDFBx1vDXYQe7VLK9DowR3PDTbaIbfHXb
-   C26GjUyeq/MlAcNcvkD7iSsbe0WnortqCnpzrr7ENduGu+yeENMsgLI2h
-   r6Qm4158z4ySzTnhUtCdvvBVsIGw3kNmx2j6t5w75T6tgqhlQSXByTqEl
-   8McVB7ASLLN2uU41ZCgZUzG6Rtm5IDpmJeQxGUgmUNtwQN3w6b/uU346N
-   rXIBaG7v5nVkORx7I9ulrkGD2sA3ZbnLgLoTd+Mnp21UFzhrtEu49/Wnc
-   KoBHdvsV140o1cZ0vOYgNrqUkk8bMV+uQYNBE0nY7cLc7xL57lx42dhkF
-   A==;
-X-CSE-ConnectionGUID: qDrmXETnTICtEZtLjzttjg==
-X-CSE-MsgGUID: o9GOsZIASMKJCa397sH+bg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="52520957"
-X-IronPort-AV: E=Sophos;i="6.15,305,1739865600"; 
-   d="scan'208";a="52520957"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 21:47:33 -0700
-X-CSE-ConnectionGUID: PDpBzU4DQGq3uC2xwUfqAg==
-X-CSE-MsgGUID: n/eaUrNDQpm5f+S7cWJGwQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,305,1739865600"; 
-   d="scan'208";a="141330446"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 21:47:33 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 21 May 2025 21:47:32 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Wed, 21 May 2025 21:47:32 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.47) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.55; Wed, 21 May 2025 21:47:32 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CR9AEEGxLNnNsP2CfwdoWZGKdnAzRPEnxZW6O9EJnDFWaTyG9gX1vM61vCnj9TmAsrL3he8MR1YbHWJ0lNQSlwDJeQixwrpnxshl+tik+T0UfSjyJmoIKavx8c09G3QNDTtIZ0sVmk7tDfkvn90XPhsFwvW1mnvtWqx5886U6OVeXxD8SnfzfHbV/10z+JaQ7C0x5haOmkBdyWcqKn83L6iVxKpMjZoMvKGLBFCNRaOdFtH0anrOaLyYgAofyl7v4IhMV/N7fCtlFBCgAXOb5tTrRxAep0bvAJx7rRjk4tnnpaNNzJvkxks5YpuDL9yiM89hWRMd9JvjOeYb2Q+kgg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=euspgiGNdI36ENjnvH0S0G9ZPxexgC1LAemNyoIR5ik=;
- b=mQaqUYet51hBqgYodc3ZaCb8BBrZ8dA/Ywqb6J+1g4Hl9Eht32hz8ZRCo1eX3dnRFf+6m4vVYRkwznEOshRYrOSKTroG3cGRbnhbOXKDY2pJwTBHq70MsKyqNoEqVan0+BPtLdI7WgDZBlJUKUNaGhMRVAVmcqCNGFX7WKvFCxIUZIIk+3CjHCGq+WkWqc7jUy9oPr4uKE33Z+5NRhblzaj9mnUtTVmzgGH/va+ND7rtIY+E/qpMHNhVJW41px5a68ps1tCbgXSZx2KeJDY0inpBCNDddbw4sICp24GtIihWrKnzbLwSgnUG8VZ9+24zBKXl+W5S+OoUA2d6KhNtxw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB8794.namprd11.prod.outlook.com (2603:10b6:806:46a::5)
- by BL4PR11MB8797.namprd11.prod.outlook.com (2603:10b6:208:5a7::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.30; Thu, 22 May
- 2025 04:47:29 +0000
-Received: from SA1PR11MB8794.namprd11.prod.outlook.com
- ([fe80::a3d4:9d67:2f5d:6720]) by SA1PR11MB8794.namprd11.prod.outlook.com
- ([fe80::a3d4:9d67:2f5d:6720%5]) with mapi id 15.20.8746.030; Thu, 22 May 2025
- 04:47:29 +0000
-Date: Wed, 21 May 2025 21:47:18 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: <marc.herbert@linux.intel.com>
-CC: <linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-	<dan.j.williams@intel.com>
-Subject: Re: [ndctl PATCH 1/2] README.md: add CONFIG_s missing to pass NFIT
- tests
-Message-ID: <aC6sVpma71y4jH7S@aschofie-mobl2.lan>
-References: <20250521002640.1700283-1-marc.herbert@linux.intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250521002640.1700283-1-marc.herbert@linux.intel.com>
-X-ClientProxiedBy: SJ0PR05CA0017.namprd05.prod.outlook.com
- (2603:10b6:a03:33b::22) To SA1PR11MB8794.namprd11.prod.outlook.com
- (2603:10b6:806:46a::5)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QOhekBoY"
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250522080832epoutp03211b1aa1d45dfa873170d479a4b0d83c~ByvuKtjdq2713927139epoutp03M
+	for <linux-cxl@vger.kernel.org>; Thu, 22 May 2025 08:08:32 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250522080832epoutp03211b1aa1d45dfa873170d479a4b0d83c~ByvuKtjdq2713927139epoutp03M
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1747901312;
+	bh=j5e89bxW+dUvDSFtAEe4o/9DR+/R6+jma2SiWb+OTGI=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=QOhekBoYXqqY0URx8JeZjeNDfICVVv2VDnGcOADP0El9vNv/MfFtsusiL0Ga08Zy7
+	 YWxoXXYD/HXhQ6gC9BkoNPq3luh8YLNdDQZwu4uWK9NKYuM9MLFgij2OOHNbwFjEV1
+	 Xn++5pifm2wSQDmCdFweI0p9dcVApVDQDtmMhDto=
+Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
+	20250522080831epcas5p3f5affcf829c94f3e627c5242590ca378~ByvtR7RC_0045300453epcas5p3n;
+	Thu, 22 May 2025 08:08:31 +0000 (GMT)
+Received: from epcas5p4.samsung.com (unknown [182.195.38.175]) by
+	epsnrtp03.localdomain (Postfix) with ESMTP id 4b31Bj2k0nz3hhT8; Thu, 22 May
+	2025 08:08:29 +0000 (GMT)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250522063149epcas5p13719600aa8f59313ff3dc2570c996aec~BxbR0iKUi2830428304epcas5p16;
+	Thu, 22 May 2025 06:31:49 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250522063149epsmtrp230f6db4aef1e4c0f9bee98421485facb~BxbRzvRn41208312083epsmtrp2W;
+	Thu, 22 May 2025 06:31:49 +0000 (GMT)
+X-AuditID: b6c32a28-46cef70000001e8a-bc-682ec4d57996
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	F5.F8.07818.5D4CE286; Thu, 22 May 2025 15:31:49 +0900 (KST)
+Received: from test-PowerEdge-R740xd.samsungds.net (unknown [107.99.41.79])
+	by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250522063147epsmtip24a25fc88e390ec373fae9aab2a4bd8d8~BxbQXsN-y1283412834epsmtip2G;
+	Thu, 22 May 2025 06:31:47 +0000 (GMT)
+From: Vinayak Holikatti <vinayak.kh@samsung.com>
+To: qemu-devel@nongnu.org
+Cc: gost.dev@samsung.com, linux-cxl@vger.kernel.org, nifan.cxl@gmail.com,
+	dave@stgolabs.net, vishak.g@samsung.com, krish.reddy@samsung.com,
+	a.manzanares@samsung.com, alok.rathore@samsung.com, Vinayak Holikatti
+	<vinayak.kh@samsung.com>
+Subject: [PATCH] Add support for FMAPI Get Mutliheaded Head info opcode
+ (5501h)
+Date: Thu, 22 May 2025 12:01:35 +0530
+Message-Id: <20250522063135.366295-1-vinayak.kh@samsung.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB8794:EE_|BL4PR11MB8797:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8a435781-a836-40a2-2ece-08dd98ebc1ef
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?QvBrYMFOGWtQ2Rdw2Td7aKW6+CuyH5GelYVEStmKAtIbDL0+HSAxfKmwLTqH?=
- =?us-ascii?Q?rhR0lsgzPyz4YoRhxeI9rZ2RxjYjQTE7YucS3lLRV5hJxMjQkO5r8jcRJBQi?=
- =?us-ascii?Q?ibfmQF3UehwQLZWS1SoF6SRpltw/yUnxiZSnvg1as7s/QW20wtbihxQxTkV+?=
- =?us-ascii?Q?I5kADN6GxZ47QuH7vQ4eA1poeIaR9/LApB+2CEXs8oKEaleTDDWkMDAhjvq3?=
- =?us-ascii?Q?Z4vltWE3nu+IbeRxDlDbAMWXtWMsYMT80g++kasJOeHHmftcf2cN6O1ckJf7?=
- =?us-ascii?Q?P7mF9wBNRWVzoppPaAFHGr7h8yjNtDaV3o7t5sghl9BUu/L/y7zJlrIj7LhM?=
- =?us-ascii?Q?DkyTM4StgtT+pzLOII1rqZwYU2lHn6EtpNz609hHM3PAskjfkuw3Vzcdgd1b?=
- =?us-ascii?Q?lehW6F/UF+6zM2jkdrNX52cHAItsDONhwCHfo1cOyx47gNfrtePyjQ7/wHtq?=
- =?us-ascii?Q?AcoBSwb4A+/rDMhP2VCg2meiKZ0udVSv4BOD8tdbiKVWNW+uZedN/NzSSqmx?=
- =?us-ascii?Q?IRja3RTTE/4WIa+7oUPmNdnQAt700qgh9MdY2Ac/9fTfurWG8ddoS/B78lcM?=
- =?us-ascii?Q?Abw0wplkNMhNpCgpTmqskV5cBLIzNc9YM0nnvSNK42q7nW/NEMcZNWFd1fBY?=
- =?us-ascii?Q?8CjKNgxClSRDU+kObEROB6oYV47bVwv6yxI9GphUvjSuNklxaP4EYMoH4U/x?=
- =?us-ascii?Q?QW7qMhTzhO4V+xK5298djm4E/VKAHr9osSdwyitSyvTTPbjtke6ZvcfBYmL2?=
- =?us-ascii?Q?B3jM9hRjlQzpB4yBavFdJzC7tlz4xxAlFuElrB+/McwB9rlRHxjwaqX8H4I8?=
- =?us-ascii?Q?GJKzqjoV+kG/R0/wNDsn6MKUXnhsaX/6aXI/5Rf1IKphDBArYHbBG1dzgn2z?=
- =?us-ascii?Q?9hIr17w9BvCmruZ8OiLCK2Hd2/kcGp3a7GMQQ2TuZzK9c4NdpO6XslO8LoSV?=
- =?us-ascii?Q?GMxQD4G3uanQFydGEuAOQQS48KttnSV15/tIROZhIMaot3mTUdbLHLuvlRAK?=
- =?us-ascii?Q?AePf9bH/u+q4QEO+aNPwwWZwawwhirapHgZDlIjg6cxog9lcWFF0p8GNDGm8?=
- =?us-ascii?Q?V1S/jtHS8hhSeUXSmo1sfpSDBSPcwFIx0ccaT7lLCoPYqFwrfSfBchLiWvY+?=
- =?us-ascii?Q?W/l8ehtJRPImb7FG440QShbyDa8h+AXAXncfXRu28Jwr4aelEyYwyfssAFK3?=
- =?us-ascii?Q?YJXEOlrjWb9B7X28s1PprLrn0y9dqtayeERbeHOG8u248fUnsZVEqRKn6Puy?=
- =?us-ascii?Q?vBXmT+VC3A99YNqUKdbI+d3ADy4OQukiO4N2QeucMzQIL4nbNsj1Osv76dwM?=
- =?us-ascii?Q?o9qtIVK9Ky1ijaHp0YNZhCgt5FIED2A32unCCyoupFVxCMwqK+/MgGXy4gaW?=
- =?us-ascii?Q?VB0P5qZz2MCiF2esuuChAKRMuVQBnw1cYKg+sKR+9exkBwouKuYFiOI/+FOb?=
- =?us-ascii?Q?MdRePTmvwQc=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB8794.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?mCT5fRzG+Oo27XLRqcoQYDejBVpxUS8tUNPQdGA2w6cth/VJY+sTcOMla4jj?=
- =?us-ascii?Q?HqQnjV13BdMUuLlkSl4/zC2qWN5gmxLtclrAev2zj9bRYNEIpdCj2Br2QVz8?=
- =?us-ascii?Q?z7hRJzZO8a2Nzya8xm99Shmb4nK+vHIpSYneUDQh5OKiCAGkrRpeF5aIwwOK?=
- =?us-ascii?Q?dKRr7duQ49qCkSpX7u1p0XEZqPCJNEvNOxir8Dc+HdL4COyRLBKfhmxZ3tu6?=
- =?us-ascii?Q?C5yYkesa5nJyK4ESzGM0Hf0ug4YMln/7ekqBcpZb7ZGAOTtH2B8/KxYk7iV1?=
- =?us-ascii?Q?Fb9EVfnrCGFfnHwLkClYCNW0tBzHDY3uYb5GlZagV1cGituGUIAi3BMFlAl3?=
- =?us-ascii?Q?o/7C3tCd9qgJzebE90aYAP7WVoZbdQCkJ4sFhrti/2UFEzQoh6G1v7lnIdQS?=
- =?us-ascii?Q?u5B0S6XCck9MxyNPwDGgbD/T9GRbGV3GdOT3rTlqYoX3V7mlyXZNb/DBtNgi?=
- =?us-ascii?Q?HptTa+NZc9OvCBSQ3/ND2fCuhJ3mgLZqSZw3P2duV57Mnmn4RNPstopyx1zo?=
- =?us-ascii?Q?ndCisLyE3aQiRbeHcZ61cGJux8cx36qpIUUABV8dY5/SZ2m8KGpv/UPec7Hr?=
- =?us-ascii?Q?rJAPSmgEoSU/EJuD0d+fLNs7fm5vLHyQu3VAeeXI4zFl7fzxYLNCdpVqFxfo?=
- =?us-ascii?Q?WcDJq49cHCejGLwx1lf1n2/OCxLA+U+ilgtxRRAEDoMjX3pEZhoxDsWXCKbg?=
- =?us-ascii?Q?e7jsr+EebcZA8/tZfvxxzzbBvMHxmXelI3yNSqQ0ip1hmE1WjhYAL5fpqikD?=
- =?us-ascii?Q?Q18taFzqh9ppM8Bpp1UbZf9MI97yERMNjkG2ZC/MyGsIx84qIcZhIDoz/uo0?=
- =?us-ascii?Q?lfWSAyF0ZKhW5gKyFPXYPnbdhToUiVKOLFtYndOWo5tTNYPaFFKGaS5aE7Cq?=
- =?us-ascii?Q?Mg0X44rxOGoRl4U4tjVCkexRPKjgfWfWgageJqR9Uwhwrymkkvlberj5MyQn?=
- =?us-ascii?Q?lh73qArC50tMM9KptpKNKjBYyoy9ocyu5uTaGHGuq+YqONf5MZnkjEIgkYhQ?=
- =?us-ascii?Q?Rx9GbL6AOnPR3wuVWCXKSeZwDoft9l48it+fZHT0hKiyJM/Jj+smGa9gHpc+?=
- =?us-ascii?Q?PzXjnXwfwy3OPm5TQAnltGgSbjPeit625M33IxlX0sLHG8g2Q/yYp/K9niqm?=
- =?us-ascii?Q?rvHBEQG5vPkqeKzciEkueE00p2TFlW1MbHeJh1MN5/ZQ5VpKgPeHz/LL6Cya?=
- =?us-ascii?Q?nm/zGZL1Vo0aNMZJyIng5LjbbJpA6Lrm3qQp/+L92UFEh2y1mLEnDyEhJ59H?=
- =?us-ascii?Q?tE3UgDWIAXjRlNTNkAdrMFkx0gQVaAON1lHOMbrGQ5bMdg44jl5Q+xkmS5c+?=
- =?us-ascii?Q?qkRlIebsYsfnbTG0pylle/cBUjhqvqs5UT4PKBq4hcMv4zUdD0DB0inOprSO?=
- =?us-ascii?Q?XZsM2y1I48jPKMO9AnDq0uF78syHsvv94LkakBWA/X6rn2Rc+pV9LhywNDCO?=
- =?us-ascii?Q?n/v9ZaycDarrtFgXgqWM2yeZFl85TgK8v6bddvxOYzeLSjQbbfz+pEXkBN9p?=
- =?us-ascii?Q?CkbuxiLwhifoCgyT6tmvi/1ZSP3bnI+HwBxS5LtZwItNiY2RntAot15ZkrZQ?=
- =?us-ascii?Q?/8LdzuPRRzfyXWuaUCHunnW+3soKLAVq/bxQaoU9ZKmNIHJJl6YuukP6pk8F?=
- =?us-ascii?Q?mQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8a435781-a836-40a2-2ece-08dd98ebc1ef
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB8794.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2025 04:47:29.6721
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iU/F2BQ+si9u+V8HTF9Aa60jc9urJy2+G/4piPphfuSu0eDN2obMj2CBYbeJxxWigD9KTj7Gr6yx+L1Bd8mCTkS6PlA/Ph3hKQ7d3NJGTyo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL4PR11MB8797
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrDLMWRmVeSWpSXmKPExsWy7bCSvO7VI3oZBndncllMP6xo8eX0HjaL
+	1TfXMFrcPLCTyWLhxmVMFudnnWKx+LttL6PF8d4dLBYnTm5nB4rNYXfg8tg56y67x5Nrm5k8
+	+rasYvSYOrve4/MmuQDWKC6blNSczLLUIn27BK6MxXfeMxc8jag4/fwuWwNjn0MXIyeHhICJ
+	xK8V69i7GLk4hAR2M0rMbgNxQBJSEsd2/mSDsIUlVv57DlX0j1FiW+MZJpAEm4CBxIPm42AN
+	IgKSEr+7TjODFDEL/GKUeLr7PlhCWMBfoqulDaiBg4NFQFVi7cRokDCvgI3ErLXrGSEWyEvs
+	P3iWGSIuKHFy5hMWEJsZKN68dTbzBEa+WUhSs5CkFjAyrWKUTC0ozk3PTTYsMMxLLdcrTswt
+	Ls1L10vOz93ECA5gLY0djO++NekfYmTiYDzEKMHBrCTCG7tCJ0OINyWxsiq1KD++qDQntfgQ
+	ozQHi5I470rDiHQhgfTEktTs1NSC1CKYLBMHp1QDk05TfWp1t+qySdI7JbaJ/NqbVvpKTn3J
+	qzVlGiyBb9Y/WfvmSf+2sA/HZMLWOHHomxavVw84q2G29PDZsv/ZOlb/s26cyUvIvbgqkP3Y
+	xCrzqrVn7Wz3/2SbdeCV+An+FI0Vd7ebHm90Dv3OqH+Am8PDp+boS3F+59jlcdvmxvxViPis
+	sqJ36dW1Vse/WK42Dy8y/jJrttaSm0XnAne6CKxhin1X9L2vOVktc/XBDd0JRqvrkk4khvk1
+	udi6v2k3amObuOOcSw5PlTDTqn0S2q75wTuu5XLZbXuvP/12867PUYaZJdaP4qx+HExnfT67
+	arKh9u7Kg2LPbr7Zd05c/E3x6tlOB2rZXDhslwWxKbEUZyQaajEXFScCALdVnTXPAgAA
+X-CMS-MailID: 20250522063149epcas5p13719600aa8f59313ff3dc2570c996aec
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-542,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250522063149epcas5p13719600aa8f59313ff3dc2570c996aec
+References: <CGME20250522063149epcas5p13719600aa8f59313ff3dc2570c996aec@epcas5p1.samsung.com>
 
-On Wed, May 21, 2025 at 12:26:39AM +0000, marc.herbert@linux.intel.com wrote:
-> From: Marc Herbert <marc.herbert@linux.intel.com>
-> 
-> Found by trial and error. As of kernel v6.15, the CONFIG_s in this
-> version are enough to give to ./scripts/kconfig/merge_config.sh and pass
-> `meson test --suite=ndctl:ndctl` and `meson test --suite=ndctl:dax`
-> 
-> This has been manually tested with only `make defconfig ARCH=x86_64` as
-> a starting point. This is admittedly incomplete test coverage but still
-> a massively better starting point for other ARCHs and a big time
-> saver. There's a good chance it's enough for other ARCHs too.
+CXL spec 3.2 section 7.6.7.5.2  describes Get Head Info.
 
-Thanks for doing this Marc! 
+Signed-off-by: Vinayak Holikatti <vinayak.kh@samsung.com>
+---
+This patch is generated against Jonathan Cameron's branch cxl-2025-03-20
 
-I'm wondering about the need to delineate between what is needed to load
-and use the cxl-test or nfit-test modules as opposed to what is required to
-run all the unit tests.
+ hw/cxl/cxl-mailbox-utils.c  | 21 +++++++++
+ hw/cxl/mhsld/mhsld.c        | 92 ++++++++++++++++++++++++++++++++++++-
+ hw/cxl/mhsld/mhsld.h        | 26 +++++++++++
+ include/hw/cxl/cxl_device.h |  6 +++
+ 4 files changed, 144 insertions(+), 1 deletion(-)
 
-I believe my environment, and yours, and most other folks using these
-environments are doing so in a VM so it's no big deal to load up all the
-things.
+diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+index a02d130926..4f25caecea 100644
+--- a/hw/cxl/cxl-mailbox-utils.c
++++ b/hw/cxl/cxl-mailbox-utils.c
+@@ -122,6 +122,7 @@ enum {
+         #define MANAGEMENT_COMMAND     0x0
+     MHD = 0x55,
+         #define GET_MHD_INFO 0x0
++        #define GET_MHD_HEAD_INFO 0x1
+ };
+ 
+ /* CCI Message Format CXL r3.1 Figure 7-19 */
+@@ -267,6 +268,23 @@ static CXLRetCode cmd_mhd_get_info(const struct cxl_cmd *cmd,
+     return CXL_MBOX_UNSUPPORTED;
+ }
+ 
++/*
++ * CXL r3.2 section 7.6.7.5.2 - Get Multi-Headed Head Info (Opcode 5501h)
++ */
++static CXLRetCode cmd_mhd_get_head_info(const struct cxl_cmd *cmd,
++                                   uint8_t *payload_in, size_t len_in,
++                                   uint8_t *payload_out, size_t *len_out,
++                                   CXLCCI *cci)
++{
++    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
++    CXLType3Class *cvc = CXL_TYPE3_GET_CLASS(ct3d);
++    if (cvc->mhd_get_head_info) {
++        return cvc->mhd_get_head_info(cmd, payload_in, len_in, payload_out,
++                                 len_out, cci);
++    }
++    return CXL_MBOX_UNSUPPORTED;
++}
++
+ static CXLRetCode cmd_events_get_records(const struct cxl_cmd *cmd,
+                                          uint8_t *payload_in, size_t len_in,
+                                          uint8_t *payload_out, size_t *len_out,
+@@ -3429,6 +3447,7 @@ static const struct cxl_cmd cxl_cmd_set[256][256] = {
+         "MEDIA_AND_POISON_GET_SCAN_MEDIA_RESULTS",
+         cmd_media_get_scan_media_results, 0, 0 },
+     [MHD][GET_MHD_INFO] = { "GET_MULTI_HEADED_INFO", cmd_mhd_get_info, 2, 0},
++    [MHD][GET_MHD_HEAD_INFO] = { "GET_MULTI_HEADED_INFO", cmd_mhd_get_head_info, 2, 0},
+ };
+ 
+ static const struct cxl_cmd cxl_cmd_set_dcd[256][256] = {
+@@ -3761,6 +3780,8 @@ static const struct cxl_cmd cxl_cmd_set_t3_fm_owned_ld_mctp[256][256] = {
+     [TIMESTAMP][GET] = { "TIMESTAMP_GET", cmd_timestamp_get, 0, 0 },
+     [TUNNEL][MANAGEMENT_COMMAND] = { "TUNNEL_MANAGEMENT_COMMAND",
+                                      cmd_tunnel_management_cmd, ~0, 0 },
++    [MHD][GET_MHD_INFO] = { "GET_MULTI_HEADED_INFO", cmd_mhd_get_info, 2, 0},
++    [MHD][GET_MHD_HEAD_INFO] = { "GET_MULTI_HEADED_INFO", cmd_mhd_get_head_info, 2, 0},
+ };
+ 
+ void cxl_initialize_t3_fm_owned_ld_mctpcci(CXLCCI *cci, DeviceState *d,
+diff --git a/hw/cxl/mhsld/mhsld.c b/hw/cxl/mhsld/mhsld.c
+index 9f633b3bed..981546b5ff 100644
+--- a/hw/cxl/mhsld/mhsld.c
++++ b/hw/cxl/mhsld/mhsld.c
+@@ -61,9 +61,57 @@ static CXLRetCode cmd_mhd_get_info(const struct cxl_cmd *cmd,
+     return CXL_MBOX_SUCCESS;
+ }
+ 
++/*
++ * CXL r3.2 section 7.6.7.5.2 - Get Head Info (Opcode 5501h)
++ *
++ * This command retrieves the number of heads, number of supported LDs,
++ * and Head-to-LD mapping of a Multi-Headed device.
++ */
++static CXLRetCode cmd_mhd_get_head_info(const struct cxl_cmd *cmd,
++                                        uint8_t *payload_in, size_t len_in,
++                                        uint8_t *payload_out, size_t *len_out,
++                                        CXLCCI *cci)
++{
++    CXLMHSLDState *s = CXL_MHSLD(cci->d);
++    MHDGetHeadInfoInput *input = (void *)payload_in;
++    MHDGetHeadInfoOutput *output = (void *)payload_out;
++    int i = 0;
++
++    if (input->start_head > MHSLD_HEADS) {
++        return CXL_MBOX_INVALID_INPUT;
++    }
++
++    output->nr_heads = MIN((MHSLD_HEADS - input->start_head), input->nr_heads);
++    for (i = input->start_head; i < input->start_head + output->nr_heads; i++) {
++        output->head_info_list[i].port_number =
++                                 s->mhd_state->head_info_blocks[i].port_number;
++        output->head_info_list[i].max_link_width =
++                              s->mhd_state->head_info_blocks[i].max_link_width;
++        output->head_info_list[i].nego_link_width =
++                             s->mhd_state->head_info_blocks[i].nego_link_width;
++        output->head_info_list[i].supp_link_speeds_vector =
++                     s->mhd_state->head_info_blocks[i].supp_link_speeds_vector;
++        output->head_info_list[i].max_link_speed =
++                              s->mhd_state->head_info_blocks[i].max_link_speed;
++        output->head_info_list[i].current_link_speed =
++                          s->mhd_state->head_info_blocks[i].current_link_speed;
++        output->head_info_list[i].ltssm_state =
++                                 s->mhd_state->head_info_blocks[i].ltssm_state;
++        output->head_info_list[i].first_nego_lane_num =
++                         s->mhd_state->head_info_blocks[i].first_nego_lane_num;
++        output->head_info_list[i].link_state_flags =
++                            s->mhd_state->head_info_blocks[i].link_state_flags;
++    }
++
++    *len_out = sizeof(*output) + output->nr_heads * sizeof(MHDHeadInfoBlock);
++    return CXL_MBOX_SUCCESS;
++}
++
+ static const struct cxl_cmd cxl_cmd_set_mhsld[256][256] = {
+     [MHSLD_MHD][GET_MHD_INFO] = {"GET_MULTI_HEADED_INFO",
+         cmd_mhd_get_info, 2, 0},
++    [MHSLD_MHD][GET_MHD_HEAD_INFO] = {"GET_HEAD_INFO",
++        cmd_mhd_get_head_info, 2, 0},
+ };
+ 
+ static const Property cxl_mhsld_props[] = {
+@@ -166,6 +214,47 @@ static void cxl_mhsld_state_initialize(CXLMHSLDState *s, size_t dc_size)
+     s->mhd_state->nr_blocks = dc_size / MHSLD_BLOCK_SZ;
+ }
+ 
++
++static void cxl_mhsld_init_head_info(CXLMHSLDState *s, PCIDevice *pdev)
++{
++    uint16_t lnksta = 0;
++    uint16_t current_link_speed = 0;
++    uint16_t negotiated_link_width = 0;
++    uint16_t lnkcap = 0, lnkcap2 = 0;
++    uint16_t max_link_width = 0;
++    uint16_t max_link_speed = 0;
++    uint16_t supported_link_speeds_vector = 0;
++
++    lnksta = pdev->config_read(pdev,
++                               pdev->exp.exp_cap + PCI_EXP_LNKSTA,
++                               sizeof(lnksta));
++    lnkcap = pdev->config_read(pdev,
++                               pdev->exp.exp_cap + PCI_EXP_LNKCAP,
++                               sizeof(lnkcap));
++    lnkcap2 = pdev->config_read(pdev,
++                                pdev->exp.exp_cap + PCI_EXP_LNKCAP2,
++                                sizeof(lnkcap2));
++    supported_link_speeds_vector = (lnkcap2 & 0xFE) >> 1;
++    max_link_width = (lnkcap & PCI_EXP_LNKCAP_MLW) >> 4;
++    max_link_speed = lnkcap & PCI_EXP_LNKCAP_SLS;
++    current_link_speed = lnksta & PCI_EXP_LNKSTA_CLS;
++    negotiated_link_width = (lnksta & PCI_EXP_LNKSTA_NLW) >> 4;
++
++    s->mhd_state->head_info_blocks[s->mhd_head].port_number = s->mhd_head;
++    s->mhd_state->head_info_blocks[s->mhd_head].max_link_width = max_link_width;
++    s->mhd_state->head_info_blocks[s->mhd_head].nego_link_width =
++                                                          negotiated_link_width;
++    s->mhd_state->head_info_blocks[s->mhd_head].supp_link_speeds_vector =
++                                                   supported_link_speeds_vector;
++    s->mhd_state->head_info_blocks[s->mhd_head].max_link_speed =
++                                                                 max_link_speed;
++    s->mhd_state->head_info_blocks[s->mhd_head].current_link_speed =
++                                                             current_link_speed;
++    s->mhd_state->head_info_blocks[s->mhd_head].ltssm_state = 0x7;
++    s->mhd_state->head_info_blocks[s->mhd_head].first_nego_lane_num = 0;
++    s->mhd_state->head_info_blocks[s->mhd_head].link_state_flags = 0;
++}
++
+ /* Returns starting index of region in MHD map. */
+ static inline size_t cxl_mhsld_find_dc_region_start(PCIDevice *d,
+                                                     CXLDCRegion *r)
+@@ -376,7 +465,7 @@ static void cxl_mhsld_realize(PCIDevice *pci_dev, Error **errp)
+     }
+ 
+     cxl_mhsld_state_initialize(s, dc_size);
+-
++    cxl_mhsld_init_head_info(s, pci_dev);
+     /* Set the LD ownership for this head to this system */
+     s->mhd_state->ldmap[s->mhd_head] = s->mhd_head;
+     return;
+@@ -428,6 +517,7 @@ static void cxl_mhsld_class_init(ObjectClass *klass, void *data)
+ 
+     CXLType3Class *cvc = CXL_TYPE3_CLASS(klass);
+     cvc->mhd_get_info = cmd_mhd_get_info;
++    cvc->mhd_get_head_info = cmd_mhd_get_head_info;
+     cvc->mhd_access_valid = cxl_mhsld_access_valid;
+     cvc->mhd_reserve_extents = cxl_mhsld_reserve_extents;
+     cvc->mhd_reclaim_extents = cxl_mhsld_reclaim_extents;
+diff --git a/hw/cxl/mhsld/mhsld.h b/hw/cxl/mhsld/mhsld.h
+index e7ead1f0d2..c9fbec71ca 100644
+--- a/hw/cxl/mhsld/mhsld.h
++++ b/hw/cxl/mhsld/mhsld.h
+@@ -23,6 +23,18 @@
+  */
+ #define MHSLD_HEADS  (8)
+ 
++typedef struct MHDHeadInfoBlock {
++    uint8_t port_number;
++    uint8_t max_link_width;
++    uint8_t nego_link_width;
++    uint8_t supp_link_speeds_vector;
++    uint8_t max_link_speed;
++    uint8_t current_link_speed;
++    uint8_t ltssm_state;
++    uint8_t first_nego_lane_num;
++    uint8_t link_state_flags;
++} QEMU_PACKED MHDHeadInfoBlock;
++
+ /*
+  * The shared state cannot have 2 variable sized regions
+  * so we have to max out the ldmap.
+@@ -32,6 +44,7 @@ typedef struct MHSLDSharedState {
+     uint8_t nr_lds;
+     uint8_t ldmap[MHSLD_HEADS];
+     uint64_t nr_blocks;
++    MHDHeadInfoBlock head_info_blocks[MHSLD_HEADS];
+     uint8_t blocks[];
+ } MHSLDSharedState;
+ 
+@@ -52,6 +65,7 @@ struct CXLMHSLDClass {
+ enum {
+     MHSLD_MHD = 0x55,
+         #define GET_MHD_INFO 0x0
++        #define GET_MHD_HEAD_INFO 0x1
+ };
+ 
+ /*
+@@ -72,4 +86,16 @@ typedef struct MHDGetInfoOutput {
+     uint16_t resv2;
+     uint8_t ldmap[];
+ } QEMU_PACKED MHDGetInfoOutput;
++
++typedef struct MHDGetHeadInfoInput {
++    uint8_t start_head;
++    uint8_t nr_heads;
++} QEMU_PACKED MHDGetHeadInfoInput;
++
++typedef struct MHDGetHeadInfoOutput {
++    uint8_t nr_heads;
++    uint8_t rsvd[3];
++    MHDHeadInfoBlock head_info_list[];
++} QEMU_PACKED MHDGetHeadInfoOutput;
++
+ #endif
+diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+index ca515cab13..c93c71c45d 100644
+--- a/include/hw/cxl/cxl_device.h
++++ b/include/hw/cxl/cxl_device.h
+@@ -732,6 +732,12 @@ struct CXLType3Class {
+                                uint8_t *payload_out,
+                                size_t *len_out,
+                                CXLCCI *cci);
++    CXLRetCode (*mhd_get_head_info)(const struct cxl_cmd *cmd,
++                               uint8_t *payload_in,
++                               size_t len_in,
++                               uint8_t *payload_out,
++                               size_t *len_out,
++                               CXLCCI *cci);
+     bool (*mhd_access_valid)(PCIDevice *d, uint64_t addr, unsigned int size);
+     bool (*mhd_reserve_extents)(PCIDevice *d,
+                                 CxlDynamicCapacityExtentList *records,
+-- 
+2.34.1
 
-Maybe just a gentle separator in the list showing required and optional.
-I would NOT go so far as to pick apart which ones are needed for which
-test because that is a slippery slope. If a user is in test running mode
-they need all the things.
-
-> 
-> Link: https://lore.kernel.org/nvdimm/aed71134-1029-4b88-ab20-8dfa527a7438@linux.intel.com/
-> Signed-off-by: Marc Herbert <marc.herbert@linux.intel.com>
-> ---
->  README.md | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/README.md b/README.md
-> index db25a9114402..a37991ccefa2 100644
-> --- a/README.md
-> +++ b/README.md
-> @@ -69,10 +69,20 @@ loaded.  To build and install nfit_test.ko:
->     CONFIG_NVDIMM_PFN=y
->     CONFIG_NVDIMM_DAX=y
->     CONFIG_DEV_DAX_PMEM=m
-> +   CONFIG_FS_DAX=y
-> +   CONFIG_XFS_FS=y
-> +   CONFIG_DAX=m
-> +   CONFIG_DEV_DAX=m
->     CONFIG_ENCRYPTED_KEYS=y
->     CONFIG_NVDIMM_SECURITY_TEST=y
->     CONFIG_STRICT_DEVMEM=y
->     CONFIG_IO_STRICT_DEVMEM=y
-> +   CONFIG_ACPI_NFIT=m
-> +   CONFIG_NFIT_SECURITY_DEBUG=y
-> +   CONFIG_MEMORY_FAILURE=y
-> +   CONFIG_MEMORY_HOTPLUG=y
-> +   CONFIG_MEMORY_HOTREMOVE=y
-> +   CONFIG_TRANSPARENT_HUGEPAGE=y
->     ```
->  
->  1. Build and install the unit test enabled libnvdimm modules in the
-> -- 
-> 2.49.0
-> 
