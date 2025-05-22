@@ -1,74 +1,145 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2542D221FAA
-	for <linux-cxl@vger.kernel.org>; Thu, 22 May 2025 11:04:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747911895; cv=pass; b=IB5axpCLVztuSQPGJCuNc23+wiIXB6GoloB6jOb4H7vXUUbB1vkdJ+o6hKVAN5WWSs9PR/p2W1baCvaFw4ExnMalgz/b8FvsfeE6oxAZ6HgmgLSLIEcNJ17+t5JCuIUBKksegpBnMrBa4VLxqNaaLn1gSMePTmRU8i1RrHg2nkM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747911895; c=relaxed/simple;
-	bh=Y3q7RQi7mno2use9EvDPF3UJb/UXc5DJI3ecq3RW4l8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g+zPIprrDjUheZBTHneLdF7bcJ5RoqATsdm6DYQCP51OQ4QJnWnTFSvDHNzmzIbSMyIFpX6DXI/yYJ768BwaWaAWgWw0U376q7Opn+vEhiAh33kbQnJ2VLyvYVJOfF3squu/uuYXk6CHaS/fm1dC+xUzjwQOWY0D+FTHVDZaeVM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=Xw+qmzYb; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="Xw+qmzYb"
-ARC-Seal: i=1; a=rsa-sha256; t=1747911880; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=BBl05GkgOPK1PMnQdLJpBkKB25aIaMvhET44Rq6BIuK6+KDZ8J/dAYltNuPihUZejdVw8mj7i0jKPFGaIPMFliAfFaKyHSG3h+taS3VDeESY/dBo/fycW/jI6EyUVpE17Z77Oz+Xi6FlkPeJvkmpdzoqPnOdqgpjCzf4BIEuC4M=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1747911880; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Y3q7RQi7mno2use9EvDPF3UJb/UXc5DJI3ecq3RW4l8=; 
-	b=BJNYRamiQM/ciaFEABe/KcCg1/PoAjzpuI9QuKJLONLsc2NoeJgjCQbwn5Vg3cmRO93KKwrd4eUdZunMDe9wPNbPiwnklkiK8J0R2qJdOjU+dCNLyvfsdcQbEcFqYVEZnurJmxJSwyzzyMqYIyBynVo+Rx6qAc3H0Bzb0HNqNJs=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747911880;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=Y3q7RQi7mno2use9EvDPF3UJb/UXc5DJI3ecq3RW4l8=;
-	b=Xw+qmzYb1qjwLsBTGnm4fs8FQnTHYu5kk4qvkSIkeA0ZLZYaRrnCoxQ+XDT4vrNS
-	bgtQSuTmJSi/CYdr6diaWN8NexEC0GQ4MHm4uCSLnMV8EQNzAQ0LacVBa3m3EiiJjGS
-	S38Aurqk7nZ+fWTcCvkAfmTHvMOuTPRCrbAFWh2w=
-Received: by mx.zohomail.com with SMTPS id 1747911878863670.5709260300591;
-	Thu, 22 May 2025 04:04:38 -0700 (PDT)
-Message-ID: <0d2f40ae-07b6-434b-8943-eb0cad278123@zohomail.com>
-Date: Thu, 22 May 2025 19:04:36 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05932882BC
+	for <linux-cxl@vger.kernel.org>; Thu, 22 May 2025 13:56:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747922191; cv=none; b=o6byJoSwtKIEkGgW8IyMWRuxpsBld68pk2eErka67ZPWHDGCk8c/3GetMK9IfoVqVfrTK2sb6ojEsHxJS1pHT9OULwSlBIWEWE7+EQM8MGMAZcaN6vBnMZYvK69qO/9fOOLJ6TTt31xubNjSaT4ZjoH3xoGhBSLjHBN94svMVLA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747922191; c=relaxed/simple;
+	bh=l5bMALYMc1kxMd2+r9hzJ6sHUhAaL/H3DKczpeUjduM=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ui/Z//1I13PeXq350JtLgB4gKCaoCcjBY3NAn7QhfUp0iTQjeoG2v5Nnxa7fZK+oZRARcgOVTXXZyEMLF5qH0vyl4hiVho8q7LzxXkk4Bw2qsT9v910hwNTdFhb4V4VJ8/2i0aRE92LhRi6wFfre3v3/16fKf6qotKyUkArODQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b38pW6K1yz6M4R3;
+	Thu, 22 May 2025 21:51:31 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id DB379140605;
+	Thu, 22 May 2025 21:56:24 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 22 May
+ 2025 15:56:24 +0200
+Date: Thu, 22 May 2025 14:56:22 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: Itaru Kitayama <itaru.kitayama@linux.dev>, Dave Jiang
+	<dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>
+Subject: Re: Internal error: Oops: 0000000096000044 [#11] SMP
+Message-ID: <20250522145622.00002633@huawei.com>
+In-Reply-To: <682e62f8e7073_1626e10066@dwillia2-xfh.jf.intel.com.notmuch>
+References: <aC2RKceK4HqYEQo/@vm4>
+	<96235d4d-2bb7-4743-b519-0c35a9a21749@intel.com>
+	<98DE3B2C-1393-4ED8-BB6A-E72D6131F97A@linux.dev>
+	<71238a94-361f-4264-a5e4-510d428f5f66@intel.com>
+	<B0A9901C-E0FE-48C1-A584-B0090B43A5C4@linux.dev>
+	<682e62f8e7073_1626e10066@dwillia2-xfh.jf.intel.com.notmuch>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 7/9] cxl: Change sslbis handler to only handle single
- dport
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
- dan.j.williams@intel.com, Gregory Price <gourry@gourry.net>,
- linux-cxl@vger.kernel.org
-References: <20250521183443.3828320-1-dave.jiang@intel.com>
- <20250521183443.3828320-8-dave.jiang@intel.com>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <20250521183443.3828320-8-dave.jiang@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Feedback-ID: rr080112279f019f8443585b02e6defbbc0000a3b30d2d78e445e240690d9443c2f561588c2a6fd4478b4d00:zu080112275db273d6359f743f57c52a9200001c25032b9c45dcd9a0af185a0ef2689a9e0b56ace52a6ad617:rf0801122db2c3245e87e8ac52a76275870000757d176faec63ec2e4e3d7cb4ee45ff76de436157f7f8d66932412571d8fa7:ZohoMail
-X-ZohoMailClient: External
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On 5/22/2025 2:34 AM, Dave Jiang wrote:
-> While cxl_switch_parse_cdat() is harmless to be run multiple times, it is
-> not efficient in the current scheme where one dport is being updated at
-> a time by the memdev probe path. Change the input parameter to the
-> specific dport being updated to pick up the SSLBIS information for just
-> that dport.
->
-> Reviewed-by: Gregory Price <gourry@gourry.net>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Li Ming <ming.li@zohomail.com>
+On Wed, 21 May 2025 16:34:16 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
+
+> Itaru Kitayama wrote:
+> > Dave et al., =20
+> [..]
+> > Rebuilt the rootfs image and tried today=E2=80=99s cx/next
+> > (6.15.0-rc4-00046-g6eed708a5693) again to boot now I don=E2=80=99t see =
+the
+> > splats, so something I was messing my dev environment sorry about
+> > that.
+> >=20
+> > CXL utility commands work reasonably now and I can execute meson test
+> > =E2=80=94suite cxl, while most of them still fails due to the HPA alloc=
+ation
+> > error which makes me wonder as the resource requests are quite modest. =
+ =20
+>=20
+> So cxl_test_init() just "hopes" that the top of the system physical
+> address space is free to use to emulate CXL windows. That might be an
+> assumption that only works for x86_64, not ARM64. I would double check
+> that this code in cxl_test_init()
+>=20
+>         rc =3D gen_pool_add(cxl_mock_pool, iomem_resource.end + 1 - SZ_64=
+G,
+>                           SZ_64G, NUMA_NO_NODE);
+>         if (rc)
+>                 goto err_gen_pool_add;
+>=20
+> ...is not setting up CXL Windows that overlap with existing resources in
+> that range.
+>=20
+
+I think there are checks that block use of ranges up there.
+
+Print I'm seeing is
+Hotplug memory [0xfffffff010000000-0xfffffff030000000] exceeds maximum addr=
+essable range [0x40000000-0xf80003fffffff]
+
+I think right answer is to use mhp_get_pluggable_range(true); to check
+for limits on the range we can use.
+
+On architectures that don't define arch_get_mappable_range()
+that ends up the as (unsigned long)-1 which I think would work
+though there may be other stuff up there.  Maybe min(iomem_resource.end + 1=
+ - SZ_64G,
+						     mappable_range.end + 1 - SZ_64G)
+or something like that adapted to avoid wrap around.
+
+I haven't yet sanity checked this doesn't break x86 but I think it should
+end up making no difference to the locations on x86.
+
+
+With the below - all 11 tests in ndctl cxl test suite pass for me.
+
+=46rom b287ff2c5ee7fbe507ef8cb61df3e4e156a9773f Mon Sep 17 00:00:00 2001
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Date: Thu, 22 May 2025 14:20:42 +0100
+Subject: [PATCH] cxl_test: Limit location for fake CFMWS to mappable range
+
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ tools/testing/cxl/test/cxl.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+index 8a5815ca870d..b4e6c7659ac4 100644
+--- a/tools/testing/cxl/test/cxl.c
++++ b/tools/testing/cxl/test/cxl.c
+@@ -1328,6 +1328,7 @@ static int cxl_mem_init(void)
+ static __init int cxl_test_init(void)
+ {
+ 	int rc, i;
++	struct range mappable;
+=20
+ 	cxl_acpi_test();
+ 	cxl_core_test();
+@@ -1342,8 +1343,11 @@ static __init int cxl_test_init(void)
+ 		rc =3D -ENOMEM;
+ 		goto err_gen_pool_create;
+ 	}
++	mappable =3D mhp_get_pluggable_range(true);
+=20
+-	rc =3D gen_pool_add(cxl_mock_pool, iomem_resource.end + 1 - SZ_64G,
++	rc =3D gen_pool_add(cxl_mock_pool,
++			  min(iomem_resource.end + 1 - SZ_64G,
++			      mappable.end + 1 - SZ_64G),
+ 			  SZ_64G, NUMA_NO_NODE);
+ 	if (rc)
+ 		goto err_gen_pool_add;
+--=20
+2.43.0
+
