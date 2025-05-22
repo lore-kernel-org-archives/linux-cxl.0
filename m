@@ -1,273 +1,74 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2074.outbound.protection.outlook.com [40.107.95.74])
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D6EA33DB;
-	Thu, 22 May 2025 10:56:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2542D221FAA
+	for <linux-cxl@vger.kernel.org>; Thu, 22 May 2025 11:04:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747911384; cv=fail; b=OMI7Eh24iQIayiDopfXbJE1LV1BtSL5fbfgBIsXtWM5Vpzkqt3/DpcNAY0iE7MDQyGq5c7pHj2I853y/0M4WqYAFcrbFIqfEraUu+ajw47uSkDY4Wjv0N0Kz6S3EY8Wl8GX7ag65I64xRjrc3IHBcwWEJA5Spf8LwMyBtdcEXvw=
+	t=1747911895; cv=pass; b=IB5axpCLVztuSQPGJCuNc23+wiIXB6GoloB6jOb4H7vXUUbB1vkdJ+o6hKVAN5WWSs9PR/p2W1baCvaFw4ExnMalgz/b8FvsfeE6oxAZ6HgmgLSLIEcNJ17+t5JCuIUBKksegpBnMrBa4VLxqNaaLn1gSMePTmRU8i1RrHg2nkM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747911384; c=relaxed/simple;
-	bh=BlegJBb6b0rA1sD2ZMKwV2I2Pv5r2vKypsW05luTrps=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=KB1Y6N4ZsANzQgw2LWi33l0ONFzUlFIJgUe65xdVtAsL1C71dxs7jSYiURw2n9MIK/v93ss1w+HXz/ntSW7C64j+EZ03O4LdBpAqbsQ+prtkovc3SGpBqKbV127c1HaM3As2SmtwSc74Gl/TwNFi1xDsIda7WpeCrPD7EMsZrOc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=BWtNsuSw; arc=fail smtp.client-ip=40.107.95.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1747911895; c=relaxed/simple;
+	bh=Y3q7RQi7mno2use9EvDPF3UJb/UXc5DJI3ecq3RW4l8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g+zPIprrDjUheZBTHneLdF7bcJ5RoqATsdm6DYQCP51OQ4QJnWnTFSvDHNzmzIbSMyIFpX6DXI/yYJ768BwaWaAWgWw0U376q7Opn+vEhiAh33kbQnJ2VLyvYVJOfF3squu/uuYXk6CHaS/fm1dC+xUzjwQOWY0D+FTHVDZaeVM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=Xw+qmzYb; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="BWtNsuSw"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NoCwHi0VIu5OtWmy4b/aYarFmnRDOBvKRe5KHfrhc04JrFBMfTyyrWnIl3qgWyx8eOxKdSpBdjUhcheonB2RqTUVo1eNpsBuN5s+lGlZInjRypYIVnVXCt2RyIOSuJz1n/XSF0FyfqkLV5Sk91+UZbo7/YngzLK1RSdkF3FKulV5uTg+PBUVPzlTGDwpnyYv8NNLVtzoCbRCaa71ZE9OTeknXMNCGV2CeSrwBASVUMcVbrEw/MqyElb0OmXcvP14qELaNw6Ew4srjdVP+OfXaKdV+cgahlb1tLe1DeLxZUnQMbay5ZKrwf6egK/9ESEPxXLqoYDbK960k8KAr6f1QA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iI23mYY1s3aMcTemvfP/kIKhHZabemJyeztk84LR6GY=;
- b=Gd+k+b40koj2EVpaJPOM2uv6ze5n4q8gUHkIGEl6jZsp27qE5MtQ2gjdveS8TWYRrXVUCyX2c4FazbsiDWXnyiJPZ55m2DzrBbVCCIwFRdGqAQRjTkrJuSWEUbKrsWydC6FpBHyAlLIQ2KsWsuPCC4CSf23fEKgUDrWgwIsxDRllXRbSsEcYHsRj/NO/ZHnSS0TEiYTh2zcO5GmBbs3y7CykoWSQdjIskBhS0+cW57EvXihbNKkE/xtomGhI6D/bPD1GE0ZENTPviIfh2sfY0UPmeaCIIF7OGVYv6xJAc1X9GnNkgQFXvJpImFDC2xvz1Lu4tu4UlyBYVxngK91srg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iI23mYY1s3aMcTemvfP/kIKhHZabemJyeztk84LR6GY=;
- b=BWtNsuSwaGKXBtbyqj0/rch6BNwNi3wvmktWBMCAQVzuBZs0vx5S3vPx/vB994B3dsQ/FQAQJ/Hc0QztaOcFH+bKcwse5Ze+LevPD20ISauPbumVs+GB6RsdsXDI/EzANwt1PVF4jTru/I1MxkthEOq+zgdxCacyihV0MsfDrHs=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
- by MN6PR12MB8516.namprd12.prod.outlook.com (2603:10b6:208:46f::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.21; Thu, 22 May
- 2025 10:56:17 +0000
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79%4]) with mapi id 15.20.8769.019; Thu, 22 May 2025
- 10:56:16 +0000
-Message-ID: <b30d7195-fb0b-4ba5-a670-342eb5516605@amd.com>
-Date: Thu, 22 May 2025 11:56:11 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v16 11/22] cxl: Define a driver interface for HPA free
- space enumeration
-Content-Language: en-US
-To: Dan Williams <dan.j.williams@intel.com>, alejandro.lucero-palau@amd.com,
- linux-cxl@vger.kernel.org, netdev@vger.kernel.org, edward.cree@amd.com,
- davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
- edumazet@google.com, dave.jiang@intel.com
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-References: <20250514132743.523469-1-alejandro.lucero-palau@amd.com>
- <20250514132743.523469-12-alejandro.lucero-palau@amd.com>
- <682e2a0b9b15b_1626e10088@dwillia2-xfh.jf.intel.com.notmuch>
-From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <682e2a0b9b15b_1626e10088@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P123CA0573.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:276::6) To DM6PR12MB4202.namprd12.prod.outlook.com
- (2603:10b6:5:219::22)
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="Xw+qmzYb"
+ARC-Seal: i=1; a=rsa-sha256; t=1747911880; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=BBl05GkgOPK1PMnQdLJpBkKB25aIaMvhET44Rq6BIuK6+KDZ8J/dAYltNuPihUZejdVw8mj7i0jKPFGaIPMFliAfFaKyHSG3h+taS3VDeESY/dBo/fycW/jI6EyUVpE17Z77Oz+Xi6FlkPeJvkmpdzoqPnOdqgpjCzf4BIEuC4M=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1747911880; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=Y3q7RQi7mno2use9EvDPF3UJb/UXc5DJI3ecq3RW4l8=; 
+	b=BJNYRamiQM/ciaFEABe/KcCg1/PoAjzpuI9QuKJLONLsc2NoeJgjCQbwn5Vg3cmRO93KKwrd4eUdZunMDe9wPNbPiwnklkiK8J0R2qJdOjU+dCNLyvfsdcQbEcFqYVEZnurJmxJSwyzzyMqYIyBynVo+Rx6qAc3H0Bzb0HNqNJs=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747911880;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=Y3q7RQi7mno2use9EvDPF3UJb/UXc5DJI3ecq3RW4l8=;
+	b=Xw+qmzYb1qjwLsBTGnm4fs8FQnTHYu5kk4qvkSIkeA0ZLZYaRrnCoxQ+XDT4vrNS
+	bgtQSuTmJSi/CYdr6diaWN8NexEC0GQ4MHm4uCSLnMV8EQNzAQ0LacVBa3m3EiiJjGS
+	S38Aurqk7nZ+fWTcCvkAfmTHvMOuTPRCrbAFWh2w=
+Received: by mx.zohomail.com with SMTPS id 1747911878863670.5709260300591;
+	Thu, 22 May 2025 04:04:38 -0700 (PDT)
+Message-ID: <0d2f40ae-07b6-434b-8943-eb0cad278123@zohomail.com>
+Date: Thu, 22 May 2025 19:04:36 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|MN6PR12MB8516:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6b17e330-d34f-454e-3ce4-08dd991f463d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?OWlrRm8raTJZSlhMMkVFZjU0dlhucitURUc4V29IQjNXZzhRL0RlTVRtR2M2?=
- =?utf-8?B?Qk5hdDdLT0NYYkZEZ1d3Sncxc2JPN3c2UVliVVFBTVBxTHVkUlh0L2RTQUkz?=
- =?utf-8?B?Z0U1dlBDd09iOVFxSEljWSt0T3owV013WkJ0NWFrWUpJNG8zY3pHRTRYcWsz?=
- =?utf-8?B?dEVvbzJTZzZ1bXFPTE1FdjQvbkFNUjJaRXZzd1p2TFFNTGtNS2hPMXpwamIz?=
- =?utf-8?B?V1RRRE8rR2VOemxleVY1TmQ3RFpaME1HQnV6czZRV3VUWHhKc0ErY1J0eTRm?=
- =?utf-8?B?YVloOTd3TkpJcmtwME84a1kwUlVKenVpUHROdTdsSWQrRXZPQm4wZS9NRWtk?=
- =?utf-8?B?Z0k3MU1UaXVqVEM0WXhYSU8zcEFNWFdZd2NPb2FweE1ldFZHNXJnRHEzN2Vh?=
- =?utf-8?B?cHIwdFNKMC9hMnhjRUthRFhFMEtFVmNZVDY0YnRzQW9rNjBtWVJ5eU1VaHov?=
- =?utf-8?B?L2NUOEhudHp2cUIzbDVndU9VWDRFNTFaOTRpbEhMZ1VSSVdORkxsOHAvRDRY?=
- =?utf-8?B?NVdnTmZySGFZbjhhd0NEUEhHVVdJdEhZKzlETG12MEJPNkp6R295YmZGUFB3?=
- =?utf-8?B?WGk4bmdJNTNZQUNHV2R0VHI2T212OGxudGxVV1dyanVhZ1ZGRUMvRHo2cmlZ?=
- =?utf-8?B?d1VoNndxQ1VTbExQcjg4R09ldHJiRUJrTW5KNnVyS012U29mL2k2NGNWTEdo?=
- =?utf-8?B?MlBSdnBKdHN0N3g4Q1hkV0NFbmZUM0VDbTQ0bUpPdkV4bGU4Q2JUY1RuVzFk?=
- =?utf-8?B?UUVnSk9ubTk0Sk5HTnF4ZStsYmJ5aHNWazd0Q25JNDNLZlJVZU92SEdwME9M?=
- =?utf-8?B?VU94dDdlaEVjenlzK1dZa2lQZ294ZXVnNUZBWUI2Tm51Y1dZaEVtbWJTbnV5?=
- =?utf-8?B?MFd4NEhINnN4MmlyVXdBbG5TMmc2cnBwOGRNK2ZqTHc0NURXMDYrUko5VkpK?=
- =?utf-8?B?SEVVYWZQRXNIcTlqeHJVYzhzd3RGOGx0c255YXZkQllMc1pULzFNSjRyK3ho?=
- =?utf-8?B?Y21HYmtYeHRTMW80K3gydm90MldHUWdPMy9hWXIvTitmeDZqTVplVFJ0RXVK?=
- =?utf-8?B?NjlSVXduRDJKRWxGU1lTM3ZYTTNrOWJmTVZJRVM3a2V5RWlmdzB2a3Q4OTlC?=
- =?utf-8?B?UGF5ZlRYWDdjb0pTSEI5U1ZWbk11SjgrRmpaVjdlWVh0S09mblFTN3ZxZlRr?=
- =?utf-8?B?U3o0eUxnUW5aeUNuV094NWNzSC9jd25qcWR0emJYOVdIN2k1dng3Qkt1dHBM?=
- =?utf-8?B?TEYvcWZlUFdja2FIcStCMkltWE1PdXZreUJEeGx1Tm1UZjFXUDdYUURFUkEw?=
- =?utf-8?B?RnZsaU1UR0crSjRuK2JCK05DaHdOSk5XQWNQeElzZHZITVdUeGVMSW9pOWRj?=
- =?utf-8?B?bW1xd1RqdFVVbldzbS9HOXc5NUNyMzR4ZWhjWFU1Y040SW5qS1BGcGxuanBk?=
- =?utf-8?B?bmdQU25kY2ZnWVJ1VjByZFpFZWd4UU85MUlka0ZwUFNjbjhrcGpuM2NRVm93?=
- =?utf-8?B?cnVNYW15SkVvdWVZMi9laUk2ak9YeDJzUmZMbG5RUElYaTlGdWprRjRjL1hP?=
- =?utf-8?B?QTVET2dEeHh5RmMxQk9aOG5kYzhabVJ0VldwTTVMZTVLa25iNVNJUDI2V0ZR?=
- =?utf-8?B?TXNXZGQvSDh4d0V2SHdwQUw1TktubU8vcWh5dVo3RE9nMVdHZHh4Q2o4N1VT?=
- =?utf-8?B?ajRZZk1NQUVEbVNhQ0YwTWI2N0NNbjJKREJmVUVaQkVud2djblhQR1d3cldE?=
- =?utf-8?B?OTZLS3hOUzVkclRFK0tEeDF5aGFNVHR2QUViRFVSYWI3MXkrSjdKOUZpbmdL?=
- =?utf-8?B?b2dURnBicGZKa3ZDRGVnVWFVQnVmYVNLVWNtN2tHVDh6ZWxTdUU4R2hRZmRu?=
- =?utf-8?B?RnVUKzJwNVNEWUpvKzFadm12aGFCM2NMZnJ4UVc2Zm9LMkE9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aG5XRUFEa201K3JJMi85Y21XVzlvenE0N3JJanlkK3ZPYlF2bStwWmxXeDRi?=
- =?utf-8?B?UXo3R2tjMExtRTFkM3IreklldEZvZEw4THFwUEdreDA5d3FoYmtwQUlpVkNZ?=
- =?utf-8?B?ZVZtdTBHa2MvcXc5Vkh2c3UvdTRjakhyWVZ3UERTbncyNDJPTWdVekE1U25W?=
- =?utf-8?B?ck05WFpYa2pyblpScGZWczN3UWFncm1tWXhvZGNMSnFuYk91VjZGbkNmcm1G?=
- =?utf-8?B?TWhFaFBjUXhjTzlzWUM5NzM3YkVhQlF1VWNDc09FdHovcmJjczdidHBIb0hU?=
- =?utf-8?B?STdCQmx6M0w3OEx6ZFhTRk9WbnB0UU4zSmFrSmNzOXJDZVhXTitNSVQ4S0FR?=
- =?utf-8?B?ME9ZeEttMWFHN0ptd2U0NzlKK1VTTUlVS0VxTmVrVmE3cTVFSWdmbTBkYjJ4?=
- =?utf-8?B?M0JVNVBDU0ZCaWJ6ZlFIZm9RUWNJWGwxQXU4Qk5QZENuWkl2Q25GcExNdWc4?=
- =?utf-8?B?RzRFcmt4ekpsd1FsWkhRVHRKamhwMUZLMTR0NENzK1JHNElyTzhKRFQ5V1Bo?=
- =?utf-8?B?d1k5ZkhIL0NHdGZYa0tYZHJwZGROSVIwYW1IeUJtUm5nNkpMMVhzSitmVFFO?=
- =?utf-8?B?SFQ1NVozb2tsL29WRWVlcDhZTHZIMUU4TS9Cbzg2Vms1SFhmZVNGb3dXV1BZ?=
- =?utf-8?B?eU5UZWhvSXdQVWJuZldxTlhSaGtobmpKZ0M4YWJZQTdrTGc1OUJlTnBvU3hW?=
- =?utf-8?B?VVdnSHlFZk5kc3V4Ym9acDIxd0RtMk1SUWlvcnZEVWR2YkpocHdyd0JqR3l4?=
- =?utf-8?B?bEJSTFlCOVJJMmlmUk1WVW16VDl6MkhmWUJHbVdjME9ZWUxoMms5VyswdjBS?=
- =?utf-8?B?d0NuVGlFVEJRcGRLd1AwaU5xcjlmS0R3d3pFeWprMmJwejlKVm5oV05sMEVP?=
- =?utf-8?B?V0tjckZYdzAreDN2TndkSHdaa0VpQlJvWGNwL01wbmFmYjNGT1g0dHdPcG5F?=
- =?utf-8?B?UUUxTlZKWmVBLzhWWWdPbHg0TU5HazVTVERPYUJCWVBzWFBxdG4yM0hoUlU0?=
- =?utf-8?B?TWJ4RzRFYmkzbXhLY3p6OHNvYldIMFdDRFE4dThyZE9wZUtNSVNVZDJnWWFE?=
- =?utf-8?B?T0lVck5nd0ZKMHZPaER1WC8vZzYrRG5sZHZvRjhaNjNCM2xtMDc5TkEyUTZj?=
- =?utf-8?B?SUFHUDh5b0pqRE9OZUJETEZibTJqdUdCS3ZLQUozZWVSUE4xZklSNVc4NkpE?=
- =?utf-8?B?UW5HeVRzQmZqaHlURGJUK2RuM2lFa2I4YU9ud2M2cUNqV0dkSmh1TjZNamV6?=
- =?utf-8?B?NjlMSStoVUlYekwxa1FtY1Z6Umk3WUpXcWhNU1lyZWxBdmM4T2NuQzlkampn?=
- =?utf-8?B?UFlNTkpLSXBNOEVyMmNuZ1hEa3RTd0o2bkZ6bDYwVmI2VG1GeUxvZkQydUta?=
- =?utf-8?B?cEY5UkZWY3h1VDNjcHVCVHdOa1Z2ekVvSWI5YXdDRnNrUlhFN2ZTVloyQXR4?=
- =?utf-8?B?L01SMzMxTEVsQmNkaldQMFJnNFQzK2hVT1l3ekljakdCZlJMekc4cUF6bXNY?=
- =?utf-8?B?R0NwRXZ3NmE1ZWxGSG9NWURpSlFHVUdPODR3THo2U2x2enl0MFRRRWRLV2Vs?=
- =?utf-8?B?WUVzbFhITW5NYUFYc0RJb01ZRDRBMkpDSGJuVnJQaUtxUURLRGZGaU15TGZm?=
- =?utf-8?B?U2I1dW56VlM2eGpqOEZHdzhVWElmYnB4UTFGNVdHQU1YTjFVTVVwaVBjZzBq?=
- =?utf-8?B?TXR0S3A3blVoTXpnV2Q2em1vcllRS3RNMzYxaXVWblROeFBKeHhUelFnOWs1?=
- =?utf-8?B?MzVjdUt1UnU3bTh6aVVRdzdrVkZicnFSVGdCN3h2YzJtNzQ4K0F0eGNVY1hI?=
- =?utf-8?B?Sm1vendjV1l3ejc5Q0dWWjRzNWVwKzBRM0g2ZUErenVqSTlIUkZieGM0dElB?=
- =?utf-8?B?RFNDVWE3eElGTE92aC80UEZBY2lFcFp4UEtHcU1Td2pnK1RTbzIvVS93R3lM?=
- =?utf-8?B?dFpmeWNlajJsa01DaHhwN2NMTjVMbVRDOGdZUW1iRkJZaUhWdUpJWHNzT0tD?=
- =?utf-8?B?OFhnYUViYW01UTBoU0NocjZWbUt0VEV2MkVDWG1LMTRhUnhiVC9kdGw5YnFp?=
- =?utf-8?B?TTU5OGFBajZucEJpcS92UzlPQ2IvT1Zmei9keSs0dDFpanQ3ZHhoZGp0aEJn?=
- =?utf-8?Q?Q4zMGD5efkeuIfUFHbxrZQlNh?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6b17e330-d34f-454e-3ce4-08dd991f463d
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2025 10:56:16.2769
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: pRyXoDbllDQYvIrBtS34kdj8yxLwPXVriOlC3leeWKW3qCAajtyJ9tAp4UpveV7Fgo8WegpqzQSPIRcMF16RQw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR12MB8516
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 7/9] cxl: Change sslbis handler to only handle single
+ dport
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com, Gregory Price <gourry@gourry.net>,
+ linux-cxl@vger.kernel.org
+References: <20250521183443.3828320-1-dave.jiang@intel.com>
+ <20250521183443.3828320-8-dave.jiang@intel.com>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <20250521183443.3828320-8-dave.jiang@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Feedback-ID: rr080112279f019f8443585b02e6defbbc0000a3b30d2d78e445e240690d9443c2f561588c2a6fd4478b4d00:zu080112275db273d6359f743f57c52a9200001c25032b9c45dcd9a0af185a0ef2689a9e0b56ace52a6ad617:rf0801122db2c3245e87e8ac52a76275870000757d176faec63ec2e4e3d7cb4ee45ff76de436157f7f8d66932412571d8fa7:ZohoMail
+X-ZohoMailClient: External
 
-
-On 5/21/25 20:31, Dan Williams wrote:
-> alejandro.lucero-palau@ wrote:
->> From: Alejandro Lucero <alucerop@amd.com>
->>
->> CXL region creation involves allocating capacity from device DPA
->> (device-physical-address space) and assigning it to decode a given HPA
->> (host-physical-address space). Before determining how much DPA to
->> allocate the amount of available HPA must be determined. Also, not all
->> HPA is created equal, some specifically targets RAM, some target PMEM,
->> some is prepared for device-memory flows like HDM-D and HDM-DB, and some
->> is host-only (HDM-H).
->>
->> In order to support Type2 CXL devices, wrap all of those concerns into
->> an API that retrieves a root decoder (platform CXL window) that fits the
->> specified constraints and the capacity available for a new region.
->>
->> Add a complementary function for releasing the reference to such root
->> decoder.
->>
->> Based on https://lore.kernel.org/linux-cxl/168592159290.1948938.13522227102445462976.stgit@dwillia2-xfh.jf.intel.com/
->>
->> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
->> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> ---
->>   drivers/cxl/core/region.c | 166 ++++++++++++++++++++++++++++++++++++++
->>   drivers/cxl/cxl.h         |   3 +
->>   include/cxl/cxl.h         |  11 +++
->>   3 files changed, 180 insertions(+)
->>
->> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->> index c3f4dc244df7..4affa1f22fd1 100644
->> --- a/drivers/cxl/core/region.c
->> +++ b/drivers/cxl/core/region.c
->> @@ -695,6 +695,172 @@ static int free_hpa(struct cxl_region *cxlr)
->>   	return 0;
->>   }
->>   
-
-
-snip
-
-
->> +struct cxl_root_decoder *cxl_get_hpa_freespace(struct cxl_memdev *cxlmd,
->> +					       int interleave_ways,
->> +					       unsigned long flags,
->> +					       resource_size_t *max_avail_contig)
->> +{
->> +	struct cxl_port *endpoint = cxlmd->endpoint;
->> +	struct cxlrd_max_context ctx = {
->> +		.host_bridges = &endpoint->host_bridge,
->> +		.flags = flags,
->> +	};
->> +	struct cxl_port *root_port;
->> +	struct cxl_root *root __free(put_cxl_root) = find_cxl_root(endpoint);
->> +
->> +	if (!is_cxl_endpoint(endpoint)) {
->> +		dev_dbg(&endpoint->dev, "hpa requestor is not an endpoint\n");
->> +		return ERR_PTR(-EINVAL);
->> +	}
-> This seems confused because the @cxlmd argument is always an endpoint.
-> The dynamic state is whether that endpoint is currently connected to the
-> CXL HDM decode hierarchy, or not.
+On 5/22/2025 2:34 AM, Dave Jiang wrote:
+> While cxl_switch_parse_cdat() is harmless to be run multiple times, it is
+> not efficient in the current scheme where one dport is being updated at
+> a time by the memdev probe path. Change the input parameter to the
+> specific dport being updated to pick up the SSLBIS information for just
+> that dport.
 >
-> That state changes relative to whether @cxlmd is bound to the cxl_mem
-> driver. So the above check is also racy.
->
-> I think this wants to be:
->
-> 	guard(device)(&cxlmd->dev);
-> 	if (!cxlmd->endpoint)
-> 		return -ENXIO;
-
-
-It makes sense. I'll do so.
-
-
->> +	if (!root) {
->> +		dev_dbg(&endpoint->dev, "endpoint can not be related to a root port\n");
->> +		return ERR_PTR(-ENXIO);
->> +	}
->> +
->> +	root_port = &root->port;
->> +	scoped_guard(rwsem_read, &cxl_region_rwsem)
->> +		device_for_each_child(&root_port->dev, &ctx, find_max_hpa);
->> +
->> +	if (!ctx.cxlrd)
->> +		return ERR_PTR(-ENOMEM);
->> +
->> +	*max_avail_contig = ctx.max_hpa;
->> +	return ctx.cxlrd;
->> +}
->> +EXPORT_SYMBOL_NS_GPL(cxl_get_hpa_freespace, "CXL");
->> +
->> +void cxl_put_root_decoder(struct cxl_root_decoder *cxlrd)
->> +{
->> +	put_device(CXLRD_DEV(cxlrd));
->> +}
->> +EXPORT_SYMBOL_NS_GPL(cxl_put_root_decoder, "CXL");
-> I think this cxl_put_root_decoder() requirement is manageable for the
-> for the initial merge, but it is not something to commit to long term.
-> The device's HPA freespace and CXL HDM should be freed at cxl_mem detach
-> time, but that will require more infrastructure.
->
-> The reference does not stop the root decoder from being unregistered and
-> it is clearly broken to allow it to be unregistered while drivers have
-> pending allocations.
-
-
-I agree all this requires to address those problems, hopefully in the 
-short-mid term, meaning follow-ups of this patchset.
-
+> Reviewed-by: Gregory Price <gourry@gourry.net>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Li Ming <ming.li@zohomail.com>
