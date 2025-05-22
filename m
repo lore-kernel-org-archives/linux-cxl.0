@@ -1,99 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C57A628B3F7
-	for <linux-cxl@vger.kernel.org>; Thu, 22 May 2025 14:48:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D22592F41;
+	Thu, 22 May 2025 15:46:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747925288; cv=none; b=YHF+cielh0pEAQ7XpDlLLQndcn7Djm8vZBOe3JT0A1xuUnqW/ELTzMYatbr3bUr62p3l8jajo8gDvlZM3qWHAna486Q3sJve4/zq4PgwDnYmyo17Yd+UShX9e/cYXo/bIkc6Nk8Ge+iaI+f89frqBWWJNUkaL0ZUqkphkRVL1U8=
+	t=1747928770; cv=none; b=h1s/d4cMo10h4ZxGZC5egXPR5T/f6SnrG8DLm1WJc1CwTwgI6iIgtDnRe+U2maM07lUJn7lx7Dg4+tVD+cka2uUCDb54T4bscpT8wSQGdSwx42g1T2kfryt4vACW0E1BW7fbIumFvolYjE+XTEdwwnnm9gI+FI1GTPGm+7twUik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747925288; c=relaxed/simple;
-	bh=HG4jexxHxsB32owSL6REekKPlnK9nTSRa6nQpwwOhSY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lqqrsriragug0+9r7RHtxT+9spMmQ8bkcQI7LprzpcaH7eHTqWiUHnB/E8AnVfc0HyEAHkEI9hL2yLmG9o5Lf3Fo2eXIM3u9gz8BTgYdBztuBXlwo+drnUNtBJ9MrEQZ9zWAz2ouCdQ3t7T2Y0BF6YVYNzgFoTplFJR3NPwNp5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A/icHTE8; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747928770; c=relaxed/simple;
+	bh=HHFfb8zt1W7b7687wsmntPJNHJRczR0BfGUhfr1rO0I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=u5l5rjrabkk8z5yXrJTKr7AG1p70YI9S+Rexp2jb5GH7E66lIWy0S5cPloAEnzRcVjo10+9yCEY4LAhYFr6W6Dp/Xj5dX/EXJ2N9hWKZ5hhiH3CEIGVF+HaGe+aLMGMWIEvgs/+XnGjnxe1k0ToHXITRch2q8MQjmG1cCyxuLyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nR4I8zlA; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A/icHTE8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747925286; x=1779461286;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=HG4jexxHxsB32owSL6REekKPlnK9nTSRa6nQpwwOhSY=;
-  b=A/icHTE8s2Rgnh5NNLtDKMPcYAKyGynazq6fhzjOO6hrmWh+yfNsocw7
-   efUeriG4MK031YSXZGw7tQLao21VuxXc5d3KZfzYqeNhYOZgvX9SSJBHG
-   dvqA15kBFDh+QEBtJ5XzbKap+yXbBG2BP2jemsJl8KcwFrMngZc7taujD
-   ZzNQDNIFnFczKJzFmsGmLAVuiGWDXQeeCx6g671zdCT8DCkO73K+5Si9A
-   IAMnRRC9Q38xGu69iF3STumNg31GFnLYGggBiX+Ogu9IpfRBohtoRHJmf
-   tm2yU9LnE2iP6Jh5I4YrrfcSTFXoS2h1nrIimqtW0K1kjYYdfh1V8F6/F
-   w==;
-X-CSE-ConnectionGUID: QMZsBVjnQ02qe6QxlEAN5Q==
-X-CSE-MsgGUID: GdIccc5nSJSss6hIKiMYVg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="49874085"
-X-IronPort-AV: E=Sophos;i="6.15,306,1739865600"; 
-   d="scan'208";a="49874085"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 07:48:05 -0700
-X-CSE-ConnectionGUID: xdmwhi2VTCiMRHaU1OWuUQ==
-X-CSE-MsgGUID: PEjVkBhzS2uhWNEe2XmU0w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,306,1739865600"; 
-   d="scan'208";a="171513071"
-Received: from adavare-mobl.amr.corp.intel.com (HELO [10.125.186.118]) ([10.125.186.118])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 07:48:05 -0700
-Message-ID: <5c712edf-3cc5-4707-8a5d-472ede773b6f@linux.intel.com>
-Date: Thu, 22 May 2025 07:47:56 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nR4I8zlA"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-601dfef6a8dso8242936a12.1;
+        Thu, 22 May 2025 08:46:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747928766; x=1748533566; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fgiMoj0zBLI77kFJsTbxWoQIzqomQqgDgEkdUW1inN8=;
+        b=nR4I8zlATON7G7djPMbVEPEP2Tv+1guLLF3GoEjemHndALHVllUFNzwA9TPCBZ/8O4
+         Zlv5dgs1fTb3L0kRtpHvtZaaAbNX7ZQBnltDHCKoZsg89Dc64GgKkbUlyz7s0sBdfwJe
+         I/dP4b2Nh0I05f8FBVvToCkkmD5/YuwyXJBes4MNqTd74QHzVVhhllOy+VVrAUdOENEG
+         nCEd10Q+AEuBBv2jH+k2ZWC83L4aAFXR/rTlM1vp6gK2PU3AEHik2tP9mKXhOupLjarH
+         TmLIv1OCkX/ngurevIf0OqSBA9lU5XvEXSWzoPOcSLCewnDFaNdqc7v4I+31iJRxvW1B
+         oCpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747928766; x=1748533566;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fgiMoj0zBLI77kFJsTbxWoQIzqomQqgDgEkdUW1inN8=;
+        b=qQYEAoV/OLnV1Q29URM8MBT11F2OGzDXXuHEok8ygI3Jx9CBCcPoZlcs+F3ghrXCBh
+         +pBgMjgXZiSCpbnhM+1t4utiDfWuQINiEjmqMRMlvH09nomQhc1tCvUgE3qbBwiZ9ik7
+         GKV1Hg8jkwr14kYSEfmLotJj0RSV6jNlomz0bGywgj68PefnkReXjaxQtg1bKgTMwKmi
+         X4Rm4mcJx9RAGgtNfL6uNUa3xVcY6mQ+5fikh50ggqX5ToUXWc2C2KxM7jVmqJlKZiJO
+         O7laah7/yBj7e57qn05efe5l/PNUW7emIUY7sgEBGvtbAgAdJfZZo9lMZnc4t97nfGKN
+         oSmw==
+X-Forwarded-Encrypted: i=1; AJvYcCUuvMxQdPZ6jFhUT85Gy2TPzt3K970u7AlFsj94/bxX/ja7qM7CtbtKKJPVO4xZYYUgvFChxLCfPxSr0hivyA==@vger.kernel.org, AJvYcCV5F6JgKpuL0u30nsqcKXfMs6VQGmLGvIRDw8DnL5MTH+T25GiNXZOePPs3LF3GC7/HFekcPk/t5ctWUVpR@vger.kernel.org, AJvYcCWN3UVwRTNsFbRjyZQnoxnTggGuKsNUlBccIvTVFG0nocglS5Ke5EnEBfykeQKZnSvbG+5pSo5qb44=@vger.kernel.org, AJvYcCWpwV0t6VRY162+EkI9JKBW5PiaZcb4wpMp6Ia0dOPjitjOxJbZIMMAMtHOuofW9hKBjltawU4cw6+o@vger.kernel.org
+X-Gm-Message-State: AOJu0YyI3clqHUj/H/GkaUYDKuJuWkyoVhIIx9KWMY7/rEdQNHxLWSlx
+	RmDs4s2VheXr87AMd2fJEIxoViJDnN4z65mUgAIWvrSUy+9r0lqnB0y+TLuG8Q/tbTcb4XPrlLU
+	jWzHR2pdRmjlDI/3+jgBepUFGEPKDDb8=
+X-Gm-Gg: ASbGncux20VyprPbNovNl6lRnS1wqx3SNP/yWluISrr0KcfIvL7LlOyNDPX1aferlO1
+	P+x6tp6f6vFTykay5N13AXaG+cDNGa2cl4Z+r+TY+zIs4yAe7TnltgSLghS0vWoSuQnmTjg1cna
+	zyBY+gDHv/1pf/gxfZvuht/DuBFR1mP33RcFaUUhYOKVo=
+X-Google-Smtp-Source: AGHT+IFCqHZ4nii59QrK+Jhw+rDrywqjWTrMjDZMLq2ull6eKrj9OenDertsGsb8tK4eBZqLTUn9pP38DriMvIz7YVc=
+X-Received: by 2002:a17:906:6a19:b0:ace:9d35:6987 with SMTP id
+ a640c23a62f3a-ad52d441f89mr2374003266b.3.1747928765733; Thu, 22 May 2025
+ 08:46:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [ndctl PATCH 1/2] README.md: add CONFIG_s missing to pass NFIT
- tests
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
- dan.j.williams@intel.com
-References: <20250521002640.1700283-1-marc.herbert@linux.intel.com>
- <aC6sVpma71y4jH7S@aschofie-mobl2.lan>
-Content-Language: en-GB
-From: Marc Herbert <Marc.Herbert@linux.intel.com>
-In-Reply-To: <aC6sVpma71y4jH7S@aschofie-mobl2.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250421013346.32530-1-john@groves.net> <20250421013346.32530-13-john@groves.net>
+ <CAJnrk1ZRSoMN+jan5D9d3UYWnTVxc_5KVaBtP7JV2b+0skrBfg@mail.gmail.com> <xhekfz652u3dla26aj4ge45zr4tk76b2jgkcb22jfo46gvf6ry@zze73cprkx6g>
+In-Reply-To: <xhekfz652u3dla26aj4ge45zr4tk76b2jgkcb22jfo46gvf6ry@zze73cprkx6g>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Thu, 22 May 2025 17:45:54 +0200
+X-Gm-Features: AX0GCFtyU3N_Zhefral0ZnR18iMPx5aO1xlmLEfo3wUu9EslWmr6-Y8DzN_FaFM
+Message-ID: <CAOQ4uxj73Z8Hee1U7LxABYKoHbowA4ARBFDv434yDq+qn5iMZw@mail.gmail.com>
+Subject: Re: [RFC PATCH 12/19] famfs_fuse: Plumb the GET_FMAP message/response
+To: John Groves <John@groves.net>
+Cc: Joanne Koong <joannelkoong@gmail.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Bernd Schubert <bschubert@ddn.com>, John Groves <jgroves@micron.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	"Darrick J . Wong" <djwong@kernel.org>, Luis Henriques <luis@igalia.com>, 
+	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
+	Kent Overstreet <kent.overstreet@linux.dev>, Petr Vorel <pvorel@suse.cz>, 
+	Brian Foster <bfoster@redhat.com>, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
+	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
+	Josef Bacik <josef@toxicpanda.com>, Aravind Ramesh <arramesh@micron.com>, 
+	Ajay Joshi <ajayjoshi@micron.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-05-21 21:47, Alison Schofield wrote:
+On Mon, May 12, 2025 at 6:28=E2=80=AFPM John Groves <John@groves.net> wrote=
+:
+>
+> On 25/05/01 10:48PM, Joanne Koong wrote:
+> > On Sun, Apr 20, 2025 at 6:34=E2=80=AFPM John Groves <John@groves.net> w=
+rote:
+> > >
+> > > Upon completion of a LOOKUP, if we're in famfs-mode we do a GET_FMAP =
+to
+> > > retrieve and cache up the file-to-dax map in the kernel. If this
+> > > succeeds, read/write/mmap are resolved direct-to-dax with no upcalls.
+> > >
+> > > Signed-off-by: John Groves <john@groves.net>
+> > > ---
+...
+> > > diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+> > > index 7f4b73e739cb..848c8818e6f7 100644
+> > > --- a/fs/fuse/inode.c
+> > > +++ b/fs/fuse/inode.c
+> > > @@ -117,6 +117,9 @@ static struct inode *fuse_alloc_inode(struct supe=
+r_block *sb)
+> > >         if (IS_ENABLED(CONFIG_FUSE_PASSTHROUGH))
+> > >                 fuse_inode_backing_set(fi, NULL);
+> > >
+> > > +       if (IS_ENABLED(CONFIG_FUSE_FAMFS_DAX))
+> > > +               famfs_meta_set(fi, NULL);
+> >
+> > "fi->famfs_meta =3D NULL;" looks simpler here
+>
+> I toootally agree here, but I was following the passthrough pattern
+> just above.  @miklos or @Amir, got a preference here?
+>
 
-> Thanks for doing this Marc! 
-> 
-> I'm wondering about the need to delineate between what is needed to load
-> and use the cxl-test or nfit-test modules as opposed to what is required to
-> run all the unit tests.
-> 
-> I believe my environment, and yours, and most other folks using these
-> environments are doing so in a VM so it's no big deal to load up all the
-> things.
-> 
-> Maybe just a gentle separator in the list showing required and optional.
+It's not about preference, this fails build.
+Even though compiler (or pre-processor whatever) should be able to skip
+"fi->famfs_meta =3D NULL;" if CONFIG_FUSE_FAMFS_DAX is not defined
+IIRC it does not. Feel free to try. Maybe I do not remember correctly.
 
-I unfortunately don't know and understand these enough to remember that
-and it would be very time-consuming to re-test them one by one.
-
-More generally speaking, this sort of list looks deceptively simple but
-it almost never is. That's basically why I initially asked in
-https://lore.kernel.org/nvdimm/aed71134-1029-4b88-ab20-8dfa527a7438@linux.intel.com/
-if someone more knowledgeable could do this (based on the
-run_qemu.git/.github/workflows/*.cfg files) Also, this stuff tends to
-evolve.
-
-Now that tested versions can be found in run_qemu.bit, it's less
-critical to update this README.md file. The current README.md version is
-inconveniently non working but at least some functional versions can be
-found somewhere else.
-
-Cheers,
-
-Marc
+Thanks,
+Amir.
