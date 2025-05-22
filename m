@@ -1,229 +1,165 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2052.outbound.protection.outlook.com [40.107.94.52])
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 814DF2914;
-	Thu, 22 May 2025 10:24:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D188533DB
+	for <linux-cxl@vger.kernel.org>; Thu, 22 May 2025 10:55:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747909469; cv=fail; b=qXZC0nFMIx/u/hebnV3DjiN2fckpLEN6r7KM1ajWwYJvbp/HmIAu/otgQb+9uAhJmf25pvsNoV5VyOrCS9d1wJXPVLNiKJeHa2Fi0NL1cCky6s73O0dEVT4quMQLmG+aMtIlwufpzucRa9Zss9EaSkKtBV31xQ+7lVI/dsaFA6w=
+	t=1747911360; cv=pass; b=ukkvP7xAHKdyOWT/1HNlTg/J0buBNZZSnvrM2mQIxZsKYvHGOQgVqQZ8xr4E+/xx+8UmMpc0FTWZ5VgF4aJl1jxscK39TJxr/9OvxF1Pel+hxgJNMw+Tyfl67K0zhgdRPFY182gWIZASOoobdPWNdTnsrS9rQLgIdJo8DK/0J6A=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747909469; c=relaxed/simple;
-	bh=2PGri+tc+MYnnX870v4j6gnM5sxl7N2ama9iGxI40bM=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=YrmmBeUxtfpBbLXrOyarq7BvxML2kHUQR3XhDZ0uGjgJJ9UNlCzGyYgAkL+qOcxN8VYqTLqq/gAOQqrPyScZi+h8UYz8SKVk38q5BcRozykijH53AZScRc3bAuzmg82P9to8xKNvUYwQTXi/wcKaF0MXIhDmGqPbqoivwCR8peo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=kjGU4PD5; arc=fail smtp.client-ip=40.107.94.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1747911360; c=relaxed/simple;
+	bh=Zk6ujc4OMU4NxP4wt3FCUWjyDu29nR3G+Xd1qRaaSZg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=K9NnvY3HqrbLuo7rA3AE+NvjIElUyxwq42A2W3ofF+wnjpQOkLCTSOVjB5PdgUCnmgnAF0MfFgWwrZz+MY/yDoX2/WsFyZ/wKIRtMjTNHZ+thdFuI2LzMQ5GmYlvbZCmks1DWO0smBDRKaqCNVQiNEg4F54txNuRMyxDI7wOqRM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=BMbx5hbg; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="kjGU4PD5"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lHAl6XsIjBwvZm6gphl//UO/N2eYqMtBmCORVMru8WG69gnMfBHDAkGqWBoeIyR8sgpZ4iSBfnfdZ1MmmptwFQnxSBEexUnb58koXZLLH/0sZv2HrDIbN20fxwYbMGJZxB1ZUcv6a6TzWrGDoyPd4RdD525C2IvYC0RLIXGDhZloBQ2uGLKDGaK+c2udoDCtEZe2A0vE5edrjUgo22gCiwrF/xkZ/py140llMcQA9iWDmROH+MKpMbHbkiMcwptxksP/JcHr3lYKOdrGD7WpqoloSpsN0RBNa6Smj4LzjOza6HEIayLwrvRGuvutcHp89SE1/VCf+VXmiMSLHMsh4Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ekUOqBY41XXZLkeWLqZcas3wIUmFxAglgA1WWwNGI6A=;
- b=fs2wbZlpzNm/yn88GpuaiBxXHeC6b93GzvssiEfvTmL1GnJs6TrzeFEIRSEKcS9DV/3onrYR1COFJ039izS3aitwa9QGYRSSfPCDcgrUXO3kQ/ddZe717sAWunjYQ4K53I+U6nnviOhWs+SQkXyPgM0/bAvGwTTrgxaKjpTSVHnaE3TcDC2SR6g9Er0ebxPnXRzvm6+kXEm6NYuEAPoYHohg6bX3rwOHEvs5Ty4HmWIi7hqMOS3g3dkYK6mhqVrGnF0noP4uyt4Xw6ORY3Yu/g1DHDQ0AQ3R/Ofu6nE/oV+31FmsIEaqROUd6eNBtCDXoPilKilWDpvkYfzCb/MfVA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ekUOqBY41XXZLkeWLqZcas3wIUmFxAglgA1WWwNGI6A=;
- b=kjGU4PD5n3YK3aDXu68gEm5BDeqT3WrpaNmCTrLKJYnndQIGZ+WfEMjtQV4uk0mduB6c47JpaJiELiqQgGbNeQZej2omoMbLn29RtgUgpfeprmSW4xyMN996TUhL4KFq7nRPKURo7dV8PQYPlGbUjz7CClCNG0weZQuS0YgOBls=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
- by DM3PR12MB9389.namprd12.prod.outlook.com (2603:10b6:0:46::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8769.21; Thu, 22 May 2025 10:24:25 +0000
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79%4]) with mapi id 15.20.8769.019; Thu, 22 May 2025
- 10:24:24 +0000
-Message-ID: <edb78c4e-f9ad-410d-907c-0564222f455f@amd.com>
-Date: Thu, 22 May 2025 11:24:19 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v16 07/22] cxl: Support dpa initialization without a
- mailbox
-Content-Language: en-US
-To: Dan Williams <dan.j.williams@intel.com>, alejandro.lucero-palau@amd.com,
- linux-cxl@vger.kernel.org, netdev@vger.kernel.org, edward.cree@amd.com,
- davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
- edumazet@google.com, dave.jiang@intel.com
-Cc: Ben Cheatham <benjamin.cheatham@amd.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>
-References: <20250514132743.523469-1-alejandro.lucero-palau@amd.com>
- <20250514132743.523469-8-alejandro.lucero-palau@amd.com>
- <682e1fc963402_1626e1001c@dwillia2-xfh.jf.intel.com.notmuch>
-From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <682e1fc963402_1626e1001c@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO3P123CA0012.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:ba::17) To DM6PR12MB4202.namprd12.prod.outlook.com
- (2603:10b6:5:219::22)
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="BMbx5hbg"
+ARC-Seal: i=1; a=rsa-sha256; t=1747911349; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=WBhMqLFc6iEZ4iZxqQ6hQHX76mVf6TM+MGWxpty0EIM1vVIsa8UImu4TZxThRzCm0k0ahBjmtndK7gfM8Mt586DocAUHFELOLgG/cSWM3wC+XR3S88b5wYWC5BA7QWTEOm5LA7qr/rmXGB6r4thuRNroJ4a2hi8BxTx9bUlIBmU=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1747911349; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=/9NIu7PHLwtli5MCKSPR4Tdp9l42XHea8CNOuHxB3FQ=; 
+	b=YKl2CSfquPRBduT6NuOUzpECE2mTiZ4RzZaL5Nibn5zWKWwB6n0GFv6iyAeUEQx5nDHmA4PYAwgqGXfCfC6lVj88ObJXr/KyNUO9dfl5q7sRtVboKyOCTNja+8P9Lz6XLfA3/3Qz+P5JSCWVvPe7ieLRoBn05RBxqUjOI/yWqiI=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747911349;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=/9NIu7PHLwtli5MCKSPR4Tdp9l42XHea8CNOuHxB3FQ=;
+	b=BMbx5hbgo3hNJQVCG0h8e5OKbjoeIFpi7eVxXe0RErH3tTpPx4481Gp4BnyoNbR2
+	/tFrkVweIQZmkmxsYpUnxSB2m02NvvSUNo4ipoykaTLRCxL59GWrOTSLIxqrtOYd0ie
+	jiGTQcXMV+iwjnXN106DcLd4wqT8Dg+EnLY3Griw=
+Received: by mx.zohomail.com with SMTPS id 1747911347578901.4094277563157;
+	Thu, 22 May 2025 03:55:47 -0700 (PDT)
+Message-ID: <475052ab-f85b-448b-8a5b-4e0b59a8d282@zohomail.com>
+Date: Thu, 22 May 2025 18:55:44 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|DM3PR12MB9389:EE_
-X-MS-Office365-Filtering-Correlation-Id: 21ba8b1e-1c90-4349-c0b0-08dd991ad286
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?OTdzV2EyYUp4d1FDMWtsWFZmbDJnMVp2WmowOHhnN2xSQUFNU3VZVTJzdkx5?=
- =?utf-8?B?RGVna3QzOHlhVUh2S2tVRkhDcHkrQ09OZXJKYnljZnZhTG9Cd1RaSHNhM0Fh?=
- =?utf-8?B?eEF5UU9nMmROUElHa25BSDFnRFRyOEV1OTNPUThZR09DVWtJdmYxVlFXbHF1?=
- =?utf-8?B?Ti9JMDFyLzhjaUthdXBWcXQyUDk0b1orSUVMZk50Y0VqRUJqT1BvL2hhRyti?=
- =?utf-8?B?aTlOSkkycGpySE5PMUpGell5Szh4QWxIQnVSak9UL3J3OCtEVGdyRjlsR0Uv?=
- =?utf-8?B?ejlkSTM3dUpsSytUR3RnRkNPb2krSTFTYktSK3ByS2ZqZ3BsRElDdy9GMzZj?=
- =?utf-8?B?dVVBR1NXdDYrdklzWlBoblZGejRldzY3ZzNhYWhoVlh0cHF5d0NkRzV0NnZs?=
- =?utf-8?B?T216cEttRmg0aHZPZGIwd1E2TFdsb0lpYm9HU3hyekY1Qm0yUTE5c3BYUVBS?=
- =?utf-8?B?b1FzQm5RaW9CNzNiQVh2UXZQNGFhNWZLb1hmTnBQZlM3OVRmaXd6Zlg1WFN2?=
- =?utf-8?B?ZXR3eXR5UkZNeFdhbnJWNW5tUWVLdWIweFJDZ0djekpKVE9taWNNMlZoTldP?=
- =?utf-8?B?LzZhcjc3UDlYYWI0ZEZUN1M5QVg3R3NWcDF5MzdQaWJ1UXlSTkl2WUNVM3Fu?=
- =?utf-8?B?ZHNJWVdQanlJRm1OUE5oc2dRUE9GdDBtaEdxZWd1NkZSMWM3MStwMnZzNlZK?=
- =?utf-8?B?MVZaVS9rdEhsOURwT0c5M2wxMDQ0VHhMTEhTQTd2QWEyYVlISFdDOEVic1hC?=
- =?utf-8?B?S1JlWXFoUW9ZbW9JK01JaFVOT1JGZDZHdTRIS25oemlnNHBWa2hjNUprcVFv?=
- =?utf-8?B?d01NdEJwM1pZY3k2TlBKdVF5VGdLWW8wYTJVZ2VUbTZlOThhZXFBYkNTSTda?=
- =?utf-8?B?MFZYMVQ4d3N3T01sd2Z5Nmw3b1ZobVozNDVnbzhYT0ExZGJqSHhYQ1daS0xp?=
- =?utf-8?B?a2c3N09MSDJJS3Mxelk0MVV4a1VHRHp2SGFPcHJxS3FvcHRLZXdLd0liM3lr?=
- =?utf-8?B?RW9Cb1Bma0xRSUU0UHc1cElSSENWczdqZ2N3bm9HOGtNMmlFb0tQeDVIRWx5?=
- =?utf-8?B?eDgvVVdzdGQrSFhNMC8vNktJUFlKRUVqSW9XWTFScEhacU80L2xVeDFGZE9G?=
- =?utf-8?B?ZmdCeDFKKzZWbHJNbTRSVFpKTXd4MkRUMUpUVnpTY3I3bVExR0tQZDdzOFZJ?=
- =?utf-8?B?d2lRLzBNdVpwRllsbHJYeUxqcmtkbnVKd05KbHlxL1h1SWhjcDBZT3g5bjU5?=
- =?utf-8?B?ZG5heGJzaGgvNDJuMkFMMjZza2k2VkRiaFNqcDJhZENhUFBFNGQycXBaK3pL?=
- =?utf-8?B?aitPMmpFR0JOQ2VqM1NyNnBOMVIxcjNaT0FZZE8rc25ZaW82aFR1QzVyaVFa?=
- =?utf-8?B?SjNmdzhBRkh1YXNsNGlrU1RlSXllZXFrSXZ5ZVVZb1lxOUJSZEdNeFhveGhs?=
- =?utf-8?B?bUtBdFBsNUNEczBlMjdpTHNzbWV3Q3Btc3dpcDBsKzY2MVUwSXRYZDlHc3RZ?=
- =?utf-8?B?MWFqYzV3bEQwalRzQUpwVDZYa05OdG1tZ21NeStPeUd4ckkycExXMWlzREdp?=
- =?utf-8?B?cGI4TE5BcjNOSEk5MEZqZkE1SDJrdGtzNDM2T0NLSjJPSFlvVHUwVFZPUU16?=
- =?utf-8?B?YzdaMHFndjNybDN5aFM3TmxzTFJSYkJlVzViWGFSU3M1V2RrRGtoODAzR0NP?=
- =?utf-8?B?UlRVaWg5dGhJOUhaOVlFcjhtdWxxVzR6cmFBQk5udHk0cm53a1pFNFo1Y1Zz?=
- =?utf-8?B?dm1UY1ZyeUt1bFpETmFGSHAxZ3N4WUNQSHIzazByLzBLNFJkaURNQy9Mcnpz?=
- =?utf-8?B?YXV5ZVdkb2NvVTR1ajFIOHRFV1VHdks3YzRzVlpxR3czbTRhSnRZYmdDcFpK?=
- =?utf-8?B?bnRZcFI3c1dxU2JGdis2cU1HK05MdmtBNmtER2FLamlVYlQyZm9ZUWp3TThZ?=
- =?utf-8?B?NkRRUU5JM213Y3JvSW0zcUxwbzlKQldpRWovT0ZMcGhScWllN0NoaFlLR2NJ?=
- =?utf-8?B?UUtCQ1BKeVNBPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RDk4WTZ3b0pYZDZCZ29kN2FvYWpxdHZvdXg5K29FZkdqdjZNU1kzNGs1L0Rn?=
- =?utf-8?B?VkRlalUxY2phSGdMRmxOOHRncm9Rbll0NFg5Q2hzdmtjVnAyVkIwd3I5ZFZD?=
- =?utf-8?B?MDJSQ2lwa3hQTHlLcDA2dDZVUXBRMEFWcm1KSStHWXMxQm8xZlJibU5qZUh6?=
- =?utf-8?B?dkN4bitrbitOdzZlR25MblFvMlM5ajBrZFNXeWVlalgrbVpRZFVwWjg4Snls?=
- =?utf-8?B?a2tudjU5bmdwZlpUU0FsMlhwd0NXc290Mk43R05MLzJ0RVZkY3lmNWx3VHIx?=
- =?utf-8?B?V1l3b1VlUHphQXZkbktxZU81RHpFdDgydWxRU1hvOFFpVjRBT3F4aTJZdzNE?=
- =?utf-8?B?a1h1VGU0cUpRbjlpMFROWXc1UkJrOS95b1VGMmY5UG90R056TjkxOC95Ly8w?=
- =?utf-8?B?UjRxclZBK21ZaU4yZW04ZHNURUdvc1Z2WkFsVWxMZnlYdWVHNFBvVk5VWnRv?=
- =?utf-8?B?cTB3OUtmV09HK1R1dEFkODczMi8rNXNFUzFMTldqVzN5ZXJ4NE5wUHl6QXJX?=
- =?utf-8?B?RXY2bk53azNwUStVOXR2RTQwVHNHZXBRMjZtK1ZKYnJBdTFCK0pBNllIQkFD?=
- =?utf-8?B?TDVUUjVGUlR6cWwvK2QyT1BjaGRYOVVESlU2NkExVkc5RXVzOW4vUUorcUFS?=
- =?utf-8?B?ZW8rQlFRRE5WZTQ5V0pROE5TT2NLUzNSTGJGNjFuL2gyMHpkZGZhem0zSDJP?=
- =?utf-8?B?OGJoSmRvcWNSSXg0K1RxYTA2UWVPeWlWT0pwRnZHb1JSTlY4TXk4S0xOMGlJ?=
- =?utf-8?B?TE55VyttaHRYKy9uUDZKd3dwNk9CR1EzdW81RHhHbW0xcFQwc3hjaFZDSGJs?=
- =?utf-8?B?Z3JOVlJmVVFlVkRub2RsTjVWTFRRdEVmN3VqdVdqaVBxS01pRG84djZYeDhj?=
- =?utf-8?B?OGNtbU1lMUxmalZIYTZBOCtyMDZPYi95TGVLNjBCY3l4bC9SemU2L3ZEbWNw?=
- =?utf-8?B?YW4zS0k3ckFaaGpKazJZZkJNVWlZdS9XR0RPWFNYa3Qva080eURrdG03MTlQ?=
- =?utf-8?B?dTk4NGppZzZWRGRzSnhrcm9FSUM1REkvOWhWWjRuWWg3a2lwSnBUbUwxcHg3?=
- =?utf-8?B?Q1U3N0RGMk5EbnVRdmJSMm5GVGYwVC8rUjhpVkdDM1o5MWs3cVhMVk9sb1Bz?=
- =?utf-8?B?NXhVY2gyWWNMdjN3eHBYVWlwcVpFVWdONUMycXY0TjVjc0FvZ1hrSFdWcGdz?=
- =?utf-8?B?NEl0OHVJY3F1Mk0vRXN4Vk14TCs3blhFd2wyNndPZ2haYmxUWHpxWDZLcG1I?=
- =?utf-8?B?R0I0RTdwV3E3ZUpQOHRBQ2FkeDZDbXB3OThvcnFvMDQ4MVpSVmlvaFhBK0tl?=
- =?utf-8?B?ZGg3bXFKYitxRDhoVGczRGpSbjZDUlduRUtqMC9VY2U4Q3FJd3BWcDRPbUwx?=
- =?utf-8?B?Z1BYZDcwMitEL1RHQlRacDIvTUU5alBsL3M4Yy9ZV001Yk5ScmN2MkNKaTF0?=
- =?utf-8?B?OFM4TFRkU1VyZkhUbFc1bmIrb1R2eDlyYjMveGxPNjRYbnVVTmM3ZUFOek5j?=
- =?utf-8?B?eE4xM1F5a1FRa21lSHFST3poL3NSZEJMSUt1SklwRnJTWG1oMUZBRVZtSytu?=
- =?utf-8?B?TURUamRQREFCUFRQd2grNDVEa2ZKeTBFeDRyVzh5U3RyVTBGZHdiRVZiLzNF?=
- =?utf-8?B?aWVhY2dLWHRFL1ZTbjYvek5tVlFwcWNVRXN5MURlMHZ5TnprWlZ1ZzNyc0Rs?=
- =?utf-8?B?SkFXOTlBTVVFbkhISlNiRElMWjM5K2FIS2JkTjR5bGJSQlRtM2ovNFpmZEZ2?=
- =?utf-8?B?dFpkK2hHTHpGTkJqNDh3eUlySW4vR1dUK2Y3b0dhMW5IdStqTFFjYUdqdTFp?=
- =?utf-8?B?MVN5SGVHMEdNSUltbStTTDNiYW41ZFlhc0tqZGVvTnZORDF4QWhhVlJ2TlFw?=
- =?utf-8?B?SExraFBmdDlzZzFqZXFFMk9ydkZTZjZmYmZzdHhvNzBXUmhrdEJ0VXdTRndD?=
- =?utf-8?B?QXhNVFFjem9zdll3UkJWcWNWUXM2eElEbDg5K0gyOTQxMGNZL3VRdFB4S3FK?=
- =?utf-8?B?TnI0WVlrV3BwTEVUTlhuMmV1RlVtaEl6cUV5amxuTUR4cTJnaXdyaFludEps?=
- =?utf-8?B?VXg2Y3RLSzVPTjFlZHVsTjliY0dINERFMkcyT0ZhbTFUa05acG9UQkYxWnVm?=
- =?utf-8?Q?lESv2Ol7AjtJ/tibIVUUvEGn4?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 21ba8b1e-1c90-4349-c0b0-08dd991ad286
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2025 10:24:24.0172
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: C3l1CdfJqPV6XDEffYl+7Rx4cHaYzkDnA4MbeCQC05DVGKtVnqo4K5cGfWOVpY9WVOE0b9wV92PcFY7tJNvuCg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR12MB9389
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 5/9] cxl: Defer hardware dport->port_id assignment and
+ registers probing
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com, linux-cxl@vger.kernel.org
+References: <20250521183443.3828320-1-dave.jiang@intel.com>
+ <20250521183443.3828320-6-dave.jiang@intel.com>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <20250521183443.3828320-6-dave.jiang@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Feedback-ID: rr08011227ecd93627a0297456e6ee5ca300008a5b4df40ccfd94a88ab66e9ae5efd3d3bfb11d99f362ff109:zu080112272c09ac5d84e086a3b5fc5a4c0000a2ab48611764d534593f59772aa221c1622d3c0b2ca9cf7f98:rf0801122d9d8398a6fde8bab99b3a05150000fa35b681083c242583b759390305777af8b7083955e754ed776e78537ab544:ZohoMail
+X-ZohoMailClient: External
+
+On 5/22/2025 2:34 AM, Dave Jiang wrote:
+> Current implementation only enumerates the dports during the port probe.
+> Without an endpoint connected, the dport may not be active during port
+> probe. This scheme may prevent a valid hardware dport id to be retrieved
+> and MMIO registers to be read when an endpoint is hot-plugged. Move the hw
+> dport id assignment and the register probing to behind memdev probe so the
+> endpoint is guaranteed to be connected.
+>
+> In the original enumeration behavior, there are 3 phases (or 2 if no CXL
+> switches) for port creation. cxl_acpi() creates a root port from the
+> ACPI0017.N device. Through that it enumerate downstream ports composed
+> of ACPI0016.N devices through add_host_bridge_dport(). Once done, it
+> use add_host_bridge_uport() to create the ports that enumerates the PCI
+> root ports as the dports of these ports. Every time a port is created,
+> the port driver is attached and drv->probe() is called and
+> devm_cxl_port_enumerate_dports() is envoked to enumerate and probe
+> the dports.
+>
+> The second phase is if there are any CXL switches. When the pci endpoint
+> device driver (cxl_pci) calls probe, it will add a mem device and triggers
+> the cxl_mem->probe(). cxl_mem->probe() calls devm_cxl_enumerate_ports()
+> and attempts to discovery and create all the ports represent CXL switches.
+> During this phase, a port is created per switch and the attached dports
+> are also enumerated and probed.
+>
+> The last phase is creating endpoint port which happens for all endpoint
+> devices.
+>
+> In this commit, the port create and its dport probing in cxl_acpi is not
+> changed. That will be handled in a different patch later on. The behavior
+> change is only for CXL switch ports. Only the dport that is part of the
+> path for an endpoint device to the RP will be probed and marked as active
+> by having a valid dport->port_num. This happens naturally by the code
+> walking up the device hierarchy and identifying the upstream device and
+> the downstream device.
+>
+> Locking of port device wraps the cxl_switch_port_dport_setup() to
+> protect modifications against the port and its dports while multiple
+> endpoints can be probing at the same time and the same port is being
+> modified concurrently.
+>
+> The detection of duplicate dport for add_dport() is removed. The port_id
+> is not read from the hw at this point any longer. The port->id will always
+> be unique since it's retrieved from an ida. The dup detection thus become
+> irrelevant. With this behavior, only a dport that points to a valid
+> endpoint path would be probed. Of course the decoder enumeration and
+> SSLBIS parsing is also delayed until the dport is probed since it needs to
+> know the port_num and also be able to read the registers.
+>
+> The decoders must also be updated since previously it's all done when all
+> the dports are setup and now every time a dport is setup per endpoint, the
+> switch target listing need to be updated with new dport. A
+> guard(rwsem_write) is used to update decoder targets. This is similar to
+> when decoder_populate_target() is called and the decoder programming
+> must be protected.
+>
+> The success return value of devm_cxl_port_enumerate_dports() has been
+> changed to always 0 since no caller is using the return value of dports
+> enumerated for anything in the current code now.
+>
+> Link: https://lore.kernel.org/linux-cxl/20250305100123.3077031-1-rrichter@amd.com/
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+[snip]
+> +
+> +int devm_cxl_port_setup_decoders(struct cxl_port *port)
+> +{
+> +	struct cxl_dport *dport;
+> +	struct cxl_hdm *cxlhdm;
+> +	unsigned long index;
+> +	int dports = 0;
+> +
+> +	cxlhdm = devm_cxl_setup_hdm(port, NULL);
+> +	if (!IS_ERR(cxlhdm))
+> +		return devm_cxl_enumerate_decoders(cxlhdm, NULL);
+> +
+> +	if (PTR_ERR(cxlhdm) != -ENODEV) {
+> +		dev_err(&port->dev, "Failed to map HDM decoder capability\n");
+> +		return PTR_ERR(cxlhdm);
+> +	}
+> +
+> +	xa_for_each(&port->dports, index, dport)
+> +		dports++;
+
+There is a nr_dports in cxl_port, maybe we can use it instead of this xa_for_each().
+
+Other looks good to me.
+
+Reviewed-by: Li Ming <ming.li@zohomail.com>
 
 
-On 5/21/25 19:47, Dan Williams wrote:
-> alejandro.lucero-palau@ wrote:
->> From: Alejandro Lucero <alucerop@amd.com>
->>
->> Type3 relies on mailbox CXL_MBOX_OP_IDENTIFY command for initializing
->> memdev state params which end up being used for DMA initialization.
->>
->> Allow a Type2 driver to initialize DPA simply by giving the size of its
->> volatile and/or non-volatile hardware partitions.
->>
->> Export cxl_dpa_setup as well for initializing those added DPA partitions
->> with the proper resources.
->>
->> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
->> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
->> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> ---
->>   drivers/cxl/core/mbox.c | 26 ++++++++++++++++++++------
->>   drivers/cxl/cxlmem.h    | 13 -------------
->>   include/cxl/cxl.h       | 14 ++++++++++++++
->>   3 files changed, 34 insertions(+), 19 deletions(-)
->>
->> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
->> index ab994d459f46..b14cfc6e3dba 100644
->> --- a/drivers/cxl/core/mbox.c
->> +++ b/drivers/cxl/core/mbox.c
->> @@ -1284,6 +1284,22 @@ static void add_part(struct cxl_dpa_info *info, u64 start, u64 size, enum cxl_pa
->>   	info->nr_partitions++;
->>   }
->>   
->> +/**
->> + * cxl_mem_dpa_init: initialize dpa by a driver without a mailbox.
->> + *
->> + * @info: pointer to cxl_dpa_info
->> + * @volatile_bytes: device volatile memory size
->> + * @persistent_bytes: device persistent memory size
->> + */
->> +void cxl_mem_dpa_init(struct cxl_dpa_info *info, u64 volatile_bytes,
->> +		      u64 persistent_bytes)
-> I struggle to imagine a Type-2 device with PMEM, or needing anything
-> more complicated than a single volatile range. No need to pre-enable
-> something that may never exist.
->
-> Lets just have a cxl_set_capacity() for the simple / common case:
->
-> int cxl_set_capacity(struct cxl_dev_state *cxlds, u64 capacity)
-> {
-> 	struct cxl_dpa_info range_info = { 0 };
->
-> 	add_part(info, 0, capacity, CXL_PARTMODE_RAM);
-> 	return cxl_dpa_setup(cxlds, &range_info);
-> }
->
-> ...then there is no need to move 'struct cxl_dpa_info' to a public
-> header, or require type-2 drivers to pass in a pointless PMEM capacity.
->
-> If more complicated devices show up later the code can always be made
-> more sophisticated at that point.
-
-
-That seems fine to me. The only problem I see is a driver with a mailbox 
-will initialize this differently, getting the cxl_dpa_info first, then 
-calling cxl_setup_dpa, or all that also hidden in another function. In 
-any case, I guess the first driver needing that will have to work it out.
+> +
+> +	if (dports == 1) {
+> +		dev_dbg(&port->dev, "Fallback to passthrough decoder\n");
+> +		return devm_cxl_add_passthrough_decoder(port);
+> +	}
+> +
+> +	dev_err(&port->dev, "HDM decoder capability not found\n");
+> +	return -ENXIO;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(devm_cxl_port_setup_decoders, "CXL");
+> +
 
