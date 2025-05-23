@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A77018DB2A
-	for <linux-cxl@vger.kernel.org>; Fri, 23 May 2025 05:52:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC85D17A2F6
+	for <linux-cxl@vger.kernel.org>; Fri, 23 May 2025 06:00:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747979551; cv=none; b=LKdiBCGROzMGTulR3y+nOK8iNUvDsQKIustSrR38+0cl658RkMFdGZChT4WWm9RPSTIII2EnjN8OSB8C6P7ruH//hVLHIvqwIqgK66NqkoS0qwCNJYhe1SIdPpEitrkw6qdSgTqvZpkJbhUYUGeTrS6//6kLS2ILL9HbMd00uVg=
+	t=1747980028; cv=none; b=hnqJ7r+lP2tjf+FMU7s5qt+T5KFH2AaQPcDYWHRbMFwZbnPRVWu6YhbX0fJRTIn5i5rea+h4p8w8o90HDjgwYcpOCTFizVKowVKqtHgl6zP4NzUPwMFt6pK2ZzJL0IKW0w+Dm12dtOgxQS0S01nWkTrL9eiRrQtLM+Wyi7I+BY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747979551; c=relaxed/simple;
-	bh=uYZ+8l+gwFvhjudqgM0lRGN9ikaYUSNI0PFO2jYXgMs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s+vSwm/dAGJZigsYOVmmrADGO+x3fSX+B3uJqa7mPkH9+FCMS5MgzUu61W6V4wWWkBJUVCr03F3lCx+jMH9cJDfqp5EjJtZOeTJkw5RM1eVoQBKOrNv6rVZbSINAVwxa4cYMzOHu34WkCdOZyQVIZEUlnlvNi00Vld0eWVVS1Tw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nVPJrmZi; arc=none smtp.client-ip=198.175.65.20
+	s=arc-20240116; t=1747980028; c=relaxed/simple;
+	bh=O5q9Sg68tfPeHqMn3mC/eaNSosBn6I+CRfSPGfxGJhs=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ZvGrOdAgeJRNvnngPfKk/4TNfGwLnxQWav5NH3ZyI40SWEx9r3s83x0p2JPGRezSs3R3ohV0Y1mL0JYRjpNfehDbXljSbhNIMwIzvltJJwoIqRWknI6N0KH86Dz9JBx+pqpevCSqRRXrP9ubLH2B1QfyA6WhgjhPa/RPpERby/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iZiF65a+; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nVPJrmZi"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iZiF65a+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747979549; x=1779515549;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=uYZ+8l+gwFvhjudqgM0lRGN9ikaYUSNI0PFO2jYXgMs=;
-  b=nVPJrmZievGxqeueh5w8WhjnYoAHm862IF6O8+Oi2uF5pacQiYn2FLQq
-   RFIoAYXQJYWaCEo96yWdNVCY1DLInvaS3l+wYvpVfkZ0icGLxmt0vJiLc
-   273fM0REApZ/jCCIk/gRcsqHRxsB8vh982PTdA+D7fSbxxrEUSiFkQFe3
-   qpa0MJ3CBbOfzbuE2csvntTWv76e9Zdxi6fFXeYLopKTxZ/b3+HZOA1ak
-   iBSfhq72GrNYHqo5RH9c/2SHjU5QMJaL03c4BeEIGmQ3h65s5ZPRwm9oo
-   LYXmg4dO0miI+3I1qq4+k+3lkg5581OcTwLXM+jsSuW6/fdIxED9SyF7+
-   A==;
-X-CSE-ConnectionGUID: CXrVUx/tQ/O/UGu4G2xM4w==
-X-CSE-MsgGUID: 5QvnaSWJQ+GorZC+ID7Qmg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="49731310"
+  t=1747980028; x=1779516028;
+  h=message-id:date:mime-version:from:subject:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=O5q9Sg68tfPeHqMn3mC/eaNSosBn6I+CRfSPGfxGJhs=;
+  b=iZiF65a+d1qpYt4PbisTr6qJLL+aI+yP7+UR+L0f1ciUG/HW6kPqALsn
+   DyjVGMR1Bc9IZ/CWiAl632zqBYoq+F8t3rXH/upGKTKg9zM+S0YXaURyR
+   uHzRlacWGTG/RxDvHXbUGK5iERZ55bqFAKcIwT9O3jAv6O9tCRmPBMSCd
+   KVI3AbU0TpdOmtp0zZfHQP6sD9cKXXAR6aNLrEsbBp6rVhm9MZsxJ8xo8
+   /WMfW+HZryGkPNVjhEjyGzGgglNxWOWF5e96iHJJK0bMGza4kckr/+Hw8
+   B6t7l/hPThZhu9S+Ji11hizSTfkFFjdSeaFTsIzIB9qzZveHF22EaORuY
+   g==;
+X-CSE-ConnectionGUID: xVZ2JD+HT8KqE8nYiA92MA==
+X-CSE-MsgGUID: 2NmCgUtpTASZ/o9ic6jK5g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="67441354"
 X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
-   d="scan'208";a="49731310"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 22:52:28 -0700
-X-CSE-ConnectionGUID: a+29qGMnTQC5qrnCFIUpiA==
-X-CSE-MsgGUID: au5FdkSwRLihaa43dNUTog==
+   d="scan'208";a="67441354"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 23:00:27 -0700
+X-CSE-ConnectionGUID: WSDZx+J2RT6NwkW4yJxQhQ==
+X-CSE-MsgGUID: KZnp0lF9S7atk2jTurRIvQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
-   d="scan'208";a="142018097"
-Received: from lslayter-mobl.amr.corp.intel.com (HELO [10.125.23.146]) ([10.125.23.146])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 22:52:28 -0700
-Message-ID: <6a08d9e8-6895-4111-8a5a-1ee698e87de5@linux.intel.com>
-Date: Thu, 22 May 2025 22:52:19 -0700
+   d="scan'208";a="141398279"
+Received: from lamonsox-mobl1.amr.corp.intel.com (HELO [10.125.63.139]) ([10.125.63.139])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 23:00:24 -0700
+Message-ID: <d4ac98ba-bfea-40b3-a7b2-99e1bac5bb41@linux.intel.com>
+Date: Thu, 22 May 2025 23:00:15 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,79 +52,62 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Internal error: Oops: 0000000096000044 [#11] SMP
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Dan Williams <dan.j.williams@intel.com>
-Cc: Itaru Kitayama <itaru.kitayama@linux.dev>,
- Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org
-References: <aC2RKceK4HqYEQo/@vm4>
- <96235d4d-2bb7-4743-b519-0c35a9a21749@intel.com>
- <98DE3B2C-1393-4ED8-BB6A-E72D6131F97A@linux.dev>
- <71238a94-361f-4264-a5e4-510d428f5f66@intel.com>
- <B0A9901C-E0FE-48C1-A584-B0090B43A5C4@linux.dev>
- <682e62f8e7073_1626e10066@dwillia2-xfh.jf.intel.com.notmuch>
- <20250522145622.00002633@huawei.com>
-Content-Language: en-GB
 From: Marc Herbert <marc.herbert@linux.intel.com>
-In-Reply-To: <20250522145622.00002633@huawei.com>
+Subject: Re: [ndctl PATCH] cxl/test: skip, don't fail, when kernel tracing is
+ not enabled
+To: alison.schofield@intel.com, nvdimm@lists.linux.dev
+Cc: linux-cxl@vger.kernel.org
+References: <20250523031518.1781309-1-alison.schofield@intel.com>
+Content-Language: en-GB
+In-Reply-To: <20250523031518.1781309-1-alison.schofield@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 2025-05-22 06:56, Jonathan Cameron wrote:
-
+On 2025-05-22 20:15, alison.schofield@intel.com wrote:
+> From: Alison Schofield <alison.schofield@intel.com>
 > 
-> With the below - all 11 tests in ndctl cxl test suite pass for me.
+> cxl-events.sh and cxl-poison.sh require a kernel with CONFIG_TRACING
+> enabled and currently report a FAIL when /sys/kernel/tracing is
+> missing. Update these tests to report a SKIP along with a message
+> stating the requirement. This allows the tests to run cleanly on
+> systems without TRACING enabled and gives users the info needed to
+> enable TRACING for testing.
 > 
-> From b287ff2c5ee7fbe507ef8cb61df3e4e156a9773f Mon Sep 17 00:00:00 2001
-> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Date: Thu, 22 May 2025 14:20:42 +0100
-> Subject: [PATCH] cxl_test: Limit location for fake CFMWS to mappable range
-> 
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 > ---
->  tools/testing/cxl/test/cxl.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
 > 
-> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-> index 8a5815ca870d..b4e6c7659ac4 100644
-> --- a/tools/testing/cxl/test/cxl.c
-> +++ b/tools/testing/cxl/test/cxl.c
-> @@ -1328,6 +1328,7 @@ static int cxl_mem_init(void)
->  static __init int cxl_test_init(void)
->  {
->  	int rc, i;
-> +	struct range mappable;
+> Noticed this behavior in Itaru's test results:
+> https://lore.kernel.org/linux-cxl/FD4183E1-162E-4790-B865-E50F20249A74@linux.dev/
+> 
+>  test/cxl-events.sh | 1 +
+>  test/cxl-poison.sh | 1 +
+>  2 files changed, 2 insertions(+)
+> 
+> diff --git a/test/cxl-events.sh b/test/cxl-events.sh
+> index c216d6aa9148..7326eb7447ee 100644
+> --- a/test/cxl-events.sh
+> +++ b/test/cxl-events.sh
+> @@ -13,6 +13,7 @@ num_info_expected=3
+>  rc=77
 >  
->  	cxl_acpi_test();
->  	cxl_core_test();
-> @@ -1342,8 +1343,11 @@ static __init int cxl_test_init(void)
->  		rc = -ENOMEM;
->  		goto err_gen_pool_create;
->  	}
-> +	mappable = mhp_get_pluggable_range(true);
+>  set -ex
+> +[ -d "/sys/kernel/tracing" ] || do_skip "test requires CONFIG_TRACING"
 >  
-> -	rc = gen_pool_add(cxl_mock_pool, iomem_resource.end + 1 - SZ_64G,
-> +	rc = gen_pool_add(cxl_mock_pool,
-> +			  min(iomem_resource.end + 1 - SZ_64G,
-> +			      mappable.end + 1 - SZ_64G),
->  			  SZ_64G, NUMA_NO_NODE);
->  	if (rc)
->  		goto err_gen_pool_add;
+>  trap 'err $LINENO' ERR
+>  
+> diff --git a/test/cxl-poison.sh b/test/cxl-poison.sh
+> index 2caf092db460..6ed890bc666c 100644
+> --- a/test/cxl-poison.sh
+> +++ b/test/cxl-poison.sh
+> @@ -7,6 +7,7 @@
+>  rc=77
+>  
+>  set -ex
+> +[ -d "/sys/kernel/tracing" ] || do_skip "test requires CONFIG_TRACING"
+>  
+>  trap 'err $LINENO' ERR
+>  
 
-Tested-by: Marc Herbert <marc.herbert@linux.intel.com>
+Reviewed-by: Marc Herbert <marc.herbert@linux.intel.com>
 
-cxl-security.sh aside, this patch turns all CXL test results from red to
-green and finally fixes the 3 months old
-https://github.com/pmem/ndctl/issues/278 which has a ton of relevant
-context.
 
-Without Johanthan's fix, Itaru's and everyone else's run should be all
-red too. But they are not all red because the current test suite does
-not care about kernel errors (!) which causes a lot of false negatives
-("green failures").
-
-These serious false negatives are addressed by my patch v2
-https://lore.kernel.org/linux-cxl/20250515021730.1201996-3-marc.herbert@linux.intel.com/T/#u
-
-Please help with review and testing it, thanks! This is the perfect
-timing to test it.
