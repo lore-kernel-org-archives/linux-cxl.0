@@ -1,275 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4DBB23A9AA
-	for <linux-cxl@vger.kernel.org>; Fri, 23 May 2025 09:58:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A59C22318;
+	Fri, 23 May 2025 16:46:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747994321; cv=none; b=PYZ/W91l9kYLf1F33JzmPNrXPS/sYvKcVDDYTKNLmED2mRsajgG7IJmSTVNYlaki7PofVSJcAQ6jAgKmPLbx+IEhl2zwyM4LTrTZGo6sx6+QUCkL40qsuZqY7PaCkPXxzQOEsER5mE59VtZ+hmxpWYInzrawEOmy72y990XpENk=
+	t=1748018805; cv=none; b=JqKRgl0Zu856GclY2BSGAxb52cQnkYdLoW05nVFiRgyzGRDtp9tiS04UlaDGaKrhXaw+2sZxl7kMBhcVQewkdEFVvEDXnDuJx21lOTrJiSjbQaopp5KSay03j1ZhPbC8Dyka58ybosQqYmdsiFwMpRxGvcIyNUGXVUzZFz9bVlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747994321; c=relaxed/simple;
-	bh=kZToDWUKcew3jrskSs4Ntk9NwnqfmSF4Mh7W6i9UKBg=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=npm42VR7il1W4JAzahj8blTRwLIDtLh9jPOE2BRD57uPvvkBbOhjrnu0bvDDcFarI8QQvvRdj+f4AOUwk7ywqlUHzfZ4ozwd9fTY56mCRcf/xjFTQsEwJ3fEpfYr+YF4u3NgAdWs77t2k7wlhbor4G8W/vZpWnMadpLhSYUUJnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BirUXZri; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BirUXZri"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747994320; x=1779530320;
-  h=date:from:to:cc:subject:message-id;
-  bh=kZToDWUKcew3jrskSs4Ntk9NwnqfmSF4Mh7W6i9UKBg=;
-  b=BirUXZri7rjRRDwhPkmc8EY2ghP5aenACQugEWPxgrm+P1iQLMPC/k95
-   hMxlJvgG81ZIaUuURCMY3xQvXTh5fTz51vTiZHydGBTyW8FRb5FE9M8Lv
-   5h/a4YCLFOLEyGwEGn0YtuSkpOCxoZB47ZffiEpBohi0AybDs0lAfwpV4
-   YymHANnxS78I6ca8Q+amPpSXmVKJJ6TGrSW7R6Bprj00v1Hff+BIBMnWz
-   U2UKSh4fOA6yvdwfm7OKBl4SOciVVg2pF/f5Cx/IJo6rjJkoku46FtnFm
-   hEsGxxjMf8EAnuuTAjSNy7v8T2n0ADUTztIjQg2xi4rBUYMUFhect/ru+
-   g==;
-X-CSE-ConnectionGUID: 1fz48fCvScyuguuXScjHWQ==
-X-CSE-MsgGUID: t4TJekX6SoWdIvTQi6C74w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="52675471"
-X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
-   d="scan'208";a="52675471"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 02:58:39 -0700
-X-CSE-ConnectionGUID: iuLZvD7vQOa9nILPDZ8e0Q==
-X-CSE-MsgGUID: XpSgV5J7TWmsBUag+Lvzzw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
-   d="scan'208";a="140957881"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 23 May 2025 02:58:37 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uIPAg-000QGz-1k;
-	Fri, 23 May 2025 09:58:34 +0000
-Date: Fri, 23 May 2025 17:58:18 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Subject: [cxl:for-6.16/cxl-ras-features-merge] BUILD SUCCESS
- bb76b83c02e9cab124992f6d12dd846b7e1135ed
-Message-ID: <202505231707.Gzz2HheD-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1748018805; c=relaxed/simple;
+	bh=f2GdJGdH1qO/ZnwkcVTPFHVWaViizZ+H0qDOU+LvK+E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CSWlW10xCMtams0mJNDbS3en9CaVLRtSGTcK9IJrJ3kpScZCZ2PEbMkgMLvPDkBRnFftSo/Ch5TGMMnQstbLAlLpXPKXPkCO87p0JZOEGIlYbNovsn4JomO42f/IJDlgN8TwEoQRJd3EC62chf1BVgsScwQRZtP37zV7HY9IYbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 511C3C4CEE9;
+	Fri, 23 May 2025 16:46:44 +0000 (UTC)
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev
+Cc: alison.schofield@intel.com,
+	Marc.Herbert@linux.intel.com,
+	Dan Williams <dan.j.williams@intel.com>
+Subject: [NDCTL PATCH v9 0/4] ndctl: Add support and test for CXL Features support
+Date: Fri, 23 May 2025 09:46:35 -0700
+Message-ID: <20250523164641.3346251-1-dave.jiang@intel.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git for-6.16/cxl-ras-features-merge
-branch HEAD: bb76b83c02e9cab124992f6d12dd846b7e1135ed  Merge branch 'for-6.16/cxl-features-ras' into cxl-for-next
+v9:
+- Move script body to main(). (Marc)
+- Remove uuid dep for test module. (Marc)
+- Remove removal of error trap. (Marc)
 
-elapsed time: 724m
+v8:
+- Stash fwctl discovery functions behind ifdef (Alison)
+- Deal with old compilers and __counted_by(). (Alison)
 
-configs tested: 195
-configs skipped: 5
+v7:
+- Move enumeration of fwctl behind meson option 'fwctl'. (Dan)
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+v6:
+- Rename cxl-features.control.c back to fwctl.c. (Dan)
+- Move features behind a meson option. (Dan)
+- See individual commits for specific changes from v5.
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-alpha                               defconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-14.2.0
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    gcc-14.2.0
-arc                                 defconfig    gcc-14.2.0
-arc                   randconfig-001-20250523    gcc-15.1.0
-arc                   randconfig-002-20250523    gcc-10.5.0
-arc                           tb10x_defconfig    gcc-14.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-21
-arm                               allnoconfig    gcc-14.2.0
-arm                              allyesconfig    gcc-14.2.0
-arm                                 defconfig    clang-21
-arm                      integrator_defconfig    clang-21
-arm                      jornada720_defconfig    clang-21
-arm                            mmp2_defconfig    gcc-14.2.0
-arm                            mps2_defconfig    clang-21
-arm                   randconfig-001-20250523    clang-16
-arm                   randconfig-002-20250523    gcc-8.5.0
-arm                   randconfig-003-20250523    gcc-7.5.0
-arm                   randconfig-004-20250523    clang-21
-arm                         s5pv210_defconfig    gcc-14.2.0
-arm                       spear13xx_defconfig    clang-21
-arm                           stm32_defconfig    clang-21
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-14.2.0
-arm64                               defconfig    gcc-14.2.0
-arm64                 randconfig-001-20250523    gcc-8.5.0
-arm64                 randconfig-002-20250523    clang-16
-arm64                 randconfig-003-20250523    clang-21
-arm64                 randconfig-004-20250523    gcc-8.5.0
-csky                              allnoconfig    gcc-14.2.0
-csky                                defconfig    gcc-14.2.0
-csky                  randconfig-001-20250523    gcc-10.5.0
-csky                  randconfig-002-20250523    gcc-14.2.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                           allnoconfig    gcc-14.2.0
-hexagon                          allyesconfig    clang-21
-hexagon                             defconfig    clang-21
-hexagon               randconfig-001-20250523    clang-21
-hexagon               randconfig-002-20250523    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250523    clang-20
-i386        buildonly-randconfig-002-20250523    clang-20
-i386        buildonly-randconfig-003-20250523    clang-20
-i386        buildonly-randconfig-004-20250523    clang-20
-i386        buildonly-randconfig-005-20250523    clang-20
-i386        buildonly-randconfig-006-20250523    clang-20
-i386                                defconfig    clang-20
-i386                  randconfig-001-20250523    gcc-12
-i386                  randconfig-002-20250523    gcc-12
-i386                  randconfig-003-20250523    gcc-12
-i386                  randconfig-004-20250523    gcc-12
-i386                  randconfig-005-20250523    gcc-12
-i386                  randconfig-006-20250523    gcc-12
-i386                  randconfig-007-20250523    gcc-12
-i386                  randconfig-011-20250523    gcc-12
-i386                  randconfig-012-20250523    gcc-12
-i386                  randconfig-013-20250523    gcc-12
-i386                  randconfig-014-20250523    gcc-12
-i386                  randconfig-015-20250523    gcc-12
-i386                  randconfig-016-20250523    gcc-12
-i386                  randconfig-017-20250523    gcc-12
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch                           defconfig    gcc-14.2.0
-loongarch             randconfig-001-20250523    gcc-15.1.0
-loongarch             randconfig-002-20250523    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                         apollo_defconfig    gcc-14.2.0
-m68k                                defconfig    gcc-14.2.0
-m68k                       m5208evb_defconfig    gcc-14.2.0
-m68k                            mac_defconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-microblaze                          defconfig    gcc-14.2.0
-microblaze                      mmu_defconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                        bcm47xx_defconfig    clang-18
-mips                           mtx1_defconfig    clang-21
-mips                          rb532_defconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                               defconfig    gcc-14.2.0
-nios2                 randconfig-001-20250523    gcc-10.5.0
-nios2                 randconfig-002-20250523    gcc-10.5.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-14.2.0
-openrisc                 simple_smp_defconfig    clang-21
-parisc                           alldefconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-14.2.0
-parisc                randconfig-001-20250523    gcc-9.3.0
-parisc                randconfig-002-20250523    gcc-7.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-21
-powerpc                      chrp32_defconfig    clang-19
-powerpc                       ebony_defconfig    clang-21
-powerpc                      katmai_defconfig    clang-21
-powerpc                    mvme5100_defconfig    gcc-14.2.0
-powerpc                      pasemi_defconfig    clang-21
-powerpc               randconfig-001-20250523    clang-21
-powerpc               randconfig-002-20250523    clang-21
-powerpc               randconfig-003-20250523    clang-20
-powerpc                         wii_defconfig    clang-21
-powerpc64             randconfig-001-20250523    clang-21
-powerpc64             randconfig-002-20250523    clang-19
-powerpc64             randconfig-003-20250523    clang-21
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-21
-riscv                 randconfig-001-20250523    gcc-8.5.0
-riscv                 randconfig-002-20250523    clang-17
-s390                             allmodconfig    clang-18
-s390                             allmodconfig    gcc-14.2.0
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                                defconfig    clang-21
-s390                  randconfig-001-20250523    gcc-6.5.0
-s390                  randconfig-002-20250523    clang-21
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                                  defconfig    gcc-14.2.0
-sh                            hp6xx_defconfig    clang-21
-sh                          polaris_defconfig    gcc-14.2.0
-sh                    randconfig-001-20250523    gcc-12.4.0
-sh                    randconfig-002-20250523    gcc-6.5.0
-sh                           se7343_defconfig    gcc-14.2.0
-sh                           se7780_defconfig    clang-21
-sh                   sh7724_generic_defconfig    gcc-14.2.0
-sh                              ul2_defconfig    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250523    gcc-10.3.0
-sparc                 randconfig-002-20250523    gcc-10.3.0
-sparc64                             defconfig    gcc-14.2.0
-sparc64               randconfig-001-20250523    gcc-9.3.0
-sparc64               randconfig-002-20250523    gcc-7.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-21
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250523    gcc-12
-um                    randconfig-002-20250523    gcc-12
-um                           x86_64_defconfig    clang-21
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250523    gcc-12
-x86_64      buildonly-randconfig-002-20250523    clang-20
-x86_64      buildonly-randconfig-002-20250523    gcc-12
-x86_64      buildonly-randconfig-003-20250523    clang-20
-x86_64      buildonly-randconfig-003-20250523    gcc-12
-x86_64      buildonly-randconfig-004-20250523    clang-20
-x86_64      buildonly-randconfig-004-20250523    gcc-12
-x86_64      buildonly-randconfig-005-20250523    clang-20
-x86_64      buildonly-randconfig-005-20250523    gcc-12
-x86_64      buildonly-randconfig-006-20250523    gcc-12
-x86_64                              defconfig    gcc-11
-x86_64                                  kexec    clang-20
-x86_64                randconfig-001-20250523    clang-20
-x86_64                randconfig-002-20250523    clang-20
-x86_64                randconfig-003-20250523    clang-20
-x86_64                randconfig-004-20250523    clang-20
-x86_64                randconfig-005-20250523    clang-20
-x86_64                randconfig-006-20250523    clang-20
-x86_64                randconfig-007-20250523    clang-20
-x86_64                randconfig-008-20250523    clang-20
-x86_64                randconfig-071-20250523    clang-20
-x86_64                randconfig-072-20250523    clang-20
-x86_64                randconfig-073-20250523    clang-20
-x86_64                randconfig-074-20250523    clang-20
-x86_64                randconfig-075-20250523    clang-20
-x86_64                randconfig-076-20250523    clang-20
-x86_64                randconfig-077-20250523    clang-20
-x86_64                randconfig-078-20250523    clang-20
-x86_64                               rhel-9.4    clang-20
-x86_64                          rhel-9.4-rust    clang-18
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250523    gcc-9.3.0
-xtensa                randconfig-002-20250523    gcc-11.5.0
+v5:
+- Add documentation for exported symbols. (Alison)
+- Create 'struct cxl_fwctl' as object under cxl_memdev. (Dan)
+- Make command prep common code. (Alison)
+- Rename fwctl.c to cxl-features-control.c. (Alison)
+- See individual commits for specific changes from v4.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+v4:
+- Adjust to kernel changes of input/output structs
+- Fixup skip/pass/fail logic
+- Added new kernel headers detection and dependency in meson.build
+
+v3:
+- Update test to use opcode instead of command id.
+
+v2:
+- Drop features device enumeration
+- Add discovery of char device under memdev
+
+The series provides support of libcxl enumerating FWCTL character device
+under the cxl_memdev device. It discovers the char device major
+and minor numbers for the CXL features device in order to allow issuing
+of ioctls to the device.
+
+A unit test is added to locate cxl_memdev exported by the cxl_test
+kernel module and issue all the supported ioctls to the associated
+FWCTL char device to verify that all the ioctl paths are working as expected.
+
+Kernel series: https://lore.kernel.org/linux-cxl/20250207233914.2375110-1-dave.jiang@intel.com/T/#t
+
+Dave Jiang (4):
+  cxl: Add cxl_bus_get_by_provider()
+  cxl: Enumerate major/minor of FWCTL char device
+  ndctl: Add features.h from kernel UAPI
+  cxl/test: Add test for cxl features device
+
+ Documentation/cxl/lib/libcxl.txt |  26 ++
+ config.h.meson                   |   3 +
+ cxl/fwctl/cxl.h                  |  56 ++++
+ cxl/fwctl/features.h             | 187 +++++++++++++
+ cxl/fwctl/fwctl.h                | 141 ++++++++++
+ cxl/lib/libcxl.c                 |  94 +++++++
+ cxl/lib/libcxl.sym               |   8 +
+ cxl/lib/private.h                |   6 +
+ cxl/libcxl.h                     |   7 +
+ meson.build                      |   1 +
+ meson_options.txt                |   2 +
+ test/cxl-features.sh             |  37 +++
+ test/fwctl.c                     | 439 +++++++++++++++++++++++++++++++
+ test/meson.build                 |  18 ++
+ 14 files changed, 1025 insertions(+)
+ create mode 100644 cxl/fwctl/cxl.h
+ create mode 100644 cxl/fwctl/features.h
+ create mode 100644 cxl/fwctl/fwctl.h
+ create mode 100755 test/cxl-features.sh
+ create mode 100644 test/fwctl.c
+
+
+base-commit: 1850ddcbcbf9eebd343c6e87a2c55f3f5e3930c4
+-- 
+2.49.0
+
