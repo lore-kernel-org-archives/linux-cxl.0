@@ -1,137 +1,103 @@
-Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D8561F30BB;
-	Fri, 23 May 2025 00:30:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4971421B9C8;
+	Fri, 23 May 2025 01:13:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747960209; cv=none; b=uevJdUyYcNz1ijY3hKu1YglEdTfui2lMHWNCYYqOM2mvw399GgIpfDTiFa+ZhKVjcepTLAzxd37aJ0NPYhVk4bQ2pN7GQDAR4T8eT2opuq6xdcLovDnRtHetwaXnWrHvHdQ4boTcsmEpdwNYtq/uVgskKjKu/xqUysLjOfsdDeo=
+	t=1747962792; cv=none; b=Co6h9gHuWO8yLw+ilp1LoCp7wWMFaXzyR9G1ULQFQvm/5SglsB0Z219s/knAQa9hraIe4wfaMvgV5qinGnZgrdFEdnReBGqtPCX78Y513cSp5GmRcgF0mx8TyOkXTDKNTFcy3SWEgQu7bSzcpB7B8KIh4Cvy827WYIdBEHqXfsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747960209; c=relaxed/simple;
-	bh=Wl5YfiDuVTh4ATPHm/VPfxVkWv4VXMTmqAwd1VupLRI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r95zDFMZMQFuVZKSsl7Es4OVxSnlcStm6NBGBzkY98DUdLCljvB4QNkCpKMToJrbm2zIaFYSK8zUwOXL58hSI/ovGAlC25xnCmqcfylWGoBon26VUq8LBBpMnLAoKkAKWiPQEF9paF9bTUpOVfaqZbn88sYEv5/fxZFYPENangk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hk5UMMcT; arc=none smtp.client-ip=209.85.160.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+	s=arc-20240116; t=1747962792; c=relaxed/simple;
+	bh=LOvFzs/T3i4wRAI9d7REZh0re65ylVe+GMKFnPVLcoM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mT4u/88G3WDoQjXnzf2PLZ6dThh/GuiZtzAZ1QRUcTZ/cIzHcdPuhMnAY6rYO265gWrA6+gLJrU4QHqmtHGBMWZu+oojWb1OMcZfalJsB71YzzAAhrO7ZxvVR+mZKPBQZzBEa0ceXyKj6BSq0m2BzBm/pOkGG9AkoXPBRUAbsKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f+BJI7a9; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hk5UMMcT"
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2cc57330163so4495697fac.2;
-        Thu, 22 May 2025 17:30:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f+BJI7a9"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a4bdee0bf7so984773f8f.1;
+        Thu, 22 May 2025 18:13:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747960206; x=1748565006; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
+        d=gmail.com; s=20230601; t=1747962789; x=1748567589; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=l3DeqVyXhMjUkCDgLsB9zplddhMp4wWfdmMvRjbrEdM=;
-        b=Hk5UMMcT3QcuLWSD68waWnej7XsddP2NPC3XzhhXXEbsXeDD1TP6dbNKcBie+GdxUA
-         LeVVMNrvnWBf9sLy0fwWZ+XasEaCMaaqEmjIpvkmVMmodbNrbQ6U0k4ywZ6Pm0Inn9hQ
-         qZNBQwoBiDLd6S8NR9raZIJS/gJBpjt/SX6bOD9skVTlsC6UY/QU19niUfp50wXyXFbg
-         gJVLABwqYHeC0pUkB3T1jTTwXFPZyFrQDw3iE5wcKnn0WEfh0t4QDCIAPTdyXOsHSxoy
-         BskkiL4OghMp6ug272301xtJxpTPqV1ROJYf8t3tJLE1JTb2zAc3X+jI/o/9NeJCLvPJ
-         li/Q==
+        bh=LOvFzs/T3i4wRAI9d7REZh0re65ylVe+GMKFnPVLcoM=;
+        b=f+BJI7a9FF7jiyosZQfMe5LS582iBSaGMhoKM4onIVDM5gV2nWUNi3NsRfbASpcLJV
+         ylWJpQkffX30W7Pzcj5yjoXhMfk2H9MBlG9DVKRjANcB16QH0TAePVCiTR/L9JYW3x6y
+         uJLso9WxnBBnsGAHIUlObzaVynRRE/5pfg9Ia/QKNIOTv8f/Hd/m7KMVwUrGJIWqs8LD
+         QwZ22REHE1VGoWMWj6Eb5NjwNHVExjfEuNfb3Lza3R8re/2SOe85qHn4y35bNl72//32
+         imnLQ3fUsz38104UOWqDImzthWMSEgevUTp06HscAeR6NUICSa7JFH48xfM7KDSkvMvp
+         DEmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747960206; x=1748565006;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
+        d=1e100.net; s=20230601; t=1747962789; x=1748567589;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=l3DeqVyXhMjUkCDgLsB9zplddhMp4wWfdmMvRjbrEdM=;
-        b=BhC/ohJuyanQpZGVLG0MUN5AgLH+VcyN7BFg3vMOmvj8VVUGtIpardCfnCAXR6OIs8
-         8hIeIG1xPAkyL+/OQqVyF59Lr2+yYguqm/Enr34/eKcoJy/t9wCQbRaggdmxGJlfHLo3
-         qJND3HVttliohAaw2Sdu6jvhZmj49vRGrZJqNaQCBMk+vmdYxmroaHL/6hqhAkZhSZlS
-         Ygn95HfCrZeRSLl6Lehi4ImmXvLndD4KJ7G0E+zK3JMZ3zrwvjttdr/ba/21BSlDQO4h
-         hCWz0N6TY22ib5UHobD3HGXJO6tUmZo6PDkj0nGEUhKnUg7BGvXfe0jsQCFy63IVZUMl
-         S+Ag==
-X-Forwarded-Encrypted: i=1; AJvYcCUNZmefnP2f6AvnHSTEXQ01YI+V7Cyl9BFHidqjCkR/mCp3hSI1yGXpb071vMuYTaa6umuD2YHtyeo=@vger.kernel.org, AJvYcCW3fNqULggXlUqk6nh+O7lFaqVWFaPDs7cjIideq0bhfzRNf6tyinbWLd8d9trqD8c6Dr0JXsJ1uYZ8zzJq@vger.kernel.org, AJvYcCWTFmInN6y8RM0pGUDkEq1U56IXbtV72rAP2ev2nmaY4S3+kBBX1awsDsif9Y/0bZz6y+AEZIzcl8ig@vger.kernel.org, AJvYcCXdtv0fCMDCLRHLGXMnFZvjHb1nU5uuFuEJNX3jYDmSA0tVMvMifcGo90yKW94SnITlN7AmKOT8d4FAwhiRGw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcqxDAmOwjIlQCkR8BoNhxw54QnP4/p6aa2W6gnR5RCDcwYmao
-	4hbbV8J618D6+wPdJayvnWPbgRNW5jEh6Y++77g+/miEJrHpV+fGQmfD
-X-Gm-Gg: ASbGncsL1GNrJZFi0ukl01ghY430l6x00nDW/P9uPMoHcr15yEOlQDobYlHLrF7tRbf
-	XW5W+AkV0/OyioTsy+QCWxaaN74lqZ0mdY/EORk/+tFAX7Hwoh34rOd/AnLypDqGkugMUU6hnOP
-	nYrksEvVgc389GmqkI19Xyv38H8Ig9u26hCWkv2VTwGLYlzm6SrfKMqtnOTGUMUp6ewhtk7NY5V
-	/wZ2GaNn+zx3BGHlQ3FgfIo1mvBxrnj2W97bMp4oHs0g+coK3qp9IYfILaOLImnRrFb+Gm995do
-	rc6Xrq46XZoG7oCKYGkr9BW98ClNGxtrSCtRHM6rKNbQLUi8JBfoANfBLZRySlrEGg==
-X-Google-Smtp-Source: AGHT+IGzkPKh4ltsHgJ3DC9EjVHlO8KxAU5N7rqWDv9531QCEztz3JUTMJs31ibfrfp+x7mffoOdEw==
-X-Received: by 2002:a05:6871:aa14:b0:29d:c85f:bc8c with SMTP id 586e51a60fabf-2e3c1f50b50mr17123684fac.36.1747960206336;
-        Thu, 22 May 2025 17:30:06 -0700 (PDT)
-Received: from groves.net ([2603:8080:1500:3d89:5d18:dfdf:ed52:cd5d])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2e3c0a9e02dsm3339566fac.35.2025.05.22.17.30.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 17:30:04 -0700 (PDT)
-Sender: John Groves <grovesaustin@gmail.com>
-Date: Thu, 22 May 2025 19:30:02 -0500
-From: John Groves <John@groves.net>
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: Joanne Koong <joannelkoong@gmail.com>, 
-	Dan Williams <dan.j.williams@intel.com>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Bernd Schubert <bschubert@ddn.com>, John Groves <jgroves@micron.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	"Darrick J . Wong" <djwong@kernel.org>, Luis Henriques <luis@igalia.com>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, Petr Vorel <pvorel@suse.cz>, Brian Foster <bfoster@redhat.com>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
-	Josef Bacik <josef@toxicpanda.com>, Aravind Ramesh <arramesh@micron.com>, 
-	Ajay Joshi <ajayjoshi@micron.com>
-Subject: Re: [RFC PATCH 12/19] famfs_fuse: Plumb the GET_FMAP message/response
-Message-ID: <dgt4gpgpc4f3455rxdhztvnbmewdo3yw44b7mbs4tj2bt2x56n@dr5txuwm2c37>
-References: <20250421013346.32530-1-john@groves.net>
- <20250421013346.32530-13-john@groves.net>
- <CAJnrk1ZRSoMN+jan5D9d3UYWnTVxc_5KVaBtP7JV2b+0skrBfg@mail.gmail.com>
- <xhekfz652u3dla26aj4ge45zr4tk76b2jgkcb22jfo46gvf6ry@zze73cprkx6g>
- <CAOQ4uxj73Z8Hee1U7LxABYKoHbowA4ARBFDv434yDq+qn5iMZw@mail.gmail.com>
+        bh=LOvFzs/T3i4wRAI9d7REZh0re65ylVe+GMKFnPVLcoM=;
+        b=ho8tl0db24kISxIGAHHS/PRKMaLYy40ANg3inGLZ/3Ss6a2Dt4ebDtR01ugtcnFfW/
+         w+PkVittSe/fv7r6bwhisvrfF8bSZFRBQN07lJgVxuUJSK+h2ewZaLxkbCua0nmg5WxP
+         s3LAZ4/36na404I0sRouQAaHyF7uZYHu3xaHi/22nOFalebkcvQD/MQlioHTPVtPn6BQ
+         roob/xk1u62/KMGgxWMygOtuhl4wzv+Xnsl3xEZhqLEhLXxMlxtZ/WPNEW4+V/GJ1ZF6
+         n8bShml2KkXUyt51zOPp9E5LM+9/tluZzlK/WV2wa5m7NSwGLtzlyl/dd8A5rxmthGrT
+         Ellw==
+X-Forwarded-Encrypted: i=1; AJvYcCU+AK8y8cN+fqnxtZqIGfSl1bZaJmwQnlYFTIenFbu9pQdmYFKoTRk5W2vY6isuWKJi3gvti1mtIaY=@vger.kernel.org, AJvYcCVrMFgpbkbm05hBP2bSctJQOrFqwci/7nICiM2r1NjtWHrzllOf4FMlQH+ivYPbAVBhebOsAk1l@vger.kernel.org
+X-Gm-Message-State: AOJu0YySvLeQc5+75lVu1svBADtKAhlzot9SVwgDBgHLMLQpkzavDZw4
+	Jo8hkesNCxqLBk2vFxdjOqkgq4FwGC07xOKeAUWG1TZR4fJ9PvDFuA9F
+X-Gm-Gg: ASbGncuYoplGC0PSnwLiY9ucJ4BAN8mO9KKKQktBODWh/fG+NxPgYezzqa36NC8JX/r
+	TNXCIYkbYnieYuRbeNZBW/xeFE9THLDt8UEdqlymgM7jhVdEQyUNseyNPbL8E20gEu2DzhiS4/Y
+	lBzp9iBrBCNz1WqRsbCQqCXXBtQ4y+/2G4/fzpApcG+5UvDsp/lLSKgf56x6sgAR09LY4M+RSVw
+	Jmw8/8Ye6QOQbHqadtYgQ+xJJoI198GKk7OBpAoiDJqgf5JUbqsoHQ0R+sfvmtiJLFVx9ePoL/F
+	2Byoucp8dvU+jp173YmEg7qAgTrYMVeCCeFTp70qBuJmtnUlWf+S1/MkqLtiz5CZdX+C3daImO9
+	YTKWgDeSR5FFC/5jp+YbBvLtFI+pEaoDuHeQFWfU=
+X-Google-Smtp-Source: AGHT+IFs7eHYoE6Upd6eQ/uC/j0etjkMS2RZvRT3n9sebo7aDeMSJh3A4xPLh8KeonW2Y371C/mcig==
+X-Received: by 2002:a05:6000:2507:b0:3a3:7031:59da with SMTP id ffacd0b85a97d-3a370315bcamr15404329f8f.59.1747962789399;
+        Thu, 22 May 2025 18:13:09 -0700 (PDT)
+Received: from [192.168.1.122] (cpc159313-cmbg20-2-0-cust161.5-4.cable.virginm.net. [82.0.78.162])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca8874bsm25088187f8f.67.2025.05.22.18.13.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 May 2025 18:13:09 -0700 (PDT)
+Message-ID: <54f84504-b40b-40a1-ac3e-b6baeec8ec0d@gmail.com>
+Date: Fri, 23 May 2025 02:13:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOQ4uxj73Z8Hee1U7LxABYKoHbowA4ARBFDv434yDq+qn5iMZw@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v16 22/22] sfc: support pio mapping based on cxl
+To: Dan Williams <dan.j.williams@intel.com>, alejandro.lucero-palau@amd.com,
+ linux-cxl@vger.kernel.org, netdev@vger.kernel.org, edward.cree@amd.com,
+ davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
+ edumazet@google.com, dave.jiang@intel.com
+Cc: Alejandro Lucero <alucerop@amd.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>
+References: <20250514132743.523469-1-alejandro.lucero-palau@amd.com>
+ <20250514132743.523469-23-alejandro.lucero-palau@amd.com>
+ <682e4a2c481d6_1626e1008e@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Language: en-GB
+From: Edward Cree <ecree.xilinx@gmail.com>
+In-Reply-To: <682e4a2c481d6_1626e1008e@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 25/05/22 05:45PM, Amir Goldstein wrote:
-> On Mon, May 12, 2025 at 6:28 PM John Groves <John@groves.net> wrote:
-> >
-> > On 25/05/01 10:48PM, Joanne Koong wrote:
-> > > On Sun, Apr 20, 2025 at 6:34 PM John Groves <John@groves.net> wrote:
-> > > >
-> > > > Upon completion of a LOOKUP, if we're in famfs-mode we do a GET_FMAP to
-> > > > retrieve and cache up the file-to-dax map in the kernel. If this
-> > > > succeeds, read/write/mmap are resolved direct-to-dax with no upcalls.
-> > > >
-> > > > Signed-off-by: John Groves <john@groves.net>
-> > > > ---
-> ...
-> > > > diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-> > > > index 7f4b73e739cb..848c8818e6f7 100644
-> > > > --- a/fs/fuse/inode.c
-> > > > +++ b/fs/fuse/inode.c
-> > > > @@ -117,6 +117,9 @@ static struct inode *fuse_alloc_inode(struct super_block *sb)
-> > > >         if (IS_ENABLED(CONFIG_FUSE_PASSTHROUGH))
-> > > >                 fuse_inode_backing_set(fi, NULL);
-> > > >
-> > > > +       if (IS_ENABLED(CONFIG_FUSE_FAMFS_DAX))
-> > > > +               famfs_meta_set(fi, NULL);
-> > >
-> > > "fi->famfs_meta = NULL;" looks simpler here
-> >
-> > I toootally agree here, but I was following the passthrough pattern
-> > just above.  @miklos or @Amir, got a preference here?
-> >
-> 
-> It's not about preference, this fails build.
-> Even though compiler (or pre-processor whatever) should be able to skip
-> "fi->famfs_meta = NULL;" if CONFIG_FUSE_FAMFS_DAX is not defined
-> IIRC it does not. Feel free to try. Maybe I do not remember correctly.
-> 
-> Thanks,
-> Amir.
+On 21/05/2025 22:48, Dan Williams wrote:
+> Maybe that would be more obvious to me if I knew what a "PIO buffer" was
+> used for currently, but some more words about the why of all this would
+> help clarify if the design is making the right complexity vs benefit
+> tradeoffs.
 
-Thanks Amir. Will fiddle with this when cleaning up V2.
+A PIO buffer is a region of device memory to which the driver can write
+ packet data for TX, so that when the device handles the transmit
+ doorbell it doesn't have to DMA that data across from host memory.
+Essentially it's spending CPU time to save a round-trip across the PCIe
+ bus, reducing latency; the driver heuristically decides whether a TX is
+ more bandwidth- or latency-sensitive, and in the latter case uses PIO.
+I don't know too much about the CXL side of things (hopefully Alejandro
+ will elaborate) but AIUI using CXL instead of PCIe for this reduces the
+ latency further.
 
-John
-
+Some of the above information should probably be added to the series
+ cover letter or this patch description.
