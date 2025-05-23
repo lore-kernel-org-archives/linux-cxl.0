@@ -1,195 +1,286 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 260132DCBE7
-	for <linux-cxl@vger.kernel.org>; Fri, 23 May 2025 03:58:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747972716; cv=fail; b=MefI3wmpdAzTyOpiPidu75jiYJq0ZiNqkFJ1XaDtHd5GYkNgfse2t4esrIrXXLf69fdpl0CyZ2ojAX1/ACIep5A7SGUzW+hQ85HgcZRbPYomjo+40PvoM7CPPprCKztHypJJLn4ETNL0c7cj/XyoN01n2uuIKpa3QHtrcKIC8Yk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747972716; c=relaxed/simple;
-	bh=JPrzGQPffXLJby2tzSSCs29zkx4ZfVtoUnQ26j6Rk4k=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=uBVEWVjMyYcipthsQztfFZgbC40XgVtcaB2fbXheyPkVASAKSIIJiyuW9TU4/etsd3RSrQbWg9FU7/NpBNrGZ4wDpxmJQsd+fYM5+pMTEapJMiKtMzTLcST85pVVy9SvDcKU849WMjPCF6GtMKyz7glQlXZkEE48Jo7qFKpAcaA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RVlph8gj; arc=fail smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B302DCC02
+	for <linux-cxl@vger.kernel.org>; Fri, 23 May 2025 04:56:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747976189; cv=none; b=OOTZaJbCsKEyad/Aksou6uRZjrA0pRB3w1FSk21zLtb9V+7FguddGvlnQ+q1l12ba0SUpJL9v4dnCm05vuLdKBePQ3qScHwTTCH5/U71KNInT12u7CM6HUrfJEdAsI4U1MpgHVTo/l6MH87RY0dhHlU+RtKxjTOzA/0Ai5Om7sM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747976189; c=relaxed/simple;
+	bh=HROEQe5PwmAT/OKb8/rwJJgCpcVy7spRTXiZ+M+7Fxw=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=X2R1zpD7nOMvbU/45yFsHDrTXNhb5j1BNGEWTbrh6I99m8I3J0WxRDu4cq2z4n5cUokAQlNZVEaypFjt8Gf+1RKvbHUIwwl+KtTGCj/Acn2gq5YuyEBj9cX8RAGY+pINNyp6f/Z2VrG0JFOQLJwl1rS5r2exEguAAV1XjpCfFlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rpCfndCF; arc=none smtp.client-ip=95.215.58.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RVlph8gj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747972714; x=1779508714;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=JPrzGQPffXLJby2tzSSCs29zkx4ZfVtoUnQ26j6Rk4k=;
-  b=RVlph8gjdiIrm1mBFGg6DpqrNme1Hv7gdRVwq06pntp0iRi4yi1rubSe
-   4urAC/rd3GiN0qpUx/SUAJrpp+Q1pdmpWOCwY23HMC3n3vl4Aae2zorzM
-   SipKqThP9vJHImEZO7nPBlRblFOgqDf2EvnTo6G+LOFV9aJ+5DpDmNSFq
-   YQKFHZLwz5/fgjiCEDmniuKm8uPy3aff9vJ+IV1R8fuVx2EwH4wzM4ag9
-   kINV9q6Askg7cHp0W6GOG+6Di3aMsjfPOC2H7x1aC2UpUuldQMwf8EWGF
-   tecqr5lLSh4OS78lBVpkBbZpA9XTSKsLwbDfps0fnjlm0zOBkawuHbFQW
-   A==;
-X-CSE-ConnectionGUID: Rbgv1bWsQyyD3JP9z6IZOg==
-X-CSE-MsgGUID: tY+2CSaARuif7ymX0IsGeg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="50184211"
-X-IronPort-AV: E=Sophos;i="6.15,307,1739865600"; 
-   d="scan'208";a="50184211"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 20:58:33 -0700
-X-CSE-ConnectionGUID: pn/ol+fESEaGC3Yjc7pJsg==
-X-CSE-MsgGUID: nPIY+/uqSwicl+uWZXGcIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,307,1739865600"; 
-   d="scan'208";a="178073078"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 20:58:34 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Thu, 22 May 2025 20:58:33 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Thu, 22 May 2025 20:58:33 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (40.107.243.76)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.55; Thu, 22 May 2025 20:58:33 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=k6YcP33nRqJ6sqzV2gCbnZaR9oeJujgDUIpuzW0B2YItloNP+9prq6Ga5HznK/kw+BWxiDTCsfCJsyncSIJLe8+Th/h2IFrns0UgxDKad9AS3oNdjnMD829wVNZcEzpUxcWOuzlWP79Inrukvx02sgaiE1dwhY9yaeg7EnxhlqiINE7cTrZjDGA6Q0ovJorkd+KKIUPkmWZJV7/SGB4MrXbR4Z4zZoxQi7rSgUrjLR2C8dQsonFGbXlKcCIKIPP8i3L6UmRZTdupS2aG6nPXmb50HSZ9FiMl4mMbH9hBxHz+u4DbJ+s+CbiOKfu+2vZDTfpQhfmaQy+ApNF7k5j9lA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VFcpPbsi5Q8F9sHKXGEuf6ZhlG5Ehy6k6RJofuTAUD8=;
- b=lqVoOUS+IxICPZr94qGHhL9XQoFs4HBgSSkQg0Wl7KKzHjNrdi6xyETxHy6sTuVN+SekbJsUADSEEcglPFkq4Ptx/okjJh7P1pVMG4sfC1V/KThpbTmKozXTLKl+sgMtfO3WnetFatZ1FaZ3U0WwQRxvrVIegEK9NrsQZdhA4VeSnUKFLxBMFrSKKM2WfUL2nLz1Ed7fKfrXBfFxK8oNL/3ttrbDb2cejJjBVQWT/MQg2VsxZiIao7wOMZ1OrdxJuzZue2hYFDuIChum5jMWgh1ggyFyA9IqEXusCOyyTPO97bXGtFzbylKVdSmRTlSMeM5k0EtuGiveY0S1s0PFqA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by CY8PR11MB7034.namprd11.prod.outlook.com (2603:10b6:930:52::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.25; Fri, 23 May
- 2025 03:57:50 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8769.019; Fri, 23 May 2025
- 03:57:50 +0000
-Date: Thu, 22 May 2025 20:57:49 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: <alison.schofield@intel.com>, <nvdimm@lists.linux.dev>
-CC: Alison Schofield <alison.schofield@intel.com>, <linux-cxl@vger.kernel.org>
-Subject: Re: [ndctl PATCH] cxl/test: skip, don't fail, when kernel tracing is
- not enabled
-Message-ID: <682ff23d8ff_1626e100e6@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20250523031518.1781309-1-alison.schofield@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250523031518.1781309-1-alison.schofield@intel.com>
-X-ClientProxiedBy: BYAPR11CA0056.namprd11.prod.outlook.com
- (2603:10b6:a03:80::33) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rpCfndCF"
+Content-Type: text/plain;
+	charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747976183;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eRb5F0GEI9PYjBXKAOP5D0a7jUXVitFDy6QPJO0kiDs=;
+	b=rpCfndCFy+zG0Xo5UEJFipGetp3gMieJa3IDIezZh/tXWlVlH9rOkj28m5EQWMQ8bKYWc/
+	Qd61PODkOZwnpjJgrY4O54h86XQIMiMx58oLw3WYTOHMDARpWC94vGfG//X+ALT9triSpz
+	3bHi7Nss2Np7Oydeeg9ucGil7qQLInY=
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CY8PR11MB7034:EE_
-X-MS-Office365-Filtering-Correlation-Id: 17470a22-e7c6-4599-6b85-08dd99adfcd7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?x6ZYmJS7aSoX/d0/6bQj600WHdxP7tjhnv2ZL9YrNO4B9a+tRJ6ub6WW892D?=
- =?us-ascii?Q?zoFmyAf6QlxS3bOdimXprG1YEelTyh9FJdHzEifICfeNTAcjOC5PGfhW3v+n?=
- =?us-ascii?Q?p/5Z7uCggB4xuxDcHoOsWAY7ZXKaa6gtDmiTc6Kq2DqclNstAJx3a+4MyCPE?=
- =?us-ascii?Q?lmr9+Zp9JFhUsAcVYWUI9DHREmfLfLwYdg7KBgIXdThfJ1RL9Fwy0FsyNqZP?=
- =?us-ascii?Q?JAtL9f9NOEfq/nKDkTxHkZ/YQA3phfjOL7pEWlLMxnRQAyLFJz0gzZHQruqu?=
- =?us-ascii?Q?0S4bG9zOdszKnUpJiyOohi6iFynDoiNzEkyY+Pv9aRq8Jsz3SCucVvq0ZbhZ?=
- =?us-ascii?Q?AELJwZOiqu4K5pK//Nhhd/WfiyTphMs6ghG1S7gLZGCUet5D9z9JIjdgLr3K?=
- =?us-ascii?Q?41cZacz0UPj6j+D4RLW7qegq50Pryzv5Jww7MH2c2jyeB88Z7gx6RYVpEvPc?=
- =?us-ascii?Q?qfGkVL2mq397QYUtrhgSbHfT7hBroxpr93RSuWHrVuzzEUBFbDG2D3a4GyUP?=
- =?us-ascii?Q?5D6Mb8gqnu6h+nRV4i/B1z0V/Msvq2RoEQqKfA954l8ONlIwm5/vpydh1GNk?=
- =?us-ascii?Q?JFkaAk9wJ6YI3Y0/DyBT/m7n8HvB6S86njXYcbjmYiC7IKsIB/4EsFyvtyEg?=
- =?us-ascii?Q?BVVPVAtQqDWUseu1htnhSnTfpLQ6THh3lgLx1sBJVY+ofOhVqxAh7T983i+s?=
- =?us-ascii?Q?QXHJaXMGSacCl9AG/wgeISwZFM5tX9jPSDWCCmhOY2b7pG1xy8Tfvf7gdZaP?=
- =?us-ascii?Q?jsDrtGr9U4qTqIYryyoKEV7TRLI1vsIFuS2lvVlVZZnmmVn9yv/nZE7TVMb/?=
- =?us-ascii?Q?lb8D3jKzL908ob3w7UQKbbTt9SSUNESFxY8PPNyJpDUNeD0m8xs9YYNRPSqi?=
- =?us-ascii?Q?VblC4wR7/0RZ3R96bN/0rVXbodJCSr3tI/pHvyvSgF18mEpWwqddxLm0dYr6?=
- =?us-ascii?Q?y0LHs1RvxJeysnph9Weq8sM9dTD3hadSrafJHxGKkVODI8Gt3oPz21pYhwCO?=
- =?us-ascii?Q?1yH6JFIwDmwKRqoUJz6qJ/RHmhWZ8f/C1LCVY+9pSYg+R9Uo3FOWt61Siz4v?=
- =?us-ascii?Q?kaXfgrP9DqH+HNkpIPGcF3NK2PxjE9ooOaCpZbTbmzt5MXfz6/4Ot5ZzLqPR?=
- =?us-ascii?Q?DbE9Ja9jmp9Ff9DOLCE3KjGj6BoPeSkeoGegdiBGbUsx6rTrpcRlDggmlH92?=
- =?us-ascii?Q?jgS4dMgaZQGAIY7fZ8Am5xn8OMxXni/b6PQ88NwFGrZVWVSln//Biu1yuj0A?=
- =?us-ascii?Q?VpKIvwHNv3WmWYXmJLP6YqYAU0GmmosnLr5I1BlwYk7MB/2+kSbHl29vNhIK?=
- =?us-ascii?Q?lPuAPtl5OtNKCdr5KnH5K1Jerh0zpxHDP9dWgdvjsYtAngn819zH+L5BVJE9?=
- =?us-ascii?Q?qbPOwWeCA6KEhPZKcqdB0ukYFE3G?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?KxBV522FsSVA7hrH3WfL6oHb7vb71glQZYC+ORqxC17S0oDpWfvFeJdvOtdp?=
- =?us-ascii?Q?ZQaYaKJPFrMstkute4xsNm1ainKOPUrL4ekMUvq3+01tW1RwFPfkJ7wXSotW?=
- =?us-ascii?Q?+L1Mia+lgGvSdurUQA/vMtfumqRgDfwlJHVmC2uMM6HRwkLnbLZSXGc0hkNU?=
- =?us-ascii?Q?ptaMhX2vuXOXynzxBNpT4mGrXMTT4s+7UL6iXN8rBB+etUnz8hVpqqflqDHl?=
- =?us-ascii?Q?zqa1Vu6EBBmYrRaWZ0xLs13jmUfBdA336iLgbmgqRvGRIrrdzarUwyVS8eBL?=
- =?us-ascii?Q?iygnR1ifV30UjNBysMF9gKhC3zLbVyPxN20xQS03K2yByZMu+haNi/1R1bh+?=
- =?us-ascii?Q?xYog2UenIHihJEb60aaDUVxcgf7/0e1LEhtsaf8dYioBwHWJAA61Df2v64RS?=
- =?us-ascii?Q?KYZprtQ6GZFgpdfjuHRBXizUOKeeUDR0Edq+ESDTv4ohQ36tTQcFfDkkkdAj?=
- =?us-ascii?Q?kw0lrDSnmBPa2Ksk9Yv7qHd9kSTgXeL6naraolYLKHO+yjW8q4C/cTmxA7o5?=
- =?us-ascii?Q?tK4GZl0twUWL01IN7Z3/4HNGIPlXuukvVOhbaLI0q0r5bpFtx+JAClHXPRKE?=
- =?us-ascii?Q?cg7SgEc9WnkXxho2+MpD4bbHgFbtu2THjivXVtMnIMjcnSUqElQE+3dsPwCm?=
- =?us-ascii?Q?B+9tgbclgMrXmQjYLOf/etar/OmIL5fhR9WksIyJyvsliWQvFLR3QBZX6ERQ?=
- =?us-ascii?Q?3GXhQnQaR8mS1bs16oUIEaN0dvDbsZK+Dmgem406UNnqXP/qXN8FsXS5SdvA?=
- =?us-ascii?Q?lVpRVqmHDods8ohVwNvtEObrE+S1VdazuKy54rI3sjKrwXp3+xJKdPIeAMQB?=
- =?us-ascii?Q?zcswhDo63wIoDwMYmBwedEqUk3FM919lA9aK2q3BxOE1CFYrNMPwKS2LceSJ?=
- =?us-ascii?Q?35gbU3GuNzo93u41PVsrliuSfUcGdCw/KKthsLaIikVu/hzHI2ffBuJtUWl3?=
- =?us-ascii?Q?/YevTedR9PDhvpd+sXvfgpKHPV3ly236qw/ZLNTT9uOxczctsPnhnBAhmCVV?=
- =?us-ascii?Q?AcuZQ6P+wTtat8HwwYFinPTR+3a7T79Fh8B/GiEAf9EuDzGqe60WuFET+i2G?=
- =?us-ascii?Q?K9xifO5ud9YifOZcv4QoizwQxr8gvXvaRXjt72647gemrqTG5P5mXWoGR4/v?=
- =?us-ascii?Q?tMXjvwygM0Qvh497gYnO1l2QbtHQJ8Fyf/fMDPRn3dF5B7c4eY1SjsFmziRb?=
- =?us-ascii?Q?F3kzj0Exca2m8149bduGm06cugL1V6LN9bFScFGArBYJ9/9Ex6///kwXSuto?=
- =?us-ascii?Q?mQHMxMkxnAQCBjLNu6Bi+VkNigDarV2A0DvHfwfoJDn7l5SbiWKfWEjWaXMW?=
- =?us-ascii?Q?bFay+lwKScK6i8AbVNkn/VVGCriHwkOXZxvQer6wcKG5Om41l3N/NGGTuG1C?=
- =?us-ascii?Q?BV1TbxQ8Xhg89+b9eRyre9+RCfQlLNYGZOpP8Sg26gRH0ZZijgjdJVvLdTA5?=
- =?us-ascii?Q?FjINFDsRY7Zpm+b5Pysypx3Ae9FEkd4/8LohydoIRYbIkMR2dksQ4xdNTzbe?=
- =?us-ascii?Q?VgcDrSBfSAU30BgOBZgMMs/g12MFCskaBd3AWAvpjB5KF3QeNAabEJmVxnk5?=
- =?us-ascii?Q?/acEASTF4+IuQrhubdgQKwEdSY43rOplTyIcXiiSiFlHceLI93SgsGx6qT2Z?=
- =?us-ascii?Q?cw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 17470a22-e7c6-4599-6b85-08dd99adfcd7
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 May 2025 03:57:50.8057
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mHIkDGhIXQAAAFUzwd5EApX2XweZqrq6geBp0Y5EuhHXkhqweNpEZuzqaGIlL+DfS2D5u1EceH3nWtrsWkKTzifBTHuR6vJva3s4NgJsvLw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7034
-X-OriginatorOrg: intel.com
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: Internal error: Oops: 0000000096000044 [#11] SMP
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Itaru Kitayama <itaru.kitayama@linux.dev>
+In-Reply-To: <aC_rWIc9TY5F2wGf@aschofie-mobl2.lan>
+Date: Fri, 23 May 2025 13:56:04 +0900
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ linux-cxl@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <F7FA1D5E-9BCB-44C0-8E18-3313D490D6F7@linux.dev>
+References: <aC2RKceK4HqYEQo/@vm4>
+ <96235d4d-2bb7-4743-b519-0c35a9a21749@intel.com>
+ <98DE3B2C-1393-4ED8-BB6A-E72D6131F97A@linux.dev>
+ <71238a94-361f-4264-a5e4-510d428f5f66@intel.com>
+ <B0A9901C-E0FE-48C1-A584-B0090B43A5C4@linux.dev>
+ <682e62f8e7073_1626e10066@dwillia2-xfh.jf.intel.com.notmuch>
+ <20250522145622.00002633@huawei.com>
+ <FD4183E1-162E-4790-B865-E50F20249A74@linux.dev>
+ <aC_rWIc9TY5F2wGf@aschofie-mobl2.lan>
+To: Alison Schofield <alison.schofield@intel.com>
+X-Migadu-Flow: FLOW_OUT
 
-alison.schofield@ wrote:
-> From: Alison Schofield <alison.schofield@intel.com>
-> 
-> cxl-events.sh and cxl-poison.sh require a kernel with CONFIG_TRACING
-> enabled and currently report a FAIL when /sys/kernel/tracing is
-> missing. Update these tests to report a SKIP along with a message
-> stating the requirement. This allows the tests to run cleanly on
-> systems without TRACING enabled and gives users the info needed to
-> enable TRACING for testing.
-> 
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> ---
-> 
-> Noticed this behavior in Itaru's test results:
-> https://lore.kernel.org/linux-cxl/FD4183E1-162E-4790-B865-E50F20249A74@linux.dev/
+Hi Alison,
 
-You could borrow the kernel process for information like this and move
-it above the --- line with the following trailers:
+> On May 23, 2025, at 12:28, Alison Schofield =
+<alison.schofield@intel.com> wrote:
+>=20
+> On Fri, May 23, 2025 at 06:46:53AM +0900, Itaru Kitayama wrote:
+>> Hi Jonathan,
+>>=20
+>>> On May 22, 2025, at 22:56, Jonathan Cameron =
+<Jonathan.Cameron@huawei.com> wrote:
+>>>=20
+>>> On Wed, 21 May 2025 16:34:16 -0700
+>>> Dan Williams <dan.j.williams@intel.com> wrote:
+>>>=20
+>>>> Itaru Kitayama wrote:
+>>>>> Dave et al., =20
+>>>> [..]
+>>>>> Rebuilt the rootfs image and tried today=E2=80=99s cx/next
+>>>>> (6.15.0-rc4-00046-g6eed708a5693) again to boot now I don=E2=80=99t =
+see the
+>>>>> splats, so something I was messing my dev environment sorry about
+>>>>> that.
+>>>>>=20
+>>>>> CXL utility commands work reasonably now and I can execute meson =
+test
+>>>>> =E2=80=94suite cxl, while most of them still fails due to the HPA =
+allocation
+>>>>> error which makes me wonder as the resource requests are quite =
+modest.  =20
+>>>>=20
+>>>> So cxl_test_init() just "hopes" that the top of the system physical
+>>>> address space is free to use to emulate CXL windows. That might be =
+an
+>>>> assumption that only works for x86_64, not ARM64. I would double =
+check
+>>>> that this code in cxl_test_init()
+>>>>=20
+>>>>       rc =3D gen_pool_add(cxl_mock_pool, iomem_resource.end + 1 - =
+SZ_64G,
+>>>>                         SZ_64G, NUMA_NO_NODE);
+>>>>       if (rc)
+>>>>               goto err_gen_pool_add;
+>>>>=20
+>>>> ...is not setting up CXL Windows that overlap with existing =
+resources in
+>>>> that range.
+>>>>=20
+>>>=20
+>>> I think there are checks that block use of ranges up there.
+>>>=20
+>>> Print I'm seeing is
+>>> Hotplug memory [0xfffffff010000000-0xfffffff030000000] exceeds =
+maximum addressable range [0x40000000-0xf80003fffffff]
+>>>=20
+>>> I think right answer is to use mhp_get_pluggable_range(true); to =
+check
+>>> for limits on the range we can use.
+>>>=20
+>>> On architectures that don't define arch_get_mappable_range()
+>>> that ends up the as (unsigned long)-1 which I think would work
+>>> though there may be other stuff up there.  Maybe =
+min(iomem_resource.end + 1 - SZ_64G,
+>>>    mappable_range.end + 1 - SZ_64G)
+>>> or something like that adapted to avoid wrap around.
+>>>=20
+>>> I haven't yet sanity checked this doesn't break x86 but I think it =
+should
+>>> end up making no difference to the locations on x86.
+>>>=20
+>>>=20
+>>> With the below - all 11 tests in ndctl cxl test suite pass for me.
+>>>=20
+>>> =46rom b287ff2c5ee7fbe507ef8cb61df3e4e156a9773f Mon Sep 17 00:00:00 =
+2001
+>>> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>>> Date: Thu, 22 May 2025 14:20:42 +0100
+>>> Subject: [PATCH] cxl_test: Limit location for fake CFMWS to mappable =
+range
+>>>=20
+>>> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>>> ---
+>>> tools/testing/cxl/test/cxl.c | 6 +++++-
+>>> 1 file changed, 5 insertions(+), 1 deletion(-)
+>>>=20
+>>> diff --git a/tools/testing/cxl/test/cxl.c =
+b/tools/testing/cxl/test/cxl.c
+>>> index 8a5815ca870d..b4e6c7659ac4 100644
+>>> --- a/tools/testing/cxl/test/cxl.c
+>>> +++ b/tools/testing/cxl/test/cxl.c
+>>> @@ -1328,6 +1328,7 @@ static int cxl_mem_init(void)
+>>> static __init int cxl_test_init(void)
+>>> {
+>>> int rc, i;
+>>> + struct range mappable;
+>>>=20
+>>> cxl_acpi_test();
+>>> cxl_core_test();
+>>> @@ -1342,8 +1343,11 @@ static __init int cxl_test_init(void)
+>>> rc =3D -ENOMEM;
+>>> goto err_gen_pool_create;
+>>> }
+>>> + mappable =3D mhp_get_pluggable_range(true);
+>>>=20
+>>> - rc =3D gen_pool_add(cxl_mock_pool, iomem_resource.end + 1 - =
+SZ_64G,
+>>> + rc =3D gen_pool_add(cxl_mock_pool,
+>>> +  min(iomem_resource.end + 1 - SZ_64G,
+>>> +      mappable.end + 1 - SZ_64G),
+>>> SZ_64G, NUMA_NO_NODE);
+>>> if (rc)
+>>> goto err_gen_pool_add;
+>>> --=20
+>>> 2.43.0
+>>>=20
+>>=20
+>> Tested-by: Itaru Kitayama <itaru.kitayama@fujitsu.com =
+<mailto:itaru.kitayama@fujitsu.com>>
+>>=20
+>> # meson test --suite cxl
+>> ninja: Entering directory `/root/ndctl/build'
+>> [1/82] Generating version.h with a custom command
+>> 1/12 ndctl:cxl / cxl-topology.sh                OK              =
+33.96s
+>> 2/12 ndctl:cxl / cxl-region-sysfs.sh            OK              =
+18.00s
+>> 3/12 ndctl:cxl / cxl-labels.sh                  OK              =
+23.78s
+>> 4/12 ndctl:cxl / cxl-create-region.sh           OK              =
+43.03s
+>> 5/12 ndctl:cxl / cxl-xor-region.sh              OK              =
+19.30s
+>> 6/12 ndctl:cxl / cxl-events.sh                  FAIL             =
+6.40s   exit status 1
+>>>>> =
+LD_LIBRARY_PATH=3D/root/ndctl/build/daxctl/lib:/root/ndctl/build/cxl/lib:/=
+root/ndctl/build/ndctl/lib MALLOC_PERTURB_=3D45 =
+TEST_PATH=3D/root/ndctl/build/test =
+UBSAN_OPTIONS=3Dhalt_on_error=3D1:abort_on_error=3D1:print_summary=3D1:pri=
+nt_stacktrace=3D1 =
+MSAN_OPTIONS=3Dhalt_on_error=3D1:abort_on_error=3D1:print_summary=3D1:prin=
+t_stacktrace=3D1 MESON_TEST_ITERATION=3D1 =
+DAXCTL=3D/root/ndctl/build/daxctl/daxctl =
+NDCTL=3D/root/ndctl/build/ndctl/ndctl =
+ASAN_OPTIONS=3Dhalt_on_error=3D1:abort_on_error=3D1:print_summary=3D1 =
+DATA_PATH=3D/root/ndctl/test /bin/bash /root/ndctl/test/cxl-events.sh
+>>=20
+>> 7/12 ndctl:cxl / cxl-sanitize.sh                OK              =
+14.77s
+>> 8/12 ndctl:cxl / cxl-destroy-region.sh          OK              =
+13.69s
+>> 9/12 ndctl:cxl / cxl-qos-class.sh               OK              =
+14.31s
+>> 10/12 ndctl:cxl / cxl-poison.sh                  FAIL             =
+3.46s   exit status 1
+>>>>> =
+LD_LIBRARY_PATH=3D/root/ndctl/build/daxctl/lib:/root/ndctl/build/cxl/lib:/=
+root/ndctl/build/ndctl/lib =
+MSAN_OPTIONS=3Dhalt_on_error=3D1:abort_on_error=3D1:print_summary=3D1:prin=
+t_stacktrace=3D1 MALLOC_PERTURB_=3D80 =
+UBSAN_OPTIONS=3Dhalt_on_error=3D1:abort_on_error=3D1:print_summary=3D1:pri=
+nt_stacktrace=3D1 TEST_PATH=3D/root/ndctl/build/test =
+MESON_TEST_ITERATION=3D1 DAXCTL=3D/root/ndctl/build/daxctl/daxctl =
+NDCTL=3D/root/ndctl/build/ndctl/ndctl =
+ASAN_OPTIONS=3Dhalt_on_error=3D1:abort_on_error=3D1:print_summary=3D1 =
+DATA_PATH=3D/root/ndctl/test /bin/bash /root/ndctl/test/cxl-poison.sh
+>>=20
+>> 11/12 ndctl:cxl / cxl-update-firmware.sh         OK              =
+66.23s
+>> 12/12 ndctl:cxl / cxl-security.sh                SKIP             =
+0.34s   exit status 77
+>>=20
+>> Ok:                 9
+>> Expected Fail:      0
+>> Fail:               2
+>> Unexpected Pass:    0
+>> Skipped:            1
+>> Timeout:            0
+>>=20
+>> My understanding is that these CXL tests are using mock CFMWs, not =
+the actual physical memory regions at their fixed locations. So I wonder =
+executing these set of test on a =E2=80=9Csane" CXL emulation setup =
+(run_qemu.sh creates) that the Intel folk is using does matter or not.
+>=20
+> Right - these test run on the mock CFMW's that the cxl-test module
+> creates. As far as running on a 'sane' CXL emulation setup, like
+> run_qemu.sh, I may not be understanding the question, but I'll take
+> a shot. The qemu defined CXL devices do not matter at all for the cxl
+> unit test run. The unit tests only uses the mock cxl/test environment
+> provided by the cxl-test module. The qemu CXL devices are irrelevant.
 
-Reported-by: Itaru Kitayama <itaru.kitayama@linux.dev>
-Closes: http://lore.kernel.org/FD4183E1-162E-4790-B865-E50F20249A74@linux.dev
+Ah, I see thanks for the clarification. That=E2=80=99s what I needed to =
+know.  =20
 
-...you can also add:
+>=20
+> Let me know if I missed the point of you were making.
+>=20
+> I noticed your test output FAIL cases, probably for CONFIG_TRACING not
+> enabled, and posted a patch to turn those into SKIPs.
 
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Indeed, by looking at the test logs I figured that. Now like Jonathan =
+confirmed I just seen the same results:
+
+ 1/12 ndctl:cxl / cxl-topology.sh                OK             106.48s
+ 2/12 ndctl:cxl / cxl-region-sysfs.sh            OK              55.90s
+ 3/12 ndctl:cxl / cxl-labels.sh                  OK              54.95s
+ 4/12 ndctl:cxl / cxl-create-region.sh           OK             141.98s
+ 5/12 ndctl:cxl / cxl-xor-region.sh              OK              66.00s
+ 6/12 ndctl:cxl / cxl-events.sh                  OK              33.82s
+ 7/12 ndctl:cxl / cxl-sanitize.sh                OK              34.92s
+ 8/12 ndctl:cxl / cxl-destroy-region.sh          OK              41.08s
+ 9/12 ndctl:cxl / cxl-qos-class.sh               OK              40.55s
+10/12 ndctl:cxl / cxl-poison.sh                  OK              82.08s
+11/12 ndctl:cxl / cxl-update-firmware.sh         OK              99.39s
+12/12 ndctl:cxl / cxl-security.sh                SKIP             1.03s  =
+ exit status 77
+
+Thanks again for your comments.
+
+Itaru.
+
+>=20
+> --Alison
+>=20
+>>=20
+>> Itaru.
+
+
