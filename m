@@ -1,109 +1,129 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A081632C8
-	for <linux-cxl@vger.kernel.org>; Wed, 28 May 2025 16:15:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E15CB1632C8;
+	Wed, 28 May 2025 16:21:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748448945; cv=none; b=VxFyifKRnxzj06w7FN9TOPthpXyGarme59FhZMSMTtEj8S42M9VfO63Acu83TWOPr2pztwRpobbc4dfcb/dfbVUv1AvNhOfUkbytwM7WidHoDcS2ccEH9uFxrGiIiaeeBPpYCGCVLeFFdsnqxfVfT27CByEEulUqZlhnF1uNKGM=
+	t=1748449277; cv=none; b=I3gIKy2wI18rwh6akO9kc5h6sKXYBWSsyL5zW9F26fsjh1mg1eHZgmegxiv5U5tZPwZ/ix0TiWyTrrAY/dCHShykQ2P00ucczXLRChaN02wp/4+AsQFwbif8LoZXhei/BIAylBk9BROfC8Y3AzJVlcarPbK6puiAPDYJNlu8lZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748448945; c=relaxed/simple;
-	bh=7szsciP4s4R9wknqXBXBTZqN3lbaKfXPhicwDQ8Hmdw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gx+eQ+Rpr16FWfHePBZD6v/We6w9KcfWrxXrhTEu8rJMKPlcDnHWTp6eUUCL8cSCZHSfaqxebZ7CI9GC4Cgvns7ERejL4HINPqyhBQ2BsebXuJ2vsiS5vbtUlztr20U8Gu8BNlcRYdr6VAS0mI4TJ5d6jB7KchWwIvQ6F0s7s/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gL3Skzeh; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gL3Skzeh"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-442ccf0e1b3so422485e9.3
-        for <linux-cxl@vger.kernel.org>; Wed, 28 May 2025 09:15:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748448941; x=1749053741; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+C1RzNTr6MbSo58wcEFxOVAmKna9VJA+FNUjpMEd4H8=;
-        b=gL3SkzehCRPTbEareMaVrIuuL6aN9um90oEuhc5yudHJfX8iUpFwRjTv6VAtRpVUEu
-         ecAF5HVrSVpLSDuTcwdCGvtq+A3LrsFZWosbDZi4JZQaHdkErRKv9mq2KROHE5T7r47x
-         K+JFF1SZaGOziosFC3+L0UHqqfItztS6aMDZeNddyNnIyuQBrF+nR/75OSlXJZwtTEzY
-         dD5nuonu3a0OvG1FFjc1Hp654WRktMqyWlWOILhcM+AJBXOP9HoQuitiDqLX0LdIMtYV
-         AXH3N04AZ5E+nRN1c8ZtvKmDrBTMlLTOa0cR2rxDHdbGDSUMGTR50BNX/gOuVuqJR2Ox
-         mQMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748448941; x=1749053741;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+C1RzNTr6MbSo58wcEFxOVAmKna9VJA+FNUjpMEd4H8=;
-        b=Ho+RuMigTDhb+PAyt4z3dZSni8dc/ZoM5aHdHVwqgNyzQRq4d8L/N4ppD+ACwF8sUB
-         B8HxE1378ItHi2XzSBen9T/0UO7Ae67DLzCqtCzVf3OxuRkHg1kzP2y1pfvNdzEtXX+Q
-         Q31Kx8bcq0OdG8GNjnr63OO/BXkkSvj4cBKxPmUiUtTYQJ4Qbr7QiUKapgm9C7uwr2zx
-         AzTLCwg3xxj9fTRPx73dexsJ36lX8h4yM+ycpMsVgV7yJGOje1bADeBEXi+Bt6zlVqge
-         Fqf/ESD72m+qa3W4Sttq+kHxZbdnYuHA6mL6S7AV0j92ogsuU01FKK0arzmcN0Uonmaz
-         JjmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVklhv2GeghmjiAqUyIP7R8Wc+jN238O88mQS1XeP97E1gcXRLBQ3jQ+5+IZMX4OxrAOgpWoZo2t2c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywppr/SED/7awVzKnROLbEq0p+K9IaPyF4I4Rp5dqB6r66bjk6S
-	Fl6TYdfRNABmAb+yJHNpxVviuDA7A5CztR97JLhNJsLeDZqByqtKEzsO0v5y+rOLLhU=
-X-Gm-Gg: ASbGncvI27Zrox2Xsif/77dqK5lWSxGSVf/1dMutcQ+LQ9nFYSAAssxVxkqbaz/6oVC
-	7N16abkJZLa7Pp1J7S+n5pAs2EUnRtRVDyToshEai8MqrTgWJfBZb5xyaR4Byqj3zTjQQIwzvSx
-	DmTsrvAh14HjWSUNIdy71eIjrkb6hEqSA2nFU5qCWMEit/dqVzNRFq89JYzhdQHBwCY3vhtQEY+
-	uzvdqzV1+bh/T9D/aDnWeohrLdh2mjSybyPvpU15RcnEVueXYCYo676W7l4lm4VB++l9K0C623e
-	2nxsJMZxIFGDk7ZC13n/DFYq85njshbZz1NHUm2B8eTEzOPabcf/zxw=
-X-Google-Smtp-Source: AGHT+IGY3B2n3dEpBIQTEIc4UcD13zJbfNxCVilIBzIvGrsLXjUktw06sdl/F0Rxa0Z5ypRV303Ptw==
-X-Received: by 2002:a05:6000:2389:b0:3a4:d238:682c with SMTP id ffacd0b85a97d-3a4d2386cfbmr12567851f8f.53.1748448941430;
-        Wed, 28 May 2025 09:15:41 -0700 (PDT)
-Received: from localhost ([41.210.143.146])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a4eac8a74esm1859615f8f.45.2025.05.28.09.15.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 09:15:41 -0700 (PDT)
-Date: Wed, 28 May 2025 19:15:36 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: Shiju Jose <shiju.jose@huawei.com>, Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Li Ming <ming.li@zohomail.com>, Fan Ni <fan.ni@samsung.com>,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH next] cxl: fix return value in
+	s=arc-20240116; t=1748449277; c=relaxed/simple;
+	bh=qS1gHsWMRI6Lyh/zqh0ANB9xHCaIG1o65jbSeKh8QG4=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=drudts38yKJx7TEd90WA9uRNoPb4e6LcjaXy2NVwob6ZcUw2CMGtNCdKLhZOuvkOpfOzd/RlgIWEdolapnbHhSlqjGB7j6Rm9R0qMh0IvR3WIaE+scJLk0KLTfoc6EAz8PhQ/XwEqVX8W2cqrJsvF5mmmEHgET7LKNkhP5u9O98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b6vrN6Ykrz6M4GB;
+	Thu, 29 May 2025 00:21:08 +0800 (CST)
+Received: from frapeml500005.china.huawei.com (unknown [7.182.85.13])
+	by mail.maildlp.com (Postfix) with ESMTPS id AE7F81402F6;
+	Thu, 29 May 2025 00:21:11 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (7.182.85.172) by
+ frapeml500005.china.huawei.com (7.182.85.13) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 28 May 2025 18:21:11 +0200
+Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
+ frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
+ Wed, 28 May 2025 18:21:11 +0200
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Alison Schofield <alison.schofield@intel.com>, Dan Carpenter
+	<dan.carpenter@linaro.org>
+CC: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
+	<jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, "Vishal
+ Verma" <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, "Dan
+ Williams" <dan.j.williams@intel.com>, Li Ming <ming.li@zohomail.com>, Fan Ni
+	<fan.ni@samsung.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "kernel-janitors@vger.kernel.org"
+	<kernel-janitors@vger.kernel.org>
+Subject: RE: [PATCH next] cxl: fix return value in
  cxlctl_validate_set_features()
-Message-ID: <aDc2qGgYVzXMSUpz@stanley.mountain>
+Thread-Topic: [PATCH next] cxl: fix return value in
+ cxlctl_validate_set_features()
+Thread-Index: AQHbz6gs+BvlS7zgN0afPd/wpn1fvrPoB9WAgAAuyyA=
+Date: Wed, 28 May 2025 16:21:11 +0000
+Message-ID: <3cf2e87f32934c6d84ede6415206a352@huawei.com>
 References: <aDbFPSCujpJLY1if@stanley.mountain>
  <aDcqO5hlGrRXzIPT@aschofie-mobl2.lan>
+In-Reply-To: <aDcqO5hlGrRXzIPT@aschofie-mobl2.lan>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aDcqO5hlGrRXzIPT@aschofie-mobl2.lan>
 
-On Wed, May 28, 2025 at 08:22:35AM -0700, Alison Schofield wrote:
-> On Wed, May 28, 2025 at 11:11:41AM +0300, Dan Carpenter wrote:
-> > The cxlctl_validate_set_features() function is type bool.  It's supposed
-> > to return true for valid requests and false for invalid.  However, this
-> > error path returns ERR_PTR(-EINVAL) which is true when it was intended to
-> > return false.
-> 
-> Shiju - Can you trace this one through and add the impact statement?
-> Wondering if this is going to fail gracefully, or badly, further 
-> down this path?
-> 
+>-----Original Message-----
+>From: Alison Schofield <alison.schofield@intel.com>
+>Sent: 28 May 2025 16:23
+>To: Shiju Jose <shiju.jose@huawei.com>; Dan Carpenter
+><dan.carpenter@linaro.org>
+>Cc: Davidlohr Bueso <dave@stgolabs.net>; Jonathan Cameron
+><jonathan.cameron@huawei.com>; Dave Jiang <dave.jiang@intel.com>; Vishal
+>Verma <vishal.l.verma@intel.com>; Ira Weiny <ira.weiny@intel.com>; Dan
+>Williams <dan.j.williams@intel.com>; Li Ming <ming.li@zohomail.com>; Fan N=
+i
+><fan.ni@samsung.com>; linux-cxl@vger.kernel.org; linux-
+>kernel@vger.kernel.org; kernel-janitors@vger.kernel.org
+>Subject: Re: [PATCH next] cxl: fix return value in cxlctl_validate_set_fea=
+tures()
+>
+>On Wed, May 28, 2025 at 11:11:41AM +0300, Dan Carpenter wrote:
+>> The cxlctl_validate_set_features() function is type bool.  It's
+>> supposed to return true for valid requests and false for invalid.
+>> However, this error path returns ERR_PTR(-EINVAL) which is true when
+>> it was intended to return false.
+>
+>Shiju - Can you trace this one through and add the impact statement?
+>Wondering if this is going to fail gracefully, or badly, further down this=
+ path?
 
-Sorry, I would normally analyse this a bit more myself, but it's only in
-linux-next so I assumed no one was using it yet.  It ends up being fine.
+Hi Alison,
 
-cxlctl_set_feature() has a check for:
+This is introduced when following fwctl specific code
+move out of common  function (use both in fwctl and edac path)
+get_support_feature_info() to fwctl specific function
+cxlctl_validae_set_feature().
+"if (rpc_in->op_size < sizeof(uuid_t))
+      return ERR_PTR(-EINVAL);"
 
-	if (rpc_in->op_size <= sizeof(feat_in->hdr))
+This may have an impact on fwctl side if the above check pass.
 
-at the start and sizeof(feat_in->hdr) is larger than sizeof(uuid_t).
+Thanks,
+Shiju
 
-regards,
-dan carpenter
+>
+>>
+>> Fixes: f76e0bbc8bc3 ("cxl: Update prototype of function
+>> get_support_feature_info()")
+>> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+>> ---
+>>  drivers/cxl/core/features.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
+>> index 6f2eae1eb126..7c750599ea69 100644
+>> --- a/drivers/cxl/core/features.c
+>> +++ b/drivers/cxl/core/features.c
+>> @@ -544,7 +544,7 @@ static bool cxlctl_validate_set_features(struct
+>cxl_features_state *cxlfs,
+>>  	u32 flags;
+>>
+>>  	if (rpc_in->op_size < sizeof(uuid_t))
+>> -		return ERR_PTR(-EINVAL);
+>> +		return false;
+>>
+>>  	feat =3D cxl_feature_info(cxlfs, &rpc_in->set_feat_in.uuid);
+>>  	if (IS_ERR(feat))
+>> --
+>> 2.47.2
+>>
 
