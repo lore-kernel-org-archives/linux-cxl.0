@@ -1,163 +1,339 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03DD18DB03
-	for <linux-cxl@vger.kernel.org>; Wed, 28 May 2025 11:10:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF647E9
+	for <linux-cxl@vger.kernel.org>; Wed, 28 May 2025 12:31:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748430607; cv=none; b=GY0ysrcE9nEWxG3o1hqkpupxzuK7d+aul7/dnVYZ+lMb9zYaM9W5Qmpm0SFCrLWcunuJJzZlcDaUBWRq8i7XMd5P4ld50cjZL+G9lEUZ3rWpJ/cVdTu7rcxCm62soZCX0GJGJH9C+zo15rmupE0hiRnNFEaFSDf5SEuZnTtEr+c=
+	t=1748435475; cv=none; b=O9/QaZSeYpfaNbCF4Qhd1+JTGzz1mxsgsxl93BmLpJvxOPhi4se1+eVqLmblCT94IGYSjQS0o9ClTXXut+X2aAk6XPcYsd+4VdnLelOF2ocbtDmicafIeXYCnqYevGwShkLj4cHi0fnBrkq6ttSIDB77stnMIiDwXFd/ege+ATw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748430607; c=relaxed/simple;
-	bh=YFcSj+vc3GZGoGSQfbBOPUTk7LiISSYuzjc5lNdqoPo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SzsptYS0vbOyxPusCuaaeW2krWnXZLHsz8ktu/Uw2+bbunB3MkQPLJPzrTN1r8Hpl2Kyb07HohjZ8H+XBNh00K8H9iPicevJLkKscukoTT/ogPecvKTlgJ+SNkHuJRh9iZKTLt/4R7eO0tSLhGPdGgRCXzKUTWVoI5pSuOPrIAE=
+	s=arc-20240116; t=1748435475; c=relaxed/simple;
+	bh=PuZgO3IRh38n60O+yqfZ+qCry5JNl0klsHGnAsnOxEw=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QznCgXIbRIqtF+CMvh14UUrB1U/V8/idA23Aqa28eX/B6lnd4Gg7CGFk5OS6UtxJIBPr9iP+9CqJyQYuVXQ77waBdHxRaw3bLpydHWe1Ww4HsfL2dw5xVdC3hNd1R96vZGdh/ybgIMw+XFjnSM/78L50YTPsplwnNKdBzw90lg0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b6msL0ZN6z6L5Fw;
-	Wed, 28 May 2025 19:06:30 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b6pfv1vtgz6L5Gp;
+	Wed, 28 May 2025 20:27:35 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 530DD14034D;
-	Wed, 28 May 2025 19:10:03 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.19.247) by
- frapeml500008.china.huawei.com (7.182.85.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 28 May 2025 13:10:02 +0200
+	by mail.maildlp.com (Postfix) with ESMTPS id B04791402F1;
+	Wed, 28 May 2025 20:31:08 +0800 (CST)
+Received: from localhost (10.122.19.247) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 28 May
+ 2025 14:31:08 +0200
+Date: Wed, 28 May 2025 13:31:06 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <qemu-devel@nongnu.org>, Fan Ni <fan.ni@samsung.com>, Peter Maydell
-	<peter.maydell@linaro.org>, <mst@redhat.com>
-CC: <linuxarm@huawei.com>, <linux-cxl@vger.kernel.org>, <qemu-arm@nongnu.org>,
-	Yuquan Wang <wangyuquan1236@phytium.com.cn>, Itaru Kitayama
-	<itaru.kitayama@linux.dev>, =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?=
-	<philmd@linaro.org>, Alireza Sanaee <alireza.sanaee@huawei.com>
-Subject: [PATCH v14 5/5] qtest/cxl: Add aarch64 virt test for CXL
-Date: Wed, 28 May 2025 12:07:26 +0100
-Message-ID: <20250528110726.226389-6-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250528110726.226389-1-Jonathan.Cameron@huawei.com>
-References: <20250528110726.226389-1-Jonathan.Cameron@huawei.com>
+To: Arpit Kumar <arpit1.kumar@samsung.com>
+CC: "Michael S. Tsirkin" <mst@redhat.com>, <linux-cxl@vger.kernel.org>,
+	<qemu-devel@nongnu.org>, <linuxarm@huawei.com>, <fan.ni@samsung.com>, Yuquan
+ Wang <wangyuquan1236@phytium.com.cn>, Sweta Kumari <s5.kumari@samsung.com>,
+	Vinayak Holikatti <vinayak.kh@samsung.com>, Davidlohr Bueso
+	<dave@stgolabs.net>, Ajay Joshi <ajay.opensrc@micron.com>, <cpgs@samsung.com>
+Subject: Re: [PATCH qemu 7/8] hw/cxl/cxl-mailbox-utils: Added support for
+ Get Log Capabilities (Opcode 0402h)
+Message-ID: <20250528133106.000003c8@huawei.com>
+In-Reply-To: <1983025922.01747408682214.JavaMail.epsvc@epcpadp2new>
+References: <20250305092501.191929-1-Jonathan.Cameron@huawei.com>
+	<20250305092501.191929-8-Jonathan.Cameron@huawei.com>
+	<20250512043011-mutt-send-email-mst@kernel.org>
+	<20250512093638-mutt-send-email-mst@kernel.org>
+	<20250512174038.00000beb@huawei.com>
+	<CGME20250516134255epcas5p378dda7fbda7db62fe73cc6163c5e7043@epcas5p3.samsung.com>
+	<1983025922.01747408682214.JavaMail.epsvc@epcpadp2new>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-Add a single complex case for aarch64 virt machine.
-Given existing much more comprehensive tests for x86 cover the
-common functionality, a single test should be enough to verify
-that the aarch64 part continue to work.
+On Fri, 16 May 2025 19:12:45 +0530
+Arpit Kumar <arpit1.kumar@samsung.com> wrote:
 
-Tested-by: Itaru Kitayama <itaru.kitayama@fujitsu.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
----
-v14: Tags only.
----
- tests/qtest/cxl-test.c  | 59 ++++++++++++++++++++++++++++++++---------
- tests/qtest/meson.build |  1 +
- 2 files changed, 47 insertions(+), 13 deletions(-)
-
-diff --git a/tests/qtest/cxl-test.c b/tests/qtest/cxl-test.c
-index a600331843..c7189d6222 100644
---- a/tests/qtest/cxl-test.c
-+++ b/tests/qtest/cxl-test.c
-@@ -19,6 +19,12 @@
-     "-device pxb-cxl,id=cxl.1,bus=pcie.0,bus_nr=53 " \
-     "-M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.targets.1=cxl.1,cxl-fmw.0.size=4G "
- 
-+#define QEMU_VIRT_2PXB_CMD \
-+    "-machine virt,cxl=on -cpu max " \
-+    "-device pxb-cxl,id=cxl.0,bus=pcie.0,bus_nr=52 " \
-+    "-device pxb-cxl,id=cxl.1,bus=pcie.0,bus_nr=53 " \
-+    "-M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.targets.1=cxl.1,cxl-fmw.0.size=4G "
-+
- #define QEMU_RP \
-     "-device cxl-rp,id=rp0,bus=cxl.0,chassis=0,slot=0 "
- 
-@@ -197,25 +203,52 @@ static void cxl_2pxb_4rp_4t3d(void)
-     qtest_end();
-     rmdir(tmpfs);
- }
-+
-+static void cxl_virt_2pxb_4rp_4t3d(void)
-+{
-+    g_autoptr(GString) cmdline = g_string_new(NULL);
-+    char template[] = "/tmp/cxl-test-XXXXXX";
-+    const char *tmpfs;
-+
-+    tmpfs = mkdtemp(template);
-+
-+    g_string_printf(cmdline, QEMU_VIRT_2PXB_CMD QEMU_4RP QEMU_4T3D,
-+                    tmpfs, tmpfs, tmpfs, tmpfs, tmpfs, tmpfs,
-+                    tmpfs, tmpfs);
-+
-+    qtest_start(cmdline->str);
-+    qtest_end();
-+    rmdir(tmpfs);
-+}
- #endif /* CONFIG_POSIX */
- 
- int main(int argc, char **argv)
+> On 12/05/25 05:40PM, Jonathan Cameron wrote:
+> >On Mon, 12 May 2025 09:37:07 -0400
+> >"Michael S. Tsirkin" <mst@redhat.com> wrote:
+> > =20
+> >> On Mon, May 12, 2025 at 04:42:41AM -0400, Michael S. Tsirkin wrote: =20
+> >> > On Wed, Mar 05, 2025 at 09:24:58AM +0000, Jonathan Cameron wrote: =20
+> >> > > From: Arpit Kumar <arpit1.kumar@samsung.com>
+> >> > >
+> >> > > CXL spec 3.2 section 8.2.10.5.3 describes Get Log Capabilities.
+> >> > > It provides log capabilities supported by specified log.
+> >> > >
+> >> > > Signed-off-by: Arpit Kumar <arpit1.kumar@samsung.com>
+> >> > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> >> > > ---
+> >> > >  include/hw/cxl/cxl_device.h  | 20 ++++++++++++++++
+> >> > >  include/hw/cxl/cxl_mailbox.h |  5 ++++
+> >> > >  hw/cxl/cxl-mailbox-utils.c   | 45 +++++++++++++++++++++++++++++++=
++++++
+> >> > >  3 files changed, 70 insertions(+)
+> >> > >
+> >> > > diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_devi=
+ce.h
+> >> > > index ed6cd50c67..87a376c982 100644
+> >> > > --- a/include/hw/cxl/cxl_device.h
+> >> > > +++ b/include/hw/cxl/cxl_device.h
+> >> > > @@ -133,6 +133,18 @@ typedef enum {
+> >> > >      CXL_MBOX_MAX =3D 0x20
+> >> > >  } CXLRetCode;
+> >> > >
+> >> > > +/* types of logs */
+> >> > > +typedef enum {
+> >> > > +    CXL_LOG_COMMAND_EFFECT,
+> >> > > +    CXL_LOG_VENDOR_DEBUG,
+> >> > > +    CXL_LOG_COMPONENT_STATE_DUMP,
+> >> > > +    CXL_LOG_ERROR_CHECK_SCRUB,
+> >> > > +    CXL_LOG_MEDIA_TEST_CAPABILITY,
+> >> > > +    CXL_LOG_MEDIA_TEST_RESULTS_SHORT,
+> >> > > +    CXL_LOG_MEDIA_TEST_RESULTS_LONG,
+> >> > > +    MAX_LOG_TYPE
+> >> > > +} CXLLogType;
+> >> > > +
+> >> > >  typedef struct CXLCCI CXLCCI;
+> >> > >  typedef struct cxl_device_state CXLDeviceState;
+> >> > >  struct cxl_cmd;
+> >> > > @@ -163,6 +175,11 @@ typedef struct CXLEventLog {
+> >> > >      QSIMPLEQ_HEAD(, CXLEvent) events;
+> >> > >  } CXLEventLog;
+> >> > >
+> >> > > +typedef struct CXLLogCapabilities {
+> >> > > +    uint32_t param_flags;
+> >> > > +    QemuUUID uuid;
+> >> > > +} CXLLogCapabilities;
+> >> > > +
+> >> > >  typedef struct CXLCCI {
+> >> > >      struct cxl_cmd cxl_cmd_set[256][256];
+> >> > >      struct cel_log {
+> >> > > @@ -171,6 +188,9 @@ typedef struct CXLCCI {
+> >> > >      } cel_log[1 << 16];
+> >> > >      size_t cel_size;
+> >> > >
+> >> > > +    /* get log capabilities */
+> >> > > +    const CXLLogCapabilities *supported_log_cap;
+> >> > > +
+> >> > >      /* background command handling (times in ms) */
+> >> > >      struct {
+> >> > >          uint16_t opcode;
+> >> > > diff --git a/include/hw/cxl/cxl_mailbox.h b/include/hw/cxl/cxl_mai=
+lbox.h
+> >> > > index 9008402d1c..8e1c7c5f15 100644
+> >> > > --- a/include/hw/cxl/cxl_mailbox.h
+> >> > > +++ b/include/hw/cxl/cxl_mailbox.h
+> >> > > @@ -16,4 +16,9 @@
+> >> > >  #define CXL_MBOX_BACKGROUND_OPERATION (1 << 6)
+> >> > >  #define CXL_MBOX_BACKGROUND_OPERATION_ABORT (1 << 7)
+> >> > >
+> >> > > +#define CXL_LOG_CAP_CLEAR_SUPPORTED (1 << 0)
+> >> > > +#define CXL_LOG_CAP_POPULATE_SUPPORTED (1 << 1)
+> >> > > +#define CXL_LOG_CAP_AUTO_POPULATE_SUPPORTED (1 << 2)
+> >> > > +#define CXL_LOG_CAP_PERSISTENT_COLD_RESET_SUPPORTED (1 << 3)
+> >> > > +
+> >> > >  #endif
+> >> > > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils=
+.c
+> >> > > index 299f232f26..f35fc4f112 100644
+> >> > > --- a/hw/cxl/cxl-mailbox-utils.c
+> >> > > +++ b/hw/cxl/cxl-mailbox-utils.c
+> >> > > @@ -81,6 +81,7 @@ enum {
+> >> > >      LOGS        =3D 0x04,
+> >> > >          #define GET_SUPPORTED 0x0
+> >> > >          #define GET_LOG       0x1
+> >> > > +        #define GET_LOG_CAPABILITIES   0x2
+> >> > >      FEATURES    =3D 0x05,
+> >> > >          #define GET_SUPPORTED 0x0
+> >> > >          #define GET_FEATURE   0x1
+> >> > > @@ -1068,6 +1069,43 @@ static CXLRetCode cmd_logs_get_log(const st=
+ruct cxl_cmd *cmd,
+> >> > >      return CXL_MBOX_SUCCESS;
+> >> > >  }
+> >> > >
+> >> > > +static const struct CXLLogCapabilities *find_log_index(QemuUUID *=
+uuid, CXLCCI *cci)
+> >> > > +{
+> >> > > +    for (int i =3D CXL_LOG_COMMAND_EFFECT; i < MAX_LOG_TYPE; i++)=
  {
--    g_test_init(&argc, &argv, NULL);
-+    const char *arch = qtest_get_arch();
- 
--    qtest_add_func("/pci/cxl/basic_hostbridge", cxl_basic_hb);
--    qtest_add_func("/pci/cxl/basic_pxb", cxl_basic_pxb);
--    qtest_add_func("/pci/cxl/pxb_with_window", cxl_pxb_with_window);
--    qtest_add_func("/pci/cxl/pxb_x2_with_window", cxl_2pxb_with_window);
--    qtest_add_func("/pci/cxl/rp", cxl_root_port);
--    qtest_add_func("/pci/cxl/rp_x2", cxl_2root_port);
-+    g_test_init(&argc, &argv, NULL);
-+    if (strcmp(arch, "i386") == 0 || strcmp(arch, "x86_64") == 0) {
-+        qtest_add_func("/pci/cxl/basic_hostbridge", cxl_basic_hb);
-+        qtest_add_func("/pci/cxl/basic_pxb", cxl_basic_pxb);
-+        qtest_add_func("/pci/cxl/pxb_with_window", cxl_pxb_with_window);
-+        qtest_add_func("/pci/cxl/pxb_x2_with_window", cxl_2pxb_with_window);
-+        qtest_add_func("/pci/cxl/rp", cxl_root_port);
-+        qtest_add_func("/pci/cxl/rp_x2", cxl_2root_port);
- #ifdef CONFIG_POSIX
--    qtest_add_func("/pci/cxl/type3_device", cxl_t3d_deprecated);
--    qtest_add_func("/pci/cxl/type3_device_pmem", cxl_t3d_persistent);
--    qtest_add_func("/pci/cxl/type3_device_vmem", cxl_t3d_volatile);
--    qtest_add_func("/pci/cxl/type3_device_vmem_lsa", cxl_t3d_volatile_lsa);
--    qtest_add_func("/pci/cxl/rp_x2_type3_x2", cxl_1pxb_2rp_2t3d);
--    qtest_add_func("/pci/cxl/pxb_x2_root_port_x4_type3_x4", cxl_2pxb_4rp_4t3d);
-+        qtest_add_func("/pci/cxl/type3_device", cxl_t3d_deprecated);
-+        qtest_add_func("/pci/cxl/type3_device_pmem", cxl_t3d_persistent);
-+        qtest_add_func("/pci/cxl/type3_device_vmem", cxl_t3d_volatile);
-+        qtest_add_func("/pci/cxl/type3_device_vmem_lsa", cxl_t3d_volatile_lsa);
-+        qtest_add_func("/pci/cxl/rp_x2_type3_x2", cxl_1pxb_2rp_2t3d);
-+        qtest_add_func("/pci/cxl/pxb_x2_root_port_x4_type3_x4",
-+                       cxl_2pxb_4rp_4t3d);
- #endif
-+    } else if (strcmp(arch, "aarch64") == 0) {
-+#ifdef CONFIG_POSIX
-+        qtest_add_func("/pci/cxl/virt/pxb_x2_root_port_x4_type3_x4",
-+                       cxl_virt_2pxb_4rp_4t3d);
-+#endif
-+    }
-+
-     return g_test_run();
- }
-diff --git a/tests/qtest/meson.build b/tests/qtest/meson.build
-index 43e5a86699..3145c7b5fb 100644
---- a/tests/qtest/meson.build
-+++ b/tests/qtest/meson.build
-@@ -259,6 +259,7 @@ qtests_aarch64 = \
-   (config_all_accel.has_key('CONFIG_TCG') and                                            \
-    config_all_devices.has_key('CONFIG_TPM_TIS_I2C') ? ['tpm-tis-i2c-test'] : []) + \
-   (config_all_devices.has_key('CONFIG_ASPEED_SOC') ? qtests_aspeed64 : []) + \
-+  qtests_cxl +                                                                                  \
-   ['arm-cpu-features',
-    'numa-test',
-    'boot-serial-test',
--- 
-2.48.1
+> >> > > +        if (qemu_uuid_is_equal(uuid,
+> >> > > +            &cci->supported_log_cap[i].uuid)) {
+> >> > > +                return &cci->supported_log_cap[i];
+> >> > > +        }
+> >> > > +    }
+> >> > > +    return NULL;
+> >> > > +}
+> >> > > +
+> >> > > +/* CXL r3.2 Section 8.2.10.5.3: Get Log Capabilities (Opcode 0402=
+h) */
+> >> > > +static CXLRetCode cmd_logs_get_log_capabilities(const struct cxl_=
+cmd *cmd,
+> >> > > +                                                uint8_t *payload_=
+in,
+> >> > > +                                                size_t len_in,
+> >> > > +                                                uint8_t *payload_=
+out,
+> >> > > +                                                size_t *len_out,
+> >> > > +                                                CXLCCI *cci)
+> >> > > +{
+> >> > > +    const CXLLogCapabilities *cap;
+> >> > > +    struct {
+> >> > > +        QemuUUID uuid;
+> >> > > +    } QEMU_PACKED QEMU_ALIGNED(8) *get_log_capabilities_in =3D (v=
+oid *)payload_in;
+> >> > > +
+> >> > > +    uint32_t *get_log_capabilities_out =3D (uint32_t *)payload_ou=
+t;
+> >> > > +
+> >> > > +    cap =3D find_log_index(&get_log_capabilities_in->uuid, cci);
+> >> > > +    if (!cap) {
+> >> > > +        return CXL_MBOX_INVALID_LOG;
+> >> > > +    }
+> >> > > +
+> >> > > +    memcpy(get_log_capabilities_out, &cap->param_flags,
+> >> > > +           sizeof(cap->param_flags));
+> >> > > +    *len_out =3D sizeof(*get_log_capabilities_out);
+> >> > > +    return CXL_MBOX_SUCCESS;
+> >> > > +}
+> >> > > +
+> >> > >  /* CXL r3.1 section 8.2.9.6: Features */
+> >> > >  /*
+> >> > >   * Get Supported Features output payload
+> >> > > @@ -3253,6 +3291,8 @@ static const struct cxl_cmd cxl_cmd_set[256]=
+[256] =3D {
+> >> > >      [LOGS][GET_SUPPORTED] =3D { "LOGS_GET_SUPPORTED", cmd_logs_ge=
+t_supported,
+> >> > >                                0, 0 },
+> >> > >      [LOGS][GET_LOG] =3D { "LOGS_GET_LOG", cmd_logs_get_log, 0x18,=
+ 0 },
+> >> > > +    [LOGS][GET_LOG_CAPABILITIES] =3D { "LOGS_GET_LOG_CAPABILITIES=
+",
+> >> > > +                                     cmd_logs_get_log_capabilitie=
+s, 0x10, 0 },
+> >> > >      [FEATURES][GET_SUPPORTED] =3D { "FEATURES_GET_SUPPORTED",
+> >> > >                                    cmd_features_get_supported, 0x8=
+, 0 },
+> >> > >      [FEATURES][GET_FEATURE] =3D { "FEATURES_GET_FEATURE",
+> >> > > @@ -3512,10 +3552,15 @@ static void cxl_rebuild_cel(CXLCCI *cci)
+> >> > >      }
+> >> > >  }
+> >> > >
+> >> > > +static const struct CXLLogCapabilities cxl_get_log_cap[MAX_LOG_TY=
+PE] =3D {
+> >> > > +    [CXL_LOG_COMMAND_EFFECT] =3D { .param_flags =3D 0, .uuid =3D =
+cel_uuid },
+> >> > > +};
+> >> > > + =20
+> >> >
+> >> >
+> >> > causes ci build failures:
+> >> >
+> >> > https://gitlab.com/mstredhat/qemu/-/jobs/9999980051
+> >> >
+> >> > ../hw/cxl/cxl-mailbox-utils.c:3556:60: error: initializer element is=
+ not constant
+> >> >      [CXL_LOG_COMMAND_EFFECT] =3D { .param_flags =3D 0, .uuid =3D ce=
+l_uuid },
+> >> >                                                             ^~~~~~~~
+> >> > ../hw/cxl/cxl-mailbox-utils.c:3556:60: note: (near initialization fo=
+r =E2=80=98cxl_get_log_cap[0].uuid=E2=80=99)
+> >> >
+> >> >
+> >> > Fixed it up like this:
+> >> >
+> >> > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> >> > index f35fc4f112..13d26e391b 100644
+> >> > --- a/hw/cxl/cxl-mailbox-utils.c
+> >> > +++ b/hw/cxl/cxl-mailbox-utils.c
+> >> > @@ -992,9 +992,10 @@ static CXLRetCode cmd_timestamp_set(const struc=
+t cxl_cmd *cmd,
+> >> >  }
+> >> >
+> >> >  /* CXL r3.1 Section 8.2.9.5.2.1: Command Effects Log (CEL) */
+> >> > -static const QemuUUID cel_uuid =3D {
+> >> > -    .data =3D UUID(0x0da9c0b5, 0xbf41, 0x4b78, 0x8f, 0x79,
+> >> > +#define CEL_UUID UUID(0x0da9c0b5, 0xbf41, 0x4b78, 0x8f, 0x79, \
+> >> >                   0x96, 0xb1, 0x62, 0x3b, 0x3f, 0x17)
+> >> > +static const QemuUUID cel_uuid =3D {
+> >> > +    .data =3D CEL_UUID
+> >> >  };
+> >> >
+> >> >  /* CXL r3.1 Section 8.2.9.5.1: Get Supported Logs (Opcode 0400h) */
+> >> > @@ -3553,7 +3554,7 @@ static void cxl_rebuild_cel(CXLCCI *cci)
+> >> >  }
+> >> >
+> >> >  static const struct CXLLogCapabilities cxl_get_log_cap[MAX_LOG_TYPE=
+] =3D {
+> >> > -    [CXL_LOG_COMMAND_EFFECT] =3D { .param_flags =3D 0, .uuid =3D ce=
+l_uuid },
+> >> > +    [CXL_LOG_COMMAND_EFFECT] =3D { .param_flags =3D 0, .uuid =3D CE=
+L_UUID },
+> >> >  };
+> >> >
+> >> >  void cxl_init_cci(CXLCCI *cci, size_t payload_max)
+> >> > =20
+> >>
+> >>
+> >> Actually no, does not help either. Dropped for now.
+> >> Next patch does not depend on this one, right? =20
+> >
+> >Indeed. Unrelated.
+> >
+> >Thanks,
+> >
+> >J =20
+>=20
+> Thanks for pointing this out. The code builds successfully on my setup
+> with gcc version: 11.4.0. However, it fails to compile on gcc 7.5.0
+> "cc (SUSE Linux) 7.5.0" as used by Michael. This could be a compiler
+> issue as per the link:
+> https://stackoverflow.com/questions/54135942/why-initializer-
+> element-is-not-a-constant-is-not-working-anymore.
+>=20
+> My setup doesn't allow me to regenerate the error using lower version
+> of compiler. A probable fix to it would be
+> type casting cel_uuid as: [CXL_LOG_COMMAND_EFFECT] =3D
+> { .param_flags =3D 0,.uuid =3D (QemuUUID)cel_uuid }. It will be helpful
+> if you could test the same.
+
+I wonder if we are better off just filling it in in cxl_init_cci()
+So change the type of the element in struct CXLCCI to
+CXLLogCapabiliites supported_log_cap[MAX_LOGS];
+
+then assign the elements at runtime.
+
+That should avoid any issues with whether it is const or not at the
+cost of a little more code.
+
+>=20
+> Also, In the existing code,
+> function: cmd_logs_get_supported(), cel_uuid(const) is assigned to a
+> non-const variable but I am unsure of why it is not throwing an error.
+
+Isn't it just copying the content which should be fine?
+
+>=20
+> Thanks,
+> Arpit
+> >> =20
+> >> > >  void cxl_init_cci(CXLCCI *cci, size_t payload_max)
+> >> > >  {
+> >> > >      cci->payload_max =3D payload_max;
+> >> > >      cxl_rebuild_cel(cci);
+> >> > > +    cci->supported_log_cap =3D cxl_get_log_cap;
+> >> > >
+> >> > >      cci->bg.complete_pct =3D 0;
+> >> > >      cci->bg.starttime =3D 0;
+> >> > > --
+> >> > > 2.43.0 =20
+> >>
+> >> =20
+> > =20
+>=20
 
