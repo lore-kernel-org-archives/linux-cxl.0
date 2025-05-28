@@ -1,248 +1,221 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1E2F2750FA
-	for <linux-cxl@vger.kernel.org>; Wed, 28 May 2025 17:39:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748453965; cv=none; b=fkaVqxTyTCGgH6Kq7hFVdknYvZMM7tO2yvsfp2rNUKVwep0yc95+j6GhpYVdQVLLoS8qvUP6dszH3DWZZdatbEwreWVPGLjut6fOo5ZS79Rl9hz3KiG+OsRu1di4RYzSG/oU8BA7qwV1+X0GtzVKY/22pyCazq0A/D0eJMW+5dU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748453965; c=relaxed/simple;
-	bh=1DeZgjWR+pO/U7TJ5hX543A2fpZFW90vO9ABog39QDA=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FLHUb+XTOh3T3CVU2/HvJdDRKzSw7pTDyef4qeZ6fESGZvIfKULfsJsAAfh+S1wF57zSd81jmw42Rd8Xl7RJs6hrGCT8LZixCqU/iqhXfWz0vEawv0qcpFe0y9r8jzgZwgcP3lYB6D4OOf5n41ugMv3zbO21G1lNVtwsEgiibmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xrb8Tczb; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB48D3B1AB
+	for <linux-cxl@vger.kernel.org>; Wed, 28 May 2025 20:50:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.18
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748465407; cv=fail; b=ij8lRVAsv6guj4jkRlcrsFf7MjkuEfBf8yAoeCRXin1ihTX9MUaygqDyvfUhGglKrDifzjMY1n9q4kaajKvLm6p0hw2pV52SkYGbcsxCCdO8ZmahNDgmqussLdzX7rF64ckfPZwtBYurB0TgHYHmO/WgaaQ9FicQhQJwBqnEURQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748465407; c=relaxed/simple;
+	bh=iBAabnOZraAgeM/PZ9SpOLygcv9OdKu/GbRLnkAAVdE=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=rjSxA82q4WM80nX115PFr4lujHy/Tkq4CogZy0UQdM0ohc+Xysc1izMdusTPXPqc2KTVAGb3O+4E+TC3/P88NKhJTqrEnSMbFszV77WmhHrwzNibPjYfC/w3hWaMAKbs8bHdoR+b6IcXOWrVAXwCerQy6Ffz7YwAmPmCmow6dKM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NRoI2IJa; arc=fail smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xrb8Tczb"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-73712952e1cso3529218b3a.1
-        for <linux-cxl@vger.kernel.org>; Wed, 28 May 2025 10:39:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748453963; x=1749058763; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=s3CUMqKkExl5Yqm2d32QXyDSBLqA1Cfd73PkgxPB7vY=;
-        b=Xrb8Tczbap4o5LCZ9tz2foQBT6g5UBspjfDbwB+Hr+sA5zkVmBWoE8MK8vDOMYjrz6
-         RKHV6HWmT5fKJpdLg9SU390LiS+HsCYHnfWBFOrvedozSZLRY2U6XPvSfkAhktoyxZ3I
-         vtPAP7zDLi9/9EYb5SnvWj/BsXOYIxbrW1zHqzeGqaIY9vpCWq0dbeGrxHeJk6TVUMZS
-         0ZWY4ectaufA2RfopHLNzSKyfry/7LgKNuG4NjTCsjzhkZ9nFaflmN+m5a0Kmm8aLxko
-         1uIOkV+iZdL/HlJiiCjB8Ev5j/rXAGWpWXYKIIqQ65xfHh1/81lZsVQWfLg2ZTdWKJIN
-         1E2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748453963; x=1749058763;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=s3CUMqKkExl5Yqm2d32QXyDSBLqA1Cfd73PkgxPB7vY=;
-        b=gZk82bEQPwv/V6VIFoPvap//GqOndHt73MIw6qnriZxzD9UUszYDxDTVXuoupaIfWD
-         QC/kFUZluIiu05VD5EM7mt61jfB1a69P5PAE9/d1nhBer8DsTsapI2GZ/o8zWk+Nqq1T
-         SB3yVqBQ93ao0TTgLG3vqNDojAvMXPChGpulEIA/vpJTwF0KJteH9cwq/3jtZRj2MTJc
-         pkZB5JyEXqfDhFSNnc6U0/sT9kWfYamWYD3XHu4Nxd3CUQJfr9/3xGtob1UWtjS0XGV8
-         0oofFseoyrM3kC2qv5Ndd89eCunP+hMgvOxgObaIMTIIzp4YloUAtTBf//hcvNLTSSVB
-         FfgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUEuy5oWYUscHtPM/dk6wZ0mUIsxbItmSo+5dbOu/XDAAxDdCOR26vSNzQ6jO+i24ksSnNdSPISZ2k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdKEf+KWuo8vy0w331h7SmlKK7UHfwVH4tkNm1TFKMIKqFC0EE
-	d8/AyzPvgr+XK9AdZsu8za0dOt6O2F57JuDagxL4BN740Wy8yaACjL5E
-X-Gm-Gg: ASbGncvPV0zdi9vJQYf6yiaN33Wgh4RGIE6mVeAoodXlDHWX/gmZggGNey3dAnpGy5V
-	VzgjdIVIxw4MC1CrBDfqrcZZLFhAsnuaPyTAvZtUz1LdrLRg/AIHlNAwSSvZAMt2fkTJo2tyL6n
-	R3d20/RDR+27n4LZ66510cqKtkzOtZ1hlLrBiTIgflprG3u6EmKrs6LlVjD1p78AU0TCeraUD2H
-	qRGhL1YdQOtE9EnbAiKhRLl3XqiSa6oubsCMr9xvlGh67azCrakfkI7Q6NMxnaIb7M8X3cSpm+x
-	rIrCiFJWwh9Io3XtqQmGA2k9EMmtPS3Fq1sKdH+ROMy8QpDcy4evgCc=
-X-Google-Smtp-Source: AGHT+IFfrHY8StlI1EtMqUvTKr+winERQk33CEfPSAoE1icRvErrxpuZfwfiSeoysqnF14o4j70zgQ==
-X-Received: by 2002:a05:6a00:140f:b0:740:3830:4119 with SMTP id d2e1a72fcca58-745fe035cc9mr28850379b3a.18.1748453962793;
-        Wed, 28 May 2025 10:39:22 -0700 (PDT)
-Received: from smc-140338-bm01 ([149.97.161.244])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-746e345e842sm1492123b3a.168.2025.05.28.10.39.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 10:39:22 -0700 (PDT)
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Wed, 28 May 2025 17:39:20 +0000
-To: nifan.cxl@gmail.com
-Cc: jonathan.cameron@huawei.com, qemu-devel@nongnu.org,
-	linux-cxl@vger.kernel.org, a.manzanares@samsung.com,
-	dave@stgolabs.net, nmtadam.samsung@gmail.com, anisa.su887@gmail.com,
-	gourry@gourry.net
-Subject: Re: [PATCH] hw/cxl: fix DC extent capacity tracking
-Message-ID: <aDdJj0gBtFQKt8VA@smc-140338-bm01>
-References: <20250520195741.789841-1-nifan.cxl@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NRoI2IJa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748465404; x=1780001404;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=iBAabnOZraAgeM/PZ9SpOLygcv9OdKu/GbRLnkAAVdE=;
+  b=NRoI2IJa+XoDl+1SFqdlpijmcoyRZCcv3QjcD4gw+pvk6V8w6iP6RFZc
+   v1Ml82ysNwcTs1kNWnROhNZt8gScDTToi/lIRChZYLoeF7QlxSzTR9uDy
+   uewRjkfpROPpcnZmtmg13eJAX29tQlf9iuVHmkDUleFWkzMWtJo+7XkH0
+   FExeCPIE/pOs6XLP7Fn4CsWugAF9zl+OfKE14GHdFJWvprxn6Tdf2MCmk
+   kT2b1+t6bUhKLDd72PvzGlVmuzChz2Xk88ANm4UXMoS/mvjQDDRR98cY5
+   UaEYAOxvLf+ptSYc1ro9kDDssQBrHPhw+9U46ezQ6ObsNOcebdMhn0QB7
+   w==;
+X-CSE-ConnectionGUID: QwyYPUKLSGqVfL89UsDVrw==
+X-CSE-MsgGUID: ixG282aXRte/9l/VUIgIEg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11447"; a="49755702"
+X-IronPort-AV: E=Sophos;i="6.15,322,1739865600"; 
+   d="scan'208";a="49755702"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 13:50:04 -0700
+X-CSE-ConnectionGUID: iwijHysmTByyDr2P5aAVrQ==
+X-CSE-MsgGUID: QUOtNHCUQqWeouxEfs7R5Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,322,1739865600"; 
+   d="scan'208";a="143337199"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 13:50:04 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 28 May 2025 13:50:03 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Wed, 28 May 2025 13:50:03 -0700
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (40.107.100.62)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.55; Wed, 28 May 2025 13:50:03 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ecbyUSBart2tk2YvHYzVitM2yXkq4TqpHV//Eipqc/QkMPrciOTp/TNeZZech8vfQ/quoec0euJEhUtlpZ8zjVOr9a/heHzTDQUB8Hm9RZtyTVoojRQt7rwHOE3sSm+YjXVbZThZiPENtiV2/n30r41Um3+XQAEsiLno4wzoEYCBINC1E/E9/0UP1ALX6LMikK3AceordWCeJAwQgFQw0n3yJU0CM2eJaO6d9POXxgYkxWgSIBWAYSEKKLnCiiUOz9vfaLRV4p5TRmPaGJenp2SHm8SMzwaZ+omxqQTNVwTZshIY+pIpyIADfKKSFWY/CcKOeSqPZhqnS9ZKbV6MUA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wqfBMic1BKYkPPTw0aBtzbmz2igBCYlP2JiEcwj+lLA=;
+ b=PWrI7v2jjm0JGkHM1BCwNN7SrBJUoBaSdGcaR8+84J7PN39wwsoPK55D0VVklTdJ8pUjtOvz0qTtx4FxQRMa/dUg1Odv7LM3EKrGx29Mh+iTxEJ2bzgHP98OQ8q09xcFxM215seq/gtmkbjSTdeWkzmWka+xJXPJlfhkWMA5D3WP6q47nmLj9oO0wpedn49gWmo+VAn1XMMuCifiNGIP7PTeC/Ff8WNi4uB5Lxmamdnbn0IaGHbK5Smt3hZv+fJT/rf/Xk9RsFpxCYYwC/2hcnZGVeVD6SyTSOyA0XcxLr3eOozHT9jwy8ue4gsVKT7nOQRPSRbwZ0ahM/ynK0TK6Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB8794.namprd11.prod.outlook.com (2603:10b6:806:46a::5)
+ by SN7PR11MB6826.namprd11.prod.outlook.com (2603:10b6:806:2a1::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.26; Wed, 28 May
+ 2025 20:49:59 +0000
+Received: from SA1PR11MB8794.namprd11.prod.outlook.com
+ ([fe80::a3d4:9d67:2f5d:6720]) by SA1PR11MB8794.namprd11.prod.outlook.com
+ ([fe80::a3d4:9d67:2f5d:6720%5]) with mapi id 15.20.8769.025; Wed, 28 May 2025
+ 20:49:59 +0000
+Date: Wed, 28 May 2025 13:49:56 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: ruansy.fnst <ruansy.fnst@fujitsu.com>
+CC: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
+	<vishal.l.verma@intel.com>, <sunfishho12@gmail.com>
+Subject: Re: [PATCH] test/cxl-xor-region.sh: remove redundant waitting
+Message-ID: <aDd29HN3R1HzaQ1w@aschofie-mobl2.lan>
+References: <20250514112003.2150272-1-ruansy.fnst@fujitsu.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250514112003.2150272-1-ruansy.fnst@fujitsu.com>
+X-ClientProxiedBy: SJ0PR13CA0017.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c0::22) To SA1PR11MB8794.namprd11.prod.outlook.com
+ (2603:10b6:806:46a::5)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250520195741.789841-1-nifan.cxl@gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB8794:EE_|SN7PR11MB6826:EE_
+X-MS-Office365-Filtering-Correlation-Id: bb6c8b5b-8ecf-487c-6bd3-08dd9e2935e8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7053199007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?tS6GR29nJromyx2dcomv+d0tNhgTc1AKuM9Ar3EYLH14OxUIkJdA8UeJX8hR?=
+ =?us-ascii?Q?gMaB7qE9KgxxSbN5p3PbH3i79IPEj+qMtOlvcIyTreyJ+L3blm0l5qsKtJ6r?=
+ =?us-ascii?Q?l+kbKiBYEqZSMNwLxu7TIPMn5AMGuTPOjhL9GU7kAJ0kOQT3QtvpgQxzMz1D?=
+ =?us-ascii?Q?IszeY/OvbBdssRlVu8o/ZDpELojp8BUMiy34M8k4rXv3jHFzhiwvoEfrSy1S?=
+ =?us-ascii?Q?dbwiiSTISbu/IyVB32pHegF9Mnr0cBlVFp+IG3yj5r87J84JzBbewhZZa2AN?=
+ =?us-ascii?Q?LW2E5BREjDGN2l4Cow5xGwoLP00faA2F6yOiJ+PiwrH0+nQ0pVEpmk871c1q?=
+ =?us-ascii?Q?tsgS6K2VqX3Ed+M59/bKz5JW/2rmYdysXmR1VYV9V/a/qDt+y+lLIinRAgrJ?=
+ =?us-ascii?Q?ZEHZs1VySpECeClFaFkGnWyy5tXSxX/LF8bNnkmhs7oDbh3huDZsM87/kluH?=
+ =?us-ascii?Q?XcAkpdxylpNHRT2XXCRXpRwxs1tSNbH3cAnLZqT7du9ZvFLWDAPGBK8HWIe1?=
+ =?us-ascii?Q?9RlaaoolwVkt2htwnlxCHRL8FnL3MT47+s12sxZyiyTjEBCvYucJXD1mNY9N?=
+ =?us-ascii?Q?sXXtIcjX5NFm4xRJKPb3e8MOaFNW9kLdjw2A/X4Es/iY6BFlssRrItf5qRdQ?=
+ =?us-ascii?Q?4LNw8Y+DI04TtkVOa2mNK/dVPP1wZOFuTdZ1TUWMLYoi9NAQbBVz2wZM7X+B?=
+ =?us-ascii?Q?Zjq0u1v+obPGnhwl1OhZpIJ28WrhaFTPCMUZ21DGtbiKrBWVGDJVGm9lE6pd?=
+ =?us-ascii?Q?yURjXyCp6w9kUrpFGYdwQxf+HI9Qaxtt1OqOR5RwC9zs/LfIg/r4RuljAKmm?=
+ =?us-ascii?Q?W6Xod5vQCYkDuocxkr220bgSmm7IsoOlXglFLr/vdS65iisRP6adIylmhV5J?=
+ =?us-ascii?Q?uy0fg2rMd8T3eJfnm5YqnXpdTzMaS4r4XuI9t/6UTP08i82i1YkWDBnAEsJt?=
+ =?us-ascii?Q?LeZUxWIc7PolK1szx40Z3iCY+3U06wmvmjanVld9LKnSakPRW/jHIA01oyP3?=
+ =?us-ascii?Q?x66K5sETQVigi35RaiacPrH+wzTBrqclAMYEXCRwSCtKS/HDfWq+GPn1MXQD?=
+ =?us-ascii?Q?wlxV1hPGZzP5jGdbelVGYBWLQdHwLrcX6fat6j5J3iIJIuxDrUDciQamsYlw?=
+ =?us-ascii?Q?5b6gdcklTHkkwrUnowgOSdAQcJkqEcFP2KlL47AP4tbvdXUdo6Ab2FWMfYbw?=
+ =?us-ascii?Q?6Ghvd2VN88s5tyZXx19uvMX1h426tP1EzqvpFUE0JPVZDsKLKVrFh47hrupt?=
+ =?us-ascii?Q?qKVN3vruo3QVjQ8+jbzCsgCHal8g2fN/HCrv5tb7X0BV8OeLKBD9wQpZBQmH?=
+ =?us-ascii?Q?t1vuh27k/t5p8gUg3gYU8KwQwohd45ySQgAD3r5Uem5BwqzQ6aWVZl6gsU3+?=
+ =?us-ascii?Q?kuj4AYRscbuH47+LvY3rVp0IU4ngxVp48ja3lYMrdZw/ckTASsRL/1+69d1+?=
+ =?us-ascii?Q?aNJxqdxpbmQ=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB8794.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?TDg01x4sYH0X9f8Y3JcdhqY+UQd+/mseclCAaSDbDpJx4JEEXpwuKCft+gN7?=
+ =?us-ascii?Q?HH+c0L4UdrRiroqHea7JVJwziyZ95+mB7XOJMjx8oc7sn3m7yvz+iiHH/DK0?=
+ =?us-ascii?Q?WN3ow03GKAlGgr8OkFpZU9heJ1F2+FibNeeMOtxLAxovepqOpwyNNV3y+rDm?=
+ =?us-ascii?Q?gAUBQdt9B9rqgHh4xXgm4zis/vC7jFOxkxLGIeJWX9YnQLv+c43jZ1zMP3Ro?=
+ =?us-ascii?Q?JeRdHiKq/egJiB+JSp8D2x+ceva+h4kfIk6ZyvRRCi21iIQpkY/uYeTh20IZ?=
+ =?us-ascii?Q?68QkYCoUq/ooVV7yuf+8MFiwdrp5Ms73kCS09/6ikzBPzUBdpWa6a9yGZ1V7?=
+ =?us-ascii?Q?9r089N+ZoO4lp8r0DXciwTQHpwa7U2z9GqWUQCRV8VnzDKt8qxO3kQn67SH3?=
+ =?us-ascii?Q?+rEtJ3F1M2btUDasVd7AZFSEAb8gdZFFbHbhvNGZrOZxssONGll9nYjZNQGS?=
+ =?us-ascii?Q?mTxK29Qk+4RY2GFyWF1zTdrD03Giu6M9Ol4kXxSGl+J7+2t7MOrjGJoEWMph?=
+ =?us-ascii?Q?Rw8L9A5kgQGVBUYRF8a8TKxaeKRbUr0lDFOi3w69DVcvRWwTuo/198FcJdcq?=
+ =?us-ascii?Q?pUD+/bsBHg3jO+uejt/ovT7ezz7kt37w5hh2R+KSJPKlLGxQZvu2kcfGpqXf?=
+ =?us-ascii?Q?7gmJdeI4EUS5vF5vUQrz8ayY4O+F47xBHaC6len4hLI57MWpah9kDaUxMEZM?=
+ =?us-ascii?Q?iu7MhALLjm3Gx+qIb4BsFdFeZCbekxEAlikgnJbdOmhOGJsQLOrrRUH3rS/F?=
+ =?us-ascii?Q?2wx7oxXV4yEA7XPogIEUfyfZrSzuEIhJH0kg6IOpqjslY+PAoR0w/qbFmTz3?=
+ =?us-ascii?Q?JIohqwo7vyEOyxU4jQP51MZl5YlBJa2jDMbUfqYhoavX0sqaeoa+Uanrblrn?=
+ =?us-ascii?Q?6bFBe8r6gV9onxJ3vdiMF+CCkbhGBCYMz3JCCD+dfmFvQB1+T7DkUa4U0cjv?=
+ =?us-ascii?Q?YY78fD4NAH0NpEI0KSpp5/S2ScZdOGCwRK4tHjYIEpQyGg3AVTRQrJ0vOqzP?=
+ =?us-ascii?Q?yXYtS+SDoUw+6N3Y/yWJQbeHBsA4ieTo9tYsLqY3q2nSe6ECeKjry/q5s6nn?=
+ =?us-ascii?Q?GAqa8zcG/bfcwgB4c3i3DNxacrvpYetVXIVWc8FChqRdzWB7iY0KvZJ/rxVw?=
+ =?us-ascii?Q?LhxRJ/cjxuvmSNUD9NbsdaPPrYhfZdMkpwrYFN/oIVslBByYO1paCmobd9f0?=
+ =?us-ascii?Q?Kw8suMpzdIpjg1zBC273MvVUEuIJ2z68LqOjAyNIGO2a8uYEi/rlVEDs7Ihp?=
+ =?us-ascii?Q?PxKfsdWPFDaU+/ao1VFxs/CxKH/D3pe6TTQGy8hvkYMAbne4pV/igcfkVb67?=
+ =?us-ascii?Q?H3SmOlMXxWVK7xxQc/Yc44SYMaYWoT3E8HR8HqxOfHdhTrpd9zRpuvc6lSfz?=
+ =?us-ascii?Q?U0BLDTdeOpuYZarHQNLXstdx1fFYvZbQWUChpM6UidUjsYBG3TijJnS8vHXq?=
+ =?us-ascii?Q?6hemhHc7XU1oCm4s62fKeojcXA/q76sRICAs5uKSfnZnjvsuCJfT4xDbRO5F?=
+ =?us-ascii?Q?SnqLC1KlpOsUdcSP2Q+FadLP0Qupx0SzWVddNG9yyyMtmRfDqPUTlklCU185?=
+ =?us-ascii?Q?e0Ede6l4/1LhkMb9YOd5FTZAKdct5kAbwxwUv+NZ/mdK8KsLKhC4gz7uPR63?=
+ =?us-ascii?Q?iQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: bb6c8b5b-8ecf-487c-6bd3-08dd9e2935e8
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB8794.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2025 20:49:59.6295
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qHKfU/vDacl5EpfDfzkaS5IagRN2nnFYlOicxwIutcfYYg1OPdwFX3Z2C9OaKWKI7oPoUOXoChCwnpmg0kYrmPrhzi7yC6hvnA9rogVzAQE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB6826
+X-OriginatorOrg: intel.com
 
-On Tue, May 20, 2025 at 12:56:43PM -0700, nifan.cxl@gmail.com wrote:
-> From: Fan Ni <fan.ni@samsung.com>
+On Wed, May 14, 2025 at 07:20:03PM +0800, ruansy.fnst wrote:
+> From: Ruan Shiyang <ruansy.fnst@fujitsu.com>
 > 
-> Per cxl r3.2 Section 9.13.3.3, extent capacity tracking should include
-> extents in different states including added, pending, etc.
+> Now that cxl_wait_probe() has been added[1] to wait for udev queue
+> empty, the `udevadm settle` here is no longer necessary.
 > 
-> Before the change, for the in-device extent number tracking purpose, we only
-> have "total_extent_count" defined, which only tracks the number of
-> extents accepted. However, we need to track number of extents in other
-> states also, for now it is extents pending-to-add.
+> [1] b231603 cxl/lib: Add cxl_wait_probe()
 > 
-> To fix that, we introduce a new counter for dynamic capacity
-> "nr_extents_accepted" which explicitly tracks number of the extents
-> accepted by the hosts, and fix "total_extent_count" to include
-> both accepted and pending extents counting.
+> Signed-off-by: Ruan Shiyang <ruansy.fnst@fujitsu.com>
+
+Applied to pending branch:
+https://github.com/pmem/ndctl/tree/pending
+
 > 
-> Signed-off-by: Fan Ni <fan.ni@samsung.com>
-
-Ping ...
-
-Hi Jonathan,
-
-The FM DCD management mailbox patches needs to be on top of this fix.
-
-Fan
-
+> ===
+> Question to Dan:
+> 
+> I understand how cxl_wait_probe() work, but I have some questions about
+> the motivation of adding this function:  Firstly, is it function added
+> for simply waiting for new added CXL device been ready before cxl
+> command does the actual work?  Just for replacing `udevadm settle`'s
+> work?
+> 
+> Now I am facing a problem that cxl command takes a long time to complete
+> when I run it in a udev rule(do some configuration when CXL memdev is
+> added).  I found it is caused by this function: waitting for udev
+> queue's endding but itself is in the queue.  The cxl_wait_probe()
+> function does not seem to allow me to do that.  So, the 2nd question is:
+> is it against the spec to run cxl command in a udev rule?
+> ====
 > ---
->  hw/cxl/cxl-mailbox-utils.c  | 26 ++++++++++++++++++--------
->  hw/mem/cxl_type3.c          |  1 +
->  include/hw/cxl/cxl_device.h |  3 ++-
->  3 files changed, 21 insertions(+), 9 deletions(-)
+>  test/cxl-xor-region.sh | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> index 299f232f26..0b615ea37a 100644
-> --- a/hw/cxl/cxl-mailbox-utils.c
-> +++ b/hw/cxl/cxl-mailbox-utils.c
-> @@ -2750,7 +2750,7 @@ static CXLRetCode cmd_dcd_get_dyn_cap_ext_list(const struct cxl_cmd *cmd,
->      uint16_t out_pl_len, size;
->      CXLDCExtent *ent;
+> diff --git a/test/cxl-xor-region.sh b/test/cxl-xor-region.sh
+> index b9e1d79..fb4f9a0 100644
+> --- a/test/cxl-xor-region.sh
+> +++ b/test/cxl-xor-region.sh
+> @@ -14,7 +14,6 @@ check_prereq "jq"
 >  
-> -    if (start_extent_id > ct3d->dc.total_extent_count) {
-> +    if (start_extent_id > ct3d->dc.nr_extents_accepted) {
->          return CXL_MBOX_INVALID_INPUT;
->      }
+>  modprobe -r cxl_test
+>  modprobe cxl_test interleave_arithmetic=1
+> -udevadm settle
+>  rc=1
 >  
-> @@ -2761,7 +2761,7 @@ static CXLRetCode cmd_dcd_get_dyn_cap_ext_list(const struct cxl_cmd *cmd,
->      out_pl_len = sizeof(*out) + record_count * sizeof(out->records[0]);
->  
->      stl_le_p(&out->count, record_count);
-> -    stl_le_p(&out->total_extents, ct3d->dc.total_extent_count);
-> +    stl_le_p(&out->total_extents, ct3d->dc.nr_extents_accepted);
->      stl_le_p(&out->generation_num, ct3d->dc.ext_list_gen_seq);
->  
->      if (record_count > 0) {
-> @@ -2883,16 +2883,20 @@ void cxl_extent_group_list_insert_tail(CXLDCExtentGroupList *list,
->      QTAILQ_INSERT_TAIL(list, group, node);
->  }
->  
-> -void cxl_extent_group_list_delete_front(CXLDCExtentGroupList *list)
-> +uint32_t cxl_extent_group_list_delete_front(CXLDCExtentGroupList *list)
->  {
->      CXLDCExtent *ent, *ent_next;
->      CXLDCExtentGroup *group = QTAILQ_FIRST(list);
-> +    uint32_t extents_deleted = 0;
->  
->      QTAILQ_REMOVE(list, group, node);
->      QTAILQ_FOREACH_SAFE(ent, &group->list, node, ent_next) {
->          cxl_remove_extent_from_extent_list(&group->list, ent);
-> +        extents_deleted++;
->      }
->      g_free(group);
-> +
-> +    return extents_deleted;
->  }
->  
->  /*
-> @@ -3011,7 +3015,7 @@ static CXLRetCode cmd_dcd_add_dyn_cap_rsp(const struct cxl_cmd *cmd,
->      CXLUpdateDCExtentListInPl *in = (void *)payload_in;
->      CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
->      CXLDCExtentList *extent_list = &ct3d->dc.extents;
-> -    uint32_t i;
-> +    uint32_t i, num;
->      uint64_t dpa, len;
->      CXLRetCode ret;
->  
-> @@ -3020,7 +3024,8 @@ static CXLRetCode cmd_dcd_add_dyn_cap_rsp(const struct cxl_cmd *cmd,
->      }
->  
->      if (in->num_entries_updated == 0) {
-> -        cxl_extent_group_list_delete_front(&ct3d->dc.extents_pending);
-> +        num = cxl_extent_group_list_delete_front(&ct3d->dc.extents_pending);
-> +        ct3d->dc.total_extent_count -= num;
->          return CXL_MBOX_SUCCESS;
->      }
->  
-> @@ -3051,10 +3056,12 @@ static CXLRetCode cmd_dcd_add_dyn_cap_rsp(const struct cxl_cmd *cmd,
->  
->          cxl_insert_extent_to_extent_list(extent_list, dpa, len, NULL, 0);
->          ct3d->dc.total_extent_count += 1;
-> +        ct3d->dc.nr_extents_accepted += 1;
->          ct3_set_region_block_backed(ct3d, dpa, len);
->      }
->      /* Remove the first extent group in the pending list */
-> -    cxl_extent_group_list_delete_front(&ct3d->dc.extents_pending);
-> +    num = cxl_extent_group_list_delete_front(&ct3d->dc.extents_pending);
-> +    ct3d->dc.total_extent_count -= num;
->  
->      return CXL_MBOX_SUCCESS;
->  }
-> @@ -3160,7 +3167,7 @@ free_and_exit:
->          }
->          *updated_list_size = 0;
->      } else {
-> -        *updated_list_size = ct3d->dc.total_extent_count + cnt_delta;
-> +        *updated_list_size = ct3d->dc.nr_extents_accepted + cnt_delta;
->      }
->  
->      return ret;
-> @@ -3222,7 +3229,10 @@ static CXLRetCode cmd_dcd_release_dyn_cap(const struct cxl_cmd *cmd,
->          ct3_set_region_block_backed(ct3d, ent->start_dpa, ent->len);
->          cxl_remove_extent_from_extent_list(&updated_list, ent);
->      }
-> -    ct3d->dc.total_extent_count = updated_list_size;
-> +    ct3d->dc.total_extent_count += (updated_list_size -
-> +                                    ct3d->dc.nr_extents_accepted);
-> +
-> +    ct3d->dc.nr_extents_accepted = updated_list_size;
->  
->      return CXL_MBOX_SUCCESS;
->  }
-> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> index 94e7274912..f283178d88 100644
-> --- a/hw/mem/cxl_type3.c
-> +++ b/hw/mem/cxl_type3.c
-> @@ -2076,6 +2076,7 @@ static void qmp_cxl_process_dynamic_capacity_prescriptive(const char *path,
->      }
->      if (group) {
->          cxl_extent_group_list_insert_tail(&dcd->dc.extents_pending, group);
-> +        dcd->dc.total_extent_count += num_extents;
->      }
->  
->      /*
-> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> index ed6cd50c67..a151e19da8 100644
-> --- a/include/hw/cxl/cxl_device.h
-> +++ b/include/hw/cxl/cxl_device.h
-> @@ -618,6 +618,7 @@ struct CXLType3Dev {
->          CXLDCExtentList extents;
->          CXLDCExtentGroupList extents_pending;
->          uint32_t total_extent_count;
-> +        uint32_t nr_extents_accepted;
->          uint32_t ext_list_gen_seq;
->  
->          uint8_t num_regions; /* 0-8 regions */
-> @@ -696,7 +697,7 @@ CXLDCExtentGroup *cxl_insert_extent_to_extent_group(CXLDCExtentGroup *group,
->                                                      uint16_t shared_seq);
->  void cxl_extent_group_list_insert_tail(CXLDCExtentGroupList *list,
->                                         CXLDCExtentGroup *group);
-> -void cxl_extent_group_list_delete_front(CXLDCExtentGroupList *list);
-> +uint32_t cxl_extent_group_list_delete_front(CXLDCExtentGroupList *list);
->  void ct3_set_region_block_backed(CXLType3Dev *ct3d, uint64_t dpa,
->                                   uint64_t len);
->  void ct3_clear_region_block_backed(CXLType3Dev *ct3d, uint64_t dpa,
+>  # THEORY OF OPERATION: Create x1,2,3,4 regions to exercise the XOR math
 > -- 
-> 2.47.2
+> 2.43.0
 > 
-
--- 
-Fan Ni (From gmail)
+> 
