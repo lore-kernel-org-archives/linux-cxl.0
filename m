@@ -1,178 +1,226 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2050.outbound.protection.outlook.com [40.107.244.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E73C025291B
-	for <linux-cxl@vger.kernel.org>; Thu, 29 May 2025 05:13:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748495629; cv=none; b=Sz8DsdjQc0CY3+LNF6fpJ4Fey4KO+GXw67Wa7dBTa2Kncl1Gr6bu7UUdjvUZFNiAKGyNRMtmgSWYREMgp7BpuINiI30rDWxFnSwxdQormRUPNnL9Q5fb+iyQlJz11aVlexzAKWlwGmMMUDiVahioIhLPqgPK2dTbjnhIm3FbQvI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748495629; c=relaxed/simple;
-	bh=fHGAkrjJ0diP/1aryM9HUsCICK01IpEIBD3RppjmyIY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QgQu0iZEw+pFs8to/U5cSLMDmkc02cCWVmylFwH7gyPPaGI5+pxW5pcRuzSI6TYjPysfL3QcuPsdaROjQAG6LN5AKDyoWsWb1g/SImQm/KgZ49GDlZDOnxpyGjkxFtX7F6/TkpK3w1JPYZapOBC7msllG+/SzFqTKLddPmBqXus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=YMikC+Lt; arc=none smtp.client-ip=91.218.175.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42D4513AC1;
+	Thu, 29 May 2025 05:29:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748496580; cv=fail; b=Ea5V0k48cVNtX0tpf6pkfSdZTxJzwKWHB5JnzspR7qW6mPKDsNtuX4vg3/GkXjskMIh0tL6mGunCjJweUykNdpnoYqzLsL/nkfVFEi0r6uOy8Koflp2WaivM6EHc6iXR0P2DWLM3LT8dD6Bk75wBW061XjHguxzMJBsliwARECQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748496580; c=relaxed/simple;
+	bh=C+M+TOmeeJ1BEJwYvh3f+RyebBIh+iLAUuzteZRg95E=;
+	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=MBFzuLc/kAMfxGVvAwN2MQdpqE1iMktvOf+5/cQCXaEmBCRs2LuA+LEBMjJCH+N0mWYbB9eQPyY+6/Cy5tftl/c3a+aLvc3YZ2lPGBRvszjxWW8wBV0lFXYxXDOptlygEPqHnP9CHcwUR/Ox7Ry3lSDnOmA9/NXxmtMG+5CHw0A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=z/KySBh5; arc=fail smtp.client-ip=40.107.244.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="YMikC+Lt"
-Date: Thu, 29 May 2025 14:13:30 +0900
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748495620;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ft5agwKDm8mVsjeLDhOw5RT0PS9jra2LFUmmBHo9PzE=;
-	b=YMikC+Lt8WyYOzjn3zlw0vWqHTGW1zCE2G6beXc++FC/N1ZK4RytW87EtTmHQp/9ZefJNv
-	8GSKMe+uPmC1wWA7cxxXzjWUYUgdB+fQVzJpWzGGXOTRporoy0vxi/emfirt/H7r1NINB3
-	+qtBmZG7Q1tuZKXF4bP4EAuRQYUbZpo=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Itaru Kitayama <itaru.kitayama@linux.dev>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: qemu-devel@nongnu.org, Fan Ni <fan.ni@samsung.com>,
-	Peter Maydell <peter.maydell@linaro.org>, mst@redhat.com,
-	linuxarm@huawei.com, linux-cxl@vger.kernel.org, qemu-arm@nongnu.org,
-	Yuquan Wang <wangyuquan1236@phytium.com.cn>,
-	Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
-	Alireza Sanaee <alireza.sanaee@huawei.com>
-Subject: Re: [PATCH v14 0/5] arm/virt: CXL support via pxb_cxl
-Message-ID: <aDfs+gIkK5ekKBXx@vm4>
-References: <20250528110726.226389-1-Jonathan.Cameron@huawei.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="z/KySBh5"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LI94LGIO6ha2ir8FzN5jRGDiQMDgE7sWE3Wbr6k2L8+v16dvLQBACaLuk6C4Z2yLF9rlOAyjv3b5P/Y7gzzx1ChWZGMR+LtfBpylWBeSmvEGg9WSUak1lxATTyQCZFzEIKUiR8i38MkZutxoOoIZcLR3taahEt6AisWtZexmYhnCCX1ldHfrZVcHL6ydZi5rm/Bdre9sFzp4A5qMDGRAgo1B/NSJXQocNXTkm4JJsP9PQ/xIE2JBpP7oJkZnTtJLNmd5JgHQGgDaQNmGJzpsuKj3cmPrDYuW/18jnEpthPzzPj5EwDCABkYjw4Q6oqp1OGoc8dFIzKDy5OtcqZ46fg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QELpkHI0pNN4A+ZvtnsJNnF2RKWRZZRBNMN88P/IYyE=;
+ b=kxcAoWQ9XSkgQHcy399tzf4p1/1BrOM+PMxOGkSth++WTfIs4SvUZDgpFQ9rg4EHCr7KfEmA9NkYT/xn0FfsmFvBr8awnaieMnoeltzw0BB9C2OxkVqLP09RCllgmHpwCA0UAkRMr0Us/DEVUP4oCSMmon77yZeI29g4Ax5CJBQnoxd9JAPP5n+O7Gx+4HLH5dz8MetrInvOHB2QtVaxU3Yvzf/GOqBJXQ9mAHBpDvsAsDkPD1wXzfYg5n6mKoD6upDNcSwQPTJJHEwkvmNAf+HzcYh/L6k+ARvaWv/g97BZOe4odSEX9gQWARUGIn5sTYhvfEmVaH4WZ5gfy+YUCQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QELpkHI0pNN4A+ZvtnsJNnF2RKWRZZRBNMN88P/IYyE=;
+ b=z/KySBh52ZSLkBTRKFnn4OPoFsnyu54mIu+i6Ipz9IU3N4hwAzxEDn120H7NmzAoRRZBulB/mK6mg8y6EiMb9H81/AIkWFXz++1tQONknH4phQAJh7o/kExx4jjRNCOaiyeESoe8zaIR0NBfl8KTkL0OgA53vdUKYAAVc5uaHiw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
+ by SN7PR12MB7884.namprd12.prod.outlook.com (2603:10b6:806:343::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.27; Thu, 29 May
+ 2025 05:29:34 +0000
+Received: from CH3PR12MB9194.namprd12.prod.outlook.com
+ ([fe80::53fb:bf76:727f:d00f]) by CH3PR12MB9194.namprd12.prod.outlook.com
+ ([fe80::53fb:bf76:727f:d00f%5]) with mapi id 15.20.8769.022; Thu, 29 May 2025
+ 05:29:34 +0000
+Message-ID: <91e2985f-0815-4918-b7cf-c593bc2fa96b@amd.com>
+Date: Thu, 29 May 2025 15:29:23 +1000
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH v2 00/18] PCI device authentication
+From: Alexey Kardashevskiy <aik@amd.com>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Bjorn Helgaas <helgaas@kernel.org>, David Howells <dhowells@redhat.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ "David S. Miller" <davem@davemloft.net>,
+ David Woodhouse <dwmw2@infradead.org>,
+ James Bottomley <James.Bottomley@hansenpartnership.com>,
+ linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
+ linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
+ linux-crypto@vger.kernel.org, linuxarm@huawei.com,
+ David Box <david.e.box@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+ "Li, Ming" <ming4.li@intel.com>,
+ Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
+ Alistair Francis <alistair.francis@wdc.com>,
+ Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+ Damien Le Moal <dlemoal@kernel.org>, Dhaval Giani <dhaval.giani@amd.com>,
+ Gobikrishna Dhanuskodi <gdhanuskodi@nvidia.com>,
+ Jason Gunthorpe <jgg@nvidia.com>, Peter Gonda <pgonda@google.com>,
+ Jerome Glisse <jglisse@google.com>, Sean Christopherson <seanjc@google.com>,
+ Alexander Graf <graf@amazon.com>, Samuel Ortiz <sameo@rivosinc.com>,
+ Eric Biggers <ebiggers@google.com>, Stefan Berger <stefanb@linux.ibm.com>,
+ Jonathan Corbet <corbet@lwn.net>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Alan Stern <stern@rowland.harvard.edu>
+References: <cover.1719771133.git.lukas@wunner.de>
+ <2140c4e4-6df0-47c7-8301-c6eb70ada27d@amd.com> <ZovrK7GsDpOMp3Bz@wunner.de>
+ <b1595ceb-a916-4ff0-97bd-1a223e0cef15@amd.com> <Z6zN8R-E9uJpkU7j@wunner.de>
+ <dab69e0c-37c2-41f1-a9db-fe116fe4cbbd@amd.com>
+Content-Language: en-US
+In-Reply-To: <dab69e0c-37c2-41f1-a9db-fe116fe4cbbd@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SY6PR01CA0035.ausprd01.prod.outlook.com
+ (2603:10c6:10:eb::22) To CH3PR12MB9194.namprd12.prod.outlook.com
+ (2603:10b6:610:19f::7)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250528110726.226389-1-Jonathan.Cameron@huawei.com>
-X-Migadu-Flow: FLOW_OUT
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|SN7PR12MB7884:EE_
+X-MS-Office365-Filtering-Correlation-Id: 08cf0c75-546f-48ba-0ef2-08dd9e71cb71
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?QUE3Z2dvRklOc0F0azFkN3JjdlU4UmIvY2tMRld1VWovY25ON0svUldXcklE?=
+ =?utf-8?B?TStXMmlnZldjcndVOWpKUGtQRDJmVk5RcENyMVlTQXpMaFpEV1NNTHBjT3Nj?=
+ =?utf-8?B?YzNFVWc1Y1F3TG5pRldkckx5d0Z4a05ocmtHOWQxRlV0WWE5NEg3R3NXWjll?=
+ =?utf-8?B?NHUrVk0vWFdDQktTbWNsNlhOWXFFSG90Q3RVcGI5TVZ6K05BYVpuRU5meUxr?=
+ =?utf-8?B?UGJ5UHQ4SHdsMUozb2hvMGZZQlF2WjUwakxjM1pXYS9xck1HUnA3SmV6djhH?=
+ =?utf-8?B?R0FIRysxcGZHZ0Q2V0hidXQ3ZVFzWUdwa3BXS05PaERsSzVtanlYU01BeTFt?=
+ =?utf-8?B?MGhSUUFDMUlUSnVrZXE5eWJZV1lRNXFKWHJDSWozeTBYK2FqZ1BTSFJWUDd3?=
+ =?utf-8?B?SW1CTTlNUjJMMGRzaU5nUGlSL2RDZGo4NERjT0hYNUtsQVk0NDJxN09hSjJ0?=
+ =?utf-8?B?RnlpRlpEQ1Fzc1A2K2w5TmF1dGNVZE84eE50a000U0VGWFlyd3RzanZGK3pH?=
+ =?utf-8?B?MnZyWHJ0eXNOZGl5TXdCK2Y1a3pybHEzSXVrL0RlNjZsenZaR2R1aCtud0dU?=
+ =?utf-8?B?Vit3QnpnVFpFQ1dkVVd5dU9HRE5ZS1JNZWRCOWsrdEFjN3F2Q2hzRUZsalpx?=
+ =?utf-8?B?b2R1S3pXS2hMRGVwcDd5OFltWno1Zzgwclo3enFkYktzenJqc3dIbkZrbldN?=
+ =?utf-8?B?eVIrUm1Fdll0Mk1YdHFxYlFXUGxEdFYzc3FxcktOU1dZcHdOaEIrbWVmcnlX?=
+ =?utf-8?B?R2VRZFRzclR1TjlWRHJ6UUYzWmtVWklSbHdjK2t6TlV4YWtlWm5mRjZ0cDJM?=
+ =?utf-8?B?TlVZUFlrVG1kalFnb09DYktLZmkwN3JkL0V4TG50UEVMR2VjcVB4MWVoOVkx?=
+ =?utf-8?B?NmxmZVcyU0grYytjYzg3YjNiMVhKZUF2YzhZSW5ySFRiNFloQmxrZVhwNkcw?=
+ =?utf-8?B?OUVnZ0EwVVFJV2FJUlFvejkxWXdMdHpZanVIeFY0RnhqdDNGY29hc2thbG1G?=
+ =?utf-8?B?Slg5MmZmWGx5WEpPT1hSSDZWRW1LNUJtSzRjRTdKWk4vYzlZZDkzcEhrbmUx?=
+ =?utf-8?B?WVJEL05QVmpsQVJaNTZTcXgwNDJIWGVoUUhObVljci9YSkRCSnNSYWJFT2tH?=
+ =?utf-8?B?aS9WYVdBSVNlNisrYVdUNmwrVTB3Wi9sd1JIeUFMT0dMdE5pUUJjdGtpMlV1?=
+ =?utf-8?B?Ujk0MWJhRGQxcERsSDJNNWlGMWVDVDBTRmdUcGMvNm9TWW1nOXp4em1JOUto?=
+ =?utf-8?B?Ym9WU21sL2xxS1puWGVMNWxnUVIxejlIajFQZUx6RUE5UXZPQ1RkWkRubFk5?=
+ =?utf-8?B?VUdkWURsbkdCb2dXMWt6Sjl0d0VUMm04UU5wOVFTc2wxV0s0d084aDBCem5r?=
+ =?utf-8?B?NThXOHhhOGhCb1kxcXJUVGFVM1B3TjNKcVE5YXcvU05zVDg0V0paMXc3S0Qv?=
+ =?utf-8?B?M3VvS2g4bWhLRHNlaXdaTFR0c0JsVkMxM05zREIvZ29iM3k5ZTkvQ2lwdGhi?=
+ =?utf-8?B?UmpzcmRCMWxpelhPKzRkeDBtVTFWZHVGYk1qV0tFOXkzb245eTBMR01MMU9o?=
+ =?utf-8?B?bmhWLzdIa3BqdnoyLzZVT1lVcndSaGdodFhoTWJmYXYyN1JUMW9BQnJtditM?=
+ =?utf-8?B?WFFPMVJrNTQvNjNrb0l4eGZSN016alNHZW1WUG1xNEUrTlBFc1F6QWFMQ25m?=
+ =?utf-8?B?bUpjMEpXRjlYR2tDK1hqSWJwdDBxOGwvOUxad1J1R1k2WG8zakVMbXU2Qzdh?=
+ =?utf-8?B?aDJyWU9kaTk1NEZ0bUhJOE5NZCtvcjRkQXJKUmJSaXBzdmtQRDhPV3dXbHlt?=
+ =?utf-8?B?M3dobVhHc0VGZ0RCdTE5WEJObVg5S3FFcGlPRVA3UzdVSEExelJTMXQ5T1dR?=
+ =?utf-8?B?cjVoSXFDbGplcDY5QXJ6YTgyOCtQbkhxOGxvb3g1Vm1ZNy94eTR5d2F5eUFE?=
+ =?utf-8?Q?QFexsZjvISaWiBpsi4/EWN8NUZtKyUs9?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?eHhXTkhrRFMyb0VCLzF4cWkvSE9SK0pQbWlCcko4a1NvR1VoRE5PVm01enls?=
+ =?utf-8?B?N1FuRXVNMm42RXV5bGhteUhmdXdVWmJOd3p3YkhIQ0U2NkxJQzl4cWJGaG8r?=
+ =?utf-8?B?NW9BSFBRWDdFRVExTHgxRXpWQ0lHWVZUK05OQlZWUklwYTZMaGtEb2liR3RJ?=
+ =?utf-8?B?bVZIckNRb2trdFI1UWQxeC9tWi94YXpobXFBR0VKS3lnUDVLZWtsKzNiWk8y?=
+ =?utf-8?B?TU9oYmh2NVlFdUtXM1BWeHV1TUlBQ2hsdWptakxvbVlmNEJzQ29ZR2psemRq?=
+ =?utf-8?B?aVJ4czA1Vm4yNERIbWdYVU10dFBqaGhSWUJ4N29jeGVoWkNwSXpkN214NCtG?=
+ =?utf-8?B?YjRuZjc3WFIvVHJkNlAwd0VkWlNEMFRTbE93V1MvZjNsODVMZkZNWUJwWEF3?=
+ =?utf-8?B?d2FYRVFrdCtnUy91amgvR0d4NG5Sd3Bkc3lDbWp2QStCQ2hVbCsxSzZDaW1I?=
+ =?utf-8?B?dmpDOXNIcEJoU25aUnNiUFFOL1FvekM2MFFlamtEMnN6V3BSYjFrUDUwSVh0?=
+ =?utf-8?B?UUcyWFI0SHp4UzNoWTNZazA2Mmxuc1JWeFBnaXJHY2pqRUh2TmQvYmtNS0Vi?=
+ =?utf-8?B?N3BTVWsxS1VmSUdwZTJDS2lXOFIrS2V2aGZPSTlsY1NSSFh3alp0VDF3aVM3?=
+ =?utf-8?B?Yk5aNFlHS2p2ZGVhcHJqTDcrQ0ZZQm90STRkVXJrRnVRVmx4T0didmZEMDBw?=
+ =?utf-8?B?RUhHSnRBMkVHaENtK3VESk8rY1VCbHcyNk5Mb0w3Skg4TFpNV0FaaXVTQWNu?=
+ =?utf-8?B?NlBVNml2OTcycklwNHIwOGZBdWp1NzdYTzVBUVJEL0RVS3NadSsxNmRtemxi?=
+ =?utf-8?B?dmVnU1RDd2lwZkUySnJ5cE5UTFFjeFcrRG9OWkxITHMrTVNQRUJoaWRlb3FS?=
+ =?utf-8?B?ZGdwVUduYnFFdTlsaE5RcVQzTzduRnM2TUt6Yk8yN2c1eXR5OStGcDZxQ0xa?=
+ =?utf-8?B?RCs3RE1JemxmVjFQS2wrb212ME52aHpvSzZ6OFBHVjQ0UXkxRFZBOGhrREZH?=
+ =?utf-8?B?OWRGbVA3M1gveXV1VUJnYnA0dVEzTktDY0Y0QnRBanlYei84bjArb0dDN3N5?=
+ =?utf-8?B?Y1pxbmpCcmxNUVdvMTgxbVZiV1pSbWNCWGVsaUFuNGUwa2o2MlhuSDV2TmV3?=
+ =?utf-8?B?aFZmUGVUd1pyOUcwTGphM3ZaVFJzbU1pd3B3LzVVR0NGcFhMR0RhZ2dDVERC?=
+ =?utf-8?B?dS9lamx1V0x3TmlSamhwUXJjOXZoMVR2bExVMVVrMENOenltaGVrSThjb1F5?=
+ =?utf-8?B?aXZOZE9HOVV0Nm5RRkcwdWhXRE9RTDZYQnlyODhnb1dBbkp5LzZwUXo0bU81?=
+ =?utf-8?B?T0FKYVR5RkdlbjdhNzlKMVUwSlhGbkVFVTJQR2MyeU1vR1RxQmpEZjhzZTRC?=
+ =?utf-8?B?cWQ5S3ZCV0gzL2hhd0tJOG5RN3FEK3NHU0t0cTdhcDBOWk40WHBNNnh6ZkJ0?=
+ =?utf-8?B?N01uU25JNElRbHlnazVUTE4rQzk5ejJZQ1FRWGNoMFJzdEJLL2dXNTRtWWxX?=
+ =?utf-8?B?SXU3Yi93YUhqTHp6cGJaeWJqa09pTks1RjZ5YW1qVjhkQlBXV01ZUk1CN2tE?=
+ =?utf-8?B?bjFydUtQbDI5KzFqQnhXWm81SlQ5RnE5SUFGZnduTE5pKzcrTkRLSEJoVHdH?=
+ =?utf-8?B?U2xLYUxTdnU3VG44WGtsN1FLSTRETkFoUllBRDVPOW9NREtzUmZZVHFheHJT?=
+ =?utf-8?B?NzBBNHlVL0JjL0hvS2NqMVZKdUNXeUg5YXJVWW5CNVZGck5TRnd6aHFmTDZ1?=
+ =?utf-8?B?Y012KzBPRHNFU09pSUk1OUxLc29maXV2SkZLSElyWUpSQXZhMHppWkEzbW9F?=
+ =?utf-8?B?YzlXSG1xSmJ6Um5JUmtvQlZ6NU9BZzVVTTZ0ZUlDanBzbGtxZlZGYVFwYk55?=
+ =?utf-8?B?dFVuTmhIVlhBN1htUVdpNGpZZVVkZlBmblE0UWJoSVFYQXFIMXg0R29aQUhZ?=
+ =?utf-8?B?N25FZlZvdkVTUEhMaEp5WVR6aTZWQytzTHF1bFFWSFc4K2Uxa1ptS3lEUEwy?=
+ =?utf-8?B?NVZNRkVVZllWc2VCeHZoejkzOWkwQTM2SlkyZndPcXdEdmZGN0xTck5VZmk0?=
+ =?utf-8?B?dDJ4b0ppZ0FhSVd1dDN0ZjZDZ1BvTmMzR3NScDdFLzNmLzdPYW9yZjQ2NzlE?=
+ =?utf-8?Q?aEdH34zyYggg6ewDolVlrV+Tn?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 08cf0c75-546f-48ba-0ef2-08dd9e71cb71
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2025 05:29:34.3937
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: x3g+ZRPAvxFcEc45KcCG9fM0np+96lgKuC9cHKVddz1V9uDL2kN/UNmFqQpkDiZd9eSpvPzpEhrocp0pii7S1A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7884
 
-On Wed, May 28, 2025 at 12:07:21PM +0100, Jonathan Cameron wrote:
-> v14: Simplifications suggeseted by Itaru (and some extra simplifications
->      that became apparent) and gather tags.
->      See individual patches for more information.
-> 
-> Updated cover letter
-> 
-> Richard Henderson has posted a pull request with a fix for the TCG TLB
-> issue which will hopefully merge shortly (Thanks Richard!).
-> 
-> Back in 2022, this series stalled on the absence of a solution to device
-> tree support for PCI Expander Bridges (PXB) and we ended up only having
-> x86 support upstream. I've been carrying the arm64 support out of tree
-> since then, with occasional nasty surprises (e.g. UNIMP + DT issue seen
-> a few weeks ago) and a fair number of fiddly rebases.
-> gitlab.com/jic23/qemu cxl-<latest date>.  Will update shortly with this
-> series.
-> 
-> A recent discussion with Peter Maydell indicated that there are various
-> other ACPI only features now, so in general he might be more relaxed
-> about DT support being necessary. The upcoming vSMMUv3 support would
-> run into this problem as well.
-> 
-> I presented the background to the PXB issue at Linaro connect 2022. In
-> short the issue is that PXBs steal MMIO space from the main PCI root
-> bridge. The challenge is knowing how much to steal.
-> 
-> On ACPI platforms, we can rely on EDK2 to perform an enumeration and
-> configuration of the PCI topology and QEMU can update the ACPI tables
-> after EDK2 has done this when it can simply read the space used by the
-> root ports. On device tree, there is no entity to figure out that
-> enumeration so we don't know how to size the stolen region.
-> 
-> Three approaches were discussed:
-> 1) Enumerating in QEMU. Horribly complex and the last thing we want is a
->    3rd enumeration implementation that ends up out of sync with EDK2 and
->    the kernel (there are frequent issues because of how those existing
->    implementations differ.
-> 2) Figure out how to enumerate in kernel. I never put a huge amount of work
->    into this, but it seemed likely to involve a nasty dance with similar
->    very specific code to that EDK2 is carrying and would very challenging
->    to upstream (given the lack of clarity on real use cases for PXBs and
->    DT).
-> 3) Hack it based on the control we have which is bus numbers.
->    No one liked this but it worked :)
-> 
-> The other little wrinkle would be the need to define full bindings for CXL
-> on DT + implement a fairly complex kernel stack as equivalent in ACPI
-> involves a static table, CEDT, new runtime queries via _DSM and a description
-> of various components. Doable, but so far there is no interest on physical
-> platforms. Worth noting that for now, the QEMU CXL emulation is all about
-> testing and developing the OS stack, not about virtualization (performance
-> is terrible except in some very contrived situations!)
-> 
-> There is only a very simple test in here, because my intent is not to
-> duplicate what we have on x86, but just to do a smoke test that everything
-> is hooked up.  In general we need much more comprehensive end to end CXL
-> tests but that requires a reaonsably stable guest software stack. A few
-> people have expressed interest in working on that, but we aren't there yet.
-> 
-> Note that this series has a very different use case to that in the proposed
-> SBSA-ref support:
-> https://lore.kernel.org/qemu-devel/20250117034343.26356-1-wangyuquan1236@phytium.com.cn/
-> 
-> SBSA-ref is a good choice if you want a relatively simple mostly fixed
-> configuration.  That works well with the limited host system
-> discoverability etc as EDK2 can be build against a known configuration.
-> 
-> My interest with this support in arm/virt is support host software stack
-> development (we have a wide range of contributors, most of whom are working
-> on emulation + the kernel support). I care about the weird corners. As such
-> I need to be able to bring up variable numbers of host bridges, multiple CXL
-> Fixed Memory Windows with varying characteristics (interleave etc), complex
-> NUMA topologies with wierd performance characteristics etc. We can do that
-> on x86 upstream today, or my gitlab tree. Note that we need arm support
-> for some arch specific features in the near future (cache flushing).
-> Doing kernel development with this need for flexibility on SBSA-ref is not
-> currently practical. SBSA-ref CXL support is an excellent thing, just
-> not much use to me for this work.
-> 
-> Also, we are kicking off some work on DCD virtualization, particularly to
-> support inter-host shared memory being presented up into a VM. That
-> will need upstream support on arm64 as it is built on top of the existing
-> CXL emulation to avoid the need for a separate guest software stack.
-> 
-> Note this is TCG only - it is possible to support limited use with KVM but
-> that needs additional patches not yet ready for upstream.  The challenge
-> is interleave - and the solution is don't interleave if you want to run
-> with KVM.
 
-Series applied cleanly on top of today's QEMU. And I confirm that
-qtest-aarch64/cxl-test passes the test as it should and ndctl cxl test
-suite ran fine 11 out of 12 (1 SKIP) on this series again this time tracing
-subsystem enabled as Alison suggested. Used the Intel folk cxl/next
-kernel.
 
-Tested-by: Itaru Kitayama <itaru.kitayama@fujitsu.com>
+On 20/5/25 18:35, Alexey Kardashevskiy wrote:
+> 
+> 
+> On 13/2/25 03:36, Lukas Wunner wrote:
+>> On Tue, Feb 11, 2025 at 12:30:21PM +1100, Alexey Kardashevskiy wrote:
+>>>>> On 1/7/24 05:35, Lukas Wunner wrote:
+>>>>>> PCI device authentication v2
+>>>>>>
+>>>>>> Authenticate PCI devices with CMA-SPDM (PCIe r6.2 sec 6.31) and
+>>>>>> expose the result in sysfs.
+>>>
+>>> Has any further development happened since then? I am asking as I have the
+>>> CMA-v2 in my TSM exercise tree (to catch conflicts, etc) but I do not see
+>>> any change in your github or kernel.org/devsec since v2 and that v2 does not
+>>> merge nicely with the current upstream.
+>>
+>> Please find a rebase of v2 on v6.14-rc2 on this branch:
+>>
+>> https://github.com/l1k/linux/commits/doe
+>>
+>> A portion of the crypto patches that were part of v2 have landed in v6.13.
+>> So the rebased version has shrunk.
+>>
+>> There was a bit of fallout caused by the upstreamed crypto patches
+>> and dealing with that kept me occupied during the v6.13 cycle.
+>> However I'm now back working on the PCI/CMA patches,
+> 
+> Any luck with these? Asking as there is another respin  https://lore.kernel.org/r/20250516054732.2055093-1-dan.j.williams@intel.com  and it considers merge with yours. Thanks,
 
-Thanks,
-Itaru.
+Ping?
 
 > 
-> Jonathan Cameron (5):
->   hw/cxl-host: Add an index field to CXLFixedMemoryWindow
->   hw/cxl: Make the CXL fixed memory windows devices.
->   hw/cxl-host: Allow split of establishing memory address and mmio
->     setup.
->   hw/arm/virt: Basic CXL enablement on pci_expander_bridge instances
->     pxb-cxl
->   qtest/cxl: Add aarch64 virt test for CXL
+>> specifically the migration to netlink for retrieval of signatures
+>> and measurements as discussed at Plumbers.
+>>
+>> Thanks,
+>>
+>> Lukas
 > 
->  include/hw/arm/virt.h     |   4 +
->  include/hw/cxl/cxl.h      |   4 +
->  include/hw/cxl/cxl_host.h |   6 +-
->  hw/acpi/cxl.c             |  76 +++++++--------
->  hw/arm/virt-acpi-build.c  |  34 +++++++
->  hw/arm/virt.c             |  29 ++++++
->  hw/cxl/cxl-host-stubs.c   |   8 +-
->  hw/cxl/cxl-host.c         | 190 ++++++++++++++++++++++++++++++++------
->  hw/i386/pc.c              |  51 +++++-----
->  tests/qtest/cxl-test.c    |  59 +++++++++---
->  tests/qtest/meson.build   |   1 +
->  11 files changed, 353 insertions(+), 109 deletions(-)
-> 
-> -- 
-> 2.48.1
-> 
+
+-- 
+Alexey
+
