@@ -1,224 +1,111 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1A7B209F5A
-	for <linux-cxl@vger.kernel.org>; Thu, 29 May 2025 17:07:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 684FB1632C8
+	for <linux-cxl@vger.kernel.org>; Thu, 29 May 2025 17:24:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748538468; cv=none; b=CNnwDiTi96fwNcIELLheicyn6XqyZYEfYhkzWk2oaioLj5n/nivx0nBSL+LlhQezss8UrhN+LhEp9dXgYDk1DUbWlhUmEjTff1QSM+Qi7Hx0jbeV4uXN3tgFPzujrlsXKEzZednmBZ+S0mbXdKGu/OH6rm1wqaWKoBLVBd4eLD8=
+	t=1748539448; cv=none; b=goIeXb/le8KDOenNMefIOyN/1fnkDbj8nwr7RcHnDYOY4P8Zwpxe9Ykph2MjHlqNrVfAZb12mKygKq/4mvpw5Rb1tW+hY31J2961tAaJ74h/MNL/TF1Y1AejWLwYm7XCaEMe5tq2uyvaGPw0eyhpFNme3kja5JQ5isZ1itwj9So=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748538468; c=relaxed/simple;
-	bh=I/YL0lB56F9jcP+w0tTW+nlfG7ZJuAKtFLTxCZws6Lo=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=meZb490p0npzb12M3OI/ia2ekBrteNf2s2i/S5vzAq1NW6xVP6BlunBvAReynCWTfVsFQWchHD8OT2lewVpf1E6oYUaekPT8B/0I42K9hcRyMligN8iPoTvenN8Q/PhqhY9HaTiayia4VQOz8H10kkZU6zfJaVDt38IK3gE91QA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b7Xp40Zp2z6K9LY;
-	Fri, 30 May 2025 01:06:20 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 218D8140595;
-	Fri, 30 May 2025 01:07:36 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 29 May
- 2025 19:07:35 +0200
-Date: Thu, 29 May 2025 18:07:34 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <nifan.cxl@gmail.com>, <mst@redhat.com>
-CC: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>,
-	<a.manzanares@samsung.com>, <dave@stgolabs.net>, <nmtadam.samsung@gmail.com>,
-	<anisa.su887@gmail.com>, <gourry@gourry.net>, <fan.ni@samsung.com>
-Subject: Re: [Qemu PATCH v2] hw/cxl: fix DC extent capacity tracking
-Message-ID: <20250529180734.00001197@huawei.com>
-In-Reply-To: <20250529163925.2916725-1-nifan.cxl@gmail.com>
-References: <20250529163925.2916725-1-nifan.cxl@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1748539448; c=relaxed/simple;
+	bh=82xFsc6Sni33qIILIGq8Dc+nmMfXkZDD0WLeJR3Yeho=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r8Czahh0d00cAMAUt6DJf6eNYWU3N8TFsD4c8cGJJhxF9w5h9qCE02l/rxO3UFs8rnw4Mx+9lX2MWrbQyn7alXTVXVxPnTaVH1s7ny0Q2AOd3+9tCJ7Z3MTbbnELPwXemLptHHW4qim3lZSFHsoMaHBtFfcv/vREHzn7JJVDivk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TEz5RTIf; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TEz5RTIf"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22d95f0dda4so14786895ad.2
+        for <linux-cxl@vger.kernel.org>; Thu, 29 May 2025 10:24:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748539447; x=1749144247; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kEyH62zNAebqEqtp3fTh4mOcudMflb/GkOdJm5SLEDk=;
+        b=TEz5RTIf5LUjZclHcn+0DA+nBnHLcLn82NLUYtb19ja+YHqF38wU6TSdMjiLH0sIyB
+         OVQeF07htZOGcQC2pdLWlr8VlHu/iiHltgUIm9yVxvCJkCa5T3IUr26KZ03wsUcy9o0S
+         TUzuCCPH92cZJgumIO/HFvIhhShbOi3e/mXP8dPwmhLa/RCYtWFNz2RCeCgUy7iv6ptp
+         K24noerYNo7SqqWP3b4Oqk8mgDZQVO6SrWPd1hp7fj6Iks3BBQ7UfIqDiHJCin7OPA0I
+         v1Dw75GJcIp6rjJsXm9wwx3WwS1rgsM/qq4HoSy8/7yZ7oB/UozPp0Fvxnd3gbd4auTZ
+         pnbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748539447; x=1749144247;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kEyH62zNAebqEqtp3fTh4mOcudMflb/GkOdJm5SLEDk=;
+        b=rHZ2U1r83cu6PXiMelr+Xipvyaig0smeAU+tKoAb/dhfif9+tGdB10nmAz2pM6EADM
+         7RumiHMa6lH41CUAPXmsFdSB1zx5VYAIFw7cJ5ZshKF5TvVs7XNEzBEYnCRum+HfG/Gm
+         HKH9hb6lluyhCHdokV0cW063O3ACDUyZZ67HIorzxsRLrHk8qtEzfADwDydJ2QJwfHTp
+         RRrUsbXVtXi3m8RHWNMfpbEP/Zt95fis7ue9S94uBuC+5cYZV5MYP1P8kSihsuGh31ni
+         31V92abSPF9zObGlnerSiJs/uXMuoyC5JHF18aZkloCajr/OTfhXGIcOtYPPXKFUiIez
+         cq4A==
+X-Forwarded-Encrypted: i=1; AJvYcCUU2IVfGNPiw4KQWxQaRMZEc6Wa5jZQkTmNutsTm0uCqDbW7iuPOGsRNeiFaxWs+86lJ0cW8LYBdx4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXaa1tunoO8CTUK+MNKDtm/tz/bV6BUAn2EvqB8goaDqKQQvZE
+	RI+0Rvh8xYIFZf0ohpRvLtQj+/btU1rSMQsZqfHvCRdsr4+vUuQgSyBW
+X-Gm-Gg: ASbGncssc+8BWxN7mAQ6wxEX5yKTDfiGA7uKNAI/aqKHDGuBNmPFF0TR44lFkiUEZt+
+	O/pLAZrf3rvSCLhlNuUDzeXxJx5qhrzu4FCwiLs5fEmF1va+Ilpyl9rNga0FJY54VdVD/tcomAU
+	VZdcyiRczeosX2aphgv7bFZwK2IxATJhckidsf1nxVEEmlS48I+S1H+/h8wa2LkjfcHwRo6slyQ
+	n6F/HwSPZ5HfJlcVYb4t608vgv/FyeyKK9FpgWYIVsWdj052q90563oT1YiIQ5/w2NAeXaDxUwd
+	jBhF5I5eq8HmaygwoFLezkUfeT4nGg+nb8NLcnG78sXuuzkCgqsbAXc=
+X-Google-Smtp-Source: AGHT+IGi5cGGCBmBiq+PkmtAJs3wjt1VsFTAILjcCXfRmlpkbOd8nC8FKlVdDZKj1HMFeYrFw5JuzQ==
+X-Received: by 2002:a17:902:c952:b0:235:779:edfe with SMTP id d9443c01a7336-23529a11512mr5031775ad.43.1748539446636;
+        Thu, 29 May 2025 10:24:06 -0700 (PDT)
+Received: from smc-140338-bm01 ([149.97.161.244])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bc8863sm14826385ad.19.2025.05.29.10.24.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 May 2025 10:24:06 -0700 (PDT)
+From: Fan Ni <nifan.cxl@gmail.com>
+X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
+Date: Thu, 29 May 2025 17:24:04 +0000
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: qemu-devel@nongnu.org, mst@redhat.com, linux-cxl@vger.kernel.org,
+	linuxarm@huawei.com
+Subject: Re: [PATCH qemu] hw/cxl: Fix register block locator size
+Message-ID: <aDiYNDGscGVVz6BB@smc-140338-bm01>
+References: <20250529134828.403049-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250529134828.403049-1-Jonathan.Cameron@huawei.com>
 
-On Thu, 29 May 2025 16:34:25 +0000
-nifan.cxl@gmail.com wrote:
-
-> From: Fan Ni <fan.ni@samsung.com>
+On Thu, May 29, 2025 at 02:48:28PM +0100, Jonathan Cameron wrote:
+> This has been wrong from day 1.  For now we only have
+> two entries (component and device registers).
 > 
-> Per cxl r3.2 Section 9.13.3.3, extent capacity tracking should include
-> extents in different states including added, pending, etc.
+> The wrong size could lead to arbitrary data off the stack being presented
+> in PCIe config space.
 > 
-> Before the change, for the in-device extent number tracking purpose, we only
-> have "total_extent_count" defined, which only tracks the number of
-> extents accepted. However, we need to track number of extents in other
-> states also, for now it is extents pending-to-add.
-> 
-> To fix that, we introduce a new counter for dynamic capacity
-> "nr_extents_accepted" which explicitly tracks number of the extents
-> accepted by the hosts, and fix "total_extent_count" to include
-> both accepted and pending extents counting.
-> 
-> Signed-off-by: Fan Ni <fan.ni@samsung.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-Thanks.  Michael, would you mind picking this up directly if
-you are happy with it?   It is an esoteric corner case but
-we should emulate resource exhaustion for tracking extents correctly.
-
-I don't have many fixes queued up at the moment to make it worth
-me bundling them up into a little series.  There is just this one
-and the one for Register Locator capability size I posted
-earlier today (Fan can you take a look at that one?)
-
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > ---
-> v2:
-> 1) No functional changes;
-> 2) Rebased the code to ToT of master branch;
-> 3) Picked up tag;
-> 
-> v1:
-> https://lore.kernel.org/linux-cxl/20250520195741.789841-1-nifan.cxl@gmail.com/
-> ---
->  hw/cxl/cxl-mailbox-utils.c  | 26 ++++++++++++++++++--------
->  hw/mem/cxl_type3.c          |  1 +
->  include/hw/cxl/cxl_device.h |  3 ++-
->  3 files changed, 21 insertions(+), 9 deletions(-)
-> 
-> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> index 299f232f26..0b615ea37a 100644
-> --- a/hw/cxl/cxl-mailbox-utils.c
-> +++ b/hw/cxl/cxl-mailbox-utils.c
-> @@ -2750,7 +2750,7 @@ static CXLRetCode cmd_dcd_get_dyn_cap_ext_list(const struct cxl_cmd *cmd,
->      uint16_t out_pl_len, size;
->      CXLDCExtent *ent;
->  
-> -    if (start_extent_id > ct3d->dc.total_extent_count) {
-> +    if (start_extent_id > ct3d->dc.nr_extents_accepted) {
->          return CXL_MBOX_INVALID_INPUT;
->      }
->  
-> @@ -2761,7 +2761,7 @@ static CXLRetCode cmd_dcd_get_dyn_cap_ext_list(const struct cxl_cmd *cmd,
->      out_pl_len = sizeof(*out) + record_count * sizeof(out->records[0]);
->  
->      stl_le_p(&out->count, record_count);
-> -    stl_le_p(&out->total_extents, ct3d->dc.total_extent_count);
-> +    stl_le_p(&out->total_extents, ct3d->dc.nr_extents_accepted);
->      stl_le_p(&out->generation_num, ct3d->dc.ext_list_gen_seq);
->  
->      if (record_count > 0) {
-> @@ -2883,16 +2883,20 @@ void cxl_extent_group_list_insert_tail(CXLDCExtentGroupList *list,
->      QTAILQ_INSERT_TAIL(list, group, node);
->  }
->  
-> -void cxl_extent_group_list_delete_front(CXLDCExtentGroupList *list)
-> +uint32_t cxl_extent_group_list_delete_front(CXLDCExtentGroupList *list)
->  {
->      CXLDCExtent *ent, *ent_next;
->      CXLDCExtentGroup *group = QTAILQ_FIRST(list);
-> +    uint32_t extents_deleted = 0;
->  
->      QTAILQ_REMOVE(list, group, node);
->      QTAILQ_FOREACH_SAFE(ent, &group->list, node, ent_next) {
->          cxl_remove_extent_from_extent_list(&group->list, ent);
-> +        extents_deleted++;
->      }
->      g_free(group);
-> +
-> +    return extents_deleted;
->  }
->  
->  /*
-> @@ -3011,7 +3015,7 @@ static CXLRetCode cmd_dcd_add_dyn_cap_rsp(const struct cxl_cmd *cmd,
->      CXLUpdateDCExtentListInPl *in = (void *)payload_in;
->      CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
->      CXLDCExtentList *extent_list = &ct3d->dc.extents;
-> -    uint32_t i;
-> +    uint32_t i, num;
->      uint64_t dpa, len;
->      CXLRetCode ret;
->  
-> @@ -3020,7 +3024,8 @@ static CXLRetCode cmd_dcd_add_dyn_cap_rsp(const struct cxl_cmd *cmd,
->      }
->  
->      if (in->num_entries_updated == 0) {
-> -        cxl_extent_group_list_delete_front(&ct3d->dc.extents_pending);
-> +        num = cxl_extent_group_list_delete_front(&ct3d->dc.extents_pending);
-> +        ct3d->dc.total_extent_count -= num;
->          return CXL_MBOX_SUCCESS;
->      }
->  
-> @@ -3051,10 +3056,12 @@ static CXLRetCode cmd_dcd_add_dyn_cap_rsp(const struct cxl_cmd *cmd,
->  
->          cxl_insert_extent_to_extent_list(extent_list, dpa, len, NULL, 0);
->          ct3d->dc.total_extent_count += 1;
-> +        ct3d->dc.nr_extents_accepted += 1;
->          ct3_set_region_block_backed(ct3d, dpa, len);
->      }
->      /* Remove the first extent group in the pending list */
-> -    cxl_extent_group_list_delete_front(&ct3d->dc.extents_pending);
-> +    num = cxl_extent_group_list_delete_front(&ct3d->dc.extents_pending);
-> +    ct3d->dc.total_extent_count -= num;
->  
->      return CXL_MBOX_SUCCESS;
->  }
-> @@ -3160,7 +3167,7 @@ free_and_exit:
->          }
->          *updated_list_size = 0;
->      } else {
-> -        *updated_list_size = ct3d->dc.total_extent_count + cnt_delta;
-> +        *updated_list_size = ct3d->dc.nr_extents_accepted + cnt_delta;
->      }
->  
->      return ret;
-> @@ -3222,7 +3229,10 @@ static CXLRetCode cmd_dcd_release_dyn_cap(const struct cxl_cmd *cmd,
->          ct3_set_region_block_backed(ct3d, ent->start_dpa, ent->len);
->          cxl_remove_extent_from_extent_list(&updated_list, ent);
->      }
-> -    ct3d->dc.total_extent_count = updated_list_size;
-> +    ct3d->dc.total_extent_count += (updated_list_size -
-> +                                    ct3d->dc.nr_extents_accepted);
-> +
-> +    ct3d->dc.nr_extents_accepted = updated_list_size;
->  
->      return CXL_MBOX_SUCCESS;
->  }
-> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> index 94e7274912..f283178d88 100644
-> --- a/hw/mem/cxl_type3.c
-> +++ b/hw/mem/cxl_type3.c
-> @@ -2076,6 +2076,7 @@ static void qmp_cxl_process_dynamic_capacity_prescriptive(const char *path,
->      }
->      if (group) {
->          cxl_extent_group_list_insert_tail(&dcd->dc.extents_pending, group);
-> +        dcd->dc.total_extent_count += num_extents;
->      }
->  
->      /*
-> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> index ed6cd50c67..a151e19da8 100644
-> --- a/include/hw/cxl/cxl_device.h
-> +++ b/include/hw/cxl/cxl_device.h
-> @@ -618,6 +618,7 @@ struct CXLType3Dev {
->          CXLDCExtentList extents;
->          CXLDCExtentGroupList extents_pending;
->          uint32_t total_extent_count;
-> +        uint32_t nr_extents_accepted;
->          uint32_t ext_list_gen_seq;
->  
->          uint8_t num_regions; /* 0-8 regions */
-> @@ -696,7 +697,7 @@ CXLDCExtentGroup *cxl_insert_extent_to_extent_group(CXLDCExtentGroup *group,
->                                                      uint16_t shared_seq);
->  void cxl_extent_group_list_insert_tail(CXLDCExtentGroupList *list,
->                                         CXLDCExtentGroup *group);
-> -void cxl_extent_group_list_delete_front(CXLDCExtentGroupList *list);
-> +uint32_t cxl_extent_group_list_delete_front(CXLDCExtentGroupList *list);
->  void ct3_set_region_block_backed(CXLType3Dev *ct3d, uint64_t dpa,
->                                   uint64_t len);
->  void ct3_clear_region_block_backed(CXLType3Dev *ct3d, uint64_t dpa,
 
+Reviewed-by: Fan Ni <fan.ni@samsung.com>
+
+>  include/hw/cxl/cxl_pci.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/hw/cxl/cxl_pci.h b/include/hw/cxl/cxl_pci.h
+> index d0855ed78b..3bb882ce89 100644
+> --- a/include/hw/cxl/cxl_pci.h
+> +++ b/include/hw/cxl/cxl_pci.h
+> @@ -31,7 +31,7 @@
+>  #define PCIE_CXL3_FLEXBUS_PORT_DVSEC_LENGTH 0x20
+>  #define PCIE_CXL3_FLEXBUS_PORT_DVSEC_REVID  2
+>  
+> -#define REG_LOC_DVSEC_LENGTH 0x24
+> +#define REG_LOC_DVSEC_LENGTH 0x1C
+>  #define REG_LOC_DVSEC_REVID  0
+>  
+>  enum {
+> -- 
+> 2.48.1
+> 
+
+-- 
+Fan Ni (From gmail)
