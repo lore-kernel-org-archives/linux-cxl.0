@@ -1,133 +1,70 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCBB4647
-	for <linux-cxl@vger.kernel.org>; Thu, 29 May 2025 13:17:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D8FABE49
+	for <linux-cxl@vger.kernel.org>; Thu, 29 May 2025 13:48:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748524642; cv=none; b=cg7lutRBtFRlxK9/PD2bJECT8utjQYHdeZGq2lvkHKTTOwOH2jO3CvP5apFJL5ww0KScezgbmIcpJGKxsK6hSgPERSCnNAQZ9rURJo/Yv4zx2NnWKKuNIT9PcmgBWM2hxokO0XXIcC5mPxB44qZN6baMFFw9d02QIQg/uy4Y9Ag=
+	t=1748526516; cv=none; b=q56ljUNPxtI+t/aUrehGFUon/Be8RaTdtXHZWCsRHe62vb7ohEIp3FkLgUCD+0Zmrk0GYp8jrtAT9zB0YK+CLgNd5H2jYm9q4HzU1Rq3MtPnFnZFlE7icOb4+7DQMP4tO6C4BYTOzHHgegP8ahKOQQvedVVGH361Ajc5OWG66rg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748524642; c=relaxed/simple;
-	bh=r3zC7VAUD2OAqjuUK18CHUGARurJ5BvZT2B4CR2Dk1Y=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=spam4YdToYUnp4uSuACEPqtd84VOsENoep9CoF7Hi8KIrMmI/a/Rqz3TcD6mOutGzVB4R6SeKmoDNZ1Ol1/asM9blMKUdjUsLCHrJ+wDmvEf7rzAmrM+eaH/ei3VCN3c+DEG3VTD0rl9P71+MAq2Z/4qVo6NdBrz4OOkE3MUM8I=
+	s=arc-20240116; t=1748526516; c=relaxed/simple;
+	bh=ElP+UmoU6ABG+vgli9CAMhaEHHterPEZygKXR2uQGs4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KnQZga5we0x7kDSgeLvGZvhRQCJiq7cN9l4Ki/JwJMpKAc5R6zhIfIzup1VFid6kBiLZen3Yq7sJA2eM+Wv/kx1z03h4PpPuCy4O5nY8Ugk2m/h5WmWediuebN42fldRbwWtZdU3vCZqDX9CZdAv5P5SNkFwfrgHciT5J5XZ7vY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b7Rjh23kTz6M4sl;
-	Thu, 29 May 2025 21:17:12 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b7SKd0qckz6L5cG;
+	Thu, 29 May 2025 21:44:53 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 65DF91402EB;
-	Thu, 29 May 2025 21:17:16 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 29 May
- 2025 15:17:15 +0200
-Date: Thu, 29 May 2025 14:17:13 +0100
+	by mail.maildlp.com (Postfix) with ESMTPS id E3C821402FE;
+	Thu, 29 May 2025 21:48:29 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.19.247) by
+ frapeml500008.china.huawei.com (7.182.85.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 29 May 2025 15:48:29 +0200
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Dave Jiang <dave.jiang@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-	<alison.schofield@intel.com>, <Marc.Herbert@linux.intel.com>, Dan Williams
-	<dan.j.williams@intel.com>
-Subject: Re: [NDCTL PATCH v9 2/4] cxl: Enumerate major/minor of FWCTL char
- device
-Message-ID: <20250529141713.0000530f@huawei.com>
-In-Reply-To: <20250523164641.3346251-3-dave.jiang@intel.com>
-References: <20250523164641.3346251-1-dave.jiang@intel.com>
-	<20250523164641.3346251-3-dave.jiang@intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+To: <qemu-devel@nongnu.org>, <mst@redhat.com>, Fan Ni <fan.ni@samsung.com>
+CC: <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>
+Subject: [PATCH qemu] hw/cxl: Fix register block locator size
+Date: Thu, 29 May 2025 14:48:28 +0100
+Message-ID: <20250529134828.403049-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Fri, 23 May 2025 09:46:37 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
+This has been wrong from day 1.  For now we only have
+two entries (component and device registers).
 
-> Add major/minor discovery for the FWCTL character device that is associated
-> with supprting CXL Features under 'struct cxl_fwctl'. A 'struct cxl_fwctl'
-> may be installed under cxl_memdev if CXL Features are supported and FWCTL
-> is enabled. Add libcxl API functions to retrieve the major and minor of the
-> FWCTL character device.
-> 
-> Acked-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Hi Dave,
+The wrong size could lead to arbitrary data off the stack being presented
+in PCIe config space.
 
-I don't normally look at ndctl stuff (not enough time) but I had a few
-mins so trivial comments inline.
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ include/hw/cxl/cxl_pci.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Jonathan
-
-> diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-> index bab7343e8a4a..af28f976bdc8 100644
-> --- a/cxl/lib/libcxl.c
-> +++ b/cxl/lib/libcxl.c
-
-> @@ -1253,6 +1254,67 @@ static int add_cxl_memdev_fwl(struct cxl_memdev *memdev,
->  	return -ENOMEM;
->  }
->  
-> +#ifdef ENABLE_FWCTL
-> +static const char fwctl_prefix[] = "fwctl";
-> +static int get_feature_chardev(struct cxl_memdev *memdev, const char *base,
-> +			       char *chardev_path)
-> +{
-> +	char *path = memdev->dev_buf;
-> +	struct dirent *entry;
-> +	bool found = false;
-> +	int rc = 0;
-> +	DIR *dir;
-> +
-> +	sprintf(path, "%s/fwctl/", base);
-> +	dir = opendir(path);
-> +	if (!dir)
-> +		return -errno;
-> +
-> +	while ((entry = readdir(dir)) != NULL) {
-> +		if (strncmp(entry->d_name, fwctl_prefix, strlen(fwctl_prefix)) == 0) {
-> +			found = true;
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (!entry || !found) {
-
-If entry != NULL then found is true as no other way to get out
-of the loop above.  Which raises obvious question of why we need found?
-
-
-> +		rc = -ENOENT;
-> +		goto read_err;
-> +	}
-> +
-> +	sprintf(chardev_path, "/dev/fwctl/%s", entry->d_name);
-> +
-> +read_err:
-> +	closedir(dir);
-> +	return rc;
-> +}
-
-> diff --git a/meson_options.txt b/meson_options.txt
-> index 5c41b1abe1f1..acc19be4ff0a 100644
-> --- a/meson_options.txt
-> +++ b/meson_options.txt
-> @@ -28,3 +28,5 @@ option('iniparserdir', type : 'string',
->         description : 'Path containing the iniparser header files')
->  option('modprobedatadir', type : 'string',
->         description : '''${sysconfdir}/modprobe.d/''')
-> +option('fwctl', type : 'feature', value : 'enabled',
-> +  description : 'enable firmware control')
-
-Just looking at what is in the diff, seems that indent isn't
-matching local style.
-
-Jonathan
+diff --git a/include/hw/cxl/cxl_pci.h b/include/hw/cxl/cxl_pci.h
+index d0855ed78b..3bb882ce89 100644
+--- a/include/hw/cxl/cxl_pci.h
++++ b/include/hw/cxl/cxl_pci.h
+@@ -31,7 +31,7 @@
+ #define PCIE_CXL3_FLEXBUS_PORT_DVSEC_LENGTH 0x20
+ #define PCIE_CXL3_FLEXBUS_PORT_DVSEC_REVID  2
+ 
+-#define REG_LOC_DVSEC_LENGTH 0x24
++#define REG_LOC_DVSEC_LENGTH 0x1C
+ #define REG_LOC_DVSEC_REVID  0
+ 
+ enum {
+-- 
+2.48.1
 
