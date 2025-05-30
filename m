@@ -1,216 +1,232 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2085.outbound.protection.outlook.com [40.107.220.85])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9E7749C
-	for <linux-cxl@vger.kernel.org>; Fri, 30 May 2025 13:51:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.85
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748613082; cv=fail; b=Rrc/P2htrNydHMRoIfStXF2pMmimFbG4XoRTb+hilQwjYzhtKp4TrxazSsbGUNXJyXgGV0UchEfIKuYrPjtBR/YEvKJqup4wIwKytfG/q+MJA4tiX7D3V3wg/+o4JRYTakrwEWN164+qaFQ+mgmskMogu/rubYELi7m2BeRMojQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748613082; c=relaxed/simple;
-	bh=WnZSwkhhra1tjy4GAnBID6qyxCsqq3lNHOkmxtcX7R4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=C29tCOO1WEw1TOhClTNsQEi5Ie76wXb8unCPNdfEQK3/Ye7oy67PCuGC81ogLinl/Gy8ls84sHPWOBtiu1bSl0xmtX89sdv3W+83NbM+4Wt7wkMKf+g0S0oC0ZIg0XKRjDWO2nrtu66IyMmgDasdCbdZuUxV+BbTKHQ7TOm8syA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ASZohPKY; arc=fail smtp.client-ip=40.107.220.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ASZohPKY"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=AoSfVXl6F5NJpdjQBwhDUarWVvatG+aNS6YcFwmDw4ZjNNtAHnBM9BsQYaWu683MIE3DrDZXsft3jQ5Y+9M8xShWnmew3/GDRZ2+hhmEejehbwzmuPCfryO5nG2CBVZBa9KdpxDLalpHgxDpVXYkP6Ebzs0pO6wp73MLLXCRJDlhD4D7VVQgmJe8KOfA0a/tTy6I7bv7UElK9u5jQoD6h4QHcxCQ/qjPNkgFzhvDwv+ghxyRlC1TkT7b7YfC7LsI6Lr9IBWAkiMxEXdPt2Oz31Y3y3YQZJoQ0qjPUlmRYqd7IIkHrykFmoujVGS7UiNnChfqqoqmEUVx5li9JuKeoA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tKF4RG1k0LadCjqK4FxQi8Xq2//pfsRIEY4DXJeKnJs=;
- b=CntTI3DQq+Wnj2qG/gbGg42Tgom++Kc8N6T9K8z8NaqDS1Y4lAcIgWW93CbBhOXS3t1t/UQqCeB9lPrgTXRobYDHMBpMkJM78rGZE3JKJWISS36G9HdnoXg7HGloKwQCfAfo68F13ELadkPPKBakEu0XjcW5RIkTTv0VDfq8eg7PRb+OWT2uIlc8phy1ge5Npqe3RCXToou3x4ybMOhWDyaCjeugZEyaTwS8DD3zCpelqdG+wBHhDBSRH6rLa7T3umderkVpu+B8D+6Wsy+zAMu3ZeCuEoDJuh7vqwK+hcmbIc8fRhFU35ILEG1x7rpnJMUUzJaWrVBzJCe9lFPm8g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tKF4RG1k0LadCjqK4FxQi8Xq2//pfsRIEY4DXJeKnJs=;
- b=ASZohPKYwcUSUZ8aUv0DBgPESAflTUET1iwOnphD3v9vf1Tm8vadRJShg29fMt97mwCNh475XIAW/BFHCgKbE3Xnp7YcolwYW83ovWVNkBT4PNys9DVVVDNAN6PcKIzZRII0LlAW/9lBzfShldOAmsu1ssuMTq5Y8QVvMEP7t7k=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com (2603:10b6:930:be::18)
- by DS0PR12MB7558.namprd12.prod.outlook.com (2603:10b6:8:133::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.25; Fri, 30 May
- 2025 13:51:17 +0000
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::b965:1501:b970:e60a]) by CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::b965:1501:b970:e60a%6]) with mapi id 15.20.8769.029; Fri, 30 May 2025
- 13:51:16 +0000
-Date: Fri, 30 May 2025 15:51:09 +0200
-From: Robert Richter <rrichter@amd.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, Alejandro Lucero <alucerop@amd.com>,
-	Gregory Price <gourry@gourry.net>,
-	Jonathan Cameron <Jonsathan.Cameron@huawei.com>,
-	Li Ming <ming.li@zohomail.com>
-Subject: Re: [PATCH v3 0/9] cxl: Delay HB port and switch dport probing until
- endpoint dev probe
-Message-ID: <aDm3zR2LkC3joLFL@rric.localdomain>
-References: <20250521183443.3828320-1-dave.jiang@intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250521183443.3828320-1-dave.jiang@intel.com>
-X-ClientProxiedBy: FR2P281CA0150.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:98::11) To CYYPR12MB8750.namprd12.prod.outlook.com
- (2603:10b6:930:be::18)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4215D22D780
+	for <linux-cxl@vger.kernel.org>; Fri, 30 May 2025 14:07:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748614059; cv=none; b=LgB/MD4sYwWU91/T67oY/hjpsl4SIuOPSzWhL25G0h9jy4myd3q5ZSBQhqDwzZQGqeLNpj5aUVVoshfE2yLCgAt+PhiICZFnvyC/HpfP0ro1DtSvZ2q2MiAFxCXuXhk8u5x9OiGwLbh6Ikz0YZnlGEmj7wpYL15TeC2iG5VFwUk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748614059; c=relaxed/simple;
+	bh=SxuSPFaS/gzuAdg0rE8PZ1CiVzIphsqe/A1xJEIYumA=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=N0ltV05++9ybH0tnz1o5Ynn3jdR0N4jNU+3xuN7mCqT/Do9P/XDF9dHFk7DHNHKBRNwO/bQcPKmB6ABJOwOeUSym/Xus4hiWmb2yhqdSR0w+0JHaiUrBJ2kKKZcgoOvCweK91mD8kLCgP44jHeQsI77cQfjXBhpr9x+KGrrHLe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b84j55tCcz6L5ZN;
+	Fri, 30 May 2025 22:03:53 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id D48A81402FC;
+	Fri, 30 May 2025 22:07:33 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 30 May
+ 2025 16:07:33 +0200
+Date: Fri, 30 May 2025 15:07:32 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: <anisa.su887@gmail.com>
+CC: <qemu-devel@nongnu.org>, <nifan.cxl@gmail.com>, <dave@stgolabs.net>,
+	<linux-cxl@vger.kernel.org>, Anisa Su <anisa.su@samsung.com>
+Subject: Re: [PATCH v2 02/10] cxl-mailbox-utils: 0x5600 - FMAPI Get DCD Info
+Message-ID: <20250530150732.00007220@huawei.com>
+In-Reply-To: <20250508001754.122180-3-anisa.su887@gmail.com>
+References: <20250508001754.122180-1-anisa.su887@gmail.com>
+	<20250508001754.122180-3-anisa.su887@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CYYPR12MB8750:EE_|DS0PR12MB7558:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3dcde8d2-1639-4ea3-2b17-08dd9f810c65
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?r3dG/08EZIdBfXIyT9GgeaVc5RRH9zq9WykQgyz+DKceE56pGApRbIpyFtzC?=
- =?us-ascii?Q?VcR71jt7J5ZXpW1m0fjnWfpQ5NIr/nPxD8NyFJ/oR1kmYGEcYqOTf1Szmt/2?=
- =?us-ascii?Q?t6dBvuR+A7GcMNlCwz3+fdr44ZeMgAz32YoNV1zlAf6Aw+5r2dEb+ZIU+VQL?=
- =?us-ascii?Q?/CN3iOWISEJMVaBKmAZzCnhzG3vFdZBsVZzwIksD2+3/MViyON2jP8XvRbBk?=
- =?us-ascii?Q?nXuIrIGHEgVHIdvqOOs9AoYzjv3H0JJtqI2dChW3PcHyt/FcCnR9MS7ncFzO?=
- =?us-ascii?Q?iCcVjyUfcwhAcOZON8Uz+jDpZ1N6XadG4ZG0B/E485dmFsQ16aBSuSmQOCZs?=
- =?us-ascii?Q?/L/tbRZ8TdX/YVdOfKFYou71AkO8eaqGTac92PFlPmKHPLfHZEybIx8NR0CZ?=
- =?us-ascii?Q?xGhanlS/dpKHoY/TYtLYgowfb+9xvVVjkoHDpsRHD5qu9el6uZ2EP78HQQXp?=
- =?us-ascii?Q?EBbrf0AwzDNV4/jbkVjr5rJOkmSMClma8IxkyjYhRr70+ZdEIY9BPpACBM3C?=
- =?us-ascii?Q?5BEZfG2qrLr3j/y4Xgopyw8SOojxuD309zXecZkKAe5hO9hgJhaQiDvHZEhv?=
- =?us-ascii?Q?78D2HfR/+ZP1RqFnEvvte0Fbi1hCwDx2Mxy5hy+m1XV8XVZxTAGbakJ7ZTgE?=
- =?us-ascii?Q?EncX2DoWoZ93C7r/ildXS7CrZ8Wswd37N2H2PMk2WnzfAMwjKROk861C0R9g?=
- =?us-ascii?Q?7WiSJDlpy2DDQ98a6Z9ufXvzqL0NSuyFW8WyeiVEbMbqqGeDEwLDDhG3mfEW?=
- =?us-ascii?Q?H4uxyqz2qFtraZ33y/ZxXxEQLpGjnV6y6ioqf4XVDKxKpAmUkjciOefJwkSh?=
- =?us-ascii?Q?jPaqQD+XKLn4okVOZzEUUaFBKZ3E2vUsmCwVOZINYUhLTtDav4wEIFuY7chR?=
- =?us-ascii?Q?qmVRXaS2ICmCL2P25lGC230hrrr3c+JCJPmsYNLwnslRmmsYOqtoAeY4rYlz?=
- =?us-ascii?Q?HO1kZFZYH+EGvmsEsnnzRJNHAL248gGQv+X+i1dFlXJKouliieBD9zDkiaMA?=
- =?us-ascii?Q?7+UtKmBGmOcNAV1tnCKZdVUzKMc0CcmsgZUwoIn4Scm647+uo7bnrNvKE+uX?=
- =?us-ascii?Q?l0LYr5jpJy1vZKL0BwEdEdI2T0Szx50D6dHtbgGQdDZQECGY1VwcHceifXOi?=
- =?us-ascii?Q?GPFHxaXAALabYlEwD0/vpR3vU6xgzOJh+wJt8fJI+YZZSpEanLmdaKtJOQ1s?=
- =?us-ascii?Q?C1wI7Cyk7EFF/ncVcL4g8ip3eIegBEiMguHBL0PPk8xs0SQCfNjLCVpaZeZN?=
- =?us-ascii?Q?dVvUXJnVqQwvhMFNIWmU9jBDFhufAc6X7gXBo0ZqCMJ9w4XXyJk/uKcucwLw?=
- =?us-ascii?Q?xGkIofX3KqEly+oQ1SYYl0va2RUKEfmHhAHsO4azI5o4aqf0ktwQWXHIylxO?=
- =?us-ascii?Q?/DBey5udoDrokBaD8+s7l8/d0MGORDokMhW8pDGYuMhsxUa+XC9Uw7OZlY13?=
- =?us-ascii?Q?1Am+DlSCujU=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?PupmqexMfP24czSREsQcWZRcz5W1nJcnBTlO+xiR6PjSNT7zr/FLfOasF9Tp?=
- =?us-ascii?Q?99xNrpEnAhSoFDWpk4iSopwZ7j7Bfd/HWpJFKdK4WymqT0PuAzZ6d6TZA4g2?=
- =?us-ascii?Q?VSdktLG3OaaI7gokn0qUeVPB9HBsDwvF26RvvWkf0pAGlBAF+j+bjyYKjghY?=
- =?us-ascii?Q?fc9Bz0hwbWp4hjxVDvjBnm/gEMTMXsSmUADEeKv5gR1DskWnXYLkO3PzQyAe?=
- =?us-ascii?Q?Fwe7ohC8H7zt+8Bz2xMIUd7j6lwGXVQFeMCebCF3uyzQEtdVnBjySGpXU7VU?=
- =?us-ascii?Q?8Y77R26lTixhmjA1f8uuoZZ24fRZyOEZvaUOTLGSdlo9WQhp+vEqCzfTRjRV?=
- =?us-ascii?Q?y/TBNBTBEpQdLdpNNQW9yQ0MDVedf1wa0QK05sMpE2pHtRLU2+YtBGdWU8tV?=
- =?us-ascii?Q?p2X4dB6bHbN2wknXOvAi6F/09V+zLRO2Dfj1+aEk9n1n5lk3QTKuikqUbe1h?=
- =?us-ascii?Q?m31P8BvDxwPB6lWpwkGsL1OipD1PDwRUYfwEGDgMIHc59QPp76yyfxJk/8A0?=
- =?us-ascii?Q?f1rLC1EG1nx6l95g9klCkMZU8pNpdwADOfY34bGR8YWcHIaW/NsFsQKAZxd8?=
- =?us-ascii?Q?t8NMUwdgLwimBqQX+9ntuWv2yA2PAqI+UM6XJJQpBrXcHIxZKTw4WtI5hXNi?=
- =?us-ascii?Q?8Olhe3Vzno0VHfblg3blqyGC8vrJbKEB7Tmk56y3N+VzJ1fk05m6vd8y/5uu?=
- =?us-ascii?Q?nEmaS9Vkzney/aEse+IqdVuHElbxdVNa1sWmkoI5oz4B2UVlFoj3KHRNarem?=
- =?us-ascii?Q?cwOPNYbu4wblbucU0qZ7VuJGYEG/A/fUmKJ9rw4v5sr5w3zRctsL1Rm10CME?=
- =?us-ascii?Q?4Bm+S7cOGqBnEdvfBHFiQ4N+FK2+RgZMgN3vDvgVbBkbV+8Sv/d8xhTphlOi?=
- =?us-ascii?Q?WdoPxziMCqv0fNDfx6Of8b586NNxiBolhDU+EIQDU1T4GKyd86MjRzWL5sZx?=
- =?us-ascii?Q?+rxu7D6oLW+WFFvj153vS3Ctg8lBt2ujI5jmnBBim53ZS3B0z4S1UsbbpYU/?=
- =?us-ascii?Q?X86Z3gcaLjdbf+1wt1z9DI2iE4+Y34IU17Y+ik7f4W4fPDAwDNfhAonzzCLo?=
- =?us-ascii?Q?rnbOsce9a6QGfZyCTqIxV/M3r7hRy2CDrNEC7VDZMgNlHLpC+n+b99Lyjn0r?=
- =?us-ascii?Q?oHQn+9lTjHYUMAEAFdKI+pFDVKiL6BylPahsZRRD3R0rEPKRJKD9Eb7yDhBP?=
- =?us-ascii?Q?01PjIucQN234AsJdWsG2QYdyb+Lit2Dr3b1qORZsUy6HzFnNTErzt/IS82Dc?=
- =?us-ascii?Q?8GrhNTJ8Rq1aZQ2e7WckNKnP/iA2fx6tUxFlFpLqDpWG+K9Mn3KILS4mns0s?=
- =?us-ascii?Q?qAQBwSFT7C+ophTRhB9UNTEn9eKSXzw8sW3s1a+U0NtVHSoQWzgZB3rUpkKH?=
- =?us-ascii?Q?+zbZbRnOb3Fd63to48x3GeC25BJQ9qA/cLCYWaoHcu49pI6fpvSxGIE+e/vs?=
- =?us-ascii?Q?rlsGTxWT1DBNl1V6Q5DyTt1IMrlJJY9DE5UxBVgUv8yraaHq8XhQzJ2R8Lsd?=
- =?us-ascii?Q?PifiZKg4IWVYMZ986jcfZzGRMTE8JYEbN9G094bcReHZSDQapCeEP5YTFHSH?=
- =?us-ascii?Q?Hy1W5JvVKk0Q+u+9lcYjQQxuGP1/s4mUMuJ5xbkx?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3dcde8d2-1639-4ea3-2b17-08dd9f810c65
-X-MS-Exchange-CrossTenant-AuthSource: CYYPR12MB8750.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2025 13:51:16.7453
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /yVpMq0HL/BcZOjKMV5W8u9XgXZeaFhloNjlyVwPHGukn0uPAldWyMjQkgksBV1zQp6T4UkcS6s6UbTsixmx7w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7558
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-Dave,
+On Thu,  8 May 2025 00:00:58 +0000
+anisa.su887@gmail.com wrote:
 
-thanks for your series.
-
-On 21.05.25 11:34:34, Dave Jiang wrote:
-> v3:
-> - Main changes revolve around improving naming of hostbridge uport and dport (Gregory)
-> - See specific patches for detailed change log
+> From: Anisa Su <anisa.su@samsung.com>
 > 
-> This series attempts to delay the setup of dports and Host Bridge (HB) register
-> until when the endpoint device (memdev) is being probed. At this point,
-> the CXL link is established and all the devices along the CXL link path up to
-> the Root Port (RP) should be active.
+> FM DCD Management command 0x5600 implemented per CXL 3.2 Spec Section 7.6.7.6.1.
 > 
-> And hopefully this help a bit with Robert's issue raised in the "Inactive
-> downstream port handling" series [1]. Testing would be appreicated. Thank you!
+> Signed-off-by: Anisa Su <anisa.su@samsung.com>
+Looks like a missing include - though probably due to some indirect include 
+going away.
+
+> ---
+>  hw/cxl/cxl-mailbox-utils.c   | 56 ++++++++++++++++++++++++++++++++++++
+>  hw/cxl/i2c_mctp_cxl.c        |  6 ++--
+>  hw/mem/cxl_type3.c           |  4 +++
+>  include/hw/cxl/cxl_device.h  |  1 +
+>  include/hw/cxl/cxl_opcodes.h |  3 ++
+>  5 files changed, 68 insertions(+), 2 deletions(-)
 > 
-> [1]: https://lore.kernel.org/linux-cxl/67c8a0cc23ec_24b64294f6@dwillia2-xfh.jf.intel.com.notmuch/
-> 
-> Dave Jiang (9):
->   cxl/region: Add decoder check to check_commit_order()
->   cxl: Add helper to detect top of CXL device topology
->   cxl: Separate out CXL dport->id vs actual dport hardware id
->   cxl: Remove adding of port_num via devm_cxl_add_dport()
->   cxl: Defer hardware dport->port_id assignment and registers probing
->   cxl/test: Add workaround for cxl_test for cxl_core calling mocked
->     functions
->   cxl: Change sslbis handler to only handle single dport
->   cxl: Create an xarray to tie a host bridge to the cxl_root
->   cxl: Move enumeration of hostbridge ports to the memdev probe path
+> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> index ed3294530f..d3c69233b8 100644
+> --- a/hw/cxl/cxl-mailbox-utils.c
+> +++ b/hw/cxl/cxl-mailbox-utils.c
+> @@ -3280,6 +3280,52 @@ static CXLRetCode cmd_dcd_release_dyn_cap(const struct cxl_cmd *cmd,
+>      return CXL_MBOX_SUCCESS;
+>  }
+>  
+> +/* CXL r3.2 section 7.6.7.6.1: Get DCD Info (Opcode 5600h) */
+> +static CXLRetCode cmd_fm_get_dcd_info(const struct cxl_cmd *cmd,
+> +                                      uint8_t *payload_in,
+> +                                      size_t len_in,
+> +                                      uint8_t *payload_out,
+> +                                      size_t *len_out,
+> +                                      CXLCCI *cci)
+> +{
+> +    struct {
+> +        uint8_t num_hosts;
+> +        uint8_t num_regions_supported;
+> +        uint8_t rsvd1[2];
+> +        uint16_t add_select_policy_bitmask;
+> +        uint8_t rsvd2[2];
+> +        uint16_t release_select_policy_bitmask;
+> +        uint8_t sanitize_on_release_bitmask;
+> +        uint8_t rsvd3;
+> +        uint64_t total_dynamic_capacity;
+> +        uint64_t region_blk_size_bitmasks[8];
+> +    } QEMU_PACKED *out = (void *)payload_out;
+> +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
+> +    CXLDCRegion *region;
+> +    int i;
+> +
+> +    out->num_hosts = 1;
+> +    out->num_regions_supported = ct3d->dc.num_regions;
+> +    stw_le_p(&out->add_select_policy_bitmask,
+> +             BIT(CXL_EXTENT_SELECTION_POLICY_PRESCRIPTIVE));
 
-I have tested your series and this solves the enumeration issue with
-ports where the link of its downstream ports is down and that have
-duplicate port ids. For the whole series you can add:
+Something seems to have changed upstream so this now needs
+#include <qapi/qapi-types-cxl.h> to get these enum values.
 
-Tested-by: Robert Richter <rrichter@amd.com>
+> +    stw_le_p(&out->release_select_policy_bitmask,
+> +             BIT(CXL_EXTENT_REMOVAL_POLICY_PRESCRIPTIVE));
+> +    out->sanitize_on_release_bitmask = 0;
+> +
+> +    stq_le_p(&out->total_dynamic_capacity,
+> +             ct3d->dc.total_capacity / CXL_CAPACITY_MULTIPLIER);
+> +
+> +    for (i = 0; i < ct3d->dc.num_regions; i++) {
+> +        region = &ct3d->dc.regions[i];
+> +        memcpy(&out->region_blk_size_bitmasks[i],
+> +               &region->supported_blk_size_bitmask,
+> +               sizeof(out->region_blk_size_bitmasks[i]));
+> +    }
+> +
+> +    *len_out = sizeof(*out);
+> +    return CXL_MBOX_SUCCESS;
+> +}
+> +
+>  static const struct cxl_cmd cxl_cmd_set[256][256] = {
+>      [INFOSTAT][BACKGROUND_OPERATION_ABORT] = { "BACKGROUND_OPERATION_ABORT",
+>          cmd_infostat_bg_op_abort, 0, 0 },
+> @@ -3401,6 +3447,11 @@ static const struct cxl_cmd cxl_cmd_set_sw[256][256] = {
+>                                       cmd_tunnel_management_cmd, ~0, 0 },
+>  };
+>  
+> +static const struct cxl_cmd cxl_cmd_set_fm_dcd[256][256] = {
+> +    [FMAPI_DCD_MGMT][GET_DCD_INFO] = { "GET_DCD_INFO",
+> +        cmd_fm_get_dcd_info, 0, 0 },
+> +};
+> +
+>  /*
+>   * While the command is executing in the background, the device should
+>   * update the percentage complete in the Background Command Status Register
+> @@ -3703,7 +3754,12 @@ void cxl_initialize_t3_fm_owned_ld_mctpcci(CXLCCI *cci, DeviceState *d,
+>                                             DeviceState *intf,
+>                                             size_t payload_max)
+>  {
+> +    CXLType3Dev *ct3d = CXL_TYPE3(d);
+> +
+>      cxl_copy_cci_commands(cci, cxl_cmd_set_t3_fm_owned_ld_mctp);
+> +    if (ct3d->dc.num_regions) {
+> +        cxl_copy_cci_commands(cci, cxl_cmd_set_fm_dcd);
+> +    }
+>      cci->d = d;
+>      cci->intf = intf;
+>      cxl_init_cci(cci, payload_max);
+> diff --git a/hw/cxl/i2c_mctp_cxl.c b/hw/cxl/i2c_mctp_cxl.c
+> index 7d2cbc3b75..dd5fc4f393 100644
+> --- a/hw/cxl/i2c_mctp_cxl.c
+> +++ b/hw/cxl/i2c_mctp_cxl.c
+> @@ -29,6 +29,7 @@
+>  #include "hw/pci/pcie_port.h"
+>  #include "hw/qdev-properties.h"
+>  #include "hw/registerfields.h"
+> +#include "hw/cxl/cxl_opcodes.h"
+>  
+>  #define TYPE_I2C_MCTP_CXL "i2c_mctp_cxl"
+>  
+> @@ -198,9 +199,10 @@ static void i2c_mctp_cxl_handle_message(MCTPI2CEndpoint *mctp)
+>           */
+>  
+>          if (!(msg->message_type == MCTP_MT_CXL_TYPE3 &&
+> -              msg->command_set < 0x51) &&
+> +              msg->command_set < PHYSICAL_SWITCH) &&
+>              !(msg->message_type == MCTP_MT_CXL_FMAPI &&
+> -              msg->command_set >= 0x51 && msg->command_set < 0x56)) {
+> +              msg->command_set >= PHYSICAL_SWITCH &&
+> +              msg->command_set < GLOBAL_MEMORY_ACCESS_EP_MGMT)) {
+>              buf->rc = CXL_MBOX_UNSUPPORTED;
+>              st24_le_p(buf->pl_length, len_out);
+>              s->len = s->pos;
+> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> index 11c38a9292..7129da0940 100644
+> --- a/hw/mem/cxl_type3.c
+> +++ b/hw/mem/cxl_type3.c
+> @@ -8,6 +8,7 @@
+>   *
+>   * SPDX-License-Identifier: GPL-v2-only
+>   */
+> +#include <math.h>
+>  
+>  #include "qemu/osdep.h"
+>  #include "qemu/units.h"
+> @@ -766,6 +767,8 @@ static bool cxl_create_dc_regions(CXLType3Dev *ct3d, Error **errp)
+>      uint64_t region_len;
+>      uint64_t decode_len;
+>      uint64_t blk_size = 2 * MiB;
+> +    /* Only 1 block size is supported for now. */
+> +    uint64_t supported_blk_size_bitmask = BIT((int) log2(blk_size));
+>      CXLDCRegion *region;
+>      MemoryRegion *mr;
+>      uint64_t dc_size;
+> @@ -811,6 +814,7 @@ static bool cxl_create_dc_regions(CXLType3Dev *ct3d, Error **errp)
+>              .block_size = blk_size,
+>              /* dsmad_handle set when creating CDAT table entries */
+>              .flags = 0,
+> +            .supported_blk_size_bitmask = supported_blk_size_bitmask,
+>          };
+>          ct3d->dc.total_capacity += region->len;
+>          region->blk_bitmap = bitmap_new(region->len / region->block_size);
+> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> index ca515cab13..bebed04085 100644
+> --- a/include/hw/cxl/cxl_device.h
+> +++ b/include/hw/cxl/cxl_device.h
+> @@ -608,6 +608,7 @@ typedef struct CXLDCRegion {
+>      uint32_t dsmadhandle;
+>      uint8_t flags;
+>      unsigned long *blk_bitmap;
+> +    uint64_t supported_blk_size_bitmask;
+>  } CXLDCRegion;
+>  
+>  typedef struct CXLSetFeatureInfo {
+> diff --git a/include/hw/cxl/cxl_opcodes.h b/include/hw/cxl/cxl_opcodes.h
+> index 26d3a99e8a..c4c233665e 100644
+> --- a/include/hw/cxl/cxl_opcodes.h
+> +++ b/include/hw/cxl/cxl_opcodes.h
+> @@ -61,4 +61,7 @@ enum {
+>          #define MANAGEMENT_COMMAND     0x0
+>      MHD = 0x55,
+>          #define GET_MHD_INFO 0x0
+> +    FMAPI_DCD_MGMT = 0x56,
+> +        #define GET_DCD_INFO 0x0
+> +    GLOBAL_MEMORY_ACCESS_EP_MGMT = 0X59
+>  };
 
-However, some observations:
-
-The port_num can no longer retrieved using sysfs. Previously, the X in
-dportX could be used to identify the port number (former port_id)
-which was identical to the numbers in the sysfs target_list entries.
-This is esp. useful to reconstruct the decoder tree and map pci child
-devices and its decoders to a parent decoder including its positions
-in the target list. Maybe create a targetX symlink from the decoder
-device to the child decoders of it?
-
-Due to the different initialization order there is an odd port
-numbering now showing up with unexpected, out-of-order sequence
-numbers, e.g.:
-
-/sys/bus/cxl/devices/port1/endpoint2
-/sys/bus/cxl/devices/port1/endpoint3
-/sys/bus/cxl/devices/port1/endpoint6
-/sys/bus/cxl/devices/port4/endpoint5
-/sys/bus/cxl/devices/port4/endpoint7
-/sys/bus/cxl/devices/port4/endpoint10
-/sys/bus/cxl/devices/port4/endpoint11
-/sys/bus/cxl/devices/port8/endpoint9
-/sys/bus/cxl/devices/port12/endpoint13
-/sys/bus/cxl/devices/port12/endpoint14
-
-Still, this is correct, but maybe we could force a specific order
-during initialization, such as per-port initialization which should
-result in a defined order? Note the shared numbering of ports and
-endpoints is also confusing, maybe that could be changed here too?
-
-Going to review your patches.
-
-Thanks for your patches.
-
--Robert
