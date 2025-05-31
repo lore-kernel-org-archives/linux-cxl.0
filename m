@@ -1,297 +1,141 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3DC52F84F
-	for <linux-cxl@vger.kernel.org>; Fri, 30 May 2025 19:57:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BC8FF9CB;
+	Sat, 31 May 2025 07:52:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748635069; cv=none; b=NzOsBqb3cQdlot7lN3mZqhr8fDdzySFd+5svpUVYi2r6lIwzmyw/m22GefMJjd0Y3K0xy1fNntgzNPiWNmydrwIuhUZyGAWLZ+gT0rm7xY/M/oB64DMACOBPfY+IfN3YqlqbzDl5tBLNqF/e/Ff+J84SoAs6rhpxUIdxd/CUntA=
+	t=1748677951; cv=none; b=GnhtavdedCsJQ8h+zLjI/nKrisVmYukiCBMA8z4z9Q8nF4JJ7SiCDNntU/3XamOrw8D/8lssjEDRPUjc0lbKM3DqzIiLLrPfL6nct2RqCGtGK2C+vBxu4H3vrRs1w1lJorfF81BsBrlqCyshe7CEvmvvduF22I0I8qcbA3FNRiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748635069; c=relaxed/simple;
-	bh=vVgyf4+z2b0d/vQpJxFdP87+qp7pytDQHy3HtlELev4=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WCVmpICgn09BnUZosp81PgCWRQU11bgz+KqMPZsuBR0QMz+VLX4wBrTmTjdRcV0UQjmHlKdPF08ft0OI3t8Kw+Juqd11j2ktlUO8jhgzDNEe0T00pCOjpm3IR5hw4uLzRkpNucrutiuIaIjCRT0cC4yktZFhWxnBUFQNXd5S+4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bgy0jUEF; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748677951; c=relaxed/simple;
+	bh=tHojx3WnGS7eQ0SzezEGkt1EjWAPJ30dI6MnJxTgjM8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iftYM6jbtrFs4Disz+2086oHuKguKmhlN6JyEoBM4lvnlp9mt9uBP2zzpT5hQH6O5CYTrMhzGPh52ZrI1xVF5elXkqkRudoXZDcoRvF9SpJswiX3SZJYsOI5wNrf39Jknw/R2WDPE2DPBFndiqitN9AE31PJaCZZXeP+1C0qgcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=fQn2Dy7d; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bgy0jUEF"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-742c9907967so2529615b3a.1
-        for <linux-cxl@vger.kernel.org>; Fri, 30 May 2025 12:57:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748635067; x=1749239867; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=i/ErOmswlJOoVR4M1ZO3vfVuY1CrD+LRjJ2SE66WtCc=;
-        b=Bgy0jUEFRqDW7sdygcMgHDgfZEOuFO+8mHvDa00AlDAckOQ/A+MS0pYpDzL4STP+wI
-         0rH6eudga+Hlx0G9DUWP4ZQLBqH9+0W5MaXJnuddSHSyX6RzmgDZXxcXd6a6GjuD2QGh
-         YEsK5T9hibxyqAknkPwFs4oVo+754KCwPphEPFhKud4AKk+UqHMaKYy0GKFFE5NQALlg
-         zM2vZhvIy8PhwIJDbag/CnVaRepTDdJU/9ftB0yUtZS+uwy2CFdWx9crKXNC1XDVk6sG
-         2Nn5Q5e78+kIdgv22922b3tOqZDxVut3T17mjSUwUGnSSeztRwlcEeDGlph7dCfdN555
-         1p+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748635067; x=1749239867;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=i/ErOmswlJOoVR4M1ZO3vfVuY1CrD+LRjJ2SE66WtCc=;
-        b=P/HFU53noRJ9Kov4ZkNcS19PwWq4BMjb5IMcSIS0ob5fhz7RCUl5Wymj9EOintVQsC
-         iUFArkzhHaQcygcdmG18agOMeOHRHW2wbcotghCKCDskDS1/d07ZBUB6gnIEQQCV3shY
-         +MwQGb6cFSluMIUt3wXOdz3I88e8EbRWwVb3qv6/pZB4A8T/iFxSZxZuNVkNtjzjZP3i
-         cebku4ffckBa/Hy6mn+fr9/ZUhSjZneir7yELt8/teM9bULJFcqL/JcBoyC0YolPH84K
-         ecKPstuvGhEiFDHLVpsDc5/aslIex4077/yC77g5RAnTuk+walYDjaOWrw1NqT0swLom
-         Z3JA==
-X-Forwarded-Encrypted: i=1; AJvYcCXREqLp/+v4J93qoASO7Uuaemei4FM87MwDkpf/YE6OBf7U+/Y9Cdjv5JBaAgkmVOPiT07/FcqnHGg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8K5TIIXUPJ7D8pxkw7u56JXb94T2IY5nwV2kxVpMzPae/cQaL
-	e8oAlmDO2qOh0NEEr3lZbGXe4yn7CTZweRZf+Tv65M0McclqhIifVBdsBJhdgQ==
-X-Gm-Gg: ASbGncuLahx+CLuHJEIXbxsHJG6+VBgTlQBFHu4lvI50a0i2npa7sORRNp2AHp76nj+
-	StFth9SQ9a4KE44+uJhTZdPos7AOkihJ4vvD5ukyBMB/ua/NRiCmldGQuFX++25lmA2MHjvQ+mT
-	f+uqLAJNvR7AwHRK4BBnlYduhzk1jxzPR6ioj4socZe3xZoySgUurJoIeFQBHcnE7qc3aOtwA0X
-	IPH370FowFlSZk4MULn1R8/syK5UbJFsxZGCb/3I1jX3gExBgmzUAPNldSITRBctOcBD1f7qnTK
-	26He6mpZPr8Az75daNa3+ZBrQLHdabuROt83EQUmwV0LrZcYoBkpVedNNRfPRUXmXR3FAuvkLir
-	wWg==
-X-Google-Smtp-Source: AGHT+IFT8s+hVa62EhYMJFJNvdliv5us6aWbRl3wyQxz6lZ8/5/4ozmHl3yjNVl32O3S9+dAsSjyVA==
-X-Received: by 2002:a17:90b:1dce:b0:312:26d9:d5a0 with SMTP id 98e67ed59e1d1-312413f60famr6676212a91.3.1748635056663;
-        Fri, 30 May 2025 12:57:36 -0700 (PDT)
-Received: from deb-101020-bm01.eng.stellus.in ([149.97.161.244])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2eceb02662sm1909385a12.5.2025.05.30.12.57.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 May 2025 12:57:36 -0700 (PDT)
-From: Anisa Su <anisa.su887@gmail.com>
-X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
-Date: Fri, 30 May 2025 19:57:34 +0000
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Anisa Su <anisa.su887@gmail.com>, Fan Ni <nifan.cxl@gmail.com>,
-	qemu-devel@nongnu.org, dave@stgolabs.net, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2 01/10] cxl-mailbox-utils: Move opcodes enum to new
- header file
-Message-ID: <aDoNrrGFWtTMsyEw@deb-101020-bm01.eng.stellus.in>
-References: <20250508001754.122180-1-anisa.su887@gmail.com>
- <20250508001754.122180-2-anisa.su887@gmail.com>
- <aCyhv8Qz1LUpJKd3@lg>
- <aCy8-vMEYsFaOiWC@deb-101020-bm01.eng.stellus.in>
- <20250530144335.000064f3@huawei.com>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fQn2Dy7d"
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54V5F2C4012423;
+	Sat, 31 May 2025 07:52:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=U/de0sLPbqSCHnDWBPAZlkOrRjPwz
+	POr/jCBm6y14z4=; b=fQn2Dy7dU/Mwi6+5/HaZVdFRdHhvS8obRHMsitkIQ89KR
+	5XKRAcm6cVDhNh29WVRlyTF54A3f6RshKJTGLdDOIY6JVmFZh9eXM1rmGcnyc20s
+	IDv1EBT5fFV/H9VZZsKxw+mg7CYRayC92YNa3k920zHubF8p/2a2DNZmNU1lR3FK
+	EuCbw3nQhVsC1PABb15d0aEFENbIOuskoBc4pYoWzpPyrP/P1wvUEZP6XBbp+4GG
+	cIMaALAaKkJhgbGYzf8bB//TAZnax7OaWT5ebg7F1aLwUzey3KYeAL1hw9AfA7RL
+	TS0t87y8JAKXUHW0SMxSz5/m/SDQeMvNHmWZ82nXA==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46yrpe05rv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 31 May 2025 07:52:15 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54V6VD7F040698;
+	Sat, 31 May 2025 07:52:14 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 46yr76n6nw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 31 May 2025 07:52:14 +0000
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 54V7qDZX009425;
+	Sat, 31 May 2025 07:52:13 GMT
+Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 46yr76n6nq-1;
+	Sat, 31 May 2025 07:52:13 +0000
+From: Alok Tiwari <alok.a.tiwari@oracle.com>
+To: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+        alison.schofield@intel.com, vishal.l.verma@intel.com,
+        ira.weiny@intel.com, dan.j.williams@intel.com, corbet@lwn.net,
+        linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: alok.a.tiwari@oracle.com, linux-kernel@vger.kernel.org,
+        darren.kenny@oracle.com
+Subject: [PATCH] Documentation: cxl: fix typos and improve clarity in memory-devices.rst
+Date: Sat, 31 May 2025 00:51:58 -0700
+Message-ID: <20250531075209.3334261-1-alok.a.tiwari@oracle.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250530144335.000064f3@huawei.com>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-31_03,2025-05-30_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 malwarescore=0
+ phishscore=0 mlxscore=0 mlxlogscore=999 suspectscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2505310067
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTMxMDA2OCBTYWx0ZWRfX9mSvu23lUmTe ZEzKciV+C8x+RSIB47ibN8EU/YW05929zCa3L5CST2XJh7slNIjWTOVCMa98skM8ZOj6Hc+Z1Dz nlt+AtrV/I1XHlrAOdBKV7RkBQ4jJGIPftK+9KgUKS/9TlsXzZ6B9LKZd3M/E1EqzbmVtAeVLGs
+ lCJow/hf1y3CtrIHm6LlfgCEsQMk8QGSs89VPvtGYg7YHWdZVwGiOF7qApaAb1+icsSKsndv+P+ e6NLxcdsxivXKBVN09o6pSRI1VLTeAoBE5tlrli8RDNy1sBUjo+QeY+pV1zauWtPak4huSFbDSi LM7Rh7hlNN9p+4ug0752ZLN1EKI+2Y/yXKFBh6/lDT8EchHDAUAmMyMOXQpTLTHLX3CkNNHbzyg
+ BJr9eSQvvNirIGUhytaeQQzIDIsvIit8DT4t1SG1ROB4wRRh6FPPMnepO97LYeIWxa85mb+F
+X-Authority-Analysis: v=2.4 cv=NN7V+16g c=1 sm=1 tr=0 ts=683ab52f b=1 cx=c_pps a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17 a=dt9VzEwgFbYA:10 a=yPCof4ZbAAAA:8 a=434jntuLdbThvQkW9cEA:9 cc=ntf awl=host:13206
+X-Proofpoint-GUID: tY2p2HxlxCnsdj_N1alDJ5HSJN6OP0_w
+X-Proofpoint-ORIG-GUID: tY2p2HxlxCnsdj_N1alDJ5HSJN6OP0_w
 
-On Fri, May 30, 2025 at 02:43:35PM +0100, Jonathan Cameron wrote:
-> On Tue, 20 May 2025 17:33:46 +0000
-> Anisa Su <anisa.su887@gmail.com> wrote:
-> 
-> > On Tue, May 20, 2025 at 08:37:35AM -0700, Fan Ni wrote:
-> > > On Thu, May 08, 2025 at 12:00:57AM +0000, anisa.su887@gmail.com wrote:  
-> > > > From: Anisa Su <anisa.su@samsung.com>
-> > > > 
-> > > > In preparation for the next patch, move opcodes enum to new cxl_opcodes.h file
-> > > > for visibility from mailbox-utils.c and i2c_mctp_cxl.c, which checks that
-> > > > certain command sets are bound with the correct MCTP binding.
-> > > > 
-> > > > Signed-off-by: Anisa Su <anisa.su@samsung.com>
-> > > > ---
-> > > >  hw/cxl/cxl-mailbox-utils.c   | 68 ++----------------------------------
-> > > >  include/hw/cxl/cxl_opcodes.h | 64 +++++++++++++++++++++++++++++++++  
-> > > 
-> > > Should we put the opcodes into include/hw/cxl/cxl_mailbox.h instead of
-> > > creating a new file. cxl_mailbox.h only has some macros.
-> > > 
-> > > Fan
-> > >   
-> > I had some discussion with Jonathan in the v1 thread about this. We
-> > agreed it is fine to use mailbox.h because it only has a few macros in it,
-> > but in case more things get added to it later, I made a separate file.
-> > Then no need to re-organize later.
-> > > 
-> 
-> We can always move them in future if it turns out cxl_mailbox.h is
-> not a good home.
-> 
-> Also, note that the include file added in this patch has no descriptive
-> comments or ifndef magic which would have wanted to be there.
-> 
-> Jonathan
-> 
-Ah ok~ I'll have it in cxl_mailbox.h for v3 then.
+This patch corrects several typographical issues and improves phrasing
+in memory-devices.rst:
 
-Thanks,
-Anisa
-> > >   
-> > > >  2 files changed, 66 insertions(+), 66 deletions(-)
-> > > >  create mode 100644 include/hw/cxl/cxl_opcodes.h
-> > > > 
-> > > > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> > > > index a02d130926..ed3294530f 100644
-> > > > --- a/hw/cxl/cxl-mailbox-utils.c
-> > > > +++ b/hw/cxl/cxl-mailbox-utils.c
-> > > > @@ -23,6 +23,7 @@
-> > > >  #include "qemu/uuid.h"
-> > > >  #include "system/hostmem.h"
-> > > >  #include "qemu/range.h"
-> > > > +#include "hw/cxl/cxl_opcodes.h"
-> > > >  
-> > > >  #define CXL_CAPACITY_MULTIPLIER   (256 * MiB)
-> > > >  #define CXL_DC_EVENT_LOG_SIZE 8
-> > > > @@ -36,7 +37,7 @@
-> > > >  
-> > > >  /*
-> > > >   * How to add a new command, example. The command set FOO, with cmd BAR.
-> > > > - *  1. Add the command set and cmd to the enum.
-> > > > + *  1. Add the command set and cmd to the enum in cxl_opcodes.h.
-> > > >   *     FOO    = 0x7f,
-> > > >   *          #define BAR 0
-> > > >   *  2. Implement the handler
-> > > > @@ -59,71 +60,6 @@
-> > > >   *  a register interface that already deals with it.
-> > > >   */
-> > > >  
-> > > > -enum {
-> > > > -    INFOSTAT    = 0x00,
-> > > > -        #define IS_IDENTIFY   0x1
-> > > > -        #define BACKGROUND_OPERATION_STATUS    0x2
-> > > > -        #define GET_RESPONSE_MSG_LIMIT         0x3
-> > > > -        #define SET_RESPONSE_MSG_LIMIT         0x4
-> > > > -        #define BACKGROUND_OPERATION_ABORT     0x5
-> > > > -    EVENTS      = 0x01,
-> > > > -        #define GET_RECORDS   0x0
-> > > > -        #define CLEAR_RECORDS   0x1
-> > > > -        #define GET_INTERRUPT_POLICY   0x2
-> > > > -        #define SET_INTERRUPT_POLICY   0x3
-> > > > -    FIRMWARE_UPDATE = 0x02,
-> > > > -        #define GET_INFO      0x0
-> > > > -        #define TRANSFER      0x1
-> > > > -        #define ACTIVATE      0x2
-> > > > -    TIMESTAMP   = 0x03,
-> > > > -        #define GET           0x0
-> > > > -        #define SET           0x1
-> > > > -    LOGS        = 0x04,
-> > > > -        #define GET_SUPPORTED 0x0
-> > > > -        #define GET_LOG       0x1
-> > > > -        #define GET_LOG_CAPABILITIES   0x2
-> > > > -        #define CLEAR_LOG     0x3
-> > > > -        #define POPULATE_LOG  0x4
-> > > > -    FEATURES    = 0x05,
-> > > > -        #define GET_SUPPORTED 0x0
-> > > > -        #define GET_FEATURE   0x1
-> > > > -        #define SET_FEATURE   0x2
-> > > > -    IDENTIFY    = 0x40,
-> > > > -        #define MEMORY_DEVICE 0x0
-> > > > -    CCLS        = 0x41,
-> > > > -        #define GET_PARTITION_INFO     0x0
-> > > > -        #define GET_LSA       0x2
-> > > > -        #define SET_LSA       0x3
-> > > > -    HEALTH_INFO_ALERTS = 0x42,
-> > > > -        #define GET_ALERT_CONFIG 0x1
-> > > > -        #define SET_ALERT_CONFIG 0x2
-> > > > -    SANITIZE    = 0x44,
-> > > > -        #define OVERWRITE     0x0
-> > > > -        #define SECURE_ERASE  0x1
-> > > > -        #define MEDIA_OPERATIONS 0x2
-> > > > -    PERSISTENT_MEM = 0x45,
-> > > > -        #define GET_SECURITY_STATE     0x0
-> > > > -    MEDIA_AND_POISON = 0x43,
-> > > > -        #define GET_POISON_LIST        0x0
-> > > > -        #define INJECT_POISON          0x1
-> > > > -        #define CLEAR_POISON           0x2
-> > > > -        #define GET_SCAN_MEDIA_CAPABILITIES 0x3
-> > > > -        #define SCAN_MEDIA             0x4
-> > > > -        #define GET_SCAN_MEDIA_RESULTS 0x5
-> > > > -    DCD_CONFIG  = 0x48,
-> > > > -        #define GET_DC_CONFIG          0x0
-> > > > -        #define GET_DYN_CAP_EXT_LIST   0x1
-> > > > -        #define ADD_DYN_CAP_RSP        0x2
-> > > > -        #define RELEASE_DYN_CAP        0x3
-> > > > -    PHYSICAL_SWITCH = 0x51,
-> > > > -        #define IDENTIFY_SWITCH_DEVICE      0x0
-> > > > -        #define GET_PHYSICAL_PORT_STATE     0x1
-> > > > -    TUNNEL = 0x53,
-> > > > -        #define MANAGEMENT_COMMAND     0x0
-> > > > -    MHD = 0x55,
-> > > > -        #define GET_MHD_INFO 0x0
-> > > > -};
-> > > > -
-> > > >  /* CCI Message Format CXL r3.1 Figure 7-19 */
-> > > >  typedef struct CXLCCIMessage {
-> > > >      uint8_t category;
-> > > > diff --git a/include/hw/cxl/cxl_opcodes.h b/include/hw/cxl/cxl_opcodes.h
-> > > > new file mode 100644
-> > > > index 0000000000..26d3a99e8a
-> > > > --- /dev/null
-> > > > +++ b/include/hw/cxl/cxl_opcodes.h
-> > > > @@ -0,0 +1,64 @@
-> > > > +enum {
-> > > > +    INFOSTAT    = 0x00,
-> > > > +        #define IS_IDENTIFY   0x1
-> > > > +        #define BACKGROUND_OPERATION_STATUS    0x2
-> > > > +        #define GET_RESPONSE_MSG_LIMIT         0x3
-> > > > +        #define SET_RESPONSE_MSG_LIMIT         0x4
-> > > > +        #define BACKGROUND_OPERATION_ABORT     0x5
-> > > > +    EVENTS      = 0x01,
-> > > > +        #define GET_RECORDS   0x0
-> > > > +        #define CLEAR_RECORDS   0x1
-> > > > +        #define GET_INTERRUPT_POLICY   0x2
-> > > > +        #define SET_INTERRUPT_POLICY   0x3
-> > > > +    FIRMWARE_UPDATE = 0x02,
-> > > > +        #define GET_INFO      0x0
-> > > > +        #define TRANSFER      0x1
-> > > > +        #define ACTIVATE      0x2
-> > > > +    TIMESTAMP   = 0x03,
-> > > > +        #define GET           0x0
-> > > > +        #define SET           0x1
-> > > > +    LOGS        = 0x04,
-> > > > +        #define GET_SUPPORTED 0x0
-> > > > +        #define GET_LOG       0x1
-> > > > +        #define GET_LOG_CAPABILITIES   0x2
-> > > > +        #define CLEAR_LOG     0x3
-> > > > +        #define POPULATE_LOG  0x4
-> > > > +    FEATURES    = 0x05,
-> > > > +        #define GET_SUPPORTED 0x0
-> > > > +        #define GET_FEATURE   0x1
-> > > > +        #define SET_FEATURE   0x2
-> > > > +    IDENTIFY    = 0x40,
-> > > > +        #define MEMORY_DEVICE 0x0
-> > > > +    CCLS        = 0x41,
-> > > > +        #define GET_PARTITION_INFO     0x0
-> > > > +        #define GET_LSA       0x2
-> > > > +        #define SET_LSA       0x3
-> > > > +    HEALTH_INFO_ALERTS = 0x42,
-> > > > +        #define GET_ALERT_CONFIG 0x1
-> > > > +        #define SET_ALERT_CONFIG 0x2
-> > > > +    SANITIZE    = 0x44,
-> > > > +        #define OVERWRITE     0x0
-> > > > +        #define SECURE_ERASE  0x1
-> > > > +        #define MEDIA_OPERATIONS 0x2
-> > > > +    PERSISTENT_MEM = 0x45,
-> > > > +        #define GET_SECURITY_STATE     0x0
-> > > > +    MEDIA_AND_POISON = 0x43,
-> > > > +        #define GET_POISON_LIST        0x0
-> > > > +        #define INJECT_POISON          0x1
-> > > > +        #define CLEAR_POISON           0x2
-> > > > +        #define GET_SCAN_MEDIA_CAPABILITIES 0x3
-> > > > +        #define SCAN_MEDIA             0x4
-> > > > +        #define GET_SCAN_MEDIA_RESULTS 0x5
-> > > > +    DCD_CONFIG  = 0x48,
-> > > > +        #define GET_DC_CONFIG          0x0
-> > > > +        #define GET_DYN_CAP_EXT_LIST   0x1
-> > > > +        #define ADD_DYN_CAP_RSP        0x2
-> > > > +        #define RELEASE_DYN_CAP        0x3
-> > > > +    PHYSICAL_SWITCH = 0x51,
-> > > > +        #define IDENTIFY_SWITCH_DEVICE      0x0
-> > > > +        #define GET_PHYSICAL_PORT_STATE     0x1
-> > > > +    TUNNEL = 0x53,
-> > > > +        #define MANAGEMENT_COMMAND     0x0
-> > > > +    MHD = 0x55,
-> > > > +        #define GET_MHD_INFO 0x0
-> > > > +};
-> > > > -- 
-> > > > 2.47.2
-> > > >   
-> > > 
-> > > -- 
-> > > Fan Ni  
-> 
+- Fixes duplicate word ("1 one") and adjusts phrasing for clarity.
+- Adds missing hyphen in "on-device".
+- Corrects "a give memory device" to "a given memory device".
+- fix singular/plural "decoder resource" -> "decoder resources".
+- Clarifies "spans to Host Bridges" -> "spans two Host Bridges".
+
+These changes improve readability and accuracy of the documentation.
+
+Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+---
+ Documentation/driver-api/cxl/memory-devices.rst | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/memory-devices.rst
+index d732c42526df..e9e2952a967d 100644
+--- a/Documentation/driver-api/cxl/memory-devices.rst
++++ b/Documentation/driver-api/cxl/memory-devices.rst
+@@ -29,8 +29,8 @@ Platform firmware enumerates a menu of interleave options at the "CXL root port"
+ (Linux term for the top of the CXL decode topology). From there, PCIe topology
+ dictates which endpoints can participate in which Host Bridge decode regimes.
+ Each PCIe Switch in the path between the root and an endpoint introduces a point
+-at which the interleave can be split. For example platform firmware may say at a
+-given range only decodes to 1 one Host Bridge, but that Host Bridge may in turn
++at which the interleave can be split. For example, platform firmware may say at a
++given range only decodes to one Host Bridge, but that Host Bridge may in turn
+ interleave cycles across multiple Root Ports. An intervening Switch between a
+ port and an endpoint may interleave cycles across multiple Downstream Switch
+ Ports, etc.
+@@ -187,7 +187,7 @@ decodes them to "ports", "ports" decode to "endpoints", and "endpoints"
+ represent the decode from SPA (System Physical Address) to DPA (Device Physical
+ Address).
+ 
+-Continuing the RAID analogy, disks have both topology metadata and on device
++Continuing the RAID analogy, disks have both topology metadata and on-device
+ metadata that determine RAID set assembly. CXL Port topology and CXL Port link
+ status is metadata for CXL.mem set assembly. The CXL Port topology is enumerated
+ by the arrival of a CXL.mem device. I.e. unless and until the PCIe core attaches
+@@ -197,7 +197,7 @@ the Linux PCI core to tear down switch-level CXL resources because the endpoint
+ ->remove() event cleans up the port data that was established to support that
+ Memory Expander.
+ 
+-The port metadata and potential decode schemes that a give memory device may
++The port metadata and potential decode schemes that a given memory device may
+ participate can be determined via a command like::
+ 
+     # cxl list -BDMu -d root -m mem3
+@@ -249,8 +249,8 @@ participate can be determined via a command like::
+ ...which queries the CXL topology to ask "given CXL Memory Expander with a kernel
+ device name of 'mem3' which platform level decode ranges may this device
+ participate". A given expander can participate in multiple CXL.mem interleave
+-sets simultaneously depending on how many decoder resource it has. In this
+-example mem3 can participate in one or more of a PMEM interleave that spans to
++sets simultaneously depending on how many decoder resources it has. In this
++example mem3 can participate in one or more of a PMEM interleave that spans two
+ Host Bridges, a PMEM interleave that targets a single Host Bridge, a Volatile
+ memory interleave that spans 2 Host Bridges, and a Volatile memory interleave
+ that only targets a single Host Bridge.
+-- 
+2.47.1
+
