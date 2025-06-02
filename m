@@ -1,233 +1,240 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DA001FDD;
-	Mon,  2 Jun 2025 17:25:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61BEF523A
+	for <linux-cxl@vger.kernel.org>; Mon,  2 Jun 2025 17:47:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748885117; cv=none; b=FjDqOx6uXKgass+z8XYFEinWudNwwSfccMfo4PVh9NaSIABbzwY+PFwXh7sNIqnzuGLnusJWf1Uvl4seOy2QUZ0wYrq65INPEc59i1hENEeIyas8D5vA51tV12liiki3ba/99QGqY0S2uwN4lQ/QFGoF/zg27p3U6BSfm1+WxGc=
+	t=1748886422; cv=none; b=NcZt8lPLQ7rLt8x5jjpCdC9liQrZU6WNzEqDZgQHihgPWWJPUEP3W1gzUPMpDHo/UeD1U/7UYBas9BJ0rjL29VsLKfwIVzVRy6faMCC+Hg6gmSl9L+MNtq9yCRnJVaVS+5r3T6ErpOL1eK+4N2hz1iCJbD4mQm++3m37A9fY1pM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748885117; c=relaxed/simple;
-	bh=/skQwB1cZMZ5ydmADMVfyG7s15UpTncCW4C9EISzA2o=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=G03+T/nwcjjw7cm1Jmc6bAWv2TWEjQ9rzAgAq6d94lRCyRZDaw5gAA64dfj2WiYh3erFYguVqdAylc7fHrc2mCa/OxIcbrTF8WPqWVqySw0VXoHF3CPMt10V3Sws1WQG0jJnSMnYx/pWAgLloVBwPcaLeT9/UEyErGx/O9KVo04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bB10H6yNbz6HJcp;
-	Tue,  3 Jun 2025 01:23:43 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id C58171400D9;
-	Tue,  3 Jun 2025 01:25:11 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (7.182.85.172) by
- frapeml500008.china.huawei.com (7.182.85.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 2 Jun 2025 19:25:11 +0200
-Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
- frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
- Mon, 2 Jun 2025 19:25:11 +0200
-From: Shiju Jose <shiju.jose@huawei.com>
-To: Alison Schofield <alison.schofield@intel.com>
-CC: Li Ming <ming.li@zohomail.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>, "dave.jiang@intel.com"
-	<dave.jiang@intel.com>, "vishal.l.verma@intel.com"
-	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [RFC PATCH 1/1] cxl/edac: Fix the min_scrub_cycle of a region
- miscalculation
-Thread-Topic: [RFC PATCH 1/1] cxl/edac: Fix the min_scrub_cycle of a region
- miscalculation
-Thread-Index: AQHb0V6BLsbEFutoIk+fqAJdROItN7PrXNGAgAQsgOCAAG61AIAAJJ5A
-Date: Mon, 2 Jun 2025 17:25:11 +0000
-Message-ID: <d036c22fc0e348a3ba7ecb0b4dbf35ba@huawei.com>
-References: <20250530122852.10139-1-ming.li@zohomail.com>
-	<aDn4o8Fw91vQ9D-D@aschofie-mobl2.lan>
-	<bba0fc4616d54babb2b0113967acc95f@huawei.com>
- <aD3V1MbVV7RZmbu0@aschofie-mobl2.lan>
-In-Reply-To: <aD3V1MbVV7RZmbu0@aschofie-mobl2.lan>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1748886422; c=relaxed/simple;
+	bh=uOuNxcoptLo+I7LePoEOmLrnV5RBxcvnAiOvfseCwQo=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LkaDdYxd1UCzxnMD08KYFJeqJRGIXKUN0LU1Pe6zKQ0WYonIL8kiqk2PkZVG3pwkQrQKYX5LTi/Ve7NQLk4sqZQdmE9kbF5kwnAHDBsjmiSlRYDVbb3ILyQMHgIw4U3BXJDV4OUoOkY7bgWvHmCSqOlxBeiVxUABtwrXfKM6i9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WDD9DtFE; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WDD9DtFE"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-73972a54919so4092512b3a.3
+        for <linux-cxl@vger.kernel.org>; Mon, 02 Jun 2025 10:47:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748886420; x=1749491220; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lXOxmjxJTW7vpVDwTCYY+gUTdvFyCG/DWn1e8gUxoXc=;
+        b=WDD9DtFEarbUQedwjJzcrS4mpBZsdSxiQ56vvN9Io5hxWn9D3WNgGUxG0nK2205til
+         9uDSXePLbPrifGck1g5IAF3EG1OIymBp1+EaIYfeHCaGqC/y59eRDfUYTTLWaizT0MrT
+         fcBYT+lk1GNneC1UTn4cXjDIjNe77BAFmcgkMxG29AVuFFIuMLxk29sjatgZ8s024US0
+         LVmTtk3q8VTGTfXAgXApxKcaF9XS/aeUKAqfexwLJbnT8TV93nxyvhj2kIw0iZFsIAoq
+         mn6Re7yCVBxy+PIkyjaXaIK8ee2wZ6aTwhKyuIDomzPlhyqIgBrFQtaOVmsYpuKob/6R
+         nlpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748886420; x=1749491220;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lXOxmjxJTW7vpVDwTCYY+gUTdvFyCG/DWn1e8gUxoXc=;
+        b=RANwvCT9sWLQUJBoNbsA4kMaTkBV6KeBFxmi0R4p9w+bctQRIfEtLxfrfXJhHrqaaR
+         m/bLAHkHnlQ/t70sqMCZhnXDSZTaVOdfn7x3ZKcjt5fWwXYw5QtySxPpJ2sRtFL1U3YZ
+         vWMkv0LIgeq+lUSquO6dG/LjsiKyJGoL74I5oBpRG81Du13fSMUoWG+B+xwsZb+XpuoA
+         5SLNCGbu03oEdxE1QaI4IhSD/0WjapVbMwj3YYxzgg43cNF3Nu3n727NkoA5tdSQaj9V
+         iWAZ0Ec9cQXiDeDHGyMc4fsdJCXbYgE2Rz+UKhhmiOARfxT03QNUsx9y66nieX3OwQ3i
+         beug==
+X-Forwarded-Encrypted: i=1; AJvYcCVqv1uEbq6+8OueWUc9S2BFVesVrggoqV8fDmjlmJLOC22nzKz6OJQOwkau4RokYbkN9geI2BqDpcU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+qaAQqkX4gpkiu+v+aAv2kE9nqJB5EWGKxBw3W7Xtq/Ii681j
+	leFLerSU+uQazj3zGPNjzj2xkL/jEvuSnMcb5kj5Dny71BpZV5ypd1GUKWf40Q==
+X-Gm-Gg: ASbGncuRtDejY1vmyniHh89Yobto3go0gPEALrU0w0ne5kzPcamd4WoF5JbBWad78rT
+	Mds6viLa14M/O12Qr5Giku2C+o7bv03ZKmsQ3NCborL1LPDC3PClp0/abL1twNJIo2VY17krhdq
+	WcllTwK++30gtv7WlgCfB9/MQmIl83S4mKVQmtnaOZlQw8v37SOGt0t6U96eshp0G1YUd+KCiUq
+	5skIcEJb0nLDaluwZmfhl/JLfGJ5C0fBJDha9l4YUh95px59LgBAOCK9a9AVn32rT7z5gQkN+1K
+	x2AtT5TVVEKLP03Uj4CjSgdjwYHmPSKHPmy601HaEtQDZ5lbmSTwJBeixTUeObWRLqL1QXkac5b
+	K1g==
+X-Google-Smtp-Source: AGHT+IGwTXr02neCGnVcFeoVH37rrSREjgCOPvTOpyw3Wo4CW4jsOWStJ26+hgejI175AltkHOrL8Q==
+X-Received: by 2002:a05:6a00:10c8:b0:747:cffb:bb37 with SMTP id d2e1a72fcca58-747d1833514mr11642565b3a.10.1748886419565;
+        Mon, 02 Jun 2025 10:46:59 -0700 (PDT)
+Received: from deb-101020-bm01.eng.stellus.in ([149.97.161.244])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afeab75csm8138278b3a.52.2025.06.02.10.46.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Jun 2025 10:46:59 -0700 (PDT)
+From: Anisa Su <anisa.su887@gmail.com>
+X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
+Date: Mon, 2 Jun 2025 17:46:57 +0000
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Jonathan Cameron via <qemu-devel@nongnu.org>, anisa.su887@gmail.com,
+	nifan.cxl@gmail.com, dave@stgolabs.net, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v2 00/10] CXL: FMAPI DCD Management Commands 0x5600-0x5605
+Message-ID: <aD3jkRBHmbdc9QmD@deb-101020-bm01.eng.stellus.in>
+References: <20250508001754.122180-1-anisa.su887@gmail.com>
+ <20250520143947.00000337@huawei.com>
+ <20250530152655.00007132@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250530152655.00007132@huawei.com>
 
->-----Original Message-----
->From: Alison Schofield <alison.schofield@intel.com>
->Sent: 02 June 2025 17:48
->To: Shiju Jose <shiju.jose@huawei.com>
->Cc: Li Ming <ming.li@zohomail.com>; dave@stgolabs.net; Jonathan Cameron
-><jonathan.cameron@huawei.com>; dave.jiang@intel.com;
->vishal.l.verma@intel.com; ira.weiny@intel.com; dan.j.williams@intel.com; l=
-inux-
->cxl@vger.kernel.org; linux-kernel@vger.kernel.org
->Subject: Re: [RFC PATCH 1/1] cxl/edac: Fix the min_scrub_cycle of a region
->miscalculation
->
->On Mon, Jun 02, 2025 at 08:23:34AM +0000, Shiju Jose wrote:
->> >-----Original Message-----
->> >From: Alison Schofield <alison.schofield@intel.com>
->> >Sent: 30 May 2025 19:28
->> >To: Li Ming <ming.li@zohomail.com>
->> >Cc: dave@stgolabs.net; Jonathan Cameron
->> ><jonathan.cameron@huawei.com>; dave.jiang@intel.com;
->> >vishal.l.verma@intel.com; ira.weiny@intel.com;
->> >dan.j.williams@intel.com; Shiju Jose <shiju.jose@huawei.com>; linux-
->> >cxl@vger.kernel.org; linux-kernel@vger.kernel.org
->> >Subject: Re: [RFC PATCH 1/1] cxl/edac: Fix the min_scrub_cycle of a
->> >region miscalculation
->> >
->> >On Fri, May 30, 2025 at 08:28:52PM +0800, Li Ming wrote:
->> >> When trying to update the scrub_cycle value of a cxl region, which
->> >> means updating the scrub_cycle value of each memdev under a cxl
->> >> region. cxl driver needs to guarantee the new scrub_cycle value is
->> >> greater than the min_scrub_cycle value of a memdev, otherwise the
->> >> updating operation will fail(Per Table 8-223 in CXL r3.2 section
->8.2.10.9.11.1).
->> >>
->> >> Current implementation logic of getting the min_scrub_cycle value
->> >> of a cxl region is that getting the min_scrub_cycle value of each
->> >> memdevs under the cxl region, then using the minimum
->> >> min_scrub_cycle value as the region's min_scrub_cycle. Checking if
->> >> the new scrub_cycle value is greater than this value. If yes,
->> >> updating the new scrub_cycle value to each memdevs. The issue is
->> >> that the new scrub_cycle value is possibly greater than the minimum
->> >> min_scrub_cycle value of all memdevs but less than the maximum
->> >> min_scrub_cycle value of all memdevs if memdevs have a different
->> >> min_scrub_cycle value. The updating operation will always fail on
->> >> these memdevs which have a greater min_scrub_cycle than the new
->scrub_cycle.
->> >>
->> >> The correct implementation logic is to get the maximum value of
->> >> these memdevs' min_scrub_cycle, check if the new scrub_cycle value
->> >> is greater than the value. If yes, the new scrub_cycle value is fit f=
-or the
->region.
->> >>
->> >> The change also impacts the result of
->> >> cxl_patrol_scrub_get_min_scrub_cycle(), the interface returned the
->> >> minimum min_scrub_cycle value among all memdevs under the region
->> >> before the change. The interface will return the maximum
->> >> min_scrub_cycle value among all memdevs under the region with the
->change.
->> >>
->> >> Signed-off-by: Li Ming <ming.li@zohomail.com>
->> >> ---
->> >> I made this change based on my understanding on the SPEC and
->> >> current CXL EDAC code, but I am not sure if it is a bug or it is desi=
-gned this
->way.
->> >
->> >The attribute is defined to show (per
->> >Documentation/ABI/testing/sysfs-edac-
->> >scrub)
->> >   "Supported minimum scrub cycle duration in seconds by the memory
->> >scrubber."
->> >
->> >Your fix, making the min the max of the mins, looks needed.
->> >
->> >I took a look at the max attribute. If the min is the max on the
->> >mins, then the max should be the max of the maxes. But, not true. We do
->this:
->> >
->> >instead: *max =3D U8_MAX * 3600; /* Max set by register size */
->> >
->> >The comment isn't helping me, esp since the sysfs description doesn't
->> >explain that we are using a constant max.
->> CXL spec r3.2 Table 8-222. Device Patrol Scrub Control Feature
->> Readable Attributes does not define a field for "max scrub cycle
->> supported".  Thus for max scrub cycle, returning max value of (U8_MAX) o=
-f
->patrol scrub cycle field.
->
->Understand that now, thanks. I'm still wondering if both these deserve mor=
-e
->explanation in Documentation/ABI/testing/sysfs-edac-scrub
->explaining the calculations. Like if the device represents an aggregate of
->devices, like a region, the min scrub cycle is the max of the mins, wherea=
-s if the
->device is a single, it's exactly what the device returned.  And for max, e=
-xplaining
->what you replied above.
-
-Not sure is it appropriate to add these CXL scrub specific details to the g=
-eneric file  =20
-Documentation/ABI/testing/sysfs-edac-scrub?
-
-CXL region specific details were added under section 1.2. Region based scru=
-bbing
-of Documentation/edac/scrub.rst. May be better add these details for CXL sp=
-ecific
-min and max scrub cycle calculation to the Documentation/edac/scrub.rst?
-
-How do you want to post these suggested doc changes, in a follow-up patch n=
-ow?
+On Fri, May 30, 2025 at 03:26:55PM +0100, Jonathan Cameron wrote:
+> On Tue, 20 May 2025 14:39:47 +0100
+> Jonathan Cameron via <qemu-devel@nongnu.org> wrote:
+> 
+> > On Thu,  8 May 2025 00:00:56 +0000
+> > anisa.su887@gmail.com wrote:
+> > 
+> > > From: Anisa Su <anisa.su@samsung.com>
+> > > 
+> > > This patchset adds support for 6 FM API DCD Management commands (0x5600-0x5605)
+> > > according to the CXL r3.2 Spec. It is based on the following branch:
+> > > https://gitlab.com/jic23/qemu/-/tree/cxl-2025-02-20.  
+> > 
+> > Nice work - this is very clean and well presented.
+> > 
+> > I would like Fan to take a look an provide some tags as DCD modeling in
+> > QEMU is more in his area of expertise than mine!
+> > 
+> > I think this series is much more ready for upstream than much of
+> > my staging cxl tree so I'll rebase it to go near the front.
+> > 
+> > Today I'm focused on getting test cases to Richard for the TCG issues but
+> > after that I'll spin a new tree (probably pushed out under a name
+> > that makes it clear there is a known nasty problem though!)
+> 
+> Anisa,
+> 
+> Ideally I'd like to get the majority of this upstream once you post
+> a v3.  To do that I'd like to break the dependence on mctp_i2c in patch 2.
+> These commands are equally valid via a switch-cci (and that path to the
+> fm owned ld_mctpcci is already upstream).
+> 
+> If you could send it as two series. One of which sits on upstream and
+> doesn't include the i2c_mctp part and the other of which is applied once
+> that support is available in my tree that would be great. I'll squash
+> the i2c_mctp part into the patch that adds support for that in the
+> first place.
+> 
+> I'll deal with rebasing needed for other command introductions etc.
+> 
+> There are just enough open questions in this series that I haven't done
+> this rework directly (though I did start doing it - hence the missing
+> include note in one of the patches).
+> 
+> Thanks,
+> 
+Sounds good, will do :)
 
 Thanks,
-Shiju
->
->Regardless of this noise I'm making about the Docs.. I think Ming should g=
-o
->ahead and v1 the fix for the min calc.
->
->--Alison
->
->>
->> Thanks,
->> Shiju
->> >
->> >
->> >>
->> >> base-commit: 9f153b7fb5ae45c7d426851f896487927f40e501 cxl/next
->> >> ---
->> >>  drivers/cxl/core/edac.c | 8 ++++++--
->> >>  1 file changed, 6 insertions(+), 2 deletions(-)
->> >>
->> >> diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
->> >> index
->> >> 2cbc664e5d62..ad243cfe00e7 100644
->> >> --- a/drivers/cxl/core/edac.c
->> >> +++ b/drivers/cxl/core/edac.c
->> >> @@ -103,10 +103,10 @@ static int cxl_scrub_get_attrbs(struct
->> >cxl_patrol_scrub_context *cxl_ps_ctx,
->> >>  				u8 *cap, u16 *cycle, u8 *flags, u8 *min_cycle)
->> >{
->> >>  	struct cxl_mailbox *cxl_mbox;
->> >> -	u8 min_scrub_cycle =3D U8_MAX;
->> >>  	struct cxl_region_params *p;
->> >>  	struct cxl_memdev *cxlmd;
->> >>  	struct cxl_region *cxlr;
->> >> +	u8 min_scrub_cycle =3D 0;
->> >>  	int i, ret;
->> >>
->> >>  	if (!cxl_ps_ctx->cxlr) {
->> >> @@ -133,8 +133,12 @@ static int cxl_scrub_get_attrbs(struct
->> >cxl_patrol_scrub_context *cxl_ps_ctx,
->> >>  		if (ret)
->> >>  			return ret;
->> >>
->> >> +		/*
->> >> +		 * The min_scrub_cycle of a region is the maximum value
->> >among
->> >> +		 * the min_scrub_cycle of all the memdevs under the region.
->> >> +		 */
->> >>  		if (min_cycle)
->> >> -			min_scrub_cycle =3D min(*min_cycle, min_scrub_cycle);
->> >> +			min_scrub_cycle =3D max(*min_cycle, min_scrub_cycle);
->> >>  	}
->> >>
->> >>  	if (min_cycle)
->> >> --
->> >> 2.34.1
->> >>
->>
-
+Anisa
+> Jonathan
+> > 
+> > Jonathan
+> > 
+> > 
+> > > 
+> > > The code was tested with libcxlmi, which runs in the QEMU VM and sends 56xxh
+> > > commands to the device (QEMU emulated) through MCTP messages over I2C
+> > > bus. To perform end-to-end tests, both MCTP and DCD support are needed
+> > > for the kernel, so the needed MCTP patches are applied on top of Ira's DCD
+> > > branch https://github.com/weiny2/linux-kernel/tree/dcd-v4-2024-12-11.
+> > > 
+> > > For the tests of commands 0x5600 (Get DCD Info), 0x5601 (Get Host DC Region
+> > > Config), and 0x5603 (Get DC Region Extent Lists), DCD kernel code is not involved.
+> > > The libcxlmi test program is used to send the command to the device and results
+> > > are collected and verified.
+> > > 
+> > > For command 0x5602 (Set DC Region Config): device creates an event record with type
+> > > DC_EVENT_REGION_CONFIG_UPDATED and triggers an interrupt to the host
+> > > if the configuration changes as a result of the command. Currently, the kernel
+> > > version used to test this only supports Add/Release type events. Thus, this
+> > > request essentially gets ignored but did not cause problems besides the host
+> > > not knowing about the configuration change when tested.
+> > > 
+> > > For the command 0x5604 (Initiate DC Add) and 0x5605 (Initiate DC Release), the
+> > > tests involve libcxlmi test program (acting as the FM), kernel DCD
+> > > code (host) and QEMU device. The test workflow follows that in cxl r3.2 section
+> > > 7.6.7.6.5 and 7.6.7.6.6. More specifically, the tests involve following
+> > > steps,
+> > > 1. Start a VM with CXL topology: https://github.com/moking/cxl-test-tool/blob/main/utils/cxl.py#L54.
+> > > 2. Load the CXL related drivers in the VM;
+> > > 3. Create a DC region for the DCD device attached.
+> > > 4. add/release DC extents by sending 0x5604 and 0x5605 respectively through
+> > > the out-of-tree libcxlmi test program
+> > > (https://github.com/anisa-su993/libcxlmi/blob/dcd_management_cmds/tests/test-fmapi.c).
+> > > 5. Check and verify the extents by retrieving the extents list through
+> > > command 0x5603 in the test program.
+> > > 
+> > > The remaining 3 commands in this series (0x5606-0x5608) are related to tags
+> > > and sharing, thus have not been implemented.
+> > > 
+> > > Changes
+> > > ================================================================================
+> > > v1 -> v2:
+> > > 1. Feedback from Jonathan Cameron on v1
+> > > Addressed general style concerns (newlines/spacing, minor refactoring, etc.)
+> > > 1.1. Changes Related to 0x5600 - FMAPI Get DCD Info
+> > >     - Squashed prepatory patch adding supported_blk_sizes_bitmask
+> > >     - Added new prepatory patch moving opcodes enum from cxl-mailbox-utils.c to
+> > >     new header file opcodes.h
+> > >     Needed for the check in i2c_mctp_cxl.c to ensure the FMAPI Commands
+> > >     (0x51 - 0x59) are bound with MCTP_MT_CXL_FMAPI. By moving the enum,
+> > >     the hardcoded values (0x51, 0x59) can be replaced with their
+> > >     enumerators.
+> > >     - Bug fix to return Add/Release Extent Selection Policy bitmasks
+> > >       correctly
+> > > 1.2. Changes Related to 0x5601 - FMAPI Get Host Region Config
+> > >     - Prepatory patch to add dsmas_flags to CXLDCRegion struct was modified to
+> > >     store the booleans dsmas_flags is made up of instead of copying it from the
+> > >     CDAT for that region. Values hardcoded for unsupported flags.
+> > >     - Build the returned dsmas_flags from the new booleans.
+> > > 1.3. Changes Related to 0x5602 - FMAPI Set DC Region Config
+> > >     - Added locking for CXLDCRegion bitmap for the case that extents are being
+> > >     added/released via a different CCI than that of the FM-enabled CCI.
+> > >     - Prepatory patch created for the above (quite short, can be squashed if
+> > >     preferred)
+> > >     - Added a check to verify that the requested block_size is supported by the
+> > >     region by looking at region->supported_blk_sizes_bitmask
+> > >     - Instead of event_record validity flag being cleared, set to 1
+> > >     - Fixed bug of forgetting to update region->block_size
+> > > 1.4. Changes Related to 0x5603 - FMAPI Get DC Region Extents
+> > >     - Minor refactoring of loop filling in response payload extents
+> > > 
+> > > 2. Feedback from Fan Ni and Jonathan Cameron on v1
+> > > 2.1. Changes Related to 0x5604 - FMAPI Initiate DC Add
+> > >     - Remove redundant storage of extents in event_rec_exts
+> > >     - Refactor event record creation into helper function for re-use by release
+> > >     - Return event_record.available_extents
+> > >     (total_extents_available - num_pending - num_accepted) instead of
+> > >     leaving it blank
+> > > 2.2. Changes Related to 0x5605 - FMAPI Initiate DC Release
+> > >     - Remove redundant storage of extents in event_rec_exts/redundant 2nd loop
+> > >     - Add #define for removal_policy_bitmask instead of hardcoding 0x7
+> > > 
+> > > Anisa Su (10):
+> > >   cxl-mailbox-utils: Move opcodes enum to new header file
+> > >   cxl-mailbox-utils: 0x5600 - FMAPI Get DCD Info
+> > >   cxl/type3: Add dsmas_flags to CXLDCRegion struct
+> > >   cxl-mailbox-utils: 0x5601 - FMAPI Get Host Region Config
+> > >   cxl_events.h: Move definition for dynamic_capacity_uuid and enum for
+> > >     DC event types
+> > >   hw/cxl_type3: Add DC Region bitmap lock
+> > >   cxl-mailbox-utils: 0x5602 - FMAPI Set DC Region Config
+> > >   cxl-mailbox-utils: 0x5603 - FMAPI Get DC Region Extent Lists
+> > >   cxl-mailbox-utils: 0x5604 - FMAPI Initiate DC Add
+> > >   cxl-mailbox-utils: 0x5605 - FMAPI Initiate DC Release
+> > > 
+> > >  hw/cxl/cxl-mailbox-utils.c   | 649 +++++++++++++++++++++++++++++++----
+> > >  hw/cxl/i2c_mctp_cxl.c        |   6 +-
+> > >  hw/mem/cxl_type3.c           |  41 ++-
+> > >  include/hw/cxl/cxl_device.h  |  24 ++
+> > >  include/hw/cxl/cxl_events.h  |  15 +
+> > >  include/hw/cxl/cxl_mailbox.h |   6 +
+> > >  include/hw/cxl/cxl_opcodes.h |  72 ++++
+> > >  7 files changed, 724 insertions(+), 89 deletions(-)
+> > >  create mode 100644 include/hw/cxl/cxl_opcodes.h
+> > >   
+> > 
+> > 
+> 
