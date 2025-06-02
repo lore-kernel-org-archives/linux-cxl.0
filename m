@@ -1,361 +1,227 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2075.outbound.protection.outlook.com [40.107.223.75])
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBE81196C7C
-	for <linux-cxl@vger.kernel.org>; Mon,  2 Jun 2025 20:58:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.75
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB941DF58;
+	Mon,  2 Jun 2025 23:57:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748897887; cv=fail; b=ZzIkJh2e4FqgLv49/CVyl4GJrf9s4sjbNeqz1GLtUPXNEoQXAwAxQwuAq9nZ1yQ6LB9wutLFqC/cD2hnsSpMlX8E9WJLA69eRRVVD0F1IgNsh8VDLWbtmGtWVoc9jzWbVjpGwdDfmueB2XDtcatW3QhSyWQBDmTrT0Ka3Io5sVU=
+	t=1748908657; cv=pass; b=HD8qUIZiV09nO3Ua612dkNABFgRzqYB5oBLc9n57K7yX8AiwC9uSaKwAWRbJTQpn1fNn6Lw7Or/CUoMLV1MtU+9odRD7+LSUeWbz+yfxP+tsI0NZ5bCfE6fglA/19pn+t9HwPTvzvMnc0tBnf/KDvf9D0zdHy5YmLoWBF48tpAk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748897887; c=relaxed/simple;
-	bh=I68xBZmXvTkjIXNm8JPJ7abYCNgkS+DCdZ+IsTwIeEY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j5WCanv+HVxwzv1upktuumb65sIyMYZZ03VvNj9mCJ3UQSTsn/qkTxKcv+nQAga09Tc+7pWt0GuN20G2jLMYJm0ep9W5TJ3nRKcAlmZQL1+r+BhLt7WYuyBM1+WhMihFQznzxk0MMQtvpe914jR4cvV0lpsfT8OME6g7N12JDvo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=qzjuAh4R; arc=fail smtp.client-ip=40.107.223.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1748908657; c=relaxed/simple;
+	bh=/AaMx1KkKov7euq9bW+sYnENG609KtIIwk6/21G5uX0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k0bN63gog2RDVozK9/RyfY1NAYMot3k+T88l/7KUn/wxPZrr6EmvbeSxJYX9hEY+F9OZZbEDhTtA3FKdQqJNdFM3nTu7Yx7Khq5aw3fz2YxucYLkM4lOnwlP67gs0oONaHiZstVmB2rVSv9fFrB7fCQ/uBU8p+UzRfd0xE2P9GI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=JTz9FegJ; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="qzjuAh4R"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hVilo+Xf7MSv6q0ZL+KNC2iBc4CrkAZUpaWBdCvGS3zZIANu5FFchjQICBTFuMiqasQ41KGfs+DkU1nV6pnvefHrdlrZNH5XL8wbFw+nxX2e9lQUCgmq/Kvrz1POI01oCDyhiB0RDDXtL9CXrejQ7kmUH14Ngf9xjsMbZrLwECgvgt2EUZ4TJFYYagXlTx6cvBIbgub/ZRHEVs8jH3GdK0BGhEc+dpwI2LH+TMMe7CMwT0wckcYHMmUKHrNvZ27OI8j3BAbNhQ1uPMK7R7mbrodZV4uw6lHhMCdNn9+jSg1iSlThUqsiJrcFlAtGQ1B9+q2ZePOk3/q1GLZdVtUfqw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SqqP2PlRq6Fma43b8rDZtyGyQVmqzd/Dtn/r4IGqwzM=;
- b=O4kSwS/3Dc4dh3RNe0nTOiUk2JaPesU3K/uu4/aN/lFHAfCNJxte8YCZ4RXcMKbsPtmGOq5iJdDNrF98UXv/t/OIH/y6pfrECGJJcTc3aznhnxlhxVH9Pp7nWJVkiinZkhI+FTKFYgiXuMZaKWS+1vHd5oOM85o+Cy0iQ0ACALR+jbirGKG6BS32am8nJmy4gTHXYq0ZfbHEuWKodnESa+ofJQBy8JoSTVacen/Abn8WO4A1gK87BdiNLaI64ZrYwhUWfPF3Pbjr/teW+rn09skKFet9hw7gNuNFrW8t2t7g3VWGSEkQvF2FSBF9kgiUhOLyMw/j+HOqjK1X9DruoQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=lists.linux.dev smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SqqP2PlRq6Fma43b8rDZtyGyQVmqzd/Dtn/r4IGqwzM=;
- b=qzjuAh4RKDEmj73esqAVWgFD7E5z+DVhB3+DRssQmVKl3t6V3elPsrHg2hX7oFICGa4aKxvWasMQWjZ0zm1MJpbVLCbRTRsWpdduvCqwxv2NSwadZ8fvspzj1vwsJeTpnJmI3lWatBdjDDrPWzFl4TPWtcLIhxZaXYe6sW/BvP8=
-Received: from BN8PR04CA0064.namprd04.prod.outlook.com (2603:10b6:408:d4::38)
- by MN6PR12MB8492.namprd12.prod.outlook.com (2603:10b6:208:472::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Mon, 2 Jun
- 2025 20:58:01 +0000
-Received: from BN1PEPF0000468E.namprd05.prod.outlook.com
- (2603:10b6:408:d4:cafe::94) by BN8PR04CA0064.outlook.office365.com
- (2603:10b6:408:d4::38) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8746.31 via Frontend Transport; Mon,
- 2 Jun 2025 20:58:01 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN1PEPF0000468E.mail.protection.outlook.com (10.167.243.139) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8792.29 via Frontend Transport; Mon, 2 Jun 2025 20:58:01 +0000
-Received: from SCS-L-bcheatha.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 2 Jun
- 2025 15:58:00 -0500
-From: Ben Cheatham <Benjamin.Cheatham@amd.com>
-To: <nvdimm@lists.linux.dev>
-CC: <linux-cxl@vger.kernel.org>, <benjamin.cheatham@amd.com>,
-	<alison.schofield@intel.com>, <junhyeok.im@samsung.com>
-Subject: [ndctl PATCH v2 7/7] Documentation: Add docs for inject/clear-error commands
-Date: Mon, 2 Jun 2025 15:56:33 -0500
-Message-ID: <20250602205633.212-8-Benjamin.Cheatham@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250602205633.212-1-Benjamin.Cheatham@amd.com>
-References: <20250602205633.212-1-Benjamin.Cheatham@amd.com>
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="JTz9FegJ"
+ARC-Seal: i=1; a=rsa-sha256; t=1748908641; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=NNVXAClyAcq/e2T5opLAHhfNV6NwyBnLFJhl35TQz9WLnWO0RratY7XA2DO7Yfn1rXuSYENyg4GvLLpQyldrl2xhUPtbCZG7UNj9wE9YgFjxv+MOW+mgTQ2a6LCoKB1bgZGfCmgVykmdxdQb57cN+QmF+um7w6ebkQkN3Pl//pw=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1748908641; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=n532nxp0rDiHnAPdPPmvoKaXfwAx/Gwgb+t1Ew+OE78=; 
+	b=Kpe82yjzriHWBYNE6eFgZ1i3wIeyW19vzfnFidwnQ/hGZB7DDefTutHjKmqWCpote+3cbreKPxHgOWemLVF3fbTR6+JIllUoYuwErm8l5HiCJSP4AtVZuqvF1iI9U3G1Jf3lUc7WfxBK8cnsA6p9VjQt9iMMhfqbXUIbHhX8kGI=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1748908641;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=n532nxp0rDiHnAPdPPmvoKaXfwAx/Gwgb+t1Ew+OE78=;
+	b=JTz9FegJ9xulv73NU9Dcj4vx7KB6cvbFKCCBiPyPv025xHw2GWOZZejMaizzieJd
+	0uxWkj/MYJcD3KRm9+GIbzIZ0mh8vWc/zhuiMgLzEA7eun8SykSXCVFeo/Lb9aowy/W
+	zVV9/WrrxMfEQU+mgrcE26BMw44PVYq2DLhhiVfY=
+Received: by mx.zohomail.com with SMTPS id 1748908639508232.13497197880224;
+	Mon, 2 Jun 2025 16:57:19 -0700 (PDT)
+Message-ID: <96fedb6e-6184-4609-b249-4289f61d5003@zohomail.com>
+Date: Tue, 3 Jun 2025 07:57:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1PEPF0000468E:EE_|MN6PR12MB8492:EE_
-X-MS-Office365-Filtering-Correlation-Id: a1b79b57-4dbf-4679-42a1-08dda2182991
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?LuEtPtq7M/ocaJKspl/5IPLmHKDlSy7ZcLsfgh4o/wvvGt6nIqZ/UIW33i42?=
- =?us-ascii?Q?5qWSyMZFoeXTEx7ULinl+xZOb9/KSxVhdgZDJo8ExrHfhTYKWn6WjEwvgKbs?=
- =?us-ascii?Q?geFqN7gv1oKksuxc5EY+JCe1JF4dSimx3oG/MDM5MK5BM83tkJmfGcK24iAW?=
- =?us-ascii?Q?vnMj+U8BFgU4SNAQxS9g/QuKS7jQusjYmYdalapHKYF17UwF2pLYgOodAVYD?=
- =?us-ascii?Q?0yxdfmyZ3j0xGnfCn6Qiwz1z5Xus/y58Amb60A3m+1GnZhu4LMza9sJtaHZZ?=
- =?us-ascii?Q?0NMjsLKvjuyALhIumRQs0x5ngeGdbQMV6eqZkRJgWqt2Qn9TJuSKpSGkPBRf?=
- =?us-ascii?Q?FuSHcskvzsrTF6o3AcrUwG5qXK1jLTn+fWLpEwApU6KtzD1NUX+9zq0XH2tu?=
- =?us-ascii?Q?xJLjDAkiIE6ROqU3ONvOdQw2R0TOjZktktg/g8tiew0cJ4HV1euAw1LQpWyX?=
- =?us-ascii?Q?oYI9Rq4XA2cp/fDfr9VYHc69GkmJlRFqB7uQqVkvQcS6ETmsNl5UI1NWiReL?=
- =?us-ascii?Q?8U3/MKwKziYRwToY+IJ41hp1j3mLJQec64/FgozNS8J5ZaXIaDZdWLCfgufi?=
- =?us-ascii?Q?jAbZy2i7/CyHkjM4zU1iDfvyWDdYvgo3RgakyZAZP3mKaJZBSAky3huro0Gs?=
- =?us-ascii?Q?dcb6LEnffPhuaCOGQkjHZ9BeHIMvG/p2Rqc8yf5jAWc4vQel45IJvzOGAZyD?=
- =?us-ascii?Q?Nz8sSaT6zcPUgeyhkQ/QBWaizxXWcPAGgTIIXWBrQfRHI7AzSslMi7LVzU/e?=
- =?us-ascii?Q?WmO01ICSqtFB66cT43v5NELwJIOHR0eAp273Z+BGhTdpaF0DwQ92gfRDmIJG?=
- =?us-ascii?Q?3Zin7VlnbGSgQml35KiXwHGn+5sIW7Wo/btwoWjV/3Xu2SkcxPcaTMGfCL4q?=
- =?us-ascii?Q?SPKB2jGy87lNMKrB1AB8yNURp533Zx8uAOKkygZaVZM66nTN1So3BPvK4MO9?=
- =?us-ascii?Q?zkx/r1AYCGSoLQd1mLGDmSZFwDzKk7+g+YDyXlGkl+YGxRwjWvVCZXDi36n9?=
- =?us-ascii?Q?gh8A6/ltpmv9VJOrP7QxOAEqpS+W9TR+uM+O/kG4B/oyl9Nf9EnOfE7aCGQB?=
- =?us-ascii?Q?72kUdk7TR3Zgh+a6ttzlZQPl7CFqrTvEavJQdt1wjpDC5QjeQMk1wryaKBAc?=
- =?us-ascii?Q?G8ZiTBq7kOw3nYIUHQgxNmESFg3RzLkCtO1AOOI9cwRYccubZPZFRnGB1+XB?=
- =?us-ascii?Q?pt43ieis10Svg5/Kd3kQF3XSG1t7s78JOjYdQYubGgP9iY1YufKR6ptT7e7w?=
- =?us-ascii?Q?ESnzLc4RNb+MQhOIZ6HzbGiNh/OiqxWRIHwTpPnrOioP5YsFEm2ikg44vQrh?=
- =?us-ascii?Q?dOwBcCDwsuDVWw8hW1NcU9J24sQa/wtCjJubSksXui3Qz+K1Eemv/QWNTigX?=
- =?us-ascii?Q?+1qDPEMQLmglLC3OvtpGMNcYgnBEGzXqDAs/o7WZqn5zJFBrowdkwdN8Wf3t?=
- =?us-ascii?Q?M30pJ/NMWOIHjHOBwVG6dBQVy5ArDHUOl5Xap68Vv7vF52NV9gVkaA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2025 20:58:01.6357
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a1b79b57-4dbf-4679-42a1-08dda2182991
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN1PEPF0000468E.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR12MB8492
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 1/1] cxl/edac: Fix the min_scrub_cycle of a region
+ miscalculation
+To: Shiju Jose <shiju.jose@huawei.com>,
+ Alison Schofield <alison.schofield@intel.com>
+Cc: "dave@stgolabs.net" <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ "dave.jiang@intel.com" <dave.jiang@intel.com>,
+ "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+ "ira.weiny@intel.com" <ira.weiny@intel.com>,
+ "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+ "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250530122852.10139-1-ming.li@zohomail.com>
+ <aDn4o8Fw91vQ9D-D@aschofie-mobl2.lan>
+ <bba0fc4616d54babb2b0113967acc95f@huawei.com>
+ <aD3V1MbVV7RZmbu0@aschofie-mobl2.lan>
+ <d036c22fc0e348a3ba7ecb0b4dbf35ba@huawei.com>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <d036c22fc0e348a3ba7ecb0b4dbf35ba@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Feedback-ID: rr080112277d4a4e08dae40075da27ef7a0000e03eddd12b2ed080b156ee8a2c0a0378a3d7161711dfc98d5b:zu08011227e0631b9cf8211257fcf9409f0000f061b07ac347fc45990b661dabd6733427bef424ef9a1b4a66:rf0801122d686c01d30ab0e615a9d5827b0000ad623da6fb84ea20954cec980ecafd9ee96efd5bc06bb8b9c255369281a091:ZohoMail
+X-ZohoMailClient: External
 
-Add man pages for the 'cxl-inject-error' and 'cxl-clear-error' commands.
-These man pages show usage and examples for each of their use cases.
+On 6/3/2025 1:25 AM, Shiju Jose wrote:
+>> -----Original Message-----
+>> From: Alison Schofield <alison.schofield@intel.com>
+>> Sent: 02 June 2025 17:48
+>> To: Shiju Jose <shiju.jose@huawei.com>
+>> Cc: Li Ming <ming.li@zohomail.com>; dave@stgolabs.net; Jonathan Cameron
+>> <jonathan.cameron@huawei.com>; dave.jiang@intel.com;
+>> vishal.l.verma@intel.com; ira.weiny@intel.com; dan.j.williams@intel.com; linux-
+>> cxl@vger.kernel.org; linux-kernel@vger.kernel.org
+>> Subject: Re: [RFC PATCH 1/1] cxl/edac: Fix the min_scrub_cycle of a region
+>> miscalculation
+>>
+>> On Mon, Jun 02, 2025 at 08:23:34AM +0000, Shiju Jose wrote:
+>>>> -----Original Message-----
+>>>> From: Alison Schofield <alison.schofield@intel.com>
+>>>> Sent: 30 May 2025 19:28
+>>>> To: Li Ming <ming.li@zohomail.com>
+>>>> Cc: dave@stgolabs.net; Jonathan Cameron
+>>>> <jonathan.cameron@huawei.com>; dave.jiang@intel.com;
+>>>> vishal.l.verma@intel.com; ira.weiny@intel.com;
+>>>> dan.j.williams@intel.com; Shiju Jose <shiju.jose@huawei.com>; linux-
+>>>> cxl@vger.kernel.org; linux-kernel@vger.kernel.org
+>>>> Subject: Re: [RFC PATCH 1/1] cxl/edac: Fix the min_scrub_cycle of a
+>>>> region miscalculation
+>>>>
+>>>> On Fri, May 30, 2025 at 08:28:52PM +0800, Li Ming wrote:
+>>>>> When trying to update the scrub_cycle value of a cxl region, which
+>>>>> means updating the scrub_cycle value of each memdev under a cxl
+>>>>> region. cxl driver needs to guarantee the new scrub_cycle value is
+>>>>> greater than the min_scrub_cycle value of a memdev, otherwise the
+>>>>> updating operation will fail(Per Table 8-223 in CXL r3.2 section
+>> 8.2.10.9.11.1).
+>>>>> Current implementation logic of getting the min_scrub_cycle value
+>>>>> of a cxl region is that getting the min_scrub_cycle value of each
+>>>>> memdevs under the cxl region, then using the minimum
+>>>>> min_scrub_cycle value as the region's min_scrub_cycle. Checking if
+>>>>> the new scrub_cycle value is greater than this value. If yes,
+>>>>> updating the new scrub_cycle value to each memdevs. The issue is
+>>>>> that the new scrub_cycle value is possibly greater than the minimum
+>>>>> min_scrub_cycle value of all memdevs but less than the maximum
+>>>>> min_scrub_cycle value of all memdevs if memdevs have a different
+>>>>> min_scrub_cycle value. The updating operation will always fail on
+>>>>> these memdevs which have a greater min_scrub_cycle than the new
+>> scrub_cycle.
+>>>>> The correct implementation logic is to get the maximum value of
+>>>>> these memdevs' min_scrub_cycle, check if the new scrub_cycle value
+>>>>> is greater than the value. If yes, the new scrub_cycle value is fit for the
+>> region.
+>>>>> The change also impacts the result of
+>>>>> cxl_patrol_scrub_get_min_scrub_cycle(), the interface returned the
+>>>>> minimum min_scrub_cycle value among all memdevs under the region
+>>>>> before the change. The interface will return the maximum
+>>>>> min_scrub_cycle value among all memdevs under the region with the
+>> change.
+>>>>> Signed-off-by: Li Ming <ming.li@zohomail.com>
+>>>>> ---
+>>>>> I made this change based on my understanding on the SPEC and
+>>>>> current CXL EDAC code, but I am not sure if it is a bug or it is designed this
+>> way.
+>>>> The attribute is defined to show (per
+>>>> Documentation/ABI/testing/sysfs-edac-
+>>>> scrub)
+>>>>   "Supported minimum scrub cycle duration in seconds by the memory
+>>>> scrubber."
+>>>>
+>>>> Your fix, making the min the max of the mins, looks needed.
+>>>>
+>>>> I took a look at the max attribute. If the min is the max on the
+>>>> mins, then the max should be the max of the maxes. But, not true. We do
+>> this:
+>>>> instead: *max = U8_MAX * 3600; /* Max set by register size */
+>>>>
+>>>> The comment isn't helping me, esp since the sysfs description doesn't
+>>>> explain that we are using a constant max.
+>>> CXL spec r3.2 Table 8-222. Device Patrol Scrub Control Feature
+>>> Readable Attributes does not define a field for "max scrub cycle
+>>> supported".  Thus for max scrub cycle, returning max value of (U8_MAX) of
+>> patrol scrub cycle field.
+>>
+>> Understand that now, thanks. I'm still wondering if both these deserve more
+>> explanation in Documentation/ABI/testing/sysfs-edac-scrub
+>> explaining the calculations. Like if the device represents an aggregate of
+>> devices, like a region, the min scrub cycle is the max of the mins, whereas if the
+>> device is a single, it's exactly what the device returned.  And for max, explaining
+>> what you replied above.
+> Not sure is it appropriate to add these CXL scrub specific details to the generic file   
+> Documentation/ABI/testing/sysfs-edac-scrub?
+>
+> CXL region specific details were added under section 1.2. Region based scrubbing
+> of Documentation/edac/scrub.rst. May be better add these details for CXL specific
+> min and max scrub cycle calculation to the Documentation/edac/scrub.rst?
+>
+> How do you want to post these suggested doc changes, in a follow-up patch now?
+>
+> Thanks,
+> Shiju
 
-Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
----
- Documentation/cxl/cxl-clear-error.txt  |  67 +++++++++++++
- Documentation/cxl/cxl-inject-error.txt | 129 +++++++++++++++++++++++++
- Documentation/cxl/meson.build          |   2 +
- 3 files changed, 198 insertions(+)
- create mode 100644 Documentation/cxl/cxl-clear-error.txt
- create mode 100644 Documentation/cxl/cxl-inject-error.txt
+I can include the doc changes in next version.
 
-diff --git a/Documentation/cxl/cxl-clear-error.txt b/Documentation/cxl/cxl-clear-error.txt
-new file mode 100644
-index 0000000..ccb0e63
---- /dev/null
-+++ b/Documentation/cxl/cxl-clear-error.txt
-@@ -0,0 +1,67 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+cxl-clear-error(1)
-+==================
-+
-+NAME
-+----
-+cxl-clear-error - Clear CXL errors from CXL devices
-+
-+SYNOPSIS
-+--------
-+[verse]
-+'cxl clear-error' <device name> [<options>]
-+
-+Clear an error from a CXL device. The types of devices supported are:
-+
-+"memdevs":: A CXL memory device. Memory devices are specified by device
-+name ("mem0"), device id ("0") and/or host device name ("0000:35:00.0").
-+
-+Only device poison (viewable using the '-L'/'--media-errors' option of
-+'cxl-list') can be cleared from a device using this command. For example:
-+
-+----
-+
-+# cxl list -m mem0 -L -u
-+{
-+  "memdev":"mem0",
-+  "ram_size":"1024.00 MiB (1073.74 MB)",
-+  "ram_qos_class":42,
-+  "serial":"0x0",
-+  "numa_node:1,
-+  "host":"0000:35:00.0",
-+  "media_errors":[
-+    {
-+	  "offset":"0x1000",
-+	  "length":64,
-+	  "source":"Injected"
-+	}
-+  ]
-+}
-+
-+# cxl clear-error mem0 -a 0x1000
-+poison cleared at mem0:0x1000
-+
-+# cxl list -m mem0 -L -u
-+{
-+  "memdev":"mem0",
-+  "ram_size":"1024.00 MiB (1073.74 MB)",
-+  "ram_qos_class":42,
-+  "serial":"0x0",
-+  "numa_node:1,
-+  "host":"0000:35:00.0",
-+  "media_errors":[
-+  ]
-+}
-+
-+----
-+
-+OPTIONS
-+-------
-+-a::
-+--address::
-+	Device physical address (DPA) to clear poison from. Address can be specified
-+	in hex or decimal. Required for clearing poison.
-+
-+--debug::
-+	Enable debug output
-diff --git a/Documentation/cxl/cxl-inject-error.txt b/Documentation/cxl/cxl-inject-error.txt
-new file mode 100644
-index 0000000..a0263dd
---- /dev/null
-+++ b/Documentation/cxl/cxl-inject-error.txt
-@@ -0,0 +1,129 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+cxl-inject-error(1)
-+===================
-+
-+NAME
-+----
-+cxl-inject-error - Inject CXL errors into CXL devices
-+
-+SYNOPSIS
-+--------
-+[verse]
-+'cxl inject-error' <device name> [<options>]
-+
-+Inject an error into a CXL device. The type of errors supported depend on the
-+device specified. The types of devices supported are:
-+
-+"Downstream Ports":: A CXL RCH downstream port (dport) or a CXL VH root port.
-+Eligible CXL 2.0+ ports are dports of ports at depth 1 in the output of cxl-list.
-+Dports are specified by host name ("0000:0e:01.1").
-+"memdevs":: A CXL memory device. Memory devices are specified by device name
-+("mem0"), device id ("0"), and/or host device name ("0000:35:00.0").
-+
-+There are two types of errors which can be injected: CXL protocol errors
-+and device poison.
-+
-+CXL protocol errors can only be used with downstream ports (as defined above).
-+Protocol errors follow the format of "<protocol>-<severity>". For example,
-+a "mem-fatal" error is a CXL.mem fatal protocol error. Protocol errors can be
-+found with the '-N' option of 'cxl-list' under a CXL bus object. For example:
-+
-+----
-+
-+# cxl list -NB
-+[
-+  {
-+	"bus":"root0",
-+	"provider":"ACPI.CXL",
-+	"injectable_protocol_errors":[
-+	  "mem-correctable",
-+	  "mem-fatal",
-+	]
-+  }
-+]
-+
-+----
-+
-+CXL protocol (CXL.cache/mem) error injection requires the platform to support
-+ACPI v6.5+ error injection (EINJ). In addition to platform support, the
-+CONFIG_ACPI_APEI_EINJ and CONFIG_ACPI_APEI_EINJ_CXL kernel configuration options
-+will need to be enabled. For more information, view the Linux kernel documentation
-+on EINJ.
-+
-+Device poison can only by used with CXL memory devices. A device physical address
-+(DPA) is required to do poison injection. DPAs range from 0 to the size of
-+device's memory, which can be found using 'cxl-list'. An example injection:
-+
-+----
-+
-+# cxl inject-error mem0 -t poison -a 0x1000
-+poison injected at mem0:0x1000
-+# cxl list -m mem0 -u --media-errors
-+{
-+  "memdev":"mem0",
-+  "ram_size":"256.00 MiB (268.44 MB)",
-+  "serial":"0",
-+  "host":"0000:0d:00.0",
-+  "firmware_version":"BWFW VERSION 00",
-+  "media_errors":[
-+    {
-+  	"offset":"0x1000",
-+  	"length":64,
-+  	"source":"Injected"
-+    }
-+  ]
-+}
-+
-+----
-+
-+Not all devices support poison injection. To see if a device supports poison injection
-+through debugfs, use 'cxl-list' with the '-N' option and look for the "poison-injectable"
-+attribute under the device. Example:
-+
-+----
-+
-+# cxl list -Nu -m mem0
-+{
-+  "memdev":"mem0",
-+  "ram_size":"256.00 MiB (268.44 MB)",
-+  "serial":"0",
-+  "host":"0000:0d:00.0",
-+  "firmware_version":"BWFW VERSION 00",
-+  "poison_injectable":true
-+}
-+
-+----
-+
-+This command depends on the kernel debug filesystem (debugfs) to do CXL protocol
-+error and device poison injection.
-+
-+OPTIONS
-+-------
-+-a::
-+--address::
-+	Device physical address (DPA) to use for poison injection. Address can
-+	be specified in hex or decimal. Required for poison injection.
-+
-+-t::
-+--type::
-+	Type of error to inject into <device name>. The type of error is restricted
-+	by device type. The following shows the possible types under their associated
-+	device type(s):
-+----
-+
-+Downstream Ports: ::
-+	cache-correctable, cache-uncorrectable, cache-fatal, mem-correctable,
-+	mem-fatal
-+
-+Memdevs: ::
-+	poison
-+
-+----
-+
-+--debug::
-+	Enable debug output
-+
-+SEE ALSO
-+--------
-+linkcxl:cxl-list[1]
-diff --git a/Documentation/cxl/meson.build b/Documentation/cxl/meson.build
-index 8085c1c..0b75eed 100644
---- a/Documentation/cxl/meson.build
-+++ b/Documentation/cxl/meson.build
-@@ -50,6 +50,8 @@ cxl_manpages = [
-   'cxl-update-firmware.txt',
-   'cxl-set-alert-config.txt',
-   'cxl-wait-sanitize.txt',
-+  'cxl-inject-error.txt',
-+  'cxl-clear-error.txt',
- ]
- 
- foreach man : cxl_manpages
--- 
-2.34.1
+
+Thanks
+
+Ming
+
+
+>> Regardless of this noise I'm making about the Docs.. I think Ming should go
+>> ahead and v1 the fix for the min calc.
+>>
+>> --Alison
+>>
+>>> Thanks,
+>>> Shiju
+>>>>
+>>>>> base-commit: 9f153b7fb5ae45c7d426851f896487927f40e501 cxl/next
+>>>>> ---
+>>>>>  drivers/cxl/core/edac.c | 8 ++++++--
+>>>>>  1 file changed, 6 insertions(+), 2 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
+>>>>> index
+>>>>> 2cbc664e5d62..ad243cfe00e7 100644
+>>>>> --- a/drivers/cxl/core/edac.c
+>>>>> +++ b/drivers/cxl/core/edac.c
+>>>>> @@ -103,10 +103,10 @@ static int cxl_scrub_get_attrbs(struct
+>>>> cxl_patrol_scrub_context *cxl_ps_ctx,
+>>>>>  				u8 *cap, u16 *cycle, u8 *flags, u8 *min_cycle)
+>>>> {
+>>>>>  	struct cxl_mailbox *cxl_mbox;
+>>>>> -	u8 min_scrub_cycle = U8_MAX;
+>>>>>  	struct cxl_region_params *p;
+>>>>>  	struct cxl_memdev *cxlmd;
+>>>>>  	struct cxl_region *cxlr;
+>>>>> +	u8 min_scrub_cycle = 0;
+>>>>>  	int i, ret;
+>>>>>
+>>>>>  	if (!cxl_ps_ctx->cxlr) {
+>>>>> @@ -133,8 +133,12 @@ static int cxl_scrub_get_attrbs(struct
+>>>> cxl_patrol_scrub_context *cxl_ps_ctx,
+>>>>>  		if (ret)
+>>>>>  			return ret;
+>>>>>
+>>>>> +		/*
+>>>>> +		 * The min_scrub_cycle of a region is the maximum value
+>>>> among
+>>>>> +		 * the min_scrub_cycle of all the memdevs under the region.
+>>>>> +		 */
+>>>>>  		if (min_cycle)
+>>>>> -			min_scrub_cycle = min(*min_cycle, min_scrub_cycle);
+>>>>> +			min_scrub_cycle = max(*min_cycle, min_scrub_cycle);
+>>>>>  	}
+>>>>>
+>>>>>  	if (min_cycle)
+>>>>> --
+>>>>> 2.34.1
+>>>>>
 
