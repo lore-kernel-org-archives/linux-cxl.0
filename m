@@ -1,240 +1,201 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61BEF523A
-	for <linux-cxl@vger.kernel.org>; Mon,  2 Jun 2025 17:47:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E166EAF9;
+	Mon,  2 Jun 2025 18:11:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748886422; cv=none; b=NcZt8lPLQ7rLt8x5jjpCdC9liQrZU6WNzEqDZgQHihgPWWJPUEP3W1gzUPMpDHo/UeD1U/7UYBas9BJ0rjL29VsLKfwIVzVRy6faMCC+Hg6gmSl9L+MNtq9yCRnJVaVS+5r3T6ErpOL1eK+4N2hz1iCJbD4mQm++3m37A9fY1pM=
+	t=1748887872; cv=none; b=Iw1PfzlIpbWW2nq5xiVxGssu64okMRlooilb/nE7/vGv8CS1a13VMVVdwP2cKQyB27G4Y5/08p/DxJ6gjnVvu6wW9dySlaLjemU5rkZKCVJctHYelYv6Lz7hZn+lWqPSF1F2tN+yzUgchAVXDIqnx+E1oNy/eHMIqD41bmOcpqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748886422; c=relaxed/simple;
-	bh=uOuNxcoptLo+I7LePoEOmLrnV5RBxcvnAiOvfseCwQo=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LkaDdYxd1UCzxnMD08KYFJeqJRGIXKUN0LU1Pe6zKQ0WYonIL8kiqk2PkZVG3pwkQrQKYX5LTi/Ve7NQLk4sqZQdmE9kbF5kwnAHDBsjmiSlRYDVbb3ILyQMHgIw4U3BXJDV4OUoOkY7bgWvHmCSqOlxBeiVxUABtwrXfKM6i9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WDD9DtFE; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748887872; c=relaxed/simple;
+	bh=30U5FrzZe477PkMourbldSSCDpz4fRDaC700uOnf3C0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FV1qs+I8v7408En5xYve6KejJtMYw+9+POj8dNFMRQW4y6WF9pyoo1N5DCYVvjOMcA0ny2OjXaJNUPhWubN/QcCiDXj3ECj34ZrtUSKChyUfRZkkABwPd/I2xJ7WE12BT22832FNpYWPY0Xv4XA+dx60MEmMf/6GvCUYdvI1o0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fmSQW/5Z; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WDD9DtFE"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-73972a54919so4092512b3a.3
-        for <linux-cxl@vger.kernel.org>; Mon, 02 Jun 2025 10:47:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748886420; x=1749491220; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lXOxmjxJTW7vpVDwTCYY+gUTdvFyCG/DWn1e8gUxoXc=;
-        b=WDD9DtFEarbUQedwjJzcrS4mpBZsdSxiQ56vvN9Io5hxWn9D3WNgGUxG0nK2205til
-         9uDSXePLbPrifGck1g5IAF3EG1OIymBp1+EaIYfeHCaGqC/y59eRDfUYTTLWaizT0MrT
-         fcBYT+lk1GNneC1UTn4cXjDIjNe77BAFmcgkMxG29AVuFFIuMLxk29sjatgZ8s024US0
-         LVmTtk3q8VTGTfXAgXApxKcaF9XS/aeUKAqfexwLJbnT8TV93nxyvhj2kIw0iZFsIAoq
-         mn6Re7yCVBxy+PIkyjaXaIK8ee2wZ6aTwhKyuIDomzPlhyqIgBrFQtaOVmsYpuKob/6R
-         nlpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748886420; x=1749491220;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lXOxmjxJTW7vpVDwTCYY+gUTdvFyCG/DWn1e8gUxoXc=;
-        b=RANwvCT9sWLQUJBoNbsA4kMaTkBV6KeBFxmi0R4p9w+bctQRIfEtLxfrfXJhHrqaaR
-         m/bLAHkHnlQ/t70sqMCZhnXDSZTaVOdfn7x3ZKcjt5fWwXYw5QtySxPpJ2sRtFL1U3YZ
-         vWMkv0LIgeq+lUSquO6dG/LjsiKyJGoL74I5oBpRG81Du13fSMUoWG+B+xwsZb+XpuoA
-         5SLNCGbu03oEdxE1QaI4IhSD/0WjapVbMwj3YYxzgg43cNF3Nu3n727NkoA5tdSQaj9V
-         iWAZ0Ec9cQXiDeDHGyMc4fsdJCXbYgE2Rz+UKhhmiOARfxT03QNUsx9y66nieX3OwQ3i
-         beug==
-X-Forwarded-Encrypted: i=1; AJvYcCVqv1uEbq6+8OueWUc9S2BFVesVrggoqV8fDmjlmJLOC22nzKz6OJQOwkau4RokYbkN9geI2BqDpcU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+qaAQqkX4gpkiu+v+aAv2kE9nqJB5EWGKxBw3W7Xtq/Ii681j
-	leFLerSU+uQazj3zGPNjzj2xkL/jEvuSnMcb5kj5Dny71BpZV5ypd1GUKWf40Q==
-X-Gm-Gg: ASbGncuRtDejY1vmyniHh89Yobto3go0gPEALrU0w0ne5kzPcamd4WoF5JbBWad78rT
-	Mds6viLa14M/O12Qr5Giku2C+o7bv03ZKmsQ3NCborL1LPDC3PClp0/abL1twNJIo2VY17krhdq
-	WcllTwK++30gtv7WlgCfB9/MQmIl83S4mKVQmtnaOZlQw8v37SOGt0t6U96eshp0G1YUd+KCiUq
-	5skIcEJb0nLDaluwZmfhl/JLfGJ5C0fBJDha9l4YUh95px59LgBAOCK9a9AVn32rT7z5gQkN+1K
-	x2AtT5TVVEKLP03Uj4CjSgdjwYHmPSKHPmy601HaEtQDZ5lbmSTwJBeixTUeObWRLqL1QXkac5b
-	K1g==
-X-Google-Smtp-Source: AGHT+IGwTXr02neCGnVcFeoVH37rrSREjgCOPvTOpyw3Wo4CW4jsOWStJ26+hgejI175AltkHOrL8Q==
-X-Received: by 2002:a05:6a00:10c8:b0:747:cffb:bb37 with SMTP id d2e1a72fcca58-747d1833514mr11642565b3a.10.1748886419565;
-        Mon, 02 Jun 2025 10:46:59 -0700 (PDT)
-Received: from deb-101020-bm01.eng.stellus.in ([149.97.161.244])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afeab75csm8138278b3a.52.2025.06.02.10.46.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 10:46:59 -0700 (PDT)
-From: Anisa Su <anisa.su887@gmail.com>
-X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
-Date: Mon, 2 Jun 2025 17:46:57 +0000
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Jonathan Cameron via <qemu-devel@nongnu.org>, anisa.su887@gmail.com,
-	nifan.cxl@gmail.com, dave@stgolabs.net, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2 00/10] CXL: FMAPI DCD Management Commands 0x5600-0x5605
-Message-ID: <aD3jkRBHmbdc9QmD@deb-101020-bm01.eng.stellus.in>
-References: <20250508001754.122180-1-anisa.su887@gmail.com>
- <20250520143947.00000337@huawei.com>
- <20250530152655.00007132@huawei.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fmSQW/5Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748887871; x=1780423871;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=30U5FrzZe477PkMourbldSSCDpz4fRDaC700uOnf3C0=;
+  b=fmSQW/5ZVmnMp5slep4QinOaqcZjzpm4c4TKX1SinJezIVG/Z/aOJJZW
+   C3k0xzSKuvArrDK70JCWs4AXwUdRd7GGqCULxHnjs0xzX5+a+DvbegBuC
+   JpK1tTojevQjKbi070x6IXBqxLcD7ZMmWqWQ+53Nn/BVjj/+CrRo4KRp9
+   lZGHi0Bbn5z8viq+1BsxZQhNXck99FQ8heEvzyL6CAV9itYegZ74l1JR3
+   zDZfHc7rqhBdmu2DUEXd7jxZQ7W0cG75UWk/baTbLBHhNegXoIeW757mx
+   O/MH/BCtyYsSnAO7m+XOanmOt2M9XkWSxvqe9HDWLjgnZKUzHNji3zH8j
+   g==;
+X-CSE-ConnectionGUID: DFLFctPOQiSFkgCBQxHYnA==
+X-CSE-MsgGUID: X6wdajwUS/yz3qxThmtmtQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="50770704"
+X-IronPort-AV: E=Sophos;i="6.16,204,1744095600"; 
+   d="scan'208";a="50770704"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 11:11:10 -0700
+X-CSE-ConnectionGUID: rmcKHSDgT8WBm+xG+YxC8w==
+X-CSE-MsgGUID: OZrs+IS/S4yOMpwDesH9+Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,204,1744095600"; 
+   d="scan'208";a="148467703"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.244])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 11:11:04 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: Yazen Ghannam <yazen.ghannam@amd.com>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+ Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
+ linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-cxl@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-pci@vger.kernel.org, linux-edac@vger.kernel.org
+Subject: Re: [PATCH 4/4 v2] ACPI: extlog: Trace CPER CXL Protocol Errors
+Date: Mon, 02 Jun 2025 20:06:28 +0200
+Message-ID: <2947754.vYhyI6sBWr@fdefranc-mobl3>
+In-Reply-To: <20250429182055.GB76257@yaz-khff2.amd.com>
+References:
+ <20250429172109.3199192-1-fabio.m.de.francesco@linux.intel.com>
+ <20250429172109.3199192-5-fabio.m.de.francesco@linux.intel.com>
+ <20250429182055.GB76257@yaz-khff2.amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250530152655.00007132@huawei.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On Fri, May 30, 2025 at 03:26:55PM +0100, Jonathan Cameron wrote:
-> On Tue, 20 May 2025 14:39:47 +0100
-> Jonathan Cameron via <qemu-devel@nongnu.org> wrote:
-> 
-> > On Thu,  8 May 2025 00:00:56 +0000
-> > anisa.su887@gmail.com wrote:
-> > 
-> > > From: Anisa Su <anisa.su@samsung.com>
-> > > 
-> > > This patchset adds support for 6 FM API DCD Management commands (0x5600-0x5605)
-> > > according to the CXL r3.2 Spec. It is based on the following branch:
-> > > https://gitlab.com/jic23/qemu/-/tree/cxl-2025-02-20.  
-> > 
-> > Nice work - this is very clean and well presented.
-> > 
-> > I would like Fan to take a look an provide some tags as DCD modeling in
-> > QEMU is more in his area of expertise than mine!
-> > 
-> > I think this series is much more ready for upstream than much of
-> > my staging cxl tree so I'll rebase it to go near the front.
-> > 
-> > Today I'm focused on getting test cases to Richard for the TCG issues but
-> > after that I'll spin a new tree (probably pushed out under a name
-> > that makes it clear there is a known nasty problem though!)
-> 
-> Anisa,
-> 
-> Ideally I'd like to get the majority of this upstream once you post
-> a v3.  To do that I'd like to break the dependence on mctp_i2c in patch 2.
-> These commands are equally valid via a switch-cci (and that path to the
-> fm owned ld_mctpcci is already upstream).
-> 
-> If you could send it as two series. One of which sits on upstream and
-> doesn't include the i2c_mctp part and the other of which is applied once
-> that support is available in my tree that would be great. I'll squash
-> the i2c_mctp part into the patch that adds support for that in the
-> first place.
-> 
-> I'll deal with rebasing needed for other command introductions etc.
-> 
-> There are just enough open questions in this series that I haven't done
-> this rework directly (though I did start doing it - hence the missing
-> include note in one of the patches).
-> 
+On Tuesday, April 29, 2025 8:20:55=E2=80=AFPM Central European Summer Time =
+Yazen Ghannam wrote:
+> On Tue, Apr 29, 2025 at 07:21:09PM +0200, Fabio M. De Francesco wrote:
+> > When Firmware First is enabled, BIOS handles errors first and then it
+> > makes them available to the kernel via the Common Platform Error Record
+> > (CPER) sections (UEFI 2.10 Appendix N). Linux parses the CPER sections
+> > via one of two similar paths, either ELOG or GHES.
+> >=20
+> > Currently, ELOG and GHES show some inconsistencies in how they report to
+> > userspace via trace events.
+> >=20
+> > Therfore make the two mentioned paths act similarly by tracing the CPER
+> > CXL Protocol Error Section (UEFI v2.10, Appendix N.2.13) signaled by the
+> > I/O Machine Check Architecture and reported by BIOS in FW-First.
+> >=20
+> > Cc: Dan Williams <dan.j.williams@intel.com>
+> > Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.=
+com>
+> > ---
+> >  drivers/acpi/acpi_extlog.c | 60 ++++++++++++++++++++++++++++++++++++++
+> >  drivers/cxl/core/ras.c     |  6 ++++
+> >  include/cxl/event.h        |  2 ++
+> >  3 files changed, 68 insertions(+)
+> >=20
+> > diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
+> > index 7d7a813169f1..8f2ff3505d47 100644
+> > --- a/drivers/acpi/acpi_extlog.c
+> > +++ b/drivers/acpi/acpi_extlog.c
+> > @@ -12,6 +12,7 @@
+> >  #include <linux/ratelimit.h>
+> >  #include <linux/edac.h>
+> >  #include <linux/ras.h>
+> > +#include <cxl/event.h>
+> >  #include <acpi/ghes.h>
+> >  #include <asm/cpu.h>
+> >  #include <asm/mce.h>
+> > @@ -157,6 +158,60 @@ static void extlog_print_pcie(struct cper_sec_pcie=
+ *pcie_err,
+> >  	}
+> >  }
+> > =20
+> > +static void
+> > +extlog_cxl_cper_handle_prot_err(struct cxl_cper_sec_prot_err *prot_err,
+> > +				int severity)
+> > +{
+> > +#ifdef CONFIG_ACPI_APEI_PCIEAER
+>=20
+> Why not apply this check on the function prototype?
+>=20
+This function is static.
+>
+> Reference: Documentation/process/coding-style.rst
+> 	   Section 21) Conditional Compilation
+>=20
+> > +	struct cxl_cper_prot_err_work_data wd;
+> > +	u8 *dvsec_start, *cap_start;
+> > +
+> > +	if (!(prot_err->valid_bits & PROT_ERR_VALID_AGENT_ADDRESS)) {
+> > +		pr_err_ratelimited("CXL CPER invalid agent type\n");
+> > +		return;
+> > +	}
+> > +
+> > +	if (!(prot_err->valid_bits & PROT_ERR_VALID_ERROR_LOG)) {
+> > +		pr_err_ratelimited("CXL CPER invalid protocol error log\n");
+> > +		return;
+> > +	}
+> > +
+> > +	if (prot_err->err_len !=3D sizeof(struct cxl_ras_capability_regs)) {
+> > +		pr_err_ratelimited("CXL CPER invalid RAS Cap size (%u)\n",
+> > +				   prot_err->err_len);
+> > +		return;
+> > +	}
+> > +
+> > +	if (!(prot_err->valid_bits & PROT_ERR_VALID_SERIAL_NUMBER))
+> > +		pr_warn(FW_WARN "CXL CPER no device serial number\n");
+>=20
+> Is this a requirement (in the spec) that we should warn users about?
+>=20
+> The UEFI spec says that serial number is only used if "CXL agent" is a
+> "CXL device".
+>=20
+> "CXL ports" won't have serial numbers. So this will be a false warning
+> for port errors.
+>=20
+I'll add a test and print that warning only if agent is a device (RCD,
+DEVICE, LD, FMLD).
+>
+> > +
+> > +	switch (prot_err->agent_type) {
+> > +	case RCD:
+> > +	case DEVICE:
+> > +	case LD:
+> > +	case FMLD:
+> > +	case RP:
+> > +	case DSP:
+> > +	case USP:
+> > +		memcpy(&wd.prot_err, prot_err, sizeof(wd.prot_err));
+> > +
+> > +		dvsec_start =3D (u8 *)(prot_err + 1);
+> > +		cap_start =3D dvsec_start + prot_err->dvsec_len;
+> > +
+> > +		memcpy(&wd.ras_cap, cap_start, sizeof(wd.ras_cap));
+> > +		wd.severity =3D cper_severity_to_aer(severity);
+> > +		break;
+> > +	default:
+> > +		pr_err_ratelimited("CXL CPER invalid agent type: %d\n",
+>=20
+> "invalid" is too harsh given that the specs may be updated. Maybe say
+> "reserved" or "unknown" or "unrecognized" instead.
+>=20
+> Hopefully things will settle down to where a user will be able to have a
+> system with newer CXL "agents" without *requiring* a kernel update. :)
+>
+I'll replace "invalid" with "unknown".
+>=20
 > Thanks,
-> 
-Sounds good, will do :)
-
+> Yazen
+>=20
 Thanks,
-Anisa
-> Jonathan
-> > 
-> > Jonathan
-> > 
-> > 
-> > > 
-> > > The code was tested with libcxlmi, which runs in the QEMU VM and sends 56xxh
-> > > commands to the device (QEMU emulated) through MCTP messages over I2C
-> > > bus. To perform end-to-end tests, both MCTP and DCD support are needed
-> > > for the kernel, so the needed MCTP patches are applied on top of Ira's DCD
-> > > branch https://github.com/weiny2/linux-kernel/tree/dcd-v4-2024-12-11.
-> > > 
-> > > For the tests of commands 0x5600 (Get DCD Info), 0x5601 (Get Host DC Region
-> > > Config), and 0x5603 (Get DC Region Extent Lists), DCD kernel code is not involved.
-> > > The libcxlmi test program is used to send the command to the device and results
-> > > are collected and verified.
-> > > 
-> > > For command 0x5602 (Set DC Region Config): device creates an event record with type
-> > > DC_EVENT_REGION_CONFIG_UPDATED and triggers an interrupt to the host
-> > > if the configuration changes as a result of the command. Currently, the kernel
-> > > version used to test this only supports Add/Release type events. Thus, this
-> > > request essentially gets ignored but did not cause problems besides the host
-> > > not knowing about the configuration change when tested.
-> > > 
-> > > For the command 0x5604 (Initiate DC Add) and 0x5605 (Initiate DC Release), the
-> > > tests involve libcxlmi test program (acting as the FM), kernel DCD
-> > > code (host) and QEMU device. The test workflow follows that in cxl r3.2 section
-> > > 7.6.7.6.5 and 7.6.7.6.6. More specifically, the tests involve following
-> > > steps,
-> > > 1. Start a VM with CXL topology: https://github.com/moking/cxl-test-tool/blob/main/utils/cxl.py#L54.
-> > > 2. Load the CXL related drivers in the VM;
-> > > 3. Create a DC region for the DCD device attached.
-> > > 4. add/release DC extents by sending 0x5604 and 0x5605 respectively through
-> > > the out-of-tree libcxlmi test program
-> > > (https://github.com/anisa-su993/libcxlmi/blob/dcd_management_cmds/tests/test-fmapi.c).
-> > > 5. Check and verify the extents by retrieving the extents list through
-> > > command 0x5603 in the test program.
-> > > 
-> > > The remaining 3 commands in this series (0x5606-0x5608) are related to tags
-> > > and sharing, thus have not been implemented.
-> > > 
-> > > Changes
-> > > ================================================================================
-> > > v1 -> v2:
-> > > 1. Feedback from Jonathan Cameron on v1
-> > > Addressed general style concerns (newlines/spacing, minor refactoring, etc.)
-> > > 1.1. Changes Related to 0x5600 - FMAPI Get DCD Info
-> > >     - Squashed prepatory patch adding supported_blk_sizes_bitmask
-> > >     - Added new prepatory patch moving opcodes enum from cxl-mailbox-utils.c to
-> > >     new header file opcodes.h
-> > >     Needed for the check in i2c_mctp_cxl.c to ensure the FMAPI Commands
-> > >     (0x51 - 0x59) are bound with MCTP_MT_CXL_FMAPI. By moving the enum,
-> > >     the hardcoded values (0x51, 0x59) can be replaced with their
-> > >     enumerators.
-> > >     - Bug fix to return Add/Release Extent Selection Policy bitmasks
-> > >       correctly
-> > > 1.2. Changes Related to 0x5601 - FMAPI Get Host Region Config
-> > >     - Prepatory patch to add dsmas_flags to CXLDCRegion struct was modified to
-> > >     store the booleans dsmas_flags is made up of instead of copying it from the
-> > >     CDAT for that region. Values hardcoded for unsupported flags.
-> > >     - Build the returned dsmas_flags from the new booleans.
-> > > 1.3. Changes Related to 0x5602 - FMAPI Set DC Region Config
-> > >     - Added locking for CXLDCRegion bitmap for the case that extents are being
-> > >     added/released via a different CCI than that of the FM-enabled CCI.
-> > >     - Prepatory patch created for the above (quite short, can be squashed if
-> > >     preferred)
-> > >     - Added a check to verify that the requested block_size is supported by the
-> > >     region by looking at region->supported_blk_sizes_bitmask
-> > >     - Instead of event_record validity flag being cleared, set to 1
-> > >     - Fixed bug of forgetting to update region->block_size
-> > > 1.4. Changes Related to 0x5603 - FMAPI Get DC Region Extents
-> > >     - Minor refactoring of loop filling in response payload extents
-> > > 
-> > > 2. Feedback from Fan Ni and Jonathan Cameron on v1
-> > > 2.1. Changes Related to 0x5604 - FMAPI Initiate DC Add
-> > >     - Remove redundant storage of extents in event_rec_exts
-> > >     - Refactor event record creation into helper function for re-use by release
-> > >     - Return event_record.available_extents
-> > >     (total_extents_available - num_pending - num_accepted) instead of
-> > >     leaving it blank
-> > > 2.2. Changes Related to 0x5605 - FMAPI Initiate DC Release
-> > >     - Remove redundant storage of extents in event_rec_exts/redundant 2nd loop
-> > >     - Add #define for removal_policy_bitmask instead of hardcoding 0x7
-> > > 
-> > > Anisa Su (10):
-> > >   cxl-mailbox-utils: Move opcodes enum to new header file
-> > >   cxl-mailbox-utils: 0x5600 - FMAPI Get DCD Info
-> > >   cxl/type3: Add dsmas_flags to CXLDCRegion struct
-> > >   cxl-mailbox-utils: 0x5601 - FMAPI Get Host Region Config
-> > >   cxl_events.h: Move definition for dynamic_capacity_uuid and enum for
-> > >     DC event types
-> > >   hw/cxl_type3: Add DC Region bitmap lock
-> > >   cxl-mailbox-utils: 0x5602 - FMAPI Set DC Region Config
-> > >   cxl-mailbox-utils: 0x5603 - FMAPI Get DC Region Extent Lists
-> > >   cxl-mailbox-utils: 0x5604 - FMAPI Initiate DC Add
-> > >   cxl-mailbox-utils: 0x5605 - FMAPI Initiate DC Release
-> > > 
-> > >  hw/cxl/cxl-mailbox-utils.c   | 649 +++++++++++++++++++++++++++++++----
-> > >  hw/cxl/i2c_mctp_cxl.c        |   6 +-
-> > >  hw/mem/cxl_type3.c           |  41 ++-
-> > >  include/hw/cxl/cxl_device.h  |  24 ++
-> > >  include/hw/cxl/cxl_events.h  |  15 +
-> > >  include/hw/cxl/cxl_mailbox.h |   6 +
-> > >  include/hw/cxl/cxl_opcodes.h |  72 ++++
-> > >  7 files changed, 724 insertions(+), 89 deletions(-)
-> > >  create mode 100644 include/hw/cxl/cxl_opcodes.h
-> > >   
-> > 
-> > 
-> 
+
+=46abio
+
+
+
