@@ -1,246 +1,190 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2061.outbound.protection.outlook.com [40.107.236.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94EA2253AE;
-	Mon,  2 Jun 2025 18:11:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748887883; cv=none; b=aFx/S2JhePihXjCEpjI+WDv4w2TUX4QberlRvTxlPih1uJ5WhzbmyzG3MhKUr9pcBdVIyaC/5Hh0AJzGnAopHCwnS6LzOVCFxR/MoDEGe8dQhEQFT1PpG1utlP5sN3Fx+THXvBRRR5hM6ZC1s+jDbnwgyYQM2MMkv4aZ1X0LwxE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748887883; c=relaxed/simple;
-	bh=2UUlMrZ8pq2KZwO7Te3yGwm+qcaW3/azDJtyt1C5sXU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=U/c5c5wrxlYjXjzdsCoxj/2ATSntVN0QI6ueZ63Qh1Eht32Xo9/kqSbvHYiBVtxsNjfOqoSsD7JWrk0756i7NiysK24vw9kam+4dVLtJhoCqjktcLA8+lG8ZHos/4aePudBdbK5zjoQuEb+LiRxEFYtGy9G7RUWHnoTQ74UlPPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SaYXJVUx; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD84A196C7C
+	for <linux-cxl@vger.kernel.org>; Mon,  2 Jun 2025 20:56:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.61
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748897808; cv=fail; b=CTFwQL4HwD7ayIWW0UUedi9CsphY2tRmakIDPkt8+g5IPUOgu8Bkf4jKrTDv5thOiEUcl1BpivQKeuiPts4iNf5TDe2I6zE4e7ipodSIs5XS0QjXN0cxGseaerhIuVWqx71Hd9yDEtgDbxhURfjabAFiyu/QL66iph3zkILxwk4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748897808; c=relaxed/simple;
+	bh=Tq21xdBwslBalINJG7ZbsT/HZHHkQL2s9lsNUKiw2Q8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GNdz2ntm3lRfalYx38cn38Tk54XO3IbS8mLbutRAYPp9C4zo78Gul5p9gqWyOwKfhuJ4881H7w6VBtVa++drkouXSWXChWht0H8WOo2FWLpMB+rCCL49HSzY8skwd6943LJo9E1g9GtxVHCVERCV7OExGikhUbv1t3fa0JCg0F8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ZMz8+yIr; arc=fail smtp.client-ip=40.107.236.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SaYXJVUx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748887882; x=1780423882;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=2UUlMrZ8pq2KZwO7Te3yGwm+qcaW3/azDJtyt1C5sXU=;
-  b=SaYXJVUxQkbfG9Bg97nwo3S/J5nGhKefTHJEzETmMogVCrbHZbdTZwGP
-   WrI4Y44ORqiz/4cCMJgYVQzkYFnDmbLj20vR+VnT6nrgg6UbOCD4gl78I
-   Ic4Qp29ofUhgmtHkQpxWrSZNIcqCP1L7hfU7iP8oStHv0NkQAxYm9E9ju
-   tGP7FnMK7qnbcNfnXhcGsFlpNmGsgVl+cFVtJFesan/2gOM0jd38/e4/X
-   GsUf57x7h5yULcewPSjMzBhdu2DUykKxsgh3b08erOEq0+KOqXswS55kz
-   yQiCRdd4AoBqWxX30+dKHGTbz5oJ4tdlLvfvayfKSHbhrSZH2FzPElAO6
-   w==;
-X-CSE-ConnectionGUID: PFBIE7guRpqbKS/ubFn6fQ==
-X-CSE-MsgGUID: n6AJl14QRW2ZwGh+PJU9tw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11451"; a="51004921"
-X-IronPort-AV: E=Sophos;i="6.16,204,1744095600"; 
-   d="scan'208";a="51004921"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 11:11:20 -0700
-X-CSE-ConnectionGUID: 9Hr2MReVSlembJqHcEmVpg==
-X-CSE-MsgGUID: iehnMzY1TL2kjPR7bm1I/Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,204,1744095600"; 
-   d="scan'208";a="145561290"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.244])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2025 11:11:13 -0700
-From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: Yazen Ghannam <yazen.ghannam@amd.com>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
- linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-cxl@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-pci@vger.kernel.org, linux-edac@vger.kernel.org
-Subject: Re: [PATCH 3/4 v2] ACPI: extlog: Trace CPER PCI Express Error Section
-Date: Mon, 02 Jun 2025 18:59:05 +0200
-Message-ID: <3791386.LZWGnKmheA@fdefranc-mobl3>
-In-Reply-To: <20250429180242.GA76257@yaz-khff2.amd.com>
-References:
- <20250429172109.3199192-1-fabio.m.de.francesco@linux.intel.com>
- <20250429172109.3199192-4-fabio.m.de.francesco@linux.intel.com>
- <20250429180242.GA76257@yaz-khff2.amd.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ZMz8+yIr"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uZeX9Z0L44EzwHiMq7hFg2SPWzKGZ1H5NsAgi+sXSyyN4/bEMI4Hm0Cgvw26rcXGouq4Yq5pXF2Qgbs/AX8ALmnbgNrZdaXPQE7c2dTQAP7iwzJa974gdZtoEj6pwA0agrM1TxtBOm71uTXWY/NMH8TuvQeHCRwcbAweZKo+8VTZHXgPNGr1O0fsDJWt1gFXGqQ0JsQgdRBEPan7z6llYrbhXQ3KrTIRYXidQLWeGL+hpv9n17bnPpkK1LIxaCBJhOzJdaMc3rTeoEzOfMw6bMIIAabIwpFUVl0c/lHNXwMlCjQeCzI0WeM456Zr/SAJ9pk24/9W8RkROgg/yTTySQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=A4Qaorn836ve7gnZCJMIvKxUzqcjUj8m8erbeYoS304=;
+ b=qju6Fj7cYk+S4pqT59wTHfZpB7IzckrPmY68KkNb1NVzOs65hOeWC7ya7lI6iptLkWMrxkf6Fgkyb7HAEpq643DHS5toYhxyZ3pIWMTXKW2wVPCZVWrqDiJtufWuMAhlphd28gg4/3FNs1LRCuaN2SR6aATgyto7IaOG1pQ39f+wGMuO8GWzF1nPz1aaYujO5fBirZ9g1SUnSiKt1j5QGO80rkp0ZXMs+OhQBupXlixJMhnTdglHLed+2OFIkp2qdlmulEuqp3SxI+NthUxAG34Dat7Jgd+RLNRfU2WbjOyEXXBrj5CtRgsDAUgDg4mkdQlAcS7BMvkJTe5V1OkgmQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=lists.linux.dev smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=A4Qaorn836ve7gnZCJMIvKxUzqcjUj8m8erbeYoS304=;
+ b=ZMz8+yIrqnxDBBJeurkGjq8qsNjZzQ1KwiusP9baUKNnVIvZPOZ9MbLYoCoJA6wx493XoNMq/1azsbVxPZAbNnS73rUVLv8oScYcDAo72F/AS6VWxDl4NZn1GBGVFdOT2U/4M3+i7BXL5olCOCPRSnWBi+kb62TWs7ZiVa9L93o=
+Received: from BN9PR03CA0086.namprd03.prod.outlook.com (2603:10b6:408:fc::31)
+ by DM4PR12MB6351.namprd12.prod.outlook.com (2603:10b6:8:a2::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8769.22; Mon, 2 Jun 2025 20:56:40 +0000
+Received: from BN1PEPF00004688.namprd05.prod.outlook.com
+ (2603:10b6:408:fc:cafe::8e) by BN9PR03CA0086.outlook.office365.com
+ (2603:10b6:408:fc::31) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8746.29 via Frontend Transport; Mon,
+ 2 Jun 2025 20:56:40 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN1PEPF00004688.mail.protection.outlook.com (10.167.243.133) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8792.29 via Frontend Transport; Mon, 2 Jun 2025 20:56:40 +0000
+Received: from SCS-L-bcheatha.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 2 Jun
+ 2025 15:56:39 -0500
+From: Ben Cheatham <Benjamin.Cheatham@amd.com>
+To: <nvdimm@lists.linux.dev>
+CC: <linux-cxl@vger.kernel.org>, <benjamin.cheatham@amd.com>,
+	<alison.schofield@intel.com>, <junhyeok.im@samsung.com>
+Subject: [ndctl PATCH v2 0/7] Add error injection support
+Date: Mon, 2 Jun 2025 15:56:26 -0500
+Message-ID: <20250602205633.212-1-Benjamin.Cheatham@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN1PEPF00004688:EE_|DM4PR12MB6351:EE_
+X-MS-Office365-Filtering-Correlation-Id: a0d1fe4c-7264-41d6-cb9a-08dda217f930
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?BJAxaa32ZlRshrnRtl59SZJYcBLWJ7pZ+wakLOV6ggnVD573qJuaDa+ifAbC?=
+ =?us-ascii?Q?5ipQpnBeH5KalsahsqJC1uREt1hpwaC2Y+O5oXH+b4cyO1SKVljRXScfC87z?=
+ =?us-ascii?Q?PtJ+HNKVzcJy7Au36euP3Dm3rMgWJl8tCPZfWJ8gn4tRME+SpYPIkO5dT7oW?=
+ =?us-ascii?Q?xO6KCJSAQqY8i368YxU+l89Otl7G+IXch11rAeeUAUpvw+WaZK3rOYEgDDo2?=
+ =?us-ascii?Q?3IJN4pYSFzNF0BqfCtZKLHxMOV7RAA1C7x+HVv3Bjul/CUlPHahlWKXW/SRS?=
+ =?us-ascii?Q?YVaLV091ei4roUB4+9j4Qr++EYZuNPTEGTcNbbdGPM5pS0JB7GTBzdSnPPNp?=
+ =?us-ascii?Q?RSAxYoJWMee6nrpwa7ELE7++yU/n2sXC1Ssk21ghOHF9uCi+g2U89oF/9Uyi?=
+ =?us-ascii?Q?Kt4dnl0KZVQSZCOJotKvAogzF7xdAOfym/VxXsqUySbpeix+16vg6cskKzi+?=
+ =?us-ascii?Q?ur0NzSbctQ3WoldwqrebszHE9vLVnPtJQSyQgNOMNn+FX221v5F0D240uq5b?=
+ =?us-ascii?Q?blRc6ziYHqdhpTn9OVBncn8NXHcgDJL9zGdjT5wGeFfJjQIIVZ1Hwc8eGVO1?=
+ =?us-ascii?Q?LyAxCpdcUL4LxRpDR3mDV/FZGtZH3nqYgXA8W4ee80PZAWSbeIuu1itIHtWj?=
+ =?us-ascii?Q?ublzCeiMHL3b6EaTY8dvL2puaJxwXf2LLSndj4s5ysJucDZIIc0NxeM8zFQ4?=
+ =?us-ascii?Q?nWREBsj2axrn05yqu0cMqekcjvws/uULZgNNgRuTJNXA0dK6fbWNFus4/uAZ?=
+ =?us-ascii?Q?G0ypnwkEl99UBkeAQ9mMWWJETWP0OPxhJ9htyk5/qLL8Ut0jhbVFNoHh8LUo?=
+ =?us-ascii?Q?P8g3cYkKbo1MHD0PsClQNkBOHjEuHF4IOZM8oFaKxUwBqxaqel/esIzaMqZ/?=
+ =?us-ascii?Q?MsxUkPG6enjLYIRJgodUc7KtfPMD2Q6Vk6tTAIZe3tZ4jtwRROzDrwaKIUri?=
+ =?us-ascii?Q?URBsCWNIBoZZ0/je12hkkL4g/k1mcMiynYeGXeE/1kcz9SKmT8qhKP2fQ3I8?=
+ =?us-ascii?Q?I7ng3Nour/tylBO9iaGHp1HOaM4dbMeWy+GYRd+eXfb89VZpwwURHbl/kss4?=
+ =?us-ascii?Q?gvo9cw4ujihrK1F+EMQTqIfRw2RKiyZ+JrWur6x+lpJ8X8coANwuFDSjqq/j?=
+ =?us-ascii?Q?eXOJnTlzCSWl4U0rgu7C0fswG05yyOGeVHP5glItxuAdqCS+LC4a0rvCljO7?=
+ =?us-ascii?Q?5eucVxm1ahpJMBC8UzKQzxRfhOEOSi9SRu4GIMa9seSJ2qUty4q1kA9eLgTJ?=
+ =?us-ascii?Q?Ky/qWGAPPQP3vCWAmLQtgKvTMfUJ7gkLx8uwigz2kVcvgWcZDKKyDVa4ONo9?=
+ =?us-ascii?Q?4ctOpTIQbiogpt4fPPuqEglKNPCt1LOkeCe+1pM2Wxncoxb6vPiLMERZnKkh?=
+ =?us-ascii?Q?KvVLLygLMvsqrD9f/PmpIJjQ2o7o+92+ZK/RluPTnJwCZPiUIQO9J/SL73iH?=
+ =?us-ascii?Q?lNn87gdL3LpQC1XlWBSphrsPsm+7k7Zh9qk3RO4mF4dM7N7crx10kQ=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2025 20:56:40.4125
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a0d1fe4c-7264-41d6-cb9a-08dda217f930
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN1PEPF00004688.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6351
 
-On Tuesday, April 29, 2025 8:02:42=E2=80=AFPM Central European Summer Time =
-Yazen Ghannam wrote:
-> On Tue, Apr 29, 2025 at 07:21:08PM +0200, Fabio M. De Francesco wrote:
-> > I/O Machine Check Arcitecture events may signal failing PCIe components
-> > or links. The AER event contains details on what was happening on the w=
-ire
-> > when the error was signaled.
-> >=20
-> > Trace the CPER PCIe Error section (UEFI v2.10, Appendix N.2.7) reported
-> > by the I/O MCA.
-> >=20
-> > Cc: Dan Williams <dan.j.williams@intel.com>
-> > Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.=
-com>
-> > ---
-> >  drivers/acpi/acpi_extlog.c | 30 ++++++++++++++++++++++++++++++
-> >  drivers/pci/pcie/aer.c     |  2 +-
-> >  include/linux/aer.h        | 13 +++++++++++--
-> >  3 files changed, 42 insertions(+), 3 deletions(-)
-> >=20
-> > diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
-> > index caca6ccd6e99..7d7a813169f1 100644
-> > --- a/drivers/acpi/acpi_extlog.c
-> > +++ b/drivers/acpi/acpi_extlog.c
-> > @@ -131,6 +131,32 @@ static int print_extlog_rcd(const char *pfx,
-> >  	return 1;
-> >  }
-> > =20
-> > +static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
-> > +			      int severity)
-> > +{
-> > +	struct aer_capability_regs *aer;
-> > +	struct pci_dev *pdev;
-> > +	unsigned int devfn;
-> > +	unsigned int bus;
-> > +	int aer_severity;
-> > +	int domain;
-> > +
-> > +	if (pcie_err->validation_bits & CPER_PCIE_VALID_DEVICE_ID &&
-> > +	    pcie_err->validation_bits & CPER_PCIE_VALID_AER_INFO) {
->=20
-> You can save an indentation level by inverting this check and returning
-> early.
->=20
-Nice idea, I'll do it.
->
-> > +		aer_severity =3D cper_severity_to_aer(severity);
->=20
-> I think it would help with clarity if all these lines were aligned on
-> the "=3D".
->=20
-> > +		aer =3D (struct aer_capability_regs *)pcie_err->aer_info;
-> > +		domain =3D pcie_err->device_id.segment;
-> > +		bus =3D pcie_err->device_id.bus;
->=20
-> Many of these variables are passed unchanged to a single function below.
->=20
-> Why not pass them directly to the function?
->=20
-> Even if you split the function parameters across multiple lines, you
-> will still have fewer lines. Plus you will not need to allocate the
-> variables.
->=20
-I think that the cost is minimal and readability is improved.
->
-> > +		devfn =3D PCI_DEVFN(pcie_err->device_id.device,
-> > +				  pcie_err->device_id.function);
-> > +		pdev =3D pci_get_domain_bus_and_slot(domain, bus, devfn);
-> > +		if (!pdev)
-> > +			return;
->=20
-> Newline here, please.
->=20
-Sure.
->
-> > +		pci_print_aer(KERN_DEBUG, pdev, aer_severity, aer);
->=20
-> Why use a debug log level?
->
-Dan Williams suggested the debug log level commenting v1.
->
-> > +		pci_dev_put(pdev);
-> > +	}
-> > +}
-> > +
-> >  static int extlog_print(struct notifier_block *nb, unsigned long val,
-> >  			void *data)
-> >  {
-> > @@ -182,6 +208,10 @@ static int extlog_print(struct notifier_block *nb,=
- unsigned long val,
-> >  			if (gdata->error_data_length >=3D sizeof(*mem))
-> >  				trace_extlog_mem_event(mem, err_seq, fru_id, fru_text,
-> >  						       (u8)gdata->error_severity);
-> > +		} else if (guid_equal(sec_type, &CPER_SEC_PCIE)) {
-> > +			struct cper_sec_pcie *pcie_err =3D acpi_hest_get_payload(gdata);
-> > +
-> > +			extlog_print_pcie(pcie_err, gdata->error_severity);
-> >  		} else {
-> >  			void *err =3D acpi_hest_get_payload(gdata);
-> > =20
-> > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> > index d0ebf7c15afa..627fcf434698 100644
-> > --- a/drivers/pci/pcie/aer.c
-> > +++ b/drivers/pci/pcie/aer.c
-> > @@ -801,7 +801,7 @@ void pci_print_aer(char *level, struct pci_dev *dev=
-, int aer_severity,
-> >  	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
-> >  			aer_severity, tlp_header_valid, &aer->header_log);
-> >  }
-> > -EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
-> > +EXPORT_SYMBOL_GPL(pci_print_aer);
-> > =20
-> >  /**
-> >   * add_error_device - list device to be handled
-> > diff --git a/include/linux/aer.h b/include/linux/aer.h
-> > index 45d0fb2e2e75..737db92e6570 100644
-> > --- a/include/linux/aer.h
-> > +++ b/include/linux/aer.h
-> > @@ -56,17 +56,26 @@ struct aer_capability_regs {
-> >  #if defined(CONFIG_PCIEAER)
-> >  int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
-> >  int pcie_aer_is_native(struct pci_dev *dev);
-> > +void pci_print_aer(char *level, struct pci_dev *dev, int aer_severity,
-> > +		   struct aer_capability_regs *aer);
-> >  #else
-> >  static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
-> >  {
-> >  	return -EINVAL;
-> >  }
-> >  static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
-> > +static inline void pci_print_aer(char *level, struct pci_dev *dev,
-> > +				 int aer_severity,
-> > +				 struct aer_capability_regs *aer)
-> > +{ }
->=20
-> I think the "{ }" can just go at the end of the parameters.
->=20
-> >  #endif
-> > =20
-> > -void pci_print_aer(char *level, struct pci_dev *dev, int aer_severity,
-> > -		   struct aer_capability_regs *aer);
-> > +#if defined(CONFIG_ACPI_APEI_PCIEAER)
-> >  int cper_severity_to_aer(int cper_severity);
-> > +#else
-> > +static inline int cper_severity_to_aer(int cper_severity) { return 0; }
->=20
-> This may have an unintentional side effect.
->=20
-> '0' means AER_NONFATAL.
->=20
-> So the function will return that the error is an uncorrectable AER error
-> that is potentially recoverable. At a minimum, this will incorrectly
-> classify the error for data collection, and it could cause incorrect
-> handling.
->=20
-> I guess the risk is minimal, since CONFIG_ACPI_APEI_PCIEAER will likely
-> be enabled on systems that would use this.
->
-Noted. Kconfig will select CONFIG_ACPI_APEI_PCIEAER.
->
-> Thanks,
-> Yazen
->
+v2 Changes:
+	- Make the --clear option of 'inject-error' its own command (Alison)
+	- Debugfs is now found using the /proc/mount entry instead of
+	providing the path using a --debugfs option
+	- Man page added for 'clear-error'
+	- Reword commit descriptions for clarity
 
-Thanks,
+This series adds support for injecting CXL protocol (CXL.cache/mem)
+errors[1] into CXL RCH Downstream ports and VH root ports[2] and
+poison into CXL memory devices through the CXL debugfs. Errors are
+injected using a new 'inject-error' command, while errors are reported
+using a new cxl-list "-N"/"--injectable-errors" option. Device poison
+can be cleared using the 'clear-error' command.
 
-=46abio
+The 'inject-error'/'clear-error' commands and "-N" option of cxl-list all
+require access to the CXL driver's debugfs.
 
+The documentation for the new cxl-inject-error command shows both usage
+and the possible device/error types, as well as how to retrieve them
+using cxl-list. The documentation for cxl-list has also been updated to
+show the usage of the new injectable errors option.
+
+[1]: ACPI v6.5 spec, section 18.6.4
+[2]: ACPI v6.5 spec, table 18.31
+
+--
+
+Alison, I reached out to Junhyeok about his poison injection series but
+never heard back, so I've just continued with my original plans for a
+v2.
+
+Quick note: My testing setup is screwed up at the moment, so this
+revision is untested. I'll try to get it fixed for the next revision.
+
+--
+
+Ben Cheatham (7):
+  libcxl: Add debugfs path to CXL context
+  libcxl: Add CXL protocol errors
+  libcxl: Add poison injection support
+  cxl: Add inject-error command
+  cxl: Add clear-error command
+  cxl/list: Add injectable errors in output
+  Documentation: Add docs for inject/clear-error commands
+
+ Documentation/cxl/cxl-clear-error.txt  |  67 ++++++
+ Documentation/cxl/cxl-inject-error.txt | 129 ++++++++++++
+ Documentation/cxl/cxl-list.txt         |  35 +++-
+ Documentation/cxl/meson.build          |   2 +
+ cxl/builtin.h                          |   2 +
+ cxl/cxl.c                              |   2 +
+ cxl/filter.h                           |   3 +
+ cxl/inject-error.c                     | 253 +++++++++++++++++++++++
+ cxl/json.c                             |  30 +++
+ cxl/lib/libcxl.c                       | 274 +++++++++++++++++++++++++
+ cxl/lib/libcxl.sym                     |  12 ++
+ cxl/lib/private.h                      |  14 ++
+ cxl/libcxl.h                           |  16 ++
+ cxl/list.c                             |   3 +
+ cxl/meson.build                        |   1 +
+ util/json.h                            |   1 +
+ 16 files changed, 843 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/cxl/cxl-clear-error.txt
+ create mode 100644 Documentation/cxl/cxl-inject-error.txt
+ create mode 100644 cxl/inject-error.c
+
+-- 
+2.34.1
 
