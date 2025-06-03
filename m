@@ -1,93 +1,107 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82DAD22DFE8;
-	Tue,  3 Jun 2025 13:30:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F416B230BE3
+	for <linux-cxl@vger.kernel.org>; Tue,  3 Jun 2025 13:34:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748957437; cv=none; b=SCdxn3P1x9waWZTr0hHn3XrsS/e7S+taUChQ6d+geCqoEOEJmw4b16xVgLd52VSgzrrSROZFrdhNu03n+lRz6uV1LJ36kala6x1pavvdczr+xfJLbWW7Ys27NFtGZiY6OQWt+4g0fYLG/xGFTxdgTkYkZ+Tq3iiliRvTAfjxhto=
+	t=1748957674; cv=none; b=L8oL//9XN5Mm6vRmN8nGDfGFyyYw44u7972XNY1stG9HQLQ/M30+KbsgIw/Gq4bC/3hLI8wjJqAf8vE12GND/j3yRr0bfYuUpwCj7TqVLuTlnMNjPloYK3w2Qw5NvxGdYaVptrukuGVGPffA1XnPGocOMBw0aHALTZn/BN6TvhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748957437; c=relaxed/simple;
-	bh=zaTj2WCKus6LN9iIeEFHBmFy6LVdhen7pT5KRKRjqMs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ngBh738oTV3zVyHltRG6FiFnMG25fOd1nfRUowWPSH/8bAn8yfIiz7wYy29Zm//e28YKmeGA4ID2rhMuA+a2BsW9iSVB4w+ckepLRMnW2x5yEi9lSLDVbbRhRYePlwXjkDv7Cf44dxmJ2Z3JEfTPuUq/LIOIYgD+3BM7l/PAGt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=fQMpuw6X; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1748957674; c=relaxed/simple;
+	bh=Lw5cSrf9yXELvBT6bTYGu3OBlBOa4jK7fmgeC+bgcao=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=asKfC+OjsyaJD16seTCJNmBndlf4/i2NtIR+6y3ttlqeamJIYq+DvIO4e6SX8B97Ay7RGlNS8IGAheqUyq0bThzAwZn5v3n2NvOqBVY4N+uwm8eyc+dzUaNdtdyNyvt+eGMubdr0jayw1uPy/XVqrtgcbFx1dUX5VbfGSouKXgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=lrAku4ce; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="fQMpuw6X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1748957431;
-	bh=zaTj2WCKus6LN9iIeEFHBmFy6LVdhen7pT5KRKRjqMs=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=fQMpuw6XNphUS70DvQkaqmrG+GE+TdjaV6FYMJeMCefz1fCXagpoYJgH1kOTUcqap
-	 TlNACzQbyxEu6oQ0yDzPx8gZhwuehoWVmH9j77SjQtfKEJiS9qmB+jodS0BzoehEBE
-	 HvU812nautR//a/zDERv25AoQhwqrK42f0c8V2Sg=
-Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 0280265F62;
-	Tue,  3 Jun 2025 09:30:27 -0400 (EDT)
-Message-ID: <4c2f44c4115eae6b68846da1ec85c5f47ea66122.camel@xry111.site>
-Subject: Re: [PATCH v3 1/1] mm: numa_memblks: introduce
- numa_add_reserved_memblk
-From: Xi Ruoyao <xry111@xry111.site>
-To: Guenter Roeck <linux@roeck-us.net>, Yuquan Wang
-	 <wangyuquan1236@phytium.com.cn>
-Cc: Jonathan.Cameron@huawei.com, dan.j.williams@intel.com, rppt@kernel.org, 
-	rafael@kernel.org, lenb@kernel.org, akpm@linux-foundation.org, 
-	alison.schofield@intel.com, rrichter@amd.com, bfaccini@nvidia.com, 
-	haibo1.xu@intel.com, david@redhat.com, chenhuacai@kernel.org, 
-	linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, chenbaozi@phytium.com.cn,
- 	loongarch@lists.linux.dev
-Date: Tue, 03 Jun 2025 21:30:25 +0800
-In-Reply-To: <06a0abfd-5508-4fb5-8a96-a13cf3d8aca7@roeck-us.net>
-References: <20250508022719.3941335-1-wangyuquan1236@phytium.com.cn>
-	 <06a0abfd-5508-4fb5-8a96-a13cf3d8aca7@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="lrAku4ce"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6f0ad744811so41001236d6.1
+        for <linux-cxl@vger.kernel.org>; Tue, 03 Jun 2025 06:34:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1748957672; x=1749562472; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=o9eD6fBv50JvJ7Gx4KUjwD3EkSFG+lO7duRzw9dtFZs=;
+        b=lrAku4ceWFfd92z3vNIRNznkctKgFgmmyMQzW81z4NHUxFQj/l3xSfa7PCLr00O6ew
+         UM6mT2kD6Ct/OECKUDQZG53FXfqFij9nZhl/zpvcIBTGZn0q3FfWJ3rmLOcj/MsP7Gsy
+         SVIVWQB/Z0dVQA9/oora/QY9tOLyr7TtDGd6V19zHnLrc/gLS2DpuqdvOgmR3z0NjizF
+         6j42V4uqsJf+D3RxJVZDuduTu2Id0UiwGsV0mqt2UAsFiOvCgjL9MRxPLV8RIvcsMdYA
+         frhFnACPi8wIvshwXOGxlFJ9wjx1nmtTgJh0ufocXr2a1Sf83OiQD3w05nQQJ5mc9Zww
+         TEHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748957672; x=1749562472;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o9eD6fBv50JvJ7Gx4KUjwD3EkSFG+lO7duRzw9dtFZs=;
+        b=xBpTzzriAmJ1cBYunDKZQageOFz4kCj67ZDsyPrsJBOGBWKrya8+68v1XV3ia+GJFn
+         VEKkwA7SR+ihwXaRNWy5g8mr8q4s7E770lFjCdZHWT1BjG2/nZRhlVB8z1Omifq1kvJJ
+         4bJWD6NtmLaKiZ1TipNxOu9E+OQcUuQ8J/t/3apOH2dUKp8I+CkFtDttyxw5lTPqR41D
+         cfi9wbM3geIgesfE2apU9mlSxCXv9OyW6BxNJKyzHCL/T27dSYukjgoocTcl2AUBfw5i
+         APjqA/3xN+shIjlH60bc3lsVPSMqF+VeNCww3Wx5VHdOXt5PQblJNbglZ6GDyGO0AdAP
+         8/xA==
+X-Forwarded-Encrypted: i=1; AJvYcCW5C1UwpWWhOmp/UW4A9F11Vn5PpQVKJ719wnIUoKoDhyuHJuaQ4UT07yFq9gRM+8929PB4MG19cY0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwusjxMCwpKTBBlSf9KEYhXcKz5tWz7A9j4+ejoTyDtJkNWR2Ai
+	/NExbMc1qetbjIqZou5L3b3+iE0iruQQibD9dkE87o0YVSILyNl9N4jCHs+wB1QmwfA=
+X-Gm-Gg: ASbGncsUthcNV/8iKTkpR+ysKQp4A2ZS3f3564jDvNSONthDRtM7ihzNTrPXGIhtjci
+	4Tm9HgjKxp4IJIg1rf1mp2yBBgJl/1ug0p6aCdxFS9v41tdKA0v/yf8on2KgtBSP1Jn61U2e+tO
+	+hIDaaMGz0jgEjlgs1qba+10UnFpRL/UXa7Y6FVvj0rmrbAd8OW+jkphFQgt8AMMPUDgt6RJadC
+	r7c9GoevfmcwCrykEnX8eZOVJWAF1v7PsY4ynDmxnOqQiRiA/Wu+SAt8AlDMND6lghtm6PDMtpM
+	gqRTP5t3GG6IN16wziW69XXKP4Ei24wUOYidkiGbm0aGU2ha0U0Q48n14BPLqlx/mv0StpG3nqZ
+	Ri4cVcHAhjyocrCIxy4d15Dc+aQY=
+X-Google-Smtp-Source: AGHT+IH3/hKllTZ0eEK/dcuWTgO5QsHZ5LZ3JNRLIXTEioRhdRSPfL4GWfnU3eDieGqXq6aFnuzp+A==
+X-Received: by 2002:a05:6214:5096:b0:6ed:1651:e8c1 with SMTP id 6a1803df08f44-6fad90aa622mr189063246d6.13.1748957671754;
+        Tue, 03 Jun 2025 06:34:31 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fac6e00b78sm80064216d6.75.2025.06.03.06.34.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Jun 2025 06:34:31 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1uMRmg-00000001h3q-2scY;
+	Tue, 03 Jun 2025 10:34:30 -0300
+Date: Tue, 3 Jun 2025 10:34:30 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Alistair Popple <apopple@nvidia.com>
+Cc: linux-mm@kvack.org, gerald.schaefer@linux.ibm.com,
+	dan.j.williams@intel.com, willy@infradead.org, david@redhat.com,
+	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+	linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
+	zhang.lyra@gmail.com, debug@rivosinc.com, bjorn@kernel.org,
+	balbirs@nvidia.com, lorenzo.stoakes@oracle.com,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-cxl@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	John@groves.net
+Subject: Re: [PATCH 01/12] mm: Remove PFN_MAP, PFN_SG_CHAIN and PFN_SG_LAST
+Message-ID: <20250603133430.GB386142@ziepe.ca>
+References: <cover.541c2702181b7461b84f1a6967a3f0e823023fcc.1748500293.git-series.apopple@nvidia.com>
+ <cb45fa705b2eefa1228e262778e784e9b3646827.1748500293.git-series.apopple@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cb45fa705b2eefa1228e262778e784e9b3646827.1748500293.git-series.apopple@nvidia.com>
 
-On Tue, 2025-06-03 at 06:06 -0700, Guenter Roeck wrote:
-> Hi,
->=20
-> On Thu, May 08, 2025 at 10:27:19AM +0800, Yuquan Wang wrote:
-> > acpi_parse_cfmws() currently adds empty CFMWS ranges to numa_meminfo
-> > with the expectation that numa_cleanup_meminfo moves them to
-> > numa_reserved_meminfo. There is no need for that indirection when it
-> > is
-> > known in advance that these unpopulated ranges are meant for
-> > numa_reserved_meminfo in support of future hotplug / CXL
-> > provisioning.
-> >=20
-> > Introduce and use numa_add_reserved_memblk() to add the empty CFMWS
-> > ranges directly.
-> >=20
-> > Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
->=20
-> Just on case this has not been reported yet:
->=20
-> Building loongarch:defconfig ... failed
-> --------------
-> Error log:
-> drivers/acpi/numa/srat.c: In function 'acpi_parse_cfmws':
-> drivers/acpi/numa/srat.c:467:13: error: implicit declaration of
-> function 'numa_add_reserved_memblk'=20
+On Thu, May 29, 2025 at 04:32:02PM +1000, Alistair Popple wrote:
+> The PFN_MAP flag is no longer used for anything, so remove it. The
+> PFN_SG_CHAIN and PFN_SG_LAST flags never appear to have been used so
+> also remove them.
+> 
+> Signed-off-by: Alistair Popple <apopple@nvidia.com>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  include/linux/pfn_t.h             | 31 +++----------------------------
+>  mm/memory.c                       |  2 --
+>  tools/testing/nvdimm/test/iomap.c |  4 ----
+>  3 files changed, 3 insertions(+), 34 deletions(-)
 
-The fix is queued at
-https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.g=
-it/commit/?h=3Dloongarch-next&id=3Da24f2fb70cb62180486ad4d74f809ff35ddd1cf9
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 
-
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+Jason
