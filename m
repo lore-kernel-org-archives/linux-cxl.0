@@ -1,68 +1,67 @@
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0833823815B
-	for <linux-cxl@vger.kernel.org>; Tue,  3 Jun 2025 13:47:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CBD123AE60
+	for <linux-cxl@vger.kernel.org>; Tue,  3 Jun 2025 13:48:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748958472; cv=none; b=aMwSUHbcvGSkjt/pxPsLlliui+W+G4wiM6vhUjyRpTwgV8AH8ee5vKZ8yuKejWREJ9SDjxjJr5A6xbE/XC4d9y0cj5sqxpvCsMqsrQb9HTQQ9+y4FQXTYCfsAjb26MobGSlc3QgqbWVBotpXDACsF0dCJAT5XvgCxlOJM0tqvXk=
+	t=1748958503; cv=none; b=s6hD/JosCFJh1ddYd6rqEmJ0LaFJEOinbuu2PU0hXQz7mJuYXZ+B+XRgqBv6VLqmqkmo1Hcm9Zfal6ioKJyeGdJxM+seN089bCEOwha9fghywWNcmY80kkUKtei3KF4K8AOaFPbuzEqrENQicCa4ATo9c71JFzm4lZDQ/ZW4kAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748958472; c=relaxed/simple;
-	bh=QuA4bLScr7zZl9oRdPCFKpAujll0Lr/hMN/nG963i68=;
+	s=arc-20240116; t=1748958503; c=relaxed/simple;
+	bh=y7QlyC6KXPLMJYPeW/fxUEb7YGMf3rqlxQiF8jReTpg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LehaUMj4xmO8CXvPqKBTLVmp+ObomDmfQZzsbHRjVxAgIKZtO8Vq3ZXlttpbY6aXOyLgSxdkQ1rB10IaPksPQUG0NChVxWrAetR0rJGL0x9ws+/3d4PYZqM1M/ytqcoWQNLB3Y8+cWfzWHkTKYOZFa4q895QC4ubkH8lbmvg2lM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=bcbblDxg; arc=none smtp.client-ip=209.85.167.181
+	 Content-Type:Content-Disposition:In-Reply-To; b=OqaKqkxIjQEoNGHitiX/T6D3bZgwxkIzq7lItwh2cPrLDV8piJ30EcnQjFrVaEkeIP+IXt1+5uXiZOA18wLBeg+9wyg6UxAfQHoOdiVntvSbAfHDyA6OrB2iwSUgDkoWXKBICYqS8aKg3a/ulBjy4iaHxDK/gV8+Al3pQ/ZI3uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=AjOqEgfZ; arc=none smtp.client-ip=209.85.222.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="bcbblDxg"
-Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-4079f80ff0fso1948916b6e.1
-        for <linux-cxl@vger.kernel.org>; Tue, 03 Jun 2025 06:47:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="AjOqEgfZ"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7cadd46ea9aso682652285a.1
+        for <linux-cxl@vger.kernel.org>; Tue, 03 Jun 2025 06:48:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1748958470; x=1749563270; darn=vger.kernel.org;
+        d=ziepe.ca; s=google; t=1748958496; x=1749563296; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UpF3njOJtHrMyikmrAfZ4zzOg2YUvEVFUbKoE3kb2rM=;
-        b=bcbblDxgaCWpXfttqmUcdoBoYMbuay6D8z7S4RlHmwfg9FWEFerb/mKsF3806mT3F1
-         +aspVIhWyWVbnQL4vAxjsApLcyRisrxoBGXPJFuWGESq65R/E+xIevTVOjpR74I0/y2o
-         5hgqYceelth0nebvZWKjpqdAlbrdxBVpwbWFiPfwOhNYuoOHO2OJc/R3u77bzDsgxOz3
-         YPNH9j40XI1UuIvlytU1x5oB+i+0ifWfYOF/ym+YnoStzsmbtcqTOIzU1lgtZPvyCgqZ
-         xxo2WEYmh1a8DDHv+pocQwyFijicYQvSbWw8VrKRF5p5RkG7jhn0rwkNMcsVe37DyV1d
-         2BeA==
+        bh=0ag2KSfmpizoceiuoj+cZXZUUA1usyi82jYygfJs/Bg=;
+        b=AjOqEgfZCAKJpwstPgw4JUuuLsAGp4nuxZRwWsRx7CMfzOZNcGorTQaU0A+5m3TJgs
+         r4OuHdohJGbuNjZ0ZfPjWtHdlHW0OUVT2MLGLWgssYWADyAl4O71jzDVYgB/hFpePHMF
+         82h2pWYP3V1Wpd/Dx4GOY6hgM50TO3Sw38gXNjoK5nIiV0BAazMOQed27p1HtLGXrzfG
+         Y41CTIjAqO84UvYK8NETu4qxigoFB31sHhGw/l5w/mwTsZm9iCHyHZFq5TAYGiWTz4G9
+         jlH6Zb+lGS1JwhW2YHzLp7uXrXNKjo1ZIRmAJZ8hteKsQOdVlximwGQrn5r+EpsPZYxy
+         YDKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748958470; x=1749563270;
+        d=1e100.net; s=20230601; t=1748958496; x=1749563296;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UpF3njOJtHrMyikmrAfZ4zzOg2YUvEVFUbKoE3kb2rM=;
-        b=riaeaIva0gnS9J2em8NK3VeVSMyRzZnW/OZLZG9fxZ68uCBn500NhUOvvD/tC900Y+
-         NGEzKR0dOJUXQQhQGh2sYpppbw4fafG6C46xVYzxViH6yZCaqsSJw70jXH4Zrr8ZxVuw
-         sJUMGizmF2c4+BEhgm7FG16xuhsWiv6jxZoSRONmLDt5lzATLXypN3ov3tiC4C3g5GKl
-         WMqt2e+SIND2xlSOQ+wCWT62hpcmB3R6IlLZte5m4WGtBEcsggZhkJiCMwNpC1V16cvn
-         ayTYmVNaJ9gRV9yg4j+YG1Mg9tfRwVRIK0CRs9lfVuUm72XMsIt4/HCvM4q9VAbtyjIu
-         oRfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUPOh4duOW/Q3xxPef9Ytl3tyvdSS8YtR8D++oAiCEkd82IQKIAmr2eyfd9pd+dFKqUJMgFlRxLu6U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4iILr8xDQbw58PbwJJT+KzjvaK/Ef9RLNIOsnTNuMYndjcREO
-	eb2VyChtjTEqoe0jkPChPm73Asa208YarBWPrLCPiLnKjYQn6Gq5RFhkIgysai58SlRU3I/hrPN
-	dC4cD
-X-Gm-Gg: ASbGncsm26bCw6vOyMxSTsjH9lBQyGD12XoL6CsszjvlHrrQaf2BdX7BKuCXIhSGZyv
-	skvhwVfD0a3zI5E4PvaVloc+aurQDdztMOG6miEmTdKs42Z5T7dz603rEG8FpC41mor2rV5EhZj
-	CiBe9kPrp7IWSC1qR+eBMX5K/o2Kqlprd9O3NmDN6zd0/6bSiCeN83kzSPWp3NIT7T2nI3TH/KX
-	UxJzDbv53WCmpUA9HZmp45tw5t2FwPBTFmPu5A9kjgg7Rdw2CDy2kpUe+uUZxApjVznhwL0Lo48
-	nK+iGx6RvDaFTAzaO6s9VE/6ywu4ERLfKnOueAxWyklrwv4760GNnZbk0yqflWRJjx0Ofm44Kz0
-	JLbQO11BVQpAikpldf6KQxTvjCZQ=
-X-Google-Smtp-Source: AGHT+IEn/uCXnqGk9mGrQEIlQbsguMg4s70jmRhOs28+dV79kPuZtTFgI19mnXFgGkPMbOXTAF/Qjg==
-X-Received: by 2002:a05:620a:278d:b0:7c5:d71c:6a47 with SMTP id af79cd13be357-7d211676724mr394455585a.8.1748958459265;
-        Tue, 03 Jun 2025 06:47:39 -0700 (PDT)
+        bh=0ag2KSfmpizoceiuoj+cZXZUUA1usyi82jYygfJs/Bg=;
+        b=qmED8XQj6xdKJ44wO0evjOLVzZefwQl96yLTrgzl30rbQP2ZFe4rGkxT9ipPxX9RMU
+         eDX8FSWtuAJkZSgSdC+jhVknCLPmpJQw++2ElWttKM0LB/+5mYfRIBhT3KAdK5mAPfP8
+         VL3LKWIR7nDhdAQjdLKKwzJvN6H6ZQIYe/rgkxo5wZXaVpHS/2M4j3rXctUa+e7pa7CU
+         ZDkgKmTHQrs6e9fLwkFufyyzLFgoiFcm298nw9AOSz+CUOnX/x6a3dDr+wLKvuE6PhbM
+         +qY7Om/4PNH48KD3142BuuYXLS1k/DCziRrHrPOWDUItdvg8801dVSrn228EoY2vjp2A
+         W3qA==
+X-Forwarded-Encrypted: i=1; AJvYcCU0Y1Ai3zRKE4kN+ngnYKf4wSNoc4y0xgJyVB0O42/bzdH31mgrVBgeQdPBgIFHRBFP80EXj7RzrNE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy52P6uz7po5CY7DHzZ8X/Ewtnwu20liuT5n0Gmd2K2r1dx8VFL
+	XjFa3rtotlP2atXrdqhw8RHGlFArDT5z1x6f5AKTvU2Z7Isc6CdiTIkVJr0ZWLW7XUE=
+X-Gm-Gg: ASbGncuVeIeQuVzK3lRQqD7gW98Ialrz6OgJG10u52EsPVHih9SJUBxg0w1shHI4ke0
+	EJhsTjIffI1rqUg1R50zlEqzl6cWfaWXy0Jzsz2uLbq3Whb1t8AR5Fo1w4sVvpw2+YA+z58JQN6
+	bDhTyU0M7u8EJfmggnku4uPM9KCtgshxC/fZteBzwY++HOerFkvkKGnD/vjHkfo4nPx5ke78rRx
+	u8YaSr5tbDdti/47Cics6FT48bJnxzX4687S7Ss3yO8zXRAqXSn2kocFvnlOVvYRR8DlwhCsv+E
+	JS6h30TTbczMKXtwO1jDU2W8lcudzIBi6YboMZruzJKz7BJI79LH2+8fFRIhKWNIna+tJ5fCtl0
+	0s6KuFpPr3BMe4yoGXHdq5A/jAbU=
+X-Google-Smtp-Source: AGHT+IEC7tetoyd4MWB27Cys7lEZRwLgg/tDNDKGL2nO8t1WlsQDGW4e4zhoToAJp9Wky9F+fr/2kQ==
+X-Received: by 2002:a05:620a:290a:b0:7c5:544e:2ccf with SMTP id af79cd13be357-7d0a4e57644mr2655730585a.57.1748958495697;
+        Tue, 03 Jun 2025 06:48:15 -0700 (PDT)
 Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d09a195d7dsm840098585a.78.2025.06.03.06.47.38
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d09a0e3fa9sm838696585a.24.2025.06.03.06.48.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 06:47:38 -0700 (PDT)
+        Tue, 03 Jun 2025 06:48:15 -0700 (PDT)
 Received: from jgg by wakko with local (Exim 4.97)
 	(envelope-from <jgg@ziepe.ca>)
-	id 1uMRzO-00000001hB3-1CmA;
-	Tue, 03 Jun 2025 10:47:38 -0300
-Date: Tue, 3 Jun 2025 10:47:38 -0300
+	id 1uMRzy-00000001hBT-2tOq;
+	Tue, 03 Jun 2025 10:48:14 -0300
+Date: Tue, 3 Jun 2025 10:48:14 -0300
 From: Jason Gunthorpe <jgg@ziepe.ca>
 To: Alistair Popple <apopple@nvidia.com>
 Cc: linux-mm@kvack.org, gerald.schaefer@linux.ibm.com,
@@ -76,11 +75,10 @@ Cc: linux-mm@kvack.org, gerald.schaefer@linux.ibm.com,
 	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
 	linux-cxl@vger.kernel.org, dri-devel@lists.freedesktop.org,
 	John@groves.net
-Subject: Re: [PATCH 06/12] mm/gup: Remove pXX_devmap usage from
- get_user_pages()
-Message-ID: <20250603134738.GG386142@ziepe.ca>
+Subject: Re: [PATCH 07/12] mm: Remove redundant pXd_devmap calls
+Message-ID: <20250603134814.GH386142@ziepe.ca>
 References: <cover.541c2702181b7461b84f1a6967a3f0e823023fcc.1748500293.git-series.apopple@nvidia.com>
- <c4d81161c6d04a7ae3f63cc087bdc87fb25fd8ea.1748500293.git-series.apopple@nvidia.com>
+ <2ee5a64581d2c78445e5c4180d7eceed085825ca.1748500293.git-series.apopple@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -89,33 +87,33 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c4d81161c6d04a7ae3f63cc087bdc87fb25fd8ea.1748500293.git-series.apopple@nvidia.com>
+In-Reply-To: <2ee5a64581d2c78445e5c4180d7eceed085825ca.1748500293.git-series.apopple@nvidia.com>
 
-On Thu, May 29, 2025 at 04:32:07PM +1000, Alistair Popple wrote:
-> GUP uses pXX_devmap() calls to see if it needs to a get a reference on
-> the associated pgmap data structure to ensure the pages won't go
-> away. However it's a driver responsibility to ensure that if pages are
-> mapped (ie. discoverable by GUP) that they are not offlined or removed
-> from the memmap so there is no need to hold a reference on the pgmap
-> data structure to ensure this.
-
-Yes, the pgmap refcounting never made any sense here.
-
-But I'm not sure this ever got fully fixed up?
-
-To solve races with GUP fast we need a IPI/synchronize_rcu after all
-VMAs are zapped and before the pgmap gets destroyed. Granted it is a
-very small race in gup fast, it still should have this locking.
-
-> Furthermore mappings with PFN_DEV are no longer created, hence this
-> effectively dead code anyway so can be removed.
+On Thu, May 29, 2025 at 04:32:08PM +1000, Alistair Popple wrote:
+> DAX was the only thing that created pmd_devmap and pud_devmap entries
+> however it no longer does as DAX pages are now refcounted normally and
+> pXd_trans_huge() returns true for those. Therefore checking both pXd_devmap
+> and pXd_trans_huge() is redundant and the former can be removed without
+> changing behaviour as it will always be false.
 > 
 > Signed-off-by: Alistair Popple <apopple@nvidia.com>
 > ---
->  include/linux/huge_mm.h |   3 +-
->  mm/gup.c                | 162 +----------------------------------------
->  mm/huge_memory.c        |  40 +----------
->  3 files changed, 5 insertions(+), 200 deletions(-)
+>  fs/dax.c                   |  5 ++---
+>  include/linux/huge_mm.h    | 10 ++++------
+>  include/linux/pgtable.h    |  2 +-
+>  mm/hmm.c                   |  4 ++--
+>  mm/huge_memory.c           | 30 +++++++++---------------------
+>  mm/mapping_dirty_helpers.c |  4 ++--
+>  mm/memory.c                | 15 ++++++---------
+>  mm/migrate_device.c        |  2 +-
+>  mm/mprotect.c              |  2 +-
+>  mm/mremap.c                |  5 ++---
+>  mm/page_vma_mapped.c       |  5 ++---
+>  mm/pagewalk.c              |  8 +++-----
+>  mm/pgtable-generic.c       |  7 +++----
+>  mm/userfaultfd.c           |  4 ++--
+>  mm/vmscan.c                |  3 ---
+>  15 files changed, 40 insertions(+), 66 deletions(-)
 
 Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 
