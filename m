@@ -1,103 +1,155 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43551132111
-	for <linux-cxl@vger.kernel.org>; Tue,  3 Jun 2025 13:51:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A3126290
+	for <linux-cxl@vger.kernel.org>; Tue,  3 Jun 2025 13:55:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748958686; cv=none; b=QY47Za/MJfuPubkSt2KIyExzrDbGEQ27zGsOQj/nOHFBMJgzrWpz5Io2x5HaslDrJBDp3/t0twTTzBvBTz+28wVqMU1fsMYYRQs6cDM674cO+01uE9i9It8Kz52paIkpHne5176jBvK7rzLwR0ZvGp6PrhM6IDeFPDfSvpCPu/Q=
+	t=1748958921; cv=none; b=dbMCm3ZZSwKTCHeeHm8vuQ9zMxqVyNmccPTEzVsJc7132l/lvOCuR6eykUrdVYWzwCqcfXBbVjuhwMQs6kOwHucuyazRGnbmxyTkweeQOUPw+/4j1yeAijAraI2+aaIOM0qfK1Vo/6hPCFm7IicZz+hUGfiJuur93Cf71p/ncnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748958686; c=relaxed/simple;
-	bh=DZgdvaQsVzy3FEkZ9qjIOfWCU7WN4gcYp04RM+bGGPE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LxCRl7XGaPO0EYD+n+agBKQXMC81xPdPksw6WdphecKTSGax/3yZPZBFc1+IzFKGMZf1QtUjAVUPO/Rdo+ghCdRdBk7D3XGDsaiKVvm/zqILBzxqD8CBHzFRPstR8fmcFukeLkukIUtvSpHzi9Ct/OX1wwqI2BL/Ry8kfE5Cn2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=CkjRQVCo; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1748958921; c=relaxed/simple;
+	bh=VxxLLwSWDKAZh0hknqXTuaSbAr304ysMILQWluEnEDw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Xyngl1i5GSuLz6YRq27SIOTQbtsgwem4rh6d4jUmJFG4Pc34GfdX/nc0LBSRaLEUwcc7K9L+v0XKUwfe8+6HxEwstXAYBg+WmORLdFy0BGXnu72sRlr1k5IjBTqNGbj3DbVtKMjHu6d2wYkDCkOltFmbiKunSrrSnCwsTnledyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZQUTCd8z; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="CkjRQVCo"
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6f0c30a1cf8so72685216d6.2
-        for <linux-cxl@vger.kernel.org>; Tue, 03 Jun 2025 06:51:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1748958684; x=1749563484; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VzY+cZCL0448RY0GID08t4arF/zf+2+XaBNqbHYkIpY=;
-        b=CkjRQVCo62+UdQJlcNKk9VStpJfKAfSkj7uDLJAc/YWTM1zvSrsN5EZZaR4PTlIj5z
-         yo2SjyR1wqiQfBTHNexaRxrqGj3hLlTTX3csuOdyzbR8z1Xe995WpXPDV0+5ffx2AkIZ
-         U5vq184X+k5p/VQiIFOS+7iFFZCB+/x7Oh5gnV2tPjioeiCstxG9btlv9mF0FmeUWGJE
-         +kxNaRtj6mRr8ngAu7fHyMgIsMERoOUKtwP9q99Mp+FMyL4HTJRO+IG/45bLTpqSQczx
-         qH3wmD8OM+yPUcR/C9x11+TsSt5pFdjkiB7JE3VbLkGCg9PigUvrAcH9871NtnAYMqmz
-         73tQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748958684; x=1749563484;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VzY+cZCL0448RY0GID08t4arF/zf+2+XaBNqbHYkIpY=;
-        b=hWK3MD+lo4h0sVRLM/5SROe3gl/KQzZ0RFfUk5ZpGAJUyeyT5b2WfG4RQax6NHhwqE
-         iLfjHj2BB2sX8VwhJ59s8X32DT70uniuQ77BOMlop4AJp3AfekgAG6Hhjr91IgW45H/S
-         KIvpcJ4/LdfuF4ZrL7Z/v0nsTNj0Y4cQLd8E1VGpwtyDSJlC3yBsJCNiUtsWDDi2uY6p
-         IOTNDa0zqTSUKbxoPtUEVSqbvhTRh9Li6RF4PcyZlwQFrPKMaWCAU5BkX/fTKPaeVUIV
-         pUp0YxTk5P6ahRT+/iz9KFkROqxa5ngt3exunzVQCdsYrbnJ1vihsA5PsjkKgRAP+nxz
-         pnrA==
-X-Forwarded-Encrypted: i=1; AJvYcCVCthfb7We8DYZ7bK2BH3yKJ7Amkzot7/sRsn9r2f5UpmGWdrdbJewPmLkSLPyUCtclRvV43rZBjMY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFEOwwmGvhxW/QkkKxm3q1t7oS1lNHyJdGZeQPBzKUq93YvfrZ
-	U0BrMhhZg6K+E98z4zz7VyYFVFugzJ11YMNIN5fCtlAfGxfNM4OaXPXyic2pp0epvj/XGwlTeMu
-	FeFNl
-X-Gm-Gg: ASbGnctTXDuExgVXLeVm1xseLxbK25mQDNKF1wr0JgwGnJnV5VxAA8mv1RSjagomAe4
-	JlO0hpPPYkqedgKOCOIPGFPaxE+JS1tqSax+Lu4p28QTVYysD+mosyZlEqVpZPkaG2iqa1wEFhu
-	cOxhPI4NlqZ75/nmX3TnwSi6YTKsqE4w0GFDseFe94gqHID6EZWq+uiQz2atfeGB/I2wlfge04n
-	iZjc4tuxFmtJs7wrraRsNXm/29eReLebMjejbJZAinxaFSPSHr8KLsrg9jP+hu5jHEPSgPamt6H
-	axfXrstYr8IezhauxtFxqcSbIBxnz+7gzDBS571Wa1CMIf2qtbfUBtwzhYClekNHQbEyzq0jVmF
-	xgfXTT3DCMDIXyir5RGUAAmNtfYQ=
-X-Google-Smtp-Source: AGHT+IFvqH9ubcC6dbv0UqQGW5DGDtp+BZ9QNaQHwHo+bs9Vg0oCfSh3AzQ5xeJI5fTattmwccxXPg==
-X-Received: by 2002:a05:6214:2aa3:b0:6fa:caa2:19bc with SMTP id 6a1803df08f44-6fad916605amr159392986d6.44.1748958672893;
-        Tue, 03 Jun 2025 06:51:12 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fad0495cf2sm68040826d6.39.2025.06.03.06.51.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 06:51:12 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1uMS2p-00000001hDX-3xh9;
-	Tue, 03 Jun 2025 10:51:11 -0300
-Date: Tue, 3 Jun 2025 10:51:11 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Alistair Popple <apopple@nvidia.com>
-Cc: linux-mm@kvack.org, gerald.schaefer@linux.ibm.com,
-	dan.j.williams@intel.com, willy@infradead.org, david@redhat.com,
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-	linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
-	zhang.lyra@gmail.com, debug@rivosinc.com, bjorn@kernel.org,
-	balbirs@nvidia.com, lorenzo.stoakes@oracle.com,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-cxl@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	John@groves.net
-Subject: Re: [PATCH 12/12] mm/memremap: Remove unused devmap_managed_key
-Message-ID: <20250603135111.GM386142@ziepe.ca>
-References: <cover.541c2702181b7461b84f1a6967a3f0e823023fcc.1748500293.git-series.apopple@nvidia.com>
- <112f77932e2dc6927ee77017533bf8e0194c96da.1748500293.git-series.apopple@nvidia.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZQUTCd8z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748958920; x=1780494920;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=VxxLLwSWDKAZh0hknqXTuaSbAr304ysMILQWluEnEDw=;
+  b=ZQUTCd8z5pp0kQhPKl8xjjoRg8xVX3zjjomtIU1jFhzu4bJUOp+ZUOUx
+   2ZifUraQZAwKz8sqTFk1j1tvH38T+m3MCWxwXxwkduAUHw3G/4VWiCAT1
+   LHNO2yfOhSy5IcSo0wCPMGXduOtDwv8nEPinW6scjI1fbSiNomtj7t78d
+   x1HTqiUZIejJaEruEGS8DpHMg96n7YNbNUj9uhkuITGJbKRMtA7grc5Ih
+   rDWu4b0DllOti2+TFxZ1xt2JEmAuAniX3M75Elf1TCxK2RdWp5pmSbm+m
+   PG60rGZkvFL53SkEpzSpxIu/FO0K3uy4yDeEIqWr/hGbI7h1vSb8VD6ua
+   w==;
+X-CSE-ConnectionGUID: fpElRKCAS22sX6ui3m4EOg==
+X-CSE-MsgGUID: /tcU58uUShiTs5Z8Fb4GAw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="50916360"
+X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
+   d="scan'208";a="50916360"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 06:55:17 -0700
+X-CSE-ConnectionGUID: ZxiYWW1HS1GCi4NdJhU3NA==
+X-CSE-MsgGUID: OnLjcS/aTJGNsIqkfQoTsw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
+   d="scan'208";a="145835497"
+Received: from iherna2-mobl4.amr.corp.intel.com (HELO [10.125.110.198]) ([10.125.110.198])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 06:55:16 -0700
+Message-ID: <ff8ec7f0-6cae-4c1b-973d-c126ce60435a@intel.com>
+Date: Tue, 3 Jun 2025 06:55:15 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <112f77932e2dc6927ee77017533bf8e0194c96da.1748500293.git-series.apopple@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/9] cxl: Delay HB port and switch dport probing until
+ endpoint dev probe
+To: Robert Richter <rrichter@amd.com>
+Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
+ Alejandro Lucero <alucerop@amd.com>, Gregory Price <gourry@gourry.net>,
+ Jonathan Cameron <Jonsathan.Cameron@huawei.com>,
+ Li Ming <ming.li@zohomail.com>
+References: <20250521183443.3828320-1-dave.jiang@intel.com>
+ <aDm3zR2LkC3joLFL@rric.localdomain>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <aDm3zR2LkC3joLFL@rric.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 29, 2025 at 04:32:13PM +1000, Alistair Popple wrote:
-> It's no longer used so remove it.
+
+
+On 5/30/25 6:51 AM, Robert Richter wrote:
+> Dave,
 > 
-> Signed-off-by: Alistair Popple <apopple@nvidia.com>
-> ---
->  mm/memremap.c | 27 ---------------------------
->  1 file changed, 27 deletions(-)
+> thanks for your series.
+> 
+> On 21.05.25 11:34:34, Dave Jiang wrote:
+>> v3:
+>> - Main changes revolve around improving naming of hostbridge uport and dport (Gregory)
+>> - See specific patches for detailed change log
+>>
+>> This series attempts to delay the setup of dports and Host Bridge (HB) register
+>> until when the endpoint device (memdev) is being probed. At this point,
+>> the CXL link is established and all the devices along the CXL link path up to
+>> the Root Port (RP) should be active.
+>>
+>> And hopefully this help a bit with Robert's issue raised in the "Inactive
+>> downstream port handling" series [1]. Testing would be appreicated. Thank you!
+>>
+>> [1]: https://lore.kernel.org/linux-cxl/67c8a0cc23ec_24b64294f6@dwillia2-xfh.jf.intel.com.notmuch/
+>>
+>> Dave Jiang (9):
+>>   cxl/region: Add decoder check to check_commit_order()
+>>   cxl: Add helper to detect top of CXL device topology
+>>   cxl: Separate out CXL dport->id vs actual dport hardware id
+>>   cxl: Remove adding of port_num via devm_cxl_add_dport()
+>>   cxl: Defer hardware dport->port_id assignment and registers probing
+>>   cxl/test: Add workaround for cxl_test for cxl_core calling mocked
+>>     functions
+>>   cxl: Change sslbis handler to only handle single dport
+>>   cxl: Create an xarray to tie a host bridge to the cxl_root
+>>   cxl: Move enumeration of hostbridge ports to the memdev probe path
+> 
+> I have tested your series and this solves the enumeration issue with
+> ports where the link of its downstream ports is down and that have
+> duplicate port ids. For the whole series you can add:
+> 
+> Tested-by: Robert Richter <rrichter@amd.com>
+> 
+> However, some observations:
+> 
+> The port_num can no longer retrieved using sysfs. Previously, the X in
+> dportX could be used to identify the port number (former port_id)
+> which was identical to the numbers in the sysfs target_list entries.
+> This is esp. useful to reconstruct the decoder tree and map pci child
+> devices and its decoders to a parent decoder including its positions
+> in the target list. Maybe create a targetX symlink from the decoder
+> device to the child decoders of it?
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+The numbers in the target_list are dport->id and should reflect the dportX. Is this not what you are seeing?
 
-Jason
+> 
+> Due to the different initialization order there is an odd port
+> numbering now showing up with unexpected, out-of-order sequence
+> numbers, e.g.:
+> 
+> /sys/bus/cxl/devices/port1/endpoint2
+> /sys/bus/cxl/devices/port1/endpoint3
+> /sys/bus/cxl/devices/port1/endpoint6
+> /sys/bus/cxl/devices/port4/endpoint5
+> /sys/bus/cxl/devices/port4/endpoint7
+> /sys/bus/cxl/devices/port4/endpoint10
+> /sys/bus/cxl/devices/port4/endpoint11
+> /sys/bus/cxl/devices/port8/endpoint9
+> /sys/bus/cxl/devices/port12/endpoint13
+> /sys/bus/cxl/devices/port12/endpoint14
+> 
+> Still, this is correct, but maybe we could force a specific order
+> during initialization, such as per-port initialization which should
+> result in a defined order? Note the shared numbering of ports and
+> endpoints is also confusing, maybe that could be changed here too?
+
+I think the upstream expectation WRT sysfs device number enumeration (for all Linux kernel devices) is that no ordering should be expected as the devices are initialized async. And previous ordering appearance is merely coincidence and not the expectation. And the expectation for user tools is that they should not depend on device numbering order and identify the devices by other stable means.  
+
+> 
+> Going to review your patches.
+
+Thank you!
+> 
+> Thanks for your patches.
+> 
+> -Robert
+
