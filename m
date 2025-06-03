@@ -1,79 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDDAD238C34
-	for <linux-cxl@vger.kernel.org>; Tue,  3 Jun 2025 14:00:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7C8B23BCFA;
+	Tue,  3 Jun 2025 15:55:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748959253; cv=none; b=Ueix6V1rFq7ZxaC5rYTjLfFfUl0V8kzLlGEQxOHKhRaCtGqsq5oejGPyYwbvsv+3y54byjGdNTxMMlRFLGKima9hdTXulij1zSFxTBLRebepL+aF0nZZOesEXX2xlgPLc+mVEFnBDj6WE+R9UkstgckDlF0gaPP/CzN+TE1tlO0=
+	t=1748966157; cv=none; b=LfbXzhYoBvnaO+TsfG9S4nsJWZLxyLESKknJMKX/Sif14ADPA5UhERx/e/4k1Lgt8jnaF9bDT5rGWvDoMUv1VTs4ly9JYh4zlIVWe/t5oLOVjZ+sIO0wib41dS8Ngx2BAtVshnGLe7paNxVliZi2lITpWwLFFaiMP0zx82dLVaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748959253; c=relaxed/simple;
-	bh=NHiib8ex5nQmGUHfV8CWHB2qBWj2cvZKJi/TJZ9JG78=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Jc/DIE2fNUPpan9TcL7tei4gwKxEAGRltJCKsBlmicIeKh8Vu6X/+3gvP+Y/2V8SicUWuOBWAA51aE012Ne/461Kl1/aywY51DEwnbsj+lzXHiIaRMP0oJgf/SwOtqV7Zo22Zlma//qXBc5LibYAtqoWo83fX2vANNBHsAT6Z7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZJJRKa2w; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748966157; c=relaxed/simple;
+	bh=NYKZkS68/255/Qa6jdHtwiii8rQH5UhEATWNB/Ewplk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=E8WqHRbSJfwLDs+OXI9dieWtbm8/BtNRrSNZW0JOp9jIMbgD3JbV9MPv9AbTEVc7LP/ydirzxbYJyNHSBD6pX4St9YDelyqoXgKj6rTQLCMrRQe7YY/J3IrUewranY3mUa+LpkrUFLa/bgycFKkadQSuZXe5GAIfSS8rffKO9Ow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NseYRNT2; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZJJRKa2w"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NseYRNT2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748959252; x=1780495252;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=NHiib8ex5nQmGUHfV8CWHB2qBWj2cvZKJi/TJZ9JG78=;
-  b=ZJJRKa2woO3N0lF1ibYo62nS3EgmZiC+6iZ8o7mOWHU6+fQ2ZdMJJJBI
-   PXBOgbU8ORG0VXu5pCtMd2wBQVHTbuuii4rbQRwFQLlO84fAry5d143bn
-   xJzvLtgAvQCYlY9+eNQc7fzrdv+ZmBs619/FTyNx2XcOx2kVY4b4ba43x
-   1GlbYLLb2IRvxnlTI9ln8GLRScg6UcouK5un1oxUK4JiVeptaGXQf6MUA
-   rqJ8S2kr9GTGSLKN1SMHvY1feCDX5B/yQO2eykYdsj3jY6XUTYQj9qV0i
-   lmZUVpYwUF/nkg5UC/yNB63nuBjePKiwNjDFQKhVlbr1Hh51Xhl4sg3aZ
-   A==;
-X-CSE-ConnectionGUID: kPR8JoHOQ1uj9QUIZYKycQ==
-X-CSE-MsgGUID: +wJ+QzkjTn2PRW59cUgT5A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="50917413"
+  t=1748966156; x=1780502156;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=NYKZkS68/255/Qa6jdHtwiii8rQH5UhEATWNB/Ewplk=;
+  b=NseYRNT2KUJo1lHgnXxrMt1KCSCFMKkM6G5Yg87kj96H+nv4Wn+fUhJj
+   ak2YxiS1rGD0YcGH5LVTjvNL3GNlHB9xoFSdYGczazjLKRF6dBokA59rl
+   s0dgunsjlQsHivSlmhgHqYVl9stpA2N76AOjHyIlwXpnJUT/6RCCNOGy2
+   4K7ZKmu3FkPmzlmxQ/rLNjC+mXVTtDIGMBVdAQp82z0A8GJ2o6GFCyfFY
+   5arOtNaLect3aA9penmM46+mdoJd2CmvTomIU6d4DK3Vq07vOCyWm9p1o
+   Bn13i7h+hfb11UKhWqPtQ8cKpXWmE8kh4Hq5/W4TW2Y9DI+N5PcQ++KZe
+   w==;
+X-CSE-ConnectionGUID: LBZxZXFNSwaaP5ffbwUp4g==
+X-CSE-MsgGUID: tsbpfGXiTMeEt3I5f77mDg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="62066974"
 X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
-   d="scan'208";a="50917413"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 07:00:51 -0700
-X-CSE-ConnectionGUID: zxyhYhu5SYqTM46FZ9xdpw==
-X-CSE-MsgGUID: dqy/DmYoRia3loF8iQ67zw==
+   d="scan'208";a="62066974"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 08:55:55 -0700
+X-CSE-ConnectionGUID: V5GGI+JjTjWmKM6FV+wLKw==
+X-CSE-MsgGUID: veCWw0FuT7Kiy1bRI8pvow==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,206,1744095600"; 
-   d="scan'208";a="144898140"
-Received: from iherna2-mobl4.amr.corp.intel.com (HELO [10.125.110.198]) ([10.125.110.198])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 07:00:51 -0700
-Message-ID: <48e4eee5-aed0-4ec1-bf2c-88a865be3c9b@intel.com>
-Date: Tue, 3 Jun 2025 07:00:50 -0700
+   d="scan'208";a="175766102"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.intel.com) ([10.245.246.29])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 08:55:48 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Borislav Petkov <bp@alien8.de>,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-pci@vger.kernel.org,
+	linux-edac@vger.kernel.org
+Cc: Yazen Ghannam <yazen.ghannam@amd.com>,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 1/4 v3] ACPI: extlog: Trace CPER Non-standard Section Body
+Date: Tue,  3 Jun 2025 17:54:36 +0200
+Message-ID: <20250603155536.577493-2-fabio.m.de.francesco@linux.intel.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250603155536.577493-1-fabio.m.de.francesco@linux.intel.com>
+References: <20250603155536.577493-1-fabio.m.de.francesco@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Kernel test setup
-To: Itaru Kitayama <itaru.kitayama@linux.dev>, linux-cxl@vger.kernel.org
-References: <0A157714-A431-4AAB-A4E6-DB0C32DB73E9@linux.dev>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <0A157714-A431-4AAB-A4E6-DB0C32DB73E9@linux.dev>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+ghes_do_proc() has a catch-all for unknown or unhandled CPER formats
+(UEFI v2.10 Appendix N 2.3), extlog_print() does not. This gap was
+noticed by a RAS test that injected CXL protocol errors which were
+notified to extlog_print() via the IOMCA (I/O Machine Check
+Architecture) mechanism. Bring parity to the extlog_print() path by
+including a similar log_non_standard_event().
 
+Cc: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
+---
+ drivers/acpi/acpi_extlog.c | 6 ++++++
+ drivers/ras/ras.c          | 1 +
+ 2 files changed, 7 insertions(+)
 
-On 6/1/25 3:03 PM, Itaru Kitayama wrote:
-> Hi Alison, all,
-> 
-> Your comments cleared up my incorrect assumption (in order for meson test —suite cxl to success, CXL device emulation is required):
-> 
-> https://lore.kernel.org/linux-cxl/aC_rWIc9TY5F2wGf@aschofie-mobl2.lan/
-> 
-> Now I wonder, thanks to Jonathan’s QEMU series being proposed to upstream, if it is possible to test the CXL “next" kernel in a fully CXL devices emulated environment be it on arm/virt or q35 machine. What do you think?
-
-I think a new group of tests are needed if we (the community) want tests against QEMU emulation. I would love to see that addition to add more robustness to kernel CXL regression testing. The current tests are written exclusively for cxl_test. There are certain design choices made and certain test cases specifically created by cxl_test to exercise kernel paths. As always, patches are welcome to augment CXL CLI package testing. :)
-
-> 
-> Itaru.
+diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
+index f6b9562779de0..47d11cb5c9120 100644
+--- a/drivers/acpi/acpi_extlog.c
++++ b/drivers/acpi/acpi_extlog.c
+@@ -183,6 +183,12 @@ static int extlog_print(struct notifier_block *nb, unsigned long val,
+ 			if (gdata->error_data_length >= sizeof(*mem))
+ 				trace_extlog_mem_event(mem, err_seq, fru_id, fru_text,
+ 						       (u8)gdata->error_severity);
++		} else {
++			void *err = acpi_hest_get_payload(gdata);
++
++			log_non_standard_event(sec_type, fru_id, fru_text,
++					       gdata->error_severity, err,
++					       gdata->error_data_length);
+ 		}
+ 	}
+ 
+diff --git a/drivers/ras/ras.c b/drivers/ras/ras.c
+index a6e4792a1b2e9..ac0e132ccc3eb 100644
+--- a/drivers/ras/ras.c
++++ b/drivers/ras/ras.c
+@@ -51,6 +51,7 @@ void log_non_standard_event(const guid_t *sec_type, const guid_t *fru_id,
+ {
+ 	trace_non_standard_event(sec_type, fru_id, fru_text, sev, err, len);
+ }
++EXPORT_SYMBOL_GPL(log_non_standard_event);
+ 
+ void log_arm_hw_error(struct cper_sec_proc_arm *err)
+ {
+-- 
+2.49.0
 
