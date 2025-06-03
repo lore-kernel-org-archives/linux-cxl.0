@@ -1,128 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B18F4A23;
-	Tue,  3 Jun 2025 21:14:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295AA226D10
+	for <linux-cxl@vger.kernel.org>; Tue,  3 Jun 2025 21:16:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748985302; cv=none; b=k/s2vmZa6h9cJPeB1sxqybIt7XXph6TeVtDUG+JBzXOBJRzBgYW9kaNNo8q4P9KJEQB1/hNMPB4pUbDM8LgOPol1xVD8JnSK0BgveUNsH6e0FOswzSzIeIFEM8see/G4Ig+YH980ojulNmtLkz6IfL5FkCHmTZKhpqFsQIGftEo=
+	t=1748985403; cv=none; b=FdsVekmBVbqCxbUQkST+1oI38kebH7NAfJPhBwo1uN69tWDWEfYmxUEJhEyVz+e4eY9oFWQLAGhm3YeyJLnHScPXnMmJBjGGKacnqLMqGDvtDM6OJ+nvlRWdknWLlyJPiXPc3hovGR5yr998HF6K8SxPJe7TgUHJKlKI0/d2tEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748985302; c=relaxed/simple;
-	bh=+8XUA1Yj3EXGtJ0QJw8cNrvcC7jxpUxiyf5VO6aExHY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cJDIbREkBSr4he+mLiSz/PGTPqmHxMczzv6uTbGhsKx16EBvWxiMtWVu6IdFAPB9jSGlFfViFcisIx1UgLndQQGvx9+b9pHvHLr3AXdOpziRTUliE2yOhApbvJYZrlJmssNX8fmyiTCupCNTbUnewrvLp3iv57P181JWqzMk4t4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Da0IuDH5; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748985403; c=relaxed/simple;
+	bh=XoGH0h2IJWjwbQWxYS/rtN7yH92g+3vhD4JjuLqqPnw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=u1Ka6GVs5ZNgGYv342Qc/fiPVp6Z0GRU3d4zb/e3REaIFQebe5y3SYoHaySXihwV0Mby1osa9m0tETR1ME9E+AKqMCTWbSdwC12x+P/z/WK+nJEVT1BGFTYI0TSV5udEJ410Kb6kTUZUFfvCP9kscnqxeC/2YCdOFRrDNL+o5yM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hyClcddk; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Da0IuDH5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748985300; x=1780521300;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=+8XUA1Yj3EXGtJ0QJw8cNrvcC7jxpUxiyf5VO6aExHY=;
-  b=Da0IuDH5JvnQTQTL6s8DA92q2cScevlZZP3wQ7dLjsjcN/63kzCwKzvN
-   ii2f1rEdLQAfotM8QWgJ5R/66DaeLUNgbT0SYWvKwhXlujJySILZk5Uka
-   LMQR73ltt5BsZKh6GmMoF8fzzXwE7R28pvBePYzTWUwMdL0jG3JSUKCWc
-   x4u8toPaTL1sNiAgg0ePeivo9Kdb1SVwoRhhhN2lHtRUQ3x/3ZRvAjEQx
-   0ZXREjvYUXeZW9XqscqUv9GWGKnf5zXxLrdnAb4p5sqKgVp0aju+jwOy3
-   l1WAtwQWOIiQwVwq1G2QUGwf3cDfu19hPE4DtFaMleZvKEU3yEixoDv/R
-   g==;
-X-CSE-ConnectionGUID: dW95g0ArRMqqlhsMHqoedg==
-X-CSE-MsgGUID: VhBs7zIrTI69beat2+V5wg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11453"; a="62401768"
-X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
-   d="scan'208";a="62401768"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 14:14:59 -0700
-X-CSE-ConnectionGUID: hpPJib8GR+u14TohnCFh2Q==
-X-CSE-MsgGUID: 6cFTCHi2Qb2p+BeJdAgY3Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,207,1744095600"; 
-   d="scan'208";a="145927047"
-Received: from iherna2-mobl4.amr.corp.intel.com (HELO [10.125.110.198]) ([10.125.110.198])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2025 14:14:58 -0700
-Message-ID: <d74249cf-e3e3-4e5c-a086-26e5a91750c7@intel.com>
-Date: Tue, 3 Jun 2025 14:14:56 -0700
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hyClcddk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748985401;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=314MrEBwr4k+CUpKTmx4sCu/ScFWOUTeM6rdnwbV6hM=;
+	b=hyClcddkVtGzi6PSC4yUzM3n9yn0Ey/DkNK/KEhmlNRUPMX/e+HabHHj2e45v2k2czAzhR
+	kQApH0smjztfJ3OB1NAsMg6TFwC5kfwPqwRo2aR9e90IGuXER5MVRIDgacNYAkZqjqefUw
+	EvG1JS6Og+k/Z4viAsWUM/2T5QMmzdk=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-558-CVHlkzOmOzScvo0RsuW8qQ-1; Tue, 03 Jun 2025 17:16:38 -0400
+X-MC-Unique: CVHlkzOmOzScvo0RsuW8qQ-1
+X-Mimecast-MFC-AGG-ID: CVHlkzOmOzScvo0RsuW8qQ_1748985397
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a4f6cc5332so3198076f8f.2
+        for <linux-cxl@vger.kernel.org>; Tue, 03 Jun 2025 14:16:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748985397; x=1749590197;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=314MrEBwr4k+CUpKTmx4sCu/ScFWOUTeM6rdnwbV6hM=;
+        b=kn8a5sN5dj2SvNRdAYbd05/t7z18/EWJAli3QTm2MCjiaz/E3pJrvvApJRmGXv2Czd
+         9tMJYK7fNX8MebUszLCuBfo1HKJ9qUPziP5C8havAjWqQFn42xkGTrIaADXpYSfwxDzc
+         lVEpqgohEnTRSegNCsqR+O7Mrkq87/NdQAaHOcXJGXHdP2FWig7OrAnDDT2fsiog1nkF
+         643+DzTiqpt1URTEWMyBcIWqTDDH1eJfpibjXtOMY7xFPpLhovBalQPlwTKo0X3XvZAp
+         RC1sgzLTXUzTfhtgEqVOWMMohmHGJWwcQj4racFLOD2ofiLP4sPvehD/bjEaW9xoej+s
+         XBKw==
+X-Forwarded-Encrypted: i=1; AJvYcCUOi3pJSaTq3KhZ2JpDpBOKlFy/iuiAmRKJibeINjELJUyJk8qh5pYiIUPKmIN2sB4UwD6FvqrOocM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTTG+MiNAg85cY5ZyFsQnjvfVsS3e7ov+EPokfIEoI5t31aZjp
+	vjV93f5w0bjIkdQRhV7q4qoQFtWNwAyAMeaCw6ln/R0kV2yQpy560U2+3ec5WVoGT5qcM9ogdCC
+	kjWym12ds/3RX+JEX+8s1APTG0cHvHvD+3FTofPw+zNUqkA8Xf3mpETsWli2tqQ==
+X-Gm-Gg: ASbGncspLz8YSnP1/CBn5+s3oMrLbeqvJlSNIjUy9NR64vDtBiq/fspbEyu/LWlKUO0
+	5jYUyQrDNXXCGGc10N2cCin1xpbdqpseXI2ZA4G6/+xWWXM9bI9TylahxtxD6jtjX0K1fo6Cr8M
+	X+a9imBMJ3VK7WZXQqR9lOiktVE6imesOUUoW8HUpPjLNpTVeqs9lH4DztsuDcDle+o9agsDne+
+	qcHWROe7ET5Bt6doFZyOB2nj7qScC2kPu4FBbDxFYbiCT7xOBjFbka/0j5e5OQWNpv3S/CHZbQo
+	baoCUrj9gg/8tAinebAN+3DDM/zTOnkpIesWlbirt2bTeS7BqpnzVURhcxIMpWnfLQArhT6R
+X-Received: by 2002:a05:6000:1a8a:b0:3a4:f379:65c4 with SMTP id ffacd0b85a97d-3a51d96b480mr197080f8f.45.1748985397095;
+        Tue, 03 Jun 2025 14:16:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE8kkzJnQJD0YMtEENpld5wUwUCJ3Dmqv/cCnKp6Z6c5loiuHX+OBpCRrySLipJK13BBXeN7A==
+X-Received: by 2002:a05:6000:1a8a:b0:3a4:f379:65c4 with SMTP id ffacd0b85a97d-3a51d96b480mr197074f8f.45.1748985396684;
+        Tue, 03 Jun 2025 14:16:36 -0700 (PDT)
+Received: from localhost (p200300d82f0df000eec92b8d4913f32a.dip0.t-ipconnect.de. [2003:d8:2f0d:f000:eec9:2b8d:4913:f32a])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a4f009fd7csm19308738f8f.88.2025.06.03.14.16.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Jun 2025 14:16:36 -0700 (PDT)
+From: David Hildenbrand <david@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org,
+	nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org,
+	David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alistair Popple <apopple@nvidia.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Zi Yan <ziy@nvidia.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Nico Pache <npache@redhat.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Dev Jain <dev.jain@arm.com>,
+	Dan Williams <dan.j.williams@intel.com>
+Subject: [PATCH v1 0/2] mm/huge_memory: don't mark refcounted pages special in vmf_insert_folio_*()
+Date: Tue,  3 Jun 2025 23:16:32 +0200
+Message-ID: <20250603211634.2925015-1-david@redhat.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4 v3] ACPI: extlog: Trace CPER Non-standard Section Body
-To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
- "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
- linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-cxl@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-pci@vger.kernel.org, linux-edac@vger.kernel.org
-Cc: Yazen Ghannam <yazen.ghannam@amd.com>
-References: <20250603155536.577493-1-fabio.m.de.francesco@linux.intel.com>
- <20250603155536.577493-2-fabio.m.de.francesco@linux.intel.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250603155536.577493-2-fabio.m.de.francesco@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 96AJGPuSE6fMDFcSH0ccL7f4E_5l5bHt53iynsmMsVw_1748985397
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
+
+Based on Linus' master.
+
+While working on improving vm_normal_page() and friends, I stumbled
+over this issues: refcounted "normal" pages must not be marked
+using pmd_special() / pud_special().
+
+Fortunately, so far there doesn't seem to be serious damage.
+
+This is only compile-tested so far. Still looking for an easy way to test
+PMD/PUD mappings with DAX. Any tests I can easily run?
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alistair Popple <apopple@nvidia.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Zi Yan <ziy@nvidia.com>
+Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: Nico Pache <npache@redhat.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Dev Jain <dev.jain@arm.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+
+David Hildenbrand (2):
+  mm/huge_memory: don't mark refcounted pages special in
+    vmf_insert_folio_pmd()
+  mm/huge_memory: don't mark refcounted pages special in
+    vmf_insert_folio_pud()
+
+ include/linux/mm.h | 15 ++++++++++
+ mm/huge_memory.c   | 72 +++++++++++++++++++++++++++++++++++-----------
+ 2 files changed, 70 insertions(+), 17 deletions(-)
 
 
-
-On 6/3/25 8:54 AM, Fabio M. De Francesco wrote:
-> ghes_do_proc() has a catch-all for unknown or unhandled CPER formats
-> (UEFI v2.10 Appendix N 2.3), extlog_print() does not. This gap was
-> noticed by a RAS test that injected CXL protocol errors which were
-> notified to extlog_print() via the IOMCA (I/O Machine Check
-> Architecture) mechanism. Bring parity to the extlog_print() path by
-> including a similar log_non_standard_event().
-> 
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  drivers/acpi/acpi_extlog.c | 6 ++++++
->  drivers/ras/ras.c          | 1 +
->  2 files changed, 7 insertions(+)
-> 
-> diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
-> index f6b9562779de0..47d11cb5c9120 100644
-> --- a/drivers/acpi/acpi_extlog.c
-> +++ b/drivers/acpi/acpi_extlog.c
-> @@ -183,6 +183,12 @@ static int extlog_print(struct notifier_block *nb, unsigned long val,
->  			if (gdata->error_data_length >= sizeof(*mem))
->  				trace_extlog_mem_event(mem, err_seq, fru_id, fru_text,
->  						       (u8)gdata->error_severity);
-> +		} else {
-> +			void *err = acpi_hest_get_payload(gdata);
-> +
-> +			log_non_standard_event(sec_type, fru_id, fru_text,
-> +					       gdata->error_severity, err,
-> +					       gdata->error_data_length);
->  		}
->  	}
->  
-> diff --git a/drivers/ras/ras.c b/drivers/ras/ras.c
-> index a6e4792a1b2e9..ac0e132ccc3eb 100644
-> --- a/drivers/ras/ras.c
-> +++ b/drivers/ras/ras.c
-> @@ -51,6 +51,7 @@ void log_non_standard_event(const guid_t *sec_type, const guid_t *fru_id,
->  {
->  	trace_non_standard_event(sec_type, fru_id, fru_text, sev, err, len);
->  }
-> +EXPORT_SYMBOL_GPL(log_non_standard_event);
->  
->  void log_arm_hw_error(struct cper_sec_proc_arm *err)
->  {
+base-commit: a9dfb7db96f7bc1f30feae673aab7fdbfbc94e9c
+-- 
+2.49.0
 
