@@ -1,215 +1,204 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2055.outbound.protection.outlook.com [40.107.223.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8090928F950;
-	Wed,  4 Jun 2025 14:35:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749047738; cv=none; b=FvRvU+YxR1OXskNbHqf+w5QP3LDBN2TXp9DmWbcHGMZuDUUFceQP9QTby1RYW3HteUNvlizbsTXn4A4Xdkg0lzf3S5dbDb9wJoTeYP9C6IZTp0nRQ3467FOe2TrFvNj00G1Jz+ht25yrkb6CrGW8rY8sz88ty8z6GkYRQFFaV9M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749047738; c=relaxed/simple;
-	bh=x/HDN8ZE77fRy93+e9zpmrKLhx3xowe0WlDM+Fs+tB8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y/XBE+EOqNhHF1ezhuKwOt4dn7n4MxH+xM0/tw4mjeMSR3ZWzdRTczbGiTDjPVDF7YCHOdbp24bMFKyRW7bfbCGNuUCM7BGwBloitHT1JGVn0AhezzLeuFVZ7M2s3h8/SOeVP7n1wkjbzhnAAr3mZSWBATQWNaenswGfoNr4aVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SrAO6fDh; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978A6290BD2;
+	Wed,  4 Jun 2025 14:37:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749047833; cv=fail; b=bZ4EtG44LhEi/Vv3hse4p4Qh3pyCzMWtFW8bivsOyLu+0f6n3MyuWcfQ3MqioqF92aJqBIGvp9BeoKU3uHi5qw2gQ+2oGj0VkQC64HTX0CLL/zGqOFTeDx1vwVRocfC660T6D6HSNSAXnicD5X/eOMAuJAFvQ2CYQWBonlFCfes=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749047833; c=relaxed/simple;
+	bh=lvuaOO+iZH6WOvQiP1yG4LCKLhiuRbEh/clo+PYTBB8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=LcbR0doDiQiYmWZBjd/qOCJGWAE6AlF+5Hmo7n0u7H3VNKtxxBkNTRk0/KoKlZbUguINv/JmVkVAsrjvApKNk78HQsZak+RWScPhqAbC8P9I6VZT53IJO4Sc3ltC0FyRo8trIUuxpmuYDVS+U3V+N1hs6nFP+BX+/aq+a2TwECw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=DMZBH/W6; arc=fail smtp.client-ip=40.107.223.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SrAO6fDh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749047736; x=1780583736;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=x/HDN8ZE77fRy93+e9zpmrKLhx3xowe0WlDM+Fs+tB8=;
-  b=SrAO6fDhDfNVbmjW5MH9sy28n05d3PgxBYTN1LOJItDJDFyBsNy+JNsD
-   aRSn0zkxc+CLv0zLGm5d33jcHw1cwEpiDzCcd2gPH6OL70ISH/p7e8IZ1
-   pnOYeaj79J2OCWPNZ3FJ4XpnW1dDJZUmJaJX5XD/2uA6RHkkVoANghjrZ
-   t6k4tQG19J4wydVYmfKzP2dm4RrRm3YPPbuQCNaIAOZGa4yHUDt0LvqV0
-   DZ4osbASI2lcLgJiTIC3ketnbzssEr2xxb7fR5GTlmu2gf9sNY7pwW5GJ
-   3cg1uh4nzLwl/E1hmyE5+og7INDWhD8OOYZlXViKg7VHGz1KON97nuBV6
-   g==;
-X-CSE-ConnectionGUID: 86NMfliHT5mMZMY04cO9tg==
-X-CSE-MsgGUID: O/gp1rXESiOu9NhHKoc2/g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="54924141"
-X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
-   d="scan'208";a="54924141"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 07:35:35 -0700
-X-CSE-ConnectionGUID: m/5wgwI3TjG4pYN4XeiUAQ==
-X-CSE-MsgGUID: BnW7+6TUSMOdwad30rho3g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
-   d="scan'208";a="145104296"
-Received: from lstrano-mobl6.amr.corp.intel.com (HELO [10.125.110.233]) ([10.125.110.233])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 07:35:34 -0700
-Message-ID: <acb0f359-cd4a-4221-a7ba-9c473ad7ecd2@intel.com>
-Date: Wed, 4 Jun 2025 07:35:33 -0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="DMZBH/W6"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ZKMcuEZoATaYd+RgPLkeN03N4QgVOZHtFixGKwBNG2sr7rKwn+TjwYDwFJvVbEDU9CDVlsVUJfaukpeOB3hY0Yvy9kTyHQ4BUlRLflKGUFfnqHpf5uNOKk//7iGoKCfG+qXymPOQKFR9UAdFwG54AAOuKVq3c/2kDORH4YA00ObWHQL/k3z7MMnpXP+WeoGxSLQxlq1GBtM9Imi6NhcJlDH5TFva4ovWe1Xj+LjiRiVeD7dY7k7n6lbNiYa393y5BNL0mK5op21ofR5M44mE+SkG1Q6j2SI/RDWI1L20wQOs1LI8vpm7PqQ6WQjDRA8rMN4Jwbhq1Q8mCenjJCvUoQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wvQGJvvrAPvz5NfioA5Y3YU5JcnB1ZdRKXBAW5zqQKQ=;
+ b=fCfCJo22mmb34AXw8NldjqliCNrJu+RkJ8dKZXXzPSdltUBpTuDYAwJDVeP3tM+MWb9gG9hxbLnyqhDtxVCyZ31XFpl7s2WSFrYec57Nsb3AuyS+GQZ7Rw1wSOVL0A6smuLg+s8s9SFN3PKG68iac1HXGSv1Kb73xfJR8uMGxBhJVX6db5amfGxBHNdjw5+2VFYvDGS9CNwA/GahzXWWbVubJ0xNJxdjSATVFebFqf14BKTLatPd/5V8J4tGnH6M3bN/Z4cRXpk+QqaDAIOY8qSrWZPLETXdeGPRadHNVbQubr2t7wW47iYKwMiTHYGBusd7HdasVGy7kMswxVTdOA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wvQGJvvrAPvz5NfioA5Y3YU5JcnB1ZdRKXBAW5zqQKQ=;
+ b=DMZBH/W6rpxVn1OjhKfAj+0YoaKrlgKmu51vRLyJEkUOFpXXGZQqEUnbjm6w+VAKohaQzAfzuShEMaIxiJCXvuNgsL2qGXl5PO6jgTKycp4H8Ri9f15ceRzP6PfXLJfnBkvyfqRKbl8+L5yu1xVi7ikXimEacMC0JHpsq7Q2iU4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
+ IA0PR12MB8695.namprd12.prod.outlook.com (2603:10b6:208:485::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8769.37; Wed, 4 Jun 2025 14:37:09 +0000
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f%5]) with mapi id 15.20.8792.034; Wed, 4 Jun 2025
+ 14:37:09 +0000
+Message-ID: <1f719cfd-2c2b-4431-a370-290a865b0bf2@amd.com>
+Date: Wed, 4 Jun 2025 09:37:02 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 03/16] CXL/AER: Introduce kfifo for forwarding CXL
+ errors
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: PradeepVineshReddy.Kodamati@amd.com, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, bp@alien8.de,
+ ming.li@zohomail.com, shiju.jose@huawei.com,
+ Smita.KoralahalliChannabasappa@amd.com, kobayashi.da-06@fujitsu.com,
+ yanfei.xu@intel.com, rrichter@amd.com, peterz@infradead.org, colyli@suse.de,
+ uaisheng.ye@intel.com, fabio.m.de.francesco@linux.intel.com,
+ ilpo.jarvinen@linux.intel.com, yazen.ghannam@amd.com,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <20250603172239.159260-1-terry.bowman@amd.com>
+ <20250603172239.159260-4-terry.bowman@amd.com>
+ <aD_hQ7sKu-s7Yxiq@stanley.mountain>
+Content-Language: en-US
+From: "Bowman, Terry" <terry.bowman@amd.com>
+In-Reply-To: <aD_hQ7sKu-s7Yxiq@stanley.mountain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YT1P288CA0016.CANP288.PROD.OUTLOOK.COM (2603:10b6:b01::29)
+ To DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/7] cxl/acpi: Add background worker to wait for
- cxl_pci and cxl_mem probe
-To: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>,
- Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
- "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
- "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
- "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, Matthew Wilcox
- <willy@infradead.org>, Jan Kara <jack@suse.cz>,
- "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
- Pavel Machek <pavel@kernel.org>, Li Ming <ming.li@zohomail.com>,
- Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
- Ying Huang <huang.ying.caritas@gmail.com>,
- "Xingtao Yao (Fujitsu)" <yaoxt.fnst@fujitsu.com>,
- Peter Zijlstra <peterz@infradead.org>, Greg KH <gregkh@linuxfoundation.org>,
- Nathan Fontenot <nathan.fontenot@amd.com>,
- Terry Bowman <terry.bowman@amd.com>, Robert Richter <rrichter@amd.com>,
- Benjamin Cheatham <benjamin.cheatham@amd.com>,
- PradeepVineshReddy Kodamati <PradeepVineshReddy.Kodamati@amd.com>
-References: <20250603221949.53272-1-Smita.KoralahalliChannabasappa@amd.com>
- <20250603221949.53272-5-Smita.KoralahalliChannabasappa@amd.com>
- <860121d7-4f40-4da5-b49a-cfeea5bc14c5@fujitsu.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <860121d7-4f40-4da5-b49a-cfeea5bc14c5@fujitsu.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|IA0PR12MB8695:EE_
+X-MS-Office365-Filtering-Correlation-Id: ff06af53-350b-410b-76eb-08dda3754907
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?eEtwWFRrdFllTGp0TFFydnEvYmhrRWtZeE44eDhwQzUwK3BKSFc1VHgwdWY0?=
+ =?utf-8?B?U2NzWE1mL1ZHZXJzVGFGNmcvVFJaSVlnMHVJWk5LYVBwbEIrblZ0OFdwRHZi?=
+ =?utf-8?B?NGRvVEhkMVA3TFVPQ2l0TW5sdUo1MUZHTHhUOWVtNUZtUzUzSWdYS0JuSnBw?=
+ =?utf-8?B?cUZqUmFSYm01cXJsM0JxRGFjRmtjcWdSenc4WHpzdld2Z2x1RGNjdytrd2N3?=
+ =?utf-8?B?Y1Z4NDhDNld6NkovV0VDbVBIUlAyd2dOZEFUSnlJMHNIZW5mUWpoVjFqeW1K?=
+ =?utf-8?B?YjNvaTBOclg1TnVjTzUzTkovNTBkWGtVUnVDbDcvOHlnSzJpM1N0WWY3QWMy?=
+ =?utf-8?B?YitSR2prZU9DeVpyMndvb2EzTjl0RUt6cUc5dktOY011N2ZrcW40c3JrKzQ3?=
+ =?utf-8?B?T0hrYm10SG9wa21haUJyaDBRZm90ZktMTDcrOVkrNHVIL3ozWEEzeW1yNGRz?=
+ =?utf-8?B?bFlZbXFZMGlLM0Jhc1pGekxoYXhzSkZvWFpjVXdCYjdIdmhubjlJSTkxTnRs?=
+ =?utf-8?B?YXNKMGgxVGlNelRuYmhIVWdHRWhSNGF5TDc5QkRWKzR6dEJRT0dWRXRKRmR6?=
+ =?utf-8?B?b1JWSTVnZ1ZOZjhkTDhLbFZNRE1vZWQvUndFZTI5RDFhMXQxZk1BejVMUGFw?=
+ =?utf-8?B?RE9WbktrSEdmVUx2VlFPS0locTkwbXY1MUQzQ1kwRFRrRUpVb0QrWGw3VWZE?=
+ =?utf-8?B?SFJWOXB1Ungya0V1NUJoZ0xpTzhlZ3dwdEltTGNEaTNhS2FIaE1SVDdxYmlL?=
+ =?utf-8?B?WU9HOTFXT1g5Sm8xK3ByYVBIUzFuMjA2WEY1bEs2d0lvV0E5bHUzMXVwUFBH?=
+ =?utf-8?B?by9oMHhIN05IZlFxTnF3YkJuYmszOElQVHVSbjdPeGxxVUE4WnUwU3dEbEJL?=
+ =?utf-8?B?NmdHQ0o0Y3FrNnlrZCswRlUzdS9LY0s3c01NSks5a2RUemdmbTFJVlJ1NnRx?=
+ =?utf-8?B?eTVQTVlCOXhlRWlCTSt2NXlJRmxCZDc0UGYzdC9xaWF2SzVrOW1aK3JvNHMy?=
+ =?utf-8?B?d2tscFlsVy9BUEZIUmYwT1RPdG05Z1lZb2YyR0RibEpReFluTGIxSEhwTXpE?=
+ =?utf-8?B?YlRpZnlQOERsNTd2Qy9YVGtjdXpNRVRhWDUrbFc4MDVQZGd1SWJ5MTZEOFMy?=
+ =?utf-8?B?ODZKT2wrYklyZWwvT3FzYmU1V0NaVjFXZUtNL3AwWmtWZHJyUS9LNjg4K0Fr?=
+ =?utf-8?B?ZlEyM0VSbWRoVlpzcTJBZTU4S1JlY0tISjBXc0hkZDBTQlZFV1AzWEgwaGZ1?=
+ =?utf-8?B?aVFXaHkzYTFzZU1pSHR4ZDBUNU44eFYzYUN4QlR2MU9wNjhkbG9VbVBSY1dL?=
+ =?utf-8?B?aEdMVkpLdWRZeWw2K1QzUVE0Q1dBKzVXb2k5MTVXYitZaXk4KzNVUFVja2ww?=
+ =?utf-8?B?MFdFcm8vcGlDUDllUk10YjVRaE15azNjNDJkbjBpeUlRbm9JWW5relcwSlk3?=
+ =?utf-8?B?L0hpeW9kK3Q2RytQU0U2blQ0YzhuUnAvcmdEanRTVHdUUHhCMlFPZW8ycDIw?=
+ =?utf-8?B?cEN6MmhBaG9UUWczd3YwL3Z0cTdZRzhnWGVMR0ROcGNReW5QQ2RsakVuZTRh?=
+ =?utf-8?B?YlFLZGtRVGNYOVNBNEl4VmxCYi9RUVkrbEpsRFQ1RnhndkdQTzRBa1lQL1Nr?=
+ =?utf-8?B?WVAyRFgyVCtsYUsrVk1Wb1NoN2REWkQxdnI0YU9SbnlqdzhlVWFxTTBBdmx1?=
+ =?utf-8?B?dEM2QWJjeG1nR1pBTTB4OXpNZHJ2WHY3OUxORk12ZUg0SXBoclQ0TElpQTly?=
+ =?utf-8?B?RHluREVTTE5Qak5OSURLMTNsaUZFZEJzZUFrQUF2N0wvWXpoZC9SZm1Ja3V6?=
+ =?utf-8?B?eWZsYmdKakg4aUpqei9RckdyeFB0NUdCVWRFSng3TlQwS0phM2ZzMFhNMkNL?=
+ =?utf-8?B?cXNPaGRTektEcHByR1U2UGVaNTFkdHdSWHZvdm9maEdzSHc9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?djRWQWtqdkZ1a1lnZlh6Zk41ZGNvQjloR1FOeGZ6VDRQTGg3QWlGMytRVmhm?=
+ =?utf-8?B?UkxrRlR4cTc4OFR3WlZWcXAvakVoUWpFaFNwZFJ4TTk5c1puMWxiRzlqeEJx?=
+ =?utf-8?B?MklIVjBGL1p2cFMvQnNTbmFCK1RrcEVleDlBVmJsaFE2MWcvcWdRMDAyc1FC?=
+ =?utf-8?B?L0FGVWVLQ1ZLR2NyUmhoSmxRRXkzbXdpOGFFRVUvYldWQ0RnbXBFK3JsaFp1?=
+ =?utf-8?B?ZngrTjg2dnVENTR2ampoOWwxb1VBdHhwQzkraURBTksreEd0elFjTDJReFhj?=
+ =?utf-8?B?bFlodXF0U040TVNFblliaFBoU0QzbnRHakFnb3hSSnRMcGxNenlBcTd2MlFn?=
+ =?utf-8?B?UDVJZ3czY1pCQ1E5VitpZFhFcFFOTElIUHNGUms4N3haRmovMEFLV0lRZEgy?=
+ =?utf-8?B?clpyQ2ZwWk0wTmNGeThqd2V0aWcvUTM5N2JtaGFpK1B2YmNrcnQ5cTNIL29E?=
+ =?utf-8?B?U25aV3Y3WmlsSlZSUi9QWmJVMzJGSkRPT3RjT1VDN0lhZTNpTlV2enk2U0k2?=
+ =?utf-8?B?SHBJMHZZTFAzZVpHSHZKQXlJM2R2T0ZBRE8wSGJPSzlBVlZMQnZWYXhSSUk0?=
+ =?utf-8?B?ejdQNDZIY0V1OXJ0SW5qYkFBcEdEQjRITC83Mk5BVDVHamJSQXlKUUxUSWMx?=
+ =?utf-8?B?ejIvMC9YUjNkZUVsckppQjJodHJmMUNqdVhEOW80MmlKMnUwY2gvdGtnUElq?=
+ =?utf-8?B?UTJLclZ1K242SWN4T3UybU5tNVJKZU9OWXpvL3M2a0NrY0o4Y3ZwcFZnZFNw?=
+ =?utf-8?B?U0lsWFVXMjJPdHJDZE9aeDZ2eFRxd3FaWU1lTGpnRmlFUFdCc2xHUVBRUDR2?=
+ =?utf-8?B?cHNKZlR4cFVRYWhpdlRiaHdmVXBTUTlmTkFhdHpVTzdIdnlBTkZ0bEQ4dGpz?=
+ =?utf-8?B?MFkzU0UzUXU5Nlc5ZXh3K2R2NE1Ubjl1amlkNHIvcVFTOTFjS0xVd3F2QVlG?=
+ =?utf-8?B?WmdkTk9QdG9icERZUFF6WjZnVVFGUFhYQVQ3bHBwT2V0dWd2eGowYzFxMStL?=
+ =?utf-8?B?OGg5aHBIRzZwOVY2SG04QXB6NUgrYzV3WDh3Ky9TRlVlV25zS08vSkc2Mm5P?=
+ =?utf-8?B?QTliMHRPblFjSDJhU3lkbmg1NWhnc3lVOHhYMDBEUUE1RDdUTEtMdHlxZ1E5?=
+ =?utf-8?B?WjRMbGROZXdGclJZOVBqdnAxWWU5c2szNTM1T0lYL1lXUGt2d3hNb2FyTDdB?=
+ =?utf-8?B?K0Y4NlZLTjAzZzR2b0xScWI0VW0zSS9PaGpnUVlZUjlWK21LeTBkQ1VhK05M?=
+ =?utf-8?B?Ui9TRjFMM285Tko3YzFnZC9XdGlaTXpDK2xUaVFWSVFGWmFBN0VCMzJwUmNP?=
+ =?utf-8?B?TG55aHM5QUdHemFHUjBacmZQYi9FRXB6ZkE2NnRGNEZLRHp2d1FwQkNPdVJN?=
+ =?utf-8?B?QkJJS1J2TkpoM3JORUJhTURLS3k4cmY3VVdUMXBGWkpPdmZOY2E5SVI4dFhV?=
+ =?utf-8?B?bHRvMG92NkJOODlvK2J1cTJpUDBNVUluNGxQd2FzUGJvdW5ZOFU0VkMwZjVS?=
+ =?utf-8?B?S3lvZG5SM2ZoeitSaXJNdFNDWEVSWnlyNnlvUUQrbDFJdThQdnAvTkgwakRk?=
+ =?utf-8?B?QXRTTk5ySm5uVGNIVzlaZVdyOStYRldsdGJLTmsxaXppN0RoYy9EY1RzSkh5?=
+ =?utf-8?B?WFJjdVFVMU42VHY3WnN6Z01TTW5UdWg0bE9RbkpncW42enRnTzY2UUdRdG9X?=
+ =?utf-8?B?djNZSlVqL000RzB1M2FnZTJCcExMS3VtZDN5eVRFd085TnYxWU5DcG8wci8w?=
+ =?utf-8?B?OTFlVGk5ZnVtWXZaYzZiVTdYWlFMc2ptSUNTMVNrbGRFQUJPOVFMWGRvMlBK?=
+ =?utf-8?B?aVBteTViNDhWRlJ3RXRmdGtmVDZlR3JPZUpQcE1mejg4UFJTL1VGaVhYWkNS?=
+ =?utf-8?B?Z0FnYms0b3c5UnRjNTdLY0srT2Zqek9DR3VOK3pBUDhQWWdpVTBJQ2phM1Aw?=
+ =?utf-8?B?YlpCM04wbVFyS0JuMEhQblJaOVlwcUlKL1M4ZUlqZ3U5R2RKQmpTNFFteEJa?=
+ =?utf-8?B?SlVyOWppdEdlNHBZbk5Ga2lFTFVMNEhqRkpwSGpCTUgrSzBJYkxQazNsMThS?=
+ =?utf-8?B?aGVEa1FINzVjQ3piYmtwQXZXa29sSGhnTXJVZDRRdGlHQXJOVjdpRmVyaUdj?=
+ =?utf-8?Q?w2t7i7PeWU9J6ikypotaZZLTW?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ff06af53-350b-410b-76eb-08dda3754907
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 14:37:09.0031
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ebe9EQW4QqqbI9t1tjBOYIH817O1N3VzSI2SfsM288RR0McIzTzevnOB1gCzZnVd3nyrCELdA59EYMDV/Bt1IQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8695
 
 
 
-On 6/4/25 2:40 AM, Zhijian Li (Fujitsu) wrote:
-> 
-> 
-> On 04/06/2025 06:19, Smita Koralahalli wrote:
->>   drivers/cxl/acpi.c         | 23 +++++++++++++++++++++++
->>   drivers/cxl/core/suspend.c | 21 +++++++++++++++++++++
->>   drivers/cxl/cxl.h          |  2 ++
->>   3 files changed, 46 insertions(+)
->>
->> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
->> index cb14829bb9be..978f63b32b41 100644
->> --- a/drivers/cxl/acpi.c
->> +++ b/drivers/cxl/acpi.c
->> @@ -813,6 +813,24 @@ static int pair_cxl_resource(struct device *dev, void *data)
->>   	return 0;
->>   }
->>   
->> +static void cxl_softreserv_mem_work_fn(struct work_struct *work)
->> +{
->> +	/* Wait for cxl_pci and cxl_mem drivers to load */
->> +	cxl_wait_for_pci_mem();
+On 6/4/2025 1:01 AM, Dan Carpenter wrote:
+> On Tue, Jun 03, 2025 at 12:22:26PM -0500, Terry Bowman wrote:
+>> +static struct work_struct cxl_prot_err_work;
+>> +static DECLARE_WORK(cxl_prot_err_work, cxl_prot_err_work_fn);
 >> +
->> +	/*
->> +	 * Wait for the driver probe routines to complete after cxl_pci
->> +	 * and cxl_mem drivers are loaded.
->> +	 */
->> +	wait_for_device_probe();
->> +}
->> +static DECLARE_WORK(cxl_sr_work, cxl_softreserv_mem_work_fn);
+>>  int cxl_ras_init(void)
+>>  {
+>> -	return cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work);
+>> +	int rc;
 >> +
->> +static void cxl_softreserv_mem_update(void)
->> +{
->> +	schedule_work(&cxl_sr_work);
->> +}
->> +
->>   static int cxl_acpi_probe(struct platform_device *pdev)
->>   {
->>   	int rc;
->> @@ -887,6 +905,10 @@ static int cxl_acpi_probe(struct platform_device *pdev)
->>   
->>   	/* In case PCI is scanned before ACPI re-trigger memdev attach */
->>   	cxl_bus_rescan();
->> +
->> +	/* Update SOFT RESERVE resources that intersect with CXL regions */
->> +	cxl_softreserv_mem_update();
->> +
->>   	return 0;
->>   }
->>   
->> @@ -918,6 +940,7 @@ static int __init cxl_acpi_init(void)
->>   
->>   static void __exit cxl_acpi_exit(void)
->>   {
->> +	cancel_work_sync(&cxl_sr_work);
->>   	platform_driver_unregister(&cxl_acpi_driver);
->>   	cxl_bus_drain();
->>   }
->> diff --git a/drivers/cxl/core/suspend.c b/drivers/cxl/core/suspend.c
->> index 72818a2c8ec8..c0d8f70aed56 100644
->> --- a/drivers/cxl/core/suspend.c
->> +++ b/drivers/cxl/core/suspend.c
->> @@ -2,12 +2,15 @@
->>   /* Copyright(c) 2022 Intel Corporation. All rights reserved. */
->>   #include <linux/atomic.h>
->>   #include <linux/export.h>
->> +#include <linux/wait.h>
->>   #include "cxlmem.h"
->>   #include "cxlpci.h"
->>   
->>   static atomic_t mem_active;
->>   static atomic_t pci_loaded;
->>   
->> +static DECLARE_WAIT_QUEUE_HEAD(cxl_wait_queue);
-> 
-> Given that this file (suspend.c) focuses on power management functions,
-> it might be more appropriate to move the wait queue declaration and its
-> related changes to acpi.c in where the its caller is.
+>> +	rc = cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work);
+>> +	if (rc)
+>> +		pr_err("Failed to register CPER AER kfifo (%x)", rc);
+> This shouldn't return rc;?
 
-You mean drivers/cxl/acpi.c and not drivers/cxl/core/acpi.c right? The core one is my mistake and I'm going to create a patch to remove that.
+This was implemented to allow for native CXL handling initialization even if
+FW-first (CPER) initialization fails. This can be changed to return rc.
 
-DJ
+Thanks for reviewing dan Carpenter.
 
-> 
-> 
-> Thanks
-> Zhijian
-> 
+-Terry
+
+>
 >> +
->>   bool cxl_mem_active(void)
->>   {
->>   	if (IS_ENABLED(CONFIG_CXL_MEM))
->> @@ -19,6 +22,7 @@ bool cxl_mem_active(void)
->>   void cxl_mem_active_inc(void)
->>   {
->>   	atomic_inc(&mem_active);
->> +	wake_up(&cxl_wait_queue);
->>   }
->>   EXPORT_SYMBOL_NS_GPL(cxl_mem_active_inc, "CXL");
->>   
->> @@ -28,8 +32,25 @@ void cxl_mem_active_dec(void)
->>   }
->>   EXPORT_SYMBOL_NS_GPL(cxl_mem_active_dec, "CXL");
->>   
->> +static bool cxl_pci_loaded(void)
->> +{
->> +	if (IS_ENABLED(CONFIG_CXL_PCI))
->> +		return atomic_read(&pci_loaded) != 0;
+>> +	rc = cxl_register_prot_err_work(&cxl_prot_err_work);
+>> +	if (rc) {
+>> +		pr_err("Failed to register native AER kfifo (%x)", rc);
+>> +		return rc;
+>> +	}
 >> +
->> +	return false;
->> +}
->> +
->>   void mark_cxl_pci_loaded(void)
->>   {
->>   	atomic_inc(&pci_loaded);
->> +	wake_up(&cxl_wait_queue);
->>   }
->>   EXPORT_SYMBOL_NS_GPL(mark_cxl_pci_loaded, "CXL");
->> +
->> +void cxl_wait_for_pci_mem(void)
->> +{
->> +	if (!wait_event_timeout(cxl_wait_queue, cxl_pci_loaded() &&
->> +				cxl_mem_active(), 30 * HZ))
->> +		pr_debug("Timeout waiting for cxl_pci or cxl_mem probing\n");
->> +}
+>> +	return 0;
+>>  }
+> regards,
+> dan carpenter
+>
 
