@@ -1,200 +1,124 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2078.outbound.protection.outlook.com [40.107.220.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4101A42C4
-	for <linux-cxl@vger.kernel.org>; Wed,  4 Jun 2025 15:44:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.78
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749051884; cv=fail; b=YqbjduE93al1CFKtvVmdKDZp93/7N4+l5Fih4doBEzjdaKUhMeNgYdIzWyNVcrthF5rUMXlgVcwCF+begqvJeHDm/eKxPjTm6vxhto5x4h+I36Rdb4NT8vhPyClBr7yHKm1ay9ou622eP5Mk0SNpf50SCm6iRf9jMwQpX7vGViE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749051884; c=relaxed/simple;
-	bh=vgWDUazjZWI7Tr7XP0S6Ggu7e5t3/s2+DNWwzzaVN/c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=mp2DlQYUL4i6uzFVmuvfD7y78Ytv17KJcSCP4L5kXWMW+mvvylMd6IwAPihjiZcR55FBX7UpaErUIxh9U0IJ3XhbDPgVJoF8EGEh5JusMVKy4bcW3Zg8N8DPLzagG3RnCWVA9WLQgh5P5muVa2dF/D9NiZ84whs1Oy2dOq8eoFQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=0HyQjoZ5; arc=fail smtp.client-ip=40.107.220.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4C4A1DE8B3
+	for <linux-cxl@vger.kernel.org>; Wed,  4 Jun 2025 17:24:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749057873; cv=none; b=PiD96+QGuXb58nfknbzXd7GEgQ3VIElssbMDbaqASCW3FjGSotwxEkMsxlP5jDZJR+YjMlmdWdQc2ZGWkSR7ycoOcta51DWVf96PBo/+xc2Oka8SR63D00+NX7GMnSzJ5Ngd+u47YLQI5GiRtRx4J1uQCUQOoRglFt3K4ym/ns8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749057873; c=relaxed/simple;
+	bh=YI5mFLWc53VgL5FQ8bsi7skJV4Aik/gLWAIifjuXyD0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VVmdhe69jnXBh26cAZQulyXDfmsByFrsyCfJupsmNGofCPIWqUha0SOj2yBngBWNHibdXJ5kig865xDdfV+QPcbal0yeZ8uvrOqTmikF9ldboWq+NilIbRifZFxAqLpEveQzCC694LGo/MeuOcPePpMAZAPwmtsaA4s5tl0vQNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AMzyjRze; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="0HyQjoZ5"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EX8TMajR2DnqquDD01ZH1kea7eoxyyKX+k6ywOobJwgouE5eJZ4ONkTmn2I9q3iTfCbvbIly1VqD1vGtQPOhB+x6nDJZZb50GkWMRmm8RBe5GEDb65aXjLhTbfuLUYg39Jt+ML3jMde5bm6O/yZe6Yux/WZbenXtFX1smNMxDq8VDusxcmxSZE60W1Gk5P9Mt3nb2iMjR2+zFI6jZ0k+d5G0/InwwiAYumBGEkd4SbpcrPHNYbQJFMBzBuiHmytPijQGMo2BTfO3SKSoAA8mZ+zKj6kBunF7YAUw+i9k1LahqZ9O0NZ+d/zgUlWVP2pdbg+ys2ZRb4A6qPQeKwtZzA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=x9k6mnEmvXPqfdXHKfPREZQZfkTwdnjG5kjJkXAEuR4=;
- b=DeC6Wqt5TrnWpFKhVQpPYcWHYzJOnRTjtgjYgqmewsxCHRehXTYtlHa1UTLNkempcPU771IKfSV8eY5dLL2u/DM8V1j/gkIx3pxIvJAqQCW7XSzRZB2skF3UpLdVO4xp8v7uCiFyLUa1cMwJBc8wnBS5LdkDWui8sQRG1gk0dDJqKOvFK8UpL158Z3uuwarjyS6tzNXv30r7kz3R1dMidfrNKgAdOBg03RWsuED0dNalndc4XH5vX0XU3uG+2QqX/o5OM4w5YoAjazJ4NvhMrDYVCsVj8OYidWyvF3c4+VBKdtmeEUJPkzStnp7wiVoy1CrxqDuajI/0d/kxHYjiKw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=x9k6mnEmvXPqfdXHKfPREZQZfkTwdnjG5kjJkXAEuR4=;
- b=0HyQjoZ5WIXSX1TCVROPk3Ms579EunMJ6x6k3DTy44y4vmVZnieranrV96UJLPppK9GaEWeFih1cNyYqiWlyJu3aannTCwMSZL1JtdgvNaRRt/RVPTOFvtN5I+cIDOBTfel9xjdAxclq8csvnOsa13zafB8eSbn5nvQM6czE6HM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com (2603:10b6:930:be::18)
- by DS7PR12MB8324.namprd12.prod.outlook.com (2603:10b6:8:ec::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8792.34; Wed, 4 Jun 2025 15:44:36 +0000
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::b965:1501:b970:e60a]) by CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::b965:1501:b970:e60a%6]) with mapi id 15.20.8792.034; Wed, 4 Jun 2025
- 15:44:36 +0000
-Date: Wed, 4 Jun 2025 17:44:31 +0200
-From: Robert Richter <rrichter@amd.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, Alejandro Lucero <alucerop@amd.com>,
-	Gregory Price <gourry@gourry.net>,
-	Jonathan Cameron <Jonsathan.Cameron@huawei.com>,
-	Li Ming <ming.li@zohomail.com>
-Subject: Re: [PATCH v3 0/9] cxl: Delay HB port and switch dport probing until
- endpoint dev probe
-Message-ID: <aEBp30k03GP46eBd@rric.localdomain>
-References: <20250521183443.3828320-1-dave.jiang@intel.com>
- <aDm3zR2LkC3joLFL@rric.localdomain>
- <ff8ec7f0-6cae-4c1b-973d-c126ce60435a@intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ff8ec7f0-6cae-4c1b-973d-c126ce60435a@intel.com>
-X-ClientProxiedBy: FR4P281CA0008.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:c8::19) To CYYPR12MB8750.namprd12.prod.outlook.com
- (2603:10b6:930:be::18)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AMzyjRze"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-606b58241c9so3894678a12.3
+        for <linux-cxl@vger.kernel.org>; Wed, 04 Jun 2025 10:24:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749057870; x=1749662670; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5Rx6gG3qsE4+StDVhI8Ouf35YkFJYK0JatY+uS2ZTLI=;
+        b=AMzyjRze6N+CdUwAkkXRMLQyhnHh9VDOOuZs+j+q4uiq3s6KdS9GFEJq21qhfvtPbT
+         fIWXNFaXLOTxIwjTCNkfIvXcpEosYQQPg5iJzgep+ehIulc0V+bVRYGCnkBxwHkMDqqB
+         bqwXc7EHXMYSqAccUPKt6OAqNcatvCVEbAxbEjlEajeTA+LU1c29uD9TusSxu+t7bPkY
+         R9iG7DILGEi3VM/KXvE1u565yUR7oWFZXWikYkBf0VF9Vd2sh16GqmUi0UcvdC7N1wQ0
+         5kGY9jSP8ABtAdXSTZbucGAFCNzT4cj92axqg3sGplWAFRYqluAkGP7o3TQ+dDlxmpFP
+         x60w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749057870; x=1749662670;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5Rx6gG3qsE4+StDVhI8Ouf35YkFJYK0JatY+uS2ZTLI=;
+        b=U+gBIChBZW5wrSUVp73hYg9cspQiAGd8zMu1trYBYBE7NCZH9LDWMv3gEBWZGdvTDV
+         M8MwZapNzZuZ5mFFthaBuG2hRIdb6HjtEKLoEFL/vFiwKH+aRL+CzOI44aJB9b0E17k6
+         KSjlkWM2DdTn+VrtdUdnWqLCJCrlmWj1cV/NDpYWVA2eKj5CPKQUItr38APE7YQX7e9a
+         wB/ysmccL7bt5niHqZjEKSna6bBqojF08OEjMctLa49Rr5XN5+6RdTenJOHLSBO9CHq5
+         At4eSbbOwFsH8rMPX+HyqaQs5GYlAsLZx1vKdDiMVVeIdZDiy8+P5k07gK7POCle08ix
+         qctg==
+X-Forwarded-Encrypted: i=1; AJvYcCWtBsS9XmfkY18iqWHzdXQ3z1i7rXzwDuvo5pkZuMFsbfsBPw6lysJuzSAAhzmzpGGxkArcpuzke1w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKmMArxtxT0GC1Ul6fuo/cSMStf6U8ZSzzvTD4zHXcmU6CdlNE
+	idQBu6lHeER/gydjjPgw+W9PSkBODp9wh0y8gazk1l+MWUAHBLbJGdbhWP1jwp95X5A=
+X-Gm-Gg: ASbGnctnkF01lqGfdtdy+UoI99dvDzUdYclbLqTYXGJObJn9aDIcDWXIvvbc7E2TG2P
+	R3q9FSdmAFXMX36FlWZcwFTjKFcFby32KJUB6Lu7bE42UeGWWlZATNVr5P31TBuixZSl2H/mnAp
+	WDqzrU1/vXZ5uatB9LDbCumk1AIUgRephdFyvRGCGzGkE4oaSRpqFBH5L845xuvIqO0mStbgplN
+	HK4Ax/aoUqw5BJ+yxyzjApPSSz4tWPQlSds33KgC5KY0QoDWSY+GjPVakULPTN8M2T0FE3PTlR4
+	D6Q4WFq4E+CFV5Y9cu+Q4AbzcvXEwJfkveai1v7NWTt4EmqlLJUdPPU=
+X-Google-Smtp-Source: AGHT+IH+P0WeybYhDtQX0mOthiBD4sJUH0iS4YBwLkOkmeksTa502is8e50CYha9Oj5de4xARn23DA==
+X-Received: by 2002:a17:907:3e11:b0:ad8:89f8:3f66 with SMTP id a640c23a62f3a-addf8cd2118mr358479966b.21.1749057869894;
+        Wed, 04 Jun 2025 10:24:29 -0700 (PDT)
+Received: from localhost ([41.210.155.222])
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ada5d7fef72sm1127136966b.34.2025.06.04.10.24.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Jun 2025 10:24:29 -0700 (PDT)
+Date: Wed, 4 Jun 2025 20:24:23 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: "Bowman, Terry" <terry.bowman@amd.com>
+Cc: PradeepVineshReddy.Kodamati@amd.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com, bhelgaas@google.com,
+	bp@alien8.de, ming.li@zohomail.com, shiju.jose@huawei.com,
+	Smita.KoralahalliChannabasappa@amd.com, kobayashi.da-06@fujitsu.com,
+	yanfei.xu@intel.com, rrichter@amd.com, peterz@infradead.org,
+	colyli@suse.de, uaisheng.ye@intel.com,
+	fabio.m.de.francesco@linux.intel.com, ilpo.jarvinen@linux.intel.com,
+	yazen.ghannam@amd.com, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v9 03/16] CXL/AER: Introduce kfifo for forwarding CXL
+ errors
+Message-ID: <aECBR79lhlj7SPUV@stanley.mountain>
+References: <20250603172239.159260-1-terry.bowman@amd.com>
+ <20250603172239.159260-4-terry.bowman@amd.com>
+ <aD_hQ7sKu-s7Yxiq@stanley.mountain>
+ <1f719cfd-2c2b-4431-a370-290a865b0bf2@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CYYPR12MB8750:EE_|DS7PR12MB8324:EE_
-X-MS-Office365-Filtering-Correlation-Id: bfac3909-a0a3-44dc-9b63-08dda37eb58f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?HVJFxnIH57oZYfp9rWDcZLn0s3KLyNacDipJdjVZB8t6foTngj5veDfMrqss?=
- =?us-ascii?Q?utDYntUSEYKNfKxzTCIVQB5OrzvZPSqmXrj+pNrUDsDv+Fzx2Pm2HYqr2e3j?=
- =?us-ascii?Q?mqET4RbwjKJyQRTt14RFxY/k+NRWZ9PkjoC1LNFlUYji2EftOzueTWib+JM5?=
- =?us-ascii?Q?x10UxYJPv7kwDdZyh5yjBIIeKvL8T+97p5sG7UhDDVSfPDm8wTCaii4uTrAE?=
- =?us-ascii?Q?wI1gtTg6UJSIw9MUJQZ8E4ESjI7905gFEup1eusGET91NZPn+JuIx9pZDn5c?=
- =?us-ascii?Q?wGBPaRl+LtPHGc7NDudGXGfzm0QuUFMqs6FuAoOdBKHTkqHrj8z77/eoGblV?=
- =?us-ascii?Q?NTByMi1e6IMvsmQ7SzCzoxThgp3VKaVftFcaywzD5iGz4pq3XuVEqcZqrZzB?=
- =?us-ascii?Q?j9mZat3W/vOhh2enisW+cU6GfydeolwdafEFiCDMGcVtM38Zy0EXxAU+85Fh?=
- =?us-ascii?Q?vGBgBa0jR1MgjLQU8Ag+k9ACxa3ojPfFTJLcY/YwR2MvIusVgsK5B3/uz1Dp?=
- =?us-ascii?Q?4L80ZxYttk0/2S2PLXpnFSn9ixCVliqd4pnqEuDQ9oJzywcKdh1M+BG7KYHJ?=
- =?us-ascii?Q?3Z8UEJPcQxqRLrJ9+2m1yf7YYh7yDGv6BSw6bxAHm2vgh03EKGyNpbPLrqgK?=
- =?us-ascii?Q?LA/cX0ueDOdZq2r3XVVFxgUx85hJ9gsP/e4t6AzSD9OhzHh6BbFDDlyPxreU?=
- =?us-ascii?Q?cBaxjgPfhJfmKNmmrr/1lilISMiizCr9shbX5RbBErDLL8Vcy0wIXUOg5uY0?=
- =?us-ascii?Q?vOWMvUzh/3ibSod8rDONOm5CvvcprO48d1Rh7CEQp9WGrLNrme5ZkqJcRsiE?=
- =?us-ascii?Q?YdDYdA+q/FGz7lSqGQThraMcU1tixzh8gaLAurNyzVHLhqMgjuSN17MwX1kN?=
- =?us-ascii?Q?TIL9/mVZTC1beNHqhY8u29lrbu0UfrXGUDS+UmVnBhtTEBrLSLZVwXny0lfZ?=
- =?us-ascii?Q?7FrryjkJUAfXJnQTqCkM+t+mtpuqKMuLyFkxMJXM0xU5jPCOWxMJaHO3sjp1?=
- =?us-ascii?Q?MpH11oBSC/OaLRab9ZlwvS3zoN8H01s+xmNLfEiyLX/hu61zYdOrn/DzUZ0c?=
- =?us-ascii?Q?+3Gt3tz1wDOdD8QD2wxH0ZKe/XLRyadpvbqIK8zCcaiAA7ZIErk0SHwwVw3G?=
- =?us-ascii?Q?l5OQ/iq9s+sIPD84y06hLPJvaWKVRdAeW/mYRZ8HWRQ/62+Fd3LCFQUvSvwu?=
- =?us-ascii?Q?w4wN8qOFA6AIx2TcKnqein/kNwkECtqj/hCYrnaVmBUr3iB/ffNmdvjeO64T?=
- =?us-ascii?Q?qV2pTzlofS12sKxRY6uFqAMIzabA9E7UYV2jdOGZwIVyVorunV6aXvxclmnG?=
- =?us-ascii?Q?ztOIa9Y514OfGkpJ6kKAVzaXTaJjmC+IDl/klmYyu14JaSK642FchH83OwVV?=
- =?us-ascii?Q?rHlDFmy8ioEJPy0oQzCLfOFfhgGyS/aFhJq6lbUJVW5RKG0AteFMemIDhOTZ?=
- =?us-ascii?Q?Kl5wonUzepQ=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Zr/FGZsEItmo3CG5XhJUh5Ibb+SuqBd0JfCzJPGhvAfUBw/lZjt0LIYP7rJa?=
- =?us-ascii?Q?+zGISPFt/iMYNYFtSzunS3M6u7pOBgqDb+bAhRJIcACwdsp5bK08nZ0huaWK?=
- =?us-ascii?Q?jN5ZS5irbL8rdlshYL/e1jfYvdM4/kqvmLPff9b7SCOVdnSJ96hqmARP9lSj?=
- =?us-ascii?Q?D2I0YJPH8DWJWg4hHXcSsxVSMXCTIBa3Bj41zCwtaJxaBn5do5fyv7SpggeW?=
- =?us-ascii?Q?tVxplUaCMfyUs8fmcFS2t74OkCGxehf+y8gyxsp8x35y4UcKW3sBB007w+I+?=
- =?us-ascii?Q?wy2BiE0bF0bZdIbhpianI/8aXErvlXqrnV3LKxwWMR1PM2uVYykXqkstOOKJ?=
- =?us-ascii?Q?avpiwrEgSnMAE7YYBUpG1AHDDkkVlamRXOHCcrWug9ONRKlyVBCE1px99tRD?=
- =?us-ascii?Q?sM0g9gVYnvJpmL9xpHRULB49x1UuyK6N0oN1F+qdUNqx1rcAXnfJ1Bu6K+gN?=
- =?us-ascii?Q?kCvHbK8brcdhgjMpdIkm3TZA4CHn1BE6vv9LrOAoq5agiFwiVxVulhgz1APh?=
- =?us-ascii?Q?wGOJ0283RN4SEt6EjKb//sNRs0Oqwl6RQ7BurzO7+tQrotClC1hKUhFVChs5?=
- =?us-ascii?Q?v+k/Zi05xqsSKVaoRhDJSWb436eWz7zhZae4aI5J4pzSe92tR1L3+TrzO5aN?=
- =?us-ascii?Q?V1ncQJ5+rE7WqceCAdniGS9uC+pUwmeEYWRCBfWdnMeCOKZ/p8mOpgbGzYm+?=
- =?us-ascii?Q?YfpmjUw9abm5l25BTr8Or5Vq641Rhh1PCZqDXd0CyI0TC5gAl/4YfbKhShmY?=
- =?us-ascii?Q?bceZr3MQ+KPtKduRFoeGc30sCOJ6OLcBHGrCweDmfcjgbQfNaSDBOGSDHPOf?=
- =?us-ascii?Q?pitXDg/tF+9GYfsD/p+9e8osuEXmxa1ILOK4SGc+C8JRDDEwlVep5rQW90Pv?=
- =?us-ascii?Q?Jtn+/H+XbvXrNCJhTcsz8nPKINnoIjZIfqiCA5tZjBzQDZiTHRVEgxhtUOxk?=
- =?us-ascii?Q?B5b6VsGd4sxCwxHNyv6fqfBQpHqDzrSOeL3oQlEjaejpPOFcgJnyuDd24MkN?=
- =?us-ascii?Q?zI7n4F8b4SfMzNBKhb+tMz/Y8Ec36FUOO/mSpnsecvBXAAzT7AehVAR1y3pO?=
- =?us-ascii?Q?0YpHmKBDzncSVhB4QnJF3ZTLWEpwNMz/L22zn9dELDKe1McvYnyDe9fzv/eN?=
- =?us-ascii?Q?BPecdSwmliObVr+rPxy0/SKfl9qEH6w7SvTQHz5wPtBgQ2XTVZ1LOyQDx2k/?=
- =?us-ascii?Q?CRz+a2mUpSRjrgTx368CDITDhFVCDKaYWlQQH/+3M+3vBRgug2CsvxfwCKh0?=
- =?us-ascii?Q?TNNoScYoFLuqnsj293SF3hDljeD4BX8IxwR4OYVWsvxHBCYv6vnwhQVQ6epO?=
- =?us-ascii?Q?pBWLGn6AzyAJUejSkcdBJe1/QVgzWG7CMebOY/F72fq/yRA7irOxkmAe1Mmx?=
- =?us-ascii?Q?Dy70tTOdZZIpdGPX95oI+CuDuvsa1ZNiHyTrYB+bela7foIImGHSfCMBm58F?=
- =?us-ascii?Q?Vb1dlxnfrCFnIf/vMnSf7VJ7//rzCP3zYdezjEqZaRbGc6oG9QYtzrnVGWlD?=
- =?us-ascii?Q?iMKY7Bs5VLYn2jLakIU9nH6HYcW9A+nS/H0qT5hOYhzwr4dAUydkDXDOPzfN?=
- =?us-ascii?Q?GIKdKVWs6duMYxqX/oPFnO6Hli07vG28DXTILDOj?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bfac3909-a0a3-44dc-9b63-08dda37eb58f
-X-MS-Exchange-CrossTenant-AuthSource: CYYPR12MB8750.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2025 15:44:36.5385
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5TYvfUErMSwJrllBj85vRsDcAjmxhHlscKp+GnBdT9L55sL2C3FHDHI0YvEgbU+NpSjxVKYqEAmutq4/QBzqkw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8324
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1f719cfd-2c2b-4431-a370-290a865b0bf2@amd.com>
 
-On 03.06.25 06:55:15, Dave Jiang wrote:
-> On 5/30/25 6:51 AM, Robert Richter wrote:
-
-> > The port_num can no longer retrieved using sysfs. Previously, the X in
-> > dportX could be used to identify the port number (former port_id)
-> > which was identical to the numbers in the sysfs target_list entries.
-> > This is esp. useful to reconstruct the decoder tree and map pci child
-> > devices and its decoders to a parent decoder including its positions
-> > in the target list. Maybe create a targetX symlink from the decoder
-> > device to the child decoders of it?
+On Wed, Jun 04, 2025 at 09:37:02AM -0500, Bowman, Terry wrote:
 > 
-
-> The numbers in the target_list are dport->id and should reflect the
-> dportX. Is this not what you are seeing?
-
-Exactly, but I would prefer real numbers for the target list, that is,
-uid and port_num.
-
-> > 
-> > Due to the different initialization order there is an odd port
-> > numbering now showing up with unexpected, out-of-order sequence
-> > numbers, e.g.:
-> > 
-> > /sys/bus/cxl/devices/port1/endpoint2
-> > /sys/bus/cxl/devices/port1/endpoint3
-> > /sys/bus/cxl/devices/port1/endpoint6
-> > /sys/bus/cxl/devices/port4/endpoint5
-> > /sys/bus/cxl/devices/port4/endpoint7
-> > /sys/bus/cxl/devices/port4/endpoint10
-> > /sys/bus/cxl/devices/port4/endpoint11
-> > /sys/bus/cxl/devices/port8/endpoint9
-> > /sys/bus/cxl/devices/port12/endpoint13
-> > /sys/bus/cxl/devices/port12/endpoint14
-> > 
-> > Still, this is correct, but maybe we could force a specific order
-> > during initialization, such as per-port initialization which should
-> > result in a defined order? Note the shared numbering of ports and
-> > endpoints is also confusing, maybe that could be changed here too?
 > 
+> On 6/4/2025 1:01 AM, Dan Carpenter wrote:
+> > On Tue, Jun 03, 2025 at 12:22:26PM -0500, Terry Bowman wrote:
+> >> +static struct work_struct cxl_prot_err_work;
+> >> +static DECLARE_WORK(cxl_prot_err_work, cxl_prot_err_work_fn);
+> >> +
+> >>  int cxl_ras_init(void)
+> >>  {
+> >> -	return cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work);
+> >> +	int rc;
+> >> +
+> >> +	rc = cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work);
+> >> +	if (rc)
+> >> +		pr_err("Failed to register CPER AER kfifo (%x)", rc);
+> > This shouldn't return rc;?
+> 
+> This was implemented to allow for native CXL handling initialization even if
+> FW-first (CPER) initialization fails. This can be changed to return rc.
 
-> I think the upstream expectation WRT sysfs device number enumeration
-> (for all Linux kernel devices) is that no ordering should be
-> expected as the devices are initialized async. And previous ordering
-> appearance is merely coincidence and not the expectation. And the
-> expectation for user tools is that they should not depend on device
-> numbering order and identify the devices by other stable means.
+No no.  I'm fine with it either way so long as it's deliberate.  But
+maybe add a comment if we can continue.
 
-sysfs still is human readable and for good reasons not some binary
-blob you need a viewer for. Avoiding un-ordered enumeration where
-possible helps understanding the topology. So let's think about it and
-if possible find a way to get a defined numbering.
+	rc = cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work);
+	if (rc) {
+		pr_err("Failed to register CPER AER kfifo (%x)", rc);
+		/* Continuing regardless.  Thanks. */
+	}
 
-Thanks,
+	rc = cxl_register_prot_err_work(&cxl_prot_err_work);
 
--Robert
+regards,
+dan carpenter
+
