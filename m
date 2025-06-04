@@ -1,244 +1,185 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AED5528F935;
-	Wed,  4 Jun 2025 14:25:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749047163; cv=fail; b=TD/JsURSrm/wHtGcTu5WrpqIFG5We20zky6iiXYJi2acZCUjAIm2Ale162RgetSEkCepoW2ytInrD//i81jfRDmOBOwI4LdwGz4tSYpNKxjkw1sxLWQkdJyjlCRrwjSEHHuCf+FKNcMX33ClLSneHdaq7oA5bIkvwIGAUU5YONQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749047163; c=relaxed/simple;
-	bh=CMdACvG14OV6mcJPjJQhnozDlfdk/thvlJavRPEDgCs=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=RgXOPkUJed+vJKjHptq9GRONCL1EEMoBvl0kZ8w1JrDv/7jmjCHx3YNqm+Jovo94fZpMLOMHwlWmYwC3UOuJudD9Uz1G1Uj02I5voxeR9auvRphvOAnFUNpQXn4fFG5Mpeh3NXPD7LVWKhcHnOGpRTPD4rFxcDOPNc2ZTMCJs1I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jpwBbNM8; arc=fail smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jpwBbNM8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749047162; x=1780583162;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=CMdACvG14OV6mcJPjJQhnozDlfdk/thvlJavRPEDgCs=;
-  b=jpwBbNM8WjHROoETXWgpcFi8Qp0wCFM0OBYv2zfqSqAwYpWAZDpTde7A
-   VHFb6CUuNlrQflUqPSdhqY0zgfIZzSXo7fqGwbbnNcPG5K5Mw6rznwJzy
-   +/gmgS241lgZd76Tp/U6ySzkOmG5TBQrdLru/GBw2SDgO012T+NFtEBmh
-   5Acn6cZ+MCSDBJK2q0HejUOcoKqTZUlFHxsaZ+dvjxIRlZgrORoNTHjzI
-   UMP65brhT++Ci5W75ToaQkbqJOqzrZmqTwRpv+h5VoXyQSqN5nocfMkQI
-   jVKQ8fs0a675Q+douQvkmNfXmoUfypzqCgSP2QBVBzLgADQrzcK726Due
-   Q==;
-X-CSE-ConnectionGUID: fUxxKkBWQg2rtQS/ZJ8gjQ==
-X-CSE-MsgGUID: z2Cq2upIQeeAKhvsNo4BZg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="50373316"
-X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
-   d="scan'208";a="50373316"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 07:25:57 -0700
-X-CSE-ConnectionGUID: PJVRKgL5R46JJSnWhLBJ2g==
-X-CSE-MsgGUID: 6d+5LLYCRqmxytflJ0isGQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,209,1744095600"; 
-   d="scan'208";a="176168244"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 07:25:54 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 4 Jun 2025 07:25:53 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Wed, 4 Jun 2025 07:25:53 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (40.107.236.77)
- by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 4 Jun 2025 07:25:53 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YKWBIdCczEM74vLO7Vwao2qC0ETiY5AfGfQV6oFtM6KcseAX+5sQli+xBHdATs0hNogOIrNKBXb2WuOHn0C1dAIZOslt82cO3J6iImegp7xt9/8P6uZDOchxjuURI2Wg+GmHSNZRgEaOLmk6Ua0YLabNdON1jup7USPmlAUfMCNtfkie1+QvU2l4s/FvrKuHE3lbBZUuO4gjnMr0qFQf8hjTodg7PZdCST00KFGIBo3/CIqgZNJIvDG0qqsdz0Mi5zbOUCxShxvPxDdaVcVl+52m92Hr/LzHROFtse/7MRDpHh5PBXe7VdvsXSi7uJwYvdKe/tn0r3dfiiOK5BLuxw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZbDm3LdtVZ7EFAQhYZmIdDn+nok4DMn7Qkv0Q7y5ukc=;
- b=VkZJGVNLob3W2GCIU0wgTkeXIwsHI2oVfVu1zZi/Nxr8j9aU5vnHATzDLTrPEyrReN966vGYKkk/MvF4wPPj4VxzpXYuAOYmnGntlYIFvxE9riI4S1uEBfA9bzh/u8l7iw3bi5fLaoU5jr4qKqh2w1JBkq/GOxU8cvAUxc4Z3EwBu5X7HbYxR1L4S8FBniFI2KY52uylzqaJx+hVcGmcbjiNLvN0luso/60thA5clh1oCwMxIIUYR9EBAgBQpFVxPfXQrFLib4eU28FPP23M433OUmPumqSj6X9B/s0OkrKhYGJM7g6O5/J9m8AFlJLU/zXQVyKIfyy7N9zUKkF+Qw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from CY8PR11MB7134.namprd11.prod.outlook.com (2603:10b6:930:62::17)
- by LV8PR11MB8607.namprd11.prod.outlook.com (2603:10b6:408:1ec::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.31; Wed, 4 Jun
- 2025 14:25:50 +0000
-Received: from CY8PR11MB7134.namprd11.prod.outlook.com
- ([fe80::cd87:9086:122c:be3d]) by CY8PR11MB7134.namprd11.prod.outlook.com
- ([fe80::cd87:9086:122c:be3d%5]) with mapi id 15.20.8769.025; Wed, 4 Jun 2025
- 14:25:50 +0000
-From: "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>
-To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>, "Rafael J
- . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, Davidlohr Bueso
-	<dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, "Jiang,
- Dave" <dave.jiang@intel.com>, "Schofield, Alison"
-	<alison.schofield@intel.com>, "Verma, Vishal L" <vishal.l.verma@intel.com>,
-	"Weiny, Ira" <ira.weiny@intel.com>, "Williams, Dan J"
-	<dan.j.williams@intel.com>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
-	"Luck, Tony" <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
-CC: Yazen Ghannam <yazen.ghannam@amd.com>
-Subject: RE: [PATCH 3/4 v3] ACPI: extlog: Trace CPER PCI Express Error Section
-Thread-Topic: [PATCH 3/4 v3] ACPI: extlog: Trace CPER PCI Express Error
- Section
-Thread-Index: AQHb1KAatJFCpAJRJUKKaiGMRfbdfrPzC7VA
-Date: Wed, 4 Jun 2025 14:25:50 +0000
-Message-ID: <CY8PR11MB7134BFAE1A4E54EE0C539CCA896CA@CY8PR11MB7134.namprd11.prod.outlook.com>
-References: <20250603155536.577493-1-fabio.m.de.francesco@linux.intel.com>
- <20250603155536.577493-4-fabio.m.de.francesco@linux.intel.com>
-In-Reply-To: <20250603155536.577493-4-fabio.m.de.francesco@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CY8PR11MB7134:EE_|LV8PR11MB8607:EE_
-x-ms-office365-filtering-correlation-id: e7fc1c6e-d7d1-46f8-cddc-08dda373b4b5
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014|38070700018|921020;
-x-microsoft-antispam-message-info: =?us-ascii?Q?B/FOpAYLHPDHXhbIAHoA8XtFgHPvFttRl+K8La/tHc19MybpoyybbXSoUXiU?=
- =?us-ascii?Q?Zrg0emXqqIYUsdxzUfvE1rZ+p6q4Adi8tQxG2zxfs4CLmjdtEg5jnm5nLT7r?=
- =?us-ascii?Q?k+wGDeYhpmauWdUq543T4wfTuQITKSO7AtJxs8IG4nqCsa0JleXhFbytTr8a?=
- =?us-ascii?Q?jwegybLu5zgGplE5te/St4xaMY8y1iGP1IGnMao+XCbw9JSQE7y5HETYB12Z?=
- =?us-ascii?Q?XZZdvHTd3dKJiG/Z6VvW1x/EI3jbclodZENbun4qmwVgTa0DkBO6WNe3XumB?=
- =?us-ascii?Q?CEcic4Lh008MEP1J/mDdCawwA1UVHNgeUnHcKLz59UGuhtYr53VyvGlWDQCl?=
- =?us-ascii?Q?zdX383UYXTeggkFbZXnPgPH7UlnW2hd5NbQpogo1+rR81igEPrfEBF2ykL4l?=
- =?us-ascii?Q?KPbnIBqzN3zsLMKAyFGdtCBoZ1HzFc0vrExSS+OeNGVDK8jgJno82TJ9bZHM?=
- =?us-ascii?Q?W1sAIk/ZnZcByGXXD1zPZJmWu2mdOFdb+2iNyDAQUbfXhI1rx+gzwUZ3wqWR?=
- =?us-ascii?Q?TDgEgVLlRWWxdKS3R/glCy4upMhS/jHIDNhoSNWBZZwmlnJRuroko0XN5SaA?=
- =?us-ascii?Q?wxUBZPU5alX5K3QsCyHLhYA09QTADXUl0o+eIjEe6mJYDMbJj9o80GXf8MrP?=
- =?us-ascii?Q?opb+ixaJTE/q7w3Z5NV39Vzw6BaaFeeuUuGKAxWq78toDXTHx10BfaWPBd3f?=
- =?us-ascii?Q?821KHZHu86mH1JGtEAnvo9hZoyO4tOTyd0ceKo/ZzHQwuuUtenOBtLhR+eAr?=
- =?us-ascii?Q?QqAmIi47wrIA4WLsOxBEhXtSl2UfHC7TARaH9xx/xcs7bHGUPHgrgc/8ISWu?=
- =?us-ascii?Q?iVvnOTzfkz4etYYNqc4eIkY731Kz0Nz7gwqylGO8hjNx9Qa3bPZUXHxPA+yg?=
- =?us-ascii?Q?KfPfRCsEDsA1ULmuXBKuXdqfUiA9l7VikEogmUQFEzzdIc6EOcjm44tOJNu9?=
- =?us-ascii?Q?DBjA2E/uNsX21XiSAqsNTjHB3n4dLP0eSbIGPMHOZeBoc3uNVIgJbxm4N4Nm?=
- =?us-ascii?Q?2O2hC1eElDSgHcggDmqxrmGYjSSdqagR0TmgQlW4F5iQJknJiGzna/nP6GAQ?=
- =?us-ascii?Q?ys3tTfY9ieE8EGI1l7CrMzFjwsiLaMs5ggvUuF1+Ae7IZtDTVa66IeIqVFgg?=
- =?us-ascii?Q?gxV6NFvdwP8O7vGBKYy7CW2WVtdrHGxyTmVnvaM62n/NMMlzBgwrg1XUwP5d?=
- =?us-ascii?Q?VMUTlLvJdVetuRU+StKMpgGLjdWBICWQWEKnaihIOXs4Tj+XQoaVUHzj+Cac?=
- =?us-ascii?Q?F2m92LXHUZT6KD7wTcGS3/vwBb5KQRvLex1S4L4/AHPQPCuKXYQB0/ktDviJ?=
- =?us-ascii?Q?JuhHq5F7mxsOrLx2snVD0H41+LC48Lv5+pegEimlY3RV1wvzSB+0t+y4t1fd?=
- =?us-ascii?Q?VYeRB5WJgrmjZb7Tr3DkPiHeV3Um+wPJhigpgpxzqy+6MOhFb3zcQQrVZ7y0?=
- =?us-ascii?Q?/3KKGUxG7dr4JEpO2ly3Ho+NRq7pq+JYnqaA7eAS2hiULXVtdrPamOef1D7H?=
- =?us-ascii?Q?5jn9JJBV6EFTIek=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY8PR11MB7134.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(38070700018)(921020);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?81UKyJNVJpAH7aFVyERzUjEQh2/N+lZGi2yDhgtKPtqwIHrrGwSnfPFRRg8X?=
- =?us-ascii?Q?9yV9VLE7j8UpVKNLThLogddj9mhQjB+bFHtkGTJJz/WBfnx/X4W2pmqPXyPO?=
- =?us-ascii?Q?cqArxH0hHSUbft8nRM/veadslNKpJMBk2zWMJPqn57T8W7A9CPOY9r6k+SLP?=
- =?us-ascii?Q?R11mLZ6sdlWt7iOKBV2jLoJdPXK1Sjhcvaj4me+JaaG7LXgnhBWh21ikEisJ?=
- =?us-ascii?Q?jojBgIpAq+AZR1SEEcCEyzKPMgNzyXNIwQJWYd35Q8GhNotI2XZQtxrt4Zol?=
- =?us-ascii?Q?UGYEs3LoMisQZu/RhVsaaB9lwPwyQGIVyVJDzmABWOvyunsttYFBnO9D8HXZ?=
- =?us-ascii?Q?3svpeVqSAI/Xs3PDYnUejZHz7k+O2RShiStr6YZyNvg3jM+mYNOvYB+aDSWi?=
- =?us-ascii?Q?2hFFWjNjRkmnfTn7tKyvB5KOeB1+lBguyBvYUO7wla4FOnjwCysbO6hQy7y2?=
- =?us-ascii?Q?iALNxTh9fL8E3SkhS1C09rA5hB/Mx8g+Aep2olpYtzT/A+qUv6NS8f/cEzdi?=
- =?us-ascii?Q?OodsLfikXe/c8AXZXPqtO/5wxDzRhO/yUfQeHIVYgwDOAHHFbC7es3gbDtCA?=
- =?us-ascii?Q?YVx9WnFXKvCvN8hWo+4wMBWdh6euWcKXp8ZEE9EjmC/xVoLWHs4rLDPenC/k?=
- =?us-ascii?Q?472qEFnRPHZ70ZQrC1yzQpWD591bLty6WYgmm++r++M6qg/iUsOtrUJfjxdV?=
- =?us-ascii?Q?zs+cYa2/877/mty9qK9jW24kSMP2Obh++6Fkf8FVwJ6a0s6z6Kf5J4eid0xn?=
- =?us-ascii?Q?Ca+3/mNTVyA6cyFK8URrh5OJAN770rUJbDZYAyK8vCnsje47d6ZRlDJuYEK8?=
- =?us-ascii?Q?tpaV49VrailYeQv8gOc2ERU8vzbbVN/iwmkL8FZunui/2XSd+dORcho2kXb6?=
- =?us-ascii?Q?LJSF9jfojOr8XiuLxAJ+kuD+PYHUOd0ObO4r3aeN+tCHwoWR6CNE2kpxP4pY?=
- =?us-ascii?Q?d/xpoQ6Vd91y3jMnfezDBaBlBRE/IEYEOSV86U6uHZXSv9q7r+vJ7OS8Yoc4?=
- =?us-ascii?Q?ZpOpsR+bHVpeK4g1jylMO7f3esYMFY21NJjw7EZ/Cik1UFQPsOcBAhCR6K3x?=
- =?us-ascii?Q?cc0qACwYsQgXHM7InAr6suEORWjbmIgvURDJIpC6MZRdn8ZQxhTDHnatyDz5?=
- =?us-ascii?Q?6GFnQCqY2ITrtdiFGMQ2syXUx0mIeEZFAckWKkleQ8U5FXskssi5zStOjsZU?=
- =?us-ascii?Q?qxrFUddAjI4nd76oiVqnGb7ZZeZYYcVXqOWi0Btkd5OoUhgshhjr94Hcx+Kt?=
- =?us-ascii?Q?u3td//NSqiJsIhYEMsj61ghl19irwMeAgoN/c7K9fOlv0m59c2EqPaz/l26v?=
- =?us-ascii?Q?Uamy8gclGlhwq8HR5JAT5htTP6HnmVP0oXlUAhnxIaRubfqnnAb83z8k0fgA?=
- =?us-ascii?Q?ouvb2NCcQXxkrwpdx0F05TuPESLaXHoCe4MXHkUM5MAFaxYroTap1Swsj2il?=
- =?us-ascii?Q?k3FQziPmYYFcQ/fA67szPz9mU72BjuNPH8BeR8j6iK0BGZpV4OTFRecFU1lz?=
- =?us-ascii?Q?zI48PelZPHw3gIfdWIN5VqaGd5qKtzUrELr2VRGzsn4WEL5KP7BiqdFKzaNb?=
- =?us-ascii?Q?t+7y9/P+Q8uFzJAlzsYsQh0r3TT+kTThfTamJYCw?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 364D728ECC6
+	for <linux-cxl@vger.kernel.org>; Wed,  4 Jun 2025 14:32:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749047568; cv=none; b=CVd8JARSI94WsG/4SgPBfZI5BcZSoHyVpcEpuXMznQxNs2l+ONcL7oJUMbg3EmFtfky/RyfvW+JYSE2L47wwTgZ79uo71nzNG5CQNySe/L+CZNurzxSQp1UQ8QlTCyHCwB3KJny3+JB08Qg3/gjy/aF3jKu2XuprTMqIxwC8uDA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749047568; c=relaxed/simple;
+	bh=9z8QudQWghDp5WMpvA3iQs3K28eMZKlUjQsez2q3whw=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tJTa5c9XnE59UcZufonaNSW9m410U4lnK6EWEC9l22nfa0KP9zZHTOAIZW+kcbvPYgIuHB3rzlv0TYMQpIRNHUpdpwMC7hC+o0+FrpUnmHIXVAbM6fIEa7djRcZlHDku2xvTu8k4lK0qHMr+v409+VaCfWHwo2kdb3LFDV9TQDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bC95n2HQGz6K99W;
+	Wed,  4 Jun 2025 22:32:29 +0800 (CST)
+Received: from frapeml500003.china.huawei.com (unknown [7.182.85.28])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8E2E71400D9;
+	Wed,  4 Jun 2025 22:32:42 +0800 (CST)
+Received: from localhost (10.203.177.99) by frapeml500003.china.huawei.com
+ (7.182.85.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 4 Jun
+ 2025 16:32:41 +0200
+Date: Wed, 4 Jun 2025 15:32:37 +0100
+From: Alireza Sanaee <alireza.sanaee@huawei.com>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+CC: <qemu-devel@nongnu.org>, Fan Ni <fan.ni@samsung.com>, Peter Maydell
+	<peter.maydell@linaro.org>, <mst@redhat.com>, <linux-cxl@vger.kernel.org>,
+	<qemu-arm@nongnu.org>, Yuquan Wang <wangyuquan1236@phytium.com.cn>, "Itaru
+ Kitayama" <itaru.kitayama@linux.dev>, Philippe =?ISO-8859-1?Q?Mathieu-Daud?=
+ =?ISO-8859-1?Q?=E9?= <philmd@linaro.org>, Alireza Sanaee
+	<alireza.sanaee@huawei.com>
+Subject: Re: [PATCH v14 5/5] qtest/cxl: Add aarch64 virt test for CXL
+Message-ID: <20250604153051.0000190c@huawei.com>
+In-Reply-To: <20250528110726.226389-6-Jonathan.Cameron@huawei.com>
+References: <20250528110726.226389-1-Jonathan.Cameron@huawei.com>
+	<20250528110726.226389-6-Jonathan.Cameron@huawei.com>
+Organization: Huawei
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CY8PR11MB7134.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e7fc1c6e-d7d1-46f8-cddc-08dda373b4b5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jun 2025 14:25:50.4831
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6DhFLHu8TQKS2tEKy8UKwF3YmNnlaIgCwnBSrdcElwQPEqkQHobu1CEoXCH/v65ezTkD7MNjI2XANaTdbJGq4g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR11MB8607
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ frapeml500003.china.huawei.com (7.182.85.28)
 
-> From: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
-> [...]
-> Subject: [PATCH 3/4 v3] ACPI: extlog: Trace CPER PCI Express Error Sectio=
-n
->=20
-> I/O Machine Check Architecture events may signal failing PCIe components =
-or
-> links. The AER event contains details on what was happening on the wire
-> when the error was signaled.
->=20
-> Trace the CPER PCIe Error section (UEFI v2.10, Appendix N.2.7) reported b=
-y
-> the I/O MCA.
->=20
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Fabio M. De Francesco
-> <fabio.m.de.francesco@linux.intel.com>
-> [...]
-> --- a/drivers/acpi/acpi_extlog.c
-> +++ b/drivers/acpi/acpi_extlog.c
-> @@ -132,6 +132,34 @@ static int print_extlog_rcd(const char *pfx,
->  	return 1;
+On Wed, 28 May 2025 12:07:26 +0100
+Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+
+> Add a single complex case for aarch64 virt machine.
+> Given existing much more comprehensive tests for x86 cover the
+> common functionality, a single test should be enough to verify
+> that the aarch64 part continue to work.
+> 
+> Tested-by: Itaru Kitayama <itaru.kitayama@fujitsu.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+> ---
+> v14: Tags only.
+> ---
+>  tests/qtest/cxl-test.c  | 59
+> ++++++++++++++++++++++++++++++++--------- tests/qtest/meson.build |
+> 1 + 2 files changed, 47 insertions(+), 13 deletions(-)
+> 
+> diff --git a/tests/qtest/cxl-test.c b/tests/qtest/cxl-test.c
+> index a600331843..c7189d6222 100644
+> --- a/tests/qtest/cxl-test.c
+> +++ b/tests/qtest/cxl-test.c
+> @@ -19,6 +19,12 @@
+>      "-device pxb-cxl,id=cxl.1,bus=pcie.0,bus_nr=53 " \
+>      "-M
+> cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.targets.1=cxl.1,cxl-fmw.0.size=4G
+> " +#define QEMU_VIRT_2PXB_CMD \
+> +    "-machine virt,cxl=on -cpu max " \
+> +    "-device pxb-cxl,id=cxl.0,bus=pcie.0,bus_nr=52 " \
+> +    "-device pxb-cxl,id=cxl.1,bus=pcie.0,bus_nr=53 " \
+> +    "-M
+> cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.targets.1=cxl.1,cxl-fmw.0.size=4G
+> " + #define QEMU_RP \
+>      "-device cxl-rp,id=rp0,bus=cxl.0,chassis=0,slot=0 "
+>  
+> @@ -197,25 +203,52 @@ static void cxl_2pxb_4rp_4t3d(void)
+>      qtest_end();
+>      rmdir(tmpfs);
 >  }
->=20
-> +static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
-> +			      int severity)
+> +
+> +static void cxl_virt_2pxb_4rp_4t3d(void)
 > +{
-> +	struct aer_capability_regs *aer;
-> +	struct pci_dev *pdev;
-> +	unsigned int devfn;
-> +	unsigned int bus;
-> +	int aer_severity;
-> +	int domain;
+> +    g_autoptr(GString) cmdline = g_string_new(NULL);
+> +    char template[] = "/tmp/cxl-test-XXXXXX";
+> +    const char *tmpfs;
 > +
-> +	if (!(pcie_err->validation_bits & CPER_PCIE_VALID_DEVICE_ID ||
-> +	      pcie_err->validation_bits & CPER_PCIE_VALID_AER_INFO))
-> +		return;
+> +    tmpfs = mkdtemp(template);
 > +
-> +	aer_severity =3D cper_severity_to_aer(severity);
-> +	aer =3D (struct aer_capability_regs *)pcie_err->aer_info;
-> +	domain =3D pcie_err->device_id.segment;
-> +	bus =3D pcie_err->device_id.bus;
-> +	devfn =3D PCI_DEVFN(pcie_err->device_id.device,
-> +			  pcie_err->device_id.function);
-> +	pdev =3D pci_get_domain_bus_and_slot(domain, bus, devfn);
-> +	if (!pdev)
-> +		return;
+> +    g_string_printf(cmdline, QEMU_VIRT_2PXB_CMD QEMU_4RP QEMU_4T3D,
+> +                    tmpfs, tmpfs, tmpfs, tmpfs, tmpfs, tmpfs,
+> +                    tmpfs, tmpfs);
 > +
-> +	pci_print_aer(KERN_DEBUG, pdev, aer_severity, aer);
-
-Is there any reason not to use "KERN_ERR" log level?
-
-> +	pci_dev_put(pdev);
+> +    qtest_start(cmdline->str);
+> +    qtest_end();
+> +    rmdir(tmpfs);
 > +}
-> +=20
+>  #endif /* CONFIG_POSIX */
+>  
+>  int main(int argc, char **argv)
+>  {
+> -    g_test_init(&argc, &argv, NULL);
+> +    const char *arch = qtest_get_arch();
+>  
+> -    qtest_add_func("/pci/cxl/basic_hostbridge", cxl_basic_hb);
+> -    qtest_add_func("/pci/cxl/basic_pxb", cxl_basic_pxb);
+> -    qtest_add_func("/pci/cxl/pxb_with_window", cxl_pxb_with_window);
+> -    qtest_add_func("/pci/cxl/pxb_x2_with_window",
+> cxl_2pxb_with_window);
+> -    qtest_add_func("/pci/cxl/rp", cxl_root_port);
+> -    qtest_add_func("/pci/cxl/rp_x2", cxl_2root_port);
+> +    g_test_init(&argc, &argv, NULL);
+> +    if (strcmp(arch, "i386") == 0 || strcmp(arch, "x86_64") == 0) {
+> +        qtest_add_func("/pci/cxl/basic_hostbridge", cxl_basic_hb);
+> +        qtest_add_func("/pci/cxl/basic_pxb", cxl_basic_pxb);
+> +        qtest_add_func("/pci/cxl/pxb_with_window",
+> cxl_pxb_with_window);
+> +        qtest_add_func("/pci/cxl/pxb_x2_with_window",
+> cxl_2pxb_with_window);
+> +        qtest_add_func("/pci/cxl/rp", cxl_root_port);
+> +        qtest_add_func("/pci/cxl/rp_x2", cxl_2root_port);
+>  #ifdef CONFIG_POSIX
+> -    qtest_add_func("/pci/cxl/type3_device", cxl_t3d_deprecated);
+> -    qtest_add_func("/pci/cxl/type3_device_pmem", cxl_t3d_persistent);
+> -    qtest_add_func("/pci/cxl/type3_device_vmem", cxl_t3d_volatile);
+> -    qtest_add_func("/pci/cxl/type3_device_vmem_lsa",
+> cxl_t3d_volatile_lsa);
+> -    qtest_add_func("/pci/cxl/rp_x2_type3_x2", cxl_1pxb_2rp_2t3d);
+> -    qtest_add_func("/pci/cxl/pxb_x2_root_port_x4_type3_x4",
+> cxl_2pxb_4rp_4t3d);
+> +        qtest_add_func("/pci/cxl/type3_device", cxl_t3d_deprecated);
+> +        qtest_add_func("/pci/cxl/type3_device_pmem",
+> cxl_t3d_persistent);
+> +        qtest_add_func("/pci/cxl/type3_device_vmem",
+> cxl_t3d_volatile);
+> +        qtest_add_func("/pci/cxl/type3_device_vmem_lsa",
+> cxl_t3d_volatile_lsa);
+> +        qtest_add_func("/pci/cxl/rp_x2_type3_x2", cxl_1pxb_2rp_2t3d);
+> +        qtest_add_func("/pci/cxl/pxb_x2_root_port_x4_type3_x4",
+> +                       cxl_2pxb_4rp_4t3d);
+>  #endif
+> +    } else if (strcmp(arch, "aarch64") == 0) {
+> +#ifdef CONFIG_POSIX
+> +        qtest_add_func("/pci/cxl/virt/pxb_x2_root_port_x4_type3_x4",
+> +                       cxl_virt_2pxb_4rp_4t3d);
+> +#endif
+> +    }
+> +
+>      return g_test_run();
+>  }
+> diff --git a/tests/qtest/meson.build b/tests/qtest/meson.build
+> index 43e5a86699..3145c7b5fb 100644
+> --- a/tests/qtest/meson.build
+> +++ b/tests/qtest/meson.build
+> @@ -259,6 +259,7 @@ qtests_aarch64 = \
+>    (config_all_accel.has_key('CONFIG_TCG') and
+>                     \
+> config_all_devices.has_key('CONFIG_TPM_TIS_I2C') ?
+> ['tpm-tis-i2c-test'] : []) + \
+> (config_all_devices.has_key('CONFIG_ASPEED_SOC') ? qtests_aspeed64 :
+> []) + \
+> +  qtests_cxl +
+>                            \ ['arm-cpu-features',
+>     'numa-test',
+>     'boot-serial-test',
+
+Hi Jonathan,
+
+This patch does not apply on the latest master anymore. I think did a
+few days ago though. Not sure what's wrong.
+
+Thanks,
+Alireza
