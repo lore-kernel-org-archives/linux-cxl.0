@@ -1,362 +1,383 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F73F1EDA3F;
-	Wed,  4 Jun 2025 23:58:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D597436D
+	for <linux-cxl@vger.kernel.org>; Thu,  5 Jun 2025 00:11:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749081537; cv=none; b=R7TwC1a4QpERc6Qtqgf1r0sqCGSjp5hoirRhJXib63wiiGDm7GvXWSDI5syO02/2f89J6RJuVqrO7LJWnts7/ssrKiF7zwjLQQyx5oqnxFTFogiYpptHfidmlqizxlPoKdg51102P99ZPyIahmxt4zpf4HAqZ60KAcm4kmYV+Mw=
+	t=1749082309; cv=none; b=Y69Gr5L2ZyN9r4shmFHbhIKDcRK8PH1UdpDW4BUUTquHBh+X9PGsURcBrdLPept2V+5YyqU9xdSo3tyBT+/l21Rh/4onk2KHgND/t/g7libKh/Wp5WzdZci+tkmsC9laFfOzqba5gKL4HB2EwKkExrZ2nLH8sdpgAK5IeCCJqtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749081537; c=relaxed/simple;
-	bh=fc6Ta5pbfKoNyE4SL922MjkzE305Idhs+yRGCI8zkVY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=A97LkK6bJmbyI/KeL/0/xmZBpvIBYiIlsea0/ALQrOENX4+DB1xu6VHiUu+ZYCzR1CZquoX09gw19oYZSV87AYwgtCunaid8WTT9SHtrcDbIlOxKbni4m1os0eYTerp4x2ctsIyB5kMOhbMnBjN8V/ZjT4h2jjYQ4/EXTlJ1oMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JkoM8sP0; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JkoM8sP0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749081535; x=1780617535;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=fc6Ta5pbfKoNyE4SL922MjkzE305Idhs+yRGCI8zkVY=;
-  b=JkoM8sP0IHZpWftCn0QW0gb7Hxc6ZVSfxrAjHo3jVhF+FxchPDqpnCd3
-   sOxuY31YCuxPJZab2ZBVjPijbVRj7nAqi+5y9qU8Dd6EVhiAJMH6HNka3
-   1ueS3tu0sQxgnuC08gmJeyHBCd0QNHSLSWnCm5KX6REIO9N6lg92QZELG
-   U7cY+U9gIzfxkBOJKatjmoo4OIcgl5Y13H5mY/f2pTBWtqFkSs2FZPRt0
-   0yyhl3xD7eCJlYtjgX3slvmM2Mz+AEwHYNQ7x8juAGfQ5HQzqD5bUmta5
-   oPQpYMoQzjk1W8p/iS3oUgnNDtsvXqPUXf9oOTtL66qWmfuIHxW8WTDF/
-   A==;
-X-CSE-ConnectionGUID: /TmmVUlhSxOR1eHlW7lD0A==
-X-CSE-MsgGUID: t4YAYPHtSK2tIM7oGLlx7w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11454"; a="73718292"
-X-IronPort-AV: E=Sophos;i="6.16,210,1744095600"; 
-   d="scan'208";a="73718292"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 16:58:52 -0700
-X-CSE-ConnectionGUID: 5R1ZUrVSR46ylGp/kdvXCQ==
-X-CSE-MsgGUID: iJloBj5BQ4+vH1duhYWVHA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,210,1744095600"; 
-   d="scan'208";a="145229852"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2025 16:58:53 -0700
-Received: from [10.124.221.247] (unknown [10.124.221.247])
-	by linux.intel.com (Postfix) with ESMTP id 3BC6620B5736;
-	Wed,  4 Jun 2025 16:58:51 -0700 (PDT)
-Message-ID: <451bbab4-59b3-4ac7-a894-b05198d7062f@linux.intel.com>
-Date: Wed, 4 Jun 2025 16:58:50 -0700
+	s=arc-20240116; t=1749082309; c=relaxed/simple;
+	bh=1B2f+rABOpUsx/20SA4MtTJJp9Iax7tdCrSfJQuNbw0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VaYI+cQAtPsMJ4PDGrUuYrVnc/8C742imLyfnouh+sWhcMAzO7VpQ2y/d+NBmAW8togj7mxsa6/+wN1yybRWGe9aHJnzr+iy66CRg/4fs452CUqixnJFdCDomJTvCBbG0fn5Y5CweylgjRHg8A/hqYMUN01XlSvlGzHx00JU40o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36539C4CEE4;
+	Thu,  5 Jun 2025 00:11:49 +0000 (UTC)
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org
+Cc: dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com
+Subject: [PATCH] cxl: Remove core/acpi.c and cxl core dependency on ACPI
+Date: Wed,  4 Jun 2025 17:11:47 -0700
+Message-ID: <20250605001148.1698633-1-dave.jiang@intel.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 04/16] PCI/AER: Dequeue forwarded CXL error
-To: Terry Bowman <terry.bowman@amd.com>, PradeepVineshReddy.Kodamati@amd.com,
- dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
- dan.j.williams@intel.com, bhelgaas@google.com, bp@alien8.de,
- ming.li@zohomail.com, shiju.jose@huawei.com, dan.carpenter@linaro.org,
- Smita.KoralahalliChannabasappa@amd.com, kobayashi.da-06@fujitsu.com,
- yanfei.xu@intel.com, rrichter@amd.com, peterz@infradead.org, colyli@suse.de,
- uaisheng.ye@intel.com, fabio.m.de.francesco@linux.intel.com,
- ilpo.jarvinen@linux.intel.com, yazen.ghannam@amd.com,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org
-References: <20250603172239.159260-1-terry.bowman@amd.com>
- <20250603172239.159260-5-terry.bowman@amd.com>
-Content-Language: en-US
-From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20250603172239.159260-5-terry.bowman@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+It was a mistake to introduce core/acpi.c and putting ACPI dependency on
+cxl_core when adding the extended linear cache support. Add a callback
+in the cxl_root_decoder to retrieve the extended linear cache size from
+ACPI via the cxl_acpi driver.
 
-On 6/3/25 10:22 AM, Terry Bowman wrote:
-> The AER driver is now designed to forward CXL protocol errors to the CXL
-> driver. Update the CXL driver with functionality to dequeue the forwarded
-> CXL error from the kfifo. Also, update the CXL driver to begin the protocol
-> error handling processing using the work received from the FIFO.
->
-> Introduce function cxl_prot_err_work_fn() to dequeue work forwarded by the
-> AER service driver. This will begin the CXL protocol error processing
-> with a call to cxl_handle_prot_error().
->
-> Update cxl/core/ras.c by adding cxl_rch_handle_error_iter() that was
-> previously in the AER driver.
->
-> Introduce sbdf_to_pci() to take the SBDF values from 'struct cxl_prot_error_info'
-> and use in discovering the erring PCI device. Make scope based reference
-> increments/decrements for the discovered PCI device and the associated
-> CXL device.
->
-> Implement cxl_handle_prot_error() to differentiate between Restricted CXL
-> Host (RCH) protocol errors and CXL virtual host (VH) protocol errors.
-> RCH errors will be processed with a call to walk the associated Root
-> Complex Event Collector's (RCEC) secondary bus looking for the Root Complex
-> Integrated Endpoint (RCiEP) to handle the RCH error. Export pcie_walk_rcec()
-> so the CXL driver can walk the RCEC's downstream bus, searching for
-> the RCiEP.
->
-> VH correctable error (CE) processing will call the CXL CE handler. VH
-> uncorrectable errors (UCE) will call cxl_do_recovery(), implemented as a
-> stub for now and to be updated in future patch. Export pci_aer_clean_fatal_status()
-> and pci_clean_device_status() used to clean up AER status after handling.
->
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> ---
+In order to deal with cxl_test, a device parameter had to be introduced
+to the hmat_get_extended_linear_cache_size() call in order to help with
+the mock wrapped function from ACPI. Even though the 'struct device' is
+not used by the actual hmat_get_extended_linear_cache_size() function.
 
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
+ drivers/acpi/numa/hmat.c      |  4 +++-
+ drivers/cxl/acpi.c            | 15 ++++++++++++++-
+ drivers/cxl/core/Makefile     |  1 -
+ drivers/cxl/core/acpi.c       | 11 -----------
+ drivers/cxl/core/core.h       |  2 --
+ drivers/cxl/core/port.c       |  5 ++++-
+ drivers/cxl/core/region.c     |  6 +++++-
+ drivers/cxl/cxl.h             | 12 +++++++++++-
+ include/linux/acpi.h          |  6 ++++--
+ tools/testing/cxl/Kbuild      |  2 +-
+ tools/testing/cxl/test/cxl.c  | 20 ++++++++++++++++++++
+ tools/testing/cxl/test/mock.c | 23 +++++++++++++++++++++++
+ tools/testing/cxl/test/mock.h |  4 ++++
+ 13 files changed, 89 insertions(+), 22 deletions(-)
+ delete mode 100644 drivers/cxl/core/acpi.c
 
->   drivers/cxl/core/ras.c  | 92 +++++++++++++++++++++++++++++++++++++++++
->   drivers/pci/pci.c       |  1 +
->   drivers/pci/pci.h       |  8 ----
->   drivers/pci/pcie/aer.c  |  1 +
->   drivers/pci/pcie/rcec.c |  1 +
->   include/linux/aer.h     |  2 +
->   include/linux/pci.h     | 10 +++++
->   7 files changed, 107 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
-> index d35525e79e04..9ed5c682e128 100644
-> --- a/drivers/cxl/core/ras.c
-> +++ b/drivers/cxl/core/ras.c
-> @@ -110,8 +110,100 @@ static DECLARE_WORK(cxl_cper_prot_err_work, cxl_cper_prot_err_work_fn);
->   
->   #ifdef CONFIG_PCIEAER_CXL
->   
-> +static void cxl_do_recovery(struct pci_dev *pdev)
-> +{
-> +}
-> +
-> +static int cxl_rch_handle_error_iter(struct pci_dev *pdev, void *data)
-> +{
-> +	struct cxl_prot_error_info *err_info = data;
-> +	struct pci_dev *pdev_ref __free(pci_dev_put) = pci_dev_get(pdev);
-> +	struct cxl_dev_state *cxlds;
-> +
-> +	/*
-> +	 * The capability, status, and control fields in Device 0,
-> +	 * Function 0 DVSEC control the CXL functionality of the
-> +	 * entire device (CXL 3.0, 8.1.3).
+diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+index 9d9052258e92..bc8441dc7fe2 100644
+--- a/drivers/acpi/numa/hmat.c
++++ b/drivers/acpi/numa/hmat.c
+@@ -110,6 +110,7 @@ static struct memory_target *find_mem_target(unsigned int mem_pxm)
+ 
+ /**
+  * hmat_get_extended_linear_cache_size - Retrieve the extended linear cache size
++ * @dev: device for debug output
+  * @backing_res: resource from the backing media
+  * @nid: node id for the memory region
+  * @cache_size: (Output) size of extended linear cache.
+@@ -117,7 +118,8 @@ static struct memory_target *find_mem_target(unsigned int mem_pxm)
+  * Return: 0 on success. Errno on failure.
+  *
+  */
+-int hmat_get_extended_linear_cache_size(struct resource *backing_res, int nid,
++int hmat_get_extended_linear_cache_size(struct device *dev,
++					struct resource *backing_res, int nid,
+ 					resource_size_t *cache_size)
+ {
+ 	unsigned int pxm = node_to_pxm(nid);
+diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+index cb14829bb9be..7076d471ada5 100644
+--- a/drivers/cxl/acpi.c
++++ b/drivers/cxl/acpi.c
+@@ -337,6 +337,19 @@ static int add_or_reset_cxl_resource(struct resource *parent, struct resource *r
+ 	return rc;
+ }
+ 
++static int cxl_acpi_get_extended_linear_cache_size(struct cxl_root_decoder *cxlrd,
++						   struct resource *backing_res,
++						   int nid,
++						   resource_size_t *size)
++{
++	return hmat_get_extended_linear_cache_size(&cxlrd->cxlsd.cxld.dev,
++						   backing_res, nid, size);
++}
++
++static const struct cxl_rcd_ops acpi_rcd_ops = {
++	.get_extended_linear_cache_size = cxl_acpi_get_extended_linear_cache_size,
++};
++
+ DEFINE_FREE(put_cxlrd, struct cxl_root_decoder *,
+ 	    if (!IS_ERR_OR_NULL(_T)) put_device(&_T->cxlsd.cxld.dev))
+ DEFINE_FREE(del_cxl_resource, struct resource *, if (_T) del_cxl_resource(_T))
+@@ -375,7 +388,7 @@ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
+ 		return rc;
+ 
+ 	struct cxl_root_decoder *cxlrd __free(put_cxlrd) =
+-		cxl_root_decoder_alloc(root_port, ways);
++		cxl_root_decoder_alloc(root_port, ways, &acpi_rcd_ops);
+ 
+ 	if (IS_ERR(cxlrd))
+ 		return PTR_ERR(cxlrd);
+diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+index 086df97a0fcf..f67e879dbf9a 100644
+--- a/drivers/cxl/core/Makefile
++++ b/drivers/cxl/core/Makefile
+@@ -15,7 +15,6 @@ cxl_core-y += hdm.o
+ cxl_core-y += pmu.o
+ cxl_core-y += cdat.o
+ cxl_core-y += ras.o
+-cxl_core-y += acpi.o
+ cxl_core-$(CONFIG_TRACING) += trace.o
+ cxl_core-$(CONFIG_CXL_REGION) += region.o
+ cxl_core-$(CONFIG_CXL_MCE) += mce.o
+diff --git a/drivers/cxl/core/acpi.c b/drivers/cxl/core/acpi.c
+deleted file mode 100644
+index f13b4dae6ac5..000000000000
+--- a/drivers/cxl/core/acpi.c
++++ /dev/null
+@@ -1,11 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-only
+-/* Copyright(c) 2024 Intel Corporation. All rights reserved. */
+-#include <linux/acpi.h>
+-#include "cxl.h"
+-#include "core.h"
+-
+-int cxl_acpi_get_extended_linear_cache_size(struct resource *backing_res,
+-					    int nid, resource_size_t *size)
+-{
+-	return hmat_get_extended_linear_cache_size(backing_res, nid, size);
+-}
+diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+index 17b692eb3257..719cee0de1ec 100644
+--- a/drivers/cxl/core/core.h
++++ b/drivers/cxl/core/core.h
+@@ -120,8 +120,6 @@ int cxl_port_get_switch_dport_bandwidth(struct cxl_port *port,
+ int cxl_ras_init(void);
+ void cxl_ras_exit(void);
+ int cxl_gpf_port_setup(struct cxl_dport *dport);
+-int cxl_acpi_get_extended_linear_cache_size(struct resource *backing_res,
+-					    int nid, resource_size_t *size);
+ 
+ #ifdef CONFIG_CXL_FEATURES
+ size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index 726bd4a7de27..89b4cdc2bd8c 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -1800,6 +1800,7 @@ static int cxl_switch_decoder_init(struct cxl_port *port,
+  * cxl_root_decoder_alloc - Allocate a root level decoder
+  * @port: owning CXL root of this decoder
+  * @nr_targets: static number of downstream targets
++ * @ops: root decoder callback operations
+  *
+  * Return: A new cxl decoder to be registered by cxl_decoder_add(). A
+  * 'CXL root' decoder is one that decodes from a top-level / static platform
+@@ -1807,7 +1808,8 @@ static int cxl_switch_decoder_init(struct cxl_port *port,
+  * topology.
+  */
+ struct cxl_root_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
+-						unsigned int nr_targets)
++						unsigned int nr_targets,
++						const struct cxl_rcd_ops *ops)
+ {
+ 	struct cxl_root_decoder *cxlrd;
+ 	struct cxl_switch_decoder *cxlsd;
+@@ -1846,6 +1848,7 @@ struct cxl_root_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
+ 
+ 	atomic_set(&cxlrd->region_id, rc);
+ 	cxlrd->qos_class = CXL_QOS_CLASS_INVALID;
++	cxlrd->ops = ops;
+ 	return cxlrd;
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_root_decoder_alloc, "CXL");
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index c3f4dc244df7..ac05fe7335c9 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -3239,7 +3239,11 @@ static int cxl_extended_linear_cache_resize(struct cxl_region *cxlr,
+ 	resource_size_t cache_size, start;
+ 	int rc;
+ 
+-	rc = cxl_acpi_get_extended_linear_cache_size(res, nid, &cache_size);
++	if (!cxlrd->ops || !cxlrd->ops->get_extended_linear_cache_size)
++		return -EOPNOTSUPP;
++
++	rc = cxlrd->ops->get_extended_linear_cache_size(cxlrd, res, nid,
++							&cache_size);
+ 	if (rc)
+ 		return rc;
+ 
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index a9ab46eb0610..899092835e04 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -420,6 +420,12 @@ struct cxl_switch_decoder {
+ struct cxl_root_decoder;
+ typedef u64 (*cxl_hpa_to_spa_fn)(struct cxl_root_decoder *cxlrd, u64 hpa);
+ 
++struct cxl_rcd_ops {
++	int (*get_extended_linear_cache_size)(struct cxl_root_decoder *cxlrd,
++					      struct resource *backing_res,
++					      int nid, resource_size_t *size);
++};
++
+ /**
+  * struct cxl_root_decoder - Static platform CXL address decoder
+  * @res: host / parent resource for region allocations
+@@ -428,6 +434,7 @@ typedef u64 (*cxl_hpa_to_spa_fn)(struct cxl_root_decoder *cxlrd, u64 hpa);
+  * @platform_data: platform specific configuration data
+  * @range_lock: sync region autodiscovery by address range
+  * @qos_class: QoS performance class cookie
++ * @ops: root decoder specific operations
+  * @cxlsd: base cxl switch decoder
+  */
+ struct cxl_root_decoder {
+@@ -437,7 +444,9 @@ struct cxl_root_decoder {
+ 	void *platform_data;
+ 	struct mutex range_lock;
+ 	int qos_class;
++	const struct cxl_rcd_ops *ops;
+ 	struct cxl_switch_decoder cxlsd;
++	/* DO NOT ADD ANYTHING AFTER THIS LINE. cxlsd trails with a flex array */
+ };
+ 
+ /*
+@@ -772,7 +781,8 @@ bool is_root_decoder(struct device *dev);
+ bool is_switch_decoder(struct device *dev);
+ bool is_endpoint_decoder(struct device *dev);
+ struct cxl_root_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
+-						unsigned int nr_targets);
++						unsigned int nr_targets,
++						const struct cxl_rcd_ops *ops);
+ struct cxl_switch_decoder *cxl_switch_decoder_alloc(struct cxl_port *port,
+ 						    unsigned int nr_targets);
+ int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map);
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index 3f2e93ed9730..507aa15913d2 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -1095,10 +1095,12 @@ static inline acpi_handle acpi_get_processor_handle(int cpu)
+ #endif	/* !CONFIG_ACPI */
+ 
+ #ifdef CONFIG_ACPI_HMAT
+-int hmat_get_extended_linear_cache_size(struct resource *backing_res, int nid,
++int hmat_get_extended_linear_cache_size(struct device *dev,
++					struct resource *backing_res, int nid,
+ 					resource_size_t *size);
+ #else
+-static inline int hmat_get_extended_linear_cache_size(struct resource *backing_res,
++static inline int hmat_get_extended_linear_cache_size(struct device *dev,
++						      struct resource *backing_res,
+ 						      int nid, resource_size_t *size)
+ {
+ 	return -EOPNOTSUPP;
+diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
+index 387f3df8b988..3e6e3c4ab797 100644
+--- a/tools/testing/cxl/Kbuild
++++ b/tools/testing/cxl/Kbuild
+@@ -15,6 +15,7 @@ ldflags-y += --wrap=devm_cxl_add_rch_dport
+ ldflags-y += --wrap=cxl_rcd_component_reg_phys
+ ldflags-y += --wrap=cxl_endpoint_parse_cdat
+ ldflags-y += --wrap=cxl_dport_init_ras_reporting
++ldflags-y += --wrap=hmat_get_extended_linear_cache_size
+ 
+ DRIVERS := ../../../drivers
+ CXL_SRC := $(DRIVERS)/cxl
+@@ -62,7 +63,6 @@ cxl_core-y += $(CXL_CORE_SRC)/hdm.o
+ cxl_core-y += $(CXL_CORE_SRC)/pmu.o
+ cxl_core-y += $(CXL_CORE_SRC)/cdat.o
+ cxl_core-y += $(CXL_CORE_SRC)/ras.o
+-cxl_core-y += $(CXL_CORE_SRC)/acpi.o
+ cxl_core-$(CONFIG_TRACING) += $(CXL_CORE_SRC)/trace.o
+ cxl_core-$(CONFIG_CXL_REGION) += $(CXL_CORE_SRC)/region.o
+ cxl_core-$(CONFIG_CXL_MCE) += $(CXL_CORE_SRC)/mce.o
+diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+index 1c3336095923..40d9f7b76d01 100644
+--- a/tools/testing/cxl/test/cxl.c
++++ b/tools/testing/cxl/test/cxl.c
+@@ -470,6 +470,24 @@ struct cxl_cedt_context {
+ 	struct device *dev;
+ };
+ 
++static int mock_hmat_get_extended_linear_cache_size(struct device *dev,
++						    struct resource *backing_res,
++						    int nid, resource_size_t *size)
++{
++	struct cxl_decoder *cxld;
++	struct cxl_port *port;
++
++	if (!is_root_decoder(dev))
++		return -EINVAL;
++
++	cxld = to_cxl_decoder(dev);
++	port = to_cxl_port(cxld->dev.parent);
++	if (is_mock_port(&port->dev))
++		return -EOPNOTSUPP;
++
++	return hmat_get_extended_linear_cache_size(dev, backing_res, nid, size);
++}
++
+ static int mock_acpi_table_parse_cedt(enum acpi_cedt_type id,
+ 				      acpi_tbl_entry_handler_arg handler_arg,
+ 				      void *arg)
+@@ -1040,6 +1058,8 @@ static struct cxl_mock_ops cxl_mock_ops = {
+ 	.devm_cxl_enumerate_decoders = mock_cxl_enumerate_decoders,
+ 	.cxl_endpoint_parse_cdat = mock_cxl_endpoint_parse_cdat,
+ 	.list = LIST_HEAD_INIT(cxl_mock_ops.list),
++	.hmat_get_extended_linear_cache_size =
++		mock_hmat_get_extended_linear_cache_size,
+ };
+ 
+ static void mock_companion(struct acpi_device *adev, struct device *dev)
+diff --git a/tools/testing/cxl/test/mock.c b/tools/testing/cxl/test/mock.c
+index af2594e4f35d..69aa3deee6c2 100644
+--- a/tools/testing/cxl/test/mock.c
++++ b/tools/testing/cxl/test/mock.c
+@@ -78,6 +78,29 @@ int __wrap_acpi_table_parse_cedt(enum acpi_cedt_type id,
+ }
+ EXPORT_SYMBOL_NS_GPL(__wrap_acpi_table_parse_cedt, "ACPI");
+ 
++int __wrap_hmat_get_extended_linear_cache_size(struct device *dev,
++					       struct resource *backing_res,
++					       int nid,
++					       resource_size_t *size)
++{
++	int index;
++	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
++	int rc;
++
++	if (ops)
++		rc = ops->hmat_get_extended_linear_cache_size(dev,
++							      backing_res, nid,
++							      size);
++	else
++		rc = hmat_get_extended_linear_cache_size(dev, backing_res,
++							 nid, size);
++
++	put_cxl_mock_ops(index);
++
++	return rc;
++}
++EXPORT_SYMBOL_NS_GPL(__wrap_hmat_get_extended_linear_cache_size, "CXL");
++
+ acpi_status __wrap_acpi_evaluate_integer(acpi_handle handle,
+ 					 acpi_string pathname,
+ 					 struct acpi_object_list *arguments,
+diff --git a/tools/testing/cxl/test/mock.h b/tools/testing/cxl/test/mock.h
+index d1b0271d2822..240ad3d3e6f9 100644
+--- a/tools/testing/cxl/test/mock.h
++++ b/tools/testing/cxl/test/mock.h
+@@ -26,6 +26,10 @@ struct cxl_mock_ops {
+ 	int (*devm_cxl_enumerate_decoders)(
+ 		struct cxl_hdm *hdm, struct cxl_endpoint_dvsec_info *info);
+ 	void (*cxl_endpoint_parse_cdat)(struct cxl_port *port);
++	int (*hmat_get_extended_linear_cache_size)(struct device *dev,
++						   struct resource *backing_res,
++						   int nid,
++						   resource_size_t *size);
+ };
+ 
+ void register_cxl_mock_ops(struct cxl_mock_ops *ops);
 
-Nit: I think you give spec references with different versions across your code (v3.0, v3.1, v3.2).
-May be you can stick to the latest?
-
-> +	 */
-> +	if (pdev->devfn != PCI_DEVFN(0, 0))
-> +		return 0;
-> +
-> +	/*
-> +	 * CXL Memory Devices must have the 502h class code set (CXL
-> +	 * 3.0, 8.1.12.1).
-> +	 */
-> +	if ((pdev->class >> 8) != PCI_CLASS_MEMORY_CXL)
-> +		return 0;
-> +
-> +	if (!is_cxl_memdev(&pdev->dev) || !pdev->dev.driver)
-> +		return 0;
-> +
-> +	cxlds = pci_get_drvdata(pdev);
-> +	struct device *dev __free(put_device) = get_device(&cxlds->cxlmd->dev);
-> +
-> +	if (err_info->severity == AER_CORRECTABLE)
-> +		cxl_cor_error_detected(pdev);
-> +	else
-> +		cxl_do_recovery(pdev);
-> +
-> +	return 1;
-> +}
-> +
-> +static struct pci_dev *sbdf_to_pci(struct cxl_prot_error_info *err_info)
-> +{
-> +	unsigned int devfn = PCI_DEVFN(err_info->device,
-> +				       err_info->function);
-> +	struct pci_dev *pdev __free(pci_dev_put) =
-> +		pci_get_domain_bus_and_slot(err_info->segment,
-> +					    err_info->bus,
-> +					    devfn);
-> +	return pdev;
-> +}
-> +
-> +static void cxl_handle_prot_error(struct cxl_prot_error_info *err_info)
-> +{
-> +	struct pci_dev *pdev __free(pci_dev_put) = pci_dev_get(sbdf_to_pci(err_info));
-> +
-> +	if (!pdev) {
-> +		pr_err("Failed to find the CXL device\n");
-
-Nit: Maybe including BDF value is more informative.
-
-> +		return;
-> +	}
-> +
-> +	/*
-> +	 * Internal errors of an RCEC indicate an AER error in an
-> +	 * RCH's downstream port. Check and handle them in the CXL.mem
-> +	 * device driver.
-> +	 */
-> +	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_EC)
-> +		return pcie_walk_rcec(pdev, cxl_rch_handle_error_iter, err_info);
-> +
-> +	if (err_info->severity == AER_CORRECTABLE) {
-> +		int aer = pdev->aer_cap;
-> +		struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-> +		struct device *dev __free(put_device) = get_device(&cxlds->cxlmd->dev);
-> +
-> +		if (aer)
-> +			pci_clear_and_set_config_dword(pdev,
-> +						       aer + PCI_ERR_COR_STATUS,
-> +						       0, PCI_ERR_COR_INTERNAL);
-> +
-> +		cxl_cor_error_detected(pdev);
-> +
-> +		pcie_clear_device_status(pdev);
-> +	} else {
-> +		cxl_do_recovery(pdev);
-> +	}
-> +}
-> +
->   static void cxl_prot_err_work_fn(struct work_struct *work)
->   {
-> +	struct cxl_prot_err_work_data wd;
-> +
-> +	while (cxl_prot_err_kfifo_get(&wd)) {
-> +		struct cxl_prot_error_info *err_info = &wd.err_info;
-> +
-> +		cxl_handle_prot_error(err_info);
-> +	}
->   }
->   
->   #else
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index e77d5b53c0ce..524ac32b744a 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -2328,6 +2328,7 @@ void pcie_clear_device_status(struct pci_dev *dev)
->   	pcie_capability_read_word(dev, PCI_EXP_DEVSTA, &sta);
->   	pcie_capability_write_word(dev, PCI_EXP_DEVSTA, sta);
->   }
-> +EXPORT_SYMBOL_NS_GPL(pcie_clear_device_status, "CXL");
->   #endif
->   
->   /**
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index d6296500b004..3c54a5ed803e 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -649,16 +649,10 @@ static inline bool pci_dpc_recovered(struct pci_dev *pdev) { return false; }
->   void pci_rcec_init(struct pci_dev *dev);
->   void pci_rcec_exit(struct pci_dev *dev);
->   void pcie_link_rcec(struct pci_dev *rcec);
-> -void pcie_walk_rcec(struct pci_dev *rcec,
-> -		    int (*cb)(struct pci_dev *, void *),
-> -		    void *userdata);
->   #else
->   static inline void pci_rcec_init(struct pci_dev *dev) { }
->   static inline void pci_rcec_exit(struct pci_dev *dev) { }
->   static inline void pcie_link_rcec(struct pci_dev *rcec) { }
-> -static inline void pcie_walk_rcec(struct pci_dev *rcec,
-> -				  int (*cb)(struct pci_dev *, void *),
-> -				  void *userdata) { }
->   #endif
->   
->   #ifdef CONFIG_PCI_ATS
-> @@ -967,7 +961,6 @@ void pci_no_aer(void);
->   void pci_aer_init(struct pci_dev *dev);
->   void pci_aer_exit(struct pci_dev *dev);
->   extern const struct attribute_group aer_stats_attr_group;
-> -void pci_aer_clear_fatal_status(struct pci_dev *dev);
->   int pci_aer_clear_status(struct pci_dev *dev);
->   int pci_aer_raw_clear_status(struct pci_dev *dev);
->   void pci_save_aer_state(struct pci_dev *dev);
-> @@ -976,7 +969,6 @@ void pci_restore_aer_state(struct pci_dev *dev);
->   static inline void pci_no_aer(void) { }
->   static inline void pci_aer_init(struct pci_dev *d) { }
->   static inline void pci_aer_exit(struct pci_dev *d) { }
-> -static inline void pci_aer_clear_fatal_status(struct pci_dev *dev) { }
->   static inline int pci_aer_clear_status(struct pci_dev *dev) { return -EINVAL; }
->   static inline int pci_aer_raw_clear_status(struct pci_dev *dev) { return -EINVAL; }
->   static inline void pci_save_aer_state(struct pci_dev *dev) { }
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 5350fa5be784..6e88331c6303 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -290,6 +290,7 @@ void pci_aer_clear_fatal_status(struct pci_dev *dev)
->   	if (status)
->   		pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, status);
->   }
-> +EXPORT_SYMBOL_GPL(pci_aer_clear_fatal_status);
->   
->   /**
->    * pci_aer_raw_clear_status - Clear AER error registers.
-> diff --git a/drivers/pci/pcie/rcec.c b/drivers/pci/pcie/rcec.c
-> index d0bcd141ac9c..fb6cf6449a1d 100644
-> --- a/drivers/pci/pcie/rcec.c
-> +++ b/drivers/pci/pcie/rcec.c
-> @@ -145,6 +145,7 @@ void pcie_walk_rcec(struct pci_dev *rcec, int (*cb)(struct pci_dev *, void *),
->   
->   	walk_rcec(walk_rcec_helper, &rcec_data);
->   }
-> +EXPORT_SYMBOL_NS_GPL(pcie_walk_rcec, "CXL");
->   
->   void pci_rcec_init(struct pci_dev *dev)
->   {
-> diff --git a/include/linux/aer.h b/include/linux/aer.h
-> index 550407240ab5..c9a18eca16f8 100644
-> --- a/include/linux/aer.h
-> +++ b/include/linux/aer.h
-> @@ -77,12 +77,14 @@ struct cxl_prot_err_work_data {
->   
->   #if defined(CONFIG_PCIEAER)
->   int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
-> +void pci_aer_clear_fatal_status(struct pci_dev *dev);
->   int pcie_aer_is_native(struct pci_dev *dev);
->   #else
->   static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
->   {
->   	return -EINVAL;
->   }
-> +static inline void pci_aer_clear_fatal_status(struct pci_dev *dev) { }
->   static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
->   #endif
->   
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index bff3009f9ff0..cd53715d53f3 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1806,6 +1806,9 @@ extern bool pcie_ports_native;
->   
->   int pcie_set_target_speed(struct pci_dev *port, enum pci_bus_speed speed_req,
->   			  bool use_lt);
-> +void pcie_walk_rcec(struct pci_dev *rcec,
-> +		    int (*cb)(struct pci_dev *, void *),
-> +		    void *userdata);
->   #else
->   #define pcie_ports_disabled	true
->   #define pcie_ports_native	false
-> @@ -1816,8 +1819,15 @@ static inline int pcie_set_target_speed(struct pci_dev *port,
->   {
->   	return -EOPNOTSUPP;
->   }
-> +
-> +static inline void pcie_walk_rcec(struct pci_dev *rcec,
-> +				  int (*cb)(struct pci_dev *, void *),
-> +				  void *userdata) { }
-> +
->   #endif
->   
-> +void pcie_clear_device_status(struct pci_dev *dev);
-> +
->   #define PCIE_LINK_STATE_L0S		(BIT(0) | BIT(1)) /* Upstr/dwnstr L0s */
->   #define PCIE_LINK_STATE_L1		BIT(2)	/* L1 state */
->   #define PCIE_LINK_STATE_L1_1		BIT(3)	/* ASPM L1.1 state */
-
+base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+2.49.0
 
