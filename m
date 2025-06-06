@@ -1,456 +1,163 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA367322A;
-	Fri,  6 Jun 2025 00:27:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8153125DF
+	for <linux-cxl@vger.kernel.org>; Fri,  6 Jun 2025 00:28:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749169673; cv=none; b=JppDjo+bdZkc3V/2d4uzX0qcX3hhEHd1mssaLR+cqMyhOR1KCaAd2BMCtJE6CcC+b23DYQJ5NzKBWhPPa9Pe4d7uAGX5ZPA3DJw0WckOD1D+G5eq4agqfschF11Dy6irOZOYaqgW/aqtB/uHJYxUNZM0b43sMGgWLynVFc50E5k=
+	t=1749169727; cv=none; b=lJETtU6r9XRcaTLjD8tR7Lr9Tg+Aoul6IK+7pmokM+/Xa12DvbH0Xh517xb9T2agS1um4CnDAqLfb0vvRufIBeBY837D/5HtMTElvhoCRupsSuAuRL20dzNuXxrNum2vT0BfMqvEhamyv7RBjiprgVya6jUD2FToGsECyyzWRCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749169673; c=relaxed/simple;
-	bh=I5j7nMmVhpw0w5ikr/2dDTD06FV6Z8/IkYT2gUAhv5Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=hgyYdqJ5bxT9QkVQ7x36mlX/zGFvTbY6JR843iBbAKunh+6hNtJ1fExxVZ/3ZgGuwvBnPz+H/MiSw0/yQPYmFpI8031xHRkuhpFhK4RMY+r9QHgPKTVDEhzslv1PJEUuv0z48HR9ncq1xetnXor3++2AYoMinunT8lSGmMg7oN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gHKPQwoZ; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749169727; c=relaxed/simple;
+	bh=gnEwdszCdw8pdyoPwWQ8YHseMTvuWJ+/3Et8J9YYx+c=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sdvbHpum0YSjtGYfMe1FrZyjdekUmRyrst0kEZH5MfujhAPbGZbTZXNyoPt5Uj7L+vWkN6BI3ui5b+0nLZx6V/7ntIyBS1smPj7SXKbCZQLEQEIUV9Hy1zrjc6PBggtO9cTKoRG5H2Z+s6R1rV9CfDq6Vbt5GCzfSCFywYGi5iE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V3Zjt9ox; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gHKPQwoZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749169671; x=1780705671;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=I5j7nMmVhpw0w5ikr/2dDTD06FV6Z8/IkYT2gUAhv5Y=;
-  b=gHKPQwoZyaZaBfKGOeEdNLptQ+QNQ7xz/Uf7oVOT8sDG27nB7hPpRTLR
-   SvcwCrcnGFiIlwD811k3ADD/EJcDPdp6LzZ119ekq4vn6kb2Hs/dPdEYZ
-   gtO+Rms3kDG7bx34rOBPwzHSdSGL9Kj7dN2UU2qhOZBQWfqIa6YO8aP3O
-   kCbmWW0bvsWvOEqmA+ve5ko5iBmD0VoC41G7/xFHp0draASPpBsrJsfgq
-   QB6FQWNYH125+ETJppxM/qoU4sTEGe7pMyFuOq8zoDR3tzFt5pevlkMRZ
-   oqYGzh/2jQxg+6Hi+b8jBdVrzF0QpKANoXzhnQkUw4jTEolnWaoBrRT2U
-   Q==;
-X-CSE-ConnectionGUID: gIrkhRNoReu0O2o6bhzQsw==
-X-CSE-MsgGUID: diZyoxEBQe6LhKooREcZOQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11455"; a="51454407"
-X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
-   d="scan'208";a="51454407"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 17:27:50 -0700
-X-CSE-ConnectionGUID: Z7nYAxwVR0OsVGnimHwBQw==
-X-CSE-MsgGUID: 43iIRXKHRk6tIhfh5jFPEA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,213,1744095600"; 
-   d="scan'208";a="145633601"
-Received: from dwoodwor-mobl2.amr.corp.intel.com (HELO [10.125.111.7]) ([10.125.111.7])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2025 17:27:47 -0700
-Message-ID: <ced413e5-6a98-4d6a-9c49-1a0603a1bb98@intel.com>
-Date: Thu, 5 Jun 2025 17:27:44 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V3Zjt9ox"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b200047a6a5so2304759a12.0
+        for <linux-cxl@vger.kernel.org>; Thu, 05 Jun 2025 17:28:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749169725; x=1749774525; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=i3TxrRqR0I76iLnt2ucZkJXg4dmyNRw//DeN8cjiWKA=;
+        b=V3Zjt9oxUoR+JHjHvj8waiX5zNKeBQ8DoYxiqswvXcv7UrldQ0TGHLTIqg8FOhet/X
+         1+eRE5bTucq1ISi9lnwJgXO3+/X65l/k/1HyS0aoTWqqAx1xT2kKKKfNAl0G3Kd9+avG
+         pll7rFbwk6z8LtglWaNR9N3Wyp7jyOcEVXfaLQmgBmFtXklEEnm4lWI7X/0nIZTTv+2+
+         dPLIQfzF3NkU8CDVkoliatxenfRiuEkWtYlc2cTlKAwk5IbFfkoQch6Hw71x4EAGOQUg
+         0U1Jv0YiPLlNDH/JT7w8Z6ftgepv4QH0k0IXbt/qtG0JsTJHGet1ia8cOeDjWrAOJ861
+         Cq8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749169725; x=1749774525;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=i3TxrRqR0I76iLnt2ucZkJXg4dmyNRw//DeN8cjiWKA=;
+        b=RjXY8e+opPARsCI+PjZeoMMdvfcyqODJCgelcBaaYNfxFuBSkypeqI6b7awnCLa6xp
+         M/FUzy/MfQxDYpss7DM7dpGEMReNao1cuBi92TBJkilw85JdRvrNmKVNU+D9ErFGnEa1
+         O3ccmpdhBfochsre7cbJrMuDTEyosfOpZm1LYJVYc3bb3Ad2q9EmK0fjtQd57IZ0oAmj
+         Ww37Vm7nl1CTfRGRb8tjzwUBIxJScQQ5nU3hZRvugvUtNM1ftxZGZYd5dDBsle6xif8C
+         KpohqcBa92/uyGhFuEz0NLX/RcYbiAjRJ8WMzSR4G2pGrPNMpRLjXfNtvQ6/rOw9Ibu7
+         BqFA==
+X-Forwarded-Encrypted: i=1; AJvYcCXwtSymPYiil4tuHOLvswiDpI59HTNf0epy/fgMLHzDIWfqxLL0WZMiKdD6vtAjS7XzbSMotwKK0fg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwVIRyhMj7Wr89mly99blpe5MZ1BfBjUzAzkiCPUJUZwV6n7A7
+	u7jWm6kdjlS3hYB4G1jXpreQ60S9s3Y3DnGzeWWNIOPFroa0tg0qw5TI
+X-Gm-Gg: ASbGncudOynpPjBqo0zNTF7sler0rnGbs9aopBNth7zBoxmwH4Yd1CqbCruqeRkVgwD
+	RODX5MPRxNB4m0civBprV0dafpmcK529+z9dVaqIEVgmS7WcV/kGvaa85LEXbqOgm2jpwFs2BK9
+	qynghAtJ3my3llslPjzf9Was7M8TEIKK87E8Su+iOm0yzCxSHYJeLY3oulMi7yeqU1N0/OHpisa
+	UaBbESTZMKrOKK6vp3TkpZuTeXeu91nFIpr1hW9HX1mzudAfWLdh6uOp+KN08sDzyENa/aoZXGq
+	lWLl852K4sl4CtaNhWa+pnAt0eWAQWiiyErPQtdbdejGLgTO56paq79BAUXKLyCUPB/GWKTLWkJ
+	LeUdbfIES/jHu
+X-Google-Smtp-Source: AGHT+IHhXDTTL9IQxG6AeE/7Rhc+nTeeWJszgfYp5mAP+Tad2iQqBJ0bjydFNuMUl8FB8KiS/+Y1pg==
+X-Received: by 2002:a17:90b:1a8b:b0:30e:9b31:9495 with SMTP id 98e67ed59e1d1-3134cfc9fd0mr624175a91.9.1749169724848;
+        Thu, 05 Jun 2025 17:28:44 -0700 (PDT)
+Received: from deb-101020-bm01.eng.stellus.in ([149.97.161.244])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603506d4dsm1778845ad.235.2025.06.05.17.28.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jun 2025 17:28:44 -0700 (PDT)
+From: Anisa Su <anisa.su887@gmail.com>
+X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
+Date: Fri, 6 Jun 2025 00:28:42 +0000
+To: Anisa Su <anisa.su887@gmail.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Jonathan Cameron via <qemu-devel@nongnu.org>, nifan.cxl@gmail.com,
+	dave@stgolabs.net, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v2 00/10] CXL: FMAPI DCD Management Commands 0x5600-0x5605
+Message-ID: <aEI2OqYwgTLw4KsY@deb-101020-bm01.eng.stellus.in>
+References: <20250508001754.122180-1-anisa.su887@gmail.com>
+ <20250520143947.00000337@huawei.com>
+ <20250530152655.00007132@huawei.com>
+ <aD3jkRBHmbdc9QmD@deb-101020-bm01.eng.stellus.in>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 03/16] CXL/AER: Introduce kfifo for forwarding CXL
- errors
-To: Terry Bowman <terry.bowman@amd.com>, PradeepVineshReddy.Kodamati@amd.com,
- dave@stgolabs.net, jonathan.cameron@huawei.com, alison.schofield@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
- bhelgaas@google.com, bp@alien8.de, ming.li@zohomail.com,
- shiju.jose@huawei.com, dan.carpenter@linaro.org,
- Smita.KoralahalliChannabasappa@amd.com, kobayashi.da-06@fujitsu.com,
- yanfei.xu@intel.com, rrichter@amd.com, peterz@infradead.org, colyli@suse.de,
- uaisheng.ye@intel.com, fabio.m.de.francesco@linux.intel.com,
- ilpo.jarvinen@linux.intel.com, yazen.ghannam@amd.com,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org
-References: <20250603172239.159260-1-terry.bowman@amd.com>
- <20250603172239.159260-4-terry.bowman@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250603172239.159260-4-terry.bowman@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aD3jkRBHmbdc9QmD@deb-101020-bm01.eng.stellus.in>
 
+On Mon, Jun 02, 2025 at 05:46:57PM +0000, Anisa Su wrote:
+> On Fri, May 30, 2025 at 03:26:55PM +0100, Jonathan Cameron wrote:
+> > On Tue, 20 May 2025 14:39:47 +0100
+> > Jonathan Cameron via <qemu-devel@nongnu.org> wrote:
+> > 
+> > > On Thu,  8 May 2025 00:00:56 +0000
+> > > anisa.su887@gmail.com wrote:
+> > > 
+> > > > From: Anisa Su <anisa.su@samsung.com>
+> > > > 
+snip 
+> > Anisa,
+> > 
+> > Ideally I'd like to get the majority of this upstream once you post
+> > a v3.  To do that I'd like to break the dependence on mctp_i2c in patch 2.
+> > These commands are equally valid via a switch-cci (and that path to the
+> > fm owned ld_mctpcci is already upstream).
+> > 
+> > If you could send it as two series. One of which sits on upstream and
+> > doesn't include the i2c_mctp part and the other of which is applied once
+> > that support is available in my tree that would be great. I'll squash
+> > the i2c_mctp part into the patch that adds support for that in the
+> > first place.
+> > 
+> > I'll deal with rebasing needed for other command introductions etc.
+> > 
+Hi Jonathan,
 
+I applied the v3 patches (which are based on ToT master) on your latest
+published branch cxl-2025-03-20 + Fan's patch fixing dc extent tracking
+and then edited the first patch to add the i2c_mctp stuff and rebased
+the remaining patches on top.
 
-On 6/3/25 10:22 AM, Terry Bowman wrote:
-> CXL error handling will soon be moved from the AER driver into the CXL
-> driver. This requires a notification mechanism for the AER driver to share
-> the AER interrupt with the CXL driver. The notification will be used
-> as an indication for the CXL drivers to handle and log the CXL RAS errors.
+Would it be easier for you if I send you those?
+
+Let me know, thanks!
+Anisa
+
+> > There are just enough open questions in this series that I haven't done
+> > this rework directly (though I did start doing it - hence the missing
+> > include note in one of the patches).
+> > 
+> > Thanks,
+> > 
+> Sounds good, will do :)
 > 
-> Add a kfifo work queue to be used by the AER driver and CXL driver. The AER
-> driver will be the sole kfifo producer adding work and the cxl_core will be
-> the sole kfifo consumer removing work. Add the boilerplate kfifo support.
-> 
-> Add CXL work queue handler registration functions in the AER driver. Export
-> the functions allowing CXL driver to access. Implement registration
-> functions for the CXL driver to assign or clear the work handler function.
-> 
-> Introduce function cxl_create_prot_err_info() and 'struct cxl_prot_err_info'.
-> Implement cxl_create_prot_err_info() to populate a 'struct cxl_prot_err_info'
-> instance with the AER severity and the erring device's PCI SBDF. The SBDF
-> details will be used to rediscover the erring device after the CXL driver
-> dequeues the kfifo work. The device rediscovery will be introduced along
-> with the CXL handling in future patches.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> ---
->  drivers/cxl/core/ras.c |  31 +++++++++-
->  drivers/cxl/cxlpci.h   |   1 +
->  drivers/pci/pcie/aer.c | 132 ++++++++++++++++++++++++++++-------------
->  include/linux/aer.h    |  36 +++++++++++
->  4 files changed, 157 insertions(+), 43 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
-> index 485a831695c7..d35525e79e04 100644
-> --- a/drivers/cxl/core/ras.c
-> +++ b/drivers/cxl/core/ras.c
-> @@ -5,6 +5,7 @@
->  #include <linux/aer.h>
->  #include <cxl/event.h>
->  #include <cxlmem.h>
-> +#include <cxlpci.h>
->  #include "trace.h"
->  
->  static void cxl_cper_trace_corr_port_prot_err(struct pci_dev *pdev,
-> @@ -107,13 +108,41 @@ static void cxl_cper_prot_err_work_fn(struct work_struct *work)
->  }
->  static DECLARE_WORK(cxl_cper_prot_err_work, cxl_cper_prot_err_work_fn);
->  
-> +#ifdef CONFIG_PCIEAER_CXL
-> +
-> +static void cxl_prot_err_work_fn(struct work_struct *work)
-> +{
-> +}
-> +
-> +#else
-> +static void cxl_prot_err_work_fn(struct work_struct *work) { }
-> +#endif /* CONFIG_PCIEAER_CXL */
-
-I wonder instead of the ifdef block we can just do:
-
-static void cxl_prot_err_work_fn(...)
-{
-	if (!IS_ENABLED(CONFIG_PCIEAER_CXL))
-		return;
-
-	....
-}
-
-In general we want to avoid ifdefs in C files. 
-
-Also, where is CONFIG_PCIEAER_CXL defined? I'm having trouble finding the Kconfig that declares it.
-
-$ git grep CONFIG_PCIEAER_CXL
-drivers/cxl/core/pci.c:#ifdef CONFIG_PCIEAER_CXL
-drivers/cxl/core/ras.c:#ifdef CONFIG_PCIEAER_CXL
-drivers/cxl/core/ras.c:#endif /* CONFIG_PCIEAER_CXL */
-drivers/cxl/cxl.h:#ifdef CONFIG_PCIEAER_CXL
-drivers/cxl/port.c:#ifdef CONFIG_PCIEAER_CXL
-drivers/cxl/port.c:#endif /* CONFIG_PCIEAER_CXL */
-drivers/pci/pcie/aer.c:#if defined(CONFIG_PCIEAER_CXL)
-drivers/pci/pcie/aer.c:#ifdef CONFIG_PCIEAER_CXL
-drivers/pci/pcie/aer.c:#if defined(CONFIG_PCIEAER_CXL)
-include/linux/aer.h:#if defined(CONFIG_PCIEAER_CXL)
-
-
-> +
-> +static struct work_struct cxl_prot_err_work;
-> +static DECLARE_WORK(cxl_prot_err_work, cxl_prot_err_work_fn);
-> +
->  int cxl_ras_init(void)
->  {
-> -	return cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work);
-> +	int rc;
-> +
-> +	rc = cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work);
-> +	if (rc)
-> +		pr_err("Failed to register CPER AER kfifo (%x)", rc);
-> +
-> +	rc = cxl_register_prot_err_work(&cxl_prot_err_work);
-> +	if (rc) {
-> +		pr_err("Failed to register native AER kfifo (%x)", rc);
-> +		return rc;
-> +	}
-> +
-> +	return 0;
->  }
->  
->  void cxl_ras_exit(void)
->  {
->  	cxl_cper_unregister_prot_err_work(&cxl_cper_prot_err_work);
->  	cancel_work_sync(&cxl_cper_prot_err_work);
-> +
-> +	cxl_unregister_prot_err_work();
-> +	cancel_work_sync(&cxl_prot_err_work);
->  }
-> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-> index 54e219b0049e..6f1396ef7b77 100644
-> --- a/drivers/cxl/cxlpci.h
-> +++ b/drivers/cxl/cxlpci.h
-> @@ -4,6 +4,7 @@
->  #define __CXL_PCI_H__
->  #include <linux/pci.h>
->  #include "cxl.h"
-> +#include "linux/aer.h"
->  
->  #define CXL_MEMORY_PROGIF	0x10
->  
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index adb4b1123b9b..5350fa5be784 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -114,6 +114,14 @@ struct aer_stats {
->  static int pcie_aer_disable;
->  static pci_ers_result_t aer_root_reset(struct pci_dev *dev);
->  
-> +#if defined(CONFIG_PCIEAER_CXL)
-
-Would it make sense to move all the CXL bits to a cxl_aer.c instead of all the ifdefs in this C file?
-
-DJ
-
-> +#define CXL_ERROR_SOURCES_MAX          128
-> +static DEFINE_KFIFO(cxl_prot_err_fifo, struct cxl_prot_err_work_data,
-> +		    CXL_ERROR_SOURCES_MAX);
-> +static DEFINE_SPINLOCK(cxl_prot_err_fifo_lock);
-> +struct work_struct *cxl_prot_err_work;
-> +#endif
-> +
->  void pci_no_aer(void)
->  {
->  	pcie_aer_disable = 1;
-> @@ -1004,45 +1012,17 @@ static bool is_internal_error(struct aer_err_info *info)
->  	return info->status & PCI_ERR_UNC_INTN;
->  }
->  
-> -static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
-> +static bool is_cxl_error(struct pci_dev *pdev, struct aer_err_info *info)
->  {
-> -	struct aer_err_info *info = (struct aer_err_info *)data;
-> -	const struct pci_error_handlers *err_handler;
-> +	if (!info || !info->is_cxl)
-> +		return false;
->  
-> -	if (!is_cxl_mem_dev(dev) || !cxl_error_is_native(dev))
-> -		return 0;
-> +	/* Only CXL Endpoints are currently supported */
-> +	if ((pci_pcie_type(pdev) != PCI_EXP_TYPE_ENDPOINT) &&
-> +	    (pci_pcie_type(pdev) != PCI_EXP_TYPE_RC_EC))
-> +		return false;
->  
-> -	/* Protect dev->driver */
-> -	device_lock(&dev->dev);
-> -
-> -	err_handler = dev->driver ? dev->driver->err_handler : NULL;
-> -	if (!err_handler)
-> -		goto out;
-> -
-> -	if (info->severity == AER_CORRECTABLE) {
-> -		if (err_handler->cor_error_detected)
-> -			err_handler->cor_error_detected(dev);
-> -	} else if (err_handler->error_detected) {
-> -		if (info->severity == AER_NONFATAL)
-> -			err_handler->error_detected(dev, pci_channel_io_normal);
-> -		else if (info->severity == AER_FATAL)
-> -			err_handler->error_detected(dev, pci_channel_io_frozen);
-> -	}
-> -out:
-> -	device_unlock(&dev->dev);
-> -	return 0;
-> -}
-> -
-> -static void cxl_rch_handle_error(struct pci_dev *dev, struct aer_err_info *info)
-> -{
-> -	/*
-> -	 * Internal errors of an RCEC indicate an AER error in an
-> -	 * RCH's downstream port. Check and handle them in the CXL.mem
-> -	 * device driver.
-> -	 */
-> -	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC &&
-> -	    is_internal_error(info))
-> -		pcie_walk_rcec(dev, cxl_rch_handle_error_iter, info);
-> +	return is_internal_error(info);
->  }
->  
->  static int handles_cxl_error_iter(struct pci_dev *dev, void *data)
-> @@ -1056,13 +1036,17 @@ static int handles_cxl_error_iter(struct pci_dev *dev, void *data)
->  	return *handles_cxl;
->  }
->  
-> -static bool handles_cxl_errors(struct pci_dev *rcec)
-> +static bool handles_cxl_errors(struct pci_dev *dev)
->  {
->  	bool handles_cxl = false;
->  
-> -	if (pci_pcie_type(rcec) == PCI_EXP_TYPE_RC_EC &&
-> -	    pcie_aer_is_native(rcec))
-> -		pcie_walk_rcec(rcec, handles_cxl_error_iter, &handles_cxl);
-> +	if (!pcie_aer_is_native(dev))
-> +		return false;
-> +
-> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)
-> +		pcie_walk_rcec(dev, handles_cxl_error_iter, &handles_cxl);
-> +	else
-> +		handles_cxl = pcie_is_cxl(dev);
->  
->  	return handles_cxl;
->  }
-> @@ -1076,10 +1060,46 @@ static void cxl_rch_enable_rcec(struct pci_dev *rcec)
->  	pci_info(rcec, "CXL: Internal errors unmasked");
->  }
->  
-> +static int cxl_create_prot_error_info(struct pci_dev *pdev,
-> +				      struct aer_err_info *aer_err_info,
-> +				      struct cxl_prot_error_info *cxl_err_info)
-> +{
-> +	cxl_err_info->severity = aer_err_info->severity;
-> +
-> +	cxl_err_info->function = PCI_FUNC(pdev->devfn);
-> +	cxl_err_info->device = PCI_SLOT(pdev->devfn);
-> +	cxl_err_info->bus = pdev->bus->number;
-> +	cxl_err_info->segment = pci_domain_nr(pdev->bus);
-> +
-> +	return 0;
-> +}
-> +
-> +static void forward_cxl_error(struct pci_dev *pdev, struct aer_err_info *aer_err_info)
-> +{
-> +	struct cxl_prot_err_work_data wd;
-> +	struct cxl_prot_error_info *cxl_err_info = &wd.err_info;
-> +
-> +	cxl_create_prot_error_info(pdev, aer_err_info, cxl_err_info);
-> +
-> +	if (!kfifo_put(&cxl_prot_err_fifo, wd)) {
-> +		dev_err_ratelimited(&pdev->dev, "CXL kfifo overflow\n");
-> +		return;
-> +	}
-> +
-> +	schedule_work(cxl_prot_err_work);
-> +}
-> +
->  #else
->  static inline void cxl_rch_enable_rcec(struct pci_dev *dev) { }
->  static inline void cxl_rch_handle_error(struct pci_dev *dev,
->  					struct aer_err_info *info) { }
-> +static inline void forward_cxl_error(struct pci_dev *dev,
-> +				    struct aer_err_info *info) { }
-> +static inline bool handles_cxl_errors(struct pci_dev *dev)
-> +{
-> +	return false;
-> +}
-> +static bool is_cxl_error(struct pci_dev *pdev, struct aer_err_info *info) { return 0; };
->  #endif
->  
->  /**
-> @@ -1117,8 +1137,11 @@ static void pci_aer_handle_error(struct pci_dev *dev, struct aer_err_info *info)
->  
->  static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
->  {
-> -	cxl_rch_handle_error(dev, info);
-> -	pci_aer_handle_error(dev, info);
-> +	if (is_cxl_error(dev, info))
-> +		forward_cxl_error(dev, info);
-> +	else
-> +		pci_aer_handle_error(dev, info);
-> +
->  	pci_dev_put(dev);
->  }
->  
-> @@ -1582,6 +1605,31 @@ static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
->  	return rc ? PCI_ERS_RESULT_DISCONNECT : PCI_ERS_RESULT_RECOVERED;
->  }
->  
-> +#if defined(CONFIG_PCIEAER_CXL)
-> +
-> +int cxl_register_prot_err_work(struct work_struct *work)
-> +{
-> +	guard(spinlock)(&cxl_prot_err_fifo_lock);
-> +	cxl_prot_err_work = work;
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_register_prot_err_work, "CXL");
-> +
-> +int cxl_unregister_prot_err_work(void)
-> +{
-> +	guard(spinlock)(&cxl_prot_err_fifo_lock);
-> +	cxl_prot_err_work = NULL;
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_unregister_prot_err_work, "CXL");
-> +
-> +int cxl_prot_err_kfifo_get(struct cxl_prot_err_work_data *wd)
-> +{
-> +	return kfifo_get(&cxl_prot_err_fifo, wd);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_prot_err_kfifo_get, "CXL");
-> +#endif
-> +
->  static struct pcie_port_service_driver aerdriver = {
->  	.name		= "aer",
->  	.port_type	= PCIE_ANY_PORT,
-> diff --git a/include/linux/aer.h b/include/linux/aer.h
-> index 02940be66324..550407240ab5 100644
-> --- a/include/linux/aer.h
-> +++ b/include/linux/aer.h
-> @@ -10,6 +10,7 @@
->  
->  #include <linux/errno.h>
->  #include <linux/types.h>
-> +#include <linux/workqueue_types.h>
->  
->  #define AER_NONFATAL			0
->  #define AER_FATAL			1
-> @@ -53,6 +54,27 @@ struct aer_capability_regs {
->  	u16 uncor_err_source;
->  };
->  
-> +/**
-> + * struct cxl_prot_err_info - Error information used in CXL error handling
-> + * @severity: AER severity
-> + * @function: Device's PCI function
-> + * @device: Device's PCI device
-> + * @bus: Device's PCI bus
-> + * @segment: Device's PCI segment
-> + */
-> +struct cxl_prot_error_info {
-> +	int severity;
-> +
-> +	u8 function;
-> +	u8 device;
-> +	u8 bus;
-> +	u16 segment;
-> +};
-> +
-> +struct cxl_prot_err_work_data {
-> +	struct cxl_prot_error_info err_info;
-> +};
-> +
->  #if defined(CONFIG_PCIEAER)
->  int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
->  int pcie_aer_is_native(struct pci_dev *dev);
-> @@ -64,6 +86,20 @@ static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
->  static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
->  #endif
->  
-> +#if defined(CONFIG_PCIEAER_CXL)
-> +int cxl_register_prot_err_work(struct work_struct *work);
-> +int cxl_unregister_prot_err_work(void);
-> +int cxl_prot_err_kfifo_get(struct cxl_prot_err_work_data *wd);
-> +#else
-> +static inline int
-> +cxl_register_prot_err_work(struct work_struct *work)
-> +{
-> +	return 0;
-> +}
-> +static inline int cxl_unregister_prot_err_work(void) { return 0; }
-> +static inline int cxl_prot_err_kfifo_get(struct cxl_prot_err_work_data *wd) { return 0; }
-> +#endif
-> +
->  void pci_print_aer(struct pci_dev *dev, int aer_severity,
->  		    struct aer_capability_regs *aer);
->  int cper_severity_to_aer(int cper_severity);
-
+> Thanks,
+> Anisa
+> > Jonathan
+> > > 
+> > > Jonathan
+> > > 
+> > > 
+> > > 
+snip
+> > > > Anisa Su (10):
+> > > >   cxl-mailbox-utils: Move opcodes enum to new header file
+> > > >   cxl-mailbox-utils: 0x5600 - FMAPI Get DCD Info
+> > > >   cxl/type3: Add dsmas_flags to CXLDCRegion struct
+> > > >   cxl-mailbox-utils: 0x5601 - FMAPI Get Host Region Config
+> > > >   cxl_events.h: Move definition for dynamic_capacity_uuid and enum for
+> > > >     DC event types
+> > > >   hw/cxl_type3: Add DC Region bitmap lock
+> > > >   cxl-mailbox-utils: 0x5602 - FMAPI Set DC Region Config
+> > > >   cxl-mailbox-utils: 0x5603 - FMAPI Get DC Region Extent Lists
+> > > >   cxl-mailbox-utils: 0x5604 - FMAPI Initiate DC Add
+> > > >   cxl-mailbox-utils: 0x5605 - FMAPI Initiate DC Release
+> > > > 
+> > > >  hw/cxl/cxl-mailbox-utils.c   | 649 +++++++++++++++++++++++++++++++----
+> > > >  hw/cxl/i2c_mctp_cxl.c        |   6 +-
+> > > >  hw/mem/cxl_type3.c           |  41 ++-
+> > > >  include/hw/cxl/cxl_device.h  |  24 ++
+> > > >  include/hw/cxl/cxl_events.h  |  15 +
+> > > >  include/hw/cxl/cxl_mailbox.h |   6 +
+> > > >  include/hw/cxl/cxl_opcodes.h |  72 ++++
+> > > >  7 files changed, 724 insertions(+), 89 deletions(-)
+> > > >  create mode 100644 include/hw/cxl/cxl_opcodes.h
+> > > >   
+> > > 
+> > > 
+> > 
