@@ -1,169 +1,211 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119321F130A
-	for <linux-cxl@vger.kernel.org>; Fri,  6 Jun 2025 18:41:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC3771A9B3D
+	for <linux-cxl@vger.kernel.org>; Fri,  6 Jun 2025 18:43:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749235282; cv=none; b=FdNI2adFwt9Oi1JcNXabK22TJ5Zp20Q1eHn1+7QMyyhDapE1AJcpJt2q+U1ipEPt56fWWxt99kOYfKPoRX3exi/wpFBRhN0mYrAsoA8LYGWKRXznMQcPmz6KOBoQWfYWGbqgAgNgqaMFSku8BoYu2gwtateqXm3DdgKcQt+U24w=
+	t=1749235436; cv=none; b=g6VDvOGZp2Gc/i0a8HAFgIFn6Fc5Ty1/nm/wd5UIQ2wzQ/Hxn5hCTuzpIh++74QTLoePuRfuSNlleMl0D5Sphqo7b/sRSrhBexL2IZ4CH93tBit4lFQCIvdO9d7rlHnNgurK6iF6bqjBPJqZmign4tElkHOUG7KLrGIvAgXj3Ss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749235282; c=relaxed/simple;
-	bh=VwcS2Z8io2o0cY3xmV6ZCIZl/itPdgGtnMt2d7h2C7I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E8lbjDYyoXL7fuNz5jFi+yRJxT3ep5PbwKE1O32CVojtuqmksHF8Ot50h5PbUU+8n8JfcX9bpvNDc6JMhVn6NyAaguwIGgT1v6YetI4UTvHlE4s4BcOamqU5IeSQYw2wv6ewDizrx3oggHsQG8qMZ5OcCYMI2dlm7g2FdXXCOQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fi+dJnM6; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749235436; c=relaxed/simple;
+	bh=iTdwQD+n8COZv/3weoVio2xEQJgs5fplpffYLrafzFM=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ttyWeGKFEVAuRPWNpdaXn7q0SClWapvkjBSkwf1D+rNyuSqsPNzLmzLRPt6Ul80NUU0I+fuRxNvcsIcjZicKcdVm5MAL4YyEE2DeQ7GAPRJG4lajHrt2vkWU/HRhTfzqFCgmFqmTSuasLh4NUaOHt5jWwfbdZx1+M+/kPshlqdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X0TFy3wv; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fi+dJnM6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749235280;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=tkX4uYhgyu0xrtO7ADEiny3gzIp95LCIRO3lMgtzOQs=;
-	b=fi+dJnM65BHYHHGuC9+JO4bDPeZq3KetkZ+hjVd7GqFD6+aqaUHTpLZPX6Dj1I6dsMmBdg
-	qsmXTwLLM5yO9OItBPtU70YBj/c44lqFsD3ej1uD/nJPqNClcV33srRN7hlJ86lYAudRYH
-	efsByrir/i20EAuegyk85ABRFojNojo=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-447-9cZy5gxSOj-1oe7347uRjw-1; Fri, 06 Jun 2025 14:41:18 -0400
-X-MC-Unique: 9cZy5gxSOj-1oe7347uRjw-1
-X-Mimecast-MFC-AGG-ID: 9cZy5gxSOj-1oe7347uRjw_1749235278
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4f858bc5eso1847855f8f.0
-        for <linux-cxl@vger.kernel.org>; Fri, 06 Jun 2025 11:41:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X0TFy3wv"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22d95f0dda4so31325355ad.2
+        for <linux-cxl@vger.kernel.org>; Fri, 06 Jun 2025 11:43:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749235434; x=1749840234; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Mhv/7vS6onvDQS4kU+erZtxBqbLvtfmSsjoBZc0m6TY=;
+        b=X0TFy3wvsnyL5vNVGYbOzOrxaWsn/roBBksq3OuSEXoMRBrwQtMvCgFt8jtVmHhnoj
+         ElWAjfZwcWRkIs8gGfYhCOh+eQ5eZU7+iLmaQLDlSyIV2Qn2AIBpkXjkKnlEiH1wuZXA
+         DGJRvB68vvN6R8aw2/UMGjS9+yuhRTuZpY3h8bdEB5T13iIMUB+vgRsTle4hu0ikdSuc
+         fgGiZxjPyzr1sswodQc5u/fEnup9BB3PIUgktPGiKinZ/F6NuF0xx10e+fBX9o/5FBF1
+         M2mxmDVZ1bgYPAFk1qoNi38Rjx3MhmB7oT9Y4HehAsHf7bpGXevQTp0PO5gHlNs1m9bp
+         sVSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749235277; x=1749840077;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=tkX4uYhgyu0xrtO7ADEiny3gzIp95LCIRO3lMgtzOQs=;
-        b=aCEEBSFIJVEO5t/61FhIpc1nTQYfc8tBrUgC9L4sf9F9ef57bJaxnKax21TYeJaac0
-         a1zYC7vOWCU7XZBdjVv/exOfJJi4nVGGeJmt1kS7L78esOQ0AtAhzyWYJB1CdQssgnR5
-         nwNaD/AG+tqvoLT3kTKj0x3s0zgj3rrz/PhRkXFQv33IzPi0gXrkNgU/dhnEcU3InayN
-         0EI7Ro6V42925U/RbQkim/7XBB+YQBDwI28cVwNokmpCI4TOKBqnbDmmN6q3sBztoCB8
-         bLtcgIY1HhFFYURFXInRsWCnIrS4k0F7OTXt34DckJMLs98K2yB+dFQOXkwQRLt5kdqh
-         Vz2w==
-X-Forwarded-Encrypted: i=1; AJvYcCVeMgT3epwY/Wbzu9qvVsELKiKbS+ut+g/g2EMS+htnTY85bMb7a4t6NlU9Iu7pXEm80ccUpM8TTAc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxS+4Gpfp+Yxn1moh+FuFew9NgYIQ3PuzF28wMHmFjG/nFiO3kT
-	0Q34bGN8JPOfyrLNbHNdoNktOuc+NeI3Jz0PU/PsenCMKzPHArQr9cEkjo8HNCdZ+GPgd+Fzxn8
-	qaGgKaCTU3ZRoWhAlsx9Fds6WAWDMVP/xAZct5GrHDbAuqu8T9arrOqEn4jE1Fw==
-X-Gm-Gg: ASbGncsFi6x6XwJhRLrbOrXUZ0mCVBMBjMFgCdjNXfCDfWQfJCz6dHDBTfYst6F3V2D
-	W/ulzJ4qsA6YUTpdcvWHP0ia38+kPhGCol6uyoKYvdRkj8/ia4dFUMH1Ey/WAInhkIwvj69Ocr/
-	AoxebIZ8jeZ6RR3H5/RdE1fng7Nl5OBdM9NbNjuaX57y6xrqwpVgOU+pUvK1J7aStoDRj3OD56q
-	ZscHZnItsYDZxu03uX1Ajf24sI0avmPN6EYh+P5FtZkChVNzhpeyASUP6NEvwYYwrF3K/wpfDwb
-	zGgrUfAcS7NSLSEEHtRbrXnTvCcG0a9SxilJzw/nTWSivXrwRtknyZzOW5km7Dvsk2Ss0iGGlVg
-	QXzekPmSpTVGENsYMn8/2AU0dIXt8uS4=
-X-Received: by 2002:a05:6000:2382:b0:3a5:300d:ead0 with SMTP id ffacd0b85a97d-3a531cdd5a0mr3790783f8f.43.1749235277483;
-        Fri, 06 Jun 2025 11:41:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IECTH6YhYvW6ZH1CMtqGX1UnVUl20ogDcBS5RnIYh0ZPNAA1XAMq5p/2Szxsq9CZSwnHVZ/TQ==
-X-Received: by 2002:a05:6000:2382:b0:3a5:300d:ead0 with SMTP id ffacd0b85a97d-3a531cdd5a0mr3790768f8f.43.1749235277116;
-        Fri, 06 Jun 2025 11:41:17 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f19:9c00:568:7df7:e1:293d? (p200300d82f199c0005687df700e1293d.dip0.t-ipconnect.de. [2003:d8:2f19:9c00:568:7df7:e1:293d])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a532468360sm2571480f8f.100.2025.06.06.11.41.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Jun 2025 11:41:16 -0700 (PDT)
-Message-ID: <965a6d13-e97b-450f-9d4c-d53cf08f9315@redhat.com>
-Date: Fri, 6 Jun 2025 20:41:15 +0200
+        d=1e100.net; s=20230601; t=1749235434; x=1749840234;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Mhv/7vS6onvDQS4kU+erZtxBqbLvtfmSsjoBZc0m6TY=;
+        b=ul4OPbmiedSN3CwJvekdm1DGtPiE+9PwW5vDsg6/7h81R6ye4x8fQkVpr4f6orR3oj
+         qjiOu/URL/uKjeNkqK/QYA2BIc4U+De/ce7a/QtiWiz9g+p0+uyCeae0qpV8ClpoQiEU
+         zyz+4kXvTTTIgLZOxWAoGgnaCgnyRSPOK3lqC/SDyOu7ti4aVEGwDn/IqYie0ylubq5o
+         0DZi94KsZVYw0V4EOHX6cPsT/2twxrRa9B8fYF1SgKKWE75E2AhwqmEhM9ZMel408CZi
+         uidRo6HDKW9+TGmTMobVB13sshdYHGbBFnBvDnM8TFI80nSiWAGzb8tAK+GIs+xsLS4I
+         2yFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXv6fLhX6Ll9iA16eqd3TAXp6WUAbTQPoJ5dh737x11F3nmHitt8epvVB+gLuoixC5znzJ/y4VYquw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0IW2rH7kUnyUEbXZENMocr9lF35y4qdfADRYw3Y6b5MH9oodN
+	L7AwEfW7EgxIJlkcQJxXOoWmN9VaMFH8WoNZaGjIoH98J6vNFDEEOUQJ
+X-Gm-Gg: ASbGnctulk/tIyZ7oMIi9zIGFToTr+DpTAiAMtRWwR7Wb4nrFRFAJdWO+en736fRG8W
+	0r9lne3CCybM+fWnjR/J6aSvdTflnCqoj92ytVb2rTDYckWuvthWMSiBh0hZ4SHMYq07yM1DFfw
+	eeeR9CKYNkb+mfpTObJE94QtqFJOBFrZH4b/v0stGXSYqXxpSij4loiUcPdPs5N8F2YnaI8GwFa
+	Pfb0Uqf6/KCH0Fs765xAF3fk+Si/Q+yONbrQobsrSznK+BaMsnsXqY6pbHkJRw9VCnRc6kVIKSx
+	ws36xxgjTyGp4CQRavZaQ7cr9YUU8TIk8B2fREJHUPt15g==
+X-Google-Smtp-Source: AGHT+IHIN9GBxzwrNzoZfcy0V1hXqGtfx43t6qLxVC2WhfNFmXSFsrzjCVgmUj8VZLBUHn0L75ParQ==
+X-Received: by 2002:a17:902:f54f:b0:234:8ec1:4ad3 with SMTP id d9443c01a7336-23601d71b8bmr68810945ad.40.1749235434045;
+        Fri, 06 Jun 2025 11:43:54 -0700 (PDT)
+Received: from debian ([2601:646:8f03:9fee:5e33:e006:dcd5:852d])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2f5ef88914sm1487793a12.33.2025.06.06.11.43.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Jun 2025 11:43:53 -0700 (PDT)
+From: Fan Ni <nifan.cxl@gmail.com>
+X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
+Date: Fri, 6 Jun 2025 11:43:51 -0700
+To: anisa.su887@gmail.com
+Cc: qemu-devel@nongnu.org, Jonathan.Cameron@huawei.com, nifan.cxl@gmail.com,
+	dave@stgolabs.net, linux-cxl@vger.kernel.org,
+	Anisa Su <anisa.su@samsung.com>
+Subject: Re: [QEMU PATCH v3 9/9] cxl-mailbox-utils: 0x5605 - FMAPI Initiate
+ DC Release
+Message-ID: <aEM25yCeErixfi0l@debian>
+References: <20250605234227.970187-1-anisa.su887@gmail.com>
+ <20250605234227.970187-10-anisa.su887@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] mm/huge_memory: don't mark refcounted pages
- special in vmf_insert_folio_pmd()
-To: Oscar Salvador <osalvador@suse.de>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, nvdimm@lists.linux.dev,
- linux-cxl@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Alistair Popple <apopple@nvidia.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
- Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
- Dev Jain <dev.jain@arm.com>, Dan Williams <dan.j.williams@intel.com>
-References: <20250603211634.2925015-1-david@redhat.com>
- <20250603211634.2925015-2-david@redhat.com>
- <aEKkvdSAplmukcXz@localhost.localdomain>
- <b6a1b97b-39d9-4c9e-ba95-190684fc4074@redhat.com>
- <aEKmOfWDIy14Ub6n@localhost.localdomain>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <aEKmOfWDIy14Ub6n@localhost.localdomain>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 3J2A_S2-64S4-Eg082Yb3SUG0EHlfP6PYKxcIivHPxk_1749235278
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250605234227.970187-10-anisa.su887@gmail.com>
 
-On 06.06.25 10:26, Oscar Salvador wrote:
-> On Fri, Jun 06, 2025 at 10:23:11AM +0200, David Hildenbrand wrote:
->> See my reply to Dan.
->>
->> Yet another boolean, yuck. Passing the folio and the pfn, yuck.
->>
->> (I have a strong opinion here ;) )
+On Thu, Jun 05, 2025 at 11:42:23PM +0000, anisa.su887@gmail.com wrote:
+> From: Anisa Su <anisa.su@samsung.com>
 > 
-> ok, I see it was already considered. No more questions then ;-)
+> FM DCD Managment command 0x5605 implemented per CXL r3.2 Spec Section 7.6.7.6.6
+> 
+> Signed-off-by: Anisa Su <anisa.su@samsung.com>
 
-Okay, change of plans, let me try to unify both functions in a clean way :)
+See below ..
 
-I'll only have to find a clean way to make the other stuff I have 
-planned with these functions work ...
+> ---
+>  hw/cxl/cxl-mailbox-utils.c | 62 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 62 insertions(+)
+> 
+> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> index 7ee5be00bc..6c57e0deac 100644
+> --- a/hw/cxl/cxl-mailbox-utils.c
+> +++ b/hw/cxl/cxl-mailbox-utils.c
+> @@ -124,6 +124,7 @@ enum {
+>          #define SET_DC_REGION_CONFIG        0x2
+>          #define GET_DC_REGION_EXTENT_LIST   0x3
+>          #define INITIATE_DC_ADD             0x4
+> +        #define INITIATE_DC_RELEASE         0x5
+>  };
+>  
+>  /* CCI Message Format CXL r3.1 Figure 7-19 */
+> @@ -3685,6 +3686,60 @@ static CXLRetCode cmd_fm_initiate_dc_add(const struct cxl_cmd *cmd,
+>      return CXL_MBOX_SUCCESS;
+>  }
+>  
+> +#define CXL_EXTENT_REMOVAL_POLICY_MASK 0x7
+> +/* CXL r3.2 Section 7.6.7.6.6 Initiate Dynamic Capacity Release (Opcode 5605h) */
+> +static CXLRetCode cmd_fm_initiate_dc_release(const struct cxl_cmd *cmd,
+> +                                             uint8_t *payload_in,
+> +                                             size_t len_in,
+> +                                             uint8_t *payload_out,
+> +                                             size_t *len_out,
+> +                                             CXLCCI *cci)
+> +{
+> +    struct {
+> +        uint16_t host_id;
+> +        uint8_t flags;
+> +        uint8_t reg_num;
+> +        uint64_t length;
+> +        uint8_t tag[0x10];
+> +        uint32_t ext_count;
+> +        CXLDCExtentRaw extents[];
+> +    } QEMU_PACKED *in = (void *)payload_in;
+> +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
+> +    CXLUpdateDCExtentListInPl *list;
+> +    CXLDCExtentList updated_list;
+> +    uint32_t updated_list_size;
+> +    int rc;
+> +
+> +    switch (in->flags & CXL_EXTENT_REMOVAL_POLICY_MASK) {
+> +    case CXL_EXTENT_REMOVAL_POLICY_PRESCRIPTIVE:
+> +        list = calloc(1, (sizeof(*list) +
+> +                          in->ext_count * sizeof(*list->updated_entries)));
 
--- 
-Cheers,
+Use g_malloc() and free with g_free();
 
-David / dhildenb
+> +        convert_raw_extents(in->extents, list, in->ext_count);
+> +        rc = cxl_detect_malformed_extent_list(ct3d, list);
+> +        if (rc) {
+> +            return rc;
+> +        }
+> +        rc = cxl_dc_extent_release_dry_run(ct3d,
+> +                                           list,
+> +                                           &updated_list,
+> +                                           &updated_list_size);
 
+This seems not right.
+this is only fm issue dc release request, not host release dc extents to device.
+So we should follow what we did in the qmp_cxl_process_dynamic_capacity_prescriptive()
+for release case.
+
+One thing that I can see that making the workflow is different is that, we check
+the extent list with the pending list to make sure fm is not trying to remove
+non-accepted extents, but the host release extent workflow does not need to do
+that as it is filtered out in the first place when fm sends the request if it is
+from FM.
+I have to admit, existing qmp interface can be improved to remove some condition
+checks as they are kind of duplicate.
+For example, if an extent is still pending, it will not be set in the bitmap, so
+we can still tigger the error if it happens by removing the pending list check.
+One justification is that the error message is different for a non-existing
+extent and a pending extent, which is useful for a dmp interface.
+
+
+Also, the case to detect exhausted resouces is not different, FM can request to
+release a lot of extents, but what the host actually does can be a subset or
+none.
+
+Fan
+
+> +        if (rc) {
+> +            return rc;
+> +        }
+> +        cxl_mbox_create_dc_event_records_for_extents(ct3d,
+> +                                                     DC_EVENT_RELEASE_CAPACITY,
+> +                                                     in->extents,
+> +                                                     in->ext_count);
+> +        return CXL_MBOX_SUCCESS;
+> +    default:
+> +        qemu_log_mask(LOG_UNIMP,
+> +            "CXL extent selection policy not supported.\n");
+> +        return CXL_MBOX_INVALID_INPUT;
+> +    }
+> +
+> +    return CXL_MBOX_SUCCESS;
+> +}
+> +
+>  static const struct cxl_cmd cxl_cmd_set[256][256] = {
+>      [INFOSTAT][BACKGROUND_OPERATION_ABORT] = { "BACKGROUND_OPERATION_ABORT",
+>          cmd_infostat_bg_op_abort, 0, 0 },
+> @@ -3819,6 +3874,13 @@ static const struct cxl_cmd cxl_cmd_set_fm_dcd[256][256] = {
+>          CXL_MBOX_CONFIG_CHANGE_CXL_RESET |
+>          CXL_MBOX_IMMEDIATE_CONFIG_CHANGE |
+>          CXL_MBOX_IMMEDIATE_DATA_CHANGE) },
+> +    [FMAPI_DCD_MGMT][INITIATE_DC_RELEASE] = { "INIT_DC_RELEASE",
+> +        cmd_fm_initiate_dc_release, ~0,
+> +        (CXL_MBOX_CONFIG_CHANGE_COLD_RESET |
+> +         CXL_MBOX_CONFIG_CHANGE_CONV_RESET |
+> +         CXL_MBOX_CONFIG_CHANGE_CXL_RESET |
+> +         CXL_MBOX_IMMEDIATE_CONFIG_CHANGE |
+> +         CXL_MBOX_IMMEDIATE_DATA_CHANGE) },
+>  };
+>  
+>  /*
+> -- 
+> 2.47.2
+> 
