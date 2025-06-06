@@ -1,288 +1,463 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2044.outbound.protection.outlook.com [40.107.237.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A0528A702
-	for <linux-cxl@vger.kernel.org>; Fri,  6 Jun 2025 17:30:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749231056; cv=none; b=CEvrga4DcZuli6IrVEG94dj4/NyIIN4wncuk/8IKmGwXKAFiRYVQQFvBQ15BjOaUETVCPhRreunxTwrjBwO59cu76SHCcvj0Yf0TZrUa80Lnu9BMtrO5dC2VxN+lGcZvA5XOGb9a745sIlz1oDiqCUsCa1vy1XZRyzacO3P49vg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749231056; c=relaxed/simple;
-	bh=AeTjaRTFQDRB9uyO58eofZZb0BCGQATpJTDqmIkIiUY=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OrtWj/8i4IrB0ypvGrx8nP8IxXVikulWEDBYF92g/pa3dGM1Lhv7UFbecFghwqrsZVDvrLK9f8s1AkjgqBbCLDx9fGbrDj50P5mb5AWP5IfM6N1OLpVRVj0fxWtWs7IKExso+eRXNyC2+rz8ch7044w9QAry+u8RCRe2RM4xH/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cEQRQ+ws; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7331E1E04;
+	Fri,  6 Jun 2025 17:53:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749232412; cv=fail; b=GB4CXNAzY52vlG4+yM8NF/GBCCUQ6Zg/BcypzeAhcB8CbPnH9PkIY025EBBIyGd/h90wdhLAurLt1zqYKSkYHr0hEBdRH+fd//q8tO1i2vNmuj6qMmEAIH5lQI7yZIHVCizqRB6s+65NrI1/r2k37KonVVIi4g+BCjeWvTMxnlw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749232412; c=relaxed/simple;
+	bh=taHXxjpPrnxj6HP/DTMXUqcUll124lXB7IhycCTNM9E=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=P/zuq6HQaqEey6xj7SX/NG6uoXZA0lxDkhQGwK/9CBob1HSExbWQS9z/WXO11Wtc5ss/oopIaJcvpFG6VkzVfDT/qsPWo4UxA+ATvfLPU+OpUlYOVa5vUYa482K9b+08hBPWsY+c8ynzaM7vfwfMXX5s+wIO0+eX1se56aog2Rc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ULHoPa45; arc=fail smtp.client-ip=40.107.237.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cEQRQ+ws"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-31332cff2d5so1709116a91.1
-        for <linux-cxl@vger.kernel.org>; Fri, 06 Jun 2025 10:30:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749231054; x=1749835854; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CxdNKgrqZ4mlo4Y16FRnlcHMC/6R6WSdYbc8k3t07Ig=;
-        b=cEQRQ+wsuApFyrX+Z5SetsgmRvSd/wW7l6jbDFpz3UZrqveBJ0nqCNyaclfTrddxwN
-         rH88KvhFZTDNWrRBvP4L91nUJ5RGKUjGPJYbDP3VG1vGQbMEVhn7Q4Zf5d+xZOzL8/P1
-         1gJN+6HwKbc1WxSewjstJfYiuapGCizANm+QGhTKk4hdB90dj22W2nYLQ8bTIc20uKDw
-         7MXYjPb1hZB+AgZybSdYtBZd69wejANsxwBGJPtJc1ahBvRM2HJVr6JcUf4psXOTCxTx
-         T2XPnDQEuGleuiUqrw51VzS1W8aDP6rQjiodtyYXqfkKGJ8j1VUyhWSMddZTEynWFTZx
-         yxZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749231054; x=1749835854;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CxdNKgrqZ4mlo4Y16FRnlcHMC/6R6WSdYbc8k3t07Ig=;
-        b=eUD0s6jDWLyte7QciUfXu+4/sK2FOXmn2Ra3aMVaaYnkOKHCyskt/ZaFLxHfUFgiBp
-         2SkqIQsSeV7SutC+wLvou1nPI6A9wbNJ+7UyGlHZ7idU/0Pd6yIOK5916WPyWjH5hrTl
-         vS+k4plVRaEr1R8zuxYY/JjscxwiBI0dRI3BtvdFCIr7cWINidq8oT4EcRTDeSx6zcBP
-         JkJxrRsfNh1JxInT1FXczzmrgY4HnO1FxucH69EUzXqYwZVRCHAzFLXR4ehlDK81Jtnk
-         kHFe/+piQJWGvBJRaGS+hB4D5yetvgO34Cf7BNabn7vfbJIeBr2BGgVuPFmcEsYUgcfT
-         o13A==
-X-Forwarded-Encrypted: i=1; AJvYcCWgGzvarkpNQzQh7t9BW+6sTEPfvi6eLv4Rvp48Tb06Jqro56TWMbD+8+792L4in7tTogB5go/EkZ0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxzza0uG9uCDN5GQ+DZzrNT2jdNjRL6Zu5c4a/PRDL+odXUDLip
-	+BtzMJ2RjuXTSapOAzaa2+mHPF0Hy8rkf/S0S8ODk5WuYk7lCSg2o/3T1ogc7Q==
-X-Gm-Gg: ASbGncsci8uNmZIvabA6aZ2mOoEavpPbYWF5OAIJ6HleDxawJy9SaPv72dPcdnNqZ/t
-	2sWXjYXWqx5MxZaFFGz1OiYc76su3BVO1E0HvNo/ulUOJIMGZ54/OcfvjJh1jIFpOtbjSjAwKqs
-	BWbaQ8OR776qSklRVHcQVXJzaQ99nMacfV0lQQXa3swTq5fQ2oCNg6UkBapNfyWfW6+ZzkIPlPM
-	f1YKfVsYb63/7Wev40RG/3DxAAv7wLYLwt/wWqwcxffAm+lNeD1Q8He2BDFE2puZBYmIQwfYMrZ
-	0NosQZAv+v3e2r1HRGZiqPxae9pT2rR5zlNSQ0S+45MdGjk4vzy2yEpJBSX45RBpG1KVTiO+I/f
-	Jig==
-X-Google-Smtp-Source: AGHT+IFOzMA5Cqnh+K6VMneGojR2gXXdnew3bx5tBfjGhADyY6uKkwBXeWQzURg0+3lzGnsa85lbJA==
-X-Received: by 2002:a17:90b:4990:b0:2fa:157e:c790 with SMTP id 98e67ed59e1d1-31346b0411emr5629239a91.5.1749231053576;
-        Fri, 06 Jun 2025 10:30:53 -0700 (PDT)
-Received: from deb-101020-bm01.eng.stellus.in ([149.97.161.244])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31349fdfe58sm1562497a91.38.2025.06.06.10.30.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 10:30:53 -0700 (PDT)
-From: Anisa Su <anisa.su887@gmail.com>
-X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
-Date: Fri, 6 Jun 2025 17:30:51 +0000
-To: ALOK TIWARI <alok.a.tiwari@oracle.com>
-Cc: anisa.su887@gmail.com, qemu-devel@nongnu.org,
-	Jonathan.Cameron@huawei.com, nifan.cxl@gmail.com, dave@stgolabs.net,
-	linux-cxl@vger.kernel.org
-Subject: Re: [QEMU PATCH v3 8/9] cxl-mailbox-utils: 0x5604 - FMAPI Initiate
- DC Add
-Message-ID: <aEMly5F8kdziHWzO@deb-101020-bm01.eng.stellus.in>
-References: <20250605234227.970187-1-anisa.su887@gmail.com>
- <20250605234227.970187-9-anisa.su887@gmail.com>
- <09aea84f-8c3f-4321-879d-35c8956b3573@oracle.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ULHoPa45"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YH2UBhEPmcZEujBmIvcqq1BS2lBLxM/92Z78xAQngGjh6TLxiVG0UxdQ2pKi2Q+CnnustMt4DlJ7gO5I4c6rsy9xl0Ld7qvtPdi/+JeJTwny3MUAbmetBFninzDi41vX2zYDhN0OgAkFLVrwXE+SNIqud9zwfWvv+twMsMRkIi+qpmleWQmPyIEmQF6aTFBbAzoc64gt/PHUQFWdt0I7tuVDuLNPEzjDUB3UF+wms6K7c/ZiIkBc/cToe54BipG4WxBvGpkn+OYyatldvqVu1v+AoqD++Lf3hmTJOLufEc5auVBG1juPtxiXFdu0RFFSlUGrWtMMdXYP4EOrqzjzKw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xQjJLHeepOvbFeZt4T6ArMQ8+UJlF/ITImUijJAyedE=;
+ b=kRx/HsqcvjyMXfyh72LtYsfKBk1GjG930b646DjJyvNGojHvaPVn4PSRks/bhllwtBKjwTiVkh35liM7Do++EuTmgcLLuozrlBm1qxTi4LZeIOYsH4Zp7pKkFfbEEcUVG8mSQixhuyjkOuhPh4f1DOdfZSCVHC2+e3l0g3XLvRbKNmKvEKwKrovMmEgz77eEHnDca1sU65yHikNydafgX2SFnipeTaRuT1DL21i4GbFZI7+VIurG7lXtxpgC/1n7YHTB1on6Z4pEUYUw6HlMPHIDGP23OEYfxDUXT1tlLnFFsGBvjuIG2Fw3VYNmz8vn5UynmNQWIAA7TMTY+pGPvA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xQjJLHeepOvbFeZt4T6ArMQ8+UJlF/ITImUijJAyedE=;
+ b=ULHoPa45qtqjVI1K8XEsCa/SjQ4ikAZVFByKajwIzlPLTIjIt56Sc//VTHEz3ltVGTTAGvPxiHxq3UKvYFQGwrEsqErx5x9H9kAMvnS7ufUo0f9LugHBTIM0Jmd85MT3YfA6RULSpQDPfbwwy0G8WDojHqP/34hKFH6w5NEz0aw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MW4PR12MB7142.namprd12.prod.outlook.com (2603:10b6:303:220::6)
+ by SJ1PR12MB6338.namprd12.prod.outlook.com (2603:10b6:a03:455::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.35; Fri, 6 Jun
+ 2025 17:53:25 +0000
+Received: from MW4PR12MB7142.namprd12.prod.outlook.com
+ ([fe80::e5b2:cd7c:ba7d:4be3]) by MW4PR12MB7142.namprd12.prod.outlook.com
+ ([fe80::e5b2:cd7c:ba7d:4be3%3]) with mapi id 15.20.8792.038; Fri, 6 Jun 2025
+ 17:53:24 +0000
+Message-ID: <8e077620-b1aa-4c51-9f66-58a9739aeb75@amd.com>
+Date: Fri, 6 Jun 2025 10:53:22 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 5/7] cxl/region: Introduce SOFT RESERVED resource
+ removal on region teardown
+To: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>,
+ "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
+ "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+ "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, Matthew Wilcox
+ <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
+ Pavel Machek <pavel@kernel.org>, Li Ming <ming.li@zohomail.com>,
+ Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+ Ying Huang <huang.ying.caritas@gmail.com>,
+ "Xingtao Yao (Fujitsu)" <yaoxt.fnst@fujitsu.com>,
+ Peter Zijlstra <peterz@infradead.org>, Greg KH <gregkh@linuxfoundation.org>,
+ Nathan Fontenot <nathan.fontenot@amd.com>,
+ Terry Bowman <terry.bowman@amd.com>, Robert Richter <rrichter@amd.com>,
+ Benjamin Cheatham <benjamin.cheatham@amd.com>,
+ PradeepVineshReddy Kodamati <PradeepVineshReddy.Kodamati@amd.com>
+References: <20250603221949.53272-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20250603221949.53272-6-Smita.KoralahalliChannabasappa@amd.com>
+ <3e045950-9ffb-4a9b-9793-958a16db0c33@fujitsu.com>
+Content-Language: en-US
+From: "Koralahalli Channabasappa, Smita"
+ <Smita.KoralahalliChannabasappa@amd.com>
+In-Reply-To: <3e045950-9ffb-4a9b-9793-958a16db0c33@fujitsu.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR21CA0014.namprd21.prod.outlook.com
+ (2603:10b6:a03:114::24) To MW4PR12MB7142.namprd12.prod.outlook.com
+ (2603:10b6:303:220::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <09aea84f-8c3f-4321-879d-35c8956b3573@oracle.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW4PR12MB7142:EE_|SJ1PR12MB6338:EE_
+X-MS-Office365-Filtering-Correlation-Id: 169f02ce-2fda-4375-a6a4-08dda5230843
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dnZOcHVvZ085QXBiZjlWcG5OYnphbElwbGNUMzJkZlY0T3kyYVJHTnk5UXBm?=
+ =?utf-8?B?WHVUeW9zWXFMcGNNVmd4YTl1VEtwcyt3dFIrUW1Yb1JQNHpxQjJGa0ZJL1Zz?=
+ =?utf-8?B?bFo3WjJHWlBWcXlMaDhOdDJHUWVGTmxjRVlqZ25HMDZCOFpBYXh0bU9raXVn?=
+ =?utf-8?B?QWNQeU1hRTQvSk02UVZ3Q3ZWSS9vWldOMFZXVE9abVpNTjN5ZGdqc0pjR2ha?=
+ =?utf-8?B?ck83bEMvbnBBc2JpYzlxNlIrSkhndm1tcEdzOTA5QnEwQ1czeUg2clQrTzMr?=
+ =?utf-8?B?Y0dyelkvMGNqdHF2WVNvd0psV0Z4dFVHWjh6TS9IZDdRVVcxNERkWkk2Slhj?=
+ =?utf-8?B?MkZaTW0zYm5rUGZEQm05blZzcnRPNjRwWkVRRzg5S1ZXa2tjRXAxV3ZqdFBD?=
+ =?utf-8?B?OXRCZVhvM0psUmhKL0lCQlpmOXlXTVlvZFlRQ2k0R09rM042Y2x2d3NWV3Nv?=
+ =?utf-8?B?aXdBQ1A3dG55M1FuaEx2NlpkVUh4T0p2Skk4THlDWk40Z2tLU3BMZ3VvQ2Nr?=
+ =?utf-8?B?Mnl0Z2FDU01hOVFUdjltK1NsbTlTU2FadEJENFllQjlnQ2dtTnpYdHdWdmtD?=
+ =?utf-8?B?YVFleGZIY1gyNHRHdWJuZ051WlJUQitldFRYL09DZEFVNWxjOEFKME5KUTNG?=
+ =?utf-8?B?WWlrd21SZGxHbHdZVVh3SXZtNDA5WlF0NFExcFhtYlZUaHFNVmg1UlRQdkpN?=
+ =?utf-8?B?aytxNmwrVTREbVR1d0tKZ2xBdkQyK3lGbmNWUFQrenZ6cWpkUmN2cDNtd0dJ?=
+ =?utf-8?B?L1pydHMwWFZVQVFlclFGY3UzMExDcnN1VElXSlROUEk4NG9LRkJlN2ZJMVBB?=
+ =?utf-8?B?bmNMenJ4Tit3SlBzMnF6aGhNeXZoczRBM040SjlodmhkZWNoSmpQU1p2YW5V?=
+ =?utf-8?B?YklZNkc1VFV5bnpDbkFWcmQyNXlhWFNGeE1heHI3RjFzREZzZzFRQ01KRGpy?=
+ =?utf-8?B?dk5QUUxQeVNsU2QrUk16NmhqNGpML091SmFlNm40NGkxSVlhZ0RUd1pMbi9x?=
+ =?utf-8?B?NWlPUWlPYXUyVkdZaUlxUDdSZzZFYTJBR0NRSlBLUXU3bVdidXFRZDNTbnJF?=
+ =?utf-8?B?aWFaUlVoUDNuam1ZYlRYWVJEWks5bkVxTDVHVFBRMStCSGx2eUVlTFdKdTNa?=
+ =?utf-8?B?MzdLZUd0aFVEY1VBZi9qb3FscmorQndYUVQ3eWoraVl2L2NORDg5S2IxVTNz?=
+ =?utf-8?B?a1UvbWJwamoyNUNRV3hkWDN0UHp0cXNaVU5qUnFqRU94SVFoWWh5S1N2TGFu?=
+ =?utf-8?B?U0F3OUl2a0NsaGtnR3doVzB6M3M2MUZhcFB5eXp0TFpUMzNmblhLRGhKb3lw?=
+ =?utf-8?B?bW5mUG9HSHVSYkM2VE5BaGx5OUFaWVg2anR0alZOZVJidnZQRURsQXcrVXpQ?=
+ =?utf-8?B?cUxMQ3VQa0ppUHRpdHdWeEw2N0ZXRUhHNDNUNHRZRDRzaEwzRm53ZVhJUDd6?=
+ =?utf-8?B?YnpMY0l1M1hFQWJhKzh2bVh5ZVQ5QUd3K0M1Q1BRcENBOUhzOXpPVGRJSk1h?=
+ =?utf-8?B?Wml0VTdoV1hvdGFIR3Q0VHVrSlBkZDBicjA1Y3pESUg1SS8yTDBBSFlXVm5U?=
+ =?utf-8?B?eXpTVEVZWjB1Q2wrWGFXOWRaR1BPK2VTNy9IUXFtV3JhNHh1aXNBL2xCbVkv?=
+ =?utf-8?B?SE1jTk95M2tZcmhoZkp5c25XaXp3UDRqVzBQR2FhOGQ4TC8vVzNGQUhWUTVJ?=
+ =?utf-8?B?d0hwMnFmbmEyc1cxb01HckpMamZaUXk0T0NKWkVCQlp0dTFUVWZLRE5Za1lK?=
+ =?utf-8?B?dUpSY0UwMDBMQm9mb1pvYUZhYkRheVl2eWlHVU42VnF4Q2FkWWcvVTJGN3lE?=
+ =?utf-8?B?Y1BZZTEwaDNtUllZZWRLcVNlRFpZV1BNYU1LcDd4V01lNjdhM0xvRVpxemtj?=
+ =?utf-8?B?OWh4TExEZ21Wb0hDTEUxUEk0NFNaUUpBT3Q3S05zTjNUdm5vcUxpUkdNK1pG?=
+ =?utf-8?Q?ltC93woxOSM=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR12MB7142.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Qjk1Y3pQSUNtQklFQUtUQ0RDajJDRzNQbE0xcjNURVFsMjF0Ny9MdVh0SXBs?=
+ =?utf-8?B?WmNYSWlEdVp2U0dLSVZQU0pGelI2UVhEZ2hoVkhJMFN1VEpJR3JLTWtlQzFs?=
+ =?utf-8?B?WWwwalpmdkpNNTJzSittNnY1L3g5WXlwcXRzMFY0L3d6UnV5eVlhRUhualRF?=
+ =?utf-8?B?L3pHeWR6Y1VvbnNORzJlZWZTUGtpNUVHVGh2aW9sb3ZkQmlTaHhhUUJ5UUZW?=
+ =?utf-8?B?R2FjVDBjaEE4WjBxMnJFNjUyYitaMW0xaEppK1lJa0x3d0JrOW4xTUczRlBo?=
+ =?utf-8?B?Y0h0a0pqM3hraEJuSHFXQ3gxVjFIWS94OU90MjBxdG96eHRzVTE3d1JIdE9R?=
+ =?utf-8?B?bndDYkQ3QjlzR0R0N3JPSmdxM3Q4OTBQVC9KV09Cd3RNekNnTVhPSitLVWJW?=
+ =?utf-8?B?YTFUTDRONkNkWWRzSXVQWFZ2ZGF5NEJqSTF6UFZ5dEwvdThUaXlFZk1kc3cr?=
+ =?utf-8?B?VWdmdlhSL0kyVWlnRnl4VVlqOTZPWkxyMVV4NlVvWUpVUU9tU1ZnMWZET0NZ?=
+ =?utf-8?B?MU9hbFF6WHBIZ0pNOGxYQUdCOTlFQUMvTDJHczVoWGxrcXBNWFdjbitUcUYr?=
+ =?utf-8?B?UGVsSUFVZVFaNG0wR0xXbWJ1NUpOWkR0bFlnd0hXQ0lKMjNUMUdyUkRYQlQ0?=
+ =?utf-8?B?VCszenpwZzNOTlpyS2VicEEwZkNnaEdKbzFXOVFKZzJFTEN4eW96dm1DUGRq?=
+ =?utf-8?B?aUFDMkhLSVJXMWhlOUY5cWwvT2FYOTc5a2ZYRm5nVmhBZUtpMDlkcVZYR21t?=
+ =?utf-8?B?d2o4ajJWdHhlUGJqSWFjZ3pqRXA1UVJlVFFIN1V2TllKc2FNN2VoengzeEdM?=
+ =?utf-8?B?UlU2Skc5Y1JBaVFsenB1bHlLTjg3djdlakRLR2h4cDZ2R0JCMTB4cW5VU2E3?=
+ =?utf-8?B?ZEN3L3ZoZzJmbUJnMjVVc1Z4UXc1czNiSEZ1VlM5QjdobGJJSk93QUk0bDBi?=
+ =?utf-8?B?MkRJNFh2aENTZ3NackFFeC9yVGZMbUtjeWF1NzQ0MHJlY0VJaU95UXNsZ2gr?=
+ =?utf-8?B?QStLM1VCSWlSdldwbWhUYUptUGZWVlJjUk1hUGN0VzdPMDloTlc3OU9udEQ1?=
+ =?utf-8?B?MFpTYnB2OTRoZThpOXZ2TmJxWXdnVHNWaGErVk5MT1VKeTB1TkZQczdINlZM?=
+ =?utf-8?B?SGJFZ3ZwNmdPakZscGRqWFUxVnF1ODVmQ1kzdEhSM1lPdVNVNFd6MGVBay9R?=
+ =?utf-8?B?SXRBSTRBK3lPR0tLRVFkWEZ0eEgzK2VFcXJrRUkyY0g0bTFyUncrRnpSc2Fi?=
+ =?utf-8?B?Rzk2OHk4a1gwMTZRRUptWUpBcGYrdVAxV2FhZzYyV2F2VHJzeS9mbGtNYjNz?=
+ =?utf-8?B?SVZGcDJkZmVaSHpUMzNwbEF3NlVtVjFuSldKdE5wTElEbEFsREZ2enZWMkhB?=
+ =?utf-8?B?UnYvdmFpQ0loa29xeFdUTmYveXdDZ3ZKeEVBeHBQd0I4UjRHNitWQlJ2cHUy?=
+ =?utf-8?B?K2JFeUVGTWIyRHJleTkrZHN1aWtsdnJRaVZhZEU0ZVhLM0xkRFAvOHdKNE5z?=
+ =?utf-8?B?cmx1ZDFJbjRONHlYQzFzQTd5clM5OFN2RUdNZmdyMXB4SGp3L1Boc1YrV1o4?=
+ =?utf-8?B?SHJqWnB3UHc2d2RzRENEOVkxWllsY3l1cEFlUzlINlROMThWTFRKTHVnZkJV?=
+ =?utf-8?B?b01kVkZTQ1M5TzFQU0FJSjdpK1FyeDZ1VlMvcEpQK3c5bzRjTTJEa0pRS0pW?=
+ =?utf-8?B?MkIrZ0o1cWZDcWFaK0pYOGtDR01qZkI1b3ZMT0lITzE0bXJOSEJiTWJRQk1E?=
+ =?utf-8?B?bWozUVFwMnNyY3NmQ3ZML2J4aGZPOWl4aWppRnJmWHNBVm50aVFuMXYvRW9L?=
+ =?utf-8?B?RFhvWEwzbnVMblhTMGtJS1lMZEEvQUpIRk5CVjN0Nzc4OWwyRXNyZWE1ZUxq?=
+ =?utf-8?B?dDJsa1BJK0tTYnBxSlJHTHF3eDh0OGcxd0k0YUN6cXFzVUx4WFIvSXoxZmxj?=
+ =?utf-8?B?b1RiandrbWcwWXdtcDY0bm95QTAyaDNhUjFQeERpZlphWWcwZUQwN3VveDZo?=
+ =?utf-8?B?VS9YeERXdk9mb2RxdmFyVmpwN1lrZEZzMHJCQjNZT2pKc3JtUUJvcnNrcFFJ?=
+ =?utf-8?B?aTdqV21kcDB0bDU3Z0I1UGtQQUJla2YvU1hXaXBBTGl6QngvMXhBaEx0T3hE?=
+ =?utf-8?Q?k3wm3U+m4igE/4efzWREEqIrr?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 169f02ce-2fda-4375-a6a4-08dda5230843
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR12MB7142.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2025 17:53:23.9646
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VrveUT8CuRkuwmVzfwGsrzrcJB/MTnKn/dUSzz9UJxZmUK3bPLhlOPeHNZ2s0LQXYAKybBBcpqwfNsHcyjZk2Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6338
 
-On Fri, Jun 06, 2025 at 06:12:19PM +0530, ALOK TIWARI wrote:
+On 6/5/2025 9:16 PM, Zhijian Li (Fujitsu) wrote:
+> 
+> The term "region teardown" in the subject line appears inaccurate.
 > 
 > 
-> On 06-06-2025 05:12, anisa.su887@gmail.com wrote:
-> > From: Anisa Su <anisa.su@samsung.com>
-> > 
-> > FM DCD Management command 0x5604 implemented per CXL r3.2 Spec Section 7.6.7.6.5
-> > 
-> > Signed-off-by: Anisa Su <anisa.su@samsung.com>
-> > ---
-> >   hw/cxl/cxl-mailbox-utils.c  | 152 ++++++++++++++++++++++++++++++++++++
-> >   hw/mem/cxl_type3.c          |   8 +-
-> >   include/hw/cxl/cxl_device.h |   4 +
-> >   3 files changed, 160 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> > index 004e502b22..7ee5be00bc 100644
-> > --- a/hw/cxl/cxl-mailbox-utils.c
-> > +++ b/hw/cxl/cxl-mailbox-utils.c
-> > @@ -123,6 +123,7 @@ enum {
-> >           #define GET_HOST_DC_REGION_CONFIG   0x1
-> >           #define SET_DC_REGION_CONFIG        0x2
-> >           #define GET_DC_REGION_EXTENT_LIST   0x3
-> > +        #define INITIATE_DC_ADD             0x4
-> >   };
-> >   /* CCI Message Format CXL r3.1 Figure 7-19 */
-> > @@ -3540,6 +3541,150 @@ static CXLRetCode cmd_fm_get_dc_region_extent_list(const struct cxl_cmd *cmd,
-> >       return CXL_MBOX_SUCCESS;
-> >   }
-> > +static void cxl_mbox_dc_add_to_pending(CXLType3Dev *ct3d,
-> > +                                       uint32_t ext_count,
-> > +                                       CXLDCExtentRaw extents[])
-> > +{
-> > +    CXLDCExtentGroup *group = NULL;
-> > +    int i;
-> > +
-> > +    for (i = 0; i < ext_count; i++) {
-> > +        group = cxl_insert_extent_to_extent_group(group,
-> > +                                                  extents[i].start_dpa,
-> > +                                                  extents[i].len,
-> > +                                                  extents[i].tag,
-> > +                                                  extents[i].shared_seq);
-> > +    }
-> > +
-> > +    cxl_extent_group_list_insert_tail(&ct3d->dc.extents_pending, group);
-> > +    ct3d->dc.total_extent_count += ext_count;
-> > +}
-> > +
-> > +static void cxl_mbox_create_dc_event_records_for_extents(CXLType3Dev *ct3d,
-> > +                                                         CXLDCEventType type,
-> > +                                                         CXLDCExtentRaw extents[],
-> > +                                                         uint32_t ext_count)
-> > +{
-> > +    CXLEventDynamicCapacity event_rec = {};
-> > +    int i;
-> > +
-> > +    cxl_assign_event_header(&event_rec.hdr,
-> > +                            &dynamic_capacity_uuid,
-> > +                            (1 << CXL_EVENT_TYPE_INFO),
-> > +                            sizeof(event_rec),
-> > +                            cxl_device_get_timestamp(&ct3d->cxl_dstate));
-> > +    event_rec.type = type;
-> > +    event_rec.validity_flags = 1;
-> > +    event_rec.host_id = 0;
-> > +    event_rec.updated_region_id = 0;
-> > +    event_rec.extents_avail = CXL_NUM_EXTENTS_SUPPORTED -
-> > +                              ct3d->dc.total_extent_count;
-> > +
-> > +    for (i = 0; i < ext_count; i++) {
-> > +        memcpy(&event_rec.dynamic_capacity_extent,
-> > +               &extents[i],
-> > +               sizeof(CXLDCExtentRaw));
-> > +        event_rec.flags = 0;
-> > +        if (i < ext_count - 1) {
-> > +            /* Set "More" flag */
-> > +            event_rec.flags |= BIT(0);
-> > +        }
-> > +
-> > +        if (cxl_event_insert(&ct3d->cxl_dstate,
-> > +                             CXL_EVENT_TYPE_DYNAMIC_CAP,
-> > +                             (CXLEventRecordRaw *)&event_rec)) {
-> > +            cxl_event_irq_assert(ct3d);
-> > +        }
-> > +    }
-> > +}
-> > +
-> > +/*
-> > + * Helper function to convert CXLDCExtentRaw to CXLUpdateDCExtentListInPl
-> > + * in order to reuse cxl_detect_malformed_extent_list() functin which accepts
+> As I understand, cxl_region_softreserv_update() should work only
+> when the region is ready, but the current logic only guarantees that the *memdev* is ready.
 > 
-> typo functin
+> Is there truly no timing gap between region readiness and memdev readiness?
+> If this assumption is true, could we document this relationship in both the commit log and code comments?
 > 
-> > + * CXLUpdateDCExtentListInPl as a parameter.
-> > + */
-> > +static void convert_raw_extents(CXLDCExtentRaw raw_extents[],
-> > +                                CXLUpdateDCExtentListInPl *extent_list,
-> > +                                int count)
-> > +{
-> > +    int i;
-> > +
-> > +    extent_list->num_entries_updated = count;
-> > +
-> > +    for (i = 0; i < count; i++) {
-> > +        extent_list->updated_entries[i].start_dpa = raw_extents[i].start_dpa;
-> > +        extent_list->updated_entries[i].len = raw_extents[i].len;
-> > +    }
-> > +}
-> > +
-> > +/* CXL r3.2 Section 7.6.7.6.5 Initiate Dynamic Capacity Add (Opcode 5604h) */
-> > +static CXLRetCode cmd_fm_initiate_dc_add(const struct cxl_cmd *cmd,
-> > +                                         uint8_t *payload_in,
-> > +                                         size_t len_in,
-> > +                                         uint8_t *payload_out,
-> > +                                         size_t *len_out,
-> > +                                         CXLCCI *cci)
-> > +{
-> > +    struct {
-> > +        uint16_t host_id;
-> > +        uint8_t selection_policy;
-> > +        uint8_t reg_num;
-> > +        uint64_t length;
-> > +        uint8_t tag[0x10];
-> > +        uint32_t ext_count;
-> > +        CXLDCExtentRaw extents[];
-> > +    } QEMU_PACKED *in = (void *)payload_in;
-> > +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
-> > +    CXLUpdateDCExtentListInPl *list;
-> > +    int i, rc;
-> > +
-> > +    switch (in->selection_policy) {
-> > +    case CXL_EXTENT_SELECTION_POLICY_PRESCRIPTIVE:
-> > +        /* Adding extents exceeds device's extent tracking ability. */
-> > +        if (in->ext_count + ct3d->dc.total_extent_count >
-> > +            CXL_NUM_EXTENTS_SUPPORTED) {
-> > +            return CXL_MBOX_RESOURCES_EXHAUSTED;
-> > +        }
-> > +
-> > +        list = calloc(1, (sizeof(*list) +
-> > +                          in->ext_count * sizeof(*list->updated_entries)));
-> > +        convert_raw_extents(in->extents, list, in->ext_count);
-> > +        rc = cxl_detect_malformed_extent_list(ct3d, list);
-> > +
-> > +        for (i = 0; i < in->ext_count; i++) {
-> > +            CXLDCExtentRaw ext = in->extents[i];
-> > +             /* Check requested extents do not overlap with pending extents. */
-> > +            if (cxl_extent_groups_overlaps_dpa_range(&ct3d->dc.extents_pending,
-> > +                                                     ext.start_dpa, ext.len)) {
-> > +                return CXL_MBOX_INVALID_EXTENT_LIST;
-> > +            }
-> > +            /* Check requested extents do not overlap with existing extents. */
-> > +            if (cxl_extents_overlaps_dpa_range(&ct3d->dc.extents,
-> > +                                               ext.start_dpa, ext.len)) {
-> > +                return CXL_MBOX_INVALID_EXTENT_LIST;
-> > +            }
-> > +        }
-> > +
-> > +        if (rc) {
-> > +            return rc;
 > 
-> is list free not require ?
-> 
-oh yeah it's definitely required :( that was dumb of me, same for the
-next patch.
+> Thanks
+> Zhijian
 
-Thanks for catching that!
--Anisa
-> > +        }
-> > +
-> > +        cxl_mbox_dc_add_to_pending(ct3d, in->ext_count, in->extents);
-> > +        cxl_mbox_create_dc_event_records_for_extents(ct3d,
-> > +                                                     DC_EVENT_ADD_CAPACITY,
-> > +                                                     in->extents,
-> > +                                                     in->ext_count);
-> > +
-> > +        return CXL_MBOX_SUCCESS;
-> > +    default:
-> > +        qemu_log_mask(LOG_UNIMP,
-> > +                      "CXL extent selection policy not supported.\n");
-> > +        return CXL_MBOX_INVALID_INPUT;
-> > +    }
-> > +
-> > +    return CXL_MBOX_SUCCESS;
+I think you're right in pointing this out.
+
+We cannot guarantee region readiness unless there's an explicit ordering
+or dependency ensuring that cxl_region_probe() always completes after or 
+synchronously with memdev probing and wait_for_device_probe().
+
+I don't believe we currently have such a guarantee.
+
+I was considering adding a null check for cxlr->params.res in 
+__cxl_region_softreserv_update(), along with a comment like below:
+
+static int __cxl_region_softreserv_update(struct resource *soft,
+					  void *_cxlr)
+{
+	struct cxl_region *cxlr = _cxlr;
+	struct resource *res = cxlr->params.res;
+
+	/*
+	 * Skip if the region has not yet been fully initialized.
+	 *
+	 * This code assumes all cxl_region devices have completed
+	 * probing before this function runs, and that params.res is
+	 * valid.
+	 */
+
+	if (!res)
+		return 0;
+
+..
+..
+
+}
+
+This would prevent a null dereference and make the assumption around 
+region readiness more explicit.
+
+That said, I'd appreciate input from Terry, Nathan, or others on whether 
+there's a better way to guarantee that region creation has completed by 
+the time this function is invoked.
+
+Thanks
+Smita
+
 > 
-> CXL_MBOX_SUCCESS, this is unreachable
 > 
-> > +}
-> > +
-> >   static const struct cxl_cmd cxl_cmd_set[256][256] = {
-> >       [INFOSTAT][BACKGROUND_OPERATION_ABORT] = { "BACKGROUND_OPERATION_ABORT",
-> >           cmd_infostat_bg_op_abort, 0, 0 },
-> > @@ -3667,6 +3812,13 @@ static const struct cxl_cmd cxl_cmd_set_fm_dcd[256][256] = {
-> >            CXL_MBOX_IMMEDIATE_DATA_CHANGE) },
-> >       [FMAPI_DCD_MGMT][GET_DC_REGION_EXTENT_LIST] = { "GET_DC_REGION_EXTENT_LIST",
-> >           cmd_fm_get_dc_region_extent_list, 12, 0 },
-> > +    [FMAPI_DCD_MGMT][INITIATE_DC_ADD] = { "INIT_DC_ADD",
-> > +        cmd_fm_initiate_dc_add, ~0,
-> > +        (CXL_MBOX_CONFIG_CHANGE_COLD_RESET |
-> > +        CXL_MBOX_CONFIG_CHANGE_CONV_RESET |
-> > +        CXL_MBOX_CONFIG_CHANGE_CXL_RESET |
-> > +        CXL_MBOX_IMMEDIATE_CONFIG_CHANGE |
-> > +        CXL_MBOX_IMMEDIATE_DATA_CHANGE) },
-> >   };
-> 
-> 
-> Thanks,
-> Alok
+> On 04/06/2025 06:19, Smita Koralahalli wrote:
+>> Reworked from a patch by Alison Schofield <alison.schofield@intel.com>
+>>
+>> Previously, when CXL regions were created through autodiscovery and their
+>> resources overlapped with SOFT RESERVED ranges, the soft reserved resource
+>> remained in place after region teardown. This left the HPA range
+>> unavailable for reuse even after the region was destroyed.
+>>
+>> Enhance the logic to reliably remove SOFT RESERVED resources associated
+>> with a region, regardless of alignment or hierarchy in the iomem tree.
+>>
+>> Link: https://lore.kernel.org/linux-cxl/29312c0765224ae76862d59a17748c8188fb95f1.1692638817.git.alison.schofield@intel.com/
+>> Co-developed-by: Alison Schofield <alison.schofield@intel.com>
+>> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+>> Co-developed-by: Terry Bowman <terry.bowman@amd.com>
+>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+>> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+>> ---
+>>    drivers/cxl/acpi.c        |   2 +
+>>    drivers/cxl/core/region.c | 151 ++++++++++++++++++++++++++++++++++++++
+>>    drivers/cxl/cxl.h         |   5 ++
+>>    3 files changed, 158 insertions(+)
+>>
+>> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+>> index 978f63b32b41..1b1388feb36d 100644
+>> --- a/drivers/cxl/acpi.c
+>> +++ b/drivers/cxl/acpi.c
+>> @@ -823,6 +823,8 @@ static void cxl_softreserv_mem_work_fn(struct work_struct *work)
+>>    	 * and cxl_mem drivers are loaded.
+>>    	 */
+>>    	wait_for_device_probe();
+>> +
+>> +	cxl_region_softreserv_update();
+>>    }
+>>    static DECLARE_WORK(cxl_sr_work, cxl_softreserv_mem_work_fn);
+>>    
+>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>> index 109b8a98c4c7..3a5ca44d65f3 100644
+>> --- a/drivers/cxl/core/region.c
+>> +++ b/drivers/cxl/core/region.c
+>> @@ -3443,6 +3443,157 @@ int cxl_add_to_region(struct cxl_port *root, struct cxl_endpoint_decoder *cxled)
+>>    }
+>>    EXPORT_SYMBOL_NS_GPL(cxl_add_to_region, "CXL");
+>>    
+>> +static int add_soft_reserved(resource_size_t start, resource_size_t len,
+>> +			     unsigned long flags)
+>> +{
+>> +	struct resource *res = kmalloc(sizeof(*res), GFP_KERNEL);
+>> +	int rc;
+>> +
+>> +	if (!res)
+>> +		return -ENOMEM;
+>> +
+>> +	*res = DEFINE_RES_MEM_NAMED(start, len, "Soft Reserved");
+>> +
+>> +	res->desc = IORES_DESC_SOFT_RESERVED;
+>> +	res->flags = flags;
+>> +	rc = insert_resource(&iomem_resource, res);
+>> +	if (rc) {
+>> +		kfree(res);
+>> +		return rc;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void remove_soft_reserved(struct cxl_region *cxlr, struct resource *soft,
+>> +				 resource_size_t start, resource_size_t end)
+>> +{
+>> +	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
+>> +	resource_size_t new_start, new_end;
+>> +	int rc;
+>> +
+>> +	/* Prevent new usage while removing or adjusting the resource */
+>> +	guard(mutex)(&cxlrd->range_lock);
+>> +
+>> +	/* Aligns at both resource start and end */
+>> +	if (soft->start == start && soft->end == end)
+>> +		goto remove;
+>> +
+>> +	/* Aligns at either resource start or end */
+>> +	if (soft->start == start || soft->end == end) {
+>> +		if (soft->start == start) {
+>> +			new_start = end + 1;
+>> +			new_end = soft->end;
+>> +		} else {
+>> +			new_start = soft->start;
+>> +			new_end = start - 1;
+>> +		}
+>> +
+>> +		rc = add_soft_reserved(new_start, new_end - new_start + 1,
+>> +				       soft->flags);
+>> +		if (rc)
+>> +			dev_warn(&cxlr->dev, "cannot add new soft reserved resource at %pa\n",
+>> +				 &new_start);
+>> +
+>> +		/* Remove the original Soft Reserved resource */
+>> +		goto remove;
+>> +	}
+>> +
+>> +	/*
+>> +	 * No alignment. Attempt a 3-way split that removes the part of
+>> +	 * the resource the region occupied, and then creates new soft
+>> +	 * reserved resources for the leading and trailing addr space.
+>> +	 */
+>> +	new_start = soft->start;
+>> +	new_end = soft->end;
+>> +
+>> +	rc = add_soft_reserved(new_start, start - new_start, soft->flags);
+>> +	if (rc)
+>> +		dev_warn(&cxlr->dev, "cannot add new soft reserved resource at %pa\n",
+>> +			 &new_start);
+>> +
+>> +	rc = add_soft_reserved(end + 1, new_end - end, soft->flags);
+>> +	if (rc)
+>> +		dev_warn(&cxlr->dev, "cannot add new soft reserved resource at %pa + 1\n",
+>> +			 &end);
+>> +
+>> +remove:
+>> +	rc = remove_resource(soft);
+>> +	if (rc)
+>> +		dev_warn(&cxlr->dev, "cannot remove soft reserved resource %pr\n",
+>> +			 soft);
+>> +}
+>> +
+>> +/*
+>> + * normalize_resource
+>> + *
+>> + * The walk_iomem_res_desc() returns a copy of a resource, not a reference
+>> + * to the actual resource in the iomem_resource tree. As a result,
+>> + * __release_resource() which relies on pointer equality will fail.
+>> + *
+>> + * This helper walks the children of the resource's parent to find and
+>> + * return the original resource pointer that matches the given resource's
+>> + * start and end addresses.
+>> + *
+>> + * Return: Pointer to the matching original resource in iomem_resource, or
+>> + *         NULL if not found or invalid input.
+>> + */
+>> +static struct resource *normalize_resource(struct resource *res)
+>> +{
+>> +	if (!res || !res->parent)
+>> +		return NULL;
+>> +
+>> +	for (struct resource *res_iter = res->parent->child;
+>> +	     res_iter != NULL; res_iter = res_iter->sibling) {
+>> +		if ((res_iter->start == res->start) &&
+>> +		    (res_iter->end == res->end))
+>> +			return res_iter;
+>> +	}
+>> +
+>> +	return NULL;
+>> +}
+>> +
+>> +static int __cxl_region_softreserv_update(struct resource *soft,
+>> +					  void *_cxlr)
+>> +{
+>> +	struct cxl_region *cxlr = _cxlr;
+>> +	struct resource *res = cxlr->params.res;
+>> +
+>> +	/* Skip non-intersecting soft-reserved regions */
+>> +	if (soft->end < res->start || soft->start > res->end)
+>> +		return 0;
+>> +
+>> +	soft = normalize_resource(soft);
+>> +	if (!soft)
+>> +		return -EINVAL;
+>> +
+>> +	remove_soft_reserved(cxlr, soft, res->start, res->end);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +int cxl_region_softreserv_update(void)
+>> +{
+>> +	struct device *dev = NULL;
+>> +
+>> +	while ((dev = bus_find_next_device(&cxl_bus_type, dev))) {
+>> +		struct device *put_dev __free(put_device) = dev;
+>> +		struct cxl_region *cxlr;
+>> +
+>> +		if (!is_cxl_region(dev))
+>> +			continue;
+>> +
+>> +		cxlr = to_cxl_region(dev);
+>> +
+>> +		walk_iomem_res_desc(IORES_DESC_SOFT_RESERVED,
+>> +				    IORESOURCE_MEM, 0, -1, cxlr,
+>> +				    __cxl_region_softreserv_update);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(cxl_region_softreserv_update, "CXL");
+>> +
+>>    u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint, u64 spa)
+>>    {
+>>    	struct cxl_region_ref *iter;
+>> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+>> index 1ba7d39c2991..fc39c4b24745 100644
+>> --- a/drivers/cxl/cxl.h
+>> +++ b/drivers/cxl/cxl.h
+>> @@ -859,6 +859,7 @@ struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev);
+>>    int cxl_add_to_region(struct cxl_port *root,
+>>    		      struct cxl_endpoint_decoder *cxled);
+>>    struct cxl_dax_region *to_cxl_dax_region(struct device *dev);
+>> +int cxl_region_softreserv_update(void);
+>>    u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint, u64 spa);
+>>    #else
+>>    static inline bool is_cxl_pmem_region(struct device *dev)
+>> @@ -878,6 +879,10 @@ static inline struct cxl_dax_region *to_cxl_dax_region(struct device *dev)
+>>    {
+>>    	return NULL;
+>>    }
+>> +static inline int cxl_region_softreserv_update(void)
+>> +{
+>> +	return 0;
+>> +}
+>>    static inline u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint,
+>>    					       u64 spa)
+>>    {
+
