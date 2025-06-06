@@ -1,342 +1,169 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A98841DFCB
-	for <linux-cxl@vger.kernel.org>; Fri,  6 Jun 2025 18:21:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119321F130A
+	for <linux-cxl@vger.kernel.org>; Fri,  6 Jun 2025 18:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749234073; cv=none; b=Psgu3DF1U/jMixQEduaMnDRcRE6H29wifoLZWY+s8+mV9Pf/tGHIyTSHb/FfGEnWGtMxKKIwxl+JIOkJr93wmARlsTniY7GnaVndxZ4eDpUGvecLkc8QTzzN3cbWXmJW/1fOuf/O41hGG9eL9UvGcNEcG+pHhVp77dLzxSb0pM8=
+	t=1749235282; cv=none; b=FdNI2adFwt9Oi1JcNXabK22TJ5Zp20Q1eHn1+7QMyyhDapE1AJcpJt2q+U1ipEPt56fWWxt99kOYfKPoRX3exi/wpFBRhN0mYrAsoA8LYGWKRXznMQcPmz6KOBoQWfYWGbqgAgNgqaMFSku8BoYu2gwtateqXm3DdgKcQt+U24w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749234073; c=relaxed/simple;
-	bh=/bLozB2jLyD24LiaPjuFDCp+SnVjQqprqMrphGXGv40=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fKl92nhNZBRAH6dHIG3ARIOuvJkzNBfZ8GI1fuQaU2SIHUtcvJzZXJJqcIisWYzeaJWim6RkdybQpX//G+ZMJgFP8Hvgsb18mpiaUZJ4K2YpcDqRDPuYW9FU0bRYmbLJung1ReuER4Evld6JC2tU/e7L+GeFzAfwMuICoz9JGnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=drTIL6qf; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749235282; c=relaxed/simple;
+	bh=VwcS2Z8io2o0cY3xmV6ZCIZl/itPdgGtnMt2d7h2C7I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E8lbjDYyoXL7fuNz5jFi+yRJxT3ep5PbwKE1O32CVojtuqmksHF8Ot50h5PbUU+8n8JfcX9bpvNDc6JMhVn6NyAaguwIGgT1v6YetI4UTvHlE4s4BcOamqU5IeSQYw2wv6ewDizrx3oggHsQG8qMZ5OcCYMI2dlm7g2FdXXCOQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fi+dJnM6; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="drTIL6qf"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-742af84818cso1814975b3a.1
-        for <linux-cxl@vger.kernel.org>; Fri, 06 Jun 2025 11:21:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749234071; x=1749838871; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tP/wQPBGjbbKyfTZfIc/iAV9m6jQ7fU2q5ZDYkmBio0=;
-        b=drTIL6qfTj1ZtbxZxyUeCn+6IlbbOmdl64hnhLkhD4+FlCtNJ3/on1KQ9qgwMsYHFc
-         mQ0Ibw9fvAOgJhDCZqToi15QqUi6bJq6hOR7MSOsycR7tPgSt0fioKHfQnMSKoIMNc9J
-         bHpkKCuSpeyM0/KpGW2tw2E0IW9Do7kE2AYxLc5s9NBuXd+x9dw4SuBpFEM7WclHQTmN
-         iLtslCCYgFn0WaaK7IhR+CihZiqvIwNWlqF60i3xOVcdcn6RqDa1+25ILfWuiYDBV+eI
-         oWMHTTpoiESTnQRP5gAjAtwfXMqINTnq69KnvQ/p6HvoBoYlw+tBhmxqHfdx2lNazLJh
-         hz7w==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fi+dJnM6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749235280;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=tkX4uYhgyu0xrtO7ADEiny3gzIp95LCIRO3lMgtzOQs=;
+	b=fi+dJnM65BHYHHGuC9+JO4bDPeZq3KetkZ+hjVd7GqFD6+aqaUHTpLZPX6Dj1I6dsMmBdg
+	qsmXTwLLM5yO9OItBPtU70YBj/c44lqFsD3ej1uD/nJPqNClcV33srRN7hlJ86lYAudRYH
+	efsByrir/i20EAuegyk85ABRFojNojo=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-447-9cZy5gxSOj-1oe7347uRjw-1; Fri, 06 Jun 2025 14:41:18 -0400
+X-MC-Unique: 9cZy5gxSOj-1oe7347uRjw-1
+X-Mimecast-MFC-AGG-ID: 9cZy5gxSOj-1oe7347uRjw_1749235278
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4f858bc5eso1847855f8f.0
+        for <linux-cxl@vger.kernel.org>; Fri, 06 Jun 2025 11:41:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749234071; x=1749838871;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tP/wQPBGjbbKyfTZfIc/iAV9m6jQ7fU2q5ZDYkmBio0=;
-        b=nRKERnyP1IDh9zZgEjDJ9ATVOsTzOT2JbnM0DBV/9oHW+oMWfXH20zmiQ8Xk1AC/cc
-         Vm/S9xecfDHOVZV3mJKU4qnWDViqg1QiNVmgsGERZzGJy8OuN81CoBhtDxvH/iJLnQnH
-         rzpWkqiqYQMQEjj1VDyn4WIlVI00r4lGG7a18biW7cZ8qXPyvC36aTTtGwZArwxYDoni
-         wL831+jlD3zHA+6ILRGUHriTBSBOAs6LD4dJ3lhqqBtElNqzC3RD/5EFzBvYbRxM1Ww+
-         yQiDsuH+2vZHho+/jqsHQO33+Bpl6rS30BEkFHmCAPWHa97APMlGzlYk19ONFdj6bPpW
-         4ZMA==
-X-Forwarded-Encrypted: i=1; AJvYcCWHdvtfphM7ZFmeuCfO/3XP9EWgst5uFvNJmXa6AnWHZDYIFXj/uLHQL9laNCQsODgmskY1HMb4AT4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKzawCY8XY9912tRKKYH5SD9AJVjOCqEInUyTUFHg5q+F5HvhJ
-	2tkO53ZAyTgfkhDVgG429UjfMjfeyYObycU+Es7067SUPWyct6LERy+pCwa83g==
-X-Gm-Gg: ASbGncuMxytvlZPWANkWxKEsI98M+00zlNCOjuMiHn0Gksm6qAmzt7tTE5y8ZNtfbhQ
-	SwZylq3LLSslIxWxCOXuEEgQpzqIWMAkfg+6cVC1DEGz4Uc0r5w9hvcs5uQTCL/UIspXx4ehEud
-	eqFbsDRDteYDQcTtCie3RyvBrwRePSP3j2uThT85CfIm5pAwA55DwtH876jPq/QcRJK5ThOkPup
-	HEzH+CTtD4ne75LiXqfOffI8vDdB0QwAMGXv40cS6f5vfTbm6ycpLzFOOYQPHqvhThnd6Cnx0WA
-	RcgCtVs7hjOTCDeufWwrPJ8YrJbxOZn59toq6PIb2aibEPAeYOD2LfmN
-X-Google-Smtp-Source: AGHT+IEQKwEx2+/rddCXUF2Qea6AEuSEJ2Z4uB4eLOdmdV0gZL/ozRb0PlKzXwtLOLvwFDwZQdiaXw==
-X-Received: by 2002:a05:6a20:3d8a:b0:215:e9ec:81d2 with SMTP id adf61e73a8af0-21ee686173bmr6007354637.32.1749234070773;
-        Fri, 06 Jun 2025 11:21:10 -0700 (PDT)
-Received: from debian ([2601:646:8f03:9fee:5e33:e006:dcd5:852d])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b091cc3sm1612701b3a.106.2025.06.06.11.21.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jun 2025 11:21:10 -0700 (PDT)
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Fri, 6 Jun 2025 11:21:08 -0700
-To: anisa.su887@gmail.com
-Cc: qemu-devel@nongnu.org, Jonathan.Cameron@huawei.com, nifan.cxl@gmail.com,
-	dave@stgolabs.net, linux-cxl@vger.kernel.org,
-	Anisa Su <anisa.su@samsung.com>
-Subject: Re: [QEMU PATCH v3 8/9] cxl-mailbox-utils: 0x5604 - FMAPI Initiate
- DC Add
-Message-ID: <aEMxlAvukxhWXhw1@debian>
-References: <20250605234227.970187-1-anisa.su887@gmail.com>
- <20250605234227.970187-9-anisa.su887@gmail.com>
+        d=1e100.net; s=20230601; t=1749235277; x=1749840077;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=tkX4uYhgyu0xrtO7ADEiny3gzIp95LCIRO3lMgtzOQs=;
+        b=aCEEBSFIJVEO5t/61FhIpc1nTQYfc8tBrUgC9L4sf9F9ef57bJaxnKax21TYeJaac0
+         a1zYC7vOWCU7XZBdjVv/exOfJJi4nVGGeJmt1kS7L78esOQ0AtAhzyWYJB1CdQssgnR5
+         nwNaD/AG+tqvoLT3kTKj0x3s0zgj3rrz/PhRkXFQv33IzPi0gXrkNgU/dhnEcU3InayN
+         0EI7Ro6V42925U/RbQkim/7XBB+YQBDwI28cVwNokmpCI4TOKBqnbDmmN6q3sBztoCB8
+         bLtcgIY1HhFFYURFXInRsWCnIrS4k0F7OTXt34DckJMLs98K2yB+dFQOXkwQRLt5kdqh
+         Vz2w==
+X-Forwarded-Encrypted: i=1; AJvYcCVeMgT3epwY/Wbzu9qvVsELKiKbS+ut+g/g2EMS+htnTY85bMb7a4t6NlU9Iu7pXEm80ccUpM8TTAc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxS+4Gpfp+Yxn1moh+FuFew9NgYIQ3PuzF28wMHmFjG/nFiO3kT
+	0Q34bGN8JPOfyrLNbHNdoNktOuc+NeI3Jz0PU/PsenCMKzPHArQr9cEkjo8HNCdZ+GPgd+Fzxn8
+	qaGgKaCTU3ZRoWhAlsx9Fds6WAWDMVP/xAZct5GrHDbAuqu8T9arrOqEn4jE1Fw==
+X-Gm-Gg: ASbGncsFi6x6XwJhRLrbOrXUZ0mCVBMBjMFgCdjNXfCDfWQfJCz6dHDBTfYst6F3V2D
+	W/ulzJ4qsA6YUTpdcvWHP0ia38+kPhGCol6uyoKYvdRkj8/ia4dFUMH1Ey/WAInhkIwvj69Ocr/
+	AoxebIZ8jeZ6RR3H5/RdE1fng7Nl5OBdM9NbNjuaX57y6xrqwpVgOU+pUvK1J7aStoDRj3OD56q
+	ZscHZnItsYDZxu03uX1Ajf24sI0avmPN6EYh+P5FtZkChVNzhpeyASUP6NEvwYYwrF3K/wpfDwb
+	zGgrUfAcS7NSLSEEHtRbrXnTvCcG0a9SxilJzw/nTWSivXrwRtknyZzOW5km7Dvsk2Ss0iGGlVg
+	QXzekPmSpTVGENsYMn8/2AU0dIXt8uS4=
+X-Received: by 2002:a05:6000:2382:b0:3a5:300d:ead0 with SMTP id ffacd0b85a97d-3a531cdd5a0mr3790783f8f.43.1749235277483;
+        Fri, 06 Jun 2025 11:41:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IECTH6YhYvW6ZH1CMtqGX1UnVUl20ogDcBS5RnIYh0ZPNAA1XAMq5p/2Szxsq9CZSwnHVZ/TQ==
+X-Received: by 2002:a05:6000:2382:b0:3a5:300d:ead0 with SMTP id ffacd0b85a97d-3a531cdd5a0mr3790768f8f.43.1749235277116;
+        Fri, 06 Jun 2025 11:41:17 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f19:9c00:568:7df7:e1:293d? (p200300d82f199c0005687df700e1293d.dip0.t-ipconnect.de. [2003:d8:2f19:9c00:568:7df7:e1:293d])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a532468360sm2571480f8f.100.2025.06.06.11.41.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Jun 2025 11:41:16 -0700 (PDT)
+Message-ID: <965a6d13-e97b-450f-9d4c-d53cf08f9315@redhat.com>
+Date: Fri, 6 Jun 2025 20:41:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250605234227.970187-9-anisa.su887@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] mm/huge_memory: don't mark refcounted pages
+ special in vmf_insert_folio_pmd()
+To: Oscar Salvador <osalvador@suse.de>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, nvdimm@lists.linux.dev,
+ linux-cxl@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+ Alistair Popple <apopple@nvidia.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Dan Williams <dan.j.williams@intel.com>
+References: <20250603211634.2925015-1-david@redhat.com>
+ <20250603211634.2925015-2-david@redhat.com>
+ <aEKkvdSAplmukcXz@localhost.localdomain>
+ <b6a1b97b-39d9-4c9e-ba95-190684fc4074@redhat.com>
+ <aEKmOfWDIy14Ub6n@localhost.localdomain>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <aEKmOfWDIy14Ub6n@localhost.localdomain>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 3J2A_S2-64S4-Eg082Yb3SUG0EHlfP6PYKxcIivHPxk_1749235278
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 05, 2025 at 11:42:22PM +0000, anisa.su887@gmail.com wrote:
-> From: Anisa Su <anisa.su@samsung.com>
+On 06.06.25 10:26, Oscar Salvador wrote:
+> On Fri, Jun 06, 2025 at 10:23:11AM +0200, David Hildenbrand wrote:
+>> See my reply to Dan.
+>>
+>> Yet another boolean, yuck. Passing the folio and the pfn, yuck.
+>>
+>> (I have a strong opinion here ;) )
 > 
-> FM DCD Management command 0x5604 implemented per CXL r3.2 Spec Section 7.6.7.6.5
-> 
-> Signed-off-by: Anisa Su <anisa.su@samsung.com>
+> ok, I see it was already considered. No more questions then ;-)
 
-See below...
+Okay, change of plans, let me try to unify both functions in a clean way :)
 
-> ---
->  hw/cxl/cxl-mailbox-utils.c  | 152 ++++++++++++++++++++++++++++++++++++
->  hw/mem/cxl_type3.c          |   8 +-
->  include/hw/cxl/cxl_device.h |   4 +
->  3 files changed, 160 insertions(+), 4 deletions(-)
-> 
-> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> index 004e502b22..7ee5be00bc 100644
-> --- a/hw/cxl/cxl-mailbox-utils.c
-> +++ b/hw/cxl/cxl-mailbox-utils.c
-> @@ -123,6 +123,7 @@ enum {
->          #define GET_HOST_DC_REGION_CONFIG   0x1
->          #define SET_DC_REGION_CONFIG        0x2
->          #define GET_DC_REGION_EXTENT_LIST   0x3
-> +        #define INITIATE_DC_ADD             0x4
->  };
->  
->  /* CCI Message Format CXL r3.1 Figure 7-19 */
-> @@ -3540,6 +3541,150 @@ static CXLRetCode cmd_fm_get_dc_region_extent_list(const struct cxl_cmd *cmd,
->      return CXL_MBOX_SUCCESS;
->  }
->  
-> +static void cxl_mbox_dc_add_to_pending(CXLType3Dev *ct3d,
+I'll only have to find a clean way to make the other stuff I have 
+planned with these functions work ...
 
-This naming can be improved here, not straightforward to me.
-Maybe cxl_add_extents_to_pending_list() ?
+-- 
+Cheers,
 
-> +                                       uint32_t ext_count,
-> +                                       CXLDCExtentRaw extents[])
-> +{
-> +    CXLDCExtentGroup *group = NULL;
-> +    int i;
-> +
-> +    for (i = 0; i < ext_count; i++) {
-> +        group = cxl_insert_extent_to_extent_group(group,
-> +                                                  extents[i].start_dpa,
-> +                                                  extents[i].len,
-> +                                                  extents[i].tag,
-> +                                                  extents[i].shared_seq);
-> +    }
-> +
-> +    cxl_extent_group_list_insert_tail(&ct3d->dc.extents_pending, group);
-> +    ct3d->dc.total_extent_count += ext_count;
-> +}
+David / dhildenb
 
-Also the code is duplicate with existing code in cxl_type3.c 
-qmp_cxl_process_dynamic_capacity_prescriptive(). 
-The function was simulating the behaviour of the mailbox command, so it is
-behaviour will be smilar to what we have in this patch, 
-find a way to reuse code, maybe extract common code as a helper function and use
-it in both qmp interface and here.
-
-> +
-> +static void cxl_mbox_create_dc_event_records_for_extents(CXLType3Dev *ct3d,
-cxl_create_dc_extent_records_for extents()?
-> +                                                         CXLDCEventType type,
-> +                                                         CXLDCExtentRaw extents[],
-> +                                                         uint32_t ext_count)
-> +{
-> +    CXLEventDynamicCapacity event_rec = {};
-> +    int i;
-> +
-> +    cxl_assign_event_header(&event_rec.hdr,
-> +                            &dynamic_capacity_uuid,
-> +                            (1 << CXL_EVENT_TYPE_INFO),
-> +                            sizeof(event_rec),
-> +                            cxl_device_get_timestamp(&ct3d->cxl_dstate));
-> +    event_rec.type = type;
-> +    event_rec.validity_flags = 1;
-> +    event_rec.host_id = 0;
-> +    event_rec.updated_region_id = 0;
-> +    event_rec.extents_avail = CXL_NUM_EXTENTS_SUPPORTED -
-> +                              ct3d->dc.total_extent_count;
-> +
-> +    for (i = 0; i < ext_count; i++) {
-> +        memcpy(&event_rec.dynamic_capacity_extent,
-> +               &extents[i],
-> +               sizeof(CXLDCExtentRaw));
-> +        event_rec.flags = 0;
-> +        if (i < ext_count - 1) {
-> +            /* Set "More" flag */
-> +            event_rec.flags |= BIT(0);
-> +        }
-> +
-> +        if (cxl_event_insert(&ct3d->cxl_dstate,
-> +                             CXL_EVENT_TYPE_DYNAMIC_CAP,
-> +                             (CXLEventRecordRaw *)&event_rec)) {
-> +            cxl_event_irq_assert(ct3d);
-> +        }
-> +    }
-> +}
-
-Some issue here. A lot of duplicate code compared to
-qmp_cxl_process_dynamic_capacity_prescriptive.
-
-> +
-> +/*
-> + * Helper function to convert CXLDCExtentRaw to CXLUpdateDCExtentListInPl
-> + * in order to reuse cxl_detect_malformed_extent_list() functin which accepts
-> + * CXLUpdateDCExtentListInPl as a parameter.
-> + */
-> +static void convert_raw_extents(CXLDCExtentRaw raw_extents[],
-> +                                CXLUpdateDCExtentListInPl *extent_list,
-> +                                int count)
-> +{
-> +    int i;
-> +
-> +    extent_list->num_entries_updated = count;
-> +
-> +    for (i = 0; i < count; i++) {
-> +        extent_list->updated_entries[i].start_dpa = raw_extents[i].start_dpa;
-> +        extent_list->updated_entries[i].len = raw_extents[i].len;
-> +    }
-> +}
-> +
-> +/* CXL r3.2 Section 7.6.7.6.5 Initiate Dynamic Capacity Add (Opcode 5604h) */
-> +static CXLRetCode cmd_fm_initiate_dc_add(const struct cxl_cmd *cmd,
-> +                                         uint8_t *payload_in,
-> +                                         size_t len_in,
-> +                                         uint8_t *payload_out,
-> +                                         size_t *len_out,
-> +                                         CXLCCI *cci)
-> +{
-> +    struct {
-> +        uint16_t host_id;
-> +        uint8_t selection_policy;
-> +        uint8_t reg_num;
-> +        uint64_t length;
-> +        uint8_t tag[0x10];
-> +        uint32_t ext_count;
-> +        CXLDCExtentRaw extents[];
-> +    } QEMU_PACKED *in = (void *)payload_in;
-> +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
-> +    CXLUpdateDCExtentListInPl *list;
-> +    int i, rc;
-> +
-> +    switch (in->selection_policy) {
-> +    case CXL_EXTENT_SELECTION_POLICY_PRESCRIPTIVE:
-> +        /* Adding extents exceeds device's extent tracking ability. */
-> +        if (in->ext_count + ct3d->dc.total_extent_count >
-> +            CXL_NUM_EXTENTS_SUPPORTED) {
-> +            return CXL_MBOX_RESOURCES_EXHAUSTED;
-> +        }
-> +
-> +        list = calloc(1, (sizeof(*list) +
-> +                          in->ext_count * sizeof(*list->updated_entries)));
-
-Use g_malloc() and g_free().
-
-> +        convert_raw_extents(in->extents, list, in->ext_count);
-> +        rc = cxl_detect_malformed_extent_list(ct3d, list);
-> +
-> +        for (i = 0; i < in->ext_count; i++) {
-> +            CXLDCExtentRaw ext = in->extents[i];
-> +             /* Check requested extents do not overlap with pending extents. */
-> +            if (cxl_extent_groups_overlaps_dpa_range(&ct3d->dc.extents_pending,
-> +                                                     ext.start_dpa, ext.len)) {
-> +                return CXL_MBOX_INVALID_EXTENT_LIST;
-> +            }
-> +            /* Check requested extents do not overlap with existing extents. */
-> +            if (cxl_extents_overlaps_dpa_range(&ct3d->dc.extents,
-> +                                               ext.start_dpa, ext.len)) {
-> +                return CXL_MBOX_INVALID_EXTENT_LIST;
-> +            }
-> +        }
-> +
-> +        if (rc) {
-> +            return rc;
-> +        }
-> +
-> +        cxl_mbox_dc_add_to_pending(ct3d, in->ext_count, in->extents);
-> +        cxl_mbox_create_dc_event_records_for_extents(ct3d,
-> +                                                     DC_EVENT_ADD_CAPACITY,
-> +                                                     in->extents,
-> +                                                     in->ext_count);
-> +
-> +        return CXL_MBOX_SUCCESS;
-> +    default:
-> +        qemu_log_mask(LOG_UNIMP,
-> +                      "CXL extent selection policy not supported.\n");
-> +        return CXL_MBOX_INVALID_INPUT;
-> +    }
-> +
-
-For all the case to return, instead of return directly set return code and jump
-here, do two things:
-1. g_free(list);
-2. return rt;
-
-Fan
-
-> +    return CXL_MBOX_SUCCESS;
-> +}
-> +
->  static const struct cxl_cmd cxl_cmd_set[256][256] = {
->      [INFOSTAT][BACKGROUND_OPERATION_ABORT] = { "BACKGROUND_OPERATION_ABORT",
->          cmd_infostat_bg_op_abort, 0, 0 },
-> @@ -3667,6 +3812,13 @@ static const struct cxl_cmd cxl_cmd_set_fm_dcd[256][256] = {
->           CXL_MBOX_IMMEDIATE_DATA_CHANGE) },
->      [FMAPI_DCD_MGMT][GET_DC_REGION_EXTENT_LIST] = { "GET_DC_REGION_EXTENT_LIST",
->          cmd_fm_get_dc_region_extent_list, 12, 0 },
-> +    [FMAPI_DCD_MGMT][INITIATE_DC_ADD] = { "INIT_DC_ADD",
-> +        cmd_fm_initiate_dc_add, ~0,
-> +        (CXL_MBOX_CONFIG_CHANGE_COLD_RESET |
-> +        CXL_MBOX_CONFIG_CHANGE_CONV_RESET |
-> +        CXL_MBOX_CONFIG_CHANGE_CXL_RESET |
-> +        CXL_MBOX_IMMEDIATE_CONFIG_CHANGE |
-> +        CXL_MBOX_IMMEDIATE_DATA_CHANGE) },
->  };
->  
->  /*
-> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> index ee554a77be..ca9fe89e4f 100644
-> --- a/hw/mem/cxl_type3.c
-> +++ b/hw/mem/cxl_type3.c
-> @@ -1885,8 +1885,8 @@ void qmp_cxl_inject_memory_module_event(const char *path, CxlEventLog log,
->   * the list.
->   * Return value: return true if has overlaps; otherwise, return false
->   */
-> -static bool cxl_extents_overlaps_dpa_range(CXLDCExtentList *list,
-> -                                           uint64_t dpa, uint64_t len)
-> +bool cxl_extents_overlaps_dpa_range(CXLDCExtentList *list,
-> +                                    uint64_t dpa, uint64_t len)
->  {
->      CXLDCExtent *ent;
->      Range range1, range2;
-> @@ -1931,8 +1931,8 @@ bool cxl_extents_contains_dpa_range(CXLDCExtentList *list,
->      return false;
->  }
->  
-> -static bool cxl_extent_groups_overlaps_dpa_range(CXLDCExtentGroupList *list,
-> -                                                 uint64_t dpa, uint64_t len)
-> +bool cxl_extent_groups_overlaps_dpa_range(CXLDCExtentGroupList *list,
-> +                                          uint64_t dpa, uint64_t len)
->  {
->      CXLDCExtentGroup *group;
->  
-> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> index 76af75d2d0..d30f6503fa 100644
-> --- a/include/hw/cxl/cxl_device.h
-> +++ b/include/hw/cxl/cxl_device.h
-> @@ -724,4 +724,8 @@ bool ct3_test_region_block_backed(CXLType3Dev *ct3d, uint64_t dpa,
->  void cxl_assign_event_header(CXLEventRecordHdr *hdr,
->                               const QemuUUID *uuid, uint32_t flags,
->                               uint8_t length, uint64_t timestamp);
-> +bool cxl_extents_overlaps_dpa_range(CXLDCExtentList *list,
-> +                                    uint64_t dpa, uint64_t len);
-> +bool cxl_extent_groups_overlaps_dpa_range(CXLDCExtentGroupList *list,
-> +                                          uint64_t dpa, uint64_t len);
->  #endif
-> -- 
-> 2.47.2
-> 
