@@ -1,116 +1,182 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC17C1D9A5F
-	for <linux-cxl@vger.kernel.org>; Mon,  9 Jun 2025 16:55:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB97219E8F
+	for <linux-cxl@vger.kernel.org>; Mon,  9 Jun 2025 17:03:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749488123; cv=none; b=Qwma6RvxMyJaXhZLwWpMcV7LK6jgi7JZdSb/78Ot44EiSb5WOYV9giEeKNzCyHozmumxI7LfnudNC80NR8wWo/s+S9YzkmJDVjPwyupowOjvrg/M//UssFrY3aHozBQNsfYouUUqo4aht/vgN0lMzQuqqihoHNe1osP9Tr2/U6s=
+	t=1749488606; cv=none; b=NjKkgBuEc2IVdChThpSH5wUTl1AhsgPkgMQxzP2YlxL2GTnlC4/LEZl7upEyAhHYrgWVA8g/yoeDzyfdPEt3J4UyKoO02mOYplunvH89EsRZ7Aeksjj4BsTxGQ3cl1idANbVoEiqExd/I+q8PAXSgVRo+VeCAUqYg6zEregzrvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749488123; c=relaxed/simple;
-	bh=+7UEky+TDhv0k58uye4JoMBF14ZYtNbQ7lReARytUMI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=efvVYEdH5pCluQ12wKwUFYm0+s9uDR5srk4xdQUq2I+jCIiGiQYjxru9QiQ8Dz0obKbfeWSY5K0jYoB0i83sBV5yHbLTiJ723fb9F6rOMX1WWu/yftWRHJz6+m65N+MZ+pzvmaR65CzqvCfW3hGKuDGvCRme9V9M+RzoU9hq454=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EnCnTEYK; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749488606; c=relaxed/simple;
+	bh=h3LVrJcHKUK9EtRaCPRj6IfvWwti1Z2xkhx/iMjMIwE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Uk6IDLM13ARzgMTHCP1n7ZEcH5PWJELkXiu7xqVO2dn78La/l+K6pbrV6zlzwxhkYAtWNI0wlKQF6262P4PyLYy3cwIDCq5YsYjlhNlwXqzGm4qVNsdFEeDP/BJyTc9lLb+ELDO6y6WKQxm4QQPPFK6qkHlaxtOVtv0FDK48qq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b27eMFiV; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EnCnTEYK"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b27eMFiV"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749488122; x=1781024122;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=+7UEky+TDhv0k58uye4JoMBF14ZYtNbQ7lReARytUMI=;
-  b=EnCnTEYKZHvflTGqvYm3V0q7hRx+pnMmJ2qTbyUD6yn9S5TIt2DZLu+n
-   X5jkSuRDBi9PePRWBodeXVw5cfu2+oD34c7GMELw5ABKI38076Kv2bi17
-   SlSE0tCIQ+a8PIlXX2ZdogMhLPWZuadM18lFWvgnFf34X6qJNBerVzVBa
-   7PL5jZIXnvcpB+yFLWUym2G6xizVLHB2pJZwoTuKHsu5y6AG7PWdhRmeV
-   3roXq1iKO9FEG3ITrtXSV06B104c35ul41vMX/B1IfyWeiO/5OD2LIDJX
-   KO0m5XtT1ogD80LoY+ExiFwvnuQWSeFoPKzT9gk8ixG68hr8FfV3lHXBH
-   w==;
-X-CSE-ConnectionGUID: 7dpx1XcvTf61xywn/JOyfw==
-X-CSE-MsgGUID: Mn+Mdjw1QnmUISEUrMjC4A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="55364271"
+  t=1749488604; x=1781024604;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=h3LVrJcHKUK9EtRaCPRj6IfvWwti1Z2xkhx/iMjMIwE=;
+  b=b27eMFiVjllajI0uGY1OSqz2K51kofA7Pr1fP2W20rbnbovRE0F2bx8K
+   QYIDxIaK8yezwasmPIXb9HlQahwu6lftAFwDjGIzacYsFT7mgluPMabGI
+   150JcNlt644gK2sD887H1E9xK5TS348cO7o5vZaZnk28BHTXS3PPTSuIP
+   ZvWPnqlZ3MVshWzMLG8WobBylbuD6n/cS4aUToYSTeOcd2LH4uelBQM+E
+   +jIR0RFW8byoYa+TUF+TbgJ/2KFsGjCQANWAq8Ydv3yvXgogjV85kvjAN
+   5qZrMFLLoXoDrgnDDqocJFmJZ63gbmdcbRRw1ZVr6uiGbc9V7BiY38Pjm
+   g==;
+X-CSE-ConnectionGUID: goVC1nnkSe6aRnARXNLKgw==
+X-CSE-MsgGUID: RyT5eoiaQ7utKn7ad003oQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="51667260"
 X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
-   d="scan'208";a="55364271"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 09:55:21 -0700
-X-CSE-ConnectionGUID: fg3K/AOTTk+CD669XYENHA==
-X-CSE-MsgGUID: H+tHxwoUT2mWoNqF/bqn+A==
+   d="scan'208";a="51667260"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 10:03:23 -0700
+X-CSE-ConnectionGUID: 9dU72jiHQYS5DofEyaOYhQ==
+X-CSE-MsgGUID: QZnJ503JQASyGqbV1tvNeQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
-   d="scan'208";a="177472844"
-Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.111.99]) ([10.125.111.99])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 09:55:20 -0700
-Message-ID: <d37eaf92-a74a-4c44-8307-ca87906e9a75@intel.com>
-Date: Mon, 9 Jun 2025 09:55:17 -0700
+   d="scan'208";a="146563632"
+Received: from slindbla-desk.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.162])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 10:03:20 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com
+Subject: Re: [PATCH] cxl: Remove core/acpi.c and cxl core dependency on ACPI
+Date: Mon, 09 Jun 2025 19:03:15 +0200
+Message-ID: <2529357.LH7GnMWURc@fdefranc-mobl3>
+In-Reply-To: <20250605001148.1698633-1-dave.jiang@intel.com>
+References: <20250605001148.1698633-1-dave.jiang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl/pci: Replace mutex_lock_io() w mutex_lock() for
- mailbox access
-To: alison.schofield@intel.com, Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org, Alok Tiwari <alok.a.tiwari@oracle.com>
-References: <20250529205117.1990465-1-alison.schofield@intel.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250529205117.1990465-1-alison.schofield@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
+Hi Dave,
 
-
-On 5/29/25 1:51 PM, alison.schofield@intel.com wrote:
-> From: Alison Schofield <alison.schofield@intel.com>
-> 
-> mutex_lock_io() differs from mutex_lock() in that it may call
-> io_schedule() when a task must sleep waiting for the lock. This
-> distinction only makes sense in block I/O or memory reclaim paths,
-> where giving I/O a chance to make progress is useful.
-> 
-> At this call site, cxl_pci_mbox_send(), the mutex protects an MMIO
-> mailbox. The task holding the lock is not blocking I/O progress, so
-> calling io_schedule(), as mutex_lock_io() may do, has no practical
-> effect.
-> 
-> Although there is no functional change, using the correct locking
-> primitive, that more accurately reflects the semantics and intended
-> use of the lock, improves code clarity and avoids misleading readers
-> and tools.
-> 
-> Reported-by: Alok Tiwari <alok.a.tiwari@oracle.com>
-> Closes: https://lore.kernel.org/linux-cxl/0d2af1e8-7f1b-438c-a090-fd366c8c63e0@oracle.com/
-> Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> Fixes: 8adaf747c9f0 ("cxl/mem: Find device capabilities")
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-
-Applied to cxl/next with Fixes tag dropped.
-
+On Thursday, June 5, 2025 2:11:47=E2=80=AFAM Central European Summer Time D=
+ave Jiang wrote:
+> It was a mistake to introduce core/acpi.c and putting ACPI dependency on
+> cxl_core when adding the extended linear cache support. Add a callback
+> in the cxl_root_decoder to retrieve the extended linear cache size from
+> ACPI via the cxl_acpi driver.
+>=20
+> In order to deal with cxl_test, a device parameter had to be introduced
+> to the hmat_get_extended_linear_cache_size() call in order to help with
+> the mock wrapped function from ACPI. Even though the 'struct device' is
+> not used by the actual hmat_get_extended_linear_cache_size() function.
+>=20
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 > ---
->  drivers/cxl/pci.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 785aa2af5eaa..bd100ac31672 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -379,7 +379,7 @@ static int cxl_pci_mbox_send(struct cxl_mailbox *cxl_mbox,
+>  drivers/acpi/numa/hmat.c      |  4 +++-
+>  drivers/cxl/acpi.c            | 15 ++++++++++++++-
+>  drivers/cxl/core/Makefile     |  1 -
+>  drivers/cxl/core/acpi.c       | 11 -----------
+>  drivers/cxl/core/core.h       |  2 --
+>  drivers/cxl/core/port.c       |  5 ++++-
+>  drivers/cxl/core/region.c     |  6 +++++-
+>  drivers/cxl/cxl.h             | 12 +++++++++++-
+>  include/linux/acpi.h          |  6 ++++--
+>  tools/testing/cxl/Kbuild      |  2 +-
+>  tools/testing/cxl/test/cxl.c  | 20 ++++++++++++++++++++
+>  tools/testing/cxl/test/mock.c | 23 +++++++++++++++++++++++
+>  tools/testing/cxl/test/mock.h |  4 ++++
+>  13 files changed, 89 insertions(+), 22 deletions(-)
+>  delete mode 100644 drivers/cxl/core/acpi.c
+>=20
+> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+> index 9d9052258e92..bc8441dc7fe2 100644
+> --- a/drivers/acpi/numa/hmat.c
+> +++ b/drivers/acpi/numa/hmat.c
+> @@ -110,6 +110,7 @@ static struct memory_target *find_mem_target(unsigned=
+ int mem_pxm)
+> =20
+>  /**
+>   * hmat_get_extended_linear_cache_size - Retrieve the extended linear ca=
+che size
+> + * @dev: device for debug output
+
+Isn't dev used to find a port check if it is a mock one?
+BTW, should the test part go to a separate patch?=20
+
+>   * @backing_res: resource from the backing media
+>   * @nid: node id for the memory region
+>   * @cache_size: (Output) size of extended linear cache.
+> @@ -117,7 +118,8 @@ static struct memory_target *find_mem_target(unsigned=
+ int mem_pxm)
+>   * Return: 0 on success. Errno on failure.
+>   *
+>   */
+> -int hmat_get_extended_linear_cache_size(struct resource *backing_res, in=
+t nid,
+> +int hmat_get_extended_linear_cache_size(struct device *dev,
+> +					struct resource *backing_res, int nid,
+>  					resource_size_t *cache_size)
 >  {
->  	int rc;
->  
-> -	mutex_lock_io(&cxl_mbox->mbox_mutex);
-> +	mutex_lock(&cxl_mbox->mbox_mutex);
->  	rc = __cxl_pci_mbox_send_cmd(cxl_mbox, cmd);
->  	mutex_unlock(&cxl_mbox->mbox_mutex);
->  
-> 
-> base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
+>  	unsigned int pxm =3D node_to_pxm(nid);
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index cb14829bb9be..7076d471ada5 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -337,6 +337,19 @@ static int add_or_reset_cxl_resource(struct resource=
+ *parent, struct resource *r
+>  	return rc;
+>  }
+> =20
+> +static int cxl_acpi_get_extended_linear_cache_size(struct cxl_root_decod=
+er *cxlrd,
+> +						   struct resource *backing_res,
+> +						   int nid,
+> +						   resource_size_t *size)
+> +{
+> +	return hmat_get_extended_linear_cache_size(&cxlrd->cxlsd.cxld.dev,
+> +						   backing_res, nid, size);
+> +}
+> +
+> +static const struct cxl_rcd_ops acpi_rcd_ops =3D {
+
+What does _rcd_ stand for?
+
+> +	.get_extended_linear_cache_size =3D cxl_acpi_get_extended_linear_cache_=
+size,
+> +};
+> +
+
+[skip]
+
+>  };
+> =20
+> +static int mock_hmat_get_extended_linear_cache_size(struct device *dev,
+> +						    struct resource *backing_res,
+> +						    int nid, resource_size_t *size)
+> +{
+> +	struct cxl_decoder *cxld;
+> +	struct cxl_port *port;
+> +
+> +	if (!is_root_decoder(dev))
+> +		return -EINVAL;
+
+Is there any real chance that dev is not a root decoder? Is that check nece=
+ssary?
+
+Thanks,
+
+=46abio
+
+
+Thanks,
+
+=46abio
+
+
 
