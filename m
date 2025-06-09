@@ -1,42 +1,41 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E01121B196;
-	Mon,  9 Jun 2025 17:05:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE15421B8EC;
+	Mon,  9 Jun 2025 17:06:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749488754; cv=none; b=kLddrXwTGvvVR5jsB8XXrEB5K27K7J2RVuHHdbn7ozHVRg2owV+t3mYjCVNhDh9R38MHRACJgZFrKCfZiPwUJrB1bmDEHKjxGodOwlLT8xXLzEZVBYMCqQNp52XcJ0Aiz8XI9cO6xWBn59+6Frxs5ywWw7H45sUt0xmR/UE5PKA=
+	t=1749488789; cv=none; b=tfjNArmO5bKjHkw2+nXjsoPLRIuIjqf/6SjBnj77owwk9NLvRl9SI7EJ1dsp8W5ydCebUscSOux97M/TaN+OPriNWV/UZiCTdGHWqKFeYXHs+YsFL6ATAavR6CYp13bmd5Iz1TBJKgARiUTbXu2aBe+eUgUPIMH/mtNLgU6a2YY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749488754; c=relaxed/simple;
-	bh=LMqM1bzqqA6GzoF9KcOSowI3oyydWM2x+aSFWvoAQ60=;
+	s=arc-20240116; t=1749488789; c=relaxed/simple;
+	bh=6425sUT3qp/eMwl8bhbaV0GvgGK38CKKWgsI+gxrBHU=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LC0YK/nhtsWX4JREmyIJKKk9Y3P8ze0ldv9erJ4kJNXGHF0xMtrN1LaTHOVF34Pc6EP+7ytDCrq4Ob7nPtxaECF0VEf+V/kHvZjgAJ4psjl1HDZzbKFbFQ9dip1QsLdDWgatFz1ES6krLX4yGl2sMxmRD9f27bodYj0rbjUzIsU=
+	 MIME-Version:Content-Type; b=aggoHyCBBMni/ICVSdFUFzZ4Oe0tGVHuvZoGfsCWH3IUOlRUjA2yf9nxC248cffPHoaB0JoioIesL64hA/qLq1vqloR/oxkvFEr6IAkniF8doxx32buOIzjMruPIp6boElRCKVrYzRSvPLTR9eS03RKMO9EBT350Rzi5MHbb62M=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bGJDJ4vJbz6L4sh;
-	Tue, 10 Jun 2025 01:04:00 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bGJF06vHqz6L5NZ;
+	Tue, 10 Jun 2025 01:04:36 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1A971140276;
-	Tue, 10 Jun 2025 01:05:48 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 5F42E140276;
+	Tue, 10 Jun 2025 01:06:24 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 9 Jun
- 2025 19:05:47 +0200
-Date: Mon, 9 Jun 2025 18:05:45 +0100
+ 2025 19:06:23 +0200
+Date: Mon, 9 Jun 2025 18:06:22 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To: Li Ming <ming.li@zohomail.com>
 CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
 	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
 	<dan.j.williams@intel.com>, <shiju.jose@huawei.com>,
 	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 2/2] cxl/Documentation: Add more description about
- min/max scrub cycle
-Message-ID: <20250609180545.00003839@huawei.com>
-In-Reply-To: <20250603104314.25569-2-ming.li@zohomail.com>
+Subject: Re: [PATCH v1 1/2] cxl/edac: Fix the min_scrub_cycle of a region
+ miscalculation
+Message-ID: <20250609180622.000033cc@huawei.com>
+In-Reply-To: <20250603104314.25569-1-ming.li@zohomail.com>
 References: <20250603104314.25569-1-ming.li@zohomail.com>
-	<20250603104314.25569-2-ming.li@zohomail.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -49,15 +48,38 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue,  3 Jun 2025 18:43:14 +0800
+On Tue,  3 Jun 2025 18:43:13 +0800
 Li Ming <ming.li@zohomail.com> wrote:
 
-> user can configurare scrub cycle for a region or a memory device via
-> sysfs interface. Currently, these interfaces have not enough description
-> for the return value. So adding return value description to these
-> interfaces.
+> When trying to update the scrub_cycle value of a cxl region, which means
+> updating the scrub_cycle value of each memdev under a cxl region. cxl
+> driver needs to guarantee the new scrub_cycle value is greater than the
+> min_scrub_cycle value of a memdev, otherwise the updating operation will
+> fail(Per Table 8-223 in CXL r3.2 section 8.2.10.9.11.1).
 > 
-> Suggested-by: Alison Schofield <alison.schofield@intel.com>
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+> Current implementation logic of getting the min_scrub_cycle value of a
+> cxl region is that getting the min_scrub_cycle value of each memdevs
+> under the cxl region, then using the minimum min_scrub_cycle value as
+> the region's min_scrub_cycle. Checking if the new scrub_cycle value is
+> greater than this value. If yes, updating the new scrub_cycle value to
+> each memdevs. The issue is that the new scrub_cycle value is possibly
+> greater than the minimum min_scrub_cycle value of all memdevs but less
+> than the maximum min_scrub_cycle value of all memdevs if memdevs have
+> a different min_scrub_cycle value. The updating operation will always
+> fail on these memdevs which have a greater min_scrub_cycle than the new
+> scrub_cycle.
+> 
+> The correct implementation logic is to get the maximum value of these
+> memdevs' min_scrub_cycle, check if the new scrub_cycle value is greater
+> than the value. If yes, the new scrub_cycle value is fit for the region.
+> 
+> The change also impacts the result of
+> cxl_patrol_scrub_get_min_scrub_cycle(), the interface returned the
+> minimum min_scrub_cycle value among all memdevs under the region before
+> the change. The interface will return the maximum min_scrub_cycle value
+> among all memdevs under the region with the change.
+> 
 > Signed-off-by: Li Ming <ming.li@zohomail.com>
 Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+
+Thanks for fixing this up.
