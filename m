@@ -1,224 +1,158 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E1993D544;
-	Mon,  9 Jun 2025 16:13:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749485612; cv=fail; b=b5VldEBST0hvmULzSbE5qpeYrzc1anjG3+TdP/cnPjcPV5kRpzI+lLKG4AgZBM21dq7bMzX2cCqaUm0lanhm+yTgE+MCquvjJP1jr9IYHt9I4O1ez1Jk+aYQ7gyWdM1Fahre2oj29zmAvMGhQ2TNULSEvXntH0fDiDgyoRhDrC0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749485612; c=relaxed/simple;
-	bh=aFe1YQPe3/fVVHvUvPmKHZlwzktXKaa4gNAzDIlnB8g=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=rYwFCgw/RxYjswozsG/i9/IckS543l/gjqDg2h7YhX5sCJHCtqAQUjURd8DkDfZoPCr1zX0EfODTG+mKuzxhn2nFqg3MWQP5pK//3AkUY8P50HFqDbXq0oWYYm5UKzzvrYqDl24UwHx+MVkPE9mIojsW/aMlXJNrMJuaGgKQOag=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nWgdjGvD; arc=fail smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nWgdjGvD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749485611; x=1781021611;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=aFe1YQPe3/fVVHvUvPmKHZlwzktXKaa4gNAzDIlnB8g=;
-  b=nWgdjGvDNuRlPkp9f6YRX7RJiiqixfTuFvf757MOLYFiMbYwYb04j9yv
-   45SMJuWcMjAcjRlafKK9MvUqwj06ZWZHqG+kdePKm62dpvljeurOlSVhb
-   JolLTl1Feq+DN3xjZ1zVrXAfVcAnMDsXov1X/nPJNXeuCt89PZk8OSAd9
-   fXwoqBgVEVwBtzN1b9ecuVFVDd+//qt5IzndfZiSIGWDjav4oJCwpxAsn
-   Jb+hShg9QJQN6Al7StwmWWaaLgnkdKx1tCQLSHQX42T9UtPJbku34fGfq
-   gKZg+m7rryIdhxTioH1Pm5FLl6WRbfXVFXh/aNdKQN1v9fd6++JH/Q/xE
-   w==;
-X-CSE-ConnectionGUID: Um+VK7m1SciqSAKQXxLoSQ==
-X-CSE-MsgGUID: 66ZOC5q/T7enQrPNVWFhmA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="61838079"
-X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
-   d="scan'208";a="61838079"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 09:13:30 -0700
-X-CSE-ConnectionGUID: wh9DeSGhSpKuH5gpX7L58Q==
-X-CSE-MsgGUID: LNyhWPQJQc+CftQf/JCOmA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
-   d="scan'208";a="147493141"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 09:13:29 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A33F3A1B6
+	for <linux-cxl@vger.kernel.org>; Mon,  9 Jun 2025 16:33:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749486821; cv=none; b=Hw8rBhr4GCFyrfkSSAVQpQ6rKReJkbCgP6xTSgz9VR9W82DOBHaZ/fDbDTojXYD5qtVFAVzGa7HuPSuhLazln6RnZn4mt+WFMvSf5+nPvWHq86znhXZq54zyPnHesbZi3xYGPBgFSyiDGPs8sJZI1E/ibr9P12hBBGNEtPK+5Ys=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749486821; c=relaxed/simple;
+	bh=jBPfT+z0nIpBHsUkSs0pIas/cCvYIiYUQymaXCMSdlY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NsX4LvtIZ0fONtnMqg/C4UCl9HTu1vvt+DxGkEQTQOz8yXCobLp5aynjGgRUY+McbYB1DyqcXq2TI0sR/kpeT7QcyPA3QcUhO6k++sfWeW2pABwLT5/bVZSIRWl/565Vez3tffTGz26IzMxeFAYy5fgZbYUyqckOBqQnzB2YWac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bGHXp1m30z6M53D;
+	Tue, 10 Jun 2025 00:33:14 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id C6BDF140276;
+	Tue, 10 Jun 2025 00:33:35 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.19.247) by
+ frapeml500008.china.huawei.com (7.182.85.71) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Mon, 9 Jun 2025 09:13:28 -0700
-Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Mon, 9 Jun 2025 09:13:28 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (40.107.93.49) by
- edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Mon, 9 Jun 2025 09:13:28 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=T1/5Omk9jauhaec3ScfZnCrigYI+YP0D2TKP0N59JeVIvUf7Rz5Up9p3Zk2XdWwnwoURJdZFg0aHDwfP3orrLUuq2y1reguNGSsoe2/EBRzwjUzB3vqpL4EoYtFrsjpx8BiBrnsMOkcc1oIcuC0BJ+4qHSAHVm8X21q9iTfy+B3hStn+WbAypCHNOcTZjSBL7jXAOvK0IJm49Jq7y2yKHsFKuWpERpr3aFNYQnR8Fm/78nHKqfRC/8OJdvReKka9ARrDtxhLTHPLXh9vPlAx/AForREGmEzCUUY0FN8+Yn360YOg4QuHuSG8EJuSCdsDURz1jYnfGYX3WwzDAG/Fug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jPqbZIpStB6366rTqhR5tbHpjA5PoY0nfhcGWWcbKPM=;
- b=PylrcCTMoSeZyy3in6p9g727iw1LpL53uGvqoPnqlOyCuXEZ68wJZzzTGICXWeXcHKNEUbr8nEZVCSpJ5RX3O+TxEL15/O/RH0mjo4bX3kEl3LG/mYLhSOJq+A3Wwlt3r/zSndz/ME5AFDBrsqvoSf/3m/EISB9WFyqtNJKjGTuZFPDuxN5Xsa7FpB1VLxRoFjrMN9FrUv4vF7VgrMZV8/Eia3JVBi5+S/udw4V+aHXkxDPtJnl2K8XXgZUxmqd/9YUJcF8Q0/p4BaKtG/1e2/uOgbP0P9jVgVGtq/FJiVH1KxdQBC3HjQsd6wq9lt7T7/ftIIdbqvLqORoZqn5C7g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from IA4PR11MB9131.namprd11.prod.outlook.com (2603:10b6:208:55c::11)
- by SJ0PR11MB6623.namprd11.prod.outlook.com (2603:10b6:a03:479::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.30; Mon, 9 Jun
- 2025 16:13:21 +0000
-Received: from IA4PR11MB9131.namprd11.prod.outlook.com
- ([fe80::7187:92a3:991:56e2]) by IA4PR11MB9131.namprd11.prod.outlook.com
- ([fe80::7187:92a3:991:56e2%7]) with mapi id 15.20.8813.024; Mon, 9 Jun 2025
- 16:13:20 +0000
-Date: Mon, 9 Jun 2025 11:14:24 -0500
-From: Ira Weiny <ira.weiny@intel.com>
-To: Shiju Jose <shiju.jose@huawei.com>, Alison Schofield
-	<alison.schofield@intel.com>, Dan Carpenter <dan.carpenter@linaro.org>
-CC: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
-	<jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, "Vishal
- Verma" <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, "Dan
- Williams" <dan.j.williams@intel.com>, Li Ming <ming.li@zohomail.com>, Fan Ni
-	<fan.ni@samsung.com>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "kernel-janitors@vger.kernel.org"
-	<kernel-janitors@vger.kernel.org>
-Subject: RE: [PATCH next] cxl: fix return value in
- cxlctl_validate_set_features()
-Message-ID: <684708602e1c8_1b0de02945d@iweiny-mobl.notmuch>
-References: <aDbFPSCujpJLY1if@stanley.mountain>
- <aDcqO5hlGrRXzIPT@aschofie-mobl2.lan>
- <3cf2e87f32934c6d84ede6415206a352@huawei.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <3cf2e87f32934c6d84ede6415206a352@huawei.com>
-X-ClientProxiedBy: MW4PR03CA0133.namprd03.prod.outlook.com
- (2603:10b6:303:8c::18) To IA4PR11MB9131.namprd11.prod.outlook.com
- (2603:10b6:208:55c::11)
+ 15.1.2507.39; Mon, 9 Jun 2025 18:33:35 +0200
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Klaus Jensen <k.jensen@samsung.com>, <cminyard@mvista.com>, Fan Ni
+	<fan.ni@samsung.com>, Anisa Su <anisa.su@samsung.com>,
+	<qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>, <mst@redhat.com>
+CC: <linuxarm@huawei.com>, =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?=
+	<philmd@linaro.org>
+Subject: [RFC PATCH qemu 0/5] hw/cxl/mctp/i2c/usb: MCTP for OoB control of CXL devices.
+Date: Mon, 9 Jun 2025 17:33:28 +0100
+Message-ID: <20250609163334.922346-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA4PR11MB9131:EE_|SJ0PR11MB6623:EE_
-X-MS-Office365-Filtering-Correlation-Id: 35970f0b-a4e0-4383-2eb9-08dda7708d30
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?REJ3kFhvQFZkzSngyujlnAmTKrd+UMyOk0bOdLRmcuc3ZVYAI5CBht31kI/g?=
- =?us-ascii?Q?Z0f+MFqr3utuOftRnOI4IGUvPS7POxczSh75+r7nXWd4sFsniX7HqJ5Z2MNm?=
- =?us-ascii?Q?iS6oS4csP3fQ0JCvqZAH8TfuAJ1j6XJ4CInUGEpXCthW5JkxkIjfVdaBycB2?=
- =?us-ascii?Q?ZWsIvACtWP+GlW+XOh2wwygv07qRHMuUSG2NxBGS1b8TvGUQO4gxza08rs6r?=
- =?us-ascii?Q?JoHa4WeyF2OfUyv+7/gJzWJZDPEgYnxPtrsqWz9kaJ2X/+F3pxBJvVJVd3Hv?=
- =?us-ascii?Q?d0UEyKyWf36ryz/8wmGSG5MgFCaMeiBbRXWpusnI8AK0KtwiVGwxKw386C7X?=
- =?us-ascii?Q?8L8ZJIKS5USGyqkJ2xbd6sIFSKu79/AF++bQO23gr/hAGqa7lGgFIJM7CCxS?=
- =?us-ascii?Q?GOe3SCoQix2e7t4migNjr9lWQL0NgDAz3+uR9zS4RdSqx8FEGugY/8RZRPzm?=
- =?us-ascii?Q?v7BcBKF6iHWA8Br5idCsNg3b8iwE7bB31GtUpxnyYx6awHYIvBa02WKo2syA?=
- =?us-ascii?Q?UCMWz0fMCT8s54PU0C3Z1Zc9WU6EKzr/ch0xeMKYL2/HqO7v8a2RrEuTynMY?=
- =?us-ascii?Q?iz1sN4F4q59nDl9TNyGD5Vs2YFe25Q8pHkB1sMB8cfi6sYMyfhxQXDQFkgiv?=
- =?us-ascii?Q?MeIHdIhljopsbFUR1Ux1IY831MA30utL+nkvdmaTtoDWMUo2feptdPDk/29p?=
- =?us-ascii?Q?TMnBkzwb2YbA5ZtpquqC5BTOyiAxS/wNC/kdWTw6hGX1dO5+VKCK994SkG8Q?=
- =?us-ascii?Q?OyZPEexKkipVYSlkMN2EugIaNVjWKfz4AgpJ65mxLUq/R6h26Kk0XUCqQeAH?=
- =?us-ascii?Q?8oSd0qWkCOJmh2svMIH0Q7LOxj80JGLZG4wcfGeuRMY02t+dayghnIpewu5v?=
- =?us-ascii?Q?f2GVBXElasCDJVnvmSyo5Xw1gvu6a0yjVP+cquYLenCkA/j8l+YiyzOrZv2M?=
- =?us-ascii?Q?CSkCqiW9aADYbQxOPjCqhUTdcAJFNO6w0H13kWVHqxPieZeyrYmXTeNAwadB?=
- =?us-ascii?Q?PV16KpBHXAqVDthTes4/rxD/TAv5WL+gYR7WLa9tOYWg8mMqO7YKpi8Z/R1Q?=
- =?us-ascii?Q?3Od/I3NUk4Mpv0F3JgFS5iTtZmDpdg+k5ECCNGdabG5/1OIxm690FeZoMOao?=
- =?us-ascii?Q?k/dWNP1mi2EjOmPU0nqh5oKn6UmGE35fgsJ8G16Y1vbxIdgmo+DqV2lj1LHS?=
- =?us-ascii?Q?xqcoelC0Cl8HAmwvhvg7Zsj4c3zE5DwyxQCOJdgUaZpKCbr75B+f5vI0Cd9m?=
- =?us-ascii?Q?rQYNGY2dWSuho/HxWHeNlx5RR3OBT0lpiT87Kgm484jhLCZtcLHs5lyjXU3v?=
- =?us-ascii?Q?s1j0wrTVaaYwLRB/kqsKU14wdSVYn796j0Akl7U8IzutUb+iYYj4cldGLWNk?=
- =?us-ascii?Q?UYCe0/LCDKvJQprns31YDktqtwvvoJxuudHdWWwbMI1Xcug+wsvR3IMFkIZM?=
- =?us-ascii?Q?V2+6w8x/b8Y=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA4PR11MB9131.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?H88yD272DM1gaibOC8cvrl1Yj/QZskBxqcEmVfVLhjRCoOB+JWauqqnTE8A5?=
- =?us-ascii?Q?Qt6+O7WEd7D9EW0nfc5T2g8cp70Bi7J72MwK4x8STh+DL3avDQqYVV+2e2l6?=
- =?us-ascii?Q?Y1+F0aVGdWqkzE1TSjy49noW1386GaTtcCkSiwtTsFbOcAWUYGoJEa3CnbFf?=
- =?us-ascii?Q?EAqXdIkuLxYhXllSIpOQ/EXX7sn4+JpiXKrMwAau//nukiLm+rI8YP6fvuDE?=
- =?us-ascii?Q?bGEtuJE++z2yUaW4/5YP1Mg8ja+fADSca6X9tSzulJ4BgJWkC7nb2F2w6iVl?=
- =?us-ascii?Q?xcwTuEusLfQq3LG1ZAllZ/qJtD3ZzMR7J6hVHs2KbFPR9bJ27djWL5x026jR?=
- =?us-ascii?Q?F3/pn1ir1SqdUUTTw2Fc5EV8DsfkjxUT/x1S5BufxZiWwpnitc4ILohplz5Q?=
- =?us-ascii?Q?PdM7XZ2XgIwmWGYomfZ+Vtena8WzCwLFS4HqJGH3cB8apFEPJI4hXoaFef3j?=
- =?us-ascii?Q?vjVkFwo5lTQ48iqwpIoDpBfkue74/7zPYEIitlj+g2mImfNvWMiX98j/A7CJ?=
- =?us-ascii?Q?zn02XwY3y+KbEy/ttc3UhPHosKYOwT5cdQSDlH0xc4hAsju82ZsubAU178lZ?=
- =?us-ascii?Q?hELZ+JhO5VPLPsIxkBRa7jTZ10UZwpL7PzElgR/JZaDkqciyZCy1wmgT2HmJ?=
- =?us-ascii?Q?EAuMif3roCfgGI1IMLWQrbbkt24rtpfYJ8GlIJxKAZbvOX35I3geQongi62D?=
- =?us-ascii?Q?Pu8jfaqaGXhTwIjgdqm0Gu9/lKnGzuRjYvRNo28DZ3mFGU5frht4I7ltSORE?=
- =?us-ascii?Q?DikNY6KZSDjvrREQ5LIUMkrwVVNS+OdsF0y8tCufjZzJszR8tRGtZaMKcRL8?=
- =?us-ascii?Q?wGul/H+l2nvFt2/BRWB8/4NsQhoieRcPWClpYWVqMMEz7c5gDKlYiW+QYuTa?=
- =?us-ascii?Q?JW3W8n4BGqe3GpewFqCYkXTyLshcgwaIlaF/KFuoVVW8/RpWglYi8ya4vzd1?=
- =?us-ascii?Q?3R2tyQnwdCJnm4j1Ig3XxqHzI3OKw9JX22OSOMlWTfSca+oSLN2vC/UukHkp?=
- =?us-ascii?Q?QBdWArOnupPCdXqVc07V97NL+CUwYmHDptBq0Wkr10sY3dDTFi9hKXXHkw9C?=
- =?us-ascii?Q?mlKciVaZjcRSeJ6+clHq/ellyHCBiYMazOX767zTzBA8BqgXWJxFClCqDBiz?=
- =?us-ascii?Q?xC8eBr5r7Bv5EOLJ3sP0z9lkbe689G2d5Bz54Qxko27y2uFBPtTK2by3A06O?=
- =?us-ascii?Q?70vJzSAl3EHADXsR+E2XdWgCxiD2ObDYMqjQEyKWqCVD3J3Od1FGGcgFdyt/?=
- =?us-ascii?Q?l4AMi6u0z4kJXx4Y6zeTUAUbseXtWOy40PgpGwURU62cUcgOSOKsrHyX0a05?=
- =?us-ascii?Q?CwYmjofmRoOLOrGlf16ozi55El0euCK1Dd+YlM134sAlYefY6SptCnC0jrix?=
- =?us-ascii?Q?0uBoufplWO5IYjPStDkuWd5/vR/RVnnk4nqY0reIabEYgXhdK0mmqcHPajEB?=
- =?us-ascii?Q?eQ3MU85HamUKwFG4yXk3iQIo5i4HlMiJjpzp49trgFYSxQgOB8mffWuRnZjM?=
- =?us-ascii?Q?T/F1li6+GbZrwFad6rTl8t9Gsv68SNVZUh1icj5Q25qRkiD3dZ0Q0Vf8YOQr?=
- =?us-ascii?Q?BzIKau2xoECbPWEZk+gXNjLiO9ztF4mnQy/qDmIk?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 35970f0b-a4e0-4383-2eb9-08dda7708d30
-X-MS-Exchange-CrossTenant-AuthSource: IA4PR11MB9131.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2025 16:13:20.6928
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tqY0HaVaQl/teuj/YLpHzEB91uP8vQTZbEI2JXvcfBZUWliJOkxPiqHRIdlwey/0tAKfPpssw6t/BwhZwIt5lQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB6623
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-Shiju Jose wrote:
-> >-----Original Message-----
-> >From: Alison Schofield <alison.schofield@intel.com>
-> >Sent: 28 May 2025 16:23
-> >To: Shiju Jose <shiju.jose@huawei.com>; Dan Carpenter
-> ><dan.carpenter@linaro.org>
-> >Cc: Davidlohr Bueso <dave@stgolabs.net>; Jonathan Cameron
-> ><jonathan.cameron@huawei.com>; Dave Jiang <dave.jiang@intel.com>; Vishal
-> >Verma <vishal.l.verma@intel.com>; Ira Weiny <ira.weiny@intel.com>; Dan
-> >Williams <dan.j.williams@intel.com>; Li Ming <ming.li@zohomail.com>; Fan Ni
-> ><fan.ni@samsung.com>; linux-cxl@vger.kernel.org; linux-
-> >kernel@vger.kernel.org; kernel-janitors@vger.kernel.org
-> >Subject: Re: [PATCH next] cxl: fix return value in cxlctl_validate_set_features()
-> >
-> >On Wed, May 28, 2025 at 11:11:41AM +0300, Dan Carpenter wrote:
-> >> The cxlctl_validate_set_features() function is type bool.  It's
-> >> supposed to return true for valid requests and false for invalid.
-> >> However, this error path returns ERR_PTR(-EINVAL) which is true when
-> >> it was intended to return false.
-> >
-> >Shiju - Can you trace this one through and add the impact statement?
-> >Wondering if this is going to fail gracefully, or badly, further down this path?
-> 
-> Hi Alison,
-> 
-> This is introduced when following fwctl specific code
-> move out of common  function (use both in fwctl and edac path)
-> get_support_feature_info() to fwctl specific function
-> cxlctl_validae_set_feature().
-> "if (rpc_in->op_size < sizeof(uuid_t))
->       return ERR_PTR(-EINVAL);"
-> 
-> This may have an impact on fwctl side if the above check pass.
-> 
+This posting is primarily about sharing the USB device emulation to get some
+early feedback.
 
-I got a bit sidetracked by this conversation.
+RFC reasons:
+- Known 'inaccuracies' in emulation (not obeying MTU in the to host direction for
+  example)./
+- Not sure what to do wrt to Klaus' I2C MCTP support given that has been stalled
+  for some time. For now only the headers are really shared between the
+  two implementations.
+- This is more of an FYI / request for testing than a formal suggestion that this
+  might be ready for upstream.
 
-It seems the TLDR is:
+Why add a CXL FM-API over MCTP over USB device?
+- Can be emulated on pretty much any host system as USB is discoverable and
+  expandable. If you want a giggle, see the hacks on i386/pc and arm/virt on
+  we've been using until now given only I2C controller that works is the aspeed
+  one. e.g. https://gitlab.com/jic23/qemu/-/commit/134c2e3952b
+- Being able to talk to both the fabric management out of band interfaces
+  and the in band devices on the same host makes testing much simpler.
 
-This fix is not required.  But should be fixed for long term correctness.
+Background:
 
-With that interpretation.
+Back in 2022 I posted some support for controlling the CXL fabric via the
+spec defined out of band interfaces (CXL Fabric Management API - FM-API)
+over MCTP on I2C
 
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+https://lore.kernel.org/qemu-devel/20220520170128.4436-1-Jonathan.Cameron@huawei.com/
+I reworked that on top of the NVME-MI work from Klauss.
+
+To that end I hacked the aspeed-i2c controller onto both i386/pc and arm/virt
+and posted kernel patches to enabled ACPI support for that device (more or less).
+It worked and has been useful in the meantime, but adding that i2c controller
+to those boards was obviously not going to be upstreamable - and to build
+reliable tests against it I don't want to carry this out of tree for ever.
+I messed around with a PCI hosted aspeed controller and might come back to
+that at some point.
+
+In the meantime, DMTF published a transport binding for MCTP over USB
+https://www.dmtf.org/sites/default/files/standards/documents/DSP0283_1.0.1.pdf
+
+Kernel support duly followed early this year: drivers/net/mctp/mctp-usb.c
+https://codeconstruct.com.au/docs/mctp-over-usb/
+
+Given the ease of adding a suitable USB controller on a PCI bus, emulating a
+suitable endpoint provides what I think is an upstreamable solution.
+
+To use this:
+ -device usb-ehci,id=ehci
+ -device usb-cxl-mctp,bus=ehci.0,id=fred,target=us0
+
+where target is either a CXL switch upstream port, or a type 3 device.
+
+Then install the mctp userspace tools in your guest and configure it with
+
+  mctp addr add 8 dev mctpusb0
+  mctp link set mctpusb0 net 11
+  mctp link set mctpusb0 up
+
+  systemctl start mctpd.service
+  busctl call au.com.codeconstruct.MCTP1 /au/com/codeconstruct/mctp1/interfaces/mctpusb0 au.com.codeconstruct.MCTP.BusOwner1 SetupEndpoint ay 0
+
+I've been testing the CXL commands with
+
+https://gitlab.com/jic23/cxl-fmapi-tests
+(mostly because I still had them in my image from the i2c work)
+but libcxlmi is probably a better bet
+
+https://github.com/computexpresslink/libcxlmi
+
+I'll post a tree with this on at gitlab.com/jic23/qemu shortly
+(cxl-<latest date>).
+
+Jonathan Cameron (3):
+  hw/cxl/i2c_mctp_cxl: Initial device emulation
+  docs: cxl: Add example commandline for MCTP CXL CCIs
+  usb/mctp/cxl: CXL FMAPI interface via MCTP over usb.
+
+Klaus Jensen (2):
+  hw/i2c: add smbus pec utility function
+  hw/i2c: add mctp core
+
+ MAINTAINERS                               |   7 +
+ docs/system/devices/cxl.rst               |  27 +
+ include/hw/cxl/cxl_device.h               |   8 +
+ include/hw/i2c/mctp.h                     | 125 +++++
+ include/hw/i2c/smbus_master.h             |   2 +
+ include/hw/pci-bridge/cxl_upstream_port.h |   1 +
+ include/hw/usb.h                          |   1 +
+ include/net/mctp.h                        | 100 ++++
+ hw/cxl/cxl-mailbox-utils.c                |  49 ++
+ hw/cxl/i2c_mctp_cxl.c                     | 289 ++++++++++
+ hw/i2c/mctp.c                             | 414 ++++++++++++++
+ hw/i2c/smbus_master.c                     |  26 +
+ hw/usb/dev-mctp.c                         | 639 ++++++++++++++++++++++
+ hw/arm/Kconfig                            |   1 +
+ hw/cxl/Kconfig                            |   4 +
+ hw/cxl/meson.build                        |   4 +
+ hw/i2c/Kconfig                            |   4 +
+ hw/i2c/meson.build                        |   1 +
+ hw/i2c/trace-events                       |  14 +
+ hw/usb/Kconfig                            |   5 +
+ hw/usb/meson.build                        |   1 +
+ 21 files changed, 1722 insertions(+)
+ create mode 100644 include/hw/i2c/mctp.h
+ create mode 100644 include/net/mctp.h
+ create mode 100644 hw/cxl/i2c_mctp_cxl.c
+ create mode 100644 hw/i2c/mctp.c
+ create mode 100644 hw/usb/dev-mctp.c
+
+-- 
+2.48.1
+
