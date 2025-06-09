@@ -1,47 +1,75 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D76A320B;
-	Mon,  9 Jun 2025 13:39:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711122144A2;
+	Mon,  9 Jun 2025 15:04:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749476367; cv=none; b=tx4OR/DP9NdGYsFfFbLgHTgAd5XmQqFYZbAqzffPWjU2orRdvNLvFzL9/CNC3Rx7XrJA+Nl+tV13q0R1nA/hTZwaxZAm8jzHEil6KFXSYfu+IhmQH+spTEna2gDIoCK2dNGJy6L4uls7SxL0fN+JpqzWl3S4RyiEL+CoWuHMlhQ=
+	t=1749481480; cv=none; b=p7K3Gju5Uf2YEReuwwtvASpw/Ku90grgS5GeByUPnRrNFBSJ+K2Va3HefxI5kf4xg7YMUQyOMJC6IBOWPs4ptcx2OWhrCBLe/iQrS8J80dTV7UDM0hso3w0/P3HtzXKqVXxCd35mCZ0AYYoM3qI7brP6lLMECAfVxNYjWnLM+BM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749476367; c=relaxed/simple;
-	bh=gPk48AU13jAxLAvi85enhXQMHSUKyaTIVSCLs34IgBw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eYFHDB8B+ULHvL9fD1xO79r6IUeCH9PbmqE10As8ZU6EvBtgfh3ddh5Fh93RvWu2KdW2ir/gT+fobT494M3C2fzoc+MV/dZqEHL1Bkes7Q8RnCTBTJ3lCLih82Xs+0ri+95RkzGye1ENaPVcjUZdxTAQ0E63WAVQsWYomGerQ8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D7CFE113E;
-	Mon,  9 Jun 2025 06:39:04 -0700 (PDT)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0C2A13F59E;
-	Mon,  9 Jun 2025 06:39:21 -0700 (PDT)
-Date: Mon, 9 Jun 2025 14:39:19 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: <gregkh@linuxfoundation.org>, <rafael.j.wysocki@intel.com>,
-	Sudeep Holla <sudeep.holla@arm.com>, <linux-cxl@vger.kernel.org>,
-	<linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	Ben Cheatham <Benjamin.Cheatham@amd.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH 0/3] CXL: ACPI: faux: Fix cxl_core.ko module load
- regression
-Message-ID: <20250609-hysterical-radiant-civet-b93fac@sudeepholla>
-References: <20250607033228.1475625-1-dan.j.williams@intel.com>
+	s=arc-20240116; t=1749481480; c=relaxed/simple;
+	bh=V2PN5JsXooSqcaGIvoztdatOOtrQfmNHfS85eSZtJ/k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kGEU/O+bOeaSGFeIEDjsJnbgvQC1rjFE5mywYSiSaXQBD47S8qVdJsUp2Riph1HOZOGRhXi8fffLFPypmckRXlE14BJ3EJq+lfZIJk0hZ3CFoGUgYnoyMa4dpSEt36MYcSQHEfz5Xfn8RFdL316sKKOgvL9Fbl9V+R4Dl7Qi0sQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iv2tTttW; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iv2tTttW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749481479; x=1781017479;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=V2PN5JsXooSqcaGIvoztdatOOtrQfmNHfS85eSZtJ/k=;
+  b=iv2tTttWHOjg9NJq9dURQiOkj+RJWMEHj8M0qF0p82aSBDtzzRotlDNN
+   C831M+W/5QxrNExNhOhh4nOdnUszpAYxpi+gF88DEPIbTunm5/aprUrTE
+   BA0c7WlPUd0jv/IRGyC1c3H5HMjlATByVwdFb7pKEw0ll3VOE5VnTBiAu
+   IVk8zHwjHqNLJxv7QmOKCOshU/hh1Sbjz9d84K6TYLv+NkHAvafvrO1+E
+   8jZjhaJ8icnfuva6OCVaNtBl67JNK/+ncaVewwzBY3SjGAR2cknJgNg1h
+   hOcVgMQBPCCCSlh2gv4wKRFhhNflSsvRciHPaNFK2iSjwBnWbyLYR7ulL
+   A==;
+X-CSE-ConnectionGUID: g6vy237vSdSQh5cABFLv1g==
+X-CSE-MsgGUID: 8BrqfbK/RJaKoaZ4HcGeBw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="62174421"
+X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
+   d="scan'208";a="62174421"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 08:04:32 -0700
+X-CSE-ConnectionGUID: a3UHTwhURdOC/DPbnZXwWw==
+X-CSE-MsgGUID: kkAolnScSZuy+jStCwfN3A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
+   d="scan'208";a="146411213"
+Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.111.99]) ([10.125.111.99])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 08:04:31 -0700
+Message-ID: <2af31ff8-eee0-4868-8f97-2a390910f9ed@intel.com>
+Date: Mon, 9 Jun 2025 08:04:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] CXL: ACPI: faux: Fix cxl_core.ko module load
+ regression
+To: Dan Williams <dan.j.williams@intel.com>, gregkh@linuxfoundation.org,
+ rafael.j.wysocki@intel.com
+Cc: linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Ben Cheatham <Benjamin.Cheatham@amd.com>,
+ Danilo Krummrich <dakr@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Sudeep Holla <sudeep.holla@arm.com>
+References: <20250607033228.1475625-1-dan.j.williams@intel.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
 In-Reply-To: <20250607033228.1475625-1-dan.j.williams@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 06, 2025 at 08:32:25PM -0700, Dan Williams wrote:
+
+
+On 6/6/25 8:32 PM, Dan Williams wrote:
 > git bisect flags:
 > 
 > 6cb9441bfe8d ("ACPI: APEI: EINJ: Transition to the faux device interface")
@@ -51,14 +79,20 @@ On Fri, Jun 06, 2025 at 08:32:25PM -0700, Dan Williams wrote:
 > faux_device to make it behave more like platform_driver_probe(). Details
 > in the individual patches.
 > 
+> Dan Williams (3):
+>   driver core: faux: Suppress bind attributes
+>   driver core: faux: Quiet probe failures
+>   ACPI: APEI: EINJ: Do not fail einj_init() on faux_device_create()
+>     failure
 
-Thanks for not only reporting the issue with the commit above but also
-solving it and posting patches.
+LGTM
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-They all look good to me.
+> 
+>  drivers/acpi/apei/einj-core.c | 9 +++------
+>  drivers/base/faux.c           | 3 ++-
+>  2 files changed, 5 insertions(+), 7 deletions(-)
+> 
+> 
+> base-commit: a9dfb7db96f7bc1f30feae673aab7fdbfbc94e9c
 
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-
--- 
-Regards,
-Sudeep
