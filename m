@@ -1,135 +1,96 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA554A3C
-	for <linux-cxl@vger.kernel.org>; Mon,  9 Jun 2025 17:25:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE6621CFEC;
+	Mon,  9 Jun 2025 18:58:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749489946; cv=none; b=I0AY99/oJtT8Jphx/wXdMJlkrXQjJjAlpH/NrSoCy1E+tUVqmDTXB8asc92EnKMYLZl/QWmo0kPCwjFQENCt/JYChDPExp4c4udQjGnFMTh6P9G57fywwQE0cN1cQYF/1x69UwBiwMtxbQw/X8B0HmBSRpIiSqpdtFMQ5jgg/xg=
+	t=1749495518; cv=none; b=OTLfLGv2JKqDBEcTqtdec4FNeCRdb9BWNEXlDOXBXTcYSUZi1STW9xe1ITm8fGq0k8y34ap19wnXd6nj2f+d+D9hX5nXMFA2MDUMhVyF1zk6xPgkYibFgIJiBD9dveZTqc1AlhSVGwK1/2K9Vg+VtiDBaLv5VnHfZfGuZ/5l9iY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749489946; c=relaxed/simple;
-	bh=GpegMALV/0PmgP+yuXN7foTmbOBMxRlj+DJAHs1ZEOA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GV0bSJHvwBitUIKY51//478s/31HbFzsjPWMf4V1cIlmybK9N3T2r2OvZzkZVvfooeaNzuuwdnGN+VQAiTNjnkUff0bWBYdF9M3Ous4e1J8SXunaMH64oJ5BT4Be9vhX3xIhqAjV/4bNSVDZvrFfIsiKMrEzYAUSGuYAFkGCk3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QB8ZESsa; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749495518; c=relaxed/simple;
+	bh=jjPWTfrAHKJowj5Z+4zZD4280cfX8ICtIyTBCFXvyXA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R7lP4Sfj6DxIrfjY8EEsLAdod5uJZIHCDlCmD2RctwnHwkiz8FRlh1MmP0IG2oTf9W5O6l0IvHnupaw3wa7HR/QyfBhyXUOWkmsz5PbAEqWc+e84oZLBrx9m3V4lFzvouh5qtx6nsZwui5PZCYOd4izSI8K6wsek9oYUPyh6MyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pg3C94eU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QB8ZESsa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749489944; x=1781025944;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=GpegMALV/0PmgP+yuXN7foTmbOBMxRlj+DJAHs1ZEOA=;
-  b=QB8ZESsaKCFCero710yuinHW3TPiZ+tTCh7lC97bfnqJRSWHtsLnKHVS
-   EL9ICK9lHwK3p5rc2oqNIrB7qC+uvfodlSZnrQ6LLhofjlcm/6lMiChAx
-   E2l8YyS4NlNqagT4PTUZkmo1czp5sf0G4qRXBHkYPmwhkcZ3TAZHY99RH
-   MYU7psdhb0QMEi5d0ZFSfU2wS2EhlTHHZ1oT2QQg60AHjlDA4xgKGmItc
-   RpkTSpZ57aPUpO4lD5K07mEdcn4SV3m4r6PxoAKQ2UPmJnV5bJ9mO/iYd
-   VMzt2UeE4j7YkfPpBbKc2CWDkHwiTBIWPAsD9h2PzWCQJANsFf6NTFMVS
-   Q==;
-X-CSE-ConnectionGUID: NpxPAL2jQMGMzLzpRrzguA==
-X-CSE-MsgGUID: Uudc9CxKSPe+4ww9VY2JVw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="51671072"
-X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
-   d="scan'208";a="51671072"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 10:25:43 -0700
-X-CSE-ConnectionGUID: 18XIU7RlTuaXW9mfZp8uWw==
-X-CSE-MsgGUID: 0GuiNuFaRw6kd0Sakqeh3A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
-   d="scan'208";a="151713918"
-Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.111.99]) ([10.125.111.99])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 10:25:42 -0700
-Message-ID: <8b53e8e1-8b9f-4db5-952f-0a961942dfeb@intel.com>
-Date: Mon, 9 Jun 2025 10:25:41 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pg3C94eU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06926C4CEEB;
+	Mon,  9 Jun 2025 18:58:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749495518;
+	bh=jjPWTfrAHKJowj5Z+4zZD4280cfX8ICtIyTBCFXvyXA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=pg3C94eUpCb2nkxFPVcQnF8o5van3SJL0Bs2RSjymovqZwi0GmCzmn4m68CHPBYNL
+	 DxBUubPRtEwqI+RLvqoMs3GNGjY1NwA5dSwUzl+ZSFwQJhl87F76XegePDGKsDpzEj
+	 7v2frVfOcMcRaf6gXFwICqb/x6N8omJsyuQro1F7bkjtjayx3FQHJt7XrfUhboaJnk
+	 YTpt4ImQc7rs8WWAPYZpuwYLmENPACxZ/Tt05F1Rin5LoUYx0YdWUKdS+R2whrqxAD
+	 7OsB2isfcuDT96fNNXlTtabNGMJBrpLtWW7gvPPApL4xlq+sG2acM3vV4U+vtEhtY8
+	 0vyXWORB90R9w==
+Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-72c173211feso1420640a34.1;
+        Mon, 09 Jun 2025 11:58:38 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWkHhoOYiJw4d4etx9hxDQuAUA7r1g3ew3byLZ5Xf/sgYKsa5lB+GEH11dO36WefNkDEdSnGCDJ/X5g@vger.kernel.org, AJvYcCXWG8xJB0N0HBLb4JH9PaN33j1qNetQrvfTuMlQUvr6c39YQfeDELSeVwCUNI0Kqg9tT7+0mPZMrYWQQT1M@vger.kernel.org, AJvYcCXw19YE+bOFwWKh5PPhEs3ZHPj1CoTg3wb+9gf/mmWn74Upkl8sm39Pk19GVzW+BrhAGDsrZZgnuPIl@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGXHiAEIJ5y+mayRWOYKYTKP+ZG1xdugReGpqOplhG+K0GCoOs
+	n+dZC/aksVKvqL5zjpimK88k0lUf6saoU1L4/3xMHG9kDC70Z3n1dgL00N9G9zGUfCVXTZmTFWG
+	FxLX5fPVeQDzlWr7KNzn2UXZkvBTTZUE=
+X-Google-Smtp-Source: AGHT+IE/Kf/rglv+zULIsd/Hx9i9RCS+ZxIkARQeY4xSLesj5blmdcfud4/343OwkYCSbD3QuWbq3rTHSxaVmc5WZ3M=
+X-Received: by 2002:a05:6870:1786:b0:2c2:2f08:5e5b with SMTP id
+ 586e51a60fabf-2ea00877847mr8655527fac.13.1749495517352; Mon, 09 Jun 2025
+ 11:58:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl_test: Limit location for fake CFMWS to mappable range
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-cxl@vger.kernel.org
-Cc: Itaru Kitayama <itaru.kitayama@linux.dev>,
- Dan Williams <dan.j.williams@intel.com>,
- Marc Herbert <marc.herbert@linux.intel.com>,
- Alison Schofield <alison.schofield@intel.com>, linuxarm@huawei.com
-References: <20250527153451.82858-1-Jonathan.Cameron@huawei.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250527153451.82858-1-Jonathan.Cameron@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250607033228.1475625-1-dan.j.williams@intel.com> <2af31ff8-eee0-4868-8f97-2a390910f9ed@intel.com>
+In-Reply-To: <2af31ff8-eee0-4868-8f97-2a390910f9ed@intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 9 Jun 2025 20:58:26 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0j5+iB97rTqtOoFB0zpHzNOOHGOQVz51ZU--=4AcUPf-Q@mail.gmail.com>
+X-Gm-Features: AX0GCFtM4Z_9kTNBgzU_uqk4-HS_OYG_CSCBhIivKu7nnPX-kKHvYc24bYkuhmo
+Message-ID: <CAJZ5v0j5+iB97rTqtOoFB0zpHzNOOHGOQVz51ZU--=4AcUPf-Q@mail.gmail.com>
+Subject: Re: [PATCH 0/3] CXL: ACPI: faux: Fix cxl_core.ko module load regression
+To: Dave Jiang <dave.jiang@intel.com>, gregkh@linuxfoundation.org
+Cc: Dan Williams <dan.j.williams@intel.com>, rafael.j.wysocki@intel.com, 
+	linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Ben Cheatham <Benjamin.Cheatham@amd.com>, 
+	Danilo Krummrich <dakr@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Jun 9, 2025 at 5:04=E2=80=AFPM Dave Jiang <dave.jiang@intel.com> wr=
+ote:
+>
+>
+>
+> On 6/6/25 8:32 PM, Dan Williams wrote:
+> > git bisect flags:
+> >
+> > 6cb9441bfe8d ("ACPI: APEI: EINJ: Transition to the faux device interfac=
+e")
+> >
+> > ...as the reason basic CXL unit tests are failing on latest mainline. I=
+n
+> > addition to the fix to einj-core.c, this also needs some updates to
+> > faux_device to make it behave more like platform_driver_probe(). Detail=
+s
+> > in the individual patches.
+> >
+> > Dan Williams (3):
+> >   driver core: faux: Suppress bind attributes
+> >   driver core: faux: Quiet probe failures
+> >   ACPI: APEI: EINJ: Do not fail einj_init() on faux_device_create()
+> >     failure
+>
+> LGTM
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+>
+> >
+> >  drivers/acpi/apei/einj-core.c | 9 +++------
+> >  drivers/base/faux.c           | 3 ++-
+> >  2 files changed, 5 insertions(+), 7 deletions(-)
 
+Greg, I think it's better if I route this through the ACPI tree as the
+issue being fixed was introduced through it.
 
-On 5/27/25 8:34 AM, Jonathan Cameron wrote:
-> Some architectures (e.g. arm64) only support memory hotplug operations on
-> a restricted set of physical addresses. This applies even when we are
-> faking some CXL fixed memory windows for the purposes of cxl_test.
-> That range can be queried with mhp_get_pluggable_range(true). Use the
-> minimum of that the top of that range and iomem_resource.end to establish
-> the 64GiB region used by cxl_test.
-> 
-> From thread #2 which was related to the issue in #1.
-> 
-> Link: https://lore.kernel.org/linux-cxl/20250522145622.00002633@huawei.com/ #2
-> Reported-by: Itaru Kitayama <itaru.kitayama@linux.dev>
-> Closes: https://github.com/pmem/ndctl/issues/278 #1
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> Tested-by: Itaru Kitayama <itaru.kitayama@fujitsu.com <mailto:itaru.kitayama@fujitsu.com>
-> Tested-by: Marc Herbert <marc.herbert@linux.intel.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-Applied to cxl/next
-
-Added the config check from Alison
-
-> 
-> ---
-> I haven't given this a fixes tag because it never worked on arm64.
-> So it isn't a regression fix, and I'm not sure we want to back port this
-> which a fixes tag might well trigger.  If people want one shout and I'll
-> try and figure out what is appropriate.
-> ---
->  tools/testing/cxl/test/cxl.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-> index 8a5815ca870d..6a25cca5636f 100644
-> --- a/tools/testing/cxl/test/cxl.c
-> +++ b/tools/testing/cxl/test/cxl.c
-> @@ -2,6 +2,7 @@
->  // Copyright(c) 2021 Intel Corporation. All rights reserved.
->  
->  #include <linux/platform_device.h>
-> +#include <linux/memory_hotplug.h>
->  #include <linux/genalloc.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
-> @@ -1328,6 +1329,7 @@ static int cxl_mem_init(void)
->  static __init int cxl_test_init(void)
->  {
->  	int rc, i;
-> +	struct range mappable;
->  
->  	cxl_acpi_test();
->  	cxl_core_test();
-> @@ -1342,8 +1344,11 @@ static __init int cxl_test_init(void)
->  		rc = -ENOMEM;
->  		goto err_gen_pool_create;
->  	}
-> +	mappable = mhp_get_pluggable_range(true);
->  
-> -	rc = gen_pool_add(cxl_mock_pool, iomem_resource.end + 1 - SZ_64G,
-> +	rc = gen_pool_add(cxl_mock_pool,
-> +			  min(iomem_resource.end + 1 - SZ_64G,
-> +			      mappable.end + 1 - SZ_64G),
->  			  SZ_64G, NUMA_NO_NODE);
->  	if (rc)
->  		goto err_gen_pool_add;
-
+Any concerns regarding this?
