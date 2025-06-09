@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD14120AF98;
-	Mon,  9 Jun 2025 16:41:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4954C189513
+	for <linux-cxl@vger.kernel.org>; Mon,  9 Jun 2025 16:51:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749487263; cv=none; b=LBp5yxvWmCuFxUq2Y5fKIhWNlck9DKjIHNGjW5YnPxJbfhqkEv59IKCMocuTb195zecUBSlfF1GZYLsNP+PS8LsZCVO231+X9kKnogCM7t9RBjCSo5CBtiiLBubSU5SrDIY4uh1Cw3T2qvzsA/pqYGXwMY3g6BbNgi7KZlBU2Sk=
+	t=1749487889; cv=none; b=M1Ls4PqC8j2lzkOdBdfULR9kD4Zs1JuntRvcG8cC7E4v6Nut5V/MAUL2BuATlICYgG8YTy5FVOqkFgMYWN5EHpdTFXjZJYWChshoy98lG04m0ahzwzCcpzBlKbIQH9n5LZcLS7MWTZACYzl3MUfPBR2bYzNGH9P9194Bp4I9OY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749487263; c=relaxed/simple;
-	bh=ha7ECEKCMCDchRfPNYxpMZ6Vo/9sNn6p8DDILVKCivQ=;
+	s=arc-20240116; t=1749487889; c=relaxed/simple;
+	bh=2JKuz9nZG6GESCqspdQ7bOGdSE5TuriqIYJFH5bxThY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LJLj+x7uzdtO7r70zrGN6w/yOR+1tdU1PlbFwEtSZxWgA5Q25qce/AzGCPAKal61q4t6M58eD3Ti5SmxBsvDUve7YxDmGqWIGzSW6RChfKMfGKXk48orpOnSEgcq1v3bo+tymOhhwTQy3D6cw2MB70eq4GBAC/4beUbtWat+Sko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N6PIfZuG; arc=none smtp.client-ip=198.175.65.15
+	 In-Reply-To:Content-Type; b=BaRFR2Bz6irMnUNogkcjdeKZeBQ+H3IyEh/OYPrMpCA52FWu0aBhk9Bpzy20chYue8RxRmEXq5E3g4t3rwemb/LP9AEvPDxHX9uY+GdaiqAcd+NwHeRVxmTB7tUKcfjTDvhggntfH41hxi9t8TJfPK01haK3l+dygLJBedQMfr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KWyCoL5D; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N6PIfZuG"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KWyCoL5D"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749487262; x=1781023262;
+  t=1749487887; x=1781023887;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=ha7ECEKCMCDchRfPNYxpMZ6Vo/9sNn6p8DDILVKCivQ=;
-  b=N6PIfZuGEJBVni9Flwj6d0zMers+NHS0KVCZEarvPEHHM5vPr2hrxJed
-   lMmR8aylGzRrUPF3FH2l1Dk7zUAUkvGF/bXZWHdY4NtzK2qr8wja6pgE3
-   YFio3mxp7zGyTr9dgsew3bPrzaSKCcRknvLm9yo4y+V83mK1dVdAlyLsw
-   hjZM8/MDzvAYvyc4WUVIvJRfu1mfMbGQLV+ycLiBfr9Uf6PDio2d5HWlZ
-   4Xg3RijsNOoECqXKgXwHPg4f1chpuA6M42jX71+ggdDGVg5I56QzlbheD
-   GioEk9i67nc0WskuRtuqwA9o0tnoXnoj+iGNxJG1FxzHUCM4IX5UQwJpQ
-   A==;
-X-CSE-ConnectionGUID: Vyp5unAwS4KOF1pO+uDOKA==
-X-CSE-MsgGUID: GmMEUPJDR062VIsPpJL7/Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="55236806"
+  bh=2JKuz9nZG6GESCqspdQ7bOGdSE5TuriqIYJFH5bxThY=;
+  b=KWyCoL5DV9bECDx6x/CtISuuAP6HixLpziG1X/j4ttFmVz4WPDSt3Tt7
+   BFpXKBT3dKoO1wvJy6ATb7R1Z925eqpUpCPpmelhw0XcJ9qiAdETr7ZJY
+   KhiED76QZRag5ODD96myTuPYtE2a385jVm5XekSNHQXxHfbqWF7dB9FIH
+   Uo3uk5gHgqgaOUdLRgkuCDFLls+I48plGKguMtaK414du1BfFHTS8G/9N
+   Xqy/sUWgTIVcG+YpBj/qaU5LlklvPw4Z+VXPHyyUubPUV3OK7vRwbmcMG
+   rNC+HNYluhSL7gVLAlPrIrzzHxL/tLMF7UHglvm3gMM8e7UIp1lrwhfEm
+   Q==;
+X-CSE-ConnectionGUID: 3n6tOSeqTZ+OxiOQZ3xoog==
+X-CSE-MsgGUID: CzHj97IGRPmQeiF+A5a4oA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="69133819"
 X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
-   d="scan'208";a="55236806"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 09:40:02 -0700
-X-CSE-ConnectionGUID: A+m0HTtnQYO99xJMx+aCrA==
-X-CSE-MsgGUID: fJ3h8UzPQai2LhrzdDauZA==
+   d="scan'208";a="69133819"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 09:51:26 -0700
+X-CSE-ConnectionGUID: EYr83CLoTdCAJ9s/MUkhCA==
+X-CSE-MsgGUID: jFpDZv2AQOGnYUZhbZ7Aqg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,222,1744095600"; 
-   d="scan'208";a="151440305"
+   d="scan'208";a="146469776"
 Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.111.99]) ([10.125.111.99])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 09:40:01 -0700
-Message-ID: <a130fe6b-7b16-4ece-aa87-3d10d0f9efb3@intel.com>
-Date: Mon, 9 Jun 2025 09:39:58 -0700
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 09:51:26 -0700
+Message-ID: <1e31a20f-9b9a-4bb5-ba13-3ab2365a8a98@intel.com>
+Date: Mon, 9 Jun 2025 09:51:25 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,52 +52,123 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH next] cxl: fix return value in
- cxlctl_validate_set_features()
-To: Dan Carpenter <dan.carpenter@linaro.org>,
- Shiju Jose <shiju.jose@huawei.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, Li Ming <ming.li@zohomail.com>,
- Fan Ni <fan.ni@samsung.com>, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <aDbFPSCujpJLY1if@stanley.mountain>
+Subject: Re: [PATCH] Documentation/driver-api/cxl: Introduce conventions.rst
+To: Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Cc: fabio.m.de.francesco@linux.intel.com, Jonathan.Cameron@huawei.com,
+ rrichter@amd.com
+References: <20250603185254.3730099-1-dan.j.williams@intel.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <aDbFPSCujpJLY1if@stanley.mountain>
+In-Reply-To: <20250603185254.3730099-1-dan.j.williams@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 5/28/25 1:11 AM, Dan Carpenter wrote:
-> The cxlctl_validate_set_features() function is type bool.  It's supposed
-> to return true for valid requests and false for invalid.  However, this
-> error path returns ERR_PTR(-EINVAL) which is true when it was intended to
-> return false.
+On 6/3/25 11:52 AM, Dan Williams wrote:
+> There exists shipping platforms that bend, break, or otherwise lean on
+> ambiguities in the CXL specification. Without driver changes to accommodate
+> these deviations, end users are left without CXL subsystem RAS features.
+> Specifically, provisioning, error translation, and other flows require the
+> CXL subsystem to understand the platforms CXL topology beyond undecorated
+> memory address ranges.
 > 
-> Fixes: f76e0bbc8bc3 ("cxl: Update prototype of function get_support_feature_info()")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Those isolated compatibility problems risk growing into deeper upstream
+> maintenance burden if different platform vendors arrive at diverging
+> solutions. For example, there are multiple options for resolving
+> low-memory-mmio intersecting large-interleave-ways CXL windows. Linux
+> should only entertain one solution to that problem.
+> 
+> Now, with the ACPI Specification Working Group, situations like this would
+> be resolved with the "Code First ECN" process to codify Linux expectations
+> in a specification. In the absence of such a process for the CXL
+> specification, create a file in Linux documentation to detail the
+> motivations, assumptions, tradeoffs, and proposals for amending
+> specification language.
+> 
+> The goal is to capture the issues such that platform vendors arrive at
+> compatible solutions for these problems and serve as a repository for
+> potential specification updates. The expectation is to update
+> conventions.rst along with CXL subsystem code changes to accommodate the
+> platform topology.
+> 
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-Applied to cxl/fixes
+Applied to cxl/next
+
+Rebased against v6.16-rc1
 
 > ---
->  drivers/cxl/core/features.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  Documentation/driver-api/cxl/conventions.rst | 48 ++++++++++++++++++++
+>  Documentation/driver-api/cxl/index.rst       |  2 +
+>  2 files changed, 50 insertions(+)
+>  create mode 100644 Documentation/driver-api/cxl/conventions.rst
 > 
-> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-> index 6f2eae1eb126..7c750599ea69 100644
-> --- a/drivers/cxl/core/features.c
-> +++ b/drivers/cxl/core/features.c
-> @@ -544,7 +544,7 @@ static bool cxlctl_validate_set_features(struct cxl_features_state *cxlfs,
->  	u32 flags;
+> diff --git a/Documentation/driver-api/cxl/conventions.rst b/Documentation/driver-api/cxl/conventions.rst
+> new file mode 100644
+> index 000000000000..662dbaf1f045
+> --- /dev/null
+> +++ b/Documentation/driver-api/cxl/conventions.rst
+> @@ -0,0 +1,48 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +.. include:: <isonum.txt>
+> +
+> +=======================================
+> +Compute Express Link: Linux Conventions
+> +=======================================
+> +
+> +There exists shipping platforms that bend or break CXL specification
+> +expectations. Record the details and the rationale for those deviations.
+> +Borrow the ACPI Code First template format to capture the assumptions
+> +and tradeoffs such that multiple platform implementations can follow the
+> +same convention.
+> +
+> +<(template) Title>
+> +==================
+> +
+> +Document
+> +--------
+> +CXL Revision <rev>, Version <ver>
+> +
+> +License
+> +-------
+> +SPDX-License Identifier: CC-BY-4.0
+> +
+> +Creator/Contributors
+> +--------------------
+> +
+> +Summary of the Change
+> +---------------------
+> +
+> +<Detail the conflict with the specification and where available the
+> +assumptions and tradeoffs taken by the hardware platform.>
+> +
+> +
+> +Benefits of the Change
+> +----------------------
+> +
+> +<Detail what happens if platforms and Linux do not adopt this
+> +convention.>
+> +
+> +References
+> +----------
+> +
+> +Detailed Description of the Change
+> +----------------------------------
+> +
+> +<Propose spec language that corrects the conflict.>
+> +
+> diff --git a/Documentation/driver-api/cxl/index.rst b/Documentation/driver-api/cxl/index.rst
+> index 965ba90e8fb7..721a2dacf8fc 100644
+> --- a/Documentation/driver-api/cxl/index.rst
+> +++ b/Documentation/driver-api/cxl/index.rst
+> @@ -12,4 +12,6 @@ Compute Express Link
 >  
->  	if (rpc_in->op_size < sizeof(uuid_t))
-> -		return ERR_PTR(-EINVAL);
-> +		return false;
+>     maturity-map
 >  
->  	feat = cxl_feature_info(cxlfs, &rpc_in->set_feat_in.uuid);
->  	if (IS_ERR(feat))
+> +   conventions
+> +
+>  .. only::  subproject and html
+> 
+> base-commit: a5806cd506af5a7c19bcd596e4708b5c464bfd21
 
