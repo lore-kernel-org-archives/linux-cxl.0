@@ -1,130 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB495253358;
-	Mon,  9 Jun 2025 10:43:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC17E2561AE
+	for <linux-cxl@vger.kernel.org>; Mon,  9 Jun 2025 10:55:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749465782; cv=none; b=AzyLk3Ow9B72lGpEk2y+q2cpGIvyAUMAAaDnPF2oUKcyTRqAgrhWNkUkHNAUVxY4Sli3fVilkt0fXERdIQLXW6YOcvCBRt2kdz/k3k8tvWB0LkZrRgvu5oW1Je7yj7CcSxcSfz+yeOyn2gmUc7ub2ac2n/hC04FQPJNZNjQTtx0=
+	t=1749466524; cv=none; b=Wik3qE6R09UfSDS0l9s9VZBBJYnZ39xmd55vU0oDNhxwOCEqla/RmBYUft2Y6QHIyGzLoJ2/k+55rkTCPnW8nYSDtSrqABLaKlxsR++xys9T21yJ+6sdh32a9MjMry6emqHSAbcvAs/x2jBYl+IvmA0b+PdO7uI3PNdn8vveBkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749465782; c=relaxed/simple;
-	bh=RO0M5v7DMElc6ChipnWpEqVr3s8Oz/7GQJ9z5A8pIUw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AoiuD2VOZVzRDeRXKsYbGwjVp4lkcelRmyi0b+wEKcOBjOloAxgLOGpJ7wCGuGAXZpIVTuyvl3G+OJ0y+U2riRMwoPDjrqM1jEIKlOOVDBbW4zI7vIJUBjQb28Z/RwNbx/pQ2/y4HvPQ+oQ6tbWTV2buVBqNLk8y1GkNyXJ43Vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=v0jpNaGt; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="v0jpNaGt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20D79C4CEEB;
-	Mon,  9 Jun 2025 10:43:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1749465782;
-	bh=RO0M5v7DMElc6ChipnWpEqVr3s8Oz/7GQJ9z5A8pIUw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=v0jpNaGtYcfgBNwB9QHKxk53cdsW/8wa8sGn2pYhvI5IACqvWHaiILp/4fBmTxHYG
-	 oq2vrXcwDoqIVXX0lINDR4h47F5VkHwnp0liveJXl7Fzk92Ti8nmc8a4d41eg0PfAY
-	 aoWG1RMo9AgZKxgvK1+mKuDotexUqFcHcZe/EEZY=
-Date: Mon, 9 Jun 2025 12:42:53 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, rafael.j.wysocki@intel.com,
-	linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Ben Cheatham <Benjamin.Cheatham@amd.com>
-Subject: Re: [PATCH 3/3] ACPI: APEI: EINJ: Do not fail einj_init() on
- faux_device_create() failure
-Message-ID: <2025060954-district-breeder-2c3e@gregkh>
-References: <20250607033228.1475625-1-dan.j.williams@intel.com>
- <20250607033228.1475625-4-dan.j.williams@intel.com>
- <20250609111758.0000258d@huawei.com>
+	s=arc-20240116; t=1749466524; c=relaxed/simple;
+	bh=qpYsbWnkCfmrMxo41kVD1aM2hwIb+HBRlqr2c6GdwZk=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Qpr2f2W/i/skOI2mt/uu2bWgavrpd954hg+qVP8WiqjO4maO7RY2BkB+fPKhVA8fy5S/LsolpGNgQFY1pXL6Xz2HxqLliqovFvxJT4Ebbizy4i7L7ZKWs0N/gmfO0Gy2WqSfD74GjoE8lJfnj/0t24ojAmB9Zrrx+e7qZ0ceZMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bG82V0VDwz6M4q3;
+	Mon,  9 Jun 2025 18:54:58 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 46CCF1404D8;
+	Mon,  9 Jun 2025 18:55:19 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 9 Jun
+ 2025 12:55:18 +0200
+Date: Mon, 9 Jun 2025 11:55:17 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <dave.jiang@intel.com>,
+	<fabio.m.de.francesco@linux.intel.com>, <rrichter@amd.com>
+Subject: Re: [PATCH] Documentation/driver-api/cxl: Introduce conventions.rst
+Message-ID: <20250609115517.00000ad4@huawei.com>
+In-Reply-To: <20250603185254.3730099-1-dan.j.williams@intel.com>
+References: <20250603185254.3730099-1-dan.j.williams@intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250609111758.0000258d@huawei.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Mon, Jun 09, 2025 at 11:17:58AM +0100, Jonathan Cameron wrote:
-> On Fri, 6 Jun 2025 20:32:28 -0700
-> Dan Williams <dan.j.williams@intel.com> wrote:
-> 
-> > CXL has a symbol dependency on einj_core.ko, so if einj_init() fails then
-> > cxl_core.ko fails to load. Prior to the faux_device_create() conversion,
-> > einj_probe() failures were tracked by the einj_initialized flag without
-> > failing einj_init().
-> > 
-> > Revert to that behavior and always succeed einj_init() given there is no
-> > way, and no pressing need, to discern faux device-create vs device-probe
-> > failures.
-> > 
-> > This situation arose because CXL knows proper kernel named objects to
-> > trigger errors against, but acpi-einj knows how to perform the error
-> > injection. The injection mechanism is shared with non-CXL use cases. The
-> > result is CXL now has a module dependency on einj-core.ko, and init/probe
-> > failures are handled at runtime.
-> > 
-> > Fixes: 6cb9441bfe8d ("ACPI: APEI: EINJ: Transition to the faux device interface")
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> > Cc: Sudeep Holla <sudeep.holla@arm.com>
-> > Cc: Ben Cheatham <Benjamin.Cheatham@amd.com>
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > ---
-> >  drivers/acpi/apei/einj-core.c | 9 +++------
-> >  1 file changed, 3 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/acpi/apei/einj-core.c b/drivers/acpi/apei/einj-core.c
-> > index fea11a35eea3..9b041415a9d0 100644
-> > --- a/drivers/acpi/apei/einj-core.c
-> > +++ b/drivers/acpi/apei/einj-core.c
-> > @@ -883,19 +883,16 @@ static int __init einj_init(void)
-> >  	}
-> >  
-> >  	einj_dev = faux_device_create("acpi-einj", NULL, &einj_device_ops);
-> > -	if (!einj_dev)
-> > -		return -ENODEV;
-> >  
-> > -	einj_initialized = true;
-> > +	if (einj_dev)
-> > +		einj_initialized = true;
-> >  
-> >  	return 0;
-> >  }
-> >  
-> >  static void __exit einj_exit(void)
-> >  {
-> > -	if (einj_initialized)
-> > -		faux_device_destroy(einj_dev);
-> > -
-> > +	faux_device_destroy(einj_dev);
-> 
-> Hi Dan,
-> 
-> Thi bit is sort of fine though not really related, because
-> faux_device_destroy() checks
-> 
-> void faux_device_destroy(struct faux_device *faux_dev)
-> {
-> 	struct device *dev = &faux_dev->dev;
-> 
-> 	if (!faux_dev)
-> 		return;
-> 
-> Though that check is after a dereference of faux_dev
-> which doesn't look right to me.  Might be fine because
-> of how the kernel is built (I can't remember where we ended
-> up on topic of compilers making undefined behavior based
-> optimizations).  Still not that nice from a logical point of view!
+On Tue, 3 Jun 2025 11:52:54 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-I think this is fine as we just put "0 + offset of dev" into dev, and
-didn't do anything with that (i.e. no actual read of that memory
-location happened).  The compiler shouldn't be doing anything that could
-happen after the return before we check for a valid pointer here, right?
-
-thanks,
-
-greg k-h
+> There exists shipping platforms that bend, break, or otherwise lean on
+> ambiguities in the CXL specification. Without driver changes to accommodate
+> these deviations, end users are left without CXL subsystem RAS features.
+> Specifically, provisioning, error translation, and other flows require the
+> CXL subsystem to understand the platforms CXL topology beyond undecorated
+> memory address ranges.
+> 
+> Those isolated compatibility problems risk growing into deeper upstream
+> maintenance burden if different platform vendors arrive at diverging
+> solutions. For example, there are multiple options for resolving
+> low-memory-mmio intersecting large-interleave-ways CXL windows. Linux
+> should only entertain one solution to that problem.
+> 
+> Now, with the ACPI Specification Working Group, situations like this would
+> be resolved with the "Code First ECN" process to codify Linux expectations
+> in a specification. In the absence of such a process for the CXL
+> specification, create a file in Linux documentation to detail the
+> motivations, assumptions, tradeoffs, and proposals for amending
+> specification language.
+> 
+> The goal is to capture the issues such that platform vendors arrive at
+> compatible solutions for these problems and serve as a repository for
+> potential specification updates. The expectation is to update
+> conventions.rst along with CXL subsystem code changes to accommodate the
+> platform topology.
+> 
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Seems like a good way to get things going.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
