@@ -1,92 +1,125 @@
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E0B747F;
-	Tue, 10 Jun 2025 04:15:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CF8328C018
+	for <linux-cxl@vger.kernel.org>; Tue, 10 Jun 2025 09:17:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749528936; cv=none; b=I7ypSoQ/IdzzR3zCUY0iyJPgPhWL98XQ9Vu8sZhwbEpXatXS/ZWFBpHpg3mQLBxcmSs2q6YpLmOdvgoUsD4L7uoucZYzpRKMQm4ahawlbaK6rXgGsfKM3gV82JLGvHV+aXcoQWi3EeaYOhcgc2mCT1fI+yCHsniYyNidbFwFuqc=
+	t=1749547038; cv=none; b=NlckUhfsRcZ9fcTLH4Ni552XdFWq+VaJH8x24qzcifH4kDFTohqPKprcPLd4peQEPCxaAvAOfkxnO4Eva2NKrturFe6ZHe8QVWz2gz1Gsh3QHZsuOxcRrv6nd/TLVgR9xy4il2/6PFHkiA7x6DJHD/qEJMxGL2TDCqhe7h0keVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749528936; c=relaxed/simple;
-	bh=llhOqEqb+waz6qtvUyFF2WI74JyhttJdc0ni7u0DfY0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QU4qK5iEj2N1+NIcODhl9C8lGUdvv/Vpvj/N5amby+q19J3rVLqSRwCdGiw1FEqjrZhTrROVgyENS32C1I2hZCkrLq218jQk8kVCtGxSshmOjh1in5YAivlasMTKgZ8UjaDDNEweWMUF9nVYE4SywgAai/XBQZsaxJyPovVh15M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id D6F0B2009D03;
-	Tue, 10 Jun 2025 06:15:30 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id C1250366B3E; Tue, 10 Jun 2025 06:15:30 +0200 (CEST)
-Date: Tue, 10 Jun 2025 06:15:30 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Terry Bowman <terry.bowman@amd.com>
-Cc: PradeepVineshReddy.Kodamati@amd.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, dan.j.williams@intel.com, bhelgaas@google.com,
-	bp@alien8.de, ming.li@zohomail.com, shiju.jose@huawei.com,
-	dan.carpenter@linaro.org, Smita.KoralahalliChannabasappa@amd.com,
-	kobayashi.da-06@fujitsu.com, yanfei.xu@intel.com, rrichter@amd.com,
-	peterz@infradead.org, colyli@suse.de, uaisheng.ye@intel.com,
-	fabio.m.de.francesco@linux.intel.com, ilpo.jarvinen@linux.intel.com,
-	yazen.ghannam@amd.com, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v9 04/16] PCI/AER: Dequeue forwarded CXL error
-Message-ID: <aEexYj8uImRt0kr9@wunner.de>
-References: <20250603172239.159260-1-terry.bowman@amd.com>
- <20250603172239.159260-5-terry.bowman@amd.com>
+	s=arc-20240116; t=1749547038; c=relaxed/simple;
+	bh=qonDtQhJAxGe1i/kjL1q3KI7OJrw5txvzO79CYcZn/0=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VC5gUxiDiQfxZwJp/UAJwGSq8BcDZcaNOLHu5v5oGQ1mxDD0aZBwUr2I8GeVxj5iON8N7LYHPUz1bLidpZQiXQB40M7OUxWeoENmaZ4KrKdgSjBfYpEuGaBLnYjNBkoYPTJKSCwSEO4/8E6nq050B3i2KvIhzRm3oiJS18oBSZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bGjpp0PSzz6L7GZ;
+	Tue, 10 Jun 2025 17:16:50 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id A243A140525;
+	Tue, 10 Jun 2025 17:17:12 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 10 Jun
+ 2025 11:17:12 +0200
+Date: Tue, 10 Jun 2025 10:17:10 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Dave Jiang <dave.jiang@intel.com>
+CC: <linux-cxl@vger.kernel.org>, Itaru Kitayama <itaru.kitayama@linux.dev>,
+	Dan Williams <dan.j.williams@intel.com>, Marc Herbert
+	<marc.herbert@linux.intel.com>, Alison Schofield
+	<alison.schofield@intel.com>, <linuxarm@huawei.com>
+Subject: Re: [PATCH] cxl_test: Limit location for fake CFMWS to mappable
+ range
+Message-ID: <20250610101710.000008b7@huawei.com>
+In-Reply-To: <8b53e8e1-8b9f-4db5-952f-0a961942dfeb@intel.com>
+References: <20250527153451.82858-1-Jonathan.Cameron@huawei.com>
+	<8b53e8e1-8b9f-4db5-952f-0a961942dfeb@intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250603172239.159260-5-terry.bowman@amd.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, Jun 03, 2025 at 12:22:27PM -0500, Terry Bowman wrote:
-> --- a/drivers/cxl/core/ras.c
-> +++ b/drivers/cxl/core/ras.c
-> +static int cxl_rch_handle_error_iter(struct pci_dev *pdev, void *data)
-> +{
-> +	struct cxl_prot_error_info *err_info = data;
-> +	struct pci_dev *pdev_ref __free(pci_dev_put) = pci_dev_get(pdev);
-> +	struct cxl_dev_state *cxlds;
-> +
-> +	/*
-> +	 * The capability, status, and control fields in Device 0,
-> +	 * Function 0 DVSEC control the CXL functionality of the
-> +	 * entire device (CXL 3.0, 8.1.3).
-> +	 */
-> +	if (pdev->devfn != PCI_DEVFN(0, 0))
-> +		return 0;
-> +
-> +	/*
-> +	 * CXL Memory Devices must have the 502h class code set (CXL
-> +	 * 3.0, 8.1.12.1).
-> +	 */
-> +	if ((pdev->class >> 8) != PCI_CLASS_MEMORY_CXL)
-> +		return 0;
-> +
-> +	if (!is_cxl_memdev(&pdev->dev) || !pdev->dev.driver)
-> +		return 0;
+On Mon, 9 Jun 2025 10:25:41 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-Is the point of the "!pdev->dev.driver" check to ascertain that
-pdev is bound to cxl_pci_driver?
+> On 5/27/25 8:34 AM, Jonathan Cameron wrote:
+> > Some architectures (e.g. arm64) only support memory hotplug operations on
+> > a restricted set of physical addresses. This applies even when we are
+> > faking some CXL fixed memory windows for the purposes of cxl_test.
+> > That range can be queried with mhp_get_pluggable_range(true). Use the
+> > minimum of that the top of that range and iomem_resource.end to establish
+> > the 64GiB region used by cxl_test.
+> > 
+> > From thread #2 which was related to the issue in #1.
+> > 
+> > Link: https://lore.kernel.org/linux-cxl/20250522145622.00002633@huawei.com/ #2
+> > Reported-by: Itaru Kitayama <itaru.kitayama@linux.dev>
+> > Closes: https://github.com/pmem/ndctl/issues/278 #1
+> > Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> > Tested-by: Itaru Kitayama <itaru.kitayama@fujitsu.com <mailto:itaru.kitayama@fujitsu.com>
+> > Tested-by: Marc Herbert <marc.herbert@linux.intel.com>
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>  
+> 
+> Applied to cxl/next
+> 
+> Added the config check from Alison
+Thanks. Was about to send v2 but this is quicker ;)
 
-If so, you need to check "if (pdev->driver != &cxl_pci_driver)"
-directly (like cxl_handle_cper_event() does).
 
-That's because there are drivers which may bind to *any* PCI device,
-e.g. vfio_pci_driver.
+> 
+> > 
+> > ---
+> > I haven't given this a fixes tag because it never worked on arm64.
+> > So it isn't a regression fix, and I'm not sure we want to back port this
+> > which a fixes tag might well trigger.  If people want one shout and I'll
+> > try and figure out what is appropriate.
+> > ---
+> >  tools/testing/cxl/test/cxl.c | 7 ++++++-
+> >  1 file changed, 6 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+> > index 8a5815ca870d..6a25cca5636f 100644
+> > --- a/tools/testing/cxl/test/cxl.c
+> > +++ b/tools/testing/cxl/test/cxl.c
+> > @@ -2,6 +2,7 @@
+> >  // Copyright(c) 2021 Intel Corporation. All rights reserved.
+> >  
+> >  #include <linux/platform_device.h>
+> > +#include <linux/memory_hotplug.h>
+> >  #include <linux/genalloc.h>
+> >  #include <linux/module.h>
+> >  #include <linux/mutex.h>
+> > @@ -1328,6 +1329,7 @@ static int cxl_mem_init(void)
+> >  static __init int cxl_test_init(void)
+> >  {
+> >  	int rc, i;
+> > +	struct range mappable;
+> >  
+> >  	cxl_acpi_test();
+> >  	cxl_core_test();
+> > @@ -1342,8 +1344,11 @@ static __init int cxl_test_init(void)
+> >  		rc = -ENOMEM;
+> >  		goto err_gen_pool_create;
+> >  	}
+> > +	mappable = mhp_get_pluggable_range(true);
+> >  
+> > -	rc = gen_pool_add(cxl_mock_pool, iomem_resource.end + 1 - SZ_64G,
+> > +	rc = gen_pool_add(cxl_mock_pool,
+> > +			  min(iomem_resource.end + 1 - SZ_64G,
+> > +			      mappable.end + 1 - SZ_64G),
+> >  			  SZ_64G, NUMA_NO_NODE);
+> >  	if (rc)
+> >  		goto err_gen_pool_add;  
+> 
+> 
 
-Thanks,
-
-Lukas
