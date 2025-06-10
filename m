@@ -1,195 +1,433 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2043.outbound.protection.outlook.com [40.107.236.43])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5422652B8
-	for <linux-cxl@vger.kernel.org>; Tue, 10 Jun 2025 12:55:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749560108; cv=fail; b=Z43KS2dDL7CPJIeVuCZre7/gCNCsvWTQi+IdFd9zLzQrqp3xt945S20JI75SQRh/Fd/Oea2HVKIiGtjWonKhHYrvISnXAdR82lxNGcQfhz+Lcq0OzE0Px3+LRgi7AMBH26F7RMR8DddInj+ml7j0aDcqcmQOB+wQNfas8Torv0c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749560108; c=relaxed/simple;
-	bh=rpgBXhDYPdvL/aoI4tSZiNq5y4WRYGqA4jPGFAnO4LI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=AMZx+uYGszjjvbd61Y2sqLL4aLa8K89Oqh4F9cn8datISySZTTH84r+EiqGhaJFpONflGWA3FCF05QRtmQcULjxMouROFMUDbfHZxF3MttBO5Ya3x1nk4S+4kFwsgVQDHiRZa1j5jFMjDfpB6k16aRAa1u//Y8yPx75tsIRrQ+s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=JbTt47No; arc=fail smtp.client-ip=40.107.236.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="JbTt47No"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nwbz3eab4+E9aOwFlNxfFmaJ4YlV/xTYgxj6o1dtGMsImgWMFD8R+Vm1KUYfwjImpuy9ovSmnt0cnQRDvzm19XdS6uFiLooITbhxPMYLcKDUyqf/0nUvjp0vLKz9Crl05eaprivkfLwaNvI1qopzoPxHV9141zaWvMEmtxgdZ59alJRw9NrNgE3Hof/04lKsmDfNb8hTB6Dy6c71t6sNOmXgwF0nLqZdZHv/pJfPXDZoMhV51Kw0Pcnq9Od6p1+WQfGq4hyENyZRv1Cz74m1rDIWedvxP3zJNP5w2cBGJMppehEHBOaRAQsUn3CIqMPDXrAfF6kbaRNkCzlGA7N0PA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yS8zlkXY/9bWzZsbqa0U+7Gjro/tI4HCZWzHpYODu2I=;
- b=EgUguHDLajAbZuN5HuYUElubVhcqu15MIueyOaSM+0JiFiliE96tVfHEdaZBHT2NXo3GVrwVV8uK9YzLBGu83iD0AQ0PoQFe5eg3hLkIB7/xZEQfnWbibLdc1N2t0Gr8S10Mkjfnii/6dzkVfNEol+afb6w4MEEP/sQkfduLjpuY+m6RI8roI0TdvqEgX7/lY49FatmQZ97Hwikgpo94CUH0jW4uygdVYcVpUUr9BNIzoelw3893m7Gn2HnGyzmxcOlQntZHDmRvXPv6tzKnj9r9H6rYeMMsg8ysrCSvsLVrXytYaGOlSO6T+cHYa5KE6+Bt8GSvQbdynVjnmMQ2bA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yS8zlkXY/9bWzZsbqa0U+7Gjro/tI4HCZWzHpYODu2I=;
- b=JbTt47NobC1mxo7Gd3+RcXdUD3+ysd3hJuhNc4vz6Vg1frOxZhnnqufcSRHbwxKtwTaoVTImHnGh6we2ZZ+SX/JUH9IAGwNwEuU9WXSoSMtaB8XA54pc3Lp6a7673XLzCZ6QPSuGYFvjEySdThm6U0FXwSCXn/2BMDDvqGD2VmQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com (2603:10b6:930:be::18)
- by IA1PR12MB6113.namprd12.prod.outlook.com (2603:10b6:208:3eb::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.39; Tue, 10 Jun
- 2025 12:55:02 +0000
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::b965:1501:b970:e60a]) by CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::b965:1501:b970:e60a%6]) with mapi id 15.20.8792.036; Tue, 10 Jun 2025
- 12:55:02 +0000
-Date: Tue, 10 Jun 2025 14:54:57 +0200
-From: Robert Richter <rrichter@amd.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org, dave.jiang@intel.com,
-	fabio.m.de.francesco@linux.intel.com, Jonathan.Cameron@huawei.com
-Subject: Re: [PATCH] Documentation/driver-api/cxl: Introduce conventions.rst
-Message-ID: <aEgrIeoOR3J0Iaqs@rric.localdomain>
-References: <20250603185254.3730099-1-dan.j.williams@intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250603185254.3730099-1-dan.j.williams@intel.com>
-X-ClientProxiedBy: FR4P281CA0072.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:ce::17) To CYYPR12MB8750.namprd12.prod.outlook.com
- (2603:10b6:930:be::18)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8A43246BA4
+	for <linux-cxl@vger.kernel.org>; Tue, 10 Jun 2025 14:21:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749565289; cv=none; b=AN2UabziJ67AmPehKp0UuDK7OG0lnAcAA7/ue9Pw3c+jRaT1aGHcwOhCZEb/pMS/laj5GqWQtGelFdBSWIBs8iB13pe4yxpK0f0bLuYjj0iJdhBh1MXuc0ARgXCmy5i60snNyzlRRzdQ6Ee9pfEzQu66yKSjwqyvzee9ebV/VTw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749565289; c=relaxed/simple;
+	bh=pynEVxrOlN0TPKZ6MRTZ/56SXOGdnqzoIAZdbUgi3sc=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OpGb/bbuS40sId1tsrfY4d/aq/JS7jscFXEWJY7Ms3H8ljD5U9cw8QeeyJUI3EJtQsM19FiPM8GTVG7KdmGEDIbmlBezM9LfUnwUw63DmhBUrquJV/OehnOm6wqX499uEWsvcId9/PKNjDvnJLMkGxhA7L/jXAq3jiXfOjknvxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bGrYn1HTlz6M4lJ;
+	Tue, 10 Jun 2025 22:21:01 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 185CC1404C5;
+	Tue, 10 Jun 2025 22:21:24 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 10 Jun
+ 2025 16:21:23 +0200
+Date: Tue, 10 Jun 2025 15:21:21 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Arpit Kumar <arpit1.kumar@samsung.com>
+CC: <qemu-devel@nongnu.org>, <gost.dev@samsung.com>,
+	<linux-cxl@vger.kernel.org>, <nifan.cxl@gmail.com>, <dave@stgolabs.net>,
+	<vishak.g@samsung.com>, <krish.reddy@samsung.com>,
+	<a.manzanares@samsung.com>, <alok.rathore@samsung.com>
+Subject: Re: [PATCH 1/3] hw/cxl: Storing physical ports info during
+ enumeration
+Message-ID: <20250610152121.00004dda@huawei.com>
+In-Reply-To: <20250602135942.2773823-2-arpit1.kumar@samsung.com>
+References: <20250602135942.2773823-1-arpit1.kumar@samsung.com>
+	<CGME20250602140018epcas5p2de38473dfcc0369193dd826c6e0e3fac@epcas5p2.samsung.com>
+	<20250602135942.2773823-2-arpit1.kumar@samsung.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CYYPR12MB8750:EE_|IA1PR12MB6113:EE_
-X-MS-Office365-Filtering-Correlation-Id: 24c81fb6-620f-4d10-fd53-08dda81e039a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?RZu6l2WgbNvwPeif5taN4HRjiXPD0lKd6xNRnZ7ATw8o3qKogqmyAbTv0gC9?=
- =?us-ascii?Q?JfH4IaKfpy9XcOFZi/cwcM7qWhhoq9Z6Ees2zbGK/52+Im6PnUdQYsWDl+AP?=
- =?us-ascii?Q?vuxSdZLwLyADFkAt/MVZragSHuR4oqJamj1wdlMU4KGynpyVWbSPMJEPCBVy?=
- =?us-ascii?Q?q/qYaz8ObVVwK1zZ4+6gCnO0dGDGMJYxItjLG/X0/USi3+myn5wgIwuRXNxF?=
- =?us-ascii?Q?AiMVBe4BAfNXUASaNfju/+pt0N7NBXcCOCltPeXRkWxLPjVmatFwluFDTqHx?=
- =?us-ascii?Q?lRmXEohYL3UAjYjkWb65jEQXYsLXsl/gfgClDbaK8ZR8+iclZRn01bY08cyY?=
- =?us-ascii?Q?O+RnPjMlWRb1O/Htn/tdM2WYbWrct5tvH5a0WZmZCmI7yaFHBX9M7Eo5tbGr?=
- =?us-ascii?Q?i44nzuWtU7/a3kgV/jfdernODSrH3IcgZGdm+CfmVPgmXgCPrWmHICwRFQoO?=
- =?us-ascii?Q?l0rIavfstvTwN3KSLcSY5bJUpko46onN5LM2UsZqj7h2k/EoqGGBwRfg7Z29?=
- =?us-ascii?Q?wNvBmlrLXIDTtUtVHvGX2TNSEMERVCqj4F8I5Kg944/Qcf0TjoMjr7ypsut9?=
- =?us-ascii?Q?/rqeX4opXKpBnHuhwuh3sKHD3TNyonHep3JCIfvsin68wRRlCOiecGYzVv6B?=
- =?us-ascii?Q?YjQCLlsBmM1tbYhQJA2TgyMbo/B5w5jR+I2MnJnKjDd+54PIvt1COOJPHc4G?=
- =?us-ascii?Q?qhmaO1fxZz+DgBvioCH8co4icWDA42+Gd7BNNDizey6JSDyzcW2PbGwQtXws?=
- =?us-ascii?Q?LvZ7vl4oug0LLYW4ONF6b7HUDtrrmpjMYD/3f9uge0erL+Aa1dS7R4xXaAYL?=
- =?us-ascii?Q?g95jNoK45ZDJ+uEa5scz0E6aB+t/r59vKJ1px5f8S2kL0DrQZUh7NtNIK69e?=
- =?us-ascii?Q?nY+XRkqOMPcJLwCIHKMVe0ADmEMVZBBHFeFMxCF6xx53ew72kP/wNCWuBGdV?=
- =?us-ascii?Q?wKhowvtDwpIXkRnD40CRuD6lc5FosttoDVS6qttGsEYl/fcd23/hFzQ45fS9?=
- =?us-ascii?Q?LpCwYckZsWOZ3U6YkV+nxa4BLAa0j6kL8V7bcZYxxOX5ssBc5epjwm6n4PAG?=
- =?us-ascii?Q?ZFU84Pll9KJZWbCt85prpa4bFkBs7HHWfOIKe56VsIkUvhsKxwcDmk9uNHqz?=
- =?us-ascii?Q?sYwOnVyhwLWyWGkbjy7CYIiDGYzmLENdBw8x+WefeQrjMRwCEuF0hLmp4s7j?=
- =?us-ascii?Q?Ehl7nhGxI6tcjgjo0xjuevcmnX+ktx66SFhO4Ps86biglupXNy5lGravUYBP?=
- =?us-ascii?Q?hzcfSCiZ5gIBssTpuELcvcf+OXQoZEwEwROhwflcaBVuOYn/So5V2xDV+reX?=
- =?us-ascii?Q?ByIRaHE6/NIavYdurBy3oAeeLafFMaIQ//PPsS00Q5ntzBxcZ4p33YC9FWHH?=
- =?us-ascii?Q?zhi5SxhhHBaGsa27ZSipDRwUyFxxufaFwJtz4VJW+4dnW5scVgT8YtwhVn84?=
- =?us-ascii?Q?wHLudfYukD0=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?1x4UP1Si26/ASOyl+iWx5PQl3ZyEjtESXo0qkxzdgW2XCuUhnStVy4x5xndL?=
- =?us-ascii?Q?xIF3zEzDjrBBi/oFW/mhylVzFhfbP+7bdzGrqXUR4UschI/zrHdc2hOJcBR2?=
- =?us-ascii?Q?Sm9r/o899kzYj8T1gMyW9KzCMe1FRK8DSWkSupBz99xng2GyKGq4GNzsHYIA?=
- =?us-ascii?Q?ZiyZFlbbk+vctmaNhrLFyCxIKfFYuVMm+sbXqE22r3ZP1U4WBCh5w0Be4U9S?=
- =?us-ascii?Q?IRPQFTpQ7xwmrErlfhaUzCD4VtyqTxvYfcW0CcjIsJkqHE2Q5GimeF6fLtVd?=
- =?us-ascii?Q?OebJLLEjiLfro5j6N9gjTPS1/uwOHibYwQnpqx5LHwAo+P3M2ztN/0irGubY?=
- =?us-ascii?Q?XjL0CEYxITNjZgGHyYsIblqGC11WEgrNs4qvLaKb3br6OBg0Uf2TmJy2s1Ws?=
- =?us-ascii?Q?G30YgXwmua42TUFO3iaBSQ+j93MG2Gg6I/VMezQXnl5DzGRdavwSZhjDRuJF?=
- =?us-ascii?Q?ahkBthHIWl1cGZiJwuBaPn9ss3S2OzKe0yROk7rgOiey4+ppc/jLK87LL3of?=
- =?us-ascii?Q?IRIfx2YqBKyvIpJsVvpmFq2Djw69SrO9TR0w/wYWFQ9X5q9e+m7YYhZL+uBB?=
- =?us-ascii?Q?W46wUrNoxfRQ9IO0XV2sozNKrH+i8i4MIjvQzu78u+xeVggye0iN8uzpAsm+?=
- =?us-ascii?Q?uiEFGyWVwkT6JFsKuoVgKUskW6CaTvXFNblZtC3xO1USIrwtZHbIGsK9v1hI?=
- =?us-ascii?Q?Off0xXSqH1jVQO2MPoe2v4KIFUJ9JNrzv29eCexFxthZomhpd+ef0rA61sRm?=
- =?us-ascii?Q?0PzNFs+08l+2/pG879ScmSbUVR/WyOmAGmHFYKfFxCJygJ5RJk+a2mCfBIjQ?=
- =?us-ascii?Q?jDhKSYqPX1LrE5bY7l9awFogq45FW4+7yaXmZrctmIa7PeZ38+DTyABHxgKj?=
- =?us-ascii?Q?sYMRCIN9TtXOrrO+iu3iBAr3OJGsZe0meo5aIgSahjMoSylhSj59iMMNwly8?=
- =?us-ascii?Q?GiCKXVXonhjk7tpopK+D+z+4M3wjQQSyoR0SjyMOv80mNepLXqmsyaOTC2cr?=
- =?us-ascii?Q?mp3//O9iRud42wM87VImg9kF5K+EJbV/Lx/ziz+ACvnuiUoFasWd0u8Kxf2I?=
- =?us-ascii?Q?ZvvniQzyEpWjwfRy89W3my7qVjrtU+UiNJe1XJPRD47pE4K9K5ca3pKTNJb5?=
- =?us-ascii?Q?vPKOaAcaU2tbXFbpKw8tiWad2kKyXxDcQyJb7d3izlOvUS8EBFTm/fBEaYY6?=
- =?us-ascii?Q?dDtHjM/jxulDiGTQ2m7WWAhiXkbedlC35ceM2Ija+cRmFTi+ONjKrKtrz/FG?=
- =?us-ascii?Q?BXICkL87VutwoiqlN5rRTIQoqDnPHPrt4oq7UQx3vacSDaurYKb36Oi/V9HN?=
- =?us-ascii?Q?TLGqgnU57tAeEz7/BFNtk5YlSXvVcX/jvr3o1Hhk1KErsW3xCSZg2hWJQdVL?=
- =?us-ascii?Q?Ygpo1kdbYaJF+++2QiVWGuBuE0DUMjyR7Qi7XorvIp+UCuoI5Ty0Z6FfgC1q?=
- =?us-ascii?Q?nRbxHg7sVt+J/E/ZtiMD3C36R9STLNGPH4pfXqj4nPEJLOD/i9Ug7qoJuC27?=
- =?us-ascii?Q?cHBwa1mtPQ8xjEEkjQcpIKt/3lgZyhh44LlM/0JsgCAxjB7kWWx3t+fcKt5P?=
- =?us-ascii?Q?ATDOqH9fWLmEEENrMejkEsYiaWwKmsmXGPeMLhh0?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 24c81fb6-620f-4d10-fd53-08dda81e039a
-X-MS-Exchange-CrossTenant-AuthSource: CYYPR12MB8750.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2025 12:55:02.2776
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WFNcfowjSs2XBRTs6BGjcLRwb6/5tGI043Zlwv7XcXZxguxH5Xuqe3mlsjrpvbYphOohu8Cr0vsju6zWALs0Zg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6113
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-Dan,
+On Mon,  2 Jun 2025 19:29:40 +0530
+Arpit Kumar <arpit1.kumar@samsung.com> wrote:
 
-On 03.06.25 11:52:54, Dan Williams wrote:
-> There exists shipping platforms that bend, break, or otherwise lean on
-> ambiguities in the CXL specification. Without driver changes to accommodate
-> these deviations, end users are left without CXL subsystem RAS features.
-> Specifically, provisioning, error translation, and other flows require the
-> CXL subsystem to understand the platforms CXL topology beyond undecorated
-> memory address ranges.
-
-thank you for addressing and documenting this. That helps following a
-process to generalize platform specifics and add them to the spec and
-Linux driver.
-
+> Physical ports info is stored for both mailbox cci &
+> mctp based cci type as per spec CXL r3.2 Table 8-230: Physical Switch
 > 
-> Those isolated compatibility problems risk growing into deeper upstream
-> maintenance burden if different platform vendors arrive at diverging
-> solutions. For example, there are multiple options for resolving
-> low-memory-mmio intersecting large-interleave-ways CXL windows. Linux
-> should only entertain one solution to that problem.
-> 
-> Now, with the ACPI Specification Working Group, situations like this would
-> be resolved with the "Code First ECN" process to codify Linux expectations
-> in a specification. In the absence of such a process for the CXL
-> specification, create a file in Linux documentation to detail the
-> motivations, assumptions, tradeoffs, and proposals for amending
-> specification language.
+> Signed-off-by: Arpit Kumar <arpit1.kumar@samsung.com>
+Hi Arpit,
 
-I have found a collection of ACPI ECNs here:
+Sorry for slow response. I got behind on reviews in general and missed
+this in the backlog!
 
- https://github.com/pmem/acpi-spec-ecr
- https://github.com/pmem/acpi-spec-ecr/blob/main/cxl-hmat-ext-linear.md
+Anyhow, main comment is that this is mostly a refactor that only makes
+sense in a single patch with what you have in patch 2.
 
-Is there the plan to have a repo like this for CXL? Or just use
-Documentation/driver-api/cxl/ for this?
-
-> 
-> The goal is to capture the issues such that platform vendors arrive at
-> compatible solutions for these problems and serve as a repository for
-> potential specification updates. The expectation is to update
-> conventions.rst along with CXL subsystem code changes to accommodate the
-> platform topology.
-
-Ah, so it will be part of conventions.rst for each ECN, right?
-
-> 
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-
-Though it is already applied:
-
-Reviewed-by: Robert Richter <rrichter@amd.com>
-
+Don't introduce duplicate infrastructure for so few usecases.  It means
+we can't just look at he diff and see what was added vs what was removed.
+Much cleaner to just have a single refactoring patch.
 > ---
->  Documentation/driver-api/cxl/conventions.rst | 48 ++++++++++++++++++++
->  Documentation/driver-api/cxl/index.rst       |  2 +
->  2 files changed, 50 insertions(+)
->  create mode 100644 Documentation/driver-api/cxl/conventions.rst
+>  hw/cxl/cxl-mailbox-utils.c  | 166 ++++++++++++++++++++++++++++++++++++
+>  include/hw/cxl/cxl_device.h |  28 ++++++
+>  2 files changed, 194 insertions(+)
+> 
+> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> index a02d130926..680055c6c0 100644
+> --- a/hw/cxl/cxl-mailbox-utils.c
+> +++ b/hw/cxl/cxl-mailbox-utils.c
+> @@ -124,6 +124,64 @@ enum {
+>          #define GET_MHD_INFO 0x0
+>  };
+>  
+> +/* link state flags */
+Naming makes that clear (which is great) so I'd drop the comment.
+
+> +#define LINK_STATE_FLAG_LANE_REVERSED    (1 << 0)
+
+BIT(0) from qemu/bitops.h
+
+> +#define LINK_STATE_FLAG_PERST_ASSERTED   (1 << 1)
+> +#define LINK_STATE_FLAG_PRSNT            (1 << 2)
+> +#define LINK_STATE_FLAG_POWER_OFF        (1 << 3)
+> +
+> +/* physical port control info - CXL r3.2 table 7-19 */
+> +typedef enum {
+> +    PORT_DISABLED = 0,
+> +    BIND_IN_PROGRESS = 1,
+> +    UNBIND_IN_PROGRESS = 2,
+> +    DSP = 3,
+> +    USP = 4,
+> +    FABRIC_PORT = 5,
+> +    INVALID_PORT_ID = 15
+> +} current_port_config_state;
+
+These aren't used as types really but more as defines.
+Hence I'd be tempted to make them defines. Also provide
+defines for the masks.
+
+Namespace the defines so it is obvious which field
+they are in.
+
+> +
+> +typedef enum {
+> +    NOT_CXL_OR_DISCONNECTED = 0x00,
+> +    RCD_MODE = 0x01,
+> +    CXL_68B_FLIT_AND_VH_MODE = 0x02,
+> +    STANDARD_256B_FLIT_MODE = 0x03,
+> +    CXL_LATENCY_OPTIMIZED_256B_FLIT_MODE = 0x04,
+> +    PBR_MODE = 0x05
+> +} connected_device_mode;
+> +
+> +typedef enum {
+> +    NO_DEVICE_DETECTED = 0,
+> +    PCIE_DEVICE = 1,
+> +    CXL_TYPE_1_DEVICE = 2,
+> +    CXL_TYPE_2_DEVICE_OR_HBR_SWITCH = 3,
+> +    CXL_TYPE_3_SLD = 4,
+> +    CXL_TYPE_3_MLD = 5,
+> +    PBR_COMPONENT = 6
+> +} connected_device_type;
+> +
+> +typedef enum {
+> +    CXL_RCD_MODE = 0x00,
+> +    CXL_68B_FLIT_AND_VH_CAPABLE = 0x01,
+> +    CXL_256B_FLIT_CAPABLE = 0x02,
+> +    CXL_LATENCY_OPTIMIZED_256B_FLIT = 0x03,
+> +    CXL_PBR_CAPABLE = 0x04
+> +} supported_cxl_modes;
+> +
+> +typedef enum {
+> +    LTSSM_DETECT = 0x00,
+> +    LTSSM_POLLING = 0x01,
+> +    LTSSM_CONFIGURATION = 0x02,
+> +    LTSSM_RECOVERY = 0x03,
+> +    LTSSM_L0 = 0x04,
+> +    LTSSM_L0S = 0x05,
+> +    LTSSM_L1 = 0x06,
+> +    LTSSM_L2 = 0x07,
+> +    LTSSM_DISABLED = 0x08,
+> +    LTSSM_LOOPBACK = 0x09,
+> +    LTSSM_HOT_RESET = 0x0A
+> +} LTSSM_State;
+> +
+>  /* CCI Message Format CXL r3.1 Figure 7-19 */
+>  typedef struct CXLCCIMessage {
+>      uint8_t category;
+> @@ -3686,6 +3744,112 @@ void cxl_add_cci_commands(CXLCCI *cci, const struct cxl_cmd (*cxl_cmd_set)[256],
+>      cxl_rebuild_cel(cci);
+>  }
+>  
+> +static CXLRetCode cxl_set_port_type(struct phy_port *ports, int pnum,
+> +                                    CXLCCI *cci)
+> +{
+> +    PCIDevice *port_dev;
+> +    uint16_t lnkcap, lnkcap2, lnksta;
+> +    int i = pnum;
+I'd just use pnum for all the indexes.  This local variable doesn't add
+much readability.
+
+> +    if (!cci) {
+
+As below. No need to defend against bugs so only check if there is a
+chance cci might not be set.
+
+> +        return CXL_MBOX_INTERNAL_ERROR;
+> +    }
+> +
+
+Don't interleave declarations and cod.e
+
+> +    PCIBus *bus = &PCI_BRIDGE(cci->d)->sec_bus;
+> +    PCIEPort *usp = PCIE_PORT(cci->d);
+
+blank line after declarations - of include this
+in the declarations as
+    PCIEDevice *port_dev = pcie_find_port_by_pn(bus, i);
+
+However that is reasonable expensive, so maybe do the usp case first?
+
+
+> +    port_dev = pcie_find_port_by_pn(bus, i);
+> +
+> +    if (port_dev) { /* DSP */
+> +        PCIDevice *ds_dev = pci_bridge_get_sec_bus(PCI_BRIDGE(port_dev))
+> +            ->devices[0];
+> +        ports->pport_info[i].port_id = i;
+
+This is not affected by USP or DSP, so drop it out of this if / else.
+
+> +        ports->pport_info[i].current_port_config_state = DSP;
+> +        ports->active_port_bitmask[i / 8] |= (1 << i % 8);
+
+As below - this is currently set but not read, so I'd bring it in as part of
+the patch that uses it.
+
+Independent of port type, so doesn't belong in the if/else.
+
+
+> +        if (ds_dev) {
+> +            if (object_dynamic_cast(OBJECT(ds_dev), TYPE_CXL_TYPE3)) {
+> +                ports->pport_info[i].connected_device_type = CXL_TYPE_3_MLD;
+
+Hmm. We should make this controllable (vs SLD).  I made this up in the existing
+code and probably shouldn't have done :(
+
+> +            } else {
+> +                ports->pport_info[i].connected_device_type = PCIE_DEVICE;
+> +            }
+> +        } else {
+> +            ports->pport_info[i].connected_device_type = NO_DEVICE_DETECTED;
+> +        }
+> +        ports->pport_info[i].supported_ld_count = 3;
+> +    } else if (usp->port == i) { /* USP */
+> +        port_dev = PCI_DEVICE(usp);
+> +        ports->pport_info[i].port_id = i;
+> +        ports->pport_info[i].current_port_config_state = USP;
+> +        ports->pport_info[i].connected_device_type = NO_DEVICE_DETECTED;
+> +        ports->active_port_bitmask[i / 8] |= (1 << i % 8);
+> +    } else {
+> +        return CXL_MBOX_INVALID_INPUT;
+> +    }
+> +
+> +    if (!port_dev->exp.exp_cap) {
+> +        return CXL_MBOX_INTERNAL_ERROR;
+> +    }
+> +
+> +    lnksta = port_dev->config_read(port_dev,
+> +                                   port_dev->exp.exp_cap + PCI_EXP_LNKSTA,
+> +                                   sizeof(lnksta));
+> +    lnkcap = port_dev->config_read(port_dev,
+> +                                   port_dev->exp.exp_cap + PCI_EXP_LNKCAP,
+> +                                   sizeof(lnkcap));
+> +    lnkcap2 = port_dev->config_read(port_dev,
+> +                                    port_dev->exp.exp_cap + PCI_EXP_LNKCAP2,
+> +                                    sizeof(lnkcap2));
+> +
+> +    ports->pport_info[i].max_link_width = (lnkcap & PCI_EXP_LNKCAP_MLW) >> 4;
+> +    ports->pport_info[i].negotiated_link_width = (lnksta & PCI_EXP_LNKSTA_NLW) >> 4;
+> +    ports->pport_info[i].supported_link_speeds_vector = (lnkcap2 & 0xFE) >> 1;
+> +    ports->pport_info[i].max_link_speed = lnkcap & PCI_EXP_LNKCAP_SLS;
+> +    ports->pport_info[i].current_link_speed = lnksta & PCI_EXP_LNKSTA_CLS;
+> +
+> +    ports->pport_info[i].ltssm_state = LTSSM_L2;
+> +    ports->pport_info[i].first_negotiated_lane_num = 0;
+> +    ports->pport_info[i].link_state_flags = 0;
+> +    ports->pport_info[i].supported_cxl_modes = CXL_256B_FLIT_CAPABLE;
+> +    ports->pport_info[i].connected_device_mode = STANDARD_256B_FLIT_MODE;
+> +
+> +    return CXL_MBOX_SUCCESS;
+> +}
+> +
+> +static CXLRetCode cxl_set_phy_port_info(CXLCCI *cci)
+> +{
+> +    uint8_t phy_port_num;
+> +    if (!cci) {
+
+What is this defending against?  At least for now the cci
+is definitely not null where this function is used.
+
+> +        return CXL_MBOX_INTERNAL_ERROR;
+> +    }
+> +
+> +    PCIEPort *usp = PCIE_PORT(cci->d);
+
+Don't mix declarations and code.  Declarations still typically
+go at the top.
+
+> +    PCIBus *bus = &PCI_BRIDGE(cci->d)->sec_bus;
+> +    struct phy_port *ports = &cci->pports;
+> +    int num_phys_ports = pcie_count_ds_ports(bus) + 1;
+> +    if (num_phys_ports < 0) {
+
+Given add 1 this is always false and the check serve no
+purpose.
+
+> +        return CXL_MBOX_INTERNAL_ERROR;
+> +    }
+> +
+> +    ports->num_ports = num_phys_ports;
+> +    phy_port_num =  usp->port;
+> +
+> +    cxl_set_port_type(ports, phy_port_num, cci); /* usp */
+
+USP for comment given it's an acronym.
+ 
+> +
+> +    for (int devfn = 0; devfn < ARRAY_SIZE(bus->devices); devfn++) {
+
+Maybe use pci_for_each_device_under_bus() ?
+
+> +        PCIDevice *dev = bus->devices[devfn];
+> +
+> +        if (dev) {
+> +            phy_port_num = PCIE_PORT(dev)->port;
+> +            const char *typename = object_get_typename(OBJECT(dev));
+
+Normally in qemu we just use a dynamic cast to identify types rather than
+matching on names.  I'd prefer that approach here.
+
+if (object_dynamic_cast(OBJECT(dev), TYPE_CXL_DSP)
+
+
+> +
+> +            if ((strcmp(typename, "cxl-downstream") == 0)) {
+> +                cxl_set_port_type(ports, phy_port_num, cci);
+> +            } else {
+> +                return CXL_MBOX_INTERNAL_ERROR;
+> +            }
+> +        }
+> +    }
+> +    return CXL_MBOX_SUCCESS;
+> +}
+> +
+>  void cxl_initialize_mailbox_swcci(CXLCCI *cci, DeviceState *intf,
+>                                    DeviceState *d, size_t payload_max)
+>  {
+> @@ -3693,6 +3857,7 @@ void cxl_initialize_mailbox_swcci(CXLCCI *cci, DeviceState *intf,
+>      cci->d = d;
+>      cci->intf = intf;
+>      cxl_init_cci(cci, payload_max);
+> +    cxl_set_phy_port_info(cci); /* store port info */
+>  }
+>  
+>  void cxl_initialize_mailbox_t3(CXLCCI *cci, DeviceState *d, size_t payload_max)
+> @@ -3797,4 +3962,5 @@ void cxl_initialize_usp_mctpcci(CXLCCI *cci, DeviceState *d, DeviceState *intf,
+>      cci->d = d;
+>      cci->intf = intf;
+>      cxl_init_cci(cci, payload_max);
+> +    cxl_set_phy_port_info(cci); /* store port info */
+
+I'd not bother with the comment.  The naming of the function is clear enough.
+
+>  }
+> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> index ca515cab13..9eb128a1e8 100644
+> --- a/include/hw/cxl/cxl_device.h
+> +++ b/include/hw/cxl/cxl_device.h
+> @@ -127,6 +127,31 @@
+>                    CXL_NUM_CHMU_INSTANCES * (1 << 16),                   \
+>                    (1 << 16))
+>  
+> +/* CXL r3.2 Table 7-19: Port Info */
+> +struct cxl_phy_port_info {
+
+There is one of these in cxl-mailbox-utils.c already.  Pull it out
+as part of this patch.  That may mean combining patches 1 and 2.
+
+
+> +    uint8_t port_id;
+> +    uint8_t current_port_config_state;
+
+I'd pull the field defines and masks etc alongside the structure
+definition.
+
+
+> +    uint8_t connected_device_mode;
+> +    uint8_t rsv1;
+> +    uint8_t connected_device_type;
+> +    uint8_t supported_cxl_modes;
+> +    uint8_t max_link_width;
+> +    uint8_t negotiated_link_width;
+> +    uint8_t supported_link_speeds_vector;
+> +    uint8_t max_link_speed;
+> +    uint8_t current_link_speed;
+> +    uint8_t ltssm_state;
+> +    uint8_t first_negotiated_lane_num;
+> +    uint16_t link_state_flags;
+> +    uint8_t supported_ld_count;
+> +} QEMU_PACKED;
+> +
+> +struct phy_port {
+> +    uint8_t num_ports;
+> +    uint8_t active_port_bitmask[0x20];
+
+Why that size?  Also not used yet - so maybe bring this in where
+you need it?
+
+> +    struct cxl_phy_port_info pport_info[PCI_DEVFN_MAX];
+
+I think there are lower limits than that on how many ports
+we can have on a given bus + does this actually care about
+the limits from one bus?  Request is per switch, not per
+virtual heirarchy.  So we might be limited by number of unique
+port numbers.
+
+Today we only have one VCH so maybe this is fine for now.
+
+
+> +};
+> +
+>  /* CXL r3.1 Table 8-34: Command Return Codes */
+>  typedef enum {
+>      CXL_MBOX_SUCCESS = 0x0,
+> @@ -223,6 +248,9 @@ typedef struct CXLCCI {
+>      /* get log capabilities */
+>      const CXLLogCapabilities *supported_log_cap;
+>  
+> +    /*physical ports information */
+
+Space after /* 
+
+Run checkpatch.pl over qemu patches. I 'think' it would have
+caught this trivial thing.
+
+> +    struct phy_port pports;
+Storing this in the CCI is a little odd seeing (as opposed to
+in the USP - maybe DSP) as there is only one answer to this query whichever
+CCI we come in on.
+
+For similar things we do have firmware update in there which
+is a mixture of device side stuff and CCI specific handling.
+That might ideally be split up.  Obviously not something for
+this patch, but maybe we can avoid making CCI more bloated? 
+
+To me it seems reasonable to store this in the port and set
+it up whether or not the cci is connected.
+
+> +
+>      /* background command handling (times in ms) */
+>      struct {
+>          uint16_t opcode;
+
