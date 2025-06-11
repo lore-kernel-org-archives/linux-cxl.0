@@ -1,113 +1,131 @@
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 366B128469C;
-	Tue, 10 Jun 2025 22:00:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.209.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F08A613A3F2;
+	Wed, 11 Jun 2025 03:37:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749592861; cv=pass; b=i306ZyATWdITha3AEbbI+XbLu9ChKoCdklYSapQumkNMAdi90k/Nqnec2Kal5wvcNEp4UZJiNkMvrYvkP/cIDbTtDZxaqGz4PFYvRczi+kAzMZnqGIQC4uN8Rxwb/O2mBQ+O0H5TB7nopoT6Md0gbfHFnO07NfyHUARi/sOpnJU=
+	t=1749613064; cv=pass; b=cilZFT8M17vHZi3maanbWyBe3eOLuyN4pzAFUURSqoQ8nQuU/6NfCj+UwyiM5X6hrTRtQ49iJ5Vbj6lIq60tK04vy2yAkM9u2G899cIlbNnMf/e3ZFaIJFDO/4P08FPczSuSNdMufu6yDzgpzeQxNwwhSloFv8M+F4WjY2bHP4c=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749592861; c=relaxed/simple;
-	bh=dIbNFft6CaYTMLr+91ryBglJuKP2jhFXmKg1aBJZ8vI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gCTrteZP7k7Nwfd6G4ZOPpiq1AHu7sYZnhNxee+4vL+CNTJDAGZF9CEst6AP/Y8rFwJ/w3CGYFLQs72/neHHV7GDGiuPoZm8DXIUvRKjap3RWPMMtMFNG9lDxmG2GvCrLAVN/r/NUEQ9r3yJ8VRJXZPWBococUaI5rE3M3EvrKI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=BUOlSahf; arc=pass smtp.client-ip=23.83.209.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	s=arc-20240116; t=1749613064; c=relaxed/simple;
+	bh=WBYZJNpKxuiJOBYXbR+TQh0cq5L9uaE7NAB6VnlearM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AzzaspXmV4ZMZV2lasXeebnNYKS6qz6b2EQGeWxT3tItvmldWK4jUEP5xNNjXyWklt/dO924lYZmIc1V7af8N8K9iUXrgUQl44TBq56UqJ2Ual/Ijj7Z1LGsaSb18BIcm3TAAwyB55huCLRKvDx3uTf7iSfNq57ha9X5vdYl+E8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=B+Xbi1c4; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="BUOlSahf"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 89AA62C4F3D;
-	Tue, 10 Jun 2025 16:25:02 +0000 (UTC)
-Received: from pdx1-sub0-mail-a231.dreamhost.com (trex-green-9.trex.outbound.svc.cluster.local [100.119.143.12])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id E50E72C5598;
-	Tue, 10 Jun 2025 16:25:01 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1749572702; a=rsa-sha256;
-	cv=none;
-	b=KB0W8msBHstNJ9oBJ9BFRev/hfSHTRlLy5Sa/i0534dU+lLw8xGLGPdibtBUn2Da2O6Imb
-	X7HDSE50ChLnoShxZLQaVyGGbnUI1wSUlAbKpwYXK8b5PNQWej2yhBs0rOfD/eV30BkXsd
-	4R1u2eZUXMoWw2J7RDxozIYwKCt4UmDg3MEqDH4jF1CDfmyucZKa1PD9dD1c/O87HoQUD4
-	Om3C9VFTCVzpLMi5bbGsdqo6KCMSLIb9IAFlLbSiCVhrrbt7pp5MIUlDAAK4T0GZrxfdTN
-	7tg9H0tqLRa/T8eqCXmAqyiacNL7CkCkpkLibMhpDe3DZ03enkXWYehxHgVi8g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1749572702;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=dIbNFft6CaYTMLr+91ryBglJuKP2jhFXmKg1aBJZ8vI=;
-	b=RdaFcVFR1K5pEo6opZwgLv1akYVFpi8jfb1WcXKNqwqd7nxlAxU+GfMo3TJiXPR7s2JRhY
-	7o/IiLwaauVswDhXHJ4fLtrt0AFyxaD05q4o1UDJYFof1COeVS9/wdXIUO8bXnI1NgaZEU
-	NI91p2Bu02EHj1WoSPys5D2Js0XaxwapSrlXy/977jQUpB3QG6sfF0knLCDc8KgyrC9Fqs
-	Z2zWq71/Xc4iibwzN0sn17qofs+PxllVTcSQI0Wok7Ggge9ZSWDF5KSmFtpCJ9090mw6RR
-	tbW5h4bNwTLvK+uA17Xno2GvZrpUn6EZ39miKMJAxa8RaKkEQdhaKdv8IFdzPQ==
-ARC-Authentication-Results: i=1;
-	rspamd-5674bcf875-gcbmk;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Whistle-Society: 54d24218127b95f7_1749572702295_686142442
-X-MC-Loop-Signature: 1749572702295:142634956
-X-MC-Ingress-Time: 1749572702295
-Received: from pdx1-sub0-mail-a231.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.119.143.12 (trex/7.0.3);
-	Tue, 10 Jun 2025 16:25:02 +0000
-Received: from offworld (syn-076-167-199-067.res.spectrum.com [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a231.dreamhost.com (Postfix) with ESMTPSA id 4bGvJs1l23z4x;
-	Tue, 10 Jun 2025 09:25:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1749572701;
-	bh=dIbNFft6CaYTMLr+91ryBglJuKP2jhFXmKg1aBJZ8vI=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=BUOlSahfn2dlJpoN23ujgzyYTnEPXa2Q9+/1lWKciIhYHyBflU8CdErXNFy9RgbfU
-	 l9nTVYIAViuYzNejlkoaxVEV5XmaHdDU7WUK4egEuSQ1u6nDV059tUhgH+MAUdSGz9
-	 uu/OisbFV5jnRPd2nzI5toMEeG8Dg9paW1T0JtnT7vrUzj+TbJKRghGBbfleFMnBTg
-	 y/XACTSxTu3YudRmuhlKnUR201IWMNpnPRHo0nMw0V6P2kPPlUKJpVnUGj1yeK1f6O
-	 jyKRVSeUEnbSj9txcw6pBD9osrMcYaVRhjQi9Sr0iRrJm1lNiQt6cbhW2f9ffZ12x3
-	 cp3/Y65W0oLRQ==
-Date: Tue, 10 Jun 2025 09:24:57 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Li Ming <ming.li@zohomail.com>
-Cc: jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, dan.j.williams@intel.com,
-	shiju.jose@huawei.com, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] cxl/Documentation: Add more description about
- min/max scrub cycle
-Message-ID: <20250610162457.suqmw3bawg4n4zmu@offworld>
-References: <20250603104314.25569-1-ming.li@zohomail.com>
- <20250603104314.25569-2-ming.li@zohomail.com>
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="B+Xbi1c4"
+ARC-Seal: i=1; a=rsa-sha256; t=1749613046; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=h2HgZfUvVxnMbpFC3jyOX2cKHFCJPINOMZE7CgeHOSNOg6/PjdZ+hwfWryek1o7AjmhVGUYS+9hksWH3WguW+SNsOL2AqgALqbwQyZUpFXHMJwmnkzAzcyzQlZf+vsHu51jV4iqSf4AhYvm48xhziSoLihJND8i5oHAElZe2Y2g=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1749613046; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=faHRvR+SGHmxzSv7cHI84PGrtEsnJDo9oDvQ6DBDa2A=; 
+	b=Wg56mmLhoeKFAe28KoUTcqxEIxSs+oDI7jrH03Frd/+IMs1XoCQaQ8lsUeZcb8rEoO1spuUJrN1dddCbnPIErVcdZKvuutROGCuWrfhW1DAUse/1rCcN/jjf0g2apS+aM8Wu81r79Fo+VSzOh+0lxF26SZUBd0EMhXblhR2j5yE=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749613046;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
+	bh=faHRvR+SGHmxzSv7cHI84PGrtEsnJDo9oDvQ6DBDa2A=;
+	b=B+Xbi1c4KU0Wv/RnuPEFwyGGm/PsPL0VAgi3cRmsxvdWfJrWBK0GgfeZKjoCres7
+	729Z0pcEAP9BRLYurR15VAzjPhys9wxvZl5GdN9GzpvYvMX1HkkQAn9JpIYxSPR1OW9
+	rTTYNh4p8gKDXSBN4t2Pj9FSR4VFHgHM2p9EgGIc=
+Received: by mx.zohomail.com with SMTPS id 1749613044314624.6785588017032;
+	Tue, 10 Jun 2025 20:37:24 -0700 (PDT)
+From: Li Ming <ming.li@zohomail.com>
+To: dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com,
+	shiju.jose@huawei.com
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Li Ming <ming.li@zohomail.com>
+Subject: [PATCH 1/1] cxl/edac: Fix potential memory leak issues
+Date: Wed, 11 Jun 2025 11:35:42 +0800
+Message-Id: <20250611033542.96184-1-ming.li@zohomail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250603104314.25569-2-ming.li@zohomail.com>
-User-Agent: NeoMutt/20220429
+Content-Transfer-Encoding: 8bit
+Feedback-ID: rr08011227d2a18e541872dd899b08b2780000ef9113495e4c5a724022f8f4c8e44db4221c7aba003b0413a7:zu080112276e7654b12c07aa55d2c5f5cc0000fbb3770a9a91b5c2455bf3c8fbdc8947ce237166555cdb479d:rf0801122d1cc9bff403e174513f9128b40000900505c44c2c6c26ab15d56e00452bc821e69e23e7997452209261b63b08e5:ZohoMail
+X-ZohoMailClient: External
 
-On Tue, 03 Jun 2025, Li Ming wrote:
+In cxl_store_rec_gen_media() and cxl_store_rec_dram(), use kmemdup() to
+duplicate a cxl gen_media/dram event to store the event in a xarray by
+xa_store(). The cxl gen_media/dram event allocated by kmemdup() should
+be freed in the case that the xa_store() fails.
 
->user can configurare scrub cycle for a region or a memory device via
->sysfs interface. Currently, these interfaces have not enough description
->for the return value. So adding return value description to these
->interfaces.
->
->Suggested-by: Alison Schofield <alison.schofield@intel.com>
->Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
->Signed-off-by: Li Ming <ming.li@zohomail.com>
+Fixes: 0b5ccb0de1e2 ("cxl/edac: Support for finding memory operation attributes from the current boot")
+Signed-off-by: Li Ming <ming.li@zohomail.com>
+---
+base-commit: 87b42c114cdda76c8ad3002f2096699ad5146cb3 cxl/fixes
+---
+ drivers/cxl/core/edac.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
+index 2cbc664e5d62..b4c5c23a45d4 100644
+--- a/drivers/cxl/core/edac.c
++++ b/drivers/cxl/core/edac.c
+@@ -1086,13 +1086,13 @@ static void cxl_del_overflow_old_recs(struct xarray *rec_xarray)
+ int cxl_store_rec_gen_media(struct cxl_memdev *cxlmd, union cxl_event *evt)
+ {
+ 	struct cxl_mem_err_rec *array_rec = cxlmd->err_rec_array;
+-	struct cxl_event_gen_media *rec;
+ 	void *old_rec;
+ 
+ 	if (!IS_ENABLED(CONFIG_CXL_EDAC_MEM_REPAIR) || !array_rec)
+ 		return 0;
+ 
+-	rec = kmemdup(&evt->gen_media, sizeof(*rec), GFP_KERNEL);
++	struct cxl_event_gen_media *rec __free(kfree) =
++		kmemdup(&evt->gen_media, sizeof(*rec), GFP_KERNEL);
+ 	if (!rec)
+ 		return -ENOMEM;
+ 
+@@ -1106,6 +1106,7 @@ int cxl_store_rec_gen_media(struct cxl_memdev *cxlmd, union cxl_event *evt)
+ 
+ 	cxl_del_expired_gmedia_recs(&array_rec->rec_gen_media, rec);
+ 	cxl_del_overflow_old_recs(&array_rec->rec_gen_media);
++	retain_and_null_ptr(rec);
+ 
+ 	return 0;
+ }
+@@ -1114,13 +1115,13 @@ EXPORT_SYMBOL_NS_GPL(cxl_store_rec_gen_media, "CXL");
+ int cxl_store_rec_dram(struct cxl_memdev *cxlmd, union cxl_event *evt)
+ {
+ 	struct cxl_mem_err_rec *array_rec = cxlmd->err_rec_array;
+-	struct cxl_event_dram *rec;
+ 	void *old_rec;
+ 
+ 	if (!IS_ENABLED(CONFIG_CXL_EDAC_MEM_REPAIR) || !array_rec)
+ 		return 0;
+ 
+-	rec = kmemdup(&evt->dram, sizeof(*rec), GFP_KERNEL);
++	struct cxl_event_dram *rec __free(kfree) =
++		kmemdup(&evt->dram, sizeof(*rec), GFP_KERNEL);
+ 	if (!rec)
+ 		return -ENOMEM;
+ 
+@@ -1134,6 +1135,7 @@ int cxl_store_rec_dram(struct cxl_memdev *cxlmd, union cxl_event *evt)
+ 
+ 	cxl_del_expired_dram_recs(&array_rec->rec_dram, rec);
+ 	cxl_del_overflow_old_recs(&array_rec->rec_dram);
++	retain_and_null_ptr(rec);
+ 
+ 	return 0;
+ }
+-- 
+2.34.1
+
