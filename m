@@ -1,164 +1,221 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87DD32AEED
-	for <linux-cxl@vger.kernel.org>; Thu, 12 Jun 2025 13:45:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C78812AEED
+	for <linux-cxl@vger.kernel.org>; Thu, 12 Jun 2025 13:50:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749735949; cv=none; b=h86QalhlcV/BUrgHNinEU+hkqFt3Kt1SUzHYXUQw3ekptwsRLuR1gKYGEgLmMydIXchcOfgplr2soFtTp/nAzTQTczpV8HlHByLFfrqawrEiPxos83uRxXyXiliKJcNp3LzM8TQdbru4wu3ITnMzOcGmFVIYb5utUYgp4xVPa5c=
+	t=1749736222; cv=none; b=gHS3vWjayLJju7vAS8tF+vD8SRACS4q6+8fucVhNtd3S64e0xu+ubyEkoGedauebO4latiIxeEwAI3YoPsILrDOdCnvzSR+nEf2BWhruhbABng0glHjNtRnw8DvUqhs7Vf/BN90HKSoXxqZ6Yk19utIvQF6N1OTnHW4XfA5E7S0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749735949; c=relaxed/simple;
-	bh=dOsjEPqcGPoSyrnrbGhWL3wwhIU1Bi485BROBi/iAJg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YlByHo/upcqYVYKpuQjyOBqqgbb9yXd664Ak1S8h7tZ0U3RsgWt9681WF2MnemtpdBRqgsCj6S1niaN6x/4KZpQTbhMCHT8+bSPsOdOfzs+FWAA3ydtB/fCLo4Lv3zj9e/7vvlCPk2LsxxSxost5AKdNGnt0w8letJU6fpw++PE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bJ3gg3YMZz6M4ff;
-	Thu, 12 Jun 2025 21:45:19 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 56357140370;
-	Thu, 12 Jun 2025 21:45:45 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.19.247) by
- frapeml500008.china.huawei.com (7.182.85.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 12 Jun 2025 15:45:44 +0200
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <qemu-devel@nongnu.org>, Fan Ni <fan.ni@samsung.com>, Peter Maydell
-	<peter.maydell@linaro.org>, <mst@redhat.com>, Zhijian Li
-	<lizhijian@fujitsu.com>, Itaru Kitayama <itaru.kitayama@linux.dev>
-CC: <linuxarm@huawei.com>, <linux-cxl@vger.kernel.org>, <qemu-arm@nongnu.org>,
-	Yuquan Wang <wangyuquan1236@phytium.com.cn>,
-	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>, Alireza Sanaee
-	<alireza.sanaee@huawei.com>, =?UTF-8?q?Alex=20Benn=C3=A9e?=
-	<alex.bennee@linaro.org>
-Subject: [PATCH v15 4/4] qtest/cxl: Add aarch64 virt test for CXL
-Date: Thu, 12 Jun 2025 14:43:38 +0100
-Message-ID: <20250612134338.1871023-5-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250612134338.1871023-1-Jonathan.Cameron@huawei.com>
-References: <20250612134338.1871023-1-Jonathan.Cameron@huawei.com>
+	s=arc-20240116; t=1749736222; c=relaxed/simple;
+	bh=j+6Xor0tnBgkouMt1inR3FjxsBD2g0BzXtP49oRuzvU=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=JpYEgxkZz5CQ3Y4C/focyaC9/lsFcZahUlqErpB0801t9iRlM/mFwWVwMQBf2tM0IVMAgAkNakOMmgFip9gQ319VH89KCL4RYG5bnLj4IGDFeLeirCBZk9qbe+ErDrpSUPperuUUbHVONF8oEc7Gsay6ouxpcyY03fymcaRN9r0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U0hR5mNt; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U0hR5mNt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749736221; x=1781272221;
+  h=date:from:to:cc:subject:message-id;
+  bh=j+6Xor0tnBgkouMt1inR3FjxsBD2g0BzXtP49oRuzvU=;
+  b=U0hR5mNtvzN89wkhojLKU1/bLBNAiG/kDYUOMuToNUnWIHpgUHpDrsvX
+   dCynCepxFPiTugWV/y5tSejl9/d42LH+NKGvJRxO+Br9dSH4j2jrDHz9E
+   mpXyXVHFSXSEyK6vTqVWmTYuhLn7ZG6FmvEDYy5aT8srlt3AHbBtwRdJs
+   dRD/y2AyHF++2QsLGwVlqe2F78GLzUts43avPR1zOo5HkQIo/IWdsapCP
+   goLgJfgCBzKo1Uftjxjii+lQ+0lYs5LxPyKIOYaHFWje+IvrVn5Wxt0nT
+   X75D6q18ENpkyYGvGPnAe/Ja82yJ0YTZhhFMUutje4JmYZjHE2JuyNBL1
+   g==;
+X-CSE-ConnectionGUID: tkvFqB4bSa2SUNRkHxLtDA==
+X-CSE-MsgGUID: +wbpIlMuSCm5XEhMy1ax3w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="52005703"
+X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
+   d="scan'208";a="52005703"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 06:50:18 -0700
+X-CSE-ConnectionGUID: vbpI+YIqSEWIXwWJ6f3wFQ==
+X-CSE-MsgGUID: xyi2X4bvRqS9KmgEJAncNQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
+   d="scan'208";a="152434294"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 12 Jun 2025 06:50:16 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uPiJq-000Bau-1F;
+	Thu, 12 Jun 2025 13:50:14 +0000
+Date: Thu, 12 Jun 2025 21:49:34 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Subject: [cxl:next] BUILD SUCCESS
+ 529a56be66aaadf850e69c816887f26a6f1e6e91
+Message-ID: <202506122123.JsT08vL8-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
- frapeml500008.china.huawei.com (7.182.85.71)
 
-Add a single complex case for aarch64 virt machine.
-Given existing much more comprehensive tests for x86 cover the
-common functionality, a single test should be enough to verify
-that the aarch64 part continue to work.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
+branch HEAD: 529a56be66aaadf850e69c816887f26a6f1e6e91  Documentation: fix typo in CXL driver documentation
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+elapsed time: 968m
 
----
-v15: Dropped tags due to changes in patches 2 and 3.
----
- tests/qtest/cxl-test.c  | 59 ++++++++++++++++++++++++++++++++---------
- tests/qtest/meson.build |  1 +
- 2 files changed, 47 insertions(+), 13 deletions(-)
+configs tested: 141
+configs skipped: 5
 
-diff --git a/tests/qtest/cxl-test.c b/tests/qtest/cxl-test.c
-index a600331843..c7189d6222 100644
---- a/tests/qtest/cxl-test.c
-+++ b/tests/qtest/cxl-test.c
-@@ -19,6 +19,12 @@
-     "-device pxb-cxl,id=cxl.1,bus=pcie.0,bus_nr=53 " \
-     "-M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.targets.1=cxl.1,cxl-fmw.0.size=4G "
- 
-+#define QEMU_VIRT_2PXB_CMD \
-+    "-machine virt,cxl=on -cpu max " \
-+    "-device pxb-cxl,id=cxl.0,bus=pcie.0,bus_nr=52 " \
-+    "-device pxb-cxl,id=cxl.1,bus=pcie.0,bus_nr=53 " \
-+    "-M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.targets.1=cxl.1,cxl-fmw.0.size=4G "
-+
- #define QEMU_RP \
-     "-device cxl-rp,id=rp0,bus=cxl.0,chassis=0,slot=0 "
- 
-@@ -197,25 +203,52 @@ static void cxl_2pxb_4rp_4t3d(void)
-     qtest_end();
-     rmdir(tmpfs);
- }
-+
-+static void cxl_virt_2pxb_4rp_4t3d(void)
-+{
-+    g_autoptr(GString) cmdline = g_string_new(NULL);
-+    char template[] = "/tmp/cxl-test-XXXXXX";
-+    const char *tmpfs;
-+
-+    tmpfs = mkdtemp(template);
-+
-+    g_string_printf(cmdline, QEMU_VIRT_2PXB_CMD QEMU_4RP QEMU_4T3D,
-+                    tmpfs, tmpfs, tmpfs, tmpfs, tmpfs, tmpfs,
-+                    tmpfs, tmpfs);
-+
-+    qtest_start(cmdline->str);
-+    qtest_end();
-+    rmdir(tmpfs);
-+}
- #endif /* CONFIG_POSIX */
- 
- int main(int argc, char **argv)
- {
--    g_test_init(&argc, &argv, NULL);
-+    const char *arch = qtest_get_arch();
- 
--    qtest_add_func("/pci/cxl/basic_hostbridge", cxl_basic_hb);
--    qtest_add_func("/pci/cxl/basic_pxb", cxl_basic_pxb);
--    qtest_add_func("/pci/cxl/pxb_with_window", cxl_pxb_with_window);
--    qtest_add_func("/pci/cxl/pxb_x2_with_window", cxl_2pxb_with_window);
--    qtest_add_func("/pci/cxl/rp", cxl_root_port);
--    qtest_add_func("/pci/cxl/rp_x2", cxl_2root_port);
-+    g_test_init(&argc, &argv, NULL);
-+    if (strcmp(arch, "i386") == 0 || strcmp(arch, "x86_64") == 0) {
-+        qtest_add_func("/pci/cxl/basic_hostbridge", cxl_basic_hb);
-+        qtest_add_func("/pci/cxl/basic_pxb", cxl_basic_pxb);
-+        qtest_add_func("/pci/cxl/pxb_with_window", cxl_pxb_with_window);
-+        qtest_add_func("/pci/cxl/pxb_x2_with_window", cxl_2pxb_with_window);
-+        qtest_add_func("/pci/cxl/rp", cxl_root_port);
-+        qtest_add_func("/pci/cxl/rp_x2", cxl_2root_port);
- #ifdef CONFIG_POSIX
--    qtest_add_func("/pci/cxl/type3_device", cxl_t3d_deprecated);
--    qtest_add_func("/pci/cxl/type3_device_pmem", cxl_t3d_persistent);
--    qtest_add_func("/pci/cxl/type3_device_vmem", cxl_t3d_volatile);
--    qtest_add_func("/pci/cxl/type3_device_vmem_lsa", cxl_t3d_volatile_lsa);
--    qtest_add_func("/pci/cxl/rp_x2_type3_x2", cxl_1pxb_2rp_2t3d);
--    qtest_add_func("/pci/cxl/pxb_x2_root_port_x4_type3_x4", cxl_2pxb_4rp_4t3d);
-+        qtest_add_func("/pci/cxl/type3_device", cxl_t3d_deprecated);
-+        qtest_add_func("/pci/cxl/type3_device_pmem", cxl_t3d_persistent);
-+        qtest_add_func("/pci/cxl/type3_device_vmem", cxl_t3d_volatile);
-+        qtest_add_func("/pci/cxl/type3_device_vmem_lsa", cxl_t3d_volatile_lsa);
-+        qtest_add_func("/pci/cxl/rp_x2_type3_x2", cxl_1pxb_2rp_2t3d);
-+        qtest_add_func("/pci/cxl/pxb_x2_root_port_x4_type3_x4",
-+                       cxl_2pxb_4rp_4t3d);
- #endif
-+    } else if (strcmp(arch, "aarch64") == 0) {
-+#ifdef CONFIG_POSIX
-+        qtest_add_func("/pci/cxl/virt/pxb_x2_root_port_x4_type3_x4",
-+                       cxl_virt_2pxb_4rp_4t3d);
-+#endif
-+    }
-+
-     return g_test_run();
- }
-diff --git a/tests/qtest/meson.build b/tests/qtest/meson.build
-index 8ad849054f..42e927b32a 100644
---- a/tests/qtest/meson.build
-+++ b/tests/qtest/meson.build
-@@ -261,6 +261,7 @@ qtests_aarch64 = \
-    config_all_devices.has_key('CONFIG_TPM_TIS_I2C') ? ['tpm-tis-i2c-test'] : []) + \
-   (config_all_devices.has_key('CONFIG_ASPEED_SOC') ? qtests_aspeed64 : []) + \
-   (config_all_devices.has_key('CONFIG_NPCM8XX') ? qtests_npcm8xx : []) + \
-+  qtests_cxl +                                                                                  \
-   ['arm-cpu-features',
-    'numa-test',
-    'boot-serial-test',
--- 
-2.48.1
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+alpha                               defconfig    gcc-15.1.0
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    gcc-15.1.0
+arc                          axs101_defconfig    gcc-15.1.0
+arc                                 defconfig    gcc-15.1.0
+arc                        nsimosci_defconfig    gcc-15.1.0
+arc                   randconfig-001-20250612    gcc-8.5.0
+arc                   randconfig-002-20250612    gcc-10.5.0
+arm                              allmodconfig    gcc-15.1.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-15.1.0
+arm                                 defconfig    clang-21
+arm                      footbridge_defconfig    clang-17
+arm                         nhk8815_defconfig    clang-21
+arm                   randconfig-001-20250612    clang-21
+arm                   randconfig-002-20250612    clang-18
+arm                   randconfig-003-20250612    clang-21
+arm                   randconfig-004-20250612    clang-21
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                               defconfig    gcc-15.1.0
+arm64                 randconfig-001-20250612    clang-19
+arm64                 randconfig-002-20250612    clang-17
+arm64                 randconfig-003-20250612    clang-21
+arm64                 randconfig-004-20250612    clang-18
+csky                              allnoconfig    gcc-15.1.0
+csky                                defconfig    gcc-15.1.0
+csky                  randconfig-001-20250612    gcc-11.5.0
+csky                  randconfig-002-20250612    gcc-15.1.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon                             defconfig    clang-21
+hexagon               randconfig-001-20250612    clang-21
+hexagon               randconfig-002-20250612    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250612    clang-20
+i386        buildonly-randconfig-002-20250612    gcc-12
+i386        buildonly-randconfig-003-20250612    clang-20
+i386        buildonly-randconfig-004-20250612    clang-20
+i386        buildonly-randconfig-005-20250612    clang-20
+i386        buildonly-randconfig-006-20250612    clang-20
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-15.1.0
+loongarch                         allnoconfig    gcc-15.1.0
+loongarch                           defconfig    gcc-15.1.0
+loongarch             randconfig-001-20250612    gcc-13.3.0
+loongarch             randconfig-002-20250612    gcc-12.4.0
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+m68k                                defconfig    gcc-15.1.0
+m68k                           sun3_defconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+mips                           mtx1_defconfig    clang-21
+mips                   sb1250_swarm_defconfig    gcc-15.1.0
+nios2                         3c120_defconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                               defconfig    gcc-14.2.0
+nios2                 randconfig-001-20250612    gcc-14.2.0
+nios2                 randconfig-002-20250612    gcc-8.5.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20250612    gcc-8.5.0
+parisc                randconfig-002-20250612    gcc-10.5.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                          allyesconfig    clang-21
+powerpc                      ep88xc_defconfig    gcc-15.1.0
+powerpc                     mpc83xx_defconfig    clang-21
+powerpc               randconfig-001-20250612    clang-21
+powerpc               randconfig-002-20250612    gcc-8.5.0
+powerpc               randconfig-003-20250612    clang-17
+powerpc                    sam440ep_defconfig    gcc-15.1.0
+powerpc64                        alldefconfig    clang-21
+powerpc64             randconfig-001-20250612    gcc-12.4.0
+powerpc64             randconfig-002-20250612    clang-21
+powerpc64             randconfig-003-20250612    clang-21
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    clang-21
+riscv                 randconfig-001-20250612    clang-21
+riscv                 randconfig-002-20250612    clang-21
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-15.1.0
+s390                                defconfig    clang-21
+s390                  randconfig-001-20250612    clang-21
+s390                  randconfig-002-20250612    gcc-11.5.0
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                                  defconfig    gcc-15.1.0
+sh                     magicpanelr2_defconfig    gcc-15.1.0
+sh                    randconfig-001-20250612    gcc-12.4.0
+sh                    randconfig-002-20250612    gcc-15.1.0
+sh                   sh7724_generic_defconfig    gcc-15.1.0
+sh                        sh7757lcr_defconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                 randconfig-001-20250612    gcc-14.3.0
+sparc                 randconfig-002-20250612    gcc-10.3.0
+sparc64                             defconfig    gcc-15.1.0
+sparc64               randconfig-001-20250612    gcc-13.3.0
+sparc64               randconfig-002-20250612    gcc-8.5.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250612    clang-17
+um                    randconfig-002-20250612    clang-21
+um                           x86_64_defconfig    clang-21
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250612    gcc-12
+x86_64      buildonly-randconfig-002-20250612    clang-20
+x86_64      buildonly-randconfig-003-20250612    gcc-12
+x86_64      buildonly-randconfig-004-20250612    gcc-12
+x86_64      buildonly-randconfig-005-20250612    clang-20
+x86_64      buildonly-randconfig-006-20250612    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-18
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20250612    gcc-10.5.0
+xtensa                randconfig-002-20250612    gcc-12.4.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
