@@ -1,97 +1,202 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B862F4317
-	for <linux-cxl@vger.kernel.org>; Thu, 12 Jun 2025 16:04:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E855299A8C;
+	Thu, 12 Jun 2025 16:06:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749744286; cv=none; b=TkAMRQJXgLnEKQzgED8H9xkXGF3BZHoGd88DmDEyqlKaSPzs8GUInkmrMoij3vcSuGGt162gYa8sR6ugLMISQqg0S8s5jcpIYUu5/uIPT9Ot/aJYD3HR66HoQaJQ3g8s/0zyabmdSZXrBCkUdYS863kykwST93ikZNjCIs7M2UE=
+	t=1749744389; cv=none; b=FdWP5/sAnYmF3XkRm2zf3svCflRK2x3orPmK1FT4Q1wMqj4J2+bGoGPHxoq9YBAMa4GK6hUEbl9/gHPKg8KZ83A8QpdyN6z8Vk6QUu6w3Murfcx/Kfc5mhE5mpQh2g3XGU6dwBxdHKJ/HdpCS4ToAQs81yqJGF7qXfiOX6i2JVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749744286; c=relaxed/simple;
-	bh=74HlUB2oFeuUYSSOugXT6kNy62cj1dC5X1cHOYad6C0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IGCWSuvaII5Mflsp5Ijy8O3A1cXTJYUwvRSU6l6KQXIk+z2r2T4TpjwTdoTP9k6Ey98Hbyit8/0Uk5sgauel+74yOJUvS/q/79xPj6jO6fIRW4LN68lfuedsuTsv++UBfAlixljvi3oX+iSoZVVUVGN0mq9fPZDrSNNl5xd3/gE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YbG7uvhX; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YbG7uvhX"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-710e344bbf9so10117157b3.2
-        for <linux-cxl@vger.kernel.org>; Thu, 12 Jun 2025 09:04:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749744283; x=1750349083; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=EefkG4AutVpnBM/hBmoXMzaEp175aj32Sbgg3k63XCY=;
-        b=YbG7uvhXBmS/e9HFbAufubKoq174UGrd8BsWZY5iJtFbXYlCrSsKEkMp1C8ngXLLAB
-         GW79rH/39ooR0MaeJ1/8qo1hdYjrF3EIpo6vH2CoeBmN7cAxO84S0XTb6I7eOvDy0UBL
-         ljrMeMPrH9xVVCaawyw06oM/BTE7bq4mE4XF8dwL+z14BkCiLfHE0p1FxkGfXaNk3n62
-         9Amo8xOjWLKuk0zgV3+V9B6HGPa1b/tT+6dqkcO38oQzMaZ8Vkl0fzr0Luk0yKlnB665
-         JW0P3T8ozCaJVcVkgoG8VXyONSO+dpDOzcSIyCvy+rkSonRNb1TOa7A1YcCJe1A426hS
-         dbIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749744283; x=1750349083;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EefkG4AutVpnBM/hBmoXMzaEp175aj32Sbgg3k63XCY=;
-        b=qy0mlc8UjRhbw3sRl58/gUbc30Tx57EFeaZKRpQxHldSFwhNWnn4qMsRZkNvs2eljh
-         qfg6dd08Rsoo1b4h9yAfw8DaZm5Hv3MYFzdKKyUzRpAFxoivzPOOMHQj9AMNWubc57o2
-         OkoRkRdZC5tCErfWJL+sE+LoXbwDDdTiP52nyR5t0Z5X3b0DM/jMPQ6F8ldxpLGdqi6/
-         v8IgCW244/Fu/FfUrlCncsIDVZZCxC4/n7kG9QMZhGAaKZgQbh7WkoviimMnz5afF3vs
-         UNrSk/waLb6Oj3hO3MppiXx6OKZhmTe+b1LzR2a4jxwcjuv1MYBzEK7vY+DYXEezUuat
-         jvTg==
-X-Forwarded-Encrypted: i=1; AJvYcCUlO/uZkrVR3jXUA1f2kexQaPMq3hNNTqGpfDsIraRHG/RsFYXIrd2m5Qj5GH0aGJRVGc3mNdQoKA0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAtHwdFlZ5TRNC8ak4Ba1vySUFYu3l0e5dC82+enE5XEznNHGy
-	BM98dt7U/+k/xVE3cQcaOYe40AplXDF86F/pjARK7uKN1jIbkmoNXKKGuJl5tSuKJHKelPzUHFN
-	mfSBJr73DQZz1GMTw+k1rnwsLpNlYXmEA+KDVLIhYxQ==
-X-Gm-Gg: ASbGncsIvzgznZb7oH5kd3LUQ/xFRKpMo9bTaHm2oBb6w0NYarmWW/986XXDuOEuAdT
-	9JJY+KooEwKNHWJyg2x84I/sJcodL8tzb0nxgltMKRkQVj3XT/J1833+dIsxNu9VIaKCgPismjz
-	ZEp48pim1BEmwPaEOPCOBFqZtjmFPrk367kUgmQderhVqaxXOM613TYS4=
-X-Google-Smtp-Source: AGHT+IG/sKTyln7/Rh9ZAyvgO3cTqV7x3+t7YPsMib12hMamHWC1vsfheBF6RN59okgSiPTyIy/EYdtm8QgDURCe6mQ=
-X-Received: by 2002:a05:690c:46c6:b0:70e:7663:8bb4 with SMTP id
- 00721157ae682-71161f3b72dmr6621557b3.25.1749744283371; Thu, 12 Jun 2025
- 09:04:43 -0700 (PDT)
+	s=arc-20240116; t=1749744389; c=relaxed/simple;
+	bh=VIUv2Ui3nYFGZ2cBKzI5nTq2hiA+kq32TImfGH+4rXk=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QWWIUIt9fyylJ2iqEJk1NvGJZRldYbB/19CZ6qDyeWgcrIfeIIsl0fomE6CMopO+ujABfWeUpTrDR/TI6BDqfHx+YSVvt1EF3uslYkcZXwjKO/L68TjYm2ePW3EA2Evx/9GoPmuKCnBj1B5GDBWDlTSU58HtVAM4KW4eUYMU8VE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bJ6jQ4d5cz6H76Z;
+	Fri, 13 Jun 2025 00:02:02 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 97121140136;
+	Fri, 13 Jun 2025 00:06:24 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 12 Jun
+ 2025 18:06:23 +0200
+Date: Thu, 12 Jun 2025 17:06:22 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Terry Bowman <terry.bowman@amd.com>
+CC: <PradeepVineshReddy.Kodamati@amd.com>, <dave@stgolabs.net>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <bp@alien8.de>,
+	<ming.li@zohomail.com>, <shiju.jose@huawei.com>, <dan.carpenter@linaro.org>,
+	<Smita.KoralahalliChannabasappa@amd.com>, <kobayashi.da-06@fujitsu.com>,
+	<yanfei.xu@intel.com>, <rrichter@amd.com>, <peterz@infradead.org>,
+	<colyli@suse.de>, <uaisheng.ye@intel.com>,
+	<fabio.m.de.francesco@linux.intel.com>, <ilpo.jarvinen@linux.intel.com>,
+	<yazen.ghannam@amd.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v9 05/16] CXL/PCI: Introduce CXL uncorrectable protocol
+ error recovery
+Message-ID: <20250612170622.000071df@huawei.com>
+In-Reply-To: <20250603172239.159260-6-terry.bowman@amd.com>
+References: <20250603172239.159260-1-terry.bowman@amd.com>
+	<20250603172239.159260-6-terry.bowman@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612134338.1871023-1-Jonathan.Cameron@huawei.com>
-In-Reply-To: <20250612134338.1871023-1-Jonathan.Cameron@huawei.com>
-From: Peter Maydell <peter.maydell@linaro.org>
-Date: Thu, 12 Jun 2025 17:04:32 +0100
-X-Gm-Features: AX0GCFsVkhB-NNCIPuW5Ihp7pcwAXu-4Z1zJIMp9UK--qP27Z1yH3-eqLOzVB4c
-Message-ID: <CAFEAcA9CuQWL2b63+XCe+vZCGR7hRSx8SkTR0LDa+Ra1Z5ur7w@mail.gmail.com>
-Subject: Re: [PATCH v15 0/4] arm/virt: CXL support via pxb_cxl
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: qemu-devel@nongnu.org, Fan Ni <fan.ni@samsung.com>, mst@redhat.com, 
-	Zhijian Li <lizhijian@fujitsu.com>, Itaru Kitayama <itaru.kitayama@linux.dev>, linuxarm@huawei.com, 
-	linux-cxl@vger.kernel.org, qemu-arm@nongnu.org, 
-	Yuquan Wang <wangyuquan1236@phytium.com.cn>, 
-	=?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <philmd@linaro.org>, 
-	Alireza Sanaee <alireza.sanaee@huawei.com>, =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, 12 Jun 2025 at 14:43, Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> v15:
->   - Split the address map calculations and mmio setup into separate
->     functions in patch 2, allowing v14 patch 3 to be dropped as not
->     x86 and arm make the same calls.  Note I felt this was a sufficient
->     change to trigger dropping tags. (Zhijian Li)
->   - A few other minor tweaks.
->   - TLB issue mentioned in v14 now fixed upstream so dropped reference
->     in this cover letter.
->
-> Thanks to Itaru Kitayama and Zhijian Li for testing + reviews.
+On Tue, 3 Jun 2025 12:22:28 -0500
+Terry Bowman <terry.bowman@amd.com> wrote:
 
-Hi Jonathan -- I forget where we are on this. Do you think this
-series is OK to go upstream at this point, or is there still
-stuff you're iterating on here ?  (Put another way, should I
-review it and consider queueing it?)
+> Create cxl_do_recovery() to provide uncorrectable protocol error (UCE)
+> handling. Follow similar design as found in PCIe error driver,
+> pcie_do_recovery(). One difference is cxl_do_recovery() will treat all UCEs
+> as fatal with a kernel panic. This is to prevent corruption on CXL memory.
+> 
+> Copy the PCI error driver's merge_result() and rename as cxl_merge_result().
+> Introduce PCI_ERS_RESULT_PANIC and add support in the cxl_merge_result()
+> routine.
 
-thanks
--- PMM
+Do we need a separate version?  PCI won't ever set PCI_ERS_RESULT_PANIC
+so new != PCI_ERS_RESULT_PANIC and the first condition would only do
+something on CXL.
+
+> 
+> Copy pci_walk_bridge() to cxl_walk_bridge(). Make a change to walk the
+> first device in all cases.
+> 
+> Copy the PCI error driver's report_error_detected() to cxl_report_error_detected().
+> Note, only CXL Endpoints are currently supported. Add locking for PCI
+> device as done in PCI's report_error_detected(). Add reference counting for
+> the CXL device responsible for cleanup of the CXL RAS. This is necessary
+> to prevent the RAS registers from disappearing before logging is completed.
+> 
+> Call panic() to halt the system in the case of uncorrectable errors (UCE)
+> in cxl_do_recovery(). Export pci_aer_clear_fatal_status() for CXL to use
+> if a UCE is not found. In this case the AER status must be cleared and
+> uses pci_aer_clear_fatal_status().
+> 
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> ---
+>  drivers/cxl/core/ras.c | 79 ++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/pci.h    |  3 ++
+>  2 files changed, 82 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
+> index 9ed5c682e128..715f7221ea3a 100644
+> --- a/drivers/cxl/core/ras.c
+> +++ b/drivers/cxl/core/ras.c
+> @@ -110,8 +110,87 @@ static DECLARE_WORK(cxl_cper_prot_err_work, cxl_cper_prot_err_work_fn);
+>  
+>  #ifdef CONFIG_PCIEAER_CXL
+>  
+> +static pci_ers_result_t cxl_merge_result(enum pci_ers_result orig,
+> +					 enum pci_ers_result new)
+> +{
+> +	if (new == PCI_ERS_RESULT_PANIC)
+> +		return PCI_ERS_RESULT_PANIC;
+> +
+> +	if (new == PCI_ERS_RESULT_NO_AER_DRIVER)
+> +		return PCI_ERS_RESULT_NO_AER_DRIVER;
+> +
+> +	if (new == PCI_ERS_RESULT_NONE)
+> +		return orig;
+> +
+> +	switch (orig) {
+> +	case PCI_ERS_RESULT_CAN_RECOVER:
+> +	case PCI_ERS_RESULT_RECOVERED:
+> +		orig = new;
+> +		break;
+> +	case PCI_ERS_RESULT_DISCONNECT:
+> +		if (new == PCI_ERS_RESULT_NEED_RESET)
+> +			orig = PCI_ERS_RESULT_NEED_RESET;
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return orig;
+> +}
+> +
+> +static int cxl_report_error_detected(struct pci_dev *pdev, void *data)
+> +{
+> +	pci_ers_result_t vote, *result = data;
+> +	struct cxl_dev_state *cxlds;
+> +
+> +	if ((pci_pcie_type(pdev) != PCI_EXP_TYPE_ENDPOINT) &&
+> +	    (pci_pcie_type(pdev) != PCI_EXP_TYPE_RC_END))
+> +		return 0;
+> +
+> +	cxlds = pci_get_drvdata(pdev);
+> +	struct device *dev __free(put_device) = get_device(&cxlds->cxlmd->dev);
+> +
+> +	device_lock(&pdev->dev);
+> +	vote = cxl_error_detected(pdev, pci_channel_io_frozen);
+> +	*result = cxl_merge_result(*result, vote);
+> +	device_unlock(&pdev->dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static void cxl_walk_bridge(struct pci_dev *bridge,
+> +			    int (*cb)(struct pci_dev *, void *),
+> +			    void *userdata)
+> +{
+> +	if (cb(bridge, userdata))
+> +		return;
+> +
+> +	if (bridge->subordinate)
+> +		pci_walk_bus(bridge->subordinate, cb, userdata);
+> +}
+> +
+>  static void cxl_do_recovery(struct pci_dev *pdev)
+>  {
+> +	struct pci_host_bridge *host = pci_find_host_bridge(pdev->bus);
+> +	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+> +
+> +	cxl_walk_bridge(pdev, cxl_report_error_detected, &status);
+> +	if (status == PCI_ERS_RESULT_PANIC)
+> +		panic("CXL cachemem error.");
+> +
+> +	/*
+> +	 * If we have native control of AER, clear error status in the device
+> +	 * that detected the error.  If the platform retained control of AER,
+> +	 * it is responsible for clearing this status.  In that case, the
+> +	 * signaling device may not even be visible to the OS.
+> +	 */
+> +	if (host->native_aer) {
+> +		pcie_clear_device_status(pdev);
+> +		pci_aer_clear_nonfatal_status(pdev);
+> +		pci_aer_clear_fatal_status(pdev);
+> +	}
+> +
+> +	pci_info(pdev, "CXL uncorrectable error.\n");
+>  }
+>  
+>  static int cxl_rch_handle_error_iter(struct pci_dev *pdev, void *data)
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index cd53715d53f3..b0e7545162de 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -870,6 +870,9 @@ enum pci_ers_result {
+>  
+>  	/* No AER capabilities registered for the driver */
+>  	PCI_ERS_RESULT_NO_AER_DRIVER = (__force pci_ers_result_t) 6,
+> +
+> +	/* System is unstable, panic  */
+> +	PCI_ERS_RESULT_PANIC = (__force pci_ers_result_t) 7,
+>  };
+>  
+>  /* PCI bus error event callbacks */
+
