@@ -1,295 +1,202 @@
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D6501CD208;
-	Thu, 12 Jun 2025 05:58:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B1F92628D
+	for <linux-cxl@vger.kernel.org>; Thu, 12 Jun 2025 06:46:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749707884; cv=none; b=subuOFNPCRNLe5eUxkwAuq2ysmOyxIaNN+W7C54U1S6a+WUVWHgrGrAFwYSYgXiC9ybErdFBZa1fx09miXaJgo4RyfKuo9sszln4QXh/J6oFNvg/0itrPm2oTveR7+fNCEIf1XvGI6VLQvyYJxO8uovOhAErQUiaKMF+snOuFPw=
+	t=1749710787; cv=none; b=YSn5vZX4Wsig3SUtAloU0P1G31KCsTbAYUpe2dlqYol8axhScdUICpCduEoqSXTe8UnQMX/jjG7mekx6J5bvePqycdMGTHQu42DYdyAenN1pAz6b1P88RKFefldPCQFRUHFzlLkszUxS4c7rOtTA4yCOfnW23gyPzVhJ7ECBTWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749707884; c=relaxed/simple;
-	bh=t9DFAXafbBpQoxbSD83zR7atzKmCC3qmxfog0a69E0Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XDNLpeDRb383L12ALda4yLZXb8jLJxvTt39OfVCzI58F/AT40pDNeS+Eor2csp6ujrFji6kNQCY+N8lcPhgsES8PRp+YCPGVHfYAii+6/v8YvVVi6gSVG2KJHA9dHBiL2BHotZ+Per+omolp2vNqsvvC3+zdFnArh8MPzyZyCbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kKo4Kmwu; arc=none smtp.client-ip=209.85.217.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749710787; c=relaxed/simple;
+	bh=IipZv141DufKgYkSUWXgjF9SSwNa9LoPKUeg2jWaMFs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FxO1l2JMZfnr9XNw7czqGe1BIYr6b8O+jyDHlMBZffUf4ylos/EuIm3zGzmMbyi97q0HOqjDKdeofzpBqgfjb3vXYCziuQ+smmnn7TcncNCc1MrgHstbBk5prOH5ARjGkyS5HuJDZpt+fRt8m7l5bGFcttb+uTN09Ffcg21PaU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZGhQFlgX; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kKo4Kmwu"
-Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-4e79de9da3fso152927137.1;
-        Wed, 11 Jun 2025 22:58:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749707881; x=1750312681; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dib0fsbbn+uZXprI82x5KfkaUX4XukaqcnHt4XTNnyM=;
-        b=kKo4KmwukSM4Ze9WZJMQHH8r1AtSJ10xNAC9AdFs9fh5y4hHFQiiV0DsSp4u0hrGb0
-         yHxMxnAK4y9rZF/+TQSvfqjKcEVwW+qA+M6hMAxxO4PZ0d61gApOCWqg5OoYWcliklIz
-         4wnVffV3HrekT8dKFd/QJNhw8l1zZoNIqbf7OcFUforQLod6w0+QifcClJ9ZiyVW29pM
-         s1klnTfzb9j3o04IHqXSXat1b6sRTZF3Gzm13N7+QSBFmcG4Q3mdWv09VCkZ0/09HUcm
-         SMySaXS2lxpenntV55Cvv11iJhO9B/o7g7dqvPpqyLpdXnDUBzJwS6ry4MTKGxMjGjXq
-         6ezw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZGhQFlgX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749710784;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=iIzkhRpa1dZPuoK2BlfsPGBgeWv5TwKlqrn2D99cAqA=;
+	b=ZGhQFlgXwdh4Cpi8++UtbFqJ2KRa4dZ/5EUmRp+7RsRWVK3wpKtqM+bAgwb59j4sf/Ba9Z
+	Bo0WVeixZA7THh828ROLNYrPaqcPiJ06qel1Z4CZTkVv1+Ip5EWCiwOB3745Us2bBOrWqi
+	MF/NLWQzPx283xCJGR5rwi5cLYfdr5k=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-347-cwEKZqjMMLi-nBQQWOfGbw-1; Thu, 12 Jun 2025 02:46:23 -0400
+X-MC-Unique: cwEKZqjMMLi-nBQQWOfGbw-1
+X-Mimecast-MFC-AGG-ID: cwEKZqjMMLi-nBQQWOfGbw_1749710782
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-45311704d1fso2978195e9.1
+        for <linux-cxl@vger.kernel.org>; Wed, 11 Jun 2025 23:46:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749707881; x=1750312681;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dib0fsbbn+uZXprI82x5KfkaUX4XukaqcnHt4XTNnyM=;
-        b=sh8JQaiKql+2l8ggVeL24IIlzba+uyPxd2fzKCvB0LHR5mi0t7tX+zrB4O1zTp5H2u
-         rWcrFU5vXraCuanGeo4tve5zamopSnIieKd0caLFUks+zUkzdKD7oSCPu/WQy+J2UH0g
-         K4B+nc85WENA9GaQP1rW2zMy9Hyhk+ucYnXFN72aoCHWGm5Zs6GG/yT4irGYXmtfzvYD
-         koGdFvk3DUtHvoGODG6Brgj/FCf0cGVTfSQAd06J2+Hgt3THN47f0rJcBc5xEEHmDfpD
-         3OG3rXduCAUurihoc6vxAmAbiHYPAp5TlAAcbHNWcmM6wmPEYamFTIeYFXCb2uFFas/K
-         Uuww==
-X-Forwarded-Encrypted: i=1; AJvYcCX2OHEF7C2osQwJo0XvKtoGBxgekVq6zPCcSu2i5uWRpQ+vYPeeusiY6JJ8G+MtKaETVafMhGdBJ4JL6kX+@vger.kernel.org, AJvYcCXPL3WsjmlXnj7XQXsWsUZgYNPGyqX2VCPuf75TrlgV3PGJIkgTsHAHzAckNVcDNQ+oQTNzkxrgLpjhz7XA/8M=@vger.kernel.org, AJvYcCXX7njLMwthuVHUAZ4P0ixVKgdp9ptnZXXvcn1kslk1Zm4wVIUkqUe+Q8nsLHwCnd98CocXaEEB5C9P@vger.kernel.org, AJvYcCXd8KymPMPPAEmLJt+m7UjmasVhvoo0TQ5BNAyS0suS08HzmPVB4ZPIzF99ENvWlDP8iHiKHRB89jQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGR+T1AMpwuTmD1xaJ6SX1qBbrklYXVxEeEWUweMxXu+60JAMA
-	2ByWEUy5jZVT9FHsxUpeQsWXufK3bXkNUUu1WtFy8cF40ohKcszHnEl0gqQSKQt0eetnhUWBHAw
-	BBpob8TNR9qVGH5YNOF8lQJ8Ycz+9lnkXbA==
-X-Gm-Gg: ASbGnct91msfw5fo2YQB5g/+UlXWL5kdnmaBHmYweN06N8D41vVsznCny5StCNyV5vk
-	tgb6L/QupkmE7CgIX4VfGcFSDlLqwRDkPteKz2zH4QBW0H9WbIfO1uxhzSy7Ko5In1vIbQMU2IZ
-	arlN88oqcZC/g1OcwbFMjO0nm1TeKFmY8E6fUmr+qVN+t+6yrAiCHmki40tExwWwg7rdJuUqoeS
-	9gOjzKLK1PL
-X-Google-Smtp-Source: AGHT+IGEMavk70qt3RuGIQr9WWZqlaa9jeDDSPgh/mflwaCkoGhyuwH7XuQ9rwMUz29WMtYJkcGpnIdZhJ5FDM5VvC0=
-X-Received: by 2002:a05:6102:54a9:b0:4e6:d784:3f7 with SMTP id
- ada2fe7eead31-4e7ce8ef245mr1335838137.15.1749707881321; Wed, 11 Jun 2025
- 22:58:01 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749710782; x=1750315582;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=iIzkhRpa1dZPuoK2BlfsPGBgeWv5TwKlqrn2D99cAqA=;
+        b=NN5X4199lPSvv9IS4OuXdtkLORhTPBwGuiN6zj0DAOQjA2T3xEmHVTyEcSA3AxotGw
+         H65TMB6c7u+kP/sZvtTU4Njhsuei1U69m2x6e7OUQDyvxv5JiNqhLSh3oLQP4yuzXeu0
+         fAvrIEB1JNZCi7DGxIMWsQNvmFNBUB2cSD3rBDcdknlPZ6LrDScr7SSyQwQhl20p1mhs
+         y95853OqZjuwBZK2y3q1YQIqpHKeN4G7uR+YtU7BQFc7E0FtlQWX3M8upDiiMnmQ9gN/
+         z9w3T8RWqENAUX3i357eyuCGCazZ0H67wrLsSWulYGrpIjN9NbvI52gTIt/464bMQsVL
+         2WzA==
+X-Forwarded-Encrypted: i=1; AJvYcCV9nApyAADmDszOt6dWZiwTDs5S1tgzhJc+Z6rfLmJqjHo60idhtVjPPgIkxZmumjCF/60zSTSOjc0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuXAeYwJMK9h9CNIW7smg6k4wRDwFvDzsJlvCqiV7XtHdKMvLG
+	ARFhPTDd9UYd4BZDrH+SBhUcP1fgOkmnQrCj8RHQ51yCtACEq24T5RCcxM0ca6PSzUkRHP5jm6W
+	TjHuBzJNJnjP9axZwf5DNK2jQKV4/QhNGayS13FnBOOWE23j4NjcJNvuMoCT5sw==
+X-Gm-Gg: ASbGncsr5L0hFav+/tePdEXRth2UlvOro79tqaAVPe8qz3cAy+DGqiUsie+uvsuQNkf
+	tcN0sjDw78NFolWA8vZaSJcQePrpluOoO9oJ0m/v65Lj4bJIOzeksG+AuECgqiFalVzvZNYeo2O
+	Rq0X5+srcMcn622FZfhM+mPlhBMjvWitT72pGbiYgahkQmtG+CY7FUSYRDqUcXxVtOZYzixmOAH
+	rfngnNG9ZDzEnfHN5Y+04+z4WjmbtLKgGtUs7EsbOKEbPXgZqiOWktUHi4P7xk09/eTV0wGOyPg
+	KB5bA6tdCgbHUdMWqb7nh9jIZniqOVD/5Hf36xDK23sMhqpKF0KIPDBNJNAjGr8zAW2pvG9k4M3
+	xfuc/FhmkjD7geqnXtTAcUaHI2LO3eRLYQPQDHQiE+Vt7L2xl0g==
+X-Received: by 2002:a05:600c:1c9e:b0:450:d012:df85 with SMTP id 5b1f17b1804b1-4532b915f4cmr27084635e9.18.1749710781972;
+        Wed, 11 Jun 2025 23:46:21 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE9CX26GoEV2BCNczSNv1t4oY27XPzEIg8IbOmnXnRc1IGtfEL5drtXFBMEzg5dY7jqMLb1YA==
+X-Received: by 2002:a05:600c:1c9e:b0:450:d012:df85 with SMTP id 5b1f17b1804b1-4532b915f4cmr27084335e9.18.1749710781510;
+        Wed, 11 Jun 2025 23:46:21 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f2c:1e00:1e1e:7a32:e798:6457? (p200300d82f2c1e001e1e7a32e7986457.dip0.t-ipconnect.de. [2003:d8:2f2c:1e00:1e1e:7a32:e798:6457])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e2446b0sm10338425e9.21.2025.06.11.23.46.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Jun 2025 23:46:21 -0700 (PDT)
+Message-ID: <fa65d0ed-ccd0-4cca-9ac4-fad423e498b6@redhat.com>
+Date: Thu, 12 Jun 2025 08:46:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250227030952.2319050-1-alistair@alistair23.me> <20250611143737.00005e21@huawei.com>
-In-Reply-To: <20250611143737.00005e21@huawei.com>
-From: Alistair Francis <alistair23@gmail.com>
-Date: Thu, 12 Jun 2025 15:57:35 +1000
-X-Gm-Features: AX0GCFsV5zkqcbRQLFy6YRBBC2YdwkRh-jAXFTHtjbwkFiyZkLQYm_5yhcXUlIo
-Message-ID: <CAKmqyKNpqUp8zBSKzmUVaeVnLkWi3VK7_UBqvgrF7Yp2ZYs6MA@mail.gmail.com>
-Subject: Re: [RFC v2 00/20] lib: Rust implementation of SPDM
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Alistair Francis <alistair@alistair23.me>, linux-cxl@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, lukas@wunner.de, linux-pci@vger.kernel.org, 
-	bhelgaas@google.com, rust-for-linux@vger.kernel.org, 
-	akpm@linux-foundation.org, boqun.feng@gmail.com, bjorn3_gh@protonmail.com, 
-	wilfred.mallawa@wdc.com, aliceryhl@google.com, ojeda@kernel.org, 
-	a.hindborg@kernel.org, tmgross@umich.edu, gary@garyguo.net, 
-	alex.gaynor@gmail.com, benno.lossin@proton.me
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] mm/huge_memory: don't ignore queried cachemode in
+ vmf_insert_pfn_pud()
+To: Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org, nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Alistair Popple <apopple@nvidia.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Oscar Salvador <osalvador@suse.de>,
+ stable@vger.kernel.org
+References: <20250611120654.545963-1-david@redhat.com>
+ <20250611120654.545963-2-david@redhat.com>
+ <684a58bf34666_2491100d7@dwillia2-xfh.jf.intel.com.notmuch>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <684a58bf34666_2491100d7@dwillia2-xfh.jf.intel.com.notmuch>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: H83xYd-lfIBQxMtJu2-R2gLBeUGFB95Y8nBqK01ZBHE_1749710782
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 11, 2025 at 11:56=E2=80=AFPM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Thu, 27 Feb 2025 13:09:32 +1000
-> Alistair Francis <alistair@alistair23.me> wrote:
->
-> > Security Protocols and Data Models (SPDM) [1] is used for authenticatio=
-n,
-> > attestation and key exchange. SPDM is generally used over a range of
-> > transports, such as PCIe, MCTP/SMBus/I3C, ATA, SCSI, NVMe or TCP.
-> >
-> > From the kernels perspective SPDM is used to authenticate and attest de=
-vices.
-> > In this threat model a device is considered untrusted until it can be v=
-erified
-> > by the kernel and userspace using SPDM. As such SPDM data is untrusted =
-data
-> > that can be mallicious.
-> >
-> > The SPDM specification is also complex, with the 1.2.1 spec being almos=
-t 200
-> > pages and the 1.3.0 spec being almost 250 pages long.
-> >
-> > As such we have the kernel parsing untrusted responses from a complex
-> > specification, which sounds like a possible exploit vector. This is the=
- type
-> > of place where Rust excels!
-> >
-> > This series implements a SPDM requester in Rust.
-> >
-> > This is very similar to Lukas' implementation [2]. This series includes=
- patches
-> > and files from Lukas' C SPDM implementation, which isn't in mainline.
-> >
-> > This is a standalone series and doesn't depend on Lukas' implementation=
-, although
-> > we do still rely on Lukas' crypto preperation patches, not all of which=
- are
-> > upstream yet.
-> >
-> > To help with maintaining compatibility it's designed in a way to match =
-Lukas'
-> > design and the state struct stores the same information, although in a =
-Rust
-> > struct instead of the original C one.
-> >
-> > This series doesn't expose the data to userspace (except for a single s=
-ysfs
-> > bool) to avoid the debate about how to do that. I'm planning to do that=
- in
-> > the future though.
-> >
-> > This series is based on the latest rust-next tree.
-> >
-> > This seris depends on the Untrusted abstraction work [4].
-> >
-> > This seris also depends on the recent bindgen support for static inline=
-s  [5].
-> >
-> > The entire tree can be seen here: https://github.com/alistair23/linux/t=
-ree/alistair/spdm-rust
-> >
-> > based-on: https://lore.kernel.org/rust-for-linux/20240925205244.873020-=
-1-benno.lossin@proton.me/
-> > based-on: https://lore.kernel.org/rust-for-linux/20250107035058.818539-=
-1-alistair@alistair23.me/
->
-> Hi Alastair,
->
-> I've completely failed to find time to actually pick up enough rust to re=
-view
-> this :(  Also failed to find anyone else who has the rust skills and enou=
-gh of
-> the background.
->
-> Ideally I'll get up to speed at some point, but in the meantime wanted to=
- revisit
-> the question of whether we want to go this way from day 1 rather than try=
-ing to
-> deal with C version and later this?
+On 12.06.25 06:34, Dan Williams wrote:
+> David Hildenbrand wrote:
+>> We setup the cache mode but ... don't forward the updated pgprot to
+>> insert_pfn_pud().
+>>
+>> Only a problem on x86-64 PAT when mapping PFNs using PUDs that
+>> require a special cachemode.
+> 
+> This is only a problem if the kernel mapped the pud in advance of userspace
+> mapping it, right?
 
-My feeling is that if the C version is merged first, there is going to
-be very little appetite to later replace it with a Rust version. So if
-we do want a Rust version, then it should be merged soon-ish.
+Good question, PAT code is confusing.
 
-But, no one seems super excited by a Rust implementation. I didn't get
-a resounding yes from anyone, including Rust devs, but I did get a few
-no's.
+What I understood is that drivers like vfio will register the range with 
+the expected cachemode, and then rely on vm_insert_* to fill out the 
+cachemode for them.
 
-So in the current environment I don't see this progressing.
+Peter explained it in the dicussion here [1] how e.g., vfio triggers 
+that early registration.
 
->
-> What's your current thoughts?  I know Lukas mentioned he was going to spi=
-n a
-> new version shortly (in one of the TSM threads) so are we waiting on that=
-?
+Regarding vfio, I can see that we do in vfio_pci_core_mmap() 
+unconditionally:
 
-I saw that Lukas is working on a netlink version. That's great to see
-and hopefully will address the comments from LPC last year. That
-should also pave the way to getting SPDM support upstream.
+vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
+vma->vm_page_prot = pgprot_decrypted(vma->vm_page_prot);
 
-I currently don't have time to convert the Rust version to use netlink
-and I'm not convinced it's worth the effort as there appears to be
-little enthusiasm for this at the moment.
+and probably rely on us querying the actual cachemode to be used later.
 
-Maybe in the future this is something that can be picked up
+vfio can map all kinds of different memory types ...
 
->
-> For now I'm going to take this off my review queue. Sorry!
+[1] https://lkml.kernel.org/r/aBDXr-Qp4z0tS50P@x1.local
 
-No worries! Thanks for letting me know
+> 
+> The change looks good.
+> 
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> 
+> ...but I am struggling with the scenario where this causes problems in
+> practice, where vm_page_prot is the wrong cachemode.
 
-Alistair
+Yeah, it's all confusing.
 
->
-> Jonathan
->
->
->
-> >
-> > 1: https://www.dmtf.org/standards/spdm
-> > 2: https://lore.kernel.org/all/cover.1719771133.git.lukas@wunner.de/
-> > 3: https://github.com/l1k/linux/commits/spdm-future/
-> > 4: https://lore.kernel.org/rust-for-linux/20240925205244.873020-1-benno=
-.lossin@proton.me/
-> > 5: https://lore.kernel.org/rust-for-linux/20250107035058.818539-1-alist=
-air@alistair23.me/
-> >
-> > v2:
-> >  - Drop support for Rust and C implementations
-> >  - Include patches from Lukas to reduce series deps
-> >  - Large code cleanups based on more testing
-> >  - Support support for authentication
-> >
-> > Alistair Francis (12):
-> >   lib: rspdm: Initial commit of Rust SPDM
-> >   lib: rspdm: Support SPDM get_version
-> >   lib: rspdm: Support SPDM get_capabilities
-> >   lib: rspdm: Support SPDM negotiate_algorithms
-> >   lib: rspdm: Support SPDM get_digests
-> >   lib: rspdm: Support SPDM get_certificate
-> >   crypto: asymmetric_keys - Load certificate parsing early in boot
-> >   KEYS: Load keyring and certificates early in boot
-> >   PCI/CMA: Support built in X.509 certificates
-> >   lib: rspdm: Support SPDM certificate validation
-> >   rust: allow extracting the buffer from a CString
-> >   lib: rspdm: Support SPDM challenge
-> >
-> > Jonathan Cameron (1):
-> >   PCI/CMA: Authenticate devices on enumeration
-> >
-> > Lukas Wunner (7):
-> >   X.509: Make certificate parser public
-> >   X.509: Parse Subject Alternative Name in certificates
-> >   X.509: Move certificate length retrieval into new helper
-> >   certs: Create blacklist keyring earlier
-> >   PCI/CMA: Validate Subject Alternative Name in certificates
-> >   PCI/CMA: Reauthenticate devices on reset and resume
-> >   PCI/CMA: Expose in sysfs whether devices are authenticated
-> >
-> >  Documentation/ABI/testing/sysfs-devices-spdm |   31 +
-> >  MAINTAINERS                                  |   14 +
-> >  certs/blacklist.c                            |    4 +-
-> >  certs/system_keyring.c                       |    4 +-
-> >  crypto/asymmetric_keys/asymmetric_type.c     |    2 +-
-> >  crypto/asymmetric_keys/x509_cert_parser.c    |    9 +
-> >  crypto/asymmetric_keys/x509_loader.c         |   38 +-
-> >  crypto/asymmetric_keys/x509_parser.h         |   40 +-
-> >  crypto/asymmetric_keys/x509_public_key.c     |    2 +-
-> >  drivers/pci/Kconfig                          |   13 +
-> >  drivers/pci/Makefile                         |    4 +
-> >  drivers/pci/cma.asn1                         |   41 +
-> >  drivers/pci/cma.c                            |  272 +++++
-> >  drivers/pci/doe.c                            |    5 +-
-> >  drivers/pci/pci-driver.c                     |    1 +
-> >  drivers/pci/pci-sysfs.c                      |    3 +
-> >  drivers/pci/pci.c                            |   12 +-
-> >  drivers/pci/pci.h                            |   15 +
-> >  drivers/pci/pcie/err.c                       |    3 +
-> >  drivers/pci/probe.c                          |    1 +
-> >  drivers/pci/remove.c                         |    1 +
-> >  include/keys/asymmetric-type.h               |    2 +
-> >  include/keys/x509-parser.h                   |   55 +
-> >  include/linux/oid_registry.h                 |    3 +
-> >  include/linux/pci-doe.h                      |    4 +
-> >  include/linux/pci.h                          |   16 +
-> >  include/linux/spdm.h                         |   39 +
-> >  lib/Kconfig                                  |   16 +
-> >  lib/Makefile                                 |    2 +
-> >  lib/rspdm/Makefile                           |   11 +
-> >  lib/rspdm/consts.rs                          |  135 +++
-> >  lib/rspdm/lib.rs                             |  180 +++
-> >  lib/rspdm/req-sysfs.c                        |   97 ++
-> >  lib/rspdm/state.rs                           | 1037 ++++++++++++++++++
-> >  lib/rspdm/sysfs.rs                           |   28 +
-> >  lib/rspdm/validator.rs                       |  489 +++++++++
-> >  rust/bindgen_static_functions                |    5 +
-> >  rust/bindings/bindings_helper.h              |    7 +
-> >  rust/kernel/error.rs                         |    3 +
-> >  rust/kernel/str.rs                           |    5 +
-> >  40 files changed, 2587 insertions(+), 62 deletions(-)
-> >  create mode 100644 Documentation/ABI/testing/sysfs-devices-spdm
-> >  create mode 100644 drivers/pci/cma.asn1
-> >  create mode 100644 drivers/pci/cma.c
-> >  create mode 100644 include/keys/x509-parser.h
-> >  create mode 100644 include/linux/spdm.h
-> >  create mode 100644 lib/rspdm/Makefile
-> >  create mode 100644 lib/rspdm/consts.rs
-> >  create mode 100644 lib/rspdm/lib.rs
-> >  create mode 100644 lib/rspdm/req-sysfs.c
-> >  create mode 100644 lib/rspdm/state.rs
-> >  create mode 100644 lib/rspdm/sysfs.rs
-> >  create mode 100644 lib/rspdm/validator.rs
-> >
->
+But as long as we don't conclude that pfnmap_setup_cachemode_pfn() can 
+be removed entirely (esp. also from pte / pmd case), this seems to be 
+the right thing to do and was accidental change in the introducing commit.
+
+Is it actually stable material? I don't know, but possibly getting 
+cachemodes wrongs sounds ... bad?
+
+-- 
+Cheers,
+
+David / dhildenb
+
