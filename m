@@ -1,188 +1,133 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80B81F3BB0;
-	Thu, 12 Jun 2025 16:56:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D03D10E5;
+	Thu, 12 Jun 2025 16:56:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749747365; cv=none; b=KX8DYizOSxNjch8Os3e4pEIulqkogOJTRHwd8iaa9eIrWrDCDnO/he1FF37cOxh55DyEsBdwx8sIsG+J6cGxFfy2nUFJV9LQrxw6LLLVmUw8dz8VXIPjwnURD4sA3SGtTmupx7JIzVLiZfhVV0qWH1Aj3o8vtCH/Rc+OZNOu1TU=
+	t=1749747398; cv=none; b=XGKJOh7FF/gUwRR7A/c8ZT7jackrMjxUcZ17gH/EyOp9jNv67LHqOvsoup7ztlikTaqiX+dx9jnnOaLPvlZcO78lHzWvbA1t6jwfJmGCjpxshPbwpM13W6ftCaqW71clZIclQ4e6iH2d5m/YF99ZUa+gRSD+GEKUkxVfs4IXfvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749747365; c=relaxed/simple;
-	bh=v89dW3iMfh6mZ1TxInMmlWaE+TSy57a+Fi/OSAIAcF0=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iXfMh+tHxTVR8FI4Ceu2mxmEsGuoo8KCkvUR11jfRlaVEtfsHknOG9Asfn4iH4sxJtzvZPhhVPTBSxjcNiEtSHSFKci0Gdjp7G/hPrs83oheXCdbI/vNIXHbBlRIeLzpzBO7O8REF3vV+TTngLoVU4dvvIChT+pKF/2FkgCdaW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bJ7v90vVqz6M529;
-	Fri, 13 Jun 2025 00:55:33 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 29C90140276;
-	Fri, 13 Jun 2025 00:55:59 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 12 Jun
- 2025 18:55:58 +0200
-Date: Thu, 12 Jun 2025 17:55:56 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Terry Bowman <terry.bowman@amd.com>
-CC: <PradeepVineshReddy.Kodamati@amd.com>, <dave@stgolabs.net>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <bp@alien8.de>,
-	<ming.li@zohomail.com>, <shiju.jose@huawei.com>, <dan.carpenter@linaro.org>,
-	<Smita.KoralahalliChannabasappa@amd.com>, <kobayashi.da-06@fujitsu.com>,
-	<yanfei.xu@intel.com>, <rrichter@amd.com>, <peterz@infradead.org>,
-	<colyli@suse.de>, <uaisheng.ye@intel.com>,
-	<fabio.m.de.francesco@linux.intel.com>, <ilpo.jarvinen@linux.intel.com>,
-	<yazen.ghannam@amd.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v9 12/16] cxl/pci: Introduce CXL Endpoint protocol error
- handlers
-Message-ID: <20250612175556.000036b5@huawei.com>
-In-Reply-To: <20250603172239.159260-13-terry.bowman@amd.com>
-References: <20250603172239.159260-1-terry.bowman@amd.com>
-	<20250603172239.159260-13-terry.bowman@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1749747398; c=relaxed/simple;
+	bh=8Ye67YnjttyTwFTBHI+RLSlHPDRdNz234kvp3fp5Y9M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u10EE370Od5Q0ZYNDXetaI77CQGIphy6w/fEQMWhAexEsY101uEYZZmTx2NB281Qg5ule+W984z51p1WxEEQfqWQi6j+7AMAE7EuMPbBFCwm/PN2lcAr3nhQbwKIIDvCfuYy9cahelm8nJzV0okuhZNz7UQMLCzwDWkXKf1ylKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TnUpXXZp; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TnUpXXZp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749747397; x=1781283397;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=8Ye67YnjttyTwFTBHI+RLSlHPDRdNz234kvp3fp5Y9M=;
+  b=TnUpXXZpdFiZZhF+4UXGq3hxk1eRm/34eTtKsyBc6oNm99yXQtFzaeUC
+   FrXfplTJgH70k0mRtRsB0U788kq87zmTU1+wlorUSv4lhSG2uDGq4nnLu
+   +p0kaJ+Tb3Xe0uxTcUxHDT6jFPcW6DHIlCBg8U+YCGRC3pho1eWiOicSk
+   GWseOsyM8B9IwUCehv2lw9Gj9Zj9+CxSMqDz64XvS0yz+KWrEhf5HPdKJ
+   LiQUxvG8BSdb5WmqluR1nHZ/dQUixuRlXBifzJnP+SC6vuzciZRt0HE21
+   342rbys55+VyM/7O7NuaXu1Vc95GbGF8uf26pJCH8QwQ48I2ZIN+Mlk6P
+   A==;
+X-CSE-ConnectionGUID: THhNqup4QlSCCRicfyZf3g==
+X-CSE-MsgGUID: 8D0RYl9QTfuMK/qA86vccQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="52039761"
+X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
+   d="scan'208";a="52039761"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 09:56:36 -0700
+X-CSE-ConnectionGUID: IEi61bqhR3G9Riiy6tUyzw==
+X-CSE-MsgGUID: 3V8D+rDbRz6duGbQpO2V6Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
+   d="scan'208";a="152483191"
+Received: from dannysua-mobl.amr.corp.intel.com (HELO [10.125.98.185]) ([10.125.98.185])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 09:56:35 -0700
+Message-ID: <22b3158d-565d-450b-809a-af302220bcf4@linux.intel.com>
+Date: Thu, 12 Jun 2025 09:56:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/3] mm/huge_memory: vmf_insert_folio_*() and
+ vmf_insert_pfn_pud() fixes
+To: David Hildenbrand <david@redhat.com>,
+ Dan Williams <dan.j.williams@intel.com>, Alistair Popple <apopple@nvidia.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, nvdimm@lists.linux.dev,
+ linux-cxl@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Oscar Salvador <osalvador@suse.de>
+References: <20250611120654.545963-1-david@redhat.com>
+ <lpfprux2x34qjgpuk6ufvuq4akzolt3gwn5t4hmfakxcqakgqy@ciiwnsoqsl6j>
+ <684a5594eb21d_2491100de@dwillia2-xfh.jf.intel.com.notmuch>
+ <990ce9cf-0e48-432c-a29f-0bd1704eede4@redhat.com>
+ <e11ba418-4184-4f4f-add5-18a5edaa0f34@redhat.com>
+Content-Language: en-GB
+From: Marc Herbert <marc.herbert@linux.intel.com>
+In-Reply-To: <e11ba418-4184-4f4f-add5-18a5edaa0f34@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, 3 Jun 2025 12:22:35 -0500
-Terry Bowman <terry.bowman@amd.com> wrote:
 
-> CXL Endpoint protocol errors are currently handled using PCI error
-> handlers. The CXL Endpoint requires CXL specific handling in the case of
-> uncorrectable error handling not provided by the PCI handlers.
+
+>>>>> I spent too much time trying to get the ndctl tests mentioned by Dan
+>>>>> running (.config tweaks, memmap= setup, ... ), without getting them to
+>>>>> pass even without these patches. Some SKIP, some FAIL, some sometimes
+>>>>> suddenly SKIP on first invocation, ... instructions unclear or the tests
+>>>>> are shaky. This is how far I got:
+>>>>
+>>>> FWIW I had a similar experience, although I eventually got the FAIL cases below
+>>>> to pass. I forget exactly what I needed to tweak for that though :-/
+>>>
+>>> Add Marc who has been working to clean the documentation up to solve the
+>>> reproducibility problem with standing up new environments to run these
+>>> tests.
+>>
+>> I was about to send some doc improvements myself, but I didn't manage to
+>> get the tests running in the first place ... even after trying hard :)
+>>
+
+
+>>> http://lore.kernel.org/20250521002640.1700283-1-marc.herbert@linux.intel.com
+>>>
+>>
+>> I think I have CONFIG_XFS_FS=m (instead of y) and CONFIG_DAX=y (instead
+>> of =m), and CONFIG_NFIT_SECURITY_DEBUG not set (instead of =y).
+>>
+>> Let me try with these settings adjusted.
 > 
-> Add CXL specific handlers for CXL Endpoints. Rename the existing
-> cxl_error_handlers to be pci_error_handlers to more correctly indicate
-> the error type and follow naming consistency.
+> Yeah, no. Unfortunately doesn't make it work with my debug config. Maybe with the
+> defconfig as raised by Marc it would do ... maybe will try that later.
 
-I wonder if a rename precursor patch would be better here than doing it
-all in one go?
+After a lot of trial and error to get them right, these fragments have always
+worked for me:
 
-Having not read the patch description thoroughly this had me confused ;)
+make defconfig ARCH=x86_64
+./scripts/kconfig/merge_config.sh .config ../run_qemu/.github/workflows/*.cfg
 
-> 
-> Keep the existing PCI Endpoint handlers. PCI handlers can be called if the
-> CXL device is not trained for alternate protocol (CXL). Update the CXL
-> Endpoint PCI handlers to call the CXL handler. If the CXL uncorrectable
-> handler returns PCI_ERS_RESULT_PANIC then the PCI handler invokes panic().
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+Warning: there is a CONFIG_DRM=n in there to save a lot of compilation
+time.  Nothing against DRM specifically; it's just the best "value" for
+a single line change :-)
 
 
->  
->  static bool cxl_handle_endpoint_ras(struct cxl_dev_state *cxlds)
->  {
-> -
+The run_qemu/.github/workflows/*.cfg fragments are mostly duplicated
+from ndctl.git/README.md - but unlike the latter, they're
+machine-readable and testable. The CXL fragment is actually tested in 
+run_qemu's CI (CI = the only way not to bitrot).
+https://github.com/pmem/run_qemu/actions
 
-So this snuck in somewhere between upstream and here.  If it is in this
-set let's push the removal back to where it came from.
-
->  	return __cxl_handle_ras(&cxlds->cxlmd->dev, cxlds->serial, cxlds->regs.ras);
->  }
->  
-> @@ -844,14 +843,15 @@ static void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds)
->  static void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds) { }
->  #endif
->
-> +pci_ers_result_t cxl_error_detected(struct device *dev)
-> +{
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-> +	struct device *cxlmd_dev = &cxlds->cxlmd->dev;
-> +	pci_ers_result_t ue;
-> +
-> +	scoped_guard(device, cxlmd_dev) {
->  		if (!dev->driver) {
->  			dev_warn(&pdev->dev,
->  				 "%s: memdev disabled, abort error handling\n",
->  				 dev_name(dev));
-> -			return PCI_ERS_RESULT_DISCONNECT;
-> +			return PCI_ERS_RESULT_PANIC;
->  		}
->  
->  		if (cxlds->rcd)
-> @@ -892,29 +900,25 @@ pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
->  		ue = cxl_handle_endpoint_ras(cxlds);
->  	}
->  
-> -
-
-Maybe something more in the patch description on why this chunk isn't relevant?
-I guess we don't need the more complex handling as these are all panic :)
-
-> -	switch (state) {
-> -	case pci_channel_io_normal:
-> -		if (ue) {
-> -			device_release_driver(dev);
-> -			return PCI_ERS_RESULT_NEED_RESET;
-> -		}
-> -		return PCI_ERS_RESULT_CAN_RECOVER;
-> -	case pci_channel_io_frozen:
-> -		dev_warn(&pdev->dev,
-> -			 "%s: frozen state error detected, disable CXL.mem\n",
-> -			 dev_name(dev));
-> -		device_release_driver(dev);
-> -		return PCI_ERS_RESULT_NEED_RESET;
-> -	case pci_channel_io_perm_failure:
-> -		dev_warn(&pdev->dev,
-> -			 "failure state error detected, request disconnect\n");
-> -		return PCI_ERS_RESULT_DISCONNECT;
-> -	}
-> -	return PCI_ERS_RESULT_NEED_RESET;
-> +	return ue;
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_error_detected, "CXL");
-
->  static int cxl_flit_size(struct pci_dev *pdev)
->  {
->  	if (cxl_pci_flit_256(pdev))
-> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
-> index 0ef8c2068c0c..664f532cc838 100644
-> --- a/drivers/cxl/core/ras.c
-> +++ b/drivers/cxl/core/ras.c
-
-> @@ -244,6 +244,8 @@ static struct pci_dev *sbdf_to_pci(struct cxl_prot_error_info *err_info)
->  static void cxl_handle_prot_error(struct cxl_prot_error_info *err_info)
->  {
->  	struct pci_dev *pdev __free(pci_dev_put) = pci_dev_get(sbdf_to_pci(err_info));
-> +	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-> +	struct device *cxlmd_dev __free(put_device) = get_device(&cxlds->cxlmd->dev);
->  
->  	if (!pdev) {
->  		pr_err("Failed to find the CXL device\n");
-> @@ -260,15 +262,13 @@ static void cxl_handle_prot_error(struct cxl_prot_error_info *err_info)
->  
->  	if (err_info->severity == AER_CORRECTABLE) {
->  		int aer = pdev->aer_cap;
-> -		struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-> -		struct device *dev __free(put_device) = get_device(&cxlds->cxlmd->dev);
-
-This code move seems somewhat unrelated?  Maybe it's in the wrong patch and
-becomes necessary later?
-
->  
->  		if (aer)
->  			pci_clear_and_set_config_dword(pdev,
->  						       aer + PCI_ERR_COR_STATUS,
->  						       0, PCI_ERR_COR_INTERNAL);
->  
-> -		cxl_cor_error_detected(pdev);
-> +		cxl_cor_error_detected(&pdev->dev);
->  
->  		pcie_clear_device_status(pdev);
->  	} else {
-
-
+As I wrote in
+https://lore.kernel.org/linux-cxl/aed71134-1029-4b88-ab20-8dfa527a7438@linux.intel.com/
+these fragments should ideally live in ndctl.git/, not in run_qemu.git/
+(the latter could still add tweaks). Then ndctl.git/README.md could just
+refer to the testable fragments instead of inlining them. "Send patches"
+they say :-)
 
