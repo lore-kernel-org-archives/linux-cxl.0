@@ -1,67 +1,68 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306B52D320E
-	for <linux-cxl@vger.kernel.org>; Thu, 12 Jun 2025 18:02:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BCBB2D0267
+	for <linux-cxl@vger.kernel.org>; Thu, 12 Jun 2025 18:02:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749751356; cv=none; b=qCPoExvHwdXkGr5Iv/tBu7tIhqR6HYpQX3efWvt6f6FodxH60nIXtf1awkUSmls7yjrUadwgTkPffqzyaYP+AiOvaM5J8TcmVKK/SLhA45jUDoFrjOSkg2FVlJNRUf/4CFjhYKV9MmVirAph59RwjTEx2FNsQAPt93ej+lRgpug=
+	t=1749751374; cv=none; b=XoBF8YHYPHkqYtjSoPObLVe011GEnH0zvH84038yFs/r7AU13iD0nZyNIU322ENmEhBBCZmXhjGkzYkQ+GxTJxhbPyQ9L1/8isUFCyrhw7Ib53f5/8/upH/e9h6wbJDUqfqmEu+ipCmrt2VxOm8tFIcLV54yZgEUMPCucoZM6gQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749751356; c=relaxed/simple;
-	bh=S7r59/PIWkoTLIG07/E/jEWrNmZtWKxEaHN/jiSuqUs=;
+	s=arc-20240116; t=1749751374; c=relaxed/simple;
+	bh=7xWw5aJLm8rN49o70JV7Et+XL03bPweLX55FIjhoBWI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ESXpoEvqf9R9q2Jgpwoy2E1CmRZm0rfJr8l/inKlWOlgcCYZpLefIvve08ea1WefzBOwlEGqZtKck8ps75R4hgmVXDR20dFpdyVmbgyxvE5pgqqFkJNFmRPiSaih8/xlzC9khSc1AIfrslLJYpA0ByK6T5tftcSYgTb8K223GhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=WaeDzmsz; arc=none smtp.client-ip=209.85.160.177
+	 Content-Type:Content-Disposition:In-Reply-To; b=bjLZ+MGJTLDKQWen1mRtyUZBuRtpLi/Rhrj+q9p/qpLp+vtr+JHWJq837yn8y76o6qIH4LwhNKGXWykHayABQXUVfA3mIsgsajt2txHClEXt7p8I43Dob/X/DFMPkHYU12yMK2X1h62ztgt+51PVJVeDrGS8TyIbqn9okKV5Lcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=SHQUsczu; arc=none smtp.client-ip=209.85.222.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="WaeDzmsz"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4a6f6d52af7so14477481cf.1
-        for <linux-cxl@vger.kernel.org>; Thu, 12 Jun 2025 11:02:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="SHQUsczu"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7d0a2220fb0so144995685a.3
+        for <linux-cxl@vger.kernel.org>; Thu, 12 Jun 2025 11:02:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1749751354; x=1750356154; darn=vger.kernel.org;
+        d=ziepe.ca; s=google; t=1749751371; x=1750356171; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Men1Nv7TOAnztTuH0H3iBJJYmyP24ktCmwcSSGXFev0=;
-        b=WaeDzmszRAUHVlAnIJEbJ8onMxOApOo0ScZYPiD9U0sp4i3kGK4rR/wYq+9q600hWi
-         wwzNvXI6cE4z5jBOlKo2j0HbxaFj/R71YuKgrBw+NfVyeOR+TR16XxiQxVXE8dvaVp/p
-         s/IY5ogw+cSZIRwmoC+SblvVqFzsXTA2f+iQM/xxQIFd8VtLm9iNWA+U4Q9Bwr6tuEZe
-         yr1cPg4emPNKyRbubdbNi506auJDQuA7+eoACeDY19e0kvrBU1sf9FfQu8S4yaMv67Z2
-         upL/OSFmI95stNikn9VNvWK+5oZmJuyEUpkBqK7r12a7+7Ntinde/HcjV+8vOuMidkEZ
-         LgvQ==
+        bh=GDDRWPX1lH08t+vNjXng50l3/jIs9pZf702xFyzNrfY=;
+        b=SHQUsczuWm3agl6woZtp5CzhI7/hEvYO/lqDw70+mtT+2jgiku0xpGdC2XGyFTdiNY
+         h4m/rihWjDzqeFqTygtJsjrTbLIgVc2oWUdkcrr7ixISuPE6IWe7rynrg+xfzMo18k/A
+         c4vIlJLWRVpVTtyJ5TpLHCoh1ETzUp7EW+n/8K3wcszxUQJ6KNlse89xi/AFh0tXl7G2
+         lR6fuSupVMvMvwpHei0L6VE7O3Fm17HcKOWOAuCOii4/lzYuX4UmS/+/zNzQDqtowlbY
+         CUPbEigeyT+6uW+JOJd9PB2F7dNmvze8S5qlSbaplW8dAJQ+PNarM3DTxXeo7gkd9tW7
+         s3cA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749751354; x=1750356154;
+        d=1e100.net; s=20230601; t=1749751371; x=1750356171;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Men1Nv7TOAnztTuH0H3iBJJYmyP24ktCmwcSSGXFev0=;
-        b=anFxOtqFUuWAR+GWPVWluibPHwf0fB7Cr/v9Hw2OAO3/kBXsVkzzhP3yDacsWJbDXM
-         6mom6q+nQKXCjKZqgzydnxg+1p361woUUviC7WWn8Kk0aPz3EQOQUgcuMtdJH9FMXI1l
-         qzfcLS3CHNDy/bQbZvuq4rZa2VGbUoEU5+Je5mh2bFaVtqiyeZZ3JmDydN8TJirxDrNr
-         5ekTip9V1K98SKC6YTGZIU/oKVrvIcVYcp4KJ+Sdi6YkIvLlbBEJD0FQ95wwzQq4QkYm
-         8mrEbFGbwteWGqJY+MrjpTKDq8jzyTaAzrZlX0CC4oPy2EFKroiq46shjcAx2mwTloFK
-         Bazw==
-X-Forwarded-Encrypted: i=1; AJvYcCUSutk1GPxpa8ngA0Vw92ei6IQ4huEyTTcCjpwCbhvc0wjgH4pzfbzr8EvYgJGycbDckI6D9s40rdo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRZYBXmkdEROi158YvFrbgL0suWX40PI/4V+77KYdJgVqsXjEN
-	qUgxIrO/cF7XPAd6VC7LSPORrB/ZdSvFDxLr7cr5exB3HKUaoTMyPERM0XSYhYmYh6I=
-X-Gm-Gg: ASbGnct8V6idec0oTcJLGC01vkrlvjYBal7ejOuIhAlRhuSfp7reFdP+2vpxENlrrLw
-	ESw4fmYO6MHYfD64v0XbknLmUXL7EOeWc3gzbq6e2xQCp60Pk0IR9mCI3jFp8/O7N7iTrABwl2G
-	w7pUkzy7OIBoJCHRnAzjeKYa/numMGr1Q502mfh6E8NPfscOFprmAT5s8SnzhGo9h7Xq+rE1Z6/
-	DjQ9TxSqaQv811TzH2PkY7wvsQDLwDrY7qqOsdy45/fT0peocrCGWUiYqHqhLDf8yRaswX6ERYC
-	+Ka4BbzVezj9fyMaaPJnnlSVWmLOQt6n3bBcuoXjMm2r2b4vZuU0ljVT80FuM58ahy2I/P+qTF7
-	UFIHfsAxVX3yZi9vX1hESQaxXtr4ONwQY4lJmuA==
-X-Google-Smtp-Source: AGHT+IF2gHZ0WFh5VXAMyx6YiN8EJ/UWCFphfLEXmh1c3StoJxVby1YEDKi6l0heE4IvQIvOlyk6VA==
-X-Received: by 2002:a05:622a:1f91:b0:4a4:3079:55e7 with SMTP id d75a77b69052e-4a72fe7a666mr2315081cf.17.1749751353871;
-        Thu, 12 Jun 2025 11:02:33 -0700 (PDT)
+        bh=GDDRWPX1lH08t+vNjXng50l3/jIs9pZf702xFyzNrfY=;
+        b=VsJgVCxdpRvabIq6NFGUXTKOGRkk6ELPiAAz7VvxBldRQiU3TD6zj3lQHsHBP1LEQB
+         P7FK1QOT3ZcFhxPEZinE8/JaSiiqEx3IZXFUJFvChPd3TJm4f/u0qM8w0WlpLzBsG1q9
+         tkwc/9Zcx21PlBbs1QUQ0DdMA3X8VTGcwDIgtD7p2Bdo781WfSb9KbOKWpn6+kzBfsrt
+         UR49wZ3ha7LYNDPNgmoRKii3dGOqme3wXCS44SCvdpXHs3il5gTDs2FeAH6jrzmxJx3k
+         fdap4sSG7aoYvB7dTW4qRIKjDV9gKO51J+FxAc4ju3nOskSDGVrajk5QUGOSpV4AuInn
+         cJuA==
+X-Forwarded-Encrypted: i=1; AJvYcCVAVcZtaYdOWfjHAILe/FTk0VIkAocTKxl3XYWNqC0KEyMeEP6upmgpZkUIqgmh+oQIjS8mm6lDguk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5gI9zswvR/u7WZLfdf/mpAYb51oAbkpam837hq5QsLigpUdm0
+	OOfJLpnZX0FocvA9HlOtQDMPLRWtEfalA9AUq12Kwmqyy7ij1qnuZvcUKguPUE9uFs4HFWwh2Gi
+	B7bSs
+X-Gm-Gg: ASbGncv8/ag2IK1KC9SlEDH2b/EzJfivnYmGs8SmUUV/kJGpKlgpyS/MeJ7LJQIAR6s
+	/sV+KLfbH9Bi78gf+cbSUSfgRcGQ7NeQZrkejJCVfo6GQ2k15s7NodZ2cEXxU6Rm1nLI7cTRFFz
+	5XONW7C86yGNVcGzJotWr9wFbjFSzt4gth7k51bdnyIOfMwROKaf07lAdbl4GLvuJ9Yrkcaq/fM
+	g95F7LIN5xYUlbTVkD0AYApEPrEZwh+76NQysOALFyBECSfJ5iY6g3RpdtmVUaY1muuHiT4dOyN
+	7NENSWy6vhqQJVfRVJzU0tTkzVYfCsJS5pzom7HR8aCYezdzpyoSeWvW1PPeODwvbJuru6czY0p
+	EORustv93IQbgHqpimQMphLZDXQfE6svTcOE9AA==
+X-Google-Smtp-Source: AGHT+IErLirqZ/IjWI/XgEsozLii1/UP6Pds6ZK0pCCFWbV1P+4pjEqskuPc1d9m/qNp3cmq3DvELw==
+X-Received: by 2002:a05:6214:e86:b0:6fa:d95d:d0b1 with SMTP id 6a1803df08f44-6fb3d2b2155mr7744516d6.24.1749751371067;
+        Thu, 12 Jun 2025 11:02:51 -0700 (PDT)
 Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a72a4b0cb9sm6750981cf.50.2025.06.12.11.02.33
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb35c8ee5fsm12595756d6.122.2025.06.12.11.02.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 11:02:33 -0700 (PDT)
+        Thu, 12 Jun 2025 11:02:50 -0700 (PDT)
 Received: from jgg by wakko with local (Exim 4.97)
 	(envelope-from <jgg@ziepe.ca>)
-	id 1uPmG0-00000004kgF-3F9r;
-	Thu, 12 Jun 2025 15:02:32 -0300
-Date: Thu, 12 Jun 2025 15:02:32 -0300
+	id 1uPmGI-00000004kgd-0Li5;
+	Thu, 12 Jun 2025 15:02:50 -0300
+Date: Thu, 12 Jun 2025 15:02:50 -0300
 From: Jason Gunthorpe <jgg@ziepe.ca>
 To: David Hildenbrand <david@redhat.com>
 Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
@@ -78,11 +79,11 @@ Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
 	Dev Jain <dev.jain@arm.com>,
 	Dan Williams <dan.j.williams@intel.com>,
 	Oscar Salvador <osalvador@suse.de>
-Subject: Re: [PATCH v2 2/3] mm/huge_memory: don't mark refcounted folios
- special in vmf_insert_folio_pmd()
-Message-ID: <20250612180232.GB1130869@ziepe.ca>
+Subject: Re: [PATCH v2 3/3] mm/huge_memory: don't mark refcounted folios
+ special in vmf_insert_folio_pud()
+Message-ID: <20250612180250.GC1130869@ziepe.ca>
 References: <20250611120654.545963-1-david@redhat.com>
- <20250611120654.545963-3-david@redhat.com>
+ <20250611120654.545963-4-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -91,35 +92,33 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250611120654.545963-3-david@redhat.com>
+In-Reply-To: <20250611120654.545963-4-david@redhat.com>
 
-On Wed, Jun 11, 2025 at 02:06:53PM +0200, David Hildenbrand wrote:
-> Marking PMDs that map a "normal" refcounted folios as special is
+On Wed, Jun 11, 2025 at 02:06:54PM +0200, David Hildenbrand wrote:
+> Marking PUDs that map a "normal" refcounted folios as special is
 > against our rules documented for vm_normal_page().
 > 
-> Fortunately, there are not that many pmd_special() check that can be
-> mislead, and most vm_normal_page_pmd()/vm_normal_folio_pmd() users that
-> would get this wrong right now are rather harmless: e.g., none so far
+> Fortunately, there are not that many pud_special() check that can be
+> mislead and are right now rather harmless: e.g., none so far
 > bases decisions whether to grab a folio reference on that decision.
 > 
 > Well, and GUP-fast will fallback to GUP-slow. All in all, so far no big
 > implications as it seems.
 > 
-> Getting this right will get more important as we use
-> folio_normal_page_pmd() in more places.
+> Getting this right will get more important as we introduce
+> folio_normal_page_pud() and start using it in more place where we
+> currently special-case based on other VMA flags.
 > 
-> Fix it by teaching insert_pfn_pmd() to properly handle folios and
-> pfns -- moving refcount/mapcount/etc handling in there, renaming it to
-> insert_pmd(), and distinguishing between both cases using a new simple
-> "struct folio_or_pfn" structure.
+> Fix it just like we fixed vmf_insert_folio_pmd().
 > 
-> Use folio_mk_pmd() to create a pmd for a folio cleanly.
+> Add folio_mk_pud() to mimic what we do with folio_mk_pmd().
 > 
-> Fixes: 6c88f72691f8 ("mm/huge_memory: add vmf_insert_folio_pmd()")
+> Fixes: dbe54153296d ("mm/huge_memory: add vmf_insert_folio_pud()")
 > Signed-off-by: David Hildenbrand <david@redhat.com>
 > ---
->  mm/huge_memory.c | 58 ++++++++++++++++++++++++++++++++----------------
->  1 file changed, 39 insertions(+), 19 deletions(-)
+>  include/linux/mm.h | 19 ++++++++++++++++-
+>  mm/huge_memory.c   | 51 +++++++++++++++++++++++++---------------------
+>  2 files changed, 46 insertions(+), 24 deletions(-)
 
 Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 
