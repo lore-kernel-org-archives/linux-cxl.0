@@ -1,319 +1,186 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2066.outbound.protection.outlook.com [40.107.236.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779A821FF2C
-	for <linux-cxl@vger.kernel.org>; Thu, 12 Jun 2025 08:27:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749716841; cv=none; b=QS6ksoQ+wDdc7PyK9+HX+WzIn1eSW34JM2c3BRtj++QqEANbE3IrskMl8nVOXU+h9PP7nxQWMp5n6Yg0aH4de7oMjbpnB3bPk9Bt1lQ7ZkgEbCx802z63j22Zx7lQRsJPS07PkckyE6uam9Xw6wRwP00nyVoWBNEz26kzFuiFl8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749716841; c=relaxed/simple;
-	bh=hainky8gctJviguOl6nth/BkZnjuwyLykzKAN0GP39I=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=rvalf97DOyM0W2K37NGv7aoIV+Iln8CFCpYy2fca69eNTv1gSHJG+O+nGNkItQMr2zslEn2AQqUPp9xbb2e73YOA+xo05lW1EgmqEGgXomNALeTEu6VHZiJIelf+A4JxwbiDCPewf616G3RwQrpsymzxISu7yTV8onxVV66s0yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eLBA4VN0; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41BF41F237E;
+	Thu, 12 Jun 2025 08:47:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749718046; cv=fail; b=J6ZB+11aBQJZnBRZo5StyukARxtyyP0QPQiRSl+TlLzFI2fggxiaZdKaH7Frsn0BSxQEiSQMRt38oEIfgCY+/46kXQT5BxLC778baRYaJtVNSwEsCxvCwDhShO+3nk6UcNnTaKWzv5ryb301h0DHzP8TSlqUFC5yzbt+OLFZ3G0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749718046; c=relaxed/simple;
+	bh=dhGa+9cyQaJO1vhkstt4fG+R/heTtow6vfnc/QDpen4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=XV/fdLpd6nyYaTehI5nEugwdzLqZ0yJuGwpW4GIGtTITvB8zyoC5iGiSBdlVUxJvwQ93mOmWqWEdEZT7MEQqYyzQMPUU0h30RKIjIOcGEUainOQtwKNeplwOPOdQCSLPDw2Wvwy4C4W2Nc97kdllxBluTViDuIDkOgH3EdXTk88=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=BmEqgN5q; arc=fail smtp.client-ip=40.107.236.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eLBA4VN0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749716838;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=bN8Ot3+jNJZDy3gvrIb10O3K47lHJizLoV8n78vRwTE=;
-	b=eLBA4VN0v3/FDRSDxtLDKGrWBF4RO3tdk7sE3jw7LoNwCl+OvkPlB7ZoCNjPKrtOE1xy3n
-	KcxI36dKYRFf9ef+wzK40Lbg1s26dZnqc+fLlNnX9STg15UhRjC7rqPv3HYpJx42OHC34G
-	riPRu1pR8I1aWQ0CiI4TUiE7wvdKRBs=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-104-D94Q1aIoNA2gGLBX90I57Q-1; Thu, 12 Jun 2025 04:27:15 -0400
-X-MC-Unique: D94Q1aIoNA2gGLBX90I57Q-1
-X-Mimecast-MFC-AGG-ID: D94Q1aIoNA2gGLBX90I57Q_1749716834
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a4eb6fcd88so487818f8f.1
-        for <linux-cxl@vger.kernel.org>; Thu, 12 Jun 2025 01:27:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749716834; x=1750321634;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:from:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=bN8Ot3+jNJZDy3gvrIb10O3K47lHJizLoV8n78vRwTE=;
-        b=kHkn2z4OsGheDIswtTLTUkugWcswwdvpmSA9jUvtFhyv32JKYJYbni4rXL9g0rPTJR
-         D2DJmEQyRMYo59R4ot9P878U1vIq1KfaLrOR+jnHIR8ABa9vY5aChmc6CJwmSch3COXO
-         kl/I5uyUEhhYyMayc0VcyrxUF5lt9vfPqkkFwPVJBBOE/lXP84HmsiLApcVIxINHL0aI
-         99vNJWLQ/ZE+Z0E5sENT4rqs2hyWQ4iJH+TU8Pi9sxzqAqvl6nLDaQlTWgoEfuqKmfwS
-         p4yub54KmAIZLJ77m4aBfRNCU5VHcNUbSwCTSeOXnQ0X7sigRrEcnDxbh3CK33H9FqZY
-         W4jw==
-X-Forwarded-Encrypted: i=1; AJvYcCVSiGC7skPJveeD8p+ZyF9sNDoL0mXxoXuwn3QSJB6VBRLf9jv6RAvAPyglfypPZoFMX89q1X2Ex94=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxf6fPzxtJ2BzVhz+NaKHi/YMoCzW/8BkcF9w+imhyQIlI0lPCm
-	jL9qVKFvise31CByTSeezznohkwY6Y3cPBY+lXU5UV+OBLvGPkqnuYyKg4XNeaSlDMT3ssBubW0
-	CXWcVdpBXa03fTr/8U8lIGfYWWve6JyDryFl4078omyjzm3kb5+dQXAVl59IZQMKptnK0l654
-X-Gm-Gg: ASbGncsRmplD8uIXqslueXCP0rXHOwIMSwx+hFfobHEfaOsNnFm5UM2piOQYKK75Dao
-	GXq2YBuAMwAu19xlMJQDf9OuoZfSxPITGUia6E8mQ+JT34FQD7egCpjr0r0E5rpTz5Jx+HCRX5L
-	AdLCZRGZxx38faLR/YlPEn1DfNxpx2APT+B6unWykrRX4aeKB9L2fj+DF1U4a7bk6owZJnJgBY+
-	DovTTS5TqKWIWha1eHpm6dvRJVrO54IPO+1LkE2uqNeSKpAWrgSyR5LTRDMPRzIO3fYyS9qOR6V
-	nX2d4zvKJQCmIPKKlMKFuKu+nKpMPuCCrcx/yN15JAFcXixPRIidlwWy3saotncCvyHHKoqXmIU
-	KaWVZm2syQFznzDeHzkBkO68r3yfgsyiuMberec7pOM6eLDqC5w==
-X-Received: by 2002:a05:6000:4313:b0:3a4:f7e3:c63c with SMTP id ffacd0b85a97d-3a56126981bmr1748143f8f.0.1749716833826;
-        Thu, 12 Jun 2025 01:27:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE5IaUy7ZOJxeKsAYaNcwddb/Oox2oCst9TiHvETD1rZWF9Q4Jcg1ZORYRbYQxMbsqDN9+G/w==
-X-Received: by 2002:a05:6000:4313:b0:3a4:f7e3:c63c with SMTP id ffacd0b85a97d-3a56126981bmr1748125f8f.0.1749716833359;
-        Thu, 12 Jun 2025 01:27:13 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f2c:1e00:1e1e:7a32:e798:6457? (p200300d82f2c1e001e1e7a32e7986457.dip0.t-ipconnect.de. [2003:d8:2f2c:1e00:1e1e:7a32:e798:6457])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a561b4b79bsm1274569f8f.66.2025.06.12.01.27.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Jun 2025 01:27:12 -0700 (PDT)
-Message-ID: <e11ba418-4184-4f4f-add5-18a5edaa0f34@redhat.com>
-Date: Thu, 12 Jun 2025 10:27:11 +0200
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="BmEqgN5q"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=pSL9av6rLnjDPtQYRhNRYroKRPv+gLmUwgKutWEYHtOLsqcEI9nHXX7KPetIGTjxh8q1nCP1N7zufimj1VwflAF7axvvKCSfFeMiYrvUrd2kKhKzsPZo1vonT+4ZoBVYeXneQNkoiETo8/iboXRxxKKCbyMss6yhFFuCiL35Hwm5P6dIAFKdTu9rn1/OSGl/2YavDigjYk2IvYDEblTbJRb9J4wIKj36svopOX6WLHYfqr7QQEj+fWzcJqqdmmH8IxybtsvUYkaNj4oCneXDAir4CvTa/LEw2RknElocja4hZ4V+DZxFHInRUgQ9YkqrtB2AeFQdCBsUIV0ASPt5DQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0gBLu/HtAKyzpB5+V3m/GmUdRvYCGUrHYIL5WI49w2c=;
+ b=tACQnuiEjKyvPfK1IVTXMjDoyRdZskkeqmhPavraj+UE5axNWRR96ES3sM+P149acYO5uNHwpjpmzNPf6/DziLRuYe6Cd3KUeyVamsBAERAUHpc6XUmBz8AMdQujqh1t+hGi8CW7bmL/ultZsMwn4MFH2psIwmmD/vlXEz+AF+Fu1uKbCoOT5khVooE9UEinrTOQm9MCNu+3Vm9JZXofIevPRekD1bjq0Qt4ZQf16dtJNvPx2Io8NICpr68dI+vQdOmq3yBMhwcsCKP0mTk9gcS4pQdNOox3abeMnBVvTKwHd/co5uABu2t4X2MDlCHydp48hI0gKUeovdNzcxwCVg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0gBLu/HtAKyzpB5+V3m/GmUdRvYCGUrHYIL5WI49w2c=;
+ b=BmEqgN5qUJtu7ik5y+0hTpYfp9N5x7SL8NOp+S9rq0AvVGYipGxgJSi0yOG6V6ZP/82hO+k65NUSTFZgbtyoxrBuwpBq1/ddUOwRfIECJoaI5oNNHI7d34BH2O8PIIQDh+VP4LVAuxU+LDWatz7lEASv4u7qMCA6oWKIlFM2/SSqsyXjIZYgNUPNJSAqqHWeAQjBUedJKbCZ+z4USq0U4g5QJUg8uvta4kzZFcA8q0u4R0IKGy3mxz2IT5kBEbvBE6bA+swJbn3Mw0+Qt/d/ttfvtNw+Wf7dcgtzFSzqLoS0Nc2YZh1LH+OBX3vG8qgOIC98Jh5GYLR+sNJtBGaIHw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS0PR12MB7728.namprd12.prod.outlook.com (2603:10b6:8:13a::10)
+ by DM6PR12MB4201.namprd12.prod.outlook.com (2603:10b6:5:216::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.19; Thu, 12 Jun
+ 2025 08:47:22 +0000
+Received: from DS0PR12MB7728.namprd12.prod.outlook.com
+ ([fe80::f790:9057:1f2:6e67]) by DS0PR12MB7728.namprd12.prod.outlook.com
+ ([fe80::f790:9057:1f2:6e67%5]) with mapi id 15.20.8835.018; Thu, 12 Jun 2025
+ 08:47:21 +0000
+Date: Thu, 12 Jun 2025 18:47:17 +1000
+From: Alistair Popple <apopple@nvidia.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: David Hildenbrand <david@redhat.com>, Christoph Hellwig <hch@lst.de>, 
+	linux-mm@kvack.org, gerald.schaefer@linux.ibm.com, jgg@ziepe.ca, willy@infradead.org, 
+	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
+	linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org, jhubbard@nvidia.com, 
+	zhang.lyra@gmail.com, debug@rivosinc.com, bjorn@kernel.org, balbirs@nvidia.com, 
+	lorenzo.stoakes@oracle.com, linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, linux-cxl@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, John@groves.net
+Subject: Re: [PATCH 03/12] mm/pagewalk: Skip dax pages in pagewalk
+Message-ID: <wqzr4hv4vv4wd2mcy5m2gapy6n5ipvex7hst4locic4dbeu3cr@47crvlk4kubj>
+References: <cover.541c2702181b7461b84f1a6967a3f0e823023fcc.1748500293.git-series.apopple@nvidia.com>
+ <1799c6772825e1401e7ccad81a10646118201953.1748500293.git-series.apopple@nvidia.com>
+ <6840f9ed3785a_249110084@dwillia2-xfh.jf.intel.com.notmuch>
+ <20250605074637.GA7727@lst.de>
+ <b064c820-1735-47db-96e3-6f2b00300c67@redhat.com>
+ <6841c408e85d3_249110075@dwillia2-xfh.jf.intel.com.notmuch>
+ <axbj5vrowokxfmrm3gl6tw3mn6xbzz7uwbxkf75bbgmzf7htwc@vcr5ajluw3rn>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <axbj5vrowokxfmrm3gl6tw3mn6xbzz7uwbxkf75bbgmzf7htwc@vcr5ajluw3rn>
+X-ClientProxiedBy: SY5PR01CA0006.ausprd01.prod.outlook.com
+ (2603:10c6:10:1fa::10) To DS0PR12MB7728.namprd12.prod.outlook.com
+ (2603:10b6:8:13a::10)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/3] mm/huge_memory: vmf_insert_folio_*() and
- vmf_insert_pfn_pud() fixes
-From: David Hildenbrand <david@redhat.com>
-To: Dan Williams <dan.j.williams@intel.com>,
- Alistair Popple <apopple@nvidia.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, nvdimm@lists.linux.dev,
- linux-cxl@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
- Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
- Dev Jain <dev.jain@arm.com>, Oscar Salvador <osalvador@suse.de>,
- marc.herbert@linux.intel.com
-References: <20250611120654.545963-1-david@redhat.com>
- <lpfprux2x34qjgpuk6ufvuq4akzolt3gwn5t4hmfakxcqakgqy@ciiwnsoqsl6j>
- <684a5594eb21d_2491100de@dwillia2-xfh.jf.intel.com.notmuch>
- <990ce9cf-0e48-432c-a29f-0bd1704eede4@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <990ce9cf-0e48-432c-a29f-0bd1704eede4@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: G6Hxu1NcBkx-XUGiHywI3Nwr9p6Bp9ZZPaZfmKZApyM_1749716834
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB7728:EE_|DM6PR12MB4201:EE_
+X-MS-Office365-Filtering-Correlation-Id: c2da20c0-3203-4f07-f14e-08dda98dbedd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?qVLUNKBV672PUP59FyxRTw06X2NrNwLWk7p5KT+0CqSPGmfXD4vWXpuFOFFL?=
+ =?us-ascii?Q?fbymzibWhRTt1bXMi8mKscZDFM37p5IVAykTSG8nLCU88OoWG+9DvQrzhvVl?=
+ =?us-ascii?Q?3AcyL+pII45q3CsMKArPJ/JxFGxCv1QueSGrulLUUOeN6dqglnhD4LYrHWrT?=
+ =?us-ascii?Q?rY+MHqTi92iAJ7OgOXpzqIAQSKVSmihpaNGSmrnvc73dKhI8tIenzKucGSKH?=
+ =?us-ascii?Q?a/OVtsLCElodqSdQtWLy80Iyimv0bUsNTms89KzpvnGTdvx3QdH/ghJmYY5M?=
+ =?us-ascii?Q?ErcDiviQDQBO6Xqh8fOb1VsRN/QN6WqzHdXMokSnOBcfZM5zBJ7032cZnHV+?=
+ =?us-ascii?Q?eSB6VTFCkKpyZ1vi8IL3elqrFVfN86wKeN2vECXTlTLC4L4U2DHsNIYFM9qP?=
+ =?us-ascii?Q?+a38WBgEgDOYkji8KMYrhy8G86mqtYkc7U0bjtB7RZOIDgME+jJGuQWgCdqw?=
+ =?us-ascii?Q?3ZLAKfbYwDBCciYCAn1OwM/DnBW/d2ZsXit9H134oUcZACXeMsexcn0bE6Sv?=
+ =?us-ascii?Q?TQhRhtzrJgqTmejdoRTnK3ze0ahD4CLfxrfAZbgwBNwKfAdc9WPtMXO6WmFG?=
+ =?us-ascii?Q?6OCpvpuZdBo4ETX89GbylD19SBJaGGFc3kom2Sobie/+2iYMv62wjIG8LKjP?=
+ =?us-ascii?Q?flWEZVltTSNAxxRMff2FfTMhLgFEgwhoVT+88o29iJYw3TlX1YY8PD+re3ix?=
+ =?us-ascii?Q?rqY+pBPGlEi+a3AY8KakAv2o8FC79rzcvw0pMc42S2/uuVxRghYyRO1DUFiI?=
+ =?us-ascii?Q?PiVfM/prdGwioCE5dj0aWuTtNTEbs7yajIlqrbec8KCSi4VjdMGughNldNAc?=
+ =?us-ascii?Q?zaDf+s8BSDHinS46Z8q+mQUM5u30lxIQCvpPU5MUwnG7TFcQ7KPwLuwip4i7?=
+ =?us-ascii?Q?d5FpN98QsmiNa4sbCacjcgjzZV1WFRmPDTXWxJRz/tAfAcSL4aTiVTtJBO4Z?=
+ =?us-ascii?Q?JAPdsJrHrKKi9l66QfWiSR96onoNsgZjll1KsxKRQ+Q7yvmFZYqc7xRYlTRv?=
+ =?us-ascii?Q?TY2uEb7rhEQvMtqojqzymGdA/0D2hL9145i7712RvcHZBWBj0AuO47sZo3ir?=
+ =?us-ascii?Q?a3cu5ijg8UPN4Rxv98DQ87A2/8BVNexgQx7UmDLdVY6ae8zV8uUEhs53FbpM?=
+ =?us-ascii?Q?hVgR56fW02Auu+CRwxtgprjhVPdlJbrCasfuyDgx6TRyTPJgpokmGYKSTzG7?=
+ =?us-ascii?Q?uPF08dTv0YJN5xz2i/SBND1C9KrG1WwKX93vr4ACCn6yi6ulL9Ur7V6xC142?=
+ =?us-ascii?Q?o3XzmUhjgUyWhKcIExvrEUpwNqKR2hs2TRPyMDYdrIh2evD5KxlRaexjMsrT?=
+ =?us-ascii?Q?q1JpWFOGvy9Oloe8rl1eXIk13Id50qaQskQAmWKmi3y9hwcF6ANhxLvuu7K5?=
+ =?us-ascii?Q?rpA/qLq3noTIub2CQoLh0jSOLJ9zcpJJHafBIYiG1LoZQKRHGZAPIFpSSeLk?=
+ =?us-ascii?Q?3ZLOtfS87Jw=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7728.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?5KlA2IZ1GML2S6ER+/2zlr+vx9BIeU6c0/udDAp60oU2gEuOrUmHQpHAum5H?=
+ =?us-ascii?Q?wh0ukWzMuLpiewTSjO2qXpI5eoKxOVpUXpxgkjfzaYcQBiXBOCgM4GmtGikh?=
+ =?us-ascii?Q?1V+cghh5Elpl8QMZ6JLeDLLWVThk9ZfOayqp2mzN80xZYZmITlYnCYuJx77h?=
+ =?us-ascii?Q?hw7wEZ2FI5txeO6rN536cV9f64jFezdI3Nx+OnoxfHTHc+ZqrCqj0F7GlaN2?=
+ =?us-ascii?Q?Fg1nhvoKi0obfos58BnIUhYB+2vjlX/T/l+ui39q1YMZ/ddXElpcu8UjPYSZ?=
+ =?us-ascii?Q?A/KYwLokHokij8m8gD5QYG3Hy+Y9lUJ2DMeGTwWKz3UJmwK8ai5CpSsZgLl1?=
+ =?us-ascii?Q?8yjOhM3jtHetE44wsZH36v9Q3t2EhZi6BcokY2VYW2kRJ+aCVuxRCes06em5?=
+ =?us-ascii?Q?HjkitfIMVr7jeFHcNFGwOLnCRMCXip4DpGrXD6zoLM55XEjUTQUQF69QKDxW?=
+ =?us-ascii?Q?tP95W/bh7zCa+DGbECk/IWyAmHiYkLO6u1hPwCiB66qyBvr5sssHyth2TFAa?=
+ =?us-ascii?Q?Xbj/c9ba4nVAiEGcw3eSRYMNC+vQPpysMfhXOm+uqFqbUlX0kBxvqoCzlL/v?=
+ =?us-ascii?Q?eMLXREq6oA+toR5VdmDsFKUBadeKp5GOWoKgnNNt71M39cTf8fEdz8JQqMeB?=
+ =?us-ascii?Q?RwPsk6Mssfxp1+BZOWOLN+d3S/0hHnV6U3WZaXuoz0JtWwmiCfIf5lsnzJoa?=
+ =?us-ascii?Q?Ni3bJMwCMaxkqkoJKTh9eZs0tHluawxiUW/Ru2VGmlex28GbuJlKsiyO+jvA?=
+ =?us-ascii?Q?ZaikE2t73Y5MBKlPzmgHcG71w+gAs6ayLE64vEmzxwfU8Uv06Qd+ijvuxBU7?=
+ =?us-ascii?Q?6W46eYDkMhD+Mwib+01iUtBfegSuxNqm6POyyFawALA1KSUuLdcvcl9/ecUY?=
+ =?us-ascii?Q?odsT2Njw4F1skesWBrgeiYFg5+yHP/AiqhNSShagYHqsl5QiOcg+W8+MYFxs?=
+ =?us-ascii?Q?sIljPlk1nlfEtqm0OBir+y6XOgsWLEeTueoCeGtRayeLHuLLzS+HaBarajQk?=
+ =?us-ascii?Q?nb1H1E1mV34DgYUAhviO9Yu+uqVuCdizDxZirMy1RnZqWKmUi2tz3qAcidg+?=
+ =?us-ascii?Q?Pqoc93kFjxhomMFVShmp7pBgRH87lEOHkn/TySfSpPIlJhbgay26E4+PePy1?=
+ =?us-ascii?Q?l6j8kI7Q8jXK7DHv+0wX5VOBw4OX2AERv7xZe9VrLoNrIv4sTIOpEFNrGoQU?=
+ =?us-ascii?Q?GlW+0oLwr1JY12bupwBVHdG2txZbcsqZVFf/jxfv/pWsUzmB6I0nfd0oacKe?=
+ =?us-ascii?Q?slN6BNOf1m6f88epmVPmC6/Jzc1fsbu/dWIF9WArgeuLdYM5RMo1mE5p9y0W?=
+ =?us-ascii?Q?Q8xTl+vIK89UJa065BX/Iw6ABNl9mtlDWIB1DyidmEdoW0euI5tMe5RexotZ?=
+ =?us-ascii?Q?Q4Mm0cZD09VsrC/jUaN8B4WpAHHQeoTw6yEsuj97qSOeNQj6Q7e8lTaCn5Wa?=
+ =?us-ascii?Q?UFjk26XCLV99NYnmAhJr+6pkNUAN4HT6B4YdgwP4ZUG1589aqDDpWFpoCl76?=
+ =?us-ascii?Q?7GVbw4dNEE1XQLxKaxj02ze9FrSmUHjpixUyp/89c1LUGqjAfHZJAE/L8cml?=
+ =?us-ascii?Q?EXkLkZkF/iFid6+fAMlP69XpRr9x351ui/400k72?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c2da20c0-3203-4f07-f14e-08dda98dbedd
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7728.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2025 08:47:21.6036
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8ycjP1ftMoJS44LK8+Qq+frPsDFCii0bnuNtOP/7c0eCjCCO2D4tYcWbsvt0KU7r7rCME8AvPqOC5Kl3L/amhA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4201
 
-On 12.06.25 09:18, David Hildenbrand wrote:
-> On 12.06.25 06:20, Dan Williams wrote:
->> Alistair Popple wrote:
->>> On Wed, Jun 11, 2025 at 02:06:51PM +0200, David Hildenbrand wrote:
->>>> This is v2 of
->>>> 	"[PATCH v1 0/2] mm/huge_memory: don't mark refcounted pages special
->>>> 	 in vmf_insert_folio_*()"
->>>> Now with one additional fix, based on mm/mm-unstable.
->>>>
->>>> While working on improving vm_normal_page() and friends, I stumbled
->>>> over this issues: refcounted "normal" pages must not be marked
->>>> using pmd_special() / pud_special().
->>>>
->>>> Fortunately, so far there doesn't seem to be serious damage.
->>>>
->>>> I spent too much time trying to get the ndctl tests mentioned by Dan
->>>> running (.config tweaks, memmap= setup, ... ), without getting them to
->>>> pass even without these patches. Some SKIP, some FAIL, some sometimes
->>>> suddenly SKIP on first invocation, ... instructions unclear or the tests
->>>> are shaky. This is how far I got:
->>>
->>> FWIW I had a similar experience, although I eventually got the FAIL cases below
->>> to pass. I forget exactly what I needed to tweak for that though :-/
->>
->> Add Marc who has been working to clean the documentation up to solve the
->> reproducibility problem with standing up new environments to run these
->> tests.
+On Thu, Jun 12, 2025 at 05:02:13PM +1000, Alistair Popple wrote:
+> On Thu, Jun 05, 2025 at 09:21:28AM -0700, Dan Williams wrote:
+> > David Hildenbrand wrote:
+> > > On 05.06.25 09:46, Christoph Hellwig wrote:
+> > > > On Wed, Jun 04, 2025 at 06:59:09PM -0700, Dan Williams wrote:
+> > > >> +/* return normal pages backed by the page allocator */
+> > > >> +static inline struct page *vm_normal_gfp_pmd(struct vm_area_struct *vma,
+> > > >> +					     unsigned long addr, pmd_t pmd)
+> > > >> +{
+> > > >> +	struct page *page = vm_normal_page_pmd(vma, addr, pmd);
+> > > >> +
+> > > >> +	if (!is_devdax_page(page) && !is_fsdax_page(page))
+> > > >> +		return page;
+> > > >> +	return NULL;
+> > > > 
+> > > > If you go for this make it more straight forward by having the
+> > > > normal path in the main flow:
+> > > > 
+> > > > 	if (is_devdax_page(page) || is_fsdax_page(page))
+> > > > 		return NULL;
+> > > > 	return page;
+> > > 
+> > > +1
+> > > 
+> > > But I'd defer introducing that for now if avoidable. I find the naming 
+> > > rather ... suboptimal :)
+> > 
+> > Agree, that was a "for lack of a better term" suggestion, but the
+> > suggestion is indeed lacking.
 > 
-> I was about to send some doc improvements myself, but I didn't manage to
-> get the tests running in the first place ... even after trying hard :)
-> 
-> I think there is also one issue with a test that requires you to
-> actually install ndctl ... and some tests seem to temporarily fail with
-> weird issues regarding "file size problems with /proc/kallsyms",
-> whereby, ... there are no such file size problems :)
-> 
-> All a bit shaky. The "memmap=" stuff is not documented anywhere for the
-> tests, which is required for some tests I think. Maybe it should be
-> added, not sure how big of an area we actually need, though.
-> 
->>
->> http://lore.kernel.org/20250521002640.1700283-1-marc.herbert@linux.intel.com
->>
-> 
-> I think I have CONFIG_XFS_FS=m (instead of y) and CONFIG_DAX=y (instead
-> of =m), and CONFIG_NFIT_SECURITY_DEBUG not set (instead of =y).
-> 
-> Let me try with these settings adjusted.
+> I don't like the naming either ... maybe that is motivation enough for me to
+> audit the callers and have them explicitly filter the pages they don't want.
 
-Yeah, no. Unfortunately doesn't make it work with my debug config. Maybe with the
-defconfig as raised by Marc it would do ... maybe will try that later.
-
-# meson test -C build --suite ndctl:dax
-ninja: Entering directory `/root/ndctl/build'
-[1/70] Generating version.h with a custom command
-  1/13 ndctl:dax / daxdev-errors.sh          OK              14.60s
-  2/13 ndctl:dax / multi-dax.sh              OK               4.28s
-  3/13 ndctl:dax / sub-section.sh            SKIP             0.25s   exit status 77
-  4/13 ndctl:dax / dax-dev                   OK               1.00s
-  5/13 ndctl:dax / dax-ext4.sh               OK              23.60s
-  6/13 ndctl:dax / dax-xfs.sh                OK              23.74s
-  7/13 ndctl:dax / device-dax                OK              40.61s
-  8/13 ndctl:dax / revoke-devmem             OK               0.98s
-  9/13 ndctl:dax / device-dax-fio.sh         SKIP             0.10s   exit status 77
-10/13 ndctl:dax / daxctl-devices.sh         SKIP             0.16s   exit status 77
-11/13 ndctl:dax / daxctl-create.sh          FAIL             2.53s   exit status 1
->>> DAXCTL=/root/ndctl/build/daxctl/daxctl DATA_PATH=/root/ndctl/test MSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 MALLOC_PERTURB_=167 LD_LIBRARY_PATH=/root/ndctl/build/cxl/lib:/root/ndctl/build/daxctl/lib:/root/ndctl/build/ndctl/lib TEST_PATH=/root/ndctl/build/test UBSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 NDCTL=/root/ndctl/build/ndctl/ndctl ASAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1 /root/ndctl/test/daxctl-create.sh
-
-12/13 ndctl:dax / dm.sh                     FAIL             0.24s   exit status 1
->>> DAXCTL=/root/ndctl/build/daxctl/daxctl DATA_PATH=/root/ndctl/test MSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 UBSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 LD_LIBRARY_PATH=/root/ndctl/build/cxl/lib:/root/ndctl/build/daxctl/lib:/root/ndctl/build/ndctl/lib TEST_PATH=/root/ndctl/build/test MALLOC_PERTURB_=27 NDCTL=/root/ndctl/build/ndctl/ndctl ASAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1 /root/ndctl/test/dm.sh
-
-13/13 ndctl:dax / mmap.sh                   OK             343.67s
-
-Ok:                 8
-Expected Fail:      0
-Fail:               2
-Unexpected Pass:    0
-Skipped:            3
-Timeout:            0
-
-Full log written to /root/ndctl/build/meson-logs/testlog.txt
-
-
-After compilation, I can see that I again have "CONFIG_DAX=y" in my config.
-
-And for the DAX setting in "make menuconfig" I can see:
-
-Symbol: DAX [=y]
-  ...
-  Selected by [y]:
-  - FS_DAX [=y] && MMU [=y] && (ZONE_DEVICE [=y] || FS_DAX_LIMITED [=n]
-  Selected by [m]:
-  - BLK_DEV_PMEM [=m] && LIBNVDIMM [=m]
-
-So I guess, as requested in the doc "CONFIG_FS_DAX=y" combined with
-"CONFIG_DAX=m" is impossible to achieve?
-
-
-===
-
-sub-section.sh complains about
-
-++ /root/ndctl/build/ndctl/ndctl list -R -b ACPI.NFIT
-+ json=
-++ echo
-++ jq -r '[.[] | select(.available_size >= 67108864)][0].dev'
-+ region=
-++ echo
-++ jq -r '[.[] | select(.available_size >= 67108864)][0].available_size'
-+ avail=
-+ '[' -z ']'
-+ exit 77
-
-Not sure what's the problem in my environment. I thought we would be emulating
-ACPI.NFIT.
-
-===
-
-device-dax-fio.sh complains about
-
-kernel 6.16.0-rc1-00069-g0ede5baa0b46: missing fio, skipping...
-
-So I guess I just need to install "fio" to make it fly.
-
-Yes, with that the test is passing now.
-
-===
-
-daxctl-devices.sh complains about
-
-++ reset_dev
-++ /root/ndctl/build/ndctl/ndctl destroy-namespace -f -b ACPI.NFIT 'Error at linn
-e 33'
-error destroying namespaces: No such device or address
-destroyed 0 namespaces
-++ exit 77
-
-
-No idea.
-
-===
-
-daxctl-create.sh complains about
-
-+ /root/ndctl/build/daxctl/daxctl reconfigure-device -m devdax -f dax1.0
-libdaxctl: daxctl_dev_enable: dax1.0: failed to enable
-error reconfiguring devices: Invalid argument
-reconfigured 0 devices
-++ cleanup 54
-++ printf 'Error at line %d\n' 54
-++ [[ -n dax1.0 ]]
-++ reset_dax
-++ test -n dax1.0
-++ /root/ndctl/build/daxctl/daxctl disable-device -r 1 all
-disabled 1 device
-++ /root/ndctl/build/daxctl/daxctl destroy-device -r 1 all
-destroyed 1 device
-++ /root/ndctl/build/daxctl/daxctl reconfigure-device -s '' dax1.0
-reconfigured 1 device
-++ exit 1
-
-
-Again, no idea ... :(
-
-
--- 
-Cheers,
-
-David / dhildenb
-
+Which actually most of them already do. The only ones I'm unsure about are both
+in s390 so I'll be conservative and add checks for folio_is_zone_device() there.
