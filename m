@@ -1,187 +1,242 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2042.outbound.protection.outlook.com [40.107.94.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFA1F23AE96
-	for <linux-cxl@vger.kernel.org>; Thu, 12 Jun 2025 22:02:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749765750; cv=none; b=OCq1ub26+xfM0JBM30jxrRgLxK++N8T+Iqsz4g4r42w12/RZ6J3nr9CWFD4JXnc625I7kl1SoZPUQqZi2BXKk/L2z+C5vXWbutjSbUKUzdr4wVBDJCn46gWcWEn/X7I7q3vT+t83BDogPepAyA9ygXR3w7LGqot3hf1mAeb6LTU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749765750; c=relaxed/simple;
-	bh=PQ5m5s/45WJtNx26wTuHxVR32oIpdMMWGScKf2GwtZc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fn2FNYWTtz6cXaRHs/rHnXa6d+CcnsIRFTHExpow4Xl0hnLhCXfr7xWsxMeYEp8yX6882LZ0EyFA7NIJ1BcYTVnM380n2A9NsJLLx53diqTAz1kulDCUURILJ+tHfsZA7GfA2umW443zb6O6laOT45TTDUV1JfwSZSm5g21C0XE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=H8clXi0f; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4C9F153BD9;
+	Thu, 12 Jun 2025 22:50:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749768625; cv=fail; b=gDyJLv2DDdBUHuGi7x6nlHzWHMUiW+CuqYCOecMemDGKu62ba2bXeMgErPB5wQsMMOqmraG/UZUBJOvOA/H9KdrcwwKfUFOwmRe+Mq7SrX46/P8pDyZszHGmhILZLmfG7i3o4dAzAvVEIrjx+K2RCP1RfiPaSj2bCZN5T9fJSxg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749768625; c=relaxed/simple;
+	bh=xFo0TU0kzZcPjRitA0pllV89e3EdyOuL3ay4vSQYgo8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=kxs+zDmrlSc/m3rAErlejZ143dor148Z+EWw/JkzhrLrkGSkLa942/QV/fxIiHN41CDwasbVquFG7v2qVtBmtREiJ9H72YSfEs2f7nUYAG/V1/qcG8U9/BlZBoWqelHrq9zXthH1t7A26+v9Rlw5MzfqE2tnq1d+sI1u2nvfdNg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Dfy8YJEz; arc=fail smtp.client-ip=40.107.94.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="H8clXi0f"
-Date: Fri, 13 Jun 2025 07:02:14 +0900
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1749765744;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yQfqAp663vRwAp+Zj5rZDIUplmHlYtLgfJHOGelwtm8=;
-	b=H8clXi0fQY0C5Ke8Y27lfG5t9ZdPGZ/tizYlCSgvP1+ui2L1ljE7mNgqLAo56WY5af7AUA
-	s6zx+OLSkwpj0WP53oKYP7AybCNdg0KPkHuu88yLI98Heid+YAyc2UmWBPusSKrfWmnies
-	ba9AdICSop5cNQAInnpUwvQe66bA9vE=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Itaru Kitayama <itaru.kitayama@linux.dev>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: qemu-devel@nongnu.org, Fan Ni <fan.ni@samsung.com>,
-	Peter Maydell <peter.maydell@linaro.org>, mst@redhat.com,
-	Zhijian Li <lizhijian@fujitsu.com>, linuxarm@huawei.com,
-	linux-cxl@vger.kernel.org, qemu-arm@nongnu.org,
-	Yuquan Wang <wangyuquan1236@phytium.com.cn>,
-	Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
-	Alireza Sanaee <alireza.sanaee@huawei.com>,
-	Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>
-Subject: Re: [PATCH v15 4/4] qtest/cxl: Add aarch64 virt test for CXL
-Message-ID: <aEtOZkkb7R5jvgRE@vm4>
-References: <20250612134338.1871023-1-Jonathan.Cameron@huawei.com>
- <20250612134338.1871023-5-Jonathan.Cameron@huawei.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Dfy8YJEz"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=C9WtQqMeYgsDK4LXBtPI8DJUYjSW8IsK+o0jdImkm4iFIWC7RxzHR392Uwj0+7JPKw1slYF94HGzOZbH3yYXhJBE1PtrrAE1ncA+fqes3vIIOP5jz+jcG0DcJu3xXYB+OmHcQYQAFxnP0gELxsfRRPALYPIJPAEcIY79Qs+BrDjWSByx5Mj/M6SB3TQnZKlkhndk4fZil2ARr6J4bOywQCcLPQHvon3d+W/arEOgN8cU9n2f/G+wErFBjU4pEnAiFsWrYTHSXd02cMEOjS/U77g+p8UNk04JNO9Be1tzYFmpTbXio/1vqkY2JiusHYFlZOyXBjHO/LLMgYzn21st8g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uoZL4nQnsuPbbzobiwxxLfLDempiqsD7YWenTsnQ5u0=;
+ b=Vop0HI6zQH0oxxJNykd7snjXPvI4IF8f9wbj9rtTk0E1BaaPuU01Fp/a4E14i3NKeFYvFVgBuR01CSzLV1gnF9inBKLfY20e/1uo854M56w1x/FDBzmUZmmFWPd0gdb0fOP4bWtrNeH/zg4lgUAHKdKqt7yvZPYhboFbXAHH4kMdAM3Dj5lY8pS/Of0kR/CYP6uDJwZ0SnowcG2zavIdGb+E4a5c6bthsnu2Cj0WJshBzAN1S06abtYY/dh+SLRkxepUyUeJh4T8pOGkorZaQEL5sMuehMKj9/2e30Hp5WF+R1QbYAAGn3vdLjc4lhUj+CoLlAOJ0hxGjPm9HQW+bQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uoZL4nQnsuPbbzobiwxxLfLDempiqsD7YWenTsnQ5u0=;
+ b=Dfy8YJEzOexRWYLoog+n4L1hAGuVETR935zrjAXp0MFimi07TGwkjDngRmyaghJxabOq9UQ0U/Ox6sciTHrhFEXRsngAhv+KVXN8w95mCQtpy9jwolbnURzuz5Bllu5cCydU1GO7eK6Ddji0y4IbZGDLbBWNLq4so4j7eULdzXF/vUERIodo1QoW4qQOLY44AnaTiS2DJ/TpiguvSBZqsNiNqoczICjaGBSLqc074I77cPzguucTpfmhxU1nAqOhLqWJEHLbIo0wUWlJHbBJuP35XV5IpQqvoxzJFkk0vyfvoQS8XxpsRWE6Puqm8Dg0ytUx9m9iP1vFhp78ArH2iQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS0PR12MB7728.namprd12.prod.outlook.com (2603:10b6:8:13a::10)
+ by DM6PR12MB4138.namprd12.prod.outlook.com (2603:10b6:5:220::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.18; Thu, 12 Jun
+ 2025 22:50:20 +0000
+Received: from DS0PR12MB7728.namprd12.prod.outlook.com
+ ([fe80::f790:9057:1f2:6e67]) by DS0PR12MB7728.namprd12.prod.outlook.com
+ ([fe80::f790:9057:1f2:6e67%5]) with mapi id 15.20.8835.018; Thu, 12 Jun 2025
+ 22:50:20 +0000
+Date: Fri, 13 Jun 2025 08:50:15 +1000
+From: Alistair Popple <apopple@nvidia.com>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: linux-mm@kvack.org, gerald.schaefer@linux.ibm.com, 
+	dan.j.williams@intel.com, jgg@ziepe.ca, willy@infradead.org, david@redhat.com, 
+	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
+	linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de, 
+	zhang.lyra@gmail.com, debug@rivosinc.com, bjorn@kernel.org, balbirs@nvidia.com, 
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
+	linux-riscv@lists.infradead.org, linux-cxl@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	John@groves.net
+Subject: Re: [PATCH 03/12] mm/pagewalk: Skip dax pages in pagewalk
+Message-ID: <q6wgtlud6gyz47fxpxnaxh7vv647kz3h4qyrnsjelxq2nocfai@pvllo4c3spfx>
+References: <cover.541c2702181b7461b84f1a6967a3f0e823023fcc.1748500293.git-series.apopple@nvidia.com>
+ <1799c6772825e1401e7ccad81a10646118201953.1748500293.git-series.apopple@nvidia.com>
+ <fda482ca-ed0a-4c1e-a94d-38e3cfce0258@lucifer.local>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fda482ca-ed0a-4c1e-a94d-38e3cfce0258@lucifer.local>
+X-ClientProxiedBy: SY4P282CA0013.AUSP282.PROD.OUTLOOK.COM
+ (2603:10c6:10:a0::23) To DS0PR12MB7728.namprd12.prod.outlook.com
+ (2603:10b6:8:13a::10)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250612134338.1871023-5-Jonathan.Cameron@huawei.com>
-X-Migadu-Flow: FLOW_OUT
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB7728:EE_|DM6PR12MB4138:EE_
+X-MS-Office365-Filtering-Correlation-Id: f6cdde14-4bd0-4708-e1d5-08ddaa038203
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?/I/gpqyKPCXbZtOvGagQ7C3fdiL0ajL6Sc+ET0we2xvEimifd4hauH2a2Lnf?=
+ =?us-ascii?Q?0hYUPKpgbMliarz65l5uYEMGCKgtkYJzP2D42Ficbir5/5YSAvGX19WLCsCR?=
+ =?us-ascii?Q?SwBxSmZ+0zIeJE47Vl8+rUdUyZribyupZm6Yx2nUcugrSn3yeRc0y/samFzd?=
+ =?us-ascii?Q?mrTTAaN0uiVmZHZ9h3JgFcHb/WBPWAcQt7/V10mIbotsgPuDiPFov9u17/d7?=
+ =?us-ascii?Q?CYnhvojmvXP8mNlFB4C9eoJEyN57OVC3ijNQKsdBW1pef8jvu85rmpDTKN3L?=
+ =?us-ascii?Q?maUxIQw04+iY+2iqY92Nr4RhVDglcdKAbEPA/fUqxh56Sn9M7aE/KtvUCcgw?=
+ =?us-ascii?Q?Nc50jGpCE9vkV1DpNJgUHj1OEsyXBwd2nSbW1AJdSwVZUN6mAHd1nn7Cz29a?=
+ =?us-ascii?Q?yjwYh4lN/nv0784X3vyDxkhmoKVK68yjK3Ag6cCLKdf4o3F4JQ9h3kgYJbC/?=
+ =?us-ascii?Q?h0XtuwCRNvdGW1TB7PGjjHfdls+C0KtYQaRre59LaAik8KGNUEKoatZXmD7v?=
+ =?us-ascii?Q?/stOh1Ex0ASLcvm5UIVx5UeOMhC3hgEemA+D9EX/UzRb5+u30sLixYEjG4o4?=
+ =?us-ascii?Q?WyTjhCjjDGOE+MuEC88Se0MK6/1twzIn1w/Vy3I/TKHY3D3i9PKbo5phUx+z?=
+ =?us-ascii?Q?umNoEmu7T+mIwgcYXLC2e8mvIVXuIsiTigoKETJqOCrVgDgKnRbBpF913q+Y?=
+ =?us-ascii?Q?/y0GWhKNMmsYMoIOaJRAfw0wympvSXWHQOxtEXNqmoK9b6tzaOD4pNHOi/1X?=
+ =?us-ascii?Q?9YZo+YvnEWlMrZO7X5Sr5oFbfV6FkkHwLwa839HGpBYiFznfS4yNfgifDdh1?=
+ =?us-ascii?Q?VS/sMz2djbLoHlBHm671b0jNDzxaf43VDmFqhxZIOLpATA1g2ZswwPNeOpE2?=
+ =?us-ascii?Q?KLZB7OO4/MttboAVP2ljpqqKYeWN6ZWK9CWAclPxXDme/dKtfZEHrC7LMus3?=
+ =?us-ascii?Q?cMM5i5SKeZkUs2a4L2YfSX44sPgHCg9RgYYxge2oTG8We+AbHY8vShAF20hv?=
+ =?us-ascii?Q?EKECrM3dgY3ifbl0ElF8fHm7KF1MpjtjxBjqswQwPg+wuTnzwkHoQ+8VvVbq?=
+ =?us-ascii?Q?5vM+aDc+K6Yx8RVmJkmaN+acYutCPZrKR4n4JCQPYF/3sr0rH5USDtYPmom3?=
+ =?us-ascii?Q?Eu7jG3lvK6tPx3eyWx6DFBLcLFqfTyAnafUdh2J9GKDmqfVLfzlA6jbNNDF1?=
+ =?us-ascii?Q?YXY2FCQNeXnLRSReEKS70fXNe1igjoCVmKarE1XoVysxRm7J7ZVweRatzwZo?=
+ =?us-ascii?Q?BPe9HwlFmahTDz4/3FD8nLChLHoH0OkKhv7j6Vwh5HwMPGyLfVubGgpNXhpN?=
+ =?us-ascii?Q?+4TKdUaePhgzQq6wzAU/RlftE2pqGDOHyGo1C8DOeLDWihHQrJLKPqpLuCIA?=
+ =?us-ascii?Q?yf8owpId/sNxJsxSBhVvCWBGeo1aozdU8AsoPXqgc6vNZ4ajYPq6Ng63mgmf?=
+ =?us-ascii?Q?m4ywDXp+WlE=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7728.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?nH+VVf3zCUBGiXeNYBib0WbsJt47SPfZLDDzEnfxRGfLhMATJi5IysCbD3ON?=
+ =?us-ascii?Q?TCi2bYGN9Bmy7jUciTYm9QRy1bl6ai9gn2KAWTGKeT1hALcEQ4iVcWVpkxeg?=
+ =?us-ascii?Q?eV1MF8s28mgUwknLiOF20APMPgs+pEew8UW/OR1427AhxjgnBHpLDtnQS5Ng?=
+ =?us-ascii?Q?oBWZSNM+b7DeDWDzfju/taWCmeICFDCEtL5XxaM+weExgOYgjSOmiiWw+opt?=
+ =?us-ascii?Q?+MRiSekn60x4RywrHpU5onZ08okj/K/SBEnTPFUqGFIGmgm4Cz/2s1LSn+u9?=
+ =?us-ascii?Q?2WfPpHZ4y3M1hIw3IiaKCsD5Dv64/nKNPNP+/VQfA4ukd7ALRzuIOUnTQnR4?=
+ =?us-ascii?Q?M6tN+W4KvJW891VFKxNFTOAw5jCdMjoKBlWXAo5ku0BEAbxIjdeTP3mWidSk?=
+ =?us-ascii?Q?HmeTp+cjllYFuZCLEAotmnH3oySGc5By0ECx2Wf+5r59aDLmH5LhBXrQqALY?=
+ =?us-ascii?Q?ZyHc0DA08jB78/kdyTaQiKBTJmm4nZesIX8rSYAEobxHZWgcJuPal445gnv6?=
+ =?us-ascii?Q?Y+jjjCRqYmsUhurC8NNwxH5b+Eau//dpoThxOLrhzjgDeUyNtey68bNujzCn?=
+ =?us-ascii?Q?RK1jU8qDkwN3vBefOZ2QCJP5wWFULetlwwf8riUf1OGZpP8CY9ZRZZjg3hh8?=
+ =?us-ascii?Q?+EjFAQolzmMrROunGFo5HIdRRWEUCUKb3YupN+QUGJa98hoL2ZNeCdZcqrra?=
+ =?us-ascii?Q?qjqbcH20i3kAefAI9OaCOkJ1iR70szOYtW8I1N/GSriBkXX6rAcNdOp6pwJb?=
+ =?us-ascii?Q?9Gl2/UWAd7o2PqkJzk+T1+TDGnAzIIrFAmtqV21LMW45JezsWM9EdD8P3hNG?=
+ =?us-ascii?Q?l9QUGYgrnD+cDZ+A6DYyAMtVIbcALOLRTba8an14jze57uN8x5LMDqdhi13i?=
+ =?us-ascii?Q?K3svhgQXV+CTllOKG5CQqw2yLe0uyIO2o57HTZrwX4bG0KVIhzgZtu6Prcvt?=
+ =?us-ascii?Q?+GzsuGMbGPJ1JfEUcXznP7z8nNd7c075Qap5Q6w40SAxnjxkjvDGHtv1yS9g?=
+ =?us-ascii?Q?MwRPJNdNpXrM7tsKBbVuraUfD5GwZStnUoFhU7/m4x7Vrmxfevg6f2/Q9KO4?=
+ =?us-ascii?Q?24iUSWBzScjL6VEK3SfMvW+rG6DWjyqJbWbuc3mnRtwsjJie26UyvK2zdBLe?=
+ =?us-ascii?Q?+EsnFcY4o7y1EFHxl0ekAUq5ogmGoOxBGIS1JOOOPCLn3SObaZGcALu4+MNN?=
+ =?us-ascii?Q?pe6ultKxzEps2dz9nJTG8Gqeakx9JO6u7cAQMSEpn3deNeZoi5FAwHA5cf1J?=
+ =?us-ascii?Q?aaCKhad6oEolXWhnRY1y5MznZB7GjvwEdlYgDnuSTjMwOZdeuZjnzlK3iogg?=
+ =?us-ascii?Q?xLWMEC5leIvx10tzuB4lMKXt5Dm7JNaKghZ80iGKyKIbxSGQ0qt7+uvRNy50?=
+ =?us-ascii?Q?bfoXX+DkrMoTC1mj31nUMANU37p065Bcd96psb0Y2ekIWtK9M0aaww3fpo/p?=
+ =?us-ascii?Q?fPzo97uFqHEEpqMq/eD+zyagfP+3pOIkK5xaf73yhlTsoygB2JzrivfSGUZ5?=
+ =?us-ascii?Q?iP1hrF67l9bSGR1VO0OymiKqEPRnG+y4czY1IBTESf1naQGhbEZsQLocojf9?=
+ =?us-ascii?Q?uowGiS4syEzrVWYAu3hhm4L6gTuE282yDSmvCQzV?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f6cdde14-4bd0-4708-e1d5-08ddaa038203
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7728.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2025 22:50:20.7643
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: FtDGNWNNX+HY+Par/I5yX6UMlbA+iRMLtO/gMt47T9psWU/Zdmt21bxa5Tgmq5JKtZYoU2/OParbmhQV9YfpAA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4138
 
-On Thu, Jun 12, 2025 at 02:43:38PM +0100, Jonathan Cameron wrote:
-> Add a single complex case for aarch64 virt machine.
-> Given existing much more comprehensive tests for x86 cover the
-> common functionality, a single test should be enough to verify
-> that the aarch64 part continue to work.
+On Thu, Jun 12, 2025 at 03:15:31PM +0100, Lorenzo Stoakes wrote:
+> On Thu, May 29, 2025 at 04:32:04PM +1000, Alistair Popple wrote:
+> > Previously dax pages were skipped by the pagewalk code as pud_special() or
+> > vm_normal_page{_pmd}() would be false for DAX pages. Now that dax pages are
+> > refcounted normally that is no longer the case, so add explicit checks to
+> > skip them.
+> >
+> > Signed-off-by: Alistair Popple <apopple@nvidia.com>
+> > ---
+> >  include/linux/memremap.h | 11 +++++++++++
+> >  mm/pagewalk.c            | 12 ++++++++++--
+> >  2 files changed, 21 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/include/linux/memremap.h b/include/linux/memremap.h
+> > index 4aa1519..54e8b57 100644
+> > --- a/include/linux/memremap.h
+> > +++ b/include/linux/memremap.h
+> > @@ -198,6 +198,17 @@ static inline bool folio_is_fsdax(const struct folio *folio)
+> >  	return is_fsdax_page(&folio->page);
+> >  }
+> >
+> > +static inline bool is_devdax_page(const struct page *page)
+> > +{
+> > +	return is_zone_device_page(page) &&
+> > +		page_pgmap(page)->type == MEMORY_DEVICE_GENERIC;
+> > +}
+> > +
+> > +static inline bool folio_is_devdax(const struct folio *folio)
+> > +{
+> > +	return is_devdax_page(&folio->page);
+> > +}
+> > +
+> >  #ifdef CONFIG_ZONE_DEVICE
+> >  void zone_device_page_init(struct page *page);
+> >  void *memremap_pages(struct dev_pagemap *pgmap, int nid);
+> > diff --git a/mm/pagewalk.c b/mm/pagewalk.c
+> > index e478777..0dfb9c2 100644
+> > --- a/mm/pagewalk.c
+> > +++ b/mm/pagewalk.c
+> > @@ -884,6 +884,12 @@ struct folio *folio_walk_start(struct folio_walk *fw,
+> >  		 * support PUD mappings in VM_PFNMAP|VM_MIXEDMAP VMAs.
+> >  		 */
+> >  		page = pud_page(pud);
+> > +
+> > +		if (is_devdax_page(page)) {
 > 
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Is it only devdax that can exist at PUD leaf level, not fsdax?
+
+Correct.
+
+> > +			spin_unlock(ptl);
+> > +			goto not_found;
+> > +		}
+> > +
+> >  		goto found;
+> >  	}
+> >
+> > @@ -911,7 +917,8 @@ struct folio *folio_walk_start(struct folio_walk *fw,
+> >  			goto pte_table;
+> >  		} else if (pmd_present(pmd)) {
+> >  			page = vm_normal_page_pmd(vma, addr, pmd);
+> > -			if (page) {
+> > +			if (page && !is_devdax_page(page) &&
+> > +			    !is_fsdax_page(page)) {
+> >  				goto found;
+> >  			} else if ((flags & FW_ZEROPAGE) &&
+> >  				    is_huge_zero_pmd(pmd)) {
+> > @@ -945,7 +952,8 @@ struct folio *folio_walk_start(struct folio_walk *fw,
+> >
+> >  	if (pte_present(pte)) {
+> >  		page = vm_normal_page(vma, addr, pte);
+> > -		if (page)
+> > +		if (page && !is_devdax_page(page) &&
+> > +		    !is_fsdax_page(page))
+> >  			goto found;
+> >  		if ((flags & FW_ZEROPAGE) &&
+> >  		    is_zero_pfn(pte_pfn(pte))) {
 > 
-> ---
-> v15: Dropped tags due to changes in patches 2 and 3.
-> ---
->  tests/qtest/cxl-test.c  | 59 ++++++++++++++++++++++++++++++++---------
->  tests/qtest/meson.build |  1 +
->  2 files changed, 47 insertions(+), 13 deletions(-)
-> 
-> diff --git a/tests/qtest/cxl-test.c b/tests/qtest/cxl-test.c
-> index a600331843..c7189d6222 100644
-> --- a/tests/qtest/cxl-test.c
-> +++ b/tests/qtest/cxl-test.c
-> @@ -19,6 +19,12 @@
->      "-device pxb-cxl,id=cxl.1,bus=pcie.0,bus_nr=53 " \
->      "-M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.targets.1=cxl.1,cxl-fmw.0.size=4G "
->  
-> +#define QEMU_VIRT_2PXB_CMD \
-> +    "-machine virt,cxl=on -cpu max " \
-> +    "-device pxb-cxl,id=cxl.0,bus=pcie.0,bus_nr=52 " \
-> +    "-device pxb-cxl,id=cxl.1,bus=pcie.0,bus_nr=53 " \
-> +    "-M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.targets.1=cxl.1,cxl-fmw.0.size=4G "
-> +
->  #define QEMU_RP \
->      "-device cxl-rp,id=rp0,bus=cxl.0,chassis=0,slot=0 "
->  
-> @@ -197,25 +203,52 @@ static void cxl_2pxb_4rp_4t3d(void)
->      qtest_end();
->      rmdir(tmpfs);
->  }
-> +
-> +static void cxl_virt_2pxb_4rp_4t3d(void)
-> +{
-> +    g_autoptr(GString) cmdline = g_string_new(NULL);
-> +    char template[] = "/tmp/cxl-test-XXXXXX";
-> +    const char *tmpfs;
-> +
-> +    tmpfs = mkdtemp(template);
-> +
-> +    g_string_printf(cmdline, QEMU_VIRT_2PXB_CMD QEMU_4RP QEMU_4T3D,
-> +                    tmpfs, tmpfs, tmpfs, tmpfs, tmpfs, tmpfs,
-> +                    tmpfs, tmpfs);
-> +
-> +    qtest_start(cmdline->str);
-> +    qtest_end();
-> +    rmdir(tmpfs);
-> +}
->  #endif /* CONFIG_POSIX */
->  
->  int main(int argc, char **argv)
->  {
-> -    g_test_init(&argc, &argv, NULL);
-> +    const char *arch = qtest_get_arch();
->  
-> -    qtest_add_func("/pci/cxl/basic_hostbridge", cxl_basic_hb);
-> -    qtest_add_func("/pci/cxl/basic_pxb", cxl_basic_pxb);
-> -    qtest_add_func("/pci/cxl/pxb_with_window", cxl_pxb_with_window);
-> -    qtest_add_func("/pci/cxl/pxb_x2_with_window", cxl_2pxb_with_window);
-> -    qtest_add_func("/pci/cxl/rp", cxl_root_port);
-> -    qtest_add_func("/pci/cxl/rp_x2", cxl_2root_port);
-> +    g_test_init(&argc, &argv, NULL);
-> +    if (strcmp(arch, "i386") == 0 || strcmp(arch, "x86_64") == 0) {
-> +        qtest_add_func("/pci/cxl/basic_hostbridge", cxl_basic_hb);
-> +        qtest_add_func("/pci/cxl/basic_pxb", cxl_basic_pxb);
-> +        qtest_add_func("/pci/cxl/pxb_with_window", cxl_pxb_with_window);
-> +        qtest_add_func("/pci/cxl/pxb_x2_with_window", cxl_2pxb_with_window);
-> +        qtest_add_func("/pci/cxl/rp", cxl_root_port);
-> +        qtest_add_func("/pci/cxl/rp_x2", cxl_2root_port);
->  #ifdef CONFIG_POSIX
-> -    qtest_add_func("/pci/cxl/type3_device", cxl_t3d_deprecated);
-> -    qtest_add_func("/pci/cxl/type3_device_pmem", cxl_t3d_persistent);
-> -    qtest_add_func("/pci/cxl/type3_device_vmem", cxl_t3d_volatile);
-> -    qtest_add_func("/pci/cxl/type3_device_vmem_lsa", cxl_t3d_volatile_lsa);
-> -    qtest_add_func("/pci/cxl/rp_x2_type3_x2", cxl_1pxb_2rp_2t3d);
-> -    qtest_add_func("/pci/cxl/pxb_x2_root_port_x4_type3_x4", cxl_2pxb_4rp_4t3d);
-> +        qtest_add_func("/pci/cxl/type3_device", cxl_t3d_deprecated);
-> +        qtest_add_func("/pci/cxl/type3_device_pmem", cxl_t3d_persistent);
-> +        qtest_add_func("/pci/cxl/type3_device_vmem", cxl_t3d_volatile);
-> +        qtest_add_func("/pci/cxl/type3_device_vmem_lsa", cxl_t3d_volatile_lsa);
-> +        qtest_add_func("/pci/cxl/rp_x2_type3_x2", cxl_1pxb_2rp_2t3d);
-> +        qtest_add_func("/pci/cxl/pxb_x2_root_port_x4_type3_x4",
-> +                       cxl_2pxb_4rp_4t3d);
->  #endif
-> +    } else if (strcmp(arch, "aarch64") == 0) {
-> +#ifdef CONFIG_POSIX
-> +        qtest_add_func("/pci/cxl/virt/pxb_x2_root_port_x4_type3_x4",
-> +                       cxl_virt_2pxb_4rp_4t3d);
-> +#endif
-> +    }
-> +
->      return g_test_run();
->  }
-> diff --git a/tests/qtest/meson.build b/tests/qtest/meson.build
-> index 8ad849054f..42e927b32a 100644
-> --- a/tests/qtest/meson.build
-> +++ b/tests/qtest/meson.build
-> @@ -261,6 +261,7 @@ qtests_aarch64 = \
->     config_all_devices.has_key('CONFIG_TPM_TIS_I2C') ? ['tpm-tis-i2c-test'] : []) + \
->    (config_all_devices.has_key('CONFIG_ASPEED_SOC') ? qtests_aspeed64 : []) + \
->    (config_all_devices.has_key('CONFIG_NPCM8XX') ? qtests_npcm8xx : []) + \
-> +  qtests_cxl +                                                                                  \
->    ['arm-cpu-features',
->     'numa-test',
->     'boot-serial-test',
+> I'm probably echoing others here (and I definitely particularly like Dan's
+> suggestion of a helper function here, and Jason's suggestion of explanatory
+> comments), but would also be nice to not have to do this separately at each page
+> table level and instead have something that you can say 'get me normal non-dax
+> page at page table level <parameter>'.
 
-V15 is applied cleanly using b4 on top of today's master.
+I did the filtering here because I was trying to avoid unintended behavioural
+changes and was being lazy by not auditing the callers. Turns out naming is
+harder than doing this properly so I'm going to go with Jason and David's
+suggestion and drop the filtering entirely. It will then be up to callers to
+define what is "normal" for them by filtering out folio types they don't care
+about. Most already do filter out zone device folios or DAX VMA's anyway, and I
+will add some commentary to this effect in the respin.
 
-$ meson test qtest-aarch64/cxl-test
-ninja: Entering directory `/home/realm/projects/qemu/build'
-[1/8] Generating qemu-version.h with a custom command (wrapped by meson to capture output)
-1/1 qemu:qtest+qtest-aarch64 / qtest-aarch64/cxl-test        OK              0.21s   1 subtests passed
-
-Ok:                 1
-Expected Fail:      0
-Fail:               0
-Unexpected Pass:    0
-Skipped:            0
-Timeout:            0
-
-Tested-by: Itaru Kitayama <itaru.kitayama@fujitsu.com>
-
-Thanks,
-Itaru
-
-> -- 
-> 2.48.1
+> > --
+> > git-series 0.9.1
 > 
