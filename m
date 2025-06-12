@@ -1,47 +1,42 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BF52239E99
-	for <linux-cxl@vger.kernel.org>; Thu, 12 Jun 2025 12:51:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C839523D280
+	for <linux-cxl@vger.kernel.org>; Thu, 12 Jun 2025 13:13:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749732667; cv=none; b=VcFslRbnSiyiYDtm0r6X5O+bUEith25z6DfNdolHLGpNeoo0HzHVAWSWYKFE/kHVZu7AqQ6E5yD3VZicokiDLT3KFjJZXpA2EukfnFX9uXAXk5QlI7QrO68CBS7dCfLemxxARgwdwJV5fBo43I81Tp/hqpwISPwmNn6E3eLFfTY=
+	t=1749734021; cv=none; b=j4mXlU9/5TW7dK+h60xiqM/kWni4GmapXn9vV+1U9V8UOXHYq9GX11r7+9u0aBb6Kun/jOCEG8xory+5uSrwHW7ZNb9wTQ6Yi1JvFpdDPM32CJaGpNHSDVX/gXTLVOPZdEH0n3hqNvHc3M6kAnk7PkZ0VJ54/Cfdow90PNd1Zo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749732667; c=relaxed/simple;
-	bh=Qt+kork5waADPVxeD9rHOP2nt1Fw6sPyFuw25hK4JCo=;
+	s=arc-20240116; t=1749734021; c=relaxed/simple;
+	bh=9hhm4n9suJwABZyBEruLNQigSHJcBzXGOZd+/GK/KWY=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T4f5K1vEasmwvI2borTPOnVZJzobt9TN9WiVMpWMGxME2HREnVtRzGq42bqij2qLf3QWZQ05GymML0NSQmLzQ/R7HyZKFNR0p33PQnL84ImcrmtXBaZqxGYJa259GwdZPuVrqqINyoL4vsh2CRv9q4O6CMcPpEnoRDV7OgUFCOQ=
+	 MIME-Version:Content-Type; b=maS3Agt2FDvvLggEgJpg9MdaEYnzE3JUobVqGOtDKBWma7UijcdBS8+LFxE0B0H9ZrtlT+/jCMypLhEzq37rF61vjgVt3m6NopYvVbrH+MenFPnzrUAbfSOBxpHqVscHBAwplAMvv1E1VlEWVvuUq97Z7JcUTfzue/T8YWmMF0c=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bJ2Mz5Ym1z6L53f;
-	Thu, 12 Jun 2025 20:46:39 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bJ2wr4D6hz6K8Rw;
+	Thu, 12 Jun 2025 21:11:40 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4EF6F1402F3;
-	Thu, 12 Jun 2025 20:51:01 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 11C5F1400DC;
+	Thu, 12 Jun 2025 21:13:36 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 12 Jun
- 2025 14:51:00 +0200
-Date: Thu, 12 Jun 2025 13:50:58 +0100
+ 2025 15:13:35 +0200
+Date: Thu, 12 Jun 2025 14:13:33 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
-CC: "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>, Fan Ni
-	<fan.ni@samsung.com>, Peter Maydell <peter.maydell@linaro.org>,
-	"mst@redhat.com" <mst@redhat.com>, "linuxarm@huawei.com"
-	<linuxarm@huawei.com>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>, "qemu-arm@nongnu.org" <qemu-arm@nongnu.org>,
-	Yuquan Wang <wangyuquan1236@phytium.com.cn>, Itaru Kitayama
-	<itaru.kitayama@linux.dev>, Philippe =?ISO-8859-1?Q?Mathieu-Daud=E9?=
+To: Itaru Kitayama <itaru.kitayama@linux.dev>
+CC: <qemu-devel@nongnu.org>, Fan Ni <fan.ni@samsung.com>, Peter Maydell
+	<peter.maydell@linaro.org>, <mst@redhat.com>, <linuxarm@huawei.com>,
+	<linux-cxl@vger.kernel.org>, <qemu-arm@nongnu.org>, Yuquan Wang
+	<wangyuquan1236@phytium.com.cn>, Philippe =?ISO-8859-1?Q?Mathieu-Daud=E9?=
 	<philmd@linaro.org>, Alireza Sanaee <alireza.sanaee@huawei.com>
-Subject: Re: [PATCH v14 3/5] hw/cxl-host: Allow split of establishing memory
- address and mmio setup.
-Message-ID: <20250612135058.000047fe@huawei.com>
-In-Reply-To: <ce28ad6b-a76a-44d7-8135-9560e8e1d6f8@fujitsu.com>
+Subject: Re: [PATCH v14 0/5] arm/virt: CXL support via pxb_cxl
+Message-ID: <20250612141333.00004bcc@huawei.com>
+In-Reply-To: <aDfs+gIkK5ekKBXx@vm4>
 References: <20250528110726.226389-1-Jonathan.Cameron@huawei.com>
-	<20250528110726.226389-4-Jonathan.Cameron@huawei.com>
-	<ce28ad6b-a76a-44d7-8135-9560e8e1d6f8@fujitsu.com>
+	<aDfs+gIkK5ekKBXx@vm4>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -51,173 +46,145 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Mon, 9 Jun 2025 01:15:10 +0000
-"Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com> wrote:
+On Thu, 29 May 2025 14:13:30 +0900
+Itaru Kitayama <itaru.kitayama@linux.dev> wrote:
 
-> In patch 2/5, we introduced `cxl_fmws_set_memmap_and_update_mmio()`.
+> On Wed, May 28, 2025 at 12:07:21PM +0100, Jonathan Cameron wrote:
+> > v14: Simplifications suggeseted by Itaru (and some extra simplifications
+> >      that became apparent) and gather tags.
+> >      See individual patches for more information.
+> > 
+> > Updated cover letter
+> > 
+> > Richard Henderson has posted a pull request with a fix for the TCG TLB
+> > issue which will hopefully merge shortly (Thanks Richard!).
+> > 
+> > Back in 2022, this series stalled on the absence of a solution to device
+> > tree support for PCI Expander Bridges (PXB) and we ended up only having
+> > x86 support upstream. I've been carrying the arm64 support out of tree
+> > since then, with occasional nasty surprises (e.g. UNIMP + DT issue seen
+> > a few weeks ago) and a fair number of fiddly rebases.
+> > gitlab.com/jic23/qemu cxl-<latest date>.  Will update shortly with this
+> > series.
+> > 
+> > A recent discussion with Peter Maydell indicated that there are various
+> > other ACPI only features now, so in general he might be more relaxed
+> > about DT support being necessary. The upcoming vSMMUv3 support would
+> > run into this problem as well.
+> > 
+> > I presented the background to the PXB issue at Linaro connect 2022. In
+> > short the issue is that PXBs steal MMIO space from the main PCI root
+> > bridge. The challenge is knowing how much to steal.
+> > 
+> > On ACPI platforms, we can rely on EDK2 to perform an enumeration and
+> > configuration of the PCI topology and QEMU can update the ACPI tables
+> > after EDK2 has done this when it can simply read the space used by the
+> > root ports. On device tree, there is no entity to figure out that
+> > enumeration so we don't know how to size the stolen region.
+> > 
+> > Three approaches were discussed:
+> > 1) Enumerating in QEMU. Horribly complex and the last thing we want is a
+> >    3rd enumeration implementation that ends up out of sync with EDK2 and
+> >    the kernel (there are frequent issues because of how those existing
+> >    implementations differ.
+> > 2) Figure out how to enumerate in kernel. I never put a huge amount of work
+> >    into this, but it seemed likely to involve a nasty dance with similar
+> >    very specific code to that EDK2 is carrying and would very challenging
+> >    to upstream (given the lack of clarity on real use cases for PXBs and
+> >    DT).
+> > 3) Hack it based on the control we have which is bus numbers.
+> >    No one liked this but it worked :)
+> > 
+> > The other little wrinkle would be the need to define full bindings for CXL
+> > on DT + implement a fairly complex kernel stack as equivalent in ACPI
+> > involves a static table, CEDT, new runtime queries via _DSM and a description
+> > of various components. Doable, but so far there is no interest on physical
+> > platforms. Worth noting that for now, the QEMU CXL emulation is all about
+> > testing and developing the OS stack, not about virtualization (performance
+> > is terrible except in some very contrived situations!)
+> > 
+> > There is only a very simple test in here, because my intent is not to
+> > duplicate what we have on x86, but just to do a smoke test that everything
+> > is hooked up.  In general we need much more comprehensive end to end CXL
+> > tests but that requires a reaonsably stable guest software stack. A few
+> > people have expressed interest in working on that, but we aren't there yet.
+> > 
+> > Note that this series has a very different use case to that in the proposed
+> > SBSA-ref support:
+> > https://lore.kernel.org/qemu-devel/20250117034343.26356-1-wangyuquan1236@phytium.com.cn/
+> > 
+> > SBSA-ref is a good choice if you want a relatively simple mostly fixed
+> > configuration.  That works well with the limited host system
+> > discoverability etc as EDK2 can be build against a known configuration.
+> > 
+> > My interest with this support in arm/virt is support host software stack
+> > development (we have a wide range of contributors, most of whom are working
+> > on emulation + the kernel support). I care about the weird corners. As such
+> > I need to be able to bring up variable numbers of host bridges, multiple CXL
+> > Fixed Memory Windows with varying characteristics (interleave etc), complex
+> > NUMA topologies with wierd performance characteristics etc. We can do that
+> > on x86 upstream today, or my gitlab tree. Note that we need arm support
+> > for some arch specific features in the near future (cache flushing).
+> > Doing kernel development with this need for flexibility on SBSA-ref is not
+> > currently practical. SBSA-ref CXL support is an excellent thing, just
+> > not much use to me for this work.
+> > 
+> > Also, we are kicking off some work on DCD virtualization, particularly to
+> > support inter-host shared memory being presented up into a VM. That
+> > will need upstream support on arm64 as it is built on top of the existing
+> > CXL emulation to avoid the need for a separate guest software stack.
+> > 
+> > Note this is TCG only - it is possible to support limited use with KVM but
+> > that needs additional patches not yet ready for upstream.  The challenge
+> > is interleave - and the solution is don't interleave if you want to run
+> > with KVM.  
 > 
-> Initially, I assumed patch 3/5 would split `cxl_fmws_set_memmap_and_update_mmio()` into two steps:
-> 1. Traverse CXLFixedWindow and update `fw->base`.
-> 2. Call `sysbus_mmio_map(SYS_BUS_DEVICE(fw), 0, fw->base)`.
-> For example (my personal preference):
-> ```c
-> hwaddr cxl_fmws_set_memmap_and_update_mmio(hwaddr base, hwaddr max_addr)
-> {
->      hwaddr end = cxl_fmws_set_memmap(base, max_addr);
->      cxl_fmws_update_mmio();
->      return end;
-> }
+> Series applied cleanly on top of today's QEMU. And I confirm that
+> qtest-aarch64/cxl-test passes the test as it should and ndctl cxl test
+> suite ran fine 11 out of 12 (1 SKIP) on this series again this time tracing
+> subsystem enabled as Alison suggested. Used the Intel folk cxl/next
+> kernel.
 > 
-> 
-> If we had implemented this design in patch 2/5, patch 3/5 might not be necessary.
+> Tested-by: Itaru Kitayama <itaru.kitayama@fujitsu.com>
+Thanks Itaru.
 
-At the time of patch 2 we had no justification for the split as for x86 that would
-just look like a pointless double loop.
-
-However you are right that this is too complex given it's not a performance path
-and perhaps some commentary in the patch description will be enough that no
-one minds.
-
-I'll go a little further than you suggest and push the two calls in
-your cxl_fmws_set_memmap_and_mmio() into pc.c (patch 2) as that wrapper
-isn't adding much value.
-
-I think it is a big enough change that I'll drop tags given on patch 2.
-
-Thanks,
+I'm not going to pick this tag up purely because of the changes in patch
+2 and related dropping of patch 3.  Whilst not huge that is in fairly
+critical bit of the code, so feels inappropriate to carryn tags forwards.
 
 Jonathan
 
-
-> The only potential benefit I see in the current patch 3/5 is efficiency improvements
-> in cxl_fmws_set_memmap_and_update_mmio(), but since the function is typically
-> called only once and the GLib list (glist) is small, the practical impact should
-> be minimal.
 > 
-> I'm interested in others' perspectives on this.
+> Thanks,
+> Itaru.
 > 
-> Thanks
-> Zhijian
-> 
-> 
-> On 28/05/2025 19:07, Jonathan Cameron via wrote:
-> > On arm/virt the memory map is set up before any devices are brought
-> > up.  To enable this provide split functions to establish the fw->base
-> > and later to actually map it.
 > > 
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > ---
-> > v14: Update wrt to changes in previous patch.
-> >       Add a do_cfwms_set_memmap_and_update_mmio() utility function
-> >       to reduce code duplication. (Zhijian)
-> > ---
-> >   include/hw/cxl/cxl_host.h |  2 ++
-> >   hw/cxl/cxl-host-stubs.c   |  2 ++
-> >   hw/cxl/cxl-host.c         | 43 +++++++++++++++++++++++++++++++++++----
-> >   3 files changed, 43 insertions(+), 4 deletions(-)
+> > Jonathan Cameron (5):
+> >   hw/cxl-host: Add an index field to CXLFixedMemoryWindow
+> >   hw/cxl: Make the CXL fixed memory windows devices.
+> >   hw/cxl-host: Allow split of establishing memory address and mmio
+> >     setup.
+> >   hw/arm/virt: Basic CXL enablement on pci_expander_bridge instances
+> >     pxb-cxl
+> >   qtest/cxl: Add aarch64 virt test for CXL
 > > 
-> > diff --git a/include/hw/cxl/cxl_host.h b/include/hw/cxl/cxl_host.h
-> > index 6dce2cde07..aee9d573d6 100644
-> > --- a/include/hw/cxl/cxl_host.h
-> > +++ b/include/hw/cxl/cxl_host.h
-> > @@ -16,6 +16,8 @@
-> >   void cxl_machine_init(Object *obj, CXLState *state);
-> >   void cxl_fmws_link_targets(Error **errp);
-> >   void cxl_hook_up_pxb_registers(PCIBus *bus, CXLState *state, Error **errp);
-> > +hwaddr cxl_fmws_set_memmap(hwaddr base, hwaddr max_addr);
-> > +void cxl_fmws_update_mmio(void);
-> >   hwaddr cxl_fmws_set_memmap_and_update_mmio(hwaddr base, hwaddr max_addr);
-> >   GSList *cxl_fmws_get_all_sorted(void);
+> >  include/hw/arm/virt.h     |   4 +
+> >  include/hw/cxl/cxl.h      |   4 +
+> >  include/hw/cxl/cxl_host.h |   6 +-
+> >  hw/acpi/cxl.c             |  76 +++++++--------
+> >  hw/arm/virt-acpi-build.c  |  34 +++++++
+> >  hw/arm/virt.c             |  29 ++++++
+> >  hw/cxl/cxl-host-stubs.c   |   8 +-
+> >  hw/cxl/cxl-host.c         | 190 ++++++++++++++++++++++++++++++++------
+> >  hw/i386/pc.c              |  51 +++++-----
+> >  tests/qtest/cxl-test.c    |  59 +++++++++---
+> >  tests/qtest/meson.build   |   1 +
+> >  11 files changed, 353 insertions(+), 109 deletions(-)
+> > 
+> > -- 
+> > 2.48.1
 > >   
-> > diff --git a/hw/cxl/cxl-host-stubs.c b/hw/cxl/cxl-host-stubs.c
-> > index 13eb6bf6a4..d9e38618d6 100644
-> > --- a/hw/cxl/cxl-host-stubs.c
-> > +++ b/hw/cxl/cxl-host-stubs.c
-> > @@ -11,6 +11,8 @@
-> >   void cxl_fmws_link_targets(Error **errp) {};
-> >   void cxl_machine_init(Object *obj, CXLState *state) {};
-> >   void cxl_hook_up_pxb_registers(PCIBus *bus, CXLState *state, Error **errp) {};
-> > +hwaddr cxl_fmws_set_memmap(hwaddr base, hwaddr max_addr) { return base; };
-> > +void cxl_fmws_update_mmio(void) {};
-> >   hwaddr cxl_fmws_set_memmap_and_update_mmio(hwaddr base, hwaddr max_addr)
-> >   {
-> >       return base;
-> > diff --git a/hw/cxl/cxl-host.c b/hw/cxl/cxl-host.c
-> > index 016a4fdc6a..a1b9980035 100644
-> > --- a/hw/cxl/cxl-host.c
-> > +++ b/hw/cxl/cxl-host.c
-> > @@ -378,11 +378,14 @@ void cxl_hook_up_pxb_registers(PCIBus *bus, CXLState *state, Error **errp)
-> >       }
-> >   }
-> >   
-> > -static void cxl_fmws_update(CXLFixedWindow *fw, hwaddr *base, hwaddr max_addr)
-> > +static void cxl_fmws_update(CXLFixedWindow *fw, hwaddr *base, hwaddr max_addr,
-> > +                            bool update_mmio)
-> >   {
-> >       if (*base + fw->size <= max_addr) {
-> >           fw->base = *base;
-> > -        sysbus_mmio_map(SYS_BUS_DEVICE(fw), 0, fw->base);
-> > +        if (update_mmio) {
-> > +            sysbus_mmio_map(SYS_BUS_DEVICE(fw), 0, fw->base);
-> > +        }
-> >           *base += fw->size;
-> >       }
-> >   }
-> > @@ -421,19 +424,51 @@ GSList *cxl_fmws_get_all_sorted(void)
-> >       return g_slist_sort_with_data(cxl_fmws_get_all(), cfmws_cmp, NULL);
-> >   }
-> >   
-> > -hwaddr cxl_fmws_set_memmap_and_update_mmio(hwaddr base, hwaddr max_addr)
-> > +static hwaddr do_cxl_fmws_set_memmap_and_update_mmio(hwaddr base,
-> > +                                                     hwaddr max_addr,
-> > +                                                     bool update_mmio)
-> >   {
-> >       GSList *cfmws_list, *iter;
-> >   
-> >       cfmws_list = cxl_fmws_get_all_sorted();
-> >       for (iter = cfmws_list; iter; iter = iter->next) {
-> > -        cxl_fmws_update(CXL_FMW(iter->data), &base, max_addr);
-> > +        cxl_fmws_update(CXL_FMW(iter->data), &base, max_addr, update_mmio);
-> >       }
-> >       g_slist_free(cfmws_list);
-> >   
-> >       return base;
-> >   }
-> >   
-> > +hwaddr cxl_fmws_set_memmap(hwaddr base, hwaddr max_addr)
-> > +{
-> > +    return do_cxl_fmws_set_memmap_and_update_mmio(base, max_addr, false);
-> > +}
-> > +
-> > +hwaddr cxl_fmws_set_memmap_and_update_mmio(hwaddr base, hwaddr max_addr)
-> > +{
-> > +    return do_cxl_fmws_set_memmap_and_update_mmio(base, max_addr, true);
-> > +}
-> > +
-> > +static int cxl_fmws_mmio_map(Object *obj, void *opaque)
-> > +{
-> > +    struct CXLFixedWindow *fw;
-> > +
-> > +    if (!object_dynamic_cast(obj, TYPE_CXL_FMW)) {
-> > +        return 0;
-> > +    }
-> > +    fw = CXL_FMW(obj);
-> > +    sysbus_mmio_map(SYS_BUS_DEVICE(fw), 0, fw->base);
-> > +
-> > +    return 0;
-> > +}
-> > +
-> > +void cxl_fmws_update_mmio(void)
-> > +{
-> > +    /* Ordering is not required for this */
-> > +    object_child_foreach_recursive(object_get_root(), cxl_fmws_mmio_map,
-> > +                                   NULL);
-> > +}
-> > +
-> >   static void cxl_fmw_realize(DeviceState *dev, Error **errp)
-> >   {
-> >       CXLFixedWindow *fw = CXL_FMW(dev)  
 
