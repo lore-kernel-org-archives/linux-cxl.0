@@ -1,141 +1,176 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606092D1304;
-	Fri, 13 Jun 2025 13:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9D022D9EF7
+	for <linux-cxl@vger.kernel.org>; Fri, 13 Jun 2025 13:50:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749822599; cv=none; b=O85IoCBwfG8BPJyaOORv8u/5X0hadFeANBfHc205jQprrX+/a1ZbSFAu9a4Yt7kpbNCgjaIe2/SeZ8u2hFrkaRo4sDCmzQeDXbbtTgIlb3WT//HHUFPDdaysVDR5eaVI3HtrEuEAil7af1gP4TG2rgtn7JROQDwONfl1J+g+nBE=
+	t=1749822603; cv=none; b=H0CuKGzA8Q/jkxHUZPjUV4F5KUqnkzOeU+hdvTRyG3HK8ZMF7DcpDf/c7F8x8Yd/2u/c78tUFFxgzfI+ldV5m0SGg0AM7OpQJKxcxyx9/NaI80f834sYf3wzqC5sgIpD49kkzAputF2VgT36NQ8LkBukXeFnm8eOQxgIGfh2zAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749822599; c=relaxed/simple;
-	bh=XfaFZJbpPnn5P7AWNKZTZI2bEWtKdKvNZh+ex9dhxL0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BOsR+uIS15JJS72N+dPyhUKRXGxxnhpkP1E2x4QqoKpgNAIywEYU4ye4zsoxIlu/QKIyNPOUEa6zlacQlpqjYDwpb4BuV7zEDder2lEiIFpyiFCvUpV1qWZXRrjS3hCKU3NEZrO8RmC7p7TF6EteHAU0i4QBHT6o5Rx/nPWvZTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=PmOtPKRp; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1749822603; c=relaxed/simple;
+	bh=48Btmq48StA+CNIKojo0XJZQ2ucjHK2q9m1cr1JmpC4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DkB9IWlnTj+03VEPVAFDmS3k0QjGaRjbFZQArWO2aK6xV8eo4oNDUX9i9VET+cKKnpg1a+JaWp0ZmTaKYlbA7CWgg+Jmf9dxYNcVd8cvRB5coFGlMMjcd6xefRVOf4qok4cfciirWTmnZIh5FzVJqepv0fSlcwzCZ4KpPCSx/Ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=JFjl4Q+8; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=o96Nzw7P; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=NbaSZyMh; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=eVEysA6P; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PmOtPKRp"
-Received: by mail.gandi.net (Postfix) with ESMTPA id 8D746439C1;
-	Fri, 13 Jun 2025 13:49:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1749822595;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="JFjl4Q+8";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="o96Nzw7P";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="NbaSZyMh";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="eVEysA6P"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id ECA3A1F397;
+	Fri, 13 Jun 2025 13:49:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749822599; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=2WUtGaDXoMVBG3In2EoMbIWbQFZXS/XzmECPUwP3qOk=;
-	b=PmOtPKRpo1zl6cFiM5WFK+zH72UPlsNWbWesWXOzOa13dF6NrYrd9tHWFSan/VDfOYZOtN
-	xt+fP9HV1YOyX2zl/UKObG4aETC/HfctdPOOhMjHTs3ZPB+AK//6w0cexG7wgr28Bubksh
-	Mt0ksWeZwRWyDAfpjI5FDGeeShEkkBnWwTrsfvOOt06Kz4md8o01HZ7aRvtLolqxtpa6vL
-	/AWfl50UTlHeMmMLmg3fxUhKXGz+sb0o/5dsfIWYBLdU188iXAJyVZypSn0COvpAKXwM8T
-	IvKwRxUx9AAsjO/F3aRHAXycD9nv1X6CegugSnEgpzrYo8J02vEsGAtlEN+DbQ==
-From: Herve Codina <herve.codina@bootlin.com>
-To: Andrew Lunn <andrew@lunn.ch>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
+	bh=isd0zIYqD3QWm/e2mMHa02LcMAiVEgUmouA78tywbwM=;
+	b=JFjl4Q+8AQh3LwubknOdgVD4oUmh/ajNptA0CrIeZKCCvmOXloT8lUDyYG+1tNPeQWM3jv
+	BLIHQfk/uEkLXQA+j5MHUnsYNPvk/h8jfEH0Diex3gDY1oavFRzRBmzRjSQieqP9jYKzsY
+	8pHGvZ/oLdcexdUNfJQ9/H7KdHhD57c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749822599;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=isd0zIYqD3QWm/e2mMHa02LcMAiVEgUmouA78tywbwM=;
+	b=o96Nzw7PtgzWpMVZQFmTXHcKaN74FiNyCjJ+V8KDPdlG237umtLqeLOLvbEX2pTAJtefK8
+	NoSyXdSxlk/8anCQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=NbaSZyMh;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=eVEysA6P
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749822597; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=isd0zIYqD3QWm/e2mMHa02LcMAiVEgUmouA78tywbwM=;
+	b=NbaSZyMh2LIU02VlY3UXMG0lONn/VkG1qtlN1zCkfDwjYs+DM0S4mem9gjq4P1zmqkLmDh
+	YVclMWgVBTbaXTR/GzcLBnP66qNBEvTk3rrA224aJdYofXtjFExAGEfDRoX5mGE4EXBD8K
+	ANJw+A6+MtTJz7uS40K/npORwMS65BU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749822597;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=isd0zIYqD3QWm/e2mMHa02LcMAiVEgUmouA78tywbwM=;
+	b=eVEysA6Ptqu/+c6G9EG/hmLqxlRPje3ZL7uIEDYEnzE4yugEDcubXkv7uHVQ5Kw+so46xd
+	ClyMP9aLEV0tJ/AA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DA7A9137FE;
+	Fri, 13 Jun 2025 13:49:56 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ng2tMoQsTGhFCwAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Fri, 13 Jun 2025 13:49:56 +0000
+Date: Fri, 13 Jun 2025 15:49:46 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alistair Popple <apopple@nvidia.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+	Dev Jain <dev.jain@arm.com>,
 	Dan Williams <dan.j.williams@intel.com>,
-	linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-spi@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v3 28/28] misc: lan966x_pci: Add drivers needed to support SFPs in Kconfig help
-Date: Fri, 13 Jun 2025 15:48:08 +0200
-Message-ID: <20250613134817.681832-29-herve.codina@bootlin.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250613134817.681832-1-herve.codina@bootlin.com>
-References: <20250613134817.681832-1-herve.codina@bootlin.com>
+	Jason Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCH v3 2/3] mm/huge_memory: don't mark refcounted folios
+ special in vmf_insert_folio_pmd()
+Message-ID: <aEwseqmFrpNO5NJC@localhost.localdomain>
+References: <20250613092702.1943533-1-david@redhat.com>
+ <20250613092702.1943533-3-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddukeduudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeehffeigfejueelueeuffelueefgfelhfejhfehieegudekteeiledttdfhffekffenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedvudenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtrdhlohgtrghlughomhgrihhnpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeegledprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshdrh
- hgruhgvrhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepkhgvrhhnvghlsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehfvghsthgvvhgrmhesghhmrghilhdrtghomh
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250613092702.1943533-3-david@redhat.com>
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: ECA3A1F397
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:email];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Score: -4.51
+X-Spam-Level: 
 
-Recently, new device-tree nodes were added in the overlay to add support
-for SFPs on LAN966x PCI device.
+On Fri, Jun 13, 2025 at 11:27:01AM +0200, David Hildenbrand wrote:
+> Marking PMDs that map a "normal" refcounted folios as special is
+> against our rules documented for vm_normal_page(): normal (refcounted)
+> folios shall never have the page table mapping marked as special.
+> 
+> Fortunately, there are not that many pmd_special() check that can be
+> mislead, and most vm_normal_page_pmd()/vm_normal_folio_pmd() users that
+> would get this wrong right now are rather harmless: e.g., none so far
+> bases decisions whether to grab a folio reference on that decision.
+> 
+> Well, and GUP-fast will fallback to GUP-slow. All in all, so far no big
+> implications as it seems.
+> 
+> Getting this right will get more important as we use
+> folio_normal_page_pmd() in more places.
+> 
+> Fix it by teaching insert_pfn_pmd() to properly handle folios and
+> pfns -- moving refcount/mapcount/etc handling in there, renaming it to
+> insert_pmd(), and distinguishing between both cases using a new simple
+> "struct folio_or_pfn" structure.
+> 
+> Use folio_mk_pmd() to create a pmd for a folio cleanly.
+> 
+> Fixes: 6c88f72691f8 ("mm/huge_memory: add vmf_insert_folio_pmd()")
+> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> Tested-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-The LAN966X Kconfig help section mentions drivers related to devices
-added based on the overlay description.
+Altough we have it quite well explained here in the changelog, maybe
+having a little comment in insert_pmd() noting why pmds mapping normal
+folios cannot be marked special would be nice.
 
-Add drivers related to devices described by those new nodes in the
-already existing driver list.
+But just saying :-)
 
-Signed-off-by: Herve Codina <herve.codina@bootlin.com>
----
- drivers/misc/Kconfig | 5 +++++
- 1 file changed, 5 insertions(+)
+Reviewed-by: Oscar salvador <osalvador@suse.de>
 
-diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index b05fddff8f97..ab6a94b201be 100644
---- a/drivers/misc/Kconfig
-+++ b/drivers/misc/Kconfig
-@@ -636,13 +636,18 @@ config MCHP_LAN966X_PCI
- 	  Even if this driver does not depend on those other drivers, in order
- 	  to have a fully functional board, the following drivers are needed:
- 	    - fixed-clock (COMMON_CLK)
-+	    - i2c-mux-pinctrl (I2C_MUX_PINCTRL)
- 	    - lan966x-cpu-syscon (MFD_SYSCON)
-+	    - lan966x-gck (COMMON_CLK_LAN966X)
- 	    - lan966x-miim (MDIO_MSCC_MIIM)
- 	    - lan966x-oic (LAN966X_OIC)
- 	    - lan966x-pinctrl (PINCTRL_OCELOT)
- 	    - lan966x-serdes (PHY_LAN966X_SERDES)
- 	    - lan966x-switch (LAN966X_SWITCH)
- 	    - lan966x-switch-reset (RESET_MCHP_SPARX5)
-+	    - sam9x60-i2c (I2C_AT91)
-+	    - sama5d2-flexcom (MFD_ATMEL_FLEXCOM)
-+	    - sfp (SFP)
  
- source "drivers/misc/c2port/Kconfig"
- source "drivers/misc/eeprom/Kconfig"
--- 
-2.49.0
 
+-- 
+Oscar Salvador
+SUSE Labs
