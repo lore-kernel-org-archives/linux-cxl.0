@@ -1,50 +1,72 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9CA1FCCEB;
-	Fri, 13 Jun 2025 15:58:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70AEC1FDA69
+	for <linux-cxl@vger.kernel.org>; Fri, 13 Jun 2025 16:06:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749830308; cv=none; b=Tafyq3OuMN1u604hZJeoqtU52fr4HMnD8vfb/bIxp3S+DwTxJFZTWFROuA1iBktev4jjIK1JxDH5DYz0hEWop+jN7jnowJFZZy9xqz99KrUfOrueoEvkERF/jyjpHmcj1D7AyenlaL7yK0Y36+Y+RYQjvROC21mLQ88lLRksauU=
+	t=1749830778; cv=none; b=ngCsMYePpdCYbFXoHnetseuzWqWESTtpOqwthidX8f0LDrDhO/ZCGAw60B51IVsP1TCNbWWvuvKEWbH318OVvNqG5bufyCBfatwtRmQhFgXRx2A8RUHI6vqDIkHDeG3VumxPlWwGWf6Ao0lA9B/TYBkstLSR/gEpvqou7dLnpCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749830308; c=relaxed/simple;
-	bh=cGUKaP6dgfpeo+RKTZCV94jyFa+uREbM3iubZvhap0M=;
+	s=arc-20240116; t=1749830778; c=relaxed/simple;
+	bh=mWQ4k6zmVSdHGYS5h1mw8uGV3kLo/0jKlYkTPNaXty8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nndWGyE91EYoCbI9ATMVhf8246wSYZHHELB0Yaw+a9n2IQq5Sk3fo3ZTcyA326Vh0nWHOtrNObLiSBLwriP6xusn81K64A53psiyaWXg+eZc8u1BoIEot+mCCMJIeo1NhJI37tBlfRm+BSdf4objNvxWxtHqsSlOmmz/TqiUbmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pjqt138l; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=ZRfi6cmbTS1hJ/uwbL+14DaptS4nBZElZbV4e1jFeE3mu7Wz1LWKIWQkq8ihHylP5gZ7En07If8QMmtaKnEaafGBkLlQSMHjgAVHqcxpumiAH1/7827W+o9x9Xaow1WkSiqXEXUoTFEzXXVxzen2j9ZjupEVrJDDnHCMqIzL6Ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=in3ln5LO; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pjqt138l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749830307; x=1781366307;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=cGUKaP6dgfpeo+RKTZCV94jyFa+uREbM3iubZvhap0M=;
-  b=Pjqt138lW+iEvt7Srov9kVIQRHYRKcxlw10kLXShQrH1LXNYZSgaJy0O
-   zq1G5w0Rhow9Nw6JcuX658RGeDvhGwQ2LLUjwfNzbc+fTBNSialJeWsVX
-   3DlwofaQ0l3MKdE4WNVhkXcBv3hEZlD+wQ0nGpDwg5/NqPaC1TUgthSzd
-   QwbcURku9tQOfZOKW/tF+NGDLAzGADKHvOo5zJrWTBazXV6Vbms8qtUC3
-   Z1V/ynBhOHgPcn5R1dlj9G+8XQpgFgq5laswbniDntMCPo1muSBwM2vh7
-   /bACBQ15E6GmcLXhG3p0h1LLS88Erq/OpLB2ArH+IjlAVvovx+BJVt9+a
-   g==;
-X-CSE-ConnectionGUID: 7ZWwf9qzRzCXfKLnJd/DNw==
-X-CSE-MsgGUID: w7bB8LruQm+s6wQLf2wvog==
-X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="63403165"
-X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="63403165"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 08:58:25 -0700
-X-CSE-ConnectionGUID: ZNpjhcVcQvCbGVVMZUTnnQ==
-X-CSE-MsgGUID: Q3OrfPCuRPKKipwCiTZe7w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,234,1744095600"; 
-   d="scan'208";a="147743732"
-Received: from iherna2-mobl4.amr.corp.intel.com (HELO [10.125.111.232]) ([10.125.111.232])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 08:58:19 -0700
-Message-ID: <4fed7722-d0f7-4bde-a06b-a003718651ea@intel.com>
-Date: Fri, 13 Jun 2025 08:58:17 -0700
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="in3ln5LO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749830774;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=5N8ym7BOqBZIrhAbASMNB8gRxjZ3JD2Kuq7uCLK3/1Y=;
+	b=in3ln5LOSy/P7FpE2+FaZT9pF33OCo0E97GbEiYogwWbmFW9hZrDDDmQaPehTlIOPtMRB9
+	iA+ne5WX5cBBCUvsQuBM8X3tJtQ23qtLojBddZbqduWdYFUC5Xe4tPmDFPx9c8L9zOCN30
+	MJ8hhUC9chBF1ijowsKef358XQ1zfOE=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-96-UXUyDXihNUaRBdLazVRWhA-1; Fri, 13 Jun 2025 12:06:11 -0400
+X-MC-Unique: UXUyDXihNUaRBdLazVRWhA-1
+X-Mimecast-MFC-AGG-ID: UXUyDXihNUaRBdLazVRWhA_1749830770
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a4e713e05bso1280949f8f.3
+        for <linux-cxl@vger.kernel.org>; Fri, 13 Jun 2025 09:06:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749830770; x=1750435570;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=5N8ym7BOqBZIrhAbASMNB8gRxjZ3JD2Kuq7uCLK3/1Y=;
+        b=FMCC4qTXIRSLLnkU2ZSsw1GGxzoLS1rneS2VVHBsa4qHVIxkGWAn1M2zJstC5AdplN
+         a5NVu+fqFTK7bOnGx2vve9jdRe3/5dwmqqNRJhGYcpQm6/TSswUggL6xVErs+75w4Zde
+         +DU9l+0yByX2W+mWevAm+eACsOb4r9+/qUT7LJtHabKYf+incKAEqkYKPCeFqJQQS5jJ
+         wi6khIyctQUsajZKsQ2CLkRhhXNLsNH1m+pHi8Nr0F+gRCuTjz6Idk0kgHAeqpP2HJYe
+         Whnx0chOaUOmaRqztwaRjAg0jtVktwBwDgq4yY+ot4ndobtxWECpTO2ilWuWZ6XN+JyS
+         ufDA==
+X-Forwarded-Encrypted: i=1; AJvYcCVJNi209sRKEUWuosigSwJRsPCL1Vk/Ijm/St3jMRl6m30EVeXOrcENtD5+QXf8jE1qOd1f2F0+yyA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8lz5kSSNnQvwGN3fFUW1AdH1t/E/YXbkquauL+EVSt9ebXEyE
+	HPswLUcSbjz+my/G/BVtCd+VQZ+Kaldr7Ghm1RRDiTsfAf5+ygUsNK7Nb4al/P+9O/cGRZv6f5A
+	sYI4ESjO9mtzI2bG1gTzij8HyDgan9mWVzXNFzNeVxCXS8/bzuyBUXjMpw7qqvw==
+X-Gm-Gg: ASbGncv7iEj3MbNsSKDvclqugD9Fbm1f7zj+jenmbztTu1vjLvve6AjPZWeOrT5zT6q
+	w+y5oh3XSEl/XtPAu2aDU4XHKx7APQI5ihXqP6zTSdWMH8hPLa7IZRLrx1C20YKgIb1oZhTOgog
+	fUbIL2YhWKNC/ynJMISxj5lfBErrche2EKAJvyEMihMP6STFFYJPoS+x9lZGKbqEUMxaSA+Dxj4
+	yeABBbfmEIf+91rYwRsn3LGqGNk2mPel5dg9S4Lj8miOyBu5itZRSPlCuESwkGJK7SnmhhQDvaU
+	PJOqj4VbFm8f/0V/URRNqPeoWbU4cpOre1p7+Hq0qb7VV2OGOwAy
+X-Received: by 2002:a05:6000:2010:b0:3a4:f70d:8673 with SMTP id ffacd0b85a97d-3a57237dc6cmr359523f8f.25.1749830770217;
+        Fri, 13 Jun 2025 09:06:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEfYXkzkQkAcTvSULfyfCbASOU+hWVQdvFvTPfVCMVGu/s4JrzJeqV9M6p3tgK1zfO5d52NZg==
+X-Received: by 2002:a05:6000:2010:b0:3a4:f70d:8673 with SMTP id ffacd0b85a97d-3a57237dc6cmr359461f8f.25.1749830769654;
+        Fri, 13 Jun 2025 09:06:09 -0700 (PDT)
+Received: from [192.168.3.141] (p57a1a50c.dip0.t-ipconnect.de. [87.161.165.12])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a54d7fsm2807541f8f.18.2025.06.13.09.06.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Jun 2025 09:06:08 -0700 (PDT)
+Message-ID: <85b998c1-b9b7-4a8f-b2f0-f5c6d4ada9c8@redhat.com>
+Date: Fri, 13 Jun 2025 18:06:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,74 +74,140 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 10/28] cxl/test: Use fw_devlink_set_device()
-To: Herve Codina <herve.codina@bootlin.com>, Andrew Lunn <andrew@lunn.ch>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
- Peter Rosin <peda@axentia.se>, Derek Kiernan <derek.kiernan@amd.com>,
- Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
- Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
- Bjorn Helgaas <bhelgaas@google.com>, Mark Brown <broonie@kernel.org>,
- Len Brown <lenb@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Wolfram Sang <wsa@kernel.org>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
- devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-cxl@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>,
- Horatiu Vultur <horatiu.vultur@microchip.com>,
- Steen Hegelund <steen.hegelund@microchip.com>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-References: <20250613134817.681832-1-herve.codina@bootlin.com>
- <20250613134817.681832-11-herve.codina@bootlin.com>
+Subject: Re: [PATCH v3 2/3] mm/huge_memory: don't mark refcounted folios
+ special in vmf_insert_folio_pmd()
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Oscar Salvador <osalvador@suse.de>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Alistair Popple <apopple@nvidia.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Dan Williams <dan.j.williams@intel.com>,
+ Jason Gunthorpe <jgg@nvidia.com>
+References: <20250613092702.1943533-1-david@redhat.com>
+ <20250613092702.1943533-3-david@redhat.com>
+ <aEwseqmFrpNO5NJC@localhost.localdomain>
+ <4acaa46f-f856-4116-917e-08e7c1f3156a@redhat.com>
+ <fec14df9-da28-4717-8e4c-e5997a4c32cb@lucifer.local>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <fec14df9-da28-4717-8e4c-e5997a4c32cb@lucifer.local>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 2-RDEqF3TCKqL3PI34_4x8ofkEc3GNLHvkGtCCThkL0_1749830770
+X-Mimecast-Originator: redhat.com
 Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250613134817.681832-11-herve.codina@bootlin.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-
-
-On 6/13/25 6:47 AM, Herve Codina wrote:
-> The code set directly fwnode.dev field.
+On 13.06.25 16:00, Lorenzo Stoakes wrote:
+> On Fri, Jun 13, 2025 at 03:53:58PM +0200, David Hildenbrand wrote:
+>> On 13.06.25 15:49, Oscar Salvador wrote:
+>>> On Fri, Jun 13, 2025 at 11:27:01AM +0200, David Hildenbrand wrote:
+>>>> Marking PMDs that map a "normal" refcounted folios as special is
+>>>> against our rules documented for vm_normal_page(): normal (refcounted)
+>>>> folios shall never have the page table mapping marked as special.
+>>>>
+>>>> Fortunately, there are not that many pmd_special() check that can be
+>>>> mislead, and most vm_normal_page_pmd()/vm_normal_folio_pmd() users that
+>>>> would get this wrong right now are rather harmless: e.g., none so far
+>>>> bases decisions whether to grab a folio reference on that decision.
+>>>>
+>>>> Well, and GUP-fast will fallback to GUP-slow. All in all, so far no big
+>>>> implications as it seems.
+>>>>
+>>>> Getting this right will get more important as we use
+>>>> folio_normal_page_pmd() in more places.
+>>>>
+>>>> Fix it by teaching insert_pfn_pmd() to properly handle folios and
+>>>> pfns -- moving refcount/mapcount/etc handling in there, renaming it to
+>>>> insert_pmd(), and distinguishing between both cases using a new simple
+>>>> "struct folio_or_pfn" structure.
+>>>>
+>>>> Use folio_mk_pmd() to create a pmd for a folio cleanly.
+>>>>
+>>>> Fixes: 6c88f72691f8 ("mm/huge_memory: add vmf_insert_folio_pmd()")
+>>>> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+>>>> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+>>>> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+>>>> Tested-by: Dan Williams <dan.j.williams@intel.com>
+>>>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>>>
+>>> Altough we have it quite well explained here in the changelog, maybe
+>>> having a little comment in insert_pmd() noting why pmds mapping normal
+>>> folios cannot be marked special would be nice.
+>>
+>> Well, I don't think we should be replicating that all over the place. The
+>> big comment above vm_normal_page() is currently our source of truth (which I
+>> will teak soon further).
 > 
-> Use the dedicated fw_devlink_set_device() helper to perform this
-> operation.
+> Suggestion:
 > 
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> "Kinda self-explanatory (special means don't touch) unless you use museum piece
+> hardware OR IF YOU ARE XEN!"
+> 
+> ;)
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  tools/testing/cxl/test/cxl.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-> index 1db7732a70df..80e6fb3c9a43 100644
-> --- a/tools/testing/cxl/test/cxl.c
-> +++ b/tools/testing/cxl/test/cxl.c
-> @@ -1047,7 +1047,7 @@ static void mock_companion(struct acpi_device *adev, struct device *dev)
->  	device_initialize(&adev->dev);
->  	fwnode_init(&adev->fwnode, NULL);
->  	device_set_node(dev, &adev->fwnode);
-> -	adev->fwnode.dev = dev;
-> +	fw_devlink_set_device(&adev->fwnode, dev);
->  }
->  
->  #ifndef SZ_64G
+I looked into the XEN stuff and it is *extremely* nasty.
+
+No, it doesn't do a pte_mkspecial(). It updates the PTE using ...
+
+	!!! A HYPERCALL !!!
+
+WTF, why did we ever allow that.
+
+It's documented to require GUP to work because ... QEMU AIO. Otherwise 
+we could easily convert it to a proper PFNMAP.
+
+-- 
+Cheers,
+
+David / dhildenb
 
