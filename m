@@ -1,97 +1,108 @@
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6346A78F5E
-	for <linux-cxl@vger.kernel.org>; Fri, 13 Jun 2025 16:08:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E8778F5E;
+	Fri, 13 Jun 2025 17:14:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749830923; cv=none; b=EkvvfS13LFUY7iisdQ+qPNyU+Nr+Xgtr/qpB65jPEk1JntyVgGLrmW0nBdEL1vhQGHwQ/qjRvqO9iyII5juzMw7uzS/MVeJ02yjaodiIRuI+CxwkKdHYDZ+dccXDQz0MWogLUm2Tz9+UzchgD9ajAbxiW/V7zsLpXU4ESWnYaKM=
+	t=1749834882; cv=none; b=vBVIVgRBhHeMnuzp4xFGiCuV1TycAizAtCg2Acxr+L2ojN5Icp5zFHsxcP/6uP20VQ8ItTr78WwLG7nuLAx/+cs99HBMfMG2u4Z2ifmwu7CPq+rs0vqEXhsWFouWtsME3siyr0zxzEUXFnnhLi5xc5ikVYvJ7VU50pi2iU4XxEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749830923; c=relaxed/simple;
-	bh=q0AGVEj3qEhFG+8N5hRJQD66tcaORTK0Qv/mJVuZYFI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WMD2U907JiJQ1PqOVqmhfVj7cMlN4Q2fdt/5OCvdJ86FTQuVzs4WgOHlLwXHwfMbr/fBChv8GIT1u/Vj8OLyR8VNouqfr+eBi1csCPFDU3uDr+lTbqGJfCN1TzH+uiqWy2qKxhDOgtbItOBkHB0yCx/PxKqFA7Z7GFVUC30HrLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mgbgi2lW; arc=none smtp.client-ip=209.85.128.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mgbgi2lW"
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-70e447507a0so17148937b3.0
-        for <linux-cxl@vger.kernel.org>; Fri, 13 Jun 2025 09:08:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749830920; x=1750435720; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=q0AGVEj3qEhFG+8N5hRJQD66tcaORTK0Qv/mJVuZYFI=;
-        b=mgbgi2lW17DFlLCGjLaImvxLHsHoHhh6Ow40uHldlOjfGTt90Yd0mjcJrH0U76Tmeu
-         BKV6sDVRgh/B4z9IFR3boVT3qbHEnEgHN7F/9wYR6O7MaumOUPuve3JY92SMnTCxr181
-         CtKShX4HuGSHGobKdy9rvg+PmHseiZmMap2LrelxkCmVGQ4rcbedGurBJAT+/D8oCUSh
-         VX/rrbV7MrqJGcni9FWuDAno3UI9gqqxNqs+ns4LQMDn4rj4KLWlPXbT3IextxdJeu35
-         mVOmkLMEU8JIg305s5C5+3hG5hoxU6QFxZTwRqeWtxrym2XCP6Gs43b14jJGCnzdUuRU
-         dSFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749830920; x=1750435720;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=q0AGVEj3qEhFG+8N5hRJQD66tcaORTK0Qv/mJVuZYFI=;
-        b=LLS0GYrOZYS5K9Rcbhsa9WSwvjQLC8K9VIIuojJZan8pEKVuoI677HhNrDDu/oEKqF
-         aIGKA24vYDXQlKuTbgo63MrpnUnPqAiy+TYACKir9y3Bs79z9+TCSCZIvunzInauax0I
-         kf7V6DFEEYmtnikNfqBfTPEfK4g5TOR37zkHmYhYw8T3pXQrJsT9LzM0847aA5RBYED6
-         CoMJ9jjRQpyS/OtTbhDE91qpeAY3ssnkpaR+j6sWRq1DsofBGg8kQfufF04ceddfzALx
-         WrDTeGlDpUuyZv9YLZX8JVbkd47bePmy76sok07VuzgSk6XJlV9hgjg8hPkmzCca4sxA
-         hpow==
-X-Forwarded-Encrypted: i=1; AJvYcCWt8NGdWwpCdmtRub+LRi+uxFCL3ugwyz1TYkwd8mirUK5piwdrKbpOgl1kqCEg6sZnv9nkHEYSGVM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyjplbhk3okVxFEWi0XbKV3ADphKVZ8m8FRTV9PCjVC55GhvfwD
-	RrZVgVcGCfsu2J0LTAuD1/cdywjXReqcYbkGXU+ZWVkOT9qFQu0S9Zc146+9qrd1J3M4v9CVAOF
-	vjUJo9vtMoLSlLp2PwRRZx3RC9m3M3O/XzGU+bAy2PA==
-X-Gm-Gg: ASbGnct82fgom4si2WyLwmMB8lM5yhCSH+SHdejYF0GQxvHPzhocJIkmjP9X3JA/D0a
-	WxeKByosdV6A78MFOwouJo8NzpdyTrgROXd2PIV8/IYVb2FaEZEckj9booEnw2FmE4ZaQ/h1+uW
-	yOFrsMszRBp3y+2RcvvS2QfzzS+i7iw3q6JxDeAZ6xKyO6
-X-Google-Smtp-Source: AGHT+IHElaU3RUXZGp1oeZWJCJPSrUK/n0tHMa2uBoZHgT+aAWen+V+PnRFJAoQg0vBu1VZiHvd4z51Hi6eHefpTBI4=
-X-Received: by 2002:a05:690c:dc1:b0:6fb:1e5a:fcdd with SMTP id
- 00721157ae682-711637ab1e3mr54822697b3.17.1749830920354; Fri, 13 Jun 2025
- 09:08:40 -0700 (PDT)
+	s=arc-20240116; t=1749834882; c=relaxed/simple;
+	bh=qu+qSuW1vVQPvFQiNyNWumlLgRt91hsgnA+dNwyAfIw=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rXenOGzOZkF68CCJoRM/Rq7LldoORhaZ2P5/4MZvkXgjYDeX3/MWMm3SPHY/iztzxy0jBqwV8sgPCpU/dUmW2PQtUY+kPTkqkoPc02etCMX/hbl/Gj2n2Djq0PpBVpyV5wR93gNIfzuJmMWgY8a52cTJdJVBgNJSHESqneLBzHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bJmDQ068yz6L4wf;
+	Sat, 14 Jun 2025 01:12:38 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id C596214033C;
+	Sat, 14 Jun 2025 01:14:36 +0800 (CST)
+Received: from localhost (10.122.19.247) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 13 Jun
+ 2025 19:14:36 +0200
+Date: Fri, 13 Jun 2025 18:14:34 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Yicong Yang <yangyicong@huawei.com>
+CC: Catalin Marinas <catalin.marinas@arm.com>, <yangyicong@hisilicon.com>,
+	<linux-cxl@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<james.morse@arm.com>, <conor@kernel.org>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linuxarm@huawei.com>, Yushan Wang
+	<wangyushan12@huawei.com>, <linux-mm@kvack.org>,
+	<gregkh@linuxfoundation.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, Mark
+ Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>, "Dan Williams"
+	<dan.j.williams@intel.com>
+Subject: Re: [RFC PATCH 2/6] arm64: Support
+ ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION
+Message-ID: <20250613181434.00004e7e@huawei.com>
+In-Reply-To: <64ae0e68-b025-4a33-9389-5393ee887fb4@huawei.com>
+References: <20250320174118.39173-1-Jonathan.Cameron@huawei.com>
+	<20250320174118.39173-3-Jonathan.Cameron@huawei.com>
+	<Z-bo7AQ1h6VQr65V@arm.com>
+	<64ae0e68-b025-4a33-9389-5393ee887fb4@huawei.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612134338.1871023-1-Jonathan.Cameron@huawei.com>
- <20250612134338.1871023-3-Jonathan.Cameron@huawei.com> <CAFEAcA8eC9TpGyrMARRUWs4q1o7LACD03zLAwPnTRU+m98LrWQ@mail.gmail.com>
- <20250613140954.000013f5@huawei.com>
-In-Reply-To: <20250613140954.000013f5@huawei.com>
-From: Peter Maydell <peter.maydell@linaro.org>
-Date: Fri, 13 Jun 2025 17:08:28 +0100
-X-Gm-Features: AX0GCFtBfo3kmQAF6wwgQG8QxEjF53UX0ugXUJJfukHAY7fltSOjcRO4-bqAPPo
-Message-ID: <CAFEAcA_ZbAnUS4Ufa+jsOgj6aeRS5JHJP=scw6d0qXd3NNtqdA@mail.gmail.com>
-Subject: Re: [PATCH v15 2/4] hw/cxl: Make the CXL fixed memory windows devices.
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: qemu-devel@nongnu.org, Fan Ni <fan.ni@samsung.com>, mst@redhat.com, 
-	Zhijian Li <lizhijian@fujitsu.com>, Itaru Kitayama <itaru.kitayama@linux.dev>, linuxarm@huawei.com, 
-	linux-cxl@vger.kernel.org, qemu-arm@nongnu.org, 
-	Yuquan Wang <wangyuquan1236@phytium.com.cn>, 
-	=?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <philmd@linaro.org>, 
-	Alireza Sanaee <alireza.sanaee@huawei.com>, =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Fri, 13 Jun 2025 at 14:10, Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
-> For these specific devices (the fixed memory windows) there isn't
-> any state as they are representing fixed configuration of the system.
-> The state is all in the host bridges and beyond. I'll add
-> a comment as you suggest.
->
-> Currently CXL emulation is completely broken wrt to migration and
-> there are some known issues for reset as well. Both are on the list
-> of things to fix. Migration is less important as the only current use
-> for this stuff is running software stack test cases and for that
-> migration isn't currently of interest - that will change for some
-> of the virtualization related work that is just getting started.
+On Sat, 29 Mar 2025 15:14:14 +0800
+Yicong Yang <yangyicong@huawei.com> wrote:
 
-That's OK as long as something somewhere is registering a
-migration-blocker so there's a useful error message if the
-user ever tries it.
+> On 2025/3/29 2:22, Catalin Marinas wrote:
+> > On Thu, Mar 20, 2025 at 05:41:14PM +0000, Jonathan Cameron wrote:  
+> >> +struct system_cache_flush_method {
+> >> +	int (*invalidate_memregion)(int res_desc,
+> >> +				    phys_addr_t start, size_t len);
+> >> +};  
+> > [...]  
+> >> +int cpu_cache_invalidate_memregion(int res_desc, phys_addr_t start, size_t len)
+> >> +{
+> >> +	guard(spinlock_irqsave)(&scfm_lock);
+> >> +	if (!scfm_data)
+> >> +		return -EOPNOTSUPP;
+> >> +
+> >> +	return scfm_data->invalidate_memregion(res_desc, start, len);
+> >> +}  
+> > 
+> > WBINVD on x86 deals with the CPU caches as well. Even the API naming in
+> > Linux implies CPU caches. IIUC, devices registering to the above on Arm
+> > SoCs can only deal with system caches. Is it sufficient?
+> >   
+> 
+> The device driver who register this method should handle this. If the
+> hardware support maintaining the coherency among the system, for example
+> on system cache invalidation the hardware is also able to invalidate the
+> involved cachelines on all the subordinate caches (L1/L2/etc, by back
+> invalidate snoop or other ways), then software don't need to invalidate
+> the non-system cache explicitly. Otherwise the driver need to explicitly
+> invalidate the non-system cache explicitly in their
+> scfm_data::invalidate_memregion() method. Here in the generally code we
+> simply don't know the capability of the hardware.
 
--- PMM
+Coming to this a little late.  It would definitely be helpful to understand
+whether other hardware implementations where this is relevant (e.g. CXL
+capable systems) do require explicit flushes of the caches nearer the
+CPU and any dance that they need in that case to ensure no race conditions
+leave stale lines.
+
+The PSCI spec (that never was) did allow for reporting that it was necessary
+to stop all traffic prior to flushes, but that is crazy to support and
+someone built the wrong system if they need to do that under even
+vaguely normal software flows.
+
+Jonathan
+ 
+> 
+> Thanks.
+> 
+
