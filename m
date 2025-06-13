@@ -1,311 +1,283 @@
-Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8113D7082A
-	for <linux-cxl@vger.kernel.org>; Fri, 13 Jun 2025 05:07:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 371B42D0267
+	for <linux-cxl@vger.kernel.org>; Fri, 13 Jun 2025 07:44:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749791270; cv=none; b=hW5Ru9OzloGl0oV/U/JwaPwrcoiFjkplJH3AVMFEuXuvlD74YP4yl0ogGGIwsgmcE3bknJQQaqZDQDc9IZppAARcjPqsXueZl+LXMcxs/sijmLeuLjFm3nSDRKNeMQyx8C2L6VMIW3H0/yze0kY40oTpRtB48i322op7JkeNJ7Y=
+	t=1749800662; cv=none; b=SJxt5FT/sa4AFJ+ut9oIC+nIfle/hU0eO+Z3/z3PwdsBM/uE9cVm/Nncd2bJ7R6xHfPmkGjuEtJjWKmwvxQfXUbOyi9UjrutNDUcAPyvtYp5wrqVmPdh/bheAOObNAtJqUxWzR6t7nfSmsf2gZlSVpcYpQt+ouZwsbKp9vObh3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749791270; c=relaxed/simple;
-	bh=6Tlt6vC2uJeOxu0e8u7xS85MBacejBM2mPsqFr1NFZk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IRbgX5hMp2pb10+b4SU+ARhHjVwgi6DPBq+IAYplez3S4Ni6mWijLIgVNUkgybPTo07eMo3xTQwSosXvZsApLzBa9/q5lfaaDX4PmyJz0LkzhmzLptQi0QJfXN0cJJVnFLPLUT3AJhR2sKHejKVVcQpr+5A59+MNHgDHj9u2nCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=owWRlRIk; arc=none smtp.client-ip=95.215.58.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1749800662; c=relaxed/simple;
+	bh=EnVnrBmOV7rIEgq7QH/fwD0t8DU3lxRyCJYZ7Y8djus=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZJ2l4i/LQ/vy8YTTs6Mb4i7ZP3SaZ+hWQh8YHz44CEysLUXPCZfAVumgsqfV8RkgUQ84255XYhBxpIsvztpO97u8udOvSih2hpQ1OLGkZFkkFMOHGyFbc0H748bY4sGCAE2Lr3tT8JSl5/HnBopOmkGNCX/kM4sDNOg2rN1Vgbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J2h5ELs1; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="owWRlRIk"
-Date: Fri, 13 Jun 2025 14:07:32 +0900
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1749791263;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J2h5ELs1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749800659;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GkvK5CwdgTfzVehhlYR/22C54raijMQHPJxq6LFqbdk=;
-	b=owWRlRIkBTst+zGWjbylA7nMnpcr5DxGdKnE/gq+3A2S0wPMxh7SZEB40s2AOFKDCKD3Fk
-	4gEtN4oOPkXfSrNGA/tHbpKutatyo7qk4IcAKU3S70H2/ruK/NJ6M4D4yzUBZWHt38Iztp
-	XMpzVwtdqiaKEcK7SiBhdCJmNksm9kQ=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Itaru Kitayama <itaru.kitayama@linux.dev>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: qemu-devel@nongnu.org, Fan Ni <fan.ni@samsung.com>,
-	Peter Maydell <peter.maydell@linaro.org>, mst@redhat.com,
-	Zhijian Li <lizhijian@fujitsu.com>, linuxarm@huawei.com,
-	linux-cxl@vger.kernel.org, qemu-arm@nongnu.org,
-	Yuquan Wang <wangyuquan1236@phytium.com.cn>,
-	Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
-	Alireza Sanaee <alireza.sanaee@huawei.com>,
-	Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>
-Subject: Re: [PATCH v15 0/4] arm/virt: CXL support via pxb_cxl
-Message-ID: <aEuyFHlk7t7wiLvU@vm4>
-References: <20250612134338.1871023-1-Jonathan.Cameron@huawei.com>
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=jGTjyGqgLpAkXFQhlYftBGt/d0bSUT/7S3I84fIEcgc=;
+	b=J2h5ELs1rVil9IIK+ZXshuydWbZISTc/PSPQFQYCqX3p4hp403/KwC2S3O95gozjM6eqvT
+	SrRjDEAUm/5ua6KyX/QjKBjaPaukQj8p/Jl64TEI3LcMZhR9Vo0zbMGJ33AzLWPGBopQQJ
+	xAk93c/I9qZSSAGedcipg+AbQyFB3ck=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-50-dGgYFOw-PS2R2AzTulvKCQ-1; Fri, 13 Jun 2025 03:44:16 -0400
+X-MC-Unique: dGgYFOw-PS2R2AzTulvKCQ-1
+X-Mimecast-MFC-AGG-ID: dGgYFOw-PS2R2AzTulvKCQ_1749800655
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a3696a0d3aso753221f8f.2
+        for <linux-cxl@vger.kernel.org>; Fri, 13 Jun 2025 00:44:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749800654; x=1750405454;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=jGTjyGqgLpAkXFQhlYftBGt/d0bSUT/7S3I84fIEcgc=;
+        b=V6ccN0fNuV+ha6dyW7vPv6C3XM9Seoga3LwHPGr9QCgblKEPeMspef8ybkSu2k0D0C
+         GpSAyeTAs3VD0CmhuhcfdzxHczCxxdtbgAVvLNHUzpSgQUerWnqKWXsOu31uu0Xs1H1O
+         KGmO/+mD7M3L2AX0OsQAqSrnVj7Gt6FEcjjX2w23F+9IwVzerLj/LQGdfnEH7VepaR1i
+         O7FPrj9hVBPsUmANPCv9hOAU0eVMqSasjqqdoCu2kddtqihhiTxfjthvqlJgfJY8YR2v
+         9CaKFzDyEY+G5IYeslszlssiFjypA9MNd3Fx6v9BX1EqGtHgV/Mf8Kvju893OeWpNT8W
+         YYaA==
+X-Forwarded-Encrypted: i=1; AJvYcCXIBTIDx/cv8fEIArJuVAjCSOjBetohq/CVyedjOnishqR0f+8loTwd0K3zsYZZBKyZV9M/Jq+3IM0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2LFCyZRmphsRlSkUBgvgFSxR7XYhNLbvg648XfwktjHxqaWoJ
+	PAqOCvvOBueg4gWS5qhd0uKyQhrKEykznAdCfAJI3N3RLJOStU8rrn3/y1j/1nBG/XHGaD7FWC3
+	fZQtprcE1LqqZpnJ5HJ75C6E8RN8LDxAPOEBdZRdTsw8SCyqoDGKYQ+9jK8WL4w==
+X-Gm-Gg: ASbGnctqaXzN66h4ciGGXJaQFFbJ/+8NpKxKIdEpI3J2r86PHC9pCbtBPhPBQbU0v0i
+	Q5Eq2Mz/QDyo8ZmSPyPPlK5Lsev3aQA0QGgFee0eLe22+eAyhn2L/VYFt9r5EKIYI/QeYcSxOPx
+	PECQly1Hj/ge8kHiXcDmnP8G613v+6zhjJO6XirgrSm80+iKGttAVYq9y2bp464Hfq8xANRWufx
+	F1S5xdemXBkcAwVB61p8IGywbNLNfcyV4ugxGJRSgNaAfZOyiUROcmRaMU1dINrhGMA8CAA6Ofz
+	Pvh14E8yu/0iCe4Y+RHsuzYYLjP0MGJ7mIN3SG8xGmHjFugOThF6MqwfQxDtMkSiSPqSwRZL9XU
+	QeH7SPfUReXyJlUQ7DeiyY0OK+lVVW4u6fMIlYV+kmnBgwPjhlg==
+X-Received: by 2002:a05:6000:2085:b0:3a4:d6ed:8df7 with SMTP id ffacd0b85a97d-3a568738d6amr1803374f8f.59.1749800654630;
+        Fri, 13 Jun 2025 00:44:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGl/T3bpZSTH6EemLwcTOlSFsSb99biE42PVbkwHnNV+UQgVHq5uEEmxu+Q9QQsb+MD/3RwxQ==
+X-Received: by 2002:a05:6000:2085:b0:3a4:d6ed:8df7 with SMTP id ffacd0b85a97d-3a568738d6amr1803335f8f.59.1749800654148;
+        Fri, 13 Jun 2025 00:44:14 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f1a:3700:2982:b5f7:a04e:4cb4? (p200300d82f1a37002982b5f7a04e4cb4.dip0.t-ipconnect.de. [2003:d8:2f1a:3700:2982:b5f7:a04e:4cb4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b09148sm1547927f8f.58.2025.06.13.00.44.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Jun 2025 00:44:13 -0700 (PDT)
+Message-ID: <51520205-07f5-45c2-b3e3-cf58a95d9fe6@redhat.com>
+Date: Fri, 13 Jun 2025 09:44:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250612134338.1871023-1-Jonathan.Cameron@huawei.com>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] mm/huge_memory: don't mark refcounted folios
+ special in vmf_insert_folio_pmd()
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, nvdimm@lists.linux.dev,
+ linux-cxl@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+ Alistair Popple <apopple@nvidia.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Dan Williams <dan.j.williams@intel.com>,
+ Oscar Salvador <osalvador@suse.de>
+References: <20250611120654.545963-1-david@redhat.com>
+ <20250611120654.545963-3-david@redhat.com>
+ <434c6cfd-ba83-4d3c-8bde-736fcb8e9d91@lucifer.local>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <434c6cfd-ba83-4d3c-8bde-736fcb8e9d91@lucifer.local>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: koDORSjW8qHn-SpPkFOwsxf2sp6077ht65iMjmQtJKU_1749800655
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 12, 2025 at 02:43:34PM +0100, Jonathan Cameron wrote:
-> v15:
->   - Split the address map calculations and mmio setup into separate
->     functions in patch 2, allowing v14 patch 3 to be dropped as not
->     x86 and arm make the same calls.  Note I felt this was a sufficient
->     change to trigger dropping tags. (Zhijian Li)
->   - A few other minor tweaks.
->   - TLB issue mentioned in v14 now fixed upstream so dropped reference
->     in this cover letter.
+On 12.06.25 18:10, Lorenzo Stoakes wrote:
+> On Wed, Jun 11, 2025 at 02:06:53PM +0200, David Hildenbrand wrote:
+>> Marking PMDs that map a "normal" refcounted folios as special is
+>> against our rules documented for vm_normal_page().
+>>
+>> Fortunately, there are not that many pmd_special() check that can be
+>> mislead, and most vm_normal_page_pmd()/vm_normal_folio_pmd() users that
+>> would get this wrong right now are rather harmless: e.g., none so far
+>> bases decisions whether to grab a folio reference on that decision.
+>>
+>> Well, and GUP-fast will fallback to GUP-slow. All in all, so far no big
+>> implications as it seems.
+>>
+>> Getting this right will get more important as we use
+>> folio_normal_page_pmd() in more places.
+>>
+>> Fix it by teaching insert_pfn_pmd() to properly handle folios and
+>> pfns -- moving refcount/mapcount/etc handling in there, renaming it to
+>> insert_pmd(), and distinguishing between both cases using a new simple
+>> "struct folio_or_pfn" structure.
+>>
+>> Use folio_mk_pmd() to create a pmd for a folio cleanly.
+>>
+>> Fixes: 6c88f72691f8 ("mm/huge_memory: add vmf_insert_folio_pmd()")
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
 > 
-> Thanks to Itaru Kitayama and Zhijian Li for testing + reviews.
+> Looks good to me, checked that the logic remains the same. Some micro
+> nits/thoughts below. So:
 > 
-> Updated cover letter
-> 
-> Back in 2022, this series stalled on the absence of a solution to device
-> tree support for PCI Expander Bridges (PXB) and we ended up only having
-> x86 support upstream. I've been carrying the arm64 support out of tree
-> since then, with occasional nasty surprises (e.g. UNIMP + DT issue seen
-> a few weeks ago) and a fair number of fiddly rebases.
-> gitlab.com/jic23/qemu cxl-<latest date>.  Will update shortly with this
-> series.
-> 
-> A recent discussion with Peter Maydell indicated that there are various
-> other ACPI only features now, so in general he might be more relaxed
-> about DT support being necessary. The upcoming vSMMUv3 support would
-> run into this problem as well.
-> 
-> I presented the background to the PXB issue at Linaro connect 2022. In
-> short the issue is that PXBs steal MMIO space from the main PCI root
-> bridge. The challenge is knowing how much to steal.
-> 
-> On ACPI platforms, we can rely on EDK2 to perform an enumeration and
-> configuration of the PCI topology and QEMU can update the ACPI tables
-> after EDK2 has done this when it can simply read the space used by the
-> root ports. On device tree, there is no entity to figure out that
-> enumeration so we don't know how to size the stolen region.
-> 
-> Three approaches were discussed:
-> 1) Enumerating in QEMU. Horribly complex and the last thing we want is a
->    3rd enumeration implementation that ends up out of sync with EDK2 and
->    the kernel (there are frequent issues because of how those existing
->    implementations differ.
-> 2) Figure out how to enumerate in kernel. I never put a huge amount of work
->    into this, but it seemed likely to involve a nasty dance with similar
->    very specific code to that EDK2 is carrying and would very challenging
->    to upstream (given the lack of clarity on real use cases for PXBs and
->    DT).
-> 3) Hack it based on the control we have which is bus numbers.
->    No one liked this but it worked :)
-> 
-> The other little wrinkle would be the need to define full bindings for CXL
-> on DT + implement a fairly complex kernel stack as equivalent in ACPI
-> involves a static table, CEDT, new runtime queries via _DSM and a description
-> of various components. Doable, but so far there is no interest on physical
-> platforms. Worth noting that for now, the QEMU CXL emulation is all about
-> testing and developing the OS stack, not about virtualization (performance
-> is terrible except in some very contrived situations!)
-> 
-> There is only a very simple test in here, because my intent is not to
-> duplicate what we have on x86, but just to do a smoke test that everything
-> is hooked up.  In general we need much more comprehensive end to end CXL
-> tests but that requires a reaonsably stable guest software stack. A few
-> people have expressed interest in working on that, but we aren't there yet.
-> 
-> Note that this series has a very different use case to that in the proposed
-> SBSA-ref support:
-> https://lore.kernel.org/qemu-devel/20250117034343.26356-1-wangyuquan1236@phytium.com.cn/
-> 
-> SBSA-ref is a good choice if you want a relatively simple mostly fixed
-> configuration.  That works well with the limited host system
-> discoverability etc as EDK2 can be build against a known configuration.
-> 
-> My interest with this support in arm/virt is support host software stack
-> development (we have a wide range of contributors, most of whom are working
-> on emulation + the kernel support). I care about the weird corners. As such
-> I need to be able to bring up variable numbers of host bridges, multiple CXL
-> Fixed Memory Windows with varying characteristics (interleave etc), complex
-> NUMA topologies with wierd performance characteristics etc. We can do that
-> on x86 upstream today, or my gitlab tree. Note that we need arm support
-> for some arch specific features in the near future (cache flushing).
-> Doing kernel development with this need for flexibility on SBSA-ref is not
-> currently practical. SBSA-ref CXL support is an excellent thing, just
-> not much use to me for this work.
-> 
-> Also, we are kicking off some work on DCD virtualization, particularly to
-> support inter-host shared memory being presented up into a VM. That
-> will need upstream support on arm64 as it is built on top of the existing
-> CXL emulation to avoid the need for a separate guest software stack.
-> 
-> Note this is TCG only - it is possible to support limited use with KVM but
-> that needs additional patches not yet ready for upstream.  The challenge
-> is interleave - and the solution is don't interleave if you want to run
-> with KVM.
+> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
-One of the ndctl:cxl tests fails (other tests ran ok):
-
-# meson test cxl-region-sysfs.sh
-ninja: Entering directory `/root/ndctl/build'
-[1/55] Generating version.h with a custom command
-[  706.564783][ T2080] calling  cxl_port_init+0x0/0xfe0 [cxl_port] @ 2080
-[  706.566861][ T2080] initcall cxl_port_init+0x0/0xfe0 [cxl_port] returned 0 after 1735 usecs
-[  706.586457][ T2080] calling  cxl_acpi_init+0x0/0xfe0 [cxl_acpi] @ 2080
-[  706.625690][ T2080] probe of port1 returned 0 after 25381 usecs
-[  706.626634][ T2080]  pci0000:bf: host supports CXL
-[  706.653573][ T2080] probe of port2 returned 0 after 25631 usecs
-[  706.655164][ T2080]  pci0000:35: host supports CXL
-[  706.662409][ T2080] probe of ACPI0017:00 returned 0 after 74464 usecs
-[  706.663150][ T2080] initcall cxl_acpi_init+0x0/0xfe0 [cxl_acpi] returned 0 after 76306 usecs
-[  706.690482][ T2080] calling  cxl_pmem_init+0x0/0xfd0 [cxl_pmem] @ 2080
-[  706.695324][ T2080] probe of ndbus0 returned 0 after 1496 usecs
-[  706.699217][ T2080] probe of nvdimm-bridge0 returned 0 after 6705 usecs
-[  706.702372][ T2080] initcall cxl_pmem_init+0x0/0xfd0 [cxl_pmem] returned 0 after 11576 usecs
-[  706.717668][ T2080] calling  cxl_mem_driver_init+0x0/0xfe0 [cxl_mem] @ 2080
-[  706.758561][ T2080] probe of port3 returned 0 after 34188 usecs
-[  706.767080][ T2080] cxl_nvdimm pmem11: GPF: could not set dirty shutdown state
-[  706.779392][ T2080] probe of nmem0 returned 0 after 1083 usecs
-[  706.782181][ T2080] probe of pmem11 returned 0 after 15516 usecs
-[  706.826941][ T2080] probe of endpoint4 returned 0 after 42630 usecs
-[  706.827987][ T2080] probe of mem11 returned 0 after 108475 usecs
-[  706.878052][ T2080] probe of port5 returned 0 after 41354 usecs
-[  706.938260][ T2080] probe of endpoint6 returned 0 after 46831 usecs
-[  706.939223][ T2080] probe of mem12 returned 0 after 105104 usecs
-[  706.994611][ T2080] probe of endpoint7 returned 0 after 49337 usecs
-[  706.995790][ T2080] probe of mem13 returned 0 after 53632 usecs
-[  707.004334][ T2080] cxl_nvdimm pmem14: GPF: could not set dirty shutdown state
-[  707.017782][ T2080] probe of nmem1 returned 0 after 1115 usecs
-[  707.019324][ T2080] probe of pmem14 returned 0 after 14920 usecs
-[  707.072148][ T2080] probe of endpoint8 returned 0 after 50887 usecs
-[  707.073367][ T2080] probe of mem14 returned 0 after 71279 usecs
-[  707.079062][ T2080] initcall cxl_mem_driver_init+0x0/0xfe0 [cxl_mem] returned 0 after 361073 usecs
-[  707.111533][ T2080] calling  cxl_test_init+0x0/0xc88 [cxl_test] @ 2080
-[  708.001403][ T2080] platform cxl_host_bridge.0: Unsupported platform config, mixed Virtual Host and Restricted CXL Host hierarchy.
-[  708.002032][ T2080] platform cxl_host_bridge.1: Unsupported platform config, mixed Virtual Host and Restricted CXL Host hierarchy.
-[  708.010988][ T2080] platform cxl_host_bridge.2: Unsupported platform config, mixed Virtual Host and Restricted CXL Host hierarchy.
-[  708.011963][ T2080] platform cxl_host_bridge.3: Unsupported platform config, mixed Virtual Host and Restricted CXL Host hierarchy.
-[  708.034604][ T2080] platform cxl_host_bridge.0: Unsupported platform config, mixed Virtual Host and Restricted CXL Host hierarchy.
-[  708.056775][ T2080] probe of port10 returned 0 after 20555 usecs
-[  708.057814][ T2080] platform cxl_host_bridge.0: host supports CXL
-[  708.062226][ T2080] platform cxl_host_bridge.1: Unsupported platform config, mixed Virtual Host and Restricted CXL Host hierarchy.
-[  708.081857][ T2080] probe of port11 returned 0 after 18696 usecs
-[  708.085821][ T2080] platform cxl_host_bridge.1: host supports CXL
-[  708.086496][ T2080] platform cxl_host_bridge.2: Unsupported platform config, mixed Virtual Host and Restricted CXL Host hierarchy.
-[  708.538268][ T2080] probe of port12 returned 0 after 450064 usecs
-[  708.563248][ T2080] platform cxl_host_bridge.2: host supports CXL
-[  708.563875][ T2080] platform cxl_host_bridge.3: host supports CXL (restricted)
-[  708.803640][ T2080] probe of ndbus1 returned 0 after 87373 usecs
-[  708.817241][ T2080] probe of nvdimm-bridge1 returned 0 after 182992 usecs
-[  708.839172][ T2080] probe of cxl_acpi.0 returned 0 after 843615 usecs
-[  709.026867][  T503] cxl_mock_mem cxl_mem.0: CXL MCE unsupported
-[  709.240435][  T502] cxl_mock_mem cxl_mem.1: CXL MCE unsupported
-[  709.263055][  T499] cxl_mock_mem cxl_mem.2: CXL MCE unsupported
-[  709.317257][  T503] probe of port13 returned 0 after 57147 usecs
-[  709.442524][  T498] cxl_mock_mem cxl_mem.3: CXL MCE unsupported
-[  709.495789][  T499] probe of port15 returned 0 after 57022 usecs
-[  709.538513][ T1514] cxl_mock_mem cxl_mem.5: CXL MCE unsupported
-[  709.553021][  T503] probe of nmem3 returned 0 after 12329 usecs
-[  709.555876][  T503] probe of pmem0 returned 0 after 54954 usecs
-[  709.567823][  T499] probe of nmem2 returned 0 after 27577 usecs
-[  709.569359][  T499] probe of pmem2 returned 0 after 64505 usecs
-[  709.603845][  T497] cxl_mock_mem cxl_mem.4: CXL MCE unsupported
-[  709.626487][   T12] cxl_mock_mem cxl_mem.6: CXL MCE unsupported
-[  709.639194][  T502] probe of port14 returned 0 after 255539 usecs
-[  709.662671][  T503] probe of region2 returned 6 after 421 usecs
-[  709.664855][  T503] cxl_mock_mem cxl_mem.0: Extended linear cache calculation failed rc:-2
-[  709.694975][  T503] probe of endpoint16 returned 0 after 100427 usecs
-[  709.698678][  T503] probe of mem0 returned 0 after 516964 usecs
-[  709.752821][   T49] cxl_mock_mem cxl_mem.7: CXL MCE unsupported
-[  709.782050][  T499] probe of endpoint17 returned 0 after 102692 usecs
-[  709.814422][  T499] probe of mem2 returned 0 after 539843 usecs
-[  709.859496][  T497] probe of nmem4 returned 0 after 74368 usecs
-[  709.860064][  T497] probe of pmem5 returned 0 after 120134 usecs
-[  709.862431][  T499] probe of cxl_mem.2 returned 0 after 686512 usecs
-[  709.863290][  T503] probe of cxl_mem.0 returned 0 after 892734 usecs
-[  709.870924][   T30] cxl_mock_mem cxl_mem.9: CXL MCE unsupported
-[  709.876631][ T2080] initcall cxl_test_init+0x0/0xc88 [cxl_test] returned 0 after 2764528 usecs
-[  709.886776][  T498] probe of port18 returned 0 after 168122 usecs
-[  709.900934][  T500] cxl_mock_mem cxl_mem.8: CXL MCE unsupported
-[  709.946498][ T1514] probe of nmem5 returned 0 after 9462 usecs
-[  709.947381][ T1514] probe of pmem4 returned 0 after 14445 usecs
-[  709.970022][   T12] probe of nmem6 returned 0 after 32603 usecs
-[  709.978337][  T498] probe of nmem7 returned 0 after 35875 usecs
-[  709.986071][  T498] probe of pmem3 returned 0 after 46583 usecs
-[  710.010717][   T12] probe of pmem6 returned 0 after 75369 usecs
-[  710.014337][  T501] cxl_mock_mem cxl_rcd.10: CXL MCE unsupported
-[  710.040337][  T502] probe of nmem8 returned 0 after 29862 usecs
-[  710.059653][  T502] probe of pmem1 returned 0 after 88935 usecs
-[  710.079573][   T12] probe of endpoint23 returned 0 after 49198 usecs
-[  710.097280][   T30] probe of port21 returned 0 after 120461 usecs
-[  710.097393][   T49] probe of nmem9 returned 0 after 26437 usecs
-[  710.101820][   T49] probe of pmem7 returned 0 after 36944 usecs
-[  710.106202][   T12] probe of mem6 returned 0 after 452293 usecs
-[  710.130816][   T12] probe of cxl_mem.6 returned 0 after 669975 usecs
-[  710.133959][  T500] probe of nmem10 returned 0 after 12351 usecs
-[  710.170179][  T500] probe of pmem9 returned 0 after 50316 usecs
-[  710.183178][  T498] probe of endpoint22 returned 0 after 160579 usecs
-[  710.208790][  T498] probe of mem3 returned 0 after 760551 usecs
-[  710.212463][  T501] probe of endpoint24 returned 0 after 149792 usecs
-[  710.236975][  T497] probe of dax2.0 returned 0 after 118646 usecs
-[  710.240952][  T497] probe of dax_region2 returned 0 after 166940 usecs
-[  710.242545][  T498] probe of cxl_mem.3 returned 0 after 917362 usecs
-[  710.256278][   T30] probe of nmem11 returned 0 after 45572 usecs
-[  710.257079][   T30] probe of pmem8 returned 0 after 105691 usecs
-[  710.259332][  T501] probe of mem10 returned 0 after 218194 usecs
-[  710.265545][  T497] probe of region2 returned 0 after 225563 usecs
-[  710.269232][ T1514] probe of endpoint20 returned 0 after 320269 usecs
-[  710.282299][  T497] probe of endpoint19 returned 0 after 421116 usecs
-[  710.283234][  T497] probe of mem5 returned 0 after 642268 usecs
-[  710.304734][ T1514] probe of mem4 returned 0 after 762768 usecs
-[  710.322940][   T49] probe of endpoint26 returned 0 after 117975 usecs
-[  710.324643][   T49] probe of mem7 returned 0 after 558032 usecs
-[  710.336434][  T501] probe of cxl_rcd.10 returned 0 after 414904 usecs
-[  710.339624][  T497] probe of cxl_mem.4 returned 0 after 957535 usecs
-[  710.400496][ T1514] probe of cxl_mem.5 returned 0 after 996364 usecs
-[  710.450320][   T49] probe of cxl_mem.7 returned 0 after 842769 usecs
-[  710.648851][  T500] probe of endpoint25 returned 0 after 477479 usecs
-[  710.659334][  T500] probe of mem9 returned 0 after 690185 usecs
-[  710.706030][  T500] probe of cxl_mem.8 returned 0 after 917194 usecs
-[  711.162896][   T30] probe of endpoint28 returned 0 after 493899 usecs
-[  711.227336][   T30] probe of mem8 returned 0 after 1278462 usecs
-[  711.325568][  T502] probe of endpoint27 returned 0 after 929403 usecs
-[  711.356687][  T502] probe of mem1 returned 0 after 2101415 usecs
-[  711.531055][   T30] probe of cxl_mem.9 returned 0 after 1707787 usecs
-[  711.554073][  T502] probe of cxl_mem.1 returned 0 after 2425696 usecs
-[  724.421245][ T2077] probe of region5 returned 6 after 262 usecs
-1/1 ndctl:cxl / cxl-region-sysfs.sh        FAIL            18.22s   exit status 1
->>> TEST_PATH=/root/ndctl/build/test ASAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1 LD_LIBRARY_PATH=/root/ndctl/build/daxctl/lib:/root/ndctl/build/cxl/lib:/root/ndctl/build/ndctl/lib DAXCTL=/root/ndctl/build/daxctl/daxctl DATA_PATH=/root/ndctl/test NDCTL=/root/ndctl/build/ndctl/ndctl MESON_TEST_ITERATION=1 UBSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 MSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_summary=1:print_stacktrace=1 MALLOC_PERTURB_=123 /bin/bash /root/ndctl/test/cxl-region-sysfs.sh
-
-The kernel (the cxl_test kernel module) is built off of cxl/next which
-has Jonathan's fix to the cxl_test seen on arm64.
-Could the experts take a look at this issue?
-
-Thanks,
-Itaru.
+Thanks!
 
 > 
-> Jonathan Cameron (4):
->   hw/cxl-host: Add an index field to CXLFixedMemoryWindow
->   hw/cxl: Make the CXL fixed memory windows devices.
->   hw/arm/virt: Basic CXL enablement on pci_expander_bridge instances
->     pxb-cxl
->   qtest/cxl: Add aarch64 virt test for CXL
+>> ---
+>>   mm/huge_memory.c | 58 ++++++++++++++++++++++++++++++++----------------
+>>   1 file changed, 39 insertions(+), 19 deletions(-)
+>>
+>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>> index 49b98082c5401..7e3e9028873e5 100644
+>> --- a/mm/huge_memory.c
+>> +++ b/mm/huge_memory.c
+>> @@ -1372,9 +1372,17 @@ vm_fault_t do_huge_pmd_anonymous_page(struct vm_fault *vmf)
+>>   	return __do_huge_pmd_anonymous_page(vmf);
+>>   }
+>>
+>> -static int insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
+>> -		pmd_t *pmd, pfn_t pfn, pgprot_t prot, bool write,
+>> -		pgtable_t pgtable)
+>> +struct folio_or_pfn {
+>> +	union {
+>> +		struct folio *folio;
+>> +		pfn_t pfn;
+>> +	};
+>> +	bool is_folio;
+>> +};
 > 
->  include/hw/arm/virt.h     |   4 +
->  include/hw/cxl/cxl.h      |   5 +-
->  include/hw/cxl/cxl_host.h |   5 +-
->  hw/acpi/cxl.c             |  76 +++++++++--------
->  hw/arm/virt-acpi-build.c  |  34 ++++++++
->  hw/arm/virt.c             |  29 +++++++
->  hw/cxl/cxl-host-stubs.c   |   7 +-
->  hw/cxl/cxl-host.c         | 170 +++++++++++++++++++++++++++++++-------
->  hw/i386/pc.c              |  50 +++++------
->  tests/qtest/cxl-test.c    |  59 ++++++++++---
->  tests/qtest/meson.build   |   1 +
->  11 files changed, 330 insertions(+), 110 deletions(-)
+> Interesting... I guess a memdesc world will make this easy... maybe? :)
 > 
-> -- 
-> 2.48.1
+> But this is a neat way of passing this.
 > 
+> Another mega nit is mayyybe we could have a macro for making these like:
+> 
+> 
+> #define DECLARE_FOP_PFN(name_, pfn_)		\
+> 	struct folio_or_pfn name_ {		\
+> 		.pfn = pfn_,			\
+> 		.is_folio = false,		\
+> 	}
+> 
+> #define DECLARE_FOP_FOLIO(name_, folio_)	\
+> 	struct folio_or_pfn name_ {		\
+> 		.folio = folio_,		\
+> 		.is_folio = true,		\
+> 	}
+> 
+> But yeah maybe overkill for this small usage in this file.
+
+Yeah. I suspect at some point we will convert this into a folio+idx 
+("page") or "pfn" approach, at which point we could also use this for 
+ordinary insert_pfn().
+
+(hopefully, then we can also do pfn_t -> unsigned long)
+
+So let's defer adding that for now.
+
+> 
+>> +
+>> +static int insert_pmd(struct vm_area_struct *vma, unsigned long addr,
+>> +		pmd_t *pmd, struct folio_or_pfn fop, pgprot_t prot,
+>> +		bool write, pgtable_t pgtable)
+>>   {
+>>   	struct mm_struct *mm = vma->vm_mm;
+>>   	pmd_t entry;
+>> @@ -1382,8 +1390,11 @@ static int insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
+>>   	lockdep_assert_held(pmd_lockptr(mm, pmd));
+>>
+>>   	if (!pmd_none(*pmd)) {
+>> +		const unsigned long pfn = fop.is_folio ? folio_pfn(fop.folio) :
+>> +					  pfn_t_to_pfn(fop.pfn);
+>> +
+>>   		if (write) {
+>> -			if (pmd_pfn(*pmd) != pfn_t_to_pfn(pfn)) {
+>> +			if (pmd_pfn(*pmd) != pfn) {
+>>   				WARN_ON_ONCE(!is_huge_zero_pmd(*pmd));
+>>   				return -EEXIST;
+>>   			}
+>> @@ -1396,11 +1407,19 @@ static int insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
+>>   		return -EEXIST;
+>>   	}
+>>
+>> -	entry = pmd_mkhuge(pfn_t_pmd(pfn, prot));
+>> -	if (pfn_t_devmap(pfn))
+>> -		entry = pmd_mkdevmap(entry);
+>> -	else
+>> -		entry = pmd_mkspecial(entry);
+>> +	if (fop.is_folio) {
+>> +		entry = folio_mk_pmd(fop.folio, vma->vm_page_prot);
+>> +
+>> +		folio_get(fop.folio);
+>> +		folio_add_file_rmap_pmd(fop.folio, &fop.folio->page, vma);
+>> +		add_mm_counter(mm, mm_counter_file(fop.folio), HPAGE_PMD_NR);
+>> +	} else {
+>> +		entry = pmd_mkhuge(pfn_t_pmd(fop.pfn, prot));
+> 
+> Mega micro annoying nit - in above branch you have a newline after entry =, here
+> you don't. Maybe should add here also?
+
+Well, it's combining all the "entry" setup in one block. But I don't 
+particularly care, so I'll just do it :)
+
+-- 
+Cheers,
+
+David / dhildenb
+
