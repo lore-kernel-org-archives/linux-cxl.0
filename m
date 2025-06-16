@@ -1,92 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20BE81DE8BB;
-	Mon, 16 Jun 2025 03:35:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 539815A79B;
+	Mon, 16 Jun 2025 06:07:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750044914; cv=none; b=HPujLO9QnySghNZva3Xm5wBkqiYLVB7IJZLq3oabkQrLb0bzP24s0wtD6lxqc6xIDGbYPwTcCf1SazsM8lnEeJB+Xrpc98h8ZsojUI1S4yBh4W6hbJ7ESdke2w5wp98iQPElnFSF+DzJBacdLeNAbivRH7nZx1a9pIVBgdAYk8U=
+	t=1750054074; cv=none; b=hUvpWBUtWhE69H9e57rwS2MEs456/xxj242+/Y6wzojszOBecuTIIhVPXKJc32Zt5/noYpyEB+qcWM6lAGonS4es77acOEPQtVDrCkvVQcPtsduSUaNYwQFXiaJWYvjkeOlBMvxfC7BZxchj8pICmVa0Y6BFuIkW0Ch6WqTQfDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750044914; c=relaxed/simple;
-	bh=xUiaQrK9jzGMfYv6/h+DNBKT/uNE7jcWo2wKABJN138=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cExqpE89LS+uI8TMw5NDLyxSpmFDjoyzjunIoHdG4x21m9+ZWmYhCdvJ2XwILLov7SX0kZV1v0aLLMOrunIWJtLfBEDcXhk9HzOdwHOea4BLSYK/cuK1lxL94BV75p6CabPpZHPFfEWtKOc8bFr+vn9ZU4NOum0kHjiZSRCpLyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=nt71+uJx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750054074; c=relaxed/simple;
+	bh=3aY1BoapMOrG+X9hJ11RVDqZMjK7J273gsTC9KOzXYo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=M6VIov4DjhWA0eSTJ8845pShiXMGiWWxNXbKnPVsLrA1JKWrQkhiLeGW9dnDJLJueuODl3XDOMOZM/BEzbqkP5cl74kyR/DDwlZxn07auVaeMfqXEvNL3vhibU3yariGnI5jN4aoZYsF6phsKIHhAkiwpUvmx5A7rNYEBXGbQmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=qAH/5Ut/; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="nt71+uJx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13430C4CEF1;
-	Mon, 16 Jun 2025 03:35:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1750044913;
-	bh=xUiaQrK9jzGMfYv6/h+DNBKT/uNE7jcWo2wKABJN138=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nt71+uJx7QXTGOtKf0VR+sAJ35Rj1uC0kefyQak5IaZLMFuMM8BdwdU4dCDqBFRfu
-	 m1NNJSZwh/prl/Rqc7M/fRBReIEpgfLVOjVBiZSaxHsjkr6tyV6lA1TOiVbHWTQYY8
-	 CkaQxn6HN/HrWKB9yHJrwduvcMftkG5TvjI+Fulw=
-Date: Sun, 15 Jun 2025 23:35:10 -0400
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Marc Herbert <marc.herbert@linux.intel.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Benjamin.Cheatham@amd.com,
-	Jonathan.Cameron@huawei.com, dakr@kernel.org,
-	dan.j.williams@intel.com, linux-acpi@vger.kernel.org,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	rafael.j.wysocki@intel.com, rafael@kernel.org, sudeep.holla@arm.com,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Kees Cook <kees@kernel.org>
-Subject: Re: [PATCH] driver core: faux: fix Undefined Behavior in
- faux_device_destroy()
-Message-ID: <2025061546-exile-baggage-c231@gregkh>
-References: <2025061313-theater-surrender-944c@gregkh>
- <20250614105037.1441029-1-ojeda@kernel.org>
- <2025061446-wriggle-modulator-f7f3@gregkh>
- <a3a08e5d-bfea-4569-8d13-ed0a42d81b2a@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qAH/5Ut/"
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55FNrep0004958;
+	Mon, 16 Jun 2025 06:07:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=OeQccFsxYaMk+2oAr5Rfei0TTt24+
+	k+w+3UL8HZWKiw=; b=qAH/5Ut/H1NSM0b4+rVKdR/qBxvKO+gWdugz7L9lhdHMz
+	wb+x8jhnZ2MPqBV09JrAb/K1jUikPtoxpeyHCB7ir83USspzOculELRgq4F7p4j+
+	xVc6gIWUHji76kE5eq3OJWsae8cP2CZGf2QlN34l6Yw2ec7/cPMraoW/IqQF9G84
+	y9IfZMZ7mhM3lQWME3ENQLZODLvpNLXRpd13swWEeSV2YZBfoa9q1pvS+bINeRVU
+	4pS2i0Zhr79MvF5C3O7KnMatHYtO7x+XmMlH5rfo9FJ0XTOt8AxTkae+0+bgwLVi
+	okSZmEASL4eE4/OxWNsNNMWQ2Bd/C6BH27lZyss9Q==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47914ehqxe-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 16 Jun 2025 06:07:41 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55G4dPoj032093;
+	Mon, 16 Jun 2025 06:07:40 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 478yh7g6ey-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 16 Jun 2025 06:07:40 +0000
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55G67d7f007555;
+	Mon, 16 Jun 2025 06:07:39 GMT
+Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 478yh7g6ej-1;
+	Mon, 16 Jun 2025 06:07:39 +0000
+From: Alok Tiwari <alok.a.tiwari@oracle.com>
+To: linux-doc@vger.kernel.org, linux-cxl@vger.kernel.org, corbet@lwn.net,
+        dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+        alison.schofield@intel.com, vishal.l.verma@intel.com,
+        ira.weiny@intel.com, dan.j.williams@intel.com, gourry@gourry.net
+Cc: alok.a.tiwari@oracle.com, linux-kernel@vger.kernel.org,
+        darren.kenny@oracle.com
+Subject: [PATCH] cxl: docs/devices Fix typos and clarify wording in device-types.rst
+Date: Sun, 15 Jun 2025 23:07:32 -0700
+Message-ID: <20250616060737.1645393-1-alok.a.tiwari@oracle.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a3a08e5d-bfea-4569-8d13-ed0a42d81b2a@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-16_02,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999 mlxscore=0
+ spamscore=0 malwarescore=0 adultscore=0 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2506160039
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE2MDAzOSBTYWx0ZWRfXx4QQKlmuKXZI VLp2EqYIjck4mohGrDvUjfp31yijgBn+I32lT4NY9loLjOLz5Ert7n8gCJtHw+MU8nN9uFKDW47 shebjA8umXRTQXMCBbuYb241uxIBJGDOr8X73cQvOVveEmJHRu8/5clISCh1MKU6ntwH2Tjy/SG
+ Sf7edSC45mJnnUS4dj+A7/j3ldfee/axO1gr/j9w3cNeWOPoX4oYp/E3Tp/5vOu1As1em9qrYHl jTz86ruXzGR6xxtkvJeZGlumxQS7fWxVYtcEmgqIIGh4wYRPl2g7VyIP7c3CPY0PoQyalJmiP3x HMXvMQdmwEVdfo38kw6BohfJwxJyieu6H1wwhkS3EAj7fSleIXemgH4GIPqSdBtEiVCUtZWkvoR
+ u5PFXqdLpPf54GSKNqtXoYumdYP7Yy2Vd8EWZEssE2aFIL+R9CM426HprUpBVtGwQdlVk1f0
+X-Authority-Analysis: v=2.4 cv=U4CSDfru c=1 sm=1 tr=0 ts=684fb4ad b=1 cx=c_pps a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=5rsIUXSFhDujYq55XicA:9
+X-Proofpoint-GUID: DkbpINJH-lcQiqr3Wuefolq7p5FmBC-P
+X-Proofpoint-ORIG-GUID: DkbpINJH-lcQiqr3Wuefolq7p5FmBC-P
 
-On Sat, Jun 14, 2025 at 07:53:34AM -0700, Marc Herbert wrote:
-> > the kernel relies on this not being "optimized away" by the compiler
-> > in many places.
-> 
-> I think "undefined behavior" is the more general topic, more important
-> than null pointer checks specifically?
+Fix several typos and improve comment clarity in the CXL device types
+docs:
+ "w/" replaced with "with"
+ "sill" -> "still"
+ "The allows" -> "This allows"
+ "capacity" corrected to "capable"
+ "more devices" corrected to "more hosts" in MLD description
 
-Is this really "undefined behaviour"?  There are a lot of things that
-the kernel requires for a compiler to be able to build it, and this is
-one of those things, it can't do this type of "optimization" and expect
-the output to actually work properly.
+These changes improve readability and enhance the documentation quality.
 
-> > the kernel relies on the compiler to be sane :)
-> 
-> Undefined behavior is... insane by essence? I'm afraid a few custom
-> compiler options can never fully address that.  While we might get away
-> with -fno-delete-null-pointer-checks right here right now, who knows
-> what else could happen in some future compiler version or future
-> combination of flags. No one: that's why it's called "undefined"
-> behavior!
+Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+---
+ Documentation/driver-api/cxl/devices/device-types.rst | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Again, that's not the issue here.  The issue is that we rely on this
-type of optimization to not happen in order to work properly.  So no
-need to "fix" anything here except perhaps the compiler for not
-attempting to do foolish things like this :)
+diff --git a/Documentation/driver-api/cxl/devices/device-types.rst b/Documentation/driver-api/cxl/devices/device-types.rst
+index f5e4330c1cfe..401c463af3ba 100644
+--- a/Documentation/driver-api/cxl/devices/device-types.rst
++++ b/Documentation/driver-api/cxl/devices/device-types.rst
+@@ -63,13 +63,13 @@ A Type-2 CXL Device:
+ 
+ * Supports cxl.io, cxl.cache, and cxl.mem protocols
+ * Optionally implements coherent cache and Host-Managed Device Memory
+-* Is typically an accelerator device w/ high bandwidth memory.
++* Is typically an accelerator device with high bandwidth memory.
+ 
+ The primary difference between a type-1 and type-2 device is the presence
+ of host-managed device memory, which allows the device to operate on a
+-local memory bank - while the CPU sill has coherent DMA to the same memory.
++local memory bank - while the CPU still has coherent DMA to the same memory.
+ 
+-The allows things like GPUs to expose their memory via DAX devices or file
++This allows things like GPUs to expose their memory via DAX devices or file
+ descriptors, allows drivers and programs direct access to device memory
+ rather than use block-transfer semantics.
+ 
+@@ -89,7 +89,7 @@ basic coherent DMA.
+ Switch
+ ------
+ 
+-A CXL switch is a device capacity of routing any CXL (and by extension, PCIe)
++A CXL switch is a device capable of routing any CXL (and by extension, PCIe)
+ protocol between an upstream, downstream, or peer devices.  Many devices, such
+ as Multi-Logical Devices, imply the presence of switching in some manner.
+ 
+@@ -103,7 +103,7 @@ A Single-Logical Device (SLD) is a device which presents a single device to
+ one or more heads.
+ 
+ A Multi-Logical Device (MLD) is a device which may present multiple devices
+-to one or more devices.
++to one or more hosts.
+ 
+ A Single-Headed Device exposes only a single physical connection.
+ 
+-- 
+2.47.1
 
-> > If "tooling" trips over stuff like this, then we should fix the tooling
-> 
-> Because of its old age, many quirks and limitations, C needs and has a
-> pretty large number of external "tools": static and run-time analyzers,
-> coding rules (CERT, MISRA,...) and what not. It's not realistic to "fix"
-> them all so they all "support" undefined behaviors like this one.
-
-If they wish to analize Linux, then yes, they do need to be fixed to
-recognize that this is not an issue for us.  There is no requirement
-that we have that _all_ tools must be able to parse our source code.
-
-thanks,
-
-greg k-h
