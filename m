@@ -1,109 +1,207 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2068.outbound.protection.outlook.com [40.107.100.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC2B91F8676
-	for <linux-cxl@vger.kernel.org>; Mon, 16 Jun 2025 17:27:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750094879; cv=none; b=ZBBtncmNP/yqzpHrxZWNfR+7tGJNsBJDVNiMt7KKMSUlDvIXUu9UpyaUEsTe4Gw7BzqJ991YbV/h9RwLSfg13YW7+HdIFK9KLp8GY1dEmxQ4iWSM64SVLFWH1Ep8HYS4IZo/URg4Owk0J9xpvZ4DMqWLrdFKiviwPAosg80Hv8k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750094879; c=relaxed/simple;
-	bh=LelOrep8BFhkDNPGP79ngM80BpQG1itNZ9WdpzkFM5s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mi9P3duxFU9nFG98CVKqy+J/66zdnYY/zlxcAJTcXM5AWE+qCNnDQCZYv7eQ5driZ0ztAo4bJXSFPOOGk+G4+/rlZoDg6Sfnc1xlDnoxo/LnyMY8Vapx0jtEG1BmUz5X7cp6bY5BzqFkvMfJEDzhjJqr4ii6Gm4sY1q+UFX2o94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=F+Z3up9E; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A36D11E7C1B
+	for <linux-cxl@vger.kernel.org>; Mon, 16 Jun 2025 20:09:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750104570; cv=fail; b=NObREiaqRM7m7nsNuf/Ae08bEIJuYIXyIX7dbJbzjXmDdr9O4GiUEmfa6e6nw0wBszIAGrbYT5hWjokhZY4IZfzTMRX/GOmg0EMXAww6IZzAIaCbxQfLRlZ98EortzTKU5bW9/R6DWEsDpXrmhBklZyChuQVIl4loigrxHlACSw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750104570; c=relaxed/simple;
+	bh=hK/jZRh1cCt+Iy+oAMlBuyisJVnMR6vDGq+t2WShdAA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ZIwOfZc3Jvzxnpm8gzpMQRrsrRBkatwph1A7NRYd7Swq3ppJqlFBmlDYHEBcq/I104sMVK945QBLQEXMz9PiQSJGa3ozoA6gi1rCuierVBpY3ugvi1nzNeVLgqMsIgk6tb/BR9O+r+tJDEf4bd3Nvzu+RzIekoKZ51mJlV9sIxk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=m9FRbIUA; arc=fail smtp.client-ip=40.107.100.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="F+Z3up9E"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6fae04a3795so51202596d6.3
-        for <linux-cxl@vger.kernel.org>; Mon, 16 Jun 2025 10:27:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1750094876; x=1750699676; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q7HCyyC5UYA2b8c4IzXsIvi20Ipr0wxqzS/03kE5MqM=;
-        b=F+Z3up9E6+pxXo3PTj1kp0vCGtqpZkiG6pA1/KZj6t/dBGcfhH4WEpHAq/DwzFBfyZ
-         PCmet2Lx0Ra/VW3EPhVXNd8uWGD4fOawLTht51+/1XR+uR/V4FocWthb/zsWNjKfDiBp
-         MxGIqmamX8eqoLCFTNiRko+EGsa+so2LVELzfhWYX+vxfefU4AH+2E3EkrJ4Hwxja0NN
-         MMcnmhvilgZcwOo1Rzn3m9yiDpiwis/aQ2683nrIwoXUqVOXcRbbzvNkIsO79rpN2k2I
-         h09+DoOd8YzIvfzrdXp2ORzQFVHZbZ19TL/g0VnyXRMiDyg8jIt21rfTvxaJfE8KUHyt
-         5sOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750094876; x=1750699676;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q7HCyyC5UYA2b8c4IzXsIvi20Ipr0wxqzS/03kE5MqM=;
-        b=sHchbRF3REjg6O37VnEb0MlpyF/K2RrpUJocHusjVzscg2+EuIG7aqywmh5W2Ky/LZ
-         WW7MC4BmqlFcsl3wnNRRc5B+ayYRqmqJ6Xy1yg5SaABcbdnU61yztU2IwfDodhpx3qnO
-         yvfdnVyBouz1RPrNf1qk6XqyPQEWG/7mHZPWTTY5rUiv6SkYRsusxIHIkJGfPlva1WYs
-         X+80kYCSeT36ID8dPyftbwH6/8bebuYLtlBsjOmIf9VFB03omMVbYenZByi1kUD9NAa9
-         blqR/Rqt+V23Wt9SZnIMMf0cDq8kat1rLNF3ne3QshmUih1MFxv9qAaiGp9dwvQeXSDV
-         MTBw==
-X-Forwarded-Encrypted: i=1; AJvYcCWveJoqCzhoFZF1Y2ioxLeJLIxRV2p5sF7ojIC1hK6UzQskrlpGF7mlqpRVQ/8qrJasifc34p2KQ+Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw49THOk71fvAqUHR1kE6laCQDzYjIFwX+qSGajqrHonLwTbHFp
-	dAw+mTxNWAA5dHovo5hXunqzYk+u7Gugjhvj0Yf/ZoZav4yxt7JfL73Jpvke+OXqIoM=
-X-Gm-Gg: ASbGnct8xSTGOhjIU+S4LrCbK5UC8QFaG+weB0LXn1ikbhSSiyWqt6Xs/tblfHG4EL6
-	6wqFg88GBZRVNf6N2wDy54iERBGqDFCXR7kA6wjVMhZMighGvbMmbMynQA7xgINQjL6fPnLIGD6
-	tk7wD2XDPsgG9bFPwnPz2o8U2ZgkDaVP8TCDbW7MjlzaR66KP+WnKrNoW9BcRoGI2eGHqhH/YnF
-	0SHGr7yDQYJWxqQcgX/efhpTk9t78OkFLfnZM9XlwCp0wa48T7AIU1OlcAsqy2Cn1cdCpy6gNHI
-	FgZz4XqQy5WrVAk0Da7O/DIis/C6zXsp+Qmo4MtKT3x2PZZgLFo70NhulqS1c9i2cUnm
-X-Google-Smtp-Source: AGHT+IFTR01Y6+W1geCwjaW5IfCrLepVJGWaVvo70DuFbzxcMRNcEzZhf9yE9pfFqi8vBf06mSlbhg==
-X-Received: by 2002:a05:6214:20a2:b0:6fa:bf2f:41ad with SMTP id 6a1803df08f44-6fb47736bbfmr161414176d6.19.1750094875589;
-        Mon, 16 Jun 2025 10:27:55 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F ([2620:10d:c091:400::5:cf64])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb35c72b17sm53505016d6.102.2025.06.16.10.27.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 10:27:55 -0700 (PDT)
-Date: Mon, 16 Jun 2025 12:27:53 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Alok Tiwari <alok.a.tiwari@oracle.com>
-Cc: linux-doc@vger.kernel.org, linux-cxl@vger.kernel.org, corbet@lwn.net,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, linux-kernel@vger.kernel.org,
-	darren.kenny@oracle.com
-Subject: Re: [PATCH] cxl: docs/devices Fix typos and clarify wording in
- device-types.rst
-Message-ID: <aFBUGTM4fpwU749k@gourry-fedora-PF4VCD3F>
-References: <20250616060737.1645393-1-alok.a.tiwari@oracle.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="m9FRbIUA"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=lqPCv7xnGEy1pSfTBspu/1XxbCyhkeh3tCA/ML0cYrtjF2oQLk4MBFhY0W7KzubyER4+355W5WBmv+XgIBbkZi43WXIsKSeD2IZ+sQUEVtyQmJ03e27MR8BVHU+dpNcmXVv0bgAtOI96zSf+85KNUZ41h7SoSnPCeaVoaqMzkCU6gW+Py+kFCnPvoDQXjKk3KtvjcZoNjWYasxIsWcl6aVpuIdZECbJmI2fSauE/TwoOm4L7Cy1cm3mMaQIA2cHgErauJZwNNbhXUaHniKvTv26V+hb6AkX7KuatA5Knvhx4wVRM4WlDDJV1yCmVlzbO3IAdq1DEJEDl3t8onoDffw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QppaooB7C33avOM8o9tTuIYdNlhGm68kwejMtYh/emA=;
+ b=lgA9bt831jq8flHRAIqmBAHUAexnZDWSteQukutvkQKr9dhfJ/vwm39GMhiN4LruMqan8JXXWCQ4EPbfm2zrI1ncjDhnzcA1s+nt0A1PM6kFAz8wtBFmnoGEn+K8TJTEaNbfrCt0nkX27nDdvZgmc25OSLzcFKky2LFQ4XlkEa9jM8dC5a0YsRUkn0o4WxI6T1ClTLvGcjw7cFiTWiK/2vmue7wghS7uA8MY6m5XhaPorH28Uis344/KTRlPbD+jxQgKlWrgCum+H4cM6Uu+2z4xQq2MYstR/xq6cLZU6VvP7meA7I1eR/6663556KblWgmspmDk+jU+nhBN5+F7GA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QppaooB7C33avOM8o9tTuIYdNlhGm68kwejMtYh/emA=;
+ b=m9FRbIUAslfdmYQORP74zaOo5HVIWtV1t2DhAIOlBxSXwo4beO6XYxH346YAWJRTWodLkzzyEWbavcDVyb5JKfUVLsP9MKrxw13xsXgwQGKPnHursRhAN9SmENBA2v0q9jo9BsvJilWoJ/OE0kPHfCJjY8f2Jd0C4Yek9e8BvI0=
+Received: from MN0PR03CA0022.namprd03.prod.outlook.com (2603:10b6:208:52f::21)
+ by SA1PR12MB8600.namprd12.prod.outlook.com (2603:10b6:806:257::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.23; Mon, 16 Jun
+ 2025 20:09:21 +0000
+Received: from BL02EPF0001A0FD.namprd03.prod.outlook.com
+ (2603:10b6:208:52f:cafe::f3) by MN0PR03CA0022.outlook.office365.com
+ (2603:10b6:208:52f::21) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.25 via Frontend Transport; Mon,
+ 16 Jun 2025 20:09:21 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL02EPF0001A0FD.mail.protection.outlook.com (10.167.242.104) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8835.15 via Frontend Transport; Mon, 16 Jun 2025 20:09:21 +0000
+Received: from [10.254.50.197] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 16 Jun
+ 2025 15:09:20 -0500
+Message-ID: <4126d1cd-e91d-4c12-b255-1c4c5a0e86e1@amd.com>
+Date: Mon, 16 Jun 2025 15:09:19 -0500
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250616060737.1645393-1-alok.a.tiwari@oracle.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [ndctl PATCH v2 0/7] Add error injection support
+To: Alison Schofield <alison.schofield@intel.com>
+CC: <nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>,
+	<junhyeok.im@samsung.com>
+References: <20250602205633.212-1-Benjamin.Cheatham@amd.com>
+ <aEpJon2W2m1IpgGx@aschofie-mobl2.lan>
+Content-Language: en-US
+From: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
+In-Reply-To: <aEpJon2W2m1IpgGx@aschofie-mobl2.lan>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL02EPF0001A0FD:EE_|SA1PR12MB8600:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9566a5df-d469-4b34-4742-08ddad11aef4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|82310400026|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?anp3Zy83bTN3R0pHNU5PUFEyL0lkU00yZ3NPZm43cTJBSEE3VDBTZE56TlpS?=
+ =?utf-8?B?V1FIOTEvM1B1NkJpTjZoRTFuemJaRlZYRlVzWSs5VkhDbGEzVVJDODFzSXdI?=
+ =?utf-8?B?Mzh1WmtxS2RXaElPZTJFQXp5VzN6VVVZeFhXSmNJMWFJalRyUmNrVHRUM1FX?=
+ =?utf-8?B?UGx0cWlzYXNFR1pIYU1CYW5UYkg3VUNvYWtTQm5VTkNML3pxVDJWemwvTGtU?=
+ =?utf-8?B?bnJqbFY0MEN6QnVZZ0IzM0VrMDR1SU8vWGtkS29Temk0THdndmRIdWNFNEpt?=
+ =?utf-8?B?ZnoxcjN3QlhIYXgvWEh1bk1pQ1hMak5nUGFqMnJsUHRNdjBkeHUzWGNVOEN0?=
+ =?utf-8?B?K3NGOCtLa3dFM1N3UzVVVDBXMTRVV1BFc09vQnFCV002L3RDVVFqZ2JiczVE?=
+ =?utf-8?B?Szdzd3pPYjdVc21XQnVrSmpGVW1iQ014ZXdDTy9jSFJwUlBaREhVWGZtN3pm?=
+ =?utf-8?B?L2s5ZGxxT1pObGxGNERVS0VURCtzcThiVnRhZTZqbkNSa1QyTGNodXFRYVdv?=
+ =?utf-8?B?bEh5YnpheWNwM05keFprZWkvbTNaS3grUWpBR3kvQk5rV3RJYmw3TGZKd2J6?=
+ =?utf-8?B?STdwcktBbkFOTmkyM28wdEVXNUVTMnJSNGxjYUhEK2dKMWlKNENMeVJlMjFZ?=
+ =?utf-8?B?aXRrdWFpSzh4RWdlaFE3akl3UE8xMTFnTWpObVc3RXpZQnp3eG1BN29QVWJa?=
+ =?utf-8?B?UFRCMkZWQUdUOS9HWGo2NHRKQVVhb1poN0drTytnMWVZaVJJNEUzMUtvVS9B?=
+ =?utf-8?B?VGhzL1FJbTFMdG1mcDZRNk1yaHEzWmw1L1k3NkZkMm4yV1R5UnVtNm1pMDV1?=
+ =?utf-8?B?ZVpwNmM0MEdaY1N6Y3FBTXJERkdRZ0Jvejc2TWo0SjZuRy9mM05RQWQ0ckY5?=
+ =?utf-8?B?NTdtcmdkTnZhdlpPRTVvQ1ZSWUdpV0p0QnJLdGtjMUl6SVczbldueUwweEs4?=
+ =?utf-8?B?VTF2eWVLS09RRzZkRE9zUEpkNWRQRk1tMk5ZWTNzNC9hQjRIUEQ5SG04cFZs?=
+ =?utf-8?B?WWhYcTJpbEtaM0VMdDQyaVdKQ3UvK1NlM1ZFVVZ4VnRlQ1ZpRW9Ob2J1R3F6?=
+ =?utf-8?B?VWNMUFVwRm5mZ2lhcmw1NTZ5emxyRTZwVkMrQ1Fzd3N3Z1d4ZVdkMm1lSzMx?=
+ =?utf-8?B?Mm56NTVEem1CTnRGWm9PRVZXSVlVazFzbzdJb2pUZDB1N2xPaFMyTEZ2VzJ2?=
+ =?utf-8?B?WmFmdi9sNjhiMXJRN2hwL0hnSmZ2UHBKWloyaVVmOGg3M3JFYmF4Q0lqSWZG?=
+ =?utf-8?B?SngxTE1ZaEI3eVJPZ3pqUmJqMWJ0b1orbGRsTTZGYnlXZE5UM3drR1hsT21m?=
+ =?utf-8?B?Y3dXdVM5ZW15bmJTTzZWMWY5Y1RRVE4zTnR3VmJQV2tXdkhGbG5uZTFzdHZn?=
+ =?utf-8?B?ODJIT2RLNTVQQ29sY2xCMzdoWDBMcU93UWVvQnBQUGdhRkRINU14bC9JYXVD?=
+ =?utf-8?B?cFRSSzd3VTZxNVZxdzNrNWgrcVZTZy96TiswdVFtZjNKVnh2UU40Yjd2Q2Fx?=
+ =?utf-8?B?RHhnbkovMzlDeDljeG9SU01qQ2lrUGtTRzVkNVdCWUQzVkhtUXRZaTFtNExD?=
+ =?utf-8?B?THZ0NWR5cEdsWUU3MmwrVnZqNWNqR1ArYkxSeEY0MmphNCs3bEN3ZnF6M3FO?=
+ =?utf-8?B?VXhvWEJIMitQWWdlWmdrMjFyVEJUZG1rVzBNUUZDUWlPdkZNYjNhYkZJRm1S?=
+ =?utf-8?B?SitqOWIvMGpBM0lKSTlpQUpQRGd4TkQrL3laVi9LVGZXczJvREZ5MFBURlVa?=
+ =?utf-8?B?RHhnbDlVN0FnYVFDa1A0ekVrRVpBM2NKaDZZOWpTQmhwaFJ6WitLNmQ3eGJ2?=
+ =?utf-8?B?SFk0ZnNPSFdEbE1PaHhzaUNLTHJWbWJBT2VXWkVlSHlwT3ZnQy95aUtUclds?=
+ =?utf-8?B?RVRMT0xVUy9MRWR3ck5RdTUxYk13OE0vNzRQK0pHV2FpVzhla2ZMQ3RhWU1x?=
+ =?utf-8?B?Wi9DRU9Xd0x3NktpZC9zNFp6OXRiY1FjUjljZCtlbVdMU3JGaDlwbEI0UGcr?=
+ =?utf-8?B?KzJEallFM1hReUtnYUZRc3lVZGZyZEJ6YnovUzNRdlVSQkZjRXFxOHJSbGo4?=
+ =?utf-8?Q?DHBvxW?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2025 20:09:21.7286
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9566a5df-d469-4b34-4742-08ddad11aef4
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL02EPF0001A0FD.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8600
 
-On Sun, Jun 15, 2025 at 11:07:32PM -0700, Alok Tiwari wrote:
->  Documentation/driver-api/cxl/devices/device-types.rst | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
+[snip]
+
+> I applied this to v82 (needs a sync up in libcxl.sym) and ran cxl-poison unit
+> test using your new cxl-cli cmds instead of writing to debugfs directly.[1]
+> Works for me. Just thought I'd share that as proof of life until I review it
+> completely.
+
+Thanks for testing!
+
 > 
+> Adding more test cases to cxl-poison.sh makes sense for the device poison.
+> Wondering about the protocol errors. How do we test those?
+
+So protocol errors are provided by the platform through EINJ (section 18.6 of ACPI v6.5 spec).
+The best way to test would be with real hardware (what I've been doing), but that obviously doesn't
+work for everyone. I'm not aware of a way to mock/emulate an actual injection (QEMU doesn't support EINJ),
+so I'm not sure software-only testing is viable.
+
+I do have any idea for testing the interface though. It would probably look like writing to mock
+error_types/einj_inject attributes (that replace the ones in debugfs) and having a phony error
+come up in the dmesg. Something like:
+
+# echo 0x8000 > <debugfs>/<cxl dport>/einj_inject
+# dmesg
 ...
+[CXL Error print]
+
+Of course I'm not sure how useful that is since it's basically a roundabout way of testing the debugfs
+files exist :/.
+
+> 
+> [1] diff --git a/test/cxl-poison.sh b/test/cxl-poison.sh
+> index 6ed890bc666c..41ab670b1094 100644
+> --- a/test/cxl-poison.sh
+> +++ b/test/cxl-poison.sh
+> @@ -68,7 +68,8 @@ inject_poison_sysfs()
+>         memdev="$1"
+>         addr="$2"
 >  
->  A Multi-Logical Device (MLD) is a device which may present multiple devices
-> -to one or more devices.
-> +to one or more hosts.
+> -       echo "$addr" > /sys/kernel/debug/cxl/"$memdev"/inject_poison
+> +#      echo "$addr" > /sys/kernel/debug/cxl/"$memdev"/inject_poison
+> +       $CXL inject-error "$memdev" -t poison -a "$addr"
+>  }
+>  
+>  clear_poison_sysfs()
+> @@ -76,7 +77,8 @@ clear_poison_sysfs()
+>         memdev="$1"
+>         addr="$2"
+>  
+> -       echo "$addr" > /sys/kernel/debug/cxl/"$memdev"/clear_poison
+> +#      echo "$addr" > /sys/kernel/debug/cxl/"$memdev"/clear_poison
+> +       $CXL clear-error "$memdev" -a "$addr"
+>  }
+> 
+> 
+> While applying this: Documentation: Add docs for inject/clear-error commands
+> Got these whitespace complaints:
+> 234: new blank line at EOF
+> 158: space before tab in indent.
+>         "offset":"0x1000",
+> 159: space before tab in indent.
+>         "length":64,
+> 160: space before tab in indent.
+>         "source":"Injected"
+> 
 
-This is subtly incorrect.
+I'll fix these for v3.
 
-A *Multi-Headed* MLD presents one or more devices to one or more hosts.
-
-A *Multi-logical Device* presents one or more devices to one or more
-upstream devices (such as a switch).
-
-You can have a Single-Headed Multi-Logical Device that presents 2
-"Logical Devices" to a single upstream device (host or switch).
-
-So please change "one or more hosts" to "one or more upstream devices".
-
-
-With that change you may add
-
-Reviewed-by: Gregory Price <gourry@gourry.net>
-
-~Gregory
+Thanks,
+Ben
