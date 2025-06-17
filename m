@@ -1,222 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1805321FF5E
-	for <linux-cxl@vger.kernel.org>; Tue, 17 Jun 2025 12:04:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB7BE2DF3CB
+	for <linux-cxl@vger.kernel.org>; Tue, 17 Jun 2025 13:00:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750161872; cv=none; b=Ebsl+0nM5Vhh/C9qtiZaz3asjW3B1N9E4wbj+JR/crRyeKL3VFXEIkKG4+6hFowV91IlG6kczMIjzbg0MznrCFZcwJjsXAklgFFCl4jEUv20ESj+Y7Bi5aLhKb+II8Fd8i8pSWkKfMS/XE3Gwx+vEdJI9iK2l/EfXCWNDODkfvc=
+	t=1750165210; cv=none; b=c3QkD3fd/ObSulB1sV7MWfGmIv4OFUjaoJiVZ8f1zsgSa0CttGeoUqX9G4tIoT7iDQWo5rwMyZND10AJ3dQSZCPIvMDYlVoWH3S1amb/sJGoFECLND2tHYKvyAb3nBxGhIsGWQntYfyiE+bPyee75U5YuNxleWpKmLnLo/HjIjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750161872; c=relaxed/simple;
-	bh=moGiQCO1fTHWOFXccIuBWregNxm44PhEFhx5dvZ34mc=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=KWOo9qReLVlp1AOldmVgT4xurbBfj8jGnFiWSNIxD5Kn6XQFch3bAY7SNEQsrZRbFwoUexSs0unHtw2x8nbg3AsLfi44hvysRzp1sYmox08boky1Eo0rcWstTc5vPNYI1XTy8ymx5exRNBAeFsfqkCWbU1aihQZRC3CYUelNpHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=duux1dtI; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750165210; c=relaxed/simple;
+	bh=SXglxYJm3kykRFcg2mUYP7HlJ5JimJdAoRTYsOeEBZI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
+	 Content-Type:References; b=jp5Gh+0f/X7cWhxXNtRmj08aHCaqxeqhJCfiGnhCwvKlY/RWH346PljRpP7DKO6h86mcFz4gXtrv7KeQ9mPkiWwzyldSEwg59dQNFX9xO1TmP9bysDG132lQNauhPkW86FsOtYAD0NilyJIyUHGSrYxjZisdITBIeULe2EIktSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=D99vWlnB; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="duux1dtI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750161868; x=1781697868;
-  h=date:from:to:cc:subject:message-id;
-  bh=moGiQCO1fTHWOFXccIuBWregNxm44PhEFhx5dvZ34mc=;
-  b=duux1dtI17Syo8Zr/tBImkWcKaJTJKbRBPQp7bRWbpj+DO7nHCFNZlJb
-   biTgzuV84pfp8Q2xeJXSZCZJByny+WgyJmSDECK/YTTGrgXMtLDJV/57t
-   OK+vYdEBw/WjMvlpmZL0oy7CwViBCC9+j0zCii2CORG6F5sr5/mJUlOzk
-   ZZXypsBKbDvCPIKZfyCkkvxt3+mIvgDZCZiWpSzfLpdoOyM6NlQZlaSEF
-   26C1N7EvXs+HcPKDiYcsIjnErJVRU4w1AFrrhyeqSmP60XLxz15UVG+Zt
-   FBJ17xfoO3IoLb5TEpUBUzHRpqvhEB80ybkhJfIgskmXH9OxPYGuAJjP/
-   w==;
-X-CSE-ConnectionGUID: u+9i7wbkS8WL1xTUvCP9CA==
-X-CSE-MsgGUID: 6ziWEcRdTnOJlu5gkRJpnQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="63368781"
-X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
-   d="scan'208";a="63368781"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 05:04:27 -0700
-X-CSE-ConnectionGUID: FUL18T/nTqiSCz7a6+jYGg==
-X-CSE-MsgGUID: iuMKeFk/SY+jvSMhQKsvgg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
-   d="scan'208";a="148747021"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 17 Jun 2025 05:04:25 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uRV38-000Fwj-1q;
-	Tue, 17 Jun 2025 12:04:22 +0000
-Date: Tue, 17 Jun 2025 20:03:57 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Subject: [cxl:next] BUILD SUCCESS
- a021802c18c4c30dff3db9bd355cacb68521f1aa
-Message-ID: <202506172045.rbiBCF4J-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="D99vWlnB"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250617130004epoutp04fa9ae9c90b136ac830c8fb26714d4294~J1fsqFrL32140121401epoutp04V
+	for <linux-cxl@vger.kernel.org>; Tue, 17 Jun 2025 13:00:04 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250617130004epoutp04fa9ae9c90b136ac830c8fb26714d4294~J1fsqFrL32140121401epoutp04V
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1750165204;
+	bh=7H8FItXHZnyaOwFyXZ68yq7arH/yEadM3eU/M988Hms=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=D99vWlnBuQS6VtWd9bIUNMC3DAZldtNdAPLKbd1OtgkzB2LBWXKpx0oilkOmZ7POL
+	 Lps5xjANSHjVodw10VFjFZgHrWQSBc9Xz6UVqMwSg4U4vdK7kJPEVhn89j/yjTzuW8
+	 cS0fxxkwWlQqZqny+ntCbMDDALW7KE+5sFad5LOE=
+Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
+	20250617130004epcas5p10ae12ee0b4673ae2da3d20c4d7aaef2b~J1fsEYvNb2452824528epcas5p1k;
+	Tue, 17 Jun 2025 13:00:04 +0000 (GMT)
+Received: from epcpadp1new (unknown [182.195.40.141]) by
+	epsnrtp03.localdomain (Postfix) with ESMTP id 4bM6R81s4Sz3hhTB; Tue, 17 Jun
+	2025 13:00:04 +0000 (GMT)
+Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20250617124013epcas5p3c241c626448fcf7851a100fdf2816160~J1OXewFJB2103821038epcas5p3S;
+	Tue, 17 Jun 2025 12:40:13 +0000 (GMT)
+Received: from test-PowerEdge-R740xd.samsungds.net (unknown [107.99.41.79])
+	by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250617124011epsmtip20589d4013bbfae3a6988883eb57982fe~J1OU-Of5k2544925449epsmtip2k;
+	Tue, 17 Jun 2025 12:40:11 +0000 (GMT)
+From: Neeraj Kumar <s.neeraj@samsung.com>
+To: dan.j.williams@intel.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com
+Cc: a.manzanares@samsung.com, nifan.cxl@gmail.com, anisa.su@samsung.com,
+	vishak.g@samsung.com, krish.reddy@samsung.com, arun.george@samsung.com,
+	alok.rathore@samsung.com, s.neeraj@samsung.com, neeraj.kernel@gmail.com,
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev, gost.dev@samsung.com, cpgs@samsung.com
+Subject: [RFC PATCH 03/20] nvdimm/namespace_label: Add namespace label
+ changes as per CXL LSA v2.1
+Date: Tue, 17 Jun 2025 18:09:27 +0530
+Message-Id: <1279309678.121750165204255.JavaMail.epsvc@epcpadp1new>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250617123944.78345-1-s.neeraj@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20250617124013epcas5p3c241c626448fcf7851a100fdf2816160
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20250617124013epcas5p3c241c626448fcf7851a100fdf2816160
+References: <20250617123944.78345-1-s.neeraj@samsung.com>
+	<CGME20250617124013epcas5p3c241c626448fcf7851a100fdf2816160@epcas5p3.samsung.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-branch HEAD: a021802c18c4c30dff3db9bd355cacb68521f1aa  cxl: docs/devices Fix typos and clarify wording in device-types.rst
+CXL 3.2 Spec mentions CXL LSA 2.1 Namespace Labels at section 9.13.2.5
+Modified __pmem_label_update function using setter functions to update
+namespace label as per CXL LSA 2.1
 
-elapsed time: 739m
+Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
+---
+ drivers/nvdimm/label.c |  3 +++
+ drivers/nvdimm/nd.h    | 27 +++++++++++++++++++++++++++
+ 2 files changed, 30 insertions(+)
 
-configs tested: 142
-configs skipped: 3
+diff --git a/drivers/nvdimm/label.c b/drivers/nvdimm/label.c
+index 30bccad98939..d5cfaa99f976 100644
+--- a/drivers/nvdimm/label.c
++++ b/drivers/nvdimm/label.c
+@@ -923,6 +923,7 @@ static int __pmem_label_update(struct nd_region *nd_region,
+ 	memset(nd_label, 0, sizeof_namespace_label(ndd));
+ 
+ 	ns_label = &nd_label->ns_label;
++	nsl_set_type(ndd, ns_label);
+ 	nsl_set_uuid(ndd, ns_label, nspm->uuid);
+ 	nsl_set_name(ndd, ns_label, nspm->alt_name);
+ 	nsl_set_flags(ndd, ns_label, flags);
+@@ -934,7 +935,9 @@ static int __pmem_label_update(struct nd_region *nd_region,
+ 	nsl_set_lbasize(ndd, ns_label, nspm->lbasize);
+ 	nsl_set_dpa(ndd, ns_label, res->start);
+ 	nsl_set_slot(ndd, ns_label, slot);
++	nsl_set_alignment(ndd, ns_label, 0);
+ 	nsl_set_type_guid(ndd, ns_label, &nd_set->type_guid);
++	nsl_set_region_uuid(ndd, ns_label, NULL);
+ 	nsl_set_claim_class(ndd, ns_label, ndns->claim_class);
+ 	nsl_calculate_checksum(ndd, ns_label);
+ 	nd_dbg_dpa(nd_region, ndd, res, "\n");
+diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
+index 2ead96ac598b..07d665f18bf6 100644
+--- a/drivers/nvdimm/nd.h
++++ b/drivers/nvdimm/nd.h
+@@ -295,6 +295,33 @@ static inline const u8 *nsl_uuid_raw(struct nvdimm_drvdata *ndd,
+ 	return nd_label->efi.uuid;
+ }
+ 
++static inline void nsl_set_type(struct nvdimm_drvdata *ndd,
++				struct nd_namespace_label *ns_label)
++{
++	uuid_t tmp;
++
++	if (ndd->cxl) {
++		uuid_parse(CXL_NAMESPACE_UUID, &tmp);
++		export_uuid(ns_label->cxl.type, &tmp);
++	}
++}
++
++static inline void nsl_set_alignment(struct nvdimm_drvdata *ndd,
++				     struct nd_namespace_label *ns_label,
++				     u32 align)
++{
++	if (ndd->cxl)
++		ns_label->cxl.align = __cpu_to_le16(align);
++}
++
++static inline void nsl_set_region_uuid(struct nvdimm_drvdata *ndd,
++				       struct nd_namespace_label *ns_label,
++				       const uuid_t *uuid)
++{
++	if (ndd->cxl)
++		export_uuid(ns_label->cxl.region_uuid, uuid);
++}
++
+ bool nsl_validate_type_guid(struct nvdimm_drvdata *ndd,
+ 			    struct nd_namespace_label *nd_label, guid_t *guid);
+ enum nvdimm_claim_class nsl_get_claim_class(struct nvdimm_drvdata *ndd,
+-- 
+2.34.1
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-alpha                               defconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                                 defconfig    gcc-15.1.0
-arc                   randconfig-001-20250617    gcc-11.5.0
-arc                   randconfig-002-20250617    gcc-15.1.0
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-15.1.0
-arm                                 defconfig    clang-21
-arm                      footbridge_defconfig    clang-17
-arm                          ixp4xx_defconfig    gcc-15.1.0
-arm                   milbeaut_m10v_defconfig    clang-19
-arm                   randconfig-001-20250617    gcc-8.5.0
-arm                   randconfig-002-20250617    clang-21
-arm                   randconfig-003-20250617    clang-21
-arm                   randconfig-004-20250617    clang-21
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                               defconfig    gcc-15.1.0
-arm64                 randconfig-001-20250617    gcc-11.5.0
-arm64                 randconfig-002-20250617    clang-21
-arm64                 randconfig-003-20250617    gcc-8.5.0
-arm64                 randconfig-004-20250617    gcc-12.3.0
-csky                              allnoconfig    gcc-15.1.0
-csky                                defconfig    gcc-15.1.0
-csky                  randconfig-001-20250617    gcc-13.3.0
-csky                  randconfig-002-20250617    gcc-12.4.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon                             defconfig    clang-21
-hexagon               randconfig-001-20250617    clang-21
-hexagon               randconfig-002-20250617    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250617    gcc-12
-i386        buildonly-randconfig-002-20250617    clang-20
-i386        buildonly-randconfig-003-20250617    gcc-12
-i386        buildonly-randconfig-004-20250617    gcc-12
-i386        buildonly-randconfig-005-20250617    gcc-12
-i386        buildonly-randconfig-006-20250617    gcc-12
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-15.1.0
-loongarch                         allnoconfig    gcc-15.1.0
-loongarch                           defconfig    gcc-15.1.0
-loongarch             randconfig-001-20250617    gcc-15.1.0
-loongarch             randconfig-002-20250617    gcc-15.1.0
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-m68k                                defconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                            gpr_defconfig    clang-18
-nios2                             allnoconfig    gcc-14.2.0
-nios2                               defconfig    gcc-14.2.0
-nios2                 randconfig-001-20250617    gcc-10.5.0
-nios2                 randconfig-002-20250617    gcc-14.2.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                generic-64bit_defconfig    gcc-15.1.0
-parisc                randconfig-001-20250617    gcc-8.5.0
-parisc                randconfig-002-20250617    gcc-8.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    clang-21
-powerpc                        cell_defconfig    gcc-15.1.0
-powerpc                      mgcoge_defconfig    clang-21
-powerpc                  mpc866_ads_defconfig    clang-21
-powerpc                    mvme5100_defconfig    gcc-15.1.0
-powerpc                      pasemi_defconfig    clang-21
-powerpc               randconfig-001-20250617    gcc-8.5.0
-powerpc               randconfig-002-20250617    clang-16
-powerpc               randconfig-003-20250617    gcc-12.4.0
-powerpc64             randconfig-001-20250617    gcc-14.3.0
-powerpc64             randconfig-002-20250617    clang-21
-powerpc64             randconfig-003-20250617    gcc-13.3.0
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-21
-riscv                 randconfig-001-20250617    clang-21
-riscv                 randconfig-002-20250617    gcc-10.5.0
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    clang-21
-s390                  randconfig-001-20250617    clang-21
-s390                  randconfig-002-20250617    clang-20
-sh                               alldefconfig    gcc-15.1.0
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-15.1.0
-sh                             espt_defconfig    gcc-15.1.0
-sh                    randconfig-001-20250617    gcc-12.4.0
-sh                    randconfig-002-20250617    gcc-14.3.0
-sh                      rts7751r2d1_defconfig    gcc-15.1.0
-sh                   secureedge5410_defconfig    gcc-15.1.0
-sh                             shx3_defconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                 randconfig-001-20250617    gcc-12.4.0
-sparc                 randconfig-002-20250617    gcc-13.3.0
-sparc64                             defconfig    gcc-15.1.0
-sparc64               randconfig-001-20250617    gcc-15.1.0
-sparc64               randconfig-002-20250617    gcc-9.3.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-21
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250617    gcc-12
-um                    randconfig-002-20250617    clang-21
-um                           x86_64_defconfig    clang-21
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250617    clang-20
-x86_64      buildonly-randconfig-002-20250617    clang-20
-x86_64      buildonly-randconfig-003-20250617    gcc-11
-x86_64      buildonly-randconfig-004-20250617    gcc-12
-x86_64      buildonly-randconfig-005-20250617    gcc-12
-x86_64      buildonly-randconfig-006-20250617    gcc-12
-x86_64                              defconfig    gcc-11
-x86_64                          rhel-9.4-rust    clang-18
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20250617    gcc-10.5.0
-xtensa                randconfig-002-20250617    gcc-12.4.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
