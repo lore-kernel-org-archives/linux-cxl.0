@@ -1,180 +1,148 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 568D22E717E
-	for <linux-cxl@vger.kernel.org>; Tue, 17 Jun 2025 13:07:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C5521018A;
+	Tue, 17 Jun 2025 16:08:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750165646; cv=none; b=YE+T80LQGrZ3ADPEuk5pHRDTPEaGfvKn/hK1PE8RJu0gsclCCJSkVs3gHw/8PkMG0fD695UVnZS8x6WElOKmVXTbFm3+8UZ1qb+qozxHA+VFaIKaIhjlMM/NaFFhwO+cLCUwtwuwoqQz1xZzF10iw+dJs97R+8hEH/3bGmxM+J8=
+	t=1750176512; cv=none; b=r4rDV00cXjZbUfqXp3hUhbYPngeyAElVVe4M59sK2NRMY9SpSgHQTI+S1TJCDx1J3SO3g4rdDebPdUVd2NcLAHBWn1/P1MyY7trE+LNyf4SocxqH+zC0MeZmijwpYufQpR1VfNyCQxyMVUUrtzsb1sbYXMzg7Iw5vtmC/j7B2M0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750165646; c=relaxed/simple;
-	bh=DF0F8s9i8zF6gkQUvgfqL8KFLpU80+hqS+HztAFwXjw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=Ef+ki9s4fqdygmzpn7tEpHeaZ/AgSAitfTLQCDwcOlt3dg2Jun0p4pweWDQDLce9a34HXeNoBwS9US7B8AZd1bpKVVgWYizH/TO8jr3jEJ4g+dQhUeA/2yUnpOSx5VqaNtWEr3kQv2dfUL4j9/awbWXOE3cR+1AoGQI0PyzpuvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=SJwA/4fX; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1750176512; c=relaxed/simple;
+	bh=PGfPZ4jTLlzp0soWT5Kna5ae2Q1pKDI1WP51XvYIZbU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Pq2q9FMBgnL/hKP/MX1ds/sAwNt1xnsirAs/XS/Hbd7NkKXVjouy2KEQx4JjkOaOR+C8eteZ18Byg3VERAvbipixVi1XDxarFwxmZN8eFtgZbFVBXB4SE4Tj6WGVd6vax26jvSn6ZChHUHCPMOKm521OcGdYJHCkEdXoYpexQQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iadDBGZU; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="SJwA/4fX"
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250617130004epoutp024ca88eb5da1324f1dbd4ab2ff19930ac~J1fsClGe12453024530epoutp02J
-	for <linux-cxl@vger.kernel.org>; Tue, 17 Jun 2025 13:00:04 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250617130004epoutp024ca88eb5da1324f1dbd4ab2ff19930ac~J1fsClGe12453024530epoutp02J
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1750165204;
-	bh=pUkI5fAVHOssGM0XEx7hINUt5DO6uow+53f3e1oNt8k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SJwA/4fXj/DzPk8ZWJzequgzw9IUV3M32Tl7I1wvg2Aji9RlNheTwcg26h2T38scu
-	 +r2RUzI/VVxXTH/sIjmbi/9CBLZJlMHUIsHqTuUSR2SVjQfnq7KCWjH5495vCV2zqo
-	 6UpJuLfrjrplSIxpkZee0Djfq3T8bZoFM6+vEdGQ=
-Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
-	20250617130003epcas5p1842c90f8d24f2f7cfd8e3bbacbba9864~J1frfhijX0551805518epcas5p1z;
-	Tue, 17 Jun 2025 13:00:03 +0000 (GMT)
-Received: from epcpadp1new (unknown [182.195.40.141]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4bM6R74ZkSz6B9mD; Tue, 17 Jun
-	2025 13:00:03 +0000 (GMT)
-Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250617124008epcas5p2e702f786645d44ceb1cdd980a914ce8e~J1OR_eMh20675106751epcas5p2E;
-	Tue, 17 Jun 2025 12:40:08 +0000 (GMT)
-Received: from test-PowerEdge-R740xd.samsungds.net (unknown [107.99.41.79])
-	by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250617124005epsmtip2c4b92fa3b085bd73326887d2c1352f93~J1OPei42b2543925439epsmtip2X;
-	Tue, 17 Jun 2025 12:40:05 +0000 (GMT)
-From: Neeraj Kumar <s.neeraj@samsung.com>
-To: dan.j.williams@intel.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com
-Cc: a.manzanares@samsung.com, nifan.cxl@gmail.com, anisa.su@samsung.com,
-	vishak.g@samsung.com, krish.reddy@samsung.com, arun.george@samsung.com,
-	alok.rathore@samsung.com, s.neeraj@samsung.com, neeraj.kernel@gmail.com,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	nvdimm@lists.linux.dev, gost.dev@samsung.com, cpgs@samsung.com
-Subject: [RFC PATCH 01/20] nvdimm/label: Introduce NDD_CXL_LABEL flag to set
- cxl label format
-Date: Tue, 17 Jun 2025 18:09:25 +0530
-Message-Id: <158453976.61750165203630.JavaMail.epsvc@epcpadp1new>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250617123944.78345-1-s.neeraj@samsung.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iadDBGZU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750176510; x=1781712510;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=PGfPZ4jTLlzp0soWT5Kna5ae2Q1pKDI1WP51XvYIZbU=;
+  b=iadDBGZUehfDV2868ELiM0neA4sDUJgg16LKXZdC7ItwoFhl1xhuoHuT
+   0huLdI5+n4/gQ95R57BSubiO0nO2BvD4mg4MM6e0qrak67Evp5FpkVB46
+   mOSvWKtkoNeAprqFMKC2i6NbQIM5BcoUwN1Bo6kHI4GmmX+oH54zj8J1z
+   WLjp9/BmpHdJSehWFSjHmqy8iMrvonlxAmHUwA3aHAs1Ps1XTYwugJ6VN
+   lX1m5YJJL7LHqB6qhwg4P8qGQWu/dYEV+7RMHgy5RxqeUpd2LLFved6Lm
+   crchDJXrszuMjZy57IuX5aAEgRqr1zGd7u6yKYGQCpnvDjJha1b7zIpNY
+   A==;
+X-CSE-ConnectionGUID: a+7vuGvyRJOcrMuf1kUm6Q==
+X-CSE-MsgGUID: sH9E2Ra4SN+BZSckzE5A4g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="63018515"
+X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
+   d="scan'208";a="63018515"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 09:08:29 -0700
+X-CSE-ConnectionGUID: IxbxU0ZNQ1aN1ZpkTN73XQ==
+X-CSE-MsgGUID: 02+xtRrdS46bfBcK2NodMA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
+   d="scan'208";a="153773404"
+Received: from spandruv-desk1.amr.corp.intel.com (HELO [10.125.108.59]) ([10.125.108.59])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 09:08:28 -0700
+Message-ID: <79e86754-710a-4335-8a09-a756201f7ae4@intel.com>
+Date: Tue, 17 Jun 2025 09:08:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250617124008epcas5p2e702f786645d44ceb1cdd980a914ce8e
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20250617124008epcas5p2e702f786645d44ceb1cdd980a914ce8e
-References: <20250617123944.78345-1-s.neeraj@samsung.com>
-	<CGME20250617124008epcas5p2e702f786645d44ceb1cdd980a914ce8e@epcas5p2.samsung.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 04/16] PCI/AER: Dequeue forwarded CXL error
+To: Lukas Wunner <lukas@wunner.de>, "Bowman, Terry" <terry.bowman@amd.com>
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, bp@alien8.de,
+ ming.li@zohomail.com, shiju.jose@huawei.com, dan.carpenter@linaro.org,
+ Smita.KoralahalliChannabasappa@amd.com, kobayashi.da-06@fujitsu.com,
+ rrichter@amd.com, peterz@infradead.org,
+ fabio.m.de.francesco@linux.intel.com, ilpo.jarvinen@linux.intel.com,
+ yazen.ghannam@amd.com, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20250603172239.159260-1-terry.bowman@amd.com>
+ <20250603172239.159260-5-terry.bowman@amd.com> <aEexYj8uImRt0kr9@wunner.de>
+ <aad4372e-d73b-47f9-9736-31dc1e6e03b0@amd.com>
+ <a602603b-e075-46a1-a4bf-3653954faa08@amd.com> <aEkIXiM3jaCvKw3o@wunner.de>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <aEkIXiM3jaCvKw3o@wunner.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-NDD_CXL_LABEL is introduced to set cxl LSA 2.1 label format
-Accordingly updated label index version
 
-Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
----
- drivers/nvdimm/dimm.c      |  1 +
- drivers/nvdimm/dimm_devs.c | 10 ++++++++++
- drivers/nvdimm/label.c     | 16 ++++++++++++----
- drivers/nvdimm/nd.h        |  1 +
- include/linux/libnvdimm.h  |  3 +++
- 5 files changed, 27 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/nvdimm/dimm.c b/drivers/nvdimm/dimm.c
-index 91d9163ee303..8753b5cd91cc 100644
---- a/drivers/nvdimm/dimm.c
-+++ b/drivers/nvdimm/dimm.c
-@@ -62,6 +62,7 @@ static int nvdimm_probe(struct device *dev)
- 	if (rc < 0)
- 		dev_dbg(dev, "failed to unlock dimm: %d\n", rc);
- 
-+	ndd->cxl = nvdimm_check_cxl_label_format(ndd->dev);
- 
- 	/*
- 	 * EACCES failures reading the namespace label-area-properties
-diff --git a/drivers/nvdimm/dimm_devs.c b/drivers/nvdimm/dimm_devs.c
-index 21498d461fde..e8f545f889fd 100644
---- a/drivers/nvdimm/dimm_devs.c
-+++ b/drivers/nvdimm/dimm_devs.c
-@@ -18,6 +18,16 @@
- 
- static DEFINE_IDA(dimm_ida);
- 
-+bool nvdimm_check_cxl_label_format(struct device *dev)
-+{
-+	struct nvdimm *nvdimm = to_nvdimm(dev);
-+
-+	if (test_bit(NDD_CXL_LABEL, &nvdimm->flags))
-+		return true;
-+
-+	return false;
-+}
-+
- /*
-  * Retrieve bus and dimm handle and return if this bus supports
-  * get_config_data commands
-diff --git a/drivers/nvdimm/label.c b/drivers/nvdimm/label.c
-index 082253a3a956..48b5ba90216d 100644
---- a/drivers/nvdimm/label.c
-+++ b/drivers/nvdimm/label.c
-@@ -687,11 +687,19 @@ static int nd_label_write_index(struct nvdimm_drvdata *ndd, int index, u32 seq,
- 		- (unsigned long) to_namespace_index(ndd, 0);
- 	nsindex->labeloff = __cpu_to_le64(offset);
- 	nsindex->nslot = __cpu_to_le32(nslot);
--	nsindex->major = __cpu_to_le16(1);
--	if (sizeof_namespace_label(ndd) < 256)
-+
-+	/* Support CXL LSA 2.1 label format */
-+	if (ndd->cxl) {
-+		nsindex->major = __cpu_to_le16(2);
- 		nsindex->minor = __cpu_to_le16(1);
--	else
--		nsindex->minor = __cpu_to_le16(2);
-+	} else {
-+		nsindex->major = __cpu_to_le16(1);
-+		if (sizeof_namespace_label(ndd) < 256)
-+			nsindex->minor = __cpu_to_le16(1);
-+		else
-+			nsindex->minor = __cpu_to_le16(2);
-+	}
-+
- 	nsindex->checksum = __cpu_to_le64(0);
- 	if (flags & ND_NSINDEX_INIT) {
- 		unsigned long *free = (unsigned long *) nsindex->free;
-diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
-index 5ca06e9a2d29..304f0e9904f1 100644
---- a/drivers/nvdimm/nd.h
-+++ b/drivers/nvdimm/nd.h
-@@ -522,6 +522,7 @@ void nvdimm_set_labeling(struct device *dev);
- void nvdimm_set_locked(struct device *dev);
- void nvdimm_clear_locked(struct device *dev);
- int nvdimm_security_setup_events(struct device *dev);
-+bool nvdimm_check_cxl_label_format(struct device *dev);
- #if IS_ENABLED(CONFIG_NVDIMM_KEYS)
- int nvdimm_security_unlock(struct device *dev);
- #else
-diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
-index e772aae71843..0a55900842c8 100644
---- a/include/linux/libnvdimm.h
-+++ b/include/linux/libnvdimm.h
-@@ -44,6 +44,9 @@ enum {
- 	/* dimm provider wants synchronous registration by __nvdimm_create() */
- 	NDD_REGISTER_SYNC = 8,
- 
-+	/* dimm supports region labels (LSA Format 2.1) */
-+	NDD_CXL_LABEL = 9,
-+
- 	/* need to set a limit somewhere, but yes, this is likely overkill */
- 	ND_IOCTL_MAX_BUFLEN = SZ_4M,
- 	ND_CMD_MAX_ELEM = 5,
--- 
-2.34.1
+On 6/10/25 9:38 PM, Lukas Wunner wrote:
+> On Tue, Jun 10, 2025 at 04:20:53PM -0500, Bowman, Terry wrote:
+>> On 6/10/2025 1:07 PM, Bowman, Terry wrote:
+>>> On 6/9/2025 11:15 PM, Lukas Wunner wrote:
+>>>> On Tue, Jun 03, 2025 at 12:22:27PM -0500, Terry Bowman wrote:
+>>>>> --- a/drivers/cxl/core/ras.c
+>>>>> +++ b/drivers/cxl/core/ras.c
+>>>>> +static int cxl_rch_handle_error_iter(struct pci_dev *pdev, void *data)
+>>>>> +{
+>>>>> +	struct cxl_prot_error_info *err_info = data;
+>>>>> +	struct pci_dev *pdev_ref __free(pci_dev_put) = pci_dev_get(pdev);
+>>>>> +	struct cxl_dev_state *cxlds;
+>>>>> +
+>>>>> +	/*
+>>>>> +	 * The capability, status, and control fields in Device 0,
+>>>>> +	 * Function 0 DVSEC control the CXL functionality of the
+>>>>> +	 * entire device (CXL 3.0, 8.1.3).
+>>>>> +	 */
+>>>>> +	if (pdev->devfn != PCI_DEVFN(0, 0))
+>>>>> +		return 0;
+>>>>> +
+>>>>> +	/*
+>>>>> +	 * CXL Memory Devices must have the 502h class code set (CXL
+>>>>> +	 * 3.0, 8.1.12.1).
+>>>>> +	 */
+>>>>> +	if ((pdev->class >> 8) != PCI_CLASS_MEMORY_CXL)
+>>>>> +		return 0;
+>>>>> +
+>>>>> +	if (!is_cxl_memdev(&pdev->dev) || !pdev->dev.driver)
+>>>>> +		return 0;
+>>>>
+>>>> Is the point of the "!pdev->dev.driver" check to ascertain that
+>>>> pdev is bound to cxl_pci_driver?
+>>>>
+>>>> If so, you need to check "if (pdev->driver != &cxl_pci_driver)"
+>>>> directly (like cxl_handle_cper_event() does).
+>>>>
+>>>> That's because there are drivers which may bind to *any* PCI device,
+>>>> e.g. vfio_pci_driver.
+>>
+>> Looking closer to implement this change I find the cxl_pci_driver is
+>> defined static in cxl/pci.c and is unavailable to reference in
+>> cxl/core/ras.c as-is. Would you like me to export cxl_pci_driver to
+>> make available for this check?
+> 
+> I'm not sure you need an export.  The consumer you're introducing
+> is located in core/ras.c, which is always built-in, never modular,
+> hence just making it non-static and adding a declaration to cxlpci.h
+> may be sufficient.
+> 
+> An alternative would be to keep it static, but add a non-static helper
+> cxl_pci_drv_bound() or something like that.
+> 
+> I'm passing the buck to CXL maintainers for this. :)
 
+I don't have a good solution to this. Moving the declaration of cxl_pci driver to core would be pretty messy. Perhaps doing the dance of calling try_module_get() is less messy? Or maybe Dan has a better idea....
+
+DJ
+
+> 
+>> The existing class code check guarantees it is a CXL EP. Is it not
+>> safe to expect it is bound to a the CXL driver?
+> 
+> Just checking for the pci_dev being bound seems insufficient to me
+> because of the vfio_pci_driver case and potentially others.
+> 
+> HTH,
+> 
+> Lukas
+> 
 
