@@ -1,406 +1,230 @@
-Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AAB626AEC
-	for <linux-cxl@vger.kernel.org>; Tue, 17 Jun 2025 04:20:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED89B292B40
+	for <linux-cxl@vger.kernel.org>; Tue, 17 Jun 2025 09:19:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750134019; cv=none; b=eQnofm63toy+3jVO4FS3kpuwVBYKHc/zxuZxoncL8ybB5kEuRo4UXKIVpcOOsqhO82uQz8f0CEh39+ip4QpgHvHLJom7x/dajxOIXJ9IVlhO2CHo1Ptacp2ENuUS5scP9E2ZrF/qEmPD/N1xNQ+4p1Bt31Rzg4Tvq2TJU+4jCaQ=
+	t=1750151983; cv=none; b=Rmgdjj8Kyhz9th2U96mIsRsaXvMBOp4rUWPHU6lTyYQA9J70GtKZPwjli8uNLYUovvIwhqIZc/c0IbwzPGxGIXuRI6EbLTUF6JZuF69aibTndFMBVbgvevBTwuoNypCe9L2F/uy7Zfb+XWS60j6xQE1ckYNO5I485dBybtpi9BU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750134019; c=relaxed/simple;
-	bh=7uWu+xtFkpkUvFewB4UPjfrrtHrhMXjTrdlu0VcJKG8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eNHb3X/S06/fSFMmRqnO0ROzsF51rUl/Oah+mX5PYPiTwVQdkNTQmGGBqZ9iwIDCRJ4GeX+WDhQRLsWiabQmILQmhkmdxyEHHY347CG/zLAy02tjYehCfhWNCKuHqokKSb99DNiIWC9Ij6gG8mLBoY5gyFDrPwQsKGPFnClKfeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=129.150.39.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwAHDxv77FBopb04Aw--.991S2;
-	Tue, 17 Jun 2025 12:20:11 +0800 (CST)
-Received: from phytium.com.cn (unknown [218.76.62.144])
-	by mail (Coremail) with SMTP id AQAAfwC3Tyny7FBoIwhWAA--.24S3;
-	Tue, 17 Jun 2025 12:20:03 +0800 (CST)
-From: wangyuquan <wangyuquan1236@phytium.com.cn>
-To: rad@semihalf.com,
-	peter.maydell@linaro.org,
-	leif.lindholm@oss.qualcomm.com,
-	jonathan.cameron@huawei.com
-Cc: qemu-devel@nongnu.org,
-	linux-cxl@vger.kernel.org,
-	Yuquan Wang <wangyuquan1236@phytium.com.cn>
-Subject: [RFC PATCH v6] hw/arm/sbsa-ref: Support CXL Host Bridge & CFMW
-Date: Tue, 17 Jun 2025 12:19:46 +0800
-Message-Id: <20250617041946.82587-1-wangyuquan1236@phytium.com.cn>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1750151983; c=relaxed/simple;
+	bh=+5SWU1o8juSDYZoOuyQJC1B+OKlGQ52mSspkNeSUazk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KkiacB2S7kxS0J029OU1b1VwlmocQC2eWDYMQTsfz2jhcgyjRXyuS8l+BFy7LxV52I/JUZJbmm/8woSADTI0uBWWB1CapePPzZ+U/5wp7nzowxnFSvWsp6zOqMQe5OJezYH09zH8GjJ3WMUHaj2Rq97FCVKZmIealrqU3snj9fw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Hpyv6nxu; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hpyv6nxu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750151979;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Pl6PxwbpUS7ADU1xqvtXXrf/iKUynSR5SAu+83BnGX4=;
+	b=Hpyv6nxuUkYyaiSPWyTENXhMPXmMziP5LWCNJqk+SV/gM4mOWMsHPPHyk8T1g1LZ+wvtp6
+	VDeDiWzC2xAxN6S+QkgrSoYDOIFb0O5R0EhqmeWfP7XfVtCc+5cL2pcU31a/IyOlsEzGpE
+	+ORyZjkGIviB99mAWsh5xEXPqt6iQKg=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-94-6MkwQhbsNCqWwW50cRfGAQ-1; Tue, 17 Jun 2025 05:19:38 -0400
+X-MC-Unique: 6MkwQhbsNCqWwW50cRfGAQ-1
+X-Mimecast-MFC-AGG-ID: 6MkwQhbsNCqWwW50cRfGAQ_1750151977
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-45311704d22so35978235e9.2
+        for <linux-cxl@vger.kernel.org>; Tue, 17 Jun 2025 02:19:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750151977; x=1750756777;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Pl6PxwbpUS7ADU1xqvtXXrf/iKUynSR5SAu+83BnGX4=;
+        b=kOKi8YyaMHyJGEZc2YoeM5pTpKC6FJ6zXLkqduh896mLNJi3dCib4lNcgDByAD1HKk
+         SiK2P4rLHzThW94QtPx5aCnH68U8ChiEAiIxmch1iwHz+W8Tuwh08b1k+TglK+hngNK2
+         EbwkSYUCnB9UX7ER1pTSx48gziHyBgEA9CXSVcj4/b0E//uVY47CXx4G1jxtptJKAy1c
+         7OzkAtpv1BaBnTxlHg8A+aO98TMcpQUiFHc1EOX7wIjDDNZdryZjRw1qxJ999XU4ZDnP
+         7YW/BZBprAZLXMqtagM/yrYT3zgEBDkEgqBDlcCqK3gxzYVS2E58H0M+W4+yevgmqjBH
+         mhfA==
+X-Forwarded-Encrypted: i=1; AJvYcCWLpAJ8mXmTpoDFWuFZ4xpjjat4ttVkRRN1QeK9BeRtl2Tgssj2cmSmJW/4ZrfbtEggrEHyWeLbPr8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVNjE5AMz2DTPtKra9zL1B9l+rjYJeFchSIBsXXGyeFZ0hTJEz
+	mMUWLsvb2VpPH7PbgF6Nb3xcWhm+lzkmuLfxaeVfb8JEAB37RvEwjG+O5HjtHoEWNcWaQaGK7+N
+	/qGIf9VbmKON4uDx3WbognnHZ1FUrOAZ/8BwECujlikqAenBoTpXWBq0dtD3h6Q==
+X-Gm-Gg: ASbGnctul/g/qKvdDR5h6td6/PlmWnXgTgVJ2D6I0jiKqMozKfcFzqxMWEwAG4AiyUP
+	19PMc2phJRytZ9nq7fsFttjvfVd5FHDXLeVgfW32k2SV4H+DAPdLBxQDC5zmYTiYtpYV34uNFqN
+	oDbUdC+cLzw6oEyLELOELmgNA1Mk1xG4FkTaDB1n0fq+OzKBMQmbcL4y+0WLV0gq2RA/kojpMa2
+	zkcTZkMmmV4QcpZKAv4EerYtWE2II4B4XLvtosAQk830hjH0Bp8gEl9zgavzLvR7x3YJluLFvXF
+	nF+5ZVcRWOXxKbGVcIqa5vFunxtUM5RKsL3MXaOHrtDBveVx4O9kQ+L1Bk83IQYf0geXk9dphT9
+	7/6yaPZzUuffozQjKkcaKaWg63aDAua7gwzC0axg9sfnSz0g=
+X-Received: by 2002:a05:6000:4202:b0:3a4:dfaa:df8d with SMTP id ffacd0b85a97d-3a572367c45mr11265689f8f.9.1750151977234;
+        Tue, 17 Jun 2025 02:19:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHt8iXJvJT0W2e4sI8GT6VcpVG8jxrePAU09oM8r6xnq4XSbjmN3FC6k4gXR+D2djVSpIQQtw==
+X-Received: by 2002:a05:6000:4202:b0:3a4:dfaa:df8d with SMTP id ffacd0b85a97d-3a572367c45mr11265656f8f.9.1750151976687;
+        Tue, 17 Jun 2025 02:19:36 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f31:700:3851:c66a:b6b9:3490? (p200300d82f3107003851c66ab6b93490.dip0.t-ipconnect.de. [2003:d8:2f31:700:3851:c66a:b6b9:3490])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b08e21sm13528866f8f.52.2025.06.17.02.19.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 02:19:36 -0700 (PDT)
+Message-ID: <bf855ce0-d0ba-4bd6-bfc1-8be2fdbdfe70@redhat.com>
+Date: Tue, 17 Jun 2025 11:19:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAfwC3Tyny7FBoIwhWAA--.24S3
-X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQADAWhPIu4E8QAgs9
-Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=wangyuquan
-	1236@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjvAXoWfGFWrZrW8Xr18KFy3Ar15CFg_yoW8Gr1xKo
-	WIqFs5CF48Kw4SqF10kFZrtrW7XFZ8KFn3JF45CF4Yka1UA3yDJa4fKws7JwsxJr4rtF13
-	XFZrtr9xW34DJF97n29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXasCq-sGcSsGvf
-	J3UbIjqfuFe4nvWSU8nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2KfnxnUUI43ZEXa7xR_UU
-	UUUUUUU==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 01/14] mm: Convert pXd_devmap checks to vma_is_dax
+To: Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org
+Cc: linux-mm@kvack.org, gerald.schaefer@linux.ibm.com,
+ dan.j.williams@intel.com, jgg@ziepe.ca, willy@infradead.org,
+ linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+ linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
+ zhang.lyra@gmail.com, debug@rivosinc.com, bjorn@kernel.org,
+ balbirs@nvidia.com, lorenzo.stoakes@oracle.com,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-cxl@vger.kernel.org, dri-devel@lists.freedesktop.org, John@Groves.net,
+ m.szyprowski@samsung.com, Jason Gunthorpe <jgg@nvidia.com>
+References: <cover.8d04615eb17b9e46fc0ae7402ca54b69e04b1043.1750075065.git-series.apopple@nvidia.com>
+ <361009510f346090fad328c53ec228d99bb955ee.1750075065.git-series.apopple@nvidia.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <361009510f346090fad328c53ec228d99bb955ee.1750075065.git-series.apopple@nvidia.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: xAADF6eL2NbXsm-cvp18sOw7spkPRaxyuefk9C2A_G0_1750151977
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+On 16.06.25 13:58, Alistair Popple wrote:
+> Currently dax is the only user of pmd and pud mapped ZONE_DEVICE
+> pages. Therefore page walkers that want to exclude DAX pages can check
+> pmd_devmap or pud_devmap. However soon dax will no longer set PFN_DEV,
+> meaning dax pages are mapped as normal pages.
+> 
+> Ensure page walkers that currently use pXd_devmap to skip DAX pages
+> continue to do so by adding explicit checks of the VMA instead.
+ > > Signed-off-by: Alistair Popple <apopple@nvidia.com>
+> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> 
+> ---
+> 
+> Changes from v1:
+> 
+>   - Remove vma_is_dax() check from mm/userfaultfd.c as
+>     validate_move_areas() will already skip DAX VMA's on account of them
+>     not being anonymous.
 
-This creates a specific CXL host bridge (0001:00) with two cxl
-root ports on sbsa-ref. And the memory layout provides separate
-space windows for the cxl host bridge in the sbsa-ref memmap:
+This should be documented in the patch description above.
 
-- 64K  CXL Host Bridge Component Registers (CHBCR)
-- 64K  CXL_PIO
-- 128M CXL_MMIO
-- 256M CXL_ECAM
-- 4G   CXL_MMIO_HIGH
+> ---
+>   fs/userfaultfd.c | 2 +-
+>   mm/hmm.c         | 2 +-
+>   mm/userfaultfd.c | 6 ------
+>   3 files changed, 2 insertions(+), 8 deletions(-)
+> 
+> diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+> index ef054b3..a886750 100644
+> --- a/fs/userfaultfd.c
+> +++ b/fs/userfaultfd.c
+> @@ -304,7 +304,7 @@ static inline bool userfaultfd_must_wait(struct userfaultfd_ctx *ctx,
+>   		goto out;
+>   
+>   	ret = false;
+> -	if (!pmd_present(_pmd) || pmd_devmap(_pmd))
+> +	if (!pmd_present(_pmd) || vma_is_dax(vmf->vma))
+>   		goto out;
 
-To provide CFMWs on sbsa-ref, this extends 1TB space from the
-hole above RAM Memory [SBSA_MEM] for CXL Fixed Memory Window:
+VMA checks should be done before doing any page table walk.
 
-- 1T   CXL_FIXED_WINDOW
+>   
+>   	if (pmd_trans_huge(_pmd)) {
+> diff --git a/mm/hmm.c b/mm/hmm.c
+> index feac861..5311753 100644
+> --- a/mm/hmm.c
+> +++ b/mm/hmm.c
+> @@ -441,7 +441,7 @@ static int hmm_vma_walk_pud(pud_t *pudp, unsigned long start, unsigned long end,
+>   		return hmm_vma_walk_hole(start, end, -1, walk);
+>   	}
+>   
+> -	if (pud_leaf(pud) && pud_devmap(pud)) {
+> +	if (pud_leaf(pud) && vma_is_dax(walk->vma)) {
+>   		unsigned long i, npages, pfn;
+>   		unsigned int required_fault;
+>   		unsigned long *hmm_pfns;
 
-Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
----
+Dito.
 
-v5 -> v6:
-- Change the CXL root ports to 4
+> diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+> index 58b3ad6..8395db2 100644
+> --- a/mm/userfaultfd.c
+> +++ b/mm/userfaultfd.c
+> @@ -1818,12 +1818,6 @@ ssize_t move_pages(struct userfaultfd_ctx *ctx, unsigned long dst_start,
+>   
+>   		ptl = pmd_trans_huge_lock(src_pmd, src_vma);
+>   		if (ptl) {
+> -			if (pmd_devmap(*src_pmd)) {
+> -				spin_unlock(ptl);
+> -				err = -ENOENT;
+> -				break;
+> -			}
+> -
+>   			/* Check if we can move the pmd without splitting it. */
+>   			if (move_splits_huge_pmd(dst_addr, src_addr, src_start + len) ||
+>   			    !pmd_none(dst_pmdval)) {
 
-Background
-==========
-Currently the base CXL support for arm platforms is only on Jonathan's patches[2].
-SBSA-REF can be more like a real machine, thus my initial purpose is to support the
-simplest CXL VH topology on sbsa-ref to verify the basic CXL function usage,
-therefore, some real machine could refer the CXL running result on sbsa-ref.  
 
-This series leverages Jonathan's patches to design [SBSA_CXL_CHBCR] and
-[SBSA_CXL_FIXED_WINDOW] spaces for sbsa-ref layout. 
-
-Regard to the burden of edk2 firmware, I try to build a static CEDT table and add
-acpi0016, acpi0017 and other CXL relevant contents into acpi tables[3][4]. Hence it
-doesn't need to communicate CXL contents via DT to edk2. 
-
-The New CXL HOST
-================
-This patch will use the new CXL host bridge to establish the CXL topology[5].
-
-CXL FIXED WINDOW design
-=======================
-0xA0000000000 is chosen as the base address of this space because of 3 reasons:
-1) It is more suitable to choose a static address instead of that
-implementation in virt, since a dynamic address space layout of
-sbsa-ref is not appropriate for its original purpose as a reference
-platform.
-
-2) The Hotplug Memory address range should in the range of maximum
-addressable range of sbsa-ref platform(0x10000000000-0x80ffffffffff).
-It is satisfied the requirements of memory hotplug in linux kernel.
-
-3) The start pfn of CFMW should exceed the reserved_pfn_range for
-onlined numa node.
-
-Usage of CXL on sbsa-ref
-========================
-With the 'create_cxl()' and 'create_cxl_fixed_window()', users don't need to input
-'-device pxb-cxl' , '-device cxl-rp' and '-M cxl-fmw' parameters.
-
-Thus, to run sbsa-ref with a CXL device could use:
-qemu-system-aarch64 \
--object memory-backend-file,id=mem2,mem-path=/tmp/mem2,size=256M,share=true \
--device cxl-type3,bus=cxl.0,volatile-memdev=mem2,id=cxl-mem1 \
-
-Incompatibility problem
-=======================
-Although the new CXL host bridge has been separated from the original pcie host, the
-incompatibility problem of "-device qemu-xhci" is not resolved. Because the new device
-to plug by qemu command would be enumerated at the largest domain(0001), for example,
-if we add "-device qemu-xhci" to boot sbsa-ref with CXL, the lspci would show:
-
-    root@ubuntu-jammy-arm64:~# lspci
-     0000:00:00.0 Host bridge: Red Hat, Inc. QEMU PCIe Host bridge
-     0000:00:01.0 Ethernet controller: Intel Corporation 82574L Gigabit Network Connection
-     0000:00:02.0 Display controller: Device 1234:1111 (rev 02)
-     0001:00:00.0 PCI bridge: Intel Corporation Device 7075
-     0001:00:01.0 PCI bridge: Intel Corporation Device 7075
-     0001:00:02.0 PCI bridge: Intel Corporation Device 7075
-     0001:00:03.0 PCI bridge: Intel Corporation Device 7075
-     0001:00:04.0 USB controller: Red Hat, Inc. QEMU XHCI Host Controller (rev 01)
-     0001:01:00.0 Memory controller [0502]: Intel Corporation Device 0d93 (rev 01)
-     0001:02:00.0 Memory controller [0502]: Intel Corporation Device 0d93 (rev 01)
-     0001:03:00.0 Memory controller [0502]: Intel Corporation Device 0d93 (rev 01)
-     0001:04:00.0 Memory controller [0502]: Intel Corporation Device 0d93 (rev 01)
-
-Hence we should add "bus=pcie.0" when we want to plug some devices on the original
-pcie bus, for example:
--device qemu-xhci,bus=pcie.0 \
-or
--device nvme,serial=deadbeef,bus=pcie.0,drive=hdd \
--drive file=../disk/hdd.qcow2,format=qcow2,id=hdd,if=none \
-
-Dynamic CXL topology problem
-============================
-Actually the ideal expectation is sbsa-ref could also have a dynamic CXL topology by user
-parameters. According to my knowledge, it should pass a dtb to firmware to match the required
-address space. I'm currently trying to solve this problem. I am looking for suggestions on if
-there are better ways to do it.
-
-This series patches are here to hopefully some comments to guide me!
-
-Link:
-[1]: https://lists.nongnu.org/archive/html/qemu-arm/2024-12/msg00350.html
-[2]: https://lore.kernel.org/linux-cxl/20220616141950.23374-1-Jonathan.Cameron@huawei.com/
-[3]: https://edk2.groups.io/g/devel/message/120851
-[4]: https://edk2.groups.io/g/devel/topic/rfc_patch_edk2_platforms_v4/110023229
-[5]: https://lore.kernel.org/linux-cxl/20250617040649.81303-1-wangyuquan1236@phytium.com.cn/T/#t
-
- docs/system/arm/sbsa.rst |   4 ++
- hw/arm/Kconfig           |   1 +
- hw/arm/sbsa-ref.c        | 137 ++++++++++++++++++++++++++++++++++++++-
- 3 files changed, 141 insertions(+), 1 deletion(-)
-
-diff --git a/docs/system/arm/sbsa.rst b/docs/system/arm/sbsa.rst
-index 2bf3fc8d59..21b88e88e7 100644
---- a/docs/system/arm/sbsa.rst
-+++ b/docs/system/arm/sbsa.rst
-@@ -28,6 +28,7 @@ The ``sbsa-ref`` board supports:
-   - E1000E ethernet card on PCIe bus
-   - Bochs display adapter on PCIe bus
-   - A generic SBSA watchdog device
-+  - CXL host bridge and CXL fixed memory window
- 
- 
- Board to firmware interface
-@@ -92,3 +93,6 @@ Platform version changes:
- 
- 0.4
-   CPU topology information is present in devicetree.
-+
-+0.5
-+  CXL host bridge and CXL fixed memory window are supported.
-diff --git a/hw/arm/Kconfig b/hw/arm/Kconfig
-index f543d944c3..b7247f83bc 100644
---- a/hw/arm/Kconfig
-+++ b/hw/arm/Kconfig
-@@ -192,6 +192,7 @@ config SBSA_REF
-     select GPIO_KEY
-     select PCI_EXPRESS
-     select PCI_EXPRESS_GENERIC_BRIDGE
-+    select CXL_HOST_BRIDGE
-     select PFLASH_CFI01
-     select PL011 # UART
-     select PL031 # RTC
-diff --git a/hw/arm/sbsa-ref.c b/hw/arm/sbsa-ref.c
-index deae5cf986..7082d83da0 100644
---- a/hw/arm/sbsa-ref.c
-+++ b/hw/arm/sbsa-ref.c
-@@ -36,11 +36,15 @@
- #include "hw/arm/smmuv3.h"
- #include "hw/block/flash.h"
- #include "hw/boards.h"
-+#include "hw/cxl/cxl.h"
-+#include "hw/cxl/cxl_host.h"
- #include "hw/ide/ide-bus.h"
- #include "hw/ide/ahci-sysbus.h"
- #include "hw/intc/arm_gicv3_common.h"
- #include "hw/intc/arm_gicv3_its_common.h"
- #include "hw/loader.h"
-+#include "hw/pci/pcie_port.h"
-+#include "hw/pci-host/cxl_host_bridge.h"
- #include "hw/pci-host/gpex.h"
- #include "hw/qdev-properties.h"
- #include "hw/usb.h"
-@@ -94,6 +98,13 @@ enum {
-     SBSA_SECURE_MEM,
-     SBSA_AHCI,
-     SBSA_XHCI,
-+    SBSA_CXL,
-+    SBSA_CXL_CHBCR,
-+    SBSA_CXL_MMIO,
-+    SBSA_CXL_MMIO_HIGH,
-+    SBSA_CXL_PIO,
-+    SBSA_CXL_ECAM,
-+    SBSA_CXL_FIXED_WINDOW,
- };
- 
- struct SBSAMachineState {
-@@ -105,6 +116,7 @@ struct SBSAMachineState {
-     int psci_conduit;
-     DeviceState *gic;
-     PFlashCFI01 *flash[2];
-+    CXLState cxl_devices_state;
- };
- 
- #define TYPE_SBSA_MACHINE   MACHINE_TYPE_NAME("sbsa-ref")
-@@ -132,6 +144,14 @@ static const MemMapEntry sbsa_ref_memmap[] = {
-     /* Space here reserved for more SMMUs */
-     [SBSA_AHCI] =               { 0x60100000, 0x00010000 },
-     [SBSA_XHCI] =               { 0x60110000, 0x00010000 },
-+    /* 64K CXL Host Bridge Registers space */
-+    [SBSA_CXL_CHBCR] =          { 0x60200000, 0x00010000 },
-+    /* 64K CXL PIO space */
-+    [SBSA_CXL_PIO] =            { 0x60300000, 0x00010000 },
-+    /* 128M CXL 32-bit MMIO space */
-+    [SBSA_CXL_MMIO] =           { 0x60400000, 0x08000000 },
-+    /* 256M CXL ECAM space */
-+    [SBSA_CXL_ECAM] =           { 0x68500000, 0x10000000 },
-     /* Space here reserved for other devices */
-     [SBSA_PCIE_PIO] =           { 0x7fff0000, 0x00010000 },
-     /* 32-bit address PCIE MMIO space */
-@@ -141,6 +161,10 @@ static const MemMapEntry sbsa_ref_memmap[] = {
-     /* ~1TB PCIE MMIO space (4GB to 1024GB boundary) */
-     [SBSA_PCIE_MMIO_HIGH] =     { 0x100000000ULL, 0xFF00000000ULL },
-     [SBSA_MEM] =                { 0x10000000000ULL, RAMLIMIT_BYTES },
-+    /* 4G CXL 64-bit MMIO space */
-+    [SBSA_CXL_MMIO_HIGH] =      { 0x90000000000ULL, 0x100000000ULL },
-+    /* 1TB CXL FIXED WINDOW space */
-+    [SBSA_CXL_FIXED_WINDOW] =   { 0xA0000000000ULL, 0x10000000000ULL },
- };
- 
- static const int sbsa_ref_irqmap[] = {
-@@ -154,6 +178,7 @@ static const int sbsa_ref_irqmap[] = {
-     [SBSA_XHCI] = 11,
-     [SBSA_SMMU] = 12, /* ... to 15 */
-     [SBSA_GWDT_WS0] = 16,
-+    [SBSA_CXL] = 17, /* ... to 20 */
- };
- 
- static uint64_t sbsa_ref_cpu_mp_affinity(SBSAMachineState *sms, int idx)
-@@ -216,7 +241,7 @@ static void create_fdt(SBSAMachineState *sms)
-      *                        fw compatibility.
-      */
-     qemu_fdt_setprop_cell(fdt, "/", "machine-version-major", 0);
--    qemu_fdt_setprop_cell(fdt, "/", "machine-version-minor", 4);
-+    qemu_fdt_setprop_cell(fdt, "/", "machine-version-minor", 5);
- 
-     if (ms->numa_state->have_numa_distance) {
-         int size = nb_numa_nodes * nb_numa_nodes * 3 * sizeof(uint32_t);
-@@ -631,6 +656,114 @@ static void create_smmu(const SBSAMachineState *sms, PCIBus *bus)
-     }
- }
- 
-+static void create_cxl_fixed_window(SBSAMachineState *sms,
-+                               MemoryRegion *mem, CXLHostBridge *host)
-+{
-+    PCIBus *cxlbus = PCI_HOST_BRIDGE(host)->bus;
-+    char *cxl_host = object_get_canonical_path(OBJECT(cxlbus));
-+    hwaddr base = sbsa_ref_memmap[SBSA_CXL_FIXED_WINDOW].base;
-+    GList *it;
-+    strList host_target = { NULL, cxl_host };
-+    CXLFixedMemoryWindowOptions sbsa_ref_cfmwoptions = {
-+        .size = 1 * TiB,
-+        .has_interleave_granularity = false,
-+        .targets = &host_target,
-+    };
-+    CXLFixedWindow *fw;
-+
-+    cxl_fixed_memory_window_config(&sms->cxl_devices_state,
-+                                   &sbsa_ref_cfmwoptions, &error_fatal);
-+
-+    it = sms->cxl_devices_state.fixed_windows;
-+    fw = it->data;
-+    fw->base = base;
-+    fw->target_hbs[0] = OBJECT(host);
-+
-+    memory_region_init_io(&fw->mr, OBJECT(sms), &cfmws_ops, fw,
-+                          "cxl-fixed-memory-region", fw->size);
-+
-+    memory_region_add_subregion(mem, fw->base, &fw->mr);
-+}
-+
-+static void create_cxl(SBSAMachineState *sms)
-+{
-+    hwaddr base_ecam = sbsa_ref_memmap[SBSA_CXL_ECAM].base;
-+    hwaddr size_ecam = sbsa_ref_memmap[SBSA_CXL_ECAM].size;
-+    hwaddr base_mmio = sbsa_ref_memmap[SBSA_CXL_MMIO].base;
-+    hwaddr size_mmio = sbsa_ref_memmap[SBSA_CXL_MMIO].size;
-+    hwaddr base_mmio_high = sbsa_ref_memmap[SBSA_CXL_MMIO_HIGH].base;
-+    hwaddr size_mmio_high = sbsa_ref_memmap[SBSA_CXL_MMIO_HIGH].size;
-+    hwaddr base_pio = sbsa_ref_memmap[SBSA_CXL_PIO].base;
-+    hwaddr base_chbcr = sbsa_ref_memmap[SBSA_CXL_CHBCR].base;
-+    hwaddr size_chbcr = sbsa_ref_memmap[SBSA_CXL_CHBCR].size;
-+    int irq = sbsa_ref_irqmap[SBSA_CXL];
-+    MemoryRegion *mmio_alias, *mmio_alias_high, *mmio_reg;
-+    MemoryRegion *ecam_alias, *ecam_reg;
-+    MemoryRegion *sysmem = get_system_memory();
-+    MemoryRegion *chbcr = &sms->cxl_devices_state.host_mr;
-+    DeviceState *dev;
-+    CXLHostBridge *host;
-+    PCIHostState *cxl;
-+    PCIDevice *cxlrp;
-+    PCIEPort *p;
-+    PCIESlot *s;
-+    int i;
-+
-+    dev = qdev_new(TYPE_CXL_HOST);
-+    sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
-+    sms->cxl_devices_state.is_enabled = true;
-+
-+    /* Map CXL ECAM space */
-+    ecam_alias = g_new0(MemoryRegion, 1);
-+    ecam_reg = sysbus_mmio_get_region(SYS_BUS_DEVICE(dev), 1);
-+    memory_region_init_alias(ecam_alias, OBJECT(dev), "cxl-ecam",
-+                             ecam_reg, 0, size_ecam);
-+    memory_region_add_subregion(get_system_memory(), base_ecam, ecam_alias);
-+
-+    /* Map CXL MMIO space */
-+    mmio_alias = g_new0(MemoryRegion, 1);
-+    mmio_reg = sysbus_mmio_get_region(SYS_BUS_DEVICE(dev), 2);
-+    memory_region_init_alias(mmio_alias, OBJECT(dev), "cxl-mmio",
-+                             mmio_reg, base_mmio, size_mmio);
-+    memory_region_add_subregion(get_system_memory(), base_mmio, mmio_alias);
-+
-+    /* Map CXL MMIO_HIGH space */
-+    mmio_alias_high = g_new0(MemoryRegion, 1);
-+    memory_region_init_alias(mmio_alias_high, OBJECT(dev), "cxl-mmio-high",
-+                             mmio_reg, base_mmio_high, size_mmio_high);
-+    memory_region_add_subregion(get_system_memory(),
-+                                base_mmio_high, mmio_alias_high);
-+
-+    /* Map CXL IO port space */
-+    sysbus_mmio_map(SYS_BUS_DEVICE(dev), 3, base_pio);
-+
-+    for (i = 0; i < PCI_NUM_PINS; i++) {
-+        sysbus_connect_irq(SYS_BUS_DEVICE(dev), i,
-+                           qdev_get_gpio_in(sms->gic, irq + i));
-+        cxl_host_set_irq_num(CXL_HOST(dev), i, irq + i);
-+    }
-+
-+    /* Map CXL CHBCR space */
-+    memory_region_init(chbcr, OBJECT(sms), "cxl_host_reg", size_chbcr);
-+    memory_region_add_subregion(sysmem, base_chbcr, chbcr);
-+
-+    cxl = PCI_HOST_BRIDGE(dev);
-+
-+    for (i = 0; i < 4; i++) {
-+        cxlrp = pci_new(-1, "cxl-rp");
-+        p = PCIE_PORT(cxlrp);
-+        s = PCIE_SLOT(cxlrp);
-+        p->port = i;
-+        s->slot = i;
-+        pci_realize_and_unref(cxlrp, cxl->bus, &error_fatal);
-+    }
-+
-+    host = CXL_HOST(dev);
-+    cxl_host_hook_up_registers(&sms->cxl_devices_state, host);
-+
-+    create_cxl_fixed_window(sms, sysmem, host);
-+}
-+
- static void create_pcie(SBSAMachineState *sms)
- {
-     hwaddr base_ecam = sbsa_ref_memmap[SBSA_PCIE_ECAM].base;
-@@ -823,6 +956,8 @@ static void sbsa_ref_init(MachineState *machine)
- 
-     create_pcie(sms);
- 
-+    create_cxl(sms);
-+
-     create_secure_ec(secure_sysmem);
- 
-     sms->bootinfo.ram_size = machine->ram_size;
 -- 
-2.34.1
+Cheers,
+
+David / dhildenb
 
