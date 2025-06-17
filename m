@@ -1,328 +1,222 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3865E28B3F9
-	for <linux-cxl@vger.kernel.org>; Tue, 17 Jun 2025 10:21:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1805321FF5E
+	for <linux-cxl@vger.kernel.org>; Tue, 17 Jun 2025 12:04:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750155708; cv=none; b=tl1/8NNmO0ed6TgAb36U/L6CPGU8f8A2PJ0LE4MDGP5nIvNFnBtQBEdCsbMib8a2qdki0sxGyFtfGFE9ziFFrM0t/qGo97RP9r0tyiVQwlMlq7UrDUkHOMsPMx1AccGyxEnmp/NRIkFTg/OqubCuGYOA9aRyzn57y4wwBzxIksc=
+	t=1750161872; cv=none; b=Ebsl+0nM5Vhh/C9qtiZaz3asjW3B1N9E4wbj+JR/crRyeKL3VFXEIkKG4+6hFowV91IlG6kczMIjzbg0MznrCFZcwJjsXAklgFFCl4jEUv20ESj+Y7Bi5aLhKb+II8Fd8i8pSWkKfMS/XE3Gwx+vEdJI9iK2l/EfXCWNDODkfvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750155708; c=relaxed/simple;
-	bh=iO7Km8/B29OZwQG0g4bxX/V5elNUV+4k/B+3YHxLAqw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=YFAV8EC1h1kiceiWLb9DBBmU19PiQF0WujpEbfFgwDg823v/L6brlvlB9W926YLmpp/v1JP/e20YGFX70/K2YUof3TvVkgjDvUbKHEA2lu84RvyD/n8oswvTzB4klJ1sx/JEX1XgT+F5NauGv7qFLM22dG7Ar+dVozG8PIv9OnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=tQZyY0oK; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1750161872; c=relaxed/simple;
+	bh=moGiQCO1fTHWOFXccIuBWregNxm44PhEFhx5dvZ34mc=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=KWOo9qReLVlp1AOldmVgT4xurbBfj8jGnFiWSNIxD5Kn6XQFch3bAY7SNEQsrZRbFwoUexSs0unHtw2x8nbg3AsLfi44hvysRzp1sYmox08boky1Eo0rcWstTc5vPNYI1XTy8ymx5exRNBAeFsfqkCWbU1aihQZRC3CYUelNpHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=duux1dtI; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tQZyY0oK"
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250617102144epoutp04405e649260794f6299a3985e0ae96c01~JzVcjBXzK1125911259epoutp04a
-	for <linux-cxl@vger.kernel.org>; Tue, 17 Jun 2025 10:21:44 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250617102144epoutp04405e649260794f6299a3985e0ae96c01~JzVcjBXzK1125911259epoutp04a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1750155704;
-	bh=3KgvRgTU4cn4BM4l0esPAnPMKhdKDAdRbUBviGxOSKQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=tQZyY0oKjVGWmKb5P6D7kdehWwGzjoLpKB78XpszGuc6fGDvDG2R6vr1hMlY4E+kz
-	 aLV8rFWZ3N8KkzmPbvlf/bGC0r74bZojZWM2cyxbbtduw/OSLaEfFjQEdyvH0ynXUg
-	 kHuwb2+Azkmg27MfGHHls0P8RdJLGUB+eFqD5D3g=
-Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
-	20250617102144epcas5p2c6ae5fd671c6b8434674381ffffddb13~JzVcR4YPO0587405874epcas5p2S;
-	Tue, 17 Jun 2025 10:21:44 +0000 (GMT)
-Received: from epcas5p2.samsung.com (unknown [182.195.38.182]) by
-	epsnrtp01.localdomain (Postfix) with ESMTP id 4bM2wQ48s1z6B9m4; Tue, 17 Jun
-	2025 10:21:42 +0000 (GMT)
-Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20250617101142epcas5p480d44eef68b94fb4590949e5fbf31e69~JzMsIoPeq1786417864epcas5p4z;
-	Tue, 17 Jun 2025 10:11:42 +0000 (GMT)
-Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250617101141epsmtip118bbb4d9ca9bc2fac510f4653dd7b2f4~JzMq15knE2132521325epsmtip1P;
-	Tue, 17 Jun 2025 10:11:41 +0000 (GMT)
-Date: Tue, 17 Jun 2025 15:41:36 +0530
-From: Arpit Kumar <arpit1.kumar@samsung.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: qemu-devel@nongnu.org, gost.dev@samsung.com, linux-cxl@vger.kernel.org,
-	nifan.cxl@gmail.com, dave@stgolabs.net, vishak.g@samsung.com,
-	krish.reddy@samsung.com, a.manzanares@samsung.com, alok.rathore@samsung.com
-Subject: Re: [PATCH 3/3] hw/cxl: Add Physical Port Control (Opcode 5102h)
-Message-ID: <20250617101136.z4ityaayhuglrvqu@test-PowerEdge-R740xd>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="duux1dtI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750161868; x=1781697868;
+  h=date:from:to:cc:subject:message-id;
+  bh=moGiQCO1fTHWOFXccIuBWregNxm44PhEFhx5dvZ34mc=;
+  b=duux1dtI17Syo8Zr/tBImkWcKaJTJKbRBPQp7bRWbpj+DO7nHCFNZlJb
+   biTgzuV84pfp8Q2xeJXSZCZJByny+WgyJmSDECK/YTTGrgXMtLDJV/57t
+   OK+vYdEBw/WjMvlpmZL0oy7CwViBCC9+j0zCii2CORG6F5sr5/mJUlOzk
+   ZZXypsBKbDvCPIKZfyCkkvxt3+mIvgDZCZiWpSzfLpdoOyM6NlQZlaSEF
+   26C1N7EvXs+HcPKDiYcsIjnErJVRU4w1AFrrhyeqSmP60XLxz15UVG+Zt
+   FBJ17xfoO3IoLb5TEpUBUzHRpqvhEB80ybkhJfIgskmXH9OxPYGuAJjP/
+   w==;
+X-CSE-ConnectionGUID: u+9i7wbkS8WL1xTUvCP9CA==
+X-CSE-MsgGUID: 6ziWEcRdTnOJlu5gkRJpnQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="63368781"
+X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
+   d="scan'208";a="63368781"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 05:04:27 -0700
+X-CSE-ConnectionGUID: FUL18T/nTqiSCz7a6+jYGg==
+X-CSE-MsgGUID: iuMKeFk/SY+jvSMhQKsvgg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
+   d="scan'208";a="148747021"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 17 Jun 2025 05:04:25 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uRV38-000Fwj-1q;
+	Tue, 17 Jun 2025 12:04:22 +0000
+Date: Tue, 17 Jun 2025 20:03:57 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Subject: [cxl:next] BUILD SUCCESS
+ a021802c18c4c30dff3db9bd355cacb68521f1aa
+Message-ID: <202506172045.rbiBCF4J-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <20250610154501.0000213b@huawei.com>
-X-CMS-MailID: 20250617101142epcas5p480d44eef68b94fb4590949e5fbf31e69
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----K5ZVV-zrPS8y8iJelFUsagW7KEVVNg7wn3oh2ZJRPRpX678s=_a5bcc_"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-542,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250602140045epcas5p2445a99b249ba9588af027d59b0c8bd35
-References: <20250602135942.2773823-1-arpit1.kumar@samsung.com>
-	<CGME20250602140045epcas5p2445a99b249ba9588af027d59b0c8bd35@epcas5p2.samsung.com>
-	<20250602135942.2773823-4-arpit1.kumar@samsung.com>
-	<20250610154501.0000213b@huawei.com>
 
-------K5ZVV-zrPS8y8iJelFUsagW7KEVVNg7wn3oh2ZJRPRpX678s=_a5bcc_
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Disposition: inline
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
+branch HEAD: a021802c18c4c30dff3db9bd355cacb68521f1aa  cxl: docs/devices Fix typos and clarify wording in device-types.rst
 
-On 10/06/25 03:45PM, Jonathan Cameron wrote:
->On Mon,  2 Jun 2025 19:29:42 +0530
->Arpit Kumar <arpit1.kumar@samsung.com> wrote:
->
->
->Very interesting to see support for this. It will enable a load
->of additional test cases.
->
->> added assert-deassert PERST implementation, reset PPB
->> for physical port.
->Added
-okay
->
->Please also include some details of testing done and what happens.
->Given I know we have some issues with reset that we haven't resolved
->I'm curious if you see them here.
->
-sure, I have tested this command using libcxl-mi. will share the details in the
-next iteration (V2) of the patch series.
->>
->> Signed-off-by: Arpit Kumar <arpit1.kumar@samsung.com>
->
->> +/* Assert - Deassert PERST */
->> +#define ASSERT_WAIT_TIME_MS 100
->> +
->>  /* link state flags */
->>  #define LINK_STATE_FLAG_LANE_REVERSED    (1 << 0)
->>  #define LINK_STATE_FLAG_PERST_ASSERTED   (1 << 1)
->> @@ -662,6 +666,114 @@ static CXLRetCode cmd_get_physical_port_state(const struct cxl_cmd *cmd,
->>      return CXL_MBOX_SUCCESS;
->>  }
->>
->> +static struct PCIDevice *cxl_find_port_dev(uint8_t ppb_id, PCIBus *bus)
->> +{
->> +    PCIDevice *d;
->> +    int devfn;
->> +
->> +    for (devfn = 0; devfn < ARRAY_SIZE(bus->devices); devfn++) {
->
->As in patch one, maybe use the for_each_pci_...  Though with the callback
->needed it may end up slightly more complex that this.
->
-right, will use the same.
->
->> +        d = bus->devices[devfn];
->> +        if (d) {
->> +            if (object_dynamic_cast(OBJECT(d), TYPE_CXL_DSP)) {
->> +                uint8_t port = PCIE_PORT(d)->port;
->I'd not bother with the local variable for this one.
->
-okay
->                 if (PCIE_PORT(d)->port == ppb_id) {
->                     return d;
->                 }
->
->> +                if (port == ppb_id) {
->> +                    return d;
->> +                }
->> +            }
->> +        }
->> +    }
->> +    return NULL;
->> +}
->> +
->> +static CXLRetCode deassert_PERST(Object *obj, ResetType type, uint8_t pn, CXLCCI *cci)
->> +{
->> +    ResettableClass *rc = RESETTABLE_GET_CLASS(obj);
->> +    ResettableState *s = rc->get_state(obj);
->> +
->> +    if (cci->pports.perst[pn].issued_assert_PERST) {
->> +        if (cci->pports.perst[pn].asrt_time == -1 && !s->hold_phase_pending) {
->
->I'd flip the logic as then can return early in error case and reduce
->indent of the rest.
->
-okay, will update in V2.
->
->> +            qemu_mutex_lock(&cci->pports.perst[pn].lock);
->
->            QEMU_LOCK_GUARD(&cci->pports.prst[pn].lock);
->
->> +            resettable_release_reset(obj, type);
->> +            cci->pports.perst[pn].issued_assert_PERST = false;
->> +            cci->pports.pport_info[pn].link_state_flags &=
->> +                ~LINK_STATE_FLAG_PERST_ASSERTED;
->> +            cci->pports.perst[pn].asrt_time = ASSERT_WAIT_TIME_MS;
->> +            qemu_mutex_unlock(&cci->pports.perst[pn].lock);
->and drop explicit unlock.
-got it
->> +        } else {
->> +            return CXL_MBOX_INTERNAL_ERROR;
->> +        }
->> +    } else {
->> +        return CXL_MBOX_INTERNAL_ERROR;
->> +    }
->> +    return CXL_MBOX_SUCCESS;
->> +}
->> +
->> +static CXLRetCode assert_PERST(Object *obj, ResetType type, uint8_t pn, CXLCCI *cci)
->> +{
->> +    ResettableClass *rc = RESETTABLE_GET_CLASS(ocpgs@samsung.combj);
->> +    ResettableState *s = rc->get_state(obj);
->> +
->> +    if (cci->pports.perst[pn].issued_assert_PERST || s->exit_phase_in_progress) {
->> +        return CXL_MBOX_INTERNAL_ERROR;
->> +    }
->> +
->
->WITH_QEMU_LOCK_GUARD() perhaps
-okay
->
->> +    qemu_mutex_lock(&cci->pports.perst[pn].lock);
->> +    cci->pports.perst[pn].issued_assert_PERST = true;
->> +    cci->pports.pport_info[pn].link_state_flags |=
->> +        LINK_STATE_FLAG_PERST_ASSERTED;
->> +    resettable_assert_reset(obj, type);
->> +    qemu_mutex_unlock(&cci->pports.perst[pn].lock);
->> +
->> +    /* holding reset phase for 100ms */
->> +    while (cci->pports.perst[pn].asrt_time--) {
->> +        usleep(1000);
->Is this happening synchronously?  I'd kind of expect it to be a background thing
->where we'd just check it had finished.
-okay, will update it in V2 of patch series.
->> +    }
->> +    return CXL_MBOX_SUCCESS;
->> +}
->> +
->> +/*CXL r3.2 Section 7.6.7.1.3: Get Physical Port Control (Opcode 5102h)*/
->> +static CXLRetCode cmd_physical_port_control(const struct cxl_cmd *cmd,
->> +                                            uint8_t *payload_in,
->> +                                            size_t len_in,
->> +                                            uint8_t *payload_out,
->> +                                            size_t *len_out,
->> +                                            CXLCCI *cci)
->> +{
->> +    PCIBus *bus = &PCI_BRIDGE(cci->d)->sec_bus;
->> +    PCIDevice *dev;
->> +    struct cxl_fmapi_get_physical_port_control_req_pl {
->> +        uint8_t PPB_ID;
->> +        uint8_t Ports_Op;
->> +    } QEMU_PACKED *in;
->> +
->> +    in = (struct cxl_fmapi_get_physical_port_control_req_pl *)payload_in;
->
->Often we cheat on these where the type is locally defined and do
->
->    struct cxl_fmapi_get_physical_port_control_req_pl {
->        uint8_t ppb_id;
->        uint8_t ports_op;
->    } QEMU_PACKED *in = (void *)payload_in;
->
->Given it's all together the type isn't confusing or ambiguous even
->though we use a void * instead of the more specific cast.
->
->Note also that it is better to stick to local style and use lower_case
->style for structure element naming etc.
->
-got it
->> +
->> +    if (len_in < sizeof(*in)) {
->> +        return CXL_MBOX_INVALID_PAYLOAD_LENGTH;
->> +    }
->> +
->> +    uint8_t pn = in->PPB_ID;
->> +    dev = cxl_find_port_dev(pn, bus);
->> +    if (!dev) {
->> +        return CXL_MBOX_INTERNAL_ERROR;
->> +    }
->> +
->> +    switch (in->Ports_Op) {
->> +    case 0:
->> +        assert_PERST(OBJECT(&dev->qdev), RESET_TYPE_COLD, pn, cci);
->
->Even for these probably
->
->assert_perst()
->
-okay
->> +        break;
->return CXL_MBOX_SUCESS;
->> +    case 1:
->> +        deassert_PERST(OBJECT(&dev->qdev), RESET_TYPE_COLD, pn, cci);
->> +        break;
->> +    case 2:
->> +        device_cold_reset(&dev->qdev);
->> +        break;
->> +    default:
->> +        return CXL_MBOX_INVALID_INPUT;
->> +    }
->> +    return CXL_MBOX_SUCCESS;
->> +}
->> +
->
->> @@ -3878,4 +3995,15 @@ void cxl_initialize_usp_mctpcci(CXLCCI *cci, DeviceState *d, DeviceState *intf,
->>      cci->intf = intf;
->>      cxl_init_cci(cci, payload_max);
->>      cxl_set_phy_port_info(cci); /* store port info */
->> +    /* physical port control */
->> +    for (int i = 0; i < PCI_DEVFN_MAX; i++) {
->> +        qemu_mutex_init(&cci->pports.perst[i].lock);
->
->perst is definitely port wise - not linked to CCI so that stuff should be
->in the port structures themselves.
->
->> +        cci->pports.perst[i].issued_assert_PERST = false;
->> +        /* Assert PERST involves physical port to be in
->wrap at 80 chars.
-okay
->> +         * hold reset phase for minimum 100ms. No other calls
->> +         * are entertained until Deassert PERST command.
->> +         * https://patchwork.ozlabs.org/project/linux-pci/patch/20190523194409.17718-1-niklas.cassel@linaro.org/#2178369
->
->Blocking other commands is fine but we should lock up emulation of other stuff
->in the system and I think you currently do.
->
-got it. I think you meant 'we should *not lock up..'
->> +         */
->> +        cci->pports.perst[i].asrt_time = ASSERT_WAIT_TIME_MS;
->> +    }
->>  }
->> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
->> index 9eb128a1e8..f877d60b39 100644
->> --- a/include/hw/cxl/cxl_device.h
->> +++ b/include/hw/cxl/cxl_device.h
->> @@ -146,10 +146,18 @@ struct cxl_phy_port_info {
->>      uint8_t supported_ld_count;
->>  } QEMU_PACKED;
->>
->> +/* assert-deassert PERST */
->> +struct pperst {
->> +    bool issued_assert_PERST;
->> +    int asrt_time;
->> +    QemuMutex lock;
->> +};
->> +
->>  struct phy_port {
->>      uint8_t num_ports;
->>      uint8_t active_port_bitmask[0x20];
->>      struct cxl_phy_port_info pport_info[PCI_DEVFN_MAX];
->> +    struct pperst perst[PCI_DEVFN_MAX];
->>  };
->>
->>  /* CXL r3.1 Table 8-34: Command Return Codes */
->
+elapsed time: 739m
 
-------K5ZVV-zrPS8y8iJelFUsagW7KEVVNg7wn3oh2ZJRPRpX678s=_a5bcc_
-Content-Type: text/plain; charset="utf-8"
+configs tested: 142
+configs skipped: 3
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-------K5ZVV-zrPS8y8iJelFUsagW7KEVVNg7wn3oh2ZJRPRpX678s=_a5bcc_--
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+alpha                               defconfig    gcc-15.1.0
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    gcc-15.1.0
+arc                                 defconfig    gcc-15.1.0
+arc                   randconfig-001-20250617    gcc-11.5.0
+arc                   randconfig-002-20250617    gcc-15.1.0
+arm                              allmodconfig    gcc-15.1.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-15.1.0
+arm                                 defconfig    clang-21
+arm                      footbridge_defconfig    clang-17
+arm                          ixp4xx_defconfig    gcc-15.1.0
+arm                   milbeaut_m10v_defconfig    clang-19
+arm                   randconfig-001-20250617    gcc-8.5.0
+arm                   randconfig-002-20250617    clang-21
+arm                   randconfig-003-20250617    clang-21
+arm                   randconfig-004-20250617    clang-21
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                               defconfig    gcc-15.1.0
+arm64                 randconfig-001-20250617    gcc-11.5.0
+arm64                 randconfig-002-20250617    clang-21
+arm64                 randconfig-003-20250617    gcc-8.5.0
+arm64                 randconfig-004-20250617    gcc-12.3.0
+csky                              allnoconfig    gcc-15.1.0
+csky                                defconfig    gcc-15.1.0
+csky                  randconfig-001-20250617    gcc-13.3.0
+csky                  randconfig-002-20250617    gcc-12.4.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon                             defconfig    clang-21
+hexagon               randconfig-001-20250617    clang-21
+hexagon               randconfig-002-20250617    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250617    gcc-12
+i386        buildonly-randconfig-002-20250617    clang-20
+i386        buildonly-randconfig-003-20250617    gcc-12
+i386        buildonly-randconfig-004-20250617    gcc-12
+i386        buildonly-randconfig-005-20250617    gcc-12
+i386        buildonly-randconfig-006-20250617    gcc-12
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-15.1.0
+loongarch                         allnoconfig    gcc-15.1.0
+loongarch                           defconfig    gcc-15.1.0
+loongarch             randconfig-001-20250617    gcc-15.1.0
+loongarch             randconfig-002-20250617    gcc-15.1.0
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+m68k                                defconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+mips                            gpr_defconfig    clang-18
+nios2                             allnoconfig    gcc-14.2.0
+nios2                               defconfig    gcc-14.2.0
+nios2                 randconfig-001-20250617    gcc-10.5.0
+nios2                 randconfig-002-20250617    gcc-14.2.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                generic-64bit_defconfig    gcc-15.1.0
+parisc                randconfig-001-20250617    gcc-8.5.0
+parisc                randconfig-002-20250617    gcc-8.5.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                          allyesconfig    clang-21
+powerpc                        cell_defconfig    gcc-15.1.0
+powerpc                      mgcoge_defconfig    clang-21
+powerpc                  mpc866_ads_defconfig    clang-21
+powerpc                    mvme5100_defconfig    gcc-15.1.0
+powerpc                      pasemi_defconfig    clang-21
+powerpc               randconfig-001-20250617    gcc-8.5.0
+powerpc               randconfig-002-20250617    clang-16
+powerpc               randconfig-003-20250617    gcc-12.4.0
+powerpc64             randconfig-001-20250617    gcc-14.3.0
+powerpc64             randconfig-002-20250617    clang-21
+powerpc64             randconfig-003-20250617    gcc-13.3.0
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    clang-21
+riscv                 randconfig-001-20250617    clang-21
+riscv                 randconfig-002-20250617    gcc-10.5.0
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-15.1.0
+s390                                defconfig    clang-21
+s390                  randconfig-001-20250617    clang-21
+s390                  randconfig-002-20250617    clang-20
+sh                               alldefconfig    gcc-15.1.0
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                                  defconfig    gcc-15.1.0
+sh                             espt_defconfig    gcc-15.1.0
+sh                    randconfig-001-20250617    gcc-12.4.0
+sh                    randconfig-002-20250617    gcc-14.3.0
+sh                      rts7751r2d1_defconfig    gcc-15.1.0
+sh                   secureedge5410_defconfig    gcc-15.1.0
+sh                             shx3_defconfig    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                 randconfig-001-20250617    gcc-12.4.0
+sparc                 randconfig-002-20250617    gcc-13.3.0
+sparc64                             defconfig    gcc-15.1.0
+sparc64               randconfig-001-20250617    gcc-15.1.0
+sparc64               randconfig-002-20250617    gcc-9.3.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250617    gcc-12
+um                    randconfig-002-20250617    clang-21
+um                           x86_64_defconfig    clang-21
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250617    clang-20
+x86_64      buildonly-randconfig-002-20250617    clang-20
+x86_64      buildonly-randconfig-003-20250617    gcc-11
+x86_64      buildonly-randconfig-004-20250617    gcc-12
+x86_64      buildonly-randconfig-005-20250617    gcc-12
+x86_64      buildonly-randconfig-006-20250617    gcc-12
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-18
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20250617    gcc-10.5.0
+xtensa                randconfig-002-20250617    gcc-12.4.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
