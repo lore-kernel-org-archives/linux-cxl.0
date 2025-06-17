@@ -1,104 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAFA2225408;
-	Mon, 16 Jun 2025 22:32:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB40A7483
+	for <linux-cxl@vger.kernel.org>; Tue, 17 Jun 2025 00:10:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750113169; cv=none; b=Og5csLCNIfYBCJg99saNTEqSFnnTpinUacJhES8N7xAPfgYQe16mcL3TrFWgCB/Gm4srfl+wHkWlskY/tBlxO+zWPvm+k6YL2NIBZk+4GhC3YxaRvtkaDkon7TudxAmVuDM3NrKmGHAOh/QYJTSnYBlqdN0u9iTve7m2x7XXq8I=
+	t=1750119060; cv=none; b=o70wkdZbpLEYNpMUNCGFpTXESNkaIkCKC3iNTWlYMek5yrT3cbBQDyk802BIy/sBlveWieYh+eil/ZHDzXBFUNb83tNJ9mGjWKtABVUvlGLh61tqN5FpkvfzZTg8rLe3KEYKp4YEiCRBxhHslYxKeGryKTnf3ubALQ7SDkstujw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750113169; c=relaxed/simple;
-	bh=21l1u44nFY/FSBWWEBNEFJN9ZxtEqMV3ZV+4YHzlHSA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PoxmeUhOWmLveclcyASlwyNlVidi94s0MoAlaPa5/XXT/ZMtF6nlHsawzAKwDvu7Z3kPqW5s1WPJN7zoZuHYMAGVuRpgVUjKsqTlMQRRDjLzect0GW41SzptKZ60O+76Eig1/skEmxXrhqt11Z4J3FA92VFNfUiwzzIbZEnhirs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MnF8PUKM; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750119060; c=relaxed/simple;
+	bh=cW9a3H2Jb1XORPCWPEbQXH89DofL90Y/4tlpYncP5Rc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oLx/IuS/DEM0dZJ9NZ3OXLP8rsDMQPsyoVgT6XZuuwfbWTdUwU6t6PUZyiSnKjixeO9LuXuEcKGmQAKK+KKn62a7r/hBMPqB/ZqXyWaPJnRQq11jRZ1XPNVsaPJWJFmMi/2PII1QDDd4LRYxraDvr/pIh54mFXQZQpM/9RsSiV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=RDXXWZ+K; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MnF8PUKM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750113168; x=1781649168;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=21l1u44nFY/FSBWWEBNEFJN9ZxtEqMV3ZV+4YHzlHSA=;
-  b=MnF8PUKMelqDiYFzHg9ER9a21Pp67sw/XSMCzUUTk5sXf7idAFkZzjGY
-   AJmJK/WQ751muMr8cJJYoVjM7J3n1vx8juo/QUCnBu4DPPgojdBVVf2If
-   oQLd7ToAtZwpsWKRPCwRPw+JGxpuht1OnkbcqEaEryKTepXAbLiPaIvGO
-   JdEmXERuCi5Wo6taZ/YxjVzzN3CIUAbU3e0SY0Wbdbke+0KwRqnrnzldy
-   gl2J5Tw4y4PZCc7oB8Q82HQimMZamFk3rjYCpV1XRn8P+0RQiUdRvuWr6
-   IgyCsUQlNVk0ibl+PeHiniO5itJm69Mjlp1QComXjb2MQhQoInu8BmfGX
-   Q==;
-X-CSE-ConnectionGUID: DqQAc51yRsaHzvucFBKp7Q==
-X-CSE-MsgGUID: zzrFsRXHQXWIMXvll9of+w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="52405959"
-X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
-   d="scan'208";a="52405959"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 15:32:47 -0700
-X-CSE-ConnectionGUID: tqIyvY5BTTeAHz1kVRNJFw==
-X-CSE-MsgGUID: SombBd8GRmyCumuQI0R3eA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,241,1744095600"; 
-   d="scan'208";a="148428340"
-Received: from ldmartin-desk2.corp.intel.com (HELO [10.125.108.27]) ([10.125.108.27])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 15:32:45 -0700
-Message-ID: <b2acd80e-38ce-488f-a6d8-8bdad425534c@intel.com>
-Date: Mon, 16 Jun 2025 15:32:44 -0700
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="RDXXWZ+K"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7cad6a4fae4so1010013285a.2
+        for <linux-cxl@vger.kernel.org>; Mon, 16 Jun 2025 17:10:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1750119057; x=1750723857; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=e5TEqGP1dA1ohDNNPEUIn+95Q5c5y2M6lr7dUEc7k9U=;
+        b=RDXXWZ+KwE2+4LSb7ctQH5GYfTiJoYS6MiwgxmT33G10W7tEFaFSkcd388+pg4rE4m
+         xiWaBLGZsRGBy14UTyouhU1t7kOqj5KzaKH5QtRLu7CvEhD5+xMqTI9JkeV+kSHVZnRI
+         43zoXRjbeXo5ciWP1X2gX70UdSjz4+Mwt5dJfkVvdmyxTF9BYIa5V19n+HLUlgIVKKAs
+         XdGL6/eivkNxEeQIpc42ogywATi2GYvM0WYVTdXboz6LcCGTmvg52KaSDHq0+5/YXDPF
+         Xxl1ek6rJbsL8DnDnVSa9mlUpKhY30ZqGyqRCkzGgnG2opZDOYn17cpHe0T2Fhd1ek09
+         F/pQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750119057; x=1750723857;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e5TEqGP1dA1ohDNNPEUIn+95Q5c5y2M6lr7dUEc7k9U=;
+        b=gQvGumnIxvs+sVq/g6vZqd/AYjEaao3Q197P8Y/a6wINc/2dNjwFwtMGVLCBT3Qecn
+         Nuu4zIbj8wt5vJrvIRCDOmeG2/kLIK82sMDiw/PAYRhew0wz9WCgkqrA1ggMp3+l3FYs
+         G3zNcO25ENZzTddFERlNTbNnyHZKrbUui5x+Z1hvmHOJiYErPCT4rx/rHXRI4kVcwDjE
+         PDBUXU99KznHP2r5oTuStMTFuP6KX3AAX2MNgBPoL1U4e7jsyZMWaKoyPkOGqlrMxxS3
+         +NeB+m7R1MbEktHbQZEMcO3XfmpMYsnaJoo4kh42EqMI5ZS+F4kGNfIbVDZl0FlB3QJ2
+         q6gQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX59P6YX5jhv4cNsV1vFj1Uj1pi0w9p36qigt1XOsdzVkjVr2CQe46EZNeyl/Qb9PjOD7gQ4KYSYpo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz70qBEbOcuvUKcp1hO/HqA+Jj5JFM85iFuQJpYOyMPM1OfgCRC
+	E8/CY11zH0qutP4iiCUt8GIOcIpitogO6jPXBAyZfTcXNP7DQo8KdZ7ZcW2edjjcQmk=
+X-Gm-Gg: ASbGnctO+VbIxUqxLG4ozEklMMAWCdUW0y2NG6O8NVJMaFz3nhAQVX6l7zwxvCzH3Z1
+	CgqXni+HEvS3SrY/sp/g7f/5WPh92A0ok6LhHd+lbZ4jjmyRt4BRuZ8YWUPuORo3cBzPsJJqUUy
+	BRaA3PLAwHuR6PYdNTatq5SnExIi5mP0bnuxw3ekZnp2wEj7uzftB8Sec01YjAFUvCOkk0o6szo
+	5bkl6g+/y9oP1p0vbW99FtAQHhMZkQdpuPNaOjwxbHb41VF//8Sry0uEBeWvcGEI9Cfq9S1jfPI
+	JMOdr7uw+4h4Whv5EF0R3avms+fswQPcxianLE7i6o0ohGpZkQBt9PJwwg==
+X-Google-Smtp-Source: AGHT+IETz9LYg5ng7mTZU0WsBXmtI5+6OhKkrzdiTTp9Ts5WqaC5ydvNWoYbhaOUC9it+gTF/lSbLw==
+X-Received: by 2002:a05:622a:87:b0:4a4:3bae:8dce with SMTP id d75a77b69052e-4a73c597286mr190961541cf.33.1750119057584;
+        Mon, 16 Jun 2025 17:10:57 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F ([2620:10d:c091:400::5:cf64])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a72a3103a5sm54775971cf.30.2025.06.16.17.10.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 17:10:56 -0700 (PDT)
+Date: Mon, 16 Jun 2025 19:10:54 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Alok Tiwari <alok.a.tiwari@oracle.com>, linux-doc@vger.kernel.org,
+	linux-cxl@vger.kernel.org, corbet@lwn.net, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, linux-kernel@vger.kernel.org,
+	darren.kenny@oracle.com
+Subject: Re: [PATCH] cxl: docs/devices Fix typos and clarify wording in
+ device-types.rst
+Message-ID: <aFCyjkSB9VwZXjPt@gourry-fedora-PF4VCD3F>
+References: <20250616060737.1645393-1-alok.a.tiwari@oracle.com>
+ <aFBUGTM4fpwU749k@gourry-fedora-PF4VCD3F>
+ <b2acd80e-38ce-488f-a6d8-8bdad425534c@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl: docs/devices Fix typos and clarify wording in
- device-types.rst
-To: Gregory Price <gourry@gourry.net>, Alok Tiwari <alok.a.tiwari@oracle.com>
-Cc: linux-doc@vger.kernel.org, linux-cxl@vger.kernel.org, corbet@lwn.net,
- dave@stgolabs.net, jonathan.cameron@huawei.com, alison.schofield@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
- linux-kernel@vger.kernel.org, darren.kenny@oracle.com
-References: <20250616060737.1645393-1-alok.a.tiwari@oracle.com>
- <aFBUGTM4fpwU749k@gourry-fedora-PF4VCD3F>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <aFBUGTM4fpwU749k@gourry-fedora-PF4VCD3F>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b2acd80e-38ce-488f-a6d8-8bdad425534c@intel.com>
 
+On Mon, Jun 16, 2025 at 03:32:44PM -0700, Dave Jiang wrote:
+> > With that change you may add
+> > 
+> > Reviewed-by: Gregory Price <gourry@gourry.net>
+> 
+> I fixed it up with your suggestion and applied to cxl/next. Please check and make sure the fix is correct. Thanks!
 
-
-On 6/16/25 10:27 AM, Gregory Price wrote:
-> On Sun, Jun 15, 2025 at 11:07:32PM -0700, Alok Tiwari wrote:
->>  Documentation/driver-api/cxl/devices/device-types.rst | 10 +++++-----
->>  1 file changed, 5 insertions(+), 5 deletions(-)
->>
-> ...
->>  
->>  A Multi-Logical Device (MLD) is a device which may present multiple devices
->> -to one or more devices.
->> +to one or more hosts.
-> 
-> This is subtly incorrect.
-> 
-> A *Multi-Headed* MLD presents one or more devices to one or more hosts.
-> 
-> A *Multi-logical Device* presents one or more devices to one or more
-> upstream devices (such as a switch).
-> 
-> You can have a Single-Headed Multi-Logical Device that presents 2
-> "Logical Devices" to a single upstream device (host or switch).
-> 
-> So please change "one or more hosts" to "one or more upstream devices".
-> 
-> 
-> With that change you may add
-> 
-> Reviewed-by: Gregory Price <gourry@gourry.net>
-
-I fixed it up with your suggestion and applied to cxl/next. Please check and make sure the fix is correct. Thanks!
-
-> 
-> ~Gregory
-
+lgtm
