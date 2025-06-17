@@ -1,220 +1,213 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6A7295D95
-	for <linux-cxl@vger.kernel.org>; Tue, 17 Jun 2025 09:49:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91715215F7C
+	for <linux-cxl@vger.kernel.org>; Tue, 17 Jun 2025 10:21:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750153770; cv=none; b=elASjJ16qG4rLLToQefgBzvPsFIYOldRb/8XIAc2t4S2W7VGtAncISW4BmHuDDQFW5Tu/G0K9H5uSDJmyHq6qwBfH6xMX6VJLUmAOZ4Qw7F9rKLSHxBDWZqXMGTL5fDmYaiRMprjWa2kGhRmViybjnGlcxZdzY+Yb4ed54/5nMg=
+	t=1750155706; cv=none; b=DkVJ63oqYHqCsys76DSqGlUCCW5MiWodl0V5lkalWkC2WN+0lO5eV4SGwB8Uc9O9o7fV3R8Ogjgo03qztfFkDBp0uwkafriDIKaqqJAbaqrsUIfvgviuIavKFEUDevAOZ5L41ryC7MEm20M9HEAKNttUURAEOaiO0+rxLW/4tI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750153770; c=relaxed/simple;
-	bh=y9PWU5GUxhjJggeZ2t0v/qrg4XfMxZpcGntNLDW1ll0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XCGSHhJCcLXKq9S9MxPceOKDe4ztgCnFeygS48prOUAWgLNFiWhks2q8naU8vdGsX46BhgtF/4Q4XBqjQ4W7fCCOLKVzN6grGil36kUPNDZk0LpbwDP+RH2qB6ToEbzbfu2r+ys+6ld7XNNEdjAWk/a+YT1juJr1UJ6AXibE/VQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HmKjjMs/; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750155706; c=relaxed/simple;
+	bh=DTxW1K6pPf7PCMcVYYfTxcoHeOKhXFXtVux/FXL9UJg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=jMHq9EPHff479RjyPG6eeBTWeQhlq5OllIsNcPyPcCNHxjSw9qS2ihH8kr1wIrleZRQQwYIEZEjzPojypMfp4AOOLjztRglUwHz+H2Rx7PtPhDG/eiKGok9d9To9y+mh94nmigqjbDqNnayUEo5tVp4xDu2Yh+8LUyqHbyg32IU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=izlujs3L; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HmKjjMs/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750153767;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=lg0mFUm80r9X0igLB1pMrSxygF5fgmEE/5oZN4jlRBc=;
-	b=HmKjjMs/VIYl3mPRFW5JOVuhfBBOmt63R/T8ygMLbzWxk8lZNFxM3Zy34kgYZjF4Yd4KNk
-	LgMuDo79a6JMHxkNdgBp3eFFhAIu1NCWm25E5hc8ZAO39RK8qPIMdVgvD7/7aB30lwkeLj
-	SuVHGNaIrKI6qr7fDU9M94Lty1VeB44=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-231-wH5Q3-A3PHKaEbBpUXvdJA-1; Tue, 17 Jun 2025 05:49:24 -0400
-X-MC-Unique: wH5Q3-A3PHKaEbBpUXvdJA-1
-X-Mimecast-MFC-AGG-ID: wH5Q3-A3PHKaEbBpUXvdJA_1750153763
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4530ec2c87cso28193585e9.0
-        for <linux-cxl@vger.kernel.org>; Tue, 17 Jun 2025 02:49:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750153763; x=1750758563;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=lg0mFUm80r9X0igLB1pMrSxygF5fgmEE/5oZN4jlRBc=;
-        b=gziRnb7hXEsIHMvaPVjZv1xBIE6vVCx5qDGtNPopXhXZQBUrxzil1WbksoXa5B5Y1I
-         L9Mom6VJLgEqqSIs3pwCsnIMLX8I/vqflUkaS3lQXo6wlSP4ZmZZlvR3a8y242r/nqBZ
-         eB/jaAYg2ub293kWOrMIAvT/oPLeA2NyIayZM32aCrenLoMkXBS91Qhw3lyJSbf36OaJ
-         YY/RMfipiNezDKZx2z/Dee1vf+r7ArOtyDPGcQmepHzL3pe6RDcjh8+ak0wjNf+hFOvg
-         bx5WcPwh91HnJ3kDZXDE7PqNtxy8s07GszssnQQQ95XaYT1jz8ErDLgNpceFoi75i/rR
-         eqaA==
-X-Forwarded-Encrypted: i=1; AJvYcCXQcarUUY2k5MAbgw5KeOCmXbhn3vnH4zyIHpq512MCCOPjZqGOnBn5vS4c5cOZnoebqlIN6OcIIKU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YybCH4R7rrQQqCxkcJwTPiOBy5ylfOdyCjpNmiHVGjsv2kshUWJ
-	5/ipFz3yNJ1FN3/13Pkpfih0RUoZ/mqniWSrALG6QNpO+84Tp2sEXr1gJUefCCQsW36ATfhwvl4
-	HCnJ8OHJ5z8riwamcBSdv33iACjvsvqBe7t/PM99yUKlF1RYfW6LffNNrmC8qXw==
-X-Gm-Gg: ASbGnct3NFyW434rw5SrOTY5tp0uPsv3FQ7JR9HYawcD+/7nXMvHMkWc57DkQ/K/KzJ
-	0xItEySIBcmZOwLo/+6cN/tZ/EeeBnOLXUaZJc59R0xTm2g03Uaq2wJl6C838+Swq8+R3FVSlQg
-	mvOc164Z2H2kMKO8DtL3h0Igiu0FdOHx+SWHcdK+7MR5R21PkUSrYVqHPpV1/184vurp3V+CiUL
-	El3MjD60tYYXYUu9NYj8JRB8TejTaFC7VytOqPMqAjvc4dit2nkYM5LK+oasMAYcoMpeudJf6f8
-	PPh6C8RgwreESLMDAiYZNg4yFj/59L5ptV0NYKMkCheGzIUYxzeFgzktSKLr+nMhQUpxcCFoV5K
-	FVnftUPfPsieynvoosxtndge532bgDAbfxHX5wstGKYRcWrI=
-X-Received: by 2002:a05:600c:8b66:b0:43d:1b74:e89a with SMTP id 5b1f17b1804b1-4533ca71c4cmr120176225e9.9.1750153763446;
-        Tue, 17 Jun 2025 02:49:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFXZNQ8PD9qufR5L3UGiEianFrRGislf+YnSmpb1KcTqInns51iN3qzkWWM7hMwKXRBlIkEGg==
-X-Received: by 2002:a05:600c:8b66:b0:43d:1b74:e89a with SMTP id 5b1f17b1804b1-4533ca71c4cmr120175955e9.9.1750153763021;
-        Tue, 17 Jun 2025 02:49:23 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f31:700:3851:c66a:b6b9:3490? (p200300d82f3107003851c66ab6b93490.dip0.t-ipconnect.de. [2003:d8:2f31:700:3851:c66a:b6b9:3490])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a578510edcsm9430995f8f.8.2025.06.17.02.49.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Jun 2025 02:49:22 -0700 (PDT)
-Message-ID: <6bb233ef-5e56-4546-b571-6a5f052d8b45@redhat.com>
-Date: Tue, 17 Jun 2025 11:49:20 +0200
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="izlujs3L"
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250617102141epoutp03c1e40304ba9aded2fc3735ce90ecd98d~JzVZzm2IS1042410424epoutp03k
+	for <linux-cxl@vger.kernel.org>; Tue, 17 Jun 2025 10:21:41 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250617102141epoutp03c1e40304ba9aded2fc3735ce90ecd98d~JzVZzm2IS1042410424epoutp03k
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1750155701;
+	bh=RHnfMDcnjkCpNXmxxzs/C20X71OBG3mUzj26FeqODOk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=izlujs3LCKUBIg49nVzC6FCeUhl+kIF4XNlDjpa26bxGBYGuei461kAtoTZCbrRcA
+	 P4YS/jNcatxuKjZbTsUVotoFy7GNj5N5FwYk+TRR8vbVgPZ/8/3c5ckDxYrXUVRCY8
+	 p6/TqPOYtRQ12RiqHgNoCrwOXQpMx80Lda+HpwcA=
+Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
+	20250617102141epcas5p3630447b43bcedd87c29009961428e537~JzVZeEtoT1868018680epcas5p3G;
+	Tue, 17 Jun 2025 10:21:41 +0000 (GMT)
+Received: from epcas5p2.samsung.com (unknown [182.195.38.178]) by
+	epsnrtp02.localdomain (Postfix) with ESMTP id 4bM2wM2x7cz2SSKY; Tue, 17 Jun
+	2025 10:21:39 +0000 (GMT)
+Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250617100204epcas5p2a5516d83ce61909c730901772fe90ae8~JzERge6Dn0477404774epcas5p2m;
+	Tue, 17 Jun 2025 10:02:04 +0000 (GMT)
+Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250617100202epsmtip120c42834f6a8f3ac4e6cc9f3427f716e~JzEQPyDP91516415164epsmtip1a;
+	Tue, 17 Jun 2025 10:02:02 +0000 (GMT)
+Date: Tue, 17 Jun 2025 15:31:56 +0530
+From: Arpit Kumar <arpit1.kumar@samsung.com>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: qemu-devel@nongnu.org, gost.dev@samsung.com, linux-cxl@vger.kernel.org,
+	nifan.cxl@gmail.com, dave@stgolabs.net, vishak.g@samsung.com,
+	krish.reddy@samsung.com, a.manzanares@samsung.com, alok.rathore@samsung.com
+Subject: Re: [PATCH 2/3] hw/cxl: Simplified Identify Switch Device & Get
+ Physical Port State
+Message-ID: <20250617100156.nllspip2jcykteid@test-PowerEdge-R740xd>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 06/14] mm/huge_memory: Remove pXd_devmap usage from
- insert_pXd_pfn()
-To: Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org
-Cc: linux-mm@kvack.org, gerald.schaefer@linux.ibm.com,
- dan.j.williams@intel.com, jgg@ziepe.ca, willy@infradead.org,
- linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
- linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
- zhang.lyra@gmail.com, debug@rivosinc.com, bjorn@kernel.org,
- balbirs@nvidia.com, lorenzo.stoakes@oracle.com,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-cxl@vger.kernel.org, dri-devel@lists.freedesktop.org, John@Groves.net,
- m.szyprowski@samsung.com
-References: <cover.8d04615eb17b9e46fc0ae7402ca54b69e04b1043.1750075065.git-series.apopple@nvidia.com>
- <67bc382c49ed8b165cfbd927886372272c35f508.1750075065.git-series.apopple@nvidia.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
- 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
- rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
- wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
- 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
- pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
- KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
- BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
- 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
- 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
- M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
- boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
- 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
- XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
- a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
- Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
- 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
- kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
- th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
- jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <67bc382c49ed8b165cfbd927886372272c35f508.1750075065.git-series.apopple@nvidia.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: YlO0YZkPeSFdDCUAMiazepycJY_Es0taWCae9a8tjZw_1750153763
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20250610152906.00002c4b@huawei.com>
+X-CMS-MailID: 20250617100204epcas5p2a5516d83ce61909c730901772fe90ae8
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----K5ZVV-zrPS8y8iJelFUsagW7KEVVNg7wn3oh2ZJRPRpX678s=_a58ee_"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-542,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250602140026epcas5p131c1af3cdd05056e7dccf0f91efe490b
+References: <20250602135942.2773823-1-arpit1.kumar@samsung.com>
+	<CGME20250602140026epcas5p131c1af3cdd05056e7dccf0f91efe490b@epcas5p1.samsung.com>
+	<20250602135942.2773823-3-arpit1.kumar@samsung.com>
+	<20250610152906.00002c4b@huawei.com>
 
-On 16.06.25 13:58, Alistair Popple wrote:
-> Nothing uses PFN_DEV anymore so no need to create devmap pXd's when
-> mapping a PFN. Instead special mappings will be created which ensures
-> vm_normal_page_pXd() will not return pages which don't have an
-> associated page. This could change behaviour slightly on architectures
-> where pXd_devmap() does not imply pXd_special() as the normal page
-> checks would have fallen through to checking VM_PFNMAP/MIXEDMAP instead,
-> which in theory at least could have returned a page.
-> 
-> However vm_normal_page_pXd() should never have been returning pages for
-> pXd_devmap() entries anyway, so anything relying on that would have been
-> a bug.
-> 
-> Signed-off-by: Alistair Popple <apopple@nvidia.com>
-> 
-> ---
-> 
-> Changes since v1:
-> 
->   - New for v2
-> ---
->   mm/huge_memory.c | 12 ++----------
->   1 file changed, 2 insertions(+), 10 deletions(-)
-> 
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index b096240..6514e25 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -1415,11 +1415,7 @@ static int insert_pmd(struct vm_area_struct *vma, unsigned long addr,
->   		add_mm_counter(mm, mm_counter_file(fop.folio), HPAGE_PMD_NR);
->   	} else {
->   		entry = pmd_mkhuge(pfn_t_pmd(fop.pfn, prot));
-> -
-> -		if (pfn_t_devmap(fop.pfn))
-> -			entry = pmd_mkdevmap(entry);
-> -		else
-> -			entry = pmd_mkspecial(entry);
-> +		entry = pmd_mkspecial(entry);
->   	}
->   	if (write) {
->   		entry = pmd_mkyoung(pmd_mkdirty(entry));
-> @@ -1565,11 +1561,7 @@ static void insert_pud(struct vm_area_struct *vma, unsigned long addr,
->   		add_mm_counter(mm, mm_counter_file(fop.folio), HPAGE_PUD_NR);
->   	} else {
->   		entry = pud_mkhuge(pfn_t_pud(fop.pfn, prot));
-> -
-> -		if (pfn_t_devmap(fop.pfn))
-> -			entry = pud_mkdevmap(entry);
-> -		else
-> -			entry = pud_mkspecial(entry);
-> +		entry = pud_mkspecial(entry);
->   	}
->   	if (write) {
->   		entry = pud_mkyoung(pud_mkdirty(entry));
+------K5ZVV-zrPS8y8iJelFUsagW7KEVVNg7wn3oh2ZJRPRpX678s=_a58ee_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
+
+On 10/06/25 03:29PM, Jonathan Cameron wrote:
+>On Mon,  2 Jun 2025 19:29:41 +0530
+>Arpit Kumar <arpit1.kumar@samsung.com> wrote:
+>
+>> Modified Identify Switch Device (Opcode 5100h)
+>> & Get Physical Port State(Opcode 5101h)
+>> using physical ports info stored during enumeration
+>>
+>> Signed-off-by: Arpit Kumar <arpit1.kumar@samsung.com>
+>A few additional comments in here.
+>
+>J
+>> ---
+>>  hw/cxl/cxl-mailbox-utils.c | 133 +++++++------------------------------
+>>  1 file changed, 24 insertions(+), 109 deletions(-)
+>>
+>> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+>> index 680055c6c0..b2fa79a721 100644
+>> --- a/hw/cxl/cxl-mailbox-utils.c
+>> +++ b/hw/cxl/cxl-mailbox-utils.c
+>> @@ -558,17 +558,7 @@ static CXLRetCode cmd_set_response_msg_limit(const struct cxl_cmd *cmd,
+>>      return CXL_MBOX_SUCCESS;
+>>  }
+>>
+>> -static void cxl_set_dsp_active_bm(PCIBus *b, PCIDevice *d,
+>> -                                  void *private)
+>> -{
+>> -    uint8_t *bm = private;
+>> -    if (object_dynamic_cast(OBJECT(d), TYPE_CXL_DSP)) {
+>> -        uint8_t port = PCIE_PORT(d)->port;
+>> -        bm[port / 8] |= 1 << (port % 8);
+>> -    }
+>> -}
+>> -
+>> -/* CXL r3.1 Section 7.6.7.1.1: Identify Switch Device (Opcode 5100h) */
+>> +/* CXL r3.2 Section 7.6.7.1.1: Identify Switch Device (Opcode 5100h) */
+>
+>I'd prefer the spec reference updates in a separate patch. They are noise here
+>and kind of suggest there are real changes rather than just refactoring.
+>
+okay
+>
+>> @@ -611,16 +599,14 @@ static CXLRetCode cmd_identify_switch_device(const struct cxl_cmd *cmd,
+>>          out->ingress_port_id = 0;
+>>      }
+>>
+>> -    pci_for_each_device_under_bus(bus, cxl_set_dsp_active_bm,
+>> -                                  out->active_port_bitmask);
+>> -    out->active_port_bitmask[usp->port / 8] |= (1 << usp->port % 8);
+>
+>Ah. With this in front of me the reason for the sizeing is much clearer
+>than in previous patch on it's own. Combining the two will make it all more obvious.
+>
+right, will do the same in next iteration(V2) of the patch series.
+>> -
+>> +    memcpy(out->active_port_bitmask, cci->pports.active_port_bitmask,
+>> +           sizeof(cci->pports.active_port_bitmask));
+>>      *len_out = sizeof(*out);
+>>
+>>      return CXL_MBOX_SUCCESS;
+>>  }
+>>
+>> -/* CXL r3.1 Section 7.6.7.1.2: Get Physical Port State (Opcode 5101h) */
+>> +/* CXL r3.2 Section 7.6.7.1.2: Get Physical Port State (Opcode 5101h) */
+>>  static CXLRetCode cmd_get_physical_port_state(const struct cxl_cmd *cmd,
+>>                                                uint8_t *payload_in,
+>>                                                size_t len_in,
+>> @@ -628,44 +614,21 @@ static CXLRetCode cmd_get_physical_port_state(const struct cxl_cmd *cmd,
+>>                                                size_t *len_out,
+>>                                                CXLCCI *cci)
+>>  {
+>
+>>
+>>      in = (struct cxl_fmapi_get_phys_port_state_req_pl *)payload_in;
+>>      out = (struct cxl_fmapi_get_phys_port_state_resp_pl *)payload_out;
+>> @@ -673,72 +636,24 @@ static CXLRetCode cmd_get_physical_port_state(const struct cxl_cmd *cmd,
+>>      if (len_in < sizeof(*in)) {
+>>          return CXL_MBOX_INVALID_PAYLOAD_LENGTH;
+>>      }
+>> -    /* Check if what was requested can fit */
+>> +
+>
+>The check is still here... So why remove the comment?
+thanks for pointing this out, will add the comment back.
+>
+>>      if (sizeof(*out) + sizeof(*out->ports) * in->num_ports > cci->payload_max) {
+>>          return CXL_MBOX_INVALID_INPUT;
+>>      }
+>>
+>> -    /* For success there should be a match for each requested */
+>> -    out->num_ports = in->num_ports;
+>> +    if (in->num_ports > cci->pports.num_ports) {
+>> +        return CXL_MBOX_INVALID_INPUT;
+>> +    }
+>>
+>> +    out->num_ports = in->num_ports;
+>>      for (i = 0; i < in->num_ports; i++) {
+>> -        struct cxl_fmapi_port_state_info_block *port;
+>> -        /* First try to match on downstream port */
+>> -        PCIDevice *port_dev;
+>> -        uint16_t lnkcap, lnkcap2, lnksta;
+>> -
+>> -        port = &out->ports[i];
+>> -
+>> -        port_dev = pcie_find_port_by_pn(bus, in->ports[i]);
+>> -        if (port_dev) { /* DSP */
+>> -            PCIDevice *ds_dev = pci_bridge_get_sec_bus(PCI_BRIDGE(port_dev))
+>> -                ->devices[0];
+>> -            port->config_state = 3;
+>> -            if (ds_dev) {
+>> -                if (object_dynamic_cast(OBJECT(ds_dev), TYPE_CXL_TYPE3)) {
+>> -                    port->connected_device_type = 5; /* Assume MLD for now */
+>> -                } else {
+>> -                    port->connected_device_type = 1;
+>> -                }
+>> -            } else {
+>> -                port->connected_device_type = 0;
+>> +        int pn = in->ports[i];
+>> +        for (int j = 0; j < PCI_DEVFN_MAX; j++) {
+>> +            if (pn == cci->pports.pport_info[j].port_id) {
+>
+>Given port id is 0-255 and your port_info has 256 elements, why not index
+>by port_id when storing them in the first place? That should reduce
+>complexity of this look up.  I don't think we ever actually look up
+>by devfn?
+okay
+>
+>> +                memcpy(&out->ports[i], &(cci->pports.pport_info[pn]),
+>> +                       sizeof(struct cxl_phy_port_info));
+
+------K5ZVV-zrPS8y8iJelFUsagW7KEVVNg7wn3oh2ZJRPRpX678s=_a58ee_
+Content-Type: text/plain; charset="utf-8"
 
 
-Why not squash this patch into #3, and remove the pmd_special() check 
-from vm_normal_page_pmd() in the same go? Seems wrong to handle the 
-PMD/PUD case separately.
-
-But now I am confused why some pte_devmap() checks are removed in patch 
-#3, while others are removed in #7.
-
-Why not split it up into (a) stop setting p*_devmap() and (b) remove 
-p*_devmap().
-
-Logically makes more sense to me ... :)
-
--- 
-Cheers,
-
-David / dhildenb
-
+------K5ZVV-zrPS8y8iJelFUsagW7KEVVNg7wn3oh2ZJRPRpX678s=_a58ee_--
