@@ -1,47 +1,47 @@
 Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DD8C21C9FF
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 568D22E717E
 	for <linux-cxl@vger.kernel.org>; Tue, 17 Jun 2025 13:07:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750165646; cv=none; b=fvamKkhmclc5ptPTt135izzx2c+LWFXXzNKpZIGtmEwnTCNwDIJXRkClcnXGUnMS7hbjEcjGADFb347vUu85uimqe7q+J0U95gWf04esKv8qTo6ayHcS9H0IfDUbocAeuMwKTvlIqGuYlnAWCQLEw8TI37AwiZ3cSFvKSWkiGyU=
+	t=1750165646; cv=none; b=YE+T80LQGrZ3ADPEuk5pHRDTPEaGfvKn/hK1PE8RJu0gsclCCJSkVs3gHw/8PkMG0fD695UVnZS8x6WElOKmVXTbFm3+8UZ1qb+qozxHA+VFaIKaIhjlMM/NaFFhwO+cLCUwtwuwoqQz1xZzF10iw+dJs97R+8hEH/3bGmxM+J8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750165646; c=relaxed/simple;
-	bh=y6iIBkSfQpc3/TmTqlFfXP50Swq+9QwG7cEVpJdcS3c=;
+	bh=DF0F8s9i8zF6gkQUvgfqL8KFLpU80+hqS+HztAFwXjw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=HkVRYULldLT00T5zYlZtodFZX+rffWr0OXaKX4nORSsgym8pZ45j0DU///qoSsfhisMdSFTsC8kxEy6DIsiPShCWpxdLh2pViSXwvysfVG0B5PPakGtEyEsKfdegHknUURpyZ01kXW9TFLm2wuKqc+UnePx6rTuPc09FhTwhMQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=jpjrgdMV; arc=none smtp.client-ip=203.254.224.25
+	 Content-Type:References; b=Ef+ki9s4fqdygmzpn7tEpHeaZ/AgSAitfTLQCDwcOlt3dg2Jun0p4pweWDQDLce9a34HXeNoBwS9US7B8AZd1bpKVVgWYizH/TO8jr3jEJ4g+dQhUeA/2yUnpOSx5VqaNtWEr3kQv2dfUL4j9/awbWXOE3cR+1AoGQI0PyzpuvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=SJwA/4fX; arc=none smtp.client-ip=203.254.224.25
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="jpjrgdMV"
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250617130006epoutp026ff2d75b3fb20df6788df7d7b6ea0a91~J1fuAhw_92363523635epoutp02u
-	for <linux-cxl@vger.kernel.org>; Tue, 17 Jun 2025 13:00:06 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250617130006epoutp026ff2d75b3fb20df6788df7d7b6ea0a91~J1fuAhw_92363523635epoutp02u
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="SJwA/4fX"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250617130004epoutp024ca88eb5da1324f1dbd4ab2ff19930ac~J1fsClGe12453024530epoutp02J
+	for <linux-cxl@vger.kernel.org>; Tue, 17 Jun 2025 13:00:04 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250617130004epoutp024ca88eb5da1324f1dbd4ab2ff19930ac~J1fsClGe12453024530epoutp02J
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1750165206;
-	bh=FfEMNSF2SjxETkkknpiXVsaeo76vBAkdkVZScA5l+vE=;
+	s=mail20170921; t=1750165204;
+	bh=pUkI5fAVHOssGM0XEx7hINUt5DO6uow+53f3e1oNt8k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jpjrgdMVST80a3jjFNaiwbLvMeNz5nevCsvWBdwnBEEgCxT4CimdRGO/sL2/I9qvp
-	 lq2w6EH6R+2q3VWnnWT/GaH4HSYCxlPmka1s6nX3kBS2x+1C0xATYQTthLuItJZP4r
-	 +vvfHJE/jlw2hbA5bznULxvgvbXaFG7aG1HPQvl4=
-Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
+	b=SJwA/4fXj/DzPk8ZWJzequgzw9IUV3M32Tl7I1wvg2Aji9RlNheTwcg26h2T38scu
+	 +r2RUzI/VVxXTH/sIjmbi/9CBLZJlMHUIsHqTuUSR2SVjQfnq7KCWjH5495vCV2zqo
+	 6UpJuLfrjrplSIxpkZee0Djfq3T8bZoFM6+vEdGQ=
+Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
 	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
-	20250617130005epcas5p1a584e26385ebd15770b3934d7d8d3964~J1ftW2kx-2447924479epcas5p1z;
-	Tue, 17 Jun 2025 13:00:05 +0000 (GMT)
+	20250617130003epcas5p1842c90f8d24f2f7cfd8e3bbacbba9864~J1frfhijX0551805518epcas5p1z;
+	Tue, 17 Jun 2025 13:00:03 +0000 (GMT)
 Received: from epcpadp1new (unknown [182.195.40.141]) by
-	epsnrtp01.localdomain (Postfix) with ESMTP id 4bM6R94Zvzz6B9m4; Tue, 17 Jun
-	2025 13:00:05 +0000 (GMT)
+	epsnrtp04.localdomain (Postfix) with ESMTP id 4bM6R74ZkSz6B9mD; Tue, 17 Jun
+	2025 13:00:03 +0000 (GMT)
 Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250617124025epcas5p1ce6656fed9ef1175812f80574048cd7a~J1OigNtnm1366613666epcas5p1X;
-	Tue, 17 Jun 2025 12:40:25 +0000 (GMT)
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250617124008epcas5p2e702f786645d44ceb1cdd980a914ce8e~J1OR_eMh20675106751epcas5p2E;
+	Tue, 17 Jun 2025 12:40:08 +0000 (GMT)
 Received: from test-PowerEdge-R740xd.samsungds.net (unknown [107.99.41.79])
 	by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250617124023epsmtip2a96c6c44466709ae38bfa7e8e9597bc4~J1OgAJRnQ2545625456epsmtip2b;
-	Tue, 17 Jun 2025 12:40:22 +0000 (GMT)
+	20250617124005epsmtip2c4b92fa3b085bd73326887d2c1352f93~J1OPei42b2543925439epsmtip2X;
+	Tue, 17 Jun 2025 12:40:05 +0000 (GMT)
 From: Neeraj Kumar <s.neeraj@samsung.com>
 To: dan.j.williams@intel.com, dave@stgolabs.net,
 	jonathan.cameron@huawei.com, dave.jiang@intel.com,
@@ -51,10 +51,10 @@ Cc: a.manzanares@samsung.com, nifan.cxl@gmail.com, anisa.su@samsung.com,
 	alok.rathore@samsung.com, s.neeraj@samsung.com, neeraj.kernel@gmail.com,
 	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
 	nvdimm@lists.linux.dev, gost.dev@samsung.com, cpgs@samsung.com
-Subject: [RFC PATCH 07/20] nvdimm/namespace_label: Update namespace
- init_labels and its region_uuid
-Date: Tue, 17 Jun 2025 18:09:31 +0530
-Message-Id: <720167805.241750165205630.JavaMail.epsvc@epcpadp1new>
+Subject: [RFC PATCH 01/20] nvdimm/label: Introduce NDD_CXL_LABEL flag to set
+ cxl label format
+Date: Tue, 17 Jun 2025 18:09:25 +0530
+Message-Id: <158453976.61750165203630.JavaMail.epsvc@epcpadp1new>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250617123944.78345-1-s.neeraj@samsung.com>
 Precedence: bulk
@@ -64,56 +64,116 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250617124025epcas5p1ce6656fed9ef1175812f80574048cd7a
+X-CMS-MailID: 20250617124008epcas5p2e702f786645d44ceb1cdd980a914ce8e
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: REQ_APPROVE
 CMS-TYPE: 105P
 X-CPGSPASS: Y
 X-Hop-Count: 3
-X-CMS-RootMailID: 20250617124025epcas5p1ce6656fed9ef1175812f80574048cd7a
+X-CMS-RootMailID: 20250617124008epcas5p2e702f786645d44ceb1cdd980a914ce8e
 References: <20250617123944.78345-1-s.neeraj@samsung.com>
-	<CGME20250617124025epcas5p1ce6656fed9ef1175812f80574048cd7a@epcas5p1.samsung.com>
+	<CGME20250617124008epcas5p2e702f786645d44ceb1cdd980a914ce8e@epcas5p2.samsung.com>
 
-nd_mapping->labels maintains the list of labels present into LSA.
-init_labels function prepares this list while adding new label
-into LSA and updates nd_mapping->labels accordingly. During cxl
-region creation nd_mapping->labels list and LSA was updated with
-one region label. Therefore during new namespace label creation
-pre-include the previously created region label, so increase
-num_labels count by 1.
-
-Also updated nsl_set_region_uuid with region uuid with which
-namespace is associated with.
+NDD_CXL_LABEL is introduced to set cxl LSA 2.1 label format
+Accordingly updated label index version
 
 Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
 ---
- drivers/nvdimm/label.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/nvdimm/dimm.c      |  1 +
+ drivers/nvdimm/dimm_devs.c | 10 ++++++++++
+ drivers/nvdimm/label.c     | 16 ++++++++++++----
+ drivers/nvdimm/nd.h        |  1 +
+ include/linux/libnvdimm.h  |  3 +++
+ 5 files changed, 27 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/nvdimm/dimm.c b/drivers/nvdimm/dimm.c
+index 91d9163ee303..8753b5cd91cc 100644
+--- a/drivers/nvdimm/dimm.c
++++ b/drivers/nvdimm/dimm.c
+@@ -62,6 +62,7 @@ static int nvdimm_probe(struct device *dev)
+ 	if (rc < 0)
+ 		dev_dbg(dev, "failed to unlock dimm: %d\n", rc);
+ 
++	ndd->cxl = nvdimm_check_cxl_label_format(ndd->dev);
+ 
+ 	/*
+ 	 * EACCES failures reading the namespace label-area-properties
+diff --git a/drivers/nvdimm/dimm_devs.c b/drivers/nvdimm/dimm_devs.c
+index 21498d461fde..e8f545f889fd 100644
+--- a/drivers/nvdimm/dimm_devs.c
++++ b/drivers/nvdimm/dimm_devs.c
+@@ -18,6 +18,16 @@
+ 
+ static DEFINE_IDA(dimm_ida);
+ 
++bool nvdimm_check_cxl_label_format(struct device *dev)
++{
++	struct nvdimm *nvdimm = to_nvdimm(dev);
++
++	if (test_bit(NDD_CXL_LABEL, &nvdimm->flags))
++		return true;
++
++	return false;
++}
++
+ /*
+  * Retrieve bus and dimm handle and return if this bus supports
+  * get_config_data commands
 diff --git a/drivers/nvdimm/label.c b/drivers/nvdimm/label.c
-index 9381c50086fc..108100c4bf44 100644
+index 082253a3a956..48b5ba90216d 100644
 --- a/drivers/nvdimm/label.c
 +++ b/drivers/nvdimm/label.c
-@@ -947,7 +947,7 @@ static int __pmem_label_update(struct nd_region *nd_region,
- 	nsl_set_slot(ndd, ns_label, slot);
- 	nsl_set_alignment(ndd, ns_label, 0);
- 	nsl_set_type_guid(ndd, ns_label, &nd_set->type_guid);
--	nsl_set_region_uuid(ndd, ns_label, NULL);
-+	nsl_set_region_uuid(ndd, ns_label, &nd_set->uuid);
- 	nsl_set_claim_class(ndd, ns_label, ndns->claim_class);
- 	nsl_calculate_checksum(ndd, ns_label);
- 	nd_dbg_dpa(nd_region, ndd, res, "\n");
-@@ -1114,7 +1114,8 @@ int nd_pmem_namespace_label_update(struct nd_region *nd_region,
- 				count++;
- 		WARN_ON_ONCE(!count);
+@@ -687,11 +687,19 @@ static int nd_label_write_index(struct nvdimm_drvdata *ndd, int index, u32 seq,
+ 		- (unsigned long) to_namespace_index(ndd, 0);
+ 	nsindex->labeloff = __cpu_to_le64(offset);
+ 	nsindex->nslot = __cpu_to_le32(nslot);
+-	nsindex->major = __cpu_to_le16(1);
+-	if (sizeof_namespace_label(ndd) < 256)
++
++	/* Support CXL LSA 2.1 label format */
++	if (ndd->cxl) {
++		nsindex->major = __cpu_to_le16(2);
+ 		nsindex->minor = __cpu_to_le16(1);
+-	else
+-		nsindex->minor = __cpu_to_le16(2);
++	} else {
++		nsindex->major = __cpu_to_le16(1);
++		if (sizeof_namespace_label(ndd) < 256)
++			nsindex->minor = __cpu_to_le16(1);
++		else
++			nsindex->minor = __cpu_to_le16(2);
++	}
++
+ 	nsindex->checksum = __cpu_to_le64(0);
+ 	if (flags & ND_NSINDEX_INIT) {
+ 		unsigned long *free = (unsigned long *) nsindex->free;
+diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
+index 5ca06e9a2d29..304f0e9904f1 100644
+--- a/drivers/nvdimm/nd.h
++++ b/drivers/nvdimm/nd.h
+@@ -522,6 +522,7 @@ void nvdimm_set_labeling(struct device *dev);
+ void nvdimm_set_locked(struct device *dev);
+ void nvdimm_clear_locked(struct device *dev);
+ int nvdimm_security_setup_events(struct device *dev);
++bool nvdimm_check_cxl_label_format(struct device *dev);
+ #if IS_ENABLED(CONFIG_NVDIMM_KEYS)
+ int nvdimm_security_unlock(struct device *dev);
+ #else
+diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
+index e772aae71843..0a55900842c8 100644
+--- a/include/linux/libnvdimm.h
++++ b/include/linux/libnvdimm.h
+@@ -44,6 +44,9 @@ enum {
+ 	/* dimm provider wants synchronous registration by __nvdimm_create() */
+ 	NDD_REGISTER_SYNC = 8,
  
--		rc = init_labels(nd_mapping, count);
-+		/* Adding 1 to pre include the already added region label */
-+		rc = init_labels(nd_mapping, count + 1);
- 		if (rc < 0)
- 			return rc;
- 
++	/* dimm supports region labels (LSA Format 2.1) */
++	NDD_CXL_LABEL = 9,
++
+ 	/* need to set a limit somewhere, but yes, this is likely overkill */
+ 	ND_IOCTL_MAX_BUFLEN = SZ_4M,
+ 	ND_CMD_MAX_ELEM = 5,
 -- 
 2.34.1
 
