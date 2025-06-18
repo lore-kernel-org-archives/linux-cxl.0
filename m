@@ -1,156 +1,177 @@
-Received: from slateblue.cherry.relay.mailchannels.net (slateblue.cherry.relay.mailchannels.net [23.83.223.168])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D189215077
-	for <linux-cxl@vger.kernel.org>; Tue, 17 Jun 2025 22:15:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.168
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750198518; cv=pass; b=o60zXeq3xTy68ZPyWgBPPTrIQmG6wBXVktkTgoLtoppX4CXdFkJdUPlU8Hk56P9XXq/aihnmomS3ogYninN1XUd7QjMX8xClO4zgZiEMs2cYCQ1xKymKHJrk/8ch0Dfwt+O7sve0Kc0LWeJAkcpFdLy4dPUBeWYrhZXQ3XqsBMU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750198518; c=relaxed/simple;
-	bh=br1JxbEqjp+XKPoJ5VINwswLzpe79a/gzx3L6lmu6Hc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OzBq+getnD7i4nt/GzuNDUEXHk6s5hDn1+Am5fnOTXZGRppVzb9Q3y2a5cpQO23zrlhGPmGckaJYsXuh92zEpMW5U9VVwmKwtZ88EgdN+HtBPf1K73+UoznHxw/3Pglj+swnMVsuMdlNQMSLvbzwXMd4hJGf9kFyyR0nmehn2qw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=TEdCt42j; arc=pass smtp.client-ip=23.83.223.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83AA328000E
+	for <linux-cxl@vger.kernel.org>; Wed, 18 Jun 2025 09:31:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750239070; cv=none; b=REp/J+IB8MbItWslfjl9N+H69A2BrD554ngmZHST7VwHu3IibaUdXCmeoj2nu459S8XcpYCI8Upu08cB5p/rsYwCJFea3AlIgunY20kt/Hu99HqivWyC10JWPACIL3UBHQZGtQiR2ln3w87XxRcudY2XSS3xZ9S25BM6V3sbZxY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750239070; c=relaxed/simple;
+	bh=4DUmQNuK4KTUlCUIkhvb5/nFonNtmaZleGEiMulYcdg=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=KAQwiiWrqslBrQLM8uFGyPLFzYZvO5YAVz/0GSKd1WiJHozrCgw3XHv27rm5WGT9elxKJPzUnyHH2tOBML2gTBNz2DvA/mNp86+rD+F3HhMig9eXX899+y53HnwKbVp+l5UTHVE9t00LA3RdK8Re7FY5yuw215llrDApHZ+PMLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XfRK2f6X; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="TEdCt42j"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 57629845564;
-	Tue, 17 Jun 2025 22:15:14 +0000 (UTC)
-Received: from pdx1-sub0-mail-a309.dreamhost.com (100-100-12-242.trex-nlb.outbound.svc.cluster.local [100.100.12.242])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id AEC5F844C9F;
-	Tue, 17 Jun 2025 22:15:13 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1750198513; a=rsa-sha256;
-	cv=none;
-	b=pxTJysnzi0QORDS+VW1g6Vmaxql1P1GUBWI1N9yzI7slu5zwBaK0vI/pMKIK4xGMYbbO7A
-	fBIfKDaLUsV4/TuW3FVOE+0UrEwV9nGLnw+CUPUKd/M9hajVePN9yGhrh+8IHwFw6BaLaU
-	ok7ADqTeD+dXn+JcLz5ISLlY4K8ybb8zSoYsVGZb7Virc2fTp/vg0c9TkYUamnvu/It3dO
-	q5jGuc2KoOah6YU7FcgdT4mq+zlTtudc9A686Iuo0LFWWv7jy7cUoWcHLfm89LlrtfAorc
-	vU0eied5v3eufPOeQyiQP36+mtNm4VIWQYwVLVAhZ0Nxzlnx43FxzXrxWjkxfA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1750198513;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XfRK2f6X"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750239067;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=sO2Gd2Lsd0N4J7D4BaAlkKkuEFB73n5zDQ9oBJo4ENY=;
-	b=B/OBPvHVdwPgiAWefPc7g75e3MrcVdR7962fcr8S9hKoWpPrTXaXpeV9Qzld3QkNUwUb4l
-	k4TjfYypSguNTMWGqGYfFcPo8fT4zcKijeSraFpuh3wTRWybONl+lzLyN/cGBzA81qtTHw
-	j/n0cz9LM6uAZh2TNMavofFxdoCwwZw8A7aY0oTWnfgyAI0X051A8n5XWiyro6sH+PN3pe
-	WRx/sfEebyxjU+VoYY79x2oqtbvvHr/z4cDjOuEye9JkO84PS2rEx0b7EsW/FVPmPffQX6
-	odLo0cvWThJF3zHEoZ8WI6SPy18/Su6Fjj2AOV2qhYY0Ykc2pWajIBlL/trBTw==
-ARC-Authentication-Results: i=1;
-	rspamd-5859dfb5d9-hh9g8;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Shrill-Shade: 76d5d434554d88e7_1750198514055_284077636
-X-MC-Loop-Signature: 1750198514054:2714795775
-X-MC-Ingress-Time: 1750198514054
-Received: from pdx1-sub0-mail-a309.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.100.12.242 (trex/7.0.3);
-	Tue, 17 Jun 2025 22:15:14 +0000
-Received: from offworld (syn-076-167-199-067.res.spectrum.com [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a309.dreamhost.com (Postfix) with ESMTPSA id 4bMLlh5hc1z1P;
-	Tue, 17 Jun 2025 15:15:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1750198513;
-	bh=sO2Gd2Lsd0N4J7D4BaAlkKkuEFB73n5zDQ9oBJo4ENY=;
-	h=Date:From:To:Cc:Subject:Content-Type:Content-Transfer-Encoding;
-	b=TEdCt42jpFsJdI4cE13WcxYOkQXwrt4jTW0Fam5sEFNptleurNKVWZ9mtxI1j+/iU
-	 7CONWhWd6HCm6FzzajUUAV1PaF9k670mj3rhviyPXFNvDHMfwx65rtq/rHitxKfJIJ
-	 CVpO5pBdxPlUVnWn4rG2NKy2YO4NzgXkKSCfw98fvyH5cD9Foi06pTfWQwjdi3g+JD
-	 M0BgWBrqhBzeBTri6VSkqkrkQI8yk6KdUt9+414vZvmeDEyTRNOcGYGk67cpZg7rn9
-	 s8dg1FOqLECMMbtHjQFfk1gRIYsx+KwZW9R3aSE3yAriD+vJ/6JfP9RIw0nbBr+nWW
-	 AQHKV1pTFP6oA==
-Date: Tue, 17 Jun 2025 15:15:09 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: dave.jiang@intel.com
-Cc: dan.j.williams@intel.com, jonathan.cameron@huawei.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, jgroves@micron.com, ravis.opensrc@micron.com,
-	fan.ni@samsung.com, anisa.su@samsung.com, a.manzanares@samsung.com,
-	linux-cxl@vger.kernel.org, dave@stgolabs.net
-Subject: [PATCH 7/7] cxl/mbox: Add Populate Log support
-Message-ID: <20250617221509.ro27iocdmfllvvwg@offworld>
-References: <20250617193611.564668-1-dave@stgolabs.net>
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=DAAxpkDR64hsnaI9Udos0W7mCWFzGT/DUlyAtDcPHQM=;
+	b=XfRK2f6Xk0iT8cmMZXk815s0t3tgxz+oyOZWSVz+uW4+p+qa8jmYy4l02WoJfkmXsOZmMc
+	VfXqBLUNi2O+68Kz2Kw9vK+lybCs/GkbBmwoKXuCyXpzBstruW6ad8lfns1w/mgLG1Hd2K
+	Dy6GbhyvB+smAKK56F/oOL1WdRs77+I=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-10-FXjAixgSMsqHDNi7rC_H0g-1; Wed, 18 Jun 2025 05:31:06 -0400
+X-MC-Unique: FXjAixgSMsqHDNi7rC_H0g-1
+X-Mimecast-MFC-AGG-ID: FXjAixgSMsqHDNi7rC_H0g_1750239065
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-450d64026baso45500645e9.1
+        for <linux-cxl@vger.kernel.org>; Wed, 18 Jun 2025 02:31:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750239065; x=1750843865;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:from:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=DAAxpkDR64hsnaI9Udos0W7mCWFzGT/DUlyAtDcPHQM=;
+        b=lAvOiOkX45N1d4CxnmKwHSoUhlOuLMzW64tTsliR5wU0DigYeqxfEWmoTBP1TqxROT
+         K1z1b26NXFy25U/kyginhl0pnra/aNvTZOElj8mvJJT0kZICvWZSn1W+USmxoikt7vmU
+         RVTCbeWu9r8ey15NpNWyNPGQ7Ql9vOstgXM1Sku0fWdftmmMpe8X7Od2enZPp8uj7Ma7
+         jiRjZpORaH8yCtfBGZGdU1YbQrgo3PcdXR54yUJKyPMm9WBXkom6VxSdS9RTSrXwGj9D
+         o+Na4jyvyfsIVpjIeWX4ceh2Swj+qNOsX5PqBBIXxqPVDhBsrxg4AolGQcTroxgj6tYb
+         P1xA==
+X-Forwarded-Encrypted: i=1; AJvYcCWB5g8aswaa/SexxqQT0cVpHhmoc0X10eiNLTQTD4DPWHmyyvSsi0XHRKOBFhFnzzKBcydnF5BXP88=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxyG8i8K7s7/ERuaSCpILFJviN2n4tSQj1yLTjaKz7+AsUGmlq
+	Iazwqh7lOv9e5wkukADJ2zXLLKYLNje+e9yeRBDlTzzk8EN/YxHnB19PEkHI3B8Q1w1umPoyUKS
+	1ufWtA5G/iI99H1U2wMKGG4zqS6a3vFaWlJ9Sa2P04whSld4OlucsFCV6DR8cFw==
+X-Gm-Gg: ASbGncszElUpfABErVzyAC/YuMOwWIWAhb6iwQxD8S0RSKzP4PCWvHlMjKytP5hlTdj
+	qwTGqB/DzJW0Gz/AGNFMguUYy1yBB5wL5HybwkwTSoKCUuSTses7/X71lqgI0AwdM5tWa3Wg5Fv
+	ytYek1AtEn9tZ4J5zIl25irPeHE9GxnVMxRM+yXtmhghyK3TVtVedq+clCOK8xnGdrv3lel8f9F
+	/QZAJZ3mVpXD9ARN2UFaBjL8kIYRbNzrn8iPezXdL2cIG5o+nqHk6uNvIccjFX6EDxo1xTRYkh7
+	QeQMTEFDIFAsd/B6cNzwX6ziHLk49vT7N6mET9UDnarl3xHx6ehqnEQszNg7dA1C6bARDEpIckg
+	ylo6ULBsQWNqP81pYhRaKL0o3nNALeb3YGXxdk3UJxRciJxM=
+X-Received: by 2002:a05:600c:5396:b0:43d:172:50b1 with SMTP id 5b1f17b1804b1-4533cac8fdbmr151178425e9.29.1750239064921;
+        Wed, 18 Jun 2025 02:31:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGFE2lmgl3UBomQIO41tOZKwEtVJWCPsqqDyTr4SmltEOYbKotteA+xAeGqRpDK/3zaPP374g==
+X-Received: by 2002:a05:600c:5396:b0:43d:172:50b1 with SMTP id 5b1f17b1804b1-4533cac8fdbmr151178015e9.29.1750239064488;
+        Wed, 18 Jun 2025 02:31:04 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f2d:2400:4052:3b5:fff9:4ed0? (p200300d82f2d2400405203b5fff94ed0.dip0.t-ipconnect.de. [2003:d8:2f2d:2400:4052:3b5:fff9:4ed0])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a73845sm16606417f8f.35.2025.06.18.02.31.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Jun 2025 02:31:04 -0700 (PDT)
+Message-ID: <051f769d-3a0e-409e-bd40-22000f10b986@redhat.com>
+Date: Wed, 18 Jun 2025 11:31:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250617193611.564668-1-dave@stgolabs.net>
-User-Agent: NeoMutt/20220429
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 03/14] mm: Convert vmf_insert_mixed() from using
+ pte_devmap to pte_special
+From: David Hildenbrand <david@redhat.com>
+To: Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org
+Cc: linux-mm@kvack.org, gerald.schaefer@linux.ibm.com,
+ dan.j.williams@intel.com, jgg@ziepe.ca, willy@infradead.org,
+ linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+ linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
+ zhang.lyra@gmail.com, debug@rivosinc.com, bjorn@kernel.org,
+ balbirs@nvidia.com, lorenzo.stoakes@oracle.com,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-cxl@vger.kernel.org, dri-devel@lists.freedesktop.org, John@Groves.net,
+ m.szyprowski@samsung.com, Jason Gunthorpe <jgg@nvidia.com>
+References: <cover.8d04615eb17b9e46fc0ae7402ca54b69e04b1043.1750075065.git-series.apopple@nvidia.com>
+ <5c03174d2ea76f579e4675f5fab6277f5dd91be2.1750075065.git-series.apopple@nvidia.com>
+ <1709a271-273b-4668-b813-648e5785e4e8@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <1709a271-273b-4668-b813-648e5785e4e8@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: mjw_lml62fqJYy_WRtGi2aGFCHxNXQWjcFUtsdQ7exg_1750239065
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-=46rom: Ravi Shankar <ravis.opensrc@micron.com>
+On 17.06.25 11:49, David Hildenbrand wrote:
+> On 16.06.25 13:58, Alistair Popple wrote:
+>> DAX no longer requires device PTEs as it always has a ZONE_DEVICE page
+>> associated with the PTE that can be reference counted normally. Other users
+>> of pte_devmap are drivers that set PFN_DEV when calling vmf_insert_mixed()
+>> which ensures vm_normal_page() returns NULL for these entries.
+>>
+>> There is no reason to distinguish these pte_devmap users so in order to
+>> free up a PTE bit use pte_special instead for entries created with
+>> vmf_insert_mixed(). This will ensure vm_normal_page() will continue to
+>> return NULL for these pages.
+>>
+>> Architectures that don't support pte_special also don't support pte_devmap
+>> so those will continue to rely on pfn_valid() to determine if the page can
+>> be mapped.
+>>
+>> Signed-off-by: Alistair Popple <apopple@nvidia.com>
+>> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+>> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+>> ---
 
-Adding UAPI support for
-  CXL r3.1 8.2.9.5.5 Populate Log.
+As Andrew notes offlined, there is no content here. I sent this by mistake
+after replying to patch#6 instead.
 
-Signed-off-by: Ravi Shankar <ravis.opensrc@micron.com>
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
----
-Apologies, this one had not gone out.
+-- 
+Cheers,
 
-  drivers/cxl/core/mbox.c      | 1 +
-  drivers/cxl/cxlmem.h         | 1 +
-  include/uapi/linux/cxl_mem.h | 1 +
-  3 files changed, 3 insertions(+)
-
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index abb6bb77a43d..ef737f9dacf2 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -60,6 +60,7 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_CO=
-MMAND_ID_MAX] =3D {
-  	CXL_CMD(GET_LOG_CAPS, 0x10, 0x4, 0),
-  	CXL_CMD(CLEAR_LOG, 0x10, 0, 0),
-  	CXL_CMD(GET_SUP_LOG_SUBLIST, 0x2, CXL_VARIABLE_PAYLOAD, 0),
-+	CXL_CMD(POPULATE_LOG, 0x10, 0, 0),
-  	CXL_CMD(SET_PARTITION_INFO, 0x0a, 0, 0),
-  	CXL_CMD(SET_LSA, CXL_VARIABLE_PAYLOAD, 0, 0),
-  	CXL_CMD(GET_ALERT_CONFIG, 0, 0x10, 0),
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index ebd7679143dd..56d5f9ea823a 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -555,6 +555,7 @@ enum cxl_opcode {
-  	CXL_MBOX_OP_GET_LOG		=3D 0x0401,
-  	CXL_MBOX_OP_GET_LOG_CAPS	=3D 0x0402,
-  	CXL_MBOX_OP_CLEAR_LOG           =3D 0x0403,
-+	CXL_MBOX_OP_POPULATE_LOG        =3D 0x0404,
-  	CXL_MBOX_OP_GET_SUP_LOG_SUBLIST =3D 0x0405,
-  	CXL_MBOX_OP_GET_SUPPORTED_FEATURES	=3D 0x0500,
-  	CXL_MBOX_OP_GET_FEATURE		=3D 0x0501,
-diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
-index c6c0fe27495d..ca7fbd1be873 100644
---- a/include/uapi/linux/cxl_mem.h
-+++ b/include/uapi/linux/cxl_mem.h
-@@ -50,6 +50,7 @@
-  	___C(GET_LOG_CAPS, "Get Log Capabilities"),			  \
-  	___C(CLEAR_LOG, "Clear Log"),					  \
-  	___C(GET_SUP_LOG_SUBLIST, "Get Supported Logs Sub-List"),	  \
-+	___C(POPULATE_LOG, "Populate Log"),				  \
-  	___C(MAX, "invalid / last command")
- =20
-  #define ___C(a, b) CXL_MEM_COMMAND_ID_##a
---=20
-2.39.5
+David / dhildenb
 
