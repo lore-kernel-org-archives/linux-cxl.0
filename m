@@ -1,40 +1,47 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2257628C86C
-	for <linux-cxl@vger.kernel.org>; Fri, 20 Jun 2025 14:48:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D03F2D4B6F;
+	Fri, 20 Jun 2025 16:40:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750430902; cv=none; b=T0O32AmCc1Fh0SgbxMjJwEmCDuXH4cmFOlaWnk4lC2cmrUJUiSjf3yBQhZx8DP6p1yW9wDudAqLHYXbm4PaX/glJEmNXkYY8pegF2r1o68buT3ckPDZxeBSPfJBwyD2/+hhlk+NFhw08CiapyxM1VUfFH7qBWT0O5g/GylEmUlI=
+	t=1750437611; cv=none; b=m1TSgJxcHdngSsd4rZEaGfXiQZmkwcAqy99/NnVulhIGxpWuRgFKeh0YWN8Zvw7wBx2sk1xohkyTWSrMGd4oK6761fGrJB296uhFh3NvdEzJAmWKx7lMaPmDwxlhBkbpox9EFZnodi8WgYR9J7hGNQMGCtdV/JW555bGx4G/zko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750430902; c=relaxed/simple;
-	bh=J8DmG16DzVEKoPKLNLqHX8AQMsWt+YFXQHlF4fi44lc=;
+	s=arc-20240116; t=1750437611; c=relaxed/simple;
+	bh=6MOrDPSqajVX9dglL2iIpKlky0ZC16o6M1J4f7fNxNY=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VXgoGsPn8GzuvBvqOdhxJoVzpUPYGLxKBUEy/yxQsxfbE2xFv2us1OZtCj2PuSqEp/sfFC3TkPcqSfGTMTXGRSdoU4aY9D9z8qAHujZP8NC7kLxc0tY6uFj8E8W5FKUz48N8EsPpvVTXI2oJzwU03vLLqym1PzLSCzNa5kq+mdM=
+	 MIME-Version:Content-Type; b=K0PXggmM8itYYwLSdOgJekXP++PjdKx3q2brdUI1nThWBzUYDuCzj7RrTCVDg5BL3JvqbIwnb2V1ezS0UbXKfNCxJjqIZ7WP1SzgiwJrmS7iGCzDRC+mq7u41zEDSXyl/UI/9ZAVw7ZPwXv09G/GvPFBQqGCRE4SxVZHrhJ58ms=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bP0b465hNz6L56V;
-	Fri, 20 Jun 2025 22:43:28 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bP36y4ySyz6L5jx;
+	Sat, 21 Jun 2025 00:37:46 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9A8881400D7;
-	Fri, 20 Jun 2025 22:48:15 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id BC89B1402F3;
+	Sat, 21 Jun 2025 00:40:05 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 20 Jun
- 2025 16:48:15 +0200
-Date: Fri, 20 Jun 2025 15:48:13 +0100
+ 2025 18:40:04 +0200
+Date: Fri, 20 Jun 2025 17:40:01 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <shiju.jose@huawei.com>
-CC: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>,
-	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>, <linuxarm@huawei.com>
-Subject: Re: [PATCH v2 7/7] hw/cxl: Add emulation for memory sparing control
- feature
-Message-ID: <20250620154813.00002bbd@huawei.com>
-In-Reply-To: <20250619151619.1695-8-shiju.jose@huawei.com>
-References: <20250619151619.1695-1-shiju.jose@huawei.com>
-	<20250619151619.1695-8-shiju.jose@huawei.com>
+To: Neeraj Kumar <s.neeraj@samsung.com>
+CC: <dan.j.williams@intel.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <a.manzanares@samsung.com>, <nifan.cxl@gmail.com>,
+	<anisa.su@samsung.com>, <vishak.g@samsung.com>, <krish.reddy@samsung.com>,
+	<arun.george@samsung.com>, <alok.rathore@samsung.com>,
+	<neeraj.kernel@gmail.com>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+	<gost.dev@samsung.com>, <cpgs@samsung.com>
+Subject: Re: [RFC PATCH 01/20] nvdimm/label: Introduce NDD_CXL_LABEL flag to
+ set cxl label format
+Message-ID: <20250620174001.00003aa2@huawei.com>
+In-Reply-To: <158453976.61750165203630.JavaMail.epsvc@epcpadp1new>
+References: <20250617123944.78345-1-s.neeraj@samsung.com>
+	<CGME20250617124008epcas5p2e702f786645d44ceb1cdd980a914ce8e@epcas5p2.samsung.com>
+	<158453976.61750165203630.JavaMail.epsvc@epcpadp1new>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -44,150 +51,126 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, 19 Jun 2025 16:16:19 +0100
-<shiju.jose@huawei.com> wrote:
+On Tue, 17 Jun 2025 18:09:25 +0530
+Neeraj Kumar <s.neeraj@samsung.com> wrote:
 
-> From: Shiju Jose <shiju.jose@huawei.com>
+> NDD_CXL_LABEL is introduced to set cxl LSA 2.1 label format
+> Accordingly updated label index version
 > 
-> Memory sparing is defined as a repair function that replaces a portion of
-> memory with a portion of functional memory at that same DPA. The subclasses
-> for this operation vary in terms of the scope of the sparing being
-> performed. The Cacheline sparing subclass refers to a sparing action that
-> can replace a full cacheline. Row sparing is provided as an alternative to
-> PPR sparing functions and its scope is that of a single DDR row. Bank
-> sparing allows an entire bank to be replaced. Rank sparing is defined as
-> an operation in which an entire DDR rank is replaced.
-> 
-> Memory sparing maintenance operations may be supported by CXL devices
-> that implement CXL.mem protocol. A sparing maintenance operation requests
-> the CXL device to perform a repair operation on its media.
-> For example, a CXL device with DRAM components that support memory sparing
-> features may implement sparing Maintenance operations.
-> 
-> The host may issue a query command by setting Query Resources flag in the
-> Input Payload (CXL Spec 3.2 Table 8-120) to determine availability of
-> sparing resources for a given address. In response to a query request,
-> the device shall report the resource availability by producing the Memory
-> Sparing Event Record (CXL Spec 3.2 Table 8-60) in which the Channel, Rank,
-> Nibble Mask, Bank Group, Bank, Row, Column, Sub-Channel fields are a copy
-> of the values specified in the request.
-> 
-> During the execution of a sparing maintenance operation, a CXL memory device:
-> - May or may not retain data
-> - May or may not be able to process CXL.mem requests correctly.
-> These CXL memory device capabilities are specified by restriction flags
-> in the memory sparing feature readable attributes.
-> 
-> When a CXL device identifies error on a memory component, the device
-> may inform the host about the need for a memory sparing maintenance
-> operation by using DRAM event record, where the 'maintenance needed' flag
-> may set. The event record contains some of the DPA, Channel, Rank,
-> Nibble Mask, Bank Group, Bank, Row, Column, Sub-Channel fields that
-> should be repaired. The userspace tool requests for maintenance operation
-> if the 'maintenance needed' flag set in the CXL DRAM error record.
-> 
-> CXL spec 3.2 section 8.2.10.7.2.3 describes the memory sparing feature
-> discovery and configuration.
-> 
-> CXL spec 3.2 section 8.2.10.7.1.4 describes the device's memory sparing
-> maintenance operation feature.
-> 
-> Add emulation for CXL memory device memory sparing control feature
-> and memory sparing maintenance operation command.
-> 
-> TODO: Following are the pending tasks, though not sure how to implement.
->  1. Add emulation for memory sparing maintenance operation.
+> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
+A few local comments.  I'll need to read on to figure out how this
+fits in generally.
 
-At most wipe the data if advertising that it won't be retained.
-No need to actually do anything.
-
->  2. On query, report memory sparing resource availability in a memory sparing
->     event record if required in the future.
-I'd go with a a per device per type set of counters.
-Lets just say we have X of them on a device - once used up they are gone.
-No need to worry too much on what X is.  Just pick some values so we have
-something to test against. 4 maybe enough for testing?
-
-
-Some comments on previous patch feed through to here.  A few more things inline.
-
-Jonathan
-
-> 
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 > ---
->  hw/cxl/cxl-mailbox-utils.c  | 295 ++++++++++++++++++++++++++++++++++++
->  hw/mem/cxl_type3.c          |  44 ++++++
->  include/hw/cxl/cxl_device.h |  40 +++++
->  3 files changed, 379 insertions(+)
+>  drivers/nvdimm/dimm.c      |  1 +
+>  drivers/nvdimm/dimm_devs.c | 10 ++++++++++
+>  drivers/nvdimm/label.c     | 16 ++++++++++++----
+>  drivers/nvdimm/nd.h        |  1 +
+>  include/linux/libnvdimm.h  |  3 +++
+>  5 files changed, 27 insertions(+), 4 deletions(-)
 > 
+> diff --git a/drivers/nvdimm/dimm.c b/drivers/nvdimm/dimm.c
+> index 91d9163ee303..8753b5cd91cc 100644
+> --- a/drivers/nvdimm/dimm.c
+> +++ b/drivers/nvdimm/dimm.c
+> @@ -62,6 +62,7 @@ static int nvdimm_probe(struct device *dev)
+>  	if (rc < 0)
+>  		dev_dbg(dev, "failed to unlock dimm: %d\n", rc);
 >  
-> +typedef struct CXLMemSparingMaintInPayload {
-> +    uint8_t flags;
-> +    uint8_t channel;
-> +    uint8_t rank;
-> +    uint8_t nibble_mask[3];
-> +    uint8_t bank_group;
-> +    uint8_t bank;
-> +    uint8_t row[3];
-> +    uint16_t column;
-> +    uint8_t sub_channel;
-> +} QEMU_PACKED CXLMemSparingMaintInPayload;
-> +
-> +static CXLRetCode cxl_perform_mem_sparing(CXLType3Dev *ct3d, uint8_t sub_class,
-> +                                          void *maint_pi)
+> +	ndd->cxl = nvdimm_check_cxl_label_format(ndd->dev);
+>  
+>  	/*
+>  	 * EACCES failures reading the namespace label-area-properties
+> diff --git a/drivers/nvdimm/dimm_devs.c b/drivers/nvdimm/dimm_devs.c
+> index 21498d461fde..e8f545f889fd 100644
+> --- a/drivers/nvdimm/dimm_devs.c
+> +++ b/drivers/nvdimm/dimm_devs.c
+> @@ -18,6 +18,16 @@
+>  
+>  static DEFINE_IDA(dimm_ida);
+>  
+> +bool nvdimm_check_cxl_label_format(struct device *dev)
 > +{
-> +     CXLMemSparingMaintInPayload *sparing_maint_pi = (void *)maint_pi;
-
-Odd spacing
-
+> +	struct nvdimm *nvdimm = to_nvdimm(dev);
 > +
-> +    qemu_log_mask(LOG_UNIMP, "Memory Sparing Maintenance Input Payload...\n");
-> +    qemu_log_mask(LOG_UNIMP, "flags = %u\n", sparing_maint_pi->flags);
-> +    qemu_log_mask(LOG_UNIMP, "channel= %u\n", sparing_maint_pi->channel);
-> +    qemu_log_mask(LOG_UNIMP, "rank = %u\n", sparing_maint_pi->rank);
-> +    qemu_log_mask(LOG_UNIMP, "nibble_mask[0] = 0x%x\n",
-> +                  sparing_maint_pi->nibble_mask[0]);
-> +    qemu_log_mask(LOG_UNIMP, "nibble_mask[1] = 0x%x\n",
-> +                  sparing_maint_pi->nibble_mask[1]);
-> +    qemu_log_mask(LOG_UNIMP, "nibble_mask[2] = 0x%x\n",
-> +                  sparing_maint_pi->nibble_mask[2]);
-> +    qemu_log_mask(LOG_UNIMP, "bank_group = %u\n",
-> +                  sparing_maint_pi->bank_group);
-> +    qemu_log_mask(LOG_UNIMP, "bank = %u\n", sparing_maint_pi->bank);
-> +    qemu_log_mask(LOG_UNIMP, "row[0] = 0x%x\n", sparing_maint_pi->row[0]);
-> +    qemu_log_mask(LOG_UNIMP, "row[1] = 0x%x\n", sparing_maint_pi->row[1]);
-> +    qemu_log_mask(LOG_UNIMP, "row[2] = 0x%x\n", sparing_maint_pi->row[2]);
-> +    qemu_log_mask(LOG_UNIMP, "column = %u\n", sparing_maint_pi->column);
-> +    qemu_log_mask(LOG_UNIMP, "sub_channel = %u\n",
-> +                  sparing_maint_pi->sub_channel);
-
-LOG_UNIMP is a bit odd given there is nothing to do really.
-
+> +	if (test_bit(NDD_CXL_LABEL, &nvdimm->flags))
+> +		return true;
 > +
-> +    switch (sub_class) {
-> +    case 0: /* Cacheline Memory Sparing */
-> +        qemu_log("Cacheline Memory Sparing\n");
-> +        return CXL_MBOX_SUCCESS;
-> +    case 1: /* Row Memory Sparing */
-> +        qemu_log("Row Memory Sparing\n");
-> +        return CXL_MBOX_SUCCESS;
-> +    case 2: /* Bank Memory Sparing */
-> +        qemu_log("Bank Memory Sparing\n");
-> +        return CXL_MBOX_SUCCESS;
-> +    case 3: /* Rank Memory Sparing */
-> +        qemu_log("Rank Memory Sparing\n");
-> +        return CXL_MBOX_SUCCESS;
-> +    default:
-> +        return CXL_MBOX_UNSUPPORTED;
+> +	return false;
 
-As previously - I think this is invalid parameter as the command is supported
-just not the sub_class.
+	return test_bit(NDD_CXL_LABEL, &nvdimm->flags);
 
-> +    }
+Unless this is going to get more complex in later patches, in which case
+may be fine to ignore this comment.
+
 > +}
 > +
+>  /*
+>   * Retrieve bus and dimm handle and return if this bus supports
+>   * get_config_data commands
+> diff --git a/drivers/nvdimm/label.c b/drivers/nvdimm/label.c
+> index 082253a3a956..48b5ba90216d 100644
+> --- a/drivers/nvdimm/label.c
+> +++ b/drivers/nvdimm/label.c
+> @@ -687,11 +687,19 @@ static int nd_label_write_index(struct nvdimm_drvdata *ndd, int index, u32 seq,
+>  		- (unsigned long) to_namespace_index(ndd, 0);
+>  	nsindex->labeloff = __cpu_to_le64(offset);
+>  	nsindex->nslot = __cpu_to_le32(nslot);
+> -	nsindex->major = __cpu_to_le16(1);
+> -	if (sizeof_namespace_label(ndd) < 256)
+> +
+> +	/* Support CXL LSA 2.1 label format */
+
+Might be good to sprinkle some extra details in the references.
+E.g. CXL r3.2 Table 9-9 Label Index Block Layout
+
+> +	if (ndd->cxl) {
+> +		nsindex->major = __cpu_to_le16(2);
+>  		nsindex->minor = __cpu_to_le16(1);
+> -	else
+> -		nsindex->minor = __cpu_to_le16(2);
+> +	} else {
+> +		nsindex->major = __cpu_to_le16(1);
+
+Same for these.  Case of making reviewers jobs easier by
+giving them breadcrumb trails to follow.
+
+> +		if (sizeof_namespace_label(ndd) < 256)
+> +			nsindex->minor = __cpu_to_le16(1);
+> +		else
+> +			nsindex->minor = __cpu_to_le16(2);
+> +	}
+> +
+>  	nsindex->checksum = __cpu_to_le64(0);
+>  	if (flags & ND_NSINDEX_INIT) {
+>  		unsigned long *free = (unsigned long *) nsindex->free;
+> diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
+> index 5ca06e9a2d29..304f0e9904f1 100644
+> --- a/drivers/nvdimm/nd.h
+> +++ b/drivers/nvdimm/nd.h
+> @@ -522,6 +522,7 @@ void nvdimm_set_labeling(struct device *dev);
+>  void nvdimm_set_locked(struct device *dev);
+>  void nvdimm_clear_locked(struct device *dev);
+>  int nvdimm_security_setup_events(struct device *dev);
+> +bool nvdimm_check_cxl_label_format(struct device *dev);
+>  #if IS_ENABLED(CONFIG_NVDIMM_KEYS)
+>  int nvdimm_security_unlock(struct device *dev);
+>  #else
+> diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
+> index e772aae71843..0a55900842c8 100644
+> --- a/include/linux/libnvdimm.h
+> +++ b/include/linux/libnvdimm.h
+> @@ -44,6 +44,9 @@ enum {
+>  	/* dimm provider wants synchronous registration by __nvdimm_create() */
+>  	NDD_REGISTER_SYNC = 8,
+>  
+> +	/* dimm supports region labels (LSA Format 2.1) */
+> +	NDD_CXL_LABEL = 9,
+> +
+>  	/* need to set a limit somewhere, but yes, this is likely overkill */
+>  	ND_IOCTL_MAX_BUFLEN = SZ_4M,
+>  	ND_CMD_MAX_ELEM = 5,
 
