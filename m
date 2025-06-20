@@ -1,259 +1,239 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67626251793
-	for <linux-cxl@vger.kernel.org>; Fri, 20 Jun 2025 10:37:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 588F330E83F;
+	Fri, 20 Jun 2025 12:43:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750415825; cv=none; b=LnNWaFnFLBwGp86E9ZrFSGWpiyRIJHU4axHOO6Kwe9RIuDSH1YcR58N+FujsB6R4c2/N9F00/viSrsOWGHpt1WyE7XKRHvyGAvl64Xwtlwx48pS6+8b0/g0JDwtich9Uc4uOXJrhq9LKVfJFgDl1ZNtnlKS8Uki5irFB3vHzDz0=
+	t=1750423422; cv=none; b=tXRR1NKsBAPEAeVKMeztQSzlcvFYJa7Mq4nFWtkfhSr2M9q2Hb7zXCYC6HfD/hgjkWMz2sQJKTDnKNJBacU0U1S+Dyy8F7FEROfaw29Q3bUXQF+Cwy2+7RjQ+3o5Jo8GwVrx1nhx7rLZ6lzVMZa8WD1qPMViZgePIRz3eFLi1ZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750415825; c=relaxed/simple;
-	bh=sF/QL5Yqp/WDkIrGBIBEM8Twyaszu6/r4SVwnsZrius=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=IlBrNjLzTuB7IRONBDAKJZiQ3mxSSf/Uyl12Wykuf41RU3DWt+ucLsONOmOfoelpyb6lvXxfVj2aAhgCNBdiK9Ge5rkU0MCNyu6himJBPDxFoBE25e4AY3YG8qDHSg4PZDnsDxOnuCUCNol9n3r19uvLWWXE2CXHYhwf7UFWbQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CsjJ6rsP; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750423422; c=relaxed/simple;
+	bh=GFBJ48BJmbin7OvIjxInCjOTcSdsWlXFtQPkSlOVq4I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NpyNRxhe760abHASkdHTBWB7o98u9HtTYpJCSejWqrRM0JQd2aJCy5hn3lGFqUtg/52RkCmqu5fI/0VOufDP3wfEkkwndWPfaHDFErpkeoGc+OPUy9P4HB/5ZbaVIQdbUWJMz7N3SBuU5ZeAMHHJYJ/Jl2CDtq/z7xR2sCvMTXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mwC3y0j9; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CsjJ6rsP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mwC3y0j9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750415823; x=1781951823;
-  h=date:from:to:cc:subject:message-id;
-  bh=sF/QL5Yqp/WDkIrGBIBEM8Twyaszu6/r4SVwnsZrius=;
-  b=CsjJ6rsP5O74Bk6pcAcSW4hiXJF/en2k1TV4LUTlTq1t2C+JQhvv2j0W
-   D3Iwxrz0qwtkpUJctoW6jGmA9pg7skuQX/iha6DNp0AEOLwyldZAswirb
-   +2whDeVePFbZci7kIUeyJtb5b+vYpxNkVEAzg1qOTU1pu++0695vuG7iT
-   uDCIFDnLW9J0Chfmd+GS3FyU/3ThJ4w2hqdeQW8/nA8b7gC5rwTp/KQP8
-   vunxPO4AIhCj3ClZ/5OYuJKKOCGX1gdg2bdYJtGHmblosM0rNT7IGe4YU
-   AUknk0vh8ZDASKDFKVZyQbT5Pr9MbD1Q/Q+aM42c+Zc3ftPV4DJy2D32G
-   A==;
-X-CSE-ConnectionGUID: praAjKVcQhWEG/Bkjszcnw==
-X-CSE-MsgGUID: IZ7RHn4XS86DEsXqoizpDA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="78083101"
+  t=1750423421; x=1781959421;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=GFBJ48BJmbin7OvIjxInCjOTcSdsWlXFtQPkSlOVq4I=;
+  b=mwC3y0j942kzHo3tCJtpdozNedCW5r67heO3vVlw9PDaP+dkwPjWxxmn
+   E3X0kAqOH/N8DeDBX5zoSbCEERgMkKxRymRSjvH2a/SHO52FH5wlRNkTN
+   lc453oefFhm0+JVlWa5ZEA1ERjLTWzZ68MXZa5z9XrjsTzrq2kUFvr+dy
+   5P4yHWztTueQiYnp5Vzpa4OaRX9oDXSGzSYlyr9ytpcgIvdwyZki/649Z
+   ABezKcx6SK87JwghDzmKVd133VYesLm8t0eQIDK7pDWcLRPStI4siVXuf
+   UKPSxqdfbIUJogpnmCo+cyp7fbsNAbOSrJ5pAztW/Ahbg0pMSu0NxBend
+   g==;
+X-CSE-ConnectionGUID: jeLrnc57QmWxwcEmxPOCig==
+X-CSE-MsgGUID: 1fK9k+RySYiexRQOsYsQ/A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="70121849"
 X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
-   d="scan'208";a="78083101"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 03:37:02 -0700
-X-CSE-ConnectionGUID: 59Ftxlj1RBaqeNnIIDkBzA==
-X-CSE-MsgGUID: tiww/KPLR0GPUfNfOyij/Q==
+   d="scan'208";a="70121849"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 05:43:40 -0700
+X-CSE-ConnectionGUID: WFUbhHarSMq6gzeAfullQw==
+X-CSE-MsgGUID: ih52RrnCSOO16gArwfrW4Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
-   d="scan'208";a="151178781"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 20 Jun 2025 03:37:01 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uSZ7D-000Ld2-0E;
-	Fri, 20 Jun 2025 10:36:59 +0000
-Date: Fri, 20 Jun 2025 18:36:32 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org
-Subject: [cxl:for-6.17/cxl-acquire] BUILD SUCCESS
- 6c90a41a7833a6bb2fb17b9f3cafda66ebdf259b
-Message-ID: <202506201821.arv5Anob-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+   d="scan'208";a="151437765"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.215])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 05:43:35 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: linux-cxl@vger.kernel.org, ALOK TIWARI <alok.a.tiwari@oracle.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, Jonathan Corbet <corbet@lwn.net>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject:
+ Re: [PATCH v2] cxl: docs/driver-api/conventions resolve conflicts btw CFMWS,
+ LMH, ED
+Date: Fri, 20 Jun 2025 14:43:32 +0200
+Message-ID: <2884280.h6RI2rZIcs@fdefranc-mobl3>
+In-Reply-To: <01769786-483d-4142-9b8f-f03f20998fe2@oracle.com>
+References:
+ <20250618161907.1008564-1-fabio.m.de.francesco@linux.intel.com>
+ <01769786-483d-4142-9b8f-f03f20998fe2@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git for-6.17/cxl-acquire
-branch HEAD: 6c90a41a7833a6bb2fb17b9f3cafda66ebdf259b  cxl: Convert to ACQUIRE() for conditional rwsem locking
+On Wednesday, June 18, 2025 7:11:07=E2=80=AFPM Central European Summer Time=
+ ALOK TIWARI wrote:
+>=20
+> On 6/18/2025 9:46 PM, Fabio M. De Francesco wrote:
+> > Add documentation on how to resolve conflicts between CXL Fixed Memory
+> > Windows, Platform Memory Holes, and Endpoint Decoders.
+> >=20
+> > Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.=
+com>
+> > ---
+> >=20
+> > v1 -> v2: Rewrite "Summary of the Change" section, 3r paragraph.
+> >=20
+> >   Documentation/driver-api/cxl/conventions.rst | 85 ++++++++++++++++++++
+> >   1 file changed, 85 insertions(+)
+> >=20
+> > diff --git a/Documentation/driver-api/cxl/conventions.rst b/Documentati=
+on/driver-api/cxl/conventions.rst
+> > index da347a81a237..acf2523ae799 100644
+> > --- a/Documentation/driver-api/cxl/conventions.rst
+> > +++ b/Documentation/driver-api/cxl/conventions.rst
+> > @@ -45,3 +45,88 @@ Detailed Description of the Change
+> >   ----------------------------------
+> >  =20
+> >   <Propose spec language that corrects the conflict.>
+> > +
+> > +
+> > +Resolve conflict between CFMWS, Plaftform Memory Holes, and Endpoint D=
+ecoders
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+>=20
+> typo Plaftform
+>=20
+Ah yes, "Platform".
+>=20
+> > +
+> > +Document
+> > +--------
+> > +
+> > +CXL Revision 3.2, Version 1.0
+> > +
+> > +License
+> > +-------
+> > +
+> > +SPDX-License Identifier: CC-BY-4.0
+> > +
+> > +Creator/Contributors
+> > +--------------------
+> > +
+> > +Fabio M. De Francesco, Intel
+> > +Dan J. Williams, Intel
+> > +Mahesh Natu, Intel
+> > +
+> > +Summary of the Change
+> > +---------------------
+> > +
+> > +According to the current CXL Specifications (Revision 3.2, Version 1.0)
+> > +the CXL Fixed Memory Window Structure (CFMWS) describes zero or more H=
+ost
+> > +Physical Address (HPA) windows that are associated with each CXL Host
+> > +Bridge. Each window represents a contiguous HPA range that may be
+> > +interleaved across one or more targets, some of which are CXL Host Bri=
+dges.
+> > +Associated with each window are a set of restrictions that govern its
+> > +usage. It is the OSPM=E2=80=99s responsibility to utilize each window =
+for the
+> > +specified use.
+> > +
+> > +Table 9-22 states the Window Size field contains that the total number=
+ of
+> > +consecutive bytes of HPA this window represents and this value shall b=
+e a
+> > +multiple of Number of Interleave Ways * 256 MB.
+> > +
+> > +Platform Firmware (BIOS) might reserve part of physical addresses below
+> > +4 GB (e.g., the Low Memory Hole that describes PCIe memory space for M=
+MIO
+> > +or a requirement for the greater than 8 way interleave CXL regions sta=
+rting
+> > +at address 0). In that case the Window Size value cannot be anymore
+> > +constrained to the NIW * 256 MB above-mentioned rule.
+> > +
+> > +On those systems, BIOS publishes CFMWS which communicate the active Sy=
+stem
+> > +Physical Address (SPA) ranges that map to a subset of the Host Physical
+> > +Address (HPA) ranges. The SPA range trims out the hole, and capacity i=
+n the
+> > +endpoint is lost with no SPA to map to CXL HPA in that hole.
+> > +
+> > +The description of the Window Size field in table 9-22 needs to take t=
+hat
+> > +special case into account.
+> > +
+> > +Note that the Endpoint Decoders HPA range sizes have to comply with the
+> > +alignment constraints and so a part of their memory capacity might not=
+ be
+> > +accessible if their size exceeds the matching CFMWS range's.
+> > +
+> > +Benefits of the Change
+> > +----------------------
+> > +
+> > +Without this change, the OSPM wouldn't match Endpoint Decoders with CF=
+MWS
+> > +whose Window Size don't comply with the alignment rules and so all the=
+ir
+>=20
+> Size does not comply
+>=20
+Right!. Maybe "fit the alignment constraints"?
+>
+> > +capacity would be lost. This change allows the OSPM to match Endpoint
+> > +Decoders whose HPA range size exceeds the matching CFMWS and create
+> > +regions that at least utilize part of the decoders total memory capaci=
+ty.
+>=20
+> the decoder's total memory ?
+>=20
+Ah yes, maybe "part of the memory devices capacity"?
+>=20
+> > +
+> > +References
+> > +----------
+> > +
+> > +Compute Express Link Specification Revision 3.2, Version 1.0
+> > +<https://urldefense.com/v3/__https://www.computeexpresslink.org/__;!!A=
+CWV5N9M2RV99hQ!KMvmUQzFTNqBga7-zQPzxmzSqdYgKZWELM7-GwPfbpk5BeOwvr0WMeZ9UxWW=
+235HbZzpgBfnIUryy_eQSHsLGAt9Z7Abgi_UdiU$ >
+> > +
+> > +Detailed Description of the Change
+> > +----------------------------------
+> > +
+> > +The current description of a CFMWS Window Size (table 9-22) is replaced
+>=20
+> Table 9-22
+>
+OK.
+>=20
+> > +with:
+> > +
+> > +"The total number of consecutive bytes of HPA this window represents. =
+This
+> > +value shall be a multiple of NIW*256 MB. On platforms that reserve phy=
+sical
+> > +addresses below 4 GB for special use (e.g., the Low Memory Hole for PC=
+Ie
+> > +MMIO on x86), an instance of CFMWS whose Base HPA is 0 might have a wi=
+ndow
+> > +size that doesn't align with the NIW*256 MB constraint; note that the
+> > +matching Endpoint Decoders HPA range size must still align to the
+> > +above-mentioned rule and so the memory capacity that might exceeds the
+> > +CFMWS window size will not be accessible.".
+> >=20
+> > base-commit: a021802c18c4c30dff3db9bd355cacb68521f1aa
+>=20
+> Thanks,
+> Alok
+>=20
+Thanks,
 
-elapsed time: 738m
+=46abio=20
 
-configs tested: 180
-configs skipped: 4
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-alpha                               defconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                          axs101_defconfig    gcc-15.1.0
-arc                                 defconfig    gcc-15.1.0
-arc                   randconfig-001-20250620    gcc-8.5.0
-arc                   randconfig-002-20250620    gcc-11.5.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-15.1.0
-arm                                 defconfig    clang-21
-arm                            dove_defconfig    gcc-15.1.0
-arm                       imx_v6_v7_defconfig    clang-16
-arm                        multi_v5_defconfig    gcc-15.1.0
-arm                        multi_v7_defconfig    gcc-15.1.0
-arm                        neponset_defconfig    gcc-15.1.0
-arm                   randconfig-001-20250620    clang-21
-arm                   randconfig-002-20250620    clang-21
-arm                   randconfig-003-20250620    clang-21
-arm                   randconfig-004-20250620    clang-21
-arm                        shmobile_defconfig    gcc-15.1.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                               defconfig    gcc-15.1.0
-arm64                 randconfig-001-20250620    gcc-9.5.0
-arm64                 randconfig-002-20250620    gcc-8.5.0
-arm64                 randconfig-003-20250620    gcc-11.5.0
-arm64                 randconfig-004-20250620    clang-21
-csky                              allnoconfig    gcc-15.1.0
-csky                                defconfig    gcc-15.1.0
-csky                  randconfig-001-20250620    gcc-13.3.0
-csky                  randconfig-002-20250620    gcc-15.1.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon                             defconfig    clang-21
-hexagon               randconfig-001-20250620    clang-21
-hexagon               randconfig-002-20250620    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250620    clang-20
-i386        buildonly-randconfig-002-20250620    clang-20
-i386        buildonly-randconfig-003-20250620    clang-20
-i386        buildonly-randconfig-004-20250620    clang-20
-i386        buildonly-randconfig-005-20250620    clang-20
-i386        buildonly-randconfig-006-20250620    clang-20
-i386        buildonly-randconfig-006-20250620    gcc-12
-i386                                defconfig    clang-20
-i386                  randconfig-001-20250620    gcc-12
-i386                  randconfig-002-20250620    gcc-12
-i386                  randconfig-003-20250620    gcc-12
-i386                  randconfig-004-20250620    gcc-12
-i386                  randconfig-005-20250620    gcc-12
-i386                  randconfig-006-20250620    gcc-12
-i386                  randconfig-007-20250620    gcc-12
-i386                  randconfig-011-20250620    gcc-12
-i386                  randconfig-012-20250620    gcc-12
-i386                  randconfig-013-20250620    gcc-12
-i386                  randconfig-014-20250620    gcc-12
-i386                  randconfig-015-20250620    gcc-12
-i386                  randconfig-016-20250620    gcc-12
-i386                  randconfig-017-20250620    gcc-12
-loongarch                        allmodconfig    gcc-15.1.0
-loongarch                         allnoconfig    gcc-15.1.0
-loongarch                           defconfig    gcc-15.1.0
-loongarch             randconfig-001-20250620    gcc-14.3.0
-loongarch             randconfig-002-20250620    gcc-15.1.0
-m68k                             alldefconfig    gcc-15.1.0
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-m68k                                defconfig    gcc-15.1.0
-m68k                        m5407c3_defconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                        maltaup_defconfig    clang-21
-nios2                             allnoconfig    gcc-14.2.0
-nios2                               defconfig    gcc-14.2.0
-nios2                 randconfig-001-20250620    gcc-8.5.0
-nios2                 randconfig-002-20250620    gcc-10.5.0
-openrisc                          allnoconfig    clang-21
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-openrisc                  or1klitex_defconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    clang-21
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20250620    gcc-10.5.0
-parisc                randconfig-002-20250620    gcc-12.4.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    clang-21
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    clang-21
-powerpc               randconfig-001-20250620    clang-21
-powerpc               randconfig-002-20250620    gcc-11.5.0
-powerpc               randconfig-003-20250620    clang-21
-powerpc64             randconfig-001-20250620    gcc-14.3.0
-powerpc64             randconfig-002-20250620    clang-21
-powerpc64             randconfig-003-20250620    clang-19
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    clang-21
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-21
-riscv                 randconfig-001-20250620    gcc-14.3.0
-riscv                 randconfig-002-20250620    clang-21
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    clang-21
-s390                  randconfig-001-20250620    gcc-9.3.0
-s390                  randconfig-002-20250620    clang-21
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-15.1.0
-sh                ecovec24-romimage_defconfig    gcc-15.1.0
-sh                        edosk7760_defconfig    gcc-15.1.0
-sh                    randconfig-001-20250620    gcc-15.1.0
-sh                    randconfig-002-20250620    gcc-15.1.0
-sh                           se7343_defconfig    gcc-15.1.0
-sh                           se7705_defconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                 randconfig-001-20250620    gcc-8.5.0
-sparc                 randconfig-002-20250620    gcc-10.3.0
-sparc64                             defconfig    gcc-15.1.0
-sparc64               randconfig-001-20250620    gcc-13.3.0
-sparc64               randconfig-002-20250620    gcc-8.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-21
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250620    clang-21
-um                    randconfig-002-20250620    clang-21
-um                           x86_64_defconfig    clang-21
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250620    gcc-12
-x86_64      buildonly-randconfig-002-20250620    gcc-12
-x86_64      buildonly-randconfig-003-20250620    clang-20
-x86_64      buildonly-randconfig-003-20250620    gcc-12
-x86_64      buildonly-randconfig-004-20250620    gcc-12
-x86_64      buildonly-randconfig-005-20250620    gcc-12
-x86_64      buildonly-randconfig-006-20250620    clang-20
-x86_64      buildonly-randconfig-006-20250620    gcc-12
-x86_64                              defconfig    gcc-11
-x86_64                                  kexec    clang-20
-x86_64                randconfig-001-20250620    clang-20
-x86_64                randconfig-002-20250620    clang-20
-x86_64                randconfig-003-20250620    clang-20
-x86_64                randconfig-004-20250620    clang-20
-x86_64                randconfig-005-20250620    clang-20
-x86_64                randconfig-006-20250620    clang-20
-x86_64                randconfig-007-20250620    clang-20
-x86_64                randconfig-008-20250620    clang-20
-x86_64                randconfig-071-20250620    clang-20
-x86_64                randconfig-072-20250620    clang-20
-x86_64                randconfig-073-20250620    clang-20
-x86_64                randconfig-074-20250620    clang-20
-x86_64                randconfig-075-20250620    clang-20
-x86_64                randconfig-076-20250620    clang-20
-x86_64                randconfig-077-20250620    clang-20
-x86_64                randconfig-078-20250620    clang-20
-x86_64                               rhel-9.4    clang-20
-x86_64                          rhel-9.4-rust    clang-18
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20250620    gcc-8.5.0
-xtensa                randconfig-002-20250620    gcc-13.3.0
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
