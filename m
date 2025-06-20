@@ -1,121 +1,94 @@
-Received: from toucan.tulip.relay.mailchannels.net (toucan.tulip.relay.mailchannels.net [23.83.218.254])
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 552B422154B;
-	Thu, 19 Jun 2025 23:45:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.254
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC3E778F39;
+	Fri, 20 Jun 2025 05:29:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750376755; cv=pass; b=GkTBol3n4R0+6prxx7FSByWnuplo5Gxfp962WXqCCPFyC2IzDOQUO6RUoH8Kl9a0UGxHeKteHhKOOuxbnFeF0sZPH5xoDwbqj93LmLAnhC+HG1yNBRm+rd6TClZUialSjGdVaBw4VuLnUuZjxuBScNRN1mMnAm7CIFfzp3/fCks=
+	t=1750397398; cv=pass; b=qdUpYxG/WLMQHg7L3buIUTXdjpGm4lfLwCl65+lk3xAyoIFDa95IO0K018BnrL+3TuL2Z9Wm8j30Rib4ISFmO4wS+z7YVxDQ4QXvtEBMH68Go+166eQZFb+RYv3TLdNdK+kCdUfjA5OH3FnqnRc2yBA8uN1y9JTE8coHmhwgS6Y=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750376755; c=relaxed/simple;
-	bh=L4dSHdkCOmLBy3SWCtOKHfW4EI2/uu2b+5DOvbtU8KI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D79vcw4wfqIxrzleibLm1RZC07ugQiogKIRa+k8wNQr/xrb8ObegiWd8QjY38q1hJ86kDpREqbPV4AtCqdM4XUgPy2a8RDy1332TZrw2ZKAGmOMw9vxtlwIjHtrQnMMNuKmZg9Qhnl6ped1OerQUgIr/DW8ILBmZxzLliR/Megw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=iO7Y518Q; arc=pass smtp.client-ip=23.83.218.254
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	s=arc-20240116; t=1750397398; c=relaxed/simple;
+	bh=KLTwekWnOIGEwf5a6ZTZCxAx2BXsXPUzPeMu4ceMhuo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=s06iS5nJ9Zlkd6V8tfl+ja5N4BeIh1HVH4A3Wry85CjEUmK4Zhv2Ntddgd7p2SU13dzwog2NPgUIEhdoym3tkqlYZ4grq8SJL6TgtqrmCCgU35ghTduXfSYmuhFeJFklERXsSyvo6ErBw/2GFyWVjFygvfj0R1hSFVpzWDX36BQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=eEQZY7Q7; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="iO7Y518Q"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 9815F44F56;
-	Thu, 19 Jun 2025 23:40:28 +0000 (UTC)
-Received: from pdx1-sub0-mail-a246.dreamhost.com (trex-green-4.trex.outbound.svc.cluster.local [100.96.195.136])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 1496E44F2B;
-	Thu, 19 Jun 2025 23:40:28 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1750376428; a=rsa-sha256;
-	cv=none;
-	b=Y0KKa9/1a1j8Troi4xiWSeEcNMDwM082Ik/g9R5RAGg6mySDpdSAzigbf6MzTp2pgMcbya
-	9Of6esI3uP8cW73KA1dk53MqXhNtrjDpTeLI6SbeKL4c7Cf5gQ+oHMC85bI9Hokl/LKvMa
-	yzUUmFLHpqVmbDLRPqME35JQlnYyOOlhZWVIeo8csr0G8NZUqk12FJg0XwjYVOVVfCZCPd
-	Ive2Bbdgrgou0VSda4zs64GKntk+S9u+Z1vKxgjC7aROFYK5cwViwYNMyH9XI7xIxHjyHL
-	LrJi+e96rPWZK7erTNN1aQPuFtM5A6cfNKGwRQuoxyZQwxGZ+Pm8FanT/QyiZw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1750376428;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=L4dSHdkCOmLBy3SWCtOKHfW4EI2/uu2b+5DOvbtU8KI=;
-	b=WFwxP1Uxvp5WZT+m6u/h4ZKIAHTBGTCuLEw2yyIYicWMeJ8aeqKFxPytVKoHFkXKnYJ4Lx
-	iuXI6k7hUtkQAz5yyXWMKXs0EcqAu9NidgD1UeY5iWvlPl/wcQQsqP9dik/SD/cyg0hHrS
-	FHtyUpDjqjjZsreDNPtA/KDtGLiWHxQPARgW9S8RytTFaWWuEte+C28cu5a3lyQa/OarG5
-	pUL43zWJNCIJxht62dPB8dTQzF7TTXNwcgNdR94jf7L4VBLO8GNlplcEc54C7arwbKFiCk
-	epZZb8UBwcxmbYeComr32K9wh53XCY5gTCe+KpyAj/33iikbn/QPmve/1DiQTA==
-ARC-Authentication-Results: i=1;
-	rspamd-6597f9cdc7-n4fh2;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Share-Society: 106c49bb093fb471_1750376428345_2560380918
-X-MC-Loop-Signature: 1750376428345:4088892011
-X-MC-Ingress-Time: 1750376428344
-Received: from pdx1-sub0-mail-a246.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.96.195.136 (trex/7.0.3);
-	Thu, 19 Jun 2025 23:40:28 +0000
-Received: from offworld (syn-076-167-199-067.res.spectrum.com [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a246.dreamhost.com (Postfix) with ESMTPSA id 4bNcY73FG0zYg;
-	Thu, 19 Jun 2025 16:40:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1750376427;
-	bh=L4dSHdkCOmLBy3SWCtOKHfW4EI2/uu2b+5DOvbtU8KI=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=iO7Y518Q+5XizyG9oJcO1zrkk0Mxhv7fH6qAuyPE9BgE+diG1T3xutCG8PT//TqCH
-	 dlrk1+qmpECgQ9WnwFHUuinx4yl+irMEgvyHP3rDcEy19eF2BRy0IeKH7WHpqTXDDF
-	 R28cuxDwhliTdzNSBmZVDOb13HrnsERZUgkDrt1FSMYQLRi+nUr0N/YpGiVbBAXGkI
-	 bChn2jqA3eS5WnEV28Q0BJ7fhGRSzx04K9WJTHBWoiVoVpuIVP2E3gHCntZHUFGkGg
-	 F1HUGUjdkqVUZkt7j/vsQ7TwlGnAs45BrDJS/e/d3XJCwCqoyhWhet/nJvcwz36Doj
-	 q9LW6Qa6mvJgQ==
-Date: Thu, 19 Jun 2025 16:40:22 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [PATCH v2 4/8] cxl/decoder: Drop pointless locking
-Message-ID: <20250619234022.6ucg5bktq66fmhoi@offworld>
-References: <20250619050416.782871-1-dan.j.williams@intel.com>
- <20250619050416.782871-5-dan.j.williams@intel.com>
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="eEQZY7Q7"
+ARC-Seal: i=1; a=rsa-sha256; t=1750397376; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=TQd3JhPbWX6Zj9oOK1b+4YrHsAeMiAD9Aj4L/DgVIkxom/FGVT2vYy6OdxEVNboRW2qqmoz/nEgDivR4LuyAJB47E3Nsvy7DCv+B306VRCEIGCRlWFrsT9+qpKPbxg+7Hc+GcDgMV+Yq2Mg2F9lHN8gl/cxB3iSGoTieM0+4dkE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1750397376; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=qHKGusWoiF5FpA2uC1/f3a/JKaJs0uOL3w3lBc2uXGk=; 
+	b=ZfXAugwP/Glj005SP9pajcifQGA3xrveJ13P0nOt+pgqw4hFtjcbzcOMQtpW3soaVYzLddrpAHJRsLx47WnhYmYa2tJ3qJlKxZtYZp444ftyp49saWlHZK5O+6WZOgJAzV6x52jh0GWT6GkOkqsGkndlxWdjpve60dO3y0dR8vU=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750397376;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
+	bh=qHKGusWoiF5FpA2uC1/f3a/JKaJs0uOL3w3lBc2uXGk=;
+	b=eEQZY7Q7eLV3z7Q6Ep4REsu2TQ5M+z/QIzvfpBZ4ZidFt25YkP9yUPKaHk1UpJ0o
+	rzvo+7hep/U+MjgcRRjYbht8XMiabN2xQ/ZbrPAQBFDtBJxojZxCmteOUcCP3lV/u/0
+	JmYKMqK02WMywTKT8medokU2JOZfOyKsosWL3Hf0=
+Received: by mx.zohomail.com with SMTPS id 1750397374690501.77460902845905;
+	Thu, 19 Jun 2025 22:29:34 -0700 (PDT)
+From: Li Ming <ming.li@zohomail.com>
+To: dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com,
+	shiju.jose@huawei.com
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Li Ming <ming.li@zohomail.com>
+Subject: [PATCH 1/1] cxl/edac: Fix using wrong repair type to check dram event record
+Date: Fri, 20 Jun 2025 13:29:24 +0800
+Message-Id: <20250620052924.138892-1-ming.li@zohomail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250619050416.782871-5-dan.j.williams@intel.com>
-User-Agent: NeoMutt/20220429
+Content-Transfer-Encoding: 8bit
+Feedback-ID: rr08011227e91d332aa4327cec4390cd8c000070e5c6e3aaaf2626bd44fd99da857da8c2cce1fae56102dfa1:zu08011227b4c49e91e48aad6e698398d90000ce84e86fa77c950d222468a501679f95896125cc8706d71a78:rf0801122dad43ba7108c01f6139ddb1d30000fd05ee002c0a4218da4faef59692162b9daa6ab47612c72597284f8f88d85b:ZohoMail
+X-ZohoMailClient: External
 
-On Wed, 18 Jun 2025, Dan Williams wrote:
+cxl_find_rec_dram() is used to find a DRAM event record based on the
+inputted attributes. Different repair_type of the inputted attributes
+will check the DRAM event record in different ways.
+When EDAC driver is performing a memory rank sparing, it should use
+CXL_RANK_SPARING rather than CXL_BANK_SPARING as repair_type for DRAM
+event record checking.
 
->cxl_dpa_rwsem coordinates changes to dpa allocation settings for a given
->decoder. cxl_decoder_reset() has no need for a consistent snapshot of the
->dpa settings since it is merely clearing out whatever was there previously.
->
->Otherwise, cxl_region_rwsem protects against 'reset' racing 'setup'.
->
->In preparationg for converting to rw_semaphore_acquire semantics, drop this
->locking.
->
->Cc: Davidlohr Bueso <dave@stgolabs.net>
->Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
->Cc: Dave Jiang <dave.jiang@intel.com>
->Cc: Alison Schofield <alison.schofield@intel.com>
->Cc: Vishal Verma <vishal.l.verma@intel.com>
->Cc: Ira Weiny <ira.weiny@intel.com>
->Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Fixes: 588ca944c277 ("cxl/edac: Add CXL memory device memory sparing control feature")
+Signed-off-by: Li Ming <ming.li@zohomail.com>
+---
+base-commit: 3c70ec71abdaf4e4fa48cd8fdfbbd864d78235a8 cxl/fixes
+---
+ drivers/cxl/core/edac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
+index d725ee954199..623aaa4439c4 100644
+--- a/drivers/cxl/core/edac.c
++++ b/drivers/cxl/core/edac.c
+@@ -1323,7 +1323,7 @@ cxl_mem_get_rec_dram(struct cxl_memdev *cxlmd,
+ 		attrbs.bank = ctx->bank;
+ 	break;
+ 	case EDAC_REPAIR_RANK_SPARING:
+-		attrbs.repair_type = CXL_BANK_SPARING;
++		attrbs.repair_type = CXL_RANK_SPARING;
+ 		break;
+ 	default:
+ 		return NULL;
+-- 
+2.34.1
+
