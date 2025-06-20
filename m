@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 588F330E83F;
-	Fri, 20 Jun 2025 12:43:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1684263F5B;
+	Fri, 20 Jun 2025 12:46:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750423422; cv=none; b=tXRR1NKsBAPEAeVKMeztQSzlcvFYJa7Mq4nFWtkfhSr2M9q2Hb7zXCYC6HfD/hgjkWMz2sQJKTDnKNJBacU0U1S+Dyy8F7FEROfaw29Q3bUXQF+Cwy2+7RjQ+3o5Jo8GwVrx1nhx7rLZ6lzVMZa8WD1qPMViZgePIRz3eFLi1ZI=
+	t=1750423582; cv=none; b=b8lCid9UK2dOkEzet1yRzzaZ46OhDcJvZgrWj9cS9G14hlQSpfFYDm7pMmRVcLxpZXOjrS89zFDpeYxJsnyLj7CTYvtjfMI7DYsySgDEakcbZaPvTOdwlMMJXiF1DCt6VPvgU4yidBdwW5sucPpKcACiVk7gLR/Sp1qEM0eUZq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750423422; c=relaxed/simple;
-	bh=GFBJ48BJmbin7OvIjxInCjOTcSdsWlXFtQPkSlOVq4I=;
+	s=arc-20240116; t=1750423582; c=relaxed/simple;
+	bh=8D/3rXr7aLfxT+nfdjxwtCzpi7Ojp5qrveWYUl0YqpU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NpyNRxhe760abHASkdHTBWB7o98u9HtTYpJCSejWqrRM0JQd2aJCy5hn3lGFqUtg/52RkCmqu5fI/0VOufDP3wfEkkwndWPfaHDFErpkeoGc+OPUy9P4HB/5ZbaVIQdbUWJMz7N3SBuU5ZeAMHHJYJ/Jl2CDtq/z7xR2sCvMTXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mwC3y0j9; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version:Content-Type; b=PbAhbG08KJxYYTsivxcpR98NFECWIW2u/DI96vOVOS1r9jB8zM70whXqMkFmHj+12SCD2ysCfPZ1dwZq6Nk06FOs3cVmYHeQ4YuTYMK4LemxQnwjDX/IEOOE0q4RFzteBM3kSdenwS1T0CeTxNSq5qlkp6Z8ASI7+7E/PGvFGh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d0QPULLE; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mwC3y0j9"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d0QPULLE"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750423421; x=1781959421;
+  t=1750423581; x=1781959581;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=GFBJ48BJmbin7OvIjxInCjOTcSdsWlXFtQPkSlOVq4I=;
-  b=mwC3y0j942kzHo3tCJtpdozNedCW5r67heO3vVlw9PDaP+dkwPjWxxmn
-   E3X0kAqOH/N8DeDBX5zoSbCEERgMkKxRymRSjvH2a/SHO52FH5wlRNkTN
-   lc453oefFhm0+JVlWa5ZEA1ERjLTWzZ68MXZa5z9XrjsTzrq2kUFvr+dy
-   5P4yHWztTueQiYnp5Vzpa4OaRX9oDXSGzSYlyr9ytpcgIvdwyZki/649Z
-   ABezKcx6SK87JwghDzmKVd133VYesLm8t0eQIDK7pDWcLRPStI4siVXuf
-   UKPSxqdfbIUJogpnmCo+cyp7fbsNAbOSrJ5pAztW/Ahbg0pMSu0NxBend
-   g==;
-X-CSE-ConnectionGUID: jeLrnc57QmWxwcEmxPOCig==
-X-CSE-MsgGUID: 1fK9k+RySYiexRQOsYsQ/A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="70121849"
+  bh=8D/3rXr7aLfxT+nfdjxwtCzpi7Ojp5qrveWYUl0YqpU=;
+  b=d0QPULLE1G8de43pY/zxgo2ixGGNKWG8NPP8q+EcNDHyU39PoAezGsko
+   MPKCVsxR4lC12Vxo3Qu0K8UiRk3R5BTpr2f76t5ImTKVXwE4cOBSPaKiQ
+   yY0m6YXh/XeszWWkRyO+sX+eqpRBl8C/TmO/5MZBUzDxj2uRcZSoLq1VD
+   axx5kMgJIwUdzFXZ4PtQkEeBn11sHeI8aU8HwRUP3g0mRAK0mQDEZJbx0
+   kXHVM8mBJmhzHfTpCXcYIWgOwJY8pEJU14Zw7LEugXZ8HNN55IE9M3wSP
+   OihsG4MDtCYLT42kGsxrSLkf/MWhHBwU0Ek7U3jIQC33VSyLuQ/4V3uFD
+   A==;
+X-CSE-ConnectionGUID: 3x1qU5ZuSLOswWQg6bCoog==
+X-CSE-MsgGUID: we34CWAeTtSLUWzEmBgSxA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="63737729"
 X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
-   d="scan'208";a="70121849"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 05:43:40 -0700
-X-CSE-ConnectionGUID: WFUbhHarSMq6gzeAfullQw==
-X-CSE-MsgGUID: ih52RrnCSOO16gArwfrW4Q==
+   d="scan'208";a="63737729"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 05:46:19 -0700
+X-CSE-ConnectionGUID: sQr8BNk7QaetJSqb1QezEg==
+X-CSE-MsgGUID: dHFA4dGhRsa9rCmOwD5ELQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,251,1744095600"; 
-   d="scan'208";a="151437765"
+   d="scan'208";a="150402846"
 Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.215])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 05:43:35 -0700
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 05:46:15 -0700
 From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: linux-cxl@vger.kernel.org, ALOK TIWARI <alok.a.tiwari@oracle.com>
+To: linux-cxl@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>
 Cc: Davidlohr Bueso <dave@stgolabs.net>,
  Jonathan Cameron <jonathan.cameron@huawei.com>,
  Dave Jiang <dave.jiang@intel.com>,
@@ -53,14 +53,14 @@ Cc: Davidlohr Bueso <dave@stgolabs.net>,
  Dan Williams <dan.j.williams@intel.com>, Jonathan Corbet <corbet@lwn.net>,
  linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject:
- Re: [PATCH v2] cxl: docs/driver-api/conventions resolve conflicts btw CFMWS,
+ Re: [PATCH] cxl: docs/driver-api/conventions resolve conflicts btw CFMWS,
  LMH, ED
-Date: Fri, 20 Jun 2025 14:43:32 +0200
-Message-ID: <2884280.h6RI2rZIcs@fdefranc-mobl3>
-In-Reply-To: <01769786-483d-4142-9b8f-f03f20998fe2@oracle.com>
+Date: Fri, 20 Jun 2025 14:46:11 +0200
+Message-ID: <4295321.aCxCBeP46V@fdefranc-mobl3>
+In-Reply-To: <34fcdfb0-e32c-4eb3-8afe-49c34dcab2c3@infradead.org>
 References:
- <20250618161907.1008564-1-fabio.m.de.francesco@linux.intel.com>
- <01769786-483d-4142-9b8f-f03f20998fe2@oracle.com>
+ <20250618151710.1001847-1-fabio.m.de.francesco@linux.intel.com>
+ <34fcdfb0-e32c-4eb3-8afe-49c34dcab2c3@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -70,21 +70,21 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="utf-8"
 
-On Wednesday, June 18, 2025 7:11:07=E2=80=AFPM Central European Summer Time=
- ALOK TIWARI wrote:
+Hi Randy,
+
+On Wednesday, June 18, 2025 5:54:35=E2=80=AFPM Central European Summer Time=
+ Randy Dunlap wrote:
+> Hi,
 >=20
-> On 6/18/2025 9:46 PM, Fabio M. De Francesco wrote:
+> On 6/18/25 8:17 AM, Fabio M. De Francesco wrote:
 > > Add documentation on how to resolve conflicts between CXL Fixed Memory
 > > Windows, Platform Memory Holes, and Endpoint Decoders.
 > >=20
 > > Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.=
 com>
 > > ---
-> >=20
-> > v1 -> v2: Rewrite "Summary of the Change" section, 3r paragraph.
-> >=20
-> >   Documentation/driver-api/cxl/conventions.rst | 85 ++++++++++++++++++++
-> >   1 file changed, 85 insertions(+)
+> >  Documentation/driver-api/cxl/conventions.rst | 85 ++++++++++++++++++++
+> >  1 file changed, 85 insertions(+)
 > >=20
 > > diff --git a/Documentation/driver-api/cxl/conventions.rst b/Documentati=
 on/driver-api/cxl/conventions.rst
@@ -92,9 +92,9 @@ on/driver-api/cxl/conventions.rst
 > > --- a/Documentation/driver-api/cxl/conventions.rst
 > > +++ b/Documentation/driver-api/cxl/conventions.rst
 > > @@ -45,3 +45,88 @@ Detailed Description of the Change
-> >   ----------------------------------
-> >  =20
-> >   <Propose spec language that corrects the conflict.>
+> >  ----------------------------------
+> > =20
+> >  <Propose spec language that corrects the conflict.>
 > > +
 > > +
 > > +Resolve conflict between CFMWS, Plaftform Memory Holes, and Endpoint D=
@@ -103,11 +103,6 @@ ecoders
 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
 =3D=3D=3D=3D
->=20
-> typo Plaftform
->=20
-Ah yes, "Platform".
->=20
 > > +
 > > +Document
 > > +--------
@@ -137,12 +132,22 @@ ost
 > > +interleaved across one or more targets, some of which are CXL Host Bri=
 dges.
 > > +Associated with each window are a set of restrictions that govern its
+>=20
+>                                is
+>=20
+Okay.
+>
 > > +usage. It is the OSPM=E2=80=99s responsibility to utilize each window =
 for the
 > > +specified use.
 > > +
 > > +Table 9-22 states the Window Size field contains that the total number=
  of
+>=20
+>                                            contains the total number of
+>
+Ok.
+>=20
 > > +consecutive bytes of HPA this window represents and this value shall b=
 e a
 > > +multiple of Number of Interleave Ways * 256 MB.
@@ -178,38 +183,21 @@ hat
 MWS
 > > +whose Window Size don't comply with the alignment rules and so all the=
 ir
->=20
-> Size does not comply
->=20
-Right!. Maybe "fit the alignment constraints"?
->
 > > +capacity would be lost. This change allows the OSPM to match Endpoint
 > > +Decoders whose HPA range size exceeds the matching CFMWS and create
 > > +regions that at least utilize part of the decoders total memory capaci=
 ty.
->=20
-> the decoder's total memory ?
->=20
-Ah yes, maybe "part of the memory devices capacity"?
->=20
 > > +
 > > +References
 > > +----------
 > > +
 > > +Compute Express Link Specification Revision 3.2, Version 1.0
-> > +<https://urldefense.com/v3/__https://www.computeexpresslink.org/__;!!A=
-CWV5N9M2RV99hQ!KMvmUQzFTNqBga7-zQPzxmzSqdYgKZWELM7-GwPfbpk5BeOwvr0WMeZ9UxWW=
-235HbZzpgBfnIUryy_eQSHsLGAt9Z7Abgi_UdiU$ >
+> > +<https://www.computeexpresslink.org/>
 > > +
 > > +Detailed Description of the Change
 > > +----------------------------------
 > > +
 > > +The current description of a CFMWS Window Size (table 9-22) is replaced
->=20
-> Table 9-22
->
-OK.
->=20
 > > +with:
 > > +
 > > +"The total number of consecutive bytes of HPA this window represents. =
@@ -223,16 +211,18 @@ ndow
 > > +size that doesn't align with the NIW*256 MB constraint; note that the
 > > +matching Endpoint Decoders HPA range size must still align to the
 > > +above-mentioned rule and so the memory capacity that might exceeds the
+>=20
+>                                                               exceed
+>
+Again.
+>=20
 > > +CFMWS window size will not be accessible.".
 > >=20
 > > base-commit: a021802c18c4c30dff3db9bd355cacb68521f1aa
 >=20
-> Thanks,
-> Alok
->=20
 Thanks,
 
-=46abio=20
+=46abio
 
 
 
