@@ -1,176 +1,328 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D03F2D4B6F;
-	Fri, 20 Jun 2025 16:40:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 511E01F4CB7
+	for <linux-cxl@vger.kernel.org>; Fri, 20 Jun 2025 18:16:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750437611; cv=none; b=m1TSgJxcHdngSsd4rZEaGfXiQZmkwcAqy99/NnVulhIGxpWuRgFKeh0YWN8Zvw7wBx2sk1xohkyTWSrMGd4oK6761fGrJB296uhFh3NvdEzJAmWKx7lMaPmDwxlhBkbpox9EFZnodi8WgYR9J7hGNQMGCtdV/JW555bGx4G/zko=
+	t=1750443418; cv=none; b=pUofOw4sGLbYFIh5oqVpJ+oWoqwxV9GBhf9qgcEd8xoPOluYg94Hfc8uWj0Bub3ANettNOhayyI8ZkVTJJwbPFPD02DbKCGMWQ1MEn8TQVrnVR0rgs77d2xYiL1Y3UMX4ad6ScjvdftorCJNm0sryLwJGxl9o3zadFji66Q/jDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750437611; c=relaxed/simple;
-	bh=6MOrDPSqajVX9dglL2iIpKlky0ZC16o6M1J4f7fNxNY=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=K0PXggmM8itYYwLSdOgJekXP++PjdKx3q2brdUI1nThWBzUYDuCzj7RrTCVDg5BL3JvqbIwnb2V1ezS0UbXKfNCxJjqIZ7WP1SzgiwJrmS7iGCzDRC+mq7u41zEDSXyl/UI/9ZAVw7ZPwXv09G/GvPFBQqGCRE4SxVZHrhJ58ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bP36y4ySyz6L5jx;
-	Sat, 21 Jun 2025 00:37:46 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id BC89B1402F3;
-	Sat, 21 Jun 2025 00:40:05 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 20 Jun
- 2025 18:40:04 +0200
-Date: Fri, 20 Jun 2025 17:40:01 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Neeraj Kumar <s.neeraj@samsung.com>
-CC: <dan.j.williams@intel.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>, <a.manzanares@samsung.com>, <nifan.cxl@gmail.com>,
-	<anisa.su@samsung.com>, <vishak.g@samsung.com>, <krish.reddy@samsung.com>,
-	<arun.george@samsung.com>, <alok.rathore@samsung.com>,
-	<neeraj.kernel@gmail.com>, <linux-kernel@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-	<gost.dev@samsung.com>, <cpgs@samsung.com>
-Subject: Re: [RFC PATCH 01/20] nvdimm/label: Introduce NDD_CXL_LABEL flag to
- set cxl label format
-Message-ID: <20250620174001.00003aa2@huawei.com>
-In-Reply-To: <158453976.61750165203630.JavaMail.epsvc@epcpadp1new>
-References: <20250617123944.78345-1-s.neeraj@samsung.com>
-	<CGME20250617124008epcas5p2e702f786645d44ceb1cdd980a914ce8e@epcas5p2.samsung.com>
-	<158453976.61750165203630.JavaMail.epsvc@epcpadp1new>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1750443418; c=relaxed/simple;
+	bh=9yOHen+zDxYb77q+ijBiEXk8HWRTF6MECKkf55XtsmA=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=nbXhytVc3cHjUd2t4f1RG3mmXjcAoepqA87A7YyaAN+pXI0NFv8DhpF1ZwiHDfw7QT3zo12jD/eSNYJo/owOlE3ruXQ94BiMVG9pFHJUla3SpBP6Gabr+Mh87tlSIxeiN23lXlvuVGGxEegVbNnDcbXOCdLgg+e+ccQ8rxpDjU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jX5rIQwT; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jX5rIQwT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750443416; x=1781979416;
+  h=date:from:to:cc:subject:message-id;
+  bh=9yOHen+zDxYb77q+ijBiEXk8HWRTF6MECKkf55XtsmA=;
+  b=jX5rIQwTQxJMD/Md3xk5xTWNnVu8wVokEPB6uG8jcvrzj/KKjMoPBjF/
+   Y4DpqwVnfa6gogODvOJNU3Ai4O4W6gecfFlGDkWZTzTciI7gZtsfts1Ub
+   pR0PQiZIBKDtYn/Pvm+xsyDXHtmIhWv7pQJVALFlVhiNq7YuhZPDXDSHM
+   IJPe9LWIhEPYCw1cevji93LZmyJhmAV9t/gEhThYUOn2QKnZh+XRJYTN1
+   k94oBOuI0vCbiIumUa7c3Z9SOeFQiHjs9dYK3LFgG8gSzRw2J8B+ou7Xg
+   AupaF4A6e0veLUrR+uoisOH5U+txwlaoAS57l5hyHaHBE3N5NO741YgVy
+   A==;
+X-CSE-ConnectionGUID: sEh9vURrTVS57PdPtkkMWw==
+X-CSE-MsgGUID: V6GXi21tTUS0OY6A+FDoFw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="52680270"
+X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
+   d="scan'208";a="52680270"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2025 11:16:56 -0700
+X-CSE-ConnectionGUID: /3UWKtRQS+KVpJj94rjW1w==
+X-CSE-MsgGUID: l6Pvd0fBRaOg3MEysY0eUg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,252,1744095600"; 
+   d="scan'208";a="151115982"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 20 Jun 2025 11:16:54 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uSgIG-000M3S-06;
+	Fri, 20 Jun 2025 18:16:52 +0000
+Date: Sat, 21 Jun 2025 02:16:44 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org
+Subject: [cxl:for-6.17/cleanup-acquire] BUILD SUCCESS
+ 41e8737fed161ee0cfc9692d8eff881440ef4b10
+Message-ID: <202506210234.jeB2spBE-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, 17 Jun 2025 18:09:25 +0530
-Neeraj Kumar <s.neeraj@samsung.com> wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git for-6.17/cleanup-acquire
+branch HEAD: 41e8737fed161ee0cfc9692d8eff881440ef4b10  cleanup: Introduce ACQUIRE() and ACQUIRE_ERR() for conditional locks
 
-> NDD_CXL_LABEL is introduced to set cxl LSA 2.1 label format
-> Accordingly updated label index version
-> 
-> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
-A few local comments.  I'll need to read on to figure out how this
-fits in generally.
+elapsed time: 1199m
 
-> ---
->  drivers/nvdimm/dimm.c      |  1 +
->  drivers/nvdimm/dimm_devs.c | 10 ++++++++++
->  drivers/nvdimm/label.c     | 16 ++++++++++++----
->  drivers/nvdimm/nd.h        |  1 +
->  include/linux/libnvdimm.h  |  3 +++
->  5 files changed, 27 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/nvdimm/dimm.c b/drivers/nvdimm/dimm.c
-> index 91d9163ee303..8753b5cd91cc 100644
-> --- a/drivers/nvdimm/dimm.c
-> +++ b/drivers/nvdimm/dimm.c
-> @@ -62,6 +62,7 @@ static int nvdimm_probe(struct device *dev)
->  	if (rc < 0)
->  		dev_dbg(dev, "failed to unlock dimm: %d\n", rc);
->  
-> +	ndd->cxl = nvdimm_check_cxl_label_format(ndd->dev);
->  
->  	/*
->  	 * EACCES failures reading the namespace label-area-properties
-> diff --git a/drivers/nvdimm/dimm_devs.c b/drivers/nvdimm/dimm_devs.c
-> index 21498d461fde..e8f545f889fd 100644
-> --- a/drivers/nvdimm/dimm_devs.c
-> +++ b/drivers/nvdimm/dimm_devs.c
-> @@ -18,6 +18,16 @@
->  
->  static DEFINE_IDA(dimm_ida);
->  
-> +bool nvdimm_check_cxl_label_format(struct device *dev)
-> +{
-> +	struct nvdimm *nvdimm = to_nvdimm(dev);
-> +
-> +	if (test_bit(NDD_CXL_LABEL, &nvdimm->flags))
-> +		return true;
-> +
-> +	return false;
+configs tested: 249
+configs skipped: 8
 
-	return test_bit(NDD_CXL_LABEL, &nvdimm->flags);
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Unless this is going to get more complex in later patches, in which case
-may be fine to ignore this comment.
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    clang-19
+alpha                            allyesconfig    gcc-15.1.0
+alpha                               defconfig    gcc-15.1.0
+arc                              allmodconfig    clang-19
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    clang-19
+arc                              allyesconfig    gcc-15.1.0
+arc                                 defconfig    gcc-15.1.0
+arc                   randconfig-001-20250620    clang-21
+arc                   randconfig-001-20250620    gcc-8.5.0
+arc                   randconfig-002-20250620    clang-21
+arc                   randconfig-002-20250620    gcc-11.5.0
+arc                    vdk_hs38_smp_defconfig    gcc-15.1.0
+arm                              allmodconfig    clang-19
+arm                              allmodconfig    gcc-15.1.0
+arm                               allnoconfig    clang-21
+arm                               allnoconfig    gcc-15.1.0
+arm                              allyesconfig    clang-19
+arm                              allyesconfig    gcc-15.1.0
+arm                       aspeed_g5_defconfig    gcc-15.1.0
+arm                      integrator_defconfig    clang-21
+arm                          ixp4xx_defconfig    gcc-15.1.0
+arm                         lpc18xx_defconfig    clang-21
+arm                            mps2_defconfig    clang-21
+arm                   randconfig-001-20250620    clang-21
+arm                   randconfig-002-20250620    clang-21
+arm                   randconfig-003-20250620    clang-21
+arm                   randconfig-004-20250620    clang-21
+arm                        realview_defconfig    gcc-15.1.0
+arm                           stm32_defconfig    gcc-15.1.0
+arm                       versatile_defconfig    gcc-15.1.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                 randconfig-001-20250620    clang-21
+arm64                 randconfig-001-20250620    gcc-9.5.0
+arm64                 randconfig-002-20250620    clang-21
+arm64                 randconfig-002-20250620    gcc-8.5.0
+arm64                 randconfig-003-20250620    clang-21
+arm64                 randconfig-003-20250620    gcc-11.5.0
+arm64                 randconfig-004-20250620    clang-21
+csky                              allnoconfig    gcc-15.1.0
+csky                                defconfig    gcc-15.1.0
+csky                  randconfig-001-20250620    clang-21
+csky                  randconfig-001-20250620    gcc-13.3.0
+csky                  randconfig-002-20250620    clang-21
+csky                  randconfig-002-20250620    gcc-15.1.0
+hexagon                          allmodconfig    clang-17
+hexagon                          allmodconfig    clang-19
+hexagon                           allnoconfig    clang-21
+hexagon                           allnoconfig    gcc-15.1.0
+hexagon                          allyesconfig    clang-19
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250620    clang-21
+hexagon               randconfig-002-20250620    clang-21
+i386                             allmodconfig    clang-20
+i386                              allnoconfig    clang-20
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    clang-20
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250620    clang-20
+i386        buildonly-randconfig-002-20250620    clang-20
+i386        buildonly-randconfig-003-20250620    clang-20
+i386        buildonly-randconfig-004-20250620    clang-20
+i386        buildonly-randconfig-005-20250620    clang-20
+i386        buildonly-randconfig-006-20250620    clang-20
+i386        buildonly-randconfig-006-20250620    gcc-12
+i386                                defconfig    clang-20
+i386                  randconfig-001-20250620    gcc-12
+i386                  randconfig-002-20250620    gcc-12
+i386                  randconfig-003-20250620    gcc-12
+i386                  randconfig-004-20250620    gcc-12
+i386                  randconfig-005-20250620    gcc-12
+i386                  randconfig-006-20250620    gcc-12
+i386                  randconfig-007-20250620    gcc-12
+i386                  randconfig-011-20250620    gcc-12
+i386                  randconfig-012-20250620    gcc-12
+i386                  randconfig-013-20250620    gcc-12
+i386                  randconfig-014-20250620    gcc-12
+i386                  randconfig-015-20250620    gcc-12
+i386                  randconfig-016-20250620    gcc-12
+i386                  randconfig-017-20250620    gcc-12
+loongarch                        alldefconfig    gcc-15.1.0
+loongarch                        allmodconfig    gcc-15.1.0
+loongarch                         allnoconfig    gcc-15.1.0
+loongarch             randconfig-001-20250620    clang-21
+loongarch             randconfig-001-20250620    gcc-14.3.0
+loongarch             randconfig-002-20250620    clang-21
+loongarch             randconfig-002-20250620    gcc-15.1.0
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+m68k                          amiga_defconfig    gcc-15.1.0
+m68k                         apollo_defconfig    gcc-15.1.0
+m68k                          atari_defconfig    gcc-15.1.0
+m68k                        stmark2_defconfig    gcc-15.1.0
+m68k                           sun3_defconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                      mmu_defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+mips                      bmips_stb_defconfig    clang-21
+mips                           ci20_defconfig    gcc-15.1.0
+mips                           ip22_defconfig    gcc-15.1.0
+mips                           ip32_defconfig    gcc-15.1.0
+nios2                         3c120_defconfig    gcc-15.1.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-15.1.0
+nios2                 randconfig-001-20250620    clang-21
+nios2                 randconfig-001-20250620    gcc-8.5.0
+nios2                 randconfig-002-20250620    clang-21
+nios2                 randconfig-002-20250620    gcc-10.5.0
+openrisc                          allnoconfig    clang-21
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-12
+openrisc                            defconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    clang-21
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-12
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20250620    clang-21
+parisc                randconfig-001-20250620    gcc-10.5.0
+parisc                randconfig-002-20250620    clang-21
+parisc                randconfig-002-20250620    gcc-12.4.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    clang-21
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                          allyesconfig    clang-21
+powerpc                          allyesconfig    gcc-15.1.0
+powerpc                     ep8248e_defconfig    gcc-15.1.0
+powerpc                     kmeter1_defconfig    gcc-15.1.0
+powerpc               mpc834x_itxgp_defconfig    clang-21
+powerpc                     mpc83xx_defconfig    gcc-15.1.0
+powerpc               randconfig-001-20250620    clang-21
+powerpc               randconfig-002-20250620    clang-21
+powerpc               randconfig-002-20250620    gcc-11.5.0
+powerpc               randconfig-003-20250620    clang-21
+powerpc                     stx_gp3_defconfig    gcc-15.1.0
+powerpc                     tqm8548_defconfig    clang-21
+powerpc64             randconfig-001-20250620    clang-21
+powerpc64             randconfig-001-20250620    gcc-14.3.0
+powerpc64             randconfig-002-20250620    clang-21
+powerpc64             randconfig-003-20250620    clang-19
+powerpc64             randconfig-003-20250620    clang-21
+riscv                            allmodconfig    clang-21
+riscv                            allmodconfig    gcc-15.1.0
+riscv                             allnoconfig    clang-21
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    clang-16
+riscv                            allyesconfig    gcc-15.1.0
+riscv                               defconfig    clang-21
+riscv                               defconfig    gcc-12
+riscv                 randconfig-001-20250620    gcc-13.3.0
+riscv                 randconfig-001-20250620    gcc-14.3.0
+riscv                 randconfig-002-20250620    clang-21
+riscv                 randconfig-002-20250620    gcc-13.3.0
+s390                             allmodconfig    clang-18
+s390                             allmodconfig    gcc-15.1.0
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-15.1.0
+s390                                defconfig    clang-21
+s390                                defconfig    gcc-12
+s390                  randconfig-001-20250620    gcc-13.3.0
+s390                  randconfig-001-20250620    gcc-9.3.0
+s390                  randconfig-002-20250620    clang-21
+s390                  randconfig-002-20250620    gcc-13.3.0
+s390                       zfcpdump_defconfig    clang-21
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                                  defconfig    gcc-12
+sh                                  defconfig    gcc-15.1.0
+sh                         ecovec24_defconfig    gcc-15.1.0
+sh                 kfr2r09-romimage_defconfig    gcc-15.1.0
+sh                          landisk_defconfig    gcc-15.1.0
+sh                    randconfig-001-20250620    gcc-13.3.0
+sh                    randconfig-001-20250620    gcc-15.1.0
+sh                    randconfig-002-20250620    gcc-13.3.0
+sh                    randconfig-002-20250620    gcc-15.1.0
+sh                           se7343_defconfig    gcc-15.1.0
+sh                     sh7710voipgw_defconfig    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                 randconfig-001-20250620    gcc-13.3.0
+sparc                 randconfig-001-20250620    gcc-8.5.0
+sparc                 randconfig-002-20250620    gcc-10.3.0
+sparc                 randconfig-002-20250620    gcc-13.3.0
+sparc64                             defconfig    gcc-12
+sparc64                             defconfig    gcc-15.1.0
+sparc64               randconfig-001-20250620    gcc-13.3.0
+sparc64               randconfig-002-20250620    gcc-13.3.0
+sparc64               randconfig-002-20250620    gcc-8.5.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    clang-19
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                                  defconfig    gcc-12
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250620    clang-21
+um                    randconfig-001-20250620    gcc-13.3.0
+um                    randconfig-002-20250620    clang-21
+um                    randconfig-002-20250620    gcc-13.3.0
+um                           x86_64_defconfig    clang-21
+um                           x86_64_defconfig    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250620    gcc-12
+x86_64      buildonly-randconfig-002-20250620    gcc-12
+x86_64      buildonly-randconfig-003-20250620    clang-20
+x86_64      buildonly-randconfig-003-20250620    gcc-12
+x86_64      buildonly-randconfig-004-20250620    gcc-12
+x86_64      buildonly-randconfig-005-20250620    gcc-12
+x86_64      buildonly-randconfig-006-20250620    clang-20
+x86_64      buildonly-randconfig-006-20250620    gcc-12
+x86_64                              defconfig    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                                  kexec    clang-20
+x86_64                randconfig-001-20250620    clang-20
+x86_64                randconfig-002-20250620    clang-20
+x86_64                randconfig-003-20250620    clang-20
+x86_64                randconfig-004-20250620    clang-20
+x86_64                randconfig-005-20250620    clang-20
+x86_64                randconfig-006-20250620    clang-20
+x86_64                randconfig-007-20250620    clang-20
+x86_64                randconfig-008-20250620    clang-20
+x86_64                randconfig-071-20250620    clang-20
+x86_64                randconfig-072-20250620    clang-20
+x86_64                randconfig-073-20250620    clang-20
+x86_64                randconfig-074-20250620    clang-20
+x86_64                randconfig-075-20250620    clang-20
+x86_64                randconfig-076-20250620    clang-20
+x86_64                randconfig-077-20250620    clang-20
+x86_64                randconfig-078-20250620    clang-20
+x86_64                               rhel-9.4    clang-20
+x86_64                           rhel-9.4-bpf    gcc-12
+x86_64                         rhel-9.4-kunit    gcc-12
+x86_64                           rhel-9.4-ltp    gcc-12
+x86_64                          rhel-9.4-rust    clang-18
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20250620    gcc-13.3.0
+xtensa                randconfig-001-20250620    gcc-8.5.0
+xtensa                randconfig-002-20250620    gcc-13.3.0
 
-> +}
-> +
->  /*
->   * Retrieve bus and dimm handle and return if this bus supports
->   * get_config_data commands
-> diff --git a/drivers/nvdimm/label.c b/drivers/nvdimm/label.c
-> index 082253a3a956..48b5ba90216d 100644
-> --- a/drivers/nvdimm/label.c
-> +++ b/drivers/nvdimm/label.c
-> @@ -687,11 +687,19 @@ static int nd_label_write_index(struct nvdimm_drvdata *ndd, int index, u32 seq,
->  		- (unsigned long) to_namespace_index(ndd, 0);
->  	nsindex->labeloff = __cpu_to_le64(offset);
->  	nsindex->nslot = __cpu_to_le32(nslot);
-> -	nsindex->major = __cpu_to_le16(1);
-> -	if (sizeof_namespace_label(ndd) < 256)
-> +
-> +	/* Support CXL LSA 2.1 label format */
-
-Might be good to sprinkle some extra details in the references.
-E.g. CXL r3.2 Table 9-9 Label Index Block Layout
-
-> +	if (ndd->cxl) {
-> +		nsindex->major = __cpu_to_le16(2);
->  		nsindex->minor = __cpu_to_le16(1);
-> -	else
-> -		nsindex->minor = __cpu_to_le16(2);
-> +	} else {
-> +		nsindex->major = __cpu_to_le16(1);
-
-Same for these.  Case of making reviewers jobs easier by
-giving them breadcrumb trails to follow.
-
-> +		if (sizeof_namespace_label(ndd) < 256)
-> +			nsindex->minor = __cpu_to_le16(1);
-> +		else
-> +			nsindex->minor = __cpu_to_le16(2);
-> +	}
-> +
->  	nsindex->checksum = __cpu_to_le64(0);
->  	if (flags & ND_NSINDEX_INIT) {
->  		unsigned long *free = (unsigned long *) nsindex->free;
-> diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
-> index 5ca06e9a2d29..304f0e9904f1 100644
-> --- a/drivers/nvdimm/nd.h
-> +++ b/drivers/nvdimm/nd.h
-> @@ -522,6 +522,7 @@ void nvdimm_set_labeling(struct device *dev);
->  void nvdimm_set_locked(struct device *dev);
->  void nvdimm_clear_locked(struct device *dev);
->  int nvdimm_security_setup_events(struct device *dev);
-> +bool nvdimm_check_cxl_label_format(struct device *dev);
->  #if IS_ENABLED(CONFIG_NVDIMM_KEYS)
->  int nvdimm_security_unlock(struct device *dev);
->  #else
-> diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
-> index e772aae71843..0a55900842c8 100644
-> --- a/include/linux/libnvdimm.h
-> +++ b/include/linux/libnvdimm.h
-> @@ -44,6 +44,9 @@ enum {
->  	/* dimm provider wants synchronous registration by __nvdimm_create() */
->  	NDD_REGISTER_SYNC = 8,
->  
-> +	/* dimm supports region labels (LSA Format 2.1) */
-> +	NDD_CXL_LABEL = 9,
-> +
->  	/* need to set a limit somewhere, but yes, this is likely overkill */
->  	ND_IOCTL_MAX_BUFLEN = SZ_4M,
->  	ND_CMD_MAX_ELEM = 5,
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
