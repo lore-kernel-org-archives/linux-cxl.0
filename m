@@ -1,169 +1,102 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F167D1E50E;
-	Sun, 22 Jun 2025 12:50:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10FAD1CF5C0
+	for <linux-cxl@vger.kernel.org>; Sun, 22 Jun 2025 18:40:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750596654; cv=none; b=HAw6qq+B6kHr7481+HAlM1hAQ7fnTMMObnXpgh5Wi4ruvp5Hm+/+2zh9XtwzPSJbSF2e9ENnFBjkRZPpwMjMK1I9UlZiWgX3jfB6Mk0f+vOWi4AimIGIm9kGSuf0jv8CfampHMOzkstgqQsWK5kb7SjVLCpsYCrUtLA3/a+hqPc=
+	t=1750617604; cv=none; b=ndnDoL6zVMOc3Aj0+7ilQpj09c/MVTkqo5DOfHDWCQKYlqbOJ7aUwO30ixDrT4UzALQqeWmveUQ7UW0Z7l8eTPi3fj3/+J+KR9Uo14CWwZ6umOjGO1zon+XGNea6o1J8RJ58W2ZPZ6BUiZNibAr4sAFQxXOMyXcLlqK74MmSqbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750596654; c=relaxed/simple;
-	bh=LP62ThN8+dqGtMsgMUB7WR3DT2vghClJKe04swbOiLo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=azCRHT02ctzrnLPC7uBEDhGBF7Mag6UFVdUt1J813h4Tly/szNZZs/OA9xC3IifWGhZt8cCKFQ/bjTn7c7ablyxALeeOO/P1Z8637lDy5NDAuiJHrMgI196ZtS2zpdV7MSoANXi3YWjUJYpz8ETm1+DYQhx7dpYMggIGg6UulQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XufU49SF; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750617604; c=relaxed/simple;
+	bh=4zUqJarprWUVg1v6H/WICt1b3c333Mfr5RUckN7EDcQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VQ+h5Lb/x0H8IKHC8JWnx8V7YFbfUFoPeCGKOcmWrCw8exdZfxShwej/NXr1e8qSimazD8ZIUkDx9w9Ub3ZOCQlP2SMUbHcjnW3YRzgXJDUH6ugsm7Zw3Sjxb+OXwuKt1HeJqXaMOUidZa0KUNdKJ8ibN5LwHXCP3XhEqwR/ywo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=iVDv5Dbb; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XufU49SF"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-32b2f5d91c8so25250451fa.0;
-        Sun, 22 Jun 2025 05:50:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750596651; x=1751201451; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eFFYOfuMXwg0F/A7AmhvhfJNkmAtB4Mz1/92bvCyRBk=;
-        b=XufU49SFP38mmWyP8jZURqeMz+3DUlh0GH8j0z0I+//XQoJRCQ6jPZ9Epsn+TzuXWS
-         +Vhb9NxLyrYsQGVVkcfp2l8uc8hdvZuBaCoTw89Gdg7cP7RqBieBzgA9N4beSZqeFddk
-         juh7UGIUfYjkcRcZIjg/zM8QjYGlQbbCUzsoCtZg0QF1Ztz/bH0Fx6mxlu/TF0bpejdh
-         /hoGWZCI+S6dKcTbgyHwbHTsVN5lXtFt8c4obqfyqnOvjzWBoiO67nXx6lcEvdPNO3TA
-         y04+hvwiW5JKt7SX3cxi2sOuc/z55Km2tjE0DbhhKky55Pv0FMpwIXwNAnKHUiD5zuN9
-         OfiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750596651; x=1751201451;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eFFYOfuMXwg0F/A7AmhvhfJNkmAtB4Mz1/92bvCyRBk=;
-        b=UvV0VfBGdGT9U7MiKcdK4x7L8rZNVhWAJaSd4JerlgwToTTNNnajNsrhsSW3jt2cuo
-         mOqRZD+4HmUt3Cj6+j83Q9Hibl+FItPmBq2jRFyMswR3Y+7cO71ZgB7ZltDSPiv7z6+5
-         6RTsK4GQFVlC9pgI/XiZ3lNjII/YWsvu3Ncew36QSJkCojvOmsRRo7vDFMPhnTUHEg8r
-         sunP48q/EEjyOwjNVAmHGUs8jqBKoDir7FoH2/9N95280GXxquCyYfwcmmk2AxhPGMwD
-         2zH5rTEKvN63jQ0LTgtPPFwbHD/qHjimwle+yFPS25kxn2bHv33Jzb+ofm5S08w29904
-         Yxuw==
-X-Forwarded-Encrypted: i=1; AJvYcCVY0zELO3Ps/+4sS8gbeOeNQGZvpIHmKrAt3SNdSVl47jbBpS0MHJZT5Y0NPG/8PH8GttS6e7Qx0sE=@vger.kernel.org, AJvYcCWCE84OY7wPXxJ/9zUnReC9X6/wQgP8VnWTqYYHPtQRuGoLtOcmQ9L+CGYJVUeeYKx6d0PPDw+ekeIfWPDJ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxf6dmxMrEtkHg+fj6iWBNPL4w0ogZVWA7YlvOJCCSXmPjflSY6
-	hB65OKF8y8+YedW7ESIu1Pmm9GII2r0IeokJBuil865h9sEXqGUr1XsjYAZ9pGwA/xe8GPOT9wA
-	3kcby18nQb7H5vNGEXiPt7L1rpNnYfwERgo5Mwd4=
-X-Gm-Gg: ASbGncscnQdmtE/unblFglWqd5pkeHY0d8X9evYQgOpwOvgN9F7Z+lUmKt2Y88Caycy
-	O/QUvUpOr0PTccnEb+YA8W7C4RUWKmnx6E66NRo3CTbrRBah06iwa5GDCls5MX8nHpLg02KCftw
-	Rw+j6OEC7aTTEnN6wrZtr4jH0wO7rBm4K7I5uBby5Q1NllUuQ7HR3OwU/DmBC0BQdCR3eJABmaX
-	xsb/g==
-X-Google-Smtp-Source: AGHT+IFwf0HPUHHBU01IMCEE71dmUV3d1MMeHEiXJeaMpofTIgfboDAXU4JwM8HiZ4bm1qwIXt1fgafzUGdqkcB2cAU=
-X-Received: by 2002:a05:651c:4188:b0:32b:7614:5724 with SMTP id
- 38308e7fff4ca-32b98e6657fmr18284801fa.5.1750596650813; Sun, 22 Jun 2025
- 05:50:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iVDv5Dbb"
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55MFNAEk014190;
+	Sun, 22 Jun 2025 18:39:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=9nHZI0gPEtXoWqp7IpuQXNvPmNw6Y
+	D5znE2qxmUning=; b=iVDv5DbbyZBrAogWSy6T7vQTUeh02bT7ubLA6n1oDWCLT
+	lgnIbGUUQgR45maKUYieoQYAgmptN5S5Nv+QZXAMJ1ko/xj3VxsFRl61/eFWXJVC
+	1FhLptJ662IO+N8nbfYm6dEmNY3CY5obaycxg6ddhKd2U7JtzQzYgS6gt/3PxRZF
+	3hQcfak4bj3dV8l2xJRJjNew7MySrLTbAduZxUx08OXn8Ro9WiWrBFEklNxk+B2w
+	NaqUBC9cTptT3eaO1a88FG5Y/ez3zNX9rJrT7Q44SSRhOdT2MEC6Oos5OK/pRs6K
+	UOpCNqncMZUqYufxr6IX80JuHdl/EXJ/EoFOB7TUQ==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47egt5g7gy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 22 Jun 2025 18:39:51 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55MIVGuU002571;
+	Sun, 22 Jun 2025 18:39:50 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 47ehpb4bwb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 22 Jun 2025 18:39:50 +0000
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55MIdnSR019077;
+	Sun, 22 Jun 2025 18:39:49 GMT
+Received: from ca-dev110.us.oracle.com (ca-dev110.us.oracle.com [10.129.136.45])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 47ehpb4bw1-1;
+	Sun, 22 Jun 2025 18:39:49 +0000
+From: Alok Tiwari <alok.a.tiwari@oracle.com>
+To: linux-cxl@vger.kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com,
+        dave.jiang@intel.com, alison.schofield@intel.com,
+        vishal.l.verma@intel.com, ira.weiny@intel.com,
+        dan.j.williams@intel.com
+Cc: alok.a.tiwari@oracle.com
+Subject: [PATCH] cxl/edac: Use correct format specifier for u32 val
+Date: Sun, 22 Jun 2025 11:39:16 -0700
+Message-ID: <20250622183919.4156343-1-alok.a.tiwari@oracle.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250622120958.475765-1-pranav.tyagi03@gmail.com> <50a01a17-4afc-415d-b5c8-9a84e3bdf191@zohomail.com>
-In-Reply-To: <50a01a17-4afc-415d-b5c8-9a84e3bdf191@zohomail.com>
-From: Pranav Tyagi <pranav.tyagi03@gmail.com>
-Date: Sun, 22 Jun 2025 18:20:39 +0530
-X-Gm-Features: Ac12FXwCBi5-E051VA0FIrOZrmrDAPgUljbzWVvxT9GN5qnb5YEmFQa0Fg00NR8
-Message-ID: <CAH4c4jLYSXsWE8aDV0Cue0y0xMoYKbfN_Tkoj8SuAreDidG1dw@mail.gmail.com>
-Subject: Re: [PATCH] cxl/memdev: automate cleanup with __free()
-To: Li Ming <ming.li@zohomail.com>
-Cc: rrichter@amd.com, peterz@infradead.org, skhan@linuxfoundation.org, 
-	linux-kernel-mentees@lists.linux.dev, dave@stgolabs.net, 
-	jonathan.cameron@huawei.com, dave.jiang@intel.com, alison.schofield@intel.com, 
-	vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com, 
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-22_06,2025-06-20_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
+ suspectscore=0 spamscore=0 mlxlogscore=999 mlxscore=0 malwarescore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2505160000 definitions=main-2506220119
+X-Proofpoint-GUID: j3etamI16WVDUWt6HzLSaB7SBbHrovuo
+X-Authority-Analysis: v=2.4 cv=PMYP+eqC c=1 sm=1 tr=0 ts=68584df7 b=1 cx=c_pps a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=uaK7bTDsDLueLMOGudsA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIyMDExOSBTYWx0ZWRfX10LR9P9VqVYl BzovnuZSJZcnu/m+9Nwjdgjn6y9lvYCY5rr2zX+OAPqU6zrKYjdZxwQeF6FbteAk5HVBbr08veI uTaI/n2DIonQzZGa7HwNl86Jhv+iivHHMhmzZoXGb5JgwFuTwaeYudw8OmhC4poYP0+c2skSY5m
+ H5lC88CnwNhSTDBsg1H1J6Ac3IEBfVvnf7m+7A0+yJ238vDZ7P75FdZgNCQZbE4h7BthnOkvPZ/ 7KBIkJ4sSbtN0JjpbWrMqV3PMqMOmTd1ZtcOUbGuzliYv9VhfSzdrE1i1h7jxbN7D+aTScZL58n RhCqdWbKFxzP1l6ljOJR2sgB9aD6T0vFCI+sQLODBIkJPSq0eWvCzyJL59NOd4ZJ+niAf+S8wkq
+ Id7NJAcLMZMOa2Rv3xgimM0UDXr3NXY5LGbjjstLPJ7QcD09q7s5CVzrfRHl4jLWVwVh6Q1q
+X-Proofpoint-ORIG-GUID: j3etamI16WVDUWt6HzLSaB7SBbHrovuo
 
-On Sun, Jun 22, 2025 at 5:53=E2=80=AFPM Li Ming <ming.li@zohomail.com> wrot=
-e:
->
-> On 6/22/2025 8:09 PM, Pranav Tyagi wrote:
-> > Use the scope based resource management (defined in linux/cleanup.h) to
-> > automate the lifetime control of struct cxl_mbox_transfer_fw. This
-> > eliminates explicit kfree() calls and makes the code more robust and
-> > maintainable in presence of early returns.
-> >
-> > Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
-> > ---
-> >  drivers/cxl/core/memdev.c | 9 ++++-----
-> >  1 file changed, 4 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> > index f88a13adf7fa..be73a6099cb6 100644
-> > --- a/drivers/cxl/core/memdev.c
-> > +++ b/drivers/cxl/core/memdev.c
-> > @@ -7,6 +7,7 @@
-> >  #include <linux/slab.h>
-> >  #include <linux/idr.h>
-> >  #include <linux/pci.h>
-> > +#include <linux/cleanup.h>
-> >  #include <cxlmem.h>
-> >  #include "trace.h"
-> >  #include "core.h"
-> > @@ -802,11 +803,11 @@ static int cxl_mem_activate_fw(struct cxl_memdev_=
-state *mds, int slot)
-> >  static int cxl_mem_abort_fw_xfer(struct cxl_memdev_state *mds)
-> >  {
-> >       struct cxl_mailbox *cxl_mbox =3D &mds->cxlds.cxl_mbox;
-> > -     struct cxl_mbox_transfer_fw *transfer;
-> >       struct cxl_mbox_cmd mbox_cmd;
-> >       int rc;
-> >
-> > -     transfer =3D kzalloc(struct_size(transfer, data, 0), GFP_KERNEL);
-> > +     struct cxl_mbox_transfer_fw *transfer __free(kfree) =3D
-> > +             kzalloc(struct_size(transfer, data, 0), GFP_KERNEL);
-> >       if (!transfer)
-> >               return -ENOMEM;
-> >
-> > @@ -822,7 +823,6 @@ static int cxl_mem_abort_fw_xfer(struct cxl_memdev_=
-state *mds)
-> >       transfer->action =3D CXL_FW_TRANSFER_ACTION_ABORT;
-> >
-> >       rc =3D cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
-> > -     kfree(transfer);
-> >       return rc;
-> the rc can be removed with your change, can be "return cxl_internal_send_=
-cmd(cxl_mbox, &mbox_cmd)".
-> >  }
-> >
-> > @@ -880,7 +880,7 @@ static enum fw_upload_err cxl_fw_write(struct fw_up=
-load *fwl, const u8 *data,
-> >       struct cxl_dev_state *cxlds =3D &mds->cxlds;
-> >       struct cxl_mailbox *cxl_mbox =3D &cxlds->cxl_mbox;
-> >       struct cxl_memdev *cxlmd =3D cxlds->cxlmd;
-> > -     struct cxl_mbox_transfer_fw *transfer;
-> > +     struct cxl_mbox_transfer_fw *transfer __free(kfree);
-> >       struct cxl_mbox_cmd mbox_cmd;
-> >       u32 cur_size, remaining;
-> >       size_t size_in;
-> > @@ -970,7 +970,6 @@ static enum fw_upload_err cxl_fw_write(struct fw_up=
-load *fwl, const u8 *data,
-> >       rc =3D FW_UPLOAD_ERR_NONE;
-> >
-> >  out_free:
-> > -     kfree(transfer);
-> >       return rc;
-> >  }
-> >
->
-> I believe all "goto out_free" in the function are not needed with your ch=
-ange.
->
->
-> Ming
->
+The dev_dbg() message in cxl_set_ecs_threshold() used %d for
+an unsigned value, which could lead to incorrect logging.
+Update the format specifier to %u to match variable type.
 
-Hi,
+Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+---
+ drivers/cxl/core/edac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks for the feedback.
+diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
+index 2cbc664e5d626..76cb016e0bd9a 100644
+--- a/drivers/cxl/core/edac.c
++++ b/drivers/cxl/core/edac.c
+@@ -693,7 +693,7 @@ static int cxl_set_ecs_threshold(struct device *dev, u8 *log_cap, u16 *config,
+ 				      ECS_THRESHOLD_IDX_4096);
+ 		break;
+ 	default:
+-		dev_dbg(dev, "Invalid CXL ECS threshold count(%d) to set\n",
++		dev_dbg(dev, "Invalid CXL ECS threshold count(%u) to set\n",
+ 			val);
+ 		dev_dbg(dev, "Supported ECS threshold counts: %u, %u, %u\n",
+ 			ECS_THRESHOLD_256, ECS_THRESHOLD_1024,
+-- 
+2.46.0
 
-You're absolutely right - with __free() handling cleanup, the
-explicit rc variable and the goto out_free blocks can now be
-eliminated.
-
-I'll send a v2 shortly incorporating these cleanups.
-
-Regards
-Pranav Tyagi
