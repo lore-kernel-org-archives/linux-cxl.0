@@ -1,43 +1,42 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5731A23ABB2;
-	Mon, 23 Jun 2025 10:05:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E494239E84;
+	Mon, 23 Jun 2025 10:08:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750673150; cv=none; b=e43JJ00AFfYcz4SRY0WJU/FX69ucyXd6xgOu2wKN2OPYiaZvOWgJX8GlQgs5E4HcmEwccFHTxEjPL0ZTE9l6uYK5+r5ze7ei9c5mO0SYW5psz9E1iX8G7n70jNDVeiky4ykMqOjXsfkv9FIaGu/bBUCstc1rtIleUy6+cCR67lU=
+	t=1750673314; cv=none; b=XmBEIxgOmwSxAqnwJ7+5ifCJR5GG/kyYhqfpRnlCA0aI8aGKd6Bm3Z6NYuq+JhPWdfPs+8g7ezBm4cJy+xpUYGvpnOb5Zxbs0a0GvsaHEAL9iyVyZQGLcNhzG9GolVn2bbi+x90LKiUoVQIX8ANuuMN3B8+edZEcUZEUsUDKCFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750673150; c=relaxed/simple;
-	bh=iPNitE4nbuEDiKbUBmKidOk6gTXChF4de7gB/oOsN0g=;
+	s=arc-20240116; t=1750673314; c=relaxed/simple;
+	bh=rxytXpv5wo27moJlcA5NuL2zOOMcZuDo39JoSMJKbhc=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WjuQsvZOOB5ctQFige7MzI5Zo4/cBmQTBPNjze3JQkFEjzeYsv14oDeZ4jMOJNhS8QchZMnyLvCs5sWGq1SGCUbvJqhoDOtqG31JFt+p9mUH0MXZsfWzqWKX7omYTkpbYaHygyBGfpG+UpR6yJNlesIJTrrEaGV+adudRts3hn4=
+	 MIME-Version:Content-Type; b=vD3PnhWvcZmUZ5ZYs/7+JuTL5YyUVgVGyZwQTTnI+3Y9wyxiVJP9g4EkWijD4Qi2bBlc9mQTWotRVLHwaPKig5BTaNgyCEt4/pb8HjvxYCdErjWIsFzHnGXAAEM9EpSXCdRthpflLYGiaaHseNAM9A11763LKs+PR6enoIDUNfA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bQk9Z1cWTz6L5j9;
-	Mon, 23 Jun 2025 18:00:50 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bQkHC3zccz6HJrx;
+	Mon, 23 Jun 2025 18:05:43 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0625E1402EA;
-	Mon, 23 Jun 2025 18:05:46 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 3CAAA1402EA;
+	Mon, 23 Jun 2025 18:08:10 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 23 Jun
- 2025 12:05:45 +0200
-Date: Mon, 23 Jun 2025 11:05:44 +0100
+ 2025 12:08:09 +0200
+Date: Mon, 23 Jun 2025 11:08:08 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To: Dan Williams <dan.j.williams@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Peter
- Zijlstra" <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, "Linus
- Torvalds" <torvalds@linux-foundation.org>, David Lechner
-	<dlechner@baylibre.com>, "Fabio M. De Francesco"
-	<fabio.m.de.francesco@linux.intel.com>
-Subject: Re: [PATCH v2 1/8] cleanup: Introduce ACQUIRE() and ACQUIRE_ERR()
- for conditional locks
-Message-ID: <20250623110544.0000753d@huawei.com>
-In-Reply-To: <20250619050416.782871-2-dan.j.williams@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Linus
+ Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra
+	<peterz@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang
+	<dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, Vishal
+ Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>
+Subject: Re: [PATCH v2 2/8] cxl/mbox: Convert poison list mutex to ACQUIRE()
+Message-ID: <20250623110808.00003fcb@huawei.com>
+In-Reply-To: <20250619050416.782871-3-dan.j.williams@intel.com>
 References: <20250619050416.782871-1-dan.j.williams@intel.com>
-	<20250619050416.782871-2-dan.j.williams@intel.com>
+	<20250619050416.782871-3-dan.j.williams@intel.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -50,70 +49,93 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Wed, 18 Jun 2025 22:04:09 -0700
+On Wed, 18 Jun 2025 22:04:10 -0700
 Dan Williams <dan.j.williams@intel.com> wrote:
 
-> From: Peter Zijlstra <peterz@infradead.org>
+> Towards removing all explicit unlock calls in the CXL subsystem, convert
+> the conditional poison list mutex to use a conditional lock guard.
 > 
-> scoped_cond_guard(), automatic cleanup for conditional locks, has a couple
-> pain points:
+> Rename the lock to have the compiler validate that all existing call sites
+> are converted.
 > 
-> * It causes existing straight-line code to be re-indented into a new
->   bracketed scope. While this can be mitigated by a new helper function
->   to contain the scope, that is not always a comfortable conversion.
-> 
-> * The return code from the conditional lock is tossed in favor of a scheme
->   to pass a 'return err;' statement to the macro.
-> 
-> Other attempts to clean this up, to behave more like guard() [1], got hung
-> up trying to both establish and evaluate the conditional lock in one
-> statement.
-> 
-> ACQUIRE() solves this by reflecting the result of the condition in the
-> automatic variable established by the lock CLASS(). The result is
-> separately retrieved with the ACQUIRE_ERR() helper, effectively a PTR_ERR()
-> operation.
-> 
-> Link: http://lore.kernel.org/all/Z1LBnX9TpZLR5Dkf@gmail.com [1]
-> Link: http://patch.msgid.link/20250512105026.GP4439@noisy.programming.kicks-ass.net
-> Link: http://patch.msgid.link/20250512185817.GA1808@noisy.programming.kicks-ass.net
-> Cc: Ingo Molnar <mingo@kernel.org>
 > Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: David Lechner <dlechner@baylibre.com>
-> Cc: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
-> Not-yet-signed-off-by: Peter Zijlstra <peterz@infradead.org>
-> [djbw: wrap Peter's proposal with changelog and comments]
-> Co-developed-by: Dan Williams <dan.j.williams@intel.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Davidlohr Bueso <dave@stgolabs.net>
+> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Alison Schofield <alison.schofield@intel.com>
+> Cc: Vishal Verma <vishal.l.verma@intel.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
 > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-This looks like a nice solution.  One trivial style thing inline.
+
+One trivial inline. Either way
+
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 
 > ---
->  include/linux/cleanup.h | 77 ++++++++++++++++++++++++++++++++++-------
->  include/linux/mutex.h   |  2 +-
->  include/linux/rwsem.h   |  2 +-
->  3 files changed, 67 insertions(+), 14 deletions(-)
+>  drivers/cxl/core/mbox.c | 7 +++----
+>  drivers/cxl/cxlmem.h    | 4 ++--
+>  2 files changed, 5 insertions(+), 6 deletions(-)
 > 
-> diff --git a/include/linux/cleanup.h b/include/linux/cleanup.h
-> index 7093e1d08af0..1e1eb35cc225 100644
-> --- a/include/linux/cleanup.h
-> +++ b/include/linux/cleanup.h
-> +#define __GUARD_IS_ERR(_ptr) \
-> +	({ unsigned long _rc = (__force unsigned long)(_ptr); \
-> +	   unlikely((_rc-1) >= -MAX_ERRNO-1); })
-
-Trivial but I'd have added spaces to make this
-	   unlikely((_rc - 1) >= -MAX_ERRNO - 1); })
-
-> +
->  #define __DEFINE_GUARD_LOCK_PTR(_name, _exp) \
->  	static inline void * class_##_name##_lock_ptr(class_##_name##_t *_T) \
-> -	{ return (void *)(__force unsigned long)*(_exp); }
-> +	{ void *_ptr = (void *)(__force unsigned long)*(_exp); \
-> +	  if (IS_ERR(_ptr)) { _ptr = NULL; } return _ptr; } \
-> +	static inline int class_##_name##_lock_err(class_##_name##_t *_T) \
-> +	{ long _rc = (__force unsigned long)*(_exp); \
-> +	  if (!_rc) { _rc = -EBUSY; } if (!IS_ERR_VALUE(_rc)) { _rc = 0; } \
-> +	  return _rc; }
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index 2689e6453c5a..81b21effe8cf 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -1401,8 +1401,8 @@ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+>  	int nr_records = 0;
+>  	int rc;
 >  
+> -	rc = mutex_lock_interruptible(&mds->poison.lock);
+> -	if (rc)
+> +	ACQUIRE(mutex_intr, lock)(&mds->poison.mutex);
 
+I'd slightly prefer the 'canonical' style from the cleanup.h docs in previous patch.
+
+	rc = ACQUIRE_ERR(mutex_intr, &lock);
+	if (rc)
+		return rc;
+
+> +	if ((rc = ACQUIRE_ERR(mutex_intr, &lock)))
+>  		return rc;
+>  
+>  	po = mds->poison.list_out;
+> @@ -1437,7 +1437,6 @@ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+>  		}
+>  	} while (po->flags & CXL_POISON_FLAG_MORE);
+>  
+> -	mutex_unlock(&mds->poison.lock);
+>  	return rc;
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_mem_get_poison, "CXL");
+> @@ -1473,7 +1472,7 @@ int cxl_poison_state_init(struct cxl_memdev_state *mds)
+>  		return rc;
+>  	}
+>  
+> -	mutex_init(&mds->poison.lock);
+> +	mutex_init(&mds->poison.mutex);
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_poison_state_init, "CXL");
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index 551b0ba2caa1..f5b20641e57c 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -254,7 +254,7 @@ enum security_cmd_enabled_bits {
+>   * @max_errors: Maximum media error records held in device cache
+>   * @enabled_cmds: All poison commands enabled in the CEL
+>   * @list_out: The poison list payload returned by device
+> - * @lock: Protect reads of the poison list
+> + * @mutex: Protect reads of the poison list
+>   *
+>   * Reads of the poison list are synchronized to ensure that a reader
+>   * does not get an incomplete list because their request overlapped
+> @@ -265,7 +265,7 @@ struct cxl_poison_state {
+>  	u32 max_errors;
+>  	DECLARE_BITMAP(enabled_cmds, CXL_POISON_ENABLED_MAX);
+>  	struct cxl_mbox_poison_out *list_out;
+> -	struct mutex lock;  /* Protect reads of poison list */
+> +	struct mutex mutex;  /* Protect reads of poison list */
+>  };
+>  
+>  /*
 
