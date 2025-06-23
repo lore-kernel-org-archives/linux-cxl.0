@@ -1,115 +1,349 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C886AD51;
-	Mon, 23 Jun 2025 09:27:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B77031FBEBD;
+	Mon, 23 Jun 2025 09:43:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750670856; cv=none; b=DKlgXi1TJs+cIae6qn8oMVVsALbVplvkzxnkHhIo2q07j7NOncWzlOxXDOULblMulFVTvDwJKErg2Lpd93aVEolx84wh/W0ZOkHJDEUKr4XhqB+cK5KgUdr6vf7Ay5vI+aVHfyfrNjmGsanHfcYT4Brs4U/7DMq+d5xgTByfqcI=
+	t=1750671790; cv=none; b=sRhTHOJtqZl/llnUc941i7hLY/+bpmzODwcqlwR5Ko70cBDVznXtUlshRU57nvH9vOYggM2HM4YaBBxRa18YoHD2GS5ILIxWhFuVAY6kC4aEF/6wvdOwws2hIWikTfeC7GGwH01QYMRlxiu4bggDh8uYsXmXFjfbjXugXBbKwBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750670856; c=relaxed/simple;
-	bh=q7oJSYwirHOOEYci9Vsvx/PmgyNKO2aIYxM5EObmOXw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tnF6T446Vvq07QfK9yCXrVMCnOpuk+p88oR7iAuv6rObr3OBgk9Y77lc6R6zVxhzUCzScQD4tZ9NsBLCupOXtCGM7xiwiyaCVpLu04ufkMlN4drsxyVckrw/CGBHon7gewE+X3JJHZFHoHDy+OYFEBeuGkmUB++17qdOGy6akFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ESdAMab6; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ESdAMab6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E27AC4CEEA;
-	Mon, 23 Jun 2025 09:27:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1750670855;
-	bh=q7oJSYwirHOOEYci9Vsvx/PmgyNKO2aIYxM5EObmOXw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ESdAMab6d81Q7RX3glu6wx3ZVAyvGuwGx2KY6WmdSSL8+XN1BsnMjO2aoYzE2lJVR
-	 ovIRp100yEvaP4BmfymeewpZ3CzCyIEQOmeZOWJOBo5SV+snCnawcHDRp3jvrOWUlq
-	 D1Vi/z0hA0EN7pKwY86DHDDBEg4AsxxnDUHItF3k=
-Date: Mon, 23 Jun 2025 11:27:33 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Pranav Tyagi <pranav.tyagi03@gmail.com>
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, dan.j.williams@intel.com, ming.li@zohomail.com,
-	rrichter@amd.com, jeff.johnson@oss.qualcomm.com,
-	peterz@infradead.org, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev
-Subject: Re: [PATCH] cxl/port: automate cleanup with __free()
-Message-ID: <2025062343-brilliant-laziness-e2cf@gregkh>
-References: <20250623091929.366357-1-pranav.tyagi03@gmail.com>
+	s=arc-20240116; t=1750671790; c=relaxed/simple;
+	bh=kMlmjHwx3oiFn5F7q3Vxcu7mVmKsw4P94pgJNSLCTaQ=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mzd3vno+aPrDIo1lXfsvJ7KH8YZ3kSHHl4HSGcHrqzTPm/rOdy8pYOhq02AWGcSZ8q0pAF/dUbahJ3MunYmgOUh2sRWVjTYSaCpmTqbBcYMk8d20ggVnZBsrbaa6jQPQqVxUMnPd66uhX+kSziKbI4BScooQJrTB1jG+up1aeYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bQjgP0698z6L5dQ;
+	Mon, 23 Jun 2025 17:38:09 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id B89FE140446;
+	Mon, 23 Jun 2025 17:43:04 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 23 Jun
+ 2025 11:43:03 +0200
+Date: Mon, 23 Jun 2025 10:43:02 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Neeraj Kumar <s.neeraj@samsung.com>
+CC: <dan.j.williams@intel.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <a.manzanares@samsung.com>, <nifan.cxl@gmail.com>,
+	<anisa.su@samsung.com>, <vishak.g@samsung.com>, <krish.reddy@samsung.com>,
+	<arun.george@samsung.com>, <alok.rathore@samsung.com>,
+	<neeraj.kernel@gmail.com>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+	<gost.dev@samsung.com>, <cpgs@samsung.com>
+Subject: Re: [RFC PATCH 14/20] cxl/region: Add cxl pmem region creation
+ routine for region persistency
+Message-ID: <20250623104302.00004405@huawei.com>
+In-Reply-To: <1691538257.61750165382463.JavaMail.epsvc@epcpadp2new>
+References: <20250617123944.78345-1-s.neeraj@samsung.com>
+	<CGME20250617124046epcas5p16a45d2afe3b41ca08994a5cca09bfb68@epcas5p1.samsung.com>
+	<1691538257.61750165382463.JavaMail.epsvc@epcpadp2new>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250623091929.366357-1-pranav.tyagi03@gmail.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Mon, Jun 23, 2025 at 02:49:29PM +0530, Pranav Tyagi wrote:
-> Use the scope based resource management (defined in linux/cleanup.h) to
-> automate the lifetime control of struct cxl_endpoint_decoder. This
-> eliminates the explicit kfree() call and makes the code more robust and
-> maintainable in presence of early returns.
+On Tue, 17 Jun 2025 18:09:38 +0530
+Neeraj Kumar <s.neeraj@samsung.com> wrote:
+
+> Added exported cxl_create_pmem_region routine to create cxl pmem region
+
+For function names always add () after and drop 'function/routine' etc.
+Ends up shorter and easier to read.
+
+> from LSA parsed cxl region information.
+> Inspirition for the function is taken from ndctl device attribute
+> (_store) call. It allocates cxlr and fills information parsed from LSA
+> and calls device_add(&cxlr->dev) to initiates further region creation
+> porbes
+Spell check.
+
 > 
-> Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
+> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
 > ---
->  drivers/cxl/core/port.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>  drivers/cxl/core/port.c   |   6 ++
+>  drivers/cxl/core/region.c | 208 ++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/cxl.h         |  11 ++
+>  3 files changed, 225 insertions(+)
 > 
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index eb46c6764d20..c35946882b20 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -10,6 +10,7 @@
->  #include <linux/slab.h>
->  #include <linux/idr.h>
->  #include <linux/node.h>
-> +#include <linux/cleanup.h>
->  #include <cxl/einj.h>
->  #include <cxlmem.h>
->  #include <cxlpci.h>
-> @@ -1888,14 +1889,14 @@ EXPORT_SYMBOL_NS_GPL(cxl_switch_decoder_alloc, "CXL");
->   */
->  struct cxl_endpoint_decoder *cxl_endpoint_decoder_alloc(struct cxl_port *port)
+
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index b98b1ccffd1c..8990e3c3474d 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -2522,6 +2522,214 @@ static ssize_t create_ram_region_show(struct device *dev,
+>  	return __create_region_show(to_cxl_root_decoder(dev), buf);
+>  }
+>  
+> +static ssize_t update_region_size(struct cxl_region *cxlr, u64 val)
+> +{
+> +	int rc;
+> +
+> +	rc = down_write_killable(&cxl_region_rwsem);
+ACQUIRE() as mentioned below.
+
+> +	if (rc)
+> +		return rc;
+> +
+> +	if (val)
+> +		rc = alloc_hpa(cxlr, val);
+> +	else
+> +		rc = free_hpa(cxlr);
+> +	up_write(&cxl_region_rwsem);
+> +
+> +	if (rc)
+> +		return rc;
+
+	return rc;
+
+> +
+> +	return 0;
+> +}
+> +
+> +static ssize_t update_region_dpa_size(struct cxl_region *cxlr,
+> +		struct cxl_decoder *cxld,
+> +		unsigned long long size)
+> +{
+> +	int rc;
+> +	struct cxl_endpoint_decoder *cxled =
+> +		to_cxl_endpoint_decoder(&cxld->dev);
+> +
+> +	if (!IS_ALIGNED(size, SZ_256M))
+> +		return -EINVAL;
+> +
+> +	rc = cxl_dpa_free(cxled);
+> +	if (rc)
+> +		return rc;
+> +
+> +	if (size == 0)
+> +		return 0;
+> +
+> +	rc = cxl_dpa_alloc(cxled, size);
+return cxl_dpa_alloc()
+
+Unless something more is getting added here in later patches in which case
+you can ignore this comment.
+
+> +	if (rc)
+> +		return rc;
+> +
+> +	return 0;
+> +}
+> +
+> +static ssize_t update_region_dpa_mode(struct cxl_region *cxlr,
+> +		struct cxl_decoder *cxld)
+> +{
+> +	int rc;
+> +	struct cxl_endpoint_decoder *cxled =
+> +		to_cxl_endpoint_decoder(&cxld->dev);
+Maybe don't bother with local variable and just put this
+below as the parameter.
+> +
+> +	rc = cxl_dpa_set_mode(cxled, CXL_DECODER_PMEM);
+
+return cxl_dpa_set_mode()
+
+> +	if (rc)
+> +		return rc;
+> +
+> +	return 0;
+> +}
+> +
+> +static size_t attach_region_target(struct cxl_region *cxlr,
+> +		struct cxl_decoder *cxld, int pos)
+> +{
+> +	int rc;
+> +	struct cxl_endpoint_decoder *cxled =
+> +		to_cxl_endpoint_decoder(&cxld->dev);
+> +
+> +	rc = attach_target(cxlr, cxled, pos, TASK_INTERRUPTIBLE);
+> +
+No blank line here
+> +	if (rc < 0)
+Can it ever be > 0 ?
+If not, return attach_target() should be fine.
+> +		return rc;
+> +
+> +	return 0;
+> +}
+> +
+> +static ssize_t commit_region(struct cxl_region *cxlr)
+> +{
+> +	struct cxl_region_params *p = &cxlr->params;
+> +	ssize_t rc;
+> +
+> +	rc = down_write_killable(&cxl_region_rwsem);
+
+Maybe look at Dan's new ACQUIRE() series. The last patch in there
+is targeting code similar to this.
+
+> +	if (rc)
+> +		return rc;
+> +
+> +	/* Already in the requested state? */
+> +	if (p->state >= CXL_CONFIG_COMMIT)
+> +		goto out;
+> +
+> +	/* Not ready to commit? */
+> +	if (p->state < CXL_CONFIG_ACTIVE) {
+> +		rc = -ENXIO;
+> +		goto out;
+> +	}
+> +
+> +	/*
+> +	 * Invalidate caches before region setup to drop any speculative
+> +	 * consumption of this address space
+> +	 */
+> +	rc = cxl_region_invalidate_memregion(cxlr);
+> +	if (rc)
+> +		goto out;
+> +
+> +	rc = cxl_region_decode_commit(cxlr);
+> +	if (rc == 0)
+With AQUIRE() stuff you can just  do
+	if (rc)
+		return rc;
+
+here
+
+> +		p->state = CXL_CONFIG_COMMIT;
+> +out:
+> +	up_write(&cxl_region_rwsem);
+> +	if (rc)
+> +		return rc;
+> +	return 0;
+> +}
+> +
+> +static struct cxl_region *
+> +devm_cxl_pmem_add_region(struct cxl_root_decoder *cxlrd,
+> +		struct cxl_decoder *cxld,
+> +		struct cxl_pmem_region_params *params, int id,
+> +		enum cxl_decoder_mode mode, enum cxl_decoder_type type)
+> +{
+> +	struct cxl_port *port;
+> +	struct cxl_region *cxlr;
+> +	struct cxl_region_params *p;
+> +	struct device *dev;
+> +	int rc;
+> +
+> +	if (!cxlrd)
+> +		return ERR_PTR(-EINVAL);
+
+For a check like this, add a comment on why it might be NULL.
+If it can't be, then drop the check.
+
+> +
+> +	port = to_cxl_port(cxlrd->cxlsd.cxld.dev.parent);
+
+Maybe add a comment on which port this actually is.  These long indirections
+can make that hard to figure out!
+
+> +
+> +	cxlr = cxl_region_alloc(cxlrd, id);
+> +	if (IS_ERR(cxlr))
+> +		return cxlr;
+> +	cxlr->mode = mode;
+> +	cxlr->type = type;
+> +
+> +	dev = &cxlr->dev;
+> +	rc = dev_set_name(dev, "region%d", id);
+> +	if (rc)
+> +		goto err;
+> +
+> +	p = &cxlr->params;
+> +	p->uuid = params->uuid;
+> +	p->interleave_ways = params->nlabel;
+> +	p->interleave_granularity = params->ig;
+> +
+> +	/* Update region size */
+> +	if (update_region_size(cxlr, params->rawsize))
+> +		goto err;
+> +
+> +	/* Flush cxl wq */
+
+Much more useful to say 'why' you are flushing it.  It's obvious
+from the code that you are.
+
+> +	cxl_wq_flush();
+> +
+> +	/* Clear DPA Size */
+
+I'd look at all these comments and where they are obvious, drop the comment
+and let the code speak for itself.
+
+> +	if (update_region_dpa_size(cxlr, cxld, 0))
+> +		goto err;
+> +
+> +	/* Update DPA mode */
+> +	if (update_region_dpa_mode(cxlr, cxld))
+> +		goto err;
+> +
+> +	/* Update DPA Size */
+> +	if (update_region_dpa_size(cxlr, cxld, params->rawsize))
+> +		goto err;
+> +
+> +	/* Attach region targets */
+It's attaching just one by the look of it.  I'd just drop the comment.
+
+> +	if (attach_region_target(cxlr, cxld, params->position))
+> +		goto err;
+> +
+> +	/* Commit Region */
+> +	if (commit_region(cxlr))
+> +		goto err;
+> +
+> +	rc = device_add(dev);
+> +	if (rc)
+> +		goto err;
+> +
+> +	rc = devm_add_action_or_reset(port->uport_dev, unregister_region, cxlr);
+> +	if (rc)
+> +		return ERR_PTR(rc);
+> +
+> +	dev_dbg(port->uport_dev, "%s: created %s\n",
+> +		dev_name(&cxlrd->cxlsd.cxld.dev), dev_name(dev));
+> +	return cxlr;
+> +
+> +err:
+> +	put_device(dev);
+> +	return ERR_PTR(rc);
+> +}
+> +
+> +struct cxl_region *cxl_create_pmem_region(struct cxl_root_decoder *cxlrd,
+> +		struct cxl_decoder *cxld,
+> +		struct cxl_pmem_region_params *params, int id)
+> +{
+> +	int rc;
+> +
+> +	rc = memregion_alloc(GFP_KERNEL);
+> +	if (rc < 0)
+> +		return ERR_PTR(rc);
+> +
+> +	if (atomic_cmpxchg(&cxlrd->region_id, id, rc) != id) {
+> +		memregion_free(rc);
+> +		return ERR_PTR(-EBUSY);
+> +	}
+I'm a little surprised not to see cleanup of the memregion via
+devm somewhere here.
+> +
+> +	return devm_cxl_pmem_add_region(cxlrd, cxld, params, id,
+> +			CXL_DECODER_PMEM, CXL_DECODER_HOSTONLYMEM);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_create_pmem_region, "CXL");
+> +
+>  static struct cxl_region *__create_region(struct cxl_root_decoder *cxlrd,
+>  					  enum cxl_decoder_mode mode, int id)
 >  {
-> -	struct cxl_endpoint_decoder *cxled;
->  	struct cxl_decoder *cxld;
->  	int rc;
->  
->  	if (!is_cxl_endpoint(port))
->  		return ERR_PTR(-EINVAL);
->  
-> -	cxled = kzalloc(sizeof(*cxled), GFP_KERNEL);
-> +	struct cxl_endpoint_decoder *cxled __free(kfree) =
-> +		kzalloc(sizeof(*cxled), GFP_KERNEL);
->  	if (!cxled)
->  		return ERR_PTR(-ENOMEM);
->  
-> @@ -1904,7 +1905,6 @@ struct cxl_endpoint_decoder *cxl_endpoint_decoder_alloc(struct cxl_port *port)
->  	cxld = &cxled->cxld;
->  	rc = cxl_decoder_init(port, cxld);
->  	if (rc)	 {
-> -		kfree(cxled);
->  		return ERR_PTR(rc);
->  	}
->  
-> -- 
-> 2.49.0
 
-Note, I can't speak for the maintainers of this subsystem, but
-generally, making changes like this for no real good reason, for code
-that has been around for years, is really not needed at all.
 
-If you fix a bug with it, sure, but changes for the sake of "let's use
-this new feature" in here really might not be necessary.
-
-Why not add cleanup.h support to code paths that actually fix existing
-bugs instead?
-
-Also, you have added some coding style errors to the code now with this
-patch, which also is generally not considered a good idea :)
-
-thanks,
-
-greg k-h
