@@ -1,155 +1,137 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6AC11DDA0C;
-	Mon, 23 Jun 2025 09:17:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8362D20A5EB;
+	Mon, 23 Jun 2025 09:19:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750670267; cv=none; b=TehgrWhqQh6UtcZgTR5xLXidOZcR7Z6ZAC4fDTJ7LTntUeEw5EhUpHVV+9jStrLTFEaP5o6fiBYt9fnydx1aNwOYn9UYafOUrSEKN6GRE4GjQnyG/erCIUtXb89nUGy8CIu50cEsrJgP5900sKJx0fRFuYd1l7gsAEBr10pT1cw=
+	t=1750670382; cv=none; b=tCAErzbT6IR4Ssg4UxwFKDtswvfMUuO23CLw7gZ4tuPdIx8A6h06C7J+2w4P0bqGrPVOjPBbsEEu41AZBYid1Ijh6r4LNL/jHvxPdIkvgQUiWg2C/s96yVFzhGSmb3Z8GeDkGiDjKEXvSBmHtG+9SrCYMlIhav2Ylnrv9vY3UsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750670267; c=relaxed/simple;
-	bh=Lz+4noPkADPzOVza6QdPRsZLH7WjZAqND7jwzSRYIug=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qkedgW+vnxcKqZao8hjTFYPu6saNEu0kN6cQUYZWtUdTHCPTH14+B9MSv9BLdH4B0FikUSjgdk6KEFLWKv94reu5vGuOrYe6Qdx86k+PC23qxZKx1CH1CAtkkoSF5EJ4Ze7VA8QwN2WXTuvAOthG2bCuR3u5WaI/OYUhvgzSCoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bQj90252dz6HJqs;
-	Mon, 23 Jun 2025 17:15:16 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id E5FD81402EF;
-	Mon, 23 Jun 2025 17:17:42 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 23 Jun
- 2025 11:17:42 +0200
-Date: Mon, 23 Jun 2025 10:17:40 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Neeraj Kumar <s.neeraj@samsung.com>
-CC: <dan.j.williams@intel.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>, <a.manzanares@samsung.com>, <nifan.cxl@gmail.com>,
-	<anisa.su@samsung.com>, <vishak.g@samsung.com>, <krish.reddy@samsung.com>,
-	<arun.george@samsung.com>, <alok.rathore@samsung.com>,
-	<neeraj.kernel@gmail.com>, <linux-kernel@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-	<gost.dev@samsung.com>, <cpgs@samsung.com>
-Subject: Re: [RFC PATCH 12/20] nvdimm/namespace_label: Skip region label
- during namespace creation
-Message-ID: <20250623101740.00004840@huawei.com>
-In-Reply-To: <2024918163.301750165206130.JavaMail.epsvc@epcpadp1new>
-References: <20250617123944.78345-1-s.neeraj@samsung.com>
-	<CGME20250617124040epcas5p3be044cbdc5b33b0b8465d84870a5b280@epcas5p3.samsung.com>
-	<2024918163.301750165206130.JavaMail.epsvc@epcpadp1new>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1750670382; c=relaxed/simple;
+	bh=ji/FAgHI92OTK5f23io89QCG5WvGIIeBGOkDnmo9nuY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jZQM/D8n1E9T08kznFn62aB2bfArEt449IYWis2D+pgclkagwNxIOiptOjIKazI4NoW4nl2+H5uUQhUEQ1mcCzVAC+7yubbN5648zwVKELT6oDVXIFU5Z9e5I/KJ0Rqdn7Wbq3KImYmPBiRmOfDS73KBbJ0Tz90pYVB4mVsGajs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aLypZivO; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aLypZivO"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-747fba9f962so2916002b3a.0;
+        Mon, 23 Jun 2025 02:19:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750670381; x=1751275181; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=W4YJw5XPCMvS5//y1Mmde0UI3BPz61gnsXJcsAlcDn4=;
+        b=aLypZivOUPa91pG2I0TFpImeEOfX4BGBt3XZcFTc/mzHF+6LdA616PHLLBa0H8EzHD
+         APsVxV+dYyvRvwfOVKiW9/Dr66rUkgPY2gWQuP9v0ZtJ8KBWNqJmn+GAe1lfLpZ2lYbF
+         ZGws+hoYzadWTZ1s/5NOC/vsbvTjN8D6zuG3/XF+rqSO3k8X0GNhKQF4QRFBg2lkAU8v
+         pWMRzdiQNB7PVIuNRMx7qhkltGonq06TXoX4a8zhHxCvwbY4snawrdmgFTykqcgWrdnQ
+         q87ohJ5zcvZpFx7vdJxrCk/9IwIBGnHLnDCMiuOqYtQ6Q7sBppiL0CthvIcUhZ6kLK51
+         YUCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750670381; x=1751275181;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=W4YJw5XPCMvS5//y1Mmde0UI3BPz61gnsXJcsAlcDn4=;
+        b=iS/MMVwcb9zW1EwGN+Lmq6tpeiQWPOKgVaQzbkLB0NHIPh5RZi20EPqAg9M4QH7cq9
+         QJpQ11uH04ROmD9tq3i/gHUyldckkCtXqHc37PSWMYK6dD+hlLcDgoLErfCoTYhIa6Z0
+         wGh+tnkoazlLsqBLlkHemvoQQQn2GgFNukQOI0CFPp9oadJuiMQcUU71DC0HxUJi+aAv
+         SXCjPipVcYUw6+egIqHD465MkmXMCjDtMoCJMMk7HqtXaA4hqwixy5X00WoclEkGkUVA
+         OX1tDwa0gRADOi9l2gonZH1Si2mD4ZsAAowcKMC+4gO/aIhhr9yB8sqt26btf/3Eigsa
+         i0Pw==
+X-Forwarded-Encrypted: i=1; AJvYcCU9N8bALWimWGxrpN4sYvvX2TdPtez7FOqfB51+5h4F29ojLnY4BIadMPhKXe2sbI42Ft3jTGZN/js=@vger.kernel.org, AJvYcCWSvsrLLHDbyyvSxJ/bGp6JuWZ2yAhtuBM/3ENDAVwalila/+pm5Oy+NKhRkRJ3qKTL8JlOH0IeQw2YXBQq@vger.kernel.org
+X-Gm-Message-State: AOJu0YxL9nfd0/O/WzQWcTzISrrEtcu/iJbTbLf8HhOtvWe48WrGC2VV
+	/M11m/e1ERa7croMROU5aGWK0T/bYOr5CJdihmWQ2FdQMYYX3UP7A+5V
+X-Gm-Gg: ASbGncuR+a6c3r/nuwNBrdGZ9d+BJizFypi1xOxQq13vyid5Eh0K3izmYaiINvDCTZ0
+	qM8dEH0Q5PDspHRDUVP+s3M7neZL2uSCdvvkncQeFO9QdGm2HzIOgqrgQGySVbK5wXgwj9ugFKW
+	iWVayieRR0mcakvNMYDyAPkaicRn8mkeVPjONRoehSDVZNYW2wgLZDQ1KCQra+uD0vwXQ+FtgtP
+	w0hIL1pvZXHV0NkHBEG5F+VvRooqhIvF+yM5kgevvdVSNbdDOLOo9HrYgC31Mag5H2l7PxN7S9r
+	3OB0Pv0t+AJzTX61BvszRWxBdyCiIq48MKlH7kIi+qiI0OYXu+XscdxCENJRswHuwBiu8ihl9Jx
+	PdYTyCuM=
+X-Google-Smtp-Source: AGHT+IH9RLIYNgOIHeCndHNhloZ7mp+IiMwxQJdW8lE1NhoYyXy7rgsiZiOa8Fo2+Ilx9+DVNMOxdA==
+X-Received: by 2002:a05:6a00:cd4:b0:742:ae7e:7da1 with SMTP id d2e1a72fcca58-7490f287c44mr14578637b3a.0.1750670380544;
+        Mon, 23 Jun 2025 02:19:40 -0700 (PDT)
+Received: from manjaro.domain.name ([2401:4900:1c66:8091:47dd:9377:3ab1:4e4c])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7490a6bd5bbsm7773093b3a.168.2025.06.23.02.19.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 02:19:40 -0700 (PDT)
+From: Pranav Tyagi <pranav.tyagi03@gmail.com>
+To: dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com
+Cc: ming.li@zohomail.com,
+	rrichter@amd.com,
+	jeff.johnson@oss.qualcomm.com,
+	peterz@infradead.org,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev,
+	Pranav Tyagi <pranav.tyagi03@gmail.com>
+Subject: [PATCH] cxl/port: automate cleanup with __free()
+Date: Mon, 23 Jun 2025 14:49:29 +0530
+Message-ID: <20250623091929.366357-1-pranav.tyagi03@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Transfer-Encoding: 8bit
 
-On Tue, 17 Jun 2025 18:09:36 +0530
-Neeraj Kumar <s.neeraj@samsung.com> wrote:
+Use the scope based resource management (defined in linux/cleanup.h) to
+automate the lifetime control of struct cxl_endpoint_decoder. This
+eliminates the explicit kfree() call and makes the code more robust and
+maintainable in presence of early returns.
 
-> During namespace creation skip presence of region label if present.
-> Also preserve region label into labels list if present.
-> 
-> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
-> ---
->  drivers/nvdimm/namespace_devs.c | 48 +++++++++++++++++++++++++++++----
->  1 file changed, 43 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
-> index b081661b7aaa..ca8f8546170c 100644
-> --- a/drivers/nvdimm/namespace_devs.c
-> +++ b/drivers/nvdimm/namespace_devs.c
-> @@ -1976,6 +1976,10 @@ static struct device **scan_labels(struct nd_region *nd_region)
->  		if (!nd_label)
->  			continue;
->  
-> +		/* skip region labels if present */
-> +		if (is_region_label(ndd, nd_label))
-> +			continue;
-> +
->  		/* skip labels that describe extents outside of the region */
->  		if (nsl_get_dpa(ndd, &nd_label->ns_label) < nd_mapping->start ||
->  		    nsl_get_dpa(ndd, &nd_label->ns_label) > map_end)
-> @@ -2014,9 +2018,29 @@ static struct device **scan_labels(struct nd_region *nd_region)
->  
->  	if (count == 0) {
->  		struct nd_namespace_pmem *nspm;
-> +		for (i = 0; i < nd_region->ndr_mappings; i++) {
-> +			struct nd_label_ent *le, *e;
-> +			LIST_HEAD(list);
->  
-> -		/* Publish a zero-sized namespace for userspace to configure. */
-> -		nd_mapping_free_labels(nd_mapping);
-> +			nd_mapping = &nd_region->mapping[i];
-> +			if (list_empty(&nd_mapping->labels))
-> +				continue;
-> +
-> +			list_for_each_entry_safe(le, e, &nd_mapping->labels,
-> +						 list) {
-> +				struct nd_lsa_label *nd_label = le->label;
-> +
-> +				/* preserve region labels if present */
-> +				if (is_region_label(ndd, nd_label))
-> +					list_move_tail(&le->list, &list);
-> +			}
-> +
-> +			/* Publish a zero-sized namespace for userspace
+Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
+---
+ drivers/cxl/core/port.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Comment syntax as before looks to be inconsistent with file.
-
-> +			 * to configure.
-> +			 */
-> +			nd_mapping_free_labels(nd_mapping);
-> +			list_splice_init(&list, &nd_mapping->labels);
-> +		}
->  		nspm = kzalloc(sizeof(*nspm), GFP_KERNEL);
->  		if (!nspm)
->  			goto err;
-> @@ -2028,7 +2052,7 @@ static struct device **scan_labels(struct nd_region *nd_region)
->  	} else if (is_memory(&nd_region->dev)) {
->  		/* clean unselected labels */
->  		for (i = 0; i < nd_region->ndr_mappings; i++) {
-> -			struct list_head *l, *e;
-> +			struct nd_label_ent *le, *e;
->  			LIST_HEAD(list);
->  			int j;
->  
-> @@ -2039,10 +2063,24 @@ static struct device **scan_labels(struct nd_region *nd_region)
->  			}
->  
->  			j = count;
-> -			list_for_each_safe(l, e, &nd_mapping->labels) {
-> +			list_for_each_entry_safe(le, e, &nd_mapping->labels,
-> +						 list) {
-> +				struct nd_lsa_label *nd_label = le->label;
-> +
-> +				/* preserve region labels */
-> +				if (is_region_label(ndd, nd_label)) {
-> +					list_move_tail(&le->list, &list);
-> +					continue;
-> +				}
-> +
-> +				/* Once preserving selected ns label done
-Comment syntax.
-> +				 * break out of loop
-> +				 */
->  				if (!j--)
->  					break;
-> -				list_move_tail(l, &list);
-> +
-> +				/* preserve selected ns label */
-> +				list_move_tail(&le->list, &list);
->  			}
->  			nd_mapping_free_labels(nd_mapping);
->  			list_splice_init(&list, &nd_mapping->labels);
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index eb46c6764d20..c35946882b20 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -10,6 +10,7 @@
+ #include <linux/slab.h>
+ #include <linux/idr.h>
+ #include <linux/node.h>
++#include <linux/cleanup.h>
+ #include <cxl/einj.h>
+ #include <cxlmem.h>
+ #include <cxlpci.h>
+@@ -1888,14 +1889,14 @@ EXPORT_SYMBOL_NS_GPL(cxl_switch_decoder_alloc, "CXL");
+  */
+ struct cxl_endpoint_decoder *cxl_endpoint_decoder_alloc(struct cxl_port *port)
+ {
+-	struct cxl_endpoint_decoder *cxled;
+ 	struct cxl_decoder *cxld;
+ 	int rc;
+ 
+ 	if (!is_cxl_endpoint(port))
+ 		return ERR_PTR(-EINVAL);
+ 
+-	cxled = kzalloc(sizeof(*cxled), GFP_KERNEL);
++	struct cxl_endpoint_decoder *cxled __free(kfree) =
++		kzalloc(sizeof(*cxled), GFP_KERNEL);
+ 	if (!cxled)
+ 		return ERR_PTR(-ENOMEM);
+ 
+@@ -1904,7 +1905,6 @@ struct cxl_endpoint_decoder *cxl_endpoint_decoder_alloc(struct cxl_port *port)
+ 	cxld = &cxled->cxld;
+ 	rc = cxl_decoder_init(port, cxld);
+ 	if (rc)	 {
+-		kfree(cxled);
+ 		return ERR_PTR(rc);
+ 	}
+ 
+-- 
+2.49.0
 
