@@ -1,522 +1,242 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF5B322FF37;
-	Mon, 23 Jun 2025 09:57:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F32241682
+	for <linux-cxl@vger.kernel.org>; Mon, 23 Jun 2025 10:00:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750672672; cv=none; b=dR0Pu9D1K9GWQ+91+k/m3qkWqqFaDm+2op1nPiXDDdFr+vu1aYa34e8cwTZ9y8lDjX3YrbdwuZW2z07fLYim/6ZCaHtV7/u4/hwkUWvD3EvJcVNnAe75fplaMQ5ZXVXZEuVlpCwxlcl/i2uBlqQZsuMBNN4R+B2iSaD1ZjYEQHg=
+	t=1750672837; cv=none; b=bzGpk9NwrGXny8a889IQqaLjb8+fQBJzjSFJYlPieRUxz6dMzdzvHZbbI0vst9aPOyj9gmu1KvYZxYWyecZwfKS5MEt0VozVX7UgoPrwLvqpn8cIy6IjAVOQlWLOkn6UdsLkfabLoI81sK78bo1uqFUiVNgn+Ym2xw5lcIwTVjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750672672; c=relaxed/simple;
-	bh=NsDz0dmPDAlE8/200yhTH0sPFz9rB7VBA8i7dkXdVGw=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Z8VtiXWcSUU3v53VB9Kd5aYN4tkGo1uAjv51BU9BgdXKOKIEFNkz1YtZyZ2c7QYhj09EtjfCeKYTbg/885+5iZwRfUr5JO3gX7mgC5AUmvlvDd1Yw0qDWc6m5YMXGASiX+6YcrQ4bP0QeyFlfp4AiA1AYvFiZNyF/ZBXjsTZBnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bQk0M2jf2z6L5Hr;
-	Mon, 23 Jun 2025 17:52:51 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 274311402F4;
-	Mon, 23 Jun 2025 17:57:47 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 23 Jun
- 2025 11:57:46 +0200
-Date: Mon, 23 Jun 2025 10:57:44 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Neeraj Kumar <s.neeraj@samsung.com>
-CC: <dan.j.williams@intel.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>, <a.manzanares@samsung.com>, <nifan.cxl@gmail.com>,
-	<anisa.su@samsung.com>, <vishak.g@samsung.com>, <krish.reddy@samsung.com>,
-	<arun.george@samsung.com>, <alok.rathore@samsung.com>,
-	<neeraj.kernel@gmail.com>, <linux-kernel@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-	<gost.dev@samsung.com>, <cpgs@samsung.com>
-Subject: Re: [RFC PATCH 00/20] Add CXL LSA 2.1 format support in nvdimm and
- cxl pmem
-Message-ID: <20250623105744.0000491e@huawei.com>
-In-Reply-To: <20250617180723.00002d13@huawei.com>
-References: <CGME20250617123958epcas5p3a9f00c6a63ddb140714e3d37463ff00e@epcas5p3.samsung.com>
-	<1931444790.41750165203442.JavaMail.epsvc@epcpadp1new>
-	<20250617180723.00002d13@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1750672837; c=relaxed/simple;
+	bh=zlA09CkuzwuxG1/Gu9Ktwimz0F8ULxZBegIPH75q2G4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=graisA8PM0E1v0WpcHPyLCtDx+bj7HFSYCX3k5+DOMuNr3MlybbXiB5tMF+Rpj8qNtNIcriE4QLxceeLV9ApH2mqCdFJY60yjGjjOWKPdKu9J9yM5S633bPbqXJPXaK/JIj3SqInuZHIBaZguUmXyt4MImNVxaqkI7uWM4Jl1aw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kjlUyxJS; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kjlUyxJS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750672835; x=1782208835;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=zlA09CkuzwuxG1/Gu9Ktwimz0F8ULxZBegIPH75q2G4=;
+  b=kjlUyxJSM16VQ/Kypp0RwHOuGVZZVWIF20MGRy0HHr3zpnRJaThvCP0h
+   EPs2ASJ9xqaRwas2euhGYKMpfxpRz8Zn+a1yJQO6GDdmup0NPlAkfg+Hy
+   51I4iDLIQa3SKqEJazW0Sux9XFxg2NvYHBY6Rub3jG0g2c7hyqxaK9+U8
+   zUWMmAA7EWP2eE4N/VFEgPR2JHjoqmU7nzjmuQDgzOcSlKOS9Wp52F46P
+   Or9smUcq2urPgvVgPsfW/xC48NxH25AC1Hr+dPyU88YZ9oJTHHSLHYN0q
+   dQhG8Vxo3iUnj/df1e6h4s2E3CpYSESrwTbXKrGXxO1DJ4V9/5y3bP2kf
+   A==;
+X-CSE-ConnectionGUID: pyeEQdyWQS6qT8bIPXSVog==
+X-CSE-MsgGUID: 35X4e4yfSeKOsCK0Xz5x3g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11472"; a="64227958"
+X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
+   d="scan'208";a="64227958"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 03:00:34 -0700
+X-CSE-ConnectionGUID: WcSJC7DXSzWzJpCzC+jkWQ==
+X-CSE-MsgGUID: ecUkFxIJTY2WhQf9vy2dkA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
+   d="scan'208";a="151023820"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 23 Jun 2025 03:00:32 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uTdyX-000NvY-0u;
+	Mon, 23 Jun 2025 10:00:29 +0000
+Date: Mon, 23 Jun 2025 18:00:05 +0800
+From: kernel test robot <lkp@intel.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Subject: [cxl:for-6.17/cxl-acquire 1/8]
+ kernel/trace/trace_events_synth.c:1295:12: warning: stack frame size (1040)
+ exceeds limit (1024) in '__create_synth_event'
+Message-ID: <202506231745.lcWYDSWD-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Tue, 17 Jun 2025 18:07:23 +0100
-Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git for-6.17/cxl-acquire
+head:   6c90a41a7833a6bb2fb17b9f3cafda66ebdf259b
+commit: 41e8737fed161ee0cfc9692d8eff881440ef4b10 [1/8] cleanup: Introduce ACQUIRE() and ACQUIRE_ERR() for conditional locks
+config: riscv-allyesconfig (https://download.01.org/0day-ci/archive/20250623/202506231745.lcWYDSWD-lkp@intel.com/config)
+compiler: clang version 16.0.6 (https://github.com/llvm/llvm-project 7cbf1a2591520c2491aa35339f227775f4d3adf6)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250623/202506231745.lcWYDSWD-lkp@intel.com/reproduce)
 
-> On Tue, 17 Jun 2025 18:09:24 +0530
-> Neeraj Kumar <s.neeraj@samsung.com> wrote:
->=20
-> Hi Neeraj,
->=20
-> First a process thing. Looks like threading is broken in your patch set.
-> https://lore.kernel.org/linux-cxl/1931444790.41750165203442.JavaMail.epsv=
-c@epcpadp1new/T/#u
-> Lore had a go and seems to have figured out there is a thread for the res=
-t.
-> If you can't fix it locally for your email, look at using the b4 gateway
-> (see the docs for the b4 tool)
->=20
-> https://git.kernel.org/pub/scm/linux/kernel/git/palmer/b4.git/
->=20
-> Also, in an RFC the first thing I expect to see if a 'Why this is an RFC =
-statement'
-> vs ready for upstream merge.  What are the questions that need comments or
-> the blockers you know need to be resolved?
->=20
-> Anyhow, good to see this. Not an area I'm that familiar with but
-> I'll try to take a detailed look a bit later this week.
->=20
-Whilst I've looked through this series, most of my comments are superficial=
- 'local'
-stuff.  This needs some attention from those more familiar with the persist=
-ent memory
-flows than I am.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506231745.lcWYDSWD-lkp@intel.com/
 
-Jonathan
+All warnings (new ones prefixed by >>):
 
-> Thanks,
->=20
-> Jonathan
->=20
->=20
-> > Introduction:
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > CXL Persistent Memory (Pmem) devices region, namespace and content must=
- be
-> > persistent across system reboot. In order to achieve this persistency, =
-it
-> > uses Label Storage Area (LSA) to store respective metadata. During syst=
-em
-> > reboot, stored metadata in LSA is used to bring back the region, namesp=
-ace
-> > and content of CXL device in its previous state.
-> > CXL specification provides Get_LSA (4102h) and Set_LSA (4103h) mailbox
-> > commands to access the LSA area. nvdimm driver is using same commands to
-> > get/set LSA data.
-> >=20
-> > There are three types of LSA format and these are part of following
-> > specifications:=20
-> >  - v1.1: https://pmem.io/documents/NVDIMM_Namespace_Spec.pdf
-> >  - v1.2: https://uefi.org/sites/default/files/resources/UEFI_Spec_2_7.p=
-df
-> >  - v2.1: https://computeexpresslink.org/wp-content/uploads/2024/02/CXL-=
-2.0-Specification.pdf
-> >=20
-> > Basic differences between these LSA formats:
-> >  - v1.1: Support Namespace persistency. Size of Namespace Label is 128 =
-bytes
-> >  - v1.2: Support Namespace persistency. Size of Namespace Label is 256 =
-bytes
-> >  - v2.1: Support Namespace and Region persistency. Size of Namespace and
-> >    Region Label is 256 bytes.
-> >=20
-> > Linux nvdimm driver supports only v1.1 and v1.2 LSA format. CXL pmem de=
-vice
-> > require support of LSA v2.1 format for region and namespace persistency.
-> > Initial support of LSA 2.1 was add in [1].
-> >=20
-> > This patchset adds support of LSA 2.1 in nvdimm and cxl pmem driver.
-> >=20
-> > Patch 1:     Introduce NDD_CXL_LABEL flag and Update cxl label index as=
- per v2.1
-> > Patch 2-4:   Update namespace label as per v2.1
-> > Patch 5-12:  Introduce cxl region labels and modify existing change acc=
-ordingly
-> > Patch 13:    Refactor cxl pmem region auto assembly
-> > Patch 14-18: Save cxl region info in LSA and region recreation during r=
-eboot
-> > Patch 19:    Segregate out cxl pmem region code from region.c to pmem_r=
-egion.c
-> > Patch 20:    Introduce cxl region addition/deletion attributes
-> >=20
-> >=20
-> > Testing:
-> > =3D=3D=3D=3D=3D=3D=3D=3D
-> > In order to test this patchset, I also added the support of LSA v2.1 fo=
-rmat
-> > in ndctl. ndctl changes are available at [2]. After review, I=E2=80=99l=
-l push in
-> > ndctl repo for community review.
-> >=20
-> > 1. Used Qemu using following CXL topology
-> >    M2=3D"-object memory-backend-file,id=3Dcxl-mem1,share=3Don,mem-path=
-=3D$TMP_DIR/cxltest.raw,size=3D512M \
-> >        -object memory-backend-file,id=3Dcxl-lsa1,share=3Don,mem-path=3D=
-$TMP_DIR/lsa.raw,size=3D1M \
-> >        -object memory-backend-file,id=3Dcxl-mem2,share=3Don,mem-path=3D=
-$TMP_DIR/cxltest2.raw,size=3D512M \
-> >        -object memory-backend-file,id=3Dcxl-lsa2,share=3Don,mem-path=3D=
-$TMP_DIR/lsa2.raw,size=3D1M \
-> >        -device pxb-cxl,bus_nr=3D10,bus=3Dpcie.0,id=3Dcxl.1 \
-> >        -device cxl-rp,port=3D1,bus=3Dcxl.1,id=3Droot_port11,chassis=3D0=
-,slot=3D1 \
-> >        -device cxl-type3,bus=3Droot_port11,memdev=3Dcxl-mem1,lsa=3Dcxl-=
-lsa1,id=3Dcxl-pmem1,sn=3D1 \
-> >        -device cxl-rp,port=3D2,bus=3Dcxl.1,id=3Droot_port12,chassis=3D0=
-,slot=3D2 \
-> >        -device cxl-type3,bus=3Droot_port12,memdev=3Dcxl-mem2,lsa=3Dcxl-=
-lsa2,id=3Dcxl-pmem2,sn=3D2 \
-> >        -M cxl-fmw.0.targets.0=3Dcxl.1,cxl-fmw.0.size=3D4G,cxl-fmw.0.int=
-erleave-granularity=3D8k"
-> >=20
-> > 2. Create cxl region on both devices
-> > 	cxl create-region -d decoder0.0 -m mem0
-> > 	cxl create-region -d decoder0.0 -m mem1
-> >=20
-> > 	root@QEMUCXL6060pmem:~# cxl list
-> > 	[
-> > 	  {
-> > 	    "memdevs":[
-> > 	      {
-> > 	        "memdev":"mem0",
-> > 	        "pmem_size":536870912,
-> > 	        "serial":2,
-> > 	        "host":"0000:0c:00.0",
-> > 	        "firmware_version":"BWFW VERSION 00"
-> > 	      },
-> > 	      {
-> > 	        "memdev":"mem1",
-> > 	        "pmem_size":536870912,
-> > 	        "serial":1,
-> > 	        "host":"0000:0b:00.0",
-> > 	        "firmware_version":"BWFW VERSION 00"
-> > 	      }
-> > 	    ]
-> > 	  },
-> > 	  {
-> > 	    "regions":[
-> > 	      {
-> > 	        "region":"region0",
-> > 	        "resource":45365592064,
-> > 	        "size":536870912,
-> > 	        "type":"pmem",
-> > 	        "interleave_ways":1,
-> > 	        "interleave_granularity":256,
-> > 	        "decode_state":"commit",
-> > 	        "qos_class_mismatch":true
-> > 	      },
-> > 	      {
-> > 	        "region":"region1",
-> > 	        "resource":45902462976,
-> > 	        "size":536870912,
-> > 	        "type":"pmem",
-> > 	        "interleave_ways":1,
-> > 	        "interleave_granularity":256,
-> > 	        "decode_state":"commit",
-> > 	        "qos_class_mismatch":true
-> > 	      }
-> > 	    ]
-> > 	  }
-> > 	]
-> >=20
-> > 3. Re-Start Qemu and we could see cxl region persistency using "cxl lis=
-t"
-> >=20
-> > 4. Create namespace for both regions
-> > 	root@QEMUCXL6060pmem:~# ndctl create-namespace --mode=3Dfsdax --region=
-=3Dregion0 --size=3D128M
-> > 	{
-> > 	  "dev":"namespace0.0",
-> > 	  "mode":"fsdax",
-> > 	  "map":"dev",
-> > 	  "size":"124.00 MiB (130.02 MB)",
-> > 	  "uuid":"3f6dcdc5-d289-4b0c-ad16-82636c82bec1",
-> > 	  "sector_size":512,
-> > 	  "align":2097152,
-> > 	  "blockdev":"pmem0"
-> > 	}
-> > =09
-> > 	root@QEMUCXL6060pmem:~# ndctl create-namespace --mode=3Dfsdax --region=
-=3Dregion1 --size=3D256M
-> > 	{
-> > 	  "dev":"namespace1.0",
-> > 	  "mode":"fsdax",
-> > 	  "map":"dev",
-> > 	  "size":"250.00 MiB (262.14 MB)",
-> > 	  "uuid":"6b9083c9-cb1a-447b-894d-fdfd2f3dbed2",
-> > 	  "sector_size":512,
-> > 	  "align":2097152,
-> > 	  "blockdev":"pmem1"
-> > 	}
-> > =09
-> > 	root@QEMUCXL6060pmem:~# time ndctl create-namespace --mode=3Dfsdax --r=
-egion=3Dregion0 --size=3D256M
-> > 	{
-> > 	  "dev":"namespace0.1",
-> > 	  "mode":"fsdax",
-> > 	  "map":"dev",
-> > 	  "size":"250.00 MiB (262.14 MB)",
-> > 	  "uuid":"c2071802-8c24-4f9c-a6c1-f6bb6589e561",
-> > 	  "sector_size":512,
-> > 	  "align":2097152,
-> > 	  "blockdev":"pmem0.1"
-> > 	}
-> > =09
-> > 	real    0m47.517s
-> > 	user    0m0.209s
-> > 	sys     0m26.879s
-> > 	root@QEMUCXL6060pmem:~# time ndctl create-namespace --mode=3Dfsdax --r=
-egion=3Dregion1 --size=3D128M
-> > 	{
-> > 	  "dev":"namespace1.1",
-> > 	  "mode":"fsdax",
-> > 	  "map":"dev",
-> > 	  "size":"124.00 MiB (130.02 MB)",
-> > 	  "uuid":"13bc8de3-53d3-4c3d-b252-be7efefe80ee",
-> > 	  "sector_size":512,
-> > 	  "align":2097152,
-> > 	  "blockdev":"pmem1.1"
-> > 	}
-> > =09
-> > 	real    0m33.459s
-> > 	user    0m0.243s
-> > 	sys     0m13.590s
-> >=20
-> > 	root@QEMUCXL6060pmem:~# ndctl list
-> > 	[
-> > 	  {
-> > 	    "dev":"namespace1.0",
-> > 	    "mode":"fsdax",
-> > 	    "map":"dev",
-> > 	    "size":262144000,
-> > 	    "uuid":"6b9083c9-cb1a-447b-894d-fdfd2f3dbed2",
-> > 	    "sector_size":512,
-> > 	    "align":2097152,
-> > 	    "blockdev":"pmem1"
-> > 	  },
-> > 	  {
-> > 	    "dev":"namespace1.1",
-> > 	    "mode":"fsdax",
-> > 	    "map":"dev",
-> > 	    "size":130023424,
-> > 	    "uuid":"13bc8de3-53d3-4c3d-b252-be7efefe80ee",
-> > 	    "sector_size":512,
-> > 	    "align":2097152,
-> > 	    "blockdev":"pmem1.1"
-> > 	  },
-> > 	  {
-> > 	    "dev":"namespace0.1",
-> > 	    "mode":"fsdax",
-> > 	    "map":"dev",
-> > 	    "size":262144000,
-> > 	    "uuid":"c2071802-8c24-4f9c-a6c1-f6bb6589e561",
-> > 	    "sector_size":512,
-> > 	    "align":2097152,
-> > 	    "blockdev":"pmem0.1"
-> > 	  },
-> > 	  {
-> > 	    "dev":"namespace0.0",
-> > 	    "mode":"fsdax",
-> > 	    "map":"dev",
-> > 	    "size":130023424,
-> > 	    "uuid":"3f6dcdc5-d289-4b0c-ad16-82636c82bec1",
-> > 	    "sector_size":512,
-> > 	    "align":2097152,
-> > 	    "blockdev":"pmem0"
-> > 	  }
-> > 	]
-> > =09
-> > 5. Re-Start Qemu and we could see
-> > 	- Region persistency using "cxl list"
-> > 	- Namespace persistency using "ndctl list" and cat /proc/iomem
-> >=20
-> > 	root@QEMUCXL6060pmem:~# cat /proc/iomem
-> > =09
-> > 	a90000000-b8fffffff : CXL Window 0
-> > 	  a90000000-aafffffff : Persistent Memory
-> > 	    a90000000-aafffffff : region0
-> > 	      a90000000-a97ffffff : namespace0.0
-> > 	      a98000000-aa7ffffff : namespace0.1
-> > 	  ab0000000-acfffffff : Persistent Memory
-> > 	    ab0000000-acfffffff : region1
-> > 	      ab0000000-abfffffff : namespace1.0
-> > 	      ac0000000-ac7ffffff : namespace1.1
-> > =09
-> >=20
-> > 	- NOTE: We can see some lag in restart, Its WIP
-> >=20
-> > 6. Also verify LSA version using "ndctl read-labels -j nmem0 -u"
-> > 	root@QEMUCXL6060pmem:~# ndctl read-labels -j nmem0
-> > 	{
-> > 	  "dev":"nmem0",
-> > 	  "index":[
-> > 	    {
-> > 	      "signature":"NAMESPACE_INDEX",
-> > 	      "major":2,
-> > 	      "minor":1,
-> > 	      "labelsize":256,
-> > 	      "seq":2,
-> > 	      "nslot":4090
-> > 	    },
-> > 	    {
-> > 	      "signature":"NAMESPACE_INDEX",
-> > 	      "major":2,
-> > 	      "minor":1,
-> > 	      "labelsize":256,
-> > 	      "seq":1,
-> > 	      "nslot":4090
-> > 	    }
-> > 	  ],
-> > 	  "label":[
-> > 	    {
-> > 	      "type":"68bb2c0a-5a77-4937-9f85-3caf41a0f93c",
-> > 	      "uuid":"9a26b9ce-a859-4a63-b1b7-fd176105770d",
-> > 	      "name":"",
-> > 	      "flags":8,
-> > 	      "nrange":1,
-> > 	      "position":0,
-> > 	      "dpa":134217728,
-> > 	      "rawsize":268435456,
-> > 	      "slot":0,
-> > 	      "align":0,
-> > 	      "region_uuid":"de512bdc-9731-4e5f-838c-be2e9b94ea72",
-> > 	      "abstraction_uuid":"266400ba-fb9f-4677-bcb0-968f11d0d225",
-> > 	      "lbasize":512
-> > 	    },
-> > 	    {
-> > 	      "type":"529d7c61-da07-47c4-a93f-ecdf2c06f444",
-> > 	      "uuid":"de512bdc-9731-4e5f-838c-be2e9b94ea72",
-> > 	      "flags":0,
-> > 	      "nlabel":1,
-> > 	      "position":0,
-> > 	      "dpa":0,
-> > 	      "rawsize":536870912,
-> > 	      "hpa":45365592064,
-> > 	      "slot":1,
-> > 	      "interleave granularity":256,
-> > 	      "align":0
-> > 	    },
-> > 	    {
-> > 	      "type":"68bb2c0a-5a77-4937-9f85-3caf41a0f93c",
-> > 	      "uuid":"a90d211a-b28d-48c7-bfe7-99560d3825ef",
-> > 	      "name":"",
-> > 	      "flags":0,
-> > 	      "nrange":1,
-> > 	      "position":0,
-> > 	      "dpa":0,
-> > 	      "rawsize":134217728,
-> > 	      "slot":2,
-> > 	      "align":0,
-> > 	      "region_uuid":"de512bdc-9731-4e5f-838c-be2e9b94ea72",
-> > 	      "abstraction_uuid":"266400ba-fb9f-4677-bcb0-968f11d0d225",
-> > 	      "lbasize":512
-> > 	    },
-> > 	    {
-> > 	      "type":"68bb2c0a-5a77-4937-9f85-3caf41a0f93c",
-> > 	      "uuid":"9a26b9ce-a859-4a63-b1b7-fd176105770d",
-> > 	      "name":"",
-> > 	      "flags":0,
-> > 	      "nrange":1,
-> > 	      "position":0,
-> > 	      "dpa":134217728,
-> > 	      "rawsize":268435456,
-> > 	      "slot":3,
-> > 	      "align":0,
-> > 	      "region_uuid":"de512bdc-9731-4e5f-838c-be2e9b94ea72",
-> > 	      "abstraction_uuid":"266400ba-fb9f-4677-bcb0-968f11d0d225",
-> > 	      "lbasize":512
-> > 	    }
-> > 	  ]
-> > 	}
-> > 	read 1 nmem
-> >=20
-> > 	- NOTE: We have following UUID types as per CXL Spec
-> > 		"type":"529d7c61-da07-47c4-a93f-ecdf2c06f444" is region label
-> > 		"type":"68bb2c0a-5a77-4937-9f85-3caf41a0f93c" is namespace label
-> >=20
-> >=20
-> > Limitation (WIP):
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > Current changes only support interleave way =3D=3D 1
-> >=20
-> > Observation:
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > First time namespace creation using ndctl takes around 10 to 20 second =
-time
-> > while executing "devm_memremap_pages" at [3]
-> >=20
-> > As using this patchset, after auto region creation, namespace creation =
-is
-> > happening in boot sequence (if nvdimm and cxl drivers are static), It is
-> > therefore boot sequence is increased by around 10 to 20 sec.
-> >=20
-> >=20
-> > [1]: https://lore.kernel.org/all/163116432405.2460985.55478673845701234=
-03.stgit@dwillia2-desk3.amr.corp.intel.com/
-> > [2]: https://github.com/neerajoss/ndctl/tree/linux-cxl/CXL_LSA_2.1_Supp=
-ort
-> > [3]: https://elixir.bootlin.com/linux/v6.13.7/source/drivers/nvdimm/pme=
-m.c#L520
-> >=20
-> >=20
-> >=20
-> >=20
-> > Neeraj Kumar (20):
-> >   nvdimm/label: Introduce NDD_CXL_LABEL flag to set cxl label format
-> >   nvdimm/label: Prep patch to accommodate cxl lsa 2.1 support
-> >   nvdimm/namespace_label: Add namespace label changes as per CXL LSAv2.1
-> >   nvdimm/label: CXL labels skip the need for 'interleave-set cookie'
-> >   nvdimm/region_label: Add region label updation routine
-> >   nvdimm/region_label: Add region label deletion routine
-> >   nvdimm/namespace_label: Update namespace init_labels and its region_u=
-uid
-> >   nvdimm/label: Include region label in slot validation
-> >   nvdimm/namespace_label: Skip region label during ns label DPA reserva=
-tion
-> >   nvdimm/region_label: Preserve cxl region information from region label
-> >   nvdimm/region_label: Export routine to fetch region information
-> >   nvdimm/namespace_label: Skip region label during namespace creation
-> >   cxl/mem: Refactor cxl pmem region auto-assembling
-> >   cxl/region: Add cxl pmem region creation routine for region persisten=
-cy
-> >   cxl: Add a routine to find cxl root decoder on cxl bus
-> >   cxl/mem: Preserve cxl root decoder during mem probe
-> >   cxl/pmem: Preserve region information into nd_set
-> >   cxl/pmem: Add support of cxl lsa 2.1 support in cxl pmem
-> >   cxl/pmem_region: Prep patch to accommodate pmem_region attributes
-> >   cxl/pmem_region: Add cxl region label updation and deletion device at=
-tributes
-> >=20
-> >  drivers/cxl/Kconfig             |  12 +
-> >  drivers/cxl/core/Makefile       |   1 +
-> >  drivers/cxl/core/core.h         |   8 +-
-> >  drivers/cxl/core/pmem_region.c  | 325 ++++++++++++++++++++++++++
-> >  drivers/cxl/core/port.c         |  72 +++++-
-> >  drivers/cxl/core/region.c       | 383 +++++++++++++++---------------
-> >  drivers/cxl/cxl.h               |  46 +++-
-> >  drivers/cxl/cxlmem.h            |   1 +
-> >  drivers/cxl/mem.c               |  27 ++-
-> >  drivers/cxl/pmem.c              |  72 +++++-
-> >  drivers/cxl/port.c              |  38 ---
-> >  drivers/nvdimm/dimm.c           |   5 +
-> >  drivers/nvdimm/dimm_devs.c      |  28 +++
-> >  drivers/nvdimm/label.c          | 403 ++++++++++++++++++++++++++++----
-> >  drivers/nvdimm/label.h          |  20 +-
-> >  drivers/nvdimm/namespace_devs.c | 149 ++++++++----
-> >  drivers/nvdimm/nd-core.h        |   2 +
-> >  drivers/nvdimm/nd.h             |  81 ++++++-
-> >  drivers/nvdimm/region_devs.c    |   5 +
-> >  include/linux/libnvdimm.h       |  28 +++
-> >  tools/testing/cxl/Kbuild        |   1 +
-> >  21 files changed, 1364 insertions(+), 343 deletions(-)
-> >  create mode 100644 drivers/cxl/core/pmem_region.c
-> >=20
-> >=20
-> > base-commit: 448a60e85ae2afe2cb760f5d2ed2c8a49d2bd1b4 =20
->=20
->=20
+>> kernel/trace/trace_events_synth.c:1295:12: warning: stack frame size (1040) exceeds limit (1024) in '__create_synth_event' [-Wframe-larger-than]
+   static int __create_synth_event(const char *name, const char *raw_fields)
+              ^
+   461/1040 (44.33%) spills, 579/1040 (55.67%) variables
+   1 warning generated.
 
+
+vim +/__create_synth_event +1295 kernel/trace/trace_events_synth.c
+
+726721a51838e3 Tom Zanussi             2020-05-28  1294  
+c9e759b1e8456a Tom Zanussi             2021-02-01 @1295  static int __create_synth_event(const char *name, const char *raw_fields)
+726721a51838e3 Tom Zanussi             2020-05-28  1296  {
+c9e759b1e8456a Tom Zanussi             2021-02-01  1297  	char **argv, *field_str, *tmp_fields, *saved_fields = NULL;
+726721a51838e3 Tom Zanussi             2020-05-28  1298  	struct synth_field *field, *fields[SYNTH_FIELDS_MAX];
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1299  	int consumed, cmd_version = 1, n_fields_this_loop;
+c9e759b1e8456a Tom Zanussi             2021-02-01  1300  	int i, argc, n_fields = 0, ret = 0;
+726721a51838e3 Tom Zanussi             2020-05-28  1301  	struct synth_event *event = NULL;
+d4d704637d935e Tom Zanussi             2020-10-13  1302  
+726721a51838e3 Tom Zanussi             2020-05-28  1303  	/*
+726721a51838e3 Tom Zanussi             2020-05-28  1304  	 * Argument syntax:
+726721a51838e3 Tom Zanussi             2020-05-28  1305  	 *  - Add synthetic event: <event_name> field[;field] ...
+726721a51838e3 Tom Zanussi             2020-05-28  1306  	 *  - Remove synthetic event: !<event_name> field[;field] ...
+726721a51838e3 Tom Zanussi             2020-05-28  1307  	 *      where 'field' = type field_name
+726721a51838e3 Tom Zanussi             2020-05-28  1308  	 */
+726721a51838e3 Tom Zanussi             2020-05-28  1309  
+c9e759b1e8456a Tom Zanussi             2021-02-01  1310  	if (name[0] == '\0') {
+8d3e8165232322 Tom Zanussi             2021-02-01  1311  		synth_err(SYNTH_ERR_INVALID_CMD, 0);
+726721a51838e3 Tom Zanussi             2020-05-28  1312  		return -EINVAL;
+d4d704637d935e Tom Zanussi             2020-10-13  1313  	}
+726721a51838e3 Tom Zanussi             2020-05-28  1314  
+9bbb33291f8e44 Tom Zanussi             2020-10-13  1315  	if (!is_good_name(name)) {
+d4d704637d935e Tom Zanussi             2020-10-13  1316  		synth_err(SYNTH_ERR_BAD_NAME, errpos(name));
+c9e759b1e8456a Tom Zanussi             2021-02-01  1317  		return -EINVAL;
+9bbb33291f8e44 Tom Zanussi             2020-10-13  1318  	}
+9bbb33291f8e44 Tom Zanussi             2020-10-13  1319  
+c9e759b1e8456a Tom Zanussi             2021-02-01  1320  	mutex_lock(&event_mutex);
+c9e759b1e8456a Tom Zanussi             2021-02-01  1321  
+726721a51838e3 Tom Zanussi             2020-05-28  1322  	event = find_synth_event(name);
+726721a51838e3 Tom Zanussi             2020-05-28  1323  	if (event) {
+d4d704637d935e Tom Zanussi             2020-10-13  1324  		synth_err(SYNTH_ERR_EVENT_EXISTS, errpos(name));
+726721a51838e3 Tom Zanussi             2020-05-28  1325  		ret = -EEXIST;
+c9e759b1e8456a Tom Zanussi             2021-02-01  1326  		goto err;
+726721a51838e3 Tom Zanussi             2020-05-28  1327  	}
+726721a51838e3 Tom Zanussi             2020-05-28  1328  
+c9e759b1e8456a Tom Zanussi             2021-02-01  1329  	tmp_fields = saved_fields = kstrdup(raw_fields, GFP_KERNEL);
+c9e759b1e8456a Tom Zanussi             2021-02-01  1330  	if (!tmp_fields) {
+c9e759b1e8456a Tom Zanussi             2021-02-01  1331  		ret = -ENOMEM;
+c9e759b1e8456a Tom Zanussi             2021-02-01  1332  		goto err;
+c9e759b1e8456a Tom Zanussi             2021-02-01  1333  	}
+c9e759b1e8456a Tom Zanussi             2021-02-01  1334  
+c9e759b1e8456a Tom Zanussi             2021-02-01  1335  	while ((field_str = strsep(&tmp_fields, ";")) != NULL) {
+c9e759b1e8456a Tom Zanussi             2021-02-01  1336  		argv = argv_split(GFP_KERNEL, field_str, &argc);
+c9e759b1e8456a Tom Zanussi             2021-02-01  1337  		if (!argv) {
+c9e759b1e8456a Tom Zanussi             2021-02-01  1338  			ret = -ENOMEM;
+726721a51838e3 Tom Zanussi             2020-05-28  1339  			goto err;
+726721a51838e3 Tom Zanussi             2020-05-28  1340  		}
+726721a51838e3 Tom Zanussi             2020-05-28  1341  
+f40fc799afc598 Vamshi K Sthambamkadi   2021-03-04  1342  		if (!argc) {
+f40fc799afc598 Vamshi K Sthambamkadi   2021-03-04  1343  			argv_free(argv);
+c9e759b1e8456a Tom Zanussi             2021-02-01  1344  			continue;
+f40fc799afc598 Vamshi K Sthambamkadi   2021-03-04  1345  		}
+c9e759b1e8456a Tom Zanussi             2021-02-01  1346  
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1347  		n_fields_this_loop = 0;
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1348  		consumed = 0;
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1349  		while (argc > consumed) {
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1350  			int field_version;
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1351  
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1352  			field = parse_synth_field(argc - consumed,
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1353  						  argv + consumed, &consumed,
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1354  						  &field_version);
+726721a51838e3 Tom Zanussi             2020-05-28  1355  			if (IS_ERR(field)) {
+726721a51838e3 Tom Zanussi             2020-05-28  1356  				ret = PTR_ERR(field);
+c24be24aed405d Miaoqian Lin            2021-12-09  1357  				goto err_free_arg;
+726721a51838e3 Tom Zanussi             2020-05-28  1358  			}
+c9e759b1e8456a Tom Zanussi             2021-02-01  1359  
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1360  			/*
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1361  			 * Track the highest version of any field we
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1362  			 * found in the command.
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1363  			 */
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1364  			if (field_version > cmd_version)
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1365  				cmd_version = field_version;
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1366  
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1367  			/*
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1368  			 * Now sort out what is and isn't valid for
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1369  			 * each supported version.
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1370  			 *
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1371  			 * If we see more than 1 field per loop, it
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1372  			 * means we have multiple fields between
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1373  			 * semicolons, and that's something we no
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1374  			 * longer support in a version 2 or greater
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1375  			 * command.
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1376  			 */
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1377  			if (cmd_version > 1 && n_fields_this_loop >= 1) {
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1378  				synth_err(SYNTH_ERR_INVALID_CMD, errpos(field_str));
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1379  				ret = -EINVAL;
+c24be24aed405d Miaoqian Lin            2021-12-09  1380  				goto err_free_arg;
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1381  			}
+c9e759b1e8456a Tom Zanussi             2021-02-01  1382  
+c9e759b1e8456a Tom Zanussi             2021-02-01  1383  			if (n_fields == SYNTH_FIELDS_MAX) {
+c9e759b1e8456a Tom Zanussi             2021-02-01  1384  				synth_err(SYNTH_ERR_TOO_MANY_FIELDS, 0);
+c9e759b1e8456a Tom Zanussi             2021-02-01  1385  				ret = -EINVAL;
+c24be24aed405d Miaoqian Lin            2021-12-09  1386  				goto err_free_arg;
+c9e759b1e8456a Tom Zanussi             2021-02-01  1387  			}
+ff4837f7fe59ff Zheng Yejian            2022-12-07  1388  			fields[n_fields++] = field;
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1389  
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1390  			n_fields_this_loop++;
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1391  		}
+c24be24aed405d Miaoqian Lin            2021-12-09  1392  		argv_free(argv);
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1393  
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1394  		if (consumed < argc) {
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1395  			synth_err(SYNTH_ERR_INVALID_CMD, 0);
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1396  			ret = -EINVAL;
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1397  			goto err;
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1398  		}
+8b5ab6bd0b2934 Tom Zanussi             2021-02-01  1399  
+726721a51838e3 Tom Zanussi             2020-05-28  1400  	}
+726721a51838e3 Tom Zanussi             2020-05-28  1401  
+c9e759b1e8456a Tom Zanussi             2021-02-01  1402  	if (n_fields == 0) {
+8d3e8165232322 Tom Zanussi             2021-02-01  1403  		synth_err(SYNTH_ERR_INVALID_CMD, 0);
+726721a51838e3 Tom Zanussi             2020-05-28  1404  		ret = -EINVAL;
+726721a51838e3 Tom Zanussi             2020-05-28  1405  		goto err;
+726721a51838e3 Tom Zanussi             2020-05-28  1406  	}
+726721a51838e3 Tom Zanussi             2020-05-28  1407  
+726721a51838e3 Tom Zanussi             2020-05-28  1408  	event = alloc_synth_event(name, n_fields, fields);
+726721a51838e3 Tom Zanussi             2020-05-28  1409  	if (IS_ERR(event)) {
+726721a51838e3 Tom Zanussi             2020-05-28  1410  		ret = PTR_ERR(event);
+726721a51838e3 Tom Zanussi             2020-05-28  1411  		event = NULL;
+726721a51838e3 Tom Zanussi             2020-05-28  1412  		goto err;
+726721a51838e3 Tom Zanussi             2020-05-28  1413  	}
+726721a51838e3 Tom Zanussi             2020-05-28  1414  	ret = register_synth_event(event);
+726721a51838e3 Tom Zanussi             2020-05-28  1415  	if (!ret)
+8b0e6c744fef64 Steven Rostedt (VMware  2021-08-16  1416) 		dyn_event_add(&event->devent, &event->call);
+726721a51838e3 Tom Zanussi             2020-05-28  1417  	else
+726721a51838e3 Tom Zanussi             2020-05-28  1418  		free_synth_event(event);
+726721a51838e3 Tom Zanussi             2020-05-28  1419   out:
+726721a51838e3 Tom Zanussi             2020-05-28  1420  	mutex_unlock(&event_mutex);
+726721a51838e3 Tom Zanussi             2020-05-28  1421  
+c9e759b1e8456a Tom Zanussi             2021-02-01  1422  	kfree(saved_fields);
+c9e759b1e8456a Tom Zanussi             2021-02-01  1423  
+726721a51838e3 Tom Zanussi             2020-05-28  1424  	return ret;
+c24be24aed405d Miaoqian Lin            2021-12-09  1425   err_free_arg:
+c24be24aed405d Miaoqian Lin            2021-12-09  1426  	argv_free(argv);
+726721a51838e3 Tom Zanussi             2020-05-28  1427   err:
+726721a51838e3 Tom Zanussi             2020-05-28  1428  	for (i = 0; i < n_fields; i++)
+726721a51838e3 Tom Zanussi             2020-05-28  1429  		free_synth_field(fields[i]);
+726721a51838e3 Tom Zanussi             2020-05-28  1430  
+726721a51838e3 Tom Zanussi             2020-05-28  1431  	goto out;
+726721a51838e3 Tom Zanussi             2020-05-28  1432  }
+726721a51838e3 Tom Zanussi             2020-05-28  1433  
+
+:::::: The code at line 1295 was first introduced by commit
+:::::: c9e759b1e8456a460f258fcfe9682003fcf03938 tracing: Rework synthetic event command parsing
+
+:::::: TO: Tom Zanussi <zanussi@kernel.org>
+:::::: CC: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
