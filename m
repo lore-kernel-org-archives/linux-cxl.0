@@ -1,317 +1,171 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9D88F7D
-	for <linux-cxl@vger.kernel.org>; Mon, 23 Jun 2025 04:18:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A84E1F4CB3;
+	Mon, 23 Jun 2025 08:38:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750652308; cv=none; b=NgTV+IWGoH4GCHBmDCcNGqmpuxoaWuTkjQpMc3O6AIT0dDKDfd/WkWUh+WkBD89RN8C+s36IUSeHUj9O4+R12zPbEwxcPIdUol/QOeRvuJj7iBvKhpmd2NPVU07/7fwQmUZewnXwRTSEssH6RP3T5cDqucmftsqSPIRSV2PR/qA=
+	t=1750667934; cv=none; b=YEvrAnXE960fZvuI1YyB3JQnhpR48Q3JGiTUWkeWr+73pmEEk2xogoAvu7J9Vd7SzIBwoxX7eOCTj0sTDyz3isI/8ye54+kUu7QX79GYXVr2vAWGmO/3ZR3IoWIuMfdJI1lNGpmKP+BzzkZmh27S4XwuBfqe4oDD0xmpwBCVKbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750652308; c=relaxed/simple;
-	bh=LNvTQMohQGbCf669BPvM7Gt/ksdDI8Rt23bDew9iG48=;
-	h=Content-Type:Message-ID:Date:MIME-Version:Subject:From:To:Cc:
-	 References:In-Reply-To; b=MT5umrMrJMGdt8T1ohU2UvOOUj3xNYTZsBRfq7SrdcsBFuQJAaFrHMYjAzIICIVajowDJUK626HSF7lSzC686XFEiulH0K3/zItWx4LXPePGZZdYDAtYiUN1h0oTf6gmCrJlSIemBUZ2h4NPqIa9rABDORntdCZYAEj7uLs7FoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cd0y3YNl; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750667934; c=relaxed/simple;
+	bh=KPTfA+lD82RyS97lfltBlDwFaXpnQXlrck43kgnV2pA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hBw5bdH51gdi73bL6/4JTHSGZPk1OMbafu0R+FpYqqpcFk0ryGANpKp8HopbJ8YVeTBIM8BGiDq1I8p92K4InWm9vezetzpWaqHk9OLb+ThAFnD5UQdu++VxNUkPsgG564hvYlqKlRDx85Kv8EmWuSyqortOW3n/+LtaAgIH4JY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PAaIMywU; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cd0y3YNl"
-Content-Type: multipart/mixed; boundary="------------Xeu1yh6QyigQDsRmSTUjsv3o"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750652294;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1a6j6ymdbum7p7MsHk6NCF4o6R+uaO7oENryoGusN1c=;
-	b=cd0y3YNlQeQtBV0/CejXJE54HeIGC/QP8qxcQioeKpKXzgM0Oh9pHuEyG9IzT22bD721Yi
-	5TUE40R1gznoPE88IlPT9C0IMCNXvAGip9YJQUaXH1SzsVu7v8dZGhiERDffMWhUXUtms3
-	Lym/f5EF4E9sJQZjcQ0hXk8C1UmU5c8=
-Message-ID: <9dd017ea-a0ec-47c4-b7ae-b6f441dbd5ec@linux.dev>
-Date: Mon, 23 Jun 2025 12:18:08 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PAaIMywU"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7406c6dd2b1so2917514b3a.0;
+        Mon, 23 Jun 2025 01:38:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750667933; x=1751272733; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PyVVTWaZgryZ9TMNe9jpkxLwz3WmJyduY+dRovtnePo=;
+        b=PAaIMywUzuPrJF8Z0XrCE+DZjPfsvL8Lua1lekfife5QOQc8aasFaGPuFXxrHf2k/R
+         g1rd1uT8FQcyfIY185zYI+uheBFOCCh05c2hBIqbMJRPFAQz8AA20rmoRe6F1QEkLpqn
+         lFJg1R4ZVCa36TWAgvguTuAsXCMXIrSBUGDluwYrn6gSYcuDkJavIUUelH08hT7KQILR
+         nzYrcxE51zETRYUsixruSkP6nlzFcGNHPa21LKfcYv5tTzPavN8L4/YXX3+mjhCATGfx
+         mNXDTFE76uF4K+B2e4fhjDzfv5CWPxuLNx1sr7utBUMe3SHdBDPVngbY7k4QjPOPl60E
+         UcKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750667933; x=1751272733;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PyVVTWaZgryZ9TMNe9jpkxLwz3WmJyduY+dRovtnePo=;
+        b=K8jOKfOx6hZ8OC2FDjg8tDsbHCgwr1mUyoButzJtsE1c+UFEiix6u5OTiVKP4QecEG
+         GOKc2p9Azm3Sq2HdrrUpxUrk83kjSbOjlNMdLDDOMxQ9BDoE2SJWNqvWQFWbn/FGjIgi
+         19hRzVMT8Wk5FRUFFfWYxRUEW3/7gETzhywS0wLt2KzWMFqlpPfshOcN/VuDj4TYzhFW
+         t8YcvlabJzqmLAnkRzbgQnHUmXc6PPPn4KtVKlwiiES19+8A4kJdR1vYvAjw4cPfjhYb
+         unCoJ9jykrqxzK+f9f1lPzBFMAXbWOvc1tL9D/KBMaxznuuL4S09EP1grsuU9lDvDApL
+         LgaA==
+X-Forwarded-Encrypted: i=1; AJvYcCV1HaGaCQHCyoBF7cnDK+MXu/bClpO42rUjtKoh7STA/1b2SjYuekHJeuFyyxB1Gpwwl8X1BzZygmp9UOc3@vger.kernel.org, AJvYcCVzTg9h+lL45cDv60M0leUpjngJAx5+S/EkCaKyzEV3U71AA04K+wEhN/wKzogs5RQoGSE/3gVFY34=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxf5e8/vMwi64tdx7sOHbJoZOB8Ecdg6X91FkbTYu+C7q2ZcIZD
+	jcg8nZLBMjTqGJ11EWg178fUh2laneZkf9hyLfN6/arwOPUM7RLRO5EU
+X-Gm-Gg: ASbGncv8zin2hjWKkqqPtc/DeYAwWPb0Gw9JTU/xnXwv3t2KTaeFWHZMZzRH4Cj+va7
+	8CwvlqTtbcHHMyoHrn8feLDlXaFwr5fvrX4sFxQHq3cu5db6gZ1UKnWPkbtadBgyNDxePGDITyL
+	vRbMKCHh+9uxq9EwzOWPyTg08GlgcRAnG/Out50hFsdIDXYdsr8HLq1+tJNTEWF2smdh0fbUFd7
+	7RhnylRLYApyIXIxBZrFNjOv1UCBv91cYGXg32H8+l59MHMu6dwBbcf7XguOqTgz+hGxKsypzOF
+	dxWf9QgSz6dWPL7AdnuA7PzhuIqcvm36FXMRBH7jrFRkJEnAi7WK2TGuQxqhHP2U84x36ur9kD6
+	FeQoGayE=
+X-Google-Smtp-Source: AGHT+IGUeFiCv00KVBMrpOmKRu6YCsOh3f2syfhlZ6O0RFPGj97gwW+e+gn6L9Eq8La3deVTY0MrQA==
+X-Received: by 2002:a05:6a21:6d91:b0:1ee:ab52:b8cc with SMTP id adf61e73a8af0-2202934b9e0mr18197566637.21.1750667932543;
+        Mon, 23 Jun 2025 01:38:52 -0700 (PDT)
+Received: from manjaro.domain.name ([2401:4900:1c66:8091:47dd:9377:3ab1:4e4c])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b31f1258b55sm6209442a12.61.2025.06.23.01.38.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 01:38:52 -0700 (PDT)
+From: Pranav Tyagi <pranav.tyagi03@gmail.com>
+To: dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: ming.li@zohomail.com,
+	rrichter@amd.com,
+	peterz@infradead.org,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev,
+	Pranav Tyagi <pranav.tyagi03@gmail.com>
+Subject: [PATCH v2] cxl/memdev: automate cleanup with __free()
+Date: Mon, 23 Jun 2025 14:08:41 +0530
+Message-ID: <20250623083841.364002-1-pranav.tyagi03@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: =?UTF-8?Q?Re=3A_=5BRFC_v2_00/11=5D_dm-pcache_=E2=80=93_persistent-m?=
- =?UTF-8?Q?emory_cache_for_block_devices?=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Dongsheng Yang <dongsheng.yang@linux.dev>
-To: Mikulas Patocka <mpatocka@redhat.com>
-Cc: agk@redhat.com, snitzer@kernel.org, axboe@kernel.dk, hch@lst.de,
- dan.j.williams@intel.com, Jonathan.Cameron@Huawei.com,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev, dm-devel@lists.linux.dev
-References: <20250605142306.1930831-1-dongsheng.yang@linux.dev>
- <dc019764-5128-526e-d8ea-effa78e37b39@redhat.com>
- <3c9f304a-b830-4242-8e01-04efab4e0eaa@linux.dev>
-In-Reply-To: <3c9f304a-b830-4242-8e01-04efab4e0eaa@linux.dev>
-X-Migadu-Flow: FLOW_OUT
-
-This is a multi-part message in MIME format.
---------------Xeu1yh6QyigQDsRmSTUjsv3o
-Content-Type: multipart/alternative;
- boundary="------------aMux5mWrKV7NqLbSowDXImIu"
-
---------------aMux5mWrKV7NqLbSowDXImIu
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+Use the scope based resource management (defined in linux/cleanup.h) to
+automate the lifetime control of struct cxl_mbox_transfer_fw. This
+eliminates explicit kfree() calls and makes the code more robust and
+maintainable in presence of early returns.
 
-在 6/23/2025 11:13 AM, Dongsheng Yang 写道:
->
-> Hi Mikulas:
->
->      I will send dm-pcache V1 soon, below is my response to your comments.
->
-> 在 6/13/2025 12:57 AM, Mikulas Patocka 写道:
->> Hi
->>
->>
->> On Thu, 5 Jun 2025, Dongsheng Yang wrote:
->>
->>> Hi Mikulas and all,
->>>
->>> This is *RFC v2* of the *pcache* series, a persistent-memory backed cache.
->>>
->>>
->>> ----------------------------------------------------------------------
->>> 1. pmem access layer
->>> ----------------------------------------------------------------------
->>>
->>> * All reads use *copy_mc_to_kernel()* so that uncorrectable media
->>>    errors are detected and reported.
->>> * All writes go through *memcpy_flushcache()* to guarantee durability
->>>    on real persistent memory.
->> You could also try to use normal write and clflushopt for big writes - I
->> found out that for larger regions it is better - see the function
->> memcpy_flushcache_optimized in dm-writecache. Test, which way is better.
->
-> I did a test with fio on /dev/pmem0, with an attached patch on nd_pmem.ko:
->
-> when I use memmap pmem device, I got a similar result with the comment 
-> in memcpy_flushcache_optimized():
->
-> Test (memmap pmem) clflushopt flushcache 
-> ------------------------------------------------- test_randwrite_512 
-> 200 MiB/s 228 MiB/s test_randwrite_1024 378 MiB/s 431 MiB/s 
-> test_randwrite_2K 773 MiB/s 769 MiB/s test_randwrite_4K 1364 MiB/s 
-> 1272 MiB/s test_randwrite_8K 2078 MiB/s 1817 MiB/s test_randwrite_16K 
-> 2745 MiB/s 2098 MiB/s test_randwrite_32K 3232 MiB/s 2231 MiB/s 
-> test_randwrite_64K 3660 MiB/s 2411 MiB/s test_randwrite_128K 3922 
-> MiB/s 2513 MiB/s test_randwrite_1M 3824 MiB/s 2537 MiB/s 
-> test_write_512 228 MiB/s 228 MiB/s test_write_1024 439 MiB/s 423 MiB/s 
-> test_write_2K 841 MiB/s 800 MiB/s test_write_4K 1364 MiB/s 1308 MiB/s 
-> test_write_8K 2107 MiB/s 1838 MiB/s test_write_16K 2752 MiB/s 2166 
-> MiB/s test_write_32K 3213 MiB/s 2247 MiB/s test_write_64K 3661 MiB/s 
-> 2415 MiB/s test_write_128K 3902 MiB/s 2514 MiB/s test_write_1M 3808 
-> MiB/s 2529 MiB/s
->
-> But I got a different result when I use Optane pmem100:
->
-> Test (Optane pmem100) clflushopt flushcache 
-> ------------------------------------------------- test_randwrite_512 
-> 167 MiB/s 226 MiB/s test_randwrite_1024 301 MiB/s 420 MiB/s 
-> test_randwrite_2K 615 MiB/s 639 MiB/s test_randwrite_4K 967 MiB/s 1024 
-> MiB/s test_randwrite_8K 1047 MiB/s 1314 MiB/s test_randwrite_16K 1096 
-> MiB/s 1377 MiB/s test_randwrite_32K 1155 MiB/s 1382 MiB/s 
-> test_randwrite_64K 1184 MiB/s 1452 MiB/s test_randwrite_128K 1199 
-> MiB/s 1488 MiB/s test_randwrite_1M 1178 MiB/s 1499 MiB/s 
-> test_write_512 233 MiB/s 233 MiB/s test_write_1024 424 MiB/s 391 MiB/s 
-> test_write_2K 706 MiB/s 760 MiB/s test_write_4K 978 MiB/s 1076 MiB/s 
-> test_write_8K 1059 MiB/s 1296 MiB/s test_write_16K 1119 MiB/s 1380 
-> MiB/s test_write_32K 1158 MiB/s 1387 MiB/s test_write_64K 1184 MiB/s 
-> 1448 MiB/s test_write_128K 1198 MiB/s 1481 MiB/s test_write_1M 1178 
-> MiB/s 1486 MiB/s
->
->
-> So for now I’d rather keep using flushcache in pcache. In future, once 
-> we’ve come up with a general-purpose optimization, we can switch to that.
->
-Sorry for the formatting issue—the table can be checked in attachment 
-<pmem_test_result>
+Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
+---
+ drivers/cxl/core/memdev.c | 21 ++++++++-------------
+ 1 file changed, 8 insertions(+), 13 deletions(-)
 
-Thanx
+diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+index f88a13adf7fa..38f4449f9740 100644
+--- a/drivers/cxl/core/memdev.c
++++ b/drivers/cxl/core/memdev.c
+@@ -7,6 +7,7 @@
+ #include <linux/slab.h>
+ #include <linux/idr.h>
+ #include <linux/pci.h>
++#include <linux/cleanup.h>
+ #include <cxlmem.h>
+ #include "trace.h"
+ #include "core.h"
+@@ -802,11 +803,10 @@ static int cxl_mem_activate_fw(struct cxl_memdev_state *mds, int slot)
+ static int cxl_mem_abort_fw_xfer(struct cxl_memdev_state *mds)
+ {
+ 	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
+-	struct cxl_mbox_transfer_fw *transfer;
+ 	struct cxl_mbox_cmd mbox_cmd;
+-	int rc;
+-
+-	transfer = kzalloc(struct_size(transfer, data, 0), GFP_KERNEL);
++	
++	struct cxl_mbox_transfer_fw *transfer __free(kfree) =
++		kzalloc(struct_size(transfer, data, 0), GFP_KERNEL);
+ 	if (!transfer)
+ 		return -ENOMEM;
+ 
+@@ -821,9 +821,7 @@ static int cxl_mem_abort_fw_xfer(struct cxl_memdev_state *mds)
+ 
+ 	transfer->action = CXL_FW_TRANSFER_ACTION_ABORT;
+ 
+-	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
+-	kfree(transfer);
+-	return rc;
++	return cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
+ }
+ 
+ static void cxl_fw_cleanup(struct fw_upload *fwl)
+@@ -880,7 +878,7 @@ static enum fw_upload_err cxl_fw_write(struct fw_upload *fwl, const u8 *data,
+ 	struct cxl_dev_state *cxlds = &mds->cxlds;
+ 	struct cxl_mailbox *cxl_mbox = &cxlds->cxl_mbox;
+ 	struct cxl_memdev *cxlmd = cxlds->cxlmd;
+-	struct cxl_mbox_transfer_fw *transfer;
++	struct cxl_mbox_transfer_fw *transfer __free(kfree);
+ 	struct cxl_mbox_cmd mbox_cmd;
+ 	u32 cur_size, remaining;
+ 	size_t size_in;
+@@ -949,7 +947,7 @@ static enum fw_upload_err cxl_fw_write(struct fw_upload *fwl, const u8 *data,
+ 	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
+ 	if (rc < 0) {
+ 		rc = FW_UPLOAD_ERR_RW_ERROR;
+-		goto out_free;
++		return rc;
+ 	}
+ 
+ 	*written = cur_size;
+@@ -963,14 +961,11 @@ static enum fw_upload_err cxl_fw_write(struct fw_upload *fwl, const u8 *data,
+ 			dev_err(&cxlmd->dev, "Error activating firmware: %d\n",
+ 				rc);
+ 			rc = FW_UPLOAD_ERR_HW_ERROR;
+-			goto out_free;
++			return rc;
+ 		}
+ 	}
+ 
+ 	rc = FW_UPLOAD_ERR_NONE;
+-
+-out_free:
+-	kfree(transfer);
+ 	return rc;
+ }
+ 
+-- 
+2.49.0
 
-Dongsheng
-
---------------aMux5mWrKV7NqLbSowDXImIu
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  </head>
-  <body>
-    <p><br>
-    </p>
-    <div class="moz-cite-prefix">在 6/23/2025 11:13 AM, Dongsheng Yang
-      写道:<br>
-    </div>
-    <blockquote type="cite"
-      cite="mid:3c9f304a-b830-4242-8e01-04efab4e0eaa@linux.dev">
-      <p>Hi Mikulas:</p>
-      <p>     I will send dm-pcache V1 soon, below is my response to
-        your comments.</p>
-      <div class="moz-cite-prefix">在 6/13/2025 12:57 AM, Mikulas Patocka
-        写道:<br>
-      </div>
-      <blockquote type="cite"
-        cite="mid:dc019764-5128-526e-d8ea-effa78e37b39@redhat.com">
-        <pre wrap="" class="moz-quote-pre">Hi
-
-
-On Thu, 5 Jun 2025, Dongsheng Yang wrote:
-
-</pre>
-        <blockquote type="cite">
-          <pre wrap="" class="moz-quote-pre">Hi Mikulas and all,
-
-This is *RFC v2* of the *pcache* series, a persistent-memory backed cache.
-
-
-----------------------------------------------------------------------
-1. pmem access layer
-----------------------------------------------------------------------
-
-* All reads use *copy_mc_to_kernel()* so that uncorrectable media
-  errors are detected and reported.
-* All writes go through *memcpy_flushcache()* to guarantee durability
-  on real persistent memory.
-</pre>
-        </blockquote>
-        <pre wrap="" class="moz-quote-pre">You could also try to use normal write and clflushopt for big writes - I 
-found out that for larger regions it is better - see the function 
-memcpy_flushcache_optimized in dm-writecache. Test, which way is better.</pre>
-      </blockquote>
-      <p>I did a test with fio on /dev/pmem0, with an attached patch on
-        nd_pmem.ko:</p>
-      <p>when I use memmap pmem device, I got a similar result with the
-        comment in <span>memcpy_flushcache_optimized():</span></p>
-      <p><span>Test (memmap pmem) clflushopt flushcache
-          -------------------------------------------------
-          test_randwrite_512 200 MiB/s 228 MiB/s
-          test_randwrite_1024 378 MiB/s 431 MiB/s
-          test_randwrite_2K 773 MiB/s 769 MiB/s
-          test_randwrite_4K 1364 MiB/s 1272 MiB/s
-          test_randwrite_8K 2078 MiB/s 1817 MiB/s
-          test_randwrite_16K 2745 MiB/s 2098 MiB/s
-          test_randwrite_32K 3232 MiB/s 2231 MiB/s
-          test_randwrite_64K 3660 MiB/s 2411 MiB/s
-          test_randwrite_128K 3922 MiB/s 2513 MiB/s
-          test_randwrite_1M 3824 MiB/s 2537 MiB/s
-          test_write_512 228 MiB/s 228 MiB/s
-          test_write_1024 439 MiB/s 423 MiB/s
-          test_write_2K 841 MiB/s 800 MiB/s
-          test_write_4K 1364 MiB/s 1308 MiB/s
-          test_write_8K 2107 MiB/s 1838 MiB/s
-          test_write_16K 2752 MiB/s 2166 MiB/s
-          test_write_32K 3213 MiB/s 2247 MiB/s
-          test_write_64K 3661 MiB/s 2415 MiB/s
-          test_write_128K 3902 MiB/s 2514 MiB/s
-          test_write_1M 3808 MiB/s 2529 MiB/s</span></p>
-      <p><span>But I got a different result when I use Optane pmem100:</span></p>
-      <p><span>Test (Optane pmem100) clflushopt flushcache
-          -------------------------------------------------
-          test_randwrite_512 167 MiB/s 226 MiB/s
-          test_randwrite_1024 301 MiB/s 420 MiB/s
-          test_randwrite_2K 615 MiB/s 639 MiB/s
-          test_randwrite_4K 967 MiB/s 1024 MiB/s
-          test_randwrite_8K 1047 MiB/s 1314 MiB/s
-          test_randwrite_16K 1096 MiB/s 1377 MiB/s
-          test_randwrite_32K 1155 MiB/s 1382 MiB/s
-          test_randwrite_64K 1184 MiB/s 1452 MiB/s
-          test_randwrite_128K 1199 MiB/s 1488 MiB/s
-          test_randwrite_1M 1178 MiB/s 1499 MiB/s
-          test_write_512 233 MiB/s 233 MiB/s
-          test_write_1024 424 MiB/s 391 MiB/s
-          test_write_2K 706 MiB/s 760 MiB/s
-          test_write_4K 978 MiB/s 1076 MiB/s
-          test_write_8K 1059 MiB/s 1296 MiB/s
-          test_write_16K 1119 MiB/s 1380 MiB/s
-          test_write_32K 1158 MiB/s 1387 MiB/s
-          test_write_64K 1184 MiB/s 1448 MiB/s
-          test_write_128K 1198 MiB/s 1481 MiB/s
-          test_write_1M 1178 MiB/s 1486 MiB/s</span></p>
-      <p><br>
-      </p>
-      <p>So for now I’d rather keep using flushcache in pcache. In
-        future, once we’ve come up with a general-purpose optimization,
-        we can switch to that.</p>
-    </blockquote>
-    <p>Sorry for the formatting issue—the table can be checked in
-      attachment &lt;pmem_test_result&gt;</p>
-    <p>Thanx</p>
-    <p>Dongsheng</p>
-    <p>    </p>
-    <blockquote type="cite"
-      cite="mid:3c9f304a-b830-4242-8e01-04efab4e0eaa@linux.dev">
-      <p><span style="white-space: pre-wrap">
-</span></p>
-    </blockquote>
-    <blockquote type="cite"
-      cite="mid:3c9f304a-b830-4242-8e01-04efab4e0eaa@linux.dev">
-      <blockquote type="cite"
-        cite="mid:dc019764-5128-526e-d8ea-effa78e37b39@redhat.com"> </blockquote>
-    </blockquote>
-  </body>
-</html>
-
---------------aMux5mWrKV7NqLbSowDXImIu--
---------------Xeu1yh6QyigQDsRmSTUjsv3o
-Content-Type: text/plain; charset=UTF-8; name="pmem_test_result.txt"
-Content-Disposition: attachment; filename="pmem_test_result.txt"
-Content-Transfer-Encoding: base64
-
-VGVzdCAobWVtbWFwIHBtZW0pICAgICAgICAgICAgICAgICAgICAgIGNsZmx1c2hvcHQgICBm
-bHVzaGNhY2hlDQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tDQp0ZXN0X3JhbmR3cml0ZV81MTIgICAgICAgICAgICAgMjAwIE1pQi9zICAgICAg
-MjI4IE1pQi9zDQp0ZXN0X3JhbmR3cml0ZV8xMDI0ICAgICAgICAgICAgMzc4IE1pQi9zICAg
-ICAgNDMxIE1pQi9zDQp0ZXN0X3JhbmR3cml0ZV8ySyAgICAgICAgICAgICAgNzczIE1pQi9z
-ICAgICAgNzY5IE1pQi9zDQp0ZXN0X3JhbmR3cml0ZV80SyAgICAgICAgICAgICAxMzY0IE1p
-Qi9zICAgICAxMjcyIE1pQi9zDQp0ZXN0X3JhbmR3cml0ZV84SyAgICAgICAgICAgICAyMDc4
-IE1pQi9zICAgICAxODE3IE1pQi9zDQp0ZXN0X3JhbmR3cml0ZV8xNksgICAgICAgICAgICAy
-NzQ1IE1pQi9zICAgICAyMDk4IE1pQi9zDQp0ZXN0X3JhbmR3cml0ZV8zMksgICAgICAgICAg
-ICAzMjMyIE1pQi9zICAgICAyMjMxIE1pQi9zDQp0ZXN0X3JhbmR3cml0ZV82NEsgICAgICAg
-ICAgICAzNjYwIE1pQi9zICAgICAyNDExIE1pQi9zDQp0ZXN0X3JhbmR3cml0ZV8xMjhLICAg
-ICAgICAgICAzOTIyIE1pQi9zICAgICAyNTEzIE1pQi9zDQp0ZXN0X3JhbmR3cml0ZV8xTSAg
-ICAgICAgICAgICAzODI0IE1pQi9zICAgICAyNTM3IE1pQi9zDQp0ZXN0X3dyaXRlXzUxMiAg
-ICAgICAgICAgICAgICAgMjI4IE1pQi9zICAgICAgMjI4IE1pQi9zDQp0ZXN0X3dyaXRlXzEw
-MjQgICAgICAgICAgICAgICAgNDM5IE1pQi9zICAgICAgNDIzIE1pQi9zDQp0ZXN0X3dyaXRl
-XzJLICAgICAgICAgICAgICAgICAgODQxIE1pQi9zICAgICAgODAwIE1pQi9zDQp0ZXN0X3dy
-aXRlXzRLICAgICAgICAgICAgICAgICAxMzY0IE1pQi9zICAgICAxMzA4IE1pQi9zDQp0ZXN0
-X3dyaXRlXzhLICAgICAgICAgICAgICAgICAyMTA3IE1pQi9zICAgICAxODM4IE1pQi9zDQp0
-ZXN0X3dyaXRlXzE2SyAgICAgICAgICAgICAgICAyNzUyIE1pQi9zICAgICAyMTY2IE1pQi9z
-DQp0ZXN0X3dyaXRlXzMySyAgICAgICAgICAgICAgICAzMjEzIE1pQi9zICAgICAyMjQ3IE1p
-Qi9zDQp0ZXN0X3dyaXRlXzY0SyAgICAgICAgICAgICAgICAzNjYxIE1pQi9zICAgICAyNDE1
-IE1pQi9zDQp0ZXN0X3dyaXRlXzEyOEsgICAgICAgICAgICAgICAzOTAyIE1pQi9zICAgICAy
-NTE0IE1pQi9zDQp0ZXN0X3dyaXRlXzFNICAgICAgICAgICAgICAgICAzODA4IE1pQi9zICAg
-ICAyNTI5IE1pQi9zDQoNCg0KVGVzdCAoT3B0YW5lIHBtZW0xMDApICAgICAgICAgICAgICAg
-ICAgICAgY2xmbHVzaG9wdCAgIGZsdXNoY2FjaGUNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCnRlc3RfcmFuZHdyaXRlXzUxMiAgICAgICAg
-ICAgICAxNjcgTWlCL3MgICAgICAyMjYgTWlCL3MNCnRlc3RfcmFuZHdyaXRlXzEwMjQgICAg
-ICAgICAgICAzMDEgTWlCL3MgICAgICA0MjAgTWlCL3MNCnRlc3RfcmFuZHdyaXRlXzJLICAg
-ICAgICAgICAgICA2MTUgTWlCL3MgICAgICA2MzkgTWlCL3MNCnRlc3RfcmFuZHdyaXRlXzRL
-ICAgICAgICAgICAgICA5NjcgTWlCL3MgICAgIDEwMjQgTWlCL3MNCnRlc3RfcmFuZHdyaXRl
-XzhLICAgICAgICAgICAgIDEwNDcgTWlCL3MgICAgIDEzMTQgTWlCL3MNCnRlc3RfcmFuZHdy
-aXRlXzE2SyAgICAgICAgICAgIDEwOTYgTWlCL3MgICAgIDEzNzcgTWlCL3MNCnRlc3RfcmFu
-ZHdyaXRlXzMySyAgICAgICAgICAgIDExNTUgTWlCL3MgICAgIDEzODIgTWlCL3MNCnRlc3Rf
-cmFuZHdyaXRlXzY0SyAgICAgICAgICAgIDExODQgTWlCL3MgICAgIDE0NTIgTWlCL3MNCnRl
-c3RfcmFuZHdyaXRlXzEyOEsgICAgICAgICAgIDExOTkgTWlCL3MgICAgIDE0ODggTWlCL3MN
-CnRlc3RfcmFuZHdyaXRlXzFNICAgICAgICAgICAgIDExNzggTWlCL3MgICAgIDE0OTkgTWlC
-L3MNCnRlc3Rfd3JpdGVfNTEyICAgICAgICAgICAgICAgICAyMzMgTWlCL3MgICAgICAyMzMg
-TWlCL3MNCnRlc3Rfd3JpdGVfMTAyNCAgICAgICAgICAgICAgICA0MjQgTWlCL3MgICAgICAz
-OTEgTWlCL3MNCnRlc3Rfd3JpdGVfMksgICAgICAgICAgICAgICAgICA3MDYgTWlCL3MgICAg
-ICA3NjAgTWlCL3MNCnRlc3Rfd3JpdGVfNEsgICAgICAgICAgICAgICAgICA5NzggTWlCL3Mg
-ICAgIDEwNzYgTWlCL3MNCnRlc3Rfd3JpdGVfOEsgICAgICAgICAgICAgICAgIDEwNTkgTWlC
-L3MgICAgIDEyOTYgTWlCL3MNCnRlc3Rfd3JpdGVfMTZLICAgICAgICAgICAgICAgIDExMTkg
-TWlCL3MgICAgIDEzODAgTWlCL3MNCnRlc3Rfd3JpdGVfMzJLICAgICAgICAgICAgICAgIDEx
-NTggTWlCL3MgICAgIDEzODcgTWlCL3MNCnRlc3Rfd3JpdGVfNjRLICAgICAgICAgICAgICAg
-IDExODQgTWlCL3MgICAgIDE0NDggTWlCL3MNCnRlc3Rfd3JpdGVfMTI4SyAgICAgICAgICAg
-ICAgIDExOTggTWlCL3MgICAgIDE0ODEgTWlCL3MNCnRlc3Rfd3JpdGVfMU0gICAgICAgICAg
-ICAgICAgIDExNzggTWlCL3MgICAgIDE0ODYgTWlCL3M=
-
---------------Xeu1yh6QyigQDsRmSTUjsv3o--
