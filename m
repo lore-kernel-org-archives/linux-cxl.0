@@ -1,171 +1,206 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A84E1F4CB3;
-	Mon, 23 Jun 2025 08:38:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 195881422AB;
+	Mon, 23 Jun 2025 09:05:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750667934; cv=none; b=YEvrAnXE960fZvuI1YyB3JQnhpR48Q3JGiTUWkeWr+73pmEEk2xogoAvu7J9Vd7SzIBwoxX7eOCTj0sTDyz3isI/8ye54+kUu7QX79GYXVr2vAWGmO/3ZR3IoWIuMfdJI1lNGpmKP+BzzkZmh27S4XwuBfqe4oDD0xmpwBCVKbU=
+	t=1750669535; cv=none; b=oEvtpQtp5eUtcC7a5eo4K8dWiDhNLtOe/r4V4HC1fnGgcIao1tdUtuVQs2JqJkR9+Ap5n3huXUyNp79iJF6y1rbFZn53dKijLx8O4EyDttFN1A8/fHseU/ekx13l7vZ/YjItaHaVgxebeQ3BJ2FSlqMmei/wtMpd/1egyeuFXE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750667934; c=relaxed/simple;
-	bh=KPTfA+lD82RyS97lfltBlDwFaXpnQXlrck43kgnV2pA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hBw5bdH51gdi73bL6/4JTHSGZPk1OMbafu0R+FpYqqpcFk0ryGANpKp8HopbJ8YVeTBIM8BGiDq1I8p92K4InWm9vezetzpWaqHk9OLb+ThAFnD5UQdu++VxNUkPsgG564hvYlqKlRDx85Kv8EmWuSyqortOW3n/+LtaAgIH4JY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PAaIMywU; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PAaIMywU"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7406c6dd2b1so2917514b3a.0;
-        Mon, 23 Jun 2025 01:38:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750667933; x=1751272733; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PyVVTWaZgryZ9TMNe9jpkxLwz3WmJyduY+dRovtnePo=;
-        b=PAaIMywUzuPrJF8Z0XrCE+DZjPfsvL8Lua1lekfife5QOQc8aasFaGPuFXxrHf2k/R
-         g1rd1uT8FQcyfIY185zYI+uheBFOCCh05c2hBIqbMJRPFAQz8AA20rmoRe6F1QEkLpqn
-         lFJg1R4ZVCa36TWAgvguTuAsXCMXIrSBUGDluwYrn6gSYcuDkJavIUUelH08hT7KQILR
-         nzYrcxE51zETRYUsixruSkP6nlzFcGNHPa21LKfcYv5tTzPavN8L4/YXX3+mjhCATGfx
-         mNXDTFE76uF4K+B2e4fhjDzfv5CWPxuLNx1sr7utBUMe3SHdBDPVngbY7k4QjPOPl60E
-         UcKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750667933; x=1751272733;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PyVVTWaZgryZ9TMNe9jpkxLwz3WmJyduY+dRovtnePo=;
-        b=K8jOKfOx6hZ8OC2FDjg8tDsbHCgwr1mUyoButzJtsE1c+UFEiix6u5OTiVKP4QecEG
-         GOKc2p9Azm3Sq2HdrrUpxUrk83kjSbOjlNMdLDDOMxQ9BDoE2SJWNqvWQFWbn/FGjIgi
-         19hRzVMT8Wk5FRUFFfWYxRUEW3/7gETzhywS0wLt2KzWMFqlpPfshOcN/VuDj4TYzhFW
-         t8YcvlabJzqmLAnkRzbgQnHUmXc6PPPn4KtVKlwiiES19+8A4kJdR1vYvAjw4cPfjhYb
-         unCoJ9jykrqxzK+f9f1lPzBFMAXbWOvc1tL9D/KBMaxznuuL4S09EP1grsuU9lDvDApL
-         LgaA==
-X-Forwarded-Encrypted: i=1; AJvYcCV1HaGaCQHCyoBF7cnDK+MXu/bClpO42rUjtKoh7STA/1b2SjYuekHJeuFyyxB1Gpwwl8X1BzZygmp9UOc3@vger.kernel.org, AJvYcCVzTg9h+lL45cDv60M0leUpjngJAx5+S/EkCaKyzEV3U71AA04K+wEhN/wKzogs5RQoGSE/3gVFY34=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxf5e8/vMwi64tdx7sOHbJoZOB8Ecdg6X91FkbTYu+C7q2ZcIZD
-	jcg8nZLBMjTqGJ11EWg178fUh2laneZkf9hyLfN6/arwOPUM7RLRO5EU
-X-Gm-Gg: ASbGncv8zin2hjWKkqqPtc/DeYAwWPb0Gw9JTU/xnXwv3t2KTaeFWHZMZzRH4Cj+va7
-	8CwvlqTtbcHHMyoHrn8feLDlXaFwr5fvrX4sFxQHq3cu5db6gZ1UKnWPkbtadBgyNDxePGDITyL
-	vRbMKCHh+9uxq9EwzOWPyTg08GlgcRAnG/Out50hFsdIDXYdsr8HLq1+tJNTEWF2smdh0fbUFd7
-	7RhnylRLYApyIXIxBZrFNjOv1UCBv91cYGXg32H8+l59MHMu6dwBbcf7XguOqTgz+hGxKsypzOF
-	dxWf9QgSz6dWPL7AdnuA7PzhuIqcvm36FXMRBH7jrFRkJEnAi7WK2TGuQxqhHP2U84x36ur9kD6
-	FeQoGayE=
-X-Google-Smtp-Source: AGHT+IGUeFiCv00KVBMrpOmKRu6YCsOh3f2syfhlZ6O0RFPGj97gwW+e+gn6L9Eq8La3deVTY0MrQA==
-X-Received: by 2002:a05:6a21:6d91:b0:1ee:ab52:b8cc with SMTP id adf61e73a8af0-2202934b9e0mr18197566637.21.1750667932543;
-        Mon, 23 Jun 2025 01:38:52 -0700 (PDT)
-Received: from manjaro.domain.name ([2401:4900:1c66:8091:47dd:9377:3ab1:4e4c])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b31f1258b55sm6209442a12.61.2025.06.23.01.38.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 01:38:52 -0700 (PDT)
-From: Pranav Tyagi <pranav.tyagi03@gmail.com>
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: ming.li@zohomail.com,
-	rrichter@amd.com,
-	peterz@infradead.org,
-	skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev,
-	Pranav Tyagi <pranav.tyagi03@gmail.com>
-Subject: [PATCH v2] cxl/memdev: automate cleanup with __free()
-Date: Mon, 23 Jun 2025 14:08:41 +0530
-Message-ID: <20250623083841.364002-1-pranav.tyagi03@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1750669535; c=relaxed/simple;
+	bh=RWuS71A2QsnVIVDB4RKGk4iONoi5tzTDwm8Np/A6zUs=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aUlCYLVhNZiseg7gW/KQxeC4SkCVcsEEEfxiXp7SF5nxjnjwUazZUPrlyXc8mMsETu/6IHu4dn3h9So1pXwVBN03Izvf0J+AE76HpLVHyvjVQ/J3+CWNdYzIn6qZCuRMFhhcCNXtmgiargoRHzcnylqL/Q0lBrBPhRs4MN83RLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bQhtm4tCFz6HJqB;
+	Mon, 23 Jun 2025 17:02:56 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4C11F1402F4;
+	Mon, 23 Jun 2025 17:05:23 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 23 Jun
+ 2025 11:05:22 +0200
+Date: Mon, 23 Jun 2025 10:05:20 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Neeraj Kumar <s.neeraj@samsung.com>
+CC: <dan.j.williams@intel.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <a.manzanares@samsung.com>, <nifan.cxl@gmail.com>,
+	<anisa.su@samsung.com>, <vishak.g@samsung.com>, <krish.reddy@samsung.com>,
+	<arun.george@samsung.com>, <alok.rathore@samsung.com>,
+	<neeraj.kernel@gmail.com>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+	<gost.dev@samsung.com>, <cpgs@samsung.com>
+Subject: Re: [RFC PATCH 05/20] nvdimm/region_label: Add region label
+ updation routine
+Message-ID: <20250623100520.00003f34@huawei.com>
+In-Reply-To: <1690859824.141750165204442.JavaMail.epsvc@epcpadp1new>
+References: <20250617123944.78345-1-s.neeraj@samsung.com>
+	<CGME20250617124019epcas5p39815cc0f2b175aee40c194625166695c@epcas5p3.samsung.com>
+	<1690859824.141750165204442.JavaMail.epsvc@epcpadp1new>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-Use the scope based resource management (defined in linux/cleanup.h) to
-automate the lifetime control of struct cxl_mbox_transfer_fw. This
-eliminates explicit kfree() calls and makes the code more robust and
-maintainable in presence of early returns.
+On Tue, 17 Jun 2025 18:09:29 +0530
+Neeraj Kumar <s.neeraj@samsung.com> wrote:
 
-Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
----
- drivers/cxl/core/memdev.c | 21 ++++++++-------------
- 1 file changed, 8 insertions(+), 13 deletions(-)
+Add region label update routine
 
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index f88a13adf7fa..38f4449f9740 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -7,6 +7,7 @@
- #include <linux/slab.h>
- #include <linux/idr.h>
- #include <linux/pci.h>
-+#include <linux/cleanup.h>
- #include <cxlmem.h>
- #include "trace.h"
- #include "core.h"
-@@ -802,11 +803,10 @@ static int cxl_mem_activate_fw(struct cxl_memdev_state *mds, int slot)
- static int cxl_mem_abort_fw_xfer(struct cxl_memdev_state *mds)
- {
- 	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
--	struct cxl_mbox_transfer_fw *transfer;
- 	struct cxl_mbox_cmd mbox_cmd;
--	int rc;
--
--	transfer = kzalloc(struct_size(transfer, data, 0), GFP_KERNEL);
-+	
-+	struct cxl_mbox_transfer_fw *transfer __free(kfree) =
-+		kzalloc(struct_size(transfer, data, 0), GFP_KERNEL);
- 	if (!transfer)
- 		return -ENOMEM;
- 
-@@ -821,9 +821,7 @@ static int cxl_mem_abort_fw_xfer(struct cxl_memdev_state *mds)
- 
- 	transfer->action = CXL_FW_TRANSFER_ACTION_ABORT;
- 
--	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
--	kfree(transfer);
--	return rc;
-+	return cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- }
- 
- static void cxl_fw_cleanup(struct fw_upload *fwl)
-@@ -880,7 +878,7 @@ static enum fw_upload_err cxl_fw_write(struct fw_upload *fwl, const u8 *data,
- 	struct cxl_dev_state *cxlds = &mds->cxlds;
- 	struct cxl_mailbox *cxl_mbox = &cxlds->cxl_mbox;
- 	struct cxl_memdev *cxlmd = cxlds->cxlmd;
--	struct cxl_mbox_transfer_fw *transfer;
-+	struct cxl_mbox_transfer_fw *transfer __free(kfree);
- 	struct cxl_mbox_cmd mbox_cmd;
- 	u32 cur_size, remaining;
- 	size_t size_in;
-@@ -949,7 +947,7 @@ static enum fw_upload_err cxl_fw_write(struct fw_upload *fwl, const u8 *data,
- 	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- 	if (rc < 0) {
- 		rc = FW_UPLOAD_ERR_RW_ERROR;
--		goto out_free;
-+		return rc;
- 	}
- 
- 	*written = cur_size;
-@@ -963,14 +961,11 @@ static enum fw_upload_err cxl_fw_write(struct fw_upload *fwl, const u8 *data,
- 			dev_err(&cxlmd->dev, "Error activating firmware: %d\n",
- 				rc);
- 			rc = FW_UPLOAD_ERR_HW_ERROR;
--			goto out_free;
-+			return rc;
- 		}
- 	}
- 
- 	rc = FW_UPLOAD_ERR_NONE;
--
--out_free:
--	kfree(transfer);
- 	return rc;
- }
- 
--- 
-2.49.0
+
+> Added __pmem_region_label_update region label update routine to update
+> region label
+> 
+> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
+A few trivial comments inline. 
+
+Jonathan
+
+> ---
+>  drivers/nvdimm/label.c          | 142 ++++++++++++++++++++++++++++++++
+>  drivers/nvdimm/label.h          |   2 +
+>  drivers/nvdimm/namespace_devs.c |  12 +++
+>  drivers/nvdimm/nd.h             |  20 +++++
+>  include/linux/libnvdimm.h       |   8 ++
+>  5 files changed, 184 insertions(+)
+> 
+> diff --git a/drivers/nvdimm/label.c b/drivers/nvdimm/label.c
+> index d5cfaa99f976..7f33d14ce0ef 100644
+> --- a/drivers/nvdimm/label.c
+> +++ b/drivers/nvdimm/label.c
+> @@ -381,6 +381,16 @@ static void nsl_calculate_checksum(struct nvdimm_drvdata *ndd,
+>  	nsl_set_checksum(ndd, nd_label, sum);
+>  }
+>  
+> +static void rgl_calculate_checksum(struct nvdimm_drvdata *ndd,
+> +				   struct cxl_region_label *rg_label)
+> +{
+> +	u64 sum;
+> +
+> +	rgl_set_checksum(rg_label, 0);
+> +	sum = nd_fletcher64(rg_label, sizeof_namespace_label(ndd), 1);
+> +	rgl_set_checksum(rg_label, sum);
+> +}
+> +
+>  static bool slot_valid(struct nvdimm_drvdata *ndd,
+>  		struct nd_lsa_label *nd_label, u32 slot)
+>  {
+> @@ -1117,6 +1127,138 @@ int nd_pmem_namespace_label_update(struct nd_region *nd_region,
+>  	return 0;
+>  }
+>  
+> +static int __pmem_region_label_update(struct nd_region *nd_region,
+> +		struct nd_mapping *nd_mapping, int pos, unsigned long flags)
+> +{
+> +	struct nd_interleave_set *nd_set = nd_region->nd_set;
+> +	struct nvdimm_drvdata *ndd = to_ndd(nd_mapping);
+> +	struct nd_lsa_label *nd_label;
+> +	struct cxl_region_label *rg_label;
+> +	struct nd_namespace_index *nsindex;
+> +	struct nd_label_ent *label_ent;
+> +	unsigned long *free;
+> +	u32 nslot, slot;
+> +	size_t offset;
+> +	int rc;
+> +	uuid_t tmp;
+> +
+> +	if (!preamble_next(ndd, &nsindex, &free, &nslot))
+> +		return -ENXIO;
+> +
+> +	/* allocate and write the label to the staging (next) index */
+> +	slot = nd_label_alloc_slot(ndd);
+> +	if (slot == UINT_MAX)
+> +		return -ENXIO;
+> +	dev_dbg(ndd->dev, "allocated: %d\n", slot);
+> +
+> +	nd_label = to_label(ndd, slot);
+> +
+> +	memset(nd_label, 0, sizeof_namespace_label(ndd));
+> +	rg_label = &nd_label->rg_label;
+> +
+> +	/* Set Region Label Format identification UUID */
+> +	uuid_parse(CXL_REGION_UUID, &tmp);
+> +	export_uuid(nd_label->rg_label.type, &tmp);
+> +
+> +	/* Set Current Region Label UUID */
+> +	export_uuid(nd_label->rg_label.uuid, &nd_set->uuid);
+> +
+> +	rg_label->flags = __cpu_to_le32(flags);
+> +	rg_label->nlabel = __cpu_to_le16(nd_region->ndr_mappings);
+> +	rg_label->position = __cpu_to_le16(pos);
+> +	rg_label->dpa = __cpu_to_le64(nd_mapping->start);
+> +	rg_label->rawsize = __cpu_to_le64(nd_mapping->size);
+> +	rg_label->hpa = __cpu_to_le64(nd_set->res->start);
+> +	rg_label->slot = __cpu_to_le32(slot);
+> +	rg_label->ig = __cpu_to_le32(nd_set->interleave_granularity);
+> +	rg_label->align = __cpu_to_le16(0);
+> +
+> +	/* Update fletcher64 Checksum */
+> +	rgl_calculate_checksum(ndd, rg_label);
+> +
+> +	/* update label */
+> +	offset = nd_label_offset(ndd, nd_label);
+> +	rc = nvdimm_set_config_data(ndd, offset, nd_label,
+> +			sizeof_namespace_label(ndd));
+> +	if (rc < 0) {
+> +		nd_label_free_slot(ndd, slot);
+> +		return rc;
+> +	}
+> +
+> +	/* Garbage collect the previous label */
+> +	mutex_lock(&nd_mapping->lock);
+
+Perhaps use
+
+	guard(mutex)(&nd_mapping->lock);
+
+so you can directly return in the error path below and simplify the flow
+a tiny bit.
+
+> +	list_for_each_entry(label_ent, &nd_mapping->labels, list) {
+> +		if (!label_ent->label)
+> +			continue;
+> +		if (rgl_uuid_equal(&label_ent->label->rg_label, &nd_set->uuid))
+> +			reap_victim(nd_mapping, label_ent);
+> +	}
+> +
+> +	/* update index */
+> +	rc = nd_label_write_index(ndd, ndd->ns_next,
+> +			nd_inc_seq(__le32_to_cpu(nsindex->seq)), 0);
+> +
+With guard this can be 
+	if (rc)
+		return rec;
+
+	list_for_each...
+
+> +	if (rc == 0) {
+> +		list_for_each_entry(label_ent, &nd_mapping->labels, list)
+> +			if (!label_ent->label) {
+> +				label_ent->label = nd_label;
+> +				nd_label = NULL;
+> +				break;
+> +			}
+> +		dev_WARN_ONCE(&nd_region->dev, nd_label,
+> +				"failed to track label: %d\n",
+> +				to_slot(ndd, nd_label));
+> +		if (nd_label)
+> +			rc = -ENXIO;
+> +	}
+> +	mutex_unlock(&nd_mapping->lock);
+> +
+> +	return rc;
+> +}
 
