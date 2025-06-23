@@ -1,150 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CE5426E175;
-	Mon, 23 Jun 2025 14:49:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480181A01B9
+	for <linux-cxl@vger.kernel.org>; Mon, 23 Jun 2025 14:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750690177; cv=none; b=Qyxcchwkx77yoxcNjRG37nvdd72d+huQjC8Bbgtr15HPqD5+2YKbxjZ3Ce6hS/FzKybjvWToxNtkVEPlCMQSdkSopUjIG0AeHFTKn0Dwkxr87uLnB6gbdSL8ggBfvQ/PTW4giRwek6QGsap6N5WQNqc7WJu0GKOranUSJZXY26s=
+	t=1750690206; cv=none; b=iIbhWeAUInqXSvQYUyiHTFEXfI1zJH7xIt7LL/QIqgeY30Yjhx2oDPXda/YIW2jANPVDV0tnmAYWlxi49nsfDAt186092jxh/6YzJ8y96VHRPvPRLAqOm4XbeusSjNxEm02aWXs++dYGrJqN6TnnID9PTgqJjO8vEHGB3Nf850Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750690177; c=relaxed/simple;
-	bh=h9B+FKCtkHoA+eBpzEgqZWOAO0qwpOGRD1LQ2ZTE+F8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ozwU3g5sD0bz+lpCoIBsB5BB8vwPlcV5IDMT/bSn9Il8FF1H1RsmZA4pz/k6EwPQ/AFpQi+n3REM5bD1g12ogMJl7NujZd66ONL+5MD+0E+6IEOwdMRjJRTy30FrGyBUB0toG9gt72QrGmGMqXKOd2odH3TL67QwA0qNYqoBesU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AeqK4AfJ; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AeqK4AfJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750690175; x=1782226175;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=h9B+FKCtkHoA+eBpzEgqZWOAO0qwpOGRD1LQ2ZTE+F8=;
-  b=AeqK4AfJaVdx4KGaFlsv10nQj+a7PocuW/NMASO3Dt9hwWLecG4+24cY
-   eD92rZrf7cZWGewdrsmb2pTqPv34ph6G42/n3/fIa0l+8UqKyApaWxzJ2
-   TjcEe5b1LgCcJnsL+fGfjOe0/Hx1VYpDzcQF6zG7ejTYno/jl+mZTOFNI
-   5rAHMVWX2zjaQr22OxOIt9rrsBnBGS7vDnbBBUKIgIWmbhKag23dexohv
-   W5nlx7EsAHLhw/VmKQUeZrgaAa3IArIT7rurU8xiodLX+HpCnTciZAo3w
-   MqYPt9ExlItcqetNhpT2vVYNATpAXgBELIW9qX8bkKstD39pQqDYW8TAg
-   w==;
-X-CSE-ConnectionGUID: lGZHVYfSRT6es1ypTOZyEQ==
-X-CSE-MsgGUID: kS1jD8GORiypxW0HEVDGUg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="52771057"
-X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="52771057"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 07:49:34 -0700
-X-CSE-ConnectionGUID: AmSJ52JPTWK/gtafG/Pi7g==
-X-CSE-MsgGUID: uqBbw3HAREq7Zc9AW30Fzg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,258,1744095600"; 
-   d="scan'208";a="152139645"
-Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.108.178]) ([10.125.108.178])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 07:49:32 -0700
-Message-ID: <054ac59c-d088-4267-b0bf-e291ab8f7214@intel.com>
-Date: Mon, 23 Jun 2025 07:49:31 -0700
+	s=arc-20240116; t=1750690206; c=relaxed/simple;
+	bh=t23FVEVErgE+gLEVp8i5XIVQbzzYo9MnGh6KASd8pNI=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=R/D+aDZCj8yrUvg83VQ3T9qchGBm6RNjMcBQjXMxVY9CdRA0uSC8BrhAd8WvzaVz7NUNexKacn5jD6bvet2KR6Tr0jRagJ3IcGjP9n9MxujbV9BB2k7LmIg+7uTswqXu9pNyot8DH8GPinCEblyVd09jw+gN6pQaWO2Do7qrYZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bQrZQ2GYgz6D983;
+	Mon, 23 Jun 2025 22:49:18 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 244FE1402E9;
+	Mon, 23 Jun 2025 22:50:01 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 23 Jun
+ 2025 16:50:00 +0200
+Date: Mon, 23 Jun 2025 15:49:59 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Davidlohr Bueso <dave@stgolabs.net>
+CC: <dave.jiang@intel.com>, <dan.j.williams@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <jgroves@micron.com>, <ravis.opensrc@micron.com>,
+	<fan.ni@samsung.com>, <anisa.su@samsung.com>, <a.manzanares@samsung.com>,
+	<linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH 5/7] cxl/mbox: Allow userspace background commands
+Message-ID: <20250623154959.00005d54@huawei.com>
+In-Reply-To: <20250617193611.564668-6-dave@stgolabs.net>
+References: <20250617193611.564668-1-dave@stgolabs.net>
+	<20250617193611.564668-6-dave@stgolabs.net>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/8] cxl/mbox: Convert poison list mutex to ACQUIRE()
-To: Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Peter Zijlstra <peterz@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>
-References: <20250619050416.782871-1-dan.j.williams@intel.com>
- <20250619050416.782871-3-dan.j.williams@intel.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250619050416.782871-3-dan.j.williams@intel.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
+On Tue, 17 Jun 2025 12:36:09 -0700
+Davidlohr Bueso <dave@stgolabs.net> wrote:
 
-
-On 6/18/25 10:04 PM, Dan Williams wrote:
-> Towards removing all explicit unlock calls in the CXL subsystem, convert
-> the conditional poison list mutex to use a conditional lock guard.
+> CXL 3.1 introduced the ability to request that the current on-going
+> background command be aborted. As such userspace may be allowed to
+> monopolize the background operation capability if there are no
+> other bg commands that want to run.
 > 
-> Rename the lock to have the compiler validate that all existing call sites
-> are converted.
+> The policy here are as follows:
 > 
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Davidlohr Bueso <dave@stgolabs.net>
-> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Alison Schofield <alison.schofield@intel.com>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> 1. Give bg-capable commands from the kernel higher priority than those
+> from userspace (albeit currently no command). Therefore a userspace
+> on-going command can be canceled so a kernel one may run instead.
+> 
+> 2. Userspace bg commands may cancel each other on demand. It is not
+> up to the kernel to put any policies in place here.
+> 
+> 3. Any previously synchronous polling timedout command that is still
+> running may also be aborted by any command. This window is expected
+> to be small.
+> 
+> The context of doing the cancellation request is the same as the new
+> incoming command, and will always hold the mbox_mutex, guaranteeing
+> that any successful cancel does not race with a third thread coming
+> in and stealing the effort.
+> 
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 > ---
->  drivers/cxl/core/mbox.c | 7 +++----
->  drivers/cxl/cxlmem.h    | 4 ++--
->  2 files changed, 5 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 2689e6453c5a..81b21effe8cf 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -1401,8 +1401,8 @@ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
->  	int nr_records = 0;
->  	int rc;
->  
-> -	rc = mutex_lock_interruptible(&mds->poison.lock);
-> -	if (rc)
-> +	ACQUIRE(mutex_intr, lock)(&mds->poison.mutex);
-> +	if ((rc = ACQUIRE_ERR(mutex_intr, &lock)))
->  		return rc;
->  
->  	po = mds->poison.list_out;
-> @@ -1437,7 +1437,6 @@ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
->  		}
->  	} while (po->flags & CXL_POISON_FLAG_MORE);
->  
-> -	mutex_unlock(&mds->poison.lock);
->  	return rc;
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_mem_get_poison, "CXL");
-> @@ -1473,7 +1472,7 @@ int cxl_poison_state_init(struct cxl_memdev_state *mds)
->  		return rc;
->  	}
->  
-> -	mutex_init(&mds->poison.lock);
-> +	mutex_init(&mds->poison.mutex);
->  	return 0;
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_poison_state_init, "CXL");
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 551b0ba2caa1..f5b20641e57c 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -254,7 +254,7 @@ enum security_cmd_enabled_bits {
->   * @max_errors: Maximum media error records held in device cache
->   * @enabled_cmds: All poison commands enabled in the CEL
->   * @list_out: The poison list payload returned by device
-> - * @lock: Protect reads of the poison list
-> + * @mutex: Protect reads of the poison list
->   *
->   * Reads of the poison list are synchronized to ensure that a reader
->   * does not get an incomplete list because their request overlapped
-> @@ -265,7 +265,7 @@ struct cxl_poison_state {
->  	u32 max_errors;
->  	DECLARE_BITMAP(enabled_cmds, CXL_POISON_ENABLED_MAX);
->  	struct cxl_mbox_poison_out *list_out;
-> -	struct mutex lock;  /* Protect reads of poison list */
-> +	struct mutex mutex;  /* Protect reads of poison list */
->  };
->  
->  /*
+>  drivers/cxl/core/mbox.c |  9 ++++--
+>  drivers/cxl/cxlmem.h    |  4 +++
+>  drivers/cxl/pci.c       | 72 +++++++++++++++++++++++++++++++++++++----
+>  include/cxl/mailbox.h   |  2 ++
+>  4 files changed, 78 insertions(+), 9 deletions(-)
+
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 3648efcc7c89..6ada0f502914 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+
+> @@ -263,6 +264,8 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_mailbox *cxl_mbox,
+>  	 * commands during this window.
+>  	 */
+>  	switch (mds->bg.opcode) {
+> +	case 0:
+
+I assume this is the race?  Add a comment so we can figure this out in future.
+
+> +		break;
+>  	case CXL_MBOX_OP_SANITIZE:
+>  		/*
+>  		 * Ensure no new command comes in until so. Keep the
+
+
+>  static int cxl_pci_mbox_send(struct cxl_mailbox *cxl_mbox,
+>  			     struct cxl_mbox_cmd *cmd)
+>  {
+> @@ -381,9 +437,11 @@ static int cxl_pci_mbox_send(struct cxl_mailbox *cxl_mbox,
+>  	/*
+>  	 * Ensure cxl_mbox_background_done() checks are safe amongst
+>  	 * each other: no new bg operation can occur in between while polling.
+> +	 *
+
+Stray change.
+
+>  	 */
+
+
 
