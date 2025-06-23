@@ -1,117 +1,115 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B1822FF59;
-	Mon, 23 Jun 2025 09:20:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C886AD51;
+	Mon, 23 Jun 2025 09:27:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750670453; cv=none; b=LghFUpfI8a2HfAqAIMgdSj719uTcNPahOznUUhjvc6pOEyxj+SO+BdS4zO9dXMkStAP5zl9yx/YxrOAhPegY6BpgXCpk5t1FDzJRFECaSE5rIiB62uWeaWtkQrjyj40Pqme7otCy0OKzJVq4iRxfkBCtWS6oX/M8K97t/AY7lG8=
+	t=1750670856; cv=none; b=DKlgXi1TJs+cIae6qn8oMVVsALbVplvkzxnkHhIo2q07j7NOncWzlOxXDOULblMulFVTvDwJKErg2Lpd93aVEolx84wh/W0ZOkHJDEUKr4XhqB+cK5KgUdr6vf7Ay5vI+aVHfyfrNjmGsanHfcYT4Brs4U/7DMq+d5xgTByfqcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750670453; c=relaxed/simple;
-	bh=yPNVRmb7MDtEqXGhH5b4pWnQ1vD1JGAVWJ7awgEhwaA=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kPKdNQ5TADArJ3SGAODo0VuQBUA5bmresn0ITGCx+DyVDiRPYf1JnVPSSTHcXrfivD0ILvpAVpw8iMwL/wUDuFmnvt5H1Hh5EDYCnwnF6RuzOQnmOouohFIjkCMLr1f6yIwmT1DcgDaBA77iywrTVkEd4KWM+lA8jPqNtPltVYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bQjGZ5D7Fz6M539;
-	Mon, 23 Jun 2025 17:20:06 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3519F1402E9;
-	Mon, 23 Jun 2025 17:20:49 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 23 Jun
- 2025 11:20:48 +0200
-Date: Mon, 23 Jun 2025 10:20:47 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Neeraj Kumar <s.neeraj@samsung.com>
-CC: <dan.j.williams@intel.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>, <a.manzanares@samsung.com>, <nifan.cxl@gmail.com>,
-	<anisa.su@samsung.com>, <vishak.g@samsung.com>, <krish.reddy@samsung.com>,
-	<arun.george@samsung.com>, <alok.rathore@samsung.com>,
-	<neeraj.kernel@gmail.com>, <linux-kernel@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-	<gost.dev@samsung.com>, <cpgs@samsung.com>
-Subject: Re: [RFC PATCH 13/20] cxl/mem: Refactor cxl pmem region
- auto-assembling
-Message-ID: <20250623102047.000020fc@huawei.com>
-In-Reply-To: <1213349904.281750165205974.JavaMail.epsvc@epcpadp1new>
-References: <20250617123944.78345-1-s.neeraj@samsung.com>
-	<CGME20250617124043epcas5p21e5b77aa3a6acfa7e01847ffd58350ed@epcas5p2.samsung.com>
-	<1213349904.281750165205974.JavaMail.epsvc@epcpadp1new>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1750670856; c=relaxed/simple;
+	bh=q7oJSYwirHOOEYci9Vsvx/PmgyNKO2aIYxM5EObmOXw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tnF6T446Vvq07QfK9yCXrVMCnOpuk+p88oR7iAuv6rObr3OBgk9Y77lc6R6zVxhzUCzScQD4tZ9NsBLCupOXtCGM7xiwiyaCVpLu04ufkMlN4drsxyVckrw/CGBHon7gewE+X3JJHZFHoHDy+OYFEBeuGkmUB++17qdOGy6akFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ESdAMab6; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ESdAMab6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E27AC4CEEA;
+	Mon, 23 Jun 2025 09:27:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1750670855;
+	bh=q7oJSYwirHOOEYci9Vsvx/PmgyNKO2aIYxM5EObmOXw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ESdAMab6d81Q7RX3glu6wx3ZVAyvGuwGx2KY6WmdSSL8+XN1BsnMjO2aoYzE2lJVR
+	 ovIRp100yEvaP4BmfymeewpZ3CzCyIEQOmeZOWJOBo5SV+snCnawcHDRp3jvrOWUlq
+	 D1Vi/z0hA0EN7pKwY86DHDDBEg4AsxxnDUHItF3k=
+Date: Mon, 23 Jun 2025 11:27:33 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Pranav Tyagi <pranav.tyagi03@gmail.com>
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com, ming.li@zohomail.com,
+	rrichter@amd.com, jeff.johnson@oss.qualcomm.com,
+	peterz@infradead.org, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH] cxl/port: automate cleanup with __free()
+Message-ID: <2025062343-brilliant-laziness-e2cf@gregkh>
+References: <20250623091929.366357-1-pranav.tyagi03@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250623091929.366357-1-pranav.tyagi03@gmail.com>
 
-On Tue, 17 Jun 2025 18:09:37 +0530
-Neeraj Kumar <s.neeraj@samsung.com> wrote:
-
-> In 84ec985944ef3, For cxl pmem region auto-assembly after endpoint port
-> probing, cxl_nvd presence was required. And for cxl region persistency,
-> region creation happens during nvdimm_probe which need the completion
-> of endpoint probe.
+On Mon, Jun 23, 2025 at 02:49:29PM +0530, Pranav Tyagi wrote:
+> Use the scope based resource management (defined in linux/cleanup.h) to
+> automate the lifetime control of struct cxl_endpoint_decoder. This
+> eliminates the explicit kfree() call and makes the code more robust and
+> maintainable in presence of early returns.
 > 
-> It is therefore refactored cxl pmem region auto-assembly after endpoint
-> probing to cxl mem probing
-> 
-> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
-For ordering requirements this needs more eyes.  I've never cared that
-much about he persistency and auto assembly code so not something I have
-a good mental model of!
-
-
+> Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
 > ---
->  drivers/cxl/core/port.c | 38 ++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/cxl.h       |  1 +
->  drivers/cxl/mem.c       | 27 ++++++++++++++++++---------
->  drivers/cxl/port.c      | 38 --------------------------------------
->  4 files changed, 57 insertions(+), 47 deletions(-)
-
-> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> index 2f03a4d5606e..aaea4eb178ef 100644
-> --- a/drivers/cxl/mem.c
-> +++ b/drivers/cxl/mem.c
-
-> @@ -180,6 +171,24 @@ static int cxl_mem_probe(struct device *dev)
->  			return rc;
+>  drivers/cxl/core/port.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index eb46c6764d20..c35946882b20 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/idr.h>
+>  #include <linux/node.h>
+> +#include <linux/cleanup.h>
+>  #include <cxl/einj.h>
+>  #include <cxlmem.h>
+>  #include <cxlpci.h>
+> @@ -1888,14 +1889,14 @@ EXPORT_SYMBOL_NS_GPL(cxl_switch_decoder_alloc, "CXL");
+>   */
+>  struct cxl_endpoint_decoder *cxl_endpoint_decoder_alloc(struct cxl_port *port)
+>  {
+> -	struct cxl_endpoint_decoder *cxled;
+>  	struct cxl_decoder *cxld;
+>  	int rc;
+>  
+>  	if (!is_cxl_endpoint(port))
+>  		return ERR_PTR(-EINVAL);
+>  
+> -	cxled = kzalloc(sizeof(*cxled), GFP_KERNEL);
+> +	struct cxl_endpoint_decoder *cxled __free(kfree) =
+> +		kzalloc(sizeof(*cxled), GFP_KERNEL);
+>  	if (!cxled)
+>  		return ERR_PTR(-ENOMEM);
+>  
+> @@ -1904,7 +1905,6 @@ struct cxl_endpoint_decoder *cxl_endpoint_decoder_alloc(struct cxl_port *port)
+>  	cxld = &cxled->cxld;
+>  	rc = cxl_decoder_init(port, cxld);
+>  	if (rc)	 {
+> -		kfree(cxled);
+>  		return ERR_PTR(rc);
 >  	}
 >  
-> +	if (resource_size(&cxlds->pmem_res) && IS_ENABLED(CONFIG_CXL_PMEM)) {
-> +		rc = devm_cxl_add_nvdimm(parent_port, cxlmd);
-> +		if (rc) {
-> +			if (rc == -ENODEV)
-> +				dev_info(dev, "PMEM disabled by platform\n");
-> +			return rc;
-> +		}
-> +	}
-> +
-> +	/*
-> +	 * Now that all endpoint decoders are successfully enumerated, try to
-> +	 * assemble region autodiscovery from committed decoders.
-> +	 * Earlier it was part of cxl_endpoint_port_probe, So moved it here
+> -- 
+> 2.49.0
 
-I would drop this history statement. Good to have in the patch description
-but no point in keeping it in the code. Just state what the requirements
-are now.
+Note, I can't speak for the maintainers of this subsystem, but
+generally, making changes like this for no real good reason, for code
+that has been around for years, is really not needed at all.
 
-> +	 * as cxl_nvd of the memdev needs to be available during the pmem
-> +	 * region auto-assembling
-> +	 */
-> +	cxl_region_discovery(cxlmd->endpoint);
-> +
->  	/*
->  	 * The kernel may be operating out of CXL memory on this device,
+If you fix a bug with it, sure, but changes for the sake of "let's use
+this new feature" in here really might not be necessary.
 
+Why not add cleanup.h support to code paths that actually fix existing
+bugs instead?
 
+Also, you have added some coding style errors to the code now with this
+patch, which also is generally not considered a good idea :)
 
+thanks,
+
+greg k-h
