@@ -1,121 +1,105 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1C821B393C;
-	Mon, 23 Jun 2025 18:44:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33F661078F
+	for <linux-cxl@vger.kernel.org>; Mon, 23 Jun 2025 19:19:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750704299; cv=none; b=gizXSEYHGfwKrN3f+IWSxn+65MDuxdd3jWVAI+fyjn+Q2uJvgRBuMbe0t5fMMJ3bUzBnhNbRUdBAQ5gJgRU638HVYFf0Wxs6L0XL+DZMQvjP7EAPYPwNDs6mi0/OcMn+cshXXFn/KSahkqxXLAmzmKys1zLGWUKAPAHbsnVQ3IM=
+	t=1750706398; cv=none; b=HFK2i/n20RTvpoiGx9SoQLKk91o+BQNUms1mJFf3cPb1RtLogittfxgimrJl/tXzSCpRIFIyFUtyc7eyEME/DPhSTXCDCbEl2QegeezXyYLx6hui/UNBjmtsHnu19n+Sm1Kd8zNX+KWeohRX1fOlOmXQJshv8Q0HrtbR7Tw61Vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750704299; c=relaxed/simple;
-	bh=GopSPIKKUHWzzImCePFGXP3aY/mN3axe8ECTeJ4KnZ8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=n9xmMdG0QOjV+kNI0cz1cJnfg+JyKQcfm/KDotBhuXnf5JbAUVNxC857w+NITrt97FAhQCwzVepwmPEWBd0iKdH99l4JPmrhybJVWvj9P5OeYkhU5TqRS3gfXd/2MhnIAHvnMWibaHCzUdrPDhDKHAjIhaZJUbyUmOX3wD3o2cA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=q98buHEj; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1750706398; c=relaxed/simple;
+	bh=/KzjYP4jGRkOL8tv1XYhP6PhsnBHTBQpvSmWP9PLkkc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HgInIjqF/dpEyWMIktoFvdMGPrLcTHRIu4QbRS7ESXV9dztqw6syc1SKkdFmg5VSLzgaaQSW7VYwdl5M8xxmiCeNn4YAG/gds0nbDhdI5crgkHOA9RECScPLaG1BkbD311NS4Qa7LOnDF62SOe+tF63WCtV4NVIMk5al82gNRdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=bpvhanDW; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="q98buHEj"
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55NGY1rA015508;
-	Mon, 23 Jun 2025 18:44:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=corp-2025-04-25; bh=vSIsgPuR8bu5IBeEFtMHltrZ67ejw
-	0HFaP2JXTm2H0w=; b=q98buHEj9Inho9ZeTC3r1onche4RYpqeIQI157XhYzGfK
-	QE3N2BzKosQ3l5oAeDLBr1pzEZwA+m9B75rpgF+uBxmTznK7cWq86wsiTIk+jkax
-	MONM2Z/y4x/ggPbm71PNLNZUh0Xlm82oPibEBieSR0Z0tuIpEcD+LX7a3onxNijU
-	fEdlw9up8ZSAJgxL2xldOH7m8iYpByIsvoyv5DRo+6WFvH9YHHiqNEK71PK8/u3S
-	Vfp94m2iocjwAo0uWLan77jMZblXAxoIMl24Ws116lxRgaBPB1OwePif+SCckO7Q
-	MVtrv+kj6st6RsXfnAhPhtCZ+6K5oiJCj3My5OBvw==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47ds8muc63-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 23 Jun 2025 18:44:46 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55NHFXlO031509;
-	Mon, 23 Jun 2025 18:44:45 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 47ehpp7264-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 23 Jun 2025 18:44:45 +0000
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55NIijgS038720;
-	Mon, 23 Jun 2025 18:44:45 GMT
-Received: from ca-dev110.us.oracle.com (ca-dev110.us.oracle.com [10.129.136.45])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 47ehpp725k-1;
-	Mon, 23 Jun 2025 18:44:45 +0000
-From: Alok Tiwari <alok.a.tiwari@oracle.com>
-To: jonathan.cameron@huawei.com, will@kernel.org, mark.rutland@arm.com,
-        linux-cxl@vger.kernel.org
-Cc: alok.a.tiwari@oracle.com, linux-perf-users@vger.kernel.org
-Subject: [PATCH] perf/cxlpmu: Fix allocation argument order and minor formatting issues
-Date: Mon, 23 Jun 2025 11:44:11 -0700
-Message-ID: <20250623184415.42751-1-alok.a.tiwari@oracle.com>
-X-Mailer: git-send-email 2.46.0
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="bpvhanDW"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4a56cc0def0so77865591cf.3
+        for <linux-cxl@vger.kernel.org>; Mon, 23 Jun 2025 12:19:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1750706394; x=1751311194; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Sc/yka3hfGiPDvvwtGoDtghN7JXKc2MnzeWxQ4J3bkI=;
+        b=bpvhanDWrZRD4KArqodsP1nwH0JPliKlVjUo4dQFo8upKAgTyCVu5/XNHgiAutqk/A
+         b2o+o8XCaA9p8OXqZVeyegeTZ6lULObDALj2vFnr5xsp1e6s5Yen9rt0AzJjCy2sBhPI
+         34NO+MLFxyJplJ/MIP7sR5zAR6EeBq/VAfhEeJUNuB7z45/DWS5CiWtDQKLh2TjM7dxT
+         RhxiX+7tguTY8clfb12xBKogkDhHNZ3cRiAeNUGY8nGg80z7+aH6XDF6ckXyrwkO7n5k
+         SlOuGC6My5KTfOLATK2te1ZDnTixhj0n5r3RHeaoaULFzItObTutXQJdAo2Bi/TN+FvN
+         InWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750706394; x=1751311194;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Sc/yka3hfGiPDvvwtGoDtghN7JXKc2MnzeWxQ4J3bkI=;
+        b=bOOyTWP3p0eC+CEP3VPv1tuNbB8wcrl889o/tOGOmIgg8w8g9RYmepHhitYLf7uQvp
+         kHw5SdG+bXksXo7Y2rAAToimkUfMvrc0vqkYRGaM8Fx/AneLQKiL6ZkKeq5am1lBZvtD
+         sBpEDFUSqR235H42Dv35DfkFdaKn92O2dcrhjT3M5WMAzafmCwcGn8U+b8zO4GWjyCxl
+         QRAsIBVXOIWcS92i8EuXlw9uzdYxkSApaIQkqLUMjgxbZQHnI6KIXjeEh+3XmxXPlh0r
+         YgtQ0GCwLPc9Z2w5Go+XNv80m4C1HoEsyIjU95zYaSuPIumINvHtR1PotwRemn0eTigh
+         Y/fg==
+X-Gm-Message-State: AOJu0YxDQykVxIT7POyry46l0eVDfD5MTRXXyIWR8KI/3SLJI/GrPldy
+	W/lFjV7H4smeTH9N9u2KliHsfMen2tIRm8JFJWDw4ahsMbARBqCT4Tl9122hSxZ5vRI=
+X-Gm-Gg: ASbGncuQkRqnRoxOlbd0KltMe2rAtX4yJb3tK3u23ZZUWzAOuG5XiuO1rFSxju8kCJY
+	uRBqqLLpkXvZLw8MfEpxcSTR5y7SemQ177eyDfZl/3oUdJVIiV43sLfqgYnUrcFAr18nP89S2r0
+	91JZ20xxsMPjVpgTp7RelACv+iRnwadGmFWw0ekXQhoYDYrNWk8lgLwl39CkTM7KdQFFme4qSos
+	KF6M6d5nckpmQQBm58w/x+SHo0fB8MEUZ22qadqhrYVyI3U92C98fy17HqhOmNAueXHbE0qMs5d
+	fGgKexhCFZG9WmoXo7ZmyHOg/NpU+fyYBTpHQBdxDGFrP8TBeRF02eHNXQ==
+X-Google-Smtp-Source: AGHT+IEJDgRZZ4nVCbDO5jD8bXYatavVeTWpCEC8bT+J/SLimj0HRJIsJlld3v5/Yfo/JKK58W+zjw==
+X-Received: by 2002:a05:6214:268d:b0:6fb:4f9e:957b with SMTP id 6a1803df08f44-6fd0a600403mr207925346d6.43.1750706393967;
+        Mon, 23 Jun 2025 12:19:53 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F ([2620:10d:c091:400::5:e19e])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd1dcf1be2sm28135296d6.71.2025.06.23.12.19.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 12:19:53 -0700 (PDT)
+Date: Mon, 23 Jun 2025 14:19:51 -0500
+From: Gregory Price <gourry@gourry.net>
+To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Cc: linux-cxl@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] cxl: docs/driver-api/conventions resolve conflicts
+ btw CFMWS, LMH, ED
+Message-ID: <aFmo18OEZGMA2HU8@gourry-fedora-PF4VCD3F>
+References: <20250623152923.1048525-1-fabio.m.de.francesco@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-23_05,2025-06-23_07,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 bulkscore=0
- malwarescore=0 phishscore=0 suspectscore=0 adultscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
- definitions=main-2506230119
-X-Authority-Analysis: v=2.4 cv=IcWHWXqa c=1 sm=1 tr=0 ts=6859a09e cx=c_pps a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=6G97NM66kQU3OCPaGyAA:9
-X-Proofpoint-ORIG-GUID: UCeJiwcs_lg7LaFR4Ps15_D8noW1eo4H
-X-Proofpoint-GUID: UCeJiwcs_lg7LaFR4Ps15_D8noW1eo4H
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjIzMDExOCBTYWx0ZWRfXyqejpg88gnG4 5TXWVqePVDMNlTMnMWXdgo55GbvvNtOf9f873xpGDt8FOxQdlTaZT/rDj88mNsPwBpu9aEdCvWB LcQmWLOnWxO0cFqlPdS26gsfIpcoIKK2k61YpnUTC7DQwaEItLqC4pS6029pbn0R4zyxQ+wAKHm
- 2b3Mj6+NiZtJdbjlW44aftR3k/hqfxHTRAu8NDwTePMSPsMfWf4LoPlwHlu0Eex3BZqGiAmDHft Zm3DLyJAsKzc+fIwM5L2iN6KNhienEeCr6kLVldbMuwRiFrGrU/DEmRPbj0mWaI2sQj1HXqCJfZ pg736P4J6vc/+stbf07fDQxvayYBJIHMkqfDf8kvpKu/q+Z/pd1Sd88VNAvzZ/Y2UTqqHqypTyn
- AQvW69yfgpVib/T7PFHlcJ2R3EVOTE93zhRSUPvB6DfdqkkdI4/Mg0DWknWBTJ0BALZIbFXW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250623152923.1048525-1-fabio.m.de.francesco@linux.intel.com>
 
-Correct the argument order in devm_kcalloc() to follow the conventional
-count, size form to avoid any confusion or bugs.
-Also fix a formatting issue in the devm_kasprintf() call by removing a
-stray newline and fix a duplicated word in a comment.
+On Mon, Jun 23, 2025 at 05:29:02PM +0200, Fabio M. De Francesco wrote:
+> Add documentation on how to resolve conflicts between CXL Fixed Memory
+> Windows, Platform Memory Holes, and Endpoint Decoders.
+> 
+> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
 
-Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
----
- drivers/perf/cxl_pmu.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+I won't block a doc update on a suggestion so
 
-diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-index d6693519eaee2..fb0b29f149807 100644
---- a/drivers/perf/cxl_pmu.c
-+++ b/drivers/perf/cxl_pmu.c
-@@ -113,7 +113,7 @@ struct cxl_pmu_info {
- 
- /*
-  * All CPMU counters are discoverable via the Event Capabilities Registers.
-- * Each Event Capability register contains a a VID / GroupID.
-+ * Each Event Capability register contains a VID / GroupID.
-  * A counter may then count any combination (by summing) of events in
-  * that group which are in the Supported Events Bitmask.
-  * However, there are some complexities to the scheme.
-@@ -834,8 +834,8 @@ static int cxl_pmu_probe(struct device *dev)
- 	if (rc)
- 		return rc;
- 
--	info->hw_events = devm_kcalloc(dev, sizeof(*info->hw_events),
--				       info->num_counters, GFP_KERNEL);
-+	info->hw_events = devm_kcalloc(dev, info->num_counters,
-+				       sizeof(*info->hw_events), GFP_KERNEL);
- 	if (!info->hw_events)
- 		return -ENOMEM;
- 
-@@ -873,7 +873,7 @@ static int cxl_pmu_probe(struct device *dev)
- 		return rc;
- 	irq = rc;
- 
--	irq_name = devm_kasprintf(dev, GFP_KERNEL, "%s_overflow\n", dev_name);
-+	irq_name = devm_kasprintf(dev, GFP_KERNEL, "%s_overflow", dev_name);
- 	if (!irq_name)
- 		return -ENOMEM;
- 
--- 
-2.46.0
+Reviewed-by: Gregory Price <gourry@gourry.net>
 
+> +Platform Firmware (BIOS) might reserve part of physical addresses below
+> +4 GB (e.g., the Low Memory Hole that describes PCIe memory space for MMIO
+> +or a requirement for the greater than 8 way interleave CXL regions starting
+> +at address 0). In that case the Window Size value cannot be anymore
+> +constrained to the NIW * 256 MB above-mentioned rule.
+
+It might be nice to have a diagram that explains this visually, as it's
+difficult for me to understand the implications through words alone...
+
+which is likely why the conflict exists in the first place :]
+
+~Gregory
