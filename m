@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4720D6F53E
-	for <linux-cxl@vger.kernel.org>; Tue, 24 Jun 2025 00:53:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB983594B
+	for <linux-cxl@vger.kernel.org>; Tue, 24 Jun 2025 00:53:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750726425; cv=none; b=eVjR3YVQLHnVYoN3ndnISfvr5+K/Fr+w/VZ2KtHDUusVeXb0Z8CDJo3CxfUv6ogReK7dQWbyVQUqjbduTgIhOLPsyJWZPsrTTcaFZN2bG24ISZtd5wElL7Wyf5GauN+mWmapz/bQD5qvS+s5pt90BNVj/Yh2MXhFbmU9uREi04Y=
+	t=1750726427; cv=none; b=QoDH/VZhxaciVKjg+EIU0Lv1xFXcHXw0QKkrG2PX2zPf5eGBS2lovlBVcQtLCoqMDfFXijyo+SReWa80IzBXvIWqD0xqIh86CzHsIFsbV4QgQlSZUyk57BKpgHKp+cnOpEc1sdAGNLLYtSoukdl41l0XQlg2V0KEMfmyFQJ6eIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750726425; c=relaxed/simple;
-	bh=6ue5SkOOnonCi0JVDNz8fAzqfFyNh5999bTGySBe1es=;
+	s=arc-20240116; t=1750726427; c=relaxed/simple;
+	bh=xI5+jMDjodJg1jiA0qJct4MoSUOELQUNUrOFBiUAnd4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WWSfkHTQROiJNa9qZQjzVOqsDjkKAV8TffVrkcGuU4ocmGhpIKrP7XF55PKiFJGSxp9XhSH94Sn/xNsr6ipxhmUUa1UCjmH66qZqeQgVNJeToZybB0z3ZDQLd1ERgiODcqtPgogg/OwQkeaJTIqUcoe38TnmqAmulj9zPgFT2ZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WaTRXbYR; arc=none smtp.client-ip=198.175.65.14
+	 MIME-Version; b=EFf0Jq6xHx/HmbZTi+TLbiS0qIi8NLTDBNTDMpqzMQnG94DyeEdPJ4YD8yPxgbuqjFG8dCYJnD8etUjvAq34LmdC6rrBA70D7Gks/tw5nKouOs2MGZTvwpeISTjuidlfkgimIo+gcgUUX6IRIQIrX7wvBpxkATayO5+Z/+eShqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W//LpnaY; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WaTRXbYR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W//LpnaY"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750726424; x=1782262424;
+  t=1750726426; x=1782262426;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=6ue5SkOOnonCi0JVDNz8fAzqfFyNh5999bTGySBe1es=;
-  b=WaTRXbYRXVTpTljOsykU+4Fixx48pnsQOz2scN/vWVoNbr5Q8m0Naqky
-   0jLiBxTOPEBE+Bej5rbjgJggXXvlXx4MntTPyMmXKHp35Ry+nI3jmXPok
-   f+sQeVpyBK2dV7PVvMEsCYjOgtwoATgU67Q6AIFTP7owN8yLLTNEkMbjo
-   HWZCN/6KE8MoY9kbC2cwSDM0XBNEjjA0oxB4j6xoNUJNiwkRimcHlq1nf
-   YLlA8VQATSVw9YczYpdQw3e/E4knnji+f8JwtE74s3ilMB+X0uluy0ZOx
-   +vvZMUtCo/Bto+Doc6TPoCWun90VKsqXamkYne91aTlmdKjWcZFfB2ref
-   A==;
-X-CSE-ConnectionGUID: 15BNyCyiSISI7vijg86Z9w==
-X-CSE-MsgGUID: c030k/6oR+aZjIdsRi7WAg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="56728809"
+  bh=xI5+jMDjodJg1jiA0qJct4MoSUOELQUNUrOFBiUAnd4=;
+  b=W//LpnaY4oxPuqSreWfMiTb4tKaEGS/O8Hdz74KdUlmzmeXIfspAczaP
+   UdUaNcVtXnOsPTWhnLCTCuex9AzhXDn7TyKhM3sn3eQDm9x2QmFSyJ15z
+   fd5XBoLezzHCE9693OzAjVmi8gKwokP5YzztmKNOVBs9ErjxWCfQ3SWao
+   d9hX7j3blYQjFYfGfXg3JxiEbIoicJx9TYvCnfv6t0zr/MMPuIfU0tCUG
+   8qWZXftiK3NTtzry2avmy3RSe067QBDazCqAcs+OWCBq8IvRFTyItrAJD
+   DG83bm4MO1kmU2p/9mmCKKrrxSm9yqwFgFVL7smOzGvTur8GSLfOilShX
+   Q==;
+X-CSE-ConnectionGUID: iIzBhkZrQ522WVohDCxoyg==
+X-CSE-MsgGUID: LeMEjnVNRTepBCmkqtvSMg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="56728819"
 X-IronPort-AV: E=Sophos;i="6.16,260,1744095600"; 
-   d="scan'208";a="56728809"
+   d="scan'208";a="56728819"
 Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 17:53:44 -0700
-X-CSE-ConnectionGUID: ze8YSi1UQjCWqy34JIqebA==
-X-CSE-MsgGUID: AuUYo+4wQsaLwnT0GLyC4w==
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 17:53:46 -0700
+X-CSE-ConnectionGUID: ePmuSELLQ9yBU+az+xzJhg==
+X-CSE-MsgGUID: JX2iRGLnRYKAE42c5c3dZw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,260,1744095600"; 
-   d="scan'208";a="156129155"
+   d="scan'208";a="156129162"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.222.202])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 17:53:43 -0700
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 17:53:44 -0700
 From: alison.schofield@intel.com
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jonathan.cameron@huawei.com>,
@@ -52,9 +52,9 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Ira Weiny <ira.weiny@intel.com>,
 	Dan Williams <dan.j.williams@intel.com>
 Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH 2/3] cxl/region: Introduce HPA to DPA address translation
-Date: Mon, 23 Jun 2025 17:53:35 -0700
-Message-ID: <4c4a1a52a4651b726ef66d9020e71e731b74cb5d.1750725512.git.alison.schofield@intel.com>
+Subject: [PATCH 3/3] cxl/region: Add inject and clear poison by HPA
+Date: Mon, 23 Jun 2025 17:53:36 -0700
+Message-ID: <50bd42e0db1ed5979a00e6f5a43147320a1d5b9b.1750725512.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <cover.1750725512.git.alison.schofield@intel.com>
 References: <cover.1750725512.git.alison.schofield@intel.com>
@@ -68,132 +68,272 @@ Content-Transfer-Encoding: 8bit
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-Add infrastructure to translate Host Physical Addresses (HPA) to Device
-Physical Addresses (DPA) within CXL regions. This capability is being
-introduced for use by follow-on patches that will add poison inject
-and clear operations at the region level.
+Add CXL region debugfs attributes to inject and clear poison based
+on Host Physical Addresses (HPA). These new interfaces allow users
+to operate on poison at the region level without needing to resolve
+Device Physical Addresses (DPA) or target individual memdevs.
 
-The HPA-to-DPA translation process involves several steps:
-1. Apply root decoder transformations (HPA to SPA) if configured
-2. Calculate the relative offset within the region's address space
-3. Decode the interleave position using the region's interleave ways
-   and granularity settings
-4. Identify the target memdev based on the decoded position
-5. Compute the final DPA by adding the decoded offset to the memdev's
-   DPA base address
+The implementation leverages an internal HPA-to-DPA helper, which
+applies decoder interleave logic, including XOR-based address decoding
+when applicable. Note that XOR decodes rely on driver internal xormaps
+which are not exposed to userspace. So, this support is not only a
+simplification of poison operations that could be done using existing
+per memdev operations, but also it enables the functionality for XOR
+interleaved regions for the first time.
 
-It is Step 1 above that makes this a driver level operation and not
-work we can push to user space. Rather than exporting the XOR maps for
-root decoders configured with XOR interleave, the driver performs this
-complex calculation for the user.
+The new debugfs attributes are added under /sys/kernel/debug/regionX/:
+inject_poison and clear_poison. These are only exposed if all memdevs
+participating in the region support both inject and clear commands,
+ensuring consistent and reliable behavior across multi-device regions.
 
-While not immediately apparent in this diff, broader examination of
-the region.c code shows that this work is basically the reverse of
-previous work where a DPA is translated to an HPA. This is notable
-because it demonstrates that these calculations reuse existing logic
-rather than introducing new algorithms.
+If tracing is enabled, these operations are logged as cxl_poison
+events in /sys/kernel/tracing/trace.
 
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- drivers/cxl/core/region.c | 85 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 85 insertions(+)
+ Documentation/ABI/testing/debugfs-cxl |  33 +++++++
+ drivers/cxl/core/core.h               |   4 +
+ drivers/cxl/core/memdev.c             |  11 +++
+ drivers/cxl/core/region.c             | 120 +++++++++++++++++++++++++-
+ 4 files changed, 166 insertions(+), 2 deletions(-)
 
+diff --git a/Documentation/ABI/testing/debugfs-cxl b/Documentation/ABI/testing/debugfs-cxl
+index 12488c14be64..c784885cdf07 100644
+--- a/Documentation/ABI/testing/debugfs-cxl
++++ b/Documentation/ABI/testing/debugfs-cxl
+@@ -35,6 +35,39 @@ Description:
+ 		The clear_poison attribute is only visible for devices
+ 		supporting the capability.
+ 
++
++What:		/sys/kernel/debug/regionX/inject_poison
++Date:		August, 2025
++KernelVersion:	v6.17
++Contact:	linux-cxl@vger.kernel.org
++Description:
++		(WO) When a Host Physical Address (HPA) is written to this
++		attribute, the region driver translates it to a Device
++		Physical Address (DPA) and identifies the corresponding
++		memdev. It then sends an inject poison command to that memdev
++		at the translated DPA. Refer to the memdev ABI entry at:
++		/sys/kernel/debug/cxl/memX/inject_poison for the detailed
++		behavior. This attribute is only visible if all memdevs
++		participating in the region support both inject and clear
++		poison commands.
++
++
++What:		/sys/kernel/debug/regionX/clear_poison
++Date:		August, 2025
++KernelVersion:	v6.17
++Contact:	linux-cxl@vger.kernel.org
++Description:
++		(WO) When a Host Physical Address (HPA) is written to this
++		attribute, the region driver translates it to a Device
++		Physical Address (DPA) and identifies the corresponding
++		memdev. It then sends a clear poison command to that memdev
++		at the translated DPA. Refer to the memdev ABI entry at:
++		/sys/kernel/debug/cxl/memX/clear_poison for the detailed
++		behavior. This attribute is only visible if all memdevs
++		participating in the region support both inject and clear
++		poison commands.
++
++
+ What:		/sys/kernel/debug/cxl/einj_types
+ Date:		January, 2024
+ KernelVersion:	v6.9
+diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+index 29b61828a847..66ca5f899fd6 100644
+--- a/drivers/cxl/core/core.h
++++ b/drivers/cxl/core/core.h
+@@ -109,6 +109,10 @@ enum cxl_poison_trace_type {
+ 	CXL_POISON_TRACE_CLEAR,
+ };
+ 
++enum poison_cmd_enabled_bits;
++bool cxl_memdev_has_poison_cmd(struct cxl_memdev *cxlmd,
++			       enum poison_cmd_enabled_bits cmd);
++
+ long cxl_pci_get_latency(struct pci_dev *pdev);
+ int cxl_pci_get_bandwidth(struct pci_dev *pdev, struct access_coordinate *c);
+ int cxl_update_hmat_access_coordinates(int nid, struct cxl_region *cxlr,
+diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+index b38141761f47..7616e68fa79e 100644
+--- a/drivers/cxl/core/memdev.c
++++ b/drivers/cxl/core/memdev.c
+@@ -200,6 +200,17 @@ static ssize_t security_erase_store(struct device *dev,
+ static struct device_attribute dev_attr_security_erase =
+ 	__ATTR(erase, 0200, NULL, security_erase_store);
+ 
++bool cxl_memdev_has_poison_cmd(struct cxl_memdev *cxlmd,
++			       enum poison_cmd_enabled_bits cmd)
++{
++	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
++
++	if (test_bit(cmd, mds->poison.enabled_cmds))
++		return true;
++
++	return false;
++}
++
+ static int cxl_get_poison_by_memdev(struct cxl_memdev *cxlmd)
+ {
+ 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
 diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 6e5e1460068d..d2d904c4b427 100644
+index d2d904c4b427..e9ed5ac7309e 100644
 --- a/drivers/cxl/core/region.c
 +++ b/drivers/cxl/core/region.c
-@@ -2972,6 +2972,91 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
- 	return hpa;
+@@ -2,6 +2,7 @@
+ /* Copyright(c) 2022 Intel Corporation. All rights reserved. */
+ #include <linux/memregion.h>
+ #include <linux/genalloc.h>
++#include <linux/debugfs.h>
+ #include <linux/device.h>
+ #include <linux/module.h>
+ #include <linux/memory.h>
+@@ -3004,8 +3005,7 @@ static struct hpa_decode_result decode_hpa_to_dpa(u64 hpa_offset, u8 eiw,
+ 	return result;
  }
  
-+struct hpa_decode_result {
-+	u64 dpa_offset;
-+	int pos;
-+};
-+
-+struct cxl_dpa_result {
-+	u64 dpa;
-+	struct cxl_memdev *cxlmd;
-+};
-+
-+static struct hpa_decode_result decode_hpa_to_dpa(u64 hpa_offset, u8 eiw,
-+						  u16 eig)
+-static struct cxl_dpa_result __maybe_unused
+-cxl_hpa_to_dpa(struct cxl_region *cxlr, u64 hpa)
++static struct cxl_dpa_result cxl_hpa_to_dpa(struct cxl_region *cxlr, u64 hpa)
+ {
+ 	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
+ 	struct cxl_dpa_result result = { .dpa = ULLONG_MAX, .cxlmd = NULL };
+@@ -3616,10 +3616,101 @@ static void shutdown_notifiers(void *_cxlr)
+ 	unregister_mt_adistance_algorithm(&cxlr->adist_notifier);
+ }
+ 
++static void remove_debugfs(void *dentry)
 +{
-+	struct hpa_decode_result result;
-+	u64 bits_upper;
-+
-+	if (eiw < 8) {
-+		result.pos = (hpa_offset >> (eig + 8)) & GENMASK(eiw - 1, 0);
-+		hpa_offset &= ~((u64)GENMASK(eiw - 1, 0) << (eig + 8));
-+		result.dpa_offset = hpa_offset >> eiw;
-+	} else {
-+		bits_upper = hpa_offset >> (eig + 8);
-+		result.pos = bits_upper % 3;
-+		bits_upper /= 3;
-+		result.dpa_offset = bits_upper << (eig + 8);
-+	}
-+
-+	result.dpa_offset |= hpa_offset & GENMASK_ULL(eig + 7, 0);
-+
-+	return result;
++	debugfs_remove_recursive(dentry);
 +}
 +
-+static struct cxl_dpa_result __maybe_unused
-+cxl_hpa_to_dpa(struct cxl_region *cxlr, u64 hpa)
++static int cxl_region_debugfs_poison_inject(void *data, u64 hpa)
 +{
-+	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
-+	struct cxl_dpa_result result = { .dpa = ULLONG_MAX, .cxlmd = NULL };
++	struct cxl_region *cxlr = data;
 +	struct cxl_region_params *p = &cxlr->params;
-+	struct hpa_decode_result decode;
-+	u64 hpa_offset;
-+	u16 eig = 0;
-+	u8 eiw = 0;
++	struct cxl_dpa_result result;
++	int rc;
 +
-+	lockdep_assert_held(&cxl_region_rwsem);
-+	lockdep_assert_held(&cxl_dpa_rwsem);
++	rc = down_read_interruptible(&cxl_region_rwsem);
++	if (rc)
++		return rc;
++
++	rc = down_read_interruptible(&cxl_dpa_rwsem);
++	if (rc) {
++		up_read(&cxl_region_rwsem);
++		return rc;
++	}
 +
 +	if (hpa < p->res->start || hpa > p->res->end) {
-+		dev_err_once(&cxlr->dev,
-+			     "HPA 0x%llx not in region [0x%llx-0x%llx]\n", hpa,
-+			     p->res->start, p->res->end);
-+
-+		return result;
++		dev_err_once(&cxlr->dev, "HPA 0x%llx not in region %pr\n", hpa,
++			     p->res);
++		rc = -EINVAL;
++		goto out;
 +	}
++	result = cxl_hpa_to_dpa(cxlr, hpa);
++	if (!result.cxlmd || result.dpa == ULLONG_MAX) {
++		dev_err(&cxlr->dev, "Failed to resolve DPA from HPA 0x%llx\n",
++			hpa);
 +
-+	/* Apply root decoder translation */
-+	if (cxlrd->hpa_to_spa)
-+		hpa = cxlrd->hpa_to_spa(cxlrd, hpa);
-+
-+	ways_to_eiw(p->interleave_ways, &eiw);
-+	granularity_to_eig(p->interleave_granularity, &eig);
-+	hpa_offset = hpa - p->res->start;
-+
-+	decode = decode_hpa_to_dpa(hpa_offset, eiw, eig);
-+	if (decode.pos >= p->nr_targets) {
-+		dev_err(&cxlr->dev, "Invalid position %d for %d targets\n",
-+			decode.pos, p->nr_targets);
-+
-+		return result;
++		rc = -EINVAL;
++		goto out;
 +	}
++	rc = __inject_poison_locked(result.cxlmd, result.dpa);
 +
-+	for (int i = 0; i < p->nr_targets; i++) {
-+		struct cxl_endpoint_decoder *cxled = p->targets[i];
++out:
++	up_read(&cxl_dpa_rwsem);
++	up_read(&cxl_region_rwsem);
 +
-+		if (cxled->pos == decode.pos) {
-+			result.cxlmd = cxled_to_memdev(cxled);
-+			result.dpa = decode.dpa_offset + cxl_dpa_resource_start(cxled);
-+
-+			return result;
-+		}
-+	}
-+	dev_err(&cxlr->dev, "No device found for position %d\n", decode.pos);
-+
-+	return result;
++	return rc;
 +}
 +
- static struct lock_class_key cxl_pmem_region_key;
++DEFINE_DEBUGFS_ATTRIBUTE(cxl_poison_inject_fops, NULL,
++			 cxl_region_debugfs_poison_inject, "%llx\n");
++
++static int cxl_region_debugfs_poison_clear(void *data, u64 hpa)
++{
++	struct cxl_region *cxlr = data;
++	struct cxl_region_params *p = &cxlr->params;
++	struct cxl_dpa_result result;
++	int rc;
++
++	rc = down_read_interruptible(&cxl_region_rwsem);
++	if (rc)
++		return rc;
++
++	rc = down_read_interruptible(&cxl_dpa_rwsem);
++	if (rc) {
++		up_read(&cxl_region_rwsem);
++		return rc;
++	}
++
++	if (hpa < p->res->start || hpa > p->res->end) {
++		dev_err_once(&cxlr->dev, "HPA 0x%llx not in region %pr\n", hpa,
++			     p->res);
++		rc = -EINVAL;
++		goto out;
++	}
++	result = cxl_hpa_to_dpa(cxlr, hpa);
++	if (!result.cxlmd || result.dpa == ULLONG_MAX) {
++		dev_err(&cxlr->dev, "Failed to resolve DPA from HPA 0x%llx\n",
++			hpa);
++
++		rc = -EINVAL;
++		goto out;
++	}
++	rc = __clear_poison_locked(result.cxlmd, result.dpa);
++out:
++	up_read(&cxl_dpa_rwsem);
++	up_read(&cxl_region_rwsem);
++
++	return rc;
++}
++
++DEFINE_DEBUGFS_ATTRIBUTE(cxl_poison_clear_fops, NULL,
++			 cxl_region_debugfs_poison_clear, "%llx\n");
++
+ static int cxl_region_probe(struct device *dev)
+ {
+ 	struct cxl_region *cxlr = to_cxl_region(dev);
+ 	struct cxl_region_params *p = &cxlr->params;
++	bool poison_supported = true;
+ 	int rc;
  
- static int cxl_pmem_region_alloc(struct cxl_region *cxlr)
+ 	rc = down_read_interruptible(&cxl_region_rwsem);
+@@ -3663,6 +3754,31 @@ static int cxl_region_probe(struct device *dev)
+ 	if (rc)
+ 		return rc;
+ 
++	/* Create poison attributes if all memdevs support the capabilities */
++	for (int i = 0; i < p->nr_targets; i++) {
++		struct cxl_endpoint_decoder *cxled = p->targets[i];
++		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
++
++		if (!cxl_memdev_has_poison_cmd(cxlmd, CXL_POISON_ENABLED_INJECT) ||
++		    !cxl_memdev_has_poison_cmd(cxlmd, CXL_POISON_ENABLED_CLEAR)) {
++			poison_supported = false;
++			break;
++		}
++	}
++
++	if (poison_supported) {
++		struct dentry *dentry;
++
++		dentry = cxl_debugfs_create_dir(dev_name(dev));
++		debugfs_create_file("inject_poison", 0200, dentry, cxlr,
++				    &cxl_poison_inject_fops);
++		debugfs_create_file("clear_poison", 0200, dentry, cxlr,
++				    &cxl_poison_clear_fops);
++		rc = devm_add_action_or_reset(dev, remove_debugfs, dentry);
++		if (rc)
++			return rc;
++	}
++
+ 	switch (cxlr->mode) {
+ 	case CXL_PARTMODE_PMEM:
+ 		rc = devm_cxl_region_edac_register(cxlr);
 -- 
 2.37.3
 
