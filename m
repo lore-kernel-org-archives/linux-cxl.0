@@ -1,242 +1,169 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 419F12C08B0
-	for <linux-cxl@vger.kernel.org>; Tue, 24 Jun 2025 13:38:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B572D12E7;
+	Tue, 24 Jun 2025 13:56:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750772310; cv=none; b=fo6sH4KnpKMi9WsF5Ebr+p/ZIizZcwH4Y3RyaMD1FAVeZFmC+1lvrmZ6WwcsyLf8sgEReYq4K0LiNBCzMvxtxqRCWIHgsywYssSf2GGasBkjTVnse5T2Jm2GiZIf6sw9Pp5GT8nRkMZBvxlEBU43I/0bveGy2NJ9P1g3Q4xU2eY=
+	t=1750773420; cv=none; b=mo7sr8w4MHWKjh42Qw+Wo6H+n/r8dlTaRAK9ZoVjwVrgt9oDXMwno9U1JHlxbP9vcWCPGq0ANK6grBkl4NjkfWRjxcu5hfVRjLApwIGw8tn+XwoECu5HnasQ7vOIIpAjU6dVV4UAD0THJPLLFe60v5cHR7CZcQAVQvKkXMgYDng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750772310; c=relaxed/simple;
-	bh=BA8cMC4jycaIE+E2cPfUVt4QMolwpjOJ/RBwCddFSCk=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uAWmi44El+2bbBgp7E6NG7wvCiqAVC83o77Sby3Z3Qpieu53//Bu0YIqbJYxh1NeQhfuLkK+eh5ckDJY/uFLp3q+jHgfMW24jSgIie4ELYFoQ2rzCzTks9iNChjgb2+zyc7rgmp/IOt7LtRc46Z92QnTzB30fkRbPibVTnCpf9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bRQxJ3W51z6GFW6;
-	Tue, 24 Jun 2025 21:37:40 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id B4B761402F5;
-	Tue, 24 Jun 2025 21:38:24 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 24 Jun
- 2025 15:38:24 +0200
-Date: Tue, 24 Jun 2025 14:38:22 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <alison.schofield@intel.com>
-CC: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan
- Williams <dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 1/3] cxl/core: Add locked variants of the poison inject
- and clear funcs
-Message-ID: <20250624143822.00003256@huawei.com>
-In-Reply-To: <71f51bcc7d335c9f558441bb68f05f546230696a.1750725512.git.alison.schofield@intel.com>
-References: <cover.1750725512.git.alison.schofield@intel.com>
-	<71f51bcc7d335c9f558441bb68f05f546230696a.1750725512.git.alison.schofield@intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1750773420; c=relaxed/simple;
+	bh=BpzCqYrZgktHyHFsZFW3UfcXDFM+0KqnOLAMuBNHnj0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Fr1X/QkCkW97MDJwspwfBc0Lr2IsDLCf0TLAwyGw36C67KSwe9aBLWQcWdNvNqBiBVzdR3MRWxOJTBx7JR8Jv1zTVv4n0xD6dAKixKFa1sVwpgSCmV7hHInn0J7MV2UzcxC8zU9jBz+ROSnmW8F3J5p4g1hKYu4debuyCc9TmPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ehjJHvjZ; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ehjJHvjZ"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-553c31542b1so4473127e87.2;
+        Tue, 24 Jun 2025 06:56:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750773413; x=1751378213; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1yABC0w8DEfvFsnNOYqPanr5Sg2H2x2a5U7q3it7HMM=;
+        b=ehjJHvjZ14n/jCUzZJfjUQ7PtAlXWe/lOKEyET3PX3iOC8z8b6dtiQ8YeNXIAw+VnL
+         nqjhnwTKIEd62R4EX0uZZ4jU/g3IGahZfjTyMMqB0FAoIYJOqHF0Iefyq5pbj75CMn6n
+         Ur5JSd6PhXM87RQWXMGewUWwEU+9/43tch61kAtUQBSY7ygX8+U092DEwTp+YIwrff9D
+         Gl0XZRVTqEgG2zRqUmJ3TDGyTpl88CNuXBXbDtCkQ7VcCrsRYOUuSE5OeOgrVHpqIqsZ
+         0WZjX+LnbDEAkDvstVV3v3UNcFpwNf9NGVnFqTrCIvoTM5H8l6N3JzFuewgiTSNiVvSj
+         HFAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750773413; x=1751378213;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1yABC0w8DEfvFsnNOYqPanr5Sg2H2x2a5U7q3it7HMM=;
+        b=pWbD7S15J9b4CvKgnQK3kl8UTJlh63gDZG0zDUUPp+bh7KCSJfB6FV/6HR5xvlpCq9
+         EPA5ZwJXY2Y/Yci8VlDlFOYet/marivOA43A6TRsE7sKcUCcoKi+Q2bT27embE2WaAbX
+         R884Ogdwc0joVK0oqxeoo2PigDs8oXOz2sptLawctXBCuqkcLCJRRupJ8UxPB5pVC/WW
+         bpYGx+s8m4jgNhGmQ3U1PnegHscYigw85N09xXwOM7dtjtYx4EuyAqjWRZYQkldMjYKN
+         pQNoyw64qwXmNCl95qeZLHVPU1Hg4SDFTJlr/w97H2d7Lh5nM42DOW6xDmC7LsFIJ9Cb
+         KoCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUss42Fndd7cZpSdN8vkH/Qc12nJtHOEQ203pnuJ4bY0zP0iTTk0BYfB75ReS0lnbcWQHDUUNpBHpyk/z7Q@vger.kernel.org, AJvYcCXZZlQfwP180RasaYFDissMTb0uFQy/I63lvIufZt/0f19U00oYixBrEsRTvFCTwY78nSjAFYZ8lXg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfY/zYWKyGo0Rpb0L0m7Kz1OmaGqpZsYvhLGk2KAriHQV/R38K
+	SQoaVLxTvBBxaONYX+QWmAqrUcl4jpoHYblgCZj7SAD8PcqtXlc4t+7rIb1MInZ5ucoJSCKKnNt
+	wcPQJMjRDY0Y+R5riK/LLTykanea3I90=
+X-Gm-Gg: ASbGnctN8u57KFoL/vLZooevYTikRW9Yo4pD9ccUkFTvP6hO0uX2LMhbzNZDP2zHSP4
+	YK8FEUi2IGyqpYuJ65oprzn/McNtSiRVxqT036iVPA3cdairSZxD/Pf4Fj8PuJYmCV8xrP71PlB
+	y+FTu6+Gkw2wxWSuoZ0G1/+cwEoqDmqi55lvRADycLbEdabe5INRGmRQqMpSUbYajpKHt4szb4d
+	A/Hsg==
+X-Google-Smtp-Source: AGHT+IHXYi6I/UqWOT18oDq+1JOOpyKXM7cogsUpmD7YM+DSdmtZsArE5Lb3v+YDn6Av7/arwxcsKeYaVo5vgs03PuI=
+X-Received: by 2002:a05:6512:b8e:b0:553:37a7:b217 with SMTP id
+ 2adb3069b0e04-553e3bf3e5dmr5544673e87.35.1750773412740; Tue, 24 Jun 2025
+ 06:56:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
- frapeml500008.china.huawei.com (7.182.85.71)
+References: <20250623091929.366357-1-pranav.tyagi03@gmail.com> <2025062343-brilliant-laziness-e2cf@gregkh>
+In-Reply-To: <2025062343-brilliant-laziness-e2cf@gregkh>
+From: Pranav Tyagi <pranav.tyagi03@gmail.com>
+Date: Tue, 24 Jun 2025 19:26:40 +0530
+X-Gm-Features: Ac12FXxXAIMa7msu1Ixldzq9g6VHMyrCm53AQgkcjWXSWvwjIHhI1C4QApdm17g
+Message-ID: <CAH4c4jJtKP_MsqGBgt1kRim_nmWOS=Zd49iNYiHNM2-yDgMv1g@mail.gmail.com>
+Subject: Re: [PATCH] cxl/port: automate cleanup with __free()
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com, 
+	alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com, 
+	dan.j.williams@intel.com, ming.li@zohomail.com, rrichter@amd.com, 
+	jeff.johnson@oss.qualcomm.com, peterz@infradead.org, 
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 23 Jun 2025 17:53:34 -0700
-alison.schofield@intel.com wrote:
+On Mon, Jun 23, 2025 at 2:57=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org=
+> wrote:
+>
+> On Mon, Jun 23, 2025 at 02:49:29PM +0530, Pranav Tyagi wrote:
+> > Use the scope based resource management (defined in linux/cleanup.h) to
+> > automate the lifetime control of struct cxl_endpoint_decoder. This
+> > eliminates the explicit kfree() call and makes the code more robust and
+> > maintainable in presence of early returns.
+> >
+> > Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
+> > ---
+> >  drivers/cxl/core/port.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> > index eb46c6764d20..c35946882b20 100644
+> > --- a/drivers/cxl/core/port.c
+> > +++ b/drivers/cxl/core/port.c
+> > @@ -10,6 +10,7 @@
+> >  #include <linux/slab.h>
+> >  #include <linux/idr.h>
+> >  #include <linux/node.h>
+> > +#include <linux/cleanup.h>
+> >  #include <cxl/einj.h>
+> >  #include <cxlmem.h>
+> >  #include <cxlpci.h>
+> > @@ -1888,14 +1889,14 @@ EXPORT_SYMBOL_NS_GPL(cxl_switch_decoder_alloc, =
+"CXL");
+> >   */
+> >  struct cxl_endpoint_decoder *cxl_endpoint_decoder_alloc(struct cxl_por=
+t *port)
+> >  {
+> > -     struct cxl_endpoint_decoder *cxled;
+> >       struct cxl_decoder *cxld;
+> >       int rc;
+> >
+> >       if (!is_cxl_endpoint(port))
+> >               return ERR_PTR(-EINVAL);
+> >
+> > -     cxled =3D kzalloc(sizeof(*cxled), GFP_KERNEL);
+> > +     struct cxl_endpoint_decoder *cxled __free(kfree) =3D
+> > +             kzalloc(sizeof(*cxled), GFP_KERNEL);
+> >       if (!cxled)
+> >               return ERR_PTR(-ENOMEM);
+> >
+> > @@ -1904,7 +1905,6 @@ struct cxl_endpoint_decoder *cxl_endpoint_decoder=
+_alloc(struct cxl_port *port)
+> >       cxld =3D &cxled->cxld;
+> >       rc =3D cxl_decoder_init(port, cxld);
+> >       if (rc)  {
+> > -             kfree(cxled);
+> >               return ERR_PTR(rc);
+> >       }
+> >
+> > --
+> > 2.49.0
+>
+> Note, I can't speak for the maintainers of this subsystem, but
+> generally, making changes like this for no real good reason, for code
+> that has been around for years, is really not needed at all.
+>
+> If you fix a bug with it, sure, but changes for the sake of "let's use
+> this new feature" in here really might not be necessary.
+>
+> Why not add cleanup.h support to code paths that actually fix existing
+> bugs instead?
+>
+> Also, you have added some coding style errors to the code now with this
+> patch, which also is generally not considered a good idea :)
+>
+> thanks,
+>
+> greg k-h
 
-> From: Alison Schofield <alison.schofield@intel.com>
-> 
-> The core functions that validate and send inject and clear commands
-> to the memdev devices require holding both the dpa_rwsem and the
-> region_rwsem.
-> 
-> In preparation for another caller of these functions that must hold
-> the locks upon entry, split the work into a locked and unlocked pair.
-> 
-> Consideration was given to moving the locking to both callers,
-> however, the existing caller is not in the core (mem.c) and cannot
-> access the locks.
-> 
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+Hi Greg,
 
-This will clash with Dan's ACQUIRE() set.  Up to Dave on how
-to handle that but my gut feeling is that if we want to queue much
-else this cycle and that we should ask for patches on top of the
-ACQUIRE() series.  The risk being that gets some later push back.
+Thanks for the feedback.
 
-Ah well I'll apply the someone else's problem field.
+This patch was intended as a cleanup to improve consistency and
+readability, particularly around handling early returns using
+cleanup.h. I followed up on similar prior patches that introduced
+automatic cleanup in this subsystem and aimed to extend that style
+more consistently.
 
-Given reuse of these in patch 3 this looks sensible to me.
+That said, I understand your concern about changing long-standing
+code without a strong functional reason. I=E2=80=99ll be more careful going
+forward and focus such changes around actual bug fixes.
 
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-
-
-> ---
->  drivers/cxl/core/memdev.c | 77 +++++++++++++++++++++++++--------------
->  drivers/cxl/cxlmem.h      |  2 +
->  2 files changed, 52 insertions(+), 27 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index f88a13adf7fa..b38141761f47 100644
-> --- a/drivers/cxl/core/memdev.c
-> +++ b/drivers/cxl/core/memdev.c
-> @@ -280,7 +280,7 @@ static int cxl_validate_poison_dpa(struct cxl_memdev *cxlmd, u64 dpa)
->  	return 0;
->  }
->  
-> -int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
-> +int __inject_poison_locked(struct cxl_memdev *cxlmd, u64 dpa)
->  {
->  	struct cxl_mailbox *cxl_mbox = &cxlmd->cxlds->cxl_mbox;
->  	struct cxl_mbox_inject_poison inject;
-> @@ -292,19 +292,12 @@ int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
->  	if (!IS_ENABLED(CONFIG_DEBUG_FS))
->  		return 0;
->  
-> -	rc = down_read_interruptible(&cxl_region_rwsem);
-> -	if (rc)
-> -		return rc;
-> -
-> -	rc = down_read_interruptible(&cxl_dpa_rwsem);
-> -	if (rc) {
-> -		up_read(&cxl_region_rwsem);
-> -		return rc;
-> -	}
-> +	lockdep_assert_held(&cxl_dpa_rwsem);
-> +	lockdep_assert_held(&cxl_region_rwsem);
->  
->  	rc = cxl_validate_poison_dpa(cxlmd, dpa);
->  	if (rc)
-> -		goto out;
-> +		return rc;
->  
->  	inject.address = cpu_to_le64(dpa);
->  	mbox_cmd = (struct cxl_mbox_cmd) {
-> @@ -314,7 +307,7 @@ int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
->  	};
->  	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
->  	if (rc)
-> -		goto out;
-> +		return rc;
->  
->  	cxlr = cxl_dpa_to_region(cxlmd, dpa);
->  	if (cxlr)
-> @@ -327,7 +320,26 @@ int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
->  		.length = cpu_to_le32(1),
->  	};
->  	trace_cxl_poison(cxlmd, cxlr, &record, 0, 0, CXL_POISON_TRACE_INJECT);
-> -out:
-> +
-> +	return rc;
-> +}
-> +
-> +int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
-> +{
-> +	int rc;
-> +
-> +	rc = down_read_interruptible(&cxl_region_rwsem);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = down_read_interruptible(&cxl_dpa_rwsem);
-> +	if (rc) {
-> +		up_read(&cxl_region_rwsem);
-> +		return rc;
-> +	}
-> +
-> +	rc = __inject_poison_locked(cxlmd, dpa);
-> +
->  	up_read(&cxl_dpa_rwsem);
->  	up_read(&cxl_region_rwsem);
->  
-> @@ -335,7 +347,7 @@ int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_inject_poison, "CXL");
->  
-> -int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa)
-> +int __clear_poison_locked(struct cxl_memdev *cxlmd, u64 dpa)
->  {
->  	struct cxl_mailbox *cxl_mbox = &cxlmd->cxlds->cxl_mbox;
->  	struct cxl_mbox_clear_poison clear;
-> @@ -347,20 +359,12 @@ int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa)
->  	if (!IS_ENABLED(CONFIG_DEBUG_FS))
->  		return 0;
->  
-> -	rc = down_read_interruptible(&cxl_region_rwsem);
-> -	if (rc)
-> -		return rc;
-> -
-> -	rc = down_read_interruptible(&cxl_dpa_rwsem);
-> -	if (rc) {
-> -		up_read(&cxl_region_rwsem);
-> -		return rc;
-> -	}
-> +	lockdep_assert_held(&cxl_dpa_rwsem);
-> +	lockdep_assert_held(&cxl_region_rwsem);
->  
->  	rc = cxl_validate_poison_dpa(cxlmd, dpa);
->  	if (rc)
-> -		goto out;
-> -
-> +		return rc;
->  	/*
->  	 * In CXL 3.0 Spec 8.2.9.8.4.3, the Clear Poison mailbox command
->  	 * is defined to accept 64 bytes of write-data, along with the
-> @@ -378,7 +382,7 @@ int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa)
->  
->  	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
->  	if (rc)
-> -		goto out;
-> +		return rc;
->  
->  	cxlr = cxl_dpa_to_region(cxlmd, dpa);
->  	if (cxlr)
-> @@ -391,7 +395,26 @@ int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa)
->  		.length = cpu_to_le32(1),
->  	};
->  	trace_cxl_poison(cxlmd, cxlr, &record, 0, 0, CXL_POISON_TRACE_CLEAR);
-> -out:
-> +
-> +	return rc;
-> +}
-> +
-> +int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa)
-> +{
-> +	int rc;
-> +
-> +	rc = down_read_interruptible(&cxl_region_rwsem);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = down_read_interruptible(&cxl_dpa_rwsem);
-> +	if (rc) {
-> +		up_read(&cxl_region_rwsem);
-> +		return rc;
-> +	}
-> +
-> +	rc = __clear_poison_locked(cxlmd, dpa);
-> +
->  	up_read(&cxl_dpa_rwsem);
->  	up_read(&cxl_region_rwsem);
->  
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 551b0ba2caa1..c0643e8b9d8f 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -861,6 +861,8 @@ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
->  int cxl_trigger_poison_list(struct cxl_memdev *cxlmd);
->  int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa);
->  int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa);
-> +int __inject_poison_locked(struct cxl_memdev *cxlmd, u64 dpa);
-> +int __clear_poison_locked(struct cxl_memdev *cxlmd, u64 dpa);
->  
->  #ifdef CONFIG_CXL_EDAC_MEM_FEATURES
->  int devm_cxl_memdev_edac_register(struct cxl_memdev *cxlmd);
-
+Regards
+Pranav Tyagi
