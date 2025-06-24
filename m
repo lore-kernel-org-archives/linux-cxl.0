@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB4B3594B
-	for <linux-cxl@vger.kernel.org>; Tue, 24 Jun 2025 00:53:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4720D6F53E
+	for <linux-cxl@vger.kernel.org>; Tue, 24 Jun 2025 00:53:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750726424; cv=none; b=WqVNVcULHEC8uAV/ki20IfupClPzI29mz7oytxx41rOheBzJ4voMmGzl8YFmpVDQr1c7ZOoD5ZjtC3jqVOYWwe6eX4tO6J5BccPmzt0nQQQ8T4XrsIr1UoceM20eh+jU/vBJEBAQ/bP8q7LCU9CaLx+9CSZTssSgqoXq2nGK3/Y=
+	t=1750726425; cv=none; b=eVjR3YVQLHnVYoN3ndnISfvr5+K/Fr+w/VZ2KtHDUusVeXb0Z8CDJo3CxfUv6ogReK7dQWbyVQUqjbduTgIhOLPsyJWZPsrTTcaFZN2bG24ISZtd5wElL7Wyf5GauN+mWmapz/bQD5qvS+s5pt90BNVj/Yh2MXhFbmU9uREi04Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750726424; c=relaxed/simple;
-	bh=rckY/p9CJ/+kO9Z7X53WwEvI9yjACuV2bTa5l+zIbDU=;
+	s=arc-20240116; t=1750726425; c=relaxed/simple;
+	bh=6ue5SkOOnonCi0JVDNz8fAzqfFyNh5999bTGySBe1es=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=owGg0MCjdqv6xRB/ZKIh3mM+n/05IH8UFIX/TWKgDLPYFSP/7VEed2jKIgzwihkjS+f3T1HJOSh+VcAda6S6KSaD9coHUnNBcgs3EKkr9OvRCkZuGaG41s664k7WzEwC0+dGgNBa9fNGiH+7fq/dRPr3lE71Jd9ZlK8kbY/oY9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RRCVX8Zz; arc=none smtp.client-ip=198.175.65.14
+	 MIME-Version; b=WWSfkHTQROiJNa9qZQjzVOqsDjkKAV8TffVrkcGuU4ocmGhpIKrP7XF55PKiFJGSxp9XhSH94Sn/xNsr6ipxhmUUa1UCjmH66qZqeQgVNJeToZybB0z3ZDQLd1ERgiODcqtPgogg/OwQkeaJTIqUcoe38TnmqAmulj9zPgFT2ZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WaTRXbYR; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RRCVX8Zz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WaTRXbYR"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750726423; x=1782262423;
+  t=1750726424; x=1782262424;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=rckY/p9CJ/+kO9Z7X53WwEvI9yjACuV2bTa5l+zIbDU=;
-  b=RRCVX8ZzjMHs/s6VWsN5PzuPm6FKsD1mecoBVSpWCUKOU4EqtNqAkOif
-   c0mTwYycTU/jOhh8hghMpvMUEXNisSZAopDSdOc29luE3I6igMkhjXqcj
-   O9ji5LfjXCs4OA60R3jIPTXIk8NHTtkOHcIykQmlQJnzCUshEYyaUI257
-   t88QMfrCwWRMv8bNC/8zHwN9rYkNUDW0IYpqvFyYL4viYHb3IfMYH9gd3
-   prKBGFzrml3reviIPQSKy/Z/2Uzi8mKfZZ0JuC5xQsCftngyu8DKbL0o3
-   Z3VOJEgSGqnd6FsIitnmwX37VQi7n9Syk5uiGa0uQf3C6M8KIfps+sk2X
-   w==;
-X-CSE-ConnectionGUID: Gqi7kdSlQk2vSfEHP6M9tQ==
-X-CSE-MsgGUID: Grqiy+KDSRu1CU1mbe6kEA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="56728802"
+  bh=6ue5SkOOnonCi0JVDNz8fAzqfFyNh5999bTGySBe1es=;
+  b=WaTRXbYRXVTpTljOsykU+4Fixx48pnsQOz2scN/vWVoNbr5Q8m0Naqky
+   0jLiBxTOPEBE+Bej5rbjgJggXXvlXx4MntTPyMmXKHp35Ry+nI3jmXPok
+   f+sQeVpyBK2dV7PVvMEsCYjOgtwoATgU67Q6AIFTP7owN8yLLTNEkMbjo
+   HWZCN/6KE8MoY9kbC2cwSDM0XBNEjjA0oxB4j6xoNUJNiwkRimcHlq1nf
+   YLlA8VQATSVw9YczYpdQw3e/E4knnji+f8JwtE74s3ilMB+X0uluy0ZOx
+   +vvZMUtCo/Bto+Doc6TPoCWun90VKsqXamkYne91aTlmdKjWcZFfB2ref
+   A==;
+X-CSE-ConnectionGUID: 15BNyCyiSISI7vijg86Z9w==
+X-CSE-MsgGUID: c030k/6oR+aZjIdsRi7WAg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="56728809"
 X-IronPort-AV: E=Sophos;i="6.16,260,1744095600"; 
-   d="scan'208";a="56728802"
+   d="scan'208";a="56728809"
 Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 17:53:43 -0700
-X-CSE-ConnectionGUID: /DGxN+l5QuCOGthRShCO9A==
-X-CSE-MsgGUID: 75ACe6nvT1CkUUVnxTxajw==
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 17:53:44 -0700
+X-CSE-ConnectionGUID: ze8YSi1UQjCWqy34JIqebA==
+X-CSE-MsgGUID: AuUYo+4wQsaLwnT0GLyC4w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,260,1744095600"; 
-   d="scan'208";a="156129148"
+   d="scan'208";a="156129155"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.222.202])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 17:53:42 -0700
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 17:53:43 -0700
 From: alison.schofield@intel.com
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jonathan.cameron@huawei.com>,
@@ -52,9 +52,9 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Ira Weiny <ira.weiny@intel.com>,
 	Dan Williams <dan.j.williams@intel.com>
 Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH 1/3] cxl/core: Add locked variants of the poison inject and clear funcs
-Date: Mon, 23 Jun 2025 17:53:34 -0700
-Message-ID: <71f51bcc7d335c9f558441bb68f05f546230696a.1750725512.git.alison.schofield@intel.com>
+Subject: [PATCH 2/3] cxl/region: Introduce HPA to DPA address translation
+Date: Mon, 23 Jun 2025 17:53:35 -0700
+Message-ID: <4c4a1a52a4651b726ef66d9020e71e731b74cb5d.1750725512.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <cover.1750725512.git.alison.schofield@intel.com>
 References: <cover.1750725512.git.alison.schofield@intel.com>
@@ -68,179 +68,132 @@ Content-Transfer-Encoding: 8bit
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-The core functions that validate and send inject and clear commands
-to the memdev devices require holding both the dpa_rwsem and the
-region_rwsem.
+Add infrastructure to translate Host Physical Addresses (HPA) to Device
+Physical Addresses (DPA) within CXL regions. This capability is being
+introduced for use by follow-on patches that will add poison inject
+and clear operations at the region level.
 
-In preparation for another caller of these functions that must hold
-the locks upon entry, split the work into a locked and unlocked pair.
+The HPA-to-DPA translation process involves several steps:
+1. Apply root decoder transformations (HPA to SPA) if configured
+2. Calculate the relative offset within the region's address space
+3. Decode the interleave position using the region's interleave ways
+   and granularity settings
+4. Identify the target memdev based on the decoded position
+5. Compute the final DPA by adding the decoded offset to the memdev's
+   DPA base address
 
-Consideration was given to moving the locking to both callers,
-however, the existing caller is not in the core (mem.c) and cannot
-access the locks.
+It is Step 1 above that makes this a driver level operation and not
+work we can push to user space. Rather than exporting the XOR maps for
+root decoders configured with XOR interleave, the driver performs this
+complex calculation for the user.
+
+While not immediately apparent in this diff, broader examination of
+the region.c code shows that this work is basically the reverse of
+previous work where a DPA is translated to an HPA. This is notable
+because it demonstrates that these calculations reuse existing logic
+rather than introducing new algorithms.
 
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- drivers/cxl/core/memdev.c | 77 +++++++++++++++++++++++++--------------
- drivers/cxl/cxlmem.h      |  2 +
- 2 files changed, 52 insertions(+), 27 deletions(-)
+ drivers/cxl/core/region.c | 85 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 85 insertions(+)
 
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index f88a13adf7fa..b38141761f47 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -280,7 +280,7 @@ static int cxl_validate_poison_dpa(struct cxl_memdev *cxlmd, u64 dpa)
- 	return 0;
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 6e5e1460068d..d2d904c4b427 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -2972,6 +2972,91 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+ 	return hpa;
  }
  
--int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
-+int __inject_poison_locked(struct cxl_memdev *cxlmd, u64 dpa)
- {
- 	struct cxl_mailbox *cxl_mbox = &cxlmd->cxlds->cxl_mbox;
- 	struct cxl_mbox_inject_poison inject;
-@@ -292,19 +292,12 @@ int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
- 	if (!IS_ENABLED(CONFIG_DEBUG_FS))
- 		return 0;
- 
--	rc = down_read_interruptible(&cxl_region_rwsem);
--	if (rc)
--		return rc;
--
--	rc = down_read_interruptible(&cxl_dpa_rwsem);
--	if (rc) {
--		up_read(&cxl_region_rwsem);
--		return rc;
--	}
-+	lockdep_assert_held(&cxl_dpa_rwsem);
-+	lockdep_assert_held(&cxl_region_rwsem);
- 
- 	rc = cxl_validate_poison_dpa(cxlmd, dpa);
- 	if (rc)
--		goto out;
-+		return rc;
- 
- 	inject.address = cpu_to_le64(dpa);
- 	mbox_cmd = (struct cxl_mbox_cmd) {
-@@ -314,7 +307,7 @@ int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
- 	};
- 	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- 	if (rc)
--		goto out;
-+		return rc;
- 
- 	cxlr = cxl_dpa_to_region(cxlmd, dpa);
- 	if (cxlr)
-@@ -327,7 +320,26 @@ int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
- 		.length = cpu_to_le32(1),
- 	};
- 	trace_cxl_poison(cxlmd, cxlr, &record, 0, 0, CXL_POISON_TRACE_INJECT);
--out:
++struct hpa_decode_result {
++	u64 dpa_offset;
++	int pos;
++};
 +
-+	return rc;
-+}
++struct cxl_dpa_result {
++	u64 dpa;
++	struct cxl_memdev *cxlmd;
++};
 +
-+int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
++static struct hpa_decode_result decode_hpa_to_dpa(u64 hpa_offset, u8 eiw,
++						  u16 eig)
 +{
-+	int rc;
++	struct hpa_decode_result result;
++	u64 bits_upper;
 +
-+	rc = down_read_interruptible(&cxl_region_rwsem);
-+	if (rc)
-+		return rc;
-+
-+	rc = down_read_interruptible(&cxl_dpa_rwsem);
-+	if (rc) {
-+		up_read(&cxl_region_rwsem);
-+		return rc;
++	if (eiw < 8) {
++		result.pos = (hpa_offset >> (eig + 8)) & GENMASK(eiw - 1, 0);
++		hpa_offset &= ~((u64)GENMASK(eiw - 1, 0) << (eig + 8));
++		result.dpa_offset = hpa_offset >> eiw;
++	} else {
++		bits_upper = hpa_offset >> (eig + 8);
++		result.pos = bits_upper % 3;
++		bits_upper /= 3;
++		result.dpa_offset = bits_upper << (eig + 8);
 +	}
 +
-+	rc = __inject_poison_locked(cxlmd, dpa);
++	result.dpa_offset |= hpa_offset & GENMASK_ULL(eig + 7, 0);
 +
- 	up_read(&cxl_dpa_rwsem);
- 	up_read(&cxl_region_rwsem);
- 
-@@ -335,7 +347,7 @@ int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
- }
- EXPORT_SYMBOL_NS_GPL(cxl_inject_poison, "CXL");
- 
--int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa)
-+int __clear_poison_locked(struct cxl_memdev *cxlmd, u64 dpa)
- {
- 	struct cxl_mailbox *cxl_mbox = &cxlmd->cxlds->cxl_mbox;
- 	struct cxl_mbox_clear_poison clear;
-@@ -347,20 +359,12 @@ int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa)
- 	if (!IS_ENABLED(CONFIG_DEBUG_FS))
- 		return 0;
- 
--	rc = down_read_interruptible(&cxl_region_rwsem);
--	if (rc)
--		return rc;
--
--	rc = down_read_interruptible(&cxl_dpa_rwsem);
--	if (rc) {
--		up_read(&cxl_region_rwsem);
--		return rc;
--	}
-+	lockdep_assert_held(&cxl_dpa_rwsem);
-+	lockdep_assert_held(&cxl_region_rwsem);
- 
- 	rc = cxl_validate_poison_dpa(cxlmd, dpa);
- 	if (rc)
--		goto out;
--
-+		return rc;
- 	/*
- 	 * In CXL 3.0 Spec 8.2.9.8.4.3, the Clear Poison mailbox command
- 	 * is defined to accept 64 bytes of write-data, along with the
-@@ -378,7 +382,7 @@ int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa)
- 
- 	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
- 	if (rc)
--		goto out;
-+		return rc;
- 
- 	cxlr = cxl_dpa_to_region(cxlmd, dpa);
- 	if (cxlr)
-@@ -391,7 +395,26 @@ int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa)
- 		.length = cpu_to_le32(1),
- 	};
- 	trace_cxl_poison(cxlmd, cxlr, &record, 0, 0, CXL_POISON_TRACE_CLEAR);
--out:
-+
-+	return rc;
++	return result;
 +}
 +
-+int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa)
++static struct cxl_dpa_result __maybe_unused
++cxl_hpa_to_dpa(struct cxl_region *cxlr, u64 hpa)
 +{
-+	int rc;
++	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
++	struct cxl_dpa_result result = { .dpa = ULLONG_MAX, .cxlmd = NULL };
++	struct cxl_region_params *p = &cxlr->params;
++	struct hpa_decode_result decode;
++	u64 hpa_offset;
++	u16 eig = 0;
++	u8 eiw = 0;
 +
-+	rc = down_read_interruptible(&cxl_region_rwsem);
-+	if (rc)
-+		return rc;
++	lockdep_assert_held(&cxl_region_rwsem);
++	lockdep_assert_held(&cxl_dpa_rwsem);
 +
-+	rc = down_read_interruptible(&cxl_dpa_rwsem);
-+	if (rc) {
-+		up_read(&cxl_region_rwsem);
-+		return rc;
++	if (hpa < p->res->start || hpa > p->res->end) {
++		dev_err_once(&cxlr->dev,
++			     "HPA 0x%llx not in region [0x%llx-0x%llx]\n", hpa,
++			     p->res->start, p->res->end);
++
++		return result;
 +	}
 +
-+	rc = __clear_poison_locked(cxlmd, dpa);
++	/* Apply root decoder translation */
++	if (cxlrd->hpa_to_spa)
++		hpa = cxlrd->hpa_to_spa(cxlrd, hpa);
 +
- 	up_read(&cxl_dpa_rwsem);
- 	up_read(&cxl_region_rwsem);
++	ways_to_eiw(p->interleave_ways, &eiw);
++	granularity_to_eig(p->interleave_granularity, &eig);
++	hpa_offset = hpa - p->res->start;
++
++	decode = decode_hpa_to_dpa(hpa_offset, eiw, eig);
++	if (decode.pos >= p->nr_targets) {
++		dev_err(&cxlr->dev, "Invalid position %d for %d targets\n",
++			decode.pos, p->nr_targets);
++
++		return result;
++	}
++
++	for (int i = 0; i < p->nr_targets; i++) {
++		struct cxl_endpoint_decoder *cxled = p->targets[i];
++
++		if (cxled->pos == decode.pos) {
++			result.cxlmd = cxled_to_memdev(cxled);
++			result.dpa = decode.dpa_offset + cxl_dpa_resource_start(cxled);
++
++			return result;
++		}
++	}
++	dev_err(&cxlr->dev, "No device found for position %d\n", decode.pos);
++
++	return result;
++}
++
+ static struct lock_class_key cxl_pmem_region_key;
  
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 551b0ba2caa1..c0643e8b9d8f 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -861,6 +861,8 @@ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
- int cxl_trigger_poison_list(struct cxl_memdev *cxlmd);
- int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa);
- int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa);
-+int __inject_poison_locked(struct cxl_memdev *cxlmd, u64 dpa);
-+int __clear_poison_locked(struct cxl_memdev *cxlmd, u64 dpa);
- 
- #ifdef CONFIG_CXL_EDAC_MEM_FEATURES
- int devm_cxl_memdev_edac_register(struct cxl_memdev *cxlmd);
+ static int cxl_pmem_region_alloc(struct cxl_region *cxlr)
 -- 
 2.37.3
 
