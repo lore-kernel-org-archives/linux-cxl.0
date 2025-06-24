@@ -1,40 +1,39 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BF032D6613
-	for <linux-cxl@vger.kernel.org>; Tue, 24 Jun 2025 14:34:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 844362D4B55;
+	Tue, 24 Jun 2025 14:36:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750775646; cv=none; b=ehwY5TMyKzT88peqD7HiA0HkFbENC0GmPVx7FTE/v9hegml9pbVaj34h8Gi1cngZGYhFeICuJZ+uGLQgaU8W4NPpVv5tvixOwTXwZ94fqwACjd1XFzSYe/HDKQCUjpGOzFxRqmRVlH9oIrDs5Nlecn2eXOnDs4B8vQZiC9og3ok=
+	t=1750775810; cv=none; b=WuKcWsl0/45TsHvfj1b8j0dJGHUG3vBCz2nYdAfetPcyz3U2GKhK/+tA3+8qOqqPN66QufBR4XbajBoi7hXBumaHp7LeRHoXTlKCFzJsoq59pUK7Il/hxQL+oNF/HuiYy5J0P3CA/xp6qW6EusenJXCaDlNTCUEBG9XNBNSUZOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750775646; c=relaxed/simple;
-	bh=rpJ6wVgVFjXw6bDedCEzW7td+YI32467ismyKLwo/IE=;
+	s=arc-20240116; t=1750775810; c=relaxed/simple;
+	bh=F1HaTKznDSbNVS9L0eecuOL+TvQ5pAd0p7rkrKv3EeA=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Mg9fyKuRHwiJPBlYZVtVE6pxEn+6fqnkMdTmjM/wy1tqXqRKaKJNTSI7FWx8w564jt0NQbCsw5Wl/INpSuKtZJNDUZiNH33R8rJFozozeHoXp9938cLPpByWcP0fhXuXFD94RkwZwRNM7pQbpghecoZMk/n5kh9tK+B4IFMWjUc=
+	 MIME-Version:Content-Type; b=OXJ/iMWg2sEJqCCBTeJvkPkXFMi/Ie3flqOIjCUZwz9i6YtSfQnWxoV3CgCREvbDVOiVVXHURluAfyRTOYYenkT7OQhbq7bMkvuzkyKe1yWvQZPoOXFgCkguSOJN2IFFgQazUDWFM/oYwPuVgguk1e0KFDXwSiv6kF2YGhRcAMY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bRS4Y430Hz6J67L;
-	Tue, 24 Jun 2025 22:29:01 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bRSDd5wsJz6GFCQ;
+	Tue, 24 Jun 2025 22:36:01 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 25A231402C3;
-	Tue, 24 Jun 2025 22:34:01 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 227691400CA;
+	Tue, 24 Jun 2025 22:36:46 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 24 Jun
- 2025 16:34:00 +0200
-Date: Tue, 24 Jun 2025 15:33:59 +0100
+ 2025 16:36:45 +0200
+Date: Tue, 24 Jun 2025 15:36:44 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <alison.schofield@intel.com>
-CC: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan
- Williams <dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 3/3] cxl/region: Add inject and clear poison by HPA
-Message-ID: <20250624153359.00006dbe@huawei.com>
-In-Reply-To: <50bd42e0db1ed5979a00e6f5a43147320a1d5b9b.1750725512.git.alison.schofield@intel.com>
-References: <cover.1750725512.git.alison.schofield@intel.com>
-	<50bd42e0db1ed5979a00e6f5a43147320a1d5b9b.1750725512.git.alison.schofield@intel.com>
+To: Alok Tiwari <alok.a.tiwari@oracle.com>
+CC: <will@kernel.org>, <mark.rutland@arm.com>, <linux-cxl@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>
+Subject: Re: [PATCH] perf/cxlpmu: Fix allocation argument order and minor
+ formatting issues
+Message-ID: <20250624153644.0000084f@huawei.com>
+In-Reply-To: <20250623184415.42751-1-alok.a.tiwari@oracle.com>
+References: <20250623184415.42751-1-alok.a.tiwari@oracle.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -47,163 +46,66 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Mon, 23 Jun 2025 17:53:36 -0700
-alison.schofield@intel.com wrote:
+On Mon, 23 Jun 2025 11:44:11 -0700
+Alok Tiwari <alok.a.tiwari@oracle.com> wrote:
 
-> From: Alison Schofield <alison.schofield@intel.com>
+> Correct the argument order in devm_kcalloc() to follow the conventional
+> count, size form to avoid any confusion or bugs.
+> Also fix a formatting issue in the devm_kasprintf() call by removing a
+> stray newline and fix a duplicated word in a comment.
 > 
-> Add CXL region debugfs attributes to inject and clear poison based
-> on Host Physical Addresses (HPA). These new interfaces allow users
-> to operate on poison at the region level without needing to resolve
-> Device Physical Addresses (DPA) or target individual memdevs.
-> 
-> The implementation leverages an internal HPA-to-DPA helper, which
-> applies decoder interleave logic, including XOR-based address decoding
-> when applicable. Note that XOR decodes rely on driver internal xormaps
-> which are not exposed to userspace. So, this support is not only a
-> simplification of poison operations that could be done using existing
-> per memdev operations, but also it enables the functionality for XOR
-> interleaved regions for the first time.
-> 
-> The new debugfs attributes are added under /sys/kernel/debug/regionX/:
-> inject_poison and clear_poison. These are only exposed if all memdevs
-> participating in the region support both inject and clear commands,
-> ensuring consistent and reliable behavior across multi-device regions.
-> 
-> If tracing is enabled, these operations are logged as cxl_poison
-> events in /sys/kernel/tracing/trace.
-> 
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+Hi Alok,
 
-A few things inline.
+This is a bit of an 'and' patch which usually means it should
+be split up.  The devm_kcalloc() is a fix (sort of anyway)
+which the others changes aren't.
 
-> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index b38141761f47..7616e68fa79e 100644
-> --- a/drivers/cxl/core/memdev.c
-> +++ b/drivers/cxl/core/memdev.c
-> @@ -200,6 +200,17 @@ static ssize_t security_erase_store(struct device *dev,
->  static struct device_attribute dev_attr_security_erase =
->  	__ATTR(erase, 0200, NULL, security_erase_store);
+All the actual changes are good, I'd just prefer this as a little series
+of patches that do one thing each.  The first being the devm_kcalloc()
+parameter ordering.
+
+Thanks,
+
+Jonathan
+
+
+
+> ---
+>  drivers/perf/cxl_pmu.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
+> index d6693519eaee2..fb0b29f149807 100644
+> --- a/drivers/perf/cxl_pmu.c
+> +++ b/drivers/perf/cxl_pmu.c
+> @@ -113,7 +113,7 @@ struct cxl_pmu_info {
 >  
-> +bool cxl_memdev_has_poison_cmd(struct cxl_memdev *cxlmd,
-> +			       enum poison_cmd_enabled_bits cmd)
-> +{
-> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-> +
-> +	if (test_bit(cmd, mds->poison.enabled_cmds))
-> +		return true;
-> +
-> +	return false;
-
-	return test_bit(cmd, ...);
-
-> +}
-> +
->  static int cxl_get_poison_by_memdev(struct cxl_memdev *cxlmd)
->  {
->  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index d2d904c4b427..e9ed5ac7309e 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -2,6 +2,7 @@
-
-
-> +DEFINE_DEBUGFS_ATTRIBUTE(cxl_poison_inject_fops, NULL,
-> +			 cxl_region_debugfs_poison_inject, "%llx\n");
-> +
-> +static int cxl_region_debugfs_poison_clear(void *data, u64 hpa)
-> +{
-> +	struct cxl_region *cxlr = data;
-> +	struct cxl_region_params *p = &cxlr->params;
-> +	struct cxl_dpa_result result;
-> +	int rc;
-> +
-> +	rc = down_read_interruptible(&cxl_region_rwsem);
-
-This can use the new shiny ACQUIRE() tool letting us do
-early returns and generally making it more readable.
-
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = down_read_interruptible(&cxl_dpa_rwsem);
-> +	if (rc) {
-> +		up_read(&cxl_region_rwsem);
-> +		return rc;
-> +	}
-> +
-> +	if (hpa < p->res->start || hpa > p->res->end) {
-> +		dev_err_once(&cxlr->dev, "HPA 0x%llx not in region %pr\n", hpa,
-> +			     p->res);
-> +		rc = -EINVAL;
-> +		goto out;
-> +	}
-> +	result = cxl_hpa_to_dpa(cxlr, hpa);
-> +	if (!result.cxlmd || result.dpa == ULLONG_MAX) {
-> +		dev_err(&cxlr->dev, "Failed to resolve DPA from HPA 0x%llx\n",
-> +			hpa);
-> +
-> +		rc = -EINVAL;
-> +		goto out;
-> +	}
-> +	rc = __clear_poison_locked(result.cxlmd, result.dpa);
-> +out:
-> +	up_read(&cxl_dpa_rwsem);
-> +	up_read(&cxl_region_rwsem);
-> +
-> +	return rc;
-> +}
-> +
-> +DEFINE_DEBUGFS_ATTRIBUTE(cxl_poison_clear_fops, NULL,
-> +			 cxl_region_debugfs_poison_clear, "%llx\n");
-> +
->  static int cxl_region_probe(struct device *dev)
->  {
->  	struct cxl_region *cxlr = to_cxl_region(dev);
->  	struct cxl_region_params *p = &cxlr->params;
-> +	bool poison_supported = true;
->  	int rc;
->  
->  	rc = down_read_interruptible(&cxl_region_rwsem);
-> @@ -3663,6 +3754,31 @@ static int cxl_region_probe(struct device *dev)
+>  /*
+>   * All CPMU counters are discoverable via the Event Capabilities Registers.
+> - * Each Event Capability register contains a a VID / GroupID.
+> + * Each Event Capability register contains a VID / GroupID.
+>   * A counter may then count any combination (by summing) of events in
+>   * that group which are in the Supported Events Bitmask.
+>   * However, there are some complexities to the scheme.
+> @@ -834,8 +834,8 @@ static int cxl_pmu_probe(struct device *dev)
 >  	if (rc)
 >  		return rc;
 >  
-> +	/* Create poison attributes if all memdevs support the capabilities */
-> +	for (int i = 0; i < p->nr_targets; i++) {
-> +		struct cxl_endpoint_decoder *cxled = p->targets[i];
-> +		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> +
-> +		if (!cxl_memdev_has_poison_cmd(cxlmd, CXL_POISON_ENABLED_INJECT) ||
-> +		    !cxl_memdev_has_poison_cmd(cxlmd, CXL_POISON_ENABLED_CLEAR)) {
-> +			poison_supported = false;
-You could drop i out of the loop and simply use the early break to detect
-that a match occurred.
-
-	if (i < p->nr_targets) {
-		struct dentry *dentry;
-
-but maybe that's a bit too subtle.  I don't mind having a variable for this.
-	}
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (poison_supported) {
-> +		struct dentry *dentry;
-> +
-> +		dentry = cxl_debugfs_create_dir(dev_name(dev));
-> +		debugfs_create_file("inject_poison", 0200, dentry, cxlr,
-> +				    &cxl_poison_inject_fops);
-> +		debugfs_create_file("clear_poison", 0200, dentry, cxlr,
-> +				    &cxl_poison_clear_fops);
-> +		rc = devm_add_action_or_reset(dev, remove_debugfs, dentry);
-> +		if (rc)
-> +			return rc;
-> +	}
-> +
->  	switch (cxlr->mode) {
->  	case CXL_PARTMODE_PMEM:
->  		rc = devm_cxl_region_edac_register(cxlr);
+> -	info->hw_events = devm_kcalloc(dev, sizeof(*info->hw_events),
+> -				       info->num_counters, GFP_KERNEL);
+> +	info->hw_events = devm_kcalloc(dev, info->num_counters,
+> +				       sizeof(*info->hw_events), GFP_KERNEL);
+>  	if (!info->hw_events)
+>  		return -ENOMEM;
+>  
+> @@ -873,7 +873,7 @@ static int cxl_pmu_probe(struct device *dev)
+>  		return rc;
+>  	irq = rc;
+>  
+> -	irq_name = devm_kasprintf(dev, GFP_KERNEL, "%s_overflow\n", dev_name);
+> +	irq_name = devm_kasprintf(dev, GFP_KERNEL, "%s_overflow", dev_name);
+>  	if (!irq_name)
+>  		return -ENOMEM;
+>  
 
