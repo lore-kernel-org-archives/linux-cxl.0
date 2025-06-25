@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35FEC29B239
-	for <linux-cxl@vger.kernel.org>; Wed, 25 Jun 2025 22:15:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED3EF214A9B;
+	Wed, 25 Jun 2025 22:30:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750889751; cv=none; b=IrMlfnWsbz8ngJU3b5moc8g6Ey2uOrFaZiNG7W4A882AXIDcf3SXoaPoxpi5qFdumjRhnGUi8Jp5DQLmQEt1vtI91/O2BVioA3+sXGz8ctMDI8LKtTnP5DbS6AyQdMHWqs8XP/zFDaA1z4/yUHed9/6mTPW+NYKoook3iTNxk/Q=
+	t=1750890658; cv=none; b=nbvBXbW/8Wl3icAXXgFI1QdltlshAolw4nGX+TYJCIfDmsnq2RD1A/KzExgwoJ4rb9duyZ6kQTt1rUuNrDNlohhDc73Dr7JJqSg5vCu+dbUaXDV8MAT/8BFQX9a5Slc8r+/vzhrWNJU40QEIQP9ZCf2DS0rB4xFodCvJMJ5iGlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750889751; c=relaxed/simple;
-	bh=DlJSzgfC1sEMmUJU5hO3ScyaV5UFF9CQVu3984R47ls=;
+	s=arc-20240116; t=1750890658; c=relaxed/simple;
+	bh=es2pAC8UJ6aAZOOo64AymW+sUCvL5KpwNeTvHXR6GyQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iKVpmqPQuZGzoaWmK8pYM1XUuWLJm0df7x8cWzN2X7xlxlfv4m7kDObhLEqPueHvT0GLc5pjrmk61bnCsB3e2Nox0bhEnjN8VavCKyUhi2kgXVIAsaqU1KDDBJ+4u5ypRL8bJk5k3tF/nkXX8wCa5fzjMiDbEoQB1PhbiuUrlN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TQmXmBql; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=etl8jC676z/6+BYBzAYFYdez+KXZvUtK/z6bz9zgGlDAIAnsHGSLvBBgrIK93gdUVEoZRd0WTJmuNEMH2Nd2MUMDE6ORjQKoaZvaeb62iVwqTO29ZEXhTcKLWfBQVa1SdFepSDt1zjkfq4Y9jXlFEteOsmojRx6WySrAKPRvCyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dN5O3BaP; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TQmXmBql"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dN5O3BaP"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750889750; x=1782425750;
+  t=1750890657; x=1782426657;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=DlJSzgfC1sEMmUJU5hO3ScyaV5UFF9CQVu3984R47ls=;
-  b=TQmXmBqliSnsL8vivp4Hup4qcFICTVXu7W65NX5wlhsOV4np+ZGxFn3g
-   QieFtnNBFfRLOguQGnwNZW8MJl+G712d3o/3gyDLliWtvDdgIPLRvSW4K
-   fsbgWoBkLP2YOxsZtySvZLKONxFm0AjbbzKOxhYxjq7sz5CzuGLcg1Sel
-   9qlivNmCJ6ipmKZz44Znx3f2YQk0pp3KHnO8MZQLgSqOLAkge4qMLgz9I
-   B0yRf7aQo/Crz0V9TmzOFBoX5MI4goFD5NDJR3vwFVlRmRvFznFI+P+DY
-   CuHwMR+1unSB6+GnEkQoWJ8Wz4snWXKDPB1LeQ/TY8/xpjse5df50+a35
-   A==;
-X-CSE-ConnectionGUID: QXS7Htx9SvGZOunNiIt1Fg==
-X-CSE-MsgGUID: Oho3TvLnSiG2c3n80n6c+Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="56960772"
+  bh=es2pAC8UJ6aAZOOo64AymW+sUCvL5KpwNeTvHXR6GyQ=;
+  b=dN5O3BaPwcolxkWW8YDYhWql6hkRrRO7aqmt3uVSUDb850GbuLOODRWY
+   NzA9FEq5T0QiZklqMqMDUhn01i8QRZAREuDqzN7UPVD7eF2kjKv09+S1Z
+   P1w/7qcLE6J/LWHmQdRVoT9ptKKAxKUWBRo78GB/jgVj1h6xMuEGhvq0G
+   rcApgyThDa6VQmxDmskRU6osdFzpXeoJqcsl/WI4ASS3pnFLv/JGN89Js
+   hE9qajLu0gNj4f9DGd3USs21PB6MISzdqQI/jHV2invC0v3lPE0VrXn20
+   5X4FF0bhzAhNkIPCD+Z4hvtN1rW0Bw/T2cPFriDvcEBu33+44zhYrQM4c
+   w==;
+X-CSE-ConnectionGUID: oXxDcL1fSza7Cj4yxjo9Jw==
+X-CSE-MsgGUID: udCOUSlRQmuR3WvkI/dICA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="63773812"
 X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
-   d="scan'208";a="56960772"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 15:15:49 -0700
-X-CSE-ConnectionGUID: AKGvo5dRRM+hG8hVg1WGeQ==
-X-CSE-MsgGUID: avzPDImARASm71eiWrb7kg==
+   d="scan'208";a="63773812"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 15:30:56 -0700
+X-CSE-ConnectionGUID: FVV2R/ABSsWS5xlvDo6ZMw==
+X-CSE-MsgGUID: S21WJEC/SjiWb3gJmRXOQg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
-   d="scan'208";a="183366548"
-Received: from puneetse-mobl.amr.corp.intel.com (HELO [10.125.109.5]) ([10.125.109.5])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 15:15:49 -0700
-Message-ID: <be43f6b8-907b-4476-a84a-0c7b801a3f94@intel.com>
-Date: Wed, 25 Jun 2025 15:15:45 -0700
+   d="scan'208";a="151955300"
+Received: from tmukhopa-mobl.amr.corp.intel.com (HELO [10.125.98.185]) ([10.125.98.185])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 15:30:56 -0700
+Message-ID: <daa7eb83-7413-4b6e-a241-84d306db0d43@linux.intel.com>
+Date: Wed, 25 Jun 2025 15:30:47 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,219 +52,65 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] cxl/core: Add locked variants of the poison inject
- and clear funcs
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, alison.schofield@intel.com
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-References: <cover.1750725512.git.alison.schofield@intel.com>
- <71f51bcc7d335c9f558441bb68f05f546230696a.1750725512.git.alison.schofield@intel.com>
- <20250624143822.00003256@huawei.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250624143822.00003256@huawei.com>
+Subject: Re: [PATCH] driver core: faux: fix Undefined Behavior in
+ faux_device_destroy()
+To: Dan Carpenter <dan.carpenter@linaro.org>, Miguel Ojeda <ojeda@kernel.org>
+Cc: gregkh@linuxfoundation.org, Benjamin.Cheatham@amd.com,
+ Jonathan.Cameron@huawei.com, dakr@kernel.org, dan.j.williams@intel.com,
+ linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org, rafael.j.wysocki@intel.com, rafael@kernel.org,
+ sudeep.holla@arm.com, Kees Cook <kees@kernel.org>
+References: <2025061313-theater-surrender-944c@gregkh>
+ <20250614105037.1441029-1-ojeda@kernel.org>
+ <685c13c5.050a0220.38a39d.dcf8@mx.google.com>
+Content-Language: en-GB
+From: Marc Herbert <marc.herbert@linux.intel.com>
+In-Reply-To: <685c13c5.050a0220.38a39d.dcf8@mx.google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 6/24/25 6:38 AM, Jonathan Cameron wrote:
-> On Mon, 23 Jun 2025 17:53:34 -0700
-> alison.schofield@intel.com wrote:
+On 2025-06-25 08:20, Dan Carpenter wrote:
+> On Sat, Jun 14, 2025 at 12:50:37PM +0200, Miguel Ojeda wrote:
+>> On Fri, 13 Jun 2025 20:33:42 -0400 Greg KH <gregkh@linuxfoundation.org> wrote:
+>>>
+>>> Great writeup, but as Miguel says, this isn't needed at all, the kernel
+>>> relies on the compiler to be sane :)
+>>
+>> We may still want to clean them up, e.g. for tooling -- Kees/Dan: do we?
+>> e.g. I see a similar case with discussion at:
+>>
+>>     https://lore.kernel.org/lkml/3f1e7aaa-501a-44f1-8122-28e9efa0a33c@web.de/
+>>
+>> Which in the end was picked up as commit 2df2c0caaecf ("fbdev: au1100fb:
+>> Move a variable assignment behind a null pointer check").
 > 
->> From: Alison Schofield <alison.schofield@intel.com>
->>
->> The core functions that validate and send inject and clear commands
->> to the memdev devices require holding both the dpa_rwsem and the
->> region_rwsem.
->>
->> In preparation for another caller of these functions that must hold
->> the locks upon entry, split the work into a locked and unlocked pair.
->>
->> Consideration was given to moving the locking to both callers,
->> however, the existing caller is not in the core (mem.c) and cannot
->> access the locks.
->>
->> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> 
-> This will clash with Dan's ACQUIRE() set.  Up to Dave on how
-> to handle that but my gut feeling is that if we want to queue much
-> else this cycle and that we should ask for patches on top of the
-> ACQUIRE() series.  The risk being that gets some later push back.
+> Putting the declarations at the top was always just a style preference.
 
-I think this patch may simplify more with ACQUIRE() if Dan hasn't already refactored the function. We can wait for a rev based off of that given there's an immutable branch with the ACQUIRE() patch on cxl.git already.
+No, "const" and variable scopes are not just "style", please do a
+bit of research. For instance...
 
-DJ
+> Putting declarations at the top causes issues for __cleanup magic and...
 
-> 
-> Ah well I'll apply the someone else's problem field.
-> 
-> Given reuse of these in patch 3 this looks sensible to me.
-> 
-> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> 
-> 
->> ---
->>  drivers/cxl/core/memdev.c | 77 +++++++++++++++++++++++++--------------
->>  drivers/cxl/cxlmem.h      |  2 +
->>  2 files changed, 52 insertions(+), 27 deletions(-)
->>
->> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
->> index f88a13adf7fa..b38141761f47 100644
->> --- a/drivers/cxl/core/memdev.c
->> +++ b/drivers/cxl/core/memdev.c
->> @@ -280,7 +280,7 @@ static int cxl_validate_poison_dpa(struct cxl_memdev *cxlmd, u64 dpa)
->>  	return 0;
->>  }
->>  
->> -int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
->> +int __inject_poison_locked(struct cxl_memdev *cxlmd, u64 dpa)
->>  {
->>  	struct cxl_mailbox *cxl_mbox = &cxlmd->cxlds->cxl_mbox;
->>  	struct cxl_mbox_inject_poison inject;
->> @@ -292,19 +292,12 @@ int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
->>  	if (!IS_ENABLED(CONFIG_DEBUG_FS))
->>  		return 0;
->>  
->> -	rc = down_read_interruptible(&cxl_region_rwsem);
->> -	if (rc)
->> -		return rc;
->> -
->> -	rc = down_read_interruptible(&cxl_dpa_rwsem);
->> -	if (rc) {
->> -		up_read(&cxl_region_rwsem);
->> -		return rc;
->> -	}
->> +	lockdep_assert_held(&cxl_dpa_rwsem);
->> +	lockdep_assert_held(&cxl_region_rwsem);
->>  
->>  	rc = cxl_validate_poison_dpa(cxlmd, dpa);
->>  	if (rc)
->> -		goto out;
->> +		return rc;
->>  
->>  	inject.address = cpu_to_le64(dpa);
->>  	mbox_cmd = (struct cxl_mbox_cmd) {
->> @@ -314,7 +307,7 @@ int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
->>  	};
->>  	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
->>  	if (rc)
->> -		goto out;
->> +		return rc;
->>  
->>  	cxlr = cxl_dpa_to_region(cxlmd, dpa);
->>  	if (cxlr)
->> @@ -327,7 +320,26 @@ int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
->>  		.length = cpu_to_le32(1),
->>  	};
->>  	trace_cxl_poison(cxlmd, cxlr, &record, 0, 0, CXL_POISON_TRACE_INJECT);
->> -out:
->> +
->> +	return rc;
->> +}
->> +
->> +int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
->> +{
->> +	int rc;
->> +
->> +	rc = down_read_interruptible(&cxl_region_rwsem);
->> +	if (rc)
->> +		return rc;
->> +
->> +	rc = down_read_interruptible(&cxl_dpa_rwsem);
->> +	if (rc) {
->> +		up_read(&cxl_region_rwsem);
->> +		return rc;
->> +	}
->> +
->> +	rc = __inject_poison_locked(cxlmd, dpa);
->> +
->>  	up_read(&cxl_dpa_rwsem);
->>  	up_read(&cxl_region_rwsem);
->>  
->> @@ -335,7 +347,7 @@ int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
->>  }
->>  EXPORT_SYMBOL_NS_GPL(cxl_inject_poison, "CXL");
->>  
->> -int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa)
->> +int __clear_poison_locked(struct cxl_memdev *cxlmd, u64 dpa)
->>  {
->>  	struct cxl_mailbox *cxl_mbox = &cxlmd->cxlds->cxl_mbox;
->>  	struct cxl_mbox_clear_poison clear;
->> @@ -347,20 +359,12 @@ int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa)
->>  	if (!IS_ENABLED(CONFIG_DEBUG_FS))
->>  		return 0;
->>  
->> -	rc = down_read_interruptible(&cxl_region_rwsem);
->> -	if (rc)
->> -		return rc;
->> -
->> -	rc = down_read_interruptible(&cxl_dpa_rwsem);
->> -	if (rc) {
->> -		up_read(&cxl_region_rwsem);
->> -		return rc;
->> -	}
->> +	lockdep_assert_held(&cxl_dpa_rwsem);
->> +	lockdep_assert_held(&cxl_region_rwsem);
->>  
->>  	rc = cxl_validate_poison_dpa(cxlmd, dpa);
->>  	if (rc)
->> -		goto out;
->> -
->> +		return rc;
->>  	/*
->>  	 * In CXL 3.0 Spec 8.2.9.8.4.3, the Clear Poison mailbox command
->>  	 * is defined to accept 64 bytes of write-data, along with the
->> @@ -378,7 +382,7 @@ int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa)
->>  
->>  	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
->>  	if (rc)
->> -		goto out;
->> +		return rc;
->>  
->>  	cxlr = cxl_dpa_to_region(cxlmd, dpa);
->>  	if (cxlr)
->> @@ -391,7 +395,26 @@ int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa)
->>  		.length = cpu_to_le32(1),
->>  	};
->>  	trace_cxl_poison(cxlmd, cxlr, &record, 0, 0, CXL_POISON_TRACE_CLEAR);
->> -out:
->> +
->> +	return rc;
->> +}
->> +
->> +int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa)
->> +{
->> +	int rc;
->> +
->> +	rc = down_read_interruptible(&cxl_region_rwsem);
->> +	if (rc)
->> +		return rc;
->> +
->> +	rc = down_read_interruptible(&cxl_dpa_rwsem);
->> +	if (rc) {
->> +		up_read(&cxl_region_rwsem);
->> +		return rc;
->> +	}
->> +
->> +	rc = __clear_poison_locked(cxlmd, dpa);
->> +
->>  	up_read(&cxl_dpa_rwsem);
->>  	up_read(&cxl_region_rwsem);
->>  
->> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
->> index 551b0ba2caa1..c0643e8b9d8f 100644
->> --- a/drivers/cxl/cxlmem.h
->> +++ b/drivers/cxl/cxlmem.h
->> @@ -861,6 +861,8 @@ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
->>  int cxl_trigger_poison_list(struct cxl_memdev *cxlmd);
->>  int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa);
->>  int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa);
->> +int __inject_poison_locked(struct cxl_memdev *cxlmd, u64 dpa);
->> +int __clear_poison_locked(struct cxl_memdev *cxlmd, u64 dpa);
->>  
->>  #ifdef CONFIG_CXL_EDAC_MEM_FEATURES
->>  int devm_cxl_memdev_edac_register(struct cxl_memdev *cxlmd);
-> 
+https://stackoverflow.com/questions/368385/implementing-raii-in-pure-c
+https://en.wikipedia.org/wiki/Resource_acquisition_is_initialization#Compiler_%22cleanup%22_extensions
 
+Not just "style" either:
+- Automagically avoiding exploits like TUN https://lwn.net/Articles/342330/
+- The unusual flag -fno-delete-null-pointer-checks and incompatibility
+  with other analyzers and compilers
+- All the complex compiler discussions around those.
+
+Declaration-after-statement was an important (and obviously: optional)
+C99 feature that let C catch up with every other language. Forbidding it
+just for "style" would be a serious misunderstanding of that feature. I
+don't know any yet but there has to be some more important reason(s)
+than "style".
+
+From https://lore.kernel.org/lkml/4d54e4f6-0d98-4b42-9bea-169f3b8772bb@sabinyo.mountain/
+> Btw, this is testing dereferences where the kernel code is doing pointer math.
+
+Compiler optimizations may or may not care about that difference.  It
+seems gcc and clang both do care... for now (and even if that changes
+then I guess -fno-delete-null-pointer-checks would still be enough)
