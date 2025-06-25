@@ -1,98 +1,99 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3612F27D784;
-	Wed, 25 Jun 2025 08:52:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C58628641B;
+	Wed, 25 Jun 2025 09:00:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750841542; cv=none; b=AQC1VIlVvxvfu2Pcexfrgn+FuThf+uvzbsK4ierZffe9nDEEwZ0WIVZ2hc23/5eBFhcQeYA71twqTJwpEMghk3/sY192v/giAz1SQhyshoGnqtX7xivcECqSyWt2LlcsBLVdhWd+J54jC8O7MAt7VZKoKPI4z5yzOeWrQaz2+SE=
+	t=1750842010; cv=none; b=q8TgGPplZ5gayXdXlgg9rtaFiMxdXG8Ns7ARgIQScCjAODQrn/ugH4psLGHIPaja/HG5zEzjnv/BXq/QoArhSvutSpcW2o8VIgsOu7YTXQQ4SKAKI/yjvnsqLLL9fkpGvzq3QEwdqC8eZkPHmwE2dD7PM+zmohIhPwyRLDzsFbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750841542; c=relaxed/simple;
-	bh=1aEymm9TW+31O+JYHnj+LSnYkKbL8stOxELJ4GSgqBI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wpzw4k61dLOiJ+/+cKvsaovzNm1xnJvZ24VAhFHIuMI1dg8MHaZ3UPi90J4Z7x//+s6yfREX3UhNVgsIgSdr2YQfDq6Kg9j6mKgs6E2i3oIArTTvrTpGDZ5TWrJFJ5kFSgeNaUeqm7oGRXCPA1IBKPKccWrNTrsqn2NuDeXiZsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qdhhzZ/l; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qdhhzZ/l"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=kuB6DJokf+kOHeXrbarpBOCXQ2R6TXTfr6dB5Ad6/3o=; b=qdhhzZ/loUJj4/x5n1ZsfY53Nz
-	Fntzcq+G7Y/WZyznoGpiZ7N4mKDED4CDh/WdAgmi3O+iNUt7rgLHT3tHo5gFYzOj9lYVZpAm+ZnrP
-	G05fPGu8gkCAHZvkBTPR4I0oA+PUFsXB3oApC0I2V0hRhpNPY/5aMfB5xm29ewdmMfBHjM4tJbnLw
-	QxfeCT0jEuuQkqMrvyWdmXRe5fVFGCMyj45ECw6qFjSmQaMeCSy45iIgODWENrFchbf8SeEcFryJY
-	JJw69p01O0rNbx5o/QkCzhrKPISMe+xwHd1X/oTD9eXtsti2Bp90yL3XCAYmh7O5IOyLtZ1+D0yLZ
-	oBU97CHw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uULrR-00000008vs3-11Ci;
-	Wed, 25 Jun 2025 08:52:05 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id C97B3308983; Wed, 25 Jun 2025 10:52:04 +0200 (CEST)
-Date: Wed, 25 Jun 2025 10:52:04 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, james.morse@arm.com,
-	linux-cxl@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-mm@kvack.org, gregkh@linuxfoundation.org,
-	Will Deacon <will@kernel.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Yicong Yang <yangyicong@huawei.com>, linuxarm@huawei.com,
-	Yushan Wang <wangyushan12@huawei.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	x86@kernel.org, H Peter Anvin <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH v2 0/8] Cache coherency management subsystem
-Message-ID: <20250625085204.GC1613200@noisy.programming.kicks-ass.net>
-References: <20250624154805.66985-1-Jonathan.Cameron@huawei.com>
+	s=arc-20240116; t=1750842010; c=relaxed/simple;
+	bh=GWXcQ4Nz79x8qBwbvgGBWE7L/NrUxcYy1iTic/UeGKo=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VLTN7xJ6Z80OYAjZ3pBoo4vUmQzVPV6teng+aofBAd5mHyuM9tZ4wUBE5aTbJ07MXwbyT6anNob27tHev8n0Y7zWEItpmDrSB6N0FeubHogmxGkUo8cPgAOH5zX/wBzRkGEVj59enFah6XCkcZnPM2SQiyM6sHUVoUSUpcq80eY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bRwjg2gmgz6GFDR;
+	Wed, 25 Jun 2025 16:59:19 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id CBF24140432;
+	Wed, 25 Jun 2025 16:59:44 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 25 Jun
+ 2025 10:59:32 +0200
+Date: Wed, 25 Jun 2025 09:59:30 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Alok Tiwari <alok.a.tiwari@oracle.com>
+CC: <will@kernel.org>, <mark.rutland@arm.com>, <linux-cxl@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/3] perf/cxlpmu: Fix devm_kcalloc() argument order
+ in cxl_pmu_probe()
+Message-ID: <20250625095930.00004f6f@huawei.com>
+In-Reply-To: <20250624194350.109790-2-alok.a.tiwari@oracle.com>
+References: <20250624194350.109790-1-alok.a.tiwari@oracle.com>
+	<20250624194350.109790-2-alok.a.tiwari@oracle.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250624154805.66985-1-Jonathan.Cameron@huawei.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, Jun 24, 2025 at 04:47:56PM +0100, Jonathan Cameron wrote:
+On Tue, 24 Jun 2025 12:43:38 -0700
+Alok Tiwari <alok.a.tiwari@oracle.com> wrote:
 
-> On x86 there is the much loved WBINVD instruction that causes a write back
-> and invalidate of all caches in the system. It is expensive but it is
+> The previous code mistakenly swapped the count and size parameters.
+> This fix corrects the argument order in devm_kcalloc() to follow the
+> conventional count, size form, avoiding potential confusion or bugs.
+> 
+> Previous usage:
+>   devm_kcalloc(dev, sizeof(*info->hw_events), info->num_counters,
+>    GFP_KERNEL);
+> 
+> New usage:
+>   devm_kcalloc(dev, info->num_counters, sizeof(*info->hw_events),
+>    GFP_KERNEL);
 
-Expensive is not the only problem. It actively interferes with things
-like Cache-Allocation-Technology (RDT-CAT for the intel folks). Doing
-WBINVD utterly destroys the cache subsystem for everybody on the
-machine.
+Too much detail! The sentence above would have been enough given
+we have the code change to see how it applied.
+> 
+> Previous incorrect order could lead to unexpected memory allocation
+> behavior. This fix ensures correct allocation of hw_event structure.
 
-> necessary in a few corner cases. 
+It doesn't actually make any real difference.  Look at the implementation
+of devm_kmalloc_array()  What it does is make it harder to reason about the
+code and for that it is worth fixing up.
 
-Don't we have things like CLFLUSH/CLFLUSHOPT/CLWB exactly so that we can
-avoid doing dumb things like WBINVD ?!?
+Anyhow none of that really matters.
 
-> These are cases where the contents of
-> Physical Memory may change without any writes from the host. Whilst there
-> are a few reasons this might happen, the one I care about here is when
-> we are adding or removing mappings on CXL. So typically going from
-> there being actual memory at a host Physical Address to nothing there
-> (reads as zero, writes dropped) or visa-versa. 
-
-> The
-> thing that makes it very hard to handle with CPU flushes is that the
-> instructions are normally VA based and not guaranteed to reach beyond
-> the Point of Coherence or similar. You might be able to (ab)use
-> various flush operations intended to ensure persistence memory but
-> in general they don't work either.
-
-Urgh so this. Dan, Dave, are we getting new instructions to deal with
-this? I'm really not keen on having WBINVD in active use.
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+> 
+> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+> ---
+>  drivers/perf/cxl_pmu.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
+> index d6693519eaee2..8998c0a2f3a2d 100644
+> --- a/drivers/perf/cxl_pmu.c
+> +++ b/drivers/perf/cxl_pmu.c
+> @@ -834,8 +834,8 @@ static int cxl_pmu_probe(struct device *dev)
+>  	if (rc)
+>  		return rc;
+>  
+> -	info->hw_events = devm_kcalloc(dev, sizeof(*info->hw_events),
+> -				       info->num_counters, GFP_KERNEL);
+> +	info->hw_events = devm_kcalloc(dev, info->num_counters,
+> +				       sizeof(*info->hw_events), GFP_KERNEL);
+>  	if (!info->hw_events)
+>  		return -ENOMEM;
+>  
 
