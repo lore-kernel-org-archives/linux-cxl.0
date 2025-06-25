@@ -1,114 +1,171 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3936729A323;
-	Wed, 25 Jun 2025 09:32:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0655D2BD012;
+	Wed, 25 Jun 2025 10:41:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750843937; cv=none; b=GA0fsGDOGanFke4+Ea3tqZ7z4s3vEhCBYMc/bvkN3uWPumexfAZ6Rrk4qi4TM+WJFbtAJ7nXV3WuD5TCVqoevIE3N1N4ud9OrdIXPQ1yqqUrszC6lw5qizbvfS809Wlz5acW0jdpXiov2RHEZ3wXCvggvJkmuu2Fe/Kt1v7upSk=
+	t=1750848103; cv=none; b=s3JJpKHJCNfncql/hkw6qihpCfZU5ZCdvlfDr0LX6NypXibdB7XUBJMNstp1KOuqdXQMKfd4KCBwlHMIOfQseA8lL1SA/j3mrdmHNF6IaHGdaEHOgaoPIQwByUrSzxS/dz0DjYF17GOnFcsa89kFxzFnlsOVzjKNkqmPSQdkpA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750843937; c=relaxed/simple;
-	bh=wmlo0i7y7J244aINLuThG1MyR6ZNiLk68WnvjJsz/Kg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DHr78eUSx4dii6UFBvW7/nxf4TuHiVytac4CaS83H5dgGJXPDq6lU7usv9h60LAyDPUFx1tE7qBNizZIa1SpGeM+CQZd2q0By3U2QCoNk76p4eoJFrvr/kIHSdJOUn4fYNoS3VKX+iwrca+1hGPgl2zfUJZTzVdSADVq2+PbFKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=T0hKL8t6; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T0hKL8t6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=51MXSIz01v2zZUYglT8WCA+VxWNWBxG8GinukyiOxuM=; b=T0hKL8t6mooi63qc6S+et8AjEC
-	NVwOjCyKJ0NVeoGkxhfxlkPSOEAwqvdXxiNgnbDwJcu527SaM1mxQWC/cKtInWKKMKBvmZpCmV2EA
-	eAUPbUBIq1el0HbcRgXOzWAFWBzG8vI9Mzv9p70J/3QX1dfYCIT+6sPBPTEarR3OOXBuazAbLLQFy
-	xDBGoQ/8cJO91/xRVEMwE5PZCMfGvIkC8yKJoLjx4Ml8zhQfEQ8SV4LMlS7voq7Xcs8iUG8+wrEP0
-	qJ0amzUljiPfMKhQGnEVcPhAbjynpeywC4kz46mj82jGmUDPssxzsKj3oXfYGWCn4oTEj0ccQHFyj
-	97KGRIwg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uUMTy-00000005joy-1YGc;
-	Wed, 25 Jun 2025 09:31:54 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id C64AD308983; Wed, 25 Jun 2025 11:31:52 +0200 (CEST)
-Date: Wed, 25 Jun 2025 11:31:52 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>, james.morse@arm.com,
-	linux-cxl@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-mm@kvack.org, gregkh@linuxfoundation.org,
-	Will Deacon <will@kernel.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Yicong Yang <yangyicong@huawei.com>, linuxarm@huawei.com,
-	Yushan Wang <wangyushan12@huawei.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	x86@kernel.org, Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH v2 0/8] Cache coherency management subsystem
-Message-ID: <20250625093152.GZ1613376@noisy.programming.kicks-ass.net>
-References: <20250624154805.66985-1-Jonathan.Cameron@huawei.com>
- <20250625085204.GC1613200@noisy.programming.kicks-ass.net>
- <FB7122A4-BF5E-4C05-805A-2EE3240286A1@zytor.com>
+	s=arc-20240116; t=1750848103; c=relaxed/simple;
+	bh=UWgHI2JYjTR8/RE+TvkJISVMdND38DQGmtOHHEDcGJ4=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JJV/Xk2WjTWcNKfrrV5wSyVkOvVwCLLEzpq9rH3XpB4AS3TCI3zklB9yYGR5CAxjoLtIsZeWjgD3pbNf1sb1yZgxoScAElZgpwx+tOF4nRf8YLBUGG3gk0IldkxOZRB15IcRNEAh1fxdip4PiepRKPJ8mZ23jT08txm+tZC6XXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bRyyr6Smtz6M4ZT;
+	Wed, 25 Jun 2025 18:40:52 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 70FF71402FC;
+	Wed, 25 Jun 2025 18:41:38 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 25 Jun
+ 2025 12:41:37 +0200
+Date: Wed, 25 Jun 2025 11:41:36 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: <shiju.jose@huawei.com>
+CC: <linux-edac@vger.kernel.org>, <bp@alien8.de>, <tony.luck@intel.com>,
+	<lenb@kernel.org>, <leo.duran@amd.com>, <Yazen.Ghannam@amd.com>,
+	<mchehab@kernel.org>, <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
+	<linuxarm@huawei.com>, <tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>
+Subject: Re: [PATCH 1/1] EDAC: Fix lockdep splat caused by edac features
+ code
+Message-ID: <20250625114136.0000021a@huawei.com>
+In-Reply-To: <20250624181312.1712-1-shiju.jose@huawei.com>
+References: <20250624181312.1712-1-shiju.jose@huawei.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <FB7122A4-BF5E-4C05-805A-2EE3240286A1@zytor.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Wed, Jun 25, 2025 at 02:12:39AM -0700, H. Peter Anvin wrote:
-> On June 25, 2025 1:52:04 AM PDT, Peter Zijlstra <peterz@infradead.org> wrote:
-> >On Tue, Jun 24, 2025 at 04:47:56PM +0100, Jonathan Cameron wrote:
-> >
-> >> On x86 there is the much loved WBINVD instruction that causes a write back
-> >> and invalidate of all caches in the system. It is expensive but it is
-> >
-> >Expensive is not the only problem. It actively interferes with things
-> >like Cache-Allocation-Technology (RDT-CAT for the intel folks). Doing
-> >WBINVD utterly destroys the cache subsystem for everybody on the
-> >machine.
-> >
-> >> necessary in a few corner cases. 
-> >
-> >Don't we have things like CLFLUSH/CLFLUSHOPT/CLWB exactly so that we can
-> >avoid doing dumb things like WBINVD ?!?
-> >
-> >> These are cases where the contents of
-> >> Physical Memory may change without any writes from the host. Whilst there
-> >> are a few reasons this might happen, the one I care about here is when
-> >> we are adding or removing mappings on CXL. So typically going from
-> >> there being actual memory at a host Physical Address to nothing there
-> >> (reads as zero, writes dropped) or visa-versa. 
-> >
-> >> The
-> >> thing that makes it very hard to handle with CPU flushes is that the
-> >> instructions are normally VA based and not guaranteed to reach beyond
-> >> the Point of Coherence or similar. You might be able to (ab)use
-> >> various flush operations intended to ensure persistence memory but
-> >> in general they don't work either.
-> >
-> >Urgh so this. Dan, Dave, are we getting new instructions to deal with
-> >this? I'm really not keen on having WBINVD in active use.
-> >
-> 
-> WBINVD is the nuclear weapon to use when you have lost all notion of
-> where the problematic data can be, and amounts to a full reset of the
-> cache system. 
-> 
-> WBINVD can block interrupts for many *milliseconds*, system wide, and
-> so is really only useful for once-per-boot type events, like MTRR
-> initialization.
+On Tue, 24 Jun 2025 19:13:12 +0100
+<shiju.jose@huawei.com> wrote:
 
-Right this... But that CXL thing sounds like that's semi 'regular' to
-the point that providing some infrastructure around it makes sense. This
-should not be.
+> From: Shiju Jose <shiju.jose@huawei.com>
+> 
+> Fix the lockdep splat caused by missing sysfs_attr_init() calls
+> for the newely added EDAC feature's sysfs attributes.
+newly though recently is probably better.
+> 
+> ...
+> [   16.867268] CPU: 4 UID: 0 PID: 131 Comm: kworker/u33:4 Tainted: G           O        6.16.0-rc3+
+> [   16.867272] Tainted: [O]=OOT_MODULE
+> [   16.867273] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS edk2-20241117-5.fc41 11/17/2
+> 024
+> [   16.867275] Workqueue: async async_run_entry_fn
+> [   16.867282] RIP: 0010:lockdep_init_map_type+0x131/0x270
+> [   16.867287] Code: 85 c0 75 b4 e8 50 d6 6f 00 85 c0 74 ab 8b 3d 26 0d bd 01 85 ff 75 a1 48 c7 c6 c
+> f 52 ac 82 48 c7 c7 2a 12 aa 82 e8 6f 59 f6 ff <0f> 0b eb 8a 9c 58 0f 1f 40 00 48 89 c5 fa 0f 1f 44
+> 00 00 48 c7 c7
+> [   16.867289] RSP: 0018:ffffc900020875d8 EFLAGS: 00010292
+> [   16.867291] RAX: 0000000000000016 RBX: ffff888212716a58 RCX: 0000000000000000
+> [   16.867292] RDX: 0000000000000002 RSI: ffffffff82ab189f RDI: 00000000ffffffff
+> [   16.867293] RBP: ffff888201a5e8c0 R08: 0000000000000000 R09: 0000000000000000
+> [   16.867294] R10: 0000000000000000 R11: 65726f635f6c7863 R12: 0000000000000000
+> [   16.867295] R13: ffff888201a5e8c0 R14: ffff8882052bc630 R15: ffff888201a5e9a8
+> [   16.867296] FS:  0000000000000000(0000) GS:ffff8882f11e5000(0000) knlGS:0000000000000000
+> [   16.867298] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   16.867299] CR2: 00007f20a16c6030 CR3: 0000000003c4c005 CR4: 0000000000770ef0
+> [   16.867304] PKRU: 55555554
+> [   16.867305] Call Trace:
+> [   16.867308]  <TASK>
+> [   16.867313]  __kernfs_create_file+0x77/0xf0
+> [   16.887524]  sysfs_add_file_mode_ns+0x86/0x140
+> [   16.887534]  internal_create_group+0x1cc/0x4b0
+> [   16.887540]  internal_create_groups+0x42/0xa0
+> [   16.887544]  device_add+0x310/0x860
+> [   16.887548]  ? __init_waitqueue_head+0x4a/0x60
+> [   16.887555]  edac_dev_register+0x3ff/0x480
+> [   16.887565]  devm_cxl_memdev_edac_register+0x509/0x640 [cxl_core]
+> [   16.893091]  ? lock_acquire+0xc4/0x2d0
+> [   16.893100]  ? find_held_lock+0x2b/0x80
+> [   16.893103]  ? cxl_mem_probe+0x21e/0x360 [cxl_mem]
+> [   16.893113]  ? cxl_mem_probe+0x21e/0x360 [cxl_mem]
+> [   16.893117]  ? lockdep_hardirqs_on+0x78/0x100
+> [   16.896972]  ? cxl_mem_probe+0x226/0x360 [cxl_mem]
+> [   16.896982]  cxl_mem_probe+0x226/0x360 [cxl_mem]
+
+Prune this to drop timestamps etc and keep only the relevant info.
+https://docs.kernel.org/process/submitting-patches.html#backtraces-in-commit-messages
+
+Also, call out the code that actually causes the splat which from our earlier
+discussion is I think:
+ if (!static_obj(key) && !is_dynamic_key(key)) check in lockdev_init_map_type?
+https://elixir.bootlin.com/linux/v6.15.3/source/kernel/locking/lockdep.c#L4977
+
+> ...
+> 
+> Fixes: f90b738166fe ("EDAC: Add scrub control feature")
+> Fixes: bcbd069b11b0 ("EDAC: Add a Error Check Scrub control feature")
+> Fixes: 699ea5219c4b ("EDAC: Add a memory repair control feature")
+> Reported-by: Dave Jiang <dave.jiang@intel.com>
+> Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+> ---
+>  drivers/edac/ecs.c        | 4 +++-
+>  drivers/edac/mem_repair.c | 1 +
+>  drivers/edac/scrub.c      | 1 +
+>  3 files changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/edac/ecs.c b/drivers/edac/ecs.c
+> index 1d51838a60c1..1be237d15bed 100755
+> --- a/drivers/edac/ecs.c
+> +++ b/drivers/edac/ecs.c
+> @@ -170,8 +170,10 @@ static int ecs_create_desc(struct device *ecs_dev, const struct attribute_group
+>  		fru_ctx->dev_attr[ECS_RESET]		= EDAC_ECS_ATTR_WO(reset, fru);
+>  		fru_ctx->dev_attr[ECS_THRESHOLD]	= EDAC_ECS_ATTR_RW(threshold, fru);
+>  
+> -		for (i = 0; i < ECS_MAX_ATTRS; i++)
+> +		for (i = 0; i < ECS_MAX_ATTRS; i++) {
+>  			fru_ctx->ecs_attrs[i] = &fru_ctx->dev_attr[i].dev_attr.attr;
+> +			sysfs_attr_init(fru_ctx->ecs_attrs[i]);
+It feels to me like maybe this should be applied before we put the pointer in the array
+of attribute pointers.  So one line earlier (without the convenience of that
+shorter form). Perhaps a local variable?
+
+			struct attribute *attr = &fru_ctx->dev_attr[i].dev_attr.attr;
+			
+			sysfs_attr_init(attr);
+			fru_ctx->ecs_attrs[i] = attr;
+
+I don't care that much though.
+
+> +		}
+>  
+>  		sprintf(fru_ctx->name, "%s%d", EDAC_ECS_FRU_NAME, fru);
+>  		group->name = fru_ctx->name;
+> diff --git a/drivers/edac/mem_repair.c b/drivers/edac/mem_repair.c
+> index d1a8caa85369..c7951bc5efdb 100755
+> --- a/drivers/edac/mem_repair.c
+> +++ b/drivers/edac/mem_repair.c
+> @@ -335,6 +335,7 @@ static int mem_repair_create_desc(struct device *dev,
+>  		       &dev_attr[i], sizeof(dev_attr[i]));
+>  		ctx->mem_repair_attrs[i] =
+>  			&ctx->mem_repair_dev_attr[i].dev_attr.attr;
+> +		sysfs_attr_init(ctx->mem_repair_attrs[i]);
+>  	}
+>  
+>  	sprintf(ctx->name, "%s%d", "mem_repair", instance);
+> diff --git a/drivers/edac/scrub.c b/drivers/edac/scrub.c
+> index e421d3ebd959..8831b44e9193 100755
+> --- a/drivers/edac/scrub.c
+> +++ b/drivers/edac/scrub.c
+> @@ -177,6 +177,7 @@ static int scrub_create_desc(struct device *scrub_dev,
+>  	for (i = 0; i < SCRUB_MAX_ATTRS; i++) {
+>  		memcpy(&scrub_ctx->scrub_dev_attr[i], &dev_attr[i], sizeof(dev_attr[i]));
+>  		scrub_ctx->scrub_attrs[i] = &scrub_ctx->scrub_dev_attr[i].dev_attr.attr;
+> +		sysfs_attr_init(scrub_ctx->scrub_attrs[i]);
+>  	}
+>  	sprintf(scrub_ctx->name, "%s%d", "scrub", instance);
+>  	group->name = scrub_ctx->name;
+
