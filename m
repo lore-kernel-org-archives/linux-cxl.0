@@ -1,134 +1,166 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB89425C6EF;
-	Wed, 25 Jun 2025 16:22:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F471DF980
+	for <linux-cxl@vger.kernel.org>; Wed, 25 Jun 2025 16:22:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750868527; cv=none; b=aUmACAGe+jCKJp4Y1RvHnhonxX5kigTXqhOiyo7xUq8if0yvl02HKcnHKc/dJ8c6PLks3NjqZTtChKjTfgHwNkBQIDXIdwgio5XOvSH2ejWym5rltRtguhkfrWPg5UVr8bn55TqxfiJ0wRh6Lt4U6PzcQmKqwTDLTuZv6ixTNWM=
+	t=1750868527; cv=none; b=bl4D2LKoEDSy1bEO35K7UqLBsK/EOQ3+5zln4EyTW69PftipmpHAtmU2uk1LJV+m0HL9T1LUtspfhSQeWdZxH5zOJsW0zPcQjl6lIInj3v0b1SoaHYcK2gQC8qnqg4aXpkdVelsCzfbPZpq4J8ab8D2YY9dvLGf7KV1fqz1dREM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750868527; c=relaxed/simple;
-	bh=Ou8QHMFdgetDzK5dLd56qGIJObazJQu5Eap283Iz/b8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KKjtWN1n4RujQhQ8IO7k68UrBfUx8TxJSEgV0/JGfGS390gCnyco/0/AYG8CiWYQLBzD7tLjni8nHH3TqOd7F1BjTN9QDUHQ+U8PnoZjlOZs65tx/d5sF51VG58fNT/KkaS2b3gFHnh0FvB2e5s+xmITapgfHW5mos2Ch09Ya5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HiVDlhRT; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HiVDlhRT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750868526; x=1782404526;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Ou8QHMFdgetDzK5dLd56qGIJObazJQu5Eap283Iz/b8=;
-  b=HiVDlhRTsEfeReLW4sNU9Lf8PYPIlsoq1/YKf+hGdfUEDYrTz6jhbnqm
-   RnszxQhiDKKNpHeuIGWcRIlaDqddMGNI05L1kPAORok4A1Q+yteErSZnn
-   6hWxCRLwcCXtxG5YKU8/P0pbr74Y64mxjw0TRlGgLGU8TsPbfE070a7it
-   UT6pIjJZoqnWag5lVtsmi2hAvsUKOCvdmWg8to0VRZKwTrmmrRotc5L0M
-   4blJvQ49ZgEJ3QrSYf4YqL3sOmoIffOZTvsPcwj26vLlra6+Gql3fnPvW
-   8pZfMrX+dy2G33qjkFQv4N9oZT+0rWJ88Liqe1hEJYinzddW3VYr8lIjm
-   A==;
-X-CSE-ConnectionGUID: Wtr9rhBcQfOoW3vkNHvryA==
-X-CSE-MsgGUID: STU5GK2lRhK6PpWlVReLCA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="53013152"
-X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
-   d="scan'208";a="53013152"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 09:22:05 -0700
-X-CSE-ConnectionGUID: HE36SdgBRouSxKN5A3ZuUA==
-X-CSE-MsgGUID: VNv6kMPsT8Gfurry55xSsg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
-   d="scan'208";a="175913297"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 25 Jun 2025 09:21:59 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uUSsm-000TIU-3C;
-	Wed, 25 Jun 2025 16:21:56 +0000
-Date: Thu, 26 Jun 2025 00:21:23 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>, james.morse@arm.com,
-	linux-cxl@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-mm@kvack.org, gregkh@linuxfoundation.org,
-	Will Deacon <will@kernel.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>
-Cc: oe-kbuild-all@lists.linux.dev, Yicong Yang <yangyicong@huawei.com>,
-	linuxarm@huawei.com, Yushan Wang <wangyushan12@huawei.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	x86@kernel.org, H Peter Anvin <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH v2 5/8] arm64: Select
- GENERIC_CPU_CACHE_INVALIDATE_MEMREGION
-Message-ID: <202506260055.YivRG9iE-lkp@intel.com>
-References: <20250624154805.66985-6-Jonathan.Cameron@huawei.com>
+	bh=hfRLYx3rMXvHgj77IKFKV3AaLDCqCE2bOX6Ys441Ndw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gZ2rCWsdEHXhsPICWCSsyBFEMA9AosCgBklPRK2876JmBWdqJA09ENkgL1Kt2aQ/11fK21HExg1IFPC/hQXfhIdbQH4ZbfFM1HiPKgZz/MZtF4KT0ffneStKWFX3gzX68aI9z0EN6GX2nPR/QwgDPKn5pn69r1zJuVfOrja94bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bS6Wd6t1Vz6M4ZQ;
+	Thu, 26 Jun 2025 00:21:17 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id D4A3A14044F;
+	Thu, 26 Jun 2025 00:22:03 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.19.247) by
+ frapeml500008.china.huawei.com (7.182.85.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 25 Jun 2025 18:22:03 +0200
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: <qemu-devel@nongnu.org>, Fan Ni <fan.ni@samsung.com>, Peter Maydell
+	<peter.maydell@linaro.org>, <mst@redhat.com>, Zhijian Li
+	<lizhijian@fujitsu.com>, Itaru Kitayama <itaru.kitayama@linux.dev>
+CC: <linuxarm@huawei.com>, <linux-cxl@vger.kernel.org>, <qemu-arm@nongnu.org>,
+	Yuquan Wang <wangyuquan1236@phytium.com.cn>,
+	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
+	=?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>
+Subject: [PATCH qemu v16 5/5] qtest/cxl: Add aarch64 virt test for CXL
+Date: Wed, 25 Jun 2025 17:19:26 +0100
+Message-ID: <20250625161926.549812-6-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250625161926.549812-1-Jonathan.Cameron@huawei.com>
+References: <20250625161926.549812-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250624154805.66985-6-Jonathan.Cameron@huawei.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-Hi Jonathan,
+Add a single complex case for aarch64 virt machine.
+Given existing much more comprehensive tests for x86 cover the
+common functionality, a single test should be enough to verify
+that the aarch64 part continue to work.
 
-kernel test robot noticed the following build warnings:
+Tested-by: Itaru Kitayama <itaru.kitayama@fujitsu.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-[auto build test WARNING on driver-core/driver-core-testing]
-[also build test WARNING on driver-core/driver-core-next driver-core/driver-core-linus arm64/for-next/core linus/master nvdimm/libnvdimm-for-next v6.16-rc3]
-[cannot apply to nvdimm/dax-misc next-20250625]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+---
+v16: Update to bring improvements made to other tests (Peter Maydell).
+     I'd failed to notice when rebasing this over time that the
+     other tests had undergone various improvment and I should have
+     updated this one as well.
+---
+ tests/qtest/cxl-test.c  | 58 ++++++++++++++++++++++++++++++++---------
+ tests/qtest/meson.build |  1 +
+ 2 files changed, 46 insertions(+), 13 deletions(-)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Jonathan-Cameron/memregion-Support-fine-grained-invalidate-by-cpu_cache_invalidate_memregion/20250624-235402
-base:   driver-core/driver-core-testing
-patch link:    https://lore.kernel.org/r/20250624154805.66985-6-Jonathan.Cameron%40huawei.com
-patch subject: [PATCH v2 5/8] arm64: Select GENERIC_CPU_CACHE_INVALIDATE_MEMREGION
-config: arm64-allnoconfig (https://download.01.org/0day-ci/archive/20250626/202506260055.YivRG9iE-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250626/202506260055.YivRG9iE-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506260055.YivRG9iE-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/base/cache.c:31:5: warning: no previous prototype for 'cpu_cache_invalidate_memregion' [-Wmissing-prototypes]
-      31 | int cpu_cache_invalidate_memregion(int res_desc, phys_addr_t start, size_t len)
-         |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> drivers/base/cache.c:41:6: warning: no previous prototype for 'cpu_cache_has_invalidate_memregion' [-Wmissing-prototypes]
-      41 | bool cpu_cache_has_invalidate_memregion(void)
-         |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-vim +/cpu_cache_invalidate_memregion +31 drivers/base/cache.c
-
-b51d47491c68ae Yicong Yang 2025-06-24  30  
-b51d47491c68ae Yicong Yang 2025-06-24 @31  int cpu_cache_invalidate_memregion(int res_desc, phys_addr_t start, size_t len)
-b51d47491c68ae Yicong Yang 2025-06-24  32  {
-b51d47491c68ae Yicong Yang 2025-06-24  33  	guard(spinlock_irqsave)(&scfm_lock);
-b51d47491c68ae Yicong Yang 2025-06-24  34  	if (!scfm_data)
-b51d47491c68ae Yicong Yang 2025-06-24  35  		return -EOPNOTSUPP;
-b51d47491c68ae Yicong Yang 2025-06-24  36  
-b51d47491c68ae Yicong Yang 2025-06-24  37  	return scfm_data->invalidate_memregion(res_desc, start, len);
-b51d47491c68ae Yicong Yang 2025-06-24  38  }
-b51d47491c68ae Yicong Yang 2025-06-24  39  EXPORT_SYMBOL_NS_GPL(cpu_cache_invalidate_memregion, "DEVMEM");
-b51d47491c68ae Yicong Yang 2025-06-24  40  
-b51d47491c68ae Yicong Yang 2025-06-24 @41  bool cpu_cache_has_invalidate_memregion(void)
-
+diff --git a/tests/qtest/cxl-test.c b/tests/qtest/cxl-test.c
+index a600331843..8fb7e58d4f 100644
+--- a/tests/qtest/cxl-test.c
++++ b/tests/qtest/cxl-test.c
+@@ -19,6 +19,12 @@
+     "-device pxb-cxl,id=cxl.1,bus=pcie.0,bus_nr=53 " \
+     "-M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.targets.1=cxl.1,cxl-fmw.0.size=4G "
+ 
++#define QEMU_VIRT_2PXB_CMD \
++    "-machine virt,cxl=on -cpu max " \
++    "-device pxb-cxl,id=cxl.0,bus=pcie.0,bus_nr=52 " \
++    "-device pxb-cxl,id=cxl.1,bus=pcie.0,bus_nr=53 " \
++    "-M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.targets.1=cxl.1,cxl-fmw.0.size=4G "
++
+ #define QEMU_RP \
+     "-device cxl-rp,id=rp0,bus=cxl.0,chassis=0,slot=0 "
+ 
+@@ -197,25 +203,51 @@ static void cxl_2pxb_4rp_4t3d(void)
+     qtest_end();
+     rmdir(tmpfs);
+ }
++
++static void cxl_virt_2pxb_4rp_4t3d(void)
++{
++    g_autoptr(GString) cmdline = g_string_new(NULL);
++    g_autofree const char *tmpfs = NULL;
++
++    tmpfs = g_dir_make_tmp("cxl-test-XXXXXX", NULL);
++
++    g_string_printf(cmdline, QEMU_VIRT_2PXB_CMD QEMU_4RP QEMU_4T3D,
++                    tmpfs, tmpfs, tmpfs, tmpfs, tmpfs, tmpfs,
++                    tmpfs, tmpfs);
++
++    qtest_start(cmdline->str);
++    qtest_end();
++    rmdir(tmpfs);
++}
+ #endif /* CONFIG_POSIX */
+ 
+ int main(int argc, char **argv)
+ {
+-    g_test_init(&argc, &argv, NULL);
++    const char *arch = qtest_get_arch();
+ 
+-    qtest_add_func("/pci/cxl/basic_hostbridge", cxl_basic_hb);
+-    qtest_add_func("/pci/cxl/basic_pxb", cxl_basic_pxb);
+-    qtest_add_func("/pci/cxl/pxb_with_window", cxl_pxb_with_window);
+-    qtest_add_func("/pci/cxl/pxb_x2_with_window", cxl_2pxb_with_window);
+-    qtest_add_func("/pci/cxl/rp", cxl_root_port);
+-    qtest_add_func("/pci/cxl/rp_x2", cxl_2root_port);
++    g_test_init(&argc, &argv, NULL);
++    if (strcmp(arch, "i386") == 0 || strcmp(arch, "x86_64") == 0) {
++        qtest_add_func("/pci/cxl/basic_hostbridge", cxl_basic_hb);
++        qtest_add_func("/pci/cxl/basic_pxb", cxl_basic_pxb);
++        qtest_add_func("/pci/cxl/pxb_with_window", cxl_pxb_with_window);
++        qtest_add_func("/pci/cxl/pxb_x2_with_window", cxl_2pxb_with_window);
++        qtest_add_func("/pci/cxl/rp", cxl_root_port);
++        qtest_add_func("/pci/cxl/rp_x2", cxl_2root_port);
+ #ifdef CONFIG_POSIX
+-    qtest_add_func("/pci/cxl/type3_device", cxl_t3d_deprecated);
+-    qtest_add_func("/pci/cxl/type3_device_pmem", cxl_t3d_persistent);
+-    qtest_add_func("/pci/cxl/type3_device_vmem", cxl_t3d_volatile);
+-    qtest_add_func("/pci/cxl/type3_device_vmem_lsa", cxl_t3d_volatile_lsa);
+-    qtest_add_func("/pci/cxl/rp_x2_type3_x2", cxl_1pxb_2rp_2t3d);
+-    qtest_add_func("/pci/cxl/pxb_x2_root_port_x4_type3_x4", cxl_2pxb_4rp_4t3d);
++        qtest_add_func("/pci/cxl/type3_device", cxl_t3d_deprecated);
++        qtest_add_func("/pci/cxl/type3_device_pmem", cxl_t3d_persistent);
++        qtest_add_func("/pci/cxl/type3_device_vmem", cxl_t3d_volatile);
++        qtest_add_func("/pci/cxl/type3_device_vmem_lsa", cxl_t3d_volatile_lsa);
++        qtest_add_func("/pci/cxl/rp_x2_type3_x2", cxl_1pxb_2rp_2t3d);
++        qtest_add_func("/pci/cxl/pxb_x2_root_port_x4_type3_x4",
++                       cxl_2pxb_4rp_4t3d);
+ #endif
++    } else if (strcmp(arch, "aarch64") == 0) {
++#ifdef CONFIG_POSIX
++        qtest_add_func("/pci/cxl/virt/pxb_x2_root_port_x4_type3_x4",
++                       cxl_virt_2pxb_4rp_4t3d);
++#endif
++    }
++
+     return g_test_run();
+ }
+diff --git a/tests/qtest/meson.build b/tests/qtest/meson.build
+index 8ad849054f..42e927b32a 100644
+--- a/tests/qtest/meson.build
++++ b/tests/qtest/meson.build
+@@ -261,6 +261,7 @@ qtests_aarch64 = \
+    config_all_devices.has_key('CONFIG_TPM_TIS_I2C') ? ['tpm-tis-i2c-test'] : []) + \
+   (config_all_devices.has_key('CONFIG_ASPEED_SOC') ? qtests_aspeed64 : []) + \
+   (config_all_devices.has_key('CONFIG_NPCM8XX') ? qtests_npcm8xx : []) + \
++  qtests_cxl +                                                                                  \
+   ['arm-cpu-features',
+    'numa-test',
+    'boot-serial-test',
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.48.1
+
