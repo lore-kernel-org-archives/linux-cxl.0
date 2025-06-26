@@ -1,60 +1,60 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A786B155335
-	for <linux-cxl@vger.kernel.org>; Thu, 26 Jun 2025 04:39:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D632B2367BA
+	for <linux-cxl@vger.kernel.org>; Thu, 26 Jun 2025 07:21:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750912761; cv=none; b=HjCuf+MjOSyjEbfg3d8AYr1heTkKzJzWYlhJ/jBmqtGnzA/vfeuhG7RCFpe5KmCOUqer1WSTfpceyPOM1heWfGeyOk/MlMY1s6fBMmS3Z/1MTdKyrQ9+OGoTkeiqRHPzJ/kD1HDQ5Nz1GEpfBFFHMywQ6n81rxnkKYSGJqeitBI=
+	t=1750922495; cv=none; b=aWShXR14jAbUKW5dJLKHpcOHufSewSqxO81T9oahNR4PPH2d+KogMQeZvV9OBqzPbqu+WbzU6K5QJz7J9976vigQTwE+Rj9JO1UNwq6iiWrhSvK2fibddwe6TZDqn0scYQtjjKJ94B3lTaRCEFcfCG8MtwfPYnAFlzukivFC39c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750912761; c=relaxed/simple;
-	bh=TmItMlKdMeJ/Yy5VUwBLb3I4dQcG7JLuHhz1l5bgOQo=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=R2+9eI0E1+HbJnROmBS7WWTDCuBbdBUfuR+LEKEWnZzIGNwl94cx0jMKU21HZsBzAmhKaz1hIFb4O5h1cqE52XRL3Tly5lPUgOzWfY0/hargPM+7feMwNIGJxN0nmLAPycbzfua4lee4zJJ5w+OBob4vBZCmtvdNgOh5TRbN5xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=avvUbVZ5; arc=none smtp.client-ip=192.198.163.18
+	s=arc-20240116; t=1750922495; c=relaxed/simple;
+	bh=mJw3Cg/OLV/sfVquV6b5dLtTX7oanhqaZNgSDzC25t8=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=Ifrc5Yc127BW51LAHkXhD+Cd7kH5P9cAgFJ21izRI8WQUQbpF4XR6bmopb+j3TC3roKXI2F5+5JrD53zmV+yi6yFlkogB3Slu04c4q4mFWHsFDYflUi7MuDjwAmF3DRwI+Ax0YZ4hRWIiXyWNOTuBTPsk03yIaik2GWOql3k1mw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f9rd18jb; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="avvUbVZ5"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f9rd18jb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750912760; x=1782448760;
+  t=1750922494; x=1782458494;
   h=date:from:to:cc:subject:message-id;
-  bh=TmItMlKdMeJ/Yy5VUwBLb3I4dQcG7JLuHhz1l5bgOQo=;
-  b=avvUbVZ5ImN737rgEmLV9iOehvlRtLpFxdTHO0K/Fr0uwCkGV9CwnQuQ
-   YRXFFl3CwbIQRhSdDhcCQvxXAnByRjpTjAyRqdn9lxSeGMGbSRnWyNehi
-   i2XPys+g95fTkRG1mBVh5KIuZIxEDt8P2M9Lkv1qc3GgDZqmtT4I37LqI
-   STtn5HQhRS88KTS35JRIpEw/lSrKm/ZZ+N9VkhqEbje3ZB7jej4KLDrJE
-   2kAaqWYQ4OteE+KhAqgZ9yBqQWl6dLCvOxDbhGp8Xm/l75CglIltI5fGg
-   d6840oJ2savR09yVcyuvQbp28qRgiaueOIkJ4grSaJApNddci+4s53VMR
-   Q==;
-X-CSE-ConnectionGUID: hzd3APT5QgeLLc4myonx9w==
-X-CSE-MsgGUID: gCvTFu5cTtieBztYHhYA1Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="52424829"
-X-IronPort-AV: E=Sophos;i="6.16,266,1744095600"; 
-   d="scan'208";a="52424829"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 21:39:19 -0700
-X-CSE-ConnectionGUID: wk6C+09BR02OA/G9LLWKGA==
-X-CSE-MsgGUID: +hdA3ED8RHehCj9ng6tEDA==
+  bh=mJw3Cg/OLV/sfVquV6b5dLtTX7oanhqaZNgSDzC25t8=;
+  b=f9rd18jb30DTFcykxM74vA5KCjxID20fp3Ys1lztNc0qTKZe55TQL+4a
+   8zHa1UljRMCnDj0EnPWD2tVPBSqRwIirpKwBqbIwLqLmbIJ5o+KXbm3HI
+   RfKGmmdRqnXyopw7XUUfQjmkUxG75T/qf3Ys4S2hdIOmrXbc/l+NnYga9
+   CewQnvYcV8FGceFThqazyx6zCTxB8tXL8xVZXh9jnlqFosXNqQJswO2uW
+   iPqdZ6eGU9aCFBbb1yOdFLq2Si36kc3j33azQrpQ7TBsz/fpBJrfTO2FH
+   bv4HDp4v9tLPrUC5SG5Clj2dNCZS/rvXb8tksCjm0xFsumfRcIo3fPYpu
+   g==;
+X-CSE-ConnectionGUID: PBPV6IFISx2LoU+t72hSMg==
+X-CSE-MsgGUID: p6Af08H3SRObFRk6Ympwqg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="64267474"
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="64267474"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 00:21:34 -0700
+X-CSE-ConnectionGUID: Q+JFzyulQCWw/zbNSIbn0w==
+X-CSE-MsgGUID: 6kduc0IrT4+UEskjoAS16A==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,266,1744095600"; 
-   d="scan'208";a="153128100"
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="158198846"
 Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 25 Jun 2025 21:39:17 -0700
+  by orviesa005.jf.intel.com with ESMTP; 26 Jun 2025 00:21:31 -0700
 Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1uUeOJ-000TjW-1T;
-	Thu, 26 Jun 2025 04:39:15 +0000
-Date: Thu, 26 Jun 2025 12:38:45 +0800
+	id 1uUgvJ-000Tpa-1L;
+	Thu, 26 Jun 2025 07:21:29 +0000
+Date: Thu, 26 Jun 2025 15:20:48 +0800
 From: kernel test robot <lkp@intel.com>
 To: Dave Jiang <dave.jiang@intel.com>
 Cc: Alison Schofield <alison.schofield@intel.com>,
  Vishal Verma <vishal.l.verma@intel.com>,
  Ira Weiny <ira.weiny@intel.com>,
  Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Subject: [cxl:next] BUILD SUCCESS
- d9edb01a3d74e1ed24a3dec539e423f580340e9e
-Message-ID: <202506261234.LS9FFZi0-lkp@intel.com>
+Subject: [cxl:fixes] BUILD SUCCESS
+ 0a46f60a9fe16f5596b6b4b3ee1a483ea7854136
+Message-ID: <202506261537.xWYZhgHb-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -62,10 +62,10 @@ List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-branch HEAD: d9edb01a3d74e1ed24a3dec539e423f580340e9e  cxl/edac: Use correct format specifier for u32 val
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git fixes
+branch HEAD: 0a46f60a9fe16f5596b6b4b3ee1a483ea7854136  cxl/edac: Fix using wrong repair type to check dram event record
 
-elapsed time: 733m
+elapsed time: 732m
 
 configs tested: 77
 configs skipped: 1
