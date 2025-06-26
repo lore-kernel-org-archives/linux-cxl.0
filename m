@@ -1,48 +1,48 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C1028F534
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A7B328BAB1
 	for <linux-cxl@vger.kernel.org>; Thu, 26 Jun 2025 13:25:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750944307; cv=none; b=VewebSn0GKTmrcFrYNAWN+cFjQnc20QcJ6fqZQ+Vc4a2osoL4hhGcxSnLzxjc5ESzssif7Imd7w8UcZD27LZX6S4SCTCmE0p+xARdooIEzDihnEi4uFDyi81OASBVPpqmlqPUFd7ck+k2pblvbEm8q/p2VvDmlitm2RIQYYBqso=
+	t=1750944308; cv=none; b=hwpNKIiJiAUEwjqm8kOMDIj5XfRcImJg/UQheoSPat6yPOfrO19M88MgwJq34VGJiFr4O52rQE8MuRr8tRzNwfteFofbvsysQKcNKeltr9KoaNpW9J+b4nukvF4Ox3dbkPFMGKPyWpGuUEwWBuFeBy0sDf0RCb0SdyYPK1+MA0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750944307; c=relaxed/simple;
-	bh=O4KYtnDmniONwkTdhfVH9U+a1o+pSCQe54UOG+2tBiE=;
+	s=arc-20240116; t=1750944308; c=relaxed/simple;
+	bh=y8V/+SYgiP6HF/AZLEKhiz3pD0KnTWZT9QR77yuM3YU=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=WcqMTK8sVH1ky58JVtJ1DF8D8TdUqo2giApGiV7X6rkMH06zhBIMd+9RCzyfXQK8vwWrJJZYugYiP8/UrVepHVY0Q0a+8rJwdHKmRI3bbHLTJC2mjdP9CFp3EXRq5NH1VcCkZ6ApmWvQH+bvOojdmZbzjQ1fLMRSvjCMCvK4pxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=UaB6U8dC; arc=none smtp.client-ip=203.254.224.34
+	 Content-Type:References; b=FvNlBc5EoUsPcIL2JiYJMSJdKGmvyNNiTnvXjuRISR7GQdOqRBSRd+d+Kp4Ho7uu7oD+n5WdUlrOhO/ZF+7Z+gpY+iEDZhLoMlPWXA/yr6uEQu4USQm2/i8SZLYYLEr7ZOBcWtLl2pMR2c8KpJaD1yzNCzqNMHVwkRFIbb0ZRIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=uE10nL3l; arc=none smtp.client-ip=203.254.224.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UaB6U8dC"
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250626132504epoutp0460151f716dcad366a3c3fd64b7407a20~MmpFR43-C2564525645epoutp04D
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="uE10nL3l"
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250626132504epoutp03502001f79a672758afd2d0fef2dc2546~MmpFioFdT2176821768epoutp03f
 	for <linux-cxl@vger.kernel.org>; Thu, 26 Jun 2025 13:25:04 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250626132504epoutp0460151f716dcad366a3c3fd64b7407a20~MmpFR43-C2564525645epoutp04D
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250626132504epoutp03502001f79a672758afd2d0fef2dc2546~MmpFioFdT2176821768epoutp03f
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
 	s=mail20170921; t=1750944304;
-	bh=BZravr6m8BwxDQ2S15yIrqtjocRrXzncjfWcHqXaNWU=;
+	bh=+ph+U1fBwvQsndceK1N5+3MC5CHOtis81gbQQkTGUDM=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=UaB6U8dCBzTuMggMVm82jzvAigHaUp5A1fE0MAv7dPAr0WSCwbiCRmhL3E6Sq1yae
-	 l2L/b31zA57uMDDSnCFtFyGa+oJFB+SrjTS+MAbm8DAMKYdWniGrVWXdUxDaN0+kBr
-	 KI0K6U+aLdy5KmRMV9gCRDE93EbrZ3ibn+HUlTZc=
-Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
-	20250626132503epcas5p38b58c5a252de9529e19ea5d0cdb55382~MmpEYv_gW2725427254epcas5p3o;
+	b=uE10nL3lE9rbtRgj+JMt+l53MVN0p97FssxmUMT2/+3VPZ5z6LaTRfAIHMOgIM4dV
+	 LFBxAZVi1So7hJTJ+QYsUjw98xlmIiFShE1zE2H2bArCaCKl2/TVEXoYuQLijiZOi8
+	 riqhmm+Qyai6nrFetDfwzQzuWYRgsFn9kDww/+Wg=
+Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
+	20250626132503epcas5p49f39df328c193477cfff9ea156e610ca~MmpE3BYEc3076730767epcas5p4A;
 	Thu, 26 Jun 2025 13:25:03 +0000 (GMT)
 Received: from epcpadp1new (unknown [182.195.40.141]) by
-	epsnrtp01.localdomain (Postfix) with ESMTP id 4bSfYq0Yy0z6B9m5; Thu, 26 Jun
+	epsnrtp03.localdomain (Postfix) with ESMTP id 4bSfYq4BQgz3hhT4; Thu, 26 Jun
 	2025 13:25:03 +0000 (GMT)
 Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250626104134epcas5p27b6a8dee21a1412ec167038fc99efa9d~MkaVtJxSR2696726967epcas5p23;
-	Thu, 26 Jun 2025 10:41:34 +0000 (GMT)
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20250626104841epcas5p35730336ccb6738138568912d1d558b69~Mkgi8fmRy0479104791epcas5p3p;
+	Thu, 26 Jun 2025 10:48:41 +0000 (GMT)
 Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
 	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250626104132epsmtip2189feedbbc357813ae1f8562773c6756~MkaTFUtLG2065120651epsmtip2b;
-	Thu, 26 Jun 2025 10:41:31 +0000 (GMT)
-Date: Thu, 26 Jun 2025 16:11:27 +0530
+	20250626104838epsmtip2d6d14f8ebd578264596fcb53eb8ca459~MkggjnBuk2350623506epsmtip2U;
+	Thu, 26 Jun 2025 10:48:38 +0000 (GMT)
+Date: Thu, 26 Jun 2025 16:18:34 +0530
 From: Neeraj Kumar <s.neeraj@samsung.com>
 To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Cc: dan.j.williams@intel.com, dave@stgolabs.net, dave.jiang@intel.com,
@@ -52,149 +52,143 @@ Cc: dan.j.williams@intel.com, dave@stgolabs.net, dave.jiang@intel.com,
 	alok.rathore@samsung.com, neeraj.kernel@gmail.com,
 	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
 	nvdimm@lists.linux.dev, gost.dev@samsung.com, cpgs@samsung.com
-Subject: Re: [RFC PATCH 18/20] cxl/pmem: Add support of cxl lsa 2.1 support
- in cxl pmem
-Message-ID: <1983025922.01750944303051.JavaMail.epsvc@epcpadp1new>
+Subject: Re: [RFC PATCH 20/20] cxl/pmem_region: Add cxl region label
+ updation and deletion device attributes
+Message-ID: <1931444790.41750944303583.JavaMail.epsvc@epcpadp1new>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250623104816.00005075@huawei.com>
-X-CMS-MailID: 20250626104134epcas5p27b6a8dee21a1412ec167038fc99efa9d
+In-Reply-To: <20250623105657.00003996@huawei.com>
+X-CMS-MailID: 20250626104841epcas5p35730336ccb6738138568912d1d558b69
 X-Msg-Generator: CA
 Content-Type: multipart/mixed;
-	boundary="----khSVV-i..9Pu.R11es4dz00o5VXKnjNJAECuEWvD2h73785l=_6a2d8_"
+	boundary="----nR.o9xAt.CKA9Q2_7V_sz8FZ15p3Iy14m0uxA3-zFK6OxaPG=_cd49d_"
 X-Sendblock-Type: REQ_APPROVE
 CMS-TYPE: 105P
 X-CPGSPASS: Y
 X-Hop-Count: 3
-X-CMS-RootMailID: 20250617124058epcas5p2324bd3b1bf95d47f553d90fdc727e50d
+X-CMS-RootMailID: 20250617124104epcas5p41105ad63af456b5cdb041e174a99925e
 References: <20250617123944.78345-1-s.neeraj@samsung.com>
-	<CGME20250617124058epcas5p2324bd3b1bf95d47f553d90fdc727e50d@epcas5p2.samsung.com>
-	<592959754.121750165383213.JavaMail.epsvc@epcpadp2new>
-	<20250623104816.00005075@huawei.com>
+	<CGME20250617124104epcas5p41105ad63af456b5cdb041e174a99925e@epcas5p4.samsung.com>
+	<1371006431.81750165382853.JavaMail.epsvc@epcpadp2new>
+	<20250623105657.00003996@huawei.com>
 
-------khSVV-i..9Pu.R11es4dz00o5VXKnjNJAECuEWvD2h73785l=_6a2d8_
+------nR.o9xAt.CKA9Q2_7V_sz8FZ15p3Iy14m0uxA3-zFK6OxaPG=_cd49d_
 Content-Type: text/plain; charset="utf-8"; format="flowed"
 Content-Disposition: inline
 
-On 23/06/25 10:48AM, Jonathan Cameron wrote:
->On Tue, 17 Jun 2025 18:09:42 +0530
+On 23/06/25 10:56AM, Jonathan Cameron wrote:
+>On Tue, 17 Jun 2025 18:09:44 +0530
 >Neeraj Kumar <s.neeraj@samsung.com> wrote:
 >
->> Add support of cxl lsa 2.1 using NDD_CXL_LABEL flag. It also creates cxl
->> region based on region information parsed from LSA.
+>> Using these attributes region label is added/deleted into LSA. These
+>> attributes are called from userspace (ndctl) after region creation.
+>
+>These need documentation. Documentation/ABI/testing/sysfs-bus-cxl
+>is probably the right place.
+>
+
+Sure, Will update this in Documentation as well as update it in commit
+message
+
+>
 >>
 >> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
 >> ---
->>  drivers/cxl/pmem.c | 59 ++++++++++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 59 insertions(+)
+>>  drivers/cxl/core/pmem_region.c | 103 +++++++++++++++++++++++++++++++++
+>>  drivers/cxl/cxl.h              |   1 +
+>>  2 files changed, 104 insertions(+)
 >>
->> diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
->> index ffcebb8d382f..2733d79b32d5 100644
->> --- a/drivers/cxl/pmem.c
->> +++ b/drivers/cxl/pmem.c
->> @@ -58,6 +58,63 @@ static const struct attribute_group *cxl_dimm_attribute_groups[] = {
->>  	NULL
->>  };
->>
->> +static int match_ep_decoder(struct device *dev, void *data)
->> +{
->> +	struct cxl_decoder *cxld = to_cxl_decoder(dev);
->> +
->> +	if (!cxld->region)
->> +		return 1;
->> +	else
->> +		return 0;
->> +}
->> +
->> +static struct cxl_decoder *cxl_find_free_decoder(struct cxl_port *port)
->> +{
->> +	struct device *dev;
->> +
->> +	dev = device_find_child(&port->dev, NULL, match_ep_decoder);
->> +	if (!dev)
->> +		return NULL;
->> +
->> +	return to_cxl_decoder(dev);
->> +}
->> +
->> +static int create_pmem_region(struct nvdimm *nvdimm)
->> +{
->> +	struct cxl_nvdimm *cxl_nvd;
->> +	struct cxl_memdev *cxlmd;
->> +	struct cxl_nvdimm_bridge *cxl_nvb;
->> +	struct cxl_pmem_region_params *params;
->> +	struct cxl_root_decoder *cxlrd;
->> +	struct cxl_decoder *cxld;
->> +	struct cxl_region *cxlr;
->> +
->> +	if (!nvdimm)
->> +		return -ENOTTY;
->
->As with other checks like this, it is useful to add a comment on when you can
->call this function with a null parameter.
->
-
-Sure, Will fix it accordingly
-
->> +
->> +	if (!nvdimm_has_cxl_region(nvdimm))
->> +		return 0;
->> +
->> +	cxl_nvd = nvdimm_provider_data(nvdimm);
->> +	params = nvdimm_get_cxl_region_param(nvdimm);
->> +	cxlmd = cxl_nvd->cxlmd;
->> +	cxl_nvb = cxlmd->cxl_nvb;
->> +	cxlrd = cxlmd->cxlrd;
->> +
->> +	/* FIXME: Limitation: Region creation only when interleave way == 1 */
->> +	if (params->nlabel == 1) {
->> +		cxld = cxl_find_free_decoder(cxlmd->endpoint);
->> +		cxlr = cxl_create_pmem_region(cxlrd, cxld, params,
->> +				atomic_read(&cxlrd->region_id));
->> +		if (IS_ERR(cxlr))
->> +			dev_dbg(&cxlmd->dev, "Region Creation failed\n");
->> +	} else {
->> +		dev_dbg(&cxlmd->dev, "Region Creation is not supported with iw > 1\n");
->> +	}
->
->Flip logic to check for unhandled case first and also return an error if this happens
->rather than silently carrying on. dev_info() is appropriate here.
->
-
-Thanks, Will fix it in V1
-
->> +
->> +	return 0;
->> +}
->> +
->>  static int cxl_nvdimm_probe(struct device *dev)
->>  {
->>  	struct cxl_nvdimm *cxl_nvd = to_cxl_nvdimm(dev);
->> @@ -74,6 +131,7 @@ static int cxl_nvdimm_probe(struct device *dev)
->>  		return rc;
->>
->>  	set_bit(NDD_LABELING, &flags);
->> +	set_bit(NDD_CXL_LABEL, &flags);
->>  	set_bit(NDD_REGISTER_SYNC, &flags);
->>  	set_bit(ND_CMD_GET_CONFIG_SIZE, &cmd_mask);
->>  	set_bit(ND_CMD_GET_CONFIG_DATA, &cmd_mask);
->> @@ -86,6 +144,7 @@ static int cxl_nvdimm_probe(struct device *dev)
->>  		return -ENOMEM;
->>
->>  	dev_set_drvdata(dev, nvdimm);
->> +	create_pmem_region(nvdimm);
->>  	return devm_add_action_or_reset(dev, unregister_nvdimm, nvdimm);
+>> diff --git a/drivers/cxl/core/pmem_region.c b/drivers/cxl/core/pmem_region.c
+>> index a29526c27d40..f582d796c21b 100644
+>> --- a/drivers/cxl/core/pmem_region.c
+>> +++ b/drivers/cxl/core/pmem_region.c
+>> @@ -45,8 +45,111 @@ static void cxl_pmem_region_release(struct device *dev)
+>>  	kfree(cxlr_pmem);
 >>  }
 >>
+>> +static ssize_t region_label_update_store(struct device *dev,
+>> +					 struct device_attribute *attr,
+>> +					 const char *buf, size_t len)
+>> +{
+>> +	struct cxl_pmem_region *cxlr_pmem = to_cxl_pmem_region(dev);
+>> +	struct cxl_region *cxlr = cxlr_pmem->cxlr;
+>> +	struct cxl_region_params *p = &cxlr->params;
+>> +	ssize_t rc;
+>> +	bool update;
+>> +
+>> +	rc = kstrtobool(buf, &update);
+>> +	if (rc)
+>> +		return rc;
+>> +
+>> +	rc = down_write_killable(&cxl_region_rwsem);
+>
+>Another use case for ACQUIRE()
 >
 
-------khSVV-i..9Pu.R11es4dz00o5VXKnjNJAECuEWvD2h73785l=_6a2d8_
+Sure, I will look at Dan's new ACQUIRE() series. I will update it in V1
+
+>> +	if (rc)
+>> +		return rc;
+>> +
+>> +	/* Region not yet committed */
+>> +	if (update && p->state != CXL_CONFIG_COMMIT) {
+>> +		dev_dbg(dev, "region not committed, can't update into LSA\n");
+>> +		rc = -ENXIO;
+>> +		goto out;
+>> +	}
+>> +
+>> +	if (cxlr && cxlr->cxlr_pmem && cxlr->cxlr_pmem->nd_region) {
+>> +		rc = nd_region_label_update(cxlr->cxlr_pmem->nd_region);
+>> +
+>> +		if (!rc)
+>> +			p->region_label_state = 1;
+>> +	}
+>> +
+>> +out:
+>> +	up_write(&cxl_region_rwsem);
+>> +
+>> +	if (rc)
+>> +		return rc;
+>> +
+>> +	return len;
+>> +}
+>
+>> +
+>> +static struct attribute *cxl_pmem_region_attrs[] = {
+>> +	&dev_attr_region_label_update.attr,
+>> +	&dev_attr_region_label_delete.attr,
+>> +	NULL,
+>No need for trailing commas on terminating entries as we don't want it to be easy
+>to put something after them.
+>
+
+Sure, Will fix it in V1
+
+>> +};
+>> +
+>> +struct attribute_group cxl_pmem_region_group = {
+>> +	.attrs = cxl_pmem_region_attrs,
+>> +};
+>> +
+>>  static const struct attribute_group *cxl_pmem_region_attribute_groups[] = {
+>>  	&cxl_base_attribute_group,
+>> +	&cxl_pmem_region_group,
+>>  	NULL,
+>Hmm. Drop this trailing comma perhaps whilst here.
+>>  };
+>
+
+Sure, I will update it in V1
+
+>
+
+------nR.o9xAt.CKA9Q2_7V_sz8FZ15p3Iy14m0uxA3-zFK6OxaPG=_cd49d_
 Content-Type: text/plain; charset="utf-8"
 
 
-------khSVV-i..9Pu.R11es4dz00o5VXKnjNJAECuEWvD2h73785l=_6a2d8_--
+------nR.o9xAt.CKA9Q2_7V_sz8FZ15p3Iy14m0uxA3-zFK6OxaPG=_cd49d_--
 
