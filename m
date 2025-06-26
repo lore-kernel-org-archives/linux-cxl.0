@@ -1,89 +1,219 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0143225B30A;
-	Thu, 26 Jun 2025 12:51:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13F74142E83
+	for <linux-cxl@vger.kernel.org>; Thu, 26 Jun 2025 13:15:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750942310; cv=none; b=iCxhr9tWLpBQ38UI1XM+khHOYnNw1jSUGjJksdnpMRDhsZ+vXOY3bZXLcK+YypiVijrQGpNZ48o6SMB8B3dMxK5kDan1SioTdXeIyzBDrxVVbeE2IpCSuis7xQEvZNw0uRF04Ub2UD85xIC4Ydjahl5/7ckugQ1ECDD108ReKDg=
+	t=1750943709; cv=none; b=N3rF47hoaKsKtP/Pti9D7HD8BBlWDsDQ7ir8bLIvtII3QC+A7XHUGfyQAjDnaTZzuAEVl8YGJjXJxmOX6KtIpKLRt6hSX/XJRdd08xT3wWOujfGlQzaI9/fDjj6sENV+yvuQngvceFbcfa+JeUfd+Q96cr/bFA53lY2ExAQ+QYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750942310; c=relaxed/simple;
-	bh=EPQkNCZl/P+7ztePCyqmZaljOKue1/126ei5E/j2mkQ=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QZqJeb+n+gedEdddVqQkTLND6FvippxRm/o0ZrhpIfGcKdusadpMPCjnkx0bL+tx4F0eChYxyWBpGIIv1V2SpEcTsVonxUo6klUPqEZUmlhMZifxPYvPqp7wBnIJ8IFsORYx5PJdB+Ki/AS06KQwghSujWLk1PiOxO6e6uJ40qY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bSdpW2h3Cz6M4g3;
-	Thu, 26 Jun 2025 20:50:59 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8136F140426;
-	Thu, 26 Jun 2025 20:51:46 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 26 Jun
- 2025 14:51:45 +0200
-Date: Thu, 26 Jun 2025 13:51:44 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <shiju.jose@huawei.com>
-CC: <linux-edac@vger.kernel.org>, <bp@alien8.de>, <tony.luck@intel.com>,
-	<lenb@kernel.org>, <leo.duran@amd.com>, <Yazen.Ghannam@amd.com>,
-	<mchehab@kernel.org>, <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linuxarm@huawei.com>, <tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>
-Subject: Re: [PATCH v2 1/1] EDAC: Fix lockdep splat caused by edac features
- code
-Message-ID: <20250626135144.00002973@huawei.com>
-In-Reply-To: <20250626101344.1726-1-shiju.jose@huawei.com>
-References: <20250626101344.1726-1-shiju.jose@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1750943709; c=relaxed/simple;
+	bh=5u9cun5r3VtNRTKJoYoiJ4o51uev8f7R7V33C7qbCmQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=ojcaXwTSBQWelpHm+itLhIt5+FEsXYzjkZVKNagvaAFMY/uqi7xneUQyxpckFMuX0C6f3eMYP0VGXnsSnMkKzJ0VCSQ77mi1tlKBO5TPr/p65aRxGzwPhJF3vJ7AYujw9v83Py+PIDWu4DoTrjfmN00WtfC+Y59HwOUYkZhXH3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=HseF3YoJ; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="HseF3YoJ"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250626131503epoutp03dd7add4fd8bd143edb5054ceb3296207~MmgWI_kXu1339313393epoutp03h
+	for <linux-cxl@vger.kernel.org>; Thu, 26 Jun 2025 13:15:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250626131503epoutp03dd7add4fd8bd143edb5054ceb3296207~MmgWI_kXu1339313393epoutp03h
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1750943703;
+	bh=Z48CYdHuCTJ8UqTDSPkDCBaoRT5Me1js72mN5Gpyzc4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=HseF3YoJ/ErY1Q3qa8hrIZSWKvis+9/cOakNJcNU3YfiiS3ZGcY82cFKHb/hO7h/4
+	 YzjQ20vlHbPsjt/uEh0e8hOi7Cymp8BqVtzUSXSCvmsK13Tbpa7GpAdEJYwy6cGWAr
+	 HgjKAP7SPWdlMr9l3+oQDoo0iE6mvKjGny+8vNyc=
+Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
+	20250626131503epcas5p3ad3b098c17283812411ba6ae12e24742~MmgVg38-g2713827138epcas5p3g;
+	Thu, 26 Jun 2025 13:15:03 +0000 (GMT)
+Received: from epcpadp1new (unknown [182.195.40.141]) by
+	epsnrtp02.localdomain (Postfix) with ESMTP id 4bSfLG73jWz2SSKX; Thu, 26 Jun
+	2025 13:15:02 +0000 (GMT)
+Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20250626094852epcas5p3dc4fb79d144ce6259c3ed731bedf661c~MjsUQCGNZ0414204142epcas5p3b;
+	Thu, 26 Jun 2025 09:48:52 +0000 (GMT)
+Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250626094849epsmtip1111d25dc34d42797b28a2665724e47e4~MjsRx9vFF1194711947epsmtip1b;
+	Thu, 26 Jun 2025 09:48:49 +0000 (GMT)
+Date: Thu, 26 Jun 2025 15:18:40 +0530
+From: Neeraj Kumar <s.neeraj@samsung.com>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: dan.j.williams@intel.com, dave@stgolabs.net, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+	a.manzanares@samsung.com, nifan.cxl@gmail.com, anisa.su@samsung.com,
+	vishak.g@samsung.com, krish.reddy@samsung.com, arun.george@samsung.com,
+	alok.rathore@samsung.com, neeraj.kernel@gmail.com,
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev, gost.dev@samsung.com, cpgs@samsung.com
+Subject: Re: [RFC PATCH 01/20] nvdimm/label: Introduce NDD_CXL_LABEL flag to
+ set cxl label format
+Message-ID: <1983025922.01750943702980.JavaMail.epsvc@epcpadp1new>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
- frapeml500008.china.huawei.com (7.182.85.71)
+In-Reply-To: <20250620174001.00003aa2@huawei.com>
+X-CMS-MailID: 20250626094852epcas5p3dc4fb79d144ce6259c3ed731bedf661c
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----K5ZVV-zrPS8y8iJelFUsagW7KEVVNg7wn3oh2ZJRPRpX678s=_cd417_"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20250617124008epcas5p2e702f786645d44ceb1cdd980a914ce8e
+References: <20250617123944.78345-1-s.neeraj@samsung.com>
+	<CGME20250617124008epcas5p2e702f786645d44ceb1cdd980a914ce8e@epcas5p2.samsung.com>
+	<158453976.61750165203630.JavaMail.epsvc@epcpadp1new>
+	<20250620174001.00003aa2@huawei.com>
 
-On Thu, 26 Jun 2025 11:13:44 +0100
-<shiju.jose@huawei.com> wrote:
+------K5ZVV-zrPS8y8iJelFUsagW7KEVVNg7wn3oh2ZJRPRpX678s=_cd417_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
 
-> From: Shiju Jose <shiju.jose@huawei.com>
-> 
-> Fix the lockdep splat caused by missing sysfs_attr_init() calls
-> for the recently added EDAC feature's sysfs attributes.
-> 
-> In lockdep_init_map_type(), the check for the lock-class key
-> if (!static_obj(key) && !is_dynamic_key(key)) causes the splat.
-> 
-> Backtrace:
-> RIP: 0010:lockdep_init_map_type+0x131/0x270
-> Call Trace:
->  __kernfs_create_file+0x77/0xf0
-> sysfs_add_file_mode_ns+0x86/0x140
-> internal_create_group+0x1cc/0x4b0
-> internal_create_groups+0x42/0xa0
-> device_add+0x310/0x860
-> ? __init_waitqueue_head+0x4a/0x60
-> edac_dev_register+0x3ff/0x480
-> devm_cxl_memdev_edac_register+0x509/0x640 [cxl_core]
-> ? lock_acquire+0xc4/0x2d0
-> ? find_held_lock+0x2b/0x80
-> ? cxl_mem_probe+0x21e/0x360 [cxl_mem]
-> ? cxl_mem_probe+0x21e/0x360 [cxl_mem]
-> ? lockdep_hardirqs_on+0x78/0x100
-> ? cxl_mem_probe+0x226/0x360 [cxl_mem]
-> cxl_mem_probe+0x226/0x360 [cxl_mem]
-> 
-> Fixes: f90b738166fe ("EDAC: Add scrub control feature")
-> Fixes: bcbd069b11b0 ("EDAC: Add a Error Check Scrub control feature")
-> Fixes: 699ea5219c4b ("EDAC: Add a memory repair control feature")
-> Reported-by: Dave Jiang <dave.jiang@intel.com>
-> Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+On 20/06/25 05:40PM, Jonathan Cameron wrote:
+>On Tue, 17 Jun 2025 18:09:25 +0530
+>Neeraj Kumar <s.neeraj@samsung.com> wrote:
+>
+>> NDD_CXL_LABEL is introduced to set cxl LSA 2.1 label format
+>> Accordingly updated label index version
+>>
+>> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
+>A few local comments.  I'll need to read on to figure out how this
+>fits in generally.
+>
+>> ---
+>>  drivers/nvdimm/dimm.c      |  1 +
+>>  drivers/nvdimm/dimm_devs.c | 10 ++++++++++
+>>  drivers/nvdimm/label.c     | 16 ++++++++++++----
+>>  drivers/nvdimm/nd.h        |  1 +
+>>  include/linux/libnvdimm.h  |  3 +++
+>>  5 files changed, 27 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/nvdimm/dimm.c b/drivers/nvdimm/dimm.c
+>> index 91d9163ee303..8753b5cd91cc 100644
+>> --- a/drivers/nvdimm/dimm.c
+>> +++ b/drivers/nvdimm/dimm.c
+>> @@ -62,6 +62,7 @@ static int nvdimm_probe(struct device *dev)
+>>  	if (rc < 0)
+>>  		dev_dbg(dev, "failed to unlock dimm: %d\n", rc);
+>>
+>> +	ndd->cxl = nvdimm_check_cxl_label_format(ndd->dev);
+>>
+>>  	/*
+>>  	 * EACCES failures reading the namespace label-area-properties
+>> diff --git a/drivers/nvdimm/dimm_devs.c b/drivers/nvdimm/dimm_devs.c
+>> index 21498d461fde..e8f545f889fd 100644
+>> --- a/drivers/nvdimm/dimm_devs.c
+>> +++ b/drivers/nvdimm/dimm_devs.c
+>> @@ -18,6 +18,16 @@
+>>
+>>  static DEFINE_IDA(dimm_ida);
+>>
+>> +bool nvdimm_check_cxl_label_format(struct device *dev)
+>> +{
+>> +	struct nvdimm *nvdimm = to_nvdimm(dev);
+>> +
+>> +	if (test_bit(NDD_CXL_LABEL, &nvdimm->flags))
+>> +		return true;
+>> +
+>> +	return false;
+>
+>	return test_bit(NDD_CXL_LABEL, &nvdimm->flags);
+>
+>Unless this is going to get more complex in later patches, in which case
+>may be fine to ignore this comment.
+>
 
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+Okay. I will fix in V1 patch.
 
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+>> +}
+>> +
+>>  /*
+>>   * Retrieve bus and dimm handle and return if this bus supports
+>>   * get_config_data commands
+>> diff --git a/drivers/nvdimm/label.c b/drivers/nvdimm/label.c
+>> index 082253a3a956..48b5ba90216d 100644
+>> --- a/drivers/nvdimm/label.c
+>> +++ b/drivers/nvdimm/label.c
+>> @@ -687,11 +687,19 @@ static int nd_label_write_index(struct nvdimm_drvdata *ndd, int index, u32 seq,
+>>  		- (unsigned long) to_namespace_index(ndd, 0);
+>>  	nsindex->labeloff = __cpu_to_le64(offset);
+>>  	nsindex->nslot = __cpu_to_le32(nslot);
+>> -	nsindex->major = __cpu_to_le16(1);
+>> -	if (sizeof_namespace_label(ndd) < 256)
+>> +
+>> +	/* Support CXL LSA 2.1 label format */
+>
+>Might be good to sprinkle some extra details in the references.
+>E.g. CXL r3.2 Table 9-9 Label Index Block Layout
+>
+
+Sure, I will update it in V1
+
+>> +	if (ndd->cxl) {
+>> +		nsindex->major = __cpu_to_le16(2);
+>>  		nsindex->minor = __cpu_to_le16(1);
+>> -	else
+>> -		nsindex->minor = __cpu_to_le16(2);
+>> +	} else {
+>> +		nsindex->major = __cpu_to_le16(1);
+>
+>Same for these.  Case of making reviewers jobs easier by
+>giving them breadcrumb trails to follow.
+>
+
+Sure, I will update it in V1
+
+>> +		if (sizeof_namespace_label(ndd) < 256)
+>> +			nsindex->minor = __cpu_to_le16(1);
+>> +		else
+>> +			nsindex->minor = __cpu_to_le16(2);
+>> +	}
+>> +
+>>  	nsindex->checksum = __cpu_to_le64(0);
+>>  	if (flags & ND_NSINDEX_INIT) {
+>>  		unsigned long *free = (unsigned long *) nsindex->free;
+>> diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
+>> index 5ca06e9a2d29..304f0e9904f1 100644
+>> --- a/drivers/nvdimm/nd.h
+>> +++ b/drivers/nvdimm/nd.h
+>> @@ -522,6 +522,7 @@ void nvdimm_set_labeling(struct device *dev);
+>>  void nvdimm_set_locked(struct device *dev);
+>>  void nvdimm_clear_locked(struct device *dev);
+>>  int nvdimm_security_setup_events(struct device *dev);
+>> +bool nvdimm_check_cxl_label_format(struct device *dev);
+>>  #if IS_ENABLED(CONFIG_NVDIMM_KEYS)
+>>  int nvdimm_security_unlock(struct device *dev);
+>>  #else
+>> diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
+>> index e772aae71843..0a55900842c8 100644
+>> --- a/include/linux/libnvdimm.h
+>> +++ b/include/linux/libnvdimm.h
+>> @@ -44,6 +44,9 @@ enum {
+>>  	/* dimm provider wants synchronous registration by __nvdimm_create() */
+>>  	NDD_REGISTER_SYNC = 8,
+>>
+>> +	/* dimm supports region labels (LSA Format 2.1) */
+>> +	NDD_CXL_LABEL = 9,
+>> +
+>>  	/* need to set a limit somewhere, but yes, this is likely overkill */
+>>  	ND_IOCTL_MAX_BUFLEN = SZ_4M,
+>>  	ND_CMD_MAX_ELEM = 5,
+>
+
+------K5ZVV-zrPS8y8iJelFUsagW7KEVVNg7wn3oh2ZJRPRpX678s=_cd417_
+Content-Type: text/plain; charset="utf-8"
+
+
+------K5ZVV-zrPS8y8iJelFUsagW7KEVVNg7wn3oh2ZJRPRpX678s=_cd417_--
+
