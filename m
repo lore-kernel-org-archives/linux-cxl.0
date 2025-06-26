@@ -1,108 +1,193 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 857FD2EAB7D;
-	Thu, 26 Jun 2025 14:28:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F35142EF9A4;
+	Thu, 26 Jun 2025 14:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750948129; cv=none; b=NL3b5JprQDKxGugWPk4J+f3k76fZq11zdjGnIHZ8gppVCWU86vvxBsFwSrla6Uty8Obkt3kzI0Zph8ETaFNfNRLZMqgamIISPI5TLqW50gj/ViNrw5pJReiZVK4m54VX5ZBLr6PSxu609Nq+028Wm8/iLm0ln6A/6jaEp6jBI40=
+	t=1750948346; cv=none; b=BiHcX107Nc6MGqGz+FdIJ0/ZGJ0z9x9qg2W2emFNETVqvWF+8NcqFcVouSWBx7u6wRIiWYAuXfnd9ZNVcKGmApQaReWlSMCAlHOhVgiCuyuJ7frPgBkFMu8utvJ6fSWTuaPKMj1BH/FTdoTxlQn77Zx/Uqz415Svun6EXz2uU0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750948129; c=relaxed/simple;
-	bh=cO0dIqHpbTc6DvsuyXubTVueJiquRK7Muf6WQvl1NBM=;
+	s=arc-20240116; t=1750948346; c=relaxed/simple;
+	bh=1jC/tGnvYZqIX1z6MW25LhIXH6ubgU5rEfdthqI9T7w=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F5sApm5+V+M5gHyJCUi4iXWU8DxgZ4ppQ22rO8TfrqZ5Yv4rgB1e71R/nv9Vr9kAo+axYfueBo/ko1iF8VOCEnE9Y/7Fh7xWDHxchaUZtVc/+wV1VkpiF2RWTBst2FRxsbNzW+I9hZLHC5p63kWN3KbQXRiYsDpiBEROkgaV0qc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RQ4iumFl; arc=none smtp.client-ip=209.85.208.177
+	 To:Cc:Content-Type; b=H/m4rUt2gowkL9stVfgNSSkcfuVNx+MFxyYQcayDHa/IVEUwrH57PgszOka5L+J/BEMzdjYkz9qQguldYRtiVY2SRpzmko11PMDaEWhTIX8sP6V7E029UtB1tvgID0VhWqOnAe1hv/HEY+W1yZNH9XZVU4EVG8Z8Vz9ublxBxFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FQzYbB+F; arc=none smtp.client-ip=209.85.167.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RQ4iumFl"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-32b8134ef6aso10671481fa.0;
-        Thu, 26 Jun 2025 07:28:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FQzYbB+F"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-553b6a349ccso1184028e87.0;
+        Thu, 26 Jun 2025 07:32:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750948126; x=1751552926; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750948342; x=1751553142; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cO0dIqHpbTc6DvsuyXubTVueJiquRK7Muf6WQvl1NBM=;
-        b=RQ4iumFlAebnPamXBq+PEscEcS2pEJL1IlQA/hAtERspSff9fVmAxTzeWKo6ztuTjF
-         w26aU7eweVQ7ZKstdKSkl8RB61t7doZCOdGfWO3oiECokk2scZKNwuMFjGXQuZWR4+uY
-         Eeh2F8Qxc22UAgP3hLeaevH1zU2bsSpvDOIUixfCeux1QPustWAWNhHQc888hlBdS54h
-         +bX36YXS424t1MueYdWk9MNh1tJh9W3//hU5MEzyJ0/eqQ/TZ1zGC/XYuaGo/VD2q600
-         w5n5sOi6sf2BuTUJJBK3VvDhpRON2qKgoIjMxOHQhnX3yatSgzj5ljyZzmeivDOEFL4x
-         JvtQ==
+        bh=F4ep8LpzklDdJ/PRT38YsBKJnMGg/9nUE3qJ238rNuc=;
+        b=FQzYbB+FEWv41LK3BZZWc9xBmXjSrBI20FIISTS5xlN4nu+GHu6Pyixf1sLGHR31DT
+         73AQj4CqEXq/sxBhNJJMofELAL7y88Y1Tuoj5tVgU8aGkiFBmv6xaekkTKRzd1NYJDBv
+         5ancmOy8PReBzVSCJkEXEg4cirEk1KTs/u2s3Z01FqMaysG4+nbvb5+mFxbeninJU1vy
+         SsJtSPFNdAMDEvH2Ua6Qcza5T8V0dtWh96bcBXqfrzVEniVf7+u5miyItV93EH0cj6Z1
+         q0wQY8t+36XKh0/jRccMwgmjsWTY5okb4ZOt6SJ9sANZ3Zuat4xBrkVTNRkxRkigPbr4
+         +8cQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750948126; x=1751552926;
+        d=1e100.net; s=20230601; t=1750948342; x=1751553142;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=cO0dIqHpbTc6DvsuyXubTVueJiquRK7Muf6WQvl1NBM=;
-        b=BXyq7PPMH4mF24yvmgOkzUdnv/WDBkWFtHIrbMQDmFdADO4D2z4gZyxjGlNtbM+gte
-         xQUMl6K+AdUsCmM6Q2G4H9y8CCUdOH/+oT3v0tv7eR31hTgYL4aPKctvvax6s4iQgwX8
-         iTMuWeqjGNW+3RtCHZI/i7QBH0jUa+Raws/XaweXULQHtuZxKIHAV76sfuvFqlPgCImL
-         PIAfF/5ROX3hcDTqbW/FLlPk5C2Toz/FL4ydN+yzl74HDIi9Vzyqdue8atauqNsKMt76
-         Kv+McjqnCFUUYtG5AZ/ktJ/3977j1p030UlaZvco4PH0EYzSeNI6SlyAq6iYvROCRoT1
-         JNoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVqsBSIG8jxdfh8mY1oTOI//+I6tKxFrFI35DogwFr8XkgKKtjPC1VaQ0JSLXWB46RNpOzwxiu4cuw=@vger.kernel.org, AJvYcCX+3dqCXo4duz14/XxeFPch6UN8VPD0lEVvK5e+mw0ppMac0tBcMxOg6P/RFVIa4mEOVbnFPxVqLde01Yf3@vger.kernel.org
-X-Gm-Message-State: AOJu0YyB8peOvduV/lmzFa5vFQmbvPhFo5hEdvtTiEVX9Hph9dGk3RWE
-	B6+UqmH3wjNYa2OgRCMdalNBxPP40naGqrvQnApYyv063FGvbYkZ6Pe/7HGbVE3q98I2+cqdmbX
-	s7CksAuifbm55nOFqkNGeesSqVI4N9zY=
-X-Gm-Gg: ASbGnct5/icBFyq+jEQGyVCiXjwyDM9BdybOmsS+YQeojyYam08VHGWhNBkBxgW1nv8
-	jpqn4mVIc28XrX8ulgJMyYa2ZlgGvy8rNYIHEtKIQcmqHa5vgcnFt999+1sA7JyiSyCrsKadzF9
-	cs4Q2inFAFLVpwOxqZnSQwJ33KCBHA8hjcI9Us+f8G0Iwr9okx4kp+e1MYIxH6iH1IIZiIM3xg6
-	+WxWg==
-X-Google-Smtp-Source: AGHT+IHwWc9v0nriRWmfxkaR6ErrKPjoGINPW/jmv4lNFaYYTGCtUBrIKjRtDfii7JIle46/WTToulmBo+DV+GFcw9o=
-X-Received: by 2002:a05:6512:1256:b0:553:349c:6465 with SMTP id
- 2adb3069b0e04-5550b4da73fmr6523e87.33.1750948125353; Thu, 26 Jun 2025
- 07:28:45 -0700 (PDT)
+        bh=F4ep8LpzklDdJ/PRT38YsBKJnMGg/9nUE3qJ238rNuc=;
+        b=vo5fh6DIkDJSnpulmSQlPNrLT5JIUUlR44K20pxFkmep38w+hp49RxBbstVRESyVS4
+         564tv2i9Vk8vpaOOp3avLWt3QSEtuP/HN6zwSu0isslGHwJoo8cBxYPjxPC7emgUrMPi
+         0qKYuhNyEhOu6NjBjfSIaY9tvtqo39vxYyhBDyIAwWmG2kANl1H/oZ32fr9GKaaFZJOG
+         rvZywNawWxj5z8rmiWBT3GCWO/zKuQ8wRyyLa9Kydunu7bFFZsemBB0zrKs2iPEtAx0Y
+         eDdNqhW4wBwM6nogod5qb/wRIQHy9+A4yeSR3ZjiAXkizg9z8ut1tlxilK7SgyfH9tED
+         alwg==
+X-Forwarded-Encrypted: i=1; AJvYcCWifAWErc4fsBadzqUrWTasM+tlD+g+kOK4FbGUpo6j+vO4OCb19kjSIgLFv0X/9xzK1GoHQCaHzAY+Zwkn@vger.kernel.org, AJvYcCXyJ4P0FNPMQcMAYdhMZZVEheh1kiD+4n3KVTBvg0QXAg07+XAx2P0xbCOCCEBfx+CXP3Nz5rMEteY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5SqSm/jg5PUI/MsJQWQXqtRJBnBvhQjftHci/ZSiUNdME03lm
+	PhgiPrvGckBv2g9XqfxIabFO8Tzn4IBq9/nvaUxYcT9vokuAPzFRkoRjG3/wHtUuA5EK3+0iF0E
+	X+hn1H33xlwfG/olTv/Z5HXR1ROnY31Y=
+X-Gm-Gg: ASbGnctnZ7F+u5xP5RMcxIOnosA3RcPPXIPmyAKxXAKBD5rYOX6GiVzr1ri6J7Ttkm0
+	e+pFHIj+Oij3HF3cjbdcsCAMjVUs4kQMxoNJgwWOa75rS3AIEraT5q1wO6xmz46p+WdhSMs842X
+	3xV+CFsq/zdpthV+oY6nU/vDF4VRfVWJXVBs/u+9C0dRppGvS9wGp5bqL70Q7FdalbpTn7n5BFN
+	XhwLg==
+X-Google-Smtp-Source: AGHT+IFx4sduEJGCHwL3U+pSB2Tg8LNQZ44ZqhdKUQhPbzhrEtPy2s8ZWPFPfbdHNZSYNd8FSRJALxpHY5AcPjo/atk=
+X-Received: by 2002:ac2:568e:0:b0:553:2e0f:96c with SMTP id
+ 2adb3069b0e04-554fdd0e51fmr2690042e87.23.1750948341966; Thu, 26 Jun 2025
+ 07:32:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250623091929.366357-1-pranav.tyagi03@gmail.com> <685adc4d1487b_1608bd1009b@dwillia2-xfh.jf.intel.com.notmuch>
-In-Reply-To: <685adc4d1487b_1608bd1009b@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20250623083841.364002-1-pranav.tyagi03@gmail.com> <aFrBeCn-j_AB1yzv@rric.localdomain>
+In-Reply-To: <aFrBeCn-j_AB1yzv@rric.localdomain>
 From: Pranav Tyagi <pranav.tyagi03@gmail.com>
-Date: Thu, 26 Jun 2025 19:58:33 +0530
-X-Gm-Features: Ac12FXwMes5vqgDVPQbqpvCV1-G1XfDIGUvHwA0zRSSmnY8QkXO5IKPoZKr4VsM
-Message-ID: <CAH4c4jLH2XoqfVOx-7JxTw-fX8Xbc2zhGmCh31e4v2gQc7xMoA@mail.gmail.com>
-Subject: Re: [PATCH] cxl/port: automate cleanup with __free()
-To: Dan Williams <dan.j.williams@intel.com>
+Date: Thu, 26 Jun 2025 20:02:10 +0530
+X-Gm-Features: Ac12FXysQiC9JCtpThr23nOptpbU1SVBPAIAYLzmUaBViKaSpsg8hiX7ofi6dBg
+Message-ID: <CAH4c4jLAfMTn6wN3wJSOQZ3mAoYC3uhswDu6c+c6v-wv8mSifQ@mail.gmail.com>
+Subject: Re: [PATCH v2] cxl/memdev: automate cleanup with __free()
+To: Robert Richter <rrichter@amd.com>
 Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com, 
 	alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com, 
-	ming.li@zohomail.com, rrichter@amd.com, jeff.johnson@oss.qualcomm.com, 
-	peterz@infradead.org, linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	dan.j.williams@intel.com, linux-cxl@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, ming.li@zohomail.com, peterz@infradead.org, 
 	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 24, 2025 at 10:42=E2=80=AFPM Dan Williams <dan.j.williams@intel=
-.com> wrote:
+On Tue, Jun 24, 2025 at 8:47=E2=80=AFPM Robert Richter <rrichter@amd.com> w=
+rote:
 >
-> Pranav Tyagi wrote:
+> On 23.06.25 14:08:41, Pranav Tyagi wrote:
 > > Use the scope based resource management (defined in linux/cleanup.h) to
-> > automate the lifetime control of struct cxl_endpoint_decoder. This
-> > eliminates the explicit kfree() call and makes the code more robust and
+> > automate the lifetime control of struct cxl_mbox_transfer_fw. This
+> > eliminates explicit kfree() calls and makes the code more robust and
 > > maintainable in presence of early returns.
+> >
+> > Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
+> > ---
+> >  drivers/cxl/core/memdev.c | 21 ++++++++-------------
+> >  1 file changed, 8 insertions(+), 13 deletions(-)
+> >
+> > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> > index f88a13adf7fa..38f4449f9740 100644
+> > --- a/drivers/cxl/core/memdev.c
+> > +++ b/drivers/cxl/core/memdev.c
+> > @@ -7,6 +7,7 @@
+> >  #include <linux/slab.h>
+> >  #include <linux/idr.h>
+> >  #include <linux/pci.h>
+> > +#include <linux/cleanup.h>
+> >  #include <cxlmem.h>
+> >  #include "trace.h"
+> >  #include "core.h"
+> > @@ -802,11 +803,10 @@ static int cxl_mem_activate_fw(struct cxl_memdev_=
+state *mds, int slot)
+> >  static int cxl_mem_abort_fw_xfer(struct cxl_memdev_state *mds)
+> >  {
+> >       struct cxl_mailbox *cxl_mbox =3D &mds->cxlds.cxl_mbox;
+> > -     struct cxl_mbox_transfer_fw *transfer;
+> >       struct cxl_mbox_cmd mbox_cmd;
+> > -     int rc;
+> > -
+> > -     transfer =3D kzalloc(struct_size(transfer, data, 0), GFP_KERNEL);
+> > +
+> > +     struct cxl_mbox_transfer_fw *transfer __free(kfree) =3D
+> > +             kzalloc(struct_size(transfer, data, 0), GFP_KERNEL);
 >
-> I do not want to review small standalone conversions of individual
-> functions for no other reason than vague claims of improvement. The
-> reasons to convert an existing function to cleanup.h helpers are:
+> I don't see a reason for __free() here as there are no early exits.
 >
-> 1/ to fix an actual bug
+> >       if (!transfer)
+> >               return -ENOMEM;
+> >
+> > @@ -821,9 +821,7 @@ static int cxl_mem_abort_fw_xfer(struct cxl_memdev_=
+state *mds)
+> >
+> >       transfer->action =3D CXL_FW_TRANSFER_ACTION_ABORT;
+> >
+> > -     rc =3D cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
+> > -     kfree(transfer);
+> > -     return rc;
+> > +     return cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
+> >  }
+> >
+> >  static void cxl_fw_cleanup(struct fw_upload *fwl)
+> > @@ -880,7 +878,7 @@ static enum fw_upload_err cxl_fw_write(struct fw_up=
+load *fwl, const u8 *data,
+> >       struct cxl_dev_state *cxlds =3D &mds->cxlds;
+> >       struct cxl_mailbox *cxl_mbox =3D &cxlds->cxl_mbox;
+> >       struct cxl_memdev *cxlmd =3D cxlds->cxlmd;
+> > -     struct cxl_mbox_transfer_fw *transfer;
+> > +     struct cxl_mbox_transfer_fw *transfer __free(kfree);
 >
-> 2/ in the course of refactoring the code for other reasons
+> Jonathan already catched this.
 >
-> 3/ to eliminate goto trickiness and bulk
+> >       struct cxl_mbox_cmd mbox_cmd;
+> >       u32 cur_size, remaining;
+> >       size_t size_in;
+> > @@ -949,7 +947,7 @@ static enum fw_upload_err cxl_fw_write(struct fw_up=
+load *fwl, const u8 *data,
+> >       rc =3D cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
+> >       if (rc < 0) {
+> >               rc =3D FW_UPLOAD_ERR_RW_ERROR;
+> > -             goto out_free;
+> > +             return rc;
 >
-> This patch does not make the code "more robust and maintainable", it is
-> just churn given how easy it is to verify that the kfree() is correctly
-> paired.
+> If you want to remove the goto here, just free transfer right after
+> calling cxl_internal_send_cmd(). It is no longer used then.
 >
-> One quick way to identify code churn is when the diffstat does not
-> result in a net reduction in code lines:
+> I only want those cleanup helpers where they are actually useful and
+> do not just add complexity.
 >
-> This patch is "3 insertions(+), 3 deletions(-)" =3D=3D "churn".
+> Thanks,
+>
+> -Robert
+>
+> >       }
+> >
+> >       *written =3D cur_size;
+> > @@ -963,14 +961,11 @@ static enum fw_upload_err cxl_fw_write(struct fw_=
+upload *fwl, const u8 *data,
+> >                       dev_err(&cxlmd->dev, "Error activating firmware: =
+%d\n",
+> >                               rc);
+> >                       rc =3D FW_UPLOAD_ERR_HW_ERROR;
+> > -                     goto out_free;
+> > +                     return rc;
+> >               }
+> >       }
+> >
+> >       rc =3D FW_UPLOAD_ERR_NONE;
+> > -
+> > -out_free:
+> > -     kfree(transfer);
+> >       return rc;
+> >  }
+> >
+> > --
+> > 2.49.0
+> >
 
 Thank you for the feedback. I understand your concerns and completely
 agree with your reasoning. Please pardon my misjudgment in sending this
