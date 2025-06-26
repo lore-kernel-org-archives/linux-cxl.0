@@ -1,152 +1,136 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6573D202C46;
-	Thu, 26 Jun 2025 09:55:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209D318035;
+	Thu, 26 Jun 2025 10:14:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750931744; cv=none; b=L6vEh5T3t6nMdCjuN5LD8Z3aPjydsdezfHnNrShMssoIX+r0abYk23GOqWvKAr9OhtIYCcJUkA/Zm9eRraXmFTgkSl1IVRlT+KOcRaOd4xsCste60Rci6kpuTe7bDlUZxQ8khNQP2uO4HCoA8VKU+jyBkGnzbGV6QIsgi2msLk8=
+	t=1750932846; cv=none; b=j79GJ+nNTWxgDTVI39+xhvNu9VhoAxgE0EKrBNalFlmER19ZsF7k/LEIx8bor7iu7nuzBTcfmxlC+ovfRcm64whuPQz1hvCK6r6Qul6fh9lJGIAYi01GoGIJscnrisjifQGFCW5ybWBMoE9CKsf2jDDQFs08P8EyEt8twlYYpb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750931744; c=relaxed/simple;
-	bh=OHAzZP1FNZp7wZtHHZ6Et6tNQRxEVtAxj73uffwLBMY=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RbhOS7vJ4cLLVzngm5aHSK3ivpXIK5oAtCGr3rUtchWqGdLPNeU0qF9Nrncq89moH1x/+P2CQITUx6o2UPOfkzydT5KE/zrI08IvQ+oPW6WY2sf8Jlj9TvBfOEVNtvBDHYfW3vW8Hq4kjK6zDrRNj7zsTDLs7mEKQLcsmw8amls=
+	s=arc-20240116; t=1750932846; c=relaxed/simple;
+	bh=rVERr3o2U/V7UYblWMD0/KIEIoPl380oaAmlEYQ6Sm4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qBTShkLSE55K5ZhlBusxC6AdlACvaX58zXdaIJB3PMi4cfC30nEAjnzcCjFfEwV1VYDDY+dAH0bOWhYFLe/hWYZ/uI+WX80xHiEKfy/QYa5Hi1oaK4DervvVeRxvYdDgNRjcRnylp9Q7DEzA1i+oOXgCDjFTysh8OcwlUDLVLUI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bSYvB2ts6z6M508;
-	Thu, 26 Jun 2025 17:54:46 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 610D61402EC;
-	Thu, 26 Jun 2025 17:55:33 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 26 Jun
- 2025 11:55:32 +0200
-Date: Thu, 26 Jun 2025 10:55:30 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Peter Zijlstra <peterz@infradead.org>, <linuxarm@huawei.com>
-CC: "H. Peter Anvin" <hpa@zytor.com>, Catalin Marinas
-	<catalin.marinas@arm.com>, <james.morse@arm.com>,
-	<linux-cxl@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-acpi@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-	<linux-mm@kvack.org>, <gregkh@linuxfoundation.org>, Will Deacon
-	<will@kernel.org>, Dan Williams <dan.j.williams@intel.com>, Davidlohr Bueso
-	<dave@stgolabs.net>, Yicong Yang <yangyicong@huawei.com>, Yushan Wang
-	<wangyushan12@huawei.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, Mark
- Rutland <mark.rutland@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, <x86@kernel.org>, Andy Lutomirski
-	<luto@kernel.org>
-Subject: Re: [PATCH v2 0/8] Cache coherency management subsystem
-Message-ID: <20250626105530.000010be@huawei.com>
-In-Reply-To: <20250625180343.000020de@huawei.com>
-References: <20250624154805.66985-1-Jonathan.Cameron@huawei.com>
-	<20250625085204.GC1613200@noisy.programming.kicks-ass.net>
-	<FB7122A4-BF5E-4C05-805A-2EE3240286A1@zytor.com>
-	<20250625093152.GZ1613376@noisy.programming.kicks-ass.net>
-	<20250625180343.000020de@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bSZGM5F72z6K9QQ;
+	Thu, 26 Jun 2025 18:11:23 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
+	by mail.maildlp.com (Postfix) with ESMTPS id 063F7140447;
+	Thu, 26 Jun 2025 18:13:59 +0800 (CST)
+Received: from P_UKIT01-A7bmah.china.huawei.com (10.126.171.218) by
+ frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 26 Jun 2025 12:13:58 +0200
+From: <shiju.jose@huawei.com>
+To: <linux-edac@vger.kernel.org>, <bp@alien8.de>, <tony.luck@intel.com>,
+	<lenb@kernel.org>, <leo.duran@amd.com>, <Yazen.Ghannam@amd.com>,
+	<mchehab@kernel.org>, <dave.jiang@intel.com>, <jonathan.cameron@huawei.com>
+CC: <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>,
+	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>, <shiju.jose@huawei.com>
+Subject: [PATCH v2 1/1] EDAC: Fix lockdep splat caused by edac features code
+Date: Thu, 26 Jun 2025 11:13:44 +0100
+Message-ID: <20250626101344.1726-1-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.43.0.windows.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
+ frapeml500007.china.huawei.com (7.182.85.172)
 
-On Wed, 25 Jun 2025 18:03:43 +0100
-Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+From: Shiju Jose <shiju.jose@huawei.com>
 
-> On Wed, 25 Jun 2025 11:31:52 +0200
-> Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > On Wed, Jun 25, 2025 at 02:12:39AM -0700, H. Peter Anvin wrote:  
-> > > On June 25, 2025 1:52:04 AM PDT, Peter Zijlstra <peterz@infradead.org> wrote:    
-> > > >On Tue, Jun 24, 2025 at 04:47:56PM +0100, Jonathan Cameron wrote:
-> > > >    
-> > > >> On x86 there is the much loved WBINVD instruction that causes a write back
-> > > >> and invalidate of all caches in the system. It is expensive but it is    
-> > > >
-> > > >Expensive is not the only problem. It actively interferes with things
-> > > >like Cache-Allocation-Technology (RDT-CAT for the intel folks). Doing
-> > > >WBINVD utterly destroys the cache subsystem for everybody on the
-> > > >machine.
-> > > >    
-> > > >> necessary in a few corner cases.     
-> > > >
-> > > >Don't we have things like CLFLUSH/CLFLUSHOPT/CLWB exactly so that we can
-> > > >avoid doing dumb things like WBINVD ?!?
-> > > >    
-> > > >> These are cases where the contents of
-> > > >> Physical Memory may change without any writes from the host. Whilst there
-> > > >> are a few reasons this might happen, the one I care about here is when
-> > > >> we are adding or removing mappings on CXL. So typically going from
-> > > >> there being actual memory at a host Physical Address to nothing there
-> > > >> (reads as zero, writes dropped) or visa-versa.     
-> > > >    
-> > > >> The
-> > > >> thing that makes it very hard to handle with CPU flushes is that the
-> > > >> instructions are normally VA based and not guaranteed to reach beyond
-> > > >> the Point of Coherence or similar. You might be able to (ab)use
-> > > >> various flush operations intended to ensure persistence memory but
-> > > >> in general they don't work either.    
-> > > >
-> > > >Urgh so this. Dan, Dave, are we getting new instructions to deal with
-> > > >this? I'm really not keen on having WBINVD in active use.
-> > > >    
-> > > 
-> > > WBINVD is the nuclear weapon to use when you have lost all notion of
-> > > where the problematic data can be, and amounts to a full reset of the
-> > > cache system. 
-> > > 
-> > > WBINVD can block interrupts for many *milliseconds*, system wide, and
-> > > so is really only useful for once-per-boot type events, like MTRR
-> > > initialization.    
-> > 
-> > Right this... But that CXL thing sounds like that's semi 'regular' to
-> > the point that providing some infrastructure around it makes sense. This
-> > should not be.  
-> 
-> I'm fully on board with the WBINVD issues (and hope for something new for
-> the X86 world). However, this particular infrastructure (for those systems
-> that can do so) is about pushing the problem and information to where it
-> can be handled in a lot less disruptive fashion. It can take 'a while' but
-> we are flushing only cache entries in the requested PA range. Other than
-> some potential excess snoop traffic if the coherency tracking isn't precise,
-> there should be limited affect on the rest of the system.
-> 
-> So, for the systems I particularly care about, the CXL case isn't that bad.
-> 
-> Just for giggles, if you want some horror stories the (dropped) ARM PSCI
-> spec provides for approaches that require synchronization of calls across
-> all CPUs.
-> 
-> "CPU Rendezvous" in the attributes of CLEAN_INV_MEMREGION requires all
-> CPUs to make a call within an impdef (discoverable) timeout.
-> https://developer.arm.com/documentation/den0022/falp1/?lang=en
-> 
-> I gather no one actually needs that on 'real' systems - that is systems
-> where we actually need to do these flushes! The ACPI 'RFC' doesn't support
-> that delight.
+Fix the lockdep splat caused by missing sysfs_attr_init() calls
+for the recently added EDAC feature's sysfs attributes.
 
-Seems I introduced some confusion.  Let me try summarizing:
+In lockdep_init_map_type(), the check for the lock-class key
+if (!static_obj(key) && !is_dynamic_key(key)) causes the splat.
 
-1. x86 has a potential feature gap. From a CXL ecosystem point of view I'd
-   like to see that gap closed. (Inappropriate for me to make any proposals
-   on how to do it on that architecture).
+Backtrace:
+RIP: 0010:lockdep_init_map_type+0x131/0x270
+Call Trace:
+ __kernfs_create_file+0x77/0xf0
+sysfs_add_file_mode_ns+0x86/0x140
+internal_create_group+0x1cc/0x4b0
+internal_create_groups+0x42/0xa0
+device_add+0x310/0x860
+? __init_waitqueue_head+0x4a/0x60
+edac_dev_register+0x3ff/0x480
+devm_cxl_memdev_edac_register+0x509/0x640 [cxl_core]
+? lock_acquire+0xc4/0x2d0
+? find_held_lock+0x2b/0x80
+? cxl_mem_probe+0x21e/0x360 [cxl_mem]
+? cxl_mem_probe+0x21e/0x360 [cxl_mem]
+? lockdep_hardirqs_on+0x78/0x100
+? cxl_mem_probe+0x226/0x360 [cxl_mem]
+cxl_mem_probe+0x226/0x360 [cxl_mem]
 
-2. This patch set has nothing to do with x86 (beyond modifying a function
-   signature). The hardware it is targeting avoids many of the issues around
-   WBINVD. The solution is not specific to ARM64, though the implementation
-   I care about is on an ARM64 implementation.
+Fixes: f90b738166fe ("EDAC: Add scrub control feature")
+Fixes: bcbd069b11b0 ("EDAC: Add a Error Check Scrub control feature")
+Fixes: 699ea5219c4b ("EDAC: Add a memory repair control feature")
+Reported-by: Dave Jiang <dave.jiang@intel.com>
+Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+---
+Changes:
+v1 -> v2
+1. Changes for the feedback from Jonathan.
+   https://lore.kernel.org/linux-edac/aa142386d0944955b742340b2454e114@huawei.com/T/#md430a9f146794152ac45de57d0cda65caa7f765b
+  - Updated commit message.
+  - Called sysfs_attr_init() before put the pointer in the array
+    of attribute pointers.
+---
+ drivers/edac/ecs.c        | 4 +++-
+ drivers/edac/mem_repair.c | 1 +
+ drivers/edac/scrub.c      | 1 +
+ 3 files changed, 5 insertions(+), 1 deletion(-)
 
-Right now, on x86 we have a functionally correct solution, this patch set
-adds infrastructure and 2 implementations to provide similar for other
-architectures.
+diff --git a/drivers/edac/ecs.c b/drivers/edac/ecs.c
+index 1d51838a60c1..51c451c7f0f0 100755
+--- a/drivers/edac/ecs.c
++++ b/drivers/edac/ecs.c
+@@ -170,8 +170,10 @@ static int ecs_create_desc(struct device *ecs_dev, const struct attribute_group
+ 		fru_ctx->dev_attr[ECS_RESET]		= EDAC_ECS_ATTR_WO(reset, fru);
+ 		fru_ctx->dev_attr[ECS_THRESHOLD]	= EDAC_ECS_ATTR_RW(threshold, fru);
+ 
+-		for (i = 0; i < ECS_MAX_ATTRS; i++)
++		for (i = 0; i < ECS_MAX_ATTRS; i++) {
++			sysfs_attr_init(&fru_ctx->dev_attr[i].dev_attr.attr);
+ 			fru_ctx->ecs_attrs[i] = &fru_ctx->dev_attr[i].dev_attr.attr;
++		}
+ 
+ 		sprintf(fru_ctx->name, "%s%d", EDAC_ECS_FRU_NAME, fru);
+ 		group->name = fru_ctx->name;
+diff --git a/drivers/edac/mem_repair.c b/drivers/edac/mem_repair.c
+index d1a8caa85369..70a033a76233 100755
+--- a/drivers/edac/mem_repair.c
++++ b/drivers/edac/mem_repair.c
+@@ -333,6 +333,7 @@ static int mem_repair_create_desc(struct device *dev,
+ 	for (i = 0; i < MR_MAX_ATTRS; i++) {
+ 		memcpy(&ctx->mem_repair_dev_attr[i],
+ 		       &dev_attr[i], sizeof(dev_attr[i]));
++		sysfs_attr_init(&ctx->mem_repair_dev_attr[i].dev_attr.attr);
+ 		ctx->mem_repair_attrs[i] =
+ 			&ctx->mem_repair_dev_attr[i].dev_attr.attr;
+ 	}
+diff --git a/drivers/edac/scrub.c b/drivers/edac/scrub.c
+index e421d3ebd959..f9d02af2fc3a 100755
+--- a/drivers/edac/scrub.c
++++ b/drivers/edac/scrub.c
+@@ -176,6 +176,7 @@ static int scrub_create_desc(struct device *scrub_dev,
+ 	group = &scrub_ctx->group;
+ 	for (i = 0; i < SCRUB_MAX_ATTRS; i++) {
+ 		memcpy(&scrub_ctx->scrub_dev_attr[i], &dev_attr[i], sizeof(dev_attr[i]));
++		sysfs_attr_init(&scrub_ctx->scrub_dev_attr[i].dev_attr.attr);
+ 		scrub_ctx->scrub_attrs[i] = &scrub_ctx->scrub_dev_attr[i].dev_attr.attr;
+ 	}
+ 	sprintf(scrub_ctx->name, "%s%d", "scrub", instance);
+-- 
+2.43.0
 
-Jonathan
