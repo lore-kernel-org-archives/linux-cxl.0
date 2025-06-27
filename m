@@ -1,43 +1,42 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C61829550F;
-	Fri, 27 Jun 2025 09:06:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E44225F787;
+	Fri, 27 Jun 2025 09:10:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751015208; cv=none; b=c5b9wkVr6Suf8lgmgtuIiHOBuVCXmA+YOzLEkZNwo6lIdVaCDV+In/lyp5lu6GqPTlf3qYyuNv7pp5Vg4C7+VkbM2jlLF0w75SsvwG4QfZlLNDc+YbCdL5ZyVG6Vd/gknGIce9dKbajtAZDnhduPeanpSBTu+s8veUqwbMnrjTs=
+	t=1751015431; cv=none; b=oN6LMgFYR97+BSUhGbcRMRCt6EF+OC8zs+XACa+OJOEevbezYBkk56vzzKLhiG7QrvJNK9IAJhKiI779QCCphTJ6dgpDwE15I4DDT/Q5n9bJB1broCAgyvjU6nVFbeL+iiMXqJVmiqatW02bINumITSfp5/5bVFBzcH5u9Vdxso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751015208; c=relaxed/simple;
-	bh=ZZG46HvlfGM/2p8zveWD6ysnP0vgSgCfJBB/mvCm1AA=;
+	s=arc-20240116; t=1751015431; c=relaxed/simple;
+	bh=x1qlRLAUX2JfC3QK4PWPHOZELj9cF1OUPK7Twf9axK0=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Mikwof9e9VIWOuk0ZcfxTBZymhs8ga2h9vjN1ucrv5XyqllT5EeHM3faI7mAtPSlO6dyZq0tYpNOP9BAMleX1WCwfJcrBdz6bOBLFcgE++TheNPFWvmvzs8zq4sfD678if3WExnE7c3cCczDcfv5AG4O7N9oxHYylHq9FehK+qk=
+	 MIME-Version:Content-Type; b=Pl80/X9uOu0gXPj5gIuHdr5aqObye+EPdUgFv5Xx80zio79YVotME83NotgBDSLeS9vx5gfAbTxNYwfaI2LpEjtpbNSorJtydnZtZErz7Y0dXvJ5RD+STXPUwGfPRhz3KjZJQZaoVfagUZgsCc59yzCqo3qvXzI/Brqb9D94Pk8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bT8kD54fbz6L5JM;
-	Fri, 27 Jun 2025 17:04:04 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bT8sP3Cccz67g19;
+	Fri, 27 Jun 2025 17:10:17 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id AED54140427;
-	Fri, 27 Jun 2025 17:06:42 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 8DE9E14011D;
+	Fri, 27 Jun 2025 17:10:26 +0800 (CST)
 Received: from localhost (10.48.153.213) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 27 Jun
- 2025 11:06:41 +0200
-Date: Fri, 27 Jun 2025 10:06:38 +0100
+ 2025 11:10:25 +0200
+Date: Fri, 27 Jun 2025 10:10:24 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To: <alejandro.lucero-palau@amd.com>
 CC: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
 	<dan.j.williams@intel.com>, <edward.cree@amd.com>, <davem@davemloft.net>,
 	<kuba@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>,
-	<dave.jiang@intel.com>, Alejandro Lucero <alucerop@amd.com>, Ben Cheatham
-	<benjamin.cheatham@amd.com>
-Subject: Re: [PATCH v17 13/22] cxl: Define a driver interface for DPA
- allocation
-Message-ID: <20250627100638.0000456f@huawei.com>
-In-Reply-To: <20250624141355.269056-14-alejandro.lucero-palau@amd.com>
+	<dave.jiang@intel.com>, Alejandro Lucero <alucerop@amd.com>, Martin Habets
+	<habetsm.xilinx@gmail.com>, Edward Cree <ecree.xilinx@gmail.com>
+Subject: Re: [PATCH v17 12/22] sfc: get endpoint decoder
+Message-ID: <20250627101024.00002585@huawei.com>
+In-Reply-To: <20250624141355.269056-13-alejandro.lucero-palau@amd.com>
 References: <20250624141355.269056-1-alejandro.lucero-palau@amd.com>
-	<20250624141355.269056-14-alejandro.lucero-palau@amd.com>
+	<20250624141355.269056-13-alejandro.lucero-palau@amd.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -47,120 +46,98 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
+X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, 24 Jun 2025 15:13:46 +0100
+On Tue, 24 Jun 2025 15:13:45 +0100
 <alejandro.lucero-palau@amd.com> wrote:
 
 > From: Alejandro Lucero <alucerop@amd.com>
 > 
-> Region creation involves finding available DPA (device-physical-address)
-> capacity to map into HPA (host-physical-address) space.
-> 
-> In order to support CXL Type2 devices, define an API, cxl_request_dpa(),
-> that tries to allocate the DPA memory the driver requires to operate.The
-> memory requested should not be bigger than the max available HPA obtained
-> previously with cxl_get_hpa_freespace.
-> 
-> Based on https://lore.kernel.org/linux-cxl/168592158743.1948938.7622563891193802610.stgit@dwillia2-xfh.jf.intel.com/
+> Use cxl api for getting DPA (Device Physical Address) to use through an
+> endpoint decoder.
 > 
 > Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
+> Reviewed-by: Martin Habets <habetsm.xilinx@gmail.com>
+> Acked-by: Edward Cree <ecree.xilinx@gmail.com>
 > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-Hmm. I wouldn't trust this last guy not to have missed a few things.
-See below.
-
-
-> +static struct cxl_endpoint_decoder *
-> +cxl_find_free_decoder(struct cxl_memdev *cxlmd)
-> +{
-> +	struct cxl_port *endpoint = cxlmd->endpoint;
-> +	struct device *dev;
+> ---
+>  drivers/net/ethernet/sfc/Kconfig   |  1 +
+>  drivers/net/ethernet/sfc/efx_cxl.c | 32 +++++++++++++++++++++++++++++-
+>  2 files changed, 32 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/sfc/Kconfig b/drivers/net/ethernet/sfc/Kconfig
+> index 979f2801e2a8..e959d9b4f4ce 100644
+> --- a/drivers/net/ethernet/sfc/Kconfig
+> +++ b/drivers/net/ethernet/sfc/Kconfig
+> @@ -69,6 +69,7 @@ config SFC_MCDI_LOGGING
+>  config SFC_CXL
+>  	bool "Solarflare SFC9100-family CXL support"
+>  	depends on SFC && CXL_BUS >= SFC
+> +	depends on CXL_REGION
+>  	default SFC
+>  	help
+>  	  This enables SFC CXL support if the kernel is configuring CXL for
+> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
+> index e2d52ed49535..c0adfd99cc78 100644
+> --- a/drivers/net/ethernet/sfc/efx_cxl.c
+> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
+> @@ -22,6 +22,7 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+>  {
+>  	struct efx_nic *efx = &probe_data->efx;
+>  	struct pci_dev *pci_dev = efx->pci_dev;
+> +	resource_size_t max_size;
+>  	struct efx_cxl *cxl;
+>  	u16 dvsec;
+>  	int rc;
+> @@ -86,13 +87,42 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+>  		return PTR_ERR(cxl->cxlmd);
+>  	}
+>  
+> +	cxl->endpoint = cxl_acquire_endpoint(cxl->cxlmd);
+> +	if (IS_ERR(cxl->endpoint))
+> +		return PTR_ERR(cxl->endpoint);
 > +
-> +	scoped_guard(rwsem_read, &cxl_dpa_rwsem) {
-> +		dev = device_find_child(&endpoint->dev, NULL,
-> +					find_free_decoder);
-> +	}
-> +	if (dev)
-> +		return to_cxl_endpoint_decoder(dev);
+> +	cxl->cxlrd = cxl_get_hpa_freespace(cxl->cxlmd, 1,
+> +					   CXL_DECODER_F_RAM | CXL_DECODER_F_TYPE2,
+> +					   &max_size);
 > +
-> +	return NULL;
-
-If this code isn't going to get modified later, could be simpler as
-
-	guard(rwsem_read)(&cxl_dpa_rwsem) {
-	dev = device_find_child(&endpoint->dev, NULL, find_free_decoder);
-	if (!dev)
-		return NULL
-
-	return to_cxl_endpoint_decoder(dev);
-		
-> +}
-> +
-> +/**
-> + * cxl_request_dpa - search and reserve DPA given input constraints
-> + * @cxlmd: memdev with an endpoint port with available decoders
-> + * @mode: DPA operation mode (ram vs pmem)
-> + * @alloc: dpa size required
-> + *
-> + * Returns a pointer to a cxl_endpoint_decoder struct or an error
-> + *
-> + * Given that a region needs to allocate from limited HPA capacity it
-> + * may be the case that a device has more mappable DPA capacity than
-> + * available HPA. The expectation is that @alloc is a driver known
-> + * value based on the device capacity but it could not be available
-> + * due to HPA constraints.
-> + *
-> + * Returns a pinned cxl_decoder with at least @alloc bytes of capacity
-> + * reserved, or an error pointer. The caller is also expected to own the
-> + * lifetime of the memdev registration associated with the endpoint to
-> + * pin the decoder registered as well.
-> + */
-> +struct cxl_endpoint_decoder *cxl_request_dpa(struct cxl_memdev *cxlmd,
-> +					     enum cxl_partition_mode mode,
-> +					     resource_size_t alloc)
-> +{
-> +	struct cxl_endpoint_decoder *cxled __free(put_cxled) =
-> +				cxl_find_free_decoder(cxlmd);
-> +	struct device *cxled_dev;
-> +	int rc;
-> +
-> +	if (!IS_ALIGNED(alloc, SZ_256M))
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	if (!cxled) {
-> +		rc = -ENODEV;
-> +		goto err;
+> +	if (IS_ERR(cxl->cxlrd)) {
+> +		pci_err(pci_dev, "cxl_get_hpa_freespace failed\n");
+> +		rc = PTR_ERR(cxl->cxlrd);
+> +		goto endpoint_release;
 > +	}
 > +
-> +	rc = cxl_dpa_set_part(cxled, mode);
-> +	if (rc)
-> +		goto err;
+> +	if (max_size < EFX_CTPIO_BUFFER_SIZE) {
+> +		pci_err(pci_dev, "%s: not enough free HPA space %pap < %u\n",
+> +			__func__, &max_size, EFX_CTPIO_BUFFER_SIZE);
+> +		rc = -ENOSPC;
+> +		goto put_root_decoder;
+> +	}
 > +
-> +	rc = cxl_dpa_alloc(cxled, alloc);
-> +	if (rc)
-> +		goto err;
+>  	probe_data->cxl = cxl;
+>  
+> -	return 0;
+> +	goto endpoint_release;
+I'd avoid the spiders nest here and just duplicate the release
+or if you really want to avoid that duplication, factor out everything where
+it is held into another function and have aqcuire/function/release as all that
+is seen here.
+
+
 > +
-> +	return cxled;
-
-I was kind of expecting us to disable the put above wuth a return_ptr()
-here.  If there is a reason why not, add a comment as it is not obvious
-to me anyway!
-
-
-> +err:
-> +	put_device(cxled_dev);
-
-It's not been assigned.  I'm surprised if none of the standard tooling
-(sparse, smatch etc screamed about this one).
-For complex series like this it's worth running them on each patch just to
-avoid possible bot warnings later!
-
-
-> +	return ERR_PTR(rc);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_request_dpa, "CXL");
-__CXL_CXL_H__ */
+> +put_root_decoder:
+> +	cxl_put_root_decoder(cxl->cxlrd);
+> +endpoint_release:
+> +	cxl_release_endpoint(cxl->cxlmd, cxl->endpoint);
+> +	return rc;
+>  }
+>  
+>  void efx_cxl_exit(struct efx_probe_data *probe_data)
+>  {
+> +	if (probe_data->cxl)
+> +		cxl_put_root_decoder(probe_data->cxl->cxlrd);
+>  }
+>  
+>  MODULE_IMPORT_NS("CXL");
 
