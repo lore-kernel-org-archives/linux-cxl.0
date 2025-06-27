@@ -1,43 +1,41 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56CE727E7F2;
-	Fri, 27 Jun 2025 08:51:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2561727F00E;
+	Fri, 27 Jun 2025 08:59:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751014288; cv=none; b=V53iZWwyoZkZ0kyLHxSKTOxoVB6lehf8UNcEdHG2hSDHg09ChaUOLW87Z4T/9MSDDyInrpGiWced0UeyuLdJFW2LwGQNri1I1zy5YGwhHmSxcnmtL7tfFEBCLmVWmdOzZ9eHk2uGfQS65rlhC16eP4s1NWUXS0l4185SyRSgf/Y=
+	t=1751014761; cv=none; b=XZPBoQ0UPgc4LSIcodB7VmWzZ89hVQVgQOr7EkWKz8V89DmcIYoyh19JGwJVU2yvJfhP0FagVLg5EoyBjZ4fO1YD2ABYItT2SaO72r3ztNiIYWxqzgAinEzRECQRQrgy2fyBuKUmLbEq6smVcvsCdW43DSofgL6KgEcXkTvZcGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751014288; c=relaxed/simple;
-	bh=Qmr1pWYNvkatuHEqNURtFgCKVmibYH6bu6vAsN3K8fE=;
+	s=arc-20240116; t=1751014761; c=relaxed/simple;
+	bh=A1ls2QONi1HTJeB1xlRmG2gDlIH5hR+Xj4YKW5rLLWY=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ytdy7ESj9O0n+ZEC4ePAmkl6qTV7GksYqtxXoSk0DejMeADcc30Bb2QM1kSdAljQQVDS8TNshSuQDDAZMbLU5xKLdsf6d7KYEpENHLSgYYPRDzZZNFP/5TT/RXBWzVJsWhnpxDjVWlci8iYjwZBYPDxKF6bTQaRNsiUox/lde0o=
+	 MIME-Version:Content-Type; b=GpzeWBg3+c6KVbE1MyK7R2vX1h3bFKDMu4V8csxNGFGGEffYwq2diih4VmdDm07TQHCrGm0nRzJaIDMxyE+ni3+KuL2xDKLwtR/kPVL/uW4Uz6AUQY+gElqaNagm1md90yjDqt6f7lB7ivsYueCjSSk7DkMOfggv/O2tpJ2ixpQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bT8Qg0V70z6M56y;
-	Fri, 27 Jun 2025 16:50:35 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bT8Yd5JdTz6L5Hn;
+	Fri, 27 Jun 2025 16:56:37 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 780E514011D;
-	Fri, 27 Jun 2025 16:51:23 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id B31F91404F9;
+	Fri, 27 Jun 2025 16:59:15 +0800 (CST)
 Received: from localhost (10.48.153.213) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 27 Jun
- 2025 10:51:22 +0200
-Date: Fri, 27 Jun 2025 09:51:20 +0100
+ 2025 10:59:14 +0200
+Date: Fri, 27 Jun 2025 09:59:13 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To: <alejandro.lucero-palau@amd.com>
 CC: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
 	<dan.j.williams@intel.com>, <edward.cree@amd.com>, <davem@davemloft.net>,
 	<kuba@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>,
-	<dave.jiang@intel.com>, Alejandro Lucero <alucerop@amd.com>, Martin Habets
-	<habetsm.xilinx@gmail.com>, Fan Ni <fan.ni@samsung.com>, Edward Cree
-	<ecree.xilinx@gmail.com>
-Subject: Re: [PATCH v17 09/22] sfc: create type2 cxl memdev
-Message-ID: <20250627095120.000056bf@huawei.com>
-In-Reply-To: <20250624141355.269056-10-alejandro.lucero-palau@amd.com>
+	<dave.jiang@intel.com>, Alejandro Lucero <alucerop@amd.com>
+Subject: Re: [PATCH v17 10/22] cx/memdev: Indicate probe deferral
+Message-ID: <20250627095913.000024e0@huawei.com>
+In-Reply-To: <20250624141355.269056-11-alejandro.lucero-palau@amd.com>
 References: <20250624141355.269056-1-alejandro.lucero-palau@amd.com>
-	<20250624141355.269056-10-alejandro.lucero-palau@amd.com>
+	<20250624141355.269056-11-alejandro.lucero-palau@amd.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -50,41 +48,28 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, 24 Jun 2025 15:13:42 +0100
+On Tue, 24 Jun 2025 15:13:43 +0100
 <alejandro.lucero-palau@amd.com> wrote:
 
 > From: Alejandro Lucero <alucerop@amd.com>
 > 
-> Use cxl API for creating a cxl memory device using the type2
-> cxl_dev_state struct.
+> The first step for a CXL accelerator driver that wants to establish new
+> CXL.mem regions is to register a 'struct cxl_memdev'. That kicks off
+> cxl_mem_probe() to enumerate all 'struct cxl_port' instances in the
+> topology up to the root.
+> 
+> If the port driver has not attached yet the expectation is that the
+> driver waits until that link is established. The common cxl_pci driver
+> has reason to keep the 'struct cxl_memdev' device attached to the bus
+> until the root driver attaches. An accelerator may want to instead defer
+> probing until CXL resources can be acquired.
+> 
+> Use the @endpoint attribute of a 'struct cxl_memdev' to convey when a
+> accelerator driver probing should be deferred vs failed. Provide that
+> indication via a new cxl_acquire_endpoint() API that can retrieve the
+> probe status of the memdev.
 > 
 > Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> Reviewed-by: Martin Habets <habetsm.xilinx@gmail.com>
-> Reviewed-by: Fan Ni <fan.ni@samsung.com>
-> Acked-by: Edward Cree <ecree.xilinx@gmail.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
->  drivers/net/ethernet/sfc/efx_cxl.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
-> index 5d68ee4e818d..e2d52ed49535 100644
-> --- a/drivers/net/ethernet/sfc/efx_cxl.c
-> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
-> @@ -79,6 +79,13 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
->  
->  	cxl_set_capacity(&cxl->cxlds, EFX_CTPIO_BUFFER_SIZE);
->  
-> +	cxl->cxlmd = devm_cxl_add_memdev(&pci_dev->dev, &cxl->cxlds);
-> +
-Trivial style thing but common practice (I haven't checked local style)
-is no blank line between call and associated error check. 
-> +	if (IS_ERR(cxl->cxlmd)) {
-> +		pci_err(pci_dev, "CXL accel memdev creation failed");
-> +		return PTR_ERR(cxl->cxlmd);
-> +	}
-> +
->  	probe_data->cxl = cxl;
->  
->  	return 0;
+This looks fine to me, but it needs more eyes.
 
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
