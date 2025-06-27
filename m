@@ -1,124 +1,212 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C38311F09A5;
-	Fri, 27 Jun 2025 17:49:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E92F1DF271;
+	Fri, 27 Jun 2025 18:17:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751046589; cv=none; b=mrtoOWlqW8Dh8KD+cyxOX9Ujyaev9nbykkS7MyIp5FHp3Zgyg7ZIVoi15vwG9GEBBAPzhoFY13wHobAm9soatPvvFg3OGw0eu84ZE8JVj3cwwmCIEd8ZzjJTy+GTWQy8ruQ6AcxTW2R0t0shzNGaIl1RI/ZksXyv1owND1sSddg=
+	t=1751048249; cv=none; b=Em4JkHkjhRrjvo/A3rM9CRJvFNAYympc2D0Vdgrq+0C2bv4H4THXyFP2SzgTWmNYNKNN8oa54J5/Bwtf51JogTLqWmPYehldcgleyWfvM35VsFBCf/Sry8etLTuS+EgSTjY/RiX38h1BLP7j9dcZGcf60+4Qodvq40wXxI6O9n8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751046589; c=relaxed/simple;
-	bh=fENVGkGcV01nrx8rwyk5yc++tYlpmC/4in3yTWfI+BU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bbMFCZQLINv8QjrLvBc/yfPykhqqF9Cjo00k07ZXilnMn4yDazQ7C/SvMyecXvCsF8WMGL9IFdw7fpWMb9tmE5phn7r/d/9EVwcsZ5TjFU2WKkPgW5Y7hJ9aXuPPnbhW/sEMY7UJVc5IfhyclqB6xT5VSfbNh8BXO7B8Z0lXDdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QDaBKqc7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751048249; c=relaxed/simple;
+	bh=Zy+rQDK2Rdtnv+WCJAroA36FonDrfwk2n38XI2RfCDk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t+qlNYTT/RN4AhK0QlNtJtWh5ljCHwCj3uG8O4XKdjrqSlsV10QHYniZsMEmAGr+GKidMU1hcL+YVNJr/ysEpIWZjmWI+iwdu6VZXGNsB7xZyzKYsnQsjXdrJIM5yHeJw0B0uA0Eih0IwElezhShmajPTIymkELvYXPuUtIewFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JEYsBeWg; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QDaBKqc7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66C83C4CEFB;
-	Fri, 27 Jun 2025 17:49:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751046589;
-	bh=fENVGkGcV01nrx8rwyk5yc++tYlpmC/4in3yTWfI+BU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=QDaBKqc73OAck/HvM0EVd5wtKUjUN7GPsOvpdjQ9yxQfT7gPphE3WJUX18LD5I3cV
-	 3I0DsaAXNiZrzbAjgH5RmUIHzuGV+il3/DAWKdEl1GqN7pgoGcBq/ue07wIRoUWsUt
-	 DTpXWcdsABzLOk1esyLFQ6+vPQhDQTQrIl2/oW859p+ENQfTmHeQIpUI/tNrE7f6Jx
-	 0HaPtNPil8h6RVpt0LhQKj8TbFYuz1YRJsqIZTzOr7g9NNuWwvAtNNz3sRmHxoyX4R
-	 hw1JP/ra1GDPoCgdErvqrQrL0xl6DZHuw+Uqxk597rbpThcBDon2oxslqivu081ygM
-	 1Gw7oJVnPaDng==
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ade5a0442dfso452627066b.1;
-        Fri, 27 Jun 2025 10:49:49 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUFcL3o8K4XcNCCwr/1Hn0poOddvQhQrl+98rz+OBpFX0ptmAaBjOFw2icmYhyPxanLDzt3Bs9Dsyz0@vger.kernel.org, AJvYcCV85OlD2kqLMH+Ja/mtvbCkla+glBX8wqNUUJe/yG2gHde+uYriYhSDOkr7yXOZpsmD6xnF8lws+cCI9g==@vger.kernel.org, AJvYcCVR33dTuoHXsGzVCTB+FMM8EMK9TJJo7JifLED2McI1RRmgmyuqnfMG7VQFSvbYyiojIpq/mrIRLMOINlny@vger.kernel.org, AJvYcCWnhdWYwqlaZEF2RE2uYpmQ//qLwa151J0iS4Vc8EJLhuZIxCl4pwBgYqcb+LIfH5uwVLFzvbLiBax7@vger.kernel.org, AJvYcCWrHIQdkFKqtu3aTQe3Rth8wTXCPpm4S9x5flUxxc26wlhd32JcGCxnhS/5ODR1wgyqwBYj/osYKFVE@vger.kernel.org, AJvYcCWympIu3XRPp0mybc36H/IdWUAq6GKlRTipRzrnuDEVdVT8/2HOhpdqq3/Mv597Gfh22MM2szwKsm7D@vger.kernel.org, AJvYcCXj269BJATXYJKaiwemrLrVPs3JuriT1yFOyGMIRecNlIeyCDGPUqOuYgRCRfP/dpshlW+Q0PgCADAZ@vger.kernel.org, AJvYcCXzOxcNMxXblyIensO8v/yRIGHlv0jZgNvVzCw8BGJKBIKV5e3X3ZJb0mhP+ST5jENabLIVP50ZB1mF@vger.kernel.org
-X-Gm-Message-State: AOJu0YztsrCYPhCat9rSiG0ZJpXcwuYjAABZTfK3HEg+1YoO9IEcQB6U
-	6JMZVZ7qUx6Vj1mNIyivWMcUXoAXi2TaGRiXtHa0r8CM5UIQwJPg1t8nyXWRj+7v6n7rJr7Gv6w
-	agkHDNUDKa82cwRcNh3KZXbHHACzjlg==
-X-Google-Smtp-Source: AGHT+IHT5hz4lr0pRGvdH2rjBfGZM81PcOoFrAQguTcQw3WkJwjxgHpGim6dbfGwqFeg5PpW/uAYH3Ohif/f2EVITXw=
-X-Received: by 2002:a17:907:cb86:b0:ae3:55bd:7724 with SMTP id
- a640c23a62f3a-ae355bd77f6mr319698366b.37.1751046587752; Fri, 27 Jun 2025
- 10:49:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JEYsBeWg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751048247; x=1782584247;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Zy+rQDK2Rdtnv+WCJAroA36FonDrfwk2n38XI2RfCDk=;
+  b=JEYsBeWgSWJE47+uH8JbfSf7fZdCAjXLBJWNL/PI53eIoT4F3U1EVkOy
+   uqJ2St0FsqAXzPIN5vyelx7kmFylJa7o4bid72mr41mF2rSXE4dvhZQCP
+   kmRi+PVDfIsM9TfMjHS2ZDYyrH+TLmKpLSAdiGJS4f/llR+H1RvLodXYn
+   LKQ91H0EsvTcBO5fPr5CdP3JpF9nwYMEVo5PWQiTTSo/j22DrEEeHMXgz
+   MP9J9wVpRWc+c0R1jMn9kRbt6zdJgmXK8MA51p0Mv2EyQHbCL/LbKmnkJ
+   4Enzn4EGiE9RfUQBHo1nO/gvswS/xfwqIEZgZjcv70yDhUPiKGEEBTN6E
+   A==;
+X-CSE-ConnectionGUID: Mq9Z7h9QTCyeXAGz9ARuhw==
+X-CSE-MsgGUID: K3bam4oBSpyr4raZMH4hGQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="52598116"
+X-IronPort-AV: E=Sophos;i="6.16,271,1744095600"; 
+   d="scan'208";a="52598116"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 11:17:26 -0700
+X-CSE-ConnectionGUID: iRakPMNBTpGZzpkHHrRkng==
+X-CSE-MsgGUID: pdPRwQqLQhSljapZMGp3UA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,271,1744095600"; 
+   d="scan'208";a="152485775"
+Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.109.77]) ([10.125.109.77])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 11:17:26 -0700
+Message-ID: <30d7f613-4089-4e64-893a-83ebf2e319c1@intel.com>
+Date: Fri, 27 Jun 2025 11:17:24 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250613134817.681832-1-herve.codina@bootlin.com>
- <20250613134817.681832-19-herve.codina@bootlin.com> <20250627162245.GA3513535-robh@kernel.org>
- <aF7H4-toeb7Ouz3d@smile.fi.intel.com>
-In-Reply-To: <aF7H4-toeb7Ouz3d@smile.fi.intel.com>
-From: Rob Herring <robh@kernel.org>
-Date: Fri, 27 Jun 2025 12:49:36 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJCuevzu69bx3yWm3ZR9wZ+UsWuNXscig5KMm2WH4WxOw@mail.gmail.com>
-X-Gm-Features: Ac12FXz-QVHJXTEek87UkxSujkajQAR7GpuL-shCkOttrl-AQQGXN_bA70yoM5c
-Message-ID: <CAL_JsqJCuevzu69bx3yWm3ZR9wZ+UsWuNXscig5KMm2WH4WxOw@mail.gmail.com>
-Subject: Re: [PATCH v3 18/28] of: property: Allow fw_devlink device-tree on
- x86 when PCI device-tree node creation is enabled
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Herve Codina <herve.codina@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
-	Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@google.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Davidlohr Bueso <dave@stgolabs.net>, 
-	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-	Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org, 
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-cxl@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>, 
-	Horatiu Vultur <horatiu.vultur@microchip.com>, 
-	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v17 10/22] cx/memdev: Indicate probe deferral
+To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
+ netdev@vger.kernel.org, dan.j.williams@intel.com, edward.cree@amd.com,
+ davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, edumazet@google.com
+Cc: Alejandro Lucero <alucerop@amd.com>
+References: <20250624141355.269056-1-alejandro.lucero-palau@amd.com>
+ <20250624141355.269056-11-alejandro.lucero-palau@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250624141355.269056-11-alejandro.lucero-palau@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 27, 2025 at 11:33=E2=80=AFAM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Fri, Jun 27, 2025 at 11:22:45AM -0500, Rob Herring wrote:
-> > On Fri, Jun 13, 2025 at 03:47:58PM +0200, Herve Codina wrote:
->
-> ...
->
-> > > -   if (IS_ENABLED(CONFIG_X86))
-> > > +   if (IS_ENABLED(CONFIG_X86) && !IS_ENABLED(CONFIG_PCI_DYNAMIC_OF_N=
-ODES))
-> >
-> > I really want CONFIG_PCI_DYNAMIC_OF_NODES to go away at some point, not
-> > add more users.
-> >
-> > I think this should instead check for specific platforms not with
-> > kconfig symbols but DT properties. For ce4100, you can just check the
-> > root compatible string. For OLPC, there isn't a root compatible (in the
-> > DT I have). You could check for /architecture =3D=3D OLPC instead. Ther=
-e's
-> > some virtualization guests using DT now too. I would think their DT's
-> > are simple enough to avoid any fw_devlink issues.
->
-> I don't think this is good approach. The above check is more reliable in =
-my
-> opinion.
 
-I'm fine with any solution that doesn't add a
-CONFIG_PCI_DYNAMIC_OF_NODES which we can't remove. Adding it was a
-kick the can down the road to merge the support worry the mixed
-usecase (on ACPI systems) later. It's now later.
 
-> > Alternatively, we could perhaps make x86 fw_devlink default off
->
-> For my (little) knowledge I believe this is not feasible anymore.
-> Some x86 code (drivers) relies on fw_devlink nowadays. But take
-> this with grain of salt, I may be way mistaken.
+On 6/24/25 7:13 AM, alejandro.lucero-palau@amd.com wrote:
+> From: Alejandro Lucero <alucerop@amd.com>
+> 
+> The first step for a CXL accelerator driver that wants to establish new
+> CXL.mem regions is to register a 'struct cxl_memdev'. That kicks off
+> cxl_mem_probe() to enumerate all 'struct cxl_port' instances in the
+> topology up to the root.
+> 
+> If the port driver has not attached yet the expectation is that the
+> driver waits until that link is established. The common cxl_pci driver
+> has reason to keep the 'struct cxl_memdev' device attached to the bus
+> until the root driver attaches. An accelerator may want to instead defer
+> probing until CXL resources can be acquired.
+> 
+> Use the @endpoint attribute of a 'struct cxl_memdev' to convey when a
+> accelerator driver probing should be deferred vs failed. Provide that
+> indication via a new cxl_acquire_endpoint() API that can retrieve the
+> probe status of the memdev.
+> 
+> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> ---
+>  drivers/cxl/core/memdev.c | 42 +++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/core/port.c   |  2 +-
+>  drivers/cxl/mem.c         |  7 +++++--
+>  include/cxl/cxl.h         |  2 ++
+>  4 files changed, 50 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index f43d2aa2928e..e2c6b5b532db 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -1124,6 +1124,48 @@ struct cxl_memdev *devm_cxl_add_memdev(struct device *host,
+>  }
+>  EXPORT_SYMBOL_NS_GPL(devm_cxl_add_memdev, "CXL");
+>  
+> +/*
+> + * Try to get a locked reference on a memdev's CXL port topology
+> + * connection. Be careful to observe when cxl_mem_probe() has deposited
+> + * a probe deferral awaiting the arrival of the CXL root driver.
+> + */
+> +struct cxl_port *cxl_acquire_endpoint(struct cxl_memdev *cxlmd)
 
-Doesn't the CONFIG_X86 check disable it?
+Annotation of __acquires() is needed here to annotate that this function is taking multiple locks and keeping the locks.
 
-Rob
+> +{
+> +	struct cxl_port *endpoint;
+> +	int rc = -ENXIO;
+> +
+> +	device_lock(&cxlmd->dev);
+> +> +	endpoint = cxlmd->endpoint;
+> +	if (!endpoint)
+> +		goto err;
+> +
+> +	if (IS_ERR(endpoint)) {
+> +		rc = PTR_ERR(endpoint);
+> +		goto err;
+> +	}
+> +
+> +	device_lock(&endpoint->dev);
+> +	if (!endpoint->dev.driver)> +		goto err_endpoint;
+> +
+> +	return endpoint;
+> +
+> +err_endpoint:
+> +	device_unlock(&endpoint->dev);
+> +err:
+> +	device_unlock(&cxlmd->dev);
+> +	return ERR_PTR(rc);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_acquire_endpoint, "CXL");
+> +
+> +void cxl_release_endpoint(struct cxl_memdev *cxlmd, struct cxl_port *endpoint)
+
+And __releases() here to release the lock annotations
+> +{
+> +	device_unlock(&endpoint->dev);
+> +	device_unlock(&cxlmd->dev);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_release_endpoint, "CXL");
+> +
+>  static void sanitize_teardown_notifier(void *data)
+>  {
+>  	struct cxl_memdev_state *mds = data;
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 9acf8c7afb6b..fa10a1643e4c 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -1563,7 +1563,7 @@ static int add_port_attach_ep(struct cxl_memdev *cxlmd,
+>  		 */
+>  		dev_dbg(&cxlmd->dev, "%s is a root dport\n",
+>  			dev_name(dport_dev));
+> -		return -ENXIO;
+> +		return -EPROBE_DEFER;
+>  	}
+>  
+>  	struct cxl_port *parent_port __free(put_cxl_port) =
+> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> index 7f39790d9d98..cda0b2ff73ce 100644
+> --- a/drivers/cxl/mem.c
+> +++ b/drivers/cxl/mem.c
+> @@ -148,14 +148,17 @@ static int cxl_mem_probe(struct device *dev)
+>  		return rc;
+>  
+>  	rc = devm_cxl_enumerate_ports(cxlmd);
+> -	if (rc)
+> +	if (rc) {
+> +		cxlmd->endpoint = ERR_PTR(rc);
+>  		return rc;
+> +	}
+>  
+>  	struct cxl_port *parent_port __free(put_cxl_port) =
+>  		cxl_mem_find_port(cxlmd, &dport);
+>  	if (!parent_port) {
+>  		dev_err(dev, "CXL port topology not found\n");
+> -		return -ENXIO;
+> +		cxlmd->endpoint = ERR_PTR(-EPROBE_DEFER);
+
+kdoc to 'struct cxl_memdev' will be needed to explain this change of expectation for the endpoint member.
+ 
+> +		return -EPROBE_DEFER;
+
+Can you please explain how the accelerator driver init path is different in this instance that it requires cxl_mem driver to defer probing? Currently with a type3, the cxl_acpi driver will setup the CXL root, hostbridges and PCI root ports. At that point the memdev driver will enumerate the rest of the ports and attempt to establish the hierarchy. However if cxl_acpi is not done, the mem probe will fail. But, the cxl_acpi probe will trigger a re-probe sequence at the end when it is done. At that point, the mem probe should discover all the necessary ports if things are correct. If the accelerator init path is different, can we introduce some documentation to explain the difference?
+
+Also, it seems as long as port topology is not found, it will always go to deferred probing. At what point do we conclude that things may be missing/broken and we need to fail?
+
+DJ
+
+
+>  	}
+>  
+>  	if (cxl_pmem_size(cxlds) && IS_ENABLED(CONFIG_CXL_PMEM)) {
+> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
+> index fcdf98231ffb..2928e16a62e2 100644
+> --- a/include/cxl/cxl.h
+> +++ b/include/cxl/cxl.h
+> @@ -234,4 +234,6 @@ int cxl_map_component_regs(const struct cxl_register_map *map,
+>  void cxl_set_capacity(struct cxl_dev_state *cxlds, u64 capacity);
+>  struct cxl_memdev *devm_cxl_add_memdev(struct device *host,
+>  				       struct cxl_dev_state *cxlmds);
+> +struct cxl_port *cxl_acquire_endpoint(struct cxl_memdev *cxlmd);
+> +void cxl_release_endpoint(struct cxl_memdev *cxlmd, struct cxl_port *endpoint);
+>  #endif /* __CXL_CXL_H__ */
+
