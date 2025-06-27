@@ -1,158 +1,174 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 898D41DE2C9;
-	Fri, 27 Jun 2025 09:32:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9587E27F00F
+	for <linux-cxl@vger.kernel.org>; Fri, 27 Jun 2025 09:33:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751016752; cv=none; b=Y8pOwCsK+pVHD81mmtcLM4VB+z5stPGvt+oxO4hoJzkc0ok36ZSLU7+5IKAeDKtLEY6lBvKh3wRZkUAAXZ00CcB/HAqndZfOtQrJ9imiHoJpaPUuEGhe5E6HFtGnrtT/XXf/hbea3M3CgCzc/UCCKZ2rNLR6l9lWiAc8q3MjfyQ=
+	t=1751016788; cv=none; b=P07sxezSQtmPfewC2eEU43lPR8WyNNwWPRvYwayc7Del7mEqOResHc4IB9lV/OBAtkGQvw30dS220nDKTs8cHv7+s4Jyqv4CEPMSKNaFWCsm81QVsfvu62IB8D53X/VSyMkr040QtL3GCQRC4X5dWxUTqK9KH9xOVtTzIceG+jw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751016752; c=relaxed/simple;
-	bh=1SQmu5PAB3emty92mrQ+ovRgDUkhWNNNVnMKaoyGwGU=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E/DRMtS4RY2JgBZp/tQzYtn21Hrx5EBe32aBbUXb16/YZsGEsLKjlr4yJ1CdWtJLLY7Bv14+4mT+HsmWb0p56Gbp7EvhrfFbT9Xu7MGE6rYvLgFRBX20fgEXPPPhiS8cSu5GpBOEF+tKlZTFGzvu52rWqIrllI6FVGC7KUkl+0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bT9Hx0kfMz6K99b;
-	Fri, 27 Jun 2025 17:29:49 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 25DC314038F;
-	Fri, 27 Jun 2025 17:32:27 +0800 (CST)
-Received: from localhost (10.48.153.213) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 27 Jun
- 2025 11:32:26 +0200
-Date: Fri, 27 Jun 2025 10:32:23 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <alejandro.lucero-palau@amd.com>
-CC: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<dan.j.williams@intel.com>, <edward.cree@amd.com>, <davem@davemloft.net>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>,
-	<dave.jiang@intel.com>, Alejandro Lucero <alucerop@amd.com>
-Subject: Re: [PATCH v17 18/22] cxl: Allow region creation by type2 drivers
-Message-ID: <20250627103223.00007e43@huawei.com>
-In-Reply-To: <20250624141355.269056-19-alejandro.lucero-palau@amd.com>
-References: <20250624141355.269056-1-alejandro.lucero-palau@amd.com>
-	<20250624141355.269056-19-alejandro.lucero-palau@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1751016788; c=relaxed/simple;
+	bh=VXByMGvrYIFk6J7l6d66GOgoXAABV8VqYthKY3nfMFk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=hPie4/SGa+wF1puemJFbjR3cXK8yoSS1OJNz8Gh2gu0NfAF2VYVIuco8ev4y1yFiCyR5dMfjZzeVhO5Nb0aZTr3LuEsdx73hPZDhgd08P4Y2cR0NFSaf9pMPFhKuL7BxIZKQNVcCvoplV5Q92EFBGopO+zP6nle5RvsOZQDZJ6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=uCxYqSBQ; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="uCxYqSBQ"
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250627093303epoutp03773a5c4b5186085153d7c9e81c642604~M3HzAzEvV2923029230epoutp035
+	for <linux-cxl@vger.kernel.org>; Fri, 27 Jun 2025 09:33:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250627093303epoutp03773a5c4b5186085153d7c9e81c642604~M3HzAzEvV2923029230epoutp035
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1751016783;
+	bh=803Ryi9f+g9PHC85frY88NRvvDMi88cIW/isNgputhc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=uCxYqSBQfBbQ/WsDJJvQGDLQWfB+oc0xyEx0JyHGXoigzZWjwjWW30vl9gpZzObtl
+	 92pYaJB2/ulIL5hd/cIjhnK6JreXJA5Gsqik7Ceg3B/xYJmuSrd2JDR+z1mMfmO+vz
+	 UC1VT/NYLRHjrfOJertXs8iQEtvx9j1nYfVRp4bA=
+Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
+	20250627093302epcas5p1a6ad3f06f523f5bccd4d50d2dac71130~M3HyHJ4Ct3060930609epcas5p1X;
+	Fri, 27 Jun 2025 09:33:02 +0000 (GMT)
+Received: from epcpadp2new (unknown [182.195.40.142]) by
+	epsnrtp02.localdomain (Postfix) with ESMTP id 4bT9Mf3Y5Qz2SSKj; Fri, 27 Jun
+	2025 09:33:02 +0000 (GMT)
+Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250627090337epcas5p1c77ffd7260b375241786afa81a1712ce~M2uGkTsPF2989429894epcas5p15;
+	Fri, 27 Jun 2025 09:03:37 +0000 (GMT)
+Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250627090335epsmtip10a1c0b878e5135109f36f5fe1b81d39d~M2uEJ_prp1804518045epsmtip1L;
+	Fri, 27 Jun 2025 09:03:35 +0000 (GMT)
+Date: Fri, 27 Jun 2025 14:33:29 +0530
+From: Neeraj Kumar <s.neeraj@samsung.com>
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: dan.j.williams@intel.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, a.manzanares@samsung.com, nifan.cxl@gmail.com,
+	anisa.su@samsung.com, vishak.g@samsung.com, krish.reddy@samsung.com,
+	arun.george@samsung.com, alok.rathore@samsung.com, neeraj.kernel@gmail.com,
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev, gost.dev@samsung.com, cpgs@samsung.com
+Subject: Re: [RFC PATCH 15/20] cxl: Add a routine to find cxl root decoder
+ on cxl bus
+Message-ID: <1983025922.01751016782483.JavaMail.epsvc@epcpadp2new>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- frapeml500008.china.huawei.com (7.182.85.71)
+In-Reply-To: <aF2dUqGKcu8-rwaV@aschofie-mobl2.lan>
+X-CMS-MailID: 20250627090337epcas5p1c77ffd7260b375241786afa81a1712ce
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----K5ZVV-zrPS8y8iJelFUsagW7KEVVNg7wn3oh2ZJRPRpX678s=_d1ff6_"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20250617124049epcas5p1de7eeee3b5ddd12ea221ca3ebf22f6e8
+References: <20250617123944.78345-1-s.neeraj@samsung.com>
+	<CGME20250617124049epcas5p1de7eeee3b5ddd12ea221ca3ebf22f6e8@epcas5p1.samsung.com>
+	<1295226194.21750165382072.JavaMail.epsvc@epcpadp2new>
+	<aF2dUqGKcu8-rwaV@aschofie-mobl2.lan>
 
-On Tue, 24 Jun 2025 15:13:51 +0100
-<alejandro.lucero-palau@amd.com> wrote:
+------K5ZVV-zrPS8y8iJelFUsagW7KEVVNg7wn3oh2ZJRPRpX678s=_d1ff6_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
 
-> From: Alejandro Lucero <alucerop@amd.com>
-> 
-> Creating a CXL region requires userspace intervention through the cxl
-> sysfs files. Type2 support should allow accelerator drivers to create
-> such cxl region from kernel code.
-> 
-> Adding that functionality and integrating it with current support for
-> memory expanders.
-> 
-> Support an action by the type2 driver to be linked to the created region
-> for unwinding the resources allocated properly.
-> 
-> Based on https://lore.kernel.org/linux-cxl/168592159835.1948938.1647215579839222774.stgit@dwillia2-xfh.jf.intel.com/
-> 
-> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-One question in here for others (probably Dan). When does it makes sense to
-manually request devm region cleanup and when should we let if flow out
-as we are failing the CXL creation anyway and it's one of many things to
-clean up if that happens.
+On 26/06/25 12:19PM, Alison Schofield wrote:
+>On Tue, Jun 17, 2025 at 06:09:39PM +0530, Neeraj Kumar wrote:
+>> Add cxl_find_root_decoder to find root decoder on cxl bus. It is used to
+>> find root decoder during region creation
+>
+>Does the existing to_cxl_root_decoder() provide what you need here?
+>
 
-> ---
->  drivers/cxl/core/region.c | 152 ++++++++++++++++++++++++++++++++++++--
->  drivers/cxl/port.c        |   5 +-
->  include/cxl/cxl.h         |   5 ++
->  3 files changed, 153 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 21cf8c11efe3..4ca5ade54ad9 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -2319,6 +2319,12 @@ static int cxl_region_detach(struct cxl_endpoint_decoder *cxled)
->  	return rc;
->  }
->  
-> +/**
-> + * cxl_decoder_kill_region - detach a region from device
-> + *
-> + * @cxled: endpoint decoder to detach the region from.
-> + *
+Hi Alison,
 
-Stray blank line.
+Actually, my need is to find decoder0.0 from port1, with which endpoint device is connected.
+Here i am already using to_cxl_root_decoder() inside cxl_find_root_decoder().
+In cxl_find_root_decoder(), First i am finding dev which is required by to_cxl_root_decoder()
 
-> + */
->  void cxl_decoder_kill_region(struct cxl_endpoint_decoder *cxled)
->  {
->  	down_write(&cxl_region_rwsem);
-> @@ -2326,6 +2332,7 @@ void cxl_decoder_kill_region(struct cxl_endpoint_decoder *cxled)
->  	cxl_region_detach(cxled);
->  	up_write(&cxl_region_rwsem);
->  }
-> +EXPORT_SYMBOL_NS_GPL(cxl_decoder_kill_region, "CXL");
-
-> +/**
-> + * cxl_create_region - Establish a region given an endpoint decoder
-> + * @cxlrd: root decoder to allocate HPA
-> + * @cxled: endpoint decoder with reserved DPA capacity
-> + * @ways: interleave ways required
-> + *
-> + * Returns a fully formed region in the commit state and attached to the
-> + * cxl_region driver.
-> + */
-> +struct cxl_region *cxl_create_region(struct cxl_root_decoder *cxlrd,
-> +				     struct cxl_endpoint_decoder **cxled,
-> +				     int ways, void (*action)(void *),
-> +				     void *data)
-> +{
-> +	struct cxl_region *cxlr;
-> +
-> +	scoped_guard(mutex, &cxlrd->range_lock) {
-> +		cxlr = __construct_new_region(cxlrd, cxled, ways);
-> +		if (IS_ERR(cxlr))
-> +			return cxlr;
-> +	}
-> +
-> +	if (device_attach(&cxlr->dev) <= 0) {
-> +		dev_err(&cxlr->dev, "failed to create region\n");
-> +		drop_region(cxlr);
-
-I'm in two minds about this.  If we were to have wrapped the whole thing
-up in a devres group and on failure (so carrying  on without cxl support)
-we tidy that group up, then we'd not need to clean this up here.
-However we do some local devm cleanup in construct_region today so maybe
-keeping this local makes sense...  Dan, maybe you have a better view of
-whether cleaning up here is sensible or not?
-
-> +		return ERR_PTR(-ENODEV);
-> +	}
-> +
-> +	if (action)
-> +		devm_add_action_or_reset(&cxlr->dev, action, data);
-
-This is a little odd looking (and can fail so should be error checkeD)
-I'd push the devm registration to the caller.
+	struct cxl_root_decoder *cxl_find_root_decoder(struct cxl_port *port)
+	{
+		struct cxl_root *cxl_root __free(put_cxl_root) = find_cxl_root(port);
+		struct device *dev = device_find_child(&cxl_root->port.dev, NULL, match_root_decoder);
+		return to_cxl_root_decoder(dev);
+	}
 
 
-> +
-> +	return cxlr;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_create_region, "CXL");
-> +
->  int cxl_add_to_region(struct cxl_port *root, struct cxl_endpoint_decoder *cxled)
->  {
->  	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+Thanks,
+Neeraj
+
+>>
+>> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
+>> ---
+>>  drivers/cxl/core/port.c | 26 ++++++++++++++++++++++++++
+>>  drivers/cxl/cxl.h       |  1 +
+>>  2 files changed, 27 insertions(+)
+>>
+>> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+>> index 2452f7c15b2d..94d9322b8e38 100644
+>> --- a/drivers/cxl/core/port.c
+>> +++ b/drivers/cxl/core/port.c
+>> @@ -513,6 +513,32 @@ struct cxl_switch_decoder *to_cxl_switch_decoder(struct device *dev)
+>>  }
+>>  EXPORT_SYMBOL_NS_GPL(to_cxl_switch_decoder, "CXL");
+>>
+>> +static int match_root_decoder(struct device *dev, void *data)
+>> +{
+>> +	return is_root_decoder(dev);
+>> +}
+>> +
+>> +/**
+>> + * cxl_find_root_decoder() - find a cxl root decoder on cxl bus
+>> + * @port: any descendant port in root-cxl-port topology
+>> + */
+>> +struct cxl_root_decoder *cxl_find_root_decoder(struct cxl_port *port)
+>> +{
+>> +	struct cxl_root *cxl_root __free(put_cxl_root) = find_cxl_root(port);
+>> +	struct device *dev;
+>> +
+>> +	if (!cxl_root)
+>> +		return NULL;
+>> +
+>> +	dev = device_find_child(&cxl_root->port.dev, NULL, match_root_decoder);
+>> +
+>> +	if (!dev)
+>> +		return NULL;
+>> +
+>> +	return to_cxl_root_decoder(dev);
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(cxl_find_root_decoder, "CXL");
+>> +
+>>  static void cxl_ep_release(struct cxl_ep *ep)
+>>  {
+>>  	put_device(ep->ep);
+>> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+>> index 30c80e04cb27..2c6a782d0941 100644
+>> --- a/drivers/cxl/cxl.h
+>> +++ b/drivers/cxl/cxl.h
+>> @@ -871,6 +871,7 @@ bool is_cxl_nvdimm_bridge(struct device *dev);
+>>  int devm_cxl_add_nvdimm(struct cxl_port *parent_port, struct cxl_memdev *cxlmd);
+>>  struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_port *port);
+>>  void cxl_region_discovery(struct cxl_port *port);
+>> +struct cxl_root_decoder *cxl_find_root_decoder(struct cxl_port *port);
+>>
+>>  #ifdef CONFIG_CXL_REGION
+>>  bool is_cxl_pmem_region(struct device *dev);
+>> --
+>> 2.34.1
+>>
+>>
+
+------K5ZVV-zrPS8y8iJelFUsagW7KEVVNg7wn3oh2ZJRPRpX678s=_d1ff6_
+Content-Type: text/plain; charset="utf-8"
+
+
+------K5ZVV-zrPS8y8iJelFUsagW7KEVVNg7wn3oh2ZJRPRpX678s=_d1ff6_--
 
