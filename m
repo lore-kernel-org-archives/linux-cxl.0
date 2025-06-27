@@ -1,145 +1,285 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EFD72C15BD;
-	Fri, 27 Jun 2025 11:52:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B441417A2F0;
+	Fri, 27 Jun 2025 12:22:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751025131; cv=none; b=OO7rMF15EgItllWQ13boOxyGngn0zdDfZla1ninVFiDyYhA68J6YFZkem7qAysovwargyafBz1R/DvMaFDjxR/7Df11MDOT9JadDerYs2EHtg84JKKs6mufATdthd483WCKGV+QNG+LY0qUMgHdSaomi8F4LVu0/PdUKDD3BG+Q=
+	t=1751026966; cv=none; b=RsI98UcZO2UrcGSoVvF9hZAj3gQw9RQB7kYS1JHfQ1MGsf7kgRG6OOmRr8K9y4wcS+Kat8Z/+DmBL1JJs4X/ky+zWORqgpO98HDCCsamSR/yMRaV4mXrHSOp2q/THaWI0O4aZTAYs0k75xLAEStMyqV2cKQQVIBhZudDjtXIJGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751025131; c=relaxed/simple;
-	bh=XsFBoM55j4bAYZ7L9ORFlVbOLZCzG1Kh4FVMZp84x5c=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hDyZZ7k4vM6KqhiKJYRpFSXImgLXtgTY6SkyKARBGJ7SZvZcg+eX66XsfwdWVEgzO4hMn/kI/1ETjUs1VtYUZlNS9aLWGLbOINNHtSZ+R7w+4Aauu2mGh95u9rrs0F3nk1jU957CDpzU9WWICp8TKb1yTMuVyP3yRlq/e+2TkHY=
+	s=arc-20240116; t=1751026966; c=relaxed/simple;
+	bh=9qpYac8UwarZka5WXpLgL6ussyD+oXRxLVM+NICyN28=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=B4hDfw3N5Wv+XJqb7xgNJ1WtB5o7vnaOSrNwhCsUJRuO45RV6LGBeQ/Cyytz9sLSNpwchOChMrHg+rvgC9K4jYriN3Xwbx7noyqOuTYTFtoiGp4YY/AtfwZT6rapiJpvaotM04pkkD80KMLVIhWcG9OYBwmziOiStUo4do7DLFg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bTDRw3mZ5z6L5K9;
-	Fri, 27 Jun 2025 19:51:56 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bTF6R3cwlz6M4ct;
+	Fri, 27 Jun 2025 20:21:51 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 04ADC14011D;
-	Fri, 27 Jun 2025 19:52:06 +0800 (CST)
-Received: from localhost (10.48.153.213) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 27 Jun
- 2025 13:52:04 +0200
-Date: Fri, 27 Jun 2025 12:52:03 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Terry Bowman <terry.bowman@amd.com>
-CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <shiju.jose@huawei.com>,
-	<ming.li@zohomail.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<rrichter@amd.com>, <dan.carpenter@linaro.org>,
-	<PradeepVineshReddy.Kodamati@amd.com>, <lukas@wunner.de>,
-	<Benjamin.Cheatham@amd.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v10 14/17] cxl/pci: Introduce CXL Endpoint protocol
- error handlers
-Message-ID: <20250627125203.00002564@huawei.com>
-In-Reply-To: <20250626224252.1415009-15-terry.bowman@amd.com>
+	by mail.maildlp.com (Postfix) with ESMTPS id 248E71402EC;
+	Fri, 27 Jun 2025 20:22:40 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (7.182.85.172) by
+ frapeml500008.china.huawei.com (7.182.85.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Fri, 27 Jun 2025 14:22:39 +0200
+Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
+ frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
+ Fri, 27 Jun 2025 14:22:39 +0200
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Terry Bowman <terry.bowman@amd.com>, "dave@stgolabs.net"
+	<dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>,
+	"dave.jiang@intel.com" <dave.jiang@intel.com>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "dan.j.williams@intel.com"
+	<dan.j.williams@intel.com>, "bhelgaas@google.com" <bhelgaas@google.com>,
+	"ming.li@zohomail.com" <ming.li@zohomail.com>,
+	"Smita.KoralahalliChannabasappa@amd.com"
+	<Smita.KoralahalliChannabasappa@amd.com>, "rrichter@amd.com"
+	<rrichter@amd.com>, "dan.carpenter@linaro.org" <dan.carpenter@linaro.org>,
+	"PradeepVineshReddy.Kodamati@amd.com" <PradeepVineshReddy.Kodamati@amd.com>,
+	"lukas@wunner.de" <lukas@wunner.de>, "Benjamin.Cheatham@amd.com"
+	<Benjamin.Cheatham@amd.com>, "sathyanarayanan.kuppuswamy@linux.intel.com"
+	<sathyanarayanan.kuppuswamy@linux.intel.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: RE: [PATCH v10 12/17] cxl/pci: Unify CXL trace logging for CXL
+ Endpoints and CXL Ports
+Thread-Topic: [PATCH v10 12/17] cxl/pci: Unify CXL trace logging for CXL
+ Endpoints and CXL Ports
+Thread-Index: AQHb5uwA2IgfeKd+EU2rsxjkddOTWrQW5rQg
+Date: Fri, 27 Jun 2025 12:22:39 +0000
+Message-ID: <6b8b65df7c334043863b1464e04957db@huawei.com>
 References: <20250626224252.1415009-1-terry.bowman@amd.com>
-	<20250626224252.1415009-15-terry.bowman@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+ <20250626224252.1415009-13-terry.bowman@amd.com>
+In-Reply-To: <20250626224252.1415009-13-terry.bowman@amd.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, 26 Jun 2025 17:42:49 -0500
-Terry Bowman <terry.bowman@amd.com> wrote:
+>-----Original Message-----
+>From: Terry Bowman <terry.bowman@amd.com>
+>Sent: 26 June 2025 23:43
+>To: dave@stgolabs.net; Jonathan Cameron <jonathan.cameron@huawei.com>;
+>dave.jiang@intel.com; alison.schofield@intel.com; dan.j.williams@intel.com=
+;
+>bhelgaas@google.com; Shiju Jose <shiju.jose@huawei.com>;
+>ming.li@zohomail.com; Smita.KoralahalliChannabasappa@amd.com;
+>rrichter@amd.com; dan.carpenter@linaro.org;
+>PradeepVineshReddy.Kodamati@amd.com; lukas@wunner.de;
+>Benjamin.Cheatham@amd.com;
+>sathyanarayanan.kuppuswamy@linux.intel.com; terry.bowman@amd.com;
+>linux-cxl@vger.kernel.org
+>Cc: linux-kernel@vger.kernel.org; linux-pci@vger.kernel.org
+>Subject: [PATCH v10 12/17] cxl/pci: Unify CXL trace logging for CXL Endpoi=
+nts
+>and CXL Ports
+>
+>CXL currently has separate trace routines for CXL Port errors and CXL Endp=
+oint
+>errors. This is inconvenient for the user because they must enable
+>2 sets of trace routines. Make updates to the trace logging such that a si=
+ngle
+>trace routine logs both CXL Endpoint and CXL Port protocol errors.
+>
+>Keep the trace log fields 'memdev' and 'host'. While these are not accurat=
+e for
+>non-Endpoints the fields will remain as-is to prevent breaking userspace R=
+AS
+>trace consumers.
+>
+>Add serial number parameter to the trace logging. This is used for EPs and=
+ 0 is
+>provided for CXL port devices without a serial number.
+>
+>Below is output of correctable and uncorrectable protocol error logging.
+>CXL Root Port and CXL Endpoint examples are included below.
+>
+>Root Port:
+>cxl_aer_correctable_error: memdev=3D0000:0c:00.0 host=3Dpci0000:0c serial:=
+ 0
+>status=3D'CRC Threshold Hit'
+>cxl_aer_uncorrectable_error: memdev=3D0000:0c:00.0 host=3Dpci0000:0c seria=
+l: 0
+>status: 'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable P=
+arity
+>Error'
+>
+>Endpoint:
+>cxl_aer_correctable_error: memdev=3Dmem3 host=3D0000:0f:00.0 serial=3D0
+>status=3D'CRC Threshold Hit'
+>cxl_aer_uncorrectable_error: memdev=3Dmem3 host=3D0000:0f:00.0 serial: 0 s=
+tatus:
+>'Cache Byte Enable Parity Error' first_error: 'Cache Byte Enable Parity Er=
+ror'
+>
+>Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+>---
+> drivers/cxl/core/pci.c   | 19 ++++-----
+> drivers/cxl/core/ras.c   | 14 ++++---
+> drivers/cxl/core/trace.h | 84 +++++++++-------------------------------
+> 3 files changed, 37 insertions(+), 80 deletions(-)
+>
+[...]
+>
+> static void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data
+>*data) diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h in=
+dex
+>25ebfbc1616c..494d6db461a7 100644
+>--- a/drivers/cxl/core/trace.h
+>+++ b/drivers/cxl/core/trace.h
+>@@ -48,49 +48,22 @@
+> 	{ CXL_RAS_UC_IDE_RX_ERR, "IDE Rx Error" }			  \
+> )
+>
+>-TRACE_EVENT(cxl_port_aer_uncorrectable_error,
+>-	TP_PROTO(struct device *dev, u32 status, u32 fe, u32 *hl),
+>-	TP_ARGS(dev, status, fe, hl),
+>-	TP_STRUCT__entry(
+>-		__string(device, dev_name(dev))
+>-		__string(host, dev_name(dev->parent))
+>-		__field(u32, status)
+>-		__field(u32, first_error)
+>-		__array(u32, header_log, CXL_HEADERLOG_SIZE_U32)
+>-	),
+>-	TP_fast_assign(
+>-		__assign_str(device);
+>-		__assign_str(host);
+>-		__entry->status =3D status;
+>-		__entry->first_error =3D fe;
+>-		/*
+>-		 * Embed the 512B headerlog data for user app retrieval and
+>-		 * parsing, but no need to print this in the trace buffer.
+>-		 */
+>-		memcpy(__entry->header_log, hl, CXL_HEADERLOG_SIZE);
+>-	),
+>-	TP_printk("device=3D%s host=3D%s status: '%s' first_error: '%s'",
+>-		  __get_str(device), __get_str(host),
+>-		  show_uc_errs(__entry->status),
+>-		  show_uc_errs(__entry->first_error)
+>-	)
+>-);
+>-
+> TRACE_EVENT(cxl_aer_uncorrectable_error,
+>-	TP_PROTO(const struct cxl_memdev *cxlmd, u32 status, u32 fe, u32
+>*hl),
+>-	TP_ARGS(cxlmd, status, fe, hl),
+>+	TP_PROTO(struct device *dev, u64 serial, u32 status, u32 fe,
+>+		 u32 *hl),
+>+	TP_ARGS(dev, serial, status, fe, hl),
+> 	TP_STRUCT__entry(
+>-		__string(memdev, dev_name(&cxlmd->dev))
+>-		__string(host, dev_name(cxlmd->dev.parent))
+>+		__string(name, dev_name(dev))
+>+		__string(parent, dev_name(dev->parent))
 
-> CXL Endpoint protocol errors are currently handled using PCI error
-> handlers. The CXL Endpoint requires CXL specific handling in the case of
-> uncorrectable error (UCE) handling not provided by the PCI handlers.
-> 
-> Add CXL specific handlers for CXL Endpoints. Rename the existing
-> cxl_error_handlers to be pci_error_handlers to more correctly indicate
-> the error type and follow naming consistency.
-> 
-> The PCI handlers will be called if the CXL device is not trained for
-> alternate protocol (CXL). Update the CXL Endpoint PCI handlers to call the
-> CXL UCE handlers.
-> 
-> The existing EP UCE handler includes checks for various results. These are
-> no longer needed because CXL UCE recovery will not be attempted. Implement
-> cxl_handle_ras() to return PCI_ERS_RESULT_NONE or PCI_ERS_RESULT_PANIC. The
-> CXL UCE handler is called by cxl_do_recovery() that acts on the return
-> value. In the case of the PCI handler path, call panic() if the result is
-> PCI_ERS_RESULT_PANIC.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Hi Terry,
 
-A few minor comments inline.
+Thanks for considering the feedback given in v9 regarding the compatibility=
+ issue
+with the rasdaemon.
+https://lore.kernel.org/all/959acc682e6e4b52ac0283b37ee21026@huawei.com/
 
-J
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 887b54cf3395..7209ffb5c2fe 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
+Probably some confusion w.r.t the feedback.
+Unfortunately  TP_printk(...) is not an ABI that we need to keep stable,=20
+it's this structure, TP_STRUCT__entry(..) , that matters to the rasdaemon.
 
+> 		__field(u64, serial)
+> 		__field(u32, status)
+> 		__field(u32, first_error)
+> 		__array(u32, header_log, CXL_HEADERLOG_SIZE_U32)
+> 	),
+> 	TP_fast_assign(
+>-		__assign_str(memdev);
+>-		__assign_str(host);
+>-		__entry->serial =3D cxlmd->cxlds->serial;
+>+		__assign_str(name);
+>+		__assign_str(parent);
+>+		__entry->serial =3D serial;
+> 		__entry->status =3D status;
+> 		__entry->first_error =3D fe;
+> 		/*
+>@@ -99,8 +72,8 @@ TRACE_EVENT(cxl_aer_uncorrectable_error,
+> 		 */
+> 		memcpy(__entry->header_log, hl, CXL_HEADERLOG_SIZE);
+> 	),
+>-	TP_printk("memdev=3D%s host=3D%s serial=3D%lld: status: '%s' first_error=
+:
+>'%s'",
+>-		  __get_str(memdev), __get_str(host), __entry->serial,
+>+	TP_printk("memdev=3D%s host=3D%s serial=3D%lld status=3D'%s'
+>first_error=3D'%s'",
+>+		  __get_str(name), __get_str(parent), __entry->serial,
+> 		  show_uc_errs(__entry->status),
+> 		  show_uc_errs(__entry->first_error)
+> 	)
+>@@ -124,42 +97,23 @@ TRACE_EVENT(cxl_aer_uncorrectable_error,
+> 	{ CXL_RAS_CE_PHYS_LAYER_ERR, "Received Error From Physical Layer"
+>}	\
+> )
+>
+>-TRACE_EVENT(cxl_port_aer_correctable_error,
+>-	TP_PROTO(struct device *dev, u32 status),
+>-	TP_ARGS(dev, status),
+>-	TP_STRUCT__entry(
+>-		__string(device, dev_name(dev))
+>-		__string(host, dev_name(dev->parent))
+>-		__field(u32, status)
+>-	),
+>-	TP_fast_assign(
+>-		__assign_str(device);
+>-		__assign_str(host);
+>-		__entry->status =3D status;
+>-	),
+>-	TP_printk("device=3D%s host=3D%s status=3D'%s'",
+>-		  __get_str(device), __get_str(host),
+>-		  show_ce_errs(__entry->status)
+>-	)
+>-);
+>-
+> TRACE_EVENT(cxl_aer_correctable_error,
+>-	TP_PROTO(const struct cxl_memdev *cxlmd, u32 status),
+>-	TP_ARGS(cxlmd, status),
+>+	TP_PROTO(struct device *dev, u64 serial, u32 status),
+>+	TP_ARGS(dev, serial, status),
+> 	TP_STRUCT__entry(
+>-		__string(memdev, dev_name(&cxlmd->dev))
+>-		__string(host, dev_name(cxlmd->dev.parent))
+>+		__string(name, dev_name(dev))
+>+		__string(parent, dev_name(dev->parent))
 
->  
-> -	scoped_guard(device, dev) {
-> -		if (!dev->driver) {
-> +pci_ers_result_t cxl_error_detected(struct device *dev)
-> +{
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-> +	struct device *cxlmd_dev = &cxlds->cxlmd->dev;
-> +	pci_ers_result_t ue;
-> +
-> +	scoped_guard(device, cxlmd_dev) {
-I think there is nothing much happening after this (maybe introduced in later
-patches in which case ignore this comment).
+Same as above.
+> 		__field(u64, serial)
+> 		__field(u32, status)
+> 	),
+> 	TP_fast_assign(
+>-		__assign_str(memdev);
+>-		__assign_str(host);
+>-		__entry->serial =3D cxlmd->cxlds->serial;
+>+		__assign_str(name);
+>+		__assign_str(parent);
+>+		__entry->serial =3D serial;
+> 		__entry->status =3D status;
+> 	),
+>-	TP_printk("memdev=3D%s host=3D%s serial=3D%lld: status: '%s'",
+>-		  __get_str(memdev), __get_str(host), __entry->serial,
+>+	TP_printk("memdev=3D%s host=3D%s serial=3D%lld status=3D'%s'",
+>+		  __get_str(name), __get_str(parent), __entry->serial,
+> 		  show_ce_errs(__entry->status)
+> 	)
+> );
+>--
+>2.34.1
 
-So can you just use a guard and reduce the indent of the rest?
-
-> +
-> +		if (!cxlmd_dev->driver) {
->  			dev_warn(&pdev->dev,
->  				 "%s: memdev disabled, abort error handling\n",
->  				 dev_name(dev));
-> -			return PCI_ERS_RESULT_DISCONNECT;
-> +			return PCI_ERS_RESULT_PANIC;
->  		}
->  
->  		if (cxlds->rcd)
-> @@ -881,29 +888,23 @@ pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
->  		ue = cxl_handle_ras(&cxlds->cxlmd->dev, cxlds->serial, cxlds->regs.ras);
-
-little hard to tell from this code blob but can you return here?
-
->  	}
->  
-> -
-> -	switch (state) {
-> -	case pci_channel_io_normal:
-> -		if (ue) {
-> -			device_release_driver(dev);
-> -			return PCI_ERS_RESULT_NEED_RESET;
-> -		}
-> -		return PCI_ERS_RESULT_CAN_RECOVER;
-> -	case pci_channel_io_frozen:
-> -		dev_warn(&pdev->dev,
-> -			 "%s: frozen state error detected, disable CXL.mem\n",
-> -			 dev_name(dev));
-> -		device_release_driver(dev);
-> -		return PCI_ERS_RESULT_NEED_RESET;
-> -	case pci_channel_io_perm_failure:
-> -		dev_warn(&pdev->dev,
-> -			 "failure state error detected, request disconnect\n");
-> -		return PCI_ERS_RESULT_DISCONNECT;
-> -	}
-> -	return PCI_ERS_RESULT_NEED_RESET;
-> +	return ue;
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_error_detected, "CXL");
+Thanks,
+Shiju
