@@ -1,166 +1,153 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EA041E47B7;
-	Sun, 29 Jun 2025 08:22:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751185326; cv=pass; b=cLT+0fjM+BbQtzXXh/+54y+NsVD/T39+SrsAlGUfpXZEUzwTd3JWnuh29iL3J23xls2YW8P7SHsgMU9ipdSsQTf1jCpvmhfVSPgJDMMT+yUsDeUt1Pe+SPGqShYAKX/8OxMKFmNEDtix7m82oK5XBoxdyVlHUjnjgxyX4ocbdRk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751185326; c=relaxed/simple;
-	bh=+RM+r3ays+K16RV/hadA4OkB30NF1QxjnfGKLIdd8og=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PNr1LQ19JuvnnnHThjwST+uaUC1Z5Xz5e2y6g3lOKdyAVrcMLVzI2AOtdWKizxCMor8UyeT5kh0JLuvOgzw5T+itALuy2FrvhbJUDxQ2uIhqjzfQj5a433TAFgwgRhe5zjQKenwaBFqNhCVZH0IkhVuQJAx1uF/qdyXdKEJTGEw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=ObZ+6Pg2; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677D619F11F
+	for <linux-cxl@vger.kernel.org>; Sun, 29 Jun 2025 18:02:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751220173; cv=none; b=uvO+PykF8V8M5IUwrhm7HGQ6ln7dNxXTJKqXnUqDgt/NiT80LTmt2r4QjQvB+9CPJ6FrSFSWBlqNEKRHNDNZJW/QwQRQ1KlzOLpaIiAarOjAd+F8rQZWoGdQYiUMj38AICJpGXh1doKG2fNwKDpDNdxWxhp199Q+rJwkX9mQ5Pw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751220173; c=relaxed/simple;
+	bh=M0CFUiyT09mKvCy8cDPLDkur3Owiih3SkYwZ9aOXCU8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=LLlYSLe1QZF8RsWXamMUWo3I0AKAy0iuA6PeUuIP2OZWq+2ifV275I6JKoqV76wg1djZwfnX4xT29TA4qoTHgfY6/+lzkJlMyiNvpm1IHxmcEj1NJRpjetRAJQM8NXlGjDbeG/YAyYx1p0bLmlYBHM7AzwfQlUjG5ElEvADIB+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lgJhAXl5; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="ObZ+6Pg2"
-ARC-Seal: i=1; a=rsa-sha256; t=1751185305; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=D4mphBy9zkDFx9KhpX7o9osPcCq/MXmJMrfcfmU61yHuFegBhv1DAZQkVacMDFHX+TS51ghJu2Q1h+2vNj7UjMmNHSSURuhAt5M/HfwaxZ3Mlt6UuG3xVXDuHrhsA5XQw/WyQnDzOOLOrYGvXypkXmTwW0YuxAIiAI+V8ve5j/4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751185305; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=j9HhW+KKeBFIAXptGOgjq9833pJH9mLDVqO2MWM7fI8=; 
-	b=Xa1VuigMEqBhf53wU+nO7a4aYakNVQdly/nle9CPNKLBc5ntpwf8JXBD9hzgO6g9R0IRYjTSNT2t59T20L4mx5ROMvozpR1klTREEQPpsRLPgdks/LjLXKJwjdfiSsNHh0PrKCR445+MJZxKx9oV1MubXoxe7ZwKTcjOwm8zgEk=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751185304;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
-	bh=j9HhW+KKeBFIAXptGOgjq9833pJH9mLDVqO2MWM7fI8=;
-	b=ObZ+6Pg20T6xpB12cf/yIMshQEKo0Fr0Du/GN8nX9Vp5iAkJytnUMs+HfYSR6RTV
-	qs0J4IWc/j6CL9ccmhIZsxj/lXDqKqktXrA/qrzx9fXS0IEn4PDKvtvIaK7cYRH3reU
-	AvXTxjgWlP+c+twwBVhIiJuGjbx4r/fv+HY2e5I4=
-Received: by mx.zohomail.com with SMTPS id 1751185302512722.333465929968;
-	Sun, 29 Jun 2025 01:21:42 -0700 (PDT)
-From: Li Ming <ming.li@zohomail.com>
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	shiju.jose@huawei.com
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Li Ming <ming.li@zohomail.com>
-Subject: [PATCH 2/2] cxl/core: Add a helper function to check dpa availability
-Date: Sun, 29 Jun 2025 16:20:42 +0800
-Message-Id: <20250629082042.256123-2-ming.li@zohomail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250629082042.256123-1-ming.li@zohomail.com>
-References: <20250629082042.256123-1-ming.li@zohomail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lgJhAXl5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751220171; x=1782756171;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=M0CFUiyT09mKvCy8cDPLDkur3Owiih3SkYwZ9aOXCU8=;
+  b=lgJhAXl55tSGEyRYj416XWZUXinESczAZIJlRHAUef3udGjazoBTZ8f2
+   SUXXynZv+GKdkXXfJHA0f5rHOzWcNrFEGSVmsHwcF9NztkTd1YlA7E/n1
+   Wucj1eB4ZKeBjGuMcLyMM4UCBzSHHWPUmvUxj0uqB3hWf2lbOR8wsUoyD
+   gjjtmK+zgLQ0mqCC2u2YVotYryUBB3NaNo7N+6ohO8C0YlsVGxWmd1ozl
+   YDGupStnv/PwIXOMuTID8pOF9zsCur8EInLO+syKyRAaT60J56dhyYE16
+   mu2MJA4tDenrfOOE8UF++dGGapua46C7+nJHFb3In9KC7yOwBvPUnSR1c
+   Q==;
+X-CSE-ConnectionGUID: KdMIGHN8ToOEhzDxEkxsIA==
+X-CSE-MsgGUID: v0NoOZyMQrOCr7AGGj+8AQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="76000756"
+X-IronPort-AV: E=Sophos;i="6.16,275,1744095600"; 
+   d="scan'208";a="76000756"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2025 11:02:51 -0700
+X-CSE-ConnectionGUID: LwGWyT6gREeypdxOI9LArQ==
+X-CSE-MsgGUID: Q8/Kj4stT5SkiVm0UYr+jA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,275,1744095600"; 
+   d="scan'208";a="152650052"
+Received: from igk-lkp-server01.igk.intel.com (HELO e588e990b675) ([10.91.175.65])
+  by orviesa010.jf.intel.com with ESMTP; 29 Jun 2025 11:02:49 -0700
+Received: from kbuild by e588e990b675 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uVwMY-0000wt-2h;
+	Sun, 29 Jun 2025 18:02:46 +0000
+Date: Sun, 29 Jun 2025 20:02:22 +0200
+From: kernel test robot <lkp@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Subject: [cxl:for-6.17/cxl-acquire 7/8] drivers/cxl/core/core.h:64:1:
+ warning: non-void function does not return a value
+Message-ID: <202506292006.J8za5CBf-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Feedback-ID: rr0801122743e41694e6889180c5513bec00008b1cb390e7967cd46cda0770971d899b33aeee273c290e3b85:zu0801122772fef8b0f278b9d83d795e6a000067bd10dc682d51b6180b66505c8a0b6ff0d685bfe8d0929b88:rf0801122dc06b9a69fe1a7127764a16170000f72a1e2710b35db733d265f378a6b2847c075557903a993cc3021081b01cd3:ZohoMail
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-In CXL subsystem, many pieces of code that need to check dpa
-availability in case using wrong dpa. Add a helper function called
-is_valid_dpa() for dpa availability checking.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git for-6.17/cxl-acquire
+head:   6c90a41a7833a6bb2fb17b9f3cafda66ebdf259b
+commit: e559ce544d18f6290e8f8bca761e3c22e4e845b5 [7/8] cxl/region: Introduce CLASS(cxl_decoder_detach...) consolidate multiple paths
+config: i386-buildonly-randconfig-2001-20250625 (https://download.01.org/0day-ci/archive/20250629/202506292006.J8za5CBf-lkp@intel.com/config)
+compiler: clang version 20.1.7 (https://github.com/llvm/llvm-project 6146a88f60492b520a36f8f8f3231e15f3cc6082)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250629/202506292006.J8za5CBf-lkp@intel.com/reproduce)
 
-Signed-off-by: Li Ming <ming.li@zohomail.com>
----
- drivers/cxl/core/core.h   | 1 +
- drivers/cxl/core/edac.c   | 7 +++----
- drivers/cxl/core/hdm.c    | 5 +++++
- drivers/cxl/core/memdev.c | 2 +-
- drivers/cxl/core/region.c | 2 +-
- 5 files changed, 11 insertions(+), 6 deletions(-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506292006.J8za5CBf-lkp@intel.com/
 
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index 29b61828a847..38d619df4772 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -136,4 +136,5 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
- 		    u16 *return_code);
- #endif
- 
-+bool is_valid_dpa(struct resource *res, u64 dpa);
- #endif /* __CXL_CORE_H__ */
-diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
-index 11eaa2eea642..469be1ecb703 100644
---- a/drivers/cxl/core/edac.c
-+++ b/drivers/cxl/core/edac.c
-@@ -1523,7 +1523,7 @@ static int cxl_mem_sparing_set_dpa(struct device *dev, void *drv_data, u64 dpa)
- 	struct cxl_memdev *cxlmd = ctx->cxlmd;
- 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
- 
--	if (dpa < cxlds->dpa_res.start || dpa > cxlds->dpa_res.end)
-+	if (!is_valid_dpa(&cxlds->dpa_res, dpa))
- 		return -EINVAL;
- 
- 	ctx->dpa = dpa;
-@@ -1892,7 +1892,7 @@ static int cxl_ppr_set_dpa(struct device *dev, void *drv_data, u64 dpa)
- 	struct cxl_memdev *cxlmd = cxl_ppr_ctx->cxlmd;
- 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
- 
--	if (dpa < cxlds->dpa_res.start || dpa > cxlds->dpa_res.end)
-+	if (!is_valid_dpa(&cxlds->dpa_res, dpa))
- 		return -EINVAL;
- 
- 	cxl_ppr_ctx->dpa = dpa;
-@@ -1926,8 +1926,7 @@ static int cxl_do_ppr(struct device *dev, void *drv_data, u32 val)
- 	struct cxl_memdev *cxlmd = cxl_ppr_ctx->cxlmd;
- 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
- 
--	if (cxl_ppr_ctx->dpa < cxlds->dpa_res.start ||
--	    cxl_ppr_ctx->dpa > cxlds->dpa_res.end ||
-+	if (!is_valid_dpa(&cxlds->dpa_res, cxl_ppr_ctx->dpa) ||
- 	    val != EDAC_DO_MEM_REPAIR)
- 		return -EINVAL;
- 
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index ab1007495f6b..3dc9215ea94d 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -547,6 +547,11 @@ resource_size_t cxl_dpa_resource_start(struct cxl_endpoint_decoder *cxled)
- 	return base;
- }
- 
-+bool is_valid_dpa(struct resource *res, u64 dpa)
-+{
-+	return (dpa >= res->start && dpa <= res->end);
-+}
-+
- int cxl_dpa_free(struct cxl_endpoint_decoder *cxled)
- {
- 	struct cxl_port *port = cxled_to_port(cxled);
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index f88a13adf7fa..46ea0536221c 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -267,7 +267,7 @@ static int cxl_validate_poison_dpa(struct cxl_memdev *cxlmd, u64 dpa)
- 		dev_dbg(cxlds->dev, "device has no dpa resource\n");
- 		return -EINVAL;
- 	}
--	if (dpa < cxlds->dpa_res.start || dpa > cxlds->dpa_res.end) {
-+	if (!is_valid_dpa(&cxlds->dpa_res, dpa)) {
- 		dev_dbg(cxlds->dev, "dpa:0x%llx not in resource:%pR\n",
- 			dpa, &cxlds->dpa_res);
- 		return -EINVAL;
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 6e5e1460068d..994ca02b2b48 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -2847,7 +2847,7 @@ static int __cxl_dpa_to_region(struct device *dev, void *arg)
- 	if (!cxled || !cxled->dpa_res || !resource_size(cxled->dpa_res))
- 		return 0;
- 
--	if (dpa > cxled->dpa_res->end || dpa < cxled->dpa_res->start)
-+	if (!is_valid_dpa(cxled->dpa_res, dpa))
- 		return 0;
- 
- 	/*
+All warnings (new ones prefixed by >>):
+
+   In file included from drivers/cxl/core/memdev.c:11:
+   In file included from drivers/cxl/core/trace.h:15:
+>> drivers/cxl/core/core.h:64:1: warning: non-void function does not return a value [-Wreturn-type]
+      64 | }
+         | ^
+   1 warning generated.
+
+
+vim +64 drivers/cxl/core/core.h
+
+e559ce544d18f6 Dan Williams     2025-06-18  28  
+e559ce544d18f6 Dan Williams     2025-06-18  29  struct cxl_region *cxl_decoder_detach(struct cxl_region *cxlr,
+e559ce544d18f6 Dan Williams     2025-06-18  30  				      struct cxl_endpoint_decoder *cxled,
+e559ce544d18f6 Dan Williams     2025-06-18  31  				      int pos, enum cxl_detach_mode mode);
+e559ce544d18f6 Dan Williams     2025-06-18  32  
+779dd20cfb56c5 Ben Widawsky     2021-06-08  33  #define CXL_REGION_ATTR(x) (&dev_attr_##x.attr)
+8d48817df6ac20 Dan Williams     2021-06-15  34  #define CXL_REGION_TYPE(x) (&cxl_region_type)
+779dd20cfb56c5 Ben Widawsky     2021-06-08  35  #define SET_CXL_REGION_ATTR(x) (&dev_attr_##x.attr),
+04ad63f086d1a9 Dan Williams     2022-01-11  36  #define CXL_PMEM_REGION_TYPE(x) (&cxl_pmem_region_type)
+09d09e04d2fcf8 Dan Williams     2023-02-10  37  #define CXL_DAX_REGION_TYPE(x) (&cxl_dax_region_type)
+8d48817df6ac20 Dan Williams     2021-06-15  38  int cxl_region_init(void);
+8d48817df6ac20 Dan Williams     2021-06-15  39  void cxl_region_exit(void);
+f0832a58639691 Alison Schofield 2023-04-18  40  int cxl_get_poison_by_endpoint(struct cxl_port *port);
+b98d042698a325 Alison Schofield 2024-04-30  41  struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa);
+9aa5f6235e16ac Alison Schofield 2024-07-02  42  u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+86954ff5032d9d Alison Schofield 2024-04-30  43  		   u64 dpa);
+b98d042698a325 Alison Schofield 2024-04-30  44  
+779dd20cfb56c5 Ben Widawsky     2021-06-08  45  #else
+9aa5f6235e16ac Alison Schofield 2024-07-02  46  static inline u64 cxl_dpa_to_hpa(struct cxl_region *cxlr,
+9aa5f6235e16ac Alison Schofield 2024-07-02  47  				 const struct cxl_memdev *cxlmd, u64 dpa)
+86954ff5032d9d Alison Schofield 2024-04-30  48  {
+86954ff5032d9d Alison Schofield 2024-04-30  49  	return ULLONG_MAX;
+86954ff5032d9d Alison Schofield 2024-04-30  50  }
+b98d042698a325 Alison Schofield 2024-04-30  51  static inline
+b98d042698a325 Alison Schofield 2024-04-30  52  struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa)
+b98d042698a325 Alison Schofield 2024-04-30  53  {
+b98d042698a325 Alison Schofield 2024-04-30  54  	return NULL;
+b98d042698a325 Alison Schofield 2024-04-30  55  }
+f0832a58639691 Alison Schofield 2023-04-18  56  static inline int cxl_get_poison_by_endpoint(struct cxl_port *port)
+f0832a58639691 Alison Schofield 2023-04-18  57  {
+f0832a58639691 Alison Schofield 2023-04-18  58  	return 0;
+f0832a58639691 Alison Schofield 2023-04-18  59  }
+e559ce544d18f6 Dan Williams     2025-06-18  60  static inline struct cxl_region *
+e559ce544d18f6 Dan Williams     2025-06-18  61  cxl_decoder_detach(struct cxl_region *cxlr, struct cxl_endpoint_decoder *cxled,
+e559ce544d18f6 Dan Williams     2025-06-18  62  		   int pos, enum cxl_detach_mode mode)
+b9686e8c8e39d4 Dan Williams     2022-06-04  63  {
+b9686e8c8e39d4 Dan Williams     2022-06-04 @64  }
+8d48817df6ac20 Dan Williams     2021-06-15  65  static inline int cxl_region_init(void)
+8d48817df6ac20 Dan Williams     2021-06-15  66  {
+8d48817df6ac20 Dan Williams     2021-06-15  67  	return 0;
+8d48817df6ac20 Dan Williams     2021-06-15  68  }
+8d48817df6ac20 Dan Williams     2021-06-15  69  static inline void cxl_region_exit(void)
+8d48817df6ac20 Dan Williams     2021-06-15  70  {
+8d48817df6ac20 Dan Williams     2021-06-15  71  }
+779dd20cfb56c5 Ben Widawsky     2021-06-08  72  #define CXL_REGION_ATTR(x) NULL
+8d48817df6ac20 Dan Williams     2021-06-15  73  #define CXL_REGION_TYPE(x) NULL
+779dd20cfb56c5 Ben Widawsky     2021-06-08  74  #define SET_CXL_REGION_ATTR(x)
+04ad63f086d1a9 Dan Williams     2022-01-11  75  #define CXL_PMEM_REGION_TYPE(x) NULL
+09d09e04d2fcf8 Dan Williams     2023-02-10  76  #define CXL_DAX_REGION_TYPE(x) NULL
+779dd20cfb56c5 Ben Widawsky     2021-06-08  77  #endif
+779dd20cfb56c5 Ben Widawsky     2021-06-08  78  
+
+:::::: The code at line 64 was first introduced by commit
+:::::: b9686e8c8e39d4072081ef078c04915ee51c8af4 cxl/region: Enable the assignment of endpoint decoders to regions
+
+:::::: TO: Dan Williams <dan.j.williams@intel.com>
+:::::: CC: Dan Williams <dan.j.williams@intel.com>
+
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
