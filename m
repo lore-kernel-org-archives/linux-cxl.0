@@ -1,116 +1,105 @@
-Received: from out162-62-57-210.mail.qq.com (out162-62-57-210.mail.qq.com [162.62.57.210])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25E06221F0A
-	for <linux-cxl@vger.kernel.org>; Mon, 30 Jun 2025 07:34:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CAEC204C0C;
+	Mon, 30 Jun 2025 08:36:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751268895; cv=none; b=HDZuvHSx5V0i9fhkOrlckhgf6lfa4RK31MK5R919htOdAMuWy6wJtizPtYtKBYbwwXRPlrPw6ENYmBllZKnK0Vv0SRF94UmUwdWiCrmfYaTOidfvIs9X3b19UXsrUDyUppKt4mJAar79Y56VczbcNwgYvKm43JdbrMZ4t2o0CtY=
+	t=1751272623; cv=none; b=Z4LkyeIn2HxM2TMITIMzwnINkw5/BrfV/ysCSjXEchlAeowIenHqDkgYD5I77L3cpAw33nDtSOnKDykh5r153iUPuDi02ZXE6OYFkk/e913wjRVc7B+2LqNQp8/wtOByFTdeXNC8Z3d0vXcFWj5JFhvGhmrlFveJOM0GqzvfPxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751268895; c=relaxed/simple;
-	bh=rwYEjU7uadxMKv+kffz8eKea5GinAPI9DlcA8UXayLc=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=OVF50zUDw2JdMsweBdJ99x8HMdUeyaULzQa/u3fK1zi6FN71ru8SBXFOwZ7G2P5YWBrX1H5wiI4buijMVnUuRJaPRqgurARp5O+vvX1dyS7KMeXPX8HQiVttbzUHOiuQ+23IvOTvn6mSVicDLl64neoQ8XtgLty46M3LP0XMOPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=w6dJ8XtM; arc=none smtp.client-ip=162.62.57.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="w6dJ8XtM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1751268881;
-	bh=4oV6R0g7aBzIx5O67+BkFEQj9VRZ2iN++AXMTeePqNI=;
-	h=From:To:Cc:Subject:Date;
-	b=w6dJ8XtMMaT/EKHsUqxJZBaHtikRP2ab9DijZjQ0xqj9HLjR1eFExBn744X8Pw4s3
-	 FCuu4BrGLAsWe44/OoJXtJzBOKueAoVl4SZkSkk2mqWuL8PvQfwjkUoJslao/Wu9bs
-	 /fy+RdYFwxLBPTSLWiIRXNuFm3KhTPJPTW/xm4lY=
-Received: from NUC10 ([39.156.73.10])
-	by newxmesmtplogicsvrszb20-0.qq.com (NewEsmtp) with SMTP
-	id 7210CE42; Mon, 30 Jun 2025 15:28:33 +0800
-X-QQ-mid: xmsmtpt1751268513tih88ih2x
-Message-ID: <tencent_9A6812E28AC195905396EEE5A8CAD2ABD306@qq.com>
-X-QQ-XMAILINFO: MR/iVh5QLeieg2MZOIDw8BEKxlV6eTl/fCNYe81ERt8FwuJRB2U1qzMxfbCZLH
-	 6uLXkJ4phv1la/HPNxshe+uk4hX4xzl+si/p/nOytAe7cfsjt4BkysWXXQv7Kitf8yBkvIAz4gmq
-	 JT9dAMZ3+IKkBWf76GMMt5cEP12NPRgA4LpGxpcdNLeL7iCuDN+reJsSZbbTTiUcfNM9fTU1BIER
-	 ln6Y8nrn6qDpTJ0AOjlmVY0ZAEXdzgMLo0JBCuWWn7nFv46eAtxvzfu7m5iG+fGXkjBesA9GOdv+
-	 tqS3v9wH+PzzgcMQKOwAF2d7JyOIBv7h/CkRKPJwYmdjtENGtGuQN5hyq8ibElWrWHKMYG4pYjf7
-	 Vwa7J0UGa3IOocfI1jg7eStT2Zr887fkti9HOG325M86G9zYVEjLspqydJK4gZAHgT+gRVqAiRy8
-	 8IsW+fYNHnRVMxDF5d9OddmQ8a0eBk9jOe519Kwu4W3Y006BgJwgBGcqVacq6R0bb9oefL1gYzqx
-	 C9yDKWYXW9sUjM4g9ic9Rv0/aoP3yVW6HdOl4W+V6DaP7oowCkNXrFgF9lRpfx5qhK2cpYUb7Wsb
-	 YClw4Ar9OfvhlSZraXVU0zCChPYgsSi258SIgcWYd7DAp/9gt+2DppVqTOUrkmxUWuDKZjzg0o49
-	 qj8HzxlYkxfFVNL59zRq42wTiVfLZn41+PEESlg5KfG5AoPFO4h93DUAMJUnpnpBDQCsDiTwGUr8
-	 4IQJzll0bmiEV/tiGdn83NGKVREc/HhcIh6J6g2yDLwQiU1B9fSYWMeJtxUhmn3pVemQaUU3ej1z
-	 saF7MYN5IweHHUlnoU8J/97Vuq3oOYO/8lJmY0bl5NYjExPsLO/so3WOtnxuYBVMkasIrjrV62Hb
-	 XdUMUl/ZlzbA7A1137+uEvwcnHDY36GW4fQlwPtmPAbpJ8az8AmSxXTiHO3/XMYH6iDgroqRabs6
-	 p5B24cZLRuvoEA/vmrCaTeJlD3dNLqVSaSzqGE7rM=
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-From: Rong Tao <rtoax@foxmail.com>
-To: nvdimm@lists.linux.dev
-Cc: linux-cxl@vger.kernel.org,
-	Rong Tao <rongtao@cestc.cn>
-Subject: [ndctl PATCH] Documentation: cxl,daxctl,ndctl add --list-cmds info
-Date: Mon, 30 Jun 2025 15:28:25 +0800
-X-OQ-MSGID: <20250630072825.313731-1-rtoax@foxmail.com>
-X-Mailer: git-send-email 2.50.0
+	s=arc-20240116; t=1751272623; c=relaxed/simple;
+	bh=hugCzUdA8K0FakHg83KjbSIgdfptm3/HWdSbl5gjyqU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=jsjVz3Iy+2icPr5XPO9N9Y4d9k9EhkC8GFTSk+4L5WQuuuXpf2JnKDqaTqGr5R/oadRiv5AX0t3f/yxwLgt92NSGzlaTlXHgC6EsgNfNKYhPEr/o9aeJybX6DfIAsmYLBMIuTB/4yltXQ7rtrhMJwjfMbVXe3nCXAC+enKJpeMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bVzyR6vYLz6M4xZ;
+	Mon, 30 Jun 2025 16:35:59 +0800 (CST)
+Received: from frapeml100008.china.huawei.com (unknown [7.182.85.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id 50A6A1402FC;
+	Mon, 30 Jun 2025 16:36:52 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (7.182.85.172) by
+ frapeml100008.china.huawei.com (7.182.85.131) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 30 Jun 2025 10:36:52 +0200
+Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
+ frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
+ Mon, 30 Jun 2025 10:36:51 +0200
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Borislav Petkov <bp@alien8.de>
+CC: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"tony.luck@intel.com" <tony.luck@intel.com>, "lenb@kernel.org"
+	<lenb@kernel.org>, "leo.duran@amd.com" <leo.duran@amd.com>,
+	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "mchehab@kernel.org"
+	<mchehab@kernel.org>, "dave.jiang@intel.com" <dave.jiang@intel.com>,
+	"Jonathan Cameron" <jonathan.cameron@huawei.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, Linuxarm <linuxarm@huawei.com>, tanxiaofei
+	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>
+Subject: RE: [PATCH v2 1/1] EDAC: Fix lockdep splat caused by edac features
+ code
+Thread-Topic: [PATCH v2 1/1] EDAC: Fix lockdep splat caused by edac features
+ code
+Thread-Index: AQHb5oMIRVWTBxb+4UCxmchjvCLvcLQYipCAgALbZSA=
+Date: Mon, 30 Jun 2025 08:36:51 +0000
+Message-ID: <20cced073d9b43ea907c21359bb77304@huawei.com>
+References: <20250626101344.1726-1-shiju.jose@huawei.com>
+ <20250628145433.GEaGACKVlsfyRegTw6@fat_crate.local>
+In-Reply-To: <20250628145433.GEaGACKVlsfyRegTw6@fat_crate.local>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Rong Tao <rongtao@cestc.cn>
-
-Such as daxctl(1) manual.
-
-Signed-off-by: Rong Tao <rongtao@cestc.cn>
----
- Documentation/cxl/cxl.txt       | 3 +++
- Documentation/daxctl/daxctl.txt | 3 +++
- Documentation/ndctl/ndctl.txt   | 3 +++
- 3 files changed, 9 insertions(+)
-
-diff --git a/Documentation/cxl/cxl.txt b/Documentation/cxl/cxl.txt
-index 41a51c7d3892..546207d885eb 100644
---- a/Documentation/cxl/cxl.txt
-+++ b/Documentation/cxl/cxl.txt
-@@ -14,6 +14,9 @@ SYNOPSIS
- 
- OPTIONS
- -------
-+--list-cmds::
-+  Display all available commands.
-+
- -v::
- --version::
-   Display the version of the 'cxl' utility.
-diff --git a/Documentation/daxctl/daxctl.txt b/Documentation/daxctl/daxctl.txt
-index f81b161c9771..606abc3e9635 100644
---- a/Documentation/daxctl/daxctl.txt
-+++ b/Documentation/daxctl/daxctl.txt
-@@ -14,6 +14,9 @@ SYNOPSIS
- 
- OPTIONS
- -------
-+--list-cmds::
-+  Display all available commands.
-+
- -v::
- --version::
-   Display daxctl version.
-diff --git a/Documentation/ndctl/ndctl.txt b/Documentation/ndctl/ndctl.txt
-index c2919de4692d..08c3e949418a 100644
---- a/Documentation/ndctl/ndctl.txt
-+++ b/Documentation/ndctl/ndctl.txt
-@@ -14,6 +14,9 @@ SYNOPSIS
- 
- OPTIONS
- -------
-+--list-cmds::
-+  Display all available commands.
-+
- -v::
- --version::
-   Display ndctl version.
--- 
-2.50.0
-
+Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogQm9yaXNsYXYgUGV0a292IDxicEBh
+bGllbjguZGU+DQo+U2VudDogMjggSnVuZSAyMDI1IDE1OjU1DQo+VG86IFNoaWp1IEpvc2UgPHNo
+aWp1Lmpvc2VAaHVhd2VpLmNvbT4NCj5DYzogbGludXgtZWRhY0B2Z2VyLmtlcm5lbC5vcmc7IHRv
+bnkubHVja0BpbnRlbC5jb207IGxlbmJAa2VybmVsLm9yZzsNCj5sZW8uZHVyYW5AYW1kLmNvbTsg
+WWF6ZW4uR2hhbm5hbUBhbWQuY29tOyBtY2hlaGFiQGtlcm5lbC5vcmc7DQo+ZGF2ZS5qaWFuZ0Bp
+bnRlbC5jb207IEpvbmF0aGFuIENhbWVyb24gPGpvbmF0aGFuLmNhbWVyb25AaHVhd2VpLmNvbT47
+DQo+bGludXgtY3hsQHZnZXIua2VybmVsLm9yZzsgTGludXhhcm0gPGxpbnV4YXJtQGh1YXdlaS5j
+b20+OyB0YW54aWFvZmVpDQo+PHRhbnhpYW9mZWlAaHVhd2VpLmNvbT47IFplbmd0YW8gKEIpIDxw
+cmltZS56ZW5nQGhpc2lsaWNvbi5jb20+DQo+U3ViamVjdDogUmU6IFtQQVRDSCB2MiAxLzFdIEVE
+QUM6IEZpeCBsb2NrZGVwIHNwbGF0IGNhdXNlZCBieSBlZGFjIGZlYXR1cmVzDQo+Y29kZQ0KPg0K
+Pk9uIFRodSwgSnVuIDI2LCAyMDI1IGF0IDExOjEzOjQ0QU0gKzAxMDAsIHNoaWp1Lmpvc2VAaHVh
+d2VpLmNvbSB3cm90ZToNCj4+IEZyb206IFNoaWp1IEpvc2UgPHNoaWp1Lmpvc2VAaHVhd2VpLmNv
+bT4NCj4+DQo+PiBGaXggdGhlIGxvY2tkZXAgc3BsYXQgY2F1c2VkIGJ5IG1pc3Npbmcgc3lzZnNf
+YXR0cl9pbml0KCkgY2FsbHMgZm9yDQo+PiB0aGUgcmVjZW50bHkgYWRkZWQgRURBQyBmZWF0dXJl
+J3Mgc3lzZnMgYXR0cmlidXRlcy4NCj4+DQo+PiBJbiBsb2NrZGVwX2luaXRfbWFwX3R5cGUoKSwg
+dGhlIGNoZWNrIGZvciB0aGUgbG9jay1jbGFzcyBrZXkgaWYNCj4+ICghc3RhdGljX29iaihrZXkp
+ICYmICFpc19keW5hbWljX2tleShrZXkpKSBjYXVzZXMgdGhlIHNwbGF0Lg0KPj4NCj4+IEJhY2t0
+cmFjZToNCj4+IFJJUDogMDAxMDpsb2NrZGVwX2luaXRfbWFwX3R5cGUrMHgxMzEvMHgyNzANCj4+
+IENhbGwgVHJhY2U6DQo+PiAgX19rZXJuZnNfY3JlYXRlX2ZpbGUrMHg3Ny8weGYwDQo+PiBzeXNm
+c19hZGRfZmlsZV9tb2RlX25zKzB4ODYvMHgxNDANCj4+IGludGVybmFsX2NyZWF0ZV9ncm91cCsw
+eDFjYy8weDRiMA0KPj4gaW50ZXJuYWxfY3JlYXRlX2dyb3VwcysweDQyLzB4YTANCj4+IGRldmlj
+ZV9hZGQrMHgzMTAvMHg4NjANCj4+ID8gX19pbml0X3dhaXRxdWV1ZV9oZWFkKzB4NGEvMHg2MA0K
+Pj4gZWRhY19kZXZfcmVnaXN0ZXIrMHgzZmYvMHg0ODANCj4+IGRldm1fY3hsX21lbWRldl9lZGFj
+X3JlZ2lzdGVyKzB4NTA5LzB4NjQwIFtjeGxfY29yZV0gPw0KPj4gbG9ja19hY3F1aXJlKzB4YzQv
+MHgyZDAgPyBmaW5kX2hlbGRfbG9jaysweDJiLzB4ODAgPw0KPj4gY3hsX21lbV9wcm9iZSsweDIx
+ZS8weDM2MCBbY3hsX21lbV0gPyBjeGxfbWVtX3Byb2JlKzB4MjFlLzB4MzYwDQo+PiBbY3hsX21l
+bV0gPyBsb2NrZGVwX2hhcmRpcnFzX29uKzB4NzgvMHgxMDAgPw0KPmN4bF9tZW1fcHJvYmUrMHgy
+MjYvMHgzNjANCj4+IFtjeGxfbWVtXQ0KPj4gY3hsX21lbV9wcm9iZSsweDIyNi8weDM2MCBbY3hs
+X21lbV0NCj4+DQo+PiBGaXhlczogZjkwYjczODE2NmZlICgiRURBQzogQWRkIHNjcnViIGNvbnRy
+b2wgZmVhdHVyZSIpDQo+PiBGaXhlczogYmNiZDA2OWIxMWIwICgiRURBQzogQWRkIGEgRXJyb3Ig
+Q2hlY2sgU2NydWIgY29udHJvbCBmZWF0dXJlIikNCj4+IEZpeGVzOiA2OTllYTUyMTljNGIgKCJF
+REFDOiBBZGQgYSBtZW1vcnkgcmVwYWlyIGNvbnRyb2wgZmVhdHVyZSIpDQo+PiBSZXBvcnRlZC1i
+eTogRGF2ZSBKaWFuZyA8ZGF2ZS5qaWFuZ0BpbnRlbC5jb20+DQo+PiBTdWdnZXN0ZWQtYnk6IEpv
+bmF0aGFuIENhbWVyb24gPEpvbmF0aGFuLkNhbWVyb25AaHVhd2VpLmNvbT4NCj4+IFNpZ25lZC1v
+ZmYtYnk6IFNoaWp1IEpvc2UgPHNoaWp1Lmpvc2VAaHVhd2VpLmNvbT4NCj4NCj5BcHBsaWVkLCB0
+aGFua3MuDQo+DQo+V2hpbGUgeW91J3JlIGhlcmU6IHBsZWFzZSBtYWtlIGFsbCB0aG9zZSBhdHRy
+aWJ1dGVzIHN0YXRpYyBsaWtlIGluIHRoaXMgcGF0Y2g6DQo+DQo+aHR0cHM6Ly9sb3JlLmtlcm5l
+bC5vcmcvci8yMDI1MDYyMDExNDEzNS40MDE3MTgzLTEtYXJuZEBrZXJuZWwub3JnDQo+DQo+d2hp
+Y2ggSSd2ZSBhbHJlYWR5IGFwcGxpZWQgLSB5b3UgY2FuIGJhc2Ugc3R1ZmYgb250b3Agb2YgZWRh
+Yy1mb3ItbmV4dC4NCg0KVGhhbmtzIEJvcmlzLg0KSSB3aWxsIGNoZWNrIGFuZCBtb2RpZnkgdGhl
+IGF0dHJpYnV0ZXMgYXMgc3RhdGljLg0KDQpUaGFua3MsDQpTaGlqdQ0KDQo+DQo+VGh4Lg0KPg0K
+Pi0tDQo+UmVnYXJkcy9HcnVzcywNCj4gICAgQm9yaXMuDQo+DQo+aHR0cHM6Ly9wZW9wbGUua2Vy
+bmVsLm9yZy90Z2x4L25vdGVzLWFib3V0LW5ldGlxdWV0dGUNCg0K
