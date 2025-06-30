@@ -1,110 +1,111 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF52D28B7FE
-	for <linux-cxl@vger.kernel.org>; Mon, 30 Jun 2025 16:30:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 522F928FAA5;
+	Mon, 30 Jun 2025 16:34:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751301044; cv=none; b=qJd6UXzmNE6D9fbVe9FVWK/UmI4QfEWiuBQDkD0Z6QKeoZ3cCGJIXRP1m8CNppt3yrMm3ByA/giQ1DUx7v0XwvZz0AqXUgFfaeu4dWsD9Nfa3u7XKD3rjIdpoL+sQ/4pUoB4R7rkMEs3jpLemnlay1fsBYETuQj5QVWGy3gVr0E=
+	t=1751301269; cv=none; b=PfylfTQkJXBmk4LcxzqG4OpcG0gzBe9WtamJRlkPnz7tOnYJ8KVDXzBsWmqhNmnWAI4JltVeSuqePofgtjWWTSD/6b9g5yZyXEo1m3CEH9EUz9MpRr5YHJX1Ybe6m11nBHfUN9jviMLY4asiTqJqcf56FwIffKpzvYXGCC8ONI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751301044; c=relaxed/simple;
-	bh=t586Zow7oyJp/0l1/+706waxRLAJ+MmFrMUNSW2uTfk=;
+	s=arc-20240116; t=1751301269; c=relaxed/simple;
+	bh=Ufwo18IowwwYmo6uzicPJMJYs6/UzCvrzdowvbrymq8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZRoUucMaXLUrJzqfLh6TEJcmgwXqMK7mcLwc4cHUzxz4WGnJkduuelB8hg6G0IK4tV7GlPPeo0FTsu3U64gtLp+2mzGkTlOMkw2CNoykl/ulP9WmbKgSK5TwyCeYpnZ41md2/po8JMvggx59SIQFAuhEaledJtkAIHiSPzRziPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Sm4ATIqH; arc=none smtp.client-ip=91.218.175.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 In-Reply-To:Content-Type; b=AD2+5tOA9APDEHDKmy0ArtqkqhWsW/erUmbqWua9kvU5Z9dNJPmLuuArqb+QkWY1CnlVY7ipR11uTYSV6LRO7xKIWzdjBwN8mHjW/yztHR7wmtx1agnyl/74j2gGe0f6a115b+uXwc57CCW8hA8V8pPHaHkK6ZAEF85cDAiJCjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k5zHiF3Q; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Sm4ATIqH"
-Message-ID: <0953f766-48bc-416f-9089-7403e938569c@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751301041;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=M4R8oQGNb+HE/xFlfDbpHkdOJMrhCQEK8kzkuPBr+Vw=;
-	b=Sm4ATIqHZO7EQ4eOrkwhzACDmmLcDHhu4/Bi2TrdRfOGejIcvyPP94wqzui5yH8/PEQWRJ
-	b0WuiLxErzMi5+Q3OuU7KchbcOP4nZFBD4eHHLDwLqiF4zjeyjA8Emel0lkZeOG+0APRNc
-	t1GYKUNYmAihRfsKB+4332RStm6+suE=
-Date: Tue, 1 Jul 2025 00:30:32 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k5zHiF3Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751301268; x=1782837268;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Ufwo18IowwwYmo6uzicPJMJYs6/UzCvrzdowvbrymq8=;
+  b=k5zHiF3QPGmTm0L4CiYOSWGiaEGTYPqWifO0q3TLOK5Y0xycLg1ribU7
+   ltlpwYsQFwFNgXA1/4WZOOeWkUqVoL3aOjJbc0MsL7a0zZVgUI8sCbvra
+   4iwoiA9imb44a01P6ymH96VTRm6lFVskJ1CRW3JqtA1aP5aLbcCryUA/2
+   u1DcBhH0EW5ovHDsEqnPzqcvqO1CL1C87NGMcqQwSCD9O2FR0dRNzuCEb
+   D78DUU/YlCnBRpJ4mAxlHsV1GIwdvxBeA0r9N+02bOhI/PNBE6rQZdc2x
+   vNd6FHfmkGsR9lAX8jhXhPgM6iBNY8EuMXpxiCgKvJ4eVPhnUGgDSFAvb
+   g==;
+X-CSE-ConnectionGUID: 4iU1OSGtQhWfJNFPkv58vA==
+X-CSE-MsgGUID: rBQncCUlS4iLbyushi7YXg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="64135975"
+X-IronPort-AV: E=Sophos;i="6.16,278,1744095600"; 
+   d="scan'208";a="64135975"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 09:34:26 -0700
+X-CSE-ConnectionGUID: qWX9GIwqTkycYyHg0VW2/w==
+X-CSE-MsgGUID: 2ww2rYhHQgiC5V3eMoLBVw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,278,1744095600"; 
+   d="scan'208";a="190673538"
+Received: from tfalcon-desk.amr.corp.intel.com (HELO [10.125.109.132]) ([10.125.109.132])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 09:34:25 -0700
+Message-ID: <5caa70f4-27d6-4635-93e4-61aaa9216b4e@intel.com>
+Date: Mon, 30 Jun 2025 09:34:25 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v1_00/11=5D_dm-pcache_=E2=80=93_persistent?=
- =?UTF-8?Q?-memory_cache_for_block_devices?=
-To: Mikulas Patocka <mpatocka@redhat.com>
-Cc: agk@redhat.com, snitzer@kernel.org, axboe@kernel.dk, hch@lst.de,
- dan.j.williams@intel.com, Jonathan.Cameron@Huawei.com,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev, dm-devel@lists.linux.dev
-References: <20250624073359.2041340-1-dongsheng.yang@linux.dev>
- <8d383dc6-819b-2c7f-bab5-2cd113ed9ece@redhat.com>
- <7ff7c4fc-d830-41c9-ab94-a198d3d9a3b5@linux.dev>
- <43e84a3e-f574-4c97-9f33-35fcb3751e01@linux.dev>
- <f0c46aba-9756-5f05-a843-51bc4898a313@redhat.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Dongsheng Yang <dongsheng.yang@linux.dev>
-In-Reply-To: <f0c46aba-9756-5f05-a843-51bc4898a313@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v17 16/22] cxl/region: Factor out interleave ways setup
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
+ netdev@vger.kernel.org, dan.j.williams@intel.com, edward.cree@amd.com,
+ davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
+ edumazet@google.com, Alejandro Lucero <alucerop@amd.com>,
+ Zhi Wang <zhiw@nvidia.com>, Ben Cheatham <benjamin.cheatham@amd.com>
+References: <20250624141355.269056-1-alejandro.lucero-palau@amd.com>
+ <20250624141355.269056-17-alejandro.lucero-palau@amd.com>
+ <20250627101345.00002524@huawei.com>
+ <0a73070b-b7b0-4697-9fb6-b43a4e6834b6@intel.com>
+ <20250630172052.000011bd@huawei.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250630172052.000011bd@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-在 6/30/2025 11:45 PM, Mikulas Patocka 写道:
->
-> On Mon, 30 Jun 2025, Dongsheng Yang wrote:
->
->> Hi Mikulas,
+
+On 6/30/25 9:20 AM, Jonathan Cameron wrote:
+> On Fri, 27 Jun 2025 16:05:20 -0700
+> Dave Jiang <dave.jiang@intel.com> wrote:
+> 
+>> On 6/27/25 2:13 AM, Jonathan Cameron wrote:
+>>> On Tue, 24 Jun 2025 15:13:49 +0100
+>>> <alejandro.lucero-palau@amd.com> wrote:
+>>>   
+>>>> From: Alejandro Lucero <alucerop@amd.com>
+>>>>
+>>>> Region creation based on Type3 devices is triggered from user space
+>>>> allowing memory combination through interleaving.
+>>>>
+>>>> In preparation for kernel driven region creation, that is Type2 drivers
+>>>> triggering region creation backed with its advertised CXL memory, factor
+>>>> out a common helper from the user-sysfs region setup for interleave ways.
+>>>>
+>>>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+>>>> Reviewed-by: Zhi Wang <zhiw@nvidia.com>
+>>>> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+>>>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>>>> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>  
+>>> As a heads up, this code changes a fair bit in Dan's ACQUIRE() series
+>>> that may well land before this.  Dave can ask for whatever resolution he
+>>> wants when we get to that stage!
+>>>
+>>>   
+>> We probably want to rebase on top of that. Dan has an immutable branch in cxl.git for the ACQUIRE() patch. Or are you talking about the outstanding CXL changes?
 >>
->>      The reason why we don’t release the spinlock here is that if we do, the
->> subtree could change.
+> The CXL specific ones from that series.
+
+Hopefully we can get those resolved with the next rev when Dan's back from vacation. 
+> 
+> J
 >>
->> For example, in the `fixup_overlap_contained()` function, we may need to split
->> a certain `cache_key`, and that requires allocating a new `cache_key`.
->>
->> If we drop the spinlock at this point and then re-acquire it after the
->> allocation, the subtree might already have been modified, and we cannot safely
->> continue with the split operation.
-> Yes, I understand this.
->
->>      In this case, we would have to restart the entire subtree search and walk.
->> But the new walk might require more memory—or less,
->>
->> so it's very difficult to know in advance how much memory will be needed
->> before acquiring the spinlock.
->>
->>      So allocating memory inside a spinlock is actually a more direct and
->> feasible approach. `GFP_NOWAIT` fails too easily, maybe `GFP_ATOMIC` is more
->> appropriate.
-> Even GFP_ATOMIC can fail. And it is not appropriate to return error and
-> corrupt data when GFP_ATOMIC fails.
->
->> What do you think?
-> If you need memory, you should drop the spinlock, allocate the memory
-> (with mempool_alloc(GFP_NOIO)), attach the allocated memory to "struct
-> pcache_request" and retry the request (call pcache_cache_handle_req
-> again).
->
-> When you retry the request, there are these possibilities:
-> * you don't need the memory anymore - then, you just free it
-> * you need the amount of memory that was allocated - you just proceed
->    while holding the spinlock
-> * you need more memory than what you allocated - you drop the spinlock,
->    free the memory, allocate a larger memory block and retry again
+> 
 
-
-Yes, that was exactly my initial idea when I first came up with this 
-solution—it just seemed a bit convoluted. That’s why I wondered if using 
-GFP_ATOMIC might be a more straightforward approach.
-
-Okay, compared to simply returning an error to the upper-level user, I 
-think implementing this mechanism is well worth it.
-
-Dongsheng
-
->
-> Mikulas
