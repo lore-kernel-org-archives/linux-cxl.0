@@ -1,86 +1,104 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B90BD1DFF7;
-	Mon, 30 Jun 2025 16:20:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89E1A28FFF6
+	for <linux-cxl@vger.kernel.org>; Mon, 30 Jun 2025 16:28:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751300458; cv=none; b=tK85JvfdIbOBWC2mkV+ERmbezxj+IhBBEVLaVt0G4Wgx/OpVQmxd0jqb6+rXal9b5uty1w/1iq5/ARIcVzmt8xTutjIJbEe6ubBWAvmdfhEgQ8CGUkedAnR+6f0c695s/lt1fNqkqRFWqkqs0VrjzaaGFlwpVb+D9ElS8YT0OBA=
+	t=1751300900; cv=none; b=dkNEJmeFRt6ICViC4kHSBIR2rBKWM77rJZ9MVOhtufQqKYQMIpUz6+DgDaoBgNNI50d1SZV8Jab7QXNOunAC4PjM7AVtfNWMEw6f/E7Y239VSWlUIrYLB1fGXCg8E23XIrvY99gXhm9SYq7ggFNQ+2+Th9xOYE1GYJ5ERdgkJio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751300458; c=relaxed/simple;
-	bh=b9hSZivE0RssUGKNhDBro17kA+3QCCzAgzAs2nSn63c=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S/VJqekaYE6gIGoC/ZqPjwQYUGDwuGTVZes4KRXyvOOoeQgyO+ZrEk2eXf7JXDkN42zU0JYJ5pZHKJip9WJX9fqMN2c6HXFrcWRSC07w/fKx1+dfybr1MzUuIY2PJL2ZozJaBSTl4WuSQKaUq9JXCMOLhtipW40MsXNgmWA7q5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bWBCf559Dz6L5RD;
-	Tue,  1 Jul 2025 00:18:06 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id A4DD21402F0;
-	Tue,  1 Jul 2025 00:20:54 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 30 Jun
- 2025 18:20:54 +0200
-Date: Mon, 30 Jun 2025 17:20:52 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Dave Jiang <dave.jiang@intel.com>
-CC: <alejandro.lucero-palau@amd.com>, <linux-cxl@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <dan.j.williams@intel.com>, <edward.cree@amd.com>,
-	<davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<edumazet@google.com>, Alejandro Lucero <alucerop@amd.com>, Zhi Wang
-	<zhiw@nvidia.com>, Ben Cheatham <benjamin.cheatham@amd.com>
-Subject: Re: [PATCH v17 16/22] cxl/region: Factor out interleave ways setup
-Message-ID: <20250630172052.000011bd@huawei.com>
-In-Reply-To: <0a73070b-b7b0-4697-9fb6-b43a4e6834b6@intel.com>
-References: <20250624141355.269056-1-alejandro.lucero-palau@amd.com>
-	<20250624141355.269056-17-alejandro.lucero-palau@amd.com>
-	<20250627101345.00002524@huawei.com>
-	<0a73070b-b7b0-4697-9fb6-b43a4e6834b6@intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1751300900; c=relaxed/simple;
+	bh=kZz5sHMIEYQknhrJKSrbiWd5YuyAAbeWM7s7ko+r/GA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TGIFqqiKV9SBaadOoYTdKQ74a72Ii12qA/1wXLHzGuwqjzabeAeXKNNV91nGE3dlmYS81Q2CcKvCC75ak02XQFl6gJ7AiIRjbm+X6W0QqV1Fk5cYcQU4pN2MAB/XR17uDqKNKh84fpm9Fx963Ul7709qqwcPfMX21i5AHJ4ECZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=uhEc38fE; arc=none smtp.client-ip=91.218.175.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="uhEc38fE"
+Message-ID: <bf733634-cb99-48db-9b02-09b9700cd1f0@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751300893;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lO8fF4ZORcVnpss8t30+j+JORZPUFhEkRrsTLVwbWlk=;
+	b=uhEc38fE1oedPOeKthtmO5ZaenunlM/yUS6Oy2FsJydoCnS5wdUne4Eejv4eW4uQBmBRSH
+	0cd4Ffqtdi1fcFv2Q3SYquB6XlbjYb+RZQoSB53CQkE5GbLh3yKYOkk1d2pVYwzerAclVU
+	WI+x25s4CDgdHYVLZVvwnXXd95nO96c=
+Date: Tue, 1 Jul 2025 00:28:03 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Subject: =?UTF-8?Q?Re=3A_=5BRFC_v2_00/11=5D_dm-pcache_=E2=80=93_persistent-m?=
+ =?UTF-8?Q?emory_cache_for_block_devices?=
+To: Mikulas Patocka <mpatocka@redhat.com>
+Cc: agk@redhat.com, snitzer@kernel.org, axboe@kernel.dk, hch@lst.de,
+ dan.j.williams@intel.com, Jonathan.Cameron@Huawei.com,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev, dm-devel@lists.linux.dev
+References: <20250605142306.1930831-1-dongsheng.yang@linux.dev>
+ <dc019764-5128-526e-d8ea-effa78e37b39@redhat.com>
+ <3c9f304a-b830-4242-8e01-04efab4e0eaa@linux.dev>
+ <202b7987-5652-ba46-2f9d-1a90679d89b5@redhat.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Dongsheng Yang <dongsheng.yang@linux.dev>
+In-Reply-To: <202b7987-5652-ba46-2f9d-1a90679d89b5@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, 27 Jun 2025 16:05:20 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
 
-> On 6/27/25 2:13 AM, Jonathan Cameron wrote:
-> > On Tue, 24 Jun 2025 15:13:49 +0100
-> > <alejandro.lucero-palau@amd.com> wrote:
-> >   
-> >> From: Alejandro Lucero <alucerop@amd.com>
-> >>
-> >> Region creation based on Type3 devices is triggered from user space
-> >> allowing memory combination through interleaving.
-> >>
-> >> In preparation for kernel driven region creation, that is Type2 drivers
-> >> triggering region creation backed with its advertised CXL memory, factor
-> >> out a common helper from the user-sysfs region setup for interleave ways.
-> >>
-> >> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> >> Reviewed-by: Zhi Wang <zhiw@nvidia.com>
-> >> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> >> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> >> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>  
-> > As a heads up, this code changes a fair bit in Dan's ACQUIRE() series
-> > that may well land before this.  Dave can ask for whatever resolution he
-> > wants when we get to that stage!
-> > 
-> >   
-> We probably want to rebase on top of that. Dan has an immutable branch in cxl.git for the ACQUIRE() patch. Or are you talking about the outstanding CXL changes?
-> 
-The CXL specific ones from that series.
+在 6/30/2025 11:57 PM, Mikulas Patocka 写道:
+>
+> On Mon, 23 Jun 2025, Dongsheng Yang wrote:
+>
+>> +static int dm_pcache_map_bio(struct dm_target *ti, struct bio *bio)
+>> +{
+>> +     struct pcache_request *pcache_req = dm_per_bio_data(bio, sizeof(struct pcache_request));
+>> +     struct dm_pcache *pcache = ti->private;
+>> +     int ret;
+>> +
+>> +     pcache_req->pcache = pcache;
+>> +     kref_init(&pcache_req->ref);
+>> +     pcache_req->ret = 0;
+>> +     pcache_req->bio = bio;
+>> +     pcache_req->off = (u64)bio->bi_iter.bi_sector << SECTOR_SHIFT;
+>> +     pcache_req->data_len = bio->bi_iter.bi_size;
+>> +     INIT_LIST_HEAD(&pcache_req->list_node);
+>> +     bio->bi_iter.bi_sector = dm_target_offset(ti, bio->bi_iter.bi_sector);
+>>
+>> This looks suspicious because you store the original bi_sector to
+>> pcache_req->off and then subtract the target offset from it. Shouldn't
+>> "bio->bi_iter.bi_sector = dm_target_offset(ti, bio->bi_iter.bi_sector);"
+>> be before "pcache_req->off = (u64)bio->bi_iter.bi_sector <<
+>> SECTOR_SHIFT;"?
+>>
+>>
+>> Yes, that logic is indeed questionable, but it works in testing.
+>>
+>> Since we define dm-pcache as a **singleton**, both behaviors should
+>> effectively be equivalent, IIUC. Also, in V1 I moved the call to
+>> `dm_target_offset()` so it runs before setting up `pcache_req->off`,
+>> making the code logic correct.
+> If this target is singleton, you can delete the call to dm_target_offset
+> at all.
+>
+> That call is harmless, but it looks confusing when reviewing the code,
+> because pcache_req->off is set to the absolute bio sector (from the start
+> of the table) and bio->bi_iter.bi_sector is set to the relative bio sector
+> (from the start of the target). If the target always starts at offset 0,
+> dm_target_offset just returns bi_sector.
 
-J
-> 
 
+That makes sense
+
+Thanx
+
+>
+> Mikulas
+>
