@@ -1,41 +1,41 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB7615E5C2
-	for <linux-cxl@vger.kernel.org>; Mon, 30 Jun 2025 17:01:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D86A28C2B3
+	for <linux-cxl@vger.kernel.org>; Mon, 30 Jun 2025 17:06:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751302879; cv=none; b=MRAr8YC9MvYdHSGWMbbRgGmOeIg6Wn5KZ4nW0EdDoW+i+8Opxh2QozV2GsCU2jOCT/uX3bQniF8//fM2edVCtPL5J98BNy86uMPegZhP5iy5h3eRwmeip9dF9EZPaqbyZcyAwbnYh7AQW8ZxPo8iSVR2bjB0PjH1GsTpwkAv3kI=
+	t=1751303209; cv=none; b=g464gP/yHxiCVFTRWUysKxlePKXyrJIQyQRYjMJn0sGcv+pxR/DLD8bTKaZ2Xss7G9SoJqW+9/wNmRNIZ4PIoF0u+A9wwY0BSXLKm37czyc2x1MVQTZyeKOFusyM6JSx33EMqr7f50O9gy0775DwAMLDQYbBM5UZVJi217kV4P4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751302879; c=relaxed/simple;
-	bh=y4mbGLk91sO4vmIyPUxihXD5kc9b5Irv9w+irJBg9GA=;
+	s=arc-20240116; t=1751303209; c=relaxed/simple;
+	bh=NRovVznRHz6NX1kMr8bjZkOcuM4gCS9Fk7EaOvfc0wo=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qYsDSTlItPYktUz3kZTM7qRkz0Gru2/HSniwAXTpC75xc+NgsWpmGN67NQcUV9rAP76d1ml8NcU9Jx5zBOQCLEAK8JIW9252lSimJs9vJ3OLlWTTXIhD91lJvs08lDWqUgWKg34T9xRtp4KePvV1FoFnw2yFrjnhAP/5I/nlfyc=
+	 MIME-Version:Content-Type; b=WH3sudo50/v3zNJvl1GEbmoJjRspEe6Mq4EqYHBSOyxKrH9Yyuybm/CIDFl99S/kde09thVnn3viKhbjY4vzomuYeRgBbqDsQStzYIrcImAC0w4UcTCdcuGM1QKPv+fSoPXglxOUsIAP2ytbKAlxyMB9EjLHQN7FRXFjqiT6R4M=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bWC8M08ZRz6M55w;
-	Tue,  1 Jul 2025 01:00:19 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bWCDV0hZxz6L5Qs;
+	Tue,  1 Jul 2025 01:03:54 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id DD4581400CA;
-	Tue,  1 Jul 2025 01:01:11 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 2479A1402FC;
+	Tue,  1 Jul 2025 01:06:42 +0800 (CST)
 Received: from localhost (10.122.19.247) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 30 Jun
- 2025 19:01:11 +0200
-Date: Mon, 30 Jun 2025 18:01:10 +0100
+ 2025 19:06:41 +0200
+Date: Mon, 30 Jun 2025 18:06:40 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To: <anisa.su887@gmail.com>
 CC: <qemu-devel@nongnu.org>, <nifan.cxl@gmail.com>, <dave@stgolabs.net>,
 	<alok.a.tiwari@oracle.com>, <linux-cxl@vger.kernel.org>, Anisa Su
 	<anisa.su@samsung.com>
-Subject: Re: [QEMU PATCH v4 09/10] cxl-mailbox-utils: 0x5604 - FMAPI
- Initiate DC Add
-Message-ID: <20250630180110.0000060d@huawei.com>
-In-Reply-To: <20250626222743.1766404-10-anisa.su887@gmail.com>
+Subject: Re: [QEMU PATCH v4 10/10] cxl-mailbox-utils: 0x5605 - FMAPI
+ Initiate DC Release
+Message-ID: <20250630180640.00001fad@huawei.com>
+In-Reply-To: <20250626222743.1766404-11-anisa.su887@gmail.com>
 References: <20250626222743.1766404-1-anisa.su887@gmail.com>
-	<20250626222743.1766404-10-anisa.su887@gmail.com>
+	<20250626222743.1766404-11-anisa.su887@gmail.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -48,44 +48,52 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, 26 Jun 2025 22:23:32 +0000
+On Thu, 26 Jun 2025 22:23:33 +0000
 anisa.su887@gmail.com wrote:
 
 > From: Anisa Su <anisa.su@samsung.com>
 > 
-> FM DCD Management command 0x5604 implemented per CXL r3.2 Spec Section 7.6.7.6.5
-
-There are a few long lines in here check patch doesn't like.
-
-
-I tweaked as described inline whilst picking them up.
-
-
+> FM DCD Management command 0x5605 implemented per CXL r3.2 Spec Section 7.6.7.6.6
 > 
 > Signed-off-by: Anisa Su <anisa.su@samsung.com>
+A few more long line related tweaks.
+
 > ---
->  hw/cxl/cxl-mailbox-utils.c  | 106 ++++++++++++++++++++++++++++++++++++
->  hw/mem/cxl_type3.c          |   8 +--
->  include/hw/cxl/cxl_device.h |   4 ++
->  3 files changed, 114 insertions(+), 4 deletions(-)
+>  hw/cxl/cxl-mailbox-utils.c | 79 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 79 insertions(+)
 > 
 > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> index 382c41c025..787eeaa7b9 100644
+> index 787eeaa7b9..87f9535d46 100644
 > --- a/hw/cxl/cxl-mailbox-utils.c
 > +++ b/hw/cxl/cxl-mailbox-utils.c
+> @@ -123,6 +123,7 @@ enum {
+>          #define SET_DC_REGION_CONFIG        0x2
+>          #define GET_DC_REGION_EXTENT_LIST   0x3
+>          #define INITIATE_DC_ADD             0x4
+> +        #define INITIATE_DC_RELEASE         0x5
+>  };
+>  
+>  /* CCI Message Format CXL r3.1 Figure 7-19 */
+> @@ -3638,6 +3639,77 @@ static CXLRetCode cmd_fm_initiate_dc_add(const struct cxl_cmd *cmd,
+>      }
+>  }
+>  
+> +#define CXL_EXTENT_REMOVAL_POLICY_MASK 0x0F
+> +#define CXL_FORCED_REMOVAL_MASK (1 << 4)
+> +/* CXL r3.2 Section 7.6.7.6.6 Initiate Dynamic Capacity Release (Opcode 5605h) */
 
+Added a colon and wrapped after the number.
 
-> +/* CXL r3.2 Section 7.6.7.6.5 Initiate Dynamic Capacity Add (Opcode 5604h) */
-> +static CXLRetCode cmd_fm_initiate_dc_add(const struct cxl_cmd *cmd,
-> +                                         uint8_t *payload_in,
-> +                                         size_t len_in,
-> +                                         uint8_t *payload_out,
-> +                                         size_t *len_out,
-> +                                         CXLCCI *cci)
+> +static CXLRetCode cmd_fm_initiate_dc_release(const struct cxl_cmd *cmd,
+> +                                             uint8_t *payload_in,
+> +                                             size_t len_in,
+> +                                             uint8_t *payload_out,
+> +                                             size_t *len_out,
+> +                                             CXLCCI *cci)
 > +{
 > +    struct {
 > +        uint16_t host_id;
-> +        uint8_t selection_policy;
+> +        uint8_t flags;
 > +        uint8_t reg_num;
 > +        uint64_t length;
 > +        uint8_t tag[0x10];
@@ -95,83 +103,39 @@ I tweaked as described inline whilst picking them up.
 > +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
 > +    int i, rc;
 > +
-> +    switch (in->selection_policy) {
-> +        case CXL_EXTENT_SELECTION_POLICY_PRESCRIPTIVE: {
-> +            /* Adding extents exceeds device's extent tracking ability. */
-> +            if (in->ext_count + ct3d->dc.total_extent_count >
-> +                CXL_NUM_EXTENTS_SUPPORTED) {
-> +                return CXL_MBOX_RESOURCES_EXHAUSTED;
-> +            }
-> +
+> +    switch (in->flags & CXL_EXTENT_REMOVAL_POLICY_MASK) {
+> +        case CXL_EXTENT_REMOVAL_POLICY_PRESCRIPTIVE: {
+> +            CXLDCExtentList updated_list;
+> +            uint32_t updated_list_size;
 > +            g_autofree CXLUpdateDCExtentListInPl *list =
 > +                g_malloc0(sizeof(*list) +
 > +                    in->ext_count * sizeof(*list->updated_entries));
 > +
 > +            convert_raw_extents(in->extents, list, in->ext_count);
 > +            rc = cxl_detect_malformed_extent_list(ct3d, list);
-> +
-> +            for (i = 0; i < in->ext_count; i++) {
-> +                CXLDCExtentRaw ext = in->extents[i];
-
-Using a pointer here avoids copying data for no particular reason.
-
-> +                /* Check requested extents do not overlap with pending extents. */
-This is a touch long.   I tweaked to end with ... pending ones.
-Given we are talking extents that should be clear.
-
-> +                if (cxl_extent_groups_overlaps_dpa_range(&ct3d->dc.extents_pending,
-This is the one case I'll leave as it is not nice to wrap it anywhere different.
-
-> +                                                         ext.start_dpa, ext.len)) {
-wrapped this
-
-> +                    return CXL_MBOX_INVALID_EXTENT_LIST;
-> +                }
-> +                /* Check requested extents do not overlap with existing extents. */
-exiting ones. */
-> +                if (cxl_extents_overlaps_dpa_range(&ct3d->dc.extents,
-> +                                                   ext.start_dpa, ext.len)) {
-Wrapped this.
-
-> +                    return CXL_MBOX_INVALID_EXTENT_LIST;
-> +                }
-> +            }
-> +
 > +            if (rc) {
 > +                return rc;
 > +            }
 > +
-> +            CXLDCExtentGroup *group = NULL;
-> +            for (i = 0; i < in->ext_count; i++) {
+> +            /* Fail with Invalid PA if an extent is pending and Forced Removal
 
-Used
-                   CXLDCExtentRaw *ext = &in->extents[i];
+/*
+ * Fail...
 
-> +                group = cxl_insert_extent_to_extent_group(group,
-> +                                                          in->extents[i].start_dpa,
+> +             * flag not set
+> +             */
+> +            if (!(in->flags & CXL_FORCED_REMOVAL_MASK)) {
+> +                for (i = 0; i < in->ext_count; i++) {
+> +                    CXLDCExtentRaw ext = in->extents[i];
+> +                    /* Check requested extents don't overlap with pending extents. */
+Made this a multiline comment. 
 
-To shorten all these (similar to previous loop)
+> +                    if (cxl_extent_groups_overlaps_dpa_range(&ct3d->dc.extents_pending,
+This is quite a bit too far over so I just went with the ugly
+                    if (cxl_extent_groups_overlaps_dpa_range(
+                            &ct3d->dc.extents_pending,
 
-> +                                                          in->extents[i].len,
-> +                                                          in->extents[i].tag,
-> +                                                          in->extents[i].shared_seq);
-> +            }
-> +
-> +            cxl_extent_group_list_insert_tail(&ct3d->dc.extents_pending, group);
-> +            ct3d->dc.total_extent_count += in->ext_count;
-> +            cxl_create_dc_event_records_for_extents(ct3d,
-> +                                                    DC_EVENT_ADD_CAPACITY,
-> +                                                    in->extents,
-> +                                                    in->ext_count);
-> +
-> +            return CXL_MBOX_SUCCESS;
-> +        }
-> +        default: {
-> +            qemu_log_mask(LOG_UNIMP,
-> +                          "CXL extent selection policy not supported.\n");
-> +            return CXL_MBOX_INVALID_INPUT;
-> +        }
-> +    }
-> +}
+> +                                                             ext.start_dpa, ext.len)) {
+> +                        return CXL_MBOX_INVALID_PA;
 
 
