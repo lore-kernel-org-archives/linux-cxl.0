@@ -1,41 +1,41 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D86A28C2B3
-	for <linux-cxl@vger.kernel.org>; Mon, 30 Jun 2025 17:06:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 008942E2678
+	for <linux-cxl@vger.kernel.org>; Mon, 30 Jun 2025 17:24:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751303209; cv=none; b=g464gP/yHxiCVFTRWUysKxlePKXyrJIQyQRYjMJn0sGcv+pxR/DLD8bTKaZ2Xss7G9SoJqW+9/wNmRNIZ4PIoF0u+A9wwY0BSXLKm37czyc2x1MVQTZyeKOFusyM6JSx33EMqr7f50O9gy0775DwAMLDQYbBM5UZVJi217kV4P4=
+	t=1751304258; cv=none; b=pQcG40VnXIZmRJ5ZApw/DBBHZx6Ncogsr45nb8NkhJPuXgariKcPMcfqGGmnZlNJQx5knEFYWx6WXjyW3j7oih/80j2TRXUZT+8NT1E2IFQe8N/gnL8x5ychJHQGBmyqaaGFsfIPdTMBHmF4f0EEIxvRD+U8BNLuA7sCfHvYza4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751303209; c=relaxed/simple;
-	bh=NRovVznRHz6NX1kMr8bjZkOcuM4gCS9Fk7EaOvfc0wo=;
+	s=arc-20240116; t=1751304258; c=relaxed/simple;
+	bh=aNcpCdUgYTC6wvklDASowso8BJDKy7Vs3iPMr562xfA=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WH3sudo50/v3zNJvl1GEbmoJjRspEe6Mq4EqYHBSOyxKrH9Yyuybm/CIDFl99S/kde09thVnn3viKhbjY4vzomuYeRgBbqDsQStzYIrcImAC0w4UcTCdcuGM1QKPv+fSoPXglxOUsIAP2ytbKAlxyMB9EjLHQN7FRXFjqiT6R4M=
+	 MIME-Version:Content-Type; b=aknBM79TXwh7BSls1c7hdhZCNeLXitWHehb2ny7Y78/xbpJuNxLLjv8kHNlT3Keojr/5RLn3hDl/lmwUH9KXtn0f9URi0rbtRJGUviwMBms4VUm1aQsbE7zpvtE5fl9v2BrVrH8+5yAvLDClsKn3Bi1GeMQE5vJLRv3plJjv1TM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bWCDV0hZxz6L5Qs;
-	Tue,  1 Jul 2025 01:03:54 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bWCgX2F9Qz6L5ch;
+	Tue,  1 Jul 2025 01:23:52 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2479A1402FC;
-	Tue,  1 Jul 2025 01:06:42 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 65F481402EB;
+	Tue,  1 Jul 2025 01:24:12 +0800 (CST)
 Received: from localhost (10.122.19.247) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 30 Jun
- 2025 19:06:41 +0200
-Date: Mon, 30 Jun 2025 18:06:40 +0100
+ 2025 19:24:12 +0200
+Date: Mon, 30 Jun 2025 18:24:10 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <anisa.su887@gmail.com>
+To: Anisa Su <anisa.su887@gmail.com>
 CC: <qemu-devel@nongnu.org>, <nifan.cxl@gmail.com>, <dave@stgolabs.net>,
-	<alok.a.tiwari@oracle.com>, <linux-cxl@vger.kernel.org>, Anisa Su
-	<anisa.su@samsung.com>
-Subject: Re: [QEMU PATCH v4 10/10] cxl-mailbox-utils: 0x5605 - FMAPI
- Initiate DC Release
-Message-ID: <20250630180640.00001fad@huawei.com>
-In-Reply-To: <20250626222743.1766404-11-anisa.su887@gmail.com>
-References: <20250626222743.1766404-1-anisa.su887@gmail.com>
-	<20250626222743.1766404-11-anisa.su887@gmail.com>
+	<linux-cxl@vger.kernel.org>
+Subject: Re: [HACK QEMU PATCH v1 1/1] hw/cxl: Fix MCTP Binding Check
+Message-ID: <20250630182410.00007a74@huawei.com>
+In-Reply-To: <aF7I-ByGLZOxqNXi@deb-101020-bm01.eng.stellus.in>
+References: <20250626235102.1902427-1-anisa.su887@gmail.com>
+	<20250626235102.1902427-2-anisa.su887@gmail.com>
+	<20250627104859.00003cbe@huawei.com>
+	<aF7I-ByGLZOxqNXi@deb-101020-bm01.eng.stellus.in>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -45,97 +45,279 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, 26 Jun 2025 22:23:33 +0000
-anisa.su887@gmail.com wrote:
+On Fri, 27 Jun 2025 16:38:16 +0000
+Anisa Su <anisa.su887@gmail.com> wrote:
 
-> From: Anisa Su <anisa.su@samsung.com>
+> On Fri, Jun 27, 2025 at 10:48:59AM +0100, Jonathan Cameron wrote:
+> > On Thu, 26 Jun 2025 23:41:15 +0000
+> > anisa.su887@gmail.com wrote:
+> >   
+> > > From: Anisa Su <anisa.su@samsung.com>
+> > > 
+> > > Per the spec, FMAPI commands (0x51-0x59) must be bound with
+> > > MCTP_MT_CXL_FMAPI. Fix the conditions ensuring this in i2c_mctp_cxl.c
+> > > and dev-mctp.c
+> > > 
+> > > Move the opcode enum from cxl-mailbox-utils.c to cxl_mailbox.h to
+> > > allow i2c_mctp_cxl.c and dev-mctp.c to use the enum instead of
+> > > hardcoding the values.
+> > > 
+> > > Signed-off-by: Anisa Su <anisa.su@samsung.com>  
+> > Why HACK in the patch title?
+> >   
+> I guess this isn't really a hack but my intention was to make
+> it clear that this patch isn't intended for upstream. Seems like that
+> made things more confusing though, but now I know!
 > 
-> FM DCD Management command 0x5605 implemented per CXL r3.2 Spec Section 7.6.7.6.6
+> > In general this seems reasonable - the complexity is how I merge it
+> > into my tree given the code being modified slips in at various different
+> > points. I'll sort that out though.  
 > 
-> Signed-off-by: Anisa Su <anisa.su@samsung.com>
-A few more long line related tweaks.
+> I could also send you an alternate version of the FMAPI DCD Management patchset
+> based on this one?
 
-> ---
->  hw/cxl/cxl-mailbox-utils.c | 79 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 79 insertions(+)
+No need. I've queued the DCD series up way ahead of where this makes sense.
+I'll tweak this into a precursor patch doing the move and then squash the other
+bits into the two mctp implementations.
+
+Jonathan
+
 > 
-> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> index 787eeaa7b9..87f9535d46 100644
-> --- a/hw/cxl/cxl-mailbox-utils.c
-> +++ b/hw/cxl/cxl-mailbox-utils.c
-> @@ -123,6 +123,7 @@ enum {
->          #define SET_DC_REGION_CONFIG        0x2
->          #define GET_DC_REGION_EXTENT_LIST   0x3
->          #define INITIATE_DC_ADD             0x4
-> +        #define INITIATE_DC_RELEASE         0x5
->  };
->  
->  /* CCI Message Format CXL r3.1 Figure 7-19 */
-> @@ -3638,6 +3639,77 @@ static CXLRetCode cmd_fm_initiate_dc_add(const struct cxl_cmd *cmd,
->      }
->  }
->  
-> +#define CXL_EXTENT_REMOVAL_POLICY_MASK 0x0F
-> +#define CXL_FORCED_REMOVAL_MASK (1 << 4)
-> +/* CXL r3.2 Section 7.6.7.6.6 Initiate Dynamic Capacity Release (Opcode 5605h) */
-
-Added a colon and wrapped after the number.
-
-> +static CXLRetCode cmd_fm_initiate_dc_release(const struct cxl_cmd *cmd,
-> +                                             uint8_t *payload_in,
-> +                                             size_t len_in,
-> +                                             uint8_t *payload_out,
-> +                                             size_t *len_out,
-> +                                             CXLCCI *cci)
-> +{
-> +    struct {
-> +        uint16_t host_id;
-> +        uint8_t flags;
-> +        uint8_t reg_num;
-> +        uint64_t length;
-> +        uint8_t tag[0x10];
-> +        uint32_t ext_count;
-> +        CXLDCExtentRaw extents[];
-> +    } QEMU_PACKED *in = (void *)payload_in;
-> +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
-> +    int i, rc;
-> +
-> +    switch (in->flags & CXL_EXTENT_REMOVAL_POLICY_MASK) {
-> +        case CXL_EXTENT_REMOVAL_POLICY_PRESCRIPTIVE: {
-> +            CXLDCExtentList updated_list;
-> +            uint32_t updated_list_size;
-> +            g_autofree CXLUpdateDCExtentListInPl *list =
-> +                g_malloc0(sizeof(*list) +
-> +                    in->ext_count * sizeof(*list->updated_entries));
-> +
-> +            convert_raw_extents(in->extents, list, in->ext_count);
-> +            rc = cxl_detect_malformed_extent_list(ct3d, list);
-> +            if (rc) {
-> +                return rc;
-> +            }
-> +
-> +            /* Fail with Invalid PA if an extent is pending and Forced Removal
-
-/*
- * Fail...
-
-> +             * flag not set
-> +             */
-> +            if (!(in->flags & CXL_FORCED_REMOVAL_MASK)) {
-> +                for (i = 0; i < in->ext_count; i++) {
-> +                    CXLDCExtentRaw ext = in->extents[i];
-> +                    /* Check requested extents don't overlap with pending extents. */
-Made this a multiline comment. 
-
-> +                    if (cxl_extent_groups_overlaps_dpa_range(&ct3d->dc.extents_pending,
-This is quite a bit too far over so I just went with the ugly
-                    if (cxl_extent_groups_overlaps_dpa_range(
-                            &ct3d->dc.extents_pending,
-
-> +                                                             ext.start_dpa, ext.len)) {
-> +                        return CXL_MBOX_INVALID_PA;
-
+> > Jonathan
+> >   
+> > > ---
+> > >  hw/cxl/cxl-mailbox-utils.c   | 74 +-----------------------------------
+> > >  hw/cxl/i2c_mctp_cxl.c        |  6 ++-
+> > >  hw/usb/dev-mctp.c            |  6 ++-
+> > >  include/hw/cxl/cxl_mailbox.h | 73 +++++++++++++++++++++++++++++++++++
+> > >  4 files changed, 82 insertions(+), 77 deletions(-)
+> > > 
+> > > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> > > index 4c01b25110..7f84e147f7 100644
+> > > --- a/hw/cxl/cxl-mailbox-utils.c
+> > > +++ b/hw/cxl/cxl-mailbox-utils.c
+> > > @@ -37,7 +37,7 @@
+> > >  
+> > >  /*
+> > >   * How to add a new command, example. The command set FOO, with cmd BAR.
+> > > - *  1. Add the command set and cmd to the enum.
+> > > + *  1. Add the command set and cmd to the enum in cxl_mailbox.h.
+> > >   *     FOO    = 0x7f,
+> > >   *          #define BAR 0
+> > >   *  2. Implement the handler
+> > > @@ -60,78 +60,6 @@
+> > >   *  a register interface that already deals with it.
+> > >   */
+> > >  
+> > > -enum {
+> > > -    INFOSTAT    = 0x00,
+> > > -        #define IS_IDENTIFY   0x1
+> > > -        #define BACKGROUND_OPERATION_STATUS    0x2
+> > > -        #define GET_RESPONSE_MSG_LIMIT         0x3
+> > > -        #define SET_RESPONSE_MSG_LIMIT         0x4
+> > > -        #define BACKGROUND_OPERATION_ABORT     0x5
+> > > -    EVENTS      = 0x01,
+> > > -        #define GET_RECORDS   0x0
+> > > -        #define CLEAR_RECORDS   0x1
+> > > -        #define GET_INTERRUPT_POLICY   0x2
+> > > -        #define SET_INTERRUPT_POLICY   0x3
+> > > -    FIRMWARE_UPDATE = 0x02,
+> > > -        #define GET_INFO      0x0
+> > > -        #define TRANSFER      0x1
+> > > -        #define ACTIVATE      0x2
+> > > -    TIMESTAMP   = 0x03,
+> > > -        #define GET           0x0
+> > > -        #define SET           0x1
+> > > -    LOGS        = 0x04,
+> > > -        #define GET_SUPPORTED 0x0
+> > > -        #define GET_LOG       0x1
+> > > -        #define GET_LOG_CAPABILITIES   0x2
+> > > -        #define CLEAR_LOG     0x3
+> > > -        #define POPULATE_LOG  0x4
+> > > -    FEATURES    = 0x05,
+> > > -        #define GET_SUPPORTED 0x0
+> > > -        #define GET_FEATURE   0x1
+> > > -        #define SET_FEATURE   0x2
+> > > -    IDENTIFY    = 0x40,
+> > > -        #define MEMORY_DEVICE 0x0
+> > > -    CCLS        = 0x41,
+> > > -        #define GET_PARTITION_INFO     0x0
+> > > -        #define GET_LSA       0x2
+> > > -        #define SET_LSA       0x3
+> > > -    HEALTH_INFO_ALERTS = 0x42,
+> > > -        #define GET_ALERT_CONFIG 0x1
+> > > -        #define SET_ALERT_CONFIG 0x2
+> > > -    SANITIZE    = 0x44,
+> > > -        #define OVERWRITE     0x0
+> > > -        #define SECURE_ERASE  0x1
+> > > -        #define MEDIA_OPERATIONS 0x2
+> > > -    PERSISTENT_MEM = 0x45,
+> > > -        #define GET_SECURITY_STATE     0x0
+> > > -    MEDIA_AND_POISON = 0x43,
+> > > -        #define GET_POISON_LIST        0x0
+> > > -        #define INJECT_POISON          0x1
+> > > -        #define CLEAR_POISON           0x2
+> > > -        #define GET_SCAN_MEDIA_CAPABILITIES 0x3
+> > > -        #define SCAN_MEDIA             0x4
+> > > -        #define GET_SCAN_MEDIA_RESULTS 0x5
+> > > -    DCD_CONFIG  = 0x48,
+> > > -        #define GET_DC_CONFIG          0x0
+> > > -        #define GET_DYN_CAP_EXT_LIST   0x1
+> > > -        #define ADD_DYN_CAP_RSP        0x2
+> > > -        #define RELEASE_DYN_CAP        0x3
+> > > -    PHYSICAL_SWITCH = 0x51,
+> > > -        #define IDENTIFY_SWITCH_DEVICE      0x0
+> > > -        #define GET_PHYSICAL_PORT_STATE     0x1
+> > > -    TUNNEL = 0x53,
+> > > -        #define MANAGEMENT_COMMAND     0x0
+> > > -    MHD = 0x55,
+> > > -        #define GET_MHD_INFO 0x0
+> > > -    FMAPI_DCD_MGMT = 0x56,
+> > > -        #define GET_DCD_INFO    0x0
+> > > -        #define GET_HOST_DC_REGION_CONFIG   0x1
+> > > -        #define SET_DC_REGION_CONFIG        0x2
+> > > -        #define GET_DC_REGION_EXTENT_LIST   0x3
+> > > -        #define INITIATE_DC_ADD             0x4
+> > > -        #define INITIATE_DC_RELEASE         0x5
+> > > -};
+> > > -
+> > >  /* CCI Message Format CXL r3.1 Figure 7-19 */
+> > >  typedef struct CXLCCIMessage {
+> > >      uint8_t category;
+> > > diff --git a/hw/cxl/i2c_mctp_cxl.c b/hw/cxl/i2c_mctp_cxl.c
+> > > index 1714f36e8e..3f17779562 100644
+> > > --- a/hw/cxl/i2c_mctp_cxl.c
+> > > +++ b/hw/cxl/i2c_mctp_cxl.c
+> > > @@ -29,6 +29,7 @@
+> > >  #include "hw/pci/pcie_port.h"
+> > >  #include "hw/qdev-properties.h"
+> > >  #include "hw/registerfields.h"
+> > > +#include "hw/cxl/cxl_mailbox.h"
+> > >  
+> > >  #define TYPE_I2C_MCTP_CXL "i2c_mctp_cxl"
+> > >  
+> > > @@ -198,9 +199,10 @@ static void i2c_mctp_cxl_handle_message(MCTPI2CEndpoint *mctp)
+> > >           */
+> > >  
+> > >          if (!(msg->message_type == MCTP_MT_CXL_TYPE3 &&
+> > > -              msg->command_set < 0x51) &&
+> > > +              msg->command_set < PHYSICAL_SWITCH) &&
+> > >              !(msg->message_type == MCTP_MT_CXL_FMAPI &&
+> > > -              msg->command_set >= 0x51 && msg->command_set < 0x56)) {
+> > > +              msg->command_set >= PHYSICAL_SWITCH &&
+> > > +              msg->command_set < GLOBAL_MEM_ACCESS_EP_MGMT)) {
+> > >              buf->rc = CXL_MBOX_UNSUPPORTED;
+> > >              st24_le_p(buf->pl_length, len_out);
+> > >              s->len = s->pos;
+> > > diff --git a/hw/usb/dev-mctp.c b/hw/usb/dev-mctp.c
+> > > index aafb9e7e96..b82a269561 100644
+> > > --- a/hw/usb/dev-mctp.c
+> > > +++ b/hw/usb/dev-mctp.c
+> > > @@ -25,6 +25,7 @@
+> > >  #include "hw/usb.h"
+> > >  #include "hw/usb/desc.h"
+> > >  #include "net/mctp.h"
+> > > +#include "hw/cxl/cxl_mailbox.h"
+> > >  
+> > >  /* TODO: Move to header */
+> > >  
+> > > @@ -504,9 +505,10 @@ static void usb_cxl_mctp_handle_data(USBDevice *dev, USBPacket *p)
+> > >           * onwards.
+> > >           */
+> > >          if (!(req->message_type == MCTP_MT_CXL_TYPE3 &&
+> > > -              req->command_set < 0x51) &&
+> > > +              req->command_set < PHYSICAL_SWITCH) &&
+> > >              !(req->message_type == MCTP_MT_CXL_FMAPI &&
+> > > -              req->command_set >= 0x51 && req->command_set < 0x56)) {
+> > > +              req->command_set >= PHYSICAL_SWITCH &&
+> > > +              req->command_set < GLOBAL_MEM_ACCESS_EP_MGMT)) {
+> > >              len_out = 0;
+> > >              usb_pkt_len = sizeof(MCTPUSBPacket) + sizeof(CXLMCTPMessage) +
+> > >                  len_out;
+> > > diff --git a/include/hw/cxl/cxl_mailbox.h b/include/hw/cxl/cxl_mailbox.h
+> > > index 820c411cbb..209a11ecbc 100644
+> > > --- a/include/hw/cxl/cxl_mailbox.h
+> > > +++ b/include/hw/cxl/cxl_mailbox.h
+> > > @@ -27,4 +27,77 @@
+> > >  #define CXL_LOG_CAP_AUTO_POPULATE_SUPPORTED (1 << 2)
+> > >  #define CXL_LOG_CAP_PERSISTENT_COLD_RESET_SUPPORTED (1 << 3)
+> > >  
+> > > +enum {
+> > > +    INFOSTAT    = 0x00,
+> > > +        #define IS_IDENTIFY   0x1
+> > > +        #define BACKGROUND_OPERATION_STATUS    0x2
+> > > +        #define GET_RESPONSE_MSG_LIMIT         0x3
+> > > +        #define SET_RESPONSE_MSG_LIMIT         0x4
+> > > +        #define BACKGROUND_OPERATION_ABORT     0x5
+> > > +    EVENTS      = 0x01,
+> > > +        #define GET_RECORDS   0x0
+> > > +        #define CLEAR_RECORDS   0x1
+> > > +        #define GET_INTERRUPT_POLICY   0x2
+> > > +        #define SET_INTERRUPT_POLICY   0x3
+> > > +    FIRMWARE_UPDATE = 0x02,
+> > > +        #define GET_INFO      0x0
+> > > +        #define TRANSFER      0x1
+> > > +        #define ACTIVATE      0x2
+> > > +    TIMESTAMP   = 0x03,
+> > > +        #define GET           0x0
+> > > +        #define SET           0x1
+> > > +    LOGS        = 0x04,
+> > > +        #define GET_SUPPORTED 0x0
+> > > +        #define GET_LOG       0x1
+> > > +        #define GET_LOG_CAPABILITIES   0x2
+> > > +        #define CLEAR_LOG     0x3
+> > > +        #define POPULATE_LOG  0x4
+> > > +    FEATURES    = 0x05,
+> > > +        #define GET_SUPPORTED 0x0
+> > > +        #define GET_FEATURE   0x1
+> > > +        #define SET_FEATURE   0x2
+> > > +    IDENTIFY    = 0x40,
+> > > +        #define MEMORY_DEVICE 0x0
+> > > +    CCLS        = 0x41,
+> > > +        #define GET_PARTITION_INFO     0x0
+> > > +        #define GET_LSA       0x2
+> > > +        #define SET_LSA       0x3
+> > > +    HEALTH_INFO_ALERTS = 0x42,
+> > > +        #define GET_ALERT_CONFIG 0x1
+> > > +        #define SET_ALERT_CONFIG 0x2
+> > > +    SANITIZE    = 0x44,
+> > > +        #define OVERWRITE     0x0
+> > > +        #define SECURE_ERASE  0x1
+> > > +        #define MEDIA_OPERATIONS 0x2
+> > > +    PERSISTENT_MEM = 0x45,
+> > > +        #define GET_SECURITY_STATE     0x0
+> > > +    MEDIA_AND_POISON = 0x43,
+> > > +        #define GET_POISON_LIST        0x0
+> > > +        #define INJECT_POISON          0x1
+> > > +        #define CLEAR_POISON           0x2
+> > > +        #define GET_SCAN_MEDIA_CAPABILITIES 0x3
+> > > +        #define SCAN_MEDIA             0x4
+> > > +        #define GET_SCAN_MEDIA_RESULTS 0x5
+> > > +    DCD_CONFIG  = 0x48,
+> > > +        #define GET_DC_CONFIG          0x0
+> > > +        #define GET_DYN_CAP_EXT_LIST   0x1
+> > > +        #define ADD_DYN_CAP_RSP        0x2
+> > > +        #define RELEASE_DYN_CAP        0x3
+> > > +    PHYSICAL_SWITCH = 0x51,
+> > > +        #define IDENTIFY_SWITCH_DEVICE      0x0
+> > > +        #define GET_PHYSICAL_PORT_STATE     0x1
+> > > +    TUNNEL = 0x53,
+> > > +        #define MANAGEMENT_COMMAND     0x0
+> > > +    MHD = 0x55,
+> > > +        #define GET_MHD_INFO 0x0
+> > > +    FMAPI_DCD_MGMT = 0x56,
+> > > +        #define GET_DCD_INFO    0x0
+> > > +        #define GET_HOST_DC_REGION_CONFIG   0x1
+> > > +        #define SET_DC_REGION_CONFIG        0x2
+> > > +        #define GET_DC_REGION_EXTENT_LIST   0x3
+> > > +        #define INITIATE_DC_ADD             0x4
+> > > +        #define INITIATE_DC_RELEASE         0x5
+> > > +    GLOBAL_MEM_ACCESS_EP_MGMT = 0X59,
+> > > +};
+> > > +
+> > >  #endif  
+> >   
 
