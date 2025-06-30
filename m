@@ -1,98 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19E21B87F0
-	for <linux-cxl@vger.kernel.org>; Mon, 30 Jun 2025 20:12:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A747443AA8
+	for <linux-cxl@vger.kernel.org>; Mon, 30 Jun 2025 20:32:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751314362; cv=fail; b=BxEhJLMo3gLlPof7MJUwNyG+8zIHrWv29DrdDbyYz7orTroyqnfwNOZLWvaT3KzQpr4/GhwH1vg1u9YZZ8jCw3uK1Pl0POzwW+R8P+QbAS8EWALZJXKoBSUrwS9yFmh+1QFEOTIP/xRwhX0rUf5doheXXOBihZC1//3LBL2niAg=
+	t=1751315569; cv=fail; b=i23P6fgvrw1HCLMHEshMvug6ycAJaRbwplcrQaWqZsFYf+rJO2Tkl71cxjjQI+MAlUNYC/mTCJ5sfJ8MRjgsVOtokbU+vZcsicGG+4r7zd6RcoWoURLPT1LUTEVVdS8f6w0LG1BEVFU8kmtH5AZ8V3k88B4y9F4heG/6kiqDLzM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751314362; c=relaxed/simple;
-	bh=7rPiWKoB0AFRg4dWaT5SlIJzKIuN3sF3SnLLN4mHueg=;
+	s=arc-20240116; t=1751315569; c=relaxed/simple;
+	bh=AjDG8uXiXpiYjSV624iZDtZvZVKAq9u+pWUoJAsE98c=;
 	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=c0vn1KU+NNlunFv49YwySC8uBf1FO/6rOpyYtxMSBvd4J6+D4c1qqNW4iQr1b236O5n5BAvcNw3z2XZgru+hkL9rmT86UNkPDsThAaIt7iP72IPF2Z1xqUp432MGYI4yt9uwQ8NJlNBqbFLkUfjFszr1rnk693MfmoD9C0A4oCM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JdkyLx3L; arc=fail smtp.client-ip=192.198.163.16
+	 Content-Disposition:In-Reply-To:MIME-Version; b=BSEiKx5hsCgdpoQQOo2eMvpXLlllFYq6RAgMxg4LO7lCpPfojr/FwnnRcw1gswtI/dfqeacT0PBiKhIhW0bQZIrf0izCw4y3EOCxzE5EOjgA4/H//KtvqCDLawschGWNQCUenzC5MrGBpo6LSPDvmMMh+UHqNc0TIGajl0mbTtA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aW3Ks4iN; arc=fail smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JdkyLx3L"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aW3Ks4iN"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751314361; x=1782850361;
+  t=1751315567; x=1782851567;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=7rPiWKoB0AFRg4dWaT5SlIJzKIuN3sF3SnLLN4mHueg=;
-  b=JdkyLx3L3776H1L1agcFnVZGCj8Zd79xFBLOeOMBE3jrRBzn9YPC02Rr
-   4Ttui9tT4sPO8JpY6DebLUJ/zVXiEhvoyB+hdp5yk9/lnqxtNwORFsJO3
-   CeAO+2j6n+QYJeH/qqBu4tUqiC1LTvoD4soQH06OCMfnmeGIn/SZNFBml
-   SoaduqRJZdArqe7FyAGg2HCl8ni1hZLqcsphDQW/7yhp9UbpZZ0s5uKYy
-   A12e5HUheZjazyTpmeSKKrh47tzYw+JiluIoQo/B+Mw53UVClO+raDhWE
-   QkHzK6S/rNUj7d4UVnLiEDJRgpjQO4K/XXaxDBZUpN9EFcNypU6y3o+7a
-   w==;
-X-CSE-ConnectionGUID: vlE5+mMZQGGCYs6F8mE/Cg==
-X-CSE-MsgGUID: IxqOsQbNRVC42X3EXh/hnQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="41179478"
+  bh=AjDG8uXiXpiYjSV624iZDtZvZVKAq9u+pWUoJAsE98c=;
+  b=aW3Ks4iN3WVED+Xq8CiHVCQaYjteJ40unqYy8ejXQY0w1yXPiTRorERt
+   3SMW74pw3AeWn8B2YoNe50C1kfxf/xaHzu/HPKLa4Je0YBWPSHSQSQ1vq
+   Uvaou52Mm/8E186xugdsha8DHFYJoVsFD4yQMP7+/e6c4nPTyiOgsuz4a
+   M2P99PRwUfsPZRoOOkfGVOYSNdJig+bpom5gGc/Mf+51InEs1qNaBZ1Yi
+   C6SaBY4aPereKPl13lUbthbsk+R9ft3OYC+mcYYxeQqFv1Anv03h3bt1R
+   eFVEgwdrHO3LCc00NUWxWMCZ351zPMxjjKjti8uJEvwp30JI4sNgMLj+z
+   A==;
+X-CSE-ConnectionGUID: OhDtupncSLGy+WNNJ1nmHA==
+X-CSE-MsgGUID: pzT8yVWoT7OJBmn5KFcm0A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="64156997"
 X-IronPort-AV: E=Sophos;i="6.16,278,1744095600"; 
-   d="scan'208";a="41179478"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 13:12:40 -0700
-X-CSE-ConnectionGUID: V75RPeEhS2uTawenevKpzA==
-X-CSE-MsgGUID: /o2cnbvTTFOiblgAgpj6gw==
+   d="scan'208";a="64156997"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 13:32:47 -0700
+X-CSE-ConnectionGUID: luuNbt4gQOKi2m21fmP2aQ==
+X-CSE-MsgGUID: /FonQw9XTKakAbsn1c1Wqw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,278,1744095600"; 
-   d="scan'208";a="153182086"
+   d="scan'208";a="190733364"
 Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 13:12:40 -0700
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 13:32:45 -0700
 Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
  ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Mon, 30 Jun 2025 13:12:39 -0700
+ 15.2.1544.25; Mon, 30 Jun 2025 13:32:45 -0700
 Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
  ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Mon, 30 Jun 2025 13:12:39 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (40.107.244.47)
- by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ 15.2.1544.25 via Frontend Transport; Mon, 30 Jun 2025 13:32:45 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (40.107.92.47) by
+ edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Mon, 30 Jun 2025 13:12:39 -0700
+ 15.2.1544.25; Mon, 30 Jun 2025 13:32:44 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=drSkhD1aDrQVuRwaN+GPtWVynwqwRuTvaB1guTm84urlpfqRXLEZo5exJhehpCNoLDx8SQCLqyioZzpysLpcr7KzJfZpLHVO8DSFXz1aYMtqZMyW7jZM7O2c0IWykJiqOe4ZXy/LqO1fJci3hk3+42G5KhjLfAaNpRnzQO9+M7VDtvEAhiXfxRQDKQcGviZGYBhcyxh/vVH31hYzqbOU2cuems4FsN+XVQA3eBvytb5n4uXITdIyMF2hA04iRjmswdSFjxA9Yu4sMDsqRc6xw776NyOje6tZC3X5EPPK3TE/4h6GMDzUw/a/UdREEzVqdM8T+jOrOYj19dHKMofMiQ==
+ b=ljTHBSh9HHS+Po0mD/aTYkEe6vUXeS8tkhk/gPMkGlO7XdrdMjAoc3krzLICXthOB3d164AkUxCKQ58hCGiZ+l9IKztKlzKYBAiGmFPme3GxJtVizPhhkFYchcPZixc+1qCh5aC1S90JGa+UdMLj2Zr3HhZAZnspGNN4fLVhfVQ2zdXpYQfjzHplIoDVkZI8INiHTWhSTiCzkriSXTS1OrauJablo+M5NJV7xzgcSKPO863brCXiuUcy0QFShOz4UF5zQ8BF9E+G8Ab7yhC57tHz+bX7NFpM0z5f7aq1fVt0RVVD20ual3beK6nA8oKmh0PH4ZPcjm5srzP7+V1I6w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fNOQ2cW/FIm+yWVZawaKoTWOsUoPRn0OHeqXuItQbfE=;
- b=MWh5SLaGFLr6V3HgMg7B9SSuCvx2GSYPElXw2d612B2H5VQ0MNR/hTCnp+gnDPpDyqsyDyFnJvHbDnGQBzvJOmJUbOVoKDett+To26q8F/VlEGWAZJ38HJtarBtMvG50cz9io2Vna6oN+2Z7gKpyZ+bstecd7l4PClrD6YUNuFvJq1OioMpYT8CT2zOYbbucvPZDsVT30Vc00GR3kMMILb3o1B5vkCa5Zip6ZHJdqMVxTeSvAPqca3og6sMmZHj9s52WzKgJDdKmBIBmM3ByvhFhlZJXsmth9Tgje43U0kKFZfsqYDsxqc6fZbYxpaB7vsvNO3bdpHg8uQW3I5Z8hg==
+ bh=ViUheAbjYLM48reDrkhJHEwl+8RqFsv5m2mLTJwvyxE=;
+ b=sfjJR4k5EKytVj6GLsn1ZitJkSN5Ks5zIgwzAsU4Q6mbLm8lIwedL/tjQ5C6l9SI4k3scpy9fxiR/ZNYqAAfUc8C5pw1LaaodXQ/A3spi3z8yHPvnqQzfPmcuIBlq/x9avo1aTB0685jt49gWBJfLuEVjMYleEWSjP2HzFa+DPQrhCbXNTDDTza7ksQjaGSt3puR8JUU9V00hFtSKAreZNJFCSTqtEwx6EkZDaW+CjVdiTsvBQ/gr21OwAecJjH+zYvTwhXLrNv1CdxIlKcJMdGpcwlFoib4mYjDWBJBGV6IbaTSLUw3E4HTnGD1zgdmMXXiqXfrNGTu0V/bBFWdYw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by BL1PR11MB6002.namprd11.prod.outlook.com (2603:10b6:208:386::12) with
+ by DM3PPFE441933A2.namprd11.prod.outlook.com (2603:10b6:f:fc00::f56) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.27; Mon, 30 Jun
- 2025 20:12:32 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Mon, 30 Jun
+ 2025 20:32:42 +0000
 Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
  ([fe80::8254:d7be:8a06:6efb]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
  ([fe80::8254:d7be:8a06:6efb%7]) with mapi id 15.20.8769.022; Mon, 30 Jun 2025
- 20:12:32 +0000
-Date: Mon, 30 Jun 2025 13:12:28 -0700
+ 20:32:42 +0000
+Date: Mon, 30 Jun 2025 13:32:35 -0700
 From: Alison Schofield <alison.schofield@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
+To: <dan.j.williams@intel.com>
 CC: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
-	<jonathan.cameron@huawei.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
- Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+	<jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, "Vishal
+ Verma" <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
 	<linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 2/3] cxl/region: Introduce HPA to DPA address translation
-Message-ID: <aGLvrPbHdKAP2Zmn@aschofie-mobl2.lan>
+Subject: Re: [PATCH 3/3] cxl/region: Add inject and clear poison by HPA
+Message-ID: <aGL0Y-k8k4xaZcrn@aschofie-mobl2.lan>
 References: <cover.1750725512.git.alison.schofield@intel.com>
- <4c4a1a52a4651b726ef66d9020e71e731b74cb5d.1750725512.git.alison.schofield@intel.com>
- <ef98b7b1-0fec-423e-843f-e82281eb48ef@intel.com>
+ <50bd42e0db1ed5979a00e6f5a43147320a1d5b9b.1750725512.git.alison.schofield@intel.com>
+ <685c80bf237b2_23a2a100bb@dwillia2-mobl4.notmuch>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <ef98b7b1-0fec-423e-843f-e82281eb48ef@intel.com>
-X-ClientProxiedBy: BY3PR05CA0024.namprd05.prod.outlook.com
- (2603:10b6:a03:254::29) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+In-Reply-To: <685c80bf237b2_23a2a100bb@dwillia2-mobl4.notmuch>
+X-ClientProxiedBy: SJ0PR03CA0151.namprd03.prod.outlook.com
+ (2603:10b6:a03:338::6) To DS4PPF0BAC23327.namprd11.prod.outlook.com
  (2603:10b6:f:fc02::9)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -101,147 +101,198 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|BL1PR11MB6002:EE_
-X-MS-Office365-Filtering-Correlation-Id: 842557a4-ce4a-4f95-9571-08ddb812723b
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|DM3PPFE441933A2:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7c4c7402-4126-44eb-ab92-08ddb8154372
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?uihFQ4yOCOncat1Czhcr1BNIlJz/G760mkEbFY7u+GfQocIUcMj1z/H0s/TW?=
- =?us-ascii?Q?ahCMH0Yi8JjyT5ctyfJr3jEmk4KtaOEOOZh3NitN4DH3mC9477C1/qodnsx3?=
- =?us-ascii?Q?MbNFeasvCsqdu8tPMjG0btskQ33v5M2qRjv+m1wvZuaPswC+viIBBJHQXhhl?=
- =?us-ascii?Q?wKQblIOKfq67gStVKMQ6UrjA8PLoFXM4moGtMCJnj8WCZHbVKqieMOiCTkkg?=
- =?us-ascii?Q?ydGdlaBB3FqnrAq86VFdkeILzhmENfAr473nfU+Xw30JAXYIO3MTP++LDUph?=
- =?us-ascii?Q?q8Gv3F2ISpj/mv/kDHeH18BMtGNoKLp3rGkufEynl8l8CUO/bmHkV0Df84Cn?=
- =?us-ascii?Q?gJwidhai/PvqRmGa448RLv+9Cqc4eo2KCStEe9Tk0YW6MQ7Z+7On0kNSZl5J?=
- =?us-ascii?Q?EN5oZXcWS3p8gjikTf+20XwU/c8h52OvcJOl597xT2JBhjLxoJnnch9MtYwu?=
- =?us-ascii?Q?s4wRQw8/IveF3Own22NeLJV5d74Y4Kur3f+hXvqIPr4u7yGId0NCsD4xZ0PN?=
- =?us-ascii?Q?dal4jRUFhtp7zSeeR4xkfaD4w267iZyKNOKqJoUuku5Yuh9KD1SDo9MGq5Pk?=
- =?us-ascii?Q?PPoq4Vv67ZvYy23HVvYsuezHEy2uPGIQf9AKMQ+n5i85PAWPioFqMKG88Yel?=
- =?us-ascii?Q?2sBFiwvGelt8ivA3iSXqm0Xq0yb9hTB8dhTcSNcpi8tAMTS1PjvuMW/wMaTn?=
- =?us-ascii?Q?+ykrRw8NNrKs14zn0d9Z4f/Rr1PoEU3kPJCAd1VKaLnj8nWg0NV1Nlk7ZmCO?=
- =?us-ascii?Q?1Bonj8oRgtej3JI84Ia+95oBQOza/lBf3b8V0KkxSrMW+6B7Hl9VZpyTc+Tm?=
- =?us-ascii?Q?CuHJ/AGiPGQ4YhiSaWw0e3PJ4z65y3rrQ2yF7yrOx8l85bHXmrfzt18k59+h?=
- =?us-ascii?Q?2TVw2hxDt92p29RWn06p/DlgNzA5XprAIg1HY8oSLDyupLWCui8ttG2hfX5w?=
- =?us-ascii?Q?OCzhQ86Qb626JHEnOZe3IGeRNNMPEnxmhppXjvVnqGn9dODy5WpbmgSjfwzc?=
- =?us-ascii?Q?EeOE6MyHENYNHJYVDilChUZ9ypHqdBvc9sfGb0oa2C1wy5nCjSzj0cmvbosJ?=
- =?us-ascii?Q?gX8tdLIqEenyvhzbuQIagiTmBf3qkE6Yoa0YyLIseb6BrDxqBHcWR4uZdgUV?=
- =?us-ascii?Q?qCgC7VaWIYblMXF7ao9/gqVLTGkedpq9plE0VTPhZZ0kBcDrzXMv5/seU6dU?=
- =?us-ascii?Q?pUMuyHwvmJM/TIjPUpFLCfcGT0t4B88DvKc4HdwXjb+JaScrgeIxRLA8fbhv?=
- =?us-ascii?Q?mU27hVtx2y0aVaAMNuEL8wnzSjmZkXCvBay8AUt3yTNBoEv+uH+PqF336r0m?=
- =?us-ascii?Q?lynV7T/bcQVqHXtp5qNmqZCgt3NxFRMPHi0HQ0uozxCM+fpdt3AaCY/r9HFj?=
- =?us-ascii?Q?aiDOJnldNjIKmgNwFadROQOtqyplUs5+zF0DbUiYu9eh3kgijgTXUpaFc0J9?=
- =?us-ascii?Q?ZCXcDvvqTH8=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?Ub+kHk+6jZnJFSMBpH40PR+eUsflyTZF2YtIX6NnTyp2v+PRZ5uCIHr5iomK?=
+ =?us-ascii?Q?TA5VJGPqMsxmsaF1wLzZUm6UBMFyMr1P9qWCpL6Z3+PXvxChlSvu9HbDD+lF?=
+ =?us-ascii?Q?Gpy+VBaVq2gcsTrXG2z5IPlfCgYd2a2ejcz/ayo6KKxkvuzxvtrGLQNNaTeT?=
+ =?us-ascii?Q?sxnNu+De32O4qlUcQtHOUzIS2O3tQCMQW2JTn86IECqrB97cz5jhwTwIAdov?=
+ =?us-ascii?Q?txbCt76VGWSZF/LTHvKtUbatFLfykKkfTuILx5Fe1jWQhT3UT49gceMzaGDR?=
+ =?us-ascii?Q?KWVv68HnCjuL54OGHJ+n+10Lfys4OT1F0uOvgWV32/9axPqeQPrjnA/X8aBo?=
+ =?us-ascii?Q?AtBp7jNLARRIbi4HMcIMnV5z8JujJn8CAQS2993wtLk+VFgUIBUKPHL+nWCe?=
+ =?us-ascii?Q?glkgltk8IFBs6etxkstvyb4BIl4ppnJPwKF7cWq/pRjYp1KfV3DG14iacdY2?=
+ =?us-ascii?Q?6lDs2l594kh1Ksh3SjUXf5wQRnMYsOC23x1yiMI5Nua8pgEqxQ0S6JIqy/Se?=
+ =?us-ascii?Q?m3tsLKYoyZujanTz0w933fDWxoJkloIz2Vd2D1t66bZ1XD06kRrc9ZpFto4A?=
+ =?us-ascii?Q?LswmwwJv+SQJc4iG5gqANY4OiKn6FeGnMmT84++Ew0HFW3NZUDyL6DSyo8WJ?=
+ =?us-ascii?Q?7bjZZW1vGIPk0STCX+yLsEinOJv4SGIsEu4RdH5KqXmVaP/532uVtt8oXVEq?=
+ =?us-ascii?Q?PMWVF1TEkFFxyA7QLU+nhSCOSleAPEcKL5jYhV+QI0GrdvesQ67Ln/8oFR51?=
+ =?us-ascii?Q?rRFmRkq6hFSPUrDceA2lt7RMaqvQhwao07TLiiL5kCaJeM60duBAv6H9vj/W?=
+ =?us-ascii?Q?h2MhEYO1Z/lP/wwcpuI20siVTOL/aLahFxt6qCkpneNG48kww46fNDUCdZyr?=
+ =?us-ascii?Q?431nHoXSDP8x9PybUfTxGHt6NXIHDsWVHfdtncu8nuv154cfLACgMBBZaTku?=
+ =?us-ascii?Q?l4rS3j5HFC027z+6+imgjtWpxMTeCGoMsOMSmZV17U4SREP0P5dchOiJs6lq?=
+ =?us-ascii?Q?tiC4RxYqlf+tBgNKGfB+Ds+X4XpCby0CDJq1eYL/2iwoCo9xJCPG4OWVh17J?=
+ =?us-ascii?Q?Rjy9XxlSb2h/sIpM25dnH9lIfKWuoomqKNyvzQ1Ic1FjfdVZ+hxa1uceO1OG?=
+ =?us-ascii?Q?rZxkrMYUWy8rL0xVivM0OuJnEdNVw3FdiGV+L9JvhR2XuufgVJ9TQDgZmwOx?=
+ =?us-ascii?Q?b5fwAfB/w6ccx5/sv7GGw5HkGaAWBJkm85eLfSctVEPglJhxSPqUhKvUdyTl?=
+ =?us-ascii?Q?MvknEHb8dfOHUQi5g49GsYTevvQ2YB/1pJj9vKTheR9UYjFS31PktQpoI5cA?=
+ =?us-ascii?Q?9/FLLJG/fK+ZBayV0HDgtr98MzuThRsOPKRwJ7iR72G+ViWRq/9nijWJJLEv?=
+ =?us-ascii?Q?SZUF68fY/HbFxtd96qz2vDKZuhDQi9+wfdtzvUvOYn5shaCFwZpUAYrsVK6w?=
+ =?us-ascii?Q?pLno+hQhLKE=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?HnlFtXQKCcvX+oh1MMyVzF6LopNmEv71q/jSOH97AdwM8tldmOLV2wpJIZ5h?=
- =?us-ascii?Q?9Eb8LY0i+Zf9KTtxEYHDXgdrn8euWkbzuKIWRuyDVVpU3N8mmutVAYNu0l+t?=
- =?us-ascii?Q?4MLqxP2P943zEbjmsqwLzOQGTOvQeG5p3bUi1/kWa4oXWEcReigW2dnpsads?=
- =?us-ascii?Q?c4Oe7iDoboOerTl1TcMDthyDJTPj29ZarXjamGrHtXG9kQFcOF+wd2XhIyRd?=
- =?us-ascii?Q?RfSDFZhB0C1qVLmtTsC7KINP5uSrc6LHb1IlMKIkEf/GbDmCUu8SIcpPoWMv?=
- =?us-ascii?Q?BFOi1adBXc3ZF0y3kXQdfJja7C3vVmRJjLkzEnGI+6a0C0k9OuJ0lNTuEFzW?=
- =?us-ascii?Q?CsLBvJUcvm44B/w9Q79YiRAQTAOfoIJV8cl7TEvSQtzqEScDHwTI+i4Wrzp2?=
- =?us-ascii?Q?KwJZU0zw+go9R929Y9jNb2fJxRbOgh7iX5Tm81f890vaszIDW9Y+DdLIdhBL?=
- =?us-ascii?Q?2WJn0JDwrF5/KuCCKrlo799AQxaEelLwllBPSi5N/Cr8zHns78otl8fH7Cgb?=
- =?us-ascii?Q?65vP7di1k8KXKfpgaZ8UOnOvaqveDBBiMu7IzzRak+KFhyDA3ZDZoFFac01U?=
- =?us-ascii?Q?eBmiAXWR7EivR13M0P4NZ9Sb2FhDqWSOUWnl7IBMlfSOMQLWCLVBubIRGymi?=
- =?us-ascii?Q?bCZENcAcadOIDWR13NWzl5XjnEjO8T6TzuqEuG0YyJUr470zCoxV42qCgfvs?=
- =?us-ascii?Q?GWIl2l6/bdrlaz9cYCtbkxqg5+6n7SJ0zyq+BTkIEwlC8sz3+QptNL40xGqH?=
- =?us-ascii?Q?3HxWGyvmL+nVtQmjCZM4n5aSaD9r1pQLhSpSpLY9ZHTyOMDFjl5V1cBbTpAA?=
- =?us-ascii?Q?ZCxCbV8iJIWAOBZn59LEs6XUrr1RwCfmH0BBxCigtJXqdMb6s45PA0crE31C?=
- =?us-ascii?Q?g+LspjP7pf/rdQHejbA/XQ1Wob4pMBve91v12cR2OvqrJJcq7Ce16qEYZkVz?=
- =?us-ascii?Q?Qr1y7sQXyDsioGLZRuby0/NR8C0w02IfJVceXGTXRIPXzyIQ2vv+DsBwB1lU?=
- =?us-ascii?Q?OveUVFIgc2vPt8aDAadHWDAIqNMyfs6gzudWxzgA515cZzVXGnn6yYuEXdQv?=
- =?us-ascii?Q?tCS4xsomBCzXgd/k4sem/28B6TXPU16c7Jhgl4pvf7MhloJEu/sP+ba3VvK2?=
- =?us-ascii?Q?2zPVF2x1kR/IIKbjm9eJkJUPogx5mNqTD1uVibcABn1ME7uGSaP7ZHf4sfAK?=
- =?us-ascii?Q?qD/CX8HOVkVTMs825lcNAHaWmJ+SLoadVpBJObkcXuUfQUaZc8eZ6CSxS6YI?=
- =?us-ascii?Q?MB6jcZfJOclFdUJAWUxlwT/BNbe8hFY9VcuNruH4LYH67IDbNHNsDf07Fnk5?=
- =?us-ascii?Q?6LhPGTIni9iOUnC6o4zHBNHmWFFM2xEzaRwGR+TWTelc3cQj3xnp379FKLYw?=
- =?us-ascii?Q?DSdlxK8Ef6wyp5fGzPLFD47imi/p/jlpc3pOd2l56xzyCRf5VNTSryPkVfYY?=
- =?us-ascii?Q?M1Hf7Xn1CaqCVjbZoshe0V/xySKZGTFMF8HWAGea5mNEYHEFUSf2aSRYH2hq?=
- =?us-ascii?Q?w/qUr7VUm/T+4aZ18AYCgXeF+b5twOTqxE0pd64T2uAUlhKJ7h2wGp1T9egF?=
- =?us-ascii?Q?nAABQaYLl6M4mR/zJDBcRq3elFUqvWoy2sdvZknwn2yzH6xkag6yEeuQPm8W?=
- =?us-ascii?Q?RQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 842557a4-ce4a-4f95-9571-08ddb812723b
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?dFvIessQYlPtVz5hjOaMtGX5eL4UWzcMNGlKBTLksg5gmzL6ZfyY9nIfpYkY?=
+ =?us-ascii?Q?unjDHZE5LIFllKmwiS4206CF99WquPJ3W4KuljEvBrsa8s4aSIzf+gtpb9UP?=
+ =?us-ascii?Q?2VzoHOf/A1iKZNDWfG8ppjBl7CwsF1cI1ji1yyNR9r0POd9aNaA0wIemxLle?=
+ =?us-ascii?Q?XD2tA/i0OJBTlV8de+9KPvhfOjAmJwzcVMyYkW4rGSbpEQb+e6GHDTmvr8+M?=
+ =?us-ascii?Q?5Ghm5kzK7lBUTdrUMzOU7pZppMw4/Xtdrvn6x1vLvnTYxJDxSSdX4HA79t/Y?=
+ =?us-ascii?Q?9Tpxs3SMfoa4VBAgan5+WwAL6c9mHD/gKiRkNSEZkYR/d6SsAH4uvsmQ0Hgy?=
+ =?us-ascii?Q?uZl6bHe4HWjaw3BZL+V3j+aqBUKu9iwt03NHPvmFtos0nvb+eTIlEKgAebTX?=
+ =?us-ascii?Q?j/5evZtOyY7JmMr5Tb6gfw7v0XDEo+pAq43+Zq7kYDQYjaPxGNnd6eC+hJpq?=
+ =?us-ascii?Q?m3bhaHfrsT/bRHaV1Hs29UaGYMQquL+78p4grjanUEpoYiVQN/tNJ8HUp5z8?=
+ =?us-ascii?Q?ok1hqJUURMd1RU7qDfdI83o3ZEgBDqTq5JqzUpgCq4ap8P0K8OQ6ET+UAZY8?=
+ =?us-ascii?Q?QQj13Qygsq1SHpY+CDS6/m0Y3vEk3fivzncJyrhEn1VLourfj01eZron6S/R?=
+ =?us-ascii?Q?YPczrAK6v3X//PJenf8Wc7KUTLuSopVsHJ0OGP0oMgqy3+3h3kEPs97ZFZdh?=
+ =?us-ascii?Q?MTOuQdb8+qHTzcH0bnvyN/6vYnp3K7BMqAs9IIa6vD8JrJ0yrPJWmYGO+z6X?=
+ =?us-ascii?Q?kuIb8oPMfgc1thmaLmxCSSJi+RNmHwunOxpuAoL0INnWMBg40sqlCM4SCBmT?=
+ =?us-ascii?Q?tH6y+2Saw+/KOU7A09SDtEFHHQvPeUcfmEG9Eai8Em+EgTOUkVoeuQFPWvB9?=
+ =?us-ascii?Q?MJ05ioV4JgnWlmdbNwGGfQjO2YF4OHt/kcxlUIR/tWgXAjdDUYtjdHzTy2aZ?=
+ =?us-ascii?Q?I8inC71A+qeTSoIbsak3YNERR78r308/VOdIk+7IXAYUVN0J43SNZv3fmTTd?=
+ =?us-ascii?Q?p72ubcxfLGzdv6qvZky39uTvu8Z2MKsLmGINGGi44GtbzsxDJXIYRcpp6pZe?=
+ =?us-ascii?Q?ywtYbmD7d2ekSnIXNoLSHuWOFf9aJb8qDphoOOLIMXVIj2T8SVei5d9L/1uy?=
+ =?us-ascii?Q?UvXeq+1CpQaFPxPKSevnSWn3CKDDf+tMFg0YIWiPEPebKO1XYy+LmsbBg21q?=
+ =?us-ascii?Q?9JONWJMGEmF5loYFw3oyuJqJlfhGk/SyMVxo2y7tzZZpv47fUIg8lw858ccV?=
+ =?us-ascii?Q?fmxMkmDdoECGP2ikzuNR+kEP7oMBPc6qFjWtD/+qpDb3iVsrUZrpUsXBDHZ+?=
+ =?us-ascii?Q?3zhn1GC4YgUj23ErE7uQTeDQ3JVTRwLUv4Cbu0cUQHjmuSyXKJnpiQs7ei7u?=
+ =?us-ascii?Q?muQGUgcLiB5tXuZkdQmndChJ23F1S3tOlYwtDrB1YngRxxAe08fXdi/fbWBc?=
+ =?us-ascii?Q?9q3jHe0/0qPIPjQonJIKf6n3/R3M4UWl5+ilVn1h3ZAfr6VHuO0nJtx/q5zO?=
+ =?us-ascii?Q?SrQ+QAm29uHKV5MEneCc78vsqCYkiZJ14+HLfuy/j+fpBWHiQSwIb5nC23Ny?=
+ =?us-ascii?Q?0KtjIl566IN0NplWyIvhd+gutDQXT6ne92iomivxsvE9Vqm6g3izKyFBMKw3?=
+ =?us-ascii?Q?sw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7c4c7402-4126-44eb-ab92-08ddb8154372
 X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 20:12:32.4203
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 20:32:42.3652
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XCNsy63KCsty2cZQ4MJGMpUMsT+1YslpFRjdziVVOT+Em2KL2eLVGMtZx+qVPGhHM1vrZm1XYW0ph/Y/ca2P7rTthxj7b1S0ok84oO+O0Ng=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR11MB6002
+X-MS-Exchange-CrossTenant-UserPrincipalName: nw3o87wW/xtt8PrrYuRsU7Fw2oDMXsvForj0p2kjdUK1TxGQ9gEwu1sNi82kIhHnPavV/s8ss4Ff1AzG8PgbK6JniG+1T61RI9yQ9coL3D4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PPFE441933A2
 X-OriginatorOrg: intel.com
 
-On Wed, Jun 25, 2025 at 03:49:37PM -0700, Dave Jiang wrote:
-> 
-> 
-> On 6/23/25 5:53 PM, alison.schofield@intel.com wrote:
+On Wed, Jun 25, 2025 at 04:05:35PM -0700, Dan Williams wrote:
+> alison.schofield@ wrote:
 > > From: Alison Schofield <alison.schofield@intel.com>
 > > 
-> > Add infrastructure to translate Host Physical Addresses (HPA) to Device
-> > Physical Addresses (DPA) within CXL regions. This capability is being
-> > introduced for use by follow-on patches that will add poison inject
-> > and clear operations at the region level.
+> > Add CXL region debugfs attributes to inject and clear poison based
+> > on Host Physical Addresses (HPA). These new interfaces allow users
+> > to operate on poison at the region level without needing to resolve
+> > Device Physical Addresses (DPA) or target individual memdevs.
 > > 
-> > The HPA-to-DPA translation process involves several steps:
-> > 1. Apply root decoder transformations (HPA to SPA) if configured
-> > 2. Calculate the relative offset within the region's address space
-> > 3. Decode the interleave position using the region's interleave ways
-> >    and granularity settings
-> > 4. Identify the target memdev based on the decoded position
-> > 5. Compute the final DPA by adding the decoded offset to the memdev's
-> >    DPA base address
+> > The implementation leverages an internal HPA-to-DPA helper, which
+> > applies decoder interleave logic, including XOR-based address decoding
+> > when applicable. Note that XOR decodes rely on driver internal xormaps
+> > which are not exposed to userspace. So, this support is not only a
+> > simplification of poison operations that could be done using existing
+> > per memdev operations, but also it enables the functionality for XOR
+> > interleaved regions for the first time.
 > > 
-> > It is Step 1 above that makes this a driver level operation and not
-> > work we can push to user space. Rather than exporting the XOR maps for
-> > root decoders configured with XOR interleave, the driver performs this
-> > complex calculation for the user.
+> > The new debugfs attributes are added under /sys/kernel/debug/regionX/:
+> > inject_poison and clear_poison. These are only exposed if all memdevs
+> > participating in the region support both inject and clear commands,
+> > ensuring consistent and reliable behavior across multi-device regions.
 > > 
-> > While not immediately apparent in this diff, broader examination of
-> > the region.c code shows that this work is basically the reverse of
-> > previous work where a DPA is translated to an HPA. This is notable
-> > because it demonstrates that these calculations reuse existing logic
-> > rather than introducing new algorithms.
-> 
-> Are there any public documentations (or spec section) on explaining the translation you can point to for each of the function segments?
-
-Yes. Will include in the v2 update.  Also, as I mentioned in reply to
-Jonathan, I've backed away from the just reverse the dpa->hpa
-messaging. The reason is that the spec defines exactly what to do
-for hpa->dpa - which is what we are doing here. It's simpler to just
-look at that, rather than to reverse what we reversed for dpa->hpa.
-Clear as mud ?!
-
-> 
+> > If tracing is enabled, these operations are logged as cxl_poison
+> > events in /sys/kernel/tracing/trace.
 > > 
 > > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 > > ---
-> >  drivers/cxl/core/region.c | 85 +++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 85 insertions(+)
+> >  Documentation/ABI/testing/debugfs-cxl |  33 +++++++
+> >  drivers/cxl/core/core.h               |   4 +
+> >  drivers/cxl/core/memdev.c             |  11 +++
+> >  drivers/cxl/core/region.c             | 120 +++++++++++++++++++++++++-
+> >  4 files changed, 166 insertions(+), 2 deletions(-)
 > > 
-> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > index 6e5e1460068d..d2d904c4b427 100644
-> > --- a/drivers/cxl/core/region.c
-> > +++ b/drivers/cxl/core/region.c
-> > @@ -2972,6 +2972,91 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
-> >  	return hpa;
-> >  }
+> > diff --git a/Documentation/ABI/testing/debugfs-cxl b/Documentation/ABI/testing/debugfs-cxl
+> > index 12488c14be64..c784885cdf07 100644
+> > --- a/Documentation/ABI/testing/debugfs-cxl
+> > +++ b/Documentation/ABI/testing/debugfs-cxl
+> > @@ -35,6 +35,39 @@ Description:
+> >  		The clear_poison attribute is only visible for devices
+> >  		supporting the capability.
 > >  
-> > +struct hpa_decode_result {
-> > +	u64 dpa_offset;
-> > +	int pos;
-> > +};
 > > +
-> > +struct cxl_dpa_result {
-> > +	u64 dpa;
-> > +	struct cxl_memdev *cxlmd;
-> > +};
-> > +
-> > +static struct hpa_decode_result decode_hpa_to_dpa(u64 hpa_offset, u8 eiw,
+> > +What:		/sys/kernel/debug/regionX/inject_poison
+> > +Date:		August, 2025
+> > +KernelVersion:	v6.17
 > 
-> While this is totally valid in C, I'm not big fan on returning a struct. The compiler copies the result from the function's stack to the variable of the caller function. Can we just pass in the addr of the caller's struct to write back and avoid that copy? We are not writing Rust code in CXL yet. :) 
-> 
+> I do not find the KernelVersion line all that useful because git blame
+> can get you that and sometimes the merged kernel version changes.
 
-Done with the func that remains in v2. (One got folded into the other)
+Removed it.
+
+> 
+> > +Contact:	linux-cxl@vger.kernel.org
+> > +Description:
+> > +		(WO) When a Host Physical Address (HPA) is written to this
+> > +		attribute, the region driver translates it to a Device
+> > +		Physical Address (DPA) and identifies the corresponding
+> > +		memdev. It then sends an inject poison command to that memdev
+> > +		at the translated DPA. Refer to the memdev ABI entry at:
+> > +		/sys/kernel/debug/cxl/memX/inject_poison for the detailed
+> > +		behavior. This attribute is only visible if all memdevs
+> > +		participating in the region support both inject and clear
+> > +		poison commands.
+> > +
+> > +
+> > +What:		/sys/kernel/debug/regionX/clear_poison
+> > +Date:		August, 2025
+> > +KernelVersion:	v6.17
+> > +Contact:	linux-cxl@vger.kernel.org
+> > +Description:
+> > +		(WO) When a Host Physical Address (HPA) is written to this
+> > +		attribute, the region driver translates it to a Device
+> > +		Physical Address (DPA) and identifies the corresponding
+> > +		memdev. It then sends a clear poison command to that memdev
+> > +		at the translated DPA. Refer to the memdev ABI entry at:
+> > +		/sys/kernel/debug/cxl/memX/clear_poison for the detailed
+> > +		behavior. This attribute is only visible if all memdevs
+> > +		participating in the region support both inject and clear
+> > +		poison commands.
+> 
+> A few food for thought comments here:
+> 
+> In the nvdimm subsystem all of the poison addressing is object relative.
+> I.e. instead of absolute HPA it would be a 0-based region offset. That
+> might help when we get to platforms that have additional Host Bridge
+> translation because HPA != SPA in all cases. The existing DPA interface
+> for memX injection just happens to comply because DPA is 0-based
+> mem-object relative address. Lets use region-offset values for this new
+> capability.
+
+Done.
+
+> 
+> This documentation probably needs to be clearer about the data loss
+> danger here especially when this error inject can permanently destroy
+> data in the case of CXL PMEM, and crash kernels if this is just memory.
+> Again, nvdimm was careful to separate "uninject" from "data
+> repair/recovery" because they are not equivalent. The documentation can
+> note that this interface is test-only not repair
+
+We talked thru much of this when we introduced inject/clear poison by
+memdev, because they allow the operations in active regions. This new
+method also allows the operation in active regions with the added
+benefit of finding the correct DPA in XOR cases. 
+
+The clear, as implemented previously and here, is not an uninject.
+The user may clear any address they'd like. We do not restrict the
+clear operation to addresses that have poison injected, and the
+spec doesn't require that an address have poison at all. It just
+quietly does nothing if the clear is sent to an address with no
+poison.
+
+I can make this documentation louder, and also be more shouty
+in the original by memdev docs that I reference here.
+
+If we wanted to offer 'uninject' then we'd read the poison list
+and confirm that there is poison of type 'Injected' before 
+sending the clear. That is not this patchset.
+
+Does anyone think it should be?  Which btw would mean we'd
+backtrack on existing by memdev offering.
+
 
