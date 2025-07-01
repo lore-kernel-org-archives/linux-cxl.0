@@ -1,323 +1,396 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0700027A127;
-	Tue,  1 Jul 2025 13:56:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48D5F27604B
+	for <linux-cxl@vger.kernel.org>; Tue,  1 Jul 2025 14:05:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751378218; cv=none; b=EpzVgiqfe1/zcIOuIgRnxlK7dgExPeAq4uWQmyyV3xrVytB/3M4dbSNjKYrElrHz7bZZtrOph3FLAcyhuaPicLoBzZ2eSDZcXu4PkR7Q4i3lCn4xXa0pBqeGsebA8kbUm846IzDqkLk/2y95MWryVCsdEgT7rlYk4s7ghuD2OTk=
+	t=1751378716; cv=none; b=Rk27PsWiKBqdVA4NDdz1SlIkZ1OiSwUMrGFmLApXtUpuhdOJEig3Sg3AF2KYASmthd9UK/yVA+X4AfzjbdsH3onRSSPCKk/3PlGlT92jYQAMPSjbo1tFGSUJUwZqDYoJyjy0iQd1V3CMHOktyXu7Rdgf6tXVBisP1RimhTEyWRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751378218; c=relaxed/simple;
-	bh=Z1BzRknngBIxH7d9GNoJJiTwd8p6a5uKI4XIyALfOTc=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k4leOOVDDrMeSRH3tbOHQMcJ/ObkMl9c4xnp1YWo49RZtbbD5ulfQimVlpbCHX+o05h8H7lgokHqX0vu5ygUwIkByPHtEexKvJ4hzU3JWu7mNSuEATlkg2b8MYTC/6sAMKsmT6ZG7aqXU1RF63nIND3x0oAWjO7anFVkSK4bxZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bWl1B487yz6M4jF;
-	Tue,  1 Jul 2025 21:55:58 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id BBC9C1402F4;
-	Tue,  1 Jul 2025 21:56:52 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 1 Jul
- 2025 15:56:52 +0200
-Date: Tue, 1 Jul 2025 14:56:50 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Dongsheng Yang <dongsheng.yang@linux.dev>
-CC: <mpatocka@redhat.com>, <agk@redhat.com>, <snitzer@kernel.org>,
-	<axboe@kernel.dk>, <hch@lst.de>, <dan.j.williams@intel.com>,
-	<linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-	<dm-devel@lists.linux.dev>
-Subject: Re: [PATCH v1 02/11] dm-pcache: add backing device management
-Message-ID: <20250701145650.00004e72@huawei.com>
-In-Reply-To: <20250624073359.2041340-3-dongsheng.yang@linux.dev>
-References: <20250624073359.2041340-1-dongsheng.yang@linux.dev>
-	<20250624073359.2041340-3-dongsheng.yang@linux.dev>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1751378716; c=relaxed/simple;
+	bh=CUQGD36VN0U91e7AXns3YcSxz90Nhigiuo8pZhNp3AI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=daUB7BXixPLPyxmN/Xwq/bXSYRvBwIXF63iBKSBUPdfneZ2P2Jkm7NNHNtvt7iw+AlCSUz9zM7HypR8WcRKYVz/bokEjtOy4xQHoWjaxw4fKvneRn8LQ1UZztJ6vbWqN3MKfxtB8ynQgToYXzTCvxSchWm5st9U9mJNBxSXFkNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=M4phBxy/; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="M4phBxy/"
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250701140511epoutp04e09225cafb95b9a1969159acb180057b~OJaiZDUR90581405814epoutp04M
+	for <linux-cxl@vger.kernel.org>; Tue,  1 Jul 2025 14:05:11 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250701140511epoutp04e09225cafb95b9a1969159acb180057b~OJaiZDUR90581405814epoutp04M
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1751378711;
+	bh=nB+oPxvGdY5WDKUI3ZuIzRpW7qHJsx76Yp55t6Aezcw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=M4phBxy/ITYXWkM2u3NFA17mD9et5Om/6UImeOmFmcx6+OHe4xWqxetMtPz3vu/2O
+	 IKLNVngx7Vcb8ehvsl+tnSgubSIiwvUiDB8qVyTV4E6fgqEgPuD5Vf+oAkYDV3gyKq
+	 J39YA2J7CR1SRdqN9SxHInjZeN0EkmqdgpHAQiSM=
+Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
+	20250701140510epcas5p22a37f25258781eb52cbf8b001b39d843~OJaiHL9cP2585325853epcas5p2D;
+	Tue,  1 Jul 2025 14:05:10 +0000 (GMT)
+Received: from epcas5p4.samsung.com (unknown [182.195.38.174]) by
+	epsnrtp02.localdomain (Postfix) with ESMTP id 4bWlCn3gqHz2SSKY; Tue,  1 Jul
+	2025 14:05:09 +0000 (GMT)
+Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20250701125932epcas5p3283f2e1bca3eeb34104b44b11d7f8cd9~OIhOnoABJ2734327343epcas5p3s;
+	Tue,  1 Jul 2025 12:59:32 +0000 (GMT)
+Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250701125931epsmtip2d8355ff2489cfed03a2b92bcfdd77266~OIhNlSMHm2456524565epsmtip2a;
+	Tue,  1 Jul 2025 12:59:31 +0000 (GMT)
+Date: Tue, 1 Jul 2025 18:29:09 +0530
+From: Alok Rathore <alok.rathore@samsung.com>
+To: Fan Ni <nifan.cxl@gmail.com>
+Cc: qemu-devel@nongnu.org, gost.dev@samsung.com, linux-cxl@vger.kernel.org,
+	dave@stgolabs.net, vishak.g@samsung.com, krish.reddy@samsung.com,
+	a.manzanares@samsung.com
+Subject: Re: [PATCH] Add support for FMAPI Get Mutliheaded Head info opcode
+ (5501h)
+Message-ID: <20250701125909.jmpc6eptgejvlic4@test-PowerEdge-R740xd>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- frapeml500008.china.huawei.com (7.182.85.71)
+In-Reply-To: <682f5543.170a0220.2bc644.8b61@mx.google.com>
+X-CMS-MailID: 20250701125932epcas5p3283f2e1bca3eeb34104b44b11d7f8cd9
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----nR.o9xAt.CKA9Q2_7V_sz8FZ15p3Iy14m0uxA3-zFK6OxaPG=_e1d27_"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-542,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250522063149epcas5p13719600aa8f59313ff3dc2570c996aec
+References: <CGME20250522063149epcas5p13719600aa8f59313ff3dc2570c996aec@epcas5p1.samsung.com>
+	<20250522063135.366295-1-vinayak.kh@samsung.com>
+	<682f5543.170a0220.2bc644.8b61@mx.google.com>
 
-On Tue, 24 Jun 2025 07:33:49 +0000
-Dongsheng Yang <dongsheng.yang@linux.dev> wrote:
+------nR.o9xAt.CKA9Q2_7V_sz8FZ15p3Iy14m0uxA3-zFK6OxaPG=_e1d27_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
 
-> This patch introduces *backing_dev.{c,h}*, a self-contained layer that
-> handles all interaction with the *backing block device* where cache
-> write-back and cache-miss reads are serviced.  Isolating this logic
-> keeps the core dm-pcache code free of low-level bio plumbing.
->=20
-> * Device setup / teardown
->   - Opens the target with `dm_get_device()`, stores `bdev`, file and
->     size, and initialises a dedicated `bioset`.
->   - Gracefully releases resources via `backing_dev_stop()`.
->=20
-> * Request object (`struct pcache_backing_dev_req`)
->   - Two request flavours:
->     - REQ-type =E2=80=93 cloned from an upper `struct bio` issued to
->       dm-pcache; trimmed and re-targeted to the backing LBA.
->     - KMEM-type =E2=80=93 maps an arbitrary kernel memory buffer
->       into a freshly built.
->   - Private completion callback (`end_req`) propagates status to the
->     upper layer and handles resource recycling.
->=20
-> * Submission & completion path
->   - Lock-protected submit queue + worker (`req_submit_work`) let pcache
->     push many requests asynchronously, at the same time, allow caller
->     to submit backing_dev_req in atomic context.
->   - End-io handler moves finished requests to a completion list processed
->     by `req_complete_work`, ensuring callbacks run in process context.
->   - Direct-submit option for non-atomic context.
->=20
-> * Flush
->   - `backing_dev_flush()` issues a flush to persist backing-device data.
->=20
-> Signed-off-by: Dongsheng Yang <dongsheng.yang@linux.dev>
-> ---
->  drivers/md/dm-pcache/backing_dev.c | 292 +++++++++++++++++++++++++++++
->  drivers/md/dm-pcache/backing_dev.h |  88 +++++++++
->  2 files changed, 380 insertions(+)
->  create mode 100644 drivers/md/dm-pcache/backing_dev.c
->  create mode 100644 drivers/md/dm-pcache/backing_dev.h
->=20
-> diff --git a/drivers/md/dm-pcache/backing_dev.c b/drivers/md/dm-pcache/ba=
-cking_dev.c
-> new file mode 100644
-> index 000000000000..590c6415319d
-> --- /dev/null
-> +++ b/drivers/md/dm-pcache/backing_dev.c
-> @@ -0,0 +1,292 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +#include <linux/blkdev.h>
-> +
-> +#include "../dm-core.h"
-> +#include "pcache_internal.h"
-> +#include "cache_dev.h"
-> +#include "backing_dev.h"
-> +#include "cache.h"
-> +#include "dm_pcache.h"
-> +
-> +static void backing_dev_exit(struct pcache_backing_dev *backing_dev)
-> +{
-> +	kmem_cache_destroy(backing_dev->backing_req_cache);
-> +}
-> +
-> +static void req_submit_fn(struct work_struct *work);
-> +static void req_complete_fn(struct work_struct *work);
-> +static int backing_dev_init(struct dm_pcache *pcache)
-> +{
-> +	struct pcache_backing_dev *backing_dev =3D &pcache->backing_dev;
-> +	int ret;
-> +
-> +	backing_dev->backing_req_cache =3D KMEM_CACHE(pcache_backing_dev_req, 0=
-);
-> +	if (!backing_dev->backing_req_cache) {
-> +		ret =3D -ENOMEM;
+On 22/05/25 09:48AM, Fan Ni wrote:
+>On Thu, May 22, 2025 at 12:01:35PM +0530, Vinayak Holikatti wrote:
+>> CXL spec 3.2 section 7.6.7.5.2  describes Get Head Info.
+>>
+>> Signed-off-by: Vinayak Holikatti <vinayak.kh@samsung.com>
+>> ---
+>> This patch is generated against Jonathan Cameron's branch cxl-2025-03-20
+>>
+>>  hw/cxl/cxl-mailbox-utils.c  | 21 +++++++++
+>>  hw/cxl/mhsld/mhsld.c        | 92 ++++++++++++++++++++++++++++++++++++-
+>>  hw/cxl/mhsld/mhsld.h        | 26 +++++++++++
+>>  include/hw/cxl/cxl_device.h |  6 +++
+>>  4 files changed, 144 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+>> index a02d130926..4f25caecea 100644
+>> --- a/hw/cxl/cxl-mailbox-utils.c
+>> +++ b/hw/cxl/cxl-mailbox-utils.c
+>> @@ -122,6 +122,7 @@ enum {
+>>          #define MANAGEMENT_COMMAND     0x0
+>>      MHD = 0x55,
+>>          #define GET_MHD_INFO 0x0
+>> +        #define GET_MHD_HEAD_INFO 0x1
+>>  };
+>>
+>>  /* CCI Message Format CXL r3.1 Figure 7-19 */
+>> @@ -267,6 +268,23 @@ static CXLRetCode cmd_mhd_get_info(const struct cxl_cmd *cmd,
+>>      return CXL_MBOX_UNSUPPORTED;
+>>  }
+>>
+>> +/*
+>> + * CXL r3.2 section 7.6.7.5.2 - Get Multi-Headed Head Info (Opcode 5501h)
+>That does not match the section subject of the spec
+>Get Head Info (...
 
-return -ENOMEM;=20
+Thanks Fan Ni. Will fix in V1 patch.
 
-and drop the err label.
+>> + */
+>> +static CXLRetCode cmd_mhd_get_head_info(const struct cxl_cmd *cmd,
+>> +                                   uint8_t *payload_in, size_t len_in,
+>> +                                   uint8_t *payload_out, size_t *len_out,
+>> +                                   CXLCCI *cci)
+>The indent here is not right.
 
-> +		goto err;
-> +	}
-> +
-> +	INIT_LIST_HEAD(&backing_dev->submit_list);
-> +	INIT_LIST_HEAD(&backing_dev->complete_list);
-> +	spin_lock_init(&backing_dev->submit_lock);
-> +	spin_lock_init(&backing_dev->complete_lock);
-> +	INIT_WORK(&backing_dev->req_submit_work, req_submit_fn);
-> +	INIT_WORK(&backing_dev->req_complete_work, req_complete_fn);
-> +
-> +	return 0;
-> +err:
-> +	return ret;
-> +}
+Okay. Will fix in V1 patch.
 
-> +static void req_complete_fn(struct work_struct *work)
-> +{
-> +	struct pcache_backing_dev *backing_dev =3D container_of(work, struct pc=
-ache_backing_dev, req_complete_work);
+>> +static CXLRetCode cmd_mhd_get_head_info(const struct cxl_cmd *cmd,
+>> +                                        uint8_t *payload_in, size_t len_in,
+>
+>> +{
+>> +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
+>> +    CXLType3Class *cvc = CXL_TYPE3_GET_CLASS(ct3d);
+>> +    if (cvc->mhd_get_head_info) {
+>> +        return cvc->mhd_get_head_info(cmd, payload_in, len_in, payload_out,
+>> +                                 len_out, cci);
+>
+>indent needs fix.
 
-Very long line.  Wrap it somewhere.
+Okay. Will fix in V1 patch.
 
-> +	struct pcache_backing_dev_req *backing_req;
-> +	LIST_HEAD(tmp_list);
-> +
-> +	spin_lock_irq(&backing_dev->complete_lock);
-> +	list_splice_init(&backing_dev->complete_list, &tmp_list);
-> +	spin_unlock_irq(&backing_dev->complete_lock);
-> +
-> +	while (!list_empty(&tmp_list)) {
-> +		backing_req =3D list_first_entry(&tmp_list,
-> +					    struct pcache_backing_dev_req, node);
-> +		list_del_init(&backing_req->node);
-> +		backing_dev_req_end(backing_req);
-> +	}
-> +}
-> +
-> +static void backing_dev_bio_end(struct bio *bio)
-> +{
-> +	struct pcache_backing_dev_req *backing_req =3D bio->bi_private;
-> +	struct pcache_backing_dev *backing_dev =3D backing_req->backing_dev;
-> +	unsigned long flags;
-> +
-> +	backing_req->ret =3D bio->bi_status;
-> +
-> +	spin_lock_irqsave(&backing_dev->complete_lock, flags);
-> +	list_move_tail(&backing_req->node, &backing_dev->complete_list);
-> +	queue_work(BACKING_DEV_TO_PCACHE(backing_dev)->task_wq, &backing_dev->r=
-eq_complete_work);
-> +	spin_unlock_irqrestore(&backing_dev->complete_lock, flags);
-> +}
-> +
-> +static void req_submit_fn(struct work_struct *work)
-> +{
-> +	struct pcache_backing_dev *backing_dev =3D container_of(work, struct pc=
-ache_backing_dev, req_submit_work);
+>
+>> +    }
+>> +    return CXL_MBOX_UNSUPPORTED;
+>> +}
+>> +
+>>  static CXLRetCode cmd_events_get_records(const struct cxl_cmd *cmd,
+>>                                           uint8_t *payload_in, size_t len_in,
+>>                                           uint8_t *payload_out, size_t *len_out,
+>> @@ -3429,6 +3447,7 @@ static const struct cxl_cmd cxl_cmd_set[256][256] = {
+>>          "MEDIA_AND_POISON_GET_SCAN_MEDIA_RESULTS",
+>>          cmd_media_get_scan_media_results, 0, 0 },
+>>      [MHD][GET_MHD_INFO] = { "GET_MULTI_HEADED_INFO", cmd_mhd_get_info, 2, 0},
+>> +    [MHD][GET_MHD_HEAD_INFO] = { "GET_MULTI_HEADED_INFO", cmd_mhd_get_head_info, 2, 0},
+>>  };
+>>
+>>  static const struct cxl_cmd cxl_cmd_set_dcd[256][256] = {
+>> @@ -3761,6 +3780,8 @@ static const struct cxl_cmd cxl_cmd_set_t3_fm_owned_ld_mctp[256][256] = {
+>>      [TIMESTAMP][GET] = { "TIMESTAMP_GET", cmd_timestamp_get, 0, 0 },
+>>      [TUNNEL][MANAGEMENT_COMMAND] = { "TUNNEL_MANAGEMENT_COMMAND",
+>>                                       cmd_tunnel_management_cmd, ~0, 0 },
+>> +    [MHD][GET_MHD_INFO] = { "GET_MULTI_HEADED_INFO", cmd_mhd_get_info, 2, 0},
+>> +    [MHD][GET_MHD_HEAD_INFO] = { "GET_MULTI_HEADED_INFO", cmd_mhd_get_head_info, 2, 0},
+>>  };
+>>
+>>  void cxl_initialize_t3_fm_owned_ld_mctpcci(CXLCCI *cci, DeviceState *d,
+>> diff --git a/hw/cxl/mhsld/mhsld.c b/hw/cxl/mhsld/mhsld.c
+>> index 9f633b3bed..981546b5ff 100644
+>> --- a/hw/cxl/mhsld/mhsld.c
+>> +++ b/hw/cxl/mhsld/mhsld.c
+>> @@ -61,9 +61,57 @@ static CXLRetCode cmd_mhd_get_info(const struct cxl_cmd *cmd,
+>>      return CXL_MBOX_SUCCESS;
+>>  }
+>>
+>> +/*
+>> + * CXL r3.2 section 7.6.7.5.2 - Get Head Info (Opcode 5501h)
+>> + *
+>> + * This command retrieves the number of heads, number of supported LDs,
+>> + * and Head-to-LD mapping of a Multi-Headed device.
+>> + */
+>> +static CXLRetCode cmd_mhd_get_head_info(const struct cxl_cmd *cmd,
+>> +                                        uint8_t *payload_in, size_t len_in,
+>> +                                        uint8_t *payload_out, size_t *len_out,
+>> +                                        CXLCCI *cci)
+>> +{
+>> +    CXLMHSLDState *s = CXL_MHSLD(cci->d);
+>> +    MHDGetHeadInfoInput *input = (void *)payload_in;
+>> +    MHDGetHeadInfoOutput *output = (void *)payload_out;
+>> +    int i = 0;
+>> +
+>> +    if (input->start_head > MHSLD_HEADS) {
+>
+>Should be ">=" ?
 
-Very long line.  Wrap after =3D
+Right. Head index starts from 0, so this condition should be there.
+
+>
+>Also, per the spec, we need also check the "number of heads" field, if
+>start_head and number of heads together point to a non-exist head, we
+>should return invalid input.
+
+Yes. Will add this check in V1 patch.
+
+>
+>> +        return CXL_MBOX_INVALID_INPUT;
+>> +    }
+>> +
+>> +    output->nr_heads = MIN((MHSLD_HEADS - input->start_head), input->nr_heads);
+>> +    for (i = input->start_head; i < input->start_head + output->nr_heads; i++) {
+>> +        output->head_info_list[i].port_number =
+>> +                                 s->mhd_state->head_info_blocks[i].port_number;
+>> +        output->head_info_list[i].max_link_width =
+>> +                              s->mhd_state->head_info_blocks[i].max_link_width;
+>> +        output->head_info_list[i].nego_link_width =
+>> +                             s->mhd_state->head_info_blocks[i].nego_link_width;
+>> +        output->head_info_list[i].supp_link_speeds_vector =
+>> +                     s->mhd_state->head_info_blocks[i].supp_link_speeds_vector;
+>> +        output->head_info_list[i].max_link_speed =
+>> +                              s->mhd_state->head_info_blocks[i].max_link_speed;
+>> +        output->head_info_list[i].current_link_speed =
+>> +                          s->mhd_state->head_info_blocks[i].current_link_speed;
+>> +        output->head_info_list[i].ltssm_state =
+>> +                                 s->mhd_state->head_info_blocks[i].ltssm_state;
+>> +        output->head_info_list[i].first_nego_lane_num =
+>> +                         s->mhd_state->head_info_blocks[i].first_nego_lane_num;
+>> +        output->head_info_list[i].link_state_flags =
+>> +                            s->mhd_state->head_info_blocks[i].link_state_flags;
+>> +    }
+>> +
+>> +    *len_out = sizeof(*output) + output->nr_heads * sizeof(MHDHeadInfoBlock);
+>> +    return CXL_MBOX_SUCCESS;
+>> +}
+>> +
+>>  static const struct cxl_cmd cxl_cmd_set_mhsld[256][256] = {
+>>      [MHSLD_MHD][GET_MHD_INFO] = {"GET_MULTI_HEADED_INFO",
+>>          cmd_mhd_get_info, 2, 0},
+>> +    [MHSLD_MHD][GET_MHD_HEAD_INFO] = {"GET_HEAD_INFO",
+>> +        cmd_mhd_get_head_info, 2, 0},
+>>  };
+>>
+>>  static const Property cxl_mhsld_props[] = {
+>> @@ -166,6 +214,47 @@ static void cxl_mhsld_state_initialize(CXLMHSLDState *s, size_t dc_size)
+>>      s->mhd_state->nr_blocks = dc_size / MHSLD_BLOCK_SZ;
+>>  }
+>>
+>> +
+>> +static void cxl_mhsld_init_head_info(CXLMHSLDState *s, PCIDevice *pdev)
+>> +{
+>> +    uint16_t lnksta = 0;
+>> +    uint16_t current_link_speed = 0;
+>> +    uint16_t negotiated_link_width = 0;
+>> +    uint16_t lnkcap = 0, lnkcap2 = 0;
+>> +    uint16_t max_link_width = 0;
+>> +    uint16_t max_link_speed = 0;
+>> +    uint16_t supported_link_speeds_vector = 0;
+>> +
+>> +    lnksta = pdev->config_read(pdev,
+>> +                               pdev->exp.exp_cap + PCI_EXP_LNKSTA,
+>> +                               sizeof(lnksta));
+>> +    lnkcap = pdev->config_read(pdev,
+>> +                               pdev->exp.exp_cap + PCI_EXP_LNKCAP,
+>> +                               sizeof(lnkcap));
+>> +    lnkcap2 = pdev->config_read(pdev,
+>> +                                pdev->exp.exp_cap + PCI_EXP_LNKCAP2,
+>> +                                sizeof(lnkcap2));
+>> +    supported_link_speeds_vector = (lnkcap2 & 0xFE) >> 1;
+>> +    max_link_width = (lnkcap & PCI_EXP_LNKCAP_MLW) >> 4;
+>> +    max_link_speed = lnkcap & PCI_EXP_LNKCAP_SLS;
+>> +    current_link_speed = lnksta & PCI_EXP_LNKSTA_CLS;
+>> +    negotiated_link_width = (lnksta & PCI_EXP_LNKSTA_NLW) >> 4;
+>> +
+>> +    s->mhd_state->head_info_blocks[s->mhd_head].port_number = s->mhd_head;
+>> +    s->mhd_state->head_info_blocks[s->mhd_head].max_link_width = max_link_width;
+>> +    s->mhd_state->head_info_blocks[s->mhd_head].nego_link_width =
+>> +                                                          negotiated_link_width;
+>> +    s->mhd_state->head_info_blocks[s->mhd_head].supp_link_speeds_vector =
+>> +                                                   supported_link_speeds_vector;
+>> +    s->mhd_state->head_info_blocks[s->mhd_head].max_link_speed =
+>> +                                                                 max_link_speed;
+>> +    s->mhd_state->head_info_blocks[s->mhd_head].current_link_speed =
+>> +                                                             current_link_speed;
+>> +    s->mhd_state->head_info_blocks[s->mhd_head].ltssm_state = 0x7;
+>> +    s->mhd_state->head_info_blocks[s->mhd_head].first_nego_lane_num = 0;
+>> +    s->mhd_state->head_info_blocks[s->mhd_head].link_state_flags = 0;
+>> +}
+>> +
+>>  /* Returns starting index of region in MHD map. */
+>>  static inline size_t cxl_mhsld_find_dc_region_start(PCIDevice *d,
+>>                                                      CXLDCRegion *r)
+>> @@ -376,7 +465,7 @@ static void cxl_mhsld_realize(PCIDevice *pci_dev, Error **errp)
+>>      }
+>>
+>>      cxl_mhsld_state_initialize(s, dc_size);
+>> -
+>> +    cxl_mhsld_init_head_info(s, pci_dev);
+>>      /* Set the LD ownership for this head to this system */
+>>      s->mhd_state->ldmap[s->mhd_head] = s->mhd_head;
+>>      return;
+>> @@ -428,6 +517,7 @@ static void cxl_mhsld_class_init(ObjectClass *klass, void *data)
+>>
+>>      CXLType3Class *cvc = CXL_TYPE3_CLASS(klass);
+>>      cvc->mhd_get_info = cmd_mhd_get_info;
+>> +    cvc->mhd_get_head_info = cmd_mhd_get_head_info;
+>>      cvc->mhd_access_valid = cxl_mhsld_access_valid;
+>>      cvc->mhd_reserve_extents = cxl_mhsld_reserve_extents;
+>>      cvc->mhd_reclaim_extents = cxl_mhsld_reclaim_extents;
+>> diff --git a/hw/cxl/mhsld/mhsld.h b/hw/cxl/mhsld/mhsld.h
+>> index e7ead1f0d2..c9fbec71ca 100644
+>> --- a/hw/cxl/mhsld/mhsld.h
+>> +++ b/hw/cxl/mhsld/mhsld.h
+>> @@ -23,6 +23,18 @@
+>>   */
+>>  #define MHSLD_HEADS  (8)
+>>
+>> +typedef struct MHDHeadInfoBlock {
+>> +    uint8_t port_number;
+>> +    uint8_t max_link_width;
+>> +    uint8_t nego_link_width;
+>> +    uint8_t supp_link_speeds_vector;
+>> +    uint8_t max_link_speed;
+>> +    uint8_t current_link_speed;
+>> +    uint8_t ltssm_state;
+>> +    uint8_t first_nego_lane_num;
+>> +    uint8_t link_state_flags;
+>> +} QEMU_PACKED MHDHeadInfoBlock;
+>> +
+>>  /*
+>>   * The shared state cannot have 2 variable sized regions
+>>   * so we have to max out the ldmap.
+>> @@ -32,6 +44,7 @@ typedef struct MHSLDSharedState {
+>>      uint8_t nr_lds;
+>>      uint8_t ldmap[MHSLD_HEADS];
+>>      uint64_t nr_blocks;
+>> +    MHDHeadInfoBlock head_info_blocks[MHSLD_HEADS];
+>>      uint8_t blocks[];
+>>  } MHSLDSharedState;
+>>
+>> @@ -52,6 +65,7 @@ struct CXLMHSLDClass {
+>>  enum {
+>>      MHSLD_MHD = 0x55,
+>>          #define GET_MHD_INFO 0x0
+>> +        #define GET_MHD_HEAD_INFO 0x1
+>>  };
+>>
+>>  /*
+>> @@ -72,4 +86,16 @@ typedef struct MHDGetInfoOutput {
+>>      uint16_t resv2;
+>>      uint8_t ldmap[];
+>>  } QEMU_PACKED MHDGetInfoOutput;
+>> +
+>> +typedef struct MHDGetHeadInfoInput {
+>> +    uint8_t start_head;
+>> +    uint8_t nr_heads;
+>> +} QEMU_PACKED MHDGetHeadInfoInput;
+>> +
+>> +typedef struct MHDGetHeadInfoOutput {
+>> +    uint8_t nr_heads;
+>> +    uint8_t rsvd[3];
+>> +    MHDHeadInfoBlock head_info_list[];
+>
+>s/head_info_list/head_info/
+
+Okay. Will use head_info in V1 patch.
+
+>
+>Fan
+
+Thanks Fan Ni for reviewing the patch.
+
+Alok
+>
+>> +} QEMU_PACKED MHDGetHeadInfoOutput;
+>> +
+>>  #endif
+>> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+>> index ca515cab13..c93c71c45d 100644
+>> --- a/include/hw/cxl/cxl_device.h
+>> +++ b/include/hw/cxl/cxl_device.h
+>> @@ -732,6 +732,12 @@ struct CXLType3Class {
+>>                                 uint8_t *payload_out,
+>>                                 size_t *len_out,
+>>                                 CXLCCI *cci);
+>> +    CXLRetCode (*mhd_get_head_info)(const struct cxl_cmd *cmd,
+>> +                               uint8_t *payload_in,
+>> +                               size_t len_in,
+>> +                               uint8_t *payload_out,
+>> +                               size_t *len_out,
+>> +                               CXLCCI *cci);
+>>      bool (*mhd_access_valid)(PCIDevice *d, uint64_t addr, unsigned int size);
+>>      bool (*mhd_reserve_extents)(PCIDevice *d,
+>>                                  CxlDynamicCapacityExtentList *records,
+>> --
+>> 2.34.1
+>>
+
+------nR.o9xAt.CKA9Q2_7V_sz8FZ15p3Iy14m0uxA3-zFK6OxaPG=_e1d27_
+Content-Type: text/plain; charset="utf-8"
 
 
-> +	struct pcache_backing_dev_req *backing_req;
-> +	LIST_HEAD(tmp_list);
-> +
-> +	spin_lock(&backing_dev->submit_lock);
-> +	list_splice_init(&backing_dev->submit_list, &tmp_list);
-> +	spin_unlock(&backing_dev->submit_lock);
-> +
-> +	while (!list_empty(&tmp_list)) {
-> +		backing_req =3D list_first_entry(&tmp_list,
-> +					    struct pcache_backing_dev_req, node);
-> +		list_del_init(&backing_req->node);
-> +		submit_bio_noacct(&backing_req->bio);
-> +	}
-> +}
-
-> +
-> +static void bio_map(struct bio *bio, void *base, size_t size)
-> +{
-> +	struct page *page;
-> +	unsigned int offset;
-> +	unsigned int len;
-> +
-> +	if (!is_vmalloc_addr(base)) {
-> +		page =3D virt_to_page(base);
-> +		offset =3D offset_in_page(base);
-> +
-> +		BUG_ON(!bio_add_page(bio, page, size, offset));
-
-		BUG_ON(!bio_add_page(bio, virt_to_page(base), size
-				     offset_in_page(base));
-
-Seems readable enough. Obviously that depends on whether those
-local variables get more useage in later patches.
-
-> +		return;
-> +	}
-> +
-> +	flush_kernel_vmap_range(base, size);
-> +	while (size) {
-> +		page =3D vmalloc_to_page(base);
-> +		offset =3D offset_in_page(base);
-> +		len =3D min_t(size_t, PAGE_SIZE - offset, size);
-> +
-> +		BUG_ON(!bio_add_page(bio, page, len, offset));
-> +		size -=3D len;
-> +		base +=3D len;
-> +	}
-> +}
-
-> +
-> +static struct pcache_backing_dev_req *kmem_type_req_create(struct pcache=
-_backing_dev *backing_dev,
-> +						struct pcache_backing_dev_req_opts *opts)
-> +{
-> +	struct pcache_backing_dev_req *backing_req;
-> +	struct bio *backing_bio;
-> +	u32 n_vecs =3D get_n_vecs(opts->kmem.data, opts->kmem.len);
-> +
-> +	backing_req =3D kmem_cache_zalloc(backing_dev->backing_req_cache, opts-=
->gfp_mask);
-> +	if (!backing_req)
-> +		return NULL;
-> +
-> +	if (n_vecs > BACKING_DEV_REQ_INLINE_BVECS) {
-> +		backing_req->kmem.bvecs =3D kmalloc_array(n_vecs, sizeof(struct bio_ve=
-c), opts->gfp_mask);
-> +		if (!backing_req->kmem.bvecs)
-> +			goto err_free_req;
-> +	} else {
-> +		backing_req->kmem.bvecs =3D backing_req->kmem.inline_bvecs;
-> +	}
-> +
-> +	backing_req->type =3D BACKING_DEV_REQ_TYPE_KMEM;
-> +
-> +	bio_init(&backing_req->bio, backing_dev->dm_dev->bdev, backing_req->kme=
-m.bvecs,
-> +			n_vecs, opts->kmem.opf);
-
-Odd alignment.  Align second line under &
-
-> +
-> +	backing_bio =3D &backing_req->bio;
-> +	bio_map(backing_bio, opts->kmem.data, opts->kmem.len);
-> +
-> +	backing_bio->bi_iter.bi_sector =3D (opts->kmem.backing_off) >> SECTOR_S=
-HIFT;
-> +	backing_bio->bi_private =3D backing_req;
-> +	backing_bio->bi_end_io =3D backing_dev_bio_end;
-> +
-> +	backing_req->backing_dev =3D backing_dev;
-> +	INIT_LIST_HEAD(&backing_req->node);
-> +	backing_req->end_req	=3D opts->end_fn;
-> +	backing_req->priv_data	=3D opts->priv_data;
-
-Bit of a mixture of formatting between aligned =3D and not.  Pick one style.
-I prefer never forcing alignment but others do like it.  I'm fine with that
-too, just not a mix.
-
-
-> +
-> +	return backing_req;
-> +
-> +err_free_req:
-> +	kmem_cache_free(backing_dev->backing_req_cache, backing_req);
-> +	return NULL;
-> +}
-> +
-> +struct pcache_backing_dev_req *backing_dev_req_create(struct pcache_back=
-ing_dev *backing_dev,
-> +						struct pcache_backing_dev_req_opts *opts)
-> +{
-> +	if (opts->type =3D=3D BACKING_DEV_REQ_TYPE_REQ)
-> +		return req_type_req_create(backing_dev, opts);
-> +	else if (opts->type =3D=3D BACKING_DEV_REQ_TYPE_KMEM)
-
-returned in earlier branch so go with simpler
-
-	if (opts->type..)
-
-Or use a switch statement if you expect to get more entries in this over ti=
-me.
-
-> +		return kmem_type_req_create(backing_dev, opts);
-> +
-> +	return NULL;
-> +}
-> +
-> +void backing_dev_flush(struct pcache_backing_dev *backing_dev)
-> +{
-> +	blkdev_issue_flush(backing_dev->dm_dev->bdev);
-> +}
-
-
+------nR.o9xAt.CKA9Q2_7V_sz8FZ15p3Iy14m0uxA3-zFK6OxaPG=_e1d27_--
