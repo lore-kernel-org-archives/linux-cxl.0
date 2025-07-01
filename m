@@ -1,175 +1,392 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2079.outbound.protection.outlook.com [40.107.237.79])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62D5A1DDC15;
-	Tue,  1 Jul 2025 15:31:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.79
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751383864; cv=fail; b=EoQZsRTNhosSPGFyUzapjBeoh46l0cFeiUANhL/4wVbdbw7PrE6MatabzrtCrd/lLIAZ1uHt8u9FgzwEsE/rEmqHXmfwA2Ri4iOinf7Xh+vZc2V7Arg1N3LbzPgSuxZJUPxxbBM/TQ2VLUQRUlVrVMKej9j85gj1qwtMCaEOAy0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751383864; c=relaxed/simple;
-	bh=XzDPyuFjRXuWODKUfaEj0RqoyshwrZYNL0wRkpvGDI8=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Vup6jJcgdnsx8WwzCdfVKuHytTC6wOTfYXGJaxNxyUHvbGpD+RnuQolAR3teuUYS+fhtmhBMt08XJr1ke/P25WSTZl0aV36jNsO41ozkcQ2rCKYEm5O2LSNxhnb/5GbJsaWmS2e36T2DiN8XHW29/OEyvgU0DrSTrOhadnQRcRA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=uqUFvrVH; arc=fail smtp.client-ip=40.107.237.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E65641F0E29
+	for <linux-cxl@vger.kernel.org>; Tue,  1 Jul 2025 15:34:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751384090; cv=none; b=JU1MQ754PqGFDRKP3IQNHTvYDyi20Bj37RR6fvBWjZULMuIhweV1uFn3AHnpiDDNDlfmpw8JhTHMx/Ua5TtKRDO1UrSSHA47NbXpHy9syIvCULXo+MoKpQDbpDDgWm0Wf1dN+PAHvDghXdL3mMyJAyHpvObKKsyP5jiS5fjy8as=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751384090; c=relaxed/simple;
+	bh=OBFqupbGqhAYJ+1V0zeO017MQP2SKXcO6TwhSJbk0ss=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fkCnC7He5w5bOn0ouIYAn5WdI5tyY4BEn01F5cwhWvP1h/MFuTF39zlGUSLV0VWb+GOddxz31aksJblLQh8nJtOVXRF4w5Lnn/eWrpGfZbkZrfYw+5xYfadiXvMfu+LC0aNItY6wITsi74uwM+mfR2d+UDz/UAgxv2p4sSBOVC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DCkKbpfe; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="uqUFvrVH"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SGilQo5KmnDZiZg4Pn5S5IIhs3cHISnnlY/jSUJVvvXkMNG993eQOfRJTiU2Ogj+ld3DtB7+tXEA+1t+EgeePLbJHWrChOcBnRRVvPwmw/Vsf7XyeWb9JeV8idlJQTu7ZU2Pf7s2qzmhnKw4oA/L8X+dr8uq8fIZNaVhQfLioyiDaepS3owBUzUYBM5uM4WvLD/PtvdZqqBfEJVLxITvubzYcX67xKQFO0aZPKo34y950Nmy3bCC/gQWDLNB76Cs2WSJWuI9pRaFcLMkSv1z/Wo7MOfTGtQD/07w/GvWG54WyhMNZTiotSSbKyqg2ZpIj9rEc2mP6MEDbcudHBkeag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XzDPyuFjRXuWODKUfaEj0RqoyshwrZYNL0wRkpvGDI8=;
- b=hfm7LLQY8e+OqkU79IhYwceZhvRN3SeaEWM4qXLtQmI1mzIJCpN53iK4jV+iG8VsPy04+kFeuIhBoLduyljn+TRFs7hSKS5G/exmcllGCFoWSvHjZ6dOg810K+L6QJcpZuxpGfq/S2V/W2+8+90l9d4cwgDfv4H3rIEdsGuGCfeCAtk4p8efVQrr6ajLavHVn0Ceool7UClRMOfmff6qRQ5vsRVXWxFuG6kgRUViXLvceAQ0ADJBgJolgV32wAYRv2wxI1P+e5jfxpgu50T+0JNfvJqFrnJVa+A63q89uTjbKdELOLPCHblDrZdrp84Sy+nH3ECYWxCR7f+fsuOywA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XzDPyuFjRXuWODKUfaEj0RqoyshwrZYNL0wRkpvGDI8=;
- b=uqUFvrVHOrxqHbBKM3g9fYXibv8jygmmfIKjXZP3keSznabBnrL+RB75TSvOVPZ/tzfFxmRiSJpMcKSyfcapdOKAZTVr9PJSRqx9yw3Ddl9+mlaJ7sESrRNM9ELvWTtuK2/6i2gbdn3h7oFhUw9W17xgQcL6hionDCARlVGfbZA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
- by CH2PR12MB4294.namprd12.prod.outlook.com (2603:10b6:610:a9::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.20; Tue, 1 Jul
- 2025 15:31:01 +0000
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79%6]) with mapi id 15.20.8880.021; Tue, 1 Jul 2025
- 15:31:00 +0000
-Message-ID: <ba684c79-d073-40f2-979e-4535db3ab8b9@amd.com>
-Date: Tue, 1 Jul 2025 16:30:57 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v17 10/22] cx/memdev: Indicate probe deferral
-Content-Language: en-US
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- alejandro.lucero-palau@amd.com
-Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
- dan.j.williams@intel.com, edward.cree@amd.com, davem@davemloft.net,
- kuba@kernel.org, pabeni@redhat.com, edumazet@google.com, dave.jiang@intel.com
-References: <20250624141355.269056-1-alejandro.lucero-palau@amd.com>
- <20250624141355.269056-11-alejandro.lucero-palau@amd.com>
- <20250627104233.00005c5e@huawei.com>
-From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <20250627104233.00005c5e@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DU7P194CA0001.EURP194.PROD.OUTLOOK.COM
- (2603:10a6:10:553::16) To DM6PR12MB4202.namprd12.prod.outlook.com
- (2603:10b6:5:219::22)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DCkKbpfe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751384086;
+	h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EfBBIeuv3a9WR82SRLGbt1tmYuPjxunQ5KspGGsoBAY=;
+	b=DCkKbpfesRfbIfOQE3HU+tofW184WVxZq7DaiW8qmiBJzjy6NPVSD4v6hUcXaGcH7ae9Aw
+	erwM6T7s2pwSheimADZh7plP6y4DkgSJVt8rEFeLL+heoUvWW80DfqENU2D9s9ym3TZcUu
+	BAMLTTg4dWFJgp1adUgJCM0wq/sXaXU=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-626-f-MtT0SnNRuOPunJhDA9Fw-1; Tue, 01 Jul 2025 11:34:40 -0400
+X-MC-Unique: f-MtT0SnNRuOPunJhDA9Fw-1
+X-Mimecast-MFC-AGG-ID: f-MtT0SnNRuOPunJhDA9Fw_1751384079
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a4f8192e2cso2166558f8f.3
+        for <linux-cxl@vger.kernel.org>; Tue, 01 Jul 2025 08:34:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751384079; x=1751988879;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:reply-to:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EfBBIeuv3a9WR82SRLGbt1tmYuPjxunQ5KspGGsoBAY=;
+        b=oj8w3a0B19+hwsF9iCCN0lOHoTHeGqivtbOafIGTz7TlMiJKXj0xgXrPtyIPOMA9K4
+         PUqOW7zn+ZQCYgCAVREB2eXPN82l9oKTrPhNyAHBIGotDJYL3/rtgLxRQUMfFMW61V6U
+         RcDorrC8ZPjo6Rr5IMM2IWb3NIAwwufxXHFTbz//N3yRFPfJbRiA/eACuuCAUdmed0js
+         20Tv0Yk8p5BSf20CVHwg7vKsexb8Rh8E6sW8v+yhGxacOSv587S5tmLEFzyYN8DLW32/
+         OOaxDDPOaLDCbj++Ojkm3U0kyaZUHPjnJVujUu5beMOUuP50UOldCbleMqj2s5ia54Re
+         wuHg==
+X-Forwarded-Encrypted: i=1; AJvYcCVQ1quscgEoGVSWbTMMGooBxBRYI0N6y0JTFLXf/c5WF1QzcNAdmGlCLT4HbQUDtD5n3AaAw09ecPM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIMiDKKD5EZ/ph6RQlW/Sl1bu8UQFc6g9q6psmiVK/CzPWucPk
+	bf5WaDsnjBvss1hwvEYMII2AataokkvBCTftrIRT4viTczeT09rtDWqJF+QBSp5cDAHRj7ycUaa
+	A7Qt268UWmu5y3MgV/O9JxQYXZi9tR7iHVozgN54j2uQuFFISz7PzYJxM6osymg==
+X-Gm-Gg: ASbGncuqBzykGmjUCSspQhAR6+a/fAqg/4WQHhE3tutnUs4t3TIPRxxYdX+cpTb/gag
+	RnaUjPjTsRA4QbKYQHq3Wsiwp6jnAAiIRZN5aMrshfBsHJlaZhUChSPa5A9mslulbE0+t3FSNdm
+	XxayUNJIs9qH/hUOLpa1wlNu9rjpr+RYFYRPIzTYmBakN8IxAUO9XyiPnd+FuJwrmM+/PRQSxkL
+	XNCMf1JT66NFMuM5vF3MH86crZX3U2J+L5JBBKJilauQgujxMolDAI+zFGDviGSIvtSYdDIUkY6
+	f2qmivEJmxT3uo3MUQV17074SNrF3nZQusPqaxbsVXmPmth5m6/pfDYTEoF4cA94eZsimQ==
+X-Received: by 2002:a05:6000:1804:b0:3a4:f379:65b6 with SMTP id ffacd0b85a97d-3a8fe79bb4bmr12013378f8f.46.1751384078888;
+        Tue, 01 Jul 2025 08:34:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGXfUImKG5Pbzs7Q2fXHY9QAKti0VaLFAl5aWZGZ2P1rRPZHZPsh/L4zzF9VXooNcd9XrfUgg==
+X-Received: by 2002:a05:6000:1804:b0:3a4:f379:65b6 with SMTP id ffacd0b85a97d-3a8fe79bb4bmr12013350f8f.46.1751384078273;
+        Tue, 01 Jul 2025 08:34:38 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:f0e:9070:527b:9dff:feef:3874? ([2a01:e0a:f0e:9070:527b:9dff:feef:3874])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823ad0fesm204716915e9.25.2025.07.01.08.34.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Jul 2025 08:34:37 -0700 (PDT)
+Message-ID: <128e59be-4038-4a19-8cca-3be3d6446e0e@redhat.com>
+Date: Tue, 1 Jul 2025 17:34:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|CH2PR12MB4294:EE_
-X-MS-Office365-Filtering-Correlation-Id: a68fdc8a-5175-4ce4-e8b6-08ddb8b447f1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?dWhYOXNZc2M3MFZKZTBvMForTm9ublljTld3NnFMK0ZzV05xemtISStoaEcy?=
- =?utf-8?B?Q3FUQnNycHNlS1NKZEx6ZVhCM0w5dlY4S1JiUWdnemJCRVlqOXFuTGZwbUVs?=
- =?utf-8?B?OVZ1enJjUzRDTXp6Y0xTeS9tOHZmenBMVGxiWG5iOFMrdDRSVE5FQlJ1Q0la?=
- =?utf-8?B?YjlsQ0ZWbEtaUkp1SnhpMUx3VFNkT0FnZjVWUG05eURWeS9tOHNwSk55aW1R?=
- =?utf-8?B?VjdyRzFGSjR3Rzg0dkFRTzA1REJGalNXbGI3eWMxdmJDaTYzcEY3dkI0YXFv?=
- =?utf-8?B?YXRCT2Z0NFpTTlQ3NlZ3R25MU0l0a1dkdzVwUHRXRUl5dFJrc3Fvc0k4RnZY?=
- =?utf-8?B?SkptTm9EZkpLbXVLYXFvVWdlK0lJZVlIdmRLYWNPbUNLWEZlQXZrbXRiUTc1?=
- =?utf-8?B?b25xVlkvejBDeTZHYkJ1VERzdU9zUDZ4VTN3c0RrcnMvaDlzaW1EZGdoaWtp?=
- =?utf-8?B?cXhsZDFLc01DQVBzcGNsN21FSHQwYzF1QjRQbU85UFNyV01rN3FiZFNPbWV0?=
- =?utf-8?B?Vm5uNkFMeFRjWjRSM1N0UVBzaGFvcVZLWFRPZlVVM1kyTXFSR00xL3BCMnB3?=
- =?utf-8?B?ZTVWdS83RXcwdm8yZWNhWnBKaHRnbzVyajVOUmV3YkxOUG95dFY2M2JqK2Jv?=
- =?utf-8?B?d1k3T1pPbTVzU3dIeHk2QTJVTEVRdjdZRVVWSkpVV2ZUaVZqMTFxM1VBMGdw?=
- =?utf-8?B?UXN0bGZVSzlEYW01ekdxRjdndEtud0dHNElMKzhMTTM3V21obVkxSCt1Tzkz?=
- =?utf-8?B?bkg0Qm5YczUwYVBOemVMa0RWQy9RSmZCTW51cit1ZTg5Ums4V0lvYkV2VVZr?=
- =?utf-8?B?SmptSUxDNlRiSFNiMmMwSjJ0SGR6bmZYUjNONWM3MG9jbzlKQU96OVU5dFFQ?=
- =?utf-8?B?MzIwbTJPU3d4YTliL2J1b3ZicXh2TncvUUIvc2U2em54Q1Y1b2luRkwvU05Y?=
- =?utf-8?B?RjlhcEVWOWNOVjJ5UllPUS9hRjVSemU2Y2tramRIMXkyZHltbTBxb1pkNjRO?=
- =?utf-8?B?Y0hFVUNneTVPdlViSEJycHRvOUZOQmRMTW5uWFV4QUV0MGJVcDVtZ0ptT1ZK?=
- =?utf-8?B?amtWc1F5NzVRaWtYbTh3cThrenEyN05aQXQ3Q2YrTVFkclpqSFhCM3VlcHVG?=
- =?utf-8?B?c09JWkNzM0VCV3RQVGZTL3pidUNhZWMxK2duV2J0d1laVDRBMjNUa1FEZ2E2?=
- =?utf-8?B?aUNHK2crRTJFWlY4eG9oZ21NZ1N5eUo2U2NiQkR3VmJDMm4rZ0FZTkhBTTM3?=
- =?utf-8?B?MTBESmQva0pMQ3FTWjhLSkZzVW1mTWs1R1ZUTjcwY21hTmcxbTZmM25iTVFw?=
- =?utf-8?B?d3ltUmg1S2NhdFM5RGx0NlVLekszN1hhbEtqNWxmRXgrYTNlVmRzVWlHdUtj?=
- =?utf-8?B?ZTlsQVNGSE5sK0VON2ticHh3dXhjZ1JzTml0aEZHRXhERlV4MWI0ZW9NVEtW?=
- =?utf-8?B?TW9XcHhYNE9xMmNQN1F6elorV0txMkN4S3phQ2RsUzU2WnA4dTNUTVRQNytl?=
- =?utf-8?B?SWRuS01XbFRnbmM3NWhJMkQ3dHZFcmNRNDU5YzlHMFArQU9FZHJRVWxiNitG?=
- =?utf-8?B?SW1WUmh0NHNJUEF3OUVwQVNwY0doZzM4bVNxOUpYSDlCYlZsUFFmQjVRMHY3?=
- =?utf-8?B?NVhBK3ZteVk2UVNjdzNmb0F6NndLQVFnZldjOW9Sa2txU0VaanFBODBQczFJ?=
- =?utf-8?B?YW40SDliTThnVXFLTXpydFJOTDhnM2hycEhhbXhnQkNXS2JDZUpQNUpRNHla?=
- =?utf-8?B?TXdZNnVqd2lsc3l6UktGMW9sZDhyRVY2cjRFaklaalFlQWJvNmxFR3d2a1RD?=
- =?utf-8?B?MlRLdGFKdkY5UFVmZWFrSnd1YkIvbTB3Zlp6STc1ZklJRjFFd0s5clR6aThJ?=
- =?utf-8?B?N3l5Mmp1bUFDenU2b1d0QlBnOWhiUXlYNEtQdFZrNWdYdmtjTEFuUFFlbExZ?=
- =?utf-8?Q?7Hw7iB3eeVw=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WHU1aGRIa2pqRGZtWVhvd1k1UFlzUTdqNVFHU1JCRHBRSUNlWHJLdnI1RkVm?=
- =?utf-8?B?Wmg1VGJTWWlDdDMwcTBXbjhVKzMxSzRzWEt4U1VhamFjOFZOVmJyeWZ3Q3dS?=
- =?utf-8?B?WUhHZFBBU0JpZFcxSUdPWFZaUTdUNHhWSWwwUnFidjhZblNpeEc0S2JMTHF6?=
- =?utf-8?B?bnlvUXg0UDJpMzJlWmJLTjFzOXpSd2M4T1MxSW9RR2x0SVl6Q1J4YWZFWmRt?=
- =?utf-8?B?VFlEKzkzaldINUpHajF2VUQycTJ5WGFyK2pqTHFhV2Zvcll5clZRMWhXQ2NW?=
- =?utf-8?B?elJVVVQyOGtiSCtTeHJOUm5kQU9IRVAycXI0Q1N1UFBDVEltbjZaZURid0RH?=
- =?utf-8?B?VDBLNW5VK3RRTzNkSEo0QktnQi9LNnhub241aG96NHo5WTRsS28zTkR5dVUr?=
- =?utf-8?B?VExxMythSVkxNU91bWRyMVNTbTBPalFxWnp2U0pneHVZUDdKOGVZMTlqS1N2?=
- =?utf-8?B?ZU9jeUJod05xQUxOWmpJem1vcEtIWVhyM0JVTXg0TW1ET2JvZ2Z3a2YxSmF3?=
- =?utf-8?B?aGVpckF0S0dKNmdzb0lnR2VDNGE0ZTNYLzhEWjhjVmFKOWgrWFJQUXpSeU4y?=
- =?utf-8?B?U1gvT0lTeTlIS3kxSDd2ZElML1RsYlI4cDJtZEpvbkdid0V3VnlIL1hPUlh1?=
- =?utf-8?B?MTkwaWRGV2ZqRnpNRUQ1QWtYcVFIczJ6N3B5ZnM1Y1QxRGlVOVU0eEs5TVFL?=
- =?utf-8?B?ZTBwYURhQ0krZCtBdU8xbUlVTEJ2cGVVRkZDZENpTy9DV1I1OUZ3NGJtVUg5?=
- =?utf-8?B?VVEwM0NrdWJKNGdGcFdmYmNxaTZQZmVwOVN0RUJxcGhkOXZPeFNEOFptYXNY?=
- =?utf-8?B?S01vS1pod2RKRS9XVVhxWUc2aUJtazNYZ0hRc0g4V1h4Qnprd1pnVmd2U29q?=
- =?utf-8?B?ZGozdkhIUW5TWmx4RW9RVWVtcnRKOXZVSGtpVnU4Z3JaRUNncXJNZkRDbCt0?=
- =?utf-8?B?VGpKOHVJM3lNVVVtSS81ckIraTl0RHBsTnU4S0lFWStkOHF1V3hMcEhaeFdK?=
- =?utf-8?B?WnhYbFNHbkVleFhnL3pwaHM0VUhXNGl6NXVOVjFZamxRUldzdWpzalk2a3Y1?=
- =?utf-8?B?cmxHTmszQitKWVEyRVZWSDdRVDNTV2ZTUnRwOExSQ09NQWdrVUV3alNLckd4?=
- =?utf-8?B?ZktGWVNQRTllejVRV2h0WVdvYlcvRHBtNTRGQUdpd3NYMEZxRVZiRCsxUXlv?=
- =?utf-8?B?RFJzcGs3MmZoZU4zYTVvMVhoL0l1akV1TE1rT0FodVl1SkljeXFiNHZES0xn?=
- =?utf-8?B?V1ozVzF2M2h1cDhIMDIydTV3MGtCZXdNZGFpSGw4cDFtZ3VubkN4ZXo3c0Vw?=
- =?utf-8?B?cVdFbUQ1cGYvV1FEVjVsYnJDLzhreWV6LzZIZU5VRlVZbkhNbU5xSjc0c0E3?=
- =?utf-8?B?aTl5OXozK2JZN0hZcStNUHVLdG1MVGc3b003WmFpeUFSVWFMZitXN3FqN0tj?=
- =?utf-8?B?dHJsS2o0OW5WRk1BLzhNd1huVU9aclEvVHFPK3duSXorb1JKaTlmekRRU0JZ?=
- =?utf-8?B?MmpESzY5SkRON20yd2dTd0JGeG5BTENtVzlteHkxbVorMmxiU0d5S3hYVjlh?=
- =?utf-8?B?OVJodWswYTgycWZzNVQ3cE96RTlRUytBa1dwT2ZrbXd2RGRxZVJMdjNJTDkw?=
- =?utf-8?B?YUFJOVFSVE5DQnk5elZaMFhjNDVEY1U0d2RFay9UNm5zUHB1WEV0YjNReTY0?=
- =?utf-8?B?MUxKRlpzV0Z2S1djcmNpYXFZSFJkcExVTUVTWCt0SDFETHd6VC9BbTR3STI4?=
- =?utf-8?B?TW1tSjU3cUNJUVF3OWlhajNqUHB2SlEyTTFoNnBOODNWQUcxSzRGY1ZHVWV3?=
- =?utf-8?B?L2pLelJrNVMxcEkwYlk2bW1PK3RXVk9uWXhhTW15YStsTWtrWXRTcjlLb0Z2?=
- =?utf-8?B?K1NFdi9LQWhYMEl2TEJmenp2UTI5L1lzWUI5bHp2bUxuTDNSWVEzdGdqWjhO?=
- =?utf-8?B?aVJ4cVRQSncrMFU3UldzcmhrT1dwaFArRUh3MzR6VjBSamk1ZnlDSSszVjZS?=
- =?utf-8?B?V3RoRGpMdFVQVVoyWkYyQW4zaUloMEs2Yjh4ejd1QkxDYmZLR1c0d3QwWGNu?=
- =?utf-8?B?SVVXc3hRYUduMlNoTmpXT0dxLy93YWJFQlRCdnBjb0dmSTcvSzFSbk1ZWU4w?=
- =?utf-8?Q?05koE3nAuQGTIhLn+QOA3d+2j?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a68fdc8a-5175-4ce4-e8b6-08ddb8b447f1
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2025 15:31:00.2381
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UGWWMGlZW6h69WDbmQYicCRh/ALUf7fj3JcDfZOf8hU0V/Cf0bb1FeJVsqR9BI2cYfVzaeKdofzIBROhPD/TPA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4294
+User-Agent: Mozilla Thunderbird
+Reply-To: eric.auger@redhat.com
+Subject: Re: [PATCH qemu v16 3/5] hw/arm/virt: Basic CXL enablement on
+ pci_expander_bridge instances pxb-cxl
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, qemu-devel@nongnu.org,
+ Fan Ni <fan.ni@samsung.com>, Peter Maydell <peter.maydell@linaro.org>,
+ mst@redhat.com, Zhijian Li <lizhijian@fujitsu.com>,
+ Itaru Kitayama <itaru.kitayama@linux.dev>
+Cc: linuxarm@huawei.com, linux-cxl@vger.kernel.org, qemu-arm@nongnu.org,
+ Yuquan Wang <wangyuquan1236@phytium.com.cn>,
+ =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
+ =?UTF-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>
+References: <20250625161926.549812-1-Jonathan.Cameron@huawei.com>
+ <20250625161926.549812-4-Jonathan.Cameron@huawei.com>
+From: Eric Auger <eric.auger@redhat.com>
+In-Reply-To: <20250625161926.549812-4-Jonathan.Cameron@huawei.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: KsrDOsgTfCcm8Xj89uGyZ9dJWUoaLm7_EI_j2Y9hrUE_1751384079
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+Hi Jonathan,
 
-On 6/27/25 10:42, Jonathan Cameron wrote:
-> On Tue, 24 Jun 2025 15:13:43 +0100
-> <alejandro.lucero-palau@amd.com> wrote:
+On 6/25/25 6:19 PM, Jonathan Cameron via wrote:
+> Code based on i386/pc enablement.
+> The memory layout places space for 16 host bridge register regions after
+> the GIC_REDIST2 in the extended memmap. This is a hole in the current
+> map so adding them here has no impact on placement of other memory regions
+> (tested with enough CPUs for GIC_REDIST2 to be in use.)
 >
->> From: Alejandro Lucero <alucerop@amd.com>
->>
-> Typo in patch title.
+> The CFMWs are placed above the extended memmap.  Note the confusing
+> existing variable highest_gpa is the highest_gpa that has been allocated
+> at a particular point in setting up the memory map.
+>
+> The cxl_devices_state.host_mr is provides a small space in which to place
+s/is//
+> the individual host bridge register regions for whatever host bridges are
+> allocated via -device pxb-cxl on the command line. The existing dynamic
+> sysbus infrastructure is not reused because pxb-cxl is a PCI device not
+> a sysbus one but these registers are directly in the main memory map,
+> not the PCI address space.
+>
+> Only create the CEDT table if cxl=on set for the machine. Default to off.
+>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+> v16: Some additional comments on the memory map in the patch description.
+>      Added an 'off by default' statement to he patch description.
+>      Update highest_gpa to include CXL Fixed Memory Windows. It is not
+>      used after this point but cleaner to set it anyway.
+>
+> Perhaps unresolved feedback.  Peter raised a concern about the direct
+> initialization of vms->cxl_devices_state.host_mr. I've added more
+> commentary about that to the patch description. Whilst it seems
+> unnecessary I could wrap the relevant 3 lines of code up in a utility
+> function rather than open coding them here and in i386/pc.
+> ---
+>  docs/system/arm/virt.rst |  9 +++++++++
+>  include/hw/arm/virt.h    |  4 ++++
+>  hw/arm/virt-acpi-build.c | 34 ++++++++++++++++++++++++++++++++++
+>  hw/arm/virt.c            | 29 +++++++++++++++++++++++++++++
+>  4 files changed, 76 insertions(+)
+>
+> diff --git a/docs/system/arm/virt.rst b/docs/system/arm/virt.rst
+> index 6a719b9586..10cbffc8a7 100644
+> --- a/docs/system/arm/virt.rst
+> +++ b/docs/system/arm/virt.rst
+> @@ -31,6 +31,7 @@ Supported devices
+>  The virt board supports:
+>  
+>  - PCI/PCIe devices
+> +- CXL Fixed memory windows, root bridges and devices.
+>  - Flash memory
+>  - Either one or two PL011 UARTs for the NonSecure World
+>  - An RTC
+> @@ -189,6 +190,14 @@ ras
+>  acpi
+>    Set ``on``/``off``/``auto`` to enable/disable ACPI.
+>  
+> +cxl
+> +  Set  ``on``/``off`` to enable/disable CXL. More details in
+> +  :doc:`../devices/cxl`. The default is off.
+> +
+> +cxl-fmw
+> +  Array of CXL fixed memory windows describing fixed address routing to
+> +  target CXL host bridges. See :doc:`../devices/cxl`.
+> +
+>  dtb-randomness
+>    Set ``on``/``off`` to pass random seeds via the guest DTB
+>    rng-seed and kaslr-seed nodes (in both "/chosen" and
+> diff --git a/include/hw/arm/virt.h b/include/hw/arm/virt.h
+> index 9a1b0f53d2..4375819ea0 100644
+> --- a/include/hw/arm/virt.h
+> +++ b/include/hw/arm/virt.h
+> @@ -36,6 +36,7 @@
+>  #include "hw/arm/boot.h"
+>  #include "hw/arm/bsa.h"
+>  #include "hw/block/flash.h"
+> +#include "hw/cxl/cxl.h"
+>  #include "system/kvm.h"
+>  #include "hw/intc/arm_gicv3_common.h"
+>  #include "qom/object.h"
+> @@ -85,6 +86,7 @@ enum {
+>  /* indices of IO regions located after the RAM */
+>  enum {
+>      VIRT_HIGH_GIC_REDIST2 =  VIRT_LOWMEMMAP_LAST,
+> +    VIRT_CXL_HOST,
+>      VIRT_HIGH_PCIE_ECAM,
+>      VIRT_HIGH_PCIE_MMIO,
+>  };
+> @@ -140,6 +142,7 @@ struct VirtMachineState {
+>      bool secure;
+>      bool highmem;
+>      bool highmem_compact;
+> +    bool highmem_cxl;
+>      bool highmem_ecam;
+>      bool highmem_mmio;
+>      bool highmem_redists;
+> @@ -174,6 +177,7 @@ struct VirtMachineState {
+>      char *oem_id;
+>      char *oem_table_id;
+>      bool ns_el2_virt_timer_irq;
+> +    CXLState cxl_devices_state;
+>  };
+>  
+>  #define VIRT_ECAM_ID(high) (high ? VIRT_HIGH_PCIE_ECAM : VIRT_PCIE_ECAM)
+> diff --git a/hw/arm/virt-acpi-build.c b/hw/arm/virt-acpi-build.c
+> index 7e8e0f0298..589e221b89 100644
+> --- a/hw/arm/virt-acpi-build.c
+> +++ b/hw/arm/virt-acpi-build.c
+> @@ -39,10 +39,12 @@
+>  #include "hw/acpi/aml-build.h"
+>  #include "hw/acpi/utils.h"
+>  #include "hw/acpi/pci.h"
+> +#include "hw/acpi/cxl.h"
+>  #include "hw/acpi/memory_hotplug.h"
+>  #include "hw/acpi/generic_event_device.h"
+>  #include "hw/acpi/tpm.h"
+>  #include "hw/acpi/hmat.h"
+> +#include "hw/cxl/cxl.h"
+>  #include "hw/pci/pcie_host.h"
+>  #include "hw/pci/pci.h"
+>  #include "hw/pci/pci_bus.h"
+> @@ -119,10 +121,29 @@ static void acpi_dsdt_add_flash(Aml *scope, const MemMapEntry *flash_memmap)
+>      aml_append(scope, dev);
+>  }
+>  
+> +static void build_acpi0017(Aml *table)
+> +{
+> +    Aml *dev, *scope, *method;
+> +
+> +    scope =  aml_scope("_SB");
+> +    dev = aml_device("CXLM");
+> +    aml_append(dev, aml_name_decl("_HID", aml_string("ACPI0017")));
+> +
+> +    method = aml_method("_STA", 0, AML_NOTSERIALIZED);
+> +    aml_append(method, aml_return(aml_int(0x0B)));
+> +    aml_append(dev, method);
+> +    build_cxl_dsm_method(dev);
+> +
+> +    aml_append(scope, dev);
+> +    aml_append(table, scope);
+> +}
+> +
+>  static void acpi_dsdt_add_pci(Aml *scope, const MemMapEntry *memmap,
+>                                uint32_t irq, VirtMachineState *vms)
+>  {
+>      int ecam_id = VIRT_ECAM_ID(vms->highmem_ecam);
+> +    bool cxl_present = false;
+> +    PCIBus *bus = vms->bus;
+>      struct GPEXConfig cfg = {
+>          .mmio32 = memmap[VIRT_PCIE_MMIO],
+>          .pio    = memmap[VIRT_PCIE_PIO],
+> @@ -136,6 +157,14 @@ static void acpi_dsdt_add_pci(Aml *scope, const MemMapEntry *memmap,
+>      }
+>  
+>      acpi_dsdt_add_gpex(scope, &cfg);
+> +    QLIST_FOREACH(bus, &vms->bus->child, sibling) {
+> +        if (pci_bus_is_cxl(bus)) {
+> +            cxl_present = true;
+> +        }
+> +    }
+> +    if (cxl_present) {
+> +        build_acpi0017(scope);
+> +    }
+>  }
+>  
+>  static void acpi_dsdt_add_gpio(Aml *scope, const MemMapEntry *gpio_memmap,
+> @@ -963,6 +992,11 @@ void virt_acpi_build(VirtMachineState *vms, AcpiBuildTables *tables)
+>          }
+>      }
+>  
+> +    if (vms->cxl_devices_state.is_enabled) {
+> +        cxl_build_cedt(table_offsets, tables_blob, tables->linker,
+> +                       vms->oem_id, vms->oem_table_id, &vms->cxl_devices_state);
+> +    }
+> +
+>      if (ms->nvdimms_state->is_enabled) {
+>          nvdimm_build_acpi(table_offsets, tables_blob, tables->linker,
+>                            ms->nvdimms_state, ms->ram_slots, vms->oem_id,
+> diff --git a/hw/arm/virt.c b/hw/arm/virt.c
+> index 99fde5836c..025b4cdc54 100644
+> --- a/hw/arm/virt.c
+> +++ b/hw/arm/virt.c
+> @@ -57,6 +57,7 @@
+>  #include "qemu/error-report.h"
+>  #include "qemu/module.h"
+>  #include "hw/pci-host/gpex.h"
+> +#include "hw/pci-bridge/pci_expander_bridge.h"
+>  #include "hw/virtio/virtio-pci.h"
+>  #include "hw/core/sysbus-fdt.h"
+>  #include "hw/platform-bus.h"
+> @@ -86,6 +87,8 @@
+>  #include "hw/virtio/virtio-md-pci.h"
+>  #include "hw/virtio/virtio-iommu.h"
+>  #include "hw/char/pl011.h"
+> +#include "hw/cxl/cxl.h"
+> +#include "hw/cxl/cxl_host.h"
+>  #include "qemu/guest-random.h"
+>  
+>  static GlobalProperty arm_virt_compat[] = {
+> @@ -220,6 +223,7 @@ static const MemMapEntry base_memmap[] = {
+>  static MemMapEntry extended_memmap[] = {
+>      /* Additional 64 MB redist region (can contain up to 512 redistributors) */
+>      [VIRT_HIGH_GIC_REDIST2] =   { 0x0, 64 * MiB },
+> +    [VIRT_CXL_HOST] =           { 0x0, 64 * KiB * 16 }, /* 16 UID */
+>      [VIRT_HIGH_PCIE_ECAM] =     { 0x0, 256 * MiB },
+>      /* Second PCIe window */
+>      [VIRT_HIGH_PCIE_MMIO] =     { 0x0, DEFAULT_HIGH_PCIE_MMIO_SIZE },
+> @@ -1626,6 +1630,17 @@ static void create_pcie(VirtMachineState *vms)
+>      }
+>  }
+>  
+> +static void create_cxl_host_reg_region(VirtMachineState *vms)
+> +{
+> +    MemoryRegion *sysmem = get_system_memory();
+> +    MemoryRegion *mr = &vms->cxl_devices_state.host_mr;
+> +
+> +    memory_region_init(mr, OBJECT(vms), "cxl_host_reg",
+> +                       vms->memmap[VIRT_CXL_HOST].size);
+> +    memory_region_add_subregion(sysmem, vms->memmap[VIRT_CXL_HOST].base, mr);
+> +    vms->highmem_cxl = true;
+> +}
+> +
+>  static void create_platform_bus(VirtMachineState *vms)
+>  {
+>      DeviceState *dev;
+> @@ -1742,6 +1757,12 @@ void virt_machine_done(Notifier *notifier, void *data)
+>      struct arm_boot_info *info = &vms->bootinfo;
+>      AddressSpace *as = arm_boot_address_space(cpu, info);
+>  
+> +    cxl_hook_up_pxb_registers(vms->bus, &vms->cxl_devices_state,
+> +                              &error_fatal);
+> +
+> +    if (vms->cxl_devices_state.is_enabled) {
+> +        cxl_fmws_link_targets(&error_fatal);
+> +    }
+>      /*
+>       * If the user provided a dtb, we assume the dynamic sysbus nodes
+>       * already are integrated there. This corresponds to a use case where
+> @@ -1788,6 +1809,7 @@ static inline bool *virt_get_high_memmap_enabled(VirtMachineState *vms,
+>  {
+>      bool *enabled_array[] = {
+>          &vms->highmem_redists,
+> +        &vms->highmem_cxl,
+>          &vms->highmem_ecam,
+>          &vms->highmem_mmio,
+>      };
+> @@ -1895,6 +1917,9 @@ static void virt_set_memmap(VirtMachineState *vms, int pa_bits)
+>      if (device_memory_size > 0) {
+>          machine_memory_devices_init(ms, device_memory_base, device_memory_size);
+>      }
+> +    vms->highest_gpa = cxl_fmws_set_memmap(ROUND_UP(vms->highest_gpa + 1,
+> +                                                    256 * MiB),
+> +                                           BIT_ULL(pa_bits)) - 1;
+in hw/cxl/cxl-host.c, there seems to be a loop on fw windows? I guess
+those windows only exist if cxl option is set. In the positive,
+highest_gpa will be changed only if the option is set, which is fine.
+Indeed we have requested_ipa_size = 64 - clz64(vms->highest_gpa). So we
+shall not modify this if cxl is not set.
 
-
-Upps. I'll fix it.
-
-Thanks
+What I am a bit concerned with is that it"consumes" some high memory
+without making it explicit in extended_memmap. Shouldn't we book some
+dedicated space there? Sorry I am jumping very late in the review, maybe
+turning things worse & noisy :-( Eric
+>  }
+>  
+>  static VirtGICType finalize_gic_version_do(const char *accel_name,
+> @@ -2345,6 +2370,8 @@ static void machvirt_init(MachineState *machine)
+>      memory_region_add_subregion(sysmem, vms->memmap[VIRT_MEM].base,
+>                                  machine->ram);
+>  
+> +    cxl_fmws_update_mmio();
+> +
+>      virt_flash_fdt(vms, sysmem, secure_sysmem ?: sysmem);
+>  
+>      create_gic(vms, sysmem);
+> @@ -2400,6 +2427,7 @@ static void machvirt_init(MachineState *machine)
+>      create_rtc(vms);
+>  
+>      create_pcie(vms);
+> +    create_cxl_host_reg_region(vms);
+>  
+>      if (has_ged && aarch64 && firmware_loaded && virt_is_acpi_enabled(vms)) {
+>          vms->acpi_dev = create_acpi_ged(vms);
+> @@ -3370,6 +3398,7 @@ static void virt_instance_init(Object *obj)
+>  
+>      vms->oem_id = g_strndup(ACPI_BUILD_APPNAME6, 6);
+>      vms->oem_table_id = g_strndup(ACPI_BUILD_APPNAME8, 8);
+> +    cxl_machine_init(obj, &vms->cxl_devices_state);
+>  }
+>  
+>  static const TypeInfo virt_machine_info = {
 
