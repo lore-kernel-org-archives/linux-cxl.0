@@ -1,154 +1,61 @@
-Received: from out162-62-57-210.mail.qq.com (out162-62-57-210.mail.qq.com [162.62.57.210])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62AD318D
-	for <linux-cxl@vger.kernel.org>; Tue,  1 Jul 2025 02:48:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C47B246782
+	for <linux-cxl@vger.kernel.org>; Tue,  1 Jul 2025 10:31:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751338142; cv=none; b=AyC+HHG1IbkjJ1z68s7SVmvgs6tdbWhadVxBIdmTpIFr4aNdFeWHvw7iN1uO15r0a5u0HX9cNi55aPxUINGKrGsfDN+Bjb3NUcrnVputt7E3XlW+kYzrKcRGWzQDrgBAyeN5rN/F5PpHfIaKuNFBy7M7svARLceSBSozyE232Yg=
+	t=1751365881; cv=none; b=qc/KEKcID2HYwxP6fLIL4W9tDMt8JQPH9dQn8ze4riobqyqi7cWKbszS/AE4MYOe1ZpJqoHhwo1TKlmSip14Rkm3a0snhGIRgdb+4W+33Py4DjCoQr91RXGnkSH0M6U9ZR0Bb7EBp7wL2DU8kH3DgEzSgsFb2mhmN+agRNJznqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751338142; c=relaxed/simple;
-	bh=Zm+b7msIzvUU1taQ+/eL2c5T/hzT63m/TqIPO/3nYWA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eR6raHibFafeaL4wEW04KffAIUj4DFGc6Zzsv7mKuCRe2MZsPXwkMKLL3D5yYpG646vgxMIRv4IeI5ICdmJ7bXA5uRU8BTQeEF1HOaTtbKVUZleYml9OxEarf02FJ6HlfElYw/APG9Gqaw8VDQIUUHMbxoeC3m3T1wpEpYCKz68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=btFVcFLf; arc=none smtp.client-ip=162.62.57.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="btFVcFLf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1751338133;
-	bh=iCikdi9PFpf0JfYQKaUXWT5hILOT0VaIoEga0SEMW7U=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=btFVcFLfQhoUuYUxZ1NlKgbGYmpxKNI6iIRvd/tur2dQ90SNivQOZWuc2NNewUSJH
-	 4VdHWFIIc1mw+vyz3QUaxHjAUD8H5v/r+jk5NS0cUT74jWGmg5iViBnkwuAVpB5VNz
-	 Udxkv5hL7Bf9s6IIDChkl01U7psYcBiV4o16YvS0=
-Received: from [10.56.52.9] ([39.156.73.10])
-	by newxmesmtplogicsvrsza36-0.qq.com (NewEsmtp) with SMTP
-	id C3416C83; Tue, 01 Jul 2025 10:48:52 +0800
-X-QQ-mid: xmsmtpt1751338132tf0fgvgo8
-Message-ID: <tencent_985F05467310610C8284AEB2102E5955C009@qq.com>
-X-QQ-XMAILINFO: OeJ9zRfntlNPfoTaewtNC7pEiF5g+52uKe2MG7zYislkbu/kAPq03gms+oHEoL
-	 VLQfc3EhKonBWqmxHID4PYQrayfGrzfZpBPfwKe5ybQMulcDXm2aZLTlwd8p1i403/P49uQZJ6rX
-	 NwP9MZXpebgIGpKjYsmx+S8DYuAHihx2z+Bc8TrEmH9UP+/p74JyYnTAB8i9p2IDg17vv4Ph32wQ
-	 xv+O/Y1A8Yd7yExEDIuJOhbxa4C2p+z8q0fG1az4vqfDIKBTtHDdIa5DUCuuS6ENtkSTa1a+QMEQ
-	 0RmqSG5CPWepCc8UkbfBhJDnLozgoHJrUHDv9AsEiA/q23WgilQ/TS64I5asKH/PxI/XsQuPb5QZ
-	 rLlD+UDC/p35p4MYyUqc8AB9B34jC/G4uv4M+PInOQDthLpd/A3ck8v8Mo8lh3uayrsnNcTLnL/X
-	 50DWCht27d8cgM/kXqImkG8Of3xy3wAtSfdSPveX0L8VRWHU1oGhk1wUHiwdZbd7pdyfIqcAqOxP
-	 mazMKl24+SeunDGeN5RhtV/ictWnAnQKwZnD2MM+OqdF1iMnCu3J/4oeBgMHEu3CJUD3MMMxGZAt
-	 tNVltN9+oztm8BtzIvnW3+/sjL+mUpQrUpTNT0OGZ/OLsEi3HMKv3jgm4yS+gpUHPeR5lH5BAmpp
-	 teD0oGhT+BNg2JSiU0hV2K+c136PUxGTCL7D4BROuAVlu24MF5imVg7X7wrX/rug2+H+5O3JDUZb
-	 oPeJ5IbgkMt8hVqr8xqnJCXgDDnIlTq/rnGqdRqMUmw/wb5Sbc8k/II1IYle9+T4NjnHa7kFKR71
-	 dpCPmiHcnim2NMWk2Z6+mNQjHvAgHHN+hSqzAi/8bTspUf7uUpPFSpA6uACQEJDWo6R0lfVEbtph
-	 /Z5nkoNvC1QVcDdOnUi0fbmJ+60R13apLBM0yqOPnjsV6JGX2V2L9x4LOEZxju2PATKtfQvQ5vOn
-	 +gSy6ZDHCfIQr6VvuzNC4Z8raSqnSj5kzz3BYcYWUJmyirPJqGnk/2laC07eI0
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-X-OQ-MSGID: <b206022b-fefa-44dc-8bdb-4a5172e7c6bd@foxmail.com>
-Date: Tue, 1 Jul 2025 10:48:51 +0800
+	s=arc-20240116; t=1751365881; c=relaxed/simple;
+	bh=WMSHYdSMgGOp97W0+fPqc2/+PHVO5xy0iioJ0+FctpA=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gRgw57dts233TgFC4Ksi8d4QHAwNlgQ0HKd4S/x7WmiUh6djTsyesuyU+QmvSof+66/7+FSthpWIDH8/+JsN0jTIth+9pMAlbzwnzBx0DzvSyJDTW9J1Pu6bWoxI7sP9zArcHXsXl5RumLFV6o4VBJQzjiyX5fw/0SEYiO9hd8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bWfPj4wt0z6HJZW;
+	Tue,  1 Jul 2025 18:28:25 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id C75451404C5;
+	Tue,  1 Jul 2025 18:31:15 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 1 Jul
+ 2025 12:31:15 +0200
+Date: Tue, 1 Jul 2025 11:31:14 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Dave Jiang <dave.jiang@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <dave@stgolabs.net>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <dan.j.williams@intel.com>, <rrichter@amd.com>
+Subject: Re: [PATCH v4 3/9] cxl: Add helper to reap dport
+Message-ID: <20250701113114.000073a1@huawei.com>
+In-Reply-To: <20250624213916.1665889-4-dave.jiang@intel.com>
+References: <20250624213916.1665889-1-dave.jiang@intel.com>
+	<20250624213916.1665889-4-dave.jiang@intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [ndctl PATCH] Documentation: cxl,daxctl,ndctl add --list-cmds
- info
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
- Rong Tao <rongtao@cestc.cn>, rtoax@foxmail.com
-References: <tencent_9A6812E28AC195905396EEE5A8CAD2ABD306@qq.com>
- <aGMw9JLysjOf2KWY@aschofie-mobl2.lan>
-Content-Language: en-US
-From: Rong Tao <rtoax@foxmail.com>
-In-Reply-To: <aGMw9JLysjOf2KWY@aschofie-mobl2.lan>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
+On Tue, 24 Jun 2025 14:39:10 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-On 7/1/25 08:51, Alison Schofield wrote:
-> On Mon, Jun 30, 2025 at 03:28:25PM +0800, Rong Tao wrote:
->> From: Rong Tao <rongtao@cestc.cn>
->>
->> Such as daxctl(1) manual.
-> What does the 'Such as ...' mean?  I thought that it meant you saw
-> the --list-cmds as an option in another of our family of commands,
-> but I don't see it.
+> Refactor the code in reap_dports() out to provide a helper function that
+> reaps a single dport. This will be used later in the cleanup path for
+> allocating a dport.
+> 
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
-Thanks for your reply, There are three commands has --list-cmds argument:
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 
-$ cxl --list-cmds
-
-$ daxctl --list-cmds
-
-$ ndctl --list-cmds
-
-Thus, this patch add --list-cmds in man-page for those three tools.
-
->
-> For these, the --list-cmds, is a suggestion in the --help option,
-> like this:
->
-> $ ndctl -h
->
->   usage: ndctl [--version] [--help] COMMAND [ARGS]
->
->   See 'ndctl help COMMAND' for more information on a specific command.
->   ndctl --list-cmds to see all available commands
->
->
->
->> Signed-off-by: Rong Tao <rongtao@cestc.cn>
->> ---
->>   Documentation/cxl/cxl.txt       | 3 +++
->>   Documentation/daxctl/daxctl.txt | 3 +++
->>   Documentation/ndctl/ndctl.txt   | 3 +++
->>   3 files changed, 9 insertions(+)
->>
->> diff --git a/Documentation/cxl/cxl.txt b/Documentation/cxl/cxl.txt
->> index 41a51c7d3892..546207d885eb 100644
->> --- a/Documentation/cxl/cxl.txt
->> +++ b/Documentation/cxl/cxl.txt
->> @@ -14,6 +14,9 @@ SYNOPSIS
->>   
->>   OPTIONS
->>   -------
->> +--list-cmds::
->> +  Display all available commands.
->> +
->>   -v::
->>   --version::
->>     Display the version of the 'cxl' utility.
->> diff --git a/Documentation/daxctl/daxctl.txt b/Documentation/daxctl/daxctl.txt
->> index f81b161c9771..606abc3e9635 100644
->> --- a/Documentation/daxctl/daxctl.txt
->> +++ b/Documentation/daxctl/daxctl.txt
->> @@ -14,6 +14,9 @@ SYNOPSIS
->>   
->>   OPTIONS
->>   -------
->> +--list-cmds::
->> +  Display all available commands.
->> +
->>   -v::
->>   --version::
->>     Display daxctl version.
->> diff --git a/Documentation/ndctl/ndctl.txt b/Documentation/ndctl/ndctl.txt
->> index c2919de4692d..08c3e949418a 100644
->> --- a/Documentation/ndctl/ndctl.txt
->> +++ b/Documentation/ndctl/ndctl.txt
->> @@ -14,6 +14,9 @@ SYNOPSIS
->>   
->>   OPTIONS
->>   -------
->> +--list-cmds::
->> +  Display all available commands.
->> +
->>   -v::
->>   --version::
->>     Display ndctl version.
->> -- 
->> 2.50.0
->>
->>
 
