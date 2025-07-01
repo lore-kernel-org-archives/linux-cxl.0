@@ -1,219 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E0C422759C
-	for <linux-cxl@vger.kernel.org>; Tue,  1 Jul 2025 14:22:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C3F41C3306;
+	Tue,  1 Jul 2025 14:33:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751379772; cv=none; b=rdJL8lgL0e7HTwG/UvFm+VLdbOJREeh6SKA8Qy+WY+PF8Okzv/jLgWq4ohdcck2XO6k4btUV7ykBG2gLbeB93CUK1CEu8WsVFqsuq8jbqWMtx3cUAojqEvfc/ILFaeV5V1mc1uVje0J8Hwioiw+uabg0ERDzfuI8NDzAHObpGuE=
+	t=1751380431; cv=none; b=GXlbM+d9ruZqJ6QRzDh4P9XuPdS66eCmiHuVWaKUf12S0KOjDqSa9y5D7p7QurHbs0ia4l2nOZ5WVoyLDWVPL0tSG6tNKtzX+/V6oDIDbicttz9cXglO/401zj7sxm4FhiuYXAIfmU+/14xiVkKC228ciGRASft2xURrgu+2Y+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751379772; c=relaxed/simple;
-	bh=b4mMWJBSC5c+aql9tg1VgMguR+pBCReHBqKxtiKPii0=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=K8ra3uvhunHbts1vW+5PAD6svJ/MsQyHvtr1FI1pPCQBrm+b4Zt7PpNc6tRd/zMiaw1c7iUXgkTYiW55UyJxv/UyOmKS3dkg6b5wndqJHHPyF3uX3wIVVcZfz6C6xcYN590emG7vUO2MMgmQXzpQR/7hmX3Zbbg1v8i/jymBMD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IFqe4iMN; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751380431; c=relaxed/simple;
+	bh=Pbx/EKD9++JlxPP6paHBkhHJcaCHEyRFBjtniob5ydQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=le0MBM61O3RCJq7ft8tq2xIVRHMqL5XdUosRSotRQQ4CVJmkhbJT48y1mdBLMwqa34Ni4rwfs5ita5KB8lcTBMo3nhDb1pZxpGGGYwuUBXRCQFfSaqlTZkZLG7RkOGNNFNPl2/7RJe4oslwXQXpB4MjjrSv5tmgLiEG31aWwVUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mw8KxcJT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IFqe4iMN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751379771; x=1782915771;
-  h=date:from:to:cc:subject:message-id;
-  bh=b4mMWJBSC5c+aql9tg1VgMguR+pBCReHBqKxtiKPii0=;
-  b=IFqe4iMNYUpMUuXT/Q7FRgnpBi3EMJhmFYDKD27S0X8qIsepStZyQMpc
-   FN/iEVWz637SxWzub4TofXKJnRd1KTuLHrSm6/IEUaEYRbIn467V3ewWL
-   m4zKgHTep3xMHOf7ayf7DRzAvxVTdTJAHJYbvyOzNMj5DFl7BYvrwjAYg
-   GNQXWD+3DPyVI3k4QH3Vu7hWVpU/5JAHyBRo0yGYKzraw4R92GjQsLmCP
-   0BT7ZjJo/IGik+xDtCFAwL0RKhzACgBGFckm7Ef84jFRZv4NGeFHiyxiX
-   BITnOOWgAsBBQYPa8RdRt3lW/XiLlrXIwow8FKKupPFeSiKkysyeRKqhd
-   A==;
-X-CSE-ConnectionGUID: rvLzdU9sS12PV18zMes90Q==
-X-CSE-MsgGUID: SjYx9732SNCZljekeIKAjA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="57456882"
-X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="57456882"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 07:22:50 -0700
-X-CSE-ConnectionGUID: V0As7RPvSmKc+dBPMr8QkQ==
-X-CSE-MsgGUID: 9E5tI56lRLux09R63HCZ0A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="159495617"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 01 Jul 2025 07:22:48 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uWbsk-000aHi-1a;
-	Tue, 01 Jul 2025 14:22:46 +0000
-Date: Tue, 01 Jul 2025 22:22:31 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Subject: [cxl:next] BUILD SUCCESS
- d7b9056c3a6c58d41074b7ba19ab7fd34ce9f63e
-Message-ID: <202507012220.QTe7jJyo-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mw8KxcJT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05790C4CEEB;
+	Tue,  1 Jul 2025 14:33:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751380431;
+	bh=Pbx/EKD9++JlxPP6paHBkhHJcaCHEyRFBjtniob5ydQ=;
+	h=From:Date:Subject:To:Cc:From;
+	b=mw8KxcJTWTUsceAHB41Ph04FCThUEAvv8JJfobCGUJpfdOHexVZU5VhfM0AQnsp20
+	 n6K4nUXA6xM9YSx0Jo5qYcEKO73f/mafczWDm3KgIPw21wKI13z7E5rfIAthYOTPO6
+	 d4jKAmrXrjucmKTq+705JJvOmmOT/C1Obbr4B+VR4g+NNi/rmeSiDxnCjTcUp2ypa0
+	 bipUN5pi2gIskcAcxOihLjwxtAmZSUldVpgqnfCyb/14nA7hti+tYstfvJgIwbE054
+	 mhcowXpHC1/tAuZcZwblXCM5NTw5+DBbikZJmwEm4sXQ7/7Nzte6IUkSRaUOW8PduY
+	 Tm0TyT2nLV8NQ==
+From: Nathan Chancellor <nathan@kernel.org>
+Date: Tue, 01 Jul 2025 07:33:31 -0700
+Subject: [PATCH] cxl: Include range.h in cxl.h
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250701-cxl-fix-struct-range-error-v1-1-1f199bddc7c9@kernel.org>
+X-B4-Tracking: v=1; b=H4sIALrxY2gC/x3MQQqAIBBA0avErBswTYquEi3KphqIirEiEO+eu
+ Pzw+AE8CZOHrggg9LLn80hRlQW4bTxWQp5Tg1baqkZV6L4dF/7Q3/K4GyUbEjkF27qxbpoWY2w
+ LaXAJJZnn/RDjDyS3htxsAAAA
+X-Change-ID: 20250701-cxl-fix-struct-range-error-8475cbbf3358
+To: Davidlohr Bueso <dave@stgolabs.net>, 
+ Jonathan Cameron <jonathan.cameron@huawei.com>, 
+ Dave Jiang <dave.jiang@intel.com>, 
+ Alison Schofield <alison.schofield@intel.com>, 
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+ Dan Williams <dan.j.williams@intel.com>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1619; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=Pbx/EKD9++JlxPP6paHBkhHJcaCHEyRFBjtniob5ydQ=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDBnJH89ssC/NjDy2xJ5Rp8N3ldwOj46q367HJ5U+faNrL
+ GDw/3FPRykLgxgXg6yYIkv1Y9XjhoZzzjLeODUJZg4rE8gQBi5OAZhIWwfD/7pLQuKXw5Qf22iY
+ LDlil60smlC4YIZ9Ub9Rl8Kbq4s9TjL80z3THnL99fXYTf0pMzZYbpy6Y6kM35mDfrsUPQMOMJk
+ 58AEA
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-branch HEAD: d7b9056c3a6c58d41074b7ba19ab7fd34ce9f63e  cxl/edac: Use correct format specifier for u32 val
+After commit aefeb286b960 ("libnvdimm: Don't use "proxy" headers"),
+range.h may not be implicitly included, resulting in a build error:
 
-elapsed time: 829m
+  In file included from drivers/cxl/core/features.c:8:
+  drivers/cxl/cxl.h:365:22: error: field 'hpa_range' has incomplete type
+    365 |         struct range hpa_range;
+        |                      ^~~~~~~~~
+  drivers/cxl/cxl.h:562:22: error: field 'hpa_range' has incomplete type
+    562 |         struct range hpa_range;
+        |                      ^~~~~~~~~
+  drivers/cxl/cxl.h:570:22: error: field 'hpa_range' has incomplete type
+    570 |         struct range hpa_range;
+        |                      ^~~~~~~~~
+  drivers/cxl/cxl.h:803:22: error: array type has incomplete element type 'struct range'
+    803 |         struct range dvsec_range[2];
+        |                      ^~~~~~~~~~~
 
-configs tested: 139
-configs skipped: 7
+Include range.h in cxl.h explicitly to clear up the errors.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Fixes: aefeb286b960 ("libnvdimm: Don't use "proxy" headers")
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+---
+ drivers/cxl/cxl.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-tested configs:
-alpha                            alldefconfig    gcc-15.1.0
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-alpha                               defconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                                 defconfig    gcc-15.1.0
-arc                   randconfig-001-20250701    gcc-13.3.0
-arc                   randconfig-002-20250701    gcc-15.1.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-15.1.0
-arm                                 defconfig    clang-21
-arm                   randconfig-001-20250701    clang-17
-arm                   randconfig-002-20250701    gcc-8.5.0
-arm                   randconfig-003-20250701    clang-21
-arm                   randconfig-004-20250701    clang-21
-arm                        shmobile_defconfig    gcc-15.1.0
-arm                        spear3xx_defconfig    clang-17
-arm                         vf610m4_defconfig    gcc-15.1.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                               defconfig    gcc-15.1.0
-arm64                 randconfig-001-20250701    clang-21
-arm64                 randconfig-002-20250701    gcc-15.1.0
-arm64                 randconfig-003-20250701    clang-18
-arm64                 randconfig-004-20250701    gcc-8.5.0
-csky                              allnoconfig    gcc-15.1.0
-csky                                defconfig    gcc-15.1.0
-csky                  randconfig-001-20250701    gcc-11.5.0
-csky                  randconfig-002-20250701    gcc-10.5.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon                             defconfig    clang-21
-hexagon               randconfig-001-20250701    clang-21
-hexagon               randconfig-002-20250701    clang-21
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250701    gcc-12
-i386        buildonly-randconfig-002-20250701    gcc-12
-i386        buildonly-randconfig-003-20250701    gcc-12
-i386        buildonly-randconfig-004-20250701    gcc-12
-i386        buildonly-randconfig-005-20250701    gcc-12
-i386        buildonly-randconfig-006-20250701    clang-20
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-15.1.0
-loongarch                         allnoconfig    gcc-15.1.0
-loongarch                           defconfig    gcc-15.1.0
-loongarch             randconfig-001-20250701    gcc-13.3.0
-loongarch             randconfig-002-20250701    gcc-15.1.0
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-m68k                                defconfig    gcc-15.1.0
-m68k                        m5307c3_defconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                   sb1250_swarm_defconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                               defconfig    gcc-14.2.0
-nios2                 randconfig-001-20250701    gcc-14.2.0
-nios2                 randconfig-002-20250701    gcc-13.3.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20250701    gcc-14.3.0
-parisc                randconfig-002-20250701    gcc-10.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    clang-21
-powerpc                 linkstation_defconfig    clang-20
-powerpc                 mpc8315_rdb_defconfig    clang-21
-powerpc                     mpc83xx_defconfig    clang-21
-powerpc               randconfig-001-20250701    gcc-13.3.0
-powerpc               randconfig-002-20250701    clang-21
-powerpc               randconfig-003-20250701    clang-21
-powerpc                     tqm8540_defconfig    gcc-15.1.0
-powerpc64             randconfig-001-20250701    clang-21
-powerpc64             randconfig-002-20250701    clang-21
-powerpc64             randconfig-003-20250701    gcc-10.5.0
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-21
-riscv                    nommu_virt_defconfig    clang-21
-riscv                 randconfig-001-20250701    gcc-14.3.0
-riscv                 randconfig-002-20250701    gcc-10.5.0
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    clang-21
-s390                  randconfig-001-20250701    gcc-9.3.0
-s390                  randconfig-002-20250701    clang-17
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-15.1.0
-sh                    randconfig-001-20250701    gcc-15.1.0
-sh                    randconfig-002-20250701    gcc-13.3.0
-sh                             sh03_defconfig    gcc-15.1.0
-sh                            titan_defconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                 randconfig-001-20250701    gcc-10.3.0
-sparc                 randconfig-002-20250701    gcc-15.1.0
-sparc64                             defconfig    gcc-15.1.0
-sparc64               randconfig-001-20250701    gcc-8.5.0
-sparc64               randconfig-002-20250701    gcc-12.4.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-21
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250701    gcc-12
-um                    randconfig-002-20250701    gcc-12
-um                           x86_64_defconfig    clang-21
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250701    gcc-12
-x86_64      buildonly-randconfig-002-20250701    gcc-12
-x86_64      buildonly-randconfig-003-20250701    gcc-12
-x86_64      buildonly-randconfig-004-20250701    gcc-12
-x86_64      buildonly-randconfig-005-20250701    clang-20
-x86_64      buildonly-randconfig-006-20250701    clang-20
-x86_64                              defconfig    gcc-11
-x86_64                          rhel-9.4-rust    clang-18
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                  nommu_kc705_defconfig    gcc-15.1.0
-xtensa                randconfig-001-20250701    gcc-15.1.0
-xtensa                randconfig-002-20250701    gcc-13.3.0
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 3f1695c96abc..b941ff94fe0a 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -11,6 +11,7 @@
+ #include <linux/log2.h>
+ #include <linux/node.h>
+ #include <linux/io.h>
++#include <linux/range.h>
+ 
+ extern const struct nvdimm_security_ops *cxl_security_ops;
+ 
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+---
+base-commit: aefeb286b960a0629273d1dc809ea36754f42d98
+change-id: 20250701-cxl-fix-struct-range-error-8475cbbf3358
+
+Best regards,
+--  
+Nathan Chancellor <nathan@kernel.org>
+
