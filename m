@@ -1,496 +1,222 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EF7E6F2F2
-	for <linux-cxl@vger.kernel.org>; Wed,  2 Jul 2025 04:44:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C3704C7F
+	for <linux-cxl@vger.kernel.org>; Wed,  2 Jul 2025 04:54:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751431466; cv=none; b=iG3GziMcERsiNyQgpmOLgQx1ynO9OnMmX6IsgT/PgY3KzVSgU1ces/tHU1KmILMyzf2wdkTYdSPJiNb2vgGuhqEyhn6+WQU9NgYbvlit1mAXoK5/2ELCObdNeQSOFUo78m2YfesRSYokBR95sjuaycHp6j5N8gwRzYXix8X3wwY=
+	t=1751432062; cv=none; b=aRxXgin9HVKeBmFN1PpVP41PB5SRr+nxa0Qt3Yuwd+nN4Kxy649/QwCS7KC+skLB2mBkXvNivShfSEgwXix7LOKl4x5Aoe0bVN/XTuaBwXzSjX3rbeBkFMYrQtO3PBlohF8Zeskmg2676GhFpPqmdjfTG/8FdZ/w1QunSU8Bxuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751431466; c=relaxed/simple;
-	bh=jLTjt+vu8svtyscpsOyQfoC5XVuv+sFtjltRAtO0ckM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=R0q0OmSVJ6HMYGdrxRxmltPpSZ9ZwBdrjFPouiz3gVoMp1E2eA+0+nHy9nMjPoPFyj8K593KqNKQi64dRRYD69W21m3KnP3HS/PWVBHgcKiJ86vDFJvJAinr7evxqWyuFWvh6SML97njcx6e2t20INziM4XVjj6lc3NkdEKiuTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Pe/g1IEx; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751432062; c=relaxed/simple;
+	bh=3dW1O3KEGaw1qxwQ31Q6nZsNGm5IAPUY6C9G7cLWGos=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=E5W14q+RCuTuEZh2KEMsFMfoXwxLOEXEIyFZ+3QjRB2DEI0yFgY8d8o+9l751Cameps/9s/fxW/bv8a04EqSHnNkY0Hiy+H057YfTput0oBig7jiW1n62op0Okb5ht7heoH0TtV8WxM6IoLAIgKQC/LZZLpqW7P4jBgE24kPq7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eBR9EI7Y; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pe/g1IEx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751431462;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=2ukaGPYbjF9zVbIh0GqwSOLye5W0OmleERSCOsvMcJ4=;
-	b=Pe/g1IEx6I4W3+SdHzYxdTmzDXL3m6fv/1dFQu/cRk+MlYuQq/06Psl9IyT6442EYpiy6q
-	huxJ3qz4W51FFjvXgFZKvqRyFC7Yi/FImJpMzgYWdc3tWzU1VDPKhWvt86Wq7pD12Uwk8o
-	u1r3rZNJHv2kKnhpublbYABIDvCUjQQ=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-331-9jTdC5zJMWOCGN3Hp9UPAg-1; Wed,
- 02 Jul 2025 00:44:20 -0400
-X-MC-Unique: 9jTdC5zJMWOCGN3Hp9UPAg-1
-X-Mimecast-MFC-AGG-ID: 9jTdC5zJMWOCGN3Hp9UPAg_1751431460
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BD6E11800368;
-	Wed,  2 Jul 2025 04:44:19 +0000 (UTC)
-Received: from vm-10-0-76-146.hosted.upshift.rdu2.redhat.com (vm-10-0-76-146.hosted.upshift.rdu2.redhat.com [10.0.76.146])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9FEC419560AB;
-	Wed,  2 Jul 2025 04:44:18 +0000 (UTC)
-From: Yi Zhang <yi.zhang@redhat.com>
-To: nvdimm@lists.linux.dev
-Cc: alison.schofield@intel.com,
-	linux-cxl@vger.kernel.org,
-	Dave Jiang <dave.jiang@intel.com>
-Subject: [ndctl PATCH V2] Various typos fix in Documention/, cxl/, ndctl/, test/, util/ and meson.build
-Date: Wed,  2 Jul 2025 00:18:37 -0400
-Message-ID: <20250702041837.2677896-1-yi.zhang@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eBR9EI7Y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751432060; x=1782968060;
+  h=date:from:to:cc:subject:message-id;
+  bh=3dW1O3KEGaw1qxwQ31Q6nZsNGm5IAPUY6C9G7cLWGos=;
+  b=eBR9EI7YdGwVDR3VNZ8vIfe1H1jKUsxbp7TmQU8gSXaSp3xOwLRgdTQA
+   vkLbPzIq9q9jJmGiYCZOHVaiMlc89O8UgrAtfKehz/XM6bjreFTkWfKfh
+   HcUTbWH8t/8u5SYWnNzUQTFRNPqz8bw6o98WdGwVpdUJURYWvDGq5YX3w
+   myowvtkAvWfLNrx0O3SQVIxkw0yqPlzze1LBxyp9qXVc+I/SpUg7JWeCc
+   BL8ageLRfnkBmwAIKoT5psXYeSXeuVLYx+rPVcNGwhoCYKrfr0QWHGvOY
+   sXKSJSVJ9jLVAiYdT8OWOsR8BFfg8SuRWLrx8hzJpTiYXAFK80pJHgcAV
+   w==;
+X-CSE-ConnectionGUID: N6b1lmMaT8WtLJ7u7giISA==
+X-CSE-MsgGUID: uciy0hJjS2eBC9b4vcsU+A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="53832968"
+X-IronPort-AV: E=Sophos;i="6.16,280,1744095600"; 
+   d="scan'208";a="53832968"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 21:54:20 -0700
+X-CSE-ConnectionGUID: O6TGyuBDRAmn6T+BUmJeyw==
+X-CSE-MsgGUID: cRTC/ImnSrGpPwvagAaTww==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,280,1744095600"; 
+   d="scan'208";a="159485846"
+Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 01 Jul 2025 21:54:18 -0700
+Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uWpU8-0000Bv-0G;
+	Wed, 02 Jul 2025 04:54:16 +0000
+Date: Wed, 02 Jul 2025 12:53:39 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Subject: [cxl:next] BUILD SUCCESS
+ ac0fe6a5731700bcea6fecfd5d0b76c0454b3a20
+Message-ID: <202507021226.LpQWMIK6-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 7OQoO7cyXOj3LmGUkPZwV7x6Fo-pavmpC8KOJclB6J8_1751431460
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Most of them caught by https://github.com/codespell-project/codespell
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
+branch HEAD: ac0fe6a5731700bcea6fecfd5d0b76c0454b3a20  cxl: make cxl_bus_type constant
 
-s/divdes/divides
-s/hiearchy/hierarchy
-s/convereted/converted
-s/namepace namespace/namespace
-s/namepsaces/namespaces
-s/oher/other
-s/identifer/identifier
-s/happend/happened
-s/paritition/partition
-s/thats/that's
-s/santize/sanitize
-s/sucessfully/successfully
-s/suports/supports
-s/namepace/namespace
-s/aare/are
-s/wont/won't
-s/werent/weren't
-s/cant/can't
-s/defintion/definition
-s/secounds/seconds
-s/Sucessfully/Successfully
-s/succeded/succeeded
-s/inital/initial
-s/mangement/management
-s/optionnal/optional
-s/argments/arguments
-s/incremantal/incremental
-s/detachs/detaches
+elapsed time: 729m
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Signed-off-by: Yi Zhang <yi.zhang@redhat.com>
----
-changes from v1:
-- Add reviewed-by tag
-- Add more details about the typos and how they were caught
----
- Documentation/cxl/cxl-reserve-dpa.txt          | 2 +-
- Documentation/cxl/lib/libcxl.txt               | 2 +-
- Documentation/daxctl/daxctl-create-device.txt  | 2 +-
- Documentation/ndctl/ndctl-create-namespace.txt | 4 ++--
- ccan/list/list.h                               | 2 +-
- cxl/bus.c                                      | 2 +-
- cxl/lib/libcxl.c                               | 2 +-
- cxl/memdev.c                                   | 2 +-
- meson.build                                    | 2 +-
- ndctl/dimm.c                                   | 2 +-
- ndctl/lib/ars.c                                | 4 ++--
- ndctl/lib/libndctl.c                           | 8 ++++----
- ndctl/lib/papr_pdsm.h                          | 8 ++++----
- ndctl/libndctl.h                               | 2 +-
- test/cxl-sanitize.sh                           | 2 +-
- test/daxctl-create.sh                          | 4 ++--
- test/daxctl-devices.sh                         | 4 ++--
- test/libndctl.c                                | 2 +-
- test/security.sh                               | 2 +-
- util/parse-options.h                           | 6 +++---
- util/strbuf.h                                  | 2 +-
- 21 files changed, 33 insertions(+), 33 deletions(-)
+configs tested: 142
+configs skipped: 4
 
-diff --git a/Documentation/cxl/cxl-reserve-dpa.txt b/Documentation/cxl/cxl-reserve-dpa.txt
-index 58cc93e..d51ccd6 100644
---- a/Documentation/cxl/cxl-reserve-dpa.txt
-+++ b/Documentation/cxl/cxl-reserve-dpa.txt
-@@ -38,7 +38,7 @@ include::bus-option.txt[]
- -t::
- --type::
- 	Select the partition for the allocation. CXL devices implement a
--	partition that divdes 'ram' and 'pmem' capacity, where 'pmem' capacity
-+	partition that divides 'ram' and 'pmem' capacity, where 'pmem' capacity
- 	consumes the higher DPA capacity above the partition boundary. The type
- 	defaults to 'pmem'. Note that given CXL DPA allocation constraints, once
- 	any 'pmem' allocation is established then all remaining 'ram' capacity
-diff --git a/Documentation/cxl/lib/libcxl.txt b/Documentation/cxl/lib/libcxl.txt
-index 2a512fd..ce311b1 100644
---- a/Documentation/cxl/lib/libcxl.txt
-+++ b/Documentation/cxl/lib/libcxl.txt
-@@ -296,7 +296,7 @@ use generic port APIs on root objects.
- Ports are hierarchical. All but the a root object have another CXL port
- as a parent object retrievable via cxl_port_get_parent().
- 
--The root port of a hiearchy can be retrieved via any port instance in
-+The root port of a hierarchy can be retrieved via any port instance in
- that hierarchy via cxl_port_get_bus().
- 
- The host of a port is the corresponding device name of the PCIe Root
-diff --git a/Documentation/daxctl/daxctl-create-device.txt b/Documentation/daxctl/daxctl-create-device.txt
-index 05f4dbd..b774b86 100644
---- a/Documentation/daxctl/daxctl-create-device.txt
-+++ b/Documentation/daxctl/daxctl-create-device.txt
-@@ -62,7 +62,7 @@ DESCRIPTION
- -----------
- 
- Creates dax device in 'devdax' mode in dynamic regions. The resultant can also
--be convereted to the 'system-ram' mode which arranges for the dax range to be
-+be converted to the 'system-ram' mode which arranges for the dax range to be
- hot-plugged into the system as regular memory.
- 
- 'daxctl create-device' expects that the BIOS or kernel defines a range in the
-diff --git a/Documentation/ndctl/ndctl-create-namespace.txt b/Documentation/ndctl/ndctl-create-namespace.txt
-index afb085e..3d0a2dd 100644
---- a/Documentation/ndctl/ndctl-create-namespace.txt
-+++ b/Documentation/ndctl/ndctl-create-namespace.txt
-@@ -31,7 +31,7 @@ OPTIONS
- -m::
- --mode=::
- 	- "raw": expose the namespace capacity directly with
--	  limitations. A raw pmem namepace namespace does not support
-+	  limitations. A raw pmem namespace does not support
- 	  sector atomicity (see "sector" mode below). A raw pmem
- 	  namespace may have limited to no dax support depending the
- 	  kernel. In other words operations like direct-I/O targeting a
-@@ -95,7 +95,7 @@ OPTIONS
- 	suffixes "k" or "K" for KiB, "m" or "M" for MiB, "g" or "G" for
- 	GiB and "t" or "T" for TiB.
- 
--	For pmem namepsaces the size must be a multiple of the
-+	For pmem namespaces the size must be a multiple of the
- 	interleave-width and the namespace alignment (see
- 	below).
- 
-diff --git a/ccan/list/list.h b/ccan/list/list.h
-index 15f5fb7..eeaed16 100644
---- a/ccan/list/list.h
-+++ b/ccan/list/list.h
-@@ -712,7 +712,7 @@ static inline void list_prepend_list_(struct list_head *to,
-  * @off: offset(relative to @i) at which list node data resides.
-  *
-  * This is a low-level wrapper to iterate @i over the entire list, used to
-- * implement all oher, more high-level, for-each constructs. It's a for loop,
-+ * implement all other, more high-level, for-each constructs. It's a for loop,
-  * so you can break and continue as normal.
-  *
-  * WARNING! Being the low-level macro that it is, this wrapper doesn't know
-diff --git a/cxl/bus.c b/cxl/bus.c
-index 3321295..9ef04bc 100644
---- a/cxl/bus.c
-+++ b/cxl/bus.c
-@@ -100,7 +100,7 @@ static int bus_action(int argc, const char **argv, struct cxl_ctx *ctx,
- 		if (sscanf(argv[i], "%lu", &id) == 1)
- 			continue;
- 
--		log_err(&bl, "'%s' is not a valid bus identifer\n", argv[i]);
-+		log_err(&bl, "'%s' is not a valid bus identifier\n", argv[i]);
- 		err++;
- 	}
- 
-diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-index 5d97023..1da0c1e 100644
---- a/cxl/lib/libcxl.c
-+++ b/cxl/lib/libcxl.c
-@@ -1785,7 +1785,7 @@ static void bus_invalidate(struct cxl_bus *bus)
- 	struct cxl_memdev *memdev;
- 
- 	/*
--	 * Something happend to cause the state of all ports to be
-+	 * Something happened to cause the state of all ports to be
- 	 * indeterminate, delete them all and start over.
- 	 */
- 	cxl_memdev_foreach(ctx, memdev)
-diff --git a/cxl/memdev.c b/cxl/memdev.c
-index 6e44d15..58087de 100644
---- a/cxl/memdev.c
-+++ b/cxl/memdev.c
-@@ -650,7 +650,7 @@ param_size_to_volatile_size(const char *devname, enum cxl_setpart_type type,
- }
- 
- /*
-- * Return the volatile_size to use in the CXL set paritition
-+ * Return the volatile_size to use in the CXL set partition
-  * command, or ULLONG_MAX if unable to validate the partition
-  * request.
-  */
-diff --git a/meson.build b/meson.build
-index 19808bb..5466719 100644
---- a/meson.build
-+++ b/meson.build
-@@ -172,7 +172,7 @@ keyutils = cc.find_library('keyutils', required : get_option('keyutils'))
- 
- # iniparser lacks pkgconfig and its header files are either at '/usr/include' or '/usr/include/iniparser'
- # Use the path provided by user via meson configure -Diniparserdir=<somepath>
--# if thats not provided then try searching for 'iniparser.h' in default system include path
-+# if that's not provided then try searching for 'iniparser.h' in default system include path
- # and if that not found then as a last resort try looking at '/usr/include/iniparser'
- iniparser_headers = ['iniparser.h', 'dictionary.h']
- 
-diff --git a/ndctl/dimm.c b/ndctl/dimm.c
-index aaa0abf..533ab04 100644
---- a/ndctl/dimm.c
-+++ b/ndctl/dimm.c
-@@ -1074,7 +1074,7 @@ static int action_sanitize_dimm(struct ndctl_dimm *dimm,
- 	if (!param.crypto_erase && !param.overwrite) {
- 		param.crypto_erase = true;
- 		if (param.verbose)
--			fprintf(stderr, "No santize method passed in, default to crypto-erase\n");
-+			fprintf(stderr, "No sanitize method passed in, default to crypto-erase\n");
- 	}
- 
- 	if (param.crypto_erase) {
-diff --git a/ndctl/lib/ars.c b/ndctl/lib/ars.c
-index d50c283..b705cf0 100644
---- a/ndctl/lib/ars.c
-+++ b/ndctl/lib/ars.c
-@@ -70,7 +70,7 @@ static bool __validate_ars_cap(struct ndctl_cmd *ars_cap)
- ({ \
- 	bool __valid = __validate_ars_cap(ars_cap); \
- 	if (!__valid) \
--		dbg(ctx, "expected sucessfully completed ars_cap command\n"); \
-+		dbg(ctx, "expected successfully completed ars_cap command\n"); \
- 	__valid; \
- })
- 
-@@ -224,7 +224,7 @@ static bool __validate_ars_stat(struct ndctl_cmd *ars_stat)
- ({ \
- 	bool __valid = __validate_ars_stat(ars_stat); \
- 	if (!__valid) \
--		dbg(ctx, "expected sucessfully completed ars_stat command\n"); \
-+		dbg(ctx, "expected successfully completed ars_stat command\n"); \
- 	__valid; \
- })
- 
-diff --git a/ndctl/lib/libndctl.c b/ndctl/lib/libndctl.c
-index f75dbd4..dd3e802 100644
---- a/ndctl/lib/libndctl.c
-+++ b/ndctl/lib/libndctl.c
-@@ -50,7 +50,7 @@ NDCTL_EXPORT size_t ndctl_sizeof_namespace_index(void)
- }
- 
- /**
-- * ndctl_min_namespace_size - minimum namespace size that btt suports
-+ * ndctl_min_namespace_size - minimum namespace size that btt supports
-  */
- NDCTL_EXPORT size_t ndctl_min_namespace_size(void)
- {
-@@ -3184,7 +3184,7 @@ NDCTL_EXPORT struct ndctl_cmd *ndctl_dimm_cmd_new_cfg_read(struct ndctl_cmd *cfg
- 
- 	if (cfg_size->type != ND_CMD_GET_CONFIG_SIZE
- 			|| cfg_size->status != 0) {
--		dbg(ctx, "expected sucessfully completed cfg_size command\n");
-+		dbg(ctx, "expected successfully completed cfg_size command\n");
- 		return NULL;
- 	}
- 
-@@ -3275,7 +3275,7 @@ NDCTL_EXPORT struct ndctl_cmd *ndctl_dimm_cmd_new_cfg_write(struct ndctl_cmd *cf
- 	/* enforce rmw */
- 	if (cfg_read->type != ND_CMD_GET_CONFIG_DATA
- 		       || cfg_read->status != 0) {
--		dbg(ctx, "expected sucessfully completed cfg_read command\n");
-+		dbg(ctx, "expected successfully completed cfg_read command\n");
- 		return NULL;
- 	}
- 
-@@ -4694,7 +4694,7 @@ NDCTL_EXPORT int ndctl_namespace_disable_safe(struct ndctl_namespace *ndns)
- 			 * Yes, TOCTOU hole, but if you're racing namespace
- 			 * creation you have other problems, and there's nothing
- 			 * stopping the !bdev case from racing to mount an fs or
--			 * re-enabling the namepace.
-+			 * re-enabling the namespace.
- 			 */
- 			dbg(ctx, "%s: %s failed exclusive open: %s\n",
- 					devname, bdev, strerror(errno));
-diff --git a/ndctl/lib/papr_pdsm.h b/ndctl/lib/papr_pdsm.h
-index 20ac20f..6d808da 100644
---- a/ndctl/lib/papr_pdsm.h
-+++ b/ndctl/lib/papr_pdsm.h
-@@ -44,7 +44,7 @@
-  *
-  * PDSM Header:
-  * This is papr-scm specific header that precedes the payload. This is defined
-- * as nd_cmd_pdsm_pkg.  Following fields aare available in this header:
-+ * as nd_cmd_pdsm_pkg.  Following fields are available in this header:
-  *
-  * 'cmd_status'		: (Out) Errors if any encountered while servicing PDSM.
-  * 'reserved'		: Not used, reserved for future and should be set to 0.
-@@ -83,11 +83,11 @@
-  * Various flags indicate the health status of the dimm.
-  *
-  * extension_flags	: Any extension fields present in the struct.
-- * dimm_unarmed		: Dimm not armed. So contents wont persist.
-+ * dimm_unarmed		: Dimm not armed. So contents won't persist.
-  * dimm_bad_shutdown	: Previous shutdown did not persist contents.
-- * dimm_bad_restore	: Contents from previous shutdown werent restored.
-+ * dimm_bad_restore	: Contents from previous shutdown weren't restored.
-  * dimm_scrubbed	: Contents of the dimm have been scrubbed.
-- * dimm_locked		: Contents of the dimm cant be modified until CEC reboot
-+ * dimm_locked		: Contents of the dimm can't be modified until CEC reboot
-  * dimm_encrypted	: Contents of dimm are encrypted.
-  * dimm_health		: Dimm health indicator. One of PAPR_PDSM_DIMM_XXXX
-  * dimm_fuel_gauge	: Life remaining of DIMM as a percentage from 0-100
-diff --git a/ndctl/libndctl.h b/ndctl/libndctl.h
-index 91ef0f4..e4408e5 100644
---- a/ndctl/libndctl.h
-+++ b/ndctl/libndctl.h
-@@ -258,7 +258,7 @@ int ndctl_cmd_ars_stat_get_flag_overflow(struct ndctl_cmd *ars_stat);
- 
- /*
-  * the ndctl.h definition of these are deprecated, libndctl.h is the
-- * authoritative defintion.
-+ * authoritative definition.
-  */
- #define ND_SMART_HEALTH_VALID	(1 << 0)
- #define ND_SMART_SPARES_VALID	(1 << 1)
-diff --git a/test/cxl-sanitize.sh b/test/cxl-sanitize.sh
-index 9c16101..10f07f0 100644
---- a/test/cxl-sanitize.sh
-+++ b/test/cxl-sanitize.sh
-@@ -64,7 +64,7 @@ done
- [ -z $inactive ] && err $LINENO
- 
- # kickoff a background sanitize and make sure the wait takes a couple
--# secounds
-+# seconds
- set_timeout $inactive 3000
- start=$SECONDS
- echo 1 > /sys/bus/cxl/devices/${inactive}/security/sanitize &
-diff --git a/test/daxctl-create.sh b/test/daxctl-create.sh
-index 954a112..ee3756b 100755
---- a/test/daxctl-create.sh
-+++ b/test/daxctl-create.sh
-@@ -279,7 +279,7 @@ daxctl_test_adjust()
- }
- 
- # Test 0:
--# Sucessfully zero out the region device and allocate the whole space again.
-+# Successfully zero out the region device and allocate the whole space again.
- daxctl_test0()
- {
- 	clear_dev
-@@ -287,7 +287,7 @@ daxctl_test0()
- }
- 
- # Test 1:
--# Sucessfully creates and destroys a device with the whole available space
-+# Successfully creates and destroys a device with the whole available space
- daxctl_test1()
- {
- 	local daxdev
-diff --git a/test/daxctl-devices.sh b/test/daxctl-devices.sh
-index dfce74b..659428d 100755
---- a/test/daxctl-devices.sh
-+++ b/test/daxctl-devices.sh
-@@ -117,7 +117,7 @@ daxctl_test()
- 	if ! "$NDCTL" disable-namespace "$testdev"; then
- 		echo "disable-namespace failed as expected"
- 	else
--		echo "disable-namespace succeded, expected failure"
-+		echo "disable-namespace succeeded, expected failure"
- 		echo "reboot required to recover from this state"
- 		return 1
- 	fi
-@@ -130,7 +130,7 @@ daxctl_test()
- 	if ! "$DAXCTL" reconfigure-device -N -m system-ram "$daxdev"; then
- 		echo "reconfigure failed as expected"
- 	else
--		echo "reconfigure succeded, expected failure"
-+		echo "reconfigure succeeded, expected failure"
- 		restore_online_policy
- 		return 1
- 	fi
-diff --git a/test/libndctl.c b/test/libndctl.c
-index 858110c..0c7115b 100644
---- a/test/libndctl.c
-+++ b/test/libndctl.c
-@@ -1617,7 +1617,7 @@ static int check_namespaces(struct ndctl_region *region,
- 			 * On the second time through this loop we skip
- 			 * establishing btt|pfn since
- 			 * check_{btt|pfn}_autodetect() destroyed the
--			 * inital instance.
-+			 * initial instance.
- 			 */
- 			if (mode == BTT) {
- 				btt_s = namespace->do_configure > 0
-diff --git a/test/security.sh b/test/security.sh
-index d3a840c..4112d88 100755
---- a/test/security.sh
-+++ b/test/security.sh
-@@ -250,7 +250,7 @@ echo "Test 5, freeze security"
- test_5_security_freeze
- 
- # Load-keys is independent of actual nvdimm security and is part of key
--# mangement testing.
-+# management testing.
- echo "Test 6, test load-keys"
- test_6_load_keys
- 
-diff --git a/util/parse-options.h b/util/parse-options.h
-index 9318fe7..14e87a9 100644
---- a/util/parse-options.h
-+++ b/util/parse-options.h
-@@ -75,7 +75,7 @@ typedef int parse_opt_cb(const struct option *, const char *arg, int unset);
-  *
-  * `flags`::
-  *   mask of parse_opt_option_flags.
-- *   PARSE_OPT_OPTARG: says that the argument is optionnal (not for BOOLEANs)
-+ *   PARSE_OPT_OPTARG: says that the argument is optional (not for BOOLEANs)
-  *   PARSE_OPT_NOARG: says that this option takes no argument, for CALLBACKs
-  *   PARSE_OPT_NONEG: says that this option cannot be negated
-  *   PARSE_OPT_HIDDEN this option is skipped in the default usage, showed in
-@@ -141,7 +141,7 @@ struct option {
- 	.flags = PARSE_OPT_LASTARG_DEFAULT | PARSE_OPT_NOARG}
- 
- /* parse_options() will filter out the processed options and leave the
-- * non-option argments in argv[].
-+ * non-option arguments in argv[].
-  * Returns the number of arguments left in argv[].
-  */
- extern int parse_options(int argc, const char **argv,
-@@ -160,7 +160,7 @@ extern int parse_options_subcommand(int argc, const char **argv,
- extern NORETURN void usage_with_options(const char * const *usagestr,
-                                         const struct option *options);
- 
--/*----- incremantal advanced APIs -----*/
-+/*----- incremental advanced APIs -----*/
- 
- enum {
- 	PARSE_OPT_HELP = -1,
-diff --git a/util/strbuf.h b/util/strbuf.h
-index 3f810a5..614e58b 100644
---- a/util/strbuf.h
-+++ b/util/strbuf.h
-@@ -19,7 +19,7 @@
-  *    build complex strings/buffers whose final size isn't easily known.
-  *
-  *    It is NOT legal to copy the ->buf pointer away.
-- *    `strbuf_detach' is the operation that detachs a buffer from its shell
-+ *    `strbuf_detach' is the operation that detaches a buffer from its shell
-  *    while keeping the shell valid wrt its invariants.
-  *
-  * 2. the ->buf member is a byte array that has at least ->len + 1 bytes
--- 
-2.45.1
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+alpha                               defconfig    gcc-15.1.0
+arc                              alldefconfig    gcc-15.1.0
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    gcc-15.1.0
+arc                                 defconfig    gcc-15.1.0
+arc                   randconfig-001-20250702    gcc-10.5.0
+arc                   randconfig-002-20250702    gcc-14.3.0
+arm                              allmodconfig    gcc-15.1.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-15.1.0
+arm                         assabet_defconfig    clang-18
+arm                                 defconfig    clang-21
+arm                      integrator_defconfig    clang-21
+arm                        mvebu_v7_defconfig    clang-21
+arm                   randconfig-001-20250702    clang-17
+arm                   randconfig-002-20250702    clang-19
+arm                   randconfig-003-20250702    clang-21
+arm                   randconfig-004-20250702    clang-17
+arm                        shmobile_defconfig    gcc-15.1.0
+arm                       versatile_defconfig    gcc-15.1.0
+arm                         wpcm450_defconfig    gcc-15.1.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                               defconfig    gcc-15.1.0
+arm64                 randconfig-001-20250702    clang-21
+arm64                 randconfig-002-20250702    clang-21
+arm64                 randconfig-003-20250702    clang-21
+arm64                 randconfig-004-20250702    clang-21
+csky                              allnoconfig    gcc-15.1.0
+csky                                defconfig    gcc-15.1.0
+csky                  randconfig-001-20250702    gcc-15.1.0
+csky                  randconfig-002-20250702    gcc-15.1.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon                             defconfig    clang-21
+hexagon               randconfig-001-20250702    clang-21
+hexagon               randconfig-002-20250702    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250702    clang-20
+i386        buildonly-randconfig-002-20250702    gcc-12
+i386        buildonly-randconfig-003-20250702    clang-20
+i386        buildonly-randconfig-004-20250702    clang-20
+i386        buildonly-randconfig-005-20250702    gcc-12
+i386        buildonly-randconfig-006-20250702    clang-20
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-15.1.0
+loongarch                         allnoconfig    gcc-15.1.0
+loongarch                           defconfig    gcc-15.1.0
+loongarch                 loongson3_defconfig    gcc-15.1.0
+loongarch             randconfig-001-20250702    gcc-15.1.0
+loongarch             randconfig-002-20250702    gcc-15.1.0
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+m68k                                defconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+mips                      maltaaprp_defconfig    clang-21
+nios2                             allnoconfig    gcc-14.2.0
+nios2                               defconfig    gcc-14.2.0
+nios2                 randconfig-001-20250702    gcc-14.2.0
+nios2                 randconfig-002-20250702    gcc-14.2.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-15.1.0
+openrisc                 simple_smp_defconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20250702    gcc-12.4.0
+parisc                randconfig-002-20250702    gcc-9.3.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                          allyesconfig    clang-21
+powerpc               randconfig-001-20250702    gcc-11.5.0
+powerpc               randconfig-002-20250702    gcc-11.5.0
+powerpc               randconfig-003-20250702    clang-21
+powerpc                     sequoia_defconfig    clang-17
+powerpc                     tqm5200_defconfig    gcc-15.1.0
+powerpc64             randconfig-001-20250702    clang-21
+powerpc64             randconfig-002-20250702    clang-19
+powerpc64             randconfig-003-20250702    clang-21
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    clang-21
+riscv                 randconfig-001-20250702    clang-21
+riscv                 randconfig-002-20250702    clang-21
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-15.1.0
+s390                                defconfig    clang-21
+s390                  randconfig-001-20250702    gcc-10.5.0
+s390                  randconfig-002-20250702    clang-21
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                                  defconfig    gcc-15.1.0
+sh                        edosk7705_defconfig    gcc-15.1.0
+sh                    randconfig-001-20250702    gcc-15.1.0
+sh                    randconfig-002-20250702    gcc-15.1.0
+sh                        sh7763rdp_defconfig    gcc-15.1.0
+sh                  sh7785lcr_32bit_defconfig    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                 randconfig-001-20250702    gcc-12.4.0
+sparc                 randconfig-002-20250702    gcc-15.1.0
+sparc64                             defconfig    gcc-15.1.0
+sparc64               randconfig-001-20250702    gcc-9.3.0
+sparc64               randconfig-002-20250702    gcc-11.5.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250702    clang-21
+um                    randconfig-002-20250702    clang-21
+um                           x86_64_defconfig    clang-21
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250702    gcc-12
+x86_64      buildonly-randconfig-002-20250702    gcc-11
+x86_64      buildonly-randconfig-003-20250702    clang-20
+x86_64      buildonly-randconfig-004-20250702    clang-20
+x86_64      buildonly-randconfig-005-20250702    clang-20
+x86_64      buildonly-randconfig-006-20250702    gcc-12
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-18
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20250702    gcc-14.3.0
+xtensa                randconfig-002-20250702    gcc-12.4.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
