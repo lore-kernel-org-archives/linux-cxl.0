@@ -1,259 +1,191 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2045.outbound.protection.outlook.com [40.107.236.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27DE522FF59
-	for <linux-cxl@vger.kernel.org>; Wed,  2 Jul 2025 10:18:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751451530; cv=none; b=rj6eN/dOcMupb8sgE8mJh3hdwIrZApfUbkKtOBLNBDCgzPKZ1icbrIoPFy1vBlFLOgkIi8Sx5GyWt/iW0VpeJtifS23c1Do5ze2BOcUSe6y3sTAX7NvPQB2Pf1Ml1OYV1eBq5YkjxykcAVuaxhUUPm95NFoESyBDH0dkafrsaFc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751451530; c=relaxed/simple;
-	bh=rJJM3Qk85S0PsvbU0FT58/WUubhtiyZ2IBo59X1z0SA=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QcrSiqDQOXNnG5fqBhFZMTaTXIQOrJ/O29XeN7MGgnhP8lFo8Xl0rakVIiubG01Jf2Ylp4h0ZionpGwa6IVnUEstuN+yPrQl5gr2JS3xzCRchVbVHVDIY6+bnlOi+uLABUn0B369/wJNhPU8xkVkPT02SbOlDq2z3RhjrfqP2kY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bXG4d6q7Yz6L5Sr;
-	Wed,  2 Jul 2025 18:15:45 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id D938B1400D9;
-	Wed,  2 Jul 2025 18:18:38 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 2 Jul
- 2025 12:18:38 +0200
-Date: Wed, 2 Jul 2025 11:18:37 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Dave Jiang <dave.jiang@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <dave@stgolabs.net>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>, <dan.j.williams@intel.com>, <rrichter@amd.com>
-Subject: Re: [PATCH v4 4/9] cxl: Defer dport allocation for switch ports
-Message-ID: <20250702111837.000032c5@huawei.com>
-In-Reply-To: <69efff01-1fff-488c-8bea-496a56cb057d@intel.com>
-References: <20250624213916.1665889-1-dave.jiang@intel.com>
-	<20250624213916.1665889-5-dave.jiang@intel.com>
-	<20250701121022.000035d1@huawei.com>
-	<69efff01-1fff-488c-8bea-496a56cb057d@intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7C711DDC08;
+	Wed,  2 Jul 2025 16:00:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751472057; cv=fail; b=ZUVVBx6C5YthPzEKLzA6QXvFOOQH/wHJhcMZE990fOt6PBiC42mhzm9olaFsCPdUujjrpBe8NMajGeNRwcg9dHV5GUGqnfogVcCSDXyk0GpFfuDotDL9TSyqSWwJwYIPYPcMPdfA+nwDWjuqd2+CDqxoQMRY2iRRLn6HpYXKalg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751472057; c=relaxed/simple;
+	bh=u4RellzpxjMbF6xD1XYD+x+oTX9Xs/MiULKOquFiQ6A=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=iglotCOpQ5kYYP1+hSoJhgBsSp8eueuH5/t45dxqh+5lQZ8bXD7ekx51VtgPnRGXtcdhQO9DnW2xnfyQOWmgmSwq9bPWBsz0v30pEc9pFe0juxGxOxoc2wVPy2xalUjcrGwhwXX9GEFar2hB/H+v10BQtwq4Ymmvn8kljrRJ90A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Ox3RK1I2; arc=fail smtp.client-ip=40.107.236.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Ox3RK1I2"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VV3bCZt+KcRbiVmnlWJIOXurmi5akgKnJW1NihBrfT3D6HcRcFEWLdZ8ZlCIu8/OPP7sAumgj/dC51E/UjIbyvlyFq9rZ3/MRhmH4btoM3Clv4SfeF/1bAwX6x/CQuJ1cRZwGBdYNM3yEtcmBOiGH1Pb4wXNb2iOfw04J4guizU6n8b+EWdlOTFByOjFiu0Xtm46Wjlmen2h7P1dq8SAIG7PrZcDKPdIbbuhCjMPB2JgWSIBZ1eGmga84BuXhU7hC9lapafQ3qEgMmvwD4bs6m8hu3MPtIwnjXjjF0SESjeq0FL9dNZwn7KGi++cyOlv3A2b5BvIf0X9NKUkTQ2Tyw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=u4RellzpxjMbF6xD1XYD+x+oTX9Xs/MiULKOquFiQ6A=;
+ b=zDdtnosyXq+rRE2EEjWpzum/S5tPjFMBTQm9xJKEw86/Bzne/QtbQtF/Cj0tNEVRkO7fLNPK8H5F82OGjYwZf1zFhgdUfdbjClMtrxiMRPEbR6i7gUszcMlpn3xpl128ofsqh0XHx53VzJtcBv/Z11aXr0sbtoxIiVMjNPMFIinbCMPqCledjasvupfrq7xDoXc0CzqKL9BRv6hNjwXusVbMQBr6amNi29Ox5YsZnwt62ePos/2NOLuVVS5EfjxAJED+YHm+H18+kdkfhqOh9YW912nCxCpy60ECoiXSjF06qaHTC3QqtUV5ZQ6LtdplwCgx9tt4JScxSMPu6ZFu3Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=u4RellzpxjMbF6xD1XYD+x+oTX9Xs/MiULKOquFiQ6A=;
+ b=Ox3RK1I2SbJCzS9SkxOEe3pB+Pwpsqwoz6AMSCPNPE4YOlz/WZ7PxGj+wm2yExuzuzLMFUwgAdtBIlxi43PKsHja7S9fXJW6dyx9NuDHMqkGSV6miFtPQCoUavp8sFmUzLeN17xs0RTVpHLmNw4bZG2LYdDR2mBqT5LgrDinUvU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
+ SJ0PR12MB7065.namprd12.prod.outlook.com (2603:10b6:a03:4ae::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.20; Wed, 2 Jul
+ 2025 16:00:50 +0000
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f%5]) with mapi id 15.20.8880.027; Wed, 2 Jul 2025
+ 16:00:50 +0000
+Message-ID: <f4c607f6-c82e-4c3f-998a-723902c6b976@amd.com>
+Date: Wed, 2 Jul 2025 11:00:46 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 03/17] PCI/AER: Report CXL or PCIe bus error type in
+ trace logging
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: dave@stgolabs.net, dave.jiang@intel.com, alison.schofield@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, shiju.jose@huawei.com,
+ ming.li@zohomail.com, Smita.KoralahalliChannabasappa@amd.com,
+ rrichter@amd.com, dan.carpenter@linaro.org,
+ PradeepVineshReddy.Kodamati@amd.com, lukas@wunner.de,
+ Benjamin.Cheatham@amd.com, sathyanarayanan.kuppuswamy@linux.intel.com,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <20250626224252.1415009-1-terry.bowman@amd.com>
+ <20250626224252.1415009-4-terry.bowman@amd.com>
+ <20250627105336.0000297a@huawei.com>
+Content-Language: en-US
+From: "Bowman, Terry" <terry.bowman@amd.com>
+In-Reply-To: <20250627105336.0000297a@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA9PR13CA0054.namprd13.prod.outlook.com
+ (2603:10b6:806:22::29) To DS0PR12MB6390.namprd12.prod.outlook.com
+ (2603:10b6:8:ce::7)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- frapeml500008.china.huawei.com (7.182.85.71)
-
-On Tue, 1 Jul 2025 13:18:16 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
-
-> On 7/1/25 4:10 AM, Jonathan Cameron wrote:
-> > On Tue, 24 Jun 2025 14:39:11 -0700
-> > Dave Jiang <dave.jiang@intel.com> wrote:
-> >   
-> >> The current implementation enumerates the dports during the cxl_port
-> >> driver probe. Without an endpoint connected, the dport may not be
-> >> active during port probe. This scheme may prevent a valid hardware
-> >> dport id to be retrieved and MMIO registers to be read when an endpoint
-> >> is hot-plugged. Move the dport allocation and setup to behind memdev
-> >> probe so the endpoint is guaranteed to be connected.
-> >>
-> >> In the original enumeration behavior, there are 3 phases (or 2 if no CXL
-> >> switches) for port creation. cxl_acpi() creates a Root Port (RP) from the
-> >> ACPI0017.N device. Through that it enumerate downstream ports composed
-> >> of ACPI0016.N devices through add_host_bridge_dport(). Once done, it
-> >> use add_host_bridge_uport() to create the ports that enumerates the PCI
-> >> RPs as the dports of these ports. Every time a port is created, the port
-> >> driver is attached and drv->probe() is called and
-> >> devm_cxl_port_enumerate_dports() is envoked to enumerate and probe
-> >> the dports.
-> >>
-> >> The second phase is if there are any CXL switches. When the pci endpoint
-> >> device driver (cxl_pci) calls probe, it will add a mem device and triggers
-> >> the cxl_mem->probe(). cxl_mem->probe() calls devm_cxl_enumerate_ports()
-> >> and attempts to discovery and create all the ports represent CXL switches.
-> >> During this phase, a port is created per switch and the attached dports
-> >> are also enumerated and probed.
-> >>
-> >> The last phase is creating endpoint port which happens for all endpoint
-> >> devices.
-> >>
-> >> In this commit, the port create and its dport probing in cxl_acpi is not
-> >> changed. That will be handled in a different patch later on. The behavior
-> >> change is only for CXL switch ports. Only the dport that is part of the
-> >> path for an endpoint device to the RP will be probed. This happens
-> >> naturally by the code walking up the device hierarchy and identifying the
-> >> upstream device and the downstream device.
-> >>
-> >> There are two points where the interception of dport creation happens
-> >> during the devm_cxl_enumerate_ports() path. The first location is right
-> >> before the function calls add_port_attch_ep() where it does the dport  
-> > 
-> > attach_ep()
-> >   
-> >> allocation for the RP. Once the dport is allocated, the iteration path
-> >> is reset to the beginning to try again. The second location happens
-> >> in add_port_attach_ep() after the location where either the port is
-> >> discovered or allocated new if it does not exist.
-> >>
-> >> Locking of port device during __cxl_port_add_dport() protects modifications
-> >> against the port and its dports while multiple endpoints can be probing at
-> >> the same time and the same port is being modified concurrently.
-> >>
-> >> While the decoders are allocated during the port driver probe,
-> >> The decoders must also be updated since previously it's all done when all
-> >> the dports are setup and now every time a dport is setup per endpoint, the
-> >> switch target listing need to be updated with new dport. A
-> >> guard(rwsem_write) is used to update decoder targets. This is similar to
-> >> when decoder_populate_target() is called and the decoder programming
-> >> must be protected.
-> >>
-> >> Link: https://lore.kernel.org/linux-cxl/20250305100123.3077031-1-rrichter@amd.com/
-> >> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> >> ---
-> >> v4:
-> >> - Allocate dport when they are found via endpoint probe. (Robert)  
-> > 
-> > A few comments inline. 
-> >   
-> >> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> >> index b50551601c2e..6e9b5ab69de0 100644
-> >> --- a/drivers/cxl/core/pci.c
-> >> +++ b/drivers/cxl/core/pci.c
-> >> @@ -24,6 +24,44 @@ static unsigned short media_ready_timeout = 60;
-> >>  module_param(media_ready_timeout, ushort, 0644);
-> >>  MODULE_PARM_DESC(media_ready_timeout, "seconds to wait for media ready");  
-> >   
-> >>  struct cxl_walk_context {
-> >>  	struct pci_bus *bus;
-> >>  	struct cxl_port *port;
-> >> @@ -1169,3 +1207,53 @@ int cxl_gpf_port_setup(struct cxl_dport *dport)
-> >>  
-> >>  	return 0;
-> >>  }
-> >> +
-> >> +static int match_dport(struct pci_dev *pdev, void *data)
-> >> +{
-> >> +	struct cxl_walk_context *ctx = data;
-> >> +	int type = pci_pcie_type(pdev);
-> >> +
-> >> +	if (pdev->bus != ctx->bus)
-> >> +		return 0;
-> >> +	if (!pci_is_pcie(pdev))
-> >> +		return 0;
-> >> +	if (type != ctx->type)  
-> > 
-> > I'm lost.  How would bus have matched, but type not?
-> > Add a comment.  
-> 
-> I don't follow. It could be PCI bus but not the right device type (i.e. not a downstream port or root port). Or do you mean explain that? Sure. 
-
-Miss read. I'd confused bus and subordinate though
-even that would not be enough as might be a usp.
-
-So this is fine, ignore me :)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|SJ0PR12MB7065:EE_
+X-MS-Office365-Filtering-Correlation-Id: 72d65a75-4e38-42f0-da50-08ddb9819d22
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|1800799024|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dzJWdEhreWg4M2lXZU53bXFuZmEra2VGRTNPdENta1Y5ZE5LeE9SNjZ5OWpw?=
+ =?utf-8?B?VDF3MWFsUzlLTC96S0U3ZG96K2FjUFNpMk01aURXQVRQTlduRHJWNjhKdjZK?=
+ =?utf-8?B?TGJrYk9YMWpwTDI2OGtXWHNaL3NWZnIzRy9IY3JiSWVRdU42R3hsQXlMMkdN?=
+ =?utf-8?B?OVU0czRGMHF2TTdhK1gwT3FLbWtjdWFHb2VzZDNNQTlrTjZUQzdKeU5ieit0?=
+ =?utf-8?B?bnpKczZKaFZjTXFueE0rMjFYWlU5L092dU44clJsMHJqQ3ZTblZ4Q1Q5eXht?=
+ =?utf-8?B?OWVxUnd3TUhjaE1uZEtremt3cEI0MWZIaWRiejZhUzljZGJSaG1mMHhiRWhN?=
+ =?utf-8?B?WUF0UlpyZ1VlSUxWSW9XbGg4eW93eWhJeE1FVDJ4eXo0VHd6M0pMak9EUWRU?=
+ =?utf-8?B?VHg1elVhbXBkV3RWYThYWk44b09mcDNSMUhHUEtmUXgvSEFlSlU3ZWlCQjFZ?=
+ =?utf-8?B?emZZc0lHSmwwc0xJY25wVER1VWtuUjU3Ym9VTlFhT2JHcWVFVC9vOVYrT2RI?=
+ =?utf-8?B?UVdMNjlCeS9LME5laUVPYnB1RjNMTlhSeE9aOFRQUnc0TVFPVDlnSFQzR2JH?=
+ =?utf-8?B?ZXoxdHRSeVBzT2QvRml5Z1Jrd1J4YWxUUTBZTUJJam84RkxzcVJ0eG9sSFNB?=
+ =?utf-8?B?TStWS1l2V3A1c0lCSEJDN2RMN2h6a3MwRmlEcEk4RWFTNlp1NGt5QXpGWWov?=
+ =?utf-8?B?RCtaazF1OVdDU3RxcnBseFcyVTJPbUpLSS85ZjM1OXNjSi9FQTI5dEVKYXhh?=
+ =?utf-8?B?TDJqZWVRdXJyWDY5RkdiOXhzcWhENjE3djM0cExoTzdiWWx5a2JtUFRnRzBQ?=
+ =?utf-8?B?c2xONEZXRDBmdEpHVHZjU0FVaG9EWVk5Sy9GTEFXNVVJcEZOY2FqVVF5YnhY?=
+ =?utf-8?B?b1FNL1lBQVRlU09kUk5wekV0U3lJZzdhTERBNk5nOWhmQ0pMVHVSZTlleTZr?=
+ =?utf-8?B?WGN2WDVkRDVHQ1JZeVBzU1V4L2pQWGl4MzlBRi9zT2FMN05ZYm90OWxGTzRl?=
+ =?utf-8?B?TzE4WXU2ZjIzV1c2Z2IvaVVBTlZjWmxscjdBUlQ1cTBLQW5wajQzMHgyenhR?=
+ =?utf-8?B?QzNNTjZsUHVYVnRRZ09VNjRjc0FkR1FidFFQL204SEdhTy9oSE5OZjNoV0JI?=
+ =?utf-8?B?cDRYZHBZcFhvVEk4RnJuMmpGR0UwaWhFY2IwQURHZityN09xSFlKNWdkdmll?=
+ =?utf-8?B?NXdVdHRmcTF1OHN4WU9yUnAzUmFZelJGdmlJVkZ6NHZLaVhLNi9iMTBBNEpn?=
+ =?utf-8?B?YURDUyttenE4SjBuOXI3TlpxUzdzWXkwQWpTWUwzZmxJYUFxbHFGQ211SGdy?=
+ =?utf-8?B?VkRBVXppZjNSTXFSWlBhRkRvVDlKMFZ3QWNXcDZmMUdoWGg0QTdPNVBEc2lm?=
+ =?utf-8?B?ajdxL0hzWEdveGhkeGhGVlN3RkV0bFVjaTdLWW91c09zL00vMm5rTzRCOVFy?=
+ =?utf-8?B?eWh5STU0dzg1OVhHaHhGQWdXaXl6aHpsRU92eWI1bnJqdEhJUkxVUW1RUUNl?=
+ =?utf-8?B?U3E2Q1ZMbDNRTUhpVjcvWVg5ZDNqMzlhbkRta1Jmd29mbGxXRjBkZTJ3S0p5?=
+ =?utf-8?B?WGFNU2VJemhkOGdNVXl4MlA5bkFFRzhKZW5yMVp5N2xGNWZ1NlgzYzcxQU9G?=
+ =?utf-8?B?YStISmlJVTEvdGNnSVZMV3Q2YjkvZXdYb0dZMThvWC84QUJtRmR0S1hsbGlQ?=
+ =?utf-8?B?NnBLQ3JieGRjeFhuZEFnbWNaYTlsTmxDT0ZGcVpLZW1WTFVldTBwdHZaZEZk?=
+ =?utf-8?B?TTcybGRIUGdITkowZHd4TnZKQ3R0RkNYb0Vhc1hZREwzdEpRSko0WUVYQlo5?=
+ =?utf-8?B?M295UFV2ZWZ1eTFtamxPQWcydzJqTnBDWjBlRCszTzZ4UzNwMGtXRVY1cHhK?=
+ =?utf-8?B?QW5PcWF4dU9pUWNRc2NUNWhqOEl5aTVqK2N5QmhCQlVFUER2UUlhdHhoVEtm?=
+ =?utf-8?Q?CKPNVFATykg=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?K0ZRL0NJRXZoOGV2cXVWOU9QRkNqakkvY2lpa1ZMd1lBelJ1SSsvbUo5ZUV6?=
+ =?utf-8?B?VWxOM1lGZ1FGTm9LdytuelNRSEFCaWU3M2VleDJLZFEvbGtneTlsc1pad1FK?=
+ =?utf-8?B?eXNDRUpPazFlL29FQ2RHY0pNU3RaOC9Hc3RCYmYyUmtuc2tQOVM1K0VRZ09i?=
+ =?utf-8?B?VWhqb3VZeWZHWkp4RWtTb0xaVUpsYkkxVFJTbEZqV0NrcEhkTEd2K2ZkQU40?=
+ =?utf-8?B?V2dPUHZWMUNPZWZEWGdlV2d5VHdhRDJDNFlrY3RpMm9COUNqS1ZFV21mRnNY?=
+ =?utf-8?B?bU9IQ0hKbjhsQXZCNjB6UDFUWnhuTXFwZG5TcHVYNEpqTU5Sa0V2NGhxb3B2?=
+ =?utf-8?B?ZHJOYWczUUNqRzRCVTBzSStFeGx2MGFaSU4vZ21wWGQ0RDRjR21ZM3NOQWtu?=
+ =?utf-8?B?a20vUTZ3aERJMytGLy9JMit2SGVBdGhHck9SdFZ1bWVDOGRhaS9lNW1kakU0?=
+ =?utf-8?B?ZUdaR3A2aWhqN29vN3RjTmdTVUJxUEsvUUZIeXBiem9LTEFvRmg5VXJhTC91?=
+ =?utf-8?B?bVNibWRxdXFYUCtWV1FEc3EvbUVKeTVzRGdENW1aOFNGRG13K1VKc21QWmJ2?=
+ =?utf-8?B?TnNsaGZxVWJHVEhLOG5KZisycHpDWmRQWitOWlAzZjdMME1neHJ6NEYzS2RE?=
+ =?utf-8?B?ZEVkSi9xdDdSclFJdjhrcVNOdXRpZi9VTWlYelhqL2l4ZlJTQWJXMUdFWDRL?=
+ =?utf-8?B?SjZQeFV6alBuSXVuV3dVU09PbjEwVGs5dmR0T1pJdTh1OGNEa2NRNmw1SXcz?=
+ =?utf-8?B?M01nZDl4REtrNDZhRTdwVlpibXJjQ2IvTFArejArN3dKc1J4Ymh4OERNZHR6?=
+ =?utf-8?B?TjJIWGY5VDhwcjlRYWFrM3FWQXlLMUo4Z09hN2Ruejc3YTJUV0dDTWNFVWsx?=
+ =?utf-8?B?MUdTdHFjaVBwd2l2NjVqWFRQcXhDdmZ5ZzFCSmw5VzIvQThIWmFtektRZC83?=
+ =?utf-8?B?SGg0d2xOQWhHTjVXczNSVVMyTWVDZy9UaXpheFZVYWlHZnQzd0ovWDRRV09a?=
+ =?utf-8?B?c0ZudUtTTkhLeHNlbTdDZ1JQellIb2VrTm51WEFLa0ZQSkFLengxQTBqWFZw?=
+ =?utf-8?B?c0VLK2xlSEFEZEVIZUtaL3pHU0cxclBKTTB2a01yZCt0Vll5T0lqenN2OHF1?=
+ =?utf-8?B?TUVJcy9kMXNvaGVEZDVxWVdkMUhkNVFGWGhzcWNGQlB5Qk1FQzFnWUhXVnl1?=
+ =?utf-8?B?S1NZSk9mWTlKQ2JDN3YrSS9UczlmRjZKWWdYRTMwQzlKeDROWjg4ZURVMU1m?=
+ =?utf-8?B?REoySTR1WEppS1Y1azh2TEdsbGx5SWFPRXNIZnBXZzRqVkp2TnlmRUZNSWNM?=
+ =?utf-8?B?RHVYTzBBdzlFZzlLRmJNTDZmQkZVck0yejFNTk50OEFNZndmUms5RGEyZ3J3?=
+ =?utf-8?B?cFVMaTZxMXRCeno4bS9SS2lWU2o3MDA4djhZSFNrWW9TZndBYURwQzFKakxl?=
+ =?utf-8?B?UGdxNWFubmc0Q25IekFrcVlPY2hWckYvTVJIUks0RVFzek1scGVVdUtSZmFo?=
+ =?utf-8?B?eXVCZUtlOXl1aEt1THgrSlNPN2xSS3YvZEdLWTRMbWFxaXNhZ2N0TGZMaHpw?=
+ =?utf-8?B?RXF6cFRDSlVwdFcyVSsyVmZEWHh2U0Z4QTVxQ0JjMzI5ZkQ1RHBVUlYxMmIz?=
+ =?utf-8?B?emZOaUVBVW9TbzBBUk1jamptNmI2UGF2cDFYcmpzL004cUk5dGY4cnNWd3Zh?=
+ =?utf-8?B?MEM4amZDOW5PS1lJYmRlMHIvdDZjbDUyeElZZ2E1UjdGa1kxR3hNV2ErY2po?=
+ =?utf-8?B?KzVRMTZURmhKc3lXa2FBaVl5YUhyU2NvbCtrMHBnb0tyMnhZT21wWVg5QVhS?=
+ =?utf-8?B?d2ZvWHk3SmRSTi90UHZFbXVOY3F4U0g1MXhjcitNTTR5TnpkRmR4ZDFUdlFL?=
+ =?utf-8?B?ekgxdWZqUGpOZmlyNzE4TE1Sb3JGVXBVdDlDTG1NNDljdjRRbzEwWEhGcEdr?=
+ =?utf-8?B?UG8vTmFlMTFEWERJKzhZYWQ3RGlDV3RQNFcyVzF5MTF3Y05OSlB5bTJ0eWVx?=
+ =?utf-8?B?ZVU3RjhvT2I4T29ucmJFVm9NYTZUNDBMa0RITE9rSFdXQUM3S1lMTmtJRm9H?=
+ =?utf-8?B?S01MRFJCcW5JR3R0dEZBaWxOTlFSem5FQ0dDOEc5MUxjL1VWR3ZvY3E5NXZE?=
+ =?utf-8?Q?bl3GIOFFQjxOvik50PJwrRZLv?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 72d65a75-4e38-42f0-da50-08ddb9819d22
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 16:00:49.9588
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Zrx3iX6rmPWtgt9QYfnBCeN0Drb+LZtfesWQLXNM6X606GYIAYqsKqmhG/SouZt3t0LO5mpdmPbEBwDjKp3cIg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB7065
 
 
 
+On 6/27/2025 4:53 AM, Jonathan Cameron wrote:
+> On Thu, 26 Jun 2025 17:42:38 -0500
+> Terry Bowman <terry.bowman@amd.com> wrote:
+>
+>> The AER service driver and aer_event tracing currently log 'PCIe Bus Type'
+>> for all errors. Update the driver and aer_event tracing to log 'CXL Bus
+>> Type' for CXL device errors.
+>>
+>> This requires the AER can identify and distinguish between PCIe errors and
+>> CXL errors.
+>>
+>> Introduce boolean 'is_cxl' to 'struct aer_err_info'. Add assignment in
+>> aer_get_device_error_info() and pci_print_aer().
+>>
+>> Update the aer_event trace routine to accept a bus type string parameter.
+>>
+>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+>> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+Thanks Jonathan.
 
-> 
-> >   
-> >> +		return 0;
-> >> +
-> >> +	ctx->count++;
-> >> +	return 0;
-> >> +}
-> >> +
-> >> +int cxl_port_get_total_dports(struct cxl_port *port)  
-> > 
-> > See comment below on renaming this given it doesn't return
-> > the number.
-> >   
-> >> +{
-> >> +	struct pci_bus *bus = cxl_port_to_pci_bus(port);
-> >> +	struct cxl_walk_context ctx;
-> >> +	int type;
-> >> +
-> >> +	if (!bus) {
-> >> +		dev_err(&port->dev, "No PCI bus found for port %s\n",
-> >> +			dev_name(&port->dev));
-> >> +		return -ENXIO;
-> >> +	}
-> >> +
-> >> +	if (pci_is_root_bus(bus))
-> >> +		type = PCI_EXP_TYPE_ROOT_PORT;
-> >> +	else
-> >> +		type = PCI_EXP_TYPE_DOWNSTREAM;
-> >> +
-> >> +	ctx = (struct cxl_walk_context) {
-> >> +		.bus = bus,
-> >> +		.type = type,
-> >> +	};
-> >> +	pci_walk_bus(bus, match_dport, &ctx);
-> >> +
-> >> +	port->total_dports = ctx.count;
-> >> +	if (port->total_dports == 0) {
-> >> +		dev_warn(&port->dev, "No dports found for port %s on bus %s\n",
-> >> +			 dev_name(&port->dev), bus->name);
-> >> +		return -ENXIO;
-> >> +	}
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +EXPORT_SYMBOL_NS_GPL(cxl_port_get_total_dports, "CXL");
-> >> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> >> index 9691da831224..3872638c439b 100644
-> >> --- a/drivers/cxl/core/port.c
-> >> +++ b/drivers/cxl/core/port.c
-> >> @@ -1551,6 +1551,134 @@ static resource_size_t find_component_registers(struct device *dev)
-> >>  	return map.resource;
-> >>  }  
-> > 
-> > 
-> >   
-> >> +
-> >> +static int devm_cxl_add_dport_by_uport(struct device *uport_dev,
-> >> +				       struct device *dport_dev,
-> >> +				       struct cxl_dport **dport)
-> >> +{
-> >> +	*dport = NULL;
-> >> +	struct cxl_port *port __free(put_cxl_port) =
-> >> +		find_cxl_port_by_uport(uport_dev);
-> >> +	if (!port)
-> >> +		return -ENODEV;
-> >> +
-> >> +	guard(device)(&port->dev);
-> >> +	return devm_cxl_port_add_dport(port, dport_dev, dport);
-> >> +}
-> >> +
-> >> +static int devm_cxl_add_dport_for_rp(struct device *uport_dev,
-> >> +				     struct device *dport_dev,
-> >> +				     struct cxl_dport **dport)  
-> > 
-> > That this sets *dport = NULL lead me to get confused at the caller.
-> > Perhaps instead these could return a dport *, NULL or ERR_PTR()
-> > instead?  
-> 
-> Yeah I went back and forth a bit on this one. I needed a way to
-distinguish between returning an existing dport vs a newly allocated dport.
-I suppose I could return PTR_ERR(-EEXIST) and then try to retrieve that dport again. Thoughts?
-
-Using assignment or not after reporting success on something called 'add' is a rather non intuitive.
-I was thinking NULL but -EEXIST is more explicit so agreed that
-would work and doesn't look like the handling will be too bad
-
-	dport = devm_cxl_add_dport_for_rp(uport_dev, dport_dev);
-	if (!IS_ERR(dport)) /* Added dport so restart enumeration */
-		goto retry;
-	if (PTR_ERR(dport != -EEXIST))
-		return PTR_ERR(dport);
-
-or something along those lines.
-
-
-
+-Terry
