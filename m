@@ -1,299 +1,178 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3F72F2358;
-	Wed,  2 Jul 2025 18:00:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751479255; cv=fail; b=TMetyDyVGw7yS8ZdZDMStK7cAyYhlmq3GuPlL2tof7fBfHh3dwmdCtfmcnVa83Zx/d/ULlQs9REyNyVGRnMVHs19+Ro9QWFqtHm661cJ/eu9Q9JixW6H0iiIvcvUqjH6RQLncIullv7FnY4RHwkAtRP1mg/TYpU/7zC0+8o5BZg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751479255; c=relaxed/simple;
-	bh=St7b5FR9wGWUkzuH0+oOQCZg9lggRmxG9GEwAWgGV04=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=aJP4Zeu2cmtJYnis2ibsdJ3CrKXQsOWF14kZ9lPw/Zg++YlVeGPuPNsRsig1WWJahtReA5OXLMLYtz061XFn4Ux1hQSOrn4AswZPw4QPvaM1FosvEcSy9CG5kSpqb/QNyx1Wd+QRg4QpV2+YHI29OdRXzL/eA/WubyS7yPuZG2w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DGi6xs7e; arc=fail smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF95A1E9B3D;
+	Wed,  2 Jul 2025 18:17:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751480247; cv=none; b=j3xr5z/QmiEvmS5ldL270SdI3/DBQ/la9WFXV5STY9PEDqsgZmwlvPXepeK6I3swnC256RTq5OvJXPu0y11Es4P/IZIW07JTlWa0Pls+EF9wMVcHFljrpXk2N5m8WHtG5M35A7CTV2Pi8zYpVzMZ+raM2Ao4Z+jSnXlqnAT5ng8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751480247; c=relaxed/simple;
+	bh=VOX4noNm5hdr9//VV8fJuTw8qZlpN0KBl19xUJwzM0g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GOxcUHQ/pjJCze69ylXdvplj0DN58D4zIrAibM3iwEURRXxET9J3UArCFldFzmcJ41Z+0OkpzV9FR5GVdYsVVCaONlZ9MZIiR/CmA3wsQZLZ/iRD+KeSgmH4BKhLyudF4oWQHfFe57EPrWS8b2xXrZOi9K1bSLF5NqAABKPGDCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WbEdL3RA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DGi6xs7e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751479253; x=1783015253;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=St7b5FR9wGWUkzuH0+oOQCZg9lggRmxG9GEwAWgGV04=;
-  b=DGi6xs7eg1bd8sZBSH14btn2FzhJ9Taez+GWNWW70EUhLY3Tb3M5oCt1
-   +KxDgyknzn5ZS8cHc/tBLcPmAMnisAZrUNe/26v1zQ8OhV91x9TOGQAKw
-   4xvdcSHWiF79ohOQTED5XGU7aiwP3tzXD3ZwuXE+UmbPjMSU3+ggv227D
-   2htfvI+GgeZgA4uF84lb8TDAE+R6dTH7XVD7D4+6tNTvugaO0iHWNnmGR
-   RLvwrQW2p3gbLurjgtaFLRj8/Es/9PQ7NFxrxl4O6WzfHZ5LvTLe4yvAm
-   e/gDrYasiNR7xjMiLy0rMinya5ikeKlto1sAbbm4cde/vQVLgsltopGpp
-   w==;
-X-CSE-ConnectionGUID: 535BdcT9TICLQFXgLvZ6pg==
-X-CSE-MsgGUID: hktuA669TiWJzqYjtfEBuQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="53756100"
-X-IronPort-AV: E=Sophos;i="6.16,282,1744095600"; 
-   d="scan'208";a="53756100"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 11:00:53 -0700
-X-CSE-ConnectionGUID: 5FVldMLQTiq3d6irjOUaEA==
-X-CSE-MsgGUID: fc03ybAHTr2CYQa5U/K2Yw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,282,1744095600"; 
-   d="scan'208";a="159660204"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 11:00:52 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 2 Jul 2025 11:00:47 -0700
-Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Wed, 2 Jul 2025 11:00:47 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (40.107.94.59) by
- edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 2 Jul 2025 11:00:47 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kQA7MhHIy97iMDhnWdd4oXdBYi+sdAyrdthOHHyJMaXA2Vv0NF0P/cmuYWt8xBNNmgd0f2VUa6F9xaJRtUfCkWrWsqnnlssgPaiqBUjY7qm+ZfP52JIDusT6aLZ1EPs1vRpSSWMWCslAx+Y9dbgwZ8z5N8H50GxaQh65xB3v/FPsHCguVwyX8Ms/r2+7RldWMd7eYh55TV6uZ04fBTcJYEkpCGxenpDjz5keuY9PukbuUdI69dYfLF9zSD8QZvduXauTfARqwh2A3YlJ3wL1YdO/0DjrBu5eRBvvVKVP9fbNIHRAc78jA85RijMy+OKXNZJmtffm42AxkERksQiP4A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3uzs750PyLeZu9WjXjISB6lhss5SyMooXL2IrXJTyxk=;
- b=fQiXq8Ye6QVG1h7zKixbmm8Nj9I7FKD/lTtp9xJkfxAGsLIa+FioA/y2+BJvcVkZJGjRSKoA8SQ22VD3YlVtGjMwr96SvCIm6KlGCWZpjE3s/9NFugFlVV5ocDhvW331ZP6bUN+BH+/GvClb9f64JeDBW4lqpVxv5gydrNJm61bM11CI54lAm+zpN0aiu6iAURLvkrpiDpc2H8TEB+Xg555qQpVkZab203xO/XSgFo33c0q9iuLUdaLvkfogHS9RSFMSZn+TuCnCczn4su5zss6n0Sds0bMatNiuRzbmZfVPTsIZ5iwlNGiQ1/X+DfbTtuyjsl7QmWJ6JlZIhnYOwA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH3PPF9E162731D.namprd11.prod.outlook.com
- (2603:10b6:518:1::d3c) by CH3PR11MB7913.namprd11.prod.outlook.com
- (2603:10b6:610:12e::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.27; Wed, 2 Jul
- 2025 18:00:45 +0000
-Received: from PH3PPF9E162731D.namprd11.prod.outlook.com
- ([fe80::19ef:ed1c:d30:468f]) by PH3PPF9E162731D.namprd11.prod.outlook.com
- ([fe80::19ef:ed1c:d30:468f%4]) with mapi id 15.20.8835.018; Wed, 2 Jul 2025
- 18:00:45 +0000
-Date: Wed, 2 Jul 2025 13:02:10 -0500
-From: Ira Weiny <ira.weiny@intel.com>
-To: Neeraj Kumar <s.neeraj@samsung.com>, <dan.j.williams@intel.com>,
-	<dave@stgolabs.net>, <jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>
-CC: <a.manzanares@samsung.com>, <nifan.cxl@gmail.com>, <anisa.su@samsung.com>,
-	<vishak.g@samsung.com>, <krish.reddy@samsung.com>, <arun.george@samsung.com>,
-	<alok.rathore@samsung.com>, <s.neeraj@samsung.com>,
-	<neeraj.kernel@gmail.com>, <linux-kernel@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-	<gost.dev@samsung.com>, <cpgs@samsung.com>
-Subject: Re: [RFC PATCH 01/20] nvdimm/label: Introduce NDD_CXL_LABEL flag to
- set cxl label format
-Message-ID: <686574227268c_30f2b7294f@iweiny-mobl.notmuch>
-References: <20250617123944.78345-1-s.neeraj@samsung.com>
- <CGME20250617124008epcas5p2e702f786645d44ceb1cdd980a914ce8e@epcas5p2.samsung.com>
- <158453976.61750165203630.JavaMail.epsvc@epcpadp1new>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <158453976.61750165203630.JavaMail.epsvc@epcpadp1new>
-X-ClientProxiedBy: MW4PR03CA0228.namprd03.prod.outlook.com
- (2603:10b6:303:b9::23) To PH3PPF9E162731D.namprd11.prod.outlook.com
- (2603:10b6:518:1::d3c)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WbEdL3RA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54794C4CEFC;
+	Wed,  2 Jul 2025 18:17:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751480247;
+	bh=VOX4noNm5hdr9//VV8fJuTw8qZlpN0KBl19xUJwzM0g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=WbEdL3RAX7oh0LBqkU3I3xP9rxn+OnYM54L831FAt+pVpseWAnxG9do6M0hFrTw6V
+	 JzhR5pI+UY5MbjHtc84RUu8yHKAJpECxGX6va3IKYIH9a1q1mwa1q02Vlfe6zP4Eyc
+	 ZzcgLvQlzIW9LnRbQuE1v5pOnJknFded/cQTn/r9/hXtS0sBrH7BNZzjGiHYZJwMmz
+	 FRev7V7GBEpBFphCi9Oa0z1+Y8tLKN53iH/iqz18S90j8xm4UZj3NGYVkVYRAO6BfD
+	 6GxrzN9gjLGGChImowxx6JhrruR0uBxUHLLEb8FSoGwAiLoFd89GPoSmXzfsRGa8VW
+	 DHbOiS6ok/W4A==
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-73afbe1494fso2712294a34.0;
+        Wed, 02 Jul 2025 11:17:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU8cojmHQtKYVnGibw2wbd+zKyhkdgtOwNXkQ4zueQwsqgRdlTetb7O96oXLMwtTak3N5aRghZn8XJbvpDp@vger.kernel.org, AJvYcCUff5TJOBlDsnPrDfrG2MramNzrrkpeCk2+hAWXq3zCMAlXrb3h+CneSRytd57+W+i0+yAYcGdSbkvq2A==@vger.kernel.org, AJvYcCVzLI93VPeTOt5LI0tMX+Tett4faXvifi5iSzegm/YaA6/7g6T2FZPfTEHkJOmSpv9Phill9/X3Gaj+@vger.kernel.org, AJvYcCWiXyG4CVLTT7RqAsmcqpr7G1w0KXkM95/5M1uOPoQHE1GATMkh8HyVn1lfegfcL+48Vj038DshtOGX@vger.kernel.org, AJvYcCWrjdBTAWWXIyIX7UN5lOHVsZ3UzT0+6VbFbZvqCBxXH5ynU49UBOIrTAb4NQ7UpsIXLlmPqIPIqBB/@vger.kernel.org, AJvYcCXQko8St8L8Gtevx/azqg8f1pEPHgqmYgJA3ENgacvSNjGrLvSrcf8IqLeIh2UDdyeqymTZmzpojJ3w@vger.kernel.org, AJvYcCXYp76o/YxtnM+W9EnnE8188ZV0h8l9HGIBFAkEhFeHNe4AGnMGtmk8TUO7Rk089YOw86BVx6++fUs0@vger.kernel.org, AJvYcCXZFEjV3zGn3ya/s7vslVFDj+wnbLiDZTGThBiWUnOOajG6X7ADEoEhaTKtALr39mJXfjVZsIY8Tk1/@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzFJWn/KFgl8H2vF8eV7BqqdMk6ZKVzK4FztGJacVc8tSrZrpZ
+	f2FppIuKvYRrB1avl6Dto2zTchOG1lPkE3llXzO4Rvlvh/kayXVRhId7l829SDty2huPIpmhsWc
+	9Wj5v6RiTRVXT0mXIq8OUMun0cElU5+Y=
+X-Google-Smtp-Source: AGHT+IFE15rcuOH+m5poFA5DuefTIa1FPtQnOGtl5tYQRl/dPKV6mXQEiFHJyvorY6w4piWgIZxb7JHJlha8CbYbuSQ=
+X-Received: by 2002:a05:6830:8008:b0:72b:ae42:3530 with SMTP id
+ 46e09a7af769-73b4d10411fmr2321774a34.15.1751480246377; Wed, 02 Jul 2025
+ 11:17:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH3PPF9E162731D:EE_|CH3PR11MB7913:EE_
-X-MS-Office365-Filtering-Correlation-Id: 27f46196-cac5-4d70-f350-08ddb9925e44
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?lACt4DqZ2HwFkz2xlfKXTf5ir4uaXgyG3Js3OdU5fJ5HeyF8ivuCxgZaCSnO?=
- =?us-ascii?Q?hTqQk9Nvm7KtiKfcfFF0YDJNcINCjytOvn+DVfbw09JBsJ7OCSEWJns2fmla?=
- =?us-ascii?Q?uX5ymvA8dELbe6DD+fiGc2Vq9IamE0BsUO3reZT1BERgistsOcHIIVCaxn9N?=
- =?us-ascii?Q?+/JeJ3x29/fah7pGQ+0pZpx8Ce5BU3gMOcRzgnokyEy811kX+qVBtfBx3qvD?=
- =?us-ascii?Q?e8CNBzZEo9w89gN6XOuddJc0tgMeq+FigoQ8Bma5keFRAUTniXBP5fgcJ6JM?=
- =?us-ascii?Q?hCEWXrdFsdlpENE87MHDCVMCgHSZqfkq98n2/G8l7/fIMsr7JUnAIwSyrE28?=
- =?us-ascii?Q?pIerMMdu5pzlRoSl0r3zTWpssIPg4ODt62ggqrRtM3Pu3IcwbH9aDE0Cf8X4?=
- =?us-ascii?Q?RBE7yflQDVsAORylfxz0WwKvHFhdIHzx7NHQh+p4kfy0eI+RxxIkXHRXQ1oM?=
- =?us-ascii?Q?7hH6ab4kXqX3vzCeavwX2THcIpQ5rcXjrCJXliSIaaV4zsQ382sfySjZxNhS?=
- =?us-ascii?Q?ENvn8wBFJSK9yGlpKnM74/rbCRg122QBs7AQ49SpeqyZJxmkQUUeNQTTgVT9?=
- =?us-ascii?Q?HnxCF63TCwjiicVtnhlIMHomGprUhbaV+cBiTORFU75aVGupk8i/ublcVNp2?=
- =?us-ascii?Q?4msnAVEV/D3gwxCqS3v2JEbZnhPPJ701Dl02eiAQTfd/fMNFekN2jP1dpgt8?=
- =?us-ascii?Q?d4zndgGYwPuQkgZGMFNfwmpJaygpEDTB9ZMiFYTRRjzj4kI7oxuKc+YOr/78?=
- =?us-ascii?Q?yIZcuszy0S+JyK62rJDBvnAVYg4re5ppCVDZEjk297yGbhn05dztDr+r1mvb?=
- =?us-ascii?Q?u27YB06Z4Svz8XLvw59/uESI/EFkcN2qjUd2J5nlkY+RPTPJCw0623reXdX1?=
- =?us-ascii?Q?RxQI/qGs1hUdTfvLX/jc9Slb7EraVulLKwE7NSl2bnZEGd83LIDuEZ0BrUOZ?=
- =?us-ascii?Q?wQ0zhzTxO+PK/dwvWu/GuGD93IPIjLtRLTwVftGanA8aTaW2OMyhXcNhZjG2?=
- =?us-ascii?Q?IK7yrzoziJMhlAPPYJqMq1xqtZrcM/vWa40fb7vkJFyq8eaZxqGt0kLDaLFS?=
- =?us-ascii?Q?6EBWjLAcprkTig4IfLrhEGogj0Rsq8daa9gJo25c6+ac8nHQRBR11v3ZUZYE?=
- =?us-ascii?Q?XzQhMGUlgatvPdvtnxptln5dMqD4+aLcQthxkyir6QKEFULjYNxaoFg+qVaK?=
- =?us-ascii?Q?zo6AAGoP5b5kcvcYP+06ONoStXZa5wjdhvWus/6jGy3HyhMfNl48Zw8Eacpa?=
- =?us-ascii?Q?1N2TI0rkiv89gCeft5425Gzl0AE3lBREMvs/gA6CADA4k4eDhdxjPoc+ivVY?=
- =?us-ascii?Q?kk3AO5f9+21YHfDMe4zjxQsjY/n8XUHbUU/ateextkxXry4k5kT9yrVgMfjn?=
- =?us-ascii?Q?uFHQh/ogEV8jWaF4tvudQbc8vWl+uKlnmFdUeh1g4gR79xcI3/kU1dk1EyZd?=
- =?us-ascii?Q?e2l+LYWT33A=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH3PPF9E162731D.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?K8SLPIdHv4xbaUjNPUZYljWBxvM2PoZ5cbnDNuUOmzrqQ3+MLqu4aLcq2pJQ?=
- =?us-ascii?Q?sqmr7Km8qh9RKTLbhmepQ2WBpD62rJEInDc/awttAg/ZHqe099VJVpbM/pAM?=
- =?us-ascii?Q?8NwWa6gIeJ+vwyeNnEPTXbkbSGpTtewefTnUEmI5PsmlVNoSi/DCXFfouMCE?=
- =?us-ascii?Q?NuyDwaOcIboOz3Hyv1TuZh3xoLAs9hkpB+63fWTaZ1UPwOSdt98La3gI1UTa?=
- =?us-ascii?Q?XK6aX2vueFeWRXIjnm9v4E6UCCBMU5fh35GlcLuDbNKEh0nfi1p9SI2X9Y97?=
- =?us-ascii?Q?fzRh+5nUDdNat9RrOKU17x6tbd/K4lvN6nyoF2c5HPl2It5Ht7mciJ6vnAzS?=
- =?us-ascii?Q?mXEgURYxKwgfJaXGRCdB/7NHy26a1dgm3YiIuiS77LwwgCzNA/uJ0k2VLVY/?=
- =?us-ascii?Q?DfQolBYl6gccxOG9ZkkZCIb9rmXBPf5tW6BKz+NexarRQvbe0RBw4MkYWkz/?=
- =?us-ascii?Q?3vv4gv6Jzu4nKWWcJSK3CXnrK1jpk6XOZkZPt0edVRmj69YNfExP8CKc7fIS?=
- =?us-ascii?Q?rLbG1hjwkoUatVdTxPiC9Ljx8b0crJ/F/o2zkMM3Jr08P8YCwkMX5vmgQfPT?=
- =?us-ascii?Q?3wttWHOfsiNQR/cKitvMVDUyt00Bt2T2UA4xWaW5ESvsxdhQg2fFQn6i6C/y?=
- =?us-ascii?Q?4+/RJuX0H7UioTLFEzf9WX+4gxCXvTzs6DDw6AZIrLeKrmuO1AEcFOHM++We?=
- =?us-ascii?Q?czdkc9Qag+ARJRH4WWIlquVkFIzYOYNerKTMM6LOIifZddJjlRW9HjWQwW+a?=
- =?us-ascii?Q?Dlzrwzy17HB8zLO75cy2muv83LgZ1CVzBAFlE2lUpqnDUCnvcdLgA/66YavH?=
- =?us-ascii?Q?R3cY8PQaiZY+qoMl1IlTOSG4rlW84P7FbE4JSVKyfQ3wb0XjxXSKY9UENv2M?=
- =?us-ascii?Q?szrDfye7SlbbI9CqjjEF5GMOJPXQD3LQQtTU3xrqhmGe7CQCax15WKHQxaDO?=
- =?us-ascii?Q?vplEr4Oo6kaLN1clvA9iyT2QeZTcM6YtyJmx+lvyBPk2BS3NhFeRiIzFX08N?=
- =?us-ascii?Q?swLxB0bFnYpyepkNhBxn0h23CdCFOgBmgm1w5ophdVMP0Xcgn9BAoF0Lk+3C?=
- =?us-ascii?Q?1D9Tu7x6emOtsK+oEn0wZu1sf6yJzsC3bpQI8kxjdNuM0dsG2jwHp2zaSpUL?=
- =?us-ascii?Q?7HxCsaoEh0fk8ZGVs93gz+VWD9Dy9aNjrDNmiV82p2Wz9WvNY7AEJ5MXo4eY?=
- =?us-ascii?Q?LxZYwNcLmX1pkc9i07KSq3LHNXzo7Xs/Zc0g3gtVtWNw/oL83VqMXytJ9QYE?=
- =?us-ascii?Q?dMJ57cXmHNWotCCSmiCfGSvPDzzjZvBPunc7GO74QXkEybDQMbq0R5xeR5x6?=
- =?us-ascii?Q?C7sOIzo1CbK/7ZX62KS4hHGzbJ7I1akzCymtUjlhkua0SxDZECxEqZBlcUYi?=
- =?us-ascii?Q?tVAqL5qRxnKf+bMUYWb6/w+wopPuZj560TuBS8QkpuapHLLL0RKYWwpl6HE7?=
- =?us-ascii?Q?4j5SCxBcGMo9hG7UWd4nChP7sDaEkO/nlJy6kxW6m97uMiXABrIp7Yz/dIU9?=
- =?us-ascii?Q?JeIaUSx3iYo5eACf44798w0x5CpX2NNzof7gVUa7funDQam3ybYbXzOkyJhb?=
- =?us-ascii?Q?fPMwekybita6fwHopJfz/WiO/zPPiHsQls0xWx9M?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 27f46196-cac5-4d70-f350-08ddb9925e44
-X-MS-Exchange-CrossTenant-AuthSource: PH3PPF9E162731D.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 18:00:45.5855
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zqUPLQRzn/A3v2kFAiC/dp+gIJxvNK6JcgeABLGLNtTQ4ia1Jc0HvHzMl43Uo9mwN6APAGhEvZRez6SIUUyVig==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB7913
-X-OriginatorOrg: intel.com
+References: <20250613134817.681832-1-herve.codina@bootlin.com> <20250613134817.681832-3-herve.codina@bootlin.com>
+In-Reply-To: <20250613134817.681832-3-herve.codina@bootlin.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 2 Jul 2025 20:17:15 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0iaqT5VY3=UCkTGQKjE7thEPmsSqsrEw9ntWEpZ6bNR3A@mail.gmail.com>
+X-Gm-Features: Ac12FXwDgJ7Vxx3Bq6Wnh6b7GRhQ7F_SCrOgcKmm9L_ptDl7NqzS0VvNcXasFf0
+Message-ID: <CAJZ5v0iaqT5VY3=UCkTGQKjE7thEPmsSqsrEw9ntWEpZ6bNR3A@mail.gmail.com>
+Subject: Re: [PATCH v3 02/28] driver core: Rename get_dev_from_fwnode()
+ wrapper to get_device_from_fwnode()
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
+	Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Davidlohr Bueso <dave@stgolabs.net>, 
+	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+	Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org, 
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-cxl@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>, 
+	Horatiu Vultur <horatiu.vultur@microchip.com>, 
+	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Neeraj Kumar wrote:
-> NDD_CXL_LABEL is introduced to set cxl LSA 2.1 label format
-> Accordingly updated label index version
-
-I'm not following why CXL specific code needs to be in nvdimm?
-
-I did not get a cover letter in this thread and looking at lore I don't
-see one either:
-
-https://lore.kernel.org/all/158453976.61750165203630.JavaMail.epsvc@epcpadp1new/
-
-So perhaps I am completely out of the loop here?  Could you point me at a
-cover letter?
-
-Ira
-
-> 
-> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
+On Fri, Jun 13, 2025 at 3:48=E2=80=AFPM Herve Codina <herve.codina@bootlin.=
+com> wrote:
+>
+> get_dev_from_fwnode() calls get_device() and so it acquires a reference
+> on the device returned.
+>
+> In order to be more obvious that this wrapper is a get_device() variant,
+> rename it to get_device_from_fwnode().
+>
+> Suggested-by: Mark Brown <broonie@kernel.org>
+> Link: https://lore.kernel.org/lkml/CAGETcx97QjnjVR8Z5g0ndLHpK96hLd4aYSV=
+=3DiEkKPNbNOccYmA@mail.gmail.com/
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Reviewed-by: Saravana Kannan <saravanak@google.com>
+> Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 > ---
->  drivers/nvdimm/dimm.c      |  1 +
->  drivers/nvdimm/dimm_devs.c | 10 ++++++++++
->  drivers/nvdimm/label.c     | 16 ++++++++++++----
->  drivers/nvdimm/nd.h        |  1 +
->  include/linux/libnvdimm.h  |  3 +++
->  5 files changed, 27 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/nvdimm/dimm.c b/drivers/nvdimm/dimm.c
-> index 91d9163ee303..8753b5cd91cc 100644
-> --- a/drivers/nvdimm/dimm.c
-> +++ b/drivers/nvdimm/dimm.c
-> @@ -62,6 +62,7 @@ static int nvdimm_probe(struct device *dev)
->  	if (rc < 0)
->  		dev_dbg(dev, "failed to unlock dimm: %d\n", rc);
->  
-> +	ndd->cxl = nvdimm_check_cxl_label_format(ndd->dev);
->  
->  	/*
->  	 * EACCES failures reading the namespace label-area-properties
-> diff --git a/drivers/nvdimm/dimm_devs.c b/drivers/nvdimm/dimm_devs.c
-> index 21498d461fde..e8f545f889fd 100644
-> --- a/drivers/nvdimm/dimm_devs.c
-> +++ b/drivers/nvdimm/dimm_devs.c
-> @@ -18,6 +18,16 @@
->  
->  static DEFINE_IDA(dimm_ida);
->  
-> +bool nvdimm_check_cxl_label_format(struct device *dev)
-> +{
-> +	struct nvdimm *nvdimm = to_nvdimm(dev);
-> +
-> +	if (test_bit(NDD_CXL_LABEL, &nvdimm->flags))
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
->  /*
->   * Retrieve bus and dimm handle and return if this bus supports
->   * get_config_data commands
-> diff --git a/drivers/nvdimm/label.c b/drivers/nvdimm/label.c
-> index 082253a3a956..48b5ba90216d 100644
-> --- a/drivers/nvdimm/label.c
-> +++ b/drivers/nvdimm/label.c
-> @@ -687,11 +687,19 @@ static int nd_label_write_index(struct nvdimm_drvdata *ndd, int index, u32 seq,
->  		- (unsigned long) to_namespace_index(ndd, 0);
->  	nsindex->labeloff = __cpu_to_le64(offset);
->  	nsindex->nslot = __cpu_to_le32(nslot);
-> -	nsindex->major = __cpu_to_le16(1);
-> -	if (sizeof_namespace_label(ndd) < 256)
-> +
-> +	/* Support CXL LSA 2.1 label format */
-> +	if (ndd->cxl) {
-> +		nsindex->major = __cpu_to_le16(2);
->  		nsindex->minor = __cpu_to_le16(1);
-> -	else
-> -		nsindex->minor = __cpu_to_le16(2);
-> +	} else {
-> +		nsindex->major = __cpu_to_le16(1);
-> +		if (sizeof_namespace_label(ndd) < 256)
-> +			nsindex->minor = __cpu_to_le16(1);
-> +		else
-> +			nsindex->minor = __cpu_to_le16(2);
-> +	}
-> +
->  	nsindex->checksum = __cpu_to_le64(0);
->  	if (flags & ND_NSINDEX_INIT) {
->  		unsigned long *free = (unsigned long *) nsindex->free;
-> diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
-> index 5ca06e9a2d29..304f0e9904f1 100644
-> --- a/drivers/nvdimm/nd.h
-> +++ b/drivers/nvdimm/nd.h
-> @@ -522,6 +522,7 @@ void nvdimm_set_labeling(struct device *dev);
->  void nvdimm_set_locked(struct device *dev);
->  void nvdimm_clear_locked(struct device *dev);
->  int nvdimm_security_setup_events(struct device *dev);
-> +bool nvdimm_check_cxl_label_format(struct device *dev);
->  #if IS_ENABLED(CONFIG_NVDIMM_KEYS)
->  int nvdimm_security_unlock(struct device *dev);
->  #else
-> diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
-> index e772aae71843..0a55900842c8 100644
-> --- a/include/linux/libnvdimm.h
-> +++ b/include/linux/libnvdimm.h
-> @@ -44,6 +44,9 @@ enum {
->  	/* dimm provider wants synchronous registration by __nvdimm_create() */
->  	NDD_REGISTER_SYNC = 8,
->  
-> +	/* dimm supports region labels (LSA Format 2.1) */
-> +	NDD_CXL_LABEL = 9,
-> +
->  	/* need to set a limit somewhere, but yes, this is likely overkill */
->  	ND_IOCTL_MAX_BUFLEN = SZ_4M,
->  	ND_CMD_MAX_ELEM = 5,
-> -- 
-> 2.34.1
-> 
-> 
+>  drivers/base/core.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index cbc0099d8ef2..36ccee91ba9a 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -1881,7 +1881,7 @@ static void fw_devlink_unblock_consumers(struct dev=
+ice *dev)
+>         device_links_write_unlock();
+>  }
+>
+> -#define get_dev_from_fwnode(fwnode)    get_device((fwnode)->dev)
+> +#define get_device_from_fwnode(fwnode) get_device((fwnode)->dev)
+>
+>  static bool fwnode_init_without_drv(struct fwnode_handle *fwnode)
+>  {
+> @@ -1891,7 +1891,7 @@ static bool fwnode_init_without_drv(struct fwnode_h=
+andle *fwnode)
+>         if (!(fwnode->flags & FWNODE_FLAG_INITIALIZED))
+>                 return false;
+>
+> -       dev =3D get_dev_from_fwnode(fwnode);
+> +       dev =3D get_device_from_fwnode(fwnode);
+>         ret =3D !dev || dev->links.status =3D=3D DL_DEV_NO_DRIVER;
+>         put_device(dev);
+>
+> @@ -1960,7 +1960,7 @@ static struct device *fwnode_get_next_parent_dev(co=
+nst struct fwnode_handle *fwn
+>         struct device *dev;
+>
+>         fwnode_for_each_parent_node(fwnode, parent) {
+> -               dev =3D get_dev_from_fwnode(parent);
+> +               dev =3D get_device_from_fwnode(parent);
+>                 if (dev) {
+>                         fwnode_handle_put(parent);
+>                         return dev;
+> @@ -2016,8 +2016,8 @@ static bool __fw_devlink_relax_cycles(struct fwnode=
+_handle *con_handle,
+>                 goto out;
+>         }
+>
+> -       sup_dev =3D get_dev_from_fwnode(sup_handle);
+> -       con_dev =3D get_dev_from_fwnode(con_handle);
+> +       sup_dev =3D get_device_from_fwnode(sup_handle);
+> +       con_dev =3D get_device_from_fwnode(con_handle);
+>         /*
+>          * If sup_dev is bound to a driver and @con hasn't started bindin=
+g to a
+>          * driver, sup_dev can't be a consumer of @con. So, no need to ch=
+eck
+> @@ -2156,7 +2156,7 @@ static int fw_devlink_create_devlink(struct device =
+*con,
+>         if (sup_handle->flags & FWNODE_FLAG_NOT_DEVICE)
+>                 sup_dev =3D fwnode_get_next_parent_dev(sup_handle);
+>         else
+> -               sup_dev =3D get_dev_from_fwnode(sup_handle);
+> +               sup_dev =3D get_device_from_fwnode(sup_handle);
+>
+>         if (sup_dev) {
+>                 /*
+> @@ -2225,7 +2225,7 @@ static void __fw_devlink_link_to_consumers(struct d=
+evice *dev)
+>                 bool own_link =3D true;
+>                 int ret;
+>
+> -               con_dev =3D get_dev_from_fwnode(link->consumer);
+> +               con_dev =3D get_device_from_fwnode(link->consumer);
+>                 /*
+>                  * If consumer device is not available yet, make a "proxy=
+"
+>                  * SYNC_STATE_ONLY link from the consumer's parent device=
+ to
+> --
 
+There are patches in flight that add new users of get_dev_from_fwnode(), se=
+e
 
+https://lore.kernel.org/linux-pm/20250701114733.636510-1-ulf.hansson@linaro=
+.org/T/#mc45a73769821cc520c35d8eb92d4bac75412bb7c
