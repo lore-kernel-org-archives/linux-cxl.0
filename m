@@ -1,257 +1,249 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 008682248A4;
-	Wed,  2 Jul 2025 23:40:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751499655; cv=fail; b=ICOUIw1ffjHW9Kei/ZcsVQtxzNOSx3dYUVVG6k5ZQ3DgJavBJUsLOCH22Ra+BfuVM7Bl3vcwfkM6t17cQq2R0L6bsFSE/v+648u8RDLWVgC97xow1NlfU3FvQPiMszFvK8YqWFoXDt6201oa2YhDnGE9MJclJFaO/yQ98BvS6J0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751499655; c=relaxed/simple;
-	bh=03GXylvCWnGn4ojGx+jfvNeALQtdJ59T5UCraQvzGUU=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=i2y64nuJoyhuRJh8hoyEwyT32KTfmqI3CyTigWTvjNYYACeYQKfVa5hqC6rdHt+x0d0aHs/OKZRmhobTjcVzRF9ViHKZfvevM/sxMFZETIjMwK+w2gtbWAXmR0RMfx+2/ZdMUhineg9wYBZq0sfFERgJhyWSoYetoUTYEShe3Ec=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q89lAC86; arc=fail smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B93624677B
+	for <linux-cxl@vger.kernel.org>; Thu,  3 Jul 2025 03:58:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751515120; cv=none; b=X0M79DzDwyEdjsZ6UvncjmtJtCMsIQxHTbJ1cIQhcJ5N+GEb8VIl4pi2EOwfUVLUxliDw2+bzGB+St4MKbY+MvOZoDxL1BgnQ44YkNyUkae0kg4o33VPM6y0TmLWCYmErwmqGRE5zQnAlaI2QPtKvqDYmjfxL4FxOxPaDPtgvKo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751515120; c=relaxed/simple;
+	bh=uaeFfeaZR4ilnQZk3MKm7QbwGwZL0JdqJa/OCMSlNc8=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n/QEccucxtieNXvl4GClFz8AnzWPm5AMyMs5xaxaVDTM2XRxhfuTWH2VNDOt3fawMP4XSSnnR9UsL1xiU/a5CXId/SRgRhwwnupySWQLIkCyaWBPiyiVMiGCGrMAHo3KemsAQcc8x4cztCxXgvGRQYkBZ4BRIwhJPYVh0ywYjgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KpCAFVnS; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q89lAC86"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751499654; x=1783035654;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=03GXylvCWnGn4ojGx+jfvNeALQtdJ59T5UCraQvzGUU=;
-  b=Q89lAC86JFW7Asu3z8TnKlHrRFxoEwZcbLwm2IhvMDN3RQDq8tHDuFJQ
-   u261Q5wkzZISfESc+8E87mXVsK17lJ0/hWuDca9iKy/htjhuPDfXSTnzF
-   kIJoYGs6YrfDn4eg+nADsjGUnpbrguj8pPJ92OoypBsFib3foEylkt7G9
-   YqMDYZ5SpDNnN/aVBbrHiM4cIaH4U9xqb9ueHRK4639/lsDVzXyx0kXwu
-   s5pQ8Yu6CUd78ol4YOLsD8YKi9Y1LOT7YZLNpuNupnVGJud6Y83nhP/Gu
-   XEyH0a3RCosf3LYAgItunAGiDhEv6wd1DYE0YxTmlMVAIfPKzc50ILkT7
-   w==;
-X-CSE-ConnectionGUID: myyCKXM7Rd6uc/NXQvx8xw==
-X-CSE-MsgGUID: xTPJ5ZB0QqKCfMZJibhcpg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="52930108"
-X-IronPort-AV: E=Sophos;i="6.16,282,1744095600"; 
-   d="scan'208";a="52930108"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 16:40:53 -0700
-X-CSE-ConnectionGUID: WBJgDGWJQ0CqNfknKZcCKw==
-X-CSE-MsgGUID: j/5IjZI+RZKU8WvQSVLZcw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,282,1744095600"; 
-   d="scan'208";a="154959602"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 16:40:53 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 2 Jul 2025 16:40:52 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Wed, 2 Jul 2025 16:40:52 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (40.107.223.82)
- by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 2 Jul 2025 16:40:51 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kRYRpJXT5KHpVx03r5CMiPxGaiZLgNowhKjFzMCJMScMsr4cqw/cuzblryVWEjoM9mbGz1Mng5MMogvESXaO0mBOrEQv6hjMjDqR4hcsmDs44SrcRGfeJ+utm7ih+VfUmyRYCSbHpY6T8slq9lGuXLNSKrsIoc7Oo6QISNcLyVi1/jMGRBxiD+JEbQNdKBbW+GLj2alEIg8WS0LUQRrD4WKJ46inQhMIoVj1g6GtSH/0A4RM22dpJTMHKRV7iKdEwYhZRH/aCyKbx61egb9QeF10fgwtpUas2eywozqgWuu/jgAx+yHng4/KywHhZ8FQNUS+/3oGPs5ACOWJViOElw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RU7MudlnJvTgGcrCapP/CRc4O0DLKiiBU6EFk5Ub+wo=;
- b=FTrzY5q4uyzJ4TFHVYbWXQBiWvdDgITuwtEgi94TJCZPDxwElUWY5sbUqlh/x1aM6yPbpiIGN3w9Y+//+e1nfBLagtcKRB9cszt9ncMv96FceAhxaeZ8EgGG9tUGTkbUTWOUkE3lDtzpi6qFRNwJYNfF+F6MzvKlNMSudSWICn+WQTmDJYs+z3h3JHkSXvzmReBxtSNanUoarfGUZfCZnKrzvMNBDg/9OSYN1H3cHmpkEVmRDP1lGS5ByLK+8V6tsfVip8JZXYaQLi74J65PuoA90do5MarcyWwHAkFNw3eTo1qrtnkF8ApGjwsCFcYQyE6ySfkkj7ucSFSGCTKjxQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by DS7PR11MB6245.namprd11.prod.outlook.com (2603:10b6:8:9a::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.32; Wed, 2 Jul
- 2025 23:39:34 +0000
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::8254:d7be:8a06:6efb]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::8254:d7be:8a06:6efb%7]) with mapi id 15.20.8769.022; Wed, 2 Jul 2025
- 23:39:34 +0000
-Date: Wed, 2 Jul 2025 16:39:29 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Dan Williams <dan.j.williams@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Dave Jiang
-	<dave.jiang@intel.com>, David Lechner <dlechner@baylibre.com>, "Davidlohr
- Bueso" <dave@stgolabs.net>, "Fabio M. De Francesco"
-	<fabio.maria.de.francesco@linux.intel.com>, "Fabio M . De Francesco"
-	<fabio.m.de.francesco@linux.intel.com>, Ingo Molnar <mingo@kernel.org>, "Ira
- Weiny" <ira.weiny@intel.com>, Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra
-	<peterz@infradead.org>, Shiju Jose <shiju.jose@huawei.com>, Vishal Verma
-	<vishal.l.verma@intel.com>
-Subject: Re: [PATCH v2 0/8] cleanup: Introduce ACQUIRE(), a guard() for
- conditional locks
-Message-ID: <aGXDMZB6omShJpoj@aschofie-mobl2.lan>
-References: <20250619050416.782871-1-dan.j.williams@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250619050416.782871-1-dan.j.williams@intel.com>
-X-ClientProxiedBy: SJ0PR03CA0107.namprd03.prod.outlook.com
- (2603:10b6:a03:333::22) To DS4PPF0BAC23327.namprd11.prod.outlook.com
- (2603:10b6:f:fc02::9)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KpCAFVnS"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-3134c67a173so4832407a91.1
+        for <linux-cxl@vger.kernel.org>; Wed, 02 Jul 2025 20:58:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751515117; x=1752119917; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8Go8oYBd2sxtyrP6WJqHWWOw27H9fU4zxt1+fi7opBI=;
+        b=KpCAFVnS5J+OgSnS8gq61UJwt1As1Twln6xAvZRI7EME4YCoaVHx+0autVkiKWI+h6
+         IfkWSswi0EKFLGOS1lD2TAAtzfTbSbn2+qudC9vN48HNl/AQ5bw56JeOeadlrtAbrOlW
+         RRmkUp0m3c1od7BRM3tOSgUUlsdl8d/namCdRFmaWGvCQl22hsdwRjNaGCdwDigs8tsT
+         1+/ba6uCqcVWU1LzPiZA24MX9Fp9lLprtmCw8tnHVoJ9hCjMuq5JKB++/cHN8h26J/E1
+         vP/3Pw4QD71JHFrXhXr/WRo02zh6teUKYs96HwyXqjsy0/Vu7mPleBm8oaTriOaZ+lQj
+         Nlvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751515117; x=1752119917;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8Go8oYBd2sxtyrP6WJqHWWOw27H9fU4zxt1+fi7opBI=;
+        b=BOrqh6Nq5yGMeha6kwjpqL0tSVXlhcl+BZt8HbiO/1X+stAHk4t3paF2hvxNeIbhDb
+         hK/YV0gmh9up2bj/IP50ExiIX+MTpy8bMLHs05H+NKTKg/9JvwVCiX/CHxBMdXKKqsXj
+         qvh2/+7794VVj+Rm7lSE+kJS1gMiQOtMBXWsADHacw7qxKBWxUFFVB2Y9EhzzwTUYlEo
+         MHuFvWvhfb0sTvUIXOw4xekg7jFOt5p7SfXy1DIjLwIKdpMC0T8b1qDvucFMIxntSCuG
+         hb4H1vmT1+VMPEKPfnikaTCcexIn59Pt8zIxfVA8CvDfqTXZC6lrKJN/Jrtazm9iqhDT
+         I9xQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUQeuPNpmb3vTk58efarL+73Vst1nu8ByETiRBUyQHepV6Bq8FMC2xda2mdaokL9FbI2avjaxf5OAg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYOrqK0f+xgvZzH/EscFIHknIe4Fxt8sh9R/HemcH0ZukYVQQ7
+	QwGxxuGujQGz5m68//cu5BM35ZDlATmUP/2PLCe9R8Ws1sIlNqLsiP5p
+X-Gm-Gg: ASbGnctrmuzIjkCPE41YZGyoVjSB0m33hSuBdk0JKK6gSCiWvNgrgE/Q745GCSF9qLN
+	QVzn4XpLB9WyEFYouYkwQsui2R3u56Q3SmcGNkVKmGflYimgAwB5Xfhidn4JoitzDSsv+GIKPUG
+	AHT+1pgY14+VdhCQwMVGd85+IVKx0/kgNtZZ2eNI1a15w1viPy5jGQqAouTzW+5Lf+xz+E966KZ
+	CGdDfnsrArZt04kCDWErOTAGTOajJBjtqgIE/QToWDsFZOhSd01euS5cMKQXPUfUsOtSMrPLJF7
+	3DFyPZX2MAb0aRb84Tb0uRmIf+hETRwA+G0rW3LAelrlU3C4txBQZDndq8nJDIphKXnQ
+X-Google-Smtp-Source: AGHT+IEy2EBV5wygliAxQ1KH/cRgjS8XYzieVtx7l+itL8MEy6pNnTw5RW11X1TihQZBbbvCvL+vUw==
+X-Received: by 2002:a17:90b:3b8c:b0:311:ab20:159a with SMTP id 98e67ed59e1d1-31a9d6998d2mr2235412a91.29.1751515117043;
+        Wed, 02 Jul 2025 20:58:37 -0700 (PDT)
+Received: from fanair.local ([67.131.46.202])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31a9cc67568sm1097844a91.15.2025.07.02.20.58.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 20:58:36 -0700 (PDT)
+From: Fan Ni <nifan.cxl@gmail.com>
+X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
+Date: Wed, 2 Jul 2025 20:58:34 -0700
+To: anisa.su887@gmail.com
+Cc: qemu-devel@nongnu.org, Jonathan.Cameron@huawei.com, nifan.cxl@gmail.com,
+	dave@stgolabs.net, alok.a.tiwari@oracle.com,
+	linux-cxl@vger.kernel.org, Anisa Su <anisa.su@samsung.com>
+Subject: Re: [QEMU PATCH v4 08/10] hw/cxl: create helper function to create
+ DC Event Records from extents
+Message-ID: <aGX_6ihs4lp-RSr4@fanair.local>
+References: <20250626222743.1766404-1-anisa.su887@gmail.com>
+ <20250626222743.1766404-9-anisa.su887@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|DS7PR11MB6245:EE_
-X-MS-Office365-Filtering-Correlation-Id: b41be93a-a702-4b49-c30f-08ddb9c1b302
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?9Wq7vBTw/05OV6fmllVXBs1eK7DepzG2tyYaKYzKxl5Dgw9Al6TXmcyfv3iF?=
- =?us-ascii?Q?cxHHxBCiXYpPfg0vzcXjUAXsmO2qH0M4zPblMyY28fJUmnIxY2sCxPmlCLcr?=
- =?us-ascii?Q?SrNU3+F96f8zh8nduyDRNWr6bd8FSiJ7xqf1HwSaGye6RM7rxkOWyTq24sPU?=
- =?us-ascii?Q?BI8yjBJZfDUBrOrQZiiZL3AkCqhtiq12xiuJyhfJa9JbTX9TnrWLXtGiLz1p?=
- =?us-ascii?Q?LNwVjDruj1RHwCFeqIfzAco9ZcCYgf0I3JZgOsnin8ZDTA731O0klobVNN+L?=
- =?us-ascii?Q?LbDalTOHWeS+KGrcTrkfwba30hP6b0MQrWnaXvJf6/8cuPduuIQauvreLhK3?=
- =?us-ascii?Q?Bw8YhK5yddI4KMy0fyAfchKDsaT75RRWy3uGoUBmIWBH1t4TriYdZL9IWXuI?=
- =?us-ascii?Q?8w4sjzXG+dlVr4KC1B7m5A/fT5IzMgyMBUFolHN8PCFMm/WJxTYqcxwhyMzX?=
- =?us-ascii?Q?Bgxs4NVV1RM0NFD/uqUS+ZM+n0XtlmYvYmh6kVcneIMvhGYSvBEVwuqqkRxw?=
- =?us-ascii?Q?lMUr4zRcIj3nW6xu4KxXYgWyPz5I0VwVALfccSefDRRXywtJD9h3TnipaHfK?=
- =?us-ascii?Q?INexhC8/ilPEW+2AO7BGeFgcTaLDGi5+AIN9Ss4tGoyBpg+gvXtESBEteiaP?=
- =?us-ascii?Q?iEQtiWO6eIlYht67PI31iuLzECXI8mNvOd8XkA7M2ZPWzG9af5SihS56LeVY?=
- =?us-ascii?Q?eTwIDhLw1TRrvkxFZqiksbvWM0nCMJNk3tYsCrlEJnpVcqVKJjxAlwSvEr/R?=
- =?us-ascii?Q?DXfrwHpcTH/aK+mJB9xtazIHLwptpgIzFq0/J6DVSNdwYdAGWpBcT+pDCwkX?=
- =?us-ascii?Q?o4Gmwz0su7e1Te+45vwFTslzUoCiuaC4iHXi1RNK6/wrqG1pVaH9C8p5Ec3L?=
- =?us-ascii?Q?kxLLoiNUWXGF0DniVMljIWM64hUA7px2vK2uL/TcfaC0REId6pBluwY+tSE6?=
- =?us-ascii?Q?Navu/JFi1GL2kxa4m7/ZoAZuUOAiyVjEqgyIrUqTezz6zbPFVQMkD98Fc7pY?=
- =?us-ascii?Q?rVD/e9YYYIrZlR8gWEtVzLjh8LGDBHirynBjbDdH1P0CsbQd/x1jdUMZEVnu?=
- =?us-ascii?Q?cHzcjcVAdLCXOJBHHhNiJC+kHJkKOzR6bePOJQM9LEFyMjSjVBolgHGW8jT1?=
- =?us-ascii?Q?/lZw96zyMzGPbhRngqYlblA8ORBqiVQcMXVOAe8tkn4mhwRhWZC6Tk5KA5oY?=
- =?us-ascii?Q?JOWy9WsTkG6Arlf3DzsrtLtehfZIsQttmyiO1btGItttePRiwk3GBs3vekOc?=
- =?us-ascii?Q?jRiD+QF7r0UFz3Z/zS2v9sd1cSAlwvJOm9EgzrIr5Y7atZMSeSiHt6KhTy5z?=
- =?us-ascii?Q?xUv3R9GAgbd9O/mdAwyrzCrKJdvaYdKR8fVYjvtgjalxiYticlzYcbsA6eaD?=
- =?us-ascii?Q?oVqutUmAedGJk7uaFQlnYfbil77PIKMdk7a4TDLvKksWQIBtSs1yL8oLldx1?=
- =?us-ascii?Q?eXcLu6jJ1rE=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?6vAlh9QQeRoYIpqpjpRfogaWiiF6CXa846xWfQiA12WDa8F35EzE8egvRlan?=
- =?us-ascii?Q?vaX4Phh6hl8ALxHchehrESlkF7NINlXdvt4qRJrcI41O4Xa5DW3gHoMQ3bdF?=
- =?us-ascii?Q?B5QC4TiXSiJ0rft0BrGSJxns5jF3OEbaqIHycL1yIttnINxOUqRzfNDQSeaR?=
- =?us-ascii?Q?ioAOIgaDd6MeQAg/DRRiCvSuqcEiUqXk39VpXNOmnAEM1EGwleXr2YTue7xz?=
- =?us-ascii?Q?dfuc16y3HFZkZDFpAX9Xn/tYknSy5VE+THVDl6RISLd/L/hU43BFWyI1Wai/?=
- =?us-ascii?Q?b/PsL33RDtgJYQOzVEyDwKElINRYLvxYtsGUsbuR5VOpeOwQTy5U4u9rwyE+?=
- =?us-ascii?Q?8Z/7TMiCdcHYScbX4Zgm0QRTwABRmhFy34cvjW35mu/j6aQ+sCY46Sjy54ap?=
- =?us-ascii?Q?lao+LJie5prN7kCoMNCFcA9vC9hd+qLVj8gqQSEPbzxwgz5t3JFZEiNe46m2?=
- =?us-ascii?Q?F5Htu2aaUFYopUTp8M9KZxtDn6S+Vn1ClWlm9Ksg/kfvebpCjhlinZBematj?=
- =?us-ascii?Q?14qr21WxeYrXkVGSqbcF+colgZIVMIYWvv1+SKhtToZZnc7/cMTWD2+FltcQ?=
- =?us-ascii?Q?UYtQaGHzf/pg/YgYzRPx5g2F6grVz2cVKEWM8dYrKmWd9M94WJgVF6gdNlpg?=
- =?us-ascii?Q?PSIGQVzA4r05sHzvsrClx0BEsYiojtjSI5Jtk/5wfwfghS1d0/6VjV+sI0jp?=
- =?us-ascii?Q?ivIjEa3t6R58d9kucf6y1MEhtr4DmzU9HNlY+WEMZqzbWKYHgMj+SP5R3Hh/?=
- =?us-ascii?Q?EvsfWpNW5nKv9+kI6tluJaqZa4N1MB0BpAZn1AaRi4PA7ucAjzIETBGsembf?=
- =?us-ascii?Q?NjWhC1K9v10ZdDasSh0fD4YQ0lIxWyaoNMWLR7Di8GDH3VmETDKFseziw6/Q?=
- =?us-ascii?Q?/Sol3u/7O24C0uLYyqpPBqZzRwyz8MtByGSBh5MwbwfdqhPHvyToMxHy4fzI?=
- =?us-ascii?Q?76TZsSfTYQcORaMjy7g4to8nTuQmtKt2brRXJip+BcIzF+R6k/HBvccR7A/m?=
- =?us-ascii?Q?/illxkeCGMSTTfNB8IuW/fSLvMXH8iI2OWwToCxL/Qzdl5I5O4ot2N2Ygg9I?=
- =?us-ascii?Q?eqrKvGrIwxiSNgX2VjVSyGSrzgPIIPu1AZvbK1Z3pQWPcTBlj3Sitc8Wyy3K?=
- =?us-ascii?Q?VPfCWmYexz1028tangg8/2g01gsUNMAqVBmjuwK0g2VRgD7Ztc450DRSzhbK?=
- =?us-ascii?Q?Ha3nEbrL1RcbpwTal78i+g/HBkStZHn0NWIplEKrhIyi5BMHc4IvLEGpHLF8?=
- =?us-ascii?Q?mmcGJ8+Czd9KwIRkJFl7tbcu/dgOkec8brYcZ6kMivhuC6CKpfa5KeHl/+UE?=
- =?us-ascii?Q?usbf4NL50wfUpPVlypPJCTnUZBHXz6VSHsr4ODaKyNx8/edpb5Yw32oTIEkN?=
- =?us-ascii?Q?Gqsgned01E5OIp0JJbuY7dnHFmO/jSlZDUOekineo/Rd8b6TDz7FQak5APLF?=
- =?us-ascii?Q?znokf0Rr0aFdieyP57JCU2sVXuwMzOA5eV0Tpg2n27E8UewsmkjxyBo1DrnG?=
- =?us-ascii?Q?CozGj68ZtFbuyGmLpcM5h29WktmS0OI98oumxcOPETFDO9j2jPHdr79YYU96?=
- =?us-ascii?Q?GQIyXte//0sftSTDp+Plj0vUP+lcGTx0+PrSGb09TTU8BK+aOfJVEhsnqaXW?=
- =?us-ascii?Q?Kw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: b41be93a-a702-4b49-c30f-08ddb9c1b302
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2025 23:39:34.2556
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5uYFJhnCvdwZq5f4rDueJ68+NuW4arrskCHK5aMJFFXeHuNO4EqGT1Yhm0SZDdC9G6o180c8jHvVz5Os9nSIQW2q1LM7KeZ438XHYBXrvkA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR11MB6245
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250626222743.1766404-9-anisa.su887@gmail.com>
 
-On Wed, Jun 18, 2025 at 10:04:08PM -0700, Dan Williams wrote:
-> Changes since v1: [1]
-> * Peter took one look at v1 and rewrote it into something significantly
->   better. Unlike my attempt that required suffering a new parallel
->   universe of lock guards, the rewrite reuses existing lock guards.
->   ACQUIRE() can be used any place guard() can be used, and adds
->   ACQUIRE_ERR() to pass the result of conditional locks.
+On Thu, Jun 26, 2025 at 10:23:31PM +0000, anisa.su887@gmail.com wrote:
+> From: Anisa Su <anisa.su@samsung.com>
 > 
-> [1]: http://lore.kernel.org/20250507072145.3614298-1-dan.j.williams@intel.com
+> Prepatory patch for following FMAPI Add/Release Patches. Refactors part
+> of qmp_cxl_process_dynamic_capacity_prescriptive() into a helper
+> function to create DC Event Records and insert in the event log.
 > 
-> Note, all the code in patch1 is Peter's I just wrapped it in a changelog
-> and added some commentary. Peter, forgive me if you were still in the
-> process of circling back to this topic. I marked the patch attributed to
-> you as: "Not-yet-signed-off-by". Otherwise, my motivation for going
-> ahead with a formal submission are the multiple patchsets in my review /
-> development queue where I would like to use ACQUIRE().
+> Moves definition for CXL_NUM_EXTENTS_SUPPORTED to cxl.h so it can be
+> accessed by cxl-mailbox-utils.c and cxl-events.c, where the helper
+> function is defined.
 > 
-> The orginal motivation of v1 for this work is that the CXL subsystem
-> adopted scope-based helpers and achieved some decent cleanups. However,
-> that work stalled with conditional locks. It stalled due to the pain
-> points of scoped_cond_guard() detailed in patch1.
-> 
-> This work also allows for replacing open-coded equivalents like
-> rwsem_read_intr_acquire() that went upstream in v6.16:
-> 
->     0c6e6f1357cb cxl/edac: Add CXL memory device patrol scrub control feature
-> 
-> The open question from the discussion [2] was whether it was worth
-> defining a __GUARD_IS_ERR() asm helper. I left that alone.
-> 
-> Lastly, this version of ACQUIRE_ERR() matches Peter's original proposal
-> to have the caller pass the lock scope variable by reference [3]. My
-> change of heart came from looking at the conversion and wanting
-> ACQUIRE_ERR() to be more visually distinct from ACQUIRE() especially
-> because it is accessing lock condition metadata, not the lock itself.
-> 
-> E.g.
-> 
->        ACQUIRE(rwsem_read_intr, rwsem)(&cxl_rwsem.region);
->        if ((ret = ACQUIRE_ERR(rwsem_read_intr, &rwsem)))
->                return ret;
-> 
-> Yes, checkpatch disagrees with assignment in if(), but cleanup.h already
-> demands other expections for historical style, and a compact / limited
-> idiom for ACQUIRE_ERR() feels reasonable.
+> Signed-off-by: Anisa Su <anisa.su@samsung.com>
 
-Hi Dan,
+Reviewed-by: Fan Ni <fan.ni@samsung.com>
 
-I've been building upon this set and applying this diff to squelch
-those checkpatch ERRORs. Please take a look and consider adding for
-review in next version.
-
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 664f7b7a622c..193a03fa7114 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -5682,7 +5682,14 @@ sub process {
- 			my ($s, $c) = ($stat, $cond);
- 			my $fixed_assign_in_if = 0;
- 
--			if ($c =~ /\bif\s*\(.*[^<>!=]=[^=].*/s) {
-+			if ($c =~ /\bif\s*\((.*[^<>!=]=[^=].*)\)/s) {
-+				my $expr = $1;
-+
-+				# Allow ACQUIRE_ERR() special case
-+				if ($expr =~ /\w+\s*=\s*ACQUIRE_ERR\s*\(/) {
-+					next;
-+				}
-+
- 				if (ERROR("ASSIGN_IN_IF",
- 					  "do not use assignment in if condition\n" . $herecurr) &&
- 				    $fix && $perl_version_ok) {
-
-
-
-snip
-
+> ---
+>  hw/cxl/cxl-events.c         | 38 +++++++++++++++++++++++++++++++++++++
+>  hw/cxl/cxl-mailbox-utils.c  |  1 -
+>  hw/mem/cxl_type3.c          | 37 +-----------------------------------
+>  include/hw/cxl/cxl.h        |  1 +
+>  include/hw/cxl/cxl_device.h |  4 ++++
+>  5 files changed, 44 insertions(+), 37 deletions(-)
+> 
+> diff --git a/hw/cxl/cxl-events.c b/hw/cxl/cxl-events.c
+> index 12dee2e467..724055f2cf 100644
+> --- a/hw/cxl/cxl-events.c
+> +++ b/hw/cxl/cxl-events.c
+> @@ -260,3 +260,41 @@ void cxl_event_irq_assert(CXLType3Dev *ct3d)
+>          }
+>      }
+>  }
+> +
+> +void cxl_create_dc_event_records_for_extents(CXLType3Dev *ct3d,
+> +                                             CXLDCEventType type,
+> +                                             CXLDCExtentRaw extents[],
+> +                                             uint32_t ext_count)
+> +{
+> +    CXLEventDynamicCapacity event_rec = {};
+> +    int i;
+> +
+> +    cxl_assign_event_header(&event_rec.hdr,
+> +                            &dynamic_capacity_uuid,
+> +                            (1 << CXL_EVENT_TYPE_INFO),
+> +                            sizeof(event_rec),
+> +                            cxl_device_get_timestamp(&ct3d->cxl_dstate));
+> +    event_rec.type = type;
+> +    event_rec.validity_flags = 1;
+> +    event_rec.host_id = 0;
+> +    event_rec.updated_region_id = 0;
+> +    event_rec.extents_avail = CXL_NUM_EXTENTS_SUPPORTED -
+> +                              ct3d->dc.total_extent_count;
+> +
+> +    for (i = 0; i < ext_count; i++) {
+> +        memcpy(&event_rec.dynamic_capacity_extent,
+> +               &extents[i],
+> +               sizeof(CXLDCExtentRaw));
+> +        event_rec.flags = 0;
+> +        if (i < ext_count - 1) {
+> +            /* Set "More" flag */
+> +            event_rec.flags |= BIT(0);
+> +        }
+> +
+> +        if (cxl_event_insert(&ct3d->cxl_dstate,
+> +                             CXL_EVENT_TYPE_DYNAMIC_CAP,
+> +                             (CXLEventRecordRaw *)&event_rec)) {
+> +            cxl_event_irq_assert(ct3d);
+> +        }
+> +    }
+> +}
+> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> index e3d54ed124..382c41c025 100644
+> --- a/hw/cxl/cxl-mailbox-utils.c
+> +++ b/hw/cxl/cxl-mailbox-utils.c
+> @@ -27,7 +27,6 @@
+>  
+>  #define CXL_CAPACITY_MULTIPLIER   (256 * MiB)
+>  #define CXL_DC_EVENT_LOG_SIZE 8
+> -#define CXL_NUM_EXTENTS_SUPPORTED 512
+>  #define CXL_NUM_TAGS_SUPPORTED 0
+>  #define CXL_ALERTS_LIFE_USED_WARN_THRESH (1 << 0)
+>  #define CXL_ALERTS_OVER_TEMP_WARN_THRESH (1 << 1)
+> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> index ee554a77be..9c2b9d197b 100644
+> --- a/hw/mem/cxl_type3.c
+> +++ b/hw/mem/cxl_type3.c
+> @@ -1957,15 +1957,11 @@ static void qmp_cxl_process_dynamic_capacity_prescriptive(const char *path,
+>          CxlDynamicCapacityExtentList *records, Error **errp)
+>  {
+>      Object *obj;
+> -    CXLEventDynamicCapacity dCap = {};
+> -    CXLEventRecordHdr *hdr = &dCap.hdr;
+>      CXLType3Dev *dcd;
+> -    uint8_t flags = 1 << CXL_EVENT_TYPE_INFO;
+>      uint32_t num_extents = 0;
+>      CxlDynamicCapacityExtentList *list;
+>      CXLDCExtentGroup *group = NULL;
+>      g_autofree CXLDCExtentRaw *extents = NULL;
+> -    uint8_t enc_log = CXL_EVENT_TYPE_DYNAMIC_CAP;
+>      uint64_t dpa, offset, len, block_size;
+>      g_autofree unsigned long *blk_bitmap = NULL;
+>      int i;
+> @@ -2078,38 +2074,7 @@ static void qmp_cxl_process_dynamic_capacity_prescriptive(const char *path,
+>          dcd->dc.total_extent_count += num_extents;
+>      }
+>  
+> -    /*
+> -     * CXL r3.1 section 8.2.9.2.1.6: Dynamic Capacity Event Record
+> -     *
+> -     * All Dynamic Capacity event records shall set the Event Record Severity
+> -     * field in the Common Event Record Format to Informational Event. All
+> -     * Dynamic Capacity related events shall be logged in the Dynamic Capacity
+> -     * Event Log.
+> -     */
+> -    cxl_assign_event_header(hdr, &dynamic_capacity_uuid, flags, sizeof(dCap),
+> -                            cxl_device_get_timestamp(&dcd->cxl_dstate));
+> -
+> -    dCap.type = type;
+> -    /* FIXME: for now, validity flag is cleared */
+> -    dCap.validity_flags = 0;
+> -    stw_le_p(&dCap.host_id, hid);
+> -    /* only valid for DC_REGION_CONFIG_UPDATED event */
+> -    dCap.updated_region_id = 0;
+> -    for (i = 0; i < num_extents; i++) {
+> -        memcpy(&dCap.dynamic_capacity_extent, &extents[i],
+> -               sizeof(CXLDCExtentRaw));
+> -
+> -        dCap.flags = 0;
+> -        if (i < num_extents - 1) {
+> -            /* Set "More" flag */
+> -            dCap.flags |= BIT(0);
+> -        }
+> -
+> -        if (cxl_event_insert(&dcd->cxl_dstate, enc_log,
+> -                             (CXLEventRecordRaw *)&dCap)) {
+> -            cxl_event_irq_assert(dcd);
+> -        }
+> -    }
+> +    cxl_create_dc_event_records_for_extents(dcd, type, extents, num_extents);
+>  }
+>  
+>  void qmp_cxl_add_dynamic_capacity(const char *path, uint16_t host_id,
+> diff --git a/include/hw/cxl/cxl.h b/include/hw/cxl/cxl.h
+> index 75e47b6864..3ae4303383 100644
+> --- a/include/hw/cxl/cxl.h
+> +++ b/include/hw/cxl/cxl.h
+> @@ -23,6 +23,7 @@
+>  #define CXL_DEVICE_REG_BAR_IDX 2
+>  
+>  #define CXL_WINDOW_MAX 10
+> +#define CXL_NUM_EXTENTS_SUPPORTED 512
+>  
+>  typedef struct PXBCXLDev PXBCXLDev;
+>  
+> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> index 82e3bc1a71..91ec1ba299 100644
+> --- a/include/hw/cxl/cxl_device.h
+> +++ b/include/hw/cxl/cxl_device.h
+> @@ -732,4 +732,8 @@ bool ct3_test_region_block_backed(CXLType3Dev *ct3d, uint64_t dpa,
+>  void cxl_assign_event_header(CXLEventRecordHdr *hdr,
+>                               const QemuUUID *uuid, uint32_t flags,
+>                               uint8_t length, uint64_t timestamp);
+> +void cxl_create_dc_event_records_for_extents(CXLType3Dev *ct3d,
+> +                                             CXLDCEventType type,
+> +                                             CXLDCExtentRaw extents[],
+> +                                             uint32_t ext_count);
+>  #endif
+> -- 
+> 2.47.2
+> 
