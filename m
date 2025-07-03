@@ -1,82 +1,145 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A2817BA3;
-	Thu,  3 Jul 2025 05:33:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751520821; cv=pass; b=GPC4WMcS3Ov/0+mijvdHDan/w4FIg8T7DavDrmn5WjE6si1lo8Wt3cuKXOqQo8rE8fvPOfKA89zEiqFBxoi3GJQtHwXdZ5oP6fCPCnc2ZLyAb6HNpYpYYmCSJC4vDCTVaDYBUeVp81SEWU5fuvlEjcZj5IrvBYhYcTSybF88UA0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751520821; c=relaxed/simple;
-	bh=SkDf+anFkf2F3h9PG3jhngVOvhOzINDS7zZalUsnbZY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PYHyQJsWKZLi3x56WC8Rxt3KtpNBcj033u5JYovXPfH08jNVWBrlhMD9Y3NiU1qmv1ywdywL3wlBjSYSFqXs5a7V9SxXEPqDm6XWrj/81M3ucoILwVj088llWdqXN9QwF2EyTLBO/IjEWIPqJPM93U1zZgKthDzWOW6qXcMEIEI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=UBdqWnfJ; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6870D228CB0;
+	Thu,  3 Jul 2025 06:38:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751524684; cv=none; b=WYQqkfMWlGqUVdSnw4pVN0aYjX1GlGKEUOWLEXOYjnQrcdGF96BIre0iTkTvBS2atoPDT4+MKHRPn55g6L4iUE4kjr39XXJn5u+77rVuRr9oUEKNDJ3laGykS+0aTEUT13OZUBSWDg1piVMrtyrZaBFwMTOcZ/jRX7VxquKTDvY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751524684; c=relaxed/simple;
+	bh=ycFo1nLp5/0QWcqp2qZGxrXVZQq/5D3iTncGtW7GLO8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hhRnV1CSMqGL+4N2Qcljk4uqYmyCDYjyUReeDAwIRn6oS2plNDuGYwL3KH/w6PvaBfEgxFLdeRR4xua4soCcJrDuX28/3o7obAT6EjXtsIJdY4/LsLvfLO0Qitsd1+ZNf/zMo+hC8Ktg/Lq5jwg+l81aSqcYM01ADDXVb6/L9RU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=PwapMf4A; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="UBdqWnfJ"
-ARC-Seal: i=1; a=rsa-sha256; t=1751520803; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=mHFpYOwB6hj/NdB4untDcMRpRIuaHrvj408xqt9/WdNR0DSfyZGY9HyCxpM9XuF6+8TxSOpRHXORQ9y1sAAfxdUTze9Cc48fth9PS/sVTgGEby9rXjAWq62CaYEaCV14jMGa4G9+AtlDjKGLINH6hSxzpL2JkYDVgvdXQtuDtGM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751520803; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=SkDf+anFkf2F3h9PG3jhngVOvhOzINDS7zZalUsnbZY=; 
-	b=O8Xz8FLjTou4o/M9QHa56b0BU7SJOLTFNfy2DC7+e9t//m9ULzJpv/5BNCIqDivcVoWnPRNUbGCQZG3o+gLDUEhuFdnOWF8Ii60o9SwHtr5M0sNa5HtC2ltzoNEzwhVl5m3WnnAAuvYyc2o8Rzskrl/NUZCjm3g9A5i57BwKvJ8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751520803;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=SkDf+anFkf2F3h9PG3jhngVOvhOzINDS7zZalUsnbZY=;
-	b=UBdqWnfJlLsXj4+m+Nq9rCwpX0GKCv5PmVZk3Q+CQ5qTeoZUYlNpHok2V7RvMdLT
-	02As0ePlZpISCbwJf+Xl2So6eHsjGPlGRV2v6iN3OTKD9KBhqZfwTRIkcIuFs4eWYrB
-	/u73eKoQoVJZXsx1i5hVVlZTWT5AEo32BxyPfSd4=
-Received: by mx.zohomail.com with SMTPS id 1751520801292135.64297352997426;
-	Wed, 2 Jul 2025 22:33:21 -0700 (PDT)
-Message-ID: <af28a873-1c72-4389-a6c8-98f4ef6ad475@zohomail.com>
-Date: Thu, 3 Jul 2025 13:33:16 +0800
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PwapMf4A"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 598C041B5F;
+	Thu,  3 Jul 2025 06:37:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1751524679;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4+WaR4VhxZXal3ni8c5FuKUZQzKkcDX9MLohXTPfTgg=;
+	b=PwapMf4AOf1u09JZyAvuq3MEs5Q4wJkpokCf2i9YxktO3oxlAqxu3Kuva4qlUMVWrZe6Ch
+	VsiHnhZuSck3prB2PK5yzQ3fhCQSCMLnythuh+f1I7Xp/uqgW095xyV41I1sLuK+fb2Rt4
+	34LwUAwFXNTWwxNYB2VkvYdynIt2L6NXbtpqKiJNhf9VRJHwM5lSz6I4HCFqw9fpinlL/Q
+	6J9qijxfXxGDsGK9I7GWGydnMqWvaV6jJyPnc6KvT53yUQPq+TtCmIIR/doowMzDlFQfuL
+	lyDTf+GBFBaRwnczT067UcPIVZgQ9a5tk0e34+6QyDx5/zD9/kxezacCrcPHxA==
+Date: Thu, 3 Jul 2025 08:37:55 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andrew Lunn
+ <andrew@lunn.ch>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael
+ J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Shawn
+ Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam
+ <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen
+ Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang
+ <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Derek
+ Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
+ Arnd Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@google.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, Mark Brown <broonie@kernel.org>, Len
+ Brown <lenb@kernel.org>, Daniel Scally <djrscally@gmail.com>, Heikki
+ Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
+ <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>, Geert
+ Uytterhoeven <geert+renesas@glider.be>, Davidlohr Bueso
+ <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, Alison Schofield
+ <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Ira
+ Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+ linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+ linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
+ <allan.nielsen@microchip.com>, Horatiu Vultur
+ <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 18/28] of: property: Allow fw_devlink device-tree on
+ x86 when PCI device-tree node creation is enabled
+Message-ID: <20250703083755.2fee7e7c@bootlin.com>
+In-Reply-To: <CAL_JsqJCuevzu69bx3yWm3ZR9wZ+UsWuNXscig5KMm2WH4WxOw@mail.gmail.com>
+References: <20250613134817.681832-1-herve.codina@bootlin.com>
+	<20250613134817.681832-19-herve.codina@bootlin.com>
+	<20250627162245.GA3513535-robh@kernel.org>
+	<aF7H4-toeb7Ouz3d@smile.fi.intel.com>
+	<CAL_JsqJCuevzu69bx3yWm3ZR9wZ+UsWuNXscig5KMm2WH4WxOw@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] resource: Introduce a new helper
- resource_contains_addr()
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: akpm@linux-foundation.org, bhelgaas@google.com,
- ilpo.jarvinen@linux.intel.com, dave@stgolabs.net,
- jonathan.cameron@huawei.com, dave.jiang@intel.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
- dan.j.williams@intel.com, shiju.jose@huawei.com, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250702072008.468371-1-ming.li@zohomail.com>
- <aGTsD4uFyvavYLnO@smile.fi.intel.com>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <aGTsD4uFyvavYLnO@smile.fi.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Feedback-ID: rr0801122724341268c65f3347fd76f7f50000b227b36e3b98cf51f738d552b86a01e676f8c2451717d69fea:zu08011227588d1bca68dcbd2e1de451f900001857f68d7abccd3a6e8df976bb24f3ef3206b8e2fe2102c92b:rf0801122d70fc35e80f76385143eaf5e10000d1296cfc6153f768051316b3a4616ee8f7fa92e472e63a1e89c5c578723f71:ZohoMail
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduleehkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedvhfeljedtfedtjeevffegtddutdeghfettdduhfeuhfdttdffieeuiefgvdfhvdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedvrgdtudemvgdtrgemvdekheemsgelkedtmegvgedttgemiegtgeefmegshegssgemrgegvdeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmedvkeehmegsleektdemvgegtdgtmeeitgegfeemsgehsggsmegrgedvkedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeegkedprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgth
+ hdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshdrhhgruhgvrhesphgvnhhguhhtrhhonhhigidruggv
+X-GND-Sasl: herve.codina@bootlin.com
 
-On 7/2/2025 4:21 PM, Andy Shevchenko wrote:
-> On Wed, Jul 02, 2025 at 03:20:06PM +0800, Li Ming wrote:
->> In CXL subsystem, many functions need to check an address availability
->> by checking if the resource range contains the address. Providing a new
->> helper function resource_contains_addr() to check if the resource range
->> contains the input address.
-> Hint: Use cover letter when you submit more than one patch. It will help a lot
-> in understanding what's going on. For example, I have a script [1] to submit
-> patches which makes me sure not to avoid that. Or you can try `b4 relay`...
->
-> [1]: https://github.com/andy-shev/home-bin-tools/blob/master/ge2maintainer.sh
->
-Sure, I will add cover letter in next version, thank you.
+Hi Rob, Andy,
 
+On Fri, 27 Jun 2025 12:49:36 -0500
+Rob Herring <robh@kernel.org> wrote:
 
-Ming
+> On Fri, Jun 27, 2025 at 11:33 AM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > On Fri, Jun 27, 2025 at 11:22:45AM -0500, Rob Herring wrote:  
+> > > On Fri, Jun 13, 2025 at 03:47:58PM +0200, Herve Codina wrote:  
+> >
+> > ...
+> >  
+> > > > -   if (IS_ENABLED(CONFIG_X86))
+> > > > +   if (IS_ENABLED(CONFIG_X86) && !IS_ENABLED(CONFIG_PCI_DYNAMIC_OF_NODES))  
+> > >
+> > > I really want CONFIG_PCI_DYNAMIC_OF_NODES to go away at some point, not
+> > > add more users.
+> > >
+> > > I think this should instead check for specific platforms not with
+> > > kconfig symbols but DT properties. For ce4100, you can just check the
+> > > root compatible string. For OLPC, there isn't a root compatible (in the
+> > > DT I have). You could check for /architecture == OLPC instead. There's
+> > > some virtualization guests using DT now too. I would think their DT's
+> > > are simple enough to avoid any fw_devlink issues.  
+> >
+> > I don't think this is good approach. The above check is more reliable in my
+> > opinion.  
+> 
+> I'm fine with any solution that doesn't add a
+> CONFIG_PCI_DYNAMIC_OF_NODES which we can't remove. Adding it was a
+> kick the can down the road to merge the support worry the mixed
+> usecase (on ACPI systems) later. It's now later.
+> 
+> > > Alternatively, we could perhaps make x86 fw_devlink default off  
+> >
+> > For my (little) knowledge I believe this is not feasible anymore.
+> > Some x86 code (drivers) relies on fw_devlink nowadays. But take
+> > this with grain of salt, I may be way mistaken.  
+> 
+> Doesn't the CONFIG_X86 check disable it?
+> 
+> Rob
 
+Filtering out by Kconfig seems a no-go:
+  - Check for CONFIG_OLPC of CONFIG_X86_INTEL_CE as proposed in v1
+    (https://lore.kernel.org/lkml/20250407145546.270683-12-herve.codina@bootlin.com/)
+    was a no-go from Andy
+
+  - Check for CONFIG_PCI_DYNAMIC_OF_NODES as proposed here is a no-go from
+    Rob
+
+I will follow Rob's suggestion based on DT properties. With a DT property
+list, it would be easier to add more x86 fw_delink broken system in the list
+of the system to exclude.
+
+Best regards,
+Hervé
