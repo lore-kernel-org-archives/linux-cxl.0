@@ -1,429 +1,285 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA079289373
-	for <linux-cxl@vger.kernel.org>; Thu,  3 Jul 2025 04:03:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C4942A9B
+	for <linux-cxl@vger.kernel.org>; Thu,  3 Jul 2025 04:17:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751515420; cv=none; b=eSU9539NYiuvYduMx1aR31URxx/HA3Ic7eNTpGLVV9dIAaglhssRzns7nu7/aL/NZcLxyttOLvrntD5duI2MhuEAHXfWlPOkkXiIS1Up9tjM7nqoR9gh2yaYIXr7Qo0fGNFZ1f+FV+FQWdfcFOacHa+6k8IYyQTa9lq5+ulncSs=
+	t=1751516255; cv=none; b=p1NE1Pu2c3GD6xaG8IaHiruzQy4BeTh0xGU+c7CzdKLooefH4OZvwuBhI5gK66YAImMA+J0NvREgpqagdUueGP28SrVNBc/TRw2nFKcPSKklYhRWWhxY3r7sarm/mapsKCS8LDpk0/Q9Ys4+hmYjUcUJaQ0XilVtRe2sKqYxx7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751515420; c=relaxed/simple;
-	bh=VpM4jNclqUiRyOdBN81JJ1s8y9olYrSfriN670reFmY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mtWpH7CQAREyimrFkZ7E0iEQdFckLX9BQ9IfkcIN1KBUd0pgmrv5GiJb+whszMk+HOUjF8TBgmYsEYXwAb79BzUpSzW9ELJfBO2GsCJWDbRkncqMoLvsB45fCKw9I8LGKGhQ1l993cmK+67n0A+WEOBuUM5eXj0KQwHkAYkzVEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nkKjyzSR; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751516255; c=relaxed/simple;
+	bh=eolOT2CMTKcnHSw8HGjt5BSJSUVRrjDtITmgObmWrLo=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GYDHb4u1SAGECHOyVW0m7rtI+uF1NOnsJMTWGTb2BdpqP7L1x8yohFin46g3TJSYsBh9n1VU8/ZpE5dT3MV5l6Zbai/OTAF7HUHu0x5UsuLbd6OeNL90aRIOMuIB4P0qaG9x+6vO9veyYJzKapNRsv2OZ9+jBCHD75iezenT82s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HgpzSYaT; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nkKjyzSR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751515419; x=1783051419;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=VpM4jNclqUiRyOdBN81JJ1s8y9olYrSfriN670reFmY=;
-  b=nkKjyzSRKtRy/VOiHRl7G6gXoJv4KeprYFF9CoTJugSPrnJiLwB3gu6S
-   mX98Swcg6gL4+uMhWaa5H7K4Ntf8qd/Tartcy+rN18aRA9FfEpKQZWM5o
-   RW96c5WUHvCYY1ZWQLinywOVLM85Wg+4/3n9tE7QCum+anZ9nSZk/PFNE
-   PW6VJG6qGhYgR6+fq8ulrtuSY3tdrlXpW3Y7OpIx7HSyJiIl23Karj97I
-   Ok7DKfdsE8NHK0q6Dq5Ga5+aS0k40/q/S+MWPmIwCo4SWqOQviGp6PNHs
-   1DoCxVqMU/XJ0s/JNagchYK2phyONhuENFXsGJP8o/fcIoxa4BXYoXv17
-   Q==;
-X-CSE-ConnectionGUID: VbgUVUFCTBKjdfhkl5n6iQ==
-X-CSE-MsgGUID: ws9Fd+1pRc+wJkfTfOQcvw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11482"; a="53692343"
-X-IronPort-AV: E=Sophos;i="6.16,283,1744095600"; 
-   d="scan'208";a="53692343"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 21:03:37 -0700
-X-CSE-ConnectionGUID: gQ+lxxh4QbmNGVSCEUMXmg==
-X-CSE-MsgGUID: fBc67mpjRDG7hAqOBP7PNw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,283,1744095600"; 
-   d="scan'208";a="159951160"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.223.14])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2025 21:03:37 -0700
-From: alison.schofield@intel.com
-To: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH v2 4/4] cxl/region: Add inject and clear poison by region offset
-Date: Wed,  2 Jul 2025 21:03:23 -0700
-Message-ID: <4f33bcb42217139e0884784e60139e29c647f62b.1751513505.git.alison.schofield@intel.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <cover.1751513505.git.alison.schofield@intel.com>
-References: <cover.1751513505.git.alison.schofield@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HgpzSYaT"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2349f096605so63383835ad.3
+        for <linux-cxl@vger.kernel.org>; Wed, 02 Jul 2025 21:17:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751516251; x=1752121051; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=08NQ+TjkxcZaFANSHy0nh1+PPk3TzQQAToiAVZBT/ME=;
+        b=HgpzSYaTGSgD2Y4N1wzQUwgNZ5eSN5PQ8PsRBTiU6fF1EcORJtykE1TUYAADflPJxu
+         WBRh7xWBxbB6KXLci3pp45Gi1S2g6l5F7vOFDFzXzzwFUp0LuUeUoUBzQcZL2O9bXFF5
+         GNQgl7U5zWW5Ov8htiEqoJa6m2uTN1qZAxTndIzwmmKN9SBSZFIMhyi0CiqhqwhsT8kh
+         mR45T6IZQ7oXRCYDSIp4v9MpXxU1vvY3lAkadX6xyVUEUwQZEc66IRg14yqDeqfigj8T
+         4eVDz4dwrEshaUQJwJYCXZAItDxlmYExTSki0fqEMVfOGXdC3InY/fFmBa6FeqZzxCkQ
+         i+Zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751516251; x=1752121051;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=08NQ+TjkxcZaFANSHy0nh1+PPk3TzQQAToiAVZBT/ME=;
+        b=rMoYl46V9lQMszDbLZYeKARtiDa2hOUZB2PxW3siA4z7baaq0rcL0Q8xacmMVbGi7c
+         LeBbBSxgNgn0szliG7B6O3eQMpxzsznC2KV4G/djUtwF5vuKozDSYsjUkxr/00KAPZws
+         bMLLRRSiPqjB8+D8fsH3WWEfv8mCoW1ffEM+/bTHni3zYA77cQ/uO1Bmo+wdqbWL1g9u
+         ps0Jy0F+PogAXzW2B2hycPvrT5JZSFr4TDhBxDpXug+obGnj9GHAY1jt7DLw2cxXMFNv
+         S+494Jh/x22fmynf9ptVf8GjNWyDvV3trlJaLXzUU+7IHy7ibuA+DSg9eB/YBKyFjngx
+         UNrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWJHEYUWCmaTTLwW6Fvg6gUkuPCVkOXx643r5rI0gaR5qB/SMyzRFqZO2mouhQgo8cQwSN1Bsc2iTM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyYSWO6znW6y7u7DHVlUd3kfPvqHx7JGUxWHvwnlmYYq1jiF76
+	KQxAlSh+zq5gpvBuKqP/Y1Z7NFGkmsLXrKM2Aqy9QQVF8rlZ7XpVX9La
+X-Gm-Gg: ASbGncvmD6sbRsG0R8MatO6kBxdRhmtv0q9XCAHvCS8l5LhS1f9lJ4WZ0IxsihMUCnC
+	hZealMfUXCMkwqn7bfuMIQK7oOPES46v9I2185RxZxGsVAza5Y29nEbkjquDzgwuYiE0Ri2nIPh
+	dq955LYfW6aAMPJuwVHILJLMN08R3MNd9IrN9ngVRpeZSHhU5cJc2UqBZJLhZ++Y9cHzGbSix92
+	RX4IExSIdagil5A/szu3HDB2a4j0DebUKgQ6xPd1KC8n3Kg8vWP6I3qc53XjkbU1rFqWLPgc1BQ
+	OGtIbEKlulkerNp6CoatE38GyqRgwcpUR1mPriRUQK2tfCWfzkpN5clmEau9bRYRVZmkt4GkYmO
+	5
+X-Google-Smtp-Source: AGHT+IEbGztOUWf5B7SpFHLemr8o7EKypKBByaiK87oOjUhC7qGuUyRY3Ci1wZazLCfp5+V8KPf0/w==
+X-Received: by 2002:a17:902:e5cc:b0:234:c7e6:8459 with SMTP id d9443c01a7336-23c6e5023f8mr71405255ad.20.1751516251221;
+        Wed, 02 Jul 2025 21:17:31 -0700 (PDT)
+Received: from smc-140338-bm01 ([149.97.161.244])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb2e219asm151676075ad.40.2025.07.02.21.17.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 21:17:30 -0700 (PDT)
+From: Fan Ni <nifan.cxl@gmail.com>
+X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
+Date: Thu, 3 Jul 2025 04:17:28 +0000
+To: anisa.su887@gmail.com
+Cc: qemu-devel@nongnu.org, Jonathan.Cameron@huawei.com, nifan.cxl@gmail.com,
+	dave@stgolabs.net, alok.a.tiwari@oracle.com,
+	linux-cxl@vger.kernel.org, Anisa Su <anisa.su@samsung.com>
+Subject: Re: [QEMU PATCH v4 09/10] cxl-mailbox-utils: 0x5604 - FMAPI Initiate
+ DC Add
+Message-ID: <aGYEWDOGPbtncEmN@smc-140338-bm01>
+References: <20250626222743.1766404-1-anisa.su887@gmail.com>
+ <20250626222743.1766404-10-anisa.su887@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250626222743.1766404-10-anisa.su887@gmail.com>
 
-From: Alison Schofield <alison.schofield@intel.com>
+On Thu, Jun 26, 2025 at 10:23:32PM +0000, anisa.su887@gmail.com wrote:
+> From: Anisa Su <anisa.su@samsung.com>
+> 
+> FM DCD Management command 0x5604 implemented per CXL r3.2 Spec Section 7.6.7.6.5
+> 
+> Signed-off-by: Anisa Su <anisa.su@samsung.com>
+> ---
 
-Add CXL region debugfs attributes to inject and clear poison based
-on an offset into the region. These new interfaces allow users to
-operate on poison at the region level without needing to resolve
-Device Physical Addresses (DPA) or target individual memdevs.
+Minor comments inline...
 
-The implementation uses a new helper, region_offset_to_dpa_result()
-that applies decoder interleave logic, including XOR-based address
-decoding when applicable. Note that XOR decodes rely on driver
-internal xormaps which are not exposed to userspace. So, this support
-is not only a simplification of poison operations that could be done
-using existing per memdev operations, but also it enables this
-functionality for XOR interleaved regions for the first time.
+>  hw/cxl/cxl-mailbox-utils.c  | 106 ++++++++++++++++++++++++++++++++++++
+>  hw/mem/cxl_type3.c          |   8 +--
+>  include/hw/cxl/cxl_device.h |   4 ++
+>  3 files changed, 114 insertions(+), 4 deletions(-)
+> 
+> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> index 382c41c025..787eeaa7b9 100644
+> --- a/hw/cxl/cxl-mailbox-utils.c
+> +++ b/hw/cxl/cxl-mailbox-utils.c
+> @@ -122,6 +122,7 @@ enum {
+>          #define GET_HOST_DC_REGION_CONFIG   0x1
+>          #define SET_DC_REGION_CONFIG        0x2
+>          #define GET_DC_REGION_EXTENT_LIST   0x3
+> +        #define INITIATE_DC_ADD             0x4
+>  };
+>  
+>  /* CCI Message Format CXL r3.1 Figure 7-19 */
+> @@ -3539,6 +3540,104 @@ static CXLRetCode cmd_fm_get_dc_region_extent_list(const struct cxl_cmd *cmd,
+>      return CXL_MBOX_SUCCESS;
+>  }
+>  
+> +/*
+> + * Helper function to convert CXLDCExtentRaw to CXLUpdateDCExtentListInPl
+> + * in order to reuse cxl_detect_malformed_extent_list() function which accepts
+> + * CXLUpdateDCExtentListInPl as a parameter.
+> + */
+> +static void convert_raw_extents(CXLDCExtentRaw raw_extents[],
+> +                                CXLUpdateDCExtentListInPl *extent_list,
+> +                                int count)
+> +{
+> +    int i;
+> +
+> +    extent_list->num_entries_updated = count;
+> +
+> +    for (i = 0; i < count; i++) {
+> +        extent_list->updated_entries[i].start_dpa = raw_extents[i].start_dpa;
+> +        extent_list->updated_entries[i].len = raw_extents[i].len;
+> +    }
+> +}
+> +
+> +/* CXL r3.2 Section 7.6.7.6.5 Initiate Dynamic Capacity Add (Opcode 5604h) */
 
-New debugfs attributes are added in /sys/kernel/debug/cxl/regionX/:
-inject_poison and clear_poison. These are only exposed if all memdevs
-participating in the region support both inject and clear commands,
-ensuring consistent and reliable behavior across multi-device regions.
+Keep the spec reference comments consistent like below,
+/* CXL r3.2 Section 7.6.7.6.5: Initiate Dynamic Capacity Add (Opcode 5604h) */
 
-If tracing is enabled, these operations are logged as cxl_poison
-events in /sys/kernel/tracing/trace.
+> +static CXLRetCode cmd_fm_initiate_dc_add(const struct cxl_cmd *cmd,
+> +                                         uint8_t *payload_in,
+> +                                         size_t len_in,
+> +                                         uint8_t *payload_out,
+> +                                         size_t *len_out,
+> +                                         CXLCCI *cci)
+> +{
+> +    struct {
+> +        uint16_t host_id;
+> +        uint8_t selection_policy;
+> +        uint8_t reg_num;
+> +        uint64_t length;
+> +        uint8_t tag[0x10];
+> +        uint32_t ext_count;
+> +        CXLDCExtentRaw extents[];
+> +    } QEMU_PACKED *in = (void *)payload_in;
+> +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
+> +    int i, rc;
+> +
+> +    switch (in->selection_policy) {
+> +        case CXL_EXTENT_SELECTION_POLICY_PRESCRIPTIVE: {
+> +            /* Adding extents exceeds device's extent tracking ability. */
+> +            if (in->ext_count + ct3d->dc.total_extent_count >
+> +                CXL_NUM_EXTENTS_SUPPORTED) {
+> +                return CXL_MBOX_RESOURCES_EXHAUSTED;
+> +            }
+> +
+> +            g_autofree CXLUpdateDCExtentListInPl *list =
+This seems not consistent with existing code style. Type declaration
+comes first.
+> +                g_malloc0(sizeof(*list) +
+> +                    in->ext_count * sizeof(*list->updated_entries));
+> +
+> +            convert_raw_extents(in->extents, list, in->ext_count);
+> +            rc = cxl_detect_malformed_extent_list(ct3d, list);
+> +
+> +            for (i = 0; i < in->ext_count; i++) {
+> +                CXLDCExtentRaw ext = in->extents[i];
+Use pointer as Jonathan mentioned.
+> +                /* Check requested extents do not overlap with pending extents. */
+shorten the comments like
+Extents to add cannot overlap with pending extents
+> +                if (cxl_extent_groups_overlaps_dpa_range(&ct3d->dc.extents_pending,
+> +                                                         ext.start_dpa, ext.len)) {
+> +                    return CXL_MBOX_INVALID_EXTENT_LIST;
+> +                }
+> +                /* Check requested extents do not overlap with existing extents. */
+Not allowed to add extents already existing
+> +                if (cxl_extents_overlaps_dpa_range(&ct3d->dc.extents,
+> +                                                   ext.start_dpa, ext.len)) {
+> +                    return CXL_MBOX_INVALID_EXTENT_LIST;
+> +                }
+> +            }
+> +
+> +            if (rc) {
+> +                return rc;
+> +            }
+> +
+> +            CXLDCExtentGroup *group = NULL;
+> +            for (i = 0; i < in->ext_count; i++) {
+> +                group = cxl_insert_extent_to_extent_group(group,
+> +                                                          in->extents[i].start_dpa,
+> +                                                          in->extents[i].len,
+> +                                                          in->extents[i].tag,
+> +                                                          in->extents[i].shared_seq);
+Shorten the lines as Jonathan suggested. 
 
-The ABI documentation warns users of the significant risks that
-come with using these capabilities.
+Fan
+> +            }
+> +
+> +            cxl_extent_group_list_insert_tail(&ct3d->dc.extents_pending, group);
+> +            ct3d->dc.total_extent_count += in->ext_count;
+> +            cxl_create_dc_event_records_for_extents(ct3d,
+> +                                                    DC_EVENT_ADD_CAPACITY,
+> +                                                    in->extents,
+> +                                                    in->ext_count);
+> +
+> +            return CXL_MBOX_SUCCESS;
+> +        }
+> +        default: {
+> +            qemu_log_mask(LOG_UNIMP,
+> +                          "CXL extent selection policy not supported.\n");
+> +            return CXL_MBOX_INVALID_INPUT;
+> +        }
+> +    }
+> +}
+> +
+>  static const struct cxl_cmd cxl_cmd_set[256][256] = {
+>      [INFOSTAT][BACKGROUND_OPERATION_ABORT] = { "BACKGROUND_OPERATION_ABORT",
+>          cmd_infostat_bg_op_abort, 0, 0 },
+> @@ -3666,6 +3765,13 @@ static const struct cxl_cmd cxl_cmd_set_fm_dcd[256][256] = {
+>           CXL_MBOX_IMMEDIATE_DATA_CHANGE) },
+>      [FMAPI_DCD_MGMT][GET_DC_REGION_EXTENT_LIST] = { "GET_DC_REGION_EXTENT_LIST",
+>          cmd_fm_get_dc_region_extent_list, 12, 0 },
+> +    [FMAPI_DCD_MGMT][INITIATE_DC_ADD] = { "INIT_DC_ADD",
+> +        cmd_fm_initiate_dc_add, ~0,
+> +        (CXL_MBOX_CONFIG_CHANGE_COLD_RESET |
+> +        CXL_MBOX_CONFIG_CHANGE_CONV_RESET |
+> +        CXL_MBOX_CONFIG_CHANGE_CXL_RESET |
+> +        CXL_MBOX_IMMEDIATE_CONFIG_CHANGE |
+> +        CXL_MBOX_IMMEDIATE_DATA_CHANGE) },
+>  };
+>  
+>  /*
+> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> index 9c2b9d197b..7676d785c2 100644
+> --- a/hw/mem/cxl_type3.c
+> +++ b/hw/mem/cxl_type3.c
+> @@ -1885,8 +1885,8 @@ void qmp_cxl_inject_memory_module_event(const char *path, CxlEventLog log,
+>   * the list.
+>   * Return value: return true if has overlaps; otherwise, return false
+>   */
+> -static bool cxl_extents_overlaps_dpa_range(CXLDCExtentList *list,
+> -                                           uint64_t dpa, uint64_t len)
+> +bool cxl_extents_overlaps_dpa_range(CXLDCExtentList *list,
+> +                                    uint64_t dpa, uint64_t len)
+>  {
+>      CXLDCExtent *ent;
+>      Range range1, range2;
+> @@ -1931,8 +1931,8 @@ bool cxl_extents_contains_dpa_range(CXLDCExtentList *list,
+>      return false;
+>  }
+>  
+> -static bool cxl_extent_groups_overlaps_dpa_range(CXLDCExtentGroupList *list,
+> -                                                 uint64_t dpa, uint64_t len)
+> +bool cxl_extent_groups_overlaps_dpa_range(CXLDCExtentGroupList *list,
+> +                                          uint64_t dpa, uint64_t len)
+>  {
+>      CXLDCExtentGroup *group;
+>  
+> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> index 91ec1ba299..7be68d98c6 100644
+> --- a/include/hw/cxl/cxl_device.h
+> +++ b/include/hw/cxl/cxl_device.h
+> @@ -736,4 +736,8 @@ void cxl_create_dc_event_records_for_extents(CXLType3Dev *ct3d,
+>                                               CXLDCEventType type,
+>                                               CXLDCExtentRaw extents[],
+>                                               uint32_t ext_count);
+> +bool cxl_extents_overlaps_dpa_range(CXLDCExtentList *list,
+> +                                    uint64_t dpa, uint64_t len);
+> +bool cxl_extent_groups_overlaps_dpa_range(CXLDCExtentGroupList *list,
+> +                                          uint64_t dpa, uint64_t len);
+>  #endif
+> -- 
+> 2.47.2
+> 
 
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
----
-
-Changes in v2:
-Simplify return using test_bit() in cxl_memdev_has_poison() (Jonathan)
-Use ACQUIRE() in the debugfs inject and clear funcs (DaveJ, Jonathan)
-Fail if offset is in the extended linear cache (Jonathan)
-Added 'cxl' to an existing ABI for memdev clear_poison
-Redefine ABI to take a region offset, not SPA (Dan)
-Remove KernelVersion field in ABI doc (Dan)
-Warn against misuse in ABI doc (Dan)
-Add validate_region_offset() helper
-
-
- Documentation/ABI/testing/debugfs-cxl |  89 ++++++++++++++++-
- drivers/cxl/core/core.h               |   4 +
- drivers/cxl/core/memdev.c             |   8 ++
- drivers/cxl/core/region.c             | 131 +++++++++++++++++++++++++-
- 4 files changed, 228 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/ABI/testing/debugfs-cxl b/Documentation/ABI/testing/debugfs-cxl
-index 12488c14be64..2989d4da96c1 100644
---- a/Documentation/ABI/testing/debugfs-cxl
-+++ b/Documentation/ABI/testing/debugfs-cxl
-@@ -19,8 +19,22 @@ Description:
- 		is returned to the user. The inject_poison attribute is only
- 		visible for devices supporting the capability.
- 
-+		TEST-ONLY INTERFACE: This interface is intended for testing
-+		and validation purposes only. It is not a data repair mechanism
-+		and should never be used on production systems or live data.
- 
--What:		/sys/kernel/debug/memX/clear_poison
-+		DATA LOSS RISK: For CXL persistent memory (PMEM) devices,
-+		poison injection can result in permanent data loss. Injected
-+		poison may render data permanently inaccessible even after
-+		clearing, as the clear operation writes zeros and does not
-+		recover original data.
-+
-+		SYSTEM STABILITY RISK: For volatile memory, poison injection
-+		can cause kernel crashes, system instability, or unpredictable
-+		behavior if the poisoned addresses are accessed by running code
-+		or critical kernel structures.
-+
-+What:		/sys/kernel/debug/cxl/memX/clear_poison
- Date:		April, 2023
- KernelVersion:	v6.4
- Contact:	linux-cxl@vger.kernel.org
-@@ -35,6 +49,79 @@ Description:
- 		The clear_poison attribute is only visible for devices
- 		supporting the capability.
- 
-+		TEST-ONLY INTERFACE: This interface is intended for testing
-+		and validation purposes only. It is not a data repair mechanism
-+		and should never be used on production systems or live data.
-+
-+		CLEAR IS NOT DATA RECOVERY: This operation writes zeros to the
-+		specified address range and removes the address from the poison
-+		list. It does NOT recover or restore original data that may have
-+		been present before poison injection. Any original data at the
-+		cleared address is permanently lost and replaced with zeros.
-+
-+		CLEAR IS NOT A REPAIR MECHANISM: This interface is for testing
-+		purposes only and should not be used as a data repair tool.
-+		Clearing poison is fundamentally different from data recovery
-+		or error correction.
-+
-+What:		/sys/kernel/debug/cxl/regionX/inject_poison
-+Date:		August, 2025
-+Contact:	linux-cxl@vger.kernel.org
-+Description:
-+		(WO) When a Host Physical Address (HPA) is written to this
-+		attribute, the region driver translates it to a Device
-+		Physical Address (DPA) and identifies the corresponding
-+		memdev. It then sends an inject poison command to that memdev
-+		at the translated DPA. Refer to the memdev ABI entry at:
-+		/sys/kernel/debug/cxl/memX/inject_poison for the detailed
-+		behavior. This attribute is only visible if all memdevs
-+		participating in the region support both inject and clear
-+		poison commands.
-+
-+		TEST-ONLY INTERFACE: This interface is intended for testing
-+		and validation purposes only. It is not a data repair mechanism
-+		and should never be used on production systems or live data.
-+
-+		DATA LOSS RISK: For CXL persistent memory (PMEM) devices,
-+		poison injection can result in permanent data loss. Injected
-+		poison may render data permanently inaccessible even after
-+		clearing, as the clear operation writes zeros and does not
-+		recover original data.
-+
-+		SYSTEM STABILITY RISK: For volatile memory, poison injection
-+		can cause kernel crashes, system instability, or unpredictable
-+		behavior if the poisoned addresses are accessed by running code
-+		or critical kernel structures.
-+
-+What:		/sys/kernel/debug/cxl/regionX/clear_poison
-+Date:		August, 2025
-+Contact:	linux-cxl@vger.kernel.org
-+Description:
-+		(WO) When a Host Physical Address (HPA) is written to this
-+		attribute, the region driver translates it to a Device
-+		Physical Address (DPA) and identifies the corresponding
-+		memdev. It then sends a clear poison command to that memdev
-+		at the translated DPA. Refer to the memdev ABI entry at:
-+		/sys/kernel/debug/cxl/memX/clear_poison for the detailed
-+		behavior. This attribute is only visible if all memdevs
-+		participating in the region support both inject and clear
-+		poison commands.
-+
-+		TEST-ONLY INTERFACE: This interface is intended for testing
-+		and validation purposes only. It is not a data repair mechanism
-+		and should never be used on production systems or live data.
-+
-+		CLEAR IS NOT DATA RECOVERY: This operation writes zeros to the
-+		specified address range and removes the address from the poison
-+		list. It does NOT recover or restore original data that may have
-+		been present before poison injection. Any original data at the
-+		cleared address is permanently lost and replaced with zeros.
-+
-+		CLEAR IS NOT A REPAIR MECHANISM: This interface is for testing
-+		purposes only and should not be used as a data repair tool.
-+		Clearing poison is fundamentally different from data recovery
-+		or error correction.
-+
- What:		/sys/kernel/debug/cxl/einj_types
- Date:		January, 2024
- KernelVersion:	v6.9
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index ed7d08244542..9b4c305e5e5e 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -161,6 +161,10 @@ enum cxl_poison_trace_type {
- 	CXL_POISON_TRACE_CLEAR,
- };
- 
-+enum poison_cmd_enabled_bits;
-+bool cxl_memdev_has_poison_cmd(struct cxl_memdev *cxlmd,
-+			       enum poison_cmd_enabled_bits cmd);
-+
- long cxl_pci_get_latency(struct pci_dev *pdev);
- int cxl_pci_get_bandwidth(struct pci_dev *pdev, struct access_coordinate *c);
- int cxl_update_hmat_access_coordinates(int nid, struct cxl_region *cxlr,
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index 7af626f69ac4..49b518b4c042 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -200,6 +200,14 @@ static ssize_t security_erase_store(struct device *dev,
- static struct device_attribute dev_attr_security_erase =
- 	__ATTR(erase, 0200, NULL, security_erase_store);
- 
-+bool cxl_memdev_has_poison_cmd(struct cxl_memdev *cxlmd,
-+			       enum poison_cmd_enabled_bits cmd)
-+{
-+	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-+
-+	return test_bit(cmd, mds->poison.enabled_cmds);
-+}
-+
- static int cxl_get_poison_by_memdev(struct cxl_memdev *cxlmd)
- {
- 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index d965f07ba8a8..cc26623250bf 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -2,6 +2,7 @@
- /* Copyright(c) 2022 Intel Corporation. All rights reserved. */
- #include <linux/memregion.h>
- #include <linux/genalloc.h>
-+#include <linux/debugfs.h>
- #include <linux/device.h>
- #include <linux/module.h>
- #include <linux/memory.h>
-@@ -2961,9 +2962,8 @@ struct dpa_result {
- 	u64 dpa;
- };
- 
--static int __maybe_unused region_offset_to_dpa_result(struct cxl_region *cxlr,
--						      u64 offset,
--						      struct dpa_result *result)
-+static int region_offset_to_dpa_result(struct cxl_region *cxlr, u64 offset,
-+				       struct dpa_result *result)
- {
- 	struct cxl_region_params *p = &cxlr->params;
- 	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
-@@ -3615,6 +3615,105 @@ static void shutdown_notifiers(void *_cxlr)
- 	unregister_mt_adistance_algorithm(&cxlr->adist_notifier);
- }
- 
-+static void remove_debugfs(void *dentry)
-+{
-+	debugfs_remove_recursive(dentry);
-+}
-+
-+static int validate_region_offset(struct cxl_region *cxlr, u64 offset)
-+{
-+	struct cxl_region_params *p = &cxlr->params;
-+	resource_size_t region_size;
-+	u64 hpa;
-+
-+	if (offset < p->cache_size) {
-+		dev_err(&cxlr->dev,
-+			"Offset %#llx is within extended linear cache %#llx\n",
-+			offset, p->cache_size);
-+		return -EINVAL;
-+	}
-+
-+	region_size = resource_size(p->res);
-+	if (offset >= region_size) {
-+		dev_err(&cxlr->dev, "Offset %#llx exceeds region size %#llx\n",
-+			offset, region_size);
-+		return -EINVAL;
-+	}
-+
-+	hpa = p->res->start + offset;
-+	if (hpa < p->res->start || hpa > p->res->end) {
-+		dev_err(&cxlr->dev, "HPA %#llx not in region %pr\n", hpa,
-+			p->res);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int cxl_region_debugfs_poison_inject(void *data, u64 offset)
-+{
-+	struct dpa_result result = { .dpa = ULLONG_MAX, .cxlmd = NULL };
-+	struct cxl_region *cxlr = data;
-+	int rc;
-+
-+	ACQUIRE(rwsem_read_intr, region_rwsem)(&cxl_rwsem.region);
-+	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &region_rwsem)))
-+		return rc;
-+
-+	ACQUIRE(rwsem_read_intr, dpa_rwsem)(&cxl_rwsem.dpa);
-+	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &dpa_rwsem)))
-+		return rc;
-+
-+	if (validate_region_offset(cxlr, offset))
-+		return -EINVAL;
-+
-+	rc = region_offset_to_dpa_result(cxlr, offset, &result);
-+	if (rc || !result.cxlmd || result.dpa == ULLONG_MAX) {
-+		dev_dbg(&cxlr->dev,
-+			"Failed to resolve DPA for region offset %#llx\n",
-+			offset);
-+
-+		return -EINVAL;
-+	}
-+
-+	return cxl_inject_poison_locked(result.cxlmd, result.dpa);
-+}
-+
-+DEFINE_DEBUGFS_ATTRIBUTE(cxl_poison_inject_fops, NULL,
-+			 cxl_region_debugfs_poison_inject, "%llx\n");
-+
-+static int cxl_region_debugfs_poison_clear(void *data, u64 offset)
-+{
-+	struct dpa_result result = { .dpa = ULLONG_MAX, .cxlmd = NULL };
-+	struct cxl_region *cxlr = data;
-+	int rc;
-+
-+	ACQUIRE(rwsem_read_intr, region_rwsem)(&cxl_rwsem.region);
-+	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &region_rwsem)))
-+		return rc;
-+
-+	ACQUIRE(rwsem_read_intr, dpa_rwsem)(&cxl_rwsem.dpa);
-+	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &dpa_rwsem)))
-+		return rc;
-+
-+	if (validate_region_offset(cxlr, offset))
-+		return -EINVAL;
-+
-+	rc = region_offset_to_dpa_result(cxlr, offset, &result);
-+	if (rc || !result.cxlmd || result.dpa == ULLONG_MAX) {
-+		dev_dbg(&cxlr->dev,
-+			"Failed to resolve DPA for region offset %#llx\n",
-+			offset);
-+
-+		return -EINVAL;
-+	}
-+
-+	return cxl_clear_poison_locked(result.cxlmd, result.dpa);
-+}
-+
-+DEFINE_DEBUGFS_ATTRIBUTE(cxl_poison_clear_fops, NULL,
-+			 cxl_region_debugfs_poison_clear, "%llx\n");
-+
- static int cxl_region_can_probe(struct cxl_region *cxlr)
- {
- 	struct cxl_region_params *p = &cxlr->params;
-@@ -3644,6 +3743,7 @@ static int cxl_region_probe(struct device *dev)
- {
- 	struct cxl_region *cxlr = to_cxl_region(dev);
- 	struct cxl_region_params *p = &cxlr->params;
-+	bool poison_supported = true;
- 	int rc;
- 
- 	rc = cxl_region_can_probe(cxlr);
-@@ -3667,6 +3767,31 @@ static int cxl_region_probe(struct device *dev)
- 	if (rc)
- 		return rc;
- 
-+	/* Create poison attributes if all memdevs support the capabilities */
-+	for (int i = 0; i < p->nr_targets; i++) {
-+		struct cxl_endpoint_decoder *cxled = p->targets[i];
-+		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-+
-+		if (!cxl_memdev_has_poison_cmd(cxlmd, CXL_POISON_ENABLED_INJECT) ||
-+		    !cxl_memdev_has_poison_cmd(cxlmd, CXL_POISON_ENABLED_CLEAR)) {
-+			poison_supported = false;
-+			break;
-+		}
-+	}
-+
-+	if (poison_supported) {
-+		struct dentry *dentry;
-+
-+		dentry = cxl_debugfs_create_dir(dev_name(dev));
-+		debugfs_create_file("inject_poison", 0200, dentry, cxlr,
-+				    &cxl_poison_inject_fops);
-+		debugfs_create_file("clear_poison", 0200, dentry, cxlr,
-+				    &cxl_poison_clear_fops);
-+		rc = devm_add_action_or_reset(dev, remove_debugfs, dentry);
-+		if (rc)
-+			return rc;
-+	}
-+
- 	switch (cxlr->mode) {
- 	case CXL_PARTMODE_PMEM:
- 		rc = devm_cxl_region_edac_register(cxlr);
 -- 
-2.37.3
-
+Fan Ni (From gmail)
