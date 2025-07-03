@@ -1,184 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBBD02D46C3
-	for <linux-cxl@vger.kernel.org>; Thu,  3 Jul 2025 23:22:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E6702BEC27
+	for <linux-cxl@vger.kernel.org>; Thu,  3 Jul 2025 23:27:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751584962; cv=none; b=dmg/C6zvkaby+S7WWwVt3LDq3KuGOipuWAR7kdiS6VAwtM0eJU4i/n/WS8lT8HHBhQIMOqoF+5vn0EIjCMZxjaU8wOQrz/VHY71dLEJM+QP8FU/o72b3ahlO4FnAh91CSNjW0L02V0slrUi4eURgHsR4dTzAQtRhbyPBafKFhR0=
+	t=1751585239; cv=none; b=jhleJcBuzJCFRRGMMplTELDjB6o74zwSQZmAKIUp4Spr40450P0rcxfbAqsLHTEdnx3EP5KQ8I3FoaGIZ/m9qveMgpsOMgLsxZ7BrIxfhVgM6x/g+7SYe34BaE7240HCQhmt8tvuE+QZQ03hIvYZIayqvumGe0ywZOMkQ+q49U4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751584962; c=relaxed/simple;
-	bh=GSugAfGToC1NdrOJdpmKtFiuypdr7IY3evdcAyM7Evc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=smbqSU9h7quwRgxvF8ayXtC3a6wdiDARN0wpd9AS8ZTml18Zt+LDsN2lglZVLZP76ffSSXmsKV5RhwZ38y3Jzew/i/1JhWb+B64DB2JaNF+ia8rDFvse745S8wuZosP1V2bDR5eHSn7TLYXQ2kkxVa18j6xjCapRrugS2JKTrdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=npdoktTR; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="npdoktTR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751584961; x=1783120961;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=GSugAfGToC1NdrOJdpmKtFiuypdr7IY3evdcAyM7Evc=;
-  b=npdoktTRBIERW7KRIC7BggQn1xvzq4HBM6/vQ4baaGWrzWQUE9fLhYZL
-   WR/MhiUcuPZZPb2kItlEN4o/eraZ5yJICbgIlahqhjp2nhiKv7b2FSmJC
-   6PTTj+n+L5RYcHTIR3Tv760K6vIXxCkq2nftdzg4ZaoEd7Gi/1GffHw23
-   QD2Y+AHkuvzaQW6paIRc38lx7YzM0JBPF0ZdYUxnbaNbdBhYNTRfma9kC
-   /bRWmWYTtoFMPOHNKlPXMENZYgJrEXi7wJMkE08d0AGKHgh86dfit5knn
-   pQEE/K8/a9/9IMRVUvSU9EG32YnyJ49uswO6qjJ12AeKu9+zdWVoSDc1f
-   Q==;
-X-CSE-ConnectionGUID: 40njt+r6THGCFKnsdbATEA==
-X-CSE-MsgGUID: M9WlTWy7R+qcsKojtAPGPg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="54039215"
-X-IronPort-AV: E=Sophos;i="6.16,285,1744095600"; 
-   d="scan'208";a="54039215"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 16:22:41 -0700
-X-CSE-ConnectionGUID: o7+0rCFNT7mCq+jJu67tFg==
-X-CSE-MsgGUID: tPgPeatSTcmsZUNBDjPtrQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,285,1744095600"; 
-   d="scan'208";a="158769062"
-Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.110.32]) ([10.125.110.32])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 16:22:39 -0700
-Message-ID: <c6b30b4a-e06d-4800-aada-d895989dfcab@intel.com>
-Date: Thu, 3 Jul 2025 16:22:38 -0700
+	s=arc-20240116; t=1751585239; c=relaxed/simple;
+	bh=+sKapPRbJZEY2fF1jJLd4xtm3KKKeSM6XoOMXnV8OgU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tI5srGQ6pfiS5xBEPUr/UWi056ch9K8V4Ismj91SX3K84uw5qxzDoxBbTHSZDnvZQk2dP7s+rkzY8dn8tTlE/jOmp8nSGVZpp5kdejR+tIHUh5tEVpVXrTC1lTfXTvG7EzH6K0oDF3OmlBaVQ/Q4dKC3Jkr/1Xoc50mtSR1d0Lc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C0F3C4CEE3;
+	Thu,  3 Jul 2025 23:27:16 +0000 (UTC)
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org
+Cc: dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com,
+	Gregory Price <gourry@gourry.net>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Li Ming <ming.li@zohomail.com>
+Subject: [PATCH v5 00/10] cxl: Delay HB port and switch dport probing until endpoint dev probe
+Date: Thu,  3 Jul 2025 16:27:00 -0700
+Message-ID: <20250703232710.3141436-1-dave.jiang@intel.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 9/9] cxl: Move enumeration of hostbridge ports to the
- memdev probe path
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net, alison.schofield@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
- rrichter@amd.com
-References: <20250624213916.1665889-1-dave.jiang@intel.com>
- <20250624213916.1665889-10-dave.jiang@intel.com>
- <20250701123257.000055a2@huawei.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250701123257.000055a2@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+
+v5:
+- Return dport instead of errno with dport pointer as output param. (Jonathan)
+- Consolidate common code in cxl_test. (Jonathan)
+- Rename cxl_port_get_total_dports() to cxl_port_update_total_dports(). (Jonathan)
+
+v4:
+- Push dport allocation to when they are discovered. (Robert)
+- Drop linux id for dport with above changes.
+
+v3:
+- Main changes revolve around improving naming of hostbridge uport and dport (Gregory)
+- See specific patches for detailed change log
+
+This series attempts to delay the allocation of dports until when the endpoint device
+(memdev) are being probed. At this point, the CXL link is established and all the
+devices along the CXL link path up to the Root Port (RP) should be active.
+
+And hopefully this help a bit with Robert's issue raised in the "Inactive
+downstream port handling" series [1]. Testing would be appreicated. Thank you!
+
+[1]: https://lore.kernel.org/linux-cxl/67c8a0cc23ec_24b64294f6@dwillia2-xfh.jf.intel.com.notmuch/
+
+Dave Jiang (10):
+  cxl/region: Add decoder check to check_commit_order()
+  cxl: Add helper to detect top of CXL device topology
+  cxl: Add helper to reap dport
+  cxl: Defer dport allocation for switch ports
+  cxl/test: Add cxl_test support for cxl_port_update_total_ports()
+  cxl/test: Add mock version of devm_cxl_add_dport_by_dev()
+  cxl: Change sslbis handler to only handle single dport
+  cxl: Create an xarray to tie a host bridge to the cxl_root
+  cxl: Move enumeration of hostbridge ports to the memdev probe path
+  cxl: Remove devm_cxl_port_enumerate_dports() that is no longer used
+
+ drivers/cxl/acpi.c                   | 137 ++++++-----
+ drivers/cxl/core/cdat.c              |  23 +-
+ drivers/cxl/core/pci.c               | 146 +++++++-----
+ drivers/cxl/core/port.c              | 344 +++++++++++++++++++++++++--
+ drivers/cxl/core/region.c            |   7 +-
+ drivers/cxl/cxl.h                    |  32 ++-
+ drivers/cxl/cxlpci.h                 |   1 -
+ drivers/cxl/port.c                   |   8 +-
+ tools/testing/cxl/Kbuild             |   3 +-
+ tools/testing/cxl/cxl_core_exports.c |  12 +
+ tools/testing/cxl/exports.h          |  10 +
+ tools/testing/cxl/test/cxl.c         |  67 +++++-
+ tools/testing/cxl/test/mock.c        |  31 ++-
+ tools/testing/cxl/test/mock.h        |   4 +-
+ 14 files changed, 651 insertions(+), 174 deletions(-)
+ create mode 100644 tools/testing/cxl/exports.h
 
 
-
-On 7/1/25 4:32 AM, Jonathan Cameron wrote:
-> On Tue, 24 Jun 2025 14:39:16 -0700
-> Dave Jiang <dave.jiang@intel.com> wrote:
-> 
->> Current enuemration scheme in cxl_acpi module creates the ports under the
->> root port by enumerating the hostbridges after the dports under the root
->> port is created. However error messages "cxl portN: Couldn't locate the
->> CXL.cache and CXL.mem capability array header" is observed when certain
->> platform has PCIe hotplug option turned on in BIOS. If the cxl_acpi module
->> probe is running before the CXL link between the endpoint device and the
->> RP is established, then the platform may not have exposed DVSEC ID 3 and/or
->> DVSEC ID 7 blocks which will trigger the error message. This behavior
->> is defined by the spec and not a hardware quirk.
->>
->> Setup an association in cxl_port to tie the host bridge device to the
->> associated cxl_root. The cxl_root provides a callback that's setup
->> by the cxl_acpi probe function in order to create a port per host bridge
->> that was previously done during cxl_acpi probe. Add the calling of the
->> callback in devm_cxl_enumerate_ports(). The observed behavior is that
->> ports that are not connected to endpoint device(s) are no longer
->> enumerated. This should also remove any excessive noise of port probe
->> failing on those inactive ports.
->>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->> v4:
->> - Reworked against new delayed dport allocation mechanism
-> 
-> One comment inline.
-> 
-> This whole things is complex enough I'm not feeling particularly confident
-> in my reviewing - so definitely needs a lot more eyes.  With that in mind.
-> 
-> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> 
->> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
->> index 20d2f834bf94..b1d19c609dde 100644
->> --- a/drivers/cxl/core/port.c
->> +++ b/drivers/cxl/core/port.c
-> 
->> +
->> +static int cxl_hostbridge_port_setup(struct cxl_memdev *cxlmd)
->> +{
->> +	struct device *hb_uport_dev, *hb_dport_dev;
->> +	struct cxl_dport *dport;
->> +	int rc;
->> +
->> +	rc = get_hostbridge_port_devices(cxlmd, &hb_uport_dev, &hb_dport_dev);
->> +	if (rc)
->> +		return -ENODEV;
->> +
->> +	struct cxl_root *cxl_root __free(put_cxl_root) =
->> +		cxl_hb_uport_dev_to_root(hb_uport_dev);
->> +	if (!cxl_root)
->> +		return -ENODEV;
->> +
->> +	guard(device)(&cxl_root->port.dev);
->> +	struct cxl_port *port __free(put_cxl_port) =
->> +		find_cxl_port(hb_dport_dev, &dport);
-> 
-> I'm not certain that there isn't a path to dport being uninitialized
-> if !port.  Maybe we always get passed the early checks in match_port_by_dport()
-> at least once.  Event if it is safe, I suspect we might get false positive
-> reports as a compiler or static analysis tool is going to struggle to figure
-> that out.
-
-I'm not quite sure I understand what you are saying here.
-
-DJ
-
-> 
-> 
->> +	if (!port)
->> +		port = find_cxl_port_by_uport(hb_uport_dev);
->> +
->> +	/* Port already established, add the associated dport if needed. */
->> +	if (port) {
->> +		if (dport)
->> +			return 0;
->> +
->> +		guard(device)(&port->dev);
->> +		return devm_cxl_port_add_dport(port, hb_dport_dev, &dport);
->> +	}
->> +
->> +	/* No port found, setup a port via the root port ops */
->> +	if (!cxl_root->ops || !cxl_root->ops->setup_hostbridge_uport)
->> +		return -EOPNOTSUPP;
->> +
->> +	rc = cxl_root->ops->setup_hostbridge_uport(cxl_root, hb_uport_dev);
->> +	if (rc)
->> +		return rc;
->> +
->> +	/* Add the dport that goes with the newly created port */
->> +	return devm_cxl_add_dport_by_uport(hb_uport_dev, hb_dport_dev, &dport);
->> +}
->> +
->>  int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
->>  {
->>  	struct device *dev = &cxlmd->dev;
->> @@ -1826,6 +1889,10 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
->>  	if (cxlmd->cxlds->rcd)
->>  		return 0;
->>  
->> +	rc = cxl_hostbridge_port_setup(cxlmd);
->> +	if (rc)
->> +		return rc;
->> +
->>  	rc = devm_add_action_or_reset(&cxlmd->dev, cxl_detach_ep, cxlmd);
->>  	if (rc)
->>  		return rc;
-> 
-> 
+base-commit: 9c5718dca6390711ddebce75ab298f81e3d0e058
+-- 
+2.50.0
 
