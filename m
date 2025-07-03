@@ -1,270 +1,406 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54EBC2D3757
-	for <linux-cxl@vger.kernel.org>; Thu,  3 Jul 2025 23:27:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DEEB29C351
+	for <linux-cxl@vger.kernel.org>; Thu,  3 Jul 2025 23:48:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751585251; cv=none; b=sGRPP0IcYXpbSV9PABKeILYl1yjKjwO0Gc4ldGzplJy5W7m0mjmlmk4Zs0GNe9AJqFpLeoBQFejD2aBGIVrbN5or2kyRwm5yfVrA4pIQW2xn/QQX6d6ssr3a3jiBN5dN2nXrHr1YSdCTV0GJWeS9/xxFU+C1hQ3JwL65Jq34lzU=
+	t=1751586507; cv=none; b=X3mTFeXovy1hcNMQZCmwBdc8/asLtBcZkPnpIppnHC1o6UAjURIWJP3CvxQ6aAEqtkhtgCyCEEwu5SlGJHOomVsNZyyuxT9WjG0skKB2T6pGc/hz17C1mpOodkcpUMqaEhotODswNL6Y+FpqWKu+jyMS72GIAk6TQS1Ez5HPqN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751585251; c=relaxed/simple;
-	bh=v/VY0C2IRQ/NMoYUO73aBM3MLfCyuVn00FKC6/li3cI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JCqdnCmLX7gjlBBu9j41D3ITrRrsSfxEokamX2vj+jRiA5lQoLMQcp77dYhKhG7zFj/QKR22yjbHq3pEEoduZuFm0xJOtZjfQj+a88CJrUkCJrsXwi7JjKlPxeQz3QX4XMc1NYszt6A9m+FXRiycQSsQUl7sfU4aLxrktM0Gb3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1620C4CEE3;
-	Thu,  3 Jul 2025 23:27:30 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Subject: [PATCH v5 10/10] cxl: Remove devm_cxl_port_enumerate_dports() that is no longer used
-Date: Thu,  3 Jul 2025 16:27:10 -0700
-Message-ID: <20250703232710.3141436-11-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <20250703232710.3141436-1-dave.jiang@intel.com>
-References: <20250703232710.3141436-1-dave.jiang@intel.com>
+	s=arc-20240116; t=1751586507; c=relaxed/simple;
+	bh=PDF3n95eGqyBSfyHPTdME2ngqsMoKAxASyeWq3AoGRY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ux21XaIbXdJXzMWCJm8XhagAnUpTR1RhhcynMHeF5hrbJx5ny/A+PCNrPLxFqHebpzuzscrcnaIvTb9J3+aIh/0G+e3wCA0g+wN2Q8RnM0qor/e47t+9qcAYagbVJEah/MpaULhmEiTCoXd0fSstD0IGqLm81+2pf7SG482sjNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DL+Ne4gG; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DL+Ne4gG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751586505; x=1783122505;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=PDF3n95eGqyBSfyHPTdME2ngqsMoKAxASyeWq3AoGRY=;
+  b=DL+Ne4gG8fRKXIQGMYRwjYrqU2sV4jzM0kFtRic3OrIXbULOXrgF1AMZ
+   rc6Zt7wfh0K68MgCfG5UYVh+gaYCMPzqtNY5X+FadvnjOnSsxgFCgjaiC
+   haM2H6t2KJSvHFvxOJKCGm1Nqu+AGHeIUDXSSgOQMvi5hRDnOK3i63X10
+   JXWZC5mgy8Y54M92Xmf1hJERbOHRPRlAgHKmfpykkhisOt9UI9zaUBSxb
+   aTPe+fUEV+D5BGYXA3vvdxY3hvUwItwzt3esGwwUKBqcLT3dZGGaSZioV
+   K/BdMYJf/NDtHjlBHO0S0jdtZn+H8K58wUNKZD0oDkrJI0CgLArhAoBCt
+   Q==;
+X-CSE-ConnectionGUID: 5IU+giJdT/u0cHYPRv9UFg==
+X-CSE-MsgGUID: 6NrOPIAQTauhXMrlOg+JOQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="79362131"
+X-IronPort-AV: E=Sophos;i="6.16,285,1744095600"; 
+   d="scan'208";a="79362131"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 16:48:24 -0700
+X-CSE-ConnectionGUID: K+mGyxffS2SGg/dZh6nO8w==
+X-CSE-MsgGUID: rCj8pUJuSYKs3N0NYGY8EQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,285,1744095600"; 
+   d="scan'208";a="160021401"
+Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.110.32]) ([10.125.110.32])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 16:48:24 -0700
+Message-ID: <02deafde-3762-43ff-8eb3-1f32449c851c@intel.com>
+Date: Thu, 3 Jul 2025 16:48:21 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] cxl: Remove core/acpi.c and cxl core dependency on
+ ACPI
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com
+References: <20250610172938.139428-1-dave.jiang@intel.com>
+ <aGWcNpaRup9MkFm7@aschofie-mobl2.lan>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <aGWcNpaRup9MkFm7@aschofie-mobl2.lan>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Delete function devm_cxl_port_enumerate_dports() which is no longer being
-used anywhere. Also remove cxl_test support.
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- drivers/cxl/core/pci.c        | 87 ++++-------------------------------
- drivers/cxl/cxlpci.h          |  1 -
- tools/testing/cxl/Kbuild      |  1 -
- tools/testing/cxl/test/cxl.c  | 31 -------------
- tools/testing/cxl/test/mock.c | 15 ------
- tools/testing/cxl/test/mock.h |  1 -
- 6 files changed, 8 insertions(+), 128 deletions(-)
 
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index 5594b0fcddb0..717e25131db7 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -63,85 +63,6 @@ struct cxl_dport *__devm_cxl_add_dport_by_dev(struct cxl_port *port,
- }
- EXPORT_SYMBOL_NS_GPL(__devm_cxl_add_dport_by_dev, "CXL");
- 
--struct cxl_walk_context {
--	struct pci_bus *bus;
--	struct cxl_port *port;
--	int type;
--	int error;
--	int count;
--};
--
--static int match_add_dports(struct pci_dev *pdev, void *data)
--{
--	struct cxl_walk_context *ctx = data;
--	struct cxl_port *port = ctx->port;
--	int type = pci_pcie_type(pdev);
--	struct cxl_register_map map;
--	struct cxl_dport *dport;
--	u32 lnkcap, port_num;
--	int rc;
--
--	if (pdev->bus != ctx->bus)
--		return 0;
--	if (!pci_is_pcie(pdev))
--		return 0;
--	if (type != ctx->type)
--		return 0;
--	if (pci_read_config_dword(pdev, pci_pcie_cap(pdev) + PCI_EXP_LNKCAP,
--				  &lnkcap))
--		return 0;
--
--	rc = cxl_find_regblock(pdev, CXL_REGLOC_RBI_COMPONENT, &map);
--	if (rc)
--		dev_dbg(&port->dev, "failed to find component registers\n");
--
--	port_num = FIELD_GET(PCI_EXP_LNKCAP_PN, lnkcap);
--	dport = devm_cxl_add_dport(port, &pdev->dev, port_num, map.resource);
--	if (IS_ERR(dport)) {
--		ctx->error = PTR_ERR(dport);
--		return PTR_ERR(dport);
--	}
--	ctx->count++;
--
--	return 0;
--}
--
--/**
-- * devm_cxl_port_enumerate_dports - enumerate downstream ports of the upstream port
-- * @port: cxl_port whose ->uport_dev is the upstream of dports to be enumerated
-- *
-- * Returns a positive number of dports enumerated or a negative error
-- * code.
-- */
--int devm_cxl_port_enumerate_dports(struct cxl_port *port)
--{
--	struct pci_bus *bus = cxl_port_to_pci_bus(port);
--	struct cxl_walk_context ctx;
--	int type;
--
--	if (!bus)
--		return -ENXIO;
--
--	if (pci_is_root_bus(bus))
--		type = PCI_EXP_TYPE_ROOT_PORT;
--	else
--		type = PCI_EXP_TYPE_DOWNSTREAM;
--
--	ctx = (struct cxl_walk_context) {
--		.port = port,
--		.bus = bus,
--		.type = type,
--	};
--	pci_walk_bus(bus, match_add_dports, &ctx);
--
--	if (ctx.count == 0)
--		return -ENODEV;
--	if (ctx.error)
--		return ctx.error;
--	return ctx.count;
--}
--EXPORT_SYMBOL_NS_GPL(devm_cxl_port_enumerate_dports, "CXL");
--
- static int cxl_dvsec_mem_range_valid(struct cxl_dev_state *cxlds, int id)
- {
- 	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
-@@ -1209,6 +1130,14 @@ int cxl_gpf_port_setup(struct cxl_dport *dport)
- 	return 0;
- }
- 
-+struct cxl_walk_context {
-+	struct pci_bus *bus;
-+	struct cxl_port *port;
-+	int type;
-+	int error;
-+	int count;
-+};
-+
- static int match_dport(struct pci_dev *pdev, void *data)
- {
- 	struct cxl_walk_context *ctx = data;
-diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-index 54e219b0049e..7827a183128d 100644
---- a/drivers/cxl/cxlpci.h
-+++ b/drivers/cxl/cxlpci.h
-@@ -127,7 +127,6 @@ static inline bool cxl_pci_flit_256(struct pci_dev *pdev)
- 	return lnksta2 & PCI_EXP_LNKSTA2_FLIT;
- }
- 
--int devm_cxl_port_enumerate_dports(struct cxl_port *port);
- struct cxl_dev_state;
- int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
- 			struct cxl_endpoint_dvsec_info *info);
-diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-index d8c5f7df4866..4e3597d4ee9c 100644
---- a/tools/testing/cxl/Kbuild
-+++ b/tools/testing/cxl/Kbuild
-@@ -4,7 +4,6 @@ ldflags-y += --wrap=is_acpi_device_node
- ldflags-y += --wrap=acpi_evaluate_integer
- ldflags-y += --wrap=acpi_pci_find_root
- ldflags-y += --wrap=nvdimm_bus_register
--ldflags-y += --wrap=devm_cxl_port_enumerate_dports
- ldflags-y += --wrap=cxl_port_update_total_dports
- ldflags-y += --wrap=devm_cxl_setup_hdm
- ldflags-y += --wrap=devm_cxl_add_passthrough_decoder
-diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index 3e9c877fcff2..d52ae0be4941 100644
---- a/tools/testing/cxl/test/cxl.c
-+++ b/tools/testing/cxl/test/cxl.c
-@@ -996,36 +996,6 @@ static int mock_cxl_port_update_total_dports(struct cxl_port *port)
- 	return 0;
- }
- 
--static int mock_cxl_port_enumerate_dports(struct cxl_port *port)
--{
--	struct platform_device **array;
--	int rc, i, array_size;
--
--	rc = get_port_array(port, &array, &array_size);
--	if (rc)
--		return rc;
--
--	for (i = 0; i < array_size; i++) {
--		struct platform_device *pdev = array[i];
--		struct cxl_dport *dport;
--
--		if (pdev->dev.parent != port->uport_dev) {
--			dev_dbg(&port->dev, "%s: mismatch parent %s\n",
--				dev_name(port->uport_dev),
--				dev_name(pdev->dev.parent));
--			continue;
--		}
--
--		dport = devm_cxl_add_dport(port, &pdev->dev, pdev->id,
--					   CXL_RESOURCE_NONE);
--
--		if (IS_ERR(dport))
--			return PTR_ERR(dport);
--	}
--
--	return 0;
--}
--
- static struct cxl_dport *mock_cxl_add_dport_by_dev(struct cxl_port *port,
- 						   struct device *dport_dev)
- {
-@@ -1112,7 +1082,6 @@ static struct cxl_mock_ops cxl_mock_ops = {
- 	.acpi_table_parse_cedt = mock_acpi_table_parse_cedt,
- 	.acpi_evaluate_integer = mock_acpi_evaluate_integer,
- 	.acpi_pci_find_root = mock_acpi_pci_find_root,
--	.devm_cxl_port_enumerate_dports = mock_cxl_port_enumerate_dports,
- 	.cxl_port_update_total_dports = mock_cxl_port_update_total_dports,
- 	.devm_cxl_setup_hdm = mock_cxl_setup_hdm,
- 	.devm_cxl_add_passthrough_decoder = mock_cxl_add_passthrough_decoder,
-diff --git a/tools/testing/cxl/test/mock.c b/tools/testing/cxl/test/mock.c
-index 3c7190b7d5a4..8bb90d732332 100644
---- a/tools/testing/cxl/test/mock.c
-+++ b/tools/testing/cxl/test/mock.c
-@@ -188,21 +188,6 @@ int __wrap_devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
- }
- EXPORT_SYMBOL_NS_GPL(__wrap_devm_cxl_enumerate_decoders, "CXL");
- 
--int __wrap_devm_cxl_port_enumerate_dports(struct cxl_port *port)
--{
--	int rc, index;
--	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
--
--	if (ops && ops->is_mock_port(port->uport_dev))
--		rc = ops->devm_cxl_port_enumerate_dports(port);
--	else
--		rc = devm_cxl_port_enumerate_dports(port);
--	put_cxl_mock_ops(index);
--
--	return rc;
--}
--EXPORT_SYMBOL_NS_GPL(__wrap_devm_cxl_port_enumerate_dports, "CXL");
--
- int __wrap_cxl_port_update_total_dports(struct cxl_port *port)
- {
- 	int rc, index;
-diff --git a/tools/testing/cxl/test/mock.h b/tools/testing/cxl/test/mock.h
-index 0a440b9f544c..4d262a38dd51 100644
---- a/tools/testing/cxl/test/mock.h
-+++ b/tools/testing/cxl/test/mock.h
-@@ -19,7 +19,6 @@ struct cxl_mock_ops {
- 	bool (*is_mock_bus)(struct pci_bus *bus);
- 	bool (*is_mock_port)(struct device *dev);
- 	bool (*is_mock_dev)(struct device *dev);
--	int (*devm_cxl_port_enumerate_dports)(struct cxl_port *port);
- 	int (*cxl_port_update_total_dports)(struct cxl_port *port);
- 	struct cxl_hdm *(*devm_cxl_setup_hdm)(
- 		struct cxl_port *port, struct cxl_endpoint_dvsec_info *info);
--- 
-2.50.0
+On 7/2/25 1:53 PM, Alison Schofield wrote:
+> On Tue, Jun 10, 2025 at 10:29:38AM -0700, Dave Jiang wrote:
+>> It was a mistake to introduce core/acpi.c and putting ACPI dependency on
+>> cxl_core when adding the extended linear cache support. Add a callback
+>> in the cxl_root_decoder to retrieve the extended linear cache size from
+>> ACPI via the cxl_acpi driver.
+> 
+> I see the introduction of struct cxl_rd_ops and am wondering why
+> the other existing root decoder callback is not added to that
+> new grouping...
+> * @hpa_to_spa: translate CXL host-physical-address to Platform system-physical-address
+> 
+> Seems it can join that _ops group with some updates at the call site.
+> BTW - another root decoder callback is in the works for the inverse
+> spa_to_hpa, so that'll join your ops group too.
+
+Will create a follow on patch for this.
+DJ
+> 
+> If you don't want to do that now, or it's not a fit, you can add:
+> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+> 
+> Otherwise, I'll review and tag a v4.
+> 
+>>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>> v3:
+>> - Remove commit log paragraph on adding extra dev parameter. (Jonathan)
+>> - Add device ref put. (Jonathan)
+>> - Adjust var declaration. (Jonathan)
+>> - Move callback assignment to same group. (Jonathan)
+>> ---
+>>  drivers/cxl/acpi.c            | 13 +++++++++++-
+>>  drivers/cxl/core/Makefile     |  1 -
+>>  drivers/cxl/core/acpi.c       | 11 ----------
+>>  drivers/cxl/core/core.h       |  2 --
+>>  drivers/cxl/core/port.c       |  5 ++++-
+>>  drivers/cxl/core/region.c     |  5 ++++-
+>>  drivers/cxl/cxl.h             | 10 ++++++++-
+>>  tools/testing/cxl/Kbuild      |  2 +-
+>>  tools/testing/cxl/test/cxl.c  | 40 +++++++++++++++++++++++++++++++++++
+>>  tools/testing/cxl/test/mock.c | 19 +++++++++++++++++
+>>  tools/testing/cxl/test/mock.h |  3 +++
+>>  11 files changed, 92 insertions(+), 19 deletions(-)
+>>  delete mode 100644 drivers/cxl/core/acpi.c
+>>
+>> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+>> index a1a99ec3f12c..48478bc406ee 100644
+>> --- a/drivers/cxl/acpi.c
+>> +++ b/drivers/cxl/acpi.c
+>> @@ -335,6 +335,17 @@ static int add_or_reset_cxl_resource(struct resource *parent, struct resource *r
+>>  	return rc;
+>>  }
+>>  
+>> +static int cxl_acpi_get_extended_linear_cache_size(struct resource *backing_res,
+>> +						   int nid,
+>> +						   resource_size_t *size)
+>> +{
+>> +	return hmat_get_extended_linear_cache_size(backing_res, nid, size);
+>> +}
+>> +
+>> +static const struct cxl_rd_ops acpi_rd_ops = {
+>> +	.get_extended_linear_cache_size = cxl_acpi_get_extended_linear_cache_size,
+>> +};
+>> +
+>>  DEFINE_FREE(put_cxlrd, struct cxl_root_decoder *,
+>>  	    if (!IS_ERR_OR_NULL(_T)) put_device(&_T->cxlsd.cxld.dev))
+>>  DEFINE_FREE(del_cxl_resource, struct resource *, if (_T) del_cxl_resource(_T))
+>> @@ -373,7 +384,7 @@ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
+>>  		return rc;
+>>  
+>>  	struct cxl_root_decoder *cxlrd __free(put_cxlrd) =
+>> -		cxl_root_decoder_alloc(root_port, ways);
+>> +		cxl_root_decoder_alloc(root_port, ways, &acpi_rd_ops);
+>>  
+>>  	if (IS_ERR(cxlrd))
+>>  		return PTR_ERR(cxlrd);
+>> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+>> index 79e2ef81fde8..5ad8fef210b5 100644
+>> --- a/drivers/cxl/core/Makefile
+>> +++ b/drivers/cxl/core/Makefile
+>> @@ -15,7 +15,6 @@ cxl_core-y += hdm.o
+>>  cxl_core-y += pmu.o
+>>  cxl_core-y += cdat.o
+>>  cxl_core-y += ras.o
+>> -cxl_core-y += acpi.o
+>>  cxl_core-$(CONFIG_TRACING) += trace.o
+>>  cxl_core-$(CONFIG_CXL_REGION) += region.o
+>>  cxl_core-$(CONFIG_CXL_MCE) += mce.o
+>> diff --git a/drivers/cxl/core/acpi.c b/drivers/cxl/core/acpi.c
+>> deleted file mode 100644
+>> index f13b4dae6ac5..000000000000
+>> --- a/drivers/cxl/core/acpi.c
+>> +++ /dev/null
+>> @@ -1,11 +0,0 @@
+>> -// SPDX-License-Identifier: GPL-2.0-only
+>> -/* Copyright(c) 2024 Intel Corporation. All rights reserved. */
+>> -#include <linux/acpi.h>
+>> -#include "cxl.h"
+>> -#include "core.h"
+>> -
+>> -int cxl_acpi_get_extended_linear_cache_size(struct resource *backing_res,
+>> -					    int nid, resource_size_t *size)
+>> -{
+>> -	return hmat_get_extended_linear_cache_size(backing_res, nid, size);
+>> -}
+>> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+>> index 29b61828a847..9462aea9ce9d 100644
+>> --- a/drivers/cxl/core/core.h
+>> +++ b/drivers/cxl/core/core.h
+>> @@ -120,8 +120,6 @@ int cxl_port_get_switch_dport_bandwidth(struct cxl_port *port,
+>>  int cxl_ras_init(void);
+>>  void cxl_ras_exit(void);
+>>  int cxl_gpf_port_setup(struct cxl_dport *dport);
+>> -int cxl_acpi_get_extended_linear_cache_size(struct resource *backing_res,
+>> -					    int nid, resource_size_t *size);
+>>  
+>>  #ifdef CONFIG_CXL_FEATURES
+>>  struct cxl_feat_entry *
+>> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+>> index eb46c6764d20..cbb9c5a3c309 100644
+>> --- a/drivers/cxl/core/port.c
+>> +++ b/drivers/cxl/core/port.c
+>> @@ -1793,6 +1793,7 @@ static int cxl_switch_decoder_init(struct cxl_port *port,
+>>   * cxl_root_decoder_alloc - Allocate a root level decoder
+>>   * @port: owning CXL root of this decoder
+>>   * @nr_targets: static number of downstream targets
+>> + * @ops: root decoder callback operations
+>>   *
+>>   * Return: A new cxl decoder to be registered by cxl_decoder_add(). A
+>>   * 'CXL root' decoder is one that decodes from a top-level / static platform
+>> @@ -1800,7 +1801,8 @@ static int cxl_switch_decoder_init(struct cxl_port *port,
+>>   * topology.
+>>   */
+>>  struct cxl_root_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
+>> -						unsigned int nr_targets)
+>> +						unsigned int nr_targets,
+>> +						const struct cxl_rd_ops *ops)
+>>  {
+>>  	struct cxl_root_decoder *cxlrd;
+>>  	struct cxl_switch_decoder *cxlsd;
+>> @@ -1839,6 +1841,7 @@ struct cxl_root_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
+>>  
+>>  	atomic_set(&cxlrd->region_id, rc);
+>>  	cxlrd->qos_class = CXL_QOS_CLASS_INVALID;
+>> +	cxlrd->ops = ops;
+>>  	return cxlrd;
+>>  }
+>>  EXPORT_SYMBOL_NS_GPL(cxl_root_decoder_alloc, "CXL");
+>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>> index 6e5e1460068d..0a5effbc0529 100644
+>> --- a/drivers/cxl/core/region.c
+>> +++ b/drivers/cxl/core/region.c
+>> @@ -3287,7 +3287,10 @@ static int cxl_extended_linear_cache_resize(struct cxl_region *cxlr,
+>>  	resource_size_t cache_size, start;
+>>  	int rc;
+>>  
+>> -	rc = cxl_acpi_get_extended_linear_cache_size(res, nid, &cache_size);
+>> +	if (!cxlrd->ops || !cxlrd->ops->get_extended_linear_cache_size)
+>> +		return -EOPNOTSUPP;
+>> +
+>> +	rc = cxlrd->ops->get_extended_linear_cache_size(res, nid, &cache_size);
+>>  	if (rc)
+>>  		return rc;
+>>  
+>> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+>> index 3f1695c96abc..9a17e8beca7a 100644
+>> --- a/drivers/cxl/cxl.h
+>> +++ b/drivers/cxl/cxl.h
+>> @@ -420,6 +420,11 @@ struct cxl_switch_decoder {
+>>  struct cxl_root_decoder;
+>>  typedef u64 (*cxl_hpa_to_spa_fn)(struct cxl_root_decoder *cxlrd, u64 hpa);
+>>  
+>> +struct cxl_rd_ops {
+>> +	int (*get_extended_linear_cache_size)(struct resource *backing_res,
+>> +					      int nid, resource_size_t *size);
+>> +};
+>> +
+>>  /**
+>>   * struct cxl_root_decoder - Static platform CXL address decoder
+>>   * @res: host / parent resource for region allocations
+>> @@ -428,6 +433,7 @@ typedef u64 (*cxl_hpa_to_spa_fn)(struct cxl_root_decoder *cxlrd, u64 hpa);
+>>   * @platform_data: platform specific configuration data
+>>   * @range_lock: sync region autodiscovery by address range
+>>   * @qos_class: QoS performance class cookie
+>> + * @ops: root decoder specific operations
+>>   * @cxlsd: base cxl switch decoder
+>>   */
+>>  struct cxl_root_decoder {
+>> @@ -437,6 +443,7 @@ struct cxl_root_decoder {
+>>  	void *platform_data;
+>>  	struct mutex range_lock;
+>>  	int qos_class;
+>> +	const struct cxl_rd_ops *ops;
+>>  	struct cxl_switch_decoder cxlsd;
+>>  };
+>>  
+>> @@ -775,7 +782,8 @@ bool is_root_decoder(struct device *dev);
+>>  bool is_switch_decoder(struct device *dev);
+>>  bool is_endpoint_decoder(struct device *dev);
+>>  struct cxl_root_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
+>> -						unsigned int nr_targets);
+>> +						unsigned int nr_targets,
+>> +						const struct cxl_rd_ops *ops);
+>>  struct cxl_switch_decoder *cxl_switch_decoder_alloc(struct cxl_port *port,
+>>  						    unsigned int nr_targets);
+>>  int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map);
+>> diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
+>> index 31a2d73c963f..c4fd68db41ba 100644
+>> --- a/tools/testing/cxl/Kbuild
+>> +++ b/tools/testing/cxl/Kbuild
+>> @@ -15,6 +15,7 @@ ldflags-y += --wrap=devm_cxl_add_rch_dport
+>>  ldflags-y += --wrap=cxl_rcd_component_reg_phys
+>>  ldflags-y += --wrap=cxl_endpoint_parse_cdat
+>>  ldflags-y += --wrap=cxl_dport_init_ras_reporting
+>> +ldflags-y += --wrap=hmat_get_extended_linear_cache_size
+>>  
+>>  DRIVERS := ../../../drivers
+>>  CXL_SRC := $(DRIVERS)/cxl
+>> @@ -62,7 +63,6 @@ cxl_core-y += $(CXL_CORE_SRC)/hdm.o
+>>  cxl_core-y += $(CXL_CORE_SRC)/pmu.o
+>>  cxl_core-y += $(CXL_CORE_SRC)/cdat.o
+>>  cxl_core-y += $(CXL_CORE_SRC)/ras.o
+>> -cxl_core-y += $(CXL_CORE_SRC)/acpi.o
+>>  cxl_core-$(CONFIG_TRACING) += $(CXL_CORE_SRC)/trace.o
+>>  cxl_core-$(CONFIG_CXL_REGION) += $(CXL_CORE_SRC)/region.o
+>>  cxl_core-$(CONFIG_CXL_MCE) += $(CXL_CORE_SRC)/mce.o
+>> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+>> index 8a5815ca870d..c0eb95632062 100644
+>> --- a/tools/testing/cxl/test/cxl.c
+>> +++ b/tools/testing/cxl/test/cxl.c
+>> @@ -470,6 +470,44 @@ struct cxl_cedt_context {
+>>  	struct device *dev;
+>>  };
+>>  
+>> +static int match_root_decoder_by_range(struct device *dev, const void *data)
+>> +{
+>> +	struct cxl_root_decoder *cxlrd;
+>> +	const struct range *r2 = data;
+>> +	const struct range *r1;
+>> +
+>> +	if (!is_root_decoder(dev))
+>> +		return 0;
+>> +
+>> +	cxlrd = to_cxl_root_decoder(dev);
+>> +	r1 = &cxlrd->cxlsd.cxld.hpa_range;
+>> +	return range_contains(r1, r2);
+>> +}
+>> +
+>> +static int mock_hmat_get_extended_linear_cache_size(struct resource *backing_res,
+>> +						    int nid, resource_size_t *size)
+>> +{
+>> +	struct range backing_range = {
+>> +		.start = backing_res->start,
+>> +		.end = backing_res->end,
+>> +	};
+>> +	struct cxl_decoder *cxld;
+>> +	struct cxl_port *port;
+>> +
+>> +	struct device *dev __free(put_device) =
+>> +		bus_find_device(&cxl_bus_type, NULL, &backing_range,
+>> +				match_root_decoder_by_range);
+>> +	if (!dev)
+>> +		return -ENODEV;
+>> +
+>> +	cxld = to_cxl_decoder(dev);
+>> +	port = to_cxl_port(cxld->dev.parent);
+>> +	if (is_mock_dev(port->uport_dev))
+>> +		return -EOPNOTSUPP;
+>> +
+>> +	return hmat_get_extended_linear_cache_size(backing_res, nid, size);
+>> +}
+>> +
+>>  static int mock_acpi_table_parse_cedt(enum acpi_cedt_type id,
+>>  				      acpi_tbl_entry_handler_arg handler_arg,
+>>  				      void *arg)
+>> @@ -1039,6 +1077,8 @@ static struct cxl_mock_ops cxl_mock_ops = {
+>>  	.devm_cxl_add_passthrough_decoder = mock_cxl_add_passthrough_decoder,
+>>  	.devm_cxl_enumerate_decoders = mock_cxl_enumerate_decoders,
+>>  	.cxl_endpoint_parse_cdat = mock_cxl_endpoint_parse_cdat,
+>> +	.hmat_get_extended_linear_cache_size =
+>> +		mock_hmat_get_extended_linear_cache_size,
+>>  	.list = LIST_HEAD_INIT(cxl_mock_ops.list),
+>>  };
+>>  
+>> diff --git a/tools/testing/cxl/test/mock.c b/tools/testing/cxl/test/mock.c
+>> index 1989ae020df3..ec8fc4a44073 100644
+>> --- a/tools/testing/cxl/test/mock.c
+>> +++ b/tools/testing/cxl/test/mock.c
+>> @@ -78,6 +78,25 @@ int __wrap_acpi_table_parse_cedt(enum acpi_cedt_type id,
+>>  }
+>>  EXPORT_SYMBOL_NS_GPL(__wrap_acpi_table_parse_cedt, "ACPI");
+>>  
+>> +int __wrap_hmat_get_extended_linear_cache_size(struct resource *res,
+>> +					       int nid,
+>> +					       resource_size_t *size)
+>> +{
+>> +	int index;
+>> +	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
+>> +	int rc;
+>> +
+>> +	if (ops)
+>> +		rc = ops->hmat_get_extended_linear_cache_size(res, nid, size);
+>> +	else
+>> +		rc = hmat_get_extended_linear_cache_size(res, nid, size);
+>> +
+>> +	put_cxl_mock_ops(index);
+>> +
+>> +	return rc;
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(__wrap_hmat_get_extended_linear_cache_size, "CXL");
+>> +
+>>  acpi_status __wrap_acpi_evaluate_integer(acpi_handle handle,
+>>  					 acpi_string pathname,
+>>  					 struct acpi_object_list *arguments,
+>> diff --git a/tools/testing/cxl/test/mock.h b/tools/testing/cxl/test/mock.h
+>> index d1b0271d2822..469a270ee245 100644
+>> --- a/tools/testing/cxl/test/mock.h
+>> +++ b/tools/testing/cxl/test/mock.h
+>> @@ -26,6 +26,9 @@ struct cxl_mock_ops {
+>>  	int (*devm_cxl_enumerate_decoders)(
+>>  		struct cxl_hdm *hdm, struct cxl_endpoint_dvsec_info *info);
+>>  	void (*cxl_endpoint_parse_cdat)(struct cxl_port *port);
+>> +	int (*hmat_get_extended_linear_cache_size)(struct resource *backing_res,
+>> +						   int nid,
+>> +						   resource_size_t *size);
+>>  };
+>>  
+>>  void register_cxl_mock_ops(struct cxl_mock_ops *ops);
+>>
+>> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+>> -- 
+>> 2.49.0
+>>
 
