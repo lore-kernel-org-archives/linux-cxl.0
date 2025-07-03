@@ -1,127 +1,132 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A51F2DCF68;
-	Thu,  3 Jul 2025 09:58:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751536696; cv=pass; b=tJWTNzItCdo3IKd5CgWhofkDU8kBHFW9KGYfHzUuxEdC4TQt4bWdwIiKyg4LobIJvXqg/ONMg2SN1RKKozMzSDDfLLZVWfCxaXNDpgoyfEebe/awf3sZZjvYFdtrhlpGUOpJS/LS33Ne5vfIT4qIsNUbulD1T0sqWsfd8af/JgY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751536696; c=relaxed/simple;
-	bh=QszsUgJLo/UJjAndQFyfJ5j/AC0XpvklEA8TpJmTGjk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sZsEN1W7YNMshgKknzcSUcttp9TuzfQ4KQWhrQtNs4gc8we2cHtnnrZgvsz0P9MlTgCXznnHFDA7dcKfVyiN1GL01dLJ53a+bwxbkwyOD8YXyxOdvHYPViDmCFVEkNWPtFegBV3u++L9u0SUZIaUlf0bBoIIQy3rHDvU9YqFaMk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=QWPPiOek; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="QWPPiOek"
-ARC-Seal: i=1; a=rsa-sha256; t=1751536677; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=YrLvbcgSsnKveQfU/T7HKFQ1Ne5kco8X25ntrr1jkuGMZe6BXiy9kzgpG1UjBogCLdJgMdcnJzmM2ogQ+zsfMsxqcbm8KPs8uPmmy0m9omxjG7n+vw9eXOsPkVEEc0pyT2iJkXQGR49lHJlPXXe7yH37H9I4Zqt8f3oCIkXPno4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751536677; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=vXsCgkX+jIyjyDWv3KCUQOrDI+B7GkZ6YSr93YGOphA=; 
-	b=PczccBgUEkknhZ2B2B3eCWiMNGav6oHm4WFOciMA8SMLqDu1Gl2La7eOToYweN4VPI1e8reSyjn5fsFkVFg8ye3hN6si8tTMiKVALin9sepUAeaTFL4EJ1ZJNTGR4Gdj89Wn4IY9B93iY48/4RNUGUVslBf9aySZeYwa2i0hoV0=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751536677;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=vXsCgkX+jIyjyDWv3KCUQOrDI+B7GkZ6YSr93YGOphA=;
-	b=QWPPiOekWWd1Jx9fh6jPe0O+QFfITG7dY8vM6x2SQf/SVS1ByKXkYySYtyBxXQXs
-	RjljTpH2PMQ85HEfNUEwia/pqBvyJKNYBhKwLEZY7MI3zJkFt59YdYcGNNmxnBCZfua
-	HXMDgATzthFSvmxxtPVVcuHtRZMc86RlHGuh/vq0=
-Received: by mx.zohomail.com with SMTPS id 1751536675965912.8846049878568;
-	Thu, 3 Jul 2025 02:57:55 -0700 (PDT)
-Message-ID: <02ce91ae-9ebb-4f79-b5d5-4f7463596eef@zohomail.com>
-Date: Thu, 3 Jul 2025 17:57:51 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13EFC2E1C69;
+	Thu,  3 Jul 2025 10:06:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751537171; cv=none; b=n32VckriyCl4czQMQxJbiGmHifAhd3B22oTMh56VAcHZZSaz6XvRVCohKAizyurEXQBl2NSt0VD7mhzWR0wZxcs9oMoD1GguKcZWlgGTAr3Zg3IiMHqYt+8cv01qOrKY6ophSrVwayKIFqQCCbx5JanfdjqtMU8CRQ/lnYmeAm4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751537171; c=relaxed/simple;
+	bh=Fpj1uwcH2xla2wofNQJx+8YAitM91souW9TIhCmfFPk=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GOY9cQOmAOdXVbba8fjHMxDH9sr+05AUWZD+fTjHovP5RmCR1uhUGU7oJ7pinEP8Efe/YZCItoYRnsmNm+allIwYhnyX5uYLCngLH64VeJiDh4Z8jh0MaaGqhfJGldtdnj/WnhY72ErAzaaJJXWkTKtAJkbUd2O2aRA9uK9KDBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bXspS1C2Xz67Q1Y;
+	Thu,  3 Jul 2025 18:05:36 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id D6BAD1402F5;
+	Thu,  3 Jul 2025 18:06:04 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 3 Jul
+ 2025 12:06:04 +0200
+Date: Thu, 3 Jul 2025 11:06:02 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: "Bowman, Terry" <terry.bowman@amd.com>
+CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <shiju.jose@huawei.com>,
+	<ming.li@zohomail.com>, <Smita.KoralahalliChannabasappa@amd.com>,
+	<rrichter@amd.com>, <dan.carpenter@linaro.org>,
+	<PradeepVineshReddy.Kodamati@amd.com>, <lukas@wunner.de>,
+	<Benjamin.Cheatham@amd.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v10 05/17] CXL/AER: Introduce kfifo for forwarding CXL
+ errors
+Message-ID: <20250703110602.0000699c@huawei.com>
+In-Reply-To: <a76be312-9f27-491a-99d2-79815ed98d3e@amd.com>
+References: <20250626224252.1415009-1-terry.bowman@amd.com>
+	<20250626224252.1415009-6-terry.bowman@amd.com>
+	<20250627112429.00007155@huawei.com>
+	<a76be312-9f27-491a-99d2-79815ed98d3e@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] cxl/edac: Fix wrong dpa checking for PPR operation
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
- bhelgaas@google.com, ilpo.jarvinen@linux.intel.com, dave@stgolabs.net,
- jonathan.cameron@huawei.com, dave.jiang@intel.com, vishal.l.verma@intel.com,
- ira.weiny@intel.com, dan.j.williams@intel.com, shiju.jose@huawei.com,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250702072008.468371-1-ming.li@zohomail.com>
- <20250702072008.468371-2-ming.li@zohomail.com>
- <aGWKsBYX2kux7w9W@aschofie-mobl2.lan>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <aGWKsBYX2kux7w9W@aschofie-mobl2.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Feedback-ID: rr080112274fcd7691f01259b96b87ae370000691350233a52406932514c4990707acdb09b1d91521a407dbc:zu080112273fe35d8a2bb41c2b1c520bd700008120b5b9fa42cab822e4c0dd0cb0aeeb87d8701fe84cebab91:rf0801122de828932ffda4b63597df500e000034cdc63354886784e6c87db9b40ad20cd389cef7d3d73ed27d81915362fd04:ZohoMail
-X-ZohoMailClient: External
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On 7/3/2025 3:38 AM, Alison Schofield wrote:
-> On Wed, Jul 02, 2025 at 03:20:07PM +0800, Li Ming wrote:
->> DPA 0 is considered invalid in cxl_do_ppr(), but per Table 8-143. "Get
->> Partition Info Output Payload" in CXL r3.2 section 8.2.10.9.2.1 "Get
->> Partition Info(Opcode 4100h)", it mentions that DPA 0 is a valid address
->> of a CXL device. So the correct implementation should be checking if the
->> DPA is in the DPA range of the CXL device rather than checking if the
->> DPA is equal to 0.
->>
->> Fixes: be9b359e056a ("cxl/edac: Add CXL memory device soft PPR control feature")
->> Signed-off-by: Li Ming <ming.li@zohomail.com>
->> ---
->>  drivers/cxl/core/edac.c | 5 ++++-
->>  1 file changed, 4 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
->> index 623aaa4439c4..1cf65b1538b9 100644
->> --- a/drivers/cxl/core/edac.c
->> +++ b/drivers/cxl/core/edac.c
->> @@ -1923,8 +1923,11 @@ static int cxl_ppr_set_nibble_mask(struct device *dev, void *drv_data,
->>  static int cxl_do_ppr(struct device *dev, void *drv_data, u32 val)
->>  {
->>  	struct cxl_ppr_context *cxl_ppr_ctx = drv_data;
->> +	struct cxl_memdev *cxlmd = cxl_ppr_ctx->cxlmd;
->> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
->>  
->> -	if (!cxl_ppr_ctx->dpa || val != EDAC_DO_MEM_REPAIR)
->> +	if (!resource_contains_addr(&cxlds->dpa_res, cxl_ppr_ctx->dpa) ||
->> +	    val != EDAC_DO_MEM_REPAIR)
->>  		return -EINVAL;
-> Hi Ming,
->
-> I think this one needs a user visible impact statement.
->
-> I'm hoping the broader helper gets accepted. That may be the ioport.h
-> addition, or maybe we end up with a CXL special helper.
->
-> However, if this patch is aiming to go upstream as a FIX in a 6.16 rc,
-> then we are probably better off fixing the check inline right here, and
-> then you follow on with the other 2 patches to be considered for the
-> next merge window.
->
-> Please share that impact and suggest whether it can wait for next merge
-> window.
->
-> -- Alison
->
-Hi Alison,
+On Wed, 2 Jul 2025 11:21:20 -0500
+"Bowman, Terry" <terry.bowman@amd.com> wrote:
 
+> On 6/27/2025 5:24 AM, Jonathan Cameron wrote:
+> > On Thu, 26 Jun 2025 17:42:40 -0500
+> > Terry Bowman <terry.bowman@amd.com> wrote:
+> > =20
+> >> CXL error handling will soon be moved from the AER driver into the CXL
+> >> driver. This requires a notification mechanism for the AER driver to s=
+hare
+> >> the AER interrupt with the CXL driver. The notification will be used
+> >> as an indication for the CXL drivers to handle and log the CXL RAS err=
+ors.
+> >>
+> >> First, introduce cxl/core/native_ras.c to contain changes for the CXL
+> >> driver's RAS native handling. This as an alternative to dropping the
+> >> changes into existing cxl/core/ras.c file with purpose to avoid #ifdef=
+s.
+> >> Introduce CXL Kconfig CXL_NATIVE_RAS, dependent on PCIEAER_CXL, to
+> >> conditionally compile the new file.
+> >>
+> >> Add a kfifo work queue to be used by the AER driver and CXL driver. Th=
+e AER
+> >> driver will be the sole kfifo producer adding work and the cxl_core wi=
+ll be
+> >> the sole kfifo consumer removing work. Add the boilerplate kfifo suppo=
+rt.
+> >>
+> >> Add CXL work queue handler registration functions in the AER driver. E=
+xport
+> >> the functions allowing CXL driver to access. Implement registration
+> >> functions for the CXL driver to assign or clear the work handler funct=
+ion.
+> >>
+> >> Introduce 'struct cxl_proto_err_info' to serve as the kfifo work data.=
+ This
+> >> will contain the erring device's PCI SBDF details used to rediscover t=
+he
+> >> device after the CXL driver dequeues the kfifo work. The device redisc=
+overy
+> >> will be introduced along with the CXL handling in future patches.
+> >>
+> >> Signed-off-by: Terry Bowman <terry.bowman@amd.com> =20
+> > Hi Terry,
+> >
+> > Whilst it obviously makes patch preparation a bit more time consuming
+> > for series like this with many patches it can be useful to add a brief
+> > change log to the individual patches as well as the cover letter.
+> > That helps reviewers figure out where they need to look again.
+> >
+> > A few trivial things inline.
+> >
+> > With those fixed up
+> > Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+> >
+> > Jonathan =20
+>=20
+> Hi Jonathan,
+>=20
+> Do you have an example you can point me to with a change log in the
+> individual patch? I want to make certain I change correctly.
+>=20
+> =A0
+> > =20
+> >> ---
 
-I think the impact of this issue is limited, because the issue is inside CXL edac part, just causes that user cannot issue PPR maintenance operation for the DPA 0 of a CXL device. (A PPR maintenance operation requests the CXL device to perform a repair operation on its media.)
+You just put it here.  No particular formatting standard for it other than =
+making
+sure its after the --- so it doesn't end up in the git log.
+https://lore.kernel.org/all/2025070138-vigorous-negative-eae7@gregkh/
 
-I am not sure if cxl subsystem will have another fixes PR for 6.16 rc, my understanding is that it is not worth to submit an additional PR only for this issue. So  I think merging it in next merge window is also good.
+Is first example I scrolled down to.  This is a single patch series but
+the principle is the same.
 
-
-Ming
-
->>  
->>  	return cxl_mem_perform_ppr(cxl_ppr_ctx);
->> -- 
->> 2.34.1
->>
 
