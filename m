@@ -1,80 +1,46 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B89298CC5
-	for <linux-cxl@vger.kernel.org>; Thu,  3 Jul 2025 19:40:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1EE2DE6EE
+	for <linux-cxl@vger.kernel.org>; Thu,  3 Jul 2025 22:04:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751571628; cv=none; b=p9gDD4P8tFK2g1ZbcnHLZc+kG33VicYSUsHlDw8zqe2Wxa5BFhl/VY7FXeDdCgyXZuhx+tyloYhYivvIJ+Vr7S53IhA4/5F0QDlY2R1YwVCPJV/yYsOg4vVsLX70GIpvOXZV1ou8yUEWaymFEY1c8zs32uETDc0GwtzXO2dcYrs=
+	t=1751580297; cv=none; b=njw50ic4S21V+JAZ0bka0dAym4x32K05k1OVX/Xc0aIKY4mtXHuSvWNo2+HSpJf54d/G9Na7FGxFy4WGYKsbrnV69+k5goX7nbjV8ecwL7jAcJLNbz7MPTe8eaJLElgDEO+Qu3Ep0xseQU9vCJ42WtFCAtSM7Clg/CYMd29JjR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751571628; c=relaxed/simple;
-	bh=wjAihhlgIFoKBph/30BdSuaRV45zLLu2FTAyTGC63U0=;
+	s=arc-20240116; t=1751580297; c=relaxed/simple;
+	bh=22pGelUP85nSiVmJ+girIGbzPLdSQpk70i5QwVdUCps=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iubTAWY3+jY3KG5lbrtcKbrRArNQEHlNhRrDBmEadY7vqG2e9HJO+DaoYm/0wpPsh88n1AxNEB5rQ0q0t2Rww63shYbqK60hidwAHi2SV2LLjl4q3yOU8XMS5/a+KNDB6NnmmodsBpDqzXOD+iu18LPwO3Tm1J/g4lhXaCE09Go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=tIwK+dhj; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=u93a1P/aXC4XLHi6JQ219UdNikYl9oaBipKpxmTVavAycKQVm95y6Uc/zdcVAjfPe/uYpIUFpOxtf++v82BvY3RqS+YDVnF1IXFiiQEWl1eI8klq/R8tt8SmI1mQZwZVS56rj/GUa6N0p3ZQUwJ01KoeJosrkKJa3VOcKZMIFoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Et5orT2h; arc=none smtp.client-ip=91.218.175.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="tIwK+dhj"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4a752944794so2329351cf.3
-        for <linux-cxl@vger.kernel.org>; Thu, 03 Jul 2025 12:40:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1751571624; x=1752176424; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z5JiRVjpCDIQ2FImaZDAlexoOFjZvW0CINutA6RTJCI=;
-        b=tIwK+dhjNysjyhsEaEO+QTBWm9yc/pmUIcdB5wWstIq0vtM6QzFiINXLWi5BD2ZsjY
-         PuYwFGL/Rg7b38rDWLx1dTyX4fiPz4OLv7lZ5pnTcKG+aLjnjhcwvtCnyi/51ES7/7KK
-         KT6ol/9XNPXtm1Ue6nk1zb82RiQxknwW9eSYFEk0vHxTKTaMD1AEBYTtir+5kEyrieCm
-         SRdo+gPGK5hNQzI5PPrsncNDUNoH9uIc3s/9vUhOYk1wku/dQ3i9yobIeiCwab8kvPIp
-         TeGeHYt3uiG9MhSHFpl+QYEhP4Wb1TbvC8NahY5AAvwvos/oQPzam1kTrsvEzbQMPwLn
-         oUpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751571624; x=1752176424;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z5JiRVjpCDIQ2FImaZDAlexoOFjZvW0CINutA6RTJCI=;
-        b=IXZVQbvWMhOH+bUcxoSEK9ZIyEghW7TAqczFVncPEhhKTiISn7s+037tffFVjKQKzs
-         9cxehmgz0Am4oRRA0Es/KRPpo1fRWhM+3dYB0jscC1WhC/30fTCv1IMmWsaBVLBPLUTu
-         Yvkj6s0JF3xoBxv/p50gx+xljUkvgd8jZE1ujkj/XRtHD1J9tcLL2TEuxR95MOM+/+WK
-         ugvlp9fadmoCVSDGXlbiVxBSQ21GqbK2T9zXAHWjINpYrmRi/V7ZHubRZ5zwoDVFicBD
-         ACbWpY1tT36Cbm7Ok5jI6FRKH+rJpQdI7qeUSq3yXOR+MVCmM2RIdm0Cjn8jC1RutiSM
-         083Q==
-X-Forwarded-Encrypted: i=1; AJvYcCX4GQRpj2Gt1/sa2BKrutp9eeqBOK30mpm3Cu6j6pzDFIR3jZNid5H2c1UzfrpwhKX7NCODvzRpLo8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZ/BVdbkzbtPniJLPPYj+BWWLaesdOi3Vooq/xueoEtLU/u7lX
-	0OHeUPfx/DcVActqr31VuoLstAv+d1pi/7JgCPk7+gp/XjU1nAjs49dH/UW2v/JHuok=
-X-Gm-Gg: ASbGnctW/0DLTlqwDzLZO+uiBd5pkNJ5qpfMax+k8Tqpm25veVnZWjSagV0Y7BzQBhG
-	hSDnTeP+z9B+TWCFUqDxi/zy2ilsGJj8xJR5ja4RrK4MI21Mc5gl4V8Qu6rUZv2Sj89w2uEl+72
-	I8E+vmGaj9W0sBr89ih+c6acq67yHiJJK6XvKmeQxK1UZ6VuqDw5rSm12hkcewx11sXFJkvdZw2
-	vdTLZeEigixbyxMhHNox0n3uvpkspiMMmGbYLTacyBzll0qdwTk25HMRZQ262AYv+v8gXZ9ajA7
-	PbbC8ShQVlEWMWOU4aWtcafb+fBPGQvaTYMnaoT78rkOU3DlVCBCQKVpmmeb3kwKdPXmzG4i76d
-	lPvhvxpU27CUMx2RUTxeoBsg+KRuGWekGwqOS7eiJzQ==
-X-Google-Smtp-Source: AGHT+IHtokJzW6Y7SnAkO7fHIQj00qi7TbnLaOfijw/VLKAWWQHbBebWsqlSHWpM0Ffk/Tm8g67+Iw==
-X-Received: by 2002:a05:6214:dcd:b0:6f5:3cae:920f with SMTP id 6a1803df08f44-702b1b376ffmr133762066d6.27.1751571624342;
-        Thu, 03 Jul 2025 12:40:24 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-702c4d5ad73sm2155396d6.92.2025.07.03.12.40.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 12:40:23 -0700 (PDT)
-Date: Thu, 3 Jul 2025 15:40:21 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	linux-cxl@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] cxl: docs/driver-api/conventions resolve conflicts
- btw CFMWS, LMH, ED
-Message-ID: <aGbcpac1pma1od40@gourry-fedora-PF4VCD3F>
-References: <20250623152923.1048525-1-fabio.m.de.francesco@linux.intel.com>
- <aFmo18OEZGMA2HU8@gourry-fedora-PF4VCD3F>
- <c32cede0-643c-47bb-bfde-93adbcf16155@intel.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Et5orT2h"
+Date: Fri, 4 Jul 2025 07:04:41 +0900
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751580291;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UxtN1BIaN3WcxHEmRC1CN+JEMOjBTmNpbuuXcmYcvQA=;
+	b=Et5orT2hRkElcOB4Z2ykzVCDyOdgqvOefDO5Dkdk8ean6TdMwJeCc6fI2k+RLDA3/Yluq2
+	TVDF/r+hyjS1ovDxkPAsIjkhh3lqtNqGTv2KU1y53Or2YduTHrL6JMuR43M7VByz6uedhx
+	d4r/a8NSOQGvdoUb/MhAvc/IAcB60Gk=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Itaru Kitayama <itaru.kitayama@linux.dev>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: qemu-devel@nongnu.org, Fan Ni <fan.ni@samsung.com>,
+	Peter Maydell <peter.maydell@linaro.org>,
+	Eric Auger <eric.auger@redhat.com>, mst@redhat.com,
+	Zhijian Li <lizhijian@fujitsu.com>, linuxarm@huawei.com,
+	linux-cxl@vger.kernel.org, qemu-arm@nongnu.org,
+	Yuquan Wang <wangyuquan1236@phytium.com.cn>,
+	Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
+	Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>
+Subject: Re: [PATCH qemu v17 5/5] qtest/cxl: Add aarch64 virt test for CXL
+Message-ID: <aGb+eZxaZYCofHk8@vm4>
+References: <20250703104110.992379-1-Jonathan.Cameron@huawei.com>
+ <20250703104110.992379-6-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -83,43 +49,132 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c32cede0-643c-47bb-bfde-93adbcf16155@intel.com>
+In-Reply-To: <20250703104110.992379-6-Jonathan.Cameron@huawei.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Jul 01, 2025 at 08:23:57AM -0700, Dave Jiang wrote:
+On Thu, Jul 03, 2025 at 11:41:10AM +0100, Jonathan Cameron wrote:
+> Add a single complex case for aarch64 virt machine.
 > 
+> Given existing much more comprehensive tests for x86 cover the common
+> functionality, a single test should be enough to verify that the aarch64
+> part continues to work.
 > 
-> On 6/23/25 12:19 PM, Gregory Price wrote:
-> > On Mon, Jun 23, 2025 at 05:29:02PM +0200, Fabio M. De Francesco wrote:
-> >> Add documentation on how to resolve conflicts between CXL Fixed Memory
-> >> Windows, Platform Memory Holes, and Endpoint Decoders.
-> >>
-> >> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
-> > 
-> > I won't block a doc update on a suggestion so
-> > 
-> > Reviewed-by: Gregory Price <gourry@gourry.net>
-> > 
-> >> +Platform Firmware (BIOS) might reserve part of physical addresses below
-> >> +4 GB (e.g., the Low Memory Hole that describes PCIe memory space for MMIO
-> >> +or a requirement for the greater than 8 way interleave CXL regions starting
-> >> +at address 0). In that case the Window Size value cannot be anymore
-> >> +constrained to the NIW * 256 MB above-mentioned rule.
-> > 
-> > It might be nice to have a diagram that explains this visually, as it's
-> > difficult for me to understand the implications through words alone...
+> Tested-by: Itaru Kitayama <itaru.kitayama@fujitsu.com>
+> Reviewed-by: Eric Auger <eric.auger@redhat.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > 
-> +1 on request for diagram to explain. We should try to document this issue as clearly as possible. Thank you.
->
+> ---
+> v17: Tag and small fix for patch description (Eric).
+> ---
+>  tests/qtest/cxl-test.c  | 58 ++++++++++++++++++++++++++++++++---------
+>  tests/qtest/meson.build |  1 +
+>  2 files changed, 46 insertions(+), 13 deletions(-)
+> 
+> diff --git a/tests/qtest/cxl-test.c b/tests/qtest/cxl-test.c
+> index a600331843..8fb7e58d4f 100644
+> --- a/tests/qtest/cxl-test.c
+> +++ b/tests/qtest/cxl-test.c
+> @@ -19,6 +19,12 @@
+>      "-device pxb-cxl,id=cxl.1,bus=pcie.0,bus_nr=53 " \
+>      "-M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.targets.1=cxl.1,cxl-fmw.0.size=4G "
+>  
+> +#define QEMU_VIRT_2PXB_CMD \
+> +    "-machine virt,cxl=on -cpu max " \
+> +    "-device pxb-cxl,id=cxl.0,bus=pcie.0,bus_nr=52 " \
+> +    "-device pxb-cxl,id=cxl.1,bus=pcie.0,bus_nr=53 " \
+> +    "-M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.targets.1=cxl.1,cxl-fmw.0.size=4G "
+> +
+>  #define QEMU_RP \
+>      "-device cxl-rp,id=rp0,bus=cxl.0,chassis=0,slot=0 "
+>  
+> @@ -197,25 +203,51 @@ static void cxl_2pxb_4rp_4t3d(void)
+>      qtest_end();
+>      rmdir(tmpfs);
+>  }
+> +
+> +static void cxl_virt_2pxb_4rp_4t3d(void)
+> +{
+> +    g_autoptr(GString) cmdline = g_string_new(NULL);
+> +    g_autofree const char *tmpfs = NULL;
+> +
+> +    tmpfs = g_dir_make_tmp("cxl-test-XXXXXX", NULL);
+> +
+> +    g_string_printf(cmdline, QEMU_VIRT_2PXB_CMD QEMU_4RP QEMU_4T3D,
+> +                    tmpfs, tmpfs, tmpfs, tmpfs, tmpfs, tmpfs,
+> +                    tmpfs, tmpfs);
+> +
+> +    qtest_start(cmdline->str);
+> +    qtest_end();
+> +    rmdir(tmpfs);
+> +}
+>  #endif /* CONFIG_POSIX */
+>  
+>  int main(int argc, char **argv)
+>  {
+> -    g_test_init(&argc, &argv, NULL);
+> +    const char *arch = qtest_get_arch();
+>  
+> -    qtest_add_func("/pci/cxl/basic_hostbridge", cxl_basic_hb);
+> -    qtest_add_func("/pci/cxl/basic_pxb", cxl_basic_pxb);
+> -    qtest_add_func("/pci/cxl/pxb_with_window", cxl_pxb_with_window);
+> -    qtest_add_func("/pci/cxl/pxb_x2_with_window", cxl_2pxb_with_window);
+> -    qtest_add_func("/pci/cxl/rp", cxl_root_port);
+> -    qtest_add_func("/pci/cxl/rp_x2", cxl_2root_port);
+> +    g_test_init(&argc, &argv, NULL);
+> +    if (strcmp(arch, "i386") == 0 || strcmp(arch, "x86_64") == 0) {
+> +        qtest_add_func("/pci/cxl/basic_hostbridge", cxl_basic_hb);
+> +        qtest_add_func("/pci/cxl/basic_pxb", cxl_basic_pxb);
+> +        qtest_add_func("/pci/cxl/pxb_with_window", cxl_pxb_with_window);
+> +        qtest_add_func("/pci/cxl/pxb_x2_with_window", cxl_2pxb_with_window);
+> +        qtest_add_func("/pci/cxl/rp", cxl_root_port);
+> +        qtest_add_func("/pci/cxl/rp_x2", cxl_2root_port);
+>  #ifdef CONFIG_POSIX
+> -    qtest_add_func("/pci/cxl/type3_device", cxl_t3d_deprecated);
+> -    qtest_add_func("/pci/cxl/type3_device_pmem", cxl_t3d_persistent);
+> -    qtest_add_func("/pci/cxl/type3_device_vmem", cxl_t3d_volatile);
+> -    qtest_add_func("/pci/cxl/type3_device_vmem_lsa", cxl_t3d_volatile_lsa);
+> -    qtest_add_func("/pci/cxl/rp_x2_type3_x2", cxl_1pxb_2rp_2t3d);
+> -    qtest_add_func("/pci/cxl/pxb_x2_root_port_x4_type3_x4", cxl_2pxb_4rp_4t3d);
+> +        qtest_add_func("/pci/cxl/type3_device", cxl_t3d_deprecated);
+> +        qtest_add_func("/pci/cxl/type3_device_pmem", cxl_t3d_persistent);
+> +        qtest_add_func("/pci/cxl/type3_device_vmem", cxl_t3d_volatile);
+> +        qtest_add_func("/pci/cxl/type3_device_vmem_lsa", cxl_t3d_volatile_lsa);
+> +        qtest_add_func("/pci/cxl/rp_x2_type3_x2", cxl_1pxb_2rp_2t3d);
+> +        qtest_add_func("/pci/cxl/pxb_x2_root_port_x4_type3_x4",
+> +                       cxl_2pxb_4rp_4t3d);
+>  #endif
+> +    } else if (strcmp(arch, "aarch64") == 0) {
+> +#ifdef CONFIG_POSIX
+> +        qtest_add_func("/pci/cxl/virt/pxb_x2_root_port_x4_type3_x4",
+> +                       cxl_virt_2pxb_4rp_4t3d);
+> +#endif
+> +    }
+> +
+>      return g_test_run();
+>  }
+> diff --git a/tests/qtest/meson.build b/tests/qtest/meson.build
+> index 8ad849054f..42e927b32a 100644
+> --- a/tests/qtest/meson.build
+> +++ b/tests/qtest/meson.build
+> @@ -261,6 +261,7 @@ qtests_aarch64 = \
+>     config_all_devices.has_key('CONFIG_TPM_TIS_I2C') ? ['tpm-tis-i2c-test'] : []) + \
+>    (config_all_devices.has_key('CONFIG_ASPEED_SOC') ? qtests_aspeed64 : []) + \
+>    (config_all_devices.has_key('CONFIG_NPCM8XX') ? qtests_npcm8xx : []) + \
+> +  qtests_cxl +                                                                                  \
+>    ['arm-cpu-features',
+>     'numa-test',
+>     'boot-serial-test',
+> -- 
 
-At the very least, it would be nice to have an explicitly example that
-explains the expected cfmws/decoder configurations that are valid but
-"technically" violate the spec
+I checked out jic23/cxl-2025-07-03 branch and built fine for all the
+architectures, and did `meson test qtest-aarch64/cxl-test` returned OK.
 
-I *think* this basically boils down to "CFMWS size is not aligned, but
-all the decoders it targets are"?  If I understand this correctly?
+Again, for the latest v17
 
-> > 
-> > which is likely why the conflict exists in the first place :]
-> > 
-> > ~Gregory
+Tested-by: Itaru Kitayama <itaru.kitayama@fujitsu.com>
+
+Thanks,
+Itaru.
+
+> 2.48.1
 > 
