@@ -1,162 +1,174 @@
-Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72EDD2D9EDB;
-	Fri,  4 Jul 2025 12:54:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DBF02F549C;
+	Fri,  4 Jul 2025 13:11:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751633690; cv=none; b=Ar0AV+X6L5N75I0yx6+GgaxVZZvuootb1uMPpB3fr+7j9Z6HyLEe3ARKqfGC9+TbdjAQDdOkW/cBODsBImhXGZkfKc66BPXuj5qLa9Lrl9dDfFZ5dcQKLrRbpHeoGViOlk3wXbbuTvijqiGu544cQBkXjIzRjZbDOKGE4gJS5FI=
+	t=1751634700; cv=none; b=Natji55Vi8fsvXKMJ3OysYExhQUmZTA9WJB7GDY25S0+/gCpjkwkbou4rY5NuU2kVujLnmFKPFeuugsIayPtwhQyHFIfl2p4wrZdRxtciYSI8zwHwLifDBdNrX4MuxF2TbsCI6RyVDmWw7ziqaVIRk5uLCojNpSyMA5fFvFLAgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751633690; c=relaxed/simple;
-	bh=WFTveO6q4/9I10ER4OzIRFRhszAcOJqSl6IAE70OKT4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PuKw1QM+JYJWGLelZ9sto66gZqjKLiIw44ar1cb2HEZGA6YJHwdJolMv7SMcOHRr14CqyrA61vouanz1Uf1nZON1iHZ9FQ5ZPKqJUfwCAYSQUc4DO4/rKFQMCg3pI2ZJC1G0/Z7VXHkFyoBniap/HaGRXBZGdP83a0qQmwZ+BcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XMytGmPv; arc=none smtp.client-ip=209.85.161.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751634700; c=relaxed/simple;
+	bh=3vf2eTlWWE4EMI7tNEErMjTbwzmeLu/3hhwvTGVHGnQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fePXBOnYF222q1Dt5+M3AfS0P1Nk8ECJBSlUFz1JuL1gCdaN9FPku4PP6ZDJrWnO5Ad4+SsrTDwNIId+nOXXeMV5Ohvn153yQKYeR5p0jWkg9/TbFJp/+8kJQr/O/yTZTRccMfjKV72F2O6SSiVEqD9+7ZF+fz/ik7DvvEPzIO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JigtWOV+; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XMytGmPv"
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-60402c94319so574055eaf.1;
-        Fri, 04 Jul 2025 05:54:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751633686; x=1752238486; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fWEiBexGknF9z9JpON4CDuydmvoVyHEn0sWhDagRzsw=;
-        b=XMytGmPv6zJQ1N7jQmAzGbLjTAvsCju/5+M8Fk0T1DnJhS7gvB/acjbJgaFvSftDsr
-         jV1kY0eyFUtj/M+3hDRy5W3sPdefMstroDxMOq21jLMj8NZ6EHvBY9W0KFvNtLFRZhvI
-         QYcZbfyisEFQlKT/El0gDQqM5IODrxZDwFwR+Z31iLwmjyUiE2Hb8aA0sMmlRo1NGYg3
-         jvjTtuoRvxsGy80dTGzI1TAS+nvkDRhltMXa56IRsEqYe2R0PTN6p2V6oM+kcnsQJ3Cr
-         nj/rAy3RelXQ3UnfU3Q0y6iVZLWBLzMXfSuTlQU/kecqbKILO9fSUWUUzdr/fwn9mi/9
-         NWEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751633686; x=1752238486;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fWEiBexGknF9z9JpON4CDuydmvoVyHEn0sWhDagRzsw=;
-        b=xEHU9jll3HRqejcj7r0AFZ5BCHOYFmsNfprdhOZAMibiy0eBeLq7fSWSroDsT7W8+3
-         wx+52TL/O/3ckm2jiAuXpghhdNmNogQv6ZFbcycemUTq+6Guqc3zvqxkubr9Xg6h8Ww0
-         ucpxdefh1U4mXe5rGzn3EgxAIzYNShoygFIQq9N/fzLZ9UiLpFTTvhvA00xwwBNyw3yW
-         B56Xky0jThC0rylhUk7bST5iRjrhRcwgK3I8Ihyl67VRCOlMw1HzuN4pJW6uYgOQXEGw
-         x6lDX8i1C8m8BhO6Xq4LYqDw52+9nNpGGccMmwXfEnTrJd9pbUswmlanWl0N1VfKK5Wh
-         QfqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUckJIaeT8m4BaMaHj7MG31F3Cox6FtveyIw+2LywpTtCpT7uO0KXQLZjYdTBHu6rJAg/cGwwI0JiM=@vger.kernel.org, AJvYcCWCQi72JKwJnJl6QbUIehG5XX3QmuSiztIzLU4SZC9GBfZgknKfGhoUqwLlBX9iBcjl/85wnk//XdUhZELzzA==@vger.kernel.org, AJvYcCXC/oUFnCKP63nypKJisbXvXAJps1oOPt60NFfMoNv+SkqaO2hXjBP9iECRNU45AsMLP7DUxk9YKX5KlK8H@vger.kernel.org, AJvYcCXce96OFcK+Ciabuc7E7GqZnFxRVbwOli16ocZvJc856/ZOMybYJx35/rAfk8BAySJI7Ac1Zpjf+Xho@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxCimePdhL1MYaogu1n4QyWwzukDdIDgshiR543pI9TUFpK/KN
-	Bvu1mw3edYBKH8OyMxciriioeeiJ9XE5n26Bk88nFshaZxyIf2WNAqo4
-X-Gm-Gg: ASbGncsaHThxz1oi5M0rMryWk93AR0Sf4mMWSOaat0pDKz5VSfdF9uiPH9WPBvzvpIj
-	TiFxvQ2csJViKAexFkThkjVJyXOhZmmQntI+s5x6Ka/a+c63Lu62nXYnb6M9lTO9z0ABAKe0Hif
-	Ng6d39J38a34Ru0yUe+DdcEXbZYRcrQFnpuRv3xaDufCtgP2qHIVbKhTH2tYcvlYm18eHcsP0gp
-	k8M7uWo0LjG126B/pa8Umryc7f27oJmhIZhvMHwk7ZdxvYSAWH+6EnWDGHLR9MZ/7mCvCqdTIpp
-	STNRcD6V+aBpA9uIIw1rQmYhOrzJsnE9lZwjduv5JasQ4K5Oxe8TH+NQ+nZ51IxrKWNgzss8HOc
-	=
-X-Google-Smtp-Source: AGHT+IEQCt6EzoQ1S/rGkyJCcVERY+DBQiFOXPfhObXBAnuO2Eb6V1GMOP7z4zut5KZK3JQFhWGgIg==
-X-Received: by 2002:a05:6820:1986:b0:611:b85f:b159 with SMTP id 006d021491bc7-6138ffa3919mr1751955eaf.1.1751633686279;
-        Fri, 04 Jul 2025 05:54:46 -0700 (PDT)
-Received: from groves.net ([2603:8080:1500:3d89:2db1:5c0d:1659:a3c])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-6138e5c1db3sm304526eaf.35.2025.07.04.05.54.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 05:54:43 -0700 (PDT)
-Sender: John Groves <grovesaustin@gmail.com>
-Date: Fri, 4 Jul 2025 07:54:38 -0500
-From: John Groves <John@groves.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JigtWOV+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751634699; x=1783170699;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=3vf2eTlWWE4EMI7tNEErMjTbwzmeLu/3hhwvTGVHGnQ=;
+  b=JigtWOV+0aTn8CmnS4LZmmFSEwX255Q1cM0PqEdqEVbxql+nbTMD5cBx
+   OK63Nk5RZc7l/BkG/G8Akd9rccagd9z4Ttdoqk42Iy5GtTdHQrFsiHX5w
+   sr/pB388U7C6v/UBTN3X4Yq4yv/9wnTVomLUf5yFJDIwAAn77+bVIKqWF
+   5XnZ8LxxCndNDhUpnCJwWCcKOyC3M+H+HPNIwXdxWtHa+E93DQE+WuRbC
+   HN9A2LoTYF/Vgt5iUzQng6d8DPbBMtBoDQzU69BoGKFtk7PRp7vWMDamz
+   47Np3EMnUe3phOdKR5Hjpje/dfy4eee42awLutgi6uJPrZ2z1iswzD2Os
+   w==;
+X-CSE-ConnectionGUID: VIRlCCrHTNGmOItcRnrk/Q==
+X-CSE-MsgGUID: 6Gi5yjhDQfGCUtD3gTPGOg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11484"; a="53102037"
+X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
+   d="scan'208";a="53102037"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 06:11:36 -0700
+X-CSE-ConnectionGUID: sWa9hdRtR4KlH2tX5jwlpQ==
+X-CSE-MsgGUID: /9b2KzexRZW84ifePy7JPA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
+   d="scan'208";a="185595645"
+Received: from hrotuna-mobl2.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.112])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 06:11:32 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
 To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, 
-	Miklos Szeredi <miklos@szeredb.hu>, Bernd Schubert <bschubert@ddn.com>, 
-	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	"Darrick J . Wong" <djwong@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
-	Jeff Layton <jlayton@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Amir Goldstein <amir73il@gmail.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
-	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>
-Subject: Re: [RFC V2 02/18] dev_dax_iomap: Add fs_dax_get() func to prepare
- dax for fs-dax usage
-Message-ID: <or7rm2n4syer4uxaubtotarjtmmilhedih4odgiwvqb4cfkvsl@5w66of2xms5l>
-References: <20250703185032.46568-1-john@groves.net>
- <20250703185032.46568-3-john@groves.net>
- <20250704113935.000028cf@huawei.com>
+Cc: linux-cxl@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, Jonathan Corbet <corbet@lwn.net>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject:
+ Re: [PATCH v3] cxl: docs/driver-api/conventions resolve conflicts btw CFMWS,
+ LMH, ED
+Date: Fri, 04 Jul 2025 15:11:16 +0200
+Message-ID: <8767023.EBGB3zze1k@fdefranc-mobl3>
+In-Reply-To: <20250701141747.00003bf7@huawei.com>
+References:
+ <20250623152923.1048525-1-fabio.m.de.francesco@linux.intel.com>
+ <20250701141747.00003bf7@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250704113935.000028cf@huawei.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On 25/07/04 11:39AM, Jonathan Cameron wrote:
-> On Thu,  3 Jul 2025 13:50:16 -0500
-> John Groves <John@Groves.net> wrote:
-> 
-> > This function should be called by fs-dax file systems after opening the
-> > devdax device. This adds holder_operations, which effects exclusivity
-> > between callers of fs_dax_get().
-> > 
-> > This function serves the same role as fs_dax_get_by_bdev(), which dax
-> > file systems call after opening the pmem block device.
-> > 
-> > This also adds the CONFIG_DEV_DAX_IOMAP Kconfig parameter
-> > 
-> > Signed-off-by: John Groves <john@groves.net>
-> Trivial stuff inline.
-> 
-> 
+On Tuesday, July 1, 2025 3:17:47=E2=80=AFPM Central European Summer Time Jo=
+nathan Cameron wrote:
+> On Mon, 23 Jun 2025 17:29:02 +0200
+> "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com> wrote:
+>=20
+> > Add documentation on how to resolve conflicts between CXL Fixed Memory
+> > Windows, Platform Memory Holes, and Endpoint Decoders.
+> >=20
+> > Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.=
+com>
 > > ---
-> >  drivers/dax/Kconfig |  6 ++++++
-> >  drivers/dax/super.c | 30 ++++++++++++++++++++++++++++++
-> >  include/linux/dax.h |  5 +++++
-> >  3 files changed, 41 insertions(+)
-> > 
-> > diff --git a/drivers/dax/Kconfig b/drivers/dax/Kconfig
-> > index d656e4c0eb84..ad19fa966b8b 100644
-> > --- a/drivers/dax/Kconfig
-> > +++ b/drivers/dax/Kconfig
-> > @@ -78,4 +78,10 @@ config DEV_DAX_KMEM
-> >  
-> >  	  Say N if unsure.
-> >  
-> > +config DEV_DAX_IOMAP
-> > +       depends on DEV_DAX && DAX
-> > +       def_bool y
-> > +       help
-> > +         Support iomap mapping of devdax devices (for FS-DAX file
-> > +         systems that reside on character /dev/dax devices)
-> >  endif
-> > diff --git a/drivers/dax/super.c b/drivers/dax/super.c
-> > index e16d1d40d773..48bab9b5f341 100644
-> > --- a/drivers/dax/super.c
-> > +++ b/drivers/dax/super.c
-> > @@ -122,6 +122,36 @@ void fs_put_dax(struct dax_device *dax_dev, void *holder)
-> >  EXPORT_SYMBOL_GPL(fs_put_dax);
-> >  #endif /* CONFIG_BLOCK && CONFIG_FS_DAX */
-> >  
-> > +#if IS_ENABLED(CONFIG_DEV_DAX_IOMAP)
-> > +/**
-> > + * fs_dax_get()
-> 
-> Trivial but from what I recall kernel-doc isn't going to like this.
-> Needs a short description.
-
-Right you are. I thought I'd checked all those, but missed this one.
-Queued to -next.
-
-> 
-> > + *
-> > + * fs-dax file systems call this function to prepare to use a devdax device for
-> > + * fsdax. This is like fs_dax_get_by_bdev(), but the caller already has struct
-> > + * dev_dax (and there  * is no bdev). The holder makes this exclusive.
-> 
-> there is no *bdev?  So * in wrong place.
-
-I think that's a line-break-refactor malfunction on my part. Aueued to -next.
+> >=20
+> > v2 -> v3: Rework a few phrases for better clarity.
+> > 	  Fix grammar and syntactic errors (Randy, Alok).
+> > 	  Fix semantic errors ("size does not comply", Alok).
+> > 	  Fix technical errors ("decoder's total memory?", Alok).
+> > 	 =20
+> > v1 -> v2: Rewrite "Summary of the Change" section, 3r paragraph.
+> >=20
+> >  Documentation/driver-api/cxl/conventions.rst | 85 ++++++++++++++++++++
+> >  1 file changed, 85 insertions(+)
+> >=20
+> > diff --git a/Documentation/driver-api/cxl/conventions.rst b/Documentati=
+on/driver-api/cxl/conventions.rst
+> > index da347a81a237..d6c8f4cf2f5b 100644
+> > --- a/Documentation/driver-api/cxl/conventions.rst
+> > +++ b/Documentation/driver-api/cxl/conventions.rst
+> > @@ -45,3 +45,88 @@ Detailed Description of the Change
+> >  ----------------------------------
+> > =20
+> >  <Propose spec language that corrects the conflict.>
+> > +
+> > +
+> > +Resolve conflict between CFMWS, Platform Memory Holes, and Endpoint De=
+coders
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+> > +
+> > +Document
+> > +--------
+> > +
+> > +CXL Revision 3.2, Version 1.0
+> > +
+> > +License
+> > +-------
+> > +
+> > +SPDX-License Identifier: CC-BY-4.0
+> > +
+> > +Creator/Contributors
+> > +--------------------
+> > +
+> > +Fabio M. De Francesco, Intel
+> > +Dan J. Williams, Intel
+> > +Mahesh Natu, Intel
+> > +
+> > +Summary of the Change
+> > +---------------------
+> > +
+> > +According to the current CXL Specifications (Revision 3.2, Version 1.0)
+> > +the CXL Fixed Memory Window Structure (CFMWS) describes zero or more H=
+ost
+> > +Physical Address (HPA) windows that are associated with each CXL Host
+> > +Bridge. Each window represents a contiguous HPA range that may be
+> > +interleaved across one or more targets, some of which are CXL Host Bri=
+dges.
+> > +Associated with each window is a set of restrictions that govern its u=
+sage.
+> > +It is the OSPM=E2=80=99s responsibility to utilize each window for the=
+ specified
+> > +use.
+> > +
+> > +Table 9-22 states the Window Size field contains the total number of
+> > +consecutive bytes of HPA this window represents and this value shall b=
+e a
+> > +multiple of Number of Interleave Ways * 256 MB.
+> > +
+> > +Platform Firmware (BIOS) might reserve part of physical addresses below
+> > +4 GB (e.g., the Low Memory Hole that describes PCIe memory space for M=
+MIO
+> > +or a requirement for the greater than 8 way interleave CXL regions sta=
+rting
+> > +at address 0). In that case the Window Size value cannot be anymore
+> > +constrained to the NIW * 256 MB above-mentioned rule.
+>=20
+> I'm not following argument for large interleave at address 0 being a prob=
+lem
+> (if we ignore the low memory hole and similar as a separate issue).=20
+>
+> Even
+> if it is the interaction with the low memory hole, is 12 way interleave
+> of 256MiB devices a problem?  Fills up to 3GiB.=20
+>=20
+Right, I'll drop that argument for large interleaves. The problem is still =
+the=20
+MMIO hole that might intersect the 3 GiB requirement for 12 way interleave.
 
 Thanks,
-John
+
+=46abio
+
 
