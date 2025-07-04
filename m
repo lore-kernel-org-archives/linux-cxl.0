@@ -1,120 +1,181 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073AB1E5B7B
-	for <linux-cxl@vger.kernel.org>; Fri,  4 Jul 2025 03:58:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD92F15E5DC
+	for <linux-cxl@vger.kernel.org>; Fri,  4 Jul 2025 04:35:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751601495; cv=none; b=iWpM1f7/cYh8GFbW++pAQ8Sa13TNKCjz3j0K6jA+ZuQHV+meTah/Q3+fhFulzeSKq3yyW19obw7+rguH51jB3Q1iSaJnAK5qMDV1T6J9/v9bR0KKClgscg3UjcKDNijbSC7+lRMCWQIYLn4g7/yG/lXZbKe7oF+hjON8uQyARxw=
+	t=1751603741; cv=none; b=JswzxlemzBLsOJI/Fanc4kzv43Uteqoe+gEKoLzYfLYPW47cBB96FEERZ+z06Euyxp1GsvPFC0t1O3e6neG7+fxAgvKgBt5/wSGxE3P6T7O+rUBYYlwt1E9Mq91JLKdXOpnYrryOKLX++NKi69LAgeGGLOGUHMCxRgvKPXulCrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751601495; c=relaxed/simple;
-	bh=CwsW/v3kGTUgLenN3mCNVgbHpSdDlpbvzUgi56ChsA8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=txk0iuaEPdF2n8M+bxMsx/Dk8FqfucP7JPrPiMv4NnSlfNFBJxVNK9UqRz51SVC9ug12iDHylAqAnn38dDOZseHZypYaMrRN1ZnUT0HFfVTL6WkqAFnaQKZPg6iwwFllHCG9RW7azn3SPKQZRf67LWtonnWwudo4GHjTV9eg/8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Sy5ykVVv; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1751603741; c=relaxed/simple;
+	bh=0aLKriE71gQE/ckpxiFxB0cVLz6W0/OD+4paQU1Jf5Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P2WDRdFHRj1GcXFNHa+pRbKq/3rgeaeAM4KUChjKjdxF+vfuVdANvfJgO5/rFgy0zXFmYj3aubGe06m+DNm032RcdA+KgKblrnEx72OHWHraiNkktBssrsjtEGcSaVVRMA1X4Y/BxYsnmGj/XLLEVKJUdhYsEybyp04ds6jIO20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=X3d+5IhY; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Sy5ykVVv"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250704035806epoutp016b73cc955a48a043748f00111e3df7e1~O8EWBiaNU2626726267epoutp01N
-	for <linux-cxl@vger.kernel.org>; Fri,  4 Jul 2025 03:58:06 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250704035806epoutp016b73cc955a48a043748f00111e3df7e1~O8EWBiaNU2626726267epoutp01N
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1751601486;
-	bh=x/8gj71UJV86nP6lspRD9k7s8nGbai8aJQjsGNNfkWs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Sy5ykVVv9igqpbrP5eTn+ACaqNixyqCQJqmIqarv/c9xCb+XH518N4F8tsGuN6meQ
-	 wLMHXZFJBXmVuGd56oPNBUItOsjxPfYYpWTsJNPvjw6GK21ZZFZfTZ+F5jWxKGOdyt
-	 zmIDWub3p70R5y6CFiKvCITYFA7C0LqlI6nfY/QY=
-Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
-	20250704035805epcas5p320c4465b7969403a662650d43de3d573~O8EVMpvZo0399503995epcas5p3J;
-	Fri,  4 Jul 2025 03:58:05 +0000 (GMT)
-Received: from epcpadp2new (unknown [182.195.40.142]) by
-	epsnrtp01.localdomain (Postfix) with ESMTP id 4bYKbx3SWkz6B9m6; Fri,  4 Jul
-	2025 03:58:05 +0000 (GMT)
-Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250703100429epcas5p1dd84b9da7f710c941e856857e212f64a~Ota9A8bTr0702407024epcas5p1G;
-	Thu,  3 Jul 2025 10:04:29 +0000 (GMT)
-Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250703100426epsmtip1b6479f8c372de8f2814a0faefe0c5332~Ota6ltdXZ2058220582epsmtip1u;
-	Thu,  3 Jul 2025 10:04:26 +0000 (GMT)
-Date: Thu, 3 Jul 2025 15:34:21 +0530
-From: Neeraj Kumar <s.neeraj@samsung.com>
-To: Ira Weiny <ira.weiny@intel.com>
-Cc: dan.j.williams@intel.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	a.manzanares@samsung.com, nifan.cxl@gmail.com, anisa.su@samsung.com,
-	vishak.g@samsung.com, krish.reddy@samsung.com, arun.george@samsung.com,
-	alok.rathore@samsung.com, neeraj.kernel@gmail.com,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	nvdimm@lists.linux.dev, gost.dev@samsung.com, cpgs@samsung.com
-Subject: Re: [RFC PATCH 02/20] nvdimm/label: Prep patch to accommodate cxl
- lsa 2.1 support
-Message-ID: <158453976.61751601485478.JavaMail.epsvc@epcpadp2new>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="X3d+5IhY"
+Date: Fri, 4 Jul 2025 13:35:27 +0900
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751603736;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cpwlsgHAJHmGu3j0rbHKkvBMAPaTp7uD86HXoaJWHEE=;
+	b=X3d+5IhYd6OuDRV/UG6J+gDg4M1q4Zla1NShlbf4noqAVLM/QeqWqRTiaGXEKXuthaAWBK
+	mogpSn//fUNkGIpuIdO8EDty/WXD0u6+0Fk9eC1cZ9DTpWLSlbfhKt9dUXXDA69/Pq4R4X
+	L7m1s4vfsbzFmbwB9DMLXz7zQNGWLFs=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Itaru Kitayama <itaru.kitayama@linux.dev>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: qemu-devel@nongnu.org, Fan Ni <fan.ni@samsung.com>,
+	Peter Maydell <peter.maydell@linaro.org>,
+	Eric Auger <eric.auger@redhat.com>, mst@redhat.com,
+	Zhijian Li <lizhijian@fujitsu.com>, linuxarm@huawei.com,
+	linux-cxl@vger.kernel.org, qemu-arm@nongnu.org,
+	Yuquan Wang <wangyuquan1236@phytium.com.cn>,
+	Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
+	Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>
+Subject: Re: [PATCH qemu v17 0/5] arm/virt: CXL support via pxb_cxl
+Message-ID: <aGdaD6Q6GAZtjIDg@vm4>
+References: <20250703104110.992379-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <6865728b489a7_30f2b72947b@iweiny-mobl.notmuch>
-X-CMS-MailID: 20250703100429epcas5p1dd84b9da7f710c941e856857e212f64a
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----h0bZ1fOXZXBKxlzn_9r8J_wZFA-mIVa_VlXZDLVzFug9RPyR=_ebefa_"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20250617124011epcas5p2264e30ec58977907f80d311083265641
-References: <20250617123944.78345-1-s.neeraj@samsung.com>
-	<CGME20250617124011epcas5p2264e30ec58977907f80d311083265641@epcas5p2.samsung.com>
-	<700072760.81750165203833.JavaMail.epsvc@epcpadp1new>
-	<6865728b489a7_30f2b72947b@iweiny-mobl.notmuch>
-
-------h0bZ1fOXZXBKxlzn_9r8J_wZFA-mIVa_VlXZDLVzFug9RPyR=_ebefa_
-Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250703104110.992379-1-Jonathan.Cameron@huawei.com>
+X-Migadu-Flow: FLOW_OUT
 
-On 02/07/25 12:55PM, Ira Weiny wrote:
->Neeraj Kumar wrote:
->> In order to accommodate cxl lsa 2.1 format region label, renamed
->> nd_namespace_label to nd_lsa_label.
->
->This does not really make it clear why a name change is required.
->
->Could you elaborate here?
+On Thu, Jul 03, 2025 at 11:41:05AM +0100, Jonathan Cameron wrote:
+> v17: Thanks to Eric for review
+> - Add a comment to the high memory map to reduce the chance of nasty
+>   surprises in the future as similar to device_memory, the CXL
+>   Fixed Memory Windows are of variable size as so can't be represented
+>   by explicit entries in the map.
+> - Updated a couple of patch descriptions to provide answers to questions
+>   Eric raised.
 
-Hi Ira,
+I also tested the cxl/next kernel; it boots fine with CXL devices.  
 
-LSA 2.1 format introduces region label, which can also reside into LSA
-along with only namespace label as per v1.1 and v1.2
+Tested-by: Itaru Kitayama <itaru.kitayama@fujitsu.com>
 
-As both namespace and region labels are of same size, i.e, 256 bytes.
-Therefore I have introduced nd_lsa_label as following
-
-   struct nd_lsa_label {
-	union {
-		struct nd_namespace_label ns_label;
-		struct cxl_region_label rg_label;
-	};
-   };
-
-Sure, I will update commit message with above information in next
-patch-set.
-
-
-Thanks,
-Neeraj
-
-------h0bZ1fOXZXBKxlzn_9r8J_wZFA-mIVa_VlXZDLVzFug9RPyR=_ebefa_
-Content-Type: text/plain; charset="utf-8"
-
-
-------h0bZ1fOXZXBKxlzn_9r8J_wZFA-mIVa_VlXZDLVzFug9RPyR=_ebefa_--
-
+> 
+> v16:
+> - Mostly additional documentation and descriptive text in
+>   patch titles.
+> - Update test to reflect changes to other tests.
+> - Update physmem_max in virt to include the CXL memory.
+> 
+> Updated cover letter
+> 
+> Back in 2022, this series stalled on the absence of a solution to device
+> tree support for PCI Expander Bridges (PXB) and we ended up only having
+> x86 support upstream. I've been carrying the arm64 support out of tree
+> since then, with occasional nasty surprises (e.g. UNIMP + DT issue seen
+> a few weeks ago) and a fair number of fiddly rebases.
+> gitlab.com/jic23/qemu cxl-<latest date>.  Will update shortly with this
+> series.
+> 
+> A recent discussion with Peter Maydell indicated that there are various
+> other ACPI only features now, so in general he might be more relaxed
+> about DT support being necessary. The upcoming vSMMUv3 support would
+> run into this problem as well.
+> 
+> I presented the background to the PXB issue at Linaro connect 2022. In
+> short the issue is that PXBs steal MMIO space from the main PCI root
+> bridge. The challenge is knowing how much to steal.
+> 
+> On ACPI platforms, we can rely on EDK2 to perform an enumeration and
+> configuration of the PCI topology and QEMU can update the ACPI tables
+> after EDK2 has done this when it can simply read the space used by the
+> root ports. On device tree, there is no entity to figure out that
+> enumeration so we don't know how to size the stolen region.
+> 
+> Three approaches were discussed:
+> 1) Enumerating in QEMU. Horribly complex and the last thing we want is a
+>    3rd enumeration implementation that ends up out of sync with EDK2 and
+>    the kernel (there are frequent issues because of how those existing
+>    implementations differ.
+> 2) Figure out how to enumerate in kernel. I never put a huge amount of work
+>    into this, but it seemed likely to involve a nasty dance with similar
+>    very specific code to that EDK2 is carrying and would very challenging
+>    to upstream (given the lack of clarity on real use cases for PXBs and
+>    DT).
+> 3) Hack it based on the control we have which is bus numbers.
+>    No one liked this but it worked :)
+> 
+> The other little wrinkle would be the need to define full bindings for CXL
+> on DT + implement a fairly complex kernel stack as equivalent in ACPI
+> involves a static table, CEDT, new runtime queries via _DSM and a description
+> of various components. Doable, but so far there is no interest on physical
+> platforms. Worth noting that for now, the QEMU CXL emulation is all about
+> testing and developing the OS stack, not about virtualization (performance
+> is terrible except in some very contrived situations!)
+> 
+> There is only a very simple test in here, because my intent is not to
+> duplicate what we have on x86, but just to do a smoke test that everything
+> is hooked up.  In general we need much more comprehensive end to end CXL
+> tests but that requires a reaonsably stable guest software stack. A few
+> people have expressed interest in working on that, but we aren't there yet.
+> 
+> Note that this series has a very different use case to that in the proposed
+> SBSA-ref support:
+> https://lore.kernel.org/qemu-devel/20250117034343.26356-1-wangyuquan1236@phytium.com.cn/
+> 
+> SBSA-ref is a good choice if you want a relatively simple mostly fixed
+> configuration.  That works well with the limited host system
+> discoverability etc as EDK2 can be build against a known configuration.
+> 
+> My interest with this support in arm/virt is support host software stack
+> development (we have a wide range of contributors, most of whom are working
+> on emulation + the kernel support). I care about the weird corners. As such
+> I need to be able to bring up variable numbers of host bridges, multiple CXL
+> Fixed Memory Windows with varying characteristics (interleave etc), complex
+> NUMA topologies with wierd performance characteristics etc. We can do that
+> on x86 upstream today, or my gitlab tree. Note that we need arm support
+> for some arch specific features in the near future (cache flushing).
+> Doing kernel development with this need for flexibility on SBSA-ref is not
+> currently practical. SBSA-ref CXL support is an excellent thing, just
+> not much use to me for this work.
+> 
+> Also, we are kicking off some work on DCD virtualization, particularly to
+> support inter-host shared memory being presented up into a VM. That
+> will need upstream support on arm64 as it is built on top of the existing
+> CXL emulation to avoid the need for a separate guest software stack.
+> 
+> Note this is TCG only - it is possible to support limited use with KVM but
+> that needs additional patches not yet ready for upstream.  The challenge
+> is interleave - and the solution is don't interleave if you want to run
+> with KVM.
+> 
+> Jonathan Cameron (5):
+>   hw/cxl-host: Add an index field to CXLFixedMemoryWindow
+>   hw/cxl: Make the CXL fixed memory windows devices.
+>   hw/arm/virt: Basic CXL enablement on pci_expander_bridge instances
+>     pxb-cxl
+>   docs/cxl: Add an arm/virt example.
+>   qtest/cxl: Add aarch64 virt test for CXL
+> 
+>  docs/system/arm/virt.rst    |   9 ++
+>  docs/system/devices/cxl.rst |  11 +++
+>  include/hw/arm/virt.h       |   4 +
+>  include/hw/cxl/cxl.h        |   5 +-
+>  include/hw/cxl/cxl_host.h   |   5 +-
+>  hw/acpi/cxl.c               |  76 ++++++++--------
+>  hw/arm/virt-acpi-build.c    |  34 +++++++
+>  hw/arm/virt.c               |  30 +++++++
+>  hw/cxl/cxl-host-stubs.c     |   7 +-
+>  hw/cxl/cxl-host.c           | 174 +++++++++++++++++++++++++++++-------
+>  hw/i386/pc.c                |  50 +++++------
+>  tests/qtest/cxl-test.c      |  58 +++++++++---
+>  tests/qtest/meson.build     |   1 +
+>  13 files changed, 354 insertions(+), 110 deletions(-)
+> 
+> -- 
+> 2.48.1
+> 
