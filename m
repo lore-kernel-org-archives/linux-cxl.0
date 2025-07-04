@@ -1,71 +1,71 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C7B72BE7CC;
-	Fri,  4 Jul 2025 08:27:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17BBE328B1E;
+	Fri,  4 Jul 2025 08:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751617640; cv=none; b=oxeQ+rmxEbQQECvZOVAW2hd5P8KkTe2vjiFIdB1MrH6DvyB4V5vERjEv8+Pd6Fxc/KFo3qRwsCLM8sz8Etm7dFN20xHERaTmvJtkkGbZTrl48Y6nD4kPHHag5UNH8BnRQm1DHE42YjL2GoDcUnKKrfDf1hpbJK5dnKpb3tWw2oc=
+	t=1751618679; cv=none; b=N7gkmVq50yWpEx1B3V8aRU5l1CWk/ZbC5SuYcJ1R5g1hNDlb7jwDxAd2i3zg42wnDg1pZHgg1L8RBSA8drnWBkLPGuFispugY1CB9KQXb5IGd9mOBpXfa+z6kH3/RyzSSA7e0YWSQL6XwCetiGfUkwQjERPFgS5gI/O5P+M/Wh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751617640; c=relaxed/simple;
-	bh=Ax7r7LsDUqgFOF/VvslSmOmKLT1oZFVJhHP1ZiTTjjA=;
+	s=arc-20240116; t=1751618679; c=relaxed/simple;
+	bh=ubkxPX2FW+GZUe3/04Eh7dd0rWb/KcE745/jPL04D+A=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iVq8o0THdRolwfgZZXbwbYMkH629S+xtK9F62x2gklQWp/YY6T+enDLOg1rLhVXvLrWCvO/VmGHwGQaxe+5WNBfbJceAbSuDEYVsU/t5X+6DY7FxoC3cdHwdZ6D+bfSQkS8l0u3fAbz394hAmWNXjVNMDDlNfn5UtxFCQY8rLs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ErzCZADf; arc=none smtp.client-ip=209.85.218.48
+	 To:Cc:Content-Type; b=Lpdm+y+N5nSPlh0DZcvByOhBMwRGfpobiteHJss14hPwXXxGxQhWw+dftq7C7aH/f6qILma2+LA0sorKXwbCenXvLkO6uTAvhVQQZWNpd8TGAqr9qETDAhsIBAnfklcOStK31yMNYJoUCWgAhK/azgI78yRpACgE3htOMy6/pLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iPMQykqK; arc=none smtp.client-ip=209.85.208.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ErzCZADf"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ae3c5f666bfso108707466b.3;
-        Fri, 04 Jul 2025 01:27:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iPMQykqK"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-604bff84741so1196644a12.2;
+        Fri, 04 Jul 2025 01:44:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751617635; x=1752222435; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1751618675; x=1752223475; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gmqVjk3StBYQz0vLDf82oFRdTLo20cALrcm7o2Qh9dw=;
-        b=ErzCZADfvKeeoQ+B2FPvjsYOkm6Xf+bylxoayFeJw+qho2d+6jA7JqeP98E+RWPsjg
-         S1L+HnaU1uqfFfpRYRaWRs7ZzOvvq3Qx5MTjiRXIRwMWVAzSzLmsBnOGIvTi2MJkfZVb
-         IRPE8b2UpbaCEBslwE/o3IP85/TEWAQ0ZLeTGb8lkDXKygvz+VG/ReM+mZUA1DIsWg9j
-         DduTcB1PMLjaK6THnbPzQMGBlbtzNisLAq4n9LV13dmZ3HMN8s2UfNLiJ3fI6u4O1cwG
-         6TqXq395d0ZXcyj1ixu5XHMfJ/l7PbcIXLnXPt6K7xAhEkZz+svSg9lCQEXRDUhh7baD
-         nagQ==
+        bh=pLxVD++bObx7XIGt1aHIikLchHPfaB8ug5wDwTwQnEE=;
+        b=iPMQykqKQDzJ/qyqwf8UXnEM+QAeQ/FMxrsswA+vRKzBE8LDpCvdyLO5n41ee9nsXI
+         EcN1jLK69K30zD01Hymxd88y+3th6KBcZaBaGAAs2Nu5OihJCKQuxq8qR6T6VYDcp7ma
+         SvXNp/cbZNe2XR0fTV6SlfNYgiLM0eLeQBI7SiMqQtH8WZC4soJLvqiNt4r4SEDJMWE5
+         xhGpWYHMOky90jBejawKzd+VJTkP1XD6D2/5690GX4/zDVQU1Dc6ovzKgdsCwBubqkB0
+         QxlQbhzPmOMFE9r8UFcIci1dKEduETdglQ/aIXDxjH+/hBww1AtZS+pgLLp6QlAKBAeH
+         eTHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751617635; x=1752222435;
+        d=1e100.net; s=20230601; t=1751618675; x=1752223475;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gmqVjk3StBYQz0vLDf82oFRdTLo20cALrcm7o2Qh9dw=;
-        b=WKfIOe4oF1hlClz4EdKAPlLcyiAQf7olYyD3FeDWf0RMv7oLOuwWoGY80csqTRJ4JA
-         E9orNrf7S5+pQGEdCon9wHjYyvxqcpap+k8yewGaPQxQ7SUJMQwW9m8TPP2V0Tt1xmKa
-         NV486z/nhnvThQAwgqBSZU713LoVn9gs/P6J5ohuQneE5YTXxoBxm0FhbmBUhHO7JXSj
-         66meT+K8PJFFohQPeXV4FzwASpaJybMEOaaFGa7x4hGKmmcn8MdI9uDN7tGkJX0w2PAw
-         gKcLERF4B+cWStBuiyQXGcsYmnBem7ZUkZgV0p3cDcfoyIwkY/O4zyiICQcDfz8jNVTX
-         c63g==
-X-Forwarded-Encrypted: i=1; AJvYcCUX4qLjHIu9MwzeA+7MKxaeiIZb51U+FZcd2sTDWwfNBH5RSNgOTik+J92bK2dsMM3474lJY5U91PlTVhiN@vger.kernel.org, AJvYcCVDQNzBqqcwhizNc+C+uyKruaHPNHtJ7mf/OixVPVDY3jlIi/D0mYUemipZcTQM5Klg/nGR35URbl0=@vger.kernel.org, AJvYcCVa+it8CPyCmSdw6D8OWMKBpHr3NdGj32DZwwi2oVu13WL5KAeFj8Bq5z+xZiWOVxxN+jnn4id2DRiW@vger.kernel.org, AJvYcCWZth1YiIGVICyESHnPtLygQmBaHe+qcYskTIT2FwAHcejuFrySLHFe0fOEt5yr5TkMIB/gossoNYyj/lkCvw==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1QrJ2dK7AJ9H3TR7uCowH3UBVn4N8GkNB80leZN5YdErjprTa
-	7taa5fDIcIYRQpsFqIBmx4zQr2G60uQdISKcBLb1DR0hJlTsuG5mSMVKtSa2lsRAz3WKeJoAWci
-	Sp32LmmMANa2KKmS51zv2spKJYoTF1A8=
-X-Gm-Gg: ASbGnctY+9BqHZmJBZhpRGhmsM61/ca3xL0pFgno++/pBapR75F3BSO6ABx9UWJ/h5y
-	XtyopozggXuLjdUXAp7kdoAUA51ghc2oFLYqpAwOXMLTZgSks6JY/+EZDYXFq219gFyRVXqnLUh
-	jHqI3JS/a+FmY52esM9DUdVzxdTG2hZ+R7YfowZY4Usv4=
-X-Google-Smtp-Source: AGHT+IGLkTQtUTcFlGN4yvxvN7TfmyiTnt88AODK3Pj9YzmDgae8AZpRUopQhqnS3eokpzIIJST/uqAmRG6quLm9PRk=
-X-Received: by 2002:a17:907:c5cd:b0:ae0:d7c7:97ee with SMTP id
- a640c23a62f3a-ae3fbd8097dmr135529566b.41.1751617634954; Fri, 04 Jul 2025
- 01:27:14 -0700 (PDT)
+        bh=pLxVD++bObx7XIGt1aHIikLchHPfaB8ug5wDwTwQnEE=;
+        b=m1j99wHQCJZ9R2cswD6C6lpXV27uYeidgBgqnS7AtXp5POnuFMyetGy2vbhC+DsfkH
+         vHF+pFz93d/f9ZzEFUbSe35ZvLBa172Ia0YGqJ1b1B0f9skjgXU3vQxIRcNv8BZffXAX
+         pzG1MvUWbWRph0+fCXzI9uzTjfvwVas5/f0qlhnLUAkl+0iHwau5Nk+fiQIMle0CV20e
+         2saAjFqLz1Hzh5wG3JT1VeW4NdKJV0c5UmPMfumUQ6DJPKKsJ/kTujKWJHM7hBruzhdj
+         G82O2vMWvnwJ5LM3tEUTyDaEY39Ilg9iucoEMGB0uaCDesnsKJ1kQP2ZfBP06dU2hZ4s
+         qC9w==
+X-Forwarded-Encrypted: i=1; AJvYcCUJc2MI22hgReNm4MAS8eZ7YRazNsna6aV68eSvcUzQ3O1GrH4DQTyGQJAxPYO9SGDu1MCIWzJIfis=@vger.kernel.org, AJvYcCVz99qTlXDClG5P9+8XFVtEP4HvfvqS1CryeEpobOhTeuvSug3nRxv/ruDP5VEXtlBSyOQ/1iw38voFMNLdPQ==@vger.kernel.org, AJvYcCWdzH0VOmHblQDyvz+N+KripNDLuED22kjZQTNrJB41X7I5IIsohMBT6alrD57S5cHjCzIlZWTnwTJZLlsO@vger.kernel.org, AJvYcCXW4EfoZbkYkc8Kz+ZJOM6wreIEwJ3p0NUUYfhvT15l+/6fv0h4qtf0GnX8aA7pr9Oas2ifYDNs0tgK@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOJTJflQl3gdga1WBxskRDxtM/7BT+MVfgv6uF2ghy9quM6EhJ
+	yt78mjV1jS5QtcRHVOtaNZPPRNhitEyk3pvGE+/9NVJf0brmUnCL2QGTlbiXs9IsXubioWIcrYx
+	8RKJsn36j5HtBKE6kDb/DmBqp7+wboQc=
+X-Gm-Gg: ASbGncu9u47uoOhlybqaw+P67KaOlN/7u3jY++7dI92NiimhXUvSmFKpSK0o549QgVu
+	5Xo9/rPw7sK0aq3S3RclLzVO4EEiqe6a/tlu9OPNx9B81RFELs+XF3E+f75W52hZ58yaHlqkd3W
+	CVfC3piEKFFm5Qn8yNCGqsfyOb/XeiB6NpfoNXRpapPfw=
+X-Google-Smtp-Source: AGHT+IFBDaP8zQxWcQljULEFa6GosLHM1Fr9HgBZPyfuh3qYvt0YaniWVIKCyvoHhchZrszWhCvhEz6VfcNnf1wh2wI=
+X-Received: by 2002:a17:907:7290:b0:ae3:64ec:5eb0 with SMTP id
+ a640c23a62f3a-ae3fbc2896bmr136387066b.11.1751618674841; Fri, 04 Jul 2025
+ 01:44:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250703185032.46568-1-john@groves.net> <20250703185032.46568-19-john@groves.net>
-In-Reply-To: <20250703185032.46568-19-john@groves.net>
+References: <20250703185032.46568-1-john@groves.net> <20250703185032.46568-10-john@groves.net>
+In-Reply-To: <20250703185032.46568-10-john@groves.net>
 From: Amir Goldstein <amir73il@gmail.com>
-Date: Fri, 4 Jul 2025 10:27:03 +0200
-X-Gm-Features: Ac12FXzoQQuUSkwO4WI6CczHSELRUoH6Tv15qKAcyDn_VDYQm1YX8QzT980ajJM
-Message-ID: <CAOQ4uxj0Q5bnMNyOEA96H9yP=mPoM5LsyzEuKu184cDKaQuJpg@mail.gmail.com>
-Subject: Re: [RFC V2 18/18] famfs_fuse: Add documentation
+Date: Fri, 4 Jul 2025 10:44:23 +0200
+X-Gm-Features: Ac12FXxwSwxI5T6ujv-byO1091sUsmVe0O4bcF4RyE_aZllEPVlxUcLQOg0w034
+Message-ID: <CAOQ4uxgqMOL4aRnpm02Q7V8_T1vtgHHxe+QnoLANhS_Vr2-VRw@mail.gmail.com>
+Subject: Re: [RFC V2 09/18] famfs_fuse: Update macro s/FUSE_IS_DAX/FUSE_IS_VIRTIO_DAX/
 To: John Groves <John@groves.net>
 Cc: Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
 	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
@@ -85,227 +85,162 @@ Content-Transfer-Encoding: quoted-printable
 
 On Thu, Jul 3, 2025 at 8:51=E2=80=AFPM John Groves <John@groves.net> wrote:
 >
-> Add Documentation/filesystems/famfs.rst and update MAINTAINERS
+> Virtio_fs now needs to determine if an inode is DAX && not famfs.
 >
 > Signed-off-by: John Groves <john@groves.net>
 > ---
->  Documentation/filesystems/famfs.rst | 142 ++++++++++++++++++++++++++++
->  Documentation/filesystems/index.rst |   1 +
->  MAINTAINERS                         |   1 +
->  3 files changed, 144 insertions(+)
->  create mode 100644 Documentation/filesystems/famfs.rst
-
-
-Considering "Documentation: fuse: Consolidate FUSE docs into its own
-subdirectory"
-https://lore.kernel.org/linux-fsdevel/20250612032239.17561-1-bagasdotme@gma=
-il.com/
-
-I wonder if famfs and virtiofs should be moved into fuse subdir?
-To me it makes more sense, but it's not a clear cut.
-
+>  fs/fuse/dir.c    |  2 +-
+>  fs/fuse/file.c   | 13 ++++++++-----
+>  fs/fuse/fuse_i.h |  6 +++++-
+>  fs/fuse/inode.c  |  2 +-
+>  fs/fuse/iomode.c |  2 +-
+>  5 files changed, 16 insertions(+), 9 deletions(-)
 >
-> diff --git a/Documentation/filesystems/famfs.rst b/Documentation/filesyst=
-ems/famfs.rst
-> new file mode 100644
-> index 000000000000..0d3c9ba9b7a8
-> --- /dev/null
-> +++ b/Documentation/filesystems/famfs.rst
-> @@ -0,0 +1,142 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +.. _famfs_index:
-> +
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +famfs: The fabric-attached memory file system
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +- Copyright (C) 2024-2025 Micron Technology, Inc.
-> +
-> +Introduction
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +Compute Express Link (CXL) provides a mechanism for disaggregated or
-> +fabric-attached memory (FAM). This creates opportunities for data sharin=
-g;
-> +clustered apps that would otherwise have to shard or replicate data can
-> +share one copy in disaggregated memory.
-> +
-> +Famfs, which is not CXL-specific in any way, provides a mechanism for
-> +multiple hosts to concurrently access data in shared memory, by giving i=
-t
-> +a file system interface. With famfs, any app that understands files can
-> +access data sets in shared memory. Although famfs supports read and writ=
-e,
-> +the real point is to support mmap, which provides direct (dax) access to
-> +the memory - either writable or read-only.
-> +
-> +Shared memory can pose complex coherency and synchronization issues, but
-> +there are also simple cases. Two simple and eminently useful patterns th=
-at
-> +occur frequently in data analytics and AI are:
-> +
-> +* Serial Sharing - Only one host or process at a time has access to a fi=
-le
-> +* Read-only Sharing - Multiple hosts or processes share read-only access
-> +  to a file
-> +
-> +The famfs fuse file system is part of the famfs framework; user space
-> +components [1] handle metadata allocation and distribution, and provide =
-a
-> +low-level fuse server to expose files that map directly to [presumably
-> +shared] memory.
-> +
-> +The famfs framework manages coherency of its own metadata and structures=
-,
-> +but does not attempt to manage coherency for applications.
-> +
-> +Famfs also provides data isolation between files. That is, even though
-> +the host has access to an entire memory "device" (as a devdax device), a=
-pps
-> +cannot write to memory for which the file is read-only, and mapping one
-> +file provides isolation from the memory of all other files. This is pret=
-ty
-> +basic, but some experimental shared memory usage patterns provide no suc=
-h
-> +isolation.
-> +
-> +Principles of Operation
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +Famfs is a file system with one or more devdax devices as a first-class
-> +backing device(s). Metadata maintenance and query operations happen
-> +entirely in user space.
-> +
-> +The famfs low-level fuse server daemon provides file maps (fmaps) and
-> +devdax device info to the fuse/famfs kernel component so that
-> +read/write/mapping faults can be handled without up-calls for all active
-> +files.
-> +
-> +The famfs user space is responsible for maintaining and distributing
-> +consistent metadata. This is currently handled via an append-only
-> +metadata log within the memory, but this is orthogonal to the fuse/famfs
-> +kernel code.
-> +
-> +Once instantiated, "the same file" on each host points to the same share=
-d
-> +memory, but in-memory metadata (inodes, etc.) is ephemeral on each host
-> +that has a famfs instance mounted. Use cases are free to allow or not
-> +allow mutations to data on a file-by-file basis.
-> +
-> +When an app accesses a data object in a famfs file, there is no page cac=
-he
-> +involvement. The CPU cache is loaded directly from the shared memory. In
-> +some use cases, this is an enormous reduction read amplification compare=
-d
-> +to loading an entire page into the page cache.
-> +
-> +
-> +Famfs is Not a Conventional File System
-> +---------------------------------------
-> +
-> +Famfs files can be accessed by conventional means, but there are
-> +limitations. The kernel component of fuse/famfs is not involved in the
-> +allocation of backing memory for files at all; the famfs user space
-> +creates files and responds as a low-level fuse server with fmaps and
-> +devdax device info upon request.
-> +
-> +Famfs differs in some important ways from conventional file systems:
-> +
-> +* Files must be pre-allocated by the famfs framework; allocation is neve=
-r
-> +  performed on (or after) write.
-> +* Any operation that changes a file's size is considered to put the file
-> +  in an invalid state, disabling access to the data. It may be possible =
-to
-> +  revisit this in the future. (Typically the famfs user space can restor=
-e
-> +  files to a valid state by replaying the famfs metadata log.)
-> +
-> +Famfs exists to apply the existing file system abstractions to shared
-> +memory so applications and workflows can more easily adapt to an
-> +environment with disaggregated shared memory.
-> +
-> +Memory Error Handling
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +Possible memory errors include timeouts, poison and unexpected
-> +reconfiguration of an underlying dax device. In all of these cases, famf=
-s
-> +receives a call from the devdax layer via its iomap_ops->notify_failure(=
+> diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
+> index 8f699c67561f..ad8cdf7b864a 100644
+> --- a/fs/fuse/dir.c
+> +++ b/fs/fuse/dir.c
+> @@ -1939,7 +1939,7 @@ int fuse_do_setattr(struct mnt_idmap *idmap, struct=
+ dentry *dentry,
+>                 is_truncate =3D true;
+>         }
+>
+> -       if (FUSE_IS_DAX(inode) && is_truncate) {
+> +       if (FUSE_IS_VIRTIO_DAX(fi) && is_truncate) {
+>                 filemap_invalidate_lock(mapping);
+>                 fault_blocked =3D true;
+>                 err =3D fuse_dax_break_layouts(inode, 0, -1);
+> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+> index 754378dd9f71..93b82660f0c8 100644
+> --- a/fs/fuse/file.c
+> +++ b/fs/fuse/file.c
+> @@ -239,7 +239,7 @@ static int fuse_open(struct inode *inode, struct file=
+ *file)
+>         int err;
+>         bool is_truncate =3D (file->f_flags & O_TRUNC) && fc->atomic_o_tr=
+unc;
+>         bool is_wb_truncate =3D is_truncate && fc->writeback_cache;
+> -       bool dax_truncate =3D is_truncate && FUSE_IS_DAX(inode);
+> +       bool dax_truncate =3D is_truncate && FUSE_IS_VIRTIO_DAX(fi);
+>
+>         if (fuse_is_bad(inode))
+>                 return -EIO;
+> @@ -1770,11 +1770,12 @@ static ssize_t fuse_file_read_iter(struct kiocb *=
+iocb, struct iov_iter *to)
+>         struct file *file =3D iocb->ki_filp;
+>         struct fuse_file *ff =3D file->private_data;
+>         struct inode *inode =3D file_inode(file);
+> +       struct fuse_inode *fi =3D get_fuse_inode(inode);
+>
+>         if (fuse_is_bad(inode))
+>                 return -EIO;
+>
+> -       if (FUSE_IS_DAX(inode))
+> +       if (FUSE_IS_VIRTIO_DAX(fi))
+>                 return fuse_dax_read_iter(iocb, to);
+>
+>         /* FOPEN_DIRECT_IO overrides FOPEN_PASSTHROUGH */
+> @@ -1791,11 +1792,12 @@ static ssize_t fuse_file_write_iter(struct kiocb =
+*iocb, struct iov_iter *from)
+>         struct file *file =3D iocb->ki_filp;
+>         struct fuse_file *ff =3D file->private_data;
+>         struct inode *inode =3D file_inode(file);
+> +       struct fuse_inode *fi =3D get_fuse_inode(inode);
+>
+>         if (fuse_is_bad(inode))
+>                 return -EIO;
+>
+> -       if (FUSE_IS_DAX(inode))
+> +       if (FUSE_IS_VIRTIO_DAX(fi))
+>                 return fuse_dax_write_iter(iocb, from);
+>
+>         /* FOPEN_DIRECT_IO overrides FOPEN_PASSTHROUGH */
+> @@ -2627,10 +2629,11 @@ static int fuse_file_mmap(struct file *file, stru=
+ct vm_area_struct *vma)
+>         struct fuse_file *ff =3D file->private_data;
+>         struct fuse_conn *fc =3D ff->fm->fc;
+>         struct inode *inode =3D file_inode(file);
+> +       struct fuse_inode *fi =3D get_fuse_inode(inode);
+>         int rc;
+>
+>         /* DAX mmap is superior to direct_io mmap */
+> -       if (FUSE_IS_DAX(inode))
+> +       if (FUSE_IS_VIRTIO_DAX(fi))
+>                 return fuse_dax_mmap(file, vma);
+>
+>         /*
+> @@ -3191,7 +3194,7 @@ static long fuse_file_fallocate(struct file *file, =
+int mode, loff_t offset,
+>                 .mode =3D mode
+>         };
+>         int err;
+> -       bool block_faults =3D FUSE_IS_DAX(inode) &&
+> +       bool block_faults =3D FUSE_IS_VIRTIO_DAX(fi) &&
+>                 (!(mode & FALLOC_FL_KEEP_SIZE) ||
+>                  (mode & (FALLOC_FL_PUNCH_HOLE | FALLOC_FL_ZERO_RANGE)));
+>
+> diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
+> index 2086dac7243b..9d87ac48d724 100644
+> --- a/fs/fuse/fuse_i.h
+> +++ b/fs/fuse/fuse_i.h
+> @@ -1426,7 +1426,11 @@ void fuse_free_conn(struct fuse_conn *fc);
+>
+>  /* dax.c */
+>
+> -#define FUSE_IS_DAX(inode) (IS_ENABLED(CONFIG_FUSE_DAX) && IS_DAX(inode)=
 )
-> +function. If any memory errors have been detected, access to the affecte=
-d
-> +daxdev is disabled to avoid further errors or corruption.
-> +
-> +In all known cases, famfs can be unmounted cleanly. In most cases errors
-> +can be cleared by re-initializing the memory - at which point a new famf=
-s
-> +file system can be created.
-> +
-> +Key Requirements
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +The primary requirements for famfs are:
-> +
-> +1. Must support a file system abstraction backed by sharable devdax memo=
-ry
-> +2. Files must efficiently handle VMA faults
-> +3. Must support metadata distribution in a sharable way
-> +4. Must handle clients with a stale copy of metadata
-> +
-> +The famfs kernel component takes care of 1-2 above by caching each file'=
-s
-> +mapping metadata in the kernel.
-> +
-> +Requirements 3 and 4 are handled by the user space components, and are
-> +largely orthogonal to the functionality of the famfs kernel module.
-> +
-> +Requirements 3 and 4 cannot be met by conventional fs-dax file systems
-> +(e.g. xfs) because they use write-back metadata; it is not valid to moun=
-t
-> +such a file system on two hosts from the same in-memory image.
-> +
-> +
-> +Famfs Usage
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +Famfs usage is documented at [1].
-> +
-> +
-> +References
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +- [1] Famfs user space repository and documentation
-> +      https://github.com/cxl-micron-reskit/famfs
-> diff --git a/Documentation/filesystems/index.rst b/Documentation/filesyst=
-ems/index.rst
-> index 2636f2a41bd3..5aad315206ee 100644
-> --- a/Documentation/filesystems/index.rst
-> +++ b/Documentation/filesystems/index.rst
-> @@ -90,6 +90,7 @@ Documentation for filesystem implementations.
->     ext3
->     ext4/index
->     f2fs
-> +   famfs
->     gfs2
->     gfs2-uevents
->     gfs2-glocks
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 02688f27a4d0..faa7de4a43de 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8814,6 +8814,7 @@ M:        John Groves <John@Groves.net>
->  L:     linux-cxl@vger.kernel.org
->  L:     linux-fsdevel@vger.kernel.org
->  S:     Supported
-> +F:     Documentation/filesystems/famfs.rst
->  F:     fs/fuse/famfs.c
->  F:     fs/fuse/famfs_kfmap.h
+> +/* This macro is used by virtio_fs, but now it also needs to filter for
+> + * "not famfs"
+> + */
+> +#define FUSE_IS_VIRTIO_DAX(fuse_inode) (IS_ENABLED(CONFIG_FUSE_DAX)    \
+> +                                       && IS_DAX(&fuse_inode->inode))
+
+I think we should take this opportunity to make it
+static inline fuse_is_virtio_dax()
+
+and because some of the call site really do want to know if this is dax
+should also leave a helper
+
+static inline fuse_is_dax()
+
+...
+
 >
-> --
-> 2.49.0
+>  ssize_t fuse_dax_read_iter(struct kiocb *iocb, struct iov_iter *to);
+>  ssize_t fuse_dax_write_iter(struct kiocb *iocb, struct iov_iter *from);
+> diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+> index e9db2cb8c150..29147657a99f 100644
+> --- a/fs/fuse/inode.c
+> +++ b/fs/fuse/inode.c
+> @@ -164,7 +164,7 @@ static void fuse_evict_inode(struct inode *inode)
+>         if (inode->i_sb->s_flags & SB_ACTIVE) {
+>                 struct fuse_conn *fc =3D get_fuse_conn(inode);
 >
+> -               if (FUSE_IS_DAX(inode))
+> +               if (FUSE_IS_VIRTIO_DAX(fi))
+>                         fuse_dax_inode_cleanup(inode);
+>                 if (fi->nlookup) {
+>                         fuse_queue_forget(fc, fi->forget, fi->nodeid,
+> diff --git a/fs/fuse/iomode.c b/fs/fuse/iomode.c
+> index c99e285f3183..aec4aecb5d79 100644
+> --- a/fs/fuse/iomode.c
+> +++ b/fs/fuse/iomode.c
+> @@ -204,7 +204,7 @@ int fuse_file_io_open(struct file *file, struct inode=
+ *inode)
+>          * io modes are not relevant with DAX and with server that does n=
+ot
+>          * implement open.
+>          */
+> -       if (FUSE_IS_DAX(inode) || !ff->args)
+> +       if (FUSE_IS_VIRTIO_DAX(fi) || !ff->args)
+>                 return 0;
+>
+
+... Like here, later in your patch set you add explicit check for
+!fuse_famfs_file()
+
+If you make this into if (fuse_is_dax(fi)
+it will be easier and nicer in the end.
+
+Thanks,
+Amir.
