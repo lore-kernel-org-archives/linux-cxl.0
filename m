@@ -1,189 +1,176 @@
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D02B1DAC92;
-	Fri,  4 Jul 2025 13:40:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C44C9307489;
+	Fri,  4 Jul 2025 13:43:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751636408; cv=none; b=BI8Nz7gl+xnC9+lYVbMSyJAbGmjE+FySsg5yKqB5Ensbo3c5i6rBGgcww/H/rosu1goRxOdtlhSjKlimnhbJuPPyRe8uRvxfPlayuXuMUZ1bHRgwbqGAJDt7lhQtJMxmh9rJTTNyAmhfVQ5UeJZi1I3Y95qwymfzt7VYtV7sP9Q=
+	t=1751636636; cv=none; b=aJG7rfO3IBXMu7upV0MHIRlVYZIaIn8ncRkUjmg9QdmEMW6fNcYYhqq7zsMco9vK1DSNwufI0U2BTuJ6soQPEbkAu2meB7uZaqZaC7LN+9jhcmlg5LveThtzWtlFy+TFswSB6coWAdnU5EHbBLur4iH/wBTuEvi5BWleDEVHW80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751636408; c=relaxed/simple;
-	bh=x7xVEMSsXXsnT+LLSekeh57Svi1duY+nh1PdFmeqLGQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KkWgUwixPymdB5aIl3CTHpVNsbIXXwB+y22ASJYQbIxTvNwSJrY1AFJEsmMouFTcKBziXaua03npA5hEPe1F3W9doUrg28tTRT4PzyXImzAceOjmhVDrI4rxcGP/Yo9cAEk6pqUSqLz2QtTIBYulLd5EHSBNb3aJXqBPYA7s8zY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XfEBFn0H; arc=none smtp.client-ip=209.85.160.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751636636; c=relaxed/simple;
+	bh=KmpX5zxlGsQARhawRN1W4dV47zBrJ2MU4Gpq1Itt2mE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MpGS2wI7ZFfOBwoc+5PY4qp3RBOoZw9lY2NUrN9bpUPx7YKZvbcbJxs4UCMg8Dj1lFw3x8sKFIh8+T1Xl0LK8BQNEjpD4w2KZATT6QvGwPZc5aMni+VjtAyhySVviKAr6Mfhl8QlVQMHOalCb3WeXF85j+hFTEwk2conUmJn7Q0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y9yeLqe6; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XfEBFn0H"
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-2ea65f5a0easo726354fac.1;
-        Fri, 04 Jul 2025 06:40:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751636405; x=1752241205; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2ggb97YnCGQscprdaRiD3aA04R3MJar4CeMJyfUEVTY=;
-        b=XfEBFn0H0srLeTRSPK4w37IW6+b3+oBDhpTgp9SCvVnsXWNkS00K8hcH1YV2ol/Q3O
-         LJBECX4gNvNRjI3f5041tgHaQi55k1ImpFXDQsHWfq5FybCGtqfnSYD3hC+DTKy2aQ9q
-         7BZqfvDR92hP0/ikKAQ2F0r1fHsJv1cces0Hv39btwOZeQ0U/LFg4Xa64VpQW0cNBCWG
-         PLlj2ye2TEub1HWAXeW9ghT/RiBb0ycRzlfVC7FnTdLuHYiDlUG6HQA2eesc/swaRBWE
-         trLylb52zRzgT148HUv2jizo9i7zbH+5Ai7T2/ep/RaOQwkLz8S85h9W3kAZuz1VhMTY
-         3gKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751636405; x=1752241205;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2ggb97YnCGQscprdaRiD3aA04R3MJar4CeMJyfUEVTY=;
-        b=SMkwwmtHib09y+f3LoZk5uDFkjzNLRpNx4pdabcJqkUrKzgfqoyulyPdqt+SpW91vO
-         Co/C3HoO51zA53eulBmtsiaInty/dvX3rduz8SPEfJNYoCb0mVVQJeQsoW9oVaEyjRFz
-         EuvRhLvYdva3J/AWJkscwnKvC04PGNSLkdNS4lmiYWkDNuYZb0bpskg7pTG7N5LT7y5X
-         +36ICP9Dpxkf8qsnjvbl1HdlkfSpx5TNQgrMeh5tqO3z7eUlXDP/e4MVcLXdyPv98dcy
-         0keoyiFwTIlHUofq0eKjR7CUEAIysLJJNxjcOJZywOsKAS6tt0DOvB30Oxd7/q//XGp1
-         7U7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVd5u1elRgq3ugxvuFE0pMt0Ha47CPjycUk2sqr4XhS0nd1IEUcETAKx2aNcECBTs7ExOQCqxxxxl0=@vger.kernel.org, AJvYcCWZV72f9K7/Wx9Abwb5NTNa4/CY/db9JJv+VeBsVHZEmYZnj/4iB9UrSAV6d22CpVic2NL83NzXBLuLshTM+A==@vger.kernel.org, AJvYcCXUaMpJ8g+AeBA8J/hI1b5vtpaevShpMvdTARUqH4sdaOfntSIO4MEt6YuPx6xyUP30nIU80XD7x2Ka@vger.kernel.org, AJvYcCXXUbOhFk3VqRLG4WhdWrCFSg0C/RhK2QSsRtK0blAc6zsomorDdQ7o6xzTwG7DZi5Ty5y+wQD31U9TwjBT@vger.kernel.org
-X-Gm-Message-State: AOJu0YzH7JmbNf5p/OZCfuHKxmo3PmVBdt3Lo0Fdtc3FfaOR0waAd68T
-	qK3eObfjDE+74OnZ/AA1hJOe7HhLd/5r/wkkHM/FOv5s8xkg/dZZcNmi
-X-Gm-Gg: ASbGncuJvyWmQooERHDrPymvcUtharQTSd2Wd+3jiIjO2lJbIcUrtP3wYZlUd2SDQIl
-	2zmtrePq1C254niCNQh3FpTM4zz01Y9vdgzNxmr7v4pTuxB+0nWvJcEd430Alx7FCgBaZfiRevM
-	VYhHlUr5QB/HP/NzvzispSQddn2HbRPIybpfx5v83RPZ+KSEwwvDozGwKxOLPUI6Rsk8biKL8JR
-	HYVmTQpqbX6A+P96G+o/BnHXRtWAKZyl+QH50lsXKIykbkNDv72v2TdMyaC1wbsV1YIDN0lkfee
-	zGpRcltQMvxdbs6DeLYKeShomYxa2ltuFdDDfcoOo0BRbRqNIqgcFCom8LcB7Ngf8iJ9rVUfiQf
-	jbUD7YzIB0g==
-X-Google-Smtp-Source: AGHT+IHTmverQslNh+Of2OQdfM9KG+sNpKYYyXBNG8W5je+VjCNljcNikA0fXeYMh2Zp5w7wNtcx6A==
-X-Received: by 2002:a05:6871:2d02:b0:2b8:b76f:1196 with SMTP id 586e51a60fabf-2f7920cb157mr2219870fac.19.1751636405315;
-        Fri, 04 Jul 2025 06:40:05 -0700 (PDT)
-Received: from groves.net ([2603:8080:1500:3d89:2db1:5c0d:1659:a3c])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2f78ff40cd6sm514849fac.11.2025.07.04.06.40.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 06:40:01 -0700 (PDT)
-Sender: John Groves <grovesaustin@gmail.com>
-Date: Fri, 4 Jul 2025 08:39:59 -0500
-From: John Groves <John@groves.net>
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: "Darrick J . Wong" <djwong@kernel.org>, 
-	Dan Williams <dan.j.williams@intel.com>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Bernd Schubert <bschubert@ddn.com>, John Groves <jgroves@micron.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
-	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>
-Subject: Re: [RFC V2 10/18] famfs_fuse: Basic fuse kernel ABI enablement for
- famfs
-Message-ID: <yhso6jddzt6c7glqadrztrswpisxmuvg7yopc6lp4gn44cxd4m@my4ajaw47q7d>
-References: <20250703185032.46568-1-john@groves.net>
- <20250703185032.46568-11-john@groves.net>
- <CAOQ4uxi7fvMgYqe1M3_vD3+YXm7x1c4YjA=eKSGLuCz2Dsk0TQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y9yeLqe6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751636635; x=1783172635;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=KmpX5zxlGsQARhawRN1W4dV47zBrJ2MU4Gpq1Itt2mE=;
+  b=Y9yeLqe6MVlKuwK9w2KkuyWgmqljXZIO8JIQCjtHar6A93uGzi4q1xwd
+   jYIdtzbG5yWxL6fX5GZqdhr4NTk1WbdCEv8cYBYma1XU0DOU8sMX7cTjk
+   NIE4nGumlBGlYmVoA3YBrXZ6/864Hl2UPleC0hS2kxuOgiTI6pJ13/+wr
+   RVP3yeVECMqnOhKw2urlNwJEcCpl4k/tExJukkSHSQDpAH05K4RLLr1Rj
+   BjOYgBmQRcy4DAhioehuyrZBSrUUoK4GUIfyDJNJyNvB8lRr1yK9HP3VY
+   rBsSrZPRzHBADq7bwcL1SDhwDnk9+xC2agr1EWdpdQDi6W+wM5F+9bRsX
+   g==;
+X-CSE-ConnectionGUID: j/z16jrERcqXnCm9ncKNdg==
+X-CSE-MsgGUID: qn7oUZ5MQQ+uZV1HRfZTnQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11484"; a="57745979"
+X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
+   d="scan'208";a="57745979"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 06:43:53 -0700
+X-CSE-ConnectionGUID: Xlct5SpASzGOsWnvRo5+Cg==
+X-CSE-MsgGUID: al4pzX24RQSY0KYIv3BFLA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,287,1744095600"; 
+   d="scan'208";a="155408398"
+Received: from hrotuna-mobl2.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.112])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 06:43:46 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: linux-cxl@vger.kernel.org, "Rafael J . Wysocki" <rafael@kernel.org>,
+ Len Brown <lenb@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+ Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
+ linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+ linux-edac@vger.kernel.org,
+ Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject:
+ Re: [PATCH 3/3 v4] ACPI: extlog: Trace CPER CXL Protocol Error Section
+Date: Fri, 04 Jul 2025 15:43:43 +0200
+Message-ID: <2114182.IDvDuAF1LB@fdefranc-mobl3>
+In-Reply-To: <20250701140503.00006a48@huawei.com>
+References:
+ <20250623145453.1046660-1-fabio.m.de.francesco@linux.intel.com>
+ <20250623145453.1046660-4-fabio.m.de.francesco@linux.intel.com>
+ <20250701140503.00006a48@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOQ4uxi7fvMgYqe1M3_vD3+YXm7x1c4YjA=eKSGLuCz2Dsk0TQ@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On 25/07/04 09:54AM, Amir Goldstein wrote:
-> On Thu, Jul 3, 2025 at 8:51 PM John Groves <John@groves.net> wrote:
-> >
-> > * FUSE_DAX_FMAP flag in INIT request/reply
-> >
-> > * fuse_conn->famfs_iomap (enable famfs-mapped files) to denote a
-> >   famfs-enabled connection
-> >
-> > Signed-off-by: John Groves <john@groves.net>
+On Tuesday, July 1, 2025 3:05:03=E2=80=AFPM Central European Summer Time Jo=
+nathan Cameron wrote:
+> On Mon, 23 Jun 2025 16:54:20 +0200
+> "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com> wrote:
+>=20
+> > When Firmware First is enabled, BIOS handles errors first and then it m=
+akes
+> > them available to the kernel via the Common Platform Error Record (CPER)
+> > sections (UEFI 2.10 Appendix N). Linux parses the CPER sections via one=
+ of
+> > two similar paths, either ELOG or GHES. The errors managed by ELOG are
+> > signaled to the BIOS by the I/O Machine Check Architecture (I/O MCA).
+> >=20
+> > Currently, ELOG and GHES show some inconsistencies in how they report to
+> > userspace via trace events.
+> >=20
+> > Therefore, make the two mentioned paths act similarly by tracing the CP=
+ER
+> > CXL Protocol Error Section (UEFI v2.10, Appendix N.2.13).
+> >=20
+> > Cc: Dan Williams <dan.j.williams@intel.com>
+> > Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@lin=
+ux.intel.com>
+> > Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.=
+com>
 > > ---
-> >  fs/fuse/fuse_i.h          |  3 +++
-> >  fs/fuse/inode.c           | 14 ++++++++++++++
-> >  include/uapi/linux/fuse.h |  4 ++++
-> >  3 files changed, 21 insertions(+)
-> >
-> > diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-> > index 9d87ac48d724..a592c1002861 100644
-> > --- a/fs/fuse/fuse_i.h
-> > +++ b/fs/fuse/fuse_i.h
-> > @@ -873,6 +873,9 @@ struct fuse_conn {
-> >         /* Use io_uring for communication */
-> >         unsigned int io_uring;
-> >
-> > +       /* dev_dax_iomap support for famfs */
-> > +       unsigned int famfs_iomap:1;
+> >  drivers/acpi/acpi_extlog.c | 62 ++++++++++++++++++++++++++++++++++++++
+> >  drivers/cxl/core/ras.c     |  6 ++++
+> >  include/cxl/event.h        |  2 ++
+> >  3 files changed, 70 insertions(+)
+> >=20
+> > diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
+> > index cefe8d2d8affc..9a37b08aacfea 100644
+> > --- a/drivers/acpi/acpi_extlog.c
+> > +++ b/drivers/acpi/acpi_extlog.c
+> > @@ -12,6 +12,7 @@
+> >  #include <linux/ratelimit.h>
+> >  #include <linux/edac.h>
+> >  #include <linux/ras.h>
+> > +#include <cxl/event.h>
+> >  #include <acpi/ghes.h>
+> >  #include <asm/cpu.h>
+> >  #include <asm/mce.h>
+> > @@ -160,6 +161,60 @@ static void extlog_print_pcie(struct cper_sec_pcie=
+ *pcie_err,
+> >  	pci_dev_put(pdev);
+> >  }
+> > =20
+> > +static void
+> > +extlog_cxl_cper_handle_prot_err(struct cxl_cper_sec_prot_err *prot_err,
+> > +				int severity)
+> > +{
+> > +	struct cxl_cper_prot_err_work_data wd;
+> > +	u8 *dvsec_start, *cap_start;
+>=20
+>=20
+> A bunch of this is identical to cxl_cper_post_prot_err()
+> Can we factor that stuff out for common use?
+>=20
 > > +
-> 
-> pls move up to the bit fields members.
+> > +	if (!(prot_err->valid_bits & PROT_ERR_VALID_AGENT_ADDRESS)) {
+> > +		pr_warn_ratelimited("CXL CPER invalid agent type\n");
+> > +		return;
+> > +	}
+> > +
+> > +	if (!(prot_err->valid_bits & PROT_ERR_VALID_ERROR_LOG)) {
+> > +		pr_warn_ratelimited("CXL CPER invalid protocol error log\n");
+> > +		return;
+> > +	}
+> > +
+> > +	if (prot_err->err_len !=3D sizeof(struct cxl_ras_capability_regs)) {
+> > +		pr_warn_ratelimited("CXL CPER invalid RAS Cap size (%u)\n",
+> > +				    prot_err->err_len);
+> > +		return;
+> > +	}
+> > +
+> > +	if ((prot_err->agent_type =3D=3D RCD || prot_err->agent_type =3D=3D D=
+EVICE ||
+> > +	     prot_err->agent_type =3D=3D LD || prot_err->agent_type =3D=3D FM=
+LD) &&
+> > +	    !(prot_err->valid_bits & PROT_ERR_VALID_SERIAL_NUMBER))
+> > +		pr_warn_ratelimited(FW_WARN
+> > +				    "CXL CPER no device serial number\n");
+>=20
+> Whilst some of this check isn't present in cxl_cper_post_prot_err(), it s=
+hould
+> be harmless.
+>
+Maybe all these checks should go to a static helper in cxl/core/ras.c which
+cxl_cper_handle_prot_err can call? But I'm not entirely sure yet it would=20
+really be worth. Anyway, I'll look into it.
 
-Oops, done, thanks.
+Thanks,
 
-> 
-> >         /** Maximum stack depth for passthrough backing files */
-> >         int max_stack_depth;
-> >
-> > diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-> > index 29147657a99f..e48e11c3f9f3 100644
-> > --- a/fs/fuse/inode.c
-> > +++ b/fs/fuse/inode.c
-> > @@ -1392,6 +1392,18 @@ static void process_init_reply(struct fuse_mount *fm, struct fuse_args *args,
-> >                         }
-> >                         if (flags & FUSE_OVER_IO_URING && fuse_uring_enabled())
-> >                                 fc->io_uring = 1;
-> > +                       if (IS_ENABLED(CONFIG_FUSE_FAMFS_DAX) &&
-> > +                           flags & FUSE_DAX_FMAP) {
-> > +                               /* XXX: Should also check that fuse server
-> > +                                * has CAP_SYS_RAWIO and/or CAP_SYS_ADMIN,
-> > +                                * since it is directing the kernel to access
-> > +                                * dax memory directly - but this function
-> > +                                * appears not to be called in fuse server
-> > +                                * process context (b/c even if it drops
-> > +                                * those capabilities, they are held here).
-> > +                                */
-> > +                               fc->famfs_iomap = 1;
-> > +                       }
-> 
-> 1. As long as the mapping requests are checking capabilities we should be ok
->     Right?
+=46abio
 
-It depends on the definition of "are", or maybe of "mapping requests" ;)
 
-Forgive me if this *is* obvious, but the fuse server capabilities are what
-I think need to be checked here - not the app that it accessing a file.
 
-An app accessing a regular file doesn't need permission to do raw access to
-the underlying block dev, but the fuse server does - becuase it is directing
-the kernel to access that for apps.
-
-> 2. What's the deal with capable(CAP_SYS_ADMIN) in process_init_limits then?
-
-I *think* that's checking the capabilities of the app that is accessing the
-file, and not the fuse server. But I might be wrong - I have not pulled very
-hard on that thread yet.
-
-> 3. Darrick mentioned the need for a synchronic INIT variant for his work on
->     blockdev iomap support [1]
-
-I'm not sure that's the same thing (Darrick?), but I do think Darrick's
-use case probably needs to check capabilities for a server that is sending
-apps (via files) off to access extents of block devices.
-
-> 
-> I also wonder how much of your patches and Darrick's patches end up
-> being an overlap?
-
-Darrick and I spent some time hashing through this, and came to the conclusion
-that the actual overlap is slim-to-none. 
-
-> 
-> Thanks,
-> Amir.
-> 
-> [1] https://lore.kernel.org/linux-fsdevel/20250613174413.GM6138@frogsfrogsfrogs/
-
-Thank you!
-John
