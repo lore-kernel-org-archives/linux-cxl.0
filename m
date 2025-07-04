@@ -1,353 +1,189 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B8F302CB0;
-	Fri,  4 Jul 2025 13:20:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D02B1DAC92;
+	Fri,  4 Jul 2025 13:40:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751635245; cv=none; b=IPmK2dYkYPUFVKRKNWGSeIVk6/POjRf7i/IR7JGFLmIly4o2YZOSUDVG+fwKBCpVQs64D31Vfj9U2r20GE5Dg4LiFuB2Vx55kYieHX+95LByl2vi88j7SDyv6IcxkDotdK9hokIdkVSizb41U9u6lQ7HnA5vJeQ9W7aU5REEuqY=
+	t=1751636408; cv=none; b=BI8Nz7gl+xnC9+lYVbMSyJAbGmjE+FySsg5yKqB5Ensbo3c5i6rBGgcww/H/rosu1goRxOdtlhSjKlimnhbJuPPyRe8uRvxfPlayuXuMUZ1bHRgwbqGAJDt7lhQtJMxmh9rJTTNyAmhfVQ5UeJZi1I3Y95qwymfzt7VYtV7sP9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751635245; c=relaxed/simple;
-	bh=r/zZfk+rBckUaqy0G8l9RA51eIYy10yBBUZBXpfCWZ4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YlNbpACYsI5c6NRqkOzcQ3D8hWqOaSgt7yEhgxzmdLupEhqgatm7dTuYQxog1I1Ay4kBdd9y801i4FACrVpoCy6fyUS8olwWC23wEeHtlzx4dv27yH5t/EG6T8khEqEDz4Ou9RHUYbs/oqGLv7sWxkiOCeadZBYNPrXNlVpcjX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bYZ3x2mjWz6M4jr;
-	Fri,  4 Jul 2025 21:19:41 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 03F1E1402A5;
-	Fri,  4 Jul 2025 21:20:40 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 4 Jul
- 2025 15:20:38 +0200
-Date: Fri, 4 Jul 2025 14:20:37 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: John Groves <John@Groves.net>
-CC: Dan Williams <dan.j.williams@intel.com>, Miklos Szeredi
-	<miklos@szeredb.hu>, Bernd Schubert <bschubert@ddn.com>, John Groves
-	<jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, Vishal Verma
-	<vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Matthew
- Wilcox" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Alexander Viro
-	<viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, "Darrick J
- . Wong" <djwong@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, "Jeff
- Layton" <jlayton@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>,
-	<linux-fsdevel@vger.kernel.org>, Amir Goldstein <amir73il@gmail.com>, "Stefan
- Hajnoczi" <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, Josef
- Bacik <josef@toxicpanda.com>, Aravind Ramesh <arramesh@micron.com>, Ajay
- Joshi <ajayjoshi@micron.com>
-Subject: Re: [RFC V2 14/18] famfs_fuse: GET_DAXDEV message and daxdev_table
-Message-ID: <20250704142037.00002717@huawei.com>
-In-Reply-To: <20250703185032.46568-15-john@groves.net>
+	s=arc-20240116; t=1751636408; c=relaxed/simple;
+	bh=x7xVEMSsXXsnT+LLSekeh57Svi1duY+nh1PdFmeqLGQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KkWgUwixPymdB5aIl3CTHpVNsbIXXwB+y22ASJYQbIxTvNwSJrY1AFJEsmMouFTcKBziXaua03npA5hEPe1F3W9doUrg28tTRT4PzyXImzAceOjmhVDrI4rxcGP/Yo9cAEk6pqUSqLz2QtTIBYulLd5EHSBNb3aJXqBPYA7s8zY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XfEBFn0H; arc=none smtp.client-ip=209.85.160.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XfEBFn0H"
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-2ea65f5a0easo726354fac.1;
+        Fri, 04 Jul 2025 06:40:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751636405; x=1752241205; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2ggb97YnCGQscprdaRiD3aA04R3MJar4CeMJyfUEVTY=;
+        b=XfEBFn0H0srLeTRSPK4w37IW6+b3+oBDhpTgp9SCvVnsXWNkS00K8hcH1YV2ol/Q3O
+         LJBECX4gNvNRjI3f5041tgHaQi55k1ImpFXDQsHWfq5FybCGtqfnSYD3hC+DTKy2aQ9q
+         7BZqfvDR92hP0/ikKAQ2F0r1fHsJv1cces0Hv39btwOZeQ0U/LFg4Xa64VpQW0cNBCWG
+         PLlj2ye2TEub1HWAXeW9ghT/RiBb0ycRzlfVC7FnTdLuHYiDlUG6HQA2eesc/swaRBWE
+         trLylb52zRzgT148HUv2jizo9i7zbH+5Ai7T2/ep/RaOQwkLz8S85h9W3kAZuz1VhMTY
+         3gKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751636405; x=1752241205;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2ggb97YnCGQscprdaRiD3aA04R3MJar4CeMJyfUEVTY=;
+        b=SMkwwmtHib09y+f3LoZk5uDFkjzNLRpNx4pdabcJqkUrKzgfqoyulyPdqt+SpW91vO
+         Co/C3HoO51zA53eulBmtsiaInty/dvX3rduz8SPEfJNYoCb0mVVQJeQsoW9oVaEyjRFz
+         EuvRhLvYdva3J/AWJkscwnKvC04PGNSLkdNS4lmiYWkDNuYZb0bpskg7pTG7N5LT7y5X
+         +36ICP9Dpxkf8qsnjvbl1HdlkfSpx5TNQgrMeh5tqO3z7eUlXDP/e4MVcLXdyPv98dcy
+         0keoyiFwTIlHUofq0eKjR7CUEAIysLJJNxjcOJZywOsKAS6tt0DOvB30Oxd7/q//XGp1
+         7U7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVd5u1elRgq3ugxvuFE0pMt0Ha47CPjycUk2sqr4XhS0nd1IEUcETAKx2aNcECBTs7ExOQCqxxxxl0=@vger.kernel.org, AJvYcCWZV72f9K7/Wx9Abwb5NTNa4/CY/db9JJv+VeBsVHZEmYZnj/4iB9UrSAV6d22CpVic2NL83NzXBLuLshTM+A==@vger.kernel.org, AJvYcCXUaMpJ8g+AeBA8J/hI1b5vtpaevShpMvdTARUqH4sdaOfntSIO4MEt6YuPx6xyUP30nIU80XD7x2Ka@vger.kernel.org, AJvYcCXXUbOhFk3VqRLG4WhdWrCFSg0C/RhK2QSsRtK0blAc6zsomorDdQ7o6xzTwG7DZi5Ty5y+wQD31U9TwjBT@vger.kernel.org
+X-Gm-Message-State: AOJu0YzH7JmbNf5p/OZCfuHKxmo3PmVBdt3Lo0Fdtc3FfaOR0waAd68T
+	qK3eObfjDE+74OnZ/AA1hJOe7HhLd/5r/wkkHM/FOv5s8xkg/dZZcNmi
+X-Gm-Gg: ASbGncuJvyWmQooERHDrPymvcUtharQTSd2Wd+3jiIjO2lJbIcUrtP3wYZlUd2SDQIl
+	2zmtrePq1C254niCNQh3FpTM4zz01Y9vdgzNxmr7v4pTuxB+0nWvJcEd430Alx7FCgBaZfiRevM
+	VYhHlUr5QB/HP/NzvzispSQddn2HbRPIybpfx5v83RPZ+KSEwwvDozGwKxOLPUI6Rsk8biKL8JR
+	HYVmTQpqbX6A+P96G+o/BnHXRtWAKZyl+QH50lsXKIykbkNDv72v2TdMyaC1wbsV1YIDN0lkfee
+	zGpRcltQMvxdbs6DeLYKeShomYxa2ltuFdDDfcoOo0BRbRqNIqgcFCom8LcB7Ngf8iJ9rVUfiQf
+	jbUD7YzIB0g==
+X-Google-Smtp-Source: AGHT+IHTmverQslNh+Of2OQdfM9KG+sNpKYYyXBNG8W5je+VjCNljcNikA0fXeYMh2Zp5w7wNtcx6A==
+X-Received: by 2002:a05:6871:2d02:b0:2b8:b76f:1196 with SMTP id 586e51a60fabf-2f7920cb157mr2219870fac.19.1751636405315;
+        Fri, 04 Jul 2025 06:40:05 -0700 (PDT)
+Received: from groves.net ([2603:8080:1500:3d89:2db1:5c0d:1659:a3c])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2f78ff40cd6sm514849fac.11.2025.07.04.06.40.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Jul 2025 06:40:01 -0700 (PDT)
+Sender: John Groves <grovesaustin@gmail.com>
+Date: Fri, 4 Jul 2025 08:39:59 -0500
+From: John Groves <John@groves.net>
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: "Darrick J . Wong" <djwong@kernel.org>, 
+	Dan Williams <dan.j.williams@intel.com>, Miklos Szeredi <miklos@szeredi.hu>, 
+	Bernd Schubert <bschubert@ddn.com>, John Groves <jgroves@micron.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
+	Kent Overstreet <kent.overstreet@linux.dev>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
+	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
+	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>
+Subject: Re: [RFC V2 10/18] famfs_fuse: Basic fuse kernel ABI enablement for
+ famfs
+Message-ID: <yhso6jddzt6c7glqadrztrswpisxmuvg7yopc6lp4gn44cxd4m@my4ajaw47q7d>
 References: <20250703185032.46568-1-john@groves.net>
-	<20250703185032.46568-15-john@groves.net>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+ <20250703185032.46568-11-john@groves.net>
+ <CAOQ4uxi7fvMgYqe1M3_vD3+YXm7x1c4YjA=eKSGLuCz2Dsk0TQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOQ4uxi7fvMgYqe1M3_vD3+YXm7x1c4YjA=eKSGLuCz2Dsk0TQ@mail.gmail.com>
 
-On Thu,  3 Jul 2025 13:50:28 -0500
-John Groves <John@Groves.net> wrote:
-
-> * The new GET_DAXDEV message/response is enabled
-> * The command it triggered by the update_daxdev_table() call, if there
->   are any daxdevs in the subject fmap that are not represented in the
->   daxdev_dable yet.
+On 25/07/04 09:54AM, Amir Goldstein wrote:
+> On Thu, Jul 3, 2025 at 8:51 PM John Groves <John@groves.net> wrote:
+> >
+> > * FUSE_DAX_FMAP flag in INIT request/reply
+> >
+> > * fuse_conn->famfs_iomap (enable famfs-mapped files) to denote a
+> >   famfs-enabled connection
+> >
+> > Signed-off-by: John Groves <john@groves.net>
+> > ---
+> >  fs/fuse/fuse_i.h          |  3 +++
+> >  fs/fuse/inode.c           | 14 ++++++++++++++
+> >  include/uapi/linux/fuse.h |  4 ++++
+> >  3 files changed, 21 insertions(+)
+> >
+> > diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
+> > index 9d87ac48d724..a592c1002861 100644
+> > --- a/fs/fuse/fuse_i.h
+> > +++ b/fs/fuse/fuse_i.h
+> > @@ -873,6 +873,9 @@ struct fuse_conn {
+> >         /* Use io_uring for communication */
+> >         unsigned int io_uring;
+> >
+> > +       /* dev_dax_iomap support for famfs */
+> > +       unsigned int famfs_iomap:1;
+> > +
 > 
-> Signed-off-by: John Groves <john@groves.net>
+> pls move up to the bit fields members.
 
-More drive by stuff you can ignore for now if you like.
+Oops, done, thanks.
 
-> ---
->  fs/fuse/famfs.c           | 227 ++++++++++++++++++++++++++++++++++++++
->  fs/fuse/famfs_kfmap.h     |  26 +++++
->  fs/fuse/fuse_i.h          |   1 +
->  fs/fuse/inode.c           |   4 +-
->  fs/namei.c                |   1 +
->  include/uapi/linux/fuse.h |  18 +++
->  6 files changed, 276 insertions(+), 1 deletion(-)
 > 
-> diff --git a/fs/fuse/famfs.c b/fs/fuse/famfs.c
-> index 41c4d92f1451..f5e01032b825 100644
-> --- a/fs/fuse/famfs.c
-> +++ b/fs/fuse/famfs.c
+> >         /** Maximum stack depth for passthrough backing files */
+> >         int max_stack_depth;
+> >
+> > diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+> > index 29147657a99f..e48e11c3f9f3 100644
+> > --- a/fs/fuse/inode.c
+> > +++ b/fs/fuse/inode.c
+> > @@ -1392,6 +1392,18 @@ static void process_init_reply(struct fuse_mount *fm, struct fuse_args *args,
+> >                         }
+> >                         if (flags & FUSE_OVER_IO_URING && fuse_uring_enabled())
+> >                                 fc->io_uring = 1;
+> > +                       if (IS_ENABLED(CONFIG_FUSE_FAMFS_DAX) &&
+> > +                           flags & FUSE_DAX_FMAP) {
+> > +                               /* XXX: Should also check that fuse server
+> > +                                * has CAP_SYS_RAWIO and/or CAP_SYS_ADMIN,
+> > +                                * since it is directing the kernel to access
+> > +                                * dax memory directly - but this function
+> > +                                * appears not to be called in fuse server
+> > +                                * process context (b/c even if it drops
+> > +                                * those capabilities, they are held here).
+> > +                                */
+> > +                               fc->famfs_iomap = 1;
+> > +                       }
+> 
+> 1. As long as the mapping requests are checking capabilities we should be ok
+>     Right?
 
-> +/**
-> + * famfs_fuse_get_daxdev() - Retrieve info for a DAX device from fuse server
-> + *
-> + * Send a GET_DAXDEV message to the fuse server to retrieve info on a
-> + * dax device.
-> + *
-> + * @fm:     fuse_mount
-> + * @index:  the index of the dax device; daxdevs are referred to by index
-> + *          in fmaps, and the server resolves the index to a particular daxdev
-> + *
-> + * Returns: 0=success
-> + *          -errno=failure
-> + */
-> +static int
-> +famfs_fuse_get_daxdev(struct fuse_mount *fm, const u64 index)
-> +{
-> +	struct fuse_daxdev_out daxdev_out = { 0 };
-> +	struct fuse_conn *fc = fm->fc;
-> +	struct famfs_daxdev *daxdev;
-> +	int err = 0;
-> +
-> +	FUSE_ARGS(args);
-> +
-> +	/* Store the daxdev in our table */
-> +	if (index >= fc->dax_devlist->nslots) {
-> +		pr_err("%s: index(%lld) > nslots(%d)\n",
-> +		       __func__, index, fc->dax_devlist->nslots);
-> +		err = -EINVAL;
-> +		goto out;
-> +	}
-> +
-> +	args.opcode = FUSE_GET_DAXDEV;
-> +	args.nodeid = index;
-> +
-> +	args.in_numargs = 0;
-> +
-> +	args.out_numargs = 1;
-> +	args.out_args[0].size = sizeof(daxdev_out);
-> +	args.out_args[0].value = &daxdev_out;
-> +
-> +	/* Send GET_DAXDEV command */
-> +	err = fuse_simple_request(fm, &args);
-> +	if (err) {
-> +		pr_err("%s: err=%d from fuse_simple_request()\n",
-> +		       __func__, err);
-> +		/*
-> +		 * Error will be that the payload is smaller than FMAP_BUFSIZE,
-> +		 * which is the max we can handle. Empty payload handled below.
-> +		 */
-> +		goto out;
-> +	}
-> +
-> +	down_write(&fc->famfs_devlist_sem);
+It depends on the definition of "are", or maybe of "mapping requests" ;)
 
-Worth thinking about guard() in this code in general.
-Simplify some of the error paths at least.
+Forgive me if this *is* obvious, but the fuse server capabilities are what
+I think need to be checked here - not the app that it accessing a file.
 
-> +
-> +	daxdev = &fc->dax_devlist->devlist[index];
-> +
-> +	/* Abort if daxdev is now valid */
-> +	if (daxdev->valid) {
-> +		up_write(&fc->famfs_devlist_sem);
-> +		/* We already have a valid entry at this index */
-> +		err = -EALREADY;
-> +		goto out;
-> +	}
-> +
-> +	/* Verify that the dev is valid and can be opened and gets the devno */
-> +	err = famfs_verify_daxdev(daxdev_out.name, &daxdev->devno);
-> +	if (err) {
-> +		up_write(&fc->famfs_devlist_sem);
-> +		pr_err("%s: err=%d from famfs_verify_daxdev()\n", __func__, err);
-> +		goto out;
-> +	}
-> +
-> +	/* This will fail if it's not a dax device */
-> +	daxdev->devp = dax_dev_get(daxdev->devno);
-> +	if (!daxdev->devp) {
-> +		up_write(&fc->famfs_devlist_sem);
-> +		pr_warn("%s: device %s not found or not dax\n",
-> +			__func__, daxdev_out.name);
-> +		err = -ENODEV;
-> +		goto out;
-> +	}
-> +
-> +	daxdev->name = kstrdup(daxdev_out.name, GFP_KERNEL);
-> +	wmb(); /* all daxdev fields must be visible before marking it valid */
-> +	daxdev->valid = 1;
-> +
-> +	up_write(&fc->famfs_devlist_sem);
-> +
-> +out:
-> +	return err;
-> +}
-> +
-> +/**
-> + * famfs_update_daxdev_table() - Update the daxdev table
-> + * @fm   - fuse_mount
-> + * @meta - famfs_file_meta, in-memory format, built from a GET_FMAP response
-> + *
-> + * This function is called for each new file fmap, to verify whether all
-> + * referenced daxdevs are already known (i.e. in the table). Any daxdev
-> + * indices that referenced in @meta but not in the table will be retrieved via
-> + * famfs_fuse_get_daxdev() and added to the table
-> + *
-> + * Return: 0=success
-> + *         -errno=failure
-> + */
-> +static int
-> +famfs_update_daxdev_table(
-> +	struct fuse_mount *fm,
-> +	const struct famfs_file_meta *meta)
-> +{
-> +	struct famfs_dax_devlist *local_devlist;
-> +	struct fuse_conn *fc = fm->fc;
-> +	int err;
-> +	int i;
-> +
-> +	/* First time through we will need to allocate the dax_devlist */
-> +	if (!fc->dax_devlist) {
-> +		local_devlist = kcalloc(1, sizeof(*fc->dax_devlist), GFP_KERNEL);
-> +		if (!local_devlist)
-> +			return -ENOMEM;
-> +
-> +		local_devlist->nslots = MAX_DAXDEVS;
-> +
-> +		local_devlist->devlist = kcalloc(MAX_DAXDEVS,
-> +						 sizeof(struct famfs_daxdev),
-> +						 GFP_KERNEL);
-> +		if (!local_devlist->devlist) {
-> +			kfree(local_devlist);
-> +			return -ENOMEM;
-> +		}
-> +
-> +		/* We don't need the famfs_devlist_sem here because we use cmpxchg... */
-> +		if (cmpxchg(&fc->dax_devlist, NULL, local_devlist) != NULL) {
-> +			kfree(local_devlist->devlist);
-> +			kfree(local_devlist); /* another thread beat us to it */
-> +		}
-> +	}
-> +
-> +	down_read(&fc->famfs_devlist_sem);
-> +	for (i = 0; i < fc->dax_devlist->nslots; i++) {
-> +		if (meta->dev_bitmap & (1ULL << i)) {
-Flip for readability.
-		if (!(meta->dev_bitmap & (1ULL << i))
-			continue;
+An app accessing a regular file doesn't need permission to do raw access to
+the underlying block dev, but the fuse server does - becuase it is directing
+the kernel to access that for apps.
 
-Or can we use bitmap_from_arr64() and
-for_each_set_bit() to optimize this a little.
+> 2. What's the deal with capable(CAP_SYS_ADMIN) in process_init_limits then?
 
-> +			/* This file meta struct references devindex i
-> +			 * if devindex i isn't in the table; get it...
-> +			 */
-> +			if (!(fc->dax_devlist->devlist[i].valid)) {
-> +				up_read(&fc->famfs_devlist_sem);
-> +
-> +				err = famfs_fuse_get_daxdev(fm, i);
-> +				if (err)
-> +					pr_err("%s: failed to get daxdev=%d\n",
-> +					       __func__, i);
-Don't want to surface that error?
-> +
-> +				down_read(&fc->famfs_devlist_sem);
-> +			}
-> +		}
-> +	}
-> +	up_read(&fc->famfs_devlist_sem);
-> +
-> +	return 0;
-> +}
-> +
-> +/***************************************************************************/
+I *think* that's checking the capabilities of the app that is accessing the
+file, and not the fuse server. But I might be wrong - I have not pulled very
+hard on that thread yet.
 
-?
+> 3. Darrick mentioned the need for a synchronic INIT variant for his work on
+>     blockdev iomap support [1]
 
-> diff --git a/fs/fuse/famfs_kfmap.h b/fs/fuse/famfs_kfmap.h
-> index ce785d76719c..f79707b9f761 100644
-> --- a/fs/fuse/famfs_kfmap.h
-> +++ b/fs/fuse/famfs_kfmap.h
-> @@ -60,4 +60,30 @@ struct famfs_file_meta {
->  	};
->  };
->  
-> +/**
-> + * famfs_daxdev - tracking struct for a daxdev within a famfs file system
-> + *
-> + * This is the in-memory daxdev metadata that is populated by
-> + * the responses to GET_FMAP messages
-> + */
-> +struct famfs_daxdev {
-> +	/* Include dev uuid? */
-> +	bool valid;
-> +	bool error;
-> +	dev_t devno;
-> +	struct dax_device *devp;
-> +	char *name;
-> +};
-> +
-> +#define MAX_DAXDEVS 24
-> +
-> +/**
-> + * famfs_dax_devlist - list of famfs_daxdev's
+I'm not sure that's the same thing (Darrick?), but I do think Darrick's
+use case probably needs to check capabilities for a server that is sending
+apps (via files) off to access extents of block devices.
 
-Run kernel-doc script over these. It gets grumpy about partial
-documentation.
+> 
+> I also wonder how much of your patches and Darrick's patches end up
+> being an overlap?
 
-> + */
-> +struct famfs_dax_devlist {
-> +	int nslots;
-> +	int ndevs;
-> +	struct famfs_daxdev *devlist; /* XXX: make this an xarray! */
-> +};
-> +
->  #endif /* FAMFS_KFMAP_H */
+Darrick and I spent some time hashing through this, and came to the conclusion
+that the actual overlap is slim-to-none. 
 
-> diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
-> index ecaaa62910f0..8a81b6c334fe 100644
-> --- a/include/uapi/linux/fuse.h
-> +++ b/include/uapi/linux/fuse.h
-> @@ -235,6 +235,9 @@
->   *      - struct fuse_famfs_simple_ext
->   *      - struct fuse_famfs_iext
->   *      - struct fuse_famfs_fmap_header
-> + *    - Add the following structs for the GET_DAXDEV message and reply
-> + *      - struct fuse_get_daxdev_in
-> + *      - struct fuse_get_daxdev_out
->   *    - Add the following enumerated types
->   *      - enum fuse_famfs_file_type
->   *      - enum famfs_ext_type
-> @@ -1351,6 +1354,20 @@ struct fuse_famfs_fmap_header {
->  	uint64_t reserved1;
->  };
->  
-> +struct fuse_get_daxdev_in {
-> +	uint32_t        daxdev_num;
-> +};
-> +
-> +#define DAXDEV_NAME_MAX 256
-> +struct fuse_daxdev_out {
-> +	uint16_t index;
-> +	uint16_t reserved;
-> +	uint32_t reserved2;
-> +	uint64_t reserved3; /* enough space for a uuid if we need it */
+> 
+> Thanks,
+> Amir.
+> 
+> [1] https://lore.kernel.org/linux-fsdevel/20250613174413.GM6138@frogsfrogsfrogs/
 
-Odd place for the comment. If it just refers to reserved3 then nope
-not enough space.  If you mean that and reserved4 then fiar enough
-but that's not obvious as it stands.
-
-> +	uint64_t reserved4;
-> +	char name[DAXDEV_NAME_MAX];
-> +};
-> +
->  static inline int32_t fmap_msg_min_size(void)
->  {
->  	/* Smallest fmap message is a header plus one simple extent */
-> @@ -1358,4 +1375,5 @@ static inline int32_t fmap_msg_min_size(void)
->  		+ sizeof(struct fuse_famfs_simple_ext));
->  }
->  
-> +
-Stray change.  Worth a quick scrub to clean these out (even in an RFC) as they just add
-noise to the bits you want people to look at!
-
->  #endif /* _LINUX_FUSE_H */
-
+Thank you!
+John
