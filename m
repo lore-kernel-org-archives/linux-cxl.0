@@ -1,356 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3E20A48
-	for <linux-cxl@vger.kernel.org>; Fri,  4 Jul 2025 00:17:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751588245; cv=fail; b=qge7Bi4xekN0epYDoXzkjbRmeEB+CdEtnKvs54gNkNy1nbSvO635IXOM4WyVf6RgDN1BOCxoNvJnID2gy3nwgyxU47hUeTcAQHtaYRQmeJF5Wb6YkTeuJPxpxI0EAjt9iHRTxrX92yWFHV1z9Ie/R73eEuLe+MitwSH7b86Eono=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751588245; c=relaxed/simple;
-	bh=8ryC9wd5SJL0MxRl7Vl9bUrodBksz4ziKONRDq6B+ro=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ZIEUXfngFSMnzVtZZhuXDsUrJWCNdWoNtHd+CP1PQCaVELwhjp8CpkvIR+y8xFkDI0LGj06yRUT7EE4+NyHeTcvUPen81K44TxLk2UrzFGE3lF4YWa1RLrhFGYUsrH+ivjPwgbkk47HZOOISzbu4JXUnt5+eW3ug/AFtP+DXa2I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j117sme3; arc=fail smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E76C53595A;
+	Fri,  4 Jul 2025 00:27:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751588838; cv=none; b=uvP2JaVhx6gMzJtK+8M8Ay2nHVEjE5GYWDo6VCx/39UyrDec5lmg0j70D8B7KfO3aktmTjTE9cRkzU9kc5VLPg3/4TKsjETWC2ZmTv8Hmvk+cvJg1o2qZdvG0J2niXJJtSlyNLxLMpyQMnqpplu/cvjm7SxbkR8ItJzcGXf2liM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751588838; c=relaxed/simple;
+	bh=ZiQ9WvbhgrqOMqZuRx3huleB0tjtVkP0ALx19wMz7I0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WqQKk6Br7hqZ6nN/PEkIiWIuQwCrJYJG52lG7NLCjQVnUog40K2qh3dRCVf4DNu91t/NsCQhNnrvvhqg/BAgiAjPhkyx5VHifjOOsfhidql8uubOeRJMdai3kNbMGZHGOweg1D1ZdCun1lwhvHpP1a/BKc7I/6m3QhY2f6Vil6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eLnITauF; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j117sme3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751588244; x=1783124244;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=8ryC9wd5SJL0MxRl7Vl9bUrodBksz4ziKONRDq6B+ro=;
-  b=j117sme3sRc1/JKXHtIOm2AQvsmZ1MzY1P33JFG/eo1Nm6wlNIcXLNjV
-   pWLPG6o9tOlAUVubhPhlrWQRNpHRCV1OZqy8KtjYh5+sQwPoVD7s9/+sI
-   rJ5ZKZEmUod6DwrEmZDw3aTnbEkDyPWztTTqhmdcJ7veuw+faZaA+YZD7
-   xiq9aq8sgs/b2fkzW2f0192k+5MA55V4OV7n4YJjKcj4omo1LL2L8f8U7
-   zsZHfLOWfAaNJubOgz9URll84V+wRnbt2VLkoZ2rS3KMs7UkbvMLoicas
-   dPh2y/UBrfPEDP8c3uHK8qj9tELIoLONBtcjR/XaWDJmu9a68gSj4BSro
-   A==;
-X-CSE-ConnectionGUID: O+1148NLR1an8gQKkiK7Iw==
-X-CSE-MsgGUID: 5W2cVsAHSey29veJeBBenQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11483"; a="54069108"
-X-IronPort-AV: E=Sophos;i="6.16,285,1744095600"; 
-   d="scan'208";a="54069108"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 17:17:23 -0700
-X-CSE-ConnectionGUID: hoGmzaoiSg638A3G+2Ae5Q==
-X-CSE-MsgGUID: V0QdcvAvT/OrXBjn0Nv8LQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,285,1744095600"; 
-   d="scan'208";a="185456127"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2025 17:17:23 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Thu, 3 Jul 2025 17:17:22 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Thu, 3 Jul 2025 17:17:22 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (40.107.94.48) by
- edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Thu, 3 Jul 2025 17:17:22 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=odU/fCAnTkpN3Ho4hn+ODPdyhlgCpBUogq9Ds7seX8uDHeQyz5KsyfZhPW3LlkgYuaZrdUwOWTRV6h40zLh22yCbKEUaR26FeaE9dn4ayx0tDTiiIifASSvNw7soJ6YTWDmQyuaLg2K5LxENbacp0DqRkKVbBRw1Y2yNIw5Z9koiw0p/tjqWw3VezNn84EopUAGDGdbWo3tle5udjIA0hVYKyGvJCGJKBcLEnDlXHUGQ6ZjYlxicLxs8Y6Q0uxKYLhGEXbAKOcwDl5792TlBW/hiMBqud4+LamWQjLz+prMOJTenWw6ly0C714CQC+PFfrwTnMYaNHagR0XQjf1OVQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kKimAuUfGPlucSUOR8Ghm1K9/iW3eDDO6HY/H8WV2GE=;
- b=Bi8wyzheFm89lJb3niTFDC32gwDz1BiyRjAPr8WQ2LhZZglO0XfCUR5JQ+0W2mlp5tmL8wczOb1TwlFIuXJTuSz/OU4yITNpVHxoXGuQZQkBinFey4ZJWY9QdAeUNqEAedKPBI8E7iGz4f3DpXetR8GD735u3Eokz+vdncb1KVHnExj3tRshR/wMrClTsK+kCj/B3EBhqRVbgA25HC24WhYiiZbZQSiExw2yDwGkUwmIzhQXDNh67G8rvthKaz67EfrU8NDo1TxAd6YjDiiXJh0U0OqSwlJzT/fHSNJoZ0YG1zcFbtOA83/LgOjPf5Qf6Ul5PFlGLEHD7jWzoo/oGA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by MW3PR11MB4763.namprd11.prod.outlook.com (2603:10b6:303:2c::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.19; Fri, 4 Jul
- 2025 00:17:07 +0000
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::8254:d7be:8a06:6efb]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::8254:d7be:8a06:6efb%7]) with mapi id 15.20.8769.022; Fri, 4 Jul 2025
- 00:17:07 +0000
-Date: Thu, 3 Jul 2025 17:17:00 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>
-Subject: Re: [NDCTL PATCH] cxl: Add helper function to verify port is in
- memdev hierarchy
-Message-ID: <aGcdfKJ0shbKJTCM@aschofie-mobl2.lan>
-References: <20250618204117.4039030-1-dave.jiang@intel.com>
- <aFM1iWWREEU_dlyF@aschofie-mobl2.lan>
- <46ea54ab-4e20-47d8-985e-53cb7ebbf33f@intel.com>
- <aFNBc0JqMxWT5CMu@aschofie-mobl2.lan>
- <a940a130-4c77-4f7c-812a-e273ddb01458@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <a940a130-4c77-4f7c-812a-e273ddb01458@intel.com>
-X-ClientProxiedBy: BYAPR04CA0016.namprd04.prod.outlook.com
- (2603:10b6:a03:40::29) To DS4PPF0BAC23327.namprd11.prod.outlook.com
- (2603:10b6:f:fc02::9)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eLnITauF"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-74ce477af25so228985b3a.3;
+        Thu, 03 Jul 2025 17:27:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751588836; x=1752193636; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZiQ9WvbhgrqOMqZuRx3huleB0tjtVkP0ALx19wMz7I0=;
+        b=eLnITauFlD9iK4p71ryCuqXJS7SXyCrn+koHLxhVNiltAq5wgK+Y4THvM6pMW0+Yce
+         u0hDfFVzWjCJp+k0JwnJQUIx1s4OvfxA5/n+zYnoXSP2RKsdvKxR5SCKVCPtrndjLbxL
+         mT4hjrqSQeNAl/eqKDsATLkzN2HLhCb3DUzWi34FA4zBL6QV7GFjZlZqmi3qwIB3XnOx
+         Qye5NMQCWUxPxILGaoDO4NUoEYEvE3NEzckZcQzPnWni+/idpfyJZFjfOyYU1w85vJlo
+         Uy/uCG52wZTFNsH2BIfkjFdOu6C8nFEXW1Ou9ZXBLb6CU2He5NjwuQrBbjne0iwA3icj
+         jE/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751588836; x=1752193636;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZiQ9WvbhgrqOMqZuRx3huleB0tjtVkP0ALx19wMz7I0=;
+        b=G89Ltq9UQ9c1pVWUk8qX/C+OIZzaf5uRdnA93EV013w8IKT+PjVF7bVmDj9srhkFNT
+         00XGnIQMb4faUl1k/uXP7JTg9PSW6djptE4CqOKYJI/pmIWmHPUVV4Q/VNH9p1Vhyo7C
+         Mlkrc27U8zTnhYWDzGNxzdED3VMEARCvxq4poTFXbeX38dstd/twOwmRv6qm+1inr9GM
+         ffvYa8pRo6qEQAjzg62Bg7O4BpxeyKhT8zlYYHInDQc1oKEikvHu1guziKgM4YngHCX3
+         8lYxTBg/KvKQGN6vEe4ZQR3mIQhXO5jXwSMeckefUKnKPMtYZhpVYMGm8WD9+Z4rYxUd
+         RdbA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBWaNM4Z0D+bcIWZyVS/90j1ZvxIu20XtW3ZwWwIOEe1OMrX+CtPcsCA71u0olRVx54Au4QyzqEeo=@vger.kernel.org, AJvYcCVaR6y8bsBHyl/2X7Ob9Ac+oEiYLJJcCv0wryVA/UhczLjCckPrpQW127ZLILp3BBl4a6EP6fBEs8b7AoGYpw==@vger.kernel.org, AJvYcCWWFWE+tRxVpdezW9GXIO+q93uNIh6YNk7zsY5cFCzWVFcQrNVqHWq8TlQsywGcSlfEq0T9XXC+fmZIc3nY@vger.kernel.org, AJvYcCXEwxXC6F+djT7wkgp8J/IcyWbq1s6RFwFWr3Jd3Pvq2es8DGYK5I6uH/I38CEiT+CP7jawBJ/6fOte@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx11Q7AKH0rUyk1NYJ+GJ41GPBWdQgPtq6V+e+iWTBkS4rKLrtJ
+	/MD3faH/ncrHwM0bOtC1Sbh6c63K3Y4OmRFHk6Otb5QZrxKsxMRiynle
+X-Gm-Gg: ASbGncsCyv5U08nMAxBaebCMdgYEgL7FGm/OdKQ1/Fwl2vQUCRxl3vuGob7MnExIiHj
+	fbkJ7cJsd4VLTNn7PX2hKqCXXRS80L+pLu8gUxi6psJmW8L8PYNEHGdt3uxxoRPtiCwgF2RRiDc
+	f9gIsRH41Bm+9baMoIQzu9Ycul9USKEj3KKjofNxh1ffBExQHOQR8n5XxC+aMfHNqgAVyBWnMn5
+	Ks5UEnF+p+hmy5pB3y1XA6h/irzLZgHv2z7tprl+M8TAGr1yU/bg7nycK/oycbAIEdYqhb9wdor
+	T5CzlFaSPArQIYEZa2WYap/dol1CGVMSoo4zn5aaLfunf3xl9/lIbkk0YjPIhg==
+X-Google-Smtp-Source: AGHT+IGwQCrkWrjApK0htBGSorBdvNkVh5GSO+iYPYY+Kh0DqyqHto9HinLiE593880id3pXNBbbnw==
+X-Received: by 2002:a05:6a20:4325:b0:220:9e54:d5cc with SMTP id adf61e73a8af0-225b9b7a66bmr1282824637.31.1751588836070;
+        Thu, 03 Jul 2025 17:27:16 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b38ee62dd6asm647668a12.64.2025.07.03.17.27.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Jul 2025 17:27:15 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 8A22A4206886; Fri, 04 Jul 2025 07:27:12 +0700 (WIB)
+Date: Fri, 4 Jul 2025 07:27:12 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: John Groves <John@groves.net>, Dan Williams <dan.j.williams@intel.com>,
+	Miklos Szeredi <miklos@szeredb.hu>,
+	Bernd Schubert <bschubert@ddn.com>
+Cc: John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	"Darrick J . Wong" <djwong@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Stefan Hajnoczi <shajnocz@redhat.com>,
+	Joanne Koong <joannelkoong@gmail.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Aravind Ramesh <arramesh@micron.com>,
+	Ajay Joshi <ajayjoshi@micron.com>
+Subject: Re: [RFC V2 18/18] famfs_fuse: Add documentation
+Message-ID: <aGcf4AhEZTJXbEg3@archie.me>
+References: <20250703185032.46568-1-john@groves.net>
+ <20250703185032.46568-19-john@groves.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|MW3PR11MB4763:EE_
-X-MS-Office365-Filtering-Correlation-Id: f93d0f5e-8c93-42e1-402f-08ddba901c79
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?/LohspePg6Y5OfSZegbOxVn5JWjQxgLNSXYZm/pfvadVbvL1qVBPx6DTx0+r?=
- =?us-ascii?Q?w9hdSRKapGU8Qd/AV2sPtq85up/FF7SAsVNd/WnXaF3HPRKOPVxJNCoXI+Z2?=
- =?us-ascii?Q?dNeyHXg9RaoLOq8F6iwpwK6rrSdK3touCcqgnV56+jd+HatVQtzVitjnE1+U?=
- =?us-ascii?Q?5xB1ghlFbH2NFxKjqIq4XV407uWnJRs8QFZXDkC2KN1XeDZL9CUxYui9Z7/f?=
- =?us-ascii?Q?2jzR7L1dt5mc5zVQeBqYseRs/ZfyEnk4P17iH4jddMKgsBHQKNptcC+1rowy?=
- =?us-ascii?Q?iv2LDhMD2KHWvy/GE8mHICabYB7FL8Y+NzVz7+/qgP8CElgkjy78eXRx8U6F?=
- =?us-ascii?Q?eR+mbDG8/IPJtUknoEXShhywd4ZQmzvNBRP3pzoYuVWFg8B5QG1GNKeSxFXU?=
- =?us-ascii?Q?sguTWo4v9apZS9LF3iL4ZNaZInItmJvMBaw7mWDUqWll/u4NUT8rI/69r69e?=
- =?us-ascii?Q?yodV/zQw1MV5RmwoBiiemDVggKlt75Nsj92iSPEtH7hfvO2BXDRSCZrKYovn?=
- =?us-ascii?Q?hDe4f+p3gtB1xKcTvrOxt50uoF5mFaprKnyV7QiqvK7fdr7ZM1xyH0HqWO1g?=
- =?us-ascii?Q?W6JycxWVyja2KSsday2g6UUbOtSJha07CNy0suKU+cEP9a8e6aJEbjrxbTXr?=
- =?us-ascii?Q?fgpC+cjJfutFsiVSuT1bEu+/kHG7FkIlOjN2f+MQjGfOW0qyB7171vGRwDvw?=
- =?us-ascii?Q?iydjrUestTDhSR5DLs7q47RSHaFdXtAKk6pSB54tg8Mfd9LWt26H0VYZ0Bk+?=
- =?us-ascii?Q?KxEO2s2ERITwqqLK+031HLQtT9hOJjPf+RDNg1C1+I7x4Wb5h4KGheS9GbpQ?=
- =?us-ascii?Q?LzPBwbpnGQEsoRN9qwscvgwTOf2aZDQelCdIXmbSqQO2yV1jLfU7fmZhjbXh?=
- =?us-ascii?Q?jqURDz7gigyF3snQhcz55YKqdRNYSAPgMz2kiOvXsXSdKjDIrEHcaCUIW8IG?=
- =?us-ascii?Q?2Cw6EtLqqA12nLF+Tvk7R5eopFPtcD7A6z3Ek8ePWWXZOK+TflaRvuO2sqOb?=
- =?us-ascii?Q?Vqp1Y3BTX0l9C6PSYOL00H0AvfWYBxdNdf003U9Q1A/yFWFXtw0AyV/sqQ59?=
- =?us-ascii?Q?p9CDQvuZLXx1wMxJvvIdIy5N2NQIQLGIntQuG7yRTqUHWTyE8kQ3o8iBn9/f?=
- =?us-ascii?Q?4OjLkT9cl8mDzVYvIaxYsumIAOjDdiQVtvDvsTb5+p9R7ubPMU9jKyhAkfT7?=
- =?us-ascii?Q?ez83t4MuJBsQdRzMLrnkhsSaIODqD8PrcuVHt5zHODAXXfk/brU1rT9XfXM8?=
- =?us-ascii?Q?DWbYjhGMVklPw8gZpspu/qkukntNd+HZMKp7of52hNpakMG0dLFajNcZWlIE?=
- =?us-ascii?Q?TRejsyVsyQnaR5JXcjG9+CcMLs/h93UcSrTEaLqIDfHQdmCt36qfKXeYWi6A?=
- =?us-ascii?Q?nBsE3BufVOQ3SvSchhP1N5MUxyVGSoh+fGlycFVcNG/xNKhYoTGiwE5oh9jf?=
- =?us-ascii?Q?2ftCVZyZVOg=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?+Ig7W6UYgtpUXphNfYgTxPpLk0JM8yAhEA92Y8C1DJQM2Uyhx5OdPm+Nb8n+?=
- =?us-ascii?Q?pLhRAOiSgEQ9CXHAEYo31A+P3DeaTI7cKx5FRmZjRgYOl2z9FQoAhZ49IDd8?=
- =?us-ascii?Q?g/1h8NPsO5Zkr03651uy6KXCuPsd1M3xz1c8bXZjX9Ya6Xm/ykK1nQRuNitl?=
- =?us-ascii?Q?w9dVFBNdLr6mgxLGDt7hLAFrx8zrvZCB2Ey2Sb2ty46iK16cfxC+9NVYFQBf?=
- =?us-ascii?Q?NSfc97XUGESlUlrpUuH3wjzJ3BXPNjYSop+6KoPun8xE7DkCUOCaetLVvEQZ?=
- =?us-ascii?Q?wGnz9IGD/6FXLCQdTP8/o75kEqxAqfWaV6As85wcKKKpjQJGUVFwvV0SGRQT?=
- =?us-ascii?Q?zfcHpLehbeYZSzs8g8AQKEqNJFwe9Xl+c7+mKIKvE8U0lzlQPYVid8KUt0Tf?=
- =?us-ascii?Q?UJTE+/NbRNeiY1y+be//Fjd+YtWqcUZti+HrdxRIGEIpCJYr8lWqNgicynxQ?=
- =?us-ascii?Q?FOBMfUPLynxYPCdsOqQZ4owtKV8HkuDH8LRXcMbNyomyNehiwIy7TTdMYrIg?=
- =?us-ascii?Q?Y/wqA6+4cja+eexjkaZgKfu8V2kJtlBJ2bFSFPPZC3jDC/IUnZ7NMiqPBt54?=
- =?us-ascii?Q?5gRC5FADZ9cNxyAJM9zSBFGpg1/oBXapQNTSdJ5F61RY0zx4rwX1WO23wpa0?=
- =?us-ascii?Q?QMu0Gu2brsNCzbS2XnpXRAaOZl0Vh5VTvp6d/HK3zd3JgX2JTwPKT+od9N4g?=
- =?us-ascii?Q?p+9eIma/cRxxSrupBw0kcPHDgtGvF+qfVqkub3dP6YsDd4glvJyDdHFZWkn+?=
- =?us-ascii?Q?RC0cyHR0OwIqwHluPi6QNFtTa6CgxOqcD8/gIN0R5kF36YhqXoVNYh+biUcj?=
- =?us-ascii?Q?TbXwROjNRWxqdSoCYm+Ue40bT6PNzq1yEobZplurTPUieYm+k32NsLUtRrQK?=
- =?us-ascii?Q?hNkIC53FAfPG6aUR/HeE4sPujLfWrDEjz5wtj2Yb5divC3Xyxi0ATF8axC3v?=
- =?us-ascii?Q?A4mrzl06TgHzjerBUdXTU7ILOyK/xigXPkQnK5ONzSkGXxteXdRCWXEfC9ZM?=
- =?us-ascii?Q?oOi7XNWFtq0bzlEVqaBr+7vIkR4PpWV45MoTftxF1nkkUpcOpWApRk0TecAp?=
- =?us-ascii?Q?9Mn+qi0EUmCiFhB4l8hhiSYw3A8OEl3Ohyidg0o9HsHYgbRoyJf1M8VcWkIy?=
- =?us-ascii?Q?qqtMZRHjFzTIbQLnYWDXZSp6IB3RaP9JtT8vRx8GhoRkcSY5wmLZHAzJcDiE?=
- =?us-ascii?Q?yVO6dDXkeHfTdtpcl1qz0Wn+a07DmBG+ELLfuxTjrDByjHW20GQTR688ghgR?=
- =?us-ascii?Q?wF9v4jfsPu1Q1iA7hgrfEtJ4zZ+RVmmC96CDyepi6qzduLSLIgxUPzFVVOD6?=
- =?us-ascii?Q?lwYGvufKq+YgCUFY61LsGrKPL9v306/r1NYEJ/RgWt6tgW2WfRqGzjTyf8ts?=
- =?us-ascii?Q?rnnpf+ZF6zTJpH7tRQQuHsklIxCKr7zPZyLOFNehGHsXe0PCAviE4GEbVWA/?=
- =?us-ascii?Q?t8vSsnRajaYqCIOdOwgdWEUXcQKhn4VEyfW7njYt7G4bBIwfNMZazo53bRj4?=
- =?us-ascii?Q?lv7FEZisfw3ElvsvUxvzWUUdrjZc3MJkM28ZvJVBV/mNlnhPyKHqaBNLTfgj?=
- =?us-ascii?Q?Hm00+CsPdCE5qsRF/uPZ10zLnRCJdFzteGaCtAKf2rsLiPFumSPZ3FV32Z8R?=
- =?us-ascii?Q?rg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: f93d0f5e-8c93-42e1-402f-08ddba901c79
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2025 00:17:07.3808
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XdTH78iI2zzyL/ex8R8WSkWE+LeL1KfENwJ5QMQc49tfCUVO0N2v3peH76EUWVWDLOJwLEyLcAGSYQPP+8xigv60/RAAnLlm6qF4jyFBD8k=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4763
-X-OriginatorOrg: intel.com
-
-On Wed, Jun 18, 2025 at 03:50:33PM -0700, Dave Jiang wrote:
-> 
-> 
-> On 6/18/25 3:45 PM, Alison Schofield wrote:
-> > On Wed, Jun 18, 2025 at 02:58:13PM -0700, Dave Jiang wrote:
-> >>
-> >>
-> >> On 6/18/25 2:54 PM, Alison Schofield wrote:
-> >>> On Wed, Jun 18, 2025 at 01:41:17PM -0700, Dave Jiang wrote:
-> >>>> 'cxl enable-port -m' uses cxl_port_get_dport_by_memdev() to find the
-> >>>> memdevs that are associated with a port in order to enable those
-> >>>> associated memdevs. When the kernel switch to delayed dport
-> >>>> initialization by enumerating the dports during memdev probe, the
-> >>>> dports are no longer valid until the memdev is probed. This means
-> >>>> that cxl_port_get_dport_by_memdev() will not find any memdevs under
-> >>>> the port.
-> >>>>
-> >>>> Add a new helper function cxl_port_is_memdev_hierarchy() that checks if a
-> >>>> port is in the memdev hierarchy via the memdev->host_path where the sysfs
-> >>>> path contains all the devices in the hierarchy. This call is also backward
-> >>>> compatible with the old behavior.
-> >>>
-> >>> I get how this new function works w the delayed dport init that is
-> >>> coming soon to the CXL driver. I'm not so clear on why we leave the
-> >>> existing function in place when we know it will fail in some use
-> >>> cases. (It is a libcxl fcn afterall)
-> >>>
-> >>> Why not change the behavior of the existing function?
-> >>> How come this usage of cxl_port_get_dport_by_memdev() needs to change
-> >>> to the new helper and not the other usage in action_disable()?
-> >>>
-> >>> If the 'sometimes fails to find' function stays, how about libcxl
-> >>> docs explaining the limitations.
-> >>>
-> >>> Just stirring the pot to better understand ;)
-> >>
-> >> What's the process of retiring API calls? Add deprecated in the doc? Add warnings when called? 
-> > 
-> > What is wanted here? Should a v2 of the existing cxl_port_get_dport...
-> > be replaced with a v2 that can differentiate btw memdev not probed vs
-> > NULL for dport not found.
-> > 
-> > I see example of v2 APIs in ndctl/ndctl lib, so doable, but first need
-> > to define what is wanted.
-> 
-> So there are 2 locations using cxl_port_get_dport_by_memdev(). If the usage in cxl/filter.c can be replaced by the new function, then we can drop the call entirely for CXL CLI. Of course if someone else is using this function in their app, then we would be breaking their app. I wonder if we need to add documentation to explain where it would fail and emit warning of deprecation in the next release?
-
-OK, back to this:
-There was no issue or question about adding the new function that only
-checks for existence. In fact, neither of the call sites of the old
-cxl_port_get_dport_by_memdev() use the returned dport - so both can
-switch to use the new function.
-
-What to do about the old? Can we do something like this.
-I'm thinking we don't need to obsolete the function.
-We can document this alongside the description of the new function.
-
-Not so sure of the is_enabled() in this context. It is just checking
-for the sysfs symbolic link.
-
-cxl_port_get_dport_by_memdev(struct cxl_port *port, struct cxl_memdev *memdev)
-{
-        struct cxl_dport *dport;
-
-	if (cxl_memdev_is_enabled(memdev)) {
-		error message 
-		return NULL;
-	}
-
-        cxl_dport_foreach(port, dport)
-                if (cxl_dport_maps_memdev(dport, memdev))
-                        return dport;
-        return NULL;
-}
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="FhmplPz1+JPluJTh"
+Content-Disposition: inline
+In-Reply-To: <20250703185032.46568-19-john@groves.net>
 
 
-> > 
-> >>
-> >>>
-> >>> --Alison
-> >>>
-> >>>
-> >>>>
-> >>>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> >>>> ---
-> >>>>  cxl/lib/libcxl.c   | 31 +++++++++++++++++++++++++++++++
-> >>>>  cxl/lib/libcxl.sym |  5 +++++
-> >>>>  cxl/libcxl.h       |  3 +++
-> >>>>  cxl/port.c         |  2 +-
-> >>>>  4 files changed, 40 insertions(+), 1 deletion(-)
-> >>>>
-> >>>> diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-> >>>> index 5d97023377ec..cafde1cee4e8 100644
-> >>>> --- a/cxl/lib/libcxl.c
-> >>>> +++ b/cxl/lib/libcxl.c
-> >>>> @@ -2024,6 +2024,37 @@ CXL_EXPORT int cxl_memdev_nvdimm_bridge_active(struct cxl_memdev *memdev)
-> >>>>  	return is_enabled(path);
-> >>>>  }
-> >>>>  
-> >>>> +CXL_EXPORT bool cxl_memdev_is_port_ancestor(struct cxl_memdev *memdev,
-> >>>> +					    struct cxl_port *port)
-> >>>> +{
-> >>>> +	const char *uport = cxl_port_get_host(port);
-> >>>> +	const char *start = "devices";
-> >>>> +	const char *pstr = "platform";
-> >>>> +	char *host, *pos;
-> >>>> +
-> >>>> +	host = strdup(memdev->host_path);
-> >>>> +	if (!host)
-> >>>> +		return false;
-> >>>> +
-> >>>> +	pos = strstr(host, start);
-> >>>> +	pos += strlen(start) + 1;
-> >>>> +	if (strncmp(pos, pstr, strlen(pstr)) == 0)
-> >>>> +		pos += strlen(pstr) + 1;
-> >>>> +	pos = strtok(pos, "/");
-> >>>> +
-> >>>> +	while (pos) {
-> >>>> +		if (strcmp(pos, uport) == 0) {
-> >>>> +			free(host);
-> >>>> +			return true;
-> >>>> +		}
-> >>>> +		pos = strtok(NULL, "/");
-> >>>> +	}
-> >>>> +
-> >>>> +	free(host);
-> >>>> +
-> >>>> +	return false;
-> >>>> +}
-> >>>> +
-> >>>>  static int cxl_port_init(struct cxl_port *port, struct cxl_port *parent_port,
-> >>>>  			 enum cxl_port_type type, struct cxl_ctx *ctx, int id,
-> >>>>  			 const char *cxlport_base)
-> >>>> diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
-> >>>> index 3ad0cd06e25a..e01a676cdeb9 100644
-> >>>> --- a/cxl/lib/libcxl.sym
-> >>>> +++ b/cxl/lib/libcxl.sym
-> >>>> @@ -295,3 +295,8 @@ global:
-> >>>>  	cxl_fwctl_get_major;
-> >>>>  	cxl_fwctl_get_minor;
-> >>>>  } LIBECXL_8;
-> >>>> +
-> >>>> +LIBCXL_10 {
-> >>>> +global:
-> >>>> +	cxl_memdev_is_port_ancestor;
-> >>>> +} LIBCXL_9;
-> >>>> diff --git a/cxl/libcxl.h b/cxl/libcxl.h
-> >>>> index 54d97d7bb501..54bc025b121d 100644
-> >>>> --- a/cxl/libcxl.h
-> >>>> +++ b/cxl/libcxl.h
-> >>>> @@ -179,6 +179,9 @@ bool cxl_dport_maps_memdev(struct cxl_dport *dport, struct cxl_memdev *memdev);
-> >>>>  struct cxl_dport *cxl_port_get_dport_by_memdev(struct cxl_port *port,
-> >>>>  					       struct cxl_memdev *memdev);
-> >>>>  
-> >>>> +bool cxl_memdev_is_port_ancestor(struct cxl_memdev *memdev,
-> >>>> +				 struct cxl_port *port);
-> >>>> +
-> >>>>  #define cxl_dport_foreach(port, dport)                                         \
-> >>>>  	for (dport = cxl_dport_get_first(port); dport != NULL;                 \
-> >>>>  	     dport = cxl_dport_get_next(dport))
-> >>>> diff --git a/cxl/port.c b/cxl/port.c
-> >>>> index 89f3916d85aa..c951c0c771e8 100644
-> >>>> --- a/cxl/port.c
-> >>>> +++ b/cxl/port.c
-> >>>> @@ -102,7 +102,7 @@ static int action_enable(struct cxl_port *port)
-> >>>>  		return rc;
-> >>>>  
-> >>>>  	cxl_memdev_foreach(ctx, memdev)
-> >>>> -		if (cxl_port_get_dport_by_memdev(port, memdev))
-> >>>> +		if (cxl_memdev_is_port_ancestor(memdev, port))
-> >>>>  			cxl_memdev_enable(memdev);
-> >>>>  	return 0;
-> >>>>  }
-> >>>>
-> >>>> base-commit: 74b9e411bf13e87df39a517d10143fafa7e2ea92
-> >>>> -- 
-> >>>> 2.49.0
-> >>>>
-> >>>>
-> >>
-> 
+--FhmplPz1+JPluJTh
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Jul 03, 2025 at 01:50:32PM -0500, John Groves wrote:
+> +Requirements 3 and 4 are handled by the user space components, and are
+> +largely orthogonal to the functionality of the famfs kernel module.
+> +
+> +Requirements 3 and 4 cannot be met by conventional fs-dax file systems
+
+"Such requirements, however, cannot be met by ..."
+
+> +(e.g. xfs) because they use write-back metadata; it is not valid to mount
+> +such a file system on two hosts from the same in-memory image.
+> +
+
+Thanks.
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--FhmplPz1+JPluJTh
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaGcf3AAKCRD2uYlJVVFO
+o7MlAQDFFzY/AyfkzJf6X39RAu80LaEnq2G/NAeqbWbqwX+W8gD6ArnxxAZHvTMc
+4pRWe3cIkdvJArMN4f2J8/XM623oTgk=
+=0PQj
+-----END PGP SIGNATURE-----
+
+--FhmplPz1+JPluJTh--
