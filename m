@@ -1,164 +1,139 @@
-Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B4CA2CA9;
-	Sat,  5 Jul 2025 00:06:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED7013AF2;
+	Sat,  5 Jul 2025 01:11:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751673999; cv=none; b=l1oqPFCpwfiyAgMQk0Dg7k06hJOMQuQoPZ8tj1U6YENGMsfOe8BJMhMmAlzAUM7+fj3IDz/L3bjloXNYdCU5N12hPHyrisvFfpw8sGz1+mhxUUssdF6lZkSJVE3sS0rTPblqvXm5OMphfwFRy15a1nyg2yUym0PcvUndWMxGSOA=
+	t=1751677877; cv=none; b=B2xdJX3K/+Z+3AgM8dD8Wx3RnE8WueTCoRkhMWzJ7Z2qF7V8FjFw97BIXsPQK0DBwH53CaokZCz9sENlREeos4IdpzSWRH0P8Ua4kLfuR9VaqDWOIu+7RnMjTdvH7C49COttLs8d8SX8J2ZrOkM3aQR9zArbI7QiDj6uqAcIbnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751673999; c=relaxed/simple;
-	bh=g/709Mz80eEkm8+UShjp6F/2B9qEEZzVuc/3q6jnrzc=;
+	s=arc-20240116; t=1751677877; c=relaxed/simple;
+	bh=TGLHtQniPFFRkVhKxL21veKIv8ziGCFBrUf3ZmavJfQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n41F6mRHeHgtsdCq04ZhpROhoAToCwMzZ3Z55TXJcom8KTO6kcPbF8dC1ze88UpFHuQu78r9KH2PG7xAa/c9Yt8iJRSs0OIH2ApLliHqhVAZsaUBHY+hYDhMiThrisSMfSwjjg9YiW/lMsctF1wOuPysVSbjF/rXXZ3UWmk+GzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BRnG8sLW; arc=none smtp.client-ip=209.85.161.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=eXXyae6o2SmdDDHMXXC6zsxCXEUDl6vHCsye8CjgcRrcbFDsUWLNMm5dgT9HfiAWO88VTMxLeG1+3OFFSUsX22R3pGNo0o/24BbD2XgKYBGzJ16q5DzEWfm9NPL3FELYYy4wVC3BBZL21Nr/nA4gqLhmDq6QC8V61ONtb4cNAoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cPiRSp9/; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BRnG8sLW"
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-6120049f09fso837577eaf.2;
-        Fri, 04 Jul 2025 17:06:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cPiRSp9/"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ae3a604b43bso223500766b.0;
+        Fri, 04 Jul 2025 18:11:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751673996; x=1752278796; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TwTWoqkPV7gyMrYquUEBim6LYd65earG3U1YSwgWTMk=;
-        b=BRnG8sLWMAz0OdMq77sX3PpFnXIl8ZSXmDWmfV6GIfZV0/l08ppgVJbTMkD/mtK5nC
-         ezbWnorwMlYIS65uPCjGVnpTTp9axmIt1snCF8KR+DJRouIOBmllUCq8CwFFtWQ0YETD
-         pIyAfC5WtNCydvFDngX9kyVSohL6j2y4LM06HuA4H9d+G7gVQuL113p9QOTomHULcWgq
-         4WVtPumjA9D7rKqReBfU+A5inIQyV21WmTsgOOTMhZuZuulz2BnjUe0k+EZXSBkejkC8
-         skO8mktP/vvZ4xPwt9jABICBrVg5Nud/qxdv6yro8sZwi+6jtdcQrmOuk6r146MClqoi
-         aoFA==
+        d=gmail.com; s=20230601; t=1751677874; x=1752282674; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=X/RMW5ROGAxC4jVB3NK6djzooskyVRPZCJn8BCZVKk8=;
+        b=cPiRSp9/SPZJeGtyzgDgmBkoHHB7ww5sw4cMnIa5aIdvGpIcgYYRaXShE8+NELfvIV
+         TiaHmQKgtXxDr6qER3wrMnbyCad4jdxqm6shOkOq87LsDqEfVDss2Dra2PTfTIbSxauM
+         Eqd+Pjripr+kTW7zC3dpC+49CQ+mSY0qdp8LkKW3Dy9fKcORyhcQUJttxHoafwlrmK8u
+         dsTifA97dVHfer75RqPMeZYoRBRhLp+Y7S9Kyaxyzl4s06TBqcqm9TzLXbBRbHQew1Gu
+         j+ruUD197ZHcwXQE6s9zRv2T8Lk0jRHPm7+3gdzxRZOuiVCHhzt7pDIBSaQQWLOooXxh
+         sEtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751673996; x=1752278796;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TwTWoqkPV7gyMrYquUEBim6LYd65earG3U1YSwgWTMk=;
-        b=k5b/L8P9S9Qjk9H6y5lRvbIaTD8aWdQ+kPALAdRrnyF7XX8Y2pBYtWQVBVkEsQ0vRo
-         lVdnhux4Nvlw4bhqr4g1vikhqI4ho3nWPMB/K7NdxuA1DRb67xiORjGtK/y6cKQI+P+V
-         sxWmdrUJTiO76rPJl6wKOoI4zVoctCrWzN0tGkRicdhRm3hA4tNc/ZhMbitMGIaG3Sv3
-         dn4Zzez3ocpBBqMX80M6UHlQCaZH6Y3Od06SIX8Ugsx39kOBQNrhjUkJKvPsAW2W8268
-         KH4kwLJWy4IdIYUmAGlRRHASY26Ob1lUF6HTeakQyM4FJ1iOEu0IFXC7cu05UeugwnD0
-         3PdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU+D0LCyqiCwDUj3Vjgl+u74bFdMkhb6aAEWgZODn58XjUjyjVHAFgImXIl/Ho7grL10Yo5wF3rRERJ@vger.kernel.org, AJvYcCUXXBUjPO3+vymnRndxCQdSvWAo5dUxy0CKsBb8h5JP0qfk8s6RDjKZZFO+3a7cRycW4fUPZKBS6f+UVepoKw==@vger.kernel.org, AJvYcCWZb+LibihE33sb+8aCtnUkOmF711YFLC+wGAEj/A0EdXUW24CK1wdR2H92siNPA89jP8aEYGPZHis=@vger.kernel.org, AJvYcCWuk2VY1HF2BT8Z+0JkoNjsOUSP79vbxmUON8DCRSOmK5FvTrlcbpqY5kXsNZRnJAXYvlflKf/k6uw3GczJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHgN3zPB0wsM9WBZh1n1cfsvArA5zNH6nGVV45c5BgfD0DXPYS
-	b7D2iTSS7C7jhFU25fXy44UjZPOF8ONr163xF+YbNe+wJrOnXSPae+oe
-X-Gm-Gg: ASbGncuNpBj3aQcyI8jgIfpYRmUkMbBJoB8tTZ62q6gEl3yeKhm+03uvo0JRM2/mz6W
-	KxuRJbN1JyjmV+Y0tdffs4Os9/vyy26SmeHc77FjgIZ2K8cTtwqXBvgSmzhEyJZ88D+8RRIAaPf
-	ZZn9TKwEo+2facNHtV2Rainsr58Si3Hc3cxjX0eWulp453I1FQs+ZvsuR9+d4nzi3Pw+0aRRTaY
-	PiLiCT6CcyfWusvxpFSnm/ootrsHLQkvlGEWegiSkcOqMmHlFcpiTywIETVnuKNgGcyk6DxmcxY
-	syMJ1O4S1Yk6v1PEhx9S1FlWZYKAj7sL0kXqVyljB/iqIcW0QBizoU2dqnDiOZUJE1s939Q21rN
-	a
-X-Google-Smtp-Source: AGHT+IGGepiWMq8fUxN8wR+DXLW7IkcNmsN4ClsJREkHtU4D+josD6m97IlCmcwRCouZrTUZPa8LRg==
-X-Received: by 2002:a05:6820:2687:b0:611:e31c:5d23 with SMTP id 006d021491bc7-61392b6ebf0mr2741583eaf.4.1751673996244;
-        Fri, 04 Jul 2025 17:06:36 -0700 (PDT)
-Received: from groves.net ([2603:8080:1500:3d89:5cca:28eb:68f3:4778])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73c9f73518fsm570731a34.12.2025.07.04.17.06.33
+        d=1e100.net; s=20230601; t=1751677874; x=1752282674;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X/RMW5ROGAxC4jVB3NK6djzooskyVRPZCJn8BCZVKk8=;
+        b=vHQDgM2zlNPjoLBJ6cumbuToqw0MuLNsOEK481vN6/wLYO5VB1khFl+L1Rq8zXC28G
+         zBYb3DCfPZWarKQooh4F/WM1jLq9Lal/YJ1bKgmHgNA5HuWqsf3ubaIUlCX4i/Ra/W/7
+         Q3kOLQmRFRIn1L9pZyQWWBwz1d51GEltLRaHCCipnNWycbr9p0pwT3OEyzgj2x9TiHyu
+         S3F1RHnq3eVUZajrf2SBEK1WWMXBqkQnzyLGflTsju93trew0vXjZjyyR9S6K0JH+Xxn
+         Xe/kHO7UaSSCBWXm9CNUPezcECgu77QxYWYfny/I4olgZN7+Tu8nxB9N1Qy3J9wzmzsd
+         pllg==
+X-Forwarded-Encrypted: i=1; AJvYcCV1nagRVzKq953vujP4kuJY6WzeYWlWkPUB3kUqSMQyaC1mHz9h6u/Mgf11kIjUmpYfnbyU9cOeBWM=@vger.kernel.org, AJvYcCVAIhFTVqFIIvBIBCYQHaP7P+hOtd9yioweH5uPSLHcr371vQGwgViCWZfuDgZlFctFihMdWOoiOCxE@vger.kernel.org, AJvYcCVp0CdYhZb68XflW2zybnj0bV7LprprJzynRa5RVRTn8TyGwC93lpJv34W5KjGRCHv1EKzb5yxL4BB+9XcMYQ==@vger.kernel.org, AJvYcCWS4xzisMDkrSrbe9O452SflMA86cVBOeVyeLonv27TBJkCcXxN5UHXlwkwhcNhyYekrVSMw/qt1hD25S9/@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeGkiUi9/bqRxLE1dMv6i1ZY0rmLX3zG8mT6Y27jJdENxA+y9a
+	pa81x9oDiVeIWUwNyRIOMCiRmYImMY+q/iq+bl0EbXBrKQDrIYeMaRcLNyexzw==
+X-Gm-Gg: ASbGncsPaqQaknQc1HgDB+8driHb8dJaskUzW9JcI9R0W8huEC75+CU8Gx+EskJXlv5
+	3yvtE99/4XribAqSUdG1cbUVdM4/IPKXjFMgurJVTXq6AqvnI6eLknM6/LbUp6uctLd6h1Hzl9u
+	qVEPZKS2j4oMgfSR/i6YF58zb8PcafR4Zj3XOdwaPYoMiSCR2bXGAFc1gmpQHmrcv55kb4QJE2R
+	YAUcI0tkKgErY68JpCXgI+VgCwLmYE2P4J14q6sk/t9IkQM3dLJpqQ1S3cOhFAbKZs4bWVEbMM7
+	r44uZUi7tn0c4u2mPyF0AXlo19HAa3xnX13nQ6xuLkk83kYGVlhr+8rWSZvvcVG+resTNjpC
+X-Google-Smtp-Source: AGHT+IHUSIHx+BqSNZT+kZlLiCbHuIOKR1i5aqY9CMhhNpFb/R2602F6DzC/dMa+aAfLN+gs6Hk14g==
+X-Received: by 2002:a17:907:1b1d:b0:ae3:cb50:2c6b with SMTP id a640c23a62f3a-ae3fbd141camr471008866b.38.1751677873862;
+        Fri, 04 Jul 2025 18:11:13 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f6ac35e0sm263535366b.73.2025.07.04.18.11.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 17:06:35 -0700 (PDT)
-Sender: John Groves <grovesaustin@gmail.com>
-Date: Fri, 4 Jul 2025 19:06:32 -0500
-From: John Groves <John@groves.net>
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Bernd Schubert <bschubert@ddn.com>, 
-	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	"Darrick J . Wong" <djwong@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
-	Jeff Layton <jlayton@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
-	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>
-Subject: Re: [RFC V2 12/18] famfs_fuse: Plumb the GET_FMAP message/response
-Message-ID: <gwjcw52itbe4uyr2ttwvv2gjain7xyteicox5jhoqjkr23bhef@xfz6ikusckll>
+        Fri, 04 Jul 2025 18:11:13 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 1F3A241F3D86; Sat, 05 Jul 2025 08:11:05 +0700 (WIB)
+Date: Sat, 5 Jul 2025 08:11:04 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, John Groves <John@groves.net>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Miklos Szeredi <miklos@szeredb.hu>,
+	Bernd Schubert <bschubert@ddn.com>,
+	John Groves <jgroves@micron.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, Jan Kara <jack@suse.cz>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	"Darrick J . Wong" <djwong@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Stefan Hajnoczi <shajnocz@redhat.com>,
+	Joanne Koong <joannelkoong@gmail.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Aravind Ramesh <arramesh@micron.com>,
+	Ajay Joshi <ajayjoshi@micron.com>
+Subject: Re: [RFC V2 18/18] famfs_fuse: Add documentation
+Message-ID: <aGh7qBzEJMFf_srS@archie.me>
 References: <20250703185032.46568-1-john@groves.net>
- <20250703185032.46568-13-john@groves.net>
- <CAOQ4uxh-qDahaEpdn2Xs9Q7iBTT0Qx577RK-PrZwzOST_AQqUA@mail.gmail.com>
- <c73wbrsbijzlcfoptr4d6ryuf2mliectblna2hek5pxcuxfgla@7dbxympec26j>
+ <20250703185032.46568-19-john@groves.net>
+ <aGcf4AhEZTJXbEg3@archie.me>
+ <87ecuwk83h.fsf@trenco.lwn.net>
+ <aGdQM-lcBo6T5Hog@archie.me>
+ <aGgkVA81Zms8Xgel@casper.infradead.org>
+ <aGhjv37uw3w4nZ2C@archie.me>
+ <aGhnFu8C9wVPiXBq@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="vhvcLO43juMxDsjQ"
+Content-Disposition: inline
+In-Reply-To: <aGhnFu8C9wVPiXBq@casper.infradead.org>
+
+
+--vhvcLO43juMxDsjQ
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c73wbrsbijzlcfoptr4d6ryuf2mliectblna2hek5pxcuxfgla@7dbxympec26j>
+Content-Transfer-Encoding: quoted-printable
 
-On 25/07/04 03:30PM, John Groves wrote:
-> On 25/07/04 10:54AM, Amir Goldstein wrote:
-> > On Thu, Jul 3, 2025 at 8:51 PM John Groves <John@groves.net> wrote:
-> > >
-> > > Upon completion of an OPEN, if we're in famfs-mode we do a GET_FMAP to
-> > > retrieve and cache up the file-to-dax map in the kernel. If this
-> > > succeeds, read/write/mmap are resolved direct-to-dax with no upcalls.
-> > >
-> > > GET_FMAP has a variable-size response payload, and the allocated size
-> > > is sent in the in_args[0].size field. If the fmap would overflow the
-> > > message, the fuse server sends a reply of size 'sizeof(uint32_t)' which
-> > > specifies the size of the fmap message. Then the kernel can realloc a
-> > > large enough buffer and try again.
-> > >
-> > > Signed-off-by: John Groves <john@groves.net>
-> > > ---
-> > >  fs/fuse/file.c            | 84 +++++++++++++++++++++++++++++++++++++++
-> > >  fs/fuse/fuse_i.h          | 36 ++++++++++++++++-
-> > >  fs/fuse/inode.c           | 19 +++++++--
-> > >  fs/fuse/iomode.c          |  2 +-
-> > >  include/uapi/linux/fuse.h | 18 +++++++++
-> > >  5 files changed, 154 insertions(+), 5 deletions(-)
-> > >
-> > > diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-> > > index 93b82660f0c8..8616fb0a6d61 100644
-> > > --- a/fs/fuse/file.c
-> > > +++ b/fs/fuse/file.c
-> > > @@ -230,6 +230,77 @@ static void fuse_truncate_update_attr(struct inode *inode, struct file *file)
-> > >         fuse_invalidate_attr_mask(inode, FUSE_STATX_MODSIZE);
-> > >  }
-> > >
-> > > +#if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
-> > 
-> > We generally try to avoid #ifdef blocks in c files
-> > keep them mostly in h files and use in c files
-> >    if (IS_ENABLED(CONFIG_FUSE_FAMFS_DAX))
-> > 
-> > also #if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
-> > it a bit strange for a bool Kconfig because it looks too
-> > much like the c code, so I prefer
-> > #ifdef CONFIG_FUSE_FAMFS_DAX
-> > when you have to use it
-> > 
-> > If you need entire functions compiled out, why not put them in famfs.c?
-> 
-> Perhaps moving fuse_get_fmap() to famfs.c is the best approach. Will try that
-> first.
-> 
-> Regarding '#if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)', vs.
-> '#ifdef CONFIG_FUSE_FAMFS_DAX' vs. '#if CONFIG_FUSE_FAMFS_DAX'...
-> 
-> I've learned to be cautious there because the latter two are undefined if
-> CONFIG_FUSE_FAMFS_DAX=m. I've been burned by this.
-> 
-> My original thinking was that famfs made sense as a module, but I'm leaning
-> the other way now - and in this series fs/fuse/Kconfig makes it a bool - 
-> meaning all three macro tests will work because a bool can't be set to 'm'. 
-> 
-> So to the extent that I need conditional compilation macros I can switch
-> to '#ifdef...'.
+On Sat, Jul 05, 2025 at 12:43:18AM +0100, Matthew Wilcox wrote:
+> On Sat, Jul 05, 2025 at 06:29:03AM +0700, Bagas Sanjaya wrote:
+> > I'm looking for any Sphinx warnings, but if there's none, I check for
+> > better wording or improving the docs output.
+>=20
+> That's appreciated.  Really.  But what you should be looking for is
+> unclear or misleading wording.  Not "this should be 'may' instead of
+> 'might'".  The review you give is often closer to nitpicking than
+> serious review.
 
-Doh. Spirit of full disclosure: this commit doesn't build if
-CONFIG_FUSE_FAMFS_DAX is not set (!=y). So the conditionals are at
-risk if getting worse, not better. Working on it...
+Thanks for the tip!
 
-<snip>
+--=20
+An old man doll... just what I always wanted! - Clara
 
-Thanks,
-John
+--vhvcLO43juMxDsjQ
+Content-Type: application/pgp-signature; name=signature.asc
 
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaGh7pQAKCRD2uYlJVVFO
+o/GiAP4tesyMBf5QzSsvVBV5gxPDNwesiOtgDt+HtxlS18HLLwD/XWPRGBM1yZhx
+4w3Fe2lF6lFmlIekyWjwIMJ0Qkci4A8=
+=hztl
+-----END PGP SIGNATURE-----
+
+--vhvcLO43juMxDsjQ--
