@@ -1,186 +1,271 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F35E1C7009;
-	Mon,  7 Jul 2025 17:39:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2B21288A2
+	for <linux-cxl@vger.kernel.org>; Mon,  7 Jul 2025 17:59:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751909984; cv=none; b=ClkME5EBTtYCS9tK+svig97wczKIwUiLmbhxLm8WQuH5AFEqG+ptRB3GkXH96XczZia6MQuZkTz4cb7U2FPeQynuv3KMiKZTiFRJYKKJeSlb2L9v58KI6kZefy0P8aexV+MNkI2jtaBF4mNGB6MVyg+0OuPupBUJ+n7ReC4+UUI=
+	t=1751911183; cv=none; b=UZqht5jegDaVFqZoeNbORIRPgcKUuFaX1HTf/2UetQZLdJz9sY5RSzegMMkwop3l8fQo26lnniHTDEl81Ml3bbr4vnTwBGhbxLrbZWa93ReFk9GgqSn4LZGXkDLNAtIDc59bkL5Knc5bEzBzyJkQaKK5r7/kcj2wikBU28VY91k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751909984; c=relaxed/simple;
-	bh=l+3iXjYGj1UpOXLJrT43d9M5v15VGrgjIsaEmWHnlnQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q5H6LxHl4/MYBcqt9UVEoZmhLarUnikTdQ2Qh3pzOTswRa2Cof21lWiopDcoZHs55lcShXdeUS/1IByWVom3Nr96zVCITfuMm7P9evLBNDFAmhpGtbfNCEjaV6Au7PzYphpkEcbdABmXw2M3VSPpgM3y9UBF32enkkaY9Wsf5qM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HPttIjEn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751911183; c=relaxed/simple;
+	bh=W1SG7tnly+qyafmiYDEpv/6ghzPFpxER+WAgQSzke3c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rBfgFgiup1LXXkHUSNiMdqsRWDQx9RtZ0alEBWDG0ivgUU+iyMaJyUvIx8eL9ahIKztcxwwzDBw5nEwLn4r/EA12Pe7s7quskfPNrmWGIAQnjAWPalg+d3sxZtddpYG+6LtNDl+hbq/qZMjoW2lRb1ge0pFv2mBQaCjaotcNswI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SFbiCuOL; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HPttIjEn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93A93C4CEE3;
-	Mon,  7 Jul 2025 17:39:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751909982;
-	bh=l+3iXjYGj1UpOXLJrT43d9M5v15VGrgjIsaEmWHnlnQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HPttIjEnmPAnCKgpeOWt4ktMrN65mudK91LH4ggTI9W1jtedjRId7w5nmq4vHdyTr
-	 CEtduZ+pljjwRe6H66Gc5GHT0y7i3zGZ3uCldWnx+wC8sR4+JIDYYbZTNsNWZLXdE2
-	 15lWasxQTL4GDer73CwNfUPutq3FS6KcjyVZ3Vkrh7/k93R1GDL3AylQulro2TKFmx
-	 kfqsX7Rv2PKmDBdtKF8VGsMAtwhy4xv0dB8erpvX3T4ySF4vY+x9/FfhITDmyiWPEq
-	 9fci7JmKqnt7VFb7xgCcljSQXm6wgbFwfa4hm8sWSmN4yEMXyX7j2Z9pFuiRA5mJ8W
-	 MRfIeNrPqkppw==
-Date: Mon, 7 Jul 2025 10:39:42 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: John Groves <John@groves.net>
-Cc: Amir Goldstein <amir73il@gmail.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Miklos Szeredi <miklos@szeredi.hu>,
-	Bernd Schubert <bschubert@ddn.com>,
-	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Stefan Hajnoczi <shajnocz@redhat.com>,
-	Joanne Koong <joannelkoong@gmail.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Aravind Ramesh <arramesh@micron.com>,
-	Ajay Joshi <ajayjoshi@micron.com>
-Subject: Re: [RFC V2 10/18] famfs_fuse: Basic fuse kernel ABI enablement for
- famfs
-Message-ID: <20250707173942.GC2672029@frogsfrogsfrogs>
-References: <20250703185032.46568-1-john@groves.net>
- <20250703185032.46568-11-john@groves.net>
- <CAOQ4uxi7fvMgYqe1M3_vD3+YXm7x1c4YjA=eKSGLuCz2Dsk0TQ@mail.gmail.com>
- <yhso6jddzt6c7glqadrztrswpisxmuvg7yopc6lp4gn44cxd4m@my4ajaw47q7d>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SFbiCuOL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751911182; x=1783447182;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=W1SG7tnly+qyafmiYDEpv/6ghzPFpxER+WAgQSzke3c=;
+  b=SFbiCuOLQdvtMEiCT0WrMlWYMQ/PIoxHjtLRQGg7G0xeGW1GglWVBn6x
+   J/fphlvx2BKoSSxZ36uppS0vG7rkPK540YkYtpNTcDNGW9+ZZAFi0jGop
+   MHPmZB9YQcOahqG3tX492ufn7WuscvabxLv5pwbP4J+jwSy1rPr0SffsB
+   bDmLhjoNURFiRML/1I6Sn5zjqaG/VRDvNNZVu3gM9TPETTCaM1Job/CdA
+   vvXHOLsTog/aJRB9By5o3ltLZs5VZu5VL4BJ2aS6NmOVSgjqxEIhmNwjH
+   4q5fZGS4f8e/G3U4e7uHIgvp6JAj3foynPgqUiblKCAZirZM3gjiR/CIi
+   g==;
+X-CSE-ConnectionGUID: pKWAwI4XRQO7vD6SmCAFLg==
+X-CSE-MsgGUID: 2UJyWi1qRGmGY2xPouq1BQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11487"; a="79571055"
+X-IronPort-AV: E=Sophos;i="6.16,295,1744095600"; 
+   d="scan'208";a="79571055"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2025 10:59:41 -0700
+X-CSE-ConnectionGUID: 0it4j3IQS3euRxU+pRJPYA==
+X-CSE-MsgGUID: +TvrNXvDSHKYxVAAQONQjA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,295,1744095600"; 
+   d="scan'208";a="192460377"
+Received: from puneetse-mobl.amr.corp.intel.com (HELO [10.125.110.107]) ([10.125.110.107])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2025 10:59:41 -0700
+Message-ID: <6f7723a3-3ed1-498b-aa48-2c0dda387894@intel.com>
+Date: Mon, 7 Jul 2025 10:59:38 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <yhso6jddzt6c7glqadrztrswpisxmuvg7yopc6lp4gn44cxd4m@my4ajaw47q7d>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 04/10] cxl: Defer dport allocation for switch ports
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com
+References: <20250703232710.3141436-1-dave.jiang@intel.com>
+ <20250703232710.3141436-5-dave.jiang@intel.com>
+ <20250704105255.000039da@huawei.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250704105255.000039da@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jul 04, 2025 at 08:39:59AM -0500, John Groves wrote:
-> On 25/07/04 09:54AM, Amir Goldstein wrote:
-> > On Thu, Jul 3, 2025 at 8:51 PM John Groves <John@groves.net> wrote:
-> > >
-> > > * FUSE_DAX_FMAP flag in INIT request/reply
-> > >
-> > > * fuse_conn->famfs_iomap (enable famfs-mapped files) to denote a
-> > >   famfs-enabled connection
-> > >
-> > > Signed-off-by: John Groves <john@groves.net>
-> > > ---
-> > >  fs/fuse/fuse_i.h          |  3 +++
-> > >  fs/fuse/inode.c           | 14 ++++++++++++++
-> > >  include/uapi/linux/fuse.h |  4 ++++
-> > >  3 files changed, 21 insertions(+)
-> > >
-> > > diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-> > > index 9d87ac48d724..a592c1002861 100644
-> > > --- a/fs/fuse/fuse_i.h
-> > > +++ b/fs/fuse/fuse_i.h
-> > > @@ -873,6 +873,9 @@ struct fuse_conn {
-> > >         /* Use io_uring for communication */
-> > >         unsigned int io_uring;
-> > >
-> > > +       /* dev_dax_iomap support for famfs */
-> > > +       unsigned int famfs_iomap:1;
-> > > +
-> > 
-> > pls move up to the bit fields members.
-> 
-> Oops, done, thanks.
-> 
-> > 
-> > >         /** Maximum stack depth for passthrough backing files */
-> > >         int max_stack_depth;
-> > >
-> > > diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-> > > index 29147657a99f..e48e11c3f9f3 100644
-> > > --- a/fs/fuse/inode.c
-> > > +++ b/fs/fuse/inode.c
-> > > @@ -1392,6 +1392,18 @@ static void process_init_reply(struct fuse_mount *fm, struct fuse_args *args,
-> > >                         }
-> > >                         if (flags & FUSE_OVER_IO_URING && fuse_uring_enabled())
-> > >                                 fc->io_uring = 1;
-> > > +                       if (IS_ENABLED(CONFIG_FUSE_FAMFS_DAX) &&
-> > > +                           flags & FUSE_DAX_FMAP) {
-> > > +                               /* XXX: Should also check that fuse server
-> > > +                                * has CAP_SYS_RAWIO and/or CAP_SYS_ADMIN,
-> > > +                                * since it is directing the kernel to access
-> > > +                                * dax memory directly - but this function
-> > > +                                * appears not to be called in fuse server
-> > > +                                * process context (b/c even if it drops
-> > > +                                * those capabilities, they are held here).
-> > > +                                */
-> > > +                               fc->famfs_iomap = 1;
-> > > +                       }
-> > 
-> > 1. As long as the mapping requests are checking capabilities we should be ok
-> >     Right?
-> 
-> It depends on the definition of "are", or maybe of "mapping requests" ;)
-> 
-> Forgive me if this *is* obvious, but the fuse server capabilities are what
-> I think need to be checked here - not the app that it accessing a file.
-> 
-> An app accessing a regular file doesn't need permission to do raw access to
-> the underlying block dev, but the fuse server does - becuase it is directing
-> the kernel to access that for apps.
-> 
-> > 2. What's the deal with capable(CAP_SYS_ADMIN) in process_init_limits then?
-> 
-> I *think* that's checking the capabilities of the app that is accessing the
-> file, and not the fuse server. But I might be wrong - I have not pulled very
-> hard on that thread yet.
 
-The init reply should be processed in the context of the fuse server.
-At that point the kernel hasn't exposed the fs to user programs, so
-(AFAICT) there won't be any other programs accessing that fuse mount.
 
-> > 3. Darrick mentioned the need for a synchronic INIT variant for his work on
-> >     blockdev iomap support [1]
+On 7/4/25 2:52 AM, Jonathan Cameron wrote:
 > 
-> I'm not sure that's the same thing (Darrick?), but I do think Darrick's
-> use case probably needs to check capabilities for a server that is sending
-> apps (via files) off to access extents of block devices.
-
-I don't know either, Miklos hasn't responded to my questions.  I think
-the motivation for a synchronous 
-
-As for fuse/iomap, I just only need to ask the kernel if iomap support
-is available before calling ext2fs_open2() because the iomap question
-has some implications for how we open the ext4 filesystem.
-
-> > I also wonder how much of your patches and Darrick's patches end up
-> > being an overlap?
+> Hi Dave,
 > 
-> Darrick and I spent some time hashing through this, and came to the conclusion
-> that the actual overlap is slim-to-none. 
-
-Yeah.  The neat thing about FMAPs is that you can establish repeating
-patterns, which is useful for interleaved DRAM/pmem devices.  Disk
-filesystems don't do repeating patterns, so they'd much rather manage
-non-repeating mappings.
-
---D
-
-> > 
-> > Thanks,
-> > Amir.
-> > 
-> > [1] https://lore.kernel.org/linux-fsdevel/20250613174413.GM6138@frogsfrogsfrogs/
+>> ---
+>> v5:
+>> - Change cxl_port_get_total_dports() to cxl_port_update_total_dports(). (Jonathan)
+>> - Return dport for the devm_cxl_port_add_dport() and friends. (Jonathan)
+> I'm not following how the code around this works.  See below.
 > 
-> Thank you!
-> John
+> If I'm reading it right and it should just be a return ERR_PTR(-EEXIST)
+> where noted, with that fixed:
+
+Yes will get that fixed. Thanks!
+
+DJ
+
 > 
+> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+> 
+> 
+>> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+>> index 9691da831224..ffd39c5b7222 100644
+>> --- a/drivers/cxl/core/port.c
+>> +++ b/drivers/cxl/core/port.c
+>> @@ -1551,6 +1551,128 @@ static resource_size_t find_component_registers(struct device *dev)
+> 
+>> +
+>> +static struct cxl_dport *devm_cxl_port_add_dport(struct cxl_port *port,
+>> +						 struct device *dport_dev)
+>> +{
+>> +	struct cxl_dport *dport;
+>> +	int rc;
+>> +
+>> +	device_lock_assert(&port->dev);
+>> +
+>> +	/* Port driver not attached yet, wait for cxl_acpi reprobe */
+>> +	if (!port->dev.driver)
+>> +		return ERR_PTR(-ENODEV);
+>> +
+>> +	dport = cxl_find_dport_by_dev(port, dport_dev);
+>> +	if (dport)
+>> +		return dport;
+> 
+> I was expecting this to return -EEXIST.
+> Only going to be visible in the devm_cxl_add_dport_for_rp()
+> though so maybe test isn't hitting that?
+> 
+>> +
+>> +	dport = devm_cxl_add_dport_by_dev(port, dport_dev);
+>> +	if (IS_ERR(dport))
+>> +		return dport;
+>> +
+>> +	rc = cxl_port_setup_with_dport(port, dport);
+>> +	if (rc) {
+>> +		reap_dport(port, dport);
+>> +		return ERR_PTR(rc);
+>> +	}
+>> +
+>> +	return dport;
+>> +}
+>> +
+>> +static struct cxl_dport *devm_cxl_add_dport_by_uport(struct device *uport_dev,
+>> +						     struct device *dport_dev)
+>> +{
+>> +	struct cxl_port *port __free(put_cxl_port) =
+>> +		find_cxl_port_by_uport(uport_dev);
+>> +
+>> +	if (!port)
+>> +		return ERR_PTR(-ENODEV);
+>> +
+>> +	guard(device)(&port->dev);
+>> +	return devm_cxl_port_add_dport(port, dport_dev);
+>> +}
+>> +
+>> +static struct cxl_dport *devm_cxl_add_dport_for_rp(struct device *uport_dev,
+>> +						   struct device *dport_dev)
+>> +{
+>> +	struct device *dparent = grandparent(dport_dev);
+>> +
+>> +	/* Only go down this path if we are at the root port */
+>> +	if (!is_cxl_hierarchy_head(dparent))
+>> +		return NULL;
+>> +
+>> +	return devm_cxl_add_dport_by_uport(uport_dev, dport_dev);
+>> +}
+>> +
+>>  static int add_port_attach_ep(struct cxl_memdev *cxlmd,
+>>  			      struct device *uport_dev,
+>>  			      struct device *dport_dev)
+>> @@ -1584,6 +1706,8 @@ static int add_port_attach_ep(struct cxl_memdev *cxlmd,
+>>  	 */
+>>  	struct cxl_port *port __free(put_cxl_port) = NULL;
+>>  	scoped_guard(device, &parent_port->dev) {
+>> +		struct cxl_dport *new_dport;
+>> +
+>>  		if (!parent_port->dev.driver) {
+>>  			dev_warn(&cxlmd->dev,
+>>  				 "port %s:%s disabled, failed to enumerate CXL.mem\n",
+>> @@ -1592,6 +1716,8 @@ static int add_port_attach_ep(struct cxl_memdev *cxlmd,
+>>  		}
+>>  
+>>  		port = find_cxl_port_at(parent_port, dport_dev, &dport);
+>> +		if (!port)
+>> +			port = find_cxl_port_by_uport(uport_dev);
+>>  		if (!port) {
+>>  			component_reg_phys = find_component_registers(uport_dev);
+>>  			port = devm_cxl_add_port(&parent_port->dev, uport_dev,
+>> @@ -1599,11 +1725,27 @@ static int add_port_attach_ep(struct cxl_memdev *cxlmd,
+>>  			if (IS_ERR(port))
+>>  				return PTR_ERR(port);
+>>  
+>> -			/* retry find to pick up the new dport information */
+>> -			port = find_cxl_port_at(parent_port, dport_dev, &dport);
+>> -			if (!port)
+>> -				return -ENXIO;
+>> +			/*
+>> +			 * The port holds a device reference via find_cxl_port_at()
+>> +			 * if the port is valid. But if the port is newly created
+>> +			 * via devm_cxl_add_port(), no reference is held. Therefore
+>> +			 * the driver needs to get a device reference here.
+>> +			 */
+>> +			get_device(&port->dev);
+>>  		}
+>> +
+>> +		guard(device)(&port->dev);
+>> +		new_dport = devm_cxl_port_add_dport(port, dport_dev);
+>> +		if (IS_ERR(new_dport)) {
+>> +			if (PTR_ERR(new_dport) != -EEXIST)
+>> +				return PTR_ERR(new_dport);
+> 
+> I think we never get here currently due to lack of returning -EEXIST.
+> 
+>> +
+>> +			new_dport = cxl_find_dport_by_dev(port, dport_dev);
+>> +			if (!new_dport)
+>> +				return -ENODEV;
+>> +		}
+>> +
+>> +		dport = new_dport;
+>>  	}
+>>  
+>>  	dev_dbg(&cxlmd->dev, "add to new port %s:%s\n",
+>> @@ -1620,11 +1762,13 @@ static int add_port_attach_ep(struct cxl_memdev *cxlmd,
+>>  	return rc;
+>>  }
+>>  
+>> +#define CXL_ITER_LEVEL_SWITCH	1
+>> +
+>>  int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
+>>  {
+>>  	struct device *dev = &cxlmd->dev;
+>>  	struct device *iter;
+>> -	int rc;
+>> +	int rc, i;
+>>  
+>>  	/*
+>>  	 * Skip intermediate port enumeration in the RCH case, there
+>> @@ -1643,7 +1787,7 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
+>>  	 * attempt fails.
+>>  	 */
+>>  retry:
+>> -	for (iter = dev; iter; iter = grandparent(iter)) {
+>> +	for (i = 0, iter = dev; iter; i++, iter = grandparent(iter)) {
+>>  		struct device *dport_dev = grandparent(iter);
+>>  		struct device *uport_dev;
+>>  		struct cxl_dport *dport;
+>> @@ -1686,9 +1830,28 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
+>>  			if (!dev_is_cxl_root_child(&port->dev))
+>>  				continue;
+>>  
+>> +			/*
+>> +			 * This is a corner case where the rootport is setup but
+>> +			 * the switch dport is not. It needs to go back to the
+>> +			 * beginning to setup the switch port.
+>> +			 */
+>> +			if (i >= CXL_ITER_LEVEL_SWITCH) {
+>> +				struct cxl_port *pport __free(put_cxl_port) =
+>> +					cxl_mem_find_port(cxlmd, &dport);
+>> +				if (!port)
+>> +					goto retry;
+>> +			}
+>> +
+>>  			return 0;
+>>  		}
+>>  
+>> +		dport = devm_cxl_add_dport_for_rp(uport_dev, dport_dev);
+>> +		/* Added a dport, restart enumeration */
+>> +		if (!IS_ERR_OR_NULL(dport))
+>> +			goto retry;
+> 
+> As above. I think if this finds a already existing dport we loop for ever.
+> 
+>> +		if (IS_ERR(dport))
+>> +			return PTR_ERR(dport);
+>> +
+>>  		rc = add_port_attach_ep(cxlmd, uport_dev, dport_dev);
+>>  		/* port missing, try to add parent */
+>>  		if (rc == -EAGAIN)
+> }
+> 
+
