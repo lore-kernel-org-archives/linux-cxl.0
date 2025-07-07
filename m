@@ -1,164 +1,115 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4859326560C
-	for <linux-cxl@vger.kernel.org>; Mon,  7 Jul 2025 19:55:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F3BC2AC17
+	for <linux-cxl@vger.kernel.org>; Mon,  7 Jul 2025 20:16:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751918110; cv=none; b=iCWRe7M9TcNUKQRsUa47VZHNxc1N7bX43S8lkH/NFdYvNw1x2t6PS0APc2RoZf59Fbuv/3yTAhYNswojRfRR6ovQNH0KRPpt61NeC8t9GsND0MqPnXr74xshBZchmLkh/E1wlvH9q2w74hmFLhMgtQ94I1uoMCJFE2PVedc+JG0=
+	t=1751919398; cv=none; b=iI0MB4JPMCj9b2S5ol+Zj11KIFm6jdF+TDtkpCcObpw10GVrC+C+x2lPxoXVrBFesVMDd+uoDf/nCMo6HDqGKT2kqDpjdxdsza3GM19tkECPewJG4nqv11/CwjxarboWPDbzo/sEzHNKm5v7Ff2uZQfiyZ2L0mG2k/tghz35qIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751918110; c=relaxed/simple;
-	bh=rH1Um4JjiE+OKcCWJfxcm3QVfpMPdYIq4FdAa+Mqz90=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ODgzpvCJB82USP8nTmtX+WC2OQuvWN1SS9bTE7ZsdFfizllspyvC7UHsWqTWG4/E/dKjLwAMIaf2x+tQiSPL5FbY4SZ3QVrenOdIBxfxstq/IocPJOyoPIWv9ETYogvAtv4adAVHOePhuOpqXQkZaX7t0ir6zK6mn1WNl3/2Bpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=dPuV7djX; arc=none smtp.client-ip=209.85.222.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1751919398; c=relaxed/simple;
+	bh=jYEw+dpQOLsLhqtci6KxjAhEKrOUjQnuRdygwxBmALc=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=XwB73Y3/R7XyAZJEb6Z84SBtJs+GmGvrCL9qjlSo7Qqz/e73V8/ASMcUanCr9qX3nmm4OyCQDse8xLRCvAwarniYI6rySolvjRc+k47BFdy+uX4/eLS0L6UCsKmK4d4UEsR50cclX5IctOOdrY381t0zRbEC7hiJn5Prndxt39k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q/34JVyg; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="dPuV7djX"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7d7cf6efc2fso146515185a.3
-        for <linux-cxl@vger.kernel.org>; Mon, 07 Jul 2025 12:55:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1751918106; x=1752522906; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=UADh6/FawOv4Kskk6Mh1+PdTlSoMCExqyQRzaDETwds=;
-        b=dPuV7djX+WLrtwXa/XcHF7ITOJ1uLxqCE1cF6NwY9MJBkrveA0WWtw9H+pKf6t2jcw
-         jlmHg7+qMzJYSjXuUMx2tNY9yoBMH5Lj51x6+Ez2DSrwyPFjTARl1D2fZ8At4J9niwYg
-         EEy22bQicKJD3+M1iYjrHF3UHRcebLKvMK0mhs2dMeaymZNUaNqSx0fmQhUnEK//P2ZF
-         8xihyafXksZWJqVzewljFbGr5dixm6gxWxRkxDjEZqjMItBaQLOAZpZub01odcv/kO0z
-         ultmmz8j3aaXfzHhQ5w36duaTXLKtSl92K6oXx+nWvV1RtGe7T5c3PuWQ4Tm9vGWAC6W
-         XsaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751918106; x=1752522906;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UADh6/FawOv4Kskk6Mh1+PdTlSoMCExqyQRzaDETwds=;
-        b=P8Rg9rDkF+UHzVgKc7JpYsFqn0PaujHn8trqqSv4ft31UZWlQdZO/Mkh1JA0SEz/7A
-         AI6iYT9PzkdLp05DmiYAGonpdjB5fIvguFq3o355WrkRhVAF+a4UKc/wCOf+5BvK2dzA
-         iSt9wktgPR7uDXcpI6To5ONIv/beaoMdv7RqC/a1NoXmx+lkRK3oD1EJgmQWpzMo1j/L
-         XrziHJgd+EGSFJOom4KM7wlfvg7gwEyWYhvwa9h5ruEnw9C7fWcXKJSpEjvcLs0fYUv2
-         ZvN9Vk/O6Czkd5L6mqSmb0+dyGPNN9bFzO6YM6+oUYgBFRzxsLA54PNa4LyCACh/2/M5
-         kqOw==
-X-Forwarded-Encrypted: i=1; AJvYcCXmb43VGGHkt2MsjFw4qAmS7DVIaiRkn4rWcyvKh2RTj2V3xfiEgwrFVVsqweTGk8P9ZL/br9B3ylk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YylaSWfJXk7wlZWQjmaiR1a0bSvDjpyvdkK5qTwn60PanDm58Pi
-	PiiZa3F6sg8GsWt60YCWF+eFUTXySftRbP4Aquukske7GMYmAo7ek7YUma6R8hqtj5o=
-X-Gm-Gg: ASbGncucsXkOGG0nP9ox/037U4K9umI2GaENiTCvZTH9wWG72PeJsFOapRHzdG79jkM
-	fWhvhBR+kE1ZNWuKSEZtDFA71fLfcmZf83w/ByqufoHMYWEmRl/mxGzpP4EDURBULKiQkN6mFY/
-	MPzPnwHQkTVd6ti15/uprmeKWuzBOBsqGso5RfDP7PdVdkW2GBJgLDfRBbsyCL8RY+8BDEbHgCV
-	SEiuvTuYdRqcgj6x+K7XRKdKpDVxvd78B5jA2KCYgFUcV6MO0TU5LDW9Z9bH0Vr0onK6uGqFcrs
-	209nyWdnFcKHajdtZTspgEl9VGdPJqw85pOCQJuKxio7rCvqLXZs45Ao9ffuS8F1pBOn2J5SW9G
-	xcc8ICIBnwElWtEvX8Nd8swqZrPAL+XBFaLGgmnEHGQ==
-X-Google-Smtp-Source: AGHT+IEPOB9nrwcPS8zwLTEDLhm0/0j1fZ7qx4I+2SLCJR2zuzEDi/FJw9KBkuJrFGpVm5CERv79vQ==
-X-Received: by 2002:a05:620a:468d:b0:7d7:891:83f with SMTP id af79cd13be357-7da04327fb7mr45809685a.50.1751918106175;
-        Mon, 07 Jul 2025 12:55:06 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d5dbe8f58esm661893385a.79.2025.07.07.12.55.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Jul 2025 12:55:05 -0700 (PDT)
-Date: Mon, 7 Jul 2025 15:55:03 -0400
-From: Gregory Price <gourry@gourry.net>
-To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] cxl: docs/driver-api/conventions resolve conflicts
- btw CFMWS, LMH, ED
-Message-ID: <aGwmFwGNmw8n9zGR@gourry-fedora-PF4VCD3F>
-References: <20250623152923.1048525-1-fabio.m.de.francesco@linux.intel.com>
- <c32cede0-643c-47bb-bfde-93adbcf16155@intel.com>
- <aGbcpac1pma1od40@gourry-fedora-PF4VCD3F>
- <1985851.b9uPGUboIS@fdefranc-mobl3>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q/34JVyg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751919394;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=acOOSG4Qq2nv4W4b3/Nnbhcn7CmsttwwzAN835fhnjc=;
+	b=Q/34JVyg4JXhiOeJgdF51a81Mr+I/8CexS38Ei+GsNCGkkFqVyVaQOOPYNYh9737UbsBXe
+	OWgsFY/zxmZx9R8strL5JKn4eCA2tc7vOS94unByMeMZDHKzUGep/lvfJv+ktUmHZTWYCs
+	HIJ+hdu9lmw6aWMHNRThyckt7tkUCQY=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-473-YFZl0pC0NLq_XoKGDL9m0w-1; Mon,
+ 07 Jul 2025 16:16:31 -0400
+X-MC-Unique: YFZl0pC0NLq_XoKGDL9m0w-1
+X-Mimecast-MFC-AGG-ID: YFZl0pC0NLq_XoKGDL9m0w_1751919390
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 349701801208;
+	Mon,  7 Jul 2025 20:16:29 +0000 (UTC)
+Received: from [10.22.80.10] (unknown [10.22.80.10])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 54B6E19560AB;
+	Mon,  7 Jul 2025 20:16:24 +0000 (UTC)
+Date: Mon, 7 Jul 2025 22:16:19 +0200 (CEST)
+From: Mikulas Patocka <mpatocka@redhat.com>
+To: Dongsheng Yang <dongsheng.yang@linux.dev>
+cc: agk@redhat.com, snitzer@kernel.org, axboe@kernel.dk, hch@lst.de, 
+    dan.j.williams@intel.com, Jonathan.Cameron@Huawei.com, 
+    linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+    linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev, 
+    dm-devel@lists.linux.dev
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v2_00=2F11=5D_dm-pcache_=E2=80=93_pe?=
+ =?UTF-8?Q?rsistent-memory_cache_for_block_devices?=
+In-Reply-To: <20250707065809.437589-1-dongsheng.yang@linux.dev>
+Message-ID: <85b5cb31-b272-305f-8910-c31152485ecf@redhat.com>
+References: <20250707065809.437589-1-dongsheng.yang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1985851.b9uPGUboIS@fdefranc-mobl3>
-
-On Fri, Jul 04, 2025 at 12:05:33PM +0200, Fabio M. De Francesco wrote:
-> On Thursday, July 3, 2025 9:40:21 PM Central European Summer Time Gregory Price wrote:
-> > On Tue, Jul 01, 2025 at 08:23:57AM -0700, Dave Jiang wrote:
-> > > 
-> > > 
-> > > On 6/23/25 12:19 PM, Gregory Price wrote:
-> > > > On Mon, Jun 23, 2025 at 05:29:02PM +0200, Fabio M. De Francesco wrote:
-> > > >> Add documentation on how to resolve conflicts between CXL Fixed Memory
-> > > >> Windows, Platform Memory Holes, and Endpoint Decoders.
-> > > >>
-> > > >> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
-> > > > 
-> > > > I won't block a doc update on a suggestion so
-> > > > 
-> > > > Reviewed-by: Gregory Price <gourry@gourry.net>
-> > > > 
-> > > >> +Platform Firmware (BIOS) might reserve part of physical addresses below
-> > > >> +4 GB (e.g., the Low Memory Hole that describes PCIe memory space for MMIO
-> > > >> +or a requirement for the greater than 8 way interleave CXL regions starting
-> > > >> +at address 0). In that case the Window Size value cannot be anymore
-> > > >> +constrained to the NIW * 256 MB above-mentioned rule.
-> > > > 
-> > > > It might be nice to have a diagram that explains this visually, as it's
-> > > > difficult for me to understand the implications through words alone...
-> > > 
-> > > +1 on request for diagram to explain. We should try to document this issue as clearly as possible. Thank you.
-> > >
-> > 
-> > At the very least, it would be nice to have an explicitly example that
-> > explains the expected cfmws/decoder configurations that are valid but
-> > "technically" violate the spec
-> > 
-> > I *think* this basically boils down to "CFMWS size is not aligned, but
-> > all the decoders it targets are"?  If I understand this correctly?
-> > 
-> Yes, this is the intended meaning. 
-> 
-> E.g, two windows, 384 GB total memory, LMH at 2 GB:
-> 
-> Window | CFMWS Base | CFMWS Size | HDM Decoder Base | HDM Decoder Size | Ways | Granularity
->   0    |   0 GB     |     2 GB   |      0 GB        |       3 GB       |  12  |    256
->   1    |   4 GB     |   380 GB   |      0 GB        |     380 GB       |  12  |    256
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
 
-In this example, does the root decoder have 0/2 and the host bridge
-decoder have 0/3?  Because root decoders objects are created by reading
-the CFMWS Base/Size - while host bridge decoder objects are created by
-reading the host bridge DVSECS.
 
-Or does the linux code read CFMWS Base/Size and create a root decoder
-with 0/3 because "that's what it should have"?  etc
+On Mon, 7 Jul 2025, Dongsheng Yang wrote:
 
-I think you need to describe what the expected behavior is for what linux
-will produce in terms of the decoder objects given the above.
+> Hi Mikulas,
+> 	This is V2 for dm-pcache, please take a look.
+> 
+> Code:
+>     https://github.com/DataTravelGuide/linux tags/pcache_v2
+> 
+> Changelogs
+> 
+> V2 from V1:
+> 	- introduce req_alloc() and req_init() in backing_dev.c, then we
+> 	  can do req_alloc() before holding spinlock and do req_init()
+> 	  in subtree_walk().
+> 	- introduce pre_alloc_key and pre_alloc_req in walk_ctx, that
+> 	  means we can pre-allocate cache_key or backing_dev_request
+> 	  before subtree walking.
+> 	- use mempool_alloc() with NOIO for the allocation of cache_key
+> 	  and backing_dev_req.
+> 	- some coding style changes from comments of Jonathan.
 
-> 
-> 12 *256MB = 3GB, the Top of Low memory below 4GB is set as 2GB in the platform for MMIO Low Mem Hole (2-4GB). Only 2GB will be potentially available for user, but currently the CXL driver expects a CFMWS range's size to be greater or equal to the HDM Decoder's, so it  doesn't match them and we lose those 2GB described by CFMWS0. If we allow the matching, we make those 2GB available to users.
-> 
-> Is a table like the one above good enough to make this subject clearer?
-> 
-> Thanks,
-> 
-> Fabio
-> >
-> > > > 
-> > > > which is likely why the conflict exists in the first place :]
-> > > > 
-> > > > ~Gregory
-> > > 
-> > 
-> 
-> 
-> 
-> 
+Hi
+
+mempool_alloc with GFP_NOIO never fails - so you don't have to check the 
+returned value for NULL and propagate the error upwards.
+
+"backing_req->kmem.bvecs = kmalloc_array(n_vecs, sizeof(struct bio_vec), 
+GFP_NOIO)" - this call may fail and you should handle the error gracefully 
+(i.e. don't end the bio with an error). Would it be possible to trim the 
+request to BACKING_DEV_REQ_INLINE_BVECS vectors and retry it? 
+Alternativelly, you can create a mempool for the largest possible n_vecs 
+and allocate from this mempool if kmalloc_array fails.
+
+I'm sending two patches for dm-pcache - the first patch adds the include 
+file linux/bitfield.h - it is needed in my config. The second patch makes 
+slab caches per-module rather than per-device, if you have them 
+per-device, there are warnings about duplicate cache names.
+
+
+BTW. What kind of persistent memory do you use? (afaik Intel killed the 
+Optane products and I don't know of any replacement)
+
+Some times ago I created a filesystem for persistent memory - see 
+git://leontynka.twibright.com/nvfs.git - I'd be interested if you can test 
+it on your persistent memory implementation.
+
+Mikulas
+
