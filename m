@@ -1,148 +1,198 @@
 Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5AEC23CB;
-	Tue,  8 Jul 2025 05:17:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7824F203706
+	for <linux-cxl@vger.kernel.org>; Tue,  8 Jul 2025 06:21:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751951834; cv=pass; b=lHjEg69u4olH6IYzeEWtvxQ2GB444dZlwJX8cqkQBEQdF/AqTBLnWRrUpLLqKqpmMGwFCnrew8P28XDp1db3rxHCeMPvrvzG1JwRcCYDIQOp9rm54uYNgevxsTOqdbS0WjWx5xoX3S4yu/FdzebdSuY/ZrxCvdUULjx1ZozsjY4=
+	t=1751955704; cv=pass; b=n5s78BNygYrFsg6e9b+/5xVQHmzMtxFMRALKs2ONDSio3mEL8DijcRrFtRlYoblFaXsL5SMlKK9up38sJQlE0QzHiA8jyJLDlC6KIEyWhdd4HxWo33q5iIDUwzepGeF+A32SieNQGDgNs0QYKQWWI5iUC5BnvJDxPvFZ7Knwe0k=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751951834; c=relaxed/simple;
-	bh=yqQBLnCWIwzmelNjOqBsAdm2CxKpCnetfezc6JNWm2A=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lUa9Ixei0Akwhi/PmE+AF7pVdGEWVbGiELO6gyHQ8UAn2DbGTzEm2+ZpuPQQ1oY0uw305vudHaZJYMmpgv3iiJLZ1Zh5f6EfLKTHn7zdztfUf2IHNKabJwSRGMoJOtBfdWYlXhFan53Jyc4C/n6pYpKcUfEvhzk/wOOonyX+/vQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=CvEaQ9t2; arc=pass smtp.client-ip=136.143.188.94
+	s=arc-20240116; t=1751955704; c=relaxed/simple;
+	bh=p/HdCsMISzpxP4ocym3Zp+mv1m0dFNhXwqUxpMtIg2s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NmfxlLDeA7p4FkWaRSMlDr4VPKdjFDYZxBmS4oAmfa5LAnQE+dIcVM25w+x8W9fcShltROcD1Y+3d/Z3dL0oGaOQ25Hj7mAYXTk1GGK1gGFY7SQnhHszJA7OZ233rXXZwriN+BmBzUgEYElDInDTEh1wKSFZbXCXPEW4/KUqYZ4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=eHLMOCFS; arc=pass smtp.client-ip=136.143.188.94
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="CvEaQ9t2"
-ARC-Seal: i=1; a=rsa-sha256; t=1751951801; cv=none; 
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="eHLMOCFS"
+ARC-Seal: i=1; a=rsa-sha256; t=1751955687; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=K/gKclbw5EaUYrNOWJglHQN4v+q5KlFxhp3bWXx728qXSvCSYJEJMksoAxd2aOBQnHL7aoWUTUcro0UdaVHdArfIxPOZ6PnCFlRMvkn2T1zJHTuhBQMbzr3FMQeRjMl/QTTJNb0972pyE/MFPluGiAcgPd2p0SQ8gB4oOq5rZBI=
+	b=CXXKbe0tTEUuZT582dgAKIP9j0CuyxSXzWMn2L42VXtPoEp/3pGVj88tWRew6N6Zi92mXDvLsqb2h6YOS+5y7q8lszbz7odLR0JJw6losrT4vczlcmPK3YyiA5Eq222b6DlnSSG4R0/wBXkZ7tnavwzbLHJ7hIf+kI62iCT948I=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751951801; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=0Pmojcacwl6r3Ued+iszIAObwj+kmlNOSKi/S7iYpwc=; 
-	b=mJYAQHhCb/W2AevEdd0pgiqgGdvEH74M0wOGrxOXkX6AojriXPJipKEdgb1pT1eNOw0NapNWTcxounhbpY5/PK0YRy7YfTG6HAi0X3I2dsvEz/EoRnkFtljOUO/CLfnsbn7QJBuFbP41EKbcVcrv0f5Ny8kxVauPyGB1Ff92J6Y=
+	t=1751955687; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=IDXq2qLCrbksq68GWsehGLDB5re/kaLHFCLwWG+B3hw=; 
+	b=OV2GzLhm+Jcs6pQNAhWHBqUspijzJOpiyL6TB8Qa+2M9QSHXotBxxrymIOf7mW1i3kTjHcWOa69nsgNf1aIAK8yRx7QJ+6jaFo9A+VSN4c925XDpZFcwVhrfvYawsyr3sbJaPpxpRDp+xl+PjR157tXXlKdAgVA/jQ/Www1rJ9o=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=zohomail.com;
 	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
 	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751951801;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751955687;
 	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
-	bh=0Pmojcacwl6r3Ued+iszIAObwj+kmlNOSKi/S7iYpwc=;
-	b=CvEaQ9t27uOQ2Qp0hnBrm4sphlA+go/AxvHFPHvwnysmb0xwYaKsbL2QwoY4qP6R
-	aCeRMQGXPzS9kgwHM5uTIw1yG/9GhgwZ+nL8Vk3Td2XmGJxweHgShjXciBkXtIJWZ6N
-	gPoQM6EcJY5rPrcPcDQaNX87MauVJGKrZu/VY7PA=
-Received: by mx.zohomail.com with SMTPS id 1751951799043184.00928419554668;
-	Mon, 7 Jul 2025 22:16:39 -0700 (PDT)
-From: Li Ming <ming.li@zohomail.com>
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	shiju.jose@huawei.com
-Cc: andriy.shevchenko@linux.intel.com,
-	linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Li Ming <ming.li@zohomail.com>
-Subject: [PATCH v3 3/3] cxl/core: Using resource_contains_addr() to check address availability
-Date: Tue,  8 Jul 2025 13:15:36 +0800
-Message-Id: <20250708051536.92119-4-ming.li@zohomail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250708051536.92119-1-ming.li@zohomail.com>
-References: <20250708051536.92119-1-ming.li@zohomail.com>
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=IDXq2qLCrbksq68GWsehGLDB5re/kaLHFCLwWG+B3hw=;
+	b=eHLMOCFSXvRVmSfUrMpiHVPhsYTBVnFOO/BWtKuDHHHYNCTiF+leBjkYWpvBB2R+
+	4qJnUZpAqK0ofXkwYxG+SZJCq5KYSvyJGHXpQJFVKP2RJWAHT+WrxAKKKSjC2NzAFK2
+	tkgZ9op+y1F6fdUiGyYVkNLBT1WKSxX0G5w7TAf0=
+Received: by mx.zohomail.com with SMTPS id 1751955685633673.0331114324216;
+	Mon, 7 Jul 2025 23:21:25 -0700 (PDT)
+Message-ID: <32e809fe-ff98-4b27-96e3-119b8e83414f@zohomail.com>
+Date: Tue, 8 Jul 2025 14:21:18 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 04/10] cxl: Defer dport allocation for switch ports
+To: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com
+References: <20250703232710.3141436-1-dave.jiang@intel.com>
+ <20250703232710.3141436-5-dave.jiang@intel.com>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <20250703232710.3141436-5-dave.jiang@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Feedback-ID: rr08011227a6db064b8cd5835b60263f700000b1d374ed54791f2176c5f9dc75bc932213985b9a52f0b2cc2a:zu0801122756545e54832287663b65581b0000b1653817906c84f1d37255a88cce93717998c7dbab2d9b6354:rf0801122d5fce4a1cbbd4e26e642d5b4700007fad9d880d9f9ffc492842a97256ec9761e19cd7861a1b8d4197e4070c127d:ZohoMail
+Feedback-ID: rr080112276700503485ac82163a215a6e00002277ae8aa0ece0d31ab89dea0a911b085d4a3f1bf184a5c48b:zu0801122788a4869b346040519568aece0000c75c09aaebcecfef475ab511840324c160acab47e4b279f02e:rf0801122d5ede52686a03dc669addb60d0000e3637c40277ba1853ef7e5e2331d6ac43dd85e3d5c0b88ae7b5f1b81592e22:ZohoMail
 X-ZohoMailClient: External
 
-Helper function resource_contains_addr() can be used to check if a
-resource range contains an input address. Use it to replace all
-code that checks whether a resource range contains the input
-DPA/HPA/SPA.
+On 7/4/2025 7:27 AM, Dave Jiang wrote:
+> The current implementation enumerates the dports during the cxl_port
+> driver probe. Without an endpoint connected, the dport may not be
+> active during port probe. This scheme may prevent a valid hardware
+> dport id to be retrieved and MMIO registers to be read when an endpoint
+> is hot-plugged. Move the dport allocation and setup to behind memdev
+> probe so the endpoint is guaranteed to be connected.
+>
+> In the original enumeration behavior, there are 3 phases (or 2 if no CXL
+> switches) for port creation. cxl_acpi() creates a Root Port (RP) from the
+> ACPI0017.N device. Through that it enumerate downstream ports composed
+> of ACPI0016.N devices through add_host_bridge_dport(). Once done, it
+> use add_host_bridge_uport() to create the ports that enumerates the PCI
+> RPs as the dports of these ports. Every time a port is created, the port
+> driver is attached and drv->probe() is called and
+> devm_cxl_port_enumerate_dports() is envoked to enumerate and probe
+> the dports.
+>
+> The second phase is if there are any CXL switches. When the pci endpoint
+> device driver (cxl_pci) calls probe, it will add a mem device and triggers
+> the cxl_mem->probe(). cxl_mem->probe() calls devm_cxl_enumerate_ports()
+> and attempts to discovery and create all the ports represent CXL switches.
+> During this phase, a port is created per switch and the attached dports
+> are also enumerated and probed.
+>
+> The last phase is creating endpoint port which happens for all endpoint
+> devices.
+>
+> In this commit, the port create and its dport probing in cxl_acpi is not
+> changed. That will be handled in a different patch later on. The behavior
+> change is only for CXL switch ports. Only the dport that is part of the
+> path for an endpoint device to the RP will be probed. This happens
+> naturally by the code walking up the device hierarchy and identifying the
+> upstream device and the downstream device.
+>
+> There are two points where the interception of dport creation happens
+> during the devm_cxl_enumerate_ports() path. The first location is right
+> before the function calls add_port_attach_ep() where it does the dport
+> allocation for the RP. Once the dport is allocated, the iteration path
+> is reset to the beginning to try again. The second location happens
+> in add_port_attach_ep() after the location where either the port is
+> discovered or allocated new if it does not exist.
+>
+> Locking of port device during __cxl_port_add_dport() protects modifications
+> against the port and its dports while multiple endpoints can be probing at
+> the same time and the same port is being modified concurrently.
+>
+> While the decoders are allocated during the port driver probe,
+> The decoders must also be updated since previously it's all done when all
+> the dports are setup and now every time a dport is setup per endpoint, the
+> switch target listing need to be updated with new dport. A
+> guard(rwsem_write) is used to update decoder targets. This is similar to
+> when decoder_populate_target() is called and the decoder programming
+> must be protected.
+>
+> Link: https://lore.kernel.org/linux-cxl/20250305100123.3077031-1-rrichter@amd.com/
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+> v5:
+> - Change cxl_port_get_total_dports() to cxl_port_update_total_dports(). (Jonathan)
+> - Return dport for the devm_cxl_port_add_dport() and friends. (Jonathan)
+> ---
+>  drivers/cxl/core/core.h |   2 +
+>  drivers/cxl/core/pci.c  |  88 +++++++++++++++++++
+>  drivers/cxl/core/port.c | 184 ++++++++++++++++++++++++++++++++++++++--
+>  drivers/cxl/cxl.h       |   5 ++
+>  drivers/cxl/port.c      |   8 +-
+>  5 files changed, 273 insertions(+), 14 deletions(-)
+>
+[snip]
+> +#define CXL_ITER_LEVEL_SWITCH	1
+> +
+>  int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
+>  {
+>  	struct device *dev = &cxlmd->dev;
+>  	struct device *iter;
+> -	int rc;
+> +	int rc, i;
+>  
+>  	/*
+>  	 * Skip intermediate port enumeration in the RCH case, there
+> @@ -1643,7 +1787,7 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
+>  	 * attempt fails.
+>  	 */
+>  retry:
+> -	for (iter = dev; iter; iter = grandparent(iter)) {
+> +	for (i = 0, iter = dev; iter; i++, iter = grandparent(iter)) {
+>  		struct device *dport_dev = grandparent(iter);
+>  		struct device *uport_dev;
+>  		struct cxl_dport *dport;
+> @@ -1686,9 +1830,28 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
+>  			if (!dev_is_cxl_root_child(&port->dev))
+>  				continue;
+>  
+> +			/*
+> +			 * This is a corner case where the rootport is setup but
+> +			 * the switch dport is not. It needs to go back to the
+> +			 * beginning to setup the switch port.
+> +			 */
+> +			if (i >= CXL_ITER_LEVEL_SWITCH) {
+> +				struct cxl_port *pport __free(put_cxl_port) =
+> +					cxl_mem_find_port(cxlmd, &dport);
+> +				if (!port)
+> +					goto retry;
+should be "if (!pport)" here?
+> +			}
+> +
+>  			return 0;
+>  		}
+>  
+> +		dport = devm_cxl_add_dport_for_rp(uport_dev, dport_dev);
+> +		/* Added a dport, restart enumeration */
+> +		if (!IS_ERR_OR_NULL(dport))
+> +			goto retry;
+> +		if (IS_ERR(dport))
+> +			return PTR_ERR(dport);
+> +
 
-Signed-off-by: Li Ming <ming.li@zohomail.com>
----
- drivers/cxl/core/edac.c   | 4 ++--
- drivers/cxl/core/memdev.c | 2 +-
- drivers/cxl/core/region.c | 6 +++---
- 3 files changed, 6 insertions(+), 6 deletions(-)
+This part is a little bit complicated. My understanding is that devm_cxl_add_dport_for_rp() is invoked only for uport_dev == cxl host bridge case, and below add_port_attach_ep() is invoked only for uport_dev == cxl switch USP case, is it?
 
-diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
-index 1cf65b1538b9..a3c19ec8033f 100644
---- a/drivers/cxl/core/edac.c
-+++ b/drivers/cxl/core/edac.c
-@@ -1523,7 +1523,7 @@ static int cxl_mem_sparing_set_dpa(struct device *dev, void *drv_data, u64 dpa)
- 	struct cxl_memdev *cxlmd = ctx->cxlmd;
- 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
- 
--	if (dpa < cxlds->dpa_res.start || dpa > cxlds->dpa_res.end)
-+	if (!resource_contains_addr(&cxlds->dpa_res, dpa))
- 		return -EINVAL;
- 
- 	ctx->dpa = dpa;
-@@ -1892,7 +1892,7 @@ static int cxl_ppr_set_dpa(struct device *dev, void *drv_data, u64 dpa)
- 	struct cxl_memdev *cxlmd = cxl_ppr_ctx->cxlmd;
- 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
- 
--	if (dpa < cxlds->dpa_res.start || dpa > cxlds->dpa_res.end)
-+	if (!resource_contains_addr(&cxlds->dpa_res, dpa))
- 		return -EINVAL;
- 
- 	cxl_ppr_ctx->dpa = dpa;
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index f88a13adf7fa..4a5dc1d93af1 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -267,7 +267,7 @@ static int cxl_validate_poison_dpa(struct cxl_memdev *cxlmd, u64 dpa)
- 		dev_dbg(cxlds->dev, "device has no dpa resource\n");
- 		return -EINVAL;
- 	}
--	if (dpa < cxlds->dpa_res.start || dpa > cxlds->dpa_res.end) {
-+	if (!resource_contains_addr(&cxlds->dpa_res, dpa)) {
- 		dev_dbg(cxlds->dev, "dpa:0x%llx not in resource:%pR\n",
- 			dpa, &cxlds->dpa_res);
- 		return -EINVAL;
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 6e5e1460068d..79d8211f8ed0 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -2847,7 +2847,7 @@ static int __cxl_dpa_to_region(struct device *dev, void *arg)
- 	if (!cxled || !cxled->dpa_res || !resource_size(cxled->dpa_res))
- 		return 0;
- 
--	if (dpa > cxled->dpa_res->end || dpa < cxled->dpa_res->start)
-+	if (!resource_contains_addr(cxled->dpa_res, dpa))
- 		return 0;
- 
- 	/*
-@@ -2959,7 +2959,7 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
- 	if (cxlrd->hpa_to_spa)
- 		hpa = cxlrd->hpa_to_spa(cxlrd, hpa);
- 
--	if (hpa < p->res->start || hpa > p->res->end) {
-+	if (!resource_contains_addr(p->res, hpa)) {
- 		dev_dbg(&cxlr->dev,
- 			"Addr trans fail: hpa 0x%llx not in region\n", hpa);
- 		return ULLONG_MAX;
-@@ -3499,7 +3499,7 @@ u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint, u64 spa)
- 	xa_for_each(&endpoint->regions, index, iter) {
- 		struct cxl_region_params *p = &iter->region->params;
- 
--		if (p->res->start <= spa && spa <= p->res->end) {
-+		if (resource_contains_addr(p->res, spa)) {
- 			if (!p->cache_size)
- 				return ~0ULL;
- 
--- 
-2.34.1
+If yes, maybe it is better to use a if {} else {} block here? like
+
+if (uport_dev is host bridge) {
+
+    devm_cxl_add_dport_for_rp();
+
+} else {
+
+    add_switch_port_attach_ep();
+
+}
+
+
+Ming
+
+[snip]
 
