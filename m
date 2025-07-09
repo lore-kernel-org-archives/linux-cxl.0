@@ -1,18 +1,18 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EA3C1E5B6A
-	for <linux-cxl@vger.kernel.org>; Wed,  9 Jul 2025 20:07:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71265202F8F
+	for <linux-cxl@vger.kernel.org>; Wed,  9 Jul 2025 20:36:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752091668; cv=none; b=Z8IPgqj+lo6iNfugGp4+1XZZzjv7KarXc0nv26HxUjDSC6wMex5GyN8guwutDGV5unE+Yv0yk7GMvpt35+JrU2XU0rl6KT2qJcYlvjn9Ye4CYIskvMAxL+2Q+xBZUzRCnzPiQ5cLrpM2PA4q5M0TFLHQIUFSYpYKcCYzC/MvT1A=
+	t=1752093382; cv=none; b=AN1ac9bDBE5qrHeKz8gHu9yGSumRzdNRDNcBWUtPl4Nz3HVcNeBN8Er/uWEA07hZdVxGF9niM9UM3ZduJwYGbSfFpMaMkB1QMoBxg7y+Y0J5ytnjMHInQ/I2gGWVaye+CjGu9dq7hC6OQTvsx55JZ31Ezik/8x+e5DrbXmb8uGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752091668; c=relaxed/simple;
-	bh=LdOzgW6+S7FE1UMx9mclkEjHS4gJ+GEtH4/GyGUzD7g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tFQTTPkcE66LogN42NeM3Hpbz/4+CgNY78zvV44g/AvWjcw4sfi3UqtUkhe5RkaJ/6JlptDHIL8FkfL5s2tU74I/4l8qtDCE3TTmsRdplU+Rcf2bqwOrlE1W6fdJjDrykTbaRptIuVVVN/QfzPTi1SK5vJozS15VpAX4pzxxNEY=
+	s=arc-20240116; t=1752093382; c=relaxed/simple;
+	bh=/x0nXmbGEsk7DvTCIEA9P+QhrqbyCaPR3uJeQ+LLkVs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Y/ngEwiyZOzS9v3Of9VDkB4NTCut2RHNwqISisM8b3ww3hAh6ZeN69AFeCHBjgiOzYnAy389hM1rUwK771Yz3if8R0Ox7hKoG/PFn1YqOWs9o51HWPIxrQkjbilPAwwjdQvVhxZcZCzuZRXX73O5awyFXHicKZ32Vt9SLq+XnMw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F957C4CEEF;
-	Wed,  9 Jul 2025 20:07:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4094C4CEEF;
+	Wed,  9 Jul 2025 20:36:21 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: dave@stgolabs.net,
@@ -20,10 +20,13 @@ Cc: dave@stgolabs.net,
 	alison.schofield@intel.com,
 	vishal.l.verma@intel.com,
 	ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Subject: [PATCH] cxl: Add hpa_to_spa to the root decoder callback operations
-Date: Wed,  9 Jul 2025 13:07:46 -0700
-Message-ID: <20250709200746.2567860-1-dave.jiang@intel.com>
+	dan.j.williams@intel.com,
+	Gregory Price <gourry@gourry.net>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Li Ming <ming.li@zohomail.com>
+Subject: [PATCH v6 00/10] cxl: Delay HB port and switch dport probing until endpoint dev probe
+Date: Wed,  9 Jul 2025 13:36:09 -0700
+Message-ID: <20250709203619.2607133-1-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -33,155 +36,65 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Remove cxl_hpa_to_spa_fn callback from cxl root decoder and add the
-callback function to cxl_decoder_ops. Refactor to group all the root
-decoder callbacks together.
+v6:
+- Return -EEXIST when a dport already exists. (Jonathan)
+- Fix checking wrong port for NULL. (Ming)
+- Check host_bridge and call devm_cxl_add_dport_by_uport() directly vs add_port_attach_ep(). (Ming)
+- Set dport to NULL during declaration. (Jonathan)
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- drivers/cxl/acpi.c        |  9 +++++++--
- drivers/cxl/core/port.c   |  2 +-
- drivers/cxl/core/region.c | 11 ++++++++---
- drivers/cxl/cxl.h         | 13 ++++++++-----
- 4 files changed, 24 insertions(+), 11 deletions(-)
+v5:
+- Return dport instead of errno with dport pointer as output param. (Jonathan)
+- Consolidate common code in cxl_test. (Jonathan)
+- Rename cxl_port_get_total_dports() to cxl_port_update_total_dports(). (Jonathan)
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 48478bc406ee..9f7e2a49dc5a 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -20,6 +20,10 @@ static const guid_t acpi_cxl_qtg_id_guid =
- 	GUID_INIT(0xF365F9A6, 0xA7DE, 0x4071,
- 		  0xA6, 0x6A, 0xB4, 0x0C, 0x0B, 0x4F, 0x8E, 0x52);
- 
-+static u64 cxl_default_hpa_to_spa(struct cxl_root_decoder *cxlrd, u64 hpa)
-+{
-+	return hpa;
-+}
- 
- static u64 cxl_xor_hpa_to_spa(struct cxl_root_decoder *cxlrd, u64 hpa)
- {
-@@ -342,8 +346,9 @@ static int cxl_acpi_get_extended_linear_cache_size(struct resource *backing_res,
- 	return hmat_get_extended_linear_cache_size(backing_res, nid, size);
- }
- 
--static const struct cxl_rd_ops acpi_rd_ops = {
-+static struct cxl_rd_ops acpi_rd_ops = {
- 	.get_extended_linear_cache_size = cxl_acpi_get_extended_linear_cache_size,
-+	.hpa_to_spa = cxl_default_hpa_to_spa,
- };
- 
- DEFINE_FREE(put_cxlrd, struct cxl_root_decoder *,
-@@ -425,7 +430,7 @@ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
- 	cxlrd->qos_class = cfmws->qtg_id;
- 
- 	if (cfmws->interleave_arithmetic == ACPI_CEDT_CFMWS_ARITHMETIC_XOR)
--		cxlrd->hpa_to_spa = cxl_xor_hpa_to_spa;
-+		cxlrd->ops->hpa_to_spa = cxl_xor_hpa_to_spa;
- 
- 	rc = cxl_decoder_add(cxld, target_map);
- 	if (rc)
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 6f4cd50ddf25..081dd59b422e 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -1802,7 +1802,7 @@ static int cxl_switch_decoder_init(struct cxl_port *port,
-  */
- struct cxl_root_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
- 						unsigned int nr_targets,
--						const struct cxl_rd_ops *ops)
-+						struct cxl_rd_ops *ops)
- {
- 	struct cxl_root_decoder *cxlrd;
- 	struct cxl_switch_decoder *cxlsd;
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 0a5effbc0529..f148c398b7bb 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -2902,6 +2902,11 @@ static bool cxl_is_hpa_in_chunk(u64 hpa, struct cxl_region *cxlr, int pos)
- 	return false;
- }
- 
-+static bool has_hpa_to_spa(struct cxl_root_decoder *cxlrd)
-+{
-+	return cxlrd->ops && cxlrd->ops->hpa_to_spa;
-+}
-+
- u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
- 		   u64 dpa)
- {
-@@ -2956,8 +2961,8 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
- 	hpa = hpa_offset + p->res->start + p->cache_size;
- 
- 	/* Root decoder translation overrides typical modulo decode */
--	if (cxlrd->hpa_to_spa)
--		hpa = cxlrd->hpa_to_spa(cxlrd, hpa);
-+	if (has_hpa_to_spa(cxlrd))
-+		hpa = cxlrd->ops->hpa_to_spa(cxlrd, hpa);
- 
- 	if (hpa < p->res->start || hpa > p->res->end) {
- 		dev_dbg(&cxlr->dev,
-@@ -2966,7 +2971,7 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
- 	}
- 
- 	/* Simple chunk check, by pos & gran, only applies to modulo decodes */
--	if (!cxlrd->hpa_to_spa && (!cxl_is_hpa_in_chunk(hpa, cxlr, pos)))
-+	if (!has_hpa_to_spa(cxlrd) && (!cxl_is_hpa_in_chunk(hpa, cxlr, pos)))
- 		return ULLONG_MAX;
- 
- 	return hpa;
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 91cb1e570907..1e7396d2ca6c 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -418,18 +418,22 @@ struct cxl_switch_decoder {
- };
- 
- struct cxl_root_decoder;
--typedef u64 (*cxl_hpa_to_spa_fn)(struct cxl_root_decoder *cxlrd, u64 hpa);
- 
-+/**
-+ * struct cxl_rd_ops - CXL root decoder callback operations
-+ * @get_extended_linear_cache_size: Get the extended linear cache size
-+ * @hpa_to_spa: Convert host physical address to system physical address
-+ */
- struct cxl_rd_ops {
- 	int (*get_extended_linear_cache_size)(struct resource *backing_res,
- 					      int nid, resource_size_t *size);
-+	u64 (*hpa_to_spa)(struct cxl_root_decoder *cxlrd, u64 hpa);
- };
- 
- /**
-  * struct cxl_root_decoder - Static platform CXL address decoder
-  * @res: host / parent resource for region allocations
-  * @region_id: region id for next region provisioning event
-- * @hpa_to_spa: translate CXL host-physical-address to Platform system-physical-address
-  * @platform_data: platform specific configuration data
-  * @range_lock: sync region autodiscovery by address range
-  * @qos_class: QoS performance class cookie
-@@ -439,11 +443,10 @@ struct cxl_rd_ops {
- struct cxl_root_decoder {
- 	struct resource *res;
- 	atomic_t region_id;
--	cxl_hpa_to_spa_fn hpa_to_spa;
- 	void *platform_data;
- 	struct mutex range_lock;
- 	int qos_class;
--	const struct cxl_rd_ops *ops;
-+	struct cxl_rd_ops *ops;
- 	struct cxl_switch_decoder cxlsd;
- };
- 
-@@ -783,7 +786,7 @@ bool is_switch_decoder(struct device *dev);
- bool is_endpoint_decoder(struct device *dev);
- struct cxl_root_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
- 						unsigned int nr_targets,
--						const struct cxl_rd_ops *ops);
-+						struct cxl_rd_ops *ops);
- struct cxl_switch_decoder *cxl_switch_decoder_alloc(struct cxl_port *port,
- 						    unsigned int nr_targets);
- int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map);
+v4:
+- Push dport allocation to when they are discovered. (Robert)
+- Drop linux id for dport with above changes.
 
-base-commit: 1a45e1cd694fdf2d2a22e3c70a6917ff39fe77ab
+v3:
+- Main changes revolve around improving naming of hostbridge uport and dport (Gregory)
+- See specific patches for detailed change log
+
+This series attempts to delay the allocation of dports until when the endpoint device
+(memdev) are being probed. At this point, the CXL link is established and all the
+devices along the CXL link path up to the Root Port (RP) should be active.
+
+And hopefully this help a bit with Robert's issue raised in the "Inactive
+downstream port handling" series [1]. Testing would be appreicated. Thank you!
+
+[1]: https://lore.kernel.org/linux-cxl/67c8a0cc23ec_24b64294f6@dwillia2-xfh.jf.intel.com.notmuch/
+
+Dave Jiang (10):
+  cxl/region: Add decoder check to check_commit_order()
+  cxl: Add helper to detect top of CXL device topology
+  cxl: Add helper to reap dport
+  cxl: Defer dport allocation for switch ports
+  cxl/test: Add cxl_test support for cxl_port_update_total_ports()
+  cxl/test: Add mock version of devm_cxl_add_dport_by_dev()
+  cxl: Change sslbis handler to only handle single dport
+  cxl: Create an xarray to tie a host bridge to the cxl_root
+  cxl: Move enumeration of hostbridge ports to the memdev probe path
+  cxl: Remove devm_cxl_port_enumerate_dports() that is no longer used
+
+ drivers/cxl/acpi.c                   | 137 ++++++----
+ drivers/cxl/core/cdat.c              |  23 +-
+ drivers/cxl/core/pci.c               | 146 ++++++-----
+ drivers/cxl/core/port.c              | 359 +++++++++++++++++++++++++--
+ drivers/cxl/core/region.c            |   7 +-
+ drivers/cxl/cxl.h                    |  32 ++-
+ drivers/cxl/cxlpci.h                 |   1 -
+ drivers/cxl/port.c                   |   8 +-
+ tools/testing/cxl/Kbuild             |   3 +-
+ tools/testing/cxl/cxl_core_exports.c |  12 +
+ tools/testing/cxl/exports.h          |  10 +
+ tools/testing/cxl/test/cxl.c         |  67 ++++-
+ tools/testing/cxl/test/mock.c        |  31 ++-
+ tools/testing/cxl/test/mock.h        |   4 +-
+ 14 files changed, 659 insertions(+), 181 deletions(-)
+ create mode 100644 tools/testing/cxl/exports.h
+
+
+base-commit: 9c5718dca6390711ddebce75ab298f81e3d0e058
 -- 
 2.50.0
 
