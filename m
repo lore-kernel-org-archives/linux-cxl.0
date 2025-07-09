@@ -1,96 +1,197 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 109595661;
-	Wed,  9 Jul 2025 03:45:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752032758; cv=pass; b=LCBCZFGC1NPt3EdvOBs1WpNYILJvTXBJLbzPFnszDDd3TqlsA9f9tEny7DnmkB4vFOU7sIqK5t7ouvk8Kzh1fIdS0G0o2seUWMVgngIrUTFkNA5Nf4BZRc9OxcLwCnknfKAYwuiq2FLINBinjWbpGpGBTasvunAFh4WH14P7d2U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752032758; c=relaxed/simple;
-	bh=CoqcBRDeH+ltv+XhyS/Kww+RtCdtJB9Y0YQ/df8CR/w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XBQZW2ivAmDRyhRNH4taznM7x1S0abxBOz9hccJ8MAvXoQ3xuf2enbDlDGomkWrqmINJqtOWNax8xfxMAM2eybnt57TF6zFJ14ACm8hWAEOSiVcmr/sjp47Fl8oQph8lOLKzFX+CW38TvufmIlNumnEyC55lCbYp0yHQXJGxueE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=VxSD3Hvq; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D29661E47BA;
+	Wed,  9 Jul 2025 03:59:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1752033553; cv=none; b=kFi7TIjA8Iwp76o+owiNIxuOxCv0h9OLJI0rXRZIK1vY0xcwD79j5pnHQxxyJe2XQ9AjD+qoZwlN0SIvDrjkBY2HHi7qu4EYYZXWMlgd7qMajsvsW+lGrMZWZXFqBdTIpNsl/UJ+heMPIsMuS3DbXUSQ8fIy48dMiS1PiEkD+Sk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1752033553; c=relaxed/simple;
+	bh=QytHeqnrZC2ddp9eJpzCiJaHZYXcVEL3Y7kDVMmL3JU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hNynulNp1nVqZ7n6WgRN09PuQ0gAgvUc0faVYlAOdJ3XUu9DriFDIofuEIkRVDoBecM9PApTn3bvxmHyrGzMs7x9rbiV+l8hrZl1zwO5L5nYRsurFnUekMIgWeTUax9N2KkmHjXOjln3M9md5GlRJCqVheZMgD3cFAeGB5JUyqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G+F+jf7e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="VxSD3Hvq"
-ARC-Seal: i=1; a=rsa-sha256; t=1752032740; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=kFqNtl9IpdIg6IMfiO3qZJTD1z2F6jiBcJAr0f6qxn9LyUFeMhb5IBguSbCrXhk+J5ebnebKP6DeMicN/csu+RNSsVrpFg1gzBGbWRwufcThdIBU4GxHklN6Z1U2dfC9tJPUeCM4wSbMyRY2HhjfGU9GVAC4ntSaOKs40NxB+1E=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1752032740; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=6h01kddoKngdD1ADu2AP8obsaEwlXaKbdKeuNkqGjN0=; 
-	b=KKNKr10OABIamJTtJEnmWHtNfP6XOpVSFZuRQs8YB/6mzgPw0vN+w3Xf+clPbj1CoHOHvxZEgQE73w+5hAScvFOs77se5H75SSIAy41HMHe0HsYM/hbO4kCrNKhJnyW0q9EbJVC/OGRpkqcUt7xYGaH3lJnhKSsTOxrXOaUKQdw=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1752032740;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=6h01kddoKngdD1ADu2AP8obsaEwlXaKbdKeuNkqGjN0=;
-	b=VxSD3Hvqe1cMKJQa5cRqj5AUHVfoih6dQjR9gUbmHom4ywES3+p9PQaYbujDn0HM
-	4sU4nJFN00kM8oNjI6vsRb3EbPjanTz+10IebjdWGgmF0QbLHmeJjWs+dhJBsfTbc8g
-	87spp577qzzts4NrKjWT0VjiGOVLPOTJEBOk3Zt4=
-Received: by mx.zohomail.com with SMTPS id 1752032738121925.2385401013482;
-	Tue, 8 Jul 2025 20:45:38 -0700 (PDT)
-Message-ID: <d8ea29f9-6ea6-4952-8c89-853e8c8ccb1d@zohomail.com>
-Date: Wed, 9 Jul 2025 11:45:33 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G+F+jf7e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CF41C4CEF0;
+	Wed,  9 Jul 2025 03:59:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752033552;
+	bh=QytHeqnrZC2ddp9eJpzCiJaHZYXcVEL3Y7kDVMmL3JU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=G+F+jf7eTJoZeBlRdUxYZgi+fL8+T8t834jF3yNHRTd+OhJ9Yhg1I7wAX/yFH/YAZ
+	 uGEqYwpAHDcuvT+QqSM7ZjOLnKbKQv1VPVw/lENIbTX+RcNEmUeUpQtR/QqLpWIBkO
+	 TCXgKk7DaR2RRSE0oL7eS1SwgASxr1S1j08W1YF80X/zYAUFmgn3UgXqZGeIX5q1YL
+	 jYrTN3fmIhWhOQpxCRHTZnUNNz6Xx1i1GF7WgnqLk4XJF43bWhzKXS3hwm41CkT85S
+	 xHCbc8zmhN76MMR7xG6O2puO8kSf+UDTdAFeeU8qtxqcyXxa1unEsk/ZLQSE2+vRGI
+	 59myGqc7C424Q==
+Date: Tue, 8 Jul 2025 20:59:11 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: John Groves <John@groves.net>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Miklos Szeredi <miklos@szeredb.hu>,
+	Bernd Schubert <bschubert@ddn.com>,
+	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Stefan Hajnoczi <shajnocz@redhat.com>,
+	Joanne Koong <joannelkoong@gmail.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Aravind Ramesh <arramesh@micron.com>,
+	Ajay Joshi <ajayjoshi@micron.com>
+Subject: Re: [RFC V2 11/18] famfs_fuse: Basic famfs mount opts
+Message-ID: <20250709035911.GE2672029@frogsfrogsfrogs>
+References: <20250703185032.46568-1-john@groves.net>
+ <20250703185032.46568-12-john@groves.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] cxl/core: Introduce a new helper
- resource_contains_addr()
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
- dan.j.williams@intel.com, shiju.jose@huawei.com, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250708051536.92119-1-ming.li@zohomail.com>
- <20250708051536.92119-2-ming.li@zohomail.com>
- <aG0bB2hrIZkq3Uv1@smile.fi.intel.com>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <aG0bB2hrIZkq3Uv1@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Feedback-ID: rr0801122773db6b5ee53b61c587d4a66400005f73233c3b47b5c6700df9556a998810f788214fcb50701e5f:zu0801122750552c0e87a797654dc7a2870000719af2a6001f8da3535176d1593ac3b8286c721040f3298475:rf0801122d9ea494f92891d2df80261401000093f5b3ab3bf2bbd962306a9ef04b732019ec3f7244e2bee43d67f57baf086a:ZohoMail
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250703185032.46568-12-john@groves.net>
 
-On 7/8/2025 9:20 PM, Andy Shevchenko wrote:
-> On Tue, Jul 08, 2025 at 01:15:34PM +0800, Li Ming wrote:
->> In CXL subsystem, many functions need to check an address availability
->> by checking if the resource range contains the address. Providing a new
->> helper function resource_contains_addr() to check if the resource range
->> contains the input address.
-> ...
->
->> +bool resource_contains_addr(const struct resource *res, const resource_size_t addr);
-> Right, the problem is that it collides with the resource namespace. Please, add a prefix.
->
-> bool cxl_resource_contains_addr(const struct resource *res, const resource_size_t addr);
->
-> ...
->
->> +bool resource_contains_addr(const struct resource *res, const resource_size_t addr)
->> +{
->> +	if (res->flags & IORESOURCE_MEM)
-> resource_type() ?
->
->> +		return res->start <= addr && addr <= res->end;
->> +
->> +	return false;
-> I still think using DEFINE_RES_MEM() with resource_contains() is a better
-> approach.
+On Thu, Jul 03, 2025 at 01:50:25PM -0500, John Groves wrote:
+> * -o shadow=<shadowpath>
 
-Will do all you mentioned, thanks
+What is a shadow?
 
+> * -o daxdev=<daxdev>
 
-Ming
+And, uh, if there's a FUSE_GET_DAXDEV command, then what does this mount
+option do?  Pre-populate the first element of that set?
 
+--D
 
+> Signed-off-by: John Groves <john@groves.net>
+> ---
+>  fs/fuse/fuse_i.h |  8 +++++++-
+>  fs/fuse/inode.c  | 28 +++++++++++++++++++++++++++-
+>  2 files changed, 34 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
+> index a592c1002861..f4ee61046578 100644
+> --- a/fs/fuse/fuse_i.h
+> +++ b/fs/fuse/fuse_i.h
+> @@ -583,9 +583,11 @@ struct fuse_fs_context {
+>  	unsigned int blksize;
+>  	const char *subtype;
+>  
+> -	/* DAX device, may be NULL */
+> +	/* DAX device for virtiofs, may be NULL */
+>  	struct dax_device *dax_dev;
+>  
+> +	const char *shadow; /* famfs - null if not famfs */
+> +
+>  	/* fuse_dev pointer to fill in, should contain NULL on entry */
+>  	void **fudptr;
+>  };
+> @@ -941,6 +943,10 @@ struct fuse_conn {
+>  	/**  uring connection information*/
+>  	struct fuse_ring *ring;
+>  #endif
+> +
+> +#if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
+> +	char *shadow;
+> +#endif
+>  };
+>  
+>  /*
+> diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+> index e48e11c3f9f3..a7e1cf8257b0 100644
+> --- a/fs/fuse/inode.c
+> +++ b/fs/fuse/inode.c
+> @@ -766,6 +766,9 @@ enum {
+>  	OPT_ALLOW_OTHER,
+>  	OPT_MAX_READ,
+>  	OPT_BLKSIZE,
+> +#if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
+> +	OPT_SHADOW,
+> +#endif
+>  	OPT_ERR
+>  };
+>  
+> @@ -780,6 +783,9 @@ static const struct fs_parameter_spec fuse_fs_parameters[] = {
+>  	fsparam_u32	("max_read",		OPT_MAX_READ),
+>  	fsparam_u32	("blksize",		OPT_BLKSIZE),
+>  	fsparam_string	("subtype",		OPT_SUBTYPE),
+> +#if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
+> +	fsparam_string("shadow",		OPT_SHADOW),
+> +#endif
+>  	{}
+>  };
+>  
+> @@ -875,6 +881,15 @@ static int fuse_parse_param(struct fs_context *fsc, struct fs_parameter *param)
+>  		ctx->blksize = result.uint_32;
+>  		break;
+>  
+> +#if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
+> +	case OPT_SHADOW:
+> +		if (ctx->shadow)
+> +			return invalfc(fsc, "Multiple shadows specified");
+> +		ctx->shadow = param->string;
+> +		param->string = NULL;
+> +		break;
+> +#endif
+> +
+>  	default:
+>  		return -EINVAL;
+>  	}
+> @@ -888,6 +903,7 @@ static void fuse_free_fsc(struct fs_context *fsc)
+>  
+>  	if (ctx) {
+>  		kfree(ctx->subtype);
+> +		kfree(ctx->shadow);
+>  		kfree(ctx);
+>  	}
+>  }
+> @@ -919,7 +935,10 @@ static int fuse_show_options(struct seq_file *m, struct dentry *root)
+>  	else if (fc->dax_mode == FUSE_DAX_INODE_USER)
+>  		seq_puts(m, ",dax=inode");
+>  #endif
+> -
+> +#if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
+> +	if (fc->shadow)
+> +		seq_printf(m, ",shadow=%s", fc->shadow);
+> +#endif
+>  	return 0;
+>  }
+>  
+> @@ -1017,6 +1036,9 @@ void fuse_conn_put(struct fuse_conn *fc)
+>  		}
+>  		if (IS_ENABLED(CONFIG_FUSE_PASSTHROUGH))
+>  			fuse_backing_files_free(fc);
+> +#if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
+> +		kfree(fc->shadow);
+> +#endif
+>  		call_rcu(&fc->rcu, delayed_release);
+>  	}
+>  }
+> @@ -1834,6 +1856,10 @@ int fuse_fill_super_common(struct super_block *sb, struct fuse_fs_context *ctx)
+>  	sb->s_root = root_dentry;
+>  	if (ctx->fudptr)
+>  		*ctx->fudptr = fud;
+> +
+> +#if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
+> +	fc->shadow = kstrdup(ctx->shadow, GFP_KERNEL);
+> +#endif
+>  	mutex_unlock(&fuse_mutex);
+>  	return 0;
+>  
+> -- 
+> 2.49.0
+> 
+> 
