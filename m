@@ -1,115 +1,138 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80ED23D2A8;
-	Wed,  9 Jul 2025 07:13:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752045212; cv=pass; b=BZHiSitteqgs6w8QuBuAGWkqEbDZ7lUWOusYzhTFtGVtCwttZABPExPEEtd0z10A5KBk97Rp0TeYhnuyOyvBleHl5BH3evvSH72lvxyS4S/1L6gOQOvDtW6EgNzVUYHN13x0IbcdaVkmdUPDuBAodgr2BJYfiwwBk7UgESB/0aA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752045212; c=relaxed/simple;
-	bh=q+8kEUFKOe/AKuTRv4NGUZZO/epcQtr/DUmBVoSmhpk=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FDC41FBEA8
+	for <linux-cxl@vger.kernel.org>; Wed,  9 Jul 2025 09:45:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1752054354; cv=none; b=DPb4TTaWnLUE/8IB/YrubK/SsN4D1YznXzXRVV76k2eBZtdC2Bm//pYXTHW4IMHAkzBJ0FFA9VTRwBmEL5kDRwx17kb7b0ahtrB7Y3V6cQ126YbqFhNXoDkz/J+8z+5i8C4/eJ1iajE3ij272nn4VsIk/6NWVeAtZ3tbLCtvm34=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1752054354; c=relaxed/simple;
+	bh=c6W+pjdL3fLgs4DKE4VuxDUC5yEKStcV+xtF81Jhgic=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DGmTJ1SR3Crkbx9g/UHY9dK58cCX0snNYzyVkiCne7xtiTGlgqmpcGNcCpbpRyQBlurULTk95Py54XoXDsszzzmeO7JDHwnF1Lt+cCQ+RHAOAIOsXeq9uNyFkuZLnRQBozejIBU89ye2tvNCfwIs3TiR0HJ9fLuP1qQQVABjNv4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=Qg8gTY2z; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	 In-Reply-To:Content-Type; b=DoLjQj0GaCt5KM9K4nX/n0Gsvjt3Vz5rzK+CH3NpV9OEfgijTcAsyCEeVzSe7NCuhfCyaTSCYWRViuABLsHs/a0279gjHKShbCFAmKV+bcbTWa+Ul8SlNFKenwzebjIRwU3dADhVGLXqEDYsLyrezd3pYXvDJQodyTUJQp8h55o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HQo71xhS; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="Qg8gTY2z"
-ARC-Seal: i=1; a=rsa-sha256; t=1752045197; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=VrGL00rSnZWsEe4N7esptw4fm+gl31/S0FzTLFCOR7MyIMpnwcp8mQZ2vlIb6mGT3RY9kp/1HdycGRGoveSGm40MsbZCPSVp9Sq8dWeumEB5t/l4JCk4g/I6Nkkckr0AhjNgzE4bpDAcX3jxJYfyRQVK1qNAPkojiMZkls1l1J4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1752045197; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=wHiqZyuTgPxzdXyYfuv3UPD8orqV8Nu2TK8I32/j/G8=; 
-	b=K1r2LKszC0dAZi/YRoSK5vjSb8+Gm8wQqUtkunGJpD1IChSZ6Q6TwZBDyvSURCOEZX2NmwGnxSSLowUDq7H+Mm/piIETu6RkGXClEWwj7UcCemiEQLNNUtjFNbPlujG0GDnkayHmqmpKdzSDBx9zPF3oQkqU6vnkyTPy//M4ZII=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1752045197;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=wHiqZyuTgPxzdXyYfuv3UPD8orqV8Nu2TK8I32/j/G8=;
-	b=Qg8gTY2z/Vt6feMcSXrbJ7RW+BSLDsvL5o3dVtthTAHkEo5xOQUTMyQ+5qomvqLp
-	GCHDTCEmbbxyCjfetqJCpHmmR6K2MeJT7wF8ZeSgm85v+BkMk5/lB1+nI9tKYSN9nd4
-	W8FYoQZjTJ5JHP1O2/n0YgAsDVfYgN654uxUpDjE=
-Received: by mx.zohomail.com with SMTPS id 1752045195118841.5038900262972;
-	Wed, 9 Jul 2025 00:13:15 -0700 (PDT)
-Message-ID: <86bcfb22-f9e7-4b2a-a51b-d8d63d423fcc@zohomail.com>
-Date: Wed, 9 Jul 2025 15:13:09 +0800
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HQo71xhS"
+Message-ID: <e50ef45e-4c1a-4874-8d5f-9ca86f9a532c@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1752054340;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WTz2wkEPilJ291aBXf8EittiLv9aIr5saM/qqA8YaKY=;
+	b=HQo71xhSDwkfGOSIB3FWw3v/YQdNclez8WkEdYwBvOTAIOl6AqbhbkkiJL16330Fl8+IFB
+	JIkYnrPO3KuLCRrrExhedm3XPWRaiA0VaUDJTQKabNmyYEFozGZqLnF6S6ObqT2+JOBPnh
+	CPfeQNHTjT8MKj0ZxmbHLM06SQaVEyI=
+Date: Wed, 9 Jul 2025 17:45:23 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/3] cxl/edac: Fix wrong dpa checking for PPR operation
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
- shiju.jose@huawei.com, andriy.shevchenko@linux.intel.com,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250708051536.92119-1-ming.li@zohomail.com>
- <20250708051536.92119-3-ming.li@zohomail.com>
- <aG3I9ooPm0eJnMPn@aschofie-mobl2.lan>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <aG3I9ooPm0eJnMPn@aschofie-mobl2.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Feedback-ID: rr080112276557fa28b7021264f2e8d91000004c12bdf5733af7bb711d0b54f5dd71f5d2f6b8c8fd28096c90:zu08011227b142ed5d17c63be61cf5659600003121704cbb81ca4af9ae61ba2ee5d273286914cd85c86b2e8f:rf0801122d3604bdcbcb47a2d032448b100000e7f69e1d853b41f2ab6ac607679ef88887ab7517ea8b7b95651c0467b58c63:ZohoMail
-X-ZohoMailClient: External
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v2_00/11=5D_dm-pcache_=E2=80=93_persistent?=
+ =?UTF-8?Q?-memory_cache_for_block_devices?=
+To: Mikulas Patocka <mpatocka@redhat.com>
+Cc: agk@redhat.com, snitzer@kernel.org, axboe@kernel.dk, hch@lst.de,
+ dan.j.williams@intel.com, Jonathan.Cameron@Huawei.com,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev, dm-devel@lists.linux.dev
+References: <20250707065809.437589-1-dongsheng.yang@linux.dev>
+ <85b5cb31-b272-305f-8910-c31152485ecf@redhat.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Dongsheng Yang <dongsheng.yang@linux.dev>
+In-Reply-To: <85b5cb31-b272-305f-8910-c31152485ecf@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 7/9/2025 9:42 AM, Alison Schofield wrote:
-> On Tue, Jul 08, 2025 at 01:15:35PM +0800, Li Ming wrote:
->> DPA 0 is considered invalid in cxl_do_ppr(), but per Table 8-143. "Get
->> Partition Info Output Payload" in CXL r3.2 section 8.2.10.9.2.1 "Get
->> Partition Info(Opcode 4100h)", it mentions that DPA 0 is a valid address
->> of a CXL device. So the correct implementation should be checking if the
->> DPA is in the DPA range of the CXL device rather than checking if the
->> DPA is equal to 0.
->>
-> If it needs a fixes tag, doesn't it also need a user visible impact
-> statement? I get that the PPR won't happen. What does that look like
-> to the user? Is there a user level error message we can add to the
-> commit log?
+
+在 7/8/2025 4:16 AM, Mikulas Patocka 写道:
 >
-> With that, you can add:
-> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+> On Mon, 7 Jul 2025, Dongsheng Yang wrote:
 >
-Will do. Thanks.
+>> Hi Mikulas,
+>> 	This is V2 for dm-pcache, please take a look.
+>>
+>> Code:
+>>      https://github.com/DataTravelGuide/linux tags/pcache_v2
+>>
+>> Changelogs
+>>
+>> V2 from V1:
+>> 	- introduce req_alloc() and req_init() in backing_dev.c, then we
+>> 	  can do req_alloc() before holding spinlock and do req_init()
+>> 	  in subtree_walk().
+>> 	- introduce pre_alloc_key and pre_alloc_req in walk_ctx, that
+>> 	  means we can pre-allocate cache_key or backing_dev_request
+>> 	  before subtree walking.
+>> 	- use mempool_alloc() with NOIO for the allocation of cache_key
+>> 	  and backing_dev_req.
+>> 	- some coding style changes from comments of Jonathan.
+> Hi
+>
+> mempool_alloc with GFP_NOIO never fails - so you don't have to check the
+> returned value for NULL and propagate the error upwards.
 
 
-Ming
+Hi Mikulas:
+
+    I noticed that the implementation of mempool_alloc—it waits for 5 
+seconds and retries when allocation fails.
+
+With this in mind, I propose that we handle -ENOMEM inside defer_req() 
+using a similar mechanism. something like this commit:
+
+
+https://github.com/DataTravelGuide/linux/commit/e6fc2e5012b1fe2312ed7dd02d6fbc2d038962c0
+
+
+Here are two key reasons why:
+
+(1) If we manage -ENOMEM in defer_req(), we don’t need to modify every 
+lower-level allocation to use mempool to avoid failures—for example,
+
+cache_key, backing_req, and the kmem.bvecs you mentioned. More 
+importantly, there’s no easy way to prevent allocation failure in some 
+places—for instance, bio_init_clone() could still return -ENOMEM.
+
+(2) If we use a mempool, it will block and wait indefinitely when memory 
+is unavailable, preventing the process from exiting.
+
+But with defer_req(), the user can still manually stop the pcache device 
+using dmsetup remove, releasing some memory if user want.
+
+
+What do you think?
+
+Thanx
+
+Dongsheng
 
 >
->> Fixes: be9b359e056a ("cxl/edac: Add CXL memory device soft PPR control feature")
->> Signed-off-by: Li Ming <ming.li@zohomail.com>
->> Tested-by: Shiju Jose <shiju.jose@huawei.com>
->> Reviewed-by: Shiju Jose <shiju.jose@huawei.com>
->> ---
->>  drivers/cxl/core/edac.c | 5 ++++-
->>  1 file changed, 4 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
->> index 623aaa4439c4..1cf65b1538b9 100644
->> --- a/drivers/cxl/core/edac.c
->> +++ b/drivers/cxl/core/edac.c
->> @@ -1923,8 +1923,11 @@ static int cxl_ppr_set_nibble_mask(struct device *dev, void *drv_data,
->>  static int cxl_do_ppr(struct device *dev, void *drv_data, u32 val)
->>  {
->>  	struct cxl_ppr_context *cxl_ppr_ctx = drv_data;
->> +	struct cxl_memdev *cxlmd = cxl_ppr_ctx->cxlmd;
->> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
->>  
->> -	if (!cxl_ppr_ctx->dpa || val != EDAC_DO_MEM_REPAIR)
->> +	if (!resource_contains_addr(&cxlds->dpa_res, cxl_ppr_ctx->dpa) ||
->> +	    val != EDAC_DO_MEM_REPAIR)
->>  		return -EINVAL;
->>  
->>  	return cxl_mem_perform_ppr(cxl_ppr_ctx);
->> -- 
->> 2.34.1
->>
-
+> "backing_req->kmem.bvecs = kmalloc_array(n_vecs, sizeof(struct bio_vec),
+> GFP_NOIO)" - this call may fail and you should handle the error gracefully
+> (i.e. don't end the bio with an error). Would it be possible to trim the
+> request to BACKING_DEV_REQ_INLINE_BVECS vectors and retry it?
+> Alternativelly, you can create a mempool for the largest possible n_vecs
+> and allocate from this mempool if kmalloc_array fails.
+>
+> I'm sending two patches for dm-pcache - the first patch adds the include
+> file linux/bitfield.h - it is needed in my config. The second patch makes
+> slab caches per-module rather than per-device, if you have them
+> per-device, there are warnings about duplicate cache names.
+>
+>
+> BTW. What kind of persistent memory do you use? (afaik Intel killed the
+> Optane products and I don't know of any replacement)
+>
+> Some times ago I created a filesystem for persistent memory - see
+> git://leontynka.twibright.com/nvfs.git - I'd be interested if you can test
+> it on your persistent memory implementation.
+>
+> Mikulas
+>
