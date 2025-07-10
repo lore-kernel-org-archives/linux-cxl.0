@@ -1,236 +1,105 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CBE822068D;
-	Thu, 10 Jul 2025 06:02:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752127369; cv=none; b=uPgyQ/1zj/aSee4JFmtnlaev9Y1D8VTA1Q2xqitQzDzBMfhdBadfp1GkL+G6z76Em0xnqPi2SuCHnklXggTwWbyY2/1EkW1xHFzMeRbvl2remVqWEkbGwM74N7tz28A3u+s65OorHIrcIB3MfDvvrkAPrcYACDqe+iyWk2XyW0s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752127369; c=relaxed/simple;
-	bh=/nOlbeOrrvvxw+M9MKGzMMtoH7vcH9X0upcHMnOWn5Q=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=foGyrzOO76jG0yxaI1sm2CY9wInhRexOEvf7OXrFITq214Ze9vSxrJ1+IGwzrDoHmbhWNYD52cS6gLij0hDtR8Dz7KbB4uadCxV4gFNI/Lp4hbMotqABVbdiIfUlC4CFwBHdF9EwbxgnmckqaWnBYWGivCDZHtIsegrKVco23mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=cOydII2K; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2347E17A300;
+	Thu, 10 Jul 2025 06:58:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1752130703; cv=pass; b=fRokXYmdyNNhBz+AKexPCSQoBoFHbBhZYq/ZPutI1Nj/TS1ayUnsLiNBKqA9qMzCAPXdPpi5YWJHCGQBS//q17oZQuYTgBLNbokYem5UvBcAZpHswe7neGkRvf9Mlgo95f9xFFLXAqeu13rhICgZeRVdvDTBh+ridNIb7AXocMU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1752130703; c=relaxed/simple;
+	bh=J6M9ZQjj6f3/XYNYnmF3MA0DC2/s/6r73ad/KcRhwj0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XWqT4rRcqmZjTWQZ+NmypXfnHC3rNy59RWWNDr2k2Q/TPFYOFGb8MGIPvWHvAn04/XIrM721D2y+R0J/oG54VkyUWVsvPLYvsXw1mcfxIjByEV6VWf0NjuueW/aV2bn7bxAD+oZSJ8zPyAr3e21KvFKzqvvs2Cp1Rz+sCNT246Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=DseOOtU1; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="cOydII2K"
-Received: from [127.0.0.1] (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 56A61oVv420818
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 9 Jul 2025 23:01:51 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 56A61oVv420818
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025062101; t=1752127312;
-	bh=FwvuqdG3hYjFpKWdCMq6tprnniSoRmedFOTBUf2WREU=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=cOydII2KcDOQTmWFVW0q5/KLzpEOqFpnyHLLxS1JoRZ9+vwP74kNGSFenusS+FFcP
-	 AEfl38tkTa9xogtA+khkrfI6ZWbQzsmHE0ZPh+WeUwrDPxEI/R/Coyn8N2zABaBbtD
-	 M6xldWlsVv1wyMc8O1oSS9m8xb0YYaolroX+DZWm1m1XY368ArgAvAcDGe6lKada1G
-	 ae563v8hzpdM5IpThABUh4dEge45JPjPxbFEu1oU1ASebBU41KVM9H7Vm+u9vRV7zM
-	 42f9PNFNaiuU6dalJAnxPIEb3r1r4zxs4wAdA+dIKxB405GoBTdW4/BJMwzT6Vkmpk
-	 qpTCeEG5Byz5A==
-Date: Wed, 09 Jul 2025 23:01:50 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: dan.j.williams@intel.com, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Catalin Marinas <catalin.marinas@arm.com>, james.morse@arm.com,
-        linux-cxl@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-mm@kvack.org, gregkh@linuxfoundation.org,
-        Will Deacon <will@kernel.org>, Dan Williams <dan.j.williams@intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>
-CC: Yicong Yang <yangyicong@huawei.com>, linuxarm@huawei.com,
-        Yushan Wang <wangyushan12@huawei.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2_2/8=5D_generic=3A_Support_A?=
- =?US-ASCII?Q?RCH=5FHAS=5FCPU=5FCACHE=5FINVALIDATE=5FMEMREGION?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <686f565121ea5_1d3d100ee@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20250624154805.66985-1-Jonathan.Cameron@huawei.com> <20250624154805.66985-3-Jonathan.Cameron@huawei.com> <686f565121ea5_1d3d100ee@dwillia2-xfh.jf.intel.com.notmuch>
-Message-ID: <C8F33767-6C7F-4CDA-8B78-6857AA771AD3@zytor.com>
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="DseOOtU1"
+ARC-Seal: i=1; a=rsa-sha256; t=1752130684; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=ZvE4Uw6E0e3h+2PdI39xvcWl6LEPk4wB99xofuHU5wp/ZqK7+N9CKAW2RClkKTxfFg44APHpLdGd6IRNZbH0CcOiJEyoinCAEDBGyUEWXH5qJx/Am27rA9SS7UrPxh1mjsodfJPNi2nm9ImV92U2OaDpYo74UZEktgWr1FTDI9A=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1752130684; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=q5k6fYM94q3Oyy8tWJX6HFcvBdl2o1FUCp9JW9sgzP0=; 
+	b=VtOSSmqQ69fOh70QLt81pWquWhB08hxQQ28gbI6lkB6VCMdzDNrCTdNZQ0Vew437N3T48lHhWajOs1pBBRXLffminzt8loko5RiRLrm48HgD1WQI+f8KzYhYyxrfUgitW73rLlNuFBOrPQLjE+NB9vuE8o4gaRIUUdkzlCIcDZ4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1752130684;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
+	bh=q5k6fYM94q3Oyy8tWJX6HFcvBdl2o1FUCp9JW9sgzP0=;
+	b=DseOOtU167HIXxp4KOncuYjGN8a1mJ1C15SazqjAkE+3FUowdINJvap63R3yz59j
+	0LatnONpebG+vW7TyzWWpTxLgLjdNnazZgrhanrcSQqWGRXnL3N6PjYVvcQuQPP4wi1
+	iNvIQcewpoSS0b8awmwCraJhcdxoQnp+dc2qWR5I=
+Received: by mx.zohomail.com with SMTPS id 1752130682685296.63676004383854;
+	Wed, 9 Jul 2025 23:58:02 -0700 (PDT)
+From: Li Ming <ming.li@zohomail.com>
+To: dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com,
+	shiju.jose@huawei.com
+Cc: andriy.shevchenko@linux.intel.com,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Li Ming <ming.li@zohomail.com>
+Subject: [PATCH v4 0/3] Fix wrong dpa checking in PPR operation
+Date: Thu, 10 Jul 2025 14:56:44 +0800
+Message-Id: <20250710065647.98094-1-ming.li@zohomail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Feedback-ID: rr08011227cd1d9e06e6a837d7800e886600009d3326ef9514efbd209f82969c382abf081ff28d2db25ce77d:zu08011227f8ef997983b6b96f763bfa3f0000be9722d3411e27e32c5976c866672410bf81d0fef8ac6e35ab:rf0801122d4c22330253b83c163a412d460000168bfc60765283dedb846a185bb3ceec3e06d59b429af3365e2a246a8a9389:ZohoMail
+X-ZohoMailClient: External
 
-On July 9, 2025 10:57:37 PM PDT, dan=2Ej=2Ewilliams@intel=2Ecom wrote:
->Jonathan Cameron wrote:
->> From: Yicong Yang <yangyicong@hisilicon=2Ecom>
->>=20
->> ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION provides the mechanism for
->> invalidate certain memory regions in a cache-incoherent manner=2E
->> Currently is used by NVIDMM adn CXL memory=2E This is mainly done
->> by the system component and is implementation define per spec=2E
->> Provides a method for the platforms register their own invalidate
->> method and implement ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION=2E
->
->Please run spell-check on changelogs=2E
->
->>=20
->> Architectures can opt in for this support via
->> CONFIG_GENERIC_CPU_CACHE_INVALIDATE_MEMREGION=2E
->>=20
->> Signed-off-by: Yicong Yang <yangyicong@hisilicon=2Ecom>
->> Signed-off-by: Jonathan Cameron <Jonathan=2ECameron@huawei=2Ecom>
->> ---
->>  drivers/base/Kconfig             |  3 +++
->>  drivers/base/Makefile            |  1 +
->>  drivers/base/cache=2Ec             | 46 ++++++++++++++++++++++++++++++=
-++
->
->I do not understand what any of this has to do with drivers/base/=2E
->
->See existing cache management memcpy infrastructure in lib/Kconfig=2E
->
->>  include/asm-generic/cacheflush=2Eh | 12 +++++++++
->>  4 files changed, 62 insertions(+)
->>=20
->> diff --git a/drivers/base/Kconfig b/drivers/base/Kconfig
->> index 064eb52ff7e2=2E=2Ecc6df87a0a96 100644
->> --- a/drivers/base/Kconfig
->> +++ b/drivers/base/Kconfig
->> @@ -181,6 +181,9 @@ config SYS_HYPERVISOR
->>  	bool
->>  	default n
->> =20
->> +config GENERIC_CPU_CACHE_INVALIDATE_MEMREGION
->> +	bool
->> +
->>  config GENERIC_CPU_DEVICES
->>  	bool
->>  	default n
->> diff --git a/drivers/base/Makefile b/drivers/base/Makefile
->> index 8074a10183dc=2E=2E0fbfa4300b98 100644
->> --- a/drivers/base/Makefile
->> +++ b/drivers/base/Makefile
->> @@ -26,6 +26,7 @@ obj-$(CONFIG_DEV_COREDUMP) +=3D devcoredump=2Eo
->>  obj-$(CONFIG_GENERIC_MSI_IRQ) +=3D platform-msi=2Eo
->>  obj-$(CONFIG_GENERIC_ARCH_TOPOLOGY) +=3D arch_topology=2Eo
->>  obj-$(CONFIG_GENERIC_ARCH_NUMA) +=3D arch_numa=2Eo
->> +obj-$(CONFIG_GENERIC_CPU_CACHE_INVALIDATE_MEMREGION) +=3D cache=2Eo
->>  obj-$(CONFIG_ACPI) +=3D physical_location=2Eo
->> =20
->>  obj-y			+=3D test/
->> diff --git a/drivers/base/cache=2Ec b/drivers/base/cache=2Ec
->> new file mode 100644
->> index 000000000000=2E=2E8d351657bbef
->> --- /dev/null
->> +++ b/drivers/base/cache=2Ec
->> @@ -0,0 +1,46 @@
->> +// SPDX-License-Identifier: GPL-2=2E0
->> +/*
->> + * Generic support for CPU Cache Invalidate Memregion
->> + */
->> +
->> +#include <linux/spinlock=2Eh>
->> +#include <linux/export=2Eh>
->> +#include <asm/cacheflush=2Eh>
->> +
->> +
->> +static const struct system_cache_flush_method *scfm_data;
->> +DEFINE_SPINLOCK(scfm_lock);
->> +
->> +void generic_set_sys_cache_flush_method(const struct system_cache_flus=
-h_method *method)
->> +{
->> +	guard(spinlock_irqsave)(&scfm_lock);
->> +	if (scfm_data || !method || !method->invalidate_memregion)
->> +		return;
->> +
->> +	scfm_data =3D method;
->
->The lock looks unnecessary here, this is just atomic_cmpxchg()=2E
->
->> +}
->> +EXPORT_SYMBOL_GPL(generic_set_sys_cache_flush_method);
->> +
->> +void generic_clr_sys_cache_flush_method(const struct system_cache_flus=
-h_method *method)
->> +{
->> +	guard(spinlock_irqsave)(&scfm_lock);
->> +	if (scfm_data && scfm_data =3D=3D method)
->> +		scfm_data =3D NULL;
->
->Same here, but really what is missing is a description of the locking
->requirements of cpu_cache_invalidate_memregion()=2E
->
->
->> +}
->> +
->> +int cpu_cache_invalidate_memregion(int res_desc, phys_addr_t start, si=
-ze_t len)
->> +{
->> +	guard(spinlock_irqsave)(&scfm_lock);
->> +	if (!scfm_data)
->> +		return -EOPNOTSUPP;
->> +
->> +	return scfm_data->invalidate_memregion(res_desc, start, len);
->
->Is it really the case that you need to disable interrupts during cache
->operations? For potentially flushing 10s to 100s of gigabytes, is it
->really the case that all archs can support holding interrupts off for
->that event?
->
->A read lock (rcu or rwsem) seems sufficient to maintain registration
->until the invalidate operation completes=2E
->
->If an arch does need to disable interrupts while it manages caches that
->does not feel like something that should be enforced for everyone at
->this top-level entry point=2E
->
->> +}
->> +EXPORT_SYMBOL_NS_GPL(cpu_cache_invalidate_memregion, "DEVMEM");
->> +
->> +bool cpu_cache_has_invalidate_memregion(void)
->> +{
->> +	guard(spinlock_irqsave)(&scfm_lock);
->> +	return !!scfm_data;
->
->Lock seems pointless here=2E
->
->More concerning is this diverges from the original intent of this
->function which was to disable physical address space manipulation from
->virtual environments=2E
->
->Now, different archs may have reason to diverge here but the fact that
->the API requirements are non-obvious points at a minimum to missing
->documentation if not missing cross-arch consensus=2E
->
->> +}
->> +EXPORT_SYMBOL_NS_GPL(cpu_cache_has_invalidate_memregion, "DEVMEM");
->> diff --git a/include/asm-generic/cacheflush=2Eh b/include/asm-generic/c=
-acheflush=2Eh
->> index 7ee8a179d103=2E=2E87e64295561e 100644
->> --- a/include/asm-generic/cacheflush=2Eh
->> +++ b/include/asm-generic/cacheflush=2Eh
->> @@ -124,4 +124,16 @@ static inline void flush_cache_vunmap(unsigned lon=
-g start, unsigned long end)
->>  	} while (0)
->>  #endif
->> =20
->> +#ifdef CONFIG_GENERIC_CPU_CACHE_INVALIDATE_MEMREGION
->> +
->> +struct system_cache_flush_method {
->> +	int (*invalidate_memregion)(int res_desc,
->> +				    phys_addr_t start, size_t len);
->> +};
->
->The whole point of ARCH_HAS facilities is to resolve symbols like this
->at compile time=2E Why does this need a indirect function call at all?
+In cxl_do_ppr(), there is a checking to check if a DPA is valid, the
+implementation of the checking is check if the DPA is 0, if yes,
+consider that DPA is valid. the checking is not right, the correct
+implementation is checking if the DPA is in the CXL device DPA range, if
+yes, it is valid.
 
-Yes, blocking interrupts is much like the problem with WBINVD=2E
+The patchset also includes another part implementing a general helper
+function cxl_resource_contains_addr() in cxl core so that cxl drivers
+can use it for all DPA/HPA/SPA availability checking.
 
-More or less, once user space is running, this isn't acceptable=2E
+v4:
+- Add cxl_ prefix to resource_contains_addr().	(Andy & Alison)
+- Add impact statement to the commit log of Patch #2. (Alison)
+- Add review tags.
+
+v3:
+- Move resource_contains_addr() from include/linux/ioport.h to
+cxl/core/hdm.c. (Andy)
+
+v2:
+- Implement a general helper resource_contains_addr() for DPA/HPA
+resource. (Alison)
+
+base-commit: d0b3b7b22dfa1f4b515fd3a295b3fd958f9e81af cxl/fixes
+
+Li Ming (3):
+  cxl/core: Introduce a new helper cxl_resource_contains_addr()
+  cxl/edac: Fix wrong dpa checking for PPR operation
+  cxl/core: Using cxl_resource_contains_addr() to check address
+    availability
+
+ drivers/cxl/core/core.h   | 1 +
+ drivers/cxl/core/edac.c   | 9 ++++++---
+ drivers/cxl/core/hdm.c    | 7 +++++++
+ drivers/cxl/core/memdev.c | 2 +-
+ drivers/cxl/core/region.c | 6 +++---
+ 5 files changed, 18 insertions(+), 7 deletions(-)
+
+-- 
+2.34.1
+
