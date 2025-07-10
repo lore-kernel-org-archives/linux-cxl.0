@@ -1,65 +1,62 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 007522949ED;
-	Thu, 10 Jul 2025 09:16:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C73F824501E;
+	Thu, 10 Jul 2025 10:56:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752139008; cv=none; b=DrhUwwWc05N5gCV+8LJiy+xjPGoCcZapOY3duBZJased/z3mdj8SdkgjQ/auF4ueW0dSazGi4ST8TFD/eA/cKMKCnIokhDRiJ22nNBRzapuFuhf5F00lBuwGRRPz8KDaKNfxCcV+2QJcq7bhLXOM/E+67ITZ1+UrIHULiOZqOVg=
+	t=1752145014; cv=none; b=kvDpCzpPDyUm+UmskiLD9RhhgKZXWZQ0ziawGq1oudGM8GWqso/Sdv8nVcTLlPTgWuhXnYI/ZpzMcAak+Y0WY550GKmEWIPFYPXlE4hxP8xW/1C3E6TRycy43t+PyETE86Bej5ii21VkukecYe1ZUiPYlGy4YXcTDvgdhAtPGkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752139008; c=relaxed/simple;
-	bh=t+b3LzD3BtJWEEtg/wMiNAbd2/L39v/nsGL6ZPI+0ks=;
+	s=arc-20240116; t=1752145014; c=relaxed/simple;
+	bh=o8El/2R0L0tYY8cKePR2oJVpacZopffryurxXYvCDcw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AwDMuuibfrNBOyXZsEApcNKSMO5sYa/cdKn+3MzW+0a35dWYyPWrzNbiWzaUKkc/lt0gj7mhP5LAR/YYMiHE0yzpbiPIit239mpKrJrWrwg0kvEX40AGW9IshSHMB2nh1QvH0UW/M2Q1rUieA5DSw2MectzDXyF2WwB7xVuwSyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M0j5eKH+; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=VZiXqdVLyjK7WXqRZoOmWwRVm8w6N1wfJguRrAgr4ybGhO8qdMl5d35j3aA87FHYlDdZZLpLOn+IzQaCKRxxIGbqgTm/EnJKyOmWxtwX89AS/tnT7tEARQWy7s22IfpVAsAAQr8WeLn4NruwAr3P2CXSamWieY9nv3TfuXsVfPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Q53Dg/bF; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M0j5eKH+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752139008; x=1783675008;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=t+b3LzD3BtJWEEtg/wMiNAbd2/L39v/nsGL6ZPI+0ks=;
-  b=M0j5eKH+LiSGjmsVfERAXA8Eq/3/oMTvWLsK3/SopgPSzM+eWwdQeg9b
-   TFUyNkFEEsPafFvy7F218+m/j7ycuRg/FMTv88gXH4W1nxTFMRBnC6i/q
-   H9gSkZKYWTpTWQ0cpb7/OzhrMI1o94DPh+Z4FiLtqDC7afgNA6v/9Omzf
-   oD86Nhyx3ZWvTIfOdllbtg1xOwO8xbNVkJnS85SleMZOuGWlZUqETX4ln
-   7BTFuHY7gUHAlvHX1FjwdjiIT+/sZxGtYadDLEywo+4NP2iud0OLV0FkY
-   /x/8GLGLFSxX+u6AbRU1PtdhnOumK/ulzj/Fu1OP8pB0KueFvQ58yma8V
-   A==;
-X-CSE-ConnectionGUID: 0tmqLDuDSS6IBCB4VusTzQ==
-X-CSE-MsgGUID: CaV+HBsGQt+nUfUvwS7O4A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11489"; a="65863516"
-X-IronPort-AV: E=Sophos;i="6.16,300,1744095600"; 
-   d="scan'208";a="65863516"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2025 02:16:47 -0700
-X-CSE-ConnectionGUID: H97EeAYqSTyuTVqo+amh6w==
-X-CSE-MsgGUID: bZcTMtHQRTWEpbBizvH6Lw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,300,1744095600"; 
-   d="scan'208";a="156751530"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2025 02:16:43 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uZnOS-0000000E9ZR-2wf1;
-	Thu, 10 Jul 2025 12:16:40 +0300
-Date: Thu, 10 Jul 2025 12:16:40 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Li Ming <ming.li@zohomail.com>
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, dan.j.williams@intel.com,
-	shiju.jose@huawei.com, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/3] cxl/core: Introduce a new helper
- cxl_resource_contains_addr()
-Message-ID: <aG-E-FgezviXdq3t@smile.fi.intel.com>
-References: <20250710065647.98094-1-ming.li@zohomail.com>
- <20250710065647.98094-2-ming.li@zohomail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q53Dg/bF"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=7pEA1uNTqPvv6+XR/zuY/aMB8/9LJc6Rsl4Iqenx7gQ=; b=Q53Dg/bFa0IOiKKDOS+53JMqLd
+	rWu6gVsz2DbYQS7/ZS4GsN7sNLBcFe5gtoDTA70AVg1E6+YN+gLVdwXFrHrG7RJBHNdiLIHL2Hqig
+	eJ+2QJCO3siJAdamLStruKmbDre9sLI7jMYWnF5BCA5rSs1oL0ob/BF6Fe8Z63IeS5ED3rgQepKHw
+	Rp9hPkGAAcNYMOaycRM3nSDZknPNn/2oJ9rQv0kHpzKQaU4FkLsK9SaAIbtD4844S1AGIiqdNQ/1B
+	I/5ta9es7JbfQwyn1KjbLHwNTOA5vk9C05tctaYwRZOGHrIASCwI7FNGr7RW4hxkUIp3aRH6mBZtm
+	iTMs9ePg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uZowy-00000008aeW-27gb;
+	Thu, 10 Jul 2025 10:56:24 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 0B932300125; Thu, 10 Jul 2025 12:56:23 +0200 (CEST)
+Date: Thu, 10 Jul 2025 12:56:22 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: dan.j.williams@intel.com
+Cc: "H. Peter Anvin" <hpa@zytor.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>, james.morse@arm.com,
+	linux-cxl@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-mm@kvack.org, gregkh@linuxfoundation.org,
+	Will Deacon <will@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
+	Yicong Yang <yangyicong@huawei.com>, linuxarm@huawei.com,
+	Yushan Wang <wangyushan12@huawei.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	x86@kernel.org, Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v2 0/8] Cache coherency management subsystem
+Message-ID: <20250710105622.GA542000@noisy.programming.kicks-ass.net>
+References: <20250624154805.66985-1-Jonathan.Cameron@huawei.com>
+ <20250625085204.GC1613200@noisy.programming.kicks-ass.net>
+ <FB7122A4-BF5E-4C05-805A-2EE3240286A1@zytor.com>
+ <20250625093152.GZ1613376@noisy.programming.kicks-ass.net>
+ <686f4e20c57cd_1d3d100b7@dwillia2-xfh.jf.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -68,22 +65,37 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250710065647.98094-2-ming.li@zohomail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <686f4e20c57cd_1d3d100b7@dwillia2-xfh.jf.intel.com.notmuch>
 
-On Thu, Jul 10, 2025 at 02:56:45PM +0800, Li Ming wrote:
-> In CXL subsystem, many functions need to check an address availability
-> by checking if the resource range contains the address. Providing a new
-> helper function cxl_resource_contains_addr() to check if the resource
-> range contains the input address.
+On Wed, Jul 09, 2025 at 10:22:40PM -0700, dan.j.williams@intel.com wrote:
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> "Regular?", no. Something is wrong if you are doing this regularly. In
+> current CXL systems the expectation is to suffer a WBINVD event once per
+> server provisioning event.
 
-Thanks for following my review comments!
+Ok, so how about we strictly track this once, and when it happens more
+than this once, we error out hard?
 
--- 
-With Best Regards,
-Andy Shevchenko
+> Now, there is a nascent capability called "Dynamic Capacity Devices"
+> (DCD) where the CXL configuration is able to change at runtime with
+> multiple hosts sharing a pool of memory. Each time the physical memory
+> capacity changes, cache management is needed.
+> 
+> For DCD, I think the negative effects of WBINVD are a *useful* stick to
+> move device vendors to stop relying on software to solve this problem.
+> They can implement an existing CXL protocol where the device tells CPUs
+> and other CXL.cache agents to invalidate the physical address ranges
+> that the device owns.
+> 
+> In other words, if WBINVD makes DCD inviable that is a useful outcome
+> because it motivates unburdening Linux long term with this problem.
 
+Per the above, I suggest we not support this feature *AT*ALL* until an
+alternative to WBINVD is provided.
 
+> In the near term though, current CXL platforms that do not support
+> device-initiated-invalidate still need coarse cache management for that
+> original infrequent provisioning events. Folks that want to go further
+> and attempt frequent DCD events with WBINVD get to keep all the pieces.
+
+I would strongly prefer those pieces to include WARNs and or worse.
