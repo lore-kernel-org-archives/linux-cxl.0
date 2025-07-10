@@ -1,282 +1,163 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9CDD2E3718
-	for <linux-cxl@vger.kernel.org>; Mon, 14 Jul 2025 09:32:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA67E2E36F0
+	for <linux-cxl@vger.kernel.org>; Mon, 14 Jul 2025 13:04:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752485548; cv=none; b=sPAgB8iLuc8h6cNxtwSWmiZ5hp2XKh/jDt3/hEcgk38EH6riV0a+ksXkBxp58CQqqbcj1kyMQVuYclFREdaovilFDXWYhHtNVsw8J1inUSA4+b8Pnwh58QFWOmjPfdgZxziQ4U9nU9HUG4XnvQ7XgMSSzJ/dbYYCn7IjANZYol0=
+	t=1752498255; cv=none; b=ntuQVScRc27K2k6vtIpxqu9AJmo3zJSwQ7BLMbBEmfHM8EwLlOY+XpuSLY/qiVrIOkwypDozFvm4YVdB/gzqn1n/K8M2Jt0bddcej1au8Gn/l/dthsFgwQKaqrrkwK6uF1cjK6LpZ6Q2s7SqzDebm0op1iMh6s8TPo018wAMKuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752485548; c=relaxed/simple;
-	bh=ORIp0DsTIkl1pIRoWhFV8ehRLtrIqAJsWSgoImxEfak=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=n1Akx2FZH6XoYUc8moTD7RTgFRAxDp2aAvCtjDrLfYlGizCi70C13V/008CWhnxVO6+MQqRMreUYWZTM4V7PyuEm2SM54qDlSJ/L8hwJz3WgE1B+M88/i2anZAXlkWfLwZ8J0teBTWGB1GYr5W2zWTylgLZTRYpeKPt+td96k/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PVXmix8z; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1752498255; c=relaxed/simple;
+	bh=eoRLY2/dAvEfkgg6x+b7GT1v1AHvXZ/vceTfmeEGBIk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=XBXmCeTRZvTmsWmIXacs9atumbSVtsD86hrE2skrdpIFPemrpIu5e7Hp9niEEXQqTH3PudKnb56RLsAqrbUMDyNrLeM420M01qetpkLE4eKPSw53mCD7RHGimdXbRjkgGrDCblMNSU4nEIiaif0LT3RQ5GmaYtiFfHgJ75QDjrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Nb53fn8v; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PVXmix8z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1752485545;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6BkT8p2YW/M9VYSgCvpbzN2lnaj46fH5yJZ5UAMNKGU=;
-	b=PVXmix8zd9N0PXr20BCHEKH63rfVpF4CNyxpXc13p1gE87xmA4oVgArCczW3K1Bf6jj2Q4
-	Jm2R+4NQ3c5ySQTOSDsajlRiNdwjXX4XhbaWKpzeM31W/FS0djq3K8vK7cfzthdQ4UbObi
-	J0lgxlXs9mkA/QxFowuEgUXBR4ljgyc=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-135-WTLXSUSwPEiDgO8yvkGveQ-1; Mon, 14 Jul 2025 05:32:24 -0400
-X-MC-Unique: WTLXSUSwPEiDgO8yvkGveQ-1
-X-Mimecast-MFC-AGG-ID: WTLXSUSwPEiDgO8yvkGveQ_1752485543
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-456106b7c4aso4483985e9.0
-        for <linux-cxl@vger.kernel.org>; Mon, 14 Jul 2025 02:32:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752485543; x=1753090343;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6BkT8p2YW/M9VYSgCvpbzN2lnaj46fH5yJZ5UAMNKGU=;
-        b=mF0f+3m6pcCud8zmc3SZNwG7jgNkv3VpCHBqCP2ie5Fkm7q5d0OeHyxWjoQzXboosT
-         pkDosua8JWJuNna7M096AOwGrs3T3ZjmAATLctgiuZpG6d1E1ofEqfdhnjRleaCcBrx0
-         md4Ym/PRn+B3p8uC9YFLpZZVn0EGR3ochVBcy+9tesjzNSfk5ol89UmL9l3vncP6lY+V
-         +IeFxkzds6DW3Ct/eYUGQQhLqaiHgKbttg1knpFt7xH2tztitFZC61or22ni5ZRYpFj4
-         7ZJCj725qY5YKER5iLxNk8A2xrzLdyn9a0Uzy0L34xb2huoaOvBRjWRKHE3ur5VwgmwR
-         23pA==
-X-Forwarded-Encrypted: i=1; AJvYcCXvfB9xfo0TJBCt0wJXS7GlljNsEqO50v0hFa1wv86gLP4UaugoNRs99pWHMB7f4RsXhCjav1RXh7k=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyk0SW3Sreg09LG43OVLPqoOVA0RiEG1i7xxbGpOtwOkgOwxNSS
-	Bn11RTP6J4wUkQPoFVGQcAVwlRu1dzN1Ymig9TGsmUfvsIuHKEIoZXGm8bWb2vUbA+dY5XDHtIY
-	35wWtKjMHEI26fI+DB48PdRFEa/35u3nV/ULARHJI4+75/8eK+b5yaJY+B0C+3g==
-X-Gm-Gg: ASbGncthpOxdB1/UVah7bks3LpeR2n5LeH7w+t/DohDBj5SwFAX5QaNA11As+nsJY9L
-	8Xwg1WFNz7QQPJIQvSsVlP4yMYa40rX6HzkZkdfv6brJCa0CuvztN1nUV1LljF5YCJHk308V8dm
-	jev4p9ZQqI6XdxrXdcW8mLztBhsOQOUFK0VVv8nEOkQJ6LXxp8UTBmc/niNmF7H3sAOmxifcyxx
-	bcwHIXTEI3ydD9ARAGZt7hEplu+I1fQUuEOMBJIasOK6uBqNc2euciKMK1gaO6wpL5QBzClfosD
-	Ii1cI9G4tFPxobmV2SKZ5SgMf4R/ITq+
-X-Received: by 2002:a05:600c:c097:b0:43c:ed33:a500 with SMTP id 5b1f17b1804b1-454db8b7aa9mr123777615e9.10.1752485543035;
-        Mon, 14 Jul 2025 02:32:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFmqmT+EBkAgDQgxCs3fzbMYZTOiU6Wq2jej9Z8+hmfEvxkO4md31GcLOvInI3c9HtrT1f5RA==
-X-Received: by 2002:a05:600c:c097:b0:43c:ed33:a500 with SMTP id 5b1f17b1804b1-454db8b7aa9mr123777295e9.10.1752485542441;
-        Mon, 14 Jul 2025 02:32:22 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:150d:fc00:de3:4725:47c6:6809])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b600722780sm4251288f8f.23.2025.07.14.02.32.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Jul 2025 02:32:21 -0700 (PDT)
-Date: Mon, 14 Jul 2025 05:32:19 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: qemu-devel@nongnu.org, Fan Ni <fan.ni@samsung.com>,
-	linux-cxl@vger.kernel.org, linuxarm@huawei.com
-Subject: Re: [PATCH qemu 07/11] hw/cxl: mailbox-utils: 0x5602 - FMAPI Set DC
- Region Config
-Message-ID: <20250714052757-mutt-send-email-mst@kernel.org>
-References: <20250702160219.989731-1-Jonathan.Cameron@huawei.com>
- <20250702160219.989731-8-Jonathan.Cameron@huawei.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Nb53fn8v"
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250714130410epoutp0170c0e6ba55862f8125d44c1a61b8dd90~SH9_2xvDN2247922479epoutp01V
+	for <linux-cxl@vger.kernel.org>; Mon, 14 Jul 2025 13:04:10 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250714130410epoutp0170c0e6ba55862f8125d44c1a61b8dd90~SH9_2xvDN2247922479epoutp01V
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1752498250;
+	bh=STj9hqclOjcRpIvcs4IUPY0vGcojEPv3/KD0z0+QD1A=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=Nb53fn8vg+qIVkETt8KDWZjOo+qZSHREBxDV+dWWbFA6YzofATY/+POGvRQSkpBoZ
+	 1IIwaxWFIxul0lcwaXctVXjcQkAbVdb9pSRpEUxxSrrNAFw3BDCI/Zq3UMs298H/dO
+	 xYjRYtl6atb8ocT9S+P0miIKLx5NlgCVAx8fTwW0=
+Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
+	20250714130410epcas5p2237911c82560ad16b15dd351641dc6b4~SH9_dp04U0632306323epcas5p21;
+	Mon, 14 Jul 2025 13:04:10 +0000 (GMT)
+Received: from epcas5p4.samsung.com (unknown [182.195.38.86]) by
+	epsnrtp01.localdomain (Postfix) with ESMTP id 4bgjFP2Dzqz6B9m4; Mon, 14 Jul
+	2025 13:04:09 +0000 (GMT)
+Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250710144348epcas5p1842ad24e3de24dd7048b0db9dfbe6455~Q6v1XAbYH2661926619epcas5p1D;
+	Thu, 10 Jul 2025 14:43:48 +0000 (GMT)
+Received: from test-PowerEdge-R740xd.samsungds.net (unknown [107.99.41.79])
+	by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250710144347epsmtip23509616a42021b0f9572e7496c31a534~Q6vz3acz81607016070epsmtip2y;
+	Thu, 10 Jul 2025 14:43:47 +0000 (GMT)
+From: Arpit Kumar <arpit1.kumar@samsung.com>
+To: qemu-devel@nongnu.org
+Cc: gost.dev@samsung.com, linux-cxl@vger.kernel.org, nifan.cxl@gmail.com,
+	dave@stgolabs.net, Jonathan.Cameron@huawei.com, vishak.g@samsung.com,
+	krish.reddy@samsung.com, a.manzanares@samsung.com, alok.rathore@samsung.com,
+	cpgs@samsung.com, Arpit Kumar <arpit1.kumar@samsung.com>
+Subject: [PATCH v2 0/2] FM-API Physical switch command set support
+Date: Thu, 10 Jul 2025 20:13:36 +0530
+Message-Id: <20250710144338.2839512-1-arpit1.kumar@samsung.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250702160219.989731-8-Jonathan.Cameron@huawei.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: M5GUpFuCq467YKNop4oTvNQwVfxYPvsQ0e5AF0YuSLA_1752485543
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20250710144348epcas5p1842ad24e3de24dd7048b0db9dfbe6455
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+X-CPGSPASS: Y
+cpgsPolicy: CPGSC10-542,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250710144348epcas5p1842ad24e3de24dd7048b0db9dfbe6455
+References: <CGME20250710144348epcas5p1842ad24e3de24dd7048b0db9dfbe6455@epcas5p1.samsung.com>
 
-On Wed, Jul 02, 2025 at 05:02:13PM +0100, Jonathan Cameron wrote:
-> From: Anisa Su <anisa.su@samsung.com>
-> 
-> FM DCD Management command 0x5602 implemented per CXL r3.2 Spec Section 7.6.7.6.3
-> 
-> Reviewed-by: Fan Ni <fan.ni@samsung.com>
-> Signed-off-by: Anisa Su <anisa.su@samsung.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
->  include/hw/cxl/cxl_device.h  |  3 ++
->  include/hw/cxl/cxl_mailbox.h |  6 +++
->  hw/cxl/cxl-mailbox-utils.c   | 86 ++++++++++++++++++++++++++++++++++++
->  hw/mem/cxl_type3.c           |  6 +--
->  4 files changed, 98 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> index 96ef9be444..76af75d2d0 100644
-> --- a/include/hw/cxl/cxl_device.h
-> +++ b/include/hw/cxl/cxl_device.h
-> @@ -721,4 +721,7 @@ void ct3_clear_region_block_backed(CXLType3Dev *ct3d, uint64_t dpa,
->                                     uint64_t len);
->  bool ct3_test_region_block_backed(CXLType3Dev *ct3d, uint64_t dpa,
->                                    uint64_t len);
-> +void cxl_assign_event_header(CXLEventRecordHdr *hdr,
-> +                             const QemuUUID *uuid, uint32_t flags,
-> +                             uint8_t length, uint64_t timestamp);
->  #endif
-> diff --git a/include/hw/cxl/cxl_mailbox.h b/include/hw/cxl/cxl_mailbox.h
-> index 9008402d1c..a05d7cb5b7 100644
-> --- a/include/hw/cxl/cxl_mailbox.h
-> +++ b/include/hw/cxl/cxl_mailbox.h
-> @@ -8,6 +8,7 @@
->  #ifndef CXL_MAILBOX_H
->  #define CXL_MAILBOX_H
->  
-> +#define CXL_MBOX_CONFIG_CHANGE_COLD_RESET (1)
->  #define CXL_MBOX_IMMEDIATE_CONFIG_CHANGE (1 << 1)
->  #define CXL_MBOX_IMMEDIATE_DATA_CHANGE (1 << 2)
->  #define CXL_MBOX_IMMEDIATE_POLICY_CHANGE (1 << 3)
-> @@ -15,5 +16,10 @@
->  #define CXL_MBOX_SECURITY_STATE_CHANGE (1 << 5)
->  #define CXL_MBOX_BACKGROUND_OPERATION (1 << 6)
->  #define CXL_MBOX_BACKGROUND_OPERATION_ABORT (1 << 7)
-> +#define CXL_MBOX_SECONDARY_MBOX_SUPPORTED (1 << 8)
-> +#define CXL_MBOX_REQUEST_ABORT_BACKGROUND_OP_SUPPORTED (1 << 9)
-> +#define CXL_MBOX_CEL_10_TO_11_VALID (1 << 10)
-> +#define CXL_MBOX_CONFIG_CHANGE_CONV_RESET (1 << 11)
-> +#define CXL_MBOX_CONFIG_CHANGE_CXL_RESET (1 << 12)
->  
->  #endif
-> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> index bf1710b251..1fc453f70d 100644
-> --- a/hw/cxl/cxl-mailbox-utils.c
-> +++ b/hw/cxl/cxl-mailbox-utils.c
-> @@ -121,6 +121,7 @@ enum {
->      FMAPI_DCD_MGMT = 0x56,
->          #define GET_DCD_INFO    0x0
->          #define GET_HOST_DC_REGION_CONFIG   0x1
-> +        #define SET_DC_REGION_CONFIG        0x2
->  };
->  
->  /* CCI Message Format CXL r3.1 Figure 7-19 */
-> @@ -3390,6 +3391,84 @@ static CXLRetCode cmd_fm_get_host_dc_region_config(const struct cxl_cmd *cmd,
->      return CXL_MBOX_SUCCESS;
->  }
->  
-> +/* CXL r3.2 section 7.6.7.6.3: Set Host DC Region Configuration (Opcode 5602) */
-> +static CXLRetCode cmd_fm_set_dc_region_config(const struct cxl_cmd *cmd,
-> +                                              uint8_t *payload_in,
-> +                                              size_t len_in,
-> +                                              uint8_t *payload_out,
-> +                                              size_t *len_out,
-> +                                              CXLCCI *cci)
-> +{
-> +    struct {
-> +        uint8_t reg_id;
-> +        uint8_t rsvd[3];
-> +        uint64_t block_sz;
-> +        uint8_t flags;
-> +        uint8_t rsvd2[3];
-> +    } QEMU_PACKED *in = (void *)payload_in;
-> +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
-> +    CXLEventDynamicCapacity dcEvent = {};
-> +    CXLDCRegion *region = &ct3d->dc.regions[in->reg_id];
-> +
-> +    /*
-> +     * CXL r3.2 7.6.7.6.3: Set DC Region Configuration
-> +     * This command shall fail with Unsupported when the Sanitize on Release
-> +     * field does not match the region’s configuration... and the device
-> +     * does not support reconfiguration of the Sanitize on Release setting.
-> +     *
-> +     * Currently not reconfigurable, so always fail if sanitize bit (bit 0)
-> +     * doesn't match.
-> +     */
-> +    if ((in->flags & 0x1) != (region->flags & 0x1)) {
-> +        return CXL_MBOX_UNSUPPORTED;
-> +    }
-> +
-> +    if (in->reg_id >= DCD_MAX_NUM_REGION) {
-> +        return CXL_MBOX_UNSUPPORTED;
-> +    }
-> +
-> +    /* Check that no extents are in the region being reconfigured */
-> +    if (!bitmap_empty(region->blk_bitmap, region->len / region->block_size)) {
-> +        return CXL_MBOX_UNSUPPORTED;
-> +    }
-> +
-> +    /* Check that new block size is supported */
-> +    if (!test_bit(BIT((int) log2(in->block_sz)),
-> +                  &region->supported_blk_size_bitmask)) {
-> +        return CXL_MBOX_INVALID_INPUT;
-> +    }
+This patch series refactor existing support for Identify Switch Device
+and Get Physical Port State by utilizing physical ports (USP & DSP)
+information stored during enumeration. Additionally, it introduces new
+support for Physical Port Control of FM-API based physical switch
+command set as per CXL spec r3.2 Table 8-230:Physical Switch.
 
-This does not work: test_bit works on unsigned long, while
-supported_blk_size_bitmask is uint64_t.
+This v2 patch series addresses feedback from v1 and incorporates some 
+new changes. It merges [PATCH 1/3] and [PATCH 2/3] from the v1 series,
+resulting in total of two patches in this patch series.
 
-Why so funky? what is wrong with:
+Change log [PATCH v2 1/2]:
+-namespace defines intead of enum for current_port_config_state.
+-Relocates all defines & enums to include/hw/cxl/cxl_device.h for
+ improved readibility.
+-Total number of unique physical ports defined as 256 since the length
+ of number of physical ports given in CXL r3.2 Table 7-16 is 1 byte. Thus,
+ dropping any dependencies on virtual heirarchy throughout the implementation
+ as the request is per switch.
+-Moves struct phy_port to CXLUpstreamPort avoiding cci specific handling of
+ physical ports hence making it more reasonable.
+-Utilizes pci_for_each_device_under_bus() to store downstream ports info.
+-Declarations at the beginning of the function.
 
-if (!(BIT_ULL(log2(in->block_sz)) & region->supported_blk_size_bitmask))
+Change log [PATCH v2 2/2]:
+-cxl_find_port_dev() now locates device objects for both USP and DSP as physical
+ port control request includes all physical ports.
+-Replaces qemu_mutex_lock with QEMU_LOCK_GUARD.
+-Holding reset phase for 100ms added as backgroung operation using qemu_thread_create().
+-Updates naming function/variables names as suggested by using lower_case style
+ wherever apt.
+-Removes CCI sepcific implementation for Assert-Deassert PERST & Reset as it is port
+ wise and utilize struct phy_port stored in CXLUpstreamPort as per [PATCH 1/2].
+-Changes made does not lock up other emulations.
 
-And BTW why cast to int here?
+Logic behind physical port control request:
+-Assert-Deassert PERST: Assert PERST involves physical port to be in hold reset phase
+ for minimum 100ms. No other physical port control request are entertained until Deassert
+ PERST command for the given port is issued.
+-Reset PPB: cold reset of physical port (completing enter->hold->exit phases).
 
+The Physcial port control request is tested through libcxl-mi interface. It tests 
+all active ports and all opcodes per active port. Since it does not support run time input,
+all other possible edge cases were tested manually:
+https://github.com/computexpresslink/libcxlmi/pull/31
 
-> +
-> +    /* Return success if new block size == current block size */
-> +    if (in->block_sz == region->block_size) {
-> +        return CXL_MBOX_SUCCESS;
-> +    }
-> +
-> +    /* Free bitmap and create new one for new block size. */
-> +    qemu_mutex_lock(&region->bitmap_lock);
-> +    g_free(region->blk_bitmap);
-> +    region->blk_bitmap = bitmap_new(region->len / in->block_sz);
-> +    qemu_mutex_unlock(&region->bitmap_lock);
-> +    region->block_size = in->block_sz;
-> +
-> +    /* Create event record and insert into event log */
-> +    cxl_assign_event_header(&dcEvent.hdr,
-> +                            &dynamic_capacity_uuid,
-> +                            (1 << CXL_EVENT_TYPE_INFO),
-> +                            sizeof(dcEvent),
-> +                            cxl_device_get_timestamp(&ct3d->cxl_dstate));
-> +    dcEvent.type = DC_EVENT_REGION_CONFIG_UPDATED;
-> +    dcEvent.validity_flags = 1;
-> +    dcEvent.host_id = 0;
-> +    dcEvent.updated_region_id = in->reg_id;
-> +
-> +    if (cxl_event_insert(&ct3d->cxl_dstate,
-> +                         CXL_EVENT_TYPE_DYNAMIC_CAP,
-> +                         (CXLEventRecordRaw *)&dcEvent)) {
-> +        cxl_event_irq_assert(ct3d);
-> +    }
-> +    return CXL_MBOX_SUCCESS;
-> +}
-> +
->  static const struct cxl_cmd cxl_cmd_set[256][256] = {
->      [INFOSTAT][BACKGROUND_OPERATION_ABORT] = { "BACKGROUND_OPERATION_ABORT",
->          cmd_infostat_bg_op_abort, 0, 0 },
-> @@ -3508,6 +3587,13 @@ static const struct cxl_cmd cxl_cmd_set_fm_dcd[256][256] = {
->          cmd_fm_get_dcd_info, 0, 0 },
->      [FMAPI_DCD_MGMT][GET_HOST_DC_REGION_CONFIG] = { "GET_HOST_DC_REGION_CONFIG",
->          cmd_fm_get_host_dc_region_config, 4, 0 },
-> +    [FMAPI_DCD_MGMT][SET_DC_REGION_CONFIG] = { "SET_DC_REGION_CONFIG",
-> +        cmd_fm_set_dc_region_config, 16,
-> +        (CXL_MBOX_CONFIG_CHANGE_COLD_RESET |
-> +         CXL_MBOX_CONFIG_CHANGE_CONV_RESET |
-> +         CXL_MBOX_CONFIG_CHANGE_CXL_RESET |
-> +         CXL_MBOX_IMMEDIATE_CONFIG_CHANGE |
-> +         CXL_MBOX_IMMEDIATE_DATA_CHANGE) },
->  };
->  
->  /*
-> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> index b872a26173..ee554a77be 100644
-> --- a/hw/mem/cxl_type3.c
-> +++ b/hw/mem/cxl_type3.c
-> @@ -1590,9 +1590,9 @@ void qmp_cxl_inject_correctable_error(const char *path, CxlCorErrorType type,
->      pcie_aer_inject_error(PCI_DEVICE(obj), &err);
->  }
->  
-> -static void cxl_assign_event_header(CXLEventRecordHdr *hdr,
-> -                                    const QemuUUID *uuid, uint32_t flags,
-> -                                    uint8_t length, uint64_t timestamp)
-> +void cxl_assign_event_header(CXLEventRecordHdr *hdr,
-> +                             const QemuUUID *uuid, uint32_t flags,
-> +                             uint8_t length, uint64_t timestamp)
->  {
->      st24_le_p(&hdr->flags, flags);
->      hdr->length = length;
-> -- 
-> 2.48.1
+Qemu Topology used and it's results:
+-without any devices connected to downstream ports - success
+-with virtio-rng-pci devices connected to downstream ports - success
+-with CXLType3 devices connected to downstream ports - failure
+-with different unique values of ports (both upstream and downstream) - success
+
+Below given topology is an example topology with 3 downstream ports and 1 upstream port.
+It has one virtio-rng-pci device connected to downstream port 4.
+FM="-object memory-backend-file,id=cxl-mem1,mem-path=$TMP_DIR/t3_cxl1.raw,size=256M \
+    -object memory-backend-file,id=cxl-lsa1,mem-path=$TMP_DIR/t3_lsa1.raw,size=1M \
+    -object memory-backend-file,id=cxl-mem2,mem-path=$TMP_DIR/t3_cxl2.raw,size=16M \
+    -object memory-backend-file,id=cxl-lsa2,mem-path=$TMP_DIR/t3_lsa2.raw,size=1M \
+    -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1,hdm_for_passthrough=true \
+    -device cxl-rp,port=0,bus=cxl.1,id=cxl_rp_port0,chassis=0,slot=2 \
+    -device cxl-upstream,port=2,sn=1234,bus=cxl_rp_port0,id=us0,addr=0.0,multifunction=on, \
+    -device cxl-switch-mailbox-cci,bus=cxl_rp_port0,addr=0.1,target=us0 \
+    -device cxl-downstream,port=0,bus=us0,id=swport0,chassis=0,slot=4 \
+    -device cxl-downstream,port=4,bus=us0,id=swport1,chassis=0,slot=5 \
+    -device cxl-downstream,port=8,bus=us0,id=swport2,chassis=0,slot=6 \
+    -machine cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=1k \
+    -device i2c_mctp_cxl,bus=aspeed.i2c.bus.0,address=4,target=us0 \
+    -device i2c_mctp_cxl,bus=aspeed.i2c.bus.0,address=5,target=us0 \
+    -device i2c_mctp_cxl,bus=aspeed.i2c.bus.0,address=6,target=us0 \
+    -device virtio-rng-pci,bus=swport1"
+   
+Observation/Finding:
+The assert-deassert and reset PPB operation fails when downstream ports are connected
+to a CXLType3 device as it would mean device reset instead of switch port reset.
+
+The patches are generated against the Johnathan's tree
+https://gitlab.com/jic23/qemu.git and branch cxl-2025-03-20.
+
+Signed-off-by: Arpit Kumar <arpit1.kumar@samsung.com>
+
+Arpit Kumar (2):
+  hw/cxl: Refactored Identify Switch Device & Get Physical Port State
+  hw/cxl: Add Physical Port Control (Opcode 5102h)
+
+ hw/cxl/cxl-mailbox-utils.c                | 364 +++++++++++++++-------
+ include/hw/cxl/cxl_device.h               |  92 ++++++
+ include/hw/pci-bridge/cxl_upstream_port.h |   4 +
+ 3 files changed, 352 insertions(+), 108 deletions(-)
+
+-- 
+2.34.1
 
