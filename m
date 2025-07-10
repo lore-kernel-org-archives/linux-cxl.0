@@ -1,515 +1,253 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3B94273D91
-	for <linux-cxl@vger.kernel.org>; Thu, 10 Jul 2025 17:36:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1BD127145D;
+	Thu, 10 Jul 2025 18:37:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752169010; cv=pass; b=cmowTR2YU1zYikoSFzAaClFztitHrn4jzaRiF8/D2DMAvGloddeEh58YkEeJfSKecC9F+Qd9fFX1vspps+byo1rPG5Y1zhxiMSmkxuDidbg1WCql2fTCkguQ5Hb87pjHSh8NqtrP31553zs45Otn1aJc0GFcdjpZeAUXncXZFu4=
+	t=1752172630; cv=fail; b=mVrWiHB1IEpBFt7l0vPBTncQ/dlgnLpjZjHudD2Lg7K70270alg9s5VAMISKCZ8NT8wQ/V7UMqfiYrRAs+ODd7ETT7sLUwNTZFjgMhSWjL4p7qevGca6iv5VixH2fAGtavCI5qksZW9lBmChdi4gM/HMT4IPFnSZ6zYfmsRMGxo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752169010; c=relaxed/simple;
-	bh=33I4tpwj1VAtgMLBX/tQ1PYikevQL05ulrm2QYSSxhM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dv/YZKpdBEeNJ7e5ajUsNn+NaVt7j2olMvO5OkA9aVvD7mzNihY1rJJtGCPna5zQPkU1Uz6TimfVuOQ3D8oPjPLPkxkyzi+0XRZn5afOnPGUDL86vaeUJ9E+ENU0j5Yc/Xe8DQCtNEtsFqJHy8DDG9ezy5wd/UfnccBP4NVnw7E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=S5IqIMY/; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	s=arc-20240116; t=1752172630; c=relaxed/simple;
+	bh=m+/8Ue+XqeimPrnOG40u+7FyrKXV2XoxvD6PWVZTGjU=;
+	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
+	 Content-Type:MIME-Version; b=k6X7jL+iJ33Xd7c0+NjmlHiZlkhLP52Txmjoxu5pQIvTIbsglB95/FYMTsHTsr7/AbaVeZPARfMS4L/bzDX+uyqwtR0z5asbnk3WE6LWcQCXLIyvuUnC8JMenffD8A5rqRkLbYlYYnHSJzQZAQGaqBVqPraAkeCpfSj0SNY9pI4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YifwonTu; arc=fail smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="S5IqIMY/"
-ARC-Seal: i=1; a=rsa-sha256; t=1752168995; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=ChMmmCNMXyZD+H0WoPtgePqKLNCvWmrs31m4+rZgCmxedsBrSIvdR3lEvrRmroNrXdLGcdEb6FaeI0mlT2bo6u9sFUJG4Onaj/fm/xsEHpW+LhwNX9nzFAK3sXRzwEAoMe7qr+Mq4wa/o6tEf9WVJuy/36rP4bPPrpGM/8e3tzg=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1752168995; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Bs61mIB/Ve9wik9uHPQbUgZXxWkv7edtvpzYEK3UTxg=; 
-	b=MM8OnvLlxgw0hbjBbCZ1UmYaP7Ff9l0r3mEh7pFMJLOrbmt6lHqPziXMSJJAGdw7pTwRS3UFnTr3o/DKIDXmtN/8AK2gNwWk/vNnNkQFLY1RUnN/8Nq47VjC1dtQB9SOQo9udahZm3dtx0rYRYqzsm2/2/FTi7YRVcbVmx7ir40=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1752168995;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=Bs61mIB/Ve9wik9uHPQbUgZXxWkv7edtvpzYEK3UTxg=;
-	b=S5IqIMY/AAKxJiArr5dNi56CQ+nDaJefmhQWSNEF5EBGVzQjOY6HjzOkZ5fKz+wY
-	BXlCjdpufNumFCW3vaQpH6hWdA5h0MFu5oLFK1Vcn9rWEFA74UbUZo/3f1KcJyGHwqh
-	7/++6gf/hGnLlY433LdteMtS+wXqiech9661CoyI=
-Received: by mx.zohomail.com with SMTPS id 1752168992742112.18718700354793;
-	Thu, 10 Jul 2025 10:36:32 -0700 (PDT)
-Message-ID: <8708710c-f464-4775-8803-19943574e7fb@zohomail.com>
-Date: Fri, 11 Jul 2025 01:36:27 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YifwonTu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1752172629; x=1783708629;
+  h=from:date:to:cc:message-id:in-reply-to:references:
+   subject:content-transfer-encoding:mime-version;
+  bh=m+/8Ue+XqeimPrnOG40u+7FyrKXV2XoxvD6PWVZTGjU=;
+  b=YifwonTuHj9MGkAR13tyjhyfeVKNOCvXAbbHnogSxgrcsAhb3V6bPHrb
+   deBxt3P+sw0pJG8dtKgbQ56zQ54TRkaPGZqiITpuP2sCILDX3WSpsfxGA
+   S5ZM9iwVtxH2USfUyXByUHr4Of7/6HVkyfEwEf+Ewu1Ok8P4yrwZPp1kw
+   Z9TDJcerFnXz0FOSeDHc5lWHltftH+zHawYpZHdwCwea6D04jMIPtF0jT
+   Qu3YnXTE09xqLqc2nAUHnq1Ldhg29hmLTCLrLaCsb8F/VBty0wjHY85hM
+   CN/FoYPnnA6WkI8T9enR5nm55l+hASum1WoHdH2qRCxKJbOEh2Q6wPJ/b
+   w==;
+X-CSE-ConnectionGUID: fzJoBzaLRF2QBIBVLovgKQ==
+X-CSE-MsgGUID: 3apaCOP2RTCJWRkwhAr7cg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11490"; a="57078982"
+X-IronPort-AV: E=Sophos;i="6.16,301,1744095600"; 
+   d="scan'208";a="57078982"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2025 11:37:08 -0700
+X-CSE-ConnectionGUID: /9dF6bRiTsuz4KV9uKaWjw==
+X-CSE-MsgGUID: 0XdkRHIMTpebO4r/PMXzPQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,301,1744095600"; 
+   d="scan'208";a="160721075"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2025 11:37:07 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Thu, 10 Jul 2025 11:37:07 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Thu, 10 Jul 2025 11:37:07 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (40.107.237.77)
+ by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Thu, 10 Jul 2025 11:37:05 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=FXqiWoT9lX9k5H3+u6CwWAy5m58YQSfr3lAfyMxrMrzeIgrnGAAu3GmJfpNrYOE8xt7qLqZQedz17LtjYbHJbBYymtUx/w8k9eM4rUAzIpBmLCt0tlafabbBJSz0mjYZYWSxsxUJ/ryCJ3xKi71/fCnbVpDbKsEDEZ8hD9Hj/oGy2BYosUsPMyLx+ksGINK1YdR9W5o2rpBHTGxMuJnpebuUyatc/csX+aOihTAavl3J3yVpcDHBleN1J9hLeqXfE6HSFu5qpB2RzJjZmvMkZdInCmGjX0L7wfpsz+nIM9b8GIW/8Nd8cah07mXfwfdGoDfyDCM5iZ2D174R9Nw7ag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/uqwdO6eGB2b1m0dlG7pcwmZPDSDKWP0faJ3GXYrnvw=;
+ b=dttlqtlCPwL15uarFlyukYVKr+lx3twCy6vH2IVeAs/ETe0s1elgser10YMPEsV2mdv52GDlsIddcKQP4n6APhPIksR66tpwykFm3p4TtgEiXDXjYPlWig/mbgnxSRZhS8K5ghtvHwWV1MUwu0RWrIMLYcpnHHmCNAwSpraDnN/4QmBedYauS1WUwpWjzUDkCCnFdG26lIcucz0XQjpwc93lBBXlGoH/EwzyvzBWeq+Ub63XpgIQswoo+KUdbwag9cvMgCGiBDp8ylEzDutJvVITQgGzf61gEoLTavkxqOwSkCmWWERBFWy3bN/q4r6PsgdpVcQzpTYeCYyD2ZpaSQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by CO1PR11MB5108.namprd11.prod.outlook.com (2603:10b6:303:92::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8901.27; Thu, 10 Jul
+ 2025 18:36:22 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%6]) with mapi id 15.20.8901.024; Thu, 10 Jul 2025
+ 18:36:22 +0000
+From: <dan.j.williams@intel.com>
+Date: Thu, 10 Jul 2025 11:36:20 -0700
+To: Peter Zijlstra <peterz@infradead.org>, <dan.j.williams@intel.com>
+CC: Jonathan Cameron <Jonathan.Cameron@huawei.com>, <linuxarm@huawei.com>, "H.
+ Peter Anvin" <hpa@zytor.com>, Catalin Marinas <catalin.marinas@arm.com>,
+	<james.morse@arm.com>, <linux-cxl@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-acpi@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-mm@kvack.org>,
+	<gregkh@linuxfoundation.org>, Will Deacon <will@kernel.org>, Davidlohr Bueso
+	<dave@stgolabs.net>, Yicong Yang <yangyicong@huawei.com>, Yushan Wang
+	<wangyushan12@huawei.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, "Mark
+ Rutland" <mark.rutland@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, <x86@kernel.org>, Andy Lutomirski
+	<luto@kernel.org>
+Message-ID: <68700824a2161_1d3d100f4@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <20250710105913.GB542000@noisy.programming.kicks-ass.net>
+References: <20250624154805.66985-1-Jonathan.Cameron@huawei.com>
+ <20250625085204.GC1613200@noisy.programming.kicks-ass.net>
+ <FB7122A4-BF5E-4C05-805A-2EE3240286A1@zytor.com>
+ <20250625093152.GZ1613376@noisy.programming.kicks-ass.net>
+ <20250625180343.000020de@huawei.com>
+ <20250626105530.000010be@huawei.com>
+ <686f506020726_1d3d10069@dwillia2-xfh.jf.intel.com.notmuch>
+ <20250710105913.GB542000@noisy.programming.kicks-ass.net>
+Subject: Re: [PATCH v2 0/8] Cache coherency management subsystem
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR03CA0141.namprd03.prod.outlook.com
+ (2603:10b6:a03:33c::26) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 04/10] cxl: Defer dport allocation for switch ports
-To: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
- dan.j.williams@intel.com
-References: <20250709203619.2607133-1-dave.jiang@intel.com>
- <20250709203619.2607133-5-dave.jiang@intel.com>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <20250709203619.2607133-5-dave.jiang@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Feedback-ID: rr08011227b77d31e44f07c73cad4a408000002aa29b1329b800b54e1d82f7b1ccd79f18af19e51e5197a487:zu080112277aff09f10aec27caf68a09c20000bff552f9d962525aad36190e24aed2e2cb6f829728bff669a8:rf0801122d7da3c15db6e5d566fe84874600006b5029b85227707ef127e532099f9949f16693613838a255738ff0df07b574:ZohoMail
-X-ZohoMailClient: External
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CO1PR11MB5108:EE_
+X-MS-Office365-Filtering-Correlation-Id: 58871cb4-1a22-4c03-7df5-08ddbfe0ab41
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?eGxLWHBLcFljbzY4OUtqRjJ6WWxURkJ4VnVuZUVYZGpIcXBOSVFYV1dMVGxa?=
+ =?utf-8?B?eFlTV1NMOEJWeGZZdTVPREpWQnBCY1JBQ2FySklLMEx3bXF5bWczWjZ5RlNC?=
+ =?utf-8?B?eDcxd2hxM1h6SENtQW42K24yV2Ruam94cFFjTW45ZlRqS05abjdkc3NYTVU4?=
+ =?utf-8?B?R25JNDV0NTQvekRKNVRIeUt0QTkwZEluVzlWbGd4K1RSVVloSHVTdEZxSHJX?=
+ =?utf-8?B?LzAwY3F6SlFNdm9ETHFiaUpqRk5ZbmNIMlVQa2xjUjdqNkF5WmlXYTE4ZWZR?=
+ =?utf-8?B?aEUySU5NcVpNL2Jyc2Y3alA4Mk5qaHdobGZkSGx2OVhQQkVJNVorWTBBT25v?=
+ =?utf-8?B?L0pHNzU5c2lLN0N0Mkc1SDk1R3FiMEl2L1VqWDJMTjRzS09BUnhPMHVtQVBw?=
+ =?utf-8?B?djNVajlPekJPRGxTVlNUaGhWbERmT2EzTlVJUCtXbVVNakhSQVBTRVVhZHR3?=
+ =?utf-8?B?T0U4bXlieUdqRW1hdHdNVlVEL1hrcUI3ckdWUHZDblhuVEtqTlRQWVEzSGcz?=
+ =?utf-8?B?WnhSaktXNXYxdTdvZUlmOXNQbGY1VmxzMU02Wmd6WEFCdTk4VXhyUjA3dFNE?=
+ =?utf-8?B?NFB3cy9SZTlXZ2xDbUF2aVRGeHVid05TSlJVaXkxS244QVFqckE5aFd4bGIr?=
+ =?utf-8?B?TFVxRlRJQUpHYTRFSkNXYnAycXJlb3o5dFhkZm5hay9BY1FKVC9hVUdrd1VD?=
+ =?utf-8?B?aDlValRZVERUa0lEcEl1b2VJRDNuZ2JCcnUvMXI5cTRqMDlJUExBSWNINFhS?=
+ =?utf-8?B?QU91NkpEeW52L1dLRm5OMm91L0w2akwwRFNpSHVaVG9oTnFicUtJdSt0cWg5?=
+ =?utf-8?B?L2hBRXczNHpBZUsyWjV2cU9mSENleXUvSmJleEF0REtkb2NZMDJOWk5rSVJh?=
+ =?utf-8?B?ZHMzTjZHeUVJcGhlaUluYzVlMS8xR2RwVmRlbnRxeTdGTHIzeWpUN0tnbVIz?=
+ =?utf-8?B?eDYxQURMVDVtUE54UnAxQTlvVWhxcW9IcWhiVG1sVzVwR0NsUzRGOHhSOGZt?=
+ =?utf-8?B?eUNzZVUzL3NjS0EzY2paS0tzZTl3clVkM1B6VytpUEVOUzFrZGxpUkFrZ2NW?=
+ =?utf-8?B?RE9hckd4T25xeGkyTG9qUDRsKzZrdWxzUndkZ3JQTzVUM1NxcTEvZDBMdHpD?=
+ =?utf-8?B?Uzd5c20zRWVxVks3UE5veHN3cG5ZTGZubTA3RDV0ZTI3YTMvaVV4QzVtMU5B?=
+ =?utf-8?B?R3RsR1N4SGl5eFdsdkdyV2ZkeXhKOVg4dzdTTEJRTE50Q0U4NnU0Z2xHaHB2?=
+ =?utf-8?B?Rm12TzdVWXJFeEhlVEROZ3E5emlaVEJiVklXRnJkeHJCMDhCdFZRMFYvdnd5?=
+ =?utf-8?B?b2N4U0Q4OVRSNE9YZnlySStueEpjbkpxUGMwaEtNZ1JBdS9XVmlFWVdaOEF4?=
+ =?utf-8?B?STN1YTBKdHZmeXY4cmpLdUFEY2ZjZ1gvKzVVZ1AxV3NKVTdNRGN4SWlOWUlo?=
+ =?utf-8?B?a1hKVXp4dnBNQ29URHdjUUc2RUpkYlhGSlZkcWcwTThka1cyL0pxWExndG43?=
+ =?utf-8?B?ZlFsNUp4TDFtNnM1T3lhNSt1RnExWVgxTTlPUHZBUndOOVpxUGF5TTFPZ2Np?=
+ =?utf-8?B?WDhXb1lHVGZXaldiUExRT1BCak9wVUtYc2doWUV1UWpGRDhwN01YZ29CbHRu?=
+ =?utf-8?B?Q25pWHdPQk41NTRJaVU3WGZ0NEdmMmRkdkplTTFHeDRLUktyVXI1TEYzb1lP?=
+ =?utf-8?B?dHRTdlM4S2VFdzJCcUUxMW8rbWlCUm1iZUhXZDRKQzNxK3daVXl0S2FYcVI2?=
+ =?utf-8?B?TUJOaXFSTlRUaXhuci9ONWU5RHdnd1VyWWkzdjljakh3cnlFdDRUVGJXZVA5?=
+ =?utf-8?B?V2I3WXdRdGFkZ3AxNkpxL3lld3oySkIxZFY3QlJDNHhyeVdWL0QzVDZqRS9X?=
+ =?utf-8?B?WHppdmFOazl5OVVLdW9OM0FsOG1aUjZXem5DcnNBdVVUa3pzK0hzODBUNmh6?=
+ =?utf-8?Q?PVUR+07GpaU=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?djBGaG9TTDdhOEFqbTdzNkNsZjgwajVDTlBIdDliWkJ3QUovS2NKcXNCWUZW?=
+ =?utf-8?B?Wk4rNXZqUzl5WE9hNS9hREFnaHJTaVRkV1M5VGNjYlFWV2lyM1N2WmxqSzg1?=
+ =?utf-8?B?L2VlRTRySmtCTFV0NGk4WnMyeWNvdjdMbnVXdGJSSU9hL1ZuRDQxdFR1eXAx?=
+ =?utf-8?B?bVI0QnRwamdBR1o5YnFtSEZQOEEwOUd0SHozY20veWtDQUh4Y1UrNHB0UFNQ?=
+ =?utf-8?B?K0NmWDdwcHVIWW9jQjVEZGJzTjVrVlZOUzFybmljY0V2bkoxOUE2R2MwUzdv?=
+ =?utf-8?B?WlBRNTJsWnJXbW5hZi9YR2pFOVhvSkhENEE4QzZaTG9uSW41STdXczhwdDND?=
+ =?utf-8?B?SHE1YUppQzQvWkllQ1JBT2FGa0JwNysvTm5rNFhtUktTcThQSC9CSTZSbUI4?=
+ =?utf-8?B?QnIvc1F4MTgvVnZhT1Qxb3Q2N0pvbUV5M1lqWkUzM3R3aGxvLzEvWkQzY3pH?=
+ =?utf-8?B?Q3YyZmczWDFrVURJditqRzcyZUplT3ZTZ0pURzZoa0dmY0xzUzJZRWlObU9U?=
+ =?utf-8?B?bm5sSEI1dGtPcWErSDByVEhuV09kSU5jUnluYXYyWGxtajNmNCs4em1YblNT?=
+ =?utf-8?B?VW5iM0gyUlVNajROaHBmbGMrM1FrWmhzMG1wdVJhaFNwcHY0TVNnTjFLR1dH?=
+ =?utf-8?B?YitQVEpRQ1BXQWN1YXJId3MzS0hNeGVYcFhNQ3FMempFSndzc1k3SU5TZGp4?=
+ =?utf-8?B?ZmVsS2Y2TDlaWnlacVpab1hvSS9xSXhQS0FENVk2Z0ptV0s5bEx5VVNaRXAw?=
+ =?utf-8?B?Z0IvUkpSNDV4K3FtakVHd0l4Z21HTFVwOW9nVGpVMGE1Znp3TDZ5bEpRczZL?=
+ =?utf-8?B?SWJBZTJyUVdyMEd5QUJ6MGEycTE2WldQUHQ2ME1DQ05CcENmZS9WdWwxcE5l?=
+ =?utf-8?B?TVFiU25ZUTBSMHp3d0Q0Z05lR3o1SzRJalFVY3NyTmVJY3FKL3hXNTI2Vkcv?=
+ =?utf-8?B?Z01IYjJlYWZZWVlrVGZzcnBUVGpMU0NJK2xXb1Z2WjVadGt0b2p1SENRZldv?=
+ =?utf-8?B?cU9Mc3VxU3paZklNdEVoOE01MWNHUlF0U3hUY0p2NVdnODdQR3pWdHJ6bGdC?=
+ =?utf-8?B?ekJsMy81QjgvN3Zabm9pY3RsT3pkQ3lQWWF2SE16dSsreEZFNDJQRGdvM1h6?=
+ =?utf-8?B?RTIwZjFYdE5sRkdYWmF5R2RvaU56aGNPWTE5aG9YTktkcHBpMFhoeVdLZVo0?=
+ =?utf-8?B?MmJpbVBrTVd3M05vc25ueTkrY0ZUb0JoUDZjTGVTc3pJbVpaNzhTbFBsNGMy?=
+ =?utf-8?B?QzdRZnB5T1hQajRGVFlqSXMvNmRLK2xaei9iZGh3S1ErYmdiZHFiUCtqdHJt?=
+ =?utf-8?B?emlXRlRpSTE0NVNlbjk5RmVaaE1kcnp1aHlhKzRMSGYxVmo0SVc1bGErUnJZ?=
+ =?utf-8?B?amxzOTNuaWtPTGNuanZoSWkrSHpqNkVxM2dudmFxUEw2TTRUMFE1WGRIencx?=
+ =?utf-8?B?ZzV2ajJnMlNqVW1FVm5aNFZCKzZhbUtENFZkN0JFSW1ySE9KM1JqUGZhUVZ5?=
+ =?utf-8?B?RXc2RUUxSXYvWlRQdFY4dFR4Y3dSMC9SMVAzRHJWUlpPcUtKeEJhUTNKdTR4?=
+ =?utf-8?B?MnJFOG1YRnpVRDFuUnZVOE9vNExPUUdHOHl3Zk5RUDNYSWMxcU5Bd2c1aWxw?=
+ =?utf-8?B?Zjc3SWQyV2lFZDhoc0NyNWlUalJvUDBWQi8zc0Y3QzYxdUtMVmdDR0RySDBB?=
+ =?utf-8?B?RDd2Q3EvdjFUdENnZmdlUXordE9PbmY2Nk5CdThvNkRmaDJqcllUc0hCTTdx?=
+ =?utf-8?B?bUcvQ2NzRXdMSWExUElCRVJ5S3ZUSXBTV1RmM3crVHQxbnppVlVsWU56YURE?=
+ =?utf-8?B?VU9aOFdObUZFcklyVWFKWHA0YjhpaFVEaHlUUjBleXJvTVkweGZmN3NJazNH?=
+ =?utf-8?B?Y1pvVGVEaC9ycDZ4bGt2cWcrNUxzbHBZekdtRmxRZGJYUEhlNVVwbUVPbzUy?=
+ =?utf-8?B?dFluMkdYZlhJUzhVT01peDlocUhLY2pvZFFDYXBqUlRCcXBhWTU1ZFIxL3Nr?=
+ =?utf-8?B?a3IzQU9zNUxwRVhaczd2TE5nMnFtRThLYUc2U05lMDNzSXdkZ1BUcUdia202?=
+ =?utf-8?B?YlZqbnRPYjVJc2NlazcvYUtqUXo1UWFJQUEwRFYzMGtQc0h2aEZCZXZJOC95?=
+ =?utf-8?B?SWkzZTVDTWprT0NlcTM0VFRCOUlTVmpqQWJlbm54dzNaNnhFdTdPa1MvVE8w?=
+ =?utf-8?B?bHc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 58871cb4-1a22-4c03-7df5-08ddbfe0ab41
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2025 18:36:22.4733
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: K9x3a4tM+buI55NoR+Zj0d8iy8fBIKi5BOU1DLaqecoIDcA9indQTM5FnewsJA6KEjkgR5/jCRwrriIjn1kxLAQfYFbKYyOit7V6cZb6OvQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB5108
+X-OriginatorOrg: intel.com
 
-On 7/10/2025 4:36 AM, Dave Jiang wrote:
-> The current implementation enumerates the dports during the cxl_port
-> driver probe. Without an endpoint connected, the dport may not be
-> active during port probe. This scheme may prevent a valid hardware
-> dport id to be retrieved and MMIO registers to be read when an endpoint
-> is hot-plugged. Move the dport allocation and setup to behind memdev
-> probe so the endpoint is guaranteed to be connected.
->
-> In the original enumeration behavior, there are 3 phases (or 2 if no CXL
-> switches) for port creation. cxl_acpi() creates a Root Port (RP) from the
-> ACPI0017.N device. Through that it enumerate downstream ports composed
-> of ACPI0016.N devices through add_host_bridge_dport(). Once done, it
-> use add_host_bridge_uport() to create the ports that enumerates the PCI
-> RPs as the dports of these ports. Every time a port is created, the port
-> driver is attached and drv->probe() is called and
-> devm_cxl_port_enumerate_dports() is envoked to enumerate and probe
-> the dports.
->
-> The second phase is if there are any CXL switches. When the pci endpoint
-> device driver (cxl_pci) calls probe, it will add a mem device and triggers
-> the cxl_mem->probe(). cxl_mem->probe() calls devm_cxl_enumerate_ports()
-> and attempts to discovery and create all the ports represent CXL switches.
-> During this phase, a port is created per switch and the attached dports
-> are also enumerated and probed.
->
-> The last phase is creating endpoint port which happens for all endpoint
-> devices.
->
-> In this commit, the port create and its dport probing in cxl_acpi is not
-> changed. That will be handled in a different patch later on. The behavior
-> change is only for CXL switch ports. Only the dport that is part of the
-> path for an endpoint device to the RP will be probed. This happens
-> naturally by the code walking up the device hierarchy and identifying the
-> upstream device and the downstream device.
->
-> There are two points where the interception of dport creation happens
-> during the devm_cxl_enumerate_ports() path. The first location is right
-> before the function calls add_port_attach_ep() where it does the dport
-> allocation for the RP. Once the dport is allocated, the iteration path
-> is reset to the beginning to try again. The second location happens
-> in add_port_attach_ep() after the location where either the port is
-> discovered or allocated new if it does not exist.
->
-> Locking of port device during __cxl_port_add_dport() protects modifications
-> against the port and its dports while multiple endpoints can be probing at
-> the same time and the same port is being modified concurrently.
->
-> While the decoders are allocated during the port driver probe,
-> The decoders must also be updated since previously it's all done when all
-> the dports are setup and now every time a dport is setup per endpoint, the
-> switch target listing need to be updated with new dport. A
-> guard(rwsem_write) is used to update decoder targets. This is similar to
-> when decoder_populate_target() is called and the decoder programming
-> must be protected.
->
-> Link: https://lore.kernel.org/linux-cxl/20250305100123.3077031-1-rrichter@amd.com/
-> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> ---
-> v6:
-> - Return -EEXIST when dport is already established. (Jonathan)
-> - Check !pport instead of !port. (Ming)
-> - branch devm_cxl_add_dport_by_uport() vs add_port_attach_ep(). (Ming)
-> ---
->  drivers/cxl/core/core.h |   2 +
->  drivers/cxl/core/pci.c  |  88 ++++++++++++++++++
->  drivers/cxl/core/port.c | 193 ++++++++++++++++++++++++++++++++++++----
->  drivers/cxl/cxl.h       |   5 ++
->  drivers/cxl/port.c      |   8 +-
->  5 files changed, 275 insertions(+), 21 deletions(-)
->
-> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> index 29b61828a847..8cfead6f3b08 100644
-> --- a/drivers/cxl/core/core.h
-> +++ b/drivers/cxl/core/core.h
-> @@ -122,6 +122,8 @@ void cxl_ras_exit(void);
->  int cxl_gpf_port_setup(struct cxl_dport *dport);
->  int cxl_acpi_get_extended_linear_cache_size(struct resource *backing_res,
->  					    int nid, resource_size_t *size);
-> +struct cxl_dport *devm_cxl_add_dport_by_dev(struct cxl_port *port,
-> +					    struct device *dport_dev);
->  
->  #ifdef CONFIG_CXL_FEATURES
->  struct cxl_feat_entry *
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index b50551601c2e..336451b9144a 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -24,6 +24,44 @@ static unsigned short media_ready_timeout = 60;
->  module_param(media_ready_timeout, ushort, 0644);
->  MODULE_PARM_DESC(media_ready_timeout, "seconds to wait for media ready");
->  
-> +/**
-> + * devm_cxl_add_dport_by_dev - allocate a dport by dport device
-> + * @port: cxl_port that hosts the dport
-> + * @dport_dev: 'struct device' of the dport
-> + *
-> + * Returns the allocate dport on success or ERR_PTR() of -errno on error
-> + */
-> +struct cxl_dport *devm_cxl_add_dport_by_dev(struct cxl_port *port,
-> +					    struct device *dport_dev)
-> +{
-> +	struct cxl_register_map map;
-> +	struct pci_dev *pdev;
-> +	u32 lnkcap, port_num;
-> +	int type;
-> +	int rc;
-> +
-> +	if (!dev_is_pci(dport_dev))
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	device_lock_assert(&port->dev);
-> +
-> +	pdev = to_pci_dev(dport_dev);
-> +	type = pci_pcie_type(pdev);
-> +	if (type != PCI_EXP_TYPE_DOWNSTREAM && type != PCI_EXP_TYPE_ROOT_PORT)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	if (pci_read_config_dword(pdev, pci_pcie_cap(pdev) + PCI_EXP_LNKCAP,
-> +				  &lnkcap))
-> +		return ERR_PTR(-ENXIO);
-> +
-> +	rc = cxl_find_regblock(pdev, CXL_REGLOC_RBI_COMPONENT, &map);
-> +	if (rc)
-> +		dev_dbg(&port->dev, "failed to find component registers\n");
-> +
-> +	port_num = FIELD_GET(PCI_EXP_LNKCAP_PN, lnkcap);
-> +	return devm_cxl_add_dport(port, &pdev->dev, port_num, map.resource);
-> +}
-> +
->  struct cxl_walk_context {
->  	struct pci_bus *bus;
->  	struct cxl_port *port;
-> @@ -1169,3 +1207,53 @@ int cxl_gpf_port_setup(struct cxl_dport *dport)
->  
->  	return 0;
->  }
-> +
-> +static int match_dport(struct pci_dev *pdev, void *data)
-> +{
-> +	struct cxl_walk_context *ctx = data;
-> +	int type = pci_pcie_type(pdev);
-> +
-> +	if (pdev->bus != ctx->bus)
-> +		return 0;
-> +	if (!pci_is_pcie(pdev))
-> +		return 0;
-> +	if (type != ctx->type)
-> +		return 0;
-> +
-> +	ctx->count++;
-> +	return 0;
-> +}
-> +
-> +int cxl_port_update_total_dports(struct cxl_port *port)
-> +{
-> +	struct pci_bus *bus = cxl_port_to_pci_bus(port);
-> +	struct cxl_walk_context ctx;
-> +	int type;
-> +
-> +	if (!bus) {
-> +		dev_err(&port->dev, "No PCI bus found for port %s\n",
-> +			dev_name(&port->dev));
-> +		return -ENXIO;
-> +	}
-> +
-> +	if (pci_is_root_bus(bus))
-> +		type = PCI_EXP_TYPE_ROOT_PORT;
-> +	else
-> +		type = PCI_EXP_TYPE_DOWNSTREAM;
-> +
-> +	ctx = (struct cxl_walk_context) {
-> +		.bus = bus,
-> +		.type = type,
-> +	};
-> +	pci_walk_bus(bus, match_dport, &ctx);
-> +
-> +	port->total_dports = ctx.count;
-> +	if (port->total_dports == 0) {
-> +		dev_warn(&port->dev, "No dports found for port %s on bus %s\n",
-> +			 dev_name(&port->dev), bus->name);
-> +		return -ENXIO;
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_port_update_total_dports, "CXL");
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index 9691da831224..ae3e66b914eb 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -1551,6 +1551,116 @@ static resource_size_t find_component_registers(struct device *dev)
->  	return map.resource;
->  }
->  
-> +static int match_port_by_uport(struct device *dev, const void *data)
-> +{
-> +	const struct device *uport_dev = data;
-> +	struct cxl_port *port;
-> +
-> +	if (!is_cxl_port(dev))
-> +		return 0;
-> +
-> +	port = to_cxl_port(dev);
-> +	return uport_dev == port->uport_dev;
-> +}
-> +
-> +/*
-> + * Function takes a device reference on the port device. Caller should do a
-> + * put_device() when done.
-> + */
-> +static struct cxl_port *find_cxl_port_by_uport(struct device *uport_dev)
-> +{
-> +	struct device *dev;
-> +
-> +	dev = bus_find_device(&cxl_bus_type, NULL, uport_dev, match_port_by_uport);
-> +	if (dev)
-> +		return to_cxl_port(dev);
-> +	return NULL;
-> +}
-> +
-> +static int update_switch_decoder(struct device *dev, void *data)
-> +{
-> +	struct cxl_dport *dport = data;
-> +	struct cxl_switch_decoder *cxlsd;
-> +	struct cxl_decoder *cxld;
-> +	int i;
-> +
-> +	if (!is_switch_decoder(dev))
-> +		return 0;
-> +
-> +	cxlsd = to_cxl_switch_decoder(dev);
-> +	cxld = &cxlsd->cxld;
-> +	guard(rwsem_write)(&cxl_region_rwsem);
-> +	for (i = 0; i < cxld->interleave_ways; i++) {
-> +		if (cxlsd->target_map[i] == dport->port_id) {
-> +			cxlsd->target[i] = dport;
-> +			return 0;
-> +		}
-> +	}
-> +
-> +	dev_dbg(dev, "Updating decoder target_map with %s and none found\n",
-> +		dev_name(dport->dport_dev));
-> +
-> +	return 0;
-> +}
-> +
-> +static int update_decoders_with_dport(struct cxl_port *port, struct cxl_dport *dport)
-> +{
-> +	device_lock_assert(&port->dev);
-> +	return device_for_each_child(&port->dev, dport, update_switch_decoder);
-> +}
-> +
-> +static int cxl_port_setup_with_dport(struct cxl_port *port,
-> +				     struct cxl_dport *dport)
-> +{
-> +	device_lock_assert(&port->dev);
-> +
-> +	cxl_switch_parse_cdat(port);
-> +
-> +	return update_decoders_with_dport(port, dport);
-> +}
-> +
-> +static struct cxl_dport *devm_cxl_port_add_dport(struct cxl_port *port,
-> +						 struct device *dport_dev)
-> +{
-> +	struct cxl_dport *dport;
-> +	int rc;
-> +
-> +	device_lock_assert(&port->dev);
-> +
-> +	/* Port driver not attached yet, wait for cxl_acpi reprobe */
-> +	if (!port->dev.driver)
-> +		return ERR_PTR(-ENODEV);
-> +
-> +	dport = cxl_find_dport_by_dev(port, dport_dev);
-> +	if (dport)
-> +		return ERR_PTR(-EEXIST);
+Peter Zijlstra wrote:
+> On Wed, Jul 09, 2025 at 10:32:16PM -0700, dan.j.williams@intel.com wrote:
+> 
+> > Theoretically there could be a threshold at which a CLFLUSHOPT loop is a
+> > better option, but I would rather it be the case* that software CXL
+> > cache management is stop-gap for early generation CXL platforms.
+> 
+> So isn't the problem that CLFLUSH and friends take a linear address
+> rather than a physical address? I suppose we can use our 1:1 mapping in
+> this case, is all of CXL in the 1:1 map?
 
-I noticed that Jonathan mentioned here should return -EEXIST, but seems like returnning the found dport is better, because we don't need to check for PTR_ERR(dport) == -EEXIST case. See below comments.
+Currently CXL on the unplug path does:
 
-> +
-> +	dport = devm_cxl_add_dport_by_dev(port, dport_dev);
-> +	if (IS_ERR(dport))
-> +		return dport;
-> +
-> +	rc = cxl_port_setup_with_dport(port, dport);
-> +	if (rc) {
-> +		reap_dport(port, dport);
-> +		return ERR_PTR(rc);
-> +	}
-> +
-> +	return dport;
-> +}
-> +
-> +static struct cxl_dport *devm_cxl_add_dport_by_uport(struct device *uport_dev,
-> +						     struct device *dport_dev)
-> +{
-> +	struct cxl_port *port __free(put_cxl_port) =
-> +		find_cxl_port_by_uport(uport_dev);
-> +
-> +	if (!port)
-> +		return ERR_PTR(-ENODEV);
-> +
-> +	guard(device)(&port->dev);
-> +	return devm_cxl_port_add_dport(port, dport_dev);
-> +}
-> +
->  static int add_port_attach_ep(struct cxl_memdev *cxlmd,
->  			      struct device *uport_dev,
->  			      struct device *dport_dev)
-> @@ -1584,6 +1694,8 @@ static int add_port_attach_ep(struct cxl_memdev *cxlmd,
->  	 */
->  	struct cxl_port *port __free(put_cxl_port) = NULL;
->  	scoped_guard(device, &parent_port->dev) {
-> +		struct cxl_dport *new_dport;
-> +
->  		if (!parent_port->dev.driver) {
->  			dev_warn(&cxlmd->dev,
->  				 "port %s:%s disabled, failed to enumerate CXL.mem\n",
-> @@ -1592,6 +1704,8 @@ static int add_port_attach_ep(struct cxl_memdev *cxlmd,
->  		}
->  
->  		port = find_cxl_port_at(parent_port, dport_dev, &dport);
-> +		if (!port)
-> +			port = find_cxl_port_by_uport(uport_dev);
->  		if (!port) {
->  			component_reg_phys = find_component_registers(uport_dev);
->  			port = devm_cxl_add_port(&parent_port->dev, uport_dev,
-> @@ -1599,11 +1713,27 @@ static int add_port_attach_ep(struct cxl_memdev *cxlmd,
->  			if (IS_ERR(port))
->  				return PTR_ERR(port);
->  
-> -			/* retry find to pick up the new dport information */
-> -			port = find_cxl_port_at(parent_port, dport_dev, &dport);
-> -			if (!port)
-> -				return -ENXIO;
-> +			/*
-> +			 * The port holds a device reference via find_cxl_port_at()
-> +			 * if the port is valid. But if the port is newly created
-> +			 * via devm_cxl_add_port(), no reference is held. Therefore
-> +			 * the driver needs to get a device reference here.
-> +			 */
-> +			get_device(&port->dev);
->  		}
-> +
-> +		guard(device)(&port->dev);
-> +		new_dport = devm_cxl_port_add_dport(port, dport_dev);
-> +		if (IS_ERR(new_dport)) {
-> +			if (PTR_ERR(new_dport) != -EEXIST)
-> +				return PTR_ERR(new_dport);
-> +
-> +			new_dport = cxl_find_dport_by_dev(port, dport_dev);
-> +			if (!new_dport)
-> +				return -ENODEV;
-> +		}
+arch_remove_memory() /* drop direct map */
+cxl_region_invalidate_memregion() /* wbinvd_on_all_cpus() */
+cxl_region_decode_reset() /* physically unmap memory */
 
-here can be
+...and on the plug path:
+cxl_region_decode_commit() /* physically map memory */.
+cxl_region_invalidate_memregion() /* wbinvd_on_all_cpus() */
+arch_add_memory() /* setup direct map */
 
-    if (IS_ERR(new_dport))
+Moving this to virtual address based flushing would need some callbacks
+from the memory_hotplug code to run flushes for memory spaces that are
+being physically reconfigured.
 
-        return PTR_ERR(new_dport);
+...unplug:
 
-> +
-> +		dport = new_dport;
->  	}
->  
->  	dev_dbg(&cxlmd->dev, "add to new port %s:%s\n",
-> @@ -1620,11 +1750,14 @@ static int add_port_attach_ep(struct cxl_memdev *cxlmd,
->  	return rc;
->  }
->  
-> +#define CXL_ITER_LEVEL_SWITCH	1
-> +
->  int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
->  {
->  	struct device *dev = &cxlmd->dev;
-> +	struct device *dgparent;
->  	struct device *iter;
-> -	int rc;
-> +	int rc, i;
->  
->  	/*
->  	 * Skip intermediate port enumeration in the RCH case, there
-> @@ -1643,7 +1776,7 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
->  	 * attempt fails.
->  	 */
->  retry:
-> -	for (iter = dev; iter; iter = grandparent(iter)) {
-> +	for (i = 0, iter = dev; iter; i++, iter = grandparent(iter)) {
->  		struct device *dport_dev = grandparent(iter);
->  		struct device *uport_dev;
->  		struct cxl_dport *dport;
-> @@ -1686,16 +1819,41 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
->  			if (!dev_is_cxl_root_child(&port->dev))
->  				continue;
->  
-> +			/*
-> +			 * This is a corner case where the rootport is setup but
-> +			 * the switch dport is not. It needs to go back to the
-> +			 * beginning to setup the switch port.
-> +			 */
-> +			if (i >= CXL_ITER_LEVEL_SWITCH) {
-> +				struct cxl_port *pport __free(put_cxl_port) =
-> +					cxl_mem_find_port(cxlmd, &dport);
-> +				if (!pport)
-> +					goto retry;
-> +			}
-> +
->  			return 0;
->  		}
->  
-> -		rc = add_port_attach_ep(cxlmd, uport_dev, dport_dev);
-> -		/* port missing, try to add parent */
-> -		if (rc == -EAGAIN)
-> -			continue;
-> -		/* failed to add ep or port */
-> -		if (rc)
-> -			return rc;
-> +		dgparent = grandparent(dport_dev);
-> +		/* Only go down this path if we are at the root port */
-> +		if (is_cxl_hierarchy_head(dgparent)) {
-> +			dport = devm_cxl_add_dport_by_uport(uport_dev,
-> +							    dport_dev);
-> +			/* Added a dport, restart enumeration */
-> +			if (!IS_ERR(dport) || PTR_ERR(dport) == -EEXIST)
-> +				goto retry;
-> +			if (IS_ERR(dport))
-> +				return PTR_ERR(dport);
+arch_remove_memory()
+    clwb_on_all_cpus_before_unmap()
+cxl_region_decode_reset()
 
-Same as above, and we don't need this "goto retry", because we can reuse below "goto retry".
+...plug:
 
-I haven't fully understood this patch, so please correct me if I am wrong. Thanks.
+cxl_region_decode_commit()
+arch_add_memory()
+    clflushopt_on_all_cpus_before_use()
 
-> +		} else {
-> +			rc = add_port_attach_ep(cxlmd, uport_dev, dport_dev);
-> +			/* port missing, try to add parent */
-> +			if (rc == -EAGAIN)
-> +				continue;
-> +			/* failed to add ep or port */
-> +			if (rc)
-> +				return rc;
-> +		}
-> +
->  		/* port added, new descendants possible, start over */
->  		goto retry;
->  	}
-> @@ -1727,16 +1885,19 @@ static int decoder_populate_targets(struct cxl_switch_decoder *cxlsd,
+However, this raises a question in my mind. Should not all memory
+hotplug drivers in the kernel be doing cache management when the
+physical contents of a memory range may have changed behind a CPUs back?
 
-[snip]
+Unless I am missing something it looks like the ACPI memory hotplug
+driver, for example, has never considered that an unplug/replug event
+may leave stale data in the CPU cache.
 
-
-Ming
-
+I note drm_clflush_pages() is existing infrastructure and perhaps CXL
+should uplevel/unify on that common helper?
