@@ -1,80 +1,153 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4924324501E;
-	Thu, 10 Jul 2025 10:59:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 731F72E2F16
+	for <linux-cxl@vger.kernel.org>; Thu, 10 Jul 2025 11:00:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752145191; cv=none; b=Ac5u6BWgKfhNj5NY0XZFgSbVRpdYJMyt6GlByHjznv+K/huIx3IH6VS2eml3gWCONT/P7al7onY4t/9TM7sOtkH+xRj+SugfVyWfhz3kKrU58XT2jiRHiCEs1WfUvDMKRcBmyRn8x6LH7IfXKqqzItEU4NSQXSXn5Dbx/pscGRU=
+	t=1752145206; cv=none; b=E7R50MME8aW51i3fLX+SoPyIRnqwtgRZl/tZkAf+z9Dl8o4eCpsA5Yc/gn5i6E3z1xxGB6fuuDx8/t5rHUhoIsJRKW9FTpFzVhxFM1nRiIYdh2CnHVybh4GRVHk+BOF3/G8koj8ut0ymXwI0zEGVDG7NfkFsqmebGyBmbp+pOH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752145191; c=relaxed/simple;
-	bh=VmWjPE7D3mF+0RXhrRJoYzPbnQ2jl43nEJ1OVAPJTsw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ey4UyviAyy8LvLED+2kRO8tX1m1q0alAYHpMuOMyXPm2r6o2VJljC3oysmJPC/s96u/TEPSb1ofHPDnND8HQJ0AJJJ1VLMqWNzE4zN3pzvenw5AS5pFcXGbajOlioVXZh0+H05MuuKXzaGDzgIZ8+xYB0cpzIgogpijtO5z7XgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=QSvH7+i+; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1752145206; c=relaxed/simple;
+	bh=4DFOJCCsvI24QKbrJDm/aFnyarYSoJI2WT5J2wb9AVM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=RmcinWWqwj4+tbN74wXhFajQACH4rHcgX5wj4+DidMEwnb3mArWAbJYbLuPXK4YppyANH00p7m8lJoq6VXYkqmG0EIe4t4su+BrFZu3+JQ2ZLFYx8y6qWc9GQ7LvBHQBJD3yPYkcwSfIeQNhaRsmetvqhTBL5oK8iijg14VSeFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JTkO1R1x; arc=none smtp.client-ip=91.218.175.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QSvH7+i+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=VmWjPE7D3mF+0RXhrRJoYzPbnQ2jl43nEJ1OVAPJTsw=; b=QSvH7+i+KZyp2mLIqa9KeKnzA4
-	mJZ92k/0ULwFm/FdAzd4OQ3kGLbT0N5z9IOFdfb9jDjc/Tyi/6I1b24P4ErNTGMH4peSvitmNgLv/
-	iAcAM5G4NdfT21r/fGCTBE9Zn8z6C8lHYGQhaXZbBJ7vlSb/IJ+cf6ARfwEf1uL1jCFvyrF+7aI1W
-	1ASrbFUkb+lhPEF7+h8H7rRYkJLimKy+6euvBLC0qPcpwCx/8TeuPGM07wua5kn/6thpPpJN5nHM9
-	5OhgqFrBqPla0VazZTb5egiyT7OJPMta1+Ywk0ly/YJ4Dk7Gn0aFiM0VeCLzD3opdK5OLJSTwPou5
-	iYhkkGMw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uZozk-00000009067-2kW4;
-	Thu, 10 Jul 2025 10:59:17 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 6A644300125; Thu, 10 Jul 2025 12:59:13 +0200 (CEST)
-Date: Thu, 10 Jul 2025 12:59:13 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: dan.j.williams@intel.com
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, linuxarm@huawei.com,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Catalin Marinas <catalin.marinas@arm.com>, james.morse@arm.com,
-	linux-cxl@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-mm@kvack.org, gregkh@linuxfoundation.org,
-	Will Deacon <will@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
-	Yicong Yang <yangyicong@huawei.com>,
-	Yushan Wang <wangyushan12@huawei.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	x86@kernel.org, Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH v2 0/8] Cache coherency management subsystem
-Message-ID: <20250710105913.GB542000@noisy.programming.kicks-ass.net>
-References: <20250624154805.66985-1-Jonathan.Cameron@huawei.com>
- <20250625085204.GC1613200@noisy.programming.kicks-ass.net>
- <FB7122A4-BF5E-4C05-805A-2EE3240286A1@zytor.com>
- <20250625093152.GZ1613376@noisy.programming.kicks-ass.net>
- <20250625180343.000020de@huawei.com>
- <20250626105530.000010be@huawei.com>
- <686f506020726_1d3d10069@dwillia2-xfh.jf.intel.com.notmuch>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JTkO1R1x"
+Message-ID: <41d1245c-8a7f-4c5a-ba84-8e7e33b896b2@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1752145191;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KtJpoUInX8ucjkyFAiUJkj/ubfAu8PdaUF9qEnnOSvU=;
+	b=JTkO1R1xjDfTuBgYIJDFm3myKaXQxfj7KA99JQhTwFwRfJfdlMfVqNb/32AJd5hVEQc+/y
+	ikDzG1CMPk+cf8GKLXp/oLnpGKCdp7YDNo5FxvVniKBGn3a8Zm+sh5S0I4Llam3Gk8JIy6
+	rXWG6A9C3kEzH2Wcxqp1WgkQkckbLIs=
+Date: Thu, 10 Jul 2025 18:59:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <686f506020726_1d3d10069@dwillia2-xfh.jf.intel.com.notmuch>
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v2_00/11=5D_dm-pcache_=E2=80=93_persistent?=
+ =?UTF-8?Q?-memory_cache_for_block_devices?=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Dongsheng Yang <dongsheng.yang@linux.dev>
+To: Mikulas Patocka <mpatocka@redhat.com>
+Cc: agk@redhat.com, snitzer@kernel.org, axboe@kernel.dk, hch@lst.de,
+ dan.j.williams@intel.com, Jonathan.Cameron@Huawei.com,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev, dm-devel@lists.linux.dev
+References: <20250707065809.437589-1-dongsheng.yang@linux.dev>
+ <85b5cb31-b272-305f-8910-c31152485ecf@redhat.com>
+ <e50ef45e-4c1a-4874-8d5f-9ca86f9a532c@linux.dev>
+In-Reply-To: <e50ef45e-4c1a-4874-8d5f-9ca86f9a532c@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Jul 09, 2025 at 10:32:16PM -0700, dan.j.williams@intel.com wrote:
 
-> Theoretically there could be a threshold at which a CLFLUSHOPT loop is a
-> better option, but I would rather it be the case* that software CXL
-> cache management is stop-gap for early generation CXL platforms.
+在 7/9/2025 5:45 PM, Dongsheng Yang 写道:
+>
+> 在 7/8/2025 4:16 AM, Mikulas Patocka 写道:
+>>
+>> On Mon, 7 Jul 2025, Dongsheng Yang wrote:
+>>
+>>> Hi Mikulas,
+>>>     This is V2 for dm-pcache, please take a look.
+>>>
+>>> Code:
+>>>      https://github.com/DataTravelGuide/linux tags/pcache_v2
+>>>
+>>> Changelogs
+>>>
+>>> V2 from V1:
+>>>     - introduce req_alloc() and req_init() in backing_dev.c, then we
+>>>       can do req_alloc() before holding spinlock and do req_init()
+>>>       in subtree_walk().
+>>>     - introduce pre_alloc_key and pre_alloc_req in walk_ctx, that
+>>>       means we can pre-allocate cache_key or backing_dev_request
+>>>       before subtree walking.
+>>>     - use mempool_alloc() with NOIO for the allocation of cache_key
+>>>       and backing_dev_req.
+>>>     - some coding style changes from comments of Jonathan.
+>> Hi
+>>
+>> mempool_alloc with GFP_NOIO never fails - so you don't have to check the
+>> returned value for NULL and propagate the error upwards.
+>
+>
+> Hi Mikulas:
+>
+>    I noticed that the implementation of mempool_alloc—it waits for 5 
+> seconds and retries when allocation fails.
+>
+> With this in mind, I propose that we handle -ENOMEM inside defer_req() 
+> using a similar mechanism. something like this commit:
+>
+>
+> https://github.com/DataTravelGuide/linux/commit/e6fc2e5012b1fe2312ed7dd02d6fbc2d038962c0 
+>
+>
+>
+> Here are two key reasons why:
+>
+> (1) If we manage -ENOMEM in defer_req(), we don’t need to modify every 
+> lower-level allocation to use mempool to avoid failures—for example,
+>
+> cache_key, backing_req, and the kmem.bvecs you mentioned. More 
+> importantly, there’s no easy way to prevent allocation failure in some 
+> places—for instance, bio_init_clone() could still return -ENOMEM.
+>
+> (2) If we use a mempool, it will block and wait indefinitely when 
+> memory is unavailable, preventing the process from exiting.
+>
+> But with defer_req(), the user can still manually stop the pcache 
+> device using dmsetup remove, releasing some memory if user want.
+>
+>
+> What do you think?
 
-So isn't the problem that CLFLUSH and friends take a linear address
-rather than a physical address? I suppose we can use our 1:1 mapping in
-this case, is all of CXL in the 1:1 map?
+
+BTW, I added a test case for NOMEM scenario by using failslab:
+
+
+https://github.com/DataTravelGuide/dtg-tests/blob/main/pcache.py.data/pcache_failslab.sh
+
+>
+> Thanx
+>
+> Dongsheng
+>
+>>
+>> "backing_req->kmem.bvecs = kmalloc_array(n_vecs, sizeof(struct bio_vec),
+>> GFP_NOIO)" - this call may fail and you should handle the error 
+>> gracefully
+>> (i.e. don't end the bio with an error). Would it be possible to trim the
+>> request to BACKING_DEV_REQ_INLINE_BVECS vectors and retry it?
+>> Alternativelly, you can create a mempool for the largest possible n_vecs
+>> and allocate from this mempool if kmalloc_array fails.
+>>
+>> I'm sending two patches for dm-pcache - the first patch adds the include
+>> file linux/bitfield.h - it is needed in my config. The second patch 
+>> makes
+>> slab caches per-module rather than per-device, if you have them
+>> per-device, there are warnings about duplicate cache names.
+>>
+>>
+>> BTW. What kind of persistent memory do you use? (afaik Intel killed the
+>> Optane products and I don't know of any replacement)
+>>
+>> Some times ago I created a filesystem for persistent memory - see
+>> git://leontynka.twibright.com/nvfs.git - I'd be interested if you can 
+>> test
+>> it on your persistent memory implementation.
+>>
+>> Mikulas
+>>
+>
