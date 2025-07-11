@@ -1,41 +1,41 @@
 Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77E698472;
-	Fri, 11 Jul 2025 03:25:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C2F19D8BC;
+	Fri, 11 Jul 2025 03:25:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752204318; cv=pass; b=Uek3qryoOxXFXu4Qh9OJ4vPObz28ZQBscrMtr+UEbHUjXcmK8szfYVp2FrL242Uvq54BEthHxJkrbcydA0QiTybupOI3PxMIvL6s+OYsVYCUNYGoWck84PDkPGjDJkWxCjr1/zD3k1qmdmGFjwRw86uHUPlz7C6vKtldrElVINQ=
+	t=1752204326; cv=pass; b=BUnbfQmp4/kSoaEnbA+adTktH1jvAxFecbmdOFPKxGAyauhfY91AY1p1L10Y101yMNFcgEqyUnsJEW0uiMmtF4wbWSuub7MmGurBU4iqXFRRkg/BN9Dl9Pazd6731BrVEqFKg4OMkXP9YIlfN7Ph3tHX3dV8wGNFuScUDzp10yc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752204318; c=relaxed/simple;
-	bh=hPdyobvwyLBaF4atMNDrLur5eZqNFFdnHhYwYAdlyFA=;
+	s=arc-20240116; t=1752204326; c=relaxed/simple;
+	bh=31pTOJLQLLOmM0kNLmYxRxIziNDgSTDkkEGFdzrDSqs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=udbT9xYp3uuwmcLcznbXN8bv2K70FloEvFP1cpFb3xN6uee9Tgu5x9Nhp1UQzi//VZJcBNihusn7X84e1MVDqXkKcjv/7Jvz700lxEdI1TCLlRqibOsIUmuCV4YiWIs6opNjvnpKGqtRQJSrpcsdWln3cNkWtBW7JAF9gN5cNgY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=DSsEfRUH; arc=pass smtp.client-ip=136.143.188.94
+	 MIME-Version; b=eJvOd//6GWDkH8SxgNuV7sLM9rKAIlkMScP9wSrfgTvXMYhgcwbhoOLa8DuEuC4RdtbwyglIow+E61WwPKVi3FDH3IY5lUT8x71cn05/wINdeceqXe4DsYpxF93X1TRWMYpGeDRHbdwpJLm1x8yLL/jVQZ1Kk9pYIk8caER5ohE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=bfsdAVkc; arc=pass smtp.client-ip=136.143.188.94
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="DSsEfRUH"
-ARC-Seal: i=1; a=rsa-sha256; t=1752204288; cv=none; 
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="bfsdAVkc"
+ARC-Seal: i=1; a=rsa-sha256; t=1752204298; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=hYbKNTAOUxsyFCGz8/Ob+RRFR/GkmB+HH9oBX+EIWldBUdfsjUL3U4RqG8X6EpHZqak5jyWCybZJD9soPg7IJ+K8dQqLLwhrStnZ9ercZU5A7VEwlabiAtV66dtNoMEKZTsKYYefOfoyvpvQIM5cSWoG871GgfiUPhCdskfwvgk=
+	b=WUXIxT0ZxyfnfANfhfZtqyIA/PdKg3qsi38/tW81BwxTn4FzKHG8ubEuoiW8WpKnXJagF5l1CFold6DVfDc67z+1Es8j+p3Bc7FfhyRClCRAyOYJJwJWOe/FdXIMpv7Rr3gM1WI+FRdXQKuSloaPDTSGG5tfpyKu4zlnmfsWbFk=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1752204288; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Gi3LYrc1vcSogdA2lbiuXDmZmZes03z4ws13HmDuuEg=; 
-	b=NeU480YsjM+O2AZOeu7u/KHQWu8wPwDnlu5iEfi0xcy6zOhKCDaHWFoORFOAf3ncKD6wB1xXrG1XNCFS0rIYcRtdAzuW8pjhrVbikZDjUmN+sN/wSgF6dUdryChtqs822z2eeNaSxkAGykqbqI3fqbSITBL+poNY8/8YEYi4IUg=
+	t=1752204298; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=p9Wu2W086XENViu8Ob6/rPvkHD6HmlkgETjz3STunhU=; 
+	b=GLJ3NjVcvReIA9j6XzHL+hBTqCeHF31hfE5NNSEAZACL8AwhkyMiTJgOk3lcRc5KiN+Cu8Efa5cGFJ92uPRLiKZEe4CT2nTxEnJ1FmfsLE4iquzNfTArlSNuhrBZyqLALb82PNbNeHsftByLQ6Uw1AfFHXEnwzlrFIXxBKdEJDE=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=zohomail.com;
 	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
 	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1752204288;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1752204298;
 	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
 	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
-	bh=Gi3LYrc1vcSogdA2lbiuXDmZmZes03z4ws13HmDuuEg=;
-	b=DSsEfRUHZbFXGGqBoiml6yleAhnPhJTjMO6eGDfz++3ent68bCUnK/LCK583Q65w
-	gA4VchVtH7P5j5eDfMm2D5MabARC1d4AooXaBDma4WxVrvX1nS3NjUEe3qX67v4Ewmq
-	XpElnIMH1h/2ky830PyjqBVnnhxxk8AkZenI2KPM=
-Received: by mx.zohomail.com with SMTPS id 1752204286100544.9616229614193;
-	Thu, 10 Jul 2025 20:24:46 -0700 (PDT)
+	bh=p9Wu2W086XENViu8Ob6/rPvkHD6HmlkgETjz3STunhU=;
+	b=bfsdAVkcdQwBTUIJKaexy3jHolS3kFjUTf3LZczgW47d39GFHjmMcWCsTgk6SQuW
+	fFKVVMNQ6jf5tAegNY2gRe9qGkJzvLm0H4xCIhJuSHhCubelQc1QCnf7NWAzsBk3Dyd
+	i74ceotiGqiriJ51aOMk8405rYlEjtQbwiGiYVx4=
+Received: by mx.zohomail.com with SMTPS id 1752204297070721.0108485733183;
+	Thu, 10 Jul 2025 20:24:57 -0700 (PDT)
 From: Li Ming <ming.li@zohomail.com>
 To: dave@stgolabs.net,
 	jonathan.cameron@huawei.com,
@@ -49,9 +49,9 @@ Cc: andriy.shevchenko@linux.intel.com,
 	linux-cxl@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Li Ming <ming.li@zohomail.com>
-Subject: [PATCH v6 2/3] cxl/edac: Fix wrong dpa checking for PPR operation
-Date: Fri, 11 Jul 2025 11:23:56 +0800
-Message-Id: <20250711032357.127355-3-ming.li@zohomail.com>
+Subject: [PATCH v6 3/3] cxl/core: Using cxl_resource_contains_addr() to check address availability
+Date: Fri, 11 Jul 2025 11:23:57 +0800
+Message-Id: <20250711032357.127355-4-ming.li@zohomail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250711032357.127355-1-ming.li@zohomail.com>
 References: <20250711032357.127355-1-ming.li@zohomail.com>
@@ -62,44 +62,88 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Feedback-ID: rr080112276e19b4fecd7fbedaf7c025210000f7acb665bc40cecb593781771c3619e9238656c56f4e4d769e:zu080112271ac7f47b191707d7eb89d08100004f731af18c4ec8eb92c950ceb8d92747bba30a80d723f93034:rf0801122dd64606021eb32289625f82540000ae884fbbf4bdad1321d43f5c1a17f6dbd6fa4aa51c10c036bf16ce2d5fa934:ZohoMail
+Feedback-ID: rr08011227f160a3f15b2b04b89b643c9a0000ba266fcdbf5c5af6ffbb17f8dc88816b4609c684a359785428:zu0801122722be90c47bdf865315766cd600008e73436b0a73aad926484da3998b3fe68944f3a5ce33c33893:rf0801122d7d9758514843f8622e01fea70000ba8ef4ec923a323c85be40b85a3d24e67c3d81044177dfee92511f125469fb:ZohoMail
 X-ZohoMailClient: External
 
-Per Table 8-143. "Get Partition Info Output Payload" in CXL r3.2 section
-8.2.10.9.2.1 "Get Partition Info(Opcode 4100h)", DPA 0 is a valid
-address of a CXL device. However, cxl_do_ppr() considers it as an
-invalid address, so that user will get an -EINVAL when user calls the
-sysfs interface of the edac driver to trigger a Post Package Repair(PPR)
-operation for DPA 0 on a CXL device. The correct implementation should
-be checking if the input DPA is in the DPA range of the CXL device.
+Helper function cxl_resource_contains_addr() can be used to check if a
+resource range contains an input address. Use it to replace all code
+that checks whether a resource range contains a DPA/HPA/SPA.
 
-Fixes: be9b359e056a ("cxl/edac: Add CXL memory device soft PPR control feature")
 Signed-off-by: Li Ming <ming.li@zohomail.com>
-Tested-by: Shiju Jose <shiju.jose@huawei.com>
-Reviewed-by: Shiju Jose <shiju.jose@huawei.com>
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 ---
- drivers/cxl/core/edac.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/cxl/core/edac.c   | 4 ++--
+ drivers/cxl/core/memdev.c | 2 +-
+ drivers/cxl/core/region.c | 6 +++---
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
-index 623aaa4439c4..991fa3e70522 100644
+index 991fa3e70522..714d79fb8fa0 100644
 --- a/drivers/cxl/core/edac.c
 +++ b/drivers/cxl/core/edac.c
-@@ -1923,8 +1923,11 @@ static int cxl_ppr_set_nibble_mask(struct device *dev, void *drv_data,
- static int cxl_do_ppr(struct device *dev, void *drv_data, u32 val)
- {
- 	struct cxl_ppr_context *cxl_ppr_ctx = drv_data;
-+	struct cxl_memdev *cxlmd = cxl_ppr_ctx->cxlmd;
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+@@ -1523,7 +1523,7 @@ static int cxl_mem_sparing_set_dpa(struct device *dev, void *drv_data, u64 dpa)
+ 	struct cxl_memdev *cxlmd = ctx->cxlmd;
+ 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
  
--	if (!cxl_ppr_ctx->dpa || val != EDAC_DO_MEM_REPAIR)
-+	if (val != EDAC_DO_MEM_REPAIR ||
-+	    !cxl_resource_contains_addr(&cxlds->dpa_res, cxl_ppr_ctx->dpa))
+-	if (dpa < cxlds->dpa_res.start || dpa > cxlds->dpa_res.end)
++	if (!cxl_resource_contains_addr(&cxlds->dpa_res, dpa))
  		return -EINVAL;
  
- 	return cxl_mem_perform_ppr(cxl_ppr_ctx);
+ 	ctx->dpa = dpa;
+@@ -1892,7 +1892,7 @@ static int cxl_ppr_set_dpa(struct device *dev, void *drv_data, u64 dpa)
+ 	struct cxl_memdev *cxlmd = cxl_ppr_ctx->cxlmd;
+ 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+ 
+-	if (dpa < cxlds->dpa_res.start || dpa > cxlds->dpa_res.end)
++	if (!cxl_resource_contains_addr(&cxlds->dpa_res, dpa))
+ 		return -EINVAL;
+ 
+ 	cxl_ppr_ctx->dpa = dpa;
+diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+index f88a13adf7fa..769bd9be8b94 100644
+--- a/drivers/cxl/core/memdev.c
++++ b/drivers/cxl/core/memdev.c
+@@ -267,7 +267,7 @@ static int cxl_validate_poison_dpa(struct cxl_memdev *cxlmd, u64 dpa)
+ 		dev_dbg(cxlds->dev, "device has no dpa resource\n");
+ 		return -EINVAL;
+ 	}
+-	if (dpa < cxlds->dpa_res.start || dpa > cxlds->dpa_res.end) {
++	if (!cxl_resource_contains_addr(&cxlds->dpa_res, dpa)) {
+ 		dev_dbg(cxlds->dev, "dpa:0x%llx not in resource:%pR\n",
+ 			dpa, &cxlds->dpa_res);
+ 		return -EINVAL;
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 6e5e1460068d..91ff3a495fbd 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -2847,7 +2847,7 @@ static int __cxl_dpa_to_region(struct device *dev, void *arg)
+ 	if (!cxled || !cxled->dpa_res || !resource_size(cxled->dpa_res))
+ 		return 0;
+ 
+-	if (dpa > cxled->dpa_res->end || dpa < cxled->dpa_res->start)
++	if (!cxl_resource_contains_addr(cxled->dpa_res, dpa))
+ 		return 0;
+ 
+ 	/*
+@@ -2959,7 +2959,7 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+ 	if (cxlrd->hpa_to_spa)
+ 		hpa = cxlrd->hpa_to_spa(cxlrd, hpa);
+ 
+-	if (hpa < p->res->start || hpa > p->res->end) {
++	if (!cxl_resource_contains_addr(p->res, hpa)) {
+ 		dev_dbg(&cxlr->dev,
+ 			"Addr trans fail: hpa 0x%llx not in region\n", hpa);
+ 		return ULLONG_MAX;
+@@ -3499,7 +3499,7 @@ u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint, u64 spa)
+ 	xa_for_each(&endpoint->regions, index, iter) {
+ 		struct cxl_region_params *p = &iter->region->params;
+ 
+-		if (p->res->start <= spa && spa <= p->res->end) {
++		if (cxl_resource_contains_addr(p->res, spa)) {
+ 			if (!p->cache_size)
+ 				return ~0ULL;
+ 
 -- 
 2.34.1
 
