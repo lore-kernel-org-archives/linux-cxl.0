@@ -1,391 +1,307 @@
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10BFE29B23E;
-	Fri, 11 Jul 2025 13:46:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18B372882B6
+	for <linux-cxl@vger.kernel.org>; Fri, 11 Jul 2025 14:58:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752241621; cv=none; b=exwsip2haQAZPHUC94wjM1ZVccYMA45tbMcA7UFMIPIXWh4ms5W6RDqFGl5cuZe6cM3sVJH/I7T2Q3nz4P6G5QtEDet2Gzcsy/JwE+jBOoQpeAhLiYKsC64DzmaYYueuF0rLPf55B+9wdyEqE0H6VbVThXmJnHLj3BNzELFSkN4=
+	t=1752245911; cv=none; b=DG/Bn5jU7/l19G+3Qqd+1wYtK4bhcnp7SUOGeLR4oXWTECMjgJ2Xee6H5nxuK6+ntM+NTWq0OHoAiu00l95ff9G1jbCt+VJddh5KdjAwJyBUUOSE3ADkwtxfOcL1H7g5f+jK2ArE9BHr5EtEE9q61QP1/+joGDfaGCRe1GxhM3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752241621; c=relaxed/simple;
-	bh=rU03N2HhMy2BaScWgGYe/Q97rekeyCC3P9NomOCiiJc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XrkfTxsIIWyFjGKNcqIVqgq8h6YZpHnJlK29dUl21mQHawQrvkvgOIM28ZD1S2TiemuOANnfW1sT1Q08sp+leNYTIngiNxCPK3vXXWUWyCjUfvwtXFIecGZpzUPPXBr8279hP9YRNuaQbrnMUUo14UdVGgyJJJXWFxYWNLVxSGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mf0OK7zo; arc=none smtp.client-ip=209.85.210.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1752245911; c=relaxed/simple;
+	bh=hD4JeQyqAwMIQCkTrX2G/BQwAmkntwT4vJ6Ld/2gNX4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QvcUbTx6+kMXzt7FO+TwbwdpUYtQFqZuYfd0YFEPgOlejoN1kceFcCX+rJ7+/jxgYJA3Q/h/wEdQRc3miGji8IGR1LKDz4KS7+0v3DuzdkjKzwMxeM3HLKL6Xyz43aduS576Hcx+JitnAndXou/4mpYc4f/FQ2Mu6bd6t8TKWds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y7Xh1UMq; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mf0OK7zo"
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-7387f21daadso1660208a34.0;
-        Fri, 11 Jul 2025 06:46:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752241618; x=1752846418; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/GPuleXeBHMAWgXuPdR3B4XK+IiQDyEEXPlfp+HEtyk=;
-        b=mf0OK7zo+DUa2gPjT3xfUUUvaTxejwdxCLJzDoeLhi4XKsmiMKC4t3n9GBuX7+08io
-         Jpv3QMltT4vKY3wsUkDW6AKE5LLEP+9W6hXXPaioRSoOCMERoEd6CMzQ50plPbxrnQVu
-         wRlXLSlX+CGwi3TiRQfLy/JINRya9Psvy5TBI8VmwEPNKheXcu7lW1BGi/6qugFP3xTF
-         uK0yhkKWnvkXIiOcs2rNk7RhLCln4RcMQJHpRlGL4gMLX7ya61VN+pZRkx+p7W3J1GcR
-         vAiOoNfZLUB7u4YzGNakXCBKIOf1XoJCLR7duqo3pCG5d9E6TYLfsDrooX6PuhzVDGcF
-         ugCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752241618; x=1752846418;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/GPuleXeBHMAWgXuPdR3B4XK+IiQDyEEXPlfp+HEtyk=;
-        b=P6awErtvFsqgGbwDQfaVG9o8pIEdTayFh3kgxbwIzV5Jo1l9RE45NNlrVjHpyrHHBt
-         7PxZUbJdBkRjsiUYDLXfwv0NoKK1ZHv5Gj+KHPwEod9rZC96EyQwh2xHUri3M0gVkIYQ
-         QRlO0Gaj+8kfWavm+8I2xAsaKbAVZsbqikR7b+N+OIhZeu7g4qxun1iYorrV/W3s9HFq
-         r7tJhSUoFVycYDu6X/PYoHjTdr6KKrpOXOVhvM/Yu2ZOpPjrP0YQODmXm76qdXsIaW1D
-         dDmXyhGGJpJm/6qN7L7R9F9qKsxre1Lob+oGCINJvffKTwGOHwFqVSr596kacbmTHEf3
-         3wfA==
-X-Forwarded-Encrypted: i=1; AJvYcCV1tGpkPNHWtmayi5boAcqzFld4yySRPwispnOwruTm6akCixLRGO8yoqOQR6WPGS2E+deEBxOM1PRhzhEbOg==@vger.kernel.org, AJvYcCVYr47vS8Oa6+ctBDKPFHF+ZqfDIU8fiOMONNcC5bCk7HTd7XruCiU3wwQSU+8jSBOWa0B6qNz/+3dJGpPH@vger.kernel.org, AJvYcCVp01YgQmSqzLFKdc9nEawX8QgQ0r2jC8CRYlWz4TviR4wUUkKLsMpva7SIoghiSEpu8nojCXsGj7Pq@vger.kernel.org, AJvYcCXAX0HufPGMuvo3JNaExYREELpaZBlUnxA2YxH6+FfpOJeddNMUhMp28ZTAXbtypKSbSk4rxvqXxAM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjH577CQOAqMs5bRik3bYB4P5e33jbNWJnbsxoD+HC4w6Bd4hk
-	U2XqYkCl3DnIgRD4RUy+DvaaGAImHJFJqJsaRrri7giCNUKh6Nrlkdbs
-X-Gm-Gg: ASbGncuIB7VOazDCPtkvvCRSsxFnxi9sYUrST+34UA5ohkUrWjHnWeueSh9x/kbtGme
-	0OWypMlEGgDxHiLchG/xM5EN67p81JfFgLmu/jukjzPpL9/IFVvgDheVeLSOJ7NQgJw+2YTlT5W
-	f3kWHUWZeWmf06QWIl/h+RkF/e6HOKxEzUsm0ls6eh5YBqAItI/M3rw0J94S5Ev7Sx1UkLPik08
-	2y4N5tUJ/OuoRbB1iVzo8wzVv+cwXQtxPK3AUbqyWZ8Yiwggj9ilcRbCT6rEsb4/A7vYNAqf3TW
-	InIpwxdXNHdub1Z5z7jwLaP6r/hTG4YE1pC/PXBi5HlvhFaiE2InQ49U05hVL4igD1UeL5rpxA2
-	dVSsZQAlzRjc8cqPhs/a1zIIspySuIlLX71ye
-X-Google-Smtp-Source: AGHT+IEe2XPLigbUHcncB2xlw3olBXm4plTDrY+NsL1YHY2kqGP5ueQ/yK2JyL3sv4JtTRMyN4WCtA==
-X-Received: by 2002:a05:6830:b85:b0:73b:1efa:5f5c with SMTP id 46e09a7af769-73cfa28914dmr2857648a34.8.1752241617517;
-        Fri, 11 Jul 2025 06:46:57 -0700 (PDT)
-Received: from groves.net ([2603:8080:1500:3d89:25b0:db8a:a7d3:ffe1])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73cf12a6ea1sm559465a34.49.2025.07.11.06.46.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Jul 2025 06:46:56 -0700 (PDT)
-Sender: John Groves <grovesaustin@gmail.com>
-Date: Fri, 11 Jul 2025 08:46:54 -0500
-From: John Groves <John@groves.net>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: Dan Williams <dan.j.williams@intel.com>, 
-	Miklos Szeredi <miklos@szeredb.hu>, Bernd Schubert <bschubert@ddn.com>, 
-	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, 
-	Josef Bacik <josef@toxicpanda.com>, Aravind Ramesh <arramesh@micron.com>, 
-	Ajay Joshi <ajayjoshi@micron.com>
-Subject: Re: [RFC V2 12/18] famfs_fuse: Plumb the GET_FMAP message/response
-Message-ID: <2vkgyxe3mnyamj33axiwthmqo32akdakfgv3vfauziakjnzqtj@vr3erk5wdshq>
-References: <20250703185032.46568-1-john@groves.net>
- <20250703185032.46568-13-john@groves.net>
- <20250709042713.GF2672029@frogsfrogsfrogs>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y7Xh1UMq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1752245910; x=1783781910;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=hD4JeQyqAwMIQCkTrX2G/BQwAmkntwT4vJ6Ld/2gNX4=;
+  b=Y7Xh1UMqkteoNmy6dLzl7/37ahz3E7XiF8hi7TkGDbn0nUB1GXyhNqvw
+   t81egQvXRLoF+MHvrGm+hO0E88XOGo3Wy0nx7PNbZiN09VZxYGWkyPj/7
+   2wurq4G6+HBDbqi7MJGE7ssjBMUXwjCitOgJvDMyU1Y30JBwlmo/OnNt/
+   D9Mu69nrBIIm7k9p2O5woHDPd02BJETiFD520uXedBH4Vlqqrtm6kC8MV
+   4LI8ioOnMESW6OJKBmojnh9MxHoP/VACP3Km5v24qMG4N7fktaJBLRmfy
+   dojb6NBp85DU03VbK0wa7KlzGycz7kT+A2OQMvln15U2U0OVMxnKMlHUM
+   w==;
+X-CSE-ConnectionGUID: GiO1PPGiTbG5jMPMG1FumQ==
+X-CSE-MsgGUID: dpH9pek/QKSH4M+phUHYmQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="54703745"
+X-IronPort-AV: E=Sophos;i="6.16,303,1744095600"; 
+   d="scan'208";a="54703745"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2025 07:58:29 -0700
+X-CSE-ConnectionGUID: 86diDEcqQEmZSewJXrJ5bQ==
+X-CSE-MsgGUID: dsZQFHlgQTq1DZYyOBqP5w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,303,1744095600"; 
+   d="scan'208";a="162070519"
+Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.111.35]) ([10.125.111.35])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2025 07:58:29 -0700
+Message-ID: <108cc808-ff36-4386-bc63-6f38a13dccbd@intel.com>
+Date: Fri, 11 Jul 2025 07:58:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250709042713.GF2672029@frogsfrogsfrogs>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REWORK][PATCH] cxl: Remove core/acpi.c and cxl core dependency
+ on ACPI
+To: Robert Richter <rrichter@amd.com>
+Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com
+References: <20250610172938.139428-1-dave.jiang@intel.com>
+ <5282f0d4-a25b-4fc5-9890-9f50052bd4df@intel.com>
+ <aHD3cDOZ4R3Vm7YA@rric.localdomain>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <aHD3cDOZ4R3Vm7YA@rric.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 25/07/08 09:27PM, Darrick J. Wong wrote:
-> On Thu, Jul 03, 2025 at 01:50:26PM -0500, John Groves wrote:
-> > Upon completion of an OPEN, if we're in famfs-mode we do a GET_FMAP to
-> > retrieve and cache up the file-to-dax map in the kernel. If this
-> > succeeds, read/write/mmap are resolved direct-to-dax with no upcalls.
-> > 
-> > GET_FMAP has a variable-size response payload, and the allocated size
-> > is sent in the in_args[0].size field. If the fmap would overflow the
-> > message, the fuse server sends a reply of size 'sizeof(uint32_t)' which
-> > specifies the size of the fmap message. Then the kernel can realloc a
-> > large enough buffer and try again.
-> > 
-> > Signed-off-by: John Groves <john@groves.net>
-> > ---
-> >  fs/fuse/file.c            | 84 +++++++++++++++++++++++++++++++++++++++
-> >  fs/fuse/fuse_i.h          | 36 ++++++++++++++++-
-> >  fs/fuse/inode.c           | 19 +++++++--
-> >  fs/fuse/iomode.c          |  2 +-
-> >  include/uapi/linux/fuse.h | 18 +++++++++
-> >  5 files changed, 154 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-> > index 93b82660f0c8..8616fb0a6d61 100644
-> > --- a/fs/fuse/file.c
-> > +++ b/fs/fuse/file.c
-> > @@ -230,6 +230,77 @@ static void fuse_truncate_update_attr(struct inode *inode, struct file *file)
-> >  	fuse_invalidate_attr_mask(inode, FUSE_STATX_MODSIZE);
-> >  }
-> >  
-> > +#if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
-> > +
-> > +#define FMAP_BUFSIZE 4096
+
+
+On 7/11/25 4:37 AM, Robert Richter wrote:
+> Hi Dave,
 > 
-> PAGE_SIZE ?
-
-Like it. Queued to -next
-
+> On 03.07.25 16:49:11, Dave Jiang wrote:
+>>
+>>
+>> On 6/10/25 10:29 AM, Dave Jiang wrote:
+>>> It was a mistake to introduce core/acpi.c and putting ACPI dependency on
+>>> cxl_core when adding the extended linear cache support. Add a callback
+>>> in the cxl_root_decoder to retrieve the extended linear cache size from
+>>> ACPI via the cxl_acpi driver.
+>>>
+>>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>
+>> Applied to cxl/next
+>> 1a45e1cd694fdf2d2a22e3c70a6917ff39fe77ab
 > 
-> > +
-> > +static int
-> > +fuse_get_fmap(struct fuse_mount *fm, struct inode *inode, u64 nodeid)
-> > +{
-> > +	struct fuse_get_fmap_in inarg = { 0 };
-> > +	size_t fmap_bufsize = FMAP_BUFSIZE;
-> > +	ssize_t fmap_size;
-> > +	int retries = 1;
-> > +	void *fmap_buf;
-> > +	int rc;
-> > +
-> > +	FUSE_ARGS(args);
-> > +
-> > +	fmap_buf = kcalloc(1, FMAP_BUFSIZE, GFP_KERNEL);
-> > +	if (!fmap_buf)
-> > +		return -EIO;
-> > +
-> > + retry_once:
-> > +	inarg.size = fmap_bufsize;
-> > +
-> > +	args.opcode = FUSE_GET_FMAP;
-> > +	args.nodeid = nodeid;
-> > +
-> > +	args.in_numargs = 1;
-> > +	args.in_args[0].size = sizeof(inarg);
-> > +	args.in_args[0].value = &inarg;
-> > +
-> > +	/* Variable-sized output buffer
-> > +	 * this causes fuse_simple_request() to return the size of the
-> > +	 * output payload
-> > +	 */
-> > +	args.out_argvar = true;
-> > +	args.out_numargs = 1;
-> > +	args.out_args[0].size = fmap_bufsize;
-> > +	args.out_args[0].value = fmap_buf;
-> > +
-> > +	/* Send GET_FMAP command */
-> > +	rc = fuse_simple_request(fm, &args);
-> > +	if (rc < 0) {
-> > +		pr_err("%s: err=%d from fuse_simple_request()\n",
-> > +		       __func__, rc);
-> > +		return rc;
-> > +	}
-> > +	fmap_size = rc;
-> > +
-> > +	if (retries && fmap_size == sizeof(uint32_t)) {
-> > +		/* fmap size exceeded fmap_bufsize;
-> > +		 * actual fmap size returned in fmap_buf;
-> > +		 * realloc and retry once
-> > +		 */
-> > +		fmap_bufsize = *((uint32_t *)fmap_buf);
-> > +
-> > +		--retries;
-> > +		kfree(fmap_buf);
-> > +		fmap_buf = kcalloc(1, fmap_bufsize, GFP_KERNEL);
-> > +		if (!fmap_buf)
-> > +			return -EIO;
-> > +
-> > +		goto retry_once;
-> > +	}
-> > +
-> > +	/* Will call famfs_file_init_dax() when that gets added */
+> I am sorry to come back to this patch that late in the process. While
+> rebasing my current region rework and address translation patches I
+> came across your patch and realized that I have a much more simpler
+> rework of that in my patch queue. I extracted that patch below from my
+> series I am working on. Could you take a look at it? The changes are
+> less intrusive and part of my rework required for address translation.
+> If it looks good to you and during review, I rather prefer to replace
+> your patch with this one. Note that I have follow on patches that
+> reduce more code and remove the cxl_extended_linear_cache_resize()
+> function entirely.
 > 
-> Hard to say what this does without looking further down in the patchset.
-> :)
+> Patch below bases on:
+> 
+>  ac0fe6a57317 cxl: make cxl_bus_type constant
 
-New comment:
-	/* We retrieved the "fmap" (the file's map to memory), but
-	 * we haven't used it yet. A call to famfs_file_init_dax() will be added
-	 * here in a subsequent patch, when we add the ability to attach
-	 * fmaps to files.
-	 */
+Hi Robert. I do like the simplicity of this. So lets go with that. Can you please post your patch directly to the mailing list as a stand alone? I'll drop my patch from cxl/next. We still should refactor the hpa_to_spa callback function into the cxl_rd_ops struct though. But that is a much smaller change.
+
+DJ
 
 > 
-> > +	kfree(fmap_buf);
-> > +	return 0;
-> > +}
-> > +#endif
-> > +
-> >  static int fuse_open(struct inode *inode, struct file *file)
-> >  {
-> >  	struct fuse_mount *fm = get_fuse_mount(inode);
-> > @@ -263,6 +334,19 @@ static int fuse_open(struct inode *inode, struct file *file)
-> >  
-> >  	err = fuse_do_open(fm, get_node_id(inode), file, false);
-> >  	if (!err) {
-> > +#if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
-> > +		if (fm->fc->famfs_iomap) {
-> > +			if (S_ISREG(inode->i_mode)) {
+> Many thanks,
 > 
-> /me wonders if you want to turn this into a dumb helper to reduce the
-> indenting levels?
+> -Robert
 > 
-> #if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
-> static inline bool fuse_is_famfs_file(struct inode *inode)
-> {
-> 	return fm->fc->famfs_iomap && S_ISREG(inode->i_mode);
-> }
-> #else
-> # define fuse_is_famfs_file(...)	(false)
-> #endif
 > 
-> 	if (!err) {
-> 		if (fuse_is_famfs_file(inode)) {
-> 			rc = fuse_get_fmap(fm, inode);
-> 			...
-> 		}
-> 	}
 > 
-
-I've already refactored helpers and simplified this logic in the -next 
-branch, including losing the conditrional code here in file.c:
-
-	if (!err) {
-		if ((fm->fc->famfs_iomap) && (S_ISREG(inode->i_mode))) {
-			int rc;
-			/* Get the famfs fmap */
-			rc = fuse_get_fmap(fm, inode);
-			...
-		}
-		...
-	}
-
-So I think it's quite a bit cleaner... will send out an updated patch
-pretty soon (probably next week, without the poisoned page fixes yet).
-
-> > +				int rc;
-> > +				/* Get the famfs fmap */
-> > +				rc = fuse_get_fmap(fm, inode,
-> > +						   get_node_id(inode));
 > 
-> Just get_node_id inside fuse_get_fmap to reduce the parameter count.
-
-Done, thanks
-
+> From fd3f1f5b33313bb10a2e51861031015ac48a8cd1 Mon Sep 17 00:00:00 2001
+> From: Robert Richter <rrichter@amd.com>
+> Date: Fri, 11 Jul 2025 11:56:56 +0200
+> Subject: [PATCH] cxl: Remove core/acpi.c and cxl core dependency on ACPI
 > 
-> > +				if (rc)
-> > +					pr_err("%s: fuse_get_fmap err=%d\n",
-> > +					       __func__, rc);
-> > +			}
-> > +		}
-> > +#endif
-> >  		ff = file->private_data;
-> >  		err = fuse_finish_open(inode, file);
-> >  		if (err)
-> > diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-> > index f4ee61046578..e01d6e5c6e93 100644
-> > --- a/fs/fuse/fuse_i.h
-> > +++ b/fs/fuse/fuse_i.h
-> > @@ -193,6 +193,10 @@ struct fuse_inode {
-> >  	/** Reference to backing file in passthrough mode */
-> >  	struct fuse_backing *fb;
-> >  #endif
-> > +
-> > +#if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
-> > +	void *famfs_meta;
-> > +#endif
+> From Dave [1]:
 > 
-> What gets stored in here?
-
-Explanatory comment added:
-	/* Pointer to the file's famfs metadata. Primary content is the
-	 * in-memory version of the fmap - the map from file's offset range
-	 * to DAX memory
-	 */
-
+> """
+> It was a mistake to introduce core/acpi.c and putting ACPI dependency on
+> cxl_core when adding the extended linear cache support.
+> """
 > 
-> >  };
-> >  
-> >  /** FUSE inode state bits */
-> > @@ -945,6 +949,8 @@ struct fuse_conn {
-> >  #endif
-> >  
-> >  #if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
-> > +	struct rw_semaphore famfs_devlist_sem;
-> > +	struct famfs_dax_devlist *dax_devlist;
-> >  	char *shadow;
-> >  #endif
-> >  };
-> > @@ -1435,11 +1441,14 @@ void fuse_free_conn(struct fuse_conn *fc);
-> >  
-> >  /* dax.c */
-> >  
-> > +static inline int fuse_file_famfs(struct fuse_inode *fi); /* forward */
-> > +
-> >  /* This macro is used by virtio_fs, but now it also needs to filter for
-> >   * "not famfs"
-> >   */
-> >  #define FUSE_IS_VIRTIO_DAX(fuse_inode) (IS_ENABLED(CONFIG_FUSE_DAX)	\
-> > -					&& IS_DAX(&fuse_inode->inode))
-> > +					&& IS_DAX(&fuse_inode->inode)	\
-> > +					&& !fuse_file_famfs(fuse_inode))
-> >  
-> >  ssize_t fuse_dax_read_iter(struct kiocb *iocb, struct iov_iter *to);
-> >  ssize_t fuse_dax_write_iter(struct kiocb *iocb, struct iov_iter *from);
-> > @@ -1550,4 +1559,29 @@ extern void fuse_sysctl_unregister(void);
-> >  #define fuse_sysctl_unregister()	do { } while (0)
-> >  #endif /* CONFIG_SYSCTL */
-> >  
-> > +/* famfs.c */
-> > +static inline struct fuse_backing *famfs_meta_set(struct fuse_inode *fi,
-> > +						       void *meta)
-> > +{
-> > +#if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
-> > +	return xchg(&fi->famfs_meta, meta);
-> > +#else
-> > +	return NULL;
-> > +#endif
-> > +}
-> > +
-> > +static inline void famfs_meta_free(struct fuse_inode *fi)
-> > +{
-> > +	/* Stub wil be connected in a subsequent commit */
-> > +}
-> > +
-> > +static inline int fuse_file_famfs(struct fuse_inode *fi)
-> > +{
-> > +#if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
-> > +	return (READ_ONCE(fi->famfs_meta) != NULL);
-> > +#else
-> > +	return 0;
-> > +#endif
-> > +}
+> Current implementation calls hmat_get_extended_linear_cache_size() of
+> the ACPI subsystem. That external reference causes issue running
+> cxl_test as there is no way to "mock" that function and ignore it when
+> using cxl test.
 > 
-> ...or maybe this is the predicate you want to see if you really need to
-> fmapping related stuff?
+> Instead of working around that using cxlrd ops and extensively
+> expanding cxl_test code [1], just move HMAT calls out of the core
+> module to cxl_acpi. Implement this by adding a @cache_size member to
+> struct cxl_root_decoder. During initialization the cache size is
+> determined and added to the root decoder object in cxl_acpi. Later on
+> in cxl_core the cache_size parameter is used to setup extended linear
+> caching.
 > 
-> > +
-> >  #endif /* _FS_FUSE_I_H */
-> > diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-> > index a7e1cf8257b0..b071d16f7d04 100644
-> > --- a/fs/fuse/inode.c
-> > +++ b/fs/fuse/inode.c
-> > @@ -117,6 +117,9 @@ static struct inode *fuse_alloc_inode(struct super_block *sb)
-> >  	if (IS_ENABLED(CONFIG_FUSE_PASSTHROUGH))
-> >  		fuse_inode_backing_set(fi, NULL);
-> >  
-> > +	if (IS_ENABLED(CONFIG_FUSE_FAMFS_DAX))
-> > +		famfs_meta_set(fi, NULL);
-> > +
-> >  	return &fi->inode;
-> >  
-> >  out_free_forget:
-> > @@ -138,6 +141,13 @@ static void fuse_free_inode(struct inode *inode)
-> >  	if (IS_ENABLED(CONFIG_FUSE_PASSTHROUGH))
-> >  		fuse_backing_put(fuse_inode_backing(fi));
-> >  
-> > +#if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
-> > +	if (S_ISREG(inode->i_mode) && fi->famfs_meta) {
-> > +		famfs_meta_free(fi);
-> > +		famfs_meta_set(fi, NULL);
+> [1] https://patch.msgid.link/20250610172938.139428-1-dave.jiang@intel.com
 > 
-> _free should null out the pointer, no?
-
-Good point - will do
-
-<snip>
-
-Thanks Darrick!
-John
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> ---
+>  drivers/cxl/acpi.c        | 59 +++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/core/Makefile |  1 -
+>  drivers/cxl/core/acpi.c   | 11 --------
+>  drivers/cxl/core/core.h   |  2 --
+>  drivers/cxl/core/region.c |  7 +----
+>  drivers/cxl/cxl.h         |  1 +
+>  6 files changed, 61 insertions(+), 20 deletions(-)
+>  delete mode 100644 drivers/cxl/core/acpi.c
+> 
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index a1a99ec3f12c..712624cba2b6 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -335,6 +335,63 @@ static int add_or_reset_cxl_resource(struct resource *parent, struct resource *r
+>  	return rc;
+>  }
+>  
+> +static int cxl_acpi_set_cache_size(struct cxl_root_decoder *cxlrd)
+> +{
+> +	struct cxl_decoder *cxld = &cxlrd->cxlsd.cxld;
+> +	struct range *hpa = &cxld->hpa_range;
+> +	resource_size_t size = range_len(hpa);
+> +	resource_size_t start = hpa->start;
+> +	resource_size_t cache_size;
+> +	struct resource res;
+> +	int nid, rc;
+> +
+> +	res = DEFINE_RES(start, size, 0);
+> +	nid = phys_to_target_node(start);
+> +
+> +	rc = hmat_get_extended_linear_cache_size(&res, nid, &cache_size);
+> +	if (rc)
+> +		return rc;
+> +
+> +	/*
+> +	 * The cache range is expected to be within the CFMWS.
+> +	 * Currently there is only support cache_size == cxl_size. CXL
+> +	 * size is then half of the total CFMWS window size.
+> +	 */
+> +	size = size >> 1;
+> +	if (cache_size && size != cache_size) {
+> +		dev_warn(&cxld->dev,
+> +			 "Extended Linear Cache size %pa != CXL size %pa. No Support!",
+> +			 &cache_size, &size);
+> +		return -ENXIO;
+> +	}
+> +
+> +	cxlrd->cache_size = cache_size;
+> +
+> +	return 0;
+> +}
+> +
+> +static void cxl_setup_extended_linear_cache(struct cxl_root_decoder *cxlrd)
+> +{
+> +	int rc;
+> +
+> +	rc = cxl_acpi_set_cache_size(cxlrd);
+> +	if (!rc)
+> +		return;
+> +
+> +	if (rc != -EOPNOTSUPP) {
+> +		/*
+> +		 * Failing to support extended linear cache region resize does not
+> +		 * prevent the region from functioning. Only causes cxl list showing
+> +		 * incorrect region size.
+> +		 */
+> +		dev_warn(cxlrd->cxlsd.cxld.dev.parent,
+> +			 "Extended linear cache calculation failed rc:%d\n", rc);
+> +	}
+> +
+> +	/* Ignoring return code */
+> +	cxlrd->cache_size = 0;
+> +}
+> +
+>  DEFINE_FREE(put_cxlrd, struct cxl_root_decoder *,
+>  	    if (!IS_ERR_OR_NULL(_T)) put_device(&_T->cxlsd.cxld.dev))
+>  DEFINE_FREE(del_cxl_resource, struct resource *, if (_T) del_cxl_resource(_T))
+> @@ -394,6 +451,8 @@ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
+>  		ig = CXL_DECODER_MIN_GRANULARITY;
+>  	cxld->interleave_granularity = ig;
+>  
+> +	cxl_setup_extended_linear_cache(cxlrd);
+> +
+>  	if (cfmws->interleave_arithmetic == ACPI_CEDT_CFMWS_ARITHMETIC_XOR) {
+>  		if (ways != 1 && ways != 3) {
+>  			cxims_ctx = (struct cxl_cxims_context) {
+> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+> index 79e2ef81fde8..5ad8fef210b5 100644
+> --- a/drivers/cxl/core/Makefile
+> +++ b/drivers/cxl/core/Makefile
+> @@ -15,7 +15,6 @@ cxl_core-y += hdm.o
+>  cxl_core-y += pmu.o
+>  cxl_core-y += cdat.o
+>  cxl_core-y += ras.o
+> -cxl_core-y += acpi.o
+>  cxl_core-$(CONFIG_TRACING) += trace.o
+>  cxl_core-$(CONFIG_CXL_REGION) += region.o
+>  cxl_core-$(CONFIG_CXL_MCE) += mce.o
+> diff --git a/drivers/cxl/core/acpi.c b/drivers/cxl/core/acpi.c
+> deleted file mode 100644
+> index f13b4dae6ac5..000000000000
+> --- a/drivers/cxl/core/acpi.c
+> +++ /dev/null
+> @@ -1,11 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0-only
+> -/* Copyright(c) 2024 Intel Corporation. All rights reserved. */
+> -#include <linux/acpi.h>
+> -#include "cxl.h"
+> -#include "core.h"
+> -
+> -int cxl_acpi_get_extended_linear_cache_size(struct resource *backing_res,
+> -					    int nid, resource_size_t *size)
+> -{
+> -	return hmat_get_extended_linear_cache_size(backing_res, nid, size);
+> -}
+> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> index 29b61828a847..9462aea9ce9d 100644
+> --- a/drivers/cxl/core/core.h
+> +++ b/drivers/cxl/core/core.h
+> @@ -120,8 +120,6 @@ int cxl_port_get_switch_dport_bandwidth(struct cxl_port *port,
+>  int cxl_ras_init(void);
+>  void cxl_ras_exit(void);
+>  int cxl_gpf_port_setup(struct cxl_dport *dport);
+> -int cxl_acpi_get_extended_linear_cache_size(struct resource *backing_res,
+> -					    int nid, resource_size_t *size);
+>  
+>  #ifdef CONFIG_CXL_FEATURES
+>  struct cxl_feat_entry *
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 6e5e1460068d..bc542a7142c0 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -3282,15 +3282,10 @@ static int cxl_extended_linear_cache_resize(struct cxl_region *cxlr,
+>  {
+>  	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
+>  	struct cxl_region_params *p = &cxlr->params;
+> -	int nid = phys_to_target_node(res->start);
+>  	resource_size_t size = resource_size(res);
+>  	resource_size_t cache_size, start;
+> -	int rc;
+> -
+> -	rc = cxl_acpi_get_extended_linear_cache_size(res, nid, &cache_size);
+> -	if (rc)
+> -		return rc;
+>  
+> +	cache_size = cxlrd->cache_size;
+>  	if (!cache_size)
+>  		return 0;
+>  
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index e7b66ca1d423..4643a95ca111 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -432,6 +432,7 @@ typedef u64 (*cxl_hpa_to_spa_fn)(struct cxl_root_decoder *cxlrd, u64 hpa);
+>   */
+>  struct cxl_root_decoder {
+>  	struct resource *res;
+> +	resource_size_t cache_size;
+>  	atomic_t region_id;
+>  	cxl_hpa_to_spa_fn hpa_to_spa;
+>  	void *platform_data;
 
