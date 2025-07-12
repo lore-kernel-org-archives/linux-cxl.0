@@ -1,292 +1,278 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F3DA1420DD
-	for <linux-cxl@vger.kernel.org>; Sat, 12 Jul 2025 04:41:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752295273; cv=fail; b=k+7QJk6WaiSubO08q3fipUYZI2fvW+xuCx1ESqc0LSD0LbAou0rWiI9F5nmxOsNN03xt6UHlu7BFBK7NzDwweXAtWCd8OFjZk8+uyPAKi3dsYYwn0cYCT8elvFIdw2Sxc/Cv6KbV5t4xIKzij0417JfS3ie0s3cI289SIwaJMdM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752295273; c=relaxed/simple;
-	bh=l/OX3Eol0wlfGO1TO7sTSfAdixwlcdV1r9hQ7d+ZaSw=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=DsGOKbXxdsvSpfYH80fXyummrcUXHjdToC7OQde4SxBXM9orgb7YncEJXiiCjeVRuEapUbBRESx7g8W+u+ZVnz5rAwj/qLrhpHnptJ/F7Nrw6a+MBFddoSYtV9BZOEToAvMDVlZIJrUFsju2qS3U/rEFajCnfAJEeAFsi2j5KtE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dkBBzFSj; arc=fail smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D37FE1A3154;
+	Sat, 12 Jul 2025 04:49:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1752295758; cv=none; b=cZkoP04NLAEwB8f27KOyuW1YWv/qydM9V4VrdwKLeIPnP1UQ4kunuX3P4Yl9vgfP1Lxg40rlGaww4hYM4VRwYTbZap4RWKs5x2smFSa9av2d5eeqGrMRPo6Wbw9xVCPA0YwR661kP1gpfb17wqt9HowlC5PJPLMAPpk36N8ApRE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1752295758; c=relaxed/simple;
+	bh=QSrbaUGJjKRHtW5d5mhtB/XfLm+GVoyVMz4UYy+b9Mo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LH4xFH8kOUD9x8wc4hPkXER2+kNpgGPvKM202VRV1gu0IRlrm0D+w6DmnJIixJYpMMVAN/KVa5fs2FKtd5uavT0xtSunEn2ScHrouflYAdU0htNrTh9OnetBRuAhfGjTvSE+10PvH1H7RAI/y4MlF+duCkwvp5O6eY83cRUN5xI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o0BMtoPg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dkBBzFSj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752295271; x=1783831271;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=l/OX3Eol0wlfGO1TO7sTSfAdixwlcdV1r9hQ7d+ZaSw=;
-  b=dkBBzFSjGWAWsUPqxhpgt7jRc5UgVqx5VOmCsBgu/IHZlLDK3bBLNANT
-   /t9MYSwVu00iAENq7n5DWb2Jg0BAxTx4fbaHLzOMDOk8vsXvJYkqhpluN
-   hHpxEL7r5Lcg9HzwAAybvUbNbz1APpb6NUVSZO37mpE0zemJ8KDVaGzds
-   6dezjis3FljfjWByobDDHDJYjdV+fi3yCF9vBMSdIg5Ktro8vcNyQGVls
-   xfT4yxsLXpTOGWxQyo7KMuZz74J+O/i0pItRe4OXIC//T/Oem4lL2483/
-   yQPCbh5mIgJp/g4R6C7ACgcuvnEsTCVuZ3r6wfMsR0eHJkoN6P6lYhQMp
-   g==;
-X-CSE-ConnectionGUID: LMkhNbasSxWES+akdaOxfg==
-X-CSE-MsgGUID: k46DESxvRTmmHsF5I6o6DQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="65651029"
-X-IronPort-AV: E=Sophos;i="6.16,305,1744095600"; 
-   d="scan'208";a="65651029"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2025 21:41:08 -0700
-X-CSE-ConnectionGUID: AxWbIJu7RT63e5iQ4EHA3A==
-X-CSE-MsgGUID: CLNFGBhjS3amBYDUYPaQdw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,305,1744095600"; 
-   d="scan'208";a="155935223"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2025 21:41:08 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Fri, 11 Jul 2025 21:41:06 -0700
-Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Fri, 11 Jul 2025 21:41:06 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (40.107.94.44) by
- edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Fri, 11 Jul 2025 21:41:06 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rTxurbhpaujdF269kpzRpikMnwjH7SkUJQUMLB/tyOFsU1+HamZQwJ+OZ7f6TvIBloctFj9YAC8JMMKMkOkKqieQ0pU+skPZjTSfftT5JCPRT1j1TH//iL2kuGoPLo0S03bpi5ZU9/S0QzCXwukiI5r2skEADSy2lWQ9j2OQsaV2qGXaGSYqffn5jcZBC/py7kV8B/Lpt1bryzWq5MxJ4mNfjRXYFsuZ2jL5+4n41uwNqehESvGNxYgi0wFtXGF6Ydnuo410mj9hpe8HMivzIDnQH8fBjQDCKdFp6pxFOZ2LlKoA3otMPVc/FjN35p/1S68zCMInYjKKaR0JQ2idUA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Yv/ankE8jpQlUYCtqReHH25VVX+RnU4oHQBL8x6z7hI=;
- b=buAEiEZ+zfEG868+ktbTSQUDtpwLeWpP2bnjIwDketb0MPQ3Q640eXBPL8QdJUDnaYER1pOEagKGQ+zPKX+cMGnBvj8db3Ea4jpBywh1fRo+t5W/JTT6FnU1QhjN2uhkBPqI2h6kk/NZnuCYtxvXPOIZM70uKZu10X4Q4/9aglnR+AxxirtFObQdLGDBrn9XtJQKIDuboZ2bdWywU4sgwLI9Jnev4xDsEZ39GsXU1csukOkzmWM8JSZTQhSoqMsFeTymTf9dCpw5zL/aTAihjhLFASgtuK29M8dPDxFGxKK70thOSd3WJHrztLGE7TZ17WLprPfhLSiKHBXt00Mn4Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by DS4PPFFF98E87FA.namprd11.prod.outlook.com (2603:10b6:f:fc02::63) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.25; Sat, 12 Jul
- 2025 04:41:05 +0000
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::8254:d7be:8a06:6efb]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::8254:d7be:8a06:6efb%7]) with mapi id 15.20.8769.022; Sat, 12 Jul 2025
- 04:41:05 +0000
-Date: Fri, 11 Jul 2025 21:40:58 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-CC: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
-	"Dan Williams" <dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v2 4/4] cxl/region: Add inject and clear poison by region
- offset
-Message-ID: <aHHnWgKx3YBx__8H@aschofie-mobl2.lan>
-References: <cover.1751513505.git.alison.schofield@intel.com>
- <4f33bcb42217139e0884784e60139e29c647f62b.1751513505.git.alison.schofield@intel.com>
- <20250703153138.00000a00@huawei.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250703153138.00000a00@huawei.com>
-X-ClientProxiedBy: BYAPR06CA0055.namprd06.prod.outlook.com
- (2603:10b6:a03:14b::32) To DS4PPF0BAC23327.namprd11.prod.outlook.com
- (2603:10b6:f:fc02::9)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o0BMtoPg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84BA7C4CEEF;
+	Sat, 12 Jul 2025 04:49:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752295757;
+	bh=QSrbaUGJjKRHtW5d5mhtB/XfLm+GVoyVMz4UYy+b9Mo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=o0BMtoPgPdLXtlpOahnHdpsTh5YS53WXiQe74uXwV6MwJVyIhRdO56QLioMYT5xyi
+	 2eZ84Wjy3ZUQpCwX2f+pYLZo0jp4g7/D3b6PHXI712dkbXEzZPcWvaiCiofY0HT8p1
+	 rbI/MbsclQrDAqRV5phD0bqFs7kP/lrakjTzx9/EyJEcp2ukfdIkASGAm/zyL/SaNE
+	 rEeHfW1ayr6Y3YsQYR+rU+TEsWcuQjuAWDc1ewXv6Vv4WfHBjImyTPVnBj32gwcf0W
+	 oViJg1QFnHqkTWe0S/frbmEK4R04oZ1GaRxOSrYmM5ZaGIAVQQD3zcHviqdITIuIuv
+	 rYOZe7+wKyADw==
+Date: Fri, 11 Jul 2025 21:49:16 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: John Groves <John@groves.net>
+Cc: Amir Goldstein <amir73il@gmail.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Bernd Schubert <bschubert@ddn.com>,
+	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Stefan Hajnoczi <shajnocz@redhat.com>,
+	Joanne Koong <joannelkoong@gmail.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Aravind Ramesh <arramesh@micron.com>,
+	Ajay Joshi <ajayjoshi@micron.com>
+Subject: Re: [RFC V2 10/18] famfs_fuse: Basic fuse kernel ABI enablement for
+ famfs
+Message-ID: <20250712044916.GJ2672029@frogsfrogsfrogs>
+References: <20250703185032.46568-1-john@groves.net>
+ <20250703185032.46568-11-john@groves.net>
+ <CAOQ4uxi7fvMgYqe1M3_vD3+YXm7x1c4YjA=eKSGLuCz2Dsk0TQ@mail.gmail.com>
+ <yhso6jddzt6c7glqadrztrswpisxmuvg7yopc6lp4gn44cxd4m@my4ajaw47q7d>
+ <20250707173942.GC2672029@frogsfrogsfrogs>
+ <ueepqz3oqeqzwiidk2wlf3f7enxxte4ws27gtxhakfmdiq4t26@cvfmozym5rme>
+ <20250709015348.GD2672029@frogsfrogsfrogs>
+ <wam2qo5r7tbpf4ork5qcdqnw4olhfpkvlqpnbuqpwfhrymf3dq@hw3frnbadhk7>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|DS4PPFFF98E87FA:EE_
-X-MS-Office365-Filtering-Correlation-Id: f02e11e1-f263-4564-8c61-08ddc0fe4ff3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?E/Ns8dUqeR4fHvl0XOCtDcayTW0X5XRQQVpalvsfMZUG/6E459HhNze6mY5s?=
- =?us-ascii?Q?0T5nSAXPDUktmMFaoYUy+GIXTr4Xpghsquy78H2NQMw7z4TqYtb6/hBSiPXF?=
- =?us-ascii?Q?c1Nhi4Ft0Yq9ABZzMDI38DIaw1csFGXYebanPEZChf6DAIq8a6/d/nZQgr4m?=
- =?us-ascii?Q?IyqYSzAWJhRC4cmGOhBwrZ0YZaRLClmeEfiPy4UaMc1NFl64M1LMhvFlj6dV?=
- =?us-ascii?Q?Q3t94RyZWukVsZIVj8qtsHqk2pS5X3Nv1G9Z+mI6Dba3blOOVPSllmJm7QKi?=
- =?us-ascii?Q?7LrKVIMQVr7w1cTHDmL6A0lgd9NkMkgm/iHwIfkiBL+ITeHFvhBtnJWzo9+T?=
- =?us-ascii?Q?qkZ/1v88hvUq/Vbxl8qfmC75fqwlhYkauVaL4luUdsIQknE7zeQCZhiAcSNe?=
- =?us-ascii?Q?k4XPaxtUQ80vPXc3KE6ORmW0wUG7eH5GHemn1F5USureOicHKJXlPiV8/mZD?=
- =?us-ascii?Q?uOTQ8Yfk09R7HQhETWU9UA4ZiGXw4zjAptRPyUCteMB1k3q2irZ5z1j6YNwa?=
- =?us-ascii?Q?VUl/9asEG4cywEN+nxePqGpmpAW+X14gXuwglmOxTyBVINpefERVrxWPppfq?=
- =?us-ascii?Q?B17IsSMiXrV0GnlqZGX6kg54FEMiIlmooqjjHQYbgN9Oka3Imm1RVgsop+ps?=
- =?us-ascii?Q?TsnS6ACUMrr0RvINdEb70536OaoR7+Lu8E2nClb9HSYPgo0DyWGVURIeDORR?=
- =?us-ascii?Q?xEfcD6cWsHu0XX2iJlaTiPjtSTRbtvY+co0PNHkV2rn434JGvPUOwr9jtW4T?=
- =?us-ascii?Q?UYVi5ftNlv3lBhhCAcnDCyHcnPE8XzSYNx+uDXHJZFAh8MlwkDflC5PHvZta?=
- =?us-ascii?Q?U+pkNlATfvpk/wVc6BtbLYb84bn0sxvXvGtDC7vDjKk0W1tPeykLS8ItjhBe?=
- =?us-ascii?Q?Jo3XIQ2ll87a85Xgr4neADTsgnrs26Pc2kRvPUyjVCoomcr1gXbfRAj8DG5m?=
- =?us-ascii?Q?zbRN2m9D3c70hPqEKrY62zaeMLL7MqtLASG335X2mSYYQdfb0itly1L2eccm?=
- =?us-ascii?Q?cR71pFWZR3Uj5KSpJB5CNP80AE58IMtkZpAhdQVTa6y335b62dBHPkA39AAd?=
- =?us-ascii?Q?21l1BXNNCU/JUMdiNgN4nGgPPy7TPswW4l5P4pz9/hQXOHsPU00EuQOS0i7d?=
- =?us-ascii?Q?A+BQLUe9dzeaN1rXWobcRxgPvpetneepgxhIfAyCuGTwFJv7dacLy2zDR22N?=
- =?us-ascii?Q?zsBLmwJ3jRYaeG2EvtYXdvxtbYGg1g9T8OM8jxMT1aWrloygYJtfgNYooXm1?=
- =?us-ascii?Q?SAass1tEDvwMpVa6D6jFMrQmlPS8qQj3RClHHCUorYtSkdlvRpBZbNtKArZQ?=
- =?us-ascii?Q?bwMubXJGeYUzPI1Y6XBg35zRm98ttILMEbbOgtU+OMLUGhWIWJmAgqqqCT1i?=
- =?us-ascii?Q?wiFaYR+ktJuAUVhYP9JC8I8Vg9in+UNLz7o4ceiF3Moht8NqAxSTFVXqkXSh?=
- =?us-ascii?Q?Fl4kQNLeHCM=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?JCAvofpPjkCyW+5IveJ/U9K+ZYw10d3Apj++AvUK2h0xmCyADnuq12Mw4SXb?=
- =?us-ascii?Q?cVvXqc3kuvrVz2ediKehTYjZ7Xo79BXxGS+lbJG/QfOjZ7cTCHwiHHsaae29?=
- =?us-ascii?Q?x7uASsPUEW6Hqb8KuGrNetFFd2jtoDVY2FADbGCIuvr1q5yjKM43J4eUpZSW?=
- =?us-ascii?Q?TpIycFMdDwn9M6Rc46UeKgU+d4DmwzSP/UOTn+oAkYhpbcm58X64u3Qzr/YE?=
- =?us-ascii?Q?rX/vipl2weZMJSZe2nh/8BGPuaHrQ7P5ziPG6RaQmDlTFKIvGVp4QleJg4hE?=
- =?us-ascii?Q?3WSAxtdCMjkyB28vp91nRAaG4PkCx2OkB+PYQuay3EpTViX3BV7mFfNWHOX7?=
- =?us-ascii?Q?98Tda2E4mXJcTNM0UA7bpuv5nEHWJ40mAsQuVNfHmnWSEuMcQiyVAX2erSX4?=
- =?us-ascii?Q?CxCNaVjJnjHKMGqHM3+5VqdevvvQPiFK5xh/QBYPOBzawTsIFQ1XAjg2WB7S?=
- =?us-ascii?Q?Bawvh1En6P/B+y6WpavSqDNi9+6kOJhtOJ4Np1EUVUNcuPTKDzj4kEvOaYOA?=
- =?us-ascii?Q?dZT7EOGsbyPcbvlNVaBh6Mo66lTexwU1LtHkli+uB55u287WRvYuMBwMoX6u?=
- =?us-ascii?Q?A2LrpDwMULnFZ8nMDzVqM130iNMz8aMqH9za8YkYNoKO33W6K1AZUmSqRB8b?=
- =?us-ascii?Q?jSKusoZpbGmtFQ9T9OedPig4qsfq9+vkiahkljqVi3n9d3GK1ja5FcDj5w4b?=
- =?us-ascii?Q?RrJO3xBAauEMnnIAdwJW6btA97bxsFYkZo/xrwnKajims6iEnCEDll+ZAp92?=
- =?us-ascii?Q?jdYRBRnvqBxjhSaovvaS8/Gvug2MF86uz9mWUV4oNF0W1Bb3Fj8s0dxZmYXh?=
- =?us-ascii?Q?8gKXsE1Id0tcb80sIjYUTY3SlF0VvKzb9sl+LSnC6wfvDKoWR6G4+qtu77Js?=
- =?us-ascii?Q?wAFWdycsJhpyuHBLfTMXhx6KGCkM+ZmjB02B/m+k89zEYbvyk2LzdfRCth1y?=
- =?us-ascii?Q?Ih3mnaBBR/Js3uMSsPcJHsKWovM/EOYkbMRQ3b+N5lR5vzWV6xiIhUwYWNo/?=
- =?us-ascii?Q?0HiEn+N/3mNLx7FYcU+6b6iqpLWgTG1+Sf0+oaBsfYJa9Nfyf/zUjFXK7l6H?=
- =?us-ascii?Q?F1zaACrFyCHkuQsd0nZuB4hrSfCrGhyYFLLpT28LJQ/A+WMIa9wvt7SZ7MKi?=
- =?us-ascii?Q?k+OAEncqdNzg3Bsf6u3Vsh0pc2MNwR1OGNcqC7hPkZVLIhYQ4NOSf1kfduvz?=
- =?us-ascii?Q?BN/9++LtHhYJv6cMTEzkD8I52FeVND0pTZ++OrnGZkdVWfzx3bGKYjlF7zoY?=
- =?us-ascii?Q?SjHbCH4Dy6IWwI7MufDqyvzausaSbpRBLG1aviB0TA+FMmdFhC17d9hcwZT0?=
- =?us-ascii?Q?N2FkTBZyHrTISIEyjTEsZCGd4NUgb9SNVHwgPEH58sQRegDdgaS0CnMkz6cV?=
- =?us-ascii?Q?8IbHV+4TweNyAezHACQPWMWi1uruoBkvSGydXDuNxycFpty7T4WyeIEYxOXH?=
- =?us-ascii?Q?NSQd9qGvGGlLEQiE/9iCFPMoUc0e5TVAWCiQ5f4m5BoD+SSZULGKL1tVxSQ3?=
- =?us-ascii?Q?kB7XHWW5Frprgha/f0YigH2o78GK3aA7D7Ljf+4TedpDGoR57PwblwKh+hmi?=
- =?us-ascii?Q?u0SrfTliFJfo8pJ5F5JMUtNNHF3GYZ888kMfExLWqFqmiCA7TEumM7SSDQAA?=
- =?us-ascii?Q?VA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: f02e11e1-f263-4564-8c61-08ddc0fe4ff3
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jul 2025 04:41:05.3599
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7NHY7xVNHsX2SWC0Q4xXk4NSBFwGZbIsKAh4EB+pGd3zn7CqGhPG3IW/M5itea/z/8nf9KBivlM9ttvvm/qXq53YGExWyECk6h4vhVmDvco=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS4PPFFF98E87FA
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <wam2qo5r7tbpf4ork5qcdqnw4olhfpkvlqpnbuqpwfhrymf3dq@hw3frnbadhk7>
 
-On Thu, Jul 03, 2025 at 03:31:38PM +0100, Jonathan Cameron wrote:
-> On Wed,  2 Jul 2025 21:03:23 -0700
-> alison.schofield@intel.com wrote:
+On Thu, Jul 10, 2025 at 08:32:13PM -0500, John Groves wrote:
+> On 25/07/08 06:53PM, Darrick J. Wong wrote:
+> > On Tue, Jul 08, 2025 at 07:02:03AM -0500, John Groves wrote:
+> > > On 25/07/07 10:39AM, Darrick J. Wong wrote:
+> > > > On Fri, Jul 04, 2025 at 08:39:59AM -0500, John Groves wrote:
+> > > > > On 25/07/04 09:54AM, Amir Goldstein wrote:
+> > > > > > On Thu, Jul 3, 2025 at 8:51 PM John Groves <John@groves.net> wrote:
+> > > > > > >
+> > > > > > > * FUSE_DAX_FMAP flag in INIT request/reply
+> > > > > > >
+> > > > > > > * fuse_conn->famfs_iomap (enable famfs-mapped files) to denote a
+> > > > > > >   famfs-enabled connection
+> > > > > > >
+> > > > > > > Signed-off-by: John Groves <john@groves.net>
+> > > > > > > ---
+> > > > > > >  fs/fuse/fuse_i.h          |  3 +++
+> > > > > > >  fs/fuse/inode.c           | 14 ++++++++++++++
+> > > > > > >  include/uapi/linux/fuse.h |  4 ++++
+> > > > > > >  3 files changed, 21 insertions(+)
+> > > > > > >
+> > > > > > > diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
+> > > > > > > index 9d87ac48d724..a592c1002861 100644
+> > > > > > > --- a/fs/fuse/fuse_i.h
+> > > > > > > +++ b/fs/fuse/fuse_i.h
+> > > > > > > @@ -873,6 +873,9 @@ struct fuse_conn {
+> > > > > > >         /* Use io_uring for communication */
+> > > > > > >         unsigned int io_uring;
+> > > > > > >
+> > > > > > > +       /* dev_dax_iomap support for famfs */
+> > > > > > > +       unsigned int famfs_iomap:1;
+> > > > > > > +
+> > > > > > 
+> > > > > > pls move up to the bit fields members.
+> > > > > 
+> > > > > Oops, done, thanks.
+> > > > > 
+> > > > > > 
+> > > > > > >         /** Maximum stack depth for passthrough backing files */
+> > > > > > >         int max_stack_depth;
+> > > > > > >
+> > > > > > > diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+> > > > > > > index 29147657a99f..e48e11c3f9f3 100644
+> > > > > > > --- a/fs/fuse/inode.c
+> > > > > > > +++ b/fs/fuse/inode.c
+> > > > > > > @@ -1392,6 +1392,18 @@ static void process_init_reply(struct fuse_mount *fm, struct fuse_args *args,
+> > > > > > >                         }
+> > > > > > >                         if (flags & FUSE_OVER_IO_URING && fuse_uring_enabled())
+> > > > > > >                                 fc->io_uring = 1;
+> > > > > > > +                       if (IS_ENABLED(CONFIG_FUSE_FAMFS_DAX) &&
+> > > > > > > +                           flags & FUSE_DAX_FMAP) {
+> > > > > > > +                               /* XXX: Should also check that fuse server
+> > > > > > > +                                * has CAP_SYS_RAWIO and/or CAP_SYS_ADMIN,
+> > > > > > > +                                * since it is directing the kernel to access
+> > > > > > > +                                * dax memory directly - but this function
+> > > > > > > +                                * appears not to be called in fuse server
+> > > > > > > +                                * process context (b/c even if it drops
+> > > > > > > +                                * those capabilities, they are held here).
+> > > > > > > +                                */
+> > > > > > > +                               fc->famfs_iomap = 1;
+> > > > > > > +                       }
+> > > > > > 
+> > > > > > 1. As long as the mapping requests are checking capabilities we should be ok
+> > > > > >     Right?
+> > > > > 
+> > > > > It depends on the definition of "are", or maybe of "mapping requests" ;)
+> > > > > 
+> > > > > Forgive me if this *is* obvious, but the fuse server capabilities are what
+> > > > > I think need to be checked here - not the app that it accessing a file.
+> > > > > 
+> > > > > An app accessing a regular file doesn't need permission to do raw access to
+> > > > > the underlying block dev, but the fuse server does - becuase it is directing
+> > > > > the kernel to access that for apps.
+> > > > > 
+> > > > > > 2. What's the deal with capable(CAP_SYS_ADMIN) in process_init_limits then?
+> > > > > 
+> > > > > I *think* that's checking the capabilities of the app that is accessing the
+> > > > > file, and not the fuse server. But I might be wrong - I have not pulled very
+> > > > > hard on that thread yet.
+> > > > 
+> > > > The init reply should be processed in the context of the fuse server.
+> > > > At that point the kernel hasn't exposed the fs to user programs, so
+> > > > (AFAICT) there won't be any other programs accessing that fuse mount.
+> > > 
+> > > Hmm. It would be good if you're right about that. My fuse server *is* running
+> > > as root, and when I check those capabilities in process_init_reply(), I
+> > > find those capabilities. So far so good.
+> > > 
+> > > Then I added code to my fuse server to drop those capabilities prior to
+> > > starting the fuse session (prctl(PR_CAPBSET_DROP, CAP_SYS_RAWIO) and 
+> > > prctl(PR_CAPBSET_DROP, CAP_SYS_ADMIN). I expected (hoped?) to see those 
+> > > capabilities disappear in process_init_reply() - but they did not disappear.
+> > > 
+> > > I'm all ears if somebody can see a flaw in my logic here. Otherwise, the
+> > > capabilities need to be stashed away before the reply is processsed, when 
+> > > fs/fuse *is* running in fuse server context.
+> > > 
+> > > I'm somewhat surprised if that isn't already happening somewhere...
+> > 
+> > Hrm.  I *thought* that since FUSE_INIT isn't queued as a background
+> > command, it should still execute in the same process context as the fuse
+> > server.
+> > 
+> > OTOH it also occurs to me that I have this code in fuse_send_init:
+> > 
+> > 	if (has_capability_noaudit(current, CAP_SYS_RAWIO))
+> > 		flags |= FUSE_IOMAP | FUSE_IOMAP_DIRECTIO | FUSE_IOMAP_PAGECACHE;
+> > 	...
+> > 	ia->in.flags = flags;
+> > 	ia->in.flags2 = flags >> 32;
+> > 
+> > which means that we only advertise iomap support in FUSE_INIT if the
+> > process running fuse_fill_super (which you hope is the fuse server)
+> > actually has CAP_SYS_RAWIO.  Would that work for you?  Or are you
+> > dropping privileges before you even open /dev/fuse?
 > 
-> > From: Alison Schofield <alison.schofield@intel.com>
+> Ah - that might be the answer. I will check if dropped capabilities 
+> disappear in fuse_send_init. If so, I can work with that - not advertising 
+> the famfs capability unless the capability is present at that point looks 
+> like a perfectly good option. Thanks for that idea!
+
+I thought of another twist -- what about a fuse server that runs with no
+special privilege and is passed an open fd to a dax/block device?  Maybe
+you're right that we need no explicit capability checks -- an open fd is
+sufficient.
+
+> > Note: I might decide to relax that approach later on, since iomap
+> > requires you to have opened a block device ... which implies that the
+> > process had read/write access to start with; and maybe we're ok with
+> > unprivileged fuse2fs servers running on a chmod 666 block device?
 > > 
-> > Add CXL region debugfs attributes to inject and clear poison based
-> > on an offset into the region. These new interfaces allow users to
-> > operate on poison at the region level without needing to resolve
-> > Device Physical Addresses (DPA) or target individual memdevs.
-> > 
-> > The implementation uses a new helper, region_offset_to_dpa_result()
-> > that applies decoder interleave logic, including XOR-based address
-> > decoding when applicable. Note that XOR decodes rely on driver
-> > internal xormaps which are not exposed to userspace. So, this support
-> > is not only a simplification of poison operations that could be done
-> > using existing per memdev operations, but also it enables this
-> > functionality for XOR interleaved regions for the first time.
-> > 
-> > New debugfs attributes are added in /sys/kernel/debug/cxl/regionX/:
-> > inject_poison and clear_poison. These are only exposed if all memdevs
-> > participating in the region support both inject and clear commands,
-> > ensuring consistent and reliable behavior across multi-device regions.
-> > 
-> > If tracing is enabled, these operations are logged as cxl_poison
-> > events in /sys/kernel/tracing/trace.
-> > 
-> > The ABI documentation warns users of the significant risks that
-> > come with using these capabilities.
-> > 
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> > ---
-> > 
-> > Changes in v2:
-> > Simplify return using test_bit() in cxl_memdev_has_poison() (Jonathan)
-> > Use ACQUIRE() in the debugfs inject and clear funcs (DaveJ, Jonathan)
-> > Fail if offset is in the extended linear cache (Jonathan)
-> > Added 'cxl' to an existing ABI for memdev clear_poison
-> > Redefine ABI to take a region offset, not SPA (Dan)
-> > Remove KernelVersion field in ABI doc (Dan)
-> > Warn against misuse in ABI doc (Dan)
-> > Add validate_region_offset() helper
-> > 
-> > 
-> >  Documentation/ABI/testing/debugfs-cxl |  89 ++++++++++++++++-
-> >  drivers/cxl/core/core.h               |   4 +
-> >  drivers/cxl/core/memdev.c             |   8 ++
-> >  drivers/cxl/core/region.c             | 131 +++++++++++++++++++++++++-
-> >  4 files changed, 228 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/Documentation/ABI/testing/debugfs-cxl b/Documentation/ABI/testing/debugfs-cxl
-> > index 12488c14be64..2989d4da96c1 100644
-> > --- a/Documentation/ABI/testing/debugfs-cxl
-> > +++ b/Documentation/ABI/testing/debugfs-cxl
-> > @@ -19,8 +19,22 @@ Description:
-> >  		is returned to the user. The inject_poison attribute is only
-> >  		visible for devices supporting the capability.
-> >  
-> > +		TEST-ONLY INTERFACE: This interface is intended for testing
-> > +		and validation purposes only. It is not a data repair mechanism
-> > +		and should never be used on production systems or live data.
-> >  
-> > -What:		/sys/kernel/debug/memX/clear_poison
-> > +		DATA LOSS RISK: For CXL persistent memory (PMEM) devices,
-> > +		poison injection can result in permanent data loss. Injected
-> > +		poison may render data permanently inaccessible even after
-> > +		clearing, as the clear operation writes zeros and does not
-> > +		recover original data.
-> > +
-> > +		SYSTEM STABILITY RISK: For volatile memory, poison injection
-> > +		can cause kernel crashes, system instability, or unpredictable
-> > +		behavior if the poisoned addresses are accessed by running code
-> > +		or critical kernel structures.
-> > +
-> > +What:		/sys/kernel/debug/cxl/memX/clear_poison
+> > <shrug> always easier to /relax/ the privilege checks. :)
 > 
-> Moved or previously a bug?  Looks like a bug, so separate patch.
-> Not sure we will bother asking for a backport, but having it in here made
-> me stare at that line for an unhealthy game of spot the difference.
-
-Previous bug. Will fixup separately.
-
-snip
-
-> > +
-> > +	rc = region_offset_to_dpa_result(cxlr, offset, &result);
-> > +	if (rc || !result.cxlmd || result.dpa == ULLONG_MAX) {
-> > +		dev_dbg(&cxlr->dev,
-> > +			"Failed to resolve DPA for region offset %#llx\n",
-> > +			offset);
-> > +
-> > +		return -EINVAL;
+> My policy on security is that I'm against it...
 > 
-> If rc was set, preferable to return that. I'd split the condition
-> into two parts to avoid this.
-
-I want to dev_dbg() regardless, so how about adding the rc to dev_dbg()
-and returning like this:
-
-        rc = region_offset_to_dpa_result(cxlr, offset, &result);
-        if (rc || !result.cxlmd || result.dpa == ULLONG_MAX) {
-                dev_dbg(&cxlr->dev,
--                       "Failed to resolve DPA for region offset %#llx\n",
--                       offset);
-+                       "Failed to resolve DPA for region offset %#llx rc %d\n",
-+                       offset, rc);
- 
--               return -EINVAL;
-+               return rc ? rc : -EINVAL;
-        }
-
-
-
+> > 
+> > > > > > 3. Darrick mentioned the need for a synchronic INIT variant for his work on
+> > > > > >     blockdev iomap support [1]
+> > > > > 
+> > > > > I'm not sure that's the same thing (Darrick?), but I do think Darrick's
+> > > > > use case probably needs to check capabilities for a server that is sending
+> > > > > apps (via files) off to access extents of block devices.
+> > > > 
+> > > > I don't know either, Miklos hasn't responded to my questions.  I think
+> > > > the motivation for a synchronous 
+> > > 
+> > > ?
+> > 
+> > ..."I don't know what his motivations for synchronous FUSE_INIT are."
+> > 
+> > I guess I fubard vim. :(
 > 
-> > +	}
-> > +
+> So I'm not alone...
+> 
+> > 
+> > > > As for fuse/iomap, I just only need to ask the kernel if iomap support
+> > > > is available before calling ext2fs_open2() because the iomap question
+> > > > has some implications for how we open the ext4 filesystem.
+> > > > 
+> > > > > > I also wonder how much of your patches and Darrick's patches end up
+> > > > > > being an overlap?
+> > > > > 
+> > > > > Darrick and I spent some time hashing through this, and came to the conclusion
+> > > > > that the actual overlap is slim-to-none. 
+> > > > 
+> > > > Yeah.  The neat thing about FMAPs is that you can establish repeating
+> > > > patterns, which is useful for interleaved DRAM/pmem devices.  Disk
+> > > > filesystems don't do repeating patterns, so they'd much rather manage
+> > > > non-repeating mappings.
+> > > 
+> > > Right. Interleaving is critical to how we use memory, so fmaps are designed
+> > > to support it.
+> > > 
+> > > Tangent: at some point a broader-than-just-me discussion of how block devices
+> > > have the device mapper, but memory has no such layout tools, might be good
+> > > to have. Without such a thing (which might or might not be possible/practical),
+> > > it's essential that famfs do the interleaving. Lacking a mapper layer also
+> > > means that we need dax to provide a clean "device abstraction" (meaning
+> > > a single CXL allocation [which has a uuid/tag] needs to appear as a single
+> > > dax device whether or not it's HPA-contiguous).
+> > 
+> > Well it's not as simple as device-mapper, where we can intercept struct
+> > bio and remap/split it to our heart's content.  I guess you could do
+> > that with an iovec...?  Would be sorta amusing if you could software
+> > RAID10 some DRAM. :P
+> 
+> SW RAID, and mapper in general, has a "store and forward" property (or maybe
+> "store, transmogrify, and forward") that doesn't really work for memory. 
+> It's vma's (and files) that can remap memory address regions. Layered vma's 
+> anyone? I need to think about whether that's utter nonsense, or just mostly 
+> nonsense.
+
+Oh but the ability to transmogrify is the key benefit of store and
+forward!  Suppose you have to jack into some Klingon battle cruiser...
+
+--D
+
+> Continuing to think about this...
+> 
+> Thanks!
+> John
+> 
+> 
 > 
