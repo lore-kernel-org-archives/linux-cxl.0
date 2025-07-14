@@ -1,273 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E832722F152
-	for <linux-cxl@vger.kernel.org>; Mon, 14 Jul 2025 22:35:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8681F126F0A
+	for <linux-cxl@vger.kernel.org>; Mon, 14 Jul 2025 22:46:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752532554; cv=none; b=ixtIY0otymU+MmLJDdi9AzhfYRsS6Kum3hTG96rY4E14IlYuvRFZ9wSbBQl6lmmt6B1lTyY8Xf8j6acHkb5eDdGajIakYB0Hn5mYifR5YhpVtb9k7v/kTtWqFGYuNWu0OpQxpDyZlE1za9H0A8CphgzTnkKQSABfMKPf/R74hVM=
+	t=1752533192; cv=none; b=qW6Y3kM4dN2lEXYi43TYiSIVa7oCMBOxIWDaQjPfUP1TXPI10zGoC2hkk0hjHZO7QqQ0URnvs+sk+J1HsHdfhN+b0H0uB/3CHQCn+AmwRRgORI3CywWH+RRssXJqoxlesBx4cNIHvomCxAoajaB7Q8f14kRJs7WnBS14xj4eH5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752532554; c=relaxed/simple;
-	bh=FPUOy+c+Wo44LG1WpcsAze0e1t8ZLjUzfEoyGwGUYrY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=a/VP4Yy0f8Cl6/4ROJO3NZYymGPT5pEGhcCrUcuxy4ADNs7JduQ5Px5mDa84o7xsKQI6ZitkPLJDamkhuVzM1BeGZYDAg8qO/Uwj6uNJ7FfxCJpdIJehfhvpuNl3DT1SgGigCfyMwS6SYr1WTYv12hVmavjfWJMk4v1BOixw5Bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47B8FC4CEED;
-	Mon, 14 Jul 2025 22:35:54 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	Li Ming <ming.li@zohomail.com>
-Subject: [PATCH v7 10/10] cxl: Remove devm_cxl_port_enumerate_dports() that is no longer used
-Date: Mon, 14 Jul 2025 15:35:27 -0700
-Message-ID: <20250714223527.461147-11-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <20250714223527.461147-1-dave.jiang@intel.com>
-References: <20250714223527.461147-1-dave.jiang@intel.com>
+	s=arc-20240116; t=1752533192; c=relaxed/simple;
+	bh=KHikLRAvLAWccDh6KWRsx4zSb7I4VWCifL/HsMOZbkg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pItKkc4qoSGOpii1I2vbE9r31ZcFZNFATAuwvJH5shltjLo7asImZmC/dSzbRTKExCe2a4Ijx1dL2MWKpKDvb5bGKrWhc1e1iwO/SoRaQj1bX3t6XsN48PTrwrLHCnsoAVZxMVqJ0Ux685uPBjmsZNqZP794/GKt7/Xo9maYXdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oLBMumwn; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oLBMumwn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1752533191; x=1784069191;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=KHikLRAvLAWccDh6KWRsx4zSb7I4VWCifL/HsMOZbkg=;
+  b=oLBMumwnRjVtDKrZAot7Tkr2oo9N5G7DqgPEWJSxflWIa29cH9RjLAt1
+   5Td+Rwl74mihlQhHat3t+1krpYrws53VSrNvJRjTHF+UB5Y07mVqDMuR4
+   yt0quXluRSn1eZJUn276Y/U20OSIYlSH8fJYbBoOYk6ZX2lNcb+8k9b95
+   4+o7xiD7fvJVyt95WvrZsE7HgMW2hPgQCTHxACBtzCQssOzMCIVg9WIzS
+   eOGmM3xROSVjr7Y2Ubn5B1Rg5QyyS3rQkJUAyMs8DJoHI9D3dfWjoLU4M
+   gRK5sUSphiB8Ybc0P1F1uLP1mN78R6X3kzKIlLJ+hApDFaM3u9C8Xjois
+   Q==;
+X-CSE-ConnectionGUID: 2vx1eTN3SJSkthcopfG6BQ==
+X-CSE-MsgGUID: G7m4qBOsRrWARKpvGBY6Mg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="66097480"
+X-IronPort-AV: E=Sophos;i="6.16,312,1744095600"; 
+   d="scan'208";a="66097480"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2025 15:46:30 -0700
+X-CSE-ConnectionGUID: Xqr59AfASL+Hq7baB79qbA==
+X-CSE-MsgGUID: 5UWPc+QlRviidl2ANpHszw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,312,1744095600"; 
+   d="scan'208";a="157763698"
+Received: from tfalcon-desk.amr.corp.intel.com (HELO [10.125.111.97]) ([10.125.111.97])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2025 15:46:29 -0700
+Message-ID: <bb66089e-71e8-4d0d-89b3-ed2e30a482f0@intel.com>
+Date: Mon, 14 Jul 2025 15:46:28 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [NDCTL PATCH v2] cxl: Add helper function to verify port is in
+ memdev hierarchy
+To: "Verma, Vishal L" <vishal.l.verma@intel.com>,
+ "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+ "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>
+Cc: "Schofield, Alison" <alison.schofield@intel.com>
+References: <20250711223350.3196213-1-dave.jiang@intel.com>
+ <4da519268938070b448f56d55535f0e3ea4585b0.camel@intel.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <4da519268938070b448f56d55535f0e3ea4585b0.camel@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Delete function devm_cxl_port_enumerate_dports() which is no longer being
-used anywhere. Also remove cxl_test support.
 
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-Reviewed-by: Li Ming <ming.li@zohomail.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- drivers/cxl/core/pci.c        | 87 ++++-------------------------------
- drivers/cxl/cxlpci.h          |  1 -
- tools/testing/cxl/Kbuild      |  1 -
- tools/testing/cxl/test/cxl.c  | 31 -------------
- tools/testing/cxl/test/mock.c | 15 ------
- tools/testing/cxl/test/mock.h |  1 -
- 6 files changed, 8 insertions(+), 128 deletions(-)
 
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index 5594b0fcddb0..717e25131db7 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -63,85 +63,6 @@ struct cxl_dport *__devm_cxl_add_dport_by_dev(struct cxl_port *port,
- }
- EXPORT_SYMBOL_NS_GPL(__devm_cxl_add_dport_by_dev, "CXL");
- 
--struct cxl_walk_context {
--	struct pci_bus *bus;
--	struct cxl_port *port;
--	int type;
--	int error;
--	int count;
--};
--
--static int match_add_dports(struct pci_dev *pdev, void *data)
--{
--	struct cxl_walk_context *ctx = data;
--	struct cxl_port *port = ctx->port;
--	int type = pci_pcie_type(pdev);
--	struct cxl_register_map map;
--	struct cxl_dport *dport;
--	u32 lnkcap, port_num;
--	int rc;
--
--	if (pdev->bus != ctx->bus)
--		return 0;
--	if (!pci_is_pcie(pdev))
--		return 0;
--	if (type != ctx->type)
--		return 0;
--	if (pci_read_config_dword(pdev, pci_pcie_cap(pdev) + PCI_EXP_LNKCAP,
--				  &lnkcap))
--		return 0;
--
--	rc = cxl_find_regblock(pdev, CXL_REGLOC_RBI_COMPONENT, &map);
--	if (rc)
--		dev_dbg(&port->dev, "failed to find component registers\n");
--
--	port_num = FIELD_GET(PCI_EXP_LNKCAP_PN, lnkcap);
--	dport = devm_cxl_add_dport(port, &pdev->dev, port_num, map.resource);
--	if (IS_ERR(dport)) {
--		ctx->error = PTR_ERR(dport);
--		return PTR_ERR(dport);
--	}
--	ctx->count++;
--
--	return 0;
--}
--
--/**
-- * devm_cxl_port_enumerate_dports - enumerate downstream ports of the upstream port
-- * @port: cxl_port whose ->uport_dev is the upstream of dports to be enumerated
-- *
-- * Returns a positive number of dports enumerated or a negative error
-- * code.
-- */
--int devm_cxl_port_enumerate_dports(struct cxl_port *port)
--{
--	struct pci_bus *bus = cxl_port_to_pci_bus(port);
--	struct cxl_walk_context ctx;
--	int type;
--
--	if (!bus)
--		return -ENXIO;
--
--	if (pci_is_root_bus(bus))
--		type = PCI_EXP_TYPE_ROOT_PORT;
--	else
--		type = PCI_EXP_TYPE_DOWNSTREAM;
--
--	ctx = (struct cxl_walk_context) {
--		.port = port,
--		.bus = bus,
--		.type = type,
--	};
--	pci_walk_bus(bus, match_add_dports, &ctx);
--
--	if (ctx.count == 0)
--		return -ENODEV;
--	if (ctx.error)
--		return ctx.error;
--	return ctx.count;
--}
--EXPORT_SYMBOL_NS_GPL(devm_cxl_port_enumerate_dports, "CXL");
--
- static int cxl_dvsec_mem_range_valid(struct cxl_dev_state *cxlds, int id)
- {
- 	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
-@@ -1209,6 +1130,14 @@ int cxl_gpf_port_setup(struct cxl_dport *dport)
- 	return 0;
- }
- 
-+struct cxl_walk_context {
-+	struct pci_bus *bus;
-+	struct cxl_port *port;
-+	int type;
-+	int error;
-+	int count;
-+};
-+
- static int match_dport(struct pci_dev *pdev, void *data)
- {
- 	struct cxl_walk_context *ctx = data;
-diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-index 54e219b0049e..7827a183128d 100644
---- a/drivers/cxl/cxlpci.h
-+++ b/drivers/cxl/cxlpci.h
-@@ -127,7 +127,6 @@ static inline bool cxl_pci_flit_256(struct pci_dev *pdev)
- 	return lnksta2 & PCI_EXP_LNKSTA2_FLIT;
- }
- 
--int devm_cxl_port_enumerate_dports(struct cxl_port *port);
- struct cxl_dev_state;
- int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
- 			struct cxl_endpoint_dvsec_info *info);
-diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-index d8c5f7df4866..4e3597d4ee9c 100644
---- a/tools/testing/cxl/Kbuild
-+++ b/tools/testing/cxl/Kbuild
-@@ -4,7 +4,6 @@ ldflags-y += --wrap=is_acpi_device_node
- ldflags-y += --wrap=acpi_evaluate_integer
- ldflags-y += --wrap=acpi_pci_find_root
- ldflags-y += --wrap=nvdimm_bus_register
--ldflags-y += --wrap=devm_cxl_port_enumerate_dports
- ldflags-y += --wrap=cxl_port_update_total_dports
- ldflags-y += --wrap=devm_cxl_setup_hdm
- ldflags-y += --wrap=devm_cxl_add_passthrough_decoder
-diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index 3e9c877fcff2..d52ae0be4941 100644
---- a/tools/testing/cxl/test/cxl.c
-+++ b/tools/testing/cxl/test/cxl.c
-@@ -996,36 +996,6 @@ static int mock_cxl_port_update_total_dports(struct cxl_port *port)
- 	return 0;
- }
- 
--static int mock_cxl_port_enumerate_dports(struct cxl_port *port)
--{
--	struct platform_device **array;
--	int rc, i, array_size;
--
--	rc = get_port_array(port, &array, &array_size);
--	if (rc)
--		return rc;
--
--	for (i = 0; i < array_size; i++) {
--		struct platform_device *pdev = array[i];
--		struct cxl_dport *dport;
--
--		if (pdev->dev.parent != port->uport_dev) {
--			dev_dbg(&port->dev, "%s: mismatch parent %s\n",
--				dev_name(port->uport_dev),
--				dev_name(pdev->dev.parent));
--			continue;
--		}
--
--		dport = devm_cxl_add_dport(port, &pdev->dev, pdev->id,
--					   CXL_RESOURCE_NONE);
--
--		if (IS_ERR(dport))
--			return PTR_ERR(dport);
--	}
--
--	return 0;
--}
--
- static struct cxl_dport *mock_cxl_add_dport_by_dev(struct cxl_port *port,
- 						   struct device *dport_dev)
- {
-@@ -1112,7 +1082,6 @@ static struct cxl_mock_ops cxl_mock_ops = {
- 	.acpi_table_parse_cedt = mock_acpi_table_parse_cedt,
- 	.acpi_evaluate_integer = mock_acpi_evaluate_integer,
- 	.acpi_pci_find_root = mock_acpi_pci_find_root,
--	.devm_cxl_port_enumerate_dports = mock_cxl_port_enumerate_dports,
- 	.cxl_port_update_total_dports = mock_cxl_port_update_total_dports,
- 	.devm_cxl_setup_hdm = mock_cxl_setup_hdm,
- 	.devm_cxl_add_passthrough_decoder = mock_cxl_add_passthrough_decoder,
-diff --git a/tools/testing/cxl/test/mock.c b/tools/testing/cxl/test/mock.c
-index 3c7190b7d5a4..8bb90d732332 100644
---- a/tools/testing/cxl/test/mock.c
-+++ b/tools/testing/cxl/test/mock.c
-@@ -188,21 +188,6 @@ int __wrap_devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
- }
- EXPORT_SYMBOL_NS_GPL(__wrap_devm_cxl_enumerate_decoders, "CXL");
- 
--int __wrap_devm_cxl_port_enumerate_dports(struct cxl_port *port)
--{
--	int rc, index;
--	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
--
--	if (ops && ops->is_mock_port(port->uport_dev))
--		rc = ops->devm_cxl_port_enumerate_dports(port);
--	else
--		rc = devm_cxl_port_enumerate_dports(port);
--	put_cxl_mock_ops(index);
--
--	return rc;
--}
--EXPORT_SYMBOL_NS_GPL(__wrap_devm_cxl_port_enumerate_dports, "CXL");
--
- int __wrap_cxl_port_update_total_dports(struct cxl_port *port)
- {
- 	int rc, index;
-diff --git a/tools/testing/cxl/test/mock.h b/tools/testing/cxl/test/mock.h
-index 0a440b9f544c..4d262a38dd51 100644
---- a/tools/testing/cxl/test/mock.h
-+++ b/tools/testing/cxl/test/mock.h
-@@ -19,7 +19,6 @@ struct cxl_mock_ops {
- 	bool (*is_mock_bus)(struct pci_bus *bus);
- 	bool (*is_mock_port)(struct device *dev);
- 	bool (*is_mock_dev)(struct device *dev);
--	int (*devm_cxl_port_enumerate_dports)(struct cxl_port *port);
- 	int (*cxl_port_update_total_dports)(struct cxl_port *port);
- 	struct cxl_hdm *(*devm_cxl_setup_hdm)(
- 		struct cxl_port *port, struct cxl_endpoint_dvsec_info *info);
--- 
-2.50.0
+On 7/14/25 3:27 PM, Verma, Vishal L wrote:
+> On Fri, 2025-07-11 at 15:33 -0700, Dave Jiang wrote:
+>> 'cxl enable-port -m' uses cxl_port_get_dport_by_memdev() to find the
+>> memdevs that are associated with a port in order to enable those
+>> associated memdevs. When the kernel switch to delayed dport
+>> initialization by enumerating the dports during memdev probe, the
+>> dports are no longer valid until the memdev is probed. This means
+>> that cxl_port_get_dport_by_memdev() will not find any memdevs under
+>> the port.
+>>
+>> Add a new helper function cxl_port_is_memdev_hierarchy() that checks if a
+> 
+> Stale commit message - since the actual helper is called
+> cxl_memdev_is_port_ancestor() ?
+
+Ooops. Maybe Alison can fix it up when she applies if there are no other changes.
+
+> 
+>> port is in the memdev hierarchy via the memdev->host_path where the sysfs
+>> path contains all the devices in the hierarchy. This call is also backward
+>> compatible with the old behavior.
+>>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>> v2:
+>> - Remove usages of cxl_port_get_dport_by_memdev() and add documentation to explain
+>>   when cxl_port_get_dport_by_memdev() should be used. (Alison)
+>> ---
+>>  Documentation/cxl/lib/libcxl.txt |  5 +++++
+>>  cxl/filter.c                     |  2 +-
+>>  cxl/lib/libcxl.c                 | 31 +++++++++++++++++++++++++++++++
+>>  cxl/lib/libcxl.sym               |  5 +++++
+>>  cxl/libcxl.h                     |  3 +++
+>>  cxl/port.c                       |  4 ++--
+>>  6 files changed, 47 insertions(+), 3 deletions(-)
 
