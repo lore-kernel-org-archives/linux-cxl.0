@@ -1,182 +1,199 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CF8D24678C
-	for <linux-cxl@vger.kernel.org>; Mon, 14 Jul 2025 15:44:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B262260580;
+	Mon, 14 Jul 2025 16:28:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752507842; cv=none; b=UgmJgWi5a3nf5J33Sw7gWhCa7Mp3zJqQFTJgkXxNZ/MxwXplX0ED7cWHQpsIU2WzdhOIwCCYXthXMW7orIroid/vXanTHKcdIuH4XpMbrgtBPskG921erJZ0hs4ZeT/E6BzuHACnqzSPhsWlhDXpfPfWoqtptLEmwUZX9k7XZFE=
+	t=1752510510; cv=none; b=Wx5/SdeXaLWIVVZNpv+gvgQcaa6uaQZQ5GNRzxtxTjtTDHp43iZAUExPGwQCk/1E2dCqxOpAJLYNSyjdbYSDFMQX6LdUjYFb46vP9NS7VkP/RvdEyEDuAPq5tETvHSvOgm3/X05dfhEfKeK3l5kqrKAkK0TVMIeyiVBiYD48U7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752507842; c=relaxed/simple;
-	bh=NHZTk1MbSwuX2TC/cvr03+rgfi9Vzg5JE+R5y6MRDO0=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=q5MTJjNUjcGf9fQ1UjicxKBTA92M3JXsRkrsI2d4AP4L/Dn2dpKOZcvhDXo0E71VoYq77MrsuTLj9q0n6hIKVJwNbkbwmrfYvlOMipGH+NZZ2a0BX4qT+ks6jBdXDUHTfC0o47CG/lOAxS66JWArLu8M802JjO15vOLKo0rdPPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dgaAPgzY; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dgaAPgzY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1752507839;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pioZSV5t4QyWHRN8AGbngDT1fEVjtAAoah29uzJwYZQ=;
-	b=dgaAPgzYmImyTg5Q3bRekiQy23bojiigh0yFT7iO+9wUCkoXvUU/Px4dQRVL59a36voiCj
-	LLOta0GvVvZQx0YHVLWaRVa8Aa9W9h4Wst5LS0Ncdm5387L9tDiBpcTdXnnwEZ07NTozYI
-	QKP5wDM3snCjl6y91q8uVxsVV74D1kM=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-274-A2zzeiPKMzuFj4_W3vNnnQ-1; Mon,
- 14 Jul 2025 11:43:55 -0400
-X-MC-Unique: A2zzeiPKMzuFj4_W3vNnnQ-1
-X-Mimecast-MFC-AGG-ID: A2zzeiPKMzuFj4_W3vNnnQ_1752507833
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 530631800343;
-	Mon, 14 Jul 2025 15:43:52 +0000 (UTC)
-Received: from [10.22.80.10] (unknown [10.22.80.10])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D81B5180035E;
-	Mon, 14 Jul 2025 15:43:47 +0000 (UTC)
-Date: Mon, 14 Jul 2025 17:43:42 +0200 (CEST)
-From: Mikulas Patocka <mpatocka@redhat.com>
-To: Dongsheng Yang <dongsheng.yang@linux.dev>
-cc: agk@redhat.com, snitzer@kernel.org, axboe@kernel.dk, hch@lst.de, 
-    dan.j.williams@intel.com, Jonathan.Cameron@Huawei.com, 
-    linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-    linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev, 
-    dm-devel@lists.linux.dev
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v2_00=2F11=5D_dm-pcache_=E2=80=93_pe?=
- =?UTF-8?Q?rsistent-memory_cache_for_block_devices?=
-In-Reply-To: <e50ef45e-4c1a-4874-8d5f-9ca86f9a532c@linux.dev>
-Message-ID: <1ff2da54-60dd-9719-eb55-386ff32ae421@redhat.com>
-References: <20250707065809.437589-1-dongsheng.yang@linux.dev> <85b5cb31-b272-305f-8910-c31152485ecf@redhat.com> <e50ef45e-4c1a-4874-8d5f-9ca86f9a532c@linux.dev>
+	s=arc-20240116; t=1752510510; c=relaxed/simple;
+	bh=+5kEwgQzjaASRloqt5fWQWCM7O0SdzAdNy7bCPc+Q5M=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=P5Y8FQcOgGd/GiJr9UFFtzR65cOWzPuptGjPD5u9/B+qf7y1PKm2jxWFHr0mnglCmFBrxpQ2e5NGl9oroRt+z9ASbQFxxddNT680mBKOHU6mkkiz1hwaBsiNnZtUaJfOvl6AfozMNw1nL/jRcfHl8uOQYDne6Q63tYAYwRXA+ac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bgnlq2R0Gz6L5Gx;
+	Tue, 15 Jul 2025 00:27:19 +0800 (CST)
+Received: from frapeml500005.china.huawei.com (unknown [7.182.85.13])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4F493140275;
+	Tue, 15 Jul 2025 00:28:24 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (7.182.85.172) by
+ frapeml500005.china.huawei.com (7.182.85.13) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 14 Jul 2025 18:28:23 +0200
+Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
+ frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
+ Mon, 14 Jul 2025 18:28:23 +0200
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "David
+ Lechner" <dlechner@baylibre.com>, Peter Zijlstra <peterz@infradead.org>,
+	"Linus Torvalds" <torvalds@linux-foundation.org>, Ingo Molnar
+	<mingo@kernel.org>, "Fabio M. De Francesco"
+	<fabio.m.de.francesco@linux.intel.com>, "Davidlohr Bueso"
+	<dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, Dave
+ Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>, "Ira Weiny" <ira.weiny@intel.com>
+Subject: RE: [PATCH v3 8/8] cxl: Convert to ACQUIRE() for conditional rwsem
+ locking
+Thread-Topic: [PATCH v3 8/8] cxl: Convert to ACQUIRE() for conditional rwsem
+ locking
+Thread-Index: AQHb8r6Ir5Mnvswws02cjfabWtneq7QxxK1Q
+Date: Mon, 14 Jul 2025 16:28:23 +0000
+Message-ID: <a49ab85cbd70469c8d1ebb9a43db0517@huawei.com>
+References: <20250711234932.671292-1-dan.j.williams@intel.com>
+ <20250711234932.671292-9-dan.j.williams@intel.com>
+In-Reply-To: <20250711234932.671292-9-dan.j.williams@intel.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="-1463811712-660552650-1752506079=:673007"
-Content-ID: <1c6a656d-7cb0-02e3-f428-fcf371e66565@redhat.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+>-----Original Message-----
+>From: Dan Williams <dan.j.williams@intel.com>
+>Sent: 12 July 2025 00:50
+>To: linux-cxl@vger.kernel.org
+>Cc: linux-kernel@vger.kernel.org; David Lechner <dlechner@baylibre.com>;
+>Peter Zijlstra <peterz@infradead.org>; Linus Torvalds <torvalds@linux-
+>foundation.org>; Ingo Molnar <mingo@kernel.org>; Fabio M. De Francesco
+><fabio.m.de.francesco@linux.intel.com>; Davidlohr Bueso <dave@stgolabs.net=
+>;
+>Jonathan Cameron <jonathan.cameron@huawei.com>; Dave Jiang
+><dave.jiang@intel.com>; Alison Schofield <alison.schofield@intel.com>; Vis=
+hal
+>Verma <vishal.l.verma@intel.com>; Ira Weiny <ira.weiny@intel.com>; Shiju J=
+ose
+><shiju.jose@huawei.com>
+>Subject: [PATCH v3 8/8] cxl: Convert to ACQUIRE() for conditional rwsem lo=
+cking
+>
+>Use ACQUIRE() to cleanup conditional locking paths in the CXL driver The
+>ACQUIRE() macro and its associated ACQUIRE_ERR() helpers, like
+>scoped_cond_guard(), arrange for scoped-based conditional locking. Unlike
+>scoped_cond_guard(), these macros arrange for an ERR_PTR() to be retrieved
+>representing the state of the conditional lock.
+>
+>The goal of this conversion is to complete the removal of all explicit unl=
+ock calls
+>in the subsystem. I.e. the methods to acquire a lock are solely via guard(=
+),
+>scoped_guard() (for limited cases), or ACQUIRE(). All unlock is implicit /=
+ scope-
+>based. In order to make sure all lock sites are converted, the existing rw=
+sem's
+>are consolidated and renamed in 'struct cxl_rwsem'. While that makes the p=
+atch
+>noisier it gives a clean cut-off between old-world (explicit unlock allowe=
+d), and
+>new world (explicit unlock deleted).
+>
+>Cc: David Lechner <dlechner@baylibre.com>
+>Cc: Peter Zijlstra <peterz@infradead.org>
+>Cc: Linus Torvalds <torvalds@linux-foundation.org>
+>Cc: Ingo Molnar <mingo@kernel.org>
+>Cc: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+>Cc: Davidlohr Bueso <dave@stgolabs.net>
+>Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
+>Cc: Dave Jiang <dave.jiang@intel.com>
+>Cc: Alison Schofield <alison.schofield@intel.com>
+>Cc: Vishal Verma <vishal.l.verma@intel.com>
+>Cc: Ira Weiny <ira.weiny@intel.com>
+>Cc: Shiju Jose <shiju.jose@huawei.com>
+>Acked-by: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+>Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
----1463811712-660552650-1752506079=:673007
-Content-Type: text/plain; CHARSET=UTF-8
-Content-Transfer-Encoding: 8BIT
-Content-ID: <604db260-a208-1612-a6e0-250e4a0b7b66@redhat.com>
+Hi Dan,
 
+For changes in CXL EDAC (drivers/cxl/core/edac.c),
+Tested-by: Shiju Jose <shiju.jose@huawei.com>
 
+>---
+> drivers/cxl/core/cdat.c   |   6 +-
+> drivers/cxl/core/core.h   |  17 ++-
+> drivers/cxl/core/edac.c   |  44 +++---
+> drivers/cxl/core/hdm.c    |  41 +++---
+> drivers/cxl/core/mbox.c   |   6 +-
+> drivers/cxl/core/memdev.c |  50 +++----
+> drivers/cxl/core/port.c   |  18 +--
+> drivers/cxl/core/region.c | 295 ++++++++++++++++----------------------
+> drivers/cxl/cxl.h         |  13 +-
+> include/linux/rwsem.h     |   1 +
+> 10 files changed, 212 insertions(+), 279 deletions(-)
+>
+[...]
+>diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c index
+>2cbc664e5d62..f1ebdbe222c8 100644
+>--- a/drivers/cxl/core/edac.c
+>+++ b/drivers/cxl/core/edac.c
+>@@ -115,10 +115,9 @@ static int cxl_scrub_get_attrbs(struct
+>cxl_patrol_scrub_context *cxl_ps_ctx,
+> 						flags, min_cycle);
+> 	}
+>
+>-	struct rw_semaphore *region_lock __free(rwsem_read_release) =3D
+>-		rwsem_read_intr_acquire(&cxl_region_rwsem);
+>-	if (!region_lock)
+>-		return -EINTR;
+>+	ACQUIRE(rwsem_read_intr, rwsem)(&cxl_rwsem.region);
+>+	if ((ret =3D ACQUIRE_ERR(rwsem_read_intr, &rwsem)))
+Checkpatch is giving error here and in other places with similar coding sty=
+le, =20
+"ERROR: do not use assignment in if condition"
 
-On Wed, 9 Jul 2025, Dongsheng Yang wrote:
+>+		return ret;
+>
+[...]
+> 		p =3D &cxlr->params;
+>@@ -2215,18 +2173,18 @@ int cxl_decoder_detach(struct cxl_region *cxlr,
+> 	struct cxl_region *detach;
+>
+> 	/* when the decoder is being destroyed lock unconditionally */
+>-	if (mode =3D=3D DETACH_INVALIDATE)
+>-		down_write(&cxl_region_rwsem);
+>-	else {
+>-		int rc =3D down_write_killable(&cxl_region_rwsem);
+>+	if (mode =3D=3D DETACH_INVALIDATE) {
+>+		guard(rwsem_write)(&cxl_rwsem.region);
+>+		detach =3D __cxl_decoder_detach(cxlr, cxled, pos, mode);
+>+	} else {
+>+		int rc;
+>
+>-		if (rc)
+>+		ACQUIRE(rwsem_write_kill, rwsem)(&cxl_rwsem.region);
+>+		if ((rc =3D ACQUIRE_ERR(rwsem_write_kill, &rwsem)))
+> 			return rc;
+>+		detach =3D __cxl_decoder_detach(cxlr, cxled, pos, mode);
+> 	}
+May be detach =3D __cxl_decoder_detach(cxlr, cxled, pos, mode);
+add outside if ... else as before?
+>
+>-	detach =3D __cxl_decoder_detach(cxlr, cxled, pos, mode);
+>-	up_write(&cxl_region_rwsem);
+>-
+> 	if (detach) {
+> 		device_release_driver(&detach->dev);
+> 		put_device(&detach->dev);
+>@@ -2234,29 +2192,35 @@ int cxl_decoder_detach(struct cxl_region *cxlr,
+> 	return 0;
+> }
+[...]
+> /*
+>  * downgrade write lock to read lock
+>--
+>2.50.0
+>
 
-> 
-> 在 7/8/2025 4:16 AM, Mikulas Patocka 写道:
-> > 
-> > On Mon, 7 Jul 2025, Dongsheng Yang wrote:
-> > 
-> > > Hi Mikulas,
-> > > 	This is V2 for dm-pcache, please take a look.
-> > > 
-> > > Code:
-> > >      https://github.com/DataTravelGuide/linux tags/pcache_v2
-> > > 
-> > > Changelogs
-> > > 
-> > > V2 from V1:
-> > > 	- introduce req_alloc() and req_init() in backing_dev.c, then we
-> > > 	  can do req_alloc() before holding spinlock and do req_init()
-> > > 	  in subtree_walk().
-> > > 	- introduce pre_alloc_key and pre_alloc_req in walk_ctx, that
-> > > 	  means we can pre-allocate cache_key or backing_dev_request
-> > > 	  before subtree walking.
-> > > 	- use mempool_alloc() with NOIO for the allocation of cache_key
-> > > 	  and backing_dev_req.
-> > > 	- some coding style changes from comments of Jonathan.
-> > Hi
-> > 
-> > mempool_alloc with GFP_NOIO never fails - so you don't have to check the
-> > returned value for NULL and propagate the error upwards.
-> 
-> 
-> Hi Mikulas:
-> 
->    I noticed that the implementation of mempool_alloc—it waits for 5 seconds
-> and retries when allocation fails.
-
-No, this is incorrect observation.
-
-mempool_alloc will add the current process to a wait queue:
-  prepare_to_wait(&pool->wait, &wait, TASK_UNINTERRUPTIBLE);
-then, it will execute the wait:
-  io_schedule_timeout(5*HZ);
-and then remove the current process from a wait queue:
-  finish_wait(&pool->wait, &wait);
-
-but the io_schedule_timeout function will wait at most 5 seconds - it 
-doesn't wait exactly 5 seconds. If some other piece of code frees some 
-data into the mempool, it executes:
-  wake_up(&pool->wait);
-so that the process that is waiting in io_schedule_timeout(5*HZ) is woken 
-up immediatelly.
-
-See this comment in mempool_alloc:
-        /*
-         * FIXME: this should be io_schedule().  The timeout is there as a
-         * workaround for some DM problems in 2.6.18.
-         */
-        io_schedule_timeout(5*HZ);
-
-- the timeout is actually a workaround for some buggy code in device 
-mapper where the code allocated more and more entries from the mempool 
-without freeing them. I fixed this bug many years ago. But people 
-shouldn't add more buggy code that depends on this timeout.
-
-> With this in mind, I propose that we handle -ENOMEM inside defer_req() using a
-> similar mechanism. something like this commit:
-> 
-> 
-> https://github.com/DataTravelGuide/linux/commit/e6fc2e5012b1fe2312ed7dd02d6fbc2d038962c0
-> 
-> 
-> Here are two key reasons why:
-> 
-> (1) If we manage -ENOMEM in defer_req(), we don’t need to modify every
-> lower-level allocation to use mempool to avoid failures—for example,
-> 
-> cache_key, backing_req, and the kmem.bvecs you mentioned. More importantly,
-> there’s no easy way to prevent allocation failure in some places—for instance,
-> bio_init_clone() could still return -ENOMEM.
-> 
-> (2) If we use a mempool, it will block and wait indefinitely when memory is
-> unavailable, preventing the process from exiting.
-
-Mempool will wait until some other code frees some data into the mempool. 
-So, as long as your code can make forward progress and finish some 
-requests and free their data into the mempool, it should work properly.
-
-On the other hand, non-mempool GFP_NOIO allocations can wait indefinitely.
-
-> But with defer_req(), the user can still manually stop the pcache device using
-> dmsetup remove, releasing some memory if user want.
-> 
-> What do you think?
-
-I think that you should go back to version 2 (that had mempools) and 
-change the non-mempool allocation "backing_req->kmem.bvecs = 
-kmalloc_array(n_vecs, sizeof(struct bio_vec), GFP_NOIO);" to use a 
-mempool.
-
-> Thanx
-> 
-> Dongsheng
-
-Mikulas
----1463811712-660552650-1752506079=:673007--
-
+Thanks,
+Shiju
