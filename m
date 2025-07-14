@@ -1,45 +1,47 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D155B256C9C
-	for <linux-cxl@vger.kernel.org>; Mon, 14 Jul 2025 14:16:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEA9725A33E;
+	Mon, 14 Jul 2025 15:10:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752502608; cv=none; b=jTHxKzlif1ZpxBgMdZQLzTzoD25wAmoABE7K2KcWF4k8Gge62ea3B9mgtQFokGqNIg94h/DjuLzq23EHok1y1UoznfnLNySFg3aZHnOuLNX+t5R0axBq3KigUhrdmoOsZ7M9MfA4cyO0alLayvcRbWxevW8RmGcu9ag9PN1E8GY=
+	t=1752505818; cv=none; b=qOf6KPcXyZRSXVeLLtl9vDj++Au1cWZR9CHRbFzDPU52ez42zZd7s02Aen6bIqUp9T+7qCDBbyDpoPkzXKDLHln0g5No4mvnDkbTeEuB1ebt2s0lkG7KEQA+ae2InJApFLsG/ZsalDTfb2s5xQw1ayVUyFLzOy0lLJhiDXdplic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752502608; c=relaxed/simple;
-	bh=zj1UdYMR/3VwsNvcH7fbARklsU41r4pTRWMWVRdxRfk=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fk+XKC8a96qECc0I0UGn5Z8PnDwaw/pe9Ox/VIIFsUzMVLYStVQF0YvhyvN1oS8m1wnOWO7umtRDjxDKSPX7/QFFS5FaBtQq5GhluyKKKm9pxxmctW2b4nr9xVnYv0QQ1Fndn8TkWOo5sLcWY27VYONCDuKcVR2CMJg0zSM1lDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bgkn474p3z6L5MX;
-	Mon, 14 Jul 2025 22:13:12 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 111951402F2;
-	Mon, 14 Jul 2025 22:16:40 +0800 (CST)
-Received: from localhost (10.122.19.247) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 14 Jul
- 2025 16:16:39 +0200
-Date: Mon, 14 Jul 2025 15:16:38 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: "Michael S. Tsirkin" <mst@redhat.com>
-CC: <qemu-devel@nongnu.org>, Fan Ni <fan.ni@samsung.com>,
-	<linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>, Anisa Su
-	<anisa.su@samsung.com>
-Subject: Re: [PATCH qemu 07/11] hw/cxl: mailbox-utils: 0x5602 - FMAPI Set DC
- Region Config
-Message-ID: <20250714151638.000038ac@huawei.com>
-In-Reply-To: <20250714151512.00000a2a@huawei.com>
-References: <20250702160219.989731-1-Jonathan.Cameron@huawei.com>
-	<20250702160219.989731-8-Jonathan.Cameron@huawei.com>
-	<20250714052757-mutt-send-email-mst@kernel.org>
-	<20250714150218.00006c95@huawei.com>
-	<20250714151512.00000a2a@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1752505818; c=relaxed/simple;
+	bh=tL2cvBKvP+TRNoehYql8sqSD0WsB5mk+ZMdcqb1joUM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=H0FmW19lJGOi8hmzNiEour4UeyuwkdJTBJUDvz5z5RJyvJ/jEXrLPUTtV14yMZ0A2+3GCtbNQmerAv6XDUYy26x5sU1/hp7jiewsB5SAvWdc8b4PtoqYXsrmA36gEhX++hGs0iwY0b2YwJ3TnYA2yaBrQtCSzjw7oHnyBx34PEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cWeEO09G; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cWeEO09G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70FB9C4CEED;
+	Mon, 14 Jul 2025 15:10:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752505818;
+	bh=tL2cvBKvP+TRNoehYql8sqSD0WsB5mk+ZMdcqb1joUM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=cWeEO09GvdWR7Yxc1VYvSQtI6HYGeWlBW6L3qlJJ4vSnKlQbEwatoGUPJdS0+bmcL
+	 YUkslPAQW/CggfUqF+K0X2rRRWzjo7cG7S6a7F/rbA8Wjrqid0kG8CvqgnmnmvOwh1
+	 tQbHbOZyA6RppVXNWcVEwvmBPxec3+RD+VWVJS5FKyTUpvw8bGv6XJm3ufFx6HvgSV
+	 4P8g4oWp+6t8A2hgZIcsdt/nf0GB5iAmhYk7Muesdzy54odJSJy7M1Ubl4wbSWV45p
+	 yFyOLlnFKyyHgw5S5U1ApSOtkX6EyOJ0XzVuc8zpceXrUaKlZKxAYWvlD6810rANRw
+	 FmBmcbJFyQOsw==
+From: Will Deacon <will@kernel.org>
+To: jonathan.cameron@huawei.com,
+	mark.rutland@arm.com,
+	linux-cxl@vger.kernel.org,
+	Alok Tiwari <alok.a.tiwari@oracle.com>
+Cc: catalin.marinas@arm.com,
+	kernel-team@android.com,
+	Will Deacon <will@kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] perf/cxlpmu: Fix allocation argument order and minor formatting
+Date: Mon, 14 Jul 2025 16:10:09 +0100
+Message-Id: <175249658916.1514882.17829256501206984322.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250624194350.109790-1-alok.a.tiwari@oracle.com>
+References: <20250624194350.109790-1-alok.a.tiwari@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -47,137 +49,33 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Transfer-Encoding: 8bit
 
-On Mon, 14 Jul 2025 15:15:12 +0100
-Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+On Tue, 24 Jun 2025 12:43:37 -0700, Alok Tiwari wrote:
+> This patch series includes a few minor cleanups and correctness
+> improvements in drivers/perf/cxl_pmu.c
+> 
+> Correct the argument order in devm_kcalloc() to follow the
+> conventional count, size form to avoid any confusion or bugs.
+> 
+> Remove an unintended newline in the IRQ name string passed to
+> devm_kasprintf() and  fix a formatting issue in the devm_kasprintf()
+> 
+> [...]
 
-> On Mon, 14 Jul 2025 15:02:18 +0100
-> Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
->=20
-> > On Mon, 14 Jul 2025 05:32:19 -0400
-> > "Michael S. Tsirkin" <mst@redhat.com> wrote:
-> >  =20
-> > > On Wed, Jul 02, 2025 at 05:02:13PM +0100, Jonathan Cameron wrote:   =
-=20
-> > > > From: Anisa Su <anisa.su@samsung.com>
-> > > >=20
-> > > > FM DCD Management command 0x5602 implemented per CXL r3.2 Spec Sect=
-ion 7.6.7.6.3
-> > > >=20
-> > > > Reviewed-by: Fan Ni <fan.ni@samsung.com>
-> > > > Signed-off-by: Anisa Su <anisa.su@samsung.com>
-> > > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>   =20
-> >=20
-> >  =20
-> > > > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> > > > index bf1710b251..1fc453f70d 100644
-> > > > --- a/hw/cxl/cxl-mailbox-utils.c
-> > > > +++ b/hw/cxl/cxl-mailbox-utils.c   =20
-> >  =20
-> > > > +/* CXL r3.2 section 7.6.7.6.3: Set Host DC Region Configuration (O=
-pcode 5602) */
-> > > > +static CXLRetCode cmd_fm_set_dc_region_config(const struct cxl_cmd=
- *cmd,
-> > > > +                                              uint8_t *payload_in,
-> > > > +                                              size_t len_in,
-> > > > +                                              uint8_t *payload_out,
-> > > > +                                              size_t *len_out,
-> > > > +                                              CXLCCI *cci)
-> > > > +{
-> > > > +    struct {
-> > > > +        uint8_t reg_id;
-> > > > +        uint8_t rsvd[3];
-> > > > +        uint64_t block_sz;
-> > > > +        uint8_t flags;
-> > > > +        uint8_t rsvd2[3];
-> > > > +    } QEMU_PACKED *in =3D (void *)payload_in;
-> > > > +    CXLType3Dev *ct3d =3D CXL_TYPE3(cci->d);
-> > > > +    CXLEventDynamicCapacity dcEvent =3D {};
-> > > > +    CXLDCRegion *region =3D &ct3d->dc.regions[in->reg_id];
-> > > > +
-> > > > +    /*
-> > > > +     * CXL r3.2 7.6.7.6.3: Set DC Region Configuration
-> > > > +     * This command shall fail with Unsupported when the Sanitize =
-on Release
-> > > > +     * field does not match the region=E2=80=99s configuration... =
-and the device
-> > > > +     * does not support reconfiguration of the Sanitize on Release=
- setting.
-> > > > +     *
-> > > > +     * Currently not reconfigurable, so always fail if sanitize bi=
-t (bit 0)
-> > > > +     * doesn't match.
-> > > > +     */
-> > > > +    if ((in->flags & 0x1) !=3D (region->flags & 0x1)) {
-> > > > +        return CXL_MBOX_UNSUPPORTED;
-> > > > +    }
-> > > > +
-> > > > +    if (in->reg_id >=3D DCD_MAX_NUM_REGION) {
-> > > > +        return CXL_MBOX_UNSUPPORTED;
-> > > > +    }
-> > > > +
-> > > > +    /* Check that no extents are in the region being reconfigured =
-*/
-> > > > +    if (!bitmap_empty(region->blk_bitmap, region->len / region->bl=
-ock_size)) {
-> > > > +        return CXL_MBOX_UNSUPPORTED;
-> > > > +    }
-> > > > +
-> > > > +    /* Check that new block size is supported */
-> > > > +    if (!test_bit(BIT((int) log2(in->block_sz)),
-> > > > +                  &region->supported_blk_size_bitmask)) {
-> > > > +        return CXL_MBOX_INVALID_INPUT;
-> > > > +    }     =20
-> > >=20
-> > > This does not work: test_bit works on unsigned long, while
-> > > supported_blk_size_bitmask is uint64_t.
-> > >=20
-> > > Why so funky? what is wrong with:
-> > >=20
-> > > if (!(BIT_ULL(log2(in->block_sz)) & region->supported_blk_size_bitmas=
-k))
-> > >=20
-> > > And BTW why cast to int here?   =20
-> This became obvious when your suggestion didn't build :(
->=20
-> ./../hw/cxl/cxl-mailbox-utils.c: In function =E2=80=98cmd_fm_set_dc_regio=
-n_config=E2=80=99:
-> /home/jic23/src/qemu/include/qemu/bitops.h:25:39: error: invalid operands=
- to binary << (have =E2=80=98long long unsigned int=E2=80=99 and =E2=80=98d=
-ouble=E2=80=99)
->    25 | #define BIT_ULL(nr)             (1ULL << (nr))
->       |                                       ^~ ~~~~
-> ../../hw/cxl/cxl-mailbox-utils.c:3436:11: note: in expansion of macro =E2=
-=80=98BIT_ULL=E2=80=99
->  3436 |     if (!(BIT_ULL(log2(in->block_sz)) & region->supported_blk_siz=
-e_bitmask)) {
->       |           ^~~~~~~
->=20
-> Now I look again, this is effectively 2**(log_2(x)) or x. So
-> if (in->block_sz & region->supporte_blk_size_bitmask)
+Applied to will (for-next/perf), thanks!
 
-it (!(in->block_sz & region->supports_blk_size_bitmask))
+[1/3] perf/cxlpmu: Fix devm_kcalloc() argument order in cxl_pmu_probe()
+      https://git.kernel.org/will/c/6ae58c74e7aa
+[2/3] perf/cxlpmu: Remove unintended newline from IRQ name format string
+      https://git.kernel.org/will/c/3e870815ccf5
+[3/3] perf/cxlpmu: Fix typos in cxl_pmu.c comments and documentation
+      https://git.kernel.org/will/c/0259de6331df
 
-I mean.
+Cheers,
+-- 
+Will
 
-
-> Should work as long as we know block_size is a power of 2 (which the spec=
-ification
-> says it must be).
->=20
-> Anisa?
->=20
-> >=20
-> > Change looks fine to me, so I'll prepare an updated set with this
-> > and the missing semi colon.  Anisa if you can have a look at this
-> > that would be great.=20
-> >=20
-> > Sorry I seem to have missed Anisa off the cc for this!
-> >=20
-> > Jonathan
-> >  =20
->=20
-
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
