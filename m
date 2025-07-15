@@ -1,42 +1,43 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 982A229A5
-	for <linux-cxl@vger.kernel.org>; Tue, 15 Jul 2025 15:23:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B956E21C18A;
+	Tue, 15 Jul 2025 15:33:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752593029; cv=none; b=CdiLxjYnoUkkrAvXfjMrfCLcXSAvbD9WRW4bQG8+OY/7szYKTD3GAQG8COi0QWVeK5SfKLJIBJFUEZrQGLTq5z/lqgN1w6aheoO6PeSC07mWyDS9NBomyQxZIDtfK4GPX9EgvBRBF4nx8Ea227hPWNHohjlJC+iSmPUqkeNACjI=
+	t=1752593628; cv=none; b=VY6SWYdFCIQZ/+tK+LjxQwLX+VcBVnnkyKlLD4bYEvtLFfRK+Yo7QiukYA3dXHOCXG+bBbXQTpfQLUyH2Ddjao0rpwi/jRX13Djt+aCmAhkJthzFtIUS+n4zpvfONcekd1XKwOzgg9j1uEmMyuXetKg9EXJ/1AXzyhPMsNcqnBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752593029; c=relaxed/simple;
-	bh=lUET7AcAg7hj2r2P3Hxd5NDscXlDqhnditBK3M+ZdFw=;
+	s=arc-20240116; t=1752593628; c=relaxed/simple;
+	bh=WDm9zE1TKhqjTbxi84Ch/HbXbONMz/SsFH2YNagjOoc=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TK202mRhE0PcRT8hmOZsKA9yq0urfEpUBEvZQ7v66JzaZtA/A0yCCi2J0bhvOJxsp/Fpmq0GOfouwQjA7Axp3wrhzPZgzpGVoXGWji9FvAGK9AOYZ9KkcgpzpWRS6KjZcVbjmUwdRPtrkDF9P1APlx7nILtmUznXHwh49qKsI7w=
+	 MIME-Version:Content-Type; b=K7S15W0r1tDDHvOJboY/X29wQZmAuVGxbMfSvl5Oi04UTK2CP6hL8Y4/uCA5TI4ui7w9j2mN0qBFpfCDjA5NB8UZ41/EZHnxby+hgOrdRfx8tF6vXSgpF4UL4NanNu7Jm+eFDYkE1lItwhXs2Lx0FrF9i8E1gxtY9YEhSdGAaoY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bhNGZ1CDzz6M4wj;
-	Tue, 15 Jul 2025 23:22:30 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bhNRS2xGVz6L5FG;
+	Tue, 15 Jul 2025 23:30:12 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4498F14038F;
-	Tue, 15 Jul 2025 23:23:44 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 8607D140275;
+	Tue, 15 Jul 2025 23:33:42 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 15 Jul
- 2025 17:23:43 +0200
-Date: Tue, 15 Jul 2025 16:23:42 +0100
+ 2025 17:33:42 +0200
+Date: Tue, 15 Jul 2025 16:33:40 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Alison Schofield <alison.schofield@intel.com>
-CC: Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
-	<dave@stgolabs.net>, <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-	<dan.j.williams@intel.com>
-Subject: Re: [PATCH] cxl: Add hpa_to_spa to the root decoder callback
- operations
-Message-ID: <20250715162342.000069cb@huawei.com>
-In-Reply-To: <aHFazzPSfwvymGZF@aschofie-mobl2.lan>
-References: <20250709200746.2567860-1-dave.jiang@intel.com>
-	<20250711174530.0000291a@huawei.com>
-	<aHFazzPSfwvymGZF@aschofie-mobl2.lan>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Davidlohr
+ Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, Alison
+ Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, "Ira Weiny" <ira.weiny@intel.com>, "Peter
+ Zijlstra (Intel)" <peterz@infradead.org>
+Subject: Re: [PATCH v3 6/8] cxl/region: Move ready-to-probe state check to a
+ helper
+Message-ID: <20250715163340.00002ddc@huawei.com>
+In-Reply-To: <20250711234932.671292-7-dan.j.williams@intel.com>
+References: <20250711234932.671292-1-dan.j.williams@intel.com>
+	<20250711234932.671292-7-dan.j.williams@intel.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -49,77 +50,92 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Fri, 11 Jul 2025 11:41:19 -0700
-Alison Schofield <alison.schofield@intel.com> wrote:
+On Fri, 11 Jul 2025 16:49:30 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-> On Fri, Jul 11, 2025 at 05:45:30PM +0100, Jonathan Cameron wrote:
-> > On Wed, 9 Jul 2025 13:07:46 -0700
-> > Dave Jiang <dave.jiang@intel.com> wrote:
-> >   
-> > > Remove cxl_hpa_to_spa_fn callback from cxl root decoder and add the
-> > > callback function to cxl_decoder_ops. Refactor to group all the root
-> > > decoder callbacks together.
-> > > 
-> > > Signed-off-by: Dave Jiang <dave.jiang@intel.com>  
-> > 
-> > Question inline about mixture of types of CFMWS entry.
-> >   
-> > > ---
-> > >  drivers/cxl/acpi.c        |  9 +++++++--
-> > >  drivers/cxl/core/port.c   |  2 +-
-> > >  drivers/cxl/core/region.c | 11 ++++++++---
-> > >  drivers/cxl/cxl.h         | 13 ++++++++-----
-> > >  4 files changed, 24 insertions(+), 11 deletions(-)
-> > > 
-> > > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> > > index 48478bc406ee..9f7e2a49dc5a 100644
-> > > --- a/drivers/cxl/acpi.c
-> > > +++ b/drivers/cxl/acpi.c
-> > > @@ -20,6 +20,10 @@ static const guid_t acpi_cxl_qtg_id_guid =
-> > >  	GUID_INIT(0xF365F9A6, 0xA7DE, 0x4071,
-> > >  		  0xA6, 0x6A, 0xB4, 0x0C, 0x0B, 0x4F, 0x8E, 0x52);
-> > >  
-> > > +static u64 cxl_default_hpa_to_spa(struct cxl_root_decoder *cxlrd, u64 hpa)
-> > > +{
-> > > +	return hpa;
-> > > +}
-> > >  
-> > >  static u64 cxl_xor_hpa_to_spa(struct cxl_root_decoder *cxlrd, u64 hpa)
-> > >  {
-> > > @@ -342,8 +346,9 @@ static int cxl_acpi_get_extended_linear_cache_size(struct resource *backing_res,
-> > >  	return hmat_get_extended_linear_cache_size(backing_res, nid, size);
-> > >  }
-> > >  
-> > > -static const struct cxl_rd_ops acpi_rd_ops = {
-> > > +static struct cxl_rd_ops acpi_rd_ops = {
-> > >  	.get_extended_linear_cache_size = cxl_acpi_get_extended_linear_cache_size,
-> > > +	.hpa_to_spa = cxl_default_hpa_to_spa,
-> > >  };
-> > >  
-> > >  DEFINE_FREE(put_cxlrd, struct cxl_root_decoder *,
-> > > @@ -425,7 +430,7 @@ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
-> > >  	cxlrd->qos_class = cfmws->qtg_id;
-> > >  
-> > >  	if (cfmws->interleave_arithmetic == ACPI_CEDT_CFMWS_ARITHMETIC_XOR)
-> > > -		cxlrd->hpa_to_spa = cxl_xor_hpa_to_spa;
-> > > +		cxlrd->ops->hpa_to_spa = cxl_xor_hpa_to_spa;  
-> > 
-> > What happens if we have a mixture for different CMWS entries?
-> > Some xor, some not.  
-> 
-> A separate root decoder is created for each CFMWS entry, so no
-> conflict. Is that what you're wondering?
+> Rather than unlocking the region rwsem in the middle of cxl_region_probe()
+> create a helper for determining when the region is ready-to-probe.
+I'd maybe mention the odd bit of 
+if (rc)
+	return rc;
 
-This isn't modifying a copy. It's modifying the global structure
-that you make non const above (or I'm lacking caffeine.)
+return 0;
+
+Will go away shortly. Or maybe that is overkill for a commit message.
+
+Anyhow, with that in mind LGTM
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 
 
 > 
+> Cc: Davidlohr Bueso <dave@stgolabs.net>
+> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Alison Schofield <alison.schofield@intel.com>
+> Cc: Vishal Verma <vishal.l.verma@intel.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  drivers/cxl/core/region.c | 24 ++++++++++++++++++------
+>  1 file changed, 18 insertions(+), 6 deletions(-)
 > 
-> >   
-> > >  
-> > >  	rc = cxl_decoder_add(cxld, target_map);
-> > >  	if (rc)  
-> >   
-> 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 3a77aec2c447..2a97fa9a394f 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -3572,9 +3572,8 @@ static void shutdown_notifiers(void *_cxlr)
+>  	unregister_mt_adistance_algorithm(&cxlr->adist_notifier);
+>  }
+>  
+> -static int cxl_region_probe(struct device *dev)
+> +static int cxl_region_can_probe(struct cxl_region *cxlr)
+>  {
+> -	struct cxl_region *cxlr = to_cxl_region(dev);
+>  	struct cxl_region_params *p = &cxlr->params;
+>  	int rc;
+>  
+> @@ -3597,15 +3596,28 @@ static int cxl_region_probe(struct device *dev)
+>  		goto out;
+>  	}
+>  
+> -	/*
+> -	 * From this point on any path that changes the region's state away from
+> -	 * CXL_CONFIG_COMMIT is also responsible for releasing the driver.
+> -	 */
+>  out:
+>  	up_read(&cxl_region_rwsem);
+>  
+>  	if (rc)
+>  		return rc;
+> +	return 0;
+
+This is an odd bit of code now.  Why not just
+
+	return rc;
+
+Ah. Patch 8 drops the if (rc) return rc bit.
+
+
+
+> +}
+> +
+> +static int cxl_region_probe(struct device *dev)
+> +{
+> +	struct cxl_region *cxlr = to_cxl_region(dev);
+> +	struct cxl_region_params *p = &cxlr->params;
+> +	int rc;
+> +
+> +	rc = cxl_region_can_probe(cxlr);
+> +	if (rc)
+> +		return rc;
+> +
+> +	/*
+> +	 * From this point on any path that changes the region's state away from
+> +	 * CXL_CONFIG_COMMIT is also responsible for releasing the driver.
+> +	 */
+>  
+>  	cxlr->memory_notifier.notifier_call = cxl_region_perf_attrs_callback;
+>  	cxlr->memory_notifier.priority = CXL_CALLBACK_PRI;
 
