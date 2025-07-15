@@ -1,60 +1,59 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2050.outbound.protection.outlook.com [40.107.243.50])
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2066.outbound.protection.outlook.com [40.107.100.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B197D2C033C;
-	Tue, 15 Jul 2025 19:12:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 963CA2BDC26;
+	Tue, 15 Jul 2025 19:12:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.66
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752606745; cv=fail; b=Tcv5TVFZEdDgNo06G2WJYHI1UeQx523/kOSjQMdGs1uhXEOr9Tnwyvd+QTjq4ZKOHVmEuFfe2b4juizFnqNiAPIydspUtI6yYaf52oMyOI6Jmkv7Vlnu47FQcdtigSwAsN3EGrOjKHK0u6DCbrp3GTKIA77sodIKX/FNBMUeTnc=
+	t=1752606752; cv=fail; b=sywdDp+7iF91nMHdK85Ny1aCP6+DbHMZmWbectHV9mKshwXObRrSnRwEmOlO9EqVZ0JcmJyrkAPpbpjWy0EbT8Vjsgx0BhWI+LUhZAy4geqMCap1FqYkydOPtF0BkWjlSUZqdWwB14KVgF7PPKN/fwhboYHDULtcl+NAWlokmNw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752606745; c=relaxed/simple;
-	bh=ejHY0fkm+wbijd5VaRpiTXNwJgv6hb46AkMRP8SUVp4=;
+	s=arc-20240116; t=1752606752; c=relaxed/simple;
+	bh=CeYtmnUlMbpDqENrRvZOGfm0mI284O3dKdSZNCquw1M=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R6Zz/5tHmlDYMNKcVyTRploOqoQoRArd+M67K2hy3vi6XGjidf12AtzCcycgAyscfc49j3JLQFtT3g6m4j2FrBykrkypvoMhEOi2q/ahRzwux3hWWywa6zqLXfVFGo9TXWO08RMk791bTUigZlW/dXmrElkFjg8mnNd+EShJ6Js=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=fTmQX4W8; arc=fail smtp.client-ip=40.107.243.50
+	 MIME-Version:Content-Type; b=QH0ahCDwoGOpOZyRsHDYIeY22q6b9yO77hsA4nk1xkL0LST1mWveReew9oPT/e4vZtvWLAid46kutxJtOQ6DyF4PHD6/rJVJ0X101ymdPm5A38NdBe+AcgYx1ZMXjuhTKN/F9x8kYzxRGqd0WEYW25exJsA+FrOqy1jdL5BArgw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NDhLloxV; arc=fail smtp.client-ip=40.107.100.66
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="fTmQX4W8"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NDhLloxV"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NN8KHUh0B9BTtzBgxjOxkMxY2+SrKHtj5Sr3AeLHMRBavMy2YKbRerUUr//RBXspGa0lHHBK7BQbh7fRrNmGDTXRvKkTFNP1FdvKEqhncI0pDINGIpRAO19ekjs5g9F6kh5n3XiqVCIiVQJqYzJAtD1fKGlVHWbpwY799eNRaM39i88vFeEVbHC5GYSYPLv7ZDV54vIa0RBLsyWnNLqBf7VTeZka5PI0W+YM+z1exQqVzk69SJhA2Emqdxhir5eIszfsEpVk9TL7BmGcyHU/JHtoxs1foDSYRyE6NW4mD8KEC5qrhtdPadL5dhzXElzsZmGTHsb9JSfu+2RgADlD4Q==
+ b=C/z2WLg/MPqzTacFIuaKa3oB97c9Y1RCeQNc8LaR3VTeMnID3RaNJtFrbgDWkSNzQ4v4yMtMFFQVYDDyqPKeXUqbqZpol6FQVi7gE/5eyPOKG6x6Qzl0N4gAX2qRgjEhOPeqDP8V8YEOZgPk6kMa3u13MbtiAGY0Ww82crWI83wywhTOWfJ3XxbP6LYHdMyk9L+o5SoUcSPgBjrTSWTbonzYev63rbPkPDH5kz/cjMQBKLiWPBfWReD0Yxy3GYoIWDiZLC67GI+Br6RYdTjCsgJ1s6HFF0SLiB0y52YQ7EhQqFkrUB2hoIR0CM76LkyKW/YEni5dV60b4+CCiz3xYw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7m83iI6fl3+GwB0FSLDg5iv/NED2RUacVj32MwYPAR8=;
- b=tu5gVyMW1lmbuHn3vM089xctIqHpYZf68uY/ZzvF99lqmycMW2z223H9Y0MvWyIXhc3J2RwKJRfl3ec8Yt8dnOrN6VQcbd+LCJMjiwIs8vjh8rrABkV14gCmT+QaocB0jtlRmZl4cAjNipcXMVklBWlJv6lOeAGqcQ6lFRFVmJrD2ZkOMg9YceC1VKhrAzF0zgOjZB3sXcKFxeK0g07S9pUZFK/lgp8er4JQGEkVa+X6LGnyPk2rW8b6a2Z/V9BU2jsdF0W88O/m8btxOJpfkRN1eW1v+h4JMcFIntumhxNm8hzoG0Rl5xgpcYED8eygXkWTbISmWa5ucZFCIdvHcw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
+ bh=oX/zHQGaOX8IFzAw90vyuQa3/aY4GWAgfDg+7V1Wtn0=;
+ b=flUcOIGUY1p1rrUxyBXOdkRA1tfZ/1JTtdkz8JRI8idcV2fNkRNiY9d6OL3Bar/ioK/OOlP+8tD13SchwmHQ+kOHeqFbhzFz+WFFAjxmiXE4OgeOoVKWlJ8LTlOuUchpn0GR3kYKwiR0xcoOSuPhkaP0mIb2qsu/xhXahb8wiJeKX9vdFFvG7kAoXwdXHXMmrDfZvYwtZ6AHFZVPv+NvKhedVQCZk8GZ45gUKdEEs2wW1sY6Jb1qO0VcfPGBC8bUA09hzyUT5NiCJji4Fz7EBWmrawmk4TPo3pW40nv/tWSp+IHE8OIYviHBr4NPqyKXZs6tCqkJu3D60wvrBCpygQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=temperror (sender ip
+ is 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com;
+ dmarc=temperror action=none header.from=amd.com; dkim=none (message not
+ signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7m83iI6fl3+GwB0FSLDg5iv/NED2RUacVj32MwYPAR8=;
- b=fTmQX4W85laa2vdfzLBN1IAlnzZoOUu/8SzklvhtRrkffHh/BZG0s2gtq/F09ajGPyegUZHj1LfTgH+uFjETqxw5S8053QU302AzLkZuTasU33dS6j4N/PcCt5gqXSMvVeD06+ziC3PIcAz6E+nzUWcwAksPfcUoXF2kZDOSl+4=
-Received: from BN8PR15CA0037.namprd15.prod.outlook.com (2603:10b6:408:80::14)
- by SJ5PPF0AEDE5C3D.namprd12.prod.outlook.com (2603:10b6:a0f:fc02::989) with
+ bh=oX/zHQGaOX8IFzAw90vyuQa3/aY4GWAgfDg+7V1Wtn0=;
+ b=NDhLloxVkbSCjAx/b9HQ356yfM3wwWrQt1KAG5Wd8q31oj0lnKxQAfpDM96Ut9k7iFBw0OnDdIS3SSJdEOX4WxPBeX45CZYF35WdgrNgC5d6TBhgf/F41ha28d5IlQf9jcJvRkFyBcHBRLEzmZGqQzaz2xB6dbD4Yz6C3VKk2Tk=
+Received: from BN9PR03CA0317.namprd03.prod.outlook.com (2603:10b6:408:112::22)
+ by CYXPR12MB9280.namprd12.prod.outlook.com (2603:10b6:930:e4::5) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.26; Tue, 15 Jul
- 2025 19:12:21 +0000
-Received: from MN1PEPF0000F0E5.namprd04.prod.outlook.com
- (2603:10b6:408:80:cafe::2) by BN8PR15CA0037.outlook.office365.com
- (2603:10b6:408:80::14) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8943.19 via Frontend Transport; Tue,
- 15 Jul 2025 19:12:20 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8922.27; Tue, 15 Jul
+ 2025 19:12:25 +0000
+Received: from MN1PEPF0000F0E3.namprd04.prod.outlook.com
+ (2603:10b6:408:112:cafe::cc) by BN9PR03CA0317.outlook.office365.com
+ (2603:10b6:408:112::22) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8922.33 via Frontend Transport; Tue,
+ 15 Jul 2025 19:12:25 +0000
+X-MS-Exchange-Authentication-Results: spf=temperror (sender IP is
+ 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=temperror action=none header.from=amd.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of amd.com: DNS Timeout)
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- MN1PEPF0000F0E5.mail.protection.outlook.com (10.167.242.43) with Microsoft
+ MN1PEPF0000F0E3.mail.protection.outlook.com (10.167.242.41) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8922.22 via Frontend Transport; Tue, 15 Jul 2025 19:12:20 +0000
+ 15.20.8922.22 via Frontend Transport; Tue, 15 Jul 2025 19:12:23 +0000
 Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 15 Jul
- 2025 14:12:17 -0500
+ 2025 14:12:20 -0500
 From: Robert Richter <rrichter@amd.com>
 To: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
 	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
@@ -64,9 +63,9 @@ CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Gregory Price
 	<gourry@gourry.net>, "Fabio M. De Francesco"
 	<fabio.m.de.francesco@linux.intel.com>, Terry Bowman <terry.bowman@amd.com>,
 	Robert Richter <rrichter@amd.com>
-Subject: [PATCH v1 02/20] cxl/region: Store root decoder in struct cxl_region
-Date: Tue, 15 Jul 2025 21:11:25 +0200
-Message-ID: <20250715191143.1023512-3-rrichter@amd.com>
+Subject: [PATCH v1 03/20] cxl/region: Remove region id handling from cxl_region_alloc()
+Date: Tue, 15 Jul 2025 21:11:26 +0200
+Message-ID: <20250715191143.1023512-4-rrichter@amd.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250715191143.1023512-1-rrichter@amd.com>
 References: <20250715191143.1023512-1-rrichter@amd.com>
@@ -82,228 +81,115 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN1PEPF0000F0E5:EE_|SJ5PPF0AEDE5C3D:EE_
-X-MS-Office365-Filtering-Correlation-Id: fdd2e6b4-76ee-477d-ed41-08ddc3d385b4
+X-MS-TrafficTypeDiagnostic: MN1PEPF0000F0E3:EE_|CYXPR12MB9280:EE_
+X-MS-Office365-Filtering-Correlation-Id: 66d696f9-a833-49bd-f21a-08ddc3d387bc
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|7416014|376014;
+	BCL:0;ARA:13230040|7416014|376014|36860700013|1800799024|82310400026;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?dy6cU2cRuGe+QXJIN1+6AOZEQA8fF/oRNK81omiDLWqglZXLHeuM8ENuTSp7?=
- =?us-ascii?Q?X9TLs9L2fGW7AJS/f4c6aj6U4638omS7LzC0vYiqy3H5o8loQnY/KXigHckC?=
- =?us-ascii?Q?9XpPz4WOjScZECMdzx8LYIGVVibvIcGcIi6Ffamccf1jiTnyHqq411LxO52C?=
- =?us-ascii?Q?YietKWIiTyB4WXMbEx+1iaxCMG7TrtTzsOxhsTsG047ILSgugobnPC4kPr8Y?=
- =?us-ascii?Q?LNtlBf/nH+SzjPSuL/uS4wq76uEgTlABYGrATB3kzC2yS4OepJDKCPmV/KRQ?=
- =?us-ascii?Q?XoRSKNKfCVOJh9KR0Lh2b9dWu6KMm6MW8PDw1IWDFu9St/P7TxKnmxT6QtaT?=
- =?us-ascii?Q?mMBQUTl8ARpSlESX3co78xSBA9RmUOo24vI7eH7AihjhIGPzG9sqyxcxi2PI?=
- =?us-ascii?Q?Nd2RQg+zPskKcUYxpQuWucGnykGMDCFBnLSLkDqWmyrWjXXFTASrZnBGmty0?=
- =?us-ascii?Q?Jhu/6Sao9CcJSLiQ5R2qqqlrudDRsw+S/AHwg2ITpYh7Xa+GjtY0UrTUBdm2?=
- =?us-ascii?Q?ZBtImKKQWd4M6N1n0qMub9eBGbiKkTnpW8fIaQELcNEx5y7tbPCh44LPG7Ur?=
- =?us-ascii?Q?KjBP/qaC7VFOl/YolEwwfIrBMYWXvmc4G+qcA0BlL3G1pR1jCpSYnFrHaLtF?=
- =?us-ascii?Q?L0yXUOl0sgKbwUZveenGiR//GSJFUxRqKH3im1DJHH1xsqbc+r3qZuvT/YYr?=
- =?us-ascii?Q?lIF1AeRTkE0FoH4BBLI5I53AkId3W2whZ4AqrzzJCtqgDjrzQD7fo+LohPJJ?=
- =?us-ascii?Q?nur38/TkHUppTu+G4UOh7hs6XJxf4e66TBOCBGmcrlBmp+iHqR7MZTd+R5r2?=
- =?us-ascii?Q?CmZFtaE2hdKp3wK+PdsWsgqFyVz5EXyeH4F1D9y9bM1DvTfwxUPTI75t+uEF?=
- =?us-ascii?Q?U47c4HBjl4Of9gy7vgrs51M1gc3nMxMvxjhtCfQDiDp8ySzdv43JffVkp728?=
- =?us-ascii?Q?6lAGbRN3cMINFdz0MdcYEAKkh8ia9TLcwvztj6FwG4zidap7n6OXzyiTT+n0?=
- =?us-ascii?Q?plFLigOvyRr+SaJq/3HhcehyrfYP76KoHzUmGgp4pQ2laYqOmeaHx72xNU0K?=
- =?us-ascii?Q?rmfpvehLx9puxRpL4kNKZgzpuJfdRXUSdTfb5jvwIdRyy21jxG1Y3s6Pll7d?=
- =?us-ascii?Q?63KXeJf3tmOYJmrgOC4CFyBoTLnUq/u8G6UX0lmuMeFs9Ww9W/N8j1TVZ1we?=
- =?us-ascii?Q?Wz8UQe3H3BwOX40BS48nP7NgjsBAK3nARXP9z5C22YDnRR5jtWcq3UYXGUcp?=
- =?us-ascii?Q?TOiyVTX5OfWcw2ZhuVE90tB99KT2up6TOMG+9zbgkR1uyRSUnm0g5Jn91QiW?=
- =?us-ascii?Q?5BvozUYfeIDU+dy0y8fzHMJtYlEyoHoZKTUIDTRP4dXIFQj6JPyspEzTJtVd?=
- =?us-ascii?Q?VUlIc2eWwhFyCCd8TSzp//COGkCPYysFbLQUmzuPCWUkJgOBPUykzbnZ4UVk?=
- =?us-ascii?Q?ERxpioSWeE0tLTzqZ41F8O9guqwmLjDbiaTFyOyvDupQ5H7VhgEwEEsaNXCj?=
- =?us-ascii?Q?Bs7dfd3g/qJZOaiCtpMlRjiMC0dYUGR6jtgy?=
+	=?us-ascii?Q?K232a0Ky1fO6E6XmKUyyforGRYgnZNkTnJaFNpB877P4hBSa6gHUtdaboi+g?=
+ =?us-ascii?Q?bAfZxDs9K6glj87UZOMqPFvVrJo9rdzZmvnB/nbNxG2xS3/YPBbE7mMLRoMs?=
+ =?us-ascii?Q?KmfAar/+bZsLCk5YfTZRdguy4cKwbEnrdlBLSoskdkqgUX1rOlyL0M9+alnI?=
+ =?us-ascii?Q?NnOrIrp/XHP5eRAF9Jw6M5ctpogrwerod99hgjdMtuMlfrtHiCDAY2WKuvlC?=
+ =?us-ascii?Q?aaP+cPuSfWtRGkTlAU6ZlrZXEiFiOfu72z+5qYbLPfKeLiBl1kRjdysyEHTy?=
+ =?us-ascii?Q?Ly5QGwHjjsjRCdON+ywDAObWHK6A8dZ+iTPBmycK9UR0FrBbDlfh3nP7U+Dy?=
+ =?us-ascii?Q?pe2rZQZkmX3nl3l7JTH306gPEKcso9zFMwtb2gE0o78PJKY2ycmdexjG6SIZ?=
+ =?us-ascii?Q?27jM4XT77cWnREVZxdqXUvtk1n8IMgnPk+NITxcav9wMQZcog1uADBLG6ng3?=
+ =?us-ascii?Q?q8rvRjMkDMX/Kxt4b7sgZqXL288u5ros0bseR+2RTVd1kaxrQHdVKrfct6+A?=
+ =?us-ascii?Q?YLSJcLujGReUWPyoEDJQ5ONmL8DgdWCnazcKVmUk9r/H9SFYKxhorIW2XeOS?=
+ =?us-ascii?Q?XdDXIVJoTPzbDawb/tgkzpwBGL/+NPQOnSdsdcqgs+KfYXLKLZVHW1TvxBTk?=
+ =?us-ascii?Q?sET2VwXVelZU97Bs3sKh6CsSaEFVr1TYaSEixbUP4RXw/FZgxEzs4ZDT6LL1?=
+ =?us-ascii?Q?lPn5iD7JgWr0sGQnqnKFFIDtMuJMSyQRstnXUqOc7hnhYBgq7FpoM/sFmylV?=
+ =?us-ascii?Q?Yr5x/7VnjdLuULCVjfp87DyqyWHn8woCDfy7cJExi6EwD9drfTD8ONZ86e6X?=
+ =?us-ascii?Q?NBDMPg+pKO68OjzHKxgZWxxkm43VbSywvz2jeHBEzPOYj8Ja3J6HMTUdgsLC?=
+ =?us-ascii?Q?M8hWExeYSYgUokmunZrB+oyd4PsIbHF6FcrT/NZYQwkCgjM71yYdn9VmdV8y?=
+ =?us-ascii?Q?vf6lcUk5iU3v3H/lV9iSJCMihZ1OF0Yjeax961ThhgreKkxGPmco43PoZR2g?=
+ =?us-ascii?Q?1isICiEykNvVCoOZU1TTd/nh9bWCM3hTnYQpTy5+vdKpJcljRA0eqrfaY8RT?=
+ =?us-ascii?Q?Vcz+NxOJKHJ9ZjL1Af7Rm4hpvH2Nn/QNeBP/UTFKYldaFa7zqGxp1s3FvlFF?=
+ =?us-ascii?Q?mJ6QRPd8qRToPahJuof8PdiiLm0X1NLigiGPGiP3HAR1Hycf0Xbl11yToLjB?=
+ =?us-ascii?Q?a2lWbPajG8llCLa5DpXOawlegwmPat8MR0I8wU5rTMcdMiT8xhWBygHBD82K?=
+ =?us-ascii?Q?PA3I1nJd7bHEhFPDjnOYWhPF+rlM8e5k9uJwslv8CV9/UOuWpD5j8ccNFySY?=
+ =?us-ascii?Q?4PgIc8oLkNfEanMHEeCaqLMSYPcNhZS5UUKUkm6h8cbVQg0WlhSYld5OzHul?=
+ =?us-ascii?Q?8us23PhC1+xyKTyDuFmz9uts1aM30EQKHiuac+OCCZC4X2Uvd1Zn3OVjCyzv?=
+ =?us-ascii?Q?M/TyHtihEawMhr6+ryOeg8UCkyhIWaMGCzdvUGqhwQG/n4yxPnvoAI/gwnJE?=
+ =?us-ascii?Q?jiXUsyclJUAy52aIkHJ0SzIemQXU09XAGqnI?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(36860700013)(1800799024)(82310400026);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2025 19:12:20.4794
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2025 19:12:23.8855
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: fdd2e6b4-76ee-477d-ed41-08ddc3d385b4
+X-MS-Exchange-CrossTenant-Network-Message-Id: 66d696f9-a833-49bd-f21a-08ddc3d387bc
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	MN1PEPF0000F0E5.namprd04.prod.outlook.com
+	MN1PEPF0000F0E3.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPF0AEDE5C3D
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR12MB9280
 
-A region is always bound to a root decoder. The region's associated
-root decoder is often needed. Add it to struct cxl_region.
-
-This simpifies code by removing dynamic lookups and removing the root
-decoder argument from the function argument list where possible.
+The region's id is not needed to allocate the region. Move the region
+id handling out of cxl_region_alloc(). This simplifies the function
+interface and allows the implementation of an early region allocation
+when an id is not yet assigned.
 
 Signed-off-by: Robert Richter <rrichter@amd.com>
 ---
- drivers/cxl/core/region.c | 33 +++++++++++++++++----------------
- drivers/cxl/cxl.h         |  2 ++
- 2 files changed, 19 insertions(+), 16 deletions(-)
+ drivers/cxl/core/region.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index f22ad20b0db9..a18ab5e30138 100644
+index a18ab5e30138..b968050ad3d7 100644
 --- a/drivers/cxl/core/region.c
 +++ b/drivers/cxl/core/region.c
-@@ -467,9 +467,9 @@ static ssize_t interleave_ways_store(struct device *dev,
- 				     struct device_attribute *attr,
- 				     const char *buf, size_t len)
- {
--	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(dev->parent);
--	struct cxl_decoder *cxld = &cxlrd->cxlsd.cxld;
- 	struct cxl_region *cxlr = to_cxl_region(dev);
-+	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
-+	struct cxl_decoder *cxld = &cxlrd->cxlsd.cxld;
- 	struct cxl_region_params *p = &cxlr->params;
- 	unsigned int val, save;
- 	int rc;
-@@ -535,9 +535,9 @@ static ssize_t interleave_granularity_store(struct device *dev,
- 					    struct device_attribute *attr,
- 					    const char *buf, size_t len)
- {
--	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(dev->parent);
--	struct cxl_decoder *cxld = &cxlrd->cxlsd.cxld;
- 	struct cxl_region *cxlr = to_cxl_region(dev);
-+	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
-+	struct cxl_decoder *cxld = &cxlrd->cxlsd.cxld;
- 	struct cxl_region_params *p = &cxlr->params;
- 	int rc, val;
- 	u16 ig;
-@@ -617,7 +617,7 @@ static DEVICE_ATTR_RO(mode);
+@@ -2449,16 +2449,14 @@ static int cxl_region_calculate_adistance(struct notifier_block *nb,
  
- static int alloc_hpa(struct cxl_region *cxlr, resource_size_t size)
- {
--	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
-+	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
- 	struct cxl_region_params *p = &cxlr->params;
- 	struct resource *res;
- 	u64 remainder = 0;
-@@ -1320,7 +1320,7 @@ static int cxl_port_setup_targets(struct cxl_port *port,
- 				  struct cxl_region *cxlr,
- 				  struct cxl_endpoint_decoder *cxled)
- {
--	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
-+	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
- 	int parent_iw, parent_ig, ig, iw, rc, inc = 0, pos = cxled->pos;
- 	struct cxl_port *parent_port = to_cxl_port(port->dev.parent);
- 	struct cxl_region_ref *cxl_rr = cxl_rr_load(port, cxlr);
-@@ -1679,10 +1679,10 @@ static int cxl_region_validate_position(struct cxl_region *cxlr,
- }
+ static struct lock_class_key cxl_region_key;
  
- static int cxl_region_attach_position(struct cxl_region *cxlr,
--				      struct cxl_root_decoder *cxlrd,
- 				      struct cxl_endpoint_decoder *cxled,
- 				      const struct cxl_dport *dport, int pos)
+-static struct cxl_region *cxl_region_alloc(struct cxl_root_decoder *cxlrd, int id)
++static struct cxl_region *cxl_region_alloc(struct cxl_root_decoder *cxlrd)
  {
-+	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
- 	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
- 	struct cxl_switch_decoder *cxlsd = &cxlrd->cxlsd;
- 	struct cxl_decoder *cxld = &cxlsd->cxld;
-@@ -1919,7 +1919,7 @@ static int cxl_region_sort_targets(struct cxl_region *cxlr)
- static int cxl_region_attach(struct cxl_region *cxlr,
- 			     struct cxl_endpoint_decoder *cxled, int pos)
- {
--	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
-+	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
- 	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
- 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
- 	struct cxl_region_params *p = &cxlr->params;
-@@ -2024,8 +2024,7 @@ static int cxl_region_attach(struct cxl_region *cxlr,
- 			ep_port = cxled_to_port(cxled);
- 			dport = cxl_find_dport_by_dev(root_port,
- 						      ep_port->host_bridge);
--			rc = cxl_region_attach_position(cxlr, cxlrd, cxled,
--							dport, i);
-+			rc = cxl_region_attach_position(cxlr, cxled, dport, i);
- 			if (rc)
- 				return rc;
- 		}
-@@ -2048,7 +2047,7 @@ static int cxl_region_attach(struct cxl_region *cxlr,
- 	if (rc)
- 		return rc;
+ 	struct cxl_region *cxlr;
+ 	struct device *dev;
  
--	rc = cxl_region_attach_position(cxlr, cxlrd, cxled, dport, pos);
-+	rc = cxl_region_attach_position(cxlr, cxled, dport, pos);
- 	if (rc)
- 		return rc;
+ 	cxlr = kzalloc(sizeof(*cxlr), GFP_KERNEL);
+-	if (!cxlr) {
+-		memregion_free(id);
++	if (!cxlr)
+ 		return ERR_PTR(-ENOMEM);
+-	}
  
-@@ -2323,8 +2322,8 @@ static const struct attribute_group *region_groups[] = {
- 
- static void cxl_region_release(struct device *dev)
- {
--	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(dev->parent);
- 	struct cxl_region *cxlr = to_cxl_region(dev);
-+	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
- 	int id = atomic_read(&cxlrd->region_id);
- 
- 	/*
-@@ -2470,6 +2469,8 @@ static struct cxl_region *cxl_region_alloc(struct cxl_root_decoder *cxlrd, int i
- 	 * region id allocations
- 	 */
- 	get_device(dev->parent);
-+	cxlr->cxlrd = cxlrd;
-+
+ 	dev = &cxlr->dev;
+ 	device_initialize(dev);
+@@ -2474,7 +2472,6 @@ static struct cxl_region *cxl_region_alloc(struct cxl_root_decoder *cxlrd, int i
  	device_set_pm_not_required(dev);
  	dev->bus = &cxl_bus_type;
  	dev->type = &cxl_region_type;
-@@ -2905,7 +2906,7 @@ static bool cxl_is_hpa_in_chunk(u64 hpa, struct cxl_region *cxlr, int pos)
- u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
- 		   u64 dpa)
- {
--	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
-+	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
- 	u64 dpa_offset, hpa_offset, bits_upper, mask_upper, hpa;
- 	struct cxl_region_params *p = &cxlr->params;
- 	struct cxl_endpoint_decoder *cxled = NULL;
-@@ -3293,7 +3294,7 @@ cxl_find_region_by_range(struct cxl_root_decoder *cxlrd, struct range *hpa)
- static int cxl_extended_linear_cache_resize(struct cxl_region *cxlr,
- 					    struct resource *res)
- {
--	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
-+	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
- 	struct cxl_region_params *p = &cxlr->params;
- 	resource_size_t size = resource_size(res);
- 	resource_size_t cache_size, start;
-@@ -3329,9 +3330,9 @@ static int cxl_extended_linear_cache_resize(struct cxl_region *cxlr,
+-	cxlr->id = id;
+ 
+ 	return cxlr;
  }
+@@ -2522,13 +2519,18 @@ static struct cxl_region *devm_cxl_add_region(struct cxl_root_decoder *cxlrd,
+ 	struct device *dev;
+ 	int rc;
  
- static int __construct_region(struct cxl_region *cxlr,
--			      struct cxl_root_decoder *cxlrd,
- 			      struct cxl_endpoint_decoder *cxled)
- {
-+	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
- 	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
- 	struct range *hpa = &cxled->cxld.hpa_range;
- 	struct cxl_region_params *p;
-@@ -3423,7 +3424,7 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+-	cxlr = cxl_region_alloc(cxlrd, id);
+-	if (IS_ERR(cxlr))
++	cxlr = cxl_region_alloc(cxlrd);
++	if (IS_ERR(cxlr)) {
++		memregion_free(id);
  		return cxlr;
- 	}
++	}
++
+ 	cxlr->mode = mode;
+ 	cxlr->type = type;
  
--	rc = __construct_region(cxlr, cxlrd, cxled);
-+	rc = __construct_region(cxlr, cxled);
- 	if (rc) {
- 		devm_release_action(port->uport_dev, unregister_region, cxlr);
- 		return ERR_PTR(rc);
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 0730f92df038..58c9db0bfb93 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -508,6 +508,7 @@ enum cxl_partition_mode {
-  * struct cxl_region - CXL region
-  * @dev: This region's device
-  * @id: This region's id. Id is globally unique across all regions
-+ * @cxlrd: Region's root decoder
-  * @mode: Operational mode of the mapped capacity
-  * @type: Endpoint decoder target type
-  * @cxl_nvb: nvdimm bridge for coordinating @cxlr_pmem setup / shutdown
-@@ -521,6 +522,7 @@ enum cxl_partition_mode {
- struct cxl_region {
- 	struct device dev;
- 	int id;
-+	struct cxl_root_decoder *cxlrd;
- 	enum cxl_partition_mode mode;
- 	enum cxl_decoder_type type;
- 	struct cxl_nvdimm_bridge *cxl_nvb;
+ 	dev = &cxlr->dev;
++	cxlr->id = id;
++
+ 	rc = dev_set_name(dev, "region%d", id);
+ 	if (rc)
+ 		goto err;
 -- 
 2.39.5
 
