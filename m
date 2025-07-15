@@ -1,50 +1,43 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF601CEADB;
-	Mon, 14 Jul 2025 23:51:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752537105; cv=none; b=Q5vJ00Agxel5A08t9rhyTVAU2+v/1YkCkNOL0CNYLb8IpAx8f6yERCKErbHu8Lz22vHgt3ysoIxgKavzkX0OciMoYcowMRfKnvdDPBes8KEsbVxIx4OSmr5NhuT0EuVWwJUmSrkLDbJE3StMGT465AmkD5/rC6bEv4AFN56XFaE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752537105; c=relaxed/simple;
-	bh=nNjondiXjgfCl+69FBnGWoUxr/TOqk/mk7WOrpz5/os=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=CBtLBM7jW+03K0I8RkdKYApHXxnZygsQHDcDgvV2ELnTLuyc0T4bnkmdepmys4b5mqMKcNCYPqVOZAGwQMo5DQxDyXPwlx3zOyht/DihYKES01PhAzA7OgD0a03Wa9eU1s+5sGUjKATkcq+Cchl9nFb9t4CuGpB0eBTkUXzFvDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a64tvtkF; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 617B828C5A9
+	for <linux-cxl@vger.kernel.org>; Tue, 15 Jul 2025 01:39:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1752543549; cv=pass; b=Xoq7EeYN0h2eFbRREFV0CH0Rk5JsMyTHkxB6DGoYskzu4IBRGXcg3m8bUy9FqKUhtOvKAcZbfENBK0iFVsrjItzFNcfKpyGmKEKHMzlEIZh/gtAgwiv6Opw/nqiVXVaZCgdZOD0B69W8Otl3mNC1z69a7OOIHUSOQ/Teb+sWj2w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1752543549; c=relaxed/simple;
+	bh=XTpzMK5jDMkx+GNrvfapNqer1lXNdh6OmlXmP01t3Wk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nX/z2VI4NBDu2cHPfZpgmnraxSrcvddggMYAPi9ehVkTP4l6ZoIY24eCfsCetx6pn240qadKToMRjnhOuNnNrpEZvG3bIE2dMQAemzhhf9pG4T6+ceqUFNTMpQOtum7gDWfitPVTiKyPlIMiaDTWon4ZPrmezXpWlAT/Qc12DVM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=FTbCXxPi; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a64tvtkF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752537103; x=1784073103;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=nNjondiXjgfCl+69FBnGWoUxr/TOqk/mk7WOrpz5/os=;
-  b=a64tvtkFVTSydyqvQbizSVd7EOnZLh/k27YGNO/jCiqVzXCBYcMiDj6t
-   ZV2995rFk/+P9wXYmMpG6qNxI/Xb72tUuN7aFdw8CGCybyCJIPgi8QaDD
-   EWlF4Wy9DiNJ4lqokLHNGnkea0y05WR7nqlJwAwV9lZfrA/PonS/RLIYg
-   fG03WuiphbhnxWnCTvsQ/B8d37/Y6GoWoqFhdR5VxAMroeZAtR9KH4RaB
-   YALuvMNjFtM88N1/BoObXZYcK2jE5/UhzJhfrN9nR6paEqCyOvfcilPeF
-   8zDmeMykhlHNjzzPfrZu0IAwK/8o2E8At/fMUPTZCME+YCAD1DlU+a4py
-   w==;
-X-CSE-ConnectionGUID: Mk/B/84ATkyMPaYulFZT8g==
-X-CSE-MsgGUID: U+S4ovTDRwmWc8fl4FtZkQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="65313860"
-X-IronPort-AV: E=Sophos;i="6.16,312,1744095600"; 
-   d="scan'208";a="65313860"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2025 16:51:42 -0700
-X-CSE-ConnectionGUID: /z16RVm3SYetNXQ3V/KOqQ==
-X-CSE-MsgGUID: lrP97vfeTOO8hs7cDBeGtg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,312,1744095600"; 
-   d="scan'208";a="156703431"
-Received: from tfalcon-desk.amr.corp.intel.com (HELO [10.125.111.97]) ([10.125.111.97])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2025 16:51:41 -0700
-Message-ID: <b1f44974-0609-4697-bada-9bcf27f7df43@intel.com>
-Date: Mon, 14 Jul 2025 16:51:40 -0700
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="FTbCXxPi"
+ARC-Seal: i=1; a=rsa-sha256; t=1752543535; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=emBD83AaZKSHPLOoVzPVo+UbtnDi1q28aQ1v7SIo+eNwGOwD1YeadoOzhsRFYBlUeRVeRuDGkboRFlpHVICwF3bEI+XbHv44l+LmaJxJf4HyvN5TfbCyXHoT0HCEvGvv25UV/ckqOaqNRcv9Hd1cH+iYU/wr+VltzfygbU6U+GE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1752543535; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=XTpzMK5jDMkx+GNrvfapNqer1lXNdh6OmlXmP01t3Wk=; 
+	b=hZmBYVZI4d7zUvLmaKhXGw20ORWd4kK5zjGAms3alMQewmW8GVDrvjlhX++55yF4mKXG5kQBIGBJFwRCG7GACDwSnSUmwvdZXWFEtDNWKV+sdray8gva8W2lmXhphsTPaQLEC1FJc5Lm4s1HcSdtm3T+/F7teppDKeEyzkFqr/4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1752543535;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=XTpzMK5jDMkx+GNrvfapNqer1lXNdh6OmlXmP01t3Wk=;
+	b=FTbCXxPi69PDyQb4vphA6SYneKKmugCReRETME5ttO3rxKKdYHCXw5FnrV9IH/Uf
+	5IpmmeAhqhjHjrOF8ZmJtFHKbnzg33s4PkwzG/Do5hw0x4AH3HuY5UCyYBtpnesfqsj
+	cagnrCK1Avz/K99LnsTO+CfKdwQatRoAC2+qDfGc=
+Received: by mx.zohomail.com with SMTPS id 1752543532331873.3725764471425;
+	Mon, 14 Jul 2025 18:38:52 -0700 (PDT)
+Message-ID: <c25aa2ba-ab5d-46ea-b678-abb9577bc60e@zohomail.com>
+Date: Tue, 15 Jul 2025 09:38:49 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,221 +45,76 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl: Remove core/acpi.c and cxl core dependency on ACPI
-From: Dave Jiang <dave.jiang@intel.com>
-To: Robert Richter <rrichter@amd.com>, Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>
-Cc: linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
-References: <20250711151529.787470-1-rrichter@amd.com>
- <e337a408-9c29-4990-bb74-d65f1e523998@intel.com>
-Content-Language: en-US
-In-Reply-To: <e337a408-9c29-4990-bb74-d65f1e523998@intel.com>
+Subject: Re: [PATCH v7 04/10] cxl: Defer dport allocation for switch ports
+To: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com
+References: <20250714223527.461147-1-dave.jiang@intel.com>
+ <20250714223527.461147-5-dave.jiang@intel.com>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <20250714223527.461147-5-dave.jiang@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+Feedback-ID: rr08011227db6dd2be472d93bc7ee283900000b2aacbc4b4bf59115c94fd00203c6cb5c9b06c05485842c0c8:zu08011227d3d8dcbaed9500def012cf97000001db4915e2075c1644c7665702864a9e3033ac59a766abca59:rf0801122d899839b6cf95b59d4ee1a9140000e27d8b77e770df9366278ca5700a47aeb3bb375dbf21a49ce8a5c010ddfcab:ZohoMail
+X-ZohoMailClient: External
 
-
-
-On 7/14/25 2:36 PM, Dave Jiang wrote:
-> 
-> 
-> On 7/11/25 8:15 AM, Robert Richter wrote:
->> From Dave [1]:
->>
->> """
->> It was a mistake to introduce core/acpi.c and putting ACPI dependency on
->> cxl_core when adding the extended linear cache support.
->> """
->>
->> Current implementation calls hmat_get_extended_linear_cache_size() of
->> the ACPI subsystem. That external reference causes issue running
->> cxl_test as there is no way to "mock" that function and ignore it when
->> using cxl test.
->>
->> Instead of working around that using cxlrd ops and extensively
->> expanding cxl_test code [1], just move HMAT calls out of the core
->> module to cxl_acpi. Implement this by adding a @cache_size member to
->> struct cxl_root_decoder. During initialization the cache size is
->> determined and added to the root decoder object in cxl_acpi. Later on
->> in cxl_core the cache_size parameter is used to setup extended linear
->> caching.
->>
->> [1] https://patch.msgid.link/20250610172938.139428-1-dave.jiang@intel.com
->>
->> Cc: Dave Jiang <dave.jiang@intel.com>
->> Signed-off-by: Robert Richter <rrichter@amd.com>
-> 
-> Applied to cxl/next
-> 4211a8a86304a53719931e7d19efc102eb8ede24
-
-Actually 8d41af0d378dc0832d64b71bb0f71098c23dd1c4
-Had to add the removal of core/acpi.o entry from tools/testing/cxl/Kbuild
-
-> 
->> ---
->>  drivers/cxl/acpi.c        | 59 +++++++++++++++++++++++++++++++++++++++
->>  drivers/cxl/core/Makefile |  1 -
->>  drivers/cxl/core/acpi.c   | 11 --------
->>  drivers/cxl/core/core.h   |  2 --
->>  drivers/cxl/core/region.c |  7 +----
->>  drivers/cxl/cxl.h         |  1 +
->>  6 files changed, 61 insertions(+), 20 deletions(-)
->>  delete mode 100644 drivers/cxl/core/acpi.c
->>
->> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
->> index a1a99ec3f12c..712624cba2b6 100644
->> --- a/drivers/cxl/acpi.c
->> +++ b/drivers/cxl/acpi.c
->> @@ -335,6 +335,63 @@ static int add_or_reset_cxl_resource(struct resource *parent, struct resource *r
->>  	return rc;
->>  }
->>  
->> +static int cxl_acpi_set_cache_size(struct cxl_root_decoder *cxlrd)
->> +{
->> +	struct cxl_decoder *cxld = &cxlrd->cxlsd.cxld;
->> +	struct range *hpa = &cxld->hpa_range;
->> +	resource_size_t size = range_len(hpa);
->> +	resource_size_t start = hpa->start;
->> +	resource_size_t cache_size;
->> +	struct resource res;
->> +	int nid, rc;
->> +
->> +	res = DEFINE_RES(start, size, 0);
->> +	nid = phys_to_target_node(start);
->> +
->> +	rc = hmat_get_extended_linear_cache_size(&res, nid, &cache_size);
->> +	if (rc)
->> +		return rc;
->> +
->> +	/*
->> +	 * The cache range is expected to be within the CFMWS.
->> +	 * Currently there is only support cache_size == cxl_size. CXL
->> +	 * size is then half of the total CFMWS window size.
->> +	 */
->> +	size = size >> 1;
->> +	if (cache_size && size != cache_size) {
->> +		dev_warn(&cxld->dev,
->> +			 "Extended Linear Cache size %pa != CXL size %pa. No Support!",
->> +			 &cache_size, &size);
->> +		return -ENXIO;
->> +	}
->> +
->> +	cxlrd->cache_size = cache_size;
->> +
->> +	return 0;
->> +}
->> +
->> +static void cxl_setup_extended_linear_cache(struct cxl_root_decoder *cxlrd)
->> +{
->> +	int rc;
->> +
->> +	rc = cxl_acpi_set_cache_size(cxlrd);
->> +	if (!rc)
->> +		return;
->> +
->> +	if (rc != -EOPNOTSUPP) {
->> +		/*
->> +		 * Failing to support extended linear cache region resize does not
->> +		 * prevent the region from functioning. Only causes cxl list showing
->> +		 * incorrect region size.
->> +		 */
->> +		dev_warn(cxlrd->cxlsd.cxld.dev.parent,
->> +			 "Extended linear cache calculation failed rc:%d\n", rc);
->> +	}
->> +
->> +	/* Ignoring return code */
->> +	cxlrd->cache_size = 0;
->> +}
->> +
->>  DEFINE_FREE(put_cxlrd, struct cxl_root_decoder *,
->>  	    if (!IS_ERR_OR_NULL(_T)) put_device(&_T->cxlsd.cxld.dev))
->>  DEFINE_FREE(del_cxl_resource, struct resource *, if (_T) del_cxl_resource(_T))
->> @@ -394,6 +451,8 @@ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
->>  		ig = CXL_DECODER_MIN_GRANULARITY;
->>  	cxld->interleave_granularity = ig;
->>  
->> +	cxl_setup_extended_linear_cache(cxlrd);
->> +
->>  	if (cfmws->interleave_arithmetic == ACPI_CEDT_CFMWS_ARITHMETIC_XOR) {
->>  		if (ways != 1 && ways != 3) {
->>  			cxims_ctx = (struct cxl_cxims_context) {
->> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
->> index 79e2ef81fde8..5ad8fef210b5 100644
->> --- a/drivers/cxl/core/Makefile
->> +++ b/drivers/cxl/core/Makefile
->> @@ -15,7 +15,6 @@ cxl_core-y += hdm.o
->>  cxl_core-y += pmu.o
->>  cxl_core-y += cdat.o
->>  cxl_core-y += ras.o
->> -cxl_core-y += acpi.o
->>  cxl_core-$(CONFIG_TRACING) += trace.o
->>  cxl_core-$(CONFIG_CXL_REGION) += region.o
->>  cxl_core-$(CONFIG_CXL_MCE) += mce.o
->> diff --git a/drivers/cxl/core/acpi.c b/drivers/cxl/core/acpi.c
->> deleted file mode 100644
->> index f13b4dae6ac5..000000000000
->> --- a/drivers/cxl/core/acpi.c
->> +++ /dev/null
->> @@ -1,11 +0,0 @@
->> -// SPDX-License-Identifier: GPL-2.0-only
->> -/* Copyright(c) 2024 Intel Corporation. All rights reserved. */
->> -#include <linux/acpi.h>
->> -#include "cxl.h"
->> -#include "core.h"
->> -
->> -int cxl_acpi_get_extended_linear_cache_size(struct resource *backing_res,
->> -					    int nid, resource_size_t *size)
->> -{
->> -	return hmat_get_extended_linear_cache_size(backing_res, nid, size);
->> -}
->> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
->> index 29b61828a847..9462aea9ce9d 100644
->> --- a/drivers/cxl/core/core.h
->> +++ b/drivers/cxl/core/core.h
->> @@ -120,8 +120,6 @@ int cxl_port_get_switch_dport_bandwidth(struct cxl_port *port,
->>  int cxl_ras_init(void);
->>  void cxl_ras_exit(void);
->>  int cxl_gpf_port_setup(struct cxl_dport *dport);
->> -int cxl_acpi_get_extended_linear_cache_size(struct resource *backing_res,
->> -					    int nid, resource_size_t *size);
->>  
->>  #ifdef CONFIG_CXL_FEATURES
->>  struct cxl_feat_entry *
->> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->> index 6e5e1460068d..bc542a7142c0 100644
->> --- a/drivers/cxl/core/region.c
->> +++ b/drivers/cxl/core/region.c
->> @@ -3282,15 +3282,10 @@ static int cxl_extended_linear_cache_resize(struct cxl_region *cxlr,
->>  {
->>  	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
->>  	struct cxl_region_params *p = &cxlr->params;
->> -	int nid = phys_to_target_node(res->start);
->>  	resource_size_t size = resource_size(res);
->>  	resource_size_t cache_size, start;
->> -	int rc;
->> -
->> -	rc = cxl_acpi_get_extended_linear_cache_size(res, nid, &cache_size);
->> -	if (rc)
->> -		return rc;
->>  
->> +	cache_size = cxlrd->cache_size;
->>  	if (!cache_size)
->>  		return 0;
->>  
->> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
->> index e7b66ca1d423..4643a95ca111 100644
->> --- a/drivers/cxl/cxl.h
->> +++ b/drivers/cxl/cxl.h
->> @@ -432,6 +432,7 @@ typedef u64 (*cxl_hpa_to_spa_fn)(struct cxl_root_decoder *cxlrd, u64 hpa);
->>   */
->>  struct cxl_root_decoder {
->>  	struct resource *res;
->> +	resource_size_t cache_size;
->>  	atomic_t region_id;
->>  	cxl_hpa_to_spa_fn hpa_to_spa;
->>  	void *platform_data;
-> 
-> 
-
+On 7/15/2025 6:35 AM, Dave Jiang wrote:
+> The current implementation enumerates the dports during the cxl_port
+> driver probe. Without an endpoint connected, the dport may not be
+> active during port probe. This scheme may prevent a valid hardware
+> dport id to be retrieved and MMIO registers to be read when an endpoint
+> is hot-plugged. Move the dport allocation and setup to behind memdev
+> probe so the endpoint is guaranteed to be connected.
+>
+> In the original enumeration behavior, there are 3 phases (or 2 if no CXL
+> switches) for port creation. cxl_acpi() creates a Root Port (RP) from the
+> ACPI0017.N device. Through that it enumerate downstream ports composed
+> of ACPI0016.N devices through add_host_bridge_dport(). Once done, it
+> use add_host_bridge_uport() to create the ports that enumerates the PCI
+> RPs as the dports of these ports. Every time a port is created, the port
+> driver is attached and drv->probe() is called and
+> devm_cxl_port_enumerate_dports() is envoked to enumerate and probe
+> the dports.
+>
+> The second phase is if there are any CXL switches. When the pci endpoint
+> device driver (cxl_pci) calls probe, it will add a mem device and triggers
+> the cxl_mem->probe(). cxl_mem->probe() calls devm_cxl_enumerate_ports()
+> and attempts to discovery and create all the ports represent CXL switches.
+> During this phase, a port is created per switch and the attached dports
+> are also enumerated and probed.
+>
+> The last phase is creating endpoint port which happens for all endpoint
+> devices.
+>
+> In this commit, the port create and its dport probing in cxl_acpi is not
+> changed. That will be handled in a different patch later on. The behavior
+> change is only for CXL switch ports. Only the dport that is part of the
+> path for an endpoint device to the RP will be probed. This happens
+> naturally by the code walking up the device hierarchy and identifying the
+> upstream device and the downstream device.
+>
+> There are two points where the interception of dport creation happens
+> during the devm_cxl_enumerate_ports() path. The first location is right
+> before the function calls add_port_attach_ep() where it does the dport
+> allocation for the RP. Once the dport is allocated, the iteration path
+> is reset to the beginning to try again. The second location happens
+> in add_port_attach_ep() after the location where either the port is
+> discovered or allocated new if it does not exist.
+>
+> Locking of port device during __cxl_port_add_dport() protects modifications
+> against the port and its dports while multiple endpoints can be probing at
+> the same time and the same port is being modified concurrently.
+>
+> While the decoders are allocated during the port driver probe,
+> The decoders must also be updated since previously it's all done when all
+> the dports are setup and now every time a dport is setup per endpoint, the
+> switch target listing need to be updated with new dport. A
+> guard(rwsem_write) is used to update decoder targets. This is similar to
+> when decoder_populate_target() is called and the decoder programming
+> must be protected.
+>
+> Link: https://lore.kernel.org/linux-cxl/20250305100123.3077031-1-rrichter@amd.com/
+> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Li Ming <ming.li@zohomail.com>
