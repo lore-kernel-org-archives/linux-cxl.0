@@ -1,115 +1,80 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0DC4C83;
-	Tue, 15 Jul 2025 15:11:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3F39233704
+	for <linux-cxl@vger.kernel.org>; Tue, 15 Jul 2025 15:20:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752592316; cv=none; b=Tn80zKzIgoUxgSppROpoWp8SIHnO1bCx2gpjmU6+DrmzoJvOcFZGn7k4sUGRsjckeQdQsDM2Df9BgSO4QJAgXL71Z8D1CPv0gmRG49Vj53NmS8DDh8dRs6wqmRlDFDlbThb+h8g4ARtwF8cuRSz1SAHQM32XgpGkhs52gZS62LU=
+	t=1752592855; cv=none; b=fadTrl1FaAdUFgH/stXVylZoNQSXAx3+QZ2BFltM6RU5IHl1ZlAeqJEgJ3M8LM5ekGnw8SAiMcm9lGlUDH4TvusbxBoeGvWG7Bb7yoHpnInCpm8jx7DhRJQBEAwLt7YqfQd9wXKNSOUrGdAkP2vc7tOBKo5bXdCA9MI87UKZkpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752592316; c=relaxed/simple;
-	bh=GT9YCMpmO/oGbAXwtofhY5F7e46WJk2TBT21YGNxioQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dlmFh192/alda5xZXKqeBHgfRxdwWIzLeMza3dupvtlqs8FFMyB3hrPSVi0/hv3X7G3R1ga6Gr77CXxLeZd44glUGDFaxZGWAh2DVzWuwYtj/JyP8M5W/e2/2x2aM0iDqLKtuI0wwkadALXhW4hOhUk9wYuR7tOefsISSmCyeWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q0ndQ6mS; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q0ndQ6mS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752592315; x=1784128315;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=GT9YCMpmO/oGbAXwtofhY5F7e46WJk2TBT21YGNxioQ=;
-  b=Q0ndQ6mSMIuQOLDINHH5prIeJmLF8CE1RMrncLNEZorDHJMwsB5k2UGx
-   ppy5y8Te1J+hDDTGm8OhLFziwgLr1iNJFK+4t08kEsswbgKeCnEcRvTmk
-   DmksVl3dM1rgQhFw3QaO9pnJpQ0IOagiK4OwOcI055ZxtCEU584dPq6E7
-   wd49OylARGVDaBVphLwWGdUq47vqHJaXlQS67P679iR8OLKVIk+9eNu8H
-   tKdx2ymhVp59Iby8RtNlHBX4zMPd+ozL4GHwhLzVUeT3AY+N6raphXxnr
-   vmqJpAFZ8GOyMenp5cTFEeQPdptb2Ih9ThG/1KmkqIx9z6QwctcuJEnPa
-   g==;
-X-CSE-ConnectionGUID: sk9lAPRSSH+je3lRNl9JQQ==
-X-CSE-MsgGUID: E79l3cX5Sx2XYzLQSlAIdQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11493"; a="54907821"
-X-IronPort-AV: E=Sophos;i="6.16,313,1744095600"; 
-   d="scan'208";a="54907821"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2025 08:09:24 -0700
-X-CSE-ConnectionGUID: kRlxMx3/SPu8BGSVLj+Ezg==
-X-CSE-MsgGUID: VgyJUB25RxeWdk6pmX7cWw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,313,1744095600"; 
-   d="scan'208";a="157354678"
-Received: from tcingleb-desk1.amr.corp.intel.com (HELO [10.125.111.148]) ([10.125.111.148])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2025 08:09:19 -0700
-Message-ID: <841e6d14-e3cc-4c23-9256-96f0c4e2d761@intel.com>
-Date: Tue, 15 Jul 2025 08:09:18 -0700
+	s=arc-20240116; t=1752592855; c=relaxed/simple;
+	bh=jPt3CDbLx0t1Ge9FEqItSrVPTvjkAvAl8AGN9wzNa3Q=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LPHtGbS1foLN8nS246I+azn3vRUGg8Rqz6VEQAonEJHivqI4VgjgjnNE0nYaMoKrhHEMLEW0Gaj2lWuxzr2lSYaXGHqY7pNvbNmK5aJ3EJeqvO/RpSMQEMlemvDe/8zFa9y23IDZyrJNrFgbv4jxenzU7bceK7dLg1DZu9oaGv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bhN8T44hVz6L4wJ;
+	Tue, 15 Jul 2025 23:17:13 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id A6A7414025A;
+	Tue, 15 Jul 2025 23:20:43 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 15 Jul
+ 2025 17:20:43 +0200
+Date: Tue, 15 Jul 2025 16:20:42 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Alison Schofield <alison.schofield@intel.com>
+CC: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan
+ Williams <dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH v2 4/4] cxl/region: Add inject and clear poison by
+ region offset
+Message-ID: <20250715162042.0000545e@huawei.com>
+In-Reply-To: <aHHnWgKx3YBx__8H@aschofie-mobl2.lan>
+References: <cover.1751513505.git.alison.schofield@intel.com>
+	<4f33bcb42217139e0884784e60139e29c647f62b.1751513505.git.alison.schofield@intel.com>
+	<20250703153138.00000a00@huawei.com>
+	<aHHnWgKx3YBx__8H@aschofie-mobl2.lan>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/8] cxl: mce: Fix typo "notifer"
-To: WangYuli <wangyuli@uniontech.com>
-Cc: airlied@gmail.com, akpm@linux-foundation.org, alison.schofield@intel.com,
- andrew+netdev@lunn.ch, andriy.shevchenko@linux.intel.com,
- arend.vanspriel@broadcom.com, bp@alien8.de,
- brcm80211-dev-list.pdl@broadcom.com, brcm80211@lists.linux.dev,
- colin.i.king@gmail.com, cvam0000@gmail.com, dan.j.williams@intel.com,
- dave.hansen@linux.intel.com, dave@stgolabs.net, davem@davemloft.net,
- dri-devel@lists.freedesktop.org, edumazet@google.com,
- gregkh@linuxfoundation.org, guanwentao@uniontech.com, hpa@zytor.com,
- ilpo.jarvinen@linux.intel.com, intel-xe@lists.freedesktop.org,
- ira.weiny@intel.com, j@jannau.net, jeff.johnson@oss.qualcomm.com,
- jgross@suse.com, jirislaby@kernel.org, johannes.berg@intel.com,
- jonathan.cameron@huawei.com, kuba@kernel.org, kvalo@kernel.org,
- kvm@vger.kernel.org, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
- linux-wireless@vger.kernel.org, linux@treblig.org, lucas.demarchi@intel.com,
- marcin.s.wojtas@gmail.com, ming.li@zohomail.com, mingo@kernel.org,
- mingo@redhat.com, netdev@vger.kernel.org, niecheng1@uniontech.com,
- oleksandr_tyshchenko@epam.com, pabeni@redhat.com, pbonzini@redhat.com,
- quic_ramess@quicinc.com, ragazenta@gmail.com, rodrigo.vivi@intel.com,
- seanjc@google.com, shenlichuan@vivo.com, simona@ffwll.ch,
- sstabellini@kernel.org, tglx@linutronix.de,
- thomas.hellstrom@linux.intel.com, vishal.l.verma@intel.com, x86@kernel.org,
- xen-devel@lists.xenproject.org, yujiaoliang@vivo.com, zhanjun@uniontech.com
-References: <BD5C52D2838AEA48+20250715134050.539234-1-wangyuli@uniontech.com>
- <65FC7B96ECBDB052+20250715134407.540483-2-wangyuli@uniontech.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <65FC7B96ECBDB052+20250715134407.540483-2-wangyuli@uniontech.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-
-
-On 7/15/25 6:44 AM, WangYuli wrote:
-> According to the context, "mce_notifer" should be "mce_notifier".
+> > > +
+> > > +	rc = region_offset_to_dpa_result(cxlr, offset, &result);
+> > > +	if (rc || !result.cxlmd || result.dpa == ULLONG_MAX) {
+> > > +		dev_dbg(&cxlr->dev,
+> > > +			"Failed to resolve DPA for region offset %#llx\n",
+> > > +			offset);
+> > > +
+> > > +		return -EINVAL;  
+> > 
+> > If rc was set, preferable to return that. I'd split the condition
+> > into two parts to avoid this.  
 > 
-> Link: https://lore.kernel.org/all/B3C019B63C93846F+20250715071245.398846-1-wangyuli@uniontech.com/
-> Fixes: 516e5bd0b6bf ("cxl: Add mce notifier to emit aliased address for extended linear cache")
-> Signed-off-by: WangYuli <wangyuli@uniontech.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  drivers/cxl/core/mce.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> I want to dev_dbg() regardless, so how about adding the rc to dev_dbg()
+> and returning like this:
 > 
-> diff --git a/drivers/cxl/core/mce.h b/drivers/cxl/core/mce.h
-> index ace73424eeb6..ca272e8db6c7 100644
-> --- a/drivers/cxl/core/mce.h
-> +++ b/drivers/cxl/core/mce.h
-> @@ -7,7 +7,7 @@
+>         rc = region_offset_to_dpa_result(cxlr, offset, &result);
+>         if (rc || !result.cxlmd || result.dpa == ULLONG_MAX) {
+>                 dev_dbg(&cxlr->dev,
+> -                       "Failed to resolve DPA for region offset %#llx\n",
+> -                       offset);
+> +                       "Failed to resolve DPA for region offset %#llx rc %d\n",
+> +                       offset, rc);
 >  
->  #ifdef CONFIG_CXL_MCE
->  int devm_cxl_register_mce_notifier(struct device *dev,
-> -				   struct notifier_block *mce_notifer);
-> +				   struct notifier_block *mce_notifier);
->  #else
->  static inline int
->  devm_cxl_register_mce_notifier(struct device *dev,
-
+> -               return -EINVAL;
+> +               return rc ? rc : -EINVAL;
+>         }
+> 
+LGTM
