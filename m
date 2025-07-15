@@ -1,43 +1,43 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B956E21C18A;
-	Tue, 15 Jul 2025 15:33:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E42DF248F75;
+	Tue, 15 Jul 2025 15:34:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752593628; cv=none; b=VY6SWYdFCIQZ/+tK+LjxQwLX+VcBVnnkyKlLD4bYEvtLFfRK+Yo7QiukYA3dXHOCXG+bBbXQTpfQLUyH2Ddjao0rpwi/jRX13Djt+aCmAhkJthzFtIUS+n4zpvfONcekd1XKwOzgg9j1uEmMyuXetKg9EXJ/1AXzyhPMsNcqnBg=
+	t=1752593687; cv=none; b=Rtau4ZIPSY0NRAVnk2VfiIgA3OlD466dIigx/bUqfD0NWG9uh5zrh1k3epsPosYxGi2sYZ7BJ8NebK3FhV0Gr+i2wvWKnSg283FMQtYjsW9NJXovhmh2u5SQAMyJTT2Ne9M0WN+WgnAOg8TWF9zPQyv2uETHctu3xbOAQ/1l0aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752593628; c=relaxed/simple;
-	bh=WDm9zE1TKhqjTbxi84Ch/HbXbONMz/SsFH2YNagjOoc=;
+	s=arc-20240116; t=1752593687; c=relaxed/simple;
+	bh=2X8TzFfvdle+cJIOGk4vEK4pIbmvHC3qFFVkkcuBD3w=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=K7S15W0r1tDDHvOJboY/X29wQZmAuVGxbMfSvl5Oi04UTK2CP6hL8Y4/uCA5TI4ui7w9j2mN0qBFpfCDjA5NB8UZ41/EZHnxby+hgOrdRfx8tF6vXSgpF4UL4NanNu7Jm+eFDYkE1lItwhXs2Lx0FrF9i8E1gxtY9YEhSdGAaoY=
+	 MIME-Version:Content-Type; b=VV0Ptxr1OvfMQDMb0mmxuCq4DwqMLKxjl1bdKtQh4QA3Plbq4Dwk9wOokUj40gzmTidlXc4YUfA+94V1Xr1EJAsWStmZyfbJ1gOojQTA69Ejyj/yeBZOsHgxs28Ml7ltwb7f6nAoLK7tbgEWlE2GNBBwtI9/8AGNRI97JJktkLc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bhNRS2xGVz6L5FG;
-	Tue, 15 Jul 2025 23:30:12 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bhNWL31bZz6L58d;
+	Tue, 15 Jul 2025 23:33:34 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8607D140275;
-	Tue, 15 Jul 2025 23:33:42 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 7AC181402ED;
+	Tue, 15 Jul 2025 23:34:42 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 15 Jul
- 2025 17:33:42 +0200
-Date: Tue, 15 Jul 2025 16:33:40 +0100
+ 2025 17:34:42 +0200
+Date: Tue, 15 Jul 2025 16:34:40 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To: Dan Williams <dan.j.williams@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Davidlohr
- Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, Alison
- Schofield <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, "Ira Weiny" <ira.weiny@intel.com>, "Peter
- Zijlstra (Intel)" <peterz@infradead.org>
-Subject: Re: [PATCH v3 6/8] cxl/region: Move ready-to-probe state check to a
- helper
-Message-ID: <20250715163340.00002ddc@huawei.com>
-In-Reply-To: <20250711234932.671292-7-dan.j.williams@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Peter
+ Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Linus
+ Torvalds <torvalds@linux-foundation.org>, David Lechner
+	<dlechner@baylibre.com>, "Fabio M. De Francesco"
+	<fabio.m.de.francesco@linux.intel.com>
+Subject: Re: [PATCH v3 1/8] cleanup: Introduce ACQUIRE() and ACQUIRE_ERR()
+ for conditional locks
+Message-ID: <20250715163440.00007849@huawei.com>
+In-Reply-To: <20250711234932.671292-2-dan.j.williams@intel.com>
 References: <20250711234932.671292-1-dan.j.williams@intel.com>
-	<20250711234932.671292-7-dan.j.williams@intel.com>
+	<20250711234932.671292-2-dan.j.williams@intel.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -50,92 +50,42 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Fri, 11 Jul 2025 16:49:30 -0700
+On Fri, 11 Jul 2025 16:49:25 -0700
 Dan Williams <dan.j.williams@intel.com> wrote:
 
-> Rather than unlocking the region rwsem in the middle of cxl_region_probe()
-> create a helper for determining when the region is ready-to-probe.
-I'd maybe mention the odd bit of 
-if (rc)
-	return rc;
-
-return 0;
-
-Will go away shortly. Or maybe that is overkill for a commit message.
-
-Anyhow, with that in mind LGTM
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-
-
+> From: Peter Zijlstra <peterz@infradead.org>
 > 
-> Cc: Davidlohr Bueso <dave@stgolabs.net>
-> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Alison Schofield <alison.schofield@intel.com>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> scoped_cond_guard(), automatic cleanup for conditional locks, has a couple
+> pain points:
+> 
+> * It causes existing straight-line code to be re-indented into a new
+>   bracketed scope. While this can be mitigated by a new helper function
+>   to contain the scope, that is not always a comfortable conversion.
+> 
+> * The return code from the conditional lock is tossed in favor of a scheme
+>   to pass a 'return err;' statement to the macro.
+> 
+> Other attempts to clean this up, to behave more like guard() [1], got hung
+> up trying to both establish and evaluate the conditional lock in one
+> statement.
+> 
+> ACQUIRE() solves this by reflecting the result of the condition in the
+> automatic variable established by the lock CLASS(). The result is
+> separately retrieved with the ACQUIRE_ERR() helper, effectively a PTR_ERR()
+> operation.
+> 
+> Link: http://lore.kernel.org/all/Z1LBnX9TpZLR5Dkf@gmail.com [1]
+> Link: http://patch.msgid.link/20250512105026.GP4439@noisy.programming.kicks-ass.net
+> Link: http://patch.msgid.link/20250512185817.GA1808@noisy.programming.kicks-ass.net
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: David Lechner <dlechner@baylibre.com>
+> Cc: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+> Signed-off-by: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+> [djbw: wrap Peter's proposal with changelog and comments]
+> Co-developed-by: Dan Williams <dan.j.williams@intel.com>
 > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  drivers/cxl/core/region.c | 24 ++++++++++++++++++------
->  1 file changed, 18 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 3a77aec2c447..2a97fa9a394f 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -3572,9 +3572,8 @@ static void shutdown_notifiers(void *_cxlr)
->  	unregister_mt_adistance_algorithm(&cxlr->adist_notifier);
->  }
->  
-> -static int cxl_region_probe(struct device *dev)
-> +static int cxl_region_can_probe(struct cxl_region *cxlr)
->  {
-> -	struct cxl_region *cxlr = to_cxl_region(dev);
->  	struct cxl_region_params *p = &cxlr->params;
->  	int rc;
->  
-> @@ -3597,15 +3596,28 @@ static int cxl_region_probe(struct device *dev)
->  		goto out;
->  	}
->  
-> -	/*
-> -	 * From this point on any path that changes the region's state away from
-> -	 * CXL_CONFIG_COMMIT is also responsible for releasing the driver.
-> -	 */
->  out:
->  	up_read(&cxl_region_rwsem);
->  
->  	if (rc)
->  		return rc;
-> +	return 0;
 
-This is an odd bit of code now.  Why not just
+LGTM and is definitely an improvement on all previous attempts to solve this.
 
-	return rc;
-
-Ah. Patch 8 drops the if (rc) return rc bit.
-
-
-
-> +}
-> +
-> +static int cxl_region_probe(struct device *dev)
-> +{
-> +	struct cxl_region *cxlr = to_cxl_region(dev);
-> +	struct cxl_region_params *p = &cxlr->params;
-> +	int rc;
-> +
-> +	rc = cxl_region_can_probe(cxlr);
-> +	if (rc)
-> +		return rc;
-> +
-> +	/*
-> +	 * From this point on any path that changes the region's state away from
-> +	 * CXL_CONFIG_COMMIT is also responsible for releasing the driver.
-> +	 */
->  
->  	cxlr->memory_notifier.notifier_call = cxl_region_perf_attrs_callback;
->  	cxlr->memory_notifier.priority = CXL_CALLBACK_PRI;
-
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
