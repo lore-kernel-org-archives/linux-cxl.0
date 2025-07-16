@@ -1,45 +1,41 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F27232F2702;
-	Wed, 16 Jul 2025 10:32:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 669ED2698A2
+	for <linux-cxl@vger.kernel.org>; Wed, 16 Jul 2025 10:52:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752661937; cv=none; b=pNVlqrhtOWdTXtpqqDAuzcOzMm6lowqG0Og3oyXIyUbWjgME7l9I6cFu67TA7+UzO/cM2f9xQh7Pv9vUWjaSawB3ChCjaEHU5t6hgu2kOHV+69W9Dyy3a1/PwOanVN04WE4FKcFkDFl0/CBPMG4IBLmYF5+WnQaD3zgtejqA2Aw=
+	t=1752663155; cv=none; b=AfBpN4J62aeuYXvx1v4I5dxduFenOPWV72ZeCPfPMcG7Wy6e89szyI4EZqSAhLa1AgqmxzITEkmvz4GOJYN4JMuKF2DiXzW+FUMLjbSMAFBlGjDwP1qQ1zD8Nx8cociDjenycTj6fMOLkaYIVSkL1r2D6UTk1GElBkE62VvbQ50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752661937; c=relaxed/simple;
-	bh=Imqn83baOky6c8t+GEo3fMlMKkLIRiNV6oosALBDxag=;
+	s=arc-20240116; t=1752663155; c=relaxed/simple;
+	bh=Pm8XBq3ktgLEzdPM1d6CIBxcwTVP/K9EjKuNLYo0f0Q=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GGv8fmEDB6GIt+J33iP793PayQtSFt/9/8ohMrLRawchmGw8Zrf8a2z0f2EjIFknYeSXX+tbE3kurjrpjwKsxhTp1JIj56bq0uH6/FSnnhAZZQT7Fis2ULvPnn+NDqo1DSB4uZhWKcpz9f83iWe2PIp1QriuYiTP2OKM53+sxUY=
+	 MIME-Version:Content-Type; b=IOl50M4kohXVNll1f5OFInKyl8Q2UObFCkjC2fd8pQ/3lUMLcbhqiFt4fpxHorfcbuKQ/XKC9cW+ZyCHpMGERbUBTaAFv1GBkALjzmanJdyCT0lEwzxKddqpyY70Rvocbgxh+RaNdJc9XYoGiJBltuVoRiNr+e67AG/XQM+4YHs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bhsj20g3Vz6L4xm;
-	Wed, 16 Jul 2025 18:28:38 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bhtC91cK5z6L531;
+	Wed, 16 Jul 2025 18:51:17 +0800 (CST)
 Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7673914044F;
-	Wed, 16 Jul 2025 18:32:10 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id D561914010C;
+	Wed, 16 Jul 2025 18:52:27 +0800 (CST)
 Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
  (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 16 Jul
- 2025 12:32:09 +0200
-Date: Wed, 16 Jul 2025 11:32:08 +0100
+ 2025 12:52:27 +0200
+Date: Wed, 16 Jul 2025 11:52:26 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <dan.j.williams@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Davidlohr
- Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, Alison
- Schofield <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, "Ira Weiny" <ira.weiny@intel.com>, "Peter
- Zijlstra (Intel)" <peterz@infradead.org>
-Subject: Re: [PATCH v3 7/8] cxl/region: Consolidate
- cxl_decoder_kill_region() and cxl_region_detach()
-Message-ID: <20250716113208.00001c7d@huawei.com>
-In-Reply-To: <6876856d329fb_2ead10062@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20250711234932.671292-1-dan.j.williams@intel.com>
-	<20250711234932.671292-8-dan.j.williams@intel.com>
-	<20250715165607.000036c4@huawei.com>
-	<6876856d329fb_2ead10062@dwillia2-xfh.jf.intel.com.notmuch>
+To: <alison.schofield@intel.com>
+CC: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan
+ Williams <dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH v3 2/4] cxl/region: Introduce SPA to DPA address
+ translation
+Message-ID: <20250716115226.000067fc@huawei.com>
+In-Reply-To: <28eeffc8905e658dc3ed62a7c52e030cbcfd5158.1752365427.git.alison.schofield@intel.com>
+References: <cover.1752365427.git.alison.schofield@intel.com>
+	<28eeffc8905e658dc3ed62a7c52e030cbcfd5158.1752365427.git.alison.schofield@intel.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -49,119 +45,190 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
  frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, 15 Jul 2025 09:44:29 -0700
-dan.j.williams@intel.com wrote:
+On Sat, 12 Jul 2025 19:37:55 -0700
+alison.schofield@intel.com wrote:
 
-> Jonathan Cameron wrote:
-> > On Fri, 11 Jul 2025 16:49:31 -0700
-> > Dan Williams <dan.j.williams@intel.com> wrote:
-> >   
-> > > Both detach_target() and cxld_unregister() want to tear down a cxl_region
-> > > when an endpoint decoder is either detached or destroyed.
-> > > 
-> > > When a region is to be destroyed cxl_region_detach() releases
-> > > cxl_region_rwsem unbinds the cxl_region driver and re-acquires the rwsem.
-> > > 
-> > > This "reverse" locking pattern is difficult to reason about, not amenable
-> > > to scope-based cleanup, and the minor differences in the calling context of
-> > > detach_target() and cxld_unregister() currently results in the
-> > > cxl_decoder_kill_region() wrapper.
-> > > 
-> > > Introduce cxl_decoder_detach() to wrap a core __cxl_decoder_detach() that
-> > > serves both cases. I.e. either detaching a known position in a region
-> > > (interruptible), or detaching an endpoint decoder if it is found to be a
-> > > member of a region (uninterruptible).
-> > > 
-> > > Cc: Davidlohr Bueso <dave@stgolabs.net>
-> > > Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
-> > > Cc: Dave Jiang <dave.jiang@intel.com>
-> > > Cc: Alison Schofield <alison.schofield@intel.com>
-> > > Cc: Vishal Verma <vishal.l.verma@intel.com>
-> > > Cc: Ira Weiny <ira.weiny@intel.com>
-> > > Acked-by: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>  
-> > One query inline about what I think is a change in when a reference count is
-> > held on the region device.  I'm struggling to reason about whether that change
-> > would have always been safe or if there is another change here that makes
-> > it fine now?
-> > 
-> > (or whether I'm just misreading the change).
-> > 
-> > Jonathan  
-> [..]
-> >   
-> > > diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> > > index eb46c6764d20..087a20a9ee1c 100644
-> > > --- a/drivers/cxl/core/port.c
-> > > +++ b/drivers/cxl/core/port.c
-> > > @@ -2001,12 +2001,9 @@ EXPORT_SYMBOL_NS_GPL(cxl_decoder_add, "CXL");
-> > >  
-> > >  static void cxld_unregister(void *dev)
-> > >  {
-> > > -	struct cxl_endpoint_decoder *cxled;
-> > > -
-> > > -	if (is_endpoint_decoder(dev)) {
-> > > -		cxled = to_cxl_endpoint_decoder(dev);
-> > > -		cxl_decoder_kill_region(cxled);
-> > > -	}
-> > > +	if (is_endpoint_decoder(dev))
-> > > +		cxl_decoder_detach(NULL, to_cxl_endpoint_decoder(dev), -1,
-> > > +				   DETACH_INVALIDATE);
-> > >  
-> > >  	device_unregister(dev);
-> > >  }
-> > > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > > index 2a97fa9a394f..4314aaed8ad8 100644
-> > > --- a/drivers/cxl/core/region.c
-> > > +++ b/drivers/cxl/core/region.c
-> > > @@ -2135,27 +2135,43 @@ static int cxl_region_attach(struct cxl_region *cxlr,
-> > >  	return 0;
-> > >  }
-> > >  
-> > > -static int cxl_region_detach(struct cxl_endpoint_decoder *cxled)
-> > > +static struct cxl_region *
-> > > +__cxl_decoder_detach(struct cxl_region *cxlr,
-> > > +		     struct cxl_endpoint_decoder *cxled, int pos,
-> > > +		     enum cxl_detach_mode mode)
-> > >  {
-> > > -	struct cxl_port *iter, *ep_port = cxled_to_port(cxled);
-> > > -	struct cxl_region *cxlr = cxled->cxld.region;
-> > >  	struct cxl_region_params *p;
-> > > -	int rc = 0;
-> > >  
-> > >  	lockdep_assert_held_write(&cxl_region_rwsem);
-> > >  
-> > > -	if (!cxlr)
-> > > -		return 0;
-> > > +	if (!cxled) {
-> > > +		p = &cxlr->params;
-> > >  
-> > > -	p = &cxlr->params;
-> > > -	get_device(&cxlr->dev);  
-> > 
-> > This is a fairly nasty patch to unwind and fully understand but
-> > I'm nervous that in the existing we have a get_device(&cxlr->dev)
-> > before potential cxl_region_decode_reset(cxlr, ...)
-> > and now we don't.  I'm not sure if that is a real problem though,
-> > it just makes me nervous.  
+> From: Alison Schofield <alison.schofield@intel.com>
 > 
-> The reference count is not for cxl_region_decode_reset(). The reference
-> count is to keep the region from being freed when the lock is dropped so
-> that device_release_driver() can see if it has work to do.
+> Add infrastructure to translate System Physical Addresses (SPA) to
+> Device Physical Addresses (DPA) within CXL regions. This capability
+> will be used by follow-on patches that add poison inject and clear
+> operations at the region level.
 > 
-> The lookup result from endpoint decoder to region is only stable while
-> the lock is held and the region could be freed at any point after that.
-> The pin holds that off until we are done with the potential follow-on
-> work from detaching a decoder.
+> The SPA-to-DPA translation process follows these steps:
+> 1. Apply root decoder transformations (SPA to HPA) if configured.
+> 2. Extract the position in region interleave from the HPA offset.
+> 3. Extract the DPA offset from the HPA offset.
+> 4. Use position to find endpoint decoder.
+> 5. Use endpoint decoder to find memdev and calculate DPA from offset.
+> 6. Return the result - a memdev and a DPA.
 > 
-> The reference is not taken in other paths like region sysfs because
-> userspace activity in sysfs attributes holds off attribute
-> unregistration.
-Fair enough and thanks for the explanation.
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+> It is Step 1 above that makes this a driver level operation and not
+> work we can push to user space. Rather than exporting the XOR maps for
+> root decoders configured with XOR interleave, the driver performs this
+> complex calculation for the user.
+> 
+> Steps 2 and 3 follow the CXL Spec 3.2 Section 8.2.4.20.13
+> Implementation Note: Device Decode Logic.
+> 
+> These calculations mirror much of the logic introduced earlier in DPA
+> to SPA translation, see cxl_dpa_to_hpa(), where the driver needed to
+> reverse the spec defined 'Deivce Decode Logic'.
+
+Device
 
 > 
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+Hi Alison,
+
+A few minor things inline. 
+> ---
+> 
+> Changes in v3:
+> Check return of ways_to_eiw() & granularity_to_eig() (Jonathan)
+> Collapse a header comment into pos and offset blocks (Jonathan)
+> Calc pos for 3,6,12 using actual ways, not always 3 (Jonathan)
+> Mask off bottom bits in < 8 offset case (Jonathan)
+> Wrap code comments closer to column 80 (Jonathan)
+> Use a continue to un-nest a for loop. (Jonathan)
+> 
+>  drivers/cxl/core/region.c | 93 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 93 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index a2ba19151d4f..404f69864d61 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -2956,6 +2956,99 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+>  	return hpa;
+>  }
+>  
+> +struct dpa_result {
+> +	struct cxl_memdev *cxlmd;
+> +	u64 dpa;
+> +};
+> +
+> +static int __maybe_unused region_offset_to_dpa_result(struct cxl_region *cxlr,
+> +						      u64 offset,
+> +						      struct dpa_result *result)
+> +{
+> +	struct cxl_region_params *p = &cxlr->params;
+> +	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
+> +	struct cxl_endpoint_decoder *cxled;
+> +	u64 hpa, hpa_offset, dpa_offset;
+> +	u64 bits_upper, bits_lower;
+> +	u16 eig = 0;
+> +	u8 eiw = 0;
+> +	int pos;
+> +
+> +	lockdep_assert_held(&cxl_rwsem.region);
+> +	lockdep_assert_held(&cxl_rwsem.dpa);
+> +
+> +	if (granularity_to_eig(p->interleave_granularity, &eig) ||
+> +	    ways_to_eiw(p->interleave_ways, &eiw))
+> +		return -ENXIO;
+
+Why eat return values to replace with ENXIO? I'd prefer
+
+	rc = granularity_to_eig(p->interleave_granularity, &eig);
+	if (rc)
+		return rc;
+
+	rc = ways_to_eiw(p->interleave_ways, &eiw);
+	if (rc)
+		return rc;
+
+
+> +
+> +	/*
+> +	 * If the root decoder has SPA to CXL HPA callback, use it. Otherwise
+> +	 * CXL HPA is assumed to equal SPA.
+> +	 */
+> +	if (cxlrd->spa_to_hpa) {
+> +		hpa = cxlrd->spa_to_hpa(cxlrd, p->res->start + offset);
+> +		hpa_offset = hpa - p->res->start;
+> +	} else {
+> +		hpa_offset = offset;
+> +	}
+> +	/*
+> +	 * Interleave position: CXL Spec 3.2 Section 8.2.4.20.13
+> +	 * eiw < 8
+> +	 *	Position is in the IW bits at HPA_OFFSET[IG+8+IW-1:IG+8].
+> +	 *	Per spec "remove IW bits starting with bit position IG+8"
+> +	 * eiw >= 8
+> +	 *	Position is not explicitly stored in HPA_OFFSET bits. It is
+> +	 *	derived from the modulo operation of the upper bits using
+> +	 *	the total number of interleave ways.
+> +	 */
+> +	if (eiw < 8)
+> +		pos = (hpa_offset >> (eig + 8)) & GENMASK(eiw - 1, 0);
+> +	else
+> +		pos = (hpa_offset >> (eig + 8)) % p->interleave_ways;
+> +
+> +	if (pos < 0 || pos >= p->nr_targets) {
+> +		dev_dbg(&cxlr->dev, "Invalid position %d for %d targets\n",
+> +			pos, p->nr_targets);
+> +		return -ENXIO;
+> +	}
+Maybe a blank line here.
+> +	/*
+> +	 * DPA offset: CXL Spec 3.2 Section 8.2.4.20.13
+> +	 * Lower bits [IG+7:0] pass through unchanged
+> +	 * (eiw < 8)
+> +	 *	Per spec: DPAOffset[51:IG+8] = (HPAOffset[51:IG+IW+8] >> IW)
+> +	 *	Clear the position bits to isolate upper section, then
+> +	 *	reverse the left shift by eiw that occurred during DPA->HPA
+> +	 * (eiw >= 8)
+> +	 *	Per spec: DPAOffset[51:IG+8] = HPAOffset[51:IG+IW] / 3
+> +	 *	Extract upper bits from the correct bit range and divide by 3
+> +	 *	to recover the original DPA upper bits
+> +	 */
+> +
+
+and not one here to keep this grouped slightly more closely with the
+code it is talking about.
+
+> +	bits_lower = hpa_offset & GENMASK_ULL(eig + 7, 0);
+> +	if (eiw < 8) {
+> +		hpa_offset &= ~((u64)GENMASK(eiw + eig + 8 - 1, 0));
+
+Really trivial but I'd use eig + eiw + 8 - 1 to align with the parameter
+order in the comment.  With matching that comment in mind why not,
+
+		dpa_offset = (hpa_offset & (GENMASK_ULL(51, eig + eiw + 8) >> eiw;
+(Go long on this line for readability)  Or use 63 if you prefer for the upper
+a should remain safe.
+
+Not using hpa_offset for the intermediate value avoid ambiguity about what
+the value is at that stage (it's not the hpa_offset
+
+
+> +		dpa_offset = hpa_offset >> eiw;
+> +	} else {
+> +		bits_upper = div64_u64(hpa_offset >> (eig + eiw), 3);
+> +		dpa_offset = bits_upper << (eig + 8);
+> +	}
+> +	dpa_offset |= bits_lower;
+> +
+> +	/* Look-up and return the result: a memdev and a DPA */
+> +	for (int i = 0; i < p->nr_targets; i++) {
+> +		cxled = p->targets[i];
+> +		if (cxled->pos != pos)
+> +			continue;
+> +		result->cxlmd = cxled_to_memdev(cxled);
+> +		result->dpa = cxl_dpa_resource_start(cxled) + dpa_offset;
+> +
+> +		return 0;
+> +	}
+> +	dev_err(&cxlr->dev, "No device found for position %d\n", pos);
+> +
+> +	return -ENXIO;
+> +}
+> +
+>  static struct lock_class_key cxl_pmem_region_key;
+>  
+>  static int cxl_pmem_region_alloc(struct cxl_region *cxlr)
 
