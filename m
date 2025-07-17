@@ -1,197 +1,215 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 976EA1F19A
-	for <linux-cxl@vger.kernel.org>; Thu, 17 Jul 2025 05:16:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D609C291C24
+	for <linux-cxl@vger.kernel.org>; Thu, 17 Jul 2025 09:53:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752729392; cv=none; b=glZn2/Rf/29f3u+ZqGTvHbHDCnrCC93VU20w/TOb9m0m3xl/85Q8PJ2WMRboWp2A1n9XfhHOlUsGhjvUl2jtBVKr+OLk4LvghSpQsSWkguMjvDJTtYE6+uDoR+iMPOLn49v2uslsA4QKpFvjMbltU/fTuIJfm/hWsycJ5VnmNrQ=
+	t=1752746001; cv=none; b=Uo9rwCUEYYLBzfA3QthI8ofNw3Euf3IVktciwbxWYhUhkCZoGG1q53pTmVTv+sa5PsmyIkfxIla5i9/dAupSr4DCeFdTJPmf1wPgJiWRtRNeFMAZvVXC7DbBWZIcbHp+7nWemdwpPICS2hspFP/KAAgKpvsIB0qSKDGhVCTEbHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752729392; c=relaxed/simple;
-	bh=Jrl0w8dsJpYDDxH/CA9Ed4tnwLJHHW8p8sH27rjEZgQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CeMvSLICtWA/2v+4dvykCLT6rgl9PLxw2hFi3mUZKTQtvn7o4wAd1lZouQcUFxwYZwPz9faM0KtqRvDKJq0iIjieyzyfkdhY6NLBCfpMWatXJZmVeb/fRAr/VDOQ5e+MPyhwKNR4ixd4QxlOFfFpZvwcqFdD0s5pSFl0pu39eOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dcrHNgD8; arc=none smtp.client-ip=192.198.163.11
+	s=arc-20240116; t=1752746001; c=relaxed/simple;
+	bh=GGxEAo3qWFPML+PiBKQoUEF/6I9hsBXpLXrbwHUqeyY=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=YZw1+LQTcVR9Xge7lzwzmzhktZQ/75kr6J9Qch67lUqm07gdQJHchRZo7xxzu4USLWo10YWUMEQ6pbKHGPvw4RBUmyMAe+bFIniARyyMc0YVJnTosDDKHYi/x6SbY6co2l4LWw447QAXQmNVUAyKYeWN3myDozSv+543inbyh+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SKZElK32; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dcrHNgD8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SKZElK32"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752729390; x=1784265390;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Jrl0w8dsJpYDDxH/CA9Ed4tnwLJHHW8p8sH27rjEZgQ=;
-  b=dcrHNgD8WlwxB9jwDh+yGOsjGTN8FvzaqbyVRjwlsT4wJNiLjsldxr5Y
-   2rDE/OEXCegwioLH0hTzV8UFhnOdk/BwcIrUbvQmAumyV3I+pw+KgpeI/
-   +WIDPLAsTT7lzJf1YsGtvhBgD24p4TqjHAeG5ss2EMGwVRUiL/eyaFL2r
-   FaZ6pd0Ef3XaziYsyQmLHMfApv5RpJ9cS3lx6fZYM/GvZU27ax3CpqpBQ
-   Ei8uxnBG5B3hLJTg5m4G8MQSmtDkQolpIIJjMn3cE9AQeOO5CRoDG+QNd
-   2XGY5nBVdziswtmd9DGeqBgyc4ec5WouDNAsKAgZBlkTLXFYkyjRbb+WA
-   Q==;
-X-CSE-ConnectionGUID: wzQBIZ7ERyOUaja84b/ldw==
-X-CSE-MsgGUID: Bf95yDlVRGezvtm6usjNSA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11493"; a="65558149"
-X-IronPort-AV: E=Sophos;i="6.16,317,1744095600"; 
-   d="scan'208";a="65558149"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2025 22:16:29 -0700
-X-CSE-ConnectionGUID: SBG7JrziQjy7e2kbcUlQvQ==
-X-CSE-MsgGUID: RyQ6B6gyQ6ebBu1hUwFPHw==
+  t=1752746000; x=1784282000;
+  h=date:from:to:cc:subject:message-id;
+  bh=GGxEAo3qWFPML+PiBKQoUEF/6I9hsBXpLXrbwHUqeyY=;
+  b=SKZElK32ZEKF6yjLPMYAnUSnGfAYfkZYvPMx2rTtHSOSDDguOUv0BLo4
+   KQy0/5g9bN/bB88bYAi4f7KEvqCEFvEuZXj1h343w0suDtDd4JjwN2JxI
+   mduvh1PxNgC8YWEo8etPpjhng38KhrMkI8MacLYTeQtElI0buoLNoDrcs
+   83qMaVaOR8F63LS7AhOvEDtjEYlkm+a8yqfvLWb4yq7D9u0Q3zTC0qdKr
+   8D2BsUSb0KK/Yn8eN1RPwtW3IcppnihTtLMfKwB3i31X2YaHeK8PBTppY
+   vLSJyxW5YjzCoajkB7Wq2moxjGfDUWL10XuhRSngz17p7omot12PBtbX1
+   g==;
+X-CSE-ConnectionGUID: nHLrXg11R4aJaKRBw06k9w==
+X-CSE-MsgGUID: 2ndk2CBaT9SLR5UVolKmBA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11493"; a="66366015"
+X-IronPort-AV: E=Sophos;i="6.16,318,1744095600"; 
+   d="scan'208";a="66366015"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2025 02:53:11 -0700
+X-CSE-ConnectionGUID: kMGy7IadQ9+rc/Vg4Qn4YA==
+X-CSE-MsgGUID: n7zxworrQe6YIFfKQrK7uw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,317,1744095600"; 
-   d="scan'208";a="161986918"
+X-IronPort-AV: E=Sophos;i="6.16,318,1744095600"; 
+   d="scan'208";a="157850128"
 Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 16 Jul 2025 22:16:26 -0700
+  by fmviesa006.fm.intel.com with ESMTP; 17 Jul 2025 02:53:09 -0700
 Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1ucGyl-000DAZ-2k;
-	Thu, 17 Jul 2025 05:16:23 +0000
-Date: Thu, 17 Jul 2025 13:16:04 +0800
+	id 1ucLIZ-000DV9-0i;
+	Thu, 17 Jul 2025 09:53:07 +0000
+Date: Thu, 17 Jul 2025 17:52:13 +0800
 From: kernel test robot <lkp@intel.com>
-To: shiju.jose@huawei.com, linux-cxl@vger.kernel.org,
-	dan.j.williams@intel.com, dave.jiang@intel.com,
-	jonathan.cameron@huawei.com, alison.schofield@intel.com,
-	dave@stgolabs.net, vishal.l.verma@intel.com, ira.weiny@intel.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	tanxiaofei@huawei.com, prime.zeng@hisilicon.com,
-	linuxarm@huawei.com, shiju.jose@huawei.com
-Subject: Re: [PATCH 3/4] cxl/events: Add extra validity checks for CVME count
- in DRAM Event Record
-Message-ID: <202507171217.6p5GHqr0-lkp@intel.com>
-References: <20250716104945.2002-4-shiju.jose@huawei.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Subject: [cxl:next] BUILD SUCCESS
+ b873adfddeeb337fa8e9f381fd35eb94f7887f2f
+Message-ID: <202507171700.ooUakeDh-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250716104945.2002-4-shiju.jose@huawei.com>
 
-Hi,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
+branch HEAD: b873adfddeeb337fa8e9f381fd35eb94f7887f2f  Merge branch 'for-6.17/cxl-acquire' into cxl-for-next
 
-kernel test robot noticed the following build warnings:
+elapsed time: 723m
 
-[auto build test WARNING on cxl/next]
-[also build test WARNING on linus/master v6.16-rc6 next-20250716]
-[cannot apply to cxl/pending]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+configs tested: 135
+configs skipped: 4
 
-url:    https://github.com/intel-lab-lkp/linux/commits/shiju-jose-huawei-com/cxl-events-Update-Common-Event-Record-to-CXL-spec-rev-3-2/20250716-192336
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-patch link:    https://lore.kernel.org/r/20250716104945.2002-4-shiju.jose%40huawei.com
-patch subject: [PATCH 3/4] cxl/events: Add extra validity checks for CVME count in DRAM Event Record
-config: arm-randconfig-004-20250717 (https://download.01.org/0day-ci/archive/20250717/202507171217.6p5GHqr0-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 16534d19bf50bde879a83f0ae62875e2c5120e64)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250717/202507171217.6p5GHqr0-lkp@intel.com/reproduce)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507171217.6p5GHqr0-lkp@intel.com/
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+alpha                               defconfig    gcc-15.1.0
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    gcc-15.1.0
+arc                                 defconfig    gcc-15.1.0
+arc                         haps_hs_defconfig    gcc-15.1.0
+arc                            hsdk_defconfig    gcc-15.1.0
+arc                   randconfig-001-20250717    gcc-8.5.0
+arc                   randconfig-002-20250717    gcc-15.1.0
+arm                              allmodconfig    gcc-15.1.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-15.1.0
+arm                                 defconfig    clang-21
+arm                           omap1_defconfig    gcc-15.1.0
+arm                   randconfig-001-20250717    clang-21
+arm                   randconfig-002-20250717    gcc-8.5.0
+arm                   randconfig-003-20250717    gcc-8.5.0
+arm                   randconfig-004-20250717    clang-21
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                               defconfig    gcc-15.1.0
+arm64                 randconfig-001-20250717    clang-18
+arm64                 randconfig-002-20250717    clang-18
+arm64                 randconfig-003-20250717    gcc-10.5.0
+arm64                 randconfig-004-20250717    clang-21
+csky                              allnoconfig    gcc-15.1.0
+csky                                defconfig    gcc-15.1.0
+csky                  randconfig-001-20250717    gcc-15.1.0
+csky                  randconfig-002-20250717    gcc-12.4.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon                             defconfig    clang-21
+hexagon               randconfig-001-20250717    clang-20
+hexagon               randconfig-002-20250717    clang-19
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250717    gcc-12
+i386        buildonly-randconfig-002-20250717    gcc-12
+i386        buildonly-randconfig-003-20250717    clang-20
+i386        buildonly-randconfig-004-20250717    clang-20
+i386        buildonly-randconfig-005-20250717    clang-20
+i386        buildonly-randconfig-006-20250717    gcc-12
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    clang-19
+loongarch                         allnoconfig    clang-21
+loongarch                           defconfig    clang-19
+loongarch             randconfig-001-20250717    gcc-15.1.0
+loongarch             randconfig-002-20250717    clang-21
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+m68k                                defconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                               defconfig    gcc-14.2.0
+nios2                 randconfig-001-20250717    gcc-8.5.0
+nios2                 randconfig-002-20250717    gcc-9.3.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-15.1.0
+openrisc                    or1ksim_defconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20250717    gcc-9.3.0
+parisc                randconfig-002-20250717    gcc-9.3.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                          allyesconfig    clang-21
+powerpc                      mgcoge_defconfig    clang-21
+powerpc               randconfig-001-20250717    clang-21
+powerpc               randconfig-002-20250717    gcc-13.4.0
+powerpc               randconfig-003-20250717    clang-21
+powerpc64             randconfig-001-20250717    clang-21
+powerpc64             randconfig-002-20250717    clang-18
+powerpc64             randconfig-003-20250717    clang-21
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    clang-21
+riscv                 randconfig-001-20250717    gcc-14.3.0
+riscv                 randconfig-002-20250717    clang-21
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-15.1.0
+s390                                defconfig    clang-21
+s390                  randconfig-001-20250717    gcc-8.5.0
+s390                  randconfig-002-20250717    gcc-9.3.0
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                                  defconfig    gcc-15.1.0
+sh                          r7780mp_defconfig    gcc-15.1.0
+sh                    randconfig-001-20250717    gcc-14.3.0
+sh                    randconfig-002-20250717    gcc-9.3.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                               defconfig    gcc-15.1.0
+sparc                 randconfig-001-20250717    gcc-14.3.0
+sparc                 randconfig-002-20250717    gcc-8.5.0
+sparc64                             defconfig    clang-20
+sparc64               randconfig-001-20250717    gcc-12.4.0
+sparc64               randconfig-002-20250717    clang-21
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250717    gcc-12
+um                    randconfig-002-20250717    gcc-12
+um                           x86_64_defconfig    clang-21
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250717    clang-20
+x86_64      buildonly-randconfig-002-20250717    clang-20
+x86_64      buildonly-randconfig-003-20250717    clang-20
+x86_64      buildonly-randconfig-004-20250717    gcc-12
+x86_64      buildonly-randconfig-005-20250717    gcc-12
+x86_64      buildonly-randconfig-006-20250717    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                  cadence_csp_defconfig    gcc-15.1.0
+xtensa                randconfig-001-20250717    gcc-13.4.0
+xtensa                randconfig-002-20250717    gcc-9.3.0
 
-All warnings (new ones prefixed by >>):
-
-   drivers/cxl/core/mbox.c:933:27: warning: address of array 'evt->gen_media.cme_count' will always evaluate to 'true' [-Wpointer-bool-conversion]
-     933 |                                              !evt->gen_media.cme_count);
-         |                                              ~~~~~~~~~~~~~~~~^~~~~~~~~
-   include/asm-generic/bug.h:148:18: note: expanded from macro 'WARN_ON_ONCE'
-     148 |         DO_ONCE_LITE_IF(condition, WARN_ON, 1)
-         |                         ^~~~~~~~~
-   include/linux/once_lite.h:28:27: note: expanded from macro 'DO_ONCE_LITE_IF'
-      28 |                 bool __ret_do_once = !!(condition);                     \
-         |                                         ^~~~~~~~~
->> drivers/cxl/core/mbox.c:948:22: warning: address of array 'evt->dram.cvme_count' will always evaluate to 'true' [-Wpointer-bool-conversion]
-     948 |                                              !evt->dram.cvme_count);
-         |                                              ~~~~~~~~~~~^~~~~~~~~~
-   include/asm-generic/bug.h:148:18: note: expanded from macro 'WARN_ON_ONCE'
-     148 |         DO_ONCE_LITE_IF(condition, WARN_ON, 1)
-         |                         ^~~~~~~~~
-   include/linux/once_lite.h:28:27: note: expanded from macro 'DO_ONCE_LITE_IF'
-      28 |                 bool __ret_do_once = !!(condition);                     \
-         |                                         ^~~~~~~~~
-   2 warnings generated.
-
-
-vim +948 drivers/cxl/core/mbox.c
-
-   888	
-   889	void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
-   890				    enum cxl_event_log_type type,
-   891				    enum cxl_event_type event_type,
-   892				    const uuid_t *uuid, union cxl_event *evt)
-   893	{
-   894		if (event_type == CXL_CPER_EVENT_MEM_MODULE) {
-   895			trace_cxl_memory_module(cxlmd, type, &evt->mem_module);
-   896			return;
-   897		}
-   898		if (event_type == CXL_CPER_EVENT_GENERIC) {
-   899			trace_cxl_generic_event(cxlmd, type, uuid, &evt->generic);
-   900			return;
-   901		}
-   902	
-   903		if (trace_cxl_general_media_enabled() || trace_cxl_dram_enabled()) {
-   904			u64 dpa, hpa = ULLONG_MAX, hpa_alias = ULLONG_MAX;
-   905			struct cxl_region *cxlr;
-   906	
-   907			/*
-   908			 * These trace points are annotated with HPA and region
-   909			 * translations. Take topology mutation locks and lookup
-   910			 * { HPA, REGION } from { DPA, MEMDEV } in the event record.
-   911			 */
-   912			guard(rwsem_read)(&cxl_region_rwsem);
-   913			guard(rwsem_read)(&cxl_dpa_rwsem);
-   914	
-   915			dpa = le64_to_cpu(evt->media_hdr.phys_addr) & CXL_DPA_MASK;
-   916			cxlr = cxl_dpa_to_region(cxlmd, dpa);
-   917			if (cxlr) {
-   918				u64 cache_size = cxlr->params.cache_size;
-   919	
-   920				hpa = cxl_dpa_to_hpa(cxlr, cxlmd, dpa);
-   921				if (cache_size)
-   922					hpa_alias = hpa - cache_size;
-   923			}
-   924	
-   925			if (event_type == CXL_CPER_EVENT_GEN_MEDIA) {
-   926				if (cxl_store_rec_gen_media((struct cxl_memdev *)cxlmd, evt))
-   927					dev_dbg(&cxlmd->dev, "CXL store rec_gen_media failed\n");
-   928	
-   929				if (evt->gen_media.media_hdr.descriptor &
-   930				    CXL_GMER_EVT_DESC_THRESHOLD_EVENT)
-   931					WARN_ON_ONCE((evt->gen_media.media_hdr.type &
-   932						      CXL_GMER_MEM_EVT_TYPE_AP_CME_COUNTER_EXPIRE) &&
-   933						     !evt->gen_media.cme_count);
-   934				else
-   935					WARN_ON_ONCE(evt->gen_media.media_hdr.type &
-   936						     CXL_GMER_MEM_EVT_TYPE_AP_CME_COUNTER_EXPIRE);
-   937	
-   938				trace_cxl_general_media(cxlmd, type, cxlr, hpa,
-   939							hpa_alias, &evt->gen_media);
-   940			} else if (event_type == CXL_CPER_EVENT_DRAM) {
-   941				if (cxl_store_rec_dram((struct cxl_memdev *)cxlmd, evt))
-   942					dev_dbg(&cxlmd->dev, "CXL store rec_dram failed\n");
-   943	
-   944				if (evt->dram.media_hdr.descriptor &
-   945				    CXL_GMER_EVT_DESC_THRESHOLD_EVENT)
-   946					WARN_ON_ONCE((evt->dram.media_hdr.type &
-   947						      CXL_DER_MEM_EVT_TYPE_AP_CME_COUNTER_EXPIRE) &&
- > 948						     !evt->dram.cvme_count);
-   949				else
-   950					WARN_ON_ONCE(evt->dram.media_hdr.type &
-   951						     CXL_DER_MEM_EVT_TYPE_AP_CME_COUNTER_EXPIRE);
-   952	
-   953				trace_cxl_dram(cxlmd, type, cxlr, hpa, hpa_alias,
-   954					       &evt->dram);
-   955			}
-   956		}
-   957	}
-   958	EXPORT_SYMBOL_NS_GPL(cxl_event_trace_record, "CXL");
-   959	
-
--- 
+--
 0-DAY CI Kernel Test Service
 https://github.com/intel/lkp-tests/wiki
