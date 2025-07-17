@@ -1,29 +1,29 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69ACE1E1DE9
-	for <linux-cxl@vger.kernel.org>; Thu, 17 Jul 2025 10:18:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9617628FFD8
+	for <linux-cxl@vger.kernel.org>; Thu, 17 Jul 2025 10:18:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752747519; cv=none; b=i/Xy6EOCPkO47hmCbU8v1+LmgSPcQ0dPwWDIlbwz23bZp393XcwQ8RUuG6n3mKb63NRLjDo8xwZTWwEaLp2n3URl6q4CZFWuSpuv9wepM8czyzfZef9uX3C1B3lg+uQsVigjcUHemwKbwnvgjlyAkFppxlHILph6eOQjkrR8Gs0=
+	t=1752747521; cv=none; b=MRi09Qs4ajwHkMOOSEap8w+sZAJ9DFmatO+6wlzSVXx7kJ8DsVjjWlRfopelFCMb8QX6Mtb62P3TlP3d6lmZ2+pxtYy+Q43hb9UcJisc0VSPfa9g/WpcRfi37SrefQAg9v4regY8Xq7EneU6LRgYmjdM4bs1hdQmeuttoNki0Cs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752747519; c=relaxed/simple;
-	bh=htaT4wke8YD3gtHrjAwSatFcex4m5DVUF8s9Z9KcEtI=;
+	s=arc-20240116; t=1752747521; c=relaxed/simple;
+	bh=6UsvtHYdsW0SETJ3PW4lZ/JTNljYej7qWaAUsrx1+Uw=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=s2ULdYCEOyA1OG4Xi5coSToB7HmkD6roviCqJBv18aQMW0qH+8rlnl7SREmJ4Y0PJR2+aJyHG/ppp20ub9VQsHOzBe/c/gBd3wuA8HsezZxcyXuA37rwWIfaxETzpRT5URcj/sZVta/mmycb4+dVkER6qJxOWbcb8twawYj+Y6Y=
+	 MIME-Version:Content-Type; b=Ri3basFCWTJPlnIhRvGeXXag1lKIz6eoB8k9YBAaT2G80TNIkNgs0wDr8Plun0PVG0BwyQGY1nhUGVoRQVyzcWWJwjoeWY29ge+MRpu4hvkc9MMk21UKOSpdRrX8VLXrh6MeKM2sz0hp8kUSf9YbEmcBh4J6MARUy9lW1ZA21j4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bjTPW4bt5z6L5H3;
-	Thu, 17 Jul 2025 18:17:19 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bjTPV4J0tz6M4d9;
+	Thu, 17 Jul 2025 18:17:18 +0800 (CST)
 Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
-	by mail.maildlp.com (Postfix) with ESMTPS id 659EA1400F4;
-	Thu, 17 Jul 2025 18:18:33 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 5C5F814027A;
+	Thu, 17 Jul 2025 18:18:35 +0800 (CST)
 Received: from P_UKIT01-A7bmah.china.huawei.com (10.195.245.216) by
  frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 17 Jul 2025 12:18:32 +0200
+ 15.1.2507.39; Thu, 17 Jul 2025 12:18:34 +0200
 From: <shiju.jose@huawei.com>
 To: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
 	<dave.jiang@intel.com>, <jonathan.cameron@huawei.com>,
@@ -31,9 +31,9 @@ To: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
 	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>
 CC: <tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>,
 	<linuxarm@huawei.com>, <shiju.jose@huawei.com>
-Subject: [PATCH v2 2/4] cxl/events: Add extra validity checks for corrected memory error count in General Media Event Record
-Date: Thu, 17 Jul 2025 11:18:15 +0100
-Message-ID: <20250717101817.2104-3-shiju.jose@huawei.com>
+Subject: [PATCH v2 4/4] cxl/events: Trace Memory Sparing Event Record
+Date: Thu, 17 Jul 2025 11:18:17 +0100
+Message-ID: <20250717101817.2104-5-shiju.jose@huawei.com>
 X-Mailer: git-send-email 2.43.0.windows.1
 In-Reply-To: <20250717101817.2104-1-shiju.jose@huawei.com>
 References: <20250717101817.2104-1-shiju.jose@huawei.com>
@@ -50,65 +50,270 @@ X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
 
 From: Shiju Jose <shiju.jose@huawei.com>
 
-According to the CXL Specification Revision 3.2, Section 8.2.10.2.1.1,
-Table 8-57 (General Media Event Record), the Corrected Memory Error Count
-field is valid under the following conditions:
-1. The Threshold Event bit is set in the Memory Event Descriptor field,
-and
-2. The Corrected Memory Error Count must be greater than 0 for events
-where the Advanced Programmable Threshold Counter has expired.
+CXL rev 3.2 section 8.2.10.2.1.4 Table 8-60 defines the Memory Sparing
+Event Record.
 
-Additionally, if the Advanced Programmable Corrected Memory Error Counter
-Expire bit in the Memory Event Type field is set, then the Threshold Event
-bit in the Memory Event Descriptor field shall also be set.
+Determine if the event read is memory sparing record and if so trace the
+record.
 
-Add validity checks for the above conditions while reporting the event to
-the userspace.
+Memory device shall produce a memory sparing event record
+1. After completion of a PPR maintenance operation if the memory sparing
+event record enable bit is set (Field: sPPR/hPPR Operation Mode in
+Table 8-128/Table 8-131).
+2. In response to a query request by the host (see section 8.2.10.7.1.4)
+to determine the availability of sparing resources.
+The device shall report the resource availability by producing the Memory
+Sparing Event Record (see Table 8-60) in which the channel, rank, nibble
+mask, bank group, bank, row, column, sub-channel fields are a copy of the
+values specified in the request. If the controller does not support
+reporting whether a resource is available, and a perform maintenance
+operation for memory sparing is issued with query resources set to 1, the
+controller shall return invalid input.
+
+Example trace log for produce memory sparing event record on completion
+of a soft PPR operation,
+cxl_memory_sparing: memdev=mem1 host=0000:0f:00.0 serial=3
+log=Informational : time=55045163029
+uuid=e71f3a40-2d29-4092-8a39-4d1c966c7c65 len=128 flags='0x1' handle=1
+related_handle=0 maint_op_class=2 maint_op_sub_class=1
+ld_id=0 head_id=0 : flags='' result=0
+validity_flags='CHANNEL|RANK|NIBBLE|BANK GROUP|BANK|ROW|COLUMN'
+spare resource avail=1 channel=2 rank=5 nibble_mask=a59c bank_group=2
+bank=4 row=13 column=23 sub_channel=0
+comp_id=00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+comp_id_pldm_valid_flags='' pldm_entity_id=0x00 pldm_resource_id=0x00
+
+Note: For memory sparing event record, fields 'maintenance operation
+class' and 'maintenance operation subclass' are defined twice, first
+in the common event record (Table 8-55) and second in the memory
+sparing event record (Table 8-60). Thus those in the sparing event
+record coded as reserved, to be removed when the spec is updated.
 
 Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 ---
- drivers/cxl/core/mbox.c  | 9 +++++++++
- drivers/cxl/core/trace.h | 5 ++++-
- 2 files changed, 13 insertions(+), 1 deletion(-)
+ drivers/cxl/core/mbox.c  |   6 +++
+ drivers/cxl/core/trace.h | 105 +++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/cxlmem.h     |   8 +++
+ include/cxl/event.h      |  33 ++++++++++++
+ 4 files changed, 152 insertions(+)
 
 diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 2689e6453c5a..ba4a29afd3aa 100644
+index 445889b128cd..f7e081c00c49 100644
 --- a/drivers/cxl/core/mbox.c
 +++ b/drivers/cxl/core/mbox.c
-@@ -926,6 +926,15 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
- 			if (cxl_store_rec_gen_media((struct cxl_memdev *)cxlmd, evt))
- 				dev_dbg(&cxlmd->dev, "CXL store rec_gen_media failed\n");
+@@ -899,6 +899,10 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+ 		trace_cxl_generic_event(cxlmd, type, uuid, &evt->generic);
+ 		return;
+ 	}
++	if (event_type == CXL_CPER_EVENT_MEM_SPARING) {
++		trace_cxl_memory_sparing(cxlmd, type, &evt->mem_sparing);
++		return;
++	}
  
-+			if (evt->gen_media.media_hdr.descriptor &
-+			    CXL_GMER_EVT_DESC_THRESHOLD_EVENT)
-+				WARN_ON_ONCE((evt->gen_media.media_hdr.type &
-+					      CXL_GMER_MEM_EVT_TYPE_AP_CME_COUNTER_EXPIRE) &&
-+					     !get_unaligned_le24(evt->gen_media.cme_count));
-+			else
-+				WARN_ON_ONCE(evt->gen_media.media_hdr.type &
-+					     CXL_GMER_MEM_EVT_TYPE_AP_CME_COUNTER_EXPIRE);
-+
- 			trace_cxl_general_media(cxlmd, type, cxlr, hpa,
- 						hpa_alias, &evt->gen_media);
- 		} else if (event_type == CXL_CPER_EVENT_DRAM) {
+ 	if (trace_cxl_general_media_enabled() || trace_cxl_dram_enabled()) {
+ 		u64 dpa, hpa = ULLONG_MAX, hpa_alias = ULLONG_MAX;
+@@ -970,6 +974,8 @@ static void __cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+ 		ev_type = CXL_CPER_EVENT_DRAM;
+ 	else if (uuid_equal(uuid, &CXL_EVENT_MEM_MODULE_UUID))
+ 		ev_type = CXL_CPER_EVENT_MEM_MODULE;
++	else if (uuid_equal(uuid, &CXL_EVENT_MEM_SPARING_UUID))
++		ev_type = CXL_CPER_EVENT_MEM_SPARING;
+ 
+ 	cxl_event_trace_record(cxlmd, type, ev_type, uuid, &record->event);
+ }
 diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
-index a77487a257b3..c38f94ca0ca1 100644
+index 462c2e892ba2..a53ec4798b12 100644
 --- a/drivers/cxl/core/trace.h
 +++ b/drivers/cxl/core/trace.h
-@@ -506,7 +506,10 @@ TRACE_EVENT(cxl_general_media,
- 			uuid_copy(&__entry->region_uuid, &uuid_null);
- 		}
- 		__entry->cme_threshold_ev_flags = rec->cme_threshold_ev_flags;
--		__entry->cme_count = get_unaligned_le24(rec->cme_count);
-+		if (rec->media_hdr.descriptor & CXL_GMER_EVT_DESC_THRESHOLD_EVENT)
-+			__entry->cme_count = get_unaligned_le24(rec->cme_count);
-+		else
-+			__entry->cme_count = 0;
- 	),
+@@ -887,6 +887,111 @@ TRACE_EVENT(cxl_memory_module,
+ 	)
+ );
  
- 	CXL_EVT_TP_printk("dpa=%llx dpa_flags='%s' " \
++/*
++ * Memory Sparing Event Record - MSER
++ *
++ * CXL rev 3.2 section 8.2.10.2.1.4; Table 8-60
++ */
++#define CXL_MSER_QUERY_RESOURCE_FLAG			BIT(0)
++#define CXL_MSER_HARD_SPARING_FLAG			BIT(1)
++#define CXL_MSER_DEV_INITED_FLAG			BIT(2)
++#define show_mem_sparing_flags(flags)	__print_flags(flags, "|",	\
++	{ CXL_MSER_QUERY_RESOURCE_FLAG,		"Query Resources" },	\
++	{ CXL_MSER_HARD_SPARING_FLAG,		"Hard Sparing" },	\
++	{ CXL_MSER_DEV_INITED_FLAG,	"Device Initiated Sparing" }	\
++)
++
++#define CXL_MSER_VALID_CHANNEL				BIT(0)
++#define CXL_MSER_VALID_RANK				BIT(1)
++#define CXL_MSER_VALID_NIBBLE				BIT(2)
++#define CXL_MSER_VALID_BANK_GROUP			BIT(3)
++#define CXL_MSER_VALID_BANK				BIT(4)
++#define CXL_MSER_VALID_ROW				BIT(5)
++#define CXL_MSER_VALID_COLUMN				BIT(6)
++#define CXL_MSER_VALID_COMPONENT_ID			BIT(7)
++#define CXL_MSER_VALID_COMPONENT_ID_FORMAT		BIT(8)
++#define CXL_MSER_VALID_SUB_CHANNEL			BIT(9)
++#define show_mem_sparing_valid_flags(flags)	__print_flags(flags, "|",		\
++	{ CXL_MSER_VALID_CHANNEL,			"CHANNEL" },			\
++	{ CXL_MSER_VALID_RANK,				"RANK" },			\
++	{ CXL_MSER_VALID_NIBBLE,			"NIBBLE" },			\
++	{ CXL_MSER_VALID_BANK_GROUP,			"BANK GROUP" },			\
++	{ CXL_MSER_VALID_BANK,				"BANK" },			\
++	{ CXL_MSER_VALID_ROW,				"ROW" },			\
++	{ CXL_MSER_VALID_COLUMN,			"COLUMN" },			\
++	{ CXL_MSER_VALID_COMPONENT_ID,			"COMPONENT ID" },		\
++	{ CXL_MSER_VALID_COMPONENT_ID_FORMAT,		"COMPONENT ID PLDM FORMAT" },	\
++	{ CXL_MSER_VALID_SUB_CHANNEL,			"SUB CHANNEL" }			\
++)
++
++TRACE_EVENT(cxl_memory_sparing,
++
++	TP_PROTO(const struct cxl_memdev *cxlmd, enum cxl_event_log_type log,
++		 struct cxl_event_mem_sparing *rec),
++
++	TP_ARGS(cxlmd, log, rec),
++
++	TP_STRUCT__entry(
++		CXL_EVT_TP_entry
++
++		/* Memory Sparing Event */
++		__field(u8, flags)
++		__field(u8, result)
++		__field(u16, validity_flags)
++		__field(u16, res_avail)
++		__field(u8, channel)
++		__field(u8, rank)
++		__field(u32, nibble_mask)
++		__field(u8, bank_group)
++		__field(u8, bank)
++		__field(u32, row)
++		__field(u16, column)
++		__field(u8, sub_channel)
++		__array(u8, comp_id, CXL_EVENT_GEN_MED_COMP_ID_SIZE)
++	),
++
++	TP_fast_assign(
++		CXL_EVT_TP_fast_assign(cxlmd, log, rec->hdr);
++		__entry->hdr_uuid = CXL_EVENT_MEM_SPARING_UUID;
++
++		/* Memory Sparing Event */
++		__entry->flags = rec->flags;
++		__entry->result = rec->result;
++		__entry->validity_flags = le16_to_cpu(rec->validity_flags);
++		__entry->res_avail = le16_to_cpu(rec->res_avail);
++		__entry->channel = rec->channel;
++		__entry->rank = rec->rank;
++		__entry->nibble_mask = get_unaligned_le24(rec->nibble_mask);
++		__entry->bank_group = rec->bank_group;
++		__entry->bank = rec->bank;
++		__entry->row = get_unaligned_le24(rec->row);
++		__entry->column = le16_to_cpu(rec->column);
++		__entry->sub_channel = rec->sub_channel;
++		memcpy(__entry->comp_id, &rec->component_id,
++		       CXL_EVENT_GEN_MED_COMP_ID_SIZE);
++	),
++
++	CXL_EVT_TP_printk("flags='%s' result=%u validity_flags='%s' " \
++		"spare resource avail=%u channel=%u rank=%u " \
++		"nibble_mask=%x bank_group=%u bank=%u " \
++		"row=%u column=%u sub_channel=%u " \
++		"comp_id=%s comp_id_pldm_valid_flags='%s' " \
++		"pldm_entity_id=%s pldm_resource_id=%s",
++		show_mem_sparing_flags(__entry->flags),
++		__entry->result,
++		show_mem_sparing_valid_flags(__entry->validity_flags),
++		__entry->res_avail, __entry->channel, __entry->rank,
++		__entry->nibble_mask, __entry->bank_group, __entry->bank,
++		__entry->row, __entry->column, __entry->sub_channel,
++		__print_hex(__entry->comp_id, CXL_EVENT_GEN_MED_COMP_ID_SIZE),
++		show_comp_id_pldm_flags(__entry->comp_id[0]),
++		show_pldm_entity_id(__entry->validity_flags, CXL_MSER_VALID_COMPONENT_ID,
++				    CXL_MSER_VALID_COMPONENT_ID_FORMAT, __entry->comp_id),
++		show_pldm_resource_id(__entry->validity_flags, CXL_MSER_VALID_COMPONENT_ID,
++				      CXL_MSER_VALID_COMPONENT_ID_FORMAT, __entry->comp_id)
++	)
++);
++
+ #define show_poison_trace_type(type)			\
+ 	__print_symbolic(type,				\
+ 	{ CXL_POISON_TRACE_LIST,	"List"   },	\
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index 551b0ba2caa1..f98311f357b7 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -633,6 +633,14 @@ struct cxl_mbox_identify {
+ 	UUID_INIT(0xfe927475, 0xdd59, 0x4339, 0xa5, 0x86, 0x79, 0xba, 0xb1, \
+ 		  0x13, 0xb7, 0x74)
+ 
++/*
++ * Memory Sparing Event Record UUID
++ * CXL rev 3.2 section 8.2.10.2.1.4: Table 8-60
++ */
++#define CXL_EVENT_MEM_SPARING_UUID                                          \
++	UUID_INIT(0xe71f3a40, 0x2d29, 0x4092, 0x8a, 0x39, 0x4d, 0x1c, 0x96, \
++		  0x6c, 0x7c, 0x65)
++
+ /*
+  * Get Event Records output payload
+  * CXL rev 3.0 section 8.2.9.2.2; Table 8-50
+diff --git a/include/cxl/event.h b/include/cxl/event.h
+index f4cb8568566b..6fd90f9cc203 100644
+--- a/include/cxl/event.h
++++ b/include/cxl/event.h
+@@ -110,11 +110,43 @@ struct cxl_event_mem_module {
+ 	u8 reserved[0x2a];
+ } __packed;
+ 
++/*
++ * Memory Sparing Event Record - MSER
++ * CXL rev 3.2 section 8.2.10.2.1.4; Table 8-60
++ */
++struct cxl_event_mem_sparing {
++	struct cxl_event_record_hdr hdr;
++	/*
++	 * The fields maintenance operation class and maintenance operation
++	 * subclass defined in the Memory Sparing Event Record are the
++	 * duplication of the same in the common event record. Thus defined
++	 * as reserved and to be removed after the spec correction.
++	 */
++	u8 rsv1;
++	u8 rsv2;
++	u8 flags;
++	u8 result;
++	__le16 validity_flags;
++	u8 reserved1[6];
++	__le16 res_avail;
++	u8 channel;
++	u8 rank;
++	u8 nibble_mask[3];
++	u8 bank_group;
++	u8 bank;
++	u8 row[3];
++	__le16 column;
++	u8 component_id[CXL_EVENT_GEN_MED_COMP_ID_SIZE];
++	u8 sub_channel;
++	u8 reserved2[0x25];
++} __packed;
++
+ union cxl_event {
+ 	struct cxl_event_generic generic;
+ 	struct cxl_event_gen_media gen_media;
+ 	struct cxl_event_dram dram;
+ 	struct cxl_event_mem_module mem_module;
++	struct cxl_event_mem_sparing mem_sparing;
+ 	/* dram & gen_media event header */
+ 	struct cxl_event_media_hdr media_hdr;
+ } __packed;
+@@ -133,6 +165,7 @@ enum cxl_event_type {
+ 	CXL_CPER_EVENT_GEN_MEDIA,
+ 	CXL_CPER_EVENT_DRAM,
+ 	CXL_CPER_EVENT_MEM_MODULE,
++	CXL_CPER_EVENT_MEM_SPARING,
+ };
+ 
+ #define CPER_CXL_DEVICE_ID_VALID		BIT(0)
 -- 
 2.43.0
 
