@@ -1,198 +1,215 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA0427A448;
-	Thu, 17 Jul 2025 14:14:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D682F7D16
+	for <linux-cxl@vger.kernel.org>; Thu, 17 Jul 2025 14:53:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752761663; cv=none; b=ecRZwUe3OuuXt8L2uEstChlbwFTRlIkVMgJn/gt5FLr90ubI0S5TccpnYo//d0BjOlXiIQ3Ys86hOpbv55LLzE/CvsDuJBkxfJ+J24HAKG54DT9kbSZ6McYUiKwFCFYjuD6Eu8vcZ4a1bdznYVux3ARMrDJ5WheQsr/e9Gk2EXI=
+	t=1752764037; cv=none; b=RoibVgN8SNRjVzcRDvC+w6g04DiABicKQk9J9zt0dqXXlIo0Fh8p1eOLwN67UdNTk2+BC7hdy8m3sO58TogM/M637YJyw7VAfiBLjdcnJfMFIOEZMjlQ0JRMhzj5shnSBmH1u8UZyHzrJA7+m95+DrhiHXbG4bbJtlauTKqmELg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752761663; c=relaxed/simple;
-	bh=3vWAkc4NBBEgL0bm5FI3OoK4PX5l4yfcxpfaZZRvNz0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=t2ePOesmIoyRO5GkK9RGOuYQ4kuoz9QiErpH7dfwid5wOIYsvAHCrncjnF2ZRN2LrycHRwz1fppJiJKFv07z0ZjT9MZd1zNpk3NerC7pDGD4m6vado1rDSvap8S0hryhS7M1rtH6Fb4f3vjR6m1eKsJqVDkQht1lSSHORUHLFIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hmGGgrYZ; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1752764037; c=relaxed/simple;
+	bh=dvfWM5GsW+HQFQngG7BjM0NbrdvHOEH0+aFRH+Tkijw=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=gUcOzcj/lz61Jg+vs0MgDzpJ6ahH5UfyZHb8YdDmKb+5m7liYkNYs9NMA7pmsPeL1sy+hmJ+62Ore2fI7HoYeQPtR7EaFNuEdna6QAPn1C9kbSWqCSI42bd0Yw516xT5deNmRDrUIHqaOPizeiyNYUGqqOstGd/3PoJ082lJ1n8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mGbyWt5g; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hmGGgrYZ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mGbyWt5g"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752761663; x=1784297663;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=3vWAkc4NBBEgL0bm5FI3OoK4PX5l4yfcxpfaZZRvNz0=;
-  b=hmGGgrYZ+S/W9KzD16sVC0NQEBBzA1XUdwWgDI7M2n1IMYBkZBgYxcS/
-   5PVQ/yfVXajYl5N8ZeUaaH2KRdGbUwErIwrTVIic/cSCJ2+FIzqgtVQTM
-   61bnO/5i5JBPgB1OrQqLo828Wu2o8+MFoNLNvvYZPj42J8mxIJ0aUm7D8
-   iT1BZATSqkuGipEQZhjX6YRZ1TtN0p/QDYrVNC3/GEQEmW++L38npMsTI
-   Vom35JeyNYN4CHLD8uK8XsPt4+7/xbY6gHiSyai+EVgPuOIR8BiHxmdPw
-   g6lEYv46HkYW//KDTldq5snS2omjZnj51Ge5rVGij1APAHIYJm7K2mphe
-   Q==;
-X-CSE-ConnectionGUID: Se8mjyDBRiGemKdaXa0uMA==
-X-CSE-MsgGUID: xJR3xvi8QpmznvW97CALDA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11495"; a="66487073"
+  t=1752764036; x=1784300036;
+  h=date:from:to:cc:subject:message-id;
+  bh=dvfWM5GsW+HQFQngG7BjM0NbrdvHOEH0+aFRH+Tkijw=;
+  b=mGbyWt5gy3r+dml0nnGNQRwZO+7egVYGBnjHT6tGxh7C4XWiXPFUXxWy
+   M9GxE2TRH3NTQqQzry+uvBsvWeYcvi3NFgX5XNPLEsKZsuGDNTDS5okq6
+   H3Xp0BaUR5yAhgHps9DGl95F31AY3dPWME6pJewvWNXvCUayLw3KwHRyb
+   oPWiP4pal83zLrsjNTbZ4FSMstTCpifpMORD0lHMuLUAiwvuhcv7kY620
+   qxvYEaxJsd8qtUAYeg4xiWtvOY3vYP5wQuIjkPSrQWCnm0poLdpeXtYi+
+   hqqPkD3cwe2TknLYUD+GdjzntiBIzGfJfEoWKBUFQ6hq86v7auHPjok6d
+   g==;
+X-CSE-ConnectionGUID: T98U5zrpQ6aVc/l7Wv1Ahg==
+X-CSE-MsgGUID: 2ZMtEAphQnW5y8G5eq2ERQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11495"; a="66392496"
 X-IronPort-AV: E=Sophos;i="6.16,319,1744095600"; 
-   d="scan'208";a="66487073"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2025 07:14:22 -0700
-X-CSE-ConnectionGUID: avlw3jjNSrqv2y4GmrK/1A==
-X-CSE-MsgGUID: HnjyhLQdQW2jSWjBEuOS9Q==
+   d="scan'208";a="66392496"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2025 07:53:55 -0700
+X-CSE-ConnectionGUID: YztqsJe6Rkm30r7uv01E7Q==
+X-CSE-MsgGUID: /PhYefolSxqNB8GS4PCBQA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,319,1744095600"; 
-   d="scan'208";a="157875215"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.203])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2025 07:14:16 -0700
-From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: Gregory Price <gourry@gourry.net>
-Cc: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, Jonathan Corbet <corbet@lwn.net>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject:
- Re: [PATCH v3] cxl: docs/driver-api/conventions resolve conflicts btw CFMWS,
- LMH, ED
-Date: Thu, 17 Jul 2025 16:14:13 +0200
-Message-ID: <17128669.tgchFWduMW@fdefranc-mobl3>
-In-Reply-To: <aGwmFwGNmw8n9zGR@gourry-fedora-PF4VCD3F>
-References:
- <20250623152923.1048525-1-fabio.m.de.francesco@linux.intel.com>
- <1985851.b9uPGUboIS@fdefranc-mobl3> <aGwmFwGNmw8n9zGR@gourry-fedora-PF4VCD3F>
+   d="scan'208";a="157921490"
+Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 17 Jul 2025 07:53:53 -0700
+Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ucPzb-000Djj-04;
+	Thu, 17 Jul 2025 14:53:51 +0000
+Date: Thu, 17 Jul 2025 22:53:38 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Subject: [cxl:for-6.17/cleanup-acquire] BUILD SUCCESS
+ 857d18f23ab17284d1b6de6f61f4e74958596376
+Message-ID: <202507172225.JXZsmYp7-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
 
-On Monday, July 7, 2025 9:55:03=E2=80=AFPM Central European Summer Time Gre=
-gory Price wrote:
-> On Fri, Jul 04, 2025 at 12:05:33PM +0200, Fabio M. De Francesco wrote:
-> > On Thursday, July 3, 2025 9:40:21=E2=80=AFPM Central European Summer Ti=
-me Gregory Price wrote:
-> > > On Tue, Jul 01, 2025 at 08:23:57AM -0700, Dave Jiang wrote:
-> > > >=20
-> > > >=20
-> > > > On 6/23/25 12:19 PM, Gregory Price wrote:
-> > > > > On Mon, Jun 23, 2025 at 05:29:02PM +0200, Fabio M. De Francesco w=
-rote:
-> > > > >> Add documentation on how to resolve conflicts between CXL Fixed =
-Memory
-> > > > >> Windows, Platform Memory Holes, and Endpoint Decoders.
-> > > > >>
-> > > > >> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux=
-=2Eintel.com>
-> > > > >=20
-> > > > > I won't block a doc update on a suggestion so
-> > > > >=20
-> > > > > Reviewed-by: Gregory Price <gourry@gourry.net>
-> > > > >=20
-> > > > >> +Platform Firmware (BIOS) might reserve part of physical address=
-es below
-> > > > >> +4 GB (e.g., the Low Memory Hole that describes PCIe memory spac=
-e for MMIO
-> > > > >> +or a requirement for the greater than 8 way interleave CXL regi=
-ons starting
-> > > > >> +at address 0). In that case the Window Size value cannot be any=
-more
-> > > > >> +constrained to the NIW * 256 MB above-mentioned rule.
-> > > > >=20
-> > > > > It might be nice to have a diagram that explains this visually, a=
-s it's
-> > > > > difficult for me to understand the implications through words alo=
-ne...
-> > > >=20
-> > > > +1 on request for diagram to explain. We should try to document thi=
-s issue as clearly as possible. Thank you.
-> > > >
-> > >=20
-> > > At the very least, it would be nice to have an explicitly example that
-> > > explains the expected cfmws/decoder configurations that are valid but
-> > > "technically" violate the spec
-> > >=20
-> > > I *think* this basically boils down to "CFMWS size is not aligned, but
-> > > all the decoders it targets are"?  If I understand this correctly?
-> > >=20
-> > Yes, this is the intended meaning.=20
-> >=20
-> > E.g, two windows, 384 GB total memory, LMH at 2 GB:
-> >=20
-> > Window | CFMWS Base | CFMWS Size | HDM Decoder Base | HDM Decoder Size =
-| Ways | Granularity
-> >   0    |   0 GB     |     2 GB   |      0 GB        |       3 GB       =
-|  12  |    256
-> >   1    |   4 GB     |   380 GB   |      0 GB        |     380 GB       =
-|  12  |    256
->=20
->=20
-> In this example, does the root decoder have 0/2 and the host bridge
-> decoder have 0/3?  Because root decoders objects are created by reading
-> the CFMWS Base/Size - while host bridge decoder objects are created by
-> reading the host bridge DVSECS.
->
-> Or does the linux code read CFMWS Base/Size and create a root decoder
-> with 0/3 because "that's what it should have"?  etc
->
-No, sorry for any confusion. I also noticed that some unwanted additional
-lines slipped in my last reply, probably for a copy/paste mistake.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git for-6.17/cleanup-acquire
+branch HEAD: 857d18f23ab17284d1b6de6f61f4e74958596376  cleanup: Introduce ACQUIRE() and ACQUIRE_ERR() for conditional locks
 
-Let me explain...
+elapsed time: 725m
 
-The table above shows a real configuration copied from an x86 platform=20
-where the Low Memory Hole (LMH) starts at 2GB.=20
+configs tested: 135
+configs skipped: 4
 
-The"HDM Decoder Base/Size" refers specifically to the CXL Endpoint=20
-Decoders HPA range Base/Size. The first row of the table describes the=20
-first window (CFMWS[0]), whose HPA rage base/size is 0/2GB, and the=20
-Endpoint Decoder that the CXL driver should match with that CFMWS,=20
-whose HPA range base/size is 0/3GB.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-The Endpoint Decoder follows the 256MB x 12 interleave ways rule=20
-mandated by the CXL specifications. Instead the CFMWS is truncated=20
-immediately before the beginning of the LMH, because it needs to publish
-only those memory locations that the system can address.  =20
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+alpha                               defconfig    gcc-15.1.0
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    gcc-15.1.0
+arc                                 defconfig    gcc-15.1.0
+arc                         haps_hs_defconfig    gcc-15.1.0
+arc                            hsdk_defconfig    gcc-15.1.0
+arc                   randconfig-001-20250717    gcc-8.5.0
+arc                   randconfig-002-20250717    gcc-15.1.0
+arm                              allmodconfig    gcc-15.1.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-15.1.0
+arm                                 defconfig    clang-21
+arm                           omap1_defconfig    gcc-15.1.0
+arm                   randconfig-001-20250717    clang-21
+arm                   randconfig-002-20250717    gcc-8.5.0
+arm                   randconfig-003-20250717    gcc-8.5.0
+arm                   randconfig-004-20250717    clang-21
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                               defconfig    gcc-15.1.0
+arm64                 randconfig-001-20250717    clang-18
+arm64                 randconfig-002-20250717    clang-18
+arm64                 randconfig-003-20250717    gcc-10.5.0
+arm64                 randconfig-004-20250717    clang-21
+csky                              allnoconfig    gcc-15.1.0
+csky                                defconfig    gcc-15.1.0
+csky                  randconfig-001-20250717    gcc-15.1.0
+csky                  randconfig-002-20250717    gcc-12.4.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon                             defconfig    clang-21
+hexagon               randconfig-001-20250717    clang-20
+hexagon               randconfig-002-20250717    clang-19
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250717    gcc-12
+i386        buildonly-randconfig-002-20250717    gcc-12
+i386        buildonly-randconfig-003-20250717    clang-20
+i386        buildonly-randconfig-004-20250717    clang-20
+i386        buildonly-randconfig-005-20250717    clang-20
+i386        buildonly-randconfig-006-20250717    gcc-12
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    clang-19
+loongarch                         allnoconfig    clang-21
+loongarch                           defconfig    clang-19
+loongarch             randconfig-001-20250717    gcc-15.1.0
+loongarch             randconfig-002-20250717    clang-21
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+m68k                                defconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                               defconfig    gcc-14.2.0
+nios2                 randconfig-001-20250717    gcc-8.5.0
+nios2                 randconfig-002-20250717    gcc-9.3.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-15.1.0
+openrisc                    or1ksim_defconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20250717    gcc-9.3.0
+parisc                randconfig-002-20250717    gcc-9.3.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                          allyesconfig    clang-21
+powerpc                      mgcoge_defconfig    clang-21
+powerpc               randconfig-001-20250717    clang-21
+powerpc               randconfig-002-20250717    gcc-13.4.0
+powerpc               randconfig-003-20250717    clang-21
+powerpc64             randconfig-001-20250717    clang-21
+powerpc64             randconfig-002-20250717    clang-18
+powerpc64             randconfig-003-20250717    clang-21
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    clang-21
+riscv                 randconfig-001-20250717    gcc-14.3.0
+riscv                 randconfig-002-20250717    clang-21
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-15.1.0
+s390                                defconfig    clang-21
+s390                  randconfig-001-20250717    gcc-8.5.0
+s390                  randconfig-002-20250717    gcc-9.3.0
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                                  defconfig    gcc-15.1.0
+sh                          r7780mp_defconfig    gcc-15.1.0
+sh                    randconfig-001-20250717    gcc-14.3.0
+sh                    randconfig-002-20250717    gcc-9.3.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                               defconfig    gcc-15.1.0
+sparc                 randconfig-001-20250717    gcc-14.3.0
+sparc                 randconfig-002-20250717    gcc-8.5.0
+sparc64                             defconfig    clang-20
+sparc64               randconfig-001-20250717    gcc-12.4.0
+sparc64               randconfig-002-20250717    clang-21
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250717    gcc-12
+um                    randconfig-002-20250717    gcc-12
+um                           x86_64_defconfig    clang-21
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250717    clang-20
+x86_64      buildonly-randconfig-002-20250717    clang-20
+x86_64      buildonly-randconfig-003-20250717    clang-20
+x86_64      buildonly-randconfig-004-20250717    gcc-12
+x86_64      buildonly-randconfig-005-20250717    gcc-12
+x86_64      buildonly-randconfig-006-20250717    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                  cadence_csp_defconfig    gcc-15.1.0
+xtensa                randconfig-001-20250717    gcc-13.4.0
+xtensa                randconfig-002-20250717    gcc-9.3.0
 
-Currently the CXL driver fails during the Region construction and=20
-subsequent Endpoint Decoders attachment because it cannot match Root=20
-Decoders (that are created with HPA ranges base/size equal to CFMWS)
-and Switch Decoders with Endpoint decoders due to this size discrepancy.=20
-
-The driver expects that the Endpoint Decoders HPA ranges to be contained=20
-into their corresponding Root Decoders. Furthermore, Linux fails to=20
-attach Endpoint decoders to already constructed CXL Regions because of=20
-the same size discrepancy issue.=20
->=20
-> I think you need to describe what the expected behavior is for what linux
-> will produce in terms of the decoder objects given the above.
->
-The expected behavior is that Linux should be able to match the Endpoint=20
-Decoder with the Root Decoder range even if the CFMWS size is smaller=20
-than the Decoder's, as long as the latter adheres to the 256MB * interleave=
-=20
-ways rule. Furthermore, Linux should be able to match the Endpoint decoders=
-=20
-with already constructed CXL Regions and allow the attachment process to=20
-succeed.=20
-
-This would enable the utilization of the 2GB memory described by CFMWS[0].
-
-I hope this time I explained the LMH interference with CXL Regions=20
-construction and Endpoint Decoders attachment with better clarity.
-
-If this explanation suffices, I will incorporate it into the next version
-of this patch and also explain that "HDM Decoder" stands for Endpoint Decod=
-er=20
-and that the CFMWS HPA base/size describes the System Physical Address (SPA=
-)=20
-which the CXL driver uses to make Root Decoders HPA range base/size.=20
-
-Thanks,
-
-=46abio
-
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
