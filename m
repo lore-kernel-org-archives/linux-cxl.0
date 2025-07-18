@@ -1,48 +1,48 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04F1522A7E5
-	for <linux-cxl@vger.kernel.org>; Sat, 19 Jul 2025 07:18:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E40A2356D9
+	for <linux-cxl@vger.kernel.org>; Sat, 19 Jul 2025 07:18:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752909488; cv=none; b=pwwK7f78ZehOA1BjMaw+Q89n0y6kevA/xAUbh1A5NX0Z6oBhi1zGDGK3lJvlJDFU5ODiKOsdP6DQEhRdxFVkpMw3mz7JOACKCnk06geiHFjovfTew2gTRykEjs5p1/pX1U8jEvw2AFqnyvRU433vWVKgk2QJo9iTXHzIoSnZdhk=
+	t=1752909492; cv=none; b=ujjBunZd74i6AHnJPgWWVXtYepZ6YO3ziWXNhWADs6Mmbgo4rFMTnzAro6a1g7ZqlNsGMJhJGofMDlqQFYw62dhFqhxWQUDM9lFzspXevaxkcIyLvs1NlBdTyZErliHTBO7yAcsknAxdzR2xb0eGDPtziBxIeGiltimQR7Gk2Uk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752909488; c=relaxed/simple;
-	bh=jNYmGlfM3PO40rAxO79BRxgt/OlGDr361/KyPdo76QA=;
+	s=arc-20240116; t=1752909492; c=relaxed/simple;
+	bh=3cmT1pWAFDbE5NF6d1Wsm8iDto8df8XwxPMrpnoks6M=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=Pypn30/aNq+nL5QKnWYceJLTWBEtPGSxM4FZ7Wqme7gDB5/8JRKIXmuLUrR+cAXGmGhPWwKaw29qIokRdgskDgI7YN9rIIiejAKCxmvzeHY96m5F2Rs3FHVaZgGrS/c1rJw8VkD43RxgTbdN5RC4wSndf34k/+/TF2/fGGZz4ik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=THdAJj63; arc=none smtp.client-ip=203.254.224.34
+	 Content-Type:References; b=HhuwcGy7XloDeFQ59eUlGQhw5BNMf4fAxJj9nYfIzc55rZDOaKzOjf+s7AGaacqwmxnas7p2rTsZS+LPF2P+mfoKMKACd1FHMyYvNUUFKF/LHXQy1qdQFyW89T2NvW0Ajm320Uycn+HSgrouzhBYeH2eB6bHrsQK1bGIWSF6Zbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=UBLhA+gW; arc=none smtp.client-ip=203.254.224.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="THdAJj63"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250719071804epoutp044f12c8ec0a938a26340836f648a2af19~TleOApkC-1410314103epoutp049
-	for <linux-cxl@vger.kernel.org>; Sat, 19 Jul 2025 07:18:04 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250719071804epoutp044f12c8ec0a938a26340836f648a2af19~TleOApkC-1410314103epoutp049
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UBLhA+gW"
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250719071803epoutp03dc70044333afa8e4ee2e18ae2bb5e10c~TleNKMu4u1122311223epoutp03G
+	for <linux-cxl@vger.kernel.org>; Sat, 19 Jul 2025 07:18:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250719071803epoutp03dc70044333afa8e4ee2e18ae2bb5e10c~TleNKMu4u1122311223epoutp03G
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1752909484;
-	bh=BV5NwJZ301VpEAHTsZrMy/+/o3tq6lxSpQ1yGSfvrzM=;
+	s=mail20170921; t=1752909483;
+	bh=5VtKd5pTNoTFx35Tyb9Y/s5OVtWxj5VggDGtkYkWDEg=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=THdAJj63lO7kmRwN7pkZ51QVum4jOZaiQ5Qr1PrCPufalURQVfhDV+Dl2UYPQ+EEr
-	 1Mdgvljsm7W0cFv83j++EFLKOC2ZJ5Ynxx/Eq8An7cfKlSN16kUJWNaeSqvCiKZZv9
-	 3j77dPgLAaAGL3q8vbWrFXNyYbB739bLoM50IrWc=
-Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
+	b=UBLhA+gWUnEXw162rb14Juj6CWQ1jY0Ue/wvSQgcCo8axVBzh/AHW/z816NMImmL6
+	 yxHbCugTofUJqullFKq0oMq/8Ol2NJbdfSi4RJAIL+k/w3O4LgVZosRux1R1ygIgrx
+	 Qg8SUarHRdWV+NNc8q7M6Wajwico4gQVHSj8aDsU=
+Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
 	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
-	20250719071803epcas5p297ad09c6e6c11325bd8a8e473a81b211~TleNIm0M_3167331673epcas5p2u;
-	Sat, 19 Jul 2025 07:18:03 +0000 (GMT)
+	20250719071802epcas5p24e3bd11e8050a0fa267063423dc3c49e~TleMq9YeJ2908029080epcas5p2Q;
+	Sat, 19 Jul 2025 07:18:02 +0000 (GMT)
 Received: from epcpadp2new (unknown [182.195.40.142]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4bkdKl2V3Kz6B9m8; Sat, 19 Jul
-	2025 07:18:03 +0000 (GMT)
+	epsnrtp03.localdomain (Postfix) with ESMTP id 4bkdKk63w0z3hhT3; Sat, 19 Jul
+	2025 07:18:02 +0000 (GMT)
 Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250718124814epcas5p131953c4dfe5e9fb84e51635e6d6c71f6~TWVM_e6Th0618706187epcas5p1X;
-	Fri, 18 Jul 2025 12:48:14 +0000 (GMT)
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20250718123059epcas5p43f7bd9372c65050f2da97880302d6b18~TWGJK0x3i2133321333epcas5p41;
+	Fri, 18 Jul 2025 12:30:59 +0000 (GMT)
 Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
 	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250718124811epsmtip27c49fe2c2a4a7625524d4d09031e2163~TWVKkf0W11950019500epsmtip2J;
-	Fri, 18 Jul 2025 12:48:11 +0000 (GMT)
-Date: Fri, 18 Jul 2025 18:18:05 +0530
+	20250718123056epsmtip2c08bd22d75c4ede3df4b7d5c47fe4366~TWGGymS-m0816508165epsmtip29;
+	Fri, 18 Jul 2025 12:30:56 +0000 (GMT)
+Date: Fri, 18 Jul 2025 18:00:50 +0530
 From: Neeraj Kumar <s.neeraj@samsung.com>
 To: Dave Jiang <dave.jiang@intel.com>
 Cc: dan.j.williams@intel.com, dave@stgolabs.net,
@@ -53,89 +53,157 @@ Cc: dan.j.williams@intel.com, dave@stgolabs.net,
 	neeraj.kernel@gmail.com, linux-kernel@vger.kernel.org,
 	linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev, gost.dev@samsung.com,
 	cpgs@samsung.com
-Subject: Re: [RFC PATCH 15/20] cxl: Add a routine to find cxl root decoder
- on cxl bus
-Message-ID: <439928219.101752909483341.JavaMail.epsvc@epcpadp2new>
+Subject: Re: [RFC PATCH 13/20] cxl/mem: Refactor cxl pmem region
+ auto-assembling
+Message-ID: <1931444790.41752909482841.JavaMail.epsvc@epcpadp2new>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <29487b27-ad1a-4c6d-a1a7-26eb97e77663@intel.com>
-X-CMS-MailID: 20250718124814epcas5p131953c4dfe5e9fb84e51635e6d6c71f6
+In-Reply-To: <3670eb1d-eaf5-4b8b-b3fe-1190724ee7d7@intel.com>
+X-CMS-MailID: 20250718123059epcas5p43f7bd9372c65050f2da97880302d6b18
 X-Msg-Generator: CA
 Content-Type: multipart/mixed;
-	boundary="----CDBSwZz52MZUMeM1Rx6lI.cEW_5b_YZAAzr3v09AM7rvldzc=_232af_"
+	boundary="----AO5Z5CA5q82FpJQJAbIGDvoW6m12ppu.cCYhbwpEEtg295OJ=_233c4_"
 X-Sendblock-Type: REQ_APPROVE
 CMS-TYPE: 105P
 X-CPGSPASS: Y
 X-Hop-Count: 3
-X-CMS-RootMailID: 20250617124049epcas5p1de7eeee3b5ddd12ea221ca3ebf22f6e8
+X-CMS-RootMailID: 20250617124043epcas5p21e5b77aa3a6acfa7e01847ffd58350ed
 References: <20250617123944.78345-1-s.neeraj@samsung.com>
-	<CGME20250617124049epcas5p1de7eeee3b5ddd12ea221ca3ebf22f6e8@epcas5p1.samsung.com>
-	<1295226194.21750165382072.JavaMail.epsvc@epcpadp2new>
-	<29487b27-ad1a-4c6d-a1a7-26eb97e77663@intel.com>
+	<CGME20250617124043epcas5p21e5b77aa3a6acfa7e01847ffd58350ed@epcas5p2.samsung.com>
+	<1213349904.281750165205974.JavaMail.epsvc@epcpadp1new>
+	<3670eb1d-eaf5-4b8b-b3fe-1190724ee7d7@intel.com>
 
-------CDBSwZz52MZUMeM1Rx6lI.cEW_5b_YZAAzr3v09AM7rvldzc=_232af_
+------AO5Z5CA5q82FpJQJAbIGDvoW6m12ppu.cCYhbwpEEtg295OJ=_233c4_
 Content-Type: text/plain; charset="utf-8"; format="flowed"
 Content-Disposition: inline
 
-On 10/07/25 09:23AM, Dave Jiang wrote:
+On 09/07/25 05:38PM, Dave Jiang wrote:
 >
 >
 >On 6/17/25 5:39 AM, Neeraj Kumar wrote:
->> Add cxl_find_root_decoder to find root decoder on cxl bus. It is used to
->> find root decoder during region creation
+>> In 84ec985944ef3, For cxl pmem region auto-assembly after endpoint port
+>> probing, cxl_nvd presence was required. And for cxl region persistency,
+>> region creation happens during nvdimm_probe which need the completion
+>> of endpoint probe.
+>>
+>> It is therefore refactored cxl pmem region auto-assembly after endpoint
+>> probing to cxl mem probing
+>
+>The region auto-assembly is moved after the endpoint device is added. However, it's not guaranteed that the endpoint probe has completed and completed successfully. You are just getting lucky timing wise that endpoint probe is completed when the new region discovery is starting.
+
+Hi Dave,
+
+For region auto-assembly two things are required
+  1. endpoint(s) decoder should be enumerated successfully
+  2. As per fix in 84ec985944ef3, The cxl_nvd of the memdev needs to be available during the pmem region probe
+
+Prior to current patch, region auto-assembly was happening from cxl_endpoint_port_probe() after endpoint decoder enumeration.
+In 84ec985944ef3, sequence of devm_cxl_add_nvdimm() was moved before devm_cxl_add_endpoint() so as to meet region auto assembly dependency on cxl_nvd of the memdev.
+
+Here, In this patch I have moved region auto-assembly after
+  1. devm_cxl_add_endpoint(): This function makes sure cxl_endpoint_port_probe() has completed successfully, as per below check in devm_cxl_add_endpoint()
+       if (!endpoint->dev.driver) {
+            dev_err(&cxlmd->dev, "%s failed probe\n", dev_name(&endpoint->dev));
+            return -ENXIO;
+       }
+       And successfull completion of cxl_endpoint_port_probe(), it must have enumerated endpoint(s) decoder successfully
+  2. devm_cxl_add_nvdimm(): As you rightly said, this allocates "cxl_nvd" nvdimm device and triggers the async probe of nvdimm driver
+
+Actually in this patch, from async probe function (cxl_nvdimm_probe()), I am creating "struct nvdimm" using __nvdimm_create()
+This __nvdimm_create() ultimately scans LSA. If LSA finds region label into it then it saves region information into struct nvdimm
+and then using create_pmem_region(nvdimm), I am re-creating cxl region for region persistency.
+
+As for cxl region persistency (based on LSA 2.1 scanning - this patch)
+following sequence should be required
+  1. devm_cxl_add_endpoint(): endpoint probe completion - which is getting done by devm_cxl_add_endpoint()
+  2. devm_cxl_add_nvdimm(): Here after nvdimm device creation, cxl region is being created
+
+It is therefore re-sequencing of region-auto assembly is required to move from cxl_endpoint_port_probe() to after
+devm_cxl_add_endpoint() and devm_cxl_add_nvdimm()
+
+>Return of devm_cxl_add_nvdimm() only adds the nvdimm device and triggers the async probe of nvdimm driver. You have to take the endpoint port lock
+
+I think we may not require endpoint port lock as auto-assembly and region persistency code sequence is always after successful completion of endpoint probe.
+
+>and check if the driver is attached to be certain that endpoint probe is done and successful. Therefore moving the region discovery location probably does not do what you think it does.
+>Maybe take a deeper look at the region discovery code and see how it does retry if things are not present and approach it from that angle?
+>
+
+Please let me know if my understanding is correct or am I missing something?
+
 >>
 >> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
 >> ---
->>  drivers/cxl/core/port.c | 26 ++++++++++++++++++++++++++
+>>  drivers/cxl/core/port.c | 38 ++++++++++++++++++++++++++++++++++++++
 >>  drivers/cxl/cxl.h       |  1 +
->>  2 files changed, 27 insertions(+)
+>>  drivers/cxl/mem.c       | 27 ++++++++++++++++++---------
+>>  drivers/cxl/port.c      | 38 --------------------------------------
+>>  4 files changed, 57 insertions(+), 47 deletions(-)
 >>
 >> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
->> index 2452f7c15b2d..94d9322b8e38 100644
+>> index 78a5c2c25982..bca668193c49 100644
 >> --- a/drivers/cxl/core/port.c
 >> +++ b/drivers/cxl/core/port.c
->> @@ -513,6 +513,32 @@ struct cxl_switch_decoder *to_cxl_switch_decoder(struct device *dev)
+>> @@ -1038,6 +1038,44 @@ void put_cxl_root(struct cxl_root *cxl_root)
 >>  }
->>  EXPORT_SYMBOL_NS_GPL(to_cxl_switch_decoder, "CXL");
+>>  EXPORT_SYMBOL_NS_GPL(put_cxl_root, "CXL");
 >>
->> +static int match_root_decoder(struct device *dev, void *data)
+>> +static int discover_region(struct device *dev, void *root)
 >> +{
->> +	return is_root_decoder(dev);
+>> +	struct cxl_endpoint_decoder *cxled;
+>> +	int rc;
+>> +
+>> +	if (!is_endpoint_decoder(dev))
+>> +		return 0;
+>> +
+>> +	cxled = to_cxl_endpoint_decoder(dev);
+>> +	if ((cxled->cxld.flags & CXL_DECODER_F_ENABLE) == 0)
+>> +		return 0;
+>> +
+>> +	if (cxled->state != CXL_DECODER_STATE_AUTO)
+>> +		return 0;
+>> +
+>> +	/*
+>> +	 * Region enumeration is opportunistic, if this add-event fails,
+>> +	 * continue to the next endpoint decoder.
+>> +	 */
+>> +	rc = cxl_add_to_region(root, cxled);
+>> +	if (rc)
+>> +		dev_dbg(dev, "failed to add to region: %#llx-%#llx\n",
+>> +			cxled->cxld.hpa_range.start, cxled->cxld.hpa_range.end);
+>> +
+>> +	return 0;
 >> +}
 >> +
->> +/**
->> + * cxl_find_root_decoder() - find a cxl root decoder on cxl bus
->> + * @port: any descendant port in root-cxl-port topology
+>> +void cxl_region_discovery(struct cxl_port *port)
+>> +{
+>> +	struct cxl_port *root;
+>> +	struct cxl_root *cxl_root __free(put_cxl_root) = find_cxl_root(port);
+>> +
+>> +	root = &cxl_root->port;
+>> +
+>> +	device_for_each_child(&port->dev, root, discover_region);
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(cxl_region_discovery, "CXL");
+>> +
 >
->s/root-cxl-port/CXL port/
->
->Please add a comment noting that the caller of this function must call put_device() when done as a device ref is taken via device_find_child().
->
-
-Thanks Dave for pointing this, Sure I will update it accordingly.
-
-
->> + */
->> +struct cxl_root_decoder *cxl_find_root_decoder(struct cxl_port *port)
->
->cxl_port_find_root_decoder(). There is a cxl_find_root_decoder() already in core/region.c and could cause potential symbol clash.
+>I have concerns about adding region related code in core/port.c while the rest of the region code is walled behind CONFIG_CXL_REGION. I think this change needs to go to core/region.c.
 >
 >DJ
 >
 
-Sure Dave, I will rename it while rebasing for next patch-set
-
+Sure Dave, I will move it into core/region.c in next patch-set.
 
 Regards,
 Neeraj
 
-------CDBSwZz52MZUMeM1Rx6lI.cEW_5b_YZAAzr3v09AM7rvldzc=_232af_
+------AO5Z5CA5q82FpJQJAbIGDvoW6m12ppu.cCYhbwpEEtg295OJ=_233c4_
 Content-Type: text/plain; charset="utf-8"
 
 
-------CDBSwZz52MZUMeM1Rx6lI.cEW_5b_YZAAzr3v09AM7rvldzc=_232af_--
+------AO5Z5CA5q82FpJQJAbIGDvoW6m12ppu.cCYhbwpEEtg295OJ=_233c4_--
 
