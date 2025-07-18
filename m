@@ -1,314 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6492E1A7AE3;
-	Fri, 18 Jul 2025 18:01:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FA5F21D3F3
+	for <linux-cxl@vger.kernel.org>; Fri, 18 Jul 2025 21:22:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752861702; cv=none; b=ELUPDf8uROwTIH8PnpaXk+lDaLfVCr8+ifuWMhgmJDmLTNMEmGjFkOp/NkiNf2HTj+l2AX0HsNXEJykmrnXMRBEayAz+SG9rxx27snY8JmYVBGgZvmEcz4FD2Ad5kYUcRcc6OsVcRbNTYb4CdE6N4PJOUyB+uXGYFJED1IMdCSw=
+	t=1752873765; cv=none; b=QBzoOzWPYYopSKgUmI1CsZG5icGu23JnEYKP27YqnwsumsKzfsLPH7ZKHSm+bTmf4p1Lx6p4aSiqt9TnJe0JK7Rxbd9IdW5S/s2qQlBkEUuLnbA5eGQrXt2s+vGlqhoLKu9BonTanhejHKEwAafnuFoMk6qO2Eq4ZBr0maIXo/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752861702; c=relaxed/simple;
-	bh=VBCS4PzehuzYafFcmXlBRn07mFF0e1YNXRHEI2jgWCc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FdqYk4KA51lp9Qlg6JQMbHUsMm9ImppupEyFWqUf/LKID+PHyhzCmcfTzp0FdhLuhBHn1+NLCb7jieoSVjo2crrI4uCSobeS37E4ZzGj8pIfI3FPSVWTbUJAo47bMfLnOO12gykqQfSM78vgAr2NJ3AN+w/+mwkqeACTHMs6K9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gfNgr1EW; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1752873765; c=relaxed/simple;
+	bh=tSTrgPIpnpGNk9NG4NpmpQ1B9Z+0uOo8Jk7BbP98nVo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=mlc+8fvqRxVz+iGA4Xhvi8RqR5VYuCVoaJqcb/5xM7Xvo5tfNZSKqK736ETIX/avoWzDcAw8F1tOihjz/RdlIkrbUvfw5I/4SN/OyUFACzaBtVTQnuMX4OeLBVLucoiVcXDX2NBWgcEMh6DSWjybzhLpB+W7saW3+GUinJDyoss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lqHNJFJn; arc=none smtp.client-ip=209.85.167.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gfNgr1EW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752861700; x=1784397700;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=VBCS4PzehuzYafFcmXlBRn07mFF0e1YNXRHEI2jgWCc=;
-  b=gfNgr1EW5YsuB3+fICjJBTJdEvbKQn2dpyW5pOtg5LMIMJS1+JGlEYpp
-   lZ8ZlokRR+8DhZD7SxvyMW91ysZIwUhmfokFVVAWYyEeKoL9E/Rq2MbdK
-   c5Qw0bSIRiHv8+P52pVBlUKdLI+sI4tVgqK4V9/JaUmL+xwggByXF+r+j
-   gxZn+Nxf0YqZFp69Bpl8uwF7h6jTkYDANVVdfYm319rVe1LOoPM/ysbJG
-   9p5qVPMTYy18WSa6F5dPs3i6wyYt7o0N16tstUSGIkfpzHdBr8H2YzR9t
-   XPR29LNeq/miIwMyu5v/Zv9G5mrs4Sx7JU/r7e6WKpkNhH/cgzVSy97NW
-   Q==;
-X-CSE-ConnectionGUID: TCMm0d+WSfm1yV8jJpVihQ==
-X-CSE-MsgGUID: 10JG/Q/SQnarqqrzqT3ujQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11496"; a="54264022"
-X-IronPort-AV: E=Sophos;i="6.16,322,1744095600"; 
-   d="scan'208";a="54264022"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2025 11:01:39 -0700
-X-CSE-ConnectionGUID: fJvT1S4hR9y4c5iCpknn3w==
-X-CSE-MsgGUID: s3YNyZnRQ3urgaMAl3NbsA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,322,1744095600"; 
-   d="scan'208";a="189101076"
-Received: from unknown (HELO [10.247.118.125]) ([10.247.118.125])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2025 11:01:30 -0700
-Message-ID: <7f7113db-7928-4c62-aa7d-69ab2cc6213e@intel.com>
-Date: Fri, 18 Jul 2025 11:01:26 -0700
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lqHNJFJn"
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-40a4de1753fso1515431b6e.1
+        for <linux-cxl@vger.kernel.org>; Fri, 18 Jul 2025 14:22:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1752873762; x=1753478562; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LsvoKg06SgJJI9+VuR9QTODLjTqy09owpIVoI3UQeUs=;
+        b=lqHNJFJnIAE/xDx7uJU9Te8OTDiojxRoiHqh5sQqne6FMIGj9JT8bOX4dH2Z1vvYdI
+         GT/UVGi6zELgO9GJBP3+5XW8Jv08Z8hEWe0M5Lu4GPs/tKGRyGjraT2nGp48slJzRANA
+         yf1ygijYkx6MqPVSWeDzV3Lkel0ZImZSqDdw7Ins5DjAtLEC2o3oJkNPbl9t7X2DuKa/
+         B8ErO+Rv/uNw7/v1kiG4HgbwqQd94FejR6lwphwlJCkONVnd9yfo7RNSxzilxOIc/NWx
+         wUPL+9ZKWgSKXbs384qiIs1MOXL3lU79gTQkm5Cxana/lCbq6JcVp6iJGo1haPXPmjin
+         xz9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752873762; x=1753478562;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LsvoKg06SgJJI9+VuR9QTODLjTqy09owpIVoI3UQeUs=;
+        b=tJr/seuoROwqtvsg0ppOx1GsEHjIvLgJracgI8IE2w7fm7B/WBD2QFiOk+a/bkMYjT
+         tp8erfK5lNEsIrUOlaHPSbOc/jrU2GvXNoeLDUAzqoBi70eu5EmB6yZ5ZjgXSeh/kWNA
+         bt/38C3wl9qyiYUg33IQnzVUy3Bxkcf+FgakdhgTmGF+JeOLLwIHOcDdMjZ6vmNr3YAe
+         ET1J/zqgDdrXVK8j9Up0A/4RDUgKef81EX22UvnsTJm+V+o9Ms8g0shjr1+T7qUImW+d
+         C2gQn8N7mAxDN+GcBCvvlA1PyMzNFXiVdDCjMxFneBEGxS0SBNQBFd7i/pVWgUcri2c3
+         m9gQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVBH2z5xN+aNQJ4TUjOKKNEli5Oe92wFkd953i+5qU+H4ul144J7XeAzgsc3XgwG3GAJjFPt5ibot8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywga/bXUmM+e7BpEkhaPkXW/GzSECMfb7GzYd8fZwArse2nKXhl
+	gj8UIKLQBYBYwZuHr1L2xjsie0LLljzewBkxbxExAYSIVGFDp8c8Kycpe6N5NH9xudQ=
+X-Gm-Gg: ASbGncsrSD8DUQ7P4wakk/YI5wl8+osBLdN+ZZe62sSfv5AmwzielD4y3vfyA/rhPQu
+	ZhAKc7Kcma57xrheGmJIPJoMD6ZLuf+8GSJMp+g4nFjis1AmTDPOft9t8Nw9PWz49we5FpXXX7Z
+	Jm+u6aZ4O54kOOOjOgNXCtnA00uF+zRcmlDKqD2TqDNh+9TBiYqQdpdXRAeS1uGcQNq6xJdcqyL
+	zmAyNOWUE0YjmqNQouBjr2UgjMKIui8SIEt6ETH/03MKhFk5sE295n5RNzRqA0qyjuHMREm3ZUQ
+	L+dMA6nUlmJmARHiiJnVAV0u2lVENmhbE3JxK/mbyTkHwcCWJPOAn4YFB+MYYd/CP9005vLYvb8
+	pDk4aO1xjLrE=
+X-Google-Smtp-Source: AGHT+IGh7lU3JyUSFdh98iTvsA+uq1G9ywwnUkqJkNKmpyQmKR/YnU9/CQLlNROcG3cTeKKCoijI1Q==
+X-Received: by 2002:a05:6808:2388:b0:406:6aa1:38d9 with SMTP id 5614622812f47-41e2ee52148mr6250832b6e.13.1752873762342;
+        Fri, 18 Jul 2025 14:22:42 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700::1fec])
+        by smtp.gmail.com with UTF8SMTPSA id 5614622812f47-41fd10c0ea6sm751747b6e.1.2025.07.18.14.22.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Jul 2025 14:22:41 -0700 (PDT)
+Date: Fri, 18 Jul 2025 16:22:40 -0500
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Robert Richter <rrichter@amd.com>, Li Ming <ming.li@zohomail.com>,
+	Peter Zijlstra <peterz@infradead.org>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH next] cxl/region: Fix an ERR_PTR() vs NULL bug
+Message-ID: <7def7da0-326a-410d-8c92-718c8963c0a2@sabinyo.mountain>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 08/17] cxl/pci: Move RAS initialization to cxl_port
- driver
-To: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
- jonathan.cameron@huawei.com, alison.schofield@intel.com,
- dan.j.williams@intel.com, bhelgaas@google.com, shiju.jose@huawei.com,
- ming.li@zohomail.com, Smita.KoralahalliChannabasappa@amd.com,
- rrichter@amd.com, dan.carpenter@linaro.org,
- PradeepVineshReddy.Kodamati@amd.com, lukas@wunner.de,
- Benjamin.Cheatham@amd.com, sathyanarayanan.kuppuswamy@linux.intel.com,
- linux-cxl@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20250626224252.1415009-1-terry.bowman@amd.com>
- <20250626224252.1415009-9-terry.bowman@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250626224252.1415009-9-terry.bowman@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
+The __cxl_decoder_detach() function is expected to return NULL on error
+but this error path accidentally returns an error pointer.  It could
+potentially lead to an error pointer dereference in the caller.  Change
+it to return NULL.
 
+Fixes: b3a88225519c ("cxl/region: Consolidate cxl_decoder_kill_region() and cxl_region_detach()")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+ drivers/cxl/core/region.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 6/26/25 3:42 PM, Terry Bowman wrote:
-> The cxl_port driver is intended to manage CXL Endpoint Ports and CXL Switch
-> Ports. Move existing RAS initialization to the cxl_port driver.
-> 
-> Restricted CXL Host (RCH) Downstream Port RAS initialization currently
-> resides in cxl/core/pci.c. The PCI source file is not otherwise associated
-> with CXL Port management.
-> 
-> Additional CXL Port RAS initialization will be added in future patches to
-> support a CXL Port device's CXL errors.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  drivers/cxl/core/pci.c  | 73 --------------------------------------
->  drivers/cxl/core/regs.c |  2 ++
->  drivers/cxl/cxl.h       |  6 ++++
->  drivers/cxl/port.c      | 78 +++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 86 insertions(+), 73 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 06464a25d8bd..35c9c50534bf 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -738,79 +738,6 @@ static bool cxl_handle_ras(struct cxl_dev_state *cxlds,
->  
->  #ifdef CONFIG_PCIEAER_CXL
->  
-> -static void cxl_dport_map_rch_aer(struct cxl_dport *dport)
-> -{
-> -	resource_size_t aer_phys;
-> -	struct device *host;
-> -	u16 aer_cap;
-> -
-> -	aer_cap = cxl_rcrb_to_aer(dport->dport_dev, dport->rcrb.base);
-> -	if (aer_cap) {
-> -		host = dport->reg_map.host;
-> -		aer_phys = aer_cap + dport->rcrb.base;
-> -		dport->regs.dport_aer = devm_cxl_iomap_block(host, aer_phys,
-> -						sizeof(struct aer_capability_regs));
-> -	}
-> -}
-> -
-> -static void cxl_dport_map_ras(struct cxl_dport *dport)
-> -{
-> -	struct cxl_register_map *map = &dport->reg_map;
-> -	struct device *dev = dport->dport_dev;
-> -
-> -	if (!map->component_map.ras.valid)
-> -		dev_dbg(dev, "RAS registers not found\n");
-> -	else if (cxl_map_component_regs(map, &dport->regs.component,
-> -					BIT(CXL_CM_CAP_CAP_ID_RAS)))
-> -		dev_dbg(dev, "Failed to map RAS capability.\n");
-> -}
-> -
-> -static void cxl_disable_rch_root_ints(struct cxl_dport *dport)
-> -{
-> -	void __iomem *aer_base = dport->regs.dport_aer;
-> -	u32 aer_cmd_mask, aer_cmd;
-> -
-> -	if (!aer_base)
-> -		return;
-> -
-> -	/*
-> -	 * Disable RCH root port command interrupts.
-> -	 * CXL 3.0 12.2.1.1 - RCH Downstream Port-detected Errors
-> -	 *
-> -	 * This sequence may not be necessary. CXL spec states disabling
-> -	 * the root cmd register's interrupts is required. But, PCI spec
-> -	 * shows these are disabled by default on reset.
-> -	 */
-> -	aer_cmd_mask = (PCI_ERR_ROOT_CMD_COR_EN |
-> -			PCI_ERR_ROOT_CMD_NONFATAL_EN |
-> -			PCI_ERR_ROOT_CMD_FATAL_EN);
-> -	aer_cmd = readl(aer_base + PCI_ERR_ROOT_COMMAND);
-> -	aer_cmd &= ~aer_cmd_mask;
-> -	writel(aer_cmd, aer_base + PCI_ERR_ROOT_COMMAND);
-> -}
-> -
-> -/**
-> - * cxl_dport_init_ras_reporting - Setup CXL RAS report on this dport
-> - * @dport: the cxl_dport that needs to be initialized
-> - * @host: host device for devm operations
-> - */
-> -void cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host)
-> -{
-> -	dport->reg_map.host = host;
-> -	cxl_dport_map_ras(dport);
-> -
-> -	if (dport->rch) {
-> -		struct pci_host_bridge *host_bridge = to_pci_host_bridge(dport->dport_dev);
-> -
-> -		if (!host_bridge->native_aer)
-> -			return;
-> -
-> -		cxl_dport_map_rch_aer(dport);
-> -		cxl_disable_rch_root_ints(dport);
-> -	}
-> -}
-> -EXPORT_SYMBOL_NS_GPL(cxl_dport_init_ras_reporting, "CXL");
-> -
->  static void cxl_handle_rdport_cor_ras(struct cxl_dev_state *cxlds,
->  					  struct cxl_dport *dport)
->  {
-> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-> index 5ca7b0eed568..b8e767a9571c 100644
-> --- a/drivers/cxl/core/regs.c
-> +++ b/drivers/cxl/core/regs.c
-> @@ -199,6 +199,7 @@ void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
->  
->  	return ret_val;
->  }
-> +EXPORT_SYMBOL_NS_GPL(devm_cxl_iomap_block, "CXL");
->  
->  int cxl_map_component_regs(const struct cxl_register_map *map,
->  			   struct cxl_component_regs *regs,
-> @@ -517,6 +518,7 @@ u16 cxl_rcrb_to_aer(struct device *dev, resource_size_t rcrb)
->  
->  	return offset;
->  }
-> +EXPORT_SYMBOL_NS_GPL(cxl_rcrb_to_aer, "CXL");
->  
->  static resource_size_t cxl_rcrb_to_linkcap(struct device *dev, struct cxl_dport *dport)
->  {
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 3f1695c96abc..c57c160f3e5e 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -313,6 +313,12 @@ int cxl_setup_regs(struct cxl_register_map *map);
->  struct cxl_dport;
->  resource_size_t cxl_rcd_component_reg_phys(struct device *dev,
->  					   struct cxl_dport *dport);
-> +
-> +u16 cxl_rcrb_to_aer(struct device *dev, resource_size_t rcrb);
-> +
-> +void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
-> +				   resource_size_t length);
-> +
->  int cxl_dport_map_rcd_linkcap(struct pci_dev *pdev, struct cxl_dport *dport);
->  
->  #define CXL_RESOURCE_NONE ((resource_size_t) -1)
-> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-> index fe4b593331da..021f35145c65 100644
-> --- a/drivers/cxl/port.c
-> +++ b/drivers/cxl/port.c
-> @@ -6,6 +6,7 @@
->  
->  #include "cxlmem.h"
->  #include "cxlpci.h"
-> +#include "cxl.h"
->  
->  /**
->   * DOC: cxl port
-> @@ -57,6 +58,83 @@ static int discover_region(struct device *dev, void *unused)
->  	return 0;
->  }
->  
-> +#ifdef CONFIG_PCIEAER_CXL
-> +
-> +static void cxl_dport_map_rch_aer(struct cxl_dport *dport)
-> +{
-> +	resource_size_t aer_phys;
-> +	struct device *host;
-> +	u16 aer_cap;
-> +
-> +	aer_cap = cxl_rcrb_to_aer(dport->dport_dev, dport->rcrb.base);
-> +	if (aer_cap) {
-> +		host = dport->reg_map.host;
-> +		aer_phys = aer_cap + dport->rcrb.base;
-> +		dport->regs.dport_aer = devm_cxl_iomap_block(host, aer_phys,
-> +						sizeof(struct aer_capability_regs));
-> +	}
-> +}
-> +
-> +static void cxl_dport_map_ras(struct cxl_dport *dport)
-> +{
-> +	struct cxl_register_map *map = &dport->reg_map;
-> +	struct device *dev = dport->dport_dev;
-> +
-> +	if (!map->component_map.ras.valid)
-> +		dev_dbg(dev, "RAS registers not found\n");
-> +	else if (cxl_map_component_regs(map, &dport->regs.component,
-> +					BIT(CXL_CM_CAP_CAP_ID_RAS)))
-> +		dev_dbg(dev, "Failed to map RAS capability.\n");
-> +}
-> +
-> +static void cxl_disable_rch_root_ints(struct cxl_dport *dport)
-> +{
-> +	void __iomem *aer_base = dport->regs.dport_aer;
-> +	u32 aer_cmd_mask, aer_cmd;
-> +
-> +	if (!aer_base)
-> +		return;
-> +
-> +	/*
-> +	 * Disable RCH root port command interrupts.
-> +	 * CXL 3.2 12.2.1.1 - RCH Downstream Port-detected Errors
-> +	 *
-> +	 * This sequence may not be necessary. CXL spec states disabling
-> +	 * the root cmd register's interrupts is required. But, PCI spec
-> +	 * shows these are disabled by default on reset.
-> +	 */
-> +	aer_cmd_mask = (PCI_ERR_ROOT_CMD_COR_EN |
-> +			PCI_ERR_ROOT_CMD_NONFATAL_EN |
-> +			PCI_ERR_ROOT_CMD_FATAL_EN);
-> +	aer_cmd = readl(aer_base + PCI_ERR_ROOT_COMMAND);
-> +	aer_cmd &= ~aer_cmd_mask;
-> +	writel(aer_cmd, aer_base + PCI_ERR_ROOT_COMMAND);
-> +}
-> +
-> +/**
-> + * cxl_dport_init_ras_reporting - Setup CXL RAS report on this dport
-> + * @dport: the cxl_dport that needs to be initialized
-> + * @host: host device for devm operations
-> + */
-> +void cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host)
-> +{
-> +	dport->reg_map.host = host;
-> +	cxl_dport_map_ras(dport);
-> +
-> +	if (dport->rch) {
-> +		struct pci_host_bridge *host_bridge = to_pci_host_bridge(dport->dport_dev);
-> +
-> +		if (!host_bridge->native_aer)
-> +			return;
-> +
-> +		cxl_dport_map_rch_aer(dport);
-> +		cxl_disable_rch_root_ints(dport);
-> +	}
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_dport_init_ras_reporting, "CXL");
-> +
-> +#endif /* CONFIG_PCIEAER_CXL */
-> +
->  static int cxl_switch_port_probe(struct cxl_port *port)
->  {
->  	struct cxl_hdm *cxlhdm;
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index f0765a0af845..71cc42d05248 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -2108,7 +2108,7 @@ __cxl_decoder_detach(struct cxl_region *cxlr,
+ 		if (pos >= p->interleave_ways) {
+ 			dev_dbg(&cxlr->dev, "position %d out of range %d\n",
+ 				pos, p->interleave_ways);
+-			return ERR_PTR(-ENXIO);
++			return NULL;
+ 		}
+ 
+ 		if (!p->targets[pos])
+-- 
+2.47.2
 
