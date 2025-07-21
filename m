@@ -1,107 +1,102 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77C9219644B;
-	Sun, 20 Jul 2025 08:17:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E23A7A13A
+	for <linux-cxl@vger.kernel.org>; Mon, 21 Jul 2025 00:42:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752999449; cv=none; b=FetISIbVDR/yXInKDF4/2Tg09zCf1qflfVOZb+B7wtOD57AAkQu66llyyLaeHmJJG8jNShEYqd1s515Ki2ZiiA4Rq/eZCzpba7BesQKeD6iPWzKNq1jlLw+9b8n8H4iIISd4JCc2JdjJOLFgNACDQbx4ecFmAiiNlie9qSDlYGg=
+	t=1753058559; cv=none; b=s5sHjzG9/UaNKjmNyXMxVQU9r+9TG4ra9q+2AtVCRclKQOKwRVW832MbYKE8ChkBUX3xLVr3uNcAmDVjN4O3ua4Ma3XICWkiJVyHcQI4FYqnb5OcyTlbCVJTDwG99d8WFyQtEJk9QyXO3qjvl+cegpG1i1m4fJsL+XVhnuE/14s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752999449; c=relaxed/simple;
-	bh=MmLkEzQKYtCU5dxP/5mDWFrowVL+z89sLLEDpomscCs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iUpuRnJNyFiIS+FRSJxy4/RRG2BcMnr2RSrJOsoj7vamtznK0ZfcWThADWkoKmL2xyMqTRSShUx0BvBKicJUoqAOIPCqqL5HUspO20uaEdVLMO0R0UvOgfAAJp7Zw9go+9xOt8FbNKwcI0wlGe4kU9rbv+zxhEAF5KkDlKIcf/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MVwViaru; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1753058559; c=relaxed/simple;
+	bh=qxOrhzqyG9kCjTWQu+y6SKTJcaE8DX9D+ByMeTUpNHE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oHML7q0A+CNlpcte7vRikKZ6/b95K9tNtptdKavkUp9CZFuBeYsu/mKNLeWI00L3VusP/iVVwAOXifnSJDmclBqmOGUfXFdtAAgETH6tbcjVtnQHvwrT2NAkhDM1Jh0u4XUQqbW9YQgjOGUlTzVt9wGTTtSy4ib0rFWzx+ENvsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=m6x7ny8B; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MVwViaru"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-32ce252c3acso15296121fa.1;
-        Sun, 20 Jul 2025 01:17:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="m6x7ny8B"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4ab7082b3f7so51372681cf.3
+        for <linux-cxl@vger.kernel.org>; Sun, 20 Jul 2025 17:42:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752999445; x=1753604245; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NozUcVTbZV8j7nUBx3qB+snic1Q8R5gg2JD9KsrC+dc=;
-        b=MVwViaruhijm9bQtlhcypwdah8i+TpbsFntEd7PN4ArmOBADowiXk9unD+PupHCdn8
-         fCcQdIKS9oSh4mUyByqcp4bFq/OISQa6Xdebz8WUqtPv4eCz5j0D7ewTaxmi2EOEyONq
-         G2D1Nq1pwTgsmDx7cymMeyPEOvdWlgtSQoL3Vg8fZqOBaRYLvxWuG/Yw+AY2rX9vGgKw
-         AP/doZNe+PxHCnvUtyW2pIbP4KnX5DvijGL4yfU0VU+MufBcdinbot+Kl7n4Qs0bM4UG
-         EJAha+x95rMTxHFJCGKm7DE76uLjYI4LHravHuWraHuCrnD2QBAtc026VNIEP/EnZCud
-         U/eQ==
+        d=gourry.net; s=google; t=1753058556; x=1753663356; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5plOGEMFaS45Bgu/ju0R5BnX8oJZ/qxxofN4PLKzGiU=;
+        b=m6x7ny8BDJ3rc0hT3I0QAjGWmpsetk39SMaVruYVXSyk8MkUy9BkkgHKjef7f5De3h
+         YFdYHPowq2S27QHuF7uoiOst2t2MBXaQzFBpRvyBJbA0bNeDlzOV6g7QpW0wAwk8REsW
+         JrA++QZcPbN5GRNtMa2McNu67+8IPCowHeCDwn+2fM5Zq/EjR3lOU5aJe3Wh23pL9Ul5
+         n6Tc3TFGMwH5Q9yHpxgMfYBlV2wmgs1uU62S5cxMzxlFGQZ1BuHtg6RNSGyo61oL39or
+         +ymypN3uOzT2N9JGv/YDGDHpq+OsKtP8IvHxAErhGU+Nn+SqTxkNdIaRcyhif8Nt+udY
+         N+4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752999445; x=1753604245;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NozUcVTbZV8j7nUBx3qB+snic1Q8R5gg2JD9KsrC+dc=;
-        b=v55+GZDqak8YxA0wEitK+oasEeM5jtt8BT1Dton2KNX0sRE8dET5X5wTG2ray1DVR+
-         6u33m9G025+SM2VJ08Fdv80NpcvbFrvvOvdWgyGmJVLQtw+1dRugtcJ+Gq/oEXyEL6WJ
-         FjDDDez5tFfdAnf2InLC/YPwT8/6HX1iBsOuxkYa+peK9bbjba6NZ3SyC/P6wseLr0nf
-         UIUHIHQ4+Idr4MDNcyLen3i6p1P4EKAsuxsPaRjSTcgeZTdWjLjy7C4JvvURS8wEV2Ik
-         6GFOJeb0AL2AZzD5zL/fHVrMQh7ULV3iKi4hbBdBEB4HKmQbDTmrH7r0lL3TeZeTZVGA
-         RPqw==
-X-Forwarded-Encrypted: i=1; AJvYcCWzYrBju9sl351CIzoRKjtrRBbMIAZRVG08VNKxE3ESi214l92AM2tYUGfy7Z6KlWoQr6NrNa7TDVE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZRu/T5vvq3vfBbT8aZ8aVs1TbAurDREEu/sgMYlMJo64cpNuK
-	4LBwx3Eh8QXO2wDDnH1PaOLMeXYdE6cGXZiCvBwVofbUykDvieYYfWv+NCYghVc7/4ZOk7190XU
-	xhO55+kQilTjsjlT3kO2oqotLrAxZIwBp73lt
-X-Gm-Gg: ASbGncscPLwJiaNNK+EVXxhPYGWPOZuq2LxkS9uTs5NkxeX4Kj3HOMExwcL9oXkJZAM
-	eGWUtAJbfI+1LGG4BAjEvZbNgNwonYGhmF+7mLZjZAT4ipJkZxFLXVSR9QBFFgYE8ohqkAYZqp9
-	eldezhsDPPierzB+a9hqb2rRVR0E38Qb82hvtYZMcHLP6rjMTAIUa8FDuMbORLOjq/rwirG9+Tp
-	6t5AcrAI7LA5VtYM7tKcZXh1kiRrhG/waA=
-X-Google-Smtp-Source: AGHT+IH+yiVeNQlI+whz/fqk/x17mXHhPbftkEa/YBPfJgTyZK5++1Q4kOlxgAseobRnW9e2k5QUw9aGwmV+0Z9fthE=
-X-Received: by 2002:a05:651c:4101:b0:32b:4932:d328 with SMTP id
- 38308e7fff4ca-3308f62895fmr37225661fa.32.1752999445178; Sun, 20 Jul 2025
- 01:17:25 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1753058556; x=1753663356;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5plOGEMFaS45Bgu/ju0R5BnX8oJZ/qxxofN4PLKzGiU=;
+        b=SPRI3/6NAn9Rxtii/qUJWEokuHW70x3rNpyRs1mCLCJ/w82I+i6ZZv96wTRS1B+pX8
+         fMNL+DsNy94+s2hJPysqYHjsJtG4XM/UOx0xoEBRqWxm6gHkFUy4z6ls0TcAJ2SooVxE
+         VNP7kou03RLPLYfOFI4DDE87FpsEclJuTOWoxzNYV3lKJumnbQemLF6vvWs8mMMEPx1C
+         zCUWDxR3Qjsmx6zO9Qb60i0HdfKcw2rbLHjY8rhUFr647FHyGOdtbYL3sQ56f632Vhzn
+         MGFuIclVxbgd+ELaQgXx3k2hVUzm5/F5d4Lhd19dQeiVMHQzquGuSctdPKebYquQCLMC
+         NnaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWZoToSepdUzfjvXDI/Q7FZXQ9sNVF5XUFjDICx7O/krBWBYFc9VQ+VhO3SwPOlSktuq/AdiVyfvi0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwT5iaYyzUqED0JEuTqoO/P4OXmDJCbUBeILDZH3ukNQhB7Mjaa
+	NbsgAKZsSRVWnDpNvdihjMr/c3WeWq+Nl80cDbwc3WQ8jgD1uLBUAcMhnPbNJJ88RSw=
+X-Gm-Gg: ASbGnctfCLKOyPNjwQCzrFbW4zvOoUf+HJS8Pjsa3v/kxqk9dv8lffXIP5vpDv2MaGb
+	wZ7/BlO6+M583IKr6uP9AuYHjYUQaUqJSAOdCqID2RL5EnUvk33TBkgYH8As77RX0G7PQ8YqQn6
+	Kv7S5hsNO4gT+KVxkrqza4MQdHGqsuzvqqmotQRV5h8eqf+S5KvPSUTzIQmY8846rBAud9riB74
+	NeZrjZTYcBb8JtDRRDRp+4oVgnLnu2Pb56flS5P88qcW0JblmK7zyQff9sjkB3L3JxlHM6miMiP
+	g82+MBSbT9gbKUx/zZBmpC6ClN7QRMnyY217jRq38YkypTLv6OYlwXk1hLqXruhH+KI2fU5QT1I
+	hhXwVyb81xfnMwpZLkUgW+PHnStXZYb8MZc8AjEYUqESl5NYehnYO023hAzXBEHUvlaAyv8eTdQ
+	ncmGbFWVjVeLbg
+X-Google-Smtp-Source: AGHT+IHNWco2tVVvQ1Qm5wja2fI3VWQ25WhSh/3CmATM5MOVK4gNPykPcyjoE6tfiWrecsdM+TMQUw==
+X-Received: by 2002:ac8:5ad4:0:b0:4aa:d487:594b with SMTP id d75a77b69052e-4ab93d82da5mr255955661cf.35.1753058556378;
+        Sun, 20 Jul 2025 17:42:36 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4abb4b47a31sm35649881cf.65.2025.07.20.17.42.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 20 Jul 2025 17:42:35 -0700 (PDT)
+Date: Sun, 20 Jul 2025 20:42:33 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>, joshua.hahnjy@gmail.com
+Subject: Re: [PATCH v1 00/20] cxl: Address translation support, part 2:
+ Region code rework
+Message-ID: <aH2M-b2b_trVTB7L@gourry-fedora-PF4VCD3F>
+References: <20250715191143.1023512-1-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250719112604.25500-1-akinobu.mita@gmail.com> <20250719163144.7524cfec1fe2041742608f80@linux-foundation.org>
-In-Reply-To: <20250719163144.7524cfec1fe2041742608f80@linux-foundation.org>
-From: Akinobu Mita <akinobu.mita@gmail.com>
-Date: Sun, 20 Jul 2025 17:17:13 +0900
-X-Gm-Features: Ac12FXyMlLPKQKdS6jAd3trkeEUh0wdiHufYauXj4OrWxdyB_IxRwazen7Yxi-s
-Message-ID: <CAC5umyi5ZwAR+nEPjn_5m2q7kjE0uyo=0pzv-s7uod560iGJEg@mail.gmail.com>
-Subject: Re: [PATCH] resource: fix false warning in __request_region()
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250715191143.1023512-1-rrichter@amd.com>
 
-2025=E5=B9=B47=E6=9C=8820=E6=97=A5(=E6=97=A5) 8:31 Andrew Morton <akpm@linu=
-x-foundation.org>:
->
-> On Sat, 19 Jul 2025 20:26:04 +0900 Akinobu Mita <akinobu.mita@gmail.com> =
-wrote:
->
-> > A warning is raised when __request_region() detects a conflict with a
-> > resource whose resource.desc is IORES_DESC_DEVICE_PRIVATE_MEMORY.
-> >
-> > But this warning is only valid for iomem_resources.
-> > The hmem device resource uses resource.desc as the numa node id, which =
-can
-> > cause spurious warnings.
-> >
-> > This change fixes this by restricting the warning to only iomem_resourc=
-e.
-> > This also adds a missing new line to the warning message.
->
-> What are the circumstance which cause this warning?  Are real world
-> users hitting this?  If so, should we backport this fix into earlier
-> kernels?
+On Tue, Jul 15, 2025 at 09:11:23PM +0200, Robert Richter wrote:
+> This series is the second part of adding support for CXL address
+> translation. It adds another rework of region code to address
+> implementation changes or conflicts of current address translation
+> code with cxl/next, esp. the introduction of support of extended
+> linear caching.
+> 
 
-This warning actually appeared on a machine with multiple cxl memory expand=
-ers.
-One of the NUMA node id is 6, which is the same as the value of
-IORES_DESC_DEVICE_PRIVATE_MEMORY.
+Apologies in advance for delays on review and testing.  I am unavailable
+until ~September.  Joshua Hahn may pick this up for testing in my
+absense. I will make myself available to him for questions as needed.
 
-In this environment it was just a spurious warning, but when I saw the warn=
-ing
-I suspected a real problem so it's better to fix it.
++CC: Joshua
 
-Fixes: b926b7f3baec ("mm/resource: Move HMM pr_debug() deeper into
-resource code")
+~Gregory
