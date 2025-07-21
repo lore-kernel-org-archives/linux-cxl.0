@@ -1,163 +1,150 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2066.outbound.protection.outlook.com [40.107.92.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8AF1F3FF4
-	for <linux-cxl@vger.kernel.org>; Mon, 21 Jul 2025 11:33:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753097640; cv=fail; b=pIwikeLVanRyGd0CeXACTEiocW2c1vGe9qUaXIPqxE+Zj/cOxgLc2UrkthKnSBHDpYzDhzEwKeqjXrzmFV5BrAXvA0oR5Y5h/pvmfFETVX0UaMCLIFfwDU1gNdfeGB5G4N3Ob7FomN3C/RA+72Qx3gzePMlAIGP2QbZ+3aS+onw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753097640; c=relaxed/simple;
-	bh=I+mNv+p743//qA8p4nJrUxnpJ2zC1OJdKcB1PeOxqa8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=JtxFIo6ajmUmfrS537afGBToDnX+HAEfF4SIRo6IRQ1UCtTEP7BF9tG+OfwHDvf96fFuaxQ+tGuYpO4edRwA7bTMXDES0GH9N72a7UKmyIb73GXiH0S9lq8ol5bWeCKlH6SEg+K4+gfHwQg+a9ajkBpTF+P0ag7s11MTAPXUKu4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=zVdVyFt5; arc=fail smtp.client-ip=40.107.92.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B417462;
+	Mon, 21 Jul 2025 14:16:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1753107418; cv=none; b=PDDjxc5lhnWw94fTrhfhKqYO1vkGtO2msO7LyqxY6z8FuyTrWaDPb4wWYF856oeb5QWWWvqPURdVshg2jcrvDx373wdcj4cEloqh8WN5u/JPwQntntCSYBdCieTKOrZlKAAsgVAoC1v4hpVHXSzctoSyxct+w6BsUrcVi+/j8OY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1753107418; c=relaxed/simple;
+	bh=P3UIwtVZaRYvpiQ2hIC/+Fx6PVr1AcxjBxpzVopZ240=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pIyWoA7kJpv6EdN6JBnJ+HyV3UwIwezFKcgdo8esT8OMVHkXTj/9/5f3IWgZkZc07uCRnLJrlkNbeId7R5ssMcE7FSdyxDdzjPg7HXwmvM8oiDKVbYArMQ7rKb3DKvdem1ym2bVsB1w+jsiInvtfLS9wE5yYsrYfEsFKvQNShQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dLVqOXD3; arc=none smtp.client-ip=209.85.128.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="zVdVyFt5"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OT/R1n0GSbYePu2nqCV+LSQ9rAsat27jjhvGjmqdWb9O0A/RttjcpuPWFWnjA+flTdalZaUXQ7GGC1AifFcD1ThLUA2y5zRb5aXoEHxn59CK5NWHLYniti1WDwtcJjDNAVVr9yN1nrrJfn+a794HP/yiO4ukUVkwbXA8xazAIcCJeLrNIczvRhU5u/q9gnxCgpY70cU9x1ZM4/F5WZzHTIa3bS1lLYzo9yXsFqam3J4AToEz48wHpnHufGVOr9Zt5cKlri2KzsfpM7H6dKaamEZ5v+8wboq4esSP9B7x1cbVdYa0p+va7/vo8eEkz1WZR/VXzSiwsh00B2HrwG65pA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yT5JUW01ryd2cC5SAK0DtqyvjI9nMhOBoxuCJPQVduc=;
- b=vIiSDarx2zbA/PHGefXd5qKk8WJFELJfLwC259kOe25PpuD6INsXxd17I9XO05VJ7WyoeSAehu81J8ryw79XaGB9w47KoPnPgkqUjgKgyxA/Ae/0P8NTpVaWFJZ6h1s8niThVYautBZXOcWULanRxY8SRslznkulJn/3NPBj/dakG8G9OtbBPA0yLG98AY+7TxaaJ+Y0VKpI9+DO8U3prvoRBUjURAIl0BEGLQG6gCQG/Awg4TgFvboNRL80pqlOX8BnJZAAcgemtO/jhgzVLCjscsOKCEd6rRsTb0pJ8MhLCAyBDskc0tHgh7WoewEMOT+tP+iOx9QAfohsA2I1bA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yT5JUW01ryd2cC5SAK0DtqyvjI9nMhOBoxuCJPQVduc=;
- b=zVdVyFt5d97kwMdar8z3CYrAxDKxvbQ0W2lpc7rXowJF75WelCrWCLuyQQuHL8pgSsFTSGHV1YFnvu5BTvGurhX66BZ4wJd7+iEJJ6XvUsvJ03v62mykXxEhcgjwbLP5SuZLyH39VKP3C+J0tdY4H5ifNb2csxD5ERqTq/UeYic=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com (2603:10b6:930:be::18)
- by IA0PR12MB7649.namprd12.prod.outlook.com (2603:10b6:208:437::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8943.30; Mon, 21 Jul
- 2025 11:33:55 +0000
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::b965:1501:b970:e60a]) by CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::b965:1501:b970:e60a%5]) with mapi id 15.20.8943.028; Mon, 21 Jul 2025
- 11:33:54 +0000
-Date: Mon, 21 Jul 2025 13:33:49 +0200
-From: Robert Richter <rrichter@amd.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, Gregory Price <gourry@gourry.net>,
-	Li Ming <ming.li@zohomail.com>
-Subject: Re: [PATCH v7 01/10] cxl/region: Add decoder check to
- check_commit_order()
-Message-ID: <aH4lnVnF4nuIoIng@rric.localdomain>
-References: <20250714223527.461147-1-dave.jiang@intel.com>
- <20250714223527.461147-2-dave.jiang@intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250714223527.461147-2-dave.jiang@intel.com>
-X-ClientProxiedBy: FR4P281CA0394.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:cf::12) To CYYPR12MB8750.namprd12.prod.outlook.com
- (2603:10b6:930:be::18)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dLVqOXD3"
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-7170344c100so36464467b3.0;
+        Mon, 21 Jul 2025 07:16:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1753107415; x=1753712215; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r6YwRJnlJ+cRW/GyuJIckdpGwbgGAubB75oLrU1WLiU=;
+        b=dLVqOXD3H7MENcCKt6eeTYymvRAy2L/72gh5UTM1CRACgP1+1r+OQ04yZWk23WgR+I
+         ZeScofvp6bPG6neRtEnSY28YdPC0kC+5ajJH4aMXiMgueV99glOK79TsFrFk4ebfQUxf
+         KCpJFwFOj5bWTvA8OMyGAder8jV6VtDHfWXY3dUdsGNoALz0WtZEmXGIMFJyBD7bMe8g
+         LJriOGF0CWyGtl9f4WB35VO3SNjpGPfCsF+tGNO1nZkLd0VUP0/02AGIJBjIDHJXhXKj
+         WBbAxJva4rVOXfD7KbbVFBHpHoLpwPXcWISa8NQ/bpW+R44xs0DvnBFkuUastS46tohO
+         CB2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753107415; x=1753712215;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=r6YwRJnlJ+cRW/GyuJIckdpGwbgGAubB75oLrU1WLiU=;
+        b=Gab3vWZUa39DUyL66eSr95Qtw8+Lr4FNovgMZbJBAQDudN83XvmkWTnd7oHLQRXXOw
+         5ZAX2l6Q9yOsjoRoACPYqWHC6mw0rYME1x4CeQur3ESQl4qY89J3wYKp7XpSIpOu3mLM
+         sLaavOqkedHRnr2VHW844x2Tkssj9wqBpENcsekU2F9OBw14T6zwiyycswDdgKUKagBf
+         eEz79PAwcFo/kQsLtw9B8W2lfnkTMntNC3qRoUqXdaP1laJ2a2Y5/kgOEhXJNyKkyPGt
+         XFY39iSUk+MHBjy+bdxq0KJBV7ogrKE3qDE4LH4TgODdCTESaLDg2fbb0jJ4rcM6xxd0
+         l1lg==
+X-Forwarded-Encrypted: i=1; AJvYcCX1YYCqGQk0nfIgr29J0/vhztb2I4MkMy2lZoHnzSkqbdT9rZCcxP+PxPObbIQY3xu9a6bZUiUhQFU=@vger.kernel.org, AJvYcCXkIyXzhp5YCYzWzQwTx+YPGuloAfMo0pZA3vHRnHDXZ27KvvgV3AlP+32tX1otCg7xefcj649v+4h6mZ7P@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNif0UeID35WmitGDu+bk/IY/Wa8GSy8fnJ/bvhk1BtXxfLu4I
+	puxe+XCrLr+8/A8hVnP5rgBICPIRnXsFAzQs01CtkfzbDtRieJgu2mj9
+X-Gm-Gg: ASbGncsB60G2X9AuCCopj3L52qS2WP/YYKNBD/i0mJceot5cHj1IN9MDn1/3ULJzZkn
+	bUJ9D0xZfPkUADlBBduZa3wfpKOPoujq2WRLfN3uNIhw53bFC6X9MUEVSjr9Sn5hA3C0oBLbthy
+	yC42RGCosJhanHV1EslFc6aIHSPGKz9f5ZmRRABk7ue7xWNAhUt27p5LQeNRl0IZA0tSyiJ6WjN
+	pE0CQNfvyni4hdUx1eNx7PlEm/xluO+um+qChR49GQEzakpnclnVZcphRwRngFycU1b5Ra/YGVb
+	+kqQ53Z9KZkd7VlP5JY1qIJ32grdLq69Cl8C+UOubhvnbTryD/ypo04MKSCD31iDFWx3xkDEEN7
+	a89fSXEfCTWe1busbRqcayg==
+X-Google-Smtp-Source: AGHT+IHZxGyUoSg1wWSx4jtOTu/PK8Etqd9t7suc0yd/8NtrJm+MmtdYqXsqsve+b9X2vupNR2Pirw==
+X-Received: by 2002:a05:690c:4809:b0:70c:a57c:94a3 with SMTP id 00721157ae682-718374f0513mr215033837b3.19.1753107414959;
+        Mon, 21 Jul 2025 07:16:54 -0700 (PDT)
+Received: from localhost ([2a03:2880:25ff:5a::])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e8d7ce0e41fsm2518387276.26.2025.07.21.07.16.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Jul 2025 07:16:54 -0700 (PDT)
+From: Joshua Hahn <joshua.hahnjy@gmail.com>
+To: Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Gregory Price <gourry@gourry.net>,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v1 05/20] cxl/region: Separate cxl_region_alloc() from devm_cxl_add_region()
+Date: Mon, 21 Jul 2025 07:16:52 -0700
+Message-ID: <20250721141653.89805-1-joshua.hahnjy@gmail.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250715191143.1023512-6-rrichter@amd.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CYYPR12MB8750:EE_|IA0PR12MB7649:EE_
-X-MS-Office365-Filtering-Correlation-Id: f30deb8b-b657-4541-8805-08ddc84a7954
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?CPJ0ivxAbqK41ezDa/aYGbrfLPpZGdSUpblxgerohrEMEk4U1LMwfPC7UX50?=
- =?us-ascii?Q?1+hNfRrCuKN5wJNrK6FFpivTjdLHCbzcVvfKUwW3JYgaRHIM6FXrzPOSpvyV?=
- =?us-ascii?Q?5E64RT53Y+OZ5+Se+3HQ+fm/f4iOW/zZjoyGXzi61fki7p1dSFJSD7jTC/bu?=
- =?us-ascii?Q?RjR+OsJifL8m4UMqjMCsRci6AV3pRS3Gz9uFmVTTJpntjmGy32LnQptpTvNM?=
- =?us-ascii?Q?w31LzFwGEUEf/fAXIrRWYbO40IqBA8QXYzXiKybME2sRqlZslsujKfR0kFqX?=
- =?us-ascii?Q?2C8im94ouYv90mUDVKmOTK5ULHtlVNBKyFkHsEmqL0ddVk/ORifPF247yBYg?=
- =?us-ascii?Q?JUXVhldBdRqLyeyRvm6w4FeaNI0MlUkzLNowtzBTpucDJ5jTlPKc/XJAPK4j?=
- =?us-ascii?Q?nl9gKRdX8WbmDNYbYaUEICd+2N3IJT+3PHhhu3ctlHoFz3KzwpF6BaHUy0X9?=
- =?us-ascii?Q?xswAmD+AsocWyJ6rNWrn0VBBjgqw9ZlVaq4+UoakeJEKKkUXdBuAPwjyULzL?=
- =?us-ascii?Q?+6DmCtTh4/sUPlXtpP3eczAWYKvW3x3zS5Ml02CV0dZx9YAQt6Bq2Irafg6n?=
- =?us-ascii?Q?fYutl02IoPoBHLp8kYiXuDca3KPviqwSaGbk3iokEq9OxC77auOxuZgtPyJz?=
- =?us-ascii?Q?hqi1QQP/e2G/ou7ElAzFbiMyOkW/pLujxhPdeCogBC8h+fCRc7jAjq9CfHfo?=
- =?us-ascii?Q?BVBIDLSueRbbTaUvtOAkzrPV5SE+9+BCdXiRBT9q887mFC+f2bXps3HZsxPo?=
- =?us-ascii?Q?Ho7XCCZkhfb8APojmQqzBE+VEuDoR6tLk/sz8aJtM44jgoD0UFp/ibRj4cNe?=
- =?us-ascii?Q?WyFLG4HLQBWkYglYASRwWn/g9DqIhw00dw8s4Z15GMHzeETZSChtll7msMRM?=
- =?us-ascii?Q?VaAOU9iy1ylXwtL6dyNPdssN8AiR9o8N2cKUhFOjlwvOeb8Nye7lAFv+IdRN?=
- =?us-ascii?Q?9tdV16CyjfRgJz9RFG3QsLzbDubziodBV1KybOu+8SJ/47emzNwwXTRdIK8H?=
- =?us-ascii?Q?N14lvuFc0v/NdBion/Kzxs348GopXoHXNHMQWyY8uLH/meUKlfnIDWO6jtpn?=
- =?us-ascii?Q?5g9uib7ykgvGsqR4yxgXo61LsdezNids70l8aBWe0opBqU1RmgZnR9ENZ+3A?=
- =?us-ascii?Q?TuADp6LsiNl/162c9XMQm7W97EXHdgySz5618jC059tZOyPr+qZpFxypeW8V?=
- =?us-ascii?Q?qzgsc/mdHqBeNAgp/ZkHhszcMlsm+I+Mr0YC2MMWfgicvF+ZTv34RW7i902f?=
- =?us-ascii?Q?P+UyF4rZ+Zr3PUD3mS6+etSq3p/dGU++cqN7K7Gd2+3lWpVU92jRafVSlDFx?=
- =?us-ascii?Q?KX/V8aPGLpBTAUevO3Do6Mi6uCV/8IwEBHOWk9C9kauvyjs1ttZZKKQu+8Qb?=
- =?us-ascii?Q?yzbZobpHus+E87xOYAi8ydLgu42nV1bV9U0YE0g2J5UXfa0+lU1BaZHPp+s4?=
- =?us-ascii?Q?5yDe3kquQyc=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?+oGJS01xPv/LvvqeHja0c1hy1NGLWNm2NJR/CPg5k5/GYAy7girB8itJEy+q?=
- =?us-ascii?Q?j9Is6cQ999bAZxmC/1Iys8Ytwn5sJ2dPO5HPosTM2hVWVcg8ie+bjroBJRMm?=
- =?us-ascii?Q?VJHHwKFbHtiMlRWdfGqThb9IQTDGZRz25V/EM3gQ+j1HgwFEQbwl3h1DPpxT?=
- =?us-ascii?Q?OfCQloo6SwUF5mGVs5m+OXju/K6yXe4RwhfHlHzTlFthIYm+jK8L53HqIBy9?=
- =?us-ascii?Q?ZF07d6u88h74GxpMnWC0Ks1l3OoCWzZBLYGShlvFGDSGoWxYCoTeEzhsRQaL?=
- =?us-ascii?Q?T+faTPlwXxkORjAr30Wb5WcNVqM8roib3QIGpIY5YRUSzGDEu2hmCs8LGR36?=
- =?us-ascii?Q?A2vxDk8+oQhWAW/9dEGCVdzxsy2lG1YdQ6XKep8DMEygYAXu7heijNPNqaVm?=
- =?us-ascii?Q?J0pAsqPSO4msGtgQ4NtfIHE8uvEYCcAlgsx9lBrpM1JbmTDk/wQAdlIUtsAC?=
- =?us-ascii?Q?MH2Lw0dIwitS6jO0FmOOO2FGsBDoDxpRRyUgjB+/DcGwU78DPPTrlKjRjxxO?=
- =?us-ascii?Q?5ctKm9yvRT3T8cJbaGct0isLUxdA4NlCD6kmPmRX7FE3BSihIFUZquq+/MAO?=
- =?us-ascii?Q?OjY03UB/B2ffXGoIx4q5qccXMhpKWzU84QnkKewMQGmqJWYB36oMkFyAlbSQ?=
- =?us-ascii?Q?LlC2x5FFU4rIlX323y/EIqxNbZj51zSU8CnYeNIp1gvEltb3jXJ3CGd4S/9b?=
- =?us-ascii?Q?A80HKneMdElQ45f0ewqgWMX/Hj5LfMhuf7JIgmhbqMbi5fNCny84dHYYODwH?=
- =?us-ascii?Q?idIjywHwHMkMTtLxIx2LFcg5pyKpIb8G3ttEkQnNYd2YCsa9pgs+696buOlf?=
- =?us-ascii?Q?ttfMo6WqkBhSu0lmFb+ompWGDtO87G8xQijo/WfUNTlN8vKPd1bZTt0d938B?=
- =?us-ascii?Q?UP2HkB+zVpqTPYK3LSa0bQjQXrzW/lh+Pbi5upPoOv4WiZUU45LdsbXsV+Zt?=
- =?us-ascii?Q?/VVn1fo9GbsyMf4Y9V/IffsNFMzN4EZ1W4xH7uJ8GopfvIU7OFxsM0fnAlb/?=
- =?us-ascii?Q?7klfFakGEMn2GGiqu4yH3iVATEpnfA7SWWMkgwguliW0i6gKmLltigYj3nnx?=
- =?us-ascii?Q?oaSFv+A8TP8ANkkggAVo9rgYxiUFPnHdVXP/Sx2ZrPfwFWHYmbdwbhzY2LVM?=
- =?us-ascii?Q?t6cdd0yUJz8U/nnUCK8OBybKPQoMAe8a4QJn/jVUXBIb3/bE/hs7ewZmVI4R?=
- =?us-ascii?Q?fRbz4pupefXQEr97tFPZf2zMu7ZRu4o8cStuf17R9R+GLHQ4Qa0lC3arZ8n4?=
- =?us-ascii?Q?McoKFSSq7IVmvlCnO1HqKnNz6oC2BXZbjzM/NPR8l7ImBIkE/65+Go5LLx7H?=
- =?us-ascii?Q?c4TDToo6+HAx2gZ6NFl5jdoJpIsv7JWX5TqYSHmBphx3+QSk0wEfiis9Mu1z?=
- =?us-ascii?Q?fnpNAvmzD24HcJP0HHoMtb6p7l0UcuVhPh/wTVKye7UJKWOGEU1pYIz7OS4M?=
- =?us-ascii?Q?DzAVZ3FOaHgX5daZ9xGZ0muY9pzMW6OojxTGsWWpG3ytS2hQc7L7NScIPCpz?=
- =?us-ascii?Q?+n+1kTwiMxos2uCPTDHiAVPGpUjV72HXGio8R3c7nlvGYucnwKMSu3DVpu14?=
- =?us-ascii?Q?Dcpf5VC0YRuR/zx6J3WOa90PFCKFEvxbEVJrXxs1?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f30deb8b-b657-4541-8805-08ddc84a7954
-X-MS-Exchange-CrossTenant-AuthSource: CYYPR12MB8750.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jul 2025 11:33:54.8226
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: eROKyrN8HgL1Hxyh3dWWJ2Z01Q8eezyYwcrPaemSD8Pk1r2XVmIs0Ps/6usGGgTY7FILWfOKodzel7IdsJrrPQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7649
+Content-Transfer-Encoding: 8bit
 
-On 14.07.25 15:35:18, Dave Jiang wrote:
-> check_commit_order() attempts to convert a device to a decoder without
-> making sure the device is a decoder. So far this has been working due
-> to pure luck. Issue discovered while doing deferred dport probing when
-> child ports are now in the midst of decoders due to ordering change
-> of child port additions. Add a check before attempting to do decoder
-> conversion.
+On Tue, 15 Jul 2025 21:11:28 +0200 Robert Richter <rrichter@amd.com> wrote:
+
+> In interleaving configs multiple endpoint decoders connect to the same
+> region. The region's parameters must be the same for all endpoint
+> decoders that share the interleaving setup. During initialization, the
+> region's parameters are determined for each endpoint decoder.
+> If a region for the same hpa range already exists, no new region is
+> created and the existing one is reused.
 > 
-> Reviewed-by: Gregory Price <gourry@gourry.net>
-> Reviewed-by: Li Ming <ming.li@zohomail.com>
-> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-Reviewed-by: Robert Richter <rrichter@amd.com>
-
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> To simplify region setup and the collection of the region parameters,
+> separate region allocation from its registration. This allows it to
+> allocate and setup a region before checking the parameters with
+> existing other regions and adding it to the cxl tree or releasing it
+> and instead reusing an existing region.
+> 
+> Here, only separate cxl_region_alloc() from devm_cxl_add_region().
+> 
+> Signed-off-by: Robert Richter <rrichter@amd.com>
 > ---
->  drivers/cxl/core/region.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+
+Hello Robert,
+
+Thank you for this great patch! I have one small nit:
+
+>  /**
+> - * devm_cxl_add_region - Adds a region to a decoder
+> - * @cxlrd: root decoder
+> - * @id: memregion id to create, or memregion_free() on failure
+> - * @mode: mode for the endpoint decoders of this region
+> - * @type: select whether this is an expander or accelerator (type-2 or type-3)
+> + * devm_cxl_add_region - Adds a region to the CXL hierarchy.
+> + * @cxlr: region to be added
+> + * @id: memregion id to create must match current @port_id of the
+> + *      region's @cxlrd
+>   *
+>   * This is the second step of region initialization. Regions exist within an
+>   * address space which is mapped by a @cxlrd.
+>   *
+> - * Return: 0 if the region was added to the @cxlrd, else returns negative error
+> - * code. The region will be named "regionZ" where Z is the unique region number.
+> + * Return: Pointer to the region if the region could be registered
+> + * (for use in a tail call). The region will be named "regionZ" where
+> + * Z is the unique region number. On errors, devm_cxl_add_region()
+> + * returns an encoded negative error code and releases or unregisters
+> + * @cxlr.
+>   */
+
+It seems like the changes that this new return description corresponds to
+were actually made in the previous patch. Would it make sense to move this
+new description to the previous patch?
+
+> -static struct cxl_region *devm_cxl_add_region(struct cxl_root_decoder *cxlrd,
+> -					      int id,
+> -					      enum cxl_partition_mode mode,
+> -					      enum cxl_decoder_type type)
+> +static struct cxl_region *devm_cxl_add_region(struct cxl_region *cxlr, int id)
+
+Otherwise, LGTM!
+
+Reviewed-by: Joshua Hahn <joshua.hahnjy@gmail.com>
+
+Sent using hkml (https://github.com/sjp38/hackermail)
