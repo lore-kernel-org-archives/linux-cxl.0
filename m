@@ -1,36 +1,39 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A86B2DAFCF
-	for <linux-cxl@vger.kernel.org>; Mon, 21 Jul 2025 17:22:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52EA91A08DB
+	for <linux-cxl@vger.kernel.org>; Mon, 21 Jul 2025 17:22:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753118564; cv=none; b=g2w+4dy0Cs3rtlC2Lu/DCPSbw6aBNi14JsR0WLo2qEzy7uV/ZOb477tk/h/BytP3opW+Hvb83/XIc/1dsdHcMU9pnJL3l5lgidAJOB1poJDxgklpl2deVQ2QOHP9d4smsaWcW8n08WvO/tSbozl9nV80VjJa541daRNCv5jFQoA=
+	t=1753118565; cv=none; b=BK4CmvmsWmuioe4oT/j2uuun3Sc7P/28x2gBl/UqkU6c16PslzqCPCDKgUrMnTn96ETajy7LDypDaac7Eo0TTFjAMZS82F9g4IpzcXAaZoV1Ropdkphn7PcRLytzNDLHSDj+0uGtzWYKON/F7qSelfsg8S1vlikAy8a1fEQUHos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753118564; c=relaxed/simple;
-	bh=hnKHGpPhfmfgVECLRepHg+VGu5IJWYN0GoX0drOaMls=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=I93pSsdaIKeJK5ZSKh1xN8FutnTfwiYuE31JwbvPHojwU089dhLUcD3EZ8HPvy2UflG+BJpM+JbcZjCXlWXrdJrOkq7TEIiBZpeC/5HyLLRb7uEPcZyM2sqo/v0A4EaZ5e3dKEJlNlYwGihrhiOu9kcyDQq4khO2Nst4tHZiF6k=
+	s=arc-20240116; t=1753118565; c=relaxed/simple;
+	bh=RUEXERrwcTwF235i5yerCrk5Spb/kpCMccwvAQFTu/M=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Z4xagG1BhAKaW4HUkSq/eNpUCnMFcVF88eqdLQPCD1o/n/akjiX+Jg6sjRlcrlch3nwEQnIG83Qg6SSYv9sj1l5gojnt0JitGfbvo5BlPsuIT2mWpmBAUW4/rORua09kvLfuna2TlwficusoFB+DnzRW1+2u1eiSRocU5qAepTE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bm6cr4XCcz6D9Bg;
-	Tue, 22 Jul 2025 01:21:16 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bm6ct0mjNz6D9CR;
+	Tue, 22 Jul 2025 01:21:18 +0800 (CST)
 Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
-	by mail.maildlp.com (Postfix) with ESMTPS id 52D9214033C;
-	Tue, 22 Jul 2025 01:22:39 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id C5993140277;
+	Tue, 22 Jul 2025 01:22:40 +0800 (CST)
 Received: from P_UKIT01-A7bmah.china.huawei.com (10.48.155.20) by
  frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 21 Jul 2025 19:22:38 +0200
+ 15.1.2507.39; Mon, 21 Jul 2025 19:22:40 +0200
 From: <shiju.jose@huawei.com>
 To: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>,
 	<jonathan.cameron@huawei.com>, <fan.ni@samsung.com>, <dave@stgolabs.net>
 CC: <linuxarm@huawei.com>, <shiju.jose@huawei.com>
-Subject: [PATCH qemu v4 0/7] hw/cxl: Update CXL events to rev3.2 and add maintenance support for memory repair features 
-Date: Mon, 21 Jul 2025 18:22:21 +0100
-Message-ID: <20250721172228.2118-1-shiju.jose@huawei.com>
+Subject: [PATCH qemu v4 2/7] hw/cxl/events: Updates for rev3.2 general media event record
+Date: Mon, 21 Jul 2025 18:22:23 +0100
+Message-ID: <20250721172228.2118-3-shiju.jose@huawei.com>
 X-Mailer: git-send-email 2.43.0.windows.1
+In-Reply-To: <20250721172228.2118-1-shiju.jose@huawei.com>
+References: <20250721172228.2118-1-shiju.jose@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -44,75 +47,163 @@ X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
 
 From: Shiju Jose <shiju.jose@huawei.com>
 
-Add updates for the CXL spec rev3.2 changes, in the CXL events reporting
-and QMP command to inject CXL events.
+CXL spec rev3.2 section 8.2.10.2.1.1 Table 8-57, general media event
+table has updated with following new fields.
+1. Advanced Programmable Corrected Memory Error Threshold Event Flags
+2. Corrected Memory Error Count at Event
+3. Memory Event Sub-Type
+4. Support for component ID in the PLDM format.
 
-Add maintenance support and emulation support for memory Post Package
-Repair(PPR) and memory sparing control features.
+Add updates for the above spec changes in the CXL general media event
+reporting and QMP command to inject general media event.
 
-Add support for reporting the memory sparing event record.
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+---
+ hw/mem/cxl_type3.c          | 29 +++++++++++++++++++++++++++++
+ hw/mem/cxl_type3_stubs.c    |  6 ++++++
+ include/hw/cxl/cxl_events.h |  7 +++++--
+ qapi/cxl.json               | 18 +++++++++++++++++-
+ 4 files changed, 57 insertions(+), 3 deletions(-)
 
-Changes
-=======
-v3 -> v4:
-1. Took patches applied by Jonathan to recent tag 'cxl-2025-07-03'.
-2. Add few more improvements to maintenance PPR[ patch 6] and sparing
-   [patch 7] feature patches.
-
-v2 -> v3:
-1. Changes for the feedback from Jonathan on v2.
-   https://lore.kernel.org/all/20250619151619.1695-1-shiju.jose@huawei.com/
-  1.1. https://lore.kernel.org/all/20250620150342.000055aa@huawei.com/
-    - Wrap this is sub 70 and should aim for about 75 for commit descriptions.
-    - hdr->ld_id = ld_id; to stw_le_p(&hdr->ld_id, ld_id); in cxl_assign_event_header()
-    - Make maint_class, maint_subclass, ld_id and head_id as optional parameters in QMP for
-      relevant events
-    - In QMP rename maint-class to maint-op-class, maint_subclass to maint-op-subclass
-      In functions, rename parameters, class to maint_op_class, subclass to maint_op_subclass etc.  
-  1.2. https://lore.kernel.org/all/20250620151314.0000535c@huawei.com/ 
-    - Make cme-ev-flags and cme-count for general media events as optional parameters in the QMP.
-    - Make cme-ev-flags and cvme-count for DRAM event as optional parameters in the QMP.
-  1.3. https://lore.kernel.org/all/20250620151655.00001cea@huawei.com/
-    - Add variable declarations at start of the local scope.
-  1.4. https://lore.kernel.org/all/20250620154052.00002a17@huawei.com/
-    - Adjust indent style  in few places.
-    - Add support for produce a Memory Sparing Event Record and enabled for
-      ppr maintenance request.
-    - Replaced hard coded values in few switch-cases with macro definition in few places.
-    - Replaced CXL_MBOX_UNSUPPORTED with CXL_MBOX_INVALID_INPUT.
-  1.5. https://lore.kernel.org/all/20250620154813.00002bbd@huawei.com/
-    - Add support for memory sparing resource availability.
-    - LOG_UNIMP logs for sparing maint op removed.
-    - Replaced CXL_MBOX_UNSUPPORTED with CXL_MBOX_INVALID_INPUT.
-               
-v1 -> v2:
-1. QMP CXL event injection code has updated for the following
-   change in CXL spec r3.2 Table 8-55. Common Event Record Format,
-   field: Event Record Flags. Length of this field has changed
-   from 2 bytes to 3 bytes. 
-2. Rebase to recent tag 'cxl-2025-06-10'.
-
-Davidlohr Bueso (1):
-  hw/cxl: Add Maintenance support
-
-Shiju Jose (6):
-  hw/cxl/events: Update for rev3.2 common event record format
-  hw/cxl/events: Updates for rev3.2 general media event record
-  hw/cxl/events: Updates for rev3.2 DRAM event record
-  hw/cxl/events: Updates for rev3.2 memory module event record
-  hw/cxl/cxl-mailbox-utils: Move declaration of scrub and ECS feature
-    attributes in cmd_features_set_feature()
-  hw/cxl: Add emulation for memory sparing control feature
-
- hw/cxl/cxl-events.c         |   3 +-
- hw/cxl/cxl-mailbox-utils.c  | 579 +++++++++++++++++++++++++++++++++++-
- hw/mem/cxl_type3.c          | 266 ++++++++++++++++-
- hw/mem/cxl_type3_stubs.c    |  41 ++-
- include/hw/cxl/cxl_device.h | 142 ++++++++-
- include/hw/cxl/cxl_events.h |  85 +++++-
- qapi/cxl.json               | 106 ++++++-
- 7 files changed, 1180 insertions(+), 42 deletions(-)
-
+diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+index aa6e5c1a08..a10e6bf518 100644
+--- a/hw/mem/cxl_type3.c
++++ b/hw/mem/cxl_type3.c
+@@ -1646,6 +1646,11 @@ static const QemuUUID memory_module_uuid = {
+ #define CXL_GMER_VALID_RANK                             BIT(1)
+ #define CXL_GMER_VALID_DEVICE                           BIT(2)
+ #define CXL_GMER_VALID_COMPONENT                        BIT(3)
++#define CXL_GMER_VALID_COMPONENT_ID_FORMAT              BIT(4)
++
++#define CXL_GMER_EV_DESC_UCE                            BIT(0)
++#define CXL_GMER_EV_DESC_THRESHOLD_EVENT                BIT(1)
++#define CXL_GMER_EV_DESC_POISON_LIST_OVERFLOW_EVENT     BIT(2)
+ 
+ static int ct3d_qmp_cxl_event_log_enc(CxlEventLog log)
+ {
+@@ -1677,6 +1682,12 @@ void qmp_cxl_inject_general_media_event(const char *path, CxlEventLog log,
+                                         bool has_rank, uint8_t rank,
+                                         bool has_device, uint32_t device,
+                                         const char *component_id,
++                                        bool has_comp_id_pldm,
++                                        uint8_t is_comp_id_pldm,
++                                        bool has_cme_ev_flags,
++                                        uint8_t cme_ev_flags,
++                                        bool has_cme_count, uint32_t cme_count,
++                                        uint8_t sub_type,
+                                         Error **errp)
+ {
+     Object *obj = object_resolve_path(path, NULL);
+@@ -1737,10 +1748,28 @@ void qmp_cxl_inject_general_media_event(const char *path, CxlEventLog log,
+         strncpy((char *)gem.component_id, component_id,
+                 sizeof(gem.component_id) - 1);
+         valid_flags |= CXL_GMER_VALID_COMPONENT;
++        if (has_comp_id_pldm && is_comp_id_pldm) {
++            valid_flags |= CXL_GMER_VALID_COMPONENT_ID_FORMAT;
++        }
+     }
+ 
+     stw_le_p(&gem.validity_flags, valid_flags);
+ 
++    if (has_cme_ev_flags) {
++        gem.cme_ev_flags = cme_ev_flags;
++    } else {
++        gem.cme_ev_flags = 0;
++    }
++
++    if (has_cme_count) {
++        descriptor |= CXL_GMER_EV_DESC_THRESHOLD_EVENT;
++        st24_le_p(gem.cme_count, cme_count);
++    } else {
++        st24_le_p(gem.cme_count, 0);
++    }
++
++    gem.sub_type = sub_type;
++
+     if (cxl_event_insert(cxlds, enc_log, (CXLEventRecordRaw *)&gem)) {
+         cxl_event_irq_assert(ct3d);
+     }
+diff --git a/hw/mem/cxl_type3_stubs.c b/hw/mem/cxl_type3_stubs.c
+index 91b1478114..28eb880b30 100644
+--- a/hw/mem/cxl_type3_stubs.c
++++ b/hw/mem/cxl_type3_stubs.c
+@@ -27,6 +27,12 @@ void qmp_cxl_inject_general_media_event(const char *path, CxlEventLog log,
+                                         bool has_rank, uint8_t rank,
+                                         bool has_device, uint32_t device,
+                                         const char *component_id,
++                                        bool has_comp_id_pldm,
++                                        uint8_t is_comp_id_pldm,
++                                        bool has_cme_ev_flags,
++                                        uint8_t cme_ev_flags,
++                                        bool has_cme_count, uint32_t cme_count,
++                                        uint8_t sub_type,
+                                         Error **errp) {}
+ 
+ void qmp_cxl_inject_dram_event(const char *path, CxlEventLog log,
+diff --git a/include/hw/cxl/cxl_events.h b/include/hw/cxl/cxl_events.h
+index 4d9cfdb621..352f9891bd 100644
+--- a/include/hw/cxl/cxl_events.h
++++ b/include/hw/cxl/cxl_events.h
+@@ -115,10 +115,10 @@ typedef struct CXLEventInterruptPolicy {
+ 
+ /*
+  * General Media Event Record
+- * CXL r3.1 Section 8.2.9.2.1.1; Table 8-45
++ * CXL r3.2 Section 8.2.10.2.1.1; Table 8-57
+  */
+ #define CXL_EVENT_GEN_MED_COMP_ID_SIZE  0x10
+-#define CXL_EVENT_GEN_MED_RES_SIZE      0x2e
++#define CXL_EVENT_GEN_MED_RES_SIZE      0x29
+ typedef struct CXLEventGenMedia {
+     CXLEventRecordHdr hdr;
+     uint64_t phys_addr;
+@@ -130,6 +130,9 @@ typedef struct CXLEventGenMedia {
+     uint8_t rank;
+     uint8_t device[3];
+     uint8_t component_id[CXL_EVENT_GEN_MED_COMP_ID_SIZE];
++    uint8_t cme_ev_flags;
++    uint8_t cme_count[3];
++    uint8_t sub_type;
+     uint8_t reserved[CXL_EVENT_GEN_MED_RES_SIZE];
+ } QEMU_PACKED CXLEventGenMedia;
+ 
+diff --git a/qapi/cxl.json b/qapi/cxl.json
+index c1fe8319c8..e8060d16f7 100644
+--- a/qapi/cxl.json
++++ b/qapi/cxl.json
+@@ -82,6 +82,19 @@
+ # @component-id: Device specific component identifier for the event.
+ #     May describe a field replaceable sub-component of the device.
+ #
++# @is-comp-id-pldm: Flag represents device specific component identifier
++#     format is PLDM or not.
++#
++# @cme-ev-flags: Advanced programmable corrected memory error
++#     threshold event flags.
++#     See CXL r3.2 Table 8-57 General Media Event Record.
++#
++# @cme-count: Corrected memory error count at event.
++#     See CXL r3.2 Table 8-57 General Media Event Record.
++#
++# @sub-type: Memory event sub-type.
++#     See CXL r3.2 Table 8-57 General Media Event Record.
++#
+ # Since: 8.1
+ ##
+ { 'command': 'cxl-inject-general-media-event',
+@@ -91,7 +104,10 @@
+             'dpa': 'uint64', 'descriptor': 'uint8',
+             'type': 'uint8', 'transaction-type': 'uint8',
+             '*channel': 'uint8', '*rank': 'uint8',
+-            '*device': 'uint32', '*component-id': 'str' } }
++            '*device': 'uint32', '*component-id': 'str',
++            '*is-comp-id-pldm':'uint8',
++            '*cme-ev-flags':'uint8', '*cme-count':'uint32',
++            'sub-type':'uint8' } }
+ 
+ ##
+ # @cxl-inject-dram-event:
 -- 
 2.43.0
 
