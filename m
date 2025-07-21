@@ -1,32 +1,36 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A35E2DEA75
-	for <linux-cxl@vger.kernel.org>; Mon, 21 Jul 2025 17:04:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A86B2DAFCF
+	for <linux-cxl@vger.kernel.org>; Mon, 21 Jul 2025 17:22:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753117474; cv=none; b=EwLiImjmCOQQilqZNB56Gg+e+CG9Pp+ucO9+ovKhZS1qn6JksKcA1pIrHZOoBjnVs1C/49rCIuLLGgrFTMzevtDMzobv2mrpkwt0bJyudc9+UAWMyp5mpztUU4vYMOz7EE1ebE+eD2CDmRUYZu1GTVzc+2XN0DTGhYnRC28MRsU=
+	t=1753118564; cv=none; b=g2w+4dy0Cs3rtlC2Lu/DCPSbw6aBNi14JsR0WLo2qEzy7uV/ZOb477tk/h/BytP3opW+Hvb83/XIc/1dsdHcMU9pnJL3l5lgidAJOB1poJDxgklpl2deVQ2QOHP9d4smsaWcW8n08WvO/tSbozl9nV80VjJa541daRNCv5jFQoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753117474; c=relaxed/simple;
-	bh=UEErcpWPy0SvDVobzE4kUCQ6KHTJVk613a4EWFAuVtY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Fb7l9+pKuJg5c+Uq4Hl4PkU7LpuAvZEebbq9uHyxrB2G/kfvW83V/hX2yR7C2EaxSCdm0WzHuATwL1Sa+lIzlT6aT71bPggBp05RDlfBwC8xpYFBnIZ+qkqQy43G4ooAiAHfuzv/pW+VtLKnY7itGvfW1sBcmc3PGAJcngQL7d4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02E57C4CEED;
-	Mon, 21 Jul 2025 17:04:32 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	Robert Richter <rrichter@amd.com>,
-	Terry Bowman <terry.bowman@amd.com>
-Subject: [PATCH v2] cxl: Remove ifdef blocks of CONFIG_PCIEAER_CXL from core/pci.c
-Date: Mon, 21 Jul 2025 10:04:15 -0700
-Message-ID: <20250721170415.285961-1-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.50.1
+	s=arc-20240116; t=1753118564; c=relaxed/simple;
+	bh=hnKHGpPhfmfgVECLRepHg+VGu5IJWYN0GoX0drOaMls=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=I93pSsdaIKeJK5ZSKh1xN8FutnTfwiYuE31JwbvPHojwU089dhLUcD3EZ8HPvy2UflG+BJpM+JbcZjCXlWXrdJrOkq7TEIiBZpeC/5HyLLRb7uEPcZyM2sqo/v0A4EaZ5e3dKEJlNlYwGihrhiOu9kcyDQq4khO2Nst4tHZiF6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bm6cr4XCcz6D9Bg;
+	Tue, 22 Jul 2025 01:21:16 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
+	by mail.maildlp.com (Postfix) with ESMTPS id 52D9214033C;
+	Tue, 22 Jul 2025 01:22:39 +0800 (CST)
+Received: from P_UKIT01-A7bmah.china.huawei.com (10.48.155.20) by
+ frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 21 Jul 2025 19:22:38 +0200
+From: <shiju.jose@huawei.com>
+To: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>,
+	<jonathan.cameron@huawei.com>, <fan.ni@samsung.com>, <dave@stgolabs.net>
+CC: <linuxarm@huawei.com>, <shiju.jose@huawei.com>
+Subject: [PATCH qemu v4 0/7] hw/cxl: Update CXL events to rev3.2 and add maintenance support for memory repair features 
+Date: Mon, 21 Jul 2025 18:22:21 +0100
+Message-ID: <20250721172228.2118-1-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.43.0.windows.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -34,476 +38,81 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ frapeml500007.china.huawei.com (7.182.85.172)
 
-Remove from core/pci_aer.c and move the CONFIG_PCIEAER_CXL ifdef to
-cxlpci.h to deal with the exported symbols as needed. There is enough
-AER handling code (and more to come) to move the AER code to its own
-C file.
+From: Shiju Jose <shiju.jose@huawei.com>
 
-Cc: Robert Richter <rrichter@amd.com>
-Cc: Terry Bowman <terry.bowman@amd.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
-v2:
-- Address 0-day reprot of cxl_handle_rdport_errors symbol undefined
----
- drivers/cxl/core/Makefile  |   1 +
- drivers/cxl/core/core.h    |   9 ++
- drivers/cxl/core/pci.c     | 171 +------------------------------------
- drivers/cxl/core/pci_aer.c | 168 ++++++++++++++++++++++++++++++++++++
- drivers/cxl/cxl.h          |   8 --
- drivers/cxl/cxlpci.h       |   8 ++
- tools/testing/cxl/Kbuild   |   1 +
- 7 files changed, 189 insertions(+), 177 deletions(-)
- create mode 100644 drivers/cxl/core/pci_aer.c
+Add updates for the CXL spec rev3.2 changes, in the CXL events reporting
+and QMP command to inject CXL events.
 
-diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-index 79e2ef81fde8..bcea856157af 100644
---- a/drivers/cxl/core/Makefile
-+++ b/drivers/cxl/core/Makefile
-@@ -21,3 +21,4 @@ cxl_core-$(CONFIG_CXL_REGION) += region.o
- cxl_core-$(CONFIG_CXL_MCE) += mce.o
- cxl_core-$(CONFIG_CXL_FEATURES) += features.o
- cxl_core-$(CONFIG_CXL_EDAC_MEM_FEATURES) += edac.o
-+cxl_core-$(CONFIG_PCIEAER_CXL) += pci_aer.o
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index 29b61828a847..96c319c66a48 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -136,4 +136,13 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
- 		    u16 *return_code);
- #endif
- 
-+#ifdef CONFIG_PCIEAER_CXL
-+void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds);
-+#else
-+static inline void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds) {}
-+#endif
-+
-+void __cxl_handle_cor_ras(struct cxl_dev_state *cxlds, void __iomem *ras_base);
-+bool __cxl_handle_ras(struct cxl_dev_state *cxlds, void __iomem *ras_base);
-+
- #endif /* __CXL_CORE_H__ */
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index b50551601c2e..bd78369bc3f4 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -664,8 +664,7 @@ void read_cdat_data(struct cxl_port *port)
- }
- EXPORT_SYMBOL_NS_GPL(read_cdat_data, "CXL");
- 
--static void __cxl_handle_cor_ras(struct cxl_dev_state *cxlds,
--				 void __iomem *ras_base)
-+void __cxl_handle_cor_ras(struct cxl_dev_state *cxlds, void __iomem *ras_base)
- {
- 	void __iomem *addr;
- 	u32 status;
-@@ -707,8 +706,7 @@ static void header_log_copy(void __iomem *ras_base, u32 *log)
-  * Log the state of the RAS status registers and prepare them to log the
-  * next error status. Return 1 if reset needed.
-  */
--static bool __cxl_handle_ras(struct cxl_dev_state *cxlds,
--				  void __iomem *ras_base)
-+bool __cxl_handle_ras(struct cxl_dev_state *cxlds, void __iomem *ras_base)
- {
- 	u32 hl[CXL_HEADERLOG_SIZE_U32];
- 	void __iomem *addr;
-@@ -746,171 +744,6 @@ static bool cxl_handle_endpoint_ras(struct cxl_dev_state *cxlds)
- 	return __cxl_handle_ras(cxlds, cxlds->regs.ras);
- }
- 
--#ifdef CONFIG_PCIEAER_CXL
--
--static void cxl_dport_map_rch_aer(struct cxl_dport *dport)
--{
--	resource_size_t aer_phys;
--	struct device *host;
--	u16 aer_cap;
--
--	aer_cap = cxl_rcrb_to_aer(dport->dport_dev, dport->rcrb.base);
--	if (aer_cap) {
--		host = dport->reg_map.host;
--		aer_phys = aer_cap + dport->rcrb.base;
--		dport->regs.dport_aer = devm_cxl_iomap_block(host, aer_phys,
--						sizeof(struct aer_capability_regs));
--	}
--}
--
--static void cxl_dport_map_ras(struct cxl_dport *dport)
--{
--	struct cxl_register_map *map = &dport->reg_map;
--	struct device *dev = dport->dport_dev;
--
--	if (!map->component_map.ras.valid)
--		dev_dbg(dev, "RAS registers not found\n");
--	else if (cxl_map_component_regs(map, &dport->regs.component,
--					BIT(CXL_CM_CAP_CAP_ID_RAS)))
--		dev_dbg(dev, "Failed to map RAS capability.\n");
--}
--
--static void cxl_disable_rch_root_ints(struct cxl_dport *dport)
--{
--	void __iomem *aer_base = dport->regs.dport_aer;
--	u32 aer_cmd_mask, aer_cmd;
--
--	if (!aer_base)
--		return;
--
--	/*
--	 * Disable RCH root port command interrupts.
--	 * CXL 3.0 12.2.1.1 - RCH Downstream Port-detected Errors
--	 *
--	 * This sequence may not be necessary. CXL spec states disabling
--	 * the root cmd register's interrupts is required. But, PCI spec
--	 * shows these are disabled by default on reset.
--	 */
--	aer_cmd_mask = (PCI_ERR_ROOT_CMD_COR_EN |
--			PCI_ERR_ROOT_CMD_NONFATAL_EN |
--			PCI_ERR_ROOT_CMD_FATAL_EN);
--	aer_cmd = readl(aer_base + PCI_ERR_ROOT_COMMAND);
--	aer_cmd &= ~aer_cmd_mask;
--	writel(aer_cmd, aer_base + PCI_ERR_ROOT_COMMAND);
--}
--
--/**
-- * cxl_dport_init_ras_reporting - Setup CXL RAS report on this dport
-- * @dport: the cxl_dport that needs to be initialized
-- * @host: host device for devm operations
-- */
--void cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host)
--{
--	dport->reg_map.host = host;
--	cxl_dport_map_ras(dport);
--
--	if (dport->rch) {
--		struct pci_host_bridge *host_bridge = to_pci_host_bridge(dport->dport_dev);
--
--		if (!host_bridge->native_aer)
--			return;
--
--		cxl_dport_map_rch_aer(dport);
--		cxl_disable_rch_root_ints(dport);
--	}
--}
--EXPORT_SYMBOL_NS_GPL(cxl_dport_init_ras_reporting, "CXL");
--
--static void cxl_handle_rdport_cor_ras(struct cxl_dev_state *cxlds,
--					  struct cxl_dport *dport)
--{
--	return __cxl_handle_cor_ras(cxlds, dport->regs.ras);
--}
--
--static bool cxl_handle_rdport_ras(struct cxl_dev_state *cxlds,
--				       struct cxl_dport *dport)
--{
--	return __cxl_handle_ras(cxlds, dport->regs.ras);
--}
--
--/*
-- * Copy the AER capability registers using 32 bit read accesses.
-- * This is necessary because RCRB AER capability is MMIO mapped. Clear the
-- * status after copying.
-- *
-- * @aer_base: base address of AER capability block in RCRB
-- * @aer_regs: destination for copying AER capability
-- */
--static bool cxl_rch_get_aer_info(void __iomem *aer_base,
--				 struct aer_capability_regs *aer_regs)
--{
--	int read_cnt = sizeof(struct aer_capability_regs) / sizeof(u32);
--	u32 *aer_regs_buf = (u32 *)aer_regs;
--	int n;
--
--	if (!aer_base)
--		return false;
--
--	/* Use readl() to guarantee 32-bit accesses */
--	for (n = 0; n < read_cnt; n++)
--		aer_regs_buf[n] = readl(aer_base + n * sizeof(u32));
--
--	writel(aer_regs->uncor_status, aer_base + PCI_ERR_UNCOR_STATUS);
--	writel(aer_regs->cor_status, aer_base + PCI_ERR_COR_STATUS);
--
--	return true;
--}
--
--/* Get AER severity. Return false if there is no error. */
--static bool cxl_rch_get_aer_severity(struct aer_capability_regs *aer_regs,
--				     int *severity)
--{
--	if (aer_regs->uncor_status & ~aer_regs->uncor_mask) {
--		if (aer_regs->uncor_status & PCI_ERR_ROOT_FATAL_RCV)
--			*severity = AER_FATAL;
--		else
--			*severity = AER_NONFATAL;
--		return true;
--	}
--
--	if (aer_regs->cor_status & ~aer_regs->cor_mask) {
--		*severity = AER_CORRECTABLE;
--		return true;
--	}
--
--	return false;
--}
--
--static void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds)
--{
--	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
--	struct aer_capability_regs aer_regs;
--	struct cxl_dport *dport;
--	int severity;
--
--	struct cxl_port *port __free(put_cxl_port) =
--		cxl_pci_find_port(pdev, &dport);
--	if (!port)
--		return;
--
--	if (!cxl_rch_get_aer_info(dport->regs.dport_aer, &aer_regs))
--		return;
--
--	if (!cxl_rch_get_aer_severity(&aer_regs, &severity))
--		return;
--
--	pci_print_aer(pdev, severity, &aer_regs);
--
--	if (severity == AER_CORRECTABLE)
--		cxl_handle_rdport_cor_ras(cxlds, dport);
--	else
--		cxl_handle_rdport_ras(cxlds, dport);
--}
--
--#else
--static void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds) { }
--#endif
--
- void cxl_cor_error_detected(struct pci_dev *pdev)
- {
- 	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-diff --git a/drivers/cxl/core/pci_aer.c b/drivers/cxl/core/pci_aer.c
-new file mode 100644
-index 000000000000..cf1e9377752e
---- /dev/null
-+++ b/drivers/cxl/core/pci_aer.c
-@@ -0,0 +1,168 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright(c) 2025 AMD Corporation. All rights reserved. */
-+/* Copyright(c) 2025 Intel Corporation. All rights reserved. */
-+#include <linux/pci.h>
-+#include <linux/aer.h>
-+#include <cxlpci.h>
-+#include <cxlmem.h>
-+#include <cxl.h>
-+#include "core.h"
-+
-+static void cxl_dport_map_rch_aer(struct cxl_dport *dport)
-+{
-+	resource_size_t aer_phys;
-+	struct device *host;
-+	u16 aer_cap;
-+
-+	aer_cap = cxl_rcrb_to_aer(dport->dport_dev, dport->rcrb.base);
-+	if (aer_cap) {
-+		host = dport->reg_map.host;
-+		aer_phys = aer_cap + dport->rcrb.base;
-+		dport->regs.dport_aer = devm_cxl_iomap_block(host, aer_phys,
-+						sizeof(struct aer_capability_regs));
-+	}
-+}
-+
-+static void cxl_dport_map_ras(struct cxl_dport *dport)
-+{
-+	struct cxl_register_map *map = &dport->reg_map;
-+	struct device *dev = dport->dport_dev;
-+
-+	if (!map->component_map.ras.valid)
-+		dev_dbg(dev, "RAS registers not found\n");
-+	else if (cxl_map_component_regs(map, &dport->regs.component,
-+					BIT(CXL_CM_CAP_CAP_ID_RAS)))
-+		dev_dbg(dev, "Failed to map RAS capability.\n");
-+}
-+
-+static void cxl_disable_rch_root_ints(struct cxl_dport *dport)
-+{
-+	void __iomem *aer_base = dport->regs.dport_aer;
-+	u32 aer_cmd_mask, aer_cmd;
-+
-+	if (!aer_base)
-+		return;
-+
-+	/*
-+	 * Disable RCH root port command interrupts.
-+	 * CXL 3.0 12.2.1.1 - RCH Downstream Port-detected Errors
-+	 *
-+	 * This sequence may not be necessary. CXL spec states disabling
-+	 * the root cmd register's interrupts is required. But, PCI spec
-+	 * shows these are disabled by default on reset.
-+	 */
-+	aer_cmd_mask = (PCI_ERR_ROOT_CMD_COR_EN |
-+			PCI_ERR_ROOT_CMD_NONFATAL_EN |
-+			PCI_ERR_ROOT_CMD_FATAL_EN);
-+	aer_cmd = readl(aer_base + PCI_ERR_ROOT_COMMAND);
-+	aer_cmd &= ~aer_cmd_mask;
-+	writel(aer_cmd, aer_base + PCI_ERR_ROOT_COMMAND);
-+}
-+
-+/**
-+ * cxl_dport_init_ras_reporting - Setup CXL RAS report on this dport
-+ * @dport: the cxl_dport that needs to be initialized
-+ * @host: host device for devm operations
-+ */
-+void cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host)
-+{
-+	dport->reg_map.host = host;
-+	cxl_dport_map_ras(dport);
-+
-+	if (dport->rch) {
-+		struct pci_host_bridge *host_bridge = to_pci_host_bridge(dport->dport_dev);
-+
-+		if (!host_bridge->native_aer)
-+			return;
-+
-+		cxl_dport_map_rch_aer(dport);
-+		cxl_disable_rch_root_ints(dport);
-+	}
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_dport_init_ras_reporting, "CXL");
-+
-+static void cxl_handle_rdport_cor_ras(struct cxl_dev_state *cxlds,
-+					  struct cxl_dport *dport)
-+{
-+	return __cxl_handle_cor_ras(cxlds, dport->regs.ras);
-+}
-+
-+static bool cxl_handle_rdport_ras(struct cxl_dev_state *cxlds,
-+				       struct cxl_dport *dport)
-+{
-+	return __cxl_handle_ras(cxlds, dport->regs.ras);
-+}
-+
-+/*
-+ * Copy the AER capability registers using 32 bit read accesses.
-+ * This is necessary because RCRB AER capability is MMIO mapped. Clear the
-+ * status after copying.
-+ *
-+ * @aer_base: base address of AER capability block in RCRB
-+ * @aer_regs: destination for copying AER capability
-+ */
-+static bool cxl_rch_get_aer_info(void __iomem *aer_base,
-+				 struct aer_capability_regs *aer_regs)
-+{
-+	int read_cnt = sizeof(struct aer_capability_regs) / sizeof(u32);
-+	u32 *aer_regs_buf = (u32 *)aer_regs;
-+	int n;
-+
-+	if (!aer_base)
-+		return false;
-+
-+	/* Use readl() to guarantee 32-bit accesses */
-+	for (n = 0; n < read_cnt; n++)
-+		aer_regs_buf[n] = readl(aer_base + n * sizeof(u32));
-+
-+	writel(aer_regs->uncor_status, aer_base + PCI_ERR_UNCOR_STATUS);
-+	writel(aer_regs->cor_status, aer_base + PCI_ERR_COR_STATUS);
-+
-+	return true;
-+}
-+
-+/* Get AER severity. Return false if there is no error. */
-+static bool cxl_rch_get_aer_severity(struct aer_capability_regs *aer_regs,
-+				     int *severity)
-+{
-+	if (aer_regs->uncor_status & ~aer_regs->uncor_mask) {
-+		if (aer_regs->uncor_status & PCI_ERR_ROOT_FATAL_RCV)
-+			*severity = AER_FATAL;
-+		else
-+			*severity = AER_NONFATAL;
-+		return true;
-+	}
-+
-+	if (aer_regs->cor_status & ~aer_regs->cor_mask) {
-+		*severity = AER_CORRECTABLE;
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
-+void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds)
-+{
-+	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
-+	struct aer_capability_regs aer_regs;
-+	struct cxl_dport *dport;
-+	int severity;
-+
-+	struct cxl_port *port __free(put_cxl_port) =
-+		cxl_pci_find_port(pdev, &dport);
-+	if (!port)
-+		return;
-+
-+	if (!cxl_rch_get_aer_info(dport->regs.dport_aer, &aer_regs))
-+		return;
-+
-+	if (!cxl_rch_get_aer_severity(&aer_regs, &severity))
-+		return;
-+
-+	pci_print_aer(pdev, severity, &aer_regs);
-+
-+	if (severity == AER_CORRECTABLE)
-+		cxl_handle_rdport_cor_ras(cxlds, dport);
-+	else
-+		cxl_handle_rdport_ras(cxlds, dport);
-+}
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 3f1695c96abc..73397da7f970 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -759,14 +759,6 @@ struct cxl_dport *devm_cxl_add_rch_dport(struct cxl_port *port,
- 					 struct device *dport_dev, int port_id,
- 					 resource_size_t rcrb);
- 
--#ifdef CONFIG_PCIEAER_CXL
--void cxl_setup_parent_dport(struct device *host, struct cxl_dport *dport);
--void cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host);
--#else
--static inline void cxl_dport_init_ras_reporting(struct cxl_dport *dport,
--						struct device *host) { }
--#endif
--
- struct cxl_decoder *to_cxl_decoder(struct device *dev);
- struct cxl_root_decoder *to_cxl_root_decoder(struct device *dev);
- struct cxl_switch_decoder *to_cxl_switch_decoder(struct device *dev);
-diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-index 54e219b0049e..5f73ce42a758 100644
---- a/drivers/cxl/cxlpci.h
-+++ b/drivers/cxl/cxlpci.h
-@@ -135,4 +135,12 @@ void read_cdat_data(struct cxl_port *port);
- void cxl_cor_error_detected(struct pci_dev *pdev);
- pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
- 				    pci_channel_state_t state);
-+
-+#ifdef CONFIG_PCIEAER_CXL
-+void cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host);
-+#else
-+static inline void cxl_dport_init_ras_reporting(struct cxl_dport *dport,
-+						struct device *host) { }
-+#endif
-+
- #endif /* __CXL_PCI_H__ */
-diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-index 31a2d73c963f..54b49d8e6b40 100644
---- a/tools/testing/cxl/Kbuild
-+++ b/tools/testing/cxl/Kbuild
-@@ -68,6 +68,7 @@ cxl_core-$(CONFIG_CXL_REGION) += $(CXL_CORE_SRC)/region.o
- cxl_core-$(CONFIG_CXL_MCE) += $(CXL_CORE_SRC)/mce.o
- cxl_core-$(CONFIG_CXL_FEATURES) += $(CXL_CORE_SRC)/features.o
- cxl_core-$(CONFIG_CXL_EDAC_MEM_FEATURES) += $(CXL_CORE_SRC)/edac.o
-+cxl_core-$(CONFIG_PCIEAER_CXL) += $(CXL_CORE_SRC)/pci_aer.o
- cxl_core-y += config_check.o
- cxl_core-y += cxl_core_test.o
- cxl_core-y += cxl_core_exports.o
+Add maintenance support and emulation support for memory Post Package
+Repair(PPR) and memory sparing control features.
 
-base-commit: 347e9f5043c89695b01e66b3ed111755afcf1911
+Add support for reporting the memory sparing event record.
+
+Changes
+=======
+v3 -> v4:
+1. Took patches applied by Jonathan to recent tag 'cxl-2025-07-03'.
+2. Add few more improvements to maintenance PPR[ patch 6] and sparing
+   [patch 7] feature patches.
+
+v2 -> v3:
+1. Changes for the feedback from Jonathan on v2.
+   https://lore.kernel.org/all/20250619151619.1695-1-shiju.jose@huawei.com/
+  1.1. https://lore.kernel.org/all/20250620150342.000055aa@huawei.com/
+    - Wrap this is sub 70 and should aim for about 75 for commit descriptions.
+    - hdr->ld_id = ld_id; to stw_le_p(&hdr->ld_id, ld_id); in cxl_assign_event_header()
+    - Make maint_class, maint_subclass, ld_id and head_id as optional parameters in QMP for
+      relevant events
+    - In QMP rename maint-class to maint-op-class, maint_subclass to maint-op-subclass
+      In functions, rename parameters, class to maint_op_class, subclass to maint_op_subclass etc.  
+  1.2. https://lore.kernel.org/all/20250620151314.0000535c@huawei.com/ 
+    - Make cme-ev-flags and cme-count for general media events as optional parameters in the QMP.
+    - Make cme-ev-flags and cvme-count for DRAM event as optional parameters in the QMP.
+  1.3. https://lore.kernel.org/all/20250620151655.00001cea@huawei.com/
+    - Add variable declarations at start of the local scope.
+  1.4. https://lore.kernel.org/all/20250620154052.00002a17@huawei.com/
+    - Adjust indent style  in few places.
+    - Add support for produce a Memory Sparing Event Record and enabled for
+      ppr maintenance request.
+    - Replaced hard coded values in few switch-cases with macro definition in few places.
+    - Replaced CXL_MBOX_UNSUPPORTED with CXL_MBOX_INVALID_INPUT.
+  1.5. https://lore.kernel.org/all/20250620154813.00002bbd@huawei.com/
+    - Add support for memory sparing resource availability.
+    - LOG_UNIMP logs for sparing maint op removed.
+    - Replaced CXL_MBOX_UNSUPPORTED with CXL_MBOX_INVALID_INPUT.
+               
+v1 -> v2:
+1. QMP CXL event injection code has updated for the following
+   change in CXL spec r3.2 Table 8-55. Common Event Record Format,
+   field: Event Record Flags. Length of this field has changed
+   from 2 bytes to 3 bytes. 
+2. Rebase to recent tag 'cxl-2025-06-10'.
+
+Davidlohr Bueso (1):
+  hw/cxl: Add Maintenance support
+
+Shiju Jose (6):
+  hw/cxl/events: Update for rev3.2 common event record format
+  hw/cxl/events: Updates for rev3.2 general media event record
+  hw/cxl/events: Updates for rev3.2 DRAM event record
+  hw/cxl/events: Updates for rev3.2 memory module event record
+  hw/cxl/cxl-mailbox-utils: Move declaration of scrub and ECS feature
+    attributes in cmd_features_set_feature()
+  hw/cxl: Add emulation for memory sparing control feature
+
+ hw/cxl/cxl-events.c         |   3 +-
+ hw/cxl/cxl-mailbox-utils.c  | 579 +++++++++++++++++++++++++++++++++++-
+ hw/mem/cxl_type3.c          | 266 ++++++++++++++++-
+ hw/mem/cxl_type3_stubs.c    |  41 ++-
+ include/hw/cxl/cxl_device.h | 142 ++++++++-
+ include/hw/cxl/cxl_events.h |  85 +++++-
+ qapi/cxl.json               | 106 ++++++-
+ 7 files changed, 1180 insertions(+), 42 deletions(-)
+
 -- 
-2.50.1
+2.43.0
 
