@@ -1,193 +1,192 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E594285C87
-	for <linux-cxl@vger.kernel.org>; Mon, 21 Jul 2025 10:35:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FF0F1B0414
+	for <linux-cxl@vger.kernel.org>; Mon, 21 Jul 2025 11:16:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753094155; cv=none; b=hnJ10KxwjoX1a7FrgRvU63mjyFzhaaWq7Pqpi62CWXh6Prp5b5XKgNJSNb6OmrfRKKJgDLWeYbb6c+yCMbwUXVAq3cYxkw6UbSjZjg3JeKjMu5vRvitO3C/j9ZBdoGIuiG5gC0fKFVeHpQAekuTXaVJnr9PPeQI9GMRJs03n5Gg=
+	t=1753096580; cv=none; b=sZFJ/uZjQW7M7DfibiHKIegBPvdiG+FosAvq0WGLfrPWpX7MUnNhkVehCO1Mi9OMaJYpUkUokKVG9z81EEqH1iXTSjE/yW0N1YfwgZC10ivFkF6/gzgI2HwQcApIw6GRlmvD+F2zTnt+bjufKyWpcievPZAaDRBGo2M1YG5RE84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753094155; c=relaxed/simple;
-	bh=Vtm4XdxZwgeAvnlm6RY0eCclELyAMeUZTWsaRXukuo0=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mLd1sldrTCGRF9kUY6SgA8XAMw/w6BUhYpRcQBS578LcNO7+mIJXyn2XhAqrpAC/i/aT6GcUzPl+tTc9QyNO+Nc70QX5dzHcO5ln25yMWvZhdWdLGjEQCDb58O7tpa8mumCDprxq7+h0RnqfCgWqU6fXeS6e2Fs2leNd/EasFR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4blxXg3k2vz6L4sy;
-	Mon, 21 Jul 2025 18:32:03 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8D544140114;
-	Mon, 21 Jul 2025 18:35:50 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 21 Jul
- 2025 12:35:50 +0200
-Date: Mon, 21 Jul 2025 11:35:48 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Alison Schofield <alison.schofield@intel.com>
-CC: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan
- Williams <dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v3 2/4] cxl/region: Introduce SPA to DPA address
- translation
-Message-ID: <20250721113548.0000520d@huawei.com>
-In-Reply-To: <aHgZEbvyuf4h0Kk6@aschofie-mobl2.lan>
-References: <cover.1752365427.git.alison.schofield@intel.com>
-	<28eeffc8905e658dc3ed62a7c52e030cbcfd5158.1752365427.git.alison.schofield@intel.com>
-	<20250716115226.000067fc@huawei.com>
-	<aHgZEbvyuf4h0Kk6@aschofie-mobl2.lan>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1753096580; c=relaxed/simple;
+	bh=so+Fefc6GPmzzqKg0G24dDncTq8EtCjoOCRd/IPStE8=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=YF8iDjkro6RU+fZc8OJd91wnPPwCAq5C0FDuNi+Tn5cy56kwXiLRXCW+EgroPR7jIE9cn+i4lKzF3euV6NovDjw1y5L9nGAw9Hzwg25urL7Z8vaK/Zm78ioa74T3uVkfZ+GSLpsCcY5gtmAajd4fY3YYAmCfPnXYBeqdG0WqJL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=bUOdBFQm; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="bUOdBFQm"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-749068b9b63so2742768b3a.0
+        for <linux-cxl@vger.kernel.org>; Mon, 21 Jul 2025 04:16:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1753096579; x=1753701379; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=so+Fefc6GPmzzqKg0G24dDncTq8EtCjoOCRd/IPStE8=;
+        b=bUOdBFQmlkdB3+o8uqoZEX2dZy7xW9hmYf/so8+McdQCY+SOuialNoxRLoXZaTE7vy
+         jg3q2x8Bklm1itsfCfPueFUjk011IZxnwyKOgO2rKiMK30QPEN35TkjsarV5dpIWJVWE
+         AmNsqPqJcrYppLllGqn9FmzwXAbZVDlqXSBY0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753096579; x=1753701379;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=so+Fefc6GPmzzqKg0G24dDncTq8EtCjoOCRd/IPStE8=;
+        b=mTvAO85x+ZBWvIOrXgu0zQIAAaeSszmV4FbfsdujOFVECDg/NxGEudhmGxU2bO5yWb
+         8HSx6BKKtUamB8twSRUf8dTsJ75F39lzETWMw5G/d42gMKjFwkZaWR9IRSD1JDxgrdup
+         hsCrCIMNC+n9jYtAAWq+IDDBwC1Lhb9LqwqqKxiwu26ilNQdsB8Qd9LzM3hhkFgcNEWf
+         qaisAiLL2qVVIHfMjjHXMMMVgdH/ilGjbZKkyBUD2faZxoPLUuBJzdsBu6RJLRMHsej1
+         OsYyMF/3FthGw5672Ws2d8aDYhhCq6n7AmeDmgiXsHBIXTCCog2gqIgP2RtpgN0pwwcG
+         Rl3g==
+X-Forwarded-Encrypted: i=1; AJvYcCV6sPLnEC0r21+/hDM1qttsvwPN08v0JcohtjSaFJGdp1+doI45zO8Eh75VKVm2ea5b7n2g7C/7gfg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6POcQ+W5yDt/lBNzIGP9ejpRdCI6CipFs/qfOOTm25UuLjRO3
+	46VEIkvKQfx3CvSNfv3gQWPRKDZa0l9TaLPZ0EDNaWsgjKGaySwQYQnjZ0+fScCHSj89EJEYlVx
+	4k+9D20bjsJOe/2PXcfb55fB1w8oFPr2qfyOPtGCUGwWsQKS1ArxgAA==
+X-Gm-Gg: ASbGncs5snSoUWyZNzoXtaUxmSTKH7jeBzqOfe+0D8Euvy+stHGZtdtsoSwdfXnLPoJ
+	VEe6UWN/J1Ez0c0p7ukv+AUDQ6bpDSqKi1C1/NqAoXYqVnwXw0Yq7cz8v82tm9UGJ3Am6yMPnnK
+	6rSa7GfTWrLkdmgIaWYfhqccfAfOArA43VzeZ8ckQIe3wezDSCECfA0lxmLI/KagqzWHkCfOvK+
+	o5vxhCX
+X-Google-Smtp-Source: AGHT+IGLsmPhTjs5o9UzpNB4DkuFhSwm3j3by4dY8Jo0B5qnLBhFzQhpDoTncxUpdpyFVmYabrflB1foyX4Ub2haS8U=
+X-Received: by 2002:a17:90a:fc46:b0:2ee:d371:3227 with SMTP id
+ 98e67ed59e1d1-31c9e7617d1mr32332564a91.17.1753096578697; Mon, 21 Jul 2025
+ 04:16:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
- frapeml500008.china.huawei.com (7.182.85.71)
+From: Raghu Halharvi <raghu.halharvi@broadcom.com>
+Date: Mon, 21 Jul 2025 16:46:07 +0530
+X-Gm-Features: Ac12FXwFhbWr8EUDS6mgwGJ6m7bntVcYbjtDTrwGrVLsetWofSsELQUV2fMguQc
+Message-ID: <CAEDZ0BRrt1TBu+Bwc0yK4x9OiK63zXa8ORg4SSdCLu-OLKcXOQ@mail.gmail.com>
+Subject: Does linux kernel support PCIe System Firmware Intermediary(SFI)
+To: linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="000000000000db58ac063a6e9afd"
 
-On Wed, 16 Jul 2025 14:26:41 -0700
-Alison Schofield <alison.schofield@intel.com> wrote:
+--000000000000db58ac063a6e9afd
+Content-Type: multipart/alternative; boundary="000000000000d4c3a7063a6e9add"
 
-> On Wed, Jul 16, 2025 at 11:52:26AM +0100, Jonathan Cameron wrote:
-> > On Sat, 12 Jul 2025 19:37:55 -0700
-> > alison.schofield@intel.com wrote:
-> >   
-> > > From: Alison Schofield <alison.schofield@intel.com>
-> > > 
-> > > Add infrastructure to translate System Physical Addresses (SPA) to
-> > > Device Physical Addresses (DPA) within CXL regions. This capability
-> > > will be used by follow-on patches that add poison inject and clear
-> > > operations at the region level.
-> > > 
-> > > The SPA-to-DPA translation process follows these steps:
-> > > 1. Apply root decoder transformations (SPA to HPA) if configured.
-> > > 2. Extract the position in region interleave from the HPA offset.
-> > > 3. Extract the DPA offset from the HPA offset.
-> > > 4. Use position to find endpoint decoder.
-> > > 5. Use endpoint decoder to find memdev and calculate DPA from offset.
-> > > 6. Return the result - a memdev and a DPA.
-> > > 
-> > > It is Step 1 above that makes this a driver level operation and not
-> > > work we can push to user space. Rather than exporting the XOR maps for
-> > > root decoders configured with XOR interleave, the driver performs this
-> > > complex calculation for the user.
-> > > 
-> > > Steps 2 and 3 follow the CXL Spec 3.2 Section 8.2.4.20.13
-> > > Implementation Note: Device Decode Logic.
-> > > 
-> > > These calculations mirror much of the logic introduced earlier in DPA
-> > > to SPA translation, see cxl_dpa_to_hpa(), where the driver needed to
-> > > reverse the spec defined 'Deivce Decode Logic'.  
-> > 
-> > Device
-> >   
-> > > 
-> > > Signed-off-by: Alison Schofield <alison.schofield@intel.com>  
-> > Hi Alison,
-> > 
-> > A few minor things inline.   
-> > > ---
-> > > 
-> > > Changes in v3:
-> > > Check return of ways_to_eiw() & granularity_to_eig() (Jonathan)
-> > > Collapse a header comment into pos and offset blocks (Jonathan)
-> > > Calc pos for 3,6,12 using actual ways, not always 3 (Jonathan)
-> > > Mask off bottom bits in < 8 offset case (Jonathan)
-> > > Wrap code comments closer to column 80 (Jonathan)
-> > > Use a continue to un-nest a for loop. (Jonathan)
-> > > 
-> > >  drivers/cxl/core/region.c | 93 +++++++++++++++++++++++++++++++++++++++
-> > >  1 file changed, 93 insertions(+)
-> > > 
-> > > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > > index a2ba19151d4f..404f69864d61 100644
-> > > --- a/drivers/cxl/core/region.c
-> > > +++ b/drivers/cxl/core/region.c
-> > > @@ -2956,6 +2956,99 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
-> > >  	return hpa;
-> > >  }
-> > >  
-> > > +struct dpa_result {
-> > > +	struct cxl_memdev *cxlmd;
-> > > +	u64 dpa;
-> > > +};
-> > > +
-> > > +static int __maybe_unused region_offset_to_dpa_result(struct cxl_region *cxlr,
-> > > +						      u64 offset,
-> > > +						      struct dpa_result *result)
-> > > +{
-> > > +	struct cxl_region_params *p = &cxlr->params;
-> > > +	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
-> > > +	struct cxl_endpoint_decoder *cxled;
-> > > +	u64 hpa, hpa_offset, dpa_offset;
-> > > +	u64 bits_upper, bits_lower;
-> > > +	u16 eig = 0;
-> > > +	u8 eiw = 0;
-> > > +	int pos;
-> > > +
-> > > +	lockdep_assert_held(&cxl_rwsem.region);
-> > > +	lockdep_assert_held(&cxl_rwsem.dpa);
-> > > +
-> > > +	if (granularity_to_eig(p->interleave_granularity, &eig) ||
-> > > +	    ways_to_eiw(p->interleave_ways, &eiw))
-> > > +		return -ENXIO;  
-> > 
-> > Why eat return values to replace with ENXIO? I'd prefer
-> > 
-> > 	rc = granularity_to_eig(p->interleave_granularity, &eig);
-> > 	if (rc)
-> > 		return rc;
-> > 
-> > 	rc = ways_to_eiw(p->interleave_ways, &eiw);
-> > 	if (rc)
-> > 		return rc;  
-> 
-> Ah, I should never have tried to appease you with a shortcut.
-> Let's revisit.
-> 
-> In v1,v2 it was this-
-> +       ways_to_eiw(p->interleave_ways, &eiw);
-> +       granularity_to_eig(p->interleave_granularity, &eig);
-> 
-> And you asked to check the return value. I *should* have said "No, the
-> input validation ensures these are valid. That is, when storing these
-> values in the region params, we do eiw_to_ways() and check that rc
-> value when storing. I'll note that this is not the first instance of
-> using these functions without checking return value. 
-> 
-> How about one of these:
-> 
-> Original:
-> +       ways_to_eiw(p->interleave_ways, &eiw);
-> +       granularity_to_eig(p->interleave_granularity, &eig);
-> 
-> Original w comment:
-> + 	/* Input validation ensures valid ways and gran */
-> +       ways_to_eiw(p->interleave_ways, &eiw);
-> +       granularity_to_eig(p->interleave_granularity, &eig);
+--000000000000d4c3a7063a6e9add
+Content-Type: text/plain; charset="UTF-8"
 
-That's fine.
+Hello,
 
-Personally I'd just check them separately and return the errors.
-Sometimes it's less effort to add long hand error checks that
-never fail (in slow paths!) than it is to explain why not ;)
+Not sure if this is the right forum but wanted to know if the Linux kernel
+supports SFI/eSFI?
 
-Jonathan
+Regards
+Raghu
 
-> 
-> Original w caution:
-> +	if (!p->interleave_ways || !p->interleave_granularity)
-> +		return -ENXIO;
-> +       ways_to_eiw(p->interleave_ways, &eiw);
-> +       granularity_to_eig(p->interleave_granularity, &eig);
-> 
-> 
-> -- Alison
-> 
-> 
+--000000000000d4c3a7063a6e9add
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr">Hello,<div><br></div><div>Not sure if this is the right=C2=
+=A0forum but wanted to know if the Linux kernel supports SFI/eSFI?</div><di=
+v><br></div><div>Regards</div><div>Raghu</div></div>
+
+--000000000000d4c3a7063a6e9add--
+
+--000000000000db58ac063a6e9afd
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+Q9xb8vqQRgNZeTulkvr0FxHUmdExlx0jwHzEMf+mZi3lz60JiVNv0GwaULFRyiOKNeGY0CofnIzi
+mCnGN94BevxEkLawq1aHdiVo/wcQe2siEO892b6Ee2VycQAO1J5SAcbDKUaGdcrISXU1FKFFmRYq
+p+GZ3VaagiEs8bDCSiIAPXe3mbIZh0fbaXQ6R+RqUdnO9qL+jKAX8XXpUfcCAwEAAaOCAdwwggHY
+MA4GA1UdDwEB/wQEAwIFoDCBkwYIKwYBBQUHAQEEgYYwgYMwRgYIKwYBBQUHMAKGOmh0dHA6Ly9z
+ZWN1cmUuZ2xvYmFsc2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjZzbWltZWNhMjAyMy5jcnQwOQYIKwYB
+BQUHMAGGLWh0dHA6Ly9vY3NwLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjZzbWltZWNhMjAyMzBlBgNV
+HSAEXjBcMAkGB2eBDAEFAwEwCwYJKwYBBAGgMgEoMEIGCisGAQQBoDIKAwIwNDAyBggrBgEFBQcC
+ARYmaHR0cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBBBgNV
+HR8EOjA4MDagNKAyhjBodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjZzbWltZWNhMjAy
+My5jcmwwJgYDVR0RBB8wHYEbcmFnaHUuaGFsaGFydmlAYnJvYWRjb20uY29tMBMGA1UdJQQMMAoG
+CCsGAQUFBwMEMB8GA1UdIwQYMBaAFAApNp5ceroPry1QLdugI4UYsKCSMB0GA1UdDgQWBBQkK6Ai
+DjZK8tB4SM50rdG0OzhfbDANBgkqhkiG9w0BAQsFAAOCAgEAiiTpitFV6vMrqY/21KDymGmFQTLk
+1Fx0DLC90lv18HvUYplkx29FEvPQVZbepHkIsF8/YttS9ESBDOaSoZ5/pJ/ZLy1I1ECugnqML6+L
+yWfq1w6zjIs1IsN7Vs5IoNRdBr6NkgMfHhOx9yWwfoIMYfBumf4SqpGgGtYs8EYMRylRSA+zxOcH
+api65fSgYw+2+XVNOcVZg3+HNxX/5ACUcLM2by3+mANnrjxj5UwdDFgYVZMdpExw5fHQ5GM+VLSW
+t2N1XMfQJMAEulT8AoQFRCwawedlI81I+tIc0wTYpQOh0xYUDTxmtxDbWlfL9NMk4plswvAl5cBa
+5VJy0E+AVuLkwB02OI+2+O0UIJvaTbepEduotxyqNt5oJzmgqZZ3gqYr0cV7ZOeYAxeYxTSbl0zc
+EMLSL1zyMfTdwgEadxKFEBfnha1GOMbkGdm97hxmA3GbANjSGoLQg+FuFb85TQzSO3HW2baFo1iW
+uO6oQDa/nmzWa9HfkEyu35hxZx3Q2XTS0eEj/L7LNkef1H3e9KBOk5UZ+7d4enb0rfe//lkmRiVw
+d71xM1eQFLg7qC2nxA2KNPSp4riYQyB+07u/sy/TkYAkYQqBcosBGY+lg70abCH5nCPjlVvsYXWG
+ePYxD8D+T2e2mdacrxg5OocASDBZrXiFGBQQPxoo/VW7koMxggJXMIICUwIBATBiMFIxCzAJBgNV
+BAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSgwJgYDVQQDEx9HbG9iYWxTaWduIEdD
+QyBSNiBTTUlNRSBDQSAyMDIzAgwJTk8itsWDK67bXzQwDQYJYIZIAWUDBAIBBQCggccwLwYJKoZI
+hvcNAQkEMSIEIMNAPMtwL2VJu6iWlXBZMIPtidHHj/YFh2RnphrGnrLpMBgGCSqGSIb3DQEJAzEL
+BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDcyMTExMTYxOVowXAYJKoZIhvcNAQkPMU8w
+TTALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkq
+hkiG9w0BAQcwCwYJYIZIAWUDBAIBMA0GCSqGSIb3DQEBAQUABIIBABHnbuMFPp2ZwUGDlW2rH/Fl
+owkl1VSsdROHEIdIuaJAtqSIRDQB9JzOm+OKT8bjBMSKkVRZ+wef7lyQFkaUY50gxzEY6UAT+2j4
+vrc5rlx+FRiJO70+1dn6/+ZwWDUZIIhBJ/COnogJL6MT94SaQIKY/LF5Ha7Iu24KAjpogFJGVPS9
+Q7rDFmttmfZo6pU3YmZWOx1GYgLMPme34aq++Oo214VGQsm+5UAtxAKO1UeG7RYZdhoV6WiYsshl
+rmkh63W4bb2nZUGE9DonzXH7rQXUAq8fjuSBM5/pntgaDK4leQxB20L1oSJYiR8awqE+sRuL8Mt2
+xjYCEEdQyT73Xj8=
+--000000000000db58ac063a6e9afd--
