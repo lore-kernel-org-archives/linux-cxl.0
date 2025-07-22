@@ -1,96 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 535C32BE057;
-	Tue, 22 Jul 2025 07:57:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8218F189902;
+	Tue, 22 Jul 2025 09:24:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753171057; cv=none; b=b0QgwqwmSRtaM6jviIDragRELjFQzj77bdVaPz9f4OlqpfvJzo5OkEwEyEab/UIBFVZkGQ081Q0ZzNk1XZkch3jz9dMfatnUR11xfWe+d1/q6j7+kI13Pxlch2Ut4/hTaWDGF5muGkglcuZYCgnJSXM0bchjIM1RSzdSFcwTBF8=
+	t=1753176272; cv=none; b=DlUlAhNpldZkz0ooqfPapBxY/KnuOA6TrrMT4w0sE6uE1V/ZuM+iGZC/sEMdeniXDgqhatVUoy1nc+Q0XO/MtZyOk+zNL3htQRzS5nAECnc590d4MdaZ+yrD5dPn/SLP6rt6Sw6FnM7u7UY1lU2VH/ZNOnzuGjgw+1iHWXoGOKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753171057; c=relaxed/simple;
-	bh=wEUHDmsgHVPe5kSmdb1Wec3UqL9t1n89LTQEk85htD0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c+bjYFj5zhts9XqsCmalseJtrMDO/k1FW8hik5jNKWqA9Rmq2m4ZOXUT7WRueMinpHMuWvY5h3g989Um6Kssa8PnGHBwFvXNJMhauuBEAvj+ZQI+ybpLp3U3oEvymHGBZw+Od20RaAa1xjvOPZF4zrmYnuJovCP8sulZaR3ruqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=JdcFf6pg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753176272; c=relaxed/simple;
+	bh=Ksr4RcpyiaVxvdAz9Ft+gR94b9IMq2d1CEO85zHMm3o=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ozdi7zxKbUqjVpS7bhPaGPOyba+XSkcY455kr2390EfonGP85biUUp9cXiGLNr9gVbbeTJ+MgwGtO0D32hkHab3nWo1xwF/bGoaBk/cKjpIi85g6kTgFijANpAAaCz9w+glrzCbw2yUhCsIgjDjHfmCUPY2N4E2iLwGsY0Fld2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MjJRYeJZ; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="JdcFf6pg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E9B5C4CEEB;
-	Tue, 22 Jul 2025 07:57:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1753171056;
-	bh=wEUHDmsgHVPe5kSmdb1Wec3UqL9t1n89LTQEk85htD0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JdcFf6pgjhk/nGBgS+COUsHqDSedZPrRp7PmpD9jj0Sy18W7SgAXvzKROr973tS19
-	 GmDs4Z2sApDs+Xt0VQpiOqw2NeYSo/wv/f2IDtHwKTBYe7ze0KkyW9m1MQ29aRc7hI
-	 g+r9qkREXxILI6FRvwKRc9d4sfo0vJI9m3c+MSdQ=
-Date: Tue, 22 Jul 2025 09:57:33 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MjJRYeJZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1753176271; x=1784712271;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=Ksr4RcpyiaVxvdAz9Ft+gR94b9IMq2d1CEO85zHMm3o=;
+  b=MjJRYeJZpalrlHw+UcPoLhG0hsnDsFWT4Vl198E033SFSD8VB0j88IgK
+   tsdjYlB+nUlOBtv2gmxqzWzz9v+1Vz7qcqmQRLBAvR7KjSNbfuZ3TSzwx
+   6qaTp8+EIIpqjbs7F1OpPp5qYQBh9Dmgn1p5WW0Z46zH98v9JSfFuaIof
+   mP7E3btZygMf7XIArG3cCmTUHgD3AJV5tezE1D566DfnmyOrKeYuvS5xy
+   aEiF4fT4jF51WLsfHPlb0dYBL8C8bnah7e9LuE9zS+DhxKao1yeS5i3uh
+   FKU4YUYIuD8NilU9B5NSz6N2dJHzhdmg7f0JBMvNqHTQ++GDVFQ8Titq4
+   w==;
+X-CSE-ConnectionGUID: dXx7JM3uS8aac5OU3dpXgA==
+X-CSE-MsgGUID: L+02RNx2QLSMDZdllhWsjQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11499"; a="55574717"
+X-IronPort-AV: E=Sophos;i="6.16,331,1744095600"; 
+   d="scan'208";a="55574717"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2025 02:24:30 -0700
+X-CSE-ConnectionGUID: cbehGU95QkWPRtX5+LVZGA==
+X-CSE-MsgGUID: 7OhfXV8JRdOAnLadikdZ1w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,331,1744095600"; 
+   d="scan'208";a="163133052"
+Received: from vpanait-mobl.ger.corp.intel.com (HELO [10.245.244.202]) ([10.245.244.202])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2025 02:24:17 -0700
+Message-ID: <ffd58e1a8b51c98cac9be49e85d367f1a3a24c2d.camel@linux.intel.com>
+Subject: Re: [PATCH v3 3/8] drm/xe: Fix typo "notifer"
+From: Thomas =?ISO-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>
 To: WangYuli <wangyuli@uniontech.com>
 Cc: airlied@gmail.com, akpm@linux-foundation.org,
-	alison.schofield@intel.com, andrew+netdev@lunn.ch,
-	andriy.shevchenko@linux.intel.com, arend.vanspriel@broadcom.com,
-	bp@alien8.de, brcm80211-dev-list.pdl@broadcom.com,
-	brcm80211@lists.linux.dev, colin.i.king@gmail.com,
-	cvam0000@gmail.com, dan.j.williams@intel.com,
-	dave.hansen@linux.intel.com, dave.jiang@intel.com,
-	dave@stgolabs.net, davem@davemloft.net,
-	dri-devel@lists.freedesktop.org, edumazet@google.com,
-	guanwentao@uniontech.com, hpa@zytor.com,
-	ilpo.jarvinen@linux.intel.com, intel-xe@lists.freedesktop.org,
+ alison.schofield@intel.com, 	andrew+netdev@lunn.ch,
+ andriy.shevchenko@linux.intel.com, 	arend.vanspriel@broadcom.com,
+ bp@alien8.de, brcm80211-dev-list.pdl@broadcom.com, 
+	brcm80211@lists.linux.dev, colin.i.king@gmail.com, cvam0000@gmail.com, 
+	dan.j.williams@intel.com, dave.hansen@linux.intel.com,
+ dave.jiang@intel.com, 	dave@stgolabs.net, davem@davemloft.net,
+ dri-devel@lists.freedesktop.org, 	edumazet@google.com,
+ gregkh@linuxfoundation.org, guanwentao@uniontech.com, 	hpa@zytor.com,
+ ilpo.jarvinen@linux.intel.com, intel-xe@lists.freedesktop.org, 
 	ira.weiny@intel.com, j@jannau.net, jeff.johnson@oss.qualcomm.com,
-	jgross@suse.com, jirislaby@kernel.org, johannes.berg@intel.com,
-	jonathan.cameron@huawei.com, kuba@kernel.org, kvalo@kernel.org,
-	kvm@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+ jgross@suse.com, 	jirislaby@kernel.org, johannes.berg@intel.com,
+ jonathan.cameron@huawei.com, 	kuba@kernel.org, kvalo@kernel.org,
+ kvm@vger.kernel.org, linux-cxl@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
 	linux-wireless@vger.kernel.org, linux@treblig.org,
-	lucas.demarchi@intel.com, marcin.s.wojtas@gmail.com,
-	ming.li@zohomail.com, mingo@kernel.org, mingo@redhat.com,
-	netdev@vger.kernel.org, niecheng1@uniontech.com,
-	oleksandr_tyshchenko@epam.com, pabeni@redhat.com,
-	pbonzini@redhat.com, quic_ramess@quicinc.com, ragazenta@gmail.com,
-	rodrigo.vivi@intel.com, seanjc@google.com, shenlichuan@vivo.com,
-	simona@ffwll.ch, sstabellini@kernel.org, tglx@linutronix.de,
-	thomas.hellstrom@linux.intel.com, vishal.l.verma@intel.com,
-	x86@kernel.org, xen-devel@lists.xenproject.org,
-	yujiaoliang@vivo.com, zhanjun@uniontech.com
-Subject: Re: [PATCH v2 6/8] serial: 8250_dw: Fix typo "notifer"
-Message-ID: <2025072252-halves-sadness-18dc@gregkh>
-References: <BD5C52D2838AEA48+20250715134050.539234-1-wangyuli@uniontech.com>
- <2BF1749F02ADE664+20250715134407.540483-6-wangyuli@uniontech.com>
- <2025071607-outbid-heat-b0ba@gregkh>
- <634BA467821D37FE+0b2ace38-07d9-4500-8bb7-5a4fa65c4b9f@uniontech.com>
+ lucas.demarchi@intel.com, 	marcin.s.wojtas@gmail.com, ming.li@zohomail.com,
+ mingo@kernel.org, 	mingo@redhat.com, netdev@vger.kernel.org,
+ niecheng1@uniontech.com, 	oleksandr_tyshchenko@epam.com, pabeni@redhat.com,
+ pbonzini@redhat.com, 	quic_ramess@quicinc.com, ragazenta@gmail.com,
+ rodrigo.vivi@intel.com, 	seanjc@google.com, shenlichuan@vivo.com,
+ simona@ffwll.ch, sstabellini@kernel.org, 	tglx@linutronix.de,
+ vishal.l.verma@intel.com, wangyuli@deepin.org, x86@kernel.org, 
+	xen-devel@lists.xenproject.org, yujiaoliang@vivo.com, zhanjun@uniontech.com
+Date: Tue, 22 Jul 2025 11:24:15 +0200
+In-Reply-To: <94190C5F54A19F3E+20250722073431.21983-3-wangyuli@uniontech.com>
+References: <576F0D85F6853074+20250722072734.19367-1-wangyuli@uniontech.com>
+	 <94190C5F54A19F3E+20250722073431.21983-3-wangyuli@uniontech.com>
+Organization: Intel Sweden AB, Registration Number: 556189-6027
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <634BA467821D37FE+0b2ace38-07d9-4500-8bb7-5a4fa65c4b9f@uniontech.com>
 
-On Tue, Jul 22, 2025 at 03:22:18PM +0800, WangYuli wrote:
-> Hi greg k-h,
-> 
-> On 2025/7/16 16:08, Greg KH wrote:
-> > > Signed-off-by: WangYuli <wangyuli@uniontech.com>
-> > Is your name all one word like that, or should there be a " " between
-> > them?
-> 
-> If I were to follow Western naming conventions, my name would be written as
-> 'Yuli Wang'.
-> 
-> However, frankly, I find it unnecessary and can't be bothered to follow
-> their customs, unless a maintainer strongly insists. (For example, you can
-> see that my signature on commits for the LoongArch subsystem is different
-> from my other contributions).
-> 
-> Since Chinese names are written without any spaces in Chinese characters, I
-> don't think it matters.
+On Tue, 2025-07-22 at 15:34 +0800, WangYuli wrote:
+> There is a spelling mistake of 'notifer' in the comment which
+> should be 'notifier'.
+>=20
+> Signed-off-by: WangYuli <wangyuli@uniontech.com>
+Reviewed-by: Thomas Hellstr=C3=B6m <thomas.hellstrom@linux.intel.com>
 
-Then use your Chinese name, don't feel like you need to change it to any
-other naming convention.  There's no requirement here at all to do so.
+> ---
+> =C2=A0drivers/gpu/drm/xe/xe_vm_types.h | 2 +-
+> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/gpu/drm/xe/xe_vm_types.h
+> b/drivers/gpu/drm/xe/xe_vm_types.h
+> index 1979e9bdbdf3..0ca27579fd1f 100644
+> --- a/drivers/gpu/drm/xe/xe_vm_types.h
+> +++ b/drivers/gpu/drm/xe/xe_vm_types.h
+> @@ -259,7 +259,7 @@ struct xe_vm {
+> =C2=A0		 * up for revalidation. Protected from access with
+> the
+> =C2=A0		 * @invalidated_lock. Removing items from the list
+> =C2=A0		 * additionally requires @lock in write mode, and
+> adding
+> -		 * items to the list requires either the
+> @userptr.notifer_lock in
+> +		 * items to the list requires either the
+> @userptr.notifier_lock in
+> =C2=A0		 * write mode, OR @lock in write mode.
+> =C2=A0		 */
+> =C2=A0		struct list_head invalidated;
 
-thanks,
-
-greg k-h
