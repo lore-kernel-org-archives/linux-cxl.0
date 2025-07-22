@@ -1,267 +1,92 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF06723A98E;
-	Tue, 22 Jul 2025 11:42:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8FBEA32;
+	Tue, 22 Jul 2025 14:04:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753184565; cv=none; b=jCvqXchAG5NRgSfxDen4gZiw6cdpexzZrJiWv+nh7sE8Om9Lquqiqx9OlmF8ywdu8L6ijwcckIxouhLmvtl0XkPNj2wiHgbm3yEK8pgrOEzrOTKAhvgcCI5qmxjlWL7/bFn4aw/NTrC9W+2ILLhEn13Ocz/T2b/gxn/QBUhMQ4s=
+	t=1753193076; cv=none; b=QYrH8yv541/qVHtMGvrrYe/YyEh42wfzY78zv6JTRHRe3uOlfq7IpW5vgMjWoxdhu2iigHs7U1UTEow8YNVu7y9H68UN53PGUzGGPIMFmEr9uVQQUmtWkAzSxGWvY2XygNSGqqFD9SG5phLD/l8TPg1x9O6jI5+KHtExv4xvkbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753184565; c=relaxed/simple;
-	bh=GA03q4he4YGapHfFDQKiYxzVzT9drEI8wAp2YAmeEZg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Av0oNwRHFP8gNaZy0cOLXC+m6ajqejQFgofyIrEr4arWxVWWkrKE37Xgs7gaQRukRuVfCUTzDCosQs+sFlv5yziFd/G9TZtJ9RNPMOksb5cvfzJ2ByWcfaUiGoj2Q4DUfRzX2EbWnOpS2IaW+h+EayL5DXDD9uXsW9K7VO/+aRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MWjoNI4R; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1753193076; c=relaxed/simple;
+	bh=uPFuamjn8JgXag9RFI74J/C90ZWWlQSjqj7GpBmomJ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fSq1lqGBOzEvEGRxi7yvn7WM/M3aVugrrA2k4LBHar+XQvJ+b8q0AO9DSkWUcuxj+/nb9kB6TDW4fa+RoigRZj5YaLXCW9CwV27i6sosh77R3uWXY4ikEMbBZuOGyvAKb57Ws8iV/rNyuP4UeDGotz5oOMH77XS28jSqBsdEyEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sWkFl8nC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MWjoNI4R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753184564; x=1784720564;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=GA03q4he4YGapHfFDQKiYxzVzT9drEI8wAp2YAmeEZg=;
-  b=MWjoNI4RUgKCBHSoKYEQaBqXPcW6bt0WzoNWtgwts2OiEShvvh9X7iTA
-   CwPz8c48yQ4cUPAtL2KRw2GmWgEnHh0whwy+TsU45piktpCccrnr0p/00
-   iL+HXVSaf9dePW9Hhm3XtBHCrLG/pHxFIXS7+miWed+05lmzrnuL2Byc6
-   PvJzIq6Zt2hrRxjygFc/4XbO7mxlz0tS24gzBmlFphfKXzWyh1qgfOIqz
-   3s/VZZK8lxMrdvGuapr7ys+kFSozuSA71zxCYeIS1qlkpPmgN8IfpaULf
-   cuFDUwq1b2Y9z4dUChJGERL/HXA8j01oZqpjRvYUiKwMowDdBaqRHwv/d
-   g==;
-X-CSE-ConnectionGUID: 9+s5KQ3ZTUubzZQX3uowHQ==
-X-CSE-MsgGUID: hSGLPBCzSAeVJ6HQ7Xe/YQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11499"; a="65998021"
-X-IronPort-AV: E=Sophos;i="6.16,331,1744095600"; 
-   d="scan'208";a="65998021"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2025 04:42:43 -0700
-X-CSE-ConnectionGUID: u2Rxq+g+SAWUjwPACPBklw==
-X-CSE-MsgGUID: S4xwkq4MTEO84wz1D5xfOA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,331,1744095600"; 
-   d="scan'208";a="163674521"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.65])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2025 04:42:39 -0700
-From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: Gregory Price <gourry@gourry.net>
-Cc: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, Jonathan Corbet <corbet@lwn.net>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject:
- Re: [PATCH v3] cxl: docs/driver-api/conventions resolve conflicts btw CFMWS,
- LMH, ED
-Date: Tue, 22 Jul 2025 13:42:35 +0200
-Message-ID: <8047110.oPnVEEUbh3@fdefranc-mobl3>
-In-Reply-To: <aH2PAju1rLxIbXXk@gourry-fedora-PF4VCD3F>
-References:
- <20250623152923.1048525-1-fabio.m.de.francesco@linux.intel.com>
- <17128669.tgchFWduMW@fdefranc-mobl3>
- <aH2PAju1rLxIbXXk@gourry-fedora-PF4VCD3F>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sWkFl8nC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85268C4CEF1;
+	Tue, 22 Jul 2025 14:04:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753193075;
+	bh=uPFuamjn8JgXag9RFI74J/C90ZWWlQSjqj7GpBmomJ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sWkFl8nCPLNDlOJMG6Ch0dE8liwQT/TjEDMiX0lMwJnuLusjuKrCzLod80NRSELUo
+	 u8NHIk9I5drvAO5b8cWaslWSSVtrI12ORXbU6cnC3czmox0Gpc/eBFVmQbv7WsXDHP
+	 7XI0tTvIdC3OANtPZeGtvVmL87/AUfVlow3h8BPE2czQ//X9ztlbTiQMaD2B0vzKbf
+	 q9hGEfFkRTSDPXvxHMcUnuRjST9bZDk/bPZV2PYpDIsFdoH6g089xiau1VqsOdWm+K
+	 5yrtXZWYlUbYU8EfrX/vfKb1ZfK13RF2n1xAXnRVjHWsiZpxmDlx7rVQTbvJetcEdK
+	 Bwqfe2NYx+UOw==
+Date: Tue, 22 Jul 2025 16:04:31 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Peter Rosin <peda@axentia.se>, Derek Kiernan <derek.kiernan@amd.com>, 
+	Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Wolfram Sang <wsa@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, 
+	Alison Schofield <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, 
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-cxl@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>, 
+	Horatiu Vultur <horatiu.vultur@microchip.com>, Steen Hegelund <steen.hegelund@microchip.com>, 
+	Luca Ceresoli <luca.ceresoli@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 15/28] i2c: core: Introduce i2c_get_adapter_physdev()
+Message-ID: <sk6dwbont52x7zt3woqghurkkkms72f3zxubbadi2gp2yj3sbw@wdstymdtzouc>
+References: <20250613134817.681832-1-herve.codina@bootlin.com>
+ <20250613134817.681832-16-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250613134817.681832-16-herve.codina@bootlin.com>
 
-On Monday, July 21, 2025 2:51:14=E2=80=AFAM Central European Summer Time Gr=
-egory Price wrote:
-> On Thu, Jul 17, 2025 at 04:14:13PM +0200, Fabio M. De Francesco wrote:
-> > The table above shows a real configuration copied from an x86 platform=
-=20
-> > where the Low Memory Hole (LMH) starts at 2GB.=20
-> >=20
-> > The"HDM Decoder Base/Size" refers specifically to the CXL Endpoint=20
-> > Decoders HPA range Base/Size. The first row of the table describes the=
-=20
-> > first window (CFMWS[0]), whose HPA rage base/size is 0/2GB, and the=20
-> > Endpoint Decoder that the CXL driver should match with that CFMWS,=20
-> > whose HPA range base/size is 0/3GB.
->=20
-> The only thing i ask is being more precise with decoder references.
->=20
-> HDM Decoder can refer to any of: root, switch, hb, or endpoint decoders.
->=20
-> Below you make this distinct in the explanation, but in the table it's
-> simply general "HDM Decoder".  All I ask is for a bit more clarity on
-> what decoder will contain what values to avoid further ambiguity.
->=20
-I agree, "HDM Decoder" was ambiguous. I will relabel it to "(intermediate)=
-=20
-Switch and Endpoint Decoders".
->
-> > The driver expects that the Endpoint Decoders HPA ranges to be containe=
-d=20
-> > into their corresponding Root Decoders. Furthermore, Linux fails to=20
-> > attach Endpoint decoders to already constructed CXL Regions because of=
-=20
-> > the same size discrepancy issue.=20
-> > >=20
-> > > I think you need to describe what the expected behavior is for what l=
-inux
-> > > will produce in terms of the decoder objects given the above.
-> > >
-> > The expected behavior is that Linux should be able to match the Endpoin=
-t=20
-> > Decoder with the Root Decoder range even if the CFMWS size is smaller=20
-> > than the Decoder's, as long as the latter adheres to the 256MB * interl=
-eave=20
-> > ways rule. Furthermore, Linux should be able to match the Endpoint deco=
-ders=20
-> > with already constructed CXL Regions and allow the attachment process t=
-o=20
-> > succeed.=20
-> >=20
->=20
-> You may also need to describe more than just the contents of the
-> endpoint decoder.  What would the content of any intermediate decoders
-> be (matching the root or matching the endpoint?).
->
-I think that the output of the simulation of a hole in the cxl_test=20
-mocked CXL topology, with a CFMWS HPA size of 3 * 256MiB, and Switch and=20
-Endpoint Decoders HPA sizes of 4 * 256MiB can help to clarify. The Region
-Interleave ways is 2.=20
+Hi Herve,
 
-In this example the CXL driver is patched and correctly deals with a=20
-simulated LMH that trimmed the CFMWS[0] range size and made it not aligned
-to 256MiB * IW.
+On Fri, Jun 13, 2025 at 03:47:55PM +0200, Herve Codina wrote:
+> The physical device providing an I2C adapter is the device that calls
+> i2c_add_adapter() or variants and i2c_del_adapter().
+> 
+> Most of the time this physical device is the parent of the adapter
+> device.
+> 
+> Exceptions exist with i2c muxes. Indeed, in case of i2c muxes, the
+> parent of the mux adapter device points to the adapter device the mux is
+> connected to instead of the physical of this mux adapter.
+> 
+> Introduce i2c_get_adapter_physdev() and a new physdev field in the
+> adapter structure in order to ease the adapter physical device
+> retrieval.
+> 
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 
-[root@fedora ndctl]# cxl list -RDu -r5
-[
-  {
-    "root decoders":[
-      {
-        "decoder":"decoder9.0",
-        "resource":"0x3ff010000000",
-        "size":"768.00 MiB (805.31 MB)",
-        "interleave_ways":1,
-        "max_available_extent":0,
-        "volatile_capable":true,
-        "qos_class":42,
-        "nr_targets":1,
-        "regions:decoder9.0":[
-          {
-            "region":"region5",
-            "resource":"0x3ff010000000",
-            "size":"768.00 MiB (805.31 MB)",
-            "type":"ram",
-            "interleave_ways":2,
-            "interleave_granularity":4096,
-            "decode_state":"commit"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "port decoders":[
-      {
-        "decoder":"decoder10.0",
-        "resource":"0x3ff010000000",
-        "size":"1024.00 MiB (1073.74 MB)",
-        "interleave_ways":1,
-        "region":"region5",
-        "nr_targets":1
-      },
-      {
-        "decoder":"decoder14.0",
-        "resource":"0x3ff010000000",
-        "size":"1024.00 MiB (1073.74 MB)",
-        "interleave_ways":2,
-        "interleave_granularity":4096,
-        "region":"region5",
-        "nr_targets":2
-      }
-    ]
-  },
-  {
-    "endpoint decoders":[
-      {
-        "decoder":"decoder28.0",
-        "resource":"0x3ff010000000",
-        "size":"1024.00 MiB (1073.74 MB)",
-        "interleave_ways":2,
-        "interleave_granularity":4096,
-        "region":"region5",
-        "dpa_resource":"0",
-        "dpa_size":"384.00 MiB (402.65 MB)",
-        "mode":"ram"
-      },
-      {
-        "decoder":"decoder23.0",
-        "resource":"0x3ff010000000",
-        "size":"1024.00 MiB (1073.74 MB)",
-        "interleave_ways":2,
-        "interleave_granularity":4096,
-        "region":"region5",
-        "dpa_resource":"0",
-        "dpa_size":"384.00 MiB (402.65 MB)",
-        "mode":"ram"
-      }
-    ]
-  }
-]
+Makes sense to me,
 
-The construction of Regions and subsequent attachment of Switch and=20
-Endpoint Decoders is based on matching Root Decoders and existing Regions
-with Switch and Endpoint Decoders. If these objects can't be matched=20
-between them, the Regions can't be constructed and/or attached with=20
-the Switch and Endpoint Decoders.    =20
+Reviewed-by: Andi Shyti <andi.shyti@kernel.org>
 
-The CXL driver can always match Endpoint Decoders with Switch Decoders=20
-because their HPA range sizes are the same regardless of LMH's. =20
-
-But with LMH's that trim the CFMWS HPA range to smaller sizes, a=20
-non-patched CXL driver can't match the Root Decoders and Regions with the=20
-Switch and Endpoint decoders. Therefore, the CXL Region construction and=20
-Decoders attachment can't succeed.
-      }
-    ]
-  }
-]
-
-The construction of Regions and subsequent attachment of Switch and=20
-Endpoint Decoders is based on matching Root Decoders and existing Regions
-with Switch and Endpoint Decoders. If these objects can't be matched=20
-between them, the Regions can't be constructed and/or attached with=20
-the Switch and Endpoint Decoders.    =20
-
-Anyway, the CXL driver can always match Endpoint Decoders with Switch
-Decoders because the HPA range sizes are the same also when LMH's are =20
-
-But with an LMH that trim the CFMWS HPA range size to a smaller size, a=20
-non-patched CXL driver can't match the Root Decoders and Regions with the=20
-Switch and Endpoint decoders. Therefore, the CXL Region construction and=20
-Decoders attachment can't succeed.
->
-> > If this explanation suffices, I will incorporate it into the next versi=
-on
-> > of this patch and also explain that "HDM Decoder" stands for Endpoint D=
-ecoder=20
-> > and that the CFMWS HPA base/size describes the System Physical Address =
-(SPA)=20
-> > which the CXL driver uses to make Root Decoders HPA range base/size.=20
-> >=20
->=20
-> This explanation is better, just need a few more bits of data and I
-> think you're good to go.
->=20
 Thanks,
-
-=46abio
-
-=46abio
->
-> ~Gregory
->=20
-
-
-
-
+Andi
