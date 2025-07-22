@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E2AD221734
-	for <linux-cxl@vger.kernel.org>; Tue, 22 Jul 2025 20:47:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842C627702E
+	for <linux-cxl@vger.kernel.org>; Tue, 22 Jul 2025 20:47:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753217275; cv=none; b=f/2Slwx46j1BchymMqha8oqkQEb2O0EEGWLiYV0UamzX2JQ5UvXatontYqb9+3qJwYTTX/2giFeoVNExjsTQOgxYpONPiCd9/o161B/4XmseWfrDic9wLVQzrQXjpKmHX8QQTldXxb8N+JnSy0+FdXZan2mIOXqNso7SaRzqC+A=
+	t=1753217277; cv=none; b=gHyR3fwH4nnLJzPi8byzXT3XQqQOT0TH6j+D7E3jouyVQ2HKk8tEhY/CjBC++PK9eJn5HlVdI8pRnQV2UKrovR7W4cGEjfLw+SVjBLCXSlPTZxYKIrHalOkILa4TUT+STvRvL/Hnxit9XhKvOqwh7Xm8fbzQ1gMdYABUJgHfgTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753217275; c=relaxed/simple;
-	bh=3tmV75/8uRYJ07QuRqOshGpQ1RJeU/wsWdXzVXERrTA=;
+	s=arc-20240116; t=1753217277; c=relaxed/simple;
+	bh=HfvnM/JX5kz337U+crkCtcaPPu0AxDOfNbHyvQUmbgg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=r4LIcQPGAmbqv/vf5lWLC7l4SsEg1BCDWumFIuj95pFdBJtyTjpobudjCiFvlAPBsNfgcufps/BfzPaSv8hBnISLUeHOEaCO3QUS2z7TdfoTFyQaveP1iqnAwysJXniVh2SpAKtAQ/b5MktcqinBDyYXLKJOgWLlEhXJLwttlKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OdLVuync; arc=none smtp.client-ip=192.198.163.13
+	 MIME-Version; b=TuGoHm5c69bKjEH+lFoq/rwPSa/NPOgB0GjfLxxh+y12U15nM6zBghQzmmHHVb4yXwJV4a58FPQh8yiGsNXtcJGJYr7O6A+cHv4JtTmv9zJcCOCp+4ap5+BNz61UuV9tYw8o+GudWYdAOkXISZ6+RndNzZE/TkaOvd0MEnY0Pr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c0NZ1jkL; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OdLVuync"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c0NZ1jkL"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753217274; x=1784753274;
+  t=1753217275; x=1784753275;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=3tmV75/8uRYJ07QuRqOshGpQ1RJeU/wsWdXzVXERrTA=;
-  b=OdLVuyncoZE7Dyp5JNYPlrOM31qdIwp96TETBVHj2oHSfB0FcmylQ+Oh
-   xBJHEDklSYBHWG0DEAPIJnF77D3kek9RPcOXPPR5hRMCwRW39Rgb29d3S
-   cMkajVmjJBdm1m/z5wXAIKDrdNnSf7yxbhIa08SdPNQJIiaaqN3UViyFk
-   JQMoodF7XO1yfQDpTubFiofIoOn4LvyR3yvCvL+LM87JbGA+9G+3PVydq
-   eUzkBPoWaamqPU+GlIX5lesBBjIagiZqNkjLAmT+cLQZSB0F2RwuKaB5U
-   P8EfLGOuDxn/N7tueccK72CzqZ1Th5Wumgr4m5Vtp7brXhokC4KYY9Ey8
-   w==;
-X-CSE-ConnectionGUID: YGXroObYTpawL2ODdTIBWg==
-X-CSE-MsgGUID: wigCZZzsSROSpzhlk8XUDg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11500"; a="58100182"
+  bh=HfvnM/JX5kz337U+crkCtcaPPu0AxDOfNbHyvQUmbgg=;
+  b=c0NZ1jkL7ALcrokNxP4iuhzG/58IOpDMkSXlswxZyZDQc8eSSpQ2dH7k
+   PQ6LeKrGYz5oUf63piFdTWJnNpSi6bbrnUQXy9knHZlQ9KKfLsxi1FOVv
+   YKUxhQYXVmNjzRUMYgfSrN7Gnl73DAae3qE4q061HFA2DQEVWXzsRJ48/
+   6uQsEXMe8I/EHgHmRjVGByUX4FOPemz8O9Y/GkrIB6Gl/VptFs9wJQTeR
+   gdyaymPsp7es3ZHip5F6/5vJ0/6h80f0bMj8StB1mRrUvaFl2fDSSYEii
+   /zaYSV217a6RuuqFLtsdHuSaff80MX3dmeU5s2h0rs+tR/S5I2aeet1ym
+   g==;
+X-CSE-ConnectionGUID: NSgHG0/lROmSkFNlnMJlOA==
+X-CSE-MsgGUID: 5P0/EIiXToKovE40JroXTQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11500"; a="58100186"
 X-IronPort-AV: E=Sophos;i="6.16,332,1744095600"; 
-   d="scan'208";a="58100182"
+   d="scan'208";a="58100186"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2025 13:47:54 -0700
-X-CSE-ConnectionGUID: yY701qJMROaBGIaqydGUeg==
-X-CSE-MsgGUID: HsD3u+XwSGKwDjWBTWbbLQ==
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2025 13:47:55 -0700
+X-CSE-ConnectionGUID: RW+0Tgh6TtCxHyfDI+3Ykw==
+X-CSE-MsgGUID: T2KaWfGITGO2nFoN2lp7Tw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,332,1744095600"; 
-   d="scan'208";a="159001624"
+   d="scan'208";a="159001629"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.222.207])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2025 13:47:53 -0700
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2025 13:47:55 -0700
 From: alison.schofield@intel.com
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jonathan.cameron@huawei.com>,
@@ -52,9 +52,9 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Ira Weiny <ira.weiny@intel.com>,
 	Dan Williams <dan.j.williams@intel.com>
 Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH v4 2/5] cxl: Define a SPA->CXL HPA root decoder callback for XOR Math
-Date: Tue, 22 Jul 2025 13:47:41 -0700
-Message-ID: <6f6eda7b94532329b5658f84ea7496e637a4bddd.1753214969.git.alison.schofield@intel.com>
+Subject: [PATCH v4 3/5] cxl/region: Introduce SPA to DPA address translation
+Date: Tue, 22 Jul 2025 13:47:42 -0700
+Message-ID: <ba6227b3e91d66b87e15cbaeb92f85f2426c7edf.1753214969.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <cover.1753214969.git.alison.schofield@intel.com>
 References: <cover.1753214969.git.alison.schofield@intel.com>
@@ -68,114 +68,164 @@ Content-Transfer-Encoding: 8bit
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-When DPA->SPA translation was introduced, it included a helper that
-applied the XOR maps to do the CXL HPA -> SPA translation for XOR
-region interleaves. In preparation for adding SPA->DPA address
-translation, introduce the reverse callback.
+Add infrastructure to translate System Physical Addresses (SPA) to
+Device Physical Addresses (DPA) within CXL regions. This capability
+will be used by follow-on patches that add poison inject and clear
+operations at the region level.
 
-The root decoder callback is defined generically and not all usages
-may be self inverting like this XOR function. Add another root decoder
-callback that is the spa_to_hpa function.
+The SPA-to-DPA translation process follows these steps:
+1. Apply root decoder transformations (SPA to HPA) if configured.
+2. Extract the position in region interleave from the HPA offset.
+3. Extract the DPA offset from the HPA offset.
+4. Use position to find endpoint decoder.
+5. Use endpoint decoder to find memdev and calculate DPA from offset.
+6. Return the result - a memdev and a DPA.
 
-Update the existing cxl_xor_hpa_to_spa() with a name that reflects
-what it does without directionality: cxl_apply_xor_maps(), a generic
-parameter: addr replaces hpa, and code comments stating that the
-function supports the translation in either direction.
+It is Step 1 above that makes this a driver level operation and not
+work we can push to user space. Rather than exporting the XOR maps for
+root decoders configured with XOR interleave, the driver performs this
+complex calculation for the user.
+
+Steps 2 and 3 follow the CXL Spec 3.2 Section 8.2.4.20.13
+Implementation Note: Device Decode Logic.
+
+These calculations mirror much of the logic introduced earlier in DPA
+to SPA translation, see cxl_dpa_to_hpa(), where the driver needed to
+reverse the spec defined 'Device Decode Logic'.
 
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 ---
 
-Changes in v4: none
+Changes in v4:
+Add /* Input validation ensures valid ways and gran */ (Jonathan)
+Use a temp instead of modifying hpa_offset in place (Jonathan)
+Reorder mask addends to match spec definition (Jonathan)
+Add a blank line, remove a blank line (Jonathan)
+s/Deivce/Device in commit log (Jonathan)
+Use div64_u64_rem() for MOD operation (lkp)
 
- drivers/cxl/acpi.c | 27 ++++++++++++++++-----------
- drivers/cxl/cxl.h  |  2 ++
- 2 files changed, 18 insertions(+), 11 deletions(-)
+ drivers/cxl/core/region.c | 101 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 101 insertions(+)
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index b8d69460a368..f1625212b08b 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -20,7 +20,7 @@ static const guid_t acpi_cxl_qtg_id_guid =
- 	GUID_INIT(0xF365F9A6, 0xA7DE, 0x4071,
- 		  0xA6, 0x6A, 0xB4, 0x0C, 0x0B, 0x4F, 0x8E, 0x52);
- 
--static u64 cxl_xor_hpa_to_spa(struct cxl_root_decoder *cxlrd, u64 hpa)
-+static u64 cxl_apply_xor_maps(struct cxl_root_decoder *cxlrd, u64 addr)
- {
- 	struct cxl_cxims_data *cximsd = cxlrd->platform_data;
- 	int hbiw = cxlrd->cxlsd.nr_targets;
-@@ -29,19 +29,23 @@ static u64 cxl_xor_hpa_to_spa(struct cxl_root_decoder *cxlrd, u64 hpa)
- 
- 	/* No xormaps for host bridge interleave ways of 1 or 3 */
- 	if (hbiw == 1 || hbiw == 3)
--		return hpa;
-+		return addr;
- 
- 	/*
--	 * For root decoders using xormaps (hbiw: 2,4,6,8,12,16) restore
--	 * the position bit to its value before the xormap was applied at
--	 * HPA->DPA translation.
-+	 * In regions using XOR interleave arithmetic the CXL HPA may not
-+	 * be the same as the SPA. This helper performs the SPA->CXL HPA
-+	 * or the CXL HPA->SPA translation. Since XOR is self-inverting,
-+	 * so is this function.
-+	 *
-+	 * For root decoders using xormaps (hbiw: 2,4,6,8,12,16) applying the
-+	 * xormaps will toggle a position bit.
- 	 *
- 	 * pos is the lowest set bit in an XORMAP
--	 * val is the XORALLBITS(HPA & XORMAP)
-+	 * val is the XORALLBITS(addr & XORMAP)
- 	 *
- 	 * XORALLBITS: The CXL spec (3.1 Table 9-22) defines XORALLBITS
- 	 * as an operation that outputs a single bit by XORing all the
--	 * bits in the input (hpa & xormap). Implement XORALLBITS using
-+	 * bits in the input (addr & xormap). Implement XORALLBITS using
- 	 * hweight64(). If the hamming weight is even the XOR of those
- 	 * bits results in val==0, if odd the XOR result is val==1.
- 	 */
-@@ -50,11 +54,11 @@ static u64 cxl_xor_hpa_to_spa(struct cxl_root_decoder *cxlrd, u64 hpa)
- 		if (!cximsd->xormaps[i])
- 			continue;
- 		pos = __ffs(cximsd->xormaps[i]);
--		val = (hweight64(hpa & cximsd->xormaps[i]) & 1);
--		hpa = (hpa & ~(1ULL << pos)) | (val << pos);
-+		val = (hweight64(addr & cximsd->xormaps[i]) & 1);
-+		addr = (addr & ~(1ULL << pos)) | (val << pos);
- 	}
- 
--	return hpa;
-+	return addr;
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 3a097ecda1ea..da0759acb87e 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -2923,6 +2923,11 @@ static bool has_hpa_to_spa(struct cxl_root_decoder *cxlrd)
+ 	return cxlrd->ops && cxlrd->ops->hpa_to_spa;
  }
  
- struct cxl_cxims_context {
-@@ -476,7 +480,8 @@ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
- 		if (!cxlrd->ops)
- 			return -ENOMEM;
++static bool has_spa_to_hpa(struct cxl_root_decoder *cxlrd)
++{
++	return cxlrd->ops && cxlrd->ops->spa_to_hpa;
++}
++
+ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+ 		   u64 dpa)
+ {
+@@ -2993,6 +2998,102 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+ 	return hpa;
+ }
  
--		cxlrd->ops->hpa_to_spa = cxl_xor_hpa_to_spa;
-+		cxlrd->ops->hpa_to_spa = cxl_apply_xor_maps;
-+		cxlrd->ops->spa_to_hpa = cxl_apply_xor_maps;
- 	}
++struct dpa_result {
++	struct cxl_memdev *cxlmd;
++	u64 dpa;
++};
++
++static int __maybe_unused region_offset_to_dpa_result(struct cxl_region *cxlr,
++						      u64 offset,
++						      struct dpa_result *result)
++{
++	struct cxl_region_params *p = &cxlr->params;
++	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
++	struct cxl_endpoint_decoder *cxled;
++	u64 hpa, hpa_offset, dpa_offset;
++	u64 bits_upper, bits_lower;
++	u64 shifted, rem, temp;
++	u16 eig = 0;
++	u8 eiw = 0;
++	int pos;
++
++	lockdep_assert_held(&cxl_rwsem.region);
++	lockdep_assert_held(&cxl_rwsem.dpa);
++
++	/* Input validation ensures valid ways and gran */
++	granularity_to_eig(p->interleave_granularity, &eig);
++	ways_to_eiw(p->interleave_ways, &eiw);
++
++	/*
++	 * If the root decoder has SPA to CXL HPA callback, use it. Otherwise
++	 * CXL HPA is assumed to equal SPA.
++	 */
++	if (has_spa_to_hpa(cxlrd)) {
++		hpa = cxlrd->ops->spa_to_hpa(cxlrd, p->res->start + offset);
++		hpa_offset = hpa - p->res->start;
++	} else {
++		hpa_offset = offset;
++	}
++	/*
++	 * Interleave position: CXL Spec 3.2 Section 8.2.4.20.13
++	 * eiw < 8
++	 *	Position is in the IW bits at HPA_OFFSET[IG+8+IW-1:IG+8].
++	 *	Per spec "remove IW bits starting with bit position IG+8"
++	 * eiw >= 8
++	 *	Position is not explicitly stored in HPA_OFFSET bits. It is
++	 *	derived from the modulo operation of the upper bits using
++	 *	the total number of interleave ways.
++	 */
++	if (eiw < 8) {
++		pos = (hpa_offset >> (eig + 8)) & GENMASK(eiw - 1, 0);
++	} else {
++		shifted = hpa_offset >> (eig + 8);
++		div64_u64_rem(shifted, p->interleave_ways, &rem);
++		pos = rem;
++	}
++	if (pos < 0 || pos >= p->nr_targets) {
++		dev_dbg(&cxlr->dev, "Invalid position %d for %d targets\n",
++			pos, p->nr_targets);
++		return -ENXIO;
++	}
++
++	/*
++	 * DPA offset: CXL Spec 3.2 Section 8.2.4.20.13
++	 * Lower bits [IG+7:0] pass through unchanged
++	 * (eiw < 8)
++	 *	Per spec: DPAOffset[51:IG+8] = (HPAOffset[51:IG+IW+8] >> IW)
++	 *	Clear the position bits to isolate upper section, then
++	 *	reverse the left shift by eiw that occurred during DPA->HPA
++	 * (eiw >= 8)
++	 *	Per spec: DPAOffset[51:IG+8] = HPAOffset[51:IG+IW] / 3
++	 *	Extract upper bits from the correct bit range and divide by 3
++	 *	to recover the original DPA upper bits
++	 */
++	bits_lower = hpa_offset & GENMASK_ULL(eig + 7, 0);
++	if (eiw < 8) {
++		temp = hpa_offset &= ~((u64)GENMASK(eig + eiw + 8 - 1, 0));
++		dpa_offset = temp >> eiw;
++	} else {
++		bits_upper = div64_u64(hpa_offset >> (eig + eiw), 3);
++		dpa_offset = bits_upper << (eig + 8);
++	}
++	dpa_offset |= bits_lower;
++
++	/* Look-up and return the result: a memdev and a DPA */
++	for (int i = 0; i < p->nr_targets; i++) {
++		cxled = p->targets[i];
++		if (cxled->pos != pos)
++			continue;
++		result->cxlmd = cxled_to_memdev(cxled);
++		result->dpa = cxl_dpa_resource_start(cxled) + dpa_offset;
++
++		return 0;
++	}
++	dev_err(&cxlr->dev, "No device found for position %d\n", pos);
++
++	return -ENXIO;
++}
++
+ static struct lock_class_key cxl_pmem_region_key;
  
- 	rc = cxl_decoder_add(cxld, target_map);
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index bb82777128a2..f87628a22852 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -421,9 +421,11 @@ struct cxl_root_decoder;
- /**
-  * struct cxl_rd_ops - CXL root decoder callback operations
-  * @hpa_to_spa: Convert host physical address to system physical address
-+ * @spa_to_hpa: Convert system physical address to host physical address
-  */
- struct cxl_rd_ops {
- 	u64 (*hpa_to_spa)(struct cxl_root_decoder *cxlrd, u64 hpa);
-+	u64 (*spa_to_hpa)(struct cxl_root_decoder *cxlrd, u64 spa);
- };
- 
- /**
+ static int cxl_pmem_region_alloc(struct cxl_region *cxlr)
 -- 
 2.37.3
 
