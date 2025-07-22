@@ -1,92 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8FBEA32;
-	Tue, 22 Jul 2025 14:04:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5880B239E91
+	for <linux-cxl@vger.kernel.org>; Tue, 22 Jul 2025 14:09:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753193076; cv=none; b=QYrH8yv541/qVHtMGvrrYe/YyEh42wfzY78zv6JTRHRe3uOlfq7IpW5vgMjWoxdhu2iigHs7U1UTEow8YNVu7y9H68UN53PGUzGGPIMFmEr9uVQQUmtWkAzSxGWvY2XygNSGqqFD9SG5phLD/l8TPg1x9O6jI5+KHtExv4xvkbw=
+	t=1753193349; cv=none; b=YFCoElzJwqj4h30G2UKs/6IpfMzurpIwDptJ3/tGoNalBVfWSf/Up2ItvA/pt99kPhqT+2qsLysODdao1omKhKyxS3bdpT0dYPQuYeyMbtXCR3Ue5fIagA11xsHVk83KtXOKrsuDTmFabT1UTEaFbNOCxmdkDVpHKuh4E9uSin8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753193076; c=relaxed/simple;
-	bh=uPFuamjn8JgXag9RFI74J/C90ZWWlQSjqj7GpBmomJ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fSq1lqGBOzEvEGRxi7yvn7WM/M3aVugrrA2k4LBHar+XQvJ+b8q0AO9DSkWUcuxj+/nb9kB6TDW4fa+RoigRZj5YaLXCW9CwV27i6sosh77R3uWXY4ikEMbBZuOGyvAKb57Ws8iV/rNyuP4UeDGotz5oOMH77XS28jSqBsdEyEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sWkFl8nC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1753193349; c=relaxed/simple;
+	bh=YEdOoO9/PsTYwjEuUfGww3T+6XYUej0fn/S2ktQUcfg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=cq2C9gQZftkcgd/p7m2N2XnOwJ4jqAEE2co9+ja9qqkDCwhBL2wiYcqxq703a6BQJpbGbDHTSE/rnA48qBgDuOuU4iCCJWPhdc4MHiqdrNngc7pbhDv9F/2s5ShvFYQm+4gcwbSZhNmLq2rNSJUHHCzCl9GusZhDq7uAMKqLcnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IIgZsgGA; arc=none smtp.client-ip=209.85.128.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sWkFl8nC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85268C4CEF1;
-	Tue, 22 Jul 2025 14:04:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753193075;
-	bh=uPFuamjn8JgXag9RFI74J/C90ZWWlQSjqj7GpBmomJ4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sWkFl8nCPLNDlOJMG6Ch0dE8liwQT/TjEDMiX0lMwJnuLusjuKrCzLod80NRSELUo
-	 u8NHIk9I5drvAO5b8cWaslWSSVtrI12ORXbU6cnC3czmox0Gpc/eBFVmQbv7WsXDHP
-	 7XI0tTvIdC3OANtPZeGtvVmL87/AUfVlow3h8BPE2czQ//X9ztlbTiQMaD2B0vzKbf
-	 q9hGEfFkRTSDPXvxHMcUnuRjST9bZDk/bPZV2PYpDIsFdoH6g089xiau1VqsOdWm+K
-	 5yrtXZWYlUbYU8EfrX/vfKb1ZfK13RF2n1xAXnRVjHWsiZpxmDlx7rVQTbvJetcEdK
-	 Bwqfe2NYx+UOw==
-Date: Tue, 22 Jul 2025 16:04:31 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Peter Rosin <peda@axentia.se>, Derek Kiernan <derek.kiernan@amd.com>, 
-	Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Wolfram Sang <wsa@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, 
-	Alison Schofield <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, 
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-cxl@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>, 
-	Horatiu Vultur <horatiu.vultur@microchip.com>, Steen Hegelund <steen.hegelund@microchip.com>, 
-	Luca Ceresoli <luca.ceresoli@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 15/28] i2c: core: Introduce i2c_get_adapter_physdev()
-Message-ID: <sk6dwbont52x7zt3woqghurkkkms72f3zxubbadi2gp2yj3sbw@wdstymdtzouc>
-References: <20250613134817.681832-1-herve.codina@bootlin.com>
- <20250613134817.681832-16-herve.codina@bootlin.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IIgZsgGA"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-70e77831d68so50791227b3.2
+        for <linux-cxl@vger.kernel.org>; Tue, 22 Jul 2025 07:09:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1753193347; x=1753798147; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UVz/SWQP7VE6zR7u8S3n9pcQtSS3ypPiadReAwwwScg=;
+        b=IIgZsgGAljr2g8YwSSSevckK6iBQP+RONfO0crGnfIZ8/IkO/P613sSyBUhD8xBour
+         eq3Q1KB4clXdMogVSxrFDPhBiR5WBOSZh8pfa+HZpQj/Qky+lJLGBRk3PBXNF9wztbO5
+         C3l6/rPrwDX0wynMwApJQGXLfBjxVM2KxmPCtqhm8a7Ra1E7QAq+QSwkEOrtfnm769IS
+         a+khXFjKhC4E1JLi0cFJuvD3wY/tXGY9WbvYQuvsBehn2V553WM1p0py8+iP/6VV+73n
+         q2W8sp9whb88kwxZhDA5gSgmvshlU0dHA7dDxmC2IpweRklXKaIzJ93WPTSqt9ibd799
+         MDlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753193347; x=1753798147;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UVz/SWQP7VE6zR7u8S3n9pcQtSS3ypPiadReAwwwScg=;
+        b=bd8LZn/VM9XUeuvzl7CZFkKNqlJu6rp+oZD0Er5+Di25rlBZgIzOZguYvcwVRUL7P6
+         GiZKAsGfug7Iw0fB4HjfolHkO7X/7GDTynOsbw7VnEG7h8Do5B5dwTnSkG5k+D6R+FiL
+         CSUskuSETTNK39O1tzkS5HwU3JAZKM5ehMYy7JfxcMwX1gg88mDbN3GXRilLkQ5Mumgl
+         J4N2zFeC5aoFmbcXp4/Ec8+X77vq+77FAGns74qEITo/2RtgnekmrF+iuVMLtG9WLO4r
+         hAgfuyuL/dTVJnPsVjb22IxRgDvuNUK3gRFar9HTvUV4UjJLlAZA4NwMxw4nGn8UErmD
+         SyaA==
+X-Gm-Message-State: AOJu0YzB64YXo/BH5y9LO5rzwffYbIwqKekNWlFtwoc0x8uH7kHOW3yJ
+	QNgvz9nG2kmuBC8FYODCCDFqeVSnWSQX5z/tUZfAoNPTUZ4XbwxPw4LlJfUf6g==
+X-Gm-Gg: ASbGncst5vXXShXnVU/0cmcQCU2ZsvJjsPrtdWBLgtZgvLpsStxLJQylu88q8KNQxQQ
+	vbOhLNTomLHBLOKh3B9N6CEtxxVcqZUL5dR5jBDt08xwLXqmk1a3XUTOoGmF2M4PipzAXgcXgRu
+	xM37X1iKRR8nzRoTzQ2ZrmG7yR34WSGZzJ0LGWAdMkzF29YwLTS0uSYXNjrY9wekMQxzCmUdV1L
+	7bKgPrV/HwW6BcDswuszr9+PlaASvVnmubiwu5Pm13MWgtRV/2UZMNhO2uZaOGalHfTW+SiLXOL
+	XZSdmhwENBCKZBE+0+te3ch8LO3dss6+irG1aDtev2M8u/H516C2wSsxBt8K5UHae7kS5Uh8HeH
+	R1T2B1EaEbYvAofahmMuJGA==
+X-Google-Smtp-Source: AGHT+IE6Z5u4fJKSms1PDQMBY8W3jr0HoPdpNFmj6FszKY3nIu7XcOeTv1JtQpxweYdNc9PM1kYW1g==
+X-Received: by 2002:a05:690c:f8b:b0:719:671d:255 with SMTP id 00721157ae682-719671d039cmr163597087b3.3.1753193347188;
+        Tue, 22 Jul 2025 07:09:07 -0700 (PDT)
+Received: from localhost ([2a03:2880:25ff:59::])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-71953140caasm23954697b3.37.2025.07.22.07.09.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Jul 2025 07:09:06 -0700 (PDT)
+From: Joshua Hahn <joshua.hahnjy@gmail.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org,
+	dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com,
+	Robert Richter <rrichter@amd.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v2] cxl: Remove ifdef blocks of CONFIG_PCIEAER_CXL from core/pci.c
+Date: Tue, 22 Jul 2025 07:08:59 -0700
+Message-ID: <20250722140905.178926-1-joshua.hahnjy@gmail.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250721170415.285961-1-dave.jiang@intel.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250613134817.681832-16-herve.codina@bootlin.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Herve,
+On Mon, 21 Jul 2025 10:04:15 -0700 Dave Jiang <dave.jiang@intel.com> wrote:
 
-On Fri, Jun 13, 2025 at 03:47:55PM +0200, Herve Codina wrote:
-> The physical device providing an I2C adapter is the device that calls
-> i2c_add_adapter() or variants and i2c_del_adapter().
+> Remove from core/pci_aer.c and move the CONFIG_PCIEAER_CXL ifdef to
+> cxlpci.h to deal with the exported symbols as needed. There is enough
+> AER handling code (and more to come) to move the AER code to its own
+> C file.
 > 
-> Most of the time this physical device is the parent of the adapter
-> device.
-> 
-> Exceptions exist with i2c muxes. Indeed, in case of i2c muxes, the
-> parent of the mux adapter device points to the adapter device the mux is
-> connected to instead of the physical of this mux adapter.
-> 
-> Introduce i2c_get_adapter_physdev() and a new physdev field in the
-> adapter structure in order to ease the adapter physical device
-> retrieval.
-> 
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> Cc: Robert Richter <rrichter@amd.com>
+> Cc: Terry Bowman <terry.bowman@amd.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+> v2:
+> - Address 0-day reprot of cxl_handle_rdport_errors symbol undefined
+> ---
 
-Makes sense to me,
+Hello Dave, thank you for the patch! This makes a lot of sense to me and
+it all looks good : -)
 
-Reviewed-by: Andi Shyti <andi.shyti@kernel.org>
+Feel free to add a
+Reviewed-by: Joshua Hahn <joshua.hahnjy@gmail.com>
 
-Thanks,
-Andi
+Have a great day!
+Joshua
