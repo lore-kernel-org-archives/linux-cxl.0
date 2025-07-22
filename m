@@ -1,118 +1,63 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8218F189902;
-	Tue, 22 Jul 2025 09:24:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B96D28A1F3
+	for <linux-cxl@vger.kernel.org>; Tue, 22 Jul 2025 10:57:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753176272; cv=none; b=DlUlAhNpldZkz0ooqfPapBxY/KnuOA6TrrMT4w0sE6uE1V/ZuM+iGZC/sEMdeniXDgqhatVUoy1nc+Q0XO/MtZyOk+zNL3htQRzS5nAECnc590d4MdaZ+yrD5dPn/SLP6rt6Sw6FnM7u7UY1lU2VH/ZNOnzuGjgw+1iHWXoGOKo=
+	t=1753181836; cv=none; b=RzcakAf3bglnRch3cHFRnuXD0T0CtGH4dTaoK63rFMWrtK5a7htn9jldc+GM+ln7n5VSEKuWYmrkyAmY6mXPrkbeyh1eayOaB1yyyoIoGCwG1O96N+/MqtGBJ3+T1uRq9MWSqaVsbV5KUzOqCY/lHNzL5iK8E7Xm0OydH6yjwBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753176272; c=relaxed/simple;
-	bh=Ksr4RcpyiaVxvdAz9Ft+gR94b9IMq2d1CEO85zHMm3o=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ozdi7zxKbUqjVpS7bhPaGPOyba+XSkcY455kr2390EfonGP85biUUp9cXiGLNr9gVbbeTJ+MgwGtO0D32hkHab3nWo1xwF/bGoaBk/cKjpIi85g6kTgFijANpAAaCz9w+glrzCbw2yUhCsIgjDjHfmCUPY2N4E2iLwGsY0Fld2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MjJRYeJZ; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MjJRYeJZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753176271; x=1784712271;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=Ksr4RcpyiaVxvdAz9Ft+gR94b9IMq2d1CEO85zHMm3o=;
-  b=MjJRYeJZpalrlHw+UcPoLhG0hsnDsFWT4Vl198E033SFSD8VB0j88IgK
-   tsdjYlB+nUlOBtv2gmxqzWzz9v+1Vz7qcqmQRLBAvR7KjSNbfuZ3TSzwx
-   6qaTp8+EIIpqjbs7F1OpPp5qYQBh9Dmgn1p5WW0Z46zH98v9JSfFuaIof
-   mP7E3btZygMf7XIArG3cCmTUHgD3AJV5tezE1D566DfnmyOrKeYuvS5xy
-   aEiF4fT4jF51WLsfHPlb0dYBL8C8bnah7e9LuE9zS+DhxKao1yeS5i3uh
-   FKU4YUYIuD8NilU9B5NSz6N2dJHzhdmg7f0JBMvNqHTQ++GDVFQ8Titq4
-   w==;
-X-CSE-ConnectionGUID: dXx7JM3uS8aac5OU3dpXgA==
-X-CSE-MsgGUID: L+02RNx2QLSMDZdllhWsjQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11499"; a="55574717"
-X-IronPort-AV: E=Sophos;i="6.16,331,1744095600"; 
-   d="scan'208";a="55574717"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2025 02:24:30 -0700
-X-CSE-ConnectionGUID: cbehGU95QkWPRtX5+LVZGA==
-X-CSE-MsgGUID: 7OhfXV8JRdOAnLadikdZ1w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,331,1744095600"; 
-   d="scan'208";a="163133052"
-Received: from vpanait-mobl.ger.corp.intel.com (HELO [10.245.244.202]) ([10.245.244.202])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2025 02:24:17 -0700
-Message-ID: <ffd58e1a8b51c98cac9be49e85d367f1a3a24c2d.camel@linux.intel.com>
-Subject: Re: [PATCH v3 3/8] drm/xe: Fix typo "notifer"
-From: Thomas =?ISO-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>
-To: WangYuli <wangyuli@uniontech.com>
-Cc: airlied@gmail.com, akpm@linux-foundation.org,
- alison.schofield@intel.com, 	andrew+netdev@lunn.ch,
- andriy.shevchenko@linux.intel.com, 	arend.vanspriel@broadcom.com,
- bp@alien8.de, brcm80211-dev-list.pdl@broadcom.com, 
-	brcm80211@lists.linux.dev, colin.i.king@gmail.com, cvam0000@gmail.com, 
-	dan.j.williams@intel.com, dave.hansen@linux.intel.com,
- dave.jiang@intel.com, 	dave@stgolabs.net, davem@davemloft.net,
- dri-devel@lists.freedesktop.org, 	edumazet@google.com,
- gregkh@linuxfoundation.org, guanwentao@uniontech.com, 	hpa@zytor.com,
- ilpo.jarvinen@linux.intel.com, intel-xe@lists.freedesktop.org, 
-	ira.weiny@intel.com, j@jannau.net, jeff.johnson@oss.qualcomm.com,
- jgross@suse.com, 	jirislaby@kernel.org, johannes.berg@intel.com,
- jonathan.cameron@huawei.com, 	kuba@kernel.org, kvalo@kernel.org,
- kvm@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, linux@treblig.org,
- lucas.demarchi@intel.com, 	marcin.s.wojtas@gmail.com, ming.li@zohomail.com,
- mingo@kernel.org, 	mingo@redhat.com, netdev@vger.kernel.org,
- niecheng1@uniontech.com, 	oleksandr_tyshchenko@epam.com, pabeni@redhat.com,
- pbonzini@redhat.com, 	quic_ramess@quicinc.com, ragazenta@gmail.com,
- rodrigo.vivi@intel.com, 	seanjc@google.com, shenlichuan@vivo.com,
- simona@ffwll.ch, sstabellini@kernel.org, 	tglx@linutronix.de,
- vishal.l.verma@intel.com, wangyuli@deepin.org, x86@kernel.org, 
-	xen-devel@lists.xenproject.org, yujiaoliang@vivo.com, zhanjun@uniontech.com
-Date: Tue, 22 Jul 2025 11:24:15 +0200
-In-Reply-To: <94190C5F54A19F3E+20250722073431.21983-3-wangyuli@uniontech.com>
-References: <576F0D85F6853074+20250722072734.19367-1-wangyuli@uniontech.com>
-	 <94190C5F54A19F3E+20250722073431.21983-3-wangyuli@uniontech.com>
-Organization: Intel Sweden AB, Registration Number: 556189-6027
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=arc-20240116; t=1753181836; c=relaxed/simple;
+	bh=SlfrlqwwSHE73rBbQqNbUM+sfp3jXM9aXw6vvGYdgSU=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Vea/G5sJY3v/TLIY7UJCKfHYxW1ZhtappptUSuU7fEH/moaN6Q+BZZf3ZvNg144Hu/7ermQjHr+5cq6+IaFaBY/AyWJjRYPUSDxfKI3/uJQRyZc87+JoS+bq1uiH/wGn39ilARsdf+OV8suuMxanx8baojTUKlMh3ND9glbFhYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bmYym3LdFz6GDCN;
+	Tue, 22 Jul 2025 18:53:20 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6407E1402F7;
+	Tue, 22 Jul 2025 18:57:10 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 22 Jul
+ 2025 12:57:09 +0200
+Date: Tue, 22 Jul 2025 11:57:08 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Dave Jiang <dave.jiang@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <dave@stgolabs.net>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <dan.j.williams@intel.com>, Robert Richter
+	<rrichter@amd.com>, Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v2] cxl: Remove ifdef blocks of CONFIG_PCIEAER_CXL from
+ core/pci.c
+Message-ID: <20250722115708.00003b16@huawei.com>
+In-Reply-To: <20250721170415.285961-1-dave.jiang@intel.com>
+References: <20250721170415.285961-1-dave.jiang@intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, 2025-07-22 at 15:34 +0800, WangYuli wrote:
-> There is a spelling mistake of 'notifer' in the comment which
-> should be 'notifier'.
->=20
-> Signed-off-by: WangYuli <wangyuli@uniontech.com>
-Reviewed-by: Thomas Hellstr=C3=B6m <thomas.hellstrom@linux.intel.com>
+On Mon, 21 Jul 2025 10:04:15 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-> ---
-> =C2=A0drivers/gpu/drm/xe/xe_vm_types.h | 2 +-
-> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/gpu/drm/xe/xe_vm_types.h
-> b/drivers/gpu/drm/xe/xe_vm_types.h
-> index 1979e9bdbdf3..0ca27579fd1f 100644
-> --- a/drivers/gpu/drm/xe/xe_vm_types.h
-> +++ b/drivers/gpu/drm/xe/xe_vm_types.h
-> @@ -259,7 +259,7 @@ struct xe_vm {
-> =C2=A0		 * up for revalidation. Protected from access with
-> the
-> =C2=A0		 * @invalidated_lock. Removing items from the list
-> =C2=A0		 * additionally requires @lock in write mode, and
-> adding
-> -		 * items to the list requires either the
-> @userptr.notifer_lock in
-> +		 * items to the list requires either the
-> @userptr.notifier_lock in
-> =C2=A0		 * write mode, OR @lock in write mode.
-> =C2=A0		 */
-> =C2=A0		struct list_head invalidated;
+> Remove from core/pci_aer.c and move the CONFIG_PCIEAER_CXL ifdef to
+> cxlpci.h to deal with the exported symbols as needed. There is enough
+> AER handling code (and more to come) to move the AER code to its own
+> C file.
+> 
+> Cc: Robert Richter <rrichter@amd.com>
+> Cc: Terry Bowman <terry.bowman@amd.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 
