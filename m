@@ -1,594 +1,227 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC3B1FAC4D
-	for <linux-cxl@vger.kernel.org>; Wed, 23 Jul 2025 16:43:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753289039; cv=none; b=aiLwR0YAQs+INloJIntaM4gkFjqtpEljKM1KD4S6OQagcN05ED2tiU5w2LZDWWqZF/FLHEiy5gLnlcCyDRdg13OVp7Y5nMTykAE7RXBJKmA6fk5WzZ3RAgZ5quIGxijT2rt+EN5rg//lXkuNFGYuGz2FEBn8zboiBLixzyuFE6g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753289039; c=relaxed/simple;
-	bh=0AUNAZ9bCoCkAlwcubJj9bauU5SzWze4UuZe+J/a2KE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=prMbS/Thesqorh5XHUQTEpYSr7tQCHdo+4cCUBehc/abfnTJ0nBvRCqYmTEHN2vP/3h4cIPRyyFb6fq0whr/UIc33T9qJwLyu7+eZLPFWlX8l26PyuetpcGR1lwlrQ5x6lX3cw14zRlOH+ubJpHt7sTEmO2KEUfTreZ+aW1uazc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K6cVdQtm; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46677155C97;
+	Wed, 23 Jul 2025 18:39:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1753295942; cv=fail; b=A7Peb+eMrJ7yYt2NMaHKFCTJPMHFbyFtO7cArlUZOwznys3moSDZGxNHdLRJE6fKFXY8PSNHCddBSlQ29ySXS/PyYgwfvjZBaruHYDKpGLN2hO/+AM/CxCP6nlhWWFINL2mzRHGFKdcfCXSubmPFY8uZl9Ritba4IJk0dpau6qg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1753295942; c=relaxed/simple;
+	bh=lshl2hBRjVvHKaqlDwooR6myvdE+ZtJpeDBghAxedTE=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Ll+QE5yDhps4z/oRZ38ofihjJUrnRrSFaoQoY5EVGBU4t2wpg4UMjQnVISjtOXenHmJJuTZSPVsjAUtaWprI8KzRz4qMsDznuW19wqxlmO/ckZOBYGBttlqmQWyncFPLxmN2+SCRQxSdax+jafLv50iCkJmrzyjJ3BvqCGe1zFs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dCVG3xYP; arc=fail smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K6cVdQtm"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dCVG3xYP"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753289037; x=1784825037;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=0AUNAZ9bCoCkAlwcubJj9bauU5SzWze4UuZe+J/a2KE=;
-  b=K6cVdQtm+U+oOD8DYixm7ii9B+SgR3tHiMMC40aE44NGsyjFLyP4Hrs5
-   ct0u3exRvhH3mbI2O/jPy4MHdk7i4528G5ZTXAxITUaHn02iqrpY5+aqa
-   p0I7I9Zv6d1/Go0O7SqTquFHpWT7R4VQ7ZzvAzXmLGsEdl5QY2D/YaiMB
-   mu6YtlEKFDu7hLSfYnfi9+jKelGNbIMVU78J2CgNpumx/d1jhQos6UewD
-   r0emEy1tYB2ufqxMWsLVW0HPbaT0xOknr54cA1RKLhRGXrwEQW8rRqrGe
-   Gek/W3rvXqAgWnOf7j1jVLCG+K0lSYGQsUnJSuVQc34MjQmmJsa+IRhg1
-   Q==;
-X-CSE-ConnectionGUID: vXUb6LD2RP2Prr0rrmP7kQ==
-X-CSE-MsgGUID: 4DGxHdm4QLm6G/IbTuUWjQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11501"; a="73161516"
-X-IronPort-AV: E=Sophos;i="6.16,333,1744095600"; 
-   d="scan'208";a="73161516"
+  t=1753295942; x=1784831942;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=lshl2hBRjVvHKaqlDwooR6myvdE+ZtJpeDBghAxedTE=;
+  b=dCVG3xYP6qORZ0HLdA1wAj0UO8bh6WzKTk3kUUrOlvRnBTOavBBd5njX
+   y7ba8CNR2jjywvdAX5UfHxDCu9ybYXppH5ei6d9bZ5DNdBXxNYpSWNgYV
+   7lLlxzePzvLp7ydHHwSnOJU0bCvdVp92etHRi8QK59poCAqaLE/PS3bxj
+   8YcNJQaZDILy5YUwr/AayIxCcD+kA7kOqd3jYhoekHnXDQdaUGH5gqg4v
+   jgADVS4xeCtj/F6lXGEGicY88DpYTXmba3tMnLrw6mmNGLB/rJJsGI9m7
+   JpLTk4wddMfg9/Y1GmalWjKk0U3e5895lFEFilJ92r37zbpFeEbaWAr5x
+   w==;
+X-CSE-ConnectionGUID: JmoS8vJuTXmjc2QdeU8euA==
+X-CSE-MsgGUID: jc7BdW3QTeGz6CYS6JdJ0w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11501"; a="55439660"
+X-IronPort-AV: E=Sophos;i="6.16,335,1744095600"; 
+   d="scan'208";a="55439660"
 Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2025 09:43:55 -0700
-X-CSE-ConnectionGUID: MYj/LqsmRMuV8SoZVZKuKw==
-X-CSE-MsgGUID: u7EVk30mQj2d/yMDqk837g==
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2025 11:39:01 -0700
+X-CSE-ConnectionGUID: +n6iN/pERY645/RsGDKLFg==
+X-CSE-MsgGUID: 3K3UROabSBeqND5OZORj4g==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,333,1744095600"; 
-   d="scan'208";a="159698791"
-Received: from dustinle-mobl1.gar.corp.intel.com (HELO [10.247.118.179]) ([10.247.118.179])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2025 09:43:50 -0700
-Message-ID: <baea9af7-d76e-4d17-9a7d-2363d4f6626b@intel.com>
-Date: Wed, 23 Jul 2025 09:43:44 -0700
+X-IronPort-AV: E=Sophos;i="6.16,335,1744095600"; 
+   d="scan'208";a="159762075"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2025 11:39:00 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.26; Wed, 23 Jul 2025 11:38:59 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.26 via Frontend Transport; Wed, 23 Jul 2025 11:38:59 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (40.107.93.86) by
+ edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.26; Wed, 23 Jul 2025 11:38:59 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ums/nFdKNQ8BKNxMkgiOsUAHNQ8SpLzyNA/X3JNqNCmNmiJHAzk+w2aZrKbh+lb5s++Q3VEK7UIpuxdQfcgz3I3OBvKbN9gXyfksQNnnJOkVuyetBwsXG4dsTu6hAEWF1MD7rJNkPM4EoYcgNv36q7rsLOazYU+CNx0b33b1gwbvEHIXtTWe0mbBFbrd0myiAlv9hIMIDVGz4rRGZE2z+vSlfsOJ3mBZxBLtzmoNvxeOyRWg2SoKZ2pvpxF/4b9VniSt6hwI4zg/lvL0ky9KtyX31bMHfaXKEhctddtU4KLCk3PFzZ1xJ/2hCF10gUa+Jwfzyly9rBfmOGRXLbt9Og==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MK2BT5nluyT3DGCimgZAXGotLqd6/ziokbTLIbjVz2k=;
+ b=NzvWHGLYYc8ePX2oIpEBCWgtrBEiexz0XqoPjhXeoHlOM7twdExuufdVjE5WwRdtsgrSu5iZC8lGRJTON3qKEC/IbK30DVvECnq4KcQzy/CECcA8Nod7Bm8+VBf8ixKw5m+JHFmkFtS9BcuuFmORWd60CndoUyVCGtcE0Z6ZEbanJvNO8Lj42gQCERCebu3MmUP9DGFQ7ZMKvakvrNXxf0CGB8wEq2fcSUau3OHit7bF67l6m7KC0O+cr5ROPp1m+R3imYdvp5kIInTfQSElsRMo3e3c3XDzsufMYktNAn1X1FDRh4xRVTg/mpSQUUtxN1BCFbjWliqnR1foF8wYhw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH7PR11MB6522.namprd11.prod.outlook.com (2603:10b6:510:212::12)
+ by PH8PR11MB6730.namprd11.prod.outlook.com (2603:10b6:510:1c6::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8964.21; Wed, 23 Jul
+ 2025 18:38:44 +0000
+Received: from PH7PR11MB6522.namprd11.prod.outlook.com
+ ([fe80::9e94:e21f:e11a:332]) by PH7PR11MB6522.namprd11.prod.outlook.com
+ ([fe80::9e94:e21f:e11a:332%7]) with mapi id 15.20.8964.019; Wed, 23 Jul 2025
+ 18:38:44 +0000
+Date: Wed, 23 Jul 2025 11:40:28 -0700
+From: Matthew Brost <matthew.brost@intel.com>
+To: WangYuli <wangyuli@uniontech.com>
+CC: <airlied@gmail.com>, <akpm@linux-foundation.org>,
+	<alison.schofield@intel.com>, <andrew+netdev@lunn.ch>,
+	<andriy.shevchenko@linux.intel.com>, <arend.vanspriel@broadcom.com>,
+	<bp@alien8.de>, <brcm80211-dev-list.pdl@broadcom.com>,
+	<brcm80211@lists.linux.dev>, <colin.i.king@gmail.com>, <cvam0000@gmail.com>,
+	<dan.j.williams@intel.com>, <dave.hansen@linux.intel.com>,
+	<dave.jiang@intel.com>, <dave@stgolabs.net>, <davem@davemloft.net>,
+	<dri-devel@lists.freedesktop.org>, <edumazet@google.com>,
+	<gregkh@linuxfoundation.org>, <guanwentao@uniontech.com>, <hpa@zytor.com>,
+	<ilpo.jarvinen@linux.intel.com>, <intel-xe@lists.freedesktop.org>,
+	<ira.weiny@intel.com>, <j@jannau.net>, <jeff.johnson@oss.qualcomm.com>,
+	<jgross@suse.com>, <jirislaby@kernel.org>, <johannes.berg@intel.com>,
+	<jonathan.cameron@huawei.com>, <kuba@kernel.org>, <kvalo@kernel.org>,
+	<kvm@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-serial@vger.kernel.org>,
+	<linux-wireless@vger.kernel.org>, <linux@treblig.org>,
+	<lucas.demarchi@intel.com>, <marcin.s.wojtas@gmail.com>,
+	<ming.li@zohomail.com>, <mingo@kernel.org>, <mingo@redhat.com>,
+	<netdev@vger.kernel.org>, <niecheng1@uniontech.com>,
+	<oleksandr_tyshchenko@epam.com>, <pabeni@redhat.com>, <pbonzini@redhat.com>,
+	<quic_ramess@quicinc.com>, <ragazenta@gmail.com>, <rodrigo.vivi@intel.com>,
+	<seanjc@google.com>, <shenlichuan@vivo.com>, <simona@ffwll.ch>,
+	<sstabellini@kernel.org>, <tglx@linutronix.de>,
+	<thomas.hellstrom@linux.intel.com>, <vishal.l.verma@intel.com>,
+	<x86@kernel.org>, <xen-devel@lists.xenproject.org>, <yujiaoliang@vivo.com>,
+	<zhanjun@uniontech.com>
+Subject: Re: [PATCH v2 3/8] drm/xe: Fix typo "notifer"
+Message-ID: <aIEsnEQ4TksaTkAB@lstrano-desk.jf.intel.com>
+References: <BD5C52D2838AEA48+20250715134050.539234-1-wangyuli@uniontech.com>
+ <63E6DAC34DD3C878+20250715134407.540483-3-wangyuli@uniontech.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <63E6DAC34DD3C878+20250715134407.540483-3-wangyuli@uniontech.com>
+X-ClientProxiedBy: MW4PR03CA0014.namprd03.prod.outlook.com
+ (2603:10b6:303:8f::19) To PH7PR11MB6522.namprd11.prod.outlook.com
+ (2603:10b6:510:212::12)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] cxl: Remove ifdef blocks of CONFIG_PCIEAER_CXL from
- core/pci.c
-To: "Bowman, Terry" <terry.bowman@amd.com>, linux-cxl@vger.kernel.org
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
- dan.j.williams@intel.com, Robert Richter <rrichter@amd.com>
-References: <20250721170415.285961-1-dave.jiang@intel.com>
- <12646336-9be3-4bc2-adf9-bfd59c589251@amd.com>
- <f1ddcc99-56d1-4887-ad91-714d59b9e9a3@intel.com>
- <400534e9-7763-4364-afb3-5ab9d11cde1c@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <400534e9-7763-4364-afb3-5ab9d11cde1c@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR11MB6522:EE_|PH8PR11MB6730:EE_
+X-MS-Office365-Filtering-Correlation-Id: c18a3656-77c1-4be0-4ffd-08ddca1826f5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?qLaMxSgdqLaWClrPicFnOfxrFxa0wpL/EM8gFWxY+6g+CO6Vd1MkqpPPWH5u?=
+ =?us-ascii?Q?odeGIM/nSCf4adMn4eW7yqKI57tsL+oltnXM37YlB+TS3aU8yUyucji7ws3X?=
+ =?us-ascii?Q?PTS73VbIovRNlpYjXT/KWJDxBtjTWwp/5Z2hxqHAnyp/uzWJcfPqBZPJVPNi?=
+ =?us-ascii?Q?EMvml8Oqo/Y3PrBuAD+hm2wyLNWUkDtK5CQgsQMyydEdUhEdNJN2gN40psKQ?=
+ =?us-ascii?Q?bb4vh2qpv93h48jxXzJmHI5K/4kXJckNnamDeIp9pmgjp5fgj0coD4u4V8YF?=
+ =?us-ascii?Q?X1UZTRnMcwykCfRge3c44GW/CcHmnI7TOsPVlsGmEZ06Uw5HO2iLlPttZs3y?=
+ =?us-ascii?Q?j2SV2BxAwpGXaYMhklCwR+m9KzDXRzfMBX+v8DoO9dhbj/SWh7zBYIjIRcWn?=
+ =?us-ascii?Q?FAaec1TcTT99t9vxLN1gZ9+zB4WyKbX9t3/r0LQEkHgkD2m1jFVBRbzf64Xx?=
+ =?us-ascii?Q?ZiIxNwTkonOkYeHfAGvV8ER3JL3TvH7jmzYyi9nvJIe31hwdQU87IgDX5tAq?=
+ =?us-ascii?Q?+7/aFLzjmXlpSWv8/CxozdWG8+jGbOcoyh2yqpkLcbB1DC1858PPLcX9J5Cv?=
+ =?us-ascii?Q?yFHPp/zFwBqyF13R1XRjMPC+ON0a+jyXWN4Fkp3jr2XhoWm/sXQG+DlS1Smr?=
+ =?us-ascii?Q?RZFj5fe24nmtuGWS0mfhPlVg6oPkxUdz4scewGWprYQKeKnATLZbTuMjoVs7?=
+ =?us-ascii?Q?Z0cDH6cOB9YCbLPH6dv93gAGvF5FfDBPCu/JMp0yhha23p8uFotQ5oGQOtqB?=
+ =?us-ascii?Q?a94seTkcKLwtIOQQNg5IJOa6H7zgoVKfI81jcBOMnBLPCoO/dqFPzETJHkkx?=
+ =?us-ascii?Q?ehzyqH/SGp+OVoiBVuJA2Q/wBq0Zbsk6yKQtMZoCtTHvUbdMmZJXPLIPh8OB?=
+ =?us-ascii?Q?TN8AnlBLFnZwInQYY/kHZQYoXsXHX7qw2yGMf9NCLsMy/lc9+ipart9Xzm/n?=
+ =?us-ascii?Q?q7Jo0ASBDQ1Phq6jgk5vAvU2Vr3xNVhrID300wmX7SZPxuirxdsOvn16eD4o?=
+ =?us-ascii?Q?wKyqyIofDYO1hbi4WKakkg18VwUb0Syx7HRmrb6MWsGAf8Rqp2QBNQpcKdsE?=
+ =?us-ascii?Q?DBk7JcqpG+GbriQU9MLbu3PgPJppg6mvVm2uV6R0bB7fthDbtp1kpUiB+D3h?=
+ =?us-ascii?Q?Gdl/LU8E7bbHjLbS0c5LXvHISLdrMXFos+IdsInnlA69zCc0vKeHlC+uFGTL?=
+ =?us-ascii?Q?VRTWjYUOpjUVWg0yWCe3ytGqkIGRKzG7NVnfewCIVXZjPqYzdl3ixWM40XwJ?=
+ =?us-ascii?Q?zTaaW36+e2kpOdC1rzSC5M6V9zpoU6JqW39PecHdM6qyjVIZjcWcxbbyEyeu?=
+ =?us-ascii?Q?lDJHACndDLmURjOsyTqXKPyu0QI95mZqoP0cZl75Y1UMB50xSCN082X1bU7g?=
+ =?us-ascii?Q?MnRV6gUe5Xbv+M560XHxUF+x8yHOlWqMqNTVZOWO+ybnUrAQ9XDYiImqm1ja?=
+ =?us-ascii?Q?/naa6bov1PA=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB6522.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?I6dQSZa1OhCvg66/RlIIrzcPrI2qvtg+uB8PgONvlCCC0pBTd5C1kQQyGExq?=
+ =?us-ascii?Q?oO5NPBaZJrr42hEYS7Ddo1fx3vUijFXahnRZU0ciVenl4eBn1C/BHipceOJ8?=
+ =?us-ascii?Q?admbu0dYvjQZzLAwQ7zT7ojd+dZeStm8fA3+JyMLHA7F2QV4PSReVoLThPsW?=
+ =?us-ascii?Q?qEap3SkEXYywJcAicLGYxbuluD12LDMIy0Qy9GESB+pCC74XkTJFsucEdTjp?=
+ =?us-ascii?Q?VkxeDb1fscrWQimtvbcmdM175UcKM7eOaKRe+DrGrdRl/lRB3eddPEsXYwDP?=
+ =?us-ascii?Q?EImxlJ14NsjzCEetz0YQrWpRWeQcLo/E1e01deFunDZEbDEw0ZpdmEu6Waio?=
+ =?us-ascii?Q?WlbnoprnEgRaSOFkVeMTYBlr4phfE2eUfXMUDhXrKWaM70q0Rt3eidhxWIOi?=
+ =?us-ascii?Q?fx9VPGqXxv8j/Uobktw8gN8oM104BMePz/rxf+w6DAbCoCZvxzVi0Y/6CXB0?=
+ =?us-ascii?Q?L5W60vHWLqNf0Yb4wlzJcXihwGvbNAvE+JjpOd1iapu2VXYpLReg0tJ2Evkd?=
+ =?us-ascii?Q?RLhzF+5Tgt3iuWxQspSvEGJp0viUV87UASBNyvZI+o700841eTvBzfgF2Tkx?=
+ =?us-ascii?Q?VvUXFdEJNDac75qbU105XCsKzrsbetXgEP8xge8lz/jbFynZ/eFyBcUUv49v?=
+ =?us-ascii?Q?xBQx4pEAtiGwgTPvg5CAwt35kQFQJqboB1CD9BBwh3rZhD8BYXppHHlqymB6?=
+ =?us-ascii?Q?IWZx1MF2eps10+lpr5T4zNpp+odMTP79yt8/E1yPTSyU+bwl0lrCf1N/o0eR?=
+ =?us-ascii?Q?S90WOMa8nTq+abwBzV9ZEe62KpU4gN/0lviD64yrN0jeTeviV1qMV173dN+T?=
+ =?us-ascii?Q?5L8A9o8/3vTvCJj5pVZJShVCsqkCqa0Oeh0bvzjL8x8MbgTtUx/gAXESiQqf?=
+ =?us-ascii?Q?4sv2K9egYiPwKgrxjblMFzyz+71wLf3SazrJVO4jbTAYZUZzCXBzP0WkouLp?=
+ =?us-ascii?Q?ZwJ7xI/HYBfuw2yGUt2ObXC216GKi5SVqcTtgFNe4qHF0Jp2DG2077pHKHyZ?=
+ =?us-ascii?Q?8f+LEkJBjdfsDr+z0lX+3BJ0ckPkXCHIW+52/uEurU0kRuxGrVL4L/FnmEON?=
+ =?us-ascii?Q?A+cUeHEHdzayQD5ITDXNMtHtgb2mfCNMQj7vbpID+c1vs2mmvVSKvwE2PSLb?=
+ =?us-ascii?Q?g8X/3eZlQMpOfsrNrYbber/0bykf1o3hI2rfkuPJo2DIRAtD0AQ0y1rag3wg?=
+ =?us-ascii?Q?IjnSOVxjO8P+5D0ZdeRrVr2DDew+R17cmel6IlNQglIDgL6Qo5OE0okS2k5u?=
+ =?us-ascii?Q?G8dgptEGbpkpz5ODXlrqs5rA2dDcvYsniyRKyHW57OrxUK5dVNWZKBAgCVe4?=
+ =?us-ascii?Q?7O5BzVC8b4OOUzra5Sn03aEydTR7vGcJHTP8JDs0mPX8f6FSd/LvyU+TAzga?=
+ =?us-ascii?Q?4NT3Nb2iBGNOsQXMdOJUP2t8BlbPU9sqsqbXWn8RSNOOde03PXti9wubyU98?=
+ =?us-ascii?Q?7gZC1EOCwSNVSqPTDM7zl9UPgaMH5WkDIf9adrVJHEYoewFMwJ7g0K9yWIEU?=
+ =?us-ascii?Q?uqaRb/3wJAKTrabFwOPyYcyP4FM2CjSbtN1D4M+i2VFbwSvQpqOURUBDAl60?=
+ =?us-ascii?Q?lS0rBV0DjpIZo7Ji1lH8Oqt6d80o2lvbYkZPgxgO8y9vNrNhM9suis92JtqF?=
+ =?us-ascii?Q?qw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: c18a3656-77c1-4be0-4ffd-08ddca1826f5
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB6522.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jul 2025 18:38:43.9795
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6g1JzAKQCW8pKnyTnxXF6eI2qeD9xzE9He2Z1mExCygC6QilbT7WFI0X4gYq5Z8DilhdIFCUr/7LsjnmMFsIGg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB6730
+X-OriginatorOrg: intel.com
 
+On Tue, Jul 15, 2025 at 09:44:02PM +0800, WangYuli wrote:
+> There is a spelling mistake of 'notifer' in the comment which
+> should be 'notifier'.
+> 
+> Link: https://lore.kernel.org/all/B3C019B63C93846F+20250715071245.398846-1-wangyuli@uniontech.com/
+> Signed-off-by: WangYuli <wangyuli@uniontech.com>
 
+Reviewed-by: Matthew Brost <matthew.brost@intel.com>
 
-On 7/23/25 9:38 AM, Bowman, Terry wrote:
-> On 7/23/2025 10:14 AM, Dave Jiang wrote:
->>
->>
->> On 7/23/25 7:55 AM, Bowman, Terry wrote:
->>> On 7/21/2025 12:04 PM, Dave Jiang wrote:
->>>> Remove from core/pci_aer.c and move the CONFIG_PCIEAER_CXL ifdef to
->>>> cxlpci.h to deal with the exported symbols as needed. There is enough
->>>> AER handling code (and more to come) to move the AER code to its own
->>>> C file.
->>>>
->>>> Cc: Robert Richter <rrichter@amd.com>
->>>> Cc: Terry Bowman <terry.bowman@amd.com>
->>>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>>> ---
->>>> v2:
->>>> - Address 0-day reprot of cxl_handle_rdport_errors symbol undefined
->>>> ---
->>>>  drivers/cxl/core/Makefile  |   1 +
->>>>  drivers/cxl/core/core.h    |   9 ++
->>>>  drivers/cxl/core/pci.c     | 171 +------------------------------------
->>>>  drivers/cxl/core/pci_aer.c | 168 ++++++++++++++++++++++++++++++++++++
->>>>  drivers/cxl/cxl.h          |   8 --
->>>>  drivers/cxl/cxlpci.h       |   8 ++
->>>>  tools/testing/cxl/Kbuild   |   1 +
->>>>  7 files changed, 189 insertions(+), 177 deletions(-)
->>>>  create mode 100644 drivers/cxl/core/pci_aer.c
->>>>
->>>> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
->>>> index 79e2ef81fde8..bcea856157af 100644
->>>> --- a/drivers/cxl/core/Makefile
->>>> +++ b/drivers/cxl/core/Makefile
->>>> @@ -21,3 +21,4 @@ cxl_core-$(CONFIG_CXL_REGION) += region.o
->>>>  cxl_core-$(CONFIG_CXL_MCE) += mce.o
->>>>  cxl_core-$(CONFIG_CXL_FEATURES) += features.o
->>>>  cxl_core-$(CONFIG_CXL_EDAC_MEM_FEATURES) += edac.o
->>>> +cxl_core-$(CONFIG_PCIEAER_CXL) += pci_aer.o
->>>> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
->>>> index 29b61828a847..96c319c66a48 100644
->>>> --- a/drivers/cxl/core/core.h
->>>> +++ b/drivers/cxl/core/core.h
->>>> @@ -136,4 +136,13 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
->>>>  		    u16 *return_code);
->>>>  #endif
->>>>  
->>>> +#ifdef CONFIG_PCIEAER_CXL
->>>> +void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds);
->>>> +#else
->>>> +static inline void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds) {}
->>>> +#endif
->>>> +
->>>> +void __cxl_handle_cor_ras(struct cxl_dev_state *cxlds, void __iomem *ras_base);
->>>> +bool __cxl_handle_ras(struct cxl_dev_state *cxlds, void __iomem *ras_base);
->>>> +
->>>>  #endif /* __CXL_CORE_H__ */
->>>> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
->>>> index b50551601c2e..bd78369bc3f4 100644
->>>> --- a/drivers/cxl/core/pci.c
->>>> +++ b/drivers/cxl/core/pci.c
->>>> @@ -664,8 +664,7 @@ void read_cdat_data(struct cxl_port *port)
->>>>  }
->>>>  EXPORT_SYMBOL_NS_GPL(read_cdat_data, "CXL");
->>>>  
->>>> -static void __cxl_handle_cor_ras(struct cxl_dev_state *cxlds,
->>>> -				 void __iomem *ras_base)
->>>> +void __cxl_handle_cor_ras(struct cxl_dev_state *cxlds, void __iomem *ras_base)
->>>>  {
->>>>  	void __iomem *addr;
->>>>  	u32 status;
->>>> @@ -707,8 +706,7 @@ static void header_log_copy(void __iomem *ras_base, u32 *log)
->>>>   * Log the state of the RAS status registers and prepare them to log the
->>>>   * next error status. Return 1 if reset needed.
->>>>   */
->>>> -static bool __cxl_handle_ras(struct cxl_dev_state *cxlds,
->>>> -				  void __iomem *ras_base)
->>>> +bool __cxl_handle_ras(struct cxl_dev_state *cxlds, void __iomem *ras_base)
->>>>  {
->>>>  	u32 hl[CXL_HEADERLOG_SIZE_U32];
->>>>  	void __iomem *addr;
->>>> @@ -746,171 +744,6 @@ static bool cxl_handle_endpoint_ras(struct cxl_dev_state *cxlds)
->>>>  	return __cxl_handle_ras(cxlds, cxlds->regs.ras);
->>>>  }
->>>>  
->>>> -#ifdef CONFIG_PCIEAER_CXL
->>>> -
->>>> -static void cxl_dport_map_rch_aer(struct cxl_dport *dport)
->>>> -{
->>>> -	resource_size_t aer_phys;
->>>> -	struct device *host;
->>>> -	u16 aer_cap;
->>>> -
->>>> -	aer_cap = cxl_rcrb_to_aer(dport->dport_dev, dport->rcrb.base);
->>>> -	if (aer_cap) {
->>>> -		host = dport->reg_map.host;
->>>> -		aer_phys = aer_cap + dport->rcrb.base;
->>>> -		dport->regs.dport_aer = devm_cxl_iomap_block(host, aer_phys,
->>>> -						sizeof(struct aer_capability_regs));
->>>> -	}
->>>> -}
->>>> -
->>>> -static void cxl_dport_map_ras(struct cxl_dport *dport)
->>>> -{
->>>> -	struct cxl_register_map *map = &dport->reg_map;
->>>> -	struct device *dev = dport->dport_dev;
->>>> -
->>>> -	if (!map->component_map.ras.valid)
->>>> -		dev_dbg(dev, "RAS registers not found\n");
->>>> -	else if (cxl_map_component_regs(map, &dport->regs.component,
->>>> -					BIT(CXL_CM_CAP_CAP_ID_RAS)))
->>>> -		dev_dbg(dev, "Failed to map RAS capability.\n");
->>>> -}
->>>> -
->>>> -static void cxl_disable_rch_root_ints(struct cxl_dport *dport)
->>>> -{
->>>> -	void __iomem *aer_base = dport->regs.dport_aer;
->>>> -	u32 aer_cmd_mask, aer_cmd;
->>>> -
->>>> -	if (!aer_base)
->>>> -		return;
->>>> -
->>>> -	/*
->>>> -	 * Disable RCH root port command interrupts.
->>>> -	 * CXL 3.0 12.2.1.1 - RCH Downstream Port-detected Errors
->>>> -	 *
->>>> -	 * This sequence may not be necessary. CXL spec states disabling
->>>> -	 * the root cmd register's interrupts is required. But, PCI spec
->>>> -	 * shows these are disabled by default on reset.
->>>> -	 */
->>>> -	aer_cmd_mask = (PCI_ERR_ROOT_CMD_COR_EN |
->>>> -			PCI_ERR_ROOT_CMD_NONFATAL_EN |
->>>> -			PCI_ERR_ROOT_CMD_FATAL_EN);
->>>> -	aer_cmd = readl(aer_base + PCI_ERR_ROOT_COMMAND);
->>>> -	aer_cmd &= ~aer_cmd_mask;
->>>> -	writel(aer_cmd, aer_base + PCI_ERR_ROOT_COMMAND);
->>>> -}
->>>> -
->>>> -/**
->>>> - * cxl_dport_init_ras_reporting - Setup CXL RAS report on this dport
->>>> - * @dport: the cxl_dport that needs to be initialized
->>>> - * @host: host device for devm operations
->>>> - */
->>>> -void cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host)
->>>> -{
->>>> -	dport->reg_map.host = host;
->>>> -	cxl_dport_map_ras(dport);
->>>> -
->>>> -	if (dport->rch) {
->>>> -		struct pci_host_bridge *host_bridge = to_pci_host_bridge(dport->dport_dev);
->>>> -
->>>> -		if (!host_bridge->native_aer)
->>>> -			return;
->>>> -
->>>> -		cxl_dport_map_rch_aer(dport);
->>>> -		cxl_disable_rch_root_ints(dport);
->>>> -	}
->>>> -}
->>>> -EXPORT_SYMBOL_NS_GPL(cxl_dport_init_ras_reporting, "CXL");
->>>> -
->>>> -static void cxl_handle_rdport_cor_ras(struct cxl_dev_state *cxlds,
->>>> -					  struct cxl_dport *dport)
->>>> -{
->>>> -	return __cxl_handle_cor_ras(cxlds, dport->regs.ras);
->>>> -}
->>>> -
->>>> -static bool cxl_handle_rdport_ras(struct cxl_dev_state *cxlds,
->>>> -				       struct cxl_dport *dport)
->>>> -{
->>>> -	return __cxl_handle_ras(cxlds, dport->regs.ras);
->>>> -}
->>>> -
->>>> -/*
->>>> - * Copy the AER capability registers using 32 bit read accesses.
->>>> - * This is necessary because RCRB AER capability is MMIO mapped. Clear the
->>>> - * status after copying.
->>>> - *
->>>> - * @aer_base: base address of AER capability block in RCRB
->>>> - * @aer_regs: destination for copying AER capability
->>>> - */
->>>> -static bool cxl_rch_get_aer_info(void __iomem *aer_base,
->>>> -				 struct aer_capability_regs *aer_regs)
->>>> -{
->>>> -	int read_cnt = sizeof(struct aer_capability_regs) / sizeof(u32);
->>>> -	u32 *aer_regs_buf = (u32 *)aer_regs;
->>>> -	int n;
->>>> -
->>>> -	if (!aer_base)
->>>> -		return false;
->>>> -
->>>> -	/* Use readl() to guarantee 32-bit accesses */
->>>> -	for (n = 0; n < read_cnt; n++)
->>>> -		aer_regs_buf[n] = readl(aer_base + n * sizeof(u32));
->>>> -
->>>> -	writel(aer_regs->uncor_status, aer_base + PCI_ERR_UNCOR_STATUS);
->>>> -	writel(aer_regs->cor_status, aer_base + PCI_ERR_COR_STATUS);
->>>> -
->>>> -	return true;
->>>> -}
->>>> -
->>>> -/* Get AER severity. Return false if there is no error. */
->>>> -static bool cxl_rch_get_aer_severity(struct aer_capability_regs *aer_regs,
->>>> -				     int *severity)
->>>> -{
->>>> -	if (aer_regs->uncor_status & ~aer_regs->uncor_mask) {
->>>> -		if (aer_regs->uncor_status & PCI_ERR_ROOT_FATAL_RCV)
->>>> -			*severity = AER_FATAL;
->>>> -		else
->>>> -			*severity = AER_NONFATAL;
->>>> -		return true;
->>>> -	}
->>>> -
->>>> -	if (aer_regs->cor_status & ~aer_regs->cor_mask) {
->>>> -		*severity = AER_CORRECTABLE;
->>>> -		return true;
->>>> -	}
->>>> -
->>>> -	return false;
->>>> -}
->>>> -
->>>> -static void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds)
->>>> -{
->>>> -	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
->>>> -	struct aer_capability_regs aer_regs;
->>>> -	struct cxl_dport *dport;
->>>> -	int severity;
->>>> -
->>>> -	struct cxl_port *port __free(put_cxl_port) =
->>>> -		cxl_pci_find_port(pdev, &dport);
->>>> -	if (!port)
->>>> -		return;
->>>> -
->>>> -	if (!cxl_rch_get_aer_info(dport->regs.dport_aer, &aer_regs))
->>>> -		return;
->>>> -
->>>> -	if (!cxl_rch_get_aer_severity(&aer_regs, &severity))
->>>> -		return;
->>>> -
->>>> -	pci_print_aer(pdev, severity, &aer_regs);
->>>> -
->>>> -	if (severity == AER_CORRECTABLE)
->>>> -		cxl_handle_rdport_cor_ras(cxlds, dport);
->>>> -	else
->>>> -		cxl_handle_rdport_ras(cxlds, dport);
->>>> -}
->>>> -
->>>> -#else
->>>> -static void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds) { }
->>>> -#endif
->>>> -
->>>>  void cxl_cor_error_detected(struct pci_dev *pdev)
->>>>  {
->>>>  	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
->>>> diff --git a/drivers/cxl/core/pci_aer.c b/drivers/cxl/core/pci_aer.c
->>>> new file mode 100644
->>>> index 000000000000..cf1e9377752e
->>>> --- /dev/null
->>>> +++ b/drivers/cxl/core/pci_aer.c
->>>
->>>
->>>
->>> Hi Dave,
->>>
->>> While adding this into my series and looking closer, I believe that pci_aer.c filename does not accurately reflect its content. 
->>> The only AER-related code pertains to CX1.1, which is now a corner case. The AER driver, not CXL driver, logs AER errors for 
->>> all other scenarios. There is no AER processing in the CXL driver except for CXL1.1 dports.
->>>
->>> Most of the code in this file is related to or will be directed towards CXL RAS. It's important to note that AER and 
->>> RAS are distinct and separate registers, with CXL RAS only utilizing the AER interrupt notification and UIE/CIE. 
->>>
->>> I am concerned we are conflating AER and RAS, which may be misleading for others. We have other instances of this 
->>> confusion, such as in the cxl_aer_correctable_error() and cxl_aer_uncorrectable_error() functions, which log RAS instead of AER.
->>>
->>> My series aims to clarify the distinction between AER and CXL errors, categorizing CXL errors as a separate error class. 
->>> At the least, can we add a documentation block at the top to indicate this source file provides functionality for 
->>> CXL RAS?
->>
->> Sure we can do that. Also, we have a core/ras.c already. Any suggestions on how do we want improve this? Move things to ras.c? Rename cxl_aer.c to something else? Rename current ras.c to something else?
->>
->>>
-> 
-> I don't think we want to combine the os-first and fw-first code in a single file. The separation leveraging the 
-> Makefile conditional compile is good because fw-first doesn't use PCIEAER_CXL while os-first does.
-> I think core/ras.c is good as-is.
-> 
-> cxl_aer.c is in the drivers/pci/pcie directory and is logically part of the AER service driver. This file includes the 
-> kfifo and logic for offloading CXL RAS errors to the CXL driver. I think the cxl_aer.c naming is fine but 
-> understand it could be argued to use cxl_ras.c instead. My concern was in the CXL driver AER-RAS naming but 
-> the same rules could be applied here as well. 
-> 
-> To improve the original situation mentioned I recommend we use 'ras' in what is named pci_aer.c here? 
-> Maybe 'pci_ras.c' instead? It's not perfect but would be more precise. This feels somewhat nitpicky on my part 
-> and will not be an issue if we leave as-is. Thanks for considering.
+We can apply this patch individually to drm-xe-next if that is ok with you.
 
-Thanks for the detailed explanation. I'll rename it to pci_ras.c.
-
+> ---
+>  drivers/gpu/drm/xe/xe_vm_types.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> -Terry
+> diff --git a/drivers/gpu/drm/xe/xe_vm_types.h b/drivers/gpu/drm/xe/xe_vm_types.h
+> index 1979e9bdbdf3..0ca27579fd1f 100644
+> --- a/drivers/gpu/drm/xe/xe_vm_types.h
+> +++ b/drivers/gpu/drm/xe/xe_vm_types.h
+> @@ -259,7 +259,7 @@ struct xe_vm {
+>  		 * up for revalidation. Protected from access with the
+>  		 * @invalidated_lock. Removing items from the list
+>  		 * additionally requires @lock in write mode, and adding
+> -		 * items to the list requires either the @userptr.notifer_lock in
+> +		 * items to the list requires either the @userptr.notifier_lock in
+>  		 * write mode, OR @lock in write mode.
+>  		 */
+>  		struct list_head invalidated;
+> -- 
+> 2.50.0
 > 
->>> -Terry
->>>
->>>> @@ -0,0 +1,168 @@
->>>> +// SPDX-License-Identifier: GPL-2.0-only
->>>> +/* Copyright(c) 2025 AMD Corporation. All rights reserved. */
->>>> +/* Copyright(c) 2025 Intel Corporation. All rights reserved. */
->>>> +#include <linux/pci.h>
->>>> +#include <linux/aer.h>
->>>> +#include <cxlpci.h>
->>>> +#include <cxlmem.h>
->>>> +#include <cxl.h>
->>>> +#include "core.h"
->>>> +
->>>> +static void cxl_dport_map_rch_aer(struct cxl_dport *dport)
->>>> +{
->>>> +	resource_size_t aer_phys;
->>>> +	struct device *host;
->>>> +	u16 aer_cap;
->>>> +
->>>> +	aer_cap = cxl_rcrb_to_aer(dport->dport_dev, dport->rcrb.base);
->>>> +	if (aer_cap) {
->>>> +		host = dport->reg_map.host;
->>>> +		aer_phys = aer_cap + dport->rcrb.base;
->>>> +		dport->regs.dport_aer = devm_cxl_iomap_block(host, aer_phys,
->>>> +						sizeof(struct aer_capability_regs));
->>>> +	}
->>>> +}
->>>> +
->>>> +static void cxl_dport_map_ras(struct cxl_dport *dport)
->>>> +{
->>>> +	struct cxl_register_map *map = &dport->reg_map;
->>>> +	struct device *dev = dport->dport_dev;
->>>> +
->>>> +	if (!map->component_map.ras.valid)
->>>> +		dev_dbg(dev, "RAS registers not found\n");
->>>> +	else if (cxl_map_component_regs(map, &dport->regs.component,
->>>> +					BIT(CXL_CM_CAP_CAP_ID_RAS)))
->>>> +		dev_dbg(dev, "Failed to map RAS capability.\n");
->>>> +}
->>>> +
->>>> +static void cxl_disable_rch_root_ints(struct cxl_dport *dport)
->>>> +{
->>>> +	void __iomem *aer_base = dport->regs.dport_aer;
->>>> +	u32 aer_cmd_mask, aer_cmd;
->>>> +
->>>> +	if (!aer_base)
->>>> +		return;
->>>> +
->>>> +	/*
->>>> +	 * Disable RCH root port command interrupts.
->>>> +	 * CXL 3.0 12.2.1.1 - RCH Downstream Port-detected Errors
->>>> +	 *
->>>> +	 * This sequence may not be necessary. CXL spec states disabling
->>>> +	 * the root cmd register's interrupts is required. But, PCI spec
->>>> +	 * shows these are disabled by default on reset.
->>>> +	 */
->>>> +	aer_cmd_mask = (PCI_ERR_ROOT_CMD_COR_EN |
->>>> +			PCI_ERR_ROOT_CMD_NONFATAL_EN |
->>>> +			PCI_ERR_ROOT_CMD_FATAL_EN);
->>>> +	aer_cmd = readl(aer_base + PCI_ERR_ROOT_COMMAND);
->>>> +	aer_cmd &= ~aer_cmd_mask;
->>>> +	writel(aer_cmd, aer_base + PCI_ERR_ROOT_COMMAND);
->>>> +}
->>>> +
->>>> +/**
->>>> + * cxl_dport_init_ras_reporting - Setup CXL RAS report on this dport
->>>> + * @dport: the cxl_dport that needs to be initialized
->>>> + * @host: host device for devm operations
->>>> + */
->>>> +void cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host)
->>>> +{
->>>> +	dport->reg_map.host = host;
->>>> +	cxl_dport_map_ras(dport);
->>>> +
->>>> +	if (dport->rch) {
->>>> +		struct pci_host_bridge *host_bridge = to_pci_host_bridge(dport->dport_dev);
->>>> +
->>>> +		if (!host_bridge->native_aer)
->>>> +			return;
->>>> +
->>>> +		cxl_dport_map_rch_aer(dport);
->>>> +		cxl_disable_rch_root_ints(dport);
->>>> +	}
->>>> +}
->>>> +EXPORT_SYMBOL_NS_GPL(cxl_dport_init_ras_reporting, "CXL");
->>>> +
->>>> +static void cxl_handle_rdport_cor_ras(struct cxl_dev_state *cxlds,
->>>> +					  struct cxl_dport *dport)
->>>> +{
->>>> +	return __cxl_handle_cor_ras(cxlds, dport->regs.ras);
->>>> +}
->>>> +
->>>> +static bool cxl_handle_rdport_ras(struct cxl_dev_state *cxlds,
->>>> +				       struct cxl_dport *dport)
->>>> +{
->>>> +	return __cxl_handle_ras(cxlds, dport->regs.ras);
->>>> +}
->>>> +
->>>> +/*
->>>> + * Copy the AER capability registers using 32 bit read accesses.
->>>> + * This is necessary because RCRB AER capability is MMIO mapped. Clear the
->>>> + * status after copying.
->>>> + *
->>>> + * @aer_base: base address of AER capability block in RCRB
->>>> + * @aer_regs: destination for copying AER capability
->>>> + */
->>>> +static bool cxl_rch_get_aer_info(void __iomem *aer_base,
->>>> +				 struct aer_capability_regs *aer_regs)
->>>> +{
->>>> +	int read_cnt = sizeof(struct aer_capability_regs) / sizeof(u32);
->>>> +	u32 *aer_regs_buf = (u32 *)aer_regs;
->>>> +	int n;
->>>> +
->>>> +	if (!aer_base)
->>>> +		return false;
->>>> +
->>>> +	/* Use readl() to guarantee 32-bit accesses */
->>>> +	for (n = 0; n < read_cnt; n++)
->>>> +		aer_regs_buf[n] = readl(aer_base + n * sizeof(u32));
->>>> +
->>>> +	writel(aer_regs->uncor_status, aer_base + PCI_ERR_UNCOR_STATUS);
->>>> +	writel(aer_regs->cor_status, aer_base + PCI_ERR_COR_STATUS);
->>>> +
->>>> +	return true;
->>>> +}
->>>> +
->>>> +/* Get AER severity. Return false if there is no error. */
->>>> +static bool cxl_rch_get_aer_severity(struct aer_capability_regs *aer_regs,
->>>> +				     int *severity)
->>>> +{
->>>> +	if (aer_regs->uncor_status & ~aer_regs->uncor_mask) {
->>>> +		if (aer_regs->uncor_status & PCI_ERR_ROOT_FATAL_RCV)
->>>> +			*severity = AER_FATAL;
->>>> +		else
->>>> +			*severity = AER_NONFATAL;
->>>> +		return true;
->>>> +	}
->>>> +
->>>> +	if (aer_regs->cor_status & ~aer_regs->cor_mask) {
->>>> +		*severity = AER_CORRECTABLE;
->>>> +		return true;
->>>> +	}
->>>> +
->>>> +	return false;
->>>> +}
->>>> +
->>>> +void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds)
->>>> +{
->>>> +	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
->>>> +	struct aer_capability_regs aer_regs;
->>>> +	struct cxl_dport *dport;
->>>> +	int severity;
->>>> +
->>>> +	struct cxl_port *port __free(put_cxl_port) =
->>>> +		cxl_pci_find_port(pdev, &dport);
->>>> +	if (!port)
->>>> +		return;
->>>> +
->>>> +	if (!cxl_rch_get_aer_info(dport->regs.dport_aer, &aer_regs))
->>>> +		return;
->>>> +
->>>> +	if (!cxl_rch_get_aer_severity(&aer_regs, &severity))
->>>> +		return;
->>>> +
->>>> +	pci_print_aer(pdev, severity, &aer_regs);
->>>> +
->>>> +	if (severity == AER_CORRECTABLE)
->>>> +		cxl_handle_rdport_cor_ras(cxlds, dport);
->>>> +	else
->>>> +		cxl_handle_rdport_ras(cxlds, dport);
->>>> +}
->>>> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
->>>> index 3f1695c96abc..73397da7f970 100644
->>>> --- a/drivers/cxl/cxl.h
->>>> +++ b/drivers/cxl/cxl.h
->>>> @@ -759,14 +759,6 @@ struct cxl_dport *devm_cxl_add_rch_dport(struct cxl_port *port,
->>>>  					 struct device *dport_dev, int port_id,
->>>>  					 resource_size_t rcrb);
->>>>  
->>>> -#ifdef CONFIG_PCIEAER_CXL
->>>> -void cxl_setup_parent_dport(struct device *host, struct cxl_dport *dport);
->>>> -void cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host);
->>>> -#else
->>>> -static inline void cxl_dport_init_ras_reporting(struct cxl_dport *dport,
->>>> -						struct device *host) { }
->>>> -#endif
->>>> -
->>>>  struct cxl_decoder *to_cxl_decoder(struct device *dev);
->>>>  struct cxl_root_decoder *to_cxl_root_decoder(struct device *dev);
->>>>  struct cxl_switch_decoder *to_cxl_switch_decoder(struct device *dev);
->>>> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
->>>> index 54e219b0049e..5f73ce42a758 100644
->>>> --- a/drivers/cxl/cxlpci.h
->>>> +++ b/drivers/cxl/cxlpci.h
->>>> @@ -135,4 +135,12 @@ void read_cdat_data(struct cxl_port *port);
->>>>  void cxl_cor_error_detected(struct pci_dev *pdev);
->>>>  pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
->>>>  				    pci_channel_state_t state);
->>>> +
->>>> +#ifdef CONFIG_PCIEAER_CXL
->>>> +void cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host);
->>>> +#else
->>>> +static inline void cxl_dport_init_ras_reporting(struct cxl_dport *dport,
->>>> +						struct device *host) { }
->>>> +#endif
->>>> +
->>>>  #endif /* __CXL_PCI_H__ */
->>>> diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
->>>> index 31a2d73c963f..54b49d8e6b40 100644
->>>> --- a/tools/testing/cxl/Kbuild
->>>> +++ b/tools/testing/cxl/Kbuild
->>>> @@ -68,6 +68,7 @@ cxl_core-$(CONFIG_CXL_REGION) += $(CXL_CORE_SRC)/region.o
->>>>  cxl_core-$(CONFIG_CXL_MCE) += $(CXL_CORE_SRC)/mce.o
->>>>  cxl_core-$(CONFIG_CXL_FEATURES) += $(CXL_CORE_SRC)/features.o
->>>>  cxl_core-$(CONFIG_CXL_EDAC_MEM_FEATURES) += $(CXL_CORE_SRC)/edac.o
->>>> +cxl_core-$(CONFIG_PCIEAER_CXL) += $(CXL_CORE_SRC)/pci_aer.o
->>>>  cxl_core-y += config_check.o
->>>>  cxl_core-y += cxl_core_test.o
->>>>  cxl_core-y += cxl_core_exports.o
->>>>
->>>> base-commit: 347e9f5043c89695b01e66b3ed111755afcf1911
->>>
->>
-> 
-
