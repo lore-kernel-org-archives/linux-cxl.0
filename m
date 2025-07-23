@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F7501E7C08
-	for <linux-cxl@vger.kernel.org>; Wed, 23 Jul 2025 22:12:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEBE21F1909
+	for <linux-cxl@vger.kernel.org>; Wed, 23 Jul 2025 22:14:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753308729; cv=none; b=MTLIBs5zRWZeTaajkPunVdvKRbs3TgWO7VXJ4gL12UcJKZY88s9JzGU5S2qmBPE7X7ZxbQRNouVS42VFrguq4k5zs1CbHI+UautvtcANDZAnl5UvUrn1SyR3XJ4zdGqVHEGul8yU0a5IVMeTei3hGiqTTHDiXeNRpvRVwL2p1QM=
+	t=1753308868; cv=none; b=nr/GtURD3CEEqjLRMxerWEypadYPoK6gtw6g1TC5XxpdtbE5GtU+lTHCU7vfiJ05bhdYgH471yktC9U8FnkyAPLmDup0uD1EiGMU2wBE12/GrAY9KelExdXf73E9CRRROkUMmQfk6Yjf8896mc/5Hk5t5tRPP7X1YaLraBO97q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753308729; c=relaxed/simple;
-	bh=4iktC47rTN/UEdFCbVKHySx/VqvAqfEQ/bnunuKt7EM=;
+	s=arc-20240116; t=1753308868; c=relaxed/simple;
+	bh=tqblKCBDsP5FDhqPJzbpLrE8Xw6IZohgY0D1iptzamc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DmB0yfx0Mq9UpJa2E4n1NJccR9AWl0LIFqB7KJaiC+TsPdzYOYGCS6RjYQnaerCwPUld4MStFaL6BwtQEaLtiMoKFp0ixMYh6y1eLt3GhD/pKPP35ksmJOKtaLW1Kv228wHuk7Xv6jI4TDas2UuVWilrO4RIV4rCHJFdw2m23No=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aN4kdqhT; arc=none smtp.client-ip=198.175.65.17
+	 In-Reply-To:Content-Type; b=RXutVY067wOr0A9kSIUYueiKb7kLyh33SqujUYg9+8qZl3m2jUokoDCjl/UASaYAp7evCcTU6jGg9qFdXOnq3Cq0LClPiq1QLfDITT6VqEaNv2Pb3DuLqUyF/LyxgCrW+ddrbLkE+NPWO8q4zH18e70jhE9Cgmw4NvJVK9txcmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HF9ZIg/r; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aN4kdqhT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HF9ZIg/r"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753308727; x=1784844727;
+  t=1753308867; x=1784844867;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=4iktC47rTN/UEdFCbVKHySx/VqvAqfEQ/bnunuKt7EM=;
-  b=aN4kdqhT+xczKLbcAUarNHj+t2V5+x7RfShQLdYjGAVxnNnp6doofwzE
-   gmBWpaXdyxtMiNmc5W62lii2iCI47Jx5pGwuud3Y25S0AFOBtTD9uwB5l
-   Y3v9EGZ1kWPonVu4SdlL3ZKjQF1ePJ+DSxed+1YGIHaW0d48vLb+2LRD/
-   Z7WhiXYZQBf5D7cAesmkCnRp1inANhE2np5FW/acUUpARqYnbFBfoM8ZE
-   drnFsbkzNZNRrebgGlGl6m9HxtpjMBHkesXY1c3ybEYc6KqDiMd6rTj3r
-   aOjywnctM2Q37xz0NdEgKBI1QeL9rJyvgGP+wBTLlY0BmzvMqrAokz4ud
+  bh=tqblKCBDsP5FDhqPJzbpLrE8Xw6IZohgY0D1iptzamc=;
+  b=HF9ZIg/rhH3z5Fh9ACoRifURv7CswKhBlxvBp7Wz0FsqrbZf8+WrZyjJ
+   jVJTgmcHCBaFaPS/GMSIHpzg86bZ4MxIGrQG/GvQ7JZQveaQSmeVs4l+a
+   QhUWkIlCikbP1CUrhsPxXLq24qIrOXkc8RrN1PnKSDi+ldv37rOBjgY6F
+   ODrSgc//aRhFnalSYeR0uxgMskwV0Ty+L/DhWWtdAsy5xo5eyELslz+jP
+   Lqaw50N2lAoNEgXJlGF8/rw4dUJI38tHYNISsfuALCYyrQheCJfd7k1oL
+   URNLA+FCuLn6Mpq+e82fwNOTa14Jp/amnvD92eupNY2GOYzHxsP4aGfom
    w==;
-X-CSE-ConnectionGUID: Bg5NHwnJQtiXKI1BMPNyRA==
-X-CSE-MsgGUID: lODtJKH1QP+9QEMlkY+fFA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11501"; a="55566366"
+X-CSE-ConnectionGUID: Ee7WetMoQ6uChh2FvO5HoA==
+X-CSE-MsgGUID: BGyh/LC1R4KA1ehXxwsxSw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11501"; a="59409974"
 X-IronPort-AV: E=Sophos;i="6.16,335,1744095600"; 
-   d="scan'208";a="55566366"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2025 15:12:07 -0700
-X-CSE-ConnectionGUID: GEhbTg9xQ2Ktye+5sTtCFA==
-X-CSE-MsgGUID: x2iwiCc2RqySvgwahfj1OA==
+   d="scan'208";a="59409974"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2025 15:14:27 -0700
+X-CSE-ConnectionGUID: /w7qZDHTSuagNtFyb6pbpQ==
+X-CSE-MsgGUID: UWzZXhsORRO05TwxNNe3iw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,335,1744095600"; 
-   d="scan'208";a="165207242"
+   d="scan'208";a="160492161"
 Received: from dustinle-mobl1.gar.corp.intel.com (HELO [10.247.118.179]) ([10.247.118.179])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2025 15:12:01 -0700
-Message-ID: <d785a404-dcb1-49e5-9930-819ba6e2a8d8@intel.com>
-Date: Wed, 23 Jul 2025 15:11:55 -0700
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2025 15:14:21 -0700
+Message-ID: <d84c5b2a-5160-40a6-8cf9-066aeceda5a2@intel.com>
+Date: Wed, 23 Jul 2025 15:14:15 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -54,87 +54,56 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2] cxl: Remove ifdef blocks of CONFIG_PCIEAER_CXL from
  core/pci.c
-To: "Bowman, Terry" <terry.bowman@amd.com>, linux-cxl@vger.kernel.org
+To: dan.j.williams@intel.com, "Bowman, Terry" <terry.bowman@amd.com>,
+ linux-cxl@vger.kernel.org
 Cc: dave@stgolabs.net, jonathan.cameron@huawei.com,
  alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
- dan.j.williams@intel.com, Robert Richter <rrichter@amd.com>
+ Robert Richter <rrichter@amd.com>
 References: <20250721170415.285961-1-dave.jiang@intel.com>
- <2ec323cd-0c20-4ab8-93fe-58373f2c7a54@amd.com>
+ <12646336-9be3-4bc2-adf9-bfd59c589251@amd.com>
+ <f1ddcc99-56d1-4887-ad91-714d59b9e9a3@intel.com>
+ <400534e9-7763-4364-afb3-5ab9d11cde1c@amd.com>
+ <baea9af7-d76e-4d17-9a7d-2363d4f6626b@intel.com>
+ <68812fc03518d_14c35610053@dwillia2-xfh.jf.intel.com.notmuch>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <2ec323cd-0c20-4ab8-93fe-58373f2c7a54@amd.com>
+In-Reply-To: <68812fc03518d_14c35610053@dwillia2-xfh.jf.intel.com.notmuch>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 7/23/25 2:35 PM, Bowman, Terry wrote:
-> On 7/21/2025 12:04 PM, Dave Jiang wrote:
->> Remove from core/pci_aer.c and move the CONFIG_PCIEAER_CXL ifdef to
->> cxlpci.h to deal with the exported symbols as needed. There is enough
->> AER handling code (and more to come) to move the AER code to its own
->> C file.
+On 7/23/25 11:53 AM, dan.j.williams@intel.com wrote:
+> Dave Jiang wrote:
+> [..]
+>>> I don't think we want to combine the os-first and fw-first code in a
+>>> single file. The separation leveraging the Makefile conditional
+>>> compile is good because fw-first doesn't use PCIEAER_CXL while
+>>> os-first does.  I think core/ras.c is good as-is.
+>>>
+>>> cxl_aer.c is in the drivers/pci/pcie directory and is logically part
+>>> of the AER service driver. This file includes the kfifo and logic
+>>> for offloading CXL RAS errors to the CXL driver. I think the
+>>> cxl_aer.c naming is fine but understand it could be argued to use
+>>> cxl_ras.c instead. My concern was in the CXL driver AER-RAS naming
+>>> but the same rules could be applied here as well. 
+>>>
+>>> To improve the original situation mentioned I recommend we use 'ras'
+>>> in what is named pci_aer.c here?  Maybe 'pci_ras.c' instead? It's
+>>> not perfect but would be more precise. This feels somewhat nitpicky
+>>> on my part and will not be an issue if we leave as-is. Thanks for
+>>> considering.
 >>
->> Cc: Robert Richter <rrichter@amd.com>
->> Cc: Terry Bowman <terry.bowman@amd.com>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->> v2:
->> - Address 0-day reprot of cxl_handle_rdport_errors symbol undefined
->> ---
->>  drivers/cxl/core/Makefile  |   1 +
->>  drivers/cxl/core/core.h    |   9 ++
->>  drivers/cxl/core/pci.c     | 171 +------------------------------------
->>  drivers/cxl/core/pci_aer.c | 168 ++++++++++++++++++++++++++++++++++++
->>  drivers/cxl/cxl.h          |   8 --
->>  drivers/cxl/cxlpci.h       |   8 ++
->>  tools/testing/cxl/Kbuild   |   1 +
->>  7 files changed, 189 insertions(+), 177 deletions(-)
->>  create mode 100644 drivers/cxl/core/pci_aer.c
->>
->> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
->> index 79e2ef81fde8..bcea856157af 100644
->> --- a/drivers/cxl/core/Makefile
->> +++ b/drivers/cxl/core/Makefile
->> @@ -21,3 +21,4 @@ cxl_core-$(CONFIG_CXL_REGION) += region.o
->>  cxl_core-$(CONFIG_CXL_MCE) += mce.o
->>  cxl_core-$(CONFIG_CXL_FEATURES) += features.o
->>  cxl_core-$(CONFIG_CXL_EDAC_MEM_FEATURES) += edac.o
->> +cxl_core-$(CONFIG_PCIEAER_CXL) += pci_aer.o
->> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
->> index 29b61828a847..96c319c66a48 100644
->> --- a/drivers/cxl/core/core.h
->> +++ b/drivers/cxl/core/core.h
->> @@ -136,4 +136,13 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
->>  		    u16 *return_code);
->>  #endif
->>  
->> +#ifdef CONFIG_PCIEAER_CXL
->> +void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds);
->> +#else
->> +static inline void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds) {}
->> +#endif
->> +
->> +void __cxl_handle_cor_ras(struct cxl_dev_state *cxlds, void __iomem *ras_base);
->> +bool __cxl_handle_ras(struct cxl_dev_state *cxlds, void __iomem *ras_base);
->> +
->>  #endif /* __CXL_CORE_H__ */
+>> Thanks for the detailed explanation. I'll rename it to pci_ras.c.
 > 
-> Hi Dave,
+> Hey guys, please trim your responses.
 > 
-> Any reason not to pull in cxl_handle_cor_ras()/cxl_handle_ras() into pci_ras.c?
-> These 2 functions read the RAS from the register block and then call the trace routine.
-> These are only called by the handlers in pci.c. I think it might round-out your changes 
-> nicely if they are moved into pci_ras.c s.t. when CONFIG_PCIEAER_CXL is disabled then 
-> they are do nothing. Or another way to look at it is they should only be enabled if 
-> CONFIG_PCIEAER_CXL is enabled.
-> 
+> Between RAS, AER, and EDAC there is significant overlap. You could say
+> that pci_ras.c is also misnamed because the error details being reported
+> are CXL not PCI. I am ok with "RAS" for anything that handles decorating
+> an AER notification with extra information, and "EDAC" for all the other
+> error notification / reporting / and management flows that handled
+> separately from AER.
 
-Missed them. Yes I can do that.
-
-> -Terry
-> 
-> [snip]
-> 
-> 
+I wonder if we should rename ras.c to cper.c and move the new code to ras.c.... or cxl_ras.c.
 
