@@ -1,137 +1,164 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E3220A5C4
-	for <linux-cxl@vger.kernel.org>; Thu, 24 Jul 2025 07:48:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C241F2DEA80;
+	Thu, 24 Jul 2025 14:25:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753343285; cv=none; b=fqxsRrRLEvPUnl3sSEdruidKPPVe62M9kTGNdNG+Ef9VAlgOGFl1fxY+ZIaHKSD9cqEThxRGu1XUvyq/iouLxQqzVywI01DX+O1kitmty3ekYAOEGdZpB0UhBpC3TpihZI6SyO+UMI2K4/jw5u2IwcB4ziI21rSaS6stIBaUQi0=
+	t=1753367105; cv=none; b=r+vjuZTiFKXAI/2IR5xhGTXvE5x3BsP9s/TMywVN1chj0Q16rYFOAA5PaQYqqxMseWHbPYzPx6uKJQulAeF1sWzCF9z6oYkKl/AU+8upAoLgijdKT8WHCvjdVls/EH44rKuJds71AaQpHKOtCtr+dEiZ/2+0kX7477pHoU8udEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753343285; c=relaxed/simple;
-	bh=pT3b2dnxuIaziI3OmqNmzit6puBsCssuJF1/lNaUFpc=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZHIE+SGDFZ1UBwMeSVKvIv7mSuQ1Jvn02aoCZqb1mUzHH4tje2DG9Gcgi06t0qZDrpHAguBHXxg4QrUy8EcryFSsqygWEqfR20lAZIr4uUvXwwkHIBUCRtMY9glSUZIkHVLTaOPlw3h8CFEGdZJ9JX9JeuJVmqcHJytXDqq/HOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bnjgL5Wjxz6L4yT;
-	Thu, 24 Jul 2025 15:43:58 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 08E611400D3;
-	Thu, 24 Jul 2025 15:47:54 +0800 (CST)
-Received: from localhost (10.81.206.15) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 24 Jul
- 2025 09:47:53 +0200
-Date: Thu, 24 Jul 2025 08:47:51 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: "Michael S. Tsirkin" <mst@redhat.com>, <wyguopeng@163.com>
-CC: peng guo <engguopeng@buaa.edu.cn>, <marcel.apfelbaum@gmail.com>,
-	<pbonzini@redhat.com>, <richard.henderson@linaro.org>, <eduardo@habkost.net>,
-	<qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH] hw/i386/pc: Avoid overlap between CXL window and PCI
- 64bit BARs in QEMU
-Message-ID: <20250724084751.000042e8@huawei.com>
-In-Reply-To: <20250724034335-mutt-send-email-mst@kernel.org>
-References: <20250718133545.5261-1-engguopeng@buaa.edu.cn>
-	<20250724034335-mutt-send-email-mst@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1753367105; c=relaxed/simple;
+	bh=vzs8kcKWJHaamV71LWKk22OR8zL50WkNbXej3rtsrak=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qM3qvISCy9/Q5lxn8OXBWiviBiyGzgCxOqK3A9OysIWtIk9SzG3+x6QM/EturbzSUD2R2lK6xFIv9v+b2r70HPQoZ3PlxfsZbS1pJPvusBTJ1f/iIEDIKRtBWiwSP/oosz3iII+5zD1HPnKkrTG4TVcEygIFu1qbn3Twhnw9Kno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PIGvK+B+; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PIGvK+B+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1753367103; x=1784903103;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=vzs8kcKWJHaamV71LWKk22OR8zL50WkNbXej3rtsrak=;
+  b=PIGvK+B+ufHvzIcxXFIGI2XVwNAYJfDYlLgrtbIR/mlZtNlXpAUL955Q
+   QWW7yCagjvYCIsFhT+3hyNT5NiGhgWqnRXUGUscPDXl++67HSTgvAMKPx
+   /gY7juMOl4lrJS8UUKMkGung8XMqMVnGHpWOAOLQM7oDIsXDwVX+pzHHu
+   4Nj8R35Q7LSSBSuLbzKRsOrnpw85+U2MG9H+g/74jaZ5ApJ84k0cgwhUL
+   jWWuF4wetESM4VMcyXzTivQSvH+os45ALljo/t9gUGbWSIUijXpTN5xf8
+   QTU6ceofZBbzbqvkfAvEEFzMAndEAGg/mOjgr1XFN+j3DekUkjyGE7M9w
+   A==;
+X-CSE-ConnectionGUID: HFLli1bcQ/+h1UjM9fFeQg==
+X-CSE-MsgGUID: Vfc1HNVhTCqfs38PU7j0/w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11501"; a="66250189"
+X-IronPort-AV: E=Sophos;i="6.16,337,1744095600"; 
+   d="scan'208";a="66250189"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2025 07:25:02 -0700
+X-CSE-ConnectionGUID: OlyNoVqkSey5XW6tnCFhWA==
+X-CSE-MsgGUID: CxB+AlCLThKvUTCS7L4Qrg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,337,1744095600"; 
+   d="scan'208";a="160245635"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.intel.com) ([10.245.246.151])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2025 07:24:58 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: linux-cxl@vger.kernel.org
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Robert Richter <rrichter@amd.com>,
+	ming.li@zohomail.com,
+	linux-kernel@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Subject: [PATCH 0/4 v4] cxl/core: Enable Region creation/attach on x86 with LMH
+Date: Thu, 24 Jul 2025 16:20:30 +0200
+Message-ID: <20250724142144.776992-1-fabio.m.de.francesco@linux.intel.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Transfer-Encoding: 8bit
 
-On Thu, 24 Jul 2025 03:43:56 -0400
-"Michael S. Tsirkin" <mst@redhat.com> wrote:
+The CXL Fixed Memory Window Structure (CFMWS) describes zero or more Host
+Physical Address (HPA) windows that are associated with each CXL Host
+Bridge. Each window represents a contiguous HPA that may be interleaved
+with one or more targets (CXL v3.1 - 9.18.1.3).
+ 
+The Low Memory Hole (LMH) of x86 is a range of addresses of physical low
+memory to which systems cannot send transactions. On those systems, BIOS
+publishes CFMWS which communicate the active System Physical Address (SPA)
+ranges that map to a subset of the Host Physical Address (HPA) ranges. The
+SPA range trims out the hole, and capacity in the endpoint is lost with no
+SPA to map to CXL HPA in that hole.
+ 
+In the early stages of CXL Regions construction and attach on platforms
+with Low Memory Holes, the driver fails and returns an error because it
+expects that the CXL Endpoint Decoder range is a subset of the Root
+Decoder's (SPA >= HPA). On x86 with LMH's, it happens that SPA < HPA.
 
-> On Fri, Jul 18, 2025 at 09:35:45PM +0800, peng guo wrote:
-> > When using a CXL Type 3 device together with a virtio 9p device in QEMU, the
-> > 9p device fails to initialize properly. The kernel reports the following:
-> > 
-> >     virtio: device uses modern interface but does not have VIRTIO_F_VERSION_1
-> >     9pnet_virtio virtio0: probe with driver 9pnet_virtio failed with error -22
-> > 
-> > Further investigation revealed that the 64-bit BAR space assigned to the 9pnet
-> > device was overlapped by the memory window allocated for the CXL devices. As a
-> > result, the kernel could not correctly access the BAR region, causing the
-> > virtio device to malfunction.
-> > 
-> > An excerpt from /proc/iomem shows:
-> > 
-> >     480010000-cffffffff : CXL Window 0
-> >       480010000-4bfffffff : PCI Bus 0000:00
-> >       4c0000000-4c01fffff : PCI Bus 0000:0c
-> >         4c0000000-4c01fffff : PCI Bus 0000:0d
-> >       4c0200000-cffffffff : PCI Bus 0000:00
-> >         4c0200000-4c0203fff : 0000:00:03.0
-> >           4c0200000-4c0203fff : virtio-pci-modern
-> > 
-> > To address this issue, this patch uses the value of `cxl_resv_end` to reserve
-> > sufficient address space and ensure that CXL memory windows are allocated
-> > beyond all PCI 64-bit BARs. This prevents overlap with 64-bit BARs regions such 
-> > as those used by virtio or other pcie devices, resolving the conflict.
-> > 
-> > QEMU Build Configuration:
-> > 
-> >     ./configure --prefix=/home/work/qemu_master/build/ \
-> >                 --target-list=x86_64-softmmu \
-> >                 --enable-kvm \
-> >                 --enable-virtfs
-> > 
-> > QEMU Boot Command:
-> > 
-> >     sudo /home/work/qemu_master/qemu/build/qemu-system-x86_64 \
-> >         -nographic -machine q35,cxl=on -enable-kvm -m 16G -smp 8 \
-> >         -hda /home/work/gp_qemu/rootfs.img \
-> >         -virtfs local,path=/home/work/gp_qemu/share,mount_tag=host0,security_model=passthrough,id=host0 \
-> >         -kernel /home/work/linux_output/arch/x86/boot/bzImage \
-> >         --append "console=ttyS0 crashkernel=256M root=/dev/sda rootfstype=ext4 rw loglevel=8" \
-> >         -object memory-backend-ram,id=vmem0,share=on,size=4096M \
-> >         -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
-> >         -device cxl-rp,port=0,bus=cxl.1,id=root_port13,chassis=0,slot=2 \
-> >         -device cxl-type3,bus=root_port13,volatile-memdev=vmem0,id=cxl-vmem0,sn=0x123456789 \
-> >         -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G
-> > 
-> > Tested in a QEMU setup with a CXL Type 3 device and a 9pnet virtio device.
-> > 
-> > Signed-off-by: peng guo <engguopeng@buaa.edu.cn>  
-> 
-> Cc Jonathan.
-> Any input on this?
+Therefore, detect x86 Low Memory Holes, match CXL Root and Endpoint
+Decoders or already made CXL Regions and Decoders to allow the
+construction of new CXL Regions and the attachment of Endpoint Decoders,
+even if SPA < HPA. If needed because of LMH's, adjust the Endpoint Decoder
+range end to match Root Decoder's.
 
-I've been more or less offline for a few days.  Will be back in office tomorrow.
-At first glance this looks correct to me, but I want to take a closer look.
+- Patch 1/4 changes the calling conventions of three match_*_by_range()
+  helpers in preparation of 3/4.
+- Patch 2/4 Introduces helpers to detect LMH's and also one to adjust
+  the HPA range end for CXL Regions construction.
+- Patch 3/4 enables CXL Regions construction and Endpoint Decoders
+  attachment by matching Root Decoders or Regions with Endpoint
+  Decoders, adjusting Endpoint Decoders HPA range end, and relaxing
+  constraints while Endpoints decoders' attachment.
+- Patch 4/4 simulates a LMH for the CXL tests on patched CXL driver.
 
-Jonathan
+Many thanks to Alison, Dan, Dave and Ira for their help.
 
-> 
-> 
-> > ---
-> >  hw/i386/pc.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/hw/i386/pc.c b/hw/i386/pc.c
-> > index 2f58e73d3347..180bc615f3f0 100644
-> > --- a/hw/i386/pc.c
-> > +++ b/hw/i386/pc.c
-> > @@ -975,7 +975,7 @@ void pc_memory_init(PCMachineState *pcms,
-> >  
-> >      rom_set_fw(fw_cfg);
-> >  
-> > -    if (machine->device_memory) {
-> > +    if (machine->device_memory || cxl_resv_end) {
-> >          uint64_t *val = g_malloc(sizeof(*val));
-> >          uint64_t res_mem_end;
-> >  
-> > -- 
-> > 2.43.0  
-> 
-> 
+Commenting on v1, Alison wrote a couple of observations on what users
+will see. I suggest anyone interested to see how this series affect
+users to take a look at her observations.[0] Thank you!
+
+Changes for v4:
+
+  Re-base on top of 
+	"cxl: Address translation support, part 1: Cleanups and refactoring";[1] 
+  Drop no more necessary 2/4;
+  Drop collected tags because of major changes throughout the series.
+
+  1/3 - Adjust Endpoint Decoders dpa_res->end (Alison) [2] 
+  3/3 - Use weak/strong mechanism (Dan) [3]
+
+Changes for v3:
+
+  Re-base the series on cxl/next.
+
+  1/4 - 2/4:
+        Constify local variables.
+  3/4:
+        Call arch_match_region() from region_res_match_cxl_range().
+  4/4:
+        arch_match_region() - Check that region end is under start + 4G;
+        arch_match_spa() - Check that SPA range start is cfmws_range_start.
+
+v3 - https://lore.kernel.org/linux-cxl/20250314113708.759808-1-fabio.m.de.francesco@linux.intel.com/
+v2 - https://lore.kernel.org/linux-cxl/20250114203432.31861-1-fabio.m.de.francesco@linux.intel.com/
+v1 - https://lore.kernel.org/all/20241122155226.2068287-1-fabio.m.de.francesco@linux.intel.com/
+
+[0] - https://lore.kernel.org/all/Z0Tzif55CcHuujJ-@aschofie-mobl2.lan/
+[1] - https://lore.kernel.org/linux-cxl/20250509150700.2817697-1-rrichter@amd.com/
+[2] - https://lore.kernel.org/linux-cxl/Z9tzZkn1rqd2Uk_6@aschofie-mobl2.lan/
+[3] - https://lore.kernel.org/linux-cxl/67ee07cd4f8ec_1c2c6294d5@dwillia2-xfh.jf.intel.com.notmuch/
+
+Fabio M. De Francesco (4):
+  cxl/core: Change match_*_by_range() signatures
+  cxl/core: Add helpers to detect Low Memory Holes on x86
+  cxl/core: Enable Region creation on x86 with LMH
+  cxl/test: Simulate an x86 Low Memory Hole for tests
+
+ drivers/cxl/Kconfig               |   5 ++
+ drivers/cxl/core/Makefile         |   1 +
+ drivers/cxl/core/platform.c       |  86 +++++++++++++++++++
+ drivers/cxl/core/platform.h       |  32 +++++++
+ drivers/cxl/core/region.c         | 113 ++++++++++++++++--------
+ tools/testing/cxl/Kbuild          |   2 +
+ tools/testing/cxl/mock_platform.c | 137 ++++++++++++++++++++++++++++++
+ tools/testing/cxl/test/cxl.c      |  10 +++
+ tools/testing/cxl/test/mock.h     |   1 +
+ 9 files changed, 352 insertions(+), 35 deletions(-)
+ create mode 100644 drivers/cxl/core/platform.c
+ create mode 100644 drivers/cxl/core/platform.h
+ create mode 100644 tools/testing/cxl/mock_platform.c
+
+base-commit: acc2913692413df9d1
+
+-- 
+2.50.1
 
