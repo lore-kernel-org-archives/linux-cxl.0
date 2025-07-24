@@ -1,61 +1,56 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD97220698
-	for <linux-cxl@vger.kernel.org>; Thu, 24 Jul 2025 22:16:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0586223BF8F;
+	Thu, 24 Jul 2025 22:45:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753395378; cv=none; b=s/dZwyyRYHfmwAuCVF9V0UT69Yplp8sSaRRubC6b/LEpkYGszDBcMi5GuXj9wI1ktNWI55DQ+FXMPhWW5CfS09CAUhTYrhDPu8IZ9YNcHEc17cNjUOePFqy+QhDtGkxirU+9xzX/MGY3LhTmz29pq2LMp8CPcP1Tjcc2oj5AqRk=
+	t=1753397109; cv=none; b=hlPM67ylsTrqbV2WgOmgYaU+6nzU4EY4XJ/DjU/sZrcxwHnybqz6CbxakRVFK3I4QBjQmb35U8pIyx4H5m0703kUj8O5WspebBcWXKxDURzE98WGMgXmY0opW9/zVO42CUETqv76+AbQpcB03vLfBEGcFJ49UcE8V7N3/2f0VUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753395378; c=relaxed/simple;
-	bh=VOsrWcJrCpJKt37WVVeZE3pPOc8UDCo9mApEEhIRFYA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GwLq5ttlD6f87TZC7tb0p3MRElbBduP3tyCo+enlU0GMNkxL2UngXGzKQjRiXlgHVynwhrglmsnAwogFMb80P3/BQGcial7OnVEm0rt+0f2MG/JBBol1TUFe+J2pqUyEtpU7rKDcyt7MktOhC77qLBfPlkIUTKyR47pBbNtoEtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gJzfCiJc; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1753397109; c=relaxed/simple;
+	bh=UPyEyfmQhsoOkySS+eZv7T3VhkFbdKNZiYgu5hIT510=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Yh0lw/R3P5GmWnsbo+C9UJmsYESkmXzIytJ2qGsFF3vxPHMDca9XRPPMycrm0129/Y4I8CSsIexLJhcT/0o93yRqcbLf9RM4YtS/i7gztRm81Q5FqKnjU4zN5nwXMajot/mJBXIVi0LP+eXOfQdiSc25l+/v15J9ou/5QEuYwNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ftEICtu9; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gJzfCiJc"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ftEICtu9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753395376; x=1784931376;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=VOsrWcJrCpJKt37WVVeZE3pPOc8UDCo9mApEEhIRFYA=;
-  b=gJzfCiJc/ndE+aoYplGDFb6+SGOxpDHGqZGr3CIXCh+XPtlA5tOBjoku
-   ZM8HxVMFZjnfInbjaBp/a+e9irx+SZHfiHXxxAc2h+j428rnXbr30UUVC
-   bwvt5oYAeytzDwfC3E8AqAU8qAujt2gnrkou4+uovRwe3DPQEjCQv0uc0
-   9THwb8D7u1vxIPI9n1h6++3IRhahRdfO5u/vn4ntIxbwK4eImZTVXY6fK
-   CjeVMCveRt/vzhx/9chVbsZN6VZixw5Q4fW2NOjxSiv9A394yyEfoOCNL
-   EcMPKXYSU7XnSpB36wYId/wOlz+5M1/dNEsIEDfygdVPZBw260/ndNr2f
-   w==;
-X-CSE-ConnectionGUID: HgheAAJRTfKtCkQKk0qGIw==
-X-CSE-MsgGUID: ywj6vAJcT1CRyfuQOfJqDQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11501"; a="54941725"
+  t=1753397108; x=1784933108;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=UPyEyfmQhsoOkySS+eZv7T3VhkFbdKNZiYgu5hIT510=;
+  b=ftEICtu9KnxRCma1dyVsxIUAOdsQN7RAtC1E31SXah83hmzA46BSK64M
+   gDkCp1WJl+2bLAh6kzSgAJpv34gcrUo4t1nnzm++NKZHjynCdcDs42t3q
+   Do008P/Wo2L9zyDXBVkYjNlGOOFiXhAwPNTVU+kHUC8Wwgytx0GQv/7YV
+   7d4iJjTNB1WH7CGxY/Mt7SAe7yv+Dm4T4+gj+53+TR1fBzF/8zMP+8PId
+   1kCUh/NeEANtr6v4gNul3e5dysqJuuJ+hGFPEEjS+xGkzoKkbCZSMTfTP
+   hFUvgdgQJ+c5YbSqtWMoxEcEx/DCBEFsoMCx3NwVXZhqVKwkdoPLR7N6v
+   A==;
+X-CSE-ConnectionGUID: dmx/5vxSTWOZceHQX+RKXA==
+X-CSE-MsgGUID: 7R42xs3ORUy2crFyhWGqOg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11501"; a="73191757"
 X-IronPort-AV: E=Sophos;i="6.16,337,1744095600"; 
-   d="scan'208";a="54941725"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2025 15:16:16 -0700
-X-CSE-ConnectionGUID: 3Cte6RVxTNi4VVeMPQAhLA==
-X-CSE-MsgGUID: 3UmnhAO8QU2eczd8AzfDHQ==
+   d="scan'208";a="73191757"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2025 15:45:08 -0700
+X-CSE-ConnectionGUID: /IYa0lWpTm+FadVm/WNq+A==
+X-CSE-MsgGUID: E/PwLkcTQxu52/wVOUh6DA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,337,1744095600"; 
-   d="scan'208";a="160504791"
-Received: from unknown (HELO hyperion.jf.intel.com) ([10.243.61.29])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2025 15:16:16 -0700
-From: marc.herbert@linux.intel.com
-To: linux-cxl@vger.kernel.org,
-	nvdimm@lists.linux.dev,
-	alison.schofield@intel.com,
-	dan.j.williams@intel.com,
-	dave.jiang@intel.com
-Cc: Marc Herbert <marc.herbert@linux.intel.com>
-Subject: [ndctl PATCH 3/3] test/common: stop relying on bash $SECONDS in check_dmesg()
-Date: Thu, 24 Jul 2025 22:00:46 +0000
-Message-ID: <20250724221323.365191-4-marc.herbert@linux.intel.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20250724221323.365191-1-marc.herbert@linux.intel.com>
-References: <20250724221323.365191-1-marc.herbert@linux.intel.com>
+   d="scan'208";a="160820277"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.223.202])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2025 15:45:06 -0700
+From: alison.schofield@intel.com
+To: Jonathan Corbet <corbet@lwn.net>,
+	linux-doc@vger.kernel.org
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	linux-cxl@vger.kernel.org
+Subject: [PATCH] Documentation/ABI/testing/debugfs-cxl: Add 'cxl' to clear_poison path
+Date: Thu, 24 Jul 2025 15:43:06 -0700
+Message-ID: <20250724224308.2101255-1-alison.schofield@intel.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -64,98 +59,30 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Marc Herbert <marc.herbert@linux.intel.com>
+From: Alison Schofield <alison.schofield@intel.com>
 
-Stop relying on the imprecise bash $SECONDS variable as a test start
-timestamp when scanning the logs for issues.
+'cxl' is missing from the path to the clear_poison attribute. Add it.
 
-$SECONDS was convenient because it came "for free" and did not require
-any time_init(). But it was not fine-grained enough and its rounding
-process is not even documented. Keep using $SECONDS in log messages
-where it is easy to use and more user-friendly than bare timestamps, but
-switch the critical journalctl scan to a new, absolute NDTEST_START
-timestamp initialized when test/common is sourced. Use a SECONDS-based,
-rough sanity check in time_init() to make sure test/common is always
-sourced early.
-
-Signed-off-by: Marc Herbert <marc.herbert@linux.intel.com>
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- test/common | 52 ++++++++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 50 insertions(+), 2 deletions(-)
+ Documentation/ABI/testing/debugfs-cxl | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/test/common b/test/common
-index 2d076402ef7c..0214c6aaed5f 100644
---- a/test/common
-+++ b/test/common
-@@ -15,6 +15,25 @@ err()
- 	exit "$rc"
- }
+diff --git a/Documentation/ABI/testing/debugfs-cxl b/Documentation/ABI/testing/debugfs-cxl
+index 12488c14be64..e95e21f131e9 100644
+--- a/Documentation/ABI/testing/debugfs-cxl
++++ b/Documentation/ABI/testing/debugfs-cxl
+@@ -20,7 +20,7 @@ Description:
+ 		visible for devices supporting the capability.
  
-+# Initialize the NDTEST_START timestamp used to scan the logs.
-+# Insert an anchor/bookmark in the logs to quickly locate the start of any test.
-+time_init()
-+{
-+	# Refuse to run if anything lasted for too long before this point
-+	# because that would make NDTEST_START incorrect.
-+	test "$SECONDS" -le 1 || err 'test/common must be included first!'
-+
-+	NDTEST_START=$(LC_TIME=C date '+%F %T.%3N')
-+
-+	# Log anchor, especially useful when running tests back to back
-+	printf "<5>%s@%ds: sourcing test/common: NDTEST_START=%s\n" \
-+		"$test_basename" "$SECONDS" "$NDTEST_START" > /dev/kmsg
-+
-+	# Default value, can be overridden by the environment
-+	: "${NDTEST_LOG_DBG:=false}"
-+}
-+time_init
-+
- # Global variables
  
- # NDCTL
-@@ -147,11 +166,40 @@ json2var()
- # $1: line number where this is called
- check_dmesg()
- {
-+	if "$NDTEST_LOG_DBG"; then
-+		# Keep a record of which log lines we scanned
-+		journalctl -q -b --since "$NDTEST_START" \
-+			-o short-precise > journal-"$(basename "$0")".log
-+	fi
-+	# After enabling with `NDTEST_LOG_DBG=true meson test`, inspect with:
-+	#    head -n 7 $(ls -1t build/journal-*.log | tac)
-+	#    journalctl --since='- 5 min' -o short-precise -g 'test/common'
-+
- 	# validate no WARN or lockdep report during the run
--	sleep 1
--	log=$(journalctl -r -k --since "-$((SECONDS+1))s")
-+	log=$(journalctl -r -k --since "$NDTEST_START")
- 	grep -q "Call Trace" <<< "$log" && err "$1"
- 	true
-+
-+	# Log anchor, especially useful when running tests back to back
-+	printf "<5>%s@%ds: test/common: check_dmesg() OK\n" "$test_basename" "$SECONDS" > /dev/kmsg
-+
-+	if "$NDTEST_LOG_DBG"; then
-+	    log_stress from_check_dmesg
-+	fi
-+}
-+
-+# While they should, many tests don't use check_dmesg(). So double down here. Also, this
-+# runs later which is better.
-+# Before enabling NDTEST_LOG_DBG=true, make sure no test started defining its own
-+# EXIT trap.
-+if "$NDTEST_LOG_DBG"; then
-+    trap 'log_stress from_trap' EXIT
-+fi
-+
-+log_stress()
-+{
-+	printf '<3>%s@%ds: NDTEST_LOG_DBG Call Trace; trying to break the next check_dmesg() %s\n' \
-+		"$test_basename" "$SECONDS" "$1" > /dev/kmsg
- }
- 
- # CXL COMMON
+-What:		/sys/kernel/debug/memX/clear_poison
++What:		/sys/kernel/debug/cxl/memX/clear_poison
+ Date:		April, 2023
+ KernelVersion:	v6.4
+ Contact:	linux-cxl@vger.kernel.org
+
+base-commit: 89be9a83ccf1f88522317ce02f854f30d6115c41
 -- 
-2.50.1
+2.37.3
 
