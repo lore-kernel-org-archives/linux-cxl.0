@@ -1,253 +1,444 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from baboon.banana.relay.mailchannels.net (baboon.banana.relay.mailchannels.net [23.83.217.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6454913B298
-	for <linux-cxl@vger.kernel.org>; Tue, 29 Jul 2025 18:49:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0851921ABA8
+	for <linux-cxl@vger.kernel.org>; Tue, 29 Jul 2025 20:21:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.217.8
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753814948; cv=fail; b=DDAM/dsH2Efx2tC9C4zeteBf7BAYjhuqJ+PmmHhPNWIStMlyPVf7XIm5kb8KRHmvwf/22SqAzBKst4sPjv5r1BbstAfyggLjplSUpWVYDQt2Wt038902VoafndZBDGGE169Frqrq3aqCHh1fVL86w++P1R9ySAUpVIw+B5DFX+o=
+	t=1753820493; cv=pass; b=HMddg+mVJ2RhB2t6HS1q0rWj/JoiqA/Jd1H/IxNhfYK/fXO8Tt45h0mVAjMbzKlSeRff1DDktEzD/dV3WSrsH0UxShEn7AgfR+pSbKS9FGlcDZCzvHGh9s2RSCjSbHlku9JkaLHwkThldtOgbKLjHHfPuV+hpYwHmY7HOKefAxQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753814948; c=relaxed/simple;
-	bh=qLgSBhgT+egk8Qf6NW95PmOif5CiX9+fHguPdpIldjM=;
-	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
-	 Content-Type:MIME-Version; b=S4s3bh9JsRWfPl/fsu+dJz6prt9YrlZl0Ya6AqX3HbHP5mxS1TPvZHDodS9BdRRNVcCq3ZhkjWz14TA97/yma1BzB8BP/CSzKxjccZHJOXXerOY7k8RKiHbJdJXGqUfufO3pKeNF3gW1L5VBGzM/yOBx3KKSw3si4gE3hPoQMIo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ke3qdWse; arc=fail smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1753820493; c=relaxed/simple;
+	bh=0fIMVbxIcT70yERX81MFCaUopGn/HIq2GdK++7oiv5U=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=DSpeyyO+lPVzRlB/0f7zG51ZxwpEIyewDz+8gvvU1TwJlD1S9NktvRQ+65o+tyFib6qkm3TgrI21ftlI90rucT69FDIuaWtL6PYr+MmCDk5v9URwv2teZL8CM61EY818hvWd8UGZNckTDWmoJz1RXXTnLAFkUj8REDP7CStvKXo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=E8m0Yrm2; arc=pass smtp.client-ip=23.83.217.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ke3qdWse"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753814946; x=1785350946;
-  h=from:date:to:cc:message-id:in-reply-to:references:
-   subject:content-transfer-encoding:mime-version;
-  bh=qLgSBhgT+egk8Qf6NW95PmOif5CiX9+fHguPdpIldjM=;
-  b=Ke3qdWseCNC9iB+8ZdFTiMINtl5sQNu+Ef8IHfRYzmrtmpk0AD1LEdKi
-   rEVj3gz+nxBpumj1x8VYF4ILPxbLpi0qftkZbpkb7A0g+LR/Jl/KlUFVH
-   olO0hicTaGpEyeezLD406t96Uf9khan7lzE5WhBgPM25gfsrzG8R0ZdY7
-   4MDH6Xd0tGbMrWpFEHUNqU114kxEd2DuFI3khqTql4YzI39q9gG2IJreH
-   WgEzJrbSOp0z+Sre32xoC9cvOc5geKXtWCx14asSyiqjpz3vbtbcfZT8p
-   gOwKu0f51roJyCa0uWGcIXRZ/Tv8WpmIw7vbJ/rthruqDN0J2ire7p4nn
-   g==;
-X-CSE-ConnectionGUID: Nj36VfWsS8i/oWN2js0g9g==
-X-CSE-MsgGUID: ciHFz0LKTo+gPat5Js+oPw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11506"; a="56250789"
-X-IronPort-AV: E=Sophos;i="6.16,350,1744095600"; 
-   d="scan'208";a="56250789"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2025 11:49:06 -0700
-X-CSE-ConnectionGUID: YFAthsxWRcSHrluBSRTPPQ==
-X-CSE-MsgGUID: RIDn3ctERMuSsbGm20QTfg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,350,1744095600"; 
-   d="scan'208";a="163557039"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2025 11:49:05 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.26; Tue, 29 Jul 2025 11:49:04 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.26 via Frontend Transport; Tue, 29 Jul 2025 11:49:04 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (40.107.93.73) by
- edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.26; Tue, 29 Jul 2025 11:49:04 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=l3KfYI7oOTD2DeDxqGUA2JzpjQEgg3J2VKrt9rFNtxU2pQe98e2P6eEKuzng7J3rXzFr7InDoBKWpG1TJvZJoDHESqp1KxaqcF9Um7vBHNHzz1pFgBbk4tU87U7vlUsfeGeT6IBWoeZww8YQPTy8nA/jKtNtoeHBUeGXF1bZT/OEWf93YkLr/A6jUM8Yu7zO1oBvtIs/ZHq8j5ku2YoLP1yk89MLo0RGBMk3Io1cWTwjp6/AmMrxAixEMm2Xtv2mZbXDHL/0CF30jc29ugiysLUdajsGJm2NcY58tBFlzTJrXU8vKYakHYoSZnFYpD18EQJvcW8SVqf4VLirXR3KYQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OyMD6YDiex3F38ckZ147g6ISyY90wI77sURDssHAlI0=;
- b=PUgqYSlN8+LP1qn+5vx4lRlJxSrg6cXRVD+maxjrE2tEXVbvUFaWXo2oZl0Pf5ahuoLmf0pPso6rDNOKC6y1GfS8EMb82HFP6RdeEJxUUy0qwmhCKgkGG3dM0YxxRtpcgEonZUoKISrjyfZZNvxRz+OEQUpbZ4ShqtpVOXCoFMUGI4ZfByyHADtW0of0HYr6ZlfaGBcaZlHiL/EjYrvukCJaIu1vU6WY0Yf1Jkn3li7HUaU9Xg0zBRynU2oRKKHi3x7RFKz90QpSmKIkHsW3KkPO7QtBWlsSNcb29vKYtfj+HRZh3uLUqwAaGexuXlHdbGkKpUoCpsJ1cW9kmhLRFA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA3PR11MB8118.namprd11.prod.outlook.com (2603:10b6:806:2f1::13)
- by DM4PR11MB6141.namprd11.prod.outlook.com (2603:10b6:8:b3::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8989.11; Tue, 29 Jul
- 2025 18:48:20 +0000
-Received: from SA3PR11MB8118.namprd11.prod.outlook.com
- ([fe80::c4e2:f07:bdaa:21ec]) by SA3PR11MB8118.namprd11.prod.outlook.com
- ([fe80::c4e2:f07:bdaa:21ec%4]) with mapi id 15.20.8964.025; Tue, 29 Jul 2025
- 18:48:20 +0000
-From: <dan.j.williams@intel.com>
-Date: Tue, 29 Jul 2025 11:48:18 -0700
-To: Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>
-CC: <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>, <dan.j.williams@intel.com>, Robert Richter
-	<rrichter@amd.com>, Terry Bowman <terry.bowman@amd.com>, Joshua Hahn
-	<joshua.hahnjy@gmail.com>
-Message-ID: <688917724ab56_48e51008e@dwillia2-xfh.jf.intel.com.notmuch>
-In-Reply-To: <20250729162126.2427348-1-dave.jiang@intel.com>
-References: <20250729162126.2427348-1-dave.jiang@intel.com>
-Subject: Re: [PATCH v4] cxl: Remove ifdef blocks of CONFIG_PCIEAER_CXL from
- core/pci.c
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR03CA0282.namprd03.prod.outlook.com
- (2603:10b6:a03:39e::17) To SA3PR11MB8118.namprd11.prod.outlook.com
- (2603:10b6:806:2f1::13)
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="E8m0Yrm2"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id BDFDE1A5FBE;
+	Tue, 29 Jul 2025 16:54:59 +0000 (UTC)
+Received: from pdx1-sub0-mail-a208.dreamhost.com (trex-blue-0.trex.outbound.svc.cluster.local [100.97.47.152])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 6555B1A6A1B;
+	Tue, 29 Jul 2025 16:54:59 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1753808099; a=rsa-sha256;
+	cv=none;
+	b=BuFPeRsxwGZRhkSUyrmylF7LVAHBcFkJ4Um1ZYEAP3tXq0Rc1kAh6fyfOygr4rcKlsD5uz
+	cKpKicgKnKzC22v+v6gjce7svrjMUqF/fLgF6WOWqKHQMnW8zcszoh+reZdk0NiloSHwct
+	oNx0HtTb3J2z4MTMxT10u/vCjaWXTviUtlUEbnXmUVm1af8GcjmSkFf54x8oAhkiQu62Kr
+	thNEf9uIbjNGjZNGvAYQFmKxp0+OG20hg1Kg55dpOl2pAA5LWtNy3IAziNGBZOufRGPcXX
+	pJGinJ/m6oSgfzustNsefDJQdx+hzKzPrvKVWhUez2yhzOLjD3n+ani0b3whjw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1753808099;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=SSKY9j0C8ik1w8HXeNrmP+gIjQnzzMnhn4wzueihAg0=;
+	b=T6hDOoO9apiPvNkW/rRDf4GEpPxFl6XJ/jo6SKi80dhb1zYs3DlHU92QEh48nNyt6j/df+
+	l3hgCoWZqpHiDBdEdULIYco6YCSsxEgVakl+KUE+Jl89nCmFo0bWDkz5XaDYjeAL2qj+Mh
+	+yKEccmRpPrtOp9XSGPzfx2Lq67x+HztTKsWnyEr+OsCJflRj0oN5l0KVLgsKX3maci0O7
+	DP8BbUelxlo/aIa161bqSPOrmzMlCpmDLlNYaDNqBhituT7O3wyO9WUGRw66KYuj75DUh+
+	e0+/2FqFQwPZEIntDyhi4EFg9VqshM2Nn1jdH321tkj9lXwNIroSNOG/xmPmgA==
+ARC-Authentication-Results: i=1;
+	rspamd-696f8998d-ps5xn;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Bad
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Eight-Stop: 23031a606d3abb61_1753808099700_315847281
+X-MC-Loop-Signature: 1753808099700:1908830250
+X-MC-Ingress-Time: 1753808099699
+Received: from pdx1-sub0-mail-a208.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.97.47.152 (trex/7.1.3);
+	Tue, 29 Jul 2025 16:54:59 +0000
+Received: from offworld.lan (syn-076-167-199-067.res.spectrum.com [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a208.dreamhost.com (Postfix) with ESMTPSA id 4bs1fp5TNrzGy;
+	Tue, 29 Jul 2025 09:54:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1753808099;
+	bh=SSKY9j0C8ik1w8HXeNrmP+gIjQnzzMnhn4wzueihAg0=;
+	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
+	b=E8m0Yrm27obCMhvFvHJK8gu48oXrcBGefHiWb8pd/JeA7rwBUu6m8eHjJlZum6y19
+	 ryzn2xnwWw5ucWRjEpKKJrVgGyHV1aFizmIzs1eqvKk/3UMRgSAg5lkMgB9TuE40Fi
+	 29Brh0lk9OGi3uhkbbUZtMG48EncmCtQzHhuaXYWSm0d4wsIgNm4TLtjSBbLCZBzJN
+	 C4U/SRuhql+F+gt/yNNPNhlH/KP9uIoTklcAg/cQUcSP+w9sl80055HuDLhm30yD7Y
+	 ZRP4igEc7Vif6EFXnDllsbN9HCc4hm9G/XtGfHIQMy0X7MDsdSvmlGFWcl+nUSO0Zu
+	 GJWGUmQZs67Wg==
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: jonathan.cameron@huawei.com
+Cc: ira.weiny@intel.com,
+	alucerop@amd.com,
+	a.manzanares@samsung.com,
+	linux-cxl@vger.kernel.org,
+	qemu-devel@nongnu.org,
+	Davidlohr Bueso <dave@stgolabs.net>
+Subject: [PATCH 2/2] hw/cxl: Support Type3 HDM-DB
+Date: Tue, 29 Jul 2025 09:54:41 -0700
+Message-Id: <20250729165441.1898150-3-dave@stgolabs.net>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250729165441.1898150-1-dave@stgolabs.net>
+References: <20250729165441.1898150-1-dave@stgolabs.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA3PR11MB8118:EE_|DM4PR11MB6141:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9da30046-7407-4eb3-a0ae-08ddced07d1e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?WnVtYm85VkhRTVJSeWUram04OVowTUFQRjJCWDg3Vkh5ZFc0VXRaNG5wYVRO?=
- =?utf-8?B?MzU1V2RXL0pxMFB2UnJNeEptbkxhaDJsVVdtSDFPUEYzZVdnTThWM2JBb2xo?=
- =?utf-8?B?ejl4U0dOUk80TG5maGIwS2pmWDBZSytIZW9HbUxib0N0MW1qMWdtZ0FvMkRU?=
- =?utf-8?B?bmI3SGdFekowN3A3TFcrRGhLMzRQR2dQalNyRXZMSDB3M3lEVFFxM2RyR3o5?=
- =?utf-8?B?NE13bm9hZklFa2daRUxSVG9FVkdIZXpxdnh6ZVNydSsreTNURWJuS3doUjMy?=
- =?utf-8?B?TTAvWTRsVEV4N09hZ010LzBqQkZ6SmVUTnNwSFZMZVRVUGdFT3hNL215QjJp?=
- =?utf-8?B?MlhGUXZiMXVXV240WVBXN1REOWdOQjBoQmlIVXdYc05zbEJsQWhTQXVXQjVj?=
- =?utf-8?B?bDdnZGdrN1FvVmpTam5UUCtxc3hzeEpvSXFLQXhjbUdxbzd0ZkVpaVIwcVl1?=
- =?utf-8?B?cHNYSWZVd2s1QmpFNjRZYXk5ajhyc2JjRjdVZHg0YVY1SWdNT0xKQjY4Q0ly?=
- =?utf-8?B?NGNHREhkYmZqbFpMWEt6TTRtY05SaGQ4bElwamdyZjlIVWFXZHB3bEFqdHNr?=
- =?utf-8?B?bFFvaU1TeS9EL0tOMkRxVHA3UkkzaG5GWHRyMEsxQ1ExNEkvKyt4Y04vNDlD?=
- =?utf-8?B?L0hnUXBEK2RoZmY2NG9tK0dCRUtKN3JHbTYxVUZLb3o1blV2Y3YvNDhXTU83?=
- =?utf-8?B?UDN5cHpZdFNOa2s0MitBcnZ0eTl4OW0vMk1ZRDJ0b3Q4YXV6ZzdTZmpGVmU1?=
- =?utf-8?B?SEtjRFBGdWNhNVV5WGNISXB0cHVXSVljeG1GUjgxZ0hVdlUySjNpOThjaUlu?=
- =?utf-8?B?WmwxQS94SkhpRVdra280Y2gxcG9pYzgrZE9ZbWNWVVI3UHZCbUxuSk1oeVNF?=
- =?utf-8?B?WWFsL3FsbEdEVktrQlFLZWc0NDVDbWpoZkE2RDZZb0VzNlprcE1SV28xVjZY?=
- =?utf-8?B?d2hjUkhyU2hRVzJHOWFpWXZZbTdpbnZBVzFoMzVuclNiaDJCQTdRYTlTUUQ4?=
- =?utf-8?B?bzNQSStJOTJJNDR2SHlPTTJxeUxML0o0ZitGdWJaWi9SYVhLSXcrdmNyZEto?=
- =?utf-8?B?TVkxekZtL0d2Y1RxYjdSTVhyc1pVd3NXeHhLYmthUHJkUkt2VklxQ2lRQWMz?=
- =?utf-8?B?dTQxWHdLdktBRE12aTRja0xEYlgyRXlWZWxtM0FZN2xUQUplTHhZSWdGdVNt?=
- =?utf-8?B?SWpod210WCt1MTlsS2tScG44R3l6Z1VmejZqR1hSTEJpNkQrOHZPY21mSDc2?=
- =?utf-8?B?VVVCM01yalpnNEVFZlBIM2xIT3hFSzlwbmUzS2xqOXo1NTRoZDZONnlyZ2c2?=
- =?utf-8?B?eHRobEVmRWo3V1pQb2xzNy9EL25VMFZqWWVhclp6bU1DendnVlhzRWQrTHp5?=
- =?utf-8?B?MXVNNFZFdjBZK2hLN3lFL2U1dGZHZ3lYL0o2ZFVUUlBNYWZwQ3dlVjVsWDdF?=
- =?utf-8?B?cU1jUW4zTVZ2dXkvdjNhOEhnUVVTV2JDdldUdE0xOFY0TEVxbndPTkdJa216?=
- =?utf-8?B?NHFSZWoyYlVHREpWS1FMeWdTVjdmdEh1QlB2QWFEZVZ3QVZyay9XYWFnSVl5?=
- =?utf-8?B?YVgvd3drY3JCeWRjbkp3SWl0eTlaRi9ueTEzQTN6TG5uWm9PY3p2TmhlSFJ5?=
- =?utf-8?B?bmxudXdPTDlQRW1MNmcxcHA1TXpHUEVaRWJubHdaVTFyZWt1aHZTU0ZYWkp0?=
- =?utf-8?B?QTIwWEJuRVkxRmcrOWhMWVF1YVNCVU9vV0tuZVpqSEE1YU1oMzJVTGdFWVVC?=
- =?utf-8?B?MmVXZHlIVStMR0YzY1ZSRTFhWXVOZ0RVWDBZeWVDYXFWL09IeGpoQTkzRVVl?=
- =?utf-8?B?TDZSbmNiMzc4R0VmVFRJa3dIUjY4QWREWThtblhuaWxna1dZMzFkQmJBUVZT?=
- =?utf-8?B?T09TR2kwMm5QeTNHMjg0RlZRbUN4bEt1U3VMUlFsK3JudFNzOVVVdlB0RDR1?=
- =?utf-8?Q?UP3HXCKIcp4=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR11MB8118.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RjhFa1BYMVpGT3BWcGVSVWhSOWpOUWZaVVZLRWZnbWxDQ1FlWTJiZmI3VnFE?=
- =?utf-8?B?cWVsMVhnei9FOTFzOS9zRGpvWmc2QUFSR3E3YjRhVlpUVFZYaWlsNElQZk5n?=
- =?utf-8?B?MEtJR1ROU2U4OFNYQkc0OVM5MVhNQ3YzTGF0Q3lZSkRoVWs4VWgrcjVVUGQ2?=
- =?utf-8?B?L0o5OTMzejlCZTN2bXpGZWlzbWtEQ1hRbisvVjFTdFNudktBTHVrWDhzWlFl?=
- =?utf-8?B?czFUSUxxblh1cjRudWRQTEJScktBK3BRMkJoWDBrZGIveGRZbkE5YkJUb2I0?=
- =?utf-8?B?WHJmVE0wN1R1VjkzUERBeDVCR3RHTzd5eFRodEJTTGp0MXB1ODdaOUd4bnY3?=
- =?utf-8?B?UDlYTmVaV09rSnpRYW5PNlVyOXh2UkMxRmk4K0lFQ3RES1RtWFFJRmtkbTd5?=
- =?utf-8?B?VTB5clU5eFRNMms5RENkVUVoVTVEWXRreURVNWpCODAxblhJNlN3cldGVUVs?=
- =?utf-8?B?T3lQSDNpRkdrbEdMT0NhVDBGTU9PYytEcXdSTXY5UDRCZzB3WDJUek82Zkpu?=
- =?utf-8?B?Vm5UY3R1Q004LzN6emJpTXk5UjlaRUsvOEVvWmdsWGlzTEdBNWRhcm5jKzNL?=
- =?utf-8?B?QjRiRk00MEVUQ2lMNFlBM3kwclFQcE9PNTlhSmNiajlNOXRGcGt6QktCc1hx?=
- =?utf-8?B?dm05UGxwcFVJOHlBWE1jVHhkRlJ0R0ZSNGFQVFlkMlE3ZTNWMjNwZ0JXdjVI?=
- =?utf-8?B?ZlF6NHdHTGloR3RDVmQyOWthTmtoMXQ1R0NaU1g5U2FIejUvd1RvYW0rU1A1?=
- =?utf-8?B?cDkyaEVpNWh1bHcrZ2NKM2k5Mjl6WUpoMVdnaVc1RzNYV1pPcUxocE1GT0t0?=
- =?utf-8?B?Z015RmwrRGVzR2lESC9rc2NXdFVtNXRnWDA2dnhOMmhIQ0s1TkN1ZFRKVnlX?=
- =?utf-8?B?TzNoN0VBaDBob1VkZ1FDY2hxRlZ4dDZVVGZEOGN0blpVSnIzaExHQWpqbHFH?=
- =?utf-8?B?RkdlVDNZWDBBNGUwbng1OUovRit1VEZtZStYRXY2aS9ZTnJEaUZqaXdicCto?=
- =?utf-8?B?YzVnMjE0ckloTTZLS2xqNzJ5cHVDclhCVWJQeEFucTgySGsxUi9YZ1FHb0xU?=
- =?utf-8?B?YkRtQWpYZjBLSnQ3ZE91cjRXZ1pDa0lOdHVmY2VUSEo0dVNMb2k5a3lNTHl4?=
- =?utf-8?B?cXlMbnY2aDZGeE5rVGVOYUs5TGhxS2d2TnNFMnN0S1ZaQ2ltVWhSQVBaRmVn?=
- =?utf-8?B?ckwvaGVBYkZYMHlOSVg3SnFqMzA4eTRMdHUzR0dxV1VtVWRIOTJwWktub1VB?=
- =?utf-8?B?Y24ybVl6emdQbFd5bFB0MTQ1M1I2c1JSd0Jmakh2TSs5RURpRXJCWjdjdUJI?=
- =?utf-8?B?ejFGUW0zSjl6NmR4Z2JnZ3J5UThWVkMzdkc2OWNQNkt0NTArSDU3bTRRYzl0?=
- =?utf-8?B?YXpRRVNjNnVCMzB5TUFRMzBqZ012OEQxL1Rjd3g4aVppVWpXWnZHQnhSU3dY?=
- =?utf-8?B?YjBBWThFdlY0b3VHN0hycDhDcTRrb3JLcFNxc2ZBejJsS3lsQmY2di8wNDg4?=
- =?utf-8?B?Qmtia3p2TEwxaFdzNUJ2eCtlZmhtaHM0YXlHRjg0Rm83KzQvbnR4VTRuNlM2?=
- =?utf-8?B?SVhmbWJnUkVjMWFtUklhd2syYkxQNHptd2ZTSllqVVAxVjkzc0JFak9uWmh6?=
- =?utf-8?B?em8xTE5VWGJiTGRZb3RadDhsZFNVUEtOV3lkN0VMNTZNZ1MwUWo3dWxFTnJ3?=
- =?utf-8?B?a0hMMlk3VjA0M1JwTTJGcWRkdkdCRkJmSEZqcmMzWWRTRWZZcE5URnZYWFc0?=
- =?utf-8?B?T3dWNi9odGEwMFR4dmcrR0QxMVFxNDhOQXZ6T1FYek9xbmxvcW1pbzZlNk41?=
- =?utf-8?B?NVV3WldUT2RsbnhzN2JXdXJ1YUNXa1pNZkJyRkhDM2xmeUNuZGRUTTkwaWR3?=
- =?utf-8?B?Z01Mei9ySVd6eTFuZEoxRmpkMXVUU1pvcGlBQVdXSVJXSSt4c0pSV0w0NkZH?=
- =?utf-8?B?czdWTjhpdnkyK0dsMWwvMHZGV0ZlUjVtbmQ1SkFGNEVDM1Z0NnA2c0JUWDJj?=
- =?utf-8?B?MnhQNElMcFhOYWw2MmpLUUZSWXd1cTIyL1VOc0gydjFnTkF1U2ttVlNHVjJG?=
- =?utf-8?B?KzF5VUxtdG9XWHlZZkVIRllCaGhjcnprYTNCdUFWZ1NMNkZDanFpUUNOYUdo?=
- =?utf-8?B?ZkJEL0JHSkJWWm95TFlOQ3RRMzhuK2prUmxhNVlscXZTTjdLWUVjNXF5TjRn?=
- =?utf-8?B?TXc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9da30046-7407-4eb3-a0ae-08ddced07d1e
-X-MS-Exchange-CrossTenant-AuthSource: SA3PR11MB8118.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2025 18:48:20.6305
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XOJCYQUI+qklENrH4TbE+7lDzHcwIEQGRcdn0oFutcgOBgkg+ZgDYZNtq5pwgDRjln3nLaBWoYWK9qrmlTiqZ3yK/QoagikRIgQ9W5/44PI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB6141
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-Dave Jiang wrote:
-> Create new config CONFIG_CXL_RAS and put all CXL RAS items behind
-> the config. The config will depend on CPER or PCIE AER to build.
-> Move the related RAS code from core/pci.c to core/ras.c.
-> 
-> Cc: Robert Richter <rrichter@amd.com>
-> Cc: Terry Bowman <terry.bowman@amd.com>
-> Reviewed-by: Joshua Hahn <joshua.hahnjy@gmail.com>
-> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> ---
-> v4:
-> - Drop PCIEAER dep. (Dan)
-> - Drop header prototypes that can be static. (Dan)
-> - Use PCI_ERS_RESULT_NONE as return. (Dan)
-[..]
-> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> index 29b61828a847..e9fa8b8e45f5 100644
-> --- a/drivers/cxl/core/core.h
-> +++ b/drivers/cxl/core/core.h
-> @@ -136,4 +136,10 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
->  		    u16 *return_code);
->  #endif
->  
-> +#ifdef CONFIG_CXL_RAS
-> +void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds);
-> +#else
-> +static inline void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds) {}
-> +#endif
+Add basic plumbing for memory expander devices that support Back
+Invalidation. This introduces a 'hdm-db=on|off' parameter and
+exposes the relevant BI RT/Decoder component cachemem registers.
 
-...but the only caller moved into ras.c? So, why not the following too?
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+---
+ hw/cxl/cxl-component-utils.c   | 135 +++++++++++++++++++++++++++++++--
+ hw/mem/cxl_type3.c             |   5 +-
+ include/hw/cxl/cxl_component.h |  54 ++++++++++++-
+ include/hw/cxl/cxl_device.h    |   3 +
+ 4 files changed, 188 insertions(+), 9 deletions(-)
 
--- 8< --
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index bfc05f95f1fd..f796731deedf 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -160,10 +160,4 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
- 		    u16 *return_code);
- #endif
- 
--#ifdef CONFIG_CXL_RAS
--void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds);
--#else
--static inline void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds) {}
--#endif
--
- #endif /* __CXL_CORE_H__ */
-diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
-index da301f5e163c..6adc52abd0af 100644
---- a/drivers/cxl/core/ras.c
-+++ b/drivers/cxl/core/ras.c
-@@ -331,7 +331,7 @@ static bool cxl_rch_get_aer_severity(struct aer_capability_regs *aer_regs,
- 	return false;
+diff --git a/hw/cxl/cxl-component-utils.c b/hw/cxl/cxl-component-utils.c
+index a43d227336ca..dfdbf23a427c 100644
+--- a/hw/cxl/cxl-component-utils.c
++++ b/hw/cxl/cxl-component-utils.c
+@@ -71,10 +71,40 @@ static uint64_t cxl_cache_mem_read_reg(void *opaque, hwaddr offset,
+     case 4:
+         if (cregs->special_ops && cregs->special_ops->read) {
+             return cregs->special_ops->read(cxl_cstate, offset, 4);
+-        } else {
+-            QEMU_BUILD_BUG_ON(sizeof(*cregs->cache_mem_registers) != 4);
+-            return cregs->cache_mem_registers[offset / 4];
+         }
++
++        QEMU_BUILD_BUG_ON(sizeof(*cregs->cache_mem_registers) != 4);
++
++        if (offset == A_CXL_BI_RT_STATUS ||
++            offset == A_CXL_BI_DECODER_STATUS) {
++            int type;
++            uint64_t started;
++
++            type = (offset == A_CXL_BI_RT_STATUS) ?
++                    CXL_BISTATE_RT : CXL_BISTATE_DECODER;
++            started = cxl_cstate->bi_state[type].last_commit;
++
++            if (started) {
++                uint32_t val, *cache_mem = cregs->cache_mem_registers;
++                uint64_t now;
++                int set;
++
++                val = cregs->cache_mem_registers[offset / 4];
++                now = qemu_clock_get_ms(QEMU_CLOCK_VIRTUAL);
++                /* arbitrary 100 ms to do the commit */
++                set = !!(now >= started + 100);
++
++                if (offset == A_CXL_BI_RT_STATUS) {
++                    val = FIELD_DP32(val, CXL_BI_RT_STATUS, COMMITTED, set);
++                } else {
++                    val = FIELD_DP32(val, CXL_BI_DECODER_STATUS, COMMITTED,
++                                     set);
++                }
++                stl_le_p((uint8_t *)cache_mem + offset, val);
++            }
++        }
++
++        return cregs->cache_mem_registers[offset / 4];
+     case 8:
+         qemu_log_mask(LOG_UNIMP,
+                       "CXL 8 byte cache mem registers not implemented\n");
+@@ -123,6 +153,47 @@ static void dumb_hdm_handler(CXLComponentState *cxl_cstate, hwaddr offset,
+     }
  }
  
--void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds)
-+static void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds)
++static void dumb_bi_handler(CXLComponentState *cxl_cstate, hwaddr offset,
++                            uint32_t value)
++{
++    ComponentRegisters *cregs = &cxl_cstate->crb;
++    uint32_t sts, *cache_mem = cregs->cache_mem_registers;
++    bool to_commit = false;
++    int type;
++
++    switch (offset) {
++    case A_CXL_BI_RT_CTRL:
++        to_commit = FIELD_EX32(value, CXL_BI_RT_CTRL, COMMIT);
++        if (to_commit) {
++            sts = cxl_cache_mem_read_reg(cxl_cstate,
++                                         R_CXL_BI_RT_STATUS, 4);
++            sts = FIELD_DP32(sts, CXL_BI_RT_STATUS, COMMITTED, 0);
++            stl_le_p((uint8_t *)cache_mem + R_CXL_BI_RT_STATUS, sts);
++            type = CXL_BISTATE_RT;
++        }
++        break;
++    case A_CXL_BI_DECODER_CTRL:
++        to_commit = FIELD_EX32(value, CXL_BI_DECODER_CTRL, COMMIT);
++        if (to_commit) {
++            sts = cxl_cache_mem_read_reg(cxl_cstate,
++                                         R_CXL_BI_DECODER_STATUS, 4);
++            sts = FIELD_DP32(sts, CXL_BI_DECODER_STATUS, COMMITTED, 0);
++            stl_le_p((uint8_t *)cache_mem + R_CXL_BI_DECODER_STATUS, sts);
++            type = CXL_BISTATE_DECODER;
++        }
++        break;
++    default:
++        break;
++    }
++
++    if (to_commit) {
++        cxl_cstate->bi_state[type].last_commit =
++                qemu_clock_get_ms(QEMU_CLOCK_VIRTUAL);
++    }
++
++    stl_le_p((uint8_t *)cache_mem + offset, value);
++}
++
+ static void cxl_cache_mem_write_reg(void *opaque, hwaddr offset, uint64_t value,
+                                     unsigned size)
  {
- 	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
- 	struct aer_capability_regs aer_regs;
+@@ -146,6 +217,9 @@ static void cxl_cache_mem_write_reg(void *opaque, hwaddr offset, uint64_t value,
+         if (offset >= A_CXL_HDM_DECODER_CAPABILITY &&
+             offset <= A_CXL_HDM_DECODER3_TARGET_LIST_HI) {
+             dumb_hdm_handler(cxl_cstate, offset, value);
++        } else if (offset == A_CXL_BI_RT_CTRL ||
++                   offset == A_CXL_BI_DECODER_CTRL) {
++            dumb_bi_handler(cxl_cstate, offset, value);
+         } else {
+             cregs->cache_mem_registers[offset / 4] = value;
+         }
+@@ -248,7 +322,7 @@ static void hdm_init_common(uint32_t *reg_state, uint32_t *write_msk,
+     ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, INTERLEAVE_4K, 1);
+     ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY,
+                      POISON_ON_ERR_CAP, 0);
+-    if (type == CXL2_TYPE3_DEVICE) {
++    if (type == CXL2_TYPE3_DEVICE || type == CXL3_TYPE3_DEVICE) {
+         ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, 3_6_12_WAY, 1);
+         ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, 16_WAY, 1);
+     } else {
+@@ -260,7 +334,8 @@ static void hdm_init_common(uint32_t *reg_state, uint32_t *write_msk,
+                      UIO_DECODER_COUNT, 0);
+     ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, MEMDATA_NXM_CAP, 0);
+     ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY,
+-                     SUPPORTED_COHERENCY_MODEL, 0); /* Unknown */
++                     SUPPORTED_COHERENCY_MODEL,
++                     type == CXL3_TYPE3_DEVICE ? 3:0); /* host+dev or Unknown */
+     ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_GLOBAL_CONTROL,
+                      HDM_DECODER_ENABLE, 0);
+     write_msk[R_CXL_HDM_DECODER_GLOBAL_CONTROL] = 0x3;
+@@ -271,7 +346,7 @@ static void hdm_init_common(uint32_t *reg_state, uint32_t *write_msk,
+         write_msk[R_CXL_HDM_DECODER0_SIZE_HI + i * hdm_inc] = 0xffffffff;
+         write_msk[R_CXL_HDM_DECODER0_CTRL + i * hdm_inc] = 0x13ff;
+         if (type == CXL2_DEVICE ||
+-            type == CXL2_TYPE3_DEVICE ||
++            type == CXL2_TYPE3_DEVICE || type == CXL3_TYPE3_DEVICE ||
+             type == CXL2_LOGICAL_DEVICE) {
+             write_msk[R_CXL_HDM_DECODER0_TARGET_LIST_LO + i * hdm_inc] =
+                 0xf0000000;
+@@ -283,6 +358,37 @@ static void hdm_init_common(uint32_t *reg_state, uint32_t *write_msk,
+     }
+ }
+ 
++static void bi_rt_init_common(uint32_t *reg_state, uint32_t *write_msk)
++{
++    /* switch usp must commit the new BI-ID, timeout of 2secs */
++    ARRAY_FIELD_DP32(reg_state, CXL_BI_RT_CAPABILITY, EXPLICIT_COMMIT, 1);
++
++    ARRAY_FIELD_DP32(reg_state, CXL_BI_RT_CTRL, COMMIT, 0);
++    write_msk[R_CXL_BI_RT_CTRL] = 0xffffffff;
++
++    ARRAY_FIELD_DP32(reg_state, CXL_BI_RT_STATUS, COMMITTED, 0);
++    ARRAY_FIELD_DP32(reg_state, CXL_BI_RT_STATUS, ERR_NOT_COMMITTED, 0);
++    ARRAY_FIELD_DP32(reg_state, CXL_BI_RT_STATUS, COMMIT_TMO_SCALE, 0x6);
++    ARRAY_FIELD_DP32(reg_state, CXL_BI_RT_STATUS, COMMIT_TMO_BASE, 0x2);
++}
++
++static void bi_decoder_init_common(uint32_t *reg_state, uint32_t *write_msk)
++{
++    ARRAY_FIELD_DP32(reg_state, CXL_BI_DECODER_CAPABILITY, HDM_D, 0);
++    /* switch dsp must commit the new BI-ID, timeout of 2secs */
++    ARRAY_FIELD_DP32(reg_state, CXL_BI_DECODER_CAPABILITY, EXPLICIT_COMMIT, 1);
++
++    ARRAY_FIELD_DP32(reg_state, CXL_BI_DECODER_CTRL, BI_FW, 0);
++    ARRAY_FIELD_DP32(reg_state, CXL_BI_DECODER_CTRL, BI_ENABLE, 0);
++    ARRAY_FIELD_DP32(reg_state, CXL_BI_DECODER_CTRL, COMMIT, 0);
++    write_msk[R_CXL_BI_DECODER_CTRL] = 0xffffffff;
++
++    ARRAY_FIELD_DP32(reg_state, CXL_BI_DECODER_STATUS, COMMITTED, 0);
++    ARRAY_FIELD_DP32(reg_state, CXL_BI_DECODER_STATUS, ERR_NOT_COMMITTED, 0);
++    ARRAY_FIELD_DP32(reg_state, CXL_BI_DECODER_STATUS, COMMIT_TMO_SCALE, 0x6);
++    ARRAY_FIELD_DP32(reg_state, CXL_BI_DECODER_STATUS, COMMIT_TMO_BASE, 0x2);
++}
++
+ void cxl_component_register_init_common(uint32_t *reg_state,
+                                         uint32_t *write_msk,
+                                         enum reg_type type)
+@@ -323,6 +429,7 @@ void cxl_component_register_init_common(uint32_t *reg_state,
+     case CXL2_UPSTREAM_PORT:
+     case CXL2_TYPE3_DEVICE:
+     case CXL2_LOGICAL_DEVICE:
++    case CXL3_TYPE3_DEVICE:
+         /* + HDM */
+         init_cap_reg(HDM, 5, 1);
+         hdm_init_common(reg_state, write_msk, type);
+@@ -340,6 +447,22 @@ void cxl_component_register_init_common(uint32_t *reg_state,
+         abort();
+     }
+ 
++    /* back invalidate */
++    switch (type) {
++    case CXL2_UPSTREAM_PORT:
++        init_cap_reg(BI_RT, 11, CXL_BI_RT_CAP_VERSION);
++        bi_rt_init_common(reg_state, write_msk);
++        break;
++    case CXL2_ROOT_PORT:
++    case CXL2_DOWNSTREAM_PORT:
++    case CXL3_TYPE3_DEVICE:
++        init_cap_reg(BI_DECODER, 12, CXL_BI_DECODER_CAP_VERSION);
++        bi_decoder_init_common(reg_state, write_msk);
++        break;
++    default:
++        break;
++    }
++
+     ARRAY_FIELD_DP32(reg_state, CXL_CAPABILITY_HEADER, ARRAY_SIZE, caps);
+ #undef init_cap_reg
+ }
+diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+index c4658e0955d5..c0eb99519975 100644
+--- a/hw/mem/cxl_type3.c
++++ b/hw/mem/cxl_type3.c
+@@ -1501,8 +1501,10 @@ void ct3d_reset(DeviceState *dev)
+     uint32_t *reg_state = ct3d->cxl_cstate.crb.cache_mem_registers;
+     uint32_t *write_msk = ct3d->cxl_cstate.crb.cache_mem_regs_write_mask;
+ 
++
+     pcie_cap_fill_link_ep_usp(PCI_DEVICE(dev), ct3d->width, ct3d->speed);
+-    cxl_component_register_init_common(reg_state, write_msk, CXL2_TYPE3_DEVICE);
++    cxl_component_register_init_common(reg_state, write_msk,
++                           ct3d->hdmdb ? CXL3_TYPE3_DEVICE : CXL2_TYPE3_DEVICE);
+     cxl_device_register_init_t3(ct3d, CXL_T3_MSIX_MBOX);
+ 
+     /*
+@@ -1541,6 +1543,7 @@ static const Property ct3_props[] = {
+     DEFINE_PROP_PCIE_LINK_WIDTH("x-width", CXLType3Dev,
+                                 width, PCIE_LINK_WIDTH_16),
+     DEFINE_PROP_UINT16("chmu-port", CXLType3Dev, cxl_dstate.chmu[0].port, 0),
++    DEFINE_PROP_BOOL("hdm-db", CXLType3Dev, hdmdb, 0),
+ };
+ 
+ static uint64_t get_lsa_size(CXLType3Dev *ct3d)
+diff --git a/include/hw/cxl/cxl_component.h b/include/hw/cxl/cxl_component.h
+index cd92cb02532a..4872ec5ead39 100644
+--- a/include/hw/cxl/cxl_component.h
++++ b/include/hw/cxl/cxl_component.h
+@@ -29,6 +29,7 @@ enum reg_type {
+     CXL2_UPSTREAM_PORT,
+     CXL2_DOWNSTREAM_PORT,
+     CXL3_SWITCH_MAILBOX_CCI,
++    CXL3_TYPE3_DEVICE, /* hdm-db */
+ };
+ 
+ /*
+@@ -67,6 +68,8 @@ CXLx_CAPABILITY_HEADER(LINK, 2)
+ CXLx_CAPABILITY_HEADER(HDM, 3)
+ CXLx_CAPABILITY_HEADER(EXTSEC, 4)
+ CXLx_CAPABILITY_HEADER(SNOOP, 5)
++CXLx_CAPABILITY_HEADER(BI_RT, 6)
++CXLx_CAPABILITY_HEADER(BI_DECODER, 7)
+ 
+ /*
+  * Capability structures contain the actual registers that the CXL component
+@@ -211,10 +214,56 @@ HDM_DECODER_INIT(3);
+     (CXL_IDE_REGISTERS_OFFSET + CXL_IDE_REGISTERS_SIZE)
+ #define CXL_SNOOP_REGISTERS_SIZE   0x8
+ 
+-QEMU_BUILD_BUG_MSG((CXL_SNOOP_REGISTERS_OFFSET +
+-                    CXL_SNOOP_REGISTERS_SIZE) >= 0x1000,
++#define CXL_BI_RT_CAP_VERSION 1
++#define CXL_BI_RT_REGISTERS_OFFSET \
++    (CXL_SNOOP_REGISTERS_OFFSET + CXL_SNOOP_REGISTERS_SIZE)
++#define CXL_BI_RT_REGISTERS_SIZE   0xC
++
++REG32(CXL_BI_RT_CAPABILITY, CXL_BI_RT_REGISTERS_OFFSET)
++    FIELD(CXL_BI_RT_CAPABILITY, EXPLICIT_COMMIT, 0, 1)
++REG32(CXL_BI_RT_CTRL, CXL_BI_RT_REGISTERS_OFFSET + 0x4)
++    FIELD(CXL_BI_RT_CTRL, COMMIT, 0, 1)
++REG32(CXL_BI_RT_STATUS, CXL_BI_RT_REGISTERS_OFFSET + 0x8)
++    FIELD(CXL_BI_RT_STATUS, COMMITTED, 0, 1)
++    FIELD(CXL_BI_RT_STATUS, ERR_NOT_COMMITTED, 1, 1)
++    FIELD(CXL_BI_RT_STATUS, COMMIT_TMO_SCALE, 8, 4)
++    FIELD(CXL_BI_RT_STATUS, COMMIT_TMO_BASE, 12, 4)
++
++/* CXL r3.2 8.2.4.27 - CXL BI Decoder Capability Structure */
++#define CXL_BI_DECODER_CAP_VERSION 1
++#define CXL_BI_DECODER_REGISTERS_OFFSET \
++    (CXL_BI_RT_REGISTERS_OFFSET + CXL_BI_RT_REGISTERS_SIZE)
++#define CXL_BI_DECODER_REGISTERS_SIZE   0xC
++
++REG32(CXL_BI_DECODER_CAPABILITY, CXL_BI_DECODER_REGISTERS_OFFSET)
++    FIELD(CXL_BI_DECODER_CAPABILITY, HDM_D, 0, 1)
++    FIELD(CXL_BI_DECODER_CAPABILITY, EXPLICIT_COMMIT, 1, 1)
++REG32(CXL_BI_DECODER_CTRL, CXL_BI_DECODER_REGISTERS_OFFSET + 0x4)
++    FIELD(CXL_BI_DECODER_CTRL, BI_FW, 0, 1)
++    FIELD(CXL_BI_DECODER_CTRL, BI_ENABLE, 1, 1)
++    FIELD(CXL_BI_DECODER_CTRL, COMMIT, 2, 1)
++REG32(CXL_BI_DECODER_STATUS, CXL_BI_DECODER_REGISTERS_OFFSET + 0x8)
++    FIELD(CXL_BI_DECODER_STATUS, COMMITTED, 0, 1)
++    FIELD(CXL_BI_DECODER_STATUS, ERR_NOT_COMMITTED, 1, 1)
++    FIELD(CXL_BI_DECODER_STATUS, COMMIT_TMO_SCALE, 8, 4)
++    FIELD(CXL_BI_DECODER_STATUS, COMMIT_TMO_BASE, 12, 4)
++
++QEMU_BUILD_BUG_MSG((CXL_BI_DECODER_REGISTERS_OFFSET +
++                    CXL_BI_DECODER_REGISTERS_SIZE) >= 0x1000,
+                    "No space for registers");
+ 
++/* to track BI explicit commit handling */
++enum {
++    CXL_BISTATE_RT = 0, /* switch usp */
++    CXL_BISTATE_DECODER, /* switch dsp */
++    CXL_BISTATE_MAX
++};
++
++typedef struct bi_state {
++    /* last 0->1 transition */
++    uint64_t last_commit;
++} BIState;
++
+ typedef struct component_registers {
+     /*
+      * Main memory region to be registered with QEMU core.
+@@ -260,6 +309,7 @@ typedef struct cxl_component {
+ 
+     CDATObject cdat;
+     CXLCompObject compliance;
++    BIState bi_state[CXL_BISTATE_MAX]; /* for ups+dsp switches */
+ } CXLComponentState;
+ 
+ void cxl_component_register_block_init(Object *obj,
+diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+index 068c20d61ebc..ee5bcf0652b9 100644
+--- a/include/hw/cxl/cxl_device.h
++++ b/include/hw/cxl/cxl_device.h
+@@ -840,6 +840,9 @@ struct CXLType3Dev {
+     CXLMemSparingReadAttrs rank_sparing_attrs;
+     CXLMemSparingWriteAttrs rank_sparing_wr_attrs;
+ 
++    /* BI flows */
++    bool hdmdb;
++
+     struct dynamic_capacity {
+         HostMemoryBackend *host_dc;
+         AddressSpace host_dc_as;
+-- 
+2.39.5
+
