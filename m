@@ -1,123 +1,156 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6322386250;
-	Tue, 29 Jul 2025 05:42:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+Received: from zg8tmja5ljk3lje4mi4ymjia.icoremail.net (zg8tmja5ljk3lje4mi4ymjia.icoremail.net [209.97.182.222])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F0A946447
+	for <linux-cxl@vger.kernel.org>; Tue, 29 Jul 2025 12:56:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.182.222
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753767726; cv=none; b=Jw3OR37insU9v520WQNYY9IGEqBZ4uDGaepuZtqFFnTNrq7y/BQKJMrykuUfTVhJZWDwwOsxgXM9OdoTB5fds4ZEiqiaXMYy6Wxc1DkRrCFkJeV5hCMn87m9p5jdRdf7qiMduhSlOwEaINXirx7ud5iY/dCqVr1GA6jzmDDYtGo=
+	t=1753793818; cv=none; b=rlZPWjR0XMmlu2ErgoYNPR5+ohBBaDgpgxVhH+O516+oHpLIydk9mPTdJg4HbupdBYbHNzkry48tIL9JHwb+GW5VZ+Tn2JuDgHR9KghrAj1/wGrV1z7wHb9v6zR+Bmv4QcBUXBY8ffO1UCJTw4zd70qHYtmYVdQUdPTcgdH5oHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753767726; c=relaxed/simple;
-	bh=zW+H0+MpviuGnEP+uGGy+bWOqykVTj+bOH8fIF6/mRc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pi/xuoLYk+jvhosx+LP2rEzgTZGMeMYADW0Jk00vJmBOt9QDbGxEiqsDERFCJroFbQH4GKvwC8W+rNS1JoidfafYpLevok/HbvZMaXXeYxGAJbD/cw6CMwFKh4gRc/Xw56Ure6a1d3G8HZrqaFBlTcjXijJjIIEFdPQkUcPQPTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M6kfYEMm; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1753793818; c=relaxed/simple;
+	bh=BpVSledDPB27+rMMgLEskiZMTDe4ky8TJBudKn0m1Uo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GnNvyudiK27VMBnw0zyBrS/girhrthRsY07nwZs1KLou41KM79DSM1sM8ppfx5VlGbtQohc/ETlIGUNfkskJnpyDReXtUG371vxqwnW0oi0Tr11Tv4WgnyBEHY2o4L1LzVNS7YUGIcYzGTwZSA0R5umTrmpQZgHGN9O8/D/93+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=buaa.edu.cn; spf=pass smtp.mailfrom=buaa.edu.cn; dkim=fail (0-bit key) header.d=buaa.edu.cn header.i=@buaa.edu.cn header.b=i3RXxx7N reason="key not found in DNS"; arc=none smtp.client-ip=209.97.182.222
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=buaa.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buaa.edu.cn
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M6kfYEMm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753767724; x=1785303724;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=zW+H0+MpviuGnEP+uGGy+bWOqykVTj+bOH8fIF6/mRc=;
-  b=M6kfYEMmQK2r+Y+cYn/QpOkEO0OXuI5NZBZRsvvZHdLHIQmJSitlVUMG
-   jBYzq2YXGMWTD5J9Vu7ewQxeGV2Z6wHzIyJhJBWfwVrxY/bTK/dDxgVEj
-   8OJQT+VgFDYKk8tbbuTAoPs23qErdNnvx+nuhZX9F8qNOnl2chKGCHKoH
-   XPayPSnqcD4IakNJsr/cjmf8AhMYmwqURsbllIbFR9FN3XKvFf6jui/H1
-   dGsundTelmfyjkwXWiyfCnOIBhJ2kC8RLIK4gyIsi71Quwf3WnTPQB1WF
-   Hrks5nl/bk6zTrMqjB7u5icLO8FF7tdk+s8rx/I2XfThW/XHE1P/KPmg1
-   Q==;
-X-CSE-ConnectionGUID: xLG2MfE6S+Ws92wckTW9QQ==
-X-CSE-MsgGUID: A78qoROPSQmQlDmG2Zcl/A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11505"; a="59829002"
-X-IronPort-AV: E=Sophos;i="6.16,348,1744095600"; 
-   d="scan'208";a="59829002"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2025 22:42:03 -0700
-X-CSE-ConnectionGUID: 0WTSdhJRQRqeVvlEQdiLjQ==
-X-CSE-MsgGUID: wbhnLJhNSBmvcP/WZSLqcw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,348,1744095600"; 
-   d="scan'208";a="163384314"
-Received: from kmlindbe-mobl.amr.corp.intel.com (HELO [10.125.192.163]) ([10.125.192.163])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2025 22:42:03 -0700
-Message-ID: <ef9c9418-2def-484a-89fb-b0235391ad83@linux.intel.com>
-Date: Mon, 28 Jul 2025 22:41:54 -0700
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=buaa.edu.cn header.i=@buaa.edu.cn header.b="i3RXxx7N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=buaa.edu.cn; s=buaa; h=Received:Date:From:To:Cc:Subject:
+	Message-ID:References:MIME-Version:Content-Type:
+	Content-Disposition:In-Reply-To; bh=6+9ZBEkgekzCRUpFRgTvEBDgcvfK
+	TMzg3YPrGSJ2ca0=; b=i3RXxx7NIw/D/XoLynFf+DYvCrovpAU5vwfWkqM3eFyw
+	vIvBbFM3ANoXPEgleAs+75Mziq+gsbtPDhsM9ii1NRlNY97GR1TbrPzC4lmlre90
+	RNeigZ6m1NVeLSwI8tQuO0BEqOM7nkKz0j9EYICmeijQGz4c9XbBAGMKLdNKRqc=
+Received: from localhost (unknown [139.227.252.237])
+	by coremail-app2 (Coremail) with SMTP id Nyz+CgAnIXIFxYholF0yAA--.17956S2;
+	Tue, 29 Jul 2025 20:56:39 +0800 (CST)
+Date: Tue, 29 Jul 2025 20:56:37 +0800
+From: peng guo <engguopeng@buaa.edu.cn>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: mst@redhat.com, marcel.apfelbaum@gmail.com, pbonzini@redhat.com,
+	richard.henderson@linaro.org, eduardo@habkost.net,
+	qemu-devel@nongnu.org, linux-cxl@vger.kernel.org, wyguopeng@163.com
+Subject: Re: [PATCH] hw/i386/pc: Avoid overlap between CXL window and PCI
+ 64bit BARs in QEMU
+Message-ID: <aIjFBVLHOy1tp4fD@gp-VMware-Virtual-Platform>
+References: <20250718133545.5261-1-engguopeng@buaa.edu.cn>
+ <20250725145337.00003c91@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: "invalid agent type: 1" in acpi/ghes, cper: Recognize and cache
- CXL Protocol errors
-To: "Koralahalli Channabasappa, Smita"
- <Smita.KoralahalliChannabasappa@amd.com>, linux-efi@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
-Cc: Ard Biesheuvel <ardb@kernel.org>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Yazen Ghannam <yazen.ghannam@amd.com>, Terry Bowman <terry.bowman@amd.com>,
- Dave Jiang <dave.jiang@intel.com>, tony.luck@intel.com,
- Gregory Price <gourry@gourry.net>
-References: <20250123084421.127697-1-Smita.KoralahalliChannabasappa@amd.com>
- <20250123084421.127697-5-Smita.KoralahalliChannabasappa@amd.com>
- <074f5f77-7bef-4857-97fe-b68ee9b0afaf@linux.intel.com>
- <dfc6cedd-c125-4201-a98b-cbaa84a4f370@amd.com>
-Content-Language: en-GB
-From: Marc Herbert <marc.herbert@linux.intel.com>
-In-Reply-To: <dfc6cedd-c125-4201-a98b-cbaa84a4f370@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250725145337.00003c91@huawei.com>
+X-CM-TRANSID:Nyz+CgAnIXIFxYholF0yAA--.17956S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxWF4rXr1UuF1xXFyrWw1UAwb_yoWrJw47pr
+	9rJa4rKFW8KryfKF92vF9YkF4UuF4vk3W7CFn2gwn29rnxKrn8A34qyrWjva48Xrn5GFyI
+	qF98Jasaqw1DZaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUymb7Iv0xC_Zr1lb4IE77IF4wAFc2x0x2IEx4CE42xK8VAvwI8I
+	cIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2
+	AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v2
+	6r4j6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
+	xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+	0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW7tr1U
+	Jr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
+	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
+	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
+	14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07je1v3UUUUU=
+X-CM-SenderInfo: d2isijirrujqpexdthxhgxhubq/
 
-On 2025-07-28 09:25, Koralahalli Channabasappa, Smita wrote:
-
-> On 7/22/2025 12:24 PM, Marc Herbert wrote:
-
->>    The code below triggers the error "invalid agent type: 1" in Intel
->> validation (internal issue 15018133056)
->>
->> It's not clear to anyone we asked why you did not include RCH_DP in
->> the `switch (prot_err->agent_type)` in cxl_cper_post_prot_err() below.
->>
->> I can see how RCH_DP is special in cxl_cper_PRINT_prot_err() and I can
->> even understand (despite my near-zero CPER knowledge) some of the
->> special cases there. But in cxl_cper_post_prot_err() here, it's not
->> clear why RCH_DP would be rejected. Could this be an oversight? If not,
->> a comment with a short explanation would not hurt.
->>
+On Fri, Jul 25, 2025 at 02:53:37PM +0100, Jonathan Cameron wrote:
+> On Fri, 18 Jul 2025 21:35:45 +0800
+> peng guo <engguopeng@buaa.edu.cn> wrote:
 > 
-> You're right. RCH_DP was excluded because it doesn’t report a valid
-> SBDF in the CPER record. Instead, it provides only the RCRB base
-> address.
+> > When using a CXL Type 3 device together with a virtio 9p device in QEMU, the
+> > 9p device fails to initialize properly. The kernel reports the following:
+> > 
+> >     virtio: device uses modern interface but does not have VIRTIO_F_VERSION_1
+> >     9pnet_virtio virtio0: probe with driver 9pnet_virtio failed with error -22
+> > 
+> > Further investigation revealed that the 64-bit BAR space assigned to the 9pnet
+> > device was overlapped by the memory window allocated for the CXL devices. As a
+> > result, the kernel could not correctly access the BAR region, causing the
+> > virtio device to malfunction.
+> > 
+> > An excerpt from /proc/iomem shows:
+> > 
+> >     480010000-cffffffff : CXL Window 0
+> >       480010000-4bfffffff : PCI Bus 0000:00
+> >       4c0000000-4c01fffff : PCI Bus 0000:0c
+> >         4c0000000-4c01fffff : PCI Bus 0000:0d
+> >       4c0200000-cffffffff : PCI Bus 0000:00
+> >         4c0200000-4c0203fff : 0000:00:03.0
+> >           4c0200000-4c0203fff : virtio-pci-modern
+> > 
+> > To address this issue, this patch uses the value of `cxl_resv_end` to reserve
+> > sufficient address space and ensure that CXL memory windows are allocated
+> > beyond all PCI 64-bit BARs. This prevents overlap with 64-bit BARs regions such 
+> > as those used by virtio or other pcie devices, resolving the conflict.
+> > 
+> > QEMU Build Configuration:
+> > 
+> >     ./configure --prefix=/home/work/qemu_master/build/ \
+> >                 --target-list=x86_64-softmmu \
+> >                 --enable-kvm \
+> >                 --enable-virtfs
+> > 
+> > QEMU Boot Command:
+> > 
+> >     sudo /home/work/qemu_master/qemu/build/qemu-system-x86_64 \
+> >         -nographic -machine q35,cxl=on -enable-kvm -m 16G -smp 8 \
+> >         -hda /home/work/gp_qemu/rootfs.img \
+> >         -virtfs local,path=/home/work/gp_qemu/share,mount_tag=host0,security_model=passthrough,id=host0 \
+> >         -kernel /home/work/linux_output/arch/x86/boot/bzImage \
+> >         --append "console=ttyS0 crashkernel=256M root=/dev/sda rootfstype=ext4 rw loglevel=8" \
+> >         -object memory-backend-ram,id=vmem0,share=on,size=4096M \
+> >         -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
+> >         -device cxl-rp,port=0,bus=cxl.1,id=root_port13,chassis=0,slot=2 \
+> >         -device cxl-type3,bus=root_port13,volatile-memdev=vmem0,id=cxl-vmem0,sn=0x123456789 \
+> >         -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G
+> > 
+> > Tested in a QEMU setup with a CXL Type 3 device and a 9pnet virtio device.
+> > 
+> > Signed-off-by: peng guo <engguopeng@buaa.edu.cn>
+> Analysis looks good.
 > 
-> I haven't thoroughly investigated whether SBDF can be reliably derived
-> from the RCRB base. There might be a platform-specific mechanism for
-> that, but at the time, it seemed non-trivial to implement. Introducing
-> additional infrastructure solely to support RCH_DP felt like it was
-> adding more complexity.
+> For the patch I wonder if we should match the check that follows
+> for pcms->cxl_devices_state.is_enabled rather than checking cxl_resv_end
+> (which is only set to non 0 if that is_enabled is set).
 > 
-> I agree that a brief comment explaining this rationale would help. I'm
-> okay if you plan to include a fixup for this along with the one for
-> the device serial number.
+> Probably better to use a consistent condition for checking if CXL is
+> there or not.
+> 
+> We also ideally need a suitable fixes tag.  I couldn't immediately find one
+> so maybe it goes a long way back.
+> 
 
-If I understood you correctly, I think a different error message
-would be much better than a comment. Like this?
+Would the following be the correct Fixes tag for this patch?
 
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -730,6 +730,9 @@ static void cxl_cper_post_prot_err(struct cxl_cper_sec_prot_err *prot_err,
- 		memcpy(&wd.ras_cap, cap_start, sizeof(wd.ras_cap));
- 		wd.severity = cper_severity_to_aer(severity);
- 		break;
-+	case RCH_DP:
-+		pr_err_ratelimited("CXL CPER agent type unsupported: RCH_DP\n");
-+		return;
- 	default:
- 		pr_err_ratelimited("CXL CPER invalid agent type: %d\n",
- 				   prot_err->agent_type);
+Fixes: 03b39fcf64bc ("hw/cxl: Make the CXL fixed memory window setup a machine parameter")
+
+Although earlier versions already had overlapping memory regions, they didn't 
+affect device 64-bit BAR access.
+
+> > ---
+> >  hw/i386/pc.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/hw/i386/pc.c b/hw/i386/pc.c
+> > index 2f58e73d3347..180bc615f3f0 100644
+> > --- a/hw/i386/pc.c
+> > +++ b/hw/i386/pc.c
+> > @@ -975,7 +975,7 @@ void pc_memory_init(PCMachineState *pcms,
+> >  
+> >      rom_set_fw(fw_cfg);
+> >  
+> > -    if (machine->device_memory) {
+> > +    if (machine->device_memory || cxl_resv_end) {
+> >          uint64_t *val = g_malloc(sizeof(*val));
+> >          uint64_t res_mem_end;
+> >  
+
