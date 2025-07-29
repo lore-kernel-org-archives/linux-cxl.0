@@ -1,297 +1,218 @@
-Received: from camel.aspen.relay.mailchannels.net (camel.aspen.relay.mailchannels.net [23.83.221.29])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36DE6149C4D
-	for <linux-cxl@vger.kernel.org>; Tue, 29 Jul 2025 17:03:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.221.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB8D23DE;
+	Tue, 29 Jul 2025 17:40:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.14
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753808641; cv=pass; b=LhTmKwN9SqFWpcKHx4oEUIS20z4WlchRC3CwVKiMYUBNfHiivmvxM0xQSmQWyf/6QHG4hk0YPM8lp94cVHjGD/k6NjYTX77+KTAwgQ/oatryzXIlxtDwp1ZsPAT4gereIoiuEteeBvuB2Fe6ixP1b9OC3lrMNssNDrYORfyuWZU=
+	t=1753810804; cv=fail; b=Wb2MTJYWDGrtjP59Y5l2k94Ofi1x3t250hWj2ivXLCZob02XhtneDXz1xn65/kIVDMRxJVfA9kNLBbRuKu1/1hZiL+k/SnO43zAXMeNWocye5q196xQvR2ug1CeF8zarES9whrBGA+bKub1ETrNzZH6+ql2CWONTkyN3j3ZUYhY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753808641; c=relaxed/simple;
-	bh=iI7ED7Ui/d0fFOOSnrP5vidMJCyj0ag0tYz2BZ0CHWU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oEMN3R07tF1r189OEHMJ/BXUyKDm2gB7gTzRMX7Fx+XLLbPf2tGhzXj0cByk5wqRMlOYw9y8rXZP+k4dVz2rvEK/tlopbheq+fiA7wlKgveRmd8Z5IZ5V4wu8ovQOVZmFm2DZviCCBpTF04zM81JRYfbkZJfswJjv+R486cUHmo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=iUerdZrI; arc=pass smtp.client-ip=23.83.221.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	s=arc-20240116; t=1753810804; c=relaxed/simple;
+	bh=8oICVhN/hUDmZcstO+SAtw5LHNspf4Vtgbd3SeV01lo=;
+	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
+	 Content-Type:MIME-Version; b=AGW6Bl0lwd89FFMpOoM6BNHxqe2Sw6c3GiTTvA2HuuKJFsGQO67ZFbcEdkMkV/BwWIoB2WIe26w7f01kUqk4U7s2WtrGcLOT+RFcdAQO953RA5DswyKhPANwDVFJHoflr2laFqZNc9g2by2yD9muJj7m4JCZBXIzwm62y9JlFVU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y3gtxEj2; arc=fail smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="iUerdZrI"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 687F18A3E58;
-	Tue, 29 Jul 2025 16:54:59 +0000 (UTC)
-Received: from pdx1-sub0-mail-a208.dreamhost.com (trex-blue-4.trex.outbound.svc.cluster.local [100.126.137.26])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id BCCDE8A36F9;
-	Tue, 29 Jul 2025 16:54:58 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1753808098; a=rsa-sha256;
-	cv=none;
-	b=lsBv49TCAGMBaDC9TPz1ykJc5u5Uhs02Wmbg5NlVlKy6jh1UMN73AGF+IMelxmjHxtV/T8
-	aVR++Toijt6SlM5MPYzm/ohkLYs2IEhIEUSQsEzbG+zLSZI8Ibs1oOapkcuZXwDVFhzc7r
-	StrAay8KO8EdTY57UZGGVxjRNA6y15j5LIFqh7q1zEuwx8q7DGTjvOHoSJvo/rTx3Uv/I0
-	RPJ8higPIoL1kJ9jM/f7ZgpUICh6/CWCjQ/4Iup1FoeqrXRz34sjBFGWFAzpqD27Njnm/z
-	tTzioIX+0/CVRgz/YRDQ/mvKk2Lu2+lvhu9nXW4ATPhYKMNROZlHj/7sHOKtPA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1753808098;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=m3zmudrbJi3rUAWruVPmWJ/JHGSWiiguedxKVAHxwYo=;
-	b=5es03teX/DKlrRhWGb/iHFTlx7GZFqQWZScBeSuL/FmWGx3WudLcMaY3R2vv8BySBTS+ca
-	K3MqsKuZfgqbQdziDP52QF2u8ZZ/OlewmowFslyYqMLN4784bCSHxFMXqrBNUL5b7GlGhV
-	RW3awTyYRr/o+Z5PAP0YrZSfuV0FC+iK65NyEyYyLpFhXGF2xNjJPa3/0dTLQGc2rqKRmv
-	6vO0gAC8ZPuuBn+nGZa8fAOhhdx0et2XqnwApU86/lX/BPsP4YWzu9ay4o+7xDkFhqO8tZ
-	+EYN45Gm0u4FrFpPTTW37ejZoOGIUvPs7zU4392tDotdi1JgMLZQA138C0oe6Q==
-ARC-Authentication-Results: i=1;
-	rspamd-696f8998d-ps5xn;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Bad
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Thoughtful-Trail: 58e523057b06f1b2_1753808099062_3055446933
-X-MC-Loop-Signature: 1753808099062:1942783069
-X-MC-Ingress-Time: 1753808099062
-Received: from pdx1-sub0-mail-a208.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.126.137.26 (trex/7.1.3);
-	Tue, 29 Jul 2025 16:54:59 +0000
-Received: from offworld.lan (syn-076-167-199-067.res.spectrum.com [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a208.dreamhost.com (Postfix) with ESMTPSA id 4bs1fp19SKzJl;
-	Tue, 29 Jul 2025 09:54:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1753808098;
-	bh=m3zmudrbJi3rUAWruVPmWJ/JHGSWiiguedxKVAHxwYo=;
-	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-	b=iUerdZrID4hh9DkAxqdSFTvoaS2hdUskmlvYbPH4IzPa5Ohc+k/NBZAoUJtbPV6pk
-	 Hyx9Pqkic1lukPDELa8kAbtyngh8VzopCdh74iDeASXid6CGEAwlF9jyUBEmU21HfW
-	 t5IZxyNzp5UgGcGpzw2Su+GeJW/2l2Vhu58o/+uuW3T9NwVdQZ8hLlcGRiuuGr9w2Y
-	 CB6UOHFeV+Lr98DHIrCaQ46h0oJDhzW+5hFlNkwEEGIHT3bq2KvQ9B7n980d0ETEbt
-	 Zo89h65tX70cp+IMJSpHgXTTy9tY4Mc2Eh9qnNu9LCf4d43ZLyJ0TO6rcvggx/IiOd
-	 kAV2q6sc92MFA==
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: jonathan.cameron@huawei.com
-Cc: ira.weiny@intel.com,
-	alucerop@amd.com,
-	a.manzanares@samsung.com,
-	linux-cxl@vger.kernel.org,
-	qemu-devel@nongnu.org,
-	Davidlohr Bueso <dave@stgolabs.net>
-Subject: [PATCH 1/2] hw/cxl: Refactor component register initialization
-Date: Tue, 29 Jul 2025 09:54:40 -0700
-Message-Id: <20250729165441.1898150-2-dave@stgolabs.net>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250729165441.1898150-1-dave@stgolabs.net>
-References: <20250729165441.1898150-1-dave@stgolabs.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y3gtxEj2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1753810803; x=1785346803;
+  h=from:date:to:cc:message-id:in-reply-to:references:
+   subject:content-transfer-encoding:mime-version;
+  bh=8oICVhN/hUDmZcstO+SAtw5LHNspf4Vtgbd3SeV01lo=;
+  b=Y3gtxEj2k8bhGcDzjv+KDQ9No67N2xzJxEb1b133wjgPs/+4HwlA1zXH
+   VWV5lnHMbbiCRyNQAA7ZX211Jv5A7Q22awzwp1HJ+8oxCdTxtVdgbX2nD
+   KEVJ8yP2JNSWD/FOfIbnCcrniDNvUGX6yVUkqEGMu1Mngd9U/eFppsisd
+   dpEui1p2XEwyWYhwk81w+HWNcHm7xm/dKiOLTsb7YvROamb3HOyr90Ed0
+   yfOg93NHK5dL+qd/5/df67e1GxbGQK+4RH1Tm7DpOqgDuZiwhTxlikUnX
+   SUC/fRJN+uA7GuWPpA8TJDzw2WdQduYHFDA947bZvaGF/vgJrjYtrJ9Vh
+   g==;
+X-CSE-ConnectionGUID: R7FmN0mHTG+51e9G1Ic7nw==
+X-CSE-MsgGUID: rgApeFxJRaGQxsnOIHm0cg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11506"; a="56171731"
+X-IronPort-AV: E=Sophos;i="6.16,350,1744095600"; 
+   d="scan'208";a="56171731"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2025 10:40:01 -0700
+X-CSE-ConnectionGUID: wdgXvbFyTsyCiPgR5lCZYw==
+X-CSE-MsgGUID: r/TRRz+PTF6ooizrooTazw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,350,1744095600"; 
+   d="scan'208";a="162480393"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2025 10:40:01 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.26; Tue, 29 Jul 2025 10:40:00 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.26 via Frontend Transport; Tue, 29 Jul 2025 10:40:00 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (40.107.244.84)
+ by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.26; Tue, 29 Jul 2025 10:40:00 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JqAUk+RGK/dFyd2FovaHSbRZdlGQcTqy97Ce0aHygpf0DUkc0eINYOhgmJOGaEHvlGTmk6DawfSi7s1uqolA6gcUgCR9EeQCoT+V/2E8UUQdPOVbSPsYpFYSrrW7wh4GKF6cN3A1KmIDdIU5dVhTtiSWxlfvUk2qjz59QJlNdfsSNSJxmHA/umfpv1JKycmifN2nqg22jjLrYfr4G4RBVvMuYIzJMv81RnN+bw1X4r8B4Mkp6f3srccVnN9A8sBqSs2RjwqCLaPLLbmYEABWPwIcMQKsHTLLHwiZeidJtcWn5brB+iH3MIwi3TdPPbbaNrJWZbz30vW2/7dplJHD7Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=t1cVsUYJiS2sb8x9jNHiq/PS9fX9IGpNEE+V8gIQZvI=;
+ b=MDskcn/52SR/mSp81G4+ezcvUYJwzJEX9/heaKqaMGbGSfEsF3OWN4riRVxuHMCsP0wxI8f7UCPsijvz3m5ctn6ujE/Acem4o2yt/1bv+4VeZSd7on9aXAS57IqDMz1FxwA5KAGdGq6Gj+5mbMX/7ldFfP4TULt4rm1k8O3c6Jpiymk9dF0MLfpX3RkTIYh838F0KbZqRQw/772G7JsaIEf3wuHGDNtKOgfcN+MGO1IJhp8IdEugw1OzZIWhsVmI0Ns6sN2QPeNi+fL4bNMZSPUXumxrkMXG5BJt+dwF7cOMzYAtmLTc3YM1m+C8S5aBIveldy5LHPsamMybSx6Lkg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA3PR11MB8118.namprd11.prod.outlook.com (2603:10b6:806:2f1::13)
+ by PH8PR11MB7021.namprd11.prod.outlook.com (2603:10b6:510:223::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8989.11; Tue, 29 Jul
+ 2025 17:39:30 +0000
+Received: from SA3PR11MB8118.namprd11.prod.outlook.com
+ ([fe80::c4e2:f07:bdaa:21ec]) by SA3PR11MB8118.namprd11.prod.outlook.com
+ ([fe80::c4e2:f07:bdaa:21ec%4]) with mapi id 15.20.8964.025; Tue, 29 Jul 2025
+ 17:39:30 +0000
+From: <dan.j.williams@intel.com>
+Date: Tue, 29 Jul 2025 10:39:27 -0700
+To: "Koralahalli Channabasappa, Smita"
+	<Smita.KoralahalliChannabasappa@amd.com>, Marc Herbert
+	<marc.herbert@linux.intel.com>, <linux-efi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
+CC: Ard Biesheuvel <ardb@kernel.org>, Alison Schofield
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
+ Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Yazen Ghannam
+	<yazen.ghannam@amd.com>, Terry Bowman <terry.bowman@amd.com>, Dave Jiang
+	<dave.jiang@intel.com>, <tony.luck@intel.com>, Gregory Price
+	<gourry@gourry.net>
+Message-ID: <6889074f38d5e_48e510076@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <5c052302-8639-41ef-9d51-3814f2778674@amd.com>
+References: <20250123084421.127697-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20250123084421.127697-5-Smita.KoralahalliChannabasappa@amd.com>
+ <074f5f77-7bef-4857-97fe-b68ee9b0afaf@linux.intel.com>
+ <dfc6cedd-c125-4201-a98b-cbaa84a4f370@amd.com>
+ <ef9c9418-2def-484a-89fb-b0235391ad83@linux.intel.com>
+ <5c052302-8639-41ef-9d51-3814f2778674@amd.com>
+Subject: Re: "invalid agent type: 1" in acpi/ghes, cper: Recognize and cache
+ CXL Protocol errors
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR02CA0018.namprd02.prod.outlook.com
+ (2603:10b6:a02:ee::31) To SA3PR11MB8118.namprd11.prod.outlook.com
+ (2603:10b6:806:2f1::13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA3PR11MB8118:EE_|PH8PR11MB7021:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1f8edda2-7d0e-4f36-f306-08ddcec6df21
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?NkxtZDdWR3J3NUY1QVRFMkx4YnYxaE5xcEcxdjV2Q3A4L1ltY1BhbzBZbGNV?=
+ =?utf-8?B?QVhMQldwbm5SaTJmZlNKa2dDR0djamlDeFNOaU1UVFd6bXAvclRBU0ZpVDgr?=
+ =?utf-8?B?MWFaSU9tZGRuc2hyb0oxZnNMcHN1MGloY3RRVzhQcVQzMmNjM0g0TWMzL0hQ?=
+ =?utf-8?B?bWxsblJ0eUpGTmRvVW1FRy9vWU03WkN4SFRDT1Z3cnJlUzlKMlU3dVlQbWVC?=
+ =?utf-8?B?di9neFJNRWZ4ZHl3dEoyZ1FySzliWFFCWmlFWFdtcWllMStuVnhLYytoaXkx?=
+ =?utf-8?B?UlFsRG9vRkt0eTZ5T0svSVkvNS93cVZnRzNDRDJ5bjFLdmhPc1lVMGcwYjEr?=
+ =?utf-8?B?MURFTE1oM204MGo5L0lweExzSUxGSlJQMVdTZWxRcnJONkU3c1VNZVQ5bzI1?=
+ =?utf-8?B?aDJWVkxVNDJ6RnMvU0ozV1FPMHJsa3VESkZxRXZVYktnUXlabXM2Nk4zSGs5?=
+ =?utf-8?B?OUlFTVl5a1lqaUh5MFpNZkQ0UDhKUDlhTHZNSDlZV1hwdVZVTkVQL2VMZFly?=
+ =?utf-8?B?VFRmNTBqYkN6OHgyc3JNcUFuRG5JTU83dElOSExQbDFZTXQyam5GT1pzRjVH?=
+ =?utf-8?B?RnBCMkZCZkNYT1BVQ1pTZnh2TE1nT3FmYzFDSnp4NDQ1VDlibHBHZ0pTeHNz?=
+ =?utf-8?B?WFlsaXQ4WXZtMHJMaEdUQlhSYks1eFRMT2NBbExUZlI1aU5NeTZTb1VmcTZJ?=
+ =?utf-8?B?WWhhTHBKaUtsMC85UU9xU2ZzNXU5S3lNNStvK1c5OUw5R2dEUUFYYTF4QVpX?=
+ =?utf-8?B?eG5XUVhuTU1TTWorTW94bzRGL1EwanJiTTlNb0dhaXNFQzAwMXVxQ0tVb0Na?=
+ =?utf-8?B?NGhWQ3NJQ2U0dFJtT1QxL0I1TU40QUVXZXR2b3VyWFhjYStBLzNWd3ZPUC85?=
+ =?utf-8?B?eHMwTjNJaUNvVFNhdTNaMW8xMnlMbjJ1c21ZZmlXTWZ2bkhlTDVGdmRvSDVj?=
+ =?utf-8?B?K1pubkVzREhmSmVXT1hFL1BZa0hDNXE5VFpvWHloRTRadTJFV2VmNWdFUEJn?=
+ =?utf-8?B?S1NNU1JSZlFONXlQeSthR3BhRmN6TU02a1BRM1hMQ0ZKaTREZ1hpSkVieTl1?=
+ =?utf-8?B?VUdtSG1FRGsycmpoU01qWXNVdTdNZFYyaWRzRVF0bmZuTlloZlowTjA3M0xO?=
+ =?utf-8?B?WmNJS0JCK0hhYTJtN3VGNXkrMGpaajVMN1h0OHYrU1p0UmthOXNIY0RCLzdz?=
+ =?utf-8?B?U3Uvb0ZXNlM0QzBqenJMejRhb0JLVFIyajltWEZveGl3dWhXYzNOTlZtZzNP?=
+ =?utf-8?B?cUdFQkFlYnFsWmpFbzVLNk5GZEdvZTlpajZzS3c0b3kyYzJOUUdoVGpxL2RG?=
+ =?utf-8?B?Qmp6Q2tNdHJRcDltM0xSdFF4VUtJV24ySFNIc3d0eTBPejBubW5LVVBNRTF5?=
+ =?utf-8?B?T1UwNlltTEk1OFJibjhUY1BDZWZUNG1jRHpQN2daSVRSeURFd25MWXRWanAr?=
+ =?utf-8?B?K0FTekZiTkl3dGwvZTFZWHBGdHVQSVdaNDFVeEdMaE13MEhMTXJEb1NJYUhZ?=
+ =?utf-8?B?c2NFOEdaNTRlOVJNUzFCUDF0RDNYMkljMHRPNngwdWRRQjlMd01Iak41WU1C?=
+ =?utf-8?B?eGtvNkVWSjcvSmQ5OEJpRVdDNHZRbmEvVWQreFkyZWxKeFVwcEZBY0NGUWJM?=
+ =?utf-8?B?eXk3N1RmelJEYUtiZWJMK3M5TXhreW5uM053c0htc3A2UWdNc1d5S3B3d3JK?=
+ =?utf-8?B?UFBiU2Q4OUpjMXBKdWc0SzVTcXlXUmlTWUltam00RS9Rb3dUaHZTWXZwbE5m?=
+ =?utf-8?B?Z3NzRTFVT0l5ZERJbUllb1Mwc0VSNW4zNGgxck55d2xKUERZVkluYmlOU3F3?=
+ =?utf-8?B?dXgzc3d0dGtwY0VRZWJFdVlvN2hVUTNMcnNmOFNyekN1ZThMYlRxejlNM2gz?=
+ =?utf-8?B?ZGpRVU80RFdxaElBSUZuTHFQdkQzeEpCUmFIc1JoMUlsZnEyZThiSmg4cnZi?=
+ =?utf-8?Q?8wzbj3I2p7U=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR11MB8118.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?V0VZVWRaZGVTNjhCQjNDdWJBdVdnNEV4SzkzblNZUVpCb0hiaGd6aFRSOU9s?=
+ =?utf-8?B?ZmtuUUtJQ0FWTFlDUERwYzdIMVJQU3RBR2dvR1ZteENIZVN5MGVzdEk0TDJS?=
+ =?utf-8?B?TkFiRmx5aUVMK1U0MjZ6TUthVFF3a05EYmlWM0h1QUtlRVdRc2k4aGpTQThH?=
+ =?utf-8?B?RnJUK3o5THE4SGY3d2xMWXFHYytYeHBPVHJFczFweGRCTEVwTzY2Sk10bVQr?=
+ =?utf-8?B?N0ZHS2puSDRJSU9oWjRMMld2Y0RNVlJ3U2ZzWVM5UEF5ajZWcEJjdys3YUhJ?=
+ =?utf-8?B?Q1p3RUMwdnJWcDFHZGd0UUNpY1pUVlpwSHh6Rm9WZFdpYTBYbDRDdkZlS3Bq?=
+ =?utf-8?B?ZHRvZUpNTFRyQm0zWFJOZE5LMEI3Zk1oZkxqR3lPNDRnWEJ6RHViRnRMRWFq?=
+ =?utf-8?B?MnFaVDdhMnpPS1lkVkh0T2puY05iNW5PQnlsQ2htUVI5dkJXcVRxcExKb3BM?=
+ =?utf-8?B?WmhxbUtha05UTGRpZmdOcUE5RVZHYm0yY1QyQmJiRnNBRkNPQUZrWXRUZUk4?=
+ =?utf-8?B?WWMvQ0JFQlVKWlN5Z0xtUFJueUc2d0RQY0xGYlkwUXluRjBRbmFYaENGeFNZ?=
+ =?utf-8?B?Yk9PZHJ3L05Da0RTbzV2UHJzMlRPcnpaNWE5RVNQTHlXQkdudlRNUGRSTCtB?=
+ =?utf-8?B?UHhuV0dRcUo5bzM3bUlEMXZnc25URmYxNDBBZ2pZcVUzWVBOY1dLN0dMUGhj?=
+ =?utf-8?B?bkd3UWh2VDJNNElLM0lxTTBvRkRLKzI2TG8yTE15OElUVjBrc1FFWnViQ0xL?=
+ =?utf-8?B?d0YycDF3dHJjK215OHovL1FmcEZFUnBYcG1scFNOTEdnN0JyVDJiejZQR255?=
+ =?utf-8?B?R3p4eEZCTUxmSDdhNFhDNXFieUl6S2ptTEFnWERmYVdNZGkyUytQQm1WV1lO?=
+ =?utf-8?B?ckZXWWptK2tLWHZoS1R6eDBPaStqVTl2UTAycXh2ZzRkeHMwbVdoUS8wTEI3?=
+ =?utf-8?B?cVNPZGdHdmRsU2N1MUFvc0lUZk1rQWpPdmN2L1VkQ3lNeWdLRm5HRjM5Z0Ju?=
+ =?utf-8?B?Y3ZXWkEwWHkzZWFwTlU2eGk3bndzWG4xYjRseG9aMGN5elNRd0FsMlZMelRq?=
+ =?utf-8?B?NkM4V05mZ1laRDE4d2FCRXFRc3p5eVFldlptMWNNTXpwaTJRVzZNcmM4YTh2?=
+ =?utf-8?B?WitFYzlLWVpENUlKUmtKRjFNNW4wY3BOMVpPYUxFdlBFU0hHRTJzb1NRZWZ5?=
+ =?utf-8?B?Y2UwTkFEZUZtLy9DVlJtMUVtK0RqNmZKUERHU0RDSk9HVzFuRmc2L3JlVXJO?=
+ =?utf-8?B?V2JDWkFjZUVLMTRUdlJ6M1E0NC9hK2NuTXZGTFBpempMSm1rTnRwMHBVOURC?=
+ =?utf-8?B?aGM3QU9EM2RRc1c2K21EaFNlajU2eVB6K0RwUkhuUXVhU3JsMENoVnRsMEJ5?=
+ =?utf-8?B?bXJyakxzd3I4SmVSeGQ2LzEvREdOM1hENkN1SXV6Yng0SzNPeWZITERMeFFL?=
+ =?utf-8?B?MGYxUm9SWEthdWNhYmFJMm5HVmtQS1FnUXJQU210amF2Wm1hNDJTL1d1R3BQ?=
+ =?utf-8?B?NGRKczVnVkRGNks2RnFXb0FSTWloMXRpOW5xYnMvMTlSWndwOU00MlpnWi9Z?=
+ =?utf-8?B?RlloQTdzNFYxcTdlVDRxVTk2T0NnMFBBS0VxNmt5eVJpS3BYeGFkRTBaL3ZY?=
+ =?utf-8?B?NG9mRk1ZV2tIZkR2N29YdFZVRVV4Tldpc3Uzd3Zxb0tkdUJnU0VLM016bTQy?=
+ =?utf-8?B?TEtEelpvd0YwQmxsMkhnR0I1K2FQcW5ITm5pYVNiTnRML2FLNFBySTB6Z2xr?=
+ =?utf-8?B?RGZrdGh2SWNQWEJLWXh3djZJSm5YZ0g0a09LN0ZnUURSNytBU204cDZ0RklT?=
+ =?utf-8?B?YmpFTWRvRk93aDQ0ME5qaDExRjBoU2oyVEZidGVHbnlCRVFETUw3Zjk2VjMz?=
+ =?utf-8?B?Q0QxcXcvQTBDVWVGWW1jajNwUEdFQm9UeDBFbTFPcWxZdVpRS01HUEhBZy9O?=
+ =?utf-8?B?aXVRNTYrbkRlcVRCSWF1eU5nQ3pMQXFHdisrUVVKYkNvYzd6bXRiei9maGVV?=
+ =?utf-8?B?RjJvTlJBWDNwTmZWSWIyUCs4UDZpNzVLcUNaYm1xNVEyY0dHckNQaUZVOHZW?=
+ =?utf-8?B?aC9CNVB2dEJGUHFXc1pSSmZZOStkbzhRWm1aRWM4ZGx2V0h6eGVVeHRXSSt2?=
+ =?utf-8?B?REtPc0MrckYvdmk5MDgyU3FlQW1BclY1cERnaS9MaWVYRTVVcEFab21lMDRj?=
+ =?utf-8?B?K2c9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1f8edda2-7d0e-4f36-f306-08ddcec6df21
+X-MS-Exchange-CrossTenant-AuthSource: SA3PR11MB8118.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2025 17:39:30.1257
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6m0pRFO2SFVwMPkcKKTHDAvQlP55n8oLGILMyxBGplbSJahzZDcQzRlETrFMaxB20x0tgOn1hZqkqk7cvluJyV1/k6JQzuNwXhgS7u0roGk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB7021
+X-OriginatorOrg: intel.com
 
-From: Ira Weiny <ira.weiny@intel.com>
+Koralahalli Channabasappa, Smita wrote:
+[..]
+> >> I agree that a brief comment explaining this rationale would help. I'm
+> >> okay if you plan to include a fixup for this along with the one for
+> >> the device serial number.
+> > 
+> > If I understood you correctly, I think a different error message
+> > would be much better than a comment. Like this?
+> 
+> Yeah looks good to me. Thanks for fixing this!
 
-CXL 3.2 8.2.4 Table 8-22 defines which capabilities are mandatory, not
-permitted, or optional for each type of device.
-
-cxl_component_register_init_common() uses a rather odd 'fall through'
-mechanism to define each component register set.  This assumes that any
-device or capability being added builds on the previous devices
-capabilities.  This is not true as there are mutually exclusive
-capabilities defined.  For example, downstream ports can not have snoop
-but it can have Back Invalidate capable decoders.
-
-Refactor this code to make it easier to add individual capabilities as
-defined by a device type.  Any capability which is not specified by the
-type is left NULL'ed out which complies with the packed nature of the
-register array.
-
-Update all spec references to 3.2.
-
-No functional changes should be seen with this patch.
-
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-[rebased, no RAS for HBs, r3.2 references]
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
----
- hw/cxl/cxl-component-utils.c   | 75 +++++++++++-----------------------
- include/hw/cxl/cxl_component.h | 33 ++++++++++-----
- 2 files changed, 46 insertions(+), 62 deletions(-)
-
-diff --git a/hw/cxl/cxl-component-utils.c b/hw/cxl/cxl-component-utils.c
-index ce42fa4a2946..a43d227336ca 100644
---- a/hw/cxl/cxl-component-utils.c
-+++ b/hw/cxl/cxl-component-utils.c
-@@ -289,32 +289,6 @@ void cxl_component_register_init_common(uint32_t *reg_state,
- {
-     int caps = 0;
- 
--    /*
--     * In CXL 2.0 the capabilities required for each CXL component are such
--     * that, with the ordering chosen here, a single number can be used to
--     * define which capabilities should be provided.
--     */
--    switch (type) {
--    case CXL2_DOWNSTREAM_PORT:
--    case CXL2_DEVICE:
--        /* RAS, Link */
--        caps = 2;
--        break;
--    case CXL2_UPSTREAM_PORT:
--    case CXL2_TYPE3_DEVICE:
--    case CXL2_LOGICAL_DEVICE:
--        /* + HDM */
--        caps = 3;
--        break;
--    case CXL2_ROOT_PORT:
--    case CXL2_RC:
--        /* + Extended Security, + Snoop */
--        caps = 5;
--        break;
--    default:
--        abort();
--    }
--
-     memset(reg_state, 0, CXL2_COMPONENT_CM_REGION_SIZE);
- 
-     /* CXL Capability Header Register */
-@@ -322,11 +296,12 @@ void cxl_component_register_init_common(uint32_t *reg_state,
-     ARRAY_FIELD_DP32(reg_state, CXL_CAPABILITY_HEADER, VERSION,
-         CXL_CAPABILITY_VERSION);
-     ARRAY_FIELD_DP32(reg_state, CXL_CAPABILITY_HEADER, CACHE_MEM_VERSION, 1);
--    ARRAY_FIELD_DP32(reg_state, CXL_CAPABILITY_HEADER, ARRAY_SIZE, caps);
- 
- #define init_cap_reg(reg, id, version)                                        \
-     do {                                                                      \
--        int which = R_CXL_##reg##_CAPABILITY_HEADER;                          \
-+        int which = CXL_##reg##_CAP_HDR_IDX;                                  \
-+        if (CXL_##reg##_CAP_HDR_IDX > caps)                                   \
-+            caps = CXL_##reg##_CAP_HDR_IDX;                                   \
-         reg_state[which] = FIELD_DP32(reg_state[which],                       \
-                                       CXL_##reg##_CAPABILITY_HEADER, ID, id); \
-         reg_state[which] =                                                    \
-@@ -337,37 +312,35 @@ void cxl_component_register_init_common(uint32_t *reg_state,
-                        CXL_##reg##_REGISTERS_OFFSET);                         \
-     } while (0)
- 
-+    /* CXL r3.2 8.2.4 Table 8-22 */
-     switch (type) {
--    case CXL2_DEVICE:
--    case CXL2_TYPE3_DEVICE:
--    case CXL2_LOGICAL_DEVICE:
-     case CXL2_ROOT_PORT:
-+    case CXL2_RC:
-+        /* + Extended Security, + Snoop */
-+        init_cap_reg(EXTSEC, 6, 1);
-+        init_cap_reg(SNOOP, 8, 1);
-+        /* fallthrough */
-     case CXL2_UPSTREAM_PORT:
-+    case CXL2_TYPE3_DEVICE:
-+    case CXL2_LOGICAL_DEVICE:
-+        /* + HDM */
-+        init_cap_reg(HDM, 5, 1);
-+        hdm_init_common(reg_state, write_msk, type);
-+        /* fallthrough */
-     case CXL2_DOWNSTREAM_PORT:
--    init_cap_reg(RAS, 2, CXL_RAS_CAPABILITY_VERSION);
--        ras_init_common(reg_state, write_msk);
-+    case CXL2_DEVICE:
-+        /* RAS, Link */
-+        if (type != CXL2_RC) {
-+            init_cap_reg(RAS, 2, 2);
-+            ras_init_common(reg_state, write_msk);
-+        }
-+        init_cap_reg(LINK, 4, 2);
-         break;
-     default:
--        break;
--    }
--
--    init_cap_reg(LINK, 4, CXL_LINK_CAPABILITY_VERSION);
--
--    if (caps < 3) {
--        return;
--    }
--
--    if (type != CXL2_ROOT_PORT) {
--        init_cap_reg(HDM, 5, CXL_HDM_CAPABILITY_VERSION);
--        hdm_init_common(reg_state, write_msk, type);
--    }
--    if (caps < 5) {
--        return;
-+        abort();
-     }
- 
--    init_cap_reg(EXTSEC, 6, CXL_EXTSEC_CAP_VERSION);
--    init_cap_reg(SNOOP, 8, CXL_SNOOP_CAP_VERSION);
--
-+    ARRAY_FIELD_DP32(reg_state, CXL_CAPABILITY_HEADER, ARRAY_SIZE, caps);
- #undef init_cap_reg
- }
- 
-diff --git a/include/hw/cxl/cxl_component.h b/include/hw/cxl/cxl_component.h
-index b721333cb7aa..cd92cb02532a 100644
---- a/include/hw/cxl/cxl_component.h
-+++ b/include/hw/cxl/cxl_component.h
-@@ -32,10 +32,20 @@ enum reg_type {
- };
- 
- /*
-- * Capability registers are defined at the top of the CXL.cache/mem region and
-- * are packed. For our purposes we will always define the caps in the same
-- * order.
-- * CXL r3.1 Table 8-22: CXL_CAPABILITY_ID Assignment for details.
-+ * CXL r3.2 - 8.2.4 Table 8-22 and 8-23
-+ *
-+ * Capability registers are defined at the top of the CXL.cache/mem region.
-+ * They are defined to be packed and at variable offsets.  However, NULL
-+ * capabilities can be added to the packed array.  To facilitate easier access
-+ * within the QEMU code, define these at specified offsets.  Then NULL out any
-+ * capabilities for devices which don't (or can't) have a particular capability
-+ * (see cxl_component_register_init_common).  NULL capabilities are to be
-+ * ignored by software.
-+ *
-+ * 'offsets' are based on index's which can then be used to report the array
-+ * size in CXL Capability Header Register (index/offset 0).
-+ *
-+ * See CXL r3.2 Table 8-25 for an example of allowing a 'NULL' header.
-  */
- 
- /* CXL r3.1 Section 8.2.4.1: CXL Capability Header Register */
-@@ -46,16 +56,17 @@ REG32(CXL_CAPABILITY_HEADER, 0)
-     FIELD(CXL_CAPABILITY_HEADER, CACHE_MEM_VERSION, 20, 4)
-     FIELD(CXL_CAPABILITY_HEADER, ARRAY_SIZE, 24, 8)
- 
--#define CXLx_CAPABILITY_HEADER(type, offset)                  \
--    REG32(CXL_##type##_CAPABILITY_HEADER, offset)             \
-+#define CXLx_CAPABILITY_HEADER(type, idx)                     \
-+    enum { CXL_##type##_CAP_HDR_IDX = idx };                  \
-+    REG32(CXL_##type##_CAPABILITY_HEADER, (idx * 0x4))        \
-         FIELD(CXL_##type##_CAPABILITY_HEADER, ID, 0, 16)      \
-         FIELD(CXL_##type##_CAPABILITY_HEADER, VERSION, 16, 4) \
-         FIELD(CXL_##type##_CAPABILITY_HEADER, PTR, 20, 12)
--CXLx_CAPABILITY_HEADER(RAS, 0x4)
--CXLx_CAPABILITY_HEADER(LINK, 0x8)
--CXLx_CAPABILITY_HEADER(HDM, 0xc)
--CXLx_CAPABILITY_HEADER(EXTSEC, 0x10)
--CXLx_CAPABILITY_HEADER(SNOOP, 0x14)
-+CXLx_CAPABILITY_HEADER(RAS, 1)
-+CXLx_CAPABILITY_HEADER(LINK, 2)
-+CXLx_CAPABILITY_HEADER(HDM, 3)
-+CXLx_CAPABILITY_HEADER(EXTSEC, 4)
-+CXLx_CAPABILITY_HEADER(SNOOP, 5)
- 
- /*
-  * Capability structures contain the actual registers that the CXL component
--- 
-2.39.5
-
+Wait, I was thinking to delete these messages. The rationale being, why
+continue to harass the system owner indefinetly with the fact that their
+BIOS is emitting kernel unsupported CPER records? The value of that
+unactionable report is look. This feels like dev_dbg_ratelimited(), or
+dev_warn_once() at most.
