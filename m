@@ -1,235 +1,137 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F452BD03B
-	for <linux-cxl@vger.kernel.org>; Wed, 30 Jul 2025 12:17:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE1B2D94B4;
+	Wed, 30 Jul 2025 14:10:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753877869; cv=none; b=t7M8suibVQUDT1CxoAlucOfaNUKxsRyG5Zt6NOVI924LIGzcPmjgk73MpU7Qef/Gv+YvToAP/nRex4Ocsp81Zx7BTELVFHPeNDlGZ09VX1TiseO//swkIGJY36K2aae+yLfULPynYRKQFgNjQRXUJgmAeHW7xhy20Db6WdzP5aA=
+	t=1753884616; cv=none; b=CX/MOan6ixBcaxJ5CE3L1B5C9/V7Gl8SidRG2KtYOSoDN96FerNGlRsLSFzZhRGgrXHrEFkT57n5TU1uWlkTOKMFlIAp4kTQlOCWpkYcYr+yaPvTXsjUwKDy+UH2kaMgGLccVzBfKHF49hw6AY2CFCvBmukHpcZXkXjb8+JhWSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753877869; c=relaxed/simple;
-	bh=+tfJ6kmI5TyWd3CwPGoTz3jWuNKpu0Bg1vj5zTULf+c=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=i07eEhEOdQTGzsnBTDoixOVHG1mkONo6tfd3ONcbXOfgTu+20o2D/btQ5Sw/IIoEeeN5UHo/WILDDghm1/k0QQ04BEruYBVx2Bxiocj2+O++GmzQHtoCfEkXog5FHBI28BgbAv8EcjMDXZnd/wuUa8B1woSoVQEsCJlXz0h+008=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=k9mAIX15; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1753884616; c=relaxed/simple;
+	bh=f3q82dC4fcAvpkwpRNPZBH2CXBSvKV3N+eEsYx/XpTo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wl/QsQ+Ve+Qd6xjGAfTn23LJ1XK4tRxbl1hCQUwNug2KfG0mHkBXbi3UM8A2FTXblRi/tti2Ktm4/NbTltH7I4S8HD3VBwVJRlHyz9xWrcXwtIFYEsxkj9Axpeiml7a7oVGemt5pwcd7Pw4QA4LBq+CRNC3IwJkt/zupn88PzVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SBrCIX0l; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="k9mAIX15"
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250730121746epoutp03fdb7f34155f8ab2305dd01f893a5e4d0~XBqBvV9q40106101061epoutp03H
-	for <linux-cxl@vger.kernel.org>; Wed, 30 Jul 2025 12:17:46 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250730121746epoutp03fdb7f34155f8ab2305dd01f893a5e4d0~XBqBvV9q40106101061epoutp03H
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1753877866;
-	bh=tr+z8UkyvssMX2E0j//VujZShPXWDtOnp74X2w/XQTo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=k9mAIX15KGIBncZOsXLfylxopm9B1mCLXn/PvCmTAqOJfdn07qAlwF3BK6sV4qXZc
-	 omG4ZkPaFXtlO8yYMSXQVezPRNZ9IgQJvqv4fGYKAs+H7BlQtG5YZbytuW8FXB4WKZ
-	 ZFiyzBF4cu5TXimcQXUY5RwvcQvu/ua8+C+tgVC8=
-Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
-	20250730121742epcas5p320273f99e305038dc6257047c093693f~XBp_ylszK2824128241epcas5p3w;
-	Wed, 30 Jul 2025 12:17:42 +0000 (GMT)
-Received: from epcas5p2.samsung.com (unknown [182.195.38.89]) by
-	epsnrtp03.localdomain (Postfix) with ESMTP id 4bsWSP6Rg5z3hhT3; Wed, 30 Jul
-	2025 12:17:41 +0000 (GMT)
-Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250730121249epcas5p249c2e3fec3464cfea3a1c84bc285cd49~XBltWzLs70097800978epcas5p2p;
-	Wed, 30 Jul 2025 12:12:49 +0000 (GMT)
-Received: from test-PowerEdge-R740xd.samsungds.net (unknown [107.99.41.79])
-	by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250730121248epsmtip1b44e851ee72a608296b27f03b1168fdd~XBlsUBEkq0450704507epsmtip1V;
-	Wed, 30 Jul 2025 12:12:48 +0000 (GMT)
-From: Neeraj Kumar <s.neeraj@samsung.com>
-To: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, gost.dev@samsung.com
-Cc: a.manzanares@samsung.com, vishak.g@samsung.com, neeraj.kernel@gmail.com,
-	Neeraj Kumar <s.neeraj@samsung.com>
-Subject: [PATCH V2 20/20] cxl/pmem_region: Add sysfs attribute cxl region
- label updation/deletion
-Date: Wed, 30 Jul 2025 17:42:09 +0530
-Message-Id: <20250730121209.303202-21-s.neeraj@samsung.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250730121209.303202-1-s.neeraj@samsung.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SBrCIX0l"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1753884615; x=1785420615;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=f3q82dC4fcAvpkwpRNPZBH2CXBSvKV3N+eEsYx/XpTo=;
+  b=SBrCIX0ljvW2XUPHbzEgIGkva5gBWtea314nxWDpo0W3L010K2TQsIMw
+   8ckpqqc8CJ6pY7MXq/b6/+jmVKW7qevzI0NG3DbiVEM7fv1jCUhm6rVIy
+   qLnYdxvzJgeve+OkFN/J1VWwKkvoDF4U26RGtjEyVcmESbL9tgY2nyXDN
+   +tY0duguSlDTliuHkvW3b6HWIMNwiNkZxDGrstzffJ2cMj9TV50lzh4vw
+   CFtscn/J626ixgK35sJojSkyMdAKwKq/rHSkO4FC2jqJx1zgz3phq66Hi
+   poCCrYVyfIR2e9+42tYVrHeTKz42dkBPGI5n8Mnaz2HKeMjFMlIk9Bkag
+   A==;
+X-CSE-ConnectionGUID: khiG5FfoSH6C/0bCCp8kmA==
+X-CSE-MsgGUID: YNGG5iBHQjCfLepPh9edQw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11507"; a="56334671"
+X-IronPort-AV: E=Sophos;i="6.16,350,1744095600"; 
+   d="scan'208";a="56334671"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2025 07:10:14 -0700
+X-CSE-ConnectionGUID: XsKJ/Jo5RVS1LasPilvzZw==
+X-CSE-MsgGUID: JPGiqQ5eQKS9lDAqG85H3g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,350,1744095600"; 
+   d="scan'208";a="162257888"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by orviesa010.jf.intel.com with ESMTP; 30 Jul 2025 07:10:10 -0700
+Received: by black.igk.intel.com (Postfix, from userid 1003)
+	id CF81F17; Wed, 30 Jul 2025 17:10:40 +0200 (CEST)
+Date: Wed, 30 Jul 2025 17:10:40 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>,
+	Nathan Chancellor <nathan@kernel.org>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Alison Schofield <alison.schofield@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	David Lechner <dlechner@baylibre.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Ingo Molnar <mingo@kernel.org>, Ira Weiny <ira.weiny@intel.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	Shiju Jose <shiju.jose@huawei.com>,
+	Vishal Verma <vishal.l.verma@intel.com>
+Subject: Re: [PATCH v3 0/8] cleanup: Introduce ACQUIRE(), a guard() for
+ conditional locks
+Message-ID: <aIo18KZpmKuR4hVZ@black.igk.intel.com>
+References: <20250711234932.671292-1-dan.j.williams@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250730121249epcas5p249c2e3fec3464cfea3a1c84bc285cd49
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-542,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250730121249epcas5p249c2e3fec3464cfea3a1c84bc285cd49
-References: <20250730121209.303202-1-s.neeraj@samsung.com>
-	<CGME20250730121249epcas5p249c2e3fec3464cfea3a1c84bc285cd49@epcas5p2.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250711234932.671292-1-dan.j.williams@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Using these attributes region label is added/deleted into LSA. These
-attributes are called from userspace (ndctl) after region creation.
+On Fri, Jul 11, 2025 at 04:49:24PM -0700, Dan Williams wrote:
+> Changes since v2 [1]:
+> - Pick up Acks and Reviews
+> - Whitespace fixups for cleanup.h changes (Jonathan)
+> - Use consistent local variable style for ACQUIRE_ERR() (Jonathan)
+>   - Not addressed: switch to less compact style ACQUIRE_ERR()
+> - Not addressed: pickup checkpatch change for ACQUIRE_ERR() style in
+>   this series (Alison)
+> - Drop the cxl_decoder_detach() CLASS() and convert to a helper function (Jonathan)
+> - Refactor attach_target() to make it easier to read (Jonathan)
+> 
+> [1]: http://lore.kernel.org/20250619050416.782871-1-dan.j.williams@intel.com
+> 
+> For those new to this set, the motivation for this work is that the CXL
+> subsystem adopted scope-based-cleanup helpers and achieved some decent
+> cleanups. However, that work stalled with conditional locks. It stalled
+> due to the pain points of scoped_cond_guard(). See patch1.
+> 
+> In the interim, approaches like rwsem_read_intr_acquire() attempted to
+> workaround the pain points, but started a "parallel universe" of helpers
+> that is not sustainable.
+> 
+>     0c6e6f1357cb cxl/edac: Add CXL memory device patrol scrub control feature
+> 
+> Peter fixed all of this up in a manner consistent with existing guards.
+> Take that proposal and run with it to unblock further cleanups of "goto"
+> in unwind paths in the CXL subsystem.
+> 
+> Potential follow-on work identified by this effort:
+> 
+> - __GUARD_IS_ERR() asm helper [2]
+> - Checkpatch fixups for proposed ACQUIRE_ERR() style [3]
+> 
+> [2]: http://lore.kernel.org/20250514064624.GA24938@noisy.programming.kicks-ass.net
+> [3]: http://lore.kernel.org/aGXDMZB6omShJpoj@aschofie-mobl2.lan
 
-Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
----
- Documentation/ABI/testing/sysfs-bus-cxl | 22 ++++++
- drivers/cxl/core/pmem_region.c          | 94 ++++++++++++++++++++++++-
- drivers/cxl/cxl.h                       |  1 +
- 3 files changed, 116 insertions(+), 1 deletion(-)
+This series broke `make W=1` build vor clang. +Cc Nathan.
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-index 6b4e8c7a963d..5b47a02a99ef 100644
---- a/Documentation/ABI/testing/sysfs-bus-cxl
-+++ b/Documentation/ABI/testing/sysfs-bus-cxl
-@@ -615,3 +615,25 @@ Description:
- 		The count is persistent across power loss and wraps back to 0
- 		upon overflow. If this file is not present, the device does not
- 		have the necessary support for dirty tracking.
-+
-+
-+What:		/sys/bus/cxl/devices/regionZ/pmem_regionZ/region_label_update
-+Date:		July, 2025
-+KernelVersion:	v6.16
-+Contact:	linux-cxl@vger.kernel.org
-+Description:
-+		(RW) Write a boolean 'true' string value to this attribute to
-+		update cxl region information into LSA as region label. It
-+		uses nvdimm nd_region_label_update() to update cxl region
-+		information saved during cxl region creation into LSA. This
-+		attribute must be called at last during cxl region creation.
-+
-+
-+What:		/sys/bus/cxl/devices/regionZ/pmem_regionZ/region_label_delete
-+Date:		July, 2025
-+KernelVersion:	v6.16
-+Contact:	linux-cxl@vger.kernel.org
-+Description:
-+		(WO) When a boolean 'true' is written to this attribute then
-+		pmem_region driver deletes cxl region label from LSA using
-+		nvdimm nd_region_label_delete()
-diff --git a/drivers/cxl/core/pmem_region.c b/drivers/cxl/core/pmem_region.c
-index cd1177d345e6..cc9ef2f9a2b3 100644
---- a/drivers/cxl/core/pmem_region.c
-+++ b/drivers/cxl/core/pmem_region.c
-@@ -45,9 +45,101 @@ static void cxl_pmem_region_release(struct device *dev)
- 	kfree(cxlr_pmem);
- }
- 
-+static ssize_t region_label_update_store(struct device *dev,
-+					 struct device_attribute *attr,
-+					 const char *buf, size_t len)
-+{
-+	struct cxl_pmem_region *cxlr_pmem = to_cxl_pmem_region(dev);
-+	struct cxl_region *cxlr = cxlr_pmem->cxlr;
-+	struct cxl_region_params *p = &cxlr->params;
-+	ssize_t rc;
-+	bool update;
-+
-+	rc = kstrtobool(buf, &update);
-+	if (rc)
-+		return rc;
-+
-+	ACQUIRE(rwsem_write_kill, rwsem)(&cxl_rwsem.region);
-+	rc = ACQUIRE_ERR(rwsem_write_kill, &rwsem);
-+	if (rc)
-+		return rc;
-+
-+	/* Region not yet committed */
-+	if (update && p->state != CXL_CONFIG_COMMIT) {
-+		dev_dbg(dev, "region not committed, can't update into LSA\n");
-+		return -ENXIO;
-+	}
-+
-+	if (cxlr && cxlr->cxlr_pmem && cxlr->cxlr_pmem->nd_region) {
-+		rc = nd_region_label_update(cxlr->cxlr_pmem->nd_region);
-+		if (!rc)
-+			p->region_label_state = 1;
-+	}
-+
-+	if (rc)
-+		return rc;
-+
-+	return len;
-+}
-+
-+static ssize_t region_label_update_show(struct device *dev,
-+		struct device_attribute *attr,
-+		char *buf)
-+{
-+	struct cxl_pmem_region *cxlr_pmem = to_cxl_pmem_region(dev);
-+	struct cxl_region *cxlr = cxlr_pmem->cxlr;
-+	struct cxl_region_params *p = &cxlr->params;
-+	ssize_t rc;
-+
-+	ACQUIRE(rwsem_read_intr, rwsem)(&cxl_rwsem.region);
-+	rc = ACQUIRE_ERR(rwsem_read_intr, &rwsem);
-+	if (rc)
-+		return rc;
-+
-+	return sysfs_emit(buf, "%d\n", p->region_label_state);
-+}
-+static DEVICE_ATTR_RW(region_label_update);
-+
-+static ssize_t region_label_delete_store(struct device *dev,
-+				   struct device_attribute *attr,
-+				   const char *buf, size_t len)
-+{
-+	struct cxl_pmem_region *cxlr_pmem = to_cxl_pmem_region(dev);
-+	struct cxl_region *cxlr = cxlr_pmem->cxlr;
-+	struct cxl_region_params *p = &cxlr->params;
-+	ssize_t rc;
-+
-+	ACQUIRE(rwsem_write_kill, rwsem)(&cxl_rwsem.region);
-+	rc = ACQUIRE_ERR(rwsem_write_kill, &rwsem);
-+	if (rc)
-+		return rc;
-+
-+	if (cxlr && cxlr->cxlr_pmem && cxlr->cxlr_pmem->nd_region) {
-+		rc = nd_region_label_delete(cxlr->cxlr_pmem->nd_region);
-+		if (rc)
-+			return rc;
-+	}
-+
-+	p->region_label_state = 0;
-+
-+	return len;
-+}
-+DEVICE_ATTR_WO(region_label_delete);
-+
-+static struct attribute *cxl_pmem_region_attrs[] = {
-+	&dev_attr_region_label_update.attr,
-+	&dev_attr_region_label_delete.attr,
-+	NULL
-+};
-+
-+struct attribute_group cxl_pmem_region_group = {
-+	.attrs = cxl_pmem_region_attrs,
-+};
-+
- static const struct attribute_group *cxl_pmem_region_attribute_groups[] = {
- 	&cxl_base_attribute_group,
--	NULL,
-+	&cxl_pmem_region_group,
-+	NULL
- };
- 
- const struct device_type cxl_pmem_region_type = {
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index b7592cc76192..f3faa419ddc5 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -475,6 +475,7 @@ enum cxl_config_state {
-  */
- struct cxl_region_params {
- 	enum cxl_config_state state;
-+	int region_label_state;
- 	uuid_t uuid;
- 	int interleave_ways;
- 	int interleave_granularity;
+Par exemple:
+
+/kernel/time/posix-timers.c:89:1: error: unused function 'class_lock_timer_lock_err' [-Werror,-Wunused-function]
+   89 | DEFINE_CLASS_IS_COND_GUARD(lock_timer);
+      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/include/linux/cleanup.h:376:2: note: expanded from macro 'DEFINE_CLASS_IS_COND_GUARD'
+  376 |         __DEFINE_GUARD_LOCK_PTR(_name, _T)
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/include/linux/cleanup.h:358:20: note: expanded from macro '__DEFINE_GUARD_LOCK_PTR'
+  358 |         static inline int class_##_name##_lock_err(class_##_name##_t *_T)   \
+      |                           ^~~~~~~~~~~~~~~~~~~~~~~~
+<scratch space>:24:1: note: expanded from here
+   24 | class_lock_timer_lock_err
+      | ^~~~~~~~~~~~~~~~~~~~~~~~~
+1 error generated.
+
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
