@@ -1,208 +1,833 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32593202976;
-	Wed, 30 Jul 2025 22:23:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753914219; cv=fail; b=sUHTz3VDyKQBshjAJGOnU0j+px8+uFIm6vct1IuImgV9xXX35wC+WzAhLNUqO1D2gUeJN7nhRR1BAyMGGYQPInQv65MH2jgIZaRpXpjdnIrVkfCBYbHNoINryKkuvpCQlzB+7Ly+8YiUSj1m9HFWSSqcFM28u8lEOm5iGxEfpKA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753914219; c=relaxed/simple;
-	bh=pUlcI2D1MtUlWDTfwmP96sYuZIk3JRAf1rHil/Mai4A=;
-	h=From:Date:To:CC:Message-ID:Subject:Content-Type:MIME-Version; b=YNVmTQFpJvO6XpGJHQIyhSgqY70xUpsXROVPfnVXE6yBt+6hCncSCCX/XafNYSkc01EDugtzKQyZkQATFniF5XPYYZbGAcCgLDpD4MS4aRf+TpsyCe6ZO+OH56HzhQKkhh51KO/GcGHpHR2LyK532y5Y/k9ncyLigY+LWSdW4v8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gUr3SPWi; arc=fail smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0564E2E36EA
+	for <linux-cxl@vger.kernel.org>; Thu, 31 Jul 2025 01:01:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1753923702; cv=none; b=bJGAR2QXoT5VpObvhsDk5mQuNuDNWLWivtjuh+zDNSt0+SyrVcK+sx58tVqfPSNVYjX7q5faYjZLHmDwQb1Of0BEkr9Nb0DNFfUKpat4GHbronsz3bi+WOf7WXlX3ika/TlMBQPbFDbo/pB/PmcKs+quUkciy9W+N737towwpVQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1753923702; c=relaxed/simple;
+	bh=O9+57ca9e/+D7WbkvNImPczCxYrJJ58OkUAqHpQslyU=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=olsFW41LyLblmDCw4eUoY4QrIgqRa+5QjoqQ6Psa6gd8q2+DibDvhLnO1jm3sxv7y4FkgBrxB1SDLrZ3OTESwgGKgGVH+S8jsaGW2/9rk1+/QSB5nLBUEg1FvMiyhTAq1DqbH8Bv5S+wqnRljYB+QEKeCKER0Jceh9PeIoe1Nno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QfySy73m; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gUr3SPWi"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QfySy73m"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753914217; x=1785450217;
-  h=from:date:to:cc:message-id:subject:
-   content-transfer-encoding:mime-version;
-  bh=pUlcI2D1MtUlWDTfwmP96sYuZIk3JRAf1rHil/Mai4A=;
-  b=gUr3SPWiN7TnE63HqrNNsFmeRwBRL4KZ9n6xcuq2lqFwbnaO1LWRJPDb
-   qrLo/I7/7WrsaETjJ5zc3BoacDJJWoR22I6XNjcninQsBSopyNXnMPxpg
-   do+/dLZljv+LK9n2bfxqaJypkUK+10umW6pZrVS5CZLjwVKHmOyRpGDZa
-   TohwZSZykU7mC0rLTVV9cV/zvAG4F+WGMvGyZhglGR4w9uaDthdtv7eGU
-   x7tzsPeBabqYhb9khHb5tdN8ZY1sGMYtOEqkBFZhFcF7Cd3m0CX3znXjO
-   9DAb0Tgyw+BXw0dUbU4Nen6ogeRqOgL4u180kEohFAb1ip37V3vgEoVDF
-   Q==;
-X-CSE-ConnectionGUID: Oknm0vCERsqPIlGgtTkcIQ==
-X-CSE-MsgGUID: qMHW4eEeSkehfo4E+PivOA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11507"; a="67590221"
+  t=1753923699; x=1785459699;
+  h=date:from:to:cc:subject:message-id;
+  bh=O9+57ca9e/+D7WbkvNImPczCxYrJJ58OkUAqHpQslyU=;
+  b=QfySy73mirotWnmiyq9owvYTTipkLHOTl1LCMHrfwbW5XTAEUrP2XSaz
+   l8TJXnbJLlbabqAliHHSbrVyVOKKQnZ87HrS9GRF1v0Ym2zvORRJoWEFq
+   3a3dJSZY5ilCMsckMj4rZfzqyg1dY7CO4XlLP/xZ1M+wzM3Hajt0SGOhJ
+   1nndU2VAIlmog2HP3y2Veld4knzV8wBQM2zrFrGOkoKER4igf7FOf5t3D
+   tSJvz+ogFYuKO6LeA/r6peFETF4ZB41ydqC65tisR0yJY7OopIeh2mS1a
+   3u//DmtA2Zno1De3VS45YWZuO2p44Vqbsu9Nk0FakW0x0heWwcSfZgVkn
+   A==;
+X-CSE-ConnectionGUID: hSOzEsRVRjWvABhPd3ox1Q==
+X-CSE-MsgGUID: Tgpn1Kq7QSmBQRabwCK6qw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11507"; a="56122213"
 X-IronPort-AV: E=Sophos;i="6.16,353,1744095600"; 
-   d="scan'208";a="67590221"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2025 15:23:20 -0700
-X-CSE-ConnectionGUID: JkYUeHGARtSt19WQypzYOA==
-X-CSE-MsgGUID: /CLpLb5URGCdkxU2EtH41A==
+   d="scan'208";a="56122213"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2025 18:01:37 -0700
+X-CSE-ConnectionGUID: sDoJ3DSjReKQA54kkBpX3g==
+X-CSE-MsgGUID: A8iTCRZ2T32Gbg9FW0oYFw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,353,1744095600"; 
-   d="scan'208";a="163888701"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2025 15:23:16 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.26; Wed, 30 Jul 2025 15:23:10 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.26 via Frontend Transport; Wed, 30 Jul 2025 15:23:10 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (40.107.223.73)
- by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.26; Wed, 30 Jul 2025 15:23:08 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gXVvvsx3LY6vvTQtZ8DEKZYHzGUlxretuyQ7ouN27O+bJy28sYGrjvoA7zG7G4BVw/r4LE6hNETVtl4rdT1fbBqWrn3fk2Kgmlp9Iy//3kCgBoEPjt34yJ8BtaFelxxNZYvT1uKk72AAsAkGapwVO+L7ZnBRoFIS/qKoTui0dSWZVRobFoVKiO+q2Lu6yQ8rxIrZ7cCCFm0X7dN3qkoVfv8e//+v2hrBdwI4wMyicXHz4X2/OsupbwGhdiC9Im/pKWCWnwZJlZxKBc/nPEW/1WFZDftlHbAiNeMOJYpqNp/6iViapbjFyxQqal2cuZx34EWT4X06nu4+MrZ1e5ul5A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pUlcI2D1MtUlWDTfwmP96sYuZIk3JRAf1rHil/Mai4A=;
- b=i88XvKCzLWqEGM7ut4OQtvSPnHw56IAE8ZsVym4wUC8jkaRX5ASHAjxnVhpWPntsxGrhTOu4uDa/8MzqzKPXHQKETNxEeIkuMW2CQY4fqmKvBPeUpHo8YaiefPz9dv5OU+U4eO/kAVFD4dyHcfzuX1kCAi12Upzq5e4726PaTSlzBiDBeqhEa7Ow/aGJgVmoMZQ9VE5SPNoAZMwG4kYu7a6X3BGmjAOQ5GIZ56752qtMK6miz9qTUrrHnZL2GlzLe+C3QmEP/FPc9OLOYgVCmBGOT8Apa3MhRNQkrvNqAlOKmj5k8+xk5o/tnKrgzMRQzT9Kge1zFXifQWHUjNxAtg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by SJ0PR11MB5021.namprd11.prod.outlook.com (2603:10b6:a03:2dc::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8964.26; Wed, 30 Jul
- 2025 22:22:39 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%6]) with mapi id 15.20.8989.010; Wed, 30 Jul 2025
- 22:22:39 +0000
-From: <dan.j.williams@intel.com>
-Date: Wed, 30 Jul 2025 15:22:37 -0700
-To: <linux-cxl@vger.kernel.org>, <linux-mm@kvack.org>,
-	<linux-rdma@vger.kernel.org>, <dri-devel@lists.freedesktop.org>
-CC: <linux-kernel@vger.kernel.org>, <a.manzanares@samsung.com>
-Message-ID: <688a9b2d35c97_48e5100af@dwillia2-xfh.jf.intel.com.notmuch>
-Subject: CFP: Plumbers 2025: Device Memory (formerly CXL) Microconference
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR21CA0011.namprd21.prod.outlook.com
- (2603:10b6:a03:114::21) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+   d="scan'208";a="167353057"
+Received: from lkp-server01.sh.intel.com (HELO 160750d4a34c) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 30 Jul 2025 18:01:35 -0700
+Received: from kbuild by 160750d4a34c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uhHfo-0003HQ-29;
+	Thu, 31 Jul 2025 01:01:32 +0000
+Date: Thu, 31 Jul 2025 09:01:26 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org
+Subject: [cxl:for-6.18/cxl-probe-order] BUILD REGRESSION
+ 5e29cbd1077b79468339aca04b16e401252b5a24
+Message-ID: <202507310946.xH6yARF9-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SJ0PR11MB5021:EE_
-X-MS-Office365-Filtering-Correlation-Id: 52716fb7-2c58-4aa9-5fb0-08ddcfb79816
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?VTdvNDlMaExLK1Y2eWpmR1lxUUl2dFdGcjhEZmRLQVpHYWsrOFBHOVM2Skpq?=
- =?utf-8?B?c0JDRGVLdkZrUmFPYTdmUFlGazF0bll5Vlo2Q1VEZndjVVdjMXpwNjNTd1kx?=
- =?utf-8?B?Wk56MG8rY1Rsand0SWZwaUMzTHlsemFob3I2T0VkS1hqK1ExdlVIV1VBWFRx?=
- =?utf-8?B?YnI1M3hFVnluV2RFV3Q4UHNKbzBrVmpRZzZMOEhHamExeHc4V3JnTUNGU2hu?=
- =?utf-8?B?MndtTHRLb1I3UnJoOXBBS1c4aS90VUZhOVl1SFBYNmswRGRLMzVlaUNDT0Ns?=
- =?utf-8?B?Vml2emxBUFA1VXY1cEJTV1QzS2lwOHY2VU8vWVNmQnRIWTRienZkdHlNZDFm?=
- =?utf-8?B?b2cwWnVDSEo0bEpmeXp5U0p6cDlKdm85TGhuSkFhYzU0c2FiNEw2RURlMmQz?=
- =?utf-8?B?TnJQR2Y0VE1maWJWandlZEY1b1hEeERmYVVzZjRqOWE1OEFSMkdGQjBkNXVZ?=
- =?utf-8?B?QW9yT2hNSERQYmJwbE9DVnRyUDA3THVzekI1bzc4cE1kaTA4SWNSSmJWMDVP?=
- =?utf-8?B?K3dLamdBalFURXZsZU11TVVXWW5JRUk1TEcrN0w2YlgzWWNoN3M0Umg3Q1E3?=
- =?utf-8?B?WTNwcVQxdDN2WjFhMWs5SlRhdjF0UFY4K1F1a0VBTTdJcDYwSjlHd1ZnbFJt?=
- =?utf-8?B?d3pZZjRyZVB2S0JyMVpVbDJXbFFmMUdVT2ppZG9FMjJkUVJ6NUNNQXR0YTMv?=
- =?utf-8?B?MTlwb2RGaHczdDFhKzRnLy9BQURIOWg1Y2FoQlQ4cCtYSmtDUkpnemZmUk44?=
- =?utf-8?B?ZnhGeS84NzBHOXdLakFPRSs1aFp2Q3dwK3RVVk9YMElraVBHOVo0ck1aVWgw?=
- =?utf-8?B?UHg1eWJrWU9wZERhcC9sWEhrY0M1RHprcDZ5N1owYmRmQ1F4N2F5SE9NbWNQ?=
- =?utf-8?B?ODlUTVNXUTdEMzRVVitTNkhFMEdILzcwdGJuYmNzTzdFV1hFaWZ5OTVqczlI?=
- =?utf-8?B?cHl2Tkp0bFQvdE4rT28wbFc3Zy9tMWJhdnU1Q2pRT0hsUSs5VTZPN0RRZ2dn?=
- =?utf-8?B?NGlyQUVjUk1uUjQwMmV2MkhOTm1zbHl0QlBJYWNuSTJELzE0U1BtSmJSa2lp?=
- =?utf-8?B?ektXNWthOVYxdVZKaTJSMXpLU1k5THRQc0tKOGw2ZkF3a0ZTdUdsanJ1NmZj?=
- =?utf-8?B?NFkvd1lFb1ArTUQ5NEtyNzZ3MUt0NnM3K0VjdFN5Rm5vRExKWXFtZGdsa2dU?=
- =?utf-8?B?RFRWSXZsU0phQjFwbXV3elJ0d2ZVTUdmM3JtZ0RZaDhYQmVGL3daSXVvQVlw?=
- =?utf-8?B?MFZsT0IybWpMNjJVaWtSeUFCSjNFMSt5c2QwSFJUcG1KSWJJKzFrQUxvNE5q?=
- =?utf-8?B?ejV0MXlTSEpJNWZYNGVvV1RGaFdlZmFhTUlySUgxRkJEdEgyNXc1Q3dRVndT?=
- =?utf-8?B?dStzMUQ5Rm9xdzd5cDgraXZMUUFVTFJZcVJKaUZHK3hMdjB6bkJjZ2EyRU94?=
- =?utf-8?B?VjhlcVlERnBiUFhUWHdTVkxqalVhNFQ3OTRaaEJYanIvak1KcFRBcERhUnhz?=
- =?utf-8?B?blRMLzYwTDh2Tm1FMDREZzF1aWNndW1udnVOWnZWU0wzVUxrREhaTWZBTXpH?=
- =?utf-8?B?bEwzQ2trWnFmRDlsMEFpWS9FMTBON1plc2w2UlNGUkE1SVdwVUlRVXoybFY1?=
- =?utf-8?B?dnVoSENsV1k4cHkwczlVZEIwS0VBVjNFR0RJTGtYTFRmd1FQWmRtRDEyQ0tB?=
- =?utf-8?B?clpzNS90cit2cTA5T2x5RHBRbmJUdHZXazhKUDBHR0x3Ynlqais5N3pSRUJ1?=
- =?utf-8?B?bVo0OStSL0oxdTZSWXlSL1ovbTJabTBVN1hxaFBBSHFOa2tTWUZETFJvamc5?=
- =?utf-8?Q?rmhzW1uHJZM4ZHXTmeCS8F8zoYIaiRFGpRldw=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?YTU5WGdzTGQ2anRsZ29STlUyeEJoV3hTeHZ5WkYyVzZsaXUwSk9panBMZk11?=
- =?utf-8?B?VURCUmpBeWx3SFpuSlhIYUNiVEQ0bG5UdXRWRkdjN3k0ejF5UjQyZ0dIQi9K?=
- =?utf-8?B?QlpLM3ZVSnA2QUg4Um1kR0J5QUh0YlZyWHFDUkZQZDByUEJiMHhFbVFCU0ZG?=
- =?utf-8?B?ZlZWWTllQVpLUzJXZStraitSdldHVzZNTmZIV0x0TWpvVXk5b1M4V0FHSy9Z?=
- =?utf-8?B?Q3FZVk0rQnJUNHBPQkpCY1RXeGJ3akM0K3pNQnozOHZEYkt0ZmJTK2VzenhF?=
- =?utf-8?B?eGljb0V2VUFtclFOaHJ1SGs2dGpFZDU1NXFQbTJ5cjVaYXhEYXJnVXgyWnFF?=
- =?utf-8?B?R3ZFZmQ0TDB5WjhDVEcwT2tzcGYrOHFWZktNOGVVc3MrU1ZSbndJTlJlb2Yw?=
- =?utf-8?B?VERPUzRRaWJFT1lXNWhZRkZ3ekVBSXdScnFvYUhVREJlTUh2Nmt6QzRCakUv?=
- =?utf-8?B?MFc1R0tud1V2eTdsV05FN0hrQk1CUllKd3BkQlB6RVNVTi9xbXJ6YXBoSXdT?=
- =?utf-8?B?Y2NPOElBZDB1dmlUV2tLNm9Yemg1NGlNVFJCd0pRQnVab0hJUmN5U3dEc3Ju?=
- =?utf-8?B?VmQxNDFiMDV2a0pOL0s3eGpYR1ZGRlBOQ0dLV0dmY21KWG5hVmtFZ1pibys0?=
- =?utf-8?B?V3lzeDZnUkNDT1QwcTBYMTZPeWlMN0dyVlRUS0duTWswSUgrdUh1WEtkdUg1?=
- =?utf-8?B?dTF3MnQyMFZKZmJxc2E1ZjJVOWpXWmlHang4STk4cUNTRXlxQTVWakxUNDBp?=
- =?utf-8?B?T1d5SWJSSWNuaHdGQ2dhdWhGY3JGajNwN2FkMVJhckhBeG8wcVdWL0gwOFU5?=
- =?utf-8?B?NVk1REQ3RjErdllqVWY0NjZ4NlBtTDEyTTY3QS9Na3hNeFZWUGN1Q2oxaGxD?=
- =?utf-8?B?MFRFMFJUMzRrb3ZnbUtOTkpFR0R2NVZkZlJmWFpQTEhLOG9qMmtBNHlKY01S?=
- =?utf-8?B?NVMwSXZaQ043OVRkWFRyMHlYQkJqMGdyRXhzQjArbnc2RWF6Sk1yQ0M1N1ln?=
- =?utf-8?B?dHJxRnlEdFJWWjhyUnVGc2F0cWZ1NkxVSlNEOUJmSnpxcEs4UkpJSFFPeW12?=
- =?utf-8?B?MWc0QlFYVzVCQTdlVmc2aXFib0VYcDM5RUpDNEgyb29oZHd6WXR4T01HUVZ3?=
- =?utf-8?B?Z1FWZ29lbzZDcjU2UXVXRmNEcERST0FGdmxDZGJnY0laSldubjQ3bWEwMVdr?=
- =?utf-8?B?Q1B1YkJYc2lXZVpvZmhhODhSTlE5REpvcVhrK1N2ZVBsMGFCdlhEZzVjS0Zn?=
- =?utf-8?B?ZkZWZG1hMUdaeVhmalRoTGE1a2hVeStNYi8wSENIeXFWcEVxa2g3eEo3NFAr?=
- =?utf-8?B?Z1ZFSnFLTUs2ZTM2NFJNM2VpNHQzSVlXSEZoeGk5eHRtNVdWNHYwdk05dTcr?=
- =?utf-8?B?TFErUHEySzJPTXNEUVRpTzk0cVhyUVdTa2hEeHliUGxtT2lUSjNXUnU0Sm1Q?=
- =?utf-8?B?MTlPM3lrUGsyMHNhK0J6N3ZucVg5bHU1VFArbGg5NzFOekdjaExybkw4anBK?=
- =?utf-8?B?VkFNWHB1NldVWC9DK282SGRSWUROcC9sNWYrZ1FOdGp0eTVta0lmQi9lU1Ry?=
- =?utf-8?B?NmpwS2dIcExNZlRlK2xieklXRFlPNXZtQmNSQW9qU3hGbjVlUEVreDJjY3Ev?=
- =?utf-8?B?OVpqaXdhNndJT2pEeDV1QVFlYVh0dHVpN0M0Vjl4ZjBKYnBkbU5BT3ZBVTZJ?=
- =?utf-8?B?M21Td2VQT3JtOXVqVTFpVTF0QjV2YUczM3FybGlrY3VXY2xrZTlMMm1ja1VX?=
- =?utf-8?B?ZUhyMlRTQXpYeCsyY1ErdHFMWlhsZnVZYmR5Qk1ndGhSakI2NEtvOTNDUnJ4?=
- =?utf-8?B?OXpwdnNKMW1rdU13cGFyeDYxNVBFb3JKc3R3RU1oelFIT1R0YzVyekRMQnZa?=
- =?utf-8?B?eThYK210Sy9FbUZWRWtEdFVNWGNFOUN6N0pmbHE5SDZ5TUI4aXZtekRhelVx?=
- =?utf-8?B?RStlVUgwTFNzNXdHc013ZWw0QWRvdm9ET0FZdGE4VWp1SFBtajgvcE94YmR0?=
- =?utf-8?B?clZONFlMdFlXeTdITzlMZ0J0eFFqaTh2cGhnUUtYVW1lVm5SNDFwbTNLUEdx?=
- =?utf-8?B?V0xnNWxBUTlyQkdKanVEVTNoczRFQVlodU1RUjVLb0FmdnBEUktuT0x1Zzhi?=
- =?utf-8?B?V0VjdWE4d3NqWXVDQnhzT3ZZK2t0YlJZZXRRUnV3Qng0OWVPN3ZZbWQyN2ln?=
- =?utf-8?B?SUE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 52716fb7-2c58-4aa9-5fb0-08ddcfb79816
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2025 22:22:39.5637
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3EOKIG9aaCb0VGMyRCNObrUvw16bTHs9i6gg/0jKA/7iFvbihRbW0hYO8V1SDMbBw62TLcFqg+BqGD+5zPwh7eAMsHtm+Mjvoonrg4zevZ8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB5021
-X-OriginatorOrg: intel.com
 
-Hello,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git for-6.18/cxl-probe-order
+branch HEAD: 5e29cbd1077b79468339aca04b16e401252b5a24  dax/cxl: Defer Soft Reserved registration
 
-Linux Plumbers 2025, to be held December 11th through the 13th in Tokyo
-[1], will host the "Device and Specific Purpose Memory Microconference".
-Topic submissions are now being accepted.
+Error/Warning (recently discovered and may have been fixed):
 
-Go to:
+    https://lore.kernel.org/oe-kbuild-all/202507301452.Dmrkcrcr-lkp@intel.com
+    https://lore.kernel.org/oe-kbuild-all/202507301656.6Y5x3Dqd-lkp@intel.com
 
-https://lpc.events/event/19/abstracts/
+    ERROR: modpost: "devm_cxl_add_memdev" [drivers/cxl/cxl_pci.ko] undefined!
+    Warning: kernel/resource.c:342 function parameter 'parent' not described in 'find_next_res'
+    drivers/cxl/pci.c:1009: undefined reference to `devm_cxl_add_memdev'
+    ld.lld: error: undefined symbol: devm_cxl_add_memdev
+    pci.c:(.text+0x1130): undefined reference to `devm_cxl_add_memdev'
 
-...and use the "Submit New Abstract" button. Select "Device and Specific
-Purpose Memory MC" to submit a topic proposal. Some topic suggestions
-are listed in the abstract for the track [2], and here is some general
-guidance for uConf submissions [3].
+Error/Warning ids grouped by kconfigs:
 
-Plumbers Registration opens: September 14th 2025. Submit your proposal
-by September 7th if you want to be considered in the first wave of
-acceptance notifications. Topics will be considered on a rolling basis
-until the end of September, or if the schedule fills up before then.
+recent_errors
+|-- alpha-allmodconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- alpha-allnoconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- alpha-allyesconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- alpha-defconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- alpha-randconfig-r121-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- alpha-randconfig-r131-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- arc-allmodconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- arc-allnoconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- arc-allyesconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- arc-defconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- arc-randconfig-001-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- arc-randconfig-002-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- arc-randconfig-r113-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- arm-allmodconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- arm-allnoconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- arm-allyesconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- arm-defconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- arm-randconfig-001-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- arm-randconfig-001-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- arm-randconfig-002-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- arm-randconfig-003-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- arm-randconfig-004-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- arm-randconfig-004-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- arm-s3c6400_defconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- arm64-allmodconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- arm64-allnoconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- arm64-defconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- arm64-randconfig-001-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- arm64-randconfig-001-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- arm64-randconfig-002-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- arm64-randconfig-002-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- arm64-randconfig-003-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- arm64-randconfig-003-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- arm64-randconfig-004-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- arm64-randconfig-004-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- arm64-randconfig-r062-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- csky-allnoconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- csky-defconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- csky-randconfig-001-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- csky-randconfig-002-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- csky-randconfig-r053-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- csky-randconfig-r112-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- hexagon-allmodconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- hexagon-allnoconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- hexagon-allyesconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- hexagon-defconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- hexagon-randconfig-001-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- hexagon-randconfig-002-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- i386-allmodconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- i386-allnoconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- i386-allyesconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- i386-buildonly-randconfig-001-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- i386-buildonly-randconfig-002-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- i386-buildonly-randconfig-003-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- i386-buildonly-randconfig-004-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- i386-buildonly-randconfig-005-20250730
+|   |-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|   `-- ld.lld:error:undefined-symbol:devm_cxl_add_memdev
+|-- i386-buildonly-randconfig-006-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- i386-defconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- i386-randconfig-001-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- i386-randconfig-002-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- i386-randconfig-003-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- i386-randconfig-004-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- i386-randconfig-005-20250731
+|   |-- ERROR:devm_cxl_add_memdev-drivers-cxl-cxl_pci.ko-undefined
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- i386-randconfig-006-20250731
+|   |-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|   `-- drivers-cxl-pci.c:undefined-reference-to-devm_cxl_add_memdev
+|-- i386-randconfig-007-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- i386-randconfig-011-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- i386-randconfig-012-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- i386-randconfig-013-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- i386-randconfig-014-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- i386-randconfig-015-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- i386-randconfig-016-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- i386-randconfig-017-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- i386-randconfig-051-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- i386-randconfig-052-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- i386-randconfig-053-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- i386-randconfig-054-20250731
+|   |-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|   `-- drivers-cxl-pci.c:undefined-reference-to-devm_cxl_add_memdev
+|-- i386-randconfig-141-20250730
+|   |-- ERROR:devm_cxl_add_memdev-drivers-cxl-cxl_pci.ko-undefined
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- i386-randconfig-141-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- loongarch-allmodconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- loongarch-allnoconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- loongarch-allyesconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- loongarch-randconfig-001-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- loongarch-randconfig-001-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- loongarch-randconfig-002-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- loongarch-randconfig-002-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- loongarch-randconfig-r051-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- m68k-allmodconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- m68k-allnoconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- m68k-allyesconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- m68k-defconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- m68k-randconfig-r061-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- m68k-randconfig-r111-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- m68k-randconfig-r122-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- microblaze-allmodconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- microblaze-allnoconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- microblaze-allyesconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- microblaze-defconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- mips-allmodconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- mips-allnoconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- mips-allyesconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- mips-ip27_defconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- mips-randconfig-r053-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- mips-randconfig-r121-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- nios2-allnoconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- nios2-defconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- nios2-randconfig-001-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- nios2-randconfig-001-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- nios2-randconfig-002-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- nios2-randconfig-002-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- nios2-randconfig-r061-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- nios2-randconfig-r072-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- openrisc-allnoconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- openrisc-allyesconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- openrisc-defconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- openrisc-randconfig-r052-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- openrisc-randconfig-r054-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- parisc-allmodconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- parisc-allnoconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- parisc-allyesconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- parisc-defconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- parisc-randconfig-001-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- parisc-randconfig-001-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- parisc-randconfig-002-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- parisc-randconfig-002-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- parisc-randconfig-r064-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- parisc64-alldefconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- parisc64-defconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- powerpc-allmodconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- powerpc-allnoconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- powerpc-allyesconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- powerpc-arches_defconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- powerpc-cell_defconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- powerpc-gamecube_defconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- powerpc-randconfig-001-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- powerpc-randconfig-001-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- powerpc-randconfig-002-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- powerpc-randconfig-002-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- powerpc-randconfig-003-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- powerpc-randconfig-r073-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- powerpc-randconfig-r111-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- powerpc-stx_gp3_defconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- powerpc-taishan_defconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- powerpc-xes_mpc85xx_defconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- powerpc64-randconfig-001-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- powerpc64-randconfig-001-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- powerpc64-randconfig-002-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- powerpc64-randconfig-002-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- powerpc64-randconfig-003-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- powerpc64-randconfig-003-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- powerpc64-randconfig-r121-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- riscv-allmodconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- riscv-allnoconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- riscv-allyesconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- riscv-defconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- riscv-randconfig-001-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- riscv-randconfig-002-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- s390-allmodconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- s390-allnoconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- s390-allyesconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- s390-defconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- s390-randconfig-001-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- s390-randconfig-002-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- s390-randconfig-r132-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- sh-allmodconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- sh-allnoconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- sh-allyesconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- sh-defconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- sh-polaris_defconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- sh-randconfig-001-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- sh-randconfig-001-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- sh-randconfig-002-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- sh-randconfig-002-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- sh-randconfig-r064-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- sparc-allmodconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- sparc-allnoconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- sparc-allyesconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- sparc-defconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- sparc-randconfig-001-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- sparc-randconfig-001-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- sparc-randconfig-002-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- sparc-randconfig-002-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- sparc-randconfig-r131-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- sparc64-defconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- sparc64-randconfig-001-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- sparc64-randconfig-001-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- sparc64-randconfig-002-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- sparc64-randconfig-002-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- sparc64-randconfig-r063-20250730
+|   |-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|   `-- pci.c:(.text):undefined-reference-to-devm_cxl_add_memdev
+|-- sparc64-randconfig-r063-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- um-allmodconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- um-allnoconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- um-allyesconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- um-defconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- um-i386_defconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- um-randconfig-001-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- um-randconfig-001-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- um-randconfig-002-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- um-randconfig-002-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- um-randconfig-r123-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- um-x86_64_defconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-allmodconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-allnoconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-allyesconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-buildonly-randconfig-001-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-buildonly-randconfig-002-20250730
+|   |-- ERROR:devm_cxl_add_memdev-drivers-cxl-cxl_pci.ko-undefined
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-buildonly-randconfig-003-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-buildonly-randconfig-004-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-buildonly-randconfig-005-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-buildonly-randconfig-006-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-defconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-kexec
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-randconfig-001-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-randconfig-002-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-randconfig-003-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-randconfig-004-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-randconfig-005-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-randconfig-006-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-randconfig-007-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-randconfig-008-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-randconfig-071-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-randconfig-072-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-randconfig-073-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-randconfig-074-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-randconfig-075-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-randconfig-076-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-randconfig-077-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-randconfig-078-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-randconfig-101-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-randconfig-102-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-randconfig-103-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-randconfig-104-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-randconfig-161-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-randconfig-161-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-randconfig-r071-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-rhel-9.4
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-rhel-9.4-bpf
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-rhel-9.4-func
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-rhel-9.4-kselftests
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-rhel-9.4-kunit
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- x86_64-rhel-9.4-ltp
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- xtensa-allnoconfig
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- xtensa-randconfig-001-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- xtensa-randconfig-001-20250731
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+|-- xtensa-randconfig-002-20250730
+|   `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
+`-- xtensa-randconfig-002-20250731
+    `-- Warning:kernel-resource.c-function-parameter-parent-not-described-in-find_next_res
 
-Looking forward to the discussions, see you there!
+elapsed time: 1211m
 
-[1]: https://events.linuxfoundation.org/open-source-summit-japan/attend/venue-travel/
-[2]: https://lpc.events/event/19/abstracts/2204/
-[3]: https://lpc.events/blog/current/index.php/2023/06/26/the-ideal-microconference-topic-session/
+configs tested: 245
+configs skipped: 7
+
+tested configs:
+alpha                             allnoconfig    clang-22
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    clang-19
+alpha                            allyesconfig    gcc-15.1.0
+alpha                               defconfig    gcc-15.1.0
+arc                              allmodconfig    clang-19
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    clang-22
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    clang-19
+arc                              allyesconfig    gcc-15.1.0
+arc                                 defconfig    gcc-15.1.0
+arc                   randconfig-001-20250730    gcc-8.5.0
+arc                   randconfig-001-20250731    gcc-8.5.0
+arc                   randconfig-002-20250730    gcc-14.3.0
+arc                   randconfig-002-20250731    gcc-8.5.0
+arm                              allmodconfig    clang-19
+arm                              allmodconfig    gcc-15.1.0
+arm                               allnoconfig    clang-22
+arm                              allyesconfig    clang-19
+arm                              allyesconfig    gcc-15.1.0
+arm                                 defconfig    clang-22
+arm                       imx_v4_v5_defconfig    clang-22
+arm                   randconfig-001-20250730    clang-22
+arm                   randconfig-001-20250731    gcc-8.5.0
+arm                   randconfig-002-20250730    clang-20
+arm                   randconfig-002-20250731    gcc-8.5.0
+arm                   randconfig-003-20250730    gcc-8.5.0
+arm                   randconfig-003-20250731    gcc-8.5.0
+arm                   randconfig-004-20250730    gcc-14.3.0
+arm                   randconfig-004-20250731    gcc-8.5.0
+arm                         s3c6400_defconfig    gcc-15.1.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    clang-22
+arm64                             allnoconfig    gcc-15.1.0
+arm64                               defconfig    gcc-15.1.0
+arm64                 randconfig-001-20250730    clang-22
+arm64                 randconfig-001-20250731    gcc-8.5.0
+arm64                 randconfig-002-20250730    clang-20
+arm64                 randconfig-002-20250731    gcc-8.5.0
+arm64                 randconfig-003-20250730    clang-17
+arm64                 randconfig-003-20250731    gcc-8.5.0
+arm64                 randconfig-004-20250730    clang-22
+arm64                 randconfig-004-20250731    gcc-8.5.0
+csky                             alldefconfig    gcc-15.1.0
+csky                              allnoconfig    clang-22
+csky                              allnoconfig    gcc-15.1.0
+csky                                defconfig    gcc-15.1.0
+csky                  randconfig-001-20250730    gcc-14.3.0
+csky                  randconfig-001-20250731    gcc-13.4.0
+csky                  randconfig-002-20250730    gcc-12.5.0
+csky                  randconfig-002-20250731    gcc-13.4.0
+hexagon                          allmodconfig    clang-17
+hexagon                          allmodconfig    clang-19
+hexagon                           allnoconfig    clang-22
+hexagon                          allyesconfig    clang-19
+hexagon                          allyesconfig    clang-22
+hexagon                             defconfig    clang-22
+hexagon               randconfig-001-20250730    clang-20
+hexagon               randconfig-001-20250731    gcc-13.4.0
+hexagon               randconfig-002-20250730    clang-22
+hexagon               randconfig-002-20250731    gcc-13.4.0
+i386                             allmodconfig    clang-20
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    clang-20
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    clang-20
+i386        buildonly-randconfig-001-20250730    clang-20
+i386        buildonly-randconfig-002-20250730    clang-20
+i386        buildonly-randconfig-003-20250730    gcc-12
+i386        buildonly-randconfig-004-20250730    gcc-12
+i386        buildonly-randconfig-005-20250730    clang-20
+i386        buildonly-randconfig-006-20250730    gcc-12
+i386                                defconfig    clang-20
+i386                  randconfig-001-20250731    gcc-12
+i386                  randconfig-002-20250731    gcc-12
+i386                  randconfig-003-20250731    gcc-12
+i386                  randconfig-004-20250731    gcc-12
+i386                  randconfig-005-20250731    gcc-12
+i386                  randconfig-006-20250731    gcc-12
+i386                  randconfig-007-20250731    gcc-12
+i386                  randconfig-011-20250731    gcc-12
+i386                  randconfig-012-20250731    gcc-12
+i386                  randconfig-013-20250731    gcc-12
+i386                  randconfig-014-20250731    gcc-12
+i386                  randconfig-015-20250731    gcc-12
+i386                  randconfig-016-20250731    gcc-12
+i386                  randconfig-017-20250731    gcc-12
+loongarch                        allmodconfig    clang-19
+loongarch                         allnoconfig    clang-22
+loongarch                           defconfig    clang-19
+loongarch             randconfig-001-20250730    clang-22
+loongarch             randconfig-001-20250731    gcc-13.4.0
+loongarch             randconfig-002-20250730    clang-20
+loongarch             randconfig-002-20250731    gcc-13.4.0
+m68k                             allmodconfig    clang-19
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    clang-19
+m68k                             allyesconfig    gcc-15.1.0
+m68k                                defconfig    gcc-15.1.0
+microblaze                       allmodconfig    clang-19
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    clang-19
+microblaze                       allyesconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+mips                           ip27_defconfig    gcc-15.1.0
+nios2                             allnoconfig    gcc-11.5.0
+nios2                             allnoconfig    gcc-15.1.0
+nios2                               defconfig    gcc-11.5.0
+nios2                               defconfig    gcc-15.1.0
+nios2                 randconfig-001-20250730    gcc-11.5.0
+nios2                 randconfig-001-20250731    gcc-13.4.0
+nios2                 randconfig-002-20250730    gcc-9.5.0
+nios2                 randconfig-002-20250731    gcc-13.4.0
+openrisc                          allnoconfig    clang-22
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    clang-22
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20250730    gcc-14.3.0
+parisc                randconfig-001-20250731    gcc-13.4.0
+parisc                randconfig-002-20250730    gcc-8.5.0
+parisc                randconfig-002-20250731    gcc-13.4.0
+parisc64                         alldefconfig    gcc-15.1.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    clang-22
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                          allyesconfig    clang-22
+powerpc                          allyesconfig    gcc-15.1.0
+powerpc                      arches_defconfig    gcc-15.1.0
+powerpc                        cell_defconfig    gcc-15.1.0
+powerpc                    gamecube_defconfig    gcc-15.1.0
+powerpc               randconfig-001-20250730    gcc-8.5.0
+powerpc               randconfig-001-20250731    gcc-13.4.0
+powerpc               randconfig-002-20250730    gcc-8.5.0
+powerpc               randconfig-002-20250731    gcc-13.4.0
+powerpc               randconfig-003-20250730    clang-22
+powerpc               randconfig-003-20250731    gcc-13.4.0
+powerpc                     stx_gp3_defconfig    gcc-15.1.0
+powerpc                     taishan_defconfig    clang-17
+powerpc                     tqm8548_defconfig    clang-22
+powerpc                 xes_mpc85xx_defconfig    gcc-15.1.0
+powerpc64             randconfig-001-20250730    clang-22
+powerpc64             randconfig-001-20250731    gcc-13.4.0
+powerpc64             randconfig-002-20250730    clang-22
+powerpc64             randconfig-002-20250731    gcc-13.4.0
+powerpc64             randconfig-003-20250730    gcc-10.5.0
+powerpc64             randconfig-003-20250731    gcc-13.4.0
+riscv                            allmodconfig    clang-22
+riscv                            allmodconfig    gcc-15.1.0
+riscv                             allnoconfig    clang-22
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    clang-16
+riscv                            allyesconfig    gcc-15.1.0
+riscv                               defconfig    clang-22
+riscv                 randconfig-001-20250730    gcc-10.5.0
+riscv                 randconfig-001-20250731    gcc-14.3.0
+riscv                 randconfig-002-20250730    gcc-8.5.0
+riscv                 randconfig-002-20250731    gcc-14.3.0
+s390                             allmodconfig    clang-18
+s390                             allmodconfig    gcc-15.1.0
+s390                              allnoconfig    clang-22
+s390                             allyesconfig    gcc-15.1.0
+s390                                defconfig    clang-22
+s390                  randconfig-001-20250730    clang-20
+s390                  randconfig-001-20250731    gcc-14.3.0
+s390                  randconfig-002-20250730    gcc-15.1.0
+s390                  randconfig-002-20250731    gcc-14.3.0
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                                  defconfig    gcc-15.1.0
+sh                          polaris_defconfig    gcc-15.1.0
+sh                    randconfig-001-20250730    gcc-12.5.0
+sh                    randconfig-001-20250731    gcc-14.3.0
+sh                    randconfig-002-20250730    gcc-15.1.0
+sh                    randconfig-002-20250731    gcc-14.3.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                               defconfig    gcc-15.1.0
+sparc                 randconfig-001-20250730    gcc-14.3.0
+sparc                 randconfig-001-20250731    gcc-14.3.0
+sparc                 randconfig-002-20250730    gcc-14.3.0
+sparc                 randconfig-002-20250731    gcc-14.3.0
+sparc64                             defconfig    clang-20
+sparc64               randconfig-001-20250730    clang-22
+sparc64               randconfig-001-20250731    gcc-14.3.0
+sparc64               randconfig-002-20250730    clang-20
+sparc64               randconfig-002-20250731    gcc-14.3.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-22
+um                               allyesconfig    clang-19
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-22
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250730    gcc-11
+um                    randconfig-001-20250731    gcc-14.3.0
+um                    randconfig-002-20250730    clang-22
+um                    randconfig-002-20250731    gcc-14.3.0
+um                           x86_64_defconfig    clang-22
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250730    gcc-12
+x86_64      buildonly-randconfig-002-20250730    clang-20
+x86_64      buildonly-randconfig-003-20250730    clang-20
+x86_64      buildonly-randconfig-004-20250730    clang-20
+x86_64      buildonly-randconfig-005-20250730    clang-20
+x86_64      buildonly-randconfig-006-20250730    clang-20
+x86_64                              defconfig    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                                  kexec    clang-20
+x86_64                randconfig-001-20250731    clang-20
+x86_64                randconfig-002-20250731    clang-20
+x86_64                randconfig-003-20250731    clang-20
+x86_64                randconfig-004-20250731    clang-20
+x86_64                randconfig-005-20250731    clang-20
+x86_64                randconfig-006-20250731    clang-20
+x86_64                randconfig-007-20250731    clang-20
+x86_64                randconfig-008-20250731    clang-20
+x86_64                randconfig-071-20250731    clang-20
+x86_64                randconfig-072-20250731    clang-20
+x86_64                randconfig-073-20250731    clang-20
+x86_64                randconfig-074-20250731    clang-20
+x86_64                randconfig-075-20250731    clang-20
+x86_64                randconfig-076-20250731    clang-20
+x86_64                randconfig-077-20250731    clang-20
+x86_64                randconfig-078-20250731    clang-20
+x86_64                               rhel-9.4    clang-20
+x86_64                           rhel-9.4-bpf    gcc-12
+x86_64                         rhel-9.4-kunit    gcc-12
+x86_64                           rhel-9.4-ltp    gcc-12
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20250730    gcc-11.5.0
+xtensa                randconfig-001-20250731    gcc-14.3.0
+xtensa                randconfig-002-20250730    gcc-12.5.0
+xtensa                randconfig-002-20250731    gcc-14.3.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
