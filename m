@@ -1,111 +1,181 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2062.outbound.protection.outlook.com [40.107.212.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B635230BC9;
-	Thu, 31 Jul 2025 13:12:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753967573; cv=none; b=lX/c2IZvUhkk2+TqcwSDJ84CiQLQCrlxzm3EEHKyeWEVBhJtBNVplcUqqF5Ie/iUEasYdcBHM8iIQ6/cl56EouKUwLp9/8thzD/2redf1S/5K7ij6U4Avq4IuBWoW6IIabIa+UEGPom+4YbVB263O0rQ7F2kqfVHP8u0/RnYT6I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753967573; c=relaxed/simple;
-	bh=jZLdsZQ5WfGV3C4JEATfrhBZZ5kJbzDkacOrP/JQ+O4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AQwHgT6dLHScN9Ma7/WTpgaFlvTQbtTKLlqW3OFRFkhRVvv0F6+UNc5YucNrXCFYDZvf6IM7ayhSVyBrLMVyJhESJ5EA9K3APu02T2/gzzhkaI/qKIR1CxU1uATEAsRO0bbKYTgnH0REqfCILJO9i2aDbXqV2oQ05E9Dz7+fHXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fsCh+FCM; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EFE422F740;
+	Thu, 31 Jul 2025 13:13:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.62
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1753967601; cv=fail; b=G519Q4uJQn7x/Li0z3Rgqe+3frrHXjali/bSN6/NbQHFJMm+yoDUb0O8tJkehFqLcQgNLNwyN2XKTWU9DuKrdLmUO/bWgy/L/E09TF5YO2eRBM9lKgtM9fDdPN6Mz2ypmg0BRG3kW4S3IAotcJK0GE64ZVPQS84VRJSD2x/H1WE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1753967601; c=relaxed/simple;
+	bh=yfqfMoYdnWhQfdIcGBr5nbTfs7Y7SZfGdtRnBbDOWaY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ZT/Sm1hAcLTz/CILac/jJSQ1RJe3rShcxXsZJnbmVZjTIZeZwF5oi208krUpvgAzXlxgXu66iuO931ZNYo61hEgEXWAHJ/zAWBKMJQFZeyYPzI9vzlEMikuNZRpe7MhW84U0eYIVkbxQD06vGt3/3nDtI8gvrQ33bRhb7xi4K1k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=yKD9Pqm0; arc=fail smtp.client-ip=40.107.212.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fsCh+FCM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753967572; x=1785503572;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jZLdsZQ5WfGV3C4JEATfrhBZZ5kJbzDkacOrP/JQ+O4=;
-  b=fsCh+FCMV7ChIIcNc4FNeTJHEfWuyK4yOZ/Q9/vIdHBrUUOeY1lpPlwD
-   Au1iPoa58BobYBCGSN5IWTbfRBPe6fjgBPnE13N9oP5O6csvdbBZLIBSu
-   mhQK/0sRG6wufTqP2GPCtM/PuEWEPUeLT5ABrKUMFWcBx2+Y4sy+vNSqt
-   Q4xXofq7neiC8FEY8Zn6/u3shcpClrRwhiqN67BFLVPaLRunsojEW/y/a
-   StPsdMsUk4ThFmaQENrX2iQGNQOvINyHm+jXQ8aFztTKvKdnsGWFI2ecJ
-   J8vIikvl8XP4Cty8neN6ZwulJBMdKSZ8/dTXPyXnDES0q1u3u3qywoqAr
-   w==;
-X-CSE-ConnectionGUID: NwMuP1n6QCWIA5NwcWK3Pw==
-X-CSE-MsgGUID: RHUmvB6WTkOLbCIBnyKTgg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11508"; a="59937212"
-X-IronPort-AV: E=Sophos;i="6.17,353,1747724400"; 
-   d="scan'208";a="59937212"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2025 06:12:52 -0700
-X-CSE-ConnectionGUID: evHrPxyvTyeRQx9IDd9DLg==
-X-CSE-MsgGUID: DbrrJ+e0R5mAtm/WdaGwjA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,353,1747724400"; 
-   d="scan'208";a="168657129"
-Received: from lkp-server01.sh.intel.com (HELO 160750d4a34c) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 31 Jul 2025 06:12:49 -0700
-Received: from kbuild by 160750d4a34c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uhT5T-0003mu-1H;
-	Thu, 31 Jul 2025 13:12:47 +0000
-Date: Thu, 31 Jul 2025 21:12:01 +0800
-From: kernel test robot <lkp@intel.com>
-To: Neeraj Kumar <s.neeraj@samsung.com>, linux-cxl@vger.kernel.org,
-	nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org,
-	gost.dev@samsung.com
-Cc: oe-kbuild-all@lists.linux.dev, a.manzanares@samsung.com,
-	vishak.g@samsung.com, neeraj.kernel@gmail.com,
-	Neeraj Kumar <s.neeraj@samsung.com>
-Subject: Re: [PATCH V2 03/20] nvdimm/namespace_label: Add namespace label
- changes as per CXL LSA v2.1
-Message-ID: <202507312016.4ga8UpF5-lkp@intel.com>
-References: <20250730121209.303202-4-s.neeraj@samsung.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="yKD9Pqm0"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nPq/TXCSmR914YsiPgZm1E//QTAYrixmnZa60Xf8eUxTDeezz8NXPXO/xgarT1pedqzW6C2HpD6XbXXIh9Pw87owYhVFM8Qm5mjSODh2pLvtpqCLwiNd+FIYXvmagqFx4Yv7ALw10/JYYI32mGySySDVk3S64iIILbr3eOlLjHNHDunzeXenfbVMgZiv6khNU4FwxUX4em35Q11roPho0SGNqRk3wj8RBOAM4UfbuBXZ3WzNGWQhWiM2pzqNAFOMND9npGycvNuM8Syt7Ib3tok4gJRM1iTIx6s9n8mqXfH+exZXjtgmeGXQ21H6ZKn+VoG3+MlIqu/DUBhAngqQ4w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RVMeo2ANGmyrmc7FXmQIs9IjEwEATuiukEFRx5zQvjM=;
+ b=MeF9Wo6cb89YM81AhExC6Nyn1RbVgRTAU59qbJhyhFKzoyl/fqbnV9oyApr5DL0ST61fVtSGWbxLn39Cqwr01xC9H5tE8ua0wJ6Q1IWYxiD0SR7qJY8Om9dIISGU5Byg/4iVE2HyuYIvBy0AshUg8TraGTsZkMP58GbdZjO8Dd3WddlXObVCSDIy5Qz5hlzLSX8ljkM/9pH9tdG8VsFQO2aWMPPd7Os6/Mhzu8inTXjl8fBMHhKe+LNCNyMi4nne6JbnS2JpQ/lJmFNHxcN84NXRpEwk7WkqoPQfKfZg6OXJ9QfA0pVm7Sw7x3Srh6hP0mLPxJ1mjOdUD1cEcL+Rfg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=wunner.de smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RVMeo2ANGmyrmc7FXmQIs9IjEwEATuiukEFRx5zQvjM=;
+ b=yKD9Pqm0r9g9VhCkQu2tuZXl6pP44KGYtIXfFEkzL2IdTtna9Y97ci8ESb27IfYWdEe6Gj4WnJBU8saT1uoyDbyFJp+bxFebAEVtEbnQr2Iq/ckOUfxd1yD8gL+fNPFCcGMWwrecpuBgBDctQcICqFKGvZOJrxUt60RNkTrqHC4=
+Received: from CH2PR18CA0022.namprd18.prod.outlook.com (2603:10b6:610:4f::32)
+ by DM4PR12MB6010.namprd12.prod.outlook.com (2603:10b6:8:6a::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8989.12; Thu, 31 Jul 2025 13:13:12 +0000
+Received: from DS3PEPF000099DB.namprd04.prod.outlook.com
+ (2603:10b6:610:4f:cafe::a2) by CH2PR18CA0022.outlook.office365.com
+ (2603:10b6:610:4f::32) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8989.13 via Frontend Transport; Thu,
+ 31 Jul 2025 13:13:12 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS3PEPF000099DB.mail.protection.outlook.com (10.167.17.197) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.9009.8 via Frontend Transport; Thu, 31 Jul 2025 13:13:11 +0000
+Received: from [10.254.54.138] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 31 Jul
+ 2025 08:13:10 -0500
+Message-ID: <f4d820a5-958e-47ae-af09-1012c08545be@amd.com>
+Date: Thu, 31 Jul 2025 08:13:05 -0500
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250730121209.303202-4-s.neeraj@samsung.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 05/16] PCI: PCIe portdrv: Add interface for getting CXL
+ isolation IRQ
+To: Lukas Wunner <lukas@wunner.de>
+CC: <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<linux-acpi@vger.kernel.org>
+References: <20250730214718.10679-1-Benjamin.Cheatham@amd.com>
+ <20250730214718.10679-6-Benjamin.Cheatham@amd.com>
+ <aIsGX3wPKN-PdXis@wunner.de>
+Content-Language: en-US
+From: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
+In-Reply-To: <aIsGX3wPKN-PdXis@wunner.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS3PEPF000099DB:EE_|DM4PR12MB6010:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2962ad7f-4bdd-4026-991a-08ddd0340045
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?K1c1TVNpS2g4b1BBV0pGKzdidXh4M25sbVZLNW9rQWZtZWVvQlVmQ0d3dWYv?=
+ =?utf-8?B?Mkk4aWo4c2lENk1UNERQSWJ4QU0zV3ZDeTE4M1RZckc3ZGI4ZDJQSTNuTlJY?=
+ =?utf-8?B?andnQzVnZ1NLRGtPZFFweEZtZm8wK3I2WGFZcTB3K3pxeFZXdjlyRkllNTBK?=
+ =?utf-8?B?WCtOL1YvZFFnSjV1Tk8xSy83a0JvbTYrcHorOXJsdWdBSGFoR2g2cStRbHVS?=
+ =?utf-8?B?NEFoUllYRndFVW55ZU0wRUQ3ZTNhODJBQTJVSi9OVXhFRWl5aGdueHFLZ051?=
+ =?utf-8?B?VVBnUytSWDNWY29pMi94N0h0VXFHREd3RVlCUkcwUU5tbzlBT3NNbG8vRVdP?=
+ =?utf-8?B?c2swSGRvV1JOMFV6N2RxU09hL2RuSVcrNFBQMi94bG9tUUh5MGRCM0R0bnFk?=
+ =?utf-8?B?eTR3OGlWT3ZaeXozMDZxNXUvUUJVbWdrVmJWRXFNalVUeVFPbmU1cVQ0V1Yw?=
+ =?utf-8?B?S0ZqcDZSWkRoRHhROGdFK1lxdElJdW5FMmhvSzZ3VUlRRkZmblBYdXdsYnVX?=
+ =?utf-8?B?TDRWbWZzWUx4ZGsreHBYaUlST2t1QmdjbDBrZGRBaGRaaEQvNkJDSWo1Z2ZZ?=
+ =?utf-8?B?OEdzMHEya21kaWJDbkxiTVZ0dmpWRW5zcU5Jc3JwSDVYY2kyMm55MTJmdEps?=
+ =?utf-8?B?T01lUlgrblZzRnU0U1pDRnU5MXZPaVUrVDVneDJZV1NJYmZvQkpaSExUSUpo?=
+ =?utf-8?B?Y3N6NGJIU2REdlpvdW4zOWRRSzFYeW0weGc4LzFzdlBhMEh5dUR4Mzk4VVRM?=
+ =?utf-8?B?YjE3bTJaaEVnWjQ3a0Yvejk0aXpDUUdpbGo0a2JlcGtjOTVDbW5kbG1xL29O?=
+ =?utf-8?B?V2ZadlhJMlNRemFySnZOcmEzeW9STXdrVC9RZ1pIOS9QU1ZOK2NJN3U5QnpJ?=
+ =?utf-8?B?eHVXK20ydElaTEhFeE1RSFRwc3g1Sm1QUXhsZ0Y5NVpKUEt0cTlxeDFTSUhs?=
+ =?utf-8?B?OGtOazlwOG1jNnUwQnhyeU00eVRzSWxWWmpoSXpPOXJYRDJ0eGxBRkRlUUtv?=
+ =?utf-8?B?eHpmRHJqUllwWkdzV1p5MHVhSHYwZDVXaXJUV0Q3NGJXOEhybGN5K3p4cTJM?=
+ =?utf-8?B?RldyRFFHSVova21NL0xJWjgyL2xVeGJCdHFsd1J0NmVFNTJpdVhuS1E0VU1Q?=
+ =?utf-8?B?d3Nra3EwTFBSbU1DYnZYNmZzN2tRZHFXakxOenNuWW41bnIzRHc1dDFLYlZx?=
+ =?utf-8?B?NktxZVFwczgreDRiTXc1dUN5c3VoWFNwUmZzMVoxUkk1VHB6YVVCNTZCVWFH?=
+ =?utf-8?B?aUxFTXk4aFJqQVd2VkZLMFlsRXhTcjZhbTEvR2RxRjFMQ21YUmpPWVo2aVpK?=
+ =?utf-8?B?aFR5cDNwQ2o1RmpiTjh0VVJVUWRuSVg2SlVEdHhDV2JUbVRpRkNFT1N1RDdD?=
+ =?utf-8?B?WXBKYldKMVAySm9CaVM2Qk5PTnpoOG5SYWJtL3RKTVk2UU9oNTJlZkpTcEJP?=
+ =?utf-8?B?U3RvM3B4R0h3SGFqNDJYbERoaVhPSHJ1Tm9aeXZCTFpLK29xbWlzVTZvNGNW?=
+ =?utf-8?B?ekk4ZzJjYnNSWjlyUXI3L3A1M3cxWmRiSGxacEpWSWFoZmxVYWF2WGZxWlox?=
+ =?utf-8?B?WmF0dkpSMU9HVERyUXVGMmtoRzlYRGZBdHZZdnQ1WHE3b0l4Sk9ROXFmQ1NX?=
+ =?utf-8?B?N084QkVSNk9hdE5uc3F3YWNKSnpOVFprdFFqNzJtWVNVbFNDWnhZaitBMlRO?=
+ =?utf-8?B?QXA2WWl5Y0RkSHRVTDFQSlVRVk52czRqUWNLQWZqWnV0d25FME1CWE00VjA4?=
+ =?utf-8?B?VG1zR3dRb3JSNkFiYUpLVjZOTHhLbG1OQWd2aUhJdXI0ZzNIdENkYVowTUwz?=
+ =?utf-8?B?MEtZM200dGtZcmtmV2tKdTdqejg3MXM4Qnh2MTMvMEw2WWhVVnZBRzJqU2tR?=
+ =?utf-8?B?WmFFMEdUUFVrQ3EyQzZWNXoyd25QYkFzczJpR2lYS2RYQnhibEVZMVg2UGc5?=
+ =?utf-8?B?d0k1QkthdnZDNXQrc1dReGlveG9QOXllUVpybnFHOW9GOVpDZlROczFMSG5P?=
+ =?utf-8?B?Z2pMS0xhSlN0eXA3RVpjK0toeU51clM5UEwwdGZHT1BlODNTYlc1eFFGcWtS?=
+ =?utf-8?Q?V4RlpT?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jul 2025 13:13:11.7153
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2962ad7f-4bdd-4026-991a-08ddd0340045
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS3PEPF000099DB.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6010
 
-Hi Neeraj,
+Thanks for taking a look Lukas! Responses inline.
 
-kernel test robot noticed the following build warnings:
+On 7/31/2025 12:59 AM, Lukas Wunner wrote:
+> On Wed, Jul 30, 2025 at 04:47:07PM -0500, Ben Cheatham wrote:
+>> Add a function to the CXL isolation service driver that allows the CXL
+>> core to get the necessary information for setting up an interrupt
+>> handler.
+> [...]
+>>  static int cxl_isolation_probe(struct pcie_device *dev)
+>>  {
+>> -	if (!pcie_is_cxl(dev->port) || pcie_cxliso_get_intr_vec(dev->port, NULL))
+>> +	struct cxl_isolation_info *info;
+>> +	if (!pcie_is_cxl(dev->port) ||
+>> +	    pcie_cxliso_get_intr_vec(dev->port, NULL))
+>>  		return -ENXIO;
+> 
+> The re-wrapping of the if-condition shouldn't be here, it should be
+> wrapped the way you want it in the patch *introducing* the if-condition.
+> 
 
-[auto build test WARNING on f11a5f89910a7ae970fbce4fdc02d86a8ba8570f]
+You're right, don't know why I did that :/.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Neeraj-Kumar/nvdimm-label-Introduce-NDD_CXL_LABEL-flag-to-set-cxl-label-format/20250730-202209
-base:   f11a5f89910a7ae970fbce4fdc02d86a8ba8570f
-patch link:    https://lore.kernel.org/r/20250730121209.303202-4-s.neeraj%40samsung.com
-patch subject: [PATCH V2 03/20] nvdimm/namespace_label: Add namespace label changes as per CXL LSA v2.1
-config: x86_64-randconfig-121-20250731 (https://download.01.org/0day-ci/archive/20250731/202507312016.4ga8UpF5-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250731/202507312016.4ga8UpF5-lkp@intel.com/reproduce)
+>> +	info = devm_kzalloc(&dev->device, sizeof(*info), GFP_KERNEL);
+>> +	if (!info)
+>> +		return -ENOMEM;
+>> +
+>> +	*info = (struct cxl_isolation_info) {
+>> +		.dev = &dev->device,
+>> +		.irq = dev->irq,
+>> +	};
+>> +
+>> +	set_service_data(dev, info);
+> 
+> No, the irq is already saved in struct pcie_device, there's no need
+> to duplicate that.
+> 
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507312016.4ga8UpF5-lkp@intel.com/
+Good point, will do. I think I originally had the mapping of the CXL isolation
+register in the struct cxl_isolation_info, but it makes no sense to keep this
+around anymore.
 
-sparse warnings: (new ones prefixed by >>)
-   drivers/nvdimm/label.c: note: in included file (through drivers/nvdimm/nd-core.h):
->> drivers/nvdimm/nd.h:314:37: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted __le32 [usertype] align @@     got restricted __le16 [usertype] @@
-   drivers/nvdimm/nd.h:314:37: sparse:     expected restricted __le32 [usertype] align
-   drivers/nvdimm/nd.h:314:37: sparse:     got restricted __le16 [usertype]
-
-vim +314 drivers/nvdimm/nd.h
-
-   308	
-   309	static inline void nsl_set_alignment(struct nvdimm_drvdata *ndd,
-   310					     struct nd_namespace_label *ns_label,
-   311					     u32 align)
-   312	{
-   313		if (ndd->cxl)
- > 314			ns_label->cxl.align = __cpu_to_le16(align);
-   315	}
-   316	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+Ben
