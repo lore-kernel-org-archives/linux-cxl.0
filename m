@@ -1,123 +1,194 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 625CE2F24
-	for <linux-cxl@vger.kernel.org>; Thu, 31 Jul 2025 14:20:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9CF61ADFE4;
+	Thu, 31 Jul 2025 15:08:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753971648; cv=none; b=a6i2vXAP/rrD4xUvgfvKvQ9HxcsTFpkATDDaB34tjkDJHRPrA6YJ31SVlvxflvI3WL7XHgYvd5qPSo759BIoYViVRG6veMRzBbPzbE2W+Sem92cLho5Xj+m6TZ3O3iSPsUUNWLM4MFAYN/yPdcP0kcjXuSnDbE9bndZkyDPksXQ=
+	t=1753974483; cv=none; b=oRrCHp9d97CJIz4NIICw+6ReDBHghZQjiw7gy4wCTfLbecZrNvk3Raly7uq4K5c3dgPkA0ML0HbtbB9ZJvsvorSxJohtf1VfCrpl5g5BJj2m27JiHU82+a2OF+524yGSHLixXnDNOyLnVgvSEcw+3EcEXZZPr/pZY9u45JY2Mps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753971648; c=relaxed/simple;
-	bh=Im5eujgMO2CBiq8OnVZ84e+stUrlYyqyDmDbbcF7eQ4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hbOI5OHIgc4xWGTE5O9Z1EKbkP6luDRuVBinoM2PawK9ZeOudH69Qp6mE3XXA6D2DIwxQvwGNod3jlmCCBmeVUwkLMUJCDnARA2KKaFQMNrKRhaBMPocgaIcJWcpeFVm91ytRcNluXDYjYEwXggC3nByQsVa8SbLFuACxGCOe78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4btB603yxfz6D9j0;
-	Thu, 31 Jul 2025 22:19:04 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2534A1402F2;
-	Thu, 31 Jul 2025 22:20:42 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 31 Jul
- 2025 16:20:41 +0200
-Date: Thu, 31 Jul 2025 15:20:39 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Davidlohr Bueso <dave@stgolabs.net>
-CC: <ira.weiny@intel.com>, <alucerop@amd.com>, <a.manzanares@samsung.com>,
-	<linux-cxl@vger.kernel.org>, <qemu-devel@nongnu.org>
-Subject: Re: [PATCH RFC -qemu 0/2] hw/cxl: Support Back Invalidation
-Message-ID: <20250731152039.00005fa2@huawei.com>
-In-Reply-To: <20250729165441.1898150-1-dave@stgolabs.net>
-References: <20250729165441.1898150-1-dave@stgolabs.net>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1753974483; c=relaxed/simple;
+	bh=pa9VwKcB+q4yAi7+Bv6abIVQ9PXsM7T2n398NDcEzhw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RGOqE0f1tMVP7GowzN1NEGviiZeSBfp0xrl04C30cAkesRI42+nqnZ4M8dpy/DoYMMzCpIqkMNvZSUQh3JBqagF5r9EiQAlZjVVvvHZGth3Soqq/OA70oUBgt/N2Fo8NUS5tPkBn9+9eBF4dXA8i4KJwSy/AjW/RXoZpzJ4c53A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J+zBw3wB; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J+zBw3wB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1753974482; x=1785510482;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=pa9VwKcB+q4yAi7+Bv6abIVQ9PXsM7T2n398NDcEzhw=;
+  b=J+zBw3wBJ8/D3sdDDsSDVCZHB9ionY4uh/zoeHOUH4mS8ASgpNjmqesx
+   ASqtJBjDmcjWTsEGQ3mOHMJGTybusvXYA+dPATNspM80LXT4vDmE033qm
+   Vm48uJN0UnLtYwQkD+bzYAhvY3ppLImZzb8bJgi8VZqEWA3CFXwrLQyJs
+   3ceTDagnknsCqJKi1Uk4b4gCUqOqMw1x+G06+Cj3Hn1BB5GXtzdlArgt0
+   7jO1QExRwkftt2+X7V9TeJBfTKmHq8f8SVRpIR44d9N9vnfMf5eAEe5zr
+   iTWTqo4zFgLEFz8XQfPVfPJXUFFl3r9Rj6ZlBsdKn9jIb08D+wCSZgSSB
+   A==;
+X-CSE-ConnectionGUID: obPzVQHPT2OIyYJj9xVIVA==
+X-CSE-MsgGUID: VqypVxDfS8y7tVnvFx2b6g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11508"; a="56233350"
+X-IronPort-AV: E=Sophos;i="6.17,353,1747724400"; 
+   d="scan'208";a="56233350"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2025 08:08:01 -0700
+X-CSE-ConnectionGUID: M6otbXP0RIWZisz8EVv6Tg==
+X-CSE-MsgGUID: ycrG9/pUR/WhaLOaEtc/Zw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,353,1747724400"; 
+   d="scan'208";a="163642643"
+Received: from lkp-server01.sh.intel.com (HELO 160750d4a34c) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 31 Jul 2025 08:07:59 -0700
+Received: from kbuild by 160750d4a34c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uhUsv-0003rU-0Z;
+	Thu, 31 Jul 2025 15:07:57 +0000
+Date: Thu, 31 Jul 2025 23:07:56 +0800
+From: kernel test robot <lkp@intel.com>
+To: Neeraj Kumar <s.neeraj@samsung.com>, linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org,
+	gost.dev@samsung.com
+Cc: oe-kbuild-all@lists.linux.dev, a.manzanares@samsung.com,
+	vishak.g@samsung.com, neeraj.kernel@gmail.com,
+	Neeraj Kumar <s.neeraj@samsung.com>
+Subject: Re: [PATCH V2 05/20] nvdimm/region_label: Add region label updation
+ routine
+Message-ID: <202507312211.ovRqDhYY-lkp@intel.com>
+References: <20250730121209.303202-6-s.neeraj@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250730121209.303202-6-s.neeraj@samsung.com>
 
-On Tue, 29 Jul 2025 09:54:39 -0700
-Davidlohr Bueso <dave@stgolabs.net> wrote:
+Hi Neeraj,
 
-> Hello,
-> 
-> The following allows support for component basic back invalidation discovery
-> and config, by exposing the BI routing table and decoder registers. Instead
-> of going the type2[1] route, this series proposes adding support for type3
-> hdm-db, which allows a more direct way of supporting BI in qemu.
-> 
-> Caveats/RFC: Just as in Ira's series, there is the question about the whole topology
-> allowing BI, not just the endpoint device. That series left the rest of topology
-> (dsp, rp) non-BI capable, for which any kernel counterpart testing would fail
-> when using type2, but at the same time is also consistent with flit 68B when not
-> using a type2 device.
-> 
-> This series blindly enables BI capabilities for ports even when no type3 hdm-db
-> is being used. While it is handy, it is inconsistent with the driver seeing 68B
-> and the BI registers in such cases. I've been going back and forth with possible
-> workarounds, but don't really have a good answer, and this will ultimately
-> affect not only BI but all goodies that come with 256B flit. Any suggestions welcome.
+kernel test robot noticed the following build warnings:
 
-Hi Davidlohr,
+[auto build test WARNING on f11a5f89910a7ae970fbce4fdc02d86a8ba8570f]
 
-We probably need to make this work like link width. That would push the control
-to the downstream port side and effectively 'trains' the link (really simple negotiation
-of capabilities). I don't think we care about more capable device plugged into
-a less capable upstream port, so a simple property for the type 3 device (and switch USP)
-should do the job.  If we want to do the optimized flits we'll need a little more.
+url:    https://github.com/intel-lab-lkp/linux/commits/Neeraj-Kumar/nvdimm-label-Introduce-NDD_CXL_LABEL-flag-to-set-cxl-label-format/20250730-202209
+base:   f11a5f89910a7ae970fbce4fdc02d86a8ba8570f
+patch link:    https://lore.kernel.org/r/20250730121209.303202-6-s.neeraj%40samsung.com
+patch subject: [PATCH V2 05/20] nvdimm/region_label: Add region label updation routine
+config: x86_64-randconfig-121-20250731 (https://download.01.org/0day-ci/archive/20250731/202507312211.ovRqDhYY-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250731/202507312211.ovRqDhYY-lkp@intel.com/reproduce)
 
-So in short, make RP and downstream port always BI and 256bit flit capable, but
-'fake' the training so if they are plugged into a EP or switch USP they report
-whatever that was configured for. 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507312211.ovRqDhYY-lkp@intel.com/
 
-So alongside your hdm-db property in patch 2, have a 256bit-flit property.
-Both of those have to apply for type 3 and the switch USP.
-Then we sanity check the combination works (i.e. hdm-db only if 256 bit flit)
+sparse warnings: (new ones prefixed by >>)
+>> drivers/nvdimm/label.c:1184:25: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted __le32 [usertype] align @@     got restricted __le16 [usertype] @@
+   drivers/nvdimm/label.c:1184:25: sparse:     expected restricted __le32 [usertype] align
+   drivers/nvdimm/label.c:1184:25: sparse:     got restricted __le16 [usertype]
+   drivers/nvdimm/label.c: note: in included file (through drivers/nvdimm/nd-core.h):
+   drivers/nvdimm/nd.h:314:37: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted __le32 [usertype] align @@     got restricted __le16 [usertype] @@
+   drivers/nvdimm/nd.h:314:37: sparse:     expected restricted __le32 [usertype] align
+   drivers/nvdimm/nd.h:314:37: sparse:     got restricted __le16 [usertype]
 
-I think we need this fine grained control because we want to poke the corners
-where only parts of the tree are BI capable.
+vim +1184 drivers/nvdimm/label.c
 
-So, precursor patch to enable 256bit flit mode then this stuff on top.
+  1139	
+  1140	static int __pmem_region_label_update(struct nd_region *nd_region,
+  1141			struct nd_mapping *nd_mapping, int pos, unsigned long flags)
+  1142	{
+  1143		struct nd_interleave_set *nd_set = nd_region->nd_set;
+  1144		struct nvdimm_drvdata *ndd = to_ndd(nd_mapping);
+  1145		struct nd_lsa_label *nd_label;
+  1146		struct cxl_region_label *rg_label;
+  1147		struct nd_namespace_index *nsindex;
+  1148		struct nd_label_ent *label_ent;
+  1149		unsigned long *free;
+  1150		u32 nslot, slot;
+  1151		size_t offset;
+  1152		int rc;
+  1153		uuid_t tmp;
+  1154	
+  1155		if (!preamble_next(ndd, &nsindex, &free, &nslot))
+  1156			return -ENXIO;
+  1157	
+  1158		/* allocate and write the label to the staging (next) index */
+  1159		slot = nd_label_alloc_slot(ndd);
+  1160		if (slot == UINT_MAX)
+  1161			return -ENXIO;
+  1162		dev_dbg(ndd->dev, "allocated: %d\n", slot);
+  1163	
+  1164		nd_label = to_label(ndd, slot);
+  1165	
+  1166		memset(nd_label, 0, sizeof_namespace_label(ndd));
+  1167		rg_label = &nd_label->rg_label;
+  1168	
+  1169		/* Set Region Label Format identification UUID */
+  1170		uuid_parse(CXL_REGION_UUID, &tmp);
+  1171		export_uuid(nd_label->rg_label.type, &tmp);
+  1172	
+  1173		/* Set Current Region Label UUID */
+  1174		export_uuid(nd_label->rg_label.uuid, &nd_set->uuid);
+  1175	
+  1176		rg_label->flags = __cpu_to_le32(flags);
+  1177		rg_label->nlabel = __cpu_to_le16(nd_region->ndr_mappings);
+  1178		rg_label->position = __cpu_to_le16(pos);
+  1179		rg_label->dpa = __cpu_to_le64(nd_mapping->start);
+  1180		rg_label->rawsize = __cpu_to_le64(nd_mapping->size);
+  1181		rg_label->hpa = __cpu_to_le64(nd_set->res->start);
+  1182		rg_label->slot = __cpu_to_le32(slot);
+  1183		rg_label->ig = __cpu_to_le32(nd_set->interleave_granularity);
+> 1184		rg_label->align = __cpu_to_le16(0);
+  1185	
+  1186		/* Update fletcher64 Checksum */
+  1187		rgl_calculate_checksum(ndd, rg_label);
+  1188	
+  1189		/* update label */
+  1190		offset = nd_label_offset(ndd, nd_label);
+  1191		rc = nvdimm_set_config_data(ndd, offset, nd_label,
+  1192				sizeof_namespace_label(ndd));
+  1193		if (rc < 0) {
+  1194			nd_label_free_slot(ndd, slot);
+  1195			return rc;
+  1196		}
+  1197	
+  1198		/* Garbage collect the previous label */
+  1199		guard(mutex)(&nd_mapping->lock);
+  1200		list_for_each_entry(label_ent, &nd_mapping->labels, list) {
+  1201			if (!label_ent->label)
+  1202				continue;
+  1203			if (rgl_uuid_equal(&label_ent->label->rg_label, &nd_set->uuid))
+  1204				reap_victim(nd_mapping, label_ent);
+  1205		}
+  1206	
+  1207		/* update index */
+  1208		rc = nd_label_write_index(ndd, ndd->ns_next,
+  1209				nd_inc_seq(__le32_to_cpu(nsindex->seq)), 0);
+  1210		if (rc)
+  1211			return rc;
+  1212	
+  1213		list_for_each_entry(label_ent, &nd_mapping->labels, list)
+  1214			if (!label_ent->label) {
+  1215				label_ent->label = nd_label;
+  1216				nd_label = NULL;
+  1217				break;
+  1218			}
+  1219		dev_WARN_ONCE(&nd_region->dev, nd_label,
+  1220				"failed to track label: %d\n",
+  1221				to_slot(ndd, nd_label));
+  1222		if (nd_label)
+  1223			rc = -ENXIO;
+  1224	
+  1225		return rc;
+  1226	}
+  1227	
 
-Jonathan
-
-
-
-> 
-> Patch 1: is lifted from Ira's series with some small (but non-trivial) changes.
-> Patch 2: adds BI decoder/rt register support.
-> 
-> Testing wise, this has passed relevant kernel side BI register IO flows and
-> setup.
-> 
-> Applies against branch 'origin/cxl-2025-07-03' from the jic23 repository.
-> 
-> Thanks!
-> 
-> [1] https://lore.kernel.org/linux-cxl/20230517-rfc-type2-dev-v1-0-6eb2e470981b@intel.com/
-> 
-> Davidlohr Bueso (1):
->   hw/cxl: Support Type3 HDM-DB
-> 
-> Ira Weiny (1):
->   hw/cxl: Refactor component register initialization
-> 
->  hw/cxl/cxl-component-utils.c   | 206 ++++++++++++++++++++++++---------
->  hw/mem/cxl_type3.c             |   5 +-
->  include/hw/cxl/cxl_component.h |  87 +++++++++++---
->  include/hw/cxl/cxl_device.h    |   3 +
->  4 files changed, 232 insertions(+), 69 deletions(-)
-> 
-> --
-> 2.39.5
-> 
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
