@@ -1,163 +1,202 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79240239E69
-	for <linux-cxl@vger.kernel.org>; Fri,  1 Aug 2025 12:14:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754050476; cv=none; b=nzQKi3xpjZ5aJNidyGLIEmSEyjXPN5VZgN+YMp5zbZDTuRlc+arknDH1yt5U287vcvTVJ8ytiUVlhMB1+k5xL/xWof7ADtqB5Dj2mDpbb+FV3XLhnIMr/kRMq1iBGW9IEuZYBGzCrgLziPqQ0wNGhrBC2dmnn+pkdwf8OD6XOI8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754050476; c=relaxed/simple;
-	bh=J2dJSLruedBlAkWcNha81k/K9/k9Ap9WsdnAziK7m4U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=DhxP+ysNInPdY11xNnjG4rNGsWj++JVaHHIemxcJr2WEi0gfvocxOOw8nXP/G11LkE8OvBkVBEAjgvBuq5/zBQICX9y04vO1/T8sAzzWE2eIUztFMvY3uUUUR1zlFdD/c8UbUoadYStklWrxNZIqzc1auo2kV5+JLUh3Un59HS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KgH/F9XG; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16AF4286D73
+	for <linux-cxl@vger.kernel.org>; Fri,  1 Aug 2025 15:57:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.8
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1754063861; cv=fail; b=Zl8i5TsBAsRQdtD3RgyR0sO08wQ/qd0DLbja4Iw2CsL27rzMe5eHwK1TUjhnWbiVg5/NC03tjipltUneskbCwcGhJ8/q4WNJ7xtaeuF/Bl3CaYIL2lq6h46v7Rwt7xxC5tk1ayZFN+0XMMVd3jfysjrZvgDiM0xTdVeQjuNUNv0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1754063861; c=relaxed/simple;
+	bh=DTzZFwUik6+1d2iDXublSOU4skn+/qh4JPYlPHf+ngg=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=HlkTV2VUnl0ws1T/otckQlPQBDvMKEOORTTvfW1GKWIfIzD6LufRXLiL/L8Cd6EZvKKqRXKmsizxemn8WaSTBqZaf/o+hIg8zCBYgrcTbVHIslsdx2tfrKQXVY5Nkuf/q8u9R6U0dR2+NwF5twVlJdnF/mCNZembYqF0eUkAPE0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dx/K8wXu; arc=fail smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KgH/F9XG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1754050473;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=p5DxPr+Lt12YB86ZIw/7sgJOe6TrzxX/xm3c2q428kg=;
-	b=KgH/F9XGZ/f4ATxZF4ZaBcThWfXskJ9Iy4lnEDMx1QpSwMujVk7wkrIgcLpRuBfcGAqbmn
-	rsTAimsmbSnuf0kAY9iSl9UetFu4ychkdzrB5KbGaCB8QhlXFJBowQdaVz+WSl/5f5s05N
-	WHnzrz/xbmphiaV70FoCjMx/cfkd5jM=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-367-mNPV8pa6PeOzfPju_TJsCQ-1; Fri, 01 Aug 2025 08:14:32 -0400
-X-MC-Unique: mNPV8pa6PeOzfPju_TJsCQ-1
-X-Mimecast-MFC-AGG-ID: mNPV8pa6PeOzfPju_TJsCQ_1754050471
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-456175dba68so5494805e9.2
-        for <linux-cxl@vger.kernel.org>; Fri, 01 Aug 2025 05:14:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754050471; x=1754655271;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p5DxPr+Lt12YB86ZIw/7sgJOe6TrzxX/xm3c2q428kg=;
-        b=XNCQycNDvwXCEzTh2X0AqKqa0/vHY3mlCpcENEpL+qYeyEHyWF3p8d6o3HLDGM2xay
-         zhEKPuxewfyzVJW4lRaxwGlrSTzZuETegx4FqVrTSn0iykVIGJm8Ov1dkZPIgMmxeovC
-         GBOxMslYzREUhk5MIPvdOwVJyFshnT/d2Ra25iHgLhk5ribIBK15/YMrHFFrF+s4s4D1
-         gyBfsd8PGpJK+SlBmA6QHCmVTVSbzVkMyQ5W4ncyATqyl2LGKr8J6cDBFyoQrDt1saa4
-         5JHrLjVNAC3p65cNIfUxg1LSF4lg53Msaj3+2pV1H8nQwvWo4UQREbidVWTFwSvs/ScA
-         0udw==
-X-Forwarded-Encrypted: i=1; AJvYcCVwV73VVI5+XPF1NAExCRhYjd3JWBhTIiMmHIY2hH8HDR7QmiXpEP7A63eLZ7PGqeRBvcM7NDJfR8U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgVBcCamgTz3Eug4qUEUNWJa2TuZ0M+U2gV65WLoMVJS4ndXfs
-	MoQeWB0fF/4GLqOoNMi1k8NqKJQ/03BeS/FbIWOQPXGTP7DuX2e0sb1KrGgSnnOd2vyfx6MfThj
-	rkVURYRuDbw+gjpn4x87UOmUzj2kp5mjHTa3SiSg6BN5I0r0rE3JfDLMU48PM1w==
-X-Gm-Gg: ASbGncunD5rKJtlupONnvCzUoa2ZPbF1WkbN52h6rzMwuN/mmbH6dCtpBW+H+rWOoeJ
-	zxi4/YlxZQ0K5BcBTBMQWtGFFATkm1Vf3TlJkfJ+UvL1/7qWaENYyubvVTgbTYD/Ylz6VmjKjWb
-	4yaoURFl4IIoYDLFVn4ETZcFectwAiW1bHnIcghpUcxCrS9s+qswreWWwEXiZ/BZTU36UdAWjcO
-	9+ZoWJvg0fIlBw0h2Oy7872pFd4MPtLaIe0Lazh11QLZOOzERvX99n7WQzPvfQJ8Nt+fNKQYeF/
-	KCdZneCKwBTmYdrZGBSKowO3lmDIaGKU
-X-Received: by 2002:a05:600d:108:20b0:456:26ad:46d2 with SMTP id 5b1f17b1804b1-45893943cefmr60740245e9.6.1754050471201;
-        Fri, 01 Aug 2025 05:14:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHf/uN8giiXWsyE8MRI1JdmXzBuptgXe0qs6y0z4fBmaFxeSJp5O8RxtgWgJSOwmMUJSdr6TQ==
-X-Received: by 2002:a05:600d:108:20b0:456:26ad:46d2 with SMTP id 5b1f17b1804b1-45893943cefmr60740085e9.6.1754050470790;
-        Fri, 01 Aug 2025 05:14:30 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1515:7300:62e6:253a:2a96:5e3])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c469093sm5824610f8f.51.2025.08.01.05.14.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Aug 2025 05:14:30 -0700 (PDT)
-Date: Fri, 1 Aug 2025 08:14:27 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: peng guo <engguopeng@buaa.edu.cn>
-Cc: marcel.apfelbaum@gmail.com, pbonzini@redhat.com,
-	richard.henderson@linaro.org, eduardo@habkost.net,
-	qemu-devel@nongnu.org, linux-cxl@vger.kernel.org, wyguopeng@163.com
-Subject: Re: [PATCH] hw/i386/pc: Avoid overlap between CXL window and PCI
- 64bit BARs in QEMU
-Message-ID: <20250801081408-mutt-send-email-mst@kernel.org>
-References: <20250718133545.5261-1-engguopeng@buaa.edu.cn>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dx/K8wXu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1754063859; x=1785599859;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=DTzZFwUik6+1d2iDXublSOU4skn+/qh4JPYlPHf+ngg=;
+  b=Dx/K8wXuYABSSX9uNBFS9GrC2A/JlJPjA/t3MfdoO7gTKoHQBtuOtz1E
+   56UyN75aGS5nqb9+SpETvR7aFkgoHDIdchEM/hBYAeQn1FyMUi8Rn4sjZ
+   +4o7DbH+g5meXJIG2S5eWYMxE+daojUzVSTOHYcon/7dGNPTrt96gUYxw
+   mPT/cfID4Hgal6Qr5WUpr5ptsv2HIefvvnhNN+5KfBDw3jMh6U05pd0Ey
+   S35TLEqf+LGJ0K4/hG5I+4Q/Nad4RJngRCGLaCatXl+30tDVstzzDO5hQ
+   YZJZS+7Ea9c/2gE5Zq6a5o3o7uV4KQeVaLBENn3acQTHdWggXOazyHNPR
+   A==;
+X-CSE-ConnectionGUID: RdlXbLgyTceRlyzvqqCaxQ==
+X-CSE-MsgGUID: 5HeO38iUTV+jPFpwiitIBg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11508"; a="74004427"
+X-IronPort-AV: E=Sophos;i="6.17,255,1747724400"; 
+   d="scan'208";a="74004427"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2025 08:57:36 -0700
+X-CSE-ConnectionGUID: 3ROsK4bHT8qa3beJeO2Zcw==
+X-CSE-MsgGUID: Y+devvomRbqUrVXfGCT8nA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,255,1747724400"; 
+   d="scan'208";a="168897011"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2025 08:57:33 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.26; Fri, 1 Aug 2025 08:57:32 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.26 via Frontend Transport; Fri, 1 Aug 2025 08:57:31 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (40.107.93.65) by
+ edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.26; Fri, 1 Aug 2025 08:57:31 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=IfFTeK8Ph03MadQYgJHg20Efh10Jq9TeWYpuiMYag2ZRtLFPJG8ZRpBFlr0ReHYkbe94RfwANMUbdyPJ9mwU9Nve+LGlnP8Xfb9k8D0xGPzP7xEyVltg3KWZfI//RDPUbGg42sK5Z8R2o8JIzivLPizVOjhzSkkLAJ2/s2MM3SMrA1ZE0UP6kIWoJlBz3eQBvU0KywM+ASrpADEbfTlwHtGj0AyUihpFSLeXZCSWw+S/ytBaM7jdjqosWEgPTHT0WNDq3DxRKKno4PrL8obC4dfesTT5wrRm/OsEbRi9oUFa2yWFHAEr2kc9jSpiu0VwqAfbZ3eUUZhdY+GBTpGVHg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rt53clN9OJNpB9fSqGRTyo8rje39vyP8JT5NapwMIyc=;
+ b=WNtnE67x647GwPzaHYWZER/8goH0bDmWkTG/XzQUZkbZf8Fx6Obq/1LNrjQivDP+Uqb34LHkziQ5yYfR2rdAmteGewq458uduscgPQz28X3wdfZe3XWfm3naw4Mewh6/rS26O+nz3Fka7uIYGmXpWb6PocdzgeJtQlnolKZO4asgJmQFvmAjthmyIjWDCN8SVU4/VrczX3a62fXnqdTnK6x49s5YishdbVnCfaqM6SGcS6iKwAU35765YKm8hhS4gnoxE8PT1sPTFvtu6afPniexxfFqRBPnbUGW1z3eGx769/wi3E6rZwTwgNSdMTM6cyXhw4ETfAecTRx2yY6QqA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
+ by DS0PR11MB6493.namprd11.prod.outlook.com (2603:10b6:8:c3::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8989.14; Fri, 1 Aug
+ 2025 15:57:16 +0000
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::4e89:bb6b:bb46:4808]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::4e89:bb6b:bb46:4808%8]) with mapi id 15.20.8989.015; Fri, 1 Aug 2025
+ 15:57:16 +0000
+Date: Fri, 1 Aug 2025 08:57:12 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <dave@stgolabs.net>,
+	<jonathan.cameron@huawei.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <dan.j.williams@intel.com>, Robert Richter
+	<rrichter@amd.com>, Terry Bowman <terry.bowman@amd.com>, Joshua Hahn
+	<joshua.hahnjy@gmail.com>
+Subject: Re: [PATCH v5] cxl: Remove ifdef blocks of CONFIG_PCIEAER_CXL from
+ core/pci.c
+Message-ID: <aIzj2AkBaDbPqkGK@aschofie-mobl2.lan>
+References: <20250730152519.125601-1-dave.jiang@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250730152519.125601-1-dave.jiang@intel.com>
+X-ClientProxiedBy: BY3PR05CA0021.namprd05.prod.outlook.com
+ (2603:10b6:a03:254::26) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+ (2603:10b6:f:fc02::9)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250718133545.5261-1-engguopeng@buaa.edu.cn>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: u5u3O3k-UtQphq_CRk9Cv5DPurX7NyU1i3M0EzlwSp8_1754050471
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|DS0PR11MB6493:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3fa2d293-3df9-4e93-994c-08ddd1141637
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?5qkFfNzXebi0Tm0v09lpCQLkptYo8pTSMErnvK8kNcfPAlRPGi8YxYmAqugh?=
+ =?us-ascii?Q?4IA+pfTWQKe5FzRgoOgXMIKq8+AzSnRTJ/7/5cEtU79b3tL/7AEEJQsND9fP?=
+ =?us-ascii?Q?nP33SjGTp7005GVfefuiQa2oYv8N4V6g0j/NfwzSERg4I8rt+TtaPTYsqdFe?=
+ =?us-ascii?Q?AOG1DdzUW/05L1NMKPgyZyHHwdUPz5HO1Q20XU+l9e1V3cH+TacolJBQ5qgQ?=
+ =?us-ascii?Q?Bkn93KEVFRHM4apSYgdi3F8sVmsSe+C82TKMj/Zih6OGTSujgyZAlthN6wRT?=
+ =?us-ascii?Q?xHYygpKNO99e9hMQB6ssvLrdPzWttm6LvwA8IzN878BgWma7hsHu1lIaH4Ko?=
+ =?us-ascii?Q?05rCuVgAKJgHZXhhJF4NfjtZ8yhkSt1yzFKtEoJqAD6AhTvv16xXV4LSsjib?=
+ =?us-ascii?Q?gT34NWnP0fijatf6Nm/ojHdV5MpBYPDLfga1IjpKfS4Iv9+2FQ83P1z/0S53?=
+ =?us-ascii?Q?nK+JDy+Y8qQ+rL+g8tGgRG5XcE0m4oDi3KXZznl6YYhjJEJgZGNgKYdSDm5F?=
+ =?us-ascii?Q?PRpqKsLNy/KrSL2+y9vo/jmAWfu1Ggj9En8Qaem4v8bQT5CUWqa2+ORgkcS2?=
+ =?us-ascii?Q?qxyxLW6O6PTjHHnMfPeQ7ofMnoh850GKS7WsVatdtKeXIyBYTY9GwiCZ0lS3?=
+ =?us-ascii?Q?JvgGXG1a8yoBMAwQVcWe1rDgnCTd52af9EHpq108OBGaGvvZOfmBL/lUZxfc?=
+ =?us-ascii?Q?ufdEy0L5jNgithuYMhf5FVzH5GoEIHrJrtrCA/bklKSytzAp3FXCAJS0jR8V?=
+ =?us-ascii?Q?OXtoYfBA5Y3qtrkgdb9v/X4vO+DsuhCMsvmF0OiAtcy0ESpbVurnZj4to3vA?=
+ =?us-ascii?Q?pcl2mrwA+2QkSQAq+bc97ygjcJgC5iZ0W4hMvOb+YtyY8K4BaSm2kr3B5dBC?=
+ =?us-ascii?Q?6XlwiTROn/oBGPybGSByoetry1rT3u0TcFVPkMiSFFU5ImwdYKFyJ63IbYFU?=
+ =?us-ascii?Q?ABtdRox7p8L7AsVz1IuyPEVXCkwmOCyJeeASm3jeG8z44rM1vwmnDZi5g70x?=
+ =?us-ascii?Q?izVnLbutkAG8Q7qw+N8UvszqhyhvAQE5HyDoWhzB6uYPEa+nWrr8GLK2qpiV?=
+ =?us-ascii?Q?dFLglKfODNaoKKaclUO9D8Lj2Y++eA6OKQd9Qft5vFws8uWNLXm/CrhbZyiA?=
+ =?us-ascii?Q?IdgFN/PIk0wfueok6clufbx1G3E5XzmC5B9S2DuyipvlRrx9LhIYr2Q8fe3S?=
+ =?us-ascii?Q?kXlv3ZvYjrlRQlL+91qhsPI62cMt7duIN4l254gB9+3S2m2whvgQYOPhA2FT?=
+ =?us-ascii?Q?OJBxL4H45aYtKJ4YeGAX1Rp2KEfpOlUYuGpJ67ctXLIWlwTgTaNN69U1v3n2?=
+ =?us-ascii?Q?ohabCDG7KoVA76szUJjxi41ySQJyXW/Z7U7jzcsknE0ZriFsm02TU6FKMHsT?=
+ =?us-ascii?Q?FzjtelFL7FPmkRBfcsZvqg0HEVQ2l83saK0VtSSX7oyRd8hHy2zb0tdVo5aI?=
+ =?us-ascii?Q?LNsn0irNBf0=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Lx7w1G55CO0MmWqI4QvFbPuQWpspcPf6sskteVjuuvj+qAxzXJ83Vnj1m0uX?=
+ =?us-ascii?Q?6rNKT5bI2EHF7VSlkpkH+YV9yc4Wbw8i733PjfbsXVWxXTINHSaLExNS+G4R?=
+ =?us-ascii?Q?+oXBC2VHoOufMmO28ANDx/R2GNbbveMlY/izrk1vZ3n418kSdmzVQ7EDLv+s?=
+ =?us-ascii?Q?1I9vaQcsyLAvyjtEq4SJfO0BlGWn8q9Dyx6IfjuFAHOkvcQB4ND44McxKboa?=
+ =?us-ascii?Q?v+xyLJyOI7Mud+ciusiFlJYjGZm7vRUe6YSgBAAl2v75CE+ARbSnqQY1i481?=
+ =?us-ascii?Q?kL7vlVyqJPnWuIWpNPV53kuZgsECXpUaBGbKFR5snPx58g86nFPmqjIpMhFM?=
+ =?us-ascii?Q?HKIh+C4RO03KpamUM4+hCP2JrxGcaHoU9IxFRJ8P2l84I8P/MqnK3clRNj33?=
+ =?us-ascii?Q?buvw8fYt65+mlwIXQCcLE5FmXqwhIQk7YjffyFKtLWCmMWscNRWVUIS7fs3s?=
+ =?us-ascii?Q?bGXznfERjNJsFqdjUGgaM/EzW1Hpc06YWWo7HqhRxfY6H1XZ0uM0EfI5CtxJ?=
+ =?us-ascii?Q?p5LRzNsPAuc1lBQqjP4jYVOLSeTigyGfLCqCCC5UJX8PbaJxpGXMzBHgrOeQ?=
+ =?us-ascii?Q?20ebox1QBeZizQJcXaa7uZr7br1Rqj91j01G90fLesZIHr4gc606nSxfXjm/?=
+ =?us-ascii?Q?GmJW39Jd2WQMBmdJfW2fn9Y6Ju9WGVOdC1CZJG2lkJLnBTNptVihnS3URtWI?=
+ =?us-ascii?Q?6i/Uob1WRjqh5qKZeh5feVDJChYAMM3Mhal/yTomnBqHAqgAjCea9nJ9vx6y?=
+ =?us-ascii?Q?MfEtJdPKzvPEJ8TWtanoA6WcP36D1cfeVETlC43+OU/fOaCKDI9+26h8Ih1c?=
+ =?us-ascii?Q?zVEsfErSS4JbHkhdB2PhoTDA1c0tVcofgXsNklQqyo53o1pNydKPCcIAQvdL?=
+ =?us-ascii?Q?9tOtScYliLcSX6anGHg4mRPmb5bJqCKz3aOCxFayJhDJNfHSRLKEaOwUF5EY?=
+ =?us-ascii?Q?VVbxNq0nk3eEjctlL/JOMDaMJ2Ednv7OaI/3jAvflmRJK38wvUpKNXwuAoYT?=
+ =?us-ascii?Q?vswbnT7WQLguS8Tfnux6taWaiG7zqdwgWUbviIznHuVF5woY/dMhvDIvEDIf?=
+ =?us-ascii?Q?liKQ+KG7csOY1uZP7UnrifzzKrqXQRsNxHhwRkeXOejR96xpnM8uKIdIM+n8?=
+ =?us-ascii?Q?JBwkdPZo2TRRyV+dWwyVHasi5s2TXr9voWRTQ98l+rcMpIJ8biLRIOXsVy9V?=
+ =?us-ascii?Q?aC8/FkWDTUOoJjnmWUIISxUTsR2xaYbj2Tx6uHYaQ70TvLyNchnc/5t2IRYN?=
+ =?us-ascii?Q?+xq/WSfwkmQQ64zeZJZlebk/Mq9QjBblS3awEBabsC9B1SldpjlD0o9WLqEj?=
+ =?us-ascii?Q?CYznCfQc+skpV+RnAc1WQvUkuq/xT7S+M4+i9jhvMD4758J8h2BtjdE1Bmvl?=
+ =?us-ascii?Q?NCYXcFK9rJQPKXl0zj9gPEThgRGo3H6wdFcwtkac2Rd6MskDlbqF9Xzn3gvX?=
+ =?us-ascii?Q?pQOnvEqpz3LXI2Sl+LpVBKQ5QN3ysdFh+alsQEB+6kySwHu+dQYHyHENlW83?=
+ =?us-ascii?Q?lWsJ4EiPMYH8adpwNT8A1CPg2z6O9E2cF3hYJByeZAs6tivRyVGHUz4kWMge?=
+ =?us-ascii?Q?77FecX+Pqx2xQGIiS8N07h/cqRsF6V4M196DJ7kTWMzFlViSDtx5PmRd3bku?=
+ =?us-ascii?Q?9g=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3fa2d293-3df9-4e93-994c-08ddd1141637
+X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Aug 2025 15:57:16.1294
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mggq9nrdPeFJgob4Qt0WlhmZoLdGK4u4GZs3iNwocoof/iHnQwPt+UDK3roS/km6EEwHnapeq1vFp2DsY/MRdwAEPKEuWIZ/cVkm/G80nf4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB6493
+X-OriginatorOrg: intel.com
 
-On Fri, Jul 18, 2025 at 09:35:45PM +0800, peng guo wrote:
-> When using a CXL Type 3 device together with a virtio 9p device in QEMU, the
-> 9p device fails to initialize properly. The kernel reports the following:
-> 
->     virtio: device uses modern interface but does not have VIRTIO_F_VERSION_1
->     9pnet_virtio virtio0: probe with driver 9pnet_virtio failed with error -22
-> 
-> Further investigation revealed that the 64-bit BAR space assigned to the 9pnet
-> device was overlapped by the memory window allocated for the CXL devices. As a
-> result, the kernel could not correctly access the BAR region, causing the
-> virtio device to malfunction.
-> 
-> An excerpt from /proc/iomem shows:
-> 
->     480010000-cffffffff : CXL Window 0
->       480010000-4bfffffff : PCI Bus 0000:00
->       4c0000000-4c01fffff : PCI Bus 0000:0c
->         4c0000000-4c01fffff : PCI Bus 0000:0d
->       4c0200000-cffffffff : PCI Bus 0000:00
->         4c0200000-4c0203fff : 0000:00:03.0
->           4c0200000-4c0203fff : virtio-pci-modern
-> 
-> To address this issue, this patch uses the value of `cxl_resv_end` to reserve
-> sufficient address space and ensure that CXL memory windows are allocated
-> beyond all PCI 64-bit BARs. This prevents overlap with 64-bit BARs regions such 
-> as those used by virtio or other pcie devices, resolving the conflict.
-> 
-> QEMU Build Configuration:
-> 
->     ./configure --prefix=/home/work/qemu_master/build/ \
->                 --target-list=x86_64-softmmu \
->                 --enable-kvm \
->                 --enable-virtfs
-> 
-> QEMU Boot Command:
-> 
->     sudo /home/work/qemu_master/qemu/build/qemu-system-x86_64 \
->         -nographic -machine q35,cxl=on -enable-kvm -m 16G -smp 8 \
->         -hda /home/work/gp_qemu/rootfs.img \
->         -virtfs local,path=/home/work/gp_qemu/share,mount_tag=host0,security_model=passthrough,id=host0 \
->         -kernel /home/work/linux_output/arch/x86/boot/bzImage \
->         --append "console=ttyS0 crashkernel=256M root=/dev/sda rootfstype=ext4 rw loglevel=8" \
->         -object memory-backend-ram,id=vmem0,share=on,size=4096M \
->         -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
->         -device cxl-rp,port=0,bus=cxl.1,id=root_port13,chassis=0,slot=2 \
->         -device cxl-type3,bus=root_port13,volatile-memdev=vmem0,id=cxl-vmem0,sn=0x123456789 \
->         -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G
-> 
-> Tested in a QEMU setup with a CXL Type 3 device and a 9pnet virtio device.
-> 
-> Signed-off-by: peng guo <engguopeng@buaa.edu.cn>
+On Wed, Jul 30, 2025 at 08:25:19AM -0700, Dave Jiang wrote:
+> Create new config CONFIG_CXL_RAS and put all CXL RAS items behind
+> the config. The config will depend on CPER or PCIE AER to build.
+> Move the related RAS code from core/pci.c to core/ras.c.
 
 
-To clarify I am expecting a new version of this.
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 
+> 
+> Cc: Robert Richter <rrichter@amd.com>
+> Cc: Terry Bowman <terry.bowman@amd.com>
+> Reviewed-by: Joshua Hahn <joshua.hahnjy@gmail.com>
+> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 > ---
->  hw/i386/pc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/hw/i386/pc.c b/hw/i386/pc.c
-> index 2f58e73d3347..180bc615f3f0 100644
-> --- a/hw/i386/pc.c
-> +++ b/hw/i386/pc.c
-> @@ -975,7 +975,7 @@ void pc_memory_init(PCMachineState *pcms,
->  
->      rom_set_fw(fw_cfg);
->  
-> -    if (machine->device_memory) {
-> +    if (machine->device_memory || cxl_resv_end) {
->          uint64_t *val = g_malloc(sizeof(*val));
->          uint64_t res_mem_end;
->  
-> -- 
-> 2.43.0
+> v5:
+> - Make cxl_handle_rdport_errors() static. (Dan)
+> ---
+>  drivers/cxl/Kconfig       |   4 +
+>  drivers/cxl/core/Makefile |   2 +-
+>  drivers/cxl/core/pci.c    | 319 --------------------------------------
+>  drivers/cxl/core/ras.c    | 312 +++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/cxl.h         |   8 -
+>  drivers/cxl/cxlpci.h      |  16 ++
+>  tools/testing/cxl/Kbuild  |   1 +
+>  7 files changed, 334 insertions(+), 328 deletions(-)
 
