@@ -1,47 +1,47 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC80D2309B9
-	for <linux-cxl@vger.kernel.org>; Mon,  4 Aug 2025 08:24:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76BA1917CD
+	for <linux-cxl@vger.kernel.org>; Mon,  4 Aug 2025 08:52:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754295842; cv=none; b=FyfICKYycEZRqqSnvB19BaSQXaed32S4XufXovqPKA3s7MF+3zcCvbHNhY/8E7klqqOGuDNlyMNwWldTzfiLWi/MVBgqzoCpihhhN5rIQUxG3VqUxQtzzjNbCE1iW+YkFcPp1CloNEV1A1Sc5+PtUNJ+dKoYkxfgx7kuVfhP0gY=
+	t=1754297568; cv=none; b=VDhcpkM2cEIvy99gROBnAM4gqz+WH9+hp6I/NnmRLO3huhNnmqOHrdnAt+lcRGqsQByL5BPNrGkV0fEkbhNQ8pM2e94fp1/tzTKngIdTtMulR9v9EWQ51QjPj3stBwibyxhC+Y+VubJcu+pr/mYfU/D+0I2UIHgM877fFIztvts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754295842; c=relaxed/simple;
-	bh=cgG0P5BOvzaVr0lO0bMtlngSgwQnoxS6Lbksi/AxlfI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hUd3sQ1Vcg+L0eEtt2KEK/EN8bfUhFNcjJpX4wkKj1o49IcJSgEW39SyReCisZCBhz/F9Y01SLXkxQzuEPEEpbd5PwXXtfY5FXK5aEgkn4fTXsFbV2llIxNh2NN93LkeN4h3e/NYIgbtFayS4EKdJ06fsprxx9rCPIBX/Ax21u0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ODpNaHyK; arc=none smtp.client-ip=192.198.163.9
+	s=arc-20240116; t=1754297568; c=relaxed/simple;
+	bh=8a91BKCavkLol2mQjAgwmSBLZl4JxpWi0OqSMSiL+jc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Hm3ll7KK5w6i46/P5QiRAI1HBuNDOSEDl50QCUS3C+RcMLdoiSJNqAvhfNqd5KHURGnoJg9mFzlm+/17Arj4mi0u3XsPs3jeqavjlbLL5ucTbBpfLfXe/NS1yBEkxXo9Dpn9TJ4+SnDBVQGVd8AbmAffpWNhpMwLqackkKTx4Ww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B6X0KAQs; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ODpNaHyK"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B6X0KAQs"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1754295841; x=1785831841;
+  t=1754297567; x=1785833567;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=cgG0P5BOvzaVr0lO0bMtlngSgwQnoxS6Lbksi/AxlfI=;
-  b=ODpNaHyKQNyPZ6W17YiSua/3EELE2YBiI7j8b1+S/ua8xJe762dm84bs
-   ErPvso+YSZXc3FEA/ETI/sEaTELoyUvs+aucBNn46Um8FolMgoMr5K24F
-   xV2d+tjEbzmvcsCtjbxV6+5kmkGawekDVTtrAaZFG6ZK5SsLT/V62r6tS
-   7AEn4rPniRJnB9a/UAD3Bm71LRP+I+6sKx6szeO5vt6FY1doI2IUtGcCx
-   CcRNNjPzKxvDtwV6thckS2r78L2YhjqJaF5coiSg/Uj2OUXg0HbFTOS7B
-   WKKEvc13rR3UOwuRh742Jl1uxbQAOmUEe2Lg8/NG0JKcPVY77LDzMfwkA
+  bh=8a91BKCavkLol2mQjAgwmSBLZl4JxpWi0OqSMSiL+jc=;
+  b=B6X0KAQsyHusHtFVwDYgXtQCcmLm0v3C0+5v1rW5SIy0bnwoHeBmsAb4
+   /amXHHQsU57eZLkxhQO5PwldaBkkrpYFUsa26xYg5ANr1g03YI1hsPN54
+   fDD6Yko4OTl/L62efdclV2DZ8MesORecWOK3MflDc1zP/MH00xWqMHaLx
+   bNitqdTcM6OKCjKIRF/v5JeYg3H4wtk3tdW/qB0A5UzewO27M3hEJm5Zf
+   7uNypytU6YS/dXkspQMc7UZw8MCXC+M/X/g0ZDDVwboXvPMn0M8ciJa+E
+   +qbSQxVXBZEJNINQm2LvC0Qxh6JJ7GoYzEXX/XgBz81vBK4/wGnq+Qd3S
    w==;
-X-CSE-ConnectionGUID: DFGbLzFPSOSYhGJLpfvriQ==
-X-CSE-MsgGUID: /7OyI4+QRJqN1sHj9kAQIQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11511"; a="67243883"
+X-CSE-ConnectionGUID: yTGvIgpVQAudQjETjnpjAA==
+X-CSE-MsgGUID: Y9YYRT6+Tr6XD+LRoWlpKA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11511"; a="56442161"
 X-IronPort-AV: E=Sophos;i="6.17,258,1747724400"; 
-   d="scan'208";a="67243883"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2025 01:24:00 -0700
-X-CSE-ConnectionGUID: CvPnfBGfTeCcCfIQIcsYGA==
-X-CSE-MsgGUID: 4KTzf7cvQYCexS9FSMh+Ww==
+   d="scan'208";a="56442161"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2025 01:52:47 -0700
+X-CSE-ConnectionGUID: 9ob1oevXT7K1rOS44nbKWA==
+X-CSE-MsgGUID: jqh75wz/Q9+Jrl59lkhP5w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,258,1747724400"; 
-   d="scan'208";a="195031045"
+   d="scan'208";a="164104233"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.223.77])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2025 01:24:00 -0700
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2025 01:52:46 -0700
 From: alison.schofield@intel.com
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jonathan.cameron@huawei.com>,
@@ -51,9 +51,9 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Ira Weiny <ira.weiny@intel.com>,
 	Dan Williams <dan.j.williams@intel.com>
 Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH] cxl/acpi: Limit XOR map application based on host bridge ways
-Date: Mon,  4 Aug 2025 01:23:55 -0700
-Message-ID: <20250804082357.2590809-1-alison.schofield@intel.com>
+Subject: [PATCH 0/3] CXL: Add a loadable module for address translation
+Date: Mon,  4 Aug 2025 01:52:38 -0700
+Message-ID: <cover.1754291501.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -65,78 +65,49 @@ Content-Transfer-Encoding: 8bit
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-The CXL specification defines one set of XOR maps per Host Bridge
-Interleave Granularity (HBIG), but the number of maps to apply
-depends on the Host Bridge Interleave Ways (HBIW) for each region.
+This set doesn't have a base commit. It is based on cxl/next plus the
+Poison by Region Offset patchset [1], plus the fix to Limit XOR map
+application based on host bridge ways [2] which this test module exposed.
 
-Currently, cxl_xor_hpa_to_spa() incorrectly applies all available
-XOR maps regardless of the region's host bridge interleave ways.
-This causes incorrect address translations when multiple CXL regions
-with the same HBIG but different HBIW's coexist.
+[1] https://lore.kernel.org/linux-cxl/cover.1754290144.git.alison.schofield@intel.com/
+[2] https://lore.kernel.org/linux-cxl/20250804082357.2590809-1-alison.schofield@intel.com/
 
-Example scenario with 3 XOR maps defined for 256-byte granularity:
-- 4-way interleave region:  should apply 2 maps (was applying 3)
-- 8-way interleave region:  should apply 3 maps (correct)
-- 12-way interleave region: should apply 2 maps (was applying 3)
+This series refactors CXL address translation code to support testing
+and adds a dedicated test module for validation of the translation
+calculations.
 
-Per CXL 3.2 Section 9.18.1.4 and Table 9-22, fix this by using
-a lookup table to determine the correct number of XOR maps based
-on host bridge interleave ways.
+The work is presented in 3 patches:
+1. Extracts the core translation logic into standalone, testable functions.
+2. Provides access to XOR interleave calculations without exposing internal
+   CXIMS structures to test modules.
+3. Adds the test module that validates both Host to Device, and Device
+   to Host address translations.
 
-Fixes: 3b2fedcd75e3 ("cxl: Restore XOR'd position bits during address translation")
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
----
- drivers/cxl/acpi.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+Accessing the core functions in the test module was implemented by 
+adding the needed core/region functions to cxl_core_exports.c and 
+adding a similar 'cxl_acpi_exports.c' to access the cxl/acpi.c funcs.
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 712624cba2b6..5154effb0cb2 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -16,6 +16,16 @@ struct cxl_cxims_data {
- 	u64 xormaps[] __counted_by(nr_maps);
- };
- 
-+/*
-+ * There is one CXIMS, therefore one set of XOR maps, that all CXL Windows with
-+ * the same host bridge granularity share. The number of maps to apply at address
-+ * translation is based on the Host Bridge interleave ways of the CXL Window.
-+ * CXL Specification 3.2 Section 9.18.1.4 and Table 9-22.
-+ */
-+static const int hbiw_to_nr_maps[] = {
-+	[1] = 0, [2] = 1, [3] = 0, [4] = 2, [6] = 1, [8] = 3, [12] = 2, [16] = 4
-+};
-+
- static const guid_t acpi_cxl_qtg_id_guid =
- 	GUID_INIT(0xF365F9A6, 0xA7DE, 0x4071,
- 		  0xA6, 0x6A, 0xB4, 0x0C, 0x0B, 0x4F, 0x8E, 0x52);
-@@ -23,13 +33,13 @@ static const guid_t acpi_cxl_qtg_id_guid =
- 
- static u64 cxl_xor_hpa_to_spa(struct cxl_root_decoder *cxlrd, u64 hpa)
- {
-+	int nr_maps_to_apply = hbiw_to_nr_maps[cxlrd->cxlsd.nr_targets];
- 	struct cxl_cxims_data *cximsd = cxlrd->platform_data;
--	int hbiw = cxlrd->cxlsd.nr_targets;
- 	u64 val;
- 	int pos;
- 
- 	/* No xormaps for host bridge interleave ways of 1 or 3 */
--	if (hbiw == 1 || hbiw == 3)
-+	if (!nr_maps_to_apply)
- 		return hpa;
- 
- 	/*
-@@ -47,7 +57,7 @@ static u64 cxl_xor_hpa_to_spa(struct cxl_root_decoder *cxlrd, u64 hpa)
- 	 * bits results in val==0, if odd the XOR result is val==1.
- 	 */
- 
--	for (int i = 0; i < cximsd->nr_maps; i++) {
-+	for (int i = 0; i < nr_maps_to_apply; i++) {
- 		if (!cximsd->xormaps[i])
- 			continue;
- 		pos = __ffs(cximsd->xormaps[i]);
+The companion CXL Unit Test script will be posted separately.
 
-base-commit: f11a5f89910a7ae970fbce4fdc02d86a8ba8570f
+
+Alison Schofield (3):
+  cxl/region: Refactor address translation funcs for testing
+  cxl/acpi: Make the XOR calculations available for testing
+  cxl/test: Add cxl_translate module for address translation testing
+
+ drivers/cxl/acpi.c                     |  51 ++++-
+ drivers/cxl/core/region.c              | 145 +++++++-----
+ drivers/cxl/cxl.h                      |   3 +
+ include/linux/acpi.h                   |   7 +
+ tools/testing/cxl/Kbuild               |   1 +
+ tools/testing/cxl/cxl_acpi_exports.c   |  13 ++
+ tools/testing/cxl/cxl_core_exports.c   |  11 +
+ tools/testing/cxl/test/Kbuild          |   2 +
+ tools/testing/cxl/test/cxl_translate.c | 298 +++++++++++++++++++++++++
+ 9 files changed, 467 insertions(+), 64 deletions(-)
+ create mode 100644 tools/testing/cxl/cxl_acpi_exports.c
+ create mode 100644 tools/testing/cxl/test/cxl_translate.c
+
 -- 
 2.37.3
 
