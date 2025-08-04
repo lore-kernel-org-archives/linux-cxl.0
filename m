@@ -1,54 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 441EA23D291
-	for <linux-cxl@vger.kernel.org>; Mon,  4 Aug 2025 08:14:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC80D2309B9
+	for <linux-cxl@vger.kernel.org>; Mon,  4 Aug 2025 08:24:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754295247; cv=none; b=koMpaP0uW/f27i9Z4VXkHBjvJssF2+tN5WScY5cQ17VDQHAwoDGmPq0Px3mqahRur6kf/ZQFNpNx5PNjLvJ6Rxif0xUp3JwnsMZ9IZynwx2GikMx2dGsdfzE5ohry1rakk4f1DAiTEFsT4Hll2o30xoR1XFj0DP6/PHLwhFnAQ8=
+	t=1754295842; cv=none; b=FyfICKYycEZRqqSnvB19BaSQXaed32S4XufXovqPKA3s7MF+3zcCvbHNhY/8E7klqqOGuDNlyMNwWldTzfiLWi/MVBgqzoCpihhhN5rIQUxG3VqUxQtzzjNbCE1iW+YkFcPp1CloNEV1A1Sc5+PtUNJ+dKoYkxfgx7kuVfhP0gY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754295247; c=relaxed/simple;
-	bh=WtomoPHoNVkDhFcU/dc2lIQjv1mVO9FZGCaYlTTzA8g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KM1pRPIQldIFkts5P1jTx7xlDIOZWID2wJ7qIRcZzMZkXUceYU/CPjU/Vp8xdsEu6NJZNbmwfhJ8Jc6FFAdC5ddqIXMeeS4hP9VSdm6Rskoaqk/+6DKTR+cBedKgyTeSOWM7R/hctsqQpYilnJ/5uX9XBOAOO79H7Utc+z60UlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FG5YpLlQ; arc=none smtp.client-ip=198.175.65.16
+	s=arc-20240116; t=1754295842; c=relaxed/simple;
+	bh=cgG0P5BOvzaVr0lO0bMtlngSgwQnoxS6Lbksi/AxlfI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hUd3sQ1Vcg+L0eEtt2KEK/EN8bfUhFNcjJpX4wkKj1o49IcJSgEW39SyReCisZCBhz/F9Y01SLXkxQzuEPEEpbd5PwXXtfY5FXK5aEgkn4fTXsFbV2llIxNh2NN93LkeN4h3e/NYIgbtFayS4EKdJ06fsprxx9rCPIBX/Ax21u0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ODpNaHyK; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FG5YpLlQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ODpNaHyK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1754295246; x=1785831246;
+  t=1754295841; x=1785831841;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=WtomoPHoNVkDhFcU/dc2lIQjv1mVO9FZGCaYlTTzA8g=;
-  b=FG5YpLlQoIiH9fwrbgAEd2nFHJdJUmeD0hRMWz0MLyI393HP8nOeREH1
-   R47lPTUDpg4nQosS/sDNrQO0w1TpElsaHU5ddi1SQvW/L6aHWwdl4RMV1
-   w9FQbVHUjAH/8GWaDco5LgNf8LFYV/tSUb+94Op7iOdF2AafEFelFF+wD
-   crjeZ+9EL6129IM7P4UMi3Y+D9lemuno+gJO1oapg2abr0suqf5fcOoQA
-   IUqIHhsaO+MsqiIDC2FJWLAkyCjGNZDBHNYyTbKSLlo2wV6hhJ24fMdFw
-   AcrE3vAKQ4+V/67BnwcQmK2BbmG4l7TPJ9AJSTW12tpDX0lWEKCqrE6EY
-   Q==;
-X-CSE-ConnectionGUID: uV3D8a7TSpmc2O9sC8paxA==
-X-CSE-MsgGUID: NYtOooCST9C8XGOQPeB96g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11511"; a="56686588"
+  bh=cgG0P5BOvzaVr0lO0bMtlngSgwQnoxS6Lbksi/AxlfI=;
+  b=ODpNaHyKQNyPZ6W17YiSua/3EELE2YBiI7j8b1+S/ua8xJe762dm84bs
+   ErPvso+YSZXc3FEA/ETI/sEaTELoyUvs+aucBNn46Um8FolMgoMr5K24F
+   xV2d+tjEbzmvcsCtjbxV6+5kmkGawekDVTtrAaZFG6ZK5SsLT/V62r6tS
+   7AEn4rPniRJnB9a/UAD3Bm71LRP+I+6sKx6szeO5vt6FY1doI2IUtGcCx
+   CcRNNjPzKxvDtwV6thckS2r78L2YhjqJaF5coiSg/Uj2OUXg0HbFTOS7B
+   WKKEvc13rR3UOwuRh742Jl1uxbQAOmUEe2Lg8/NG0JKcPVY77LDzMfwkA
+   w==;
+X-CSE-ConnectionGUID: DFGbLzFPSOSYhGJLpfvriQ==
+X-CSE-MsgGUID: /7OyI4+QRJqN1sHj9kAQIQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11511"; a="67243883"
 X-IronPort-AV: E=Sophos;i="6.17,258,1747724400"; 
-   d="scan'208";a="56686588"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2025 01:14:06 -0700
-X-CSE-ConnectionGUID: wDwhXupeTeiFOor+78SdpA==
-X-CSE-MsgGUID: Z17pei+gT2m8LBHxtmSPVA==
+   d="scan'208";a="67243883"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2025 01:24:00 -0700
+X-CSE-ConnectionGUID: CvPnfBGfTeCcCfIQIcsYGA==
+X-CSE-MsgGUID: 4KTzf7cvQYCexS9FSMh+Ww==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,258,1747724400"; 
-   d="scan'208";a="164427364"
+   d="scan'208";a="195031045"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.223.77])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2025 01:14:06 -0700
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2025 01:24:00 -0700
 From: alison.schofield@intel.com
-To: nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org
-Cc: Alison Schofield <alison.schofield@intel.com>
-Subject: [ndctl PATCH v2] test/cxl-poison.sh: test inject and clear poison by region offset
-Date: Mon,  4 Aug 2025 01:14:01 -0700
-Message-ID: <20250804081403.2590033-1-alison.schofield@intel.com>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>
+Cc: linux-cxl@vger.kernel.org
+Subject: [PATCH] cxl/acpi: Limit XOR map application based on host bridge ways
+Date: Mon,  4 Aug 2025 01:23:55 -0700
+Message-ID: <20250804082357.2590809-1-alison.schofield@intel.com>
 X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -60,199 +65,78 @@ Content-Transfer-Encoding: 8bit
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-The CXL kernel driver recently added support to inject and clear
-poison in a region by specifying an offset. Add a test case to the
-existing cxl-poison unit test that demonstrates how to use the new
-debugfs attributes. Use the kernel trace log to validate the round
-trip address translations.
+The CXL specification defines one set of XOR maps per Host Bridge
+Interleave Granularity (HBIG), but the number of maps to apply
+depends on the Host Bridge Interleave Ways (HBIW) for each region.
 
-SKIP, do not fail, if the new debugfs attributes are not present.
+Currently, cxl_xor_hpa_to_spa() incorrectly applies all available
+XOR maps regardless of the region's host bridge interleave ways.
+This causes incorrect address translations when multiple CXL regions
+with the same HBIG but different HBIW's coexist.
 
-See the kernel ABI documentation for usage:
-Documentation/ABI/testing/debugfs-cxl
+Example scenario with 3 XOR maps defined for 256-byte granularity:
+- 4-way interleave region:  should apply 2 maps (was applying 3)
+- 8-way interleave region:  should apply 3 maps (correct)
+- 12-way interleave region: should apply 2 maps (was applying 3)
 
+Per CXL 3.2 Section 9.18.1.4 and Table 9-22, fix this by using
+a lookup table to determine the correct number of XOR maps based
+on host bridge interleave ways.
+
+Fixes: 3b2fedcd75e3 ("cxl: Restore XOR'd position bits during address translation")
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
+ drivers/cxl/acpi.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-Changes in v2:
-Add test_poison_by_region_offset_negative set of test cases
+diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+index 712624cba2b6..5154effb0cb2 100644
+--- a/drivers/cxl/acpi.c
++++ b/drivers/cxl/acpi.c
+@@ -16,6 +16,16 @@ struct cxl_cxims_data {
+ 	u64 xormaps[] __counted_by(nr_maps);
+ };
+ 
++/*
++ * There is one CXIMS, therefore one set of XOR maps, that all CXL Windows with
++ * the same host bridge granularity share. The number of maps to apply at address
++ * translation is based on the Host Bridge interleave ways of the CXL Window.
++ * CXL Specification 3.2 Section 9.18.1.4 and Table 9-22.
++ */
++static const int hbiw_to_nr_maps[] = {
++	[1] = 0, [2] = 1, [3] = 0, [4] = 2, [6] = 1, [8] = 3, [12] = 2, [16] = 4
++};
++
+ static const guid_t acpi_cxl_qtg_id_guid =
+ 	GUID_INIT(0xF365F9A6, 0xA7DE, 0x4071,
+ 		  0xA6, 0x6A, 0xB4, 0x0C, 0x0B, 0x4F, 0x8E, 0x52);
+@@ -23,13 +33,13 @@ static const guid_t acpi_cxl_qtg_id_guid =
+ 
+ static u64 cxl_xor_hpa_to_spa(struct cxl_root_decoder *cxlrd, u64 hpa)
+ {
++	int nr_maps_to_apply = hbiw_to_nr_maps[cxlrd->cxlsd.nr_targets];
+ 	struct cxl_cxims_data *cximsd = cxlrd->platform_data;
+-	int hbiw = cxlrd->cxlsd.nr_targets;
+ 	u64 val;
+ 	int pos;
+ 
+ 	/* No xormaps for host bridge interleave ways of 1 or 3 */
+-	if (hbiw == 1 || hbiw == 3)
++	if (!nr_maps_to_apply)
+ 		return hpa;
+ 
+ 	/*
+@@ -47,7 +57,7 @@ static u64 cxl_xor_hpa_to_spa(struct cxl_root_decoder *cxlrd, u64 hpa)
+ 	 * bits results in val==0, if odd the XOR result is val==1.
+ 	 */
+ 
+-	for (int i = 0; i < cximsd->nr_maps; i++) {
++	for (int i = 0; i < nr_maps_to_apply; i++) {
+ 		if (!cximsd->xormaps[i])
+ 			continue;
+ 		pos = __ffs(cximsd->xormaps[i]);
 
-
- test/cxl-poison.sh | 129 ++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 117 insertions(+), 12 deletions(-)
-
-diff --git a/test/cxl-poison.sh b/test/cxl-poison.sh
-index 6ed890bc666c..517e3db23223 100644
---- a/test/cxl-poison.sh
-+++ b/test/cxl-poison.sh
-@@ -65,18 +65,61 @@ create_x2_region()
- 
- inject_poison_sysfs()
- {
--	memdev="$1"
-+	dev="$1"
- 	addr="$2"
-+	expect_fail="$3"
- 
--	echo "$addr" > /sys/kernel/debug/cxl/"$memdev"/inject_poison
-+	if [[ "$expect_fail" == "true" ]]; then
-+		if echo "$addr" > /sys/kernel/debug/cxl/"$dev"/inject_poison 2>/dev/null; then
-+			echo "Expected inject_poison to fail for $addr"
-+			err "$LINENO"
-+		fi
-+	else
-+		echo "$addr" > /sys/kernel/debug/cxl/"$dev"/inject_poison
-+	fi
- }
- 
- clear_poison_sysfs()
- {
--	memdev="$1"
-+	dev="$1"
- 	addr="$2"
-+	expect_fail="$3"
- 
--	echo "$addr" > /sys/kernel/debug/cxl/"$memdev"/clear_poison
-+	if [[ "$expect_fail" == "true" ]]; then
-+		if echo "$addr" > /sys/kernel/debug/cxl/"$dev"/clear_poison 2>/dev/null; then
-+			echo "Expected clear_poison to fail for $addr"
-+			err "$LINENO"
-+		fi
-+	else
-+		echo "$addr" > /sys/kernel/debug/cxl/"$dev"/clear_poison
-+	fi
-+}
-+
-+check_trace_entry()
-+{
-+	expected_region="$1"
-+	expected_hpa="$2"
-+
-+	trace_line=$(grep "cxl_poison" /sys/kernel/tracing/trace | tail -n 1)
-+	if [[ -z "$trace_line" ]]; then
-+		echo "No cxl_poison trace event found"
-+		err "$LINENO"
-+	fi
-+
-+	trace_region=$(echo "$trace_line" | grep -o 'region=[^ ]*' | cut -d= -f2)
-+	trace_hpa=$(echo "$trace_line" | grep -o 'hpa=0x[0-9a-fA-F]\+' | cut -d= -f2)
-+
-+	if [[ "$trace_region" != "$expected_region" ]]; then
-+		echo "Expected region $expected_region not found in trace"
-+		echo "$trace_line"
-+		err "$LINENO"
-+	fi
-+
-+	if [[ "$trace_hpa" != "$expected_hpa" ]]; then
-+		echo "Expected HPA $expected_hpa not found in trace"
-+		echo "$trace_line"
-+		err "$LINENO"
-+	fi
- }
- 
- validate_poison_found()
-@@ -97,7 +140,7 @@ validate_poison_found()
- 	fi
- }
- 
--test_poison_by_memdev()
-+test_poison_by_memdev_by_dpa()
- {
- 	find_memdev
- 	inject_poison_sysfs "$memdev" "0x40000000"
-@@ -113,9 +156,8 @@ test_poison_by_memdev()
- 	validate_poison_found "-m $memdev" 0
- }
- 
--test_poison_by_region()
-+test_poison_by_region_by_dpa()
- {
--	create_x2_region
- 	inject_poison_sysfs "$mem0" "0x40000000"
- 	inject_poison_sysfs "$mem1" "0x40000000"
- 	validate_poison_found "-r $region" 2
-@@ -125,13 +167,76 @@ test_poison_by_region()
- 	validate_poison_found "-r $region" 0
- }
- 
--# Turn tracing on. Note that 'cxl list --media-errors' toggles the tracing.
--# Turning it on here allows the test user to also view inject and clear
--# trace events.
-+test_poison_by_region_offset()
-+{
-+	base=$(cat /sys/bus/cxl/devices/"$region"/resource)
-+	gran=$(cat /sys/bus/cxl/devices/"$region"/interleave_granularity)
-+
-+	# Test two HPA addresses: base and base + granularity
-+	# This hits the two memdevs in the region interleave.
-+	hpa1=$(printf "0x%x" $((base)))
-+	hpa2=$(printf "0x%x" $((base + gran)))
-+
-+	# Inject at the offset and check result using the hpa's 
-+	# ABI takes an offset, but recall the hpa to check trace event
-+
-+	inject_poison_sysfs "$region" 0
-+	check_trace_entry "$region" "$hpa1"
-+	inject_poison_sysfs "$region" "$gran"
-+	check_trace_entry "$region" "$hpa2"
-+	validate_poison_found "-r $region" 2
-+
-+	clear_poison_sysfs "$region" 0
-+	check_trace_entry "$region" "$hpa1"
-+	clear_poison_sysfs "$region" "$gran"
-+	check_trace_entry "$region" "$hpa2"
-+	validate_poison_found "-r $region" 0
-+}
-+
-+test_poison_by_region_offset_negative()
-+{
-+	region_size=$(cat /sys/bus/cxl/devices/"$region"/size)
-+	cache_size=0
-+
-+	# This case is a no-op until cxl-test ELC mocking arrives
-+	# Try to get cache_size if the attribute exists
-+	if [ -f "/sys/bus/cxl/devices/$region/cache_size" ]; then
-+		cache_size=$(cat /sys/bus/cxl/devices/"$region"/cache_size)
-+	fi
-+
-+	# Offset within extended linear cache (if cache_size > 0)
-+	if [[ $cache_size -gt 0 ]]; then
-+		cache_offset=$((cache_size - 1))
-+		echo "Testing offset within cache: $cache_offset (cache_size: $cache_size)"
-+		inject_poison_sysfs "$region" "$cache_offset" "true"
-+		clear_poison_sysfs "$region" "$cache_offset" "true"
-+	else
-+		echo "Skipping cache test - cache_size is 0"
-+	fi
-+
-+	# Offset exceeds region size
-+	exceed_offset=$((region_size))
-+	inject_poison_sysfs "$region" "$exceed_offset" "true"
-+	clear_poison_sysfs "$region" "$exceed_offset" "true"
-+
-+	# Offset exceeds region size by a lot
-+	large_offset=$((region_size * 2))
-+	inject_poison_sysfs "$region" "$large_offset" "true"
-+	clear_poison_sysfs "$region" "$large_offset" "true"
-+}
-+
-+# Clear old trace events, enable cxl_poison, enable global tracing
-+echo "" > /sys/kernel/tracing/trace
- echo 1 > /sys/kernel/tracing/events/cxl/cxl_poison/enable
-+echo 1 > /sys/kernel/tracing/tracing_on
- 
--test_poison_by_memdev
--test_poison_by_region
-+test_poison_by_memdev_by_dpa
-+create_x2_region
-+test_poison_by_region_by_dpa
-+[ -f "/sys/kernel/debug/cxl/$region/inject_poison" ] ||
-+       do_skip "test cases requires inject by region kernel support"
-+test_poison_by_region_offset
-+test_poison_by_region_offset_negative
- 
- check_dmesg "$LINENO"
- 
+base-commit: f11a5f89910a7ae970fbce4fdc02d86a8ba8570f
 -- 
 2.37.3
 
