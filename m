@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE859241686
-	for <linux-cxl@vger.kernel.org>; Mon,  4 Aug 2025 08:00:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A72241679
+	for <linux-cxl@vger.kernel.org>; Mon,  4 Aug 2025 08:00:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754294425; cv=none; b=SI1bdqaLLF+UVzf9VcFtR0vgYga8JznuxBhT9a7ZWl0lUeXes/IGDKBBM8kx/eIiWiE4ii2y8JK3J03aGWRO84lTrVZ+k3X3BndrWm/VgRiNE6M8EmJo3Eo+hkHKFrDJw5j3FTRouXvlnOrrDfUTGIs3BjGpXsDDohDx2MA51mw=
+	t=1754294427; cv=none; b=mBYLUQ4uONbQ0O/xV5ZTWKELG6+BkaPrYrpeC2GJ/wR8BzJhrLH9evJmkTUic9G1ujjy82AG6+xINrutDcblbuE8iJMlz5Yxh5nf+lyPfgbsIZAtAd9RNDy5vTXgeSc8IkjnfSXrvj73IAyONNP6jYb8yTwwhz1kq3otllHGr+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754294425; c=relaxed/simple;
-	bh=m7f+XRjk7fWNe1H+QR9ZsXbyZJMacbt1rIVniuHqFaI=;
+	s=arc-20240116; t=1754294427; c=relaxed/simple;
+	bh=TB5h7A3bvDDMYMLQ60NJUOzkCQbKBsGxiFacWu7sojo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qoLPJh6SPiqg8AN0u0j63L0p2JGtrcIhUWDltX/XI9fqy4OXKY7LWayMvKfR57Ou39xNAMhAA+c9WwXYs/tw9+RZOAl8i2jDpHAj/3dnRR+FNMeM7WFxrhSib+kWlfnxHhm1fc2X5E0IvBToVww4/KTvN8KQNc9TMC4wWXO2o1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ngt47E29; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version; b=ee5VnKzMpzJR/PiGZXSYw7QWDe0AQAUum5nxZ5/LqR9sC2FQccGpRjYl0bACwicBHfsUtbEigZr5UgCppzi4LSdrdE+3pwl6yfvwni6y5IJC046V1scnY+AkZ7BJcRzCmhVCy1WrRiq5Tpug5tbF1pytKduQKQSb72iMs11BhTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dsneo5V6; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ngt47E29"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dsneo5V6"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1754294424; x=1785830424;
+  t=1754294425; x=1785830425;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=m7f+XRjk7fWNe1H+QR9ZsXbyZJMacbt1rIVniuHqFaI=;
-  b=Ngt47E29kLnFbrurxvDKH0Szt2PIT76SFINEpEur0PNpDtoKLsvhueE+
-   EAwBFZNZX/QcNYICS425uklRUEiqmFQWvOJj0cvMloaGgtUX6AO5N9RHG
-   CfYpXDXgBif5jZ8lSLMO40DDR+HgAqFj9eiKaL4Y/K83XabVcgRCxHEE7
-   sNZPCAYkuuhZ/ErdjxzCAY6AlLFzgvSjazzo/yIvJFPIAjpEjVQKb3MUq
-   YK9Q82dyczdu68Jhy9ufuJGr/n9mdlqeIRmcd8uVf/K5N4D/Q0aDCyUD+
-   xMwPjB8S5EPsVqaKN0R2ksMa06Dlx5aBAQmU9P5hkboKcxpmFzFZKHK+A
-   A==;
-X-CSE-ConnectionGUID: MBRKvf4eT+mWh5NOAe80Aw==
-X-CSE-MsgGUID: 4O1Ap84cSWOUZ9ssAWUoHQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11511"; a="56474229"
+  bh=TB5h7A3bvDDMYMLQ60NJUOzkCQbKBsGxiFacWu7sojo=;
+  b=dsneo5V6eeWl+TfU7yEe1tCGXuyLuLXUay2spmeN5H8+3SxAObIWMv2V
+   MbGqetaYU85N/C93w/au7nDbGObOPEm0eCEPHkNxIwUoqErBCmcUdsx3p
+   iYMNk3Eto3S+lcfV8lxFL7l0yNBwqH8h8Q9Je3nGWbHrRAO/yfQex9Lbs
+   ZjREd59Guff7xHU8weOQswEpqIw+mzmpnyp0ncGOdJWzVR6t4yj6ETQuo
+   j9L4093WU4KoxkUkRHLR1mQQ9+Ft3Zucf4NplmgArC+oUwulIL0ZorJK5
+   JTh7zJCEoBewMDnLcyu4TNS+SKSNDZJk+DN7UPUlzFFhDn9JDK0FxASjn
+   w==;
+X-CSE-ConnectionGUID: WIonCPTMSYOKgPWAOL7Ykg==
+X-CSE-MsgGUID: 4AFqLquIQGeWu36N3qDBCw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11511"; a="56474232"
 X-IronPort-AV: E=Sophos;i="6.17,258,1747724400"; 
-   d="scan'208";a="56474229"
+   d="scan'208";a="56474232"
 Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2025 01:00:23 -0700
-X-CSE-ConnectionGUID: iBilAtG7R1C47E69WyOe9g==
-X-CSE-MsgGUID: 5B9+alBlTMOypcMkzy76ZA==
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2025 01:00:25 -0700
+X-CSE-ConnectionGUID: oXmNLUx9TRWj60i9QYMzGg==
+X-CSE-MsgGUID: xZUs84vfSgCqlTaL8K8IGg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,258,1747724400"; 
-   d="scan'208";a="168548872"
+   d="scan'208";a="168548886"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.223.77])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2025 01:00:24 -0700
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2025 01:00:25 -0700
 From: alison.schofield@intel.com
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jonathan.cameron@huawei.com>,
@@ -52,9 +52,9 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Ira Weiny <ira.weiny@intel.com>,
 	Dan Williams <dan.j.williams@intel.com>
 Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH v5 4/5] cxl/core: Add locked variants of the poison inject and clear funcs
-Date: Mon,  4 Aug 2025 01:00:12 -0700
-Message-ID: <1d601f586975195733984ca63d1b5789bbe8690f.1754290144.git.alison.schofield@intel.com>
+Subject: [PATCH v5 5/5] cxl/region: Add inject and clear poison by region offset
+Date: Mon,  4 Aug 2025 01:00:13 -0700
+Message-ID: <f3fd8628ab57ea79704fb2d645902cd499c066af.1754290144.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <cover.1754290144.git.alison.schofield@intel.com>
 References: <cover.1754290144.git.alison.schofield@intel.com>
@@ -68,64 +68,264 @@ Content-Transfer-Encoding: 8bit
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-The core functions that validate and send inject and clear commands
-to the memdev devices require holding both the dpa_rwsem and the
-region_rwsem.
+Add CXL region debugfs attributes to inject and clear poison based
+on an offset into the region. These new interfaces allow users to
+operate on poison at the region level without needing to resolve
+Device Physical Addresses (DPA) or target individual memdevs.
 
-In preparation for another caller of these functions that must hold
-the locks upon entry, split the work into a locked and unlocked pair.
+The implementation uses a new helper, region_offset_to_dpa_result()
+that applies decoder interleave logic, including XOR-based address
+decoding when applicable. Note that XOR decodes rely on driver
+internal xormaps which are not exposed to userspace. So, this support
+is not only a simplification of poison operations that could be done
+using existing per memdev operations, but also it enables this
+functionality for XOR interleaved regions for the first time.
 
-Consideration was given to moving the locking to both callers,
-however, the existing caller is not in the core (mem.c) and cannot
-access the locks.
+New debugfs attributes are added in /sys/kernel/debug/cxl/regionX/:
+inject_poison and clear_poison. These are only exposed if all memdevs
+participating in the region support both inject and clear commands,
+ensuring consistent and reliable behavior across multi-device regions.
+
+If tracing is enabled, these operations are logged as cxl_poison
+events in /sys/kernel/tracing/trace.
+
+The ABI documentation warns users of the significant risks that
+come with using these capabilities.
+
+A CXL Maturity Map update shows this user flow is now supported.
 
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 ---
 
-Changes in v5: none
+Changes in v5: Update Maturity Map
 
- drivers/cxl/core/memdev.c | 52 +++++++++++++++++++++++++++------------
- drivers/cxl/cxlmem.h      |  2 ++
- 2 files changed, 38 insertions(+), 16 deletions(-)
+ Documentation/ABI/testing/debugfs-cxl         |  87 ++++++++++++
+ Documentation/driver-api/cxl/maturity-map.rst |   2 +-
+ drivers/cxl/core/core.h                       |   4 +
+ drivers/cxl/core/memdev.c                     |   8 ++
+ drivers/cxl/core/region.c                     | 131 +++++++++++++++++-
+ 5 files changed, 228 insertions(+), 4 deletions(-)
 
+diff --git a/Documentation/ABI/testing/debugfs-cxl b/Documentation/ABI/testing/debugfs-cxl
+index e95e21f131e9..2989d4da96c1 100644
+--- a/Documentation/ABI/testing/debugfs-cxl
++++ b/Documentation/ABI/testing/debugfs-cxl
+@@ -19,6 +19,20 @@ Description:
+ 		is returned to the user. The inject_poison attribute is only
+ 		visible for devices supporting the capability.
+ 
++		TEST-ONLY INTERFACE: This interface is intended for testing
++		and validation purposes only. It is not a data repair mechanism
++		and should never be used on production systems or live data.
++
++		DATA LOSS RISK: For CXL persistent memory (PMEM) devices,
++		poison injection can result in permanent data loss. Injected
++		poison may render data permanently inaccessible even after
++		clearing, as the clear operation writes zeros and does not
++		recover original data.
++
++		SYSTEM STABILITY RISK: For volatile memory, poison injection
++		can cause kernel crashes, system instability, or unpredictable
++		behavior if the poisoned addresses are accessed by running code
++		or critical kernel structures.
+ 
+ What:		/sys/kernel/debug/cxl/memX/clear_poison
+ Date:		April, 2023
+@@ -35,6 +49,79 @@ Description:
+ 		The clear_poison attribute is only visible for devices
+ 		supporting the capability.
+ 
++		TEST-ONLY INTERFACE: This interface is intended for testing
++		and validation purposes only. It is not a data repair mechanism
++		and should never be used on production systems or live data.
++
++		CLEAR IS NOT DATA RECOVERY: This operation writes zeros to the
++		specified address range and removes the address from the poison
++		list. It does NOT recover or restore original data that may have
++		been present before poison injection. Any original data at the
++		cleared address is permanently lost and replaced with zeros.
++
++		CLEAR IS NOT A REPAIR MECHANISM: This interface is for testing
++		purposes only and should not be used as a data repair tool.
++		Clearing poison is fundamentally different from data recovery
++		or error correction.
++
++What:		/sys/kernel/debug/cxl/regionX/inject_poison
++Date:		August, 2025
++Contact:	linux-cxl@vger.kernel.org
++Description:
++		(WO) When a Host Physical Address (HPA) is written to this
++		attribute, the region driver translates it to a Device
++		Physical Address (DPA) and identifies the corresponding
++		memdev. It then sends an inject poison command to that memdev
++		at the translated DPA. Refer to the memdev ABI entry at:
++		/sys/kernel/debug/cxl/memX/inject_poison for the detailed
++		behavior. This attribute is only visible if all memdevs
++		participating in the region support both inject and clear
++		poison commands.
++
++		TEST-ONLY INTERFACE: This interface is intended for testing
++		and validation purposes only. It is not a data repair mechanism
++		and should never be used on production systems or live data.
++
++		DATA LOSS RISK: For CXL persistent memory (PMEM) devices,
++		poison injection can result in permanent data loss. Injected
++		poison may render data permanently inaccessible even after
++		clearing, as the clear operation writes zeros and does not
++		recover original data.
++
++		SYSTEM STABILITY RISK: For volatile memory, poison injection
++		can cause kernel crashes, system instability, or unpredictable
++		behavior if the poisoned addresses are accessed by running code
++		or critical kernel structures.
++
++What:		/sys/kernel/debug/cxl/regionX/clear_poison
++Date:		August, 2025
++Contact:	linux-cxl@vger.kernel.org
++Description:
++		(WO) When a Host Physical Address (HPA) is written to this
++		attribute, the region driver translates it to a Device
++		Physical Address (DPA) and identifies the corresponding
++		memdev. It then sends a clear poison command to that memdev
++		at the translated DPA. Refer to the memdev ABI entry at:
++		/sys/kernel/debug/cxl/memX/clear_poison for the detailed
++		behavior. This attribute is only visible if all memdevs
++		participating in the region support both inject and clear
++		poison commands.
++
++		TEST-ONLY INTERFACE: This interface is intended for testing
++		and validation purposes only. It is not a data repair mechanism
++		and should never be used on production systems or live data.
++
++		CLEAR IS NOT DATA RECOVERY: This operation writes zeros to the
++		specified address range and removes the address from the poison
++		list. It does NOT recover or restore original data that may have
++		been present before poison injection. Any original data at the
++		cleared address is permanently lost and replaced with zeros.
++
++		CLEAR IS NOT A REPAIR MECHANISM: This interface is for testing
++		purposes only and should not be used as a data repair tool.
++		Clearing poison is fundamentally different from data recovery
++		or error correction.
++
+ What:		/sys/kernel/debug/cxl/einj_types
+ Date:		January, 2024
+ KernelVersion:	v6.9
+diff --git a/Documentation/driver-api/cxl/maturity-map.rst b/Documentation/driver-api/cxl/maturity-map.rst
+index 1330f3f52129..282c1102dd81 100644
+--- a/Documentation/driver-api/cxl/maturity-map.rst
++++ b/Documentation/driver-api/cxl/maturity-map.rst
+@@ -173,7 +173,7 @@ Accelerator
+ User Flow Support
+ -----------------
+ 
+-* [0] Inject & clear poison by HPA
++* [2] Inject & clear poison by region offset
+ 
+ Details
+ =======
+diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+index 2669f251d677..eac8cc1bdaa0 100644
+--- a/drivers/cxl/core/core.h
++++ b/drivers/cxl/core/core.h
+@@ -135,6 +135,10 @@ enum cxl_poison_trace_type {
+ 	CXL_POISON_TRACE_CLEAR,
+ };
+ 
++enum poison_cmd_enabled_bits;
++bool cxl_memdev_has_poison_cmd(struct cxl_memdev *cxlmd,
++			       enum poison_cmd_enabled_bits cmd);
++
+ long cxl_pci_get_latency(struct pci_dev *pdev);
+ int cxl_pci_get_bandwidth(struct pci_dev *pdev, struct access_coordinate *c);
+ int cxl_update_hmat_access_coordinates(int nid, struct cxl_region *cxlr,
 diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index c569e00a511f..90d3390d9c7c 100644
+index 90d3390d9c7c..e370d733e440 100644
 --- a/drivers/cxl/core/memdev.c
 +++ b/drivers/cxl/core/memdev.c
-@@ -276,7 +276,7 @@ static int cxl_validate_poison_dpa(struct cxl_memdev *cxlmd, u64 dpa)
- 	return 0;
- }
+@@ -200,6 +200,14 @@ static ssize_t security_erase_store(struct device *dev,
+ static struct device_attribute dev_attr_security_erase =
+ 	__ATTR(erase, 0200, NULL, security_erase_store);
  
--int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
-+int cxl_inject_poison_locked(struct cxl_memdev *cxlmd, u64 dpa)
- {
- 	struct cxl_mailbox *cxl_mbox = &cxlmd->cxlds->cxl_mbox;
- 	struct cxl_mbox_inject_poison inject;
-@@ -288,13 +288,8 @@ int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
- 	if (!IS_ENABLED(CONFIG_DEBUG_FS))
- 		return 0;
- 
--	ACQUIRE(rwsem_read_intr, region_rwsem)(&cxl_rwsem.region);
--	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &region_rwsem)))
--		return rc;
--
--	ACQUIRE(rwsem_read_intr, dpa_rwsem)(&cxl_rwsem.dpa);
--	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &dpa_rwsem)))
--		return rc;
-+	lockdep_assert_held(&cxl_rwsem.dpa);
-+	lockdep_assert_held(&cxl_rwsem.region);
- 
- 	rc = cxl_validate_poison_dpa(cxlmd, dpa);
- 	if (rc)
-@@ -324,9 +319,24 @@ int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
- 
- 	return 0;
- }
-+
-+int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa)
++bool cxl_memdev_has_poison_cmd(struct cxl_memdev *cxlmd,
++			       enum poison_cmd_enabled_bits cmd)
 +{
++	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
++
++	return test_bit(cmd, mds->poison.enabled_cmds);
++}
++
+ static int cxl_get_poison_by_memdev(struct cxl_memdev *cxlmd)
+ {
+ 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index da0759acb87e..281a31df686f 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -2,6 +2,7 @@
+ /* Copyright(c) 2022 Intel Corporation. All rights reserved. */
+ #include <linux/memregion.h>
+ #include <linux/genalloc.h>
++#include <linux/debugfs.h>
+ #include <linux/device.h>
+ #include <linux/module.h>
+ #include <linux/memory.h>
+@@ -3003,9 +3004,8 @@ struct dpa_result {
+ 	u64 dpa;
+ };
+ 
+-static int __maybe_unused region_offset_to_dpa_result(struct cxl_region *cxlr,
+-						      u64 offset,
+-						      struct dpa_result *result)
++static int region_offset_to_dpa_result(struct cxl_region *cxlr, u64 offset,
++				       struct dpa_result *result)
+ {
+ 	struct cxl_region_params *p = &cxlr->params;
+ 	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
+@@ -3648,6 +3648,105 @@ static void shutdown_notifiers(void *_cxlr)
+ 	unregister_mt_adistance_algorithm(&cxlr->adist_notifier);
+ }
+ 
++static void remove_debugfs(void *dentry)
++{
++	debugfs_remove_recursive(dentry);
++}
++
++static int validate_region_offset(struct cxl_region *cxlr, u64 offset)
++{
++	struct cxl_region_params *p = &cxlr->params;
++	resource_size_t region_size;
++	u64 hpa;
++
++	if (offset < p->cache_size) {
++		dev_err(&cxlr->dev,
++			"Offset %#llx is within extended linear cache %#llx\n",
++			offset, p->cache_size);
++		return -EINVAL;
++	}
++
++	region_size = resource_size(p->res);
++	if (offset >= region_size) {
++		dev_err(&cxlr->dev, "Offset %#llx exceeds region size %#llx\n",
++			offset, region_size);
++		return -EINVAL;
++	}
++
++	hpa = p->res->start + offset;
++	if (hpa < p->res->start || hpa > p->res->end) {
++		dev_err(&cxlr->dev, "HPA %#llx not in region %pr\n", hpa,
++			p->res);
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int cxl_region_debugfs_poison_inject(void *data, u64 offset)
++{
++	struct dpa_result result = { .dpa = ULLONG_MAX, .cxlmd = NULL };
++	struct cxl_region *cxlr = data;
 +	int rc;
 +
 +	ACQUIRE(rwsem_read_intr, region_rwsem)(&cxl_rwsem.region);
@@ -136,38 +336,28 @@ index c569e00a511f..90d3390d9c7c 100644
 +	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &dpa_rwsem)))
 +		return rc;
 +
-+	return cxl_inject_poison_locked(cxlmd, dpa);
-+}
- EXPORT_SYMBOL_NS_GPL(cxl_inject_poison, "CXL");
- 
--int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa)
-+int cxl_clear_poison_locked(struct cxl_memdev *cxlmd, u64 dpa)
- {
- 	struct cxl_mailbox *cxl_mbox = &cxlmd->cxlds->cxl_mbox;
- 	struct cxl_mbox_clear_poison clear;
-@@ -338,13 +348,8 @@ int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa)
- 	if (!IS_ENABLED(CONFIG_DEBUG_FS))
- 		return 0;
- 
--	ACQUIRE(rwsem_read_intr, region_rwsem)(&cxl_rwsem.region);
--	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &region_rwsem)))
--		return rc;
--
--	ACQUIRE(rwsem_read_intr, dpa_rwsem)(&cxl_rwsem.dpa);
--	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &dpa_rwsem)))
--		return rc;
-+	lockdep_assert_held(&cxl_rwsem.dpa);
-+	lockdep_assert_held(&cxl_rwsem.region);
- 
- 	rc = cxl_validate_poison_dpa(cxlmd, dpa);
- 	if (rc)
-@@ -383,6 +388,21 @@ int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa)
- 
- 	return 0;
- }
++	if (validate_region_offset(cxlr, offset))
++		return -EINVAL;
 +
-+int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa)
++	rc = region_offset_to_dpa_result(cxlr, offset, &result);
++	if (rc || !result.cxlmd || result.dpa == ULLONG_MAX) {
++		dev_dbg(&cxlr->dev,
++			"Failed to resolve DPA for region offset %#llx rc %d\n",
++			offset, rc);
++
++		return rc ? rc : -EINVAL;
++	}
++
++	return cxl_inject_poison_locked(result.cxlmd, result.dpa);
++}
++
++DEFINE_DEBUGFS_ATTRIBUTE(cxl_poison_inject_fops, NULL,
++			 cxl_region_debugfs_poison_inject, "%llx\n");
++
++static int cxl_region_debugfs_poison_clear(void *data, u64 offset)
 +{
++	struct dpa_result result = { .dpa = ULLONG_MAX, .cxlmd = NULL };
++	struct cxl_region *cxlr = data;
 +	int rc;
 +
 +	ACQUIRE(rwsem_read_intr, region_rwsem)(&cxl_rwsem.region);
@@ -178,24 +368,67 @@ index c569e00a511f..90d3390d9c7c 100644
 +	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &dpa_rwsem)))
 +		return rc;
 +
-+	return cxl_clear_poison_locked(cxlmd, dpa);
++	if (validate_region_offset(cxlr, offset))
++		return -EINVAL;
++
++	rc = region_offset_to_dpa_result(cxlr, offset, &result);
++	if (rc || !result.cxlmd || result.dpa == ULLONG_MAX) {
++		dev_dbg(&cxlr->dev,
++			"Failed to resolve DPA for region offset %#llx rc %d\n",
++			offset, rc);
++
++		return rc ? rc : -EINVAL;
++	}
++
++	return cxl_clear_poison_locked(result.cxlmd, result.dpa);
 +}
- EXPORT_SYMBOL_NS_GPL(cxl_clear_poison, "CXL");
++
++DEFINE_DEBUGFS_ATTRIBUTE(cxl_poison_clear_fops, NULL,
++			 cxl_region_debugfs_poison_clear, "%llx\n");
++
+ static int cxl_region_can_probe(struct cxl_region *cxlr)
+ {
+ 	struct cxl_region_params *p = &cxlr->params;
+@@ -3677,6 +3776,7 @@ static int cxl_region_probe(struct device *dev)
+ {
+ 	struct cxl_region *cxlr = to_cxl_region(dev);
+ 	struct cxl_region_params *p = &cxlr->params;
++	bool poison_supported = true;
+ 	int rc;
  
- static struct attribute *cxl_memdev_attributes[] = {
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 751478dfc410..434031a0c1f7 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -869,6 +869,8 @@ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
- int cxl_trigger_poison_list(struct cxl_memdev *cxlmd);
- int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa);
- int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa);
-+int cxl_inject_poison_locked(struct cxl_memdev *cxlmd, u64 dpa);
-+int cxl_clear_poison_locked(struct cxl_memdev *cxlmd, u64 dpa);
+ 	rc = cxl_region_can_probe(cxlr);
+@@ -3700,6 +3800,31 @@ static int cxl_region_probe(struct device *dev)
+ 	if (rc)
+ 		return rc;
  
- #ifdef CONFIG_CXL_EDAC_MEM_FEATURES
- int devm_cxl_memdev_edac_register(struct cxl_memdev *cxlmd);
++	/* Create poison attributes if all memdevs support the capabilities */
++	for (int i = 0; i < p->nr_targets; i++) {
++		struct cxl_endpoint_decoder *cxled = p->targets[i];
++		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
++
++		if (!cxl_memdev_has_poison_cmd(cxlmd, CXL_POISON_ENABLED_INJECT) ||
++		    !cxl_memdev_has_poison_cmd(cxlmd, CXL_POISON_ENABLED_CLEAR)) {
++			poison_supported = false;
++			break;
++		}
++	}
++
++	if (poison_supported) {
++		struct dentry *dentry;
++
++		dentry = cxl_debugfs_create_dir(dev_name(dev));
++		debugfs_create_file("inject_poison", 0200, dentry, cxlr,
++				    &cxl_poison_inject_fops);
++		debugfs_create_file("clear_poison", 0200, dentry, cxlr,
++				    &cxl_poison_clear_fops);
++		rc = devm_add_action_or_reset(dev, remove_debugfs, dentry);
++		if (rc)
++			return rc;
++	}
++
+ 	switch (cxlr->mode) {
+ 	case CXL_PARTMODE_PMEM:
+ 		rc = devm_cxl_region_edac_register(cxlr);
 -- 
 2.37.3
 
