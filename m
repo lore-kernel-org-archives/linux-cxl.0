@@ -1,373 +1,217 @@
-Received: from crocodile.elm.relay.mailchannels.net (crocodile.elm.relay.mailchannels.net [23.83.212.45])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BEBE171C9
-	for <linux-cxl@vger.kernel.org>; Wed,  6 Aug 2025 07:16:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.212.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754464597; cv=pass; b=AMAyS+x0div/wNqaLCI/oIuCK5sZ4vHHhpZYaHKX8GMWQCBP6Q1OFJ/Pxd/RPCL8CRpG0JoWmlIzqqFfLwtaRt9MS8SYxFgd7e8SotXmFGuMAEXFOoE19xFG2QVjPULhUWgkg3K+dv6mRJAJWtkpYN5n6Zvy8c+cXwD5GxKeQA0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754464597; c=relaxed/simple;
-	bh=xLrVr43RRUEvPgbn9a5BhcbNTl+Xp7KnSxhY0iuv1qU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BGpHtjAoL/I38S9EFfOimlaYt5JrPclwpWab9k+tJHQELVcgkylWcp9G74/Ef7FOmQILIWo68l9+gPLVGsywxyhhdoOX4V0oL9zECu2iyND4sgzjJZ5s4rAbsW4lA/nzeLUZi5Q86rxPOEVw45sp0/JBxSBVCq4zWYl8CldVWIc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=VQ4vAMsn; arc=pass smtp.client-ip=23.83.212.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67729218821
+	for <linux-cxl@vger.kernel.org>; Wed,  6 Aug 2025 07:45:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1754466328; cv=none; b=U1hsyRtlhbxT95ixZatna+PLPuPdRRuRRL+VtQRXqWC9oCsgm7+HUVEM+nh6hsvMTB7CpVegDUDiUZjcY64RopZKHQ1UflGW5QYW1G72V1+p6nFjUcaqHNbZ1s3bMipsFJu8QrEQY52YyH5x3kyEqZUbAb7eSub1R/KCUZM6f2Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1754466328; c=relaxed/simple;
+	bh=RQQZCwrQ1fiKTnFzdS1YJ0uQn6ZEyvlCnnEpbtjIIG4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=mMDAzw54WYlLtWAQoxaLoT0/CDpp9P6aJ7iGz4np/II2BBeY/mC6w/onWOokfx3J2UWX5vL779rHIxxtD+42tjo/Lc82FuKH1bsjkd5W5vnQWKiCmrD1QHgpdKNEvw4KbBmr2MzPFYjNqO1R+QveSR4Y3UyzyA32y+ubd4aj5Q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=G0COBkz/; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="VQ4vAMsn"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 7BFD02C48ED;
-	Wed,  6 Aug 2025 05:57:23 +0000 (UTC)
-Received: from pdx1-sub0-mail-a291.dreamhost.com (trex-blue-1.trex.outbound.svc.cluster.local [100.96.40.151])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 1BD5F2C5666;
-	Wed,  6 Aug 2025 05:57:23 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1754459843; a=rsa-sha256;
-	cv=none;
-	b=qW/Uahz5Eo9Jzt1zRI6WtqB0smONXEjppP8YRf0fI7Q5L7Nad6U3KwRhcsNUeZWx6nDLik
-	dPj69yoSG1IpYU9LB7ypCRrTU+jMmGkGom7aKvldqfWKIk3S8n+j6/S5pdp+99GBJp3SlN
-	EUbPY0VFFMNJOddjbr3G4VD8fnhP++IQCOVImQie6np5dTKU66b9rka30DxYKd7nAQGt7B
-	avzEN+Xut0x/GhSWIXdE/4vqXcQm544imaeu1Fy+duA6mJFHvOUKcOL2mLS2UrypL/HRqV
-	Kjq13C4Qnb8AaKijdBYg71sJaNOkhXi/E/JCUtMWr2KYagihUr76hbQfE8d10A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1754459843;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G0COBkz/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1754466323;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=JXxgqZuGbutG28XkrBGlw+oxu1u/Ig8R+KhwSol6kCE=;
-	b=Qk8V7QUTOVb4Pmo7w7wA8iBzR29Me95wssbOIp5sVke24Y/rUbLhsBYPC8wOwUHroiTqQE
-	RDUNU7j9OphQsWgnId0b5+X2LR55Y60bagms5QhMHO9lMtPI5k68DjurIu0Gi0dsQBKDNA
-	ZSD2HAESmrBRVIg6M+jlrQ69dEC4WZC2ol1uGkqjaJWePUHoyq2Ok7yipDGWigAxFh+0Yx
-	0x3/MExKSacwvBsa1tWAxj8qc05uKvShova8HGSCaMrjDxHHrprpp5nvJHt8vWX8NAJS2T
-	9+Lkcu7OAcxpO5j3uFkTtLfORKw89LEWw4Lqj5BhheMlQng7FGNtIOtc9smn0Q==
-ARC-Authentication-Results: i=1;
-	rspamd-648c9d5b94-xdgrc;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Sponge-Little: 5a303bc45940b41d_1754459843386_2902602647
-X-MC-Loop-Signature: 1754459843386:3947028736
-X-MC-Ingress-Time: 1754459843386
-Received: from pdx1-sub0-mail-a291.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.96.40.151 (trex/7.1.3);
-	Wed, 06 Aug 2025 05:57:23 +0000
-Received: from localhost.localdomain (syn-076-167-199-067.res.spectrum.com [76.167.199.67])
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sooN8WuM7O2jbxqRcl8D98tGoqGYnTOOmDPteNfeR3U=;
+	b=G0COBkz/zTukNmeNZY/ULwjztKYfXm+jCVnbMUR3FbkoZJj/GihBjav2x8EebyJJUPxByK
+	gXi0k56H5fdT8aknWwf14Qt+VRHjSZHyIsHDzvlrutoSBx0FxQOEFg/lBLmHZX0lvu3i4O
+	VxZ7FqL01uA95902k6tf+XENvW2l6rA=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-404-tsJbwsEHNdaVTIU50_YHHg-1; Wed,
+ 06 Aug 2025 03:45:18 -0400
+X-MC-Unique: tsJbwsEHNdaVTIU50_YHHg-1
+X-Mimecast-MFC-AGG-ID: tsJbwsEHNdaVTIU50_YHHg_1754466317
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a291.dreamhost.com (Postfix) with ESMTPSA id 4bxfhL3XgMz55;
-	Tue,  5 Aug 2025 22:57:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1754459843;
-	bh=JXxgqZuGbutG28XkrBGlw+oxu1u/Ig8R+KhwSol6kCE=;
-	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-	b=VQ4vAMsnMI5/kvg8/6ZnzJJC/kNl6cR2fUFcKqix0yoedRJ1LrBBb7qipREWoIkxz
-	 /OpLbzgpIJPbc3qadSGxqzzq34wSfejYdF6rXuc+ojx6Ow0bV4+khbTII3M9LN9iAc
-	 ovTeOHUDl8HQlExv8Lxx0ch9SDiIv5Ter04LFVsEhtbsiyvU/qCQeHpvF9RAa+XEwO
-	 RTkpF/pP37reSPN6Q7RmUAfkAnQPq/vftlgbjLO3ZGASxK9YioKH9D1oWRcjY+CLav
-	 P0zpqzeKg5dwtsx9CiIIG2bC2dL6u031J8LP+N14kFNScdAngMl2SeHaaue+HWuY7O
-	 ANJzLPEW+5QtQ==
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: jonathan.cameron@huawei.com
-Cc: ira.weiny@intel.com,
-	alucerop@amd.com,
-	a.manzanares@samsung.com,
-	linux-cxl@vger.kernel.org,
-	qemu-devel@nongnu.org,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 1/4] hw/pcie: Support enabling flit mode
-Date: Tue,  5 Aug 2025 22:57:05 -0700
-Message-Id: <20250806055708.196851-2-dave@stgolabs.net>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250806055708.196851-1-dave@stgolabs.net>
-References: <20250806055708.196851-1-dave@stgolabs.net>
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8B4AD195608A;
+	Wed,  6 Aug 2025 07:45:16 +0000 (UTC)
+Received: from blackfin.pond.sub.org (unknown [10.45.242.18])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4EA191800447;
+	Wed,  6 Aug 2025 07:45:15 +0000 (UTC)
+Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
+	id 79AE921E6A27; Wed, 06 Aug 2025 09:45:12 +0200 (CEST)
+From: Markus Armbruster <armbru@redhat.com>
+To: shiju.jose--- via <qemu-devel@nongnu.org>
+Cc: <linux-cxl@vger.kernel.org>,  <jonathan.cameron@huawei.com>,
+  <fan.ni@samsung.com>,  <dave@stgolabs.net>,  <shiju.jose@huawei.com>,
+  <linuxarm@huawei.com>
+Subject: Re: [PATCH qemu v4 1/7] hw/cxl/events: Update for rev3.2 common
+ event record format
+In-Reply-To: <20250721172228.2118-2-shiju.jose@huawei.com> (shiju jose's
+	message of "Mon, 21 Jul 2025 18:22:22 +0100")
+References: <20250721172228.2118-1-shiju.jose@huawei.com>
+	<20250721172228.2118-2-shiju.jose@huawei.com>
+Date: Wed, 06 Aug 2025 09:45:12 +0200
+Message-ID: <87wm7gq4fr.fsf@pond.sub.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-As with the link speed and width training, have ad-hoc property for
-setting the flit mode and allow CXL components to make use of it.
+shiju.jose--- via <qemu-devel@nongnu.org> writes:
 
-For the CXL root port and dsp cases, always report flit mode but
-the actual value after 'training' will depend on the downstream
-device configuration.
+> From: Shiju Jose <shiju.jose@huawei.com>
+>
+> CXL spec 3.2 section 8.2.9.2.1 Table 8-55, Common Event Record
+> format has updated with optional Maintenance Operation Subclass,
+> LD ID and ID of the device head information.
+>
+> Add updates for the above optional parameters in the related
+> CXL events reporting and in the QMP commands to inject CXL events.
+>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 
-Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
----
- hw/core/qdev-properties-system.c          | 11 +++++++++++
- hw/mem/cxl_type3.c                        |  4 +++-
- hw/pci-bridge/cxl_downstream.c            |  1 +
- hw/pci-bridge/cxl_root_port.c             |  1 +
- hw/pci-bridge/cxl_upstream.c              |  3 ++-
- hw/pci-bridge/gen_pcie_root_port.c        |  1 +
- hw/pci/pcie.c                             | 13 +++++++++----
- include/hw/cxl/cxl_device.h               |  1 +
- include/hw/pci-bridge/cxl_upstream_port.h |  1 +
- include/hw/pci/pcie.h                     |  2 +-
- include/hw/pci/pcie_port.h                |  1 +
- include/hw/qdev-properties-system.h       |  3 +++
- qapi/common.json                          | 14 ++++++++++++++
- 13 files changed, 49 insertions(+), 7 deletions(-)
+[...]
 
-diff --git a/hw/core/qdev-properties-system.c b/hw/core/qdev-properties-system.c
-index 24e145d87001..94a1b754ecdc 100644
---- a/hw/core/qdev-properties-system.c
-+++ b/hw/core/qdev-properties-system.c
-@@ -1172,6 +1172,17 @@ const PropertyInfo qdev_prop_pcie_link_width = {
-     .set_default_value = qdev_propinfo_set_default_value_enum,
- };
- 
-+/* --- Flit mode --- */
-+
-+const PropertyInfo qdev_prop_pcie_link_flit = {
-+    .type = "PCIELinkFlit",
-+    .description = "off/on",
-+    .enum_table = &PCIELinkFlit_lookup,
-+    .get   = qdev_propinfo_get_enum,
-+    .set   = qdev_propinfo_set_enum,
-+    .set_default_value = qdev_propinfo_set_default_value_enum,
-+};
-+
- /* --- UUID --- */
- 
- static void get_uuid(Object *obj, Visitor *v, const char *name, void *opaque,
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index c4658e0955d5..324cf62e8141 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -1501,7 +1501,8 @@ void ct3d_reset(DeviceState *dev)
-     uint32_t *reg_state = ct3d->cxl_cstate.crb.cache_mem_registers;
-     uint32_t *write_msk = ct3d->cxl_cstate.crb.cache_mem_regs_write_mask;
- 
--    pcie_cap_fill_link_ep_usp(PCI_DEVICE(dev), ct3d->width, ct3d->speed);
-+    pcie_cap_fill_link_ep_usp(PCI_DEVICE(dev), ct3d->width, ct3d->speed,
-+                              ct3d->flitmode);
-     cxl_component_register_init_common(reg_state, write_msk, CXL2_TYPE3_DEVICE);
-     cxl_device_register_init_t3(ct3d, CXL_T3_MSIX_MBOX);
- 
-@@ -1540,6 +1541,7 @@ static const Property ct3_props[] = {
-                                 speed, PCIE_LINK_SPEED_32),
-     DEFINE_PROP_PCIE_LINK_WIDTH("x-width", CXLType3Dev,
-                                 width, PCIE_LINK_WIDTH_16),
-+    DEFINE_PROP_PCIE_LINK_FLIT("256b-flit", CXLType3Dev, flitmode, 0),
-     DEFINE_PROP_UINT16("chmu-port", CXLType3Dev, cxl_dstate.chmu[0].port, 0),
- };
- 
-diff --git a/hw/pci-bridge/cxl_downstream.c b/hw/pci-bridge/cxl_downstream.c
-index 6aa8586f0161..82e6618b111c 100644
---- a/hw/pci-bridge/cxl_downstream.c
-+++ b/hw/pci-bridge/cxl_downstream.c
-@@ -257,6 +257,7 @@ static const Property cxl_dsp_props[] = {
-                                 speed, PCIE_LINK_SPEED_64),
-     DEFINE_PROP_PCIE_LINK_WIDTH("x-width", PCIESlot,
-                                 width, PCIE_LINK_WIDTH_16),
-+    DEFINE_PROP_PCIE_LINK_FLIT("256b-flit", PCIESlot, flitmode, 1),
- };
- 
- static void cxl_dsp_class_init(ObjectClass *oc, const void *data)
-diff --git a/hw/pci-bridge/cxl_root_port.c b/hw/pci-bridge/cxl_root_port.c
-index f035987b6f1f..721dc3981fd2 100644
---- a/hw/pci-bridge/cxl_root_port.c
-+++ b/hw/pci-bridge/cxl_root_port.c
-@@ -235,6 +235,7 @@ static const Property gen_rp_props[] = {
-                                 speed, PCIE_LINK_SPEED_64),
-     DEFINE_PROP_PCIE_LINK_WIDTH("x-width", PCIESlot,
-                                 width, PCIE_LINK_WIDTH_32),
-+    DEFINE_PROP_PCIE_LINK_FLIT("256b-flit", PCIESlot, flitmode, 1),
- };
- 
- static void cxl_rp_dvsec_write_config(PCIDevice *dev, uint32_t addr,
-diff --git a/hw/pci-bridge/cxl_upstream.c b/hw/pci-bridge/cxl_upstream.c
-index c2150afff39b..5e6d559a3215 100644
---- a/hw/pci-bridge/cxl_upstream.c
-+++ b/hw/pci-bridge/cxl_upstream.c
-@@ -147,7 +147,7 @@ static void cxl_usp_reset(DeviceState *qdev)
- 
-     pci_bridge_reset(qdev);
-     pcie_cap_deverr_reset(d);
--    pcie_cap_fill_link_ep_usp(d, usp->width, usp->speed);
-+    pcie_cap_fill_link_ep_usp(d, usp->width, usp->speed, usp->flitmode);
-     latch_registers(usp);
- }
- 
-@@ -433,6 +433,7 @@ static const Property cxl_upstream_props[] = {
-                                 speed, PCIE_LINK_SPEED_32),
-     DEFINE_PROP_PCIE_LINK_WIDTH("x-width", CXLUpstreamPort,
-                                 width, PCIE_LINK_WIDTH_16),
-+    DEFINE_PROP_PCIE_LINK_FLIT("256b-flit", CXLUpstreamPort, flitmode, 0),
- };
- 
- static void cxl_upstream_class_init(ObjectClass *oc, const void *data)
-diff --git a/hw/pci-bridge/gen_pcie_root_port.c b/hw/pci-bridge/gen_pcie_root_port.c
-index d9078e783bf0..c00be8147c2a 100644
---- a/hw/pci-bridge/gen_pcie_root_port.c
-+++ b/hw/pci-bridge/gen_pcie_root_port.c
-@@ -145,6 +145,7 @@ static const Property gen_rp_props[] = {
-                                 speed, PCIE_LINK_SPEED_16),
-     DEFINE_PROP_PCIE_LINK_WIDTH("x-width", PCIESlot,
-                                 width, PCIE_LINK_WIDTH_32),
-+    DEFINE_PROP_PCIE_LINK_FLIT("256b-flit", PCIESlot, flitmode, 0),
- };
- 
- static void gen_rp_dev_class_init(ObjectClass *klass, const void *data)
-diff --git a/hw/pci/pcie.c b/hw/pci/pcie.c
-index eaeb68894e6e..55e0f7110ae5 100644
---- a/hw/pci/pcie.c
-+++ b/hw/pci/pcie.c
-@@ -113,7 +113,7 @@ pcie_cap_v1_fill(PCIDevice *dev, uint8_t port, uint8_t type, uint8_t version)
- 
- /* Includes setting the target speed default */
- static void pcie_cap_fill_lnk(uint8_t *exp_cap, PCIExpLinkWidth width,
--                              PCIExpLinkSpeed speed)
-+                              PCIExpLinkSpeed speed, PCIELinkFlit flitmode)
- {
-     /* Clear and fill LNKCAP from what was configured above */
-     pci_long_test_and_clear_mask(exp_cap + PCI_EXP_LNKCAP,
-@@ -158,10 +158,15 @@ static void pcie_cap_fill_lnk(uint8_t *exp_cap, PCIExpLinkWidth width,
-                                        PCI_EXP_LNKCAP2_SLS_64_0GB);
-         }
-     }
-+
-+    if (flitmode) {
-+        pci_long_test_and_set_mask(exp_cap + PCI_EXP_LNKSTA2,
-+                                   PCI_EXP_LNKSTA2_FLIT);
-+    }
- }
- 
- void pcie_cap_fill_link_ep_usp(PCIDevice *dev, PCIExpLinkWidth width,
--                               PCIExpLinkSpeed speed)
-+                               PCIExpLinkSpeed speed, PCIELinkFlit flitmode)
- {
-     uint8_t *exp_cap = dev->config + dev->exp.exp_cap;
- 
-@@ -175,7 +180,7 @@ void pcie_cap_fill_link_ep_usp(PCIDevice *dev, PCIExpLinkWidth width,
-                                QEMU_PCI_EXP_LNKSTA_NLW(width) |
-                                QEMU_PCI_EXP_LNKSTA_CLS(speed));
- 
--    pcie_cap_fill_lnk(exp_cap, width, speed);
-+    pcie_cap_fill_lnk(exp_cap, width, speed, flitmode);
- }
- 
- static void pcie_cap_fill_slot_lnk(PCIDevice *dev)
-@@ -212,7 +217,7 @@ static void pcie_cap_fill_slot_lnk(PCIDevice *dev)
-         /* the PCI_EXP_LNKSTA_DLLLA will be set in the hotplug function */
-     }
- 
--    pcie_cap_fill_lnk(exp_cap, s->width, s->speed);
-+    pcie_cap_fill_lnk(exp_cap, s->width, s->speed, s->flitmode);
- }
- 
- int pcie_cap_init(PCIDevice *dev, uint8_t offset,
-diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-index 068c20d61ebc..4c9d2247cf02 100644
---- a/include/hw/cxl/cxl_device.h
-+++ b/include/hw/cxl/cxl_device.h
-@@ -796,6 +796,7 @@ struct CXLType3Dev {
-     /* PCIe link characteristics */
-     PCIExpLinkSpeed speed;
-     PCIExpLinkWidth width;
-+    PCIELinkFlit flitmode;
- 
-     /* DOE */
-     DOECap doe_cdat;
-diff --git a/include/hw/pci-bridge/cxl_upstream_port.h b/include/hw/pci-bridge/cxl_upstream_port.h
-index db1dfb6afd98..584e43c37291 100644
---- a/include/hw/pci-bridge/cxl_upstream_port.h
-+++ b/include/hw/pci-bridge/cxl_upstream_port.h
-@@ -20,6 +20,7 @@ typedef struct CXLUpstreamPort {
- 
-     PCIExpLinkSpeed speed;
-     PCIExpLinkWidth width;
-+    PCIELinkFlit flitmode;
- 
-     DOECap doe_cdat;
-     uint64_t sn;
-diff --git a/include/hw/pci/pcie.h b/include/hw/pci/pcie.h
-index ff6ce08e135a..82fcbc9f8823 100644
---- a/include/hw/pci/pcie.h
-+++ b/include/hw/pci/pcie.h
-@@ -142,7 +142,7 @@ void pcie_ari_init(PCIDevice *dev, uint16_t offset);
- void pcie_dev_ser_num_init(PCIDevice *dev, uint16_t offset, uint64_t ser_num);
- void pcie_ats_init(PCIDevice *dev, uint16_t offset, bool aligned);
- void pcie_cap_fill_link_ep_usp(PCIDevice *dev, PCIExpLinkWidth width,
--                               PCIExpLinkSpeed speed);
-+                               PCIExpLinkSpeed speed, PCIELinkFlit flitmode);
- 
- void pcie_cap_slot_pre_plug_cb(HotplugHandler *hotplug_dev, DeviceState *dev,
-                                Error **errp);
-diff --git a/include/hw/pci/pcie_port.h b/include/hw/pci/pcie_port.h
-index 7cd7af8cfa4b..2f96fc685729 100644
---- a/include/hw/pci/pcie_port.h
-+++ b/include/hw/pci/pcie_port.h
-@@ -58,6 +58,7 @@ struct PCIESlot {
- 
-     PCIExpLinkSpeed speed;
-     PCIExpLinkWidth width;
-+    PCIELinkFlit flitmode;
- 
-     /* Disable ACS (really for a pcie_root_port) */
-     bool        disable_acs;
-diff --git a/include/hw/qdev-properties-system.h b/include/hw/qdev-properties-system.h
-index b921392c5256..dd5dc4515ea7 100644
---- a/include/hw/qdev-properties-system.h
-+++ b/include/hw/qdev-properties-system.h
-@@ -28,6 +28,7 @@ extern const PropertyInfo qdev_prop_audiodev;
- extern const PropertyInfo qdev_prop_off_auto_pcibar;
- extern const PropertyInfo qdev_prop_pcie_link_speed;
- extern const PropertyInfo qdev_prop_pcie_link_width;
-+extern const PropertyInfo qdev_prop_pcie_link_flit;
- extern const PropertyInfo qdev_prop_cpus390entitlement;
- extern const PropertyInfo qdev_prop_iothread_vq_mapping_list;
- extern const PropertyInfo qdev_prop_endian_mode;
-@@ -80,6 +81,8 @@ extern const PropertyInfo qdev_prop_vmapple_virtio_blk_variant;
- #define DEFINE_PROP_PCIE_LINK_WIDTH(_n, _s, _f, _d) \
-     DEFINE_PROP_SIGNED(_n, _s, _f, _d, qdev_prop_pcie_link_width, \
-                         PCIExpLinkWidth)
-+#define DEFINE_PROP_PCIE_LINK_FLIT(_n, _s, _f, _d) \
-+    DEFINE_PROP_SIGNED(_n, _s, _f, _d, qdev_prop_pcie_link_flit, PCIELinkFlit)
- 
- #define DEFINE_PROP_UUID(_name, _state, _field) \
-     DEFINE_PROP(_name, _state, _field, qdev_prop_uuid, QemuUUID, \
-diff --git a/qapi/common.json b/qapi/common.json
-index 0e3a0bbbfb0b..da047fbf874f 100644
---- a/qapi/common.json
-+++ b/qapi/common.json
-@@ -140,6 +140,20 @@
- { 'enum': 'PCIELinkWidth',
-   'data': [ '1', '2', '4', '8', '12', '16', '32' ] }
- 
-+##
-+# @PCIELinkFlit:
-+#
-+# An enumeration of PCIe link FLIT mode
-+#
-+# @off: the link is not operating in FLIT mode
-+#
-+# @on: each FLIT is a fixed 256 bytes in size
-+#
-+# Since: 10.0
-+##
-+{ 'enum': 'PCIELinkFlit',
-+  'data': [ 'off', 'on'] }
-+
- ##
- # @HostMemPolicy:
- #
--- 
-2.39.5
+> diff --git a/qapi/cxl.json b/qapi/cxl.json
+> index 8f2e9237b1..c1fe8319c8 100644
+> --- a/qapi/cxl.json
+> +++ b/qapi/cxl.json
+> @@ -42,6 +42,18 @@
+>  # @flags: Event Record Flags.  See CXL r3.0 Table 8-42 Common Event
+>  #     Record Format, Event Record Flags for subfield definitions.
+>  #
+> +# @maint-op-class: Maintenance operation class the device requests to initiate.
+> +#     See CXL r3.2 Table 8-55 Common Event Record Format.
+> +#
+> +# @maint-op-subclass: Maintenance operation subclass the device requests to
+> +#     initiate. See CXL r3.2 Table 8-55 Common Event Record Format.
+> +#
+> +# @ld-id: LD ID of LD from where the event originated.
+> +#     See CXL r3.2 Table 8-55 Common Event Record Format.
+> +#
+> +# @head-id: ID of the device head from where the event originated.
+> +#     See CXL r3.2 Table 8-55 Common Event Record Format.
+> +#
+>  # @dpa: Device Physical Address (relative to @path device).  Note
+>  #     lower bits include some flags.  See CXL r3.0 Table 8-43 General
+>  #     Media Event Record, Physical Address.
+
+From docs/devel/qapi-code-gen.rst:
+
+    For legibility, wrap text paragraphs so every line is at most 70
+    characters long.
+
+    Separate sentences with two spaces.
+
+> @@ -73,7 +85,9 @@
+>  # Since: 8.1
+>  ##
+>  { 'command': 'cxl-inject-general-media-event',
+> -  'data': { 'path': 'str', 'log': 'CxlEventLog', 'flags': 'uint8',
+> +  'data': { 'path': 'str', 'log': 'CxlEventLog', 'flags': 'uint32',
+> +	    '*maint-op-class':'uint8', '*maint-op-subclass':'uint8',
+> +	    '*ld-id':'uint16', '*head-id':'uint8',
+>              'dpa': 'uint64', 'descriptor': 'uint8',
+>              'type': 'uint8', 'transaction-type': 'uint8',
+>              '*channel': 'uint8', '*rank': 'uint8',
+> @@ -93,6 +107,18 @@
+>  # @flags: Event Record Flags.  See CXL r3.0 Table 8-42 Common Event
+>  #     Record Format, Event Record Flags for subfield definitions.
+>  #
+> +# @maint-op-class: Maintenance operation class the device requests to initiate.
+> +#     See CXL r3.2 Table 8-55 Common Event Record Format.
+> +#
+> +# @maint-op-subclass: Maintenance operation subclass the device requests to
+> +#     initiate. See CXL r3.2 Table 8-55 Common Event Record Format.
+> +#
+> +# @ld-id: LD ID of LD from where the event originated.
+> +#     See CXL r3.2 Table 8-55 Common Event Record Format.
+> +#
+> +# @head-id: ID of the device head from where the event originated.
+> +#     See CXL r3.2 Table 8-55 Common Event Record Format.
+> +#
+>  # @dpa: Device Physical Address (relative to @path device).  Note
+>  #     lower bits include some flags.  See CXL r3.0 Table 8-44 DRAM
+>  #     Event Record, Physical Address.
+> @@ -132,7 +158,9 @@
+>  # Since: 8.1
+>  ##
+>  { 'command': 'cxl-inject-dram-event',
+> -  'data': { 'path': 'str', 'log': 'CxlEventLog', 'flags': 'uint8',
+> +  'data': { 'path': 'str', 'log': 'CxlEventLog', 'flags': 'uint32',
+> +	    '*maint-op-class':'uint8', '*maint-op-subclass':'uint8',
+> +	    '*ld-id':'uint16', '*head-id':'uint8',
+>              'dpa': 'uint64', 'descriptor': 'uint8',
+>              'type': 'uint8', 'transaction-type': 'uint8',
+>              '*channel': 'uint8', '*rank': 'uint8', '*nibble-mask': 'uint32',
+> @@ -154,6 +182,18 @@
+>  # @flags: Event Record Flags.  See CXL r3.0 Table 8-42 Common Event
+>  #     Record Format, Event Record Flags for subfield definitions.
+>  #
+> +# @maint-op-class: Maintenance operation class the device requests to initiate.
+> +#     See CXL r3.2 Table 8-55 Common Event Record Format.
+> +#
+> +# @maint-op-subclass: Maintenance operation subclass the device requests to
+> +#     initiate. See CXL r3.2 Table 8-55 Common Event Record Format.
+> +#
+> +# @ld-id: LD ID of LD from where the event originated.
+> +#     See CXL r3.2 Table 8-55 Common Event Record Format.
+> +#
+> +# @head-id: ID of the device head from where the event originated.
+> +#     See CXL r3.2 Table 8-55 Common Event Record Format.
+> +#
+>  # @type: Device Event Type.  See CXL r3.0 Table 8-45 Memory Module
+>  #     Event Record for bit definitions for bit definiions.
+>  #
+> @@ -184,7 +224,9 @@
+>  # Since: 8.1
+>  ##
+>  { 'command': 'cxl-inject-memory-module-event',
+> -  'data': { 'path': 'str', 'log': 'CxlEventLog', 'flags' : 'uint8',
+> +  'data': { 'path': 'str', 'log': 'CxlEventLog', 'flags' : 'uint32',
+> +	    '*maint-op-class':'uint8', '*maint-op-subclass':'uint8',
+> +	    '*ld-id':'uint16', '*head-id':'uint8',
+>              'type': 'uint8', 'health-status': 'uint8',
+>              'media-status': 'uint8', 'additional-status': 'uint8',
+>              'life-used': 'uint8', 'temperature' : 'int16',
+
+This adds identical copies to three commands.
+
+You can factor out common command arguments as follows.
+
+1. Switch commands from implicit to explicit argument type.
+
+    { 'command': 'cmd1', 'data': { ARGS1... } ... }
+
+   becomes
+
+    { 'struct': 'Args1', 'data': { ARGS1... } }
+    { 'command': 'cmd1', 'data': 'Args1' ... }
+
+2. Factor common base out of the argument types.
+
+    { 'struct': 'Args1', 'data': { COMMON-ARGS..., SPECIAL-ARGS1... } }
+
+   becomes
+
+    { 'struct': 'Base, 'data': { COMMON-ARGS... } }
+    { 'struct': 'Args1', 'base': 'Base', 'data': { SPECIAL-ARGS1... } }
+
+3. Maybe use 'boxed': true with commands.
+
+   The C function generated for a command with many arguments can be
+   rather unwieldy.  'boxed': true makes it take the arguments as a
+   single struct type instead.
+
+This is not a demand.  Just give it a thought.
 
