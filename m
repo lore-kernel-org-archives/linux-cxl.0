@@ -1,148 +1,158 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from insect.birch.relay.mailchannels.net (insect.birch.relay.mailchannels.net [23.83.209.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A36AB17736
-	for <linux-cxl@vger.kernel.org>; Wed,  6 Aug 2025 21:46:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754516821; cv=none; b=Wf1myHkW8s93sd2Bz+BfDNCxWL9Coql3xANZ0BYb4CSHztUkNZHCUplUuRZFW3O68KzE8HrskrC0UaNNyWKn/rOePyuVk96DAKaMWr7dFRVG1+GW7uSrp4I65UEIvGOp4ImDjLq4i+zw5m3oxNu6G26Yi1HNESjZNgxhGKh+yXM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754516821; c=relaxed/simple;
-	bh=n34HhzOs5x1fkgAGqnTINkXpNX+q+TD/vE4pidYXLBQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l64zssbkWm7U2+1U0kPnKffdRVhceHpUsuG99ajTGXygGu/lfAvHqJWUcRIxJCRhdMia74M5V17Ty3UVJK4iGyNTDEh/kCzCCUVxfeAZdhebxaduIQ9n3rDFych6yqS2onnr7tdbBSeYGbfJo1Qh79i/b88Thnd9IKWSX/4kwrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ByOATuti; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48D5340855
+	for <linux-cxl@vger.kernel.org>; Thu,  7 Aug 2025 00:45:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.209.93
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1754527524; cv=pass; b=BbcnaNb7+K9zajuNuCqJL3yGeb6Dk6Vn9XdNj1QrH6klQmQ9gYuKfPQ4goQgEDjDlINSaLaBqwUxdDq4QuJ9YGj8p5oX3ZCODTiEkOlrCcOUi0+A28isZAYWWWcsTcdN7SjUpd2BFMfo+K6tX6KLbcY7vKTQIzqaSnKsMpZtCtQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1754527524; c=relaxed/simple;
+	bh=0xZNOJxx3Mj4fdrStA2ZaHn4bxNWK+vyKBILMaa5Ec8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VXKpPskwQgxs8COqtIR3xTpn6Wb75kCmgjFcjtPDsO6/WuqdHae05dwzUN7/b36agamzVzH8W+NBnaQIk3SXYs43bhwIt8JyhtmbKnb7+w+u0YpL2K45UmwzYQw/xshT93LWvh28KwfaVzlFB+3zwCu0fgajr5oLUaOMhn/jlSM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=JyUSpzjk; arc=pass smtp.client-ip=23.83.209.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ByOATuti"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1754516819; x=1786052819;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=n34HhzOs5x1fkgAGqnTINkXpNX+q+TD/vE4pidYXLBQ=;
-  b=ByOATutigK/kCmC0VVjKrUfQHNbz/iXfld85MgUYcxGIvDnuAKuN1h6B
-   k3HfUh8Ed8VmjdvDaolZOSF4Qeqh1HD9GeG5hDvBMeBIX07X+F9C+0OAi
-   ltdZ1TMdv1h1O/4XDB/mshifC4GVkU9i0VOxzRB6pF0i3XHBcr8K2wC4y
-   khtq42eH6VpP08IBtK46IE+DB8MJmxtSMTAc9Ws2PUSntvePLAzoVw6Q5
-   hhylPE2ur6bAw4lntJDevlfLLP+Eje9uvVQ5WKz7OQWiB8oyI7UTuSerH
-   3mc/oK/584Mh2b3NwcQc8onQgZQFnLCDwiQdnmyPd/xR1PxIzcmxfyOHi
-   Q==;
-X-CSE-ConnectionGUID: lbolqf9iTy+MlQx724iO9Q==
-X-CSE-MsgGUID: Ic0u3comTsiuTuSsyBLVkQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11514"; a="60477419"
-X-IronPort-AV: E=Sophos;i="6.17,271,1747724400"; 
-   d="scan'208";a="60477419"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2025 14:46:59 -0700
-X-CSE-ConnectionGUID: obvsypYwSJSWHY3mJc827Q==
-X-CSE-MsgGUID: xsSvJjvfQH67mj8kzP7HYw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,271,1747724400"; 
-   d="scan'208";a="170151476"
-Received: from anmitta2-mobl4.gar.corp.intel.com (HELO [10.247.119.100]) ([10.247.119.100])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2025 14:46:55 -0700
-Message-ID: <ea832391-3ec1-46db-ae2a-7870074c7179@intel.com>
-Date: Wed, 6 Aug 2025 14:46:49 -0700
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="JyUSpzjk"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id C65B31A5024;
+	Thu,  7 Aug 2025 00:06:33 +0000 (UTC)
+Received: from pdx1-sub0-mail-a238.dreamhost.com (100-98-216-71.trex-nlb.outbound.svc.cluster.local [100.98.216.71])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 56BD51A4DD7;
+	Thu,  7 Aug 2025 00:06:33 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1754525193; a=rsa-sha256;
+	cv=none;
+	b=wKe4hBTT/6o7ZdgUirjUChtfmEYLEQOcEeu7tzmTNkONMIFDT3sY6AvgnmPfSOaHKZ9h63
+	fyXZl/D0pJMNeev4eKjYRBLV8IH7A/LCFU1uFeE0l0EtJMtcCFJY0J2l15dI87okjHp74X
+	zMsjPJZ+K+Ixl2T601yU8Can2IfwJ/bXfTjrvtRXKKVfTNROJJMiQHfeboaFMhXDfBWFvu
+	3WLkFf+zBCzjlKOzpOpX2ZJfluTUZGgrEmGDgVHMgarffFXxd0OoDNz3cSkgpxbiFzqpBo
+	DfkAgU/MAYrvr/fQgmXVkFeViiUGCTPOse1By60gsuxuGcE0xJwHHUdpsCoKhw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1754525193;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=lC+S+PMJ0IPLx3hpttP4fsD+ikeDBNPckxX0HDz441I=;
+	b=m2H4hsz6AFWCYcjBtmk/IPxhqFvkWbkwnwyFLlO85mxSW/7Gb8kINDxzjr3ffIpqCBcrTK
+	GLh+6PmR1BJiWRgNSpjcE2QzgN0AtPS7d4BZ8JNp+yIhPz45IJ6+GfAC7WmII0j7+Ql0lu
+	HUpVSoy8n8+vRlTP4RITHU6/daKBZdjNLDVqNJjwcaf5/7MfxMfQeTixRw6EeenhDpvLf8
+	nFZcw1uTzPw+R4CdqS/a8swqFSjPgBs2+6KD9/SCv5kE2dl+ZEgXvy4FL7XELFFjtFX0oK
+	hpFJJUeH2KMAZdGn99HEA918WkS8dqB7QE/68n1CpIAyHuoqa0HsCmdhBXqz3g==
+ARC-Authentication-Results: i=1;
+	rspamd-565df7d78-rkwqc;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Obese-Bottle: 6e5936080bf291ed_1754525193604_1346270259
+X-MC-Loop-Signature: 1754525193603:634501519
+X-MC-Ingress-Time: 1754525193603
+Received: from pdx1-sub0-mail-a238.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.98.216.71 (trex/7.1.3);
+	Thu, 07 Aug 2025 00:06:33 +0000
+Received: from offworld (syn-076-167-199-067.res.spectrum.com [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a238.dreamhost.com (Postfix) with ESMTPSA id 4by6s45jSYz4w;
+	Wed,  6 Aug 2025 17:06:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1754525193;
+	bh=lC+S+PMJ0IPLx3hpttP4fsD+ikeDBNPckxX0HDz441I=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=JyUSpzjkAV8zv1fVt7e+S3xHg5yS4W4UbslmT17xiWzCzqlEVjXsLCgxM2yMhdE1O
+	 v4P2Do564v90Ndp6iJ+DtY6NEUlvVT5j0GOi+V01vFS9LS3R9BC+SACproz5Jh1hu8
+	 FXjlavz6CX+fG2JmfdeWxRQI5MRUQ0jXCbpwsaJoTo4Iv3ymM0tWlmDFaIKQZ9jaAs
+	 MIMjdehoh5iOHXev7DuNTn/hp4QEhxzTkjyVMUnEOr1PuBWD5CElaEKq42KCl3Ak5H
+	 1j1hm77ZM+RhJq2+HgC1Qa2hqmVv7Fr/XsKdsBHQdeLOS00LhfQyfGSci9hDtKl5u4
+	 oEWB6+g7qPeHw==
+Date: Wed, 6 Aug 2025 17:06:30 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: jonathan.cameron@huawei.com
+Cc: ira.weiny@intel.com, alucerop@amd.com, a.manzanares@samsung.com,
+	linux-cxl@vger.kernel.org, qemu-devel@nongnu.org
+Subject: Re: [PATCH 3/4] hw/cxl: Allow BI by default in Window restrictions
+Message-ID: <20250807000630.w5k6kzc3sahup6vr@offworld>
+References: <20250806055708.196851-1-dave@stgolabs.net>
+ <20250806055708.196851-4-dave@stgolabs.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl/acpi: Limit XOR map application based on host bridge
- ways
-To: alison.schofield@intel.com, Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org
-References: <20250804082357.2590809-1-alison.schofield@intel.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250804082357.2590809-1-alison.schofield@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250806055708.196851-4-dave@stgolabs.net>
+User-Agent: NeoMutt/20220429
+
+On Tue, 05 Aug 2025, Davidlohr Bueso wrote:
+
+>diff --git a/qemu-options.hx b/qemu-options.hx
+>index 1f862b19a676..ef6072bd8b59 100644
+>--- a/qemu-options.hx
+>+++ b/qemu-options.hx
+>@@ -142,7 +142,7 @@ SRST
+>             -machine memory-backend=pc.ram
+>             -m 512M
+>
+>-    ``cxl-fmw.0.targets.0=firsttarget,cxl-fmw.0.targets.1=secondtarget,cxl-fmw.0.size=size[,cxl-fmw.0.interleave-granularity=granularity]``
+>+    ``cxl-fmw.0.targets.0=firsttarget,cxl-fmw.0.targets.1=secondtarget,cxl-fmw.0.size=size[,cxl-fmw.0.interleave-granularity=granularity,restrictions=restrictions]``
+>         Define a CXL Fixed Memory Window (CFMW).
+>
+>         Described in the CXL 2.0 ECN: CEDT CFMWS & QTG _DSM.
+>@@ -168,6 +168,8 @@ SRST
+>         interleave. Default 256 (bytes). Only 256, 512, 1k, 2k,
+>         4k, 8k and 16k granularities supported.
+>
+>+	``restrictions=restrictions`` bitmask of restrictions of the CFMW.
+
+hmm so there is a doc build error I missed:
+
+qemu-options.hx:212:Block quote ends without a blank line; unexpected unindent.
+
+------
+
+diff --git a/qemu-options.hx b/qemu-options.hx
+index ef6072bd8b59..da642642eafc 100644
+--- a/qemu-options.hx
++++ b/qemu-options.hx
+@@ -168,7 +168,7 @@ SRST
+          interleave. Default 256 (bytes). Only 256, 512, 1k, 2k,
+          4k, 8k and 16k granularities supported.
+  
+-	``restrictions=restrictions`` bitmask of restrictions of the CFMW.
++        ``restrictions=restrictions`` bitmask of the restrictions of the CFMW.
+  
+          Example:
+  
 
 
 
-On 8/4/25 1:23 AM, alison.schofield@intel.com wrote:
-> From: Alison Schofield <alison.schofield@intel.com>
-> 
-> The CXL specification defines one set of XOR maps per Host Bridge
-> Interleave Granularity (HBIG), but the number of maps to apply
-> depends on the Host Bridge Interleave Ways (HBIW) for each region.
-> 
-> Currently, cxl_xor_hpa_to_spa() incorrectly applies all available
-> XOR maps regardless of the region's host bridge interleave ways.
-> This causes incorrect address translations when multiple CXL regions
-> with the same HBIG but different HBIW's coexist.
-> 
-> Example scenario with 3 XOR maps defined for 256-byte granularity:
-> - 4-way interleave region:  should apply 2 maps (was applying 3)
-> - 8-way interleave region:  should apply 3 maps (correct)
-> - 12-way interleave region: should apply 2 maps (was applying 3)
-> 
-> Per CXL 3.2 Section 9.18.1.4 and Table 9-22, fix this by using
-> a lookup table to determine the correct number of XOR maps based
-> on host bridge interleave ways.
-> 
-> Fixes: 3b2fedcd75e3 ("cxl: Restore XOR'd position bits during address translation")
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  drivers/cxl/acpi.c | 16 +++++++++++++---
->  1 file changed, 13 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> index 712624cba2b6..5154effb0cb2 100644
-> --- a/drivers/cxl/acpi.c
-> +++ b/drivers/cxl/acpi.c
-> @@ -16,6 +16,16 @@ struct cxl_cxims_data {
->  	u64 xormaps[] __counted_by(nr_maps);
->  };
->  
-> +/*
-> + * There is one CXIMS, therefore one set of XOR maps, that all CXL Windows with
-> + * the same host bridge granularity share. The number of maps to apply at address
-> + * translation is based on the Host Bridge interleave ways of the CXL Window.
-> + * CXL Specification 3.2 Section 9.18.1.4 and Table 9-22.
-> + */
-> +static const int hbiw_to_nr_maps[] = {
-> +	[1] = 0, [2] = 1, [3] = 0, [4] = 2, [6] = 1, [8] = 3, [12] = 2, [16] = 4
-> +};
-> +
->  static const guid_t acpi_cxl_qtg_id_guid =
->  	GUID_INIT(0xF365F9A6, 0xA7DE, 0x4071,
->  		  0xA6, 0x6A, 0xB4, 0x0C, 0x0B, 0x4F, 0x8E, 0x52);
-> @@ -23,13 +33,13 @@ static const guid_t acpi_cxl_qtg_id_guid =
->  
->  static u64 cxl_xor_hpa_to_spa(struct cxl_root_decoder *cxlrd, u64 hpa)
->  {
-> +	int nr_maps_to_apply = hbiw_to_nr_maps[cxlrd->cxlsd.nr_targets];
->  	struct cxl_cxims_data *cximsd = cxlrd->platform_data;
-> -	int hbiw = cxlrd->cxlsd.nr_targets;
->  	u64 val;
->  	int pos;
->  
->  	/* No xormaps for host bridge interleave ways of 1 or 3 */
-> -	if (hbiw == 1 || hbiw == 3)
-> +	if (!nr_maps_to_apply)
->  		return hpa;
->  
->  	/*
-> @@ -47,7 +57,7 @@ static u64 cxl_xor_hpa_to_spa(struct cxl_root_decoder *cxlrd, u64 hpa)
->  	 * bits results in val==0, if odd the XOR result is val==1.
->  	 */
->  
-> -	for (int i = 0; i < cximsd->nr_maps; i++) {
-> +	for (int i = 0; i < nr_maps_to_apply; i++) {
->  		if (!cximsd->xormaps[i])
->  			continue;
->  		pos = __ffs(cximsd->xormaps[i]);
-> 
-> base-commit: f11a5f89910a7ae970fbce4fdc02d86a8ba8570f
 
+
+
+
+
+
+
+
+
+
+>+
+>         Example:
+>
+>         ::
+>-- 
+>2.39.5
+>
