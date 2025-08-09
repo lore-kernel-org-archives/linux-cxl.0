@@ -1,128 +1,111 @@
-Received: from siberian.tulip.relay.mailchannels.net (siberian.tulip.relay.mailchannels.net [23.83.218.246])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2C7B1EBFF7
-	for <linux-cxl@vger.kernel.org>; Fri,  8 Aug 2025 21:10:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.246
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754687423; cv=pass; b=hM4HP56vOf3inSFl4cut9KrHox9yUn9vuRLG+hWkTvrQSOwr+JbutgXjW30paVY1vu8+zWUiMnQCQMJZERZS6/cmvXwLX7xWKvfuzVGcxDtj2U79MMltRtghvzOSjS49mGDtoYAV7dUYvMuMvMYH5HVzJwDSqcZePsO8MKVxSXY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754687423; c=relaxed/simple;
-	bh=L+//x0OiU4vRfdzYpDpIyu3Udi9Pg/D06DDaLgbvwPA=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 358E519DF9A;
+	Sat,  9 Aug 2025 09:46:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1754732804; cv=none; b=KJHHlocTCA1oEL6Htw0nSnUeSKJ+nUtF+HzNQhbKdHNFEuLXI3tqzIqelo0JDbfn+auFDcwUlc1GvzC7BSeFPJmwhR0jQBSW6LNqZWNUxekOc3rHn9o3/AMHfw8X2vj0bLIfUrMaT54NZHtFFoq0xNwfninumzzIlt1GPdaQqhE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1754732804; c=relaxed/simple;
+	bh=wdy+l8t7qIA++5RlDvu5ZdGGsffFZW4ATZxlimIuYLg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n1Pk6Nzz4LwHdONC+aStSiPNSOuSiV8x7VHzPIONFxNY1Ig/dCkmIoqiodMZKDJHJdhZS/68LDgEwUgNoESC5EBApKSH+OnS1fe6zBitDVQebfuCwSLMf98150fSvtGpIebQe2VN0MYVu2m58+V5tmiAcDo6PhaWIHmmtuK5u78=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=iZw1CiiI; arc=pass smtp.client-ip=23.83.218.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=kjCdslP41xWy0eV8NsYOboFu0+dKYyheeSIfuCQuh32BJ1j1uGIrgEhmGPnEBSYIibZpkzdjbFcOcbPneguBV2eTvSr3knVgS367tgBLlLB5JMIaxYU5UzYN/ovb1br3kSuYlnJqyYAYZitWLOnvyXpHD6ugLAiFm7UAYKeLcF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RVqhjG3f; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="iZw1CiiI"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 059F6183FFB;
-	Fri,  8 Aug 2025 17:45:10 +0000 (UTC)
-Received: from pdx1-sub0-mail-a204.dreamhost.com (trex-blue-0.trex.outbound.svc.cluster.local [100.127.87.26])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 42B4C1841EA;
-	Fri,  8 Aug 2025 17:45:08 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1754675108; a=rsa-sha256;
-	cv=none;
-	b=goj8JFDjIpmbwL35l7YVIjwSm6Abdrxbpq2vP4eqBCEA6QuCxZqeX4cI0RbGAdKpBKhbPK
-	6pHwuCSLq5HxtXQY5Cv1IYkw1qFTYLhUyavFSjrOnpA/p9OHk3YZJhyln6MLZtX7Odkvv1
-	SFM23Holp4piAaaiaDIBhE6KWgYYN+n5dV278C/RfaeYZa68zPiWfFtgVx6yrgz0TOTGtj
-	hqb48ZLXfcCh4wZ8IuB5HPYT0fwt7z6O+WkQYCY0qqiU/LLBuD9g7O49zLQDoSJSvlaNQX
-	zsWhAk1s724dq4TGQFvTaF5BBei2KmDT9RhOhJG2ICuzEM90aFPhhUcXD5jUKA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1754675108;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=L+//x0OiU4vRfdzYpDpIyu3Udi9Pg/D06DDaLgbvwPA=;
-	b=hTYFTM6dIz7OTS91+Bo/7Yu8ss66hdsm0oOZYFxB9zxnWAD4fdbI8MobaisdxyW0lBOrn7
-	CuxCWx3Nn/CvyDD8gIVtDKbkC5t+juDHLXyyVAmP7e9aBxBcj3r1HtPrtmc2iACYNcGfwa
-	4jhGHdxGOm/B2UD82XZ+Qe/XWFfU6dNMZrDmx/0ZMOEOhgAm/39btUNsTEMbGGfKTBKwfd
-	rrQKUAT0tBkUuOycLuSMK485Ya+j3Kx42PF5Rgtbu1+tdzUrEMkZVfTbAJicD3+eEUpohW
-	ysskGqVMbqHud8NE8w8g0zowKiGLkUoVVRVV94VuOWY5pH9ykO1fAgKLOcsmJg==
-ARC-Authentication-Results: i=1;
-	rspamd-698857ffff-qvcsq;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Attack-Plucky: 0c3730915e31feb1_1754675109824_984163914
-X-MC-Loop-Signature: 1754675109824:3146162050
-X-MC-Ingress-Time: 1754675109824
-Received: from pdx1-sub0-mail-a204.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.127.87.26 (trex/7.1.3);
-	Fri, 08 Aug 2025 17:45:09 +0000
-Received: from offworld (syn-076-167-199-067.res.spectrum.com [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a204.dreamhost.com (Postfix) with ESMTPSA id 4bzBJ340mSzKn;
-	Fri,  8 Aug 2025 10:45:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1754675108;
-	bh=L+//x0OiU4vRfdzYpDpIyu3Udi9Pg/D06DDaLgbvwPA=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=iZw1CiiIERXcOPxX7KHVU1IetM4+QcNlR7yE/vPUoVgfXMYObaiyos0qd9zenc4rC
-	 mnD6tdLgjA/k2xkou/n/EfhvXF+4iOMSihcimWi5gR3ZMaqfE8jZOZW86gCnN/r2PD
-	 CkmQfts7S8z9JdaobC6aCvAWvfbUOKMD78GpJEEb8X9eSvMstW+Wc2rCdtcERJisVe
-	 vaiYzYQxuhn14SRnQnWUPcP+MT/iVlhkAtHNf6xn5sFhUqHlby6XRhM0SFdheVOzpK
-	 6pa+96ilwUHL0z9/YphUt7BrtKZ++XR9Ap43zfrMoyKKlZ/uP1ogbfnC7HX3N9Wm5f
-	 8F97N1BAuJ/8g==
-Date: Fri, 8 Aug 2025 10:45:04 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: ira.weiny@intel.com, alucerop@amd.com, a.manzanares@samsung.com,
-	linux-cxl@vger.kernel.org, qemu-devel@nongnu.org,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Marcel Apfelbaum <marcel.apfelbaum@gmail.com>,
-	Markus Armbruster <armbru@redhat.com>,
-	Michael Roth <michael.roth@amd.com>
-Subject: Re: [PATCH 1/4] hw/pcie: Support enabling flit mode
-Message-ID: <20250808174504.mh2kte35yuglvl2y@offworld>
-References: <20250806055708.196851-1-dave@stgolabs.net>
- <20250806055708.196851-2-dave@stgolabs.net>
- <20250808164216.0000196b@huawei.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RVqhjG3f"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1754732804; x=1786268804;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=wdy+l8t7qIA++5RlDvu5ZdGGsffFZW4ATZxlimIuYLg=;
+  b=RVqhjG3fGGQw2hv3KlbFZ9trIMouY/2EJFTi+veNBl3y+Um7tfaCLGKs
+   4rJY5fe8SS98yu8eSy+dl76LK6xVSGg35ZVkFjA+HEiTqeMlDt5I/P7MG
+   3U7pqsiK8gYDA4F+WxFTpCBXx1CB5k3U0jlcoLoOqx/Ax0yBBqELplm8O
+   QtNcLK6FX0DR7+Mvo9nYF5hqhSem+WPrtQywdnjvgOXvl4VW55hd6uAdH
+   Q9EFWcHg+BlRtNPU+PB6CghNnr0cbf0evhmrWwUOGv9Q/D0sq2hEmRf4x
+   yyudAkTNjS2LKeLKQA9dtHY6iSxEPTZiGJWMHujkUA78Xm/y7gJkn+/WV
+   Q==;
+X-CSE-ConnectionGUID: tXnG3J9VTFeAWSfxD7F26Q==
+X-CSE-MsgGUID: vao8Mn6kRnehpbfP5AoA5w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11515"; a="56965705"
+X-IronPort-AV: E=Sophos;i="6.17,278,1747724400"; 
+   d="scan'208";a="56965705"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2025 02:46:43 -0700
+X-CSE-ConnectionGUID: TKcsy3kwQTqHq84z+ykv4A==
+X-CSE-MsgGUID: RAzjC8bcS92sZNIqBA4Xdg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,278,1747724400"; 
+   d="scan'208";a="202693344"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2025 02:46:40 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1ukg9t-00000004cVB-0h0M;
+	Sat, 09 Aug 2025 12:46:37 +0300
+Date: Sat, 9 Aug 2025 12:46:36 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: dave.jiang@intel.com, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>
+Subject: Re: [PATCH] cleanup: Fix unused guard error function with
+ DEFINE_CLASS_IS_COND_GUARD
+Message-ID: <aJcY_IVHj_0xaM3_@smile.fi.intel.com>
+References: <20250804220955.1453135-1-dan.j.williams@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250808164216.0000196b@huawei.com>
-User-Agent: NeoMutt/20220429
+In-Reply-To: <20250804220955.1453135-1-dan.j.williams@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Fri, 08 Aug 2025, Jonathan Cameron wrote:
+On Mon, Aug 04, 2025 at 03:09:54PM -0700, Dan Williams wrote:
+> Andy reports that the "lock_timer" scheme in kernel/time/posix-timers.c,
+> with its custom usage of DEFINE_CLASS_IS_COND_GUARD(), results in:
+> 
+> kernel/time/posix-timers.c:89:1: error: unused function 'class_lock_timer_lock_err' [-Werror,-Wunused-function]
+>    89 | DEFINE_CLASS_IS_COND_GUARD(lock_timer);
+> 
+> ...with a clang W=1 build. Per Nathan, clang catches unused "static inline"
+> functions in C files since commit 6863f5643dd7 ("kbuild: allow Clang to
+> find unused static inline functions for W=1 build").
+> 
+> There are 2 ways to solve this, either mark the class_##_lock_err()
+> function as __maybe_unused, or make sure class_##_lock_err() *is* used /
+> gets called to disposition the lock status.
+> 
+> At present __lock_timer() only indicates failure with a NULL __guard_ptr().
+> However, one could imagine that __lock_timer(), or some other custom
+> conditional locking primitive, wants to pass an ERR_PTR() to indicate the
+> reason for the lock acquisition failure.
+> 
+> Update __scoped_cond_guard() to check for ERR_PTR() in addition to NULL
+> @scope values. This allows __lock_timer(), or another open coded
+> DEFINE_CLASS_IS_COND_GUARD() user, to switch to passing an ERR_PTR() in the
+> future. In the meantime, this just silences the warning.
 
->This looks a bit like an interface that evolved, but in the end
->you seem to have something that is a simple boolean property.
->As such you can avoid a fair bit of complexity.
+FWIW,
 
-Yeah, I started out having this as a bool property. But the alignment
-with the other link training properties felt right, albeit a bit of
-an overkill. At one point I considered the automatic training (which
-you point out missing here) being an option, so having off/on/auto,
-but that also seems like an overkill.
+Tested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 
->Look for disable-acs for an example.
+but as I mentioned in previous mail, it doesn't fix all issues I have, and
+maybe more.
 
-Ok, so with a counter example, I think you are right.
+-- 
+With Best Regards,
+Andy Shevchenko
 
->I don't know if it is desirable to make it an explicit type or not,
->but my gut says boolean is fine here.
->
->+CC A few potentially relevant people to answer that question more
->definitively.
 
-Unless someone shouts, I will go with just the bool prop.
-
-Thanks,
-Davidlohr
