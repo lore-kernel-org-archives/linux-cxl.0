@@ -1,305 +1,421 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6E9B1531F9
-	for <linux-cxl@vger.kernel.org>; Mon, 11 Aug 2025 16:00:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80EEB1DFDAB
+	for <linux-cxl@vger.kernel.org>; Mon, 11 Aug 2025 16:33:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754928058; cv=none; b=gCxgL9VB/YQr07vFF0p4ZT0OFAwb2Dk6BzAfRMgLRXCdNAO0cAg3RIkQOaT67dO1+xqyclhXPAD34ZPHKYEc7tgv8RedUOGYDTNINgVYRCp4XUwRqKX1T/wV4aQ5xW7l0Js9CAdGpeai9vEWg81s1zZ6uXmM2es6djRP+DOOoEI=
+	t=1754930024; cv=none; b=tKpmnPa4ppBpWXXNk0IByv8y4JjhxbrGp+UgnP0/se7Rtyd7ovWJ7LG5tEXT2YUX04yFXv9AwjepVO0Sw4lys6gPPEw/NslFEp4LvvJIANlqty+OVwMa0qhAG924O3bmngCWQkl1GRpaDPfYPY0yjzbGRFQy1Vt/DKCHZDQIhB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754928058; c=relaxed/simple;
-	bh=sIeE6Hp6b5Z41h7FSLiqTrG0LtdAByUclvSoyaQaGmQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z1YuBamzQ1tCd51f5P5R+0j7MP1dMEBAfPoS04tzIRnpTBrCpxG0ZXEYABew9RjYZlkoa0zY7d4gwuNkxcdGW8ESRMyTSMgQAFM89REtkqXqsun925pHKPW1wi2eQ5pcKGOaoSd97rGQHIBD8DrkvD8qzMopypY+3j+sDaD2tRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gLp4WG2Z; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gLp4WG2Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1754928056; x=1786464056;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=sIeE6Hp6b5Z41h7FSLiqTrG0LtdAByUclvSoyaQaGmQ=;
-  b=gLp4WG2ZiMyZePp75VWNlJsDXZnZpBRGLCj7b/wg+2s3GDJMbcYeneLC
-   0i576T1+r6RkU01fbwa93BBvkgBF0vGozdZkqzp1H5/rprXjWV0iiW27Z
-   iNCTU/uJXca4/llwDZFhhjRGU6/VmhZjVrjQv2pAj7iVjfXdas0Tusn9g
-   SrdYYLMeqXtImAuczHKsBSFWXxrzSD2lD2ctnV4SrGpv6AMn+5yJgNQh9
-   By7K8b7qJ3obr6hwPGFkOIQ6A790/+vaRvCcCgm9CW8IVn2HJZbCBrzlg
-   fbqQhWfvjxw37D+M8nuS+t86Pp9dCDPTceM4WWR4aYb++h6pKFwSr1W+A
-   A==;
-X-CSE-ConnectionGUID: GPMBexYZSuGEhk/GzvJN1A==
-X-CSE-MsgGUID: t2N+x1mpR8G5hqiIc+Hhyg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11518"; a="67894016"
-X-IronPort-AV: E=Sophos;i="6.17,278,1747724400"; 
-   d="scan'208";a="67894016"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2025 09:00:55 -0700
-X-CSE-ConnectionGUID: P/AOQLW3ROK0hZSX4NNj6Q==
-X-CSE-MsgGUID: ohy7RERwSdG4Q8BYQUkgxA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,278,1747724400"; 
-   d="scan'208";a="165446718"
-Received: from bvivekan-mobl2.gar.corp.intel.com (HELO [10.247.119.140]) ([10.247.119.140])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2025 09:00:50 -0700
-Message-ID: <04dbb916-f923-4bc7-82fb-7d1a98abff23@intel.com>
-Date: Mon, 11 Aug 2025 09:00:44 -0700
+	s=arc-20240116; t=1754930024; c=relaxed/simple;
+	bh=Zy1tsBFQ+TGpKtw7gQPlSiKAV4wyFpI4xS7QEroLtjY=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dzK9/VTgRhhvEfZONLyAnOaej+8td5MCpp8WJFPY1X30MUIpvePbiFNptUzwg6hQyHSuaybWwGGcyq7eUYdQ6GcDlnuWBWlOB/wNtrvplLFlY8pYYFqPbeoWucAToxxPet3OIiltoyhJOa7TJwuDYCBcwRCmCdoB/S3efmC0HBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4c10Sf55gyz6L5Y4;
+	Tue, 12 Aug 2025 00:28:50 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 17C3D140278;
+	Tue, 12 Aug 2025 00:33:38 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 11 Aug
+ 2025 18:33:37 +0200
+Date: Mon, 11 Aug 2025 17:33:36 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Davidlohr Bueso <dave@stgolabs.net>
+CC: <ira.weiny@intel.com>, <alucerop@amd.com>, <a.manzanares@samsung.com>,
+	<linux-cxl@vger.kernel.org>, <qemu-devel@nongnu.org>
+Subject: Re: [PATCH 4/4] hw/cxl: Support type3 HDM-DB
+Message-ID: <20250811173336.00003255@huawei.com>
+In-Reply-To: <20250811033405.332295-5-dave@stgolabs.net>
+References: <20250811033405.332295-1-dave@stgolabs.net>
+	<20250811033405.332295-5-dave@stgolabs.net>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] cxl/region: Refactor address translation funcs for
- testing
-To: alison.schofield@intel.com, Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org
-References: <cover.1754291501.git.alison.schofield@intel.com>
- <d60d89dab66e1431bb2ff5cd7da1f0960bc2a057.1754291501.git.alison.schofield@intel.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <d60d89dab66e1431bb2ff5cd7da1f0960bc2a057.1754291501.git.alison.schofield@intel.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
+On Sun, 10 Aug 2025 20:34:05 -0700
+Davidlohr Bueso <dave@stgolabs.net> wrote:
 
+> Add basic plumbing for memory expander devices that support Back
+> Invalidation. This introduces a 'hdm-db=on|off' parameter and
+> exposes the relevant BI RT/Decoder component cachemem registers.
+> 
+> Some noteworthy properties:
+>  - Devices require enabling Flit mode.
+>  - Explicit BI-ID commit is required.
+>  - HDM decoder support both host and dev coherency models.
+> 
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+Hi Davidlohr,
 
-On 8/4/25 1:52 AM, alison.schofield@intel.com wrote:
-> From: Alison Schofield <alison.schofield@intel.com>
-> 
-> In preparation for adding a test module that exercises the address
-> translation calculations, extract the core calculations into stand-
-> alone functions that operate on base parameters without dependencies
-> on struct cxl_region.
-> 
-> This refactoring enables unit testing of the address translation logic
-> with controlled inputs, while maintaining identical functionality in
-> the existing code paths.
-> 
-> The moved code has only one change. In the new cxl_calculate_position()
-> eiw_to_ways(eiw, &ways) replaces the prior usage of p->interleave_ways,
-> since the new function cannot depend upon struct cxl_region_params.
-> 
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+Ran out of time last week, so didn't get as far on this as I should have done.
+Anyhow, comments follow.
+
 > ---
->  drivers/cxl/core/region.c | 145 +++++++++++++++++++++++---------------
->  drivers/cxl/cxl.h         |   3 +
->  2 files changed, 90 insertions(+), 58 deletions(-)
+>  docs/system/devices/cxl.rst    |  23 ++++++
+>  hw/cxl/cxl-component-utils.c   | 135 +++++++++++++++++++++++++++++++--
+>  hw/mem/cxl_type3.c             |  14 +++-
+>  include/hw/cxl/cxl_component.h |  54 ++++++++++++-
+>  include/hw/cxl/cxl_device.h    |   3 +
+>  5 files changed, 217 insertions(+), 12 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 281a31df686f..ccee5049d700 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -2929,13 +2929,91 @@ static bool has_spa_to_hpa(struct cxl_root_decoder *cxlrd)
->  	return cxlrd->ops && cxlrd->ops->spa_to_hpa;
+> diff --git a/docs/system/devices/cxl.rst b/docs/system/devices/cxl.rst
+> index bf7908429af8..4815de0f2dc4 100644
+> --- a/docs/system/devices/cxl.rst
+> +++ b/docs/system/devices/cxl.rst
+> @@ -384,6 +384,29 @@ An example of 4 devices below a switch suitable for 1, 2 or 4 way interleave::
+>    -device cxl-type3,bus=swport3,persistent-memdev=cxl-mem3,lsa=cxl-lsa3,id=cxl-pmem3,sn=0x4 \
+>    -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=4k
+>  
+> +An example of 4 type3 devices with volatile memory below a switch. Two of the devices
+> +use HDM-DB for coherence::
+> +
+> +  qemu-system-x86_64 -M q35,cxl=on -m 4G,maxmem=8G,slots=8 -smp 4 \
+> +  ...
+> +  -object memory-backend-file,id=cxl-mem0,share=on,mem-path=/tmp/cxltest.raw,size=256M \
+> +  -object memory-backend-file,id=cxl-mem1,share=on,mem-path=/tmp/cxltest1.raw,size=256M \
+> +  -object memory-backend-file,id=cxl-mem2,share=on,mem-path=/tmp/cxltest2.raw,size=256M \
+> +  -object memory-backend-file,id=cxl-mem3,share=on,mem-path=/tmp/cxltest3.raw,size=256M \
+> +  -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
+> +  -device cxl-rp,port=0,bus=cxl.1,id=root_port0,chassis=0,slot=0 \
+> +  -device cxl-rp,port=1,bus=cxl.1,id=root_port1,chassis=0,slot=1 \
+> +  -device cxl-upstream,bus=root_port0,id=us0,256b-flit=on \
+> +  -device cxl-downstream,port=0,bus=us0,id=swport0,chassis=0,slot=4 \
+> +  -device cxl-type3,bus=swport0,volatile-memdev=cxl-mem0,id=cxl-mem0,sn=0x1,256b-flit=on,hdm-db=on \
+> +  -device cxl-downstream,port=1,bus=us0,id=swport1,chassis=0,slot=5 \
+> +  -device cxl-type3,bus=swport1,volatile-memdev=cxl-mem1,id=cxl-mem1,sn=0x2,256b-flit=on,hdm-db=on \
+> +  -device cxl-downstream,port=2,bus=us0,id=swport2,chassis=0,slot=6 \
+> +  -device cxl-type3,bus=swport2,volatile-memdev=cxl-mem2,id=cxl-mem2,sn=0x3 \
+> +  -device cxl-downstream,port=3,bus=us0,id=swport3,chassis=0,slot=7 \
+> +  -device cxl-type3,bus=swport3,volatile-memdev=cxl-mem3,id=cxl-mem3,sn=0x4 \
+> +  -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=4k
+> +
+>  A simple arm/virt example featuring a single direct connected CXL Type 3
+>  Volatile Memory device::
+>  
+> diff --git a/hw/cxl/cxl-component-utils.c b/hw/cxl/cxl-component-utils.c
+> index a43d227336ca..dfdbf23a427c 100644
+> --- a/hw/cxl/cxl-component-utils.c
+> +++ b/hw/cxl/cxl-component-utils.c
+> @@ -71,10 +71,40 @@ static uint64_t cxl_cache_mem_read_reg(void *opaque, hwaddr offset,
+>      case 4:
+>          if (cregs->special_ops && cregs->special_ops->read) {
+>              return cregs->special_ops->read(cxl_cstate, offset, 4);
+
+I'm not 100% sure we ever used the special_ops->read.  Might be able to just rip that
+out.  
+
+> -        } else {
+> -            QEMU_BUILD_BUG_ON(sizeof(*cregs->cache_mem_registers) != 4);
+> -            return cregs->cache_mem_registers[offset / 4];
+>          }
+> +
+> +        QEMU_BUILD_BUG_ON(sizeof(*cregs->cache_mem_registers) != 4);
+> +
+> +        if (offset == A_CXL_BI_RT_STATUS ||
+> +            offset == A_CXL_BI_DECODER_STATUS) {
+
+I suppose this does exist for all types, so special_ops->read doesn't
+make sense and it indeed belongs in here.
+
+> +            int type;
+> +            uint64_t started;
+> +
+> +            type = (offset == A_CXL_BI_RT_STATUS) ?
+> +                    CXL_BISTATE_RT : CXL_BISTATE_DECODER;
+> +            started = cxl_cstate->bi_state[type].last_commit;
+> +
+> +            if (started) {
+> +                uint32_t val, *cache_mem = cregs->cache_mem_registers;
+
+I'd split
+               uing32_t *cache_mem = cregs->cache_mem_registers;
+               uint32_t val = cache_mem[offset / 4];
+
+> +                uint64_t now;
+> +                int set;
+> +
+> +                val = cregs->cache_mem_registers[offset / 4];
+
+You just added a local variable cache_mem.
+
+> +                now = qemu_clock_get_ms(QEMU_CLOCK_VIRTUAL);
+> +                /* arbitrary 100 ms to do the commit */
+> +                set = !!(now >= started + 100);
+> +
+> +                if (offset == A_CXL_BI_RT_STATUS) {
+> +                    val = FIELD_DP32(val, CXL_BI_RT_STATUS, COMMITTED, set);
+> +                } else {
+> +                    val = FIELD_DP32(val, CXL_BI_DECODER_STATUS, COMMITTED,
+> +                                     set);
+> +                }
+> +                stl_le_p((uint8_t *)cache_mem + offset, val);
+> +            }
+> +        }
+> +
+> +        return cregs->cache_mem_registers[offset / 4];
+>      case 8:
+>          qemu_log_mask(LOG_UNIMP,
+>                        "CXL 8 byte cache mem registers not implemented\n");
+> @@ -123,6 +153,47 @@ static void dumb_hdm_handler(CXLComponentState *cxl_cstate, hwaddr offset,
+>      }
 >  }
 >  
-> +u64 cxl_calculate_dpa_offset(u64 hpa_offset, u8 eiw, u16 eig)
+> +static void dumb_bi_handler(CXLComponentState *cxl_cstate, hwaddr offset,
+
+Can probably drop the dumb.  For the HDM decoder one it was
+meant to remind me to come back and add validity checks etc
+(which I haven't done yet!) That will accept parameters that make
+no sense and hence fail in rather hard to debug ways.
+
+I don't think the same applies to this.
+
+> +                            uint32_t value)
 > +{
-> +	u64 dpa_offset, bits_lower, bits_upper, temp;
+> +    ComponentRegisters *cregs = &cxl_cstate->crb;
+> +    uint32_t sts, *cache_mem = cregs->cache_mem_registers;
+> +    bool to_commit = false;
+> +    int type;
 > +
-> +	/*
-> +	 * DPA offset: CXL Spec 3.2 Section 8.2.4.20.13
-> +	 * Lower bits [IG+7:0] pass through unchanged
-> +	 * (eiw < 8)
-> +	 *	Per spec: DPAOffset[51:IG+8] = (HPAOffset[51:IG+IW+8] >> IW)
-> +	 *	Clear the position bits to isolate upper section, then
-> +	 *	reverse the left shift by eiw that occurred during DPA->HPA
-
-May be easier to read if listing the steps instead of continued sentence:
-	 *	Per spec: DPAOffset[51:IG+8] = (HPAOffset[51:IG+IW+8] >> IW)
-	 *	1. Clear the position bits to isolate upper section.
-	 *	2. Reverse the left shift by eiw that occurred during DPA->HPA
-
-
-> +	 * (eiw >= 8)
-> +	 *	Per spec: DPAOffset[51:IG+8] = HPAOffset[51:IG+IW] / 3
-> +	 *	Extract upper bits from the correct bit range and divide by 3
-> +	 *	to recover the original DPA upper bits
-
-same here as above
-
-DJ
-
-> +	 */
-> +	bits_lower = hpa_offset & GENMASK_ULL(eig + 7, 0);
-> +	if (eiw < 8) {
-> +		temp = hpa_offset &= ~((u64)GENMASK(eig + eiw + 8 - 1, 0));
-> +		dpa_offset = temp >> eiw;
-> +	} else {
-> +		bits_upper = div64_u64(hpa_offset >> (eig + eiw), 3);
-> +		dpa_offset = bits_upper << (eig + 8);
-> +	}
-> +	dpa_offset |= bits_lower;
+> +    switch (offset) {
+> +    case A_CXL_BI_RT_CTRL:
+> +        to_commit = FIELD_EX32(value, CXL_BI_RT_CTRL, COMMIT);
+> +        if (to_commit) {
+> +            sts = cxl_cache_mem_read_reg(cxl_cstate,
+> +                                         R_CXL_BI_RT_STATUS, 4);
+> +            sts = FIELD_DP32(sts, CXL_BI_RT_STATUS, COMMITTED, 0);
+> +            stl_le_p((uint8_t *)cache_mem + R_CXL_BI_RT_STATUS, sts);
+> +            type = CXL_BISTATE_RT;
+> +        }
+> +        break;
+> +    case A_CXL_BI_DECODER_CTRL:
+> +        to_commit = FIELD_EX32(value, CXL_BI_DECODER_CTRL, COMMIT);
+> +        if (to_commit) {
+> +            sts = cxl_cache_mem_read_reg(cxl_cstate,
+> +                                         R_CXL_BI_DECODER_STATUS, 4);
+> +            sts = FIELD_DP32(sts, CXL_BI_DECODER_STATUS, COMMITTED, 0);
+> +            stl_le_p((uint8_t *)cache_mem + R_CXL_BI_DECODER_STATUS, sts);
+> +            type = CXL_BISTATE_DECODER;
+> +        }
+> +        break;
+> +    default:
+> +        break;
+> +    }
 > +
-> +	return dpa_offset;
+> +    if (to_commit) {
+> +        cxl_cstate->bi_state[type].last_commit =
+> +                qemu_clock_get_ms(QEMU_CLOCK_VIRTUAL);
+> +    }
+> +
+> +    stl_le_p((uint8_t *)cache_mem + offset, value);
+> +}
+
+> @@ -248,7 +322,7 @@ static void hdm_init_common(uint32_t *reg_state, uint32_t *write_msk,
+
+As on later functions I think we need to pass in a separate flag rather than
+using the type (for long term maintenance reasons)
+
+>      ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, INTERLEAVE_4K, 1);
+>      ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY,
+>                       POISON_ON_ERR_CAP, 0);
+> -    if (type == CXL2_TYPE3_DEVICE) {
+> +    if (type == CXL2_TYPE3_DEVICE || type == CXL3_TYPE3_DEVICE) {
+>          ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, 3_6_12_WAY, 1);
+>          ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, 16_WAY, 1);
+>      } else {
+> @@ -260,7 +334,8 @@ static void hdm_init_common(uint32_t *reg_state, uint32_t *write_msk,
+>                       UIO_DECODER_COUNT, 0);
+>      ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, MEMDATA_NXM_CAP, 0);
+>      ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY,
+> -                     SUPPORTED_COHERENCY_MODEL, 0); /* Unknown */
+> +                     SUPPORTED_COHERENCY_MODEL,
+> +                     type == CXL3_TYPE3_DEVICE ? 3:0); /* host+dev or Unknown */
+
+Spaces around the :
+
+>      ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_GLOBAL_CONTROL,
+>                       HDM_DECODER_ENABLE, 0);
+>      write_msk[R_CXL_HDM_DECODER_GLOBAL_CONTROL] = 0x3;
+
+>  
+> +static void bi_rt_init_common(uint32_t *reg_state, uint32_t *write_msk)
+> +{
+> +    /* switch usp must commit the new BI-ID, timeout of 2secs */
+> +    ARRAY_FIELD_DP32(reg_state, CXL_BI_RT_CAPABILITY, EXPLICIT_COMMIT, 1);
+> +
+> +    ARRAY_FIELD_DP32(reg_state, CXL_BI_RT_CTRL, COMMIT, 0);
+> +    write_msk[R_CXL_BI_RT_CTRL] = 0xffffffff;
+
+0x1 (See below)
+
+> +
+> +    ARRAY_FIELD_DP32(reg_state, CXL_BI_RT_STATUS, COMMITTED, 0);
+> +    ARRAY_FIELD_DP32(reg_state, CXL_BI_RT_STATUS, ERR_NOT_COMMITTED, 0);
+> +    ARRAY_FIELD_DP32(reg_state, CXL_BI_RT_STATUS, COMMIT_TMO_SCALE, 0x6);
+> +    ARRAY_FIELD_DP32(reg_state, CXL_BI_RT_STATUS, COMMIT_TMO_BASE, 0x2);
 > +}
 > +
-> +int cxl_calculate_position(u64 hpa_offset, u8 eiw, u16 eig)
+> +static void bi_decoder_init_common(uint32_t *reg_state, uint32_t *write_msk)
 > +{
-> +	unsigned int ways = 0;
-> +	u64 shifted, rem;
-> +	int pos;
+> +    ARRAY_FIELD_DP32(reg_state, CXL_BI_DECODER_CAPABILITY, HDM_D, 0);
+> +    /* switch dsp must commit the new BI-ID, timeout of 2secs */
+> +    ARRAY_FIELD_DP32(reg_state, CXL_BI_DECODER_CAPABILITY, EXPLICIT_COMMIT, 1);
+
+Reserved for EP and root ports. I think we need to pass type into this function
+so we can set this to 0 for those types and 1 for others.
+
 > +
-> +	/*
-> +	 * Interleave position: CXL Spec 3.2 Section 8.2.4.20.13
-> +	 * eiw < 8
-> +	 *	Position is in the IW bits at HPA_OFFSET[IG+8+IW-1:IG+8].
-> +	 *	Per spec "remove IW bits starting with bit position IG+8"
-> +	 * eiw >= 8
-> +	 *	Position is not explicitly stored in HPA_OFFSET bits. It is
-> +	 *	derived from the modulo operation of the upper bits using
-> +	 *	the total number of interleave ways.
-> +	 */
-> +	if (eiw < 8) {
-> +		pos = (hpa_offset >> (eig + 8)) & GENMASK(eiw - 1, 0);
-> +	} else {
-> +		shifted = hpa_offset >> (eig + 8);
-> +		eiw_to_ways(eiw, &ways);
-> +		div64_u64_rem(shifted, ways, &rem);
-> +		pos = rem;
-> +	}
+> +    ARRAY_FIELD_DP32(reg_state, CXL_BI_DECODER_CTRL, BI_FW, 0);
+> +    ARRAY_FIELD_DP32(reg_state, CXL_BI_DECODER_CTRL, BI_ENABLE, 0);
+> +    ARRAY_FIELD_DP32(reg_state, CXL_BI_DECODER_CTRL, COMMIT, 0);
+> +    write_msk[R_CXL_BI_DECODER_CTRL] = 0xffffffff;
+
+IIRC should only have the non reserved bits in the write_msk.  So 0x7
+
 > +
-> +	return pos;
+> +    ARRAY_FIELD_DP32(reg_state, CXL_BI_DECODER_STATUS, COMMITTED, 0);
+> +    ARRAY_FIELD_DP32(reg_state, CXL_BI_DECODER_STATUS, ERR_NOT_COMMITTED, 0);
+> +    ARRAY_FIELD_DP32(reg_state, CXL_BI_DECODER_STATUS, COMMIT_TMO_SCALE, 0x6);
+> +    ARRAY_FIELD_DP32(reg_state, CXL_BI_DECODER_STATUS, COMMIT_TMO_BASE, 0x2);
 > +}
-> +
-> +u64 cxl_calculate_hpa_offset(u64 dpa_offset, int pos, u8 eiw, u16 eig)
-> +{
-> +	u64 mask_upper, hpa_offset, bits_upper;
-> +
-> +	mask_upper = GENMASK_ULL(51, eig + 8);
-> +
-> +	if (eiw < 8) {
-> +		hpa_offset = (dpa_offset & mask_upper) << eiw;
-> +		hpa_offset |= pos << (eig + 8);
-> +	} else {
-> +		bits_upper = (dpa_offset & mask_upper) >> (eig + 8);
-> +		bits_upper = bits_upper * 3;
-> +		hpa_offset = ((bits_upper << (eiw - 8)) + pos) << (eig + 8);
-> +	}
-> +
-> +	/* The lower bits remain unchanged */
-> +	hpa_offset |= dpa_offset & GENMASK_ULL(eig + 7, 0);
-> +
-> +	return hpa_offset;
-> +}
-> +
->  u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
->  		   u64 dpa)
->  {
->  	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
-> -	u64 dpa_offset, hpa_offset, bits_upper, mask_upper, hpa;
->  	struct cxl_region_params *p = &cxlr->params;
->  	struct cxl_endpoint_decoder *cxled = NULL;
-> +	u64 dpa_offset, hpa_offset, hpa;
->  	u16 eig = 0;
->  	u8 eiw = 0;
->  	int pos;
-> @@ -2965,19 +3043,8 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
->  	/* Remove the dpa base */
->  	dpa_offset = dpa - cxl_dpa_resource_start(cxled);
+
+> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> index ecd3a7703b35..1e55d13c1e93 100644
+> --- a/hw/mem/cxl_type3.c
+> +++ b/hw/mem/cxl_type3.c
+> @@ -447,6 +447,7 @@ static void build_dvsecs(CXLType3Dev *ct3d)
+>      CXLComponentState *cxl_cstate = &ct3d->cxl_cstate;
+>      CXLDVSECRegisterLocator *regloc_dvsec;
+>      uint8_t *dvsec;
+> +    uint16_t type = ct3d->hdmdb ? CXL3_TYPE3_DEVICE : CXL2_TYPE3_DEVICE;
+
+Using a type for this feels like something that won't scale as we add
+more features. Perhaps stick to CXL2_TYPE3_DEVICE (perhaps renamed)
+and a separate boolean.
+
+>      uint32_t range1_size_hi = 0, range1_size_lo = 0,
+>               range1_base_hi = 0, range1_base_lo = 0,
+>               range2_size_hi = 0, range2_size_lo = 0,
+> @@ -491,7 +492,7 @@ static void build_dvsecs(CXLType3Dev *ct3d)
+>          .range2_base_hi = range2_base_hi,
+>          .range2_base_lo = range2_base_lo,
+>      };
+> -    cxl_component_create_dvsec(cxl_cstate, CXL2_TYPE3_DEVICE,
+> +    cxl_component_create_dvsec(cxl_cstate, type,
+>                                 PCIE_CXL_DEVICE_DVSEC_LENGTH,
+>                                 PCIE_CXL_DEVICE_DVSEC,
+>                                 PCIE_CXL31_DEVICE_DVSEC_REVID, dvsec);
+> @@ -521,14 +522,14 @@ static void build_dvsecs(CXLType3Dev *ct3d)
+>          },
+>      };
 >  
-> -	mask_upper = GENMASK_ULL(51, eig + 8);
-> -
-> -	if (eiw < 8) {
-> -		hpa_offset = (dpa_offset & mask_upper) << eiw;
-> -		hpa_offset |= pos << (eig + 8);
-> -	} else {
-> -		bits_upper = (dpa_offset & mask_upper) >> (eig + 8);
-> -		bits_upper = bits_upper * 3;
-> -		hpa_offset = ((bits_upper << (eiw - 8)) + pos) << (eig + 8);
-> -	}
-> -
-> -	/* The lower bits remain unchanged */
-> -	hpa_offset |= dpa_offset & GENMASK_ULL(eig + 7, 0);
-> +	/* this chunk was moved, maybe move comment too */
-> +	hpa_offset = cxl_calculate_hpa_offset(dpa_offset, pos, eiw, eig);
+> -    cxl_component_create_dvsec(cxl_cstate, CXL2_TYPE3_DEVICE,
+> +    cxl_component_create_dvsec(cxl_cstate, type,
+>                                 REG_LOC_DVSEC_LENGTH, REG_LOC_DVSEC,
+>                                 REG_LOC_DVSEC_REVID, (uint8_t *)regloc_dvsec);
+>      dvsec = (uint8_t *)&(CXLDVSECDeviceGPF){
+>          .phase2_duration = 0x603, /* 3 seconds */
+>          .phase2_power = 0x33, /* 0x33 miliwatts */
+>      };
+> -    cxl_component_create_dvsec(cxl_cstate, CXL2_TYPE3_DEVICE,
+> +    cxl_component_create_dvsec(cxl_cstate, type,
+>                                 GPF_DEVICE_DVSEC_LENGTH, GPF_DEVICE_DVSEC,
+>                                 GPF_DEVICE_DVSEC_REVID, dvsec);
 >  
->  	/* Apply the hpa_offset to the region base address */
->  	hpa = hpa_offset + p->res->start + p->cache_size;
-> @@ -3011,8 +3078,6 @@ static int region_offset_to_dpa_result(struct cxl_region *cxlr, u64 offset,
->  	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
->  	struct cxl_endpoint_decoder *cxled;
->  	u64 hpa, hpa_offset, dpa_offset;
-> -	u64 bits_upper, bits_lower;
-> -	u64 shifted, rem, temp;
->  	u16 eig = 0;
->  	u8 eiw = 0;
->  	int pos;
-> @@ -3034,50 +3099,14 @@ static int region_offset_to_dpa_result(struct cxl_region *cxlr, u64 offset,
->  	} else {
->  		hpa_offset = offset;
->  	}
-> -	/*
-> -	 * Interleave position: CXL Spec 3.2 Section 8.2.4.20.13
-> -	 * eiw < 8
-> -	 *	Position is in the IW bits at HPA_OFFSET[IG+8+IW-1:IG+8].
-> -	 *	Per spec "remove IW bits starting with bit position IG+8"
-> -	 * eiw >= 8
-> -	 *	Position is not explicitly stored in HPA_OFFSET bits. It is
-> -	 *	derived from the modulo operation of the upper bits using
-> -	 *	the total number of interleave ways.
-> -	 */
-> -	if (eiw < 8) {
-> -		pos = (hpa_offset >> (eig + 8)) & GENMASK(eiw - 1, 0);
-> -	} else {
-> -		shifted = hpa_offset >> (eig + 8);
-> -		div64_u64_rem(shifted, p->interleave_ways, &rem);
-> -		pos = rem;
-> -	}
-> -	if (pos < 0 || pos >= p->nr_targets) {
-> -		dev_dbg(&cxlr->dev, "Invalid position %d for %d targets\n",
-> -			pos, p->nr_targets);
+> @@ -539,7 +540,7 @@ static void build_dvsecs(CXLType3Dev *ct3d)
+>          .status                  = ct3d->flitmode ? 0x6 : 0x26, /* same */
+>          .rcvd_mod_ts_data_phase1 = 0xef, /* WTF? */
+>      };
+> -    cxl_component_create_dvsec(cxl_cstate, CXL2_TYPE3_DEVICE,
+> +    cxl_component_create_dvsec(cxl_cstate, type,
+>                                 PCIE_CXL3_FLEXBUS_PORT_DVSEC_LENGTH,
+>                                 PCIE_FLEXBUS_PORT_DVSEC,
+>                                 PCIE_CXL3_FLEXBUS_PORT_DVSEC_REVID, dvsec);
+> @@ -969,6 +970,11 @@ static bool cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
+>          return false;
+>      }
+>  
+> +    if (!ct3d->flitmode && ct3d->hdmdb) {
+> +        error_setg(errp, "hdm-db requires operating in 256b flit");
+> +        return false;
+> +    }
 > +
-> +	pos = cxl_calculate_position(hpa_offset, eiw, eig);
-> +	if (pos < 0 || pos >= p->nr_targets)
->  		return -ENXIO;
-> -	}
+>      if (ct3d->hostvmem) {
+>          MemoryRegion *vmr;
+>          char *v_name;
+> diff --git a/include/hw/cxl/cxl_component.h b/include/hw/cxl/cxl_component.h
+> index cd92cb02532a..acec76152ad0 100644
+> --- a/include/hw/cxl/cxl_component.h
+> +++ b/include/hw/cxl/cxl_component.h
+> @@ -29,6 +29,7 @@ enum reg_type {
+>      CXL2_UPSTREAM_PORT,
+>      CXL2_DOWNSTREAM_PORT,
+>      CXL3_SWITCH_MAILBOX_CCI,
+> +    CXL3_TYPE3_DEVICE, /* hdm-db */
+
+I'm wondering about this - whilst it's true that CXL3 allows
+an hdm-db it also enabled a bunch of other things I don't think
+we want to gate on this.  Could we just pass a separate parameter
+for it?
+
+>  };
+
+
+> +/* to track BI explicit commit handling */
+> +enum {
+> +    CXL_BISTATE_RT = 0, /* switch usp */
+
+Could spell out Route table somewhere. I couldn't remember what
+RT was for.
+
+> +    CXL_BISTATE_DECODER, /* switch dsp */
+
+Also endpoints, root ports etc. 
+
+> +    CXL_BISTATE_MAX
+> +};
+> +
+> +typedef struct bi_state {
+> +    /* last 0->1 transition */
+> +    uint64_t last_commit;
+> +} BIState;
+> +
+>  typedef struct component_registers {
+>      /*
+>       * Main memory region to be registered with QEMU core.
+> @@ -260,6 +309,7 @@ typedef struct cxl_component {
 >  
-> -	/*
-> -	 * DPA offset: CXL Spec 3.2 Section 8.2.4.20.13
-> -	 * Lower bits [IG+7:0] pass through unchanged
-> -	 * (eiw < 8)
-> -	 *	Per spec: DPAOffset[51:IG+8] = (HPAOffset[51:IG+IW+8] >> IW)
-> -	 *	Clear the position bits to isolate upper section, then
-> -	 *	reverse the left shift by eiw that occurred during DPA->HPA
-> -	 * (eiw >= 8)
-> -	 *	Per spec: DPAOffset[51:IG+8] = HPAOffset[51:IG+IW] / 3
-> -	 *	Extract upper bits from the correct bit range and divide by 3
-> -	 *	to recover the original DPA upper bits
-> -	 */
-> -	bits_lower = hpa_offset & GENMASK_ULL(eig + 7, 0);
-> -	if (eiw < 8) {
-> -		temp = hpa_offset &= ~((u64)GENMASK(eig + eiw + 8 - 1, 0));
-> -		dpa_offset = temp >> eiw;
-> -	} else {
-> -		bits_upper = div64_u64(hpa_offset >> (eig + eiw), 3);
-> -		dpa_offset = bits_upper << (eig + 8);
-> -	}
-> -	dpa_offset |= bits_lower;
-> +	dpa_offset = cxl_calculate_dpa_offset(hpa_offset, eiw, eig);
-> +	if (dpa_offset == ULLONG_MAX)
-> +		return -ENXIO;
+>      CDATObject cdat;
+>      CXLCompObject compliance;
+> +    BIState bi_state[CXL_BISTATE_MAX];
+>  } CXLComponentState;
 >  
->  	/* Look-up and return the result: a memdev and a DPA */
->  	for (int i = 0; i < p->nr_targets; i++) {
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index f87628a22852..151a8ce698c5 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -731,6 +731,9 @@ static inline bool is_cxl_root(struct cxl_port *port)
->  	return port->uport_dev == port->dev.parent;
->  }
+>  void cxl_component_register_block_init(Object *obj,
+> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> index 0abfd678b875..75603b8180b5 100644
+> --- a/include/hw/cxl/cxl_device.h
+> +++ b/include/hw/cxl/cxl_device.h
+> @@ -841,6 +841,9 @@ struct CXLType3Dev {
+>      CXLMemSparingReadAttrs rank_sparing_attrs;
+>      CXLMemSparingWriteAttrs rank_sparing_wr_attrs;
 >  
-> +u64 cxl_calculate_hpa_offset(u64 dpa_offset, int pos, u8 eiw, u16 eig);
-> +u64 cxl_calculate_dpa_offset(u64 hpa_offset, u8 eiw, u16 eig);
-> +int cxl_calculate_position(u64 hpa_offset, u8 eiw, u16 eig);
->  int cxl_num_decoders_committed(struct cxl_port *port);
->  bool is_cxl_port(const struct device *dev);
->  struct cxl_port *to_cxl_port(const struct device *dev);
+> +    /* BI flows */
+> +    bool hdmdb;
+> +
+>      struct dynamic_capacity {
+>          HostMemoryBackend *host_dc;
+>          AddressSpace host_dc_as;
 
