@@ -1,247 +1,248 @@
-Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2056.outbound.protection.outlook.com [40.107.93.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09FCB224891;
-	Mon, 11 Aug 2025 18:30:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754937060; cv=none; b=DhKL9mrrIGRC+MpZdpCLPzf4A04Gyv81Rnj2Pzv25m0LVJROuqhbtjnkMIf9+/VWSmpz+R2wOXB+HETTdNIrLtZGrTiJmhUmRU8iaJaZePpfuvOb3heqDo0rDp2gF69rAvurBJS5aGC6K0mG71vFFB70iq9CYWDgUp3b7Y5fBSU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754937060; c=relaxed/simple;
-	bh=xk8qaiErmfTGhxRgj9XAM40WAN3dsm5MjAETZq/bFWY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ewjhR8RwraQ4vT14sbUrle+yxOGADGPk2CkWzABUchcP19eb1hL+RTv5ScRjq76D+QfdQTLdnxGHvNLrOWteJiUcyj9VvW1V7fmHiWdYe7VS6kyWYjO/kmTkLFB+AEJhYuf1prYOyYpvNGSlNJzENMOWbD5XgzHFxSEjEzzZ4BM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QFvW6WU3; arc=none smtp.client-ip=209.85.160.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1F9FE555;
+	Mon, 11 Aug 2025 19:14:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1754939654; cv=fail; b=Ggpq2IaNaSIQFtlUVoyakHmG0zZC4F3sCRUDacA5hFJwwRRALHOo7BT2yjstIIuK8hrhCWMznc/yZg8w4OD8oj6anZyIXa/flTVsm3f19zwRa8QkOibaPiabVBQMS6mQ97pDLGq8/28I8LtCwlI6MV/eGz9wJH3BGYQIAoKfRa8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1754939654; c=relaxed/simple;
+	bh=k4M5WbvTu9GBP8r4hQ6U8qXGrWcIhZud2P7ou5VjeuA=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=DpNEPwN3hbM5zdnIMDlzza6M9icrAt2Qh88ZIKdxymloetL5TWl0GC2AoXyfrFZ6aZdu7ZHQxsleG+LCqrQFmrpqSTtkaBoG1lFNPQ/jL9Ft+1YHt8rlXlhnRNsSnWs14pjGXQys130PJdMYVNCURRtUpQz7XD8ErhJzTkvmbzQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=OiJF15/s; arc=fail smtp.client-ip=40.107.93.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QFvW6WU3"
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-30b71d5cc03so2173248fac.3;
-        Mon, 11 Aug 2025 11:30:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754937057; x=1755541857; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=erUZxz/3YKb6AzciSl87N1qVga0MvtNzwF8QlCkJO6o=;
-        b=QFvW6WU3lgM6P2wijhOmXo0qcXF+io6JNG7854YLpujDhyjrb8dI/Rf6JL3WS82bQP
-         nrP8hKLjATEQk/XqdD2FC92YTCVlkBw4sjxZCxyR/TfWW3seym14kgb6wi9G6oJS37zl
-         cC4RLpKIorsT47uH2SUc9WUhVfWm6LSIzbj9fAl656ybTNuk6bUQ83ZslHdbDinXw1rx
-         RZLQh1TxS1WkHGOLWtk0n5bxdcaHAnvxixIS6o/rlF70pS1Ival5JRNValbBwGaEvdD0
-         mZ7rRgIsf1QpAX2q+OdWRAmZZ169JCvtmaEmiVLM/bZql0GhNIqPNtCjakW7zBaRNBOA
-         y0MQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754937057; x=1755541857;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=erUZxz/3YKb6AzciSl87N1qVga0MvtNzwF8QlCkJO6o=;
-        b=oo6IJeJwPqlLqPeprQTVZgpBWEDBoPTUN6OKVA8GRx36Dd21esfl1SNYegwqbtqFaO
-         mz8BLqKhWXTucM467n6k0sxXCJsnuqSXKx7AdD18q1OvB5WYymWEVX4zpB/9JNxGXS3K
-         H+b7kZDMR32eEpvFyP8tbUyLBDLGS3Nw8NaVyg9sft00dcv4BmxU25Hg98g19JmqmdX5
-         ci4eVnQZXvFXva1j26iyquRdxzTx2PtAOw05BA08v9R0rg4Ydu8+BsF+VhhRst2PQqEb
-         A0Mvl5m9pqkmZAZ7zDFqePWXAlBHpcsdadKYfrUAU7NVZLg7Kvh/rdmOQedV+S4Qh6L+
-         E41w==
-X-Forwarded-Encrypted: i=1; AJvYcCUZHfOi5fNuffONqKZLrJUGT1baLrvzlMcAjaVYwQoHRGSM6JWqawwgm1gz+ICu06dRMHo9sdft58i4@vger.kernel.org, AJvYcCVRwA/CZMlZqhj4cG8cIrKd3CLVJWA8EAiAcF/FYTGx/1UhoR2IDm+JOxLUgj7keAjV4Vgy3icIAus=@vger.kernel.org, AJvYcCXZrU08wFR/oKbRmae1uzxCkdHbCuqukcViu43RxYlJJ4GsP7UDzeB2mDkm1yLDVvvUE12WszfnXMiTYA46@vger.kernel.org, AJvYcCXlQ3pfbvaOmTj1IMhsy/f8oWBgRbXrVTtN1xPuNVvqHQhmJmdYeh3mvA2ajiRf15WkBRDwdulYMSQkSRpK1A==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBM60ybjEwUU3z8DkupVY5gVO2d6J0Jfvidcn3usdvBjwUUrMl
-	zln49tgCrsPWZT+igMethtXCERAdnzBDMLS67y1CQYUm3aeSXBJwoVLG
-X-Gm-Gg: ASbGnctfgCiDoA8kuHZiLIc1xTiEuMGHUfzAoPdAMCqyUsPHhho9kZnQQZjmTvaw7X6
-	okgxtRn4/b6nXE1SpdCAKU73K51tULJN2zTJid7InkGLsJuLtqSp15bz3fBubw9o+TNQAnYPRCf
-	1a/qLzHQ6MrHuIGnzpJobzO+SPn8eHDeCGtsTks9/13ZMVfTD0LwyxL0KxpSEyIFNW5EQ5H7LxC
-	SmU9nui2E/lSVxYfAI+PchCGHI41aF9VGRfkYn36miXGTg8saoBn7DOnKCPtNe6Bfl3wOBOTmrq
-	8S1QAnqLNe0YCbyuwPBkyIxc8Vs97iRtugPPKqxDu9s9sEnEO5q9zHzFT9izuaC3Ch6gDMaIUZJ
-	qJqKuqr75p9e/toi8PwQ7UrwNFA1h9PnaFgq/
-X-Google-Smtp-Source: AGHT+IFeSQ0skn1obsPdMuUc/I2OxHhwHFM3A2M1joHpdeeawx5gSo3o7y+eUrVN/gXuAHlP6eMhag==
-X-Received: by 2002:a05:6870:479b:b0:307:3d5:713f with SMTP id 586e51a60fabf-30c210da176mr9357342fac.19.1754937056701;
-        Mon, 11 Aug 2025 11:30:56 -0700 (PDT)
-Received: from groves.net ([2603:8080:1500:3d89:b420:5f86:575e:74a8])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-307a7390b47sm7916818fac.21.2025.08.11.11.30.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Aug 2025 11:30:55 -0700 (PDT)
-Sender: John Groves <grovesaustin@gmail.com>
-Date: Mon, 11 Aug 2025 13:30:53 -0500
-From: John Groves <John@groves.net>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: Amir Goldstein <amir73il@gmail.com>, 
-	Dan Williams <dan.j.williams@intel.com>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Bernd Schubert <bschubert@ddn.com>, John Groves <jgroves@micron.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
-	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, john@groves.net
-Subject: Re: [RFC V2 10/18] famfs_fuse: Basic fuse kernel ABI enablement for
- famfs
-Message-ID: <z2yuwgzsbbirtfmr2rkgbq3yhjtvihumdxp4bvwgkybikubhgp@lfjfhlvtckmr>
-References: <20250703185032.46568-1-john@groves.net>
- <20250703185032.46568-11-john@groves.net>
- <CAOQ4uxi7fvMgYqe1M3_vD3+YXm7x1c4YjA=eKSGLuCz2Dsk0TQ@mail.gmail.com>
- <yhso6jddzt6c7glqadrztrswpisxmuvg7yopc6lp4gn44cxd4m@my4ajaw47q7d>
- <20250707173942.GC2672029@frogsfrogsfrogs>
- <ueepqz3oqeqzwiidk2wlf3f7enxxte4ws27gtxhakfmdiq4t26@cvfmozym5rme>
- <20250709015348.GD2672029@frogsfrogsfrogs>
- <wam2qo5r7tbpf4ork5qcdqnw4olhfpkvlqpnbuqpwfhrymf3dq@hw3frnbadhk7>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="OiJF15/s"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=rUQD9aATiQ/+hpHdt9PEvo/5tXVLxa3/mSfX6EdfDYGE9n1e0bI47zmVVTaF7Jl+QScGQqSwwA70DHaG0kmMI7kRkFjDAmp+Rc4HxyqpBwz6cO+PbmUTTwagDVFIiGaf59pRDMG8PuNZglUTZBBNDOWHKsaycaNuZbR0PEFcyhR1EI2kQ977ABlFYYibWuW+rL94uU7U94iTpZFnURiTpMFFPLbaLSX2wIsk+cJdMkk7LeN6HOMaXq5rSx3UMTrqG03/qyksMp81W5VJQLWb6E7YnehPxGW5s3RTGkWzZNpNsC2X9mH3oay5qKbw8Py1THBq0kQ8ylwJdycxfbHLZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fBnW3hMa8WvHt9MtQMra1r39S66q3CmQ/oFllwHWeD0=;
+ b=ZH4pYonEfSFhPSXqUc1gqnU5hd9wzOK4LfAoUkaOaKENxL/6hNHKKdRJlpadZTMdc164SN5oti/Q1Sb0+PqUlJXhgkG0Q6Ii1CJiANNkOsplwQRXI8o8Ko9MlgB0LVD1pgxiTQCzOT8ByyJXJiTohifsSaBctzMCeZQsPYzpISPV40erJ2/NQBvLU7uzoITrhpV0GZ4uKi1t7SC1bcl/ljHMx3gV54kwzZ4KjZxRFG/RioYi0xEKwVqetyqNhVC9hUZql3gN0g+5x+WNhk4WRQhMdzzQOeWHe0g4aKGYbDUo8xQASPTztGVUZ7i2zr6uNnPP5sf9O4mJe+AmGaWhjA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fBnW3hMa8WvHt9MtQMra1r39S66q3CmQ/oFllwHWeD0=;
+ b=OiJF15/sgX6xDAryddYiqXexI2nC5QTuDATlEnnZpmzPIPDERIhrcWvKX6ZqqS/6xuatHx6sn2iM6+lOwW3Plg8LpT6VfZA1q1n9bMah6kvfI4AoEF57q8BR1Zpf6PpJFxZ6aOPSy27Ptob44veCB+TlvWTxnWBHDE0HRx+PGZc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6396.namprd12.prod.outlook.com (2603:10b6:510:1fc::14)
+ by MW6PR12MB8868.namprd12.prod.outlook.com (2603:10b6:303:242::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9009.21; Mon, 11 Aug
+ 2025 19:14:08 +0000
+Received: from PH7PR12MB6396.namprd12.prod.outlook.com
+ ([fe80::c74:f334:4a4a:b1c5]) by PH7PR12MB6396.namprd12.prod.outlook.com
+ ([fe80::c74:f334:4a4a:b1c5%5]) with mapi id 15.20.9009.017; Mon, 11 Aug 2025
+ 19:14:08 +0000
+Message-ID: <a490e34b-10f9-4ac4-a053-5d45222ea58c@amd.com>
+Date: Mon, 11 Aug 2025 14:14:03 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 02/17] PCI/CXL: Add pcie_is_cxl()
+To: Alejandro Lucero Palau <alucerop@amd.com>, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, dan.j.williams@intel.com, bhelgaas@google.com,
+ shiju.jose@huawei.com, ming.li@zohomail.com,
+ Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
+ dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com,
+ lukas@wunner.de, Benjamin.Cheatham@amd.com,
+ sathyanarayanan.kuppuswamy@linux.intel.com, linux-cxl@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20250626224252.1415009-1-terry.bowman@amd.com>
+ <20250626224252.1415009-3-terry.bowman@amd.com>
+ <d8aee8c3-55cf-4aec-afc1-21773759d193@amd.com>
+Content-Language: en-US
+From: "Bowman, Terry" <terry.bowman@amd.com>
+In-Reply-To: <d8aee8c3-55cf-4aec-afc1-21773759d193@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA9PR03CA0016.namprd03.prod.outlook.com
+ (2603:10b6:806:20::21) To PH7PR12MB6396.namprd12.prod.outlook.com
+ (2603:10b6:510:1fc::14)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <wam2qo5r7tbpf4ork5qcdqnw4olhfpkvlqpnbuqpwfhrymf3dq@hw3frnbadhk7>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6396:EE_|MW6PR12MB8868:EE_
+X-MS-Office365-Filtering-Correlation-Id: e6ffa43e-4108-4ad9-9f18-08ddd90b3e8b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?bnJ2b0R5VXdEdk93aVJtT1J0VG1wVlhDaWphYkJZRy9mRWFHSTI4NlQ0ZFZ6?=
+ =?utf-8?B?SE5vcUV4RTdFOTF4S2xFU25ZalhUK24ybk9WaStSbHpQL1U1ZFR5amh2ektM?=
+ =?utf-8?B?dTRBT1BPQ0dpVFMrVUxGVEgxTjJFRHI4WW1UNC9xRCtRY3FCSHlSL08vaUdU?=
+ =?utf-8?B?SnhBZk9yN1dCVGdWaFYrRlJleXp5T05nMXBaMWF3S2FnOU1EbkxpdVY5MXdp?=
+ =?utf-8?B?SG1MVGM5SEFxQS9GOVliWk50VmtTS2dlTDUxejBPaWNUaWtyU0F5cGxVKzFi?=
+ =?utf-8?B?OU9pQ0x1MHQ4TVlUTDE5L3hpdStmeWFFT25EYWxndUp6bGhSMWFsUklUbU4x?=
+ =?utf-8?B?OXU3Q2NvTkpGWGRFZllBVG82clpEbm1yQWhrR2lKOHlwR1pzSzdLejNicGtS?=
+ =?utf-8?B?cXFUTnZNczRyVDBxRDlxNkRxRW5hem45d1cxMzBsR3BrUXpZQTlkdXd0MVEx?=
+ =?utf-8?B?YnFFaVNnekdGRWJBQXhSZkMvWjc5amFnYjl3TVI4NnQyUklqS242M2lLelVv?=
+ =?utf-8?B?b052UVRCeXRnSWtneGc1OVpaeTh0cVVhbVB1WE1qL0lSOW9xYk5KendqU3Rx?=
+ =?utf-8?B?ODMxZitmRXBvQlVCWTVTdDZRQ0pvaC9hZnlVTVR2ZDFta201eW1oTndTbnd3?=
+ =?utf-8?B?UWdWT01Ob0lUeWRFNGp6bEVvUEtsbVV2OEJjRlpmRXZiSGcwbzQybkVFZUcv?=
+ =?utf-8?B?ZEl4d25BL0V1ZzFCbUdUU1djMHYwTGxLOUpOOC95R29MdTRNQjNJeEhWcEIy?=
+ =?utf-8?B?d0psZFdlOFFueXhIUDgrREZpdjhjbXpzZUcrUE56bzZVRHlFNCthajZsUmsx?=
+ =?utf-8?B?WStFdkUwSHlKZFBkU1NLTUY3eEN5eEoyWDNlZEdySmw2Y3U5U3lKdUpjUXNW?=
+ =?utf-8?B?T3Fkb2l4dEdhdU0xSC9EL3hIb2lsMXlGM1hFZzhiZmR2d0VMTFNaNWJMa3Uy?=
+ =?utf-8?B?b3FLSTB2SWV6bW5nUC9weFc2aW1yVUs5UWlpdmphKytyWEN4MGZLWlNKVDZT?=
+ =?utf-8?B?N1ZEeFZURUUwSE1ndkczbmRlVXlaQTk0M0NOdHZJbGt3SHdkZkxVeVlEWDdD?=
+ =?utf-8?B?WW8wZnZPbmNsSEd5K1VYWU5yNkVmc1ZhaXBrVTU3TWdRcWp0eEJZa3N1SFJt?=
+ =?utf-8?B?YjBTUGUrWXVsRXhPRStKeHNVaWJrWmx0MlBCMUl1ZDlhcVRqdEFxcWIvaWdI?=
+ =?utf-8?B?Q3NoclpJU3lNWU9lYXdRR1JkTUtzdm5kOFJYaFhyZDM3R3Z4QmM1OExzNmUx?=
+ =?utf-8?B?VEtzeXQ0QUh1R3RZQWI0NzZMYWluMDg2UHJQZENuaWEyUzU4a0tjZUVVakxv?=
+ =?utf-8?B?ejhRRklpclZxTFRSeTdyUUVNQlFCRStieFhLd2d5QXJpODFkTWpJYUE2MlN0?=
+ =?utf-8?B?MTlma0hlaG5STjV0Q2VKblR3STA2Q05PeDl6TnVSbzZkYlN5NG1JRkZaOWJt?=
+ =?utf-8?B?bmR4U0dMcWdJYytBVk9GSjlFNjJhalpuWlEwWXhkSWdpUDUyaGhiK0t6c09L?=
+ =?utf-8?B?YjdCRjVHTGxtUCs0SENpbXM5V1FzMWtYV01nSm5LN1lraFE3c1NtZndvbWtm?=
+ =?utf-8?B?bVhqdnZyUnJta0F1c0hxQkdhd3NxSEx6dDFUMUQzeklMZFZOS09nb2Vmc08z?=
+ =?utf-8?B?ZVlpUmlSWFI1YVUwY3h6M016NlFSRk05YnowWnB5UmFPTFhKaDBYOVpFOHhN?=
+ =?utf-8?B?K0g1S3dDSVVNNzdRYlhtbHFONGxyUDluQmJIdTdOQk1tYmxkU1RLc25Tdzdx?=
+ =?utf-8?B?YVdJT2l5TTZ5UWNvbnlVVkd6TFcwU2xWcXpvdVJ4STRvdzNPZlgxb2FYYmV0?=
+ =?utf-8?B?QnBxcFd1TVluMjE3OWFoMU5WelBldkNIcjViSHBvUmZ3Q0hXRGxtVFlyU1FF?=
+ =?utf-8?B?YWhQUm9KSzBlNGZxeEtvTFdlRGwrRDBzVUQveTFwY2VWcDI4OXEva1hENkpC?=
+ =?utf-8?B?dXJEL0UraTdFNGpaSnRDeUs4R0dVb05yN2NGK1A3cEhSV08yWlFQTW40MnJO?=
+ =?utf-8?B?NW1SR01VM1pRPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6396.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?bFNWRktHQUpIdUMzaHVVeHdldlI4UUdpNlE4YzgxNmtQVzMrcHdETUNsMXla?=
+ =?utf-8?B?ZFhad0hULzFWR1R6Y0VIM1RVVmRUNFh6SFVwZlovNWxVak5Xa1QrTzZESGV0?=
+ =?utf-8?B?a0YvUFlJVzNKbFRJWVMyVmtlb0NUWXVVcm8zV2taNFd0bDMvaG9UOU5Tek5C?=
+ =?utf-8?B?bjhjZElzWE5xQ0twZElvMUVhM2xmS3hrTjUwRmI0cnhwYWUxamtBbWs1SHlV?=
+ =?utf-8?B?WVRrRU5saXhjQVVnajJEWFg2MS9QYVQ1d2xVaUZVSnBuSkRJWjhJUGZPczJH?=
+ =?utf-8?B?SzkvVngwRUVLenF2M2gxYmJvQkZFL0xwRWhjbEhyNHB2K1J3czRUY0RsNEV0?=
+ =?utf-8?B?aDZsRHJrR0NIQTR4d0trY0FmZ0VCTlJSa25KK245dGpWUjdpalNvd1pUTVA3?=
+ =?utf-8?B?NXhreDh2MFhOMWtVczJLckRtdzB6ZWtPR1QrclF3VWlNeWUxV21qaG9OUUFP?=
+ =?utf-8?B?cTVmNy9IalJETUNxY2lka3NFbVFjbVViK2ZWdWdOZGFRUGplYm5pa08xT0cw?=
+ =?utf-8?B?VXE1Q05Jdi9xMjhxTk5vMHJoRXZILzhlZE9vMXZzTy9mUm9HMGFqdmlZRWxp?=
+ =?utf-8?B?TC9YSzBSMDBrN2VsNXYyeXd5cmx6a2xKME1QdkdWQi9oMzN6OE5qK050TVVE?=
+ =?utf-8?B?VGFCUURtYkJ3eXFDWDJwUTNSSG9XYVRsM2JkYk4zSlZEUDNjN0Vmdys0cjlu?=
+ =?utf-8?B?My8vWDI5UHhEM1dmWGhxdkN2U2tGSVkrYzJRTjhrNFJ6QjRUNnZrellwTEt4?=
+ =?utf-8?B?cklGei9JRVFINWl2aWluSzMyWGVYRW9aeXJYSnNSaFVjanhEazBXa1ZOTnJ6?=
+ =?utf-8?B?dzRxQjJ3ZUlOalUwNXVJVFdFK2R4K0MyOWd1bTY0NkZKSkVYMFgvdmJ2aWxN?=
+ =?utf-8?B?VDhqVXFCUUdmeW43UEN6ZDA2L0xqZ2ZHK2U0SGUzRWh3S1gzMzAwWGxpN0VJ?=
+ =?utf-8?B?Q2liaW1aVkJGdU12d3pQcXIrVjVrZGsxSUY0TVZnUnZUYVBZeUw5Y3dSY2lY?=
+ =?utf-8?B?cCthL0I1b3Bqd2xTVVBwbnhoWmNFZ2tEMzFEVG02QkZDbEl4ZlYweU9BU3JV?=
+ =?utf-8?B?a08vREJRWm4wMVRlYTk0UHZwUkxpTWd3Rkg1em9qajlHUzVqYUNqdlN3ejd1?=
+ =?utf-8?B?Q0ZUVTBuRURVT0VKUVdrMzRpT2VQN0t6T1M1L1lWT0M4T2VGa204WmxvekIx?=
+ =?utf-8?B?eDdPblJjOVdNOEdZOGMwWFhDTEl5bHJxYUUwYjNZRUtaRG9Qcml1dmVZR05m?=
+ =?utf-8?B?Uk5LR1BmUm94MWRMNVZ1aks1VFMyT0UyU0htWit5aUVPTmI3M3RhTFBXSW1W?=
+ =?utf-8?B?WFUydU1YZHNLM092elFTZ3JVS3M2MnM1YnV2S005b0QzdEQ4dkZNcGxoQW40?=
+ =?utf-8?B?azVTNnE5dXhKbU5CVUxrWUZ3ZTMzaHFUZnpvajREcndCM0dNL2s4UFFEbnR5?=
+ =?utf-8?B?QlU5UDBJc0VBdkRtSm9qOWlMUkRTQzBaOE52bTlEU3R6aWo0MUQ4VEE5ZmZm?=
+ =?utf-8?B?WDF3MWE0eThvVm0yWnFLS1hWUlVPcjJiSmtobTVkaS8vbVB5Q0VZV3hvTjVS?=
+ =?utf-8?B?TDZMUVR5U0taV3hyTm9GMlVXV3h0dkl5ZXRXTThPNlYxWk1vb0ZnTEpHY2NU?=
+ =?utf-8?B?dlN1MHh0UEo5MzhobTJXS2VGS1ZyclZUL2RBaGM5ZWtTOUNxYTFKd201ZzJr?=
+ =?utf-8?B?dm1PUXNZT1pwOS83V2hNZHArczhsRmlnQXBKKzJveldNdkF6bzk0QmVwWWdV?=
+ =?utf-8?B?YVM1NHNIblN2SnZhR2RmV084QmQrRkFtM1d0V0lrcDZzZk1UbXp2SE9qMjlP?=
+ =?utf-8?B?YVVzcWVTYm04QTJRL245SENWT0M1dVJKOGthR3hTQlpmYWwzdDNtTExuU3BW?=
+ =?utf-8?B?NFNJUGpEVVpFTW00SU8vb256M1pXTldPZ0ZNaG9vN2Mwa3R1OG55d1BHbGJC?=
+ =?utf-8?B?SXRkUllCT1MwVHFGQ1I5N3IvNTNINlhPenNCRVFZYm9KWGlFcUd6RVVlWmxR?=
+ =?utf-8?B?SVFJdUpmVlJ4OHRSZ2kzSzVFTmZhaE1QYW1jRU42VllJQXZhd2lJNWlJRU0v?=
+ =?utf-8?B?TzU3d1kwRzluQWhRUitZbHFuM3dQT1pUQ0ZLUjlqSFNXZHlHRURMK1oxZ1VS?=
+ =?utf-8?Q?cYkKsX6h6gMU/6jE/89WAe2O1?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e6ffa43e-4108-4ad9-9f18-08ddd90b3e8b
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6396.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Aug 2025 19:14:07.8874
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Ys3o+Zzv7QQYm31Qvy16IqML2Cb5OxnwyaQIx/sjgpz0PzwrlrV9/EJA05laDNGYwdeBPy1Fph+arLqmQIKdmA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8868
 
-On 25/07/10 08:32PM, John Groves wrote:
-> On 25/07/08 06:53PM, Darrick J. Wong wrote:
-> > On Tue, Jul 08, 2025 at 07:02:03AM -0500, John Groves wrote:
-> > > On 25/07/07 10:39AM, Darrick J. Wong wrote:
-> > > > On Fri, Jul 04, 2025 at 08:39:59AM -0500, John Groves wrote:
-> > > > > On 25/07/04 09:54AM, Amir Goldstein wrote:
-> > > > > > On Thu, Jul 3, 2025 at 8:51 PM John Groves <John@groves.net> wrote:
-> > > > > > >
-> > > > > > > * FUSE_DAX_FMAP flag in INIT request/reply
-> > > > > > >
-> > > > > > > * fuse_conn->famfs_iomap (enable famfs-mapped files) to denote a
-> > > > > > >   famfs-enabled connection
-> > > > > > >
-> > > > > > > Signed-off-by: John Groves <john@groves.net>
-> > > > > > > ---
-> > > > > > >  fs/fuse/fuse_i.h          |  3 +++
-> > > > > > >  fs/fuse/inode.c           | 14 ++++++++++++++
-> > > > > > >  include/uapi/linux/fuse.h |  4 ++++
-> > > > > > >  3 files changed, 21 insertions(+)
-> > > > > > >
-> > > > > > > diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-> > > > > > > index 9d87ac48d724..a592c1002861 100644
-> > > > > > > --- a/fs/fuse/fuse_i.h
-> > > > > > > +++ b/fs/fuse/fuse_i.h
-> > > > > > > @@ -873,6 +873,9 @@ struct fuse_conn {
-> > > > > > >         /* Use io_uring for communication */
-> > > > > > >         unsigned int io_uring;
-> > > > > > >
-> > > > > > > +       /* dev_dax_iomap support for famfs */
-> > > > > > > +       unsigned int famfs_iomap:1;
-> > > > > > > +
-> > > > > > 
-> > > > > > pls move up to the bit fields members.
-> > > > > 
-> > > > > Oops, done, thanks.
-> > > > > 
-> > > > > > 
-> > > > > > >         /** Maximum stack depth for passthrough backing files */
-> > > > > > >         int max_stack_depth;
-> > > > > > >
-> > > > > > > diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-> > > > > > > index 29147657a99f..e48e11c3f9f3 100644
-> > > > > > > --- a/fs/fuse/inode.c
-> > > > > > > +++ b/fs/fuse/inode.c
-> > > > > > > @@ -1392,6 +1392,18 @@ static void process_init_reply(struct fuse_mount *fm, struct fuse_args *args,
-> > > > > > >                         }
-> > > > > > >                         if (flags & FUSE_OVER_IO_URING && fuse_uring_enabled())
-> > > > > > >                                 fc->io_uring = 1;
-> > > > > > > +                       if (IS_ENABLED(CONFIG_FUSE_FAMFS_DAX) &&
-> > > > > > > +                           flags & FUSE_DAX_FMAP) {
-> > > > > > > +                               /* XXX: Should also check that fuse server
-> > > > > > > +                                * has CAP_SYS_RAWIO and/or CAP_SYS_ADMIN,
-> > > > > > > +                                * since it is directing the kernel to access
-> > > > > > > +                                * dax memory directly - but this function
-> > > > > > > +                                * appears not to be called in fuse server
-> > > > > > > +                                * process context (b/c even if it drops
-> > > > > > > +                                * those capabilities, they are held here).
-> > > > > > > +                                */
-> > > > > > > +                               fc->famfs_iomap = 1;
-> > > > > > > +                       }
-> > > > > > 
-> > > > > > 1. As long as the mapping requests are checking capabilities we should be ok
-> > > > > >     Right?
-> > > > > 
-> > > > > It depends on the definition of "are", or maybe of "mapping requests" ;)
-> > > > > 
-> > > > > Forgive me if this *is* obvious, but the fuse server capabilities are what
-> > > > > I think need to be checked here - not the app that it accessing a file.
-> > > > > 
-> > > > > An app accessing a regular file doesn't need permission to do raw access to
-> > > > > the underlying block dev, but the fuse server does - becuase it is directing
-> > > > > the kernel to access that for apps.
-> > > > > 
-> > > > > > 2. What's the deal with capable(CAP_SYS_ADMIN) in process_init_limits then?
-> > > > > 
-> > > > > I *think* that's checking the capabilities of the app that is accessing the
-> > > > > file, and not the fuse server. But I might be wrong - I have not pulled very
-> > > > > hard on that thread yet.
-> > > > 
-> > > > The init reply should be processed in the context of the fuse server.
-> > > > At that point the kernel hasn't exposed the fs to user programs, so
-> > > > (AFAICT) there won't be any other programs accessing that fuse mount.
-> > > 
-> > > Hmm. It would be good if you're right about that. My fuse server *is* running
-> > > as root, and when I check those capabilities in process_init_reply(), I
-> > > find those capabilities. So far so good.
-> > > 
-> > > Then I added code to my fuse server to drop those capabilities prior to
-> > > starting the fuse session (prctl(PR_CAPBSET_DROP, CAP_SYS_RAWIO) and 
-> > > prctl(PR_CAPBSET_DROP, CAP_SYS_ADMIN). I expected (hoped?) to see those 
-> > > capabilities disappear in process_init_reply() - but they did not disappear.
-> > > 
-> > > I'm all ears if somebody can see a flaw in my logic here. Otherwise, the
-> > > capabilities need to be stashed away before the reply is processsed, when 
-> > > fs/fuse *is* running in fuse server context.
-> > > 
-> > > I'm somewhat surprised if that isn't already happening somewhere...
-> > 
-> > Hrm.  I *thought* that since FUSE_INIT isn't queued as a background
-> > command, it should still execute in the same process context as the fuse
-> > server.
-> > 
-> > OTOH it also occurs to me that I have this code in fuse_send_init:
-> > 
-> > 	if (has_capability_noaudit(current, CAP_SYS_RAWIO))
-> > 		flags |= FUSE_IOMAP | FUSE_IOMAP_DIRECTIO | FUSE_IOMAP_PAGECACHE;
-> > 	...
-> > 	ia->in.flags = flags;
-> > 	ia->in.flags2 = flags >> 32;
-> > 
-> > which means that we only advertise iomap support in FUSE_INIT if the
-> > process running fuse_fill_super (which you hope is the fuse server)
-> > actually has CAP_SYS_RAWIO.  Would that work for you?  Or are you
-> > dropping privileges before you even open /dev/fuse?
+On 8/9/2025 5:56 AM, Alejandro Lucero Palau wrote:
 > 
-> Ah - that might be the answer. I will check if dropped capabilities 
-> disappear in fuse_send_init. If so, I can work with that - not advertising 
-> the famfs capability unless the capability is present at that point looks 
-> like a perfectly good option. Thanks for that idea!
+> On 6/26/25 23:42, Terry Bowman wrote:
+>> CXL and AER drivers need the ability to identify CXL devices.
+>>
+>> Add set_pcie_cxl() with logic checking for CXL Flexbus DVSEC presence. The
+>> CXL Flexbus DVSEC presence is used because it is required for all the CXL
+>> PCIe devices.[1]
+>>
+>> Add boolean 'struct pci_dev::is_cxl' with the purpose to cache the CXL
+>> Flexbus presence.
+>>
+>> Add function pcie_is_cxl() to return 'struct pci_dev::is_cxl'.
+>>
+>> [1] CXL 3.1 Spec, 8.1.1 PCIe Designated Vendor-Specific Extended
+>>      Capability (DVSEC) ID Assignment, Table 8-2
+>>
+>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+>> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+>> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> ---
+>>   drivers/pci/probe.c           | 10 ++++++++++
+>>   include/linux/pci.h           |  6 ++++++
+>>   include/uapi/linux/pci_regs.h |  8 +++++++-
+>>   3 files changed, 23 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+>> index 4b8693ec9e4c..5d3548648d5c 100644
+>> --- a/drivers/pci/probe.c
+>> +++ b/drivers/pci/probe.c
+>> @@ -1691,6 +1691,14 @@ static void set_pcie_thunderbolt(struct pci_dev *dev)
+>>   		dev->is_thunderbolt = 1;
+>>   }
+>>   
+>> +static void set_pcie_cxl(struct pci_dev *dev)
+>> +{
+>> +	u16 dvsec = pci_find_dvsec_capability(dev, PCI_VENDOR_ID_CXL,
+>> +					      PCI_DVSEC_CXL_FLEXBUS);
+>> +	if (dvsec)
+>> +		dev->is_cxl = 1;
+> 
+> 
+> Hi Terry,
+> 
+> 
+> Should not this check for the bits about port status like IO_Enabled?
+> 
+> 
+> Maybe I'm confused with the goal, but we can know a device is a cxl one 
+> without specifically looking at the FLEXBUS capability presence or not. 
+> What this capability can tell, and what I think it is more interesting, 
+> is if the link was successfully trained as CXL.io. From problems we have 
+> had while testing our type2 device, if the training for CXL.io fails, 
+> the device will use pcie and this bit will be 0, same if the device can 
+> be configured for using pcie only.
+> 
+> 
+> If this is what we really need to know, changing is_cxl to 
+> is_cxl_enabled could be clearer.
+> 
+> 
+> I come here after Dan suggesting to use this functionality for ensuring 
+> the CXL device functionality is on, and it would require to inspect the 
+> status instead of just the capability being present. Maybe I'm confused 
+> because I remember some patches from Robert Richter dealing with 
+> checking link up for enabling downstream ports, but I think the goal 
+> here is different.
+> 
 
-Review: the famfs fuse server directs the kernel to provide access to raw
-(memory) devices, so it should should be required to have have the
-CAP_SYS_RAWIO capability. fs/fuse needs to detect this at init time,
-and fail the connection/mount if the capability is missing.
+Hi Alejandro,
 
-I initially attempted to do this verification in process_init_reply(), but
-that doesn't run in the fuse server process context.
+I agree in large part. We need to check for training complete and any change 
+in training needs to be reflected in is_cxl(). My understanding is this 
+will be be added later in a following patch series. 
 
-I am now checking the capability in fuse_send_init(), and not advertising
-the FUSE_DAX_FMAP capability (in in_args->flags[2]) unless the server has 
-CAP_SYS_RAWIO.
+Dan, can you add your thoughts ?
 
-That requires that process_init_reply() reject FUSE_DAX_FMAP from a server
-if FUSE_DAX_FMAP was not set in in_args->flags[2]. process_init_reply() was
-not previously checking the in_args, but no big deal - this works.
-
-This leads to an apparent dilemma in libfuse. In fuse_lowlevel_ops->init(),
-I should check for (flags & FUSE_DAX_IOMAP), and fail the connection if
-that capability is not on offer. But fuse_lowlevel_ops->init() doesn't
-have an obvious way to fail the connection. 
-
-How should I do that? Hoping Bernd, Amir or the other libfuse people may 
-have "the answer" (tm).
-
-And of course if any of this doesn't sound like the way to go, let me know...
-
-Thanks!
-John
+-Terry
 
