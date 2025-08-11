@@ -1,64 +1,65 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2048.outbound.protection.outlook.com [40.107.95.48])
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2079.outbound.protection.outlook.com [40.107.102.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08AA32BEC2D;
-	Mon, 11 Aug 2025 14:38:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BD471DE3BA;
+	Mon, 11 Aug 2025 14:46:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.79
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754923129; cv=fail; b=te+HZcO8DXQ9swJmzkzZodKBafzRIzITYQ0DK+L5dyL2ADa0Irv8Jt4QEToQT46jeyOt3eNfUrVadjOJFsE73aIgdeLpiSqIQHAhE/uRXPFx4W84zF/2HMIpAizuwVJ4skulWCYLkN2L62YaBR9jrGxZE4thL6rXfhAb5qMQq4k=
+	t=1754923564; cv=fail; b=DvYwaAkl57FyAhF6jmXXpHZy+3IYTuk4JT7/3ZndxzxmpPj7x0bejmEByzNnLREIoFf1X/W0mADRhw+/XnOaYbzDSed71DJHX7hj5QQdIjj+ghRKh9bZQhCUpOgyFnwcomo7RWhuXmzJPfXw1MmvJxxD4WcCGfds4IjYnAER/t8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754923129; c=relaxed/simple;
-	bh=FurQ49gRXtHYb6LQg/bFhUT9RsmstU1i8O3FqfYyK+w=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=C2uKtbSPPXUZXE9hP2AnUw4LEzigE+rI4TROSU0vvOyvoa9nmrTol2/vSmWJbdYUdIuSNkiADnK6Lu5wmkBGnPGXjT8BT+jw9A03FkA+3TR7H2Eall1O1qvYgf0q+oS5JNXxtNElycJ2IIHOvOw0tMvkdaO+/fRz/6vXl5LUNxs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=a5iKLytF; arc=fail smtp.client-ip=40.107.95.48
+	s=arc-20240116; t=1754923564; c=relaxed/simple;
+	bh=wqZQv99KpOp86DqI3tG5a5wmDRYlUxHHL3kVVaMlWKQ=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=GSIuJLWaBljNEfuoR0XCFaF2hbpQ/wBYTL5pn6XTesj//sYLd81PhQxmWN16R/Xd04/HBI5rZ5RBtW4XMiuM+TjTctol/p4miKWt0CTohbdnI5NiuyXXPMWO0g5oSeIwOjDPYaqaAFqfgVn63cdaO25XAuz0gc0LXVfiSdje+IQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=GArAYi/A; arc=fail smtp.client-ip=40.107.102.79
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="a5iKLytF"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="GArAYi/A"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pMdfjIXtpqbT8RN0wf7UpJiMb08KotyncmStQdVmIZUcWDLy/2hR9aOq4YRFY7ATqwyuGWxYMemeF4Tu9akGi8T1UlyslZGYuAmGalpVyv+rz9IUUGvpOyihuAwusodAlLcJDvJrkrCKgW9y/A0zQLyEXf3qa+ft3+U4bcpaStBDRE5SotcFbSmuHo20tWP9+z1HnfePsudy+evXfzuVh+k8OXeoXwY4b6vkDQnsErUrVqv69a8VxiHmkbdnoSrWA88lRnrPzPxyF/YXtFHMNSq08Dsz7GSaEHsSO77nfz/05B8AnacSNgC9+s210sURe4ca54aZX9Han3RBjQUA+g==
+ b=LOcTmLC63h6KR14XIlo40iZY5gmQ0udOGAyGSquGQUY2MyGodt84CYCcgCEZlF+pyOtZu8tdQOhPUNB41fPGa1aWJGxq1AHjlN5i/eR/VEqa+qquV1R8eClDwE3K7SMvXdrQN92rXuwO7lw2RtJwUGfRHvCSKe6qVvuUkyglOObNmQ3JZkn1fplDJqyfejQEet+U4W+mnPilAWvUBsrwF0cVRVdFJCGt6UtsXvEjBB9RNMZGXJc0lFzfTI4EdTChv23TLtuB5hl8WyHzrPhDzcrX9Gvb9swqRYrqec+wHYY5Jh5aDR6OX8paWodrsgHrurusPAHHroE9Wg6HkqGNaQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0FbvMm77Wl2kzDy32QtECdNobDql54A33oCl6Abt4EQ=;
- b=rw/Xg8ROK2KViTTL1SJFzJFL8E/Y3olSa4rvswcG73h9qU+4bXijnIMraOtthxvqhpBddcuix7yn3Wz+jaSCOwtCQqLqmDhXGd4U8TSiesFzVhaN0sb4NYcFCKbMcm/kr2QAzE0SKXSIsCvXoCN9VgkloJb+SuvnFiDJLXGXzYUJCeeUrboVB2EL7u4jFLLpGtETWBIlAE8ij0bY52LqKxlVHzKAsadiLM3101nBCoLEtOSjjv2tOQ+v/4dYdsaMmghZadxYYE6/UOE+A7DRhYcPwsZmvaa6byhVfE3EDc3r2OWlH/zmwht4/66qmKSQ5tAq1qBoq4bA0g8VyoH7Lg==
+ bh=D1JoFnNAmRUW0K+ySkkcFcGNT9Ry3EpLa1Wq6Kxs8Xg=;
+ b=KbhLoaWzzYJQiWMjd2F/gG3dzH2/OAWop+iLCWXpnrjB/HiE1AlBtFFyMPHIA1Fs5wkv4X+VVtcKG+79bXXG0e2pD+8sxGq0Wazf59/cDl7QIrt5LJaXtaDnmc1pmtQNexKKdPd8daWFMzL9HxXpJ88Kce884sA0w/551BWBDEJoNWQ6NElTxJ/vVk6zE0Q3zGsmqoyq40QtNqjHRmjxzQI8caMdFifEnN8f0dy8vhtC3pELIhU7j7up7lb7ELLuL0Uy1TYZkRRp1ul4LXmVemJHIXSKAVdzQug//1ucj4IKmQDtZ6g0sggFAGgS9pKp0Gkp6d/rYyc5xCVX5rrtDg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0FbvMm77Wl2kzDy32QtECdNobDql54A33oCl6Abt4EQ=;
- b=a5iKLytFDTTL60/bH1hVpEgSv0qO+CbG94FrTopZogSn0vsxCloysdW36W4hVAuVJ5CyNuo6RB1Ynovlp1mziRAGQKUQewnVZgCSH8cuGIJS0GjNNhUlCvVP4DL1ynn4mr2S05PCHd4jZSIBd9g6XIlfA1lK+N/7NxuJJ6ZettA=
+ bh=D1JoFnNAmRUW0K+ySkkcFcGNT9Ry3EpLa1Wq6Kxs8Xg=;
+ b=GArAYi/AU224udu6noEzLfTOf+aGHLGs0LsdNNPs98hnU7IfPDwwQKXB1B5GEWKKevv6rl3YgNSzk+XyLMFclMlmOCUF8ab9VXOM+SenvgDSJPF7ru0a85ETfyAqy6QYk3IsuwMYZ57d0UkMOZqM+clmd0I4aI+NXBX44928dNc=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
- by PH8PR12MB6843.namprd12.prod.outlook.com (2603:10b6:510:1ca::14) with
+ by MW4PR12MB7429.namprd12.prod.outlook.com (2603:10b6:303:21b::6) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9009.22; Mon, 11 Aug
- 2025 14:38:41 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9009.21; Mon, 11 Aug
+ 2025 14:45:59 +0000
 Received: from DM6PR12MB4202.namprd12.prod.outlook.com
  ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
  ([fe80::f943:600c:2558:af79%6]) with mapi id 15.20.9009.018; Mon, 11 Aug 2025
- 14:38:41 +0000
-Message-ID: <fb959fa6-26bd-4aaf-b5cd-3b8184d9f79f@amd.com>
-Date: Mon, 11 Aug 2025 15:38:37 +0100
+ 14:45:59 +0000
+Message-ID: <b4b5d1de-6682-4161-8c81-30cee0756a63@amd.com>
+Date: Mon, 11 Aug 2025 15:45:54 +0100
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v17 20/22] sfc: create cxl region
+Subject: Re: [PATCH v17 18/22] cxl: Allow region creation by type2 drivers
 Content-Language: en-US
 To: dan.j.williams@intel.com, alejandro.lucero-palau@amd.com,
  linux-cxl@vger.kernel.org, netdev@vger.kernel.org, edward.cree@amd.com,
  davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
  edumazet@google.com, dave.jiang@intel.com
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 References: <20250624141355.269056-1-alejandro.lucero-palau@amd.com>
- <20250624141355.269056-21-alejandro.lucero-palau@amd.com>
- <6887a3482072a_11968100ac@dwillia2-mobl4.notmuch>
+ <20250624141355.269056-19-alejandro.lucero-palau@amd.com>
+ <6892325deccdb_55f09100fb@dwillia2-xfh.jf.intel.com.notmuch>
 From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <6887a3482072a_11968100ac@dwillia2-mobl4.notmuch>
+In-Reply-To: <6892325deccdb_55f09100fb@dwillia2-xfh.jf.intel.com.notmuch>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO2P265CA0316.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a4::16) To DM6PR12MB4202.namprd12.prod.outlook.com
+X-ClientProxiedBy: LO2P123CA0065.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:1::29) To DM6PR12MB4202.namprd12.prod.outlook.com
  (2603:10b6:5:219::22)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -67,150 +68,163 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|PH8PR12MB6843:EE_
-X-MS-Office365-Filtering-Correlation-Id: 976ceb80-d9f9-4b15-3724-08ddd8e4c420
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|MW4PR12MB7429:EE_
+X-MS-Office365-Filtering-Correlation-Id: 45c628b5-7a4d-46dc-78a7-08ddd8e5c95e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|366016|1800799024|7053199007|921020;
+	BCL:0;ARA:13230040|376014|1800799024|366016|921020|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YnFhUEZDZ0h6TlVqQVpMaTZSdmVLYnNuV29QUFVIL1NhZG5EQmNPdmJUT2Zh?=
- =?utf-8?B?MkRVTWljL1NoQ1g2YVI5UGN3dUJ4QzJ3QkViSW84RjIvMERSdUIrRFl3dUNn?=
- =?utf-8?B?aFRrQXFHS3BBcW1Kb1cvOTNrcDM1YS9DblFPV1IyYzF0U0ZHZmtBZjhWV1Ju?=
- =?utf-8?B?aTcvOSsxWGoxYTdmSktQYnhERUVGNHdtdU5acDFsUkRWY1ZMc2hmTmQ5OExM?=
- =?utf-8?B?QTY4L2JTbFlrSXp4Q2xCZHRkOEZOSVJZK0RWZ2hWZVBsQ21pRDZPNDNBYTFH?=
- =?utf-8?B?bm9hKzhnWnpFdWRUTFNGZGQ4RUhCVUNZaW1BL0RscEZvNUtiaUJZUzJzMWZH?=
- =?utf-8?B?ak9lZlhFYkhHNExGYzBrd0ZHODJVZU0wbnY3MFR1b2wrSmNBcEJ2cHQ4R3V6?=
- =?utf-8?B?UkMyWW1qeDNXS2RQMnBTYVRCc3p3UDZnd1RQRDdPVGgxeC8vcnhLK3BXYlY2?=
- =?utf-8?B?bEE0R3N4Vi9sV0ZzNGVVVEk3a2pyaEwvaGdkcU1QeUNxWlZVS25NeGJObkNU?=
- =?utf-8?B?NUI4TUZreEVpRnZ0bmNUVlJkbWQ3MVN5LzVxYTlXTXh6THJrVVp4R052Sk1P?=
- =?utf-8?B?ZWtsMzIzaFRaN1RwZFZDdi8vRHQvZWVwWmdNVDl0Qk9kVlluM01oM0lDUFBu?=
- =?utf-8?B?eWM1YUF0LzFwa2dqNk5xYTJqbzZ5ZXQyb3JKUkVqelpLRDdrbHA0SS9yU2pW?=
- =?utf-8?B?M21XOWRsNFB1QnB0dm52Uy9Ed2hnb2tnYkR3RkhweDBxM2dBL1J5OGZoYXhq?=
- =?utf-8?B?WU1ZU3M0cm9zZEc0WXY3U2xrK1hwZ1NUaTB4cnhLd3hPYzhoOU1IY2FrL1hv?=
- =?utf-8?B?bmRXOE9sZlZWRnZ3NVQxbHNaQmdVSDFvNU1kTXFyOGd1ajFhbmR0N1JINko5?=
- =?utf-8?B?S0w1aWt2dGx5UTZ3K3JIcVR0MGNQVUg5MkZlWVpCbSs2VGxnU1B3aGRDbUVk?=
- =?utf-8?B?Zy9zdXhReXBqakpNdUVsS1dNZkMrbTIvWGtNSm9yS1V4VXRqQmM0L0ZBMk9R?=
- =?utf-8?B?UjV2MWd0TEFNMzBJTjFHdUhHcWRLQ2JpSGpwU2UrSWVLR3lRMkhuQ2tuWEND?=
- =?utf-8?B?TWZhS2VOWVhNRWpORXBQc2JkMjExa0wxVUg3WFlmQ013Wi8rdGcrZEwwTTlI?=
- =?utf-8?B?WXczNXU0aWRiNVp1NDFUM0kxTW80R0UwWUY0MTNtbDhkMmlmeHBKSktXc0Iv?=
- =?utf-8?B?bnhhRW5sOEhqaHJXVmNxakEvd3RmZW5kVCtSNDhhSXl5WHJHUEFES2V5VHVl?=
- =?utf-8?B?QzhTdllmVjNNREJVcytaQWRhcDJES00xeEMrT3AwcHNVK1psRXBMNm1ua2hO?=
- =?utf-8?B?QlQ3WXNkcjZPNTNnR2hiN2d2MWU4MWtDT2h4dWZBZHdybGdYV0R6cUdMdEFt?=
- =?utf-8?B?Tkw5OGtUWVN6QUJFdDdYWDNjNWdwYzBKOHVPMW5qcGsxNDFNbGdsUGwvS0NX?=
- =?utf-8?B?TVVNR0RPWS9mZ3VLUWtCb0xpbzB2dEhlK25YeklzcFRORGtYQ2dMUzk3eklT?=
- =?utf-8?B?dnAwZlFVSyt0OUlrOGVVVEJsVjZDS0JGckgvamxQZzRXRW1HdEZpQTQ5WlND?=
- =?utf-8?B?SlFxdHMwUnRLWE9BZC9KU2c5QnRvQW15WEtmZzZSUmUxOXk4TFFFaStnL1FP?=
- =?utf-8?B?YkwzK0R5QUd2MEdITTNUQWpnNUVUakQ0TmFFUDJSTjdBMWl0bkRvUG5KOEJh?=
- =?utf-8?B?Q3lTVDAzRm9rQUpaMzVZUm8rZEI5MGw0OFlLaDh2ajc1SVA2Y2pwcHNVSW1i?=
- =?utf-8?B?elF5Z1pVYWtBV1g4d3pnN2FFQjNaU1dWVnR1SFpESnRKRGdZU3ViL212aUNC?=
- =?utf-8?B?U1U0NVZjRGM4dGF2ZkhtWjlkdnFNc1ZHNGxsQitWUG1JMHNTY0F6Sk56K1Fj?=
- =?utf-8?B?V0RYMG9tcGIxdW1VT2NPLzdUelBoRm5xWTZCc3JQbER5eUM0NnhkMzNnUHV3?=
- =?utf-8?B?Z1d0b0lwQlhycGhoeWx0M2c1SytBMzVLS1UzalVxTExyenNpQk5WZThwU01w?=
- =?utf-8?B?WGg2L0pkM1lRPT0=?=
+	=?utf-8?B?cEF5c3VyNHJKRGY1MktncmR2d3ovSFdnM0svanZpMG9oWEVVeHVEL3pYME1E?=
+ =?utf-8?B?Q2pPd1FhYnYxSHpFZmRQd0VmYTlQM0FSTlZlbkplZjExUTZlVnJTa3RWQ1RJ?=
+ =?utf-8?B?KytoY3NOTVJqdVpCVVBnTTBPK3ZTbnFmaWRUdmJMeHQ2VkIzQ3RWdmJOZXZs?=
+ =?utf-8?B?VHdSTFlhWU84dUw5Tk14WWtFTVNrTnYyeHJvTXQyREtTSW5jZFB2NE94RXhs?=
+ =?utf-8?B?dSs4cTFTYTVJUFlnUU9zMnhVUm90UEY4ei9aUjZ5bnMxejFsMUN1bSsvd2M1?=
+ =?utf-8?B?K3pFNmRNUmdKNFIwdW1vZmI2ci9nNHIrNTM5ZVlFMnhHTUJNaVBmcUp2MjlO?=
+ =?utf-8?B?Q3ZZYXpUT1RKVHdoMG11VEQzeEpOamJCSnR0ZWkyUHZLVy9rSmpGRm52NHVE?=
+ =?utf-8?B?dEU5VnVic0xtR2RxM05vWHUzb2FnekJQR1JEVGhTd3JwNURXTWc1VGZ2ODNC?=
+ =?utf-8?B?WGhmRFRtVGYxdGtzNG93eE4vZE16ejdtOGdwcm56dFNvMXlGb0hRK3FrNkhG?=
+ =?utf-8?B?VU5pQUFTTGhEU1EzOHdPQkNyS1RnekgyN1RVTW1lQ0tJdG1kMzJiek9GYjhn?=
+ =?utf-8?B?aDJEeVVWZjl6U0xZQWlrc2l5YldpcGtMcUVWTSsxWmVJb3FpbXh0azlmTTBm?=
+ =?utf-8?B?L0JDRTZBTHJCaFBPblp2VnhTOFAxbzhTVXRSa1VlWU5rS0hrRWxaUnBwL0Za?=
+ =?utf-8?B?c3ViODdsMVNNeUR5OWJpZFJsVlgrUWRPRkdUWHlLY2ZkU3krMmg5YmdxWTBV?=
+ =?utf-8?B?TGJPL2NQc016b0Q0UFB6VytGZ1pOaDNrc0VGcmY1RDcxc28zK2VDSHl4S21M?=
+ =?utf-8?B?NEFzUVVhcmUydmtRMUVmblA4YTcrRjQxNm80R1dzaExZWVpmc2kwK1YwVjc1?=
+ =?utf-8?B?VEZJRjBocDRjMWN6cW15Y2lpQ3orNFZTczdwRVVWL0s0bHBWQmdkalNjK1pm?=
+ =?utf-8?B?OVFseS93aDRUb3hQaGZTVXRnMkhUWHpFQ2d1a2ZYTU9UZXhoTWFXTThCNGZo?=
+ =?utf-8?B?QnVxK3N5U3UvSjFVMWlWazVDWW13WXRnTmlRNWpRbWtrZDlhRVU2YTRBSDdK?=
+ =?utf-8?B?T2g4ZG14UEhiU3JXam1jNFFyOEU4a3dBU2xLd0dHMjdPTFBpV3VxbUMyRWxa?=
+ =?utf-8?B?Z0JpaCsrZXZUNzJOZnphTUxVaEg5bVRhS1UyWGY0bmZoQk1TcWxQL0JVbmR4?=
+ =?utf-8?B?Vk9TbmFPcHRCa2ZjQjB5WFZIQXE5ZVc5S0pqQkdSU3BHS3pCVmJlV01uN3p3?=
+ =?utf-8?B?QldGcHhVYWJDSFVqVmtzQ2h6MklkQUUxcTR6Zy90aWxYOW1TSVU4dXpsbmh1?=
+ =?utf-8?B?ZDFMUGxhaFdIb2JVN1p0K2ZDaW9kTTgyYkdLRGlYcHp5LzYxKzhDdmhKbyta?=
+ =?utf-8?B?anpOS29RcHZad2RCQjhsZWxSUGN1Q096K2NubGhUSVRJV1RUNHg3cGJMS3RY?=
+ =?utf-8?B?SkcwemZZL2pSV3phNTEwTTlvZ0doVkZOSWRmM3pueHYreW9IWU1RSjFFOEFE?=
+ =?utf-8?B?RHdXVjlqaSswWVN2MXVNN3JWcVFOMjErdDdSTjZ3WHFNbDVITmowanJMYndi?=
+ =?utf-8?B?bGdzM0gvczNlTVArUXBxem9LQ09ZZG0xQk5VQnZreDIvOW1BbGF2TlNCdEhm?=
+ =?utf-8?B?Qmg1bVRIR0NVV3RSSEs5Qm0xeDVIOU81ekluYWtvbExCcjRhQmNiNUFsOFBh?=
+ =?utf-8?B?ckdLKzNEUWpVZThDL3kwOHQxenNXTytLNCtrRVdwT1VTaFM2ejdKWDhZT2Ev?=
+ =?utf-8?B?V3BzRW5LeFAzUzZTRm5PSXo4RmxBeTYyNTg5bEpCUU5hbDFKc3laM2Z3azBQ?=
+ =?utf-8?B?c3FtMGNnWWRXK2FKdnFtUDNld05xS0R3WEYwU2xXS3luSWZ2Z0o1TkpRdUNR?=
+ =?utf-8?B?dUNhcm5YWmhnNkFPdk1vYmxtVndKRkhWM1RtU2FnQzB5V3Q1SWhxMTFiUGxI?=
+ =?utf-8?B?TjlmZVVZdUFtMll3MWhtbzY4MGQ1ay8vS1BQZTJjM0VJYS9Cbm16VXMvTUYx?=
+ =?utf-8?B?ejVaQ2VObWZ3PT0=?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007)(921020);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(921020)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UEZ0K1pNSFpXbFNtelljTW93YUEvSm1Vbm92SnErWVYxdjdaQ1E4Qm1ZcFJa?=
- =?utf-8?B?SHRlcENvQm0yU2tidjlWZmh4TE9vM0tQZzJQY1BVeVVhaVRRYzJVS0k1bmdH?=
- =?utf-8?B?YnRzY3BzV0lQaUdoTldyaHVIcmpPdHBnT3VqT0lKQXZUOGdyUWtzUlRhS3Rk?=
- =?utf-8?B?QWlRSnlDd2J0WHRSekQrMlJtMUJCcys4NjNCS05hR3dJZDhCZFAxcHR3ZURX?=
- =?utf-8?B?NUtIS3RTYVRwK2g0TlZCdUtLM2h4eDFZdURkYytyeTlGcGZzNGN5SnBiaVlN?=
- =?utf-8?B?OUc5Uk5KOHpSbFAxRE5UdkpXTkw0cHQrenc0cDRmZUZtTmVxOFF6TGNPcHJh?=
- =?utf-8?B?MjVUeU9xRjVtdFNhY0lIS084WVNZZEFnQjVsNy9SVXpzdEFzY0VSZ0hxakts?=
- =?utf-8?B?TWdKaHpsT2hQZ0dqMmpWcHA2S3JweHk2SEExdDVwSDN1UUl1ZnVNSzBmM3F5?=
- =?utf-8?B?eTlRSncwMFlNLzFMcFVpaTNlRmVsc29EOXhsd1c0TXYzcGk2Njd6TXRadDlh?=
- =?utf-8?B?azlUazhodGR6aGFHNUNpR0lvOG1LNDVObTZXUGQ4MGRQV2dieFFBWDRza0Va?=
- =?utf-8?B?cGJDVE9HdE5LVzdGWm5leE9TQUVNczc2SXFMWGpkUnV5NFE0TTloU1FuZ1B4?=
- =?utf-8?B?aXI2RVhNUHN2VVB3NEpNaEhreDBFZ040YlF4WUEyWFE0ZWRXc2YxUFhhRUM4?=
- =?utf-8?B?eE9OejJUNjV0UllWUnBqaDMwcFgzYWxyQktWalA2T29oMGgreXdIbUJxREpE?=
- =?utf-8?B?OFJ0V3FJYkJCdEl3cERVN1IweW50VzBRMW5lbUc3MnlTL3pmb0NQZEdwKzRn?=
- =?utf-8?B?NmhSajlabkZQVEFJeDJKSjZTTlg0TDkxMHFOUUZoUDRRQ0c4ekdPNmFhL3di?=
- =?utf-8?B?Z3crem1ZWnBqbE95dEs3RElvOVFWMGZrSzhVemFTMS9UNUhqRG1nUzJzZnlY?=
- =?utf-8?B?SUpJKzRVS2tCREZwbjdJRlorRXd0dXhyRDVEdjVteS9wZ09OcjF0dk5TUkdz?=
- =?utf-8?B?L2R0YkI3TXBLb0tXUnlFYXJMWGhwb3h1L2MyTVdVQkwxRS9VQkxpWnpJSldT?=
- =?utf-8?B?SlJlQkFZMWdEZGtZWENCbDVza0ZGRStRRldFd3UvcldIbVJRc3VETlJqL1lr?=
- =?utf-8?B?VGkwbWVSODljVmYvTEg0NFFISkZ2bUlNT3lsdGtHa3E2ZkFvVHd3VXpEZWxy?=
- =?utf-8?B?d3orcFBqcUNnbUxIQmRUcHFKOEFnTGdnNkc3NWNQd1U5Tm5tbE03d0NyY2Ra?=
- =?utf-8?B?OGNibTJ0cmdKNTBKdnEvMUJEQjd2TjZLZ0JxcDJDUWU1NnRVWnJBZU4vaFBs?=
- =?utf-8?B?bVd4S0pMQTNWendKMGl3allNc3dDanFIZDFGNXpROERFa2pHZ0dDbko3NDFn?=
- =?utf-8?B?dVYremRaRFhYMmh6dUo5MDN6SGpoTEY5NjFZamFSa0FpZk8vbDhROUFwNzlp?=
- =?utf-8?B?UWV1TkRNa3JTd1grM0o5V0ZoNWgyV2ppTWk3RTF6b3FQcmtRSXRXYjl2QmJE?=
- =?utf-8?B?V3dLNUpvLy9KU1p5cGYxK1pTQjFldTU0ZmNmdFhheVJnZ1RnMUFWNUVXeW45?=
- =?utf-8?B?Y2VST1Fpa09XNERnSmJGMWNqTjhXRmtsMnhWay90clhmaEdWekFwcnNXMkU1?=
- =?utf-8?B?dy9kdTRoNHo5RUtJb2VNampEVVVzWjViUGxoZm05NTRaUTVWSmd3dUpTeHVI?=
- =?utf-8?B?UXh1UTFaZ0hDTytFRVVaRnI5M3R5RGNSbUl2ZWF1YUFkUW4zeHAyYk1PeDBE?=
- =?utf-8?B?Z1p2N3dLcHY3aVBFTVRqWU0wQ2RYVUlLUHdTQVNPVzNVaTFuV1g4NWtGMDhP?=
- =?utf-8?B?VmltZkRtYmtrbkxKd1FGVGFCRkF1TWYzbXpZTThJT080WWxpanNHZ3VueDRW?=
- =?utf-8?B?ZG92OEMyWkVPZnZqWVpJbXBWeUdnVlVFK0RXTUZwamNyVkpoQkNoN2JLakRE?=
- =?utf-8?B?bVRFVGc2cXJJZDVzWkRWK2ZLeEd3YzNmc041WVFPQzk3VVI1WUtuc1F0UVJY?=
- =?utf-8?B?bU9Ba0FEVnpnZHRlektqeUxOOHArbW0zeUgvS0F2V01YZEtGcm8vM2FTYnZQ?=
- =?utf-8?B?VVpWeEFqV2VLbjArUDZOcWhpMk1JVHdmNzZKWUJTdUZZSzg0Q2dHc0swK1gx?=
- =?utf-8?Q?83pvH/hA5dxwulleNRQQk294t?=
+	=?utf-8?B?YXlLQzRHWkN0NnplbjEvbDh0QVQrU0k5dkpYaGRJNkhYWDZzVDUvMEEwd1hp?=
+ =?utf-8?B?TTB4ZUUvMDVTUEtScnFEWlNjbzNRRWx0N3FLRkdFWjRaWjBYNkdGbnQydFJC?=
+ =?utf-8?B?V0VnK1lpM3k2RjBHVkE1VTRpaEhnUUpsMnF6Kzk1VmwzR3JlNFhRNFJFUXZz?=
+ =?utf-8?B?QzBwMFVNVGQzQkZwUDI2eE1XZmlPcEV1NVlpaS9Jbyt1NWp3MnZKUCtKQUlN?=
+ =?utf-8?B?SnF2M3F5Ulc5dTBRRnROWmFrK2x6NisxN211bnNxcnVvNWtLVTd0MXdmY2d2?=
+ =?utf-8?B?U0kvUnNGNHdyMTFqcVZrTGhvVS9sTmxpQlQxTFFRNklpV0pVUDN0cnorRlFZ?=
+ =?utf-8?B?UCt3ZnZIeHlHeC9WeHZWaDA3WUZKR0wrb1VWZlF2LzNURmtpNkF6MjNNWXd4?=
+ =?utf-8?B?RUlpa2t2N1o4MTVIOFhRNm9ocDBpeDB2WmZpOFpDYXhhdTVKWkM5RnQ0SVBB?=
+ =?utf-8?B?Z1RnWXAvUUFyckFvRkYrU2puKy9NcFArdHhhdXp4YjlYQk80L0ppeGZmWU5W?=
+ =?utf-8?B?bXVoaFBxR29CS2txNXpmZSswUDVPWEovUzcyOVBtVlFvS1FVWUlRS1BlVmlO?=
+ =?utf-8?B?dDE1QkpPdmYvTHlpVHBKTk50SG9lZ2phSWFsNDIwWUhjbkpHZCsxN0tYZGR6?=
+ =?utf-8?B?TURPajFrTllPMWU4aWxiRHltM0xBZ3lTMDJLbXRwM0RjQXlpTEQ0WEhDS3d4?=
+ =?utf-8?B?RzdJbk1XSFBEbDVLbmdhSVl2bm44OTRPSk1VTFRFbjVWdEFCeU1vdTNMclNm?=
+ =?utf-8?B?VTRrMkFXb1lVQjlLVHJvb1MzSzZwQ241K2Y1bk5CVE5LYVJzRzhGSFlVL0gw?=
+ =?utf-8?B?SVFKMTZnK3hiZlp3VkFISVNVdCtYVlFNcTRpU21TUktCbHUzcmE4dVZDazl3?=
+ =?utf-8?B?eGt0Y3pMRHpWUEFqZ1VnRlVXRGhMelMwTjA4dTY5RlFpd05GMGMyOGxzdEtz?=
+ =?utf-8?B?MXNGQ1lDODRHcGVId0JFZ1FPNkgzYW5oUS9CWTdMSzdvVFRuQ0JNbjVvQVJP?=
+ =?utf-8?B?cVEweTFUT1NmMGErejVuOGEwZzZxY1lGd0VwOWxXZTBNMTdBRjYzYTR4SllQ?=
+ =?utf-8?B?TllDUU4xRU90d3JlZ0d3anpaQUc4aFVmR3IySWpWTnp6WHMvTC9uQ2RmSnFy?=
+ =?utf-8?B?MFZFM2x0UlNBeXVZeVNPaXFvQ1QyWWNyYnZ5djVRdTM4bWJtVlVLd0NhT29W?=
+ =?utf-8?B?YW9WVWE4ZFJkMm9zbzAvYXJ3RUJQWFhMcWdoaWJGSzdTV2pueHdmZDUwK0Iw?=
+ =?utf-8?B?ZGxzR28wQS85STgxMkNnbXpITW50RGYzMmxDMGN5VnhtdURXcDVQWjFzSlJJ?=
+ =?utf-8?B?YUxpZnQwbUVEVjAreUlXM2ZIMUpVd295dTVacDhUbDh4M0tFV3ZWNWk1YThC?=
+ =?utf-8?B?cjRKeHFhL09YcHF5cXZPdVFGek9ITVJjamRiRlpyU016QnIvbVFDckZ6QmlB?=
+ =?utf-8?B?QmwwNXg4QzFsdXBmUzVDMkNYRkcrZDVLRVB6TlVmWThOZStIb0x0N29PT1F5?=
+ =?utf-8?B?ZVptMFZoNTlqUGxVbE5NNmkyaERKakxlWGJWWjNiai9hN2JTb1pyb0p5SG5R?=
+ =?utf-8?B?aVJ4Yzl1TzdlaVo5ekhLQm5SaHFmaStISFNTZkJ3azdzSFRtVzNzdFZBUFZz?=
+ =?utf-8?B?b0tXQUEvM2JOUEcxMzVmMGpBSFhhaUZaQ3JZUktWQTA2dzUrd1dtMFpNcVdp?=
+ =?utf-8?B?Q09yTnlIQmJ4OWNIMzgvK2g4OUJCTjZ4MHFuVmVabjhidE1JNVZqa1Q0cStG?=
+ =?utf-8?B?OTFMczAyQ25ibi9pNU1FYzFMMjVRMVRsMFdvb3VSTHVmVE5PcW1wRS9CZi9R?=
+ =?utf-8?B?UlFXN05MRTFucjZ4eTNlNTRIUlBqcWNMK1dhWDZ0am5OaWJPeVFneFQrRVlK?=
+ =?utf-8?B?U1FJWUIwWHJUdjFCUXEvWGZXRVBRcEVKRlUybFlWSEVRT2NUSU9oUDdDZlA4?=
+ =?utf-8?B?WmxYR0RycHkwdGVmN0U5RDByRjByTUtMSDgxWVViVnpxU0xacW5mUDJEVlRN?=
+ =?utf-8?B?REQvQjlubzVYNG9vdzc2TkhLWDBHMm5meDBjQ3dxKzE4RWtpd3dZZHpLcllF?=
+ =?utf-8?B?dzVhcnd6cDI0ZDBQcnpIdklOUWdXYVdOMHhRZHZkY0lOckQ0bk1PRzRaMi9h?=
+ =?utf-8?Q?zU3f2542ibC1ZtXopNCK+fH3p?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 976ceb80-d9f9-4b15-3724-08ddd8e4c420
+X-MS-Exchange-CrossTenant-Network-Message-Id: 45c628b5-7a4d-46dc-78a7-08ddd8e5c95e
 X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Aug 2025 14:38:41.3894
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Aug 2025 14:45:59.5436
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: V2aTWrcf4mUW1r+eTEdm7SISJlj6oifDGLRwBOj0Nse+Ob/3Ab2fhK4LbUIIX8CA7PWFgzNMza7E4Y9SK+mCqA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6843
+X-MS-Exchange-CrossTenant-UserPrincipalName: vzYIlTqGYNSXjcbpm8BZIGXFckcVuYxcqmqWo8r1+RKKN35G4fEpsQQRMzUQrk6ujx3cC21pfIvHIpaNBCgTnw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7429
 
 
-On 7/28/25 17:20, dan.j.williams@intel.com wrote:
+On 8/5/25 17:33, dan.j.williams@intel.com wrote:
 > alejandro.lucero-palau@ wrote:
 >> From: Alejandro Lucero <alucerop@amd.com>
 >>
->> Use cxl api for creating a region using the endpoint decoder related to
->> a DPA range.
+>> Creating a CXL region requires userspace intervention through the cxl
+>> sysfs files. Type2 support should allow accelerator drivers to create
+>> such cxl region from kernel code.
 >>
->> Add a callback for unwinding sfc cxl initialization when the endpoint port
->> is destroyed by potential cxl_acpi or cxl_mem modules removal.
+>> Adding that functionality and integrating it with current support for
+>> memory expanders.
 >>
->> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
->> ---
->>   drivers/net/ethernet/sfc/efx_cxl.c | 24 +++++++++++++++++++++++-
->>   1 file changed, 23 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
->> index ffbf0e706330..7365effe974e 100644
->> --- a/drivers/net/ethernet/sfc/efx_cxl.c
->> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
->> @@ -18,6 +18,16 @@
->>   
->>   #define EFX_CTPIO_BUFFER_SIZE	SZ_256M
->>   
->> +static void efx_release_cxl_region(void *priv_cxl)
->> +{
->> +	struct efx_probe_data *probe_data = priv_cxl;
->> +	struct efx_cxl *cxl = probe_data->cxl;
->> +
->> +	iounmap(cxl->ctpio_cxl);
-> There is no synchronization here. If someone unbinds the a cxl_port
-> while the driver is using @ctpio_cxl, it looks it will cause a crash.
-
-
-Yes, the unmapping should be after changing cxl_pio_initialised. I will 
-fix it if this mechanism stays ...
-
-
+>> Support an action by the type2 driver to be linked to the created region
+>> for unwinding the resources allocated properly.
+> The hardest part of CXL is the fact that typical straight-line driver
+> expectations like "device present == MMIO available" are violated. An
+> accelerator driver needs to worry about asynchronous region detach and
+> CXL port detach.
 >
-> The loss of CXL connectivity after the driver has already committed to
-> it likely means that the whole driver needs to be shutdown, not just
-> this region cleanup.
+> Ideally any event that takes down a CXL port or the region simply
+> results in the accelerator driver being detached to clean everything up.
+>
+> The difficult part about that is that the remove path for regions and
+> CXL ports hold locks that prevent the accelerator remove path from
+> running.
+>
+> I do not think it is maintainable for every accelerator driver to invent
+> its own cleanup scheme like this. The expectation should be that a
+> region can go into a defunct state if someone triggers removal actions
+> in the wrong order, but otherwise the accelerator driver should be able
+> to rely on a detach event to clean everything up.
+>
+> So opting into CXL operation puts a driver into a situation where it can
+> be unbound whenever the CXL link goes down logically or physically.
+> Physical device removal of a CXL port expects that the operator has
+> first shutdown all driver operations, and if they have not at least the
+> driver should not crash while awaiting the remove event.
+>
+> Physical CXL port removal is the "easy" case since that will naturally
+> result in the accelerator 'struct pci_dev' being removed. The more
+> difficult cases are the logical removal / shutdown of a CXL port or
+> region. Those should schedule accelerator detach and put the region into
+> an error state until that cleanup runs.
+>
+> So, in summary, do not allow for custom region callbacks, arrange for
+> accelerator detach and just solve the "fail in-flight operations while
+> awaiting detach" problem.
+>
+
+This is similar to what I mentioned in patch 20: the idea is to handle 
+cxl modules removal and not CXL errors.
 
 
-What I am trying to handle here is not an CXL error but removal of cxl 
-modules. If the latter happens, the driver will keep using other 
-datapath but not the cxl_pio memory.
+But seizing on the error case, if the error is:
 
 
-About a CXL error, I really do not know what is the right thing to do 
-here. If further CXL.mem writes after such an error are not problematic, 
-then this is enough. If not, I'm afraid we can not safely deal with this 
-since the host/driver will be notified too late.
+1) not fatal and related to CXL.mem: the sfc driver can keep working 
+without the CXL PIO memory as a datapath.
+
+2) not fatal and related to CXL.io: I see this like current pcie error 
+handling.
+
+3) fatal and CXL.mem related: probably nothing safe to do or too late
+
+4) fatal and CXL.io: not sure if similar to 2 or to 3
+
 
