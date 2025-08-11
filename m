@@ -1,459 +1,247 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E53C2C21CB
-	for <linux-cxl@vger.kernel.org>; Mon, 11 Aug 2025 16:57:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09FCB224891;
+	Mon, 11 Aug 2025 18:30:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754931433; cv=none; b=kytdtjvGPC9pgXRZK25RBpC0laEl1EcdJ7na2WPi/PNJbFmasqVqO6ctbn5lWrb/DC6/sq2b0vzXqG7OZ8cTYMwWydxXbHccKR22uqRudV0Or4eYk/rTZK1nzEgKU2R58xsNxBk3THi747cnRCKaljptL3UxDZ8P1DcRJ8DE+ys=
+	t=1754937060; cv=none; b=DhKL9mrrIGRC+MpZdpCLPzf4A04Gyv81Rnj2Pzv25m0LVJROuqhbtjnkMIf9+/VWSmpz+R2wOXB+HETTdNIrLtZGrTiJmhUmRU8iaJaZePpfuvOb3heqDo0rDp2gF69rAvurBJS5aGC6K0mG71vFFB70iq9CYWDgUp3b7Y5fBSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754931433; c=relaxed/simple;
-	bh=nELo84TMa1IZMgx2lCcTovNC4YyApcsx6Bw7k7fhq6E=;
+	s=arc-20240116; t=1754937060; c=relaxed/simple;
+	bh=xk8qaiErmfTGhxRgj9XAM40WAN3dsm5MjAETZq/bFWY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=F+CkESeSmbPC6YdtC6hCNCERSgWUD/8O7SmAlLzTfWMS9bTGFDLWaMks+TjiOWO8D2QUuln9o4W2jqSh3ifs9kBh2/Hs7dlFxyu1xtWld5lYxFvAVfqeY+L7dPd2OsJUgoWp7hlPvl/oJXAFFcYuXR37pohkzobrDxvUxJ01few=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Tv6cBMxo; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ewjhR8RwraQ4vT14sbUrle+yxOGADGPk2CkWzABUchcP19eb1hL+RTv5ScRjq76D+QfdQTLdnxGHvNLrOWteJiUcyj9VvW1V7fmHiWdYe7VS6kyWYjO/kmTkLFB+AEJhYuf1prYOyYpvNGSlNJzENMOWbD5XgzHFxSEjEzzZ4BM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QFvW6WU3; arc=none smtp.client-ip=209.85.160.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tv6cBMxo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1754931430;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tttzqLi/wJy6OVDa7dUv5ptLJx05gbnq9e0lYKVIt5M=;
-	b=Tv6cBMxosLV1SoU0It/YjYj1Fk23BfQpLYd/GQwwsgKDhKAn8o8A4d+WLLPcNdjMJrbMYN
-	aRYqYlprzESiiOHhPmH1g7b/C/UHKWV3+Sv1TzMsAdNIellV4AKfLOKEpp5Bn2GWenOKNJ
-	UMA/Klulikny1DTOUlTBKgFS87xU+2A=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-513-4FnaE8rjNJC6EvfMJfwOrg-1; Mon, 11 Aug 2025 12:57:06 -0400
-X-MC-Unique: 4FnaE8rjNJC6EvfMJfwOrg-1
-X-Mimecast-MFC-AGG-ID: 4FnaE8rjNJC6EvfMJfwOrg_1754931426
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-459d6c83e2eso26094545e9.1
-        for <linux-cxl@vger.kernel.org>; Mon, 11 Aug 2025 09:57:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QFvW6WU3"
+Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-30b71d5cc03so2173248fac.3;
+        Mon, 11 Aug 2025 11:30:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1754937057; x=1755541857; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=erUZxz/3YKb6AzciSl87N1qVga0MvtNzwF8QlCkJO6o=;
+        b=QFvW6WU3lgM6P2wijhOmXo0qcXF+io6JNG7854YLpujDhyjrb8dI/Rf6JL3WS82bQP
+         nrP8hKLjATEQk/XqdD2FC92YTCVlkBw4sjxZCxyR/TfWW3seym14kgb6wi9G6oJS37zl
+         cC4RLpKIorsT47uH2SUc9WUhVfWm6LSIzbj9fAl656ybTNuk6bUQ83ZslHdbDinXw1rx
+         RZLQh1TxS1WkHGOLWtk0n5bxdcaHAnvxixIS6o/rlF70pS1Ival5JRNValbBwGaEvdD0
+         mZ7rRgIsf1QpAX2q+OdWRAmZZ169JCvtmaEmiVLM/bZql0GhNIqPNtCjakW7zBaRNBOA
+         y0MQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754931425; x=1755536225;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tttzqLi/wJy6OVDa7dUv5ptLJx05gbnq9e0lYKVIt5M=;
-        b=K9aj1nuUwmiu/nAxNm1wNFwPPoFozvQ93xcbWAPilSvmI6NqJhPvdPGcvfYE07hr1V
-         kcMWiip67M4TbF1qIEZI73fwKDvu1NmoEA/TF9X899wWVic+XjnnNoGtU7nuRc22m8j3
-         VAVxurmhuMSVcbhpK0gv6+nvVFtK/jVjEivZsu7w9kGF5DBeQ19OoCYkeEYrrXB4Ordy
-         eCMyUGZQWmWMbWP02r62LLqDJuZAwEKpQ0Q18e8L6Wb2YiY/evFyoLakInGlRp9aGjf7
-         Cx+uNVOZrn+tQDv7FWzmMNMTDTcK0HLF3XkVeJk7N6g9v+R2in5v9eRjOsEtfmAp6cjb
-         lDzA==
-X-Forwarded-Encrypted: i=1; AJvYcCUGLMUnKgV0ZCi8fanP7lK2OMHbOdTdNhCpRh1GHeb3fpGc4ABsyVosLlQ42CzG5PocQwR7EhmZcnQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzC0WKJSHXScNna4SWICDwfKVrmd6zyCjo3z+JFE8TtAQujJyV+
-	VJqjwXPagju0S/tgKUGy71oiWXZB0t/I+whSgkOaO3JtiGqMOs8Tb/2Qa5U7Nc34YkOxPq8P5c6
-	XfsFPQrutF+IwAuWj9dK1Wq7ZjH4owSfTYWRNN0SKHAw2bedzDZNWQTI6+2R7Cw==
-X-Gm-Gg: ASbGncvEsaIr8rcPh6fpibB0iJllan694X2K4sP9UpdLP+LzFBIxpJZdDTYJkvnkw/T
-	XlemtotJJcATp/Xsvo1ta4eekn0bF3iM7xFi78qML10hVLI5wdHIiJtBcldmstJJrmON5R5Q7bJ
-	cdQ1J1a8drGTh2rTN3Izj8UrVzScTojeBkuLUtc7tojZffp9gUwFu1dgheejC78J8cVNV0laF/J
-	r9hb7hN3qidDxN29VH21OH9dXFTmS6MqHIVnL9GSSoW052bglG52+yvfjUhMUfteyAL8N9IKhxP
-	ME93O/+vLZh6dNYeOJEqPbyjapymsD9D
-X-Received: by 2002:a05:600c:35c3:b0:456:18cf:66b5 with SMTP id 5b1f17b1804b1-45a10c0063amr3937665e9.22.1754931425116;
-        Mon, 11 Aug 2025 09:57:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IErqSPb9cJiFSV5DEgWAoPDiqps3otYi2ZeQ3oDJCusmhK1zVaUFhFeN+Nv6u8Zsj9oY4XjCQ==
-X-Received: by 2002:a05:600c:35c3:b0:456:18cf:66b5 with SMTP id 5b1f17b1804b1-45a10c0063amr3937435e9.22.1754931424608;
-        Mon, 11 Aug 2025 09:57:04 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1515:7300:62e6:253a:2a96:5e3])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c3c33fesm41891185f8f.29.2025.08.11.09.57.03
+        d=1e100.net; s=20230601; t=1754937057; x=1755541857;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=erUZxz/3YKb6AzciSl87N1qVga0MvtNzwF8QlCkJO6o=;
+        b=oo6IJeJwPqlLqPeprQTVZgpBWEDBoPTUN6OKVA8GRx36Dd21esfl1SNYegwqbtqFaO
+         mz8BLqKhWXTucM467n6k0sxXCJsnuqSXKx7AdD18q1OvB5WYymWEVX4zpB/9JNxGXS3K
+         H+b7kZDMR32eEpvFyP8tbUyLBDLGS3Nw8NaVyg9sft00dcv4BmxU25Hg98g19JmqmdX5
+         ci4eVnQZXvFXva1j26iyquRdxzTx2PtAOw05BA08v9R0rg4Ydu8+BsF+VhhRst2PQqEb
+         A0Mvl5m9pqkmZAZ7zDFqePWXAlBHpcsdadKYfrUAU7NVZLg7Kvh/rdmOQedV+S4Qh6L+
+         E41w==
+X-Forwarded-Encrypted: i=1; AJvYcCUZHfOi5fNuffONqKZLrJUGT1baLrvzlMcAjaVYwQoHRGSM6JWqawwgm1gz+ICu06dRMHo9sdft58i4@vger.kernel.org, AJvYcCVRwA/CZMlZqhj4cG8cIrKd3CLVJWA8EAiAcF/FYTGx/1UhoR2IDm+JOxLUgj7keAjV4Vgy3icIAus=@vger.kernel.org, AJvYcCXZrU08wFR/oKbRmae1uzxCkdHbCuqukcViu43RxYlJJ4GsP7UDzeB2mDkm1yLDVvvUE12WszfnXMiTYA46@vger.kernel.org, AJvYcCXlQ3pfbvaOmTj1IMhsy/f8oWBgRbXrVTtN1xPuNVvqHQhmJmdYeh3mvA2ajiRf15WkBRDwdulYMSQkSRpK1A==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBM60ybjEwUU3z8DkupVY5gVO2d6J0Jfvidcn3usdvBjwUUrMl
+	zln49tgCrsPWZT+igMethtXCERAdnzBDMLS67y1CQYUm3aeSXBJwoVLG
+X-Gm-Gg: ASbGnctfgCiDoA8kuHZiLIc1xTiEuMGHUfzAoPdAMCqyUsPHhho9kZnQQZjmTvaw7X6
+	okgxtRn4/b6nXE1SpdCAKU73K51tULJN2zTJid7InkGLsJuLtqSp15bz3fBubw9o+TNQAnYPRCf
+	1a/qLzHQ6MrHuIGnzpJobzO+SPn8eHDeCGtsTks9/13ZMVfTD0LwyxL0KxpSEyIFNW5EQ5H7LxC
+	SmU9nui2E/lSVxYfAI+PchCGHI41aF9VGRfkYn36miXGTg8saoBn7DOnKCPtNe6Bfl3wOBOTmrq
+	8S1QAnqLNe0YCbyuwPBkyIxc8Vs97iRtugPPKqxDu9s9sEnEO5q9zHzFT9izuaC3Ch6gDMaIUZJ
+	qJqKuqr75p9e/toi8PwQ7UrwNFA1h9PnaFgq/
+X-Google-Smtp-Source: AGHT+IFeSQ0skn1obsPdMuUc/I2OxHhwHFM3A2M1joHpdeeawx5gSo3o7y+eUrVN/gXuAHlP6eMhag==
+X-Received: by 2002:a05:6870:479b:b0:307:3d5:713f with SMTP id 586e51a60fabf-30c210da176mr9357342fac.19.1754937056701;
+        Mon, 11 Aug 2025 11:30:56 -0700 (PDT)
+Received: from groves.net ([2603:8080:1500:3d89:b420:5f86:575e:74a8])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-307a7390b47sm7916818fac.21.2025.08.11.11.30.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Aug 2025 09:57:04 -0700 (PDT)
-Date: Mon, 11 Aug 2025 12:57:01 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, ira.weiny@intel.com,
-	alucerop@amd.com, a.manzanares@samsung.com,
-	linux-cxl@vger.kernel.org, qemu-devel@nongnu.org,
-	Marcel Apfelbaum <marcel.apfelbaum@gmail.com>,
-	Markus Armbruster <armbru@redhat.com>
-Subject: Re: [PATCH 1/4] hw/pcie: Support enabling flit mode
-Message-ID: <20250811125552-mutt-send-email-mst@kernel.org>
-References: <20250811033405.332295-1-dave@stgolabs.net>
- <20250811033405.332295-2-dave@stgolabs.net>
- <20250811165741.00003aa2@huawei.com>
+        Mon, 11 Aug 2025 11:30:55 -0700 (PDT)
+Sender: John Groves <grovesaustin@gmail.com>
+Date: Mon, 11 Aug 2025 13:30:53 -0500
+From: John Groves <John@groves.net>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Amir Goldstein <amir73il@gmail.com>, 
+	Dan Williams <dan.j.williams@intel.com>, Miklos Szeredi <miklos@szeredi.hu>, 
+	Bernd Schubert <bschubert@ddn.com>, John Groves <jgroves@micron.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
+	Kent Overstreet <kent.overstreet@linux.dev>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
+	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
+	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, john@groves.net
+Subject: Re: [RFC V2 10/18] famfs_fuse: Basic fuse kernel ABI enablement for
+ famfs
+Message-ID: <z2yuwgzsbbirtfmr2rkgbq3yhjtvihumdxp4bvwgkybikubhgp@lfjfhlvtckmr>
+References: <20250703185032.46568-1-john@groves.net>
+ <20250703185032.46568-11-john@groves.net>
+ <CAOQ4uxi7fvMgYqe1M3_vD3+YXm7x1c4YjA=eKSGLuCz2Dsk0TQ@mail.gmail.com>
+ <yhso6jddzt6c7glqadrztrswpisxmuvg7yopc6lp4gn44cxd4m@my4ajaw47q7d>
+ <20250707173942.GC2672029@frogsfrogsfrogs>
+ <ueepqz3oqeqzwiidk2wlf3f7enxxte4ws27gtxhakfmdiq4t26@cvfmozym5rme>
+ <20250709015348.GD2672029@frogsfrogsfrogs>
+ <wam2qo5r7tbpf4ork5qcdqnw4olhfpkvlqpnbuqpwfhrymf3dq@hw3frnbadhk7>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250811165741.00003aa2@huawei.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 1TApMM7LzVBlnJgBVQJtYE7w7bWnmXmTCbuaU3KLVjI_1754931426
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <wam2qo5r7tbpf4ork5qcdqnw4olhfpkvlqpnbuqpwfhrymf3dq@hw3frnbadhk7>
 
-On Mon, Aug 11, 2025 at 04:57:41PM +0100, Jonathan Cameron wrote:
-> On Sun, 10 Aug 2025 20:34:02 -0700
-> Davidlohr Bueso <dave@stgolabs.net> wrote:
-> 
-> > As with the link speed and width training, have ad-hoc property for
-> > setting the flit mode and allow CXL components to make use of it.
-
-I note we didn't make it a stable API for width, want to
-prefix this one with "x-", too?
-
-> > For the CXL root port and dsp cases, always report flit mode but
-> > the actual value after 'training' will depend on the downstream
-> > device configuration.
+On 25/07/10 08:32PM, John Groves wrote:
+> On 25/07/08 06:53PM, Darrick J. Wong wrote:
+> > On Tue, Jul 08, 2025 at 07:02:03AM -0500, John Groves wrote:
+> > > On 25/07/07 10:39AM, Darrick J. Wong wrote:
+> > > > On Fri, Jul 04, 2025 at 08:39:59AM -0500, John Groves wrote:
+> > > > > On 25/07/04 09:54AM, Amir Goldstein wrote:
+> > > > > > On Thu, Jul 3, 2025 at 8:51 PM John Groves <John@groves.net> wrote:
+> > > > > > >
+> > > > > > > * FUSE_DAX_FMAP flag in INIT request/reply
+> > > > > > >
+> > > > > > > * fuse_conn->famfs_iomap (enable famfs-mapped files) to denote a
+> > > > > > >   famfs-enabled connection
+> > > > > > >
+> > > > > > > Signed-off-by: John Groves <john@groves.net>
+> > > > > > > ---
+> > > > > > >  fs/fuse/fuse_i.h          |  3 +++
+> > > > > > >  fs/fuse/inode.c           | 14 ++++++++++++++
+> > > > > > >  include/uapi/linux/fuse.h |  4 ++++
+> > > > > > >  3 files changed, 21 insertions(+)
+> > > > > > >
+> > > > > > > diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
+> > > > > > > index 9d87ac48d724..a592c1002861 100644
+> > > > > > > --- a/fs/fuse/fuse_i.h
+> > > > > > > +++ b/fs/fuse/fuse_i.h
+> > > > > > > @@ -873,6 +873,9 @@ struct fuse_conn {
+> > > > > > >         /* Use io_uring for communication */
+> > > > > > >         unsigned int io_uring;
+> > > > > > >
+> > > > > > > +       /* dev_dax_iomap support for famfs */
+> > > > > > > +       unsigned int famfs_iomap:1;
+> > > > > > > +
+> > > > > > 
+> > > > > > pls move up to the bit fields members.
+> > > > > 
+> > > > > Oops, done, thanks.
+> > > > > 
+> > > > > > 
+> > > > > > >         /** Maximum stack depth for passthrough backing files */
+> > > > > > >         int max_stack_depth;
+> > > > > > >
+> > > > > > > diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+> > > > > > > index 29147657a99f..e48e11c3f9f3 100644
+> > > > > > > --- a/fs/fuse/inode.c
+> > > > > > > +++ b/fs/fuse/inode.c
+> > > > > > > @@ -1392,6 +1392,18 @@ static void process_init_reply(struct fuse_mount *fm, struct fuse_args *args,
+> > > > > > >                         }
+> > > > > > >                         if (flags & FUSE_OVER_IO_URING && fuse_uring_enabled())
+> > > > > > >                                 fc->io_uring = 1;
+> > > > > > > +                       if (IS_ENABLED(CONFIG_FUSE_FAMFS_DAX) &&
+> > > > > > > +                           flags & FUSE_DAX_FMAP) {
+> > > > > > > +                               /* XXX: Should also check that fuse server
+> > > > > > > +                                * has CAP_SYS_RAWIO and/or CAP_SYS_ADMIN,
+> > > > > > > +                                * since it is directing the kernel to access
+> > > > > > > +                                * dax memory directly - but this function
+> > > > > > > +                                * appears not to be called in fuse server
+> > > > > > > +                                * process context (b/c even if it drops
+> > > > > > > +                                * those capabilities, they are held here).
+> > > > > > > +                                */
+> > > > > > > +                               fc->famfs_iomap = 1;
+> > > > > > > +                       }
+> > > > > > 
+> > > > > > 1. As long as the mapping requests are checking capabilities we should be ok
+> > > > > >     Right?
+> > > > > 
+> > > > > It depends on the definition of "are", or maybe of "mapping requests" ;)
+> > > > > 
+> > > > > Forgive me if this *is* obvious, but the fuse server capabilities are what
+> > > > > I think need to be checked here - not the app that it accessing a file.
+> > > > > 
+> > > > > An app accessing a regular file doesn't need permission to do raw access to
+> > > > > the underlying block dev, but the fuse server does - becuase it is directing
+> > > > > the kernel to access that for apps.
+> > > > > 
+> > > > > > 2. What's the deal with capable(CAP_SYS_ADMIN) in process_init_limits then?
+> > > > > 
+> > > > > I *think* that's checking the capabilities of the app that is accessing the
+> > > > > file, and not the fuse server. But I might be wrong - I have not pulled very
+> > > > > hard on that thread yet.
+> > > > 
+> > > > The init reply should be processed in the context of the fuse server.
+> > > > At that point the kernel hasn't exposed the fs to user programs, so
+> > > > (AFAICT) there won't be any other programs accessing that fuse mount.
+> > > 
+> > > Hmm. It would be good if you're right about that. My fuse server *is* running
+> > > as root, and when I check those capabilities in process_init_reply(), I
+> > > find those capabilities. So far so good.
+> > > 
+> > > Then I added code to my fuse server to drop those capabilities prior to
+> > > starting the fuse session (prctl(PR_CAPBSET_DROP, CAP_SYS_RAWIO) and 
+> > > prctl(PR_CAPBSET_DROP, CAP_SYS_ADMIN). I expected (hoped?) to see those 
+> > > capabilities disappear in process_init_reply() - but they did not disappear.
+> > > 
+> > > I'm all ears if somebody can see a flaw in my logic here. Otherwise, the
+> > > capabilities need to be stashed away before the reply is processsed, when 
+> > > fs/fuse *is* running in fuse server context.
+> > > 
+> > > I'm somewhat surprised if that isn't already happening somewhere...
 > > 
-> > Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-> 
-> Definitely include PCI maintainers on this.
-> +CC Michael, and Marcel.
-> 
-> Also Markus for command line bits.
-> 
-> Looks good to me.
-> 
-> Jonathan
-> 
-> 
-> > ---
-> >  hw/mem/cxl_type3.c                        |  9 ++++++---
-> >  hw/pci-bridge/cxl_downstream.c            | 11 +++++++----
-> >  hw/pci-bridge/cxl_root_port.c             | 11 +++++++----
-> >  hw/pci-bridge/cxl_upstream.c              | 19 +++++++++++--------
-> >  hw/pci-bridge/gen_pcie_root_port.c        |  1 +
-> >  hw/pci/pcie.c                             | 23 +++++++++++++++++++----
-> >  include/hw/cxl/cxl_device.h               |  1 +
-> >  include/hw/pci-bridge/cxl_upstream_port.h |  1 +
-> >  include/hw/pci/pcie.h                     |  2 +-
-> >  include/hw/pci/pcie_port.h                |  1 +
-> >  10 files changed, 55 insertions(+), 24 deletions(-)
+> > Hrm.  I *thought* that since FUSE_INIT isn't queued as a background
+> > command, it should still execute in the same process context as the fuse
+> > server.
 > > 
-> > diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> > index c4658e0955d5..ecd3a7703b35 100644
-> > --- a/hw/mem/cxl_type3.c
-> > +++ b/hw/mem/cxl_type3.c
-> > @@ -533,9 +533,10 @@ static void build_dvsecs(CXLType3Dev *ct3d)
-> >                                 GPF_DEVICE_DVSEC_REVID, dvsec);
-> >  
-> >      dvsec = (uint8_t *)&(CXLDVSECPortFlexBus){
-> > -        .cap                     = 0x26, /* 68B, IO, Mem, non-MLD */
-> > +                                   /* 68B (maybe), IO, Mem, non-MLD */
-> > +        .cap                     = ct3d->flitmode ? 0x6 : 0x26,
-> >          .ctrl                    = 0x02, /* IO always enabled */
-> > -        .status                  = 0x26, /* same as capabilities */
-> > +        .status                  = ct3d->flitmode ? 0x6 : 0x26, /* same */
-> >          .rcvd_mod_ts_data_phase1 = 0xef, /* WTF? */
-> >      };
-> >      cxl_component_create_dvsec(cxl_cstate, CXL2_TYPE3_DEVICE,
-> > @@ -1501,7 +1502,8 @@ void ct3d_reset(DeviceState *dev)
-> >      uint32_t *reg_state = ct3d->cxl_cstate.crb.cache_mem_registers;
-> >      uint32_t *write_msk = ct3d->cxl_cstate.crb.cache_mem_regs_write_mask;
-> >  
-> > -    pcie_cap_fill_link_ep_usp(PCI_DEVICE(dev), ct3d->width, ct3d->speed);
-> > +    pcie_cap_fill_link_ep_usp(PCI_DEVICE(dev), ct3d->width, ct3d->speed,
-> > +                              ct3d->flitmode);
-> >      cxl_component_register_init_common(reg_state, write_msk, CXL2_TYPE3_DEVICE);
-> >      cxl_device_register_init_t3(ct3d, CXL_T3_MSIX_MBOX);
-> >  
-> > @@ -1540,6 +1542,7 @@ static const Property ct3_props[] = {
-> >                                  speed, PCIE_LINK_SPEED_32),
-> >      DEFINE_PROP_PCIE_LINK_WIDTH("x-width", CXLType3Dev,
-> >                                  width, PCIE_LINK_WIDTH_16),
-> > +    DEFINE_PROP_BOOL("256b-flit", CXLType3Dev, flitmode, false),
-> >      DEFINE_PROP_UINT16("chmu-port", CXLType3Dev, cxl_dstate.chmu[0].port, 0),
-> >  };
-> >  
-> > diff --git a/hw/pci-bridge/cxl_downstream.c b/hw/pci-bridge/cxl_downstream.c
-> > index 6aa8586f0161..94dcd52a8017 100644
-> > --- a/hw/pci-bridge/cxl_downstream.c
-> > +++ b/hw/pci-bridge/cxl_downstream.c
-> > @@ -116,8 +116,9 @@ static void cxl_dsp_reset(DeviceState *qdev)
-> >      latch_registers(dsp);
-> >  }
-> >  
-> > -static void build_dvsecs(CXLComponentState *cxl)
-> > +static void build_dvsecs(PCIDevice *d, CXLComponentState *cxl)
-> >  {
-> > +    PCIESlot *s = PCIE_SLOT(d);
-> >      CXLDVSECRegisterLocator *regloc_dvsec;
-> >      uint8_t *dvsec;
-> >      int i;
-> > @@ -129,9 +130,10 @@ static void build_dvsecs(CXLComponentState *cxl)
-> >                                 EXTENSIONS_PORT_DVSEC_REVID, dvsec);
-> >  
-> >      dvsec = (uint8_t *)&(CXLDVSECPortFlexBus){
-> > -        .cap                     = 0x27, /* Cache, IO, Mem, non-MLD */
-> > +                                   /* 68B (maybe), IO, Mem, non-MLD */
-> > +        .cap                     = s->flitmode ? 0x7 : 0x27,
-> >          .ctrl                    = 0x02, /* IO always enabled */
-> > -        .status                  = 0x26, /* same */
-> > +        .status                  = s->flitmode ? 0x6 : 0x26, /* same */
-> >          .rcvd_mod_ts_data_phase1 = 0xef, /* WTF? */
-> >      };
-> >      cxl_component_create_dvsec(cxl, CXL2_DOWNSTREAM_PORT,
-> > @@ -212,7 +214,7 @@ static void cxl_dsp_realize(PCIDevice *d, Error **errp)
-> >  
-> >      cxl_cstate->dvsec_offset = CXL_DOWNSTREAM_PORT_DVSEC_OFFSET;
-> >      cxl_cstate->pdev = d;
-> > -    build_dvsecs(cxl_cstate);
-> > +    build_dvsecs(d, cxl_cstate);
-> >      cxl_component_register_block_init(OBJECT(d), cxl_cstate, TYPE_CXL_DSP);
-> >      memory_region_init(&dsp->bar, OBJECT(d), "registers", (2 << 16));
-> >      memory_region_add_subregion(&dsp->bar, 0, component_bar);
-> > @@ -257,6 +259,7 @@ static const Property cxl_dsp_props[] = {
-> >                                  speed, PCIE_LINK_SPEED_64),
-> >      DEFINE_PROP_PCIE_LINK_WIDTH("x-width", PCIESlot,
-> >                                  width, PCIE_LINK_WIDTH_16),
-> > +    DEFINE_PROP_BOOL("256b-flit", PCIESlot, flitmode, true),
-> >  };
-> >  
-> >  static void cxl_dsp_class_init(ObjectClass *oc, const void *data)
-> > diff --git a/hw/pci-bridge/cxl_root_port.c b/hw/pci-bridge/cxl_root_port.c
-> > index f035987b6f1f..fd992b808355 100644
-> > --- a/hw/pci-bridge/cxl_root_port.c
-> > +++ b/hw/pci-bridge/cxl_root_port.c
-> > @@ -109,8 +109,9 @@ static void latch_registers(CXLRootPort *crp)
-> >      cxl_component_register_init_common(reg_state, write_msk, CXL2_ROOT_PORT);
-> >  }
-> >  
-> > -static void build_dvsecs(CXLComponentState *cxl)
-> > +static void build_dvsecs(PCIDevice *d, CXLComponentState *cxl)
-> >  {
-> > +    PCIESlot *s = PCIE_SLOT(d);
-> >      CXLDVSECRegisterLocator *regloc_dvsec;
-> >      uint8_t *dvsec;
-> >      int i;
-> > @@ -131,9 +132,10 @@ static void build_dvsecs(CXLComponentState *cxl)
-> >                                 GPF_PORT_DVSEC_REVID, dvsec);
-> >  
-> >      dvsec = (uint8_t *)&(CXLDVSECPortFlexBus){
-> > -        .cap                     = 0x26, /* IO, Mem, non-MLD */
-> > +                                   /* 68B (maybe), IO, Mem, non-MLD */
-> > +        .cap                     = s->flitmode ? 0x6 : 0x26,
-> >          .ctrl                    = 0x2,
-> > -        .status                  = 0x26, /* same */
-> > +        .status                  = s->flitmode ? 0x6 : 0x26, /* same */
-> >          .rcvd_mod_ts_data_phase1 = 0xef,
-> >      };
-> >      cxl_component_create_dvsec(cxl, CXL2_ROOT_PORT,
-> > @@ -189,7 +191,7 @@ static void cxl_rp_realize(DeviceState *dev, Error **errp)
-> >  
-> >      cxl_cstate->dvsec_offset = CXL_ROOT_PORT_DVSEC_OFFSET;
-> >      cxl_cstate->pdev = pci_dev;
-> > -    build_dvsecs(cxl_cstate);
-> > +    build_dvsecs(pci_dev, cxl_cstate);
-> >  
-> >      cxl_component_register_block_init(OBJECT(pci_dev), cxl_cstate,
-> >                                        TYPE_CXL_ROOT_PORT);
-> > @@ -235,6 +237,7 @@ static const Property gen_rp_props[] = {
-> >                                  speed, PCIE_LINK_SPEED_64),
-> >      DEFINE_PROP_PCIE_LINK_WIDTH("x-width", PCIESlot,
-> >                                  width, PCIE_LINK_WIDTH_32),
-> > +    DEFINE_PROP_BOOL("256b-flit", PCIESlot, flitmode, true),
-> >  };
-> >  
-> >  static void cxl_rp_dvsec_write_config(PCIDevice *dev, uint32_t addr,
-> > diff --git a/hw/pci-bridge/cxl_upstream.c b/hw/pci-bridge/cxl_upstream.c
-> > index c2150afff39b..6269276408b8 100644
-> > --- a/hw/pci-bridge/cxl_upstream.c
-> > +++ b/hw/pci-bridge/cxl_upstream.c
-> > @@ -147,12 +147,13 @@ static void cxl_usp_reset(DeviceState *qdev)
-> >  
-> >      pci_bridge_reset(qdev);
-> >      pcie_cap_deverr_reset(d);
-> > -    pcie_cap_fill_link_ep_usp(d, usp->width, usp->speed);
-> > +    pcie_cap_fill_link_ep_usp(d, usp->width, usp->speed, usp->flitmode);
-> >      latch_registers(usp);
-> >  }
-> >  
-> > -static void build_dvsecs(CXLComponentState *cxl)
-> > +static void build_dvsecs(CXLUpstreamPort *usp)
-> >  {
-> > +    CXLComponentState *cxl_cstate = &usp->cxl_cstate;
-> >      CXLDVSECRegisterLocator *regloc_dvsec;
-> >      uint8_t *dvsec;
-> >      int i;
-> > @@ -160,17 +161,18 @@ static void build_dvsecs(CXLComponentState *cxl)
-> >      dvsec = (uint8_t *)&(CXLDVSECPortExt){
-> >          .status = 0x1, /* Port Power Management Init Complete */
-> >      };
-> > -    cxl_component_create_dvsec(cxl, CXL2_UPSTREAM_PORT,
-> > +    cxl_component_create_dvsec(cxl_cstate, CXL2_UPSTREAM_PORT,
-> >                                 EXTENSIONS_PORT_DVSEC_LENGTH,
-> >                                 EXTENSIONS_PORT_DVSEC,
-> >                                 EXTENSIONS_PORT_DVSEC_REVID, dvsec);
-> >      dvsec = (uint8_t *)&(CXLDVSECPortFlexBus){
-> > -        .cap                     = 0x27, /* Cache, IO, Mem, non-MLD */
-> > +                                 /* 68B (maybe), Cache, IO, Mem, non-MLD */
-> > +        .cap                     = usp->flitmode ? 0x7 : 0x27,
-> >          .ctrl                    = 0x27, /* Cache, IO, Mem */
-> > -        .status                  = 0x26, /* same */
-> > +        .status                  = usp->flitmode ? 0x6 : 0x26, /* same */
-> >          .rcvd_mod_ts_data_phase1 = 0xef, /* WTF? */
-> >      };
-> > -    cxl_component_create_dvsec(cxl, CXL2_UPSTREAM_PORT,
-> > +    cxl_component_create_dvsec(cxl_cstate, CXL2_UPSTREAM_PORT,
-> >                                 PCIE_CXL3_FLEXBUS_PORT_DVSEC_LENGTH,
-> >                                 PCIE_FLEXBUS_PORT_DVSEC,
-> >                                 PCIE_CXL3_FLEXBUS_PORT_DVSEC_REVID, dvsec);
-> > @@ -186,7 +188,7 @@ static void build_dvsecs(CXLComponentState *cxl)
-> >              RBI_CXL_CPMU_REG | 0; /* Port so only one 64 bit bar */
-> >          regloc_dvsec->reg_base[1 + i].hi = 0;
-> >      }
-> > -    cxl_component_create_dvsec(cxl, CXL2_UPSTREAM_PORT,
-> > +    cxl_component_create_dvsec(cxl_cstate, CXL2_UPSTREAM_PORT,
-> >                                 REG_LOC_DVSEC_LENGTH, REG_LOC_DVSEC,
-> >                                 REG_LOC_DVSEC_REVID, (uint8_t *)regloc_dvsec);
-> >  }
-> > @@ -381,7 +383,7 @@ static void cxl_usp_realize(PCIDevice *d, Error **errp)
-> >      }
-> >      cxl_cstate->dvsec_offset = CXL_UPSTREAM_PORT_DVSEC_OFFSET;
-> >      cxl_cstate->pdev = d;
-> > -    build_dvsecs(cxl_cstate);
-> > +    build_dvsecs(usp);
-> >      cxl_component_register_block_init(OBJECT(d), cxl_cstate, TYPE_CXL_USP);
-> >      memory_region_init(&usp->bar, OBJECT(d), "registers", (2 << 16));
-> >      memory_region_add_subregion(&usp->bar, 0, component_bar);
-> > @@ -433,6 +435,7 @@ static const Property cxl_upstream_props[] = {
-> >                                  speed, PCIE_LINK_SPEED_32),
-> >      DEFINE_PROP_PCIE_LINK_WIDTH("x-width", CXLUpstreamPort,
-> >                                  width, PCIE_LINK_WIDTH_16),
-> > +    DEFINE_PROP_BOOL("256b-flit", CXLUpstreamPort, flitmode, false),
-> >  };
-> >  
-> >  static void cxl_upstream_class_init(ObjectClass *oc, const void *data)
-> > diff --git a/hw/pci-bridge/gen_pcie_root_port.c b/hw/pci-bridge/gen_pcie_root_port.c
-> > index d9078e783bf0..b092463d471e 100644
-> > --- a/hw/pci-bridge/gen_pcie_root_port.c
-> > +++ b/hw/pci-bridge/gen_pcie_root_port.c
-> > @@ -145,6 +145,7 @@ static const Property gen_rp_props[] = {
-> >                                  speed, PCIE_LINK_SPEED_16),
-> >      DEFINE_PROP_PCIE_LINK_WIDTH("x-width", PCIESlot,
-> >                                  width, PCIE_LINK_WIDTH_32),
-> > +    DEFINE_PROP_BOOL("256b-flit", PCIESlot, flitmode, false),
-> >  };
-> >  
-> >  static void gen_rp_dev_class_init(ObjectClass *klass, const void *data)
-> > diff --git a/hw/pci/pcie.c b/hw/pci/pcie.c
-> > index eaeb68894e6e..cc8e7c3cbf3f 100644
-> > --- a/hw/pci/pcie.c
-> > +++ b/hw/pci/pcie.c
-> > @@ -113,7 +113,7 @@ pcie_cap_v1_fill(PCIDevice *dev, uint8_t port, uint8_t type, uint8_t version)
-> >  
-> >  /* Includes setting the target speed default */
-> >  static void pcie_cap_fill_lnk(uint8_t *exp_cap, PCIExpLinkWidth width,
-> > -                              PCIExpLinkSpeed speed)
-> > +                              PCIExpLinkSpeed speed, bool flitmode)
-> >  {
-> >      /* Clear and fill LNKCAP from what was configured above */
-> >      pci_long_test_and_clear_mask(exp_cap + PCI_EXP_LNKCAP,
-> > @@ -158,10 +158,15 @@ static void pcie_cap_fill_lnk(uint8_t *exp_cap, PCIExpLinkWidth width,
-> >                                         PCI_EXP_LNKCAP2_SLS_64_0GB);
-> >          }
-> >      }
-> > +
-> > +    if (flitmode) {
-> > +        pci_long_test_and_set_mask(exp_cap + PCI_EXP_LNKSTA2,
-> > +                                   PCI_EXP_LNKSTA2_FLIT);
-> > +    }
-> >  }
-> >  
-> >  void pcie_cap_fill_link_ep_usp(PCIDevice *dev, PCIExpLinkWidth width,
-> > -                               PCIExpLinkSpeed speed)
-> > +                               PCIExpLinkSpeed speed, bool flitmode)
-> >  {
-> >      uint8_t *exp_cap = dev->config + dev->exp.exp_cap;
-> >  
-> > @@ -175,7 +180,7 @@ void pcie_cap_fill_link_ep_usp(PCIDevice *dev, PCIExpLinkWidth width,
-> >                                 QEMU_PCI_EXP_LNKSTA_NLW(width) |
-> >                                 QEMU_PCI_EXP_LNKSTA_CLS(speed));
-> >  
-> > -    pcie_cap_fill_lnk(exp_cap, width, speed);
-> > +    pcie_cap_fill_lnk(exp_cap, width, speed, flitmode);
-> >  }
-> >  
-> >  static void pcie_cap_fill_slot_lnk(PCIDevice *dev)
-> > @@ -212,7 +217,7 @@ static void pcie_cap_fill_slot_lnk(PCIDevice *dev)
-> >          /* the PCI_EXP_LNKSTA_DLLLA will be set in the hotplug function */
-> >      }
-> >  
-> > -    pcie_cap_fill_lnk(exp_cap, s->width, s->speed);
-> > +    pcie_cap_fill_lnk(exp_cap, s->width, s->speed, s->flitmode);
-> >  }
-> >  
-> >  int pcie_cap_init(PCIDevice *dev, uint8_t offset,
-> > @@ -1106,6 +1111,8 @@ void pcie_sync_bridge_lnk(PCIDevice *bridge_dev)
-> >      if (!target || !target->exp.exp_cap) {
-> >          lnksta = lnkcap;
-> >      } else {
-> > +        uint16_t lnksta2;
-> > +
-> >          lnksta = target->config_read(target,
-> >                                       target->exp.exp_cap + PCI_EXP_LNKSTA,
-> >                                       sizeof(lnksta));
-> > @@ -1119,6 +1126,14 @@ void pcie_sync_bridge_lnk(PCIDevice *bridge_dev)
-> >              lnksta &= ~PCI_EXP_LNKSTA_CLS;
-> >              lnksta |= lnkcap & PCI_EXP_LNKCAP_SLS;
-> >          }
-> > +
-> > +        lnksta2 = target->config_read(target,
-> > +                                      target->exp.exp_cap + PCI_EXP_LNKSTA2,
-> > +                                      sizeof(lnksta2));
-> > +        pci_word_test_and_clear_mask(exp_cap + PCI_EXP_LNKSTA2,
-> > +                                     PCI_EXP_LNKSTA2_FLIT);
-> > +        pci_word_test_and_set_mask(exp_cap + PCI_EXP_LNKSTA2, lnksta2 &
-> > +                                   PCI_EXP_LNKSTA2_FLIT);
-> >      }
-> >  
-> >      if (!(lnksta & PCI_EXP_LNKSTA_NLW)) {
-> > diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> > index 068c20d61ebc..0abfd678b875 100644
-> > --- a/include/hw/cxl/cxl_device.h
-> > +++ b/include/hw/cxl/cxl_device.h
-> > @@ -796,6 +796,7 @@ struct CXLType3Dev {
-> >      /* PCIe link characteristics */
-> >      PCIExpLinkSpeed speed;
-> >      PCIExpLinkWidth width;
-> > +    bool flitmode;
-> >  
-> >      /* DOE */
-> >      DOECap doe_cdat;
-> > diff --git a/include/hw/pci-bridge/cxl_upstream_port.h b/include/hw/pci-bridge/cxl_upstream_port.h
-> > index db1dfb6afd98..4862601b2a60 100644
-> > --- a/include/hw/pci-bridge/cxl_upstream_port.h
-> > +++ b/include/hw/pci-bridge/cxl_upstream_port.h
-> > @@ -20,6 +20,7 @@ typedef struct CXLUpstreamPort {
-> >  
-> >      PCIExpLinkSpeed speed;
-> >      PCIExpLinkWidth width;
-> > +    bool flitmode;
-> >  
-> >      DOECap doe_cdat;
-> >      uint64_t sn;
-> > diff --git a/include/hw/pci/pcie.h b/include/hw/pci/pcie.h
-> > index ff6ce08e135a..358374b1df81 100644
-> > --- a/include/hw/pci/pcie.h
-> > +++ b/include/hw/pci/pcie.h
-> > @@ -142,7 +142,7 @@ void pcie_ari_init(PCIDevice *dev, uint16_t offset);
-> >  void pcie_dev_ser_num_init(PCIDevice *dev, uint16_t offset, uint64_t ser_num);
-> >  void pcie_ats_init(PCIDevice *dev, uint16_t offset, bool aligned);
-> >  void pcie_cap_fill_link_ep_usp(PCIDevice *dev, PCIExpLinkWidth width,
-> > -                               PCIExpLinkSpeed speed);
-> > +                               PCIExpLinkSpeed speed, bool flitmode);
-> >  
-> >  void pcie_cap_slot_pre_plug_cb(HotplugHandler *hotplug_dev, DeviceState *dev,
-> >                                 Error **errp);
-> > diff --git a/include/hw/pci/pcie_port.h b/include/hw/pci/pcie_port.h
-> > index 7cd7af8cfa4b..53cd64c5edff 100644
-> > --- a/include/hw/pci/pcie_port.h
-> > +++ b/include/hw/pci/pcie_port.h
-> > @@ -58,6 +58,7 @@ struct PCIESlot {
-> >  
-> >      PCIExpLinkSpeed speed;
-> >      PCIExpLinkWidth width;
-> > +    bool flitmode;
-> >  
-> >      /* Disable ACS (really for a pcie_root_port) */
-> >      bool        disable_acs;
+> > OTOH it also occurs to me that I have this code in fuse_send_init:
+> > 
+> > 	if (has_capability_noaudit(current, CAP_SYS_RAWIO))
+> > 		flags |= FUSE_IOMAP | FUSE_IOMAP_DIRECTIO | FUSE_IOMAP_PAGECACHE;
+> > 	...
+> > 	ia->in.flags = flags;
+> > 	ia->in.flags2 = flags >> 32;
+> > 
+> > which means that we only advertise iomap support in FUSE_INIT if the
+> > process running fuse_fill_super (which you hope is the fuse server)
+> > actually has CAP_SYS_RAWIO.  Would that work for you?  Or are you
+> > dropping privileges before you even open /dev/fuse?
+> 
+> Ah - that might be the answer. I will check if dropped capabilities 
+> disappear in fuse_send_init. If so, I can work with that - not advertising 
+> the famfs capability unless the capability is present at that point looks 
+> like a perfectly good option. Thanks for that idea!
+
+Review: the famfs fuse server directs the kernel to provide access to raw
+(memory) devices, so it should should be required to have have the
+CAP_SYS_RAWIO capability. fs/fuse needs to detect this at init time,
+and fail the connection/mount if the capability is missing.
+
+I initially attempted to do this verification in process_init_reply(), but
+that doesn't run in the fuse server process context.
+
+I am now checking the capability in fuse_send_init(), and not advertising
+the FUSE_DAX_FMAP capability (in in_args->flags[2]) unless the server has 
+CAP_SYS_RAWIO.
+
+That requires that process_init_reply() reject FUSE_DAX_FMAP from a server
+if FUSE_DAX_FMAP was not set in in_args->flags[2]. process_init_reply() was
+not previously checking the in_args, but no big deal - this works.
+
+This leads to an apparent dilemma in libfuse. In fuse_lowlevel_ops->init(),
+I should check for (flags & FUSE_DAX_IOMAP), and fail the connection if
+that capability is not on offer. But fuse_lowlevel_ops->init() doesn't
+have an obvious way to fail the connection. 
+
+How should I do that? Hoping Bernd, Amir or the other libfuse people may 
+have "the answer" (tm).
+
+And of course if any of this doesn't sound like the way to go, let me know...
+
+Thanks!
+John
 
