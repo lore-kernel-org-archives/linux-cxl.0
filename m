@@ -1,182 +1,216 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2048.outbound.protection.outlook.com [40.107.95.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 561782D3230
-	for <linux-cxl@vger.kernel.org>; Mon, 11 Aug 2025 14:38:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754923115; cv=none; b=pBLdnurdiKy8vpTBSFp1t05ikCvh2BB8UJM85EiBFvefIOgSULpy0QQCho8H5+mx8SmxSrbLLZsqfD8r+43rpJcO2EGUo7ezG9KB6BafvTT039rbr7t1TKpr1fCqxMl+2pSCiTKOYmEv7wVQ7NFP9LCBbFvR/64DnFBls35YVbQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754923115; c=relaxed/simple;
-	bh=/JGOhltkLbDQKQs5Bh6A6YZHlhCxLXpY81q5l3W/Shg=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cztr2+N367J/A7UGQ+TiD6qDJM2BH5JBTT5YFnQXQbClzjB1tpYegSlbLy9sIZ+CTKGO0/3RgF4WuozW+dgpvnoYAl20o+15uIRyMgMm6PeE+daxzCJbFULBBbyOU0keS8abwIa5EGXYPVZD5q58cVaBLtK2vtzMDlnQhDh+Img=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4c0xyM6SHkz6L5cs;
-	Mon, 11 Aug 2025 22:35:55 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 775781402EF;
-	Mon, 11 Aug 2025 22:38:30 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 11 Aug
- 2025 16:38:30 +0200
-Date: Mon, 11 Aug 2025 15:38:28 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <shiju.jose@huawei.com>
-CC: <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>, <armbru@redhat.com>,
-	<dave@stgolabs.net>, <linuxarm@huawei.com>
-Subject: Re: [PATCH v6 8/8] hw/cxl: Add emulation for memory sparing control
- feature
-Message-ID: <20250811153828.00003283@huawei.com>
-In-Reply-To: <20250811085530.2263-9-shiju.jose@huawei.com>
-References: <20250811085530.2263-1-shiju.jose@huawei.com>
-	<20250811085530.2263-9-shiju.jose@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08AA32BEC2D;
+	Mon, 11 Aug 2025 14:38:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1754923129; cv=fail; b=te+HZcO8DXQ9swJmzkzZodKBafzRIzITYQ0DK+L5dyL2ADa0Irv8Jt4QEToQT46jeyOt3eNfUrVadjOJFsE73aIgdeLpiSqIQHAhE/uRXPFx4W84zF/2HMIpAizuwVJ4skulWCYLkN2L62YaBR9jrGxZE4thL6rXfhAb5qMQq4k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1754923129; c=relaxed/simple;
+	bh=FurQ49gRXtHYb6LQg/bFhUT9RsmstU1i8O3FqfYyK+w=;
+	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=C2uKtbSPPXUZXE9hP2AnUw4LEzigE+rI4TROSU0vvOyvoa9nmrTol2/vSmWJbdYUdIuSNkiADnK6Lu5wmkBGnPGXjT8BT+jw9A03FkA+3TR7H2Eall1O1qvYgf0q+oS5JNXxtNElycJ2IIHOvOw0tMvkdaO+/fRz/6vXl5LUNxs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=a5iKLytF; arc=fail smtp.client-ip=40.107.95.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="a5iKLytF"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=pMdfjIXtpqbT8RN0wf7UpJiMb08KotyncmStQdVmIZUcWDLy/2hR9aOq4YRFY7ATqwyuGWxYMemeF4Tu9akGi8T1UlyslZGYuAmGalpVyv+rz9IUUGvpOyihuAwusodAlLcJDvJrkrCKgW9y/A0zQLyEXf3qa+ft3+U4bcpaStBDRE5SotcFbSmuHo20tWP9+z1HnfePsudy+evXfzuVh+k8OXeoXwY4b6vkDQnsErUrVqv69a8VxiHmkbdnoSrWA88lRnrPzPxyF/YXtFHMNSq08Dsz7GSaEHsSO77nfz/05B8AnacSNgC9+s210sURe4ca54aZX9Han3RBjQUA+g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0FbvMm77Wl2kzDy32QtECdNobDql54A33oCl6Abt4EQ=;
+ b=rw/Xg8ROK2KViTTL1SJFzJFL8E/Y3olSa4rvswcG73h9qU+4bXijnIMraOtthxvqhpBddcuix7yn3Wz+jaSCOwtCQqLqmDhXGd4U8TSiesFzVhaN0sb4NYcFCKbMcm/kr2QAzE0SKXSIsCvXoCN9VgkloJb+SuvnFiDJLXGXzYUJCeeUrboVB2EL7u4jFLLpGtETWBIlAE8ij0bY52LqKxlVHzKAsadiLM3101nBCoLEtOSjjv2tOQ+v/4dYdsaMmghZadxYYE6/UOE+A7DRhYcPwsZmvaa6byhVfE3EDc3r2OWlH/zmwht4/66qmKSQ5tAq1qBoq4bA0g8VyoH7Lg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0FbvMm77Wl2kzDy32QtECdNobDql54A33oCl6Abt4EQ=;
+ b=a5iKLytFDTTL60/bH1hVpEgSv0qO+CbG94FrTopZogSn0vsxCloysdW36W4hVAuVJ5CyNuo6RB1Ynovlp1mziRAGQKUQewnVZgCSH8cuGIJS0GjNNhUlCvVP4DL1ynn4mr2S05PCHd4jZSIBd9g6XIlfA1lK+N/7NxuJJ6ZettA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
+ by PH8PR12MB6843.namprd12.prod.outlook.com (2603:10b6:510:1ca::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9009.22; Mon, 11 Aug
+ 2025 14:38:41 +0000
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::f943:600c:2558:af79%6]) with mapi id 15.20.9009.018; Mon, 11 Aug 2025
+ 14:38:41 +0000
+Message-ID: <fb959fa6-26bd-4aaf-b5cd-3b8184d9f79f@amd.com>
+Date: Mon, 11 Aug 2025 15:38:37 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v17 20/22] sfc: create cxl region
+Content-Language: en-US
+To: dan.j.williams@intel.com, alejandro.lucero-palau@amd.com,
+ linux-cxl@vger.kernel.org, netdev@vger.kernel.org, edward.cree@amd.com,
+ davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
+ edumazet@google.com, dave.jiang@intel.com
+References: <20250624141355.269056-1-alejandro.lucero-palau@amd.com>
+ <20250624141355.269056-21-alejandro.lucero-palau@amd.com>
+ <6887a3482072a_11968100ac@dwillia2-mobl4.notmuch>
+From: Alejandro Lucero Palau <alucerop@amd.com>
+In-Reply-To: <6887a3482072a_11968100ac@dwillia2-mobl4.notmuch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO2P265CA0316.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:a4::16) To DM6PR12MB4202.namprd12.prod.outlook.com
+ (2603:10b6:5:219::22)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
- frapeml500008.china.huawei.com (7.182.85.71)
-
-On Mon, 11 Aug 2025 09:55:30 +0100
-<shiju.jose@huawei.com> wrote:
-
-> From: Shiju Jose <shiju.jose@huawei.com>
-> 
-> Memory sparing is defined as a repair function that replaces a portion of
-> memory with a portion of functional memory at that same DPA. The
-> subclasses for this operation vary in terms of the scope of the sparing
-> being performed. The Cacheline sparing subclass refers to a sparing
-> action that can replace a full cacheline. Row sparing is provided as an
-> alternative to PPR sparing functions and its scope is that of a single
-> DDR row. Bank sparing allows an entire bank to be replaced. Rank sparing
-> is defined as an operation in which an entire DDR rank is replaced.
-> 
-> Memory sparing maintenance operations may be supported by CXL devices
-> that implement CXL.mem protocol. A sparing maintenance operation requests
-> the CXL device to perform a repair operation on its media.
-> For example, a CXL device with DRAM components that support memory sparing
-> features may implement sparing Maintenance operations.
-> 
-> The host may issue a query command by setting Query Resources flag in the
-> Input Payload (CXL Spec 3.2 Table 8-120) to determine availability of
-> sparing resources for a given address. In response to a query request,
-> the device shall report the resource availability by producing the Memory
-> Sparing Event Record (CXL Spec 3.2 Table 8-60) in which the Channel, Rank,
-> Nibble Mask, Bank Group, Bank, Row, Column, Sub-Channel fields are a copy
-> of the values specified in the request.
-> 
-> During the execution of a sparing maintenance operation, a CXL memory
-> device:
-> - May or may not retain data
-> - May or may not be able to process CXL.mem requests correctly.
-> These CXL memory device capabilities are specified by restriction flags
-> in the memory sparing feature readable attributes.
-> 
-> When a CXL device identifies error on a memory component, the device
-> may inform the host about the need for a memory sparing maintenance
-> operation by using DRAM event record, where the 'maintenance needed' flag
-> may set. The event record contains some of the DPA, Channel, Rank,
-> Nibble Mask, Bank Group, Bank, Row, Column, Sub-Channel fields that
-> should be repaired. The userspace tool requests for maintenance operation
-> if the 'maintenance needed' flag set in the CXL DRAM error record.
-> 
-> CXL spec 3.2 section 8.2.10.7.2.3 describes the memory sparing feature
-> discovery and configuration.
-> 
-> CXL spec 3.2 section 8.2.10.7.1.4 describes the device's memory sparing
-> maintenance operation feature.
-> 
-> Add emulation for CXL memory device memory sparing control feature
-> and memory sparing maintenance operation command.
-> 
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-Hi Shiju,
-
-A few comments inline.  I'll fix up whilst applying to the CXL staging tree.
-
-> ---
->  hw/cxl/cxl-mailbox-utils.c  | 317 +++++++++++++++++++++++++++++++++++-
->  hw/mem/cxl_type3.c          |  44 +++++
->  include/hw/cxl/cxl_device.h |  33 ++++
->  include/hw/cxl/cxl_events.h |   5 +
->  4 files changed, 395 insertions(+), 4 deletions(-)
-> 
-> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> index 254154ceda..a3ab3b48f2 100644
-> --- a/hw/cxl/cxl-mailbox-utils.c
-> +++ b/hw/cxl/cxl-mailbox-utils.c
-
-> +static void cxl_create_mem_sparing_event_records(CXLType3Dev *ct3d,
->                              uint8_t maint_op_class, uint8_t maint_op_sub_class,
-> -                            CXLMaintenance *ent)
-> +                            CXLMaintenance *ent,
-> +                            CXLMemSparingMaintInPayload *sparing_pi)
->  {
->      CXLEventSparing event_rec = {};
->  
-> @@ -1615,6 +1852,31 @@ static void cxl_mbox_create_mem_sparing_event_records(CXLType3Dev *ct3d,
->              strncpy((char *)event_rec.component_id, (char *)ent->component_id,
->                      sizeof(event_rec.component_id));
->          }
-> +    } else if (sparing_pi) {
-> +        event_rec.flags = CXL_MSER_FLAGS_QUERY_RESOURCES;
-> +        event_rec.result = 0;
-> +        event_rec.validity_flags = CXL_MSER_VALID_CHANNEL |
-> +                                   CXL_MSER_VALID_RANK |
-> +                                   CXL_MSER_VALID_NIB_MASK |
-> +                                   CXL_MSER_VALID_BANK_GROUP |
-> +                                   CXL_MSER_VALID_BANK |
-> +                                   CXL_MSER_VALID_ROW |
-> +                                   CXL_MSER_VALID_COLUMN;
-> +        event_rec.res_avail = 1;
-> +        event_rec.channel = sparing_pi->channel;
-> +        event_rec.rank = sparing_pi->rank;
-> +        if (sparing_pi->flags & CXL_MEM_SPARING_FLAGS_NIB_MASK_VALID) {
-> +            __builtin_memcpy(event_rec.nibble_mask, sparing_pi->nibble_mask,
-
-Why not memcpy()?
-Also, wrong size - should be sizeof(sparing_pi->nibble_mask);
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|PH8PR12MB6843:EE_
+X-MS-Office365-Filtering-Correlation-Id: 976ceb80-d9f9-4b15-3724-08ddd8e4c420
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|366016|1800799024|7053199007|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?YnFhUEZDZ0h6TlVqQVpMaTZSdmVLYnNuV29QUFVIL1NhZG5EQmNPdmJUT2Zh?=
+ =?utf-8?B?MkRVTWljL1NoQ1g2YVI5UGN3dUJ4QzJ3QkViSW84RjIvMERSdUIrRFl3dUNn?=
+ =?utf-8?B?aFRrQXFHS3BBcW1Kb1cvOTNrcDM1YS9DblFPV1IyYzF0U0ZHZmtBZjhWV1Ju?=
+ =?utf-8?B?aTcvOSsxWGoxYTdmSktQYnhERUVGNHdtdU5acDFsUkRWY1ZMc2hmTmQ5OExM?=
+ =?utf-8?B?QTY4L2JTbFlrSXp4Q2xCZHRkOEZOSVJZK0RWZ2hWZVBsQ21pRDZPNDNBYTFH?=
+ =?utf-8?B?bm9hKzhnWnpFdWRUTFNGZGQ4RUhCVUNZaW1BL0RscEZvNUtiaUJZUzJzMWZH?=
+ =?utf-8?B?ak9lZlhFYkhHNExGYzBrd0ZHODJVZU0wbnY3MFR1b2wrSmNBcEJ2cHQ4R3V6?=
+ =?utf-8?B?UkMyWW1qeDNXS2RQMnBTYVRCc3p3UDZnd1RQRDdPVGgxeC8vcnhLK3BXYlY2?=
+ =?utf-8?B?bEE0R3N4Vi9sV0ZzNGVVVEk3a2pyaEwvaGdkcU1QeUNxWlZVS25NeGJObkNU?=
+ =?utf-8?B?NUI4TUZreEVpRnZ0bmNUVlJkbWQ3MVN5LzVxYTlXTXh6THJrVVp4R052Sk1P?=
+ =?utf-8?B?ZWtsMzIzaFRaN1RwZFZDdi8vRHQvZWVwWmdNVDl0Qk9kVlluM01oM0lDUFBu?=
+ =?utf-8?B?eWM1YUF0LzFwa2dqNk5xYTJqbzZ5ZXQyb3JKUkVqelpLRDdrbHA0SS9yU2pW?=
+ =?utf-8?B?M21XOWRsNFB1QnB0dm52Uy9Ed2hnb2tnYkR3RkhweDBxM2dBL1J5OGZoYXhq?=
+ =?utf-8?B?WU1ZU3M0cm9zZEc0WXY3U2xrK1hwZ1NUaTB4cnhLd3hPYzhoOU1IY2FrL1hv?=
+ =?utf-8?B?bmRXOE9sZlZWRnZ3NVQxbHNaQmdVSDFvNU1kTXFyOGd1ajFhbmR0N1JINko5?=
+ =?utf-8?B?S0w1aWt2dGx5UTZ3K3JIcVR0MGNQVUg5MkZlWVpCbSs2VGxnU1B3aGRDbUVk?=
+ =?utf-8?B?Zy9zdXhReXBqakpNdUVsS1dNZkMrbTIvWGtNSm9yS1V4VXRqQmM0L0ZBMk9R?=
+ =?utf-8?B?UjV2MWd0TEFNMzBJTjFHdUhHcWRLQ2JpSGpwU2UrSWVLR3lRMkhuQ2tuWEND?=
+ =?utf-8?B?TWZhS2VOWVhNRWpORXBQc2JkMjExa0wxVUg3WFlmQ013Wi8rdGcrZEwwTTlI?=
+ =?utf-8?B?WXczNXU0aWRiNVp1NDFUM0kxTW80R0UwWUY0MTNtbDhkMmlmeHBKSktXc0Iv?=
+ =?utf-8?B?bnhhRW5sOEhqaHJXVmNxakEvd3RmZW5kVCtSNDhhSXl5WHJHUEFES2V5VHVl?=
+ =?utf-8?B?QzhTdllmVjNNREJVcytaQWRhcDJES00xeEMrT3AwcHNVK1psRXBMNm1ua2hO?=
+ =?utf-8?B?QlQ3WXNkcjZPNTNnR2hiN2d2MWU4MWtDT2h4dWZBZHdybGdYV0R6cUdMdEFt?=
+ =?utf-8?B?Tkw5OGtUWVN6QUJFdDdYWDNjNWdwYzBKOHVPMW5qcGsxNDFNbGdsUGwvS0NX?=
+ =?utf-8?B?TVVNR0RPWS9mZ3VLUWtCb0xpbzB2dEhlK25YeklzcFRORGtYQ2dMUzk3eklT?=
+ =?utf-8?B?dnAwZlFVSyt0OUlrOGVVVEJsVjZDS0JGckgvamxQZzRXRW1HdEZpQTQ5WlND?=
+ =?utf-8?B?SlFxdHMwUnRLWE9BZC9KU2c5QnRvQW15WEtmZzZSUmUxOXk4TFFFaStnL1FP?=
+ =?utf-8?B?YkwzK0R5QUd2MEdITTNUQWpnNUVUakQ0TmFFUDJSTjdBMWl0bkRvUG5KOEJh?=
+ =?utf-8?B?Q3lTVDAzRm9rQUpaMzVZUm8rZEI5MGw0OFlLaDh2ajc1SVA2Y2pwcHNVSW1i?=
+ =?utf-8?B?elF5Z1pVYWtBV1g4d3pnN2FFQjNaU1dWVnR1SFpESnRKRGdZU3ViL212aUNC?=
+ =?utf-8?B?U1U0NVZjRGM4dGF2ZkhtWjlkdnFNc1ZHNGxsQitWUG1JMHNTY0F6Sk56K1Fj?=
+ =?utf-8?B?V0RYMG9tcGIxdW1VT2NPLzdUelBoRm5xWTZCc3JQbER5eUM0NnhkMzNnUHV3?=
+ =?utf-8?B?Z1d0b0lwQlhycGhoeWx0M2c1SytBMzVLS1UzalVxTExyenNpQk5WZThwU01w?=
+ =?utf-8?B?WGg2L0pkM1lRPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UEZ0K1pNSFpXbFNtelljTW93YUEvSm1Vbm92SnErWVYxdjdaQ1E4Qm1ZcFJa?=
+ =?utf-8?B?SHRlcENvQm0yU2tidjlWZmh4TE9vM0tQZzJQY1BVeVVhaVRRYzJVS0k1bmdH?=
+ =?utf-8?B?YnRzY3BzV0lQaUdoTldyaHVIcmpPdHBnT3VqT0lKQXZUOGdyUWtzUlRhS3Rk?=
+ =?utf-8?B?QWlRSnlDd2J0WHRSekQrMlJtMUJCcys4NjNCS05hR3dJZDhCZFAxcHR3ZURX?=
+ =?utf-8?B?NUtIS3RTYVRwK2g0TlZCdUtLM2h4eDFZdURkYytyeTlGcGZzNGN5SnBiaVlN?=
+ =?utf-8?B?OUc5Uk5KOHpSbFAxRE5UdkpXTkw0cHQrenc0cDRmZUZtTmVxOFF6TGNPcHJh?=
+ =?utf-8?B?MjVUeU9xRjVtdFNhY0lIS084WVNZZEFnQjVsNy9SVXpzdEFzY0VSZ0hxakts?=
+ =?utf-8?B?TWdKaHpsT2hQZ0dqMmpWcHA2S3JweHk2SEExdDVwSDN1UUl1ZnVNSzBmM3F5?=
+ =?utf-8?B?eTlRSncwMFlNLzFMcFVpaTNlRmVsc29EOXhsd1c0TXYzcGk2Njd6TXRadDlh?=
+ =?utf-8?B?azlUazhodGR6aGFHNUNpR0lvOG1LNDVObTZXUGQ4MGRQV2dieFFBWDRza0Va?=
+ =?utf-8?B?cGJDVE9HdE5LVzdGWm5leE9TQUVNczc2SXFMWGpkUnV5NFE0TTloU1FuZ1B4?=
+ =?utf-8?B?aXI2RVhNUHN2VVB3NEpNaEhreDBFZ040YlF4WUEyWFE0ZWRXc2YxUFhhRUM4?=
+ =?utf-8?B?eE9OejJUNjV0UllWUnBqaDMwcFgzYWxyQktWalA2T29oMGgreXdIbUJxREpE?=
+ =?utf-8?B?OFJ0V3FJYkJCdEl3cERVN1IweW50VzBRMW5lbUc3MnlTL3pmb0NQZEdwKzRn?=
+ =?utf-8?B?NmhSajlabkZQVEFJeDJKSjZTTlg0TDkxMHFOUUZoUDRRQ0c4ekdPNmFhL3di?=
+ =?utf-8?B?Z3crem1ZWnBqbE95dEs3RElvOVFWMGZrSzhVemFTMS9UNUhqRG1nUzJzZnlY?=
+ =?utf-8?B?SUpJKzRVS2tCREZwbjdJRlorRXd0dXhyRDVEdjVteS9wZ09OcjF0dk5TUkdz?=
+ =?utf-8?B?L2R0YkI3TXBLb0tXUnlFYXJMWGhwb3h1L2MyTVdVQkwxRS9VQkxpWnpJSldT?=
+ =?utf-8?B?SlJlQkFZMWdEZGtZWENCbDVza0ZGRStRRldFd3UvcldIbVJRc3VETlJqL1lr?=
+ =?utf-8?B?VGkwbWVSODljVmYvTEg0NFFISkZ2bUlNT3lsdGtHa3E2ZkFvVHd3VXpEZWxy?=
+ =?utf-8?B?d3orcFBqcUNnbUxIQmRUcHFKOEFnTGdnNkc3NWNQd1U5Tm5tbE03d0NyY2Ra?=
+ =?utf-8?B?OGNibTJ0cmdKNTBKdnEvMUJEQjd2TjZLZ0JxcDJDUWU1NnRVWnJBZU4vaFBs?=
+ =?utf-8?B?bVd4S0pMQTNWendKMGl3allNc3dDanFIZDFGNXpROERFa2pHZ0dDbko3NDFn?=
+ =?utf-8?B?dVYremRaRFhYMmh6dUo5MDN6SGpoTEY5NjFZamFSa0FpZk8vbDhROUFwNzlp?=
+ =?utf-8?B?UWV1TkRNa3JTd1grM0o5V0ZoNWgyV2ppTWk3RTF6b3FQcmtRSXRXYjl2QmJE?=
+ =?utf-8?B?V3dLNUpvLy9KU1p5cGYxK1pTQjFldTU0ZmNmdFhheVJnZ1RnMUFWNUVXeW45?=
+ =?utf-8?B?Y2VST1Fpa09XNERnSmJGMWNqTjhXRmtsMnhWay90clhmaEdWekFwcnNXMkU1?=
+ =?utf-8?B?dy9kdTRoNHo5RUtJb2VNampEVVVzWjViUGxoZm05NTRaUTVWSmd3dUpTeHVI?=
+ =?utf-8?B?UXh1UTFaZ0hDTytFRVVaRnI5M3R5RGNSbUl2ZWF1YUFkUW4zeHAyYk1PeDBE?=
+ =?utf-8?B?Z1p2N3dLcHY3aVBFTVRqWU0wQ2RYVUlLUHdTQVNPVzNVaTFuV1g4NWtGMDhP?=
+ =?utf-8?B?VmltZkRtYmtrbkxKd1FGVGFCRkF1TWYzbXpZTThJT080WWxpanNHZ3VueDRW?=
+ =?utf-8?B?ZG92OEMyWkVPZnZqWVpJbXBWeUdnVlVFK0RXTUZwamNyVkpoQkNoN2JLakRE?=
+ =?utf-8?B?bVRFVGc2cXJJZDVzWkRWK2ZLeEd3YzNmc041WVFPQzk3VVI1WUtuc1F0UVJY?=
+ =?utf-8?B?bU9Ba0FEVnpnZHRlektqeUxOOHArbW0zeUgvS0F2V01YZEtGcm8vM2FTYnZQ?=
+ =?utf-8?B?VVpWeEFqV2VLbjArUDZOcWhpMk1JVHdmNzZKWUJTdUZZSzg0Q2dHc0swK1gx?=
+ =?utf-8?Q?83pvH/hA5dxwulleNRQQk294t?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 976ceb80-d9f9-4b15-3724-08ddd8e4c420
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Aug 2025 14:38:41.3894
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: V2aTWrcf4mUW1r+eTEdm7SISJlj6oifDGLRwBOj0Nse+Ob/3Ab2fhK4LbUIIX8CA7PWFgzNMza7E4Y9SK+mCqA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6843
 
 
-> +                             sizeof(uint32_t));
-> +        }
-> +        event_rec.bank_group = sparing_pi->bank_group;
-> +        event_rec.bank = sparing_pi->bank;
-> +        event_rec.column = sparing_pi->column;
-> +        __builtin_memcpy(event_rec.row, sparing_pi->row, sizeof(uint32_t));
+On 7/28/25 17:20, dan.j.williams@intel.com wrote:
+> alejandro.lucero-palau@ wrote:
+>> From: Alejandro Lucero <alucerop@amd.com>
+>>
+>> Use cxl api for creating a region using the endpoint decoder related to
+>> a DPA range.
+>>
+>> Add a callback for unwinding sfc cxl initialization when the endpoint port
+>> is destroyed by potential cxl_acpi or cxl_mem modules removal.
+>>
+>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+>> ---
+>>   drivers/net/ethernet/sfc/efx_cxl.c | 24 +++++++++++++++++++++++-
+>>   1 file changed, 23 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
+>> index ffbf0e706330..7365effe974e 100644
+>> --- a/drivers/net/ethernet/sfc/efx_cxl.c
+>> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
+>> @@ -18,6 +18,16 @@
+>>   
+>>   #define EFX_CTPIO_BUFFER_SIZE	SZ_256M
+>>   
+>> +static void efx_release_cxl_region(void *priv_cxl)
+>> +{
+>> +	struct efx_probe_data *probe_data = priv_cxl;
+>> +	struct efx_cxl *cxl = probe_data->cxl;
+>> +
+>> +	iounmap(cxl->ctpio_cxl);
+> There is no synchronization here. If someone unbinds the a cxl_port
+> while the driver is using @ctpio_cxl, it looks it will cause a crash.
 
-As above.
 
-> +        if (sparing_pi->flags & CXL_MEM_SPARING_FLAGS_SUB_CHANNEL_VALID) {
-> +            event_rec.sub_channel = sparing_pi->sub_channel;
-> +            event_rec.validity_flags |= CXL_MSER_VALID_SUB_CHANNEL;
-> +        }
->      } else {
->          return;
->      }
+Yes, the unmapping should be after changing cxl_pio_initialised. I will 
+fix it if this mechanism stays ...
 
 
-> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> index 959049aa46..59f8fa7c24 100644
-> --- a/include/hw/cxl/cxl_device.h
-> +++ b/include/hw/cxl/cxl_device.h
+>
+> The loss of CXL connectivity after the driver has already committed to
+> it likely means that the whole driver needs to be shutdown, not just
+> this region cleanup.
 
-> +#define CXL_MEMDEV_SPARING_GET_FEATURE_VERSION    0x01
-> +#define CXL_MEMDEV_SPARING_SET_FEATURE_VERSION    0x01
-> +#define CXL_MEMDEV_SPARING_SAFE_IN_USE_FLAG    BIT(0)
-> +#define CXL_MEMDEV_HARD_SPARING_SUPPORT_FLAG    BIT(1)
-> +#define CXL_MEMDEV_SOFT_SPARING_SUPPORT_FLAG    BIT(2)
-Odd alignment. If going for aligned values, make sure they all
-align fully.  This seems to be 4 spaces, which doesn't relaly
-help anything.
+
+What I am trying to handle here is not an CXL error but removal of cxl 
+modules. If the latter happens, the driver will keep using other 
+datapath but not the cxl_pio memory.
+
+
+About a CXL error, I really do not know what is the right thing to do 
+here. If further CXL.mem writes after such an error are not problematic, 
+then this is enough. If not, I'm afraid we can not safely deal with this 
+since the host/driver will be notified too late.
 
