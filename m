@@ -1,233 +1,110 @@
-Received: from bisque.elm.relay.mailchannels.net (bisque.elm.relay.mailchannels.net [23.83.212.18])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C07792D94A4
-	for <linux-cxl@vger.kernel.org>; Tue, 12 Aug 2025 01:49:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.212.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754963395; cv=pass; b=IODw2xZmJzEtncIsHv8wN+eAU0iqQOddw0aq7L1wtWDqued4q5GxJraLmgr5yhciLVRy2HveBoavpyITu8+nCmvyDYi45uSoiYNZwGg0rNcXennzduP4bJWefvnL4DfUra2QmvNdpoxNHsv+g9W0moW75kPwZyt6pSNU23ZGaZI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754963395; c=relaxed/simple;
-	bh=0KKCJiXSImOjXOxgTvr1XTktKgKf3ae1YwTD4zmmMrQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sxFY1DCngToGi5klUK5sRWytLwntsubXrhAnKD0+R9a7UkNzzbUWoNJUQkoRTw7ivQ7v3SgfyLfwIAbu8Oh1y3Ay9jQmq0VNCTAaRyJCSL8qzjPBhiX1qM7O13X8Y6S3lnWWcCoiVpspQB5GGDsBHsTtfkiNhU6Iw3wAPJAvUt4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=YWmMt9Es; arc=pass smtp.client-ip=23.83.212.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="YWmMt9Es"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id EDAAB2C64B2;
-	Tue, 12 Aug 2025 01:02:32 +0000 (UTC)
-Received: from pdx1-sub0-mail-a202.dreamhost.com (trex-blue-1.trex.outbound.svc.cluster.local [100.96.55.144])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 9518C2C6657;
-	Tue, 12 Aug 2025 01:02:32 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1754960552; a=rsa-sha256;
-	cv=none;
-	b=IO/EcOGoCmgY0eWIeCOZALWLhuawUgojBzIt0aDy+XNQ7SmNChnOMKJJgZ6/o4B6Y53z52
-	H1EyrIoH2cvKmwFDL9b6YbRCyBT0wKx8FORhlmJgxqgrq1ebtzte78o2j5HmZZVYT/XhvW
-	gtpOqZoIvuaLvP1wMiOXpdlx3Z5+pJVi9IqjkfnOByRr3wvuJis7Zh1CkxabOZS0Sx1OdX
-	ClDswOtCx2HhKo/bE0n4fphWvxarMtE1u3JQN549efjpEvCDYV7vTOtzjqq+5d937x59F2
-	dkzKyRqe/3AXFoOVKlLIK0mmPY+rUP0uLYwb9TX76U+AzQ2nJf6Z4+TyzaeWcA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1754960552;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=HjfR/OBcHPVGiuEOSPLTf3OqQarmCfO90EcHdI2zOEQ=;
-	b=glUBSXO+elJ9tOanoRhlhdBJbfa0VLKPkV6wvbfdfhBU0y0fGqHkedjgE+sHuspSYhUjEC
-	lY5Dcdx4QqYt9RLLoYWRxaMyE6rVUX922Uk2vF/+G1ndtuI66OPsTondpHFUeNs9h0tixg
-	Cbaq1PPHFEOKkd7jl6Ye4mJp/goQu1mw7qC1MaM6DIvDdLIZLu+GxMD5+LA68G8LKpzbEY
-	0iUPWV+ePw/QpAt5/DfYQi/XWO0qQizixuwVjAFYO/pegN+jLsvodsIloRGsJCQBiYoxXx
-	9sJ47jOYVOgVgvWQjCiaVZTpZfarOHUnAz1z1R0dGsmFHCtgOIb4dDl+8ax7Tw==
-ARC-Authentication-Results: i=1;
-	rspamd-865b9ccc6c-k9ztl;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Tank-Ski: 1174c2c43f0b1cf2_1754960552881_1710805499
-X-MC-Loop-Signature: 1754960552881:2848415330
-X-MC-Ingress-Time: 1754960552881
-Received: from pdx1-sub0-mail-a202.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.96.55.144 (trex/7.1.3);
-	Tue, 12 Aug 2025 01:02:32 +0000
-Received: from offworld.lan (syn-076-167-199-067.res.spectrum.com [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a202.dreamhost.com (Postfix) with ESMTPSA id 4c1CsM6JXgzLg;
-	Mon, 11 Aug 2025 18:02:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1754960552;
-	bh=HjfR/OBcHPVGiuEOSPLTf3OqQarmCfO90EcHdI2zOEQ=;
-	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-	b=YWmMt9EscHt10QpmmBv0rwUKZmhhuV9QkdfrtFvHq/cmYDwDASkvwY3pV9w+cLk3K
-	 Tj9aAN2+NCIDHij0IJl0iP80HABDCD/9mU0CVtTDmt998tA3YsLSxAMPHc7DNc93eI
-	 17Qxx/84NMV+cCxPtAHit+YYuOkHnz3mvpmFBLL9RdF219GlK3LHl1pGO1p/3ncYeI
-	 In75FvL9rQ4Sn6mC8xP4JQU3Bip64xKHBqdJTOSTwVHPtydRmkvxSpmP6AdsRst8Fk
-	 RWglNBGJKnojPFcQA46eisYaL9hjh4ippOad2CHRwtS+JKmCcQAlzIECuM3T/wbRVS
-	 Cs4Z0GrmqgeQQ==
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: dave.jiang@intel.com,
-	dan.j.williams@intel.com
-Cc: jonathan.cameron@huawei.com,
-	ira.weiny@intel.com,
-	alison.schofield@intel.com,
-	alucerop@amd.com,
-	a.manzanares@samsung.com,
-	anisa.su@samsung.com,
-	linux-cxl@vger.kernel.org,
-	dave@stgolabs.net
-Subject: [PATCH 2/3] acpi, tables: Rename coherency CFMW restrictions
-Date: Mon, 11 Aug 2025 18:02:27 -0700
-Message-Id: <20250812010228.2589787-3-dave@stgolabs.net>
-X-Mailer: git-send-email 2.39.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DBBE2ED149
+	for <linux-cxl@vger.kernel.org>; Tue, 12 Aug 2025 14:53:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1755010412; cv=none; b=h8KL5hl2x6xZPOSf648j0V/2XWd6IZP2Hcjzk1+ga86k2rnPqmRtwSvCp+q5k+spFxS5+Td9f6NLNrPvaueg1wCdyZ0xEjk/oX4ME4ARQX2LUB/5in0/5Q3+fW5+CtuQrHS/jwFCbBf5+BNRKgrrqJQFK3/N5JS+Rofrci6a5tw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1755010412; c=relaxed/simple;
+	bh=i9GFLcyQTUBynLRsFNDvSrSDC5u5Sq/0cvFGVEnJLPk=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Tb1JdK5EGE+ysbWU9xXip8GSDmJ7Saopj56Excwj9VITTENhGjuFInBDPjMnhhmUYUmFx+det72EVXT5vb5+hHmPnEwgb/c0oVVFILXuY656w72JVSv+FGDXXH9zi7AjzhXaL5g/EAggYdRmCDqespACipLyZ3lT4wcpc92Lans=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4c1ZF40Lpcz6L5F1;
+	Tue, 12 Aug 2025 22:50:48 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id E42C01402FF;
+	Tue, 12 Aug 2025 22:53:25 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 12 Aug
+ 2025 16:53:25 +0200
+Date: Tue, 12 Aug 2025 15:53:24 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Davidlohr Bueso <dave@stgolabs.net>
+CC: <dave.jiang@intel.com>, <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
+	<alison.schofield@intel.com>, <alucerop@amd.com>, <a.manzanares@samsung.com>,
+	<anisa.su@samsung.com>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH RFC 0/3] cxl: Initial support for Back-Invalidate
+Message-ID: <20250812155324.00001aa2@huawei.com>
 In-Reply-To: <20250812010228.2589787-1-dave@stgolabs.net>
 References: <20250812010228.2589787-1-dave@stgolabs.net>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-This has been renamed in more recent CXL specs, as
-type3 (memory expanders) can also use HDM-DB for
-device coherent memory.
+On Mon, 11 Aug 2025 18:02:25 -0700
+Davidlohr Bueso <dave@stgolabs.net> wrote:
 
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
----
- drivers/cxl/acpi.c           |  4 ++--
- include/acpi/actbl1.h        |  4 ++--
- tools/testing/cxl/test/cxl.c | 18 +++++++++---------
- 3 files changed, 13 insertions(+), 13 deletions(-)
+> Hello,
+> 
+> The following is some initial plumbing to enabling HDM-DB in Linux. This model allows devices,
+> specifically Type 2 and Type 3 devices, to expose their local memory to the host CPU in a
+> coherent manner, In alignment with what was discussed at last year's LPC type2 support session,
+> this series takes the type3 memory expander approach, which is more direct.
+> 
+> While this is an early RFC and I'm sure many thoughts, the next phase of this would be to
+> integrate Bi with Alejandro's Type2 work as well as with Jonathan's Cache Coherency subsystem
+> series (aka memregion inv)... this might be a good topic for the upcoming LPC's devmem session:
+> 	https://lore.kernel.org/linux-cxl/20250624141355.269056-1-alejandro.lucero-palau@amd.com
+> 	https://lore.kernel.org/linux-cxl/20250624154805.66985-1-Jonathan.Cameron@huawei.com
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 712624cba2b6..9b32392c82fc 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -113,9 +113,9 @@ static unsigned long cfmws_to_decoder_flags(int restrictions)
- {
- 	unsigned long flags = CXL_DECODER_F_ENABLE;
- 
--	if (restrictions & ACPI_CEDT_CFMWS_RESTRICT_TYPE2)
-+	if (restrictions & ACPI_CEDT_CFMWS_RESTRICT_DEVMEM)
- 		flags |= CXL_DECODER_F_TYPE2;
--	if (restrictions & ACPI_CEDT_CFMWS_RESTRICT_TYPE3)
-+	if (restrictions & ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM)
- 		flags |= CXL_DECODER_F_TYPE3;
- 	if (restrictions & ACPI_CEDT_CFMWS_RESTRICT_VOLATILE)
- 		flags |= CXL_DECODER_F_RAM;
-diff --git a/include/acpi/actbl1.h b/include/acpi/actbl1.h
-index 99fd1588ff38..eb787dfbd2fa 100644
---- a/include/acpi/actbl1.h
-+++ b/include/acpi/actbl1.h
-@@ -560,8 +560,8 @@ struct acpi_cedt_cfmws_target_element {
- 
- /* Values for Restrictions field above */
- 
--#define ACPI_CEDT_CFMWS_RESTRICT_TYPE2      (1)
--#define ACPI_CEDT_CFMWS_RESTRICT_TYPE3      (1<<1)
-+#define ACPI_CEDT_CFMWS_RESTRICT_DEVMEM      (1)
-+#define ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM (1<<1)
- #define ACPI_CEDT_CFMWS_RESTRICT_VOLATILE   (1<<2)
- #define ACPI_CEDT_CFMWS_RESTRICT_PMEM       (1<<3)
- #define ACPI_CEDT_CFMWS_RESTRICT_FIXED      (1<<4)
-diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index 6a25cca5636f..ba50338f8ada 100644
---- a/tools/testing/cxl/test/cxl.c
-+++ b/tools/testing/cxl/test/cxl.c
-@@ -210,7 +210,7 @@ static struct {
- 			},
- 			.interleave_ways = 0,
- 			.granularity = 4,
--			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
-+			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
- 					ACPI_CEDT_CFMWS_RESTRICT_VOLATILE,
- 			.qtg_id = FAKE_QTG_ID,
- 			.window_size = SZ_256M * 4UL,
-@@ -225,7 +225,7 @@ static struct {
- 			},
- 			.interleave_ways = 1,
- 			.granularity = 4,
--			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
-+			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
- 					ACPI_CEDT_CFMWS_RESTRICT_VOLATILE,
- 			.qtg_id = FAKE_QTG_ID,
- 			.window_size = SZ_256M * 8UL,
-@@ -240,7 +240,7 @@ static struct {
- 			},
- 			.interleave_ways = 0,
- 			.granularity = 4,
--			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
-+			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
- 					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
- 			.qtg_id = FAKE_QTG_ID,
- 			.window_size = SZ_256M * 4UL,
-@@ -255,7 +255,7 @@ static struct {
- 			},
- 			.interleave_ways = 1,
- 			.granularity = 4,
--			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
-+			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
- 					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
- 			.qtg_id = FAKE_QTG_ID,
- 			.window_size = SZ_256M * 8UL,
-@@ -270,7 +270,7 @@ static struct {
- 			},
- 			.interleave_ways = 0,
- 			.granularity = 4,
--			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
-+			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
- 					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
- 			.qtg_id = FAKE_QTG_ID,
- 			.window_size = SZ_256M * 4UL,
-@@ -285,7 +285,7 @@ static struct {
- 			},
- 			.interleave_ways = 0,
- 			.granularity = 4,
--			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
-+			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
- 					ACPI_CEDT_CFMWS_RESTRICT_VOLATILE,
- 			.qtg_id = FAKE_QTG_ID,
- 			.window_size = SZ_256M,
-@@ -302,7 +302,7 @@ static struct {
- 			.interleave_arithmetic = ACPI_CEDT_CFMWS_ARITHMETIC_XOR,
- 			.interleave_ways = 0,
- 			.granularity = 4,
--			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
-+			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
- 					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
- 			.qtg_id = FAKE_QTG_ID,
- 			.window_size = SZ_256M * 8UL,
-@@ -318,7 +318,7 @@ static struct {
- 			.interleave_arithmetic = ACPI_CEDT_CFMWS_ARITHMETIC_XOR,
- 			.interleave_ways = 1,
- 			.granularity = 0,
--			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
-+			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
- 					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
- 			.qtg_id = FAKE_QTG_ID,
- 			.window_size = SZ_256M * 8UL,
-@@ -334,7 +334,7 @@ static struct {
- 			.interleave_arithmetic = ACPI_CEDT_CFMWS_ARITHMETIC_XOR,
- 			.interleave_ways = 8,
- 			.granularity = 1,
--			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
-+			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
- 					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
- 			.qtg_id = FAKE_QTG_ID,
- 			.window_size = SZ_512M * 6UL,
--- 
-2.39.5
+Hi Davidlohr,
+
+For type 3 devices, when are HDM-DB / BI flows this useful?
+I think it's worth calling those cases out.
+
+IIRC 
+- Shared coherent memory
+- Media operations (8.2.10.9.5.3 in 3.2 spec)
+   So the range based sanitize and zero stuff.
+
+But not I think on DCD extent add or remove.  Which is kind of fair enough as
+the device would have to track prefetches that occurred to addresses it wasn't
+backing at the time. 
+
+So I'm not immediately sure how it will combine with explicit cache coherency management.
+So far we haven't hooked anything up for non BI enabled shared memory.
+
+For type 2, do we have a BI capable example?
+
+> 
+> o Patch 1 adds the BI cachemem register discovery along with two interfaces around cxlds to allow
+> the setup and deallocations of BI-IDs. The idea is for type3 memdevs and future type2 devices
+> to make use of cxlds->bi when committing HDM decoders, such that different device coherence models
+> can be differentiated as:
+> 
+> 	type2 hdm-db: cxlds->type == CXL_DEVTYPE_DEVMEM && cxlds->bi == true
+> 	type2 hdm-d:  cxlds->type == CXL_DEVTYPE_DEVMEM && cxlds->bi == false
+> 	type3 hdm-h:  cxlds->type == CXL_DEVTYPE_CLASSMEM && cxlds->bi == false
+> 	type3 hdm-db: cxlds->type == CXL_DEVTYPE_CLASSMEM && cxlds->bi == true
+> 	
+> Because ->bi becoming true does not depend on auto-committing upon HDM decoder port/enumeration
+> (port driver), for now this is set as unsupported and will error out when initializing the HDM
+> decoder that has its BI bit set.
+> 
+> o Patch 2 renames/updates some of the CXL Window coherency restrictions. This should be picked
+> up regardless as the spec has been updated already.
+> 
+> o Patch 3 deals with the HDM decoder programming changes around whether or not to set the
+> BI bit. Based on the model above, decoder target types are straightforward: DEVMEM or HOSTONLY
+> for type2 and regular type3, but for type3 HDM-DB, this is not as clear, for which this patch
+> will 1) rely on the HDM capability for supporting coherence models, and 2) allow, when possible,
+> to change it by the user when configuring the BI-capable HDM decoder. It gives the user sysfs
+> tools to create BI-enabled memory regions (see testing below).
+
+
 
