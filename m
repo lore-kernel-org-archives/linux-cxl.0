@@ -1,99 +1,87 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08DD32309B9
-	for <linux-cxl@vger.kernel.org>; Wed, 13 Aug 2025 15:28:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B3227B50F;
+	Wed, 13 Aug 2025 15:55:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755098891; cv=none; b=CneGIBZW0O1IqMUxa5bTuhxlA2DYsoGj0bRWtR9eBZ04SX3eMGVbNJZrzqQvkzQmiLIREsEFF81l8lzJdZwo0Q6yljIwjHTYpDp7HrwCHOMZJUGsmJLxAwlMxmIgm/6yOrsZj9iJ2dwqAQaOdiM6ssWVNmpDZu0aLOe9+1C1y4Y=
+	t=1755100561; cv=none; b=kSxmw1XRbBekRXPPpSpKMIurJXkhMrFRwcnYhJ/l49bVxbdTLxJ3cAdNFBObmj5J6dCBvmKLZznhmMFZ1rShNEcjJrIdwNaBCDglgDPAyrrAPosDX2fNhzkGnnr97Xko58kW4jMxD4TBsCXYTntdxY9YBW3sKzyit1HwcDLAlhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755098891; c=relaxed/simple;
-	bh=kNbQ8bJ7GL2E1FfUR8hcocEODI6mIH2QsKu9td0CiWg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YoV7TUe0EdsQJwGTxjIGUpf0c67FInsgZgIn9B65DX5CnMjvi+AO6VpsPDg0pdfjx+vR3UI9PcG+klndk260Ua/ELYo9mt8wzLiflI2YfQS+ZWMWDqqcKxPIYvjpSLCgb51xdxST8QIBwMuFwcOiKGaKTWaBpbGSKcNy0FozWDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=UJsSxcaq; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="UJsSxcaq"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-af949891d3aso876006366b.1
-        for <linux-cxl@vger.kernel.org>; Wed, 13 Aug 2025 08:28:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1755098887; x=1755703687; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=utUYEctpaDfJIrNlEZgIBn4zx0vgLha1VJXf5Z2o5bk=;
-        b=UJsSxcaqIFqbeJrryNCzOQISVamEVM158oEiY2jwvDVVPw6Iw6bPuxeBX3917QXu1n
-         VhQyO5YcfwbWr3nocZZHjXtba+48/SerxhXMrskw3YVsioXVXDHsSo8g6Menh2NWqDmZ
-         GpSPfeKBqkencrIuGHK5ku0r0LrrY2py9/bnU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755098887; x=1755703687;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=utUYEctpaDfJIrNlEZgIBn4zx0vgLha1VJXf5Z2o5bk=;
-        b=Z1IUttyj0C44yW2tJEQ/y3+K8//ltTWoOowKna/B17OnHvCtKLDVO2rtGZ0TN8u0tt
-         rPdBaGmUta7oBWQ5cZqAn60NUUICIaFat/wfmhioj6H690/iTHn3fPYEjDDir/hvn9Hr
-         q7Reyoqu9nU0Qbv0YZUtvyoMXQF/hicmYdqAIfcaadpiyrry8Bo0O8PaKWvyVqZ+Mspo
-         WohmkjaWT0lhebCTjctUGTaA5VqV9sICQAZDoFhxJg75ttpurtG2k92yODFzxBV7ZzU7
-         65BJe4r11LlhGcPfM1FCRVLnCnnKVtC/TmaawE6SXIu2K6Z0wKiNcctHyYezITF7EIjJ
-         tojA==
-X-Forwarded-Encrypted: i=1; AJvYcCV0tmTPGy3E4Zr72rq1q4PA0AakmF9gmodEgTnVM9ECwhI4LNB3m90Lp8DjSRl5JfXbimjiJHwB/6Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxamxaSFZrVrfRbEx5C6kgi3rALSWj7K50XaBbhiDWqzOt/0koM
-	fZj1kplsrEQCRxEgNC2CO0xlvoAK9dBKAp4DU6u8djj3WBUnZSeoveL8eHA9S97mw3vzn+dgqjv
-	CfnE880E=
-X-Gm-Gg: ASbGncvROvq6ePdDJNiDg8ivHCqwwq6x+kkL4AJbmhTDLG8OaMrEKOUGs9wX7XrVSGl
-	SycimgFnDMG94iKiJfcOTqqux2j5O/ffhoqqg0pa00wJ9bj3eSy/Oy7hvFEiVKRF0TFi3zUFG81
-	FwwqoO3Ju8JI6RcdjWQ1GiX++yLOFd5vf/4O/ZjrrkglYl+oO8LvKUiGxp7dFDBmL/U+ng2Kg4W
-	y0dG3FFl2Kja0IuJFa4i1opglFkjt9vU92UILhIQHKeS3SnC4Mncw5mzCuuJMsYf0CLMtxKkHeX
-	GD+EGykiG1rKicnNrroQDnIPiaSSv0IyhP3yeE6l+PEpL3r786VwlCi3FbS8j8NB+p++eLeceJ8
-	uZ5sQ15pExwo8OgQ1dBIF7Ucg9Dsr+zJHliMHjrpvWPEg1pkUTwL6i44WKepcabIKjelUAdaX
-X-Google-Smtp-Source: AGHT+IF7UXDZ1EZgJ5WvDnBZ09AF0nKw2Ls63aOJOLv1bZ19qDCUDBPyOHkqVL7fdxFfeMiCAVi0mw==
-X-Received: by 2002:a17:907:86a3:b0:ae0:de30:8569 with SMTP id a640c23a62f3a-afca4cc92e0mr331927966b.1.1755098887153;
-        Wed, 13 Aug 2025 08:28:07 -0700 (PDT)
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com. [209.85.208.48])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-615a911567fsm21535439a12.61.2025.08.13.08.28.04
-        for <linux-cxl@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Aug 2025 08:28:05 -0700 (PDT)
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-615622ed677so8281654a12.1
-        for <linux-cxl@vger.kernel.org>; Wed, 13 Aug 2025 08:28:04 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW/2S95rp4PL65rdv1uWHHs28ti1oMoZrIrVBAQC1eg/xCwJWkN/2Ek4QRV+zozVr1qvHYK2DCBlUc=@vger.kernel.org
-X-Received: by 2002:a05:6402:2546:b0:618:4ab5:e85c with SMTP id
- 4fb4d7f45d1cf-6186bfed0f0mr2863094a12.34.1755098884496; Wed, 13 Aug 2025
- 08:28:04 -0700 (PDT)
+	s=arc-20240116; t=1755100561; c=relaxed/simple;
+	bh=xzBNb/50mbyLTPm5Suj2K7W5uV4Vxpn9qpduAfvNPgI=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sZt0Su4r5L7vUPZf51KTIEElFwAILS/K0ujmla+xivP5KAjcqY6AKwceet5Aq7Q/+U/PIU3Vz5R+eRuRvJ5XxPszmohpTSc4QdyEo9R0BfRIniceP3Gnpw1YHtGbNAJ89M+2TAQaNhnHx5VE4pzGZzuBCzzrMb3QjSILSysnb3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4c2CbT6hPTz6GFlc;
+	Wed, 13 Aug 2025 23:53:57 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id DB3361404D8;
+	Wed, 13 Aug 2025 23:55:55 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 13 Aug
+ 2025 17:55:55 +0200
+Date: Wed, 13 Aug 2025 16:55:54 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Neeraj Kumar <s.neeraj@samsung.com>
+CC: <linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, <gost.dev@samsung.com>,
+	<a.manzanares@samsung.com>, <vishak.g@samsung.com>, <neeraj.kernel@gmail.com>
+Subject: Re: [PATCH V2 12/20] nvdimm/namespace_label: Skip region label
+ during namespace creation
+Message-ID: <20250813165554.00002dea@huawei.com>
+In-Reply-To: <20250730121209.303202-13-s.neeraj@samsung.com>
+References: <20250730121209.303202-1-s.neeraj@samsung.com>
+	<CGME20250730121238epcas5p212dcce5cc5713173913ee154d5098a2c@epcas5p2.samsung.com>
+	<20250730121209.303202-13-s.neeraj@samsung.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250804220955.1453135-1-dan.j.williams@intel.com>
- <20250813141346.GM4067720@noisy.programming.kicks-ass.net>
- <CAHk-=whiz9EY5CCHPtRkAuX0wMHwqwa4=GhKUee83mMsU9R0rA@mail.gmail.com> <20250813152142.GP4067720@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250813152142.GP4067720@noisy.programming.kicks-ass.net>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 13 Aug 2025 08:27:48 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wh63uw1YO3brwJpZqL2gtBFsM3vycZuAG1vGB60eLZaOQ@mail.gmail.com>
-X-Gm-Features: Ac12FXzAQIRCxCMKXtU5LNQDn-555L6LNyKadTH4naeqp0E9Nvd70GKseVpXELk
-Message-ID: <CAHk-=wh63uw1YO3brwJpZqL2gtBFsM3vycZuAG1vGB60eLZaOQ@mail.gmail.com>
-Subject: Re: [PATCH] cleanup: Fix unused guard error function with DEFINE_CLASS_IS_COND_GUARD
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Dan Williams <dan.j.williams@intel.com>, dave.jiang@intel.com, 
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	Nathan Chancellor <nathan@kernel.org>, David Lechner <dlechner@baylibre.com>, 
-	Jonathan Cameron <jonathan.cameron@huawei.com>, Andy Shevchenko <andriy.shevchenko@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Wed, 13 Aug 2025 at 08:21, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> Right, so I've had patches that added extra #ifdef gunk because of this,
-> and we've sprinked __maybe_unused in a few places just to shut this up.
->
-> I think something like the below will do... totally untested and all
-> that.
+On Wed, 30 Jul 2025 17:42:01 +0530
+Neeraj Kumar <s.neeraj@samsung.com> wrote:
 
-Yeah. I'm not convinced we want it even at W=2, but as mentioned, at
-that point hopefully nobody really cares.
+> During namespace creation skip presence of region label if present.
 
-             Linus
+Confusing description.  What does skipping presence mean?
+Reword.
+
+During namespace creation, skip any region labels found.
+
+
+> Also preserve region label into labels list if present.
+> 
+> Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
+> ---
+>  drivers/nvdimm/namespace_devs.c | 50 +++++++++++++++++++++++++++++----
+>  1 file changed, 45 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
+> index e5c2f78ca7dd..8edd26407939 100644
+> --- a/drivers/nvdimm/namespace_devs.c
+> +++ b/drivers/nvdimm/namespace_devs.c
+> @@ -1985,6 +1985,10 @@ static struct device **scan_labels(struct nd_region *nd_region)
+>  		if (!lsa_label)
+>  			continue;
+>  
+> +		/* skip region labels if present */
+
+This is kind of obvious comment. I'd drop it.
+
+> +		if (is_region_label(ndd, lsa_label))
+> +			continue;
+> +
+>  		nd_label = &lsa_label->ns_label;
+>  
+
