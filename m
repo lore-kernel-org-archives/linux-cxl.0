@@ -1,95 +1,185 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 008E82D5C6F;
-	Wed, 13 Aug 2025 07:18:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A5E2F2907
+	for <linux-cxl@vger.kernel.org>; Wed, 13 Aug 2025 11:15:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755069483; cv=none; b=eDkwViFHTQvp6PkIHDlYjhi7ZzH8/E4IxqfxzxYwmp9wSSHpfkAMEaoB3ceSzsnz44VT4gNYGYt29r4MW/ADJsspe/7qGymCh8lSdu6iwOV66LWA7UX4LFZw2z2PrpMt309ZG9kY1pjfZD9FaV4ccq7SgpqSdNHdmAPxqKjxJaE=
+	t=1755083708; cv=none; b=rSVeuvgejnOo0eISTy07jcdaqKw+atE3sZd97f3fVKGeqQNGdyVB5Djx/dfmFRl8X8olUFE71emhDrYSn3dkLvR9ZldUywaHuq+a3FiHacF+txDchCSIWeOD28G3bMLJRn0G/n787n9pz3KL4UD7WCH19PWKo6NEuBlupQUW6CM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755069483; c=relaxed/simple;
-	bh=hcmI7iAMYwE97uti/1GOOMzj/QiwGNxvvy2bu3eStqM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=SD/njZK4YtGnjC8KnsXRoh9WTUm7jzQyjqiKKMrVU4MhL9ZC+ykfW5bzTz23rjAVfoBe0NHN6LufkwokaRc8ezWRao41xQ4RR+07Mx12a7OBE7RAgWUVpuvUDGpYG6YLVB+fw9/tfLRGj9X85Je9gPUYNBV19P9LAFtSoXlZ6Ks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com; spf=pass smtp.mailfrom=perches.com; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
-Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id F1F971A0243;
-	Wed, 13 Aug 2025 07:17:54 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf08.hostedemail.com (Postfix) with ESMTPA id 8207720025;
-	Wed, 13 Aug 2025 07:17:52 +0000 (UTC)
-Message-ID: <9afd4c898a194cd576f1aaa08b72c67d4e538cc7.camel@perches.com>
-Subject: Re: [PATCH] checkpatch: allow an assignment in if condition for
- ACQUIRE_ERR()
-From: Joe Perches <joe@perches.com>
-To: alison.schofield@intel.com, Andy Whitcroft <apw@canonical.com>, 
- Dwaipayan Ray <dwaipayanray1@gmail.com>, Lukas Bulwahn
- <lukas.bulwahn@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Dan Williams
-	 <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Wed, 13 Aug 2025 00:17:51 -0700
-In-Reply-To: <20250813003821.2891532-1-alison.schofield@intel.com>
-References: <20250813003821.2891532-1-alison.schofield@intel.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=arc-20240116; t=1755083708; c=relaxed/simple;
+	bh=hWf4+P/L1Gmyw+zJapleYBmqmFyhCss/OmtprFUpNYU=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CmJio+0EiqjJ4ETiF1Qr3MsgD6auI8Qfc4T/nQPGNAc0jv0wJzYM0ZVIIUsK5PduJHiH2b8uaZ57tYszj2VHc91uFaXnOPqB50d9L+k0xkRfwthMHnF9KsyrvAmB2DHhqzK60rJd9eNu5BApQ3W3nAi4L2X/oGwkITg4X5no/lY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4c25J25zqpz6HJnn;
+	Wed, 13 Aug 2025 19:10:10 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3C2921402EF;
+	Wed, 13 Aug 2025 19:15:03 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 13 Aug
+ 2025 13:15:02 +0200
+Date: Wed, 13 Aug 2025 12:15:01 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: peng guo <engguopeng@buaa.edu.cn>
+CC: Davidlohr Bueso <dave@stgolabs.net>, <fan.ni@samsung.com>,
+	<linux-cxl@vger.kernel.org>, <a.manzanares@samsung.com>
+Subject: Re: [RESEND] hw/cxl: fix the determination of illegal physical
+ addresses
+Message-ID: <20250813121501.00005c89@huawei.com>
+In-Reply-To: <aJIVyK7PPJdlsv4B@gp-VMware-Virtual-Platform>
+References: <20240819120317.12505-1-engguopeng@buaa.edu.cn>
+	<20240823161434.00004b30@Huawei.com>
+	<4ylhz5gnwatapw2nwu6ktgr6i6l4iwyxirg7yamimsvilh2jla@d7vkuddno4z2>
+	<aJIVyK7PPJdlsv4B@gp-VMware-Virtual-Platform>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Rspamd-Queue-Id: 8207720025
-X-Stat-Signature: rwoky5ctg8r9qqy3xznak4toecm35udm
-X-Rspamd-Server: rspamout02
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX18am+B5Hnc2pdpMW7J6uT1k3dulQ6IVQds=
-X-HE-Tag: 1755069472-731564
-X-HE-Meta: U2FsdGVkX18PNOcji16s5vY1l/BFYK8y5dYG9rydl/TgSQw7dMTQeSeiVtJjeEYj0qhZpgyg+W2vgak94c87JLOIIZMYp7wUbtyMnqrbgZVHEPbbBIc5Ilg9yc7Mdr7OgU7JO+93wVwMyHpnPEsDQYYOoeiD2SXHyL43v6Tw0an9vIPYsQGWLB5aVJXNh5MLG7Ok+qkZ3/zpSIDi8or/VCpmH415AHldOSuEGg5PdmKNLlnGlNh3gKloW+oHThnf6vI8W7mYcIbPb0Oxe6d4RLc22wN2qRkNBZS3dyPLeVAyNo9n/zXb8kmMcwdzRwF2xjlhc61osVcKewOM54krrpUrkqzEVCEQ
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, 2025-08-12 at 17:38 -0700, alison.schofield@intel.com wrote:
-> From: Alison Schofield <alison.schofield@intel.com>
+On Tue, 5 Aug 2025 22:31:36 +0800
+peng guo <engguopeng@buaa.edu.cn> wrote:
+
+> On Wed, Sep 04, 2024 at 01:01:55PM -0700, Davidlohr Bueso wrote:
+> > On Fri, 23 Aug 2024, Jonathan Cameron wrote:\n =20
+> > > On Mon, 19 Aug 2024 20:03:17 +0800
+> > > peng guo <engguopeng@buaa.edu.cn> wrote:
+> > >  =20
+> > > > When physical address range in the input payload of scan media comm=
+and
+> > > > exceeds static_mem_size but does not exceed the sum of static and d=
+ynamic
+> > > > memory, the scan media mailbox command unexpectedly returns an erro=
+r code
+> > > > which is CXL_MBOX_INVALID_PA.
+> > > >=20
+> > > > This patch determines whether the physical address is valid in two =
+cases.
+> > > > If dynamic memory exists, check whether the address range of the re=
+quest
+> > > > exceeds the range of static memory and dynamic memory.If dynamic me=
+mory =20
+> > 							 ^ space for a new sentence =20
+> > > > does not exist, then check whether the address range of the request
+> > > > exceeds the static memory size.
+> > > >=20
+> > > > Fixes: d61cc5b6a8d3 ("hw/cxl: Add get scan media capabilities cmd s=
+upport") =20
+> > > Is that the right one, this code is affecting cmd_media_scan_media()
+> > > not the capabilities one which always limits to static_mem_size and
+> > > hence also looks wrong. =20
+> >=20
+> > Yeah it is the right one - both commands were merged together (and
+> > yes, they both need to be updated for dcd).
+> >=20
+> > Maybe have a helper to consolidate all cases where such ranges are used?
+> >=20
+> > uint64_t ct3d_get_total_size(CXLDeviceState *cxl_dstate, CXLType3Dev *c=
+t3d)
+> > {
+> >=20
+> > 	return cxl_dstate->static_mem_size + ct3d->dc.total_capacity;
+> > }
+> >  =20
+> > >  =20
+> > > > Signed-off-by: peng guo <engguopeng@buaa.edu.cn> =20
+> > >=20
+> > > As with the other patch, this needs to go to qemu-devel list
+> > > + both should have gone to Davidlohr as author the patch you
+> > > are fixing (sort of it, it's mostly down to what order patches
+> > > landed in I think).
+> > >=20
+> > > Fan, Davidlohr, do we want to just cover the DCD regions as
+> > > well with all the scan_media commands? =20
+> >=20
+> > Yeah, I think so - particularly since poison management already
+> > considers dcd for CXL_MBOX_INVALID_PA.
+> >=20
+> > Thanks,
+> > Davidlohr =20
 >=20
-> New helpers, ACQUIRE() and ACQUIRE_ERR(), were recently introduced to
-> clean up conditional locking paths [1].
-[]
-> That compact format was a deliberate choice by the authors. By making
-> this a checkpatch exception, existing ERRORs are quieted, and future
-> users of the macro will not be dissuaded by checkpatch from using the
-> preferred compact format.
+> Hi Jonathan, Davidlohr,
+>=20
+> Sorry for the late reply.
+>=20
+> I=E2=80=99m following up on the discussion about the `scan media` command=
+ behavior=20
+> when dynamic memory is present. Based on our earlier exchange, it seems=20
+> that the command currently returns `CXL_MBOX_INVALID_PA` if the requested=
+=20
+> address falls within the dynamic memory region =E2=80=94 even though this=
+ should=20
+> be a valid case when DCD is enabled.
+>=20
+> Just to confirm: should this be treated as a bug that needs to be fixed w=
+ith=20
+> an updated patch?
+I'm not sure a device is obliged to support all features on DCD, but there =
+is
+no clean way to discover if it does or not.
 
-not stylish IMO.
+So, probably not worth backporting to stable QEMU (as a bug) but worth fixi=
+ng
+going forwards.
+>=20
+> If so, I=E2=80=99d be happy to prepare a new version and send it to the p=
+roper recipients.
+>=20
+Great!
 
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-[]
-> @@ -5696,7 +5696,14 @@ sub process {
->  			my ($s, $c) =3D ($stat, $cond);
->  			my $fixed_assign_in_if =3D 0;
-> =20
-> -			if ($c =3D~ /\bif\s*\(.*[^<>!=3D]=3D[^=3D].*/s) {
-> +			if ($c =3D~ /\bif\s*\((.*[^<>!=3D]=3D[^=3D].*)\)/s) {
-> +				my $expr =3D $1;
-> +
-> +				# Allow ACQUIRE_ERR() macro syntax
-> +				if ($expr =3D~ /\w+\s*=3D\s*ACQUIRE_ERR\s*\(/) {
-> +					next;
-> +				}
+Jonathan
 
-nak.
-
-Using next would not do any additional checks on this line.
-Likely use basic block or a constuct like
-
-			if ($c =3D~ /\bif\s*\((.*[^<>!=3D]=3D[^=3D].*)/s &&
-			    $1 !~ /\bACQUIRE_ERR\b/) {
-
-
-and perhaps the \w+ should be $Lval
-
-> +
->  				if (ERROR("ASSIGN_IN_IF",
->  					  "do not use assignment in if condition\n" . $herecurr) &&
->  				    $fix && $perl_version_ok) {
+> Thanks again for your feedback.
+>=20
+> Best regards,
+> Peng Guo
+>=20
+> >  =20
+> > >=20
+> > >  =20
+> > > > ---
+> > > >  hw/cxl/cxl-mailbox-utils.c | 9 +++++----
+> > > >  1 file changed, 5 insertions(+), 4 deletions(-)
+> > > >=20
+> > > > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> > > > index 3ebbd32e10..b23c6b9b0b 100644
+> > > > --- a/hw/cxl/cxl-mailbox-utils.c
+> > > > +++ b/hw/cxl/cxl-mailbox-utils.c
+> > > > @@ -1943,11 +1943,12 @@ static CXLRetCode cmd_media_scan_media(cons=
+t struct cxl_cmd *cmd,
+> > > >      }
+> > > >      query_length =3D ldq_le_p(&in->length) * CXL_CACHE_LINE_SIZE;
+> > > >=20
+> > > > -    if (query_start + query_length > cxl_dstate->static_mem_size) {
+> > > > -        return CXL_MBOX_INVALID_PA;
+> > > > -    }
+> > > > -    if (ct3d->dc.num_regions && query_start + query_length >=3D
+> > > > +    if (ct3d->dc.num_regions) {
+> > > > +        if (query_start + query_length >=3D
+> > > >              cxl_dstate->static_mem_size + ct3d->dc.total_capacity)=
+ {
+> > > > +                return CXL_MBOX_INVALID_PA;
+> > > > +            }
+> > > > +    } else if (query_start + query_length > cxl_dstate->static_mem=
+_size) {
+> > > >          return CXL_MBOX_INVALID_PA;
+> > > >      } =20
+> > > Can we not rely on dc.total_capacity =3D=3D 0 if num_regions =3D=3D 0/
+> > >  =20
+> > > >  =20
+> > >  =20
+>=20
+>=20
 
