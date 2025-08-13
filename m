@@ -1,170 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C3F3009E1
-	for <linux-cxl@vger.kernel.org>; Wed, 13 Aug 2025 21:42:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A17D3009F0;
+	Wed, 13 Aug 2025 21:45:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755121344; cv=none; b=QxFAKEN/vzLmCjd9Gq1n6q8e3YQSScyb/mpqFTUveKFqra1fazi+AfWquOK3wMExnxCc+0S06JteBEEf4LGeOZcTzJap0kI7abSiq5tA1uwKNyzPOxfucstRAKOKUYa/ptzVq4EGGS/t5IbwSoU6jgBTlDH1KP+AGeiZFQxSqAc=
+	t=1755121541; cv=none; b=XPLcHbGCzrLFaY37RoTAFYYbHia6f4NpDRFI2hI6jlk/YmgkegGSQ1b4BNuUSpbV1t75UITqBKzo3g+salAffBAoN2LWR57Ej/xjYnL0da5aViwyivy6UtTpe6YRoUB6xUcr3HzSnEMQZ/p0Hll+MQhdY3Qau+88WNbjekZ21CM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755121344; c=relaxed/simple;
-	bh=3gJ9XqQD9X6UXYVCwzQSav7gzjQw74cDbN1Hyp7QxYk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UuYlwS5jbH+Ms01OeyPObwtwRdE3yI+kJJEBMKYYxMD06kTV7gSY7b/WdfXDDrBOIkrez3wlvPbOw5sEgjv3MRMDRvRX00ue14QCbXR7nrr27cOFz28xoDgmQD7H/BOQlc4wIFxWDPq/U0xEK5d+jsWfFe2LEYEh+NAaxPW5OO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UrEPnfVf; arc=none smtp.client-ip=198.175.65.21
+	s=arc-20240116; t=1755121541; c=relaxed/simple;
+	bh=F4f83btsjyboCnQlU+uU8DbZkoaZ7bIdaugcop9Ogb0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UNvWPkXaGb61LXxrsIV7n5yGNP9BERGGGPv7v4EWJTo30v0VWpgWys4CVVBEREwT2yyo+xo3sO8OSjAZ6xhV+94uiT94EcRvODrXzD6VZ4oqPw9WI7vN/RPAH/Co3RUTR7rK7fB26Cl7EeiBv0P1399w2RR3dJkxB5xjWd2YsjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LBsgOiya; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UrEPnfVf"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LBsgOiya"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755121343; x=1786657343;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=3gJ9XqQD9X6UXYVCwzQSav7gzjQw74cDbN1Hyp7QxYk=;
-  b=UrEPnfVfGuY3kgbtM+ZLj0zvdUvx3v4e04VZvd4I4MLYliAZuSKE8cQt
-   GS5cJwNHtT1HtaUOF/Ir8f23idiBMLBh/2w7P0PGciMdSnHqw7fagIypy
-   k4lQeGnVge2Pg26iHp4DTRknD+cv4YdXe0bRj6c4TCM6GgBaMCOUAj4Ug
-   NH/faEXX57/KmkagxBb3fmLo/+AofiizyrLSvNpk0Cb/yGbION8XGK1vR
-   xG1r6h4MM1ds8A2GcDuCnjDU3tZ6dVumLLa3R7tvckoULp606nnQfBHUI
-   /nf6rYU78xvBZH/h2zk0hXE6vDoXZbWz09dzcMJTTpudrkfNAlTW5rBGP
+  t=1755121540; x=1786657540;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=F4f83btsjyboCnQlU+uU8DbZkoaZ7bIdaugcop9Ogb0=;
+  b=LBsgOiyaEh8/uvwKfJdvxtIs/w9l7WQVoDx/r15zqK0bB7QpQyz30D3M
+   I3pGvQ0hmCU9AuhXIqJmca1yk8ldYiXIkwrUPSImB8VfwSJSPa5wJ4orA
+   iFzceMS4Wov183Htt4gUF4gKkxbEeX0jTLjhGPaCWUggiaycfrh5lfqbk
+   Oopt/2w4OQLUNLrD7jpmrAiZGlXKondk8zEEvSGXCp/d5E7KFjpGw9QrL
+   aNM/XVSk1hV3FoYZSRIYNbCEID+X6lyOd7E0ioFfcXh9uxWRDAluwXAz8
+   w1TasgPsiUjJWujx3r3CHAuC6kTQbc+cT8mPlnGs/A69P71P9CG5c6LT7
    w==;
-X-CSE-ConnectionGUID: pdrp4QPFQLSTCKlDMDY7Xw==
-X-CSE-MsgGUID: H2xrrtxAS1On6iGfquuD5A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11520"; a="57334478"
+X-CSE-ConnectionGUID: bLa5Hp2ORLKryFefaCvNng==
+X-CSE-MsgGUID: /4i1G92ZQ6KTzRfvFOKS0Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11520"; a="60056186"
 X-IronPort-AV: E=Sophos;i="6.17,287,1747724400"; 
-   d="scan'208";a="57334478"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2025 14:42:22 -0700
-X-CSE-ConnectionGUID: HWDqM8wnSrW/DgAYBAUn6w==
-X-CSE-MsgGUID: AiJKBzLrTT+zm1v17kwqlQ==
+   d="scan'208";a="60056186"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2025 14:45:40 -0700
+X-CSE-ConnectionGUID: m4AS8PwJTEyMpaFlf37SRg==
+X-CSE-MsgGUID: Hu/ieqJVRsyO1K4OyLMYDQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,287,1747724400"; 
-   d="scan'208";a="197437281"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.222.205])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2025 14:42:21 -0700
-From: alison.schofield@intel.com
-To: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH] cxl/port: Validate decoder nr_targets against supported ways
-Date: Wed, 13 Aug 2025 14:42:16 -0700
-Message-ID: <20250813214218.2917555-1-alison.schofield@intel.com>
-X-Mailer: git-send-email 2.47.0
+   d="scan'208";a="203761935"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2025 14:45:37 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1umJHq-00000005W9l-2xDb;
+	Thu, 14 Aug 2025 00:45:34 +0300
+Date: Thu, 14 Aug 2025 00:45:34 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Dan Williams <dan.j.williams@intel.com>, dave.jiang@intel.com,
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+	Nathan Chancellor <nathan@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>
+Subject: Re: [PATCH] cleanup: Fix unused guard error function with
+ DEFINE_CLASS_IS_COND_GUARD
+Message-ID: <aJ0Hfqnv4LZdVcQa@smile.fi.intel.com>
+References: <20250804220955.1453135-1-dan.j.williams@intel.com>
+ <20250813141346.GM4067720@noisy.programming.kicks-ass.net>
+ <CAHk-=whiz9EY5CCHPtRkAuX0wMHwqwa4=GhKUee83mMsU9R0rA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whiz9EY5CCHPtRkAuX0wMHwqwa4=GhKUee83mMsU9R0rA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-From: Alison Schofield <alison.schofield@intel.com>
+On Wed, Aug 13, 2025 at 08:14:59AM -0700, Linus Torvalds wrote:
+> On Wed, 13 Aug 2025 at 07:13, Peter Zijlstra <peterz@infradead.org> wrote:
+> > On Mon, Aug 04, 2025 at 03:09:54PM -0700, Dan Williams wrote:
+> > >
+> > > ...with a clang W=1 build. Per Nathan, clang catches unused "static inline"
+> > > functions in C files since commit 6863f5643dd7 ("kbuild: allow Clang to
+> > > find unused static inline functions for W=1 build").
+> >
+> > I so loathe that warning :/
+> 
+> So I entirely ignore W=1 issues, because I think so many of the extra
+> warnings are bogus.
+> 
+> But if this one in particular is causing more problems than most -
+> some teams do seem to use W=1 as part of their test builds - it's fine
+> to send me a patch that just moves bad warnings to W=2.
+> 
+> And if anybody uses W=2 for their test builds, that's THEIR problem..
 
-nr_targets is the number of downstream ports in a decoder's target
-list. It is limited to the supported interleave ways: 1, 2, 3, 4, 6,
-8, 12, 16. The existing check only enforces nr_targets <=
-CXL_DECODER_MAX_INTERLEAVE (16), allowing invalid values, like 5, 7,
-etc, to pass through.
+Exactly. I am only aware of W=0/W=1, I think I run W=2 once or twice in my life.
 
-Add is_nr_targets_valid() to check for supported interleave ways using
-ways_to_eiw(). Use it before allocating a decoder to avoid alloc/free
-churn when nr_targets is already known to be invalid.
-
-This was found by inspection and hardens the code.
-
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
----
- drivers/cxl/core/port.c | 23 ++++++++++-------------
- drivers/cxl/cxl.h       | 11 +++++++++++
- 2 files changed, 21 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 8f36ff413f5d..7d62797d1202 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -1773,17 +1773,6 @@ static int cxl_decoder_init(struct cxl_port *port, struct cxl_decoder *cxld)
- 	return 0;
- }
- 
--static int cxl_switch_decoder_init(struct cxl_port *port,
--				   struct cxl_switch_decoder *cxlsd,
--				   int nr_targets)
--{
--	if (nr_targets > CXL_DECODER_MAX_INTERLEAVE)
--		return -EINVAL;
--
--	cxlsd->nr_targets = nr_targets;
--	return cxl_decoder_init(port, &cxlsd->cxld);
--}
--
- /**
-  * cxl_root_decoder_alloc - Allocate a root level decoder
-  * @port: owning CXL root of this decoder
-@@ -1805,13 +1794,17 @@ struct cxl_root_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
- 	if (!is_cxl_root(port))
- 		return ERR_PTR(-EINVAL);
- 
-+	if (!is_nr_targets_valid(nr_targets))
-+		return ERR_PTR(-EINVAL);
-+
- 	cxlrd = kzalloc(struct_size(cxlrd, cxlsd.target, nr_targets),
- 			GFP_KERNEL);
- 	if (!cxlrd)
- 		return ERR_PTR(-ENOMEM);
- 
- 	cxlsd = &cxlrd->cxlsd;
--	rc = cxl_switch_decoder_init(port, cxlsd, nr_targets);
-+	cxlsd->nr_targets = nr_targets;
-+	rc = cxl_decoder_init(port, &cxlsd->cxld);
- 	if (rc) {
- 		kfree(cxlrd);
- 		return ERR_PTR(rc);
-@@ -1859,11 +1852,15 @@ struct cxl_switch_decoder *cxl_switch_decoder_alloc(struct cxl_port *port,
- 	if (is_cxl_root(port) || is_cxl_endpoint(port))
- 		return ERR_PTR(-EINVAL);
- 
-+	if (!is_nr_targets_valid(nr_targets))
-+		return ERR_PTR(-EINVAL);
-+
- 	cxlsd = kzalloc(struct_size(cxlsd, target, nr_targets), GFP_KERNEL);
- 	if (!cxlsd)
- 		return ERR_PTR(-ENOMEM);
- 
--	rc = cxl_switch_decoder_init(port, cxlsd, nr_targets);
-+	cxlsd->nr_targets = nr_targets;
-+	rc = cxl_decoder_init(port, &cxlsd->cxld);
- 	if (rc) {
- 		kfree(cxlsd);
- 		return ERR_PTR(rc);
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 4fe3df06f57a..02b526a16492 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -132,6 +132,17 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
- 	return 0;
- }
- 
-+/* nr_targets must match a supported number of interleave ways */
-+static inline bool is_nr_targets_valid(int nr_targets)
-+{
-+	u8 unused_eiw;
-+
-+	if (nr_targets <= 0)
-+		return false;
-+
-+	return ways_to_eiw(nr_targets, &unused_eiw) == 0;
-+}
-+
- /* RAS Registers CXL 2.0 8.2.5.9 CXL RAS Capability Structure */
- #define CXL_RAS_UNCORRECTABLE_STATUS_OFFSET 0x0
- #define   CXL_RAS_UNCORRECTABLE_STATUS_MASK (GENMASK(16, 14) | GENMASK(11, 0))
-
-base-commit: d9412f08e25a5b66f9021739c090cc9b8f1089b1
 -- 
-2.37.3
+With Best Regards,
+Andy Shevchenko
+
 
