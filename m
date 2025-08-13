@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809A52727E6;
-	Tue, 12 Aug 2025 21:46:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 633D31B4248;
+	Wed, 13 Aug 2025 00:02:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755035199; cv=none; b=hw5sibcHleHnVl5dMAuPcp8I3KHqBECSRFo4mgVMfkQ5bG+E+Y0nyE5vz9VJRgNQpqUl4CwOHMPeCP1HJRHvdJbKXiRcCP6FhodIGgIJ6irfVS/aF1MoUXgthAVM6b3OB0m02ffEvG9t8I6OkVdV+BvVagXIudUrfr7psIwt2PA=
+	t=1755043329; cv=none; b=JHOUCR7KzX5btppIYIGpxFkq9BkRmdSKu5kubo+dA3uAjYouFUR46NalylUiotyMRr0Y12smajYk3chSPevvGpRvJDgjXwr2LFR183yZVtVir9TQPjF6h0iD911Bq18/2M3SNOqDTQGb/4nZMl1aFESNABuZ22g/LnWI51GHDbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755035199; c=relaxed/simple;
-	bh=Xf1H+ySZWWLVeLIhuFpndzvCpwSw16J2X0fr7aWCB9Q=;
+	s=arc-20240116; t=1755043329; c=relaxed/simple;
+	bh=fFWkenXhNI0YA0ZR3uSv3YEzOtHv0+yKxUhrs5e2Df0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b47SWECXaofir6XjJDWGxGcUFsgkStK5YA4526n51Kbx4AnKFBUfP3B51H96Fe+LwvONAmlsE86cruX/aPTDJHynQewkfWx3yhK38pUUy36HETmb2rmqbynTYymK54ZslqaPbow0FoF8c/5gPZIfBGTxW6Afd8UaAfUg4TciGM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HcLTrA74; arc=none smtp.client-ip=192.198.163.14
+	 In-Reply-To:Content-Type; b=lIQFq7MyjuClErL9uMmC+3rOnZOG8Y26uU5Pxjr8LBtGBFVu8xjjldvR4oG8vZg4XroYrb0MTK2bLSMLcODsd0p661KDTpQgacBtPAJOIG+38OIM4vmKKk8h1kgv6cMYiNsyXFbrxLdTqPiaDiA//qByeiKVMaU/Q8dmCXTIvcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kBMx04bQ; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HcLTrA74"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kBMx04bQ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755035197; x=1786571197;
+  t=1755043329; x=1786579329;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=Xf1H+ySZWWLVeLIhuFpndzvCpwSw16J2X0fr7aWCB9Q=;
-  b=HcLTrA74rh9cS+ydDr+3R0a2pJ2HWidsNMFMadkiWs9oAMFuGFig70hL
-   5JDr3bWF23sRKrIGwF6x+1lOYtgkOMttSiUlRr/sdj3Mvgr+qocN3KYKS
-   oa4wIbigFShz+rvGrmksuMpbOu5D6RpXHrc8IuNC2YnjQIfv03kcMRxSj
-   at6Y3CY3bIVefxgrsWdxnCTT/yTu+2BhptWsgDVf6UqZXwJPIgWg5VjVz
-   fK+7TPHxLVsHrduwjvpxi5IFZT4jxNfgOKw7ZYis8Uxbgq6s1RovzWnLg
-   P9j3irM7ikSN8RLsbXDXNGYfxoF9OldMh/etMb9N5RnbWp1jQmifk8ZfE
-   A==;
-X-CSE-ConnectionGUID: EMWaUEMwTwKeNT3+uuZ+BQ==
-X-CSE-MsgGUID: G6sB21g3QjW0DtAtVdFhKQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11520"; a="57384627"
+  bh=fFWkenXhNI0YA0ZR3uSv3YEzOtHv0+yKxUhrs5e2Df0=;
+  b=kBMx04bQ4Ys7uC8bj5uXbUuy6xckwuoPHhPiep+g+EobrvM67r2uZUdF
+   /OTlxBiBfSalHPE7STm75F3FSSMB5xaBk3/tQLNZqjDYLlt2rAcxZ+rsu
+   Phr2ipcwj3NBq9/wd2UdDxxS9X+fnHA8dyNd2EMtHahff3/ktE5yJYg1s
+   Ku3Ve/38jQ7T619Vv0y8eu/+L8C+JhOZszgnbR0wcy1O/rW5KBeHtkjDh
+   o651JtETJgz0qQXOGIUuqpY3rd5BSaL+t5MMRxRv9crwqqhZswmh6jT1E
+   EbaD/Kcd5q5IvNfoTGte867iKSj49m9KIUHaZC5TDYxbm/SuirQnm90sb
+   g==;
+X-CSE-ConnectionGUID: W47JAtx6Qri4gSW6Sg4pOQ==
+X-CSE-MsgGUID: NxMBtH4xTUSt0poqS6NeeQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11520"; a="56538056"
 X-IronPort-AV: E=Sophos;i="6.17,285,1747724400"; 
-   d="scan'208";a="57384627"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2025 14:46:37 -0700
-X-CSE-ConnectionGUID: gK8oe98TSN6hKy7LLMf8gw==
-X-CSE-MsgGUID: G+wHHAdcSj2OiMRU++Awog==
+   d="scan'208";a="56538056"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2025 17:02:08 -0700
+X-CSE-ConnectionGUID: N7UT1eQsSkWulp66DhhBJw==
+X-CSE-MsgGUID: BVIbH7fRS2mqUdZTzI3Tqw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,285,1747724400"; 
-   d="scan'208";a="166573218"
-Received: from anmitta2-mobl3.gar.corp.intel.com (HELO [10.247.119.148]) ([10.247.119.148])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2025 14:46:29 -0700
-Message-ID: <f2120762-bbc6-47b0-9cb6-fa45bd9cd460@intel.com>
-Date: Tue, 12 Aug 2025 14:46:24 -0700
+   d="scan'208";a="165952263"
+Received: from anmitta2-mobl4.gar.corp.intel.com (HELO [10.247.119.149]) ([10.247.119.149])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2025 17:02:03 -0700
+Message-ID: <78ebb53e-5cb3-4a6f-b2da-dd37e952a333@intel.com>
+Date: Tue, 12 Aug 2025 17:01:57 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,66 +52,42 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 00/20] Add CXL LSA 2.1 format support in nvdimm and cxl
- pmem
-To: Neeraj Kumar <s.neeraj@samsung.com>,
- Dan Williams <dan.j.williams@intel.com>, Davidlohr Bueso
- <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>,
- Ira Weiny <ira.weiny@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
- nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org, gost.dev@samsung.com
-Cc: a.manzanares@samsung.com, vishak.g@samsung.com, neeraj.kernel@gmail.com,
- cpgs@samsung.com
-References: <CGME20250730121221epcas5p3ffb9e643af6b8ae07cfccf0bdee90e37@epcas5p3.samsung.com>
- <20250730121209.303202-1-s.neeraj@samsung.com>
- <1983025922.01754829002385.JavaMail.epsvc@epcpadp1new>
+Subject: Re: [PATCH] cxl/hdm: Use str_plural() to simplify the code
+To: Xichao Zhao <zhao.xichao@vivo.com>, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250811122519.543554-1-zhao.xichao@vivo.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <1983025922.01754829002385.JavaMail.epsvc@epcpadp1new>
+In-Reply-To: <20250811122519.543554-1-zhao.xichao@vivo.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 8/7/25 2:02 AM, Neeraj Kumar wrote:
-> On 30/07/25 05:41PM, Neeraj Kumar wrote:
->> Introduction:
->> =============
->> CXL Persistent Memory (Pmem) devices region, namespace and content must be
->> persistent across system reboot. In order to achieve this persistency, it
->> uses Label Storage Area (LSA) to store respective metadata. During system
->> reboot, stored metadata in LSA is used to bring back the region, namespace
->> and content of CXL device in its previous state.
->> CXL specification provides Get_LSA (4102h) and Set_LSA (4103h) mailbox
->> commands to access the LSA area. nvdimm driver is using same commands to
->> get/set LSA data.
->>
+On 8/11/25 5:25 AM, Xichao Zhao wrote:
+> Use the string choice helper function str_plural() to simplify the code.
 > 
-> Hi Jonathan, Dave and Ira
+> Signed-off-by: Xichao Zhao <zhao.xichao@vivo.com>
+applied to cxl/next
+22fb4ad89885
+
+> ---
+>  drivers/cxl/core/hdm.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> I have addressed the review comments of V1 patch-set and sent out this
-> V2 Patch-set.
-> 0-Day Kernel Test bot has reported couple of minor issues which I will
-> address in next series.
-> 
-> Can you please have a look at this V2 series and let me know your
-> feedback.
-
-Hi Neeraj,
-It's on my review queue. Will try to get to it soon.
-
-Also, it seems that lore is still not happy your mailer. 
-https://lore.kernel.org/linux-cxl/1983025922.01754829002385.JavaMail.epsvc@epcpadp1new/T/#t
-
-See all the [not found] threading. Just FYI.
-
-DJ
-
-
-> 
-> 
-> Regards,
-> Neeraj
-> 
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index e9e1d555cec6..37176c0a781f 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -197,7 +197,7 @@ struct cxl_hdm *devm_cxl_setup_hdm(struct cxl_port *port,
+>  	 */
+>  	if (should_emulate_decoders(info)) {
+>  		dev_dbg(dev, "Fallback map %d range register%s\n", info->ranges,
+> -			info->ranges > 1 ? "s" : "");
+> +			str_plural(info->ranges));
+>  		cxlhdm->decoder_count = info->ranges;
+>  	}
+>  
 
